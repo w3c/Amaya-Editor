@@ -700,7 +700,7 @@ ThotBool            createLink;
 
 #endif /* __STDC__ */
 {
-  Element             first, last, el, next;
+  Element             first, last, el, next, parent;
   Element             parag, prev, child, anchor;
   SSchema             HTMLSSchema;
   ElementType         elType;
@@ -890,6 +890,7 @@ ThotBool            createLink;
 	  /* move the selected elements within the new Anchor element */
 	  child = first;
 	  prev = NULL;
+	  parent = TtaGetParent (anchor);
 	  while (child != NULL)
 	    {
 	      /* prepare the next element in the selection, as the current element */
@@ -906,7 +907,9 @@ ThotBool            createLink;
 		TtaInsertSibling (child, prev, FALSE, doc);
 	      /* get the next element in the selection */
 	      prev = child;
-	      if (child == last)
+	      if (child == last || next == parent)
+		/* avoid to move the previous element or the parent
+		   of the anchor into the anchor */
 		child = NULL;
 	      else
 		child = next;

@@ -65,6 +65,9 @@
 #include "wininclude.h"
 #endif /* _WINDOWS */
 
+
+static PathBuffer   PrintDirName;
+static Name         PrintDocName;
 static CHAR_T       Orientation[MAX_NAME_LENGTH];
 static Func         pFuncExportPrintDoc = NULL;
 static int          defPaperPrint;
@@ -78,17 +81,14 @@ static int          defPaginate;
 static int          defPageSize;
 static Name         PresSchema;
 
-#ifdef _WINDOWS
-
-#endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
   Print: interface to the Print program.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         Print (STRING name, STRING dir, STRING thotSch, STRING thotDoc, STRING realName, STRING output, int firstPage, int lastPage, int nCopies, int hShift, int vShift, int userOrientation, int reduction, int nbPagesPerSheet, int suppFrame, int manualFeed, int blackAndWhite, int repaginate, STRING viewsToPrint, Document document)
+static void         Print (STRING name, STRING dir, STRING thotSch, STRING thotDoc, STRING realName, STRING output, int firstPage, int lastPage, int nCopies, int hShift, int vShift, int userOrientation, int reduction, int nbPagesPerSheet, int suppFrame, int manualFeed, int blackAndWhite, int repaginate, STRING viewsToPrint, STRING cssToPrint, Document document)
 #else  /* __STDC__ */
-static void         Print (name, dir, thotSch, thotDoc, realName, output, firstPage, lastPage, nCopies, hShift, vShift, userOrientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, repaginate, viewsToPrint, document)
+static void         Print (name, dir, thotSch, thotDoc, realName, output, firstPage, lastPage, nCopies, hShift, vShift, userOrientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, repaginate, viewsToPrint, cssToPrint, document)
 STRING              name;
 STRING              dir;
 STRING              thotSch;
@@ -108,351 +108,477 @@ int                 manualFeed;
 int                 blackAndWhite;
 int                 repaginate;
 STRING              viewsToPrint;
+STRING              cssToPrint;
 Document            document;
 #endif /* __STDC__ */
 { 
-#  ifdef _WINDOWS
-   int                     printArgc = 0;
-   STRING                   printArgv [100];
+   STRING                  ptr;
+#ifdef _WINDOWS
+static LPPRINTER_INFO_5 pInfo5;
+   STRING                  printArgv [100];
    DWORD                   dwNeeded, dwReturned;
-   static LPPRINTER_INFO_5 pInfo5;
    HANDLE                  hLib;
    FARPROC                 ptrMainProc;
-#  else  /* !_WINDOWS */
-   CHAR_T             cmd[1024];
-   int              res;
-#  endif /* _WINDOWS */
-   int              i, j;
-   int              frame;
+   int                     printArgc = 0;
+#else  /* !_WINDOWS */
+   CHAR_T                  cmd[1024];
+   int                     res;
+#endif /* _WINDOWS */
+   int                     i, j;
+   int                     frame;
 
    /* initialize the print command */
-
-#  ifndef _WINDOWS
+   ptr = TtaGetEnvString (_LANG_EVAR_);
+#ifdef _WINDOWS
+   printArgv[printArgc] = TtaAllocString (ustrlen (BinariesDirectory) + 7);
+   ustrcpy (printArgv[printArgc], BinariesDirectory);
+   ustrcat (printArgv[printArgc], DIR_STR);
+   ustrcat (printArgv[printArgc], TEXT("print"));
+   printArgc++;   
+   printArgv[printArgc] = TtaAllocString (6) ;
+   ustrcpy (printArgv[printArgc], TEXT("-lang"));
+   printArgc++;
+   printArgv[printArgc] = TtaAllocString (ustrlen (ptr) + 1);
+   ustrcpy (printArgv[printArgc], ptr);
+   printArgc++;
+#else /* !_WINDOWS */
    sprintf (cmd, "%s/print", BinariesDirectory);
-#  endif /* !_WINDOWS */
+   ustrcat (cmd, " -lang ");
+   ustrcat (cmd, ptr);
+#endif /* !_WINDOWS */
 
-   if ((thotSch != NULL) && (thotSch[0] != EOS))
+   if (thotSch != NULL && thotSch[0] != EOS)
      {
-#      ifdef _WINDOWS
-	   printArgv [printArgc] = TtaAllocString (5) ;
-	   ustrcpy (printArgv [printArgc], TEXT("-sch"));
-	   printArgc++;
-	   printArgv [printArgc] = TtaAllocString (ustrlen (thotSch) + 1);
-	   ustrcpy (printArgv [printArgc], thotSch);
-	   printArgc++;
-#      else  /* !_WINDOWS */
+#ifdef _WINDOWS
+       printArgv[printArgc] = TtaAllocString (5) ;
+       ustrcpy (printArgv[printArgc], TEXT("-sch"));
+       printArgc++;
+       printArgv[printArgc] = TtaAllocString (ustrlen (thotSch) + 1);
+       ustrcpy (printArgv[printArgc], thotSch);
+       printArgc++;
+       printArgv[printArgc] = TtaAllocString (5);
+       ustrcpy (printArgv[printArgc], TEXT("-doc"));
+       printArgc++;
+       printArgv[printArgc] = TtaAllocString (ustrlen (thotDoc) + 1);
+       ustrcpy (printArgv[printArgc], thotDoc);
+       printArgc++;
+#else  /* !_WINDOWS */
        ustrcat (cmd, " -sch ");
        ustrcat (cmd, thotSch);
-#      endif /* _WINDOWS */
-     };
-
-   if ((thotDoc != NULL) && (thotDoc[0] != EOS))
-     {
-#      ifdef _WINDOWS
-	   printArgv [printArgc] = TtaAllocString (5);
-	   ustrcpy (printArgv [printArgc], TEXT("-doc"));
-	   printArgc++;
-	   printArgv [printArgc] = TtaAllocString (ustrlen (thotDoc) + 1);
-	   ustrcpy (printArgv [printArgc], thotDoc);
-	   printArgc++;
-#      else  /* _WINDOWS */
        ustrcat (cmd, " -doc ");
        ustrcat (cmd, thotDoc);
-#      endif /* _WINDOWS */
-     };
+#endif /* _WINDOWS */
+     }
 
    /* transmit the server name */
    if (servername && servername[0] != EOS)
      { 
-#      ifdef _WINDOWS
-	   printArgv [printArgc] = TtaAllocString (9);
-	   ustrcpy (printArgv [printArgc], TEXT("-display"));
-	   printArgc++;
-	   printArgv [printArgc] = TtaAllocString (ustrlen (servername) + 1);
-	   ustrcpy (printArgv [printArgc], servername);
-	   printArgc++;
-#      else  /* _WINDOWS */
+#ifdef _WINDOWS
+       printArgv[printArgc] = TtaAllocString (9);
+       ustrcpy (printArgv[printArgc], TEXT("-display"));
+       printArgc++;
+       printArgv[printArgc] = TtaAllocString (ustrlen (servername) + 1);
+       ustrcpy (printArgv[printArgc], servername);
+       printArgc++;
+#else  /* _WINDOWS */
        ustrcat (cmd, " -display ");
        ustrcat (cmd, servername);
-#      endif /* _WINDOWS */
+#endif /* _WINDOWS */
      }
 
    /* transmit the document name */
    if (realName)
      { 
-#      ifdef _WINDOWS
-	   printArgv [printArgc] = TtaAllocString (6);
-	   ustrcpy (printArgv [printArgc], TEXT("-name"));
-	   printArgc++;
-	   printArgv [printArgc] = TtaAllocString (ustrlen (realName) + 10);
-	   ustrcpy (printArgv [printArgc], realName);
-	   printArgc++;
-#      else  /* _WINDOWS */
+#ifdef _WINDOWS
+       printArgv[printArgc] = TtaAllocString (6);
+       ustrcpy (printArgv[printArgc], TEXT("-name"));
+       printArgc++;
+       printArgv[printArgc] = TtaAllocString (ustrlen (realName) + 10);
+       ustrcpy (printArgv[printArgc], realName);
+       printArgc++;
+#else  /* _WINDOWS */
        ustrcat (cmd, " -name ");
        ustrcat (cmd, realName);
-#      endif /* _WINDOWS */
+#endif /* _WINDOWS */
      }
 
    /* transmit the orientation (default value is portrait) */
    if (userOrientation != 0)
-#      ifdef _WINDOWS
-   {
-	   printArgv [printArgc] = TtaAllocString (11);
-       ustrcpy (printArgv [printArgc], TEXT("-landscape"));
-	   printArgc++;
-   }
-#      else  /* _WINDOWS */
+     {
+#ifdef _WINDOWS
+       printArgv[printArgc] = TtaAllocString (11);
+       ustrcpy (printArgv[printArgc], TEXT("-landscape"));
+       printArgc++;
+#else  /* _WINDOWS */
        ustrcat (cmd, " -landscape");
-#      endif /* _WINDOWS */
+#endif /* _WINDOWS */
+     }
 
    /* transmit the output command */
    if (PaperPrint)
-#      ifdef _WINDOWS
-   {
-	   printArgv [printArgc] = TtaAllocString (5);
-       ustrcpy (printArgv [printArgc], TEXT("-out"));
-	   printArgc++;
-   }
-#      else  /* _WINDOWS */
+     {
+#ifdef _WINDOWS
+       printArgv[printArgc] = TtaAllocString (5);
+       ustrcpy (printArgv[printArgc], TEXT("-out"));
+       printArgc++;
+#else  /* _WINDOWS */
        ustrcat (cmd, " -out \"");
-#      endif /* _WINDOWS */
+#endif /* _WINDOWS */
+     }
    else
-#      ifdef _WINDOWS
-   {
-	   printArgv [printArgc] = TtaAllocString (4);
-       ustrcpy (printArgv [printArgc], TEXT("-ps"));
-	   printArgc++;
-   }
-#      else  /* _WINDOWS */
+     {
+#ifdef _WINDOWS
+       printArgv[printArgc] = TtaAllocString (4);
+       ustrcpy (printArgv[printArgc], TEXT("-ps"));
+       printArgc++;
+#else  /* _WINDOWS */
        ustrcat (cmd, " -ps \"");
-#      endif /* _WINDOWS */
+#endif /* _WINDOWS */
+     }
 
    if (output[0] != EOS)
-#      ifdef _WINDOWS
-   {
-	   printArgv [printArgc] = TtaAllocString (ustrlen (output) + 1);
-       ustrcpy (printArgv [printArgc], output);
-	   printArgc++;
-   }
-#      else  /* _WINDOWS */
+     {
+#ifdef _WINDOWS
+       printArgv[printArgc] = TtaAllocString (ustrlen (output) + 1);
+       ustrcpy (printArgv[printArgc], output);
+       printArgc++;
+#else  /* _WINDOWS */
        ustrcat (cmd, output);
-#      endif /* _WINDOWS */
+       ustrcat (cmd, "\" ");
+#endif /* _WINDOWS */
+     }
    else
-#      ifdef _WINDOWS
-   {
-	   printArgv [printArgc] = TtaAllocString (3);
-       ustrcpy (printArgv [printArgc], TEXT("lp"));
-	   printArgc++;
-   }
-#      else  /* _WINDOWS */
+     {
+#ifdef _WINDOWS
+       printArgv[printArgc] = TtaAllocString (3);
+       ustrcpy (printArgv[printArgc], TEXT("lp"));
+       printArgc++;
+#else  /* _WINDOWS */
        ustrcat (cmd, "lp");
-   ustrcat (cmd, "\" ");
-#      endif /* _WINDOWS */
+       ustrcat (cmd, "\" ");
+#endif /* _WINDOWS */
+     }
 
    /* transmit visualization of empty boxes (default no) */
    if (suppFrame == 0)
-#      ifdef _WINDOWS
-   {
-	   printArgv [printArgc] = TtaAllocString (10);
-       ustrcpy (printArgv [printArgc], TEXT("-emptybox"));
-	   printArgc++;
-   }
-#      else  /* _WINDOWS */
+     {
+#ifdef _WINDOWS
+       printArgv[printArgc] = TtaAllocString (10);
+       ustrcpy (printArgv[printArgc], TEXT("-emptybox"));
+       printArgc++;
+#else  /* _WINDOWS */
        ustrcat (cmd, " -emptybox");
-#      endif /* _WINDOWS */
+#endif /* _WINDOWS */
+     }
 
    /* transmit black/white output (default no) */
    if (blackAndWhite != 0)
-#      ifdef _WINDOWS
-   {
-	   printArgv [printArgc] = TtaAllocString (4);
-       ustrcpy (printArgv [printArgc], TEXT("-bw"));
-	   printArgc++;
-   }
-#      else  /* _WINDOWS */
+     {
+#ifdef _WINDOWS
+       printArgv[printArgc] = TtaAllocString (4);
+       ustrcpy (printArgv[printArgc], TEXT("-bw"));
+       printArgc++;
+#else  /* _WINDOWS */
        ustrcat (cmd, " -bw");
-#      endif /* _WINDOWS */
+#endif /* _WINDOWS */
+     }
 
    /* transmit manualfeed (default no) */
    if (manualFeed != 0)
-#      ifdef _WINDOWS
-   {
-	   printArgv [printArgc] = TtaAllocString (12);
-       ustrcpy (printArgv [printArgc], TEXT("-manualfeed"));
-	   printArgc++;
-   }
-#      else  /* _WINDOWS */
+     {
+#ifdef _WINDOWS
+       printArgv[printArgc] = TtaAllocString (12);
+       ustrcpy (printArgv[printArgc], TEXT("-manualfeed"));
+       printArgc++;
+#else  /* _WINDOWS */
        ustrcat (cmd, " -manualfeed");
-#      endif /* _WINDOWS */
+#endif /* _WINDOWS */
+     }
 
    /* transmit repaginate (default no) */
    if (repaginate != 0)
-#      ifdef _WINDOWS
-   {
-	   printArgv [printArgc] = TtaAllocString (10);
-       ustrcpy (printArgv [printArgc], TEXT("-paginate"));
-	   printArgc++;
-   }
-#      else  /* _WINDOWS */
+     {
+#ifdef _WINDOWS
+       printArgv[printArgc] = TtaAllocString (10);
+       ustrcpy (printArgv[printArgc], TEXT("-paginate"));
+       printArgc++;
+#else  /* _WINDOWS */
        ustrcat (cmd, " -paginate");
-#      endif /* _WINDOWS */
+#endif /* _WINDOWS */
+     }
 
    /* transmit page format */
-#  ifdef _WINDOWS
-   printArgv [printArgc] = TtaAllocString (ustrlen (PageSize) + 3);
-   usprintf (printArgv [printArgc], TEXT("-P%s"), PageSize);
-   printArgc++;
-#  else  /* _WINDOWS */
-   ustrcat (cmd, " -P");
-   ustrcat (cmd, PageSize);
-#  endif /* _WINDOWS */
+   if (ustrcmp (PageSize, _A4PaperFormat_))
+     {
+#ifdef _WINDOWS
+       printArgv[printArgc] = TtaAllocString (ustrlen (PageSize) + 3);
+       usprintf (printArgv[printArgc], TEXT("-P%s"), PageSize);
+       printArgc++;
+#else  /* _WINDOWS */
+       ustrcat (cmd, " -P");
+       ustrcat (cmd, PageSize);
+#endif /* _WINDOWS */
+     }
 
    /* transmit window id */
-#  ifndef _WINDOWS 
+#ifndef _WINDOWS 
    i = ustrlen (cmd);
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
    if (FrRef[0] != 0)
-#     ifdef _WINDOWS
-   {
-      printArgv [printArgc] = TtaAllocString (20);
-      usprintf (printArgv [printArgc], TEXT("-w%ld"), FrRef[0]);
-      printArgc++;
-   }
-#     else  /* _WINDOWS */
-      sprintf (&cmd[i], " -w%ld", FrRef[0]);
-#     endif /* _WINDOWS */
+     {
+#ifdef _WINDOWS
+       printArgv[printArgc] = TtaAllocString (20);
+       usprintf (printArgv[printArgc], TEXT("-w%ld"), FrRef[0]);
+       printArgc++;
+#else  /* _WINDOWS */
+       sprintf (&cmd[i], " -w%ld", FrRef[0]);
+#endif /* _WINDOWS */
+     }
    else
      {
-	frame = 1;
-	while (frame <= MAX_FRAME && FrameTable[frame].FrDoc != document)
-	  frame++;
-	if (frame <= MAX_FRAME)
-#     ifdef _WINDOWS
-	{
-      printArgv [printArgc] = TtaAllocString (20);
-      usprintf (printArgv [printArgc], TEXT("-w%ld"), FrRef[frame]);
-      printArgc++;
-	}
-#     else  /* _WINDOWS */
-	  sprintf (&cmd[i], " -w%ld", FrRef[frame]);
-#     endif /* _WINDOWS */
-	else
-#     ifdef _WINDOWS
-	{
-      printArgv [printArgc] = TtaAllocString (20);
-      usprintf (printArgv [printArgc], TEXT("-w%ld"), FrRef[0]);
-      printArgc++;
-	}
-#     else  /* _WINDOWS */
-	  sprintf (&cmd[i], " -w%ld", FrRef[0]);
-#     endif /* _WINDOWS */
+       frame = 1;
+       while (frame <= MAX_FRAME && FrameTable[frame].FrDoc != document)
+	 frame++;
+       if (frame <= MAX_FRAME)
+	 {
+#ifdef _WINDOWS
+	   printArgv[printArgc] = TtaAllocString (20);
+	   usprintf (printArgv[printArgc], TEXT("-w%ld"), FrRef[frame]);
+	   printArgc++;
+#else  /* _WINDOWS */
+	   sprintf (&cmd[i], " -w%ld", FrRef[frame]);
+#endif /* _WINDOWS */
+	 }
+       else
+	 {
+#ifdef _WINDOWS
+	   printArgv[printArgc] = TtaAllocString (20);
+	   usprintf (printArgv[printArgc], TEXT("-w%ld"), FrRef[0]);
+	   printArgc++;
+#else  /* _WINDOWS */
+	   sprintf (&cmd[i], " -w%ld", FrRef[0]);
+#endif /* _WINDOWS */
+	 }
      }
 
    /* transmit values */
-#  ifdef _WINDOWS
-   printArgv [printArgc] = TtaAllocString (6);
-   ustrcpy (printArgv [printArgc], TEXT("-npps"));
-   printArgc++;
-   printArgv [printArgc] = TtaAllocString (5);
-   usprintf (printArgv [printArgc], TEXT("%d"), nbPagesPerSheet);
-   printArgc++;
-   printArgv [printArgc] = TtaAllocString (7);
-   usprintf (printArgv [printArgc], TEXT("-F%d"), firstPage);
-   printArgc++;
-   printArgv [printArgc] = TtaAllocString (7);
-   usprintf (printArgv [printArgc], TEXT("-L%d"), lastPage);
-   printArgc++;
-   printArgv [printArgc] = TtaAllocString (8);
-   usprintf (printArgv [printArgc], TEXT("-#%d"), nCopies);
-   printArgc++;
-   printArgv [printArgc] = TtaAllocString (7);
-   usprintf (printArgv [printArgc], TEXT("-H%d"), hShift);
-   printArgc++;
-   printArgv [printArgc] = TtaAllocString (7);
-   usprintf (printArgv [printArgc], TEXT("-V%d"), vShift);
-   printArgc++;
-   printArgv [printArgc] = TtaAllocString (7);
-   usprintf (printArgv [printArgc], TEXT("-%%%d"), reduction);
-   printArgc++;
-#  else  /* _WINDOWS */
-   i = ustrlen (cmd);
-   sprintf (&cmd[i], " -npps %d -F%d -L%d -#%d -H%d -V%d -%%%d ", nbPagesPerSheet, firstPage, lastPage, nCopies, hShift, vShift, reduction);
-#  endif /* _WINDOWS */
+   if (nbPagesPerSheet != 1)
+     {
+#ifdef _WINDOWS
+       printArgv[printArgc] = TtaAllocString (6);
+       ustrcpy (printArgv[printArgc], TEXT("-npps"));
+       printArgc++;
+       printArgv[printArgc] = TtaAllocString (5);
+       usprintf (printArgv[printArgc], TEXT("%d"), nbPagesPerSheet);
+       printArgc++;
+#else  /* _WINDOWS */
+       i = ustrlen (cmd);
+       sprintf (&cmd[i], " -npps %d ", nbPagesPerSheet);
+#endif /* _WINDOWS */
+     }
 
-   /* insert the flag -v before each view name */
+   if (firstPage > 1 || lastPage < 999)
+     {
+#ifdef _WINDOWS
+       printArgv[printArgc] = TtaAllocString (7);
+       usprintf (printArgv[printArgc], TEXT("-F%d"), firstPage);
+       printArgc++;
+       printArgv[printArgc] = TtaAllocString (7);
+       usprintf (printArgv[printArgc], TEXT("-L%d"), lastPage);
+       printArgc++;
+#else  /* _WINDOWS */
+   i = ustrlen (cmd);
+   sprintf (&cmd[i], " -F%d -L%d ", firstPage, lastPage);
+#endif /* _WINDOWS */
+     }
+
+   if (nCopies > 1)
+     {
+#ifdef _WINDOWS
+       printArgv[printArgc] = TtaAllocString (8);
+       usprintf (printArgv[printArgc], TEXT("-#%d"), nCopies);
+       printArgc++;
+#else  /* _WINDOWS */
+       i = ustrlen (cmd);
+       sprintf (&cmd[i], " -#%d ", nCopies);
+#endif /* _WINDOWS */
+     }
+
+   if (hShift != 0)
+     {
+#ifdef _WINDOWS
+       printArgv[printArgc] = TtaAllocString (7);
+       usprintf (printArgv[printArgc], TEXT("-H%d"), hShift);
+       printArgc++;
+#else  /* _WINDOWS */
+       i = ustrlen (cmd);
+       sprintf (&cmd[i], " -H%d ", hShift);
+#endif /* _WINDOWS */
+     }
+
+   if (vShift != 0)
+     {
+#ifdef _WINDOWS
+       printArgv[printArgc] = TtaAllocString (7);
+       usprintf (printArgv[printArgc], TEXT("-V%d"), vShift);
+       printArgc++;
+#else  /* _WINDOWS */
+       i = ustrlen (cmd);
+       sprintf (&cmd[i], " -V%d ", vShift);
+#endif /* _WINDOWS */
+     }
+
+   if (reduction != 100)
+     {
+#ifdef _WINDOWS
+       printArgv[printArgc] = TtaAllocString (7);
+       usprintf (printArgv[printArgc], TEXT("-%%%d"), reduction);
+       printArgc++;
+#else  /* _WINDOWS */
+       i = ustrlen (cmd);
+       sprintf (&cmd[i], " -%%%d ", reduction);
+#endif /* _WINDOWS */
+     }
+
+   /* transmit all view names */
    i = 0;
-#  ifndef _WINDOWS
-   j = ustrlen (cmd);
-#  endif /* _WINDOWS */
    /* skip leading spaces */ 
-   while(viewsToPrint[i] == SPACE)
+   while (viewsToPrint[i] == SPACE)
      i++;
    /* insert the first flag */
-   if(viewsToPrint[i] != EOS)
+   if (viewsToPrint[i] != EOS)
      {
-#      ifdef _WINDOWS
-       printArgv [printArgc] = TtaAllocString (3);
-       ustrcpy (printArgv [printArgc], TEXT("-v"));
+       /* insert the flag -v before each view name */
+#ifdef _WINDOWS
+       printArgv[printArgc] = TtaStrdup (TEXT("-v"));
        printArgc++;
-#      else  /* _WINDOWS */
+       printArgv[printArgc] = TtaAllocString (50);
+       j = 0;
+#else  /* _WINDOWS */
+       j = ustrlen (cmd);
+       cmd[j++] = SPACE;
        cmd[j++] = TEXT('-');
        cmd[j++] = TEXT('v');
        cmd[j++] = SPACE;
-#      endif /* _WINDOWS */
+#endif /* _WINDOWS */
      }
-   /* process from the first view name */
 
-#  ifdef _WINDOWS
-   printArgv [printArgc] = TtaAllocString (50);
-   j = 0;
-#  endif /* _WINDOWS */
-
-   while(viewsToPrint[i] != EOS)
+   while (viewsToPrint[i] != EOS)
      {
-        /* copy the character */
-#       ifdef _WINDOWS
-        if (viewsToPrint[i] != SPACE)
-           printArgv [printArgc][j++] = viewsToPrint[i];
-#       else /* _WINDOWS */
-        cmd[j++] = viewsToPrint[i];
-#       endif /* _WINDOWS */
-        /* is it a space? */
-        if(viewsToPrint[i] == SPACE)
-          {
-#           ifdef _WINDOWS
-            printArgv [printArgc][j++] = EOS;
-			printArgc++;
-#           endif /* _WINDOWS */
-            /* skip multiple spaces */
-            while(viewsToPrint[i+1] == SPACE)
-              i++;
-            /* if it is not the end, insert the flag */
-            if(viewsToPrint[i+1] != EOS)
-              {
-#               ifdef _WINDOWS
-                printArgv [printArgc] = TtaAllocString (3);
-                ustrcpy (printArgv [printArgc], TEXT("-v"));
-                printArgc++;
-                printArgv [printArgc] = TtaAllocString (50);
-                j = 0;
-#               else  /* _WINDOWS */
-                cmd[j++] = TEXT('-');
-                cmd[j++] = TEXT('v');
-                cmd[j++] = SPACE;
-#               endif /* _WINDOWS */
-              }
-          }
-        /* process next char */
-        i++;
-      }      
+       /* is it a space? */
+       if (viewsToPrint[i] == SPACE)
+	 {
+	   i++;
+	   /* skip multiple spaces */
+	   while (viewsToPrint[i] == SPACE)
+	     i++;
+	   if (viewsToPrint[i] != EOS)
+	     {
+	       /* insert the flag -v before each view name */
+#ifdef _WINDOWS
+	       printArgv[printArgc][j++] = EOS;
+	       printArgc++;
+	       printArgv[printArgc] = TtaStrdup (TEXT("-v"));
+	       printArgc++;
+	       printArgv[printArgc] = TtaAllocString (50);
+	       j = 0;
+#else  /* _WINDOWS */
+	       cmd[j++] = SPACE;
+	       cmd[j++] = TEXT('-');
+	       cmd[j++] = TEXT('v');
+	       cmd[j++] = SPACE;
+#endif /* _WINDOWS */
+	     }
+	 }
+       else
+	 {
+	   /* copy the character */
+#ifdef _WINDOWS
+	   printArgv[printArgc][j++] = viewsToPrint[i];
+#else /* _WINDOWS */
+	   cmd[j++] = viewsToPrint[i];
+#endif /* _WINDOWS */
+	   /* process next char */
+	   i++;
+	 }
+     }
+
+   /* transmit css files */
+   if (cssToPrint != NULL && cssToPrint[0] != EOS)
+     {
+       i = 0;
+       /* skip leading spaces */ 
+       while (cssToPrint[i] == SPACE)
+	 i++;
+       /* insert the first flag */
+       if (cssToPrint[i] != EOS)
+	 {
+	   /* insert the flag -v before each view name */
+#ifdef _WINDOWS
+	   printArgv[printArgc] = TtaStrdup (TEXT("-css"));
+	   printArgc++;
+	   printArgv[printArgc] = TtaAllocString (50);
+	   j = 0;
+#else  /* _WINDOWS */
+	   j = ustrlen (cmd);
+	   cmd[j++] = SPACE;
+	   cmd[j++] = TEXT('-');
+	   cmd[j++] = TEXT('c');
+	   cmd[j++] = TEXT('s');
+	   cmd[j++] = TEXT('s');
+	   cmd[j++] = SPACE;
+#endif /* _WINDOWS */
+	 }
+
+       while (cssToPrint[i] != EOS)
+	 {
+	   /* is it a space? */
+	   if (cssToPrint[i] == SPACE)
+	     {
+	       i++;
+	       /* skip multiple spaces */
+	       while (cssToPrint[i] == SPACE)
+		 i++;
+	       if (cssToPrint[i] != EOS)
+		 {
+#ifdef _WINDOWS
+		   printArgv[printArgc][j++] = EOS;
+		   printArgc++;
+		   printArgv[printArgc] = TtaStrdup (TEXT("-css"));
+		   printArgc++;
+		   printArgv[printArgc] = TtaAllocString (50);
+		   j = 0;
+#else  /* _WINDOWS */
+		   cmd[j++] = SPACE;
+		   cmd[j++] = TEXT('-');
+		   cmd[j++] = TEXT('c');
+		   cmd[j++] = TEXT('s');
+		   cmd[j++] = TEXT('s');
+		   cmd[j++] = SPACE;
+#endif /* _WINDOWS */
+		 }
+	     }
+	   else
+	     {
+	       /* copy the character */
+#ifdef _WINDOWS
+	       printArgv[printArgc][j++] = cssToPrint[i];
+#else /* _WINDOWS */
+	       cmd[j++] = cssToPrint[i];
+#endif /* _WINDOWS */
+	       /* process next char */
+	       i++;
+	     }
+	 }
+     }
 
    /* transmit the path or source file */
-#  ifdef _WINDOWS 
-   printArgv [printArgc] = TtaAllocString (11);
-   ustrcpy (printArgv [printArgc], TEXT("-removedir"));
+#ifdef _WINDOWS 
+   printArgv[printArgc] = TtaAllocString (11);
+   ustrcpy (printArgv[printArgc], TEXT("-removedir"));
    printArgc++;
-   printArgv [printArgc] = TtaAllocString (ustrlen (dir) + ustrlen (name) + 6);
-   usprintf  (printArgv [printArgc], TEXT("%s\\%s.PIV"), dir, name);
+   printArgv[printArgc] = TtaAllocString (ustrlen (dir) + ustrlen (name) + 6);
+   usprintf  (printArgv[printArgc], TEXT("%s\\%s.PIV"), dir, name);
    printArgc++;
    WIN_ReleaseDeviceContext ();
    if (buttonCommand || TtPrinterDC == 0) {
@@ -487,12 +613,12 @@ Document            document;
       EnableWindow (FrRef[currentFrame], TRUE);
    SetFocus (FrRef[currentFrame]);
    for (i = 0; i < printArgc; i++)
-       TtaFreeMemory (printArgv [i]);
+       TtaFreeMemory (printArgv[i]);
    if (TtPrinterDC) {
       DeleteDC (TtPrinterDC);
-	  TtPrinterDC = (HDC) 0;
+      TtPrinterDC = (HDC) 0;
    }
-#  else /* !_WINDOWS */
+#else /* !_WINDOWS */
    cmd[j] = EOS;
    i = ustrlen (cmd);
 
@@ -500,7 +626,7 @@ Document            document;
    res = system (cmd);
    if (res == -1)
       TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_ERROR_PS_TRANSLATION);
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -615,7 +741,53 @@ View                view;
 
    ustrcpy (viewsToPrint, TtaGetViewName (document, view));
    ustrcat (viewsToPrint, TEXT(" "));
-   TtaPrint (document, viewsToPrint);
+   TtaPrint (document, viewsToPrint, NULL);
+}
+
+/*----------------------------------------------------------------------
+   TtaGetPrintNames generates and returns a directory name to store
+   temporary files neede to start a print process.
+   The function creates the directory if it doesn't already exist.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void             TtaGetPrintNames (STRING *printDocName, STRING *printDirName)
+#else  /* __STDC__ */
+void             TtaGetPrintNames (printDocName, printDirName)
+STRING          *printDocName;
+STRING          *printDirName;
+#endif /* __STDC__ */
+{
+   ThotPid             pid = ThotPid_get ();
+   STRING              dirString;
+   int                 lg;
+
+   *printDocName = PrintDocName;
+   PrintDocName[0] = EOS;
+   *printDirName = PrintDirName;
+   PrintDirName[0] = EOS;
+
+   /* get the tmp directory from the registry */
+   dirString = TtaGetEnvString(_TMPDIR_EVAR_);
+   if (dirString != NULL) 
+     { 
+       if (!TtaCheckDirectory (dirString))
+	 TtaMakeDirectory (dirString);
+       ustrcpy (PrintDirName, dirString);
+       lg = ustrlen(PrintDirName);
+       if (PrintDirName[lg - 1] == DIR_SEP)
+         PrintDirName[--lg] = EOS;
+     }
+   else
+     {
+       ustrcpy (PrintDirName, TtaGetEnvString (TEXT("TMPDIR")));
+       lg = ustrlen (PrintDirName);
+     }
+
+   usprintf (PrintDocName, TEXT("Thot%ld"), (long) pid + numOfJobs);
+   ustrcpy (&PrintDirName[lg], DIR_STR);
+   ustrcat (&PrintDirName[lg], PrintDocName);
+   if (!TtaCheckDirectory (PrintDirName))
+     TtaMakeDirectory (PrintDirName);
 }
 
 /*----------------------------------------------------------------------
@@ -623,21 +795,20 @@ View                view;
    interface to the multiview print command.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaPrint (Document document, STRING viewNames)
+void                TtaPrint (Document document, STRING viewNames, STRING cssNames)
 #else  /* __STDC__ */
-void                TtaPrint (document, viewNames)
+void                TtaPrint (document, viewNames, cssNames)
 Document            document;
 STRING              viewNames;
-
+STRING              cssNames;
 #endif /* __STDC__ */
 {
    PtrDocument         pDoc;
-   PathBuffer          dirName,tmpDirName;
-   Name                docName,tmpDocName;
+   PathBuffer          dirName;
+   Name                docName;
    Name                savePres, newPres;
-   ThotPid             pid = ThotPid_get ();
-   STRING              dirString;
-   int                 orientation, lg;
+   STRING              tmpDirName, tmpDocName;
+   int                 orientation;
    ThotBool	       docReadOnly;
    ThotBool            ok;
 #  ifndef _WINDOWS 
@@ -659,48 +830,23 @@ STRING              viewNames;
      {
        TtaDisplayMessage(INFO, TtaGetMessage(LIB,TMSG_CHANGE_PSCH), newPres);
      }
-   /* recupere le repertoire tmp du registry */
-   dirString = NULL;
-   dirString = TtaGetEnvString(_TMPDIR_EVAR_);
-   if (dirString != NULL) 
-     { 
-       if (!TtaCheckDirectory(dirString))
-         {
-           TtaDisplayMessage(INFO, TtaGetMessage(LIB,TMSG_MISSING_DIR), dirString);
-           return;
-         }
-       ustrcpy (tmpDirName, dirString);
-       lg = ustrlen(tmpDirName);
-       if (tmpDirName[lg - 1] == DIR_SEP)
-         tmpDirName[--lg] = EOS;
-     }
-   else
-     {
-       ustrcpy (tmpDirName, TtaGetEnvString (TEXT("TMPDIR")));
-       lg = ustrlen (tmpDirName);
-     }
 
-   usprintf (tmpDocName, TEXT("Thot%ld"), (long) pid + numOfJobs);
-   ustrcpy(&tmpDirName[lg], DIR_STR);
-   ustrcat(&tmpDirName[lg], tmpDocName);
-#ifdef DEBUG
-   fprintf (stderr,"printmenu : temp dir %s \n",tmpDirName);
-#endif
-   TtaMakeDirectory (tmpDirName);
+   /* initialise temporary directory and temporary file names */
+   TtaGetPrintNames (&tmpDocName, &tmpDirName);
    numOfJobs++;
 
    ustrncpy (dirName, pDoc->DocDirectory, MAX_PATH);
    ustrncpy (docName, pDoc->DocDName, MAX_NAME_LENGTH);
    if (pFuncExportPrintDoc !=NULL)
      /* a export procedure is defined */
-       ok = (*pFuncExportPrintDoc)(document, tmpDocName, tmpDirName);
+       ok = (*pFuncExportPrintDoc)(document, PrintDocName, PrintDirName);
    else
      /* standard export */
      {
        docReadOnly = pDoc->DocReadOnly;
 
-       ustrcpy (pDoc->DocDirectory, tmpDirName);
-       ustrcpy (pDoc->DocDName, tmpDocName);
+       ustrcpy (pDoc->DocDirectory, PrintDirName);
+       ustrcpy (pDoc->DocDName, PrintDocName);
        pDoc->DocReadOnly = FALSE;
 
        ok = WriteDocument (pDoc, 5);
@@ -723,32 +869,34 @@ STRING              viewNames;
    /* make an automatic backup */
    if (ok)
      {
-	if (PaperPrint)
-	   Print (tmpDocName,
-		  tmpDirName,
-		  pDoc->DocSchemasPath,
-		  DocumentPath,
-		  docName, pPrinter,
-		  FirstPage, LastPage, NbCopies, 
-		  0, 0, orientation,
-		  Reduction, PagesPerSheet, TRUE,
-		  (int) ManualFeed, 0,
-		  Paginate,
-		  viewNames,
-		  document);
-	else if (PSdir[0] != EOS)
-	     Print (tmpDocName,
-		  tmpDirName,
-		  pDoc->DocSchemasPath,
-		  DocumentPath,
-		  docName, PSdir,
-		  FirstPage, LastPage, NbCopies,
-		  0, 0, orientation,
-		  Reduction, PagesPerSheet, TRUE,
-		  (int) ManualFeed, 0,
-		  Paginate,
-		  viewNames,
-		  document);
+       if (PaperPrint)
+	 Print (PrintDocName,
+		PrintDirName,
+		pDoc->DocSchemasPath,
+		DocumentPath,
+		docName, pPrinter,
+		FirstPage, LastPage, NbCopies, 
+		0, 0, orientation,
+		Reduction, PagesPerSheet, TRUE,
+		(int) ManualFeed, 0,
+		Paginate,
+		viewNames,
+		cssNames,
+		document);
+       else if (PSdir[0] != EOS)
+	 Print (PrintDocName,
+		PrintDirName,
+		pDoc->DocSchemasPath,
+		DocumentPath,
+		docName, PSdir,
+		FirstPage, LastPage, NbCopies,
+		0, 0, orientation,
+		Reduction, PagesPerSheet, TRUE,
+		(int) ManualFeed, 0,
+		Paginate,
+		viewNames,
+		cssNames,
+		document);
      }
    /* restores the presentation scheme */
    ustrcpy (pDoc->DocSSchema->SsDefaultPSchema, savePres);
@@ -817,7 +965,7 @@ int value;
 	 TtaError(ERR_invalid_parameter);
        break;
      case PP_ManualFeed:
-       if(value == PP_ON)
+       if (value == PP_ON)
 	 ManualFeed = TRUE;
        else if (value == PP_OFF)
 	 ManualFeed = FALSE;
@@ -1078,7 +1226,7 @@ STRING              txt;
 	      /* the other options are not taken into account without this
 		 confirmation */
 	      PaperPrint = NewPaperPrint;
-	      if(ThotLocalActions[T_rextprint]!=NULL)
+	      if (ThotLocalActions[T_rextprint]!=NULL)
 		(*ThotLocalActions[T_rextprint])(ref, val, txt);
 	      break;
 	    default:
@@ -1086,7 +1234,7 @@ STRING              txt;
 	    }
 	  break;
 	default:
-	  if(ThotLocalActions[T_rextprint]!=NULL)
+	  if (ThotLocalActions[T_rextprint]!=NULL)
 	    (*ThotLocalActions[T_rextprint])(ref, val, txt);
 	  break;
 	}

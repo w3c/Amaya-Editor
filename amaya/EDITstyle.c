@@ -23,6 +23,7 @@
 #ifdef GRAPHML
 #include "GraphML.h"
 #endif
+#include "fetchHTMLname.h"
 
 #include "AHTURLTools_f.h"
 #include "HTMLimage_f.h"

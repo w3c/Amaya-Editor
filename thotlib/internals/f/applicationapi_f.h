@@ -14,6 +14,7 @@ extern void GetViewInfo ( Document document,
                           ThotBool * assoc );
 extern int GetWindowNumber ( Document document,
                              View view );
+extern ThotBool TtaIsPrinting ( void );
 extern ThotWidget TtaGetViewFrame ( Document document,
                                     View view );
 extern void InitErrorHandler ( void );
@@ -35,6 +36,7 @@ extern void GetViewInfo (/* Document document,
                             ThotBool * assoc */);
 extern int GetWindowNumber (/* Document document,
                                View view */);
+extern ThotBool TtaIsPrinting (/* void */);
 extern ThotWidget TtaGetViewFrame (/* Document document,
                                       View view */);
 extern void InitErrorHandler (/* void */);

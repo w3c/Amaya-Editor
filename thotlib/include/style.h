@@ -19,7 +19,7 @@
 
 #ifndef __STYLE_H__
 #define __STYLE_H__
-#define MAX_ANCESTORS 10
+#define MAX_ANCESTORS 5
 
 /* two different contexts for generic and specific presentation */
 typedef struct struct_GenericContext
@@ -32,13 +32,10 @@ typedef struct struct_GenericContext
       * below is the context description.
       */
      int                   box;	     /* specific presentation box if any */
-     int                   attr;     /* or attribute */
-     int                   attrval;  /* and the corresponding value */
-     STRING                class;    /* class or box name */
-     int                   classattr;/* class attribute */
-     int                   attrelem; /* elem porting the attribute */
-     int                   ancestors[MAX_ANCESTORS];	/* ancestors type */
-     int                   ancestors_nb[MAX_ANCESTORS];	/* number for each */
+     int                   name[MAX_ANCESTORS]; /* ancestors type */
+     int                   names_nb[MAX_ANCESTORS]; /* number of occurences */
+     int                   attrType[MAX_ANCESTORS]; /* type of the attribute */
+     STRING                attrText[MAX_ANCESTORS]; /* attr. or box name */
   }
 GenericContextBlock, *GenericContext;
 

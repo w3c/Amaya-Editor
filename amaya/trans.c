@@ -17,6 +17,7 @@
 #include "message.h"
 #include "trans.h"
 #include "tree.h"
+#include "fetchHTMLname.h"
 
 #include "HTMLimage_f.h"
 #include "XMLparser_f.h"

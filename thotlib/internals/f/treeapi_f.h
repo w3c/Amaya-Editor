@@ -43,6 +43,8 @@ extern void TtaInsertElement ( ElementType elementType,
                                Document document );
 extern void TtaRemoveTree ( Element element,
                             Document document );
+extern void TtaSetElementLineNumber ( Element element,
+                                      int nb );
 extern void TtaSetAccessRight ( Element element,
                                 AccessRight right,
                                 Document document );
@@ -79,6 +81,7 @@ extern void TtaGiveTypeFromOriginalName ( ElementType * elementType,
 extern int TtaSameTypes ( ElementType type1,
                           ElementType type2 );
 extern STRING TtaGetElementLabel ( Element element );
+extern int TtaGetElementLineNumber ( Element element );
 extern int TtaIsConstant ( ElementType elementType );
 extern int TtaIsLeaf ( ElementType elementType );
 extern Construct TtaGetConstructOfType ( ElementType elementType );
@@ -157,6 +160,8 @@ extern void TtaInsertElement (/* ElementType elementType,
                                  Document document */);
 extern void TtaRemoveTree (/* Element element,
                               Document document */);
+extern void TtaSetElementLineNumber (/* Element element,
+                                        int nb */);
 extern void TtaSetAccessRight (/* Element element,
                                   AccessRight right,
                                   Document document */);
@@ -193,6 +198,7 @@ extern void TtaGiveTypeFromOriginalName (/* ElementType * elementType,
 extern int TtaSameTypes (/* ElementType type1,
                             ElementType type2 */);
 extern STRING TtaGetElementLabel (/* Element element */);
+extern int TtaGetElementLineNumber (/* Element element */);
 extern int TtaIsConstant (/* ElementType elementType */);
 extern int TtaIsLeaf (/* ElementType elementType */);
 extern Construct TtaGetConstructOfType (/* ElementType elementType */);

@@ -12,7 +12,7 @@
 #define GRAPH_TYPE 2
 
 #define MaxTypeNameLength 16
-typedef UCHAR_T typeName[MaxTypeNameLength];
+typedef CHAR_T typeName[MaxTypeNameLength];
 
 typedef struct _ElemMapping
   {		/* mapping of a XML element */

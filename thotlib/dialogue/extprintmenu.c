@@ -213,15 +213,15 @@ STRING              txt;
 	  if( LesVuesImprimables[EntreesMenuVuesAImprimer[i]-1].VdOpen )
 	    {
 	      okprint=TRUE;
-	      ustrcat(BufMenu,LesVuesImprimables[EntreesMenuVuesAImprimer[i]-1].VdViewName);
-	      ustrcat(BufMenu,TEXT(" "));
+	      ustrcat (BufMenu,LesVuesImprimables[EntreesMenuVuesAImprimer[i]-1].VdViewName);
+	      ustrcat (BufMenu,TEXT(" "));
 	    }
 	}
       if(okprint)
 	{
-	  i=ustrlen(BufMenu);
+	  i=ustrlen (BufMenu);
 	  BufMenu[i-1]=EOS;
-	  TtaPrint(docPrint,BufMenu);
+	  TtaPrint (docPrint, BufMenu, NULL);
 	}
       break;
 

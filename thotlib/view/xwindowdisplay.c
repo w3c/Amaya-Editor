@@ -385,6 +385,7 @@ int                 shadow;
 	
          XDrawString (TtDisplay, w, TtLineGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin + FontBase (font), ptcar, lg);
 #ifdef STEPHANIE
+	 printf ("font->ascent %d,  fontheight %d \n", FontAscent(font), ((XFontStruct *) font)->descent, FontHeight (font));
  printf (" XDrawString (TtDisplay, w, TtLineGC, x:%d + FrameTable[frame].FrLeftMargin:%d, y:%d + FrameTable[frame].FrTopMargin:%d + FontBase (font):%d, ptcar:%s, lg:%d)\n", x,FrameTable[frame].FrLeftMargin, y,FrameTable[frame].FrTopMargin,FontBase (font), ptcar,lg);
 #endif
          TtaFreeMemory (ptcar);

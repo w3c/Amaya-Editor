@@ -106,6 +106,117 @@ CSSInfoPtr      css;
 
 
 /*----------------------------------------------------------------------
+  CssToPrint stores CSS files to be sent to print in the print
+  directory.
+  Return the list of temporary file names. The returned string should
+  be freed by the caller.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+STRING              CssToPrint (Document doc, STRING printdir)
+#else
+STRING              CssToPrint (doc, temdir)
+Document            doc;
+STRING              printdir;
+#endif
+{
+  Element             el, head;
+  ElementType         elType;
+  FILE*               file;
+  CSSInfoPtr          css;
+  STRING              ptr, text;
+  CHAR_T              tempfile[MAX_LENGTH];
+  CHAR_T              tempdir[MAX_LENGTH];
+  int                 length, i;
+
+  css = CSSList;
+  file = NULL;
+  ptr = NULL;
+  length = 0;
+  if (doc && printdir)
+    {
+      while (css != NULL)
+	{
+	  if (css->documents[doc])
+	    if ( css->category == CSS_DOCUMENT_STYLE)
+	      /* that external CSS file concerns the document */
+	      length += ustrlen (printdir) + 5;
+	    else
+	      /* that external CSS file concerns the document */
+	      length += ustrlen (css->localName) + 1;
+	  css = css->NextCSS;
+	}
+      if (length)
+	{
+	  ptr = TtaAllocString (length);
+	  length = 0;
+
+	  /* Add first the list of external CSS files */
+	  css = CSSList;
+	  while (css != NULL)
+	    {
+	      if (css->documents[doc] &&
+		  css->category != CSS_DOCUMENT_STYLE)
+		{
+		  /* add that file name to the list */
+		  ustrcpy (&ptr[length], css->localName);
+		  length += ustrlen (css->localName);
+		  ptr[length++] = SPACE;
+		}
+	      css = css->NextCSS;
+	    }
+
+	  /* look for style elements within the document */
+	  el = TtaGetMainRoot (doc);
+	  elType = TtaGetElementType (el);
+	  elType.ElTypeNum = HTML_EL_HEAD;
+	  head = TtaSearchTypedElement (elType, SearchForward, el);
+	  elType.ElTypeNum = HTML_EL_STYLE_;
+	  el = head;
+	  while (el != NULL)
+	    {
+	      el = TtaSearchTypedElementInTree (elType, SearchForward, head, el);
+	      if (el)
+		{
+		  if (!file)
+		    {
+		      /* build the temporary file name */
+		      i = ustrlen (printdir);
+		      ustrcpy (tempfile, printdir);
+		      tempfile[i++] = DIR_SEP;
+		      ustrcpy (&tempfile[i], "css");
+		      file = ufopen (tempfile, _WriteMODE_);
+		      if (file)
+			{
+			  /* add that file name to the list */
+			  ustrcpy (&ptr[length], tempfile);
+			  length += ustrlen (tempfile);
+			  ptr[length++] = SPACE;
+			}
+		    }
+		  if (file)
+		    {
+		      /* insert the style text into the temporary file */
+		      text = GetStyleContents (el);
+		      if (text)
+			{
+			  fprintf (file, text);
+			  TtaFreeMemory (text);
+			}
+		    }
+		}
+	    }
+	  /* now close the ptr string */
+	  ptr[length++] = EOS;
+	}
+    }
+  if (file)
+    /* close the new css file */
+    fclose (file);
+  return ptr;
+}
+
+
+/*----------------------------------------------------------------------
    Callback procedure for dialogue events.                            
   ----------------------------------------------------------------------*/
 #ifdef __STDC__

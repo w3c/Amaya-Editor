@@ -339,9 +339,10 @@ STRING          localName;
       css->localName = TtaStrdup (localName);
       css->url = TtaStrdup (url);
       css->category = category;
+
+      /* that CSS is only used by the document docRef */
       for (i = 0; i < DocumentTableLength; i++)
 	css->documents[i] = FALSE;
-
       /* store information about this docRef */
       css->documents[docRef] = TRUE;
       css->infos = NULL;
@@ -627,7 +628,7 @@ CSSInfoPtr          css;
   int                 local = FALSE;
   ThotBool            import = (css != NULL);
 
-  if (TtaGetViewFrame (doc, 1) != 0)
+  if (TtaGetViewFrame (doc, 1) != 0 || TtaIsPrinting ())
     {
       if (!LoadRemoteStyleSheet (url, doc, el, css, tempURL, tempfile))
 	{

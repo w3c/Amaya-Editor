@@ -12,6 +12,14 @@ extern int MapGI ( STRING gi,
 extern void GIType ( STRING gi,
                      ElementType *elType,
                      Document doc );
+extern AttributeMapping *MapAttr ( STRING Attr,
+                                   SSchema *schema,
+                                   int elemEntry,
+                                   Document doc );
+extern void MapHTMLAttribute ( STRING Attr,
+                               AttributeType *attrType,
+                               STRING elementName,
+                               Document doc );
 
 #else /* __STDC__ */
 
@@ -21,6 +29,14 @@ extern int MapGI (/* STRING gi,
 extern void GIType (/* STRING gi,
                        ElementType *elType,
                        Document doc */);
+extern AttributeMapping *MapAttr (/* STRING Attr,
+                                     SSchema *schema,
+                                     int elemEntry,
+                                     Document doc */);
+extern void MapHTMLAttribute (/* STRING Attr,
+                                 AttributeType *attrType,
+                                 STRING elementName,
+                                 Document doc */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

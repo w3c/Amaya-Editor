@@ -3769,7 +3769,7 @@ ThotBool            shareRef;
 					pDocCopy, pEl, checkAttr, shareRef);
 			       if (pC2 != NULL)
 				 {
-				    /* temporarily breaks the lien with future parent to be able
+				    /* temporarily breaks the link with future parent to be able
 				       to compute the volume */
 				    pSP = pEl->ElParent;
 				    pEl->ElParent = NULL;

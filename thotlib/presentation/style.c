@@ -52,24 +52,19 @@ Name               *boxname;
 
   buffer[0] = 0;
   len = 0;
-  for (i = 0; i < MAX_ANCESTORS; i++)
+  for (i = 0; i < MAX_ANCESTORS && ctxt->name[i]; i++)
     {
-      if (ctxt->ancestors[i] == 0)
-	break;
-      if (ctxt->ancestors_nb[i] > 1)
-	usprintf (&buffer[len], TEXT("%d:%d/"), ctxt->ancestors[i], ctxt->ancestors_nb[i]);
+      if (ctxt->names_nb[i] > 1)
+	usprintf (&buffer[len], TEXT("%d:%d/"), ctxt->name[i], ctxt->names_nb[i]);
       else
-	usprintf (&buffer[len], TEXT("%d/"), ctxt->ancestors[i]);
+	usprintf (&buffer[len], TEXT("%d/"), ctxt->name[i]);
       len = ustrlen (buffer);
     }
   if (ctxt->type)
     usprintf (&buffer[len], TEXT("%d,"), ctxt->type);
   len = ustrlen (buffer);
-  if (ctxt->attr)
-    usprintf (&buffer[len], TEXT("%d:%d,"), ctxt->attr, ctxt->attrval);
-  len = ustrlen (buffer);
-  if (ctxt->class)
-    usprintf (&buffer[len], TEXT("%d.%s,"), ctxt->classattr, ctxt->class);
+  if (ctxt->attrType[0])
+    usprintf (&buffer[len], TEXT("%d.%s,"), ctxt->attrType[0], ctxt->attrText[0]);
   len = ustrlen (buffer);
 
   ustrncpy ((STRING) boxname, buffer, sizeof (Name));
@@ -87,32 +82,15 @@ PtrPSchema          tsch;
 GenericContext      ctxt;
 #endif /* !__STDC__ */
 {
-  int                 i, j, tmp, nb_ancestors;
+  int                 i;
   Name                boxname;
 
-  /* first sort the ancestors list */
-  for (i = 0; i < MAX_ANCESTORS; i++)
-    if (ctxt->ancestors[i] == 0)
-      break;
-  nb_ancestors = i;
-  for (i = 0; i < nb_ancestors; i++)
-    for (j = i + 1; j < nb_ancestors; j++)
-      if (ctxt->ancestors[i] > ctxt->ancestors[j])
-	{
-	  tmp = ctxt->ancestors[i];
-	  ctxt->ancestors[i] = ctxt->ancestors[j];
-	  ctxt->ancestors[j] = tmp;
-	  tmp = ctxt->ancestors_nb[i];
-	  ctxt->ancestors_nb[i] = ctxt->ancestors_nb[j];
-	  ctxt->ancestors_nb[j] = tmp;
-	}
-  
   BuildBoxName (ctxt, &boxname);
   
   /* search for the BOXE in the Presentation Schema */
   for (i = 1; i <= tsch->PsNPresentBoxes; i++)
     {
-      if (!ustrcmp (ctxt->class, tsch->PsPresentBox[i - 1].PbName))
+      if (!ustrcmp (ctxt->attrText[0], tsch->PsPresentBox[i - 1].PbName))
 	{
 	  ctxt->box = i;
 	  return (tsch->PsPresentBox[i - 1].PbFirstPRule);
@@ -335,25 +313,9 @@ GenericContext      ctxt;
 #endif /* !__STDC__ */
 {
   PresentationBox    *box;
-  int                 i, j, tmp, nb_ancestors;
+  int                 i;
   Name                boxname;
 
-  /* first sort the ancestors list */
-  for (i = 0; i < MAX_ANCESTORS; i++)
-    if (ctxt->ancestors[i] == 0)
-      break;
-  nb_ancestors = i;
-  for (i = 0; i < nb_ancestors; i++)
-    for (j = i + 1; j < nb_ancestors; j++)
-      if (ctxt->ancestors[i] > ctxt->ancestors[j])
-	{
-	  tmp = ctxt->ancestors[i];
-	  ctxt->ancestors[i] = ctxt->ancestors[j];
-	  ctxt->ancestors[j] = tmp;
-	  tmp = ctxt->ancestors_nb[i];
-	  ctxt->ancestors_nb[i] = ctxt->ancestors_nb[j];
-	  ctxt->ancestors_nb[j] = tmp;
-	}
   BuildBoxName (ctxt, &boxname);
 
   /* search for the BOXE in the Presentation Schema */
@@ -695,7 +657,7 @@ AttributePres     **attrblock;
   PtrSSchema          pSS;
   AttributePres      *attrs;
   int                 nbrules;
-  int                 i, j;
+  int                 i, j, val;
 
   /* select the right attribute */
   attrs = tsch->PsAttrPRule[attrType - 1];
@@ -709,11 +671,15 @@ AttributePres     **attrblock;
       switch (pSS->SsAttribute[attrType].AttrType)
 	{
 	case AtNumAttr:
-	  if (ctxt->attrval)
+	  if (ctxt->attrText[0])
+	    usscanf (ctxt->attrText[0], TEXT("%d"), &val);
+	  else
+	    val = 0;
+	  if (val)
 	    for (j = 0; j < attrs->ApNCases && !found ; j++)
 	      if (attrs->ApCase[j].CaComparType == ComparConstant &&
-		  attrs->ApCase[j].CaLowerBound == ctxt->attrval &&
-		  attrs->ApCase[j].CaUpperBound == ctxt->attrval)
+		  attrs->ApCase[j].CaLowerBound == val &&
+		  attrs->ApCase[j].CaUpperBound == val)
 		found = attrs->ApCase[j].CaFirstPRule;
 	  else	    
 	    for (j = 0; j < attrs->ApNCases && !found ; j++)
@@ -723,17 +689,21 @@ AttributePres     **attrblock;
 		found = attrs->ApCase[j].CaFirstPRule;
 	  break;
 	case AtTextAttr:
-	  if (ctxt->class && !ustrcmp (attrs->ApString, ctxt->class))
+	  if (ctxt->attrText[0] && !ustrcmp (attrs->ApString, ctxt->attrText[0]))
 	    found = attrs->ApTextFirstPRule;
-	  else if (!ctxt->class && attrs->ApString[0] == EOS)
+	  else if (!ctxt->attrText[0] && attrs->ApString[0] == EOS)
 	    found = attrs->ApTextFirstPRule;
 	  break;
 	case AtReferenceAttr:
 	  found = attrs->ApRefFirstPRule;
 	  break;
 	case AtEnumAttr:
-	  if (ctxt->attrval)
-	    found = attrs->ApEnumFirstPRule[ctxt->attrval - 1];
+	  if (ctxt->attrText[0])
+	    usscanf (ctxt->attrText[0], TEXT("%d"), &val);
+	  else
+	    val = 0;
+	  if (val)
+	    found = attrs->ApEnumFirstPRule[val - 1];
 	  else
 	    found = attrs->ApEnumFirstPRule[0];
 	  break;
@@ -760,7 +730,7 @@ GenericContext      ctxt;
   AttributePres      *attrs, *new;
   PtrSSchema          pSS;
   PtrPRule            found;
-  int                 nbrules;
+  int                 nbrules, val;
 
   pSS = (PtrSSchema) ctxt->schema;
   found = PresAttrRuleSearch (tsch, attrType, ctxt, &attrs);
@@ -781,11 +751,15 @@ GenericContext      ctxt;
 	{
 	case AtNumAttr:
 	  new->ApNCases = 1;
-	  if (ctxt->attrval)
+	  if (ctxt->attrText[0])
+	    usscanf (ctxt->attrText[0], TEXT("%d"), &val);
+	  else
+	    val = 0;
+	  if (val)
 	    {
 	      new->ApCase[0].CaComparType = ComparConstant;
-	      new->ApCase[0].CaLowerBound = ctxt->attrval;
-	      new->ApCase[0].CaUpperBound = ctxt->attrval;
+	      new->ApCase[0].CaLowerBound = val;
+	      new->ApCase[0].CaUpperBound = val;
 	      new->ApCase[0].CaFirstPRule = NULL;
 	    }
 	  else
@@ -798,8 +772,8 @@ GenericContext      ctxt;
 	  return (&new->ApCase[0].CaFirstPRule);
 	  break;
 	case AtTextAttr:
-	  if (ctxt->class)
-	    ustrcpy (new->ApString, ctxt->class);
+	  if (ctxt->attrText[0])
+	    ustrcpy (new->ApString, ctxt->attrText[0]);
 	  else
 	    attrs->ApString[0] = EOS;
 	  new->ApTextFirstPRule = NULL;
@@ -810,10 +784,14 @@ GenericContext      ctxt;
 	  return (&new->ApRefFirstPRule);
 	  break;
 	case AtEnumAttr:
-	  if (ctxt->attrval)
+	  if (ctxt->attrText[0])
+	    usscanf (ctxt->attrText[0], TEXT("%d"), &val);
+	  else
+	    val = 0;
+	  if (val)
 	    {
-	      new->ApEnumFirstPRule[ctxt->attrval - 1] = NULL;
-	      return (&new->ApEnumFirstPRule[ctxt->attrval - 1]);
+	      new->ApEnumFirstPRule[val - 1] = NULL;
+	      return (&new->ApEnumFirstPRule[val - 1]);
 	    }
 	  else
 	    {
@@ -836,8 +814,12 @@ GenericContext      ctxt;
 	return (&attrs->ApRefFirstPRule);
 	break;
       case AtEnumAttr:
-	if (ctxt->attrval)
-	  return (&attrs->ApEnumFirstPRule[ctxt->attrval - 1]);
+	  if (ctxt->attrText[0])
+	    usscanf (ctxt->attrText[0], TEXT("%d"), &val);
+	  else
+	    val = 0;
+	if (val)
+	  return (&attrs->ApEnumFirstPRule[val - 1]);
 	else
 	  return (&attrs->ApEnumFirstPRule[0]);
 	break;
@@ -855,19 +837,17 @@ GenericContext      ctxt;
   If pres is zero, we don't test on the kind of rule ...
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int          TstRuleContext (PtrPRule rule, GenericContext ctxt,
-                                    PRuleType pres)
+static int      TstRuleContext (PtrPRule rule, GenericContext ctxt, PRuleType pres)
 #else  /* __STDC__ */
-static int          TstRuleContext (rule, ctxt, pres)
-PtrPRule            rule;
-GenericContext      ctxt;
-PRuleType           pres;
-
+static int      TstRuleContext (rule, ctxt, pres)
+PtrPRule        rule;
+GenericContext  ctxt;
+PRuleType       pres;
 #endif /* !__STDC__ */
 {
    PtrCondition        cond;
-   int                 i, j, tmp;
-   int                 nb_ancestors;
+   int                 i, j;
+   int                 nb_names;
 
    /* first sort the rule condition list ... */
    SortConds (rule);
@@ -878,52 +858,34 @@ PRuleType           pres;
    if (pres && rule->PrType != pres)
       return (0);
 
-   /* first sort the ancestors list */
-   for (i = 0; i < MAX_ANCESTORS; i++)
-      if (ctxt->ancestors[i] == 0)
-	 break;
-   nb_ancestors = i;
-   for (i = 0; i < nb_ancestors; i++)
-      for (j = i + 1; j < nb_ancestors; j++)
-	 if (ctxt->ancestors[i] > ctxt->ancestors[j])
-	   {
-	      tmp = ctxt->ancestors[i];
-	      ctxt->ancestors[i] = ctxt->ancestors[j];
-	      ctxt->ancestors[j] = tmp;
-	      tmp = ctxt->ancestors_nb[i];
-	      ctxt->ancestors_nb[i] = ctxt->ancestors_nb[j];
-	      ctxt->ancestors_nb[j] = tmp;
-	   }
-
    /* scan all the conditions associated to a rule */
-   if (ctxt->classattr != 0)
+   if (ctxt->attrType[0] != 0)
      {
 	/* should be at the beginning as effect of sorting but ... */
 	while (cond != NULL && cond->CoCondition != PcElemType)
 	   cond = cond->CoNextCondition;
-	if (ctxt->attrelem != 0 && cond == NULL)
-	   return (0);
-	if (ctxt->attrelem == 0 && cond != NULL)
-	   return (0);
-	if (ctxt->attrelem != 0 &&
-	    cond->CoTypeElAttr != ctxt->attrelem)
+	if (ctxt->type != 0 || cond != NULL)
 	   return (0);
 	cond = rule->PrCond;
      }
 
+   nb_names = 0;
    /* scan all the ancestors conditions associated to a rule */
-   while ((cond != NULL) && (cond->CoCondition < PcWithin))
-      cond = cond->CoNextCondition;
+   while (cond != NULL && cond->CoCondition < PcWithin)
+     {
+       nb_names++;
+       cond = cond->CoNextCondition;
+     }
 
-   for (i = 0; i < nb_ancestors; i++)
+   for (i = 0; i < nb_names; i++)
      {
 	if (cond == NULL)
 	   return (0);
 	if (cond->CoCondition != PcWithin)
 	   return (0);
-	if (ctxt->ancestors[i] != cond->CoTypeAncestor)
+	if (ctxt->name[i] != cond->CoTypeAncestor)
 	   return (0);
-	if (ctxt->ancestors_nb[i] != cond->CoRelation)
+	if (ctxt->names_nb[i] != cond->CoRelation)
 	   return (0);
 	cond = cond->CoNextCondition;
      }
@@ -954,10 +916,8 @@ PtrPRule          **chain;
   /* select the good starting point depending on the context */
   if (ctxt->box != 0)
     *chain = BoxRuleInsert (tsch, ctxt);
-  else if (ctxt->class)
-    *chain = PresAttrRuleInsert (tsch, ctxt->classattr, ctxt);
-  else if (ctxt->attr)
-    *chain = PresAttrRuleInsert (tsch, ctxt->attr, ctxt);
+  else if (ctxt->attrType[0])
+    *chain = PresAttrRuleInsert (tsch, ctxt->attrType[0], ctxt);
   else if (ctxt->type != 0)
     *chain = &tsch->PsElemPRule[ctxt->type - 1];
   else
@@ -1018,25 +978,7 @@ unsigned int        extra;
 {
   PtrPRule           *chain;
   PtrPRule            cur, pRule = NULL;
-  int                 i, j, tmp, nb_ancestors;
-
-  /* first sort the ancestors list */
-  for (i = 0; i < MAX_ANCESTORS; i++)
-    if (ctxt->ancestors[i] == 0)
-      break;
-
-  nb_ancestors = i;
-  for (i = 0; i < nb_ancestors; i++)
-    for (j = i + 1; j < nb_ancestors; j++)
-      if (ctxt->ancestors[i] > ctxt->ancestors[j])
-	{
-	  tmp = ctxt->ancestors[i];
-	  ctxt->ancestors[i] = ctxt->ancestors[j];
-	  ctxt->ancestors[j] = tmp;
-	  tmp = ctxt->ancestors_nb[i];
-	  ctxt->ancestors_nb[i] = ctxt->ancestors_nb[j];
-	  ctxt->ancestors_nb[j] = tmp;
-	}
+  int                 i;
 
   /* Search presentation rule */
   cur = PresRuleSearch (tsch, ctxt, pres, extra, &chain);
@@ -1058,13 +1000,13 @@ unsigned int        extra;
 	  pRule->PrSpecifAttrSSchema = NULL;
       
 	  /* In case of an attribute rule, add the Attr condition */
-	  if ((ctxt->attr || ctxt->class) && ctxt->attrelem != 0)
-	    PresRuleAddAttrCond (pRule, ctxt->attrelem);
+	  if (ctxt->attrType[0] && ctxt->type != 0)
+	    PresRuleAddAttrCond (pRule, ctxt->type);
 	  /* add the ancesters conditions ... */
 	  i = 0;
-	  while (i < MAX_ANCESTORS && ctxt->ancestors[i] != 0)
+	  while (i < MAX_ANCESTORS && ctxt->name[i] != 0)
 	    {
-	      PresRuleAddAncestorCond (pRule, ctxt->ancestors[i], ctxt->ancestors_nb[i]);
+	      PresRuleAddAncestorCond (pRule, ctxt->name[i], ctxt->names_nb[i]);
 	      i++;
 	    }
 
@@ -1098,27 +1040,9 @@ unsigned int        extra;
   PtrPRule          cur;
   Document          doc;
   PtrSSchema        pSS;
-  int               i, j, tmp, nb_ancestors;
   int               elType = 0;
   int               attrType = 0;
   int               presBox = 0;
-
-  /* first sort the ancestors list */
-  for (i = 0; i < MAX_ANCESTORS; i++)
-    if (ctxt->ancestors[i] == 0)
-      break;
-  nb_ancestors = i;
-  for (i = 0; i < nb_ancestors; i++)
-    for (j = i + 1; j < nb_ancestors; j++)
-      if (ctxt->ancestors[i] > ctxt->ancestors[j])
-	{
-	  tmp = ctxt->ancestors[i];
-	  ctxt->ancestors[i] = ctxt->ancestors[j];
-	  ctxt->ancestors[j] = tmp;
-	  tmp = ctxt->ancestors_nb[i];
-	  ctxt->ancestors_nb[i] = ctxt->ancestors_nb[j];
-	  ctxt->ancestors_nb[j] = tmp;
-	}
 
   /* Search presentation rule */
   presBox = ctxt->box;
@@ -2124,19 +2048,16 @@ Document            doc;
   if (ctxt == NULL)
     return (NULL);
   ctxt->doc = doc;
+  ctxt->type = 0;
   ctxt->schema = TtaGetDocumentSSchema (doc);
   ctxt->destroy = 0;
   ctxt->box = 0;
-  ctxt->type = 0;
-  ctxt->attr = 0;
-  ctxt->attrval = 0;
-  ctxt->class = NULL;
-  ctxt->classattr = 0;
-  ctxt->attrelem = 0;
+  ctxt->attrType[0] = 0;
   for (i = 0; i < MAX_ANCESTORS; i++)
     {
-      ctxt->ancestors[i] = 0;
-      ctxt->ancestors_nb[i] = 0;
+      ctxt->name[i] = NULL;
+      ctxt->names_nb[i] = 0;
+      ctxt->attrText[i] = NULL;
     }
    return (ctxt);
 }
@@ -2327,12 +2248,9 @@ PresentationContext c;
 	   elType = c->type;
 	   pRule = ((PtrPSchema) tsch)->PsElemPRule[elType - 1];
 	 }
-       else if (ctxt->attr || ctxt->class)
+       else if (ctxt->attrType[0])
 	 {
-	   if (ctxt->attr)
-	     attrType = ctxt->attr;
-	   else
-	     attrType = ctxt->classattr;
+	   attrType = ctxt->attrType[0];
 	   pRule = PresAttrRuleSearch ((PtrPSchema) tsch, attrType, ctxt, &attrs);
 	 }
        else

@@ -41,24 +41,12 @@
 #define NOERROR                1
 #define MAX_PICT_SIZE          32768
 
-#ifdef _I18N_
-#      ifdef _WINDOWS
-#            define XbmName  L"Bitmap (.xbm)"
-#            define EpsName  L"EPSF (.eps)" 
-#            define GifName  L"Gif (.gif)"
-#            define JpegName L"Jpeg (.jpg)"
-#            define XpmName  L"Pixmap (.xpm)"
-#            define PngName  L"Ping (.png)"
-#      else  /* !_WINDOWS */
-#      endif /* !_WINDOWS */
-#else  /* !_I18N_ */
-#      define XbmName  "Bitmap (.xbm)"
-#      define EpsName  "EPSF (.eps)" 
-#      define GifName  "Gif (.gif)"
-#      define JpegName "Jpeg (.jpg)"
-#      define XpmName  "Pixmap (.xpm)"
-#      define PngName  "Ping (.png)"
-#endif /* !_I18N_ */
+#define XbmName  TEXT("Bitmap (.xbm)")
+#define EpsName  TEXT("EPSF (.eps)")
+#define GifName  TEXT("Gif (.gif)")
+#define JpegName TEXT("Jpeg (.jpg)")
+#define XpmName  TEXT("Pixmap (.xpm)")
+#define PngName  TEXT("Ping (.png)")
 
 typedef struct 
 {
@@ -74,6 +62,7 @@ typedef struct
   Pixmap         PicPixmap;
   int            PicNbColors;
   int           *PicColors;
+  Pixmap         PicAlpha;
 # ifndef _WINDOWS
   Pixmap         PicMask;
 # else  /* _WINDOWS */

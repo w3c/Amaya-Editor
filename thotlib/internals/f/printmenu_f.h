@@ -9,8 +9,11 @@
 extern void InitPrintParameters ( Document document );
 extern void TtcPrint ( Document document,
                        View view );
+extern void TtaGetPrintNames ( STRING *printDocName,
+                               STRING *printDirName );
 extern void TtaPrint ( Document document,
-                       STRING viewNames );
+                       STRING viewNames,
+                       STRING cssNames );
 extern void TtaSetPrintExportFunc ( Func exportFunc );
 extern void TtaSetPrintParameter ( PrintParameter parameter,
                                    int value );
@@ -31,8 +34,11 @@ extern void TtcPrintSetup ( Document document,
 extern void InitPrintParameters (/* Document document */);
 extern void TtcPrint (/* Document document,
                          View view */);
+extern void TtaGetPrintNames (/* STRING *printDocName,
+                                 STRING *printDirName */);
 extern void TtaPrint (/* Document document,
-                         STRING viewNames */);
+                         STRING viewNames,
+                         STRING cssNames */);
 extern void TtaSetPrintExportFunc (/* Func exportFunc */);
 extern void TtaSetPrintParameter (/* PrintParameter parameter,
                                      int value */);

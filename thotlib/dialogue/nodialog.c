@@ -96,6 +96,8 @@ Element         el;
 void           *css;
 #endif
 {
+  ustrcpy (completeURL, url);
+  ustrcpy (localfile, url);
   return FALSE;
 }
 

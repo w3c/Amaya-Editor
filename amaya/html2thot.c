@@ -930,741 +930,148 @@ static oneLine      StartTagEndingElem[] =
 #endif /* defined(_I18N_) || defined(__JIS__) */
 };
 
-/* mapping table of HTML attributes */
-
-#define DummyAttribute 500
-static AttributeMapping HTMLAttributeMappingTable[] =
-{
-   /* The first entry MUST be unknown_attr */
-   /* The rest of this table MUST be in alphabetical order */
-#  if defined(_I18N_) || defined(__JIS__)
-   {L"unknown_attr", L"", L'A', HTML_ATTR_Invalid_attribute},
-
-   {L"ABBR", L"", L'A', HTML_ATTR_abbr},
-   {L"ACCEPT", L"", L'A', HTML_ATTR_accept},
-   {L"ACCEPT-CHARSET", L"FORM", L'A', HTML_ATTR_accept_charset},
-   {L"ACCESSKEY", L"", L'A', HTML_ATTR_accesskey},
-   {L"ACTION", L"", L'A', HTML_ATTR_Script_URL},
-   {L"ALIGN", L"APPLET", L'A', HTML_ATTR_Alignment},
-   {L"ALIGN", L"CAPTION", L'A', HTML_ATTR_Position},
-   {L"ALIGN", L"COL", L'A', HTML_ATTR_Cell_align},
-   {L"ALIGN", L"COLGROUP", L'A', HTML_ATTR_Cell_align},
-   {L"ALIGN", L"DIV", L'A', HTML_ATTR_TextAlign},
-   {L"ALIGN", L"H1", L'A', HTML_ATTR_TextAlign},
-   {L"ALIGN", L"H2", L'A', HTML_ATTR_TextAlign},
-   {L"ALIGN", L"H3", L'A', HTML_ATTR_TextAlign},
-   {L"ALIGN", L"H4", L'A', HTML_ATTR_TextAlign},
-   {L"ALIGN", L"H5", L'A', HTML_ATTR_TextAlign},
-   {L"ALIGN", L"H6", L'A', HTML_ATTR_TextAlign},
-   {L"ALIGN", L"HR", L'A', HTML_ATTR_TextAlign},
-   {L"ALIGN", L"IFRAME", L'A', HTML_ATTR_Alignment},
-   {L"ALIGN", L"IMAGE", L'A', HTML_ATTR_Alignment},
-   {L"ALIGN", L"IMG", L'A', HTML_ATTR_Alignment},
-   {L"ALIGN", L"INPUT", L'A', HTML_ATTR_Alignment},
-   {L"ALIGN", L"LEGEND", L'A', HTML_ATTR_LAlign},
-   {L"ALIGN", L"OBJECT", L'A', HTML_ATTR_Alignment},
-   {L"ALIGN", L"P", L'A', HTML_ATTR_TextAlign},
-   {L"ALIGN", L"TABLE", L'A', HTML_ATTR_Align},
-   {L"ALIGN", L"TBODY", L'A', HTML_ATTR_Cell_align},
-   {L"ALIGN", L"TD", L'A', HTML_ATTR_Cell_align},
-   {L"ALIGN", L"TFOOT", L'A', HTML_ATTR_Cell_align},
-   {L"ALIGN", L"TH", L'A', HTML_ATTR_Cell_align},
-   {L"ALIGN", L"THEAD", L'A', HTML_ATTR_Cell_align},
-   {L"ALIGN", L"TR", L'A', HTML_ATTR_Cell_align},
-   {L"ALINK", L"BODY", L'A', HTML_ATTR_ActiveLinkColor},
-   {L"ALT", L"", L'A', HTML_ATTR_ALT},
-   {L"ARCHIVE", L"", L'A', HTML_ATTR_archive},
-   {L"AXIS", L"", L'A', HTML_ATTR_axis},
-
-   {L"BACKGROUND", L"", L'A', HTML_ATTR_background_},
-   {L"BGCOLOR", L"", L'A', HTML_ATTR_BackgroundColor},
-   {L"BORDER", L"IMAGE", L'A', HTML_ATTR_Img_border},
-   {L"BORDER", L"IMG", L'A', HTML_ATTR_Img_border},
-   {L"BORDER", L"OBJECT", L'A', HTML_ATTR_Img_border},
-   {L"BORDER", L"TABLE", L'A', HTML_ATTR_Border},
-
-   {L"CELLSPACING", L"", L'A', HTML_ATTR_cellspacing},
-   {L"CELLPADDING", L"", L'A', HTML_ATTR_cellpadding},
-   {L"CHAR", L"", L'A', HTML_ATTR_char},
-   {L"CHAROFF", L"", L'A', HTML_ATTR_charoff},
-   {L"CHARSET", L"", L'A', HTML_ATTR_charset},
-   {L"CHECKED", L"", L'A', HTML_ATTR_Checked},
-   {L"CITE", L"", L'A', HTML_ATTR_cite},
-   {L"CLASS", L"", L'A', HTML_ATTR_Class},
-   {L"CLASSID", L"", L'A', HTML_ATTR_classid},
-   {L"CLEAR", L"BR", L'A', HTML_ATTR_Clear},
-   {L"CODE", L"", L'A', HTML_ATTR_code},
-   {L"CODEBASE", L"", L'A', HTML_ATTR_codebase},
-   {L"CODETYPE", L"", L'A', HTML_ATTR_codetype},
-   {L"COLOR", L"BASEFONT", L'A', HTML_ATTR_BaseFontColor},
-   {L"COLOR", L"", L'A', HTML_ATTR_color},
-   {L"COLS", L"FRAMESET", L'A', HTML_ATTR_ColWidth},
-   {L"COLS", L"TEXTAREA", L'A', HTML_ATTR_Columns},
-   {L"COLSPAN", L"", L'A', HTML_ATTR_colspan_},
-   {L"COMPACT", L"", L'A', HTML_ATTR_COMPACT},
-   {L"CONTENT", L"", L'A', HTML_ATTR_meta_content},
-   {L"COORDS", L"", L'A', HTML_ATTR_coords},
-
-   {L"DATA", L"", L'A', HTML_ATTR_data},
-   {L"DATAPAGESIZE", L"TABLE", L'A', HTML_ATTR_datapagesize},
-   {L"DATETIME", L"", L'A', HTML_ATTR_datetime},
-   {L"DECLARE", L"OBJECT", L'A', HTML_ATTR_declare},
-   {L"DEFER", L"SCRIPT", L'A', HTML_ATTR_defer},
-   {L"DIR", L"", L'A', HTML_ATTR_dir},
-   {L"DISABLED", L"", L'A', HTML_ATTR_disabled},
-
-   {L"ENCTYPE", L"", L'A', HTML_ATTR_ENCTYPE},
-   {L"EVENT", L"SCRIPT", L'A', HTML_ATTR_event},
-
-   {L"FACE", L"BASEFONT", L'A', HTML_ATTR_BaseFontFace},
-   {L"FACE", L"FONT", L'A', HTML_ATTR_face},
-   {L"FOR", L"LABEL", L'A', HTML_ATTR_Associated_control},
-   {L"FOR", L"SCRIPT", L'A', HTML_ATTR_for_},
-   {L"FRAME", L"TABLE", L'A', HTML_ATTR_frame},
-   {L"FRAMEBORDER", L"", L'A', HTML_ATTR_frameborder},
-
-   {L"HEADERS", L"", L'A', HTML_ATTR_headers},
-   {L"HEIGHT", L"", L'A', HTML_ATTR_Height_},
-   {L"HREF", L"", L'A', HTML_ATTR_HREF_},
-   {L"HREFLANG", L"", L'A', HTML_ATTR_hreflang},
-   {L"HSPACE", L"", L'A', HTML_ATTR_hspace},
-   {L"HTTP-EQUIV", L"", L'A', HTML_ATTR_http_equiv},
-
-   {L"ID", L"", L'A', HTML_ATTR_ID},
-   {L"ISMAP", L"", L'A', HTML_ATTR_ISMAP},
-
-   {L"LABEL", L"", L'A', HTML_ATTR_label},
-   {L"LANG", L"", L'A', HTML_ATTR_Langue},
-   {L"LANGUAGE", L"SCRIPT", L'A', HTML_ATTR_script_language},
-   {L"LINK", L"BODY", L'A', HTML_ATTR_LinkColor},
-   {L"LONGDESC", L"", L'A', HTML_ATTR_longdesc},
-
-   {L"MARGINHEIGHT", L"", L'A', HTML_ATTR_marginheight},
-   {L"MARGINWIDTH", L"", L'A', HTML_ATTR_marginwidth},
-   {L"MAXLENGTH", L"", L'A', HTML_ATTR_MaxLength},
-   {L"MEDIA", L"", L'A', HTML_ATTR_media},
-   {L"METHOD", L"", L'A', HTML_ATTR_METHOD},
-   {L"MODE", L"", L'A', HTML_ATTR_mode},
-   {L"MULTIPLE", L"", L'A', HTML_ATTR_Multiple},
-
-   {L"N", L"", L'C', 0},
-   {L"NAME", L"APPLET", L'A', HTML_ATTR_applet_name},
-   {L"NAME", L"FRAME", L'A', HTML_ATTR_FrameName},
-   {L"NAME", L"IFRAME", L'A', HTML_ATTR_FrameName},
-   {L"NAME", L"META", L'A', HTML_ATTR_meta_name},
-   {L"NAME", L"PARAM", L'A', HTML_ATTR_Param_name},
-   {L"NAME", L"", L'A', HTML_ATTR_NAME},
-   {L"NOHREF", L"", L'A', HTML_ATTR_nohref},
-   {L"NORESIZE", L"", L'A', HTML_ATTR_no_resize},
-   {L"NOSHADE", L"", L'A', HTML_ATTR_NoShade},
-   {L"NOWRAP", L"", L'A', HTML_ATTR_No_wrap},
-
-   {L"OBJECT", L"APPLET", L'A', HTML_ATTR_object},
-   {L"ONBLUR", L"", L'A', HTML_ATTR_onblur},
-   {L"ONCHANGE", L"", L'A', HTML_ATTR_onchange},
-   {L"ONCLICK", L"", L'A', HTML_ATTR_onclick},
-   {L"ONDBLCLICK", L"", L'A', HTML_ATTR_ondblclick},
-   {L"ONFOCUS", L"", L'A', HTML_ATTR_onfocus},
-   {L"ONKEYDOWN", L"", L'A', HTML_ATTR_onkeydown},
-   {L"ONKEYPRESS", L"", L'A', HTML_ATTR_onkeypress},
-   {L"ONKEYUP", L"", L'A', HTML_ATTR_onkeyup},
-   {L"ONLOAD", L"", L'A', HTML_ATTR_onload},
-   {L"ONMOUSEDOWN", L"", L'A', HTML_ATTR_onmousedown},
-   {L"ONMOUSEMOVE", L"", L'A', HTML_ATTR_onmousemove},
-   {L"ONMOUSEOUT", L"", L'A', HTML_ATTR_onmouseout},
-   {L"ONMOUSEOVER", L"", L'A', HTML_ATTR_onmouseover},
-   {L"ONMOUSEUP", L"", L'A', HTML_ATTR_onmouseup},
-   {L"ONRESET", L"FORM", L'A', HTML_ATTR_onreset},
-   {L"ONSELECT", L"", L'A', HTML_ATTR_onselect},
-   {L"ONSUBMIT", L"FORM", L'A', HTML_ATTR_onsubmit},
-   {L"ONUNLOAD", L"", L'A', HTML_ATTR_onunload},
-
-   {L"PROFILE", L"HEAD", L'A', HTML_ATTR_profile},
-   {L"PROMPT", L"", L'A', HTML_ATTR_Prompt},
-
-   {L"READONLY", L"", L'A', HTML_ATTR_readonly},
-   {L"REL", L"", L'A', HTML_ATTR_REL},
-   {L"REV", L"", L'A', HTML_ATTR_REV},
-   {L"ROWS", L"FRAMESET", L'A', HTML_ATTR_RowHeight},
-   {L"ROWS", L"TEXTAREA", L'A', HTML_ATTR_Rows},
-   {L"ROWSPAN", L"", L'A', HTML_ATTR_rowspan_},
-   {L"RULES", L"TABLE", L'A', HTML_ATTR_rules_},
-
-   {L"SCHEME", L"META", L'A', HTML_ATTR_scheme},
-   {L"SCOPE", L"", L'A', HTML_ATTR_scope},
-   {L"SCROLLING", L"", L'A', HTML_ATTR_scrolling},
-   {L"SELECTED", L"", L'A', HTML_ATTR_Selected},
-   {L"SHAPE", L"", L'A', HTML_ATTR_shape},
-   {L"SIZE", L"BASEFONT", L'A', HTML_ATTR_BaseFontSize},
-   {L"SIZE", L"FONT", L'A', HTML_ATTR_Font_size},
-   {L"SIZE", L"HR", L'A', HTML_ATTR_Size_},
-   {L"SIZE", L"INPUT", L'A', HTML_ATTR_Area_Size},
-   {L"SIZE", L"SELECT", L'A', HTML_ATTR_MenuSize},
-   {L"SPAN", L"COL", L'A', HTML_ATTR_span_},
-   {L"SPAN", L"COLGROUP", L'A', HTML_ATTR_span_},
-   {L"SRC", L"FRAME", L'A', HTML_ATTR_FrameSrc},
-   {L"SRC", L"IFRAME", L'A', HTML_ATTR_FrameSrc},
-   {L"SRC", L"SCRIPT", L'A', HTML_ATTR_script_src},
-   {L"SRC", L"", L'A', HTML_ATTR_SRC},
-   {L"STANDBY", L"", L'A', HTML_ATTR_standby},
-   {L"START", L"", L'A', HTML_ATTR_Start},
-   {L"STYLE", L"", L'A', HTML_ATTR_Style_},
-   {L"SUMMARY", L"TABLE", L'A', HTML_ATTR_summary},
-
-   {L"TABINDEX", L"", L'A', HTML_ATTR_tabindex},
-   {L"TARGET", L"", L'A', HTML_ATTR_target_},
-   {L"TEXT", L"", L'A', HTML_ATTR_TextColor},
-   {L"TITLE", L"", L'A', HTML_ATTR_Title},
-   {L"TYPE", L"BUTTON", L'A', HTML_ATTR_Button_type},
-   {L"TYPE", L"LI", L'A', HTML_ATTR_ItemStyle},
-   {L"TYPE", L"LINK", L'A', HTML_ATTR_Link_type},
-   {L"TYPE", L"A", L'A', HTML_ATTR_Link_type},
-   {L"TYPE", L"OBJECT", L'A', HTML_ATTR_Object_type},
-   {L"TYPE", L"OL", L'A', HTML_ATTR_NumberStyle},
-   {L"TYPE", L"PARAM", L'A', HTML_ATTR_Param_type},
-   {L"TYPE", L"SCRIPT", L'A', HTML_ATTR_content_type},
-   {L"TYPE", L"STYLE", L'A', HTML_ATTR_Notation},
-   {L"TYPE", L"UL", L'A', HTML_ATTR_BulletStyle},
-   {L"TYPE", L"", SPACE, DummyAttribute},
-
-   {L"USEMAP", L"", L'A', HTML_ATTR_USEMAP},
-
-   {L"VALIGN", L"TBODY", L'A', HTML_ATTR_Row_valign},
-   {L"VALIGN", L"TD", L'A', HTML_ATTR_Cell_valign},
-   {L"VALIGN", L"TFOOT", L'A', HTML_ATTR_Row_valign},
-   {L"VALIGN", L"TH", L'A', HTML_ATTR_Cell_valign},
-   {L"VALIGN", L"THEAD", L'A', HTML_ATTR_Row_valign},
-   {L"VALIGN", L"TR", L'A', HTML_ATTR_Row_valign},
-   {L"VALUE", L"LI", L'A', HTML_ATTR_ItemValue},
-   {L"VALUE", L"PARAM", L'A', HTML_ATTR_Param_value},
-   {L"VALUE", L"", L'A', HTML_ATTR_Value_},
-   {L"VALUETYPE", L"PARAM", L'A', HTML_ATTR_valuetype},
-   {L"VERSION", L"", L'A', 0},
-   {L"VLINK", L"BODY", L'A', HTML_ATTR_VisitedLinkColor},
-   {L"VSPACE", L"", L'A', HTML_ATTR_vspace},
-
-   {L"WIDTH", L"APPLET", L'A', HTML_ATTR_Width__},
-   {L"WIDTH", L"HR", L'A', HTML_ATTR_Width__},
-   {L"WIDTH", L"IFRAME", L'A', HTML_ATTR_Width__},
-   {L"WIDTH", L"IMAGE", L'A', HTML_ATTR_Width__},
-   {L"WIDTH", L"IMG", L'A', HTML_ATTR_Width__},
-   {L"WIDTH", L"OBJECT", L'A', HTML_ATTR_Width__},
-   {L"WIDTH", L"PRE", L'A', HTML_ATTR_Width__},
-   {L"WIDTH", L"TABLE", L'A', HTML_ATTR_Width__},
-   {L"WIDTH", L"TD", L'A', HTML_ATTR_Width__},
-   {L"WIDTH", L"TH", L'A', HTML_ATTR_Width__},
-#ifdef GRAPHML
-   {L"WIDTH", L"XMLGRAPHICS", L'A', HTML_ATTR_Width__},
-#endif
-
-   {L"ZZGHOST", L"", L'A', HTML_ATTR_Ghost_restruct},
-   {L"", L"", EOS, 0}		/* Last entry. Mandatory */
-#  else /* !defined(_I18N_) && !defined(__JIS__) */
-   {"unknown_attr", "", 'A', HTML_ATTR_Invalid_attribute},
-
-   {"ABBR", "", 'A', HTML_ATTR_abbr},
-   {"ACCEPT", "", 'A', HTML_ATTR_accept},
-   {"ACCEPT-CHARSET", "FORM", 'A', HTML_ATTR_accept_charset},
-   {"ACCESSKEY", "", 'A', HTML_ATTR_accesskey},
-   {"ACTION", "", 'A', HTML_ATTR_Script_URL},
-   {"ALIGN", "APPLET", 'A', HTML_ATTR_Alignment},
-   {"ALIGN", "CAPTION", 'A', HTML_ATTR_Position},
-   {"ALIGN", "COL", 'A', HTML_ATTR_Cell_align},
-   {"ALIGN", "COLGROUP", 'A', HTML_ATTR_Cell_align},
-   {"ALIGN", "DIV", 'A', HTML_ATTR_TextAlign},
-   {"ALIGN", "H1", 'A', HTML_ATTR_TextAlign},
-   {"ALIGN", "H2", 'A', HTML_ATTR_TextAlign},
-   {"ALIGN", "H3", 'A', HTML_ATTR_TextAlign},
-   {"ALIGN", "H4", 'A', HTML_ATTR_TextAlign},
-   {"ALIGN", "H5", 'A', HTML_ATTR_TextAlign},
-   {"ALIGN", "H6", 'A', HTML_ATTR_TextAlign},
-   {"ALIGN", "HR", 'A', HTML_ATTR_TextAlign},
-   {"ALIGN", "IFRAME", 'A', HTML_ATTR_Alignment},
-   {"ALIGN", "IMAGE", 'A', HTML_ATTR_Alignment},
-   {"ALIGN", "IMG", 'A', HTML_ATTR_Alignment},
-   {"ALIGN", "INPUT", 'A', HTML_ATTR_Alignment},
-   {"ALIGN", "LEGEND", 'A', HTML_ATTR_LAlign},
-   {"ALIGN", "OBJECT", 'A', HTML_ATTR_Alignment},
-   {"ALIGN", "P", 'A', HTML_ATTR_TextAlign},
-   {"ALIGN", "TABLE", 'A', HTML_ATTR_Align},
-   {"ALIGN", "TBODY", 'A', HTML_ATTR_Cell_align},
-   {"ALIGN", "TD", 'A', HTML_ATTR_Cell_align},
-   {"ALIGN", "TFOOT", 'A', HTML_ATTR_Cell_align},
-   {"ALIGN", "TH", 'A', HTML_ATTR_Cell_align},
-   {"ALIGN", "THEAD", 'A', HTML_ATTR_Cell_align},
-   {"ALIGN", "TR", 'A', HTML_ATTR_Cell_align},
-   {"ALINK", "BODY", 'A', HTML_ATTR_ActiveLinkColor},
-   {"ALT", "", 'A', HTML_ATTR_ALT},
-   {"ARCHIVE", "", 'A', HTML_ATTR_archive},
-   {"AXIS", "", 'A', HTML_ATTR_axis},
-
-   {"BACKGROUND", "", 'A', HTML_ATTR_background_},
-   {"BGCOLOR", "", 'A', HTML_ATTR_BackgroundColor},
-   {"BORDER", "IMAGE", 'A', HTML_ATTR_Img_border},
-   {"BORDER", "IMG", 'A', HTML_ATTR_Img_border},
-   {"BORDER", "OBJECT", 'A', HTML_ATTR_Img_border},
-   {"BORDER", "TABLE", 'A', HTML_ATTR_Border},
-
-   {"CELLSPACING", "", 'A', HTML_ATTR_cellspacing},
-   {"CELLPADDING", "", 'A', HTML_ATTR_cellpadding},
-   {"CHAR", "", 'A', HTML_ATTR_char},
-   {"CHAROFF", "", 'A', HTML_ATTR_charoff},
-   {"CHARSET", "", 'A', HTML_ATTR_charset},
-   {"CHECKED", "", 'A', HTML_ATTR_Checked},
-   {"CITE", "", 'A', HTML_ATTR_cite},
-   {"CLASS", "", 'A', HTML_ATTR_Class},
-   {"CLASSID", "", 'A', HTML_ATTR_classid},
-   {"CLEAR", "BR", 'A', HTML_ATTR_Clear},
-   {"CODE", "", 'A', HTML_ATTR_code},
-   {"CODEBASE", "", 'A', HTML_ATTR_codebase},
-   {"CODETYPE", "", 'A', HTML_ATTR_codetype},
-   {"COLOR", "BASEFONT", 'A', HTML_ATTR_BaseFontColor},
-   {"COLOR", "", 'A', HTML_ATTR_color},
-   {"COLS", "FRAMESET", 'A', HTML_ATTR_ColWidth},
-   {"COLS", "TEXTAREA", 'A', HTML_ATTR_Columns},
-   {"COLSPAN", "", 'A', HTML_ATTR_colspan_},
-   {"COMPACT", "", 'A', HTML_ATTR_COMPACT},
-   {"CONTENT", "", 'A', HTML_ATTR_meta_content},
-   {"COORDS", "", 'A', HTML_ATTR_coords},
-
-   {"DATA", "", 'A', HTML_ATTR_data},
-   {"DATAPAGESIZE", "TABLE", 'A', HTML_ATTR_datapagesize},
-   {"DATETIME", "", 'A', HTML_ATTR_datetime},
-   {"DECLARE", "OBJECT", 'A', HTML_ATTR_declare},
-   {"DEFER", "SCRIPT", 'A', HTML_ATTR_defer},
-   {"DIR", "", 'A', HTML_ATTR_dir},
-   {"DISABLED", "", 'A', HTML_ATTR_disabled},
-
-   {"ENCTYPE", "", 'A', HTML_ATTR_ENCTYPE},
-   {"EVENT", "SCRIPT", 'A', HTML_ATTR_event},
-
-   {"FACE", "BASEFONT", 'A', HTML_ATTR_BaseFontFace},
-   {"FACE", "FONT", 'A', HTML_ATTR_face},
-   {"FOR", "LABEL", 'A', HTML_ATTR_Associated_control},
-   {"FOR", "SCRIPT", 'A', HTML_ATTR_for_},
-   {"FRAME", "TABLE", 'A', HTML_ATTR_frame},
-   {"FRAMEBORDER", "", 'A', HTML_ATTR_frameborder},
-
-   {"HEADERS", "", 'A', HTML_ATTR_headers},
-   {"HEIGHT", "", 'A', HTML_ATTR_Height_},
-   {"HREF", "", 'A', HTML_ATTR_HREF_},
-   {"HREFLANG", "", 'A', HTML_ATTR_hreflang},
-   {"HSPACE", "", 'A', HTML_ATTR_hspace},
-   {"HTTP-EQUIV", "", 'A', HTML_ATTR_http_equiv},
-
-   {"ID", "", 'A', HTML_ATTR_ID},
-   {"ISMAP", "", 'A', HTML_ATTR_ISMAP},
-
-   {"LABEL", "", 'A', HTML_ATTR_label},
-   {"LANG", "", 'A', HTML_ATTR_Langue},
-   {"LANGUAGE", "SCRIPT", 'A', HTML_ATTR_script_language},
-   {"LINK", "BODY", 'A', HTML_ATTR_LinkColor},
-   {"LONGDESC", "", 'A', HTML_ATTR_longdesc},
-
-   {"MARGINHEIGHT", "", 'A', HTML_ATTR_marginheight},
-   {"MARGINWIDTH", "", 'A', HTML_ATTR_marginwidth},
-   {"MAXLENGTH", "", 'A', HTML_ATTR_MaxLength},
-   {"MEDIA", "", 'A', HTML_ATTR_media},
-   {"METHOD", "", 'A', HTML_ATTR_METHOD},
-   {"MODE", "", 'A', HTML_ATTR_mode},
-   {"MULTIPLE", "", 'A', HTML_ATTR_Multiple},
-
-   {"N", "", 'C', 0},
-   {"NAME", "APPLET", 'A', HTML_ATTR_applet_name},
-   {"NAME", "FRAME", 'A', HTML_ATTR_FrameName},
-   {"NAME", "IFRAME", 'A', HTML_ATTR_FrameName},
-   {"NAME", "META", 'A', HTML_ATTR_meta_name},
-   {"NAME", "PARAM", 'A', HTML_ATTR_Param_name},
-   {"NAME", "", 'A', HTML_ATTR_NAME},
-   {"NOHREF", "", 'A', HTML_ATTR_nohref},
-   {"NORESIZE", "", 'A', HTML_ATTR_no_resize},
-   {"NOSHADE", "", 'A', HTML_ATTR_NoShade},
-   {"NOWRAP", "", 'A', HTML_ATTR_No_wrap},
-
-   {"OBJECT", "APPLET", 'A', HTML_ATTR_object},
-   {"ONBLUR", "", 'A', HTML_ATTR_onblur},
-   {"ONCHANGE", "", 'A', HTML_ATTR_onchange},
-   {"ONCLICK", "", 'A', HTML_ATTR_onclick},
-   {"ONDBLCLICK", "", 'A', HTML_ATTR_ondblclick},
-   {"ONFOCUS", "", 'A', HTML_ATTR_onfocus},
-   {"ONKEYDOWN", "", 'A', HTML_ATTR_onkeydown},
-   {"ONKEYPRESS", "", 'A', HTML_ATTR_onkeypress},
-   {"ONKEYUP", "", 'A', HTML_ATTR_onkeyup},
-   {"ONLOAD", "", 'A', HTML_ATTR_onload},
-   {"ONMOUSEDOWN", "", 'A', HTML_ATTR_onmousedown},
-   {"ONMOUSEMOVE", "", 'A', HTML_ATTR_onmousemove},
-   {"ONMOUSEOUT", "", 'A', HTML_ATTR_onmouseout},
-   {"ONMOUSEOVER", "", 'A', HTML_ATTR_onmouseover},
-   {"ONMOUSEUP", "", 'A', HTML_ATTR_onmouseup},
-   {"ONRESET", "FORM", 'A', HTML_ATTR_onreset},
-   {"ONSELECT", "", 'A', HTML_ATTR_onselect},
-   {"ONSUBMIT", "FORM", 'A', HTML_ATTR_onsubmit},
-   {"ONUNLOAD", "", 'A', HTML_ATTR_onunload},
-
-   {"PROFILE", "HEAD", 'A', HTML_ATTR_profile},
-   {"PROMPT", "", 'A', HTML_ATTR_Prompt},
-
-   {"READONLY", "", 'A', HTML_ATTR_readonly},
-   {"REL", "", 'A', HTML_ATTR_REL},
-   {"REV", "", 'A', HTML_ATTR_REV},
-   {"ROWS", "FRAMESET", 'A', HTML_ATTR_RowHeight},
-   {"ROWS", "TEXTAREA", 'A', HTML_ATTR_Rows},
-   {"ROWSPAN", "", 'A', HTML_ATTR_rowspan_},
-   {"RULES", "TABLE", 'A', HTML_ATTR_rules_},
-
-   {"SCHEME", "META", 'A', HTML_ATTR_scheme},
-   {"SCOPE", "", 'A', HTML_ATTR_scope},
-   {"SCROLLING", "", 'A', HTML_ATTR_scrolling},
-   {"SELECTED", "", 'A', HTML_ATTR_Selected},
-   {"SHAPE", "", 'A', HTML_ATTR_shape},
-   {"SIZE", "BASEFONT", 'A', HTML_ATTR_BaseFontSize},
-   {"SIZE", "FONT", 'A', HTML_ATTR_Font_size},
-   {"SIZE", "HR", 'A', HTML_ATTR_Size_},
-   {"SIZE", "INPUT", 'A', HTML_ATTR_Area_Size},
-   {"SIZE", "SELECT", 'A', HTML_ATTR_MenuSize},
-   {"SPAN", "COL", 'A', HTML_ATTR_span_},
-   {"SPAN", "COLGROUP", 'A', HTML_ATTR_span_},
-   {"SRC", "FRAME", 'A', HTML_ATTR_FrameSrc},
-   {"SRC", "IFRAME", 'A', HTML_ATTR_FrameSrc},
-   {"SRC", "SCRIPT", 'A', HTML_ATTR_script_src},
-   {"SRC", "", 'A', HTML_ATTR_SRC},
-   {"STANDBY", "", 'A', HTML_ATTR_standby},
-   {"START", "", 'A', HTML_ATTR_Start},
-   {"STYLE", "", 'A', HTML_ATTR_Style_},
-   {"SUMMARY", "TABLE", 'A', HTML_ATTR_summary},
-
-   {"TABINDEX", "", 'A', HTML_ATTR_tabindex},
-   {"TARGET", "", 'A', HTML_ATTR_target_},
-   {"TEXT", "", 'A', HTML_ATTR_TextColor},
-   {"TITLE", "", 'A', HTML_ATTR_Title},
-   {"TYPE", "BUTTON", 'A', HTML_ATTR_Button_type},
-   {"TYPE", "LI", 'A', HTML_ATTR_ItemStyle},
-   {"TYPE", "LINK", 'A', HTML_ATTR_Link_type},
-   {"TYPE", "A", 'A', HTML_ATTR_Link_type},
-   {"TYPE", "OBJECT", 'A', HTML_ATTR_Object_type},
-   {"TYPE", "OL", 'A', HTML_ATTR_NumberStyle},
-   {"TYPE", "PARAM", 'A', HTML_ATTR_Param_type},
-   {"TYPE", "SCRIPT", 'A', HTML_ATTR_content_type},
-   {"TYPE", "STYLE", 'A', HTML_ATTR_Notation},
-   {"TYPE", "UL", 'A', HTML_ATTR_BulletStyle},
-   {"TYPE", "", SPACE, DummyAttribute},
-
-   {"USEMAP", "", 'A', HTML_ATTR_USEMAP},
-
-   {"VALIGN", "TBODY", 'A', HTML_ATTR_Row_valign},
-   {"VALIGN", "TD", 'A', HTML_ATTR_Cell_valign},
-   {"VALIGN", "TFOOT", 'A', HTML_ATTR_Row_valign},
-   {"VALIGN", "TH", 'A', HTML_ATTR_Cell_valign},
-   {"VALIGN", "THEAD", 'A', HTML_ATTR_Row_valign},
-   {"VALIGN", "TR", 'A', HTML_ATTR_Row_valign},
-   {"VALUE", "LI", 'A', HTML_ATTR_ItemValue},
-   {"VALUE", "PARAM", 'A', HTML_ATTR_Param_value},
-   {"VALUE", "", 'A', HTML_ATTR_Value_},
-   {"VALUETYPE", "PARAM", 'A', HTML_ATTR_valuetype},
-   {"VERSION", "", 'A', 0},
-   {"VLINK", "BODY", 'A', HTML_ATTR_VisitedLinkColor},
-   {"VSPACE", "", 'A', HTML_ATTR_vspace},
-
-   {"WIDTH", "APPLET", 'A', HTML_ATTR_Width__},
-   {"WIDTH", "HR", 'A', HTML_ATTR_Width__},
-   {"WIDTH", "IFRAME", 'A', HTML_ATTR_Width__},
-   {"WIDTH", "IMAGE", 'A', HTML_ATTR_Width__},
-   {"WIDTH", "IMG", 'A', HTML_ATTR_Width__},
-   {"WIDTH", "OBJECT", 'A', HTML_ATTR_Width__},
-   {"WIDTH", "PRE", 'A', HTML_ATTR_Width__},
-   {"WIDTH", "TABLE", 'A', HTML_ATTR_Width__},
-   {"WIDTH", "TD", 'A', HTML_ATTR_Width__},
-   {"WIDTH", "TH", 'A', HTML_ATTR_Width__},
-#ifdef GRAPHML
-   {"WIDTH", "XMLGRAPHICS", 'A', HTML_ATTR_Width__},
-#endif
-
-   {"ZZGHOST", "", 'A', HTML_ATTR_Ghost_restruct},
-   {"", "", EOS, 0}		/* Last entry. Mandatory */
-#  endif /* defined(_I18N_) || defined(__JIS__) */
-};
 
 /* mapping table of HTML attribute values */
 
 static AttrValueMapping HTMLAttrValueMappingTable[] =
 {
-#  if defined(_I18N_) || defined (__JIS__)
-   {HTML_ATTR_dir, L"LTR", HTML_ATTR_dir_VAL_ltr},
-   {HTML_ATTR_dir, L"RTL", HTML_ATTR_dir_VAL_rtl},
+   {HTML_ATTR_dir, TEXT("LTR"), HTML_ATTR_dir_VAL_ltr},
+   {HTML_ATTR_dir, TEXT("RTL"), HTML_ATTR_dir_VAL_rtl},
 
-   {HTML_ATTR_TextAlign, L"LEFT", HTML_ATTR_TextAlign_VAL_left_},
-   {HTML_ATTR_TextAlign, L"CENTER", HTML_ATTR_TextAlign_VAL_center_},
-   {HTML_ATTR_TextAlign, L"RIGHT", HTML_ATTR_TextAlign_VAL_right_},
-   {HTML_ATTR_TextAlign, L"JUSTIFY", HTML_ATTR_TextAlign_VAL_justify_},
+   {HTML_ATTR_TextAlign, TEXT("LEFT"), HTML_ATTR_TextAlign_VAL_left_},
+   {HTML_ATTR_TextAlign, TEXT("CENTER"), HTML_ATTR_TextAlign_VAL_center_},
+   {HTML_ATTR_TextAlign, TEXT("RIGHT"), HTML_ATTR_TextAlign_VAL_right_},
+   {HTML_ATTR_TextAlign, TEXT("JUSTIFY"), HTML_ATTR_TextAlign_VAL_justify_},
 
-   {HTML_ATTR_Align, L"LEFT", HTML_ATTR_Align_VAL_left_},
-   {HTML_ATTR_Align, L"CENTER", HTML_ATTR_Align_VAL_center_},
-   {HTML_ATTR_Align, L"RIGHT", HTML_ATTR_Align_VAL_right_},
+   {HTML_ATTR_Align, TEXT("LEFT"), HTML_ATTR_Align_VAL_left_},
+   {HTML_ATTR_Align, TEXT("CENTER"), HTML_ATTR_Align_VAL_center_},
+   {HTML_ATTR_Align, TEXT("RIGHT"), HTML_ATTR_Align_VAL_right_},
 
-   {HTML_ATTR_LAlign, L"TOP", HTML_ATTR_LAlign_VAL_Top_},
-   {HTML_ATTR_LAlign, L"BOTTOM", HTML_ATTR_LAlign_VAL_Bottom_},
-   {HTML_ATTR_LAlign, L"LEFT", HTML_ATTR_LAlign_VAL_Left_},
-   {HTML_ATTR_LAlign, L"RIGHT", HTML_ATTR_LAlign_VAL_Right_},
+   {HTML_ATTR_LAlign, TEXT("TOP"), HTML_ATTR_LAlign_VAL_Top_},
+   {HTML_ATTR_LAlign, TEXT("BOTTOM"), HTML_ATTR_LAlign_VAL_Bottom_},
+   {HTML_ATTR_LAlign, TEXT("LEFT"), HTML_ATTR_LAlign_VAL_Left_},
+   {HTML_ATTR_LAlign, TEXT("RIGHT"), HTML_ATTR_LAlign_VAL_Right_},
 
-   {HTML_ATTR_Clear, L"LEFT", HTML_ATTR_Clear_VAL_Left_},
-   {HTML_ATTR_Clear, L"RIGHT", HTML_ATTR_Clear_VAL_Right_},
-   {HTML_ATTR_Clear, L"ALL", HTML_ATTR_Clear_VAL_All_},
-   {HTML_ATTR_Clear, L"NONE", HTML_ATTR_Clear_VAL_None},
+   {HTML_ATTR_Clear, TEXT("LEFT"), HTML_ATTR_Clear_VAL_Left_},
+   {HTML_ATTR_Clear, TEXT("RIGHT"), HTML_ATTR_Clear_VAL_Right_},
+   {HTML_ATTR_Clear, TEXT("ALL"), HTML_ATTR_Clear_VAL_All_},
+   {HTML_ATTR_Clear, TEXT("NONE"), HTML_ATTR_Clear_VAL_None},
 
-   {HTML_ATTR_NumberStyle, L"1", HTML_ATTR_NumberStyle_VAL_Arabic_},
-   {HTML_ATTR_NumberStyle, L"a", HTML_ATTR_NumberStyle_VAL_LowerAlpha},
-   {HTML_ATTR_NumberStyle, L"A", HTML_ATTR_NumberStyle_VAL_UpperAlpha},
-   {HTML_ATTR_NumberStyle, L"i", HTML_ATTR_NumberStyle_VAL_LowerRoman},
-   {HTML_ATTR_NumberStyle, L"I", HTML_ATTR_NumberStyle_VAL_UpperRoman},
+   {HTML_ATTR_NumberStyle, TEXT("1"), HTML_ATTR_NumberStyle_VAL_Arabic_},
+   {HTML_ATTR_NumberStyle, TEXT("a"), HTML_ATTR_NumberStyle_VAL_LowerAlpha},
+   {HTML_ATTR_NumberStyle, TEXT("A"), HTML_ATTR_NumberStyle_VAL_UpperAlpha},
+   {HTML_ATTR_NumberStyle, TEXT("i"), HTML_ATTR_NumberStyle_VAL_LowerRoman},
+   {HTML_ATTR_NumberStyle, TEXT("I"), HTML_ATTR_NumberStyle_VAL_UpperRoman},
 
-   {HTML_ATTR_BulletStyle, L"DISC", HTML_ATTR_BulletStyle_VAL_disc},
-   {HTML_ATTR_BulletStyle, L"SQUARE", HTML_ATTR_BulletStyle_VAL_square},
-   {HTML_ATTR_BulletStyle, L"CIRCLE", HTML_ATTR_BulletStyle_VAL_circle},
+   {HTML_ATTR_BulletStyle, TEXT("DISC"), HTML_ATTR_BulletStyle_VAL_disc},
+   {HTML_ATTR_BulletStyle, TEXT("SQUARE"), HTML_ATTR_BulletStyle_VAL_square},
+   {HTML_ATTR_BulletStyle, TEXT("CIRCLE"), HTML_ATTR_BulletStyle_VAL_circle},
 
-   {HTML_ATTR_ItemStyle, L"1", HTML_ATTR_ItemStyle_VAL_Arabic_},
-   {HTML_ATTR_ItemStyle, L"a", HTML_ATTR_ItemStyle_VAL_LowerAlpha},
-   {HTML_ATTR_ItemStyle, L"A", HTML_ATTR_ItemStyle_VAL_UpperAlpha},
-   {HTML_ATTR_ItemStyle, L"i", HTML_ATTR_ItemStyle_VAL_LowerRoman},
-   {HTML_ATTR_ItemStyle, L"I", HTML_ATTR_ItemStyle_VAL_UpperRoman},
-   {HTML_ATTR_ItemStyle, L"DISC", HTML_ATTR_ItemStyle_VAL_disc},
-   {HTML_ATTR_ItemStyle, L"SQUARE", HTML_ATTR_ItemStyle_VAL_square},
-   {HTML_ATTR_ItemStyle, L"CIRCLE", HTML_ATTR_ItemStyle_VAL_circle},
+   {HTML_ATTR_ItemStyle, TEXT("1"), HTML_ATTR_ItemStyle_VAL_Arabic_},
+   {HTML_ATTR_ItemStyle, TEXT("a"), HTML_ATTR_ItemStyle_VAL_LowerAlpha},
+   {HTML_ATTR_ItemStyle, TEXT("A"), HTML_ATTR_ItemStyle_VAL_UpperAlpha},
+   {HTML_ATTR_ItemStyle, TEXT("i"), HTML_ATTR_ItemStyle_VAL_LowerRoman},
+   {HTML_ATTR_ItemStyle, TEXT("I"), HTML_ATTR_ItemStyle_VAL_UpperRoman},
+   {HTML_ATTR_ItemStyle, TEXT("DISC"), HTML_ATTR_ItemStyle_VAL_disc},
+   {HTML_ATTR_ItemStyle, TEXT("SQUARE"), HTML_ATTR_ItemStyle_VAL_square},
+   {HTML_ATTR_ItemStyle, TEXT("CIRCLE"), HTML_ATTR_ItemStyle_VAL_circle},
 
-   {HTML_ATTR_Button_type, L"BUTTON", HTML_ATTR_Button_type_VAL_button},
-   {HTML_ATTR_Button_type, L"SUBMIT", HTML_ATTR_Button_type_VAL_submit},
-   {HTML_ATTR_Button_type, L"RESET", HTML_ATTR_Button_type_VAL_reset},
+   {HTML_ATTR_Button_type, TEXT("BUTTON"), HTML_ATTR_Button_type_VAL_button},
+   {HTML_ATTR_Button_type, TEXT("SUBMIT"), HTML_ATTR_Button_type_VAL_submit},
+   {HTML_ATTR_Button_type, TEXT("RESET"), HTML_ATTR_Button_type_VAL_reset},
 
-   {HTML_ATTR_mode, L"DISPLAY", HTML_ATTR_mode_VAL_display},
-   {HTML_ATTR_mode, L"INLINE", HTML_ATTR_mode_VAL_inline_math},
+   {HTML_ATTR_mode, TEXT("DISPLAY"), HTML_ATTR_mode_VAL_display},
+   {HTML_ATTR_mode, TEXT("INLINE"), HTML_ATTR_mode_VAL_inline_math},
 
-   {HTML_ATTR_frame, L"VOID", HTML_ATTR_frame_VAL_void},
-   {HTML_ATTR_frame, L"ABOVE", HTML_ATTR_frame_VAL_above},
-   {HTML_ATTR_frame, L"BELOW", HTML_ATTR_frame_VAL_below},
-   {HTML_ATTR_frame, L"HSIDES", HTML_ATTR_frame_VAL_hsides},
-   {HTML_ATTR_frame, L"LHS", HTML_ATTR_frame_VAL_lhs},
-   {HTML_ATTR_frame, L"RHS", HTML_ATTR_frame_VAL_rhs},
-   {HTML_ATTR_frame, L"VSIDES", HTML_ATTR_frame_VAL_vsides},
-   {HTML_ATTR_frame, L"BOX", HTML_ATTR_frame_VAL_box},
-   {HTML_ATTR_frame, L"BORDER", HTML_ATTR_frame_VAL_border},
+   {HTML_ATTR_frame, TEXT("VOID"), HTML_ATTR_frame_VAL_void},
+   {HTML_ATTR_frame, TEXT("ABOVE"), HTML_ATTR_frame_VAL_above},
+   {HTML_ATTR_frame, TEXT("BELOW"), HTML_ATTR_frame_VAL_below},
+   {HTML_ATTR_frame, TEXT("HSIDES"), HTML_ATTR_frame_VAL_hsides},
+   {HTML_ATTR_frame, TEXT("LHS"), HTML_ATTR_frame_VAL_lhs},
+   {HTML_ATTR_frame, TEXT("RHS"), HTML_ATTR_frame_VAL_rhs},
+   {HTML_ATTR_frame, TEXT("VSIDES"), HTML_ATTR_frame_VAL_vsides},
+   {HTML_ATTR_frame, TEXT("BOX"), HTML_ATTR_frame_VAL_box},
+   {HTML_ATTR_frame, TEXT("BORDER"), HTML_ATTR_frame_VAL_border},
 
-   {HTML_ATTR_frameborder, L"0", HTML_ATTR_frameborder_VAL_Border0},
-   {HTML_ATTR_frameborder, L"1", HTML_ATTR_frameborder_VAL_Border1},
+   {HTML_ATTR_frameborder, TEXT("0"), HTML_ATTR_frameborder_VAL_Border0},
+   {HTML_ATTR_frameborder, TEXT("1"), HTML_ATTR_frameborder_VAL_Border1},
 
-   {HTML_ATTR_scrolling, L"YES", HTML_ATTR_scrolling_VAL_Yes_},
-   {HTML_ATTR_scrolling, L"NO", HTML_ATTR_scrolling_VAL_No_},
-   {HTML_ATTR_scrolling, L"AUTO", HTML_ATTR_scrolling_VAL_auto},
+   {HTML_ATTR_scrolling, TEXT("YES"), HTML_ATTR_scrolling_VAL_Yes_},
+   {HTML_ATTR_scrolling, TEXT("NO"), HTML_ATTR_scrolling_VAL_No_},
+   {HTML_ATTR_scrolling, TEXT("AUTO"), HTML_ATTR_scrolling_VAL_auto},
 
-   {HTML_ATTR_rules_, L"NONE", HTML_ATTR_rules__VAL_none},
-   {HTML_ATTR_rules_, L"GROUPS", HTML_ATTR_rules__VAL_groups},
-   {HTML_ATTR_rules_, L"ROWS", HTML_ATTR_rules__VAL_rows},
-   {HTML_ATTR_rules_, L"COLS", HTML_ATTR_rules__VAL_cols},
-   {HTML_ATTR_rules_, L"ALL", HTML_ATTR_rules__VAL_all},
+   {HTML_ATTR_rules_, TEXT("NONE"), HTML_ATTR_rules__VAL_none},
+   {HTML_ATTR_rules_, TEXT("GROUPS"), HTML_ATTR_rules__VAL_groups},
+   {HTML_ATTR_rules_, TEXT("ROWS"), HTML_ATTR_rules__VAL_rows},
+   {HTML_ATTR_rules_, TEXT("COLS"), HTML_ATTR_rules__VAL_cols},
+   {HTML_ATTR_rules_, TEXT("ALL"), HTML_ATTR_rules__VAL_all},
 
-   {HTML_ATTR_Cell_align, L"LEFT", HTML_ATTR_Cell_align_VAL_Cell_left},
-   {HTML_ATTR_Cell_align, L"CENTER", HTML_ATTR_Cell_align_VAL_Cell_center},
-   {HTML_ATTR_Cell_align, L"RIGHT", HTML_ATTR_Cell_align_VAL_Cell_right},
-   {HTML_ATTR_Cell_align, L"JUSTIFY", HTML_ATTR_Cell_align_VAL_Cell_justify},
-   {HTML_ATTR_Cell_align, L"CHAR", HTML_ATTR_Cell_align_VAL_Cell_char},
+   {HTML_ATTR_Cell_align, TEXT("LEFT"), HTML_ATTR_Cell_align_VAL_Cell_left},
+   {HTML_ATTR_Cell_align, TEXT("CENTER"), HTML_ATTR_Cell_align_VAL_Cell_center},
+   {HTML_ATTR_Cell_align, TEXT("RIGHT"), HTML_ATTR_Cell_align_VAL_Cell_right},
+   {HTML_ATTR_Cell_align, TEXT("JUSTIFY"), HTML_ATTR_Cell_align_VAL_Cell_justify},
+   {HTML_ATTR_Cell_align, TEXT("CHAR"), HTML_ATTR_Cell_align_VAL_Cell_char},
 
-   {HTML_ATTR_Alignment, L"TOP", HTML_ATTR_Alignment_VAL_Top_},
-   {HTML_ATTR_Alignment, L"MIDDLE", HTML_ATTR_Alignment_VAL_Middle_},
-   {HTML_ATTR_Alignment, L"BOTTOM", HTML_ATTR_Alignment_VAL_Bottom_},
-   {HTML_ATTR_Alignment, L"LEFT", HTML_ATTR_Alignment_VAL_Left_},
-   {HTML_ATTR_Alignment, L"RIGHT", HTML_ATTR_Alignment_VAL_Right_},
+   {HTML_ATTR_Alignment, TEXT("TOP"), HTML_ATTR_Alignment_VAL_Top_},
+   {HTML_ATTR_Alignment, TEXT("MIDDLE"), HTML_ATTR_Alignment_VAL_Middle_},
+   {HTML_ATTR_Alignment, TEXT("BOTTOM"), HTML_ATTR_Alignment_VAL_Bottom_},
+   {HTML_ATTR_Alignment, TEXT("LEFT"), HTML_ATTR_Alignment_VAL_Left_},
+   {HTML_ATTR_Alignment, TEXT("RIGHT"), HTML_ATTR_Alignment_VAL_Right_},
 
-   {HTML_ATTR_METHOD, L"GET", HTML_ATTR_METHOD_VAL_Get_},
-   {HTML_ATTR_METHOD, L"POST", HTML_ATTR_METHOD_VAL_Post_},
+   {HTML_ATTR_METHOD, TEXT("GET"), HTML_ATTR_METHOD_VAL_Get_},
+   {HTML_ATTR_METHOD, TEXT("POST"), HTML_ATTR_METHOD_VAL_Post_},
 
-   {HTML_ATTR_Position, L"TOP", HTML_ATTR_Position_VAL_Position_top},
-   {HTML_ATTR_Position, L"BOTTOM", HTML_ATTR_Position_VAL_Position_bottom},
-   {HTML_ATTR_Position, L"LEFT", HTML_ATTR_Position_VAL_Position_left},
-   {HTML_ATTR_Position, L"RIGHT", HTML_ATTR_Position_VAL_Position_right},
+   {HTML_ATTR_Position, TEXT("TOP"), HTML_ATTR_Position_VAL_Position_top},
+   {HTML_ATTR_Position, TEXT("BOTTOM"), HTML_ATTR_Position_VAL_Position_bottom},
+   {HTML_ATTR_Position, TEXT("LEFT"), HTML_ATTR_Position_VAL_Position_left},
+   {HTML_ATTR_Position, TEXT("RIGHT"), HTML_ATTR_Position_VAL_Position_right},
 
-   {HTML_ATTR_Row_valign, L"TOP", HTML_ATTR_Row_valign_VAL_Row_top},
-   {HTML_ATTR_Row_valign, L"MIDDLE", HTML_ATTR_Row_valign_VAL_Row_middle},
-   {HTML_ATTR_Row_valign, L"BOTTOM", HTML_ATTR_Row_valign_VAL_Row_bottom},
-   {HTML_ATTR_Row_valign, L"BASELINE", HTML_ATTR_Row_valign_VAL_Row_baseline},
+   {HTML_ATTR_Row_valign, TEXT("TOP"), HTML_ATTR_Row_valign_VAL_Row_top},
+   {HTML_ATTR_Row_valign, TEXT("MIDDLE"), HTML_ATTR_Row_valign_VAL_Row_middle},
+   {HTML_ATTR_Row_valign, TEXT("BOTTOM"), HTML_ATTR_Row_valign_VAL_Row_bottom},
+   {HTML_ATTR_Row_valign, TEXT("BASELINE"), HTML_ATTR_Row_valign_VAL_Row_baseline},
 
-   {HTML_ATTR_Cell_valign, L"TOP", HTML_ATTR_Cell_valign_VAL_Cell_top},
-   {HTML_ATTR_Cell_valign, L"MIDDLE", HTML_ATTR_Cell_valign_VAL_Cell_middle},
-   {HTML_ATTR_Cell_valign, L"BOTTOM", HTML_ATTR_Cell_valign_VAL_Cell_bottom},
-   {HTML_ATTR_Cell_valign, L"BASELINE", HTML_ATTR_Cell_valign_VAL_Cell_baseline},
+   {HTML_ATTR_Cell_valign, TEXT("TOP"), HTML_ATTR_Cell_valign_VAL_Cell_top},
+   {HTML_ATTR_Cell_valign, TEXT("MIDDLE"), HTML_ATTR_Cell_valign_VAL_Cell_middle},
+   {HTML_ATTR_Cell_valign, TEXT("BOTTOM"), HTML_ATTR_Cell_valign_VAL_Cell_bottom},
+   {HTML_ATTR_Cell_valign, TEXT("BASELINE"), HTML_ATTR_Cell_valign_VAL_Cell_baseline},
 
-   {HTML_ATTR_shape, L"RECT", HTML_ATTR_shape_VAL_rectangle},
-   {HTML_ATTR_shape, L"CIRCLE", HTML_ATTR_shape_VAL_circle},
-   {HTML_ATTR_shape, L"POLY", HTML_ATTR_shape_VAL_polygon},
+   {HTML_ATTR_shape, TEXT("RECT"), HTML_ATTR_shape_VAL_rectangle},
+   {HTML_ATTR_shape, TEXT("CIRCLE"), HTML_ATTR_shape_VAL_circle},
+   {HTML_ATTR_shape, TEXT("POLY"), HTML_ATTR_shape_VAL_polygon},
 
-   {HTML_ATTR_valuetype, L"DATA", HTML_ATTR_valuetype_VAL_data_},
-   {HTML_ATTR_valuetype, L"REF", HTML_ATTR_valuetype_VAL_ref},
-   {HTML_ATTR_valuetype, L"OBJECT", HTML_ATTR_valuetype_VAL_object_},
+   {HTML_ATTR_valuetype, TEXT("DATA"), HTML_ATTR_valuetype_VAL_data_},
+   {HTML_ATTR_valuetype, TEXT("REF"), HTML_ATTR_valuetype_VAL_ref},
+   {HTML_ATTR_valuetype, TEXT("OBJECT"), HTML_ATTR_valuetype_VAL_object_},
 
 /* HTML attribute TYPE generates a Thot element */
-   {DummyAttribute, L"BUTTON", HTML_EL_Button_Input},
-   {DummyAttribute, L"CHECKBOX", HTML_EL_Checkbox_Input},
-   {DummyAttribute, L"FILE", HTML_EL_File_Input},
-   {DummyAttribute, L"HIDDEN", HTML_EL_Hidden_Input},
-   {DummyAttribute, L"IMAGE", HTML_EL_PICTURE_UNIT},
-   {DummyAttribute, L"PASSWORD", HTML_EL_Password_Input},
-   {DummyAttribute, L"RADIO", HTML_EL_Radio_Input},
-   {DummyAttribute, L"RESET", HTML_EL_Reset_Input},
-   {DummyAttribute, L"SUBMIT", HTML_EL_Submit_Input},
-   {DummyAttribute, L"TEXT", HTML_EL_Text_Input},
+   {DummyAttribute, TEXT("BUTTON"), HTML_EL_Button_Input},
+   {DummyAttribute, TEXT("CHECKBOX"), HTML_EL_Checkbox_Input},
+   {DummyAttribute, TEXT("FILE"), HTML_EL_File_Input},
+   {DummyAttribute, TEXT("HIDDEN"), HTML_EL_Hidden_Input},
+   {DummyAttribute, TEXT("IMAGE"), HTML_EL_PICTURE_UNIT},
+   {DummyAttribute, TEXT("PASSWORD"), HTML_EL_Password_Input},
+   {DummyAttribute, TEXT("RADIO"), HTML_EL_Radio_Input},
+   {DummyAttribute, TEXT("RESET"), HTML_EL_Reset_Input},
+   {DummyAttribute, TEXT("SUBMIT"), HTML_EL_Submit_Input},
+   {DummyAttribute, TEXT("TEXT"), HTML_EL_Text_Input},
 
 /* The following declarations allow the parser to accept boolean attributes */
-/* written "checked=CHECKED", for instance */
-   {HTML_ATTR_ISMAP, L"ISMAP", HTML_ATTR_ISMAP_VAL_Yes_},
-   {HTML_ATTR_nohref, L"NOHREF", HTML_ATTR_nohref_VAL_Yes_},
-   {HTML_ATTR_COMPACT, L"COMPACT", HTML_ATTR_COMPACT_VAL_Yes_},
-   {HTML_ATTR_Multiple, L"MULTIPLE", HTML_ATTR_Multiple_VAL_Yes_},
-   {HTML_ATTR_Selected, L"SELECTED", HTML_ATTR_Selected_VAL_Yes_},
-   {HTML_ATTR_Checked, L"CHECKED", HTML_ATTR_Checked_VAL_Yes_},
-   {HTML_ATTR_No_wrap, L"NOWRAP", HTML_ATTR_No_wrap_VAL_no_wrap},
-   {HTML_ATTR_NoShade, L"NOSHADE", HTML_ATTR_NoShade_VAL_NoShade_},
-   {HTML_ATTR_declare, L"DECLARE", HTML_ATTR_declare_VAL_Yes_},
-   {HTML_ATTR_defer, L"DEFER", HTML_ATTR_defer_VAL_Yes_},
-   {HTML_ATTR_disabled, L"DISABLED", HTML_ATTR_disabled_VAL_Yes_},
-   {HTML_ATTR_readonly, L"READONLY", HTML_ATTR_readonly_VAL_Yes_},
-   {HTML_ATTR_no_resize, L"NORESIZE", HTML_ATTR_no_resize_VAL_Yes_},
-   {0, L"", 0}			/* Last entry. Mandatory */
-#  else /* !defined(_I18N_) && !defined (__JIS__) */
-   {HTML_ATTR_dir, "LTR", HTML_ATTR_dir_VAL_ltr},
-   {HTML_ATTR_dir, "RTL", HTML_ATTR_dir_VAL_rtl},
-
-   {HTML_ATTR_TextAlign, "LEFT", HTML_ATTR_TextAlign_VAL_left_},
-   {HTML_ATTR_TextAlign, "CENTER", HTML_ATTR_TextAlign_VAL_center_},
-   {HTML_ATTR_TextAlign, "RIGHT", HTML_ATTR_TextAlign_VAL_right_},
-   {HTML_ATTR_TextAlign, "JUSTIFY", HTML_ATTR_TextAlign_VAL_justify_},
-
-   {HTML_ATTR_Align, "LEFT", HTML_ATTR_Align_VAL_left_},
-   {HTML_ATTR_Align, "CENTER", HTML_ATTR_Align_VAL_center_},
-   {HTML_ATTR_Align, "RIGHT", HTML_ATTR_Align_VAL_right_},
-
-   {HTML_ATTR_LAlign, "TOP", HTML_ATTR_LAlign_VAL_Top_},
-   {HTML_ATTR_LAlign, "BOTTOM", HTML_ATTR_LAlign_VAL_Bottom_},
-   {HTML_ATTR_LAlign, "LEFT", HTML_ATTR_LAlign_VAL_Left_},
-   {HTML_ATTR_LAlign, "RIGHT", HTML_ATTR_LAlign_VAL_Right_},
-
-   {HTML_ATTR_Clear, "LEFT", HTML_ATTR_Clear_VAL_Left_},
-   {HTML_ATTR_Clear, "RIGHT", HTML_ATTR_Clear_VAL_Right_},
-   {HTML_ATTR_Clear, "ALL", HTML_ATTR_Clear_VAL_All_},
-   {HTML_ATTR_Clear, "NONE", HTML_ATTR_Clear_VAL_None},
-
-   {HTML_ATTR_NumberStyle, "1", HTML_ATTR_NumberStyle_VAL_Arabic_},
-   {HTML_ATTR_NumberStyle, "a", HTML_ATTR_NumberStyle_VAL_LowerAlpha},
-   {HTML_ATTR_NumberStyle, "A", HTML_ATTR_NumberStyle_VAL_UpperAlpha},
-   {HTML_ATTR_NumberStyle, "i", HTML_ATTR_NumberStyle_VAL_LowerRoman},
-   {HTML_ATTR_NumberStyle, "I", HTML_ATTR_NumberStyle_VAL_UpperRoman},
-
-   {HTML_ATTR_BulletStyle, "DISC", HTML_ATTR_BulletStyle_VAL_disc},
-   {HTML_ATTR_BulletStyle, "SQUARE", HTML_ATTR_BulletStyle_VAL_square},
-   {HTML_ATTR_BulletStyle, "CIRCLE", HTML_ATTR_BulletStyle_VAL_circle},
-
-   {HTML_ATTR_ItemStyle, "1", HTML_ATTR_ItemStyle_VAL_Arabic_},
-   {HTML_ATTR_ItemStyle, "a", HTML_ATTR_ItemStyle_VAL_LowerAlpha},
-   {HTML_ATTR_ItemStyle, "A", HTML_ATTR_ItemStyle_VAL_UpperAlpha},
-   {HTML_ATTR_ItemStyle, "i", HTML_ATTR_ItemStyle_VAL_LowerRoman},
-   {HTML_ATTR_ItemStyle, "I", HTML_ATTR_ItemStyle_VAL_UpperRoman},
-   {HTML_ATTR_ItemStyle, "DISC", HTML_ATTR_ItemStyle_VAL_disc},
-   {HTML_ATTR_ItemStyle, "SQUARE", HTML_ATTR_ItemStyle_VAL_square},
-   {HTML_ATTR_ItemStyle, "CIRCLE", HTML_ATTR_ItemStyle_VAL_circle},
-
-   {HTML_ATTR_Button_type, "BUTTON", HTML_ATTR_Button_type_VAL_button},
-   {HTML_ATTR_Button_type, "SUBMIT", HTML_ATTR_Button_type_VAL_submit},
-   {HTML_ATTR_Button_type, "RESET", HTML_ATTR_Button_type_VAL_reset},
-
-   {HTML_ATTR_mode, "DISPLAY", HTML_ATTR_mode_VAL_display},
-   {HTML_ATTR_mode, "INLINE", HTML_ATTR_mode_VAL_inline_math},
-
-   {HTML_ATTR_frame, "VOID", HTML_ATTR_frame_VAL_void},
-   {HTML_ATTR_frame, "ABOVE", HTML_ATTR_frame_VAL_above},
-   {HTML_ATTR_frame, "BELOW", HTML_ATTR_frame_VAL_below},
-   {HTML_ATTR_frame, "HSIDES", HTML_ATTR_frame_VAL_hsides},
-   {HTML_ATTR_frame, "LHS", HTML_ATTR_frame_VAL_lhs},
-   {HTML_ATTR_frame, "RHS", HTML_ATTR_frame_VAL_rhs},
-   {HTML_ATTR_frame, "VSIDES", HTML_ATTR_frame_VAL_vsides},
-   {HTML_ATTR_frame, "BOX", HTML_ATTR_frame_VAL_box},
-   {HTML_ATTR_frame, "BORDER", HTML_ATTR_frame_VAL_border},
-
-   {HTML_ATTR_frameborder, "0", HTML_ATTR_frameborder_VAL_Border0},
-   {HTML_ATTR_frameborder, "1", HTML_ATTR_frameborder_VAL_Border1},
-
-   {HTML_ATTR_scrolling, "YES", HTML_ATTR_scrolling_VAL_Yes_},
-   {HTML_ATTR_scrolling, "NO", HTML_ATTR_scrolling_VAL_No_},
-   {HTML_ATTR_scrolling, "AUTO", HTML_ATTR_scrolling_VAL_auto},
-
-   {HTML_ATTR_rules_, "NONE", HTML_ATTR_rules__VAL_none},
-   {HTML_ATTR_rules_, "GROUPS", HTML_ATTR_rules__VAL_groups},
-   {HTML_ATTR_rules_, "ROWS", HTML_ATTR_rules__VAL_rows},
-   {HTML_ATTR_rules_, "COLS", HTML_ATTR_rules__VAL_cols},
-   {HTML_ATTR_rules_, "ALL", HTML_ATTR_rules__VAL_all},
-
-   {HTML_ATTR_Cell_align, "LEFT", HTML_ATTR_Cell_align_VAL_Cell_left},
-   {HTML_ATTR_Cell_align, "CENTER", HTML_ATTR_Cell_align_VAL_Cell_center},
-   {HTML_ATTR_Cell_align, "RIGHT", HTML_ATTR_Cell_align_VAL_Cell_right},
-   {HTML_ATTR_Cell_align, "JUSTIFY", HTML_ATTR_Cell_align_VAL_Cell_justify},
-   {HTML_ATTR_Cell_align, "CHAR", HTML_ATTR_Cell_align_VAL_Cell_char},
-
-   {HTML_ATTR_Alignment, "TOP", HTML_ATTR_Alignment_VAL_Top_},
-   {HTML_ATTR_Alignment, "MIDDLE", HTML_ATTR_Alignment_VAL_Middle_},
-   {HTML_ATTR_Alignment, "BOTTOM", HTML_ATTR_Alignment_VAL_Bottom_},
-   {HTML_ATTR_Alignment, "LEFT", HTML_ATTR_Alignment_VAL_Left_},
-   {HTML_ATTR_Alignment, "RIGHT", HTML_ATTR_Alignment_VAL_Right_},
-
-   {HTML_ATTR_METHOD, "GET", HTML_ATTR_METHOD_VAL_Get_},
-   {HTML_ATTR_METHOD, "POST", HTML_ATTR_METHOD_VAL_Post_},
-
-   {HTML_ATTR_Position, "TOP", HTML_ATTR_Position_VAL_Position_top},
-   {HTML_ATTR_Position, "BOTTOM", HTML_ATTR_Position_VAL_Position_bottom},
-   {HTML_ATTR_Position, "LEFT", HTML_ATTR_Position_VAL_Position_left},
-   {HTML_ATTR_Position, "RIGHT", HTML_ATTR_Position_VAL_Position_right},
-
-   {HTML_ATTR_Row_valign, "TOP", HTML_ATTR_Row_valign_VAL_Row_top},
-   {HTML_ATTR_Row_valign, "MIDDLE", HTML_ATTR_Row_valign_VAL_Row_middle},
-   {HTML_ATTR_Row_valign, "BOTTOM", HTML_ATTR_Row_valign_VAL_Row_bottom},
-   {HTML_ATTR_Row_valign, "BASELINE", HTML_ATTR_Row_valign_VAL_Row_baseline},
-
-   {HTML_ATTR_Cell_valign, "TOP", HTML_ATTR_Cell_valign_VAL_Cell_top},
-   {HTML_ATTR_Cell_valign, "MIDDLE", HTML_ATTR_Cell_valign_VAL_Cell_middle},
-   {HTML_ATTR_Cell_valign, "BOTTOM", HTML_ATTR_Cell_valign_VAL_Cell_bottom},
-   {HTML_ATTR_Cell_valign, "BASELINE", HTML_ATTR_Cell_valign_VAL_Cell_baseline},
-
-   {HTML_ATTR_shape, "RECT", HTML_ATTR_shape_VAL_rectangle},
-   {HTML_ATTR_shape, "CIRCLE", HTML_ATTR_shape_VAL_circle},
-   {HTML_ATTR_shape, "POLY", HTML_ATTR_shape_VAL_polygon},
-
-   {HTML_ATTR_valuetype, "DATA", HTML_ATTR_valuetype_VAL_data_},
-   {HTML_ATTR_valuetype, "REF", HTML_ATTR_valuetype_VAL_ref},
-   {HTML_ATTR_valuetype, "OBJECT", HTML_ATTR_valuetype_VAL_object_},
-
-/* HTML attribute TYPE generates a Thot element */
-   {DummyAttribute, "BUTTON", HTML_EL_Button_Input},
-   {DummyAttribute, "CHECKBOX", HTML_EL_Checkbox_Input},
-   {DummyAttribute, "FILE", HTML_EL_File_Input},
-   {DummyAttribute, "HIDDEN", HTML_EL_Hidden_Input},
-   {DummyAttribute, "IMAGE", HTML_EL_PICTURE_UNIT},
-   {DummyAttribute, "PASSWORD", HTML_EL_Password_Input},
-   {DummyAttribute, "RADIO", HTML_EL_Radio_Input},
-   {DummyAttribute, "RESET", HTML_EL_Reset_Input},
-   {DummyAttribute, "SUBMIT", HTML_EL_Submit_Input},
-   {DummyAttribute, "TEXT", HTML_EL_Text_Input},
-
-/* The following declarations allow the parser to accept ThotBool attributes */
-/* written "checked=CHECKED", for instance */
-   {HTML_ATTR_ISMAP, "ISMAP", HTML_ATTR_ISMAP_VAL_Yes_},
-   {HTML_ATTR_nohref, "NOHREF", HTML_ATTR_nohref_VAL_Yes_},
-   {HTML_ATTR_COMPACT, "COMPACT", HTML_ATTR_COMPACT_VAL_Yes_},
-   {HTML_ATTR_Multiple, "MULTIPLE", HTML_ATTR_Multiple_VAL_Yes_},
-   {HTML_ATTR_Selected, "SELECTED", HTML_ATTR_Selected_VAL_Yes_},
-   {HTML_ATTR_Checked, "CHECKED", HTML_ATTR_Checked_VAL_Yes_},
-   {HTML_ATTR_No_wrap, "NOWRAP", HTML_ATTR_No_wrap_VAL_no_wrap},
-   {HTML_ATTR_NoShade, "NOSHADE", HTML_ATTR_NoShade_VAL_NoShade_},
-   {HTML_ATTR_declare, "DECLARE", HTML_ATTR_declare_VAL_Yes_},
-   {HTML_ATTR_defer, "DEFER", HTML_ATTR_defer_VAL_Yes_},
-   {HTML_ATTR_disabled, "DISABLED", HTML_ATTR_disabled_VAL_Yes_},
-   {HTML_ATTR_readonly, "READONLY", HTML_ATTR_readonly_VAL_Yes_},
-   {HTML_ATTR_no_resize, "NORESIZE", HTML_ATTR_no_resize_VAL_Yes_},
-   {0, "", 0}			/* Last entry. Mandatory */
-#  endif /* defined(_I18N_) || defined (__JIS__) */
+/* written "checked=CHECKED"), for instance */
+   {HTML_ATTR_ISMAP, TEXT("ISMAP"), HTML_ATTR_ISMAP_VAL_Yes_},
+   {HTML_ATTR_nohref, TEXT("NOHREF"), HTML_ATTR_nohref_VAL_Yes_},
+   {HTML_ATTR_COMPACT, TEXT("COMPACT"), HTML_ATTR_COMPACT_VAL_Yes_},
+   {HTML_ATTR_Multiple, TEXT("MULTIPLE"), HTML_ATTR_Multiple_VAL_Yes_},
+   {HTML_ATTR_Selected, TEXT("SELECTED"), HTML_ATTR_Selected_VAL_Yes_},
+   {HTML_ATTR_Checked, TEXT("CHECKED"), HTML_ATTR_Checked_VAL_Yes_},
+   {HTML_ATTR_No_wrap, TEXT("NOWRAP"), HTML_ATTR_No_wrap_VAL_no_wrap},
+   {HTML_ATTR_NoShade, TEXT("NOSHADE"), HTML_ATTR_NoShade_VAL_NoShade_},
+   {HTML_ATTR_declare, TEXT("DECLARE"), HTML_ATTR_declare_VAL_Yes_},
+   {HTML_ATTR_defer, TEXT("DEFER"), HTML_ATTR_defer_VAL_Yes_},
+   {HTML_ATTR_disabled, TEXT("DISABLED"), HTML_ATTR_disabled_VAL_Yes_},
+   {HTML_ATTR_readonly, TEXT("READONLY"), HTML_ATTR_readonly_VAL_Yes_},
+   {HTML_ATTR_no_resize, TEXT("NORESIZE"), HTML_ATTR_no_resize_VAL_Yes_},
+   {0, TEXT(""), 0}			/* Last entry. Mandatory */
 };
 
 typedef int         State;	/* a state of the automaton */
@@ -2014,96 +1421,6 @@ Element             elem;
 }
 
 /*----------------------------------------------------------------------
-   MapAttr search in all AttributeMappingTables the entry for the
-   attribute of name Attr and returns a pointer to that entry,
-   as well as the corresponding Thot SSchema
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static AttributeMapping*          MapAttr (STRING Attr, SSchema *schema, int elemEntry)
-#else
-static AttributeMapping*          MapAttr (Attr, schema, elemEntry)
-STRING              Attr;
-SSchema            *schema;
-int                 elemEntry;
-
-#endif
-{
-   int                 i;
-   int                 entry;
-
-   entry = -1;
-   *schema = NULL;
-   i = 0;
-   do
-      if (!ustrcasecmp (HTMLAttributeMappingTable[i].XMLattribute, Attr))
-	 if (HTMLAttributeMappingTable[i].XMLelement[0] == EOS)
-	       {
-	       entry = i;
-	       *schema = DocumentSSchema;
-	       }
-	 else if (elemEntry >= 0 &&
-		  !ustrcasecmp (HTMLAttributeMappingTable[i].XMLelement,
-				pHTMLGIMapping[elemEntry].htmlGI))
-	       {
-	       entry = i;
-	       *schema = DocumentSSchema;
-	       }
-	 else
-	       i++;
-      else
-	 i++;
-   while (entry < 0 && HTMLAttributeMappingTable[i].AttrOrContent != EOS);
-   if (entry >= 0)
-      return (&HTMLAttributeMappingTable[entry]);
-   return NULL;
-}
-
-/*----------------------------------------------------------------------
-   MapHTMLAttribute search in the HTML Attribute Mapping Tables the entry
-   for the attribute of name Attr and returns the corresponding Thot
-   attribute type.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void          MapHTMLAttribute (STRING Attr, AttributeType *attrType, STRING elementName, Document doc)
-#else
-void          MapHTMLAttribute (Attr, attrType, elementName, doc)
-STRING              Attr;
-AttributeType      *attrType;
-STRING              elementName;
-Document            doc;
-
-#endif
-{
-   SSchema	       schema = NULL;
-   AttributeMapping*   tableEntry;
-   int                 elemEntry;
-
-   elemEntry = MapGI(elementName, &schema, doc);
-   if (elemEntry >= 0)
-     {
-	 tableEntry = MapAttr (Attr, &schema, elemEntry);
-	 if (tableEntry != NULL)
-	   {
-	       attrType->AttrTypeNum = tableEntry->ThotAttribute;
-	       if (DocumentSSchema == NULL && doc != (Document) 0)
-		   attrType->AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
-	       else	    
-		   attrType->AttrSSchema = DocumentSSchema;
-	   }
-	 else
-	   {
-	      attrType->AttrTypeNum = 0;
-	      attrType->AttrSSchema = NULL;
-	   }
-     }
-   else
-     {
-        attrType->AttrTypeNum = 0;
-	attrType->AttrSSchema = NULL;
-     }
- }
-
-/*----------------------------------------------------------------------
    MapThotAttr     search in AttributeMappingTable the entry for
    the attribute of name Attr and returns the Thot Attribute
    corresponding to the rank of that entry.
@@ -2128,54 +1445,11 @@ STRING              tag;
    lastElemEntry = MapGI (tag, &schema, theDocument);
    if (lastElemEntry >= 0 || tag[0] == EOS)
      {
-	tableEntry = MapAttr (Attr, &schema, lastElemEntry);
+	tableEntry = MapAttr (Attr, &schema, lastElemEntry, theDocument);
 	if (tableEntry != NULL)
 	   thotAttr = tableEntry->ThotAttribute;
      }
    return thotAttr;
-}
-
-/*----------------------------------------------------------------------
-   MapAttrValue    search in AttrValueMappingTable the entry for
-   the attribute ThotAtt and its value AttrVal. Returns the corresponding
-   Thot value.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 MapAttrValue (int ThotAtt, STRING AttrVal)
-#else
-int                 MapAttrValue (ThotAtt, AttrVal)
-int                 ThotAtt;
-STRING              AttrVal;
-
-#endif
-{
-   int                 i, value;
-
-   value = -1;
-   i = 0;
-   while (HTMLAttrValueMappingTable[i].ThotAttr != ThotAtt &&
-	  HTMLAttrValueMappingTable[i].ThotAttr != 0)
-      i++;
-   if (HTMLAttrValueMappingTable[i].ThotAttr == ThotAtt)
-      do
-	 if (AttrVal[1] == EOS && (ThotAtt == HTML_ATTR_NumberStyle ||
-				   ThotAtt == HTML_ATTR_ItemStyle))
-	    /* attributes NumberStyle (which is always 1 character long) */
-	    /* and ItemStyle (only when its length is 1) are */
-	    /* case sensistive. Compare their exact value */
-	    if (AttrVal[0] == HTMLAttrValueMappingTable[i].XMLattrValue[0])
-	       value = HTMLAttrValueMappingTable[i].ThotAttrValue;
-	    else
-	       i++;
-	 else
-	    /* for other attributes, uppercase and lowercase are */
-	    /* equivalent */
-	    if (!ustrcasecmp (HTMLAttrValueMappingTable[i].XMLattrValue, AttrVal))
-	       value = HTMLAttrValueMappingTable[i].ThotAttrValue;
-	    else
-	       i++;
-      while (value < 0 && HTMLAttrValueMappingTable[i].ThotAttr != 0);
-   return value;
 }
 
 
@@ -3887,6 +3161,49 @@ ThotBool            onStartTag;
 
 
 /*----------------------------------------------------------------------
+   MapAttrValue    search in AttrValueMappingTable the entry for
+   the attribute ThotAtt and its value AttrVal. Returns the corresponding
+   Thot value.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int                 MapAttrValue (int ThotAtt, STRING AttrVal)
+#else
+int                 MapAttrValue (ThotAtt, AttrVal)
+int                 ThotAtt;
+STRING              AttrVal;
+
+#endif
+{
+   int                 i, value;
+
+   value = -1;
+   i = 0;
+   while (HTMLAttrValueMappingTable[i].ThotAttr != ThotAtt &&
+	  HTMLAttrValueMappingTable[i].ThotAttr != 0)
+      i++;
+   if (HTMLAttrValueMappingTable[i].ThotAttr == ThotAtt)
+      do
+	 if (AttrVal[1] == EOS && (ThotAtt == HTML_ATTR_NumberStyle ||
+				   ThotAtt == HTML_ATTR_ItemStyle))
+	    /* attributes NumberStyle (which is always 1 character long) */
+	    /* and ItemStyle (only when its length is 1) are */
+	    /* case sensistive. Compare their exact value */
+	    if (AttrVal[0] == HTMLAttrValueMappingTable[i].XMLattrValue[0])
+	       value = HTMLAttrValueMappingTable[i].ThotAttrValue;
+	    else
+	       i++;
+	 else
+	    /* for other attributes, uppercase and lowercase are */
+	    /* equivalent */
+	    if (!ustrcasecmp (HTMLAttrValueMappingTable[i].XMLattrValue, AttrVal))
+	       value = HTMLAttrValueMappingTable[i].ThotAttrValue;
+	    else
+	       i++;
+      while (value < 0 && HTMLAttrValueMappingTable[i].ThotAttr != 0);
+   return value;
+}
+
+/*----------------------------------------------------------------------
    TypeAttrValue   Value val has been read for the HTML attribute
    TYPE. Create a child for the current Thot
    element INPUT accordingly.
@@ -3911,7 +3228,7 @@ STRING              val;
 	usprintf (msgBuffer, TEXT("Unknown attribute value \"TYPE = %s\""), val);
 	ParseHTMLError (theDocument, msgBuffer);
 	attrType.AttrSSchema = DocumentSSchema;
-	attrType.AttrTypeNum = HTMLAttributeMappingTable[0].ThotAttribute;
+	attrType.AttrTypeNum = pHTMLAttributeMapping[0].ThotAttribute;
 	usprintf (msgBuffer, TEXT("type=%s"),val);
 	CreateAttr (lastElement, attrType, msgBuffer, TRUE);
      }
@@ -4763,7 +4080,7 @@ CHAR_T                c;
       /* ignore attributes of unknown tags */
       tableEntry = NULL;
    else
-      tableEntry = MapAttr (inputBuffer, &schema, lastElemEntry);
+      tableEntry = MapAttr (inputBuffer, &schema, lastElemEntry, theDocument);
 
    if (tableEntry == NULL)
       /* this attribute is not in the HTML mapping table */
@@ -4784,7 +4101,7 @@ CHAR_T                c;
 	   usprintf (msgBuffer, TEXT("Unknown attribute \"%s\""), inputBuffer);
 	   ParseHTMLError (theDocument, msgBuffer);
 	   /* attach an Invalid_attribute to the current element */
-	   tableEntry = &HTMLAttributeMappingTable[0];
+	   tableEntry = &pHTMLAttributeMapping[0];
 	   schema = DocumentSSchema;
 	   UnknownAttr = TRUE;
 	   }
@@ -4806,7 +4123,7 @@ CHAR_T                c;
 		    attrType.AttrSSchema = schema;
 		    attrType.AttrTypeNum = tableEntry->ThotAttribute;
 		    CreateAttr (lastElement, attrType, inputBuffer,
-				(ThotBool)(tableEntry == &HTMLAttributeMappingTable[0]));
+				(ThotBool)(tableEntry == &pHTMLAttributeMapping[0]));
 		    ReadingHREF = (attrType.AttrTypeNum == HTML_ATTR_HREF_);
 		    if (ReadingHREF)
 		      {
@@ -5153,7 +4470,7 @@ CHAR_T                c;
 			TtaRemoveAttribute (lastAttrElement, lastAttribute,
 					    theDocument);
 			attrType.AttrSSchema = DocumentSSchema;
-			attrType.AttrTypeNum = HTMLAttributeMappingTable[0].ThotAttribute;
+			attrType.AttrTypeNum = pHTMLAttributeMapping[0].ThotAttribute;
 			usprintf (msgBuffer, TEXT("%s=%s"), attrName, inputBuffer);
 			CreateAttr (lastAttrElement, attrType, msgBuffer, TRUE);
 		        }

@@ -1461,8 +1461,6 @@ ThotBool   state;
 #endif /* __STDC__ */
 {
   int                 frame, i, index;
-  
-
 #ifndef _WINDOWS
   int                 n;
   XmString            title_string;
@@ -1548,7 +1546,7 @@ ThotBool   state;
 		  /* force la mise a jour de la fenetre */
 		  XtManageChild (row);
 #else  /* _WINDOWS */
-		  index = i + 1;
+		  index = i;
 		  if (procedure) {
 		    w = (TBBUTTON*) TtaGetMemory (sizeof (TBBUTTON));
 		    if (!w)

@@ -72,76 +72,57 @@
 
 /*----------------------------------------------------------------------
    TtaInitialize
-
-   Initializes the Thot editing tool kit for an application. This function must be
-   called before any other function of the tool kit.
-
+   Initializes the Thot editing tool kit for an application. This function
+   must be called before any other function of the tool kit.
    Parameter:
    applicationName: the argv[0] of the application that requires services
    from the tool kit.  This name is used for accessing the ressources
    defined in file .Xdefaults.
-
   ----------------------------------------------------------------------*/
-extern void         TtaInitialize (STRING applicationName);
+extern void TtaInitialize (STRING applicationName);
 
 /*----------------------------------------------------------------------
    TtaQuit
-
    Quits the Thot tool kit. No other function of the tool kit can then
    be called by the application.
-
   ----------------------------------------------------------------------*/
-extern void         TtaQuit (void);
+extern void TtaQuit (void);
 
 /*----------------------------------------------------------------------
    TtaSetErrorMessages
-
    Indicates to the tool kit whether error messages must be printed or not.
-
    Parameter:
    on: 1 if error messages must be printed, 0 if not.
-
   ----------------------------------------------------------------------*/
-extern void         TtaSetErrorMessages (int on);
+extern void TtaSetErrorMessages (int on);
 
 /*----------------------------------------------------------------------
    TtaGetVersion
-
    Returns the identifier of the current version of the Thot editing tool kit.
-
    Return value:
    identifier of the current version.
-
   ----------------------------------------------------------------------*/
-extern STRING       TtaGetVersion (void);
+extern STRING TtaGetVersion (void);
 
 /*----------------------------------------------------------------------
    TtaGetErrorCode
-
    Returns the error code set by the last call to the Thot editing tool kit.
    See file application.h for the possible values.
-
    Return value:
    last error code, 0 if the last call was successful.
-
   ----------------------------------------------------------------------*/
-extern int          TtaGetErrorCode (void);
+extern int TtaGetErrorCode (void);
 
 /*----------------------------------------------------------------------
    TtaGetStrError
-
    Returns a pointer to the message text for a given error code.
-
    Parameter:
    errorCode: an error code.
-
    Return value:
    No return value
-
-   See also:
-   TtaGetErrorCode
+   See also: TtaGetErrorCode
   ----------------------------------------------------------------------*/
-extern STRING       TtaGetStrError (int errorCode);
+extern STRING TtaGetStrError (int errorCode);
 
 /*----------------------------------------------------------------------
    TtaExtractName: extracts the directory and the file name.       
@@ -149,28 +130,33 @@ extern STRING       TtaGetStrError (int errorCode);
    which sizes are sufficient to contain the path and      
    the file name.                                          
   ----------------------------------------------------------------------*/
-extern void         TtaExtractName (STRING text, /*OUT*/ STRING aDirectory, /*OUT*/ STRING aName);
+extern void TtaExtractName (STRING text, /*OUT*/ STRING aDirectory, /*OUT*/ STRING aName);
 
-extern void        *TtaGetMemory (unsigned int size);
-extern void         TtaFreeMemory (void *buffer);
-extern STRING       TtaAllocString ( unsigned int n );
-extern void        *TtaRealloc (void *ptr, unsigned int n);
-extern STRING       TtaStrdup (STRING str);
+/*----------------------------------------------------------------------
+   TtaIsPrinting returns TRUE is the application is printing.    
+  ----------------------------------------------------------------------*/
+extern ThotBool TtaIsPrinting ();
+
+extern void   *TtaGetMemory (unsigned int size);
+extern void    TtaFreeMemory (void *buffer);
+extern STRING  TtaAllocString ( unsigned int n );
+extern void   *TtaRealloc (void *ptr, unsigned int n);
+extern STRING  TtaStrdup (STRING str);
 
 #else  /* __STDC__ */
-
-extern void         TtaInitialize ( /* STRING applicationName */ );
-extern void         TtaQuit ( /* void */ );
-extern void        *TtaGetMemory ( /* int size */ );
-extern void         TtaFreeMemory ( /* STRING buffer */ );
-extern STRING       TtaAllocString ( /* unsigned int n */ );
-extern void        *TtaRealloc ( /* void *ptr, unsigned int n */ );
-extern void         TtaSetErrorMessages ( /* int on */ );
-extern STRING       TtaGetVersion ( /* void */ );
-extern int          TtaGetErrorCode ( /* void */ );
-extern STRING       TtaGetStrError ( /* int errorCode */ );
-extern void         TtaExtractName ( /* STRING text, STRING aDirectory, STRING aName */ );
-extern STRING       TtaStrdup ( /* char *str */ );
+extern void    TtaInitialize ( /* STRING applicationName */ );
+extern void    TtaQuit ( /* void */ );
+extern void    TtaSetErrorMessages ( /* int on */ );
+extern STRING  TtaGetVersion ( /* void */ );
+extern int     TtaGetErrorCode ( /* void */ );
+extern STRING  TtaGetStrError ( /* int errorCode */ );
+extern void    TtaExtractName ( /* STRING text, STRING aDirectory, STRING aName */ );
+extern ThotBool TtaIsPrinting ();
+extern void   *TtaGetMemory ( /* int size */ );
+extern void    TtaFreeMemory ( /* STRING buffer */ );
+extern STRING  TtaAllocString ( /* unsigned int n */ );
+extern void   *TtaRealloc ( /* void *ptr, unsigned int n */ );
+extern STRING  TtaStrdup ( /* char *str */ );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -1684,6 +1684,7 @@ STRING    closingTag;
   oldDocument = currentDocument;
   currentDocument = doc;
   oldParserCtxt = currentParserCtxt;
+
   ChangeParserContext (DTDname);
   oldLanguage = currentLanguage;
   currentLanguage = lang;
@@ -1876,7 +1877,8 @@ STRING    closingTag;
      XMLElementComplete (el, currentDocument);
 
   /* restore the previous parsing environment */
-  currentParserCtxt->XMLSSchema = NULL;
+  if (currentParserCtxt)
+      currentParserCtxt->XMLSSchema = NULL;
   currentParserCtxt = oldParserCtxt;
   currentDocument = oldDocument;
   currentLanguage = oldLanguage;

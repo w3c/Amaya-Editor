@@ -12,6 +12,8 @@ extern ThotBool LoadRemoteStyleSheet ( STRING url,
                                        CSSInfoPtr css,
                                        STRING completeURL,
                                        STRING localfile );
+extern STRING CssToPrint ( Document doc,
+                           STRING printdir );
 extern void InitCSS ( void );
 extern void LinkCSS ( Document doc,
                       View view );
@@ -32,6 +34,8 @@ extern ThotBool LoadRemoteStyleSheet (/* STRING url,
                                          CSSInfoPtr css,
                                          STRING completeURL,
                                          STRING localfile */);
+extern STRING CssToPrint (/* Document doc,
+                             STRING printdir */);
 extern void InitCSS (/* void */);
 extern void LinkCSS (/* Document doc,
                         View view */);

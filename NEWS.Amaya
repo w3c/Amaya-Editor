@@ -2,6 +2,28 @@ This file lists the bugs that have been fixed and the extensions that
 have been introduced in Amaya and Thot since version 1.4 of Amaya.
  
 =============================================================
+2.2
+=============================================================
+ 
+Extensions 2.2:
+---------------
+
+* CSS:
+  - Amaya is now able to print with CSS
+
+
+Fixed bugs 2.1a:
+---------------
+
+* Amaya could get stuck when creating an anchor.
+
+* CSS:
+  - When the color was invalid Amaya used the black. Now the CSS rule is
+    ignored.
+  - CSS comments within style elements were lost.
+  - Amaya misinterpreded complex selectors.
+ 
+=============================================================
 2.1a
 =============================================================
  

@@ -5,7 +5,6 @@
  *
  */
 
-THOT_EXPORT ThotBool        Printing;
 THOT_EXPORT ThotGC          GCpicture;	 /* for bitmap */
 THOT_EXPORT ThotGC          GCimage;	 /* for pixmap */
 THOT_EXPORT char*           FileExtension[];
@@ -24,4 +23,12 @@ THOT_EXPORT int             InlineHandlers;
 THOT_EXPORT int             HandlersCounter;
 THOT_EXPORT int             currentExtraHandler;
 THOT_EXPORT ThotGC          GCpicture;
-THOT_EXPORT Pixmap          EpsfPictureLogo ;
+THOT_EXPORT Pixmap          EpsfPictureLogo;
+
+/* bg colors used by Windows */#ifdef _WINDOWS
+THOT_EXPORT int             bgRed;
+THOT_EXPORT int             bgGreen;
+THOT_EXPORT int             bgBlue;
+THOT_EXPORT ThotBool        bgAlpha;
+THOT_EXPORT HBITMAP         alphamap;
+#endif /* _WINDOWS */

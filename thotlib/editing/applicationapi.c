@@ -180,7 +180,15 @@ View                view;
 }
 
 /*----------------------------------------------------------------------
-   TtaGetViewFrame retourne le widget du frame de la vue document.    
+   TtaIsPrinting returns TRUE is the application is printing.    
+  ----------------------------------------------------------------------*/
+ThotBool         TtaIsPrinting ()
+{
+  return (Printing);
+}
+
+/*----------------------------------------------------------------------
+   TtaGetViewFrame returns the frame widget of the document view.    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 ThotWidget          TtaGetViewFrame (Document document, View view)
@@ -188,7 +196,6 @@ ThotWidget          TtaGetViewFrame (Document document, View view)
 ThotWidget          TtaGetViewFrame (document, view)
 Document            document;
 View                view;
-
 #endif /* __STDC__ */
 {
   int                 frame;

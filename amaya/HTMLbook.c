@@ -46,8 +46,8 @@ static struct _SubDoc  *SubDocs;
 static int              PaperPrint;
 static int              ManualFeed;
 static int              PageSize;
-static CHAR_T             PSdir[MAX_PATH];
-static CHAR_T             pPrinter[MAX_PATH];
+static CHAR_T           PSdir[MAX_PATH];
+static CHAR_T           pPrinter[MAX_PATH];
 static Document		docPrint;
 static ThotBool		numberLinks;
 static ThotBool		withToC;
@@ -389,7 +389,7 @@ Document            document;
        /* define the new default PS file */
        ptr = TtaGetEnvString (TEXT("APP_TMPDIR"));
        if (ptr != NULL && TtaCheckDirectory (ptr))
-	     ustrcpy(PSdir,ptr);
+	     ustrcpy(PSdir, ptr);
        else
 	     ustrcpy (PSdir, TtaGetDefEnvString (TEXT("APP_TMPDIR")));
 	   lg = ustrlen(PSdir);
@@ -425,7 +425,8 @@ Document            doc;
   AttributeType      attrType;
   Attribute          attr;
   Element            el;
-  CHAR_T               viewsToPrint[MAX_PATH];
+  STRING             files, dir;
+  CHAR_T             viewsToPrint[MAX_PATH];
   ThotBool           status, textFile;
 
   textFile = (DocumentTypes[doc] == docText ||
@@ -481,9 +482,20 @@ Document            doc;
 	attr = TtaNewAttribute (attrType);
 	TtaAttachAttribute (el, attr, doc);
      }
+
    if (attr != 0 && !printURL)
      TtaRemoveAttribute (el, attr, doc);
-   TtaPrint (docPrint, viewsToPrint);
+   /* get the path dir where css files have to be stored */
+   if (textFile)
+     files = NULL;
+   else
+     {
+       TtaGetPrintNames (&files, &dir);
+       /* store css files and get the list of names */
+       files = CssToPrint (doc, dir);
+     }
+   TtaPrint (docPrint, viewsToPrint, files);
+   TtaFreeMemory (files);
    if (!status)
      TtaSetDocumentUnmodified (doc);
 }

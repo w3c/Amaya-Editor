@@ -42,10 +42,6 @@
 #define min(a, b) (((a) < (b)) ? (a) : (b))
 
 #ifdef _WINDOWS
-extern int bgRed ;
-extern int bgGreen;
-extern int bgBlue ;
-
 extern void png_read_init (png_structp png_ptr);
 #endif /* _WINDOWS */
 

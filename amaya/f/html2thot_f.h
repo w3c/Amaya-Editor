@@ -12,14 +12,8 @@ extern void ParseAreaCoords ( Element element,
                               Document document );
 extern STRING GITagNameByType ( ElementType elType );
 extern STRING GITagName ( Element elem );
-extern void MapHTMLAttribute ( STRING Attr,
-                               AttributeType *attrType,
-                               STRING elementName,
-                               Document doc );
 extern int MapThotAttr ( STRING Attr,
                          STRING tag );
-extern int MapAttrValue ( int ThotAtt,
-                          STRING AttrVal );
 extern void InitMapping ( void );
 extern void ParseHTMLError ( Document doc,
                              USTRING msg );
@@ -27,6 +21,8 @@ extern ThotBool IsCharacterLevelElement ( Element el );
 extern void OnlyOneOptionSelected ( Element el,
                                     Document doc,
                                     ThotBool parsing );
+extern int MapAttrValue ( int ThotAtt,
+                          STRING AttrVal );
 extern void SetAttrIntItemStyle ( Element el,
                                   Document doc );
 extern void CreateAttrWidthPercentPxl ( STRING buffer,
@@ -65,14 +61,8 @@ extern void ParseAreaCoords (/* Element element,
                                 Document document */);
 extern STRING GITagNameByType (/* ElementType elType */);
 extern STRING GITagName (/* Element elem */);
-extern void MapHTMLAttribute (/* STRING Attr,
-                                 AttributeType *attrType,
-                                 STRING elementName,
-                                 Document doc */);
 extern int MapThotAttr (/* STRING Attr,
                            STRING tag */);
-extern int MapAttrValue (/* int ThotAtt,
-                            STRING AttrVal */);
 extern void InitMapping (/* void */);
 extern void ParseHTMLError (/* Document doc,
                                USTRING msg */);
@@ -80,6 +70,8 @@ extern ThotBool IsCharacterLevelElement (/* Element el */);
 extern void OnlyOneOptionSelected (/* Element el,
                                       Document doc,
                                       ThotBool parsing */);
+extern int MapAttrValue (/* int ThotAtt,
+                            STRING AttrVal */);
 extern void SetAttrIntItemStyle (/* Element el,
                                     Document doc */);
 extern void CreateAttrWidthPercentPxl (/* STRING buffer,

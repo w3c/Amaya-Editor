@@ -158,7 +158,6 @@ HWND             hDlgPrint     = NULL;
 HWND             ghwndMain     = NULL;
 HWND             currentWindow;
 HWND             ghwndAbort;
-static HWND      thotWindow    = (HWND) 0;
 static HINSTANCE hCurrentInstance ;
 
 /*----------------------------------------------------------------------
@@ -558,7 +557,7 @@ static void usage (processName)
 STRING processName;
 #endif /* __STDC__ */ 
 {
-       fprintf (stderr, "\n\nusage: %s <file name>\n", processName);
+       fprintf (stderr, "\n\nusage: %s [-lang value] <file name>\n", processName);
        fprintf (stderr, "       -v <view name> [-v <view name> [...]]\n");
        fprintf (stderr, "       -ps <psfile> | -out <printer>\n");
        fprintf (stderr, "       [-portrait | -landscape]\n");
@@ -803,7 +802,7 @@ ThotBool           *assoc;
 
 
 /*----------------------------------------------------------------------
-   OpenPSFile ouvre le fichier d'impression.                       
+   OpenPSFile opens the printing file and write the PS prologue.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          OpenPSFile (PtrDocument pDoc, int *volume)
@@ -813,761 +812,764 @@ PtrDocument         pDoc;
 int                *volume;
 #endif /* __STDC__ */
 {
-   FILE               *PSfile;
-   CHAR_T                fileName[256];
-   ViewFrame          *pFrame;
-   long                i;
-   int                 len;
-   CHAR_T                tmp[MAX_PATH];
+  FILE               *PSfile;
+  CHAR_T              tmp[MAX_PATH];
+  CHAR_T              fileName[256];
+  ViewFrame          *pFrame;
+  long                i;
+  int                 len;
 
-   /* Est-ce la premiere creation de frame ? */
-   i = 1;
-   while (FrRef[i] != 0)
-      i++;
+  /* Est-ce la premiere creation de frame ? */
+  i = 1;
+  while (FrRef[i] != 0)
+    i++;
 
-#  ifdef _WINDOWS
-   if (TtPrinterDC) {
-      FrRef[i] = (ThotWindow)i;
-      /* initialiser visibilite et zoom de la fenetre */
-      /* cf. procedure InitializeFrameParams */
-      pFrame = &ViewFrameTable[i - 1];
-      pFrame->FrVisibility = 5;	/* visibilite mise a 5 */
-      pFrame->FrMagnification = 0;	/* zoom a 0 */
+#ifdef _WINDOWS
+  if (TtPrinterDC) {
+    FrRef[i] = (ThotWindow)i;
+    /* initialiser visibilite et zoom de la fenetre */
+    /* cf. procedure InitializeFrameParams */
+    pFrame = &ViewFrameTable[i - 1];
+    pFrame->FrVisibility = 5;	/* visibilite mise a 5 */
+    pFrame->FrMagnification = 0;	/* zoom a 0 */
+    
+    /* On initialise la table des frames  (attention MYSTERES)*/
+    FrameTable[i].FrDoc = IdentDocument (pDoc);
+    RemoveClipping(i);
+    *volume = 16000;
+    return (i);
+  }
+#endif /* _WINDOWS */
 
-      /* On initialise la table des frames  (attention MYSTERES)*/
-      FrameTable[i].FrDoc = IdentDocument (pDoc);
-      RemoveClipping(i);
-      *volume = 16000;
-      return (i);
-   }
-#  endif /* _WINDOWS */
+  if (i == 1)
+    {
+      /* On construit le nom du fichier PostScript */
+      ustrcpy (tmp, DocumentPath);
+      /* On cherche le directory ou existe le .PIV */
+      MakeCompleteName (pDoc->DocDName, PIV_EXT2, tmp, fileName, &len);
+      /* On construit le nom complet avec ce directory */
+      FindCompleteName (pDoc->DocDName, Ps_EXT2, tmp, fileName, &len);	/* ps au lieu de PIV */
+      if ((PSfile = ufopen (fileName, _WriteMODE_)) == NULL)
+	TtaDisplayMessage (FATAL, TtaGetMessage (LIB, TMSG_CANNOT_CREATE_PS), fileName);
+      else
+	{
+	  fflush (PSfile);
+	  FrRef[i] = (ThotWindow) PSfile;
+	  fprintf (PSfile, "%%!PS-Adobe-2.0\n");
+	  fprintf (PSfile, "%%%%Creator: Thot\n");
+	  fprintf (PSfile, "%%%% Delete the last nwpage line command for an encapsulated PostScript\n");
+	  fprintf (PSfile, "%%%%CreationDate: Sat Nov  2 12:03:40 MET 1996\n");
+	  
+	  fprintf (PSfile, "%%%%PaginateView: (atend)\n");
+	  fprintf (PSfile, "%%%%EndComments\n\n");
+	  
+	  fprintf (PSfile, "/ThotDict 100 dict def\n");
+	  fprintf (PSfile, "ThotDict begin\n\n");
+	  
+	  fprintf (PSfile, "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Fonctions generales%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n");
+	  fprintf (PSfile, "/setpatterndict 18 dict def\n");
+	  fprintf (PSfile, "setpatterndict begin\n");
+	  fprintf (PSfile, "/bitison\n");
+	  fprintf (PSfile, "{ /ybit exch def\n");
+	  fprintf (PSfile, "  /xbit exch def\n");
+	  fprintf (PSfile, "  /bytevalue bstring ybit bwidth mul xbit 8 idiv add get def\n");
+	  fprintf (PSfile, "  /PicMask 1 7 xbit 8 mod sub bitshift def\n");
+	  fprintf (PSfile, "  bytevalue PicMask and 0 ne\n");
+	  fprintf (PSfile, "}def\n");
+	  fprintf (PSfile, "end\n");
+	  fprintf (PSfile, "/bpspotf\n");
+	  fprintf (PSfile, "{setpatterndict begin\n");
+	  fprintf (PSfile, "  /y exch def\n");
+	  fprintf (PSfile, "  /x exch def\n");
+	  fprintf (PSfile, "  /xind x 1 add 2 div bpside mul cvi def\n");
+	  fprintf (PSfile, "  /yind y 1 add 2 div bpside mul cvi def\n");
+	  fprintf (PSfile, "  xind yind bitison\n");
+	  fprintf (PSfile, "   {/onbits onbits 1 add def 1}\n");
+	  fprintf (PSfile, "   {/offbits offbits 1 add def 0}\n");
+	  fprintf (PSfile, "  ifelse\n");
+	  fprintf (PSfile, " end\n");
+	  fprintf (PSfile, "}def\n");
+	  fprintf (PSfile, "/setpattern\n");
+	  fprintf (PSfile, "{setpatterndict begin\n");
+	  fprintf (PSfile, "  /cellsz exch def\n");
+	  fprintf (PSfile, "  /bwidth exch def\n");
+	  fprintf (PSfile, "  /bpside exch def\n");
+	  fprintf (PSfile, "  /bstring exch def\n");
+	  fprintf (PSfile, "  /onbits 0 def\n");
+	  fprintf (PSfile, "  /offbits 0 def\n");
+	  fprintf (PSfile, "  cellsz 0 /bpspotf load setscreen\n");
+	  fprintf (PSfile, "  {} settransfer\n");
+	  fprintf (PSfile, "  offbits offbits onbits add div setgray\n");
+	  fprintf (PSfile, " end\n");
+	  fprintf (PSfile, "}def\n");
+	  fprintf (PSfile, "/fillbox	%% (red green blue / pattern) code fillbox\n");
+	  fprintf (PSfile, "{ /code exch def\n");
+	  fprintf (PSfile, "  code 0 ge\n");
+	  fprintf (PSfile, "  {code 0 gt\n");
+	  fprintf (PSfile, "   {code 8 eq \n");
+	  fprintf (PSfile, "    {gsave 8 1 72 300 32 div div setpattern fill grestore} %%new pattern\n");
+	  fprintf (PSfile, "    {gsave 1 code 10 div sub setgray fill grestore} %%gray level\n");
+	  fprintf (PSfile, "    ifelse\n");
+	  fprintf (PSfile, "   }if\n");
+	  fprintf (PSfile, "  }\n");
+	  fprintf (PSfile, "  {gsave setrgbcolor fill grestore} %%lower\n");
+	  fprintf (PSfile, "  ifelse\n");
+	  fprintf (PSfile, "} bind def\n\n");
+	  
+	  fprintf (PSfile, "/sf	%% font val =->\n");
+	  fprintf (PSfile, " { exch cvn findfont exch dup 10 eq {pop 9.8} if scalefont setfont } bind def\n");
+	  fprintf (PSfile, "/s	%% string larg x y =->\n");
+	  fprintf (PSfile, " { moveto \n");
+	  fprintf (PSfile, "   1 index stringwidth pop sub\n");
+	  fprintf (PSfile, "   1 index length div 0 3 2 roll ashow } bind def\n");
+	  fprintf (PSfile, "/c	%% y x string =->\n");
+	  fprintf (PSfile, " { dup 4 1 roll stringwidth pop 2 div sub exch moveto show\n");
+	  fprintf (PSfile, " } bind def\n");
+	  fprintf (PSfile, "/j  %% string nbl larg x y =->\n");
+	  fprintf (PSfile, " { moveto\n");
+	  fprintf (PSfile, "   2 index\n");
+	  fprintf (PSfile, "   stringwidth pop sub dup\n");
+	  fprintf (PSfile, "   0 ge { exch div 0 32 4 3 roll widthshow }\n");
+	  fprintf (PSfile, "	{ 2 index length div exch pop\n");
+	  fprintf (PSfile, "	  0 3 2 roll ashow }\n");
+	  fprintf (PSfile, "	ifelse\n");
+	  fprintf (PSfile, " } bind def\n");
+	  fprintf (PSfile, "/r	%% Radical\n");
+	  fprintf (PSfile, " { gsave newpath moveto gsave -1 -1 rlineto 0.75 setlinewidth\n");
+	  fprintf (PSfile, "   stroke grestore\n");
+	  fprintf (PSfile, "   lineto 1.5 setlinewidth %%1 setlinecap\n");
+	  fprintf (PSfile, "   gsave stroke grestore\n");
+	  fprintf (PSfile, "   lineto lineto 0 setlinejoin 2 setmiterlimit\n");
+	  fprintf (PSfile, "   0.75 setlinewidth stroke grestore\n");
+	  fprintf (PSfile, " } bind def\n");
+	  fprintf (PSfile, "/Seg	%% (x y)* dash width nb Segments\n");
+	  fprintf (PSfile, "{ [/nb /ep /style] {exch def} forall\n");
+	  fprintf (PSfile, "   newpath\n");
+	  fprintf (PSfile, "   moveto\n");
+	  fprintf (PSfile, "   2 1 nb {pop lineto} for\n");
+	  fprintf (PSfile, "   0 setlinejoin ep 0.4 mul setlinewidth \n");
+	  fprintf (PSfile, "   style dup 0 gt\n");
+	  fprintf (PSfile, "   {5 mul [ exch 3 ] 0 setdash}\n");
+	  fprintf (PSfile, "   {pop [ ] 0 setdash}\n");
+	  fprintf (PSfile, "   ifelse\n");
+	  fprintf (PSfile, "   ep 0 gt {stroke} if\n");
+	  fprintf (PSfile, "} bind def\n");
+	  fprintf (PSfile, "/Poly	%% rgb fill (x y)* dash width nb Polygone\n");
+	  fprintf (PSfile, "{ [/nb /ep /style] {exch def} forall\n");
+	  fprintf (PSfile, "   newpath\n");
+	  fprintf (PSfile, "   moveto\n");
+	  fprintf (PSfile, "   2 1 nb {pop lineto} for\n");
+	  fprintf (PSfile, "   closepath\n");
+	  fprintf (PSfile, "   fillbox\n");
+	  fprintf (PSfile, "   0 setlinejoin ep 0.4 mul setlinewidth \n");
+	  fprintf (PSfile, "   style dup 0 gt\n");
+	  fprintf (PSfile, "   {5 mul [ exch 3 ] 0 setdash}\n");
+	  fprintf (PSfile, "   {pop [ ] 0 setdash}\n");
+	  fprintf (PSfile, "   ifelse\n");
+	  fprintf (PSfile, "   ep 0 gt {stroke} if\n");
+	  fprintf (PSfile, "} bind def\n");
+	  fprintf (PSfile, "/Curv	%% (x y)* dash width nb Curves\n");
+	  fprintf (PSfile, "{ [/nb /ep /style] {exch def} forall\n");
+	  fprintf (PSfile, "   newpath\n");
+	  fprintf (PSfile, "   moveto\n");
+	  fprintf (PSfile, "   2 1 nb {pop curveto} for\n");
+	  fprintf (PSfile, "   0 setlinejoin ep 0.4 mul setlinewidth \n");
+	  fprintf (PSfile, "   style dup 0 gt\n");
+	  fprintf (PSfile, "   {5 mul [ exch 3 ] 0 setdash}\n");
+	  fprintf (PSfile, "   {pop [ ] 0 setdash}\n");
+	  fprintf (PSfile, "   ifelse\n");
+	  fprintf (PSfile, "   ep 0 gt {stroke} if\n");
+	  fprintf (PSfile, "} bind def\n");
+	  fprintf (PSfile, "/Splin	%% rgb fill (x y)* dash width nb Spline\n");
+	  fprintf (PSfile, "{ [/nb /ep /style] {exch def} forall\n");
+	  fprintf (PSfile, "   newpath\n");
+	  fprintf (PSfile, "   moveto\n");
+	  fprintf (PSfile, "   2 1 nb {pop curveto} for\n");
+	  fprintf (PSfile, "   closepath\n");
+	  fprintf (PSfile, "   fillbox\n");
+	  fprintf (PSfile, "   0 setlinejoin ep 0.4 mul setlinewidth \n");
+	  fprintf (PSfile, "   style dup 0 gt\n");
+	  fprintf (PSfile, "   {5 mul [ exch 3 ] 0 setdash}\n");
+	  fprintf (PSfile, "   {pop [ ] 0 setdash}\n");
+	  fprintf (PSfile, "   ifelse\n");
+	  fprintf (PSfile, "   ep 0 gt {stroke} if\n");
+	  fprintf (PSfile, "} bind def\n");
+	  fprintf (PSfile, "/s3	%% x yb yt h c1 c2 c3 =->\n");
+	  fprintf (PSfile, " { [/c3 /c2 /c1 /h /yt /yb /x] {exch def} forall\n");
+	  fprintf (PSfile, "   c1 stringwidth pop 2 div x exch sub /x exch def\n");
+	  fprintf (PSfile, "   x yt moveto c1 show\n");
+	  fprintf (PSfile, "   x yb moveto c3 show\n");
+	  fprintf (PSfile, "   { yt h sub /yt exch def\n");
+	  fprintf (PSfile, "     yt yb sub h gt\n");
+	  fprintf (PSfile, "     { yb h add /yb exch def\n");
+	  fprintf (PSfile, "       x yt moveto c2 show x yb moveto c2 show\n");
+	  fprintf (PSfile, "     }\n");
+	  fprintf (PSfile, "     { yt yb gt\n");
+	  fprintf (PSfile, "       { yt yb h 0.75 mul add le { yt h 4 div add /yt exch def } if\n");
+	  fprintf (PSfile, "         x yt moveto c2 show\n");
+	  fprintf (PSfile, "       } if\n");
+	  fprintf (PSfile, "       exit\n");
+	  fprintf (PSfile, "     } ifelse\n");
+	  fprintf (PSfile, "   } loop\n");
+	  fprintf (PSfile, " } bind def\n");
+	  fprintf (PSfile, "/s4	%% x yb yt h c1 c2 c3 c4 =->\n");
+	  fprintf (PSfile, " { 10 dict begin \n");
+	  fprintf (PSfile, "   [/c4 /c3 /c2 /c1 /h /yt /yb /x] {exch def} forall\n");
+	  fprintf (PSfile, "   c1 stringwidth pop 2 div x exch sub /x exch def\n");
+	  fprintf (PSfile, "   x yt moveto c1 show\n");
+	  fprintf (PSfile, "   x yb moveto c3 show\n");
+	  fprintf (PSfile, "   yt yt yb sub 2 div sub /ym exch def\n");
+	  fprintf (PSfile, " x ym moveto c2 show\n");
+	  fprintf (PSfile, "   /ymb ym def\n");
+	  fprintf (PSfile, "   { yt h sub /yt exch def\n");
+	  fprintf (PSfile, "     yt ym sub h gt\n");
+	  fprintf (PSfile, "     { ym h add /ym exch def\n");
+	  fprintf (PSfile, "       x yt moveto c4 show x ym moveto c4 show\n");
+	  fprintf (PSfile, "       ymb h sub /ymb exch def yb h add /yb exch def\n");
+	  fprintf (PSfile, "       x ymb moveto c4 show x yb moveto c4 show\n");
+	  fprintf (PSfile, "     }\n");
+	  fprintf (PSfile, "     { ymb h sub /ymb exch def\n");
+	  fprintf (PSfile, "       yt ym gt\n");
+	  fprintf (PSfile, "       { yt ym h 0.5 mul add le\n");
+	  fprintf (PSfile, "         { yt h 0.75 mul add /yt exch def\n");
+	  fprintf (PSfile, "           ymb h 0.25 mul add /ymb exch def\n");
+	  fprintf (PSfile, "         } if\n");
+	  fprintf (PSfile, "         x yt moveto c4 show x ymb moveto c4 show\n");
+	  fprintf (PSfile, "       } if\n");
+	  fprintf (PSfile, "       exit\n");
+	  fprintf (PSfile, "     } ifelse\n");
+	  fprintf (PSfile, "   } loop end\n");
+	  fprintf (PSfile, " } bind def\n");
+	  fprintf (PSfile, "/arr	%% xQueue yQueue xTail yTail th headth headlg Arrow\n");
+	  fprintf (PSfile, " { 16 dict begin\n");
+	  fprintf (PSfile, "   /mtrx matrix def\n");
+	  fprintf (PSfile, "   /hlg exch def\n");
+	  fprintf (PSfile, "   /hthick exch 3 div def\n");
+	  fprintf (PSfile, "   /thick exch def\n");
+	  fprintf (PSfile, "   /tipy exch def /tipx exch def\n");
+	  fprintf (PSfile, "   /taily exch def /tailx exch def\n");
+	  fprintf (PSfile, "   /dash exch def\n");
+	  fprintf (PSfile, "   /dx tipx tailx sub def\n");
+	  fprintf (PSfile, "   /dy tipy taily sub def\n");
+	  fprintf (PSfile, "   /arlg dx dx mul dy dy mul add sqrt def\n");
+	  fprintf (PSfile, "   dx 0 eq dy 0 eq and \n");
+	  fprintf (PSfile, "   { /angle 0 def }\n");
+	  fprintf (PSfile, "   { /angle dy dx atan def }\n");
+	  fprintf (PSfile, "   ifelse\n");
+	  fprintf (PSfile, "   /base arlg hlg sub def\n");
+	  fprintf (PSfile, "   /savem mtrx currentmatrix def\n");
+	  fprintf (PSfile, "   tailx taily translate\n");
+	  fprintf (PSfile, "   angle rotate\n");
+	  fprintf (PSfile, "   newpath\n");
+	  fprintf (PSfile, "   base hthick neg moveto\n");
+	  fprintf (PSfile, "   arlg 0 lineto base hthick lineto\n");
+	  fprintf (PSfile, "   closepath\n");
+	  fprintf (PSfile, "   fill\n");
+	  fprintf (PSfile, "   newpath\n");
+	  fprintf (PSfile, "   0 0 moveto base 0 moveto\n");
+	  fprintf (PSfile, "   thick 0.4 mul setlinewidth\n");
+	  fprintf (PSfile, "   savem setmatrix\n");
+	  fprintf (PSfile, "   dash 0 gt \n");
+	  fprintf (PSfile, "   { dash 5 mul /dash def\n");
+	  fprintf (PSfile, "     [dash 3] 0 setdash\n");
+	  fprintf (PSfile, "   }\n");
+	  fprintf (PSfile, "   { [] 0 setdash }\n");
+	  fprintf (PSfile, "   ifelse\n");
+	  fprintf (PSfile, "   thick 0 gt {stroke} if\n");
+	  fprintf (PSfile, "   end\n");
+	  fprintf (PSfile, " } bind def\n");
+	  fprintf (PSfile, "/ov	%% Ovale\n");
+	  fprintf (PSfile, "{\n");
+	  fprintf (PSfile, "  8 dict begin\n");
+	  fprintf (PSfile, "  /ray exch def\n");
+	  fprintf (PSfile, "  newpath moveto\n");
+	  fprintf (PSfile, "  /y1 exch def\n");
+	  fprintf (PSfile, "  /x1 exch def\n");
+	  fprintf (PSfile, "  4 {\n");
+	  fprintf (PSfile, "    /y2 exch def /x2 exch def\n");
+	  fprintf (PSfile, "    x1 y1 x2 y2 ray arcto pop pop pop pop\n");
+	  fprintf (PSfile, "    /y1 y2 def /x1 x2 def\n");
+	  fprintf (PSfile, "  } repeat closepath\n");
+	  fprintf (PSfile, "  /ep exch def /dash exch def\n");
+	  fprintf (PSfile, "  fillbox\n");
+	  fprintf (PSfile, "  ep 0.4 mul setlinewidth \n");
+	  fprintf (PSfile, "  dash dup 0 gt\n");
+	  fprintf (PSfile, "  { 5 mul [ exch 3 ] 0 setdash }\n");
+	  fprintf (PSfile, "  {  pop [ ] 0 setdash }\n");
+	  fprintf (PSfile, "  ifelse\n");
+	  fprintf (PSfile, "  ep 0 gt {stroke} if\n");
+	  fprintf (PSfile, "  end\n");
+	  fprintf (PSfile, " } bind def\n");
+	  fprintf (PSfile, "/cer  %% Cercle ep x y R\n");
+	  fprintf (PSfile, "{\n");
+	  fprintf (PSfile, "  2 index 2 index moveto \n");
+	  fprintf (PSfile, "  newpath 0 360 arc\n");
+	  fprintf (PSfile, "  /ep exch def /dash exch def\n");
+	  fprintf (PSfile, "  fillbox\n");
+	  fprintf (PSfile, "  ep 0.4 mul setlinewidth \n");
+	  fprintf (PSfile, "  dash dup 0 gt\n");
+	  fprintf (PSfile, "  { 5 mul [ exch 3 ] 0 setdash }\n");
+	  fprintf (PSfile, "  {  pop [ ] 0 setdash }\n");
+	  fprintf (PSfile, "  ifelse\n");
+	  fprintf (PSfile, "  ep 0 gt {stroke} if\n");
+	  fprintf (PSfile, "} bind def\n\n");
 
-   if (i == 1)
-     {
-	/* On construit le nom du fichier PostScript */
-	ustrcpy (tmp, DocumentPath);
-	/* On cherche le directory ou existe le .PIV */
-	MakeCompleteName (pDoc->DocDName, PIV_EXT2, tmp, fileName, &len);
-	/* On construit le nom complet avec ce directory */
-	FindCompleteName (pDoc->DocDName, Ps_EXT2, tmp, fileName, &len);	/* ps au lieu de PIV */
-	if ((PSfile = ufopen (fileName, _WriteMODE_)) == NULL)
-	  TtaDisplayMessage (FATAL, TtaGetMessage (PRINT, PRINT_UNABLE_TO_CREATE_FILE), fileName);
-	fflush (PSfile);
-	FrRef[i] = (ThotWindow) PSfile;
-	fprintf (PSfile, "%%!PS-Adobe-2.0\n");
-	fprintf (PSfile, "%%%%Creator: Thot\n");
-	fprintf (PSfile, "%%%% Delete the last nwpage line command for an encapsulated PostScript\n");
-	fprintf (PSfile, "%%%%CreationDate: Sat Nov  2 12:03:40 MET 1996\n");
+	  fprintf (PSfile, "/ellipse { %% ep x y A B\n");
+	  fprintf (PSfile, "  1 index div /scalef exch def /bigaxis exch def\n");
+	  fprintf (PSfile, "  moveto\n");
+	  fprintf (PSfile, "  gsave\n");
+	  fprintf (PSfile, "  1 scalef scale\n");
+	  fprintf (PSfile, "  currentpoint newpath bigaxis 0 360 arc closepath\n");
+	  fprintf (PSfile, "  /ep exch def /dash exch def\n");
+	  fprintf (PSfile, "  fillbox\n");
+	  fprintf (PSfile, "  ep 0.4 mul setlinewidth \n");
+	  fprintf (PSfile, "  dash dup 0 gt\n");
+	  fprintf (PSfile, "  { 5 mul [ exch 3 ] 0 setdash }\n");
+	  fprintf (PSfile, "  {  pop [ ] 0 setdash }\n");
+	  fprintf (PSfile, "  ifelse\n");
+	  fprintf (PSfile, "  ep 0 gt {stroke} if\n");
+	  fprintf (PSfile, "  grestore\n");
+	  fprintf (PSfile, "} bind def\n\n");
 
-	fprintf (PSfile, "%%%%PaginateView: (atend)\n");
-	fprintf (PSfile, "%%%%EndComments\n\n");
+	  fprintf (PSfile, "/DumpImage { %%%% Wim Him Wdr Hdr DumpImage\n");
+	  fprintf (PSfile, "       /Hdr exch def /Wdr exch def /Him exch def /Wim exch def\n");
+	  fprintf (PSfile, "       Wdr Hdr scale\n");
+	  fprintf (PSfile, "       /picstr  Wim 7 add 8 idiv  string def\n");
+	  fprintf (PSfile, "       Wim Him 1 [ Wim 0 0 Him neg 0 Him ]\n");
+	  fprintf (PSfile, "          { currentfile picstr readhexstring pop } image\n");
+	  fprintf (PSfile, " } bind def\n\n");
 
-	fprintf (PSfile, "/ThotDict 100 dict def\n");
-	fprintf (PSfile, "ThotDict begin\n\n");
+	  fprintf (PSfile, "/DumpImage2 { %%%% Wim Him Wdr Hdr DumpImage2\n");
+	  fprintf (PSfile, "       /Hdr exch def /Wdr exch def /Him exch def /Wim exch def\n");
+	  fprintf (PSfile, "       /picstr  Wim 3 mul string def\n");
+	  fprintf (PSfile, "     	Wdr Hdr scale\n");
+	  fprintf (PSfile, "        Wim Him 8 \n");
+	  fprintf (PSfile, "	[ Wim 0 0 Him neg 0 Him ]\n");
+	  fprintf (PSfile, "          { currentfile picstr readhexstring pop } \n");
+	  fprintf (PSfile, "	false 3\n");
+	  fprintf (PSfile, "	colorimage\n");
+	  fprintf (PSfile, " } bind def\n\n");
+	  
+	  fprintf (PSfile, "%%%% define \'colorimage\' if it isn\'t defined\n");
+	  fprintf (PSfile, "%%%%   (\'colortogray\' and \'mergeprocs\' come from xwd2ps\n");
+	  fprintf (PSfile, "%%%%     via xgrab)\n");
+	  fprintf (PSfile, "/colorimage where   %%%% do we know about \'colorimage\'?\n");
+	  fprintf (PSfile, "  { pop }           %%%% yes: pop off the \'dict\' returned\n");
+	  fprintf (PSfile, "  {                 %%%% no:  define one\n");
+	  fprintf (PSfile, "    /colortogray {  %%%% define an RGB->I function\n");
+	  fprintf (PSfile, "      /rgbdata exch store    %%%% call input \'rgbdata\'\n");
+	  fprintf (PSfile, "      rgbdata length 3 idiv\n");
+	  fprintf (PSfile, "      /npixls exch store\n");
+	  fprintf (PSfile, "      /rgbindx 0 store\n");
+	  fprintf (PSfile, "      /grays npixls string store  %%%% str to hold the result\n");
+	  fprintf (PSfile, "      0 1 npixls 1 sub {\n");
+	  fprintf (PSfile, "        grays exch\n");
+	  fprintf (PSfile, "        rgbdata rgbindx       get 20 mul    %%%% Red\n");
+	  fprintf (PSfile, "        rgbdata rgbindx 1 add get 32 mul    %%%% Green\n");
+	  fprintf (PSfile, "        rgbdata rgbindx 2 add get 12 mul    %%%% Blue\n");
+	  fprintf (PSfile, "        add add 64 idiv      %%%% I = .5G + .31R + .18B\n");
+	  fprintf (PSfile, "        put\n");
+	  fprintf (PSfile, "        /rgbindx rgbindx 3 add store\n");
+	  fprintf (PSfile, "      } for\n");
+	  fprintf (PSfile, "      grays\n");
+	  fprintf (PSfile, "    } bind def\n\n");
+	  
+	  fprintf (PSfile, "    %%%% Utility procedure for colorimage operator.\n");
+	  fprintf (PSfile, "    %%%% This procedure takes two procedures off the\n");
+	  fprintf (PSfile, "    %%%% stack and merges them into a single procedure.\n\n");
+	  
+	  fprintf (PSfile, "    /mergeprocs { %%%% def\n");
+	  fprintf (PSfile, "      dup length\n");
+	  fprintf (PSfile, "      3 -1 roll\n");
+	  fprintf (PSfile, "      dup\n");
+	  fprintf (PSfile, "      length\n");
+	  fprintf (PSfile, "      dup\n");
+	  fprintf (PSfile, "      5 1 roll\n");
+	  fprintf (PSfile, "      3 -1 roll\n");
+	  fprintf (PSfile, "      add\n");
+	  fprintf (PSfile, "      array cvx\n");
+	  fprintf (PSfile, "      dup\n");
+	  fprintf (PSfile, "      3 -1 roll\n");
+	  fprintf (PSfile, "      0 exch\n");
+	  fprintf (PSfile, "      putinterval\n");
+	  fprintf (PSfile, "      dup\n");
+	  fprintf (PSfile, "      4 2 roll\n");
+	  fprintf (PSfile, "      putinterval\n");
+	  fprintf (PSfile, "    } bind def\n\n");
+	  
+	  fprintf (PSfile, "    /colorimage { %%%% def\n");
+	  fprintf (PSfile, "      pop pop     %%%% remove \'false 3\' operands\n");
+	  fprintf (PSfile, "      {colortogray} mergeprocs\n");
+	  fprintf (PSfile, "      image\n");
+	  fprintf (PSfile, "    } bind def\n");
+	  fprintf (PSfile, "  } ifelse          %%%% end of \'false\' case\n\n");
+	  
+	  fprintf (PSfile, "/Pes	%% x y width =->\n");
+	  fprintf (PSfile, " { 5 dict begin\n");
+	  fprintf (PSfile, "   [/xf /y /x] {exch def} forall\n");
+	  fprintf (PSfile, "   /st (.) def\n");
+	  fprintf (PSfile, "   /lg st stringwidth pop 3 mul def\n");
+	  fprintf (PSfile, "   /xf xf x add def\n");
+	  fprintf (PSfile, "   { xf x gt\n");
+	  fprintf (PSfile, "     { xf y moveto\n");
+	  fprintf (PSfile, "       st show\n");
+	  fprintf (PSfile, "       /xf xf lg sub def\n");
+	  fprintf (PSfile, "     }\n");
+	  fprintf (PSfile, "     { exit }\n");
+	  fprintf (PSfile, "     ifelse\n");
+	  fprintf (PSfile, "   } loop end\n");
+	  fprintf (PSfile, " } bind def\n");
+	  fprintf (PSfile, "/gr	%%%% framework for graphics\n");
+	  fprintf (PSfile, " { newpath moveto lineto lineto lineto closepath\n");
+	  fprintf (PSfile, "   0.125 mul 1 exch sub setgray fill 0 setgray\n");
+	  fprintf (PSfile, " } bind def\n\n");
+	  
+	  fprintf (PSfile, "/trm    %%%% framework for empty boxes\n");
+	  fprintf (PSfile, "{ suptrame 0 eq {gr} {pop pop pop pop pop pop pop pop pop} ifelse\n");
+	  fprintf (PSfile, "} bind def\n\n");
+	  
+	  fprintf (PSfile, "/BEGINEPSFILE {%%def\n");
+	  fprintf (PSfile, "  /EPSFsave save def\n");
+	  fprintf (PSfile, "  0 setgray 0 setlinecap 1 setlinewidth 0 setlinejoin 10 setmiterlimit [] 0 setdash\n");
+	  fprintf (PSfile, "  newpath\n");
+	  fprintf (PSfile, "  /showpage {} def\n");
+	  fprintf (PSfile, "} bind def\n\n");
+	  
+	  fprintf (PSfile, "/ENDEPSFILE {%%def\n");
+	  fprintf (PSfile, "  EPSFsave restore\n");
+	  fprintf (PSfile, "} bind def\n\n");
+	  
+	  fprintf (PSfile, "%%%%%%%%%%%%%%%%%%%%%%%%%%%% Encoding of font dictionaries %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n\n");
+	  
+	  fprintf (PSfile, "/ISOLatin1Encoding where { pop } { /ISOLatin1Encoding\n");
+	  fprintf (PSfile, "[/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef\n");
+	  fprintf (PSfile, "/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef\n");
+	  fprintf (PSfile, "/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef\n");
+	  fprintf (PSfile, "/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/space\n");
+	  fprintf (PSfile, "/exclam/quotedbl/numbersign/dollar/percent/ampersand/quoteright\n");
+	  fprintf (PSfile, "/parenleft/parenright/asterisk/plus/comma/minus/period/slash/zero/one\n");
+	  fprintf (PSfile, "/two/three/four/five/six/seven/eight/nine/colon/semicolon/less/equal\n");
+	  fprintf (PSfile, "/greater/question/at/A/B/C/D/E/F/G/H/I/J/K/L/M/N/O/P/Q/R/S\n");
+	  fprintf (PSfile, "/T/U/V/W/X/Y/Z/bracketleft/backslash/bracketright/asciicircum\n");
+	  fprintf (PSfile, "/underscore/quoteleft/a/b/c/d/e/f/g/h/i/j/k/l/m/n/o/p/q/r/s\n");
+	  fprintf (PSfile, "/t/u/v/w/x/y/z/braceleft/bar/braceright/asciitilde/.notdef/.notdef\n");
+	  fprintf (PSfile, "/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef\n");
+	  fprintf (PSfile, "/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/dotlessi/grave\n");
+	  fprintf (PSfile, "/acute/circumflex/tilde/macron/breve/dotaccent/dieresis/.notdef/ring\n");
+	  fprintf (PSfile, "/cedilla/.notdef/hungarumlaut/ogonek/caron/space/exclamdown/cent\n");
+	  fprintf (PSfile, "/sterling/currency/yen/brokenbar/section/dieresis/copyright/ordfeminine\n");
+	  fprintf (PSfile, "/guillemotleft/logicalnot/hyphen/registered/macron/degree/plusminus\n");
+	  fprintf (PSfile, "/twosuperior/threesuperior/acute/mu/paragraph/periodcentered/cedilla\n");
+	  fprintf (PSfile, "/onesuperior/ordmasculine/guillemotright/onequarter/onehalf/threequarters\n");
+	  fprintf (PSfile, "/questiondown/Agrave/Aacute/Acircumflex/Atilde/Adieresis/Aring/AE\n");
+	  fprintf (PSfile, "/Ccedilla/Egrave/Eacute/Ecircumflex/Edieresis/Igrave/Iacute/Icircumflex\n");
+	  fprintf (PSfile, "/Idieresis/Eth/Ntilde/Ograve/Oacute/Ocircumflex/Otilde/Odieresis\n");
+	  fprintf (PSfile, "/OE/Oslash/Ugrave/Uacute/Ucircumflex/Udieresis/Yacute/Thorn\n");
+	  fprintf (PSfile, "/germandbls/agrave/aacute/acircumflex/atilde/adieresis/aring/ae\n");
+	  fprintf (PSfile, "/ccedilla/egrave/eacute/ecircumflex/edieresis/igrave/iacute/icircumflex\n");
+	  fprintf (PSfile, "/idieresis/eth/ntilde/ograve/oacute/ocircumflex/otilde/odieresis/oe\n");
+	  fprintf (PSfile, "/oslash/ugrave/uacute/ucircumflex/udieresis/yacute/thorn/ydieresis]\n");
+	  fprintf (PSfile, "def %%ISOLatin1Encoding\n");
+	  fprintf (PSfile, "} ifelse\n\n");
 
-	fprintf (PSfile, "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Fonctions generales%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n");
-	fprintf (PSfile, "/setpatterndict 18 dict def\n");
-	fprintf (PSfile, "setpatterndict begin\n");
-	fprintf (PSfile, "/bitison\n");
-	fprintf (PSfile, "{ /ybit exch def\n");
-	fprintf (PSfile, "  /xbit exch def\n");
-	fprintf (PSfile, "  /bytevalue bstring ybit bwidth mul xbit 8 idiv add get def\n");
-	fprintf (PSfile, "  /PicMask 1 7 xbit 8 mod sub bitshift def\n");
-	fprintf (PSfile, "  bytevalue PicMask and 0 ne\n");
-	fprintf (PSfile, "}def\n");
-	fprintf (PSfile, "end\n");
-	fprintf (PSfile, "/bpspotf\n");
-	fprintf (PSfile, "{setpatterndict begin\n");
-	fprintf (PSfile, "  /y exch def\n");
-	fprintf (PSfile, "  /x exch def\n");
-	fprintf (PSfile, "  /xind x 1 add 2 div bpside mul cvi def\n");
-	fprintf (PSfile, "  /yind y 1 add 2 div bpside mul cvi def\n");
-	fprintf (PSfile, "  xind yind bitison\n");
-	fprintf (PSfile, "   {/onbits onbits 1 add def 1}\n");
-	fprintf (PSfile, "   {/offbits offbits 1 add def 0}\n");
-	fprintf (PSfile, "  ifelse\n");
-	fprintf (PSfile, " end\n");
-	fprintf (PSfile, "}def\n");
-	fprintf (PSfile, "/setpattern\n");
-	fprintf (PSfile, "{setpatterndict begin\n");
-	fprintf (PSfile, "  /cellsz exch def\n");
-	fprintf (PSfile, "  /bwidth exch def\n");
-	fprintf (PSfile, "  /bpside exch def\n");
-	fprintf (PSfile, "  /bstring exch def\n");
-	fprintf (PSfile, "  /onbits 0 def\n");
-	fprintf (PSfile, "  /offbits 0 def\n");
-	fprintf (PSfile, "  cellsz 0 /bpspotf load setscreen\n");
-	fprintf (PSfile, "  {} settransfer\n");
-	fprintf (PSfile, "  offbits offbits onbits add div setgray\n");
-	fprintf (PSfile, " end\n");
-	fprintf (PSfile, "}def\n");
-	fprintf (PSfile, "/fillbox	%% (red green blue / pattern) code fillbox\n");
-	fprintf (PSfile, "{ /code exch def\n");
-	fprintf (PSfile, "  code 0 ge\n");
-	fprintf (PSfile, "  {code 0 gt\n");
-	fprintf (PSfile, "   {code 8 eq \n");
-	fprintf (PSfile, "    {gsave 8 1 72 300 32 div div setpattern fill grestore} %%new pattern\n");
-	fprintf (PSfile, "    {gsave 1 code 10 div sub setgray fill grestore} %%gray level\n");
-	fprintf (PSfile, "    ifelse\n");
-	fprintf (PSfile, "   }if\n");
-	fprintf (PSfile, "  }\n");
-	fprintf (PSfile, "  {gsave setrgbcolor fill grestore} %%lower\n");
-	fprintf (PSfile, "  ifelse\n");
-	fprintf (PSfile, "} bind def\n\n");
+	  fprintf (PSfile, "/ReEncode	%% NewFont Font ReEncode\n");
+	  fprintf (PSfile, "  { findfont	%% load desired font\n");
+	  fprintf (PSfile, "    dup maxlength dict /newfont exch def	%% allocate new fontdict\n");
+	  fprintf (PSfile, "    dup\n");
+	  fprintf (PSfile, "    { exch dup dup dup dup /FID ne exch /Encoding ne and exch /FontBBox ne and exch /FontMatrix ne and\n");
+	  fprintf (PSfile, "	{ exch newfont 3 1 roll put }\n");
+	  fprintf (PSfile, "	{ pop pop }\n");
+	  fprintf (PSfile, "	ifelse }\n");
+	  fprintf (PSfile, "    forall	%% copy fontdict\n\n");
+	  
+	  fprintf (PSfile, "    dup /FontBBox get 4 array copy newfont /FontBBox 3 -1 roll put\n");
+	  fprintf (PSfile, "    /FontMatrix get 6 array copy newfont /FontMatrix 3 -1 roll put\n\n");
+	  
+	  fprintf (PSfile, "    newfont /Encoding ISOLatin1Encoding 256 array copy put	%%put new encoding vector\n");
+	  fprintf (PSfile, "    newfont /Encoding get dup dup dup				%%add /**OE*/\n");
+	  fprintf (PSfile, "			 8#230 /divide put			%%add /**OE*/\n");
+	  fprintf (PSfile, "			 8#231 /multiply put			%%add /**OE*/\n");
+	  fprintf (PSfile, "			 8#367 /oe put				%%add /**OE*/\n");
+	  fprintf (PSfile, "			 8#327 /OE put				%%add /**OE*/\n\n");
+	  
+	  fprintf (PSfile, "    dup newfont /FontName 3 -1 roll put	%%put a new Fontname\n");
+	  fprintf (PSfile, "    newfont definefont pop	%%define a new font\n");
+	  fprintf (PSfile, "  } def\n\n");
+	  
+	  fprintf (PSfile, "/ReEncodeOblique	%% NewFont Font ReEncodeOblique\n");
+	  fprintf (PSfile, "  { findfont	%% load desired font\n");
+	  fprintf (PSfile, "    dup maxlength dict /newfont exch def	%% allocate new fontdict\n");
+	  fprintf (PSfile, "    dup\n");
+	  fprintf (PSfile, "    { exch dup dup dup dup /FID ne exch /Encoding ne and exch /FontBBox ne and exch /FontMatrix ne and\n");
+	  fprintf (PSfile, "	{ exch newfont 3 1 roll put }\n");
+	  fprintf (PSfile, "	{ pop pop }\n");
+	  fprintf (PSfile, "	ifelse }\n");
+	  fprintf (PSfile, "    forall	%% copy fontdict\n\n");
+	  
+	  fprintf (PSfile, "    dup /FontBBox get 4 array copy newfont /FontBBox 3 -1 roll put\n");
+	  fprintf (PSfile, "    /FontMatrix get \n");
+	  fprintf (PSfile, "    [1 0 15 sin 1 0 0 ] exch 6 array concatmatrix\n");
+	  fprintf (PSfile, "    newfont /FontMatrix 3 -1 roll put\n\n");
+	  
+	  fprintf (PSfile, "    newfont /Encoding ISOLatin1Encoding 256 array copy put	%%put new encoding vector\n");
+	  fprintf (PSfile, "    newfont /Encoding get dup dup dup				%%add /**OE*/\n");
+	  fprintf (PSfile, "			 8#230 /divide put			%%add /**OE*/\n");
+	  fprintf (PSfile, "			 8#231 /multiply put			%%add /**OE*/\n");
+	  fprintf (PSfile, "			 8#367 /oe put				%%add /**OE*/\n");
+	  fprintf (PSfile, "			 8#327 /OE put				%%add /**OE*/\n\n");
+	  
+	  fprintf (PSfile, "    dup newfont /FontName 3 -1 roll put	%%put a new Fontname\n");
+	  fprintf (PSfile, "    newfont definefont pop	%%define a new font\n");
+	  fprintf (PSfile, "  } def\n\n");
+	  
+	  fprintf (PSfile, "/lhr /Helvetica 		ReEncode\n");
+	  fprintf (PSfile, "/lhb /Helvetica-Bold  	ReEncode\n");
+	  fprintf (PSfile, "/lho /Helvetica-Oblique  	ReEncode\n");
+	  fprintf (PSfile, "/lhq /Helvetica-BoldOblique ReEncode\n\n");
+	  
+	  fprintf (PSfile, "/lhr (lhr) def\n");
+	  fprintf (PSfile, "/lhb (lhb) def\n");
+	  fprintf (PSfile, "/lhi (lho) def\n");
+	  fprintf (PSfile, "/lho (lho) def    %% lhi for helvetica italic ( = oblique )\n");
+	  fprintf (PSfile, "/lhq (lhq) def\n");
+	  fprintf (PSfile, "/lhg (lhq) def    %% lhg for helvetica bold italic ( = bold oblique )\n\n");
+	  
+	  fprintf (PSfile, "/ltr /Times-Roman 		ReEncode\n");
+	  fprintf (PSfile, "/ltb /Times-Bold 		ReEncode\n");
+	  fprintf (PSfile, "/lti /Times-Italic 		ReEncode\n");
+	  fprintf (PSfile, "/ltg /Times-BoldItalic 	ReEncode\n");
+	  fprintf (PSfile, "/lto /Times-Roman 		ReEncodeOblique\n");
+	  fprintf (PSfile, "/ltq /Times-Bold 		ReEncodeOblique\n\n");
+	  
+	  fprintf (PSfile, "/ltr (ltr) def\n");
+	  fprintf (PSfile, "/ltb (ltb) def\n");
+	  fprintf (PSfile, "/lti (lti) def\n");
+	  fprintf (PSfile, "/lto (lto) def\n");
+	  fprintf (PSfile, "/ltg (ltg) def\n");
+	  fprintf (PSfile, "/ltq (ltq) def\n\n");
 
-	fprintf (PSfile, "/sf	%% font val =->\n");
-	fprintf (PSfile, " { exch cvn findfont exch dup 10 eq {pop 9.8} if scalefont setfont } bind def\n");
-	fprintf (PSfile, "/s	%% string larg x y =->\n");
-	fprintf (PSfile, " { moveto \n");
-	fprintf (PSfile, "   1 index stringwidth pop sub\n");
-	fprintf (PSfile, "   1 index length div 0 3 2 roll ashow } bind def\n");
-	fprintf (PSfile, "/c	%% y x string =->\n");
-	fprintf (PSfile, " { dup 4 1 roll stringwidth pop 2 div sub exch moveto show\n");
-	fprintf (PSfile, " } bind def\n");
-	fprintf (PSfile, "/j  %% string nbl larg x y =->\n");
-	fprintf (PSfile, " { moveto\n");
-	fprintf (PSfile, "   2 index\n");
-	fprintf (PSfile, "   stringwidth pop sub dup\n");
-	fprintf (PSfile, "   0 ge { exch div 0 32 4 3 roll widthshow }\n");
-	fprintf (PSfile, "	{ 2 index length div exch pop\n");
-	fprintf (PSfile, "	  0 3 2 roll ashow }\n");
-	fprintf (PSfile, "	ifelse\n");
-	fprintf (PSfile, " } bind def\n");
-	fprintf (PSfile, "/r	%% Radical\n");
-	fprintf (PSfile, " { gsave newpath moveto gsave -1 -1 rlineto 0.75 setlinewidth\n");
-	fprintf (PSfile, "   stroke grestore\n");
-	fprintf (PSfile, "   lineto 1.5 setlinewidth %%1 setlinecap\n");
-	fprintf (PSfile, "   gsave stroke grestore\n");
-	fprintf (PSfile, "   lineto lineto 0 setlinejoin 2 setmiterlimit\n");
-	fprintf (PSfile, "   0.75 setlinewidth stroke grestore\n");
-	fprintf (PSfile, " } bind def\n");
-	fprintf (PSfile, "/Seg	%% (x y)* dash width nb Segments\n");
-	fprintf (PSfile, "{ [/nb /ep /style] {exch def} forall\n");
-	fprintf (PSfile, "   newpath\n");
-	fprintf (PSfile, "   moveto\n");
-	fprintf (PSfile, "   2 1 nb {pop lineto} for\n");
-	fprintf (PSfile, "   0 setlinejoin ep 0.4 mul setlinewidth \n");
-	fprintf (PSfile, "   style dup 0 gt\n");
-	fprintf (PSfile, "   {5 mul [ exch 3 ] 0 setdash}\n");
-	fprintf (PSfile, "   {pop [ ] 0 setdash}\n");
-	fprintf (PSfile, "   ifelse\n");
-	fprintf (PSfile, "   ep 0 gt {stroke} if\n");
-	fprintf (PSfile, "} bind def\n");
-	fprintf (PSfile, "/Poly	%% rgb fill (x y)* dash width nb Polygone\n");
-	fprintf (PSfile, "{ [/nb /ep /style] {exch def} forall\n");
-	fprintf (PSfile, "   newpath\n");
-	fprintf (PSfile, "   moveto\n");
-	fprintf (PSfile, "   2 1 nb {pop lineto} for\n");
-	fprintf (PSfile, "   closepath\n");
-	fprintf (PSfile, "   fillbox\n");
-	fprintf (PSfile, "   0 setlinejoin ep 0.4 mul setlinewidth \n");
-	fprintf (PSfile, "   style dup 0 gt\n");
-	fprintf (PSfile, "   {5 mul [ exch 3 ] 0 setdash}\n");
-	fprintf (PSfile, "   {pop [ ] 0 setdash}\n");
-	fprintf (PSfile, "   ifelse\n");
-	fprintf (PSfile, "   ep 0 gt {stroke} if\n");
-	fprintf (PSfile, "} bind def\n");
-	fprintf (PSfile, "/Curv	%% (x y)* dash width nb Curves\n");
-	fprintf (PSfile, "{ [/nb /ep /style] {exch def} forall\n");
-	fprintf (PSfile, "   newpath\n");
-	fprintf (PSfile, "   moveto\n");
-	fprintf (PSfile, "   2 1 nb {pop curveto} for\n");
-	fprintf (PSfile, "   0 setlinejoin ep 0.4 mul setlinewidth \n");
-	fprintf (PSfile, "   style dup 0 gt\n");
-	fprintf (PSfile, "   {5 mul [ exch 3 ] 0 setdash}\n");
-	fprintf (PSfile, "   {pop [ ] 0 setdash}\n");
-	fprintf (PSfile, "   ifelse\n");
-	fprintf (PSfile, "   ep 0 gt {stroke} if\n");
-	fprintf (PSfile, "} bind def\n");
-	fprintf (PSfile, "/Splin	%% rgb fill (x y)* dash width nb Spline\n");
-	fprintf (PSfile, "{ [/nb /ep /style] {exch def} forall\n");
-	fprintf (PSfile, "   newpath\n");
-	fprintf (PSfile, "   moveto\n");
-	fprintf (PSfile, "   2 1 nb {pop curveto} for\n");
-	fprintf (PSfile, "   closepath\n");
-	fprintf (PSfile, "   fillbox\n");
-	fprintf (PSfile, "   0 setlinejoin ep 0.4 mul setlinewidth \n");
-	fprintf (PSfile, "   style dup 0 gt\n");
-	fprintf (PSfile, "   {5 mul [ exch 3 ] 0 setdash}\n");
-	fprintf (PSfile, "   {pop [ ] 0 setdash}\n");
-	fprintf (PSfile, "   ifelse\n");
-	fprintf (PSfile, "   ep 0 gt {stroke} if\n");
-	fprintf (PSfile, "} bind def\n");
-	fprintf (PSfile, "/s3	%% x yb yt h c1 c2 c3 =->\n");
-	fprintf (PSfile, " { [/c3 /c2 /c1 /h /yt /yb /x] {exch def} forall\n");
-	fprintf (PSfile, "   c1 stringwidth pop 2 div x exch sub /x exch def\n");
-	fprintf (PSfile, "   x yt moveto c1 show\n");
-	fprintf (PSfile, "   x yb moveto c3 show\n");
-	fprintf (PSfile, "   { yt h sub /yt exch def\n");
-	fprintf (PSfile, "     yt yb sub h gt\n");
-	fprintf (PSfile, "     { yb h add /yb exch def\n");
-	fprintf (PSfile, "       x yt moveto c2 show x yb moveto c2 show\n");
-	fprintf (PSfile, "     }\n");
-	fprintf (PSfile, "     { yt yb gt\n");
-	fprintf (PSfile, "       { yt yb h 0.75 mul add le { yt h 4 div add /yt exch def } if\n");
-	fprintf (PSfile, "         x yt moveto c2 show\n");
-	fprintf (PSfile, "       } if\n");
-	fprintf (PSfile, "       exit\n");
-	fprintf (PSfile, "     } ifelse\n");
-	fprintf (PSfile, "   } loop\n");
-	fprintf (PSfile, " } bind def\n");
-	fprintf (PSfile, "/s4	%% x yb yt h c1 c2 c3 c4 =->\n");
-	fprintf (PSfile, " { 10 dict begin \n");
-	fprintf (PSfile, "   [/c4 /c3 /c2 /c1 /h /yt /yb /x] {exch def} forall\n");
-	fprintf (PSfile, "   c1 stringwidth pop 2 div x exch sub /x exch def\n");
-	fprintf (PSfile, "   x yt moveto c1 show\n");
-	fprintf (PSfile, "   x yb moveto c3 show\n");
-	fprintf (PSfile, "   yt yt yb sub 2 div sub /ym exch def\n");
-	fprintf (PSfile, " x ym moveto c2 show\n");
-	fprintf (PSfile, "   /ymb ym def\n");
-	fprintf (PSfile, "   { yt h sub /yt exch def\n");
-	fprintf (PSfile, "     yt ym sub h gt\n");
-	fprintf (PSfile, "     { ym h add /ym exch def\n");
-	fprintf (PSfile, "       x yt moveto c4 show x ym moveto c4 show\n");
-	fprintf (PSfile, "       ymb h sub /ymb exch def yb h add /yb exch def\n");
-	fprintf (PSfile, "       x ymb moveto c4 show x yb moveto c4 show\n");
-	fprintf (PSfile, "     }\n");
-	fprintf (PSfile, "     { ymb h sub /ymb exch def\n");
-	fprintf (PSfile, "       yt ym gt\n");
-	fprintf (PSfile, "       { yt ym h 0.5 mul add le\n");
-	fprintf (PSfile, "         { yt h 0.75 mul add /yt exch def\n");
-	fprintf (PSfile, "           ymb h 0.25 mul add /ymb exch def\n");
-	fprintf (PSfile, "         } if\n");
-	fprintf (PSfile, "         x yt moveto c4 show x ymb moveto c4 show\n");
-	fprintf (PSfile, "       } if\n");
-	fprintf (PSfile, "       exit\n");
-	fprintf (PSfile, "     } ifelse\n");
-	fprintf (PSfile, "   } loop end\n");
-	fprintf (PSfile, " } bind def\n");
-	fprintf (PSfile, "/arr	%% xQueue yQueue xTail yTail th headth headlg Arrow\n");
-	fprintf (PSfile, " { 16 dict begin\n");
-	fprintf (PSfile, "   /mtrx matrix def\n");
-	fprintf (PSfile, "   /hlg exch def\n");
-	fprintf (PSfile, "   /hthick exch 3 div def\n");
-	fprintf (PSfile, "   /thick exch def\n");
-	fprintf (PSfile, "   /tipy exch def /tipx exch def\n");
-	fprintf (PSfile, "   /taily exch def /tailx exch def\n");
-	fprintf (PSfile, "   /dash exch def\n");
-	fprintf (PSfile, "   /dx tipx tailx sub def\n");
-	fprintf (PSfile, "   /dy tipy taily sub def\n");
-	fprintf (PSfile, "   /arlg dx dx mul dy dy mul add sqrt def\n");
-	fprintf (PSfile, "   dx 0 eq dy 0 eq and \n");
-	fprintf (PSfile, "   { /angle 0 def }\n");
-	fprintf (PSfile, "   { /angle dy dx atan def }\n");
-	fprintf (PSfile, "   ifelse\n");
-	fprintf (PSfile, "   /base arlg hlg sub def\n");
-	fprintf (PSfile, "   /savem mtrx currentmatrix def\n");
-	fprintf (PSfile, "   tailx taily translate\n");
-	fprintf (PSfile, "   angle rotate\n");
-	fprintf (PSfile, "   newpath\n");
-	fprintf (PSfile, "   base hthick neg moveto\n");
-	fprintf (PSfile, "   arlg 0 lineto base hthick lineto\n");
-	fprintf (PSfile, "   closepath\n");
-	fprintf (PSfile, "   fill\n");
-	fprintf (PSfile, "   newpath\n");
-	fprintf (PSfile, "   0 0 moveto base 0 moveto\n");
-	fprintf (PSfile, "   thick 0.4 mul setlinewidth\n");
-	fprintf (PSfile, "   savem setmatrix\n");
-	fprintf (PSfile, "   dash 0 gt \n");
-	fprintf (PSfile, "   { dash 5 mul /dash def\n");
-	fprintf (PSfile, "     [dash 3] 0 setdash\n");
-	fprintf (PSfile, "   }\n");
-	fprintf (PSfile, "   { [] 0 setdash }\n");
-	fprintf (PSfile, "   ifelse\n");
-	fprintf (PSfile, "   thick 0 gt {stroke} if\n");
-	fprintf (PSfile, "   end\n");
-	fprintf (PSfile, " } bind def\n");
-	fprintf (PSfile, "/ov	%% Ovale\n");
-	fprintf (PSfile, "{\n");
-	fprintf (PSfile, "  8 dict begin\n");
-	fprintf (PSfile, "  /ray exch def\n");
-	fprintf (PSfile, "  newpath moveto\n");
-	fprintf (PSfile, "  /y1 exch def\n");
-	fprintf (PSfile, "  /x1 exch def\n");
-	fprintf (PSfile, "  4 {\n");
-	fprintf (PSfile, "    /y2 exch def /x2 exch def\n");
-	fprintf (PSfile, "    x1 y1 x2 y2 ray arcto pop pop pop pop\n");
-	fprintf (PSfile, "    /y1 y2 def /x1 x2 def\n");
-	fprintf (PSfile, "  } repeat closepath\n");
-	fprintf (PSfile, "  /ep exch def /dash exch def\n");
-	fprintf (PSfile, "  fillbox\n");
-	fprintf (PSfile, "  ep 0.4 mul setlinewidth \n");
-	fprintf (PSfile, "  dash dup 0 gt\n");
-	fprintf (PSfile, "  { 5 mul [ exch 3 ] 0 setdash }\n");
-	fprintf (PSfile, "  {  pop [ ] 0 setdash }\n");
-	fprintf (PSfile, "  ifelse\n");
-	fprintf (PSfile, "  ep 0 gt {stroke} if\n");
-	fprintf (PSfile, "  end\n");
-	fprintf (PSfile, " } bind def\n");
-	fprintf (PSfile, "/cer  %% Cercle ep x y R\n");
-	fprintf (PSfile, "{\n");
-	fprintf (PSfile, "  2 index 2 index moveto \n");
-	fprintf (PSfile, "  newpath 0 360 arc\n");
-	fprintf (PSfile, "  /ep exch def /dash exch def\n");
-	fprintf (PSfile, "  fillbox\n");
-	fprintf (PSfile, "  ep 0.4 mul setlinewidth \n");
-	fprintf (PSfile, "  dash dup 0 gt\n");
-	fprintf (PSfile, "  { 5 mul [ exch 3 ] 0 setdash }\n");
-	fprintf (PSfile, "  {  pop [ ] 0 setdash }\n");
-	fprintf (PSfile, "  ifelse\n");
-	fprintf (PSfile, "  ep 0 gt {stroke} if\n");
-	fprintf (PSfile, "} bind def\n\n");
+	  fprintf (PSfile, "/lcr /Courier 		ReEncode\n");
+	  fprintf (PSfile, "/lcb /Courier-Bold 		ReEncode\n");
+	  fprintf (PSfile, "/lco /Courier-Oblique	ReEncode\n");
+	  fprintf (PSfile, "/lcq /Courier-BoldOblique 	ReEncode\n\n");
+	  
+	  fprintf (PSfile, "/lcr (lcr) def\n");
+	  fprintf (PSfile, "/lcb (lcb) def\n");
+	  fprintf (PSfile, "/lco (lco) def\n");
+	  fprintf (PSfile, "/lci (lco) def    %% lci for courier italic ( = oblique )\n");
+	  fprintf (PSfile, "/lcq (lcq) def\n");
+	  fprintf (PSfile, "/lcg (lcq) def    %% lcq for courier bold italic ( = bold oblique )\n\n");
+	  
+	  fprintf (PSfile, "/ggr (Symbol) def\n\n");
+	  
+	  fprintf (PSfile, "%%%%%%%%%%%%%%%%%%%%%% Loading font commands %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n\n");
+	  
+	  fprintf (PSfile, "/pagecounter 0 def\n\n");
+	  
+	  fprintf (PSfile, "/pagenumberok 		%% int pagenumberok ThotBool\n");
+	  fprintf (PSfile, " { evenodd 0 eq 	%% evenodd = 0 -> all pages\n");
+	  fprintf (PSfile, "	{ pop true }\n");
+	  fprintf (PSfile, "	{ evenodd 1 eq 	%% evenodd = 1 -> odd pages\n");
+	  fprintf (PSfile, "		{ 2 mod 1 eq { true }	%% counter value is odd\n");
+	  fprintf (PSfile, "			     { false }\n");
+	  fprintf (PSfile, "			     ifelse }\n");
+	  fprintf (PSfile, "	 	{ 2 mod 0 eq { true }	%% evenodd = 2 -> even pages and the counter value is even\n");
+	  fprintf (PSfile, "			     { false }\n");
+	  fprintf (PSfile, "			     ifelse }\n");
+	  fprintf (PSfile, "		ifelse }\n");
+	  fprintf (PSfile, "	ifelse } bind def\n\n");
+	  
+	  fprintf (PSfile, "/pagesizeok\n");
+	  fprintf (PSfile, " { pop pop true } def\n\n");
 
-	fprintf (PSfile, "/ellipse { %% ep x y A B\n");
-	fprintf (PSfile, "  1 index div /scalef exch def /bigaxis exch def\n");
-	fprintf (PSfile, "  moveto\n");
-	fprintf (PSfile, "  gsave\n");
-	fprintf (PSfile, "  1 scalef scale\n");
-	fprintf (PSfile, "  currentpoint newpath bigaxis 0 360 arc closepath\n");
-	fprintf (PSfile, "  /ep exch def /dash exch def\n");
-	fprintf (PSfile, "  fillbox\n");
-	fprintf (PSfile, "  ep 0.4 mul setlinewidth \n");
-	fprintf (PSfile, "  dash dup 0 gt\n");
-	fprintf (PSfile, "  { 5 mul [ exch 3 ] 0 setdash }\n");
-	fprintf (PSfile, "  {  pop [ ] 0 setdash }\n");
-	fprintf (PSfile, "  ifelse\n");
-	fprintf (PSfile, "  ep 0 gt {stroke} if\n");
-	fprintf (PSfile, "  grestore\n");
-	fprintf (PSfile, "} bind def\n\n");
+	  fprintf (PSfile, "/frstpage	%% first page\n");
+	  fprintf (PSfile, " { } bind def\n\n");
+	  
+	  fprintf (PSfile, "/nwpage		%% new page\n");
+	  fprintf (PSfile, " { /pagecounter pagecounter 1 add def\n");
+	  fprintf (PSfile, "   pagesizeok { pagenumberok { showpage }\n");
+	  fprintf (PSfile, "			     {erasepage } ifelse } \n");
+	  fprintf (PSfile, "	      { erasepage } ifelse\n");
+	  fprintf (PSfile, "   grestore\n");
+	  fprintf (PSfile, "   VectMatrice pagecounter 4 mod get setmatrix \n");
+	  fprintf (PSfile, "   gsave UserMatrice concat } def\n\n");
+	  
+	  fprintf (PSfile, "/showpage { pagecounter ppf mod 0 eq {systemdict /showpage get exec} if } bind def\n");
+	  fprintf (PSfile, "/ejectpage { pagecounter ppf mod 0 ne {systemdict /showpage get exec} if } bind def\n\n");
+	  
+	  fprintf (PSfile, "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n\n");
 
-	fprintf (PSfile, "/DumpImage { %%%% Wim Him Wdr Hdr DumpImage\n");
-	fprintf (PSfile, "       /Hdr exch def /Wdr exch def /Him exch def /Wim exch def\n");
-	fprintf (PSfile, "       Wdr Hdr scale\n");
-	fprintf (PSfile, "       /picstr  Wim 7 add 8 idiv  string def\n");
-	fprintf (PSfile, "       Wim Him 1 [ Wim 0 0 Him neg 0 Him ]\n");
-	fprintf (PSfile, "          { currentfile picstr readhexstring pop } image\n");
-	fprintf (PSfile, " } bind def\n\n");
+	  fprintf (PSfile, "/MatriceDict 9 dict def\n");
+	  fprintf (PSfile, "MatriceDict begin\n\n");
 
-	fprintf (PSfile, "/DumpImage2 { %%%% Wim Him Wdr Hdr DumpImage2\n");
-	fprintf (PSfile, "       /Hdr exch def /Wdr exch def /Him exch def /Wim exch def\n");
-	fprintf (PSfile, "       /picstr  Wim 3 mul string def\n");
-	fprintf (PSfile, "     	Wdr Hdr scale\n");
-	fprintf (PSfile, "        Wim Him 8 \n");
-	fprintf (PSfile, "	[ Wim 0 0 Him neg 0 Him ]\n");
-	fprintf (PSfile, "          { currentfile picstr readhexstring pop } \n");
-	fprintf (PSfile, "	false 3\n");
-	fprintf (PSfile, "	colorimage\n");
-	fprintf (PSfile, " } bind def\n\n");
+	  fprintf (PSfile, "    /MatPortrait matrix def\n");
+	  fprintf (PSfile, "    /MatLandscape [0 1 -1 0 0 0] def\n\n");
 
-	fprintf (PSfile, "%%%% define \'colorimage\' if it isn\'t defined\n");
-	fprintf (PSfile, "%%%%   (\'colortogray\' and \'mergeprocs\' come from xwd2ps\n");
-	fprintf (PSfile, "%%%%     via xgrab)\n");
-	fprintf (PSfile, "/colorimage where   %%%% do we know about \'colorimage\'?\n");
-	fprintf (PSfile, "  { pop }           %%%% yes: pop off the \'dict\' returned\n");
-	fprintf (PSfile, "  {                 %%%% no:  define one\n");
-	fprintf (PSfile, "    /colortogray {  %%%% define an RGB->I function\n");
-	fprintf (PSfile, "      /rgbdata exch store    %%%% call input \'rgbdata\'\n");
-	fprintf (PSfile, "      rgbdata length 3 idiv\n");
-	fprintf (PSfile, "      /npixls exch store\n");
-	fprintf (PSfile, "      /rgbindx 0 store\n");
-	fprintf (PSfile, "      /grays npixls string store  %%%% str to hold the result\n");
-	fprintf (PSfile, "      0 1 npixls 1 sub {\n");
-	fprintf (PSfile, "        grays exch\n");
-	fprintf (PSfile, "        rgbdata rgbindx       get 20 mul    %%%% Red\n");
-	fprintf (PSfile, "        rgbdata rgbindx 1 add get 32 mul    %%%% Green\n");
-	fprintf (PSfile, "        rgbdata rgbindx 2 add get 12 mul    %%%% Blue\n");
-	fprintf (PSfile, "        add add 64 idiv      %%%% I = .5G + .31R + .18B\n");
-	fprintf (PSfile, "        put\n");
-	fprintf (PSfile, "        /rgbindx rgbindx 3 add store\n");
-	fprintf (PSfile, "      } for\n");
-	fprintf (PSfile, "      grays\n");
-	fprintf (PSfile, "    } bind def\n\n");
+	  fprintf (PSfile, "    /defmat { \n");
+	  fprintf (PSfile, "	matrix concatmatrix matrix concatmatrix matrix currentmatrix matrix concatmatrix } bind def\n\n");
 
-	fprintf (PSfile, "    %%%% Utility procedure for colorimage operator.\n");
-	fprintf (PSfile, "    %%%% This procedure takes two procedures off the\n");
-	fprintf (PSfile, "    %%%% stack and merges them into a single procedure.\n\n");
+	  fprintf (PSfile, "    /defdict_portrait {	%% dict defdict\n");
+	  fprintf (PSfile, "	/Portrait 3 dict def \n");
+	  fprintf (PSfile, "	Portrait begin\n");
+	  fprintf (PSfile, "	    /1ppf 2 dict def 1ppf begin\n");
+	  fprintf (PSfile, "		/VectMatrice [\n");
+	  fprintf (PSfile, "	    	    MatPortrait MatScale1 [1 0 0 1 0 PHeight] defmat\n");
+	  fprintf (PSfile, "		    dup dup dup ] def\n");
+	  fprintf (PSfile, "		/ppf 1 def\n");
+	  fprintf (PSfile, "	    end %% 1ppf dict\n");
+	  fprintf (PSfile, "	    /2ppf 2 dict def 2ppf begin\n");
+	  fprintf (PSfile, "		/VectMatrice [\n");
+	  fprintf (PSfile, "	    	    MatLandscape MatScale2 [1 0 0 1 0 0] defmat\n");
+	  fprintf (PSfile, "		    MatLandscape MatScale2 [1 0 0 1 0 PHeight 2 div] defmat\n");
+	  fprintf (PSfile, "	    	    2 copy ] def\n");
+	  fprintf (PSfile, "		/ppf 2 def\n");
+	  fprintf (PSfile, "	    end %% 2ppf dict\n");
+	  fprintf (PSfile, "	    /4ppf 2 dict def 4ppf begin\n");
+	  fprintf (PSfile, "		/VectMatrice [\n");
+	  fprintf (PSfile, "	    	    MatPortrait MatScale4 [1 0 0 1 0 PHeight] defmat\n");
+	  fprintf (PSfile, "		    MatPortrait MatScale4 [1 0 0 1 PWidth 2 div PHeight] defmat\n");
+	  fprintf (PSfile, "	    	    MatPortrait MatScale4 [1 0 0 1 0 PHeight 2 div] defmat\n");
+	  fprintf (PSfile, "		    MatPortrait MatScale4 [1 0 0 1 PWidth 2 div PHeight 2 div] defmat\n");
+	  fprintf (PSfile, "		    ] def\n");
+	  fprintf (PSfile, "		/ppf 4 def\n");
+	  fprintf (PSfile, "	    end %% 4ppf dict\n");
+	  fprintf (PSfile, "	end %% Portrait dict\n");
+	  fprintf (PSfile, "    } bind def %% end defdict_portrait\n\n");
+	  
+	  fprintf (PSfile, "    /defdict_paysage {	%% defdict\n");
+	  fprintf (PSfile, "	/Landscape 3 dict def\n");
+	  fprintf (PSfile, "	Landscape begin\n");
+	  fprintf (PSfile, "	    /1ppf 2 dict def 1ppf begin\n");
+	  fprintf (PSfile, "		/VectMatrice [\n");
+	  fprintf (PSfile, "	    	    MatLandscape MatScale1 [1 0 0 1 0 842 PHeight sub ] defmat\n");
+	  fprintf (PSfile, "		    dup dup dup ] def\n");
+	  fprintf (PSfile, "		/ppf 1 def\n");
+	  fprintf (PSfile, "	    end %% 1ppf dict\n");
+	  fprintf (PSfile, "	    /2ppf 2 dict def 2ppf begin\n");
+	  fprintf (PSfile, "		/VectMatrice [\n");
+	  fprintf (PSfile, "	    	    MatPortrait MatScale2 [1 0 0 1 0 PHeight] defmat\n");
+	  fprintf (PSfile, "		     MatPortrait MatScale2 [1 0 0 1 0 420] defmat\n");
+	  fprintf (PSfile, "	    	    2 copy ] def\n");
+	  fprintf (PSfile, "		/ppf 2 def\n");
+	  fprintf (PSfile, "	    end %% 2ppf dict\n");
+	  fprintf (PSfile, "	    /4ppf 2 dict def 4ppf begin\n");
+	  fprintf (PSfile, "		/VectMatrice [\n");
+	  fprintf (PSfile, "	    	    MatLandscape MatScale4 [1 0 0 1 0 0] defmat\n");
+	  fprintf (PSfile, "		    MatLandscape MatScale4 [1 0 0 1 0 PHeight 2 div] defmat\n");
+	  fprintf (PSfile, " 		    MatLandscape MatScale4 [1 0 0 1 PWidth 2 div 0] defmat\n");
+	  fprintf (PSfile, "		    MatLandscape MatScale4 [1 0 0 1 PWidth 2 div PHeight 2 div] defmat\n");
+	  fprintf (PSfile, "		    ] def\n");
+	  fprintf (PSfile, "		/ppf 4 def\n");
+	  fprintf (PSfile, "	    end %% 4ppf dict\n");
+	  fprintf (PSfile, "	end %% Landscape dict\n");
+	  fprintf (PSfile, "    } bind def %% end defdict_paysage\n\n");
+	  
+	  fprintf (PSfile, "    /A4 8 dict def\n");
+	  fprintf (PSfile, "    A4 begin\n");
+	  fprintf (PSfile, "    	/MatScale1 matrix def\n");
+	  fprintf (PSfile, "    	/MatScale2 [1 2 sqrt div 0 0 2 index 0 0] def\n");
+	  fprintf (PSfile, "    	/MatScale4 [0.5 0 0 0.5 0 0] def\n");
+	  fprintf (PSfile, "	/PHeight 842 def\n");
+	  fprintf (PSfile, "	/PWidth 596 def\n");
+	  fprintf (PSfile, "	end\n\n");
+	  
+	  fprintf (PSfile, "    /US 8 dict def\n");
+	  fprintf (PSfile, "    US begin\n");
+	  fprintf (PSfile, "    	/MatScale1 [1 0 0 1 0 -50.01] def\n");
+	  fprintf (PSfile, "    	/MatScale2 [1 3 sqrt div 0 0 2 index 0 0] def\n");
+	  fprintf (PSfile, "    	/MatScale4 [0.45 0 0 0.45 0 0] def\n");
+	  fprintf (PSfile, "	/PHeight 792 def\n");
+	  fprintf (PSfile, "	/PWidth 612 def\n");
+	  fprintf (PSfile, "	end\n\n");
+	  
+	  fprintf (PSfile, "    /A3 8 dict def\n");
+	  fprintf (PSfile, "    A3 begin\n");
+	  fprintf (PSfile, "    	/MatScale1 matrix def\n");
+	  fprintf (PSfile, "    	/MatScale2 [1 2 sqrt div 0 0 2 index 0 0] def\n");
+	  fprintf (PSfile, "    	/MatScale4 [0.5 0 0 0.5 0 0] def\n");
+	  fprintf (PSfile, "	/PHeight 842 def\n");
+	  fprintf (PSfile, "	/PWidth 596 def\n");
+	  fprintf (PSfile, "	end\n\n");
+	  
+	  fprintf (PSfile, "    /A5 8 dict def\n");
+	  fprintf (PSfile, "    A5 begin\n");
+	  fprintf (PSfile, "    	/MatScale1 matrix def\n");
+	  fprintf (PSfile, "    	/MatScale2 matrix def\n");
+	  fprintf (PSfile, "    	/MatScale4 [1 2 sqrt div 0 0 2 index 0 0] def\n");
+	  fprintf (PSfile, "	/PHeight 842 def\n");
+	  fprintf (PSfile, "	/PWidth 596 def\n");
+	  fprintf (PSfile, "	end\n\n");
 
-	fprintf (PSfile, "    /mergeprocs { %%%% def\n");
-	fprintf (PSfile, "      dup length\n");
-	fprintf (PSfile, "      3 -1 roll\n");
-	fprintf (PSfile, "      dup\n");
-	fprintf (PSfile, "      length\n");
-	fprintf (PSfile, "      dup\n");
-	fprintf (PSfile, "      5 1 roll\n");
-	fprintf (PSfile, "      3 -1 roll\n");
-	fprintf (PSfile, "      add\n");
-	fprintf (PSfile, "      array cvx\n");
-	fprintf (PSfile, "      dup\n");
-	fprintf (PSfile, "      3 -1 roll\n");
-	fprintf (PSfile, "      0 exch\n");
-	fprintf (PSfile, "      putinterval\n");
-	fprintf (PSfile, "      dup\n");
-	fprintf (PSfile, "      4 2 roll\n");
-	fprintf (PSfile, "      putinterval\n");
-	fprintf (PSfile, "    } bind def\n\n");
+	  fprintf (PSfile, "end %% Matrice dict\n\n");
 
-	fprintf (PSfile, "    /colorimage { %%%% def\n");
-	fprintf (PSfile, "      pop pop     %%%% remove \'false 3\' operands\n");
-	fprintf (PSfile, "      {colortogray} mergeprocs\n");
-	fprintf (PSfile, "      image\n");
-	fprintf (PSfile, "    } bind def\n");
-	fprintf (PSfile, "  } ifelse          %%%% end of \'false\' case\n\n");
+	  fprintf (PSfile, "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%DEMARRAGE%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n\n");
 
-	fprintf (PSfile, "/Pes	%% x y width =->\n");
-	fprintf (PSfile, " { 5 dict begin\n");
-	fprintf (PSfile, "   [/xf /y /x] {exch def} forall\n");
-	fprintf (PSfile, "   /st (.) def\n");
-	fprintf (PSfile, "   /lg st stringwidth pop 3 mul def\n");
-	fprintf (PSfile, "   /xf xf x add def\n");
-	fprintf (PSfile, "   { xf x gt\n");
-	fprintf (PSfile, "     { xf y moveto\n");
-	fprintf (PSfile, "       st show\n");
-	fprintf (PSfile, "       /xf xf lg sub def\n");
-	fprintf (PSfile, "     }\n");
-	fprintf (PSfile, "     { exit }\n");
-	fprintf (PSfile, "     ifelse\n");
-	fprintf (PSfile, "   } loop end\n");
-	fprintf (PSfile, " } bind def\n");
-	fprintf (PSfile, "/gr	%%%% trame pour graphique\n");
-	fprintf (PSfile, " { newpath moveto lineto lineto lineto closepath\n");
-	fprintf (PSfile, "   0.125 mul 1 exch sub setgray fill 0 setgray\n");
-	fprintf (PSfile, " } bind def\n\n");
+	  fprintf (PSfile, "/InitThot {\n");
+	  fprintf (PSfile, "    /UserMatrice \n");
+	  fprintf (PSfile, "	[reduction 100 div 0 0 2 index 0 0] \n");
+	  fprintf (PSfile, "	[1 0 0 1 decalageH HPrinterOff add 72 mul 25.4 div decalageV VPrinterOff add 72 mul 25.4 div neg] matrix concatmatrix\n");
+	  fprintf (PSfile, "        [1 0 0 1 0 0]\n");
+	  fprintf (PSfile, "	matrix concatmatrix def\n");
+	  fprintf (PSfile, "    MatriceDict begin\n");
+	  fprintf (PSfile, "    page_size cvlit load	 		%% get the page_size dict\n");
+	  fprintf (PSfile, "    begin defdict_portrait defdict_paysage	%% and init it\n");
+	  fprintf (PSfile, "    currentdict orientation cvlit get		%% get the orientation dict\n");
+	  fprintf (PSfile, "    nb_ppf cvlit get				%% get the nb_ppf dict\n");
+	  fprintf (PSfile, "    begin \n");
+	  fprintf (PSfile, "    VectMatrice 0 get setmatrix			%% init CTM\n");
+	  fprintf (PSfile, "    gsave UserMatrice concat\n");
+	  fprintf (PSfile, "    100 dict begin				%% working dict\n");
+	  fprintf (PSfile, "    } bind def\n\n");
+	  
+	  fprintf (PSfile, "/EndThot {\n");
+	  fprintf (PSfile, "   ejectpage\n");
+	  fprintf (PSfile, "   end end end end end} bind def	%%close all open dict\n\n");
 
-	fprintf (PSfile, "/trm    %%%% trame pour les boites vides\n");
-	fprintf (PSfile, "{ suptrame 0 eq {gr} {pop pop pop pop pop pop pop pop pop} ifelse\n");
-	fprintf (PSfile, "} bind def\n\n");
+	  fprintf (PSfile, "%%%%EndProlog\n");
+	  fprintf (PSfile, "/user_orientation 0 def  \n");
 
-	fprintf (PSfile, "/BEGINEPSFILE {%%def\n");
-	fprintf (PSfile, "  /EPSFsave save def\n");
-	fprintf (PSfile, "  0 setgray 0 setlinecap 1 setlinewidth 0 setlinejoin 10 setmiterlimit [] 0 setdash\n");
-	fprintf (PSfile, "  newpath\n");
-	fprintf (PSfile, "  /showpage {} def\n");
-	fprintf (PSfile, "} bind def\n\n");
+	  fprintf (PSfile, "statusdict begin\n");
 
-	fprintf (PSfile, "/ENDEPSFILE {%%def\n");
-	fprintf (PSfile, "  EPSFsave restore\n");
-	fprintf (PSfile, "} bind def\n\n");
-
-	fprintf (PSfile, "%%%%%%%%%%%%%%%%%%%%%%%%%%%% Modification des dictionnaires des polices%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n\n");
-
-	fprintf (PSfile, "/ISOLatin1Encoding where { pop } { /ISOLatin1Encoding\n");
-	fprintf (PSfile, "[/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef\n");
-	fprintf (PSfile, "/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef\n");
-	fprintf (PSfile, "/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef\n");
-	fprintf (PSfile, "/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/space\n");
-	fprintf (PSfile, "/exclam/quotedbl/numbersign/dollar/percent/ampersand/quoteright\n");
-	fprintf (PSfile, "/parenleft/parenright/asterisk/plus/comma/minus/period/slash/zero/one\n");
-	fprintf (PSfile, "/two/three/four/five/six/seven/eight/nine/colon/semicolon/less/equal\n");
-	fprintf (PSfile, "/greater/question/at/A/B/C/D/E/F/G/H/I/J/K/L/M/N/O/P/Q/R/S\n");
-	fprintf (PSfile, "/T/U/V/W/X/Y/Z/bracketleft/backslash/bracketright/asciicircum\n");
-	fprintf (PSfile, "/underscore/quoteleft/a/b/c/d/e/f/g/h/i/j/k/l/m/n/o/p/q/r/s\n");
-	fprintf (PSfile, "/t/u/v/w/x/y/z/braceleft/bar/braceright/asciitilde/.notdef/.notdef\n");
-	fprintf (PSfile, "/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef\n");
-	fprintf (PSfile, "/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/dotlessi/grave\n");
-	fprintf (PSfile, "/acute/circumflex/tilde/macron/breve/dotaccent/dieresis/.notdef/ring\n");
-	fprintf (PSfile, "/cedilla/.notdef/hungarumlaut/ogonek/caron/space/exclamdown/cent\n");
-	fprintf (PSfile, "/sterling/currency/yen/brokenbar/section/dieresis/copyright/ordfeminine\n");
-	fprintf (PSfile, "/guillemotleft/logicalnot/hyphen/registered/macron/degree/plusminus\n");
-	fprintf (PSfile, "/twosuperior/threesuperior/acute/mu/paragraph/periodcentered/cedilla\n");
-	fprintf (PSfile, "/onesuperior/ordmasculine/guillemotright/onequarter/onehalf/threequarters\n");
-	fprintf (PSfile, "/questiondown/Agrave/Aacute/Acircumflex/Atilde/Adieresis/Aring/AE\n");
-	fprintf (PSfile, "/Ccedilla/Egrave/Eacute/Ecircumflex/Edieresis/Igrave/Iacute/Icircumflex\n");
-	fprintf (PSfile, "/Idieresis/Eth/Ntilde/Ograve/Oacute/Ocircumflex/Otilde/Odieresis\n");
-	fprintf (PSfile, "/OE/Oslash/Ugrave/Uacute/Ucircumflex/Udieresis/Yacute/Thorn\n");
-	fprintf (PSfile, "/germandbls/agrave/aacute/acircumflex/atilde/adieresis/aring/ae\n");
-	fprintf (PSfile, "/ccedilla/egrave/eacute/ecircumflex/edieresis/igrave/iacute/icircumflex\n");
-	fprintf (PSfile, "/idieresis/eth/ntilde/ograve/oacute/ocircumflex/otilde/odieresis/oe\n");
-	fprintf (PSfile, "/oslash/ugrave/uacute/ucircumflex/udieresis/yacute/thorn/ydieresis]\n");
-	fprintf (PSfile, "def %%ISOLatin1Encoding\n");
-	fprintf (PSfile, "} ifelse\n\n");
-
-	fprintf (PSfile, "/ReEncode	%% NouvPolice NPolice ReEncode\n");
-	fprintf (PSfile, "  { findfont	%% load desired font\n");
-	fprintf (PSfile, "    dup maxlength dict /newfont exch def	%% allocate new fontdict\n");
-	fprintf (PSfile, "    dup\n");
-	fprintf (PSfile, "    { exch dup dup dup dup /FID ne exch /Encoding ne and exch /FontBBox ne and exch /FontMatrix ne and\n");
-	fprintf (PSfile, "	{ exch newfont 3 1 roll put }\n");
-	fprintf (PSfile, "	{ pop pop }\n");
-	fprintf (PSfile, "	ifelse }\n");
-	fprintf (PSfile, "    forall	%% copy fontdict\n\n");
-
-	fprintf (PSfile, "    dup /FontBBox get 4 array copy newfont /FontBBox 3 -1 roll put\n");
-	fprintf (PSfile, "    /FontMatrix get 6 array copy newfont /FontMatrix 3 -1 roll put\n\n");
-
-	fprintf (PSfile, "    newfont /Encoding ISOLatin1Encoding 256 array copy put	%%put new encoding vector\n");
-	fprintf (PSfile, "    newfont /Encoding get dup dup dup				%%add /**OE*/\n");
-	fprintf (PSfile, "			 8#230 /divide put			%%add /**OE*/\n");
-	fprintf (PSfile, "			 8#231 /multiply put			%%add /**OE*/\n");
-	fprintf (PSfile, "			 8#367 /oe put				%%add /**OE*/\n");
-	fprintf (PSfile, "			 8#327 /OE put				%%add /**OE*/\n\n");
-
-	fprintf (PSfile, "    dup newfont /FontName 3 -1 roll put	%%put a new Fontname\n");
-	fprintf (PSfile, "    newfont definefont pop	%%define a new font\n");
-	fprintf (PSfile, "  } def\n\n");
-
-	fprintf (PSfile, "/ReEncodeOblique	%% NouvPolice NPolice ReEncodeOblique\n");
-	fprintf (PSfile, "  { findfont	%% load desired font\n");
-	fprintf (PSfile, "    dup maxlength dict /newfont exch def	%% allocate new fontdict\n");
-	fprintf (PSfile, "    dup\n");
-	fprintf (PSfile, "    { exch dup dup dup dup /FID ne exch /Encoding ne and exch /FontBBox ne and exch /FontMatrix ne and\n");
-	fprintf (PSfile, "	{ exch newfont 3 1 roll put }\n");
-	fprintf (PSfile, "	{ pop pop }\n");
-	fprintf (PSfile, "	ifelse }\n");
-	fprintf (PSfile, "    forall	%% copy fontdict\n\n");
-
-	fprintf (PSfile, "    dup /FontBBox get 4 array copy newfont /FontBBox 3 -1 roll put\n");
-	fprintf (PSfile, "    /FontMatrix get \n");
-	fprintf (PSfile, "    [1 0 15 sin 1 0 0 ] exch 6 array concatmatrix\n");
-	fprintf (PSfile, "    newfont /FontMatrix 3 -1 roll put\n\n");
-
-	fprintf (PSfile, "    newfont /Encoding ISOLatin1Encoding 256 array copy put	%%put new encoding vector\n");
-	fprintf (PSfile, "    newfont /Encoding get dup dup dup				%%add /**OE*/\n");
-	fprintf (PSfile, "			 8#230 /divide put			%%add /**OE*/\n");
-	fprintf (PSfile, "			 8#231 /multiply put			%%add /**OE*/\n");
-	fprintf (PSfile, "			 8#367 /oe put				%%add /**OE*/\n");
-	fprintf (PSfile, "			 8#327 /OE put				%%add /**OE*/\n\n");
-
-	fprintf (PSfile, "    dup newfont /FontName 3 -1 roll put	%%put a new Fontname\n");
-	fprintf (PSfile, "    newfont definefont pop	%%define a new font\n");
-	fprintf (PSfile, "  } def\n\n");
-
-	fprintf (PSfile, "/lhr /Helvetica 		ReEncode\n");
-	fprintf (PSfile, "/lhb /Helvetica-Bold  		ReEncode\n");
-	fprintf (PSfile, "/lho /Helvetica-Oblique  	ReEncode\n");
-	fprintf (PSfile, "/lhq /Helvetica-BoldOblique 	ReEncode\n\n");
-
-	fprintf (PSfile, "/lhr (lhr) def\n");
-	fprintf (PSfile, "/lhb (lhb) def\n");
-	fprintf (PSfile, "/lhi (lho) def\n");
-	fprintf (PSfile, "/lho (lho) def    %% lhi pour helvetica italique ( = oblique )\n");
-	fprintf (PSfile, "/lhq (lhq) def\n");
-	fprintf (PSfile, "/lhg (lhq) def    %% lhg pour helvetica bold italique ( = bold oblique )\n\n");
-
-	fprintf (PSfile, "/ltr /Times-Roman 		ReEncode\n");
-	fprintf (PSfile, "/ltb /Times-Bold 		ReEncode\n");
-	fprintf (PSfile, "/lti /Times-Italic 		ReEncode\n");
-	fprintf (PSfile, "/ltg /Times-BoldItalic 		ReEncode\n");
-	fprintf (PSfile, "/lto /Times-Roman 		ReEncodeOblique\n");
-	fprintf (PSfile, "/ltq /Times-Bold 		ReEncodeOblique\n\n");
-
-	fprintf (PSfile, "/ltr (ltr) def\n");
-	fprintf (PSfile, "/ltb (ltb) def\n");
-	fprintf (PSfile, "/lti (lti) def\n");
-	fprintf (PSfile, "/lto (lto) def\n");
-	fprintf (PSfile, "/ltg (ltg) def\n");
-	fprintf (PSfile, "/ltq (ltq) def\n\n");
-
-	fprintf (PSfile, "/lcr /Courier 			ReEncode\n");
-	fprintf (PSfile, "/lcb /Courier-Bold 		ReEncode\n");
-	fprintf (PSfile, "/lco /Courier-Oblique	 	ReEncode\n");
-	fprintf (PSfile, "/lcq /Courier-BoldOblique 	ReEncode\n\n");
-
-	fprintf (PSfile, "/lcr (lcr) def\n");
-	fprintf (PSfile, "/lcb (lcb) def\n");
-	fprintf (PSfile, "/lco (lco) def\n");
-	fprintf (PSfile, "/lci (lco) def    %% lci pour courier italique ( = oblique )\n");
-	fprintf (PSfile, "/lcq (lcq) def\n");
-	fprintf (PSfile, "/lcg (lcq) def    %% lcq pour courier bold italique ( = bold oblique )\n\n");
-
-	fprintf (PSfile, "/ggr (Symbol) def\n\n");
-
-	fprintf (PSfile, "%%%%%%%%%%%%%%%%%%%%%% Commandes de changement de pages %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n\n");
-
-	fprintf (PSfile, "/pagecounter 0 def\n\n");
-
-	fprintf (PSfile, "/pagenumberok 		%% int pagenumberok ThotBool\n");
-	fprintf (PSfile, " { evenodd 0 eq 	%% evenodd = 0 -> toutes les pages\n");
-	fprintf (PSfile, "	{ pop true }\n");
-	fprintf (PSfile, "	{ evenodd 1 eq 	%% evenodd = 1 -> les pages impaires\n");
-	fprintf (PSfile, "		{ 2 mod 1 eq { true }	%% le compteur est impair\n");
-	fprintf (PSfile, "			     { false }\n");
-	fprintf (PSfile, "			     ifelse }\n");
-	fprintf (PSfile, "	 	{ 2 mod 0 eq { true }	%% evenodd = 2 -> les pages paires et le compteur est pair\n");
-	fprintf (PSfile, "			     { false }\n");
-	fprintf (PSfile, "			     ifelse }\n");
-	fprintf (PSfile, "		ifelse }\n");
-	fprintf (PSfile, "	ifelse } bind def\n\n");
-
-	fprintf (PSfile, "/pagesizeok\n");
-	fprintf (PSfile, " { pop pop true } def\n\n");
-
-	fprintf (PSfile, "/frstpage	%% 1ere page\n");
-	fprintf (PSfile, " { } bind def\n\n");
-
-	fprintf (PSfile, "/nwpage		%% nouvelle page\n");
-	fprintf (PSfile, " { /pagecounter pagecounter 1 add def\n");
-	fprintf (PSfile, "   pagesizeok { pagenumberok { showpage }\n");
-	fprintf (PSfile, "			     {erasepage } ifelse } \n");
-	fprintf (PSfile, "	      { erasepage } ifelse\n");
-	fprintf (PSfile, "   grestore\n");
-	fprintf (PSfile, "   VectMatrice pagecounter 4 mod get setmatrix \n");
-	fprintf (PSfile, "   gsave UserMatrice concat } def\n\n");
-
-	fprintf (PSfile, "/showpage { pagecounter ppf mod 0 eq {systemdict /showpage get exec} if } bind def\n");
-	fprintf (PSfile, "/ejectpage { pagecounter ppf mod 0 ne {systemdict /showpage get exec} if } bind def\n\n");
-
-	fprintf (PSfile, "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n\n");
-
-	fprintf (PSfile, "/MatriceDict 9 dict def\n");
-	fprintf (PSfile, "MatriceDict begin\n\n");
-
-	fprintf (PSfile, "    /MatPortrait matrix def\n");
-	fprintf (PSfile, "    /MatLandscape [0 1 -1 0 0 0] def\n\n");
-
-	fprintf (PSfile, "    /defmat { \n");
-	fprintf (PSfile, "	matrix concatmatrix matrix concatmatrix matrix currentmatrix matrix concatmatrix } bind def\n\n");
-
-	fprintf (PSfile, "    /defdict_portrait {	%% dict defdict\n");
-	fprintf (PSfile, "	/Portrait 3 dict def \n");
-	fprintf (PSfile, "	Portrait begin\n");
-	fprintf (PSfile, "	    /1ppf 2 dict def 1ppf begin\n");
-	fprintf (PSfile, "		/VectMatrice [\n");
-	fprintf (PSfile, "	    	    MatPortrait MatScale1 [1 0 0 1 0 PHeight] defmat\n");
-	fprintf (PSfile, "		    dup dup dup ] def\n");
-	fprintf (PSfile, "		/ppf 1 def\n");
-	fprintf (PSfile, "	    end %% 1ppf dict\n");
-	fprintf (PSfile, "	    /2ppf 2 dict def 2ppf begin\n");
-	fprintf (PSfile, "		/VectMatrice [\n");
-	fprintf (PSfile, "	    	    MatLandscape MatScale2 [1 0 0 1 0 0] defmat\n");
-	fprintf (PSfile, "		    MatLandscape MatScale2 [1 0 0 1 0 PHeight 2 div] defmat\n");
-	fprintf (PSfile, "	    	    2 copy ] def\n");
-	fprintf (PSfile, "		/ppf 2 def\n");
-	fprintf (PSfile, "	    end %% 2ppf dict\n");
-	fprintf (PSfile, "	    /4ppf 2 dict def 4ppf begin\n");
-	fprintf (PSfile, "		/VectMatrice [\n");
-	fprintf (PSfile, "	    	    MatPortrait MatScale4 [1 0 0 1 0 PHeight] defmat\n");
-	fprintf (PSfile, "		    MatPortrait MatScale4 [1 0 0 1 PWidth 2 div PHeight] defmat\n");
-	fprintf (PSfile, "	    	    MatPortrait MatScale4 [1 0 0 1 0 PHeight 2 div] defmat\n");
-	fprintf (PSfile, "		    MatPortrait MatScale4 [1 0 0 1 PWidth 2 div PHeight 2 div] defmat\n");
-	fprintf (PSfile, "		    ] def\n");
-	fprintf (PSfile, "		/ppf 4 def\n");
-	fprintf (PSfile, "	    end %% 4ppf dict\n");
-	fprintf (PSfile, "	end %% Portrait dict\n");
-	fprintf (PSfile, "    } bind def %% end defdict_portrait\n\n");
-
-	fprintf (PSfile, "    /defdict_paysage {	%% defdict\n");
-	fprintf (PSfile, "	/Landscape 3 dict def\n");
-	fprintf (PSfile, "	Landscape begin\n");
-	fprintf (PSfile, "	    /1ppf 2 dict def 1ppf begin\n");
-	fprintf (PSfile, "		/VectMatrice [\n");
-	fprintf (PSfile, "	    	    MatLandscape MatScale1 [1 0 0 1 0 842 PHeight sub ] defmat\n");
-	fprintf (PSfile, "		    dup dup dup ] def\n");
-	fprintf (PSfile, "		/ppf 1 def\n");
-	fprintf (PSfile, "	    end %% 1ppf dict\n");
-	fprintf (PSfile, "	    /2ppf 2 dict def 2ppf begin\n");
-	fprintf (PSfile, "		/VectMatrice [\n");
-	fprintf (PSfile, "	    	    MatPortrait MatScale2 [1 0 0 1 0 PHeight] defmat\n");
-	fprintf (PSfile, "		     MatPortrait MatScale2 [1 0 0 1 0 420] defmat\n");
-	fprintf (PSfile, "	    	    2 copy ] def\n");
-	fprintf (PSfile, "		/ppf 2 def\n");
-	fprintf (PSfile, "	    end %% 2ppf dict\n");
-	fprintf (PSfile, "	    /4ppf 2 dict def 4ppf begin\n");
-	fprintf (PSfile, "		/VectMatrice [\n");
-	fprintf (PSfile, "	    	    MatLandscape MatScale4 [1 0 0 1 0 0] defmat\n");
-	fprintf (PSfile, "		    MatLandscape MatScale4 [1 0 0 1 0 PHeight 2 div] defmat\n");
-	fprintf (PSfile, " 		    MatLandscape MatScale4 [1 0 0 1 PWidth 2 div 0] defmat\n");
-	fprintf (PSfile, "		    MatLandscape MatScale4 [1 0 0 1 PWidth 2 div PHeight 2 div] defmat\n");
-	fprintf (PSfile, "		    ] def\n");
-	fprintf (PSfile, "		/ppf 4 def\n");
-	fprintf (PSfile, "	    end %% 4ppf dict\n");
-	fprintf (PSfile, "	end %% Landscape dict\n");
-	fprintf (PSfile, "    } bind def %% end defdict_paysage\n\n");
-
-	fprintf (PSfile, "    /A4 8 dict def\n");
-	fprintf (PSfile, "    A4 begin\n");
-	fprintf (PSfile, "    	/MatScale1 matrix def\n");
-	fprintf (PSfile, "    	/MatScale2 [1 2 sqrt div 0 0 2 index 0 0] def\n");
-	fprintf (PSfile, "    	/MatScale4 [0.5 0 0 0.5 0 0] def\n");
-	fprintf (PSfile, "	/PHeight 842 def\n");
-	fprintf (PSfile, "	/PWidth 596 def\n");
-	fprintf (PSfile, "	end\n\n");
-
-	fprintf (PSfile, "    /US 8 dict def\n");
-	fprintf (PSfile, "    US begin\n");
-	fprintf (PSfile, "    	/MatScale1 [1 0 0 1 0 -50.01] def\n");
-	fprintf (PSfile, "    	/MatScale2 [1 3 sqrt div 0 0 2 index 0 0] def\n");
-	fprintf (PSfile, "    	/MatScale4 [0.45 0 0 0.45 0 0] def\n");
-	fprintf (PSfile, "	/PHeight 792 def\n");
-	fprintf (PSfile, "	/PWidth 612 def\n");
-	fprintf (PSfile, "	end\n\n");
-
-	fprintf (PSfile, "    /A3 8 dict def\n");
-	fprintf (PSfile, "    A3 begin\n");
-	fprintf (PSfile, "    	/MatScale1 matrix def\n");
-	fprintf (PSfile, "    	/MatScale2 [1 2 sqrt div 0 0 2 index 0 0] def\n");
-	fprintf (PSfile, "    	/MatScale4 [0.5 0 0 0.5 0 0] def\n");
-	fprintf (PSfile, "	/PHeight 842 def\n");
-	fprintf (PSfile, "	/PWidth 596 def\n");
-	fprintf (PSfile, "	end\n\n");
-
-	fprintf (PSfile, "    /A5 8 dict def\n");
-	fprintf (PSfile, "    A5 begin\n");
-	fprintf (PSfile, "    	/MatScale1 matrix def\n");
-	fprintf (PSfile, "    	/MatScale2 matrix def\n");
-	fprintf (PSfile, "    	/MatScale4 [1 2 sqrt div 0 0 2 index 0 0] def\n");
-	fprintf (PSfile, "	/PHeight 842 def\n");
-	fprintf (PSfile, "	/PWidth 596 def\n");
-	fprintf (PSfile, "	end\n\n");
-
-	fprintf (PSfile, "end %% Matrice dict\n\n");
-
-	fprintf (PSfile, "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%DEMARRAGE%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n\n");
-
-	fprintf (PSfile, "/InitThot {\n");
-	fprintf (PSfile, "    /UserMatrice \n");
-	fprintf (PSfile, "	[reduction 100 div 0 0 2 index 0 0] \n");
-	fprintf (PSfile, "	[1 0 0 1 decalageH HPrinterOff add 72 mul 25.4 div decalageV VPrinterOff add 72 mul 25.4 div neg] matrix concatmatrix\n");
-	fprintf (PSfile, "        [1 0 0 1 0 0]\n");
-	fprintf (PSfile, "	matrix concatmatrix def\n");
-	fprintf (PSfile, "    MatriceDict begin\n");
-	fprintf (PSfile, "    page_size cvlit load	 		%% get the page_size dict\n");
-	fprintf (PSfile, "    begin defdict_portrait defdict_paysage	%% and init it\n");
-	fprintf (PSfile, "    currentdict orientation cvlit get		%% get the orientation dict\n");
-	fprintf (PSfile, "    nb_ppf cvlit get				%% get the nb_ppf dict\n");
-	fprintf (PSfile, "    begin \n");
-	fprintf (PSfile, "    VectMatrice 0 get setmatrix			%% init CTM\n");
-	fprintf (PSfile, "    gsave UserMatrice concat\n");
-	fprintf (PSfile, "    100 dict begin				%% working dict\n");
-	fprintf (PSfile, "    } bind def\n\n");
-
-	fprintf (PSfile, "/EndThot {\n");
-	fprintf (PSfile, "   ejectpage\n");
-	fprintf (PSfile, "   end end end end end} bind def	%%close all open dict\n\n");
-
-	fprintf (PSfile, "%%%%EndProlog\n");
-	fprintf (PSfile, "/user_orientation 0 def  \n");
-
-	fprintf (PSfile, "statusdict begin\n");
-
-	if (manualFeed == 0)
-	  {
-	     if (!ustrcmp (pageSize, _A3PaperFormat_))
+	  if (manualFeed == 0)
+	    {
+	      if (!ustrcmp (pageSize, _A3PaperFormat_))
 		fprintf (PSfile, "a3tray\n");
-	  }
-	else
-	  {
-	     fprintf (PSfile, "/manualfeed true def\n");
-	  }
-	if (BlackAndWhite != 0)
-	   fprintf (PSfile, "1 setprocesscolors\n");
-	fprintf (PSfile, "end\n");
-	fprintf (PSfile, "/decalageH %d def /decalageV %d def\n", HorizShift, VertShift);
-	fprintf (PSfile, "/reduction %d def\n", Zoom);
-	fprintf (PSfile, "/page_size (%s) def\n", pageSize);
-	fprintf (PSfile, "/orientation (%s) def\n", Orientation);
-	fprintf (PSfile, "/nb_ppf (%dppf) def\n", NPagesPerSheet);
-	fprintf (PSfile, "/suptrame %d def\n", NoEmpyBox);
-	fprintf (PSfile, "/evenodd 0 def\n");
-	fprintf (PSfile, "/HPrinterOff 0 def\n");
-	fprintf (PSfile, "/VPrinterOff 0 def\n");
-	fprintf (PSfile, "InitThot\n");
-	fprintf (PSfile, "frstpage\n%%%%Page: cover 1\n");
-	NumberOfPages = 1;
-	fflush (PSfile);
-     }
-   else
-     {
-	PSfile = (FILE *) FrRef[1];
-	FrRef[i] = (ThotWindow) PSfile;
-     }
+	    }
+	  else
+	    {
+	      fprintf (PSfile, "/manualfeed true def\n");
+	    }
+	  if (BlackAndWhite != 0)
+	    fprintf (PSfile, "1 setprocesscolors\n");
+	  fprintf (PSfile, "end\n");
+	  fprintf (PSfile, "/decalageH %d def /decalageV %d def\n", HorizShift, VertShift);
+	  fprintf (PSfile, "/reduction %d def\n", Zoom);
+	  fprintf (PSfile, "/page_size (%s) def\n", pageSize);
+	  fprintf (PSfile, "/orientation (%s) def\n", Orientation);
+	  fprintf (PSfile, "/nb_ppf (%dppf) def\n", NPagesPerSheet);
+	  fprintf (PSfile, "/suptrame %d def\n", NoEmpyBox);
+	  fprintf (PSfile, "/evenodd 0 def\n");
+	  fprintf (PSfile, "/HPrinterOff 0 def\n");
+	  fprintf (PSfile, "/VPrinterOff 0 def\n");
+	  fprintf (PSfile, "InitThot\n");
+	  fprintf (PSfile, "frstpage\n%%%%Page: cover 1\n");
+	  NumberOfPages = 1;
+	  fflush (PSfile);
+	}
+    }
+  else
+    {
+      PSfile = (FILE *) FrRef[1];
+      FrRef[i] = (ThotWindow) PSfile;
+    }
 
-   /* initialiser visibilite et zoom de la fenetre */
-   /* cf. procedure InitializeFrameParams */
-   pFrame = &ViewFrameTable[i - 1];
-   pFrame->FrVisibility = 5;	/* visibilite mise a 5 */
+  /* initialize visibility and zoom for the window */
+  /* cf. procedure InitializeFrameParams */
+  pFrame = &ViewFrameTable[i - 1];
+  pFrame->FrVisibility = 5;	/* visibilite mise a 5 */
    pFrame->FrMagnification = 0;	/* zoom a 0 */
 
-   /* On initialise la table des frames  (attention MYSTERES)*/
+   /* initialize frames tabe because it's used by display functions */
    FrameTable[i].FrDoc = IdentDocument (pDoc);
    RemoveClipping(i);
    *volume = 16000;
@@ -1875,7 +1877,6 @@ PtrDocument         pDoc;
    if (pPageAb == NULL)
      /* document non pagine */
      {
-       TtaDisplaySimpleMessage (INFO, PRINT, PRINT_THE_DOC_DOES_NOT_BEGIN_WITH_A_PAGE_BREAK);
        /* generation de la bounding box d'un grand graphique */
        if (pNextPageAb == NULL && rootAbsBox->AbBox != NULL)
 	 {
@@ -2017,8 +2018,8 @@ int                viewsCounter;
     if (!InitPrinting (TtPrinterDC, ghwndMain, hCurrentInstance, NULL))
       WinErrorBox (NULL);
   }
-   
-#  endif /* _WINDOWS */
+   #  endif /* _WINDOWS */
+
   /* imprime l'une apres l'autre les vues a imprimer indiquees dans */
   /* les parametres d'appel du programme print */
   for (v = 0; v < viewsCounter; v++)
@@ -2121,50 +2122,55 @@ int                viewsCounter;
             CurrentFrame = OpenPSFile (pDoc, &pDoc->DocAssocVolume[CurAssocNum - 1]);
 	  else
 	    CurrentFrame = OpenPSFile (pDoc, &pDoc->DocViewVolume[CurrentView - 1]);
-	  if (CurrentFrame != 0) {
-            /* creation frame reussie */
-            /* si c'est la premiere frame, on garde son numero */
-            if (firstFrame == 0)
-	      firstFrame = CurrentFrame;
-            /* initialise la fenetre, et notamment le volume de l'image abstraite a creer et le nombre de pages creees a 0 */
-            if (CurAssocNum > 0) {
-	      pDoc->DocAssocFrame[CurAssocNum - 1] = CurrentFrame;
-	      pDoc->DocAssocFreeVolume[CurAssocNum - 1] = 1000;
-	    } else {
-	      pDoc->DocViewFrame[CurrentView - 1] = CurrentFrame;
-	      /* DocVueCreee[CurrentView]:= true; */
-	      pDoc->DocViewFreeVolume[CurrentView - 1] = 1000;
+	  if (CurrentFrame != 0)
+	    {
+	      /* creation frame reussie */
+	      /* si c'est la premiere frame, on garde son numero */
+	      if (firstFrame == 0)
+		firstFrame = CurrentFrame;
+	      /* initialise la fenetre, et notamment le volume de l'image abstraite a creer et le nombre de pages creees a 0 */
+	      if (CurAssocNum > 0)
+		{
+		  pDoc->DocAssocFrame[CurAssocNum - 1] = CurrentFrame;
+		  pDoc->DocAssocFreeVolume[CurAssocNum - 1] = 1000;
+		}
+	      else
+		{
+		  pDoc->DocViewFrame[CurrentView - 1] = CurrentFrame;
+		  /* DocVueCreee[CurrentView]:= true; */
+		  pDoc->DocViewFreeVolume[CurrentView - 1] = 1000;
+		}
+
+	      /* page dimensions and margings are unknown, set default values
+		 TopMargin = 57;
+		 LeftMargin = 57;
+	      */
+	      TopMargin = 0;
+	      LeftMargin = 0;
+	      PageHeight = 0;
+	      PageFooterHeight = 0;
+	      CleanTopOfPageElement = True;
+	      if (Repaginate && withPages)
+		{
+		  /* on pagine le document et on imprime au fur et */
+		  /* mesure les pages creees : PaginateView appelle la */
+		  /* procedure PrintOnePage definie ci-dessous */
+		  if (CurAssocNum > 0)
+		    PaginateView (pDoc, CurAssocNum, TRUE);
+		  else
+		    PaginateView (pDoc, CurrentView, FALSE);
+		}
+	      else
+		/* imprime la vue */
+		PrintView (pDoc);
+	      /* on ferme la fenetre, sauf si c'est la premiere creee. */
+	      if (CurrentFrame != firstFrame)
+		ClosePSFile (CurrentFrame);
+	      CurrentFrame = 0;
 	    }
-	    /* on ne connait pas encore les dimensions
-	       et les marges de la page */
-	    /* on met les valeurs par defaut */
-	    /*     TopMargin = 57; */
-	    /*   LeftMargin = 57; */
-	    TopMargin = 0;
-	    LeftMargin = 0;
-	    PageHeight = 0;
-	    PageFooterHeight = 0;
-	    CleanTopOfPageElement = True;
-	    if (Repaginate && withPages)
-	      {
-		/* on pagine le document et on imprime au fur et */
-		/* mesure les pages creees : PaginateView appelle la */
-		/* procedure PrintOnePage definie ci-dessous */
-		if (CurAssocNum > 0)
-		  PaginateView (pDoc, CurAssocNum, TRUE);
-		else
-		  PaginateView (pDoc, CurrentView, FALSE);
-	      }
-	    else
-	      /* imprime la vue */
-	      PrintView (pDoc);
-	    /* on ferme la fenetre, sauf si c'est la premiere creee. */
-	    if (CurrentFrame != firstFrame)
-	      ClosePSFile (CurrentFrame);
-	    CurrentFrame = 0;
-	  }
 	}
     }
+
 #  ifdef _WINDOWS
   if (TtPrinterDC) {
     if ((EndDoc (TtPrinterDC)) <= 0)
@@ -2584,7 +2590,7 @@ char              **argv;
   int                 result;
 #endif /* _WINDOWS */
 
-# ifdef _WINDOWS 
+#ifdef _WINDOWS 
   TtPrinterDC      = PrinterDC;
   TtIsTrueColor    = isTrueColors;
   TtWDepth         = depth;
@@ -2600,20 +2606,18 @@ char              **argv;
   PrinterDPI       = GetDeviceCaps (TtPrinterDC, LOGPIXELSY);
   ghwndMain        = hWnd;
   buttonCommand    = buttonCmd;
-# endif /* _WINDOWS */
+#endif /* _WINDOWS */
 
+  thotWindow       = 0;
   removeDirectory = FALSE;
   Repaginate     = 0;
   NPagesPerSheet = 1;
   BlackAndWhite  = 0;
   manualFeed     = 0;
-# ifndef _WINDOWS
-  thotWindow     = (ThotWindow) 0;
-# endif /* !_WINDOWS */
   NoEmpyBox      = 1;
   Repaginate     = 0;
-  FirstPrinted      = 0;
-  LastPrinted       = 999;
+  FirstPrinted   = 0;
+  LastPrinted    = 999;
   NCopies        = 1;
   HorizShift     = 0;
   VertShift      = 0;
@@ -2623,142 +2627,177 @@ char              **argv;
   PoscriptFont = NULL;
   ColorPs = -1;
 
-# ifndef _WINDOWS
+  ShowSpace = 1;  /* Restitution des espaces */
+  InitLanguage ();
+  Dict_Init ();
+
+  /* Initialisation de la gestion memoire */
+  InitKernelMemory ();
+  InitEditorMemory ();
+
   if (argc < 4)
-    usage (argv [0]);
+    usage (argv[0]);
 
   TtaInitializeAppRegistry (argv[0]);
-# endif /* !_WINDOWS */
+  argCounter = 1;
 
-  ShowSpace = 1;  /* Restitution des espaces */
+  /* if present the argument -lang should be the first */
+  if (!ustrcmp (argv[argCounter], TEXT("-lang")))
+    {
+      argCounter++;
+      TtaSetEnvString (_LANG_EVAR_, argv[argCounter++], TRUE);
+    }
+  /* Initialise la table des messages d'erreurs */
+  TtaGetMessageTable (TEXT("libdialogue"), TMSG_LIB_MSG_MAX);
 
-   /* Initialise la table des messages d'erreurs */
-   TtaGetMessageTable (TEXT("libdialogue"), TMSG_LIB_MSG_MAX);
-   PRINT = TtaGetMessageTable (TEXT("printdialogue"), PRINT_MSG_MAX);
-   InitLanguage ();
-   Dict_Init ();
-
-   /* Initialisation de la gestion memoire */
-   InitKernelMemory ();
-   InitEditorMemory ();
-
-#  ifdef _WINDOWS
-   argCounter = 0;
-#  else  /* !_WINDOWS */
-   argCounter = 1;
-#  endif /* _WINDOWS */
-  while (argCounter < argc) {  /* Parsing the command line */
-        if (argv [argCounter][0] == TEXT('-')) { /* the argument is a parameter */
-           if (!ustrcmp (argv [argCounter], TEXT("-display"))) {
-              /* The display is distant */
-              argCounter++;
-              server = TtaAllocString (ustrlen (argv[argCounter]) + 1);
-              ustrcpy (server, argv[argCounter++]);
-           } else if (!ustrcmp (argv [argCounter], TEXT("-name"))) {
-                  realNameFound = TRUE ;
-                  argCounter++;
-                  realName = TtaAllocString (ustrlen (argv[argCounter]) + 1);
-                  ustrcpy (realName, argv[argCounter++]);
-           } else if (!ustrcmp (argv [argCounter], TEXT("-ps"))) {
-                  /* The destination is postscript file */
-                  if (destination)
-                     /* There is a problem, a destination is already given */
-                  TtaDisplayMessage (FATAL, TtaGetMessage (PRINT, PRINT_DESTINATION_EXIST));
-                  destination = TEXT("PSFILE");
-                  argCounter++;
-                  printer = TtaAllocString (ustrlen (argv[argCounter]) + 1);
-                  ustrcpy (printer, argv[argCounter++]);
-           } else if (!ustrcmp (argv [argCounter], TEXT("-out"))) {
-                  /* The destination is a printer */
-                  if (destination)
-                     TtaDisplayMessage (FATAL, TtaGetMessage (PRINT, PRINT_DESTINATION_EXIST));
-                  destination = TEXT("PRINTER");
-                  argCounter++;
-                  printer = TtaAllocString (ustrlen (argv[argCounter]) + 1);
-                  ustrcpy (printer, argv[argCounter++]);
-           } else if (!ustrcmp (argv [argCounter], TEXT("-v"))) {
-                  /* At least one view must be given in the command line */
-                  viewFound = TRUE;
-                  argCounter++;
-                  ustrcpy (PrintViewName [viewsCounter++], argv [argCounter++]);
-           } else if (!ustrcmp (argv [argCounter], TEXT("-css"))) {
+  while (argCounter < argc)
+    {
+      /* Parsing the command line */
+      if (argv[argCounter][0] == TEXT('-'))
+	{
+	  /* the argument is a parameter */
+	  if (!ustrcmp (argv[argCounter], TEXT("-display")))
+	    {
+	      /* The display is distant */
+	      argCounter++;
+	      server = TtaAllocString (ustrlen (argv[argCounter]) + 1);
+	      ustrcpy (server, argv[argCounter++]);
+	    }
+	  else if (!ustrcmp (argv[argCounter], TEXT("-name")))
+	    {
+	      realNameFound = TRUE;
+	      argCounter++;
+	      realName = TtaAllocString (ustrlen (argv[argCounter]) + 1);
+	      ustrcpy (realName, argv[argCounter++]);
+	    }
+	  else if (!ustrcmp (argv[argCounter], TEXT("-ps")))
+	    {
+	      /* The destination is postscript file */
+	      destination = TEXT("PSFILE");
+	      argCounter++;
+	      printer = TtaAllocString (ustrlen (argv[argCounter]) + 1);
+	      ustrcpy (printer, argv[argCounter++]);
+	    }
+	  else if (!ustrcmp (argv[argCounter], TEXT("-out")))
+	    {
+	      /* The destination is a printer */
+	      destination = TEXT("PRINTER");
+	      argCounter++;
+	      printer = TtaAllocString (ustrlen (argv[argCounter]) + 1);
+	      ustrcpy (printer, argv[argCounter++]);
+	    }
+	  else if (!ustrcmp (argv[argCounter], TEXT("-v")))
+	    {
+	      /* At least one view must be given in the command line */
+	      viewFound = TRUE;
+	      argCounter++;
+	      ustrcpy (PrintViewName [viewsCounter++], argv[argCounter++]);
+	    }
+	  else if (!ustrcmp (argv[argCounter], TEXT("-css")))
+	    {
                   /* CSS files given in the command line */
                   argCounter++;
-                  ustrcpy (CSSName [cssCounter++], argv [argCounter++]);
-           } else if (!ustrcmp (argv [argCounter], TEXT("-npps"))) {
-                  argCounter++;
-                  NPagesPerSheet = uctoi (argv[argCounter++]);
-           } else if (!ustrcmp (argv [argCounter], TEXT("-bw"))) {
-                  argCounter++;
-                  BlackAndWhite = 1;
-           } else if (!ustrcmp (argv [argCounter], TEXT("-manualfeed"))) {
-                  argCounter++;
-                  manualFeed = 1;
-           } else if (!ustrcmp (argv [argCounter], TEXT("-emptybox"))) {
-                  argCounter++;
-                  NoEmpyBox = 0;
-           } else if (!ustrcmp (argv [argCounter], TEXT("-paginate"))) {
-                  argCounter++;
-                  Repaginate = 1;
-           } else if (!ustrcmp (argv [argCounter], TEXT("-landscape"))) {
-                  Orientation = TEXT("Landscape");
-                  argCounter++;
-           } else if (!ustrcmp (argv [argCounter], TEXT("-removedir"))) {
-                  removeDirectory = TRUE;
-                  argCounter++;
-           } else if (!ustrcmp (argv [argCounter], TEXT("-portrait"))) /* Orientation is already set to Portrait value */ 
-                  argCounter++;
-           else if (!ustrcmp (argv [argCounter], TEXT("-sch"))) {
-                /* flag for schema directories */
-                argCounter++;
-                ustrcpy (SchemaPath, argv[argCounter++]);
-           } else if (!ustrcmp (argv [argCounter], TEXT("-doc"))) {
-                  /* flag for document directories */
-                  argCounter++;
-                  ustrcpy (DocumentDir, argv[argCounter++]);
-           } else {
-                index = 0;
-                pChar = &argv [argCounter][2];
-                while ((option[index++] = *pChar++));
-                option [index] = EOS;
-                switch (argv [argCounter] [1]) {
-                       case TEXT('F'): FirstPrinted = uctoi (option);
-                                 argCounter++;
-                                 break;
-                       case TEXT('L'): LastPrinted = uctoi (option);
-                                 argCounter++;
-                                 break;
-                       case TEXT('P'): ustrcpy (pageSize, option);
-                                 argCounter++;
-                                 break;
-                       case TEXT('#'): NCopies = uctoi (option);
-                                 argCounter++;
-                                 break;
-                       case TEXT('H'): HorizShift = uctoi (option);
-                                 argCounter++;
-                                 break;
-                       case TEXT('V'): VertShift = uctoi (option);
-                                 argCounter++;
-                                 break;
-                       case TEXT('%'): Zoom = uctoi (option);
-                                 argCounter++;
-                                 break;
-                       case TEXT('w'): thotWindow = (ThotWindow) uctoi (option);
-                                 argCounter++;
-                                 break;
-                       default:
-                                 TtaDisplayMessage (FATAL, TtaGetMessage (PRINT, PRINT_BAD_OPTION), argv [argCounter]);
-                }
+                  ustrcpy (CSSName [cssCounter++], argv[argCounter++]);
            }
-        } else {
-             /* the argument is the filename */
-             if (TtaFileExist (argv [argCounter])) {
-                /* does it exist ?? */
-                TtaExtractName (argv[argCounter], tempDir, name); /* Yes, it does, split the string into two parts: directory and filename */  
-                argCounter++;
-             } else
-                  /* The file does not exist */
-                   TtaDisplayMessage (FATAL, TtaGetMessage (PRINT, PRINT_MISSING_FILE), argv [argCounter]);
+	  else if (!ustrcmp (argv[argCounter], TEXT("-npps")))
+	    {
+	      argCounter++;
+	      NPagesPerSheet = uctoi (argv[argCounter++]);
+	    }
+	  else if (!ustrcmp (argv[argCounter], TEXT("-bw")))
+	    {
+	      argCounter++;
+	      BlackAndWhite = 1;
+	    }
+	  else if (!ustrcmp (argv[argCounter], TEXT("-manualfeed")))
+	    {
+	      argCounter++;
+	      manualFeed = 1;
+	    }
+	  else if (!ustrcmp (argv[argCounter], TEXT("-emptybox")))
+	    {
+	      argCounter++;
+	      NoEmpyBox = 0;
+	    }
+	  else if (!ustrcmp (argv[argCounter], TEXT("-paginate")))
+	    {
+	      argCounter++;
+	      Repaginate = 1;
+	    }
+	  else if (!ustrcmp (argv[argCounter], TEXT("-landscape")))
+	    {
+	      Orientation = TEXT("Landscape");
+	      argCounter++;
+	    }
+	  else if (!ustrcmp (argv[argCounter], TEXT("-removedir")))
+	    {
+	      removeDirectory = TRUE;
+	      argCounter++;
+	    }
+	  else if (!ustrcmp (argv[argCounter], TEXT("-portrait")))
+	    /* Orientation is already set to Portrait value */ 
+	    argCounter++;
+	  else if (!ustrcmp (argv[argCounter], TEXT("-sch")))
+	    {
+	      /* flag for schema directories */
+	      argCounter++;
+	      ustrcpy (SchemaPath, argv[argCounter++]);
+	    }
+	  else if (!ustrcmp (argv[argCounter], TEXT("-doc")))
+	    {
+	      /* flag for document directories */
+	      argCounter++;
+	      ustrcpy (DocumentDir, argv[argCounter++]);
+	    }
+	  else
+	    {
+	      index = 0;
+	      pChar = &argv[argCounter][2];
+	      while ((option[index++] = *pChar++));
+	      option [index] = EOS;
+	      switch (argv[argCounter][1])
+		{
+		case TEXT('F'): FirstPrinted = uctoi (option);
+		  argCounter++;
+		  break;
+		case TEXT('L'): LastPrinted = uctoi (option);
+		  argCounter++;
+		  break;
+		case TEXT('P'): ustrcpy (pageSize, option);
+		  argCounter++;
+		  break;
+		case TEXT('#'): NCopies = uctoi (option);
+		  argCounter++;
+		  break;
+		case TEXT('H'): HorizShift = uctoi (option);
+		  argCounter++;
+		  break;
+		case TEXT('V'): VertShift = uctoi (option);
+		  argCounter++;
+		  break;
+		case TEXT('%'): Zoom = uctoi (option);
+		  argCounter++;
+		  break;
+		case TEXT('w'): thotWindow = (ThotWindow) uctoi (option);
+		  argCounter++;
+		  break;
+		default:
+		  ;
+                }
+	    }
+        }
+      else
+	{
+	  /* the argument is the filename */
+	  if (TtaFileExist (argv[argCounter]))
+	    {
+	      /* does it exist ?? */
+	      TtaExtractName (argv[argCounter], tempDir, name); /* Yes, it does, split the string into two parts: directory and filename */  
+	      argCounter++;
+	    }
+	  else
+	    /* The file does not exist */
+	    TtaDisplayMessage (FATAL, TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE), argv[argCounter]);
         }
     }
   
@@ -2828,84 +2867,80 @@ char              **argv;
 	 TheDoc = NULL;
      }
    if (TheDoc != NULL)
-     /* the document is loaded */
-     /* load CSS files and apply CSS rules */
-     for (i = 0; i < viewsCounter; i++)
-       {
-	 usprintf (tempFile, TEXT("%s%c%s"), tempDir, PATH_SEP, CSSName[i]);
-	 LoadStyleSheet (tempFile, 1, NULL, NULL);
-       }
+     {
+       /* the document is loaded */
+       /* load CSS files and apply CSS rules */
+       for (i = 0; i < cssCounter; i++)
+	 LoadStyleSheet (CSSName[i], 1, NULL, NULL);
+       
+       /* load all referred document before printing */
+       LoadReferedDocuments (TheDoc);
+       
+       if (TypeHasException (ExcNoPaginate, TheDoc->DocSSchema->SsRootElem,
+			     TheDoc->DocSSchema))
+	 /* Don't paginate a document with the exception NoPaginate */
+	 Repaginate = 0;
 
-     /* load all referred document before printing */
-     LoadReferedDocuments (TheDoc);
-
-   if (TheDoc != NULL)
-     if (TypeHasException (ExcNoPaginate, TheDoc->DocSSchema->SsRootElem,
-			   TheDoc->DocSSchema))
-       /* Don't paginate a document with the exception NoPaginate */
-       Repaginate = 0;
-   /* Start the printing process */
-   if (TheDoc != NULL)
-     if (PrintDocument (TheDoc, viewsCounter) == 0)
-       {
-         if (!ustrcmp (destination, TEXT("PSFILE")))
-           {
-#            ifdef _WINDOWS 
-             usprintf (cmd, TEXT("%s%c%s.ps"), tempDir, DIR_SEP, name);
-             CopyFile (cmd, printer, FALSE);
-#            else  /* !_WINDOWS */
-             sprintf (cmd, "/bin/mv %s%c%s.ps %s\n", tempDir, DIR_SEP, name, printer);
-             result = system (cmd);
-             if (result != 0)
+       /* Start the printing process */
+       if (PrintDocument (TheDoc, viewsCounter) == 0)
+	 {
+	   if (!ustrcmp (destination, TEXT("PSFILE")))
+	     {
+#ifdef _WINDOWS 
+	       usprintf (cmd, TEXT("%s%c%s.ps"), tempDir, DIR_SEP, name);
+	       CopyFile (cmd, printer, FALSE);
+#else  /* !_WINDOWS */
+	       sprintf (cmd, "/bin/mv %s%c%s.ps %s\n", tempDir, DIR_SEP, name, printer);
+	       result = system (cmd);
+	       if (result != 0)
 	         ClientSend (thotWindow, printer, TMSG_CANNOT_CREATE_PS);
-             else
+	       else
 	         ClientSend (thotWindow, realName, TMSG_DOC_PRINTED);
-#            endif /* _WINDOWS */
-           }
-         else
-           {
-#            ifdef _WINDOWS
-             /* sprintf (cmd, "%s\\%s.PIV", tempDir, name); */
-#            else  /* _WINDOWS */
-	     if (NCopies > 1)
-	       sprintf (cmd, "%s -#%d -T%s %s/%s.ps\n", printer, NCopies, realName, tempDir, name);
-	     else
-	       sprintf (cmd, "%s %s/%s.ps\n", printer, tempDir, name);
-
-             result = system (cmd);
-             if (result != 0)
-                ClientSend (thotWindow, cmd, TMSG_UNKNOWN_PRINTER);
-             else
-                ClientSend (thotWindow, realName, TMSG_DOC_PRINTED);
-#            endif /* _WINDOWS */
-           }
-       }
-     else
-       {
+#endif /* _WINDOWS */
+	     }
+	   else
+	     {
+#ifndef _WINDOWS
+	       if (NCopies > 1)
+		 sprintf (cmd, "%s -#%d -T%s %s/%s.ps\n", printer, NCopies, realName, tempDir, name);
+	       else
+		 sprintf (cmd, "%s %s/%s.ps\n", printer, tempDir, name);
+	       
+	       result = system (cmd);
+	       if (result != 0)
+		 ClientSend (thotWindow, cmd, TMSG_UNKNOWN_PRINTER);
+	       else
+		 ClientSend (thotWindow, realName, TMSG_DOC_PRINTED);
+#endif /* _WINDOWS */
+	     }
+	 }
+       else
+	 {
            usprintf(tempFile, TEXT("%s/%s.ps"), tempDir, name);
-	   TtaDisplayMessage (FATAL, TtaGetMessage (PRINT, PRINT_UNABLE_TO_CREATE_FILE), tempFile);
-       }
+	   ClientSend (thotWindow, tempFile, TMSG_CANNOT_CREATE_PS);
+	 }
+     }
    
    /* if the request comes from the Thotlib we have to remove the directory */
    if (removeDirectory)
     {
-#      ifdef _WINDOWS
-	   int i;
-       if (!ustrcmp (destination, TEXT("PSFILE")) && !DeleteFile (cmd))
-          WinErrorBox (NULL);
-	   else {
-             STRING pivDoc = TtaAllocString (ustrlen (tmpDocName) + ustrlen (tmpDir) + 6);
-             usprintf (pivDoc, TEXT("%s\\%s.PIV"), tmpDir, tmpDocName); 
-			 if (!DeleteFile (pivDoc))
-                WinErrorBox (NULL);
-	         else if (urmdir (tempDir))
-                  WinErrorBox (NULL);
-	   }
-#      else  /* _WINDOWS */
-       sprintf (cmd, "/bin/rm -rf %s\n", tempDir);
-       system (cmd);
-#      endif /* _WINDOWS */
-     }
+#ifdef _WINDOWS
+      int i;
+      if (!ustrcmp (destination, TEXT("PSFILE")) && !DeleteFile (cmd))
+	WinErrorBox (NULL);
+      else {
+	STRING pivDoc = TtaAllocString (ustrlen (tmpDocName) + ustrlen (tmpDir) + 6);
+	usprintf (pivDoc, TEXT("%s\\%s.PIV"), tmpDir, tmpDocName); 
+	if (!DeleteFile (pivDoc))
+	  WinErrorBox (NULL);
+	else if (urmdir (tempDir))
+	  WinErrorBox (NULL);
+      }
+#else  /* _WINDOWS */
+      sprintf (cmd, "/bin/rm -rf %s\n", tempDir);
+      system (cmd);
+#endif /* _WINDOWS */
+    }
    TtaFreeMemory (realName);
 #  ifndef _WINDOWS
    exit (0);

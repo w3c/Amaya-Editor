@@ -23,6 +23,7 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "fileaccess.h"
+#include "fetchHTMLname.h"
 #ifdef  PPSTANDALONE
 #define  NAME_LENGTH 20
 #include "parser.h"

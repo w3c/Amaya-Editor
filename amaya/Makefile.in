@@ -30,9 +30,8 @@ CONFIGFILES=XKeysymDB unix-thot.rc amaya.keyboard \
 
 DICOFILES= *.ptn *.dic alphabet clavier
 
-AMAYAFILES= HTML.STR HTML.conf HTML.trans HTML.en HTML.fr \
-           HTML*.PRS HTML*.TRA AmayaPage.html \
-	   TextFile.STR TextFile*.PRS TextFile*.TRA
+AMAYAFILES= *.STR *.conf *.trans *.en *.fr \
+           *.PRS *.TRA AmayaPage.html
 
 FONTSFILES=Families.list fonts.dir icones*
 

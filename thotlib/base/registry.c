@@ -43,41 +43,21 @@
 #include <direct.h>
 #include <winbase.h>
 #include "winsys.h"
-#if defined(_I18N_) || defined(__JIS__)
-#   define WIN_DEF_USERNAME       L"default"
-#   define THOT_INI_FILENAME      L"win-thot.rc"
-#   define WIN_USERS_HOME_DIR     L"users"
-#   define DEF_TMPDIR             L"c:\\temp"
-#else /* defined(_I18N_) || defined(__JIS__) */
-#     define WIN_DEF_USERNAME       "default"
-#     define THOT_INI_FILENAME      "win-thot.rc"
-#     define WIN_USERS_HOME_DIR     "users"
-#     define DEF_TMPDIR             "c:\\temp"
-#endif /* defined(_I18N_) || defined(__JIS__) */
+#   define WIN_DEF_USERNAME       TEXT("default")
+#   define THOT_INI_FILENAME      TEXT("win-thot.rc")
+#   define WIN_USERS_HOME_DIR     TEXT("users")
+#   define DEF_TMPDIR             TEXT("c:\\temp")
 STRING WIN_Home;
 #else /* !_WINDOWS */
-#if defined(_I18N_) || defined(__JIS__)
-#   define THOT_INI_FILENAME      L"unix-thot.rc"
-#   define DEF_TMPDIR             L"/tmp"
-#else /* defined(_I18N_) || defined(__JIS__) */
-#     define THOT_INI_FILENAME       "unix-thot.rc"
-#     define DEF_TMPDIR             "/tmp"
-#endif /* defined(_I18N_) || defined(__JIS__) */ 
+#   define THOT_INI_FILENAME      TEXT("unix-thot.rc")
+#   define DEF_TMPDIR             TEXT("/tmp")
 #endif /* ! _WINDOWS */
 
-#if defined(_I18N_) || defined(__JIS__)
-#define THOT_RC_FILENAME      L"thot.rc"
-#define THOT_CONFIG_FILENAME  L"config"
-#define THOT_BIN_FILENAME     L"bin"
-#define THOT_LIB_DEFAULTNAME  L"thot_lib"
+#define THOT_RC_FILENAME      TEXT("thot.rc")
+#define THOT_CONFIG_FILENAME  TEXT("config")
+#define THOT_BIN_FILENAME     TEXT("bin")
+#define THOT_LIB_DEFAULTNAME  TEXT("thot_lib")
 #define MAX_REGISTRY_ENTRIES 100
-#else /* defined(_I18N_) || defined(__JIS__) */
-#define THOT_RC_FILENAME      "thot.rc"
-#define THOT_CONFIG_FILENAME  "config"
-#define THOT_BIN_FILENAME     "bin"
-#define THOT_LIB_DEFAULTNAME  "thot_lib"
-#define MAX_REGISTRY_ENTRIES 100
-#endif /* defined(_I18N_) || defined(__JIS__) */
 
 typedef enum
   {

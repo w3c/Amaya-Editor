@@ -18,6 +18,7 @@
 #include "amaya.h"
 #include "css.h"
 #include "undo.h"
+#include "fetchHTMLname.h"
 
 typedef struct _BackgroundImageCallbackBlock
 {
@@ -62,7 +63,7 @@ typedef STRING (*PropertyParser) ();
 typedef struct CSSProperty
   {
      STRING               name;
-     PropertyParser parsing_function;
+     PropertyParser       parsing_function;
   }
 CSSProperty;
 
@@ -976,6 +977,37 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
+   ParseCSSLineSpacing : parse a CSS font leading string 
+   we expect the input string describing the attribute to be     
+   value% or value                                               
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static STRING       ParseCSSLineSpacing (Element element, PSchema tsch,
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+#else
+static STRING       ParseCSSLineSpacing (element, tsch, context, cssRule, css, isHTML)
+Element             element;
+PSchema             tsch;
+PresentationContext context;
+STRING              cssRule;
+CSSInfoPtr          css;
+ThotBool            isHTML;
+#endif
+{
+   PresentationValue   lead;
+
+   cssRule = ParseCSSUnit (cssRule, &lead);
+   if (lead.typed_data.unit == STYLE_UNIT_INVALID)
+     {
+       /* invalid line spacing */
+	return (cssRule);
+     }
+   /* install the new presentation */
+   TtaSetStylePresentation (PRLineSpacing, element, tsch, context, lead);
+   return (cssRule);
+}
+
+/*----------------------------------------------------------------------
    ParseCSSFontSize : parse a CSS font size attr string  
    we expect the input string describing the attribute to be     
    xx-small, x-small, small, medium, large, x-large, xx-large      
@@ -995,6 +1027,7 @@ ThotBool            isHTML;
 #endif
 {
    PresentationValue   pval;
+   STRING              ptr = NULL;
    ThotBool	       real;
 
    pval.typed_data.real = FALSE;
@@ -1055,6 +1088,14 @@ ThotBool            isHTML;
      }
    else
      {
+       /* look for a '/' within the current cssRule */
+       ptr = ustrchr (cssRule, TEXT('/'));
+       if (ptr != NULL)
+	 {
+	   /* keep the line spacing rule */
+	   ptr[0] = EOS;
+	   ptr = &ptr[1];
+	 }
        cssRule = ParseCSSUnit (cssRule, &pval);
        if (pval.typed_data.unit == STYLE_UNIT_INVALID ||
            pval.typed_data.value < 0)
@@ -1078,10 +1119,14 @@ ThotBool            isHTML;
 	       pval.typed_data.unit = STYLE_UNIT_PERCENT;
 	     }
 	 }
+
      }
 
-   /* install the attribute */
+   /* install the presentation style */
    TtaSetStylePresentation (PRSize, element, tsch, context, pval);
+
+   if (ptr != NULL)
+     cssRule = ParseCSSLineSpacing (element, tsch, context, ptr, css, isHTML);
    return (cssRule);
 }
 
@@ -1431,39 +1476,6 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSLineSpacing : parse a CSS font leading string 
-   we expect the input string describing the attribute to be     
-   value% or value                                               
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static STRING       ParseCSSLineSpacing (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
-#else
-static STRING       ParseCSSLineSpacing (element, tsch, context, cssRule, css, isHTML)
-Element             element;
-PSchema             tsch;
-PresentationContext context;
-STRING              cssRule;
-CSSInfoPtr          css;
-ThotBool            isHTML;
-#endif
-{
-   PresentationValue   lead;
-
-   cssRule = ParseCSSUnit (cssRule, &lead);
-   if (lead.typed_data.unit == STYLE_UNIT_INVALID)
-     {
-       /* invalid line spacing */
-	return (cssRule);
-     }
-   /*
-    * install the new presentation.
-    */
-   TtaSetStylePresentation (PRLineSpacing, element, tsch, context, lead);
-   return (cssRule);
-}
-
-/*----------------------------------------------------------------------
    ParseCSSTextDecoration : parse a CSS text decor string   
    we expect the input string describing the attribute to be     
    underline, overline, line-through, box, shadowbox, box3d,       
@@ -1701,7 +1713,10 @@ PresentationValue  *val;
     }
   
   if (failed)
-    val->typed_data.value = 0;
+    {
+      val->typed_data.value = 0;
+      val->typed_data.unit = STYLE_UNIT_INVALID;
+    }
   else
     {
       best = TtaGetThotColor (redval, greenval, blueval);
@@ -2075,15 +2090,9 @@ ThotBool            isHTML;
    PresentationValue   best;
 
    cssRule = ParseCSSColor (cssRule, &best);
-
-   if (best.typed_data.unit == STYLE_UNIT_INVALID)
-     {
-	return (cssRule);
-     }
-   /*
-    * install the new presentation.
-    */
-   TtaSetStylePresentation (PRForeground, element, tsch, context, best);
+   if (best.typed_data.unit != STYLE_UNIT_INVALID)
+     /* install the new presentation */
+     TtaSetStylePresentation (PRForeground, element, tsch, context, best);
    return (cssRule);
 }
 
@@ -2287,10 +2296,10 @@ ThotBool            isHTML;
   PresentationValue     image, value;
   STRING                url;
   STRING                bg_image;
-  CHAR_T                  saved;
+  CHAR_T                saved;
   STRING                base;
-  CHAR_T                  tempname[MAX_LENGTH];
-  CHAR_T                  imgname[MAX_LENGTH];
+  CHAR_T                tempname[MAX_LENGTH];
+  CHAR_T                imgname[MAX_LENGTH];
   unsigned int          savedtype = 0;
   ThotBool              moved;
 
@@ -3097,16 +3106,16 @@ ThotBool            destroy;
 }
 
 /*----------------------------------------------------------------------
-   ParseHTMLGenericSelector : Create a generic context for a given 
+   ParseGenericSelector : Create a generic context for a given 
    selector string. If the selector is made of multiple comma- 
    separated selector items, it parses them one at a time and  
    return the end of the selector string to be handled or NULL 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING  ParseHTMLGenericSelector (STRING selector, STRING cssRule,
+static STRING  ParseGenericSelector (STRING selector, STRING cssRule,
 			   GenericContext ctxt, Document doc, CSSInfoPtr css)
 #else
-static STRING  ParseHTMLGenericSelector (selector, cssRule, ctxt, doc, css)
+static STRING  ParseGenericSelector (selector, cssRule, ctxt, doc, css)
 STRING         selector;
 STRING         cssRule;
 GenericContext  ctxt;
@@ -3116,57 +3125,71 @@ CSSInfoPtr      css;
 {
   ElementType         elType;
   PSchema             tsch;
-  CHAR_T                sel[150];
-  CHAR_T                class[150];
-  CHAR_T                pseudoclass[150];
-  CHAR_T                id[150];
-  CHAR_T                attrelemname[150];
-  STRING              deb;
-  STRING              elem, structName;
-  STRING              cur;
-  STRING              ancestors[MAX_ANCESTORS];
-  int                 i, j;
-  ThotBool            isHTML, classOnly;
+  AttributeType       attrType;
+  CHAR_T              sel[MAX_ANCESTORS * 50];
+  STRING              deb, cur;
+  STRING              structName;
+  STRING              names[MAX_ANCESTORS];
+  STRING              ids[MAX_ANCESTORS];
+  STRING              classes[MAX_ANCESTORS];
+  STRING              pseudoclasses[MAX_ANCESTORS];
+  STRING              attrs[MAX_ANCESTORS];
+  STRING              attrvals[MAX_ANCESTORS];
+  int                 i, j, k, max;
+  ThotBool            isHTML;
 
   sel[0] = EOS;
-  class[0] = EOS;
-  pseudoclass[0] = EOS;
-  id[0] = EOS;
-  classOnly = FALSE;
-  attrelemname[0] = EOS;
-  deb = cur = elem = &sel[0];
   for (i = 0; i < MAX_ANCESTORS; i++)
     {
-      ancestors[i] = NULL;
-      ctxt->ancestors[i] = 0;
-      ctxt->ancestors_nb[i] = 0;
-    }
+      names[i] = NULL;
+      ids[i] = NULL;
+      classes[i] = NULL;
+      pseudoclasses[i] = NULL;
+      attrs[i] = NULL;
+      attrvals[i] = NULL;
 
-  /* first format the first selector item, uniformizing blanks */
+      ctxt->name[i] = 0;
+      ctxt->names_nb[i] = 0;
+      ctxt->attrType[i] = 0;
+      ctxt->attrText[i] = NULL;
+    }
+  ctxt->box = 0;
+  ctxt->type = 0;
+  
   selector = SkipBlanksAndComments (selector);
+  deb = cur = &sel[0];
+  max = 0; /* number of loops */
   while (1)
     {
+      /* copy an item of the selector into sel[] */
       cur = deb;
       /* put one word in the sel buffer */
       while (*selector != EOS && *selector != ',' &&
 	     *selector != '.' && *selector != ':' &&
 	     *selector != '#' && !TtaIsBlank (selector))
 	*cur++ = *selector++;
-      *cur++ = EOS;
-      
-      /* now deb points to the parsed type and cur to the next chain to be parsed */
-      elem = deb;
+      *cur++ = EOS; /* close the first string  in sel[] */
+      if (deb[0] != EOS)
+	names[max] = deb;
+      else
+	names[max] = NULL;
+      classes[max] = NULL;
+      pseudoclasses[max] = NULL;
+      ids[max] = NULL;
+      attrs[max] = NULL;
+      attrvals[max] = NULL;
+
+      /* now names[max] points to the beginning of the parsed item
+	 and cur to the next chain to be parsed */
       if (*selector == ':' || *selector == '.' || *selector == '#')
-	/* keep the name as attrelemname */
-	ustrcpy (attrelemname, elem);
+	/* keep the element name which precedes the id or
+	 pseudo class or the class */
       deb = cur;
 
       if (*selector == '.')
 	{
-	  /* read the class id : only one allowed by selector */
-	  class[0] = EOS;
-	  cur = class;
-	  classOnly = (elem == NULL || *elem == EOS);
+	  /* copy into sel[] the class */
+	  classes[max] = cur;
 	  selector++;
 	  while (*selector != EOS && *selector != ',' &&
 		 *selector != '.' && *selector != ':' &&
@@ -3176,9 +3199,8 @@ CSSInfoPtr      css;
 	}
       else if (*selector == ':')
 	{
-	  /* read the pseudoclass id : only one allowed by selector */
-	  pseudoclass[0] = EOS;
-	  cur = pseudoclass;
+	  /* copy into sel[] the pseudoclass */
+	  pseudoclasses[max]= cur;
 	  selector++;
 	  while (*selector != EOS && *selector != ',' &&
 		 *selector != '.' && *selector != ':' &&
@@ -3189,9 +3211,8 @@ CSSInfoPtr      css;
 	}
       else if (*selector == '#')
 	{
-	  /* read the id : only one allowed by selector */
-	  id[0] = EOS;
-	  cur = &id[0];
+	  /* copy into sel[] the attribute */
+	  ids[max] = cur;
 	  selector++;
 	  while (*selector != EOS && *selector != ',' &&
 		 *selector != '.' && *selector != ':' &&
@@ -3200,35 +3221,42 @@ CSSInfoPtr      css;
 	  *cur++ = EOS;
 	  cur = deb;
 	}
-      else if (TtaIsBlank (selector))
+      else if (*selector == '[')
+	{
+	  /* copy into sel[] the attribute */
+	  attrs[max] = cur;
+	  selector++;
+	  while (*selector != EOS && *selector != ']' && *selector != '=')
+	    *cur++ = *selector++;
+	  if (*cur == '=')
+	    {
+	      /* there is a value "xxxx" */
+	      *cur++ = EOS;
+	      while (*selector != EOS && *selector != ']' && *selector != '"')
+		selector++;
+	      if (*selector != EOS)
+		{
+		  /* we are now parsing the attribute value */
+		  attrvals[max] = cur;
+		  selector++;
+		  while (*selector != EOS && *selector != '"')
+		    *cur++ = *selector++;
+		  if (*selector != EOS)
+		    selector++;
+		}
+	    }
+	  *cur++ = EOS;
+	  cur = deb;
+	}
+
+      if (TtaIsBlank (selector))
 	{
 	  selector = SkipBlanksAndComments (selector);
-	  /* Thot can not take class and pseudoclass into account for
-	     ancestors. Ignore this selector */
-	  class[0] = EOS;
-	  pseudoclass[0] = EOS;
-	  id[0] = EOS;
-	  if (attrelemname[0] != EOS)
-	     {
-	       ancestors[0] = NULL;
-	       while (*selector != EOS && *selector != ',')
-		 selector++;
-	       break;
-	     }
+	  while (*selector != EOS && *selector != ',')
+	    selector++;
 	}
 
-      /* store elem in the list if the string is non-empty */
-      if (*elem != EOS)
-	{
-	  /* shifts the list to make room for the new elem */
-	  for (i = MAX_ANCESTORS - 1; i > 0; i--)
-	    if (ancestors[i - 1] != NULL)
-	      ancestors[i] = ancestors[i - 1];
-	  /* store the new elem */
-	  ancestors[0] = elem;
-	}
-
-      /* why did we stop ? */
+      /* is it a multi-level selector? */
       if (*selector == EOS)
 	/* end of the selector */
 	break;
@@ -3238,92 +3266,131 @@ CSSInfoPtr      css;
 	  selector++;
 	  break;
 	}
+      else
+	{
+	  /* shifts the list to make room for the new name */
+	  max++; /* a new level in ancestor tables */
+	  if (max == MAX_ANCESTORS)
+	    /* abort the CSS parsing */
+	    return (selector);
+	  for (i = max; i > 0; i--)
+	    {
+	      names[i] = names[i - 1];
+	      ids[i] = ids[i - 1];
+	      classes[i] = classes[i - 1];
+	      attrs[i] = attrs[i - 1];
+	      attrvals[i] = attrvals[i - 1];
+	      pseudoclasses[i] = pseudoclasses[i - 1];
+	    }
+	}
     }
 
   /* Now set up the context block */
-  ctxt->box = 0;
-  elem = ancestors[0];
-  if (elem == NULL || elem[0] == EOS)
+  i = 0;
+  k = 0;
+  j = 0;
+  while (i <= max)
     {
-      if (class[0] != EOS)
-	elem = &class[0];
-      else if (pseudoclass[0]  != EOS)
-	elem = &pseudoclass[0];
-      else if (id[0]  != EOS)
-	elem = &id[0];
-      else
-	return (selector);
-    }
-
-  if (class[0] != EOS)
-    {
-      ctxt->class = class;
-      ctxt->classattr = HTML_ATTR_Class;
-    }
-  else if (pseudoclass[0] != EOS)
-    {
-      ctxt->class = pseudoclass;
-      ctxt->classattr = HTML_ATTR_PseudoClass;
-    }
-  else if (id[0] != EOS)
-    {
-      ctxt->class = id;
-      ctxt->classattr = HTML_ATTR_ID;
-    }
-  else
-    {
-      ctxt->class = NULL;
-      ctxt->classattr = 0;
-    }
-
-  ctxt->type = ctxt->attr = ctxt->attrval = ctxt->attrelem = 0;
-  if (attrelemname[0] != EOS)
-    {
-      GIType (attrelemname, &elType, doc);
-      ctxt->attrelem = elType.ElTypeNum;
-    }
-  GIType (elem, &elType, doc);
-  ctxt->type = elType.ElTypeNum;
-  ctxt->schema = elType.ElSSchema;
-  if (elType.ElSSchema == NULL)
-    ctxt->schema = TtaGetDocumentSSchema (doc);
-  isHTML = (ustrcmp(TtaGetSSchemaName (ctxt->schema), TEXT("HTML")) == 0);
-  tsch = GetPExtension (doc, ctxt->schema, css);
-  structName = TtaGetSSchemaName (ctxt->schema);
-  if (ctxt->type == 0 && ctxt->attr == 0 &&
-      ctxt->attrval == 0 && ctxt->classattr == 0)
-    {
-      ctxt->class = elem;
-      ctxt->classattr = HTML_ATTR_Class;
-    }
-  
-  if (classOnly)
-    i = 0;
-  else
-    i = 1;
-  while (i < MAX_ANCESTORS && ancestors[i] != NULL)
-    {
-      GIType (ancestors[i], &elType, doc);
-      if (elType.ElTypeNum != 0)
+      if (names[i])
 	{
-	  for (j = 0; j < MAX_ANCESTORS; j++)
+	  /* get the new element type of this name */
+	  GIType (names[i], &elType, doc);
+	  if (i == 0)
 	    {
-	      if (ctxt->ancestors[j] == 0)
-		{
-		  ctxt->ancestors[j] = elType.ElTypeNum;
-		  ctxt->ancestors_nb[j] = 0;
-		  break;
-		}
-	      if (ctxt->ancestors[j] == elType.ElTypeNum)
-		{
-		  ctxt->ancestors_nb[j]++;
-		  break;
-		}
+	      /* Store the element type */
+	      ctxt->type = elType.ElTypeNum;
+	      ctxt->schema = elType.ElSSchema;
 	    }
+	  else if (elType.ElTypeNum != 0)
+	    {
+	      /* look at the current context to see if the type is already
+		 stored */
+	      j = 0;
+	      while (j < k && ctxt->name[j] != ctxt->name[i])
+		j++;
+	      if (j == k)
+		{
+		  /* add a new entry */
+		  k++;
+		  ctxt->name[j] = elType.ElTypeNum;
+		  if (j != 0)
+		  ctxt->names_nb[j] = 1;
+		}
+	      else
+		/* increment the number of ancestor levels */
+		ctxt->names_nb[j]++;
+	    }
+	  else
+	    {
+	      /* add a new entry */
+	      j = k;
+	      k++;
+	    }
+	}
+      else
+	{
+	  /* add a new entry */
+	  j = k;
+	  k++;
+	}
+
+      if (i > 0 && (classes[i] || pseudoclasses[i] || ids[i] || attrs[i]))
+	/* Thot is not able to manage this kind of selector
+	   -> abort the CSS parsing */
+	return (selector);
+
+      /* store attributes information */
+      if (classes[i])
+	{
+	  ctxt->attrText[j] = classes[i];
+	  ctxt->attrType[j] = HTML_ATTR_Class;
+	}
+      else if (pseudoclasses[i])
+	{
+	  ctxt->attrText[j] = pseudoclasses[i];
+	  ctxt->attrType[j] = HTML_ATTR_PseudoClass;
+	}
+      else if (ids[i])
+	{
+	  ctxt->attrText[j] = ids[i];
+	  ctxt->attrType[j] = HTML_ATTR_ID;
+	}
+      else if (attrs[i])
+	{
+	  MapHTMLAttribute (attrs[i], &attrType, names[i], doc);
+	  ctxt->attrText[j] = attrvals[i];
+	  ctxt->attrType[j] = attrType.AttrTypeNum;
 	}
       i++;
     }
 
+  /* sort the list of ancestors by name order */
+  max = k;
+  i = 1;
+  while (i < max)
+    for (k = i + 1; k < max; k++)
+      if (ctxt->name[i] > ctxt->name[k])
+	{
+	  j = ctxt->name[i];
+	  ctxt->name[i] = ctxt->name[k];
+	  ctxt->name[k] = j;
+	  j = ctxt->names_nb[i];
+	  ctxt->names_nb[i] = ctxt->names_nb[k];
+	  ctxt->names_nb[k] = j;
+	  j = ctxt->attrType[i];
+	  ctxt->attrType[i] = ctxt->attrType[k];
+	  ctxt->attrType[k] = j;
+	  cur = ctxt->attrText[i];
+	  ctxt->attrText[i] = ctxt->attrText[k];
+	  ctxt->attrText[k] = cur;
+	}
+  
+  /* Get the schema name of the main element */
+  if (ctxt->schema == NULL)
+    ctxt->schema = TtaGetDocumentSSchema (doc);
+  isHTML = (ustrcmp(TtaGetSSchemaName (ctxt->schema), TEXT("HTML")) == 0);
+  tsch = GetPExtension (doc, ctxt->schema, css);
+  structName = TtaGetSSchemaName (ctxt->schema);
   if (cssRule)
     ParseCSSRule (NULL, tsch, (PresentationContext) ctxt, cssRule, css, isHTML);
   return (selector);
@@ -3394,7 +3461,7 @@ ThotBool            destroy;
   ctxt->destroy = destroy;
 
   while ((selector != NULL) && (*selector != EOS))
-    selector = ParseHTMLGenericSelector (selector, cssRule, ctxt, doc, css);
+    selector = ParseGenericSelector (selector, cssRule, ctxt, doc, css);
   TtaFreeMemory (ctxt);
 
   /* restore the string to its original form ! */
@@ -3421,9 +3488,9 @@ STRING              class;
 Document            doc;
 #endif
 {
-   CHAR_T             name[200];
-   STRING           cur = &name[0], first; 
-   CHAR_T             save;
+   CHAR_T           name[200];
+   STRING           cur = name, first; 
+   CHAR_T           save;
    SSchema	    schema;
 
    /* make a local copy */
@@ -3733,12 +3800,11 @@ ThotBool            withUndo;
   ThotBool            HTMLcomment;
   ThotBool            toParse, eof;
   ThotBool            ignoreMedia;
-  ThotBool            noRule, CSSparsing;
+  ThotBool            noRule;
 
   CSScomment = MAX_CSS_LENGTH;
   HTMLcomment = FALSE;
   CSSindex = 0;
-  CSSparsing = TRUE;
   toParse = FALSE;
   noRule = FALSE;
   ignoreMedia = FALSE;
@@ -3758,7 +3824,7 @@ ThotBool            withUndo;
   if (css == NULL)
     css = AddCSS (docRef, docRef, CSS_DOCUMENT_STYLE, NULL, NULL);
 
-  while (CSSindex < MAX_CSS_LENGTH && c != EOS && CSSparsing && !eof)
+  while (CSSindex < MAX_CSS_LENGTH && c != EOS && !eof)
     {
       c = buffer[index++];
       eof = (c == EOS);
@@ -3793,40 +3859,35 @@ ThotBool            withUndo;
 		  CSScomment != MAX_CSS_LENGTH &&
 		  CSSbuffer[CSSindex - 1] == '*')
 		{
-		  /* close a comment */
-		  cur = TtaSkipBlanks (CSSbuffer);
-		  if (cur == &CSSbuffer[CSScomment])
-		    /* the CSS buffer includes only a comment */
-		    noRule = TRUE;
-		  /* other comments are managed later */
+		  /* close a comment:and ignore its contents */
+		  CSSindex = CSScomment - 1; /* will be incremented later */
 		  CSScomment = MAX_CSS_LENGTH;
 		}
-	      else if (CSSindex > 0 && CSSbuffer[CSSindex - 1] ==  '<')
+	      else if (CSScomment == MAX_CSS_LENGTH &&
+		       CSSindex > 0 &&
+		       CSSbuffer[CSSindex - 1] ==  '<')
 		{
 		  /* this is the closing tag ! */
-		  CSSparsing = FALSE;
 		  CSSindex -= 2; /* remove </ from the CSS string */
 		  noRule = TRUE;
 		}
 	      break;
 	    case '<':
-	      c = buffer[index++];
-	      eof = (c == EOS);
-	      if (c == '!' && CSScomment == MAX_CSS_LENGTH)
+	      if (CSScomment == MAX_CSS_LENGTH)
 		{
-		  /* CSS within an HTML comment */
-		  HTMLcomment = TRUE;
-		  CSSindex++;
-		  CSSbuffer[CSSindex] = c;
+		  /* only if we're not parsing a comment */
+		  c = buffer[index++];
+		  eof = (c == EOS);
+		  if (c == '!')
+		    {
+		      /* CSS within an HTML comment */
+		      HTMLcomment = TRUE;
+		      CSSindex++;
+		      CSSbuffer[CSSindex] = c;
+		    }
+		  else if (c == EOS)
+		    CSSindex++;
 		}
-	      else if (c == '/')
-		{
-		  CSSindex--;
-		  /* Ok we consider this as a closing tag ! */
-		  CSSparsing = FALSE;
-		}
-	      else if (c == EOS)
-		CSSindex++;
 	      break;
 	    case '-':
 	      if (CSSindex > 0 && CSSbuffer[CSSindex - 1] == '-' && HTMLcomment)
@@ -3843,7 +3904,10 @@ ThotBool            withUndo;
 		{
 		  /* is it the screen concerned? */
 		  CSSbuffer[CSSindex+1] = EOS;
-		  base = ustrstr (&CSSbuffer[import], TEXT("screen"));
+		  if (TtaIsPrinting ())
+		    base = ustrstr (&CSSbuffer[import], TEXT("print"));
+		  else
+		    base = ustrstr (&CSSbuffer[import], TEXT("screen"));
 		  if (base == NULL)
 		    ignoreMedia = TRUE;
 		  noRule = TRUE;
@@ -3872,8 +3936,15 @@ ThotBool            withUndo;
       if (c != __CR__)
 	CSSindex++;
 
-      if  (CSSindex >= MAX_CSS_LENGTH || !CSSparsing || toParse || noRule)
+      if  (CSSindex >= MAX_CSS_LENGTH || toParse || noRule)
 	{
+	  if (CSScomment < MAX_CSS_LENGTH)
+	    {
+	      /* we're still parsing a comment: remove the text comment */
+	      CSSindex = CSScomment;
+	      /* set the origin of the comment in the next buffer */
+	      CSScomment = 0;
+	    }
 	  CSSbuffer[CSSindex] = EOS;
 	  /* parse a not empty string */
 	  if (CSSindex > 0)

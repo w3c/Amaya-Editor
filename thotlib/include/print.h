@@ -38,11 +38,10 @@ typedef int PrintParameter;
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
-extern void TtaPrint (Document document,
-		      STRING viewName);
+extern void TtaGetPrintNames (STRING *printDocName, STRING *printDirName);
+extern void TtaPrint (Document document, STRING viewNames, STRING cssNames);
 extern void TtaSetPrintExportFunc (Func exportFunc);
-extern void TtaSetPrintParameter (PrintParameter parameter,
-				  int value);
+extern void TtaSetPrintParameter (PrintParameter parameter, int value);
 extern int TtaGetPrintParameter (PrintParameter parameter);
 extern void TtaSetPrintCommand (STRING command);
 extern void TtaGetPrintCommand (STRING command);
@@ -51,16 +50,16 @@ extern void TtaGetPsFile (STRING path);
 extern void TtaSetPrintSchema (STRING name);
 
 #else /* __STDC__ */
-extern void TtaPrint(/*Document document, char *viewName*/);
+extern void TtaGetPrintNames (/*STRING *printDocName, STRING *printDirName*/);
+extern void TtaPrint(/*Document document, STRINGviewNames, STRING cssNames)*/);
 extern void TtaSetPrintExportFunc (/*Func exportFunc*/);
-extern void TtaSetPrintParameter (/*PrintParameter parameter,
-				    int value*/);
+extern void TtaSetPrintParameter (/*PrintParameter parameter, int value*/);
 extern void TtaGetPrintParameter (/*PrintParameter parameter*/);
-extern void TtaSetPrintCommand (/*char *command*/);
-extern void TtaGetPrintCommand (/*char *command*/);
-extern void TtaSetPsFile (/*char *path*/);
-extern void TtaGetPsFile (/*char *path*/);
-extern void TtaSetPrintSchema (/*char *name*/);
+extern void TtaSetPrintCommand (/*STRING command*/);
+extern void TtaGetPrintCommand (/*STRING command*/);
+extern void TtaSetPsFile (/*STRING path*/);
+extern void TtaGetPsFile (/*STRING path*/);
+extern void TtaSetPrintSchema (/*STRING name*/);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

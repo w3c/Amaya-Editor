@@ -21,7 +21,6 @@
 #include "libmsg.h"
 #include "message.h"
 #include "appdialogue.h"
-
 #ifdef _WINDOWS
 #include "wininclude.h"
 #endif /* _WINDOWS */
@@ -29,6 +28,7 @@
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
 #include "boxes_tv.h"
+#include "edit_tv.h"
 #include "platform_tv.h"
 #include "frame_tv.h"
 #include "picture_tv.h"

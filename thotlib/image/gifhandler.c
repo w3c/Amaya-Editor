@@ -94,11 +94,6 @@ static int          stack[(1 << (MAX_LWZ_BITS)) * 2], *sp = stack;
 
 #define ALIGNLONG(i) ((i+3)/4*4)
 
-extern int  bgRed ;
-extern int  bgGreen;
-extern int  bgBlue ;
-extern BOOL pic2print;
-
 /* static PALETTEENTRY sysPalEntries[MAX_COLOR]; */
 static PALETTEENTRY sysPalEntries[256];
 ThotBool            peInitialized = FALSE;

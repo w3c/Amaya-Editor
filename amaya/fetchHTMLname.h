@@ -8,7 +8,10 @@
 #ifndef FETCHHTMLNAME_H 
 #define FETCHHTMLNAME_H
 
+#include "parser.h"
 #define MaxGIlength 14
+#define DummyAttribute 500
+
 typedef UCHAR_T GI[MaxGIlength];
 
 
@@ -33,7 +36,8 @@ typedef struct _GIMapping
   }
 GIMapping;
 
-/* define a pointer to let parser functions access the HTML table */
-extern GIMapping    *pHTMLGIMapping;
+/* define a pointer to let parser functions access the HTML tables */
+extern GIMapping        *pHTMLGIMapping;
+extern AttributeMapping *pHTMLAttributeMapping;
 
 #endif /* FETCHHTMLNAME_H */

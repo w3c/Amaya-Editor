@@ -43,6 +43,7 @@
 
 #define THOT_EXPORT extern
 #include "boxes_tv.h"
+#include "edit_tv.h"
 #include "frame_tv.h"
 #include "font_tv.h"
 #include "platform_tv.h"
@@ -124,10 +125,6 @@ static unsigned char MirrorBytes[0x100] = {
 
 extern ThotBool peInitialized;
 
-BOOL pic2print = FALSE ;
-int  bgRed;
-int  bgGreen;
-int  bgBlue;
 
 #ifdef _WIN_PRINT
 

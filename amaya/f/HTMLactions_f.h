@@ -23,6 +23,7 @@ extern void CheckAmayaClosed ( void );
 extern void FreeDocumentResource ( Document doc );
 extern void DocumentClosed ( NotifyDialog * event );
 extern void UpdateContextSensitiveMenus ( Document doc );
+extern void SynchronizeSourceView ( NotifyElement * event );
 extern void SelectionChanged ( NotifyElement * event );
 extern void SetCharFontOrPhrase ( int document,
                                   int elemtype );
@@ -46,6 +47,7 @@ extern void CheckAmayaClosed (/* void */);
 extern void FreeDocumentResource (/* Document doc */);
 extern void DocumentClosed (/* NotifyDialog * event */);
 extern void UpdateContextSensitiveMenus (/* Document doc */);
+extern void SynchronizeSourceView (/* NotifyElement * event */);
 extern void SelectionChanged (/* NotifyElement * event */);
 extern void SetCharFontOrPhrase (/* int document,
                                     int elemtype */);

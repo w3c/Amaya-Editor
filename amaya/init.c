@@ -3569,7 +3569,7 @@ static void	SetFileSuffix ()
 
 #endif
 {
-  CHAR_T		      suffix[6];
+  CHAR_T	      suffix[6];
   STRING              filename;
   int		      i, len;
 
@@ -3635,7 +3635,7 @@ STRING              data;
 {
   STRING              tempfile;
   STRING              tempname;
-  CHAR_T                sep;
+  CHAR_T              sep;
   int                 val, i;
   ThotBool            change;
 
