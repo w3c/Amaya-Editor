@@ -84,6 +84,7 @@ struct _HTError
 
 static HTList      *converters = NULL;	/* List of global converters */
 static HTList      *acceptTypes = NULL; /* List of types for the Accept header */
+static HTList      *acceptLanguages = NULL; /* List of language priorities for the Accept header */
 static HTList      *transfer_encodings = NULL;
 static HTList      *content_encodings = NULL;
 static int          object_counter = 0;	/* loaded objects counter */
@@ -1274,6 +1275,63 @@ HTList             *c;
 }
 
 /*----------------------------------------------------------------------
+  AHTAcceptLanguagesInit
+  This function prepares the Accept header used by Amaya during
+  the HTTP content negotiation phase
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void           AHTAcceptLanguagesInit (HTList *c)
+#else  /* __STDC__ */
+static void           AHTAcceptLanguagesInit (c)
+HTList             *c;
+#endif /* __STDC__ */
+{
+  STRING ptr;
+  STRING lang_list;
+  int count;
+  double quality;
+
+  if (c == (HTList *) NULL) 
+      return;
+  
+  ptr = TtaGetEnvString ("ACCEPT_LANGUAGES");
+
+  if (ptr && *ptr != EOS)
+    {
+      /* add the default language first  */
+      HTLanguage_add (c, "*", -1.0);
+      /* read the languages from the registry, then inject them one, by one.
+       The first one is the one with the lowest priority */
+      lang_list = TtaStrdup (ptr);
+      /* how many languages do we have? */
+      for (count = 1, ptr = lang_list; *ptr != EOS; ptr++)
+	if (*ptr == ' ')
+	  {
+	    *ptr = EOS;
+	    count++;
+	  }
+
+      if (count > 1)
+	quality = 1.1 - (double) count/10.0;
+      else
+	quality = 1.0;
+
+      ptr = lang_list;
+      while (count--) 
+	{
+	  HTLanguage_add (c, ptr, quality);
+	  quality += 0.1;
+	  while (*ptr != EOS)
+	    ptr++;
+	  if (count)
+	    ptr++;
+	}
+      
+      TtaFreeMemory (lang_list);
+    }
+}
+
+/*----------------------------------------------------------------------
   AHTConverterInit
   Bindings between a source media type and a destination media type
   (conversion).
@@ -1907,6 +1965,8 @@ char               *AppVersion;
       converters = HTList_new ();
    if (!acceptTypes)
       acceptTypes = HTList_new ();
+   if (!acceptLanguages)
+      acceptLanguages = HTList_new ();
    if (!transfer_encodings)
       transfer_encodings = HTList_new ();
    if (!content_encodings)
@@ -1951,6 +2011,7 @@ char               *AppVersion;
    AHTConverterInit (converters);
    HTFormat_setConversion (converters);
    AHTAcceptTypesInit (acceptTypes);
+   AHTAcceptLanguagesInit (acceptLanguages);
 
    /* Register the default set of transfer encoders and decoders */
    HTTransferEncoderInit (transfer_encodings);
@@ -1992,6 +2053,8 @@ static void         AHTProfile_delete ()
   HTFormat_deleteAll ();
   if (acceptTypes)
     HTConversion_deleteAll (acceptTypes);
+  if (acceptLanguages)
+    HTLanguage_deleteAll (acceptLanguages);
 
   HTList_delete (Amaya->docid_status);
   HTList_delete (Amaya->reqlist);
@@ -2514,6 +2577,7 @@ char 	     *content_type;
        me->method = METHOD_GET;
        if (!HasKnownFileSuffix (ref))
 	 HTRequest_setConversion(me->request, acceptTypes, TRUE);
+       HTRequest_setLanguage (me->request, acceptLanguages, TRUE);
      }
 
    /* Common initialization for all HTML methods */
@@ -3093,6 +3157,16 @@ int status;
       HTCacheMode_setEnabled (NO);
       CacheInit ();
     }
+
+  if (status & AMAYA_LANNEG_RESTART)
+    {
+      /* clear the current values */
+      if (acceptLanguages)
+	HTLanguage_deleteAll (acceptLanguages);
+      /* read in the new ones */
+      acceptLanguages = HTList_new ();
+      AHTAcceptLanguagesInit (acceptLanguages);
+    }
 }
 
 #endif /* AMAYA_JAVA */
@@ -3100,11 +3174,3 @@ int status;
 /*
   end of Module query.c
 */
-
-
-
-
-
-
-
-
