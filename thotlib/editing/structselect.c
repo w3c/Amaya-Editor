@@ -1459,7 +1459,7 @@ static void SelectStringOrPosition (PtrDocument pDoc, PtrElement pEl,
    firstChar in the text element pEl.
    If pEl is a polyline element, the vertex of rank firstChar is selected.
   ----------------------------------------------------------------------*/
-void     MoveCaret (PtrDocument pDoc, PtrElement pEl, int firstChar)
+void MoveCaret (PtrDocument pDoc, PtrElement pEl, int firstChar)
 {
    SelectStringOrPosition (pDoc, pEl, firstChar, firstChar, FALSE);
 }

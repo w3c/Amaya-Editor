@@ -916,14 +916,15 @@ void WordReplace (unsigned char *orgWord,  unsigned char *newWord)
 {
    int                 idx;
    int                 stringLength;	/* longueur de cette chaine */
-   char                pChaineRemplace[MAX_WORD_LEN]; /* la chaine de remplacement */
-   int                 lgChaineRempl;	/* longueur de cette chaine */
+   CHAR_T             *nString, *oString;
+   int                 newStringLen;	/* longueur de cette chaine */
 
-   /* remplacer le mot errone par le mot corrige */
-   stringLength = strlen (orgWord);
-   /* initialiser lgChaineRempl et pChaineRemplace */
-   lgChaineRempl = strlen (newWord);
-   strcpy (pChaineRemplace, newWord);
+   /* replace the wrong word by the right word */
+   oString = TtaConvertIsoToCHAR (orgWord, ISO_8859_1);
+   nString = TtaConvertIsoToCHAR (newWord, ISO_8859_1);
+   stringLength = ustrlen (oString);
+   /* initialiser newStringLen et pChaineRemplace */
+   newStringLen = ustrlen (nString);
 
    /* substitue la nouvelle chaine et la selectionne */
    if (ChkrRange->SStartToEnd)
@@ -934,16 +935,16 @@ void WordReplace (unsigned char *orgWord,  unsigned char *newWord)
 	AddEditOpInHistory (ChkrElement, ChkrRange->SDocument, TRUE, TRUE);
 	CloseHistorySequence (ChkrRange->SDocument);
 	ReplaceString (ChkrRange->SDocument, ChkrElement, idx,
-		       stringLength, pChaineRemplace, lgChaineRempl, TRUE);
+		       stringLength, nString, newStringLen, TRUE);
 	/* met a jour ChkrIndChar */
-	ChkrIndChar = idx + lgChaineRempl;
+	ChkrIndChar = idx + newStringLen;
 
 	/* met eventuellement a jour la borne de fin du domaine de recherche */
 	if (ChkrElement == ChkrRange->SEndElement)
 	   /* la borne est dans l'element ou` on a fait le remplacement */
 	   if (ChkrRange->SEndChar > 1)
 	      /* la borne n'est pas a la fin de l'element, on decale la borne */
-	      ChkrRange->SEndChar += lgChaineRempl - stringLength;
+	      ChkrRange->SEndChar += newStringLen - stringLength;
      }
    else
      {
@@ -953,11 +954,13 @@ void WordReplace (unsigned char *orgWord,  unsigned char *newWord)
 	AddEditOpInHistory (ChkrElement, ChkrRange->SDocument, TRUE, TRUE);
 	CloseHistorySequence (ChkrRange->SDocument);
 	ReplaceString (ChkrRange->SDocument, ChkrElement, idx,
-		       stringLength, pChaineRemplace, lgChaineRempl, TRUE);
+		       stringLength, nString, newStringLen, TRUE);
      }
 
+   TtaFreeMemory (nString);
+   TtaFreeMemory (oString);
    /* met eventuellement a jour la selection initiale */
-   UpdateDuringSearch (ChkrElement, lgChaineRempl - stringLength);
+   UpdateDuringSearch (ChkrElement, newStringLen - stringLength);
 }
 
 

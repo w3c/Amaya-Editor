@@ -57,12 +57,14 @@ static int           SearchedPageNumber;
 static unsigned char pPrecedentString[THOT_MAX_CHAR];
 /* searched string */
 static unsigned char pSearchedString[THOT_MAX_CHAR];
+static CHAR_T       *SString = NULL;
 /* length of the searched string */
-static int           SearchedStringLen;
+static int           SStringLen;
 /* the replace string */
 static unsigned char pReplaceString[THOT_MAX_CHAR];
+static CHAR_T       *RString = NULL;
 /* length of the replace string */
-static int           ReplaceStringLen;
+static int           RStringLen;
 /* pointer to the current reference */
 static PtrReference  CurrRef;
 
@@ -551,12 +553,18 @@ void CallbackTextReplace (int ref, int val, char *txt)
 	  ReplaceDone = FALSE;
 	  strcpy (pPrecedentString, pSearchedString);
 	}
-      SearchedStringLen = strlen (pSearchedString);
+      /* convert the string if necessary */
+      TtaFreeMemory (SString);
+      SString = TtaConvertIsoToCHAR (pSearchedString, ISO_8859_1);
+      SStringLen = ustrlen (SString);
       break;
     case NumZoneTextReplace:
       /* Chaine a remplacer */
       strcpy (pReplaceString, txt);
-      ReplaceStringLen = strlen (pReplaceString);
+      /* convert the string if necessary */
+      TtaFreeMemory (RString);
+      RString = TtaConvertIsoToCHAR (pReplaceString, ISO_8859_1);
+      RStringLen = ustrlen (RString);
       /* bascule automatiquement le remplacement */
       if (!WithReplace && !SearchingD->SDocument->DocReadOnly)
 	{
@@ -601,18 +609,27 @@ void CallbackTextReplace (int ref, int val, char *txt)
       break;
     case NumFormSearchText:
       /* Boutons de la feuille de dialogue */
-      if (SearchingD->SDocument == NULL)
+      if (SearchingD->SDocument == NULL ||
+	  SearchingD->SDocument->DocSSchema == NULL)
 	{
 	  TtaDestroyDialogue (NumFormSearchText);
+	  TtaFreeMemory (SString);
+	  SString = NULL;
+	  TtaFreeMemory (RString);
+	  RString = NULL;
 	  return;
 	}
-      if (SearchingD->SDocument->DocSSchema == NULL)
-	return;
       if (val == 2 && WithReplace && !StartSearch)
 	DoReplace = FALSE;
       else if (val == 0)
-	/* Abandon de la recherche */
-	return;
+	{
+	  /* Abandon de la recherche */
+	  TtaFreeMemory (SString);
+	  SString = NULL;
+	  TtaFreeMemory (RString);
+	  RString = NULL;
+	  return;
+	}
 
       selectionOK = GetCurrentSelection (&pDocSel, &pFirstSel,
 					 &pLastSel, &firstChar, &lastChar);
@@ -636,10 +653,10 @@ void CallbackTextReplace (int ref, int val, char *txt)
        /* la recherche est demandee, on recupere les parametres */
       if (ThotLocalActions[T_strsearchgetparams] != NULL)
 	(*ThotLocalActions[T_strsearchgetparams]) (&error, SearchingD);
-      if (!error || SearchedStringLen != 0)
+      if (!error || SStringLen != 0)
 	{
 	  found = FALSE;
-	  if (SearchedStringLen == 0)
+	  if (SStringLen == 0)
 	    {
 	      if (ThotLocalActions[T_strsearchonly] != NULL)
 		(*ThotLocalActions[T_strsearchonly]) (pCurrEl, SearchingD,
@@ -687,7 +704,7 @@ void CallbackTextReplace (int ref, int val, char *txt)
 			    if (!AutoReplace)
 			      OpenHistorySequence (SearchingD->SDocument,
 					       pFirstSel, pFirstSel, firstChar,
-					       firstChar + SearchedStringLen);
+					       firstChar + SStringLen);
 			    AddEditOpInHistory (pFirstSel,
 						SearchingD->SDocument,
 						TRUE, TRUE);
@@ -695,21 +712,20 @@ void CallbackTextReplace (int ref, int val, char *txt)
 			      CloseHistorySequence (SearchingD->SDocument);
 			    /* effectue le remplacement du texte */
 			    ReplaceString (SearchingD->SDocument, pFirstSel,
-					   firstChar, SearchedStringLen,
-					   pReplaceString, ReplaceStringLen,
+					   firstChar, SStringLen,
+					   RString, RStringLen,
 					   (ThotBool)(!AutoReplace));
 			    ReplaceDone = TRUE;
 			    StartSearch = FALSE;
 			    /* met eventuellement a jour la borne de */
 			    /* fin du domaine de recherche */
-			    if (pFirstSel == SearchingD->SEndElement)
-			      /* la borne est dans l'element ou` on a */
-			      /* fait le remplacement */
-			      if (SearchingD->SEndChar > 1)
+			    if (pFirstSel == SearchingD->SEndElement &&
+				/* la borne est dans l'element ou` on a */
+				/* fait le remplacement */
+				SearchingD->SEndChar > 1)
 				/* la borne n'est pas a la fin de */
 				/* l'element, on decale la borne */
-				SearchingD->SEndChar +=
-                                          ReplaceStringLen - SearchedStringLen;
+			      SearchingD->SEndChar += RStringLen - SStringLen;
 			    /* recupere les parametres de la nouvelle */
 			    /* chaine */
 			    if (!AutoReplace)
@@ -758,8 +774,8 @@ void CallbackTextReplace (int ref, int val, char *txt)
 		      found = SearchText (SearchingD->SDocument,
 					  &pFirstSel, &firstChar, &pLastSel,
 					  &lastChar, SearchingD->SStartToEnd,
-					  UpperLower, pSearchedString,
-					  SearchedStringLen);
+					  UpperLower, SString,
+					  SStringLen);
 		      /*if (found)
 			lastChar--;*/
 		      
@@ -954,10 +970,10 @@ void SearchLoadResources (void)
 	pExtCurrDoc = NULL;
 	GetSearchContext (&SearchingD);
 	pSearchedString[0] = EOS;
-	SearchedStringLen = 0;
+	SStringLen = 0;
 	UpperLower = TRUE;
 	WithReplace = FALSE;
 	pReplaceString[0] = EOS;
-	ReplaceStringLen = 0;
+	RStringLen = 0;
      }
 }

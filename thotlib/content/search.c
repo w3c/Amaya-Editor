@@ -64,14 +64,13 @@
    Selectionne la chaine remplace'e si select est True.		
   ----------------------------------------------------------------------*/
 void ReplaceString (PtrDocument pDoc, PtrElement pEl, int firstChar,
-		    int stringLen, unsigned char *replaceStr,
+		    int stringLen, CHAR_T *replaceStr,
 		    int replaceLen, ThotBool select)
 {
   PtrTextBuffer       pBuf1, pBuf2, pBufn;
   PtrAbstractBox      pAb;
   PtrElement          pAsc;
   NotifyOnTarget      notifyEl;
-  CHAR_T             *s;
   int                 ibuf1, ibuf2, len, diff, dvol, view, i;
   ThotBool            DontReplace;
   ThotBool            visible;
@@ -168,7 +167,6 @@ void ReplaceString (PtrDocument pDoc, PtrElement pEl, int firstChar,
     diff = 0;
 
   /* copy the remplacing string (dialogue is supposed ISO_8859_1) */
-  s = TtaConvertIsoToCHAR (replaceStr, ISO_8859_1);
   len = 0;
   pBufn = pBuf1;
   i = ibuf1;
@@ -176,15 +174,14 @@ void ReplaceString (PtrDocument pDoc, PtrElement pEl, int firstChar,
     {
       pBufn->BuContent[i] = replaceStr[len++];
       i++;
-      if (i > pBufn->BuLength)
+      if (i >= pBufn->BuLength)
 	{
 	  pBufn->BuContent[i] = EOS;
-	  pBufn->BuLength = i - 1;
+	  pBufn->BuLength = i;
 	  pBufn = pBufn->BuNext;
 	  i = 0;
 	}
     }
-  TtaFreeMemory (s);
 
   if (diff > 0)
     {
@@ -509,13 +506,12 @@ static void BackSearchString (PtrTextBuffer pBuf, int ind, ThotBool *found,
   ----------------------------------------------------------------------*/
 ThotBool SearchText (PtrDocument pDoc, PtrElement *firstEl, int *firstChar,
 		     PtrElement *lastEl, int *lastChar, ThotBool forward,
-		     ThotBool caseEquiv, unsigned char *text,
+		     ThotBool caseEquiv, CHAR_T *text,
 		     int textLen)
 {
   PtrElement          pEl;
   PtrElement          pAncest;
   PtrTextBuffer       pBuf;
-  CHAR_T             *tmp;
   int                 i;
   int                 ibuf;
   int                 ichar;
@@ -532,7 +528,6 @@ ThotBool SearchText (PtrDocument pDoc, PtrElement *firstEl, int *firstChar,
 	/* the element doesn't exist anymore */
 	return FALSE;
       /* on cherche d'abord la chaine */
-      tmp = TtaConverMbsToCHAR (text);
       if (forward)
 	/* Recherche en avant */
 	{
@@ -554,7 +549,7 @@ ThotBool SearchText (PtrDocument pDoc, PtrElement *firstEl, int *firstChar,
 		   a tester */
 		ibuf = *firstChar - 1 - i;
 		ichar = *firstChar;
-		FwdSearchString (pBuf, ibuf, &found, &ichar, caseEquiv, tmp);
+		FwdSearchString (pBuf, ibuf, &found, &ichar, caseEquiv, text);
 	      }
 	  while (!found && pEl)
 	    {
@@ -575,7 +570,7 @@ ThotBool SearchText (PtrDocument pDoc, PtrElement *firstEl, int *firstChar,
 		      {
 			ichar = 1;
 			FwdSearchString (pEl->ElText, 0, &found, &ichar,
-					 caseEquiv, tmp);
+					 caseEquiv, text);
 		      }
 		}
 	    }
@@ -600,7 +595,7 @@ ThotBool SearchText (PtrDocument pDoc, PtrElement *firstEl, int *firstChar,
 		/* pointe par pBuf du 1er caractere a tester */
 		ichar = *firstChar;
 		BackSearchString (pBuf, ibuf, &found, &ichar, caseEquiv,
-				  tmp, textLen);
+				  text, textLen);
 	      }
 	  while (!found && pEl != NULL)
 	    {
@@ -624,14 +619,13 @@ ThotBool SearchText (PtrDocument pDoc, PtrElement *firstEl, int *firstChar,
 			  pBuf = pBuf->BuNext;
 			ichar = pEl->ElTextLength;
 			BackSearchString (pBuf, pBuf->BuLength - 1, &found, &ichar,
-					  caseEquiv, tmp, textLen);
+					  caseEquiv, text, textLen);
 		      }
 		}
 	    }
 	  if (found)
 	    ichar = ichar - textLen + 1;
 	}
-      TtaFreeMemory (tmp);
       if (found)
 	/* on a trouve' la chaine cherchee */
 	/* l'element trouve' est pointe' par pEl et ichar est le rang */

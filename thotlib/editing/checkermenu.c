@@ -83,7 +83,7 @@ static int          iIgnore;
    RemoveSpellForm fait disparaitre les formulaires correction    
    s'ils concernent le document pDoc et s'ils sont a l'ecran.      
   ----------------------------------------------------------------------*/
-static void         RemoveSpellForm ()
+static void RemoveSpellForm ()
 {
   if (ChkrRange != NULL)
     {
