@@ -2870,7 +2870,7 @@ void LittleXBigEndian (register unsigned char *b, register long n)
 This function turns a 16-bit pixel
 into an RGBQUAD value.
 */
-RGBQUAD QuadFromWord(WORD b16)
+void QuadFromWord(WORD b16, RGBQUAD *rgb, DWORD greenMask)
 {
    BYTE bytVals[] =
    {
@@ -2882,58 +2882,166 @@ RGBQUAD QuadFromWord(WORD b16)
    WORD wR = b16;
    WORD wG = b16;
    WORD wB = b16;
-   RGBQUAD rgb;
 
-   wR <<= 1; wR >>= 11;
-   wG <<= 6; wG >>= 11;
-   wB <<= 11; wB >>= 11;
+   //
+   // 0x07E0 is 5-6-5 instead of 5-5-5
+   //
 
+   if (greenMask == 0x07E0) 
+     {
+   wR >>= 11;
+   wG <<= 5; 
+   wG >>= 11;
+   } 
+   else 
+     {
+       wR <<= 1; 
+       wR >>= 11;
+       wG <<= 6; 
+       wG >>= 11;
+     }
+   wB <<= 11; 
+   wB >>= 11;
 
-   rgb.rgbReserved = 0;
-   rgb.rgbBlue     = bytVals[wB];
-   rgb.rgbGreen    = bytVals[wG];
-   rgb.rgbRed      = bytVals[wR];
-
-   return rgb;
+   rgb->rgbReserved = 0;
+   rgb->rgbBlue     = bytVals[wB];
+   rgb->rgbGreen    = bytVals[wG];
+   rgb->rgbRed      = bytVals[wR];
 }
 
-
-DIB2RGBA (LPBITMAPINFOHEADER hDib, unsigned char *jsmpPixels)
+void Bitfield2RGB (BYTE *src, BYTE *p, WORD redmask, WORD greenmask, WORD bluemask, BYTE bpp, BITMAPINFOHEADER head)
 {
+  int i =0;
+  DWORD ns[3]={0,0,0};
+  long effwidth2;
+  WORD w;
+  long y2,y3,x2,x3;
+  long y;
+  long x;
+  long effwidth4;
+  long y4, x4;
+  
+  p = src;
+  
+  switch (bpp)
+    {
+    case 16:
+      {
+	
+	// compute the number of shift for each mask
+	for (i=0;i<16;i++)
+	  {
+	    if ((redmask>>i)&0x01) 
+	      ns[0]++;
+	    if ((greenmask>>i)&0x01) 
+	      ns[1]++;
+	    if ((bluemask>>i)&0x01) 
+	      ns[2]++;
+	  }
+	ns[1]+=ns[0]; 
+	ns[2]+=ns[1];	
+	ns[0]=8-ns[0]; 
+	ns[1]-=8; 
+	ns[2]-=8;
+	// dword aligned width for 16 bit image
+	effwidth2=(((head.biWidth + 1) / 2) * 4);
+	  // scan the buffer in reverse direction to avoid reallocations
+	  for (y=head.biHeight-1; y>=0; y--)
+	    {
+	      y2=effwidth2*y;
+	      y3=head.biWidth*y;
+	      for (x=head.biWidth-1; x>=0; x--)
+	      {
+		x2 = 2*x+y2;
+		x3 = 3*x+y3;
+		w = (WORD)(src[x2]+256*src[1+x2]);
+		p[  x3]=(BYTE)((w & bluemask)<<ns[0]);
+		p[1+x3]=(BYTE)((w & greenmask)>>ns[1]);
+		p[2+x3]=(BYTE)((w & redmask)>>ns[2]);
+	      }
+	    }
+	break;
+      }
+    case 32:
+      {
+	 // dword aligned width for 32 bit image
+	 effwidth4 = head.biWidth * 4;
+	 // scan the buffer in reverse direction to avoid reallocations
+	 for (y=head.biHeight-1; y>=0; y--)
+	   {
+	     y4=effwidth4*y;
+	     y3=head.biWidth*y;
+	     for (x=head.biWidth-1; x>=0; x--)
+	     {
+	       x4 = 4*x+y4;
+	       x3 = 3*x+y3;
+	       p[  x3]=src[  x4];
+	       p[1+x3]=src[1+x4];
+	       p[2+x3]=src[2+x4];
+	     }
+	   }
+      }
 
+    }
+  return;
+}
+
+void DIB2RGB (LPBITMAPINFOHEADER hDib, LPSTR lpvBits, unsigned char *jsmpPixels)
+{
   int r=0, p=0, q=0, b=0, n=0, 
     nUnused=0, nBytesWide=0, nUsed=0, nLastBits=0, nLastNibs=0, nCTEntries=0,
     nRow=0, nByte=0, nPixel=0;
   BYTE bytCTEnt = 0;
   LPBITMAPINFOHEADER pbBmHdr = (LPBITMAPINFOHEADER)hDib; 
-  
-  /*Point to the color table and pixels*/
-  DWORD     dwCTab = (DWORD)pbBmHdr + pbBmHdr->biSize;
-  LPRGBQUAD pCTab  = (LPRGBQUAD)(dwCTab);
-  LPSTR     lpBits = (LPSTR)pbBmHdr + (WORD)pbBmHdr->biSize;
-  
-  /*Different formats for the image bits*/
-  LPBYTE   lpPixels = (LPBYTE)  lpBits;
-  RGBQUAD* pRgbQs   = (RGBQUAD*)lpBits;
-  WORD*    wPixels  = (WORD*)   lpBits;
+  LPBYTE   lpPixels;
+  RGBQUAD* pRgbQs;  
+  WORD*    wPixels;
   RGBQUAD quad;
-  
+  DWORD greenMask;
+  DWORD bfmask[3];
 
+  /*lpvBits = (LPSTR)pbBmHdr + (WORD)pbBmHdr->biSize;*/
+
+  /*Different formats for the image bits*/
+  lpPixels = (LPBYTE)  lpvBits;
+  pRgbQs   = (RGBQUAD*)lpvBits;
+  wPixels  = (WORD*)   lpvBits;
+  
+			
+if (pbBmHdr->biBitCount == 16)
+  {
+  if (pbBmHdr->biCompression == BI_BITFIELDS) 
+    {
+      DWORD *lpRGBMask = (DWORD *)lpvBits;
+
+	  bfmask[0] = (DWORD)(lpvBits);
+	  bfmask[1] = (DWORD)(lpvBits + sizeof(DWORD));
+      bfmask[2] = (DWORD)(lpvBits + 2*sizeof(DWORD));
+
+	  bfmask[0] = *(lpvBits);
+	  bfmask[1] = *(lpvBits + sizeof(DWORD));
+      bfmask[2] = *(lpvBits + 2*sizeof(DWORD));
+
+      //greenMask = *(lpRGBMask+1);
+      lpvBits += (3 * sizeof(DWORD));;
+    }
+  else 
+  {//RGB555
+	bfmask[0]=0x7C00; 
+	bfmask[1]=0x3E0; 
+	bfmask[2]=0x1F; 
+  }
+
+  /*if (pbBmHdr->biOffBits != 0L)
+		pvBits += pbBmHdr->bfOffBits;*/
+
+  
+	Bitfield2RGB (lpvBits, jsmpPixels,(WORD)bfmask[0],(WORD)bfmask[1],(WORD)bfmask[2], 16, *pbBmHdr);
+		return;
+  }
   switch (pbBmHdr->biBitCount)
     {
-      
-    case 16: 
-      nPixel = 0;
-     /*  while (nPixel < pbBmHdr->biWidth*pbBmHdr->biHeight) */
-/* 	{ */
-/* 	  quad = QuadFromWord (wPixels[nPixel]); */
-	  
-/* 	  jsmpPixels[nPixel*3+0] = quad.rgbRed; */
-/* 	  jsmpPixels[nPixel*3+1] = quad.rgbGreen; */
-/* 	  jsmpPixels[nPixel*3+2] = quad.rgbBlue; */
-/* 	  nPixel++; */
-/* 	} */
-      
+    case 16: 		
 	for (r=0; r < pbBmHdr->biHeight; r++)
 	  {
 	    for (p=0,q=0; p < pbBmHdr->biWidth; p++,q+=3)
@@ -2941,11 +3049,11 @@ DIB2RGBA (LPBITMAPINFOHEADER hDib, unsigned char *jsmpPixels)
 		nRow    = (pbBmHdr->biHeight-r-1) * pbBmHdr->biWidth;
 		nPixel  = nRow + p;
 		
-		quad = QuadFromWord (wPixels[nPixel]);
+		QuadFromWord (wPixels[nPixel], &quad, greenMask);
 		
-		jsmpPixels[r*q+0] = quad.rgbRed;
-		jsmpPixels[r*q+1] = quad.rgbGreen;
-		jsmpPixels[r*q+2] = quad.rgbBlue;
+		jsmpPixels[r*(q)] = quad.rgbRed;
+		jsmpPixels[r*(q+1)] = quad.rgbGreen;
+		jsmpPixels[r*(q+2)] = quad.rgbBlue;
 	      }
 	  }
       break;
@@ -2963,9 +3071,9 @@ DIB2RGBA (LPBITMAPINFOHEADER hDib, unsigned char *jsmpPixels)
                nRow = (pbBmHdr->biHeight-r-1) * nBytesWide;
                nPixel  = nRow + p;
 
-               jsmpPixels[r*q+0] = lpPixels[nPixel+2]; //Red
-               jsmpPixels[r*q+1] = lpPixels[nPixel+1]; //Green
-               jsmpPixels[r*q+2] = lpPixels[nPixel+0]; //Blue
+               jsmpPixels[r*(q)] = lpPixels[nPixel+2]; 
+               jsmpPixels[r*(q+1)] = lpPixels[nPixel+1]; 
+               jsmpPixels[r*(q+2)] = lpPixels[nPixel+0]; 
             }
          }
          break;
@@ -2979,13 +3087,58 @@ DIB2RGBA (LPBITMAPINFOHEADER hDib, unsigned char *jsmpPixels)
                           pbBmHdr->biWidth;
                nPixel  = nRow + p;
 
-               jsmpPixels[r*q+0] = pRgbQs[nPixel].rgbRed;
-               jsmpPixels[r*q+1] = pRgbQs[nPixel].rgbGreen;
-               jsmpPixels[r*q+2] = pRgbQs[nPixel].rgbBlue;
+               jsmpPixels[r*(q)] = pRgbQs[nPixel].rgbRed;
+               jsmpPixels[r*(q+1)] = pRgbQs[nPixel].rgbGreen;
+               jsmpPixels[r*(q+2)] = pRgbQs[nPixel].rgbBlue;
             }
          }
          break;
    }   
+}
+
+void savebmp (char *filename, LPBITMAPINFO     lpbi, LPVOID           lpvBits)
+{
+  int PalEntries;
+  DWORD Written;   
+  HANDLE BmpFile=INVALID_HANDLE_VALUE;  
+  BITMAPFILEHEADER bmfh; 
+
+  BmpFile = CreateFile(filename,
+		       GENERIC_WRITE,
+		       0, NULL,
+		       CREATE_ALWAYS,
+		       FILE_ATTRIBUTE_NORMAL,
+		       NULL);
+  if (BmpFile != INVALID_HANDLE_VALUE) 
+    {
+      bmfh.bfType = 19778;  
+      // bmfh.bfSize = ???       
+      bmfh.bfReserved1 = bmfh.bfReserved2 = 0;
+      // bmfh.bfOffBits = ???   
+      WriteFile(BmpFile, &bmfh, sizeof(bmfh), &Written, NULL);
+      WriteFile(BmpFile, &lpbi->bmiHeader, sizeof(BITMAPINFOHEADER), &Written, NULL);
+      if (lpbi->bmiHeader.biCompression == BI_BITFIELDS) 
+	PalEntries = 3;
+      else
+        PalEntries = (lpbi->bmiHeader.biBitCount <= 8) ?
+	  (int)(1 << lpbi->bmiHeader.biBitCount)
+	  : 0;
+      if (lpbi->bmiHeader.biClrUsed) 
+	PalEntries = lpbi->bmiHeader.biClrUsed;
+      if (PalEntries)
+	{
+	  WriteFile(BmpFile, &lpbi->bmiColors, PalEntries * sizeof(RGBQUAD),
+		    &Written, NULL);
+	}
+      bmfh.bfOffBits = SetFilePointer(BmpFile, 0, 0,  FILE_CURRENT);
+      WriteFile(BmpFile, lpvBits, lpbi->bmiHeader.biSizeImage, &Written, NULL);
+      bmfh.bfSize = SetFilePointer(BmpFile, 0, 0,  FILE_CURRENT);
+      SetFilePointer(BmpFile, 0, 0, FILE_BEGIN);
+      WriteFile(BmpFile, &bmfh, sizeof(bmfh), &Written, NULL);
+    }
+  if (BmpFile != INVALID_HANDLE_VALUE) 
+    CloseHandle(BmpFile);
+
 }
 
 #endif /*_WINDOWS*/
@@ -2998,6 +3151,11 @@ DIB2RGBA (LPBITMAPINFOHEADER hDib, unsigned char *jsmpPixels)
   ----------------------------------------------------------------------*/
 unsigned char *GetScreenshot (int frame, char *pngurl)
 {
+#ifdef _GL
+	
+  saveBuffer (pngurl, FrameTable[frame].FrWidth, FrameTable[frame].FrHeight);
+  return NULL;
+#else /*_GL*/
   unsigned char   *screenshot = NULL;
   int              widthb, heightb;
   int              k, line, i = 0;
@@ -3008,15 +3166,12 @@ unsigned char *GetScreenshot (int frame, char *pngurl)
   unsigned char    inter;
 #else /* !_GTK */
 #ifdef _WINDOWS
-  HWND             FrameWd;
-  HDC              SurfDC;
-  /*HDC			   lpDDS;*/
-  HDC              OffscrDC; 
-  HBITMAP          OffscrBmp;
-  HBITMAP          OldBmp;
-  /*BITMAP           bm;*/
-  LPBITMAPINFO     lpbi;
-  LPVOID           lpvBits; 
+  HDC              SurfDC = NULL;
+  HDC              OffscrDC = NULL; 
+  HBITMAP          OffscrBmp = NULL;
+  HBITMAP          OldBmp = NULL;
+  LPBITMAPINFO     lpbi = NULL;
+  LPVOID           lpvBits = NULL; 
   RECT             rect;
   unsigned char   *internal;
 #endif /* _WINDOWS */
@@ -3066,59 +3221,87 @@ unsigned char *GetScreenshot (int frame, char *pngurl)
   gdk_image_destroy (View);
 #else /* !_GTK */
 #ifdef _WINDOWS
-    FrameWd = FrMainRef[frame];
-	/*FrameWd = FrameTable[frame].WdFrame;*/
-	GetClientRect (FrameWd, &rect);
-	widthb = rect.right;
-	heightb = rect.bottom;
-	SurfDC = GetDC (FrameWd);
-	OffscrDC = CreateCompatibleDC (SurfDC);
-	OffscrBmp = CreateCompatibleBitmap (SurfDC, rect.right, rect.bottom);
-	OldBmp = (HBITMAP) SelectObject (OffscrDC, OffscrBmp); 
-	if (OldBmp) 
-	{
+    GetClientRect (FrRef[frame], &rect);
+    widthb = rect.right;
+    heightb = rect.bottom;
 
+    SurfDC = GetDC (FrRef[frame]);
+    OffscrBmp = CreateCompatibleBitmap (SurfDC, widthb, heightb);
+    OffscrDC = CreateCompatibleDC (SurfDC);
+    OldBmp = (HBITMAP) SelectObject (OffscrDC, OffscrBmp); 
+
+    if (OldBmp) 
+      {
 	/*GetObject (OldBmp, sizeof (OldBmp), &bm);*/
-	if (BitBlt (OffscrDC, 0, 0, rect.right, rect.bottom, SurfDC, 0, 0, SRCCOPY))
-	{
-		lpbi = (LPBITMAPINFO) TtaGetMemory (sizeof(BITMAPINFOHEADER) + 256 * sizeof(RGBQUAD));
-		lpbi->bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-		lpbi->bmiHeader.biBitCount = 0;
-		if (SelectObject(OffscrDC, OldBmp)) 
-		{
-			GetDIBits (OffscrDC, OffscrBmp, 0, heightb, NULL, lpbi, DIB_RGB_COLORS);
-			lpvBits = TtaGetMemory (lpbi->bmiHeader.biSizeImage);
-			GetDIBits (OffscrDC, OffscrBmp, 0, heightb, lpvBits, lpbi, DIB_RGB_COLORS);
+	if (BitBlt (OffscrDC, 0, 0, widthb, heightb, SurfDC, 0, 0, SRCCOPY))
+	  {
+	    ReleaseDC (FrRef[frame], SurfDC); 
+	    SurfDC = NULL;
+
+	    lpbi = (LPBITMAPINFO) TtaGetMemory (sizeof(BITMAPINFOHEADER) + 256 * sizeof(RGBQUAD));
+	    ZeroMemory (&lpbi->bmiHeader, sizeof(BITMAPINFOHEADER));
+	    lpbi->bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+	    lpbi->bmiHeader.biBitCount = 0;
+
+	    if (SelectObject(OffscrDC, OldBmp)) 
+	      {
+		if (GetDIBits (OffscrDC, OffscrBmp, 0, heightb, NULL, lpbi, DIB_RGB_COLORS))
+		  {
+
+		    lpvBits = TtaGetMemory (lpbi->bmiHeader.biSizeImage);
+		    if (GetDIBits (OffscrDC, OffscrBmp, 0, heightb, lpvBits, lpbi, DIB_RGB_COLORS))
+		      {
 
 
+			/*	screenshot = pngurl + strlen (pngurl) - 3;
+				*screenshot++ ='b';*screenshot++ ='m';*screenshot ='p';
+			savebmp (pngurl, lpbi, lpvBits);
+	screenshot = NULL;*/
+			
 			screenshot = TtaGetMemory (heightb*widthb*3);
+
+			DIB2RGB (&lpbi->bmiHeader, lpvBits, screenshot);
+	
 			internal = lpvBits;
 			pixel = screenshot;
 			k = 0;
 			line = 0;
-            DIB2RGBA (&lpbi->bmiHeader, screenshot);
 			pixel= TtaGetMemory (heightb*widthb*4);
 			internal = screenshot;
 			for (i = 0; i < heightb*widthb; i++)
-			{
-				*(pixel + k) = *(internal + line); 
-				*(pixel + k + 1) = *(internal + line + 1); 
-				*(pixel + k + 2) = *(internal + line + 2); 
-				*(pixel + k + 3) = 255;
-				k += 4;line +=3;
-			}
-			TtaFreeMemory (lpvBits);
+			  {
+			    *(pixel + k) = *(internal + line); 
+			    *(pixel + k + 1) = *(internal + line + 1); 
+			    *(pixel + k + 2) = *(internal + line + 2); 
+			    *(pixel + k + 3) = 127;
+			    k += 4;line +=3;
+			  }
 			TtaFreeMemory (screenshot);
 			screenshot = pixel;
-			}
-	}
-	}
+		
+		      }
+			
+		    if (SurfDC) 
+		      DeleteDC(SurfDC);	
+		    if (OffscrDC) 
+		      DeleteDC(OffscrDC);
+		    if (OffscrBmp) 
+		      DeleteObject(OffscrBmp);
+		    TtaFreeMemory (lpvBits);
+		    TtaFreeMemory (lpbi);
+		  
+		  }
+		
+	      }
+	  }
+      }
 #endif /* _WINDOWS */
 #endif /* _GTK */
+#ifndef _WINDOWS
   SavePng (pngurl,
 	   screenshot,
 	   (unsigned int) widthb,
 	   (unsigned int) heightb);
-
+#endif /*_WINDOWS*/
   return screenshot;
 }

@@ -1737,17 +1737,18 @@ void DrawEllips (int frame, int thick, int style, int x, int y, int width,
 {
    Pixmap              pat;
 
+   /*
    width -= thick + 1;
    height -= thick + 1;
    x += thick / 2;
    y = y + thick / 2 + FrameTable[frame].FrTopMargin;
-
+*/
    /* Fill in the rectangle */
    pat = (Pixmap) CreatePattern (0, fg, bg, pattern);
    if (pat == 0 && thick <= 0)
       return;
 
-   if (width == height && width < 10)
+   /*if (width == height && width < 10)
      {
        if (thick > 0 && fg >= 0)
 	   GL_Point (fg, width, x, y+height/2);
@@ -1755,18 +1756,18 @@ void DrawEllips (int frame, int thick, int style, int x, int y, int width,
 	 if (pat != 0)
 	   GL_Point (fg, width, x, y);
        return;
-     }
+     }*/
    if (pat != 0)
      {
-      GL_SetForeground (bg);
-      GL_DrawArc ( x, y, width, height, 0, 360 * 64, TRUE);
+	   InitDrawing (style, thick, bg);
+      GL_DrawArc (x, y, width, height, 0, 360 * 64, TRUE);
      }
 
    /* Draw the border */
    if (thick > 0 && fg >= 0)
      {
       InitDrawing (style, thick, fg);
-      GL_DrawArc ( x, y, width, height, 0, 360 * 64, FALSE);
+      GL_DrawArc (x, y, width, height, 0, 360 * 64, FALSE);
      }
 }
 

@@ -912,10 +912,9 @@ void WIN_ChangeVScroll (int frame, int reason, int value)
 	   delta = (int) (((float)value / (float)FrameTable[frame].FrHeight) * 100);
 	   JumpIntoView (frame, delta);
 	 }
-#ifdef _GL2
-	GL_ActivateDrawing (frame);
+#ifdef _GL
+	GL_prepare (frame);
 	GL_DrawAll (NULL, frame);
-	GL_Swap (frame);
 #endif /*_GL2*/
        break;
      } 

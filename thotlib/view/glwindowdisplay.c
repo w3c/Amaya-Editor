@@ -57,7 +57,7 @@
 #include <math.h> 
 #include <stdio.h> 
 
-#define PRECISION double
+#define PRECISION float
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
@@ -72,8 +72,6 @@
 #define RAD_TO_DEG(A)   ((PRECISION)A)*57.29577957795135
 
 
-#define DEG_TO_RAD(A) ((A)*(M_PI/180.0))
-
 /*If we should use a static table instead for
   performance bottleneck...*/
 #define DCOS(A) (cos (A))
@@ -82,7 +80,7 @@
 
 #define A_DEGREE 0.017453293
 
-#define A_DEGREE ((PRECISION)(M_PI / 24))
+#define A_DEGREE ((M_PI / 24))
 
 /* Precision of a degree/1 
    If we need more precision 
@@ -834,11 +832,113 @@ static void tesse(ThotPoint *contours, int contour_cnt, ThotBool only_countour)
 }
 
 
+#define SLICES 1440
+#define SLICES_SIZE 1441
+
+
+void GL_DrawArc (int x, int y, 
+		 int w, int h, 
+		 int startAngle, int sweepAngle, 
+		 ThotBool filled)
+{
+  GLint     i, slices;
+
+  PRECISION angleOffset;
+  PRECISION sinCache[SLICES_SIZE];
+  PRECISION cosCache[SLICES_SIZE];
+  PRECISION angle;
+  PRECISION fastx, fasty, width, height;
+
+
+
+  if (w < 10 && h < 10)
+	slices = 36;
+else
+	slices = SLICES;
+
+  startAngle = startAngle / 64;
+  sweepAngle = sweepAngle / 64;
+ 
+  /* Cache is the vertex locations cache */
+  angleOffset = startAngle / 180.0 * M_PI;
+  for (i = 0; i <= slices; i++) 
+    {
+      angle = angleOffset + ((M_PI * sweepAngle) / 180.0) * i / slices;
+      sinCache[i] = DSIN(angle);
+      cosCache[i] = DCOS(angle);
+    }
+
+  for (i = 0; i <= slices; i++) 
+    {
+      angle = angleOffset + ((M_PI * sweepAngle) / 180.0) * i / slices;
+      sinCache[i] = DSIN(angle);
+      cosCache[i] = DCOS(angle);
+    }
+
+  if (sweepAngle == 360.0) 
+    {
+      sinCache[slices] = sinCache[0];
+      cosCache[slices] = cosCache[0];
+    }
+
+  width  = ((PRECISION)w) / 2;
+  height = ((PRECISION)h) / 2;
+  fastx  = ((PRECISION)x) + width;
+  fasty  = ((PRECISION)y) + height;
+
+ if (filled)
+    {
+      glBegin (GL_TRIANGLE_FAN);
+      /* The center */
+      glVertex2d (fastx, fasty);
+	  for (i = 0; i <= slices; i++)
+	 {
+	   glVertex2d (fastx + width * sinCache[i], 
+		          fasty + height * cosCache[i]);
+	 }
+  glEnd();
+    }
+  else
+    {
+     glDisable (GL_BLEND); 
+      /*glBegin (GL_LINE_STRIP);*/
+      /*glBegin (GL_POLYGON);*/ 
+	for (i = 0; i <= slices; i++)
+	 {	
+	   sinCache[i] = fastx + width * sinCache[i]; 
+	   cosCache[i] = fasty + height * cosCache[i];
+	 }
+	  glBegin (GL_LINES);
+		slices--;
+	  for (i = 0; i <= slices; i++)
+	 {
+		glVertex2d (sinCache[i], 
+		            cosCache[i]);
+
+	    glVertex2d (sinCache[i+1], 
+		            cosCache[i+1]);
+	 }
+  glEnd();
+
+    }
+       
+
+  if (!filled)
+    glEnable (GL_BLEND);
+}
+
+
+
+
+
+
+
+
 /*----------------------------------------------------------------------
  GL_DrawArc : receive angle at 64* their values...
  but
   ----------------------------------------------------------------------*/
-void GL_DrawArc (int x, int y, 
+void GL_DrawArc2 (int x, int y, 
 		 int w, int h, 
 		 int angle_int1, int angle_int2, 
 		 ThotBool filled)
@@ -846,9 +946,11 @@ void GL_DrawArc (int x, int y,
   PRECISION angle, anglefinal, angle1, angle2;
   PRECISION fastx, fasty, width, height;
 
+  PRECISION Testx, Testy;
+
   /*The formula is simple :
-       y + (h/2)*(1 - sin (DEG_TO_RAD (Angle/64)))
-       x + (w/2)*(1 + cos (DEG_TO_RAD (Angle/64)))
+    y + (h/2)*(1 - sin (DEG_TO_RAD (Angle/64)))
+    x + (w/2)*(1 + cos (DEG_TO_RAD (Angle/64)))
     But if we put all those calculation in the while
     Cpu will overheat with 5 *,  2 / and 2 +!!!
     That's why there is those preliminary steps */
@@ -857,41 +959,9 @@ void GL_DrawArc (int x, int y,
   angle2 = angle1 + angle2;
   angle1 = angle1 / 64;
   angle2 = angle2 / 64;
-  width  = ((PRECISION)w) / 2;
-  height = ((PRECISION)h) / 2;
-  fastx  = ((PRECISION)x) + width;
-  fasty  = ((PRECISION)y) + height;
   
   angle =  (PRECISION) DEG_TO_RAD (angle2);
   anglefinal = (PRECISION) DEG_TO_RAD (angle1);
-  /* A good optimization is that
-   cos(A)*cos(B)=(cos(A+B)+cos(A-B))/2 
-   based on trigo decomposition
-   sin(A+B)=sin A cos B + cos A sin B
-   sin(A-B)=sin A cos B - cos A sin B
-   cos(A+B)=cos A cos B - sin A sin B
-   cos(A-B)=cos A cos B + sin A sin B
-  it could eliminate MULs... 
-  but need to calculate cos and sin more times
-  perhaps precalculated tables...*/  
-  if (!filled && 0)
-    {
-      angle =  (PRECISION) DEG_TO_RAD (angle2);
-      glBegin (GL_POINTS);
-      /* another one is to extend the use of Vertex array...
-	 but not only for here... for all computations*/
-      while (angle1 <= angle2)
-	{
-	  glVertex2d (fastx + width * (DCOS(angle)),
-		           fasty - height * (DSIN(angle)));
-	  angle -= (PRECISION)A_DEGREE;
-	  angle2--;
-	}
-      glVertex2d ( fastx + width * DCOS (angle),
-		   fasty - height * DSIN (angle));
-      glEnd();
-      angle = (PRECISION) DEG_TO_RAD (angle2);
-    }
 
   if (filled)
     {
@@ -901,20 +971,48 @@ void GL_DrawArc (int x, int y,
     }
   else
     {
-      glDisable (GL_BLEND);
+     /*  glDisable (GL_BLEND); */
       glBegin (GL_LINE_STRIP);
     }
-  angle1 = (PRECISION) DEG_TO_RAD (angle1);
-
-  while (angle1 <= angle)
+  
+  if (1 || w == h)
     {
-	glVertex2f (fastx + (width * DCOS(angle)),
-		        fasty - (height* DSIN(angle)));
-    angle -= A_DEGREE;
+      width  = ((PRECISION)w) / 2;
+      height = ((PRECISION)h) / 2;
+
+      fastx  = ((PRECISION)x);
+      fasty  = ((PRECISION)y);
+      
+      while (anglefinal <= angle)
+	{
+	  glVertex2d (fastx + (width * DSIN(angle)),
+		          fasty +  (height * DCOS(angle)));
+	  angle -= A_DEGREE;
+	}
+      glVertex2d (fastx + (width * DSIN(angle)),
+		  fasty +  (height * DCOS(angle)));
     }
-  	glVertex2f (fastx + (width * DCOS(angle)),
-		        fasty - (height* DSIN(angle)));
+  else
+    {
+      
+      width  = ((PRECISION)w) / 2;
+      height = ((PRECISION)h) / 2;
+      fastx  = ((PRECISION)x) + width;
+      fasty  = ((PRECISION)y) + height;
+      
+      while (anglefinal <= angle)
+	{
+	  glVertex2d (fastx + (width * DCOS(angle)),
+		      fasty - (height* DSIN(angle)));
+	  angle -= A_DEGREE;
+	}
+      glVertex2d (fastx + (width * DCOS(angle)),
+		  fasty - (height* DSIN(angle)));
+      
+    }  
+  
   glEnd();
+
   if (!filled)
     glEnable (GL_BLEND);
 }
@@ -1695,7 +1793,7 @@ int glMatroxBUG (int frame, int x, int y,
  SaveBuffer :
  Take a picture (png) of the backbuffer.
 --------------------------------*/
-void saveBuffer (int width, int height)
+void saveBuffer (char *filename, int width, int height)
 {
   static int z = 0;
   unsigned char *Data;
