@@ -1371,7 +1371,11 @@ void SetFontstyleAttr (Element el, Document doc)
   Attribute	attr, IntAttr;
   Element       ancestor, textEl;
   int		len;
-  char         *value;
+  Language      lang;
+#ifndef _I18N_
+  char          script;
+#endif
+  char         *value, text[2];
   ThotBool      italic;
 
   if (el != NULL)
@@ -1458,8 +1462,25 @@ void SetFontstyleAttr (Element el, Document doc)
 			    italic = TRUE;
 			}
 		    }
-		  else
+		  else if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
 		    {
+		      /* is there a single digit? */
+		      len = TtaGetTextLength (textEl);
+		      if (len == 1)
+			{
+			  len++;
+			  TtaGiveTextContent (textEl, text, &len, &lang);
+#ifndef _I18N_
+			  script = TtaGetScript (lang);
+#endif
+			  if (
+#ifndef _I18N_
+			      script == 'L' &&
+#endif
+			      text[0] >= '0' && text[0] <= '9')
+			    italic = FALSE;
+			}
+
 		      /* is there an attribute EntityName on that character? */
 		      attrType.AttrTypeNum = MathML_ATTR_EntityName;
 		      attr = TtaGetAttribute (textEl, attrType);
