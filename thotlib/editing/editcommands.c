@@ -3784,6 +3784,9 @@ void TtcDeletePreviousChar (Document doc, View view)
 	  if (moveAfter &&
 	      pViewSel->VsBox && pViewSel->VsIndBox < pViewSel->VsBox->BxNChars)
 	    TtcPreviousChar (doc, view);
+	  /* close the undo sequence if it's not already done */
+	  if (pDoc->DocEditSequence)
+	    CloseHistorySequence (pDoc);
 	}
       
       if (!lock)
