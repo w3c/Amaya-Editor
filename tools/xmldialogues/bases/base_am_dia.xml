@@ -1499,7 +1499,7 @@
 	<message xml:lang="it">Modelli...</message>
 	<message xml:lang="es">Plantillas...</message>
 </label>
-<label define="BAnnotateSel">
+<label define="BAnnotateSelection">
 	<message xml:lang="en">Annotate selection</message>
 	<message xml:lang="fr">Annoter la séléction</message>
 </label>
@@ -1518,7 +1518,7 @@
 	<message xml:lang="en">Delete annotation</message>
 	<message xml:lang="fr">Détruire l'annotation</message>
 </label>
-<label define="BLoadAnnots">
+<label define="BLoadAnnotations">
 	<message xml:lang="en">Load annotations</message>
 	<message xml:lang="fr">Charger les annotations</message>
 	<message xml:lang="de">Anmerkungen laden</message>
@@ -1539,7 +1539,7 @@
 	<message xml:lang="it">Filtro locale...</message>
 	<message xml:lang="es">Filtro local...</message>
 </label>
-<label define="BConfigure">
+<label define="BConfigureAnnotations">
 	<message xml:lang="en">Configure...</message>
 	<message xml:lang="fr">Configuration...</message>
 	<message xml:lang="de">Konfigurieren...</message>
