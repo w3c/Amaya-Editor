@@ -30,9 +30,12 @@ public:
  protected:
   virtual void SendDataToPanel( AmayaPanelParams& params );
   virtual void DoUpdate();
+  void RefreshCharStylePanel();
 
  protected:
   DECLARE_EVENT_TABLE()
+  void OnRefresh( wxCommandEvent& event );
+  void OnApply( wxCommandEvent& event );
 };
 
 #endif // __AMAYACHARSTYLEPANEL_H__

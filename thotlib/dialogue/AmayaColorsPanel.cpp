@@ -58,8 +58,8 @@ AmayaColorsPanel::AmayaColorsPanel( wxWindow * p_parent_window, AmayaNormalWindo
   // setup labels
   RefreshToolTips();
   m_pTitleText->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_COLORS)));
-  XRCCTRL(*m_pPanelContentDetach, "wxID_MODIFYCOLOR", wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_APPLY)));
-  XRCCTRL(*m_pPanelContentDetach, "wxID_GETCOLOR", wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_CPGETBUTTON)));
+  XRCCTRL(*m_pPanelContentDetach, "wxID_APPLY", wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_APPLY)));
+  XRCCTRL(*m_pPanelContentDetach, "wxID_REFRESH", wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_REFRESH)));
 
   m_Bitmap_Empty        = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON, "empty.gif" ) );
   m_Bitmap_DefaultColor = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON, "default_color.gif" ) );
@@ -293,8 +293,8 @@ int AmayaColorsPanel::ChooseCustomColor( const wxColour & start_colour )
  *  the callbacks are assigned to an event type
  *----------------------------------------------------------------------*/
 BEGIN_EVENT_TABLE(AmayaColorsPanel, AmayaSubPanel)
-  EVT_BUTTON( XRCID("wxID_MODIFYCOLOR"), AmayaColorsPanel::OnModifyColor ) 
-  EVT_BUTTON( XRCID("wxID_GETCOLOR"),    AmayaColorsPanel::OnGetColor ) 
+  EVT_BUTTON( XRCID("wxID_APPLY"), AmayaColorsPanel::OnModifyColor ) 
+  EVT_BUTTON( XRCID("wxID_REFRESH"),    AmayaColorsPanel::OnGetColor ) 
   EVT_BUTTON( XRCID("wxID_BUTTON_DEFAULTCOLORS"), AmayaColorsPanel::OnDefaultColors ) 
   EVT_BUTTON( XRCID("wxID_BUTTON_SWITCHCOLORS"),  AmayaColorsPanel::OnSwitchColors ) 
   EVT_BUTTON( XRCID("wxID_BUTTON_FGCOLOR"),  AmayaColorsPanel::OnChooseFGColor ) 

@@ -104,14 +104,14 @@
                                   <object class="wxBoxSizer">
                                     <orient>wxVERTICAL</orient>
                                     <object class="sizeritem">
-                                      <object class="wxButton" name="wxID_MODIFYCOLOR">
+                                      <object class="wxButton" name="wxID_APPLY">
                                         <label>*Apply*</label>
                                         <style></style>
                                       </object>
                                       <flag>wxALL|wxEXPAND</flag>
                                     </object>
                                     <object class="sizeritem">
-                                      <object class="wxButton" name="wxID_GETCOLOR">
+                                      <object class="wxButton" name="wxID_REFRESH">
                                         <label>*Get*</label>
                                       </object>
                                       <flag>wxALL|wxEXPAND</flag>

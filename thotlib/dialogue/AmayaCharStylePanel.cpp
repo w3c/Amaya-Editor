@@ -30,6 +30,7 @@
 #include "colors_f.h"
 #include "inites_f.h"
 #include "presentmenu_f.h"
+#include "font_f.h"
 
 #include "AmayaCharStylePanel.h"
 #include "AmayaNormalWindow.h"
@@ -50,22 +51,60 @@ AmayaCharStylePanel::AmayaCharStylePanel( wxWindow * p_parent_window, AmayaNorma
 {
   wxLogDebug( _T("AmayaCharStylePanel::AmayaCharStylePanel") );
 
-#if 0
-  //  m_pPanelContentDetach = XRCCTRL(*this, "wxID_PANEL_CONTENT_DETACH", wxPanel);
-
-  // setup labels
+ // setup labels
   RefreshToolTips();
-  m_pTitleText->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_COLORS)));
-  XRCCTRL(*m_pPanelContentDetach, "wxID_MODIFYCOLOR", wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_APPLY)));
-  XRCCTRL(*m_pPanelContentDetach, "wxID_GETCOLOR", wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_CPGETBUTTON)));
+  m_pTitleText->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_CHAR)));
+  XRCCTRL(*m_pPanelContentDetach, "wxID_APPLY", wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_APPLY)));
+  XRCCTRL(*m_pPanelContentDetach, "wxID_REFRESH", wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_REFRESH)));
+  XRCCTRL(*m_pPanelContentDetach, "wxID_LABEL_FONTFAMILY", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_FONT_FAMILY)));
+  XRCCTRL(*m_pPanelContentDetach, "wxID_LABEL_UNDERLINE", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_LINE)));
+  XRCCTRL(*m_pPanelContentDetach, "wxID_LABEL_BODYSIZE", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BODY_SIZE_PTS)));
+  XRCCTRL(*m_pPanelContentDetach, "wxID_LABEL_CHARSTYLE", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_STYLE)));
+  XRCCTRL(*m_pPanelContentDetach, "wxID_LABEL_BOLDNESS", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BOLDNESS)));
 
-  m_Bitmap_Empty        = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON, "empty.gif" ) );
-  m_Bitmap_DefaultColor = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON, "default_color.gif" ) );
-  m_Color_ButtonBG      = XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_FGCOLOR", wxBitmapButton)->GetBackgroundColour();
+  // fill choice selectors
+  XRCCTRL(*m_pPanelContentDetach, "wxID_CHOICE_FONTFAMILY", wxChoice)->Clear();
+  XRCCTRL(*m_pPanelContentDetach, "wxID_CHOICE_FONTFAMILY", wxChoice)->Append(TtaConvMessageToWX("Times"));
+  XRCCTRL(*m_pPanelContentDetach, "wxID_CHOICE_FONTFAMILY", wxChoice)->Append(TtaConvMessageToWX("Helvetica"));
+  XRCCTRL(*m_pPanelContentDetach, "wxID_CHOICE_FONTFAMILY", wxChoice)->Append(TtaConvMessageToWX("Courier"));
+  XRCCTRL(*m_pPanelContentDetach, "wxID_CHOICE_FONTFAMILY", wxChoice)->Append(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_UNCHANGED)));
+  XRCCTRL(*m_pPanelContentDetach, "wxID_CHOICE_FONTFAMILY", wxChoice)->SetStringSelection(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_UNCHANGED)));
 
-  // on windows, the color selector dialog must be complete.
-  m_ColourData.SetChooseFull(true);
-#endif /* 0 */
+  XRCCTRL(*m_pPanelContentDetach, "wxID_CHOICE_CHARSTYLE", wxChoice)->Clear();
+  XRCCTRL(*m_pPanelContentDetach, "wxID_CHOICE_CHARSTYLE", wxChoice)->Append(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_ROMAN)));
+  XRCCTRL(*m_pPanelContentDetach, "wxID_CHOICE_CHARSTYLE", wxChoice)->Append(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_ITALIC)));
+  XRCCTRL(*m_pPanelContentDetach, "wxID_CHOICE_CHARSTYLE", wxChoice)->Append(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_OBLIQUE)));
+  XRCCTRL(*m_pPanelContentDetach, "wxID_CHOICE_CHARSTYLE", wxChoice)->Append(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_UNCHANGED)));
+  XRCCTRL(*m_pPanelContentDetach, "wxID_CHOICE_CHARSTYLE", wxChoice)->SetStringSelection(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_UNCHANGED)));
+
+  XRCCTRL(*m_pPanelContentDetach, "wxID_CHOICE_UNDERLINE", wxChoice)->Clear();
+  XRCCTRL(*m_pPanelContentDetach, "wxID_CHOICE_UNDERLINE", wxChoice)->Append(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_NORMAL)));
+  XRCCTRL(*m_pPanelContentDetach, "wxID_CHOICE_UNDERLINE", wxChoice)->Append(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_UNDERLINE)));
+  XRCCTRL(*m_pPanelContentDetach, "wxID_CHOICE_UNDERLINE", wxChoice)->Append(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_OVERLINE)));
+  XRCCTRL(*m_pPanelContentDetach, "wxID_CHOICE_UNDERLINE", wxChoice)->Append(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_CROSS_OUT)));
+  XRCCTRL(*m_pPanelContentDetach, "wxID_CHOICE_UNDERLINE", wxChoice)->Append(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_UNCHANGED)));
+  XRCCTRL(*m_pPanelContentDetach, "wxID_CHOICE_UNDERLINE", wxChoice)->SetStringSelection(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_UNCHANGED)));
+
+  XRCCTRL(*m_pPanelContentDetach, "wxID_CHOICE_BOLDNESS", wxChoice)->Clear();
+  XRCCTRL(*m_pPanelContentDetach, "wxID_CHOICE_BOLDNESS", wxChoice)->Append(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_NOT_BOLD)));
+  XRCCTRL(*m_pPanelContentDetach, "wxID_CHOICE_BOLDNESS", wxChoice)->Append(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BOLD)));
+  XRCCTRL(*m_pPanelContentDetach, "wxID_CHOICE_BOLDNESS", wxChoice)->Append(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_UNCHANGED)));
+  XRCCTRL(*m_pPanelContentDetach, "wxID_CHOICE_BOLDNESS", wxChoice)->SetStringSelection(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_UNCHANGED)));
+  
+  XRCCTRL(*m_pPanelContentDetach,"wxID_CHOICE_BODYSIZE",wxChoice)->Clear();
+  int bodyRelatSize = 0;
+  int bodyPointSize = 0;
+  int font_size_nb = NumberOfFonts ();
+  wxString font_size_unit = TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_TYPOGRAPHIC_POINTS));
+  for (bodyRelatSize = 0; bodyRelatSize < font_size_nb; bodyRelatSize++)
+    {
+      bodyPointSize = ThotFontPointSize(bodyRelatSize);
+      XRCCTRL(*m_pPanelContentDetach,"wxID_CHOICE_BODYSIZE",wxChoice)->Append(wxString::Format(_T("%d "),bodyPointSize)+font_size_unit);
+    }
+  XRCCTRL(*m_pPanelContentDetach, "wxID_CHOICE_BODYSIZE", wxChoice)->Append(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_UNCHANGED)));
+  XRCCTRL(*m_pPanelContentDetach, "wxID_CHOICE_BODYSIZE", wxChoice)->SetStringSelection(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_UNCHANGED)));
+
+  ResetPresentMenus();
 
   // register myself to the manager, so I will be avertised that another panel is floating ...
   m_pManager->RegisterSubPanel( this );
@@ -103,15 +142,7 @@ int AmayaCharStylePanel::GetPanelType()
  */
 void AmayaCharStylePanel::RefreshToolTips()
 {  
-#if 0
-  XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_DEFAULTCOLORS", wxButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_STD_COLORS)));
-  XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_SWITCHCOLORS", wxButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_CPCOLORSWITCH)));
-  XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_BGCOLOR", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_CPCOLORBG)));
-  XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_FGCOLOR", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_CPCOLORFG)));
-#endif /* 0 */
-
 }
-
 
 /*
  *--------------------------------------------------------------------------------------
@@ -122,36 +153,17 @@ void AmayaCharStylePanel::RefreshToolTips()
  */
 void AmayaCharStylePanel::SendDataToPanel( AmayaPanelParams& p )
 {
-#if 0
-  // update button background colors
-  m_ThotBGColor = (int)p.param1;
-  if (m_ThotBGColor >= 0)
-    {
-      wxColour * p_bg_colour = ColorPixel(m_ThotBGColor);
-      XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_BGCOLOR", wxBitmapButton)->SetBackgroundColour( *p_bg_colour );
-      XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_BGCOLOR", wxBitmapButton)->SetBitmapLabel(m_Bitmap_Empty);
-    }
-  else
-    {
-      // default bg color is ? white ?
-      XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_BGCOLOR", wxBitmapButton)->SetBackgroundColour( m_Color_ButtonBG );
-      XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_BGCOLOR", wxBitmapButton)->SetBitmapLabel(m_Bitmap_DefaultColor);
-    }
+  int font_family    = (int)p.param1;
+  int font_style     = (int)p.param2;
+  int font_weight    = (int)p.param3;
+  int font_underline = (int)p.param4;
+  int font_size      = (int)p.param5;
 
-  m_ThotFGColor = (int)p.param2;
-  if (m_ThotFGColor >= 0)
-    {
-      wxColour * p_fg_colour = ColorPixel(m_ThotFGColor);
-      XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_FGCOLOR", wxBitmapButton)->SetBackgroundColour( *p_fg_colour );
-      XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_FGCOLOR", wxBitmapButton)->SetBitmapLabel(m_Bitmap_Empty);
-    }
-  else
-    {
-      // default fg color is ? black ?
-      XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_FGCOLOR", wxBitmapButton)->SetBackgroundColour( m_Color_ButtonBG );
-      XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_FGCOLOR", wxBitmapButton)->SetBitmapLabel(m_Bitmap_DefaultColor);
-    }
-#endif /* 0 */
+  XRCCTRL(*m_pPanelContentDetach, "wxID_CHOICE_FONTFAMILY", wxChoice)->SetSelection(font_family);
+  XRCCTRL(*m_pPanelContentDetach, "wxID_CHOICE_UNDERLINE", wxChoice)->SetSelection(font_underline);
+  XRCCTRL(*m_pPanelContentDetach, "wxID_CHOICE_BODYSIZE", wxChoice)->SetSelection(font_size);
+  XRCCTRL(*m_pPanelContentDetach, "wxID_CHOICE_CHARSTYLE", wxChoice)->SetSelection(font_style);
+  XRCCTRL(*m_pPanelContentDetach, "wxID_CHOICE_BOLDNESS", wxChoice)->SetSelection(font_weight);
 }
 
 /*
@@ -165,7 +177,8 @@ void AmayaCharStylePanel::DoUpdate()
 {
   wxLogDebug( _T("AmayaCharStylePanel::DoUpdate") );
   AmayaSubPanel::DoUpdate();
-  //  ThotUpdatePalette();
+
+  // do not refresh the panel from the current selection because the user must ask for that
 }
 
 /*
@@ -180,19 +193,66 @@ bool AmayaCharStylePanel::IsActive()
   return AmayaSubPanel::IsActive();
 }
 
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaCharStylePanel
+ *      Method:  OnApply
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaCharStylePanel::OnApply( wxCommandEvent& event )
+{
+  wxLogDebug( _T("AmayaCharStylePanel::OnApply") );
+
+  int font_family    = XRCCTRL(*m_pPanelContentDetach,"wxID_CHOICE_FONTFAMILY",wxChoice)->GetSelection();
+  int font_style     = XRCCTRL(*m_pPanelContentDetach,"wxID_CHOICE_CHARSTYLE",wxChoice)->GetSelection();
+  int font_weight    = XRCCTRL(*m_pPanelContentDetach,"wxID_CHOICE_BOLDNESS",wxChoice)->GetSelection();
+  int font_underline = XRCCTRL(*m_pPanelContentDetach,"wxID_CHOICE_UNDERLINE",wxChoice)->GetSelection();
+  int font_size      = XRCCTRL(*m_pPanelContentDetach,"wxID_CHOICE_BODYSIZE",wxChoice)->GetSelection();
+
+  ThotCallback (NumMenuCharFamily, INTEGER_DATA, (char*)font_family);
+  ThotCallback (NumMenuCharFontStyle, INTEGER_DATA, (char*)font_style);
+  ThotCallback (NumMenuCharFontWeight, INTEGER_DATA, (char*)font_weight);
+  ThotCallback (NumMenuUnderlineType, INTEGER_DATA, (char*)font_underline);
+  ThotCallback (NumMenuCharFontSize, INTEGER_DATA, (char*)font_size);
+  ThotCallback (NumFormPresChar, INTEGER_DATA, (char*) 1);
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaCharStylePanel
+ *      Method:  OnRefresh
+ * Description:  refresh the panel from current selection
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaCharStylePanel::OnRefresh( wxCommandEvent& event )
+{
+  wxLogDebug( _T("AmayaCharStylePanel::OnRefresh") );
+  RefreshCharStylePanel();
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaCharStylePanel
+ *      Method:  RefreshCharStylePanel
+ * Description:  refresh the panel from current selection
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaCharStylePanel::RefreshCharStylePanel()
+{
+  Document doc;
+  View view;
+  TtaGetActiveView( &doc, &view );
+  TtcChangeCharacters( doc, view );
+}
+
 /*----------------------------------------------------------------------
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type
  *----------------------------------------------------------------------*/
 BEGIN_EVENT_TABLE(AmayaCharStylePanel, AmayaSubPanel)
-  /*
-  EVT_BUTTON( XRCID("wxID_MODIFYCOLOR"), AmayaCharStylePanel::OnModifyColor ) 
-  EVT_BUTTON( XRCID("wxID_GETCOLOR"),    AmayaCharStylePanel::OnGetColor ) 
-  EVT_BUTTON( XRCID("wxID_BUTTON_DEFAULTCOLORS"), AmayaCharStylePanel::OnDefaultColors ) 
-  EVT_BUTTON( XRCID("wxID_BUTTON_SWITCHCOLORS"),  AmayaCharStylePanel::OnSwitchColors ) 
-  EVT_BUTTON( XRCID("wxID_BUTTON_FGCOLOR"),  AmayaCharStylePanel::OnChooseFGColor ) 
-  EVT_BUTTON( XRCID("wxID_BUTTON_BGCOLOR"),  AmayaCharStylePanel::OnChooseBGColor ) 
-  */
+  EVT_BUTTON( XRCID("wxID_APPLY"),   AmayaCharStylePanel::OnApply ) 
+  EVT_BUTTON( XRCID("wxID_REFRESH"), AmayaCharStylePanel::OnRefresh )
 END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */

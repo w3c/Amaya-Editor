@@ -68,6 +68,7 @@
 #include "undo_f.h"
 #include "units_f.h"
 #include "unstructchange_f.h"
+#include "presentmenu_f.h"
 
 static PtrDocument  DocModPresent;
 static ThotBool            ChngStandardColor;	/* standard presentation colors  */
@@ -139,7 +140,7 @@ static RuleSet      TheRules;
 static RuleSet      GeomRules;
 static int          OldLineSp;
 static int          NormalLineSpacing;
-static void         ResetMenus ();
+//static void         ResetMenus ();
 
 #ifdef _WINGUI 
 extern int   WIN_IndentValue;
@@ -1545,7 +1546,7 @@ void TtcStandardPresentation (Document document, View view)
    PtrDocument         pDoc;
 
    pDoc = LoadedDocument[document - 1];
-   ResetMenus ();
+   ResetPresentMenus ();
 
 #ifdef _GTK
    /* formulaire presentation standard */
@@ -1575,6 +1576,9 @@ void TtcStandardPresentation (Document document, View view)
 #ifdef _GTK
    TtaShowDialogue (NumFormPresentStandard, TRUE);
 #endif /* _GTK */
+#ifdef _WX
+   wxASSERT_MSG(false, _T("TODO: TtcStandardPresentation"));
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1990,6 +1994,8 @@ void TtcChangeCharacters (Document document, View view)
    int                 firstChar, lastChar;
    ThotBool            selectionOK;
 
+   if ( document <= 0 )
+     return;
    pDoc = LoadedDocument[document - 1];
    /* demande quelle est la selection courante */
    selectionOK = GetCurrentSelection (&pSelDoc, &pFirstSel, &pLastSel, &firstChar, &lastChar);
@@ -2026,7 +2032,7 @@ void TtcChangeCharacters (Document document, View view)
 	if (pAb != NULL)
 	  {
 	     /* annule les etats memorises */
-	     ResetMenus ();
+	     ResetPresentMenus ();
 #ifdef _GTK
 	     /* formulaire Presentation Caracteres */
 	     TtaNewSheet (NumFormPresChar, TtaGetViewFrame (document, view), 
@@ -2156,18 +2162,13 @@ void TtcChangeCharacters (Document document, View view)
 				       UnderlineStyle, FontSize);
 #endif /* _WINGUI */
 #ifdef _WX
-	     /* TODO */
-	     /*
 	     AmayaPanelParams p;
-	     p.param1 = (void*)AmayaAttributePanel::wxATTR_ACTION_SETUPLANG;
-	     p.param2 = (void*)FALSE;
-	     p.param3 = (void*)ptr;
-	     p.param4 = (void*)label;
-	     p.param5 = (void*)bufMenu;
-	     p.param6 = (void*)nbItem;
-	     p.param7 = (void*)defItem;
+	     p.param1 = (void*)(FontFamily-1);
+	     p.param2 = (void*)FontStyle;
+	     p.param3 = (void*)FontWeight;
+	     p.param4 = (void*)UnderlineStyle;
+	     p.param5 = (void*)i; /* font size */
 	     AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_CHARSTYLE, p );
-	     */
 #endif /* _WX */
 	  }
 	DocModPresent = pDoc;
@@ -2221,7 +2222,7 @@ void TtcChangeGraphics (Document document, View view)
 	if (pAb != NULL)
 	  {
 	     /* annule les etats memorises */
-	     ResetMenus ();
+	     ResetPresentMenus ();
 #ifdef _GTK
 	     /* feuille de dialogue Presentation Graphiques */
 	     TtaNewSheet (NumFormPresGraphics, TtaGetViewFrame (document, view), 
@@ -2333,6 +2334,9 @@ void TtcChangeGraphics (Document document, View view)
 #endif /* _GTK */
 	  }
      }
+#ifdef _WX
+   wxASSERT_MSG(false, _T("TODO: TtcChangeGraphics"));
+#endif /* _WX */
 }
 
 
@@ -2387,7 +2391,7 @@ void TtcChangeFormat (Document document, View view)
 
       if (pAb != NULL)
 	{
-         ResetMenus ();
+         ResetPresentMenus ();
 #ifdef _GTK
          /* formulaire Presentation Format */
          TtaNewSheet (NumFormPresFormat, TtaGetViewFrame (document, view), 
@@ -2532,13 +2536,16 @@ void TtcChangeFormat (Document document, View view)
 #endif /* _GTK */     
       }
    }	
+#ifdef _WX
+   wxASSERT_MSG(false, _T("TODO: TtcChangeFormat"));
+#endif /* _WX */
 }
 
 
 /*----------------------------------------------------------------------
-  ResetMenus
+  ResetPresentMenus
   ----------------------------------------------------------------------*/
-static void         ResetMenus ()
+void ResetPresentMenus ()
 {
    if (ThotLocalActions[T_presentstd] == NULL)
      {

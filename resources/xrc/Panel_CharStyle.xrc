@@ -175,14 +175,17 @@
                                 <object class="sizeritem">
                                   <object class="wxBoxSizer">
                                     <orient>wxHORIZONTAL</orient>
-                                    <object class="spacer">
-                                      <option>1</option>
-                                      <flag>wxEXPAND</flag>
-                                    </object>
                                     <object class="sizeritem">
                                       <object class="wxButton" name="wxID_APPLY">
                                         <label>*Apply*</label>
                                       </object>
+                                    </object>
+                                    <object class="sizeritem">
+                                      <object class="wxButton" name="wxID_REFRESH">
+                                        <label>*ReFresh*</label>
+                                      </object>
+                                      <flag>wxLEFT</flag>
+                                      <border>2</border>
                                     </object>
                                   </object>
                                   <flag>wxALL|wxEXPAND</flag>

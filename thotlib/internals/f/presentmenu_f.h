@@ -23,6 +23,7 @@ extern void TtcChangeGraphics ( Document document,
                                 View view );
 extern void TtcChangeFormat ( Document document,
                               View view );
+extern void ResetPresentMenus ( void );
 
 #else /* __STDC__ */
 
@@ -43,6 +44,7 @@ extern void TtcChangeGraphics ( Document document,
                                   View view );
 extern void TtcChangeFormat ( Document document,
                                 View view );
+extern void ResetPresentMenus ( void );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
