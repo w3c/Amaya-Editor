@@ -3483,6 +3483,7 @@ BOXES
 	Background : White;
 	Foreground : Black;
 	Fillpattern : nopattern;
+	Underline: NoUnderline;
 	Copy (TITLE);
 	Justify: No;
 	HorizPos: Left = Previous PAGE_BREAK . Left;
@@ -3498,6 +3499,7 @@ BOXES
 	Background : White;
 	Foreground : Black;
 	Fillpattern : nopattern;
+	Underline: NoUnderline;
 	Copy (Document_URL);
 	Justify: No;
 	HorizPos: Left = Previous PAGE_BREAK . Left;
@@ -3513,6 +3515,7 @@ BOXES
 	Background : White;
 	Foreground : Black;
 	Fillpattern : nopattern;
+	Underline: NoUnderline;
 	Content: (Value (CptPage, Arabic));
 	VertPos: Top = Next PAGE_BREAK . Top - 0.5 cm;
 	HorizPos: VMiddle = Next PAGE_BREAK . VMiddle;
@@ -3527,6 +3530,7 @@ BOXES
 	Background : White;
 	Foreground : Black;
 	Fillpattern : nopattern;
+	Underline: NoUnderline;
 	Content: (Value (CptLinksPage, lroman));
 	VertPos: Top = Next PAGE_BREAK . Top - 0.5 cm;
 	HorizPos: VMiddle = Next PAGE_BREAK . VMiddle;
@@ -3541,6 +3545,7 @@ BOXES
 	Background : White;
 	Foreground : Black;
 	Fillpattern : nopattern;
+	Underline: NoUnderline;
 	Content: (Value (CptToCPage, Uroman));
 	VertPos: Top = Next PAGE_BREAK . Top - 0.5 cm;
 	HorizPos: VMiddle = Next PAGE_BREAK . VMiddle;
@@ -3554,6 +3559,7 @@ BOXES
 	BEGIN
 	Height: 1.4 cm;
 	Width: 1 pt;
+	Underline: NoUnderline;
 	VertPos: Bottom = Next PAGE_BREAK . Top;
 	HorizPos: Left = Next PAGE_BREAK . Left;
 	Content: (Graphics ' ');
@@ -3577,6 +3583,7 @@ BOXES
 	CreateAfter (URLhead);
 	if NOT One(CptPage) CreateBefore (PageNum);
 	IF Not One(CptPage) CreateBefore (BottomSpace);
+	Underline: NoUnderline;
 	END;
 
   LinksPage:
@@ -3596,6 +3603,7 @@ BOXES
 	CreateAfter (URLhead);
 	if NOT One(CptLinksPage) CreateBefore (LinksPageNum);
 	IF Not One(CptLinksPage) CreateBefore (BottomSpace);
+	Underline: NoUnderline;
 	END;
 
   ToCPage:
@@ -3615,6 +3623,7 @@ BOXES
 	CreateAfter (URLhead);
 	if NOT One(CptToCPage) CreateBefore (ToCPageNum);
 	IF Not One(CptToCPage) CreateBefore (BottomSpace);
+	Underline: NoUnderline;
 	END;
 
   HeadingPageNumber:
@@ -3626,6 +3635,7 @@ BOXES
 	   VertPos: Bottom = Previous . Bottom;
 	   HorizPos: Right = Enclosing . Right;
 	   Content: (Value (PageNumber(Formatted_view), Arabic));
+	   Underline: NoUnderline;
 	   END;
 	END;
 
@@ -3638,6 +3648,7 @@ BOXES
 	   VertPos: Bottom = Creator . Bottom;
 	   HorizPos: Right = Enclosing . Right;
 	   Content: (Value (PageNumber(Formatted_view), Arabic));
+	   Underline: NoUnderline;
 	   END;
 	END;
 #endif
@@ -5206,6 +5217,7 @@ RULES
  PAGE_BREAK:
 	BEGIN
 	HorizOverflow : Yes;
+	Underline: NoUnderline;
 	Visibility: 10;
 	END;
 #endif

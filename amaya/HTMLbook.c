@@ -475,6 +475,7 @@ boolean            deleteTree;
 		   lastInserted, srce, copy, old, parent, sibling;
    ElementType	   elType;
    NotifyElement   event;
+   int		   checkingMode;
 
    firstInserted = NULL;
    /* get the BODY element of source document */
@@ -484,6 +485,9 @@ boolean            deleteTree;
    body = TtaSearchTypedElement (elType, SearchForward, root);
    if (body != NULL)
      {
+     /* don't check the abstract tree against the structure schema */
+     checkingMode = TtaGetStructureChecking (destDoc);
+     TtaSetStructureChecking (0, destDoc);
      /* get elem, the ancestor of *el which is a child of a DIV or BODY
 	element in the destination document. The copied elements will be
 	inserted just before this element. */
@@ -552,6 +556,8 @@ boolean            deleteTree;
 	}
      while (sibling == NULL);
      TtaDeleteTree (elem, destDoc);
+     /* restore previous chacking mode */
+     TtaSetStructureChecking (checkingMode, destDoc);
      /* return the address of the first copied element */
      *el = firstInserted;
      }
@@ -560,7 +566,8 @@ boolean            deleteTree;
 /*----------------------------------------------------------------------
   GetIncludedDocuments
   Look forward, starting from element el, for a link (A) with attribute
-  REL="chapter" and replace that link by the contents of the target document.
+  REL="chapter" or REL="subdocument" and replace that link by the contents
+  of the target document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static Element      GetIncludedDocuments (Element el, Document document)
@@ -581,7 +588,8 @@ Document            document;
    attrType.AttrTypeNum = HTML_ATTR_REL;
    link = el;
    RelAttr = NULL;
-   /* looks for an anchor having an attribute REL="chapter" */
+   /* looks for an anchor having an attribute REL="chapter" or
+      REL="subdocument" */
    while (link != NULL && RelAttr == NULL)
      {
        TtaSearchAttribute (attrType, SearchForward, link, &link, &RelAttr);
@@ -590,7 +598,7 @@ Document            document;
 	   length = TtaGetTextAttributeLength (RelAttr);
 	   text = TtaGetMemory (length + 1);
 	   TtaGiveTextAttributeValue (RelAttr, text, &length);
-	   if (strcasecmp (text, "chapter"))
+	   if (strcasecmp (text, "chapter") && strcasecmp (text, "subdocument"))
 	     RelAttr = NULL;
 	   TtaFreeMemory (text);
 	 }
@@ -636,7 +644,7 @@ Document            document;
 /*----------------------------------------------------------------------
   MakeBook
   Replace all links in a document which have an attribute REL="chapter"
-  by the corresponding target document.
+  or REL="subdocument" by the corresponding target document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                MakeBook (Document document, View view)

@@ -695,8 +695,8 @@ static int          EntityTableEntry = 0;	/* entry of the entity table which */
 
 					/* matches the entity read so far */
 static int          CharRank = 0;	/* rank of the last matching */
-
 					/* character in that entry */
+static char	    prevChar = EOS;
 
 /*----------------------------------------------------------------------
    ParseAreaCoords computes x, y, width and height of the box from
@@ -4142,12 +4142,35 @@ char                GetNextInputChar ()
    char                charRead;
 
    charRead = EOS;
-   if (InputFile != NULL)
-      charRead = getc (InputFile);
+   if (prevChar != EOS)
+      {
+      charRead = prevChar;
+      prevChar = EOS;
+      }
    else
-      charRead = InputText[curChar++];
+      if (InputFile != NULL)
+         charRead = getc (InputFile);
+      else
+         charRead = InputText[curChar++];
    if ((InputFile != NULL && !feof (InputFile) && !ferror (InputFile))
        || (InputText != NULL && charRead != EOS))
+      {
+      if ((int) charRead == 13)
+	 /* CR has been read */
+         {
+	   /* Read next character */
+	   if (InputFile != NULL)
+	      charRead = getc (InputFile);
+	   else
+	      charRead = InputText[curChar++];
+	   if ((int) charRead != 10)
+	      /* next character is not LF. Store next character
+		 and return LF */
+	      {
+	      prevChar = charRead;
+	      charRead = (char) 10;
+	      }
+	 }
       /* update the counters of characters and lines read */
       if ((int) charRead == 10 || (int) charRead == 13)
 	 /* new line in HTML file */
@@ -4157,6 +4180,7 @@ char                GetNextInputChar ()
 	}
       else
 	 numberOfCharRead++;
+      }
    return charRead;
 }
 
