@@ -68,6 +68,7 @@ static int MaxCacheFile;
 /* Proxy menu options */
 #ifdef _WINDOWS
 static HWND ProxyHwnd = NULL;
+boolean ColorMenuConf = FALSE;
 #endif _WINDOWS
 static int ProxyBase;
 static CHAR_T HttpProxy [MAX_LENGTH+1];
@@ -1916,6 +1917,7 @@ LPARAM lParam;
     case WM_INITDIALOG:
       ColorHwnd = hwnDlg;
       WIN_RefreshColorMenu (hwnDlg);
+      ColorMenuConf = TRUE;
       break;
 
     case WM_CLOSE:
@@ -1926,25 +1928,14 @@ LPARAM lParam;
       break;
 
     case WM_COMMAND:
-      if (HIWORD (wParam) == EN_UPDATE)
-	{
-          switch (LOWORD (wParam))
-	    {
-	    case IDC_FGCOLOR:
-	      GetDlgItemText (hwnDlg, IDC_FGCOLOR, FgColor,
-			      sizeof (FgColor) - 1);
-	      break;
-	    case IDC_BGCOLOR:
-	      GetDlgItemText (hwnDlg, IDC_BGCOLOR, BgColor,
-			      sizeof (BgColor) - 1);
-	      break;
-	    }
-	}
-
       switch (LOWORD (wParam))
 	{
 	  
 	  /* action buttons */
+    case IDC_CHANGCOLOR:
+         ThotCreatePalette (200, 200);
+         break;
+
 	case ID_APPLY:
 	  SetColorConf ();	  
 	  /* reset the status flag */
