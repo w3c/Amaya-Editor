@@ -678,14 +678,17 @@ HelpNumbering
 [annot]
 AnnotateSelection
 AnnotateDocument
+ConfigAnnot
+CustomQuery
+DeleteAnnotation
+FilterAnnot
+HelpAnnotation
+LoadAnnotations
 MoveAnnotationSel
 MoveAnnotationXPtr
-LoadAnnotations
-DeleteAnnotation
-CustomQuery
-FilterAnnot
-ConfigAnnot
-HelpAnnotation
+PostAnnotation
+ReplyToAnnotation
+XPointer_bufferStore
 
 [bookmarks]
 HelpBookmarks

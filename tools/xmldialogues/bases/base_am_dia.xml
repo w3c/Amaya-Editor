@@ -2912,7 +2912,7 @@
 </label>
 <label define="BMemorizeXPtr">
 	<message xml:lang="en">Store selection as &amp;XPointer</message>
-	<message xml:lang="fr">Sauver la séléction comme &amp;XPointer</message>
+	<message xml:lang="fr">Sauver la sélection comme &amp;XPointer</message>
 	<message xml:lang="de">Als XPointer speichern</message>
 	<message xml:lang="es">Guardar selección como &amp;XPointer</message>
 	<message xml:lang="it">Salva la selezione come XPointer</message>

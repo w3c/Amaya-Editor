@@ -105,7 +105,7 @@ void TtaShowElementMenu (Document doc, View view)
   PtrSSchema     pSS;
   char           menuBuf[MAX_TXT_LEN];
   int            nbItem, height, firstChar, lastChar;
-  ThotBool       withTextInput;
+  ThotBool       withTextInput = FALSE;
 
   UserErrorCode = 0;
   height = 4;
@@ -116,12 +116,12 @@ void TtaShowElementMenu (Document doc, View view)
     TtaError (ERR_invalid_document_parameter);
   else if (!LoadedDocument[doc - 1]->DocReadOnly)
     {
+      nbItem = 0;
       pDoc = LoadedDocument[doc - 1];
       if (GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar, &lastChar) &&
 	  pSelDoc == pDoc)
 	{
 	  pSS = firstSel->ElStructSchema;
-	  nbItem = 0;
 	  menuBuf[0] = EOS;
 	  withTextInput =  (strcmp (pSS->SsName, "HTML") &&
 			    strcmp (pSS->SsName, "SVG") &&
