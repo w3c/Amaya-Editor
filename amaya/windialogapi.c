@@ -589,10 +589,10 @@ LRESULT CALLBACK MathDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	case IDC_UPDN:
 	  ThotCallback (MathsDialogue + MenuMaths, INTEGER_DATA, (char*)7);
 	  break;
-	case IDC_UP:
+	case IDC_DOWN:
 	  ThotCallback (MathsDialogue + MenuMaths, INTEGER_DATA, (char*)8);
 	  break;
-	case IDC_DOWN:
+	case IDC_UP:
 	  ThotCallback (MathsDialogue + MenuMaths, INTEGER_DATA, (char*)9);
 	  break;
 	case IDC_PAREXP:
