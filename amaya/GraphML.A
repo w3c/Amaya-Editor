@@ -2,6 +2,8 @@ APPLICATION GraphML;
 
 DEFAULT
    BEGIN
+   ElemActivate.Pre -> DoubleClick;
+   ElemClick.Pre -> SimpleClick;
    ElemPaste.Post -> GraphElemPasted;
    PRuleCreate.Pre -> GraphicsPRuleChange;
    PRuleModify.Pre -> GraphicsPRuleChange;

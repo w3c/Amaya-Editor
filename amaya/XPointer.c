@@ -605,6 +605,8 @@ View view;
   char       *lastXpath = NULL;
   ElementType elType;
 
+  CHAR_T     *schemaName;
+
   selMode    mode = 0;
 
   /* @@ debug */
@@ -613,9 +615,12 @@ View view;
   elType.ElSSchema = TtaGetDocumentSSchema (doc);
   /* only do this operation on XML and HTML documents */
   /* @@ JK: should be a function in AHTURLTools */
-  if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML"))
-      && ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("XHTML"))
-      && ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("XML")))
+  schemaName = TtaGetSSchemaName (elType.ElSSchema);
+  if (ustrcmp(schemaName, TEXT("HTML"))
+      && ustrcmp(schemaName, TEXT("XHTML"))
+      && ustrcmp(schemaName, TEXT("XML"))
+      && ustrcmp(schemaName, TEXT("MathML"))
+      && ustrcmp(schemaName, TEXT("GraphML")))
     return NULL;
 
   /* is the document selected? */

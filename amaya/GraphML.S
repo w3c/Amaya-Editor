@@ -214,7 +214,8 @@ STRUCT
               stroke)
 	= BEGIN CASE OF
 	      HTML; MathML;
-	      END; END;
+	      END;
+          END;
 	              
    metadata = TEXT;
 
@@ -225,7 +226,7 @@ STRUCT
 	= CASE OF
 	      GraphML; g; Spline; ClosedSpline; rect; circle; ellipse; line_;
 	      polyline; polygon; text_; image; desc; title;
-	      foreignObject; metadata;
+	      foreignObject; metadata; XLink;
 	      END;
 	
    TextComponent

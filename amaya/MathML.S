@@ -331,6 +331,7 @@ STRUCT
       { sep: provision for content tags }
       SEP = CONSTANT C_Empty;
 
+      XLink;  { Annotations }
       END;	 { End of Construct definition }
 
    TableRow = CASE OF
