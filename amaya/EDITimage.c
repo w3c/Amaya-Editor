@@ -263,7 +263,7 @@ char               *text;
 	     /* set stop button */
 	     ActiveTransfer (doc);
 	     TtaSetAttributeText (attr, pathimage, el, doc);
-	     FetchImage (doc, el);
+	     FetchImage (doc, el, NULL);
 	     ResetStop (doc);
 	  }
      }
@@ -281,7 +281,7 @@ char               *text;
 	     /* set stop button */
 	     ActiveTransfer (doc);
 	     TtaSetAttributeText (attr, pathimage, el, doc);
-	     FetchImage (doc, el);
+	     FetchImage (doc, el, NULL);
 	     ResetStop (doc);
 	  }
      }

@@ -164,26 +164,28 @@ void                DisplayImage (doc, el, imageName)
 Document            doc;
 Element             el;
 char               *imageName;
-
 #endif /* __STDC__ */
 {
-   ElementType         elType;
-   Element             elPicture;
-   int                 modified;
+  ElementType         elType;
+  int                 modified;
 
-   modified = TtaIsDocumentModified (doc);
-   elType = TtaGetElementType (el);
-   elPicture = NULL;
-   if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
-      elPicture = el;
-   if (elPicture != NULL)
-     {
-       TtaSetTextContent (elPicture, imageName, SPACE, doc);
-       UpdateImageMap (elPicture, doc);
-     }
-   /* if the document was not modified before this update reset it unmodified */
-   if (!modified)
-      TtaSetDocumentUnmodified (doc);
+  modified = TtaIsDocumentModified (doc);
+  elType = TtaGetElementType (el);
+  if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+    {
+      /* display the content of a picture element */
+      TtaSetTextContent (el, imageName, SPACE, doc);
+      UpdateImageMap (el, doc);
+    }
+  else
+    {
+      /* create a background image for the element */
+      /* set the value */
+    }
+  
+  /* if the document was not modified before this update reset it unmodified */
+  if (!modified)
+    TtaSetDocumentUnmodified (doc);
 }
 
 #ifdef AMAYA_JAVA
@@ -312,99 +314,115 @@ int                 status;
    FetchImage loads an IMG from local file or from the web.		
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                FetchImage (Document doc, Element el)
+void                FetchImage (Document doc, Element el, char *URL)
 #else  /* __STDC__ */
-void                FetchImage (doc, el)
+void                FetchImage (doc, el, URL)
 Document            doc;
 Element             el;
+char               *URL;
 
 #endif /* __STDC__ */
 {
-   int                 length, i;
-   char               *imageName;
-   AttributeType       attrType;
-   Attribute           attr;
-   LoadedImageDesc    *desc;
-   char                pathname[MAX_LENGTH];
-   char                tempfile[MAX_LENGTH];
-   boolean             update;
-   boolean             newImage;
-   ElemImage          *ctxEl;
+  int                 length, i;
+  char               *imageName;
+  AttributeType       attrType;
+  Attribute           attr;
+  LoadedImageDesc    *desc;
+  char                pathname[MAX_LENGTH];
+  char                tempfile[MAX_LENGTH];
+  boolean             update;
+  boolean             newImage;
+  ElemImage          *ctxEl;
 
-   if (el != NULL && DocumentURLs[doc] != NULL)
-     {
-	/* prepare the attribute to be searched */
-	attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
-	attrType.AttrTypeNum = HTML_ATTR_SRC;
-	attr = TtaGetAttribute (el, attrType);
-	if (attr != NULL)
-	   /* an element with an attribute SRC has been found */
-	  {
-	     /* get the attribute value */
-	     length = TtaGetTextAttributeLength (attr);
-	     if (length > 0)
-	       {
-		  update = TRUE;
+  imageName = NULL;
+  attr = NULL;
+  if (el != NULL && DocumentURLs[doc] != NULL)
+    {
+      if (URL == NULL)
+	{
+	  /* prepare the attribute to be searched */
+	  attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
+	  attrType.AttrTypeNum = HTML_ATTR_SRC;
+	  attr = TtaGetAttribute (el, attrType);
+	  if (attr != NULL)
+	    /* an element with an attribute SRC has been found */
+	    {
+	      /* get the attribute value */
+	      length = TtaGetTextAttributeLength (attr);
+	      if (length > 0)
+		{
 		  /* allocate some memory: length of name + 6 cars for noname */
 		  imageName = TtaGetMemory (length + 7);
 		  TtaGiveTextAttributeValue (attr, imageName, &length);
-		  /* add BASE to image name, if necessary */
-		  NormalizeURL (imageName, doc, pathname, imageName);
-		  /* is the image already loaded ? */
-		  newImage = AddLoadedImage (imageName, pathname, doc, &desc);
-		  if (newImage)
-		    {
-		       /* the current element has to be updated when the image 
-		          will be loaded */
-		       ctxEl = (ElemImage *) TtaGetMemory (sizeof (ElemImage));
-		       desc->elImage = ctxEl;
-		       ctxEl->currentElement = el;
-		       ctxEl->nextElement = NULL;
-		       update = FALSE;	/* the image is not loaded yet */
-		       FilesLoading[doc]++;
+		}
+	    }
+	}
+      else
+	imageName = URL;
+
+      if (imageName)
+	{
+	  update = TRUE;
+	  /* add BASE to image name, if necessary */
+	  NormalizeURL (imageName, doc, pathname, imageName);
+	  /* is the image already loaded ? */
+	  newImage = AddLoadedImage (imageName, pathname, doc, &desc);
+	  if (newImage)
+	    {
+	      /* the current element has to be updated when the image 
+		 will be loaded */
+	      ctxEl = (ElemImage *) TtaGetMemory (sizeof (ElemImage));
+	      desc->elImage = ctxEl;
+	      ctxEl->currentElement = el;
+	      ctxEl->nextElement = NULL;
+	      update = FALSE;	/* the image is not loaded yet */
+	      FilesLoading[doc]++;
 #ifdef AMAYA_JAVA
-		       i = GetObjectWWW (doc, pathname, NULL, tempfile,
-		                         AMAYA_ASYNC, NULL, NULL,
-					 (TTcbf *) JavaImageLoaded,
-					 (void *) desc, NO);
+	      i = GetObjectWWW (doc, pathname, NULL, tempfile,
+				AMAYA_ASYNC, NULL, NULL,
+				(TTcbf *) JavaImageLoaded,
+				(void *) desc, NO);
 #else /* !AMAYA_JAVA */
-		       i = GetObjectWWW (doc, pathname, NULL, tempfile, AMAYA_ASYNC, NULL, NULL, (TTcbf *) ImageLoaded, (void *) desc, NO);
+	      i = GetObjectWWW (doc, pathname, NULL, tempfile, AMAYA_ASYNC, NULL, NULL, (TTcbf *) ImageLoaded, (void *) desc, NO);
 #endif /* !AMAYA_JAVA */
-		       if (i != HT_ERROR) 
-			 desc->status = IMAGE_LOADED;
-		       else {
-			 update = TRUE;
-			 desc->status = IMAGE_NOT_LOADED;
-		       }
-		    }
-		  /* display the image within the document */
-		  if (update)
+	      if (i != HT_ERROR) 
+		desc->status = IMAGE_LOADED;
+	      else
+		{
+		  update = TRUE;
+		  desc->status = IMAGE_NOT_LOADED;
+		}
+	    }
+
+	  /* display the image within the document */
+	  if (update)
+	    {
+	      if (desc == NULL)
+		/* it is a local image */
+		DisplayImage (doc, el, pathname);
+	      else if (TtaFileExist (desc->localName))
+		DisplayImage (doc, el, desc->localName);
+	      else
+		{
+		  /* chain this new element as waiting for this image */
+		  ctxEl = desc->elImage;
+		  if (ctxEl != NULL)
 		    {
-		       if (desc == NULL)
-			  /* it is a local image */
-			  DisplayImage (doc, el, pathname);
-		       else if (TtaFileExist (desc->localName))
-			  DisplayImage (doc, el, desc->localName);
-		       else
-			 {
-			    /* chain this new element as waiting for this image */
-			    ctxEl = desc->elImage;
-			    if (ctxEl != NULL)
-			      {
-				 while (ctxEl->nextElement != NULL)
-				    ctxEl = ctxEl->nextElement;
-				 ctxEl->nextElement = (ElemImage *) TtaGetMemory (sizeof (ElemImage));
-				 ctxEl = ctxEl->nextElement;
-				 ctxEl->currentElement = el;
-				 ctxEl->nextElement = NULL;
-			      }
-			 }
+		      while (ctxEl->nextElement != NULL)
+			ctxEl = ctxEl->nextElement;
+		      ctxEl->nextElement = (ElemImage *) TtaGetMemory (sizeof (ElemImage));
+		      ctxEl = ctxEl->nextElement;
+		      ctxEl->currentElement = el;
+		      ctxEl->nextElement = NULL;
 		    }
-		  TtaFreeMemory (imageName);
-	       }
-	  }
-     }
-   TtaHandlePendingEvents ();
+		}
+	    }
+	}
+
+      if (attr != NULL && imageName)
+	TtaFreeMemory (imageName);
+    }
+  TtaHandlePendingEvents ();
 }
 
 /*----------------------------------------------------------------------
@@ -453,7 +471,7 @@ Document            doc;
 	TtaSearchAttribute (attrType, SearchForward, el, &elFound, &attr);
 	el = elFound;
 	/* FetchImage increments FilesLoading[doc] for each new get request */
-	FetchImage (doc, el);
+	FetchImage (doc, el, NULL);
      }
    while (el != NULL);
 
