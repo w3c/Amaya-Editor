@@ -1498,12 +1498,8 @@ void TteOpenMainWindow (char *name, ThotIcon logo, ThotPixmap icon)
 	  }
 
 	/* Les autres entrees de menus sont inactives */
-	while (i < MAX_MENU)
-	  {
-	     FrameTable[0].EnabledMenus[i] = FALSE;
-	     i++;
-	  }
-     }
+	memset(FrameTable[0].EnabledMenus, 0, sizeof(ThotBool) * MAX_MENU);
+       }
 }
 
 #if defined(_WINGUI) || defined(_GTK)
