@@ -875,7 +875,7 @@ void StopTextureScale ()
 {   
   if (GL_NotInFeedbackMode () && !GL_TransText ())
     {
-      glDeleteTextures (1, (GLuint*)&(FontBind));
+      glDeleteTextures (1, (GLuint*)&(FontBind);
       glDisable (GL_TEXTURE_2D);
     }
 }
@@ -1038,11 +1038,22 @@ int UnicodeFontRender (void *gl_font, wchar_t *text, float x, float y, int size)
 		      Width);
     }
   
+  /* SG: I think there is an optimisation to to here because 
+   * for each characteres a new OpenGL texture is created with GL_TextureInit
+   * (this function is very slow)
+   * What it is possible to do is to save into the glyph cache, each OpenGL textures id
+   * (given by glGenTextures). Then when a charactere wants to be drawn, if there is an OpenGL texture id,
+   * it uses it and map the allready generated texture on a new quad (with GL_TextMap).
+   */
+
+  /* if notinfeedbackmode (we draw draw something) then */
+  /* throw bitmap data to OpenGL */
   if (GL_NotInFeedbackMode ())
     GL_TextureInit (data, Width, Height);
   if (data && bitmap_alloc >= MAX_BITMAP_ALLOC)
     TtaFreeMemory (data);
 
+  /* now map the created texture on a quad */
   y -= SUPERSAMPLING (maxy + miny);
   GL_TextMap ((x - SUPERSAMPLING(shift)), y, width, (int) maxy, Width, Height);
   
