@@ -237,15 +237,15 @@ PtrDocument pDoc;
 
 #endif /* __STDC__ */
 {
-   PtrEditOperation editOp, nextEditOp;
+   PtrEditOperation editOp, previousEditOp;
 
    /* free all editing operations recorded in the Redo queue */
    editOp = pDoc->DocLastUndone;
    while (editOp)
       {
-      nextEditOp = editOp->EoNextOp;
+      previousEditOp = editOp->EoPreviousOp;
       CancelAnEdit (editOp, pDoc, FALSE);
-      editOp = nextEditOp;
+      editOp = previousEditOp;
       }
    /* reiniatilize all variables representing the Redo queue */
    pDoc->DocLastUndone = NULL;
@@ -266,15 +266,15 @@ PtrDocument pDoc;
 
 #endif /* __STDC__ */
 {
-   PtrEditOperation editOp, nextEditOp;
+   PtrEditOperation editOp, previousEditOp;
 
    /* free all editing operations recorded in the Undo queue */
    editOp = pDoc->DocLastEdit;
    while (editOp)
       {
-      nextEditOp = editOp->EoNextOp;
+      previousEditOp = editOp->EoPreviousOp;
       CancelAnEdit (editOp, pDoc, TRUE);
-      editOp = nextEditOp;
+      editOp = previousEditOp;
       }
    /* reiniatilize all variables representing the Undo queue */
    pDoc->DocLastEdit = NULL;
