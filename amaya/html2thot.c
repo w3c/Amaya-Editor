@@ -4005,20 +4005,93 @@ static void         PutQuestionMark (char c)
   ----------------------------------------------------------------------*/
 static void         EndOfDoctypeDecl (char c)
 {
-   int		i;
+  int	          i, j;  
+  Element         docEl, text, doctype, prev, doctypeLine;
+  ElementType     elType;
+  unsigned char  *buffer;
 
    CloseBuffer ();
+   buffer = TtaGetMemory (strlen (inputBuffer) + 1);
+
    /* process the Doctype declaration available in inputBuffer */
-   if (!strcasecmp (inputBuffer, "DOCTYPE"))
-      {
-      for (i = 7; inputBuffer[i] <= SPACE && inputBuffer[i] != EOS; i++);
-      if (!strcasecmp (&inputBuffer[i], "HTML"))
+   if (!strncasecmp (inputBuffer, "DOCTYPE", 7))
+     {
+       for (i = 7; inputBuffer[i] <= SPACE && inputBuffer[i] != EOS; i++);
+       if (!strncasecmp (&inputBuffer[i], "HTML", 4))
 	 /* it's a HTML document */
 	 {
-         /***** TO DO *****/;
+	   docEl = TtaGetMainRoot (HTMLcontext.doc);
+	   elType = TtaGetElementType (docEl);
+	   /* Create a DOCTYPE element */
+	   elType.ElTypeNum = HTML_EL_DOCTYPE;
+	   prev = TtaSearchTypedElement (elType, SearchInTree, docEl);
+	   doctype = TtaNewElement (HTMLcontext.doc, elType);
+	   TtaSetElementLineNumber (doctype, NumberOfLinesRead);
+	   if (prev == NULL)
+	     TtaInsertFirstChild (&doctype, docEl, HTMLcontext.doc);
+	   else
+	      TtaInsertSibling (doctype, prev, FALSE, HTMLcontext.doc);
+	   HTMLcontext.lastElement = doctype;
+	   HTMLcontext.lastElementClosed = TRUE;
+	   /* Create a DOCTYPE_line element as first child */
+	   elType.ElTypeNum = HTML_EL_DOCTYPE_line;
+	   doctypeLine = TtaNewElement (HTMLcontext.doc, elType);
+	   TtaSetElementLineNumber (doctypeLine, NumberOfLinesRead);
+	   TtaInsertFirstChild (&doctypeLine, doctype, HTMLcontext.doc);
+	   /* Look for line breaks in the input buffer  and create */
+	   /* as many DOCTYPE_line elements as needed */
+	   j = 0;
+	   while (inputBuffer[i] != EOS)
+	     {
+	       if (inputBuffer[i] != EOL && inputBuffer[i] != CR)
+		 {
+		   buffer[j] = inputBuffer[i];
+		   j++;
+		 }
+	       else
+		 {
+		   buffer[j] = EOS;
+		   j = 0;
+		   elType.ElTypeNum = 1;
+		   text = TtaNewElement (HTMLcontext.doc, elType);
+		   if (text != NULL)
+		     {
+		       TtaSetElementLineNumber (text, NumberOfLinesRead);
+		       /* get the position of the Doctype text */
+		       TtaInsertFirstChild (&text, doctypeLine, HTMLcontext.doc);
+		       TtaSetTextContent (text, buffer, TtaGetDefaultLanguage (), HTMLcontext.doc);
+		     }
+		   /* Create a new DOCTYPE_line element */
+		   elType.ElTypeNum = HTML_EL_DOCTYPE_line;
+		   prev = doctypeLine;
+		   doctypeLine = TtaNewElement (HTMLcontext.doc, elType);
+		   if (doctypeLine != NULL)
+		     {
+		       TtaSetElementLineNumber (doctypeLine, NumberOfLinesRead);
+		       TtaInsertSibling (doctypeLine, prev, FALSE, HTMLcontext.doc);
+		     }		   
+		 }
+	       i++;
+	     }
+	   
+	   if (j > 0)
+	     {
+	       buffer [j] = EOS;
+	       elType.ElTypeNum = 1;
+	       text = TtaNewElement (HTMLcontext.doc, elType);
+	       if (text != NULL)
+		 {
+		   TtaSetElementLineNumber (text, NumberOfLinesRead);
+		   /* get the position of the Doctype text */
+		   TtaInsertFirstChild (&text, doctypeLine, HTMLcontext.doc);
+		   TtaSetTextContent (text, buffer, TtaGetDefaultLanguage (), HTMLcontext.doc);
+		 }
+	     }
 	 }
-      }
+     }
+   
    InitBuffer ();
+   TtaFreeMemory (buffer);
 }
 
 
@@ -4027,6 +4100,7 @@ static void         EndOfDoctypeDecl (char c)
   ----------------------------------------------------------------------*/
 static void         EndOfPI (char c)
 {
+
    CloseBuffer ();
    /* process the Processing Instruction available in inputBuffer */
    /* printf ("PI: %s\n", inputBuffer); */
@@ -4620,7 +4694,8 @@ static void HTMLparse (FILE * infile, char* HTMLbuf)
 	     if ((int) charRead == EOL)
 		/* LF = end of input line */
 	       {
-		if (currentState != 12)
+		 /* don't replace end of line by space in a doctype declaration */
+		if (currentState != 12 && currentState != 15)
 		  {
 		    /* don't change characters in comments */
 		    if (currentState != 0)

@@ -2898,7 +2898,7 @@ static void       ParseDoctypeElement (char *data, int length)
   while (i < length)
     {
       /* Look for line breaks in the content and create as many */
-      /* TEXT elements as needed */
+      /* DOCTYPE_line elements as needed */
       if (data[i] != EOL && data[i] != __CR__)
 	{
 	  buffer[j] = data[i];
