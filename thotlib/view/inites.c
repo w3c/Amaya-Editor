@@ -1,18 +1,7 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
-/*=======================================================================*/
-/*|                                                                     | */
-/*|                            Projet THOT                              | */
-/*|                                                                     | */
-/*|     Module d'initialisation des e/s X-Window.                       | */
-/*|                                                                     | */
-/*|                                                                     | */
-/*|                     I. Vatton       Fevrier 92                      | */
-/*|                                                                     | */
-/*|     France Logiciel numero de depot 88-39-001-00                    | */
-/*|                                                                     | */
-/*=======================================================================*/
+/*
+ * inites.c : module handling colors and patterns in the context of
+ *	      drawing on a computer screen (initpses is for Postcript).
+ */
 
 #include "thot_sys.h"
 #include "constmedia.h"
@@ -22,13 +11,12 @@
 #include "message.h"
 #include "pattern.h"
 
-/* Declarations des variables */
-/* -------------------------- */
 #undef EXPORT
 #define EXPORT extern
 #include "frame_tv.h"
 #include "thotcolor_tv.h"
 
+#include "registry_f.h"
 #include "context_f.h"
 
 #ifdef NEW_WILLOWS
@@ -39,19 +27,11 @@ static ThotColorStruct def_colrs[256];
 static int          allocation_index[256];
 static int          have_colors = 0;
 
-#ifdef __STDC__
-extern char        *TtaGetEnvString (char *);
-
-#else  /* __STDC__ */
-extern char        *TtaGetEnvString ();
-
-#endif /* __STDC__ */
-
 #ifndef NEW_WILLOWS
-/* ---------------------------------------------------------------------- */
-/* | FindOutColor finds the closest color by allocating it, or picking  | */
-/* |            an already allocated color.                             | */
-/* ---------------------------------------------------------------------- */
+/** ----------------------------------------------------------------------
+ *   FindOutColor finds the closest color by allocating it, or picking
+ *              an already allocated color.
+ *  ---------------------------------------------------------------------- **/
 #ifdef __STDC__
 void                FindOutColor (Display * dsp, Colormap colormap, ThotColorStruct * colr)
 #else  /* __STDC__ */
@@ -66,11 +46,10 @@ ThotColorStruct    *colr;
 
 #ifdef MORE_ACCURATE
    double              rd, gd, bd, dist, mindist;
-
 #else
    int                 rd, gd, bd, dist, mindist;
-
 #endif /* MORE_ACCURATE */
+
    int                 cindx;
    int                 NumCells;
 
@@ -143,12 +122,12 @@ ThotColorStruct    *colr;
 }
 #endif /* !NEW_WILLOWS */
 
-/* ---------------------------------------------------------------------- */
-/* |    ColorRGB        retourne les trois composantes rouge-vert-bleu  | */
-/* |            de la couleur de numero num.                            | */
-/* |            Si la couleur n'existe pas le proce'dure rend les       | */
-/* |            trois composantes de la couleur par de'faut.            | */
-/* ---------------------------------------------------------------------- */
+/** ----------------------------------------------------------------------
+ *      ColorRGB        returns the Red Green and Blue values corresponding
+ *		to color number num.
+ *		If the color doesn't exist the function returns the values
+ *		for the default color.
+ *  ---------------------------------------------------------------------- **/
 #ifdef __STDC__
 void                ColorRGB (int num, unsigned short *red, unsigned short *green, unsigned short *blue)
 #else  /* __STDC__ */
@@ -174,10 +153,9 @@ unsigned short     *blue;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    InstallColor essaie d'installer une couleur dans la colormap    | */
-/* |    publique.                                                       | */
-/* ---------------------------------------------------------------------- */
+/** ----------------------------------------------------------------------
+ *      InstallColor try to install a color in the public colormap.
+ *  ---------------------------------------------------------------------- **/
 #ifdef __STDC__
 static void         InstallColor (int i)
 #else  /* __STDC__ */
@@ -195,7 +173,7 @@ int                 i;
 #else  /* NEW_WILLOWS */
    if (Color_Table[i] != NULL)
      {
-	/* Chargement de la couleur */
+	/* load the color */
 	col.red = RGB_Table[i].red * 256;
 	col.green = RGB_Table[i].green * 256;
 	col.blue = RGB_Table[i].blue * 256;
@@ -207,13 +185,15 @@ int                 i;
 #endif /* NEW_WILLOWS */
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ApproximateColors : appelee en cas de manque de d'entree libres | */
-/* |    dans le colormap, elle ajuste les couleurs non allouees en      | */
-/* |    fonction des existantes pour minimiser la difference.           | */
-/* |    l'algorithme est base sur l'ordre des couleurs dans la base     | */
-/* |    et est bien moins couteux qu'un algo optimal (closest in cube)  | */
-/* ---------------------------------------------------------------------- */
+/** ----------------------------------------------------------------------
+ *      ApproximateColors : this function is called when there is no
+ *	more free slot in the colormap. It adjusts the colors allocated
+ *	upon startup depending on the existing colormap to minimize
+ *	the distances between the requested one and existing one.
+ *	The algorithm is based on the order of the corlor in Thot
+ *	color base and should be far less expensive than an optimal
+ *	(e.g. closest in cube) algorithm.
+ *  ---------------------------------------------------------------------- **/
 static void         ApproximateColors ()
 {
    unsigned long       white = Pix_Color[0];
@@ -244,11 +224,11 @@ static void         ApproximateColors ()
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    InitDocColors initialise les couleurs des documents.            | */
-/* |    La proce'dure lit le fichier des couleurs et cre'e la table     | */
-/* |    des couleurs.                                                   | */
-/* ---------------------------------------------------------------------- */
+/** ----------------------------------------------------------------------
+ *      InitDocColors initialize the Thot internal color table.
+ *		If ReduceColor environment setting is set, less color
+ *		are allocated.
+ *  ---------------------------------------------------------------------- **/
 #ifdef __STDC__
 void                InitDocColors (char *name)
 #else  /* __STDC__ */
@@ -262,11 +242,6 @@ char               *name;
    boolean             reducecolor;
    boolean             colormap_full;
 
-#ifdef NEW_WILLOWS
-   /* value = GetPrivateProfileString("Thot Library", "ReduceColor", ,,
-      "THOT.INI"); */
-#endif
-
    /* clean up everything with white */
    for (i = 2; i < NColors; i++)
       Pix_Color[i] = Pix_Color[0];
@@ -279,6 +254,7 @@ char               *name;
       reducecolor = TRUE;
    else
       reducecolor = FALSE;
+
    /* set up black and white Pixels */
 #ifdef NEW_WILLOWS
    WIN_Pix_Color[0] = PALETTERGB (255, 255, 255);
@@ -291,6 +267,7 @@ char               *name;
    /* setup greyscale colors */
    for (i = 2; i < 8; i++)
       InstallColor (i);
+
    /* install the first row of primary colors */
    i = 4;
    for (i += 8; i < NColors; i += 8)
@@ -346,18 +323,18 @@ char               *name;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    NumberOfColors  retourne le nombre de couleurs connues.         | */
-/* ---------------------------------------------------------------------- */
+/** ----------------------------------------------------------------------
+ *      NumberOfColors  returns the number of colors in Thot color table.
+ *  ---------------------------------------------------------------------- **/
 int                 NumberOfColors ()
 {
    return NColors;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ColorName       retourne le nom de la couleur de numero num.    | */
-/* ---------------------------------------------------------------------- */
+/** ----------------------------------------------------------------------
+ *      ColorName       returns the name of a color in Thot color table.
+ *  ---------------------------------------------------------------------- **/
 #ifdef __STDC__
 char               *ColorName (int num)
 #else  /* __STDC__ */
@@ -373,9 +350,9 @@ int                 num;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ColorPixel      retourne la valeur de la couleur de numero num. | */
-/* ---------------------------------------------------------------------- */
+/** ----------------------------------------------------------------------
+ *      ColorPixel      returns the value of a color in Thot color table.
+ *  ---------------------------------------------------------------------- **/
 #ifdef __STDC__
 unsigned long       ColorPixel (int num)
 #else  /* __STDC__ */
@@ -391,10 +368,10 @@ int                 num;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ColorNumber     retourne le numero de la couleur de nom name    | */
-/* |            ou -1 si le nom est incorrect.                          | */
-/* ---------------------------------------------------------------------- */
+/** ----------------------------------------------------------------------
+ *      ColorNumber     lookup in Thot color table for an entry given it's
+ *		name. Returns the index or -1 if not found.
+ *  ---------------------------------------------------------------------- **/
 #ifdef __STDC__
 int                 ColorNumber (char *name)
 #else  /* __STDC__ */
@@ -404,37 +381,37 @@ char               *name;
 #endif /* __STDC__ */
 {
    int                 i;
-   boolean             trouve;
+   boolean             found;
 
-   trouve = FALSE;
+   found = FALSE;
    i = 0;
    if (Color_Table[i] == NULL)
-      return -1;		/* la talbe est vide */
+      return -1;		/* the table is empty */
    do
       if (strcmp (Color_Table[i], name) == 0)
-	 trouve = TRUE;
+	 found = TRUE;
       else
 	 i++;
-   while (!trouve && i < NColors);
-   if (trouve)
+   while (!found && i < NColors);
+   if (found)
       return i;
    else
       return -1;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    NumberOfPatterns        retourne le nombre de patterns connues. | */
-/* ---------------------------------------------------------------------- */
+/** ----------------------------------------------------------------------
+ *      NumberOfPatterns        returns the number of pattern available.
+ *  ---------------------------------------------------------------------- **/
 int                 NumberOfPatterns ()
 {
    return NbPatterns;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    PatternName     retourne le nom du pattern de numero num.       | */
-/* ---------------------------------------------------------------------- */
+/** ----------------------------------------------------------------------
+ *      PatternName     returns the name of a pattern available.
+ *  ---------------------------------------------------------------------- **/
 #ifdef __STDC__
 char               *PatternName (int num)
 #else  /* __STDC__ */
@@ -450,10 +427,10 @@ int                 num;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    PatternNumber   retourne le numero de pattern de nom name       | */
-/* |            ou -1 si le nom est incorrect.                          | */
-/* ---------------------------------------------------------------------- */
+/** ----------------------------------------------------------------------
+ *      PatternNumber   lookup fo a pattern given it's name. Returns the
+ *		index or -1 if not found.
+ *  ---------------------------------------------------------------------- **/
 #ifdef __STDC__
 int                 PatternNumber (char *name)
 #else  /* __STDC__ */
@@ -464,31 +441,30 @@ char               *name;
 {
    int                 i;
    int                 max;
-   boolean             trouve;
+   boolean             found;
 
-   trouve = FALSE;
+   found = FALSE;
    i = 0;
    max = NumberOfPatterns ();
    do
       if (strcmp (Patterns[i], name) == 0)
-	 trouve = TRUE;
+	 found = TRUE;
       else
 	 i++;
-   while (!trouve && i < max);
-   if (trouve)
+   while (!found && i < max);
+   if (found)
       return i;
    else
       return -1;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    CreatePattern charge et retourne une pixmap du motif donne'     | */
-/* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
-/* |            active (1) ou non (0).                                  | */
-/* |            Les parame`tres fg, bg, motif indiquent la couleur du   | */
-/* |            trace', la couleur du fond et le motif.                 | */
-/* ---------------------------------------------------------------------- */
+/** ----------------------------------------------------------------------
+ *      CreatePattern loads and return a pixmap pattern.
+ *              active parameter indicate if the box is active.
+ *              parameters fg, bg, and motif indicate respectively
+ *              the drawing color, background color and the pattern.
+ *  ---------------------------------------------------------------------- **/
 #ifdef __STDC__
 unsigned long       CreatePattern (int disp, int RO, int active, int fg, int bg, int motif)
 #else  /* __STDC__ */
@@ -516,7 +492,7 @@ int                 motif;
 #ifdef bug649
    if (TtWDepth == 1)
      {
-	/* Ecran Noir et Blanc */
+	/* Black and White display */
 	FgPixel = ColorPixel (ColorNumber ("Black"));
 	BgPixel = ColorPixel (ColorNumber ("White"));
      }
@@ -524,13 +500,13 @@ int                 motif;
 #endif
    if (active && ShowReference ())
      {
-	/* Couleur des boites actives */
+	/* Color for active boxes */
 	FgPixel = Box_Color;
 	BgPixel = ColorPixel (bg);
      }
    else if (RO && ShowReadOnly ())
      {
-	/* Couleur du read Only */
+	/* Color for read only boxes */
 	FgPixel = RO_Color;
 	BgPixel = ColorPixel (bg);
      }
@@ -886,4 +862,3 @@ int                 motif;
 #endif
    return ((unsigned long) trame);
 }
-/*fin */
