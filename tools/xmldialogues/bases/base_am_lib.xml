@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Wed Nov 12 14:43:13 CET 2003" version="32">
+<base last_update="Thu Mar  4 17:39:45 CET 2004" version="33">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -97,7 +97,7 @@
 	<message xml:lang="de">Ansicht wird vor der Erzeugung modifiziert</message>
 	<message xml:lang="it">Vista modificata prima della creazione</message>
 	<message xml:lang="tr">Görünüm dosya yaratmadan önce değiştirildi</message>
-	<message xml:lang="es">La vista está modificada entes de la creación</message>
+	<message xml:lang="es">La vista se modifica antes de la creación</message>
 	<message xml:lang="pt">A vista está modificada antes de ser criada</message>
 	<message xml:lang="fi">Näkymää muutettu ennen luontia</message>
 </label>
@@ -137,7 +137,7 @@
 	<message xml:lang="de">Dokument %s wird gedruckt</message>
 	<message xml:lang="it">Il documento %s è stato stampato</message>
 	<message xml:lang="tr">%s belgesi yazdırıldı</message>
-	<message xml:lang="es">Documento %s imprimido</message>
+	<message xml:lang="es">Documento %s impreso</message>
 	<message xml:lang="pt">O documento %s impresso</message>
 	<message xml:lang="fi">Dokumentti %s tulostettu</message>
 </label>
@@ -307,7 +307,7 @@
 	<message xml:lang="de">Schrift</message>
 	<message xml:lang="it">Caratteri</message>
 	<message xml:lang="tr">Karakterler</message>
-	<message xml:lang="es">Caracteres</message>
+	<message xml:lang="es">Carácter</message>
 	<message xml:lang="pt">Caracteres</message>
 	<message xml:lang="fi">Merkit</message>
 </label>
@@ -317,7 +317,7 @@
 	<message xml:lang="de">Darstellung</message>
 	<message xml:lang="it">Sottolineatura</message>
 	<message xml:lang="tr">Altçizgi</message>
-	<message xml:lang="es">Subrayado</message>
+	<message xml:lang="es">Decoración</message>
 	<message xml:lang="pt">Sublinhado</message>
 	<message xml:lang="fi">Alleviivaa</message>
 </label>
@@ -337,7 +337,7 @@
 	<message xml:lang="de">Ausrichtung</message>
 	<message xml:lang="it">Formattazione</message>
 	<message xml:lang="tr">Biçim</message>
-	<message xml:lang="es">Formato</message>
+	<message xml:lang="es">Párrafo</message>
 	<message xml:lang="pt">Formato</message>
 	<message xml:lang="fi">Muotoilu</message>
 </label>
@@ -377,7 +377,7 @@
 	<message xml:lang="de">Drucken</message>
 	<message xml:lang="it">Stampa</message>
 	<message xml:lang="tr">Yazdır</message>
-	<message xml:lang="es">Imprimir</message>
+	<message xml:lang="es">Configurar e imprimir</message>
 	<message xml:lang="pt">Imprimir</message>
 	<message xml:lang="fi">Tulostus</message>
 </label>
@@ -477,7 +477,7 @@
 	<message xml:lang="de">Maustaste 2 oder 3 setzt die Hintergrundfarbe</message>
 	<message xml:lang="it">Il pulsante centrale e quello destro cambiano il colore dello sfondo</message>
 	<message xml:lang="tr">Orta veya sağ tuş arkaplan rengini ayarlar</message>
-	<message xml:lang="es">El botón derecho o central fija el color del fondo</message>
+	<message xml:lang="es">El botón derecho o el central fijan el color del fondo</message>
 	<message xml:lang="pt">O botão do meio ou da direita fixa a cor de fundo</message>
 	<message xml:lang="fi">Keskimmäinen tai oikea näppäin asettaa taustavärin</message>
 </label>
@@ -487,7 +487,7 @@
 	<message xml:lang="de">Familie</message>
 	<message xml:lang="it">Famiglia</message>
 	<message xml:lang="tr">Yazıtipi ailesi</message>
-	<message xml:lang="es">Familia de fuentes</message>
+	<message xml:lang="es">Familia de fuente</message>
 	<message xml:lang="pt">Família de tipos (fonts)</message>
 	<message xml:lang="fi">Fonttiperhe</message>
 </label>
@@ -547,7 +547,7 @@
 	<message xml:lang="de">Stärke</message>
 	<message xml:lang="it">Grassetto</message>
 	<message xml:lang="tr">Kalın</message>
-	<message xml:lang="es">Negrita</message>
+	<message xml:lang="es">Grosor</message>
 	<message xml:lang="pt">Negritude (boldness)</message>
 	<message xml:lang="fi">Lihavointi</message>
 </label>
@@ -757,7 +757,7 @@
 	<message xml:lang="de">Bestätigen</message>
 	<message xml:lang="it">Rimpiazza su richiesta</message>
 	<message xml:lang="tr">İstek üzerine değiştir</message>
-	<message xml:lang="es">Reemplazar a solicitud</message>
+	<message xml:lang="es">Solicitar confirmación</message>
 	<message xml:lang="pt">Substituir sob demanda</message>
 	<message xml:lang="fi">Korvaa pyynnöstä</message>
 </label>
@@ -777,7 +777,7 @@
 	<message xml:lang="de">Suchraum</message>
 	<message xml:lang="it">Dove cercare</message>
 	<message xml:lang="tr">Arama nerede</message>
-	<message xml:lang="es">Dónde buscar...</message>
+	<message xml:lang="es">Dónde buscar</message>
 	<message xml:lang="pt">Onde buscar</message>
 	<message xml:lang="fi">Etsi missä</message>
 </label>
@@ -1366,7 +1366,7 @@
 	<message xml:lang="fr">Bouton gauche change la couleur de sélection</message>
 	<message xml:lang="de">Linke Maustaste: Farbe für markierten Text</message>
 	<message xml:lang="it">Il tasto di sinistra setta il colore della selezione</message>
-	<message xml:lang="es">El botón izquierdo fija el color de la selección</message>
+	<message xml:lang="es">El botón izquierdo fija el color de texto de la selección</message>
 	<message xml:lang="pt">Botão esquerdo fixa a cor da seleção</message>
 	<message xml:lang="fi">Hiiren vasen näppäin asettaa valintavärin</message>
 	<message xml:lang="tr">Sol düğme seçilin rengini değiştiriyor</message>
@@ -1376,7 +1376,7 @@
 	<message xml:lang="fr">Bouton milieu ou droit change la couleur du curseur</message>
 	<message xml:lang="de">Mittlere oder rechte Maustaste: Cursorfarbe</message>
 	<message xml:lang="it">l tasto centrale o di destra setta il colore del cursore</message>
-	<message xml:lang="es">El botón central o derecho fija el color del cursor de texto</message>
+	<message xml:lang="es">El botón central o derecho fija el color de fondo de la selección</message>
 	<message xml:lang="pt">Botão do meio ou da direita fixa a cor do cursor</message>
 	<message xml:lang="fi">Hiiren keskimmäinen tai oikea näppäin asettaa caret värin</message>
 	<message xml:lang="tr">Orta ve sağ düğme kürsör\'ün rengini değiştiriyor</message>

@@ -7,11 +7,11 @@
 5 Error Fatal: Fuentes no encontradas
 6 Memoria agotada
 7 Error Fatal: No puedo conectar a X
-8 La vista está modificada entes de la creación
+8 La vista se modifica antes de la creación
 9 Tabla de reglas completa
 10 Archivo incorrecto: %s.STR
 11 Archivo incorrecto: %s.PRS
-12 Documento %s imprimido
+12 Documento %s impreso
 13 Disposición
 14 1 página/hoja
 15 2 páginas/hoja
@@ -28,14 +28,14 @@
 26 Atributos
 27 Presentación estándar
 28 Aplicar
-29 Caracteres
-30 Subrayado
+29 Carácter
+30 Decoración
 31 Gráficos
-32 Formato
+32 Párrafo
 33 Por omisión
 34 Alineación
 35 Sangría
-36 Imprimir
+36 Configurar e imprimir
 37 Alimentación manual
 38 Opciones
 39 A4
@@ -45,14 +45,14 @@
 43 Directorios
 44 El documento %s ya existe. ¿Quiere sobreescribirlo?
 45 El botón izquierdo fija el color del texto
-46 El botón derecho o central fija el color del fondo
-47 Familia de fuentes
+46 El botón derecho o el central fijan el color del fondo
+47 Familia de fuente
 48 Normal
 49 Negrita
 50 Cursiva
 51 Oblicua
 52 Normal
-53 Negrita
+53 Grosor
 54 Normal
 55 Subrayado
 56 Tachado
@@ -73,9 +73,9 @@
 71 Reemplazar por:
 72 Reemplazar
 73 No reemplazar
-74 Reemplazar a solicitud
+74 Solicitar confirmación
 75 Reemplazar automáticamente
-76 Dónde buscar...
+76 Dónde buscar
 77 Antes de la selección
 78 En la selección
 79 Tras la selección
@@ -134,8 +134,8 @@
 132 Formato de documento
 133 Eventos
 134 Eliminar atributo
-135 El botón izquierdo fija el color de la selección
-136 El botón central o derecho fija el color del cursor de texto
+135 El botón izquierdo fija el color de texto de la selección
+136 El botón central o derecho fija el color de fondo de la selección
 137 Más ...
 138 Obtener
 139 Color

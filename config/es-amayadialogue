@@ -35,37 +35,37 @@
 33 Sincroni&zar
 34 Ca&mbiar doctype
 35 &Borrar doctype
-36 **&Add a doctype
-37 Cambiar doctype a &XHTML 1.1
+36 &Añadir doctype
+37 Cambiar a &XHTML 1.1
 38 Cambiar/Crear doctype XHTML 1.0 Transicional
-39 Cambiar doctype a XHTML 1.0 &Strict
-40 Cambiar doctype a XHTML 1.0 &Basic
+39 Cambiar a XHTML 1.0 &Strict
+40 Cambiar a XHTML 1.0 &Basic
 41 Cambiar doctype a HTML 4.01 Transicional
-42 Cambiar doctype a HTML 4.01 Str&ict
-43 **Force a Character Coding
+42 Cambiar a HTML 4.01 Str&ict
+43 &Forzar codificación de caracteres
 44 Unicode (UTF-8)
-45 Western (ISO-8859-1)
-46 Western (ISO-8859-15)
-47 Western (Windows-1252)
-48 Central Europe (ISO-8859-2)
-49 Central Europe (Windows-1250)
-50 South Europe (ISO-8859-3)
-51 Baltic (ISO-8859-4)
-52 Baltic (Windows-1257)
-53 Cyrillic (ISO-8859-5)
-54 Cyrillic (Windows-1251)
-55 Cyrillic (KOI8-R)
-56 Arabic (ISO-8859-6)
-57 Arabic (Windows-1256)
-58 Greek (ISO-8859-7)
-59 Greek (Windows-1253)
-60 Hebrew (ISO-8859-8)
-61 Hebrew (Windows-1255)
-62 Turkish (ISO-8859-9)
-63 Turkish (Windows-125)
-64 Japanese (ISO-2022-JP)
-65 Japanese (EUC-JP)
-66 Japanese (Shift-JIS)
+45 Occidental (ISO-8859-1)
+46 Occidental (ISO-8859-15)
+47 Occidental (Windows-1252)
+48 Europa central (ISO-8859-2)
+49 Europa Central (Windows-1250)
+50 Europa del Sur (ISO-8859-3)
+51 Báltico (ISO-8859-4)
+52 Báltico (Windows-1257)
+53 Cirílico (ISO-8859-5)
+54 Cirílico (Windows-1251)
+55 Cirílico (KOI8-R)
+56 Árabe (ISO-8859-6)
+57 Árabe (Windows-1256)
+58 Griego (ISO-8859-7)
+59 Griego (Windows-1253)
+60 Hebreo (ISO-8859-8)
+61 Hebreo (Windows-1255)
+62 Turco (ISO-8859-9)
+63 Turco (Windows-125)
+64 Japonés (ISO-2022-JP)
+65 Japonés (EUC-JP)
+66 Japonés (Shift-JIS)
 67 &Propiedades
 68 &Configurar e imprimir...
 69 &Imprimir
@@ -126,28 +126,28 @@
 124 thead
 125 tbody
 126 tfoot
-127 **Change to Data cell (td)
-128 **Change to Heading cell (th)
-129 **Join with the cell at the right
-130 **Join with the cell below
-131 **Shrink horizontal extend
-132 **Shrink vertical extend
-133 **Select the row
-134 **Insert a row before
-135 **Insert a row after
-136 **Select the column
-137 **Insert a column before
-138 **Insert a column after
-139 **Paste before
-140 **Paste after
-141 **Map area
-142 **Insert a map
+127 Cambiar a celda de datos (td)
+128 Cambiar a celda de cabecera (th)
+129 Unir con celda derecha
+130 Unir con celda inferior
+131 Reducir extensión horizontal
+132 Reducir extensión horizontal
+133 Seleccionar fila
+134 Insertar fila delante
+135 Insertar fila detrás
+136 Seleccionar columna
+137 Insertar columna delante
+138 Insertar columna detrás
+139 Pegar delante
+140 Pegar detrás
+141 Área de mapa
+142 Insertar mapa
 143 Círculo (area)
 144 Polígono (area)
 145 Rectángulo (area)
 146 Es&tructura
 147 Estilo (style)
-148 Comentario
+148 C&omentario
 149 base
 150 meta
 151 Enlace (link)
@@ -186,8 +186,8 @@
 184 Superíndice (sup)
 185 Remarcado (Quotation q)
 186 BiDi override (bdo)
-187 Nueva fórmula (math)
-188 **Basic &Elements
+187 &Nueva fórmula (math)
+188 &Elementos básicos
 189 Texto simple (mtext)
 190 Identificador (mi)
 191 Número (mn)
@@ -196,7 +196,7 @@
 194 Carácter (&xxx;)
 195 InvisibleTimes
 196 ApplyFunction
-197 **&Constructions
+197 &Construcciones
 198 Raíz (mroot)
 199 Raíz cuadrada (msqrt)
 200 Enclose (menclose)
@@ -211,26 +211,26 @@
 209 Multiscripts (mmultiscripts)
 210 **&Matrices
 211 Matriz (mtable)
-212 **Join with the cell at the right
-213 **Join with the cell below
-214 **Shrink horizontal extend
-215 **Shrink vertical extend
-216 **Select the row
-217 **Insert a row before
-218 **Insert a row after
-219 **Select the column
-220 **Insert a column before
-221 **Insert a column after
-222 **Paste before
-223 **Paste after
+212 Unir con celda derecha
+213 Unir con celda inferior
+214 Reducir extensión horizontal
+215 Reducir extensión horizontal
+216 Seleccionar fila
+217 Insertar fila delante
+218 Insertar fila detrás
+219 Seleccionar columna
+220 Insertar columna delante
+221 Insertar columna detrás
+222 Pegar delante
+223 Pegar detrás
 224 &Ver Biblioteca SVG
 225 &Añadir la selección a la Biblioteca SVG
 226 Comentario
 227 Elementos XML...
-228 Enlazar el destino &previo
+228 Enlazar último destino &creado
 229 Crear o cambiar &enlace...
-230 Crear &destino
-231 &Borrar ancla
+230 Crear &destino (a / id)
+231 &Borrar ancla (a)
 232 &Crear/Borrar atributos id...
 233 &Barra de botones
 234 D&irección
@@ -252,9 +252,9 @@
 250 A&plicar clase...
 251 &Mostrar estilo aplicado...
 252 &Enlazar hoja de estilo...
-253 &Abrir hoja de estilo...
-254 &Desactivar hoja de estilo...
-255 Acti&var hoja de estilo...
+253 &Abrir hoja de estilo enlazada...
+254 &Desactivar hoja de estilo enlazada...
+255 Acti&var hoja de estilo enlazada...
 256 &Borrar enlace a hoja de estilo...
 257 &Numeración de sección
 258 &Hacer libro

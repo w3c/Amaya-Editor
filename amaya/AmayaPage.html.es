@@ -177,14 +177,11 @@ Markup Language = Lenguage Matemático de Marcas), <acronym>SVG</acronym>
 y <acronym title="HyperText Transfer Protocol">HTTP</acronym> (HyperText
 Transfer Protocol = Protocolo de Transferencia de HiperTexto).</p>
 
-<h3>Novedades</h3>
-
 <p>Las versiones OpenGL permiten incluir transformaciones, transparencia y
 animaciones SMIL en los elementos SVG. Puesto que Amaya admite documentos
 compuestos, estas nuevas propiedades se aplican también a los elementos XHTML
 y MathML incluidos. Puedes ver <a href="Amaya.svg">una demostración de una
-animación</a> descargando una versión OpenGL de Amaya. Esta versión admite
-también la propiedad CSS float.</p>
+animación</a> descargando una versión OpenGL de Amaya.</p>
 </div>
 
 <div>
@@ -205,10 +202,11 @@ Extensible de Marcas) te permite mostrar el contenido de cualquier documento
 <acronym>CSS</acronym>.</p>
 
 <p>La navegación y la edición están integradas en Amaya. Puedes navegar y
-editar páginas web al mismo tiempo. Para editar un documento, haz clic en
-cualquier lugar y ya puedes escribir; para navegar debes hacer doble clic
-sobre los enlaces. Puedes modificar este comportamiento, así que como muchas
-otras características, mediante el menú Especial / Preferencias.</p>
+editar páginas web al mismo tiempo. Para facilitar la edición, al hacer clic
+en cualquier lugar del documento el cursor se desplaza a la posición señalada
+y te permite editar el documento; para navegar debes hacer doble clic sobre
+los enlaces. Puedes modificar este comportamiento, así que como muchas otras
+características, mediante el menú Especial / Preferencias.</p>
 
 <p>Amaya incluye una herramienta de colaboración para <a
 href="../doc/html/Annotations.html.es"><img src="annot.gif"
@@ -245,3 +243,4 @@ realices.</p>
 </div>
 </body>
 </html>
+

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Tue Feb 24 09:07:54 CET 2004" version="66">
+<base last_update="Thu Mar  4 17:38:16 CET 2004" version="67">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -324,6 +324,7 @@
 	<message xml:lang="fr">Document modifié - Voulez-vous le sauver ?</message>
 	<message xml:lang="it">Documento modificato - salvare?</message>
 	<message xml:lang="de">Möchten Sie die Änderungen speichern?</message>
+	<message xml:lang="es">Documento modificado. ¿Quiere guardarlo?</message>
 </label>
 <label define="AM_RED_FETCHING">
 	<message xml:lang="en">Redirection fetching of %s</message>
@@ -868,7 +869,7 @@
 	<message xml:lang="fr">Ouvrir CSS</message>
 	<message xml:lang="it">Apri CSS</message>
 	<message xml:lang="de">Öffnen CSS</message>
-	<message xml:lang="es">Abrir hoja de estilo</message>
+	<message xml:lang="es">Abrir hoja de estilo enlazada</message>
 	<message xml:lang="pt">Abrir CSS</message>
 	<message xml:lang="fi">Avaa CSS</message>
 	<message xml:lang="tr">Aç CSS</message>
@@ -878,7 +879,7 @@
 	<message xml:lang="fr">Désactiver CSS</message>
 	<message xml:lang="it">Disabilita CSS</message>
 	<message xml:lang="de">Deaktivieren CSS</message>
-	<message xml:lang="es">Desactivar hoja de estilo</message>
+	<message xml:lang="es">Desactivar hoja de estilo enlazada</message>
 	<message xml:lang="pt">Desabilitar CSS</message>
 	<message xml:lang="fi">Poista käytöstä CSS</message>
 	<message xml:lang="tr">Olumsuzla CSS</message>
@@ -888,7 +889,7 @@
 	<message xml:lang="fr">Réactiver CSS</message>
 	<message xml:lang="it">Abilita CSS</message>
 	<message xml:lang="de">Aktivieren CSS</message>
-	<message xml:lang="es">Activar hoja de estilo</message>
+	<message xml:lang="es">Activar hoja de estilo enlazada</message>
 	<message xml:lang="pt">Habilitar CSS</message>
 	<message xml:lang="fi">Ota käyttöön CSS</message>
 	<message xml:lang="tr">Olumla CSS</message>
@@ -979,7 +980,7 @@
 	<message xml:lang="de">Bitte Benutzernamen eingeben:</message>
 	<message xml:lang="it">Digita lo username:</message>
 	<message xml:lang="tr">Kullanıcı ismini girin:</message>
-	<message xml:lang="es">Por favor, introduzca un nombre de usuario:</message>
+	<message xml:lang="es">Por favor, escriba un nombre de usuario:</message>
 	<message xml:lang="pt">Por favor insira nome de usuário:</message>
 	<message xml:lang="fi">Syöttäkää kayttäjätunnus:</message>
 </label>
@@ -1058,6 +1059,7 @@
 	<message xml:lang="fr">Ne pas sauver</message>
 	<message xml:lang="de">Speichern</message>
 	<message xml:lang="it">Non salvare</message>
+	<message xml:lang="es">No guardar</message>
 </label>
 <label define="AM_BUTTON_PRINT">
 	<message xml:lang="en">Print</message>
@@ -1125,7 +1127,7 @@
 	<message xml:lang="de">Bild</message>
 	<message xml:lang="it">Inserisci immagine</message>
 	<message xml:lang="tr">Görüntü ekle</message>
-	<message xml:lang="es">Imagen</message>
+	<message xml:lang="es">Imagen:</message>
 	<message xml:lang="pt">Inserir imagem</message>
 	<message xml:lang="fi">Syötä kuva</message>
 </label>
@@ -1818,6 +1820,7 @@
 	<message xml:lang="fr">Sauver la géométrie en quittant</message>
 	<message xml:lang="it">Salvare la geometria all'uscita</message>
 	<message xml:lang="de">Fenstereinstellungen beim Beenden speichern</message>
+	<message xml:lang="es">Guardar geometría al salir</message>
 </label>
 <label define="AM_SHOW_BG_IMAGES">
 	<message xml:lang="en">Show background images</message>
@@ -1845,7 +1848,7 @@
 	<message xml:lang="de">Adresszeile anzeigen</message>
 	<message xml:lang="it">Mostra indirizzo</message>
 	<message xml:lang="tr">Adres göster</message>
-	<message xml:lang="es">Mostrar dirección</message>
+	<message xml:lang="es">Mostrar barra de dirección</message>
 	<message xml:lang="pt">Exibir endereço</message>
 	<message xml:lang="fi">Näytä osoite</message>
 </label>
@@ -1902,7 +1905,7 @@
 	<message xml:lang="fr">Cliquer deux fois pour suivre un lien</message>
 	<message xml:lang="de">Doppelklick aktiviert Verweis</message>
 	<message xml:lang="it">Il doppio click attiva il collegamento</message>
-	<message xml:lang="es">Doble clic activa enlaces</message>
+	<message xml:lang="es">Activar enlaces con un doble clic</message>
 	<message xml:lang="pt">Duplo clique ativa enlace</message>
 	<message xml:lang="fi">Kaksoisklikkaus aktivoi linkin</message>
 	<message xml:lang="tr">Bağlantıyı izlemek için iki kere tuşlayın</message>
@@ -2132,7 +2135,7 @@
 	<message xml:lang="fr">Autoriser la redirection automatique du PUT vers ces domaines</message>
 	<message xml:lang="de">PUT automatisch an diese Domäne umleiten</message>
 	<message xml:lang="it">Consenti la redirezione automatica dei PUT su questi domini</message>
-	<message xml:lang="es">Permitir redirecciones PUT automáticas en los dominios:</message>
+	<message xml:lang="es">Permitir redirecciones PUT automáticas a estos dominios:</message>
 	<message xml:lang="pt">Permitir redirecionamentos PUT automáticos nestes domínios</message>
 	<message xml:lang="fi">Salli automaattinen PUT-komentojen välitys näissä domaineissa</message>
 	<message xml:lang="tr">Bu alanlarda PUT otomatik olarak yeniden yönlerdirmesini kabul edin</message>
@@ -2172,7 +2175,7 @@
 	<message xml:lang="fr">Ne pas utiliser le proxy dans ces domaines</message>
 	<message xml:lang="de">Ausschließen</message>
 	<message xml:lang="it">Escludi l'utilizzo del proxy su questi domini</message>
-	<message xml:lang="es">No usar proxy es estos dominios</message>
+	<message xml:lang="es">No usar proxy en estos dominios</message>
 	<message xml:lang="pt">Não há proxy nestes domínios</message>
 	<message xml:lang="fi">Älä käytä välityspalvelinta näihin domaineihin</message>
 	<message xml:lang="tr">Bu alanlarda Proxy\'yi kullanmayın</message>
@@ -2321,7 +2324,7 @@
 	<message xml:lang="en">Selection background color</message>
 	<message xml:lang="fr">Couleur de fond de sélection</message>
 	<message xml:lang="it">Selezione colore di sfondo</message>
-	<message xml:lang="es">Color de fondo de selección</message>
+	<message xml:lang="es">Color de fondo texto selecc.:</message>
 	<message xml:lang="de">Hintergrundfarbe für Markierungen</message>
 </label>
 <label define="AM_ORIENTATION">
@@ -2669,7 +2672,7 @@
 	<message xml:lang="fr">Vous ne pouvez pas annoter un document modifié. Sauver le d'abord.</message>
 	<message xml:lang="it">Non puoi annotare un documento modificato. Prima salvalo.</message>
 	<message xml:lang="de">Anmerkung an geändertes Dokument ist nicht möglich, bitte erst speichern</message>
-	<message xml:lang="es">No puede anotar un documento modificado. Por favor, guárdelo primero.</message>
+	<message xml:lang="es">No puede anotar un documento que está siendo modificado. Por favor, guárdelo primero.</message>
 	<message xml:lang="pt">Você não pode fazer anotações em um documento modificado. Por favor salve-o antes.</message>
 	<message xml:lang="fi">Et voi merkitä muutettua dokumenttia. Tallenna dokumentti ensin.</message>
 	<message xml:lang="tr">Değişlikler gören bir belgeye ekleme imkansıdır. Önce kayıt edin.</message>
@@ -2679,7 +2682,7 @@
 	<message xml:lang="fr">Pas de nom d'utilisateur déclaré. Voir le menu Annotations/Configure.</message>
 	<message xml:lang="it">Non sono state dichiarate annotazioni utente. Apri il menu Annotazioni/Configura.</message>
 	<message xml:lang="de">Kein Ersteller für Anmerkung konfiguriert, bitte das Menü "Anmerkungen/Konfiguration" öffnen</message>
-	<message xml:lang="es">No hay anotaciones de usuario declarados. Por favor, abra el menú de configuración de Anotaciones</message>
+	<message xml:lang="es">No hay usuarios de anotaciones declarados. Por favor, abra el menú de configuración de Anotaciones</message>
 	<message xml:lang="pt">Não foi declarado o usuário da anotação. Por favor abra o menu Anotações/Configurar</message>
 	<message xml:lang="fi">Merkinnän käyttäjää ei valittu. Valitse käyttäjä Merkinnät/Määritä asetukset</message>
 	<message xml:lang="tr">Kunlayıcı ismi verilmemiştir. Ekleme/Ayarlar menüsüne bakın</message>
@@ -2689,7 +2692,7 @@
 	<message xml:lang="fr">Impossible de construire un XPointer pour cette annotation</message>
 	<message xml:lang="it">Non posso creare un XPointer per questa annotazione</message>
 	<message xml:lang="de">Für diese Anmerkung kann kein XPointer erzeugt werden</message>
-	<message xml:lang="es">No puedo construir un XPointer para esta anotación</message>
+	<message xml:lang="es">No se puede crear un XPointer para esta anotación</message>
 	<message xml:lang="pt">Incapaz de construir um XPointer para esta anotação</message>
 	<message xml:lang="fi">XPointerin luonti merkintää varten epäonnistui</message>
 	<message xml:lang="tr">Bu not için XPointer yaratmak imkansızdır</message>
@@ -2879,14 +2882,14 @@
 	<message xml:lang="fr">Ajouter ou modifier le doctype du document supprimera certains éléments ou attributs</message>
 	<message xml:lang="it">Aggiungere o cambiare doctype eliminerà alcuni elementi o attributi</message>
 	<message xml:lang="de">Durch das Hinzufügen oder Ändern des Dokumententyps gehen Elemente oder Attribute verloren</message>
-	<message xml:lang="es">Al anadir o cambiar la declaración de tipo de documento se eliminarán o cambiarán algunos elementos o atributos</message>á
+	<message xml:lang="es">Al añadir o modificar el doctype se eliminarán algunos elementos o atributos</message>
 </label>
 <label define="AM_CHANGE_DOCTYPE2">
 	<message xml:lang="en">Please confirm operation</message>
 	<message xml:lang="fr">Confirmez-vous l'opération ?</message>
 	<message xml:lang="it">Confermi l'operazione?</message>
 	<message xml:lang="de">Soll die Operation ausgeführt werden ?</message>
-	<message xml:lang="es">Confirme la operación, por favor</message>
+	<message xml:lang="es">Por favor, confirme la operación</message>
 </label>
 <label define="AM_USE_XHTML_MIMETYPE">
 	<message xml:lang="en">Use the application/xhtml+xml MIME type for XHTML documents</message>
@@ -2903,6 +2906,7 @@
 	<message xml:lang="fr">Charset pour les nouveaux documents</message>
 	<message xml:lang="it">Charset per i nuovi documenti</message>
 	<message xml:lang="de">Standardzeichensatz für neue Dakumente</message>
+	<message xml:lang="es">Juego de caracteres para nuevos documentos:</message>
 </label>
 <label define="AM_LOCK_SUCCEED">
 	<message xml:lang="en">Lock succeed!</message>
@@ -3524,7 +3528,7 @@
 	<message xml:lang="en">Enter an element name</message>
 	<message xml:lang="fr">Entrer le nom d'un élément</message>
 	<message xml:lang="it">Inserisci un nome di elemento</message>
-	<message xml:lang="es">Escribe un nombre de etiqueta XHTML:</message>
+	<message xml:lang="es">Escribe un nombre de elemento:</message>
 	<message xml:lang="de">Elementname eingeben</message>
 </label>
 <label define="AM_LOAD_CSS">
@@ -3583,7 +3587,7 @@
 	<message xml:lang="en">Recalls:</message>
 	<message xml:lang="fr">Appelle:</message>
 	<message xml:lang="it">Richiama :</message>
-	<message xml:lang="es">Enlaza:</message>
+	<message xml:lang="es">Enlace al recurso:</message>
 	<message xml:lang="de">Umbenennen:</message>
 </label>
 <label define="AM_BM_AUTHOR">
@@ -3634,14 +3638,14 @@
 	<message xml:lang="en">CSS style rules applied to the &lt;%s> element\n</message>
 	<message xml:lang="fr">Règles de style CSS appliqué l'élément &lt;%s> \n</message>
 	<message xml:lang="it">Regole di stile CSS applicate all'elemento &lt;%s>\n</message>
-	<message xml:lang="es">Reglas de estilo CSS aplicadas al elemento &lt;%s>\n</message>
+	<message xml:lang="es">Reglas de estilo aplicadas al elemento &lt;%s>\n</message>
 	<message xml:lang="de">CSS-Regeln, die für &lt;%s> gelten\n</message>
 </label>
 <label define="AM_LINK_LINE">
 	<message xml:lang="en">Blue lines are links activated by a double (or a single) click\n</message>
 	<message xml:lang="fr">Les lignes bleues sont des liens activés par un double (ou simple) click\n</message>
 	<message xml:lang="it">Le righe in blu sono collegamenti attivati con un doppio (o semplice) clic\n</message>
-	<message xml:lang="es">Cada línea azul es un enlace a la regla de estilo. Puede activar el enlace con un doble clic (o con un único clic)\n</message>
+	<message xml:lang="es">Cada línea de código (en color azul) es un enlace al correspondiente código fuente. Para editarlo, active el enlace.\n</message>
 	<message xml:lang="de">Blaue Linien sind Verweise, die durch einen Doppel- (oder Einfach-)klick aktiviert wurden.\n</message>
 </label>
 <label define="AM_LOAD_OBJECTS">

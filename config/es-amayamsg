@@ -30,7 +30,7 @@
 28 Escriba el URI o pulse el botón Buscar:
 29 Título:
 30 Título (title)
-31 **Document modified - Do you want to save it?
+31 Documento modificado. ¿Quiere guardarlo?
 32 Redirección recuperación de %s
 33 Demasiadas redirecciones detectadas
 34 No puedo crear archivo local %s
@@ -85,9 +85,9 @@
 83 Directorio de imágenes:
 84 Ubicación de objeto
 85 Hojas de estilo enlazadas:
-86 Abrir hoja de estilo
-87 Desactivar hoja de estilo
-88 Activar hoja de estilo
+86 Abrir hoja de estilo enlazada
+87 Desactivar hoja de estilo enlazada
+88 Activar hoja de estilo enlazada
 89 Borrar enlace a hoja de estilo
 90 Editor/Navegador del W3C para la Web
 91 (enviar sugerencias a www-amaya@w3.org)
@@ -96,7 +96,7 @@
 94 Actualización de enlace: %s%% realizada
 95 Nada nuevo que guardar
 96 Repetir-y (repeat-y)
-97 Por favor, introduzca un nombre de usuario:
+97 Por favor, escriba un nombre de usuario:
 98 %d solicitud pendiente
 99 No hay ninguna hoja de estilo enlazada
 100 Detener
@@ -104,14 +104,14 @@
 102 Adelante
 103 Actualizar
 104 Guardar
-105 **Don't save
+105 No guardar
 106 Imprimir
 107 Buscar
 108 Énfasis (em)
 109 Enérgico (strong)
 110 Código (code)
 111 No repetir (no-repeat)
-112 Imagen
+112 Imagen:
 113 Cabecera nivel 1 (h1)
 114 Cabecera nivel 2 (h2)
 115 Cabecera nivel 3 (h3)
@@ -181,16 +181,16 @@
 179 Idioma de diálogo:
 180 Activar pegado línea a línea
 181 Generar copias de seguridad
-182 **Save geometry on exit
+182 Guardar geometría al salir
 183 Mostrar imágenes de fondo
 184 Mostar barra de botones
-185 Mostrar dirección
+185 Mostrar barra de dirección
 186 Mostrar destinos
 187 Numeración de sección
 188 Exportar CR/LF
 189 Preferencias de navegación
 190 Cargar imágenes (img)
-191 Doble clic activa enlaces
+191 Activar enlaces con un doble clic
 192 Preferencias de publicación
 193 Usar ETAGS y precondiciones
 194 Verificar cada PUT con un GET
@@ -213,11 +213,11 @@
 211 Preferencias de perfiles
 212 URL del servidor de plantillas:
 213 Preferencias de plantillas
-214 Permitir redirecciones PUT automáticas en los dominios:
+214 Permitir redirecciones PUT automáticas a estos dominios:
 215 Ignorar hojas de estilo
 216 Tipo de transformación
 217 (separar los dominios con un espacio)
-218 No usar proxy es estos dominios
+218 No usar proxy en estos dominios
 219 Usar proxy sólo en estos dominios
 220 Nombre de carácter:
 221 Directorio de usuario de Amaya:
@@ -232,7 +232,7 @@
 230 Autocargar anotaciones remotas
 231 Deshabilitar la recarga automática remota en cada inicio (para trabajo sin conexión)
 232 Color del texto seleccionado:
-233 Color de fondo de selección
+233 Color de fondo texto selecc.:
 234 Orientación
 235 Vertical
 236 Apaisado
@@ -267,9 +267,9 @@
 265 Imposible adjuntar un XPointer final sobre un elemento interno agregado
 266 No sé a dónde mover la anotación
 267 No puedo mover la anotación a otro documento
-268 No puede anotar un documento modificado. Por favor, guárdelo primero.
-269 No hay anotaciones de usuario declarados. Por favor, abra el menú de configuración de Anotaciones
-270 No puedo construir un XPointer para esta anotación
+268 No puede anotar un documento que está siendo modificado. Por favor, guárdelo primero.
+269 No hay usuarios de anotaciones declarados. Por favor, abra el menú de configuración de Anotaciones
+270 No se puede crear un XPointer para esta anotación
 271 Crear una nueva anotación
 272 Fallo al enviar la anotación
 273 Fallo al borrar la anotación
@@ -288,10 +288,10 @@
 286 Se ignoran los estilos - vea Ver / Ver errores sintácticos
 287 Este documento ya está cargado en otra ventana
 288 Guardar la copia puede originar un problema de pérdida de actualización
-289 Al anadir o cambiar la declaración de tipo de documento se eliminarán o cambiarán algunos elementos o atributos
-290 Confirme la operación, por favor
+289 Al añadir o modificar el doctype se eliminarán algunos elementos o atributos
+290 Por favor, confirme la operación
 291 En documentos XHTML usar tipo MIME application/xhtml+xml
-292 **Charset for new documents
+292 Juego de caracteres para nuevos documentos:
 293 ¡Bloqueo conseguido!
 294 ¡Bloqueo fallido!
 295 Bloqueando %s...
@@ -357,7 +357,7 @@
 355 Borrar atributos id
 356 Crear/Borrar atributos id
 357 Aplicar operación
-358 Escribe un nombre de etiqueta XHTML:
+358 Escribe un nombre de elemento:
 359 Aplicar hojas de estilo
 360 Tipo de pantalla actual:
 361 Nuevo Tema
@@ -365,14 +365,14 @@
 363 Propiedades de tema
 364 Jerarquía de temas:
 365 Título:
-366 Enlaza:
+366 Enlace al recurso:
 367 Autor:
 368 Creado:
 369 Última modificación:
 370 Descripción:
 371 Por favor, seleccione un elemento
 372 Todos las hojas de estilo
-373 Reglas de estilo CSS aplicadas al elemento <%s>\n
-374 Cada línea azul es un enlace a la regla de estilo. Puede activar el enlace con un doble clic (o con un único clic)\n
+373 Reglas de estilo aplicadas al elemento <%s>\n
+374 Cada línea de código (en color azul) es un enlace al correspondiente código fuente. Para editarlo, active el enlace.\n
 375 Cargar objetos (object, embed)
 376 No hay regla de estilo para este elemento
