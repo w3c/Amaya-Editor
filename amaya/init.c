@@ -1146,7 +1146,8 @@ View                view;
 	W3Loading = 0;		/* loading is complete now */
 	TtaHandlePendingEvents ();
 	/* fetch and display all images referred by the document */
-	FetchAndDisplayImages (res, AMAYA_NOCACHE);
+	if (res != 0)
+	  FetchAndDisplayImages (res, AMAYA_NOCACHE);
 	TtaResetCursor (0, 0);
      }
    ResetStop(newdoc);
