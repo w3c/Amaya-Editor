@@ -4,6 +4,7 @@ DEFAULT
    BEGIN
 	ElemActivate.Pre -> DoubleClick;
 	ElemClick.Pre -> SimpleClick;
+	ElemRClick.Pre -> SimpleRClick;
 	ElemPaste.Post -> MathElementPasted;
 	ElemDelete.Pre -> MathElementWillBeDeleted;
 	ElemDelete.Post -> MathElementDeleted;

@@ -4,6 +4,7 @@ DEFAULT
    BEGIN
 	ElemActivate.Pre -> DoubleClick;
 	ElemClick.Pre -> SimpleClick;
+	ElemRClick.Pre -> SimpleRClick;
 	ElemPaste.Post -> GraphElemPasted;
 	PRuleCreate.Pre -> GraphicsPRuleChange;
 	PRuleModify.Pre -> GraphicsPRuleChange;
