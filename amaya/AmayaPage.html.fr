@@ -189,7 +189,7 @@ avec le menu Aide, qui affiche chaque section séparément. Vous pouvez
 également l'imprimer : il suffit de suivre le lien <a
 href="../doc/html/Manual.html.fr">Manuel en ligne</a>. Vous obtiendrez la
 page de garde. Construisez ensuite le livre entier à l'aide de l'entrée
-"Construire un livre" du menu Spécial et imprimez le résultat</p>
+"Construire un livre" du menu XHTML et imprimez le résultat.</p>
 </div>
 
 <div>
