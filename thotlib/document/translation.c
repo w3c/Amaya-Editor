@@ -1446,10 +1446,21 @@ static ThotBool     ConditionIsTrue (PtrTRuleBlock pBlock, PtrElement pEl,
 		  du type voulu */
 	       ret = FALSE;
 	       if (pAttr != NULL)
-		 if (pElem->ElTypeNumber == Cond->TcAttr &&
-		     !strcmp (pElem->ElStructSchema->SsName,
-			       pAttr->AeAttrSSchema->SsName))
-		   ret = TRUE;
+		 {
+		   if (!pElem->ElParent)
+		     /* That's the Document node */
+		     {
+		       if (pElem->ElTypeNumber == Cond->TcAttr)
+			 ret = TRUE;
+		     }
+		   else
+		     {
+		       if (pElem->ElTypeNumber == Cond->TcAttr &&
+			   !strcmp (pElem->ElStructSchema->SsName,
+				    pAttr->AeAttrSSchema->SsName))
+			 ret = TRUE;
+		     }
+		 }
 	       break;
 
 	     case TcondPresentation:
