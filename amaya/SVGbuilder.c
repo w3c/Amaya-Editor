@@ -1038,10 +1038,21 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
 	 elType.ElTypeNum == SVG_EL_symbol_ ||
 	 elType.ElTypeNum == SVG_EL_use_ ||
 	 elType.ElTypeNum == SVG_EL_switch ||
-	 elType.ElTypeNum == SVG_EL_a ||
 	 elType.ElTypeNum == SVG_EL_text_ ||
 	 elType.ElTypeNum == SVG_EL_tspan ||
 	 elType.ElTypeNum == SVG_EL_tref ||
+	 elType.ElTypeNum == SVG_EL_textPath ||
+	 elType.ElTypeNum == SVG_EL_altGlyph ||
+	 elType.ElTypeNum == SVG_EL_marker ||
+	 elType.ElTypeNum == SVG_EL_pattern ||
+	 elType.ElTypeNum == SVG_EL_clipPath ||
+	 elType.ElTypeNum == SVG_EL_mask ||
+	 elType.ElTypeNum == SVG_EL_filter ||
+	 elType.ElTypeNum == SVG_EL_feImage ||
+	 elType.ElTypeNum == SVG_EL_a ||
+	 elType.ElTypeNum == SVG_EL_font_ ||
+	 elType.ElTypeNum == SVG_EL_glyph ||
+	 elType.ElTypeNum == SVG_EL_missing_glyph ||
 	 elType.ElTypeNum == SVG_EL_foreignObject)
        /* add textPath, altGlyph, clipPath, marker, pattern, mask,
 	  filter, feImage, font, glyph, missing_glyph */

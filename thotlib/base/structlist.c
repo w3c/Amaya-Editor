@@ -906,7 +906,9 @@ static void wrpos (AbPosition *pPos, ThotBool racine, FILE *fileDescriptor)
 {
    fprintf (fileDescriptor, " ");
    if (pPos->PosAbRef == NULL && !racine)
-      fprintf (fileDescriptor, "PosRef = NULL");
+     {
+        fprintf (fileDescriptor, "PosRef = NULL ");
+     }
    else
      {
 	wranchor (pPos->PosEdge, fileDescriptor);
@@ -915,27 +917,27 @@ static void wrpos (AbPosition *pPos, ThotBool racine, FILE *fileDescriptor)
 	else
 	   fprintf (fileDescriptor, " = AbstractBox%d.", pPos->PosAbRef->AbNum);
 	wranchor (pPos->PosRefEdge, fileDescriptor);
-	if (pPos->PosDistance != 0)
-	  {
-	     if (pPos->PosDistance < 0)
-		fprintf (fileDescriptor, "-");
-	     else
-		fprintf (fileDescriptor, "+");
-	     fprintf (fileDescriptor, "%d", abs (pPos->PosDistance));
-	     wrTypeUnit (pPos->PosUnit, fileDescriptor);
-	  }
-	if (pPos->PosDistDelta != 0)
-	  {
-	     if (pPos->PosDistDelta < 0)
-		fprintf (fileDescriptor, "-");
-	     else
-		fprintf (fileDescriptor, "+");
-	     fprintf (fileDescriptor, "%d", abs (pPos->PosDistDelta));
-	     wrTypeUnit (pPos->PosDeltaUnit, fileDescriptor);
-	  }
-	if (pPos->PosUserSpecified)
-	   fprintf (fileDescriptor, " UserSpec");
      }
+   if (pPos->PosDistance != 0)
+     {
+       if (pPos->PosDistance < 0)
+	 fprintf (fileDescriptor, "-");
+       else
+	 fprintf (fileDescriptor, "+");
+       fprintf (fileDescriptor, "%d", abs (pPos->PosDistance));
+       wrTypeUnit (pPos->PosUnit, fileDescriptor);
+     }
+   if (pPos->PosDistDelta != 0)
+     {
+       if (pPos->PosDistDelta < 0)
+	 fprintf (fileDescriptor, "-");
+       else
+	 fprintf (fileDescriptor, "+");
+       fprintf (fileDescriptor, "%d", abs (pPos->PosDistDelta));
+       wrTypeUnit (pPos->PosDeltaUnit, fileDescriptor);
+     }
+   if (pPos->PosUserSpecified)
+     fprintf (fileDescriptor, " UserSpec");
 }
 
 /*----------------------------------------------------------------------

@@ -2284,9 +2284,9 @@ static void ApplyPos (AbPosition *PPos, PosRule *positionRule, PtrPRule pPRule,
 	       PPos->PosEdge = NoEdge;
 	       PPos->PosRefEdge = NoEdge;
 	       PPos->PosDistance = 0;
-	       PPos->PosDistDelta = 0;
+	       PPos->PosDistDelta = pPosRule->PoDistDelta;
 	       PPos->PosUnit = UnRelative;
-	       PPos->PosDeltaUnit = UnRelative;
+	       PPos->PosDeltaUnit = pPosRule->PoDeltaUnit;
 	       PPos->PosAbRef = NULL;
 	       PPos->PosUserSpecified = FALSE;
 	       *appl = FALSE;
