@@ -47,9 +47,7 @@ extern void BuildPopdown ( Menu_Ctl *ptrmenu,
                            int doc,
                            ThotBool update,
                            ThotBool RO );
-extern void TteOpenMainWindow ( char *name,
-                                ThotIcon logo,
-                                ThotPixmap icon );
+extern void TteOpenMainWindow ( char *name );
 extern int TtaAddButton ( Document document,
                           View view,
                           ThotIcon picture,
@@ -185,9 +183,7 @@ extern void BuildPopdown ( Menu_Ctl *ptrmenu,
                              int doc,
                              ThotBool update,
                              ThotBool RO );
-extern void TteOpenMainWindow ( char *name,
-                                  ThotIcon logo,
-                                  ThotPixmap icon );
+extern void TteOpenMainWindow ( char *name );
 extern int TtaAddButton ( Document document,
                             View view,
                             ThotIcon picture,

@@ -219,7 +219,7 @@ ThotBool CannotInsertNearElement (PtrElement pEl, ThotBool beforeElement)
      return FALSE; /* No function => Insertion is authorized! */
    else
      {
-       (*InsertNearFunction) ((void *)pEl, (void *)beforeElement, (void *)&isForbidden);
+       (*InsertNearFunction) ((void *)pEl, (void *)(beforeElement ? 0xFFFFFF : 0x000000), (void *)&isForbidden);
        return isForbidden;
      }
 

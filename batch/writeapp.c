@@ -15,8 +15,6 @@
 #include "typemedia.h"
 #include "appstruct.h"
 #include "menuaction.h"
-#include "logo.xpm"
-#include "logo.xbm"
 #include "registry.h"
 #include "fileaccess.h"
 
@@ -249,11 +247,9 @@ static void     WriteAppliInit (char *fname, PtrEventsSet pAppli)
 {
    if (strcmp (fname, "EDITOR") == 0)
      {
-	fprintf (AppFile, "#include \"logo.xpm\"\n#include \"logo.xbm\"\n#include \"message.h\"\n");
+	fprintf (AppFile, "#include \"message.h\"\n");
 	fprintf (AppFile, "#ifdef _WINGUI\n#include \"wininclude.h\"\n#endif\n\n");
 	fprintf (AppFile, "int    appArgc;\nchar** appArgv;\n");
-	fprintf (AppFile, "ThotIcon     image;  /* logo pixmap */\n");
-	fprintf (AppFile, "ThotPixmap   icon;   /* icon pixmap */\n\n");	
      }
    fprintf (AppFile, "\n/*----------------------------------------------------------------------\n -----------------------------------------------------------------------*/\n");
    fprintf (AppFile, "void %sApplicationInitialise ()\n", fname);
@@ -575,9 +571,7 @@ static void         WriteActionList (char *fname)
       if (editingResource)
 	fprintf (AppFile, "  EditingLoadResources ();\n");
 
-      fprintf (AppFile, "  image = TtaCreatePixmapLogo (logo_xpm);\n");
-      fprintf (AppFile, "  icon  = TtaCreateBitmapLogo (logo_width, logo_height, (char *)logo_bits);\n");
-      fprintf (AppFile, "  TteOpenMainWindow (appName, image, icon);\n");
+      fprintf (AppFile, "  TteOpenMainWindow (appName);\n");
 
       fprintf (AppFile, "  TtaMainLoop ();\n");
       fprintf (AppFile, "#if !defined(_WX)\n");
@@ -674,6 +668,7 @@ void                GenerateApplication (char *fname, PtrEventsSet pAppli)
 	WriteIncludeFile (dotHFile, infoFILE);
 	fclose (infoFILE);
 	fclose (dotHFile);
+#if 0
 	if (!TtaFileExist ("logo.xpm"))
 	  {
 	     /* create the file logo.xpm */
@@ -712,6 +707,7 @@ void                GenerateApplication (char *fname, PtrEventsSet pAppli)
 	     fprintf (infoFILE, " 0x%.2x, };\n", (unsigned int) bits[i]);
 	     fclose (infoFILE);
 	  }
+#endif /* 0 */
      }
    TtaFreeMemory (fileSuffix);
 }

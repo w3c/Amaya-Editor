@@ -81,7 +81,7 @@ extern void         TtaSetBackup (Proc procedure);
 extern void         TtaSetAutoSave (Proc procedure);
 extern void         TtaSetDocStatusUpdate (Proc procedure);
 extern void         TteZeroMenu ();
-extern void         TteOpenMainWindow (char *name, ThotIcon logo, ThotPixmap icon);
+extern void         TteOpenMainWindow (char *name);
 extern void         TteInitMenus (char *name, int number);
 extern void         TteAddMenuAction (char* actionName, Proc procedure, ThotBool state);
 extern void         TteAddMenu (int view, int menuID, int itemsNumber, char* menuName);

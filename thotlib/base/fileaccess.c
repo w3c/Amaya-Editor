@@ -109,7 +109,7 @@ ThotBool TtaReadWideChar (BinFile file, CHAR_T *bval)
     nbBytesToRead = 4;
   else if (car < 0xFC)
     nbBytesToRead = 5;
-  else if (car <= 0xFF)
+  else /* this was allways true =>   if (car <= 0xFF) */
     nbBytesToRead = 6;
 
   res = 0;

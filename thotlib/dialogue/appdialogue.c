@@ -1380,64 +1380,28 @@ void BuildPopdown ( Menu_Ctl *ptrmenu, int ref, ThotMenu button,
  
    Parameters:
    name: the name to be displayed as the title of the main window.
-   logo: the logo pixmap to be displayed in the window or NULL.
-   icon: the icon pixmap to be displayed in the window or NULL.
   ----------------------------------------------------------------------*/
-void TteOpenMainWindow (char *name, ThotIcon logo, ThotPixmap icon)
+void TteOpenMainWindow (char *name)
 {
-   /* Creation de la fenetre principale */
-   UserErrorCode = 0;
-   InitTranslations (name);
-   /* no external action declared at that time */
-   ActionList = NULL;
-   TteLoadApplications ();
-
+  /* Creation de la fenetre principale */
+  UserErrorCode = 0;
+  InitTranslations (name);
+  /* no external action declared at that time */
+  ActionList = NULL;
+  TteLoadApplications ();
+  
 #ifndef _WX
-#ifdef _GTK
    if (TtDisplay == 0)
      {
-        /* Connexion au serveur X impossible */
-        TtaError (ERR_cannot_open_main_window);
-     		gtk_exit (1);
+       /* Connexion au serveur X impossible */
+       TtaError (ERR_cannot_open_main_window);
+       gtk_exit (1);
      }
-     else
-#endif /* _GTK */
-       {
-#if 0
-    char                string[MENU_VAL_LENGTH];
-    Menu_Ctl           *ptrmenu;
-    char               *ptr;
-    int                 lg, n, i;
-	/* Compte le nombre de menus a creer */
-	n = 0;
-	i = 0;
-	ptrmenu = MainMenuList;
-	while (ptrmenu != NULL)
-	  {
-	     n++;
-	     /* Regarde si le texte des commandes ne deborde pas */
-
-	     /*
-	        ptr = TtaGetMessage(EDIT_DIALOG, ptrmenu->MenuID);
-	      */
-	     ptr = TtaGetMessage (THOT, ptrmenu->MenuID);
-	     lg = strlen (ptr) + 1;
-	     if (i + lg < MENU_VAL_LENGTH)
-	       {
-		  strcpy (&string[i], ptr);
-		  i += lg;
-		  ptrmenu = ptrmenu->NextMenu;
-	       }
-	     else
-		/* sinon on reduit le nombre de menus */
-		ptrmenu = NULL;
-	  }
-#endif /* 0 */
-#ifdef _GTK
-	/* icone des fenetres de documents */
-	wind_pixmap = TtaCreateBitmapLogo (logowindow_width, logowindow_height,
-                                       (char *)logowindow_bits);
-#endif /* _GTK */
+   else
+     {
+       /* icone des fenetres de documents */
+       wind_pixmap = TtaCreateBitmapLogo (logowindow_width, logowindow_height,
+					  (char *)logowindow_bits);
      }
 #endif /* _WX */
 }
