@@ -48,6 +48,7 @@ static int          OldHeight;
 #include "styleparser_f.h"
 #include "tree.h"
 #include "XLinkedit_f.h"
+#include "fetchHTMLname_f.h"
 
 #ifdef _WINDOWS
 extern HWND currentWindow;
@@ -1302,7 +1303,7 @@ Element last;
   The inSelection attribute says if we must apply the operation in the
   whole document or just in the current selection.
   If an element already has an ID attribute, a new one won't be created.
-  TO DO: Output error messages.
+  TO DO: Use the thotmsg functions for the dialogs.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void         CreateRemoveIDAttribute (CHAR_T *elName, Document doc, ThotBool createID, ThotBool inSelection)
@@ -1321,21 +1322,26 @@ ThotBool        inSelection;
   Attribute           attr;
   CHAR_T             *schema_name;
   DisplayMode         dispMode;
+  ThotBool            closeUndo;
   int                 i, j;
 
   /* the user must select something */
   if (inSelection && !TtaIsDocumentSelected (doc))
-    return;
-
+    {
+      ustrcpy (IdStatus, TEXT("Nothing selected"));
+      return;
+    }
   /* search for the elementType corresponding to the element name given
    by the user */
   GIType (elName, &elType, doc);
   if (elType.ElTypeNum == 0)
-    /* element name not found */
-    return;
-
+    {
+      /* element name not found */
+      ustrcpy (IdStatus, TEXT("Unknown element"));
+      return;
+    }
   /* in function of the target elType, we choose the correct
-     ATTR_ID value */
+     ATTR_ID value and schema */
   attrType.AttrTypeNum = 0;
   schema_name = TtaGetSSchemaName (elType.ElSSchema);
   if (!ustrcmp (schema_name, TEXT("HTML")))
@@ -1359,7 +1365,10 @@ ThotBool        inSelection;
   /* we didn't find an attribute or we can't put an ID attribute
      in this element */
   if (attrType.AttrTypeNum == 0)
-    return;
+    {
+      ustrcpy (IdStatus, TEXT("DTD forbids it"));
+      return;
+    }
   attrType.AttrSSchema = elType.ElSSchema;
 
   /* prepare the environment before doing the operation */
@@ -1396,6 +1405,13 @@ ThotBool        inSelection;
   if (!TtaSameTypes (TtaGetElementType (el), elType))
     el = SearchTypedElementForward (elType, el, lastEl);
 
+  if (TtaPrepareUndo (doc))
+      closeUndo = FALSE;
+  else
+    {
+      closeUndo = TRUE;
+      TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+    }
   i = 0;
   while (el)
     {
@@ -1409,21 +1425,23 @@ ThotBool        inSelection;
 	}
       else if (attr && !createID) /* delete it */
 	{
-	  TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
-	  TtaRemoveAttribute (el, attr, doc);
 	  TtaRegisterAttributeDelete (attr, el, doc);
-	  TtaCloseUndoSequence (doc);
+	  TtaRemoveAttribute (el, attr, doc);
 	  i++;
 	}
       /* get the next element */
       el = SearchTypedElementForward (elType, el, lastEl);
     }
 
+  if (closeUndo)
+    TtaCloseUndoSequence (doc);
+
   /* reset the state of the document */
   if (i)
     TtaSetDocumentModified (doc);
   if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, dispMode);
+  usprintf (IdStatus, TEXT("%d elements changed"), i);
 }
 
 /*----------------------------------------------------------------------
