@@ -166,396 +166,339 @@ ThotBool            display;
 #endif /* __STDC__ */
 {
 #ifndef NODISPLAY
-   PtrPRule            pR, pRStd;
-   PtrPRule            pRuleH, pRuleV;
-   PtrPSchema          pSPR;
-   PtrSSchema          pSSR;
-   PtrAttribute        pAttr;
-   PtrDocument         pDoc;
-   PtrElement          pEl;
-   PtrAbstractBox      pParent;
-   NotifyAttribute     notifyAttr;
-   Document            doc;
-   DisplayMode         dispMode;
-   TypeUnit            unit;
-   int                 x, y, dx, dy;
-   int                 viewSch;
-   int                 value, ref;
-   ThotBool            attr, doitX, doitY, isPos;
-   ThotBool            isNew, reDisp, isLined, histOpen;
+  PtrPRule            pR, pRStd;
+  PtrPRule            pRuleH, pRuleV;
+  PtrPSchema          pSPR;
+  PtrSSchema          pSSR;
+  PtrAttribute        pAttrH, pAttrV;
+  PtrDocument         pDoc;
+  PtrElement          pEl;
+  PtrAbstractBox      pParent;
+  NotifyAttribute     notifyAttr;
+  Document            doc;
+  DisplayMode         dispMode;
+  TypeUnit            unit;
+  int                 x, y, dx, dy;
+  int                 viewSch;
+  int                 value;
+  ThotBool            attr, doit, isPos;
+  ThotBool            isNew, reDisp, isLined, histOpen;
 
-   /* get the element */
-   pEl = pAb->AbElement;
-   /* get the document */
-   pDoc = DocumentOfElement (pEl);
-   /* view number in the presentation schema that defines it */
-   viewSch = AppliedView (pEl, NULL, pDoc, pAb->AbDocView);
-   /* by default nothing to redisplay */
-   reDisp = FALSE;
-   histOpen = FALSE;
-   /* by default the abstract box is not presented in a block of lines */
-   isLined = FALSE;
-   doitX = doitY = FALSE;
-   pParent = pAb->AbEnclosing;
-   /* check enclosing abstract boxes */
-   while (!isLined && pParent != NULL)
-     {
-       if (pParent->AbLeafType == LtCompound && pParent->AbInLine)
-	 /* the abstract box is presented in a block of lines */
-	 isLined = TRUE;
-       else if (!pParent->AbAcceptLineBreak)
-	 /* the abstract box doesn't accept line breaks, stop the research */
-	 pParent = NULL;
-       else
-	 /* go upper */
-	 pParent = pParent->AbEnclosing;
-     }
-
-   /* avoid too many redisplays */
-   doc = FrameTable[frame].FrDoc;
-   dispMode = documentDisplayMode[doc - 1];
-   if (dispMode == DisplayImmediately)
-     TtaSetDisplayMode (doc, DeferredDisplay);
-   
-   /* manage the vertical position */
-   if (pAb->AbBox != NULL && Y != pAb->AbBox->BxYOrg)
-     {
-       /* look for the position rule that applies to the element */
-       pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch,
-				    PtVertPos, FnAny, FALSE, TRUE, &pAttr);
-       y = Y;
-       /* doesn't move boxes with floating position or set in lines */
-       if (pRStd->PrPosRule.PoPosDef != NoEdge &&
-	   pAb->AbVertPos.PosAbRef != NULL && !isLined)
-	 {
-	   isPos = !(pAb->AbHeight.DimIsPosition);
-	   if (isPos)
-	     /* get the difference */
-	     dy = Y - pAb->AbBox->BxYOrg;
-	   else
-	     /* it's a position rule of stretched box */
-	     dy = Y;
-
-	   if (pRStd->PrPosRule.PoDistUnit == UnPercent)
-	     {
-	       if (pAb->AbEnclosing == NULL || pAb->AbEnclosing->AbBox == NULL)
-		 GetSizesFrame (frame, &x, &y);
-	       else
-		 y = pAb->AbEnclosing->AbBox->BxHeight;
-	       dy = LogicalValue (dy, UnPercent, (PtrAbstractBox) y, 0);
-	     }
-	   else
-	     dy = LogicalValue (dy, pRStd->PrPosRule.PoDistUnit, pAb,
-				ViewFrameTable[frame - 1].FrMagnification);
-
-	   /* check if the position is given by an attribute with the exception NewVPos */
-	   if (pAttr != NULL &&
-	       AttrHasException (ExcNewVPos, pAttr->AeAttrNum, pAttr->AeAttrSSchema))
-	     /* the new position will be stored into the attribute */
-	     attr = TRUE;
-	   else
-	     attr = FALSE;
-
-	   if (!BoxCreating && !histOpen)
-	     {
-		OpenHistorySequence (pDoc, pEl, pEl, 0, 0);
-		histOpen = TRUE;
-	     }
-	   if (attr)
-	     {
-	       pRuleV = pRStd;
-	       if (pAttr->AeAttrType == AtNumAttr)
-		 {
-		   /* change the attribute value */
-		   notifyAttr.event = TteAttrModify;
-		   notifyAttr.document = doc;
-		   notifyAttr.element = (Element) pEl;
-		   notifyAttr.attribute = (Attribute) pAttr;
-		   notifyAttr.attributeType.AttrSSchema =
-		                          (SSchema) (pAttr->AeAttrSSchema);
-		   notifyAttr.attributeType.AttrTypeNum = pAttr->AeAttrNum;
-		   if (CallEventAttribute (&notifyAttr, TRUE))
-		     doitY = FALSE;
-		   else
-		     {
-		       if (!BoxCreating)
-		         AddAttrEditOpInHistory (pAttr, pEl, pDoc, TRUE, TRUE);
-		       pAttr->AeAttrValue += dy;
-		       /* redisplay presentation variables that use the attribute */
-		       RedisplayAttribute (pAttr, pEl, pDoc);
-		       if (display)
-			 /* redisplay copies */
-			 RedisplayCopies (pEl, pDoc, TRUE);
-		     }
-		 }
-	     }
-	   else
-	     /* the new position will be stored in a specific presentation rule */
-	     {
-	       /* check if the specific presentation rule already exists */
-	       pRuleV = SearchPresRule (pEl, PtVertPos, 0, &isNew, pDoc, viewSch);
-	       
-	       if (isNew)
-		 {
-		   /* create a new rule for the element */
-		   pR = pRuleV->PrNextPRule;
-		   /* copy the standard rule */
-		   *pRuleV = *pRStd;
-		   pRuleV->PrCond = NULL;
-		   pRuleV->PrNextPRule = pR;
-		   pRuleV->PrViewNum = viewSch;
-		   unit = UnPixel;
-		   pRuleV->PrPosRule.PoDistUnit = unit;
-		   /* if the rule is associated to an attribute */
-		   /* keep the link to that attribute */
-		   if (pAttr != NULL)
-		     {
-		       pRuleV->PrSpecifAttr = pAttr->AeAttrNum;
-		       pRuleV->PrSpecifAttrSSchema = pAttr->AeAttrSSchema;
-		     }
-		 }
-	       else
-		 value = pRuleV->PrPosRule.PoDistance;
-
-	       /* check if there is a previous value */
-	       if (pAb->AbEnclosing)
-		 ref = pAb->AbEnclosing->AbBox->BxYOrg;
-	       else
-		 ref = 0;
-	       if (isNew ||(pAb->AbBox->BxYOrg != ref && value == 0))
-		 {
-		   /* the rule gives a default position */
-		   if (isPos)
-		     {
-		       /* take the box edge into account in a new rule */
-		       if (pRuleV->PrPosRule.PoPosDef == HorizMiddle)
-			 Y += pAb->AbBox->BxHeight / 2;
-		       else if (pRuleV->PrPosRule.PoPosDef == Bottom)
-			 Y += pAb->AbBox->BxHeight;
-		     }
-		   if (unit == UnPercent)
-		     dy = LogicalValue (Y, UnPercent, (PtrAbstractBox) y, 0);
-		   else
-		     dy = LogicalValue (Y, unit, pAb,
-					ViewFrameTable[frame - 1].FrMagnification);
-		   value = 0;
-		 }
-	       else if (isPos)
-		 dy += value;
-
-	       /* modify the distance in the specific rule */
-	       pRuleV->PrPosRule.PoDistance = dy;
-	       /* send the event message to the application */
-	       doitY = !PRuleMessagePre (pEl, pRuleV, pDoc, isNew);
-	       if (!doitY && !isNew)
-		 /* reset the previous value */
-		 pRuleV->PrPosRule.PoDistance = value;
-	     }
+  /* get the element */
+  pEl = pAb->AbElement;
+  /* get the document */
+  pDoc = DocumentOfElement (pEl);
+  /* view number in the presentation schema that defines it */
+  viewSch = AppliedView (pEl, NULL, pDoc, pAb->AbDocView);
+  /* by default nothing to redisplay */
+  reDisp = FALSE;
+  histOpen = FALSE;
+  /* by default the abstract box is not presented in a block of lines */
+  isLined = FALSE;
+  pParent = pAb->AbEnclosing;
+  /* check enclosing abstract boxes */
+  while (!isLined && pParent != NULL)
+    {
+      if (pParent->AbLeafType == LtCompound && pParent->AbInLine)
+	/* the abstract box is presented in a block of lines */
+	isLined = TRUE;
+      else if (!pParent->AbAcceptLineBreak)
+	/* the abstract box doesn't accept line breaks, stop the research */
+	pParent = NULL;
+      else
+	/* go upper */
+	pParent = pParent->AbEnclosing;
+    }
+  
+  /* avoid too many redisplays */
+  doc = FrameTable[frame].FrDoc;
+  dispMode = documentDisplayMode[doc - 1];
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (doc, DeferredDisplay);
+  
+  /* manage the vertical position */
+  if (pAb->AbBox != NULL && Y != pAb->AbBox->BxYOrg)
+    {
+      /* look for the position rule that applies to the element */
+      pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch,
+				   PtVertPos, FnAny, FALSE, TRUE, &pAttrV);
+      doit = FALSE;
+      y = Y;
+      /* doesn't move boxes with floating position or set in lines */
+      if (pRStd->PrPosRule.PoPosDef != NoEdge &&
+	  pAb->AbVertPos.PosAbRef != NULL && !isLined)
+	{
+	  /* check if the position is given by an attribute with the exception NewVPos */
+	  attr = (pAttrV != NULL &&
+		  AttrHasException (ExcNewVPos, pAttrV->AeAttrNum, pAttrV->AeAttrSSchema));
+	  isPos = !(pAb->AbHeight.DimIsPosition);
+	  if (isPos)
+	    /* get the difference */
+	    dy = Y - pAb->AbBox->BxYOrg;
+	  else
+	    /* position rule of stretched box is related to the parent */
+	    dy = Y;
+	  
+	  unit = pRStd->PrPosRule.PoDistUnit;
+	  if (unit == UnPercent)
+	    {
+	      if (pAb->AbEnclosing == NULL || pAb->AbEnclosing->AbBox == NULL)
+		GetSizesFrame (frame, &x, &y);
+	      else
+		y = pAb->AbEnclosing->AbBox->BxHeight;
+	      dy = LogicalValue (dy, UnPercent, (PtrAbstractBox) y, 0);
+	    }
+	  else
+	    dy = LogicalValue (dy, unit, pAb,
+			       ViewFrameTable[frame - 1].FrMagnification);
+	  
+	  if (!BoxCreating && !histOpen)
+	    {
+	      OpenHistorySequence (pDoc, pEl, pEl, 0, 0);
+	      histOpen = TRUE;
+	    }
+	  if (attr)
+	    {
+	      pRuleV = pRStd;
+	      if (pAttrV->AeAttrType == AtNumAttr)
+		{
+		  /* change the attribute value */
+		  notifyAttr.event = TteAttrModify;
+		  notifyAttr.document = doc;
+		  notifyAttr.element = (Element) pEl;
+		  notifyAttr.attribute = (Attribute) pAttrV;
+		  notifyAttr.attributeType.AttrSSchema =
+		    (SSchema) (pAttrV->AeAttrSSchema);
+		  notifyAttr.attributeType.AttrTypeNum = pAttrV->AeAttrNum;
+		  doit = !CallEventAttribute (&notifyAttr, TRUE);
+		  if (doit)
+		    {
+		      /* modify the distance in the attribute rule */
+		      if (!BoxCreating)
+			AddAttrEditOpInHistory (pAttrV, pEl, pDoc, TRUE, TRUE);
+		      pAttrV->AeAttrValue += dy;
+		    }
+		}
+	    }
+	  else
+	    /* the new position will be stored in a specific presentation rule */
+	    {
+	      /* check if the specific presentation rule already exists */
+	      pRuleV = SearchPresRule (pEl, PtVertPos, 0, &isNew, pDoc, viewSch);
+	      
+	      if (isNew)
+		{
+		  /* create a new rule for the element */
+		  pR = pRuleV->PrNextPRule;
+		  /* copy the standard rule */
+		  *pRuleV = *pRStd;
+		  pRuleV->PrCond = NULL;
+		  pRuleV->PrNextPRule = pR;
+		  pRuleV->PrViewNum = viewSch;
+		  pRuleV->PrPosRule.PoDistUnit = unit;
+		  /* if the rule is associated to an attribute */
+		  /* keep the link to that attribute */
+		  if (pAttrV != NULL)
+		    {
+		      pRuleV->PrSpecifAttr = pAttrV->AeAttrNum;
+		      pRuleV->PrSpecifAttrSSchema = pAttrV->AeAttrSSchema;
+		    }
+		  value = 0;
+		}
+	      else
+		value = pRuleV->PrPosRule.PoDistance;
+	      dy += value;
+	      
+	      /* modify the distance in the specific rule */
+	      pRuleV->PrPosRule.PoDistance = dy;
+	      /* send the event message to the application */
+	      doit = !PRuleMessagePre (pEl, pRuleV, pDoc, isNew);
+	      if (!doit && !isNew)
+		/* reset the previous value */
+		pRuleV->PrPosRule.PoDistance = value;
+	    }
 	   
-	   if (doitY)
-	     {
-	       /* the document is modified */
-	       SetDocumentModified (pDoc, TRUE, 0);
-	       if (ApplyRule (pRuleV, pSPR, pAb, pDoc, pAttr))
-		 {
-		   pAb->AbVertPosChange = TRUE;
-		   if (!isPos)
-		     {
-		       /* for stretched boxes: both position and dimension rules
-			  have to be updated */
-		       pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch,
-						    PtHeight, FnAny, FALSE, TRUE, &pAttr);
-		       ApplyRule (pRStd, pSPR, pAb, pDoc, pAttr);
-		       pAb->AbHeightChange = TRUE;
-		     }	       
-		   RedispAbsBox (pAb, pDoc);
-		   reDisp = TRUE;
-		 }
-	       if (attr)
-		 CallEventAttribute (&notifyAttr, FALSE);
-	       else
-		 PRuleMessagePost (pEl, pRuleV, pDoc, isNew);
-	     }
-	 }
-     }
-
-   /* manage horizontal position */
-   if (pAb->AbBox != NULL && X != pAb->AbBox->BxXOrg)
-     {
-       /* look for the position rule that applies to the element */
-       pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch,
-				    PtHorizPos, FnAny, FALSE, TRUE, &pAttr);
-       x = X;
-       /* doesn't move boxes with floating position or set in lines */
-       if (pRStd->PrPosRule.PoPosDef != NoEdge
-	   && pAb->AbHorizPos.PosAbRef != NULL
-	   && !isLined)
-	 {
-	   isPos = !(pAb->AbWidth.DimIsPosition);
-	   if (isPos)
-	     /* get the difference */
-	     dx = X - pAb->AbBox->BxXOrg;
-	   else
-	     /* it's a position rule of stretched box */
-	     dx = X;
+	  if (doit)
+	    {
+	      /* the document is modified */
+	      SetDocumentModified (pDoc, TRUE, 0);
+	      if (ApplyRule (pRuleV, pSPR, pAb, pDoc, pAttrV))
+		{
+		  pAb->AbVertPosChange = TRUE;
+		  if (!isPos)
+		    {
+		      /* for stretched boxes: both position and dimension rules
+			 have to be updated */
+		      pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch,
+						   PtHeight, FnAny, FALSE, TRUE, &pAttrV);
+		      ApplyRule (pRStd, pSPR, pAb, pDoc, pAttrV);
+		      pAb->AbHeightChange = TRUE;
+		    }	       
+		  reDisp = TRUE;
+		}
+	      if (attr)
+		{
+		  /* redisplay presentation variables that use the attribute */
+		  /*RedisplayAttribute (pAttrV, pEl, pDoc);*/
+		  if (display)
+		    /* redisplay copies */
+		    RedisplayCopies (pEl, pDoc, TRUE);
+		  CallEventAttribute (&notifyAttr, FALSE);
+		}
+	      else
+		PRuleMessagePost (pEl, pRuleV, pDoc, isNew);
+	    }
+	}
+    }
+  
+  /* manage horizontal position */
+  if (pAb->AbBox != NULL && X != pAb->AbBox->BxXOrg)
+    {
+      /* look for the position rule that applies to the element */
+      pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch,
+				   PtHorizPos, FnAny, FALSE, TRUE, &pAttrH);
+      doit = FALSE;
+      x = X;
+      /* doesn't move boxes with floating position or set in lines */
+      if (pRStd->PrPosRule.PoPosDef != NoEdge
+	  && pAb->AbHorizPos.PosAbRef != NULL
+	  && !isLined)
+	{
+	  /* check if the position is given by an attribute with the exception NewVPos */
+	  attr = (pAttrH != NULL &&
+		  AttrHasException (ExcNewHPos, pAttrH->AeAttrNum, pAttrH->AeAttrSSchema));
+	  isPos = !(pAb->AbWidth.DimIsPosition);
+	  if (isPos)
+	    /* get the difference */
+	    dx = X - pAb->AbBox->BxXOrg;
+	  else
+	    /* position rule of stretched box is related to the parent */
+	    dx = X;
 	     
-	   if (pRStd->PrPosRule.PoDistUnit == UnPercent)
-	     {
-	       if (pAb->AbEnclosing == NULL || pAb->AbEnclosing->AbBox == NULL)
-		 GetSizesFrame (frame, &x, &y);
-	       else
-		 x = pAb->AbEnclosing->AbBox->BxWidth;
-	       dx = LogicalValue (dx, UnPercent, (PtrAbstractBox) x, 0);
-	     }
-	   else
-	     dx = LogicalValue (dx, pRStd->PrPosRule.PoDistUnit, pAb,
-				ViewFrameTable[frame - 1].FrMagnification);
+	  unit = pRStd->PrPosRule.PoDistUnit;
+	  if (unit == UnPercent)
+	    {
+	      if (pAb->AbEnclosing == NULL || pAb->AbEnclosing->AbBox == NULL)
+		GetSizesFrame (frame, &x, &y);
+	      else
+		x = pAb->AbEnclosing->AbBox->BxWidth;
+	      dx = LogicalValue (dx, UnPercent, (PtrAbstractBox) x, 0);
+	    }
+	  else
+	    dx = LogicalValue (dx, unit, pAb,
+			       ViewFrameTable[frame - 1].FrMagnification);
+	  
+	  if (!BoxCreating && !histOpen)
+	    {
+	      OpenHistorySequence (pDoc, pEl, pEl, 0, 0);
+	      histOpen = TRUE;
+	    }
+	  if (attr)
+	    {
+	      pRuleH = pRStd;
+	      if (pAttrH->AeAttrType == AtNumAttr)
+		{
+		  /* change the attribute value */
+		  notifyAttr.event = TteAttrModify;
+		  notifyAttr.document = doc;
+		  notifyAttr.element = (Element) pEl;
+		  notifyAttr.attribute = (Attribute) pAttrH;
+		  notifyAttr.attributeType.AttrSSchema =
+		    (SSchema) (pAttrH->AeAttrSSchema);
+		  notifyAttr.attributeType.AttrTypeNum = pAttrH->AeAttrNum;
+		  doit = !CallEventAttribute (&notifyAttr, TRUE);
+		  if (doit)
+		    {
+		      /* modify the distance in the attribute rule */
+		      if (!BoxCreating)
+			AddAttrEditOpInHistory (pAttrH, pEl, pDoc, TRUE, TRUE);
+		      pAttrH->AeAttrValue += dx;
+		    }
+		}
+	    }
+	  else
+	    /* the new position will be stored in a specific presentation rule */
+	    {
+	      /* check if the specific presentation rule already exists */
+	      pRuleH = SearchPresRule (pEl, PtHorizPos, 0, &isNew, pDoc, viewSch);
+	      if (isNew)
+		{
+		  /* create a new rule for the element */
+		  pR = pRuleH->PrNextPRule;
+		  /* copy the standard rule */
+		  *pRuleH = *pRStd;
+		  pRuleH->PrCond = NULL;
+		  pRuleH->PrNextPRule = pR;
+		  pRuleH->PrViewNum = viewSch;
+		  pRuleH->PrPosRule.PoDistUnit = unit;
+		  /* if the rule is associated to an attribute */
+		  /* keep the link to that attribute */
+		  if (pAttrH != NULL)
+		    {
+		      pRuleH->PrSpecifAttr = pAttrH->AeAttrNum;
+		      pRuleH->PrSpecifAttrSSchema = pAttrH->AeAttrSSchema;
+		    }
+		}
+	      value = pRuleH->PrPosRule.PoDistance;
+	      dx += value;
 
-	   /* check if the position is given by an attribute with the exception NewVPos */
-	   if (pAttr != NULL &&
-	       AttrHasException (ExcNewHPos, pAttr->AeAttrNum, pAttr->AeAttrSSchema))
-	     /* the new position will be stored into the attribute */
-	     attr = TRUE;
-	   else
-	     attr = FALSE;
+	      /* modify the distance in the specific rule */
+	      pRuleH->PrPosRule.PoDistance = dx;
+	      /* send the event message to the application */
+	      doit = !PRuleMessagePre (pEl, pRuleH, pDoc, isNew);
+	      if (!doit && !isNew)
+		/* reset the previous value */
+		pRuleH->PrPosRule.PoDistance = value;
+	    }
+	  if (doit)
+	    {
+	      /* the document is modified */
+	      SetDocumentModified (pDoc, TRUE, 0);
+	      if (ApplyRule (pRuleH, pSPR, pAb, pDoc, pAttrH))
+		{
+		  pAb->AbHorizPosChange = TRUE;
+		  if (!isPos)
+		    {
+		      /* for stretched boxes: both position and dimension rules
+			 have to be updated */
+		      pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch,
+						   PtWidth, FnAny, FALSE, TRUE, &pAttrH);
+		      ApplyRule (pRStd, pSPR, pAb, pDoc, pAttrH);
+		      pAb->AbWidthChange = TRUE;
+		    }	       
+		  reDisp = TRUE;
+		}
+	      if (attr)
+		{
+		  /* redisplay presentation variables that use the attribute */
+		  /*RedisplayAttribute (pAttrH, pEl, pDoc);*/
+		  if (display)
+		    /* redisplay copies */
+		    RedisplayCopies (pEl, pDoc, TRUE);
+		  CallEventAttribute (&notifyAttr, FALSE);
+		}
+	      else
+		PRuleMessagePost (pEl, pRuleH, pDoc, isNew);
+	    }
+	}
+    }
 
-	   if (!BoxCreating && !histOpen)
-	     {
-	       OpenHistorySequence (pDoc, pEl, pEl, 0, 0);
-	       histOpen = TRUE;
-	     }
-	   if (attr)
-	     {
-	       pRuleH = pRStd;
-	       if (pAttr->AeAttrType == AtNumAttr)
-		 {
-		   /* change the attribute value */
-		   notifyAttr.event = TteAttrModify;
-		   notifyAttr.document = doc;
-		   notifyAttr.element = (Element) pEl;
-		   notifyAttr.attribute = (Attribute) pAttr;
-		   notifyAttr.attributeType.AttrSSchema =
-		                          (SSchema) (pAttr->AeAttrSSchema);
-		   notifyAttr.attributeType.AttrTypeNum = pAttr->AeAttrNum;
-		   if (CallEventAttribute (&notifyAttr, TRUE))
-		     doitX = FALSE;
-		   else
-		     {
-		       if (!BoxCreating)
-		         AddAttrEditOpInHistory (pAttr, pEl, pDoc, TRUE, TRUE);
-		       pAttr->AeAttrValue += dx;
-		       /* redisplay presentation variables that use the attribute */
-		       RedisplayAttribute (pAttr, pEl, pDoc);
-		       if (display)
-			 /* redisplay copies */
-			 RedisplayCopies (pEl, pDoc, TRUE);
-		     }
-		 }
-	     }
-	   else
-	     /* the new position will be stored in a specific presentation rule */
-	     {
-	       /* check if the specific presentation rule already exists */
-	       pRuleH = SearchPresRule (pEl, PtHorizPos, 0, &isNew, pDoc, viewSch);
-	       if (isNew)
-		 {
-		   /* create a new rule for the element */
-		   pR = pRuleH->PrNextPRule;
-		   /* copy the standard rule */
-		   *pRuleH = *pRStd;
-		   pRuleH->PrCond = NULL;
-		   pRuleH->PrNextPRule = pR;
-		   pRuleH->PrViewNum = viewSch;
-		   unit = UnPixel;
-		   pRuleH->PrPosRule.PoDistUnit = unit;
-		   /* if the rule is associated to an attribute */
-		   /* keep the link to that attribute */
-		   if (pAttr != NULL)
-		     {
-		       pRuleH->PrSpecifAttr = pAttr->AeAttrNum;
-		       pRuleH->PrSpecifAttrSSchema = pAttr->AeAttrSSchema;
-		     }
-		 }
-		 value = pRuleH->PrPosRule.PoDistance;
-
-
-	       /* check if there is a previous value */
-	       if (pAb->AbEnclosing)
-		 ref = pAb->AbEnclosing->AbBox->BxXOrg;
-	       else
-		 ref = 0;
-	       if (isNew ||(pAb->AbBox->BxXOrg != ref && value == 0))
-		 {
-		   /* the rule gives a default position */
-		   if (isPos)
-		     {
-		       /* take the box edge into account */
-		       if (pRStd->PrPosRule.PoPosDef == VertMiddle)
-			 X += pAb->AbBox->BxWidth / 2;
-		       else if (pRStd->PrPosRule.PoPosDef == Right)
-			 X += pAb->AbBox->BxWidth;
-		     }
-		   if (unit == UnPercent)
-		     dx = LogicalValue (X, UnPercent, (PtrAbstractBox) x, 0);
-		   else
-		     dx = LogicalValue (X, unit, pAb,
-					ViewFrameTable[frame - 1].FrMagnification);
-		   value = 0;
-		 }
-	       else if (isPos)
-		 dx += value;
-
-	       /* modify the distance in the specific rule */
-	       pRuleH->PrPosRule.PoDistance = dx;
-	       /* send the event message to the application */
-	       doitX = !PRuleMessagePre (pEl, pRuleH, pDoc, isNew);
-	       if (!doitX && !isNew)
-		 /* reset the previous value */
-		 pRuleH->PrPosRule.PoDistance = value;
-	     }
-	   if (doitX)
-	     {
-	       /* the document is modified */
-	       SetDocumentModified (pDoc, TRUE, 0);
-	       if (ApplyRule (pRuleH, pSPR, pAb, pDoc, pAttr))
-		 {
-		   pAb->AbHorizPosChange = TRUE;
-		   if (!isPos)
-		     {
-		       /* for stretched boxes: both position and dimension rules
-			  have to be updated */
-		       pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch,
-						    PtWidth, FnAny, FALSE, TRUE, &pAttr);
-		       ApplyRule (pRStd, pSPR, pAb, pDoc, pAttr);
-		       pAb->AbWidthChange = TRUE;
-		     }	       
-		   RedispAbsBox (pAb, pDoc);
-		   reDisp = TRUE;
-		 }
-	       if (attr)
-		 CallEventAttribute (&notifyAttr, FALSE);
-	       else
-		 PRuleMessagePost (pEl, pRuleH, pDoc, isNew);
-	     }
-	 }
-     }
-
-   /* restore the display mode */
-   if (dispMode == DisplayImmediately)
-     TtaSetDisplayMode (doc, dispMode);
-
-   if (!BoxCreating && histOpen)
-     {
-       CloseHistorySequence (pDoc);
-       histOpen = FALSE;
-     }
-   
-   if (reDisp && display)
-     {
-       /* update current displayed views (I'm not sure it's necessary) */
-       AbstractImageUpdated (pDoc);
-       RedisplayDocViews (pDoc);
-     }
+  if (!BoxCreating && histOpen)
+    {
+      CloseHistorySequence (pDoc);
+      histOpen = FALSE;
+    }
+  
+  if (reDisp && display)
+    {
+      /* update current displayed views (I'm not sure it's necessary) */
+      RedispAbsBox (pAb, pDoc);
+      AbstractImageUpdated (pDoc);
+      RedisplayDocViews (pDoc);
+    }
+  /* restore the display mode */
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (doc, dispMode);
 #endif /* NODISPLAY */
 }
 
@@ -582,7 +525,7 @@ ThotBool            display;
   PtrPRule            pRuleH, pRuleV;
   PtrPSchema          pSPR;
   PtrSSchema          pSSR;
-  PtrAttribute        pAttr;
+  PtrAttribute        pAttrH, pAttrV;
   PtrDocument         pDoc;
   PtrElement          pEl;
   NotifyAttribute     notifyAttr;
@@ -593,7 +536,7 @@ ThotBool            display;
   int                 heightRef, widthRef;
   int                 viewSch;
   int                 value;
-  ThotBool            attr, doitX, doitY, ok;
+  ThotBool            attr, doit, ok;
   ThotBool            isNew, reDisp, isDim, histOpen;
 
   /* get the element */
@@ -612,14 +555,14 @@ ThotBool            display;
       TtaSetDisplayMode (doc, DeferredDisplay);
       reDisp = TRUE;
     }
-  doitX = doitY = FALSE;
 
   /* manage the width change of the box */
   if (width != 0 && pAb->AbBox != NULL && width != pAb->AbBox->BxWidth)
     {
       /* look for the dimension rule applied to the element */
       pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch,
-				   PtWidth, FnAny, FALSE, TRUE, &pAttr);
+				   PtWidth, FnAny, FALSE, TRUE, &pAttrH);
+      doit = FALSE;
       /* don't change the width when it depends on the contents or it's */
       /* a stretched box */
       ok = TRUE;
@@ -644,6 +587,9 @@ ThotBool            display;
 
       if (ok)
 	{
+	  /* check if the width is given by an attribute with the exception NewWidth */
+	  attr = (pAttrH != NULL &&
+		  AttrHasException (ExcNewWidth, pAttrH->AeAttrNum, pAttrH->AeAttrSSchema));
 	  if (isDim)
 	    {
 	      /* a dimension rule */
@@ -661,7 +607,7 @@ ThotBool            display;
 	    }
 	  else
 	    {
-	      /* it's a position rule of stretched box */
+	      /* position rule of stretched box is related to the parent */
 	      dx = width;
 	      unit = pRStd->PrDimRule.DrPosRule.PoDistUnit;
 	      if (pAb->AbEnclosing == NULL)
@@ -678,44 +624,31 @@ ThotBool            display;
 	    /* convert the new height in logical value */
 	    dx = LogicalValue (dx, unit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 	  
-	  /* check if the width is given by an attribute with the exception NewWidth */
-	  attr = FALSE;
-	  if (pAttr != NULL &&
-	      AttrHasException (ExcNewWidth, pAttr->AeAttrNum, pAttr->AeAttrSSchema))
-	    /* the new width will be stored into the attribute */
-	    attr = TRUE;
-	  
 	  if (!BoxCreating && !histOpen)
 	    {
 	      OpenHistorySequence (pDoc, pEl, pEl, 0, 0);
 	      histOpen = TRUE;
 	    }
+
 	  if (attr)
 	    {
 	      pRuleH = pRStd;
-	      if (pAttr->AeAttrType == AtNumAttr)
+	      if (pAttrH->AeAttrType == AtNumAttr)
 		/* change the attribute value */
 		{
 		  notifyAttr.event = TteAttrModify;
 		  notifyAttr.document = doc;
 		  notifyAttr.element = (Element) pEl;
-		  notifyAttr.attribute = (Attribute) pAttr;
-		  notifyAttr.attributeType.AttrSSchema = (SSchema) (pAttr->AeAttrSSchema);
-		  notifyAttr.attributeType.AttrTypeNum = pAttr->AeAttrNum;
-		  if (CallEventAttribute (&notifyAttr, TRUE))
-		    doitX = FALSE;
-		  else
+		  notifyAttr.attribute = (Attribute) pAttrH;
+		  notifyAttr.attributeType.AttrSSchema = (SSchema) (pAttrH->AeAttrSSchema);
+		  notifyAttr.attributeType.AttrTypeNum = pAttrH->AeAttrNum;
+		  doit = !CallEventAttribute (&notifyAttr, TRUE);
+		  if (doit)
 		    {
+		      /* modify the distance in the attribute rule */
 		      if (!BoxCreating)
-			AddAttrEditOpInHistory (pAttr, pEl, pDoc, TRUE, TRUE);
-		      
-		      pAttr->AeAttrValue += dx;
-		      /* redisplay presentation variables using the attribute */
-		      RedisplayAttribute (pAttr, pEl, pDoc);
-		      if (display)
-			/* the new attribute value must be transmitted */
-			/* to copies and inclusions of the element */
-			RedisplayCopies (pEl, pDoc, TRUE);
+			AddAttrEditOpInHistory (pAttrH, pEl, pDoc, TRUE, TRUE);
+		      pAttrH->AeAttrValue += dx;
 		    }
 		}
 	    }
@@ -735,17 +668,17 @@ ThotBool            display;
 		  pRuleH->PrViewNum = viewSch;
 		  /* if the rule is associated to an attribute */
 		  /* keep the link to that attribute */
-		  if (pAttr != NULL)
+		  if (pAttrH != NULL)
 		    {
-		      pRuleH->PrSpecifAttr = pAttr->AeAttrNum;
-		      pRuleH->PrSpecifAttrSSchema = pAttr->AeAttrSSchema;
+		      pRuleH->PrSpecifAttr = pAttrH->AeAttrNum;
+		      pRuleH->PrSpecifAttrSSchema = pAttrH->AeAttrSSchema;
 		    }
 		  /* by default generate a rule in pixels */
-		  unit = UnPixel;
 		  if (isDim)
 		    pRuleH->PrDimRule.DrUnit = unit;
 		  else
 		    pRuleH->PrDimRule.DrPosRule.PoDistUnit = unit;
+		  value = 0;
 		}
 	      else if (isDim)
 		{
@@ -759,7 +692,7 @@ ThotBool            display;
 		  unit = pRuleH->PrDimRule.DrPosRule.PoDistUnit;
 		  value = pRuleH->PrDimRule.DrPosRule.PoDistance;
 		}
-	      if (isNew || (pAb->AbBox->BxWidth != 0 && isDim && value == 0))
+	      if (isNew/* || (pAb->AbBox->BxWidth != 0 && isDim && value == 0)*/)
 		{
 		  /* the rule gives a default */
 		  if (unit == UnPercent)
@@ -778,8 +711,8 @@ ThotBool            display;
 	      else
 		pRuleH->PrDimRule.DrPosRule.PoDistance = dx;
 	      /* send the event message to the application */
-	      doitX = !PRuleMessagePre (pEl, pRuleH, pDoc, isNew);
-	      if (!doitX && !isNew)
+	      doit = !PRuleMessagePre (pEl, pRuleH, pDoc, isNew);
+	      if (!doit && !isNew)
 		{
 		  /* reset the previous value */
 		  if (isDim)
@@ -789,11 +722,11 @@ ThotBool            display;
 		}
 	    }
 
-	  if (doitX)
+	  if (doit)
 	    {
 	      /* the document is modified */
 	      SetDocumentModified (pDoc, TRUE, 0);
-	      if (ApplyRule (pRuleH, pSPR, pAb, pDoc, pAttr))
+	      if (ApplyRule (pRuleH, pSPR, pAb, pDoc, pAttrH))
 		{
 		  pAb->AbWidthChange = TRUE;
 		   if (!isDim)
@@ -801,15 +734,22 @@ ThotBool            display;
 		       /* for stretched boxes: both position and dimension rules
 			  have to be updated */
 		       pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch,
-						    PtHorizPos, FnAny, FALSE, TRUE, &pAttr);
-		       ApplyRule (pRStd, pSPR, pAb, pDoc, pAttr);
+						    PtHorizPos, FnAny, FALSE, TRUE, &pAttrH);
+		       ApplyRule (pRStd, pSPR, pAb, pDoc, pAttrH);
 		       pAb->AbHorizPosChange = TRUE;
 		     }	       
-		  RedispAbsBox (pAb, pDoc);
 		  reDisp = TRUE;
 		}
 	      if (attr)
-		CallEventAttribute (&notifyAttr, FALSE);
+		{
+		  /* redisplay presentation variables using the attribute */
+		  /*RedisplayAttribute (pAttrH, pEl, pDoc);*/
+		  if (display)
+		    /* the new attribute value must be transmitted */
+		    /* to copies and inclusions of the element */
+		    RedisplayCopies (pEl, pDoc, TRUE);
+		  CallEventAttribute (&notifyAttr, FALSE);
+		}
 	      else
 		PRuleMessagePost (pEl, pRuleH, pDoc, isNew);
 	    }
@@ -821,7 +761,8 @@ ThotBool            display;
      {
        /* look for the dimension rule applied to the element */
        pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch,
-				    PtHeight, FnAny, FALSE, TRUE, &pAttr);
+				    PtHeight, FnAny, FALSE, TRUE, &pAttrV);
+       doit = FALSE;
        /* don't change the height when it depends on the contents or it's */
        /* a stretched box */
        ok = TRUE;
@@ -848,6 +789,9 @@ ThotBool            display;
 
        if (ok)
 	 {
+	   /* check if the height is given by an attribute with the exception NewHeight */
+	   attr = (pAttrV != NULL &&
+		   AttrHasException (ExcNewHeight, pAttrV->AeAttrNum, pAttrV->AeAttrSSchema));
 	   if (isDim)
 	     {
 	       /* a dimension rule */
@@ -865,7 +809,7 @@ ThotBool            display;
 	     }
 	   else
 	     {
-	       /* a position rule */
+	       /* position rule of stretched box is related to the parent */
 	       dy = height;
 	       unit = pRStd->PrDimRule.DrPosRule.PoDistUnit;
 	       if (pAb->AbEnclosing == NULL)
@@ -883,44 +827,32 @@ ThotBool            display;
 	     dy = LogicalValue (dy, unit, pAb,
 				ViewFrameTable[frame - 1].FrMagnification);
 	   
-	   /* check if the height is given by an attribute with the exception NewHeight */
-	   attr = FALSE;
-	   if (pAttr != NULL &&
-	       AttrHasException (ExcNewHeight, pAttr->AeAttrNum, pAttr->AeAttrSSchema))
-	     /* the new height will be stored into the attribute */
-	     attr = TRUE;
-	   
 	   if (!BoxCreating && !histOpen)
 	     {
 	       OpenHistorySequence (pDoc, pEl, pEl, 0, 0);
 	       histOpen = TRUE;
 	     }
+
 	   if (attr)
 	     {
 	       pRuleV = pRStd;
-	       if (pAttr->AeAttrType == AtNumAttr)
+	       if (pAttrV->AeAttrType == AtNumAttr)
 		 /* change the attribute value */
 		 {
 		   notifyAttr.event = TteAttrModify;
 		   notifyAttr.document = doc;
 		   notifyAttr.element = (Element) pEl;
-		   notifyAttr.attribute = (Attribute) pAttr;
+		   notifyAttr.attribute = (Attribute) pAttrV;
 		   notifyAttr.attributeType.AttrSSchema =
-		     (SSchema) (pAttr->AeAttrSSchema);
-		   notifyAttr.attributeType.AttrTypeNum = pAttr->AeAttrNum;
-		   if (CallEventAttribute (&notifyAttr, TRUE))
-		     doitY = FALSE;
-		   else
+		     (SSchema) (pAttrV->AeAttrSSchema);
+		   notifyAttr.attributeType.AttrTypeNum = pAttrV->AeAttrNum;
+		   doit = !CallEventAttribute (&notifyAttr, TRUE);
+		   if (doit)
 		     {
+		       /* modify the distance in the attribute rule */
 		       if (!BoxCreating)
-			 AddAttrEditOpInHistory (pAttr, pEl, pDoc, TRUE, TRUE);
-		       pAttr->AeAttrValue += dy;
-		       /* redisplay presentation variables using the attribute */
-		       RedisplayAttribute (pAttr, pEl, pDoc);
-		       if (display)
-			 /* the new attribute value must be transmitted */
-			 /* to copies and inclusions of the element */
-			 RedisplayCopies (pEl, pDoc, TRUE);
+			 AddAttrEditOpInHistory (pAttrV, pEl, pDoc, TRUE, TRUE);
+		       pAttrV->AeAttrValue += dy;
 		     }
 		 }
 	     }
@@ -940,17 +872,17 @@ ThotBool            display;
 		   pRuleV->PrViewNum = viewSch;
 		   /* if the rule is associated to an attribute */
 		   /* keep the link to that attribute */
-		   if (pAttr != NULL)
+		   if (pAttrV != NULL)
 		     {
-		       pRuleV->PrSpecifAttr = pAttr->AeAttrNum;
-		       pRuleV->PrSpecifAttrSSchema = pAttr->AeAttrSSchema;
+		       pRuleV->PrSpecifAttr = pAttrV->AeAttrNum;
+		       pRuleV->PrSpecifAttrSSchema = pAttrV->AeAttrSSchema;
 		     }
 		  /* by default generate a rule in pixels */
-		  unit = UnPixel;
 		  if (isDim)
 		    pRuleV->PrDimRule.DrUnit = unit;
 		  else
 		    pRuleV->PrDimRule.DrPosRule.PoDistUnit = unit;
+		  value = 0;
 		 }
 	       else if (isDim)
 		 {
@@ -964,7 +896,7 @@ ThotBool            display;
 		   unit = pRuleV->PrDimRule.DrPosRule.PoDistUnit;
 		   value = pRuleV->PrDimRule.DrPosRule.PoDistance;
 		 }
-	       if (isNew ||(pAb->AbBox->BxHeight != 0 && isDim && value == 0))
+	       if (isNew/* ||(pAb->AbBox->BxHeight != 0 && isDim && value == 0)*/)
 		 {
 		   /* the rule gives a default height */
 		   if (unit == UnPercent)
@@ -983,8 +915,8 @@ ThotBool            display;
 	       else
 		 pRuleV->PrDimRule.DrPosRule.PoDistance = dy;
 	       /* send the event message to the application */
-	       doitY = !PRuleMessagePre (pEl, pRuleV, pDoc, isNew);
-	       if (!doitY && !isNew)
+	       doit = !PRuleMessagePre (pEl, pRuleV, pDoc, isNew);
+	       if (!doit && !isNew)
 		 {
 		   /* reset the previous value */
 		   if (isDim)
@@ -994,11 +926,11 @@ ThotBool            display;
 		 }
 	     }
 	   
-	   if (doitY)
+	   if (doit)
 	     {
 	       /* the document is modified */
 	       SetDocumentModified (pDoc, TRUE, 0);
-	       if (ApplyRule (pRuleV, pSPR, pAb, pDoc, pAttr))
+	       if (ApplyRule (pRuleV, pSPR, pAb, pDoc, pAttrV))
 		 {
 		   pAb->AbHeightChange = TRUE;
 		   if (!isDim)
@@ -1006,36 +938,44 @@ ThotBool            display;
 		       /* for stretched boxes: both position and dimension rules
 			  have to be updated */
 		       pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch,
-						    PtVertPos, FnAny, FALSE, TRUE, &pAttr);
-		       ApplyRule (pRStd, pSPR, pAb, pDoc, pAttr);
+						    PtVertPos, FnAny, FALSE, TRUE, &pAttrV);
+		       ApplyRule (pRStd, pSPR, pAb, pDoc, pAttrV);
 		       pAb->AbVertPosChange = TRUE;
 		     }	       
-	   RedispAbsBox (pAb, pDoc);
-		   reDisp = TRUE;	/* il faut reafficher */
+		   reDisp = TRUE;
 		 }
 	       if (attr)
-		 CallEventAttribute (&notifyAttr, FALSE);
+		 {
+		   /* redisplay presentation variables using the attribute */
+		   RedisplayAttribute (pAttrV, pEl, pDoc);
+		   if (display)
+		     /* the new attribute value must be transmitted */
+		     /* to copies and inclusions of the element */
+		     /*RedisplayCopies (pEl, pDoc, TRUE);*/
+		   CallEventAttribute (&notifyAttr, FALSE);
+		 }
 	       else
 		 PRuleMessagePost (pEl, pRuleV, pDoc, isNew);
 	     }
 	 }
      }
-   
+
    if (!BoxCreating && histOpen)
      {
        CloseHistorySequence (pDoc);
        histOpen = FALSE;
      }
-
-   if (reDisp || dispMode == DisplayImmediately)
+  
+   if (reDisp && display)
      {
-       TtaSetDisplayMode (doc, DisplayImmediately);
-       if (display)
-	 {
-	   AbstractImageUpdated (pDoc);	/* mise a jour de l'image abstraite */
-	   RedisplayDocViews (pDoc);	/* reafficher ce qu'il faut */
-	 }
+       /* update current displayed views (I'm not sure it's necessary) */
+       RedispAbsBox (pAb, pDoc);
+       AbstractImageUpdated (pDoc);
+       RedisplayDocViews (pDoc);
      }
+   /* restore the display mode */
+   if (dispMode == DisplayImmediately)
+     TtaSetDisplayMode (doc, dispMode);
 #endif /* NODISPLAY */
 }
 

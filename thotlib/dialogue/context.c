@@ -263,7 +263,7 @@ static void         InitCurs ()
    WindowCurs = XCreateFontCursor (TtDisplay, XC_hand2);
    VCurs = XCreateFontCursor (TtDisplay, XC_sb_v_double_arrow);
    HCurs = XCreateFontCursor (TtDisplay, XC_sb_h_double_arrow);
-   HVCurs = XCreateFontCursor (TtDisplay, XC_fleur);
+   HVCurs = XCreateFontCursor (TtDisplay, /*XC_fleur*/XC_plus);
    WaitCurs = XCreateFontCursor (TtDisplay, XC_watch);
 #endif /* _WINDOWS */
 }

@@ -1248,28 +1248,26 @@ int                 construct;
 #endif
 {
   Document	    doc;
-  Element	    last, first, graphRoot, newEl, sibling, selEl;
-  Element          child, parent, elem;
-  ElementType      elType, selType, newType, childType;
-  AttributeType    attrType;
-  Attribute        attr;
+  Element	    first, graphRoot, newEl, sibling, selEl;
+  Element           child, parent, elem;
+  ElementType       elType, selType, newType, childType;
+  AttributeType     attrType;
+  Attribute         attr;
   SSchema	    docSchema, graphSchema;
-  DisplayMode      dispMode;
+  DisplayMode       dispMode;
   char		    shape;
-  STRING           name;
-  int		    c1, c2, i, j, w, h;
+  STRING            name;
+  int		    c1, i, j, w, h;
   int	            oldStructureChecking;
   int              docModified;
-  ThotBool	    found;
+  ThotBool	    found, newGraph = FALSE;
 
   doc = TtaGetSelectedDocument ();
   if (doc == 0)
     /* there is no selection. Nothing to do */
     return;
-  TtaGiveLastSelectedElement (doc, &last, &c2, &j);
   TtaGiveFirstSelectedElement (doc, &first, &c1, &i);
-  TtaOpenUndoSequence (doc, first, last, c1, c2);
-
+  TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
   selEl = first;
   newEl = NULL;
   child = NULL;
@@ -1298,9 +1296,31 @@ int                 construct;
 	      return;
 	    }
 	  graphSchema = TtaNewNature (doc, docSchema, TEXT("GraphML"), TEXT("GraphMLP"));
-	  TtaAskFirstCreation ();
-	  TtaCreateElement (elType, doc);
-	  TtaGiveFirstSelectedElement (doc, &graphRoot, &c1, &i);
+	  if (TtaIsSelectionEmpty ())
+	    {
+	      /* try to create the SVG here */
+	      TtaCreateElement (elType, doc);
+	      TtaGiveFirstSelectedElement (doc, &graphRoot, &c1, &i);
+	    }
+	  else
+	    {
+	      /* look for a position around */
+	      parent = first;
+	      do
+		{
+		  first = parent;
+		  parent = TtaGetParent (first);
+		  selType = TtaGetElementType (parent);
+		}
+	      while (selType.ElTypeNum != HTML_EL_BODY &&
+		     selType.ElTypeNum != HTML_EL_Division );
+	      
+	      /* create and insert a SVG element here */
+	      graphRoot = TtaNewElement (doc, elType);
+	      TtaInsertSibling (graphRoot, first, FALSE, doc);
+	      first = graphRoot;
+	      newGraph = TRUE;
+	    }
 	}
     }
 
@@ -1464,7 +1484,10 @@ int                 construct;
 	    }
 	  while (elem != NULL);
 	}
-      TtaRegisterElementCreate (newEl, doc);
+      if (newGraph)
+	TtaRegisterElementCreate (graphRoot, doc);
+      else
+	TtaRegisterElementCreate (newEl, doc);
 
       /* ask Thot to display changes made in the document */
       TtaSetDisplayMode (doc, dispMode);

@@ -1854,7 +1854,7 @@ int               ym;
 		  yr = y;
 		  break;
 		}
-	      
+
 	      /* set positions related to the window */
 	      xmin -= pFrame->FrXOrg;
 	      xmax -= pFrame->FrXOrg;
@@ -2184,7 +2184,6 @@ int                 frame;
 {
    ViewFrame          *pFrame;
    PtrAbstractBox      pAb;
-   PtrBox              box;
    int                 x, y;
    int                 width, height;
    int                 xr, yr;
@@ -2320,19 +2319,8 @@ int                 frame;
 			    percentW, percentH);
 
 	/* Notification de la boite saisie */
-	pAb->AbHorizPos.PosUserSpecified = FALSE;
-	pAb->AbVertPos.PosUserSpecified = FALSE;
-	pAb->AbWidth.DimUserSpecified = FALSE;
-	pAb->AbHeight.DimUserSpecified = FALSE;
 	x += pFrame->FrXOrg;
 	y += pFrame->FrYOrg;
-	if (pAb->AbEnclosing && pAb->AbEnclosing->AbBox)
-	  {
-	    box = pAb->AbEnclosing->AbBox;
-	    /* keep relative translations */
-	    x = x - box->BxXOrg + box->BxLMargin + box->BxLBorder + box->BxLPadding;
-	    y = y - box->BxYOrg + box->BxTMargin + box->BxTBorder + box->BxTPadding;
-	  }
 	NewPosition (pAb, x, y, frame, TRUE);
 	if (percentW)
 	  NewDimension (pAb, 0, height, frame, TRUE);
@@ -2340,6 +2328,10 @@ int                 frame;
 	  NewDimension (pAb, width, 0, frame, TRUE);
 	else
 	  NewDimension (pAb, width, height, frame, TRUE);
+	pAb->AbHorizPos.PosUserSpecified = FALSE;
+	pAb->AbVertPos.PosUserSpecified = FALSE;
+	pAb->AbWidth.DimUserSpecified = FALSE;
+	pAb->AbHeight.DimUserSpecified = FALSE;
      }
 
    /* Traitement de la creation interactive termine */

@@ -24,7 +24,8 @@
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
 #include "edit_tv.h"
-#undef THOT_EXPORT
+#include "select_tv.h"
+
 
 /* ----------------------------------------------------------------------
    TtaPrepareUndo returns TRUE if a undo sequence is opened
@@ -66,11 +67,11 @@ Document document;
 void          TtaOpenUndoSequence (Document document, Element firstSel, Element lastSel, int firstSelChar, int lastSelChar)
 #else  /* __STDC__ */
 void          TtaOpenUndoSequence (document, firstSel, lastSel, firstSelChar, lastSelChar)
-Document document;
-Element firstSel;
-Element lastSel;
-int firstSelChar;
-int lastSelChar;
+Document      document;
+Element       firstSel;
+Element       lastSel;
+int           firstSelChar;
+int           lastSelChar;
 #endif /* __STDC__ */
 {
   int i;
@@ -82,10 +83,11 @@ int lastSelChar;
       if (firstSel == NULL)
 	{
 	  /* gets the current selection */
-	  /* gets the first selected element */
 	  TtaGiveFirstSelectedElement (document, &firstSel, &firstSelChar, &i);
 	  /* gets the last selected element */
 	  TtaGiveLastSelectedElement (document, &lastSel, &i, &lastSelChar);
+	  if (SelPosition)
+	    firstSelChar = lastSelChar + 1;
 	}
 
       /* inits the history sequence */

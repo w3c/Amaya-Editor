@@ -618,12 +618,12 @@ int                 construct;
 #endif
 {
   Document           doc;
-  Element            sibling, last, el, row, child, leaf, placeholderEl,
+  Element            sibling, el, row, child, leaf, placeholderEl,
                      parent, new, next;
   ElementType        newType, elType;
   SSchema            docSchema, mathSchema;
   STRING             name;
-  int                c1, c2, i, j, len, oldStructureChecking, col;
+  int                c1, i, j, len, oldStructureChecking, col;
   ThotBool	     before, ParBlock, emptySel, ok, insertSibling,
 		     selectFirstChild, displayTableForm, registered;
 
@@ -632,9 +632,7 @@ int                 construct;
 	 /* the document is in ReadOnly mode */
 	 return;
 
-      TtaGiveLastSelectedElement (doc, &last, &c2, &j);
       TtaGiveFirstSelectedElement (doc, &sibling, &c1, &i); 
-    
       /* Get the type of the first selected element */
       elType = TtaGetElementType (sibling);
       docSchema = TtaGetDocumentSSchema (doc);
@@ -669,7 +667,7 @@ int                 construct;
 	 element */
       before = TRUE;
 
-      TtaOpenUndoSequence (doc, sibling, last, c1, c2);
+      TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
       registered = FALSE;
 
       /* Check whether the selected element is a MathML element */
@@ -684,7 +682,8 @@ int                 construct;
 	      if (c1 > len)
 		/* the caret is at the end of that character string */
 		{
-		next = sibling;  TtaNextSibling (&next);
+		next = sibling;
+		TtaNextSibling (&next);
 		if (next)
 		  /* there is another character string after that one.
 		     split the enclosing mo, mn, mi or mtext */

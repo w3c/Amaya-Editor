@@ -498,7 +498,8 @@ char*               shape;
 		  parent = TtaGetParent (el);
 		  elType = TtaGetElementType (parent);
 	       }
-	     while (elType.ElTypeNum != HTML_EL_BODY);
+	     while (elType.ElTypeNum != HTML_EL_BODY &&
+		    elType.ElTypeNum != HTML_EL_Division );
 	     TtaInsertSibling (map, el, FALSE, doc);
 	     CreateTargetAnchor (doc, map, FALSE);
 	     attrType.AttrTypeNum = HTML_ATTR_NAME;
@@ -623,7 +624,7 @@ char*               shape;
 	if (shape[0] == 'p')
 	  {
 	    TtcInsertGraph (doc, 1, 'p');
-	    if (TtaGetVolume (el) < 3)
+	    if (TtaGetVolume (child) < 3)
 	      {
 		/* the polyline doesn't have enough points */
 		if (newMap)
