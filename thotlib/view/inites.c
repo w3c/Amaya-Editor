@@ -514,7 +514,7 @@ unsigned short      blue;
 	       if (prev == NbExtColors)
 		 NbExtColors++;
 	     }
-	   else if (best > NColors)
+	   else if (best >= NColors)
 	     /* it's an already allocated extended color */
 	     ExtCount_Table[best - NColors]++;
 	 }
