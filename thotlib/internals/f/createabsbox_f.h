@@ -84,6 +84,10 @@ extern void WaitingRule ( PtrPRule pR,
                           PtrAbstractBox queuePP[MAX_QUEUE_LEN],
                           PtrPRule queuePR[MAX_QUEUE_LEN],
                           int *lqueue );
+extern ThotBool RuleHasHigherPriority ( PtrPRule pRule1,
+                                        PtrPSchema pPS1,
+                                        PtrPRule pRule2,
+                                        PtrPSchema pPS2 );
 extern PtrAbstractBox AbsBoxesCreate ( PtrElement pEl,
                                        PtrDocument pDoc,
                                        DocViewNumber viewNb,
@@ -171,6 +175,10 @@ extern void WaitingRule (/* PtrPRule pR,
                             PtrAbstractBox queuePP[MAX_QUEUE_LEN],
                             PtrPRule queuePR[MAX_QUEUE_LEN],
                             int *lqueue */);
+extern ThotBool RuleHasHigherPriority (/* PtrPRule pRule1,
+                                          PtrPSchema pPS1,
+                                          PtrPRule pRule2,
+                                          PtrPSchema pPS2 */);
 extern PtrAbstractBox AbsBoxesCreate (/* PtrElement pEl,
                                          PtrDocument pDoc,
                                          DocViewNumber viewNb,

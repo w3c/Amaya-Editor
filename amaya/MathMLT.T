@@ -25,7 +25,7 @@ RULES
 
    Document: BEGIN
         if Charset
-	Create '<?xml version="1.0"';
+	   Create '<?xml version="1.0"';
 	if Charset and not Charset = 'unknown'
 	   BEGIN
 	   Create ' encoding="';
@@ -39,12 +39,12 @@ RULES
    MathML:
 	begin
 	Use XLinkT for XLink;
-	Create '\12<math xmlns="http://www.w3.org/1998/Math/MathML"';
+	Create '<math xmlns="http://www.w3.org/1998/Math/MathML"';
 	Create Attributes;
 	Create '>\12';
 	indent +2;
 	indent -2 after;
-	Create '</math>\12' After;
+	Create '</math>' after;
 	end;
 
    XMLcomment:

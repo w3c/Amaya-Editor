@@ -130,8 +130,9 @@ void         UpdateAbsBoxVolume (PtrElement pEl, int view, PtrDocument pDoc)
 }
 
 /*----------------------------------------------------------------------
-   SimpleSearchRulepEl cherche dans la chaine pRule la regle du       
-   type typeRule a appliquer pour la vue view.                
+   SimpleSearchRulepEl
+   Search in the string of presentation rules starting with pRule
+   the rule of type typeRule that applies to element pEl in the given view.
   ----------------------------------------------------------------------*/
 static void SimpleSearchRulepEl (PtrPRule * pRuleView1, PtrElement pEl,
 				 int view, PRuleType typeRule,
@@ -146,28 +147,25 @@ static void SimpleSearchRulepEl (PtrPRule * pRuleView1, PtrElement pEl,
   while (pR != NULL)
     {
       if (pR->PrType == typeRule &&
-	  (typeRule != PtFunction || typeFunc == FnAny || pR->PrPresFunction == typeFunc))
+	  (typeRule != PtFunction || typeFunc == FnAny ||
+	   pR->PrPresFunction == typeFunc))
 	{
-	  /* regle du type cherche' */
-	  if (pR->PrViewNum == view &&	    /* pour la vue voulue */
+	  /* that's the type of rule we are looking for */
+	  if (pR->PrViewNum == view &&	    /* right view */
 	      (pR->PrCond == NULL ||
 	       CondPresentation (pR->PrCond, pEl, NULL, NULL, view,
 				 pEl->ElStructSchema, pDoc)))
-	    /* les conditions d'application de la regle sont satisfaites */
-	    /* cette regle convient, a moins qu'on en trouve une autre */
-	    /* plus specifique dans les regles qui suivent */
+	    /* conditions for that rule are satisfied */
+	    /* this rule applies, but let's look further */
 	    *pRule = pR;
-	  else
-	    {
-	      if (pR->PrViewNum == 1 && *pRuleView1 == NULL &&
-		  /* regle du type cherche' pour la vue 1 */
-		  (pR->PrCond == NULL ||
-		   CondPresentation (pR->PrCond, pEl, NULL, NULL, view,
-				     pEl->ElStructSchema, pDoc)))
-		/* les conditions d'application de la regle sont satisfaites*/
-		/* on la garde pour le cas ou on ne trouve pas mieux */
-		*pRuleView1 = pR;
-	    }
+	  else if (pR->PrViewNum == 1 && *pRuleView1 == NULL &&
+		   /* rule for the main view */
+		   (pR->PrCond == NULL ||
+		    CondPresentation (pR->PrCond, pEl, NULL, NULL, view,
+				      pEl->ElStructSchema, pDoc)))
+	    /* conditions for that rule are satisfied */
+	    /* this rule applies unless we find a better one later */
+	    *pRuleView1 = pR;
 	  /* regle suivante */
 	  pR = pR->PrNextPRule;
 	}
@@ -182,26 +180,286 @@ static void SimpleSearchRulepEl (PtrPRule * pRuleView1, PtrElement pEl,
 }
 
 /*----------------------------------------------------------------------
-   GlobalSearchRulepEl returns the presentation rule of type (typeRule or
-  typeFunc) that applies to the element pEl in the view.
+  GlobalSearchRulepEl
+  returns the presentation rule of type (typeRule or typeFunc) that applies
+  to element pEl in the given view.
   If the parameter presNum is NULL, the rule applies to the element itself,
-  else the rule applies to that presentation box.
+  otherwise the rule applies to that presentation box.
   In the second case, pSchP gives the presentation schema where the
-  presentation box is defined (NULL = main presntation schema).
-  When pEl refers to a page, if isElPage is TRUE, the rule applies to the
-  page break element, else the rule applies to the the enclosing block
+  presentation box is defined (NULL = main presentation schema).
+  When pEl is a page break element, if isElPage is TRUE, the rule applies to
+  the page break element, otherwise the rule applies to the the enclosing block
   (page bottom + page break + page top).
-  The parameter attr says if attributes are taken or not into account.
+  The parameter attr indicates whether attributes have to be taken into
+  account or not.
   Return:
-  The rule and pSPR points to the presentation schema that gives the rule.
-  If the returned rule is associated to an attribute, pAttr points this
+  The rule and pSPR points to the presentation schema to which the rule belongs
+  If the returned rule is associated with an attribute, pAttr points to this
   attribute.
   ----------------------------------------------------------------------*/
-PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc, PtrPSchema *pSPR,
-			      PtrSSchema *pSSR, int presNum, PtrPSchema pSchP,
-			      int view, PRuleType typeRule,
+
+PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
+			      PtrPSchema *pSPR, PtrSSchema *pSSR, int presNum, 
+			      PtrPSchema pSchP, int view, PRuleType typeRule,
 			      FunctionType typeFunc, ThotBool isElPage,
-			      ThotBool attr, PtrAttribute * pAttr)
+			      ThotBool attr, PtrAttribute *pAttr)
+{
+  int                 index;
+  PtrPRule            pRule, pRuleView1, pR;
+  PtrSSchema          pSchS;
+  ThotBool            stop;
+  PtrAttribute        pA;
+  PtrElement          pElAttr;
+  InheritAttrTable   *inheritTable;
+  PtrPSchema          pSP, pSPattr;
+  PtrHandlePSchema    pHd;
+  int                 l, valNum;
+
+  pRule = NULL;
+  *pSPR = NULL;
+  *pSSR = NULL;
+  *pAttr = NULL;
+  if (presNum)
+    /* presentation box have no attribute */
+    attr = FALSE;
+  if (pEl != NULL && PresentationSchema (pEl->ElStructSchema, pDoc) != NULL)
+    {
+      if (presNum == 0 && pEl->ElTerminal &&
+	  pEl->ElLeafType == LtPageColBreak && isElPage)
+	/* that's a page break */
+	{
+	  /* get the type of the page box */
+	  presNum = GetPageBoxType (pEl, pDoc, view, &pSchP);
+	  pSchS = pEl->ElStructSchema;
+	  index = pEl->ElTypeNumber;
+	}
+      else if (presNum == 0 || pSchP == NULL)
+	/* cherche le schema de presentation de l'element */
+	SearchPresSchema (pEl, &pSchP, &index, &pSchS, pDoc);
+        /***** s'il s'agit de l'element racine d'un objet d'une nature
+	       differente de son pere, pSchP est le schema de presentation
+	       de la nature englobante et view (numero de vue dans le
+	       schema) devrait etre mis a jour... */
+      else
+	{
+	  pSchS = pEl->ElStructSchema;
+	  index = pEl->ElTypeNumber;
+	}
+
+      /* look first at the default presentation rules from the main
+	 presentation schema */
+      pRule = pSchP->PsFirstDefaultPRule;
+      SimpleSearchRulepEl (&pRuleView1, pEl, view, typeRule, typeFunc, &pRule,
+			   pDoc);
+      if (pRule == NULL)
+	pRule = pRuleView1;
+      *pSPR = pSchP;
+      *pSSR = pSchS;
+
+      /* look at at the main presentation schema and all additional P schemas
+	 (CSS style sheets) in the order of their weight */
+      pHd = NULL;
+      pSP = pSchP;
+      while (pSP)
+	{
+	  /* first, get rules associated with the element type only if it's
+	     not the main presentation schema (pHd is NULL when it's the main
+	     P schema) */
+	  /* Note that schema extensions (pHd != NULL), aka CSS stylesheets,
+	     apply only to the main view (viewSch = 1) */
+	  if (view == 1 || pHd == NULL)
+	    {
+	      /* look at the rules associated with the element type in this
+		 P schema extension */
+	      /* first rule associated with the element type in this P schema
+		 extension */
+	      if (presNum > 0 && pSP->PsPresentBox)
+		pR = pSP->PsPresentBox->PresBox[presNum - 1]->PbFirstPRule;
+	      else
+		pR = pSP->PsElemPRule->ElemPres[index - 1];
+	      SimpleSearchRulepEl (&pRuleView1, pEl, view, typeRule, typeFunc,
+				   &pR, pDoc);
+	      if (!pR && view > 1)
+		/* no rule for the view of interest, take the rule for the
+		   main view */
+		pR = pRuleView1;
+	      if (pR)
+		if (RuleHasHigherPriority (pR, pSP, pRule, *pSPR))
+		  {
+		    pRule = pR;
+		    *pSPR = pSP;
+		    *pSSR = pSchS;
+		  }
+
+	      /* look at the rules associated with attributes of ancestors
+		 that apply to the element, for all views if it's the main
+		 P schema, but only for view 1 if it's a P schema extension */
+	      /* presentation box do not inherit any rule from attributes */
+	      if (presNum == 0)
+		{
+		  if (pSP->PsNInheritedAttrs->Num[pEl->ElTypeNumber - 1])
+		    {
+		      /* this element type inherit from some attributes */
+		      if ((inheritTable = pSP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1]) == NULL)
+			{
+			  /* inheritance table does not exist. Create it */
+			  CreateInheritedAttrTable (pEl, pDoc);
+			  inheritTable = pSP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1];
+			}
+		      for (l = 1; l <= pEl->ElStructSchema->SsNAttributes; l++)
+			if ((*inheritTable)[l - 1] &&
+			    (pA = GetTypedAttrAncestor (pEl, l,
+							pEl->ElStructSchema,
+							&pElAttr)) != NULL)
+			  /* pEl inherits from attribute l and an ancestor */
+			  /* has this attribute */
+			  {
+			    /* process all values of the attribute, in case
+			       of a text attribute with multiple values */
+			    valNum = 1;
+			    do
+			      {
+				pR = AttrPresRule (pA, pEl, TRUE, NULL, pSP,
+						   &valNum);
+				/* check all rules for this value */
+				while (pR)
+				  {
+				    if (pR->PrType == typeRule &&
+					(typeRule != PtFunction ||
+					 typeFunc == FnAny ||
+					 pR->PrPresFunction == typeFunc) &&
+					pR->PrViewNum == view)
+				      if (pR->PrCond == NULL ||
+					  CondPresentation (pR->PrCond,pEl, pA,
+							    pElAttr, view,
+							    pA->AeAttrSSchema,
+							    pDoc))
+					if (RuleHasHigherPriority (pR, pSP,
+								 pRule, *pSPR))
+					  {
+					    pRule = pR;
+					    *pSPR = pSP;
+					    *pAttr = pA;
+					    *pSSR = pA->AeAttrSSchema;
+					  }
+				    if (pR->PrType <= typeRule)
+				      pR = pR->PrNextPRule;
+				    else
+				      pR = NULL;
+				  }
+			      }
+			    while (valNum > 0);
+			  }
+		    }
+		}
+
+	      /* look at the rules associated with the attributes of the
+		 element */
+	      if (attr)
+		{
+		  /* check all attributes of element */
+		  pA = pEl->ElFirstAttr; /* first attribute of element */
+		  while (pA != NULL)
+		    {
+		      if (pHd == NULL)
+			/* main presentation schema. Take the schema associated
+			   with the attribute S schema */
+			pSPattr = PresentationSchema (pA->AeAttrSSchema, pDoc);
+		      else
+			pSPattr = pSP;
+		      /* process all values of the attribute, in case of a
+			 text attribute with multiple values */
+		      valNum = 1;
+		      do
+			{
+			  pR = AttrPresRule (pA, pEl, FALSE, NULL, pSPattr,
+					     &valNum);
+			  /* look at all rules for this value */
+			  while (pR != NULL)
+			    {
+			      if (pR->PrType == typeRule &&
+				  (typeRule != PtFunction ||
+				   typeFunc == FnAny ||
+				   pR->PrPresFunction == typeFunc) &&
+				  pR->PrViewNum == view)
+				if (pR->PrCond == NULL ||
+				    CondPresentation (pR->PrCond, pEl, pA,
+					   pEl, view, pA->AeAttrSSchema, pDoc))
+				  if (RuleHasHigherPriority (pR, pSPattr,
+							     pRule, *pSPR))
+				    {
+				      pRule = pR;
+				      *pAttr = pA;
+				      *pSPR = pSPattr;
+				      *pSSR = pA->AeAttrSSchema;
+				    }
+			      if (pR->PrType <= typeRule)
+				/* regle suivante */
+				pR = pR->PrNextPRule;
+			      else
+				pR = NULL;
+			    }
+			}
+		      while (valNum > 0);
+		      /* passe a l'attribut suivant de l'element */
+		      pA = pA->AeNext;
+		    }
+		}
+	    }
+	  /* next style sheet (P schema extension) */
+	  if (pHd)
+	    pHd = pHd->HdNextPSchema;
+	  else
+	    /* it was the main P schema, get the first schema extension */
+	    pHd = FirstPSchemaExtension (pEl->ElStructSchema, pDoc);
+	  if (pHd)
+	    pSP = pHd->HdPSchema;
+	  else
+	    /* no schema any more. stop */
+	    pSP = NULL;
+	}
+      /* look at all specific presentation rules attached to the element */
+      if (presNum == 0)
+	{
+	  pR = pEl->ElFirstPRule;
+	  stop = FALSE;
+	  while (pR && !stop)
+	    if (pR->PrType == typeRule &&
+		(typeRule != PtFunction || typeFunc == FnAny ||
+		 pR->PrPresFunction == typeFunc) &&
+		pR->PrViewNum == view)
+	      stop = TRUE;
+	    else
+	      pR = pR->PrNextPRule;
+	  if (pR)
+	    /* a rule was found */
+	    {
+	      pRule = pR;
+	      *pAttr = NULL;
+	      *pSPR = pSchP;
+	      *pSSR = pSchS;
+	      /* if the rule is associated with an attribute, get that attr */
+	      if (pR->PrSpecifAttr)
+		{
+		  *pAttr = pEl->ElFirstAttr;
+		  stop = FALSE;
+		  while (*pAttr != NULL && !stop)
+		    if ((*pAttr)->AeAttrNum == pR->PrSpecifAttr &&
+			(*pAttr)->AeAttrSSchema == pR->PrSpecifAttrSSchema)
+		      {
+			stop = TRUE;
+			*pSSR = (*pAttr)->AeAttrSSchema;
+		      }
+		    else
+		      *pAttr = (*pAttr)->AeNext;
+		}
+	    }
+	}
+    }
+  return pRule;
+}
+
+#ifdef VQ  /***********/
 {
   int                 index;
   PtrPRule            pRule, pRuleSpecView1, pRuleView1;
@@ -572,6 +830,7 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc, PtrPSchema *pSPR
     }
   return pRule;
 }
+#endif /******************/
 
 /*----------------------------------------------------------------------
   SearchRulepAb returns the presentation rule of type (typeRule or
@@ -599,9 +858,10 @@ PtrPRule SearchRulepAb (PtrDocument pDoc, PtrAbstractBox pAb,
 	presNum = pAb->AbTypeNum;
       else
 	presNum = 0;
-      pRuleFound = GlobalSearchRulepEl (pAb->AbElement, pDoc, pSPR, &pSSR, presNum,
-					pAb->AbPSchema, pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView,
-					typeRule, typeFunc, FALSE, attr, pAttr);
+      pRuleFound = GlobalSearchRulepEl (pAb->AbElement, pDoc, pSPR, &pSSR,
+                               presNum, pAb->AbPSchema,
+			       pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView,
+			       typeRule, typeFunc, FALSE, attr, pAttr);
     }
   return pRuleFound;
 }

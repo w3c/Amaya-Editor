@@ -3236,23 +3236,46 @@ static void ComputeVisib (PtrElement pEl, PtrDocument pDoc,
   schema pPS1) has a higher priority in the CSS cascade than pRule2 (which
   belongs to presentation schema pPS2).
   ----------------------------------------------------------------------*/
-static ThotBool RuleHasHigherPriority (PtrPRule pRule1, PtrPSchema pPS1,
-				       PtrPRule pRule2, PtrPSchema pPS2)
+ThotBool RuleHasHigherPriority (PtrPRule pRule1, PtrPSchema pPS1,
+				PtrPRule pRule2, PtrPSchema pPS2)
 {
   ThotBool     higher;
 
   higher = TRUE;
-  if (pRule2)
+  if (pRule2 && pPS2)
     {
-      /* check origin and importance first */
-      if (pRule2->PrImportant && pPS2->PsOrigin == User)
-	higher = pRule1->PrImportant;
-      else if (pPS1->PsOrigin < pPS2->PsOrigin)
-	higher = pRule1->PrImportant;
-      /* take selectivity into account */
-      if (higher)
-	if (pRule2->PrSpecificity > pRule1->PrSpecificity)
-	  higher = FALSE;
+      /* check origin first */
+      if (pPS1->PsOrigin != pPS2->PsOrigin)
+	/* rules have different origins */
+	{
+	  /* check importance */
+	  if (pRule1->PrImportant || pRule2->PrImportant)
+	    /* one rule at least is important */
+	    {
+	      if (pRule1->PrImportant && pRule2->PrImportant)
+		/* both rules are important. User wins */
+		higher = (pPS1->PsOrigin == User);
+	      else
+		/* only one rule is important. This one wins */
+		higher = pRule1->PrImportant;
+	    }
+	  else
+	    /* no rule is important */
+	    higher = (pPS1->PsOrigin > pPS2->PsOrigin);
+	}
+      else
+	/* rules have same origin */
+	{
+	  /* check importance */
+	  if ((pRule1->PrImportant || pRule2->PrImportant) &&
+	      !(pRule1->PrImportant && pRule2->PrImportant))
+	    /* one rule and only one is important, it wins */
+	    higher = pRule1->PrImportant;
+	  else
+	    /* no rule is important, or both are */
+	    /* take selectivity into account */
+	    higher = (pRule1->PrSpecificity >= pRule2->PrSpecificity);
+	}
     }
   return higher;
 }
