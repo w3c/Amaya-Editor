@@ -19,7 +19,7 @@ libdir = @libdir@
 # Rule to build objects
 #
 .c.o :
-	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+	$(CC) $(CFLAGS) $(THOT_OPTIONS) $(INCLUDES) -c $< -o $@
 
 all : libThotTable.a
 

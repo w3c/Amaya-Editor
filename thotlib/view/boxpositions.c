@@ -952,7 +952,7 @@ ThotBool            vertRef;
    /* sont toujours placees en absolue           */
    if (pBox->BxHorizFlex || pBox->BxXOutOfStruct)
       horizRef = FALSE;
-   if (pBox->BxVertFlex || pBox->BxYOutOfStruct)
+   if (pBox->BxYToCompute && (pBox->BxVertFlex || pBox->BxYOutOfStruct))
       vertRef = FALSE;
 
    if (pBox->BxType != BoSplit)

@@ -2803,10 +2803,7 @@ int                 frame;
 		       if (box == pBox)
 			 return;
 		       else if (box->BxMoved == pFromBox)
-			 {
-printf ("XMove, box already in the list (label=%s, type=%d)\n", box->BxAbstractBox->AbElement->ElLabel,  box->BxAbstractBox->AbElement->ElTypeNumber);
 			 box = NULL;
-			 }
 		       else
 			 box = box->BxMoved;
 		  }
@@ -3010,10 +3007,7 @@ int                 frame;
 		      if (box == pBox)
 			return;
 		      else if (box->BxMoved == pFromBox)
-			{
-printf ("YMove, box already in the list (label=%s, type=%d)\n", box->BxAbstractBox->AbElement->ElLabel,  box->BxAbstractBox->AbElement->ElTypeNumber);
-			  box = NULL;
-			}
+			box = NULL;
 		      else
 			box = box->BxMoved;
 		  }

@@ -52,6 +52,11 @@ static ThotBool          Lock = FALSE;
 #include "tree_f.h"
 #define MAX_COLROW 50
 
+#ifdef __STDC__
+static ThotBool SetCellWidths (PtrAbstractBox cell, PtrAbstractBox table, int frame);
+#else
+static ThotBool SetCellWidths (/*PtrAbstractBox cell, PtrAbstractBox table, int frame*/);
+#endif
 
 /*----------------------------------------------------------------------
   DifferFormatting registers differed table formatting in the right
@@ -706,11 +711,10 @@ int             frame;
 ThotBool         force;
 #endif
 {
-  PtrAbstractBox      pBlock, pCell;
+  PtrAbstractBox      pCell;
   PtrAbstractBox     *colBox;
   PtrBox              pBox, prevBox, box;
   PtrTabRelations     pTabRel;
-  Propagation         savePropagate;
   int                *colWidth, *colPercent;
   int                 cNumber, cRef;
   int                 i, delta, px, n;
@@ -1460,7 +1464,10 @@ int             frame;
 	  pTabRel->TaRTWidths[i] = colWidth[cRef];
 	  pTabRel->TaRTPercents[i] = colPercent[cRef];
 	  min += box->BxMinWidth;
-	  max += box->BxMaxWidth;
+	  if (colWidth[cRef]/* > box->BxMaxWidth*/)
+	    max += colWidth[cRef];
+	  else
+	    max += box->BxMaxWidth;
 	  /* take the spacing into account */
 	  if (prevBox == NULL)
 	    {
@@ -1507,27 +1514,31 @@ int             frame;
   TtaFreeMemory (colPercent);
   if (change)
     {
-      cell = GetParentCell (pBox);
-      if (cell)
+      /* trasmit the min and max widths of the enclosing paragraph */
+      pAb = SearchEnclosingType (table, BoBlock);
+      if (pAb && pAb->AbBox)
 	{
-	  /* trasmit the min and max widths of the enclosing paragraph */
-	  pAb = SearchEnclosingType (table, BoBlock);
-	  if (pAb && pAb->AbBox)
+	  pBox = pAb->AbBox;
+	  /* adding the block margins, border, paddins */
+	  mbp = pBox->BxLMargin + pBox->BxRMargin + pBox->BxLPadding + pBox->BxRPadding + pBox->BxLBorder + pBox->BxRBorder;
+	  min += mbp;
+	  max += mbp;
+	  if (pBox->BxMinWidth < min)
+	    pBox->BxMinWidth = min;
+	  if (pBox->BxMaxWidth < max)
+	    pBox->BxMaxWidth = max;
+	}
+      if (reformat)
+	{
+	  cell = GetParentCell (pBox);
+	  if (cell)
 	    {
-	      box = pAb->AbBox;
-	      if (box->BxMinWidth < min)
-	      box->BxMinWidth = min;
-	      if (box->BxMaxWidth < max)
-	      box->BxMaxWidth = max;
-	    }
-	  /* propagate changes to the enclosing table */
-	  if (reformat)
-	    {
+	      /* propagate changes to the enclosing table */
 	      row = SearchEnclosingType (cell, BoRow);
 	      if (row  && row->AbBox)
 		table = (PtrAbstractBox) row->AbBox->BxTable;
 	      if (table && table->AbBox && !IsDifferredTable (table, cell))
-		SetTableWidths (table, frame);
+		SetCellWidths (cell, table, frame);
 	    }
 	}
     }

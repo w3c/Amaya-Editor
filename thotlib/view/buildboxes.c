@@ -1356,10 +1356,10 @@ int                *carIndex;
 	/* New values of margins, paddings and borders */
 	ComputeMPB (pAb, frame, TRUE);
 	ComputeMPB (pAb, frame, FALSE);
-	enclosedWidth = ComputeDimRelation (pAb, frame, TRUE);
-	enclosedHeight = ComputeDimRelation (pAb, frame, FALSE);
 	pCurrentBox->BxXToCompute = FALSE;
 	pCurrentBox->BxYToCompute = FALSE;
+	enclosedWidth = ComputeDimRelation (pAb, frame, TRUE);
+	enclosedHeight = ComputeDimRelation (pAb, frame, FALSE);
 
 	/* On construit le chainage des boites terminales pour affichage */
 	/* et on calcule la position des paves dans le document.         */
