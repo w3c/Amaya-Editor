@@ -20,12 +20,12 @@ RULES
 	if not Namespaces and HtmlDTD = Frameset
 	   BEGIN
 	   Create '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN"\12';
-	   Create '                      "http://www.w3.org/TR/1999/PR-xhtml1-19991210/DTD/xhtml1-frameset.dtd">\12';
+	   Create '    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">\12';
 	   END;
         if not Namespaces and not HtmlDTD = Frameset
 	   BEGIN
 	   Create '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"\12';
-	   Create '                      "http://www.w3.org/TR/1999/PR-xhtml1-19991210/DTD/xhtml1-transitional.dtd">\12';
+	   Create '    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">\12';
 	   END;	   
 	Create '<html xmlns="http://www.w3.org/1999/xhtml"';
 	{*** Create Namespaces; ***}
@@ -614,7 +614,6 @@ RULES
 #else
 	Create '>\12';
 #endif
-	if not within Preformatted Create '\12';
 	END;
 
  Form: BEGIN
