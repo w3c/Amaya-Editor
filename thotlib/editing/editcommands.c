@@ -2211,6 +2211,8 @@ PtrTextBuffer       clipboard;
 	       pViewSel->VsLine = pLine;
 	       pViewSelEnd->VsLine = pLine;
 	       pFrame->FrSelectOnePosition = TRUE;
+	       /* the new selection is not shown */
+	       pFrame->FrSelectShown = FALSE;
 	       /* Si la boite etait vide */
 	       if (pAb->AbVolume == charsDelta)
 		  xDelta -= width;
@@ -2570,14 +2572,9 @@ int                 editType;
 		  }
 		else
 		  {
-		    if (editType == TEXT_PASTE || editType == TEXT_X_PASTE)
-		      /* adding clipping space to display the carret */
-		      i = 2;
-		    else
-		      i = 0;
 		    DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
 			     pBox->BxXOrg + pBox->BxWidth,
-			     pBox->BxYOrg + pBox->BxHeight + i);
+			     pBox->BxYOrg + pBox->BxHeight);
 		  }
 
 		/* Est-ce que les dimensions de la boite dependent du contenu */
@@ -2724,11 +2721,11 @@ int                 editType;
 	     /* reaffiche si necessaire */
 	     if (editType != TEXT_COPY)
 	       {
-		  SwitchSelection (frame, FALSE);
-		  /* debloque l'affichage */
-		  pFrame->FrReady = TRUE;
-		  still = RedrawFrameBottom (frame, 0);
-		  SwitchSelection (frame, TRUE);
+		 pFrame->FrReady = TRUE;
+		 SwitchSelection (frame, FALSE);
+		 /* debloque l'affichage */
+		 still = RedrawFrameBottom (frame, 0);
+		 SwitchSelection (frame, TRUE);
 	       }
 
 	     if (pAb->AbElement == NULL)

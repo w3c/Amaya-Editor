@@ -343,7 +343,8 @@ boolean             extendSel;
 			       ChangeSelection (frame, pBox->BxAbstractBox, x, TRUE, TRUE, FALSE, FALSE);
 			   }
 			 else
-			   ChangeSelection (frame, pBox->BxAbstractBox, x - 1, FALSE, TRUE, FALSE, FALSE);
+			   /* the x is equal to FirstSelectedChar - 1 */
+			   ChangeSelection (frame, pBox->BxAbstractBox, x, FALSE, TRUE, FALSE, FALSE);
 		       }
 		     else
 		       {
@@ -447,7 +448,7 @@ boolean             extendSel;
 	     /* Get the last X position */
 	     if (ok)
 	       {
-		 if (extendSel && (code == 2 || code == 7))
+		 if (extendSel && RightExtended && (code == 2 || code == 7))
 		   ClickX = pViewSelEnd->VsBox->BxXOrg + pViewSelEnd->VsXPos - pFrame->FrXOrg;
 		 else
 		   ClickX = pViewSel->VsBox->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg;
