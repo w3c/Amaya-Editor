@@ -270,7 +270,7 @@ PSchema GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css)
 			    }
 			}
 		    }
-		  if (!found && prevStyle)
+		  if (!found && nextStyle)
 		    found = TRUE;
 		  /* search if the previous CSS has a presentation schema */
 		  if (found)

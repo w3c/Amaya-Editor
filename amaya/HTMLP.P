@@ -3257,11 +3257,13 @@ RULES
 	CreateWith(VerticalLine);
 	LineBreak: No;
 	Width: Enclosing . Width;
+	PaddingLeft: 1 em;
 	VertPos: Top = Previous not MAP . Bottom;
 	if not within Definition and not within List_Item
 	        MarginTop: 0.5;
 	IN Structure_view BEGIN
 		MarginTop: 0;
+		PaddingLeft: 0;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
@@ -3277,11 +3279,13 @@ RULES
 	CreateWith(VerticalLine);
 	LineBreak: No;
 	Width: Enclosing . Width;
+	PaddingLeft: 1 em;
 	VertPos: Top = Previous not MAP . Bottom;
 	if not within Definition and not within List_Item
 	        MarginTop: 0.5;
 	IN Structure_view BEGIN
 		MarginTop: 0;
+		PaddingLeft: 0;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
@@ -7165,6 +7169,54 @@ ATTRIBUTES
 	HorizPos: Right = Enclosing . Right;
 	IN Structure_view
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	IN Alternate_view
+		HorizPos: Right = Enclosing . Right;
+	END;
+  dir (Unnumbered_List) = ltr_:
+	BEGIN
+	HorizPos: Left = Enclosing . Left;
+	PaddingLeft: 1 em;
+	PaddingRight: 0;
+	IN Structure_view BEGIN
+		PaddingLeft: 0;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		END;
+	IN Alternate_view
+		HorizPos: Left = Enclosing . Left;
+	END;
+  dir (Unnumbered_List) = rtl_:
+	BEGIN
+	HorizPos: Right = Enclosing . Right;
+	PaddingLeft: 0;
+	PaddingRight: 1 em;
+	IN Structure_view BEGIN
+		PaddingRight: 0;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		END;
+	IN Alternate_view
+		HorizPos: Right = Enclosing . Right;
+	END;
+  dir (Numbered_List) = ltr_:
+	BEGIN
+	HorizPos: Left = Enclosing . Left;
+	PaddingLeft: 1 em;
+	PaddingRight: 0;
+	IN Structure_view BEGIN
+		PaddingLeft: 0;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		END;
+	IN Alternate_view
+		HorizPos: Left = Enclosing . Left;
+	END;
+  dir (Numbered_List) = rtl_:
+	BEGIN
+	HorizPos: Right = Enclosing . Right;
+	PaddingLeft: 0;
+	PaddingRight: 1 em;
+	IN Structure_view BEGIN
+		PaddingRight: 0;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		END;
 	IN Alternate_view
 		HorizPos: Right = Enclosing . Right;
 	END;

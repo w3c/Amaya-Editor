@@ -1339,7 +1339,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   ThotBool            blockbegin;
   ThotBool            withbackground;
   ThotBool            hyphen, rtl;
-  CHAR_T CurrentChar ,prevChar,nextChar;
+  CHAR_T              CurrentChar , prevChar, nextChar;
 
 
   indmax = 0;
@@ -1406,6 +1406,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	  pBox->BxLPadding - pFrame->FrXOrg;
       y = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
 	  pBox->BxTPadding - pFrame->FrYOrg;
+      y1 = pBox->BxYOrg + pBox->BxHorizRef/*y + BoxFontBase (pBox->BxFont)*/;
       /* no previous spaces */
       bl = 0;
       charleft = pBox->BxNChars;
@@ -1432,24 +1433,22 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	      /* skip invisible characters */
 	      restbl = newbl;
 	      x += lg;
-	      CurrentChar = adbuff->BuContent[indbuff];
-	      if ((( CurrentChar >= 0x0600 )&&( CurrentChar < 0x066E ))||(CurrentChar==0x06AF)) /*arabic character */
+	      c = adbuff->BuContent[indbuff];
+	      if ((c >= 0x0600 && c < 0x066E) || c == 0x06AF) /*arabic character */
 		{
-		  prevChar=Previous_Char(&adbuff,&indbuff);
-		  nextChar=Next_Char(&adbuff,&indbuff);
-		  val=GetArabFontAndIndex(CurrentChar,prevChar,nextChar,font,&nextfont); /* index of the character in arabic font */
+		  /* index of the character in arabic font */
+		  prevChar = Previous_Char (&adbuff, &indbuff);
+		  nextChar = Next_Char (&adbuff, &indbuff);
+		  val = GetArabFontAndIndex (c, prevChar, nextChar, font, &nextfont);
 		}
 	      else
-		{
-		  val = GetFontAndIndexFromSpec (adbuff->BuContent[indbuff],
-					     font, &nextfont);
-		}
+		val = GetFontAndIndexFromSpec (c, font, &nextfont);
 	      if (val == SPACE)
 		{
 		  lg = lgspace;
 		  if (newbl > 0)
 		    {
-		      newbl--;
+		      newbl--; charleft--;
 		      lg++;
 		    } 
 		}
@@ -1504,7 +1503,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	    DrawRectangle (frame, 0, 0,
 			   x - pBox->BxLPadding, y - pBox->BxTPadding,
 			   width + pBox->BxLPadding + pBox->BxRPadding,
-			   BoxFontHeight (font) + pBox->BxTPadding + pBox->BxBPadding,
+			   pBox->BxHeight /*BoxFontHeight (font)*/ + pBox->BxTPadding + pBox->BxBPadding,
 			   0, bg, 2);
 	}
 
@@ -1585,16 +1584,14 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		 (!rtl && indbuff <= indmax))
 	    {
 	      c = adbuff->BuContent[indbuff];
-	      if ((( c >= 0x0600 )&&( c < 0x066E ))||( c ==0x06AF)) /* arabic char */
+	      if ((c >= 0x0600 && c < 0x066E) || c ==0x06AF) /* arabic char */
 		{
-		  nextChar=Previous_Char(&adbuff,&indbuff);
-		  prevChar=Next_Char(&adbuff,&indbuff);
-		  val=GetArabFontAndIndex( c ,prevChar,nextChar,font,&nextfont);
+		  nextChar = Previous_Char (&adbuff, &indbuff);
+		  prevChar = Next_Char (&adbuff, &indbuff);
+		  val = GetArabFontAndIndex (c ,prevChar, nextChar, font, &nextfont);
 		}
 	      else
-		{
-		  val = GetFontAndIndexFromSpec( c, font, &nextfont);
-	       }
+		val = GetFontAndIndexFromSpec (c, font, &nextfont);
 	      if (val == INVISIBLE_CHAR || c == ZERO_SPACE ||
 		  c == EOL || c == BREAK_LINE)
 		/* do nothing */;
@@ -1603,7 +1600,6 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		  /* display previous chars handled */
 		  if (nbcar > 0)
 		    {
-		      y1 = y + BoxFontBase (pBox->BxFont);
 		      width = width + org;
 		      org -= x;
 		      if (org == 0)
@@ -1640,7 +1636,6 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		      if (nbcar > 0 || Printing)
 #endif /* WINDOWS */
 			{
-		          y1 = y + BoxFontBase (pBox->BxFont);
 			  width = width + org;
 			  org -= x;
 			  if (org == 0)
@@ -1652,7 +1647,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 					      fg, shadow);
 			  else
 			    {
-			      if ( prevfont== NULL)
+			      if ( prevfont == NULL)
 				prevfont = nextfont;
 			      x += DrawString (buffer, nbcar, frame, x, y1,
 					       prevfont, org, bl, 0, blockbegin,
@@ -1683,7 +1678,6 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		      /* display previous chars handled */
 		      if (nbcar > 0)
 			{
-			  y1 = y + BoxFontBase (pBox->BxFont);			  
 #ifndef _GL
 			  if (script == 'Z')
 			    x += WDrawString (wbuffer, nbcar, frame, x, y1, prevfont,  
@@ -1701,10 +1695,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 			}
 		  
 		      if (shadow)
-			{
-			  y1 = y + BoxFontBase (pBox->BxFont);
-			  DrawChar ('*', frame, x, y1, nextfont, fg);
-			}
+			DrawChar ('*', frame, x, y, nextfont, fg);
 		      else if (!ShowSpace)
 			{
 			  /* Show the space chars */
@@ -1814,7 +1805,6 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		Call the function in any case to let Postscript justify the
 		text of the box.
 	      */
-	      y1 = y + BoxFontBase (pBox->BxFont); 
 #ifndef _GL
 	      if (script == 'Z')
 		x += WDrawString (wbuffer, nbcar, frame, x, y1, prevfont, width,

@@ -107,6 +107,11 @@ extern void *TtaNewBoxTransformTranslate ( float x,
 extern void *TtaNewTransformTranslate ( float x,
                                         float y,
                                         ThotBool viewbox );
+extern void *TtaNewTransformAnimTranslate ( float x,
+                                            float y );
+extern void *TtaNewTransformAnimRotate ( float angle,
+                                         float x_scale,
+                                         float y_scale );
 extern void *TtaNewTransformRotate ( float angle,
                                      float x_scale,
                                      float y_scale );
@@ -161,7 +166,6 @@ extern void *TtaNewAnimPath ( Document doc );
 extern void TtaAppendPathSegToAnim ( void *anim,
                                      PathSegment segment,
                                      Document doc );
-extern void ComputePathLength ( void *info );
 extern void TtaAddAnimPath ( void *info,
                              void *anim );
 extern void TtaSetAnimTypetoMotion ( void *anim );
@@ -314,6 +318,11 @@ extern void *TtaNewBoxTransformTranslate (/* float x,
 extern void *TtaNewTransformTranslate (/* float x,
                                           float y,
                                           ThotBool viewbox */);
+extern void *TtaNewTransformAnimTranslate (/* float x,
+                                              float y */);
+extern void *TtaNewTransformAnimRotate (/* float angle,
+                                           float x_scale,
+                                           float y_scale */);
 extern void *TtaNewTransformRotate (/* float angle,
                                        float x_scale,
                                        float y_scale */);
@@ -368,7 +377,6 @@ extern void *TtaNewAnimPath (/* Document doc */);
 extern void TtaAppendPathSegToAnim (/* void *anim,
                                        PathSegment segment,
                                        Document doc */);
-extern void ComputePathLength (/* void *info */);
 extern void TtaAddAnimPath (/* void *info,
                                void *anim */);
 extern void TtaSetAnimTypetoMotion (/* void *anim */);

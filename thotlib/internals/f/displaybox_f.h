@@ -71,9 +71,9 @@ extern void DisplayBox ( PtrBox box,
                          int xmax,
                          int ymin,
                          int ymax );
-extern int GetArabFontAndIndex ( CHAR_T un,
-                                 CHAR_T prec,
-                                 CHAR_T suiv,
+extern int GetArabFontAndIndex ( CHAR_T c,
+                                 CHAR_T prev,
+                                 CHAR_T next,
                                  SpecFont fontset,
                                  PtrFont *font );
 
@@ -144,9 +144,9 @@ extern void DisplayBox (/* PtrBox box,
                            int xmax,
                            int ymin,
                            int ymax */);
-extern int GetArabFontAndIndex (/* CHAR_T un,
-                                   CHAR_T prec,
-                                   CHAR_T suiv,
+extern int GetArabFontAndIndex (/* CHAR_T c,
+                                   CHAR_T prev,
+                                   CHAR_T next,
                                    SpecFont fontset,
                                    PtrFont *font */);
 

@@ -2541,15 +2541,14 @@ void RemoveBoxes (PtrAbstractBox pAb, ThotBool rebuild, int frame)
 	  else if (pAb->AbLeafType == LtPath)
 	    FreePath (pBox);
 	  else if (pAb->AbLeafType == LtPicture)
-	    {
-	      UnmapImage((PictInfo *)pBox->BxPictInfo);
-	    }
+	    UnmapImage((PictInfo *)pBox->BxPictInfo);
 	  else if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
 	    {
 	      /* libere les boites generees pour la mise en lignes */
 	      pPieceBox = pBox->BxNexChild;
 	      pBox->BxNexChild = NULL;
-	      while (pPieceBox != NULL)
+	      while (pPieceBox &&
+		     (pPieceBox->BxType == BoScript || pPieceBox->BxType == BoPiece))
 		{
 #ifdef _GL
 		  if (glIsList (pPieceBox->DisplayList))

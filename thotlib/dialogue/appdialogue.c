@@ -3978,7 +3978,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	 ChangeFrameTitle (frame, name, TtaGetDefaultCharset ());
 
        /* Window volume in characters */
-       *volume = GetCharsCapacity (FrameTable[frame].FrWidth * FrameTable[frame].FrHeight);
+       *volume = GetCharsCapacity (FrameTable[frame].FrWidth * FrameTable[frame].FrHeight * 5);
        FrameTable[frame].FrDoc = doc;
        FrameTable[frame].FrView = view;
 

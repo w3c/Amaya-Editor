@@ -364,12 +364,12 @@ int FloatToInt (float e)
   Move all included boxes.
   Work with absolute positions when xAbs and yAbs are TRUE.
   ----------------------------------------------------------------------*/
-void Align (PtrBox pParentBox, PtrLine pLine, int delta, int frame,
-	    ThotBool xAbs, ThotBool yAbs)
+static void Align (PtrBox pParentBox, PtrLine pLine, int frame,
+		   ThotBool adjust, ThotBool xAbs, ThotBool yAbs)
 {
   PtrBox              pBox, pBoxInLine;
   PtrBox              boxes[200];
-  int                 baseline, x;
+  int                 baseline, x, delta = 0;
   int                 i, j, k, max;
   ThotBool            rtl;
 
@@ -387,10 +387,28 @@ void Align (PtrBox pParentBox, PtrLine pLine, int delta, int frame,
 	/* this could be the case of a too short table */
 	x = pLine->LiXOrg + pLine->LiRealLength;
       else
-	x = pLine->LiXOrg + pLine->LiXMax;
+	{
+	  if (adjust)
+	    {
+	      if (pParentBox->BxAbstractBox->AbAdjust == AlignCenter)
+		delta = (pLine->LiXMax - pLine->LiRealLength) / 2;
+	      else if (pParentBox->BxAbstractBox->AbAdjust == AlignLeft)
+		delta = pLine->LiXMax - pLine->LiRealLength;
+	    }
+	x = pLine->LiXOrg + pLine->LiXMax - delta;
+	}
     }
   else
-    x = delta;
+    {
+      if (adjust)
+	{
+	  if (pParentBox->BxAbstractBox->AbAdjust == AlignCenter)
+	    delta = (pLine->LiXMax - pLine->LiRealLength) / 2;
+	  else if (pParentBox->BxAbstractBox->AbAdjust == AlignRight)
+	    delta = pLine->LiXMax - pLine->LiRealLength;
+	}
+      x = pLine->LiXOrg + delta;
+    }
   if (xAbs)
     x += pParentBox->BxXOrg;
   if (yAbs)
@@ -2872,14 +2890,9 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 		      pLine->LiXMax = pLine->LiRealLength;
 		    }
 		  if (!pBox->BxContentWidth && !extensibleBox)
-		    {
-		      if (pAb->AbAdjust == AlignCenter)
-			x = (pLine->LiXMax - pLine->LiRealLength) / 2;
-		      else if (pAb->AbAdjust == AlignRight)
-			x = x + pLine->LiXMax - pLine->LiRealLength;
-		    }
-		  /* Decale toutes les boites de la ligne */
-		  Align (pBox, pLine, x, frame, xAbs, yAbs);
+		    Align (pBox, pLine, frame, FALSE, xAbs, yAbs);
+		  else
+		    Align (pBox, pLine, frame, TRUE, xAbs, yAbs);
 		}
 	    }
 

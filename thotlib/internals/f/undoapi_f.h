@@ -12,6 +12,7 @@ extern void TtaOpenUndoSequence ( Document document,
                                   Element lastSel,
                                   int firstSelChar,
                                   int lastSelChar );
+extern void TtaExtendUndoSequence ( Document document );
 extern ThotBool TtaCloseUndoSequence ( Document document );
 extern void TtaRegisterElementCreate ( Element element,
                                        Document document );
@@ -48,6 +49,7 @@ extern void TtaOpenUndoSequence (/* Document document,
                                     Element lastSel,
                                     int firstSelChar,
                                     int lastSelChar */);
+extern void TtaExtendUndoSequence (/* Document document */);
 extern ThotBool TtaCloseUndoSequence (/* Document document */);
 extern void TtaRegisterElementCreate (/* Element element,
                                          Document document */);

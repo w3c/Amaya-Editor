@@ -19,6 +19,10 @@ extern Element TtaCopyTree ( Element sourceElement,
                              Document sourceDocument,
                              Document destinationDocument,
                              Element parent );
+extern Element TtaCopyElement ( Element sourceElement,
+                                Document sourceDocument,
+                                Document destinationDocument,
+                                Element parent );
 extern Element TtaCreateDescent ( Document document,
                                   Element element,
                                   ElementType elementType );
@@ -145,6 +149,10 @@ extern Element TtaCopyTree (/* Element sourceElement,
                                Document sourceDocument,
                                Document destinationDocument,
                                Element parent */);
+extern Element TtaCopyElement (/* Element sourceElement,
+                                  Document sourceDocument,
+                                  Document destinationDocument,
+                                  Element parent */);
 extern Element TtaCreateDescent (/* Document document,
                                     Element element,
                                     ElementType elementType */);
