@@ -2114,8 +2114,8 @@ void                (*procedure) ();
 	     if (i < MAX_TEXTZONE)
 	       {
 		  row = FrameTable[frame].Text_Zone[0];
-		  XtManageChild(row);
 #ifndef _WINDOWS
+		  XtManageChild(row);
 #ifndef _GTK
 		  XtUnmanageChild (XtParent (XtParent (row)));
 
