@@ -1423,7 +1423,6 @@ void TtaGetViewXYWH (Document doc, int view, int *xmm, int *ymm, int *width,
 
 #ifdef _GTK
   ThotWidget          tmpw;
-  gint                wx, wy;
 #endif /* _GTK */
 
 #ifdef _MOTIF  
