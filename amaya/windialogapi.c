@@ -77,8 +77,6 @@ extern CHAR_T       ChkrCorrection[MAX_PROPOSAL_CHKR+1][MAX_WORD_LEN];
 extern BOOL         TtIsPrinterTrueColor;
 extern BOOL         bUserAbort;
 extern HWND         hWndParent;
-extern int          WIN_MenuAlphabet;
-
 extern int          ClickX, ClickY;
 
 static CHAR_T       urlToOpen [256];
@@ -2833,22 +2831,6 @@ LPARAM lParam;
 	    }
 	  SetDlgItemText (hwnDlg, IDC_LANGEDIT, szBuffer);
 	  ThotCallback (NumSelectLanguage, STRING_DATA, szBuffer);
-	  switch (WIN_MenuAlphabet)
-	    {
-	    case 0: CheckRadioButton (hwnDlg, IDC_ISO_LATIN_1, IDC_SYMBOL_ENCOD, IDC_ISO_LATIN_1);
-	      break;
-	      
-	    case 1: CheckRadioButton (hwnDlg, IDC_ISO_LATIN_1, IDC_SYMBOL_ENCOD, IDC_ISO_LATIN_2);
-	      break;
-	      
-	    case 2: CheckRadioButton (hwnDlg, IDC_ISO_LATIN_1, IDC_SYMBOL_ENCOD, IDC_ISO_LATIN_9);
-	      break;
-	      
-	    case 3: CheckRadioButton (hwnDlg, IDC_ISO_LATIN_1, IDC_SYMBOL_ENCOD, IDC_SYMBOL_ENCOD);
-	      break;
-	      
-	    default: break;
-	    }
 	  if (HIWORD (wParam) == LBN_DBLCLK)
 	    {
 	      ThotCallback (NumFormLanguage, INTEGER_DATA, (STRING) 1);
