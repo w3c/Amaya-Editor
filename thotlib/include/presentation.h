@@ -281,24 +281,6 @@ extern void         TtaChangeBoxSize (Element element, Document document, View v
 extern void         TtaChangeBoxPosition (Element element, Document document, View view, int X, int Y, TypeUnit unit);
 
 /*----------------------------------------------------------------------
-   TtaGetBoxMaxSize
-
-   Returns the maximum width of the box corresponding to an element in
-   a given view. This function is useful for block of lines elements.
-   It gives the width of the element in case of lines are not wrapped.
-
-   Parameters:
-   element: the element of interest.
-   view: the view.
-   unit: the unit used for the values.
-
-   Return parameters:
-   width: box width in points.
-
-  ----------------------------------------------------------------------*/
-extern int          TtaGetBoxMaxSize (Element element, Document document, View view, TypeUnit unit);
-
-/*----------------------------------------------------------------------
    TtaGiveBoxSize
 
    Returns the height and width of the box corresponding to an element in
@@ -462,7 +444,6 @@ extern void         TtaSetPRuleValue ( /* Element element, PRule pRule, int valu
 extern void         TtaSetPRuleView ( /* PRule pRule, int view */ );
 extern void         TtaChangeBoxSize ( /* Element element, View view, Document document, int deltaX, int deltaY, TypeUnit unit */ );
 extern void         TtaChangeBoxPosition ( /* Element element, Document document, View view, int X, int Y, TypeUnit unit */ );
-extern int          TtaGetBoxMaxSize (/*Element element, Document document, View view, TypeUnit unit*/);
 extern void         TtaGiveBoxSize ( /* Element element, Document document, View view, TypeUnit unit, int *width, int *height */ );
 extern void         TtaGiveBoxPosition ( /* Element element, Document document, View view, TypeUnit unit, int *xCoord, int *yCoord */ );
 extern void         TtaGiveRGB ( /*char *colname, unsigned short *red, unsigned short *green, unsigned short *blue*/ );
