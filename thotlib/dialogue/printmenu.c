@@ -49,74 +49,67 @@
 #include "structselect_f.h"
 #include "selectmenu_f.h"
 
-#define NBMAXENTREES 25
 static PathBuffer   psdir;
-static boolean      ImprimerPapier;
-static boolean      AlimentationManuelle;
-static boolean      NewImprimerPapier;
-static char	    ptImprimante[MAX_NAME_LENGTH];
+static boolean      PaperPrint;
+static boolean      ManualFeed;
+static boolean      NewPaperPrint;
+static char	    pPrinter[MAX_NAME_LENGTH];
 static PtrDocument  pDocPrint;
-static char	    page_size[MAX_NAME_LENGTH];
-static char	    orientation[MAX_NAME_LENGTH];
-
-static ThotFileHandle msgfile_fid = ThotFile_BADHANDLE;		/* le fichier temporaire des messages */
-static char         msgfile_name[40];	/* son nom */
-static ThotFileOffset msgfile_curpos;	/* la position courante dans le fichier */
-static char         msg_buffer[1024];	/* le message courant */
-
+static char	    PageSize[MAX_NAME_LENGTH];
+static char	    Orientation[MAX_NAME_LENGTH];
 
 /* ---------------------------------------------------------------------- */
 
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         initImpression (int user_orientation, char *thotdir, char *tempdir, char *dir, char *nom, char *realname,
-				    char *imprimante, int pid, long thotWin, char *thotsch, char *thotdoc, char *traitement)
+static void         initImpression (int userOrientation, char *thotDir, char *tempDir, char *dir, char *name, char *realName,
+				    char *printer, int pid, long thotWin, char *thotSch, char *thotDoc, char *printProcessing)
 #else  /* __STDC__ */
-static void         initImpression (user_orientation, thotdir, tempdir, dir, nom, realname, imprimante, pid, thotWin, thotsch, thotdoc, traitement)
-int                 user_orientation;
-char               *thotdir;
-char               *tempdir;
+static void         initImpression (userOrientation, thotDir, tempDir, dir, name, realName, printer, pid, thotWin, thotSch, thotDoc, printProcessing)
+int                 userOrientation;
+char               *thotDir;
+char               *tempDir;
 char               *dir;
-char               *nom;
-char               *realname;
-char               *imprimante;
+char               *name;
+char               *realName;
+char               *printer;
 int                 pid;
 long                thotWin;
-char               *thotsch;
-char               *thotdoc;
-char               *traitement;
+char               *thotSch;
+char               *thotDoc;
+char               *printProcessing;
 
 #endif /* __STDC__ */
 {
    char                cmd[800];
-   char               *bak_name;
-   char               *piv_name;
+   char               *bakName;
+   char               *pivName;
 
-   if (user_orientation == 0)
-      strcpy (orientation, "Portrait");
+   if (userOrientation == 0)
+      strcpy (Orientation, "Portrait");
    else
-      strcpy (orientation, "Paysage");
+      strcpy (Orientation, "Landscape");
 
-   sprintf (cmd, "/bin/mkdir %s\n", tempdir);
+   sprintf (cmd, "/bin/mkdir %s\n", tempDir);
    system (cmd);
-   sprintf (cmd, "chmod +rwx '%s'\n", tempdir);
+   sprintf (cmd, "chmod +rwx '%s'\n", tempDir);
    system (cmd);
 
-   bak_name = (char *) TtaGetMemory (strlen (nom) + 5);
-   sprintf (bak_name, "%s.BAK", nom);
-   piv_name = (char *) TtaGetMemory (strlen (nom) + 5);
-   sprintf (piv_name, "%s.PIV", nom);
-   sprintf (cmd, "/bin/mv '%s'/'%s' '%s'/'%s'\n", dir, bak_name, tempdir, piv_name);
+   bakName = (char *) TtaGetMemory (strlen (name) + 5);
+   sprintf (bakName, "%s.BAK", name);
+   pivName = (char *) TtaGetMemory (strlen (name) + 5);
+   sprintf (pivName, "%s.PIV", name);
+   sprintf (cmd, "/bin/mv '%s'/'%s' '%s'/'%s'\n", dir, bakName, tempDir, pivName);
    system (cmd);
-   sprintf (cmd, "traitement=%s\n", traitement);
+   sprintf (cmd, "printProcessing=%s\n", printProcessing);
    system (cmd);
-   sprintf (cmd, "export traitement\n");
+   sprintf (cmd, "export printProcessing\n");
    system (cmd);
-   sprintf (cmd, "realname=%s\n", realname);
+   sprintf (cmd, "realName=%s\n", realName);
    system (cmd);
-   sprintf (cmd, "export realname\n");
+   sprintf (cmd, "export realName\n");
    system (cmd);
-   /*  sprintf (cmd, "printer_or_psname=%s\n", imprimante) ;
+   /*  sprintf (cmd, "printer_or_psname=%s\n", printer) ;
       system (cmd) ;
       sprintf (cmd, "export printer_or_psname\n") ;
       system (cmd) ; */
@@ -128,54 +121,54 @@ char               *traitement;
    system (cmd);
    sprintf (cmd, "export thotwindow\n");
    system (cmd);
-   sprintf (cmd, "BIN=%s/bin\n", thotdir);
+   sprintf (cmd, "BIN=%s/bin\n", thotDir);
    system (cmd);
    sprintf (cmd, "export BIN\n");
    system (cmd);
-   sprintf (cmd, "THOTDIR=%s\n", thotdir);
+   sprintf (cmd, "THOTDIR=%s\n", thotDir);
    system (cmd);
    sprintf (cmd, "export THOTDIR\n");
    system (cmd);
-   sprintf (cmd, "THOTSCH=%s\n", thotsch);
+   sprintf (cmd, "THOTSCH=%s\n", thotSch);
    system (cmd);
    sprintf (cmd, "export THOTSCH\n");
    system (cmd);
-   sprintf (cmd, "THOTDOC=%s:%s\n", tempdir, thotdoc);
+   sprintf (cmd, "THOTDOC=%s:%s\n", tempDir, thotDoc);
    system (cmd);
    sprintf (cmd, "export THOTDOC\n");
    system (cmd);
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    Imprimer effectue le lancement du shell pour l'impression.      | */
+/* |    Print effectue le lancement du shell pour l'impression.      | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void          Imprimer (char *nom, char *dir, char *thotsch, char *thotdoc, char *thotpres, char *realname, char *realdir, char *imprimante, int pagedeb, int pagefin, int nbex, int decalage_h, int decalage_v, int user_orientation, int reduction, int nb_ppf, int suptrame, int alimmanuelle, int noiretblanc, int repaginer, char *vuesaimprimer)
+static void          Print (char *name, char *dir, char *thotSch, char *thotDoc, char *thotpres, char *realName, char *realDir, char *printer, int firstPage, int lastPage, int nbCopies, int hShift, int vShift, int userOrientation, int reduction, int nbPagesPerSheet, int suppFrame, int manualFeed, int blackAndWhite, int repaginate, char *viewsToPrint)
 
 #else  /* __STDC__ */
-static void        Imprimer (nom, dir, thotsch, thotdoc, thotpres, realname, realdir, imprimante, pagedeb, pagefin, nbex, decalage_h, decalage_v, user_orientation, reduction, nb_ppf, suptrame, alimmanuelle, noiretblanc, repaginer, vuesaimprimer)
-char               *nom;
+static void        Print (name, dir, thotSch, thotDoc, thotpres, realName, realDir, printer, firstPage, lastPage, nbCopies, hShift, vShift, userOrientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, repaginate, viewsToPrint)
+char               *name;
 char               *dir;
-char               *thotsch;
-char               *thotdoc;
+char               *thotSch;
+char               *thotDoc;
 char               *thotpres;
-char               *realname;
-char               *realdir;
-char               *imprimante;
-int                 pagedeb;
-int                 pagefin;
-int                 nbex;
-int                 decalage_h;
-int                 decalage_v;
-int                 user_orientation;
+char               *realName;
+char               *realDir;
+char               *printer;
+int                 firstPage;
+int                 lastPage;
+int                 nbCopies;
+int                 hShift;
+int                 vShift;
+int                 userOrientation;
 int                 reduction;
-int                 nb_ppf;
-int                 suptrame;
-int                 alimmanuelle;
-int                 noiretblanc;
-int                 repaginer;
-char               *vuesaimprimer;
+int                 nbPagesPerSheet;
+int                 suppFrame;
+int                 manualFeed;
+int                 blackAndWhite;
+int                 repaginate;
+char               *viewsToPrint;
 
 #endif /* __STDC__ */
 
@@ -185,24 +178,24 @@ char               *vuesaimprimer;
 #ifndef NEW_WILLOWS
    char                cmd[800];
    int                 res;
-   char               *thotdir;
-   char               *tempdir;
+   char               *thotDir;
+   char               *tempDir;
 
-   thotdir = (char *) TtaGetEnvString ("THOTDIR");
-   if (!thotdir)
-	thotdir = ThotDir ();
-   tempdir = (char *) TtaGetMemory (40);
-   sprintf (tempdir, "/tmp/Thot%d", pid);
+   thotDir = (char *) TtaGetEnvString ("THOTDIR");
+   if (!thotDir)
+	thotDir = ThotDir ();
+   tempDir = (char *) TtaGetMemory (40);
+   sprintf (tempDir, "/tmp/Thot%d", pid);
 
-   initImpression (user_orientation, thotdir, tempdir, dir, nom, realname, imprimante, pid, FrRef[0], thotsch, thotdoc, "PRINT");
-   if (imprimante[0] != '\0')
-      sprintf (cmd, "%s/print %s %s %d %d %d 0 %s %s \"%s\" %s %d %d %d %s %d %d %d %d %d %ld Imprimer &\n",
-	       BinariesDirectory, nom, tempdir, repaginer, pagedeb, pagefin, vuesaimprimer, realname, imprimante, page_size, nbex,
-	       decalage_h, decalage_v, orientation, reduction, nb_ppf, suptrame, alimmanuelle, noiretblanc, FrRef[0]);
+   initImpression (userOrientation, thotDir, tempDir, dir, name, realName, printer, pid, FrRef[0], thotSch, thotDoc, "PRINT");
+   if (printer[0] != '\0')
+      sprintf (cmd, "%s/print %s %s %d %d %d 0 %s %s \"%s\" %s %d %d %d %s %d %d %d %d %d %ld Print &\n",
+	       BinariesDirectory, name, tempDir, repaginate, firstPage, lastPage, viewsToPrint, realName, printer, PageSize, nbCopies,
+	       hShift, vShift, Orientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, FrRef[0]);
    else
-      sprintf (cmd, "%s/print %s %s %d %d %d 0 %s %s %s %s %d %d %d %s %d %d %d %d %d %ld Imprimer &\n",
-	       BinariesDirectory, nom, tempdir, repaginer, pagedeb, pagefin, vuesaimprimer, realname, "lp", page_size, nbex,
-	       decalage_h, decalage_v, orientation, reduction, nb_ppf, suptrame, alimmanuelle, noiretblanc, FrRef[0]);
+      sprintf (cmd, "%s/print %s %s %d %d %d 0 %s %s %s %s %d %d %d %s %d %d %d %d %d %ld Print &\n",
+	       BinariesDirectory, name, tempDir, repaginate, firstPage, lastPage, viewsToPrint, realName, "lp", PageSize, nbCopies,
+	       hShift, vShift, Orientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, FrRef[0]);
 
    res = system (cmd);
    if (res == -1)
@@ -216,59 +209,59 @@ char               *vuesaimprimer;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void          SauverPS (char *nom, char *dir, char *thotsch, char *thotdoc, char *thotpres, char *realname, char *realdir, char *nomps, int pagedeb, int pagefin, int nbex, int decalage_h, int decalage_v, int user_orientation, int reduction, int nb_ppf, int suptrame, int alimmanuelle, int noiretblanc, int repaginer, char *vuesaimprimer)
+static void          SauverPS (char *name, char *dir, char *thotSch, char *thotDoc, char *thotpres, char *realName, char *realDir, char *psName, int firstPage, int lastPage, int nbCopies, int hShift, int vShift, int userOrientation, int reduction, int nbPagesPerSheet, int suppFrame, int manualFeed, int blackAndWhite, int repaginate, char *viewsToPrint)
 
 #else  /* __STDC__ */
-static void         SauverPS (nom, dir, thotsch, thotdoc, thotpres, realname, realdir, nomps, pagedeb, pagefin, nbex, decalage_h, decalage_v, user_orientation, reduction, nb_ppf, suptrame, alimmanuelle, noiretblanc, repaginer, vuesaimprimer)
-char               *nom;
+static void         SauverPS (name, dir, thotSch, thotDoc, thotpres, realName, realDir, psName, firstPage, lastPage, nbCopies, hShift, vShift, userOrientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, repaginate, viewsToPrint)
+char               *name;
 char               *dir;
-char               *thotsch;
-char               *thotdoc;
+char               *thotSch;
+char               *thotDoc;
 char               *thotpres;
-char               *realname;
-char               *realdir;
-char               *nomps;
-int                 pagedeb;
-int                 pagefin;
-int                 nbex;
-int                 decalage_h;
-int                 decalage_v;
-int                 user_orientation;
+char               *realName;
+char               *realDir;
+char               *psName;
+int                 firstPage;
+int                 lastPage;
+int                 nbCopies;
+int                 hShift;
+int                 vShift;
+int                 userOrientation;
 int                 reduction;
-int                 nb_ppf;
-int                 suptrame;
-int                 alimmanuelle;
-int                 noiretblanc;
-int                 repaginer;
-char               *vuesaimprimer;
+int                 nbPagesPerSheet;
+int                 suppFrame;
+int                 manualFeed;
+int                 blackAndWhite;
+int                 repaginate;
+char               *viewsToPrint;
 
 #endif /* __STDC__ */
 
 {
    char                cmd[800];
    int                 res;
-   char               *thotdir;
+   char               *thotDir;
 
-   char               *tempdir;
+   char               *tempDir;
    ThotPid             pid = ThotPid_get ();
 
-   thotdir = TtaGetEnvString ("THOTDIR");
-   if (!thotdir)
+   thotDir = TtaGetEnvString ("THOTDIR");
+   if (!thotDir)
      {
-	thotdir = ThotDir ();
+	thotDir = ThotDir ();
      }
-   tempdir = (char *) TtaGetMemory (40);
-   sprintf (tempdir, "/tmp/Thot%d", pid);
-   initImpression (user_orientation, thotdir, tempdir, dir, nom, realname, nomps, pid, FrRef[0], thotsch, thotdoc, "SAVEPS");
+   tempDir = (char *) TtaGetMemory (40);
+   sprintf (tempDir, "/tmp/Thot%d", pid);
+   initImpression (userOrientation, thotDir, tempDir, dir, name, realName, psName, pid, FrRef[0], thotSch, thotDoc, "SAVEPS");
 
-   if (nomps[0] != '\0')
+   if (psName[0] != '\0')
       sprintf (cmd, "%s/print %s %s %d %d %d 0 %s %s %s %s %d %d %d %s %d %d %d %d %d %ld Sauver &\n",
-	       BinariesDirectory, nom, tempdir, repaginer, pagedeb, pagefin, vuesaimprimer, realname, nomps, page_size, nbex,
-	       decalage_h, decalage_v, orientation, reduction, nb_ppf, suptrame, alimmanuelle, noiretblanc, FrRef[0]);
+	       BinariesDirectory, name, tempDir, repaginate, firstPage, lastPage, viewsToPrint, realName, psName, PageSize, nbCopies,
+	       hShift, vShift, Orientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, FrRef[0]);
    else
       sprintf (cmd, "%s/print %s %s %d %d %d 0 %s %s %s %s %d %d %d %s %d %d %d %d %d %ld Sauver &\n",
-	       BinariesDirectory, nom, tempdir, repaginer, pagedeb, pagefin, vuesaimprimer, realname, "out.ps", page_size, nbex,
-	       decalage_h, decalage_v, orientation, reduction, nb_ppf, suptrame, alimmanuelle, noiretblanc, FrRef[0]);
+	       BinariesDirectory, name, tempDir, repaginate, firstPage, lastPage, viewsToPrint, realName, "out.ps", PageSize, nbCopies,
+	       hShift, vShift, Orientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, FrRef[0]);
 
    res = system (cmd);
    if (res == -1)
@@ -290,13 +283,13 @@ static void         ConnectPrint ()
 	/* read DEFAULTPRINTER shell variable */
 	ptr = TtaGetEnvString ("THOTPRINT");
 	if (ptr == NULL)
-	   strcpy (ptImprimante, "");
+	   strcpy (pPrinter, "");
 	else
-	   strcpy (ptImprimante, ptr);
+	   strcpy (pPrinter, ptr);
 	psdir[0] = '\0';
-	ImprimerPapier = TRUE;
-	AlimentationManuelle = FALSE;
-	strcpy (page_size, "A4");
+	PaperPrint = TRUE;
+	ManualFeed = FALSE;
+	strcpy (PageSize, "A4");
      }
 }
 
@@ -313,22 +306,22 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   PathBuffer          dirname;
-   Name                 docname;
-   PathBuffer          vuesaimprimer;
+   PathBuffer          dirName;
+   Name                docName;
+   PathBuffer          viewsToPrint;
    boolean             ok;
-   Name                 savePres, newPres;
+   Name                savePres, newPres;
 
    pDocPrint = LoadedDocument[document - 1];
    ConnectPrint ();
    /* prepare le lancement de l'impression */
    strcpy (savePres, pDocPrint->DocSSchema->SsDefaultPSchema);
-   ConfigGetPSchemaForPageSize (pDocPrint->DocSSchema, page_size, newPres);
+   ConfigGetPSchemaForPageSize (pDocPrint->DocSSchema, PageSize, newPres);
    if (newPres[0] != '\0')
       strcpy (pDocPrint->DocSSchema->SsDefaultPSchema, newPres);
 
    /* la repagination se fait dans le print */
-   SavePath (pDocPrint, dirname, docname);
+   SavePath (pDocPrint, dirName, docName);
 
    strcpy (pDocPrint->DocDirectory, "/tmp");
    strcpy (pDocPrint->DocDName, "ThotXXXXXX");
@@ -346,34 +339,34 @@ View                view;
    /* on fait une sauvegarde automatique */
    if (ok)
      {
-	strcpy (vuesaimprimer, TtaGetViewName (document, view));
-	strcat (vuesaimprimer, " ");
-	if (ImprimerPapier)
-	   Imprimer (pDocPrint->DocDName,
+	strcpy (viewsToPrint, TtaGetViewName (document, view));
+	strcat (viewsToPrint, " ");
+	if (PaperPrint)
+	   Print (pDocPrint->DocDName,
 		     pDocPrint->DocDirectory,
 		     pDocPrint->DocSchemasPath,
 		     DocumentPath,
 		     pDocPrint->DocSSchema->SsDefaultPSchema,
-		     docname, dirname, ptImprimante,
+		     docName, dirName, pPrinter,
 		     1, 999, 1, 0, 0, 0,
 		     100, 1, TRUE,
-		     (int) AlimentationManuelle, 0,
+		     (int) ManualFeed, 0,
 		     1,
-		     vuesaimprimer);
+		     viewsToPrint);
 	else if (psdir[0] != '\0')
 	   SauverPS (pDocPrint->DocDName,
 		     pDocPrint->DocDirectory,
 		     pDocPrint->DocSchemasPath,
 		     DocumentPath,
 		     pDocPrint->DocSSchema->SsDefaultPSchema,
-		     docname, dirname, psdir,
+		     docName, dirName, psdir,
 		     1, 999, 1, 0, 0, 0,
 		     100, 1, TRUE,
-		     (int) AlimentationManuelle, 0,
+		     (int) ManualFeed, 0,
 		     1,
-		     vuesaimprimer);
+		     viewsToPrint);
      }
-   RestorePath (pDocPrint, dirname, docname);
+   RestorePath (pDocPrint, dirName, docName);
 }
 
 
@@ -400,16 +393,16 @@ char               *txt;
 		     switch (val)
 			   {
 			      case 0:
-				 if (!NewImprimerPapier)
+				 if (!NewPaperPrint)
 				   {
-				      NewImprimerPapier = TRUE;
-				      TtaSetTextForm (NumZonePrinterName, ptImprimante);
+				      NewPaperPrint = TRUE;
+				      TtaSetTextForm (NumZonePrinterName, pPrinter);
 				   }
 				 break;
 			      case 1:
-				 if (NewImprimerPapier)
+				 if (NewPaperPrint)
 				   {
-				      NewImprimerPapier = FALSE;
+				      NewPaperPrint = FALSE;
 				      TtaSetTextForm (NumZonePrinterName, psdir);
 				   }
 				 break;
@@ -420,22 +413,22 @@ char               *txt;
 		     switch (val)
 			   {
 			      case 0:
-				 strcpy (page_size, "A4");
+				 strcpy (PageSize, "A4");
 				 break;
 			      case 1:
-				 strcpy (page_size, "US");
+				 strcpy (PageSize, "US");
 				 break;
 			   }
 		     break;
 		  case NumMenuOptions:
 		     /* choix multiple Options */
-		     AlimentationManuelle = !AlimentationManuelle;
+		     ManualFeed = !ManualFeed;
 		     break;
 		  case NumZonePrinterName:
 		     if (txt[0] != '\0')
-			if (NewImprimerPapier)
+			if (NewPaperPrint)
 			   /* zone de saisie du nom de l'imprimante */
-			   strncpy (ptImprimante, txt, MAX_NAME_LENGTH);
+			   strncpy (pPrinter, txt, MAX_NAME_LENGTH);
 			else
 			   /* zone de saisie du nom du fichier PostScript */
 			   strncpy (psdir, txt, MAX_PATH);
@@ -448,7 +441,7 @@ char               *txt;
 			      case 1:
 				 /* confirme l'option Imprimer papier */
 				 /* les autres options ne sont prises en compte que sur confirmation */
-				 ImprimerPapier = NewImprimerPapier;
+				 PaperPrint = NewPaperPrint;
 				 break;
 			      default:
 				 break;
@@ -473,7 +466,7 @@ View                view;
 #endif /* __STDC__ */
 {
    int                 i;
-   char                BufMenu[MAX_TXT_LEN];
+   char                bufMenu[MAX_TXT_LEN];
 
    pDocPrint = LoadedDocument[document - 1];
 
@@ -483,40 +476,40 @@ View                view;
 		TtaGetMessage (LIB, LIB_PRINT),
 		1, TtaGetMessage (LIB, LIB_CONFIRM), FALSE, 2, 'L', D_DONE);
    i = 0;
-   sprintf (&BufMenu[i], "%s%s", "B", TtaGetMessage (LIB, MANUAL_FEED));
+   sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, MANUAL_FEED));
    TtaNewToggleMenu (NumMenuOptions, NumFormPrint,
-		 TtaGetMessage (LIB, OPTIONS), 1, BufMenu, NULL, FALSE);
-   if (AlimentationManuelle)
+		 TtaGetMessage (LIB, OPTIONS), 1, bufMenu, NULL, FALSE);
+   if (ManualFeed)
       TtaSetToggleMenu (NumMenuOptions, 0, TRUE);
 
    /* sous-menu format papier */
    i = 0;
-   sprintf (&BufMenu[i], "%s%s", "B", TtaGetMessage (LIB, A4));
-   i += strlen (&BufMenu[i]) + 1;
-   sprintf (&BufMenu[i], "%s%s", "B", TtaGetMessage (LIB, US));
+   sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, A4));
+   i += strlen (&bufMenu[i]) + 1;
+   sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, US));
    TtaNewSubmenu (NumMenuPaperFormat, NumFormPrint, 0,
-	    TtaGetMessage (LIB, PAPER_SIZE), 2, BufMenu, NULL, FALSE);
-   if (!strcmp (page_size, "US"))
+	    TtaGetMessage (LIB, PAPER_SIZE), 2, bufMenu, NULL, FALSE);
+   if (!strcmp (PageSize, "US"))
       TtaSetMenuForm (NumMenuPaperFormat, 1);
    else
       TtaSetMenuForm (NumMenuPaperFormat, 0);
 
    /* sous-menu imprimer papier / sauver PostScript */
    i = 0;
-   sprintf (&BufMenu[i], "%s%s", "B", TtaGetMessage (LIB, PRINTER));
-   i += strlen (&BufMenu[i]) + 1;
-   sprintf (&BufMenu[i], "%s%s", "B", TtaGetMessage (LIB, PS_FILE));
+   sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, PRINTER));
+   i += strlen (&bufMenu[i]) + 1;
+   sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, PS_FILE));
    TtaNewSubmenu (NumMenuSupport, NumFormPrint, 0,
-		  TtaGetMessage (LIB, OUTPUT), 2, BufMenu, NULL, TRUE);
+		  TtaGetMessage (LIB, OUTPUT), 2, bufMenu, NULL, TRUE);
    /* zone de saisie du nom de l'imprimante */
    TtaNewTextForm (NumZonePrinterName, NumFormPrint, NULL, 30, 1, FALSE);
 
-   /* initialisation du selecteur ImprimerPapier */
-   NewImprimerPapier = ImprimerPapier;
-   if (ImprimerPapier)
+   /* initialisation du selecteur PaperPrint */
+   NewPaperPrint = PaperPrint;
+   if (PaperPrint)
      {
 	TtaSetMenuForm (NumMenuSupport, 0);
-	TtaSetTextForm (NumZonePrinterName, ptImprimante);
+	TtaSetTextForm (NumZonePrinterName, pPrinter);
      }
    else
      {
