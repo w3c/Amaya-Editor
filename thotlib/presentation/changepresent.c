@@ -166,7 +166,7 @@ void ApplyInherit (PRuleType ruleType, PtrAbstractBox pAb,
    PtrElement          pEl;
    int                 view;
    PtrAbstractBox      pAbCur, pPRP;
-   PtrPRule            pRule;
+   PtrPRule            pRule, checkedRule;
    PtrPSchema          pSchP;
    PtrAttribute        pAttr;
 
@@ -233,15 +233,30 @@ void ApplyInherit (PRuleType ruleType, PtrAbstractBox pAb,
 	  }
 	if (pAbCur)
 	  {
-             /* apply delayed rules */
-	     do
-	       {
-		 pPRP = pAbCur;
-		 GetDelayedRule (&pRule, &pSchP, &pPRP, &pAttr);
-		 if (pRule != NULL)
-		   ApplyRule (pRule, pSchP, pPRP, pDoc, pAttr);
+	    /* apply delayed rules */
+	    checkedRule = NULL;
+	    do
+	      {
+		pPRP = pAbCur;
+		if (pAbCur->AbDelayedPRule &&
+		    pAbCur->AbDelayedPRule->DpPRule == checkedRule)
+		   pRule = NULL;
+		else
+		  {
+		    GetDelayedRule (&pRule, &pSchP, &pPRP, &pAttr);
+		    if (pRule && !ApplyRule (pRule, pSchP, pPRP, pDoc, pAttr))
+		      {
+			/* this rule cannot be applied */
+			Delay (pRule, pSchP, pPRP, pAttr, pAbCur->AbFirstEnclosed);
+			if (checkedRule == NULL)
+			  /* first rule already checked and re-inserted
+			     in the delay list */
+			  checkedRule = pRule;
+		      }
+		  }
 	       }
 	     while (pRule);
+
 	     /* il y a un element ascendant dont le pave pAbCur pourrait
 		heriter de pAb */
 	     pRule = SearchRulepAb (pDoc, pAbCur, &pSchP, ruleType, FnAny,

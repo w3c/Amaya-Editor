@@ -2138,11 +2138,11 @@ static void ApplyPos (AbPosition *PPos, PosRule *positionRule, PtrPRule pPRule,
        else
 	 /* on n'a pas trouve' le pave' de reference */
 	 if (pAbb1->AbLeafType != LtCompound &&
-	     !(pPosRule->PoRelation == RlNext ||
-	       pPosRule->PoRelation == RlPrevious ||
-	       pPosRule->PoRelation == RlSameLevel ||
-	       pPosRule->PoRelation == RlCreator ||
-	       pPosRule->PoRelation == RlReferred))
+	     pPosRule->PoRelation != RlNext &&
+	     pPosRule->PoRelation != RlPrevious &&
+	     pPosRule->PoRelation != RlSameLevel &&
+	     pPosRule->PoRelation != RlCreator &&
+	     pPosRule->PoRelation != RlReferred)
 	   {
 	     /* inutile de reessayer d'appliquer la regle */
 	     /* quand les paves environnants seront crees. */
@@ -2192,74 +2192,69 @@ static void ApplyPos (AbPosition *PPos, PosRule *positionRule, PtrPRule pPRule,
 	     PPos->PosAbRef = NULL;
 	     *appl = TRUE;
 	   }
-	 else
-	   /* on n'a pas trouv' le pave' de reference */
-	   /* si c'est un positionnement par rapport au precedent ou au */
-	   /* suivant, on positionne le pave par rapport a l'englobant */
-	   if (pAbb1->AbEnclosing != NULL &&
-	       (
-		(pPRule->PrType == PtVertPos && pPosRule->PoRelation == RlPrevious &&
-		 pPosRule->PoPosDef == Top && pPosRule->PoPosRef == Bottom) ||
-		(pPRule->PrType == PtVertPos && pPosRule->PoRelation == RlNext &&
-		 pPosRule->PoPosDef == Bottom && pPosRule->PoPosRef == Top) ||
-		(pPRule->PrType == PtHorizPos && pPosRule->PoRelation == RlPrevious &&
-		 pPosRule->PoPosDef == Left && pPosRule->PoPosRef == Right) ||
-		(pPRule->PrType == PtHorizPos && pPosRule->PoRelation == RlNext &&
-		 pPosRule->PoPosDef == Right && pPosRule->PoPosRef == Left)
-		)
-	       )
-	     /* c'est une regle de positionnement vertical en dessous du
-		precedent et on n'a pas trouve' le precedent. On remplace par
-		un positionnement en haut de l'englobant */
-	     {
-	       PPos->PosAbRef = pAbb1->AbEnclosing;
-	       PPos->PosEdge = pPosRule->PoPosDef;
-	       PPos->PosRefEdge = pPosRule->PoPosDef;
-	       /* s'agit-il d'une regle de presentation specifique ? */
-	       pRSpec = pAbb1->AbElement->ElFirstPRule;
-	       while (pRSpec != NULL && pRSpec != pPRule)
-		 pRSpec = pRSpec->PrNextPRule;
-	       if (pRSpec == pPRule)
-		 /* c'est une regle de presentation specifique */
-		 /* on prend le decalage en compte */
-		 {
+	 else if (pAbb1->AbEnclosing &&
+		  ((pPRule->PrType == PtVertPos &&
+		    pPosRule->PoRelation == RlPrevious &&
+		    pPosRule->PoPosDef == Top && pPosRule->PoPosRef == Bottom) ||
+		   (pPRule->PrType == PtVertPos &&
+		    pPosRule->PoRelation == RlNext &&
+		    pPosRule->PoPosDef == Bottom && pPosRule->PoPosRef == Top) ||
+		   (pPRule->PrType == PtHorizPos &&
+		    pPosRule->PoRelation == RlPrevious &&
+		    pPosRule->PoPosDef == Left && pPosRule->PoPosRef == Right) ||
+		   (pPRule->PrType == PtHorizPos &&
+		    pPosRule->PoRelation == RlNext &&
+		    pPosRule->PoPosDef == Right && pPosRule->PoPosRef == Left)))
+	   /* the referred next or previous abstract box is not found
+	      change the rule to refer the enclosing abstract box */
+	   {
+	     PPos->PosAbRef = pAbb1->AbEnclosing;
+	     PPos->PosEdge = pPosRule->PoPosDef;
+	     PPos->PosRefEdge = pPosRule->PoPosDef;
+	     /* s'agit-il d'une regle de presentation specifique ? */
+	     pRSpec = pAbb1->AbElement->ElFirstPRule;
+	     while (pRSpec != NULL && pRSpec != pPRule)
+	       pRSpec = pRSpec->PrNextPRule;
+	     if (pRSpec == pPRule)
+	       /* c'est une regle de presentation specifique */
+	       /* on prend le decalage en compte */
+	       {
 		 PPos->PosDistance = pPosRule->PoDistance;
 		 PPos->PosDistDelta = pPosRule->PoDistDelta;
-		 }
-	       else
-		 /* c'est une regle generique */
-		 /* on se positionne tout contre l'englobant */
-		 {
-		   PPos->PosDistance = 0;
-		   PPos->PosDistDelta = 0;
-		 }
-	       /* on pourra reessayer d'appliquer la regle plus tard : */
-	       /* le precedent existera peut etre, alors */
-	       *appl = FALSE;
-	       PPos->PosUnit = pPosRule->PoDistUnit;
-	       PPos->PosDeltaUnit = pPosRule->PoDeltaUnit;
-	       if (FirstCreation)
-		 PPos->PosUserSpecified = pPosRule->PoUserSpecified;
-	       else
-		 PPos->PosUserSpecified = FALSE;
-	       if (PPos->PosUserSpecified)
-		 PPos->PosUserSpecified = CheckPPosUser (pAbb1, pDoc);
-	       pAbb1->AbVertEnclosing = TRUE;
-	     }
-           else
-             /* position flottante, equivalente a une regle VertPos=NULL ou
-                HorizPos=NULL */
-             {
-	       PPos->PosEdge = NoEdge;
-	       PPos->PosRefEdge = NoEdge;
-	       PPos->PosDistance = 0;
-	       PPos->PosDistDelta = pPosRule->PoDistDelta;
-	       PPos->PosUnit = UnRelative;
-	       PPos->PosDeltaUnit = pPosRule->PoDeltaUnit;
-	       PPos->PosAbRef = NULL;
+	       }
+	     else
+	       /* c'est une regle generique */
+	       /* on se positionne tout contre l'englobant */
+	       {
+		 PPos->PosDistance = 0;
+		 PPos->PosDistDelta = 0;
+	       }
+	     /* on pourra reessayer d'appliquer la regle plus tard : */
+	     /* le precedent existera peut etre, alors */
+	     *appl = FALSE;
+	     PPos->PosUnit = pPosRule->PoDistUnit;
+	     PPos->PosDeltaUnit = pPosRule->PoDeltaUnit;
+	     if (FirstCreation)
+	       PPos->PosUserSpecified = pPosRule->PoUserSpecified;
+	     else
 	       PPos->PosUserSpecified = FALSE;
-	       *appl = FALSE;
-             }
+	     if (PPos->PosUserSpecified)
+	       PPos->PosUserSpecified = CheckPPosUser (pAbb1, pDoc);
+	     pAbb1->AbVertEnclosing = TRUE;
+	   }
+	 else
+	   /* generate either the VertPos=NULL or the HorizPos=NULL rule */
+	   {
+	     PPos->PosEdge = NoEdge;
+	     PPos->PosRefEdge = NoEdge;
+	     PPos->PosDistance = 0;
+	     PPos->PosDistDelta = pPosRule->PoDistDelta;
+	     PPos->PosUnit = UnRelative;
+	     PPos->PosDeltaUnit = pPosRule->PoDeltaUnit;
+	     PPos->PosAbRef = NULL;
+	     PPos->PosUserSpecified = FALSE;
+	     *appl = FALSE;
+	   }
      }
 }
 

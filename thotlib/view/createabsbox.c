@@ -706,7 +706,7 @@ void Delay (PtrPRule pR, PtrPSchema pSP, PtrAbstractBox pAbb,
 	      pAb = pAb->AbEnclosing;
      }
 
-   if (pAb != NULL)
+   if (pAb)
      {
 	GetDifferedRule (&NpDelR);
 	NpDelR->DpPRule = pR;
@@ -736,49 +736,49 @@ void Delay (PtrPRule pR, PtrPSchema pSP, PtrAbstractBox pAbb,
    regle d'attribut (NULL sinon). S'il n'y a pas de regle  
    retardee, pR et pAbb contiennent NULL au retour.          
   ----------------------------------------------------------------------*/
-void GetDelayedRule (PtrPRule * pR, PtrPSchema * pSP, PtrAbstractBox * pAbb,
+void GetDelayedRule (PtrPRule *pR, PtrPSchema *pSP, PtrAbstractBox *pAbb,
 		     PtrAttribute * pAttr)
 {
    PtrDelayedPRule     pDelR;
-   PtrAbstractBox      pAb2;
+   PtrAbstractBox      pAb;
    ThotBool            stop;
    PtrElement          pEl;
 
-   pAb2 = *pAbb;
+   pAb = *pAbb;
    /* a priori, pas de regle retardee */
    *pR = NULL;
    *pSP = NULL;
    *pAbb = NULL;
    *pAttr = NULL;
-   if (pAb2 != NULL)
+   if (pAb)
      {
 	/* cherche le pave de l'element dans cette vue */
 	/* saute les paves de presentation */
 	stop = FALSE;
-	pEl = pAb2->AbElement;
+	pEl = pAb->AbElement;
 	do
-	   if (pAb2 == NULL)
+	   if (pAb == NULL)
 	      stop = TRUE;
-	   else if (pAb2->AbElement != pEl)
+	   else if (pAb->AbElement != pEl)
 	     {
 		stop = TRUE;
-		pAb2 = NULL;
+		pAb = NULL;
 	     }
-	   else if (!pAb2->AbPresentationBox)
+	   else if (!pAb->AbPresentationBox)
 	      stop = TRUE;
 	   else
-	      pAb2 = pAb2->AbNext;
+	      pAb = pAb->AbNext;
 	while (!stop);
-	if (pAb2 != NULL)
+	if (pAb)
 	  {
-	     pDelR = pAb2->AbDelayedPRule;
-	     if (pDelR != NULL)
+	     pDelR = pAb->AbDelayedPRule;
+	     if (pDelR)
 	       {
 		  *pR = pDelR->DpPRule;
 		  *pSP = pDelR->DpPSchema;
 		  *pAbb = pDelR->DpAbsBox;
 		  *pAttr = pDelR->DpAttribute;
-		  pAb2->AbDelayedPRule = pDelR->DpNext;
+		  pAb->AbDelayedPRule = pDelR->DpNext;
 		  FreeDifferedRule (pDelR);
 	       }
 	  }
