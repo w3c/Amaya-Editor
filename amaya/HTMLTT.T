@@ -11,7 +11,7 @@ CONST
   TmpFileExt = '.tmp';
   TmpFileDir = '/tmp/';
   DoubleQuote  = '"';
-
+  DashLine = '--------------------------------------------------------------';
 VAR
   OUT_AnchorCounter : Value(AnchorCounter);
   TmpFile : TmpFileDir TmpFileName TmpFileExt;
@@ -23,7 +23,6 @@ RULES
 	END;
 
  HEAD:	BEGIN
-	Create in TmpFile '\12' After;
 	END;
 
  Document_URL:
@@ -35,7 +34,7 @@ RULES
 	END;
 
  TITLE:	BEGIN
-	Create '\12\12' After;
+	Create '\12' After;
 	END;
 
  ISINDEX: BEGIN
@@ -73,50 +72,46 @@ RULES
  BODY:	BEGIN
 	Indent +4;
 	Indent -4 After;
+	{ --- print the List of References ---}
 	Create '\12\12' After;
-	Create '-------------------------\12' After;
+	Create (DashLine) After;
+	Create '\12' After;
 	Create 'List of References\12\12' After;
 	Include '/tmp/test.tmp' After;
 	END;
 
  H1:	BEGIN
 	Indent -4;
-	if not within Preformatted Create '\12';
 	Indent +4 After;
-	if not within Preformatted Create '\12\12' After;
+	Create '\12' After;
 	END;
 
  H2:	BEGIN
 	Indent -2;
-	if not within Preformatted Create '\12';
 	Indent +2 After;
-	if not within Preformatted Create '\12\12' After;
+	Create '\12' After;
 	END;
 
  H3:	BEGIN
-	if not within Preformatted Create '\12';
-	if not within Preformatted Create '\12\12' After;
+	Create '\12' After;
 	END;
 
  H4:	BEGIN
 	Indent +2;
-	if not within Preformatted Create '\12';
 	Indent -2 After;
-	if not within Preformatted Create '\12\12' After;
+	Create '\12' After;
 	END;
 
  H5:	BEGIN
 	Indent +4;
-	if not within Preformatted Create '\12';
 	Indent -4 After;
-	if not within Preformatted Create '\12\12' After;
+	Create '\12' After;
 	END;
 
  H6:	BEGIN
 	Indent +6;
-	if not within Preformatted Create '\12';
 	Indent -6 After;
-	if not within Preformatted Create '\12\12' After;
+	Create '\12' After;
 	END;
 
  BaseFont:
@@ -125,6 +120,8 @@ RULES
 	END;
 
  BR:	BEGIN
+	If Within BR
+           Remove;
 	Create '\12';
 	Remove;
 	END;
@@ -190,7 +187,6 @@ RULES
  Applet: BEGIN
 	Create Attributes;
 	Remove;
-	Create '\12' After;
 	END;
 
  Parameter: BEGIN
@@ -201,17 +197,19 @@ RULES
  Object: BEGIN
 	Create Attributes;
 	Remove;
-	Create '\12' After;	
 	END;
 #endif
- Paragraph: BEGIN
-	Create '\12';
-	Create '\12' After;
+ Paragraph:
+	BEGIN
+	If NOT Empty
+    	   Create '\12\12' After;
 	END;
 
- Pseudo_paragraph: BEGIN
-	If NOT within Paragraph AND NOT within Pseudo_paragraph
-       	   Create '\12\12' After;
+ Pseudo_paragraph:
+	BEGIN
+	If Empty
+	   Remove;
+	Create '\12\12' After;
 	END;
 
  TEXT_UNIT: BEGIN
@@ -226,13 +224,11 @@ RULES
 	END;
 
  Definition_List: BEGIN
-	Create '\12';
 	Indent +3;
 	Indent -3 After;
 	END;
 
  Term:	BEGIN
-	Create '\12' After;
 	END;
 
  Definition: BEGIN
@@ -241,30 +237,25 @@ RULES
 	END;
 
  Unnumbered_List: BEGIN
-	Create '\12';
 	Indent +3;
 	Indent -3 After;
 	END;
 
  Numbered_List:	BEGIN
-	Create '\12';
 	Indent +3;
 	Indent -3 After;
 	END;
 
  Address: BEGIN
 	Create Attributes;
-	Create '\12' After;
 	END;
 
  Menu:	BEGIN
-	Create '\12';
 	Indent +3;
 	Indent -3 After;
 	END;
 
  Directory: BEGIN
-	Create '\12';
 	Indent +3;
 	Indent -3 After;
 	END;
@@ -278,19 +269,15 @@ RULES
  Preformatted: BEGIN
 	NoLineBreak;
 	Create Attributes;
-	Create '\12' After;
 	END;
 
  Horizontal_Rule: BEGIN
-	If NOT within Paragraph AND NOT within  Pseudo_paragraph 
-           Create '\12';
-	Create '-----------------------------\12';	
+	Create (DashLine) After;
+	Create '\12' After;
 	Remove;
 	END;
 
  Form: BEGIN
-	Create '\12';
-	Create '\12' After;
 	END;
 
  Option_Menu: BEGIN
@@ -298,46 +285,53 @@ RULES
 
  Option: BEGIN
 	If NOT Selected
+  	   Remove;
+	Create Content;
 	Remove;
 	END;
 
  Toggle_Menu: BEGIN
-	Remove;
 	END;
 
  Toggle_Item: BEGIN
-	Remove;
 	END;
 
  Radio_Menu: BEGIN
-	Remove;
 	END;
 
  Radio_Item: BEGIN
-	Remove;
 	END;
 
  Text_Input_Line: BEGIN
-	Remove;
+        If Empty
+	   Remove;
 	END;
 
  Command_Line: BEGIN
-	Remove;
 	END;
 
  Text_Area: BEGIN
+	Create Content;
 	Remove;
 	END;
 
  Checkbox_Input: BEGIN
-	Remove;
+	If Checked = Yes_
+	   Create '[x] ';
+	If Checked = No_
+           Create '[ ] ';
 	END;
 
  Radio_Input: BEGIN
+	If Checked 
+	   Create '[x]';
+	If NOT Checked
+           Create '[ ]';
 	Remove;
 	END;
 
  Text_Input: BEGIN
+	Create Content;
 	Remove;
 	END;
 
@@ -350,41 +344,51 @@ RULES
 	END;
 
  File_Input: BEGIN
+	Create Content;
 	Remove;
 	END;
 
  Reset_Input: BEGIN
+	Create '(';
+	Create Value_;
+	Create ')';
+	If Last
+  	   Create '\12';
 	Remove;
 	END;
 
  Submit_Input: BEGIN
+	Create '(';
+	Create Value_;
+	Create ')';
+	If Last
+  	   Create '\12';
 	Remove;
+
 	END;
 
  Block_Quote: BEGIN
-	Create '\12';
 	Indent +5;
 	Indent -5 After;
-	Create '\12' After;
 	END;
 
  PICTURE_UNIT: BEGIN
 #ifdef COUGAR
-	if Immediately within Object
+	If Immediately within Object
 		Remove;
-	if NOT Immediately within Object BEGIN
+	If NOT Immediately within Object BEGIN
 		Create Attributes;
 		END;
 #else
 	Create Attributes;
 #endif
-	if NOT ALT 
+	If NOT ALT 
 	  Create '[Image]';
 	END;
 
 
  Anchor: BEGIN
-	if HREF_ AND NOT InternalLink
+	If HREF_ AND NOT InternalLink
 	  BEGIN
   	    Create In TmpFile '[';
 	    Create In TmpFile  OUT_AnchorCounter;
@@ -395,6 +399,8 @@ RULES
 	    Create '[' ;
 	    Create OUT_AnchorCounter;
 	    Create ']';
+	    Create Content;
+	    Remove;
 #else
 	    Create '[' After;
 	    Create OUT_AnchorCounter After;
@@ -417,18 +423,15 @@ RULES
 
  Table:
 	BEGIN
-	Create '\12';
 	Indent +3;
 	Create Attributes;
 	Indent -3 After;
-	Create '\12' After;
 	END;
 
  CAPTION:
 	BEGIN
 	Indent -3;
 	Indent +3 After;
-	Create '\12' after;
 	END;
 
  Table_head:
@@ -437,18 +440,10 @@ RULES
 #ifdef COUGAR
  thead:
 	BEGIN
-	Create '<thead';
-	Create Attributes;
-	Create '>\12';
-	Create '</thead>\12' after;
 	END;
 
  tfoot:
 	BEGIN
-	Create '<tfoot';
-	Create Attributes;
-	Create '>\12';
-	Create '</tfoot>\12' after;
 	END;
  tbody:
 	BEGIN
@@ -459,46 +454,32 @@ RULES
 	Get tfoot;
 
  Table_row:
-	BEGIN
-	END;
+	If Empty
+	   Remove;
 
  Data_cell:
-	BEGIN
-	Create '\12' After;
-	END;
+	If Empty
+	   Remove;
 
  Heading_cell:
-	BEGIN
-	Create '\12' After;
-	END;
+	If Empty
+	   Remove;
 
  Table_foot:
-	BEGIN
-	Remove;
-	END;
+	If Empty
+	   Remove;
 
- Division: BEGIN
-	Create '\12';
-	END;
+ Division: 
+	If Empty
+	   Remove;
 
- Center: BEGIN
-	Create '\12';
-
-	END;
+ Center:
+	If Empty
+	   Remove;
 
  Invalid_element:
-	BEGIN
-	if Error_type = BadPosition
+	If Error_type = BadPosition
 	   Remove;
-	if not Error_type = BadPosition
-           BEGIN
-	   NoTranslation;
-	   Create Content;
-	   Remove;
-	   Create Attributes;
-	   Create '>';
-	   END;
-	END;
 
  Comment\240: BEGIN
 	Remove;
@@ -665,6 +646,7 @@ ATTRIBUTES
 	Create (Value(ItemCounter, URoman) '. ');
 
  Start: BEGIN
+	Remove;
 	END;
 
  ItemValue: BEGIN
@@ -697,8 +679,8 @@ ATTRIBUTES
  MenuSize: BEGIN
 	END;
 
- Selected:
-	Create ' selected';
+ Selected: BEGIN
+	END;
 
  Value_: BEGIN
 	END;
@@ -709,8 +691,8 @@ ATTRIBUTES
  Columns: BEGIN
 	END;
 
- Checked = Yes_:
-	Create ' checked';
+ Checked = Yes_: BEGIN
+	END;
 
  Area_Size: BEGIN
 	END;
