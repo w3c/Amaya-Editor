@@ -3391,17 +3391,17 @@ void *extra;
     */
    if (context->drv->GetPictureMode)
      {
-       if (! context->drv->GetPictureMode (target, context, &repeat))
+       if ((context->drv->GetPictureMode(target, context, &repeat)) < 0)
          {
 	   if (context->drv->SetPictureMode)
 	     {
-	       repeat.typed_data.value = DRIVERP_VREPEAT;
+	       repeat.typed_data.value = DRIVERP_REPEAT;
 	       context->drv->SetPictureMode (target, context, repeat);
 	     }
 	 }
      }
+
    /*
-   RedisplayDocument (doc);
     * Update the rendering.
     */
    if (context->drv->UpdatePresentation != NULL)
