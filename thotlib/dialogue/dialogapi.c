@@ -1688,10 +1688,11 @@ static gboolean CallSheetGTK (ThotWidget w, struct Cat_Context *catalogue)
 	  i++;
 	}
       /* Si la feuille de dialogue est detruite cela force l'abandon */
-      if (entry == -1 && catalogue->Cat_Type == CAT_SHEET)
 #ifndef _GTK
+      if (entry == -1 && catalogue->Cat_Type == CAT_SHEET)
 	entry = 0;
 #else /* _GTK */
+      if (entry == -1)
 	entry = catalogue->Cat_Default;
 #endif /* _GTK */
       if (entry != -1)
