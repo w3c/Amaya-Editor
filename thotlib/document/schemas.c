@@ -1531,14 +1531,91 @@ void SearchNatures (PtrDocument pDoc, PtrSSchema natureTable[MAX_NAT_TABLE],
 #define DIST_BOTTOM 2
 
 /*----------------------------------------------------------------------
+   RuleBefore
+   Return TRUE if pPRule1 must occur before pPRule2 in a chain of
+   presentation rules.
+  ----------------------------------------------------------------------*/
+static ThotBool RuleBefore (PtrPRule pPRule1, PtrPRule pPRule2)
+{
+   ThotBool             ret;
+
+   /* first criterion is the rule type */
+   if (pPRule1->PrType != pPRule2->PrType)
+      ret = pPRule1->PrType < pPRule2->PrType;
+   else
+      /* same type */
+      if (pPRule1->PrType == PtFunction)
+         {
+	 /* both rules are presentation functions, next criterion is */
+	 /* the function code. */
+	 if (pPRule1->PrPresFunction != pPRule2->PrPresFunction)
+	   /* same presentation function */
+	   ret = pPRule1->PrPresFunction < pPRule2->PrPresFunction;
+	 else
+	   /* same presentation function, the next criterion is the view
+	      number */
+	   ret = pPRule1->PrViewNum < pPRule2->PrViewNum;
+         }
+      else
+         {
+	 /* It's not a presentation function, the next criterion is the
+	    view number */
+	 if (pPRule1->PrViewNum != pPRule2->PrViewNum)
+	    ret = pPRule1->PrViewNum < pPRule2->PrViewNum;
+	 else
+	    /* same type and same view: rule with no condition or with
+	       the default condition ("otherwise") must occur first */
+	    ret = (!pPRule1->PrCond ||
+		   pPRule1->PrCond->CoCondition == PcDefaultCond);
+         }
+   return ret;
+}
+
+/*----------------------------------------------------------------------
+   LinkNewPRule
+   Insert presentation rule pRule at the right position in the chain
+   of rules anchored at anchor.
+  ----------------------------------------------------------------------*/
+static void      LinkNewPRule (PtrPRule pRule, PtrPRule *anchor)
+{
+  PtrPRule       prevPRule, curPRule;
+
+  if (*anchor == NULL)
+    /* the chain is currently empty. First rule */
+    {
+      *anchor = pRule;
+      pRule->PrNextPRule = NULL;
+    }
+  else
+    {
+      prevPRule = NULL;
+      curPRule = *anchor;
+      while (curPRule && !RuleBefore (pRule, curPRule))
+	{
+	  prevPRule = curPRule;
+	  curPRule = curPRule->PrNextPRule;
+	}
+      if (prevPRule == NULL)
+	{
+	  pRule->PrNextPRule = *anchor;
+	  *anchor = pRule;
+	}
+      else
+	{
+	  pRule->PrNextPRule = prevPRule->PrNextPRule;
+	  prevPRule->PrNextPRule = pRule;
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
    InsertXmlAtRules
    Add the presentation rules associated to the new attribute
   ----------------------------------------------------------------------*/
 static void      InsertXmlAtRules (PtrPSchema pPS, int nAtRules)
 {
-
   AttributePres *pAtPres;
-  PtrPRule       prevPRule, pRule;
+  PtrPRule       pRule;
 
   GetAttributePres (&pAtPres);
 
@@ -1551,58 +1628,52 @@ static void      InsertXmlAtRules (PtrPSchema pPS, int nAtRules)
   pPS->PsNAttrPRule->Num[nAtRules] +=1;
 
   /* Create the pRules associated with this attribute */
-   pRule = NULL;
-   prevPRule = pAtPres->ApTextFirstPRule;
 
-   /* Rule 'CreateBefore (AttrName)' */
-   GetPresentRule (&pRule);
-   if (pRule != NULL)
-     {
-       pRule->PrType = PtFunction;
-       pRule->PrNextPRule = NULL;
-       pRule->PrCond = NULL;
-       pRule->PrViewNum = FORMATTED_VIEW;
-       pRule->PrSpecifAttr = 0;
-       pRule->PrLevel = 0;
-       pRule->PrSpecifAttrSSchema = NULL;
-       pRule->PrPresMode = PresFunction;
-       pRule->PrPresFunction = FnCreateBefore;
-       pRule->PrPresBoxRepeat = 0;
-       pRule->PrExternal = 0;
-       pRule->PrElement = 0;
-       pRule->PrNPresBoxes = 1;
-       pRule->PrPresBox[0] = ATTR_NAME_PBOX;
-       pRule->PrPresBoxName[0] = EOS;
-       /* Add the new rule into the chain */
-       if (prevPRule == NULL)
-	 pAtPres->ApTextFirstPRule = pRule;
-       else
-	 prevPRule->PrNextPRule = pRule;
-       prevPRule = pRule;
-     }
+  /* Rule 'CreateBefore (AttrName)' */
+  GetPresentRule (&pRule);
+  if (pRule != NULL)
+    {
+      pRule->PrType = PtFunction;
+      pRule->PrNextPRule = NULL;
+      pRule->PrCond = NULL;
+      pRule->PrViewNum = FORMATTED_VIEW;
+      pRule->PrSpecifAttr = 0;
+      pRule->PrLevel = 0;
+      pRule->PrSpecifAttrSSchema = NULL;
+      pRule->PrPresMode = PresFunction;
+      pRule->PrPresFunction = FnCreateBefore;
+      pRule->PrPresBoxRepeat = 0;
+      pRule->PrExternal = 0;
+      pRule->PrElement = 0;
+      pRule->PrNPresBoxes = 1;
+      pRule->PrPresBox[0] = ATTR_NAME_PBOX;
+      pRule->PrPresBoxName[0] = EOS;
+      /* Add the new rule into the chain */
+      LinkNewPRule (pRule, &pAtPres->ApTextFirstPRule);
+    }
 
-   /* Rule 'CreateBefore (AttrValue)' */
-   GetPresentRule (&pRule);
-   if (pRule != NULL)
-     {
-       pRule->PrType = PtFunction;
-       pRule->PrNextPRule = NULL;
-       pRule->PrCond = NULL;
-       pRule->PrViewNum = FORMATTED_VIEW;
-       pRule->PrSpecifAttr = 0;
-       pRule->PrLevel = 0;
-       pRule->PrSpecifAttrSSchema = NULL;
-       pRule->PrPresMode = PresFunction;
-       pRule->PrPresFunction = FnCreateBefore;
-       pRule->PrPresBoxRepeat = 0;
-       pRule->PrExternal = 0;
-       pRule->PrElement = 0;
-       pRule->PrNPresBoxes = 1;
-       pRule->PrPresBox[0] = ATTR_VALUE_PBOX;
-       pRule->PrPresBoxName[0] = EOS;
-       /* Add the new rule into the chain */
-       prevPRule->PrNextPRule = pRule;
-     }
+  /* Rule 'CreateBefore (AttrValue)' */
+  GetPresentRule (&pRule);
+  if (pRule != NULL)
+    {
+      pRule->PrType = PtFunction;
+      pRule->PrNextPRule = NULL;
+      pRule->PrCond = NULL;
+      pRule->PrViewNum = FORMATTED_VIEW;
+      pRule->PrSpecifAttr = 0;
+      pRule->PrLevel = 0;
+      pRule->PrSpecifAttrSSchema = NULL;
+      pRule->PrPresMode = PresFunction;
+      pRule->PrPresFunction = FnCreateBefore;
+      pRule->PrPresBoxRepeat = 0;
+      pRule->PrExternal = 0;
+      pRule->PrElement = 0;
+      pRule->PrNPresBoxes = 1;
+      pRule->PrPresBox[0] = ATTR_VALUE_PBOX;
+      pRule->PrPresBoxName[0] = EOS;
+      /* Add the new rule into the chain */
+      LinkNewPRule (pRule, &pAtPres->ApTextFirstPRule);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -1812,32 +1883,26 @@ void    TtaGetXmlAttributeType (char *XMLName, AttributeType *attrType)
    InsertAXmlPRule
    Add a specific presentation rule.
   ----------------------------------------------------------------------*/
-static PtrPRule InsertAXmlPRule (PRuleType type,  int view, PresMode mode,
-				 PtrPRule prevPRule, PtrPSchema pPSch,
-				 int nSRule)
+static PtrPRule InsertAXmlPRule (PRuleType type, int view, PresMode mode,
+				 PtrPSchema pPSch, int nSRule)
 {
-   PtrPRule     pRule;
+  PtrPRule     pRule;
 
-   pRule = NULL;
-   GetPresentRule (&pRule);
-   if (pRule != NULL)
-     {
-       pRule->PrType = type;
-       pRule->PrNextPRule = NULL;
-       pRule->PrCond = NULL;
-       pRule->PrViewNum = view;
-       pRule->PrSpecifAttr = 0;
-       pRule->PrLevel = 0;
-       pRule->PrSpecifAttrSSchema = NULL;
-       pRule->PrPresMode = mode;
-   
-       /* Add the new rule into the chain */
-       if (prevPRule == NULL)
-	 pPSch->PsElemPRule->ElemPres[nSRule] = pRule;
-       else
-	 prevPRule->PrNextPRule = pRule;
-     }
-   return (pRule);
+  GetPresentRule (&pRule);
+  if (pRule != NULL)
+    {
+      pRule->PrType = type;
+      pRule->PrNextPRule = NULL;
+      pRule->PrCond = NULL;
+      pRule->PrViewNum = view;
+      pRule->PrSpecifAttr = 0;
+      pRule->PrLevel = 0;
+      pRule->PrSpecifAttrSSchema = NULL;
+      pRule->PrPresMode = mode;
+      /* Add the new rule into the chain */
+      LinkNewPRule (pRule, &pPSch->PsElemPRule->ElemPres[nSRule]);
+    }
+  return (pRule);
 }
 
 /*----------------------------------------------------------------------
@@ -1847,26 +1912,22 @@ static PtrPRule InsertAXmlPRule (PRuleType type,  int view, PresMode mode,
 static void    InsertXmlPRules (PtrPSchema pPSch, int nSRules)
 {
 
-  PtrPRule     prevPRule, pRule, nextPRule;
-
-  /* First presention rule associated with this element type */
-  prevPRule = pPSch->PsElemPRule->ElemPres[nSRules];
+  PtrPRule     pRule;
 
  /* Rule 'NoLine' view 2 */
-  pRule = InsertAXmlPRule (PtFunction, STRUCTURE_VIEW, PresFunction,
-			   prevPRule, pPSch, nSRules);
+  pRule = InsertAXmlPRule (PtFunction, STRUCTURE_VIEW, PresFunction, pPSch,
+			   nSRules);
   if (pRule != NULL)
     {
       pRule->PrPresFunction = FnNoLine;
       pRule->PrPresBoxRepeat = 0;
       pRule->PrExternal = 0;
       pRule->PrElement = 0;
-      prevPRule = pRule;
     }
 
  /* Rule 'CreateBefore(ElementName)' */
-  pRule = InsertAXmlPRule (PtFunction, FORMATTED_VIEW, PresFunction,
-			   prevPRule, pPSch, nSRules);
+  pRule = InsertAXmlPRule (PtFunction, FORMATTED_VIEW, PresFunction, pPSch,
+			   nSRules);
   if (pRule != NULL)
     {
       pRule->PrPresFunction = FnCreateBefore;
@@ -1876,12 +1937,11 @@ static void    InsertXmlPRules (PtrPSchema pPSch, int nSRules)
       pRule->PrNPresBoxes = 1;
       pRule->PrPresBox[0] = ELEMENT_NAME_PBOX;
       pRule->PrPresBoxName[0] = EOS;
-      prevPRule = pRule;
     }
   
   /* Rule 'CreateWith(VerticalLine)' */
-  pRule = InsertAXmlPRule (PtFunction, FORMATTED_VIEW, PresFunction,
-			   prevPRule, pPSch, nSRules);
+  pRule = InsertAXmlPRule (PtFunction, FORMATTED_VIEW, PresFunction, pPSch,
+			   nSRules);
   if (pRule != NULL)
     {
       pRule->PrPresFunction = FnCreateWith;
@@ -1891,12 +1951,11 @@ static void    InsertXmlPRules (PtrPSchema pPSch, int nSRules)
       pRule->PrNPresBoxes = 1;
       pRule->PrPresBox[0] = VERT_LINE_PBOX;
       pRule->PrPresBoxName[0] = EOS;
-      prevPRule = pRule;
     }
 
   /* Rule 'VertPos' view 2 */
-  pRule = InsertAXmlPRule (PtVertPos, STRUCTURE_VIEW, PresImmediate,
-			   prevPRule, pPSch, nSRules);
+  pRule = InsertAXmlPRule (PtVertPos, STRUCTURE_VIEW, PresImmediate, pPSch,
+			   nSRules);
   if (pRule != NULL)
     {
       pRule->PrPosRule.PoPosDef = Top;
@@ -1909,12 +1968,11 @@ static void    InsertXmlPRules (PtrPSchema pPSch, int nSRules)
       pRule->PrPosRule.PoUserSpecified = FALSE;
       pRule->PrPosRule.PoRefKind = RkPresBox;
       pRule->PrPosRule.PoRefIdent = 0;
-      prevPRule = pRule;
     }
 
   /* Rule 'HorizPos' view 2 */
-  pRule = InsertAXmlPRule (PtHorizPos, STRUCTURE_VIEW, PresImmediate,
-			   prevPRule, pPSch, nSRules);
+  pRule = InsertAXmlPRule (PtHorizPos, STRUCTURE_VIEW, PresImmediate, pPSch,
+			   nSRules);
   if (pRule != NULL)
     {
       pRule->PrPosRule.PoPosDef = Left;
@@ -1927,12 +1985,11 @@ static void    InsertXmlPRules (PtrPSchema pPSch, int nSRules)
       pRule->PrPosRule.PoUserSpecified = FALSE;
       pRule->PrPosRule.PoRefKind = RkPresBox;
       pRule->PrPosRule.PoRefIdent = 0;
-      prevPRule = pRule;
     }
 
   /* Rule 'Size' view 2 */
-  pRule = InsertAXmlPRule (PtSize, STRUCTURE_VIEW, PresInherit,
-			   prevPRule, pPSch, nSRules);
+  pRule = InsertAXmlPRule (PtSize, STRUCTURE_VIEW, PresInherit, pPSch,
+			   nSRules);
   if (pRule != NULL)
     {
       pRule->PrInheritMode = InheritParent;
@@ -1942,17 +1999,13 @@ static void    InsertXmlPRules (PtrPSchema pPSch, int nSRules)
       pRule->PrMinMaxAttr = FALSE;
       pRule->PrInhMinOrMax = 0;
       pRule->PrInhUnit = UnRelative;
-      prevPRule = pRule;
     }
 
   /* Rule 'LineBreak' view 1  */
-  pRule = InsertAXmlPRule (PtLineBreak, FORMATTED_VIEW, PresImmediate,
-			   prevPRule, pPSch, nSRules);
+  pRule = InsertAXmlPRule (PtLineBreak, FORMATTED_VIEW, PresImmediate, pPSch,
+			   nSRules);
   if (pRule != NULL)
-    {
-      pRule->PrBoolValue = TRUE;
-      prevPRule = pRule;
-    }
+    pRule->PrBoolValue = TRUE;
 }
 
 /*----------------------------------------------------------------------
@@ -1962,16 +2015,10 @@ static void    InsertXmlPRules (PtrPSchema pPSch, int nSRules)
 void    TtaAddEmptyBox (Element el, Document document)
 
 {
-  PtrPRule            prevpRule, pRule;
-  PtrElement          pEl;
-
-
-  pEl = (PtrElement) el;
-  prevpRule = pEl->ElFirstPRule;
-  pRule = NULL;
-  GetPresentRule (&pRule);
+  PtrPRule            pRule;
 
   /* Rule 'Createfirst(EmptyBox)' */
+  GetPresentRule (&pRule);
   if (pRule != NULL)
     {
       pRule->PrType = PtFunction;
@@ -1989,12 +2036,8 @@ void    TtaAddEmptyBox (Element el, Document document)
       pRule->PrNPresBoxes = 1;
       pRule->PrPresBox[0] = EMPTY_PBOX;
       pRule->PrPresBoxName[0] = EOS;
+      LinkNewPRule (pRule, &(((PtrElement)el)->ElFirstPRule));   /**** ????? VQ ****/
     }
-  
-  if (prevpRule != NULL)
-    pRule->PrNextPRule = prevpRule;
-  else
-    pEl->ElFirstPRule =  pRule;
 }
 
 /*----------------------------------------------------------------------
@@ -2009,7 +2052,7 @@ PtrPRule    TtaGetXmlPRule (PtrPSchema pPSch, int nSRule, PRuleType PrType,
 			    FunctionType FcType, int view)
 
 {
-  PtrPRule   prevPRule, pRule, nextPRule;
+  PtrPRule   pRule;
   ThotBool   found;
 
   /* First presention rule associated with this element type */
@@ -2039,7 +2082,7 @@ ThotBool    TtaIsXmlTypeInLine (ElementType elType, Document document)
   PtrPSchema          pPSch;
   PtrDocument         pDoc;
   PtrDocSchemasDescr  pPfS;
-  PtrPRule            prevPRule, pRule;
+  PtrPRule            pRule;
   int                 nSRule;
 
   pSS = NULL;
@@ -2081,7 +2124,7 @@ void    TtaSetXmlTypeInLine (ElementType elType, Document document)
   PtrPSchema          pPSch;
   PtrDocument         pDoc;
   PtrDocSchemasDescr  pPfS;
-  PtrPRule            prevPRule, pRule;
+  PtrPRule            pRule;
   int                 nSRule;
 
   pSS = NULL;
@@ -2108,31 +2151,45 @@ void    TtaSetXmlTypeInLine (ElementType elType, Document document)
   if (pRule != NULL)
     return;
 
-  /* First presentation rule associated with this element type */
-  prevPRule = pPSch->PsElemPRule->ElemPres[nSRule];
-
   /* Rule 'Line' view 1 */
-   pRule = NULL;
-   GetPresentRule (&pRule);
-   if (pRule != NULL)
-     {
-       pRule->PrType = PtFunction;
-       pRule->PrNextPRule = NULL;
-       pRule->PrCond = NULL;
-       pRule->PrViewNum = FORMATTED_VIEW;
-       pRule->PrSpecifAttr = 0;
-       pRule->PrLevel = 0;
-       pRule->PrSpecifAttrSSchema = NULL;
-       pRule->PrPresMode = PresFunction;
-       pRule->PrPresFunction = FnLine;
-       pRule->PrPresBoxRepeat = 0;
-       pRule->PrExternal = 0;
-       pRule->PrElement = 0;
-    
-       /* Add the new rule into the chain */
-       pPSch->PsElemPRule->ElemPres[nSRule] = pRule;
-       pRule->PrNextPRule = prevPRule; 
-     }
+  GetPresentRule (&pRule);
+  if (pRule != NULL)
+    {
+      pRule->PrType = PtFunction;
+      pRule->PrNextPRule = NULL;
+      pRule->PrCond = NULL;
+      pRule->PrViewNum = FORMATTED_VIEW;
+      pRule->PrSpecifAttr = 0;
+      pRule->PrLevel = 0;
+      pRule->PrSpecifAttrSSchema = NULL;
+      pRule->PrPresMode = PresFunction;
+      pRule->PrPresFunction = FnLine;
+      pRule->PrPresBoxRepeat = 0;
+      pRule->PrExternal = 0;
+      pRule->PrElement = 0;
+      /* Add the new rule into the chain */
+      LinkNewPRule (pRule, &pPSch->PsElemPRule->ElemPres[nSRule]);
+    }
+
+  /* Rule "margin-bottom: 0.5em" view 1 */
+  GetPresentRule (&pRule);
+  if (pRule != NULL)
+    {
+      pRule->PrType = PtMarginBottom;
+      pRule->PrNextPRule = NULL;
+      pRule->PrCond = NULL;
+      pRule->PrViewNum = FORMATTED_VIEW;
+      pRule->PrSpecifAttr = 0;
+      pRule->PrLevel = 0;
+      pRule->PrSpecifAttrSSchema = NULL;
+      pRule->PrPresMode = PresImmediate;
+      pRule->PrMinUnit = UnRelative;
+      pRule->PrMinAttr = FALSE;
+      pRule->PrMinValue = 5;
+      /* Add the new rule into the chain */
+      LinkNewPRule (pRule, &pPSch->PsElemPRule->ElemPres[nSRule]);
+    }
+
 }
 #endif
 
