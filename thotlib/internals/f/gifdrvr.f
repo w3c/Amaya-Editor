@@ -1,6 +1,4 @@
 
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
@@ -11,9 +9,6 @@ extern int GetDataBlock ( FILE *fd, unsigned char *buf );
 extern int GetCode ( FILE *fd, int code_size, int flag );
 extern int LWZReadByte ( FILE *fd, int flag, int input_code_size );
 extern unsigned char *ReadGifToData ( char *datafile, int *w, int *h, int *ncolors, int *cpp, ThotColorStruct colrs[256] );
-extern int GifOpenImageDrvr ( ImagingModel model );
-extern void GifCloseImageDrvr ( void );
-extern void GifInitImage ( void );
 extern void GifPrintErrorMsg ( int ErrorNumber );
 extern Drawable GifCreateImage ( char * fn, PictureScaling pres, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, Drawable *mask1 );
 extern void GifPrintImage ( char * fn, PictureScaling pres, int xif, int yif, int wif, int hif, int xcf, int ycf, int wcf, int hcf, int fd, unsigned long BackGroundPixel);
@@ -28,9 +23,6 @@ extern int GetDataBlock (/* FILE *fd, unsigned char *buf */);
 extern int GetCode (/* FILE *fd, int code_size, int flag */);
 extern int LWZReadByte (/* FILE *fd, int flag, int input_code_size */);
 extern unsigned char *ReadGifToData (/* char *datafile, int *w, int *h, int *ncolors, int *cpp, ThotColorStruct colrs[256] */);
-extern int GifOpenImageDrvr (/* ImagingModel model */);
-extern void GifCloseImageDrvr (/* void */);
-extern void GifInitImage (/* void */);
 extern void GifPrintErrorMsg (/* int ErrorNumber */);
 extern Drawable GifCreateImage (/* char * fn, PictureScaling pres, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, Drawable *mask1 */);
 extern void GifPrintImage (/* char * fn, PictureScaling pres, int xif, int yif, int wif, int hif, int xcf, int ycf, int wcf, int hcf, int fd, unsigned long BackGroundPixel*/);

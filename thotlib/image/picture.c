@@ -24,40 +24,14 @@ typedef enum
   }
 FileStatus;
 
-#ifdef __STDC__
-extern void         GetXYOrg (int, int *, int *);
-
-#else  /* __STDC__ */
-extern void         GetXYOrg ();
-
-#endif /* __STDC__ */
-
-#ifdef __STDC__
-static int          OpenImageDrvr (int typeImage, ImagingModel model);
-static boolean      IsFormat (int typeImage, char *fn);
-
-#else  /* __STDC__ */
-static int          OpenImageDrvr ();
-static boolean      IsFormat ();
-
-#endif /* __STDC__ */
-
 typedef struct
   {
-     boolean             opened;
-     boolean             printing;
-     boolean             candoscaling;
-     boolean             resolutionchange;
      char                menuName[MAXFORMATNAMELENGHT];
-
-     int                 (*OpenImageDrvr) ();
-     void                (*CloseImageDrvr) ();
-     void                (*InitImage) ();
                          Drawable (*CreateImage) ();
      void                (*PrintImage) ();
                          boolean (*IsFormat) ();
   }
-ImageDriver;
+PictureHandler;
 
 #define EXPORT extern
 #include "img.var"
@@ -65,7 +39,7 @@ ImageDriver;
 #include "font.var"
 #include "environ.var"
 
-Bool                ImageDriverPrinting;
+boolean             Printing;
 ThotGC              GCpicture;	/* for bitmap */
 
 char               *SuffixImage[] =
@@ -79,7 +53,7 @@ Visual             *theVisual;
 
 #endif
 
-static ImageDriver  ImageDriverTable[MAXNBDRIVER];
+static PictureHandler  PictureHandlerTable[MAXNBDRIVER];
 static int          ImageIDType[MAXNBDRIVER];
 static int          ImageMenuType[MAXNBDRIVER];
 static char        *ImageMenu;
@@ -125,75 +99,59 @@ static char         reverseByte[0x100] =
    0x1f, 0x9f, 0x5f, 0xdf, 0x3f, 0xbf, 0x7f, 0xff
 };
 
-#include "imagedrvr.f"
-#include "docvues.f"
-#include "arbabs.f"
-#include "dofile.f"
-#ifdef Bitmap_CONFIG
-#include "bitmapdrvr.f"
-#endif
-#ifdef Pixmap_CONFIG
-#include "pixmapdrvr.f"
-#endif
-#ifdef EPSF_CONFIG
-#include "epsfdrvr.f"
-#endif
-#ifdef Gif_CONFIG
-#include "gifdrvr.f"
-#endif
-#ifdef Jpeg_CONFIG
-#include "jpegdrvr.f"
-#endif
-#ifdef Png_CONFIG
-#include "pngdrvr.f"
-#endif
 #include "appli.f"
+#include "arbabs.f"
+#include "bitmapdrvr.f"
+#include "docvues.f"
+#include "dofile.f"
+#include "epsfdrvr.f"
 #include "filesystem.f"
+#include "font.f"
+#include "fen.f"
+#include "gifdrvr.f"
+#include "jpegdrvr.f"
+#include "imagedrvr.f"
+#include "pixmapdrvr.f"
+#include "pngdrvr.f"
 #include "pres.f"
 #include "inites.f"
-#include "font.f"
 
 /* ---------------------------------------------------------------------- */
-/* |    IsFormat retourne True si le fichier de nom fn contient une     | */
+/* |    IsFormat retourne True si le fichier de nom fileName contient une     | */
 /* |            image de type typeImage. False sinon.                   | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static boolean      IsFormat (int typeImage, char *fn)
-
+static boolean      IsFormat (int typeImage, char *fileName)
 #else  /* __STDC__ */
-static boolean      IsFormat (typeImage, fn)
+static boolean      IsFormat (typeImage, fileName)
 int                 typeImage;
-char               *fn;
-
+char               *fileName;
 #endif /* __STDC__ */
-
 {
-   return (*(ImageDriverTable[typeImage].IsFormat)) (fn);
-
-}				/*IsFormat */
+  if (PictureHandlerTable[typeImage].IsFormat != NULL)
+    return (*(PictureHandlerTable[typeImage].IsFormat)) (fileName);
+  else
+    return MAXNBDRIVER;
+}
 
 /* ---------------------------------------------------------------------- */
 /* |    SwapAllBits inverse un byte suivant pour permettre la conversion| */
 /* |            big endian - little endian.                             | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 void                SwapAllBits (register unsigned char *b, register long n)
-
 #else  /* __STDC__ */
 void                SwapAllBits (b, n)
 register unsigned char *b;
 register long       n;
-
 #endif /* __STDC__ */
-
 {
-   do
-     {
-	*b = reverseByte[*b];
-	b++;
-     }
-   while (--n > 0);
+  do
+    {
+      *b = reverseByte[*b];
+      b++;
+    }
+  while (--n > 0);
 }
 
 
@@ -201,16 +159,12 @@ register long       n;
 /* |    FreePixmap detruit le pixmap Pix s'il est non vide et different | */
 /* |            des images predefinies LostPixmap et BadPixmap.         | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 static void         FreePixmap (Pixmap pix)
-
 #else  /* __STDC__ */
 static void         FreePixmap (pix)
 Pixmap              pix;
-
 #endif /* __STDC__ */
-
 {
 #ifndef NEW_WILLOWS
    if ((pix != None)
@@ -226,18 +180,14 @@ Pixmap              pix;
 /* |    SetImageDescPixmap met a jour le pixmap du descripteur d'image  | */
 /* |            imdesc avec le pixmap pix.                              | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 static void         SetImageDescPixmap (ImageDescriptor * imdesc, Pixmap pix, Pixmap mask)
-
 #else  /* __STDC__ */
 static void         SetImageDescPixmap (imdesc, pix, mask)
 ImageDescriptor    *imdesc;
 Pixmap              pix;
 Pixmap              mask;
-
 #endif /* __STDC__ */
-
 {
    FreePixmap (imdesc->imagePixmap);
    FreePixmap (imdesc->mask);
@@ -245,24 +195,6 @@ Pixmap              mask;
    imdesc->mask = mask;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    CanDoScaling retourne la valeur du booleen candoscaling         | */
-/* |            du driver correspondant au type typeImage.              | */
-/* |            Ce booleen est positionne' a` True pour les formats     | */
-/* |            qui savent afficher avec du scaling (cgm par exemple).  | */
-/* ---------------------------------------------------------------------- */
-/*
-   #ifdef __STDC__
-   static boolean CanDoScaling(int typeImage)
-
-   #else 
-   static boolean CanDoScaling(typeImage)
-   int typeImage;
-   #endif 
-   {
-   return ImageDriverTable[typeImage].candoscaling;
-   }
- */
 
 /* ---------------------------------------------------------------------- */
 /* |    CentreImage met a jour les parametres xtranslate, ytranslate,   | */
@@ -276,10 +208,8 @@ Pixmap              mask;
 /* |            Si l'image est plus grande que la boite, on clippe et   | */
 /* |            donc pxorig ou pyorig sont non nuls.                    | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 void                CentreImage (int wimage, int himage, int wbox, int hbox, PictureScaling pres, int *xtranslate, int *ytranslate, int *pxorig, int *pyorig)
-
 #else  /* __STDC__ */
 void                CentreImage (wimage, himage, wbox, hbox, pres, xtranslate, ytranslate, pxorig, pyorig)
 int                 wimage;
@@ -291,9 +221,7 @@ int                *xtranslate;
 int                *ytranslate;
 int                *pxorig;
 int                *pyorig;
-
 #endif /* __STDC__ */
-
 {
    float               Rapw, Raph;
 
@@ -340,10 +268,8 @@ int                *pyorig;
 /* ------------------------------------------------------------------- */
 /* | On teste si on a recupere une Cropping frame                    | */
 /* ------------------------------------------------------------------- */
-
 #ifdef __STDC__
 static void         IsCropOk (int *wcf, int *hcf, int wif, int hif, ImageDescriptor * imageDesc)
-
 #else  /* __STDC__ */
 static void         IsCropOk (wcf, hcf, wif, hif, imageDesc)
 int                *wcf;
@@ -351,9 +277,7 @@ int                *hcf;
 int                 wif;
 int                 hif;
 ImageDescriptor    *imageDesc;
-
 #endif /* __STDC__ */
-
 {
    if (((imageDesc->wcf == 0) && (imageDesc->hcf == 0)) ||
        ((imageDesc->wcf > 32768) || (imageDesc->hcf > 32768)))
@@ -375,10 +299,8 @@ ImageDescriptor    *imageDesc;
 /* |            Drawab.                                                 | */
 /* |            Si srcorx ou srcory sont negatif, on decale la copie.   | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 static void         CopyOnScreen (Pixmap SrcPix, Drawable Drawab, int srcorx, int srcory, int w, int h, int desorx, int desory)
-
 #else  /* __STDC__ */
 static void         CopyOnScreen (SrcPix, Drawab, srcorx, srcory, w, h, desorx, desory)
 Pixmap              SrcPix;
@@ -389,9 +311,7 @@ int                 w;
 int                 h;
 int                 desorx;
 int                 desory;
-
 #endif /* __STDC__ */
-
 {
 
    if (srcorx < 0)
@@ -418,14 +338,11 @@ int                 desory;
 /* ---------------------------------------------------------------------- */
 /* |    ImageLostPixmap retourne le pixmap Picture perdue.                | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 static Pixmap       ImageLostPixmap ()
-
 #else  /* __STDC__ */
 static Pixmap       ImageLostPixmap ()
 #endif				/* __STDC__ */
-
 {
    return ImageLostPixmapID;
 }
@@ -433,14 +350,11 @@ static Pixmap       ImageLostPixmap ()
 /* ---------------------------------------------------------------------- */
 /* |    ImageBadPixmap retourne le pixmap Picture incorrecte.             | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 static Pixmap       ImageBadPixmap ()
-
 #else  /* __STDC__ */
 static Pixmap       ImageBadPixmap ()
 #endif				/* __STDC__ */
-
 {
    return ImageBadPixmapID;
 }
@@ -458,17 +372,13 @@ static Pixmap       ImageBadPixmap ()
 /* |            boite box possede la meme taille que le pixmap dans     | */
 /* |            les 2 directions.                                       | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 static boolean      PixmapIsOk (PtrBox box, ImageDescriptor * imageDesc)
-
 #else  /* __STDC__ */
 static boolean      PixmapIsOk (box, imageDesc)
 PtrBox            box;
 ImageDescriptor    *imageDesc;
-
 #endif /* __STDC__ */
-
 {
    boolean             pixmapok;
    int                 xpix, ypix, wpix, hpix, bdw, dep;
@@ -508,54 +418,50 @@ ImageDescriptor    *imageDesc;
 
 /* ---------------------------------------------------------------------- */
 /* |    GetImageFileFormat retourne le format d'une image contenue dans | */
-/* |            le fichier fn ou UNKNOWN_FORMAT si on ne trouve pas.     | */
+/* |            le fichier fileName ou UNKNOWN_FORMAT si on ne trouve pas.     | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
-static int          GetImageFileFormat (char *fn)
-
+static int          GetImageFileFormat (char *fileName)
 #else  /* __STDC__ */
-static int          GetImageFileFormat (fn)
-char               *fn;
-
+static int          GetImageFileFormat (fileName)
+char               *fileName;
 #endif /* __STDC__ */
-
 {
    int                 i;
    int                 l = 0;
 
    i = MAXNBDRIVER - 1;
-   l = strlen (fn);
+   l = strlen (fileName);
    if (l > 4)
      {
-	if (strcmp (fn + l - 4, ".pic") == 0 || strcmp (fn + l - 4, ".xbm") == 0)
+	if (strcmp (fileName + l - 4, ".pic") == 0 || strcmp (fileName + l - 4, ".xbm") == 0)
 	  {
 	     return Bitmap_drvr;
 	  }
-	if (strcmp (fn + l - 4, ".eps") == 0 || strcmp (fn + l - 3, ".ps") == 0)
+	if (strcmp (fileName + l - 4, ".eps") == 0 || strcmp (fileName + l - 3, ".ps") == 0)
 	  {
 	     return EPSF_drvr;
 	  }
-	if (strcmp (fn + l - 4, ".xpm") == 0)
+	if (strcmp (fileName + l - 4, ".xpm") == 0)
 	  {
 	     return Pixmap_drvr;
 	  }
-	if ((strcmp (fn + l - 4, ".gif") == 0) || (strcmp (fn + l - 4, ".GIF") == 0))
+	if ((strcmp (fileName + l - 4, ".gif") == 0) || (strcmp (fileName + l - 4, ".GIF") == 0))
 	  {
 	     return Gif_drvr;
 	  }
-	if (strcmp (fn + l - 4, ".jpg") == 0)
+	if (strcmp (fileName + l - 4, ".jpg") == 0)
 	  {
 	     return Jpeg_drvr;
 	  }
-	if (strcmp (fn + l - 4, ".png") == 0)
+	if (strcmp (fileName + l - 4, ".png") == 0)
 	  {
 	     return Png_drvr;
 	  }
      }
    while (i > UNKNOWN_FORMAT)
      {
-	if (IsFormat (i, fn))
+	if (IsFormat (i, fileName))
 	  {
 	     return i;
 	  }
@@ -570,22 +476,19 @@ char               *fn;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    FileIsOk retourne ExistePas si le fichier fn n'existe pas.      | */
+/* |    FileIsOk retourne ExistePas si le fichier fileName n'existe pas.      | */
 /* |            - Si typeImage est defini, on retourne ExisteTypeOK si  | */
 /* |            le fichier est du type typeImage, MauvaisType sinon.    | */
 /* |            - Si typeImage est non defini, on le met a jour et on   | */
 /* |            retourne ExisteTypeOK si le fichier est d'un type connu | */
 /* |            et MauvaisType sinon.                                   | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
-static FileStatus   FileIsOk (char *fn, int *typeImage)
-
+static FileStatus   FileIsOk (char *fileName, int *typeImage)
 #else  /* __STDC__ */
-static FileStatus   FileIsOk (fn, typeImage)
-char               *fn;
+static FileStatus   FileIsOk (fileName, typeImage)
+char               *fileName;
 int                *typeImage;
-
 #endif /* __STDC__ */
 
 {
@@ -595,11 +498,11 @@ int                *typeImage;
    if (*typeImage >= MAXNBDRIVER || *typeImage < 0)
       *typeImage = UNKNOWN_FORMAT;
 
-   if (FileExist (fn))
+   if (FileExist (fileName))
      {
 	if (*typeImage == UNKNOWN_FORMAT)
 	  {
-	     *typeImage = GetImageFileFormat (fn);
+	     *typeImage = GetImageFileFormat (fileName);
 	     if (*typeImage == UNKNOWN_FORMAT)
 		status = MauvaisType;
 	     else
@@ -607,7 +510,7 @@ int                *typeImage;
 	  }
 	else
 	  {
-	     if (IsFormat (*typeImage, fn))
+	     if (IsFormat (*typeImage, fileName))
 		status = ExisteTypeOK;
 	     else
 		status = MauvaisType;
@@ -622,16 +525,17 @@ int                *typeImage;
 }
 
 /* ------------------------------------------------------------------- */
-/* | On initialise suivant le modele de sortie, l'imagedrv           | */
+/* | On initialise suivant le modele de sortie, la table des drivers | */
 /* ------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         InitImageDrvr (ImagingModel model)
+void       InitPictureHandlers (boolean printing)
 #else  /* __STDC__ */
-static void         InitImageDrvr (model)
-ImagingModel        model;
-
+void       InitPictureHandlers (printing)
+boolean    printing;
 #endif /* __STDC__ */
 {
+   int                 i;
+   XVisualInfo         vinfo, *vptr;
 #ifdef NEW_WILLOWS
 #if 0
    HDC                 hdc;
@@ -647,20 +551,16 @@ ImagingModel        model;
    ReleaseDC (WIN_Main_Wd, hdc);
 #endif /* 0 */
 #else  /* NEW_WILLOWS */
-   int                 i;
-
-   /*
-    * Do here any private init
-    *
-    */
-
-   XVisualInfo         vinfo, *vptr;
-
-   ImageDriverPrinting = (model == PostScript);
    graphicGC (0) = XCreateGC (GDp (0), GRootW (0), 0, NULL);
    XSetForeground (GDp (0), graphicGC (0), Black_Color);
    XSetBackground (GDp (0), graphicGC (0), White_Color);
    XSetGraphicsExposures (GDp (0), graphicGC (0), False);
+
+   GCpicture = XCreateGC (GDp (0), GRootW (0), 0, NULL);
+   XSetForeground (GDp (0), GCpicture, Black_Color);
+   XSetBackground (GDp (0), GCpicture, White_Color);
+   XSetGraphicsExposures (GDp (0), GCpicture, False);
+
    ImageLostPixmapID = TtaCreatePixmapLogo (lost_xpm);
    ImageBadPixmapID = TtaCreatePixmapLogo (lost_xpm);
    ImageEPSFPixmapID = XCreatePixmapFromBitmapData (GDp (0), GRootW (0),
@@ -676,36 +576,14 @@ ImagingModel        model;
    theVisual = DefaultVisual (GDp (0), ThotScreen (0));
 #endif /* !NEW_WILLOWS */
 
-}
-
-/* ------------------------------------------------------------------- */
-/* | On initialise suivant le modele de sortie, la table des drivers | */
-/* ------------------------------------------------------------------- */
-#ifdef __STDC__
-void                InitImageDrivers (ImagingModel model)
-#else  /* __STDC__ */
-void                InitImageDrivers (model)
-ImagingModel        model;
-
-#endif /* __STDC__ */
-{
-   int                 i = 0;
-
-   InitImageDrvr (model);
-
+   Printing = printing;
+   i = 0;
 #ifdef Bitmap_CONFIG
    /* i=0 */
-   ImageDriverTable[i].opened = False;
-   ImageDriverTable[i].printing = (model == PostScript);
-   ImageDriverTable[i].candoscaling = False;
-   ImageDriverTable[i].resolutionchange = False;
-   strncpy (ImageDriverTable[i].menuName, BitmapName, MAXFORMATNAMELENGHT);
-   ImageDriverTable[i].OpenImageDrvr = BitmapOpenImageDrvr;
-   ImageDriverTable[i].CloseImageDrvr = BitmapCloseImageDrvr;
-   ImageDriverTable[i].InitImage = BitmapInitImage;
-   ImageDriverTable[i].CreateImage = BitmapCreateImage;
-   ImageDriverTable[i].PrintImage = BitmapPrintImage;
-   ImageDriverTable[i].IsFormat = BitmapIsFormat;
+   strncpy (PictureHandlerTable[i].menuName, BitmapName, MAXFORMATNAMELENGHT);
+   PictureHandlerTable[i].CreateImage = BitmapCreateImage;
+   PictureHandlerTable[i].PrintImage = BitmapPrintImage;
+   PictureHandlerTable[i].IsFormat = BitmapIsFormat;
 
    ImageIDType[i] = Bitmap_drvr;
    ImageMenuType[i] = Bitmap_drvr;
@@ -714,17 +592,10 @@ ImagingModel        model;
 
 #ifdef EPSF_CONFIG
    /* i=1 */
-   ImageDriverTable[i].opened = False;
-   ImageDriverTable[i].printing = (model == PostScript);
-   ImageDriverTable[i].candoscaling = True;
-   ImageDriverTable[i].resolutionchange = True;
-   strncpy (ImageDriverTable[i].menuName, EPSFName, MAXFORMATNAMELENGHT);
-   ImageDriverTable[i].OpenImageDrvr = EPSFOpenImageDrvr;
-   ImageDriverTable[i].CloseImageDrvr = EPSFCloseImageDrvr;
-   ImageDriverTable[i].InitImage = EPSFInitImage;
-   ImageDriverTable[i].CreateImage = EPSFCreateImage;
-   ImageDriverTable[i].PrintImage = EPSFPrintImage;
-   ImageDriverTable[i].IsFormat = EPSFIsFormat;
+   strncpy (PictureHandlerTable[i].menuName, EPSFName, MAXFORMATNAMELENGHT);
+   PictureHandlerTable[i].CreateImage = EPSFCreateImage;
+   PictureHandlerTable[i].PrintImage = EPSFPrintImage;
+   PictureHandlerTable[i].IsFormat = EPSFIsFormat;
 
    ImageIDType[i] = EPSF_drvr;
    ImageMenuType[i] = EPSF_drvr;
@@ -733,17 +604,10 @@ ImagingModel        model;
 
 #ifdef Pixmap_CONFIG
    /* i=2 */
-   ImageDriverTable[i].opened = False;
-   ImageDriverTable[i].printing = (model == PostScript);
-   ImageDriverTable[i].candoscaling = False;
-   ImageDriverTable[i].resolutionchange = False;
-   strncpy (ImageDriverTable[i].menuName, PixmapName, MAXFORMATNAMELENGHT);
-   ImageDriverTable[i].OpenImageDrvr = PixmapOpenImageDrvr;
-   ImageDriverTable[i].CloseImageDrvr = PixmapCloseImageDrvr;
-   ImageDriverTable[i].InitImage = PixmapInitImage;
-   ImageDriverTable[i].CreateImage = PixmapCreateImage;
-   ImageDriverTable[i].PrintImage = PixmapPrintImage;
-   ImageDriverTable[i].IsFormat = PixmapIsFormat;
+   strncpy (PictureHandlerTable[i].menuName, PixmapName, MAXFORMATNAMELENGHT);
+   PictureHandlerTable[i].CreateImage = PixmapCreateImage;
+   PictureHandlerTable[i].PrintImage = PixmapPrintImage;
+   PictureHandlerTable[i].IsFormat = PixmapIsFormat;
 
    ImageIDType[i] = Pixmap_drvr;
    ImageMenuType[i] = Pixmap_drvr;
@@ -752,17 +616,10 @@ ImagingModel        model;
 
 #ifdef Gif_CONFIG
    /* i=3 */
-   ImageDriverTable[i].opened = False;
-   ImageDriverTable[i].printing = (model == PostScript);
-   ImageDriverTable[i].candoscaling = False;
-   ImageDriverTable[i].resolutionchange = False;
-   strncpy (ImageDriverTable[i].menuName, GifName, MAXFORMATNAMELENGHT);
-   ImageDriverTable[i].OpenImageDrvr = GifOpenImageDrvr;
-   ImageDriverTable[i].CloseImageDrvr = GifCloseImageDrvr;
-   ImageDriverTable[i].InitImage = GifInitImage;
-   ImageDriverTable[i].CreateImage = GifCreateImage;
-   ImageDriverTable[i].PrintImage = GifPrintImage;
-   ImageDriverTable[i].IsFormat = GifIsFormat;
+   strncpy (PictureHandlerTable[i].menuName, GifName, MAXFORMATNAMELENGHT);
+   PictureHandlerTable[i].CreateImage = GifCreateImage;
+   PictureHandlerTable[i].PrintImage = GifPrintImage;
+   PictureHandlerTable[i].IsFormat = GifIsFormat;
 
    ImageIDType[i] = Gif_drvr;
    ImageMenuType[i] = Gif_drvr;
@@ -771,17 +628,10 @@ ImagingModel        model;
 
 #ifdef Jpeg_CONFIG
    /* i=4 */
-   ImageDriverTable[i].opened = False;
-   ImageDriverTable[i].printing = (model == PostScript);
-   ImageDriverTable[i].candoscaling = False;
-   ImageDriverTable[i].resolutionchange = False;
-   strncpy (ImageDriverTable[i].menuName, JpegName, MAXFORMATNAMELENGHT);
-   ImageDriverTable[i].OpenImageDrvr = JpegOpenImageDrvr;
-   ImageDriverTable[i].CloseImageDrvr = JpegCloseImageDrvr;
-   ImageDriverTable[i].InitImage = JpegInitImage;
-   ImageDriverTable[i].CreateImage = JpegCreateImage;
-   ImageDriverTable[i].PrintImage = JpegPrintImage;
-   ImageDriverTable[i].IsFormat = JpegIsFormat;
+   strncpy (PictureHandlerTable[i].menuName, JpegName, MAXFORMATNAMELENGHT);
+   PictureHandlerTable[i].CreateImage = JpegCreateImage;
+   PictureHandlerTable[i].PrintImage = JpegPrintImage;
+   PictureHandlerTable[i].IsFormat = JpegIsFormat;
 
    ImageIDType[i] = Jpeg_drvr;
    ImageMenuType[i] = Jpeg_drvr;
@@ -790,17 +640,10 @@ ImagingModel        model;
 
 #ifdef Png_CONFIG
    /* i=5 */
-   ImageDriverTable[i].opened = False;
-   ImageDriverTable[i].printing = (model == PostScript);
-   ImageDriverTable[i].candoscaling = False;
-   ImageDriverTable[i].resolutionchange = False;
-   strncpy (ImageDriverTable[i].menuName, PngName, MAXFORMATNAMELENGHT);
-   ImageDriverTable[i].OpenImageDrvr = PngOpenImageDrvr;
-   ImageDriverTable[i].CloseImageDrvr = PngCloseImageDrvr;
-   ImageDriverTable[i].InitImage = PngInitImage;
-   ImageDriverTable[i].CreateImage = PngCreateImage;
-   ImageDriverTable[i].PrintImage = PngPrintImage;
-   ImageDriverTable[i].IsFormat = PngIsFormat;
+   strncpy (PictureHandlerTable[i].menuName, PngName, MAXFORMATNAMELENGHT);
+   PictureHandlerTable[i].CreateImage = PngCreateImage;
+   PictureHandlerTable[i].PrintImage = PngPrintImage;
+   PictureHandlerTable[i].IsFormat = PngIsFormat;
 
    ImageIDType[i] = Png_drvr;
    ImageMenuType[i] = Png_drvr;
@@ -809,50 +652,38 @@ ImagingModel        model;
 
 
    ImageDrvrCount = i;
-}				/*InitImageDrivers */
-
-/* Drivers access functions */
-/* ---------------------------------------------------------------------- */
-/* |    OpenImageDrvr initialise un driver correspondant a` typeImage   | */
-/* |            avec le model de sortie model.                          | */
-/* ---------------------------------------------------------------------- */
-
-#ifdef __STDC__
-static int          OpenImageDrvr (int typeImage, ImagingModel model)
-
-#else  /* __STDC__ */
-static int          OpenImageDrvr (typeImage, model)
-int                 typeImage;
-ImagingModel        model;
-
-#endif /* __STDC__ */
-
-{
-   int                 refNum;
-
-   refNum = (*(ImageDriverTable[typeImage].OpenImageDrvr)) (model);
-   ImageDriverTable[typeImage].opened = (refNum != NULLIMAGEDRVR);
-
-   return refNum;
-}				/*OpenImageDrvr */
-
-/* ---------------------------------------------------------------------- */
-/* |    IsSameResolution retourne la valeur du booleen resolutionchange | */
-/* |            du driver correspondant au type typeImage.              | */
-/* |            Ce booleen est positionne' a` True pour les formats     | */
-/* |            qui ne sont pas d'origine a` la resolutoin de l'ecran.  | */
-/* |            (Tiff ou PostScript par exemple.)                       | */
-/* ---------------------------------------------------------------------- */
-#ifdef __STDC__
-static boolean      IsSameResolution (int typeImage)
-#else  /* __STDC__ */
-static boolean      IsSameResolution (typeImage)
-int                 typeImage;
-
-#endif /* __STDC__ */
-{
-   return (!ImageDriverTable[typeImage].resolutionchange);
 }
+
+
+/* ---------------------------------------------------------------------- */
+/* |    GetImageDriversList cree dans buffer une liste des drivers      | */
+/* |            utilisables. Cette fonction sert a` creer le menu       | */
+/* |            image. On retourne dans count le nombre de drivers.     | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                GetImageDriversList (int *count, char *buffer)
+#else  /* __STDC__ */
+void                GetImageDriversList (count, buffer)
+int                *count;
+char               *buffer;
+#endif /* __STDC__ */
+{
+   int                 i = 0;
+   int                 index = 0;
+   char               *item;
+ 
+   *count = ImageDrvrCount;
+   while (i < ImageDrvrCount)
+     {
+        item = PictureHandlerTable[i].menuName;
+        strcpy (buffer + index, item);
+        index += strlen (item) + 1;
+        i++;
+     }
+   buffer = ImageMenu;
+ 
+}
+
 
 /* ------------------------------------------------------------------- */
 /* | On dessine la boite correspondant a l'image + logo              | */
@@ -866,7 +697,6 @@ ImageDescriptor    *imageDesc;
 int                 frame;
 int                 wlogo;
 int                 hlogo;
-
 #endif /* __STDC__ */
 {
    int                 x, y, w, h, xif, yif, wif, hif;
@@ -993,22 +823,18 @@ int                 hlogo;
 /* ------------------------------------------------------------------------ */
 /* | On dessine une image dans une fenetre frame                          | */
 /* ------------------------------------------------------------------------ */
-
 #ifdef __STDC__
 void                DrawImage (PtrBox box, ImageDescriptor * imageDesc, int frame)
-
 #else  /* __STDC__ */
 void                DrawImage (box, imageDesc, frame)
 PtrBox            box;
 ImageDescriptor    *imageDesc;
 int                 frame;
-
 #endif /* __STDC__ */
-
 {
 #ifndef NEW_WILLOWS
    int                 typeImage;
-   char                fn[1023];
+   char                fileName[1023];
    PictureScaling           pres;
    int                 xif, yif, wif, hif;
    int                 xcf, ycf, wcf, hcf;
@@ -1018,9 +844,7 @@ int                 frame;
    Drawable            drawable;
    int                 XOrg, YOrg;
    XImage             *maskImage;
-   int                 xpix, ypix, bdw, dep;
-   Drawable            root;
-   Drawable            mask1 = None;
+   int                 xpix, ypix, bdw;
    unsigned long       BackGroundPixel;
 
    xtranslate = 0;
@@ -1030,7 +854,7 @@ int                 frame;
    drawable = TtaGetThotWindow (frame);
    GetXYOrg (frame, &XOrg, &YOrg);
    typeImage = imageDesc->imageType;
-   GetImageFileName (imageDesc->imageFileName, fn);
+   GetImageFileName (imageDesc->imageFileName, fileName);
 
    pres = imageDesc->imagePres;
    xif = box->BxXOrg + FrameTable[frame].FrLeftMargin - XOrg;
@@ -1045,7 +869,7 @@ int                 frame;
 
 
    IsCropOk (&wcf, &hcf, wif, hif, imageDesc);
-   if (!ImageDriverPrinting)
+   if (!Printing)
      {
 	SetCursorWatch (frame);
 	if (imageDesc->imagePixmap == ImageEPSFPixmapID)
@@ -1092,7 +916,7 @@ int                 frame;
    else
      {
 	if (typeImage < ImageDrvrCount && typeImage > -1)
-	   (*(ImageDriverTable[typeImage].PrintImage)) (fn, pres, xif, yif, wif, hif, xcf, ycf, wcf, hcf,
+	   (*(PictureHandlerTable[typeImage].PrintImage)) (fileName, pres, xif, yif, wif, hif, xcf, ycf, wcf, hcf,
 					(FILE *) drawable, BackGroundPixel);
      }
 #endif /* NEW_WILLOWS */
@@ -1102,21 +926,18 @@ int                 frame;
 /* ---------------------------------------------------------------------- */
 /* | Demande au driver une image au format specifie dans imageDesc      | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 void                ReadImage (int frame, PtrBox box, ImageDescriptor * imageDesc)
-
 #else  /* __STDC__ */
 void                ReadImage (frame, box, imageDesc)
 int                 frame;
 PtrBox            box;
 ImageDescriptor    *imageDesc;
-
 #endif /* __STDC__ */
 {
 #ifndef NEW_WILLOWS
    int                 typeImage;
-   char                fn[1023];
+   char                fileName[1023];
    PictureScaling           pres;
    int                 xif = 0;
    int                 yif = 0;
@@ -1131,10 +952,10 @@ ImageDescriptor    *imageDesc;
       return;
    if (imageDesc->imageFileName[0] == '\0')
       return;
-   GetImageFileName (imageDesc->imageFileName, fn);
+   GetImageFileName (imageDesc->imageFileName, fileName);
    typeImage = imageDesc->imageType;
 
-   status = FileIsOk (fn, &typeImage);
+   status = FileIsOk (fileName, &typeImage);
    w = 0;
    h = 0;
    switch (status)
@@ -1153,7 +974,7 @@ ImageDescriptor    *imageDesc;
 		    h = box->BxHeight;
 		 }
 
-	       if (!ImageDriverPrinting)
+	       if (!Printing)
 		 {
 		    if (box != NULL)
 		       /* Positionne les couleurs du graphicGC */
@@ -1182,8 +1003,8 @@ ImageDescriptor    *imageDesc;
 
 	       Bgcolor = ColorPixel (box->BxAbstractBox->AbBackground);
 
-	       myDrawable = (*(ImageDriverTable[typeImage].
-			       CreateImage)) (fn, pres, &xif, &yif, &wif, &hif, Bgcolor, &mask);
+	       myDrawable = (*(PictureHandlerTable[typeImage].
+			       CreateImage)) (fileName, pres, &xif, &yif, &wif, &hif, Bgcolor, &mask);
 
 	       noCroppingFrame = ((wif == 0) && (hif == 0));
 	       /* utilise' pour le cgm */
@@ -1226,7 +1047,7 @@ ImageDescriptor    *imageDesc;
    imageDesc->wcf = w;
    imageDesc->hcf = h;
 
-   if (!ImageDriverPrinting || imageDesc->imagePixmap != ImageEPSFPixmapID)
+   if (!Printing || imageDesc->imagePixmap != ImageEPSFPixmapID)
       SetImageDescPixmap (imageDesc, myDrawable, mask);
 
 
@@ -1237,24 +1058,20 @@ ImageDescriptor    *imageDesc;
 /* ------------------------------------------------------------------- */
 /* | EditImage  edite une image, avec l'aide des drivers.            | */
 /* ------------------------------------------------------------------- */
-
 #ifdef __STDC__
 void                EditImage (int frame, PtrBox box, ImageDescriptor * imageDesc)
-
 #else  /* __STDC__ */
 void                EditImage (frame, box, imageDesc)
 int                 frame;
 PtrBox            box;
 ImageDescriptor    *imageDesc;
-
 #endif /* __STDC__ */
-
 {
    int                 typeImage;
-   char                fn[1023];
+   char                fileName[1023];
 
    typeImage = imageDesc->imageType;
-   GetImageFileName (imageDesc->imageFileName, fn);
+   GetImageFileName (imageDesc->imageFileName, fileName);
 
    if (typeImage == UNKNOWN_FORMAT)
       return;
@@ -1264,7 +1081,6 @@ ImageDescriptor    *imageDesc;
 /* ------------------------------------------------------------------- */
 /* | On traduit l'image dans un format de sortie                     | */
 /* ------------------------------------------------------------------- */
-
 #ifdef __STDC__
 void                PrintImage (int typeImage, char *name, PictureScaling pres, int xif, int yif, int wif, int hif, int xcf, int ycf, int wcf, int hcf, FILE * fd, unsigned long BackGroundPixel)
 
@@ -1281,30 +1097,24 @@ int                 xcf;
 int                 ycf;
 FILE               *fd;
 unsigned long       BackGroundPixel;
-
 #endif /* __STDC__ */
-
 {
-   char                fn[1023];
+   char                fileName[1023];
 
-   GetImageFileName (name, fn);
-   (*(ImageDriverTable[typeImage].PrintImage)) (fn, pres, xif, yif, wif, hif, xcf, ycf, wcf, hcf, fd, BackGroundPixel);
+   GetImageFileName (name, fileName);
+   (*(PictureHandlerTable[typeImage].PrintImage)) (fileName, pres, xif, yif, wif, hif, xcf, ycf, wcf, hcf, fd, BackGroundPixel);
 
 }				/*PrintImage */
 
 /* ---------------------------------------------------------------------- */
 /* |    FreeImage libere l'image du descripteur.                        | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 void                FreeImage (ImageDescriptor * imageDesc)
-
 #else  /* __STDC__ */
 void                FreeImage (imageDesc)
 ImageDescriptor    *imageDesc;
-
 #endif /* __STDC__ */
-
 {
 
 #ifndef NEW_WILLOWS
@@ -1325,21 +1135,17 @@ ImageDescriptor    *imageDesc;
 /* |    GetImageType retourne le type d'une image en fonction de        | */
 /* |            l'index dans le menu type d'image.                      | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 int                 GetImageType (int menuIndex)
-
 #else  /* __STDC__ */
 int                 GetImageType (menuIndex)
 int                 menuIndex;
-
 #endif /* __STDC__ */
-
 {
    if (menuIndex == 0)
       return UNKNOWN_FORMAT;
    else
-      /* repose sur l'implementation de GetImageDriversList */
+      /* repose sur l'implementation de GetPictureHandlersList */
       return ImageMenuType[menuIndex];
 
 }				/*GetImageType */
@@ -1349,16 +1155,12 @@ int                 menuIndex;
 /* |            le type d'une image. Si le type est inconnu, on         | */
 /* |            retourne 0.                                             | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 int                 GetImTypeIndex (int imageType)
-
 #else  /* __STDC__ */
 int                 GetImTypeIndex (imageType)
 int                 imageType;
-
 #endif /* __STDC__ */
-
 {
    int                 i = 0;
 
@@ -1371,7 +1173,7 @@ int                 imageType;
 	   return i;
 	else
 	   i++;
-	/* repose sur l'implementation de GetImageDriversList */
+	/* repose sur l'implementation de GetPictureHandlersList */
      }
    return 0;
 }				/*GetImTypeIndex */
@@ -1381,16 +1183,12 @@ int                 imageType;
 /* |            la presentation d'une image. Si la presentation est     | */
 /* |            inconnue, on retourne RealSize.                 | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 int                 GetImPresIndex (PictureScaling imagePres)
-
 #else  /* __STDC__ */
 int                 GetImPresIndex (imagePres)
 PictureScaling           imagePres;
-
 #endif /* __STDC__ */
-
 {
    int                 i;
 
@@ -1405,7 +1203,7 @@ PictureScaling           imagePres;
 	       i = (int) RealSize;
 	       break;
 	 }
-   /* repose sur l'implementation de GetImageDriversList */
+   /* repose sur l'implementation de GetPictureHandlersList */
    /* le define des presentations possibles est dans le meme ordre que */
    /* le menu image */
 
@@ -1416,37 +1214,29 @@ PictureScaling           imagePres;
 /* |    GetImagePresentation retourne la presentation d'une image en    | */
 /* |            fonction de l'index dans le menu presentation.          | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 PictureScaling           GetImagePresentation (int menuIndex)
-
 #else  /* __STDC__ */
 PictureScaling           GetImagePresentation (menuIndex)
 int                 menuIndex;
-
 #endif /* __STDC__ */
-
 {
    return (PictureScaling) menuIndex;
 
 }				/*GetImagePresentation */
 
 /* ---------------------------------------------------------------------- */
-/* |    GetImageDriversList cree dans buffer une liste des drivers      | */
+/* |    GetPictureHandlersList cree dans buffer une liste des drivers      | */
 /* |            utilisables. Cette fonction sert a` creer le menu       | */
 /* |            image. On retourne dans count le nombre de drivers.     | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
-void                GetImageDriversList (int *count, char *buffer)
-
+void                GetPictureHandlersList (int *count, char *buffer)
 #else  /* __STDC__ */
-void                GetImageDriversList (count, buffer)
+void                GetPictureHandlersList (count, buffer)
 int                *count;
 char               *buffer;
-
 #endif /* __STDC__ */
-
 {
    int                 i = 0;
    int                 index = 0;
@@ -1455,77 +1245,15 @@ char               *buffer;
    *count = ImageDrvrCount;
    while (i < ImageDrvrCount)
      {
-	item = ImageDriverTable[i].menuName;
+	item = PictureHandlerTable[i].menuName;
 	strcpy (buffer + index, item);
 	index += strlen (item) + 1;
 	i++;
      }
    buffer = ImageMenu;
 
-}				/*GetImageDriversListe */
+}
 
-/* ---------------------------------------------------------------------- */
-/* |    OpenAllImageDrivers ouvre tous les drivers.                     | */
-/* ---------------------------------------------------------------------- */
-#ifdef __STDC__
-void                OpenAllImageDrivers (ImagingModel model)
-
-#else  /* __STDC__ */
-void                OpenAllImageDrivers (model)
-ImagingModel        model;
-
-#endif /* __STDC__ */
-{
-#ifdef Bitmap_CONFIG
-   OpenImageDrvr (Bitmap_drvr, model);
-#endif
-#ifdef Pixmap_CONFIG
-   OpenImageDrvr (Pixmap_drvr, model);
-#endif
-#ifdef EPSF_CONFIG
-   OpenImageDrvr (EPSF_drvr, model);
-#endif
-
-#ifndef NEW_WILLOWS
-   graphicGC (0) = XCreateGC (GDp (0), GRootW (0), 0, NULL);
-   XSetForeground (GDp (0), graphicGC (0), Black_Color);
-   XSetBackground (GDp (0), graphicGC (0), White_Color);
-   XSetGraphicsExposures (GDp (0), graphicGC (0), False);
-#endif /* NEW_WILLOWS */
-
-}				/*OpenAllImageDrivers */
-
-/* ---------------------------------------------------------------------- */
-/* |    GetImageDrvrID cherche l'indice d'un driver dans la table des   | */
-/* |            drivers en fonction du type d'image du driver. Si le    | */
-/* |            type est inconnu on retourne NULLIMAGEDRVR.             | */
-/* ---------------------------------------------------------------------- */
-
-#ifdef __STDC__
-int                 GetImageDrvrID (int typeImage)
-
-#else  /* __STDC__ */
-int                 GetImageDrvrID (typeImage)
-int                 typeImage;
-
-#endif /* __STDC__ */
-
-{
-   int                 i = 0;
-
-   while (i < ImageDrvrCount)
-     {
-	if (ImageIDType[i] == typeImage)
-	  {
-	     return i;
-	  }
-	else
-	  {
-	     i++;
-	  }
-     }
-   return NULLIMAGEDRVR;
-}				/*GetImageDrvrID */
 
 /* ---------------------------------------------------------------------- */
 /* |    TtaSetMainThotWindowBackgroundImage :                           | */
@@ -1541,7 +1269,7 @@ char               *imageFile;
 
 {
 /*****************************************
-  char fn[MAX_PATH];
+  char fileName[MAX_PATH];
   int  typeImage;
   Drawable   myDrawable = None;
   Drawable   mask;
@@ -1551,10 +1279,10 @@ char               *imageFile;
   ThotWindow     frame;
   int        vue;
 
-  GetImageFileName(imageFile, fn);
-  typeImage = GetImageFileFormat(fn);
-  myDrawable = (*(ImageDriverTable[typeImage].
-		  CreateImage))(fn, pres, &xif, &yif, &wif, &hif, Bgcolor,
+  GetImageFileName(imageFile, fileName);
+  typeImage = GetImageFileFormat(fileName);
+  myDrawable = (*(PictureHandlerTable[typeImage].
+		  CreateImage))(fileName, pres, &xif, &yif, &wif, &hif, Bgcolor,
 		                &mask );
   XSetWindowBackgroundPixmap(GDp(0),w,myDrawable);
   FreePixmap(myDrawable);

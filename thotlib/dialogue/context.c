@@ -704,8 +704,7 @@ int                 dy;
    InitFont (name);		/* polices de caracteres              */
 
    /* Initialisation des Picture Drivers */
-   InitImageDrivers (XWindowSystem);
-   OpenAllImageDrivers (XWindowSystem);
+   InitPictureHandlers (False);
 }
 
 /* ---------------------------------------------------------------------- */

@@ -39,60 +39,6 @@ extern int          PixelEnPt ();
 
 #endif /* __STDC__ */
 
-/* ---------------------------------------------------------------------- */
-/* |    NormalizePix  pixmap.                                            | */
-/* ---------------------------------------------------------------------- */
-
-
-/* ---------------------------------------------------------------------- */
-/* |    PixmapOpenImageDrvr ouvre le driver.                            | */
-/* ---------------------------------------------------------------------- */
-
-#ifdef __STDC__
-int                 PixmapOpenImageDrvr (ImagingModel model)
-
-#else  /* __STDC__ */
-int                 PixmapOpenImageDrvr (model)
-ImagingModel        model;
-
-#endif /* __STDC__ */
-
-{
-   int                 refNum;
-
-   refNum = GetImageDrvrID (Pixmap_drvr);
-/** a definir dans picture.h */
-   return refNum;
-
-}				/*PixmapOpenImageDrvr */
-
-/* ---------------------------------------------------------------------- */
-/* |    PixtmapCloseImageDrvr ferme le driver.                          | */
-/* ---------------------------------------------------------------------- */
-
-#ifdef __STDC__
-void                PixmapCloseImageDrvr ()
-
-#else  /* __STDC__ */
-void                PixmapCloseImageDrvr ()
-#endif				/* __STDC__ */
-
-{
-}				/*PixmapCloseImageDrvr */
-
-/* ---------------------------------------------------------------------- */
-/* |    PixmapInitImage initialise le driver pour une image.            | */
-/* ---------------------------------------------------------------------- */
-
-#ifdef __STDC__
-void                PixmapInitImage ()
-
-#else  /* __STDC__ */
-void                PixmapInitImage ()
-#endif				/* __STDC__ */
-
-{
-}				/*PixmapInitImage */
 
 /* ---------------------------------------------------------------------- */
 /* |    Messages d'erreur : On recupere les erreurs de Xpm et on envoi  | */
@@ -147,10 +93,8 @@ int                 ErrorNumber;
 /* |    PixmapCreateImage lit et retourne le Pixmap lu dans le fichier  | */
 /* |            fn. Met a` jour xif, yif, wif, hif.                     | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 Drawable            PixmapCreateImage (char *fn, PictureScaling pres, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, Drawable * mask1)
-
 #else  /* __STDC__ */
 Drawable            PixmapCreateImage (fn, pres, xif, yif, wif, hif, BackGroundPixel, mask1)
 char               *fn;
@@ -161,9 +105,7 @@ int                *wif;
 int                *hif;
 unsigned long       BackGroundPixel;
 Drawable           *mask1;
-
 #endif /* __STDC__ */
-
 {
 #ifdef NEW_WILLOWS
    return (NULL);
@@ -228,10 +170,8 @@ Drawable           *mask1;
 /* ---------------------------------------------------------------------- */
 /* |    PixmapPrintImage convertit un Pixmap en PostScript.             | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 void                PixmapPrintImage (char *fn, PictureScaling pres, int xif, int yif, int wif, int hif, int xcf, int ycf, int wcf, int hcf, int fd, unsigned long BackGroundPixel)
-
 #else  /* __STDC__ */
 void                PixmapPrintImage (fn, pres, xif, yif, wif, hif, xcf, ycf, wcf, hcf, fd, BackGroundPixel)
 char               *fn;
@@ -246,9 +186,7 @@ int                 wcf;
 int                 hcf;
 int                 fd;
 unsigned long       BackGroundPixel;
-
 #endif /* __STDC__ */
-
 {
 #ifdef NEW_WILLOWS
    return;
@@ -464,16 +402,12 @@ unsigned long       BackGroundPixel;
 /* ---------------------------------------------------------------------- */
 /* |    PixmapIsFormat teste si un fichier contient un Pixmap X11.      | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 Bool                PixmapIsFormat (char *fn)
-
 #else  /* __STDC__ */
 Bool                PixmapIsFormat (fn)
 char               *fn;
-
 #endif /* __STDC__ */
-
 {
    FILE               *f;
    char                c;

@@ -1,4 +1,3 @@
-/* -- Copyright (c) 1990 - 1994 Inria/Imag  All rights reserved. -- */
 #include "thot_gui.h"
 #include "thot_sys.h"
 
@@ -545,55 +544,6 @@ int *bg;
 
 
 /* ---------------------------------------------------------------------- */
-/* |	PngOpenImageDrvr ouvre le driver.				| */
-/* ---------------------------------------------------------------------- */
-
-#ifdef __STDC__
-int PngOpenImageDrvr(ImagingModel model)
-
-#else /* __STDC__ */
-int PngOpenImageDrvr(model)
-	ImagingModel model;
-#endif /* __STDC__ */
-
-{
-    /*int refNum;
-
-  refNum = GetImageDrvrID(Png_drvr); a definir dans picture.h 
-  return refNum;*/
-
-}/*PngOpenImageDrvr*/
-
-/* ---------------------------------------------------------------------- */
-/* |    PixtmapCloseImageDrvr ferme le driver.				| */
-/* ---------------------------------------------------------------------- */
-
-#ifdef __STDC__
-void PngCloseImageDrvr()
-
-#else /* __STDC__ */
-void PngCloseImageDrvr()
-#endif /* __STDC__ */
-
-{
-}/*PngCloseImageDrvr*/
-
-/* ---------------------------------------------------------------------- */
-/* |	PngInitImage initialise le driver pour une image.		| */
-/* ---------------------------------------------------------------------- */
-
-#ifdef __STDC__
-void PngInitImage()
-
-#else /* __STDC__ */
-void PngInitImage()
-#endif /* __STDC__ */
-
-{
-}/*PngInitImage*/
-
-
-/* ---------------------------------------------------------------------- */
 /* |	ReadPngToData  Ouverture+lecture du fichier                     | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
@@ -636,7 +586,6 @@ unsigned char *ReadPngToData(datafile, w, h, ncolors, cpp, colrs, bg)
 /* |	PngCreateImage lit et retourne le Png lu dans le fichier 	| */
 /* |		fn. Met a` jour xif, yif, wif, hif.			| */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 Drawable PngCreateImage(char *fn, PictureScaling pres, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, Drawable *mask1)
 
@@ -651,7 +600,6 @@ Drawable PngCreateImage(fn, pres, xif, yif, wif, hif, BackGroundPixel, mask1)
 	unsigned long BackGroundPixel;
 	Drawable *mask1;
 #endif /* __STDC__ */
-
 {
 #ifdef NEW_WILLOWS
   return(NULL);
@@ -711,10 +659,8 @@ Drawable PngCreateImage(fn, pres, xif, yif, wif, hif, BackGroundPixel, mask1)
 /* ---------------------------------------------------------------------- */
 /* |	PngPrintImage convertit un Png en PostScript.		| */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 void PngPrintImage(char * fn, PictureScaling pres, int xif, int yif, int wif, int hif, int xcf, int ycf, int wcf, int hcf, int fd, unsigned long BackGroundPixel)
-
 #else /* __STDC__ */
 void PngPrintImage(fn, pres, xif, yif, wif, hif, xcf, ycf, wcf, hcf, fd, BackGroundPixel)
 	char *     fn;
@@ -730,7 +676,6 @@ void PngPrintImage(fn, pres, xif, yif, wif, hif, xcf, ycf, wcf, hcf, fd, BackGro
 	int fd;
 	unsigned long BackGroundPixel;
 #endif /* __STDC__ */
-
 {
 #ifdef NEW_WILLOWS
   return;
@@ -883,15 +828,12 @@ void PngPrintImage(fn, pres, xif, yif, wif, hif, xcf, ycf, wcf, hcf, fd, BackGro
 /* ---------------------------------------------------------------------- */
 /* |	PngIsFormat teste si un fichier contient un Png X11.	| */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 boolean PngIsFormat(char * fn)
-
 #else /* __STDC__ */
 boolean PngIsFormat(fn)
 	char * fn;
 #endif /* __STDC__ */
-
 {
   
    FILE *fp;
@@ -912,5 +854,5 @@ boolean PngIsFormat(fn)
    if (ret) return (True);
    return(False);
 
-}/*PngIsFormat*/
+}
 

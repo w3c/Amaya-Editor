@@ -1,4 +1,3 @@
-/* -- Copyright (c) 1995 Inria/CNRS  All rights reserved. -- */
 
 /* +-------------------------------------------------------------------+ */
 /* |  Driver Jpeg: LAYAIDA Nabil 19-12-95                                                                             | */
@@ -61,7 +60,6 @@ extern int          PixelEnPt ();
 /* ---------------------------------------------------------------------- */
 /* | lit un fichier Jpeg et le rend en forme normalizee                                                                    | */
 /* ---------------------------------------------------------------------- */
-
 unsigned char      *ReadJPEG (FILE * infile, int *width, int *height, ThotColorStruct colrs[256])
 {
    unsigned char      *retBuffer = 0;	/* Output image buffer */
@@ -202,80 +200,25 @@ ThotColorStruct     colrs[256];
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    JpegOpenImageDrvr ouvre le driver.                              | */
-/* ---------------------------------------------------------------------- */
-
-#ifdef __STDC__
-int                 JpegOpenImageDrvr (ImagingModel model)
-#else  /* __STDC__ */
-int                 JpegOpenImageDrvr (model)
-ImagingModel        model;
-
-#endif /* __STDC__ */
-{
-   int                 refNum;
-
-   refNum = GetImageDrvrID (Jpeg_drvr);
-
-   return refNum;
-
-}				/*JpegOpenImageDrvr */
-
-/* ---------------------------------------------------------------------- */
-/* |    PixtmapCloseImageDrvr ferme le driver.                          | */
-/* ---------------------------------------------------------------------- */
-
-#ifdef __STDC__
-void                JpegCloseImageDrvr ()
-
-#else  /* __STDC__ */
-void                JpegCloseImageDrvr ()
-#endif				/* __STDC__ */
-
-{
-}				/*JpegCloseImageDrvr */
-
-/* ---------------------------------------------------------------------- */
-/* |    JpegInitImage initialise le driver pour une image.              | */
-/* ---------------------------------------------------------------------- */
-
-#ifdef __STDC__
-void                JpegInitImage ()
-
-#else  /* __STDC__ */
-void                JpegInitImage ()
-#endif				/* __STDC__ */
-
-{
-}				/*JpegInitImage */
-
-/* ---------------------------------------------------------------------- */
 /* |    Messages d'erreur : On recupere les erreurs de Xpm et on envoi  | */
 /* |            vers le frame Thot Dialogue                             | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 void                JpegPrintErrorMsg (int ErrorNumber)
-
 #else  /* __STDC__ */
 void                JpegPrintErrorMsg (ErrorNumber)
 int                 ErrorNumber;
-
 #endif /* __STDC__ */
-
 {
 }
-
 
 
 /* ---------------------------------------------------------------------- */
 /* |    JpegCreateImage lit et retourne le Jpeg lu dans le fichier      | */
 /* |            fn. Met a` jour xif, yif, wif, hif.                     | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 ThotBitmap          JpegCreateImage (char *fn, PictureScaling pres, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, Drawable * mask1)
-
 #else  /* __STDC__ */
 ThotBitmap          JpegCreateImage (fn, pres, xif, yif, wif, hif, BackGroundPixel, mask1)
 char               *fn;
@@ -286,9 +229,7 @@ int                *wif;
 int                *hif;
 unsigned long       BackGroundPixel;
 ThotBitmap         *mask1;
-
 #endif /* __STDC__ */
-
 {
    int                 w, h;
    Pixmap              pixmap;
@@ -318,20 +259,15 @@ ThotBitmap         *mask1;
 	*yif = 0;
 
 	return (ThotBitmap) pixmap;
-
      }
-
-
-}				/*JpegCreateImage */
+}
 
 
 /* ---------------------------------------------------------------------- */
 /* |    JpegPrintImage convertit un Pixmap en PostScript.               | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 void                JpegPrintImage (char *fn, PictureScaling pres, int xif, int yif, int wif, int hif, int xcf, int ycf, int wcf, int hcf, int fd, unsigned long BackGroundPixel)
-
 #else  /* __STDC__ */
 void                JpegPrintImage (fn, pres, xif, yif, wif, hif, xcf, ycf, wcf, hcf, fd, BackGroundPixel)
 char               *fn;
@@ -346,9 +282,7 @@ int                 wcf;
 int                 hcf;
 int                 fd;
 unsigned long       BackGroundPixel;
-
 #endif /* __STDC__ */
-
 {
    int                 delta;
    int                 xtmp, ytmp;
@@ -490,9 +424,7 @@ unsigned long       BackGroundPixel;
    fprintf ((FILE *) fd, "\n");
    free (buffer);
 
-}				/*JpegPrintImage */
-
-
+}
 
 
 /* ---------------------------------------------------------------------- */
@@ -500,13 +432,10 @@ unsigned long       BackGroundPixel;
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 boolean             JpegIsFormat (char *fn)
-
 #else  /* __STDC__ */
 boolean             JpegIsFormat (fn)
 char               *fn;
-
 #endif /* __STDC__ */
-
 {
    /*JSAMPROW buffer[1]; *//* row pointer array for read_scanlines */
    FILE               *fd;
@@ -541,4 +470,4 @@ char               *fn;
    fclose (fd);
 
    return True;
-}				/*JpegIsFormat */
+}

@@ -32,18 +32,14 @@ extern int          PixelEnPt ();
 /* ---------------------------------------------------------------------- */
 /* |    NormalizePix transforme un bitmap en pixmap.                    | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 static Pixmap       NormalizePix (Pixmap bitmap, int w, int h)
-
 #else  /* __STDC__ */
 static Pixmap       NormalizePix (bitmap, w, h)
 Pixmap              bitmap;
 int                 w;
 int                 h;
-
 #endif /* __STDC__ */
-
 {
    Pixmap              pix;
 
@@ -56,90 +52,6 @@ int                 h;
    return pix;
 #endif /* !NEW_WILLOWS */
 }
-
-/* ---------------------------------------------------------------------- */
-/* |    BitmapOpenImageDrvr ouvre le driver.                            | */
-/* ---------------------------------------------------------------------- */
-
-#ifdef __STDC__
-int                 BitmapOpenImageDrvr (ImagingModel model)
-
-#else  /* __STDC__ */
-int                 BitmapOpenImageDrvr (model)
-ImagingModel        model;
-
-#endif /* __STDC__ */
-
-{
-   int                 refNum;
-
-#ifdef NEW_WILLOWS
-   return (0);
-#else  /* NEW_WILLOWS */
-   GCpicture = XCreateGC (GDp (0), GRootW (0), 0, NULL);
-   XSetForeground (GDp (0), GCpicture, Black_Color);
-   XSetBackground (GDp (0), GCpicture, White_Color);
-   XSetGraphicsExposures (GDp (0), GCpicture, False);
-   refNum = GetImageDrvrID (Bitmap_drvr);
-   return refNum;
-#endif /* !NEW_WILLOWS */
-
-}				/*BitmapOpenImageDrvr */
-
-/* ---------------------------------------------------------------------- */
-/* |    BitmapCloseImageDrvr ferme le driver.                           | */
-/* ---------------------------------------------------------------------- */
-
-#ifdef __STDC__
-void                BitmapCloseImageDrvr ()
-
-#else  /* __STDC__ */
-void                BitmapCloseImageDrvr ()
-#endif				/* __STDC__ */
-
-{
-}				/*BitmapCloseImageDrvr */
-
-/* ---------------------------------------------------------------------- */
-/* |    BitmapInitImage initialise le drievr pour une image.            | */
-/* ---------------------------------------------------------------------- */
-
-#ifdef __STDC__
-void                BitmapInitImage ()
-
-#else  /* __STDC__ */
-void                BitmapInitImage ()
-#endif				/* __STDC__ */
-
-{
-}				/*BitmapInitImage */
-
-/* ---------------------------------------------------------------------- */
-/* |    BitmapDrawImage dessine un bitmap dans drawable.                | */
-/* ---------------------------------------------------------------------- */
-
-#ifdef __STDC__
-void                BitmapDrawImage (char *fn, PictureScaling pres, int xif, int yif, int wif, int hif, int xcf, int ycf, int wcf, int hcf, Drawable drawable)
-
-#else  /* __STDC__ */
-void                BitmapDrawImage (fn, pres, xif, yif, wif, hif, xcf, ycf, wcf, hcf, drawable)
-char               *fn;
-PictureScaling           pres;
-int                 xif;
-int                 yif;
-int                 wif;
-int                 hif;
-int                 xcf;
-int                 ycf;
-int                 wcf;
-int                 hcf;
-Drawable            drawable;
-
-#endif /* __STDC__ */
-
-{
-
-}				/*BitmapDrawImage */
 
 /* ---------------------------------------------------------------------- */
 /* |    BitmapCreateImage lit et retourne le bitmap lu dans le fichier  | */
@@ -158,10 +70,7 @@ int                *wif;
 int                *hif;
 unsigned long       BackGroundPixel;
 Drawable           *mask1;
-
 #endif /* __STDC__ */
-
-
 {
 #ifdef NEW_WILLOWS
    return (NULL);
@@ -193,10 +102,8 @@ Drawable           *mask1;
 /* ---------------------------------------------------------------------- */
 /* |    BitmapPrintImage convertit un bitmap en PostScript.             | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 void                BitmapPrintImage (char *fn, PictureScaling pres, int xif, int yif, int wif, int hif, int xcf, int ycf, int wcf, int hcf, int fd, unsigned int BackGroundPixel)
-
 #else  /* __STDC__ */
 void                BitmapPrintImage (fn, pres, xif, yif, wif, hif, xcf, ycf, wcf, hcf, fd, BackGroundPixel)
 char               *fn;
@@ -211,9 +118,7 @@ int                 wcf;
 int                 hcf;
 int                 fd;
 unsigned int        BackGroundPixel;
-
 #endif /* __STDC__ */
-
 {
 #ifdef NEW_WILLOWS
    return;
@@ -226,7 +131,6 @@ unsigned int        BackGroundPixel;
    register char      *pt, *pt1;
    int                 wim, him;
    Pixmap              pix;
-
 
    /* on va transformer le bitmap du fichier en un pixmap */
    i = XReadBitmapFile (GDp (0), GRootW (0), fn, &wcf, &hcf, &pix, &xtmp, &ytmp);
@@ -333,21 +237,17 @@ unsigned int        BackGroundPixel;
 	XFreePixmap (GDp (0), pix);
      }
 #endif /* !NEW_WILLOWS */
-}				/*BitmapPrintImage */
+}
 
 /* ---------------------------------------------------------------------- */
 /* |    BitmapIsFormat teste si un fichier contient un bitmap X11.      | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 boolean             BitmapIsFormat (char *fn)
-
 #else  /* __STDC__ */
 boolean             BitmapIsFormat (fn)
 char               *fn;
-
 #endif /* __STDC__ */
-
 {
 #ifdef NEW_WILLOWS
    return (False);
@@ -362,4 +262,4 @@ char               *fn;
       XFreePixmap (GDp (0), bitmap);
    return (status == BitmapSuccess);
 #endif /* !NEW_WILLOWS */
-}				/*BitmapIsFormat */
+}

@@ -1489,52 +1489,6 @@ ThotColorStruct     colrs[256];
    return ((unsigned char *) NULL);
 }
 
-#ifdef IV
-/* ---------------------------------------------------------------------- */
-/* |    NormalizePix  pixmap.                                           | */
-/* ---------------------------------------------------------------------- */
-#ifdef __STDC__
-static void         GifNormalizePix (Pixmap pixmap, int w, int h)
-
-#else  /* __STDC__ */
-static void         GifNormalizePix (pixmap, w, h)
-Pixmap              pixmap;
-int                 w;
-int                 h;
-
-#endif /* __STDC__ */
-{
-}
-#endif
-
-/* ---------------------------------------------------------------------- */
-/* |    GifOpenImageDrvr ouvre le driver.                               | */
-/* ---------------------------------------------------------------------- */
-#ifdef __STDC__
-int                 GifOpenImageDrvr (ImagingModel model)
-
-#else  /* __STDC__ */
-int                 GifOpenImageDrvr (model)
-ImagingModel        model;
-
-#endif /* __STDC__ */
-{
-}				/* Gif OpenImageDrvr */
-
-/* ---------------------------------------------------------------------- */
-/* |    GifCloseImageDrvr ferme le driver.                              | */
-/* ---------------------------------------------------------------------- */
-void                GifCloseImageDrvr ()
-{
-}				/*GifCloseImageDrvr */
-
-/* ---------------------------------------------------------------------- */
-/* |    GifInitImage initialise le driver pour une image.               | */
-/* ---------------------------------------------------------------------- */
-void                GifInitImage ()
-{
-}				/*GifInitImage */
-
 
 /* ---------------------------------------------------------------------- */
 /* |    Messages d'erreur : On recupere les erreurs de Xpm et on envoi  | */
@@ -1542,13 +1496,10 @@ void                GifInitImage ()
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 void                GifPrintErrorMsg (int ErrorNumber)
-
 #else  /* __STDC__ */
 void                GifPrintErrorMsg (ErrorNumber)
 int                 ErrorNumber;
-
 #endif /* __STDC__ */
-
 {
    switch (ErrorNumber)
 	 {
@@ -1587,10 +1538,8 @@ int                 ErrorNumber;
 /* |    GifCreateImage lit et retourne le Gif lu dans le fichier        | */
 /* |            fn. Met a` jour xif, yif, wif, hif.                     | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 ThotBitmap          GifCreateImage (char *fn, PictureScaling pres, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, ThotBitmap * mask1)
-
 #else  /* __STDC__ */
 ThotBitmap          GifCreateImage (fn, pres, xif, yif, wif, hif, BackGroundPixel, mask1)
 char               *fn;
@@ -1601,9 +1550,7 @@ int                *wif;
 int                *hif;
 unsigned long       BackGroundPixel;
 ThotBitmap         *mask1;
-
 #endif /* __STDC__ */
-
 {
    int                 w, h;
    Pixmap              pixmap;
@@ -1664,10 +1611,8 @@ ThotBitmap         *mask1;
 /* ---------------------------------------------------------------------- */
 /* |    GifPrintImage convertit un Pixmap en PostScript.                | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 void                GifPrintImage (char *fn, PictureScaling pres, int xif, int yif, int wif, int hif, int xcf, int ycf, int wcf, int hcf, int fd, unsigned long BackGroundPixel)
-
 #else  /* __STDC__ */
 void                GifPrintImage (fn, pres, xif, yif, wif, hif, xcf, ycf, wcf, hcf, fd, BackGroundPixel)
 char               *fn;
@@ -1682,9 +1627,7 @@ int                 wcf;
 int                 hcf;
 int                 fd;
 unsigned long       BackGroundPixel;
-
 #endif /* __STDC__ */
-
 {
    int                 delta;
    int                 xtmp, ytmp;
@@ -1849,18 +1792,13 @@ unsigned long       BackGroundPixel;
 /* ---------------------------------------------------------------------- */
 /* |    GifIsFormat teste si un fichier est au format image Gif .       | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 boolean             GifIsFormat (char *datafile)
-
 #else  /* __STDC__ */
 boolean             GifIsFormat (datafile)
 char               *datafile;
-
 #endif /* __STDC__ */
 {
-
-
    unsigned char       buf[16];
    FILE               *fp;
    char                version[4];
@@ -1918,4 +1856,4 @@ char               *datafile;
 	   fclose (fp);
 	return (True);
      }
-}				/*GifIsFormat */
+}

@@ -1,6 +1,4 @@
 
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /* epsfdrvr.c -- Implementation  X11 EPSF access */
 
 
@@ -91,66 +89,15 @@ int                *hif;
    return 0;
 }
 
-/* ------------------------------------------------------------------- */
-/* | On initialise le driver                                         | */
-/* ------------------------------------------------------------------- */
-
-#ifdef __STDC__
-int                 EPSFOpenImageDrvr (ImagingModel model)
-
-#else  /* __STDC__ */
-int                 EPSFOpenImageDrvr (model)
-ImagingModel        model;
-
-#endif /* __STDC__ */
-
-{
-
-
-   return EPSF_drvr;
-}				/*EPSFOpenImageDrvr */
-
-/* ------------------------------------------------------------------- */
-/* | On ferme le driver                                              | */
-/* ------------------------------------------------------------------- */
-
-#ifdef __STDC__
-void                EPSFCloseImageDrvr ()
-
-#else  /* __STDC__ */
-void                EPSFCloseImageDrvr ()
-#endif				/* __STDC__ */
-
-{
-}				/*EPSFCloseImageDrvr */
-
-/* ------------------------------------------------------------------- */
-/* | On initialise le driver pour une image                          | */
-/* ------------------------------------------------------------------- */
-
-#ifdef __STDC__
-void                EPSFInitImage ()
-
-#else  /* __STDC__ */
-void                EPSFInitImage ()
-#endif				/* __STDC__ */
-
-{
-}				/*EPSFInitImage */
-
 /* ---------------------------------------------------------------------- */
 /* |    GetHexit recupere un chiffre hexa.                              | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 static int          GetHexit (FILE * ifd)
-
 #else  /* __STDC__ */
 static int          GetHexit (ifd)
 FILE               *ifd;
-
 #endif /* __STDC__ */
-
 {
    register int        i;
    register char       c;
@@ -177,18 +124,14 @@ FILE               *ifd;
 /* ------------------------------------------------------------------- */
 /* | On recupere l'image contenue dans le fichier                    | */
 /* ------------------------------------------------------------------- */
-
 #ifdef __STDC__
 XImage             *GetIncludeImage (char *fn, int *previewW, int *previewH)
-
 #else  /* __STDC__ */
 XImage             *GetIncludeImage (fn, previewW, previewH)
 char               *fn;
 int                *previewW;
 int                *previewH;
-
 #endif /* __STDC__ */
-
 {
 #ifdef NEW_WILLOWS
    return (NULL);
@@ -314,10 +257,8 @@ int                *previewH;
 /* ------------------------------------------------------------------- */
 /* | On lit une image contenue dans le fichier fn                    | */
 /* ------------------------------------------------------------------- */
-
 #ifdef __STDC__
 ThotBitmap          EPSFCreateImage (char *fn, PictureScaling pres, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, Drawable * mask)
-
 #else  /* __STDC__ */
 ThotBitmap          EPSFCreateImage (fn, pres, xif, yif, wif, hif, BackGroundPixel, mask)
 char               *fn;
@@ -328,9 +269,7 @@ int                *wif;
 int                *hif;
 unsigned long       BackGroundPixel;
 Drawable           *mask;
-
 #endif /* __STDC__ */
-
 {
 #ifdef NEW_WILLOWS
    return (NULL);
@@ -370,10 +309,8 @@ Drawable           *mask;
 /* ------------------------------------------------------------------- */
 /* | On imprime une image                                            | */
 /* ------------------------------------------------------------------- */
-
 #ifdef __STDC__
 void                EPSFPrintImage (char *fn, PictureScaling pres, int xif, int yif, int wif, int hif, int xcf, int ycf, int wcf, int hcf, FILE * fd, unsigned long BackGroundPixel)
-
 #else  /* __STDC__ */
 void                EPSFPrintImage (fn, pres, xif, yif, wif, hif, xcf, ycf, wcf, hcf, fd, BackGroundPixel)
 char               *fn;
@@ -388,9 +325,7 @@ int                 wcf;
 int                 hcf;
 FILE               *fd;
 unsigned long       BackGroundPixel;
-
 #endif /* __STDC__ */
-
 {
 #ifdef NEW_WILLOWS
    return;
@@ -483,16 +418,12 @@ unsigned long       BackGroundPixel;
 /* ------------------------------------------------------------------- */
 /* | On teste si une image est bien du PostScript                    | */
 /* ------------------------------------------------------------------- */
-
 #ifdef __STDC__
 boolean             EPSFIsFormat (char *fn)
-
 #else  /* __STDC__ */
 boolean             EPSFIsFormat (fn)
 char               *fn;
-
 #endif /* __STDC__ */
-
 {
    FILE               *fin;
    int                 c;	/* modif postscript bea */

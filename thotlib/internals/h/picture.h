@@ -32,12 +32,6 @@ typedef enum
 	Fatal 
 } ErrorLevel;
 
-typedef enum
-{ 
-  	XWindowSystem,
-	PostScript, 
-} ImagingModel;
-
 typedef struct 
 {
   	int 	version; /* version number of this struct */

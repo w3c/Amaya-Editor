@@ -41,39 +41,21 @@ static boolean      DoEditImage;
 static char         NomImage[100] = "";
 static char         DirectoryImage[MAX_PATH] = "";
 
-/* extern struct  DisplayDesc OpenDisplays[MAX_DISPLAY]; */
-
-
-
-
- /* ActiveEntree:  GtRedrawMenuEntry(ref, ent, NULL, -1, 1); */
-/*ActiveEntree */
+#include "imagedrvr.f"
 
 #ifdef __STDC__
 extern void         DesactiveEntree (int, int);
 extern boolean      TtaIsSuffixFileIn (char *, char *);
 extern void         TtaListDirectory (char *, int, char *, int, char *, char *, int);
 extern void         BuildFileName (Name, char *, PathBuffer, PathBuffer, int *);
-extern int          GetImTypeIndex (int);
-extern int          GetImPresIndex (PictureScaling);
-extern void         GetImageDriversList (int *, char *);
 extern void         EntreeMenu (int *, char *, char[]);
-extern int          GetImageType (int);
-extern PictureScaling    GetImagePresentation (int);
-extern void         EditImage (int, PtrBox, ImageDescriptor *);
 
 #else
 extern void         DesactiveEntree ();
 extern boolean      TtaIsSuffixFileIn ();
 extern void         TtaListDirectory ();
 extern void         BuildFileName ();
-extern int          GetImTypeIndex ();
-extern int          GetImPresIndex ();
-extern void         GetImageDriversList ();
 extern void         EntreeMenu ();
-extern int          GetImageType ();
-extern PictureScaling    GetImagePresentation ();
-extern void         EditImage ();
 
 #endif /* __STDC__ */
 
