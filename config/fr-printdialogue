@@ -2,7 +2,7 @@
 1 Impossible de creer le fichier %s\n
 2 Le document ne commence pas par un saut de page\n
 3 Page trop longue, reformatez le document\n
-4 Page %4d\n
+4 Page %d\n
 5 \n%s
 6 \nFichier ferme\n
 7 Nom du document a imprimer :
