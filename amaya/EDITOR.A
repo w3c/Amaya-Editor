@@ -213,9 +213,9 @@ MENUS
 	Types button:BRuby -> CreateRuby;
         Types Separator;
 	Types toggle:TSectionNumber -> SectionNumbering;
-	Types button:BMakeBook -> MakeBook;
 	Types button:BMakeToc -> MakeToc;
 	Types button:BDate -> CreateDate;
+	Types button:BMakeBook -> MakeBook;
 
 	Types Separator;
         Types.Phrase toggle:TEmphasis -> SetOnOffEmphasis;

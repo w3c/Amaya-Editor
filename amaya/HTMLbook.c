@@ -1437,7 +1437,10 @@ void MakeToc (Document doc, View view)
   /* get the insert point */
   TtaGiveFirstSelectedElement (doc, &el, &firstChar, &i);
   if (el == NULL || TtaIsReadOnly (el))
-    /* the selected element is read-only */
+    {
+      /* no selection */
+      TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
+    }
     return;
   elType = TtaGetElementType (el);
   s = TtaGetSSchemaName (elType.ElSSchema);

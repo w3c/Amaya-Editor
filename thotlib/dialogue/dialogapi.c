@@ -3297,17 +3297,13 @@ void TtaSetToggleMenu (int ref, int val, ThotBool on)
 	    }
 	}
       else if (IsMenu (adbloc->E_ThotWidget[tmp_val]))
-	{
-	  /* change the menu item */
-	  if (CheckMenuItem (adbloc->E_ThotWidget[tmp_val], ref + val, uCheck) == 0xFFFFFFFF) 
-	    WinErrorBox (NULL, "WIN_TtaSetToggleMenu (1)");
-	}
+	/* change the menu item */
+	CheckMenuItem (adbloc->E_ThotWidget[tmp_val], ref + val, uCheck);
       else if (CheckMenuItem (hMenu, ref + val, uCheck) == 0xFFFFFFFF)
 	{
 	  /* get the parent menu reference */
 	  hMenu = GetMenu (owner);
-	  if (CheckMenuItem (hMenu, ref + val, uCheck) == 0xFFFFFFFF) 
-	    WinErrorBox (NULL, "WIN_TtaSetToggleMenu (2)");
+	  CheckMenuItem (hMenu, ref + val, uCheck);
 	}
     }
 #endif /* _WINGUI  */
@@ -3846,8 +3842,7 @@ void TtaDestroyDialogue (int ref)
 				 nbMenuItems = GetMenuItemCount (w);
 				 for (itNdx = 0; itNdx < nbMenuItems; itNdx ++) 
 				   if (!DeleteMenu (w, ref + itNdx, MF_BYCOMMAND))
-				     if (!DeleteMenu (w, ref + itNdx, MF_BYPOSITION))
-				       WinErrorBox (NULL, "TtaDestroyDialogue");
+				     DeleteMenu (w, ref + itNdx, MF_BYPOSITION);
 				 /* RemoveMenu (w, ref + itNdx, MF_BYCOMMAND); */
 				 DestroyMenu (w);
 				 subMenuID [currentFrame] = (UINT)w;

@@ -420,6 +420,8 @@ void TtaDisplaySimpleMessage (int msgType, int origin, int number)
 #ifdef _WINGUI
   if (msgType == FATAL)
     MessageBox (NULL, ptr, "Fatal error", MB_ICONERROR);
+  else if (msgType == CONFIRM)
+    MessageBox (NULL, ptr, "Error", MB_OK);
 #else  /* _WINGUI */
    TtaDisplayMessage (msgType, ptr);
 #endif /* _WINGUI */

@@ -2286,7 +2286,7 @@ void UpdateDoctypeMenu (Document doc)
 	  TtaSetItemOff (doc, 1, File, BDoctypeXhtmlBasic);
 	  TtaSetItemOff (doc, 1, File, BDoctypeHtmlTransitional);
 	  TtaSetItemOff (doc, 1, File, BDoctypeHtmlStrict);
-	}   
+	}
 }
 
 /*----------------------------------------------------------------------

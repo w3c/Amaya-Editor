@@ -1907,17 +1907,6 @@
 	<message xml:lang="fi">Osien numerointi</message>
 	<message xml:lang="ru">Нумеровать раздел&amp;ы</message>
 </label>
-<label define="BMakeBook">
-	<message xml:lang="en">&amp;Make book</message>
-	<message xml:lang="fr">&amp;Construire un livre</message>
-	<message xml:lang="de">Buch erstellen</message>
-	<message xml:lang="it">Crea libro</message>
-	<message xml:lang="tr">Kitap yap</message>
-	<message xml:lang="es">&amp;Hacer libro</message>
-	<message xml:lang="pt">Construir livro</message>
-	<message xml:lang="fi">Valmista kooste</message>
-	<message xml:lang="ru">Создат&amp;ь книгу</message>
-</label>
 <label define="BMakeToc">
 	<message xml:lang="en">&amp;Generate Table of contents</message>
 	<message xml:lang="fr">&amp;Engendrer la table des matières</message>
@@ -1929,6 +1918,17 @@
 	<message xml:lang="de">Zeitstempel einfügen</message>
 	<message xml:lang="it">Inserisci timestamp</message>
 	<message xml:lang="ru">Вставить метку времени</message>
+</label>
+<label define="BMakeBook">
+	<message xml:lang="en">&amp;Make book</message>
+	<message xml:lang="fr">&amp;Construire un livre</message>
+	<message xml:lang="de">Buch erstellen</message>
+	<message xml:lang="it">Crea libro</message>
+	<message xml:lang="tr">Kitap yap</message>
+	<message xml:lang="es">&amp;Hacer libro</message>
+	<message xml:lang="pt">Construir livro</message>
+	<message xml:lang="fi">Valmista kooste</message>
+	<message xml:lang="ru">Создат&amp;ь книгу</message>
 </label>
 <label define="Phrase">
 	<message xml:lang="en">Information type</message>

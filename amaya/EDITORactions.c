@@ -1120,7 +1120,10 @@ void CreateDate (Document doc, View view)
     /* the document is in ReadOnly mode */
     return;
   TtaGiveFirstSelectedElement (doc, &el, &first, &last);
-  if (el)
+  if (el == NULL)
+    /* no selection */
+    TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
+  else
     {
       elType = TtaGetElementType (el);
       s = TtaGetSSchemaName (elType.ElSSchema);
@@ -1320,8 +1323,11 @@ ThotBool HTMLelementAllowed (Document doc)
 
   TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar);
   if (el == NULL)
-    /* no selection */
-    return FALSE;
+    {
+      /* no selection */
+      TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
+      return FALSE;
+    }
          
   elType = TtaGetElementType (el);
   s = TtaGetSSchemaName (elType.ElSSchema);
@@ -3200,7 +3206,10 @@ void CreateForm (Document doc, View view)
 
   /* get the first selected element */
   TtaGiveFirstSelectedElement (doc, &el, &firstchar, &lastchar);
-  if (el != NULL)
+  if (el == NULL)
+    /* no selection */
+    TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
+  else
     /* there is some selection */
     {
       elType = TtaGetElementType (el);
@@ -3231,7 +3240,10 @@ static void CreateInputElement (Document doc, View view, int elInput)
 
    /* create the form if necessary */
    el = PrepareFormControl (doc, &withinP);
-   if (el != NULL)
+  if (el == NULL)
+    /* no selection */
+    TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
+  else
      {
        /* the element can be created */
        elType = TtaGetElementType (el);
