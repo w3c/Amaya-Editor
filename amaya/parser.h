@@ -13,7 +13,8 @@
 #define MATH_TYPE    2
 #define SVG_TYPE     3
 #define XLINK_TYPE   4
-#define XML_TYPE     5
+#define ANNOT_TYPE   5
+#define XML_TYPE     6
 
 #define MaxTypeNameLength 30
 #define DummyAttribute    500

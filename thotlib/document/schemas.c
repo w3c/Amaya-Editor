@@ -1865,28 +1865,6 @@ void    TtaAppendXmlAttribute (char *XMLName, AttributeType *attrType,
   attrType->AttrTypeNum = pSS->SsNAttributes;
 }
 
-/*----------------------------------------------------------------------
-  TtaGetXMLAttributeType
-  ----------------------------------------------------------------------*/
-void    TtaGetXmlAttributeType (char *XMLName, AttributeType *attrType)
-
-{
-   PtrSSchema    pSS;
-   int           nbattr;
-   ThotBool      found;
-
-   found = FALSE;
-   pSS = (PtrSSchema) attrType->AttrSSchema;
-   for (nbattr = 0;  !found && nbattr < pSS->SsNAttributes; nbattr++)
-     {
-       if (strcmp (pSS->SsAttribute->TtAttr[nbattr]->AttrName, XMLName) == 0)
-	 {
-	   attrType->AttrTypeNum = nbattr + 1;
-	   found = TRUE;
-	 }
-     }
-}
-
 #ifndef NODISPLAY
 /*----------------------------------------------------------------------
    InsertAXmlPRule
@@ -2282,10 +2260,10 @@ void    TtaAppendXmlElement (char *XMLName, ElementType *elType,
 /*----------------------------------------------------------------------
   TtaGetXMLElementType
   If elType->ElSSchema is not NULL, search in that specific schema,
-  otherwise search in the different generic schemas loaded for the document
+  otherwise search in different schemas added to the document.
   ----------------------------------------------------------------------*/
-void    TtaGetXmlElementType (char* XMLName, ElementType *elType,
-			      char** mappedName, Document doc)
+void TtaGetXmlElementType (char* XMLName, ElementType *elType,
+			   char** mappedName, Document doc)
 {
   PtrSSchema          pSS;
   int                 rule;
@@ -2294,14 +2272,15 @@ void    TtaGetXmlElementType (char* XMLName, ElementType *elType,
   PtrDocSchemasDescr  pPfS;
 
    found = FALSE;
-
+   elType->ElTypeNum = 0;
    if (elType->ElSSchema)
      {
+       /* search in that specific schema */
        pSS = (PtrSSchema) elType->ElSSchema;
        for (rule = 0; !found && rule < pSS->SsNRules; rule++)
 	 {
  	   if (strcmp (pSS->SsRule->SrElem[rule]->SrName, XMLName) == 0)
-	     {     
+	     {
 	       elType->ElTypeNum = rule + 1;
 	       *mappedName = pSS->SsRule->SrElem[rule]->SrName;
 	       found = TRUE;
@@ -2312,26 +2291,76 @@ void    TtaGetXmlElementType (char* XMLName, ElementType *elType,
      {
        pSS = NULL;
        pDoc = LoadedDocument[doc - 1];
+       /* look at all schemas of loaded natures */
        pPfS = pDoc->DocFirstSchDescr;
        while (pPfS && !found)
 	 {
 	   if (pPfS->PfSSchema)
 	     {
 	       pSS = (PtrSSchema) pPfS->PfSSchema;
-	       if (strcmp (pSS->SsName, "HTML") &&
-		   strcmp (pSS->SsName, "MathML") &&
-		   strcmp (pSS->SsName, "SVG") &&
-		   strcmp (pSS->SsName, "XLink") &&
-		   strcmp (pSS->SsName, "Annot"))
+	       for (rule = 0; !found && rule < pSS->SsNRules; rule++)
 		 {
-		   for (rule = 0; !found && rule < pSS->SsNRules; rule++)
+		   if (strcmp (pSS->SsRule->SrElem[rule]->SrName, XMLName) == 0)
 		     {
-		       if (strcmp (pSS->SsRule->SrElem[rule]->SrName, XMLName) == 0)
-			 {
-			   elType->ElTypeNum = rule + 1;
-			   elType->ElSSchema = (SSchema) pSS;
-			   found = TRUE;
-			 }
+		       elType->ElTypeNum = rule + 1;
+		       *mappedName = pSS->SsRule->SrElem[rule]->SrName;
+		       elType->ElSSchema = (SSchema) pSS;
+		       found = TRUE;
+		     }
+		 }
+	     }
+	   pPfS = pPfS->PfNext;
+	 }
+     }
+}
+
+/*----------------------------------------------------------------------
+  TtaGetXMLAttributeType
+  If attrType->AttrSSchema is not NULL, search in that specific schema,
+  otherwise search in different schemas added to the document.
+  ----------------------------------------------------------------------*/
+void TtaGetXmlAttributeType (char* XMLName, AttributeType *attrType,
+			     Document doc)
+{
+  PtrSSchema          pSS;
+  int                 att;
+  ThotBool            found;
+  PtrDocument         pDoc;
+  PtrDocSchemasDescr  pPfS;
+
+   found = FALSE;
+   attrType->AttrTypeNum = 0;
+   if (attrType->AttrSSchema)
+     {
+       /* search in that specific schema */
+       pSS = (PtrSSchema) attrType->AttrSSchema;
+       for (att = 0; !found && att < pSS->SsNAttributes; att++)
+	 {
+ 	   if (strcmp (pSS->SsAttribute->TtAttr[att]->AttrName, XMLName) == 0)
+	     {
+	       attrType->AttrTypeNum = att + 1;
+	       found = TRUE;
+	     }
+	 }
+     }
+   else
+     {
+       pSS = NULL;
+       pDoc = LoadedDocument[doc - 1];
+       /* look at all schemas of loaded natures */
+       pPfS = pDoc->DocFirstSchDescr;
+       while (pPfS && !found)
+	 {
+	   if (pPfS->PfSSchema)
+	     {
+	       pSS = (PtrSSchema) pPfS->PfSSchema;
+	       for (att = 0; !found && att < pSS->SsNAttributes; att++)
+		 {
+		   if (strcmp (pSS->SsAttribute->TtAttr[att]->AttrName, XMLName) == 0)
+		     {
+		       attrType->AttrTypeNum = att + 1;
+		       attrType->AttrSSchema = (SSchema) pSS;
+		       found = TRUE;
 		     }
 		 }
 	     }

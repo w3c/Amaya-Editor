@@ -161,73 +161,82 @@ void MapXMLElementType (int XMLtype, char *XMLname, ElementType *elType,
 			char **mappedName, char *content,
 			ThotBool *checkProfile, Document doc)
 {
-   int                 i;
-   ElemMapping        *ptr;
+  ElemMapping        *ptr;
+  char                c;
+  int                 i;
 
-   /* Initialize variables */
-   *mappedName = NULL;
-   *checkProfile = TRUE;
-   elType->ElTypeNum = 0;
+  /* Initialize variables */
+  *mappedName = NULL;
+  *checkProfile = TRUE;
+  elType->ElTypeNum = 0;
 
-   /* Select the right table */
-   if (XMLtype == XHTML_TYPE)
-     ptr = XHTMLElemMappingTable;
-   else if (XMLtype == MATH_TYPE)
-     {
-       if (TtaGetDocumentProfile(doc) == L_Basic &&
-	   DocumentTypes[doc] == docHTML)
-	 {
-	   /* Maths are not allowed in this document */
-	   ptr = NULL;
-	   *checkProfile = FALSE;
-	 }
-       else
-	 ptr = MathMLElemMappingTable;
-     }
-   else if (XMLtype == SVG_TYPE)
-     {
-       if (TtaGetDocumentProfile(doc) == L_Basic &&
-	   DocumentTypes[doc] == docHTML)
-	 {
-	   /* Graphics are not allowed in this document */
-	   ptr = NULL;
-	   *checkProfile = FALSE;
-	 }
-       else
-	 ptr = SVGElemMappingTable;
-     }
-   else
-     ptr = NULL;
+  /* Select the right table */
+  if (XMLtype == XHTML_TYPE)
+    ptr = XHTMLElemMappingTable;
+  else if (XMLtype == MATH_TYPE)
+    {
+      if (TtaGetDocumentProfile(doc) == L_Basic &&
+	  DocumentTypes[doc] == docHTML)
+	{
+	  /* Maths are not allowed in this document */
+	  ptr = NULL;
+	  *checkProfile = FALSE;
+	}
+      else
+	ptr = MathMLElemMappingTable;
+    }
+  else if (XMLtype == SVG_TYPE)
+    {
+      if (TtaGetDocumentProfile(doc) == L_Basic &&
+	  DocumentTypes[doc] == docHTML)
+	{
+	  /* Graphics are not allowed in this document */
+	  ptr = NULL;
+	  *checkProfile = FALSE;
+	}
+      else
+	ptr = SVGElemMappingTable;
+    }
+  else
+    ptr = NULL;
    
-   if (ptr != NULL)
-     {
-       /* search in the ElemMappingTable */
-       i = 0;
-       /* look for the first concerned entry in the table */
-       while (ptr[i].XMLname[0] < XMLname[0] && ptr[i].XMLname[0] != EOS)
-	 i++;     
-       /* look at all entries starting with the right character */
-       do
-	 if (strcmp (ptr[i].XMLname, XMLname))
-	   /* it's not the tag */
-	   i++;
-	 else if (TtaGetDocumentProfile(doc) != L_Other &&
-		  !(ptr[i].Level & TtaGetDocumentProfile(doc)))
-	   {
-	     /* this tag is not valid in the document profile */
-	     *checkProfile = FALSE;
-	     i++;
-	   }
-	 else
-	   {
-	     elType->ElTypeNum = ptr[i].ThotType;
-	     if (elType->ElSSchema == NULL)
-	       elType->ElSSchema = GetXMLSSchema (XMLtype, doc);
-	     *mappedName = ptr[i].XMLname;
-	     *content = ptr[i].XMLcontents;
-	   }
-       while (elType->ElTypeNum <= 0 && ptr[i].XMLname[0] == XMLname[0]);
-     }
+  if (ptr)
+    {
+      /* search in the ElemMappingTable */
+      i = 0;
+      /* case insensitive for HTML */
+      if (ptr == XHTMLElemMappingTable)
+	c = tolower (XMLname[0]);
+      else
+	c = XMLname[0];
+      /* look for the first concerned entry in the table */
+      while (ptr[i].XMLname[0] < c && ptr[i].XMLname[0] != EOS)
+	i++;     
+      /* look at all entries starting with the right character */
+      do
+	if (ptr == XHTMLElemMappingTable && strcasecmp (ptr[i].XMLname, XMLname))
+	  /* it's not the tag */
+	  i++;
+	else if (ptr != XHTMLElemMappingTable && strcmp (ptr[i].XMLname, XMLname))
+	  /* it's not the tag */
+	  i++;
+	else if (TtaGetDocumentProfile(doc) != L_Other &&
+		 !(ptr[i].Level & TtaGetDocumentProfile(doc)))
+	  {
+	    /* this tag is not valid in the document profile */
+	    *checkProfile = FALSE;
+	    i++;
+	  }
+	else
+	  {
+	    elType->ElTypeNum = ptr[i].ThotType;
+	    if (elType->ElSSchema == NULL)
+	      elType->ElSSchema = GetXMLSSchema (XMLtype, doc);
+	    *mappedName = ptr[i].XMLname;
+	    *content = ptr[i].XMLcontents;
+	  }
+      while (elType->ElTypeNum <= 0 && ptr[i].XMLname[0] == c);
+    }
 }
 
 
@@ -326,8 +335,9 @@ ThotBool IsXMLElementInline (ElementType elType, Document doc)
 int MapXMLAttribute (int XMLtype, char *attrName, char *elementName,
 		     ThotBool *checkProfile, Document doc, int *thotType)
 {
-  int               i;
-  AttributeMapping *ptr;
+  AttributeMapping   *ptr;
+  char                c;
+  int                 i;
 
   /* Initialization */
   *checkProfile = TRUE;
@@ -355,16 +365,25 @@ int MapXMLAttribute (int XMLtype, char *attrName, char *elementName,
       return 0;
     }
 
+  /* case insensitive for HTML */
+  if (ptr == XHTMLAttributeMappingTable)
+    c = tolower (attrName[0]);
+  else
+    c = attrName[0];
   /* look for the first concerned entry in the table */
-  while (ptr[i].XMLattribute[0] < attrName[0] && 
-	 ptr[i].XMLattribute[0] != EOS)
+  while (ptr[i].XMLattribute[0] < c &&  ptr[i].XMLattribute[0] != EOS)
     i++;
-
-  while (ptr[i].XMLattribute[0] == attrName[0])
+  while (ptr[i].XMLattribute[0] == c)
     {
-      if (strcmp (ptr[i].XMLattribute, attrName) ||
-	  (ptr[i].XMLelement[0] != EOS &&
-	   strcmp (ptr[i].XMLelement, elementName)))
+      if (ptr == XHTMLAttributeMappingTable &&
+	  (strcasecmp (ptr[i].XMLattribute, attrName) ||
+	   (ptr[i].XMLelement[0] != EOS &&
+	    strcasecmp (ptr[i].XMLelement, elementName))))
+	i++;
+      else if (ptr != XHTMLAttributeMappingTable &&
+	  (strcmp (ptr[i].XMLattribute, attrName) ||
+	   (ptr[i].XMLelement[0] != EOS &&
+	    strcmp (ptr[i].XMLelement, elementName))))
 	i++;
       else if (TtaGetDocumentProfile(doc) != L_Other &&
 	       !(ptr[i].Level & TtaGetDocumentProfile(doc)))

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2001.
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -94,7 +94,7 @@ void MapGenericXmlAttribute (char *attrName, AttributeType *attrType,
 
   attrType->AttrTypeNum = 0;
   /* Search for the attribute XMLName in the structure schema */
-  TtaGetXmlAttributeType (attrName, attrType);
+  TtaGetXmlAttributeType (attrName, attrType, doc);
 
   if (attrType->AttrTypeNum <= 0)
     {

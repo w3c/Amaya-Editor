@@ -67,8 +67,6 @@ extern void SearchNatures ( PtrDocument pDoc,
 extern void TtaAppendXmlAttribute ( char *XMLName,
                                     AttributeType *attrType,
                                     Document document );
-extern void TtaGetXmlAttributeType ( char *XMLName,
-                                     AttributeType *attrType );
 extern void TtaAddEmptyBox ( Element el,
                              Document document );
 extern PtrPRule TtaGetXmlPRule ( PtrPSchema pPSch,
@@ -88,6 +86,9 @@ extern void TtaGetXmlElementType ( char* XMLName,
                                    ElementType *elType,
                                    char** mappedName,
                                    Document doc );
+extern void TtaGetXmlAttributeType ( char* XMLName,
+                                     AttributeType *attrType,
+                                     Document doc );
 extern void TtaChangeGenericSchemaNames ( char *sSchemaUri,
                                           char *sSchemaName,
                                           Document document );
@@ -164,8 +165,6 @@ extern void SearchNatures (/* PtrDocument pDoc,
 extern void TtaAppendXmlAttribute (/* char *XMLName,
                                       AttributeType *attrType,
                                       Document document */);
-extern void TtaGetXmlAttributeType (/* char *XMLName,
-                                       AttributeType *attrType */);
 extern void TtaAddEmptyBox (/* Element el,
                                Document document */);
 extern PtrPRule TtaGetXmlPRule (/* PtrPSchema pPSch,
@@ -185,6 +184,9 @@ extern void TtaGetXmlElementType (/* char* XMLName,
                                      ElementType *elType,
                                      char** mappedName,
                                      Document doc */);
+extern void TtaGetXmlAttributeType (/* char* XMLName,
+                                       AttributeType *attrType,
+                                       Document doc */);
 extern void TtaChangeGenericSchemaNames (/* char *sSchemaUri,
                                             char *sSchemaName,
                                             Document document */);

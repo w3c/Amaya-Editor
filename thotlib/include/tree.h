@@ -81,7 +81,7 @@ Construct;
    typeNum: new type for the element
  
    ---------------------------------------------------------------------- */
-extern void          ChangeElementType (Element element, int typeNum);
+extern void ChangeElementType (Element element, int typeNum);
 
 /* ----------------------------------------------------------------------
    TtaNewElement
@@ -96,7 +96,7 @@ extern void          ChangeElementType (Element element, int typeNum);
    the created element.
 
    ---------------------------------------------------------------------- */
-extern Element      TtaNewElement (Document document, ElementType elementType);
+extern Element TtaNewElement (Document document, ElementType elementType);
 
 /* ----------------------------------------------------------------------
    TtaNewTree
@@ -114,7 +114,8 @@ extern Element      TtaNewElement (Document document, ElementType elementType);
    the root element of the created tree.
 
    ---------------------------------------------------------------------- */
-extern Element      TtaNewTree (Document document, ElementType elementType, char* label);
+extern Element TtaNewTree (Document document, ElementType elementType,
+			   char* label);
 
 /* ----------------------------------------------------------------------
    TtaNewTranscludedElement
@@ -129,7 +130,7 @@ extern Element      TtaNewTree (Document document, ElementType elementType, char
    the created element.
 
    ---------------------------------------------------------------------- */
-extern Element      TtaNewTranscludedElement (Document document, Element orig);
+extern Element TtaNewTranscludedElement (Document document, Element orig);
 
 /* ----------------------------------------------------------------------
    TtaCopyTree
@@ -146,7 +147,8 @@ extern Element      TtaNewTranscludedElement (Document document, Element orig);
    the root element of the created tree.
 
    ---------------------------------------------------------------------- */
-extern Element      TtaCopyTree (Element sourceElement, Document sourceDocument, Document destinationDocument, Element parent);
+extern Element TtaCopyTree (Element sourceElement, Document sourceDocument,
+			    Document destinationDocument, Element parent);
 
 /* ----------------------------------------------------------------------
    TtaCreateDescent
@@ -165,7 +167,8 @@ extern Element      TtaCopyTree (Element sourceElement, Document sourceDocument,
    This element is empty.
 
    ---------------------------------------------------------------------- */
-extern Element      TtaCreateDescent (Document document, Element element, ElementType elementType);
+extern Element TtaCreateDescent (Document document, Element element,
+				 ElementType elementType);
 
 /* ----------------------------------------------------------------------
    TtaCreateDescentWithContent
@@ -184,7 +187,8 @@ extern Element      TtaCreateDescent (Document document, Element element, Elemen
    If not NULL, the minimum content of that element has been created.
 
    ---------------------------------------------------------------------- */
-extern Element      TtaCreateDescentWithContent (Document document, Element element, ElementType elementType);
+extern Element TtaCreateDescentWithContent (Document document,Element element,
+					    ElementType elementType);
 
 /* ----------------------------------------------------------------------
    TtaDeleteTree
@@ -199,7 +203,7 @@ extern Element      TtaCreateDescentWithContent (Document document, Element elem
    document: the document containing the element to be deleted.
 
    ---------------------------------------------------------------------- */
-extern void         TtaDeleteTree (Element element, Document document);
+extern void TtaDeleteTree (Element element, Document document);
 
 /* ----------------------------------------------------------------------
    TtaAttachNewTree
@@ -1121,8 +1125,11 @@ extern void TtaAppendXmlAttribute (char *XMLName, AttributeType *attrType,
 
 /*----------------------------------------------------------------------
   TtaGetXMLAttributeType
+  If attrType->AttrSSchema is not NULL, search in that specific schema,
+  otherwise search in different schemas added to the document.
   ----------------------------------------------------------------------*/
-extern void TtaGetXmlAttributeType (char *XMLName, AttributeType *attrType);
+extern void TtaGetXmlAttributeType (char *XMLName, AttributeType *attrType,
+				   Document document);
 
 /*----------------------------------------------------------------------
    TtaAddEmptyBox

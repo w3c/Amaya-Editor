@@ -3907,7 +3907,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 {
   ElementType        elType;
   PSchema            tsch;
-  /*AttributeType    attrType;*/
+  AttributeType      attrType;
   char               sel[MAX_ANCESTORS * 50];
   char              *deb, *cur, c;
   char              *schemaName, *mappedName;
@@ -3917,7 +3917,6 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
   char              *pseudoclasses[MAX_ANCESTORS];
   char              *attrs[MAX_ANCESTORS];
   char              *attrvals[MAX_ANCESTORS];
-  char              *ptr;
   int                i, j, k, max;
   int                att, maxAttr;
   int                specificity, xmlType;
@@ -4096,7 +4095,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 		  /* there is a value */
 		  if (*selector == '"')
 		    {
-		      *selector++;
+		      selector++;
 		      *cur++ = EOS;
 		      attrvals[0] = deb;
 		    }
@@ -4148,38 +4147,52 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
   j = 0;
   maxAttr = 0;
   /* default schema name */
-  ptr = "HTML";
+  ctxt->schema = NULL;
+  elType.ElSSchema = TtaGetDocumentSSchema (doc);
+  schemaName = TtaGetSSchemaName(elType.ElSSchema);
+  if (!strcmp (schemaName, "HTML"))
+    xmlType = XHTML_TYPE;
+  else if (!strcmp (schemaName, "MathML"))
+    xmlType = MATH_TYPE;
+  else if (!strcmp (schemaName, "SVG"))
+    xmlType = SVG_TYPE;
+  else if (!strcmp (schemaName, "XLink"))
+    xmlType = XLINK_TYPE;
+  else if (!strcmp (schemaName, "Annot"))
+    xmlType = ANNOT_TYPE;
+  else
+    xmlType = XML_TYPE;
   while (i <= max)
     {
       if (names[i])
 	{
 	  /* get the element type of this name in the current document */
-	  elType.ElSSchema = TtaGetDocumentSSchema (doc);
-	  schemaName = TtaGetSSchemaName(elType.ElSSchema);
-	  if (!strcmp (schemaName, "HTML"))
-	    xmlType = XHTML_TYPE;
-	  else if (!strcmp (schemaName, "MathML"))
-	    xmlType = MATH_TYPE;
-	  else if (!strcmp (schemaName, "SVG"))
-	    xmlType = SVG_TYPE;
-	  else if (!strcmp (schemaName, "MathML"))
-	    xmlType = XLINK_TYPE;
-	  else
-	    xmlType = XML_TYPE;
 	  MapXMLElementType (xmlType, names[i], &elType, &mappedName, &c, &level, doc);
 	  if (i == 0)
 	    {
 	      if (elType.ElSSchema == NULL)
 		{
-		  /* Search in the list of loaded genereric schemas */
+		  /* Search in the list of loaded schemas */
 		  TtaGetXmlElementType (names[i], &elType, NULL, doc);
+		  if (elType.ElSSchema)
+		    {
+		      /* the element type concerns an imprted nature */
+		      schemaName = TtaGetSSchemaName(elType.ElSSchema);
+		      if (!strcmp (schemaName, "HTML"))
+			xmlType = XHTML_TYPE;
+		      else if (!strcmp (schemaName, "MathML"))
+			xmlType = MATH_TYPE;
+		      else if (!strcmp (schemaName, "SVG"))
+			xmlType = SVG_TYPE;
+		      else if (!strcmp (schemaName, "XLink"))
+			xmlType = XLINK_TYPE;
+		      else if (!strcmp (schemaName, "Annot"))
+			xmlType = ANNOT_TYPE;
+		      else
+			xmlType = XML_TYPE;
+		    }
 #ifdef XML_GENERIC
-		  if (elType.ElSSchema == NULL &&
-		      strcmp (schemaName, "HTML") &&
-		      strcmp (schemaName, "MathML") &&
-		      strcmp (schemaName, "SVG") &&
-		      strcmp (schemaName, "XLink") &&
-		      strcmp (schemaName, "Annot"))
+		  else if (xmlType == XML_TYPE)
 		    {
 		      /* Creation of a new element type in the main schema */
 		      elType.ElSSchema = TtaGetDocumentSSchema (doc);
@@ -4187,6 +4200,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 		    }
 #endif /* XML_GENERIC */
 		}
+
 	      if (elType.ElSSchema == NULL)
 		/* cannot apply these CSS rules */
 		DoApply = FALSE;
@@ -4197,7 +4211,6 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 		  ctxt->name[0] = elType.ElTypeNum;
 		  ctxt->names_nb[0] = 0;
 		  ctxt->schema = elType.ElSSchema;
-		  ptr = TtaGetSSchemaName (elType.ElSSchema);
 		}
 	    }
 	  else if (elType.ElTypeNum != 0)
@@ -4231,17 +4244,16 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
       if (classes[i])
 	{
 	  ctxt->attrText[j] = classes[i];
-	  if (!strcmp (ptr, "SVG"))
+	  if (xmlType == SVG_TYPE)
 	    ctxt->attrType[j] = SVG_ATTR_class;
-	  else if (!strcmp (ptr, "MathML"))
+	  else if (xmlType == MATH_TYPE)
 	    ctxt->attrType[j] = MathML_ATTR_class;
-#ifdef XML_GENERIC
-	  else if (!strcmp (ptr, "HTML"))
+	  else if (xmlType == XHTML_TYPE)
 	    ctxt->attrType[j] = HTML_ATTR_Class;
 	  else
+#ifdef XML_GENERIC
 	    ctxt->attrType[j] = XML_ATTR_class;
 #else /* XML_GENERIC */
-	  else
 	    ctxt->attrType[j] = HTML_ATTR_Class;
 #endif /* XML_GENERIC */
 	  /* add a new entry */
@@ -4250,17 +4262,16 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
       if (pseudoclasses[i])
 	{
 	  ctxt->attrText[j] = pseudoclasses[i];
-	  if (!strcmp (ptr, "SVG"))
+	  if (xmlType == SVG_TYPE)
 	    ctxt->attrType[j] = SVG_ATTR_PseudoClass;
-	  else if (!strcmp (ptr, "MathML"))
+	  else if (xmlType == MATH_TYPE)
 	    ctxt->attrType[j] = MathML_ATTR_PseudoClass;
-#ifdef XML_GENERIC
-	  else if (!strcmp (ptr, "HTML"))
+	  else if (xmlType == XHTML_TYPE)
 	    ctxt->attrType[j] = HTML_ATTR_PseudoClass;
 	  else
+#ifdef XML_GENERIC
 	    ctxt->attrType[j] = XML_ATTR_PseudoClass;
 #else /* XML_GENERIC */
-	  else
 	    ctxt->attrType[j] = HTML_ATTR_PseudoClass;
 #endif /* XML_GENERIC */
 	  /* add a new entry */
@@ -4269,17 +4280,16 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
       if (ids[i])
 	{
 	  ctxt->attrText[j] = ids[i];
-	  if (!strcmp (ptr, "SVG"))
+	  if (xmlType == SVG_TYPE)
 	    ctxt->attrType[j] = SVG_ATTR_id;
-	  else if (!strcmp (ptr, "MathML"))
+	  else if (xmlType == MATH_TYPE)
 	    ctxt->attrType[j] = MathML_ATTR_id;
-#ifdef XML_GENERIC
-	  else if (!strcmp (ptr, "HTML"))
+	  else if (xmlType == XHTML_TYPE)
 	    ctxt->attrType[j] = HTML_ATTR_ID;
 	  else
+#ifdef XML_GENERIC
 	    ctxt->attrType[j] = XML_ATTR_id;
 #else /* XML_GENERIC */
-	  else
 	    ctxt->attrType[j] = HTML_ATTR_ID;
 #endif /* XML_GENERIC */
 	  /* add a new entry */
@@ -4287,20 +4297,43 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	}
       if (attrs[i])
 	{
-	  if (!strcmp (ptr, "SVG"))
-	    MapXMLAttribute (SVG_TYPE, attrs[i], names[i], &level, doc, &att);
-	  else if (!strcmp (ptr, "MathML"))
-	    MapXMLAttribute (MATH_TYPE, attrs[i], names[i], &level, doc, &att);
-	  else
-	    MapXMLAttribute (XHTML_TYPE, attrs[i], names[i], &level, doc, &att);
-	  ctxt->attrText[j] = attrvals[i];
-	  /* we should pass also the attribute schema in the context */
+	  MapXMLAttribute (xmlType, attrs[i], names[i], &level, doc, &att);
 	  ctxt->attrType[j] = att;
+	  if (i == 0 && att == 0 && ctxt->schema == NULL)
+	    {
+	      /* Search in the list of loaded schemas */
+	      attrType.AttrSSchema = NULL;
+	      TtaGetXmlAttributeType (attrs[i], &attrType, doc);
+	      ctxt->attrType[j] = attrType.AttrTypeNum;
+	      if (attrType.AttrSSchema)
+		/* the element type concerns an imprted nature */
+		schemaName = TtaGetSSchemaName(elType.ElSSchema);
+#ifdef XML_GENERIC
+	      else if (xmlType == XML_TYPE)
+		{
+		  /* The attribute is not yet present in the tree */
+		  /* Create a new global attribute */
+		  attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
+		  TtaAppendXmlAttribute (attrs[i], &attrType, doc);
+		}
+#endif /* XML_GENERIC */
+
+	      if (attrType.AttrSSchema == NULL)
+		/* cannot apply these CSS rules */
+		DoApply = FALSE;
+	      else
+		ctxt->schema = elType.ElSSchema;
+	    }
+	  ctxt->attrText[j] = attrvals[i];
+	  /* todo: store the attribute schema in the context */
 	  maxAttr = i + 1;
 	}
       i++;
       /* add a new entry */
       k++;
+      if (i == 1 && ctxt->schema == NULL)
+	/* use the document schema */
+	ctxt->schema = TtaGetDocumentSSchema (doc);
     }
   /* set the selector specificity */
   ctxt->cssSpecificity = specificity;
@@ -4329,14 +4362,11 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
     }
 
   /* Get the schema name of the main element */
-  if (ctxt->schema != NULL)
-    {
-      schemaName = TtaGetSSchemaName (ctxt->schema);
-      isHTML = (strcmp (schemaName, "HTML") == 0);
-      tsch = GetPExtension (doc, ctxt->schema, css);
-      if (tsch && cssRule)
-	ParseCSSRule (NULL, tsch, (PresentationContext) ctxt, cssRule, css, isHTML);
-    }
+  schemaName = TtaGetSSchemaName (ctxt->schema);
+  isHTML = (strcmp (schemaName, "HTML") == 0);
+  tsch = GetPExtension (doc, ctxt->schema, css);
+  if (tsch && cssRule)
+    ParseCSSRule (NULL, tsch, (PresentationContext) ctxt, cssRule, css, isHTML);
   /* future CSS rules should apply */
   DoApply = TRUE;
   return (selector);
