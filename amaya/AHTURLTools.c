@@ -1286,7 +1286,7 @@ char        **url;
 		{
 		  newptr = p;
 		  while (newptr>path && *--newptr!=used_sep); /* prev slash */
-		  if (strncmp(newptr, "/../", 4))
+		  if (!strncmp(newptr, "/../", 4))
 		    {
 		      orig = newptr + 1;
 		      dest = (*(p+3)!=used_sep) ? p+3 : p+4;
@@ -1315,6 +1315,13 @@ char        **url;
 	    p++;
 	}
     }
+
+    /*
+    **  Check for host/../.. kind of things
+    */
+    if (*path=='/' && *(path+1)=='.' && *(path+2)=='.' && (!*(path+3) || *(path+3)=='/'))
+	*(path+1) = EOS;
+
   return;
 }
 
