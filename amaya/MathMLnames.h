@@ -101,6 +101,7 @@ static AttributeMapping MathMLAttributeMappingTable[] =
    {"linethickness", "", 'A', MathML_ATTR_linethickness, L_MathMLValue},
    {"lquote", "", 'A', MathML_ATTR_lquote, L_MathMLValue},
    {"lspace", "", 'A', MathML_ATTR_lspace, L_MathMLValue},
+   {"macros", "", 'A', MathML_ATTR_macros, L_MathMLValue},
    {"mathbackground", "", 'A', MathML_ATTR_mathbackground, L_MathMLValue},
    {"mathcolor", "", 'A', MathML_ATTR_mathcolor, L_MathMLValue},
    {"mathsize", "", 'A', MathML_ATTR_mathsize, L_MathMLValue},
