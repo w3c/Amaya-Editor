@@ -1392,8 +1392,9 @@ ThotBool SelectPicture (NotifyElement *event)
  -----------------------------------------------------------------------*/
 ThotBool DeletePicture (NotifyElement *event)
 {
-  Element      parent;
+  Element      parent, el;
   ElementType  elType;
+  int          firstchar, lastchar;
 
   parent = TtaGetParent (event->element);
   if (parent)
@@ -1401,7 +1402,12 @@ ThotBool DeletePicture (NotifyElement *event)
       elType = TtaGetElementType (parent);
       if (elType.ElTypeNum == HTML_EL_Object &&
 	  !strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
-	return TRUE;   /* don't delete this picture */
+	{
+	  TtaGiveFirstSelectedElement (event->document, &el, &firstchar, &lastchar);
+	  /* accept to delete the picture when the object itself is deleted */
+	  if (el == event->element)
+	    return TRUE;   /* don't delete this picture */
+	}
     }
   return FALSE; /* let Thot perform normal operation */
 }
