@@ -17,44 +17,34 @@
   <caption>Categories</caption>
   <tbody>
     <tr>
-      <td class="categ"><a href="#annotations">Annotations</a></td>
-      <td class="categ"><a href="#mathml">MathML</a></td>
+      <td width="120"><a href="#annotations">Annotations</a></td>
+      <td width="120"><a href="#browsing">Browsing</a></td>
+      <td width="120"><a href="#CSS">CSS</a></td>
+      <td width="120"><a href="#editing">Editing</a></td>
     </tr>
     <tr>
-      <td class="categ"><a href="#browsing">Browsing</a></td>
-      <td class="categ"><a href="#networking">Networking</a></td>
+      <td><a href="#formatting">Formatting</a></td>
+      <td><a href="#forms">Forms</a></td>
+      <td><a href="#GL">GL</a></td>
+      <td><a href="#xhtml">(X)HTML</a></td>
     </tr>
     <tr>
-      <td class="categ"><a href="#CSS">CSS</a></td>
-      <td class="categ"><a href="#printing">Printing</a></td>
+      <td><a href="#I18N">I18N</a></td>
+      <td><a href="#images">Images</a></td>
+      <td><a href="#mathml">MathML</a></td>
+      <td><a href="#networking">Networking</a></td>
     </tr>
     <tr>
-      <td class="categ"><a href="#editing">Editing</a></td>
-      <td class="categ"><a href="#svg">SVG</a></td>
+      <td><a href="#printing">Printing</a></td>
+      <td><a href="#svg">SVG</a></td>
+      <td><a href="#tables">Tables</a></td>
+      <td><a href="#interface">User Interface</a></td>
     </tr>
     <tr>
-      <td class="categ"><a href="#formatting">Formatting</a></td>
-      <td class="categ"><a href="#tables">Tables</a></td>
-    </tr>
-    <tr>
-      <td class="categ"><a href="#forms">Forms</a></td>
-      <td class="categ"><a href="#interface">User Interface</a></td>
-    </tr>
-    <tr>
-      <td class="categ"><a href="#GL">GL</a></td>
-      <td class="categ"><a href="#XML">XML</a></td>
-    </tr>
-    <tr>
-      <td class="categ"><a href="#xhtml">(X)HTML</a></td>
-      <td class="categ"><a href="#miscellaneous">Miscellaneous</a></td>
-    </tr>
-    <tr>
-      <td class="categ"><a href="#I18N">I18N</a></td>
+      <td><a href="#XML">XML</a></td>
+      <td><a href="#miscellaneous">Miscellaneous</a></td>
       <td></td>
-    </tr>
-    <tr>
-      <td class="categ"><a href="#images">Images</a></td>
-      <td class="categ"></td>
+      <td></td>
     </tr>
   </tbody>
 </table>
@@ -127,15 +117,15 @@
       </td>
       <td>2003-07-10</td>
       <td>Masayasu</td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>Sometimes, Amaya crashes when a CSS is removed</td>
-      <td>2003-07-1</td>
       <td>Laurent</td>
-      <td></td>
-      <td></td>
+      <td>2003-07-15</td>
+    </tr>
+    <tr class="fixed">
+      <td>Sometimes, Amaya crashes when a CSS is removed</td>
+      <td>2003-07-15</td>
+      <td>Laurent</td>
+      <td>Lauren</td>
+      <td>2003-07-18</td>
     </tr>
   </tbody>
 </table>
@@ -269,19 +259,19 @@
         letter)</td>
       <td>2003-07-13</td>
       <td>C. Koenig</td>
-      <td></td>
+      <td>Laurent</td>
       <td></td>
     </tr>
-    <tr>
+    <tr class="fixed">
       <td>Bug in Cut and Paste on Windows
 
-        <p>The structure is not pasted if there are non-ascii characters
-        within</p>
+        <p>The structure copy doesn't work when the selection contains
+        non-ascii characters.</p>
       </td>
       <td>2003-07-10</td>
       <td>Marja</td>
-      <td></td>
-      <td></td>
+      <td>Laurent</td>
+      <td>2003-07-22</td>
     </tr>
   </tbody>
 </table>
@@ -330,6 +320,13 @@
       <td></td>
       <td></td>
       <td></td>
+    </tr>
+    <tr class="fixed">
+      <td>Input box sizing problems for query boxes</td>
+      <td>2003-07-12</td>
+      <td>J. Russel</td>
+      <td>Vincent</td>
+      <td>2003-07-18</td>
     </tr>
   </tbody>
 </table>
@@ -426,7 +423,7 @@
       <td>Crash with 8.1 version
 
         <p>follow "a demonstration of animation" link, and Amaya always
-        crashes</p>
+        crashes (cannot be reproduced)</p>
       </td>
       <td>2003-07-10</td>
       <td>Masayasu</td>
@@ -583,6 +580,19 @@
       <td>2003-06</td>
       <td>Suki Venkat</td>
       <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>The glyphs for &amp;phiv; and&amp;phi; have been interchanged.
+
+        <p>&amp;thetav; becomes "&amp;thetasym; when the file is saved.</p>
+
+        <p>Some display problem associated with integrals while using
+        &lt;mrow&gt;s and some space getting eaten-up.</p>
+      </td>
+      <td>2003-07-16</td>
+      <td>Suki Venkat</td>
+      <td>Vincent</td>
       <td></td>
     </tr>
   </tbody>
@@ -844,14 +854,6 @@
         extra white-spaces.</td>
       <td>2002-12-19</td>
       <td>Irene</td>
-      <td>Laurent</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>The transformation of xhtml elements within an xml document crashes
-        Amaya (use of a null translation schema).</td>
-      <td>2002-12-19</td>
-      <td>10 years demo</td>
       <td>Laurent</td>
       <td></td>
     </tr>
