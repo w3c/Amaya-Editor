@@ -44,6 +44,10 @@
 #include "fileaccess.h"
 #include "profiles.h"
 
+#ifdef _ANNOTATIONS
+#include "ANNOTevent_f.h"
+#endif /* _ANNOTATIONS */
+
 #ifdef _WINDOWS
 #include "resource.h"
 #include "wininclude.h"
@@ -292,6 +296,50 @@ static ThotBool AnnotAutoLoad;
 /*
 ** Common functions
 */
+
+/*-----------------------------------------------------------------------
+   _GetSysUserName
+   Gives ptr the value of the system's user name. 
+   If succesful, returns TRUE, FALSE otherwise.
+  -----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+static ThotBool _GetSysUserName (CHAR_T *username)
+#else /* __STDC__*/
+static ThotBool _GetSysUserName (username)
+CHAR_ T *username;
+#endif /* __STDC__*/
+{
+#ifdef _WINDOWS
+  ThotBool status;
+  DWORD     dwSize;
+
+  /* compute the default app_home value from the username and thotdir */
+  dwSize = MAX_LENGTH * sizeof (CHAR_T);
+  status = GetUserName (username, &dwSize);
+  if (!status || *username == EOS)
+    return FALSE;
+  /* in principle, username is returned in Unicode */
+#else 
+  uid_t uid;
+  struct passwd *pwd;
+  char *pw_name;
+
+  uid = getuid ();
+  pwd = getpwuid (uid);
+  if (!pwd)
+    return FALSE;
+
+  pw_name = pwd->pw_name;
+  if (!pw_name || *pw_name == EOS)
+    return FALSE;
+  ustrncpy (username, pw_name, MAX_LENGTH - 1);
+  username[MAX_LENGTH - 1] = EOS;
+#endif /* _WINDOWS */
+
+  return TRUE;
+}
+
 /*----------------------------------------------------------------------
    GetEnvString: front end to TtaGetEnvString. If the variable name doesn't
    exist, it sets the value to an empty ("") string
@@ -327,7 +375,8 @@ void InitAmayaDefEnv (void)
 void InitAmayaDefEnv ()
 #endif /* __STDC__ */
 {
-  CHAR_T* ptr;
+  CHAR_T *ptr,  *ptr2;
+  CHAR_T username[MAX_LENGTH];
 
   /* browsing editing options */
   ptr = TtaGetEnvString ("THOTDIR");
@@ -388,10 +437,21 @@ void InitAmayaDefEnv ()
 
   /* annotations */
 #ifdef ANNOTATIONS
-  TtaSetDefEnvString ("ANNOT_USER", TEXT(""), FALSE);
   TtaSetDefEnvString ("ANNOT_POST_SERVER", TEXT(""), FALSE);
   TtaSetDefEnvString ("ANNOT_SERVERS", TEXT("localhost"), FALSE);
   TtaSetDefEnvString ("ANNOT_AUTOLOAD", TEXT("no"), FALSE);
+  TtaSetEnvString ("ANNOT_MAIN_INDEX", TEXT("annot.index"), FALSE);
+  ptr = TtaGetEnvString ("APP_HOME");
+  ptr2 = TtaGetMemory ( ustrlen (ptr) + ustrlen (TEXT("annotations"))
+			+ 2);
+  usprintf (ptr2, TEXT("%s%c%s"), ptr, DIR_SEP, TEXT("annotations"));
+  TtaSetDefEnvString ("ANNOT_DIR", ptr2, FALSE);
+  TtaFreeMemory (ptr2);
+  /* set up the default annotation user name */
+  ptr = TtaGetMemory (sizeof (CHAR_T) * MAX_LENGTH);
+  if (!_GetSysUserName (username))
+    username[0] = EOS;
+  TtaSetDefEnvString ("ANNOT_USER", username, FALSE);
 #endif /* ANNOTATIONS */
 
   /* appearance */
