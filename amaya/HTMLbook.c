@@ -14,11 +14,12 @@
 
 
 /* Included headerfiles */
-#define THOT_EXPORT
+#define THOT_EXPORT extern
 #include "amaya.h"
 #include "AHTURLTools_f.h"
 #include "print.h"
 #include "css.h"
+#include "init_f.h"
 
 /* structure to register sub-documents in MakeBook function*/
 typedef struct _SubDoc
@@ -66,8 +67,8 @@ static int              PagePerSheet;
 #include "wininclude.h"
 #endif /* _WINDOWS */
 
-static ThotBool GetIncludedDocuments ();
-
+static ThotBool GetIncludedDocuments (Element el, Element link,
+				      Document doc, IncludeCtxt *prev);
 /*----------------------------------------------------------------------
   RedisplayDocument redisplays a view of a document
   ----------------------------------------------------------------------*/
@@ -97,7 +98,7 @@ static void RegisterSubDoc (Element el, char *url)
   if (url == NULL || url[0] == EOS)
     return;
 
-  entry = TtaGetMemory (sizeof (struct _SubDoc));
+  entry = (struct _SubDoc *)TtaGetMemory (sizeof (struct _SubDoc));
   entry->SDnext = NULL;
   entry->SDel = el;
   entry->SDname = TtaStrdup (url);
@@ -242,7 +243,7 @@ void SetInternalLinks (Document document)
 	    /* this element has an HREF or cite attribute */
 	    {
 	      length = TtaGetTextAttributeLength (HrefAttr);
-	      text = TtaGetMemory (length + 1);
+	      text = (char *)TtaGetMemory (length + 1);
 	      TtaGiveTextAttributeValue (HrefAttr, text, &length);
 
 	      /* does an external link become an internal link ? */
@@ -673,7 +674,7 @@ void InitPrint (void)
 {
   char* ptr;
 
-   BasePrint = TtaSetCallback (CallbackPrint, PRINT_MAX_REF);
+   BasePrint = TtaSetCallback ((Proc)CallbackPrint, PRINT_MAX_REF);
    DocPrint = 0;
    DocPrintURL = NULL;
 
@@ -1015,7 +1016,7 @@ static void CloseMakeBook (Document document)
   SetInternalLinks (document);
   /* if the document changed force the browser mode */
   if (SubDocs)
-    SetBrowserEditor (document);
+    SetBrowserEditor (document,0);
   /* remove registered  sub-documents */
   FreeSubDocTable ();
   DocBook = 0;
@@ -1123,7 +1124,7 @@ static ThotBool GetIncludedDocuments (Element el, Element link,
       if (attr)
 	{
 	  length = TtaGetTextAttributeLength (attr);
-	  text = TtaGetMemory (length + 1);
+	  text = (char *)TtaGetMemory (length + 1);
 	  TtaGiveTextAttributeValue (attr, text, &length);
 	  /* Valid rel values are rel="chapter" or rel="subdocument" */
 	  if (strcasecmp (text, "chapter") &&
@@ -1142,7 +1143,7 @@ static ThotBool GetIncludedDocuments (Element el, Element link,
 	/* this link has an attribute HREF */
 	{
 	  length = TtaGetTextAttributeLength (attr);
-	  text = TtaGetMemory (length + 1);
+	  text = (char *)TtaGetMemory (length + 1);
 	  TtaGiveTextAttributeValue (attr, text, &length);
 	  ptr = strrchr (text, '#');
 	  url = text;
@@ -1163,7 +1164,7 @@ static ThotBool GetIncludedDocuments (Element el, Element link,
 	      if (IncludedDocument != 0)
 		{
 		  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_FETCHING), url);
-		  ctx = TtaGetMemory (sizeof (IncludeCtxt));
+		  ctx = (IncludeCtxt *)TtaGetMemory (sizeof (IncludeCtxt));
 		  ctx->div =  el;
 		  ctx->link = link;
 		  ctx->url = url; /* the URL of the document */
@@ -1178,7 +1179,7 @@ static ThotBool GetIncludedDocuments (Element el, Element link,
 #endif /* _I18N_ */
 		  newdoc = GetAmayaDoc (url, NULL, IncludedDocument,
 					doc, CE_MAKEBOOK, FALSE, 
-					(void *) GetIncludedDocuments_callback,
+					(void (*)(int, int, char*, char*, const AHTHeaders*, void*)) GetIncludedDocuments_callback,
 					(void *) ctx, charset);
 		  found = TRUE;
 		}

@@ -42,9 +42,17 @@
 #include "fetchXMLname_f.h"
 #include "AHTURLTools_f.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* #ifdef __cplusplus */
 /* libwww includes */
 #include "HTHash.h"
+#ifdef __cplusplus
+}
+#endif /* #ifdef __cplusplus */
 
+
+   
 /* schema includes */
 #include "Annot.h"
 #include "XLink.h"
@@ -56,6 +64,16 @@
 #define TMPDIR "TMPDIR"
 #endif /* _WINDOWS */
 #endif
+
+/* ------------------------------------------------------------
+   Global tables implementations
+   ------------------------------------------------------------*/
+AnnotMetaDataList AnnotMetaData[DocumentTableLength];
+#ifdef ANNOT_ON_ANNOT
+AnnotThreadList   AnnotThread[DocumentTableLength];
+#endif /* ANNOT_ON_ANNOT */
+
+
 
 /****************************************************************
  ** 
@@ -69,20 +87,20 @@
    ------------------------------------------------------------*/
 void List_addEnd (List **me, void *object)
 {
-  List *new;
+  List *new_;
   List *tmp;
 
-  new = (List *) malloc (sizeof (List));
-  new->object = object;
-  new->next = NULL;
+  new_ = (List *) malloc (sizeof (List));
+  new_->object = object;
+  new_->next = NULL;
   if (!*me)
-    *me = new;
+    *me = new_;
   else
     {
       tmp = *me;
       while (tmp->next)
 	tmp = tmp->next;
-      tmp->next = new;
+      tmp->next = new_;
     }
 }
 
@@ -93,15 +111,15 @@ void List_addEnd (List **me, void *object)
    ------------------------------------------------------------*/
 void List_add (List **me, void *object)
 {
-  List *new;
+  List *new_;
 
-  new = (List *) malloc (sizeof (List));
-  new->object = object;
+  new_ = (List *) malloc (sizeof (List));
+  new_->object = object;
   if (!*me)
-      new->next = NULL;
+      new_->next = NULL;
   else
-      new->next = *me;
-  *me = new;
+      new_->next = *me;
+  *me = new_;
 }
 
 /* ------------------------------------------------------------
@@ -316,7 +334,7 @@ static void AnnotFilter_update (Document source_doc, AnnotMeta *annot)
 
   if (annot->author)
     {
-      tmp = TtaGetMemory (strlen (annot->author) + strlen (server) + 4);
+      tmp = (char *)TtaGetMemory (strlen (annot->author) + strlen (server) + 4);
       sprintf (tmp, "%s@%s", annot->author, server);
       AnnotFilter_add (&AnnotMetaData[source_doc], BY_AUTHOR, tmp, annot);
       TtaFreeMemory (tmp);
@@ -331,7 +349,7 @@ static void AnnotFilter_update (Document source_doc, AnnotMeta *annot)
 void AnnotFilter_add (AnnotMetaDataList *annotMeta, SelType type, void *object, AnnotMeta *annot)
 {
   List **me;
-  List *new;
+  List *new_;
   ThotBool isString = TRUE;
   AnnotFilterData *filter;
 
@@ -366,18 +384,18 @@ void AnnotFilter_add (AnnotMetaDataList *annotMeta, SelType type, void *object, 
     return;
 
   /* initialize the filter */
-  filter = TtaGetMemory (sizeof (AnnotFilterData));
-  filter->object = isString ? TtaStrdup ((char*)object) : object;
+  filter = (AnnotFilterData*)TtaGetMemory (sizeof (AnnotFilterData));
+  filter->object = (char *)(isString ? TtaStrdup ((char*)object) : object);
   filter->show = TRUE;
 
   /* and now add it to the list */
-  new = (List *) malloc (sizeof (List));
-  new->object = (void *) filter;
+  new_ = (List *) malloc (sizeof (List));
+  new_->object = (void *) filter;
   if (!*me)
-      new->next = NULL;
+      new_->next = NULL;
   else
-      new->next = *me;
-  *me = new;
+      new_->next = *me;
+  *me = new_;
 }
 
 /*------------------------------------------------------------
@@ -483,7 +501,7 @@ int AnnotFilter_status (Document doc, SelType selector, void *object)
   list_item = AnnotMetaData[doc].annotations;
   for (; list_item; list_item = list_item->next)
     {
-      annot = list_item->object;
+      annot = (AnnotMeta *)list_item->object;
       /* skip those annotations that are not shown in the formatted
 	 view (or that are invisible to the user */
       if (!(annot->is_visible) || annot->is_orphan)
@@ -597,7 +615,7 @@ ThotBool AnnotFilter_showAuthor (List *list, char *author, char *url)
   /* we first normalize the url name to get the server */
   GetServerName (url, server);
 
-  tmp = TtaGetMemory (strlen (author) + strlen (server) + 4);
+  tmp = (char *)TtaGetMemory (strlen (author) + strlen (server) + 4);
   sprintf (tmp, "%s@%s", author, server);
 
   list_item = AnnotFilter_search (list, tmp, TRUE);
@@ -866,7 +884,7 @@ ThotBool AnnotList_delAnnot (List **list, char *url, ThotBool useAnnotUrl)
       /* erase the annotation body */
       if (IsFilePath (annot->body_url))
 	{
-	  ptr = TtaGetMemory (strlen (annot->body_url) + 1);
+	  ptr = (char *)TtaGetMemory (strlen (annot->body_url) + 1);
 	  NormalizeFile (annot->body_url, ptr, AM_CONV_NONE);
 	  TtaFileUnlink (ptr);
 	  TtaFreeMemory (ptr);
@@ -1086,7 +1104,7 @@ static Container * ThreadItem_new (void)
 {
   Container *me;
 
-  me = TtaGetMemory (sizeof (Container));
+  me = (Container*)TtaGetMemory (sizeof (Container));
   memset (me, 0, sizeof (Container));
   return (me);
 }
@@ -1384,7 +1402,7 @@ void AnnotThread_sortThreadList (List **thread_list)
   keys = HTHashtable_keys (id_table);
   for (i = 0; i < HTArray_size (keys); i++)
     {
-      tmp_entry = (Container *) HTHashtable_object (id_table, HTArray_data (keys)[i]);
+      tmp_entry = (Container *) HTHashtable_object (id_table, (char *)HTArray_data (keys)[i]);
       if (tmp_entry->parent == NULL)
 	{
 	  if (tmp_entry == root)
@@ -1668,12 +1686,12 @@ ThotBool AnnotThread_link2ThreadDoc (Document doc)
    ------------------------------------------------------------*/
 AnnotMeta *AnnotMeta_new (void)
 {
-  AnnotMeta *new;
+  AnnotMeta *new_;
 
-  new = (AnnotMeta *) malloc (sizeof (AnnotMeta));
-  if (new)
-    memset (new, 0, sizeof (AnnotMeta));
-  return new;
+  new_ = (AnnotMeta *) malloc (sizeof (AnnotMeta));
+  if (new_)
+    memset (new_, 0, sizeof (AnnotMeta));
+  return new_;
 }
 
 /* ------------------------------------------------------------
@@ -2001,7 +2019,7 @@ char * ANNOT_PreparePostBody (Document doc)
   char tmp_str[80];
   char *rdf_tmpfile, *ptr;
   char *html_tmpfile;
-  char *content_type;
+  const char *content_type;
   ThotBool new_annotation;
 
   AnnotMeta *annot;
@@ -2015,9 +2033,9 @@ char * ANNOT_PreparePostBody (Document doc)
 
   /* compute the temporary file names */
   ptr = TtaGetEnvString ("APP_TMPDIR");
-  rdf_tmpfile = TtaGetMemory (strlen (ptr) + sizeof ("rdf.tmp") + 2);
+  rdf_tmpfile = (char *)TtaGetMemory (strlen (ptr) + sizeof ("rdf.tmp") + 2);
   sprintf (rdf_tmpfile, "%s%c%s", ptr, DIR_SEP, "rdf.tmp");
-  html_tmpfile = TtaGetMemory (strlen (ptr) + sizeof ("html.tmp") + 2);
+  html_tmpfile = (char *)TtaGetMemory (strlen (ptr) + sizeof ("html.tmp") + 2);
   sprintf (html_tmpfile, "%s%c%s", ptr, DIR_SEP, "html.tmp");
 
   /* output the HTML body */
@@ -2146,7 +2164,7 @@ char *StrdupDate (void)
   UTCminOffset %= 60;
 
   /* @@ possible memory bug */
-  strDate = TtaGetMemory (26);
+  strDate = (char *)TtaGetMemory (26);
   sprintf (strDate,
 	   "%04d-%02d-%02dT%02d:%02d:%02d%c%02d:%02d",
 	   localDate->tm_year+1900,
@@ -2370,7 +2388,7 @@ char *SearchAttributeInEl (Document doc, Element el, int attrTypeNum,
   else
   {
     length = TtaGetTextAttributeLength (attr);
-    text = TtaGetMemory (length + 1);
+    text = (char *)TtaGetMemory (length + 1);
     TtaGiveTextAttributeValue (attr, text, &length);
     return text;
   }
@@ -2380,7 +2398,7 @@ char *SearchAttributeInEl (Document doc, Element el, int attrTypeNum,
    SubstituteCharInString
    Substitutes all occurences of old char with new char in string buffer
   -----------------------------------------------------------------------*/
-void SubstituteCharInString (char *buffer, char old, char new)
+void SubstituteCharInString (char *buffer, char old, char new_)
 {
   char *ptr;
 
@@ -2388,7 +2406,7 @@ void SubstituteCharInString (char *buffer, char old, char new)
   while (*ptr)
     {
       if (*ptr == old)
-	*ptr = new;
+	*ptr = new_;
       ptr++;
     }
 }
@@ -2526,8 +2544,8 @@ char * ANNOT_GetHTMLTitle (Document doc)
 	      length = TtaGetTextLength (el) + 1;
 	      if (length > 1)
 		{
-		  title = TtaGetMemory (length);
-		  TtaGiveTextContent (el, title, &length, &lang);
+		  title = (char *)TtaGetMemory (length);
+		  TtaGiveTextContent (el, (unsigned char *)title, &length, &lang);
 		  /* discard an empty title */
 		  if (title[0] == EOS)
 		    {
@@ -2556,8 +2574,8 @@ char * ANNOT_GetHTMLTitle (Document doc)
 	      length = TtaGetTextLength (el) + 1;
 	      if (length > 1)
 		{
-		  title = TtaGetMemory (length);
-		  TtaGiveTextContent (el, title, &length, &lang);
+		  title = (char *)TtaGetMemory (length);
+		  TtaGiveTextContent (el, (unsigned char *)title, &length, &lang);
 		  /* discard an empty title */
 		  if (title[0] == EOS)
 		    {
@@ -2604,7 +2622,7 @@ void ANNOT_SetType (Document doc, RDFResourceP type)
   /* change the text content */
   el = TtaGetFirstChild (el);
   type_name = ANNOT_GetLabel(&annot_schema_list, type);
-  TtaSetTextContent (el, type_name,
+  TtaSetTextContent (el, (unsigned char *)type_name,
 		     TtaGetDefaultLanguage (), doc);
 
   /* update the metadata */
@@ -3120,7 +3138,7 @@ char * Annot_DocumentURL (Document doc)
     {
       int len;
       len = strlen (DocumentURLs[doc] + strlen (DocumentMeta[doc]->form_data) + 2);
-      ptr = TtaGetMemory (len);
+      ptr = (char *)TtaGetMemory (len);
       sprintf (ptr, "%s?%s", DocumentURLs[doc], DocumentMeta[doc]->form_data);
     }
   else
@@ -3141,7 +3159,7 @@ char *Annot_ConcatenateBase (char *base, char *fragment)
 
   if (base && *base && fragment && *fragment)
     {
-      ptr = TtaGetMemory (strlen (base) + strlen (fragment) + 1);
+      ptr = (char *)TtaGetMemory (strlen (base) + strlen (fragment) + 1);
       sprintf (ptr, "%s%s", base, fragment);
     }
   else

@@ -149,7 +149,7 @@ ThotBool TtaReadWideChar (BinFile file, CHAR_T *bval)
   ----------------------------------------------------------------------*/
 ThotBool TtaReadBool (BinFile file, ThotBool *bval)
 {
-   char       b1;
+   unsigned char b1;
 
    if (!TtaReadByte (file, &b1))
      {
@@ -169,7 +169,7 @@ ThotBool TtaReadBool (BinFile file, ThotBool *bval)
   ----------------------------------------------------------------------*/
 ThotBool TtaReadShort (BinFile file, int *sval)
 {
-  char      car;
+  unsigned char car;
  
   *sval = 0; 
   if (!TtaReadByte (file, &car))
@@ -225,7 +225,7 @@ ThotBool TtaReadSignedShort (BinFile file, int *sval)
   ----------------------------------------------------------------------*/
 ThotBool TtaReadInteger (BinFile file, int *sval)
 {
-  char      car;
+  unsigned char car;
  
   *sval = 0;
    if (!TtaReadByte (file, &car))
@@ -315,7 +315,7 @@ static float readFloat(unsigned int *bytes)
   ----------------------------------------------------------------------*/
 ThotBool TtaReadFloat (BinFile file, float *sval)
 {
-  char      car;
+  unsigned char car;
   long      val;
   unsigned char test[4];
 
@@ -361,7 +361,7 @@ ThotBool TtaReadFloat (BinFile file, float *sval)
 /*----------------------------------------------------------------------
    TtaReadName reads a Wide Character string value.
   ----------------------------------------------------------------------*/
-ThotBool TtaReadName (BinFile file, char *name)
+ThotBool TtaReadName (BinFile file, unsigned char *name)
 {
   int                 i;
 
@@ -534,7 +534,7 @@ void TtaReadDocIdent (BinFile file, DocumentIdentifier *Ident)
    int j = 0;
    
    do
-   if (!TtaReadByte (file, &((*Ident)[j++])))
+   if (!TtaReadByte (file, (unsigned char *)&((*Ident)[j++])))
      (*Ident)[j - 1] = EOS;
    while (!(j >= MAX_DOC_IDENT_LEN || (*Ident)[j - 1] == EOS)) ;
 }

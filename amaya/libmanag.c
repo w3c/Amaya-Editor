@@ -16,7 +16,7 @@
  */
 
 /* header file */
-#define THOT_EXPORT
+#define THOT_EXPORT extern
 #include "amaya.h"
 #include "css.h"
 #include "trans.h"
@@ -1063,7 +1063,7 @@ static void InitSVGBufferForComboBox ()
 	}
       /* remove the previous list */
       TtaFreeMemory (SVGlib_list);
-      SVGlib_list = TtaGetMemory (lg + 10);
+      SVGlib_list = (char *)TtaGetMemory (lg + 10);
       curList = HeaderListUriTitle;
       SVGlib_list[0] = EOS;
       lg = 0;
@@ -1175,7 +1175,7 @@ Document CreateNewLibraryFile (char *libUrl, char *libtitle)
   title = TtaSearchTypedElement (elType, SearchInTree, root);
   text = TtaGetFirstChild (title);
   if (TtaGetTextLength (text) == 0)
-    TtaSetTextContent (text, libtitle, language, newLibraryDoc);
+    TtaSetTextContent (text, (unsigned char *)libtitle, language, newLibraryDoc);
   UpdateTitle (title, newLibraryDoc);
 
   elType.ElTypeNum = HTML_EL_HEAD;
@@ -1205,7 +1205,7 @@ Document CreateNewLibraryFile (char *libUrl, char *libtitle)
   strcat (textStr, " .g_title {color: #0000B2; font-family: helvetica; font-weight: bold; vertical-align: middle}");
   sprintf (textStr, "%s%c", textStr, EOL);
   strcat (textStr, " .g_comment {font-size: 12pt; font-weight: normal; color: #B2005A; vertical-align: middle}");
-  TtaSetTextContent (text, textStr, language, newLibraryDoc);
+  TtaSetTextContent (text, (unsigned char *)textStr, language, newLibraryDoc);
 
   /* create a Document_URL element as the first child of HEAD */
   elType.ElTypeNum = HTML_EL_Document_URL;
@@ -1227,7 +1227,7 @@ Document CreateNewLibraryFile (char *libUrl, char *libtitle)
       TtaInsertFirstChild (&text, el, newLibraryDoc);
     }
   if (libUrl != NULL && text != NULL)
-    TtaSetTextContent (text, libUrl, language, newLibraryDoc);
+    TtaSetTextContent (text, (unsigned char *)libUrl, language, newLibraryDoc);
   
   /* create a META element in the HEAD with name="generator" */
   /* and content="Amaya" */
@@ -1324,10 +1324,10 @@ char *GetLibraryFileTitle (char *url)
 		  /* title exist */
 		  length = MAX_LENGTH;
 		  reTitle = (char *) TtaGetMemory (MAX_LENGTH);
-		  TtaGiveTextContent (child, reTitle, &length, &lang);
+		  TtaGiveTextContent (child, (unsigned char *)reTitle, &length, &lang);
 #ifdef _I18N_
-		  title = TtaConvertMbsToByte (reTitle, TtaGetDefaultCharset ());
-		  strcpy (reTitle, title);
+		  title = TtaConvertMbsToByte ((unsigned char *)reTitle, TtaGetDefaultCharset ());
+		  strcpy ((char *)reTitle, (char *)title);
 		  TtaFreeMemory (title);
 #endif /* _I18N_ */
 		}
@@ -1510,7 +1510,7 @@ void SelectLibraryFromPath (char *path)
 	{
 	  /* remove the previous list */
 	  TtaFreeMemory (SVGlib_list);
-	  SVGlib_list = TtaGetMemory (lg + 10);
+	  SVGlib_list = (char *)TtaGetMemory (lg + 10);
 	  curList = HeaderListUriTitle;
 	  /* put the selected library in first position */
 	  strcpy (SVGlib_list, title);
@@ -1836,7 +1836,7 @@ void InitLibrary (void)
   iconLibsvgNo = TtaCreatePixmapLogo (libsvgNo_xpm);
 #endif /* _WINDOWS */
 
-  BaseLibrary = TtaSetCallback (CallbackLibrary, LIBRARY_MAX_REF);
+  BaseLibrary = TtaSetCallback ((Proc)CallbackLibrary, LIBRARY_MAX_REF);
 #endif /* _SVG */
 }
 
@@ -2360,7 +2360,7 @@ Document CreateNewSVGFileofSVGSelected (char *url)
       strcat (buffer, ", see http://www.w3.org/Amaya/ ");
       leaf = TtaGetFirstLeaf (comment);
       lang = TtaGetLanguageIdFromScript('L');
-      TtaSetTextContent (leaf, buffer, lang, newSVGDoc);
+      TtaSetTextContent (leaf, (unsigned char *)buffer, lang, newSVGDoc);
 
       TtaSetNotificationMode (newSVGDoc, 1);
       TtaSetDocumentProfile (newSVGDoc, 0);
@@ -2668,12 +2668,12 @@ void AddingModelIntoLibraryFile (Document libDoc, char *newURL)
   ElementType     elType;
   Attribute       attr;
   AttributeType   attrType;
-  char           *basename, *class, *relativeURL = NULL;
+  char           *basename, *class_, *relativeURL = NULL;
   int             oldStructureChecking;
 
   basename = (char *) TtaGetMemory (MAX_LENGTH);
   /*  relativeURL = (char *) TtaGetMemory (MAX_LENGTH);*/
-  class = (char *) TtaGetMemory (MAX_LENGTH);
+  class_ = (char *) TtaGetMemory (MAX_LENGTH);
 
   oldStructureChecking = TtaGetStructureChecking (libDoc);
   TtaSetStructureChecking (0, libDoc);
@@ -2795,8 +2795,8 @@ void AddingModelIntoLibraryFile (Document libDoc, char *newURL)
   attr = TtaNewAttribute (attrType);
   if (attr != NULL)
     TtaAttachAttribute (imgEl, attr, libDoc);
-  strcpy (class, "image");
-  TtaSetAttributeText (attr, class, imgEl, libDoc);
+  strcpy (class_, "image");
+  TtaSetAttributeText (attr, class_, imgEl, libDoc);
 
   /*
    * Edit the second column of the new row
@@ -2809,12 +2809,12 @@ void AddingModelIntoLibraryFile (Document libDoc, char *newURL)
       attr = TtaNewAttribute (attrType);
       if (attr != NULL)
 	TtaAttachAttribute (cellEl, attr, libDoc);
-      strcpy (class, "g_title");
-      TtaSetAttributeText (attr, class, cellEl, libDoc);
+      strcpy (class_, "g_title");
+      TtaSetAttributeText (attr, class_, cellEl, libDoc);
       elType.ElTypeNum = HTML_EL_TEXT_UNIT;
       textEl = TtaNewTree (libDoc, elType, "");
       TtaInsertFirstChild (&textEl, cellEl, libDoc);
-      TtaSetTextContent (textEl, "Title", TtaGetDefaultLanguage (), libDoc);
+      TtaSetTextContent (textEl, (unsigned char *)"Title", TtaGetDefaultLanguage (), libDoc);
     }
   /* let selection on it */
   TtaSelectElement (libDoc, textEl);
@@ -2830,12 +2830,12 @@ void AddingModelIntoLibraryFile (Document libDoc, char *newURL)
       attr = TtaNewAttribute (attrType);
       if (attr != NULL)
 	TtaAttachAttribute (cellEl, attr, libDoc);
-      strcpy (class, "g_comment");
-      TtaSetAttributeText (attr, class, cellEl, libDoc);
+      strcpy (class_, "g_comment");
+      TtaSetAttributeText (attr, class_, cellEl, libDoc);
       elType.ElTypeNum = HTML_EL_TEXT_UNIT;
       textEl = TtaNewTree (libDoc, elType, "");
       TtaInsertFirstChild (&textEl, cellEl, libDoc);
-      TtaSetTextContent (textEl, "Comment", TtaGetDefaultLanguage (), libDoc);
+      TtaSetTextContent (textEl, (unsigned char *)"Comment", TtaGetDefaultLanguage (), libDoc);
     }
 
   /* set stop button */
@@ -2845,7 +2845,7 @@ void AddingModelIntoLibraryFile (Document libDoc, char *newURL)
 
   /* Free memory */  
   TtaFreeMemory (basename);
-  TtaFreeMemory (class);  
+  TtaFreeMemory (class_);  
 
   TtaSetStructureChecking (oldStructureChecking, libDoc);
   TtaCloseUndoSequence (libDoc);
@@ -3111,7 +3111,7 @@ void SearchGraphicalObjectByTitle (char *GraphicalObjectTitle)
 	      TtaNextSibling (&goTitle);
 	      length = TtaGetTextLength (goTitle);
 	      title = (char *) TtaGetMemory (length + 1);
-	      TtaGiveTextContent (goTitle, title, &length, &lang);
+	      TtaGiveTextContent (goTitle, (unsigned char *)title, &length, &lang);
 	      if (!strcmp (GraphicalObjectTitle, title))
 		{
 		  goFound = TRUE;
@@ -3166,7 +3166,7 @@ void RemoveLibraryModel (Document deletedDoc, Element deletedEl)
 void AddLibraryButton (Document doc, View view)
 {
 #ifdef _SVG
-  LibSVGButton = TtaAddButton (doc, 1, (ThotIcon)iconLibsvg, ShowLibrary,
+  LibSVGButton = TtaAddButton (doc, 1, (ThotIcon)iconLibsvg, (Proc)ShowLibrary,
 			      "ShowLibrary",
 			      TtaGetMessage (AMAYA, AM_BUTTON_SVG_LIBRARY),
 			      TBSTYLE_BUTTON, TRUE);
@@ -3213,7 +3213,7 @@ void OpenLibraryCallback (Document doc, View view, char *text)
 	    {
 	      if (strcmp (text, curList->Title) == 0)
 		{
-		  url = TtaGetMemory (strlen (curList->URI) + 1);
+		  url = (char *)TtaGetMemory (strlen (curList->URI) + 1);
 		  strcpy (url, curList->URI);
 		  break;
 		}

@@ -98,7 +98,7 @@ unsigned char *AsciiTranslate (char *pBuffer)
 		number[k++] = pBuffer[i++];
 	      number[k] = EOS;
 
-	      switch (strlen (number))
+	      switch (strlen ((const char *)number))
 		{
 		case 0:
 		  result[j++] = pBuffer[i++];
@@ -187,10 +187,10 @@ int TtaGetMessageTable (CONST char *msgName, int msgNumber)
 
       pBuff[0] = EOS;
       fscanf (file, "# %500s\n]", pBuff);
-      if (!strncasecmp (pBuff, "encoding=", 9))
+      if (!strncasecmp ((const char *)pBuff, "encoding=", 9))
 	{
 	  fscanf (file, "%500s\n]", pBuff);
-	  if (!strncasecmp (pBuff, "utf8", 4))
+	  if (!strncasecmp ((const char *)pBuff, "utf8", 4))
 	    encoding = UTF_8;
 	  else
 	    encoding = ISO_8859_1;
@@ -234,12 +234,12 @@ int TtaGetMessageTable (CONST char *msgName, int msgNumber)
       while (fscanf (file, "%d %[^#\r\n]", &num, pBuff) != EOF &&
 	     num < msgNumber)
 	{
-    	  s = TtaGetMemory (strlen (pBuff) + 1);
-     	  strcpy (s, AsciiTranslate (pBuff));
+    	  s = (char *)TtaGetMemory (strlen ((const char *)pBuff) + 1);
+     	  strcpy (s, (const char *)AsciiTranslate ((char *)pBuff));
 	  if (encoding == UTF_8 && DialogCharset != UTF_8)
 	    {
 	      /* convert the string */
-	      ptr = TtaConvertMbsToByte (s, DialogCharset);
+	      ptr = (char *)TtaConvertMbsToByte ((unsigned char *)s, DialogCharset);
 	      currenttable->TabMessages[num] = ptr;
 	      TtaFreeMemory (s);
 	    }
@@ -286,7 +286,7 @@ char *TtaGetMessage (int origin, int num)
    /* recherche la table de messages */
    if (origin == -1)
       /* la table de messages n'est pas chargee */
-      return (EmptyMsg);
+      return ((char *)EmptyMsg);
    i = 0;
    currenttable = FirstTableMsg;
    while (currenttable && i < origin)
@@ -297,15 +297,15 @@ char *TtaGetMessage (int origin, int num)
 
    if (!currenttable)
       /* on n'a pas trouve la table de messages */
-      return (EmptyMsg);
+      return ((char *)EmptyMsg);
    else if (num >= currenttable->TabLength || num < 0)
       /* il n'y a pas de message */
-      return (EmptyMsg);
+      return ((char *)EmptyMsg);
    else if (!currenttable->TabMessages[num])
       /* il n'y a pas de message */
-      return (EmptyMsg);
+      return ((char *)EmptyMsg);
    else
-      return (currenttable->TabMessages[num]);
+      return ((char *)currenttable->TabMessages[num]);
 }
 
 /*----------------------------------------------------------------------

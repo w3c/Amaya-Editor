@@ -109,7 +109,7 @@ static void   ApplyRuleSubTree (PtrElement pE, PRuleType ruleType,
 		    /* on applique la regle */
 		    if (ApplyRule (*pPRule, pSPR, pAbb, pDoc, pAttr))
 		      {
-			SetChange (pAbb, ruleType, 0);
+			SetChange (pAbb, ruleType, (FunctionType)0);
 			if (display)
 			  RedispAbsBox (pAbb, pDoc);
 			if (!pAbb->AbPresentationBox)
@@ -134,7 +134,7 @@ static void   ApplyRuleSubTree (PtrElement pE, PRuleType ruleType,
 				if (ApplyRule (*pPRule, pSPR, pAbbF,
 					       pDoc, pAttr))
 				  {
-				    SetChange (pAbbF, ruleType, 0);
+				    SetChange (pAbbF, ruleType, (FunctionType)0);
 				    if (display)
 				      RedispAbsBox (pAbbF, pDoc);
 				  }
@@ -201,7 +201,7 @@ void         ApplyInherit (PRuleType ruleType, PtrAbstractBox pAb,
 			on applique la regle */
 		     if (ApplyRule (pPRule, pSchP, pAbbCur, pDoc, pAttrib))
 		       {
-			  SetChange (pAbbCur, ruleType, 0);
+			  SetChange (pAbbCur, ruleType, (FunctionType)0);
 			  ApplyInherit (ruleType, pAbbCur, pDoc, display);
 			  if (display)
 			    RedispAbsBox (pAbbCur, pDoc);
@@ -243,7 +243,7 @@ void         ApplyInherit (PRuleType ruleType, PtrAbstractBox pAb,
 		   /* applique la regle */
 		   if (ApplyRule (pPRule, pSchP, pAbbCur, pDoc, pAttrib))
 		     {
-		       SetChange (pAbbCur, ruleType, 0);
+		       SetChange (pAbbCur, ruleType, (FunctionType)0);
 		       ApplyInherit (ruleType, pAbbCur, pDoc, display);
 		       if (display)
 			 RedispAbsBox (pAbbCur, pDoc);
@@ -273,7 +273,7 @@ void         ApplyInherit (PRuleType ruleType, PtrAbstractBox pAb,
 			 on l'applique */
 		      if (ApplyRule (pPRule, pSchP, pAbbCur, pDoc, pAttrib))
 			{
-			  SetChange (pAbbCur, ruleType, 0);
+			  SetChange (pAbbCur, ruleType, (FunctionType)0);
 			  ApplyInherit (ruleType, pAbbCur, pDoc, display);
 			  if (display)
 			    RedispAbsBox (pAbbCur, pDoc);
@@ -298,7 +298,7 @@ void         ApplyInherit (PRuleType ruleType, PtrAbstractBox pAb,
 			 on l'applique */
 		      if (ApplyRule (pPRule, pSchP, pAbbCur, pDoc, pAttrib))
 			{
-			  SetChange (pAbbCur, ruleType, 0);
+			  SetChange (pAbbCur, ruleType, (FunctionType)0);
 			  ApplyInherit (ruleType, pAbbCur, pDoc, display);
 			  if (display)
 			    RedispAbsBox (pAbbCur, pDoc);
@@ -323,7 +323,7 @@ void         ApplyInherit (PRuleType ruleType, PtrAbstractBox pAb,
 		       on l'applique */
 		    if (ApplyRule (pPRule, pSchP, pAbbCur, pDoc, pAttrib))
 		      {
-			SetChange (pAbbCur, ruleType, 0);
+			SetChange (pAbbCur, ruleType, (FunctionType)0);
 			ApplyInherit (ruleType, pAbbCur, pDoc, display);
 			if (display)
 			  RedispAbsBox (pAbbCur, pDoc);
@@ -635,9 +635,9 @@ void    ApplyNewRule (PtrDocument pDoc, PtrPRule pPRule, PtrElement pEl)
 		  if (ApplyRule (pPRule, NULL, pAb, pDoc, NULL))
 		    {
 		      if (pPRule->PrType == PtFunction)
-			SetChange (pAb, pPRule->PrType, pPRule->PrPresFunction);
+			SetChange (pAb, pPRule->PrType, (FunctionType)pPRule->PrPresFunction);
 		      else
-			SetChange (pAb, pPRule->PrType, 0);
+			SetChange (pAb, pPRule->PrType, (FunctionType)0);
 		      ApplyInherit (pPRule->PrType, pAb, pDoc, TRUE);
 		      /* indique le pave a faire reafficher */
 		      RedispAbsBox (pAb, pDoc);
@@ -743,9 +743,9 @@ static void ApplyPRuleAndRedisplay (PtrAbstractBox pAb, PtrDocument pDoc,
   ApplyRule (pRP, pSPR, pAb, pDoc, pAttr);
   /* marque que le pave a change' et doit etre reaffiche' */
   if (pRP->PrType == PtFunction)
-    SetChange (pAb, pRP->PrType, pRP->PrPresFunction);
+    SetChange (pAb, pRP->PrType, (FunctionType)pRP->PrPresFunction);
   else
-    SetChange (pAb, pRP->PrType, 0);
+    SetChange (pAb, pRP->PrType, (FunctionType)0);
   RedispAbsBox (pAb, pDoc);
   /* applique la regle de meme type aux paves environnants */
   /* s'ils heritent de ce parametre de presentation */

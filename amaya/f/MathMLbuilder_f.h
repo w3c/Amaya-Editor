@@ -12,7 +12,7 @@ extern void MapMathMLAttribute ( char *attrName,
                                  ThotBool *level,
                                  Document doc );
 extern void MapMathMLAttributeValue ( char *attVal,
-                                      AttributeType attrType,
+                                      const AttributeType * attrType,
                                       int *value );
 extern void MathMLEntityCreated ( unsigned char *entityValue,
                                   Language lang,
@@ -50,32 +50,32 @@ extern void MathMLScriptShift ( Document doc,
 extern void HandleRowalignAttribute ( Attribute attr,
                                       Element el,
                                       Document doc,
-                                      ThotBool delete );
+                                      ThotBool delete_ );
 extern void HandleColalignAttribute ( Attribute attr,
                                       Element el,
                                       Document doc,
-                                      ThotBool delete,
+                                      ThotBool delete_,
                                       ThotBool allRows );
 extern void HandleRowspacingAttribute ( Attribute attr,
                                         Element el,
                                         Document doc,
-                                        ThotBool delete );
+                                        ThotBool delete_ );
 extern void HandleColumnspacingAttribute ( Attribute attr,
                                            Element el,
                                            Document doc,
-                                           ThotBool delete );
+                                           ThotBool delete_ );
 extern void HandleRowlinesAttribute ( Attribute attr,
                                       Element el,
                                       Document doc,
-                                      ThotBool delete );
+                                      ThotBool delete_ );
 extern void HandleColumnlinesAttribute ( Attribute attr,
                                          Element el,
                                          Document doc,
-                                         ThotBool delete );
+                                         ThotBool delete_ );
 extern void HandleFramespacingAttribute ( Attribute attr,
                                           Element el,
                                           Document doc,
-                                          ThotBool delete );
+                                          ThotBool delete_ );
 extern void SetDisplaystyleMathElement ( Element el,
                                          Document doc );
 extern void MathMLElementCreated ( Element el,
@@ -108,7 +108,7 @@ extern void MathMLSpacingAttr ( Document doc,
 extern void MathMLSetDisplaystyleAttr ( Element el,
                                         Attribute attr,
                                         Document doc,
-                                        ThotBool delete );
+                                        ThotBool delete_ );
 extern void MathMLAttributeComplete ( Attribute attr,
                                       Element el,
                                       Document doc );
@@ -123,7 +123,7 @@ extern void MapMathMLAttribute (/* char *attrName,
                                    ThotBool *level,
                                    Document doc */);
 extern void MapMathMLAttributeValue (/* char *attVal,
-                                        AttributeType attrType,
+                                        const AttributeType * attrType,
                                         int *value */);
 extern void MathMLEntityCreated (/* unsigned char *entityValue,
                                     Language lang,
@@ -161,32 +161,32 @@ extern void MathMLScriptShift (/* Document doc,
 extern void HandleRowalignAttribute (/* Attribute attr,
                                         Element el,
                                         Document doc,
-                                        ThotBool delete */);
+                                        ThotBool delete_ */);
 extern void HandleColalignAttribute (/* Attribute attr,
                                         Element el,
                                         Document doc,
-                                        ThotBool delete,
+                                        ThotBool delete_,
                                         ThotBool allRows */);
 extern void HandleRowspacingAttribute (/* Attribute attr,
                                           Element el,
                                           Document doc,
-                                          ThotBool delete */);
+                                          ThotBool delete_ */);
 extern void HandleColumnspacingAttribute (/* Attribute attr,
                                              Element el,
                                              Document doc,
-                                             ThotBool delete */);
+                                             ThotBool delete_ */);
 extern void HandleRowlinesAttribute (/* Attribute attr,
                                         Element el,
                                         Document doc,
-                                        ThotBool delete */);
+                                        ThotBool delete_ */);
 extern void HandleColumnlinesAttribute (/* Attribute attr,
                                            Element el,
                                            Document doc,
-                                           ThotBool delete */);
+                                           ThotBool delete_ */);
 extern void HandleFramespacingAttribute (/* Attribute attr,
                                             Element el,
                                             Document doc,
-                                            ThotBool delete */);
+                                            ThotBool delete_ */);
 extern void SetDisplaystyleMathElement (/* Element el,
                                            Document doc */);
 extern void MathMLElementCreated (/* Element el,
@@ -219,7 +219,7 @@ extern void MathMLSpacingAttr (/* Document doc,
 extern void MathMLSetDisplaystyleAttr (/* Element el,
                                           Attribute attr,
                                           Document doc,
-                                          ThotBool delete */);
+                                          ThotBool delete_ */);
 extern void MathMLAttributeComplete (/* Attribute attr,
                                         Element el,
                                         Document doc */);

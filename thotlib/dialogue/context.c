@@ -36,7 +36,7 @@
 
 ThotColorStruct  cblack;
 static ThotColorStruct  cwhite;
-extern int              errno;
+/*extern int              errno; allready declared ... do not compile with g++ */
 
 #include "appli_f.h"
 #include "checkermenu_f.h"
@@ -219,7 +219,11 @@ static void InitColors (char* name)
    vptr = XGetVisualInfo (TtDisplay, VisualIDMask, &vinfo, &i);
    if (vptr)
      {
+#if defined(__cplusplus) || defined(c_plusplus)
+       TtIsTrueColor = (vptr->c_class == TrueColor || vptr->c_class == DirectColor);
+#else
        TtIsTrueColor = (vptr->class == TrueColor || vptr->class == DirectColor);
+#endif
        XFree (vptr);
      }
    else
@@ -530,12 +534,12 @@ void InitDocContexts ()
   InitializeOtherThings ();
 }
 
-#ifdef _MOTIF
 /*----------------------------------------------------------------------
  *      SelectionEvents handle the X-Windows selection events.
  ----------------------------------------------------------------------*/
 void SelectionEvents (void *ev)
 {
+#ifdef _MOTIF
    XSelectionRequestEvent *request;
    XSelectionEvent     notify;
    ThotWindow          w, wind;
@@ -593,7 +597,9 @@ void SelectionEvents (void *ev)
 		 {
 		   /* returns the cut buffer */
 		   if (ThotLocalActions[T_pasteclipboard] != NULL)
-		     (*ThotLocalActions[T_pasteclipboard]) (buffer, r);
+		     (*(Proc2)ThotLocalActions[T_pasteclipboard]) (
+			(void *)buffer,
+			(void *)r);
 		 }
 	     }
 	   else
@@ -615,8 +621,8 @@ void SelectionEvents (void *ev)
 		 {
 		   if (bytes_after > 0)
 		     {
-		       buffer = TtaGetMemory (nbitems + bytes_after);
-		       strcpy (buffer, partbuffer);
+		       buffer = (unsigned char *)TtaGetMemory (nbitems + bytes_after);
+		       strcpy ((char *)buffer,(char *)partbuffer);
 		       r = XGetWindowProperty (event->display, 
 					       event->requestor,
 					       event->property, 
@@ -629,14 +635,16 @@ void SelectionEvents (void *ev)
 					       &nbitems,
 					       &bytes_after, 
 					       &partbuffer);
-		       strcpy (&buffer[256 * 4], partbuffer);
+		       strcpy ((char *)&buffer[256 * 4], (char *)partbuffer);
 		       nbitems = (256 * 4) + nbitems;
 		     }
 		   else
 		     buffer = partbuffer;
 		   /* paste the content of the selection */
 		   if (ThotLocalActions[T_pasteclipboard])
-		     (*ThotLocalActions[T_pasteclipboard]) (buffer, (int) nbitems);
+		     (*(Proc2)ThotLocalActions[T_pasteclipboard]) (
+				(void *)buffer,
+			       	(void *)((int) nbitems));
 		   if (buffer != partbuffer)
 		     TtaFreeMemory (buffer);
 		 }
@@ -676,7 +684,7 @@ void SelectionEvents (void *ev)
 	   else if (request->property == None)
 	     {
 	       /* there is no such property */
-	       XStoreBuffer (request->display, Xbuffer, ClipboardLength, 0);
+	       XStoreBuffer (request->display, (char *)Xbuffer, ClipboardLength, 0);
 	     }
 	   else
 	     {
@@ -690,7 +698,7 @@ void SelectionEvents (void *ev)
 	 }
        break;
      }
-}
 #endif /* _MOTIF */
+}
 
 

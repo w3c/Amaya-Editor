@@ -2408,7 +2408,10 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 			{
 			  if (pAb->AbBox->BxType == BoCell &&
 			      ThotLocalActions[T_checkcolumn])
-			    (*ThotLocalActions[T_checkcolumn]) (pAb, NULL, frame);
+			    (*(Proc3)ThotLocalActions[T_checkcolumn]) (
+				(void *)pAb,
+			       	(void *)NULL,
+			       	(void *)frame);
 			  else
 			    WidthPack (pAb, pSourceBox, frame);
 			}
@@ -2434,7 +2437,9 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 
 	  if (delta && pBox->BxType == BoTable && pBox->BxCycles == 0 &&
 	      ThotLocalActions[T_resizetable])
-	    (*ThotLocalActions[T_resizetable]) (pCurrentAb, frame);
+	    (*(Proc2)ThotLocalActions[T_resizetable]) (
+		(void *)pCurrentAb,
+	       	(void *)frame);
 	}
       /* check if the root box width changed */
       if (pCurrentAb->AbEnclosing == NULL)
@@ -2948,7 +2953,9 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	  else if (pBox->BxType == BoCell &&
 		   ThotLocalActions[T_checktableheight])
 	    /* it's a cell with a rowspan attribute */
-	    (*ThotLocalActions[T_checktableheight]) (pCurrentAb, frame);
+	    (*(Proc2)ThotLocalActions[T_checktableheight]) (
+		(void *)pCurrentAb,
+	       	(void *)frame);
 	}
     }
   

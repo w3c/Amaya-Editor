@@ -82,21 +82,27 @@ typedef enum
   Unsupported_Format
 } Picture_Report;
 
+   /* add proto definitions for c++ compatibility */
+#define PICHND_PROTO_Produce_Picture 	Drawable (*) (void *,void *,void *,void *,void *,void *,void *,void *,void *,void *)
+#define PICHND_PROTO_Produce_Postscript void (*) (void *,void *,void *,void *,void *,void *,void *,void *,void *,void *)
+#define PICHND_PROTO_Match_Format 	ThotBool (*) (void *)
+#define PICHND_PROTO_DrawPicture 	void (*) (void *,void *,void *,void *,void *,void *,void *)
+
 
 typedef struct
 {
   char     GUI_Name[MAX_FORMAT_NAMELENGHT];
-  Drawable (*Produce_Picture) ();
-  void     (*Produce_Postscript) ();
-  ThotBool (*Match_Format) ();
-  void     (*DrawPicture) ();
+  Drawable (*Produce_Picture) (void *,void *,void *,void *,void *,void *,void *,void *,void *,void *);
+  void     (*Produce_Postscript) (void *,void *,void *,void *,void *,void *,void *,void *,void *,void *);
+  ThotBool (*Match_Format) (void *);
+  void     (*DrawPicture) (void *,void *,void *,void *,void *,void *,void *);
   void     (*FreePicture)();
 } PictureHandler;
 
-#ifdef _GL
-  void FreeAllPicCache ();  
-  void FreeAllPicCacheFromFrame (int frame);  
-#endif /*_GL*/
+
+void FreeAllPicCache ();
+void FreeAllPicCacheFromFrame (int frame);
+
 #endif /* _PICTURE_h */
 
 

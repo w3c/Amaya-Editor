@@ -14,7 +14,8 @@
  */
 
 /* Included headerfiles */
-#define THOT_EXPORT
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "amaya.h"
 #include "css.h"
 #include "trans.h"
@@ -86,7 +87,7 @@ void AddAnimPlayButton (Document doc, View view)
   AnimButton = TtaAddButton (doc,
  			     1,  
 			     (ThotIcon)iconAnim,
-			     Anim_Play,
+			     (Proc)Anim_Play,
 			     "Anim_Play",
 			     TtaGetMessage (AMAYA, AM_BUTTON_ANIM),
 			     TBSTYLE_BUTTON, TRUE);
@@ -143,7 +144,7 @@ static int *get_intptr_attribute_from_el (Element el, int Attribut_Type)
   ElementType elType = TtaGetElementType (el);
   int *result;
   
-  result = TtaGetMemory (sizeof (int));
+  result = (int *)TtaGetMemory (sizeof (int));
   attrType.AttrSSchema = elType.ElSSchema;
   attrType.AttrTypeNum = Attribut_Type;  
   attr = TtaGetAttribute (el, attrType);
@@ -173,7 +174,7 @@ char *get_char_attribute_from_el (Element el, int Attribut_Type)
   length = TtaGetTextAttributeLength (attr);
   if (length == 0)
     return NULL;
-  text = TtaGetMemory (length+1);
+  text = (char *)TtaGetMemory (length+1);
   if (text) 
     {
       /* get the value of the x attribute */

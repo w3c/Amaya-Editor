@@ -72,7 +72,6 @@
 #include "viewapi_f.h"
 #include "views_f.h"
 
-
 #ifdef _MOTIF
 static int           mk_state = 0;
 static int           TtaKeyboardMapInstalled = 0;
@@ -1061,7 +1060,7 @@ void TtaHandleOneEvent (ThotEvent *ev)
     {
       /* Manage color events */
       if (ThotLocalActions[T_colors] != NULL)
-	(*ThotLocalActions[T_colors]) (ev);
+	(*(Proc1)ThotLocalActions[T_colors]) ((void*)ev);
       /* Manage selection events */
       SelectionEvents ((XSelectionEvent *) ev);
     }
@@ -1137,7 +1136,7 @@ void TtaMainLoop ()
 {
   NotifyEvent         notifyEvt;
   ThotEvent           ev;
-
+  
   UserErrorCode = 0;
   /* Sets the current locale according to the program environment */
 

@@ -99,7 +99,7 @@ extern char *SearchAttributeInEl ( Document doc,
                                    char *schema );
 extern void SubstituteCharInString ( char *buffer,
                                      char old,
-                                     char new );
+                                     char new_ );
 extern void GetServerName ( char *url,
                             char *server );
 extern char * ANNOT_GetHTMLTitle ( Document doc );
@@ -224,7 +224,7 @@ extern char *SearchAttributeInEl (/* Document doc,
                                      char *schema */);
 extern void SubstituteCharInString (/* char *buffer,
                                        char old,
-                                       char new */);
+                                       char new_ */);
 extern void GetServerName (/* char *url,
                               char *server */);
 extern char * ANNOT_GetHTMLTitle (/* Document doc */);

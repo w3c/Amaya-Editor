@@ -14,7 +14,7 @@ extern void MapSVGAttribute ( char *attrName,
                               ThotBool *level,
                               Document doc );
 extern void MapSVGAttributeValue ( char* attVal,
-                                   AttributeType attrType,
+                                   const AttributeType * attrType,
                                    int *value );
 extern void MapSVGEntity ( char *entityName,
                            char *entityValue,
@@ -27,7 +27,7 @@ extern void ParseCSSequivAttribute ( int attrType,
                                      Attribute attr,
                                      Element el,
                                      Document doc,
-                                     ThotBool delete );
+                                     ThotBool delete_ );
 extern void SetGraphicDepths ( Document doc,
                                Element el );
 extern void CopyTRefContent ( Element source,
@@ -41,7 +41,7 @@ extern void EvaluateTestAttrs ( Element el,
 extern void SetTextAnchor ( Attribute attr,
                             Element el,
                             Document doc,
-                            ThotBool delete );
+                            ThotBool delete_ );
 extern void CreateCSSRules ( Element el,
                              Document doc );
 extern void SVGElementComplete ( ParserData *context,
@@ -74,22 +74,22 @@ extern void ParseCoordAttribute ( Attribute attr,
 extern ThotBool ParseWidthHeightAttribute ( Attribute attr,
                                             Element el,
                                             Document doc,
-                                            ThotBool delete );
+                                            ThotBool delete_ );
 extern void ParseBaselineShiftAttribute ( Attribute attr,
                                           Element el,
                                           Document doc,
-                                          ThotBool delete );
+                                          ThotBool delete_ );
 extern void ParsePointsAttribute ( Attribute attr,
                                    Element el,
                                    Document doc );
 extern void ParseviewBoxAttribute ( Attribute attr,
                                     Element el,
                                     Document doc,
-                                    ThotBool delete );
+                                    ThotBool delete_ );
 extern void ParseTransformAttribute ( Attribute attr,
                                       Element el,
                                       Document doc,
-                                      ThotBool delete );
+                                      ThotBool delete_ );
 extern void *ParseValuesDataAttribute ( Attribute attr,
                                         Element el,
                                         Document doc );
@@ -117,7 +117,7 @@ extern void MapSVGAttribute (/* char *attrName,
                                 ThotBool *level,
                                 Document doc */);
 extern void MapSVGAttributeValue (/* char* attVal,
-                                     AttributeType attrType,
+                                     const AttributeType * attrType,
                                      int *value */);
 extern void MapSVGEntity (/* char *entityName,
                              char *entityValue,
@@ -130,7 +130,7 @@ extern void ParseCSSequivAttribute (/* int attrType,
                                        Attribute attr,
                                        Element el,
                                        Document doc,
-                                       ThotBool delete */);
+                                       ThotBool delete_ */);
 extern void SetGraphicDepths (/* Document doc,
                                  Element el */);
 extern void CopyTRefContent (/* Element source,
@@ -144,7 +144,7 @@ extern void EvaluateTestAttrs (/* Element el,
 extern void SetTextAnchor (/* Attribute attr,
                               Element el,
                               Document doc,
-                              ThotBool delete */);
+                              ThotBool delete_ */);
 extern void CreateCSSRules (/* Element el,
                                Document doc */);
 extern void SVGElementComplete (/* ParserData *context,
@@ -177,22 +177,22 @@ extern void ParseCoordAttribute (/* Attribute attr,
 extern ThotBool ParseWidthHeightAttribute (/* Attribute attr,
                                               Element el,
                                               Document doc,
-                                              ThotBool delete */);
+                                              ThotBool delete_ */);
 extern void ParseBaselineShiftAttribute (/* Attribute attr,
                                             Element el,
                                             Document doc,
-                                            ThotBool delete */);
+                                            ThotBool delete_ */);
 extern void ParsePointsAttribute (/* Attribute attr,
                                      Element el,
                                      Document doc */);
 extern void ParseviewBoxAttribute (/* Attribute attr,
                                       Element el,
                                       Document doc,
-                                      ThotBool delete */);
+                                      ThotBool delete_ */);
 extern void ParseTransformAttribute (/* Attribute attr,
                                         Element el,
                                         Document doc,
-                                        ThotBool delete */);
+                                        ThotBool delete_ */);
 extern void *ParseValuesDataAttribute (/* Attribute attr,
                                           Element el,
                                           Document doc */);

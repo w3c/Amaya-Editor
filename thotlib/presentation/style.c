@@ -386,7 +386,7 @@ static PtrPRule InsertElementPRule (PtrElement el, PtrDocument pDoc,
 	if (pRule != NULL)
 	  {
 	    stdRule = GlobalSearchRulepEl (el, pDoc, &pSPR, &pSSR, 0, NULL, 1,
-					   type, extra, FALSE, TRUE, &pAttr);
+					   type, (FunctionType)extra, FALSE, TRUE, &pAttr);
 	    if (stdRule != NULL)
 	      /* copy the standard rule */
 	      *pRule = *stdRule;
@@ -897,7 +897,7 @@ static PtrPRule *FirstPresAttrRuleSearch (PtrPSchema tsch, int attrType,
 static PtrPRule *PresAttrChainInsert (PtrPSchema tsch, int attrType,
 				      GenericContext ctxt, int att)
 {
-  AttributePres      *attrs, *new;
+  AttributePres      *attrs, *new_;
   PtrSSchema          pSS;
   PtrPSchema          pSP;
   PtrPRule           *ppRule;
@@ -912,12 +912,12 @@ static PtrPRule *PresAttrChainInsert (PtrPSchema tsch, int attrType,
       /* select the last entry */
       nbrules = tsch->PsNAttrPRule->Num[attrType - 1] + 1;
       /* add the new entry */
-      GetAttributePres (&new);
+      GetAttributePres (&new_);
       tsch->PsNAttrPRule->Num[attrType - 1] = nbrules;
       if (att > 0 && ctxt->type)
 	{
-	  new->ApElemType = ctxt->type;
-	  new->ApElemInherits = FALSE;
+	  new_->ApElemType = ctxt->type;
+	  new_->ApElemInherits = FALSE;
 	  pSP = PresentationSchema (pSS, LoadedDocument[ctxt->doc-1]);
 	  if (pSP)
 	    {
@@ -927,13 +927,13 @@ static PtrPRule *PresAttrChainInsert (PtrPSchema tsch, int attrType,
 	}
       if (attrs)
 	{
-	  new->ApNextAttrPres = attrs->ApNextAttrPres;
-	  attrs->ApNextAttrPres = new;
+	  new_->ApNextAttrPres = attrs->ApNextAttrPres;
+	  attrs->ApNextAttrPres = new_;
 	}
       else
 	{
-	  new->ApNextAttrPres = tsch->PsAttrPRule->AttrPres[attrType - 1];
-	  tsch->PsAttrPRule->AttrPres[attrType - 1] = new;
+	  new_->ApNextAttrPres = tsch->PsAttrPRule->AttrPres[attrType - 1];
+	  tsch->PsAttrPRule->AttrPres[attrType - 1] = new_;
 	}
 
       attrVal = ctxt->attrText[att];
@@ -941,50 +941,50 @@ static PtrPRule *PresAttrChainInsert (PtrPSchema tsch, int attrType,
       switch (pSS->SsAttribute->TtAttr[attrType - 1]->AttrType)
 	{
 	case AtNumAttr:
-	  new->ApNCases = 1;
+	  new_->ApNCases = 1;
 	  if (attrVal)
 	    sscanf (attrVal, "%d", &val);
 	  else
 	    val = 0;
 	  if (val)
 	    {
-	      new->ApCase[0].CaLowerBound = val;
-	      new->ApCase[0].CaUpperBound = val;
+	      new_->ApCase[0].CaLowerBound = val;
+	      new_->ApCase[0].CaUpperBound = val;
 	    }
 	  else
 	    {   
-	      new->ApCase[0].CaLowerBound = -MAX_INT_ATTR_VAL - 1;
-	      new->ApCase[0].CaUpperBound = MAX_INT_ATTR_VAL + 1;
+	      new_->ApCase[0].CaLowerBound = -MAX_INT_ATTR_VAL - 1;
+	      new_->ApCase[0].CaUpperBound = MAX_INT_ATTR_VAL + 1;
 	    }
-	  new->ApCase[0].CaComparType = ComparConstant;
-	  new->ApCase[0].CaFirstPRule = NULL;
-	  return (&(new->ApCase[0].CaFirstPRule));
+	  new_->ApCase[0].CaComparType = ComparConstant;
+	  new_->ApCase[0].CaFirstPRule = NULL;
+	  return (&(new_->ApCase[0].CaFirstPRule));
 	  break;
 	case AtTextAttr:
-	  new->ApMatch = match;
+	  new_->ApMatch = (CondMatch)match;
 	  if (attrVal)
-	    new->ApString = TtaStrdup (attrVal);
+	    new_->ApString = TtaStrdup (attrVal);
 	  else
-	    new->ApString = NULL;
-	  new->ApTextFirstPRule = NULL;
-	  return (&(new->ApTextFirstPRule));
+	    new_->ApString = NULL;
+	  new_->ApTextFirstPRule = NULL;
+	  return (&(new_->ApTextFirstPRule));
 	  break;
 	case AtReferenceAttr:
-	  new->ApRefFirstPRule = NULL;
-	  return (&(new->ApRefFirstPRule));
+	  new_->ApRefFirstPRule = NULL;
+	  return (&(new_->ApRefFirstPRule));
 	  break;
 	case AtEnumAttr:
 	  /* get the attribute value */
 	  val = (int) attrVal;
 	  if (val > 0)
 	    {
-	      new->ApEnumFirstPRule[val] = NULL;
-	      return (&(new->ApEnumFirstPRule[val]));
+	      new_->ApEnumFirstPRule[val] = NULL;
+	      return (&(new_->ApEnumFirstPRule[val]));
 	    }
 	  else
 	    {
-	      new->ApEnumFirstPRule[0] = NULL;
-	      return (&(new->ApEnumFirstPRule[0]));
+	      new_->ApEnumFirstPRule[0] = NULL;
+	      return (&(new_->ApEnumFirstPRule[0]));
 	    }
 	  break;
 	}
@@ -1218,7 +1218,7 @@ static PtrPRule PresRuleInsert (PtrPSchema tsch, GenericContext ctxt,
 	{
 	  pRule->PrType = pres;
 	  if (pres == PRFunction)
-	    pRule->PrPresFunction = extra;
+	    pRule->PrPresFunction = (FunctionType)extra;
 	  pRule->PrCond = NULL;
 	  pRule->PrViewNum = 1;
 	  pRule->PrSpecifAttr = 0;
@@ -1241,7 +1241,7 @@ static PtrPRule PresRuleInsert (PtrPSchema tsch, GenericContext ctxt,
 	      if (ctxt->attrType[i]  && i != att)
 		/* it's another attribute */
 		PresRuleAddAttrCond (pRule, ctxt->attrType[i], ctxt->attrLevel[i],
-				     ctxt->attrText[i], ctxt->attrMatch[i]);
+				     ctxt->attrText[i], (CondMatch)ctxt->attrMatch[i]);
 	      i++;
 	    }
 
@@ -2010,7 +2010,7 @@ static void PresentationValueToPRule (PresentationValue val, int type,
 static PresentationValue PRuleToPresentationValue (PtrPRule rule)
 {
   PresentationValue   val;
-  TypeUnit            int_unit = -1;
+  TypeUnit            int_unit = (TypeUnit)-1;
   int                 value = 0;
   int                 unit = -1;
   int                 type;
@@ -2725,7 +2725,7 @@ int TtaSetStylePresentation (unsigned int type, Element el, PSchema tsch,
 	    {
 	      if (!generic)
 		tsch = (PSchema) PresentationSchema (LoadedDocument[doc - 1]->DocSSchema, LoadedDocument[doc - 1]);
-	      cst = PresConstInsert (tsch, v.pointer);
+	      cst = PresConstInsert (tsch, (char *)v.pointer);
 	      v.typed_data.unit = UNIT_REL;
 	      v.typed_data.value = cst;
 	      v.typed_data.real = FALSE;

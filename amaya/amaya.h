@@ -328,8 +328,8 @@ typedef enum _ClickEvent {
 #define AMAYA_PARSE_ALL         31  /* All the parts */
 
 THOT_EXPORT int        AMAYA;     /* Index of amaya message table */
-THOT_EXPORT int        appArgc;
-THOT_EXPORT char     **appArgv;
+extern      int        appArgc;	  /* defined in EDITORAPP.c */
+extern      char     **appArgv;   /* defined in EDITORAPP.c */
 THOT_EXPORT char       TempFileDirectory[MAX_LENGTH];
 THOT_EXPORT char       Answer_text[MAX_LENGTH];
 THOT_EXPORT char       Answer_name[NAME_LENGTH];

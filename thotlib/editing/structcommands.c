@@ -827,7 +827,7 @@ void CopyCommand ()
 	  /* tell the application what document the saved elements
 	     come from */
 	  if (CopyAndCutFunction)
-	    (*CopyAndCutFunction) (IdentDocument (DocOfSavedElements));
+	    (*(Proc1)CopyAndCutFunction) ((void*)IdentDocument (DocOfSavedElements));
 	  pEl = firstSel;
 	  /* premier element selectionne */
 	  while (pEl != NULL)
@@ -1131,13 +1131,20 @@ void CutCommand (ThotBool save)
 	      /* traitement special pour les pages dans les structures
 		 qui le demandent */
 	      if (ThotLocalActions[T_cutpage] != NULL)
-		(*ThotLocalActions[T_cutpage]) (&firstSel, &lastSel, pSelDoc,
-						&save, &cutPage);
+		(*(Proc5)ThotLocalActions[T_cutpage]) (
+			(void*)&firstSel,
+			(void*)&lastSel,
+			(void*)pSelDoc,
+			(void*)&save,
+			(void*)&cutPage);
 	      /* "remonte" la selection au niveau des freres si c'est
 		 possible */
 	      if (ThotLocalActions[T_selectsiblings] != NULL)
-		(*ThotLocalActions[T_selectsiblings]) (&firstSel, &lastSel,
-						       &firstChar, &lastChar);
+		(*(Proc4)ThotLocalActions[T_selectsiblings]) (
+			(void*)&firstSel,
+			(void*)&lastSel,
+			(void*)&firstChar,
+			(void*)&lastChar);
 /******************/
 	      /* Si tout le contenu d'un element est selectionne', on
 		 detruit l'element englobant la selection, sauf s'il
@@ -1203,7 +1210,7 @@ void CutCommand (ThotBool save)
 	      /* lock tables formatting */
 	      if (ThotLocalActions[T_islock])
 		{
-		  (*ThotLocalActions[T_islock]) (&lock);
+		  (*(Proc1)ThotLocalActions[T_islock]) ((void*)&lock);
 		  if (!lock)
 		    {
 		      if (dispMode == DisplayImmediately)
@@ -1478,7 +1485,7 @@ void CutCommand (ThotBool save)
 				      /* tell the application what document
 					 the saved elements come from */
 				      if (CopyAndCutFunction)
-					(*CopyAndCutFunction) (IdentDocument (DocOfSavedElements));
+					(*(Proc1)CopyAndCutFunction) ((void*)IdentDocument (DocOfSavedElements));
 				    }
 				  /* il ne faudra pas changer les
 				     labels des elements exportables
@@ -1629,7 +1636,10 @@ void CutCommand (ThotBool save)
 		      if (pPrev != NULL)
 			/* traitement particulier aux tableaux */
 			if (ThotLocalActions[T_createhairline] != NULL)
-			  (*ThotLocalActions[T_createhairline]) (pPrev, pSave, pSelDoc);
+			  (*(Proc3)ThotLocalActions[T_createhairline]) (
+				(void*)pPrev,
+				(void*)pSave,
+				(void*)pSelDoc);
 		      /* reaffiche toutes les vues */
 		      AbstractImageUpdated (pSelDoc);
 		      RedisplayDocViews (pSelDoc);
@@ -2608,8 +2618,11 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 		firstChar = 0;
 		lastChar = 0;
 		if (ThotLocalActions[T_selectsiblings] != NULL)
-		   (*ThotLocalActions[T_selectsiblings]) (&firstSel, &lastSel,
-						       &firstChar, &lastChar);
+		   (*(Proc4)ThotLocalActions[T_selectsiblings]) (
+			(void*)&firstSel,
+			(void*)&lastSel,
+			(void*)&firstChar,
+			(void*)&lastChar);
 	        }
 	      if (firstSel->ElParent != lastSel->ElParent)
 		ok = FALSE;
@@ -2627,10 +2640,11 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 		{
 		  elType.ElTypeNum = typeNum;
                   elType.ElSSchema = (SSchema) pSS;
-
+ 
                   if (TransformIntoFunction != NULL)
-                     ok = TransformIntoFunction (elType,
-					 (Document) IdentDocument (pSelDoc));
+                     ok = (*(Func2)TransformIntoFunction) (
+			 (void*)&elType, /* SG : the @ should be passed in order to be c++ compliant */
+			 (void*)((Document) IdentDocument (pSelDoc)));
 		}
 	      /* si ca n'a pas marche' et si plusieurs elements sont
 		 selectionne's, on essaie de transformer chaque element

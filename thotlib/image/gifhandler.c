@@ -494,7 +494,7 @@ int DoExtension (FILE *fd, int label)
       while (GetDataBlock (fd, (unsigned char *) buf) != 0) ;
       return FALSE;
     default:
-      sprintf (buf, "UNKNOWN (0x%02x)", label);
+      sprintf ((char *)buf, "UNKNOWN (0x%02x)", label);
       break;
     }
   
@@ -784,7 +784,7 @@ Pixmap MakeMask (Display *dsp, unsigned char *pixels, int w, int h,
   if (newmask->bitmap_bit_order == MSBFirst)
     for (y = 0; y < height; y++)
       {
-	data_ptr = data;
+	data_ptr = (unsigned char *)data;
 	max_data = data_ptr + width;
 	if (bperpix == 1)
 	  {
@@ -856,7 +856,7 @@ Pixmap MakeMask (Display *dsp, unsigned char *pixels, int w, int h,
     {
       for (y = 0; y < height; y++)
 	{
-	  data_ptr = data;
+	  data_ptr = (unsigned char *)data;
 	  max_data = data_ptr + width;
 	  if (bperpix == 1)
 	    {
@@ -1484,7 +1484,7 @@ Pixmap DataToPixmap (unsigned char *image_data, int width, int height,
   gdkBgPixel.pixel = gdk_rgb_xpixel_from_rgb (BgPixel);
   /* TODO */
 
-  img = (Pixmap)gdk_pixmap_create_from_data (DefaultDrawable, image_data, width, height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
+  img = (Pixmap)gdk_pixmap_create_from_data (DefaultDrawable, (const gchar*)image_data, width, height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
   return (img);
 #endif /* !_GTK */
   
@@ -1608,7 +1608,7 @@ Drawable GifCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
     return ((Drawable) NULL);	
 
 #ifdef _GL
-  cols = TtaGetMemory (w * h * 4);
+  cols = (unsigned char *)TtaGetMemory (w * h * 4);
   ptr = cols;
   y = h;
   while (y--)

@@ -28,7 +28,7 @@ all cextract : ../../bin ../../bin/cextract
 	$(CC) $(LDFLAGS) -o $@ $(OBJS) $(LIBS)
 
 .c.o :
-	$(CC) '-DCPP="'"$(CPP)"'"' -O -c $< -o $@
+	$(CC) -x c '-DCPP="'"$(CPP)"'"' -O -c $< -o $@
 
 clean :
 	$(RM) -f *.o ../../bin/cextract

@@ -102,7 +102,7 @@ char *EscapeURL (const char *url)
   if (url && *url)
     {
       buffer_free_mem = strlen (url) + 20;
-      buffer = TtaGetMemory (buffer_free_mem + 1);
+      buffer = (char *)TtaGetMemory (buffer_free_mem + 1);
       ptr = (char *) url;
       buffer_len = 0;
 
@@ -184,7 +184,7 @@ char *EscapeXML (const char *string)
   if (string && *string)
     {
       buffer_free_mem = strlen (string) + 20;
-      buffer = TtaGetMemory (buffer_free_mem + 1);
+      buffer = (char *)TtaGetMemory (buffer_free_mem + 1);
       ptr = (char *) string;
       buffer_len = 0;
 
@@ -449,7 +449,7 @@ ThotBool ImageElement (Document doc, char **url, Element *image)
     {
       attr = TtaGetAttribute (imgEl, attrType);
       length = TtaGetTextAttributeLength (srcAttr) + 1;
-      value = TtaGetMemory (length);
+      value = (char *)TtaGetMemory (length);
       TtaGiveTextAttributeValue (srcAttr, value, &length);
       *url = value;
     }
@@ -963,7 +963,7 @@ char  *GetBaseURL (Document doc)
   if (doc == 0 || !DocumentURLs[doc])
      return NULL;
   /* the other functions expect basename to have no more than MAX_LENGTH chars */
-  basename = TtaGetMemory (MAX_LENGTH);
+  basename = (char *)TtaGetMemory (MAX_LENGTH);
   basename[0] = EOS;
   length = MAX_LENGTH -1;
   hasDocBase = FALSE;
@@ -1106,8 +1106,8 @@ char *GetLocalPath (Document doc, char  *url)
       noFile = (url[len] == url_sep);
       if (noFile)
          url[len] = EOS;
-      ptr = TtaGetMemory (MAX_LENGTH);
-      documentname = TtaGetMemory (MAX_LENGTH);
+      ptr = (char *)TtaGetMemory (MAX_LENGTH);
+      documentname = (char *)TtaGetMemory (MAX_LENGTH);
       TtaExtractName (url, ptr, documentname);
       sprintf (ptr, "%s%s%d%s", TempFileDirectory, DIR_STR, doc, DIR_STR);
       if (!TtaCheckDirectory (ptr))
@@ -1815,7 +1815,7 @@ char   *AmayaParseUrl (const char *aName, char *relatedName, int wanted)
 	  }
       }
   len = strlen (result);
-  if ((return_value = TtaGetMemory (len + 1)) != NULL)
+  if ((return_value = (char *)TtaGetMemory (len + 1)) != NULL)
     strcpy (return_value, result);
   return (return_value);		/* exactly the right length */
 }
@@ -2244,7 +2244,7 @@ char      *MakeRelativeURL (char *aName, char *relatedName)
       /* New name is a subset of the related name */
       /* exactly the right length */
       len = strlen (p);
-      if ((return_value = TtaGetMemory (len + 1)) != NULL)
+      if ((return_value = (char *)TtaGetMemory (len + 1)) != NULL)
 	strcpy (return_value, p);
     }
   else if ((slashes < 2 && after_access == NULL)
@@ -2253,7 +2253,7 @@ char      *MakeRelativeURL (char *aName, char *relatedName)
       /* Two names whitout common path */
       /* exactly the right length */
       len = strlen (aName);
-      if ((return_value = TtaGetMemory (len + 1)) != NULL)
+      if ((return_value = (char *)TtaGetMemory (len + 1)) != NULL)
 	strcpy (return_value, aName);
     }
   else
@@ -2280,7 +2280,7 @@ char      *MakeRelativeURL (char *aName, char *relatedName)
 
       /* exactly the right length */
       len = strlen (result);
-      if ((return_value = TtaGetMemory (len + 1)) != NULL)
+      if ((return_value = (char *)TtaGetMemory (len + 1)) != NULL)
 	strcpy (return_value, result);
 
     }

@@ -388,7 +388,7 @@ static AnnotMeta* FindAnnot( List** listP, char* annot_url, ThotBool create )
 	  TtaFreeMemory (find_last_annotURL);
 
 	find_last_length = 2*url_length;
-	find_last_annotURL = TtaGetMemory (find_last_length);
+	find_last_annotURL = (char *)TtaGetMemory (find_last_length);
       }
     strcpy(find_last_annotURL, ptr_annot_url);
     find_last_annot = annot;
@@ -468,7 +468,7 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
 	  ParseContext *parseCtx = (ParseContext *) context;
 	  char *base_uri = parseCtx->base_uri;
 	  char *ptr =  (char *) triple->subject;
-	  subject = TtaGetMemory (strlen (base_uri) + strlen (ptr) + 2);
+	  subject = (char *)TtaGetMemory (strlen (base_uri) + strlen (ptr) + 2);
 	  sprintf (subject, "%s#%s", base_uri, ptr);
 	}
       else
@@ -615,7 +615,7 @@ List *RDF_parseFile (char *file_name, List **rdf_model)
   */
   /* raptor doesn't grok file URIs under windows. The following is a patch so
    that we can use it */
-  full_file_name = TtaGetMemory (strlen (file_name) + sizeof ("file:"));
+  full_file_name = (char *)TtaGetMemory (strlen (file_name) + sizeof ("file:"));
   sprintf (full_file_name, "file:%s", file_name);
 
   raptor_set_statement_handler(rdfxml_parser, (void *) &ctx, triple_handler);

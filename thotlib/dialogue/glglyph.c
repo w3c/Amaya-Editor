@@ -98,7 +98,7 @@ static void CALLBACK GlyphmyCombine (GLdouble coords[3], void *vertex_data[4],
   
   while (ptr->next) 
     ptr = ptr->next;
-  ptr->next = TtaGetMemory (sizeof (GlyphMesh_list));
+  ptr->next = (GlyphMesh_list*)TtaGetMemory (sizeof (GlyphMesh_list));
   ptr = ptr->next;
   ptr->next = 0;
   ptr->data[0] = (double) coords[0];
@@ -151,7 +151,7 @@ static void deCasteljau (const float t, const int n, GlyphPath *path,
 	                         t * bValues[i - 1][k + 1][1];
       }        
   /* Specify next vertex to be included on curve */
-  GlyphPolyNewPoint (bValues[n][0][0], bValues[n][0][1], path);
+  GlyphPolyNewPoint ((long int)bValues[n][0][0], (long int)bValues[n][0][1], path);
 }
 
 
@@ -170,7 +170,7 @@ static void evaluateCurve (const int n, GlyphPath *path, float ctrlPtArray[4][2]
       bValues[0][i][0] = ctrlPtArray[i][0];
       bValues[0][i][1] = ctrlPtArray[i][1];
     }
-  k = 1 / kBSTEPSIZE;
+  k = (1.0f / kBSTEPSIZE);
   for (i = 0; i <= k; i++)
     {
       t = i * kBSTEPSIZE;
@@ -368,15 +368,15 @@ void MakePolygonGlyph (GL_font *font, unsigned int g, GL_glyph *BitmapGlyph)
 
   if (ftOutline.n_contours && ftOutline.n_points)
     {  
-      path = malloc (sizeof(GlyphPath));
+      path = (GlyphPath *)malloc (sizeof(GlyphPath));
       memset (path, 0, sizeof(GlyphPath));
       path->cont = ftOutline.n_contours;
       path->maxpoints = (ALLOC_POINTS + ftOutline.n_points); 
       c = path->cont * sizeof(int);
-      path->ncontour = malloc (c);
+      path->ncontour = (int *)malloc (c);
       memset (path->ncontour, 0, c); 
       c = path->maxpoints * sizeof(GlyphThotPoint);  
-      path->npoints = malloc (c); 
+      path->npoints = (GlyphThotPoint*)malloc (c); 
       memset (path->npoints, 0, c);   
       path->nsize = 0;    
       path->height = (BitmapGlyph->bbox.yMax - BitmapGlyph->bbox.yMin) >> 6;
@@ -407,9 +407,9 @@ void MakePolygonGlyph (GL_font *font, unsigned int g, GL_glyph *BitmapGlyph)
 	  first = last + 1;
 	}
       path->nsize--;
-      path->mesh_list = malloc (sizeof (GlyphMesh_list));
+      path->mesh_list = (GlyphMesh_list *)malloc (sizeof (GlyphMesh_list));
       path->mesh_list->next = NULL;  
-      glList = malloc (sizeof (GLuint));
+      glList = (GLuint *)malloc (sizeof (GLuint));
       *glList = glGenLists (1);
       glNewList (*glList, GL_COMPILE);
       GlyphMakeMesh (path,  ftOutline.flags);  

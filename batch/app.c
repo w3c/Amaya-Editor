@@ -37,12 +37,11 @@
 #include "fileaccess_f.h"
 #include "writeapp_f.h"
 
-#define THOT_EXPORT
-#include "platform_tv.h"
-#include "analsynt_tv.h"
-#include "compil_tv.h"
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
+#include "compil_tv.h"
+#include "platform_tv.h"
+#include "analsynt_tv.h"
 #include "appevents_tv.h"
 
 THOT_EXPORT int          LineNum;
@@ -371,31 +370,31 @@ static PtrSSchema ConstructAbstractSchStruct ()
 
    /* initialise les types de base */
    pSS->SsRule->SrElem[CharString] = (PtrSRule) malloc (sizeof (SRule));
-   pSS->SsRule->SrElem[CharString]->SrName = TtaGetMemory (MAX_NAME_LENGTH);
+   pSS->SsRule->SrElem[CharString]->SrName = (char *)TtaGetMemory (MAX_NAME_LENGTH);
    strcpy (pSS->SsRule->SrElem[CharString]->SrName, "TEXT_UNIT");
 
    pSS->SsRule->SrElem[GraphicElem] = (PtrSRule) malloc (sizeof (SRule));
-   pSS->SsRule->SrElem[GraphicElem]->SrName = TtaGetMemory (MAX_NAME_LENGTH);
+   pSS->SsRule->SrElem[GraphicElem]->SrName = (char *)TtaGetMemory (MAX_NAME_LENGTH);
    strcpy (pSS->SsRule->SrElem[GraphicElem]->SrName, "GRAPHICS_UNIT");
 
    pSS->SsRule->SrElem[Symbol] = (PtrSRule) malloc (sizeof (SRule));
-   pSS->SsRule->SrElem[Symbol]->SrName = TtaGetMemory (MAX_NAME_LENGTH);
+   pSS->SsRule->SrElem[Symbol]->SrName = (char *)TtaGetMemory (MAX_NAME_LENGTH);
    strcpy (pSS->SsRule->SrElem[Symbol]->SrName, "SYMBOL_UNIT");
 
    pSS->SsRule->SrElem[Picture] = (PtrSRule) malloc (sizeof (SRule));
-   pSS->SsRule->SrElem[Picture]->SrName = TtaGetMemory (MAX_NAME_LENGTH);
+   pSS->SsRule->SrElem[Picture]->SrName = (char *)TtaGetMemory (MAX_NAME_LENGTH);
    strcpy (pSS->SsRule->SrElem[Picture]->SrName, "PICTURE_UNIT");
 
    pSS->SsRule->SrElem[Refer] = (PtrSRule) malloc (sizeof (SRule));
-   pSS->SsRule->SrElem[Refer]->SrName = TtaGetMemory (MAX_NAME_LENGTH);
+   pSS->SsRule->SrElem[Refer]->SrName = (char *)TtaGetMemory (MAX_NAME_LENGTH);
    strcpy (pSS->SsRule->SrElem[Refer]->SrName, "REFERENCE_UNIT");
 
    pSS->SsRule->SrElem[PageBreak] = (PtrSRule) malloc (sizeof (SRule));
-   pSS->SsRule->SrElem[PageBreak]->SrName = TtaGetMemory (MAX_NAME_LENGTH);
+   pSS->SsRule->SrElem[PageBreak]->SrName = (char *)TtaGetMemory (MAX_NAME_LENGTH);
    strcpy (pSS->SsRule->SrElem[PageBreak]->SrName, "PAGE_BREAK");
 
    pSS->SsRule->SrElem[AnyType] = (PtrSRule) malloc (sizeof (SRule));
-   pSS->SsRule->SrElem[AnyType]->SrName = TtaGetMemory (MAX_NAME_LENGTH);
+   pSS->SsRule->SrElem[AnyType]->SrName = (char *)TtaGetMemory (MAX_NAME_LENGTH);
    strcpy (pSS->SsRule->SrElem[AnyType]->SrName, "ANY_TYPE");
 
    pSS->SsNRules = MAX_BASIC_TYPE;
@@ -598,7 +597,7 @@ static void ProcessShortKeyWord (int x, SyntacticCode r, SyntacticCode pr)
 	    typeId = attrNum;
 	  else
 	    typeId = 0;
-	  TteAddActionEvent (pAppli, typeId, curEvent, PreEvent, eventAction);
+	  TteAddActionEvent (pAppli, typeId, (APPevent)curEvent, PreEvent, eventAction);
 	  curEvent = 0;
 	  PreEvent = True;
 	  eventAction = NULL;
@@ -778,7 +777,7 @@ static void ProcessName (SyntacticCode r, SyntacticCode pr, indLine wl,
     CompilerMessage (wi, COMPIL, FATAL, INVALID_WORD_SIZE, inputLine, LineNum);
   else
     {
-      strncpy (name, &inputLine[wi - 1], wl);
+      strncpy ((char *)name, (char *)&inputLine[wi - 1], wl);
       name[wl] = '\0';
     }
   switch (r)
@@ -850,7 +849,7 @@ static void ProcessName (SyntacticCode r, SyntacticCode pr, indLine wl,
 		    {
 		      if (pSSchema->SsRule->SrElem[i]->SrName == NULL)
 			pSSchema->SsRule->SrElem[i]->SrName =
-			  TtaGetMemory(MAX_NAME_LENGTH);
+			  (char *)TtaGetMemory(MAX_NAME_LENGTH);
 		      strcpy (pSSchema->SsRule->SrElem[i]->SrName, name);
 		      pSSchema->SsNRules++;
 		      typeNum = i + 1;
@@ -1664,7 +1663,7 @@ int       main (int argc, char **argv)
 		      else if (inputLine[0] == '#')
 			{
 			  /* cette ligne contient une directive du preprocesseur cpp */
-			  sscanf (inputLine, "# %d %s", &LineNum, buffer);
+			  sscanf ((char *)inputLine, "# %d %s", &LineNum, buffer);
 			  LineNum--;
 			}
 		      else

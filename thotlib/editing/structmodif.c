@@ -28,10 +28,8 @@
 #include "content.h"
 
 #undef THOT_EXPORT
-#define THOT_EXPORT
-#include "modif_tv.h"
-#undef THOT_EXPORT
 #define THOT_EXPORT extern
+#include "modif_tv.h"
 #include "creation_tv.h"
 #include "select_tv.h"
 #include "edit_tv.h"
@@ -514,7 +512,9 @@ void TtcHolophrast (Document document, View view)
 	       {
 		  canHolophrast = TRUE;
 		  if (ThotLocalActions[T_holotable] != NULL)
-		     (*ThotLocalActions[T_holotable]) (pEl, &canHolophrast);
+		     (*(Proc2)ThotLocalActions[T_holotable]) (
+				(void *)pEl,
+				(void *)&canHolophrast);
 		  if (canHolophrast)
 		    {
 		       done = TRUE;
@@ -542,9 +542,9 @@ void TtcHolophrast (Document document, View view)
 	PrepareSelectionMenu ();
 	BuildSelectionMessage ();
 	if (ThotLocalActions[T_chselect] != NULL)
-	   (*ThotLocalActions[T_chselect]) (pDoc);
+	   (*(Proc1)ThotLocalActions[T_chselect]) ((void *)pDoc);
 	if (ThotLocalActions[T_chattr] != NULL)
-	   (*ThotLocalActions[T_chattr]) (pDoc);
+	   (*(Proc1)ThotLocalActions[T_chattr]) ((void *)pDoc);
      }
 }
 

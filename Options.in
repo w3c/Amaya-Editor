@@ -8,10 +8,12 @@
 
 SHELL	= /bin/sh
 
-CC	= @CC@
+CC	= @CXX@
 CFLAGS	= @CFLAGS@
+CXX	= @CXX@
+CXXFLAGS= @CXXFLAGS@
 CPP     = @CPP@
-LD	= @CC@
+LD	= @CXX@
 LDFLAGS	= @LDFLAGS@
 CP	= @CP@
 MV	= @MV@

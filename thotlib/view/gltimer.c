@@ -148,7 +148,7 @@ void TtaChangePlay (int frame)
 
 #ifdef _GTK
 	      AnimTimer = gtk_timeout_add (FRAME_TIME,
-					   (gpointer) GL_DrawAll, 
+					   (GtkFunction) GL_DrawAll, 
 					   (gpointer)   NULL); 
 	   	      
 #endif /* #ifdef _GTK */

@@ -16,7 +16,8 @@ extern ThotBool CallEventAttribute ( NotifyAttribute * notifyAttr,
 extern void CleanPictInfo ( PictInfo *esc );
 extern void AddInSelection ( PtrElement pEl,
                              ThotBool dernier );
-extern void FreeAbEl ( PtrElement pEl );
+extern void FreeAbEl ( PtrElement pEl,
+                       PtrDocument pDoc );
 extern void ConfigTranslateSSchema ( PtrSSchema pSS );
 extern PtrPRule GlobalSearchRulepEl ( PtrElement pEl,
                                       PtrDocument pDoc,
@@ -48,7 +49,8 @@ extern ThotBool CallEventAttribute (/* NotifyAttribute * notifyAttr,
 extern void CleanPictInfo (/* PictInfo *esc */);
 extern void AddInSelection (/* PtrElement pEl,
                                ThotBool dernier */);
-extern void FreeAbEl (/* PtrElement pEl */);
+extern void FreeAbEl (/* PtrElement pEl,
+                         PtrDocument pDoc */);
 extern void ConfigTranslateSSchema (/* PtrSSchema pSS */);
 extern PtrPRule GlobalSearchRulepEl (/* PtrElement pEl,
                                         PtrDocument pDoc,

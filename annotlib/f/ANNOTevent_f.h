@@ -67,7 +67,7 @@ extern void ANNOT_Delete ( Document doc,
 extern void ANNOT_Move ( Document doc,
                          View view,
                          ThotBool useSel );
-extern ThotBool Annot_UpdateTitle ( NotifyElement *event );
+extern void Annot_UpdateTitle ( NotifyOnTarget *event );
 extern void ANNOT_AddLink ( Document doc,
                             View view );
 
@@ -134,7 +134,7 @@ extern void ANNOT_Delete (/* Document doc,
 extern void ANNOT_Move (/* Document doc,
                            View view,
                            ThotBool useSel */);
-extern ThotBool Annot_UpdateTitle (/* NotifyElement *event */);
+extern void Annot_UpdateTitle (/* NotifyOnTarget *event */);
 extern void ANNOT_AddLink (/* Document doc,
                               View view */);
 

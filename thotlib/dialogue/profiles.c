@@ -144,12 +144,12 @@ static PtrProCtl AddInTable (char *name, ThotBool isModule, ThotBool edit,
 			      PtrProCtl subModule, int number,
 			      PtrProCtl ctxt)
 {
-  PtrProCtl           current, prev, new;
+  PtrProCtl           current, prev, new_;
   int                 i;
 
   i = number;
   current = ctxt;
-  new = NULL;
+  new_ = NULL;
   prev = NULL;
   /* skip full contexts */
   while (i >= MAX_ENTRIES && current)
@@ -178,15 +178,15 @@ static PtrProCtl AddInTable (char *name, ThotBool isModule, ThotBool edit,
 	  if (isModule && subModule == NULL)
 	    {
 	      /* allocate the context of the sub-module */
-	      new = (PtrProCtl) TtaGetMemory (sizeof (Profile_Ctl));
-	      memset (new, 0, sizeof (Profile_Ctl));
-	      current->ProEntries[i].ProSubModule = new;
+	      new_ = (PtrProCtl) TtaGetMemory (sizeof (Profile_Ctl));
+	      memset (new_, 0, sizeof (Profile_Ctl));
+	      current->ProEntries[i].ProSubModule = new_;
 	    }
 	  else
 	    current->ProEntries[i].ProSubModule = subModule;
 	}
     }
-  return new;
+  return new_;
 }
 
 /*----------------------------------------------------------------------
@@ -195,7 +195,7 @@ static PtrProCtl AddInTable (char *name, ThotBool isModule, ThotBool edit,
 ----------------------------------------------------------------------*/
 static PtrProCtl AddModule (char *name)
 {
-  PtrProCtl     new = NULL;
+  PtrProCtl     new_ = NULL;
 
   /* Register the new module */
   if (NbModules == 0)
@@ -203,9 +203,9 @@ static PtrProCtl AddModule (char *name)
       ModuleTable = (PtrProCtl) TtaGetMemory (sizeof (Profile_Ctl));
       memset (ModuleTable, 0, sizeof (Profile_Ctl));
     }
-  new = AddInTable (name, TRUE, FALSE, NULL, NbModules, ModuleTable);
+  new_ = AddInTable (name, TRUE, FALSE, NULL, NbModules, ModuleTable);
   NbModules++;
-  return new;
+  return new_;
 }
 
 
@@ -215,7 +215,7 @@ static PtrProCtl AddModule (char *name)
 ----------------------------------------------------------------------*/
 static PtrProCtl AddProfile (char *name)
 {
-  PtrProCtl     new = NULL;
+  PtrProCtl     new_ = NULL;
 
   /* Register the new profile */
   if (NbProfiles == 0)
@@ -223,12 +223,12 @@ static PtrProCtl AddProfile (char *name)
       ProfileTable = (PtrProCtl) TtaGetMemory (sizeof (Profile_Ctl));
       memset (ProfileTable, 0, sizeof (Profile_Ctl));
     }
-  new = AddInTable (name, TRUE, FALSE, NULL, NbProfiles, ProfileTable);
+  new_ = AddInTable (name, TRUE, FALSE, NULL, NbProfiles, ProfileTable);
   NbProfiles++;
   /* store the context of the user profile */
   if (UserProfContext == NULL && !strcmp (name, UserProfile))
-    UserProfContext = new;
-  return new;
+    UserProfContext = new_;
+  return new_;
 }
 
 /*----------------------------------------------------------------------
@@ -237,7 +237,7 @@ static PtrProCtl AddProfile (char *name)
 ----------------------------------------------------------------------*/
 static PtrProCtl AddDoctype (char *name)
 {
-  PtrProCtl     new = NULL;
+  PtrProCtl     new_ = NULL;
 
   /* Register the new profile */
   if (NbDoctypes == 0)
@@ -245,9 +245,9 @@ static PtrProCtl AddDoctype (char *name)
       DoctypeTable = (PtrProCtl) TtaGetMemory (sizeof (Profile_Ctl));
       memset (DoctypeTable, 0, sizeof (Profile_Ctl));
     }
-  new = AddInTable (name, TRUE, FALSE, NULL, NbDoctypes, DoctypeTable);
+  new_ = AddInTable (name, TRUE, FALSE, NULL, NbDoctypes, DoctypeTable);
   NbDoctypes++;
-  return new;
+  return new_;
 }
 
 

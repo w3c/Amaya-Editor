@@ -248,7 +248,7 @@ void ChangeDocumentName (PtrDocument pDoc, char *newName)
 	 /* met dans le buffer le nom de la vue */
 	{
 	   pView = &pDoc->DocView[view];
-	   ChangeFrameTitle (pDoc->DocViewFrame[view], buffer,
+	   ChangeFrameTitle (pDoc->DocViewFrame[view], (unsigned char *)buffer,
 			     TtaGetDefaultCharset ());
 	}
 }
@@ -319,7 +319,7 @@ void OpenDefaultViews (PtrDocument pDoc)
   PtrSSchema        pSS;
   NotifyDialog      notifyDoc;
   int               view, i, X, Y, width, height, schView;
-  ThotBool          bool, skeleton;
+  ThotBool          b, skeleton;
 
   /* si le document a ete charge' sous le forme de ses seuls elements 
      exporte's, on ouvre la vue export sinon, on ouvre la premiere vue. */
@@ -373,13 +373,13 @@ void OpenDefaultViews (PtrDocument pDoc)
      pDoc->DocViewFreeVolume[0] = pDoc->DocViewVolume[0];
      /* met a jour les menus variables de la fenetre */
      if (ThotLocalActions[T_chselect] != NULL)
-	(*ThotLocalActions[T_chselect]) (pDoc);
+	(*(Proc1)ThotLocalActions[T_chselect]) ((void*)pDoc);
      if (ThotLocalActions[T_chattr] != NULL)
-	(*ThotLocalActions[T_chattr]) (pDoc);
+	(*(Proc1)ThotLocalActions[T_chattr]) ((void*)pDoc);
      if (pDoc->DocDocElement != NULL)
 	{
 	pDoc->DocViewRootAb[0] = AbsBoxesCreate (pDoc->DocDocElement, pDoc,
-						 1, TRUE, TRUE, &bool);
+						 1, TRUE, TRUE, &b);
 	i = 0;
 	/* on ne s'occupe pas de la hauteur de page */
 	ChangeConcreteImage (pDoc->DocViewFrame[0], &i,pDoc->DocViewRootAb[0]);
@@ -415,7 +415,7 @@ int CreateAbstractImage (PtrDocument pDoc, int v, PtrSSchema pSS,
    PtrAbstractBox      pAb;
    int                 view, freeView, volume, firstChar, lastChar,
                        ret;
-   ThotBool            stop, sel, selInMainTree, bool;
+   ThotBool            stop, sel, selInMainTree, b;
    ThotBool            truncHead;
 
    freeView = 0;
@@ -446,7 +446,7 @@ int CreateAbstractImage (PtrDocument pDoc, int v, PtrSSchema pSS,
      /* on cree la nouvelle image depuis le debut du document */
      pDoc->DocViewRootAb[freeView-1] = AbsBoxesCreate (pDoc->DocDocElement,
 						       pDoc, freeView, TRUE,
-						       TRUE, &bool);
+						       TRUE, &b);
    else
      {
        /* cree l'image de la meme partie du document que */
@@ -480,7 +480,7 @@ int CreateAbstractImage (PtrDocument pDoc, int v, PtrSSchema pSS,
 	     /* document, on cree la nouvelle image depuis */
 	     /* le debut du document */
 	     pDoc->DocViewRootAb[freeView - 1] = AbsBoxesCreate (pDoc->DocDocElement,
-					   pDoc, freeView, TRUE, TRUE, &bool);
+					   pDoc, freeView, TRUE, TRUE, &b);
 	   else
 	     {
 	       /* cherche dans la vue designee le premier pave dont le debut
@@ -589,9 +589,9 @@ void OpenCreatedView (PtrDocument pDoc, int view, int X, int Y,
       
       /* met a jour les menus de la fenetre */
       if (ThotLocalActions[T_chselect] != NULL)
-	(*ThotLocalActions[T_chselect]) (pDoc);
+	(*(Proc1)ThotLocalActions[T_chselect]) ((void*)pDoc);
       if (ThotLocalActions[T_chattr] != NULL)
-	(*ThotLocalActions[T_chattr]) (pDoc);
+	(*(Proc1)ThotLocalActions[T_chattr]) ((void*)pDoc);
     }
 }
 
@@ -801,10 +801,16 @@ void CloseView (PtrDocument pDoc, int viewNb)
 		  TteConnectAction (T_rconfirmclose,
 				    (Proc) CallbackCloseDocMenu);
 		  }
-	       (*ThotLocalActions[T_confirmclose]) (pDoc, document, view, &ok,
-						    &Save);
+	       (*(Proc5)ThotLocalActions[T_confirmclose]) (
+			(void*)pDoc,
+		       	(void*)document,
+			(void*)view,
+			(void*)&ok,
+			(void*)&Save);
 	       if (Save)
-		  ok = (*(Func)ThotLocalActions[T_writedocument]) (pDoc, 0);
+		  ok = (*(Func2)ThotLocalActions[T_writedocument]) (
+		      (void*)pDoc,
+		      (void*)0);
 	       }
 	    else
 	       ok = TRUE;

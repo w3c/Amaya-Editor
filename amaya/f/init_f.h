@@ -27,7 +27,8 @@ extern void DocStatusUpdate ( Document doc,
                               ThotBool modified );
 extern void ChangeToEditorMode ( Document doc );
 extern void ChangeToBrowserMode ( Document doc );
-extern void SetBrowserEditor ( Document doc );
+extern void SetBrowserEditor ( Document doc,
+                               View view );
 extern void ShowLogFile ( Document doc,
                           View view );
 extern ThotBool OpenParsingErrors ( Document document );
@@ -248,7 +249,8 @@ extern void DocStatusUpdate (/* Document doc,
                                 ThotBool modified */);
 extern void ChangeToEditorMode (/* Document doc */);
 extern void ChangeToBrowserMode (/* Document doc */);
-extern void SetBrowserEditor (/* Document doc */);
+extern void SetBrowserEditor (/* Document doc,
+                                 View view */);
 extern void ShowLogFile (/* Document doc,
                             View view */);
 extern ThotBool OpenParsingErrors (/* Document document */);

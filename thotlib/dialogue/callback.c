@@ -151,9 +151,9 @@ static ThotBool CallAction (NotifyEvent * notifyEvent, APPevent event,
    if (funcEvent != NULL || procEvent != NULL)
      {
        if (funcEvent != NULL)
-	 status = (*funcEvent) (notifyEvent);
+	 status = (*(Func1)funcEvent) ((void *)notifyEvent);
        else
-	 (*procEvent) (notifyEvent);
+	 (*(Proc1)procEvent) ((void *)notifyEvent);
      }
    return status;
 }

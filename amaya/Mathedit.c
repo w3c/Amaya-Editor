@@ -13,7 +13,8 @@
  */
 
 /* Included headerfiles */
-#define THOT_EXPORT
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "amaya.h"
 #include "css.h"
 #include "trans.h"
@@ -706,7 +707,7 @@ static void         CreateMathConstruct (int construct)
 {
   Document           doc;
   Element            sibling, el, row, child, leaf, placeholderEl,
-                     parent, new, next, foreignObj, altText;
+                     parent, new_, next, foreignObj, altText;
   ElementType        newType, elType, parentType;
   Attribute          attr;
   AttributeType      attrType;
@@ -766,13 +767,13 @@ static void         CreateMathConstruct (int construct)
 		  child = TtaNewElement (doc, parentType);
 		  TtaRegisterElementDelete (sibling, doc);
 		  TtaInsertFirstChild (&child, sibling, doc);
-		  new = TtaNewElement (doc, newType);
-		  TtaInsertFirstChild (&new, child, doc);
-		  SetDisplaystyleMathElement (new, doc);
+		  new_ = TtaNewElement (doc, newType);
+		  TtaInsertFirstChild (&new_, child, doc);
+		  SetDisplaystyleMathElement (new_, doc);
 		  TtaRegisterElementCreate (child, doc);
 		  TtaSetDocumentModified (doc);
 		  TtaSetDisplayMode (doc, dispMode);
-		  TtaSelectElement (doc, new);
+		  TtaSelectElement (doc, new_);
 		  TtaCloseUndoSequence (doc);
 		  return;
 		}
@@ -1042,7 +1043,7 @@ static void         CreateMathConstruct (int construct)
 		      leaf = TtaNewElement (doc, elType);
 		      TtaInsertFirstChild (&leaf, altText, doc);
 		      lang = TtaGetLanguageIdFromScript('L');
-		      TtaSetTextContent (leaf, "<math>", lang, doc);
+		      TtaSetTextContent (leaf, (unsigned char *)"<math>", lang, doc);
 		      /* set the visibility of the alternate text */
 		      EvaluateTestAttrs (el, doc);
 		      /* update depth of SVG elements */
@@ -1226,7 +1227,7 @@ static void         CreateMathConstruct (int construct)
     /* selection is not empty.
        Try to transform it into the requested type*/
     {
-      if (!TransformIntoType (newType, doc))
+      if (!TransformIntoType (&newType, doc))
 	/* it failed. Try to insert a new element */
 	emptySel = TRUE;
     }
@@ -1334,15 +1335,15 @@ static void         CreateMathConstruct (int construct)
 	      elType.ElTypeNum = MathML_EL_TableRow;
 	      child = TtaSearchTypedElement (elType, SearchInTree, el);
 	      elType.ElTypeNum = MathML_EL_MTR;
-	      new = TtaNewTree (doc, elType, "");
-	      TtaInsertFirstChild (&new, child, doc);
+	      new_ = TtaNewTree (doc, elType, "");
+	      TtaInsertFirstChild (&new_, child, doc);
 	      elType.ElTypeNum = MathML_EL_MTD;
 	      child = TtaSearchTypedElement (elType, SearchInTree, el);
 	      col = NumberCols;
 	      while (col > 1)
 		{
-		  new = TtaNewTree (doc, elType, "");
-		  TtaInsertSibling (new, child, FALSE, doc);
+		  new_ = TtaNewTree (doc, elType, "");
+		  TtaInsertSibling (new_, child, FALSE, doc);
 		  col--;
 		}
 	    }
@@ -1353,17 +1354,17 @@ static void         CreateMathConstruct (int construct)
 	      while (NumberRows > 1)
 		{
 		  elType.ElTypeNum = MathML_EL_MTR;
-		  new = TtaNewTree (doc, elType, "");
-		  TtaInsertSibling (new, row, FALSE, doc);
+		  new_ = TtaNewTree (doc, elType, "");
+		  TtaInsertSibling (new_, row, FALSE, doc);
 		  NumberRows--;
 		  /* create cells within the row */
 		  elType.ElTypeNum = MathML_EL_MTD;
-		  child = TtaSearchTypedElement (elType, SearchInTree,new);
+		  child = TtaSearchTypedElement (elType, SearchInTree,new_);
 		  col = NumberCols;
 		  while (col > 1)
 		    {
-		      new = TtaNewTree (doc, elType, "");
-		      TtaInsertSibling (new, child, FALSE, doc);
+		      new_ = TtaNewTree (doc, elType, "");
+		      TtaInsertSibling (new_, child, FALSE, doc);
 		      col--;
 		    }
 		}
@@ -1541,7 +1542,7 @@ static void CreateMathMenu (Document doc, View view)
   ----------------------------------------------------------------------*/
 void                AddMathButton (Document doc, View view)
 {
-  MathButton = TtaAddButton (doc, 1, iconMath, CreateMathMenu,
+  MathButton = TtaAddButton (doc, 1, iconMath, (Proc)CreateMathMenu,
 			     "CreateMathMenu",
 			     TtaGetMessage (AMAYA, AM_BUTTON_MATH),
 			     TBSTYLE_BUTTON, TRUE);
@@ -2470,7 +2471,7 @@ void InitMathML ()
    mIcons[13] = TtaCreatePixmapLogo (greek_xpm);
 #endif /* #if defined(_MOTIF) || defined(_GTK) */
 
-  MathsDialogue = TtaSetCallback (CallbackMaths, MAX_MATHS);
+  MathsDialogue = TtaSetCallback ((Proc)CallbackMaths, MAX_MATHS);
   KeyboardsLoadResources ();
   TtaSetMoveForwardCallback ((Func) MathMoveForward);
   TtaSetMoveBackwardCallback ((Func) MathMoveBackward);
@@ -2767,7 +2768,7 @@ static void SeparateFunctionNames (Element *firstEl, Element lastEl,
 			  do
 			    {
 			      flen = strlen (functionName[func]);
-			      if (!strncmp (functionName[func], &text[i],flen))
+			      if (!strncmp ((char *)functionName[func], (char *)&text[i],flen))
 				/* this substring is a function name */
 				{
 				  /* this element will be deleted */
@@ -2825,7 +2826,7 @@ static void SeparateFunctionNames (Element *firstEl, Element lastEl,
 							   doc);
 				      text[i] = EOS;
 				      TtaSetTextContent (newText,
-							 &text[firstChar],
+							 (unsigned char *)&text[firstChar],
 							 lang, doc);
 				      MathSetAttributes (newEl, doc, NULL);
 				      TtaRegisterElementCreate (newEl, doc);
@@ -2859,7 +2860,7 @@ static void SeparateFunctionNames (Element *firstEl, Element lastEl,
 				  newText = TtaNewElement (doc, elType);
 				  TtaInsertFirstChild (&newText, newEl, doc);
 				  TtaSetTextContent (newText,
-						     functionName[func],
+						     (unsigned char *)functionName[func],
 						     lang, doc);
 				  MathSetAttributes (newEl, doc, NULL);
 				  TtaRegisterElementCreate (newEl, doc);
@@ -2900,7 +2901,7 @@ static void SeparateFunctionNames (Element *firstEl, Element lastEl,
 		      elType.ElTypeNum = MathML_EL_TEXT_UNIT;
 		      newText = TtaNewElement (doc, elType);
 		      TtaInsertFirstChild (&newText, newEl, doc);
-		      TtaSetTextContent (newText, &text[firstChar], lang, doc);
+		      TtaSetTextContent (newText, (unsigned char *)&text[firstChar], lang, doc);
 		      MathSetAttributes (newEl, doc, NULL);
 		      TtaRegisterElementCreate (newEl, doc);
 		      prevText = newText;
@@ -3464,7 +3465,7 @@ static void SetContentAfterEntity (char *entityName, Element el, Document doc)
   else if (value < 1023)
     {
       /* get the UTF-8 string of the unicode character */
-      ptr = bufEntity;
+      ptr = (unsigned char *)bufEntity;
       i = TtaWCToMBstring ((wchar_t) value, &ptr);
       bufEntity[i] = EOS;
     }
@@ -3479,9 +3480,9 @@ static void SetContentAfterEntity (char *entityName, Element el, Document doc)
 	}
       else
 	/* Try to find a fallback character */
-	GetFallbackCharacter (value, bufEntity, &lang);
+	GetFallbackCharacter (value, (unsigned char *)bufEntity, &lang);
     }
-  TtaSetTextContent (el, bufEntity, lang, doc);
+  TtaSetTextContent (el, (unsigned char *)bufEntity, lang, doc);
 }
 
 /*----------------------------------------------------------------------
@@ -3634,10 +3635,10 @@ static void InsertMathEntity (unsigned char *entityName, Document document)
   attr =  TtaNewAttribute (attrType);
   TtaAttachAttribute (el, attr, document);
   strcpy (buffer, "&");
-  strcat (buffer, entityName);
+  strcat ((char *)buffer, (char *)entityName);
   strcat (buffer, ";");
   TtaSetAttributeText (attr, buffer, el, document);
-  SetContentAfterEntity (entityName, el, document);
+  SetContentAfterEntity ((char *)entityName, el, document);
   len = TtaGetElementVolume (el);
   TtaSelectString (document, el, len + 1, len);
   ParseMathString (el, TtaGetParent (el), document);
@@ -3691,7 +3692,7 @@ void CreateMathEntity (Document document, View view)
 #endif /* #if defined(_MOTIF) || defined(_GTK) */
 
   if (MathMLEntityName[0] != EOS)
-    InsertMathEntity (MathMLEntityName, document);
+    InsertMathEntity ((unsigned char *)MathMLEntityName, document);
 }
 
 /*----------------------------------------------------------------------
@@ -3700,7 +3701,7 @@ void CreateMathEntity (Document document, View view)
  -----------------------------------------------------------------------*/
 void CreateInvisibleTimes (Document document, View view)
 {
-   InsertMathEntity ("InvisibleTimes", document);
+   InsertMathEntity ((unsigned char *)"InvisibleTimes", document);
 }
 
 /*----------------------------------------------------------------------
@@ -3709,7 +3710,7 @@ void CreateInvisibleTimes (Document document, View view)
  -----------------------------------------------------------------------*/
 void CreateApplyFunction (Document document, View view)
 {
-   InsertMathEntity ("ApplyFunction", document);
+   InsertMathEntity ((unsigned char *)"ApplyFunction", document);
 }
 
 /*----------------------------------------------------------------------
@@ -4335,7 +4336,7 @@ void FenceModified (NotifyOnValue *event)
      }
   text[0] = (unsigned char) event->value;
   text[1] = '\0';
-  TtaSetAttributeText (attr, text, mfencedEl, event->document);
+  TtaSetAttributeText (attr, (char *)text, mfencedEl, event->document);
 }
 
 /*----------------------------------------------------------------------
@@ -4360,7 +4361,7 @@ void MathEntityModified (NotifyAttribute *event)
   int            length, i;
   ThotBool       changed;
 
-  value = TtaGetMemory (BUFLEN);
+  value = (char *)TtaGetMemory (BUFLEN);
   value[0] = EOS;
   changed = FALSE;
   length = TtaGetTextAttributeLength (event->attribute);
@@ -4471,7 +4472,7 @@ void MathPresentAttrCreated (NotifyAttribute *event)
     }
   if (doit)
     {
-      value = TtaGetMemory (BUFLEN);
+      value = (char *)TtaGetMemory (BUFLEN);
       value[0] = EOS;
       length = TtaGetTextAttributeLength (event->attribute);
       if (length >= BUFLEN)
@@ -4567,7 +4568,7 @@ void MathAttrFontfamilyCreated (NotifyAttribute *event)
   char            *value;
   int              length;
 
-  value = TtaGetMemory (BUFLEN);
+  value = (char *)TtaGetMemory (BUFLEN);
   value[0] = EOS;
   length = TtaGetTextAttributeLength (event->attribute);
   if (length >= BUFLEN)
@@ -4616,7 +4617,7 @@ void MathAttrColorCreated (NotifyAttribute *event)
     }
   if (doit)
     {
-      value = TtaGetMemory (BUFLEN);
+      value = (char *)TtaGetMemory (BUFLEN);
       value[0] = EOS;
       length = TtaGetTextAttributeLength (event->attribute);
       if (length >= BUFLEN)
@@ -4687,7 +4688,7 @@ void MathAttrBackgroundCreated (NotifyAttribute *event)
     }
   if (doit)
     {
-      value = TtaGetMemory (BUFLEN);
+      value = (char *)TtaGetMemory (BUFLEN);
       value[0] = EOS;
       length = TtaGetTextAttributeLength (event->attribute);
       if (length >= BUFLEN)
@@ -4833,7 +4834,7 @@ void AttrSpacingCreated (NotifyAttribute *event)
   length = TtaGetTextAttributeLength (event->attribute);
   if (length > 0)
      {
-     value = TtaGetMemory (length+1);
+     value = (char *)TtaGetMemory (length+1);
      value[0] = EOS;
      TtaGiveTextAttributeValue (event->attribute, value, &length);
      TtaGiveAttributeType (event->attribute, &attrType, &attrKind);
@@ -4932,7 +4933,7 @@ void AttrScriptlevelCreated (NotifyAttribute *event)
   length = TtaGetTextAttributeLength (event->attribute);
   if (length > 0)
      {
-     value = TtaGetMemory (length+1);
+     value = (char *)TtaGetMemory (length+1);
      value[0] = EOS;
      TtaGiveTextAttributeValue (event->attribute, value, &length);
      MathMLSetScriptLevel (event->document, event->element, value);
@@ -4993,7 +4994,7 @@ void AttrOpenCloseChanged (NotifyAttribute *event)
  The content of a FenceSeparator element has been modified by the user
  in a MFENCED element.  Update the corresponding separators attribute.
  -----------------------------------------------------------------------*/
-void FencedSeparatorModified (NotifyOnTarget *event)
+void FencedSeparatorModified (NotifyOnValue *event)
 {
   Element	mfencedEl, fencedExpEl, child, content;
   Attribute	attr;
@@ -5054,7 +5055,7 @@ void FencedSeparatorModified (NotifyOnTarget *event)
      TtaAttachAttribute (mfencedEl, attr, event->document);
      }
   /* set the value of the separators attribute */
-  TtaSetAttributeText (attr, text, mfencedEl, event->document);
+  TtaSetAttributeText (attr, (char *)text, mfencedEl, event->document);
 }
 
 
@@ -5102,7 +5103,7 @@ void AttrScriptShiftCreated (NotifyAttribute *event)
   length = TtaGetTextAttributeLength (event->attribute);
   if (length > 0)
      {
-     value = TtaGetMemory (length+1);
+     value = (char *)TtaGetMemory (length+1);
      value[0] = EOS;
      TtaGiveTextAttributeValue (event->attribute, value, &length);
      TtaGiveAttributeType (event->attribute, &attrType, &attrKind);

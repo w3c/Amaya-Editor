@@ -40,7 +40,7 @@
   -----------------------------------------------------------------------*/
 void ANNOT_SetPath (Document document)
 {
-  char  *dirList = TtaGetMemory (2000);
+  char  *dirList = (char *)TtaGetMemory (2000);
 
   TtaGetDocumentPath (dirList, 2000);
   strcat (dirList, ":");
@@ -73,7 +73,7 @@ Document ANNOT_NewDocument (Document doc, AnnotMode mode)
      return 0;
     }
   
-  fname = TtaGetMemory (strlen (tmpname) + 20);
+  fname = (char *)TtaGetMemory (strlen (tmpname) + 20);
   sprintf (fname, "%s.html", tmpname);
   TtaFreeMemory (tmpname);
 
@@ -316,7 +316,7 @@ void  ANNOT_InitDocumentMeta (Document doc, Document docAnnot, AnnotMeta *annot,
   elType.ElTypeNum = Annot_EL_Author;
   el = TtaSearchTypedElement (elType, SearchInTree, head);
   el = TtaGetFirstChild (el);
-  TtaSetTextContent (el, user, TtaGetDefaultLanguage (), docAnnot); 
+  TtaSetTextContent (el, (unsigned char *)user, TtaGetDefaultLanguage (), docAnnot); 
 
   if (annot->creator)
     {
@@ -334,7 +334,7 @@ void  ANNOT_InitDocumentMeta (Document doc, Document docAnnot, AnnotMeta *annot,
 	  elType.ElTypeNum = Annot_EL_CreatorGivenName;
 	  el = TtaSearchTypedElement (elType, SearchInTree, head);
 	  el = TtaGetFirstChild (el);
-	  TtaSetTextContent (el, tmp,
+	  TtaSetTextContent (el, (unsigned char *)tmp,
 			     TtaGetDefaultLanguage (),
 			     docAnnot);
 #ifndef _I18N_
@@ -354,7 +354,7 @@ void  ANNOT_InitDocumentMeta (Document doc, Document docAnnot, AnnotMeta *annot,
 	  elType.ElTypeNum = Annot_EL_CreatorFamilyName;
 	  el = TtaSearchTypedElement (elType, SearchInTree, head);
 	  el = TtaGetFirstChild (el);
-	  TtaSetTextContent (el, (char *) tmp,
+	  TtaSetTextContent (el, (unsigned char *) tmp,
 			     TtaGetDefaultLanguage (),
 			     docAnnot);
 #ifndef _I18N_
@@ -368,7 +368,7 @@ void  ANNOT_InitDocumentMeta (Document doc, Document docAnnot, AnnotMeta *annot,
 	  elType.ElTypeNum = Annot_EL_CreatorEmail;
 	  el = TtaSearchTypedElement (elType, SearchInTree, head);
 	  el = TtaGetFirstChild (el);
-	  TtaSetTextContent (el, (char *) s->object->name,
+	  TtaSetTextContent (el, (unsigned char *) s->object->name,
 			     TtaGetDefaultLanguage (),
 			     docAnnot);
 	}
@@ -380,7 +380,7 @@ void  ANNOT_InitDocumentMeta (Document doc, Document docAnnot, AnnotMeta *annot,
       elType.ElTypeNum = Annot_EL_ATitle;
       el = TtaSearchTypedElement (elType, SearchInTree, head);
       el = TtaGetFirstChild (el);
-      TtaSetTextContent (el, annot->title, TtaGetDefaultLanguage (), 
+      TtaSetTextContent (el, (unsigned char *)annot->title, TtaGetDefaultLanguage (), 
 			 docAnnot); 
     }
   
@@ -388,13 +388,13 @@ void  ANNOT_InitDocumentMeta (Document doc, Document docAnnot, AnnotMeta *annot,
   elType.ElTypeNum = Annot_EL_AnnotCDate;
   el = TtaSearchTypedElement (elType, SearchInTree, head);
   el = TtaGetFirstChild (el);
-  TtaSetTextContent (el, cdate, TtaGetDefaultLanguage (), docAnnot); 
+  TtaSetTextContent (el, (unsigned char *)cdate, TtaGetDefaultLanguage (), docAnnot); 
 
   /* Last modified date metadata */
   elType.ElTypeNum = Annot_EL_AnnotMDate;
   el = TtaSearchTypedElement (elType, SearchInTree, head);
   el = TtaGetFirstChild (el);
-  TtaSetTextContent (el, mdate, TtaGetDefaultLanguage (), docAnnot); 
+  TtaSetTextContent (el, (unsigned char *)mdate, TtaGetDefaultLanguage (), docAnnot); 
 
   /* Source doc metadata (add a link to the annoted paragraph itself) */
   elType.ElTypeNum = Annot_EL_SourceDoc;
@@ -405,7 +405,7 @@ void  ANNOT_InitDocumentMeta (Document doc, Document docAnnot, AnnotMeta *annot,
   attr = TtaNewAttribute (attrType);
   TtaAttachAttribute (el, attr, docAnnot);
 
-  doc_anchor = TtaGetMemory (strlen (annot->source_url)
+  doc_anchor = (char *)TtaGetMemory (strlen (annot->source_url)
 			     + strlen (annot->name) 
 			     + 20);
   sprintf (doc_anchor, "%s#%s", annot->source_url, annot->name);
@@ -415,7 +415,7 @@ void  ANNOT_InitDocumentMeta (Document doc, Document docAnnot, AnnotMeta *annot,
   /* use the source_doc_title parameter as the value of the source
      document field */
   el = TtaGetFirstChild (el);
-  TtaSetTextContent (el, source_doc_title,
+  TtaSetTextContent (el, (unsigned char *)source_doc_title,
 		     TtaGetDefaultLanguage (), docAnnot);
   /* RDF type metadata */
   elType.ElTypeNum = Annot_EL_RDFtype;
@@ -430,7 +430,7 @@ void  ANNOT_InitDocumentMeta (Document doc, Document docAnnot, AnnotMeta *annot,
     }
   /* set the rdf type value itself */
   el = TtaGetFirstChild (el);
-  TtaSetTextContent (el, type,
+  TtaSetTextContent (el, (unsigned char *)type,
 		     TtaGetDefaultLanguage (), docAnnot);
 }
 
@@ -473,17 +473,17 @@ void  ANNOT_InitDocumentBody (Document docAnnot, char *source_doc_title)
   el = TtaSearchTypedElement (elType, SearchInTree, root);
   el = TtaGetFirstChild (el);
   /* @@ maybe parse the URL here */
-  tmp = TtaGetMemory (strlen (source_doc_title)
+  tmp = (char *)TtaGetMemory (strlen (source_doc_title)
 		      + sizeof ("Annotation of ") + 1);
   sprintf (tmp, "Annotation of %s", source_doc_title);
-  TtaSetTextContent (el, tmp,
+  TtaSetTextContent (el, (unsigned char *)tmp,
 		     TtaGetDefaultLanguage (), docAnnot);
   TtaFreeMemory (tmp);
   /* add a document URL */
   elType.ElTypeNum = HTML_EL_Document_URL;
   el = TtaSearchTypedElement (elType, SearchInTree, root);
   el = TtaGetFirstChild (el);
-  TtaSetTextContent (el, DocumentURLs[docAnnot],
+  TtaSetTextContent (el, (unsigned char *)DocumentURLs[docAnnot],
 		     TtaGetDefaultLanguage (), docAnnot);
   
   /* create a META element in the HEAD with attributes name="GENERATOR" */
@@ -612,7 +612,7 @@ static void ANNOT_ThreadItem_init (Element thread_item, Document doc,
 	{
 	  el = TtaGetFirstChild (el);
       	  tmp =  ANNOT_GetLabel(&annot_schema_list, annot->type);
-	  TtaSetTextContent (el, tmp, TtaGetDefaultLanguage (), doc);
+	  TtaSetTextContent (el, (unsigned char *)tmp, TtaGetDefaultLanguage (), doc);
 	}
     }
 
@@ -624,7 +624,7 @@ static void ANNOT_ThreadItem_init (Element thread_item, Document doc,
       el = TtaGetFirstChild (el);
       if (annot)
 	tmp = annot->title;
-      TtaSetTextContent (el, (tmp) ? tmp :  "no title", 
+      TtaSetTextContent (el, (unsigned char *)((tmp) ? tmp :  "no title"), 
 			 TtaGetDefaultLanguage (), doc);
     }
 
@@ -637,7 +637,7 @@ static void ANNOT_ThreadItem_init (Element thread_item, Document doc,
       if (annot)
 	tmp = annot->author;
       if (tmp)
-	TtaSetTextContent (el, tmp, TtaGetDefaultLanguage (), doc);
+	TtaSetTextContent (el, (unsigned char *)tmp, TtaGetDefaultLanguage (), doc);
     }
 
   /* put the date of the annotation */
@@ -649,7 +649,7 @@ static void ANNOT_ThreadItem_init (Element thread_item, Document doc,
       if (annot)
 	tmp = annot->mdate;
       if (tmp)
-	TtaSetTextContent (el, tmp, TtaGetDefaultLanguage (), doc);
+	TtaSetTextContent (el, (unsigned char *)tmp, TtaGetDefaultLanguage (), doc);
     }
 }
 #endif /* ANNOT_ON_ANNOT */
@@ -708,7 +708,7 @@ Element ANNOT_AddThreadItem (Document doc, AnnotMeta *annot)
   while (el)
     {
       i = TtaGetTextAttributeLength (attr) + 1;
-      url = TtaGetMemory (i);
+      url = (char *)TtaGetMemory (i);
       TtaGiveTextAttributeValue (attr, url, &i);
       if (!strcasecmp (url, annot->inReplyTo))
 	{
@@ -832,7 +832,7 @@ void ANNOT_ToggleThread (Document thread_doc, Document annot_doc,
   while (el)
     {
       i = TtaGetTextAttributeLength (attr) + 1;
-      url = TtaGetMemory (i);
+      url = (char *)TtaGetMemory (i);
       TtaGiveTextAttributeValue (attr, url, &i);
       /* grr... again a local compare problem! */
       elType.ElTypeNum = Annot_EL_TI_desc;
@@ -900,7 +900,7 @@ Document ANNOT_GetThreadDoc (Document thread_doc)
       attrType.AttrTypeNum = Annot_ATTR_HREF_;
       attr = TtaGetAttribute (el, attrType);
       i = TtaGetTextAttributeLength (attr) + 1;
-      url = TtaGetMemory (i);
+      url = (char *)TtaGetMemory (i);
       TtaGiveTextAttributeValue (attr, url, &i);
       for (i = 1 ; i <DocumentTableLength; i++)
 	{
@@ -962,7 +962,7 @@ void ANNOT_UpdateThreadItem (Document doc, AnnotMeta *annot, char *body_url)
   while (el)
     {
       i = TtaGetTextAttributeLength (attr) + 1;
-      url = TtaGetMemory (i);
+      url = (char *)TtaGetMemory (i);
       TtaGiveTextAttributeValue (attr, url, &i);
       if (!strcasecmp (url, body_url))
 	{
@@ -1007,7 +1007,7 @@ void ANNOT_InitDocumentStructure (Document doc, Document docAnnot,
 	text = "Reply to ";
       else
 	text = "Annotation of ";
-      annot->title = TtaGetMemory (strlen (text)
+      annot->title = (char *)TtaGetMemory (strlen (text)
 				   + strlen (source_doc_title) + 1);
       sprintf (annot->title, "%s%s", text, source_doc_title);
     }
@@ -1296,7 +1296,7 @@ ThotBool ANNOT_LocalSave (Document doc_annot, char *html_filename)
   elType.ElTypeNum = Annot_EL_AnnotMDate;
   el = TtaSearchTypedElement (elType, SearchInTree, el);
   el = TtaGetFirstChild (el);
-  TtaSetTextContent (el, annot->mdate, TtaGetDefaultLanguage (), doc_annot); 
+  TtaSetTextContent (el, (unsigned char *)annot->mdate, TtaGetDefaultLanguage (), doc_annot); 
 
   /* set up the charset and namespaces */
   SetNamespacesAndDTD (doc_annot);

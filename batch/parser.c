@@ -34,7 +34,7 @@ ParserStackItem;
 #define THOT_EXPORT extern
 #include "compil_tv.h"
 #undef THOT_EXPORT
-#define THOT_EXPORT
+#define THOT_EXPORT extern
 #include "analsynt_tv.h"
 #include "compilmsg_f.h"
 
@@ -101,7 +101,7 @@ static void CheckLongKeyword (indLine index, indLine len, SyntacticCode *ret)
    do
      {
        if (Keywords[i].SrcKeywordLen == len)
-	 if (strncasecmp (&inputLine[index - 1], Keywords[i].SrcKeyword, len) == 0)
+	 if (strncasecmp ((char *)&inputLine[index - 1], (char *)Keywords[i].SrcKeyword, len) == 0)
 	   *ret = Keywords[i].SrcKeywordCode;
        i++;
      }
@@ -127,7 +127,7 @@ static void CheckIdent (indLine index, indLine len, SyntacticCode *ret, int *ran
    do
      {
 	if (Identifier[i].SrcIdentLen == len)
-	   if (strncmp (&inputLine[index - 1], Identifier[i].SrcIdentifier, len) == 0)
+	   if (strncmp ((char *)&inputLine[index - 1], (char *)Identifier[i].SrcIdentifier, len) == 0)
 	     {
 		*rank = i + 1;
 		*ret = Identifier[i].SrcIdentCode;
@@ -178,7 +178,7 @@ int AsciiToInt (indLine index, indLine len)
 {
   int                 num;
 
-  sscanf (&inputLine[index - 1], "%d", &num);
+  sscanf ((char *)&inputLine[index - 1], "%d", &num);
   if (num > 65535)
     {
       CompilerMessage (index, COMPIL, FATAL, NUMBER_OVERFLOW, inputLine,

@@ -563,7 +563,9 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 
   /* Check if a paragraph should be reformatted after an edit */
   if (ThotLocalActions[T_updateparagraph] != NULL)
-    (*ThotLocalActions[T_updateparagraph]) (pAb, frame);
+    (*(Proc2)ThotLocalActions[T_updateparagraph]) (
+	(void*)pAb,
+	(void*)frame);
 
   if (pAb && frame > 0)
     {

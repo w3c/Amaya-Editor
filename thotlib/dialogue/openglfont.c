@@ -117,7 +117,7 @@ static void FontCache (GL_font *font, const char *font_filename, int size)
   FontTab[i].font = font;
   FontTab[i].font->Cache_index = i;
   FontTab[i].size = size;
-  FontTab[i].name = TtaGetMemory (strlen(font_filename) + 1);
+  FontTab[i].name = (char *)TtaGetMemory (strlen(font_filename) + 1);
   strcpy (FontTab[i].name, font_filename);
   FontTab[i].ref = 1;
 }
@@ -204,12 +204,12 @@ static GL_glyph *Char_index_lookup_cache (GL_font *font, unsigned int idx,
 
   if (Cache)
     {
-      Cache->next = TtaGetMemory (sizeof (Char_Cache_index));
+      Cache->next = (Char_Cache_index*)TtaGetMemory (sizeof (Char_Cache_index));
       Cache = Cache->next;  
     }
   else 
     {
-      font->Cache = TtaGetMemory (sizeof (Char_Cache_index));
+      font->Cache = (Char_Cache_index*)TtaGetMemory (sizeof (Char_Cache_index));
       Cache = font->Cache;      
     }
   Cache->index = idx;
@@ -250,12 +250,12 @@ GL_glyph *Char_index_lookup_cache_poly (GL_font *font, unsigned int idx,
 
   if (Cache)
     {
-      Cache->next = TtaGetMemory (sizeof (Char_Cache_index));
+      Cache->next = (Char_Cache_index*)TtaGetMemory (sizeof (Char_Cache_index));
       Cache = Cache->next;  
     }
   else 
     {
-      font->Cache = TtaGetMemory (sizeof (Char_Cache_index));
+      font->Cache = (Char_Cache_index*)TtaGetMemory (sizeof (Char_Cache_index));
       Cache = font->Cache;      
     }
   Cache->index = idx;
@@ -654,7 +654,7 @@ static void FontBBox (GL_font *font, wchar_t *string, int length,
   glyph = NULL;
   *llx = *lly = *llz = *urx = *ury = *urz = 0;
   c = string;
-  glyph = Char_index_lookup_cache (font, c[0], &left);
+  glyph = Char_index_lookup_cache (font, c[0], (unsigned int*)&left);
   right = 0;
   i = 0;
   while (i < length)
@@ -669,13 +669,13 @@ static void FontBBox (GL_font *font, wchar_t *string, int length,
 	  *ury = (*ury > bbox.yMax) ? *ury: bbox.yMax;
 	}
       i++;
-      glyph = Char_index_lookup_cache (font, c[i], &right);
+      glyph = Char_index_lookup_cache (font, c[i], (unsigned int*)&right);
       if (font->kerning)
 	*urx += FaceKernAdvance (font->face, 
 				 left, right);
       left = right;
     }
-  glyph = Char_index_lookup_cache (font, c[i], &left);
+  glyph = Char_index_lookup_cache (font, c[i], (unsigned int*)&left);
   
   if (left)
     {
@@ -734,7 +734,7 @@ static void MakeBitmapGlyph (GL_font *font, unsigned int g,
 		  /*if (source->pitch*(h-1) > p)
 		    source->pitch = w;
 		  */
-		  data = TtaGetMemory ((int) p * sizeof (unsigned char));
+		  data = (unsigned char *)TtaGetMemory ((int) p * sizeof (unsigned char));
 		  if (data)
 		    {
 		      memset (data, 0, (int)p);
@@ -844,7 +844,7 @@ void SetTextureScale (ThotBool Scaled)
     {
       glEnable (GL_TEXTURE_2D);
 
-      glGenTextures (1, &(FontBind));
+      glGenTextures (1, (GLuint*)&(FontBind));
       glBindTexture (GL_TEXTURE_2D, 
 		     FontBind);
       glTexParameteri (GL_TEXTURE_2D,
@@ -874,7 +874,7 @@ void StopTextureScale ()
 {   
   if (GL_NotInFeedbackMode () && !GL_TransText ())
     {
-      glDeleteTextures (1, &(FontBind));
+      glDeleteTextures (1, (GLuint*)&(FontBind));
       glDisable (GL_TEXTURE_2D);
     }
 }
@@ -965,7 +965,7 @@ int UnicodeFontRender (void *gl_font, wchar_t *text, float x, float y, int size)
   for (n = 0; n < size; n++)
     {
       /* convert character code to glyph index */
-      glyph = Char_index_lookup_cache (font, text[n], &glyph_index);
+      glyph = Char_index_lookup_cache (font, text[n], (unsigned int*)&glyph_index);
       /* retrieve kerning distance 
 	 and move pen position */
       if (use_kerning && previous && glyph_index)
@@ -1018,7 +1018,7 @@ int UnicodeFontRender (void *gl_font, wchar_t *text, float x, float y, int size)
   bitmap_alloc = sizeof (unsigned char)*Height*Width;
   if (bitmap_alloc >= MAX_BITMAP_ALLOC)
     {
-      data = TtaGetMemory (bitmap_alloc); 
+      data = (unsigned char *)TtaGetMemory (bitmap_alloc); 
       if (data == NULL)
 	return 0;
     }
@@ -1029,7 +1029,7 @@ int UnicodeFontRender (void *gl_font, wchar_t *text, float x, float y, int size)
   for (n = 0; n < size; n++)
     {
       if (bitmaps[n] && bitmaps[n]->data)
-	BitmapAppend (data, bitmaps[n]->data,
+	BitmapAppend (data, (unsigned char *)bitmaps[n]->data,
 		      (int) (bitmap_pos[n].x + shift), 
 		      (int) (bitmap_pos[n].y - miny),
 		      (int) bitmaps[n]->dimension.x, 

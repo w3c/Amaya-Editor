@@ -372,7 +372,7 @@ static void ApplyXToAllBoxes (PtrAbstractBox pAb, float result)
 				       PtElTranslate); 	  
 	  if (Trans == NULL)
 	    {
-	      Trans = TtaNewTransformTranslate (result, 0, FALSE);
+	      Trans = (PtrTransform)TtaNewTransformTranslate (result, 0, FALSE);
 	      FrameToView (Animated_Frame, &doc, &view);
 	      TtaReplaceTransform ((Element) El, Trans, doc); 
 	    }  
@@ -410,7 +410,7 @@ static void ApplyYToAllBoxes (PtrAbstractBox pAb, float result)
 				       PtElTranslate); 	  
 	  if (Trans == NULL)
 	    {
-	      Trans = TtaNewTransformTranslate (0, result, FALSE);
+	      Trans = (PtrTransform)TtaNewTransformTranslate (0, result, FALSE);
 	      FrameToView (Animated_Frame, &doc, &view);
 	      TtaReplaceTransform ((Element) El, Trans, doc); 
 	    }  
@@ -774,7 +774,7 @@ static void animate_box_transformation (PtrElement El,
       
       if (Trans == NULL)
 	{
-	  Trans = TtaNewTransformTranslate (tx, ty, FALSE);
+	  Trans = (PtrTransform)TtaNewTransformTranslate (tx, ty, FALSE);
 	  TtaReplaceTransform ((Element) El, Trans, doc); 
 	}
       Trans->XScale = tx;
@@ -815,7 +815,7 @@ static void animate_box_transformation (PtrElement El,
       
       if (Trans == NULL)
 	{
-	  Trans = TtaNewTransformScale (tx, ty, FALSE);
+	  Trans = (PtrTransform)TtaNewTransformScale (tx, ty, FALSE);
 	  TtaReplaceTransform ((Element) El, Trans, doc); 
 	}
 
@@ -871,7 +871,7 @@ static void animate_box_transformation (PtrElement El,
 				   PtElRotate);       
       if (Trans == NULL)
 	{
-	  Trans = TtaNewTransformRotate (rott, tx, ty);
+	  Trans = (PtrTransform)TtaNewTransformRotate (rott, tx, ty);
 	  TtaReplaceTransform ((Element) El, Trans, doc); 
 	}
 
@@ -891,7 +891,7 @@ static void animate_box_transformation (PtrElement El,
 				   PtElSkewX);       
       if (Trans == NULL)
 	{
-	  Trans = TtaNewTransformSkewX (result);
+	  Trans = (PtrTransform)TtaNewTransformSkewX (result);
 	  TtaReplaceTransform ((Element) El, Trans, doc); 
 	}
       Trans->TrFactor = result;
@@ -908,7 +908,7 @@ static void animate_box_transformation (PtrElement El,
 				   PtElSkewY);       
       if (Trans == NULL)
 	{
-	  Trans = TtaNewTransformSkewY (result);
+	  Trans = (PtrTransform)TtaNewTransformSkewY (result);
 	  TtaReplaceTransform ((Element) El, Trans, doc); 
 	}
       Trans->TrFactor = result;
@@ -965,7 +965,7 @@ static void animate_box_motion (PtrElement El,
 					 PtElAnimTranslate); 	  
 	    if (Trans == NULL)
 	      {
-		Trans = TtaNewTransformAnimTranslate (x, y);	    
+		Trans = (PtrTransform)TtaNewTransformAnimTranslate (x, y);	    
 		TtaReplaceTransform ((Element) El, Trans, doc); 
 	      }
 	    Trans->XScale = x;
@@ -979,7 +979,7 @@ static void animate_box_motion (PtrElement El,
 				       PtElAnimRotate);
 	  if (Trans == NULL)
 	    {
-	      Trans = TtaNewTransformAnimRotate (pop_path->Tangent_angle[i], 0, 0); 
+	      Trans = (PtrTransform)TtaNewTransformAnimRotate (pop_path->Tangent_angle[i], 0, 0); 
 	      TtaReplaceTransform ((Element) El, Trans, doc); 
 	    }
 	  Trans->TrAngle = pop_path->Tangent_angle[i];
@@ -1157,7 +1157,7 @@ ThotBool Animate_boxes (int frame,
 		    AnimTime current_time)
 {
 #ifdef _GL 
-  Animated_Cell *current = FrameTable[frame].Animated_Boxes;
+  Animated_Cell *current = (Animated_Cell *)FrameTable[frame].Animated_Boxes;
   ThotBool isfinished;
 
   /* Time update

@@ -88,7 +88,7 @@ Pixmap TtaCreatePixmapLogo(char **d)
 #ifdef _GTK
   _Thot_icon            *icon;
 
-  icon = TtaGetMemory (sizeof (_Thot_icon));
+  icon = (_Thot_icon *)TtaGetMemory (sizeof (_Thot_icon));
   if (d != NULL)
     icon->pixmap = gdk_pixmap_create_from_xpm_d (DefaultWindow->window,
 						 &(icon->mask),

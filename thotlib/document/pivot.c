@@ -21,8 +21,8 @@
 #include "constpiv.h"
 #include "labelAllocator.h"
 
-#undef THOT_EXPORT
-#define THOT_EXPORT
+/*#define THOT_EXPORT*/
+#define THOT_EXPORT extern	/* to avoid redefinitions */
 #include "edit_tv.h"
 
 #include "applicationapi_f.h"

@@ -5,11 +5,13 @@
  *
  */
 
-THOT_EXPORT ThotGC          GCpicture;	 /* for bitmap */
+/* instancied in picture.c */
+extern ThotGC          GCpicture;	 /* for bitmap */
 THOT_EXPORT ThotGC          GCimage;	 /* for pixmap */
-THOT_EXPORT char           *FileExtension[];
-THOT_EXPORT int             HandlersCounter;
-THOT_EXPORT int             InlineHandlers;
+extern char           *FileExtension[]; 
+extern int             HandlersCounter;
+extern int             InlineHandlers;
+
 #ifndef _WINDOWS
 THOT_EXPORT Visual         *theVisual;
 #else  /* _WINDOWS */

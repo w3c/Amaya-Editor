@@ -137,10 +137,14 @@ typedef void (*XML_DefaultHandler)(void *userData,
 				   const XML_Char *s,
 				   int len);
 
-/* This is called for the start of the DOCTYPE declaration when the
-name of the DOCTYPE is encountered. */
+/* This is called for the start of the DOCTYPE declaration, before
+   any DTD or internal subset is parsed.
+*/
 typedef void (*XML_StartDoctypeDeclHandler)(void *userData,
-					    const XML_Char *doctypeName);
+                                            const XML_Char *doctypeName,
+                                            const XML_Char *sysid,
+                                            const XML_Char *pubid,
+                                            int has_internal_subset);
 
 /* This is called for the start of the DOCTYPE declaration when the
 closing > is encountered, but after processing any external subset. */

@@ -44,14 +44,14 @@ extern void NormalizeURL ( char* orgName,
 extern ThotBool LoadRemoteStyleSheet ( char *url,
                                        Document doc,
                                        Element el,
-                                       void *css,
+                                       CSSInfoPtr css,
                                        char *completeURL,
                                        char *localfile );
 extern void FetchImage ( Document doc,
                          Element el,
                          char *URL,
                          int flags,
-                         Proc callback,
+                         LoadedImageCallback callback,
                          void *extra );
 extern void Prof_FreeTable ( void );
 extern Pixmap TtaCreatePixmapLogo ( char** data );
@@ -64,9 +64,11 @@ extern ThotBool ConfigGetPSchemaNature ( PtrSSchema pSS,
 extern ThotBool ConfigDefaultPSchema ( char* schema,
                                        char* schpres );
 extern void FreeTranslations ( void );
-extern void RedisplayCopies ( void );
+extern void RedisplayCopies ( PtrElement pEl,
+                              PtrDocument pDoc,
+                              ThotBool redisplay );
 extern ThotBool IsASavedElement ( PtrElement pEl );
-extern ThotBool CallEventType ( int *notifyEvent,
+extern ThotBool CallEventType ( NotifyEvent * notifyEvent,
                                 ThotBool pre );
 extern ThotBool CallEventAttribute ( NotifyAttribute * notifyAttr,
                                      ThotBool pre );
@@ -185,14 +187,14 @@ extern void NormalizeURL (/* char* orgName,
 extern ThotBool LoadRemoteStyleSheet (/* char *url,
                                          Document doc,
                                          Element el,
-                                         void *css,
+                                         CSSInfoPtr css,
                                          char *completeURL,
                                          char *localfile */);
 extern void FetchImage (/* Document doc,
                            Element el,
                            char *URL,
                            int flags,
-                           Proc callback,
+                           LoadedImageCallback callback,
                            void *extra */);
 extern void Prof_FreeTable (/* void */);
 extern Pixmap TtaCreatePixmapLogo (/* char** data */);
@@ -205,9 +207,11 @@ extern ThotBool ConfigGetPSchemaNature (/* PtrSSchema pSS,
 extern ThotBool ConfigDefaultPSchema (/* char* schema,
                                          char* schpres */);
 extern void FreeTranslations (/* void */);
-extern void RedisplayCopies (/* void */);
+extern void RedisplayCopies (/* PtrElement pEl,
+                                PtrDocument pDoc,
+                                ThotBool redisplay */);
 extern ThotBool IsASavedElement (/* PtrElement pEl */);
-extern ThotBool CallEventType (/* int *notifyEvent,
+extern ThotBool CallEventType (/* NotifyEvent * notifyEvent,
                                   ThotBool pre */);
 extern ThotBool CallEventAttribute (/* NotifyAttribute * notifyAttr,
                                        ThotBool pre */);

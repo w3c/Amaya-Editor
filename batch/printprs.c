@@ -10,6 +10,8 @@
    du schema de structure associe' et liste le contenu du schema de
    presentation.        
   ----------------------------------------------------------------------*/
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 
 #include "thot_sys.h"
 #include "constmedia.h"
@@ -20,7 +22,6 @@
 #include "fileaccess.h"
 #include "message.h"
 
-#define THOT_EXPORT
 #include "platform_tv.h"
 
 #include "fileaccess_f.h"

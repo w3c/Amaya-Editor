@@ -234,7 +234,10 @@ static void SetPageIndicators (PtrAbstractBox pAb, PtrAbstractBox table,
 
       if (isCell && ThotLocalActions[T_firstcolumn])
         /* page break can be inserted only in the first column */
-        (*ThotLocalActions[T_firstcolumn]) (pAb, table, &toContinue);
+        (*(Proc3)ThotLocalActions[T_firstcolumn]) (
+		(void *)pAb,
+	       	(void *)table,
+	       	(void *)&toContinue);
       else
 	toContinue = TRUE;
       if (toContinue)

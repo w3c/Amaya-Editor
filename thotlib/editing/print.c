@@ -30,6 +30,7 @@
 #include "appdialogue.h"
 #include "dictionary.h"
 #include "thotcolor.h"
+#include "nodialog.h"
 
 #ifdef _WINDOWS
   #include "thotprinter_f.h"
@@ -52,7 +53,7 @@
 #include "thotcolor_tv.h"
 
 #undef THOT_EXPORT
-#define THOT_EXPORT
+#define THOT_EXPORT extern	/* to avoid redefinitions */
 
 #include "select_tv.h"
 #include "page_tv.h"
@@ -142,7 +143,8 @@ static int          NoEmpyBox;
 static int          Repaginate;
 static int          FirstPrinted;
 static int          LastPrinted;
-extern int          errno;
+/* TODO : cette ligne provoque une erreur de compilation
+ * extern int          errno;*/
 
 #ifdef _GTK
   GtkWidget *window;
@@ -154,6 +156,7 @@ extern int          errno;
 #endif /* _GTK */
 
 static int button_quit = FALSE;
+
 #ifdef _WINDOWS
 HBITMAP          WIN_LastBitmap = 0;
 
@@ -473,6 +476,7 @@ static int XWindowFatalError (Display *dpy)
   if (errno != EPIPE)
     TtaDisplayMessage (FATAL, TtaGetMessage (LIB, TMSG_LIB_X11_ERR), DisplayString (dpy));
   else
+  
     TtaDisplayMessage (FATAL, TtaGetMessage (LIB, TMSG_LIB_X11_ERR), DisplayString (dpy));
   return (0);
 }
@@ -2672,14 +2676,14 @@ int main (int argc, char **argv)
 	    {
 	      /* The display is distant */
 	      argCounter++;
-	      server = TtaGetMemory (strlen (argv[argCounter]) + 1);
+	      server = (char *)TtaGetMemory (strlen (argv[argCounter]) + 1);
 	      strcpy (server, argv[argCounter++]);
 	    }
 	  else if (!strcmp (argv[argCounter], "-name"))
 	    {
 	      realNameFound = TRUE;
 	      argCounter++;
-	      realName = TtaGetMemory (strlen (argv[argCounter]) + 1);
+	      realName = (char *)TtaGetMemory (strlen (argv[argCounter]) + 1);
 	      strcpy (realName, argv[argCounter++]);
 	    }
 	  else if (!strcmp (argv[argCounter], "-ps"))
@@ -2687,7 +2691,7 @@ int main (int argc, char **argv)
 	      /* The destination is postscript file */
 	      destination = "PSFILE";
 	      argCounter++;
-	      printer = TtaGetMemory (strlen (argv[argCounter]) + 1);
+	      printer = (char *)TtaGetMemory (strlen (argv[argCounter]) + 1);
 	      strcpy (printer, argv[argCounter++]);
 	    }
 	  else if (!strcmp (argv[argCounter], "-out"))
@@ -2711,7 +2715,7 @@ int main (int argc, char **argv)
 		    }
 		  /* store the printer name */
 		  length += l;
-		  printer = TtaGetMemory (length + 1);
+		  printer = (char *)TtaGetMemory (length + 1);
 		  strcpy (printer, &argv[argCounter++][1]);
 		  for (l = 1; l <= i; l++)
 		    {
@@ -2723,7 +2727,7 @@ int main (int argc, char **argv)
 		}
 	      else
 		{
-		  printer = TtaGetMemory (l + 1);
+		  printer = (char *)TtaGetMemory (l + 1);
 		  strcpy (printer, argv[argCounter++]);
 		}
 	    }
@@ -2854,7 +2858,7 @@ int main (int argc, char **argv)
   length = strlen (name);
   if (!realNameFound)
     {
-      realName = TtaGetMemory (length + 1);
+      realName = (char *)TtaGetMemory (length + 1);
       strcpy (realName, name);
     }
 
@@ -2969,7 +2973,7 @@ int main (int argc, char **argv)
        /* the document is loaded */
        /* load CSS files and apply CSS rules */
        for (i = 0; i < cssCounter; i++)
-	 LoadStyleSheet (CSSName[i], 1, NULL, NULL, 0/*CSS_ALL*/,
+	 LoadStyleSheet (CSSName[i], 1, NULL, NULL, CSS_ALL,
 			 CSSOrigin[i] == 'u');
        
        /* load all referred document before printing */

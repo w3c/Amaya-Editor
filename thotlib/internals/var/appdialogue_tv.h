@@ -35,7 +35,7 @@ THOT_EXPORT ThotTranslations   TextTranslations;
 #endif /* #ifdef _MOTIF */
 
 THOT_EXPORT ThotAppContext     app_cont;
-THOT_EXPORT Proc	       CurrentCallbackAPI;
+/*THOT_EXPORT Proc	       CurrentCallbackAPI;*/
 
 /* Table of actions related to the menus attached to Application and	  */
 /* Documents windows.							  */
@@ -45,7 +45,7 @@ THOT_EXPORT Proc	       CurrentCallbackAPI;
 THOT_EXPORT Action_Ctl	      *MenuActionList;
 THOT_EXPORT int		       MaxMenuAction;
 /* return events for Application and Document windows			  */
-THOT_EXPORT int                ClickIsDone;
+/*THOT_EXPORT int                ClickIsDone;*/
 THOT_EXPORT char              *servername ;
 #endif /* !NODISPLAY */
 #endif /* THOT_APPDIALOGUE_VAR */

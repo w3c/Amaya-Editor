@@ -67,20 +67,20 @@ Widget resources: eg to set LiteClue box background:
 static XtResource LC_resources[] =
 {
 	{XtNforeground, XtCForeground, XtRPixel, sizeof(Pixel),
-		offset(liteClue.foreground), XtRString, "black"},
+		offset(liteClue.foreground), XtRString, (void *)"black"},
 #if XtSpecificationRelease < 5 || defined(NO_FONT_SET)
 	{XtNfont, XtCFont, XtRFontStruct, sizeof(XFontStruct *),
 		offset(liteClue.fontset), XtRString, 
-          "-adobe-new century schoolbook-bold-r-normal-*-14-*-*-*-*-*-*-*"},
+          (void *)"-adobe-new century schoolbook-bold-r-normal-*-14-*-*-*-*-*-*-*"},
 #else
 	{XtNfontSet, XtCFontSet, XtRFontSet, sizeof(XFontSet),
-		offset(liteClue.fontset), XtRString, "-adobe-new century schoolbook-bold-r-normal-*-12-*"},
+		offset(liteClue.fontset), XtRString, (void *)"-adobe-new century schoolbook-bold-r-normal-*-12-*"},
 #endif
 	{XgcNwaitPeriod, XgcCWaitPeriod, XtRInt , sizeof(int),
-		offset(liteClue.waitPeriod),XtRString, "500" },
+		offset(liteClue.waitPeriod),XtRString, (void *)"500" },
 
 	{XgcNcancelWaitPeriod, XgcCCancelWaitPeriod, XtRInt , sizeof(int),
-		offset(liteClue.cancelWaitPeriod),XtRString, "2000" },
+		offset(liteClue.cancelWaitPeriod),XtRString, (void *)"2000" },
 };
 
 #undef offset
@@ -253,7 +253,7 @@ static int string_to_FontSet (XcgLiteClueWidget cw, char *font_string, XFontSet 
 	XrmValue to;
 	
 	to.size = sizeof(out);
-	to.addr = (void *) out;
+	to.addr = (char*) out;
 	from.size = strlen(from.addr = font_string );
 	sts = XtConvertAndStore((Widget) cw, XtRString, &from, XtRFontSet, &to);
 	return sts;

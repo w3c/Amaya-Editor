@@ -13,7 +13,8 @@
  */
 
 /* Included headerfiles */
-#define THOT_EXPORT
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "amaya.h"
 #include "css.h"
 #include "parser.h"
@@ -482,7 +483,7 @@ static void UpdatePositionAttribute (Element el, Document doc, int pos,
   Element               parent, sibling, textEl;
   int                   length;
   char                  *value;
-  ThotBool              new;
+  ThotBool              new_;
 
   elType = TtaGetElementType (el);
   attrType.AttrSSchema = elType.ElSSchema;
@@ -557,19 +558,19 @@ static void UpdatePositionAttribute (Element el, Document doc, int pos,
 		  if (attr)
 		    {
 		      newAttr = TtaGetAttribute (textEl, attrType);
-		      new = !newAttr;
+		      new_ = !newAttr;
 		      if (!newAttr)
 			{
 			  newAttr = TtaNewAttribute (attrType);
 			  TtaAttachAttribute (textEl, newAttr, doc);
 			}
 		      length = TtaGetTextAttributeLength (attr);
-		      value = TtaGetMemory (length + 1);
+		      value = (char *)TtaGetMemory (length + 1);
 		      TtaGiveTextAttributeValue (attr, value, &length);
-		      if (!new)
+		      if (!new_)
 			TtaRegisterAttributeReplace (newAttr, textEl, doc);
 		      TtaSetAttributeText (newAttr, value, textEl, doc);
-		      if (new)
+		      if (new_)
 			TtaRegisterAttributeCreate (newAttr, textEl, doc);
 		      TtaFreeMemory (value);
 		    }
@@ -836,7 +837,7 @@ void CheckSVGRoot (Document doc, Element el)
       /* get the unit of the SVG width */
       rule = TtaGetPRule (SvgRoot, PRWidth);
       if (rule)
-	unit = TtaGetPRuleUnit (rule);
+	unit = (TypeUnit)TtaGetPRuleUnit (rule);
       else
 	unit = UnPixel;
       dh = dw = 0;
@@ -911,7 +912,7 @@ void CheckSVGRoot (Document doc, Element el)
       /* get the unit of the SVG width */
       rule = TtaGetPRule (SvgRoot, PRHeight);
       if (rule)
-	unit = TtaGetPRuleUnit (rule);
+	unit = (TypeUnit)TtaGetPRuleUnit (rule);
       else
 	unit = UnPixel;
       TtaGiveBoxSize (SvgRoot, doc, 1, UnPixel, &dummy, &hR);
@@ -1257,7 +1258,7 @@ ThotBool GraphicsPRuleChange (NotifyPresentation *event)
     UpdateStyleOrSvgAttr (presType, el, doc);
   else
     {
-      unit = TtaGetPRuleUnit (presRule);
+      unit = (TypeUnit)TtaGetPRuleUnit (presRule);
       mainView = TtaGetViewFromName (doc, "Formatted_view");
       if (presType == PRVertPos)
 	{
@@ -1366,8 +1367,8 @@ void ControlPointChanged (NotifyOnValue *event)
 	child = TtaGetFirstChild (el);
 	length = TtaGetPolylineLength (child);
 	/* get all points */
-	buffer = TtaGetMemory (20);
-	text = TtaGetMemory (length * 20);
+	buffer = (char *)TtaGetMemory (20);
+	text = (char *)TtaGetMemory (length * 20);
 	text[0] = EOS;
 	minX = minY = 32000;
 	maxX = maxY = 0;
@@ -1814,7 +1815,7 @@ void CreateGraphicElement (int entry)
 	  leaf = TtaNewElement (doc, elType);
 	  TtaInsertFirstChild (&leaf, altText, doc);
 	  lang = TtaGetLanguageIdFromScript('L');
-	  TtaSetTextContent (leaf, "<html>", lang, doc);
+	  TtaSetTextContent (leaf, (unsigned char *)"<html>", lang, doc);
 	  /* is there a SVG direction attribute on any ancestor element? */
 	  attrType.AttrTypeNum = SVG_ATTR_direction_;
 	  inheritedAttr = InheritAttribute (foreignObj, attrType);
@@ -2133,7 +2134,7 @@ void InitSVG ()
    mIcons[11] = TtaCreatePixmapLogo (group_xpm);
 #endif /* #if defined(_MOTIF) || defined(_GTK) */
    
-   GraphDialogue = TtaSetCallback (CallbackGraph, MAX_GRAPH);
+   GraphDialogue = TtaSetCallback ((Proc)CallbackGraph, MAX_GRAPH);
 #endif /* _SVG */
 }
 
@@ -2143,7 +2144,7 @@ void InitSVG ()
 void AddGraphicsButton (Document doc, View view)
 {
 #ifdef _SVG
-  GraphButton = TtaAddButton (doc, 1, (ThotIcon)iconGraph, ShowGraphicsPalette,
+  GraphButton = TtaAddButton (doc, 1, (ThotIcon)iconGraph, (Proc)ShowGraphicsPalette,
 			      "ShowGraphicsPalette",
 			      TtaGetMessage (AMAYA, AM_BUTTON_GRAPHICS),
 			      TBSTYLE_BUTTON, TRUE);
@@ -2293,7 +2294,7 @@ void UsePasted (NotifyElement * event)
     {
       /* get its value */
       length = TtaGetTextAttributeLength (attr);
-      href = TtaGetMemory (length + 1);
+      href = (char *)TtaGetMemory (length + 1);
       TtaGiveTextAttributeValue (attr, href, &length);
       CopyUseContent (event->element, event->document, href);
       TtaFreeMemory (href);
@@ -2316,7 +2317,7 @@ void AttrXlinkHrefChanged (NotifyAttribute *event)
    if (length <= 0)
      /* attribute empty. Invalid. restore previous value */
      return;
-   text = TtaGetMemory (length + 1);
+   text = (char *)TtaGetMemory (length + 1);
    TtaGiveTextAttributeValue (event->attribute, text, &length);
    elType = TtaGetElementType (event->element);
    if (elType.ElTypeNum == SVG_EL_image)

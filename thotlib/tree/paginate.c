@@ -26,12 +26,11 @@
 #include "appdialogue.h"
 #include "fileaccess.h"
 
+#undef THOT_EXPORT
 #define THOT_EXPORT extern
 #include "appdialogue_tv.h"
 #include "boxes_tv.h"
 #include "units_tv.h"
-#undef THOT_EXPORT
-#define THOT_EXPORT
 #include "page_tv.h"
 
 #include "absboxes_f.h"
@@ -251,7 +250,9 @@ static void SuppressPageMark (PtrElement pPage, PtrDocument pDoc, PtrElement * p
 	/* traitement de la suppression des pages dans les structures avec */
 	/* coupures speciales */
 	if (ThotLocalActions[T_deletepage] != NULL)
-	   (*ThotLocalActions[T_deletepage]) (pPage, pDoc);
+	   (*(Proc2)ThotLocalActions[T_deletepage]) (
+		(void *)pPage,
+		(void *)pDoc);
 	pPrevious = pPage->ElPrevious;
 	/* prepare l'evenement ElemDelete.Post */
 	notifyEl.event = TteElemDelete;
@@ -754,7 +755,11 @@ static PtrElement InsertMark (PtrAbstractBox pAb, int frame, int nbView,
       speciales */
    cut = FALSE;		/* a priori pas de coupure effectuee par l'exception */
    if (ThotLocalActions[T_insertpage] != NULL)
-      (*ThotLocalActions[T_insertpage]) (pElPage, pDoc, nbView, &cut);
+      (*(Proc4)ThotLocalActions[T_insertpage]) (
+		(void *)pElPage,
+		(void *)pDoc,
+		(void *)nbView,
+		(void *)&cut);
    if (!cut)
       CreateNewAbsBoxes (pElPage, pDoc, nbView);
    modifAbsBox = pDoc->DocViewModifiedAb[nbView - 1];
@@ -1318,7 +1323,10 @@ static PtrElement  PutMark (PtrElement rootEl, int nbView, PtrDocument pDoc,
 		  DestroyAbsBoxesView (pPage, pDoc, FALSE, nbView);
 		  /* traitement des elements demandant des coupures speciales */
 		  if (ThotLocalActions[T_deletepageab] != NULL)
-		    (*ThotLocalActions[T_deletepageab]) (pPage, pDoc, nbView);
+		    (*(Proc3)ThotLocalActions[T_deletepageab]) (
+				(void *)pPage,
+				(void *)pDoc,
+				(void *)nbView);
 		  if (WorkingPage == pPage)
 		    NbBoxesPageHeaderToCreate = 0;
 		  /* signale les paves morts au Mediateur */

@@ -21,8 +21,8 @@
 #include "typecorr.h"
 #include "appdialogue.h"
 
-#undef THOT_EXPORT
-#define THOT_EXPORT
+/*#define THOT_EXPORT*/
+#define THOT_EXPORT extern	/* to avoid redefinitions */
 #include "edit_tv.h"
 #include "select_tv.h"
 #include "frame_tv.h"
@@ -163,7 +163,9 @@ static void AttachMandatoryAttrSRule (PtrElement pEl, PtrDocument
 		      else
 			{
 			  if (ThotLocalActions[T_attrreq] != NULL)
-			    (*ThotLocalActions[T_attrreq]) (pAttr, pDoc);
+			    (*(Proc2)ThotLocalActions[T_attrreq]) (
+				(void *)pAttr,
+				(void *)pDoc);
 			  else
 			    switch (pAttr->AeAttrType)
 			      {
@@ -174,7 +176,7 @@ static void AttachMandatoryAttrSRule (PtrElement pEl, PtrDocument
 				
 			      case AtTextAttr:
 				/* attribut a valeur textuelle */
-				CopyStringToBuffer (" ", pAttr->AeAttrText, &len);
+				CopyStringToBuffer ((unsigned char *)" ", pAttr->AeAttrText, &len);
 				break;
 				
 			      case AtEnumAttr:
@@ -383,7 +385,7 @@ void TtaAttachAttribute (Element element, Attribute attribute, Document document
 	  if (pDoc == SelectedDocument &&
 	      (PtrElement) element == FirstSelectedElement)
 	    if (ThotLocalActions[T_chattr] != NULL)
-	      (*ThotLocalActions[T_chattr]) (pDoc);
+	      (*(Proc1)ThotLocalActions[T_chattr]) ((void *)pDoc);
 	   
 	  pAttr = (PtrAttribute) attribute;
 	  pAttr->AeNext = NULL;
@@ -592,7 +594,7 @@ void TtaSetAttributeText (Attribute attribute, char* buffer,
       else
 	ClearText (pAttr->AeAttrText);
       /* Sets the new value */
-      CopyStringToBuffer (buffer, pAttr->AeAttrText, &lg);
+      CopyStringToBuffer ((unsigned char *)buffer, pAttr->AeAttrText, &lg);
       if (pAttr->AeAttrNum == 1)
 	/* language attribute */
 	{

@@ -31,8 +31,12 @@
 #include "message.h"
 #include "fileaccess.h"
 
-#define THOT_EXPORT
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "compil_tv.h"
+
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "platform_tv.h"
 #include "thotcolor.h"
 #include "thotcolor_tv.h"
@@ -536,7 +540,7 @@ static void NewSourceString (int indx, int len)
 	   /* on l'insere dans la table */
 	   for (k = lastEntry; k >= CurEntry; k--)
 	     pTSchema->TsCharTransl[k] = pTSchema->TsCharTransl[k - 1];
-	   strncpy (pTSchema->TsCharTransl[CurEntry - 1].StSource, source,
+	   strncpy ((char *)pTSchema->TsCharTransl[CurEntry - 1].StSource, (char *)source,
 		     MAX_SRCE_LEN + 1);
 	   if (TextTrans)
 	     /* on est dans les traductions de texte */
@@ -571,7 +575,7 @@ static void ProcessTargetString (int indx, int len)
    for (k = 0; k <= len - 2; k++)
      target[k] = inputLine[indx + k - 1];
    target[len - 1] = '\0';
-   strncpy (pTSchema->TsCharTransl[CurEntry - 1].StTarget, target,
+   strncpy ((char *)pTSchema->TsCharTransl[CurEntry - 1].StTarget, (char *)target,
 	     MAX_TARGET_LEN + 1);
 }
 
@@ -723,7 +727,7 @@ static void         CopyWord (Name n, indLine wi, indLine wl)
 		      LineNum);
   else
     {
-      strncpy (n, &inputLine[wi - 1], wl);
+      strncpy ((char *)n, (char *)&inputLine[wi - 1], wl);
       n[wl] = '\0';
     }
 }
@@ -3552,7 +3556,7 @@ int main (int argc, char **argv)
 	       else if (inputLine[0] == '#')
 		 /* cette ligne contient une directive du preprocesseur cpp */
 		 {
-		   sscanf (inputLine, "# %d %s", &LineNum, buffer);
+		   sscanf ((char *)inputLine, "# %d %s", &LineNum, buffer);
 		   LineNum--;
 		 }
 	       else

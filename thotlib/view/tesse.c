@@ -124,12 +124,12 @@ void CALLBACK myCombine (GLdouble coords[3],
       ptr = path->mesh_list;
       while (ptr->next) 
 	ptr = ptr->next;
-      ptr->next = TtaGetMemory (sizeof (Mesh_list));
+      ptr->next = (Mesh_list *)TtaGetMemory (sizeof (Mesh_list));
       ptr = ptr->next;
     }
   else
     {
-      path->mesh_list = TtaGetMemory (sizeof (Mesh_list));
+      path->mesh_list = (Mesh_list *)TtaGetMemory (sizeof (Mesh_list));
       ptr = path->mesh_list;      
     }   
   ptr->next = NULL;
@@ -148,14 +148,14 @@ void *GetNewMesh ()
   ThotPath        *path;
   int             c;
   
-  path = TtaGetMemory (sizeof(ThotPath));
+  path = (ThotPath*)TtaGetMemory (sizeof(ThotPath));
   path->maxpoints = ALLOC_POINTS; 
   path->maxcont = ALLOC_POINTS; 
   c = path->maxpoints * sizeof(ThotDblePoint); 
-  path->npoints = TtaGetMemory (c); 
+  path->npoints = (ThotDblePoint*)TtaGetMemory (c); 
   memset (path->npoints, 0, c);   
   c = path->maxcont * sizeof(int); 
-  path->ncontour = TtaGetMemory (c);
+  path->ncontour = (int*)TtaGetMemory (c);
   memset (path->ncontour, 0, c);   
   path->nsize = 0;    
   path->cont = 0;    

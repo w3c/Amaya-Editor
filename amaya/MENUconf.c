@@ -472,7 +472,7 @@ void InitAmayaDefEnv (void)
   TtaSetDefEnvString ("ANNOT_RAUTOLOAD_RST", "yes", FALSE);
   TtaSetEnvString ("ANNOT_MAIN_INDEX", "annot.index", FALSE);
   ptr = TtaGetEnvString ("APP_HOME");
-  ptr2 = TtaGetMemory ( strlen (ptr) + strlen ("annotations")
+  ptr2 = (char *)TtaGetMemory ( strlen (ptr) + strlen ("annotations")
 			+ 2);
   sprintf (ptr2, "%s%c%s", ptr, DIR_SEP, "annotations");
   TtaSetDefEnvString ("ANNOT_DIR", ptr2, FALSE);
@@ -2846,7 +2846,7 @@ static void BuildScreenSelector (void)
   /* Fill in the screen list form  */
   TtaNewSizedSelector (BrowseBase + mScreenSelector, BrowseBase + BrowseMenu,
 		       TtaGetMessage (AMAYA, AM_SCREEN_TYPE), nbscreens,
-		       ((i < 2) ? "" : BufMenu), 3, 2, NULL, FALSE, FALSE);
+		       ((i < 2) ? (char *)"" : BufMenu), 3, 2, NULL, FALSE, FALSE);
   /* preselect the screen matching the user preference */
   TtaSetSelector (BrowseBase + mScreenSelector, CurrentScreen, NULL);
   strcpy (NewScreen, ScreenType);
@@ -3999,7 +3999,7 @@ static void BuildProfileSelector (void)
   /* Fill in the profile form  */
   TtaNewSelector (ProfileBase + mProfileSelector, ProfileBase + ProfileMenu,
 		  NULL, nbprofiles,
-		  ((i < 2) ? "" : BufMenu), 3, NULL, TRUE, FALSE);
+		  ((i < 2) ? (char *)"" : BufMenu), 3, NULL, TRUE, FALSE);
   /* preselect the profile matching the user current profile */
   if (nbprofiles)
     TtaSetSelector (ProfileBase + mProfileSelector, CurrentProfile, NULL);
@@ -4678,23 +4678,23 @@ void                InitConfMenu (void)
 {
   InitAmayaDefEnv ();
 #ifndef _WINDOWS
-  CacheBase = TtaSetCallback (CacheCallbackDialog, MAX_CACHEMENU_DLG);
-  ProxyBase = TtaSetCallback (ProxyCallbackDialog, MAX_PROXYMENU_DLG);
-  GeneralBase = TtaSetCallback (GeneralCallbackDialog, MAX_GENERALMENU_DLG);
-  BrowseBase = TtaSetCallback (BrowseCallbackDialog, MAX_BROWSEMENU_DLG);
-  PublishBase = TtaSetCallback (PublishCallbackDialog, MAX_PUBLISHMENU_DLG);
-  ColorBase = TtaSetCallback (ColorCallbackDialog,
+  CacheBase = TtaSetCallback ((Proc)CacheCallbackDialog, MAX_CACHEMENU_DLG);
+  ProxyBase = TtaSetCallback ((Proc)ProxyCallbackDialog, MAX_PROXYMENU_DLG);
+  GeneralBase = TtaSetCallback ((Proc)GeneralCallbackDialog, MAX_GENERALMENU_DLG);
+  BrowseBase = TtaSetCallback ((Proc)BrowseCallbackDialog, MAX_BROWSEMENU_DLG);
+  PublishBase = TtaSetCallback ((Proc)PublishCallbackDialog, MAX_PUBLISHMENU_DLG);
+  ColorBase = TtaSetCallback ((Proc)ColorCallbackDialog,
 			      MAX_COLORMENU_DLG);
-  GeometryBase = TtaSetCallback (GeometryCallbackDialog,
+  GeometryBase = TtaSetCallback ((Proc)GeometryCallbackDialog,
 				 MAX_GEOMETRYMENU_DLG);
-  LanNegBase = TtaSetCallback (LanNegCallbackDialog,
+  LanNegBase = TtaSetCallback ((Proc)LanNegCallbackDialog,
 			       MAX_LANNEGMENU_DLG);
-  ProfileBase = TtaSetCallback (ProfileCallbackDialog,
+  ProfileBase = TtaSetCallback ((Proc)ProfileCallbackDialog,
 			       MAX_PROFILEMENU_DLG);
-  TemplatesBase = TtaSetCallback (TemplatesCallbackDialog,
+  TemplatesBase = TtaSetCallback ((Proc)TemplatesCallbackDialog,
 			       MAX_LANNEGMENU_DLG);
 #ifdef ANNOTATIONS
-  AnnotBase = TtaSetCallback (AnnotCallbackDialog,
+  AnnotBase = TtaSetCallback ((Proc)AnnotCallbackDialog,
 			      MAX_ANNOTMENU_DLG);
 #endif /* ANNOTATIONS */
 #endif /* !_WINDOWS */

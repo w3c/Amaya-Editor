@@ -105,7 +105,7 @@ extern ThotBool TtaReadSignedShort ( BinFile file,
 extern ThotBool TtaReadInteger ( BinFile file,
                                 int *sval );
 extern ThotBool TtaReadName ( BinFile file,
-                             char *name );
+                             unsigned char *name );
 extern BinFile TtaReadOpen (CONST char *filename);
 extern void TtaReadClose ( BinFile file );
 extern BinFile TtaWriteOpen (CONST char *filename);

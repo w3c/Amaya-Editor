@@ -34,8 +34,6 @@
 #include "edit_tv.h"
 #include "frame_tv.h"
 #include "appdialogue_tv.h"
-#undef THOT_EXPORT
-#define THOT_EXPORT
 #include "creation_tv.h"
 
 typedef enum
@@ -187,13 +185,19 @@ void InsertOption (PtrElement pEl, PtrElement *pOption, PtrDocument pDoc)
   ----------------------------------------------------------------------*/
 void CreationExceptions (PtrElement pEl, PtrDocument pDoc)
 {
-   ThotBool            bool;
+   ThotBool            b;
 
    if (pEl->ElTypeNumber == PageBreak + 1)
       if (ThotLocalActions[T_insertpage] != NULL)
-	 (*ThotLocalActions[T_insertpage]) (pEl, pDoc, 0, &bool);
+	 (*(Proc4)ThotLocalActions[T_insertpage]) (
+		(void *)pEl,
+		(void *)pDoc,
+		(void *)0,
+		(void *)&b);
    if (ThotLocalActions[T_createtable] != NULL)
-      (*ThotLocalActions[T_createtable]) (pEl, pDoc);
+      (*(Proc2)ThotLocalActions[T_createtable]) (
+		(void *)pEl,
+	       	(void *)pDoc);
 }
 
 /*----------------------------------------------------------------------
@@ -944,7 +948,7 @@ void NewContent (PtrAbstractBox pAb)
 	    {
 	    case AtNumAttr:
 	      CopyBuffer2MBs (pAb->AbText, 0, text, 9);
-	      sscanf (text, "%d", &pNewAttr->AeAttrValue);
+	      sscanf ((char*)text, "%d", &pNewAttr->AeAttrValue);
 	      break;
 	    case AtTextAttr:
 	      if (pNewAttr->AeAttrText == NULL)
@@ -1073,7 +1077,7 @@ ThotBool LinkReference (PtrElement pEl, PtrAttribute pAttr, PtrDocument pDoc)
   PtrReference        pRef;
   PtrAbstractBox      pAb;
   int                 view, referredTypeNum, frame;
-  ThotBool            again, new, ret;
+  ThotBool            again, new_, ret;
 
   ret = FALSE;
   pModifiedElem = NULL;
@@ -1085,9 +1089,9 @@ ThotBool LinkReference (PtrElement pEl, PtrAttribute pAttr, PtrDocument pDoc)
     ReferredType (pEl, NULL, &pSS, &referredTypeNum, pDoc);
   else
     ReferredType (NULL, pAttr, &pSS, &referredTypeNum, pDoc);
-  new = FALSE;
+  new_ = FALSE;
   again = TRUE;
-  if (!new && again)
+  if (!new_ && again)
 
     {
       if (pAttr != NULL)
@@ -3839,7 +3843,7 @@ void CreatePasteIncludeMenuCallback (ThotBool create, ThotBool paste, int item)
 		     {
 			/* traitement particulier des images inserees et vides */
 			if (ThotLocalActions[T_editfunc] != NULL)
-			   (*ThotLocalActions[T_editfunc]) (TEXT_INSERT);
+			   (*(Proc1)ThotLocalActions[T_editfunc]) ((void *)TEXT_INSERT);
 		     }
 	     }
 	}

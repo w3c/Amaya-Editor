@@ -176,7 +176,7 @@ void LoadUserStyleSheet (Document doc)
 	    fclose (res);
 	  else
 	    {
-	      buffer = TtaGetMemory (buf.st_size + 1000);
+	      buffer = (char *)TtaGetMemory (buf.st_size + 1000);
 	      if (buffer == NULL)
 		fclose (res);
 	      else
@@ -329,7 +329,7 @@ void AddStyle (char *url, Document doc, Element link, CSSCategory category)
 	    }
 	  else
 	    media = CSS_ALL;
-	  LoadStyleSheet (url, doc, link, NULL, media, FALSE);
+	  LoadStyleSheet (url, doc, link, NULL, (CSSmedia)media, FALSE);
 	  /* Restore the display mode */
 	  if (dispMode != NoComputedDisplay)
 	    TtaSetDisplayMode (doc, dispMode);
@@ -400,7 +400,7 @@ void UpdateStyleSheet (char *url, char *tempdoc)
 				LoadUserStyleSheet (doc);
 			      else
 				LoadStyleSheet (refcss->url, doc, refInfo->PiLink, NULL,
-						refInfo->PiMedia,
+						(CSSmedia)refInfo->PiMedia,
 						refInfo->PiCategory == CSS_USER_STYLE);
 			      /* Restore the display mode */
 			      if (dispMode == DisplayImmediately)
@@ -473,7 +473,7 @@ char *CssToPrint (Document doc, char *printdir)
       /* now generate the complete list of style sheets */
       if (length)
 	{
-	  ptr = TtaGetMemory (length + 1);
+	  ptr = (char *)TtaGetMemory (length + 1);
 	  length = 0;
 
 	  /* Add first the User style sheet */
@@ -645,7 +645,7 @@ static void CallbackCSS (int ref, int typedata, char *data)
 		  found = TRUE;
 		}
 	      else
-		category++;
+		category = (CSSCategory)((int)category + 1);
 	    }
 	  if (category == DisplayCategory_length)
 	    category = CSS_Unknown;
@@ -875,7 +875,7 @@ void SynchronizeAppliedStyle (NotifyElement *event)
 void InitCSS (void)
 {
    /* initialize the dialogs */
-   BaseCSS = TtaSetCallback (CallbackCSS, MAX_CSS_REF);
+   BaseCSS = TtaSetCallback ((Proc)CallbackCSS, MAX_CSS_REF);
    CSSpath[0] = EOS;
 }
 
@@ -952,7 +952,7 @@ static void InitCSSDialog (Document doc, char *s)
       i = 0;
       /* create the link list */
       CSSlink = (Element *) TtaGetMemory (sty * sizeof (Element));
-      buf = TtaGetMemory (size);
+      buf = (char *)TtaGetMemory (size);
       sty = 0;
       /* initialize menu entries */
       css = CSSList;
@@ -984,7 +984,7 @@ static void InitCSSDialog (Document doc, char *s)
 		      name = TtaGetSSchemaName (elType.ElSSchema);
 		      if (!strcmp (name, "HTML") && elType.ElTypeNum == HTML_EL_STYLE_)
 			{
-			  ptr = TtaGetMemory (strlen (localname) + 11);
+			  ptr = (char *)TtaGetMemory (strlen (localname) + 11);
 			  sprintf (ptr, "%s%d", localname, sty);
 			  CSSlink[sty++] = pInfo->PiLink;
 			}
@@ -1001,10 +1001,10 @@ static void InitCSSDialog (Document doc, char *s)
 			}
 		    }
 		  else if (css->url == NULL)
-		    ptr = TtaConvertMbsToByte (css->localName,
+		    ptr = (char *)TtaConvertMbsToByte ((unsigned char *)css->localName,
 					       TtaGetDefaultCharset ());
 		  else
-		    ptr = TtaConvertMbsToByte (css->url,
+		    ptr = (char *)TtaConvertMbsToByte ((unsigned char *)css->url,
 					       TtaGetDefaultCharset ());
 		  if (ptr)
 		    {

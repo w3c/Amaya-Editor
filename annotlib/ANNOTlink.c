@@ -50,10 +50,10 @@
 static void LINK_CreateAName (AnnotMeta *annot)
 {
   char *ptr;
-  char *author = annot->author ? annot->author : "";
+  char *author = annot->author ? annot->author : (char *)"";
 
   /* memorize the anchor of the reverse link target */
-  annot->name = TtaGetMemory (strlen (ANNOT_ANAME) + strlen (author)
+  annot->name = (char *)TtaGetMemory (strlen (ANNOT_ANAME) + strlen (author)
 			      + (annot->body_url 
 				 ? strlen (annot->body_url) : 0)
 			      + 20);
@@ -91,7 +91,7 @@ char  *LINK_GetAnnotationIndexFile (char *source_url)
 
   annot_dir = GetAnnotDir ();
   annot_main_index = GetAnnotMainIndex ();
-  annot_main_index_file = TtaGetMemory (strlen (annot_dir) 
+  annot_main_index_file = (char *)TtaGetMemory (strlen (annot_dir) 
 					+ strlen (annot_main_index) 
 					+ 10);
   sprintf (annot_main_index_file, "%s%c%s", 
@@ -103,7 +103,7 @@ char  *LINK_GetAnnotationIndexFile (char *source_url)
 
   if (TtaFileExist (annot_main_index_file))
     {
-      index_file = TtaGetMemory (MAX_PATH);
+      index_file = (char *)TtaGetMemory (MAX_PATH);
       found = 0;
       if ((fp = fopen (annot_main_index_file, "r")))
 	{
@@ -156,14 +156,14 @@ void LINK_UpdateAnnotationIndexFile (char *old_source_url, char *new_source_url)
 
   annot_dir = GetAnnotDir ();
   annot_main_index = GetAnnotMainIndex ();
-  annot_main_index_file = TtaGetMemory (strlen (annot_dir) 
+  annot_main_index_file = (char *)TtaGetMemory (strlen (annot_dir) 
 					+ strlen (annot_main_index) 
 					+ 10);
   sprintf (annot_main_index_file, "%s%c%s", 
 	    annot_dir, 
 	    DIR_SEP,  
 	    annot_main_index);
-  annot_new_main_index_file = TtaGetMemory (strlen (annot_dir) 
+  annot_new_main_index_file = (char *)TtaGetMemory (strlen (annot_dir) 
 					    + strlen (annot_main_index) 
 					    + 11);
   sprintf (annot_new_main_index_file, "%s%ct%s", 
@@ -232,7 +232,7 @@ static void AddAnnotationIndexFile (char *source_url, char *index_file)
   
   annot_dir = GetAnnotDir ();
   annot_main_index = GetAnnotMainIndex ();
-  annot_main_index_file = TtaGetMemory (strlen (annot_dir) 
+  annot_main_index_file = (char *)TtaGetMemory (strlen (annot_dir) 
 					+ strlen (annot_main_index)
 					+ 10);
   www_source_url = LocalToWWW (source_url);
@@ -329,7 +329,7 @@ void LINK_AddAnnotIcon (Document source_doc, Element anchor, AnnotMeta *annot)
   len = TtaGetTextLength (el);
   if (len > 0 && len < (int) (sizeof (previous)))
     {
-      TtaGiveTextContent (el, previous, &len, &lang);
+      TtaGiveTextContent (el, (unsigned char *)previous, &len, &lang);
       previous[len] = EOS;
     }
   else
@@ -340,7 +340,7 @@ void LINK_AddAnnotIcon (Document source_doc, Element anchor, AnnotMeta *annot)
       int docModified;
 
       docModified = TtaIsDocumentModified (source_doc);
-      TtaSetPictureContent (el, iconName, SPACE, source_doc, "image/gif");
+      TtaSetPictureContent (el, (unsigned char *)iconName, SPACE, source_doc, "image/gif");
       if (!docModified)
 	{
 	  TtaSetDocumentUnmodified (source_doc);
@@ -794,11 +794,11 @@ void LINK_DeleteLink (Document source_doc, ThotBool isReplyTo)
   error = 0;
   annot_dir = GetAnnotDir ();
   main_index = GetAnnotMainIndex ();
-  main_index_file_old = TtaGetMemory (strlen (annot_dir) 
+  main_index_file_old = (char *)TtaGetMemory (strlen (annot_dir) 
 					+ strlen (main_index)
 					+ 10);
 
-  main_index_file_new = TtaGetMemory (strlen (annot_dir) 
+  main_index_file_new = (char *)TtaGetMemory (strlen (annot_dir) 
 				      + strlen (main_index)
 				      + 14);
   sprintf (main_index_file_old, 

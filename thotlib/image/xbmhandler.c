@@ -39,7 +39,7 @@ Drawable XbmCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
   int                 w, h;
   int                 xHot, yHot;
 
-  status = XReadBitmapFile (TtDisplay, TtRootWindow, fn, &w, &h, &bitmap, &xHot, &yHot);
+  status = XReadBitmapFile (TtDisplay, TtRootWindow, fn, (unsigned int *)&w, (unsigned int *)&h, &bitmap, &xHot, &yHot);
   if (status != BitmapSuccess)
     return ((Drawable) None);
   else
@@ -88,7 +88,7 @@ void XbmPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
   register char      *pt, *pt1;
   int                 wim, him;
 
-  i = XReadBitmapFile (TtDisplay, TtRootWindow, fn, &picW, &picH, &pix,
+  i = XReadBitmapFile (TtDisplay, TtRootWindow, fn, (unsigned int *)&picW, (unsigned int *)&picH, &pix,
 		       &xtmp, &ytmp);
   if (i != BitmapSuccess)
     return;
@@ -185,7 +185,7 @@ ThotBool IsXbmFormat (char *fn)
    int                 w, h;
    int                 xHot, yHot;
 
-   status = XReadBitmapFile (TtDisplay, TtRootWindow, fn, &w, &h, &bitmap, &xHot, &yHot);
+   status = XReadBitmapFile (TtDisplay, TtRootWindow, fn, (unsigned int *)&w, (unsigned int *)&h, &bitmap, &xHot, &yHot);
    if (bitmap != None)
       XFreePixmap (TtDisplay, bitmap);
    return (status == BitmapSuccess);

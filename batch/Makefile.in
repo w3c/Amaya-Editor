@@ -25,7 +25,7 @@ GRMS     = APP.GRM PRESEN.GRM STRUCT.GRM TRANS.GRM
 LANGUAGES=*.GRM *.LAN *.LST
 
 .c.o :
-	$(CC) '-DCPP="'"$(CPP)"'"' $(CFLAGS) $(THOT_OPTIONS) -DNODISPLAY $(INCLUDES) -c $< -o $@
+	$(CC) '-DCPP="'"$(CPP)"'"' $(CXXFLAGS) $(THOT_OPTIONS) -DNODISPLAY $(INCLUDES) -c $< -o $@
 
 all : ../bin $(GRMS) $(COMPILERS) \
           ../bin/printstr ../bin/rescandialogue
@@ -70,7 +70,7 @@ grm : ../thotlib/libThotKernel.a ../bin ../bin/grm
 	 
 
 ../bin/grm : $(GRM_OBJ) ../thotlib/libThotKernel.a
-	$(CC) $(LDFLAGS) -o $@ $(GRM_OBJ) $(LIBS)
+	$(CXX) $(LDFLAGS) -o $@ $(GRM_OBJ) $(LIBS)
 	@$(ECHO) "====>" grm is done
 
 #
@@ -86,7 +86,7 @@ str : STRUCT.GRM ../thotlib/libThotKernel.a ../bin ../bin/str
 	 
 
 ../bin/str : $(STR_OBJ) $(GRMS) ../thotlib/libThotKernel.a
-	$(CC) $(LDFLAGS) -o $@ $(STR_OBJ) $(LIBS)
+	$(CXX) $(LDFLAGS) -o $@ $(STR_OBJ) $(LIBS)
 	@$(ECHO) "====>" str is done
 
 #
@@ -102,7 +102,7 @@ prs : PRESEN.GRM ../thotlib/libThotKernel.a ../bin ../bin/prs
 	 
 
 ../bin/prs : $(PRS_OBJ) ../thotlib/libThotKernel.a
-	$(CC) $(LDFLAGS) -o $@ $(PRS_OBJ) $(LIBS)
+	$(CXX) $(LDFLAGS) -o $@ $(PRS_OBJ) $(LIBS)
 	@$(ECHO) "====>" prs is done
 
 #
@@ -118,7 +118,7 @@ typ : TYP.GRM ../thotlib/libThotKernel.a ../bin ../bin/typ
 	 
 
 ../bin/typ : $(TYP_OBJ) ../thotlib/libThotKernel.a
-	$(CC) $(LDFLAGS) -o $@ $(TYP_OBJ) $(LIBS)
+	$(CXX) $(LDFLAGS) -o $@ $(TYP_OBJ) $(LIBS)
 	@$(ECHO) "====>" typ is done
 
 #
@@ -134,7 +134,7 @@ tra : TRANS.GRM ../thotlib/libThotKernel.a ../bin ../bin/tra
 	 
 
 ../bin/tra : $(TRA_OBJ) ../thotlib/libThotKernel.a
-	$(CC) $(LDFLAGS) -o $@ $(TRA_OBJ) $(LIBS)
+	$(CXX) $(LDFLAGS) -o $@ $(TRA_OBJ) $(LIBS)
 	@$(ECHO) "====>" tra is done
 
 #
@@ -151,7 +151,7 @@ app : APP.GRM ../thotlib/libThotKernel.a ../bin ../bin/app
 	 
 
 ../bin/app : $(APP_OBJ) ../thotlib/libThotKernel.a
-	$(CC) $(LDFLAGS) -o $@ $(APP_OBJ) $(LIBS)
+	$(CXX) $(LDFLAGS) -o $@ $(APP_OBJ) $(LIBS)
 	@$(ECHO) "====>" app is done
 
 #
@@ -164,7 +164,7 @@ rescandialogue : ../bin ../bin/rescandialogue
 	 
 
 ../bin/rescandialogue : $(RESCAN_OBJ)
-	$(CC) -o $@ $(RESCAN_OBJ)
+	$(CXX) -o $@ $(RESCAN_OBJ)
 	@$(ECHO) "====>" rescandialogue is done
 
 #
@@ -177,7 +177,7 @@ printstr : ../thotlib/libThotKernel.a ../bin ../bin/printstr
 	 
 
 ../bin/printstr : $(PRINTSTR_OBJ) ../thotlib/libThotKernel.a
-	$(CC) $(LDFLAGS) -o $@ $(PRINTSTR_OBJ) $(LIBS)
+	$(CXX) $(LDFLAGS) -o $@ $(PRINTSTR_OBJ) $(LIBS)
 	@$(ECHO) "====>" printstr is done
 
 #
@@ -190,7 +190,7 @@ printprs : ../thotlib/libThotKernel.a ../bin ../bin/printprs
 	 
 
 ../bin/printprs : $(PRINTPRS_OBJ) ../thotlib/libThotKernel.a
-	$(CC) $(LDFLAGS) -o $@ $(INCLUDES) $(PRINTPRS_OBJ) $(LIBS)
+	$(CXX) $(LDFLAGS) -o $@ $(INCLUDES) $(PRINTPRS_OBJ) $(LIBS)
 	@$(ECHO) "====>" printprs is done
 
 clean :

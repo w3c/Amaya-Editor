@@ -95,7 +95,7 @@ static void AddToBuffer (char *orig)
       status = TtaRealloc (buffer, sizeof (char) * (lgbuffer + lg));      
       if (status != NULL)
 	{
-	  buffer = status;
+	  buffer = (char *)status;
 	  lgbuffer += lg;
 	  strcat (buffer, orig);
 	}
@@ -127,7 +127,7 @@ static void AddToBufferWithEOS (char *orig)
 
 	if (status != NULL)
 	  {
-	     buffer = status;
+	     buffer = (char *)status;
 	     lgbuffer += i;
 	     strcpy (&buffer[last_buffer_char], orig);
 	     last_buffer_char = last_buffer_char + lg - 1;
@@ -157,7 +157,7 @@ static void AddElement (unsigned char *element, CHARSET charset)
   strcpy (tmp2, "a");
   if (buffer == NULL)
     {
-      buffer = TtaGetMemory (PARAM_INCREMENT);
+      buffer = (char *)(char *)TtaGetMemory (PARAM_INCREMENT);
       lgbuffer = PARAM_INCREMENT;
       buffer[0] = EOS;
     }
@@ -262,10 +262,10 @@ static void TrimSpaces (char *string)
   ----------------------------------------------------------------------*/
 static void AddNameValue (char *name, char *value, CHARSET charset)
 {
-   AddElement (name, charset);
+   AddElement ((unsigned char *)name, charset);
    AddToBuffer ("=");
    if (value)
-      AddElement (value, charset);
+      AddElement ((unsigned char *)value, charset);
    AddToBuffer ("&");
 }
 
@@ -297,7 +297,7 @@ static void SubmitOption (Element option, char *name, Document doc)
         {
 	/* there's an explicit value */
 	length = TtaGetTextAttributeLength (attr) + 1;
-	value = TtaGetMemory (length);
+	value = (char *)TtaGetMemory (length);
 	TtaGiveTextAttributeValue (attr, value, &length);
         }
       else
@@ -307,8 +307,8 @@ static void SubmitOption (Element option, char *name, Document doc)
 	if (elText)
 	   {
 	   length = TtaGetTextLength (elText) + 1;
-	   value = TtaGetMemory (length);
-	   TtaGiveTextContent (elText, value, &length, &lang);
+	   value = (char *)TtaGetMemory (length);
+	   TtaGiveTextContent (elText, (unsigned char *)value, &length, &lang);
 	   }
         }
       /* remove extra spaces */
@@ -559,7 +559,7 @@ static void ParseForm (Document doc, Element ancestor, Element el, int mode)
 			{
 			  /* save the Value attribute of the element el */
 			  length = TtaGetTextAttributeLength (attrS) + 1;
-			  value = TtaGetMemory (length);
+			  value = (char *)TtaGetMemory (length);
 			  TtaGiveTextAttributeValue (attrS, value, &length);
 			  AddNameValue (name, value, charset);
 			  TtaFreeMemory (value);
@@ -609,7 +609,7 @@ static void ParseForm (Document doc, Element ancestor, Element el, int mode)
 			  TtaGiveTextAttributeValue (attr, name, &length);
 			  /* save the Value attribute of the element el */
 			  length = TtaGetTextAttributeLength (attrS) + 1;
-			  value = TtaGetMemory (length);
+			  value = (char *)TtaGetMemory (length);
 			  TtaGiveTextAttributeValue (attrS, value, &length);
 			  AddNameValue (name, value, charset);
 			  TtaFreeMemory (value);
@@ -649,14 +649,14 @@ static void ParseForm (Document doc, Element ancestor, Element el, int mode)
 		  /* save the NAME attribute of the element el */
 		  length = MAX_LENGTH - 1;
 		  TtaGiveTextAttributeValue (attr, name, &length);
-		  AddElement (name, charset);
+		  AddElement ((unsigned char *)name, charset);
 		  AddToBuffer ("=");
 		  while (elForm)
 		    {
 		      length = TtaGetTextLength (elForm) + 1;
-		      text = TtaGetMemory (length);
-		      TtaGiveTextContent (elForm, text, &length, &lang);
-		      AddElement (text, charset);
+		      text = (char *)TtaGetMemory (length);
+		      TtaGiveTextContent (elForm, (unsigned char *)text, &length, &lang);
+		      AddElement ((unsigned char *)text, charset);
 		      TtaFreeMemory (text);
 		      elForm = TtaSearchTypedElementInTree (elType, SearchForward, el, elForm);
 		    }
@@ -671,13 +671,13 @@ static void ParseForm (Document doc, Element ancestor, Element el, int mode)
 		  if (def != NULL)
 		    {
 		      length = TtaGetTextAttributeLength (def) + 1;
-		      value = TtaGetMemory (length);
+		      value = (char *)TtaGetMemory (length);
 		      TtaGiveTextAttributeValue (def, value, &length);
 		    }
 		  else
 		    {
 		      /* there's no default value */
-		      value = TtaGetMemory (1);
+		      value = (char *)TtaGetMemory (1);
 		      value[0] = EOS;
 		    }
 		  /* search the value in the Text_With_Frame element */
@@ -685,7 +685,7 @@ static void ParseForm (Document doc, Element ancestor, Element el, int mode)
 		  elForm = TtaSearchTypedElement (elType, SearchInTree, el);
 		  /* reset the value of the element */
 		  if (elForm != NULL) 
-		    TtaSetTextContent (elForm, value, lang, doc);
+		    TtaSetTextContent (elForm, (unsigned char *)value, lang, doc);
 		  TtaFreeMemory (value);
 		  value = NULL;
 		}
@@ -705,7 +705,7 @@ static void ParseForm (Document doc, Element ancestor, Element el, int mode)
 		      TtaGiveTextAttributeValue (attr, name, &length);
 		      /* save of the element content */
 		      length = TtaGetTextAttributeLength (def) + 1;
-		      value = TtaGetMemory (length);
+		      value = (char *)TtaGetMemory (length);
 		      TtaGiveTextAttributeValue (def, value, &length);
 		      AddNameValue (name, value, charset);
 		      TtaFreeMemory (value);
@@ -787,7 +787,7 @@ static void DoSubmit (Document doc, int method, char *action)
       TtaFreeMemory (ptr);
       break;
     case HTML_ATTR_METHOD_VAL_Get_:
-      urlName = TtaGetMemory (strlen (action) + buffer_size + 2);
+      urlName = (char *)TtaGetMemory (strlen (action) + buffer_size + 2);
       if (urlName)
 	{
 	  strcpy (urlName, action);
@@ -883,7 +883,7 @@ void SubmitForm (Document doc, Element element)
       if (attr != NULL)
 	{
 	  length = TtaGetTextAttributeLength (attr);
-	  name = TtaGetMemory (length + 3);
+	  name = (char *)TtaGetMemory (length + 3);
 	  TtaGiveTextAttributeValue (attr, name, &length);
 	  strcat (name, ". ");
 	  length ++;
@@ -924,14 +924,14 @@ void SubmitForm (Document doc, Element element)
 	{
 	  value = NULL;
 	  length = TtaGetTextAttributeLength (attr);
-	  name = TtaGetMemory (length + 1);
+	  name = (char *)TtaGetMemory (length + 1);
 	  TtaGiveTextAttributeValue (attr, name, &length);
 	  attrType.AttrTypeNum = HTML_ATTR_Value_;
 	  attr = TtaGetAttribute (element, attrType);
 	  if (attr != NULL)
 	    {
 	      length = TtaGetTextAttributeLength (attr);
-	      value = TtaGetMemory (length + 1);
+	      value = (char *)TtaGetMemory (length + 1);
 	      TtaGiveTextAttributeValue (attr, value, &length);
 	      AddNameValue (name, value, charset);
 	    }
@@ -980,7 +980,7 @@ void SubmitForm (Document doc, Element element)
 	  length = TtaGetTextAttributeLength (attr);
 	  if (length)
 	    {
-	      action = TtaGetMemory (length + 1);
+	      action = (char *)TtaGetMemory (length + 1);
 	      TtaGiveTextAttributeValue (attr, action, &length);
 	    }
 	}
@@ -1057,7 +1057,7 @@ ThotBool HandleReturn (NotifyOnTarget *event)
 	   length = TtaGetTextAttributeLength (attr);
 	   if (length)
 	     {
-	       action = TtaGetMemory (length + 1);
+	       action = (char *)TtaGetMemory (length + 1);
 	       TtaGiveTextAttributeValue (attr, action, &length);
 	       buffer = NULL;
 	       ParseForm (event->document, elForm, elForm, 
@@ -1207,7 +1207,7 @@ void SelectOneRadio (Document doc, Element el)
 		      if (attrN != NULL)
 			{
 			  length = TtaGetTextAttributeLength (attrN) + 1;
-			  buffer = TtaGetMemory (length);
+			  buffer = (char *)TtaGetMemory (length);
 			  TtaGiveTextAttributeValue (attrN, buffer, &length);
 			  if (!strcmp (name, buffer))
 			    {
@@ -1351,7 +1351,7 @@ void SelectOneOption (Document doc, Element el)
 	   el = TtaGetFirstChild (menuEl);
 
 	   /* use the global allocation buffer to store the entries */
-	   buffer = TtaGetMemory (PARAM_INCREMENT);
+	   buffer = (char *)TtaGetMemory (PARAM_INCREMENT);
 	   lgbuffer = PARAM_INCREMENT;
 	   buffer[0] = EOS;
 	   last_buffer_char = 0;
@@ -1395,7 +1395,7 @@ void SelectOneOption (Document doc, Element el)
 		     {
 		       elText = TtaGetFirstChild (el);
 		       if (elText)
-			 TtaGiveTextContent (elText, text + 1, &length, &lang);
+			 TtaGiveTextContent (elText, (unsigned char *)(text + 1), &length, &lang);
 		       else
 			 length = 0;
 		     }
@@ -1413,7 +1413,7 @@ void SelectOneOption (Document doc, Element el)
 		     text[0] = 'B';
 #ifdef _I18N_
 		   /* convert the UTF-8 string */
-		   tmp = TtaConvertMbsToByte (text, TtaGetDefaultCharset ());
+		   tmp = (char *)TtaConvertMbsToByte ((unsigned char *)text, TtaGetDefaultCharset ());
 		   AddToBufferWithEOS (tmp);
 		   TtaFreeMemory (tmp);
 #else /* _I18N_ */
@@ -1500,7 +1500,7 @@ void SelectOneOption (Document doc, Element el)
 				     { /* take the element's content */
 				       elText = TtaGetFirstChild (child);
 				       if (elText)
-					 TtaGiveTextContent (elText, text, &length, &lang);
+					 TtaGiveTextContent (elText, (unsigned char *)text, &length, &lang);
 				       else
 					 length = 0;
 				     } 
@@ -1509,7 +1509,7 @@ void SelectOneOption (Document doc, Element el)
 				   length++;
 #ifdef _I18N_
 				   /* convert the UTF-8 string */
-				   tmp = TtaConvertMbsToByte (text, TtaGetDefaultCharset ());
+				   tmp = (char *)TtaConvertMbsToByte ((unsigned char *)text, TtaGetDefaultCharset ());
 				   length = strlen (tmp) + 1;
 #else /* _I18N_ */
 				   tmp = text;

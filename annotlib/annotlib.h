@@ -101,7 +101,7 @@ typedef struct _RDFResource
 {
   char *name;
   List *statements;		/* each item is an RDFStatementP */
-  RDFClassExtP class;		/* if type->Class, points to more data */
+  RDFClassExtP class_;		/* if type->Class, points to more data */
 #if 0
   ThotBool isLiteral;		/* mostly a guess */
 #endif
@@ -216,9 +216,9 @@ typedef struct _AnnotFilter {
   ThotBool show;
 } AnnotFilterData;
 
-AnnotMetaDataList AnnotMetaData[DocumentTableLength];
+extern AnnotMetaDataList AnnotMetaData[DocumentTableLength];
 #ifdef ANNOT_ON_ANNOT
-AnnotThreadList   AnnotThread[DocumentTableLength];
+extern AnnotThreadList   AnnotThread[DocumentTableLength];
 #endif /* ANNOT_ON_ANNOT */
 
 /***************

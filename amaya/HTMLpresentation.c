@@ -198,7 +198,7 @@ void  AttrToSpan (Element elem, Attribute attr, Document doc)
 	    /* it's a text attribute */
 	    {
 	      len = TtaGetTextAttributeLength (attr);
-	      oldValue = TtaGetMemory (len + 1);
+	      oldValue = (char *)TtaGetMemory (len + 1);
 	      TtaGiveTextAttributeValue (attr, oldValue, &len);
 	      TtaSetAttributeText (newAttr, oldValue, span, doc);
 	      TtaFreeMemory (oldValue);
@@ -352,7 +352,7 @@ void SetStyleAttribute (Document doc, Element elem)
 
    /* keep the new style string */
    len = STYLELEN;
-   style = TtaGetMemory (STYLELEN);
+   style = (char *)TtaGetMemory (STYLELEN);
    GetHTMLStyleString (elem, doc, style, &len);
    if (len == 0)
      {
@@ -521,7 +521,7 @@ ThotBool ChangePRule (NotifyPresentation *event)
 		if (presType == PRWidth)
 		  {
 		    /* the new value is the old one plus the delta */
-		    TtaGiveBoxSize (el, doc, 1, unit, &value, &i);
+		    TtaGiveBoxSize (el, doc, 1, (TypeUnit)unit, &value, &i);
 		    value = event->value;
 		    if (unit == UnPercent)
 		      sprintf (buffer, "%d%%", value);
@@ -547,7 +547,7 @@ ThotBool ChangePRule (NotifyPresentation *event)
 		else
 		  {
 		    /* the new value is the old one plus the delta */
-		    TtaGiveBoxSize (el, doc, 1, unit, &i, &value);
+		    TtaGiveBoxSize (el, doc, 1, (TypeUnit)unit, &i, &value);
 		    value = event->value;
 		    attrType.AttrTypeNum = HTML_ATTR_Height_;
 		    attr = TtaGetAttribute (el, attrType);
@@ -670,7 +670,7 @@ void AttrLangCreated (NotifyAttribute *event)
   AttributeType attrType;
   Attribute	attr;
 #define ATTRLEN 64
-  char	       *value = TtaGetMemory (ATTRLEN); 
+  char	       *value = (char *)TtaGetMemory (ATTRLEN); 
 
   elem = event->element;
   elType = TtaGetElementType (elem);

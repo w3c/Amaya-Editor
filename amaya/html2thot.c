@@ -508,11 +508,11 @@ static char *StrCaseStr (char *str1, char *str2)
   if (str1 == NULL || str2 == NULL)
     return NULL;
   c = *str2;
-  len = strlen (str2);
+  len = strlen ((char *)str2);
   ptr = str1;
   while (*ptr != EOS)
     {
-      if (tolower(*ptr) == c && !strncasecmp (str2, ptr, len))
+      if (tolower(*ptr) == c && !strncasecmp ((char *)str2, ptr, len))
 	return ptr;
       else
 	ptr++;
@@ -578,7 +578,7 @@ void ParseAreaCoords (Element element, Document document)
    else
       shape = TtaGetAttributeValue (attrShape);
    length = TtaGetTextAttributeLength (attrCoords);
-   text = TtaGetMemory (length + 1);
+   text = (char*)TtaGetMemory (length + 1);
    TtaGiveTextAttributeValue (attrCoords, text, &length);
 
    if (shape == HTML_ATTR_shape_VAL_rectangle ||
@@ -788,7 +788,7 @@ void                   InitMapping (void)
    SSchema	       schema;
 
    /* building the table */
-   FirstClosedElem = TtaGetMemory (HTML_ENTRIES * sizeof(PtrClosedElement));
+   FirstClosedElem = (PtrClosedElement *)TtaGetMemory (HTML_ENTRIES * sizeof(PtrClosedElement));
    for (entry = 0; entry < HTML_ENTRIES; entry++)
      FirstClosedElem[entry] = NULL;
 
@@ -813,7 +813,7 @@ void                   InitMapping (void)
 		/* a identifier has been read */
 	       {
 		  schema = DocumentSSchema;
-		  entry = MapGI (name, &schema, HTMLcontext.doc);
+		  entry = MapGI ((char *)name, &schema, HTMLcontext.doc);
 #ifdef DEBUG
 		  if (entry < 0)
 		     fprintf (stderr, "error in EquivEndingElem: tag %s unknown in line\n%s\n", name, EquivEndingElem[line]);
@@ -872,7 +872,7 @@ void                   InitMapping (void)
 	i = 0;
 	ptr++;
 	schema = DocumentSSchema;
-	entry = MapGI (name, &schema, HTMLcontext.doc);
+	entry = MapGI ((char *)name, &schema, HTMLcontext.doc);
 #ifdef DEBUG
 	if (entry < 0)
 	   fprintf (stderr, "error in StartTagEndingElem: tag %s unknown in line\n%s\n", name, StartTagEndingElem[line]);
@@ -905,7 +905,7 @@ void                   InitMapping (void)
 		  newCE = (PtrClosedElement) TtaGetMemory (sizeof (ClosedElement));
 		  newCE->nextClosedElem = NULL;
 		  schema = DocumentSSchema;
-		  newCE->tagNum = MapGI (name, &schema, HTMLcontext.doc);
+		  newCE->tagNum = MapGI ((char *)name, &schema, HTMLcontext.doc);
 #ifdef DEBUG
 		  if (newCE->tagNum < 0)
 		     fprintf (stderr, "error in StartTagEndingElem: tag %s unknown in line\n%s\n", name, StartTagEndingElem[line]);
@@ -1189,7 +1189,7 @@ static void         TextToDocument ()
 	 {
 	   elType = TtaGetElementType (HTMLcontext.lastElement);
 	   if (elType.ElTypeNum == HTML_EL_TEXT_UNIT && HTMLcontext.mergeText)
-	     TtaAppendTextContent (HTMLcontext.lastElement, &(inputBuffer[i]),
+	     TtaAppendTextContent (HTMLcontext.lastElement, (unsigned char *)&(inputBuffer[i]),
 				   HTMLcontext.doc);
 	   else
 	     {
@@ -1203,7 +1203,7 @@ static void         TextToDocument ()
 	       HTMLcontext.mergeText = TRUE;
 	       /* put the content of the input buffer into the TEXT element */
 	       if (elText != NULL)
-		 TtaSetTextContent (elText, &(inputBuffer[i]),
+		 TtaSetTextContent (elText, (unsigned char *)&(inputBuffer[i]),
 				    HTMLcontext.language, HTMLcontext.doc);
 	     }
 	 }
@@ -1668,7 +1668,7 @@ void CheckCSSLink (Element el, Document doc, SSchema schema)
       if (attr)
 	{
 	  length = TtaGetTextAttributeLength (attr);
-	  buff = TtaGetMemory (length + 1);
+	  buff = (char*)TtaGetMemory (length + 1);
 	  TtaGiveTextAttributeValue (attr, buff, &length);
 	  media = CheckMediaCSS (buff);
 	  TtaFreeMemory (buff);
@@ -1683,7 +1683,7 @@ void CheckCSSLink (Element el, Document doc, SSchema schema)
 	  DocumentMeta[doc] && DocumentMeta[doc]->method != CE_MAKEBOOK)
 	{
 	  length = TtaGetTextAttributeLength (attr);
-	  buff = TtaGetMemory (length + 1);
+	  buff = (char*)TtaGetMemory (length + 1);
 	  TtaGiveTextAttributeValue (attr, buff, &length);
 	  /* get the CSS URI in UTF-8 */
 	  buff = ReallocUTF8String (buff, doc);
@@ -1730,7 +1730,7 @@ static ThotBool RemoveEndingSpaces (Element el)
 		       nbspaces = 0;
 		       do
 			 {
-			   TtaGiveSubString (lastLeaf, lastChar, length,
+			   TtaGiveSubString (lastLeaf, (unsigned char *)lastChar, length,
 					     1);
 			   if (lastChar[0] == SPACE)
 			     {
@@ -1978,7 +1978,7 @@ int           MapAttrValue (int thotAttr, char* attrVal)
       else
 	/* for other attributes, uppercase and lowercase are */
 	/* equivalent */
-	if (!strcasecmp (XhtmlAttrValueMappingTable[i].XMLattrValue, attrVal))
+	if (!strcasecmp ((char *)XhtmlAttrValueMappingTable[i].XMLattrValue, (char *)attrVal))
 	  value = XhtmlAttrValueMappingTable[i].ThotAttrValue;
 	else
 	  i++;
@@ -2161,8 +2161,8 @@ static void EndOfStartTag (char c)
 	  CloseBuffer ();
 	  elText = TtaGetLastChild (HTMLcontext.lastElement);
 	  if (LgBuffer > 0)
-	    TtaAppendTextContent (elText, inputBuffer, HTMLcontext.doc);
-	  TtaAppendTextContent (elText, ">", HTMLcontext.doc);
+	    TtaAppendTextContent (elText, (unsigned char *)inputBuffer, HTMLcontext.doc);
+	  TtaAppendTextContent (elText, (unsigned char *)">", HTMLcontext.doc);
 	  InitBuffer ();
 	}
     }
@@ -2206,9 +2206,9 @@ static void EndOfStartTag (char c)
 	    /* get its value */
 	    {
 	      length = TtaGetTextAttributeLength (attr);
-	      text = TtaGetMemory (length + 1);
+	      text = (char*)TtaGetMemory (length + 1);
 	      TtaGiveTextAttributeValue (attr, text, &length);
-	      if (!strcasecmp (text, "text/css"))
+	      if (!strcasecmp ((char *)text, "text/css"))
 		HTMLcontext.parsingCSS = TRUE;
 	      TtaFreeMemory (text);
 	    }
@@ -2375,11 +2375,11 @@ static void InsertInvalidEl (char* content, ThotBool badposition)
 	elText = TtaNewElement (HTMLcontext.doc, elType);
 	TtaSetElementLineNumber (elText, NumberOfLinesRead);
 	TtaInsertFirstChild (&elText, elInv, HTMLcontext.doc);
-	TtaSetTextContent (elText, content, HTMLcontext.language, HTMLcontext.doc);
+	TtaSetTextContent (elText, (unsigned char *)content, HTMLcontext.language, HTMLcontext.doc);
 	InitBuffer ();
 	if (!UnknownTag)
 	  /* close the end tag */
-	  TtaAppendTextContent (elText, ">", HTMLcontext.doc);
+	  TtaAppendTextContent (elText, (unsigned char *)">", HTMLcontext.doc);
 	if (badposition)
 	  TtaSetAccessRight (elInv, ReadOnly, HTMLcontext.doc);
      }
@@ -2402,12 +2402,12 @@ static void ProcessStartGI (char* GIname)
 
   /* ignore tag <P> within PRE */
   if (Within (HTML_EL_Preformatted, DocumentSSchema))
-    if (strcasecmp (GIname, "p") == 0)
+    if (strcasecmp ((char *)GIname, "p") == 0)
       return;
 
   /* search the HTML element name in the mapping table */
   schema = DocumentSSchema;
-  entry = MapGI (GIname, &schema, HTMLcontext.doc);
+  entry = MapGI ((char *)GIname, &schema, HTMLcontext.doc);
   lastElemEntry = entry;
 
   if (entry < 0)
@@ -2417,19 +2417,19 @@ static void ProcessStartGI (char* GIname)
       /* So, look for a colon in the element name */
       for (i = 0; GIname[i] != ':' && GIname[i] != EOS; i++);
       if (GIname[i] == ':' &&
-	      (strcasecmp (&GIname[i+1], "math") == 0 ||
-	       strcasecmp (&GIname[i+1], "xmlgraphics") == 0 ||
-	       strcasecmp (&GIname[i+1], "svg") == 0))
+	      (strcasecmp ((char *)&GIname[i+1], "math") == 0 ||
+	       strcasecmp ((char *)&GIname[i+1], "xmlgraphics") == 0 ||
+	       strcasecmp ((char *)&GIname[i+1], "svg") == 0))
 	/* it's a math or svg tag with a namespace prefix. OK */
 	{
-         entry = MapGI (&GIname[i+1], &schema, HTMLcontext.doc);
+         entry = MapGI ((char *)&GIname[i+1], &schema, HTMLcontext.doc);
 	 lastElemEntry = entry;
 	}
       else
 	/* unknown tag */
 	{
 	  UnknownTag = TRUE;
-	  if (strlen (GIname) > MaxMsgLength - 20)
+	  if (strlen ((char *)GIname) > MaxMsgLength - 20)
 	    GIname[MaxMsgLength - 20] = EOS;
 	  if (DocumentMeta[HTMLcontext.doc] &&
 	      DocumentMeta[HTMLcontext.doc]->xmlformat)
@@ -2458,7 +2458,7 @@ static void ProcessStartGI (char* GIname)
 	{
 	  /* Invalid element for the document profile */
 	  /* don't process that element */
-	  if (strlen (GIname) > MaxMsgLength - 20)
+	  if (strlen ((char *)GIname) > MaxMsgLength - 20)
 	    GIname[MaxMsgLength - 20] = EOS;
 	  sprintf (msgBuffer,
 		   "Invalid start element <%s> for the document profile",
@@ -2589,7 +2589,7 @@ static void     EndOfStartGI (char c)
       if (LgBuffer > 0 && inputBuffer[LgBuffer-1] == '/')
          LgBuffer--;
       CloseBuffer ();
-      strncpy (theGI, inputBuffer, MaxMsgLength - 1);
+      strncpy ((char *)theGI, (char *)inputBuffer, MaxMsgLength - 1);
       theGI[MaxMsgLength - 1] = EOS;
       /*** there may be a namespace prefix in front of the tag name ****/
       /*** We consider ":" as separator character ***/      
@@ -2624,12 +2624,12 @@ static void     EndOfStartGI (char c)
 	  else
 	    CurrentBufChar = StartOfTagIndx;
 
-	  if (!strcmp (theGI, "math"))
-	     strcpy (schemaName, "MathML");
+	  if (!strcmp ((char *)theGI, (char *)"math"))
+	     strcpy ((char *)schemaName, (char *)"MathML");
 	  else
-	     strcpy (schemaName, "SVG");
+	     strcpy ((char *)schemaName, (char *)"SVG");
 	  /* Parse the corresponding element with the XML parser */
-	  if (!ParseIncludedXml (stream, FileBuffer, INPUT_FILE_BUFFER_SIZE,
+	  if (!ParseIncludedXml ((FILE *)stream, FileBuffer, INPUT_FILE_BUFFER_SIZE,
 				 &EndOfHtmlFile, &NotToReadFile,
 				 PreviousFileBuffer, &LastCharInFileBuffer,
 				 InputText, &CurrentBufChar,
@@ -2679,7 +2679,7 @@ static void EndOfEndTag (char c)
 
    CloseBuffer ();
    if (HTMLcontext.parsingTextArea &&
-       strcasecmp (inputBuffer, "textarea") != 0)
+       strcasecmp ((char *)inputBuffer, "textarea") != 0)
      /* We are parsing the contents of a textarea element. The end
 	tag is not the one closing the current textarea, consider it
 	as plain text */
@@ -2710,7 +2710,7 @@ static void EndOfEndTag (char c)
 	     i++;
 	   else
 	     i = 0;
-	   if (strcasecmp (&inputBuffer[i], HTMLrootClosingTag) == 0)
+	   if (strcasecmp ((char *)&inputBuffer[i], (char *)HTMLrootClosingTag) == 0)
 	     {
 	       HTMLrootClosed = TRUE;
 	       ok = TRUE;
@@ -2721,10 +2721,10 @@ static void EndOfEndTag (char c)
 	 {
 	   /* search the HTML tag in the mapping table */
 	   schema = DocumentSSchema;
-	   entry = MapGI (inputBuffer, &schema, HTMLcontext.doc);
+	   entry = MapGI ((char *)inputBuffer, &schema, HTMLcontext.doc);
 	   if (entry < 0)
 	     {
-	       if (strlen (inputBuffer) > MaxMsgLength - 20)
+	       if (strlen ((char *)inputBuffer) > MaxMsgLength - 20)
 		 inputBuffer[MaxMsgLength - 20] = EOS;
 	       if (DocumentMeta[HTMLcontext.doc] &&
 		   DocumentMeta[HTMLcontext.doc]->xmlformat)
@@ -2749,7 +2749,7 @@ static void EndOfEndTag (char c)
 		      TtaGetDocumentProfile (HTMLcontext.doc))) 
 	     {
 	       /* Invalid element for the document profile */
-	       if (strlen (inputBuffer) > MaxMsgLength - 20)
+	       if (strlen ((char *)inputBuffer) > MaxMsgLength - 20)
 		 inputBuffer[MaxMsgLength - 20] = EOS;
 	       sprintf (msgBuffer,
 			"Invalid end element <%s> for the document profile",
@@ -2775,13 +2775,13 @@ static void EndOfEndTag (char c)
 		     /* the end tag is </Hn>. Consider all Hn as equivalent. */
 		     /* </H3> is considered as an end tag for <H2>, for instance */
 		     {
-		       strcpy (msgBuffer, inputBuffer);
+		       strcpy ((char *)msgBuffer, (char *)inputBuffer);
 		       msgBuffer[1] = '1';
 		       i = 1;
 		       do
 			 {
 			   schema = DocumentSSchema;
-			   entry = MapGI (msgBuffer, &schema, HTMLcontext.doc);
+			   entry = MapGI ((char *)msgBuffer, &schema, HTMLcontext.doc);
 			   ok = CloseElement (entry, -1, FALSE);
 			   msgBuffer[1]++;
 			   i++;
@@ -2789,25 +2789,25 @@ static void EndOfEndTag (char c)
 		       while (i <= 6 && !ok);
 		     }
 		   if (!ok &&
-		       (!strcasecmp (inputBuffer, "ol")   ||
-			!strcasecmp (inputBuffer, "ul")   ||
-			!strcasecmp (inputBuffer, "menu") ||
-			!strcasecmp (inputBuffer, "dir")))
+		       (!strcasecmp ((char *)inputBuffer, "ol")   ||
+			!strcasecmp ((char *)inputBuffer, "ul")   ||
+			!strcasecmp ((char *)inputBuffer, "menu") ||
+			!strcasecmp ((char *)inputBuffer, "dir")))
 		     /* the end tag is supposed to close a list */
 		     /* try to close another type of list */
 		     {
 		       ok = TRUE;
 		       schema = DocumentSSchema;
-		       if (!CloseElement (MapGI ("ol", &schema, HTMLcontext.doc), -1, FALSE) &&
-			   !CloseElement (MapGI ("ul", &schema, HTMLcontext.doc), -1, FALSE) &&
-			   !CloseElement (MapGI ("menu", &schema, HTMLcontext.doc), -1, FALSE) &&
-			   !CloseElement (MapGI ("dir", &schema, HTMLcontext.doc), -1, FALSE))
+		       if (!CloseElement (MapGI ((char *)"ol", &schema, HTMLcontext.doc), -1, FALSE) &&
+			   !CloseElement (MapGI ((char *)"ul", &schema, HTMLcontext.doc), -1, FALSE) &&
+			   !CloseElement (MapGI ((char *)"menu", &schema, HTMLcontext.doc), -1, FALSE) &&
+			   !CloseElement (MapGI ((char *)"dir", &schema, HTMLcontext.doc), -1, FALSE))
 			 ok = FALSE;
 		     }
 		   if (!ok)
 		     /* unrecoverable error. Create an Invalid_element */
 		     {
-		       if (strlen (inputBuffer) > MaxMsgLength - 10)
+		       if (strlen ((char *)inputBuffer) > MaxMsgLength - 10)
 			 inputBuffer[MaxMsgLength - 10] = EOS;
 		       sprintf (msgBuffer, "</%s", inputBuffer);
 		       InsertInvalidEl (msgBuffer, TRUE);
@@ -2852,8 +2852,8 @@ static void EndOfAttrName (char c)
    if (UnknownTag && HTMLcontext.lastElement)
      {
        elText = TtaGetLastChild (HTMLcontext.lastElement);
-       TtaAppendTextContent (elText, " ", HTMLcontext.doc);
-       TtaAppendTextContent (elText, inputBuffer, HTMLcontext.doc);
+       TtaAppendTextContent (elText, (unsigned char *)" ", HTMLcontext.doc);
+       TtaAppendTextContent (elText, (unsigned char *)inputBuffer, HTMLcontext.doc);
        InitBuffer ();
        lastAttrEntry = NULL;
        return;
@@ -2877,7 +2877,7 @@ static void EndOfAttrName (char c)
       /* ignore attributes of unknown tags */
       tableEntry = NULL;
    else
-      tableEntry = MapAttr (inputBuffer, &schema,
+      tableEntry = MapAttr ((char *)inputBuffer, &schema,
 			    lastElemEntry, &highEnoughLevel, HTMLcontext.doc);
 
    if (tableEntry)
@@ -2898,20 +2898,20 @@ static void EndOfAttrName (char c)
        if (highEnoughLevel)
 	 {
 	   /* this attribute is not in the HTML mapping table */
-	   if (strcasecmp (inputBuffer, "xmlns") == 0 ||
-	       strncasecmp (inputBuffer, "xmlns:", 6) == 0)
+	   if (strcasecmp ((char *)inputBuffer, "xmlns") == 0 ||
+	       strncasecmp ((char *)inputBuffer, "xmlns:", 6) == 0)
 	     /* this is a namespace declaration */
 	     {
 	       lastAttrEntry = NULL;
 	       /**** register this namespace ****/;
 	     }
-	   else if (strcasecmp (inputBuffer, "xml:lang") == 0)
+	   else if (strcasecmp ((char *)inputBuffer, "xml:lang") == 0)
 	     /* attribute xml:lang is not considered as invalid, but it is
 		ignored */
 	     lastAttrEntry = NULL;
 	   else
 	     {
-	       if (strlen (inputBuffer) > MaxMsgLength - 30)
+	       if (strlen ((char *)inputBuffer) > MaxMsgLength - 30)
 		 inputBuffer[MaxMsgLength - 30] = EOS;
 	       sprintf (msgBuffer, "Invalid attribute \"%s\"(removed if saving)", inputBuffer);
 	       HTMLParseError (HTMLcontext.doc, msgBuffer);
@@ -2924,7 +2924,7 @@ static void EndOfAttrName (char c)
        else
 	 {
 	   /* attribute invalid for the document profile */
-	   if (strlen (inputBuffer) > MaxMsgLength - 30)
+	   if (strlen ((char *)inputBuffer) > MaxMsgLength - 30)
 	     inputBuffer[MaxMsgLength - 30] = EOS;
 	   sprintf (msgBuffer,
 		    "Invalid attribute \"%s\" for the document profile",
@@ -2953,7 +2953,7 @@ static void EndOfAttrName (char c)
 	   /* create an attribute for current element */
 	   attrType.AttrSSchema = schema;
 	   attrType.AttrTypeNum = tableEntry->ThotAttribute;
-	   CreateHTMLAttribute (HTMLcontext.lastElement, attrType, inputBuffer, 
+	   CreateHTMLAttribute (HTMLcontext.lastElement, attrType, (char *)inputBuffer, 
 				(ThotBool)(tableEntry == &pHTMLAttributeMapping[0]),
 				HTMLcontext.doc, &lastAttribute, &lastAttrElement);
 	   if (attrType.AttrTypeNum == HTML_ATTR_HREF_)
@@ -3063,16 +3063,16 @@ static void         EndOfAttrValue (char c)
       if (BufferAttrValue == NULL)
 	{
 	  lg = 2 * MaxBufferLength;
-	  BufferAttrValue = TtaGetMemory (lg + 1);
-	  strcpy (BufferAttrValue, inputBuffer);
+	  BufferAttrValue = (char*)TtaGetMemory (lg + 1);
+	  strcpy ((char *)BufferAttrValue, (char *)inputBuffer);
           LgBufferAttrValue = lg;
 	}
       else
 	{
 	  LgBufferAttrValue += MaxBufferLength;
-	  newBufferAttrValue = TtaGetMemory (LgBufferAttrValue + 1);
-	  strcpy (newBufferAttrValue, BufferAttrValue);
-	  strcat (newBufferAttrValue, inputBuffer);
+	  newBufferAttrValue = (char*)TtaGetMemory (LgBufferAttrValue + 1);
+	  strcpy ((char *)newBufferAttrValue, (char *)BufferAttrValue);
+	  strcat ((char *)newBufferAttrValue, (char *)inputBuffer);
 	  TtaFreeMemory (BufferAttrValue);
 	  BufferAttrValue = newBufferAttrValue;
 	}
@@ -3092,8 +3092,8 @@ static void         EndOfAttrValue (char c)
       if (UnknownTag && HTMLcontext.lastElement)
 	{
 	  elText = TtaGetLastChild (HTMLcontext.lastElement);
-	  TtaAppendTextContent (elText, "=", HTMLcontext.doc);
-	  TtaAppendTextContent (elText, inputBuffer, HTMLcontext.doc);
+	  TtaAppendTextContent (elText, (unsigned char *)"=", HTMLcontext.doc);
+	  TtaAppendTextContent (elText, (unsigned char *)inputBuffer, HTMLcontext.doc);
 	  InitBuffer ();
 	  lastAttrEntry = NULL;
 	  return;
@@ -3113,7 +3113,7 @@ static void         EndOfAttrValue (char c)
 	{
 	  if (isAttrValueTruncated)
 	    {
-	      strcat (BufferAttrValue, inputBuffer);
+	      strcat ((char *)BufferAttrValue, (char *)inputBuffer);
 	      EndOfHTMLAttributeValue (BufferAttrValue, lastAttrEntry,
 				       lastAttribute, lastAttrElement,
 				       UnknownAttr, &HTMLcontext,
@@ -3125,7 +3125,7 @@ static void         EndOfAttrValue (char c)
 	    }
 	  else
 	    {
-	      EndOfHTMLAttributeValue (inputBuffer, lastAttrEntry, lastAttribute,
+	      EndOfHTMLAttributeValue ((char *)inputBuffer, lastAttrEntry, lastAttribute,
 				       lastAttrElement, UnknownAttr, &HTMLcontext,
 				       FALSE/*HTML parser*/);
 	    }
@@ -3282,7 +3282,7 @@ static void PutNonISOlatin1Char (int code, char *prefix)
        InsertElement (&elLeaf);
        HTMLcontext.lastElementClosed = TRUE;
        /* put that fallback character in the new text leaf */
-       TtaSetTextContent (elLeaf, buffer, lang, HTMLcontext.doc);
+       TtaSetTextContent (elLeaf, (unsigned char *)buffer, lang, HTMLcontext.doc);
        HTMLcontext.language = l;
        /* make that text leaf read-only */
        TtaSetAccessRight (elLeaf, ReadOnly, HTMLcontext.doc);
@@ -3292,9 +3292,9 @@ static void PutNonISOlatin1Char (int code, char *prefix)
        attr = TtaNewAttribute (attrType);
        TtaAttachAttribute (elLeaf, attr, HTMLcontext.doc);
        buffer[0] = '&';
-       strcpy (&buffer[1], prefix);
-       strcat (buffer, EntityName);
-       strcat (buffer, ";");
+       strcpy ((char *)&buffer[1], (char *)prefix);
+       strcat ((char *)buffer, (char *)EntityName);
+       strcat ((char *)buffer, (char *)";");
        TtaSetAttributeText (attr, buffer, elLeaf, HTMLcontext.doc);
        HTMLcontext.mergeText = FALSE;
      }
@@ -3323,7 +3323,7 @@ static void PutAmpersandInDoc ()
    InsertElement (&elText);
    HTMLcontext.lastElementClosed = TRUE;
    HTMLcontext.mergeText = FALSE;
-   TtaSetTextContent (elText, "&", HTMLcontext.language, HTMLcontext.doc);
+   TtaSetTextContent (elText, (unsigned char *)"&", HTMLcontext.language, HTMLcontext.doc);
    attrType.AttrSSchema = DocumentSSchema;
    attrType.AttrTypeNum = HTML_ATTR_IntEntity;
    attr = TtaNewAttribute (attrType);
@@ -3383,8 +3383,8 @@ static void EndOfEntity (unsigned char c)
 	PutInBuffer (EntityName[i]);
       PutInBuffer (';');
       /* print an error message */
-      sprintf (msgBuffer, "Unknown entity");
-      HTMLParseError (HTMLcontext.doc, msgBuffer);
+      sprintf ((char *)msgBuffer, "Unknown entity");
+      HTMLParseError (HTMLcontext.doc, (char *)msgBuffer);
     }
   LgEntityName = 0;
 }
@@ -3509,8 +3509,8 @@ static void EntityChar (unsigned char c)
 	      /* print an error message */
 	      EntityName[LgEntityName++] = c;
 	      EntityName[LgEntityName++] = EOS;
-	      sprintf (msgBuffer, "Unknown entity");
-	      HTMLParseError (HTMLcontext.doc, msgBuffer);
+	      sprintf ((char *)msgBuffer, "Unknown entity");
+	      HTMLParseError (HTMLcontext.doc, (char *)msgBuffer);
 	    }
 	  /* next state is the return state from the entity subautomaton,
 	     not the state computed by the automaton.
@@ -3759,7 +3759,7 @@ static void         StartOfComment (char c)
 	CommentText = TtaNewElement (HTMLcontext.doc, elType);
 	TtaSetElementLineNumber (CommentText, NumberOfLinesRead);
 	TtaInsertFirstChild (&CommentText, elCommentLine, HTMLcontext.doc);
-	TtaSetTextContent (CommentText, "", HTMLcontext.language,
+	TtaSetTextContent (CommentText, (unsigned char *)"", HTMLcontext.language,
 			   HTMLcontext.doc);
      }
    InitBuffer ();
@@ -3781,7 +3781,7 @@ static void         PutInComment (unsigned char c)
 	   /* put the content of the inputBuffer into the current */
 	   /* Comment_line element */
 	   CloseBuffer ();
-	   TtaAppendTextContent (CommentText, inputBuffer, HTMLcontext.doc);
+	   TtaAppendTextContent (CommentText, (unsigned char *)inputBuffer, HTMLcontext.doc);
 	   InitBuffer ();
 	   /* create a new Comment_line element */
 	   elType.ElSSchema = DocumentSSchema;
@@ -3797,14 +3797,14 @@ static void         PutInComment (unsigned char c)
 	   CommentText = TtaNewElement (HTMLcontext.doc, elType);
 	   TtaSetElementLineNumber (CommentText, NumberOfLinesRead);
 	   TtaInsertFirstChild (&CommentText, elCommentLine, HTMLcontext.doc);
-	   TtaSetTextContent (CommentText, "", HTMLcontext.language, HTMLcontext.doc);
+	   TtaSetTextContent (CommentText, (unsigned char *)"", HTMLcontext.language, HTMLcontext.doc);
 	}
       else
 	{
 	   if (LgBuffer >= MaxBufferLength - 1)
 	     {
 		CloseBuffer ();
-		TtaAppendTextContent (CommentText, inputBuffer, HTMLcontext.doc);
+		TtaAppendTextContent (CommentText, (unsigned char *)inputBuffer, HTMLcontext.doc);
 		InitBuffer ();
 	     }
 	   inputBuffer[LgBuffer++] = c;
@@ -3821,7 +3821,7 @@ static void         EndOfComment (char c)
      {
 	CloseBuffer ();
 	if (CommentText != NULL)
-	   TtaAppendTextContent (CommentText, inputBuffer, HTMLcontext.doc);
+	   TtaAppendTextContent (CommentText, (unsigned char *)inputBuffer, HTMLcontext.doc);
      }
    CommentText = NULL;
    InitBuffer ();
@@ -3866,14 +3866,14 @@ static void EndOfDoctypeDecl (char c)
   unsigned char  *buffer;
 
    CloseBuffer ();
-   buffer = TtaGetMemory (strlen (inputBuffer) + 4);
-   strcpy (buffer, "<!DOCTYPE ");
-   j = strlen (buffer);
+   buffer = (unsigned char*)TtaGetMemory (strlen ((char *)inputBuffer) + 4);
+   strcpy ((char *)buffer, (char *)"<!DOCTYPE ");
+   j = strlen ((char *)buffer);
    /* process the Doctype declaration available in inputBuffer */
-   if (!strncasecmp (inputBuffer, "doctype", 7))
+   if (!strncasecmp ((char *)inputBuffer, "doctype", 7))
      {
        for (i = 7; inputBuffer[i] <= SPACE && inputBuffer[i] != EOS; i++);
-       if (!strncasecmp (&inputBuffer[i], "HTML", 4))
+       if (!strncasecmp ((char *)&inputBuffer[i], "HTML", 4))
 	 /* it's a HTML document */
 	 {
 	   docEl = TtaGetMainRoot (HTMLcontext.doc);
@@ -3912,7 +3912,7 @@ static void EndOfDoctypeDecl (char c)
 
 		       /* We use the Latin_Script language to avoid the spell_chekcer */
 		       /* the spell_chekcer to check the doctype */
-		       TtaSetTextContent (text, buffer, Latin_Script, HTMLcontext.doc);
+		       TtaSetTextContent (text, (unsigned char *)buffer, Latin_Script, HTMLcontext.doc);
 		     }
 		   /* Create a new DOCTYPE_line element */
 		   elType.ElTypeNum = HTML_EL_DOCTYPE_line;
@@ -3937,7 +3937,7 @@ static void EndOfDoctypeDecl (char c)
 	       TtaInsertFirstChild (&text, doctypeLine, HTMLcontext.doc);
 	       /* We use the Latin_Script language to avoid the spell_chekcer */
 	       /* the spell_chekcer to check the doctype */
-	       TtaSetTextContent (text, buffer, Latin_Script, HTMLcontext.doc);
+	       TtaSetTextContent (text, (unsigned char *)buffer, Latin_Script, HTMLcontext.doc);
 	     }
 	 }
      }
@@ -4262,7 +4262,7 @@ static char GetNextChar (FILE *infile, char* buffer, int *index,
 	  /* return the second UTF-8 byte */
 	  charRead = SecondByte[0];
 	  /* shift */
-	  strncpy (SecondByte, &SecondByte[1], 4);
+	  strncpy ((char *)SecondByte, (char *)&SecondByte[1], 4);
 	}
       else
 	{
@@ -4283,7 +4283,7 @@ static char GetNextChar (FILE *infile, char* buffer, int *index,
 		    {
 		      /* store the second UTF-8 byte */
 		      res--;
-		      strncpy (SecondByte, &fallback[1], res);
+		      strncpy ((char *)SecondByte, (char *)&fallback[1], res);
 		      SecondByte[res] = EOS;
 		    }
 		}
@@ -4324,7 +4324,7 @@ static char GetNextChar (FILE *infile, char* buffer, int *index,
 	    NotToReadFile = FALSE;
 	  else
 	    {
-	      strcpy (PreviousFileBuffer, FileBuffer);
+	      strcpy ((char *)PreviousFileBuffer, (char *)FileBuffer);
 	      LastCharInPreviousFileBuffer = LastCharInFileBuffer;
 	      res = gzread (infile, FileBuffer, INPUT_FILE_BUFFER_SIZE);
 	      if (res <= 0)
@@ -4353,7 +4353,7 @@ static char GetNextChar (FILE *infile, char* buffer, int *index,
 	      /* return the second UTF-8 byte */
 	      charRead = SecondByte[0];
 	      /* shift */
-	      strncpy (SecondByte, &SecondByte[1], 4);
+	      strncpy ((char *)SecondByte, (char *)&SecondByte[1], 4);
 	    }
 	  else
 	    {
@@ -4389,7 +4389,7 @@ static char GetNextChar (FILE *infile, char* buffer, int *index,
 			{
 			  /* store the second UTF-8 byte */
 			  res--;
-			  strncpy (SecondByte, &fallback[1], res);
+			  strncpy ((char *)SecondByte, (char *)&fallback[1], res);
 			  SecondByte[res] = EOS;
 			}
 		    }
@@ -4451,7 +4451,7 @@ static char GetNextChar (FILE *infile, char* buffer, int *index,
 		  else if (HTMLcontext.lastElement && LgBuffer != 0)
 		    {
 		      inputBuffer[LgBuffer] = EOS;
-		      TtaSetTextContent (HTMLcontext.lastElement, inputBuffer,
+		      TtaSetTextContent (HTMLcontext.lastElement, (unsigned char *)inputBuffer,
 					 HTMLcontext.language,
 					 HTMLcontext.doc);
 		      InitBuffer ();
@@ -4498,7 +4498,7 @@ static char GetNextChar (FILE *infile, char* buffer, int *index,
 		      HTMLcontext.lastElement = elLeaf;
 		      HTMLcontext.lastElementClosed = TRUE;
 		      /* Put the fallback character into the new text leaf */
-		      TtaSetTextContent (elLeaf, fallback, lang, HTMLcontext.doc);
+		      TtaSetTextContent (elLeaf, (unsigned char *)fallback, lang, HTMLcontext.doc);
 		      HTMLcontext.mergeText = FALSE;
 		    }
 		}
@@ -4772,7 +4772,7 @@ static void HTMLparse (FILE * infile, char* HTMLbuf)
 		      /* call the procedure associated with the transition */
 		      CharProcessed = FALSE;
 		      if (trans->action != NULL)
-			(*(trans->action)) (charRead);
+			(*((Proc1)trans->action)) ((void *)charRead);
 		      if (NormalTransition || CharProcessed)
 			/* the input character has been processed */
 			charRead = EOS;
@@ -4829,7 +4829,7 @@ static Element GetANewText (Element el, ElementType elType, Document doc)
   if (LgBuffer)
     {
       inputBuffer[LgBuffer] = EOS;
-      TtaAppendTextContent (el, inputBuffer, doc);
+      TtaAppendTextContent (el, (unsigned char *)inputBuffer, doc);
       LgBuffer = 0;
       /* Create a new text leaf */
       elType.ElTypeNum = TextFile_EL_TEXT_UNIT;
@@ -4891,7 +4891,7 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
       if (pathURL != NULL && prev != NULL)
         {
           el = TtaGetFirstChild (prev);
-          TtaSetTextContent (el, pathURL, HTMLcontext.language, doc);
+          TtaSetTextContent (el, (unsigned char *)pathURL, HTMLcontext.language, doc);
         }
       /* insert the BODY element */
       elType.ElTypeNum = TextFile_EL_BODY;
@@ -4952,7 +4952,7 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
 	  /* LF = end of line */
 	  inputBuffer[LgBuffer] = EOS;
 	  if (LgBuffer != 0)
-	    TtaAppendTextContent (el, inputBuffer, doc);
+	    TtaAppendTextContent (el, (unsigned char *)inputBuffer, doc);
 	  LgBuffer = 0;
 	  el = NULL; /* generate a new line */
 	  charRead = EOS;
@@ -5160,7 +5160,7 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
 		{
 		  /* flush the current buffer */
 		  inputBuffer[LgBuffer] = EOS;
-		  TtaAppendTextContent (el, inputBuffer, doc);
+		  TtaAppendTextContent (el, (unsigned char *)inputBuffer, doc);
 		  LgBuffer = 0;
 		}
 	      if (withinComment)
@@ -5189,7 +5189,7 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
 	    {
 	      /* store the current buffer contents and continue */
 	      inputBuffer[LgBuffer] = EOS;
-	      TtaAppendTextContent (el, inputBuffer, doc);
+	      TtaAppendTextContent (el, (unsigned char *)inputBuffer, doc);
 	      LgBuffer = 0;
 	      inputBuffer[LgBuffer++] = charRead;
 	    }
@@ -5218,7 +5218,7 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
   if (LgBuffer != 0)
     {
       inputBuffer[LgBuffer] = EOS;
-      TtaAppendTextContent (el, inputBuffer, doc);
+      TtaAppendTextContent (el, (unsigned char *)inputBuffer, doc);
     }
 }
 
@@ -5333,7 +5333,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 			    }
 			}
 		    }
-		  else if (!strncasecmp (&FileBuffer[i], "<!DOCTYPE", 9))
+		  else if (!strncasecmp ((char *)&FileBuffer[i], "<!DOCTYPE", 9))
 		    {
 		      /* the doctype is found */
 		      i += 9;
@@ -5505,7 +5505,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 		      if (FileBuffer[j] == ':')
 			/* there is a prefix, skip it */
 			i = j + 1;
-		      if (!strncasecmp (&FileBuffer[i], "html", 4))
+		      if (!strncasecmp ((char *)&FileBuffer[i], "html", 4))
 			{
 			  /* the html tag is found */
 			  i += 4;
@@ -5529,7 +5529,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 			    /* No namespace, we consider the document as an html one */
 			    *thotType = docHTML;
 			}
-		      else if (!strncasecmp (&FileBuffer[i], "svg", 3))
+		      else if (!strncasecmp ((char *)&FileBuffer[i], "svg", 3))
 			{
 			  /* the svg tag is found */
 			  i += 3;
@@ -5552,7 +5552,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 				}
 			    }
 			}
-		      else if (!strncasecmp (&FileBuffer[i], "math", 4))
+		      else if (!strncasecmp ((char *)&FileBuffer[i], "math", 4))
 			{
 			  /* the math tag is found */
 			  i += 4;
@@ -6287,7 +6287,7 @@ void            CheckAbstractTree (char* pathURL, Document doc)
 	      }
 	    TtaSetAccessRight (el, ReadOnly, doc);
 	    if (DocumentURLs[doc] != NULL && elText != NULL)
-	      TtaSetTextContent (elText, DocumentURLs[doc], HTMLcontext.language, doc);
+	      TtaSetTextContent (elText,(unsigned char *) DocumentURLs[doc], HTMLcontext.language, doc);
 	    /* check all chidren of the HEAD Element, except the first one */
 	    /* which is Document_URL */
 	    TtaNextSibling (&el);
@@ -6843,7 +6843,7 @@ static void InitializeHTMLParser (Element lastelem, ThotBool isclosed,
 	   elem = lastelem;
 	while (elem != NULL && elem != rootElement && StackLevel < MaxStack-2)
 	  {
-	     strcpy (tag, GetXMLElementName (TtaGetElementType (elem), doc));
+	     strcpy ((char *)tag, (char *)GetXMLElementName (TtaGetElementType (elem), doc));
 	     if (strcmp (tag, "???"))
 	       {
 		  for (i = StackLevel; i > 0; i--)
@@ -6854,7 +6854,7 @@ static void InitializeHTMLParser (Element lastelem, ThotBool isclosed,
 		       ThotLevel[i + 1] = ThotLevel[i] + 1;
 		    }
 		  schema = DocumentSSchema;
-		  GINumberStack[1] = MapGI (tag, &schema, HTMLcontext.doc);
+		  GINumberStack[1] = MapGI ((char *)tag, &schema, HTMLcontext.doc);
 		  ElementStack[1] = elem;
 		  ThotLevel[1] = 1;
 		  LanguageStack[1] = HTMLcontext.language;
@@ -6915,7 +6915,7 @@ void ParseIncludedHTML (Element elem, char *closingTag)
    HTMLrootClosingTag = closingTag;
    /* TODO: the XML parser must call that function with two new parameters:
       the current infile and current index */
-   HTMLparse (stream, NULL);
+   HTMLparse ((FILE*)stream, NULL);
 
    HTMLcontext.lastElement = oldLastElement;
    HTMLcontext.lastElementClosed = oldLastElementClosed;
@@ -7004,8 +7004,8 @@ void ParseExternalHTMLDoc (Document doc, FILE * infile,
       TtaDeleteTree (oldel, doc);
     }
 
-  docURL = TtaGetMemory (strlen (extDocURL) + 1);
-  strcpy (docURL, extDocURL);
+  docURL = (char*)TtaGetMemory (strlen ((char *)extDocURL) + 1);
+  strcpy ((char *)docURL, (char *)extDocURL);
 
   /* Check if it's a valid encoding */
   if (DocumentMeta[doc]->charset)
@@ -7099,12 +7099,12 @@ void StartParser (Document doc, char *fileName,
       HTMLcontext.withinTable = 0;
       if (documentName[0] == EOS && !TtaCheckDirectory (documentDirectory))
 	{
-	  strcpy (documentName, documentDirectory);
+	  strcpy ((char *)documentName, (char *)documentDirectory);
 	  documentDirectory[0] = EOS;
 	  s = TtaGetEnvString ("PWD");
 	  /* set path on current directory */
 	  if (s != NULL)
-	    strcpy (documentDirectory, s);
+	    strcpy ((char *)documentDirectory, (char *)s);
 	  else
 	    documentDirectory[0] = EOS;
 	}
@@ -7113,13 +7113,13 @@ void StartParser (Document doc, char *fileName,
       /* Set document URL */
       if (DocumentURLs[doc])
 	{
-	  docURL = TtaGetMemory (strlen (DocumentURLs[doc]) + 1);
-	  strcpy (docURL, DocumentURLs[doc]);
+	  docURL = (char*)TtaGetMemory (strlen ((char *)DocumentURLs[doc]) + 1);
+	  strcpy ((char *)docURL, (char *)DocumentURLs[doc]);
 	}
       else
 	{
-	  docURL = TtaGetMemory (strlen (pathURL) + 1);
-	  strcpy (docURL, pathURL);
+	  docURL = (char*)TtaGetMemory (strlen ((char *)pathURL) + 1);
+	  strcpy ((char *)docURL, (char *)pathURL);
 	}
 
       /* do not check the Thot abstract tree against the structure */
@@ -7259,12 +7259,12 @@ void StartParser (Document doc, char *fileName,
 
       /* parse the input file and build the Thot document */
       if (plainText)
-	ReadTextFile (stream, NULL, doc, pathURL);
+	ReadTextFile ((FILE*)stream, NULL, doc, pathURL);
       else
 	{
 	  /* initialize parsing environment */
 	  InitializeHTMLParser (NULL, FALSE, 0);
-	  HTMLparse (stream, NULL);
+	  HTMLparse ((FILE*)stream, NULL);
 	  /* completes all unclosed elements */
 	  el = HTMLcontext.lastElement;
 	  while (el != NULL)

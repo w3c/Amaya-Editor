@@ -190,7 +190,7 @@ static void ModifyGraphics (PtrElement pEl, PtrDocument pDoc,
     {
       /* look for a specific presentation rule 'LineStyle' */
       /* ou en cree une nouvelle */
-      pPRule = SearchPresRule (pEl, PtLineStyle, 0, &isNew, pDoc, viewToApply);
+      pPRule = SearchPresRule (pEl, PtLineStyle, (FunctionType)0, &isNew, pDoc, viewToApply);
       /* get user choices */
       pPRule->PrType = PtLineStyle;
       pPRule->PrViewNum = viewSch;
@@ -212,7 +212,7 @@ static void ModifyGraphics (PtrElement pEl, PtrDocument pDoc,
     {
       /* cherche la regle de presentation specifique 'Epaisseur Trait' de */
       /* l'element ou en cree une nouvelle */
-      pPRule = SearchPresRule (pEl, PtLineWeight, 0, &isNew, pDoc, viewToApply);
+      pPRule = SearchPresRule (pEl, PtLineWeight, (FunctionType)0, &isNew, pDoc, viewToApply);
       /* met les choix de l'utilisateur dans cette regle */
       pPRule->PrType = PtLineWeight;
       pPRule->PrViewNum = viewSch;
@@ -236,7 +236,7 @@ static void ModifyGraphics (PtrElement pEl, PtrDocument pDoc,
     {
       /* cherche la regle de presentation specifique 'Background' de */
       /* l'element ou en cree une nouvelle */
-      pPRule = SearchPresRule (pEl, PtBackground, 0, &isNew, pDoc, viewToApply);
+      pPRule = SearchPresRule (pEl, PtBackground, (FunctionType)0, &isNew, pDoc, viewToApply);
       pPRule->PrType = PtBackground;
       pPRule->PrViewNum = viewSch;
       /* this rule will be translated into style attribute for the element */
@@ -257,7 +257,7 @@ static void ModifyGraphics (PtrElement pEl, PtrDocument pDoc,
 	  if (!pEl->ElTerminal &&
 	      !TypeHasException (ExcNoShowBox, pEl->ElTypeNumber, pEl->ElStructSchema))
 	    {
-	      pFunctRule = SearchPresRule (pEl, PtFunction, FnShowBox, &isNew,
+	      pFunctRule = SearchPresRule (pEl, PtFunction, (FunctionType)FnShowBox, &isNew,
 					   pDoc, viewToApply);
 	      pFunctRule->PrType = PtFunction;
 	      pFunctRule->PrViewNum = viewSch;
@@ -280,7 +280,7 @@ static void ModifyGraphics (PtrElement pEl, PtrDocument pDoc,
     {
       /* cherche la regle de presentation specifique 'FillPattern' de */
       /* l'element ou en cree une nouvelle */
-      pPRule = SearchPresRule (pEl, PtFillPattern, 0, &isNew, pDoc, viewToApply);
+      pPRule = SearchPresRule (pEl, PtFillPattern, (FunctionType)0, &isNew, pDoc, viewToApply);
       /* met les choix de l'utilisateur dans cette regle */
       pPRule->PrType = PtFillPattern;
       pPRule->PrViewNum = viewSch;
@@ -304,7 +304,7 @@ static void ModifyGraphics (PtrElement pEl, PtrDocument pDoc,
 	  if (!pEl->ElTerminal &&
 	      !TypeHasException (ExcNoShowBox, pEl->ElTypeNumber, pEl->ElStructSchema))
 	    {
-	      pFunctRule = SearchPresRule (pEl, PtFunction, FnShowBox, &isNew,
+	      pFunctRule = SearchPresRule (pEl, PtFunction, (FunctionType)FnShowBox, &isNew,
 					   pDoc, viewToApply);
 	      pFunctRule->PrType = PtFunction;
 	      pFunctRule->PrViewNum = viewSch;
@@ -327,7 +327,7 @@ static void ModifyGraphics (PtrElement pEl, PtrDocument pDoc,
     {
       /* cherche la regle de presentation specifique 'CouleurTrace' de */
       /* l'element ou en cree une nouvelle */
-      pPRule = SearchPresRule (pEl, PtForeground, 0, &isNew, pDoc, viewToApply);
+      pPRule = SearchPresRule (pEl, PtForeground, (FunctionType)0, &isNew, pDoc, viewToApply);
       /* met les choix de l'utilisateur dans cette regle */
       pPRule->PrType = PtForeground;
       pPRule->PrViewNum = viewSch;
@@ -401,8 +401,11 @@ void         ModifyColor (int colorNum, ThotBool Background)
 	   /* set selection to the highest level elements having the same
 	      content */
 	     if (ThotLocalActions[T_selectsiblings] != NULL)
-	       (*ThotLocalActions[T_selectsiblings]) (&pElFirstSel,
-					   &pElLastSel, &firstChar, &lastChar);
+	       (*(Proc4)ThotLocalActions[T_selectsiblings]) (
+			(void *)&pElFirstSel,
+			(void *)&pElLastSel,
+			(void *)&firstChar,
+		       	(void *)&lastChar);
 	     if (firstChar == 0 && lastChar == 0)
 	       if (pElFirstSel->ElPrevious == NULL &&
 		   pElLastSel->ElNext == NULL)
@@ -419,8 +422,13 @@ void         ModifyColor (int colorNum, ThotBool Background)
 	   }
 
 	if (ThotLocalActions[T_openhistory] != NULL)
-	  (*ThotLocalActions[T_openhistory]) (SelDoc, pElFirstSel, pElLastSel,
-					      NULL, firstChar, lastChar);
+	  (*(Proc6)ThotLocalActions[T_openhistory]) (
+		(void *)SelDoc,
+		(void *)pElFirstSel,
+		(void *)pElLastSel,
+		(void *)NULL,
+		(void *)firstChar,
+		(void *)lastChar);
 	/* parcourt les elements selectionnes */
 	pEl = pElFirstSel;
 	while (pEl != NULL)
@@ -462,7 +470,7 @@ void         ModifyColor (int colorNum, ThotBool Background)
 		   }
 		 else
 		   ModifyGraphics (pEl, SelDoc, SelectedView, FALSE,
-				   SPACE, FALSE, 0, FALSE,
+				   SPACE, FALSE, 0, (TypeUnit)FALSE,
 				   modifFillPattern, fillPatternNum,
 				   (ThotBool)Background, colorNum, (ThotBool)(!Background),
 				   colorNum);
@@ -476,7 +484,7 @@ void         ModifyColor (int colorNum, ThotBool Background)
 	/* tente de fusionner les elements voisins et reaffiche les paves */
 	/* modifie's et la selection */
 	if (ThotLocalActions[T_closehistory] != NULL)
-	  (*ThotLocalActions[T_closehistory]) (SelDoc);
+	  (*(Proc1)ThotLocalActions[T_closehistory]) ((void *)SelDoc);
 	SelectRange (SelDoc, oldFirstSel, oldLastSel, oldFirstChar,
 		     oldLastChar);
      }
@@ -509,7 +517,7 @@ static void  ModifyChar (PtrElement pEl, PtrDocument pDoc, int viewToApply,
      {
        /* cherche la regle de presentation specifique 'Fonte' de l'element */
        /* ou en cree une nouvelle */
-       pPRule = SearchPresRule (pEl, PtFont, 0, &isNew, pDoc, viewToApply);
+       pPRule = SearchPresRule (pEl, PtFont, (FunctionType)0, &isNew, pDoc, viewToApply);
        /* met les choix de l'utilisateur dans cette regle */
        pPRule->PrType = PtFont;
        pPRule->PrViewNum = viewSch;
@@ -549,7 +557,7 @@ static void  ModifyChar (PtrElement pEl, PtrDocument pDoc, int viewToApply,
      {
        /* cherche la regle de presentation specifique 'Style' de l'element */
        /* ou en cree une nouvelle */
-       pPRule = SearchPresRule (pEl, PtStyle, 0, &isNew, pDoc, viewToApply);
+       pPRule = SearchPresRule (pEl, PtStyle, (FunctionType)0, &isNew, pDoc, viewToApply);
        /* met les choix de l'utilisateur dans cette regle */
        pPRule->PrType = PtStyle;
        pPRule->PrViewNum = viewSch;
@@ -590,7 +598,7 @@ static void  ModifyChar (PtrElement pEl, PtrDocument pDoc, int viewToApply,
      {
        /* cherche la regle de presentation specifique 'Weight' de l'element */
        /* ou en cree une nouvelle */
-       pPRule = SearchPresRule (pEl, PtWeight, 0, &isNew, pDoc, viewToApply);
+       pPRule = SearchPresRule (pEl, PtWeight, (FunctionType)0, &isNew, pDoc, viewToApply);
        /* met les choix de l'utilisateur dans cette regle */
        pPRule->PrType = PtWeight;
        pPRule->PrViewNum = viewSch;
@@ -626,7 +634,7 @@ static void  ModifyChar (PtrElement pEl, PtrDocument pDoc, int viewToApply,
      {
        /* cherche la regle de presentation specifique 'Corps' de l'element */
        /* ou en cree une nouvelle */
-       pPRule = SearchPresRule (pEl, PtSize, 0, &isNew, pDoc, viewToApply);
+       pPRule = SearchPresRule (pEl, PtSize, (FunctionType)0, &isNew, pDoc, viewToApply);
        /* met les choix de l'utilisateur dans cette regle */
        pPRule->PrType = PtSize;
        pPRule->PrViewNum = viewSch;
@@ -650,7 +658,7 @@ static void  ModifyChar (PtrElement pEl, PtrDocument pDoc, int viewToApply,
      {
        /* cherche la regle de presentation specifique 'Souligne' de l'element*/
        /* ou en cree une nouvelle */
-       pPRule = SearchPresRule (pEl, PtUnderline, 0, &isNew, pDoc, viewToApply);
+       pPRule = SearchPresRule (pEl, PtUnderline, (FunctionType)0, &isNew, pDoc, viewToApply);
        /* met les choix de l'utilisateur dans cette regle */
        pPRule->PrType = PtUnderline;
        pPRule->PrViewNum = viewSch;
@@ -694,7 +702,7 @@ static void  ModifyChar (PtrElement pEl, PtrDocument pDoc, int viewToApply,
      {
        /* cherche la regle de presentation specifique weightUnderline de */
        /* l'element ou en cree une nouvelle */
-       pPRule = SearchPresRule (pEl, PtThickness, 0, &isNew, pDoc, viewToApply);
+       pPRule = SearchPresRule (pEl, PtThickness, (FunctionType)0, &isNew, pDoc, viewToApply);
        /* met les choix de l'utilisateur dans cette regle */
        pPRule->PrType = PtThickness;
        pPRule->PrViewNum = viewSch;
@@ -745,7 +753,7 @@ static void ModifyLining (PtrElement pEl, PtrDocument pDoc,
    /* applique les choix de l'utilisateur */
    if (modifAdjust && Adjust > 0)
      {
-       pPRule = SearchPresRule (pEl, PtAdjust, 0, &isNew, pDoc, viewToApply);
+       pPRule = SearchPresRule (pEl, PtAdjust, (FunctionType)0, &isNew, pDoc, viewToApply);
        pPRule->PrType = PtAdjust;
        pPRule->PrViewNum = viewSch;
        /* this rule will be translated into style attribute for the element */
@@ -774,7 +782,7 @@ static void ModifyLining (PtrElement pEl, PtrDocument pDoc,
 	  }
        if (!PRuleMessagePre (pEl, pPRule, Adjust, pDoc, isNew))
 	 {
-	   pPRule->PrAdjust = value;
+	   pPRule->PrAdjust = (BAlignment)value;
 	   SetDocumentModified (pDoc, TRUE, 0);
 	   ApplyNewRule (pDoc, pPRule, pEl);
 	   PRuleMessagePost (pEl, pPRule, pDoc, isNew);
@@ -783,7 +791,7 @@ static void ModifyLining (PtrElement pEl, PtrDocument pDoc,
    /* Coupure des mots */
    if (modifHyphen)
      {
-       pPRule = SearchPresRule (pEl, PtHyphenate, 0, &isNew, pDoc, viewToApply);
+       pPRule = SearchPresRule (pEl, PtHyphenate, (FunctionType)0, &isNew, pDoc, viewToApply);
        pPRule->PrType = PtHyphenate;
        pPRule->PrViewNum = viewSch;
        /* this rule will be translated into style attribute for the element */
@@ -800,7 +808,7 @@ static void ModifyLining (PtrElement pEl, PtrDocument pDoc,
    /* Renfoncement de la 1ere ligne */
    if (modifIndent)
      {
-       pPRule = SearchPresRule (pEl, PtIndent, 0, &isNew, pDoc, viewToApply);
+       pPRule = SearchPresRule (pEl, PtIndent, (FunctionType)0, &isNew, pDoc, viewToApply);
        pPRule->PrType = PtIndent;
        pPRule->PrViewNum = viewSch;
        /* this rule will be translated into style attribute for the element */
@@ -820,7 +828,7 @@ static void ModifyLining (PtrElement pEl, PtrDocument pDoc,
    /* Interligne */
    if (modifLineSpacing)
      {
-       pPRule = SearchPresRule (pEl, PtLineSpacing, 0, &isNew, pDoc, viewToApply);
+       pPRule = SearchPresRule (pEl, PtLineSpacing, (FunctionType)0, &isNew, pDoc, viewToApply);
        pPRule->PrType = PtLineSpacing;
        pPRule->PrViewNum = viewSch;
        /* this rule will be translated into style attribute for the element */
@@ -1009,8 +1017,11 @@ static void         ApplyPresentMod (int applyDomain)
 	   /* only changes to standard presentation */
 	   {
 	     if (ThotLocalActions[T_selectsiblings] != NULL)
-	       (*ThotLocalActions[T_selectsiblings]) (&pFirstSel, &pLastSel,
-						      &firstChar, &lastChar);
+	       (*(Proc4)ThotLocalActions[T_selectsiblings]) (
+			(void *)&pFirstSel,
+			(void *)&pLastSel,
+			(void *)&firstChar,
+			(void *)&lastChar);
 	   }
 	
 	/* evalue les difference entre le pave traite' et les demandes
@@ -1367,8 +1378,11 @@ void TtcStandardGeometry (Document document, View view)
 	/* set selection to the highest level elements having the same
 	   content */
 	if (ThotLocalActions[T_selectsiblings] != NULL)
-	  (*ThotLocalActions[T_selectsiblings]) (&pFirstSel, &pLastSel,
-						 &firstChar, &lastChar);
+	  (*(Proc4)ThotLocalActions[T_selectsiblings]) (
+		(void *)&pFirstSel,
+		(void *)&pLastSel,
+		(void *)&firstChar,
+		(void *)&lastChar);
 	if (firstChar == 0 && lastChar == 0)
 	  if (pFirstSel->ElPrevious == NULL && pLastSel->ElNext == NULL)
 	    if (pFirstSel->ElParent != NULL &&

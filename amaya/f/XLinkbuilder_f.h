@@ -12,7 +12,7 @@ extern void MapXLinkAttribute ( char *attrName,
                                 ThotBool *level,
                                 Document doc );
 extern void MapXLinkAttributeValue ( char* AttrVal,
-                                     AttributeType attrType,
+                                     const AttributeType * attrType,
                                      int *value );
 extern void XLinkAttributeComplete ( Attribute attr,
                                      Element el,
@@ -26,7 +26,7 @@ extern void MapXLinkAttribute (/* char *attrName,
                                   ThotBool *level,
                                   Document doc */);
 extern void MapXLinkAttributeValue (/* char* AttrVal,
-                                       AttributeType attrType,
+                                       const AttributeType * attrType,
                                        int *value */);
 extern void XLinkAttributeComplete (/* Attribute attr,
                                        Element el,

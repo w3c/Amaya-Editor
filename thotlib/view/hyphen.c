@@ -88,9 +88,9 @@ static int PatternHyphen (STRING word, int length, Language language,
    *addHyphen = FALSE;
    status = 0;
    /* current patterns concern only iso-latin characters */
-   iso = TtaConvertCHARToByte (word, ISO_8859_1);
+   iso = (char *)TtaConvertCHARToByte (word, ISO_8859_1);
    /* Convertit le mot en minuscule */
-   SmallLettering (iso);
+   SmallLettering ((unsigned char *)iso);
    pHyphen = TtaGetPatternHyphenList (iso, language);
    TtaFreeMemory (iso);
    if (pHyphen == NULL)

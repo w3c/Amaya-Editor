@@ -167,11 +167,11 @@ void CreateDoctype (Document doc, int profile, ThotBool useMathML, ThotBool useS
     {
       TtaInsertFirstChild (&text, doctypeLine, doc);
       if (profile == L_Basic)
-	TtaSetTextContent (text, DOCTYPE1_XHTML10_BASIC, language, doc);
+	TtaSetTextContent (text, (unsigned char*)DOCTYPE1_XHTML10_BASIC, language, doc);
       else if (profile == L_Strict && DocumentMeta[doc]->xmlformat)
-	TtaSetTextContent (text, DOCTYPE1_XHTML10_STRICT, language, doc);
+	TtaSetTextContent (text, (unsigned char*)DOCTYPE1_XHTML10_STRICT, language, doc);
       else if (profile == L_Strict && !DocumentMeta[doc]->xmlformat)
-	TtaSetTextContent (text, DOCTYPE1_HTML_STRICT, language, doc);
+	TtaSetTextContent (text, (unsigned char*)DOCTYPE1_HTML_STRICT, language, doc);
       else if (profile == L_Xhtml11 && useMathML)
 	{
 	   /* generate the David Carliste's xsl stylesheet for MathML */
@@ -182,18 +182,18 @@ void CreateDoctype (Document doc, int profile, ThotBool useMathML, ThotBool useS
 	     strcat (buffer, DOCTYPE1_XHTML11_PLUS_MATHML_PLUS_SVG);
 	   else
 	     strcat (buffer, DOCTYPE1_XHTML11_PLUS_MATHML);
-	   TtaSetTextContent (text, buffer, language, doc);
+	   TtaSetTextContent (text, (unsigned char*)buffer, language, doc);
 	}
       else if (profile == L_Xhtml11)
-	TtaSetTextContent (text, DOCTYPE1_XHTML11, language, doc);
+	TtaSetTextContent (text, (unsigned char*)DOCTYPE1_XHTML11, language, doc);
       else if (profile == L_Transitional && DocumentMeta[doc]->xmlformat)
-	TtaSetTextContent (text, DOCTYPE1_XHTML10_TRANSITIONAL, language, doc);
+	TtaSetTextContent (text, (unsigned char*)DOCTYPE1_XHTML10_TRANSITIONAL, language, doc);
       else if (profile == L_Transitional && !DocumentMeta[doc]->xmlformat)
-	TtaSetTextContent (text, DOCTYPE1_HTML_TRANSITIONAL, language, doc);
+	TtaSetTextContent (text, (unsigned char*)DOCTYPE1_HTML_TRANSITIONAL, language, doc);
       else if (profile == L_MathML)
-	TtaSetTextContent (text, DOCTYPE1_MATHML20, language, doc);
+	TtaSetTextContent (text, (unsigned char*)DOCTYPE1_MATHML20, language, doc);
       else if (profile == L_SVG)
-	TtaSetTextContent (text, DOCTYPE1_SVG10, language, doc);
+	TtaSetTextContent (text, (unsigned char*)DOCTYPE1_SVG10, language, doc);
     }
   
   /* Create the second DOCTYPE_line element */
@@ -207,25 +207,25 @@ void CreateDoctype (Document doc, int profile, ThotBool useMathML, ThotBool useS
     {
       TtaInsertFirstChild (&text, doctypeLine, doc);
       if (profile == L_Basic)
-	TtaSetTextContent (text, DOCTYPE2_XHTML10_BASIC, language, doc);
+	TtaSetTextContent (text, (unsigned char*)DOCTYPE2_XHTML10_BASIC, language, doc);
       else if (profile == L_Strict && DocumentMeta[doc]->xmlformat)
-	TtaSetTextContent (text, DOCTYPE2_XHTML10_STRICT, language, doc);
+	TtaSetTextContent (text, (unsigned char*)DOCTYPE2_XHTML10_STRICT, language, doc);
       else if (profile == L_Strict && !DocumentMeta[doc]->xmlformat)
-	TtaSetTextContent (text, DOCTYPE2_HTML_STRICT, language, doc);
+	TtaSetTextContent (text, (unsigned char*)DOCTYPE2_HTML_STRICT, language, doc);
       else if (profile == L_Xhtml11 && !useMathML)
-	TtaSetTextContent (text, DOCTYPE2_XHTML11, language, doc);
+	TtaSetTextContent (text, (unsigned char*)DOCTYPE2_XHTML11, language, doc);
       else if (profile == L_Xhtml11 && useMathML && useSVG)
-	TtaSetTextContent (text, DOCTYPE2_XHTML11_PLUS_MATHML_PLUS_SVG, language, doc);
+	TtaSetTextContent (text, (unsigned char*)DOCTYPE2_XHTML11_PLUS_MATHML_PLUS_SVG, language, doc);
       else if (profile == L_Xhtml11 && useMathML)
-	TtaSetTextContent (text, DOCTYPE2_XHTML11_PLUS_MATHML, language, doc);
+	TtaSetTextContent (text, (unsigned char*)DOCTYPE2_XHTML11_PLUS_MATHML, language, doc);
       else if (profile == L_Transitional && DocumentMeta[doc]->xmlformat)
-	TtaSetTextContent (text, DOCTYPE2_XHTML10_TRANSITIONAL, language, doc);
+	TtaSetTextContent (text, (unsigned char*)DOCTYPE2_XHTML10_TRANSITIONAL, language, doc);
       else if (profile == L_Transitional && !DocumentMeta[doc]->xmlformat)
-	TtaSetTextContent (text, DOCTYPE2_HTML_TRANSITIONAL, language, doc);
+	TtaSetTextContent (text, (unsigned char*)DOCTYPE2_HTML_TRANSITIONAL, language, doc);
       else if (profile == L_MathML)
-	TtaSetTextContent (text, DOCTYPE2_MATHML20, language, doc);
+	TtaSetTextContent (text, (unsigned char*)DOCTYPE2_MATHML20, language, doc);
       else if (profile == L_SVG)
-	TtaSetTextContent (text, DOCTYPE2_SVG10, language, doc);
+	TtaSetTextContent (text, (unsigned char*)DOCTYPE2_SVG10, language, doc);
     }
   TtaSetStructureChecking (1, doc);
 
@@ -249,12 +249,12 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
   char                 tempfile[MAX_LENGTH];
   char                 charsetName[MAX_LENGTH];
 
-  pathname = TtaGetMemory (MAX_LENGTH);
-  documentname = TtaGetMemory (MAX_LENGTH);
+  pathname = (char *)TtaGetMemory (MAX_LENGTH);
+  documentname = (char *)TtaGetMemory (MAX_LENGTH);
   NormalizeURL (url, 0, pathname, documentname, NULL);
   if (doc == 0 || InNewWindow)
     {
-      doc = InitDocAndView (0, documentname, docType, 0, FALSE, profile,
+      doc = InitDocAndView (0, documentname, (DocumentType)docType, 0, FALSE, profile,
 			    CE_ABSOLUTE);
       InitDocHistory (doc);
       InNewWindow = FALSE;
@@ -266,7 +266,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
 		     DocumentMeta[doc]->initial_url,
 		     DocumentMeta[doc]->form_data,
 		     DocumentMeta[doc]->method);
-      doc = InitDocAndView (doc, documentname, docType, 0, FALSE, profile,
+      doc = InitDocAndView (doc, documentname, (DocumentType)docType, 0, FALSE, profile,
 			    CE_ABSOLUTE);
     }
   TtaFreeMemory (documentname);
@@ -331,7 +331,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
       title = TtaSearchTypedElement (elType, SearchInTree, root);
       text = TtaGetFirstChild (title);
       if (TtaGetTextLength (text) == 0)
-	TtaSetTextContent (text, "No title", language, doc);
+	TtaSetTextContent (text, (unsigned char*)"No title", language, doc);
       UpdateTitle (title, doc);
 
       elType.ElTypeNum = HTML_EL_HEAD;
@@ -357,7 +357,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
 	  TtaInsertFirstChild (&text, el, doc);
 	}
       if (url != NULL && text != NULL)
-	TtaSetTextContent (text, url, language, doc);
+	TtaSetTextContent (text, (unsigned char*)url, language, doc);
 
       /* create a META element in the HEAD with name="generator" */
       /* and content="Amaya" */
@@ -494,7 +494,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
       /* prevent the user from editing this element */
       TtaSetAccessRight (el, ReadOnly, doc);
       el = TtaGetFirstChild (el);     
-      TtaSetTextContent (el, url, language, doc);
+      TtaSetTextContent (el, (unsigned char*)url, language, doc);
 
       body = TtaGetLastChild (root);
       /* create a new line */
@@ -816,7 +816,7 @@ void CreateBreak (Document document, View view)
 static Element InsertWithinHead (Document document, View view, int elementT)
 {
    ElementType         elType;
-   Element             el, firstSel, lastSel, head, parent, new, title;
+   Element             el, firstSel, lastSel, head, parent, new_, title;
    SSchema             docSchema;
    int                 j, firstChar, lastChar;
    ThotBool            before;
@@ -886,14 +886,14 @@ static Element InsertWithinHead (Document document, View view, int elementT)
 	   if (TtaSearchTypedElement (elType, SearchInTree, head))
 	     return (NULL);
 	 }
-       new = TtaNewTree (document, elType, "");
-       TtaInsertSibling (new, el, before, document);
+       new_ = TtaNewTree (document, elType, "");
+       TtaInsertSibling (new_, el, before, document);
        /* register this element in the editing history */
        TtaOpenUndoSequence (document, firstSel, lastSel, firstChar,
 			    lastChar);
-       TtaRegisterElementCreate (new, document);
+       TtaRegisterElementCreate (new_, document);
        TtaCloseUndoSequence (document);
-       return (new);
+       return (new_);
      }
 }
 
@@ -1355,7 +1355,7 @@ void CreateRuby (Document document, View view)
 			  if (lg > 0)
 			    {
 			      lg++;
-			      buffer = TtaGetMemory (lg * sizeof(CHAR_T));
+			      buffer = (CHAR_T*)TtaGetMemory (lg * sizeof(CHAR_T));
 			      TtaGiveBufferContent (lastEl, buffer, lg, &lang);
 			      if (lastEl == firstEl)
 				min = firstSelectedChar;
@@ -1382,7 +1382,7 @@ void CreateRuby (Document document, View view)
 			if (lg > 0)
 			  {
 			    lg++;
-			    buffer = TtaGetMemory (lg * sizeof(CHAR_T));
+			    buffer = (CHAR_T*)TtaGetMemory (lg * sizeof(CHAR_T));
 			    TtaGiveBufferContent (firstEl, buffer, lg, &lang);
 			    if (lastEl == firstEl)
 			      max = lastSelectedChar;
@@ -1450,7 +1450,7 @@ void CreateRuby (Document document, View view)
 	  TtaInsertSibling (el, rbEl, FALSE, document);
 	  prevEl = el;
 	  el = TtaGetFirstChild (el);
-	  TtaSetTextContent (el, "(", TtaGetDefaultLanguage (), document);
+	  TtaSetTextContent (el, (unsigned char*)"(", TtaGetDefaultLanguage (), document);
 	  /* create a rt element after the first rp element */
 	  elType.ElTypeNum = HTML_EL_rt;
 	  el = TtaNewTree (document, elType, "");
@@ -1465,7 +1465,7 @@ void CreateRuby (Document document, View view)
 	  el = TtaNewTree (document, elType, "");
 	  TtaInsertSibling (el, prevEl, FALSE, document);
 	  el = TtaGetFirstChild (el);
-	  TtaSetTextContent (el, ")", TtaGetDefaultLanguage (), document);
+	  TtaSetTextContent (el, (unsigned char*)")", TtaGetDefaultLanguage (), document);
 	  TtaSetStructureChecking (oldStructureChecking, document);
 	  /* create a text element after the ruby element, to allow the
 	     user to add some more text after the ruby */
@@ -1500,7 +1500,7 @@ void CreateAddress (Document document, View view)
 void CreateTable (Document document, View view)
 {
    ElementType         elType;
-   Element             el, new, cell, row;
+   Element             el, new_, cell, row;
    AttributeType       attrType;
    Attribute           attr;
    char              stylebuff[50];
@@ -1608,8 +1608,8 @@ void CreateTable (Document document, View view)
 		 } 
 	       while (NumberCols > 1)
 		 {
-		   new = TtaNewTree (document, elType, "");
-		   TtaInsertSibling (new, cell, FALSE, document);
+		   new_ = TtaNewTree (document, elType, "");
+		   TtaInsertSibling (new_, cell, FALSE, document);
 		   NumberCols--;
 		 }
 	     } 
@@ -1619,8 +1619,8 @@ void CreateTable (Document document, View view)
 	       row = TtaSearchTypedElement (elType, SearchInTree, el);
 	       while (NumberRows > 1)
 		 {
-		   new = TtaNewTree (document, elType, "");
-		   TtaInsertSibling (new, row, FALSE, document);
+		   new_ = TtaNewTree (document, elType, "");
+		   TtaInsertSibling (new_, row, FALSE, document);
 		   NumberRows--;
 		 }
 	     } 
@@ -2163,7 +2163,7 @@ static Element PrepareFormControl (Document doc, ThotBool *withinP)
 	       len = TtaGetTextLength (el);
 	       if (len == 0)
 		 {
-		   TtaSetTextContent (el, " ",
+		   TtaSetTextContent (el, (unsigned char*)" ",
 				      TtaGetDefaultLanguage (), doc);
 		   /* set a caret after the new space */
 		   TtaSelectString (doc, el, 2, 1);
@@ -2349,7 +2349,7 @@ ThotBool DeleteAttrSelected (NotifyAttribute * event)
 void CreateOption (Document doc, View view)
 {
    ElementType         elType;
-   Element             el, new;
+   Element             el, new_;
    int                 firstchar, lastchar;
 
    /* create the form if necessary */
@@ -2360,11 +2360,11 @@ void CreateOption (Document doc, View view)
        /* create the option */
        elType = TtaGetElementType (el);
        elType.ElTypeNum = HTML_EL_Option;
-       new = TtaNewTree (doc, elType, "");
-       TtaInsertFirstChild (&new, el, doc);
-       OnlyOneOptionSelected (new, doc, FALSE);
+       new_ = TtaNewTree (doc, elType, "");
+       TtaInsertFirstChild (&new_, el, doc);
+       OnlyOneOptionSelected (new_, doc, FALSE);
        /* Select the text element within the option */
-       el = TtaGetFirstChild (new);
+       el = TtaGetFirstChild (new_);
        TtaSelectElement (doc, el);
        TtaSelectView (doc, TtaGetViewFromName (doc, "Structure_view"));
      }
@@ -2449,7 +2449,7 @@ void CreateImageInput (Document doc, View view)
 	      if (attr)
 		{
 		  length = TtaGetTextAttributeLength (attr) + 10;
-		  value = TtaGetMemory (length);
+		  value = (char *)TtaGetMemory (length);
 		  TtaGiveTextAttributeValue (attr, value, &length);
 		  attrType.AttrTypeNum = HTML_ATTR_NAME;
 		  attr = TtaNewAttribute (attrType);
@@ -2580,7 +2580,7 @@ void  CreateObject (Document document, View view)
 	  length = TtaGetTextAttributeLength (attr);
 	  if (length > 0)
 	    {
-	      text = TtaGetMemory (length + 1);
+	      text = (char *)TtaGetMemory (length + 1);
 	      TtaGiveTextAttributeValue (attr, text, &length);
 	      attrType.AttrTypeNum = HTML_ATTR_data;
 	      attr = TtaNewAttribute (attrType);
@@ -2600,7 +2600,7 @@ void  CreateObject (Document document, View view)
 	    {
 	      oldStructureChecking = TtaGetStructureChecking (document);
 	      TtaSetStructureChecking (0, document);
-	      text = TtaGetMemory (length + 1);
+	      text = (char *)TtaGetMemory (length + 1);
 	      TtaGiveTextAttributeValue (attr, text, &length);
 	      elType.ElTypeNum = HTML_EL_Object_Content;
 	      content = TtaNewElement (document, elType);
@@ -2608,7 +2608,7 @@ void  CreateObject (Document document, View view)
 	      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
 	      textEl = TtaNewElement (document, elType);
 	      TtaInsertFirstChild (&textEl, content, document);
-	      TtaSetTextContent (textEl, text, Latin_Script, document);
+	      TtaSetTextContent (textEl, (unsigned char*)text, Latin_Script, document);
 	      TtaFreeMemory (text);
 	      TtaSetStructureChecking (oldStructureChecking, document);
 	    }
@@ -3005,7 +3005,7 @@ void  MoveAnnotationSel (Document document, View view)
 void ReplyToAnnotation (Document document, View view)
 {
   /* for testing threading on the selection */
-  ANNOT_Create (document, view, ANNOT_useDocRoot | ANNOT_isReplyTo);
+  ANNOT_Create (document, view, (AnnotMode)(ANNOT_useDocRoot | ANNOT_isReplyTo));
 }
 
 /*----------------------------------------------------------------------

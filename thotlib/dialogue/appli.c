@@ -749,7 +749,7 @@ gboolean GL_DrawCallback (ThotWidget widget, GdkEventExpose *event,
 			  gpointer data)
 {
   DefClip ((int ) data, -1, -1, -1, -1);
-  GL_DrawAll ((int ) data);
+  GL_DrawAll (/*(int ) data*/);
   return TRUE;
 }
 
@@ -1014,7 +1014,7 @@ void WIN_ChangeVScroll (int frame, int reason, int value)
 	  JumpIntoView (frame, delta);
 	}
 #ifdef _GL
-      GL_DrawAll (NULL, frame);
+      GL_DrawAll (/*NULL, frame*/);
 #endif /*_GL*/
       break;
     } 
@@ -1683,7 +1683,7 @@ void TtaSetStatus (Document document, View view, char *text, char *name)
 	    length = strlen (text) + 1;
 	    if (name)
 	      length += strlen (name);
-	    s = TtaGetMemory (length);
+	    s = (char *)TtaGetMemory (length);
 #ifdef _WINDOWS
 	    if (name)
 	      /* text est un format */
@@ -2444,7 +2444,7 @@ gboolean GtkLiningSelection (gpointer data)
   int                 view;
   static int          Motion_y = 0;
   static int          Motion_x = 0;
-  GdkModifierType state = GDK_BUTTON1_MOTION_MASK;
+  GdkModifierType state = (GdkModifierType)GDK_BUTTON1_MOTION_MASK;
   int x,y;
   
   frame = (int) data;
@@ -2532,20 +2532,23 @@ gboolean GtkLiningSelection (gpointer data)
 }
 #endif /* _GTK */
 
-#if defined(_GTK) || defined(_MOTIF)
-
 /*----------------------------------------------------------------------
   Evenement sur une frame document.                              
   D.V. equivalent de la fontion MS-Windows ci dessus !        
   GTK: fonction qui traite les click de la souris sauf la selection   
   ----------------------------------------------------------------------*/
+#if defined(_MOTIF) || defined(_GTK)
 #ifdef _MOTIF
 void FrameCallback (int frame, void *evnt)
 #endif /* _MOTIF */
 #ifdef _GTK
 gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer data)
 #endif /* _GTK */
+#else /* #if defined(_MOTIF) || defined(_GTK) */
+void FrameCallback (int frame, void *evnt)
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 {
+#if defined(_MOTIF) || defined(_GTK)
 #ifdef _MOTIF
   ThotEvent           event;
   ThotEvent          *ev = (ThotEvent *) evnt;
@@ -2620,7 +2623,7 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
      If another action specifically need focus, 
      w'ell grab it with the action
   */
-  textzone = gtk_object_get_data (GTK_OBJECT (widget), "Text_catcher");
+  textzone = (GtkEntry*)gtk_object_get_data (GTK_OBJECT (widget), "Text_catcher");
   gtk_widget_grab_focus (GTK_WIDGET(textzone));  
 #endif /* _GTK */
 
@@ -2993,11 +2996,9 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
     }
   return TRUE;
 #endif /* _GTK */
-  
+
+#endif /* #if defined(_MOTIF) || defined(_GTK) */  
 }
-
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
-
 
 #ifdef _GTK
 /*----------------------------------------------------------------------
@@ -3060,7 +3061,7 @@ void ThotGrab (ThotWindow win, ThotCursor cursor, long events, int disp)
 #endif /* _MOTIF */
   
 #ifdef _GTK
-  gdk_pointer_grab (win, FALSE, events, win, cursor, GDK_CURRENT_TIME);
+  gdk_pointer_grab (win, FALSE, (GdkEventMask)events, win, cursor, GDK_CURRENT_TIME);
 #endif /* _GTK */
 }
 
@@ -3406,7 +3407,7 @@ void ChangeFrameTitle (int frame, unsigned char *text, CHARSET encoding)
     {
 #ifdef _GTK
       w = gtk_widget_get_toplevel (w);
-      gtk_window_set_title (GTK_WINDOW(w), title);
+      gtk_window_set_title (GTK_WINDOW(w), (gchar *)title);
 #endif /* _GTK */
 #ifdef _MOTIF
       w = XtParent (XtParent (XtParent (w)));

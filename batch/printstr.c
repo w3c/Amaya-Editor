@@ -20,7 +20,7 @@
 #include "strmsg.h"
 #include "message.h"
 
-#define THOT_EXPORT
+#define THOT_EXPORT extern
 #include "platform_tv.h"
 
 static PtrSSchema   pSchStr;

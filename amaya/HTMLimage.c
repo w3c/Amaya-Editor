@@ -210,7 +210,7 @@ void SetAreaCoords (Document document, Element element, int attrNum)
    shape = TtaGetAttributeValue (attrShape);
    /* prepare the coords string */
    length = 2000;
-   text = TtaGetMemory (length);
+   text = (char *)TtaGetMemory (length);
    if (shape == HTML_ATTR_shape_VAL_rectangle || shape == HTML_ATTR_shape_VAL_circle)
      {
 	/* Search the x_coord attribute */
@@ -327,7 +327,7 @@ void SetAreaCoords (Document document, Element element, int attrNum)
 	length = TtaGetPolylineLength (child);
 	/* get points */
 	i = 1;
-	buffer = TtaGetMemory (100);
+	buffer = (char *)TtaGetMemory (100);
 	text[0] = EOS;
 	while (i <= length)
 	  {
@@ -374,7 +374,7 @@ void UpdateImageMap (Element image, Document doc, int oldWidth, int oldHeight)
 	/* Search the MAP element associated with IMAGE element */
 	length = TtaGetTextAttributeLength (attr);
 	length++;
-	text = TtaGetMemory (length);
+	text = (char *)TtaGetMemory (length);
 	TtaGiveTextAttributeValue (attr, text, &length);
 	if (text[0] == '#')
 	   el = SearchNAMEattribute (doc, &text[1], NULL, NULL);
@@ -693,7 +693,7 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
 	{
 	  /* svg images don't use Image Maps */
 	  /* display the content of a picture element */
-	  TtaSetPictureContent (el, tempfile, SPACE, doc, mime_type);
+	  TtaSetPictureContent (el, (unsigned char *)tempfile, SPACE, doc, mime_type);
 	  UpdateImageMap (el, doc, -1, -1);
 	}
     }
@@ -798,7 +798,7 @@ static void HandleImageLoaded (int doc, int status, char *urlName,
 	/* compute the tempfile name */
 	if (desc->tempfile)
 	  TtaFreeMemory (desc->tempfile);
-	tempfile = TtaGetMemory (MAX_LENGTH);
+	tempfile = (char *)TtaGetMemory (MAX_LENGTH);
 	strcpy (tempfile, desc->localName);
 	/* If this is an image document, point to the correct files */
 	if (DocumentTypes[doc] == docImage)
@@ -937,7 +937,7 @@ char *GetActiveImageInfo (Document document, Element element)
        if (Y < 0)
 	 Y = 0;
        /* create the search string to be appended to the URL */
-       ptr = TtaGetMemory (27);
+       ptr = (char *)TtaGetMemory (27);
        sprintf (ptr, "?%d,%d", X, Y);
      }
    return ptr;
@@ -997,7 +997,7 @@ void FetchImage (Document doc, Element el, char *URL, int flags,
 	      if (length > 0)
 		{
 		  /* allocate some memory: length of name + 6 cars for noname */
-		  imageName = TtaGetMemory (length + 7);
+		  imageName = (char *)TtaGetMemory (length + 7);
 		  TtaGiveTextAttributeValue (attr, imageName, &length);
 		}
 	    }
@@ -1051,7 +1051,7 @@ void FetchImage (Document doc, Element el, char *URL, int flags,
 	      ctxEl->extra = extra;
 	      update = FALSE;	/* the image is not loaded yet */
 	      /* store the context before downloading the images */
-	      FetchImage_ctx = TtaGetMemory (sizeof (FetchImage_context));
+	      FetchImage_ctx = (FetchImage_context*)TtaGetMemory (sizeof (FetchImage_context));
 	      FetchImage_ctx->desc = desc;
 	      FetchImage_ctx->base_url =  TtaStrdup (DocumentURLs[doc]);
 	      
@@ -1063,7 +1063,7 @@ void FetchImage (Document doc, Element el, char *URL, int flags,
 	      
 	      i = GetObjectWWW (doc, doc, pathname, NULL, tempfile,
 	                        newflags, NULL, NULL,
-				(void *) libWWWImageLoaded,
+				(void (*)(int, int, char*, char*, const AHTHeaders*, void*)) libWWWImageLoaded,
 				(void *) FetchImage_ctx, NO, NULL);
 	      if (i != -1) 
 		desc->status = IMAGE_LOADED;
@@ -1305,7 +1305,7 @@ ThotBool FetchAndDisplayImages (Document doc, int flags, Element elSubTree)
 		  if (length > 0)
 		    {
 		      /* allocate some memory */
-		      imageURI = TtaGetMemory (length + 7);
+		      imageURI = (char *)TtaGetMemory (length + 7);
 		      TtaGiveTextAttributeValue (attr, imageURI, &length);
 		      if (!( (imageURI[0] == '#')))
 			/* don't handle internal links for a use element */

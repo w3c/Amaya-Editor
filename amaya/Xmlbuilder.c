@@ -113,7 +113,7 @@ void CreateXmlAttribute (Element el, AttributeType attrType,
    Search in the Attribute Value Mapping Table the entry for the attribute
    ThotAtt and its value AttrVal. Returns the corresponding Thot value.
   ----------------------------------------------------------------------*/
-void MapXmlAttributeValue (char *AttrVal, AttributeType  attrType,
+void MapXmlAttributeValue (char *AttrVal, const AttributeType * attrType,
 			   int *value)
 
 {
@@ -344,10 +344,10 @@ ThotBool XmlStyleSheetWillBeModified (NotifyOnTarget *event)
     {
       OldCssName[0] = EOS;
       length = TtaGetTextLength (event->target) + 1;
-      buffer = TtaGetMemory (length);
+      buffer = (char *)TtaGetMemory (length);
       if (buffer != NULL)
 	{
-	  TtaGiveTextContent (event->target, buffer, &length, &lang);
+	  TtaGiveTextContent (event->target, (unsigned char *)buffer, &length, &lang);
 	  buffer[length++] = EOS;
 	  /* Is it an xml stylesheet ? */
 	  ptr = strstr (buffer, "xml-stylesheet");
@@ -388,10 +388,10 @@ void XmlStyleSheetModified (NotifyOnTarget *event)
   if (event->target != NULL)
     {
       length = TtaGetTextLength (event->target) + 1;
-      buffer = TtaGetMemory (length);
+      buffer = (char *)TtaGetMemory (length);
       if (buffer != NULL)
 	{
-	  TtaGiveTextContent (event->target, buffer, &length, &lang);
+	  TtaGiveTextContent (event->target, (unsigned char *)buffer, &length, &lang);
 	  buffer[length++] = EOS;
 	  /* Is it an xml stylesheet ? */
 	  ptr = strstr (buffer, "xml-stylesheet");
@@ -447,7 +447,7 @@ ThotBool XmlStyleSheetDeleted (NotifyElement * event)
    if (parent != NULL)
      {
        length = MAX_LENGTH - 1;
-       TtaGiveTextContent (event->element, buffer, &length, &lang);
+       TtaGiveTextContent (event->element, (unsigned char *)buffer, &length, &lang);
        buffer[length++] = EOS;
        /* Is it an xml stylesheet ? */
        ptr = strstr (buffer, "xml-stylesheet");
@@ -474,7 +474,7 @@ void XmlStyleSheetPasted (NotifyElement *event)
    if (parent != NULL)
      {
        length = MAX_LENGTH - 1;
-       TtaGiveTextContent (event->element, buffer, &length, &lang);
+       TtaGiveTextContent (event->element, (unsigned char *)buffer, &length, &lang);
        buffer[length++] = EOS;
        /* Is it an xml stylesheet ? */
        ptr = strstr (buffer, "xml-stylesheet");
@@ -513,7 +513,7 @@ void CreateXMLElementMenu (Document doc, View view)
   nbsubmenus = 0;
   
   /* use the global allocation buffer to store the entries */
-  buffer = TtaGetMemory (PARAM_INCREMENT);
+  buffer = (char *)TtaGetMemory (PARAM_INCREMENT);
   buffer[0] = EOS;
   last_buffer_char = 0;
   
@@ -527,7 +527,7 @@ void CreateXMLElementMenu (Document doc, View view)
       text[0] = 'B';
 #ifdef _I18N_
       /* convert the UTF-8 string */
-      tmp = TtaConvertMbsToByte (text, TtaGetDefaultCharset ());
+      tmp = (char *)TtaConvertMbsToByte ((unsigned char *)text, TtaGetDefaultCharset ());
       strcpy (&buffer[last_buffer_char], tmp);
       last_buffer_char = last_buffer_char + (strlen (tmp) + 2) - 1;
       TtaFreeMemory (tmp);

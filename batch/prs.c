@@ -16,6 +16,8 @@
  *          R. Guetari (W3C/INRIA): Windows routines.
  *
  */
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 
 #include "thot_sys.h"
 #include "constgrm.h"
@@ -29,14 +31,11 @@
 #include "prsdef.h"
 #include "fileaccess.h"
 
-#define THOT_EXPORT
 #include "compil_tv.h"
 #include "thotcolor.h"
 #include "thotcolor_tv.h"
 #include "thotpattern.h"
 
-#undef THOT_EXPORT
-#define THOT_EXPORT extern
 #include "analsynt_tv.h"
 #include "compil_tv.h"
 
@@ -291,7 +290,7 @@ static void         CopyName (Name n, indLine wi, indLine wl)
       CompilerMessage (wi, PRS, FATAL, WORD_SIZE_OVERFLOW, inputLine, LineNum);
    else
      {
-	strncpy (n, &inputLine[wi - 1], MAX_NAME_LENGTH);
+	strncpy ((char *)n, (char *)&inputLine[wi - 1], MAX_NAME_LENGTH);
 	n[wl] = EOS;
      }
 }
@@ -2415,12 +2414,12 @@ static void         LayoutRule (FunctionType layoutFonct, indLine wi)
 /*----------------------------------------------------------------------
    BooleanValue affecte la valeur bool a la regle de presentation courante
   ----------------------------------------------------------------------*/
-static void         BooleanValue (ThotBool bool, indLine wi)
+static void         BooleanValue (ThotBool b, indLine wi)
 {
    if (InInLineRule)
       /* on est dans une regle InLine */
       {
-        if (!bool)
+        if (!b)
 	   LayoutRule (FnNotInLine, wi);
       }
    else
@@ -2428,7 +2427,7 @@ static void         BooleanValue (ThotBool bool, indLine wi)
          PtGather, PtPageBreak, PtLineBreak */
       {
 	CurRule->PrPresMode = PresImmediate;
-	CurRule->PrBoolValue = bool;
+	CurRule->PrBoolValue = b;
       }
 }
 
@@ -4255,7 +4254,7 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
 {
    Name                n;
    int                 i, j;
-   ThotBool             ok, new;
+   ThotBool            ok, new_;
    Counter            *pCntr;
    PresVariable       *pPresVar;
    PtrPresentationBox  pPresBox;
@@ -4647,12 +4646,12 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
 	     j = CurPresBox;
 	  else
 	     j = CurType;
-	  new = True;
+	  new_ = True;
 	  for (i = 0; i < pCntr->CnNCreators; i++)
 	     if (pCntr->CnCreator[i] == j &&
 		 pCntr->CnPresBoxCreator[i] == PresBoxDef)
-	        new = False;
-	  if (new)
+	        new_ = False;
+	  if (new_)
 	     /* ce compteur n'est pas encore utilise' par la boite */
 	     /* courante dans ses regles de creation, on le marque. */
 	     {
@@ -5171,12 +5170,12 @@ que la boite creee ne contient pas AttrName ou AttrValue @@@@*****/
 			       /* deja fait. */
 			       {
 			       pCntr = &pPSchema->PsCounter[pCond->CoCounter - 1];
-			       new = True;
+			       new_ = True;
 			       for (j = 0; j < pCntr->CnNCreatedBoxes; j++)
 				  if (pCntr->CnCreatedBox[j] ==
 				      Identifier[identnum].SrcIdentDefRule)
-				     new = False;
-			       if (new)
+				     new_ = False;
+			       if (new_)
 				  {
 				  /* Si la boite est creee sur une condition
 				     de min ou de max, on le note */
@@ -5641,7 +5640,7 @@ static void ProcessString (SyntacticCode gCode, indLine wl, indLine wi)
 	     CompilerMessage (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine,
 			      LineNum);
 	   else
-	     Conditions->CoAttrTextValue = TtaStrdup (inputLine);
+	     Conditions->CoAttrTextValue = TtaStrdup ((char *)inputLine);
 	 }
        else
 	 {
@@ -6949,7 +6948,7 @@ int main (int argc, char **argv)
 	       else if (inputLine[0] == '#')
 		 {
 		   /* cette ligne contient une directive du preprocesseur cpp */
-		   sscanf (inputLine, "# %d %s", &LineNum, buffer);
+		   sscanf ((char *)inputLine, "# %d %s", &LineNum, buffer);
 		   LineNum--;
 		 }
 	       else

@@ -94,7 +94,7 @@ static void PutInteger (BinFile pivFile, int n)
   ----------------------------------------------------------------------*/
 static void PutFloat (BinFile pivFile, float n)
 {
-   TtaWrite4Byte (pivFile, (char*) (&n));
+   TtaWrite4Byte (pivFile, (unsigned char*) (&n));
 }
 /*----------------------------------------------------------------------
    PutDimensionType ecrit dans le fichier un type de dimension sur	

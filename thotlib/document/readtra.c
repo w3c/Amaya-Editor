@@ -48,7 +48,7 @@ static TransCondition ReadTransCondition (BinFile file)
    TransCondition      cond;
 
    cond = TcondFirst;
-   if (!TtaReadByte (file, &c))
+   if (!TtaReadByte (file, (unsigned char *)&c))
       TSchemaError (1);
    else
       switch (c)
@@ -134,7 +134,7 @@ static TRuleType    ReadTRuleType (BinFile file)
    TRuleType           ruleType;
 
    ruleType = TRemove;
-   if (!TtaReadByte (file, &c))
+   if (!TtaReadByte (file, (unsigned char *)&c))
       TSchemaError (3);
    else
       switch (c)
@@ -206,7 +206,7 @@ static RelatNAscend ReadRelatNAscend (BinFile file)
    RelatNAscend        relat;
 
    relat = RelEquals;		/* valeur par defaut */
-   if (!TtaReadByte (file, &c))
+   if (!TtaReadByte (file, (unsigned char *)&c))
       TSchemaError (3);
    else
       switch (c)
@@ -235,7 +235,7 @@ static TOrder       ReadTOrder (BinFile file)
    TOrder              order;
 
    order = TAfter;
-   if (!TtaReadByte (file, &c))
+   if (!TtaReadByte (file, (unsigned char *)&c))
       TSchemaError (5);
    else
       switch (c)
@@ -266,7 +266,7 @@ static CreatedObject ReadCreatedObject (BinFile file)
    CreatedObject       obj;
 
    obj = ToConst;
-   if (!TtaReadByte (file, &c))
+   if (!TtaReadByte (file, (unsigned char *)&c))
       TSchemaError (7);
    else
       switch (c)
@@ -350,7 +350,7 @@ static TRelatPosition ReadTRelatPosition (BinFile file)
    TRelatPosition      position;
 
    position = RpSibling;
-   if (!TtaReadByte (file, &c))
+   if (!TtaReadByte (file, (unsigned char *)&c))
       TSchemaError (9);
    else
       switch (c)
@@ -382,7 +382,7 @@ static TIndentType ReadIndentType (BinFile file)
    TIndentType		 typ;
 
    typ = ItAbsolute;
-   if (!TtaReadByte (file, &c))
+   if (!TtaReadByte (file, (unsigned char *)&c))
       TSchemaError (23);
    else
       switch (c)
@@ -416,7 +416,7 @@ static TCounterOp   ReadTCounterOp (BinFile file)
    TCounterOp          op;
 
    op = TCntrNoOp;
-   if (!TtaReadByte (file, &c))
+   if (!TtaReadByte (file, (unsigned char *)&c))
       TSchemaError (11);
    else
       switch (c)
@@ -452,7 +452,7 @@ static TranslVarType ReadTranslVarType (BinFile file)
    TranslVarType       varType;
 
    varType = VtText;
-   if (!TtaReadByte (file, &c))
+   if (!TtaReadByte (file, (unsigned char *)&c))
       TSchemaError (13);
    else
       switch (c)
@@ -504,7 +504,7 @@ static CounterStyle ReadCounterStyle (BinFile file)
    CounterStyle        style;
 
 
-   if (!TtaReadByte (file, &c))
+   if (!TtaReadByte (file, (unsigned char *)&c))
      {
 	c = SPACE;
 	TSchemaError (15);
@@ -543,7 +543,7 @@ static PtrTRule ReadPtrTRule (BinFile file, PtrTRule *pNextTRule)
    char                c;
    PtrTRule            pTRule;
 
-   if (!TtaReadByte (file, &c))
+   if (!TtaReadByte (file, (unsigned char *)&c))
       TSchemaError (17);
    if (c == EOS)
       pTRule = NULL;
@@ -582,19 +582,19 @@ static void ReadTRules (BinFile file, PtrTRule *pFirstTRule, PtrTRule *pNextTRul
 		       case TWrite:
 			  pTRule->TrObject = ReadCreatedObject (file);
 			  TtaReadShort (file, &pTRule->TrObjectNum);
-			  TtaReadName (file, pTRule->TrObjectNature);
+			  TtaReadName (file, (unsigned char *)pTRule->TrObjectNature);
 			  TtaReadBool (file, &pTRule->TrReferredObj);
 			  TtaReadShort (file, &pTRule->TrFileNameVar);
 			  break;
 		       case TGet:
 		       case TCopy:
 			  TtaReadShort (file, &pTRule->TrElemType);
-			  TtaReadName (file, pTRule->TrElemNature);
+			  TtaReadName (file, (unsigned char *)pTRule->TrElemNature);
 			  pTRule->TrRelPosition = ReadTRelatPosition (file);
 			  break;
 		       case TUse:
-			  TtaReadName (file, pTRule->TrNature);
-			  TtaReadName (file, pTRule->TrTranslSchemaName);
+			  TtaReadName (file, (unsigned char *)pTRule->TrNature);
+			  TtaReadName (file, (unsigned char *)pTRule->TrTranslSchemaName);
 			  break;
 		       case TRemove:
 		       case TIgnore:
@@ -642,7 +642,7 @@ static PtrTRuleBlock ReadPtrTRuleBlock (BinFile file, PtrTRuleBlock *pNextBlock)
 {
    char c;
 
-   TtaReadByte (file, &c);
+   TtaReadByte (file, (unsigned char *)&c);
    if (c == EOS)
       return NULL;
    else
@@ -681,17 +681,17 @@ static void ReadBlocks (BinFile file, PtrTRuleBlock *pBlock, PtrTRule *pNextTRul
 		  TtaReadBool (file, &pCond->TcNegativeCond);
 		  TtaReadBool (file, &pCond->TcTarget);
 		  TtaReadShort (file, &pCond->TcAscendType);
-		  TtaReadName (file, pCond->TcAscendNature);
+		  TtaReadName (file, (unsigned char *)pCond->TcAscendNature);
 		  TtaReadSignedShort (file, &pCond->TcAscendRelLevel);
 		  switch (pCond->TcCondition)
 			{
 			   case TcondScript:
-			      TtaReadByte (file, &pCond->TcScript);
+			      TtaReadByte (file, (unsigned char *)&pCond->TcScript);
 			      break;
 			   case TcondWithin:
 			   case TcondFirstWithin:
 			      TtaReadShort (file, &pCond->TcElemType);
-			      TtaReadName (file, pCond->TcElemNature);
+			      TtaReadName (file, (unsigned char *)pCond->TcElemNature);
 			      TtaReadBool (file, &pCond->TcImmediatelyWithin);
 			      pCond->TcAscendRel = ReadRelatNAscend (file);
 			      TtaReadShort (file, &pCond->TcAscendLevel);
@@ -706,7 +706,7 @@ static void ReadBlocks (BinFile file, PtrTRuleBlock *pBlock, PtrTRule *pNextTRul
 					     TtaReadSignedShort (file, &pCond->TcUpperBound);
 					     break;
 					  case AtTextAttr:
-					     TtaReadName (file, pCond->TcTextValue);
+					     TtaReadName (file, (unsigned char *)pCond->TcTextValue);
 					     break;
 					  case AtReferenceAttr:
 
@@ -738,7 +738,7 @@ static void ReadBlocks (BinFile file, PtrTRuleBlock *pBlock, PtrTRule *pNextTRul
 				      TtaReadSignedShort (file, &pCond->TcUpperBound);
 				     }
 				 else
-				    TtaReadByte (file, &pCond->TcPresValue);
+				    TtaReadByte (file, (unsigned char *)&pCond->TcPresValue);
 				}
 			      break;
 			   case TcondElementType:
@@ -815,7 +815,7 @@ static void ReadAttrTRules (BinFile file, int att, PtrTRuleBlock *pNextBlock,
 			 }
 		    break;
 		 case AtTextAttr:
-		    TtaReadName (file, pAttrT->AtrTextValue);
+		    TtaReadName (file, (unsigned char *)pAttrT->AtrTextValue);
 		    ReadBlocks (file, &pAttrT->AtrTxtTRuleBlock, pNextTRule,
 				pSS, pNextBlock);
 		    break;
@@ -899,7 +899,7 @@ static void ReadPresTRules (BinFile file, int pres, PtrTRuleBlock *pNextBlock,
 	   else
 	      for (i = 0; i <= MAX_TRANSL_PRES_VAL; i++)
 		{
-		   TtaReadByte (file, &pPruleTr->RtPRuleValue[i]);
+		   TtaReadByte (file, (unsigned char *)&pPruleTr->RtPRuleValue[i]);
 		   ReadBlocks (file, &pPruleTr->RtPRuleValueBlock[i],
 			       pNextTRule, pSS, pNextBlock);
 		}
@@ -1014,11 +1014,11 @@ PtrTSchema ReadTranslationSchema (Name fileName, PtrSSchema pSS)
 	  memset (pNextBlock, 0, sizeof (TRuleBlock));
 
 	/* lit la partie fixe du schema de traduction */
-	TtaReadName (file, pTSch->TsStructName);
+	TtaReadName (file, (unsigned char *)pTSch->TsStructName);
 	TtaReadShort (file, &pTSch->TsStructCode);
 	TtaReadShort (file, &pTSch->TsLineLength);
-	TtaReadName (file, pTSch->TsEOL);
-	TtaReadName (file, pTSch->TsTranslEOL);
+	TtaReadName (file, (unsigned char *)pTSch->TsEOL);
+	TtaReadName (file, (unsigned char *)pTSch->TsTranslEOL);
 	TtaReadShort (file, &pTSch->TsNConstants);
 	TtaReadShort (file, &pTSch->TsNCounters);
 	TtaReadShort (file, &pTSch->TsNVariables);
@@ -1072,7 +1072,7 @@ PtrTSchema ReadTranslationSchema (Name fileName, PtrSSchema pSS)
 	  }
 	for (i = 0; i < pTSch->TsNVarBuffers; i++)
 	  {
-	    TtaReadName (file, pTSch->TsVarBuffer[i].VbIdent);
+	    TtaReadName (file, (unsigned char *)pTSch->TsVarBuffer[i].VbIdent);
 	    TtaReadShort (file, &pTSch->TsVarBuffer[i].VbNum);
 	  }
 	for (i = 0; i < MAX_TRANSL_BUFFER; i++)
@@ -1158,7 +1158,7 @@ PtrTSchema ReadTranslationSchema (Name fileName, PtrSSchema pSS)
 	   for (i = 0; i < pTSch->TsNTranslScripts; i++)
 	     {
 		pAlphTr = &pTSch->TsTranslScript[i];
-		TtaReadByte (file, &pAlphTr->AlScript);
+		TtaReadByte (file, (unsigned char *)&pAlphTr->AlScript);
 		TtaReadShort (file, &pAlphTr->AlBegin);
 		TtaReadShort (file, &pAlphTr->AlEnd);
 	     }
@@ -1175,12 +1175,12 @@ PtrTSchema ReadTranslationSchema (Name fileName, PtrSSchema pSS)
 		/* lit la chaine source */
 		j = 0;
 		do
-		   TtaReadByte (file, &pStringTr->StSource[j++]);
+		   TtaReadByte (file, (unsigned char *)&pStringTr->StSource[j++]);
 		while (pStringTr->StSource[j - 1] != EOS);
 		/* lit la chaine cible */
 		j = 0;
 		do
-		   TtaReadByte (file, &pStringTr->StTarget[j++]);
+		   TtaReadByte (file, (unsigned char *)&pStringTr->StTarget[j++]);
 		while (pStringTr->StTarget[j - 1] != EOS);
 	     }
 	if (!error)
@@ -1189,7 +1189,7 @@ PtrTSchema ReadTranslationSchema (Name fileName, PtrSSchema pSS)
 	     {
 		j = pTSch->TsConstBegin[i] - 1;
 		do
-		   TtaReadByte (file, &pTSch->TsConstant[j++]);
+		   TtaReadByte (file, (unsigned char *)&pTSch->TsConstant[j++]);
 		while (pTSch->TsConstant[j - 1] != EOS);
 	     }
 	/* lit les blocs de regles des elements */

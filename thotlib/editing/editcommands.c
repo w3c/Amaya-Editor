@@ -42,14 +42,23 @@ static Language     ClipboardLanguage = 0;
 static struct _TextBuffer XClipboard;
 
 /* text element where the last insertion is done */
+/*
+ * SG: already declared in boxes_tv.h
+ *
 static PtrElement   LastInsertElText;
 static PtrElement   LastInsertElement;
 static int          LastInsertThotWindow;
+*/
 
 /* attribute for which a presentation abstract box has been modified */
+/*
+ * SG: already declared in boxes_tv.h
+ *
 static PtrAttribute LastInsertAttr;
 static PtrElement   LastInsertAttrElem;
+*/
 static ThotBool     FromKeyboard;
+
 
 #include "abspictures_f.h"
 #include "actions_f.h"
@@ -979,7 +988,7 @@ static ThotBool GiveAbsBoxForLanguage (int frame, PtrAbstractBox *pAb, int keybo
 	if (pHeritAttr != NULL && pHeritAttr->AeAttrText != NULL)
 	  {
 	    CopyBuffer2MBs (pHeritAttr->AeAttrText, 0, text, 100);
-	    language = TtaGetLanguageIdFromName (text);
+	    language = TtaGetLanguageIdFromName ((char*)text);
 	  }
 	else
 	  /* les ancetres n'ont pas d'attribut langue */
@@ -1107,7 +1116,7 @@ void  TtcInsertGraph (Document document, View view, unsigned char c)
        /* lock tables formatting */
        if (ThotLocalActions[T_islock])
 	 {
-	   (*ThotLocalActions[T_islock]) (&lock);
+	   (*(Proc1)ThotLocalActions[T_islock]) ((void *)&lock);
 	   if (!lock)
 	     /* table formatting is not loked, lock it now */
 	     (*ThotLocalActions[T_lock]) ();
@@ -1479,7 +1488,7 @@ static void SaveInClipboard (int *charsDelta, int *spacesDelta, int *xDelta,
 	      image = (PictInfo *) pAb->AbPictInfo;
 	      i = strlen (image->PicFileName);
 	      /* nom du fichier image */
-	      CopyMBs2Buffer (image->PicFileName, clipboard, 0, i);
+	      CopyMBs2Buffer ((unsigned char*)image->PicFileName, clipboard, 0, i);
 	      CopyPictInfo ((int *) &PictClipboard, (int *) image);
 	    }
 	  else
@@ -1910,9 +1919,9 @@ static void PasteClipboard (ThotBool defaultHeight, ThotBool defaultWidth,
 	       pCurrentBuffer->BuContent[i] = EOS;
 	       pCurrentBuffer->BuLength = i;
 	       i = 400;
-	       image->PicFileName = TtaGetMemory (i);
+	       image->PicFileName = (char*)TtaGetMemory (i);
 	       /* i should be too short to store non ascii characters */
-	       l = CopyBuffer2MBs (clipboard, 0, image->PicFileName, i - 1);
+	       l = CopyBuffer2MBs (clipboard, 0, (unsigned char*)image->PicFileName, i - 1);
 	       SetCursorWatch (frame);
 	       LoadPicture (frame, pBox, image);
 	       ResetCursorWatch (frame);
@@ -2111,8 +2120,11 @@ static void ContentEditing (int editType)
 	      else
 		{
 		  if (ThotLocalActions[T_insertpaste] != NULL)
-		    (*ThotLocalActions[T_insertpaste]) (TRUE, FALSE,
-							'L', &ok);
+		    (*(Proc4)ThotLocalActions[T_insertpaste]) (
+			(void *)TRUE,
+			(void *)FALSE,
+			(void *)'L',
+			(void *)&ok);
 		  else
 		    ok = FALSE;
 		  if (ok)
@@ -2123,8 +2135,11 @@ static void ContentEditing (int editType)
 	  else if (pAb->AbLeafType != LtPicture)
 	    {
 	      if (ThotLocalActions[T_insertpaste] != NULL)
-		(*ThotLocalActions[T_insertpaste]) (TRUE, FALSE,
-						    'L', &ok);
+		(*(Proc4)ThotLocalActions[T_insertpaste]) (
+			(void *)TRUE,
+			(void *)FALSE,
+			(void *)'L',
+			(void *)&ok);
 	      else
 		ok = FALSE;
 	      if (ok)
@@ -2158,8 +2173,10 @@ static void ContentEditing (int editType)
 		  (editType == TEXT_CUT || editType == TEXT_DEL ||
 		   editType == TEXT_SUP))
 		{
-		  (*ThotLocalActions[T_deletenextchar]) (frame, pAb->AbElement,
-							 FALSE);
+		  (*(Proc3)ThotLocalActions[T_deletenextchar]) (
+			(void *)frame,
+			(void *)pAb->AbElement,
+			(void *)FALSE);
 		  return;
 		}
 	      else
@@ -2402,8 +2419,10 @@ static void ContentEditing (int editType)
 		  if (ClipboardThot.BuLength == 0)
 		    {
 		      if (ThotLocalActions[T_deletenextchar] != NULL)
-			(*ThotLocalActions[T_deletenextchar]) (frame,
-							       pAb->AbElement, FALSE);
+			(*(Proc3)ThotLocalActions[T_deletenextchar]) (
+				(void *)frame,
+				(void *)pAb->AbElement,
+				(void *)FALSE);
 		      else
 			/* Pas de reaffichage */
 			DefClip (frame, 0, 0, 0, 0);
@@ -2424,8 +2443,10 @@ static void ContentEditing (int editType)
 		      /* do nothing */
 		      DefClip (frame, 0, 0, 0, 0);		      
 		    else if (ThotLocalActions[T_deletenextchar] != NULL)
-		      (*ThotLocalActions[T_deletenextchar]) (frame,
-							     pAb->AbElement, FALSE);
+		      (*(Proc3)ThotLocalActions[T_deletenextchar]) (
+				(void *)frame,
+				(void *)pAb->AbElement,
+				(void *)FALSE);
 		    else
 		      /* do nothing */
 		      DefClip (frame, 0, 0, 0, 0);
@@ -2514,7 +2535,10 @@ static void ContentEditing (int editType)
 	  pBlock = SearchEnclosingType (pBox->BxAbstractBox, BoBlock, BoFloatBlock);
 	  if (pBlock != NULL)
 	    RecomputeLines (pBlock, NULL, NULL, frame);
-	  (*ThotLocalActions[T_checkcolumn]) (pCell, NULL, frame);
+	  (*(Proc3)ThotLocalActions[T_checkcolumn]) (
+		(void *)pCell,
+		(void *)NULL,
+		(void *)frame);
 	  /* restore propagate mode */
 	  Propagate = savePropagate;
 	  /* Manage differed enclosings */
@@ -2659,8 +2683,10 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 	      pAb = pViewSel->VsBox->BxAbstractBox;
 	      CloseTextInsertion ();
 	      if (ThotLocalActions[T_deletenextchar] != NULL)
-		(*ThotLocalActions[T_deletenextchar]) (frame, pAb->AbElement,
-						       TRUE);
+		(*(Proc3)ThotLocalActions[T_deletenextchar]) (
+			(void *)frame,
+			(void *)pAb->AbElement,
+			(void *)TRUE);
 	    }
 	}
       else
@@ -2748,8 +2774,10 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 			      /* no removable character here */
 			      CloseTextInsertion ();
 			      if (ThotLocalActions[T_deletenextchar] != NULL)
-				(*ThotLocalActions[T_deletenextchar]) (frame,
-								       pAb->AbElement, TRUE);
+				(*(Proc3)ThotLocalActions[T_deletenextchar]) (
+					(void *)frame,
+					(void *)pAb->AbElement,
+					(void *)TRUE);
 			      pFrame->FrReady = TRUE;
 			      return;
 			    }
@@ -3246,8 +3274,10 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 			  pBlock = SearchEnclosingType (pAb, BoBlock, BoFloatBlock);
 			  if (pBlock != NULL)
 			    RecomputeLines (pBlock, NULL, NULL, frame);
-			  (*ThotLocalActions[T_checkcolumn]) (LastInsertCell,
-							      NULL, frame);
+			  (*(Proc3)ThotLocalActions[T_checkcolumn]) (
+				(void *)LastInsertCell,
+				(void *)NULL,
+				(void *)frame);
 			  /* restore propagate mode */
 			  Propagate = savePropagate;
 			}
@@ -3409,7 +3439,7 @@ static void PasteXClipboard (unsigned char *src, int nbytes)
       /* lock tables formatting */
       if (ThotLocalActions[T_islock])
 	{
-	  (*ThotLocalActions[T_islock]) (&lock);
+	  (*(Proc1)ThotLocalActions[T_islock]) ((void *)&lock);
 	  if (!lock)
 	    /* table formatting is not loked, lock it now */
 	    (*ThotLocalActions[T_lock]) ();
@@ -3503,7 +3533,7 @@ static void PasteXClipboardW (wchar_t* src, int nchars)
       /* lock tables formatting */
       if (ThotLocalActions[T_islock])
 	{
-	  (*ThotLocalActions[T_islock]) (&lock);
+	  (*(Proc1)ThotLocalActions[T_islock]) ((void *)&lock);
 	  if (!lock)
 	    /* table formatting is not loked, lock it now */
 	    (*ThotLocalActions[T_lock]) ();
@@ -3611,7 +3641,7 @@ void TtcInsertChar (Document doc, View view, CHAR_T c)
 	  /* lock tables formatting */
 	  if (ThotLocalActions[T_islock])
 	    {
-	      (*ThotLocalActions[T_islock]) (&lock);
+	      (*(Proc1)ThotLocalActions[T_islock]) ((void *)&lock);
 	      if (!lock)
 		/* table formatting is not loked, lock it now */
 		(*ThotLocalActions[T_lock]) ();
@@ -3706,7 +3736,7 @@ void TtcCutSelection (Document doc, View view)
    /* lock tables formatting */
    if (ThotLocalActions[T_islock])
      {
-       (*ThotLocalActions[T_islock]) (&lock);
+       (*(Proc1)ThotLocalActions[T_islock]) ((void *)&lock);
        if (!lock)
 	 /* table formatting is not loked, lock it now */
 	 (*ThotLocalActions[T_lock]) ();
@@ -3801,7 +3831,7 @@ void TtcDeletePreviousChar (Document doc, View view)
       /* lock tables formatting */
       if (ThotLocalActions[T_islock])
 	{
-	  (*ThotLocalActions[T_islock]) (&lock);
+	  (*(Proc1)ThotLocalActions[T_islock]) ((void *)&lock);
 	  if (!lock)
 	    /* table formatting is not loked, lock it now */
 	    (*ThotLocalActions[T_lock]) ();
@@ -3866,7 +3896,7 @@ void TtcDeleteSelection (Document doc, View view)
    /* lock tables formatting */
    if (ThotLocalActions[T_islock])
      {
-       (*ThotLocalActions[T_islock]) (&lock);
+       (*(Proc1)ThotLocalActions[T_islock]) ((void *)&lock);
        if (!lock)
 	 /* table formatting is not loked, lock it now */
 	 (*ThotLocalActions[T_lock]) ();
@@ -3905,12 +3935,16 @@ void TtcInclude (Document doc, View view)
 	/* lock tables formatting */
 	if (ThotLocalActions[T_islock])
 	  {
-	    (*ThotLocalActions[T_islock]) (&lock);
+	    (*(Proc1)ThotLocalActions[T_islock]) ((void *)&lock);
 	    if (!lock)
 	      /* table formatting is not loked, lock it now */
 	      (*ThotLocalActions[T_lock]) ();
 	  }
-	(*ThotLocalActions[T_insertpaste]) (FALSE, FALSE, 'L', &ok);
+	(*(Proc4)ThotLocalActions[T_insertpaste]) (
+			(void *)FALSE,
+			(void *)FALSE,
+			(void *)'L',
+			(void *)&ok);
 
 	if (!lock)
 	  /* unlock table formatting */
@@ -3963,7 +3997,7 @@ void TtcPasteFromClipboard (Document doc, View view)
 
 #ifdef _GTK
    if (Xbuffer)
-     PasteXClipboard (Xbuffer, strlen(Xbuffer)); 
+     PasteXClipboard (Xbuffer, strlen((char *)Xbuffer)); 
 #endif /* _GTK */
    
 #ifdef _MOTIF
@@ -3972,7 +4006,7 @@ void TtcPasteFromClipboard (Document doc, View view)
    if (w == None)
      {
 	/* it concerns a thot window -> paste the cutbuffer */
-	Xbuffer = XFetchBytes (TtDisplay, &i);
+	Xbuffer = (unsigned char *)XFetchBytes (TtDisplay, &i);
 	if (Xbuffer)
 	   PasteXClipboard (Xbuffer, i);
      }
@@ -4106,7 +4140,8 @@ void TtcPaste (Document doc, View view)
 	  /* lock tables formatting */
 	  if (ThotLocalActions[T_islock])
 	    {
-	      (*ThotLocalActions[T_islock]) (&lock);
+	      (*(Proc1)ThotLocalActions[T_islock]) (
+			(void *)&lock);
 	      if (!lock)
 		/* table formatting is not loked, lock it now */
 		(*ThotLocalActions[T_lock]) ();

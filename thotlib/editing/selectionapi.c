@@ -76,7 +76,7 @@ void TtaSelectElement (Document document, Element selectedElement)
        if (dispMode == DisplayImmediately)
 	 if (selectedElement == NULL && ThotLocalActions[T_resetsel])
 	   /* Abort the selection */
-	 (*ThotLocalActions[T_resetsel]) (LoadedDocument[document - 1]);
+	 (*(Proc1)ThotLocalActions[T_resetsel]) ((void *)LoadedDocument[document - 1]);
 	 else
 	   SelectElement (LoadedDocument[document - 1],
 			  (PtrElement) selectedElement, TRUE, FALSE);

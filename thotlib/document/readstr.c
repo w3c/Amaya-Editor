@@ -17,10 +17,10 @@
 #include "fileaccess.h"
 
 /* variables importees */
+#undef THOT_EXPORT
 #define THOT_EXPORT extern
-#include "platform_tv.h"
-
 #include "fileaccess_f.h"
+#include "platform_tv.h"
 #include "readstr_f.h"
 #include "memory_f.h"
 
@@ -32,7 +32,7 @@ static ThotBool ReadAttribType (BinFile file, AttribType *attrType)
 {
    char c;
 
-   TtaReadByte (file, &c);
+   TtaReadByte (file, (unsigned char *)&c);
    switch (c)
 	 {
 	    case C_INT_ATTR:
@@ -63,7 +63,7 @@ static ThotBool ReadRConstruct (BinFile file, RConstruct *constr)
 {
    char c;
 
-   TtaReadByte (file, &c);
+   TtaReadByte (file, (unsigned char *)&c);
    switch (c)
 	 {
 	    case C_IDENTITY_CONSTR:
@@ -123,7 +123,7 @@ static ThotBool ReadBasicType (BinFile file, BasicType *typ)
 {
    char c;
 
-   TtaReadByte (file, &c);
+   TtaReadByte (file, (unsigned char *)&c);
    switch (c)
 	 {
 	    case C_CHAR_STRING:
@@ -163,7 +163,7 @@ static ThotBool     ReadAttribute (BinFile file, PtrTtAttribute pAttr)
    int                 j;
    Name                buffer;
 
-   TtaReadName (file, buffer);
+   TtaReadName (file, (unsigned char *)buffer);
    pAttr->AttrName = TtaStrdup (buffer);
    pAttr->AttrOrigName = TtaStrdup (buffer);
    TtaReadBool (file, &pAttr->AttrGlobal);
@@ -179,13 +179,13 @@ static ThotBool     ReadAttribute (BinFile file, PtrTtAttribute pAttr)
 		    break;
 		 case AtReferenceAttr:
 		    TtaReadShort (file, &pAttr->AttrTypeRef);
-		    TtaReadName (file, pAttr->AttrTypeRefNature);
+		    TtaReadName (file, (unsigned char *)pAttr->AttrTypeRefNature);
 		    break;
 		 case AtEnumAttr:
 		    TtaReadShort (file, &pAttr->AttrNEnumValues);
 		    for (j = 0; j < pAttr->AttrNEnumValues; j++)
 		      {
-			TtaReadName (file, pAttr->AttrEnumValue[j]);
+			TtaReadName (file, (unsigned char *)pAttr->AttrEnumValue[j]);
 			strcpy (pAttr->AttrEnumOrigValue[j], pAttr->AttrEnumValue[j]);
 		      }
 		    break;
@@ -205,7 +205,7 @@ static ThotBool     ReadSRule (BinFile file, PtrSRule pSRule)
    int                 j;
    Name                buffer;
 
-   TtaReadName (file, buffer);
+   TtaReadName (file, (unsigned char *)buffer);
    pSRule->SrName = TtaStrdup (buffer); 
    pSRule->SrOrigName = TtaStrdup (buffer); 
    TtaReadShort (file, &pSRule->SrNDefAttrs);
@@ -240,7 +240,7 @@ static ThotBool     ReadSRule (BinFile file, PtrSRule pSRule)
    if (pSRule->SrExportedElem)
      {
 	TtaReadShort (file, &pSRule->SrExportContent);
-	TtaReadName (file, pSRule->SrNatExpContent);
+	TtaReadName (file, (unsigned char *)pSRule->SrNatExpContent);
      }
 
    TtaReadShort (file, &pSRule->SrFirstExcept);
@@ -270,7 +270,7 @@ static ThotBool     ReadSRule (BinFile file, PtrSRule pSRule)
 	       break;
 	    case CsReference:
 	       TtaReadShort (file, &pSRule->SrReferredType);
-	       TtaReadName (file, pSRule->SrRefTypeNat);
+	       TtaReadName (file, (unsigned char *)pSRule->SrRefTypeNat);
 	       break;
 	    case CsIdentity:
 	       TtaReadShort (file, &pSRule->SrIdentRule);
@@ -321,11 +321,11 @@ static ThotBool ReadConstants (BinFile file, PtrSSchema pSS)
      {
 	do
 	  {
-	     TtaReadByte (file, &c);
+	     TtaReadByte (file, (unsigned char *)&c);
 	     pSS->SsConstBuffer[i++] = c;
 	  }
 	while (c != EOS && i < MAX_LEN_ALL_CONST);
-	TtaReadByte (file, &c);
+	TtaReadByte (file, (unsigned char *)&c);
 	pSS->SsConstBuffer[i++] = c;
      }
    while (c != EOS && i < MAX_LEN_ALL_CONST);
@@ -369,9 +369,9 @@ ThotBool ReadStructureSchema (Name fileName, PtrSSchema pSS)
      {
 	pSS->SsActionList = NULL;
 	/* lit la partie fixe du schema de structure */
-	TtaReadName (file, pSS->SsName);
+	TtaReadName (file, (unsigned char *)pSS->SsName);
 	TtaReadShort (file, &pSS->SsCode);
-	TtaReadName (file, pSS->SsDefaultPSchema);
+	TtaReadName (file, (unsigned char *)pSS->SsDefaultPSchema);
 	TtaReadBool (file, &pSS->SsExtension);
 	pSS->SsUriName = NULL;
 	pSS->SsNExtensRules = 0;

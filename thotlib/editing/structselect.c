@@ -21,12 +21,11 @@
 #include "message.h"
 #include "appdialogue.h"
 
+#undef THOT_EXPORT
 #define THOT_EXPORT extern
 #include "edit_tv.h"
 #include "frame_tv.h"
 #include "appdialogue_tv.h"
-#undef THOT_EXPORT
-#define THOT_EXPORT
 #include "select_tv.h"
 
 #include "absboxes_f.h"
@@ -86,7 +85,7 @@ static int          SelectedPictureEdge;/* if the current selection is a
 void TtaSetCurrentKeyboard (int keyboard)
 {
    if (ThotLocalActions[T_keyboard] != NULL)
-      (*ThotLocalActions[T_keyboard]) (keyboard);
+      ((Proc1)*ThotLocalActions[T_keyboard]) ((void *)keyboard);
    /* remember current mode */
    KeyboardMode = keyboard;
 }
@@ -392,9 +391,9 @@ void CancelSelection ()
      {
 	PrepareSelectionMenu ();
 	if (ThotLocalActions[T_chselect] != NULL)
-	   (*ThotLocalActions[T_chselect]) (pDoc);
+	   (*(Proc1)ThotLocalActions[T_chselect]) ((void *)pDoc);
 	if (ThotLocalActions[T_chattr] != NULL)
-	   (*ThotLocalActions[T_chattr]) (pDoc);
+	   (*(Proc1)ThotLocalActions[T_chattr]) ((void *)pDoc);
      }
    SelMenuParentEl = NULL;
    SelMenuPreviousEl = NULL;
@@ -1400,9 +1399,9 @@ void SelectStringInAttr (PtrDocument pDoc, PtrAbstractBox pAb, int firstChar,
       PrepareSelectionMenu ();
       BuildSelectionMessage ();
       if (ThotLocalActions[T_chselect] != NULL)
-	(*ThotLocalActions[T_chselect]) (pDoc);
+	(*(Proc1)ThotLocalActions[T_chselect]) ((void *)pDoc);
       if (ThotLocalActions[T_chattr] != NULL)
-	(*ThotLocalActions[T_chattr]) (pDoc);
+	(*(Proc1)ThotLocalActions[T_chattr]) ((void *)pDoc);
     }
 }
 
@@ -1507,9 +1506,9 @@ static void SelectStringOrPosition (PtrDocument pDoc, PtrElement pEl,
 		PrepareSelectionMenu ();
 		BuildSelectionMessage ();
 		if (ThotLocalActions[T_chselect] != NULL)
-		   (*ThotLocalActions[T_chselect]) (pDoc);
+		   (*(Proc1)ThotLocalActions[T_chselect]) ((void *)pDoc);
 		if (ThotLocalActions[T_chattr] != NULL)
-		   (*ThotLocalActions[T_chattr]) (pDoc);
+		   (*(Proc1)ThotLocalActions[T_chattr]) ((void *)pDoc);
 	     }
 	   else
 	      /* the new selection starts in the same element as before */
@@ -1521,7 +1520,7 @@ static void SelectStringOrPosition (PtrDocument pDoc, PtrElement pEl,
 	         /* Item Split in  the Edit menu must be updated */
 	         if (SelectionUpdatesMenus)
 		    if (ThotLocalActions[T_chsplit] != NULL)
-		       (*ThotLocalActions[T_chsplit]) (pDoc);
+		       (*(Proc1)ThotLocalActions[T_chsplit]) ((void *)pDoc);
 	}
      }
 }
@@ -1570,7 +1569,7 @@ void SelectString (PtrDocument pDoc, PtrElement pEl, int firstChar, int lastChar
 void SelectElement (PtrDocument pDoc, PtrElement pEl, ThotBool begin, ThotBool check)
 {
   PtrElement          pAncest, pE;
-  ThotBool            bool, stop, elVisible;
+  ThotBool            b, stop, elVisible;
 
   if (pEl != NULL && pDoc != NULL && pEl->ElStructSchema != NULL &&
       pEl != pDoc->DocDocElement) /* do not select the Document element */
@@ -1680,8 +1679,11 @@ void SelectElement (PtrDocument pDoc, PtrElement pEl, ThotBool begin, ThotBool c
 	HighlightVisibleAncestor (FirstSelectedElement);
       /* call the procedure handling selection in tables */
       if (ThotLocalActions[T_selecttable] != NULL)
-	(*ThotLocalActions[T_selecttable]) (FirstSelectedElement,
-					    SelectedDocument, FALSE, &bool);
+	(*(Proc4)ThotLocalActions[T_selecttable]) (
+		(void *)FirstSelectedElement,
+		(void *)SelectedDocument,
+		(void *)FALSE,
+		(void *)&b);
       /* if the selected element is a paired element, select the other */
       /* element of the pair too */
       if (FirstSelectedElement->ElStructSchema->SsRule->SrElem[FirstSelectedElement->ElTypeNumber - 1]->SrConstruct ==
@@ -1719,9 +1721,9 @@ void SelectElement (PtrDocument pDoc, PtrElement pEl, ThotBool begin, ThotBool c
 	  PrepareSelectionMenu ();
 	  BuildSelectionMessage ();
 	  if (ThotLocalActions[T_chselect] != NULL)
-	    (*ThotLocalActions[T_chselect]) (pDoc);
+	    (*(Proc1)ThotLocalActions[T_chselect]) ((void *)pDoc);
 	  if (ThotLocalActions[T_chattr] != NULL)
-	    (*ThotLocalActions[T_chattr]) (pDoc);
+	    (*(Proc1)ThotLocalActions[T_chattr]) ((void *)pDoc);
 	}
     }
 }
@@ -1755,7 +1757,11 @@ void DoExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin
 
   if (pEl != NULL &&ThotLocalActions[T_selecttable] != NULL)
     /* call procedure handling selection in tables, if it is present */
-    (*ThotLocalActions[T_selecttable]) (pEl, SelectedDocument, TRUE, &sel);
+    (*(Proc4)ThotLocalActions[T_selecttable]) (
+		(void *)pEl,
+		(void *)SelectedDocument,
+		(void *)TRUE,
+		(void *)&sel);
   if (sel)
     {
       done = FALSE;
@@ -1993,9 +1999,11 @@ void DoExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin
 	      PrepareSelectionMenu ();
 	      BuildSelectionMessage ();
 	      if (ThotLocalActions[T_chselect] != NULL)
-		(*ThotLocalActions[T_chselect]) (SelectedDocument);
+		(*(Proc1)ThotLocalActions[T_chselect]) (
+			(void *)SelectedDocument);
 	      if (ThotLocalActions[T_chattr] != NULL)
-		(*ThotLocalActions[T_chattr]) (SelectedDocument);
+		(*(Proc1)ThotLocalActions[T_chattr]) (
+			(void *)SelectedDocument);
 	    }
 	  if (!fixed)
 	    /* change the fixed point: move it to the begining */
@@ -2139,9 +2147,11 @@ void           AddInSelection (PtrElement pEl, ThotBool last)
 	      /* update all the menus that depend on the current */
 	      /* selection */
 	      if (ThotLocalActions[T_chselect] != NULL)
-		(*ThotLocalActions[T_chselect]) (SelectedDocument);
+		(*(Proc1)ThotLocalActions[T_chselect]) (
+			(void *)SelectedDocument);
 	      if (ThotLocalActions[T_chattr] != NULL)
-		(*ThotLocalActions[T_chattr]) (SelectedDocument);
+		(*(Proc1)ThotLocalActions[T_chattr]) (
+			(void *)SelectedDocument);
 	    }
 	}
     }

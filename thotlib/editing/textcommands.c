@@ -330,7 +330,9 @@ static void MovingCommands (int code, Document doc, View view,
       pFrame = &ViewFrameTable[frame - 1];
       /* reformat the current paragraph if necessary */
       if (ThotLocalActions[T_updateparagraph])
-	(*ThotLocalActions[T_updateparagraph]) (pFrame->FrAbstractBox, frame);
+	(*(Proc2)ThotLocalActions[T_updateparagraph]) (
+		(void *)pFrame->FrAbstractBox,
+		(void *)frame);
       pViewSel = &(pFrame->FrSelectionBegin);
       pViewSelEnd = &(pFrame->FrSelectionEnd);
       /* beginning of the selection */
@@ -1196,7 +1198,7 @@ static int CopyXClipboard (unsigned char **buffer, View view)
   /* Adding 100 characters for extra CR */
   max = maxLength + lg;
   /* Allocate a buffer with the right length */
-  text = TtaGetMemory (max * sizeof (CHAR_T));
+  text = (CHAR_T *)TtaGetMemory (max * sizeof (CHAR_T));
   /* Copy the text into the buffer */
   i = 0;
   ind = firstChar - 1;
@@ -1333,7 +1335,7 @@ void TtcCopyToClipboard (Document doc, View view)
   /* Store the current selection */
   ClipboardLength = CopyXClipboard (&Xbuffer, view);
   /* Annule le cutbuffer courant */
-  XStoreBuffer (TtDisplay, Xbuffer, ClipboardLength, 0);
+  XStoreBuffer (TtDisplay, (char *)Xbuffer, ClipboardLength, 0);
 #endif /* _MOTIF */
 
 #ifdef _WINDOWS

@@ -66,7 +66,7 @@ void MapSVGAttribute (char *attrName, AttributeType *attrType,
    Search in the Attribute Value Mapping Table the entry for the attribute
    ThotAtt and its value attVal. Returns the corresponding Thot value.
   ----------------------------------------------------------------------*/
-void MapSVGAttributeValue (char* attVal, AttributeType attrType, int *value)
+void MapSVGAttributeValue (char* attVal, const AttributeType * attrType, int *value)
 {
   MapXMLAttributeValue (SVG_TYPE, attVal, attrType, value);
 }
@@ -101,7 +101,7 @@ void   ParseCSSequivAttribute (int attrType,
 			       Attribute attr,
 			       Element el,
 			       Document doc,
-			       ThotBool delete)
+			       ThotBool delete_)
 {
 #define buflen 200
   char               css_command[buflen+20];
@@ -119,7 +119,7 @@ void   ParseCSSequivAttribute (int attrType,
     /* the attribute value is a character string */
     {
       length = TtaGetTextAttributeLength (attr) + 2;
-      text = TtaGetMemory (length);
+      text = (char *)TtaGetMemory (length);
       if (text != NULL)
 	TtaGiveTextAttributeValue (attr, text, &length);
     }
@@ -227,7 +227,7 @@ void   ParseCSSequivAttribute (int attrType,
 
   /* parse the equivalent CSS rule */
   if (css_command[0] != EOS)
-    ParseHTMLSpecificStyle (el, css_command, doc, 0, delete);
+    ParseHTMLSpecificStyle (el, css_command, doc, 0, delete_);
   if (text)
     TtaFreeMemory (text);
 }
@@ -338,14 +338,14 @@ static Element  CreateGraphicLeaf (Element el, Document doc, ThotBool *closed)
   ----------------------------------------------------------------------*/
 static void     CreateEnclosingElement (Element el, ElementType elType, Document doc)
 {
-   Element	new, prev, next, child;
+   Element	new_, prev, next, child;
 
-   new = TtaNewElement (doc, elType);
-   TtaInsertSibling (new, el, TRUE, doc);
+   new_ = TtaNewElement (doc, elType);
+   TtaInsertSibling (new_, el, TRUE, doc);
    next = el;
    TtaNextSibling (&next);
    TtaRemoveTree (el, doc);
-   TtaInsertFirstChild (&el, new, doc);
+   TtaInsertFirstChild (&el, new_, doc);
    prev = el;
    while (next != NULL)
      {
@@ -467,7 +467,7 @@ void  CopyUseContent (Element el, Document doc, char *href)
 	      {
 		/* get its value */
 		length = TtaGetTextAttributeLength (attr);
-		id = TtaGetMemory (length + 1);
+		id = (char *)TtaGetMemory (length + 1);
 		TtaGiveTextAttributeValue (attr, id, &length);
 		/* compare with the xlink:href attribute of the use element */
 		if (!strcasecmp (&href[1], id))
@@ -549,7 +549,7 @@ static void CheckHrefAttr (Element el, Document doc)
 	{
 	  /* get its value */
 	  length = TtaGetTextAttributeLength (attr);
-	  href = TtaGetMemory (length + 1);
+	  href = (char *)TtaGetMemory (length + 1);
 	  TtaGiveTextAttributeValue (attr, href, &length);
 	  /* delete the XLink href attribute */
 	  TtaRemoveAttribute (el, attr, doc);
@@ -579,7 +579,7 @@ static ThotBool EvaluateFeatures (Attribute attr)
   length = TtaGetTextAttributeLength (attr);
   if (length > 0)
     {
-      text = TtaGetMemory (length + 2);
+      text = (char *)TtaGetMemory (length + 2);
       if (text)
 	{
 	  TtaGiveTextAttributeValue (attr, text, &length);
@@ -622,7 +622,7 @@ static ThotBool EvaluateExtensions (Attribute attr)
   length = TtaGetTextAttributeLength (attr);
   if (length > 0)
     {
-      text = TtaGetMemory (length + 2);
+      text = (char *)TtaGetMemory (length + 2);
       if (text)
 	{
 	  TtaGiveTextAttributeValue (attr, text, &length);
@@ -664,7 +664,7 @@ static ThotBool EvaluateSystemLanguage (Attribute attr)
   length = TtaGetTextAttributeLength (attr);
   if (length > 0)
     {
-      text = TtaGetMemory (length + 2);
+      text = (char *)TtaGetMemory (length + 2);
       if (text)
 	{
 	  /* get the list of languages accepted by the user */
@@ -851,7 +851,7 @@ static void SetTextAnchorTree (Element el, PresentationContext ctxt,
    Update (or create) the position rule of element el according to the
    value of the text-anchor attribute attr.
   ----------------------------------------------------------------------*/
-void SetTextAnchor (Attribute attr, Element el, Document doc, ThotBool delete)
+void SetTextAnchor (Attribute attr, Element el, Document doc, ThotBool delete_)
 {
    Attribute            attr1;
    AttributeType        attrType;
@@ -865,7 +865,7 @@ void SetTextAnchor (Attribute attr, Element el, Document doc, ThotBool delete)
    SvgSSchema = attrType.AttrSSchema;
    val = TtaGetAttributeValue (attr);
    ctxt = TtaGetSpecificStyleContext (doc);
-   if (delete || val == SVG_ATTR_text_anchor_VAL_inherit)
+   if (delete_ || val == SVG_ATTR_text_anchor_VAL_inherit)
      /* attribute text-anchor is being deleted or inherited */
      {
        ctxt->type = PositionLeft;
@@ -954,7 +954,7 @@ void CreateCSSRules (Element el, Document doc)
     /* get its value */
     {
       length = TtaGetTextAttributeLength (attr);
-      text = TtaGetMemory (length + 1);
+      text = (char *)TtaGetMemory (length + 1);
       TtaGiveTextAttributeValue (attr, text, &length);
       if (!strcasecmp (text, "text/css"))
 	parseCSS = TRUE;
@@ -980,7 +980,7 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
 {
    Document             doc;   
    ElementType		elType, parentType, newType;
-   Element		child, parent, new, leaf;
+   Element		child, parent, new_, leaf;
    AttributeType        attrType;
    Attribute            attr;
    int                  length;
@@ -1002,12 +1002,12 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
 	{
 	newType.ElSSchema = SVGSSchema;
 	newType.ElTypeNum = SVG_EL_SVG;
-	new = TtaNewElement (doc, newType);
-	TtaInsertFirstChild (&new, el, doc);
+	new_ = TtaNewElement (doc, newType);
+	TtaInsertFirstChild (&new_, el, doc);
 	/* Create a placeholder within the SVG element */
         newType.ElTypeNum = SVG_EL_GraphicsElement;
 	child = TtaNewElement (doc, newType);
-	TtaInsertFirstChild (&child, new, doc);
+	TtaInsertFirstChild (&child, new_, doc);
 	}
      }
    else
@@ -1109,7 +1109,7 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
 	   {
 	     /* get its value */
 	     length = TtaGetTextAttributeLength (attr);
-	     href = TtaGetMemory (length + 1);
+	     href = (char *)TtaGetMemory (length + 1);
 	     TtaGiveTextAttributeValue (attr, href, &length);
 	     CopyUseContent (el, doc, href);
 	     TtaFreeMemory (href);
@@ -1181,7 +1181,7 @@ void               UnknownSVGNameSpace (ParserData *context,
        elText = TtaNewElement (context->doc, elType);
        XmlSetElemLineNumber (elText);
        TtaInsertFirstChild (&elText, *unknownEl, context->doc);
-       TtaSetTextContent (elText, content, context->language, context->doc);
+       TtaSetTextContent (elText, (unsigned char *)content, context->language, context->doc);
        TtaSetAccessRight (elText, ReadOnly, context->doc);
      }
 }
@@ -1420,12 +1420,12 @@ void UpdateTransformAttr (Element el, Document doc, char *operation,
   else
     {
       length = TtaGetTextAttributeLength (attr);
-      text = TtaGetMemory (length + 1);
+      text = (char *)TtaGetMemory (length + 1);
       if (text)
 	{
 	  TtaGiveTextAttributeValue (attr, text, &length);
 	  ptr = text;
-	  newText = TtaGetMemory (length + 50);
+	  newText = (char *)TtaGetMemory (length + 50);
 	  if (newText)
 	    {
 	      newPtr = newText;
@@ -1660,8 +1660,8 @@ void UpdatePositionOfPoly (Element el, Document doc, int minX, int minY,
        /* translate all coordinates by (-minX, -minY), both in the Thot
 	  Graphic leaf element and in the "points" attribute */
        nbPoints = TtaGetPolylineLength (leaf);
-       buffer = TtaGetMemory (20);
-       text = TtaGetMemory (nbPoints * 20);
+       buffer = (char *)TtaGetMemory (20);
+       text = (char *)TtaGetMemory (nbPoints * 20);
        text[0] = EOS;
        for (i = 1; i <= nbPoints; i++)
 	 {
@@ -1702,7 +1702,7 @@ void UpdatePositionOfPoly (Element el, Document doc, int minX, int minY,
        if (pRule)
 	 {
 	   x = TtaGetPRuleValue (pRule);
-	   unit = TtaGetPRuleUnit (pRule);
+	   unit = (TypeUnit)TtaGetPRuleUnit (pRule);
 	 }
        else
 	 x = 0;
@@ -1718,7 +1718,7 @@ void UpdatePositionOfPoly (Element el, Document doc, int minX, int minY,
        if (pRule)
 	 {
 	   y = TtaGetPRuleValue (pRule);
-	   unit = TtaGetPRuleUnit (pRule);
+	   unit = (TypeUnit)TtaGetPRuleUnit (pRule);
 	 }
        else
 	 y = 0;
@@ -1753,7 +1753,7 @@ void ParseCoordAttribute (Attribute attr, Element el, Document doc)
    ThotBool             important;
 
    length = TtaGetTextAttributeLength (attr) + 2;
-   text = TtaGetMemory (length);
+   text = (char *)TtaGetMemory (length);
    if (text != NULL)
       {
       /* get the value of the x or y attribute */
@@ -1822,7 +1822,7 @@ void ParseCoordAttribute (Attribute attr, Element el, Document doc)
    the value of attribute attr, which is width_, height_, r, rx, or ry.
   ----------------------------------------------------------------------*/
 ThotBool ParseWidthHeightAttribute (Attribute attr, Element el, Document doc,
-				    ThotBool delete)
+				    ThotBool delete_)
 {
    AttributeType	attrType;
    ElementType          elType;
@@ -1836,10 +1836,10 @@ ThotBool ParseWidthHeightAttribute (Attribute attr, Element el, Document doc,
    ret = FALSE; /* let Thot perform normal operation */
    elType = TtaGetElementType (el);
    text = NULL;
-   if (attr && !delete)
+   if (attr && !delete_)
      {
        length = TtaGetTextAttributeLength (attr) + 2;
-       text = TtaGetMemory (length);
+       text = (char *)TtaGetMemory (length);
        if (!text)
 	 return ret;
      }
@@ -1867,7 +1867,7 @@ ThotBool ParseWidthHeightAttribute (Attribute attr, Element el, Document doc,
        ruleType = PRHeight;
    else
      ruleType = PRWidth;
-   if (delete)
+   if (delete_)
       /* attribute deleted */
       if (ruleType != PRXRadius && ruleType != PRYRadius)
 	/* attribute madatory. Do not delete */
@@ -1949,7 +1949,7 @@ ThotBool ParseWidthHeightAttribute (Attribute attr, Element el, Document doc,
    Process the baseline-shift attribute
   ----------------------------------------------------------------------*/
 void ParseBaselineShiftAttribute (Attribute attr, Element el, Document doc,
-				  ThotBool delete)
+				  ThotBool delete_)
 {
   int                  length;
   char                 *text, *ptr;
@@ -1959,7 +1959,7 @@ void ParseBaselineShiftAttribute (Attribute attr, Element el, Document doc,
   /* allowed values are
      baseline | sub | super | <percentage> | <length> | inherit */
    length = TtaGetTextAttributeLength (attr) + 2;
-   text = TtaGetMemory (length);
+   text = (char *)TtaGetMemory (length);
    if (text)
      {
        /* get the value of the attribute */
@@ -2009,7 +2009,7 @@ void ParseBaselineShiftAttribute (Attribute attr, Element el, Document doc,
        ctxt = TtaGetSpecificStyleContext (doc);
        /* the specific presentation is not a CSS rule */
        ctxt->cssSpecificity = 0;
-       ctxt->destroy = delete;
+       ctxt->destroy = delete_;
        TtaSetStylePresentation (PRHorizRef, el, NULL, ctxt, pval);
        TtaFreeMemory (ctxt);
        TtaFreeMemory (text);
@@ -2035,7 +2035,7 @@ void ParsePointsAttribute (Attribute attr, Element el, Document doc)
 
    /* text attribute. Get its value */
    length = TtaGetTextAttributeLength (attr) + 2;
-   text = TtaGetMemory (length);
+   text = (char *)TtaGetMemory (length);
    if (text)
       {
       /* first, delete all points in the polyline */
@@ -2088,7 +2088,7 @@ void ParsePointsAttribute (Attribute attr, Element el, Document doc)
    Parse the value of a viewbox attribute
   ----------------------------------------------------------------------*/
 void ParseviewBoxAttribute (Attribute attr, Element el, Document doc,
-			      ThotBool delete)
+			      ThotBool delete_)
 {
    int                  length;
    float                 x, y, width, height;
@@ -2098,7 +2098,7 @@ void ParseviewBoxAttribute (Attribute attr, Element el, Document doc,
    
    leaf = el;
    length = TtaGetTextAttributeLength (attr) + 2;
-   text = TtaGetMemory (length);
+   text = (char *)TtaGetMemory (length);
    if (text)
      {
        /* get the content of the transform attribute */
@@ -2134,7 +2134,7 @@ void ParseviewBoxAttribute (Attribute attr, Element el, Document doc,
    Parse the value of a transform attribute
   ----------------------------------------------------------------------*/
 void ParseTransformAttribute (Attribute attr, Element el, Document doc,
- 			      ThotBool delete)
+ 			      ThotBool delete_)
 {
    int                  length;
    float                scaleX, scaleY, x, y, a, b, c, d, e, f, angle;
@@ -2144,7 +2144,7 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
    
    leaf = el;
    length = TtaGetTextAttributeLength (attr) + 2;
-   text = TtaGetMemory (length);
+   text = (char *)TtaGetMemory (length);
    if (text)
      {
        /* get the content of the transform attribute */
@@ -2378,7 +2378,7 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
 }
 #else /* _GL */
 void ParseTransformAttribute (Attribute attr, Element el, Document doc,
-			      ThotBool delete)
+			      ThotBool delete_)
 {
    int                  length, a, b, c, d, e, f, x, y, angle;
    float                scaleX, scaleY;
@@ -2388,7 +2388,7 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
    ThotBool             error;
 
    length = TtaGetTextAttributeLength (attr) + 2;
-   text = TtaGetMemory (length);
+   text = (char *)TtaGetMemory (length);
    if (text)
      {
        /* get the content of the transform attribute */
@@ -2452,7 +2452,7 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
 		       pval.typed_data.mainValue = TRUE;
 		       ctxt = TtaGetSpecificStyleContext (doc);
 		       ctxt->cssSpecificity = 0; /* this is not a CSS rule */
-		       ctxt->destroy = delete;
+		       ctxt->destroy = delete_;
 		       /****** process values a, b, c, d *****/
 		       /* value e specifies an horizontal translation */
 		       if (e != 0)
@@ -2492,7 +2492,7 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
 		   pval.typed_data.mainValue = TRUE;
 		   ctxt = TtaGetSpecificStyleContext (doc);
 		   ctxt->cssSpecificity = 0;     /* this is not a CSS rule */
-		   ctxt->destroy = delete;
+		   ctxt->destroy = delete_;
 		   TtaSetStylePresentation (PRHorizPos, el, NULL, ctxt, pval);
 		   if (*ptr == ')')
 		     pval.typed_data.value = 0;
@@ -2672,7 +2672,7 @@ void *ParseValuesDataAttribute (Attribute attr, Element el, Document doc)
    anim_seg = TtaNewAnimPath (doc);    
    /* get a buffer for reading the attribute value */
    length = TtaGetTextAttributeLength (attr) + 2;
-   text = TtaGetMemory (length);
+   text = (char *)TtaGetMemory (length);
    if (text)
      {
        /* get the content of the data attribute */
@@ -2714,7 +2714,7 @@ void *ParseFromToDataAttribute (Attribute attrfrom, Attribute attrto,
    anim_seg = TtaNewAnimPath (doc);
    /* get a buffer for reading the attribute value */
    length = TtaGetTextAttributeLength (attrfrom) + 2;
-   text = TtaGetMemory (length);
+   text = (char *)TtaGetMemory (length);
    if (text)
      {
        /* get the content of the data attribute */
@@ -2730,7 +2730,7 @@ void *ParseFromToDataAttribute (Attribute attrfrom, Attribute attrto,
 
    /* get a buffer for reading the attribute value */
    length = TtaGetTextAttributeLength (attrto) + 2;
-   text = TtaGetMemory (length);
+   text = (char *)TtaGetMemory (length);
    if (text)
      {
        /* get the content of the data attribute */
@@ -2779,7 +2779,7 @@ void *ParsePathDataAttribute (Attribute attr, Element el, Document doc, ThotBool
    
    /* get a buffer for reading the attribute value */
    length = TtaGetTextAttributeLength (attr) + 2;
-   text = TtaGetMemory (length);
+   text = (char *)TtaGetMemory (length);
    if (text)
       {
       /* get the content of the path data attribute */
@@ -3132,7 +3132,7 @@ int ParseIntAttribute (Attribute attr)
   PresentationValue    pval;
 
   length = TtaGetTextAttributeLength (attr) + 2;
-  text = TtaGetMemory (length);
+  text = (char *)TtaGetMemory (length);
   if (text != NULL)
     {
       TtaGiveTextAttributeValue (attr, text, &length);
@@ -3156,7 +3156,7 @@ float ParseFloatAttribute (Attribute attr)
   PresentationValue    pval;
 
   length = TtaGetTextAttributeLength (attr) + 2;
-  text = TtaGetMemory (length);
+  text = (char *)TtaGetMemory (length);
   if (text != NULL)
     {
       TtaGiveTextAttributeValue (attr, text, &length);

@@ -1000,8 +1000,12 @@ void AttachAttrWithValue (PtrElement pEl, PtrDocument pDoc,
 	{
 	  /* register the attribute in history */
 	  if (ThotLocalActions[T_attraddhistory] != NULL)
-	    (*ThotLocalActions[T_attraddhistory]) (pAttr, pEl, pDoc, TRUE,
-						   FALSE);
+	    (*(Proc5)ThotLocalActions[T_attraddhistory]) (
+		(void *)pAttr,
+	       	(void *)pEl,
+	       	(void *)pDoc,
+	       	(void *)TRUE,
+		(void *)FALSE);
 	  /* detache l'attribut de l'element s'il y a lieu */
 	  pAttrNext = pAttr->AeNext;
 	  /* supprime l'attribut */
@@ -1057,8 +1061,12 @@ void AttachAttrWithValue (PtrElement pEl, PtrDocument pDoc,
 	  pAttr = AddAttrToElem (pEl, pNewAttr, pAttrNext);
 	  /* register the attribute in history */
 	  if (ThotLocalActions[T_attraddhistory] != NULL)
-	    (*ThotLocalActions[T_attraddhistory]) (pAttr, pEl, pDoc, FALSE,
-						   TRUE);
+	    (*(Proc5)ThotLocalActions[T_attraddhistory]) (
+		(void *)pAttr,
+	       	(void *)pEl,
+	       	(void *)pDoc,
+	       	(void *)FALSE,
+		(void *)TRUE);
 	  /* indique que le document a ete modifie' */
 	  /* un changement d'attribut vaut dix caracteres saisis */
 	  SetDocumentModified (pDoc, TRUE, 10);
@@ -1293,7 +1301,7 @@ void TtaGiveTextAttributeValue (Attribute attribute, char *buffer, int *length)
     TtaError (ERR_invalid_attribute_type);
   else
     *length = CopyBuffer2MBs (((PtrAttribute) attribute)->AeAttrText, 0,
-			     buffer, *length);
+			     (unsigned char*)buffer, *length);
 }
 
 /* ----------------------------------------------------------------------

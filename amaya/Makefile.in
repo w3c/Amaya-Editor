@@ -88,25 +88,25 @@ force :
 	@(cd ../tablelib ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" libThotTable)
 
 ../libjpeg.a : @MAKEJPEG@ force
-	@(cd ../libjpeg ; $(MAKE) CC="$(CC)" CFLAGS="-O")
+	@(cd ../libjpeg ; $(MAKE) CC="$(CC)" CFLAGS="-O -x c")
 
 ../libpng.a : @MAKEPNG@ force
-	@(cd ../libpng ; $(MAKE) CC="$(CC)" CFLAGS="-O")
+	@(cd ../libpng ; $(MAKE) CC="$(CC)" CFLAGS="-O -x c")
 
 ../libz.a : @MAKEPNG@ force
-	@(cd ../libpng/zlib ; $(MAKE) CC="$(CC)" CFLAGS="-O")
+	@(cd ../libpng/zlib ; $(MAKE) CC="$(CC)" CFLAGS="-O -x c")
 
 ../tools/mkdep/mkdep : 
-	@(cd ../tools/mkdep ; $(MAKE) CC="$(CC)" CFLAGS="-O")
+	@(cd ../tools/mkdep ; $(MAKE) CC="$(CC)" CFLAGS="-O -x c")
 
 ../libraptor/.libs/libraptor.a \
 amaya_comp_libraptor: @MAKERAPTOR@ force
-	@(cd .. ; $(MAKE) libraptor CC="$(CC)" CFLAGS="-O2")
+	@(cd .. ; $(MAKE) libraptor CC="$(CC)" CFLAGS="-O2 -x c")
 
 ../redland/librdf/.libs/librdf.a \
 ../redland/raptor/.libs/libraptor.a \
 amaya_comp_redland: @MAKEREDLAND@ force
-	@(cd .. ; $(MAKE) redland CC="$(CC)" CFLAGS="-O2")
+	@(cd .. ; $(MAKE) redland CC="$(CC)" CFLAGS="-O2 -x c")
 
 .depends depend : ../tools/mkdep/mkdep
 	../tools/mkdep/mkdep -relative -vpath $(VPATH) $(INCLUDES) $(VPATH)/*.c  > .depends
@@ -192,7 +192,12 @@ amaya_src :  HTML.h $(AMAYA_SRC) $(MATH_SCHEMAS) $(SVG_SCHEMAS)
 # Rule to build objects
 #
 .c.o :
-	$(CC) $(CFLAGS) $(ALL_AMAYA_OPTIONS) $(INCLUDES) -c $< -o $@
+	$(CC) $(CXXFLAGS) $(ALL_AMAYA_OPTIONS) $(INCLUDES) -c $< -o $@
+#
+# Rule to build c++ objects
+#
+.cpp.o :
+	$(CXX) $(CXXFLAGS) $(ALL_AMAYA_OPTIONS) $(INCLUDES) -c $< -o $@
 
 #########################################################################
 #									#
@@ -292,8 +297,7 @@ $(AMAYA)/HTMLP.PRS : $(AMAYA)/HTMLP.P ../bin/prs
 	$$PRS $(ALL_AMAYA_OPTIONS) -DLINK_NUMBER -DPAGE -DLANDSCAPE HTMLP  HTMLPLL ;\
 	$$PRS $(ALL_AMAYA_OPTIONS) -DLINK_NUMBER -DUS_PAPER HTMLP HTMLPLPUS ;\
 	$$PRS $(ALL_AMAYA_OPTIONS) -DLINK_NUMBER -DUS_PAPER -DLANDSCAPE HTMLP HTMLUSLL ;\
-	$$PRS $(ALL_AMAYA_OPTIONS) -DBLACK_WHITE HTMLP HTMLPBW
-
+	$$PRS $(ALL_AMAYA_OPTIONS) -DBLACK_WHITE HTMLP HTMLPBW 
 #
 # HTML translation schemas compilation
 #
@@ -415,7 +419,7 @@ $(AMAYA)/XMLT.TRA : $(AMAYA)/XMLT.T ../bin/tra
 # Interface schemas compilation
 #
 HTMLAPP.o : HTMLAPP.c
-	$(CC) $(CFLAGS) $(ALL_AMAYA_OPTIONS) $(INCLUDES) -c HTMLAPP.c -o $@
+	$(CC) $(CXXFLAGS) $(ALL_AMAYA_OPTIONS) $(INCLUDES) -c HTMLAPP.c -o $@
 
 compHTMLA : HTML.h HTMLAPP.c
 
@@ -428,7 +432,7 @@ HTML.h HTMLAPP.c : @srcdir@/HTML.STR @srcdir@/HTML.A
 	../bin/app $(ALL_AMAYA_OPTIONS) HTML.A
 
 TextFileAPP.o : TextFileAPP.c
-	$(CC) $(CFLAGS) $(ALL_AMAYA_OPTIONS) $(INCLUDES) -c TextFileAPP.c -o $@
+	$(CC) $(CXXFLAGS) $(ALL_AMAYA_OPTIONS) $(INCLUDES) -c TextFileAPP.c -o $@
 
 compTextFileA : TextFile.h TextFileAPP.c
 
@@ -441,7 +445,7 @@ TextFile.h TextFileAPP.c : @srcdir@/TextFile.STR @srcdir@/TextFile.A
 	../bin/app $(ALL_AMAYA_OPTIONS) TextFile.A
 
 XLinkAPP.o : XLinkAPP.c
-	$(CC) $(CFLAGS) $(ALL_AMAYA_OPTIONS) $(INCLUDES) -c XLinkAPP.c -o $@
+	$(CC) $(CXXFLAGS) $(ALL_AMAYA_OPTIONS) $(INCLUDES) -c XLinkAPP.c -o $@
 
 compXLinkA : XLink.h XLinkAPP.c
 
@@ -454,7 +458,7 @@ XLink.h XLinkAPP.c : @srcdir@/XLink.STR @srcdir@/XLink.A
 	../bin/app $(ALL_AMAYA_OPTIONS) XLink.A
 
 XMLAPP.o : XMLAPP.c
-	$(CC) $(CFLAGS) $(ALL_AMAYA_OPTIONS) $(INCLUDES) -c XMLAPP.c -o $@
+	$(CC) $(CXXFLAGS) $(ALL_AMAYA_OPTIONS) $(INCLUDES) -c XMLAPP.c -o $@
 
 compXMLA : XML.h XMLAPP.c
 
@@ -467,7 +471,7 @@ XML.h XMLAPP.c : @srcdir@/XML.STR @srcdir@/XML.A
 	../bin/app $(ALL_AMAYA_OPTIONS) XML.A
 
 EDITORAPP.o : EDITORAPP.c
-	$(CC) $(CFLAGS) $(ALL_AMAYA_OPTIONS) $(INCLUDES) -c EDITORAPP.c -o $@
+	$(CC) $(CXXFLAGS) $(ALL_AMAYA_OPTIONS) $(INCLUDES) -c EDITORAPP.c -o $@
 
 compEDITORA : EDITORAPP.c
 

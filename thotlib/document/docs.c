@@ -355,7 +355,9 @@ void NewDocument (PtrDocument *pDoc, char *SSchemaName, char *docName,
 	       {
 	       /* traitement des exceptions */
 	       if (ThotLocalActions[T_createtable] != NULL)
-		  (*ThotLocalActions[T_createtable]) (pEl, *pDoc);
+		  (*(Proc2)ThotLocalActions[T_createtable]) (
+			(void *)pEl,
+		       	(void *)*pDoc);
 	       /* ouvre les vues du document cree' */
 	       OpenDefaultViews (*pDoc);
 	       /* selectionne la 1ere feuille du document */
@@ -418,7 +420,7 @@ void                UpdateIncludedElement (PtrElement pEl, PtrDocument pDoc)
    DestroyAbsBoxes (pEl, pDoc, FALSE);
    /* Update Abstract views */
    if (ThotLocalActions[T_AIupdate] != NULL)
-     (*ThotLocalActions[T_AIupdate]) (pDoc);
+     (*(Proc1)ThotLocalActions[T_AIupdate]) ((void *)pDoc);
    if (pEl->ElTerminal)
      switch (pEl->ElLeafType)
        {
@@ -490,10 +492,10 @@ void                UpdateIncludedElement (PtrElement pEl, PtrDocument pDoc)
    /* reaffiche l'element dans toutes les vues ou il existe */
    /* Update Abstract views */
    if (ThotLocalActions[T_AIupdate] != NULL)
-     (*ThotLocalActions[T_AIupdate]) (pDoc);
+     (*(Proc1)ThotLocalActions[T_AIupdate]) ((void *)pDoc);
    /* Redisplay views */
    if (ThotLocalActions[T_redisplay] != NULL)
-     (*ThotLocalActions[T_redisplay]) (pDoc);
+     (*(Proc1)ThotLocalActions[T_redisplay]) ((void *)pDoc);
    /* Reaffiche les numeros suivants qui changent */
    UpdateNumbers (NextElement (pEl), pEl, pDoc, TRUE);
 }
@@ -691,7 +693,9 @@ void BackupAll()
       /* il y a un document pour cette entree de la table */
       if (LoadedDocument[doc]->DocModified)
 	if (ThotLocalActions[T_writedocument] != NULL)
-	   (* ThotLocalActions[T_writedocument]) (LoadedDocument[doc], 3);
+	   (*(Proc2)ThotLocalActions[T_writedocument]) (
+		(void *)LoadedDocument[doc],
+		(void *)3);
 }
 
 /*----------------------------------------------------------------------

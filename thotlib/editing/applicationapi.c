@@ -40,13 +40,11 @@
 #include "appevents_tv.h"
 #include "units_tv.h"
 
-#undef THOT_EXPORT
-#define THOT_EXPORT
 #include "print_tv.h"
 #include "edit_tv.h"
 #include "thotcolor.h"
 #include "thotcolor_tv.h"
-#include "thotpalette_tv.h"
+//#include "thotpalette_tv.h"
 #include "frame_tv.h"
 #include "appdialogue_tv.h"
 
@@ -77,7 +75,7 @@
 
 static Proc         AppClosingFunction = NULL;
 #define VersionId "V3.1"
-ThotBool            PrintErrorMessages = TRUE;
+static ThotBool            PrintErrorMessages = TRUE;
 
 #ifdef _WINDOWS
   #include "wininclude.h"
@@ -215,11 +213,11 @@ static void ErrorHandler ()
   ----------------------------------------------------------------------*/
 static void QuitHandler ()
 {
-   signal (SIGINT, ErrorHandler);
+   signal (SIGINT, (void (*)(int))ErrorHandler);
 #if defined(_MOTIF) || defined(_GTK)
    signal (SIGQUIT, SIG_DFL);
 #endif /* #if defined(_MOTIF) || defined(_GTK) */
-   signal (SIGTERM, ErrorHandler);
+   signal (SIGTERM, (void (*)(int))ErrorHandler);
    if (ThotLocalActions [T_backuponfatal] != NULL)
      (*ThotLocalActions [T_backuponfatal]) ();
    {
@@ -229,9 +227,9 @@ static void QuitHandler ()
      exit (1);
    }
 #if defined(_MOTIF) || defined(_GTK)
-   signal (SIGINT, QuitHandler);
-   signal (SIGQUIT, QuitHandler);
-   signal (SIGTERM, QuitHandler);
+   signal (SIGINT, (void (*)(int))QuitHandler);
+   signal (SIGQUIT, (void (*)(int))QuitHandler);
+   signal (SIGTERM, (void (*)(int))QuitHandler);
 #endif /* #if defined(_MOTIF) || defined(_GTK) */
 }
 
@@ -241,20 +239,20 @@ static void QuitHandler ()
 void InitErrorHandler ()
 {
 #if defined(_MOTIF) || defined(_GTK)
-   signal (SIGBUS, ErrorHandler);
-   signal (SIGHUP, ErrorHandler);
-   signal (SIGQUIT, QuitHandler);
+   signal (SIGBUS, (void (*)(int))ErrorHandler);
+   signal (SIGHUP, (void (*)(int))ErrorHandler);
+   signal (SIGQUIT, (void (*)(int))QuitHandler);
 #endif /* #if defined(_MOTIF) || defined(_GTK) */
 
-   signal (SIGSEGV, ErrorHandler);
+   signal (SIGSEGV, (void (*)(int))ErrorHandler);
 #  ifdef SIGABRT
-   signal (SIGABRT, ErrorHandler);
+   signal (SIGABRT, (void (*)(int))ErrorHandler);
 #  else
-   signal (SIGIOT, ErrorHandler);
+   signal (SIGIOT, (void (*)(int))ErrorHandler);
 #  endif
 
-   signal (SIGINT, QuitHandler);
-   signal (SIGTERM, QuitHandler);
+   signal (SIGINT, (void (*)(int))QuitHandler);
+   signal (SIGTERM, (void (*)(int))QuitHandler);
 }
 
 /*----------------------------------------------------------------------

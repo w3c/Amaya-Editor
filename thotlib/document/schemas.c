@@ -909,7 +909,7 @@ void LoadNatureSchema (PtrSSchema pSS, char *PSchName, int rule,
 	 pSS->SsRule->SrElem[rule - 1]->SrSSchemaNat = NULL;
 	 }
       if (ThotLocalActions[T_initevents] != NULL)
-	 (*ThotLocalActions[T_initevents]) (pNatureSS);
+	 (*(Proc1)ThotLocalActions[T_initevents]) (pNatureSS);
 #endif /* NODISPLAY */
       }
 }
@@ -1231,7 +1231,7 @@ void LoadSchemas (char *SSchName, char *PSchName, PtrSSchema *pSS,
 	  else
 	    {
 	      if (ThotLocalActions[T_initevents] != NULL)
-		(*ThotLocalActions[T_initevents]) (*pSS);
+		(*(Proc1)ThotLocalActions[T_initevents]) (*pSS);
 	    }
 #endif  /* NODISPLAY */
 	}
@@ -1472,7 +1472,7 @@ static void  AddGuestViews (PtrSSchema pSS, DocViewDescr *pViewDescr,
 	  }
 	if (found)
 	  {
-	    pGuestView = TtaGetMemory (sizeof(GuestViewDescr));
+	    pGuestView = (PtrGuestViewDescr)TtaGetMemory (sizeof(GuestViewDescr));
 	    pGuestView->GvSSchema = pSS;
 	    pGuestView->GvPSchemaView = i+1;
 	    /* link the new guest view descriptor */
@@ -2457,7 +2457,7 @@ void SetUriSSchema (PtrSSchema pSSchema, char *sSchemaUri)
 {
   if (sSchemaUri != NULL && pSSchema->SsUriName == NULL)
     {
-      pSSchema->SsUriName = TtaGetMemory (strlen (sSchemaUri) + 1);
+      pSSchema->SsUriName = (char *)TtaGetMemory (strlen (sSchemaUri) + 1);
       strcpy (pSSchema->SsUriName, sSchemaUri);
     }
 }
@@ -2619,7 +2619,7 @@ static void AddANewNamespacePrefix (PtrDocument pDoc, PtrElement element,
   memset (newPrefixDecl, 0, sizeof (NsPrefixDescr));
   if (NsPrefix != NULL)
     {
-      newPrefixDecl->NsPrefixName = TtaGetMemory (strlen (NsPrefix) + 1);
+      newPrefixDecl->NsPrefixName = (char *)TtaGetMemory (strlen (NsPrefix) + 1);
       strcpy (newPrefixDecl->NsPrefixName, NsPrefix);
     }
   newPrefixDecl->NsPrefixElem = element;
@@ -2646,7 +2646,7 @@ static void AddANewNamespaceUri (PtrDocument pDoc, PtrElement element,
   memset (newUriDecl, 0, sizeof (NsUriDescr));
   if (NsUri != NULL)
     {
-      newUriDecl->NsUriName = TtaGetMemory (strlen (NsUri) + 1);
+      newUriDecl->NsUriName = (char *)TtaGetMemory (strlen (NsUri) + 1);
       strcpy (newUriDecl->NsUriName, NsUri);
     }
   else

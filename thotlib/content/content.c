@@ -578,7 +578,7 @@ ThotBool StringAndTextEqual (char *text, PtrTextBuffer pBuf)
       else
 	{
 	  length = strlen (text);
-	  ptr = text;
+	  ptr = (unsigned char *)text;
 	  equal = TRUE;
 	  /* parcourt les buffers de texte successifs */
 	  while (pBuf && length > 0 && equal)
@@ -820,7 +820,7 @@ int CopyBuffer2MBs (PtrTextBuffer pBuf, int pos, unsigned char *des, int max)
 	  if (l <= max)
 	    {
 	      /* there is enough space to insert these characters */
-	      strncpy (&des[length], s, l);
+	      strncpy ((char *)&des[length], (char *)s, l);
 	      length += l;
 	    }
 	  max -= l;
@@ -866,7 +866,7 @@ void CopyStringToBuffer (unsigned char *src, PtrTextBuffer pDestBuf, int *length
     {
       pBuf = pDestBuf;
       /* string length to copy */
-      max = strlen (src);
+      max = strlen ((char *)src);
       *length = max;
       /* look for the end of buffers */
       while (pBuf->BuNext != NULL)
@@ -1196,7 +1196,7 @@ void *TtaCopyPath (void *void_src)
   int npoints;
 
   AnimPath *pop_path = (AnimPath *) void_src;
-  AnimPath *new_path = TtaGetMemory (sizeof(AnimPath));
+  AnimPath *new_path = (AnimPath *) TtaGetMemory (sizeof(AnimPath));
 
   memset (new_path, 0, sizeof(AnimPath));
 
@@ -1205,9 +1205,9 @@ void *TtaCopyPath (void *void_src)
   new_path->npoints = pop_path->npoints;
   new_path->length = pop_path->length;
 
-  new_path->Path = TtaGetMemory (npoints * sizeof(ThotPoint));
-  new_path->Proportion = TtaGetMemory (npoints * sizeof(float));
-  new_path->Tangent_angle = TtaGetMemory (npoints * sizeof(float));
+  new_path->Path = (ThotPoint *)TtaGetMemory (npoints * sizeof(ThotPoint));
+  new_path->Proportion = (float *)TtaGetMemory (npoints * sizeof(float));
+  new_path->Tangent_angle = (float *)TtaGetMemory (npoints * sizeof(float));
 
   npoints --;
 
@@ -1228,7 +1228,7 @@ void *TtaCopyAnim (void *void_src)
   Animated_Element *dest, *current;
   Animated_Element *src = (Animated_Element *) void_src;
   
-  dest = TtaNewAnimation ();
+  dest = (Animated_Element*)TtaNewAnimation ();
   current = dest; 
   while (src)
     {
@@ -1248,13 +1248,13 @@ void *TtaCopyAnim (void *void_src)
 	{
 	  if (src->from)
 	    {	 
-	      current->from = TtaGetMemory (strlen (src->from) + 1);     
-	      strcpy (current->from, src->from); 
+	      current->from = TtaGetMemory (strlen ((char*)src->from) + 1);     
+	      strcpy ((char*)current->from, (char*)src->from); 
 	    }
 	  if (src->to)
 	    {
-	      current->to = TtaGetMemory (strlen (src->to) + 1);     
-	      strcpy (current->to, src->to);
+	      current->to = TtaGetMemory (strlen ((char*)src->to) + 1);     
+	      strcpy ((char*)current->to, (char*)src->to);
 	    }
 	}
       if (src->AttrName)
@@ -1263,27 +1263,27 @@ void *TtaCopyAnim (void *void_src)
 	  case Motion:
 	    break;
 	  case Color:
-	    current->AttrName = TtaGetMemory (strlen (src->AttrName) + 1);     
-	    strcpy (current->AttrName, src->AttrName);  
+	    current->AttrName = (char*)TtaGetMemory (strlen ((char*)src->AttrName) + 1);     
+	    strcpy ((char*)current->AttrName, (char*)src->AttrName);  
 	    break;   
 	  case Set:
-	    current->AttrName = TtaGetMemory (strlen (src->AttrName) + 1);     
-	    strcpy (current->AttrName, src->AttrName);  
+	    current->AttrName = (char*)TtaGetMemory (strlen ((char*)src->AttrName) + 1);     
+	    strcpy ((char*)current->AttrName, (char*)src->AttrName);  
 	    break;
 	  case Transformation:
-	    current->AttrName = TtaGetMemory (sizeof (int));      
+	    current->AttrName = (char*)TtaGetMemory (sizeof (int));      
 	    *(current->AttrName) = *(src->AttrName);      
 	    break; 
 	  case Animate:
-	    current->AttrName = TtaGetMemory (strlen (src->AttrName) + 1);     
-	    strcpy (current->AttrName, src->AttrName);
+	    current->AttrName = (char*)TtaGetMemory (strlen ((char*)src->AttrName) + 1);     
+	    strcpy ((char*)current->AttrName, (char*)src->AttrName);
 	    break;
 	  default:
 	    break; 
 	  } 
       if (src->next)
 	{
-	  current->next = TtaNewAnimation ();
+	  current->next = (Animated_Element*)TtaNewAnimation ();
 	  current = current->next; 
 	}
       else
@@ -1356,7 +1356,7 @@ void *TtaCopyTransform(void *void_pPa)
   PtrTransform result_first, current;  
   PtrTransform pPa = (PtrTransform) void_pPa;
   
-  result_first = TtaNewTransform ();
+  result_first = (Transform*)TtaNewTransform ();
   current = result_first;      
   while (pPa)
     {      
@@ -1387,7 +1387,7 @@ void *TtaCopyTransform(void *void_pPa)
 	}	       
 	if (pPa->Next)
 	  {
-	    current->Next = TtaGetMemory (sizeof (Transform));
+	    current->Next = (Transform*)TtaGetMemory (sizeof (Transform));
 	    current = current->Next;
 	  }
 	else
@@ -1403,7 +1403,7 @@ void *TtaNewBoxTransformTranslate (float x, float y)
 {
    PtrTransform pPa;
 
-   pPa = TtaNewTransform ();
+   pPa = (Transform*)TtaNewTransform ();
    pPa->TransType = PtElBoxTranslate;
    pPa->XScale = x;
    pPa->YScale = y;
@@ -1417,7 +1417,7 @@ void *TtaNewTransformTranslate (float x, float y, ThotBool viewbox)
 {
    PtrTransform pPa;
 
-   pPa = TtaNewTransform ();
+   pPa = (Transform*)TtaNewTransform ();
    if (viewbox)
      pPa->TransType = PtElviewboxTranslate;
    else
@@ -1433,7 +1433,7 @@ void *TtaNewTransformAnimTranslate (float x, float y)
 {
    PtrTransform pPa;
 
-   pPa = TtaNewTransform ();
+   pPa = (Transform*)TtaNewTransform ();
    pPa->TransType = PtElAnimTranslate;
    pPa->XScale = x;
    pPa->YScale = y;
@@ -1447,7 +1447,7 @@ void *TtaNewTransformAnimRotate (float angle, float x_scale,
 {
    PtrTransform pPa;
 
-   pPa = TtaNewTransform ();
+   pPa = (Transform*)TtaNewTransform ();
    pPa->TransType = PtElAnimRotate;
    pPa->TrAngle = angle;
    pPa->XRotate = x_scale;
@@ -1463,7 +1463,7 @@ void *TtaNewTransformRotate (float angle, float x_scale,
 {
    PtrTransform pPa;
 
-   pPa = TtaNewTransform ();
+   pPa = (Transform*)TtaNewTransform ();
    pPa->TransType = PtElRotate;
    pPa->TrAngle = angle;
    pPa->XRotate = x_scale;
@@ -1479,7 +1479,7 @@ void *TtaNewTransformSkewX (float factor)
 {
    PtrTransform pPa;
 
-   pPa = TtaNewTransform ();
+   pPa = (Transform*)TtaNewTransform ();
    pPa->TransType = PtElSkewX;
    pPa->TrFactor = factor;
    return (pPa);
@@ -1492,7 +1492,7 @@ void *TtaNewTransformSkewY (float factor)
 {
    PtrTransform pPa;
 
-   pPa = TtaNewTransform ();
+   pPa = (Transform*)TtaNewTransform ();
    pPa->TransType = PtElSkewY;
    pPa->TrFactor = factor;
    return (pPa);
@@ -1504,7 +1504,7 @@ void *TtaNewTransformScale (float x_scale, float y_scale, ThotBool viewbox)
 {
    PtrTransform pPa;
 
-   pPa = TtaNewTransform ();
+   pPa = (Transform*)TtaNewTransform ();
    if (viewbox)
      pPa->TransType = PtElviewboxScale;
    else
@@ -1522,7 +1522,7 @@ void *TtaNewTransformMatrix (float a, float b, float c,
 {
    PtrTransform pPa;
 
-   pPa = TtaNewTransform ();
+   pPa = (Transform*)TtaNewTransform ();
    pPa->TransType = PtElMatrix;
    pPa->AMatrix = a;
    pPa->BMatrix = b;

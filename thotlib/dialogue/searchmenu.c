@@ -443,7 +443,7 @@ void TtcSearchText (Document document, View view)
   /* zone de saisie du texte a` rechercher */
   TtaNewTextForm (NumZoneTextSearch, NumFormSearchText,
 		  TtaGetMessage (LIB, TMSG_SEARCH_FOR), 30, 1, FALSE);
-  TtaSetTextForm (NumZoneTextSearch, pSearchedString);
+  TtaSetTextForm (NumZoneTextSearch, (char *)pSearchedString);
   
   /* Toggle button "UPPERCASE = lowercase" */
   i = 0;
@@ -456,7 +456,7 @@ void TtcSearchText (Document document, View view)
   /* zone de saisie du texte de remplacement */
   TtaNewTextForm (NumZoneTextReplace, NumFormSearchText,
 		  TtaGetMessage (LIB, TMSG_REPLACE_BY), 30, 1, FALSE);
-  TtaSetTextForm (NumZoneTextReplace, pReplaceString);
+  TtaSetTextForm (NumZoneTextReplace, (char *)pReplaceString);
   
   /* sous-menu mode de remplacement */
   if (!pDoc->DocReadOnly)
@@ -495,7 +495,7 @@ void TtcSearchText (Document document, View view)
   WithReplace = FALSE;
   ReplaceDone = FALSE;
   AutoReplace = FALSE;
-  strcpy (pPrecedentString, "");
+  strcpy ((char *)pPrecedentString, "");
   
 #ifdef _WINDOWS
   SearchAfter = ok;
@@ -557,11 +557,11 @@ void CallbackTextReplace (int ref, int val, char *txt)
     {
     case NumZoneTextSearch:
       /* Chaine a chercher */
-      strcpy (pSearchedString, txt);
-      if (strcmp (pSearchedString, pPrecedentString) != 0)
+      strcpy ((char *)pSearchedString, txt);
+      if (strcmp ((char *)pSearchedString, (char *)pPrecedentString) != 0)
 	{
 	  ReplaceDone = FALSE;
-	  strcpy (pPrecedentString, pSearchedString);
+	  strcpy ((char *)pPrecedentString, (char *)pSearchedString);
 	}
       /* convert the string if necessary */
       TtaFreeMemory (SString);
@@ -583,7 +583,7 @@ void CallbackTextReplace (int ref, int val, char *txt)
 
 	    }
 	}
-      strcpy (pReplaceString, txt);
+      strcpy ((char *)pReplaceString, txt);
       /* convert the string if necessary */
       TtaFreeMemory (RString);
       RString = TtaConvertByteToCHAR (pReplaceString, DialogCharset);

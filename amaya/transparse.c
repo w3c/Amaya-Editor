@@ -301,13 +301,13 @@ static void  AddSymbToList (strListSymb **pList, strSymbDesc *symb)
 	isjok = FALSE;
 	isnull = (symb == NULL);
 	if (!isnull)
-	   isjok = (!strcmp (symb->Tag, "*"));
+	   isjok = (!strcmp ((char *)symb->Tag, "*"));
 	pl = *pList;
 	found = ((isnull && pl->Symbol == NULL) || (!isnull && pl->Symbol == symb));
 	if (pl->Next == NULL && !isnull && !found)
 	  {
 	     if ((isjok && pl->Symbol == NULL) ||
-	     (!isjok && (pl->Symbol == NULL || !strcmp (pl->Symbol->Tag, "*"))))
+	     (!isjok && (pl->Symbol == NULL || !strcmp ((char *)pl->Symbol->Tag, "*"))))
 	       {
 		  *pList = (strListSymb *) TtaGetMemory (sizeof (strListSymb));
 		  (*pList)->Next = pl;
@@ -323,7 +323,7 @@ static void  AddSymbToList (strListSymb **pList, strSymbDesc *symb)
 	else
 	  {
 	     while (!found && pl->Next &&
-		    ((isjok || isnull) || (pl->Next->Symbol && strcmp (pl->Next->Symbol->Tag, "*")))
+		    ((isjok || isnull) || (pl->Next->Symbol && strcmp ((char *)pl->Next->Symbol->Tag, "*")))
 		    && (isnull || pl->Next->Symbol != NULL))
 	       {
 		  found = ((isnull && pl->Symbol == NULL) ||
@@ -405,12 +405,12 @@ static void ProcessSymbol (void)
 	ParsedSymb->Depth = patDepth;
 	if (ParsedIsNamed)
 	  {
-	     ParsedSymb->SymbolName = TtaStrdup (ParsedName);
+	     ParsedSymb->SymbolName = (unsigned char *)TtaStrdup ((char *)ParsedName);
 	     ParsedName[0] = EOS;
 	  }
 	else
-	   ParsedSymb->SymbolName = TtaStrdup (inputBuffer);
-	ParsedSymb->Tag = TtaStrdup (inputBuffer);
+	   ParsedSymb->SymbolName = (unsigned char *)TtaStrdup ((char *)inputBuffer);
+	ParsedSymb->Tag = (unsigned char *)TtaStrdup ((char *)inputBuffer);
 	ParsedIsNamed = FALSE;
 	ParsedLgBuffer = 0;
 	ParsedOptional = FALSE;
@@ -428,11 +428,11 @@ static void ProcessSymbol (void)
 	     symb->Next = ParsedSymb;
 	  }
 	schema = ParsedTransSet->Schema;
-	if (strcmp (ParsedSymb->Tag, "*") && (MapGI (ParsedSymb->Tag, &schema, 0) == -1))
+	if (strcmp ((char *)ParsedSymb->Tag, "*") && (MapGI ((char *)ParsedSymb->Tag, &schema, 0) == -1))
 	  {
 	     ParsedError = TRUE;
 	     sprintf (msgBuffer, "unknown element %s", ParsedSymb->Tag);
-	     ErrorMessage (msgBuffer);
+	     ErrorMessage ((unsigned char *)msgBuffer);
 	  }
      }
 }
@@ -508,10 +508,10 @@ static void SymbolName (unsigned char c)
    if (ParsedLgBuffer == 0)
      {
 	ParsedError = TRUE;
-	ErrorMessage ("missing tag name");
+	ErrorMessage ((unsigned char *)"missing tag name");
      }
    ParsedIsNamed = TRUE;
-   strcpy (ParsedName, inputBuffer);
+   strcpy ((char *)ParsedName, (char *)inputBuffer);
    ParsedLgBuffer = 0;
 }
 
@@ -526,7 +526,7 @@ static void EndNameTrans (unsigned char c)
      {	/* allocates the descriptor    */
 	patDepth = 0;
 	ParsedTrans = (strTransDesc *) TtaGetMemory (sizeof (strTransDesc));
-	ParsedTrans->NameTrans = TtaStrdup (inputBuffer);
+	ParsedTrans->NameTrans = (unsigned char *)TtaStrdup ((char *)inputBuffer);
 	ParsedTrans->NbPatSymb = 0;
 	ParsedTrans->NbRules = 0;
 	ParsedTrans->PatDepth = 0;
@@ -553,7 +553,7 @@ static void EndNameTrans (unsigned char c)
    else
      {
 	ParsedError = TRUE;
-	ErrorMessage ("Missing Transformation Name");
+	ErrorMessage ((unsigned char *)"Missing Transformation Name");
      }
 }
 
@@ -599,7 +599,7 @@ static void EndExp (unsigned char c)
   if (sizeStack < 1 || opStack[sizeStack - 1] != '(')
     {
       ParsedError = TRUE;
-      ErrorMessage ("mismatched parentheses");
+      ErrorMessage ((unsigned char *)"mismatched parentheses");
     }
   else
     {
@@ -785,7 +785,7 @@ static void EndChild (unsigned char c)
    if (sizeStack < 1 || opStack[sizeStack - 1] != '{')
      {
 	ParsedError = TRUE;
-	ErrorMessage ("mismatched parentheses");
+	ErrorMessage ((unsigned char *)"mismatched parentheses");
      }
    else
      {
@@ -880,7 +880,7 @@ static void EndPattern (unsigned char c)
    if (sizeStack != 1)
      {
 	ParsedError = TRUE;
-	ErrorMessage ("Syntax error");
+	ErrorMessage ((unsigned char *)"Syntax error");
      }
    else
      {
@@ -920,15 +920,15 @@ static void BeginOfTag (unsigned char c)
    if (ParsedLgBuffer != 0)
      {
 	ParsedError = TRUE;
-	ErrorMessage ("Syntax Error");
+	ErrorMessage ((unsigned char *)"Syntax Error");
      }
    else
      {
 	ParsedSymb = (strSymbDesc *) TtaGetMemory (sizeof (strSymbDesc));
-	ParsedSymb->SymbolName = TtaGetMemory (NAME_LENGTH);
-	ParsedSymb->Tag = TtaGetMemory (NAME_LENGTH);
-	strcpy (ParsedSymb->SymbolName, "");
-	strcpy (ParsedSymb->Tag, "");
+	ParsedSymb->SymbolName = (unsigned char *)TtaGetMemory (NAME_LENGTH);
+	ParsedSymb->Tag = (unsigned char *)TtaGetMemory (NAME_LENGTH);
+	strcpy ((char *)ParsedSymb->SymbolName, "");
+	strcpy ((char *)ParsedSymb->Tag, "");
 	ParsedSymb->Rule = NULL;
 	ParsedSymb->Children = NULL;
 	ParsedSymb->Followings = NULL;
@@ -938,8 +938,8 @@ static void BeginOfTag (unsigned char c)
 	ParsedSymb->Next = NULL;
 	if (ParsedIsNamed)
 	  {
-	     strcpy (ParsedSymb->SymbolName, ParsedName);
-	     strcpy (ParsedName, "");
+	     strcpy ((char *)ParsedSymb->SymbolName, (char *)ParsedName);
+	     strcpy ((char *)ParsedName, "");
 	  }
      }
 }
@@ -951,11 +951,11 @@ static void BeginRuleTag (unsigned char c)
    if (ParsedLgBuffer != 0)
      {
 	ParsedError = TRUE;
-	ErrorMessage ("Syntax Error");
+	ErrorMessage ((unsigned char *)"Syntax Error");
      }
    else
      {
-	strcpy (ParsedNode->Tag, "");
+	strcpy ((char *)ParsedNode->Tag, "");
 	ParsedNode->Attributes = NULL;
 	ParsedNode->Next = NULL;
      }
@@ -967,16 +967,16 @@ static void EndOfTagName (unsigned char c)
 {
    if (ParsedLgBuffer != 0)
      {
-	strcpy (ParsedSymb->Tag, inputBuffer);
+	strcpy ((char *)ParsedSymb->Tag, (char *)inputBuffer);
 	if (!ParsedIsNamed)
-	   strcpy (ParsedSymb->SymbolName, inputBuffer);
+	   strcpy ((char *)ParsedSymb->SymbolName, (char *)inputBuffer);
 	ParsedLgBuffer = 0;
 	ParsedIsNamed = FALSE;
      }
-   else if (!strcmp (ParsedSymb->Tag, ""))
+   else if (!strcmp ((char *)ParsedSymb->Tag, ""))
      {
 	ParsedError = TRUE;
-	ErrorMessage ("Missing Tag Name");
+	ErrorMessage ((unsigned char *)"Missing Tag Name");
      }
 }
 
@@ -986,13 +986,13 @@ static void EndRuleTagName (unsigned char c)
 {
    if (ParsedLgBuffer != 0)
      {
-	strcpy (ParsedNode->Tag, inputBuffer);
+	strcpy ((char *)ParsedNode->Tag, (char *)inputBuffer);
 	ParsedLgBuffer = 0;
      }
-   else if (!strcmp (ParsedNode->Tag, ""))
+   else if (!strcmp ((char *)ParsedNode->Tag, ""))
      {
 	ParsedError = TRUE;
-	ErrorMessage ("Missing Tag Name");
+	ErrorMessage ((unsigned char *)"Missing Tag Name");
      }
 }
 
@@ -1024,7 +1024,7 @@ static void DoEndOfAttrName (unsigned char c)
 
   if (ParsedLgBuffer != 0)
     {
-      thotAttr = MapThotAttr (inputBuffer, ParsedSymb->Tag);
+      thotAttr = MapThotAttr ((char *)inputBuffer, (char *)ParsedSymb->Tag);
       if (thotAttr != -1)
 	{
 	  ParsedAttr = ParsedSymb->Attributes;
@@ -1032,27 +1032,27 @@ static void DoEndOfAttrName (unsigned char c)
 	    {
 	      ParsedSymb->Attributes = (strAttrDesc *) TtaGetMemory (sizeof (strAttrDesc));
 	      ParsedAttr = ParsedSymb->Attributes;
-	      ParsedAttr->NameAttr = TtaGetMemory (NAME_LENGTH);
+	      ParsedAttr->NameAttr = (unsigned char *)TtaGetMemory (NAME_LENGTH);
 	      ParsedAttr->Next = NULL;
 	    }
 	  else
 	    {
-	      while (ParsedAttr->Next && strcmp (ParsedAttr->NameAttr, inputBuffer))
+	      while (ParsedAttr->Next && strcmp ((char *)ParsedAttr->NameAttr, (char *)inputBuffer))
 		ParsedAttr = ParsedAttr->Next;
-	      if (!strcmp (ParsedAttr->NameAttr, inputBuffer))
+	      if (!strcmp ((char *)ParsedAttr->NameAttr, (char *)inputBuffer))
 		{
 		  ParsedError = TRUE;
-		  ErrorMessage ("Multi valued attribute");
+		  ErrorMessage ((unsigned char *)"Multi valued attribute");
 		}
 	      else
 		{
 		  ParsedAttr->Next = (strAttrDesc *) TtaGetMemory (sizeof (strAttrDesc));
 		  ParsedAttr = ParsedAttr->Next;
-		  ParsedAttr->NameAttr = TtaGetMemory (NAME_LENGTH);
+		  ParsedAttr->NameAttr = (unsigned char *)TtaGetMemory (NAME_LENGTH);
 		  ParsedAttr->Next = NULL;
 		}
 	    }
-	  strcpy (ParsedAttr->NameAttr, inputBuffer);
+	  strcpy ((char *)ParsedAttr->NameAttr, (char *)inputBuffer);
 	  ParsedAttr->ThotAttr = thotAttr;
 	  ParsedAttr->IsInt = TRUE;
 	  ParsedAttr->IsTransf = FALSE;
@@ -1062,14 +1062,14 @@ static void DoEndOfAttrName (unsigned char c)
 	{
 	  ParsedError = TRUE;
 	  sprintf (msgBuffer, "unknown attribute %s", inputBuffer);
-	  ErrorMessage (msgBuffer);
+	  ErrorMessage ((unsigned char *)msgBuffer);
 	}
       ParsedLgBuffer = 0;
     }
   else
     {
       ParsedError = TRUE;
-      ErrorMessage ("Missing Attribute Name");
+      ErrorMessage ((unsigned char *)"Missing Attribute Name");
     }
 }
 
@@ -1082,10 +1082,10 @@ static void DoEndRuleAttrName (unsigned char c)
 
   if (ParsedLgBuffer != 0)
     {
-      if (strcmp (ParsedNode->Tag, "*") == 0)
-	thotAttr = MapThotAttr (inputBuffer, "");
+      if (strcmp ((char *)ParsedNode->Tag, "*") == 0)
+	thotAttr = MapThotAttr ((char *)inputBuffer, "");
       else
-	thotAttr = MapThotAttr (inputBuffer, ParsedNode->Tag);
+	thotAttr = MapThotAttr ((char *)inputBuffer, (char *)ParsedNode->Tag);
       if (thotAttr != -1)
 	{
 	  ParsedAttr = ParsedNode->Attributes;
@@ -1093,23 +1093,23 @@ static void DoEndRuleAttrName (unsigned char c)
 	    {
 	      ParsedNode->Attributes = (strAttrDesc *) TtaGetMemory (sizeof (strAttrDesc));
 	      ParsedAttr = ParsedNode->Attributes;
-	      ParsedAttr->NameAttr = TtaStrdup (inputBuffer);
+	      ParsedAttr->NameAttr = (unsigned char *)TtaStrdup ((char *)inputBuffer);
 	      ParsedAttr->Next = NULL;
 	    }
 	  else
 	    {
-	      while (ParsedAttr->Next && strcmp (ParsedAttr->NameAttr, inputBuffer))
+	      while (ParsedAttr->Next && strcmp ((char *)ParsedAttr->NameAttr, (char *)inputBuffer))
 		ParsedAttr = ParsedAttr->Next;
-	      if (!strcmp (ParsedAttr->NameAttr, inputBuffer))
+	      if (!strcmp ((char *)ParsedAttr->NameAttr, (char *)inputBuffer))
 		{
 		  ParsedError = TRUE;
-		  ErrorMessage ("Multi valued attribute");
+		  ErrorMessage ((unsigned char *)"Multi valued attribute");
 		}
 	      else
 		{
 		  ParsedAttr->Next = (strAttrDesc *) TtaGetMemory (sizeof (strAttrDesc));
 		  ParsedAttr = ParsedAttr->Next;
-		  ParsedAttr->NameAttr = TtaStrdup (inputBuffer);
+		  ParsedAttr->NameAttr = (unsigned char *)TtaStrdup ((char *)inputBuffer);
 		  ParsedAttr->Next = NULL;
 		}
 	    }
@@ -1122,14 +1122,14 @@ static void DoEndRuleAttrName (unsigned char c)
 	{
 	  ParsedError = TRUE;
 	  sprintf (msgBuffer, "unknown attribute %s", inputBuffer);
-	  ErrorMessage (msgBuffer);
+	  ErrorMessage ((unsigned char *)msgBuffer);
 	}
       ParsedLgBuffer = 0;
     }
   else
     {
       ParsedError = TRUE;
-      ErrorMessage ("Missing Attribute Name");
+      ErrorMessage ((unsigned char *)"Missing Attribute Name");
     }
 }
 
@@ -1141,7 +1141,7 @@ static void DoTransAttr (unsigned char c)
 
   if (ParsedLgBuffer != 0)
     {
-      thotAttr = MapThotAttr (inputBuffer, ParsedNode->Tag);
+      thotAttr = MapThotAttr ((char *)inputBuffer, (char *)ParsedNode->Tag);
       if (thotAttr != -1)
 	{
 	  ParsedAttr = ParsedNode->Attributes;
@@ -1149,29 +1149,29 @@ static void DoTransAttr (unsigned char c)
 	    {
 	      ParsedNode->Attributes = (strAttrDesc *) TtaGetMemory (sizeof (strAttrDesc));
 	      ParsedAttr = ParsedNode->Attributes;
-	      ParsedAttr->NameAttr = TtaGetMemory (NAME_LENGTH);
+	      ParsedAttr->NameAttr = (unsigned char *)TtaGetMemory (NAME_LENGTH);
 	      ParsedAttr->Next = NULL;
 	    }
 	  else
 	    {
-	      while (ParsedAttr->Next && strcmp (ParsedAttr->NameAttr, inputBuffer))
+	      while (ParsedAttr->Next && strcmp ((char *)ParsedAttr->NameAttr, (char *)inputBuffer))
 		ParsedAttr = ParsedAttr->Next;
-	      if (!strcmp (ParsedAttr->NameAttr, inputBuffer))
+	      if (!strcmp ((char *)ParsedAttr->NameAttr, (char *)inputBuffer))
 		{
 		  ParsedError = TRUE;
-		  ErrorMessage ("Multi valued attribute");
+		  ErrorMessage ((unsigned char *)"Multi valued attribute");
 		}
 	      else
 		{
 		  ParsedAttr->Next = (strAttrDesc *) TtaGetMemory (sizeof (strAttrDesc));
 		  ParsedAttr = ParsedAttr->Next;
-		  ParsedAttr->NameAttr = TtaGetMemory (NAME_LENGTH);
+		  ParsedAttr->NameAttr = (unsigned char *)TtaGetMemory (NAME_LENGTH);
 		  ParsedAttr->Next = NULL;
 		}
 	    }
-	  ParsedAttr->AttrTag = TtaGetMemory (NAME_LENGTH);
-	  strcpy (ParsedAttr->AttrTag, inputBuffer);
-	  strcpy (ParsedAttr->NameAttr, "");
+	  ParsedAttr->AttrTag = (unsigned char *)TtaGetMemory (NAME_LENGTH);
+	  strcpy ((char *)ParsedAttr->AttrTag, (char *)inputBuffer);
+	  strcpy ((char *)ParsedAttr->NameAttr, "");
 	  ParsedAttr->ThotAttr = thotAttr;
 	  ParsedAttr->IsInt = FALSE;
 	  ParsedAttr->IsTransf = TRUE;
@@ -1179,14 +1179,14 @@ static void DoTransAttr (unsigned char c)
       else
 	{
 	  ParsedError = TRUE;
-	  ErrorMessage ("Unknown attribute");
+	  ErrorMessage ((unsigned char *)"Unknown attribute");
 	}
       ParsedLgBuffer = 0;
     }
   else
     {
       ParsedError = TRUE;
-      ErrorMessage ("Missing Attribute Name");
+      ErrorMessage ((unsigned char *)"Missing Attribute Name");
     }
 }
 
@@ -1197,14 +1197,14 @@ static void DoTransAttrValue (unsigned char c)
   if (ParsedLgBuffer != 0)
     {
       ParsedAttr->IsTransf = TRUE;
-      ParsedAttr->AttrTag = TtaGetMemory (NAME_LENGTH);
-      strcpy (ParsedAttr->AttrTag, inputBuffer);
+      ParsedAttr->AttrTag = (unsigned char *)TtaGetMemory (NAME_LENGTH);
+      strcpy ((char *)ParsedAttr->AttrTag, (char *)inputBuffer);
       ParsedLgBuffer = 0;
     }
   else
     {
       ParsedError = TRUE;
-      ErrorMessage ("Missing Tag Name");
+      ErrorMessage ((unsigned char *)"Missing Tag Name");
     }
 }
 
@@ -1214,18 +1214,18 @@ static void DoEndTransAttr (unsigned char c)
 {
   if (ParsedLgBuffer != 0)
     {
-      ParsedAttr->AttrAttr = TtaGetMemory (NAME_LENGTH);
-      strcpy (ParsedAttr->AttrAttr, inputBuffer);
-      if (!strcmp (ParsedAttr->NameAttr, ""))
+      ParsedAttr->AttrAttr = (unsigned char *)TtaGetMemory (NAME_LENGTH);
+      strcpy ((char *)ParsedAttr->AttrAttr, (char *)inputBuffer);
+      if (!strcmp ((char *)ParsedAttr->NameAttr, ""))
 	{
-	  strcpy (ParsedAttr->NameAttr, inputBuffer);
+	  strcpy ((char *)ParsedAttr->NameAttr, (char *)inputBuffer);
 	}
       ParsedLgBuffer = 0;
     }
   else
     {
       ParsedError = TRUE;
-      ErrorMessage ("Missing Attribute Name");
+      ErrorMessage ((unsigned char *)"Missing Attribute Name");
     }
 }
 
@@ -1242,7 +1242,7 @@ static void DoPutInBuffer (unsigned char c)
        c == '<' || c == '.' || c == '!' || c == '?'))
     {
       ParsedError = TRUE;
-      ErrorMessage ("Invalid char");
+      ErrorMessage ((unsigned char *)"Invalid char");
     }
   else
     {
@@ -1256,7 +1256,7 @@ static void DoPutInBuffer (unsigned char c)
 	  if (ParsedLgBuffer + len >= MaxBufferLength)
 	    {
 	      ParsedError = TRUE;
-	      ErrorMessage ("Buffer overflow - Transformation process");
+	      ErrorMessage ((unsigned char *)"Buffer overflow - Transformation process");
 	      ParsedLgBuffer = 0;
 	    }
 	  if (len == 1)
@@ -1292,9 +1292,9 @@ static void DoEndOfAttrValue (unsigned char c)
    if (ParsedLgBuffer == 0)
      {
 	ParsedAttr->IsInt = FALSE;
-	ParsedAttr->TextVal = TtaGetMemory (ParsedLgBuffer + 2);
+	ParsedAttr->TextVal = (unsigned char *)TtaGetMemory (ParsedLgBuffer + 2);
 
-	strcpy (ParsedAttr->TextVal, "");
+	strcpy ((char *)ParsedAttr->TextVal, "");
      }
    else
      {
@@ -1304,11 +1304,11 @@ static void DoEndOfAttrValue (unsigned char c)
 	if (!isText)
 	  {
 	     ParsedAttr->IsInt = TRUE;
-	     ParsedAttr->IntVal = atoi (inputBuffer);
+	     ParsedAttr->IntVal = atoi ((char *)inputBuffer);
 	  }
 	else
 	  {
-	     attrVal = MapAttrValue (ParsedAttr->ThotAttr, inputBuffer);
+	     attrVal = MapAttrValue (ParsedAttr->ThotAttr, (char *)inputBuffer);
 	     if (attrVal != -1)
 	       {
 		  ParsedAttr->IsInt = TRUE;
@@ -1316,11 +1316,11 @@ static void DoEndOfAttrValue (unsigned char c)
 	       }
 	     else
 	       {
-		  ParsedAttr->TextVal = TtaGetMemory (ParsedLgBuffer + 2);
+		  ParsedAttr->TextVal = (unsigned char *)TtaGetMemory (ParsedLgBuffer + 2);
 		  if (inputBuffer [0] == '\"')
-		    strcpy (ParsedAttr->TextVal, &(inputBuffer[1]));
+		    strcpy ((char *)ParsedAttr->TextVal, (char *)&(inputBuffer[1]));
 		  else
-		    strcpy (ParsedAttr->TextVal, inputBuffer);
+		    strcpy ((char *)ParsedAttr->TextVal, (char *)inputBuffer);
 		  ParsedAttr->IsInt = FALSE;
 	       }
 	  }
@@ -1343,7 +1343,7 @@ static void BeginRules (unsigned char c)
 static void EndAction (unsigned char c)
 {
   ParsedTrans->IsAction = TRUE;
-  ParsedTrans->DestinationTag = TtaStrdup (inputBuffer);
+  ParsedTrans->DestinationTag = (unsigned char *)TtaStrdup ((char *)inputBuffer);
 }
 
 
@@ -1354,15 +1354,15 @@ static void EndLeftPartRule (unsigned char c)
    if (ParsedLgBuffer != 0)
      {				/* allocates a new rule descriptor */
 	ParsedRule = (strRuleDesc *) TtaGetMemory (sizeof (strRuleDesc));
-	ParsedRule->RuleName = TtaStrdup (inputBuffer);
+	ParsedRule->RuleName = (unsigned char *)TtaStrdup ((char *)inputBuffer);
 	ParsedRule->NextRule = NULL;
 	ParsedRule->Next = NULL;
 	ParsedRule->OptionNodes = (strNodeDesc *) TtaGetMemory (sizeof (strNodeDesc));
 	ParsedRule->DeleteRule = FALSE;
 	ParsedRule->NewNodes = NULL;
 	ParsedNode = ParsedRule->OptionNodes;
-	ParsedNode->Tag = TtaGetMemory (NAME_LENGTH);
-	strcpy (ParsedNode->Tag, "");
+	ParsedNode->Tag = (unsigned char *)TtaGetMemory (NAME_LENGTH);
+	strcpy ((char *)ParsedNode->Tag, "");
 	ParsedNode->Attributes = NULL;
 	ParsedNode->Next = NULL;
 	ParsedLgBuffer = 0;
@@ -1370,7 +1370,7 @@ static void EndLeftPartRule (unsigned char c)
    else
      {
 	ParsedError = TRUE;
-	ErrorMessage ("Missing left part of rule");
+	ErrorMessage ((unsigned char *)"Missing left part of rule");
      }
 }
 
@@ -1382,7 +1382,7 @@ static void DeleteElementRule (unsigned char c)
     {
       /* allocates a new rule descriptor */
       ParsedRule = (strRuleDesc *) TtaGetMemory (sizeof (strRuleDesc));
-      ParsedRule->RuleName = TtaStrdup (inputBuffer);
+      ParsedRule->RuleName = (unsigned char *)TtaStrdup ((char *)inputBuffer);
       ParsedRule->NextRule = NULL;
       ParsedRule->Next = NULL;
       ParsedRule->NewNodes = NULL;
@@ -1394,7 +1394,7 @@ static void DeleteElementRule (unsigned char c)
   else
     {
       ParsedError = TRUE;
-      ErrorMessage ("Missing rule name");
+      ErrorMessage ((unsigned char *)"Missing rule name");
     }
 }
 
@@ -1407,22 +1407,22 @@ static void EndNode (unsigned char c)
 
    if (ParsedLgBuffer != 0)
      {
-	strcpy (ParsedNode->Tag, inputBuffer);
+	strcpy ((char *)ParsedNode->Tag, (char *)inputBuffer);
 	ParsedLgBuffer = 0;
 	schema = ParsedTransSet->Schema;
-	if (MapGI (ParsedNode->Tag, &schema, 0) == -1)
+	if (MapGI ((char *)ParsedNode->Tag, &schema, 0) == -1)
 	  {
 	     ParsedError = TRUE;
 	     sprintf (msgBuffer, "unknown tag </%s>", ParsedNode->Tag);
-	     ErrorMessage (msgBuffer);
+	     ErrorMessage ((unsigned char *)msgBuffer);
 	  }
      }
    if (ParsedNode && c == '.')
      {				/* allocate the next node descriptor */
 	ParsedNode->Next = (strNodeDesc *) TtaGetMemory (sizeof (strNodeDesc));
 	ParsedNode = ParsedNode->Next;
-	ParsedNode->Tag = TtaGetMemory (NAME_LENGTH);
-	strcpy (ParsedNode->Tag, "");
+	ParsedNode->Tag = (unsigned char *)TtaGetMemory (NAME_LENGTH);
+	strcpy ((char *)ParsedNode->Tag, "");
 	ParsedNode->Attributes = NULL;
 	ParsedNode->Next = NULL;
      }
@@ -1438,17 +1438,17 @@ static void EndOptNodes (unsigned char c)
 
    if (ParsedLgBuffer != 0)
      {
-	strcpy (ParsedNode->Tag, inputBuffer);
+	strcpy ((char *)ParsedNode->Tag, (char *)inputBuffer);
 	ParsedLgBuffer = 0;
 	schema = ParsedTransSet->Schema;
-	if (MapGI (ParsedNode->Tag, &schema, 0) == -1)
+	if (MapGI ((char *)ParsedNode->Tag, &schema, 0) == -1)
 	  {
 	     ParsedError = TRUE;
 	     sprintf (msgBuffer, "unknown tag </%s>", ParsedNode->Tag);
-	     ErrorMessage (msgBuffer);
+	     ErrorMessage ((unsigned char *)msgBuffer);
 	  }
      }
-   if (!strcmp (ParsedRule->OptionNodes->Tag, ""))
+   if (!strcmp ((char *)ParsedRule->OptionNodes->Tag, ""))
      {
 	/* frees the current node descriptor if it is empty (the rule has no opt. node */
 	attr = ParsedRule->OptionNodes->Attributes;
@@ -1473,8 +1473,8 @@ static void EndOptNodes (unsigned char c)
    /* allocate a New node descriptor */
    ParsedRule->NewNodes = (strNodeDesc *) TtaGetMemory (sizeof (strNodeDesc));
    ParsedNode = ParsedRule->NewNodes;
-   ParsedNode->Tag = TtaGetMemory (NAME_LENGTH);
-   strcpy (ParsedNode->Tag, "");
+   ParsedNode->Tag = (unsigned char *)TtaGetMemory (NAME_LENGTH);
+   strcpy ((char *)ParsedNode->Tag, "");
    ParsedNode->Attributes = NULL;
    ParsedNode->Next = NULL;
 }
@@ -1488,7 +1488,7 @@ static void SelectionRule (unsigned char c)
   if (SelRuleFlag)
     {
       sprintf (msgBuffer, "Too much selection rules");
-      ErrorMessage (msgBuffer);
+      ErrorMessage ((unsigned char *)msgBuffer);
     }
   else
     {
@@ -1500,32 +1500,32 @@ static void SelectionRule (unsigned char c)
 	    {
 	      ParsedNode->Attributes = (strAttrDesc *) TtaGetMemory (sizeof (strAttrDesc));
 	      ParsedAttr = ParsedNode->Attributes;
-	      ParsedAttr->NameAttr = TtaGetMemory (NAME_LENGTH);
+	      ParsedAttr->NameAttr = (unsigned char *)TtaGetMemory (NAME_LENGTH);
 	      ParsedAttr->Next = NULL;
 	    }
 	  else
 	    {
-	      while (ParsedAttr->Next && strcmp (ParsedAttr->NameAttr, inputBuffer))
+	      while (ParsedAttr->Next && strcmp ((char *)ParsedAttr->NameAttr, (char *)inputBuffer))
 		ParsedAttr = ParsedAttr->Next;
-	      if (!strcmp (ParsedAttr->NameAttr, inputBuffer))
+	      if (!strcmp ((char *)ParsedAttr->NameAttr, (char *)inputBuffer))
 		{
 		  ParsedError = TRUE;
-		  ErrorMessage ("Multi valued attribute");
+		  ErrorMessage ((unsigned char *)"Multi valued attribute");
 		}
 	      else
 		{
 		  ParsedAttr->Next = (strAttrDesc *) TtaGetMemory (sizeof (strAttrDesc));
 		  ParsedAttr = ParsedAttr->Next;
-		  ParsedAttr->NameAttr = TtaGetMemory (NAME_LENGTH);
+		  ParsedAttr->NameAttr = (unsigned char *)TtaGetMemory (NAME_LENGTH);
 		  ParsedAttr->Next = NULL;
 		}
 	    }
-	  strcpy (ParsedAttr->NameAttr, "zzghost");
+	  strcpy ((char *)ParsedAttr->NameAttr, "zzghost");
 	  ParsedAttr->ThotAttr = HTML_ATTR_Ghost_restruct;
 	  ParsedAttr->IsInt = FALSE;
 	  ParsedAttr->IsTransf = FALSE;
-	  ParsedAttr->TextVal = TtaGetMemory (NAME_LENGTH);
-    	  strcpy (ParsedAttr->TextVal, "Select");
+	  ParsedAttr->TextVal = (unsigned char *)TtaGetMemory (NAME_LENGTH);
+    	  strcpy ((char *)ParsedAttr->TextVal, "Select");
 	}
     }
 }
@@ -1543,20 +1543,20 @@ static void EndRule (unsigned char c)
 
   if (ParsedLgBuffer != 0)
     {
-      strcpy (ParsedNode->Tag, inputBuffer);
+      strcpy ((char *)ParsedNode->Tag, (char *)inputBuffer);
       ParsedLgBuffer = 0;
       schema = ParsedTransSet->Schema;
-      if (strcmp (ParsedNode->Tag, "*") && 
-	  strcmp (ParsedNode->Tag, "#") &&
+      if (strcmp ((char *)ParsedNode->Tag, "*") && 
+	  strcmp ((char *)ParsedNode->Tag, "#") &&
 	  ParsedNode->Tag[0] != '\"' &&
-	  (MapGI (ParsedNode->Tag, &schema, 0) == -1))
+	  (MapGI ((char *)ParsedNode->Tag, &schema, 0) == -1))
 	{
 	  ParsedError = TRUE;
 	  sprintf (msgBuffer, "unknown tag </%s>", ParsedNode->Tag);
-	  ErrorMessage (msgBuffer);
+	  ErrorMessage ((unsigned char *)msgBuffer);
 	}
     }
-  if (ParsedRule->OptionNodes && !strcmp (ParsedRule->OptionNodes->Tag, ""))
+  if (ParsedRule->OptionNodes && !strcmp ((char *)ParsedRule->OptionNodes->Tag, ""))
     {				/* free the last Option node if it is empty */
       attr = ParsedRule->OptionNodes->Attributes;
       while (attr)
@@ -1578,7 +1578,7 @@ static void EndRule (unsigned char c)
       ParsedRule->NewNodes = NULL;
     }
 
-  if (ParsedRule->NewNodes && !strcmp (ParsedRule->NewNodes->Tag, ""))
+  if (ParsedRule->NewNodes && !strcmp ((char *)ParsedRule->NewNodes->Tag, ""))
     {				/* free the last New node if it is empty */
       attr = ParsedRule->NewNodes->Attributes;
       while (attr)
@@ -1618,7 +1618,7 @@ static void EndRule (unsigned char c)
   ok = FALSE;
   while (symb)
     {
-      if (!strcmp (ParsedRule->RuleName, symb->SymbolName))
+      if (!strcmp ((char *)ParsedRule->RuleName, (char *)symb->SymbolName))
 	{
 	  rule = symb->Rule;
 	  if (rule == NULL)
@@ -1642,25 +1642,25 @@ static void EndRule (unsigned char c)
 	pnode = ParsedRule->OptionNodes;
       else
 	pnode = ParsedRule->NewNodes;
-      if (pnode && strcmp (pnode->Tag, "*") != 0)
+      if (pnode && strcmp ((char *)pnode->Tag, "*") != 0)
 	{
 	if (ParsedTrans->DestinationTag == NULL)
 	  {
 	    /* the dest type is undefined => the first tag of the rule defines */
 	    /* the destination type of the transformation */
-	    ParsedTrans->DestinationTag = TtaGetMemory (NAME_LENGTH);
-	    strcpy (ParsedTrans->DestinationTag, pnode->Tag);
+	    ParsedTrans->DestinationTag = (unsigned char *)TtaGetMemory (NAME_LENGTH);
+	    strcpy ((char *)ParsedTrans->DestinationTag, (char *)pnode->Tag);
 	  }
-	else if (strcmp (ParsedTrans->DestinationTag, pnode->Tag))
+	else if (strcmp ((char *)ParsedTrans->DestinationTag, (char *)pnode->Tag))
 	  /* the first tag of the rule is different from the destination type */
 	  /* the rule has no destination type */
-	  strcpy (ParsedTrans->DestinationTag, "");
+	  strcpy ((char *)ParsedTrans->DestinationTag, "");
 	}
     }
   else
     {
       ParsedError = TRUE;
-      ErrorMessage ("undefined pattern symbol");
+      ErrorMessage ((unsigned char *)"undefined pattern symbol");
     }
   ParsedRule = NULL;
 }
@@ -1674,7 +1674,7 @@ static void EndTransformation (unsigned char c)
    /* create the pattern virtual root node */
    ParsedTrans->RootDesc = (strSymbDesc *) TtaGetMemory (sizeof (strSymbDesc));
    ParsedTrans->RootDesc->SymbolName = ParsedTrans->NameTrans;
-   ParsedTrans->RootDesc->Tag = TtaStrdup ("pattern_root");
+   ParsedTrans->RootDesc->Tag = (unsigned char *)TtaStrdup ((char *)"pattern_root");
    /* warning : the Rule points the transformation record (no rule for the root node) */
    ParsedTrans->RootDesc->Rule = (strRuleDesc *) ParsedTrans;
    ParsedTrans->RootDesc->IsOptional = FALSE;
@@ -2026,7 +2026,7 @@ static void TRANSparse (BinFile infile)
 		      /* call the procedure associated with the transition */
 		      normalTransition = TRUE;
 		      if (trans->action)
-			(*(trans->action)) (charRead);
+			(*(Proc1)(trans->action)) ((void *)charRead);
 		      if (normalTransition)
 			{
 			  /* the input character has been processed */
@@ -2090,7 +2090,7 @@ static void TRANSparse (BinFile infile)
 			      ParsedNode = NULL;
 			      ParsedRule = NULL;
 			      ParsedIsNamed = FALSE;
-			      strcpy (ParsedName, "");
+			      strcpy ((char *)ParsedName, "");
 			      opStack[0] = EOS;
 			      symbolStack[0] = NULL;
 			      choiceStack[0] = NULL;
@@ -2151,12 +2151,12 @@ int DoStartParser (char *name, SSchema tStrSchema, strTransSet **resTrSet)
    /* searches if a transformation set is already allocated */
    /* for the file to be parsed */
    ParsedTransSet = strMatchEnv.TransSets;
-   while (ParsedTransSet != NULL && (strcmp (ParsedTransSet->TransFileName, name) != 0))
+   while (ParsedTransSet != NULL && (strcmp ((char *)ParsedTransSet->TransFileName, (char *)name) != 0))
      ParsedTransSet = ParsedTransSet->Next;
    if (ParsedTransSet == NULL)
      {
-       ParsedTransSet = TtaGetMemory (sizeof (strTransSet));
-       strcpy (ParsedTransSet->TransFileName, name);
+       ParsedTransSet = (strTransSet*)TtaGetMemory (sizeof (strTransSet));
+       strcpy ((char *)ParsedTransSet->TransFileName, (char *)name);
        ParsedTransSet->Schema = tStrSchema;
        ParsedTransSet->timeLastWrite = (time_t) 0;
        ParsedTransSet->NbTrans = 0;
@@ -2174,7 +2174,7 @@ int DoStartParser (char *name, SSchema tStrSchema, strTransSet **resTrSet)
      {
    	next = strchr (cour, PATH_SEP);
 	if (next == NULL)
-       	  strcpy (fileName, cour);
+       	  strcpy ((char *)fileName, (char *)cour);
         else
 	  {
             strncpy (fileName, cour, (size_t)(next - cour)); 
@@ -2212,7 +2212,7 @@ int DoStartParser (char *name, SSchema tStrSchema, strTransSet **resTrSet)
 	   if (infile == 0)
 	     {
 		sprintf (msg, "Can't open file %s.trans", name);
-		ErrorMessage (msg);
+		ErrorMessage ((unsigned char *)msg);
 		ParsedError = TRUE;
 	     }
 	   else
@@ -2225,7 +2225,7 @@ int DoStartParser (char *name, SSchema tStrSchema, strTransSet **resTrSet)
 		ParsedNode = NULL;
 		ParsedRule = NULL;
 		ParsedIsNamed = FALSE;
-		strcpy (ParsedName, "");
+		strcpy ((char *)ParsedName, "");
 		opStack[0] = EOS;
 		symbolStack[0] = NULL;
 		choiceStack[0] = NULL;

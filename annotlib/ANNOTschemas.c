@@ -140,30 +140,30 @@ void SCHEMA_AddStatement (RDFResourceP s, RDFPropertyP p, RDFResourceP o)
 /*------------------------------------------------------------
    _AddInstance
   ------------------------------------------------------------*/
-static void _AddInstance( RDFClassP class, RDFResourceP instance )
+static void _AddInstance( RDFClassP c, RDFResourceP instance )
 {
-  if (!class->class)
+  if (!c->class_)
     {
-      class->class = (RDFClassExtP) TtaGetMemory (sizeof(RDFClassExt));
-      memset (class->class, 0, sizeof (RDFClassExt));
+      c->class_ = (RDFClassExtP) TtaGetMemory (sizeof(RDFClassExt));
+      memset (c->class_, 0, sizeof (RDFClassExt));
     }
 
-  List_add (&class->class->instances, (void*)instance);
+  List_add (&c->class_->instances, (void*)instance);
 }
 
 /*------------------------------------------------------------
    _AddSubClass
   ------------------------------------------------------------*/
-static void _AddSubClass( RDFClassP class, RDFClassP sub )
+static void _AddSubClass( RDFClassP c, RDFClassP sub )
 {
-  if (!class->class)
+  if (!c->class_)
     {
-      class->class = (RDFClassExtP)TtaGetMemory (sizeof(RDFClassExt));
-      class->class->instances = NULL;
-      class->class->subClasses = NULL;
+      c->class_ = (RDFClassExtP)TtaGetMemory (sizeof(RDFClassExt));
+      c->class_->instances = NULL;
+      c->class_->subClasses = NULL;
     }
 
-  List_add (&class->class->subClasses, (void*)sub);
+  List_add (&c->class_->subClasses, (void*)sub);
 }
 
 /* ------------------------------------------------------------
@@ -219,7 +219,7 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
 	{
 	  char *base_uri = parse_ctx->base_uri;
 	  char *ptr = (char *) triple->subject;
-	  subject = TtaGetMemory (strlen (base_uri) + strlen (ptr) + 2);
+	  subject = (char *)TtaGetMemory (strlen (base_uri) + strlen (ptr) + 2);
 	  sprintf (subject, "%s#%s", base_uri, ptr);
 	}
       else
@@ -266,9 +266,9 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
       else if (predicateP == subclassOfP)
 	{
 	  _AddSubClass( objectP, subjectP );
-	  subjectP->class = (RDFClassExtP)TtaGetMemory (sizeof(RDFClassExt));
-	  subjectP->class->instances = NULL;
-	  subjectP->class->subClasses = NULL;
+	  subjectP->class_ = (RDFClassExtP)TtaGetMemory (sizeof(RDFClassExt));
+	  subjectP->class_->instances = NULL;
+	  subjectP->class_->subClasses = NULL;
 	}
 #ifdef RAPTOR_RDF_PARSER
       if (triple->subject_type == RAPTOR_IDENTIFIER_TYPE_ANONYMOUS)
@@ -326,7 +326,7 @@ static void ReadSchema_callback (Document doc, int status,
       */
       /* raptor doesn't grok file URIs under windows. The following is a patch so
 	 that we can use it */
-      full_file_name = TtaGetMemory (strlen (ctx->filename) + sizeof ("file:"));
+      full_file_name = (char *)TtaGetMemory (strlen (ctx->filename) + sizeof ("file:"));
       sprintf (full_file_name, "file:%s", ctx->filename);
       parse_ctx->base_uri = full_file_name;
       parse_ctx->annot_schema_list = &annot_schema_list;
@@ -384,7 +384,7 @@ RDFResourceP ANNOT_FindRDFResource( List** listP, char* name, ThotBool create )
 
       resource->name = TtaStrdup (name);
       resource->statements = NULL;
-      resource->class = NULL;
+      resource->class_ = NULL;
       List_add (listP, (void*) resource);
     }
 
@@ -440,7 +440,7 @@ char *ANNOT_GetLabel (List **listP, RDFResourceP r)
 	  return labelS->object->name;
 	}
 
-      if (r->class)
+      if (r->class_)
 	{
 	  /* search superclass(es) for a label */
 	  /* RRS @@ only does one superclass for now */
@@ -500,7 +500,7 @@ void SCHEMA_ReadSchema (Document doc, char *namespace_URI)
 			  AMAYA_SYNC | AMAYA_FLUSH_REQUEST,
 			  NULL,
 			  NULL, 
-			  (void *) ReadSchema_callback,
+			  (void (*)(int, int, char*, char*, const AHTHeaders*, void*)) ReadSchema_callback,
 			  (void *) ctx,
 			  NO,
 			  "application/xml");
@@ -537,7 +537,7 @@ static void FreeAnnotNS (void)
 static void SetAnnotNS (char *ns_name)
 {
   ANNOT_NS = TtaStrdup (ns_name);
-  ANNOTATION_CLASSNAME = TtaGetMemory (strlen(ns_name)
+  ANNOTATION_CLASSNAME = (char *)TtaGetMemory (strlen(ns_name)
 				       + strlen(ANNOT_LOCAL_NAME)
 				       + 1);
   strcpy (ANNOTATION_CLASSNAME, ns_name);
@@ -589,7 +589,7 @@ void SCHEMA_InitSchemas (Document doc)
 
   len = strlen(thotdir) + strlen(app_home) + MAX_LENGTH + 32;
 
-  buffer = TtaGetMemory(len);
+  buffer = (char *)TtaGetMemory(len);
   sprintf (buffer, "%s%cannot.schemas", app_home, DIR_SEP);
 
   if (!TtaFileExist (buffer))
@@ -664,7 +664,7 @@ void SCHEMA_InitSchemas (Document doc)
 	    /* no room at beginning of buffer to expand THOTDIR,
 	       so copy the filename elsewhere before concatenating */
 	    {
-	      char *temp = TtaGetMemory(len);
+	      char *temp = (char *)TtaGetMemory(len);
 
 	      strcpy (temp, fname); /* copy */
 	      strcpy (buffer, thotdir);
@@ -685,7 +685,7 @@ void SCHEMA_InitSchemas (Document doc)
 	      /* no room at beginning of buffer to expand APP_HOME,
 		 so copy the filename elsewhere before concatenating */
 	      {
-		char *temp = TtaGetMemory(len);
+		char *temp = (char *)TtaGetMemory(len);
 
 		strcpy (temp, fname); /* copy */
 		strcpy (buffer, app_home);
@@ -740,10 +740,10 @@ void SCHEMA_InitSchemas (Document doc)
   else /* localname only */
     { /* Search the subtypes of ANNOTATION_CLASS for one whose name matches */
       RDFClassP annotType = ANNOTATION_CLASS;
-      if (annotType && annotType->class)
+      if (annotType && annotType->class_)
 	{
 	  int len = strlen (buffer);
-	  List *item = annotType->class->subClasses;
+	  List *item = annotType->class_->subClasses;
 	  for (; item; item=item->next)
 	    {
 	      RDFClassP annotType = (RDFClassP)item->object;
@@ -777,10 +777,10 @@ void SCHEMA_InitSchemas (Document doc)
   else /* localname only */
     { /* Search the subtypes of THREAD_REPLY_CLASS for one whose name matches */
       RDFClassP annotType = THREAD_REPLY_CLASS;
-      if (annotType && annotType->class)
+      if (annotType && annotType->class_)
 	{
 	  int len = strlen (buffer);
-	  List *item = annotType->class->subClasses;
+	  List *item = annotType->class_->subClasses;
 	  for (; item; item=item->next)
 	    {
 	      RDFClassP annotType = (RDFClassP)item->object;
@@ -839,11 +839,11 @@ static ThotBool SCHEMA_FreeRDFResource( void *item )
 
   TtaFreeMemory (r->name);
   List_delAll (&r->statements, List_delCharObj);
-  if (r->class)
+  if (r->class_)
     {
-      List_delAll (&r->class->instances, NULL);
-      List_delAll (&r->class->subClasses, NULL);
-      TtaFreeMemory ((char *)r->class);
+      List_delAll (&r->class_->instances, NULL);
+      List_delAll (&r->class_->subClasses, NULL);
+      TtaFreeMemory ((char *)r->class_);
     }
   TtaFreeMemory (r);
   return TRUE;

@@ -862,7 +862,7 @@ static SourcePrint RestGetSourcePrint (PrintMethod method)
   sPrint = RContext->CListSourcePrints;
   if (sPrint == NULL)
     {
-      RContext->CListSourcePrints = TtaGetMemory (sizeof(StrSourcePrint));
+      RContext->CListSourcePrints = (StrSourcePrint*)TtaGetMemory (sizeof(StrSourcePrint));
       sPrint = RContext->CListSourcePrints;
       sPrint->SNext = NULL;
       sPrint->STree = NULL;
@@ -876,7 +876,7 @@ static SourcePrint RestGetSourcePrint (PrintMethod method)
 	  {
 	  if (sPrint->SNext == NULL)
 	    {
-	      sPrint->SNext = TtaGetMemory (sizeof(StrSourcePrint));
+	      sPrint->SNext = (StrSourcePrint*)TtaGetMemory (sizeof(StrSourcePrint));
 	      sPrint = sPrint->SNext;
 	      sPrint->SNext = NULL;
 	      sPrint->STree = NULL;
@@ -944,7 +944,7 @@ ThotBool RestInitMatch (Element elemFirst, Element elemLast)
 
   if (RContext == NULL)
     {
-      RContext = TtaGetMemory(sizeof(StrRestContext));
+      RContext = (StrRestContext*)TtaGetMemory(sizeof(StrRestContext));
     }
   else
     { 

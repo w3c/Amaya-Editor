@@ -6,8 +6,10 @@
  */
  
 /* convert table for alphabets */
+#ifndef __WORD_VAR_H__
+#define __WORD_VAR_H__
 
-THOT_EXPORT short _cType_[1 + 256] = {
+short _cType_[1 + 256] = {
         0,
         _C,     _C,     _C,     _C,     _C,     _C,     _C,     _C,
         _C,     _C|_S,  _C|_S,  _C|_S,  _C|_S,  _C|_S,  _C,     _C,
@@ -42,3 +44,5 @@ THOT_EXPORT short _cType_[1 + 256] = {
         _I,     _I,     _I,     _I,     _G|_I,  _I,     _I,     _G|_I,
         _I,     _G|_I,  _I,     _G|_I,  _G|_I,  _I,     _I,     _I,
 };
+
+#endif /* #ifdef __WORD_VAR_H__ */

@@ -250,7 +250,7 @@ ThotBool CheckValidID (NotifyAttribute *event)
      /* get the value of the NAME attribute */
      length = TtaGetTextAttributeLength (event->attribute);
      length+= 10;
-     value = TtaGetMemory (length);
+     value = (char *)TtaGetMemory (length);
      length--;
      TtaGiveTextAttributeValue (event->attribute, &value[1], &length);
      if (value[1] >= '0' && value[1] <= '9')
@@ -328,7 +328,7 @@ void SetRelativeURLs (Document doc, char *newpath)
     if (content != NULL)
       {
       len = MAX_CSS_LENGTH;
-      TtaGiveTextContent (content, CSSbuffer, &len, &lang);
+      TtaGiveTextContent (content, (unsigned char *)CSSbuffer, &len, &lang);
       CSSbuffer[MAX_CSS_LENGTH] = EOS;
       new_url = UpdateCSSBackgroundImage (DocumentURLs[doc], newpath,
 					  NULL, CSSbuffer);
@@ -336,7 +336,7 @@ void SetRelativeURLs (Document doc, char *newpath)
 	{
 	  /* register the modification to be able to undo it */
 	  TtaRegisterElementReplace (content, doc);
-	  TtaSetTextContent (content, new_url, lang, doc);
+	  TtaSetTextContent (content, (unsigned char *)new_url, lang, doc);
 	  TtaFreeMemory (new_url);
 	}
       }
@@ -531,12 +531,12 @@ static void InitSaveForm (Document document, View view, char *pathname)
    TtaNewLabel (BaseDialog + CharsetSaveL, BaseDialog + SaveForm,
 		"Charset:  ");
    TtaNewLabel (BaseDialog + CharsetSave,  BaseDialog + SaveForm, 
-		UserCharset[0] != EOS ? UserCharset : "UNKNOWN");
+		UserCharset[0] != EOS ? UserCharset : (char *)"UNKNOWN");
    /* fourth line */
    TtaNewLabel (BaseDialog + MimeTypeSaveL, BaseDialog + SaveForm, 
 		"MIME type:");
    TtaNewLabel (BaseDialog + MimeTypeSave,  BaseDialog + SaveForm, 
-		UserMimeType[0] != EOS ? UserMimeType : "UNKNOWN");
+		UserMimeType[0] != EOS ? UserMimeType : (char *)"UNKNOWN");
    /* fifth line */
    TtaNewLabel (BaseDialog + SaveFormStatus, BaseDialog + SaveForm, 
 		" ");
@@ -998,7 +998,7 @@ void SetNamespacesAndDTD (Document doc)
 		   if (attr)
 		     {
 		       length = TtaGetTextAttributeLength (attr);
-		       attrText = TtaGetMemory (length + 1);
+		       attrText = (char *)TtaGetMemory (length + 1);
 		       TtaGiveTextAttributeValue (attr, attrText, &length);
 		       if (!strcmp (attrText, "Content-Type"))
 			 meta = el;
@@ -1273,7 +1273,7 @@ static ThotBool SaveDocumentLocally (Document doc, char *directoryName,
 		  TtaFreeMemory (pImage->localName);
 		  TtaFreeMemory (pImage->originalName);
 		  /* save the new location */
-		  pImage->originalName = TtaGetMemory (sizeof ("internal:")
+		  pImage->originalName = (char *)TtaGetMemory (sizeof ("internal:")
 						       + strlen (tempname)
 						       + 1);
 		  sprintf (pImage->originalName, "internal:%s", tempname);
@@ -1450,7 +1450,7 @@ static ThotBool SaveObjectThroughNet (Document doc, View view,
   int              remainder = 500;
   int              res;
 
-  msg = TtaGetMemory (remainder);
+  msg = (char *)TtaGetMemory (remainder);
   if (msg == NULL)
     return (FALSE);
 
@@ -1532,7 +1532,7 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
   int              index = 0, len, nb = 0;
   int              res;
 
-  msg = TtaGetMemory (remainder);
+  msg = (char *)TtaGetMemory (remainder);
   if (msg == NULL)
     return (FALSE);
 
@@ -1682,7 +1682,7 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
 	      if (pImage->content_type)
 		content_type = pImage->content_type;
 	      else
-		content_type = PicTypeToMIME (pImage->imageType);
+		content_type = PicTypeToMIME ((PicType)pImage->imageType);
 	      res = SafeSaveFileThroughNet(doc, pImage->tempfile,
 					   pImage->originalName, content_type,
 					   use_preconditions);
@@ -2306,8 +2306,9 @@ void RemoveAutoSavedDoc (Document doc)
 #endif
   
   /* Generate the autosaved file name */
-  url = TtaStrdup (DocumentURLs[doc]);
+  url = (char *)TtaStrdup (DocumentURLs[doc]);
   l = strlen (url) - 1;
+
   c =  url[l];
   if (c == URL_SEP)
     url[l] = EOS; /* remove the last / */
@@ -2315,6 +2316,7 @@ void RemoveAutoSavedDoc (Document doc)
   if (c == URL_SEP)
     url[l] = c; /* restore the last / */
   sprintf (pathname, "%s%c%s%d.bak", TempFileDirectory, DIR_SEP, docname, doc);
+
   /* Remove the autosaved file */
   if (TtaFileExist (pathname))
     TtaFileUnlink (pathname);  
@@ -2345,7 +2347,7 @@ void GenerateAutoSavedDoc (Document doc)
 #endif
 
   /* Generate the autosaved file name */
-  url = TtaStrdup (DocumentURLs[doc]);
+  url = (char *)TtaStrdup (DocumentURLs[doc]);
   l = strlen (url) - 1;
   c =  url[l];
   if (c == URL_SEP)
@@ -2456,7 +2458,7 @@ static ThotBool UpdateDocImage (Document doc, ThotBool src_is_local,
 	{
 	  ptr++;
 	  TtaRegisterElementReplace (el, doc);
-	  TtaSetTextContent (el, ptr, lang, doc);
+	  TtaSetTextContent (el, (unsigned char *)ptr, lang, doc);
 	}
       TtaFreeMemory (localName);
     }
@@ -2466,13 +2468,13 @@ static ThotBool UpdateDocImage (Document doc, ThotBool src_is_local,
     {
       /* make the special internal URL (used to display the image from
 	 the container */
-      internalURL = TtaGetMemory (sizeof ("internal:")
+      internalURL = (char *)TtaGetMemory (sizeof ("internal:")
 				  + strlen (newURL)
 				  + 1);
       sprintf (internalURL, "internal:%s", newURL);
       
       /* make the local name (we switch the extension to .html) */
-      localName = TtaGetMemory (strlen (newURL)
+      localName = (char *)TtaGetMemory (strlen (newURL)
 			       + sizeof (".html"));
       strcpy (localName, newURL);
       ptr = strrchr (localName, '.');
@@ -2633,7 +2635,7 @@ static void UpdateImages (Document doc, ThotBool src_is_local,
          if (content != NULL)
 	   {
 	   buflen = MAX_CSS_LENGTH;
-	   TtaGiveTextContent (content, CSSbuffer, &buflen, &lang);
+	   TtaGiveTextContent (content, (unsigned char *)CSSbuffer, &buflen, &lang);
 	   CSSbuffer[MAX_CSS_LENGTH] = EOS;
 	   url[0] = EOS;
 	   tempname[0] = EOS;
@@ -2643,7 +2645,7 @@ static void UpdateImages (Document doc, ThotBool src_is_local,
 	       /* register the modification to be able to undo it */
 	       TtaRegisterElementReplace (content, doc);
 	       /* save this new style element string */
-	       TtaSetTextContent (content, sStyle, lang, doc);
+	       TtaSetTextContent (content, (unsigned char *)sStyle, lang, doc);
 
 	       /* current point in sStyle */
 	       stringStyle = sStyle;
@@ -2801,7 +2803,7 @@ static void UpdateImages (Document doc, ThotBool src_is_local,
 		 {
 		   elType = TtaGetElementType (el);
 		   buflen = MAX_LENGTH;
-		   buf = TtaGetMemory (buflen);
+		   buf = (char *)TtaGetMemory (buflen);
 		   if (buf != NULL)
 		     {
 		       TtaGiveTextAttributeValue (attr, buf, &buflen);
@@ -3011,7 +3013,7 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
 #endif
 
   /* New document path */
-  documentFile = TtaGetMemory (MAX_LENGTH);
+  documentFile = (char *)TtaGetMemory (MAX_LENGTH);
   strcpy (documentFile, SavePath);
   len = strlen (documentFile);
   if (documentFile [len -1] != DIR_SEP && documentFile [len - 1] != '/')
@@ -3077,7 +3079,7 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
       else if (TtaFileExist (documentFile))
 	{
 	  /* ask confirmation */
-	  tempname = TtaGetMemory (MAX_LENGTH);
+	  tempname = (char *)TtaGetMemory (MAX_LENGTH);
 	  sprintf (tempname, TtaGetMessage (LIB, TMSG_FILE_EXIST), documentFile);
 	  InitConfirm (doc, 1, tempname);
 	  TtaFreeMemory (tempname);
@@ -3127,7 +3129,7 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
 	  /* verify that the directory exists */
 	  if (dst_is_local)
 	    {
-	      tempname = TtaGetMemory (MAX_LENGTH);
+	      tempname = (char *)TtaGetMemory (MAX_LENGTH);
 	      if (imgbase[0] != DIR_SEP)
 		  {
 		    strcpy (tempname, SavePath);
@@ -3319,7 +3321,7 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
 	      if (doc_url != NULL)
 		{
 		  doc_url = TtaGetFirstChild (doc_url);
-		  TtaSetTextContent (doc_url, DocumentURLs[xmlDoc],
+		  TtaSetTextContent (doc_url, (unsigned char *)DocumentURLs[xmlDoc],
 				     TtaGetDefaultLanguage (), xmlDoc);
 		}
 	      AddURLInCombobox (DocumentURLs[xmlDoc], NULL, TRUE);

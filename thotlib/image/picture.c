@@ -36,16 +36,15 @@
   #include "winsys.h"
 #endif /* _WINDOWS */
 
+#undef THOT_EXPORT
 #define THOT_EXPORT extern
+#include "picture_tv.h"
 #include "boxes_tv.h"
 #include "edit_tv.h"
 #include "exceptions_f.h"
 #include "frame_tv.h"
 #include "font_tv.h"
 #include "platform_tv.h"
-#undef THOT_EXPORT
-#define THOT_EXPORT
-#include "picture_tv.h"
 
 #ifdef _WINDOWS 
   #include "units_tv.h"
@@ -179,7 +178,7 @@ static void Free_Pic_Chache (Pic_Cache *Cache)
 #endif /* _TRACE_GL_BUGS_GLISTEXTURE */
   if (glIsTexture (Cache->texbind))
     glDeleteTextures (1, 
-		      &(Cache->texbind));
+		      (const GLuint*)&(Cache->texbind));
   
 #ifdef _PCLDEBUG
   g_print ("\n Free Image %s from cache", 
@@ -248,18 +247,18 @@ static void AddInPicCache (PictInfo *Image, int frame, ThotBool forever)
    {
      while (Cache->next)
        Cache = Cache->next;
-     Cache->next = TtaGetMemory (sizeof (Pic_Cache));
+     Cache->next = (Pic_Cache *)TtaGetMemory (sizeof (Pic_Cache));
      Cache = Cache->next;     
    }
  else
    {
-     PicCache = TtaGetMemory (sizeof (Pic_Cache));
+     PicCache = (Pic_Cache *)TtaGetMemory (sizeof (Pic_Cache));
      Cache = PicCache;      
    }   
   Cache->next = NULL; 
   Cache->frame = frame;
   Cache->texbind = Image->TextureBind;
-  Cache->filename = TtaGetMemory (strlen(Image->PicFileName) + 1);
+  Cache->filename = (char *)TtaGetMemory (strlen(Image->PicFileName) + 1);
   Cache->height = Image->PicHeight;
   Cache->width = Image->PicWidth;
   Cache->TexCoordW = Image->TexCoordW;  
@@ -560,9 +559,17 @@ static void PrintPoscriptImage (PictInfo *Image, int x, int y,
       {
 	xBox = yBox = wBox = hBox = width = height = 0;
 	Image->PicPixmap = (unsigned char *) 
-		  (*(PictureHandlerTable[Image->PicType].Produce_Picture))
-		  (Image->PicFileName, Image, &xBox, &yBox, &wBox, &hBox,
-		   0, &width, &height, 0);
+		  (*(PictureHandlerTable[Image->PicType].Produce_Picture)) (
+			(void *)Image->PicFileName,
+			(void *)Image,
+			(void *)&xBox,
+			(void *)&yBox,
+			(void *)&wBox,
+			(void *)&hBox,
+			(void *)0,
+			(void *)&width,
+			(void *)&height,
+			(void *)0 );
       }
     if (w != Image->PicWidth || h != Image->PicHeight)
       pixels = ZoomPicture (Image->PicPixmap, 
@@ -824,7 +831,7 @@ void DisplayOpaqueGroup (PtrAbstractBox pAb, int frame,
   if (GetAbsoluteBoundingBox (pAb, &x, &y, &width, &height, 
 			      frame, xmin, xmax, ymin, ymax))  
     {     
-      m = TtaGetMemory (16 * sizeof (double));      
+      m = (double *)TtaGetMemory (16 * sizeof (double));      
       glGetDoublev (GL_MODELVIEW_MATRIX, m);
       glLoadIdentity (); 
 
@@ -834,7 +841,7 @@ void DisplayOpaqueGroup (PtrAbstractBox pAb, int frame,
 	  GL_SetOpacity (1000);
 	  GL_SetStrokeOpacity (1000);
 	  
-	  GL_TextureMap (pAb->AbBox->Pre_computed_Pic,  
+	  GL_TextureMap ((PictInfo*)pAb->AbBox->Pre_computed_Pic,  
 			 x, y, width, height, frame); 
 	  
 	}
@@ -843,7 +850,7 @@ void DisplayOpaqueGroup (PtrAbstractBox pAb, int frame,
       GL_SetStrokeOpacity (pAb->AbOpacity);
 
      
-      GL_TextureMap (pAb->AbBox->Post_computed_Pic,
+      GL_TextureMap ((PictInfo*)pAb->AbBox->Post_computed_Pic,
 		     x, y, width, height, frame);
 
       GL_SetFillOpacity (1000);
@@ -958,7 +965,7 @@ ThotBool DisplayGradient (PtrAbstractBox pAb, PtrBox box,
   int                x, y, width, height;
   unsigned char      *pattern;
 
-  gradient = pAb->AbElement->ElParent->ElGradient;
+  gradient = (GradDef *)pAb->AbElement->ElParent->ElGradient;
   if (gradient->next == NULL)
     return FALSE;
   
@@ -1010,7 +1017,7 @@ ThotBool DisplayGradient (PtrAbstractBox pAb, PtrBox box,
   glStencilOp (GL_KEEP, GL_KEEP, GL_KEEP);
 
   /*then draw the gradient*/
-  GL_TextureMap (box->Pre_computed_Pic, x, y, width, height, frame);
+  GL_TextureMap ((PictInfo*)box->Pre_computed_Pic, x, y, width, height, frame);
 
   /* disable stenciling, */
   glStencilFunc (GL_NOTEQUAL, 1, 1);
@@ -1806,10 +1813,18 @@ void CreateGifLogo ()
   int                 width = 0, height = 0;
   Drawable            drw;
   
-  imageDesc = TtaGetMemory (sizeof (PictInfo));
-  drw = (*(PictureHandlerTable[GIF_FORMAT].Produce_Picture)) 
-    (LostPicturePath, imageDesc, &xBox, &yBox, &wBox,
-     &hBox, Bgcolor, &width, &height, 0);
+  imageDesc = (PictInfo*)TtaGetMemory (sizeof (PictInfo));
+  drw = (*(PictureHandlerTable[GIF_FORMAT].Produce_Picture)) (
+      		(void *)LostPicturePath,
+		(void *)imageDesc,
+		(void *)&xBox,
+		(void *)&yBox,
+		(void *)&wBox,
+		(void *)&hBox,
+		(void *)Bgcolor,
+		(void *)&width,
+		(void *)&height,
+		(void *)0 );
   TtaFreeMemory (imageDesc);
   PictureLogo = (unsigned char *) drw;
 #else /* #if defined(_WINDOWS) || defined (_GL)  */
@@ -1890,7 +1905,7 @@ void InitPictureHandlers (ThotBool printing)
    /* create a special logo for lost pictures */
    PictureLogo = TtaCreatePixmapLogo (lost_xpm);
    EpsfPictureLogo = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow,
-						  epsflogo_bits,
+						  (char *)epsflogo_bits,
 						  epsflogo_width,
 						  epsflogo_height,
 						  Black_Color,
@@ -1899,41 +1914,42 @@ void InitPictureHandlers (ThotBool printing)
    theVisual = DefaultVisual (TtDisplay, TtScreen);
 #endif /* _MOTIF */
 
+   
    Printing = printing;
    /* by default no plugins loaded */
    HandlersCounter = 0;
    currentExtraHandler = 0;
    strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, XbmName, MAX_FORMAT_NAMELENGHT);
-   PictureHandlerTable[HandlersCounter].Produce_Picture = XbmCreate;
-   PictureHandlerTable[HandlersCounter].Produce_Postscript = XbmPrint;
-   PictureHandlerTable[HandlersCounter].Match_Format = IsXbmFormat;
+   PictureHandlerTable[HandlersCounter].Produce_Picture = ( PICHND_PROTO_Produce_Picture ) XbmCreate;
+   PictureHandlerTable[HandlersCounter].Produce_Postscript = ( PICHND_PROTO_Produce_Postscript ) XbmPrint;
+   PictureHandlerTable[HandlersCounter].Match_Format = ( PICHND_PROTO_Match_Format ) IsXbmFormat;
 
    PictureIdType[HandlersCounter] = XBM_FORMAT;
    PictureMenuType[HandlersCounter] = XBM_FORMAT;
    HandlersCounter++;
 
    strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, EpsName, MAX_FORMAT_NAMELENGHT);
-   PictureHandlerTable[HandlersCounter].Produce_Picture = EpsCreate;
-   PictureHandlerTable[HandlersCounter].Produce_Postscript = EpsPrint;
-   PictureHandlerTable[HandlersCounter].Match_Format = IsEpsFormat;
+   PictureHandlerTable[HandlersCounter].Produce_Picture = ( PICHND_PROTO_Produce_Picture )EpsCreate;
+   PictureHandlerTable[HandlersCounter].Produce_Postscript = ( PICHND_PROTO_Produce_Postscript )EpsPrint;
+   PictureHandlerTable[HandlersCounter].Match_Format = ( PICHND_PROTO_Match_Format )IsEpsFormat;
 
    PictureIdType[HandlersCounter] = EPS_FORMAT;
    PictureMenuType[HandlersCounter] = EPS_FORMAT;
    HandlersCounter++;
 
    strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, XpmName, MAX_FORMAT_NAMELENGHT);
-   PictureHandlerTable[HandlersCounter].Produce_Picture = XpmCreate;
-   PictureHandlerTable[HandlersCounter].Produce_Postscript = XpmPrint;
-   PictureHandlerTable[HandlersCounter].Match_Format = IsXpmFormat;
+   PictureHandlerTable[HandlersCounter].Produce_Picture = ( PICHND_PROTO_Produce_Picture )XpmCreate;
+   PictureHandlerTable[HandlersCounter].Produce_Postscript = ( PICHND_PROTO_Produce_Postscript )XpmPrint;
+   PictureHandlerTable[HandlersCounter].Match_Format = ( PICHND_PROTO_Match_Format )IsXpmFormat;
 
    PictureIdType[HandlersCounter] = XPM_FORMAT;
    PictureMenuType[HandlersCounter] = XPM_FORMAT;
    HandlersCounter++;
 
    strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, GifName, MAX_FORMAT_NAMELENGHT);
-   PictureHandlerTable[HandlersCounter].Produce_Picture = GifCreate;
-   PictureHandlerTable[HandlersCounter].Produce_Postscript = GifPrint;
-   PictureHandlerTable[HandlersCounter].Match_Format = IsGifFormat;
+   PictureHandlerTable[HandlersCounter].Produce_Picture = ( PICHND_PROTO_Produce_Picture )GifCreate;
+   PictureHandlerTable[HandlersCounter].Produce_Postscript = ( PICHND_PROTO_Produce_Postscript )GifPrint;
+   PictureHandlerTable[HandlersCounter].Match_Format = ( PICHND_PROTO_Match_Format )IsGifFormat;
 
    PictureIdType[HandlersCounter] = GIF_FORMAT;
    PictureMenuType[HandlersCounter] = GIF_FORMAT;
@@ -1941,18 +1957,18 @@ void InitPictureHandlers (ThotBool printing)
 
    InitPngColors ();
    strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, PngName, MAX_FORMAT_NAMELENGHT);
-   PictureHandlerTable[HandlersCounter].Produce_Picture = PngCreate;
-   PictureHandlerTable[HandlersCounter].Produce_Postscript = PngPrint;
-   PictureHandlerTable[HandlersCounter].Match_Format = IsPngFormat;
+   PictureHandlerTable[HandlersCounter].Produce_Picture = ( PICHND_PROTO_Produce_Picture )PngCreate;
+   PictureHandlerTable[HandlersCounter].Produce_Postscript = ( PICHND_PROTO_Produce_Postscript )PngPrint;
+   PictureHandlerTable[HandlersCounter].Match_Format = ( PICHND_PROTO_Match_Format )IsPngFormat;
 
    PictureIdType[HandlersCounter] = PNG_FORMAT;
    PictureMenuType[HandlersCounter] = PNG_FORMAT;
    HandlersCounter++;
 
    strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, JpegName, MAX_FORMAT_NAMELENGHT);
-   PictureHandlerTable[HandlersCounter].Produce_Picture = JpegCreate;
-   PictureHandlerTable[HandlersCounter].Produce_Postscript = JpegPrint;
-   PictureHandlerTable[HandlersCounter].Match_Format = IsJpegFormat;
+   PictureHandlerTable[HandlersCounter].Produce_Picture = ( PICHND_PROTO_Produce_Picture )JpegCreate;
+   PictureHandlerTable[HandlersCounter].Produce_Postscript = ( PICHND_PROTO_Produce_Postscript )JpegPrint;
+   PictureHandlerTable[HandlersCounter].Match_Format = ( PICHND_PROTO_Match_Format )IsJpegFormat;
 
    PictureIdType[HandlersCounter] = JPEG_FORMAT;
    PictureMenuType[HandlersCounter] = JPEG_FORMAT;
@@ -2320,8 +2336,14 @@ void DrawPicture (PtrBox box, PictInfo *imageDesc, int frame,
 	  if (typeImage >= InlineHandlers)
 	    {
 	      if (PictureHandlerTable[typeImage].DrawPicture != NULL)
-		(*(PictureHandlerTable[typeImage].DrawPicture)) (box, imageDesc,
-		                            x + xTranslate, y + yTranslate);
+		(*(PictureHandlerTable[typeImage].DrawPicture)) (
+			(void *)box,
+		       	(void *)imageDesc,
+		        (void *)(x + xTranslate),
+		       	(void *)(y + yTranslate),
+		       	(void *)0,
+		       	(void *)0,
+		       	(void *)0 );
 	    }
 	  else
 	    LayoutPicture ((Pixmap) imageDesc->PicPixmap, drawable,
@@ -2424,10 +2446,18 @@ void DrawPicture (PtrBox box, PictInfo *imageDesc, int frame,
       }
 #endif /* _WINDOWS */
 #if defined(_MOTIF) || defined(_GTK)
-  (*(PictureHandlerTable[typeImage].Produce_Postscript)) (fileName,pres,
-							  x, y, w, h,
-							  (FILE *) drawable,
-							  bgColor);
+  (*(PictureHandlerTable[typeImage].Produce_Postscript)) (
+	(void *)fileName,
+	(void *)pres,
+	(void *)x,
+       	(void *)y,
+       	(void *)w,
+       	(void *)h,
+	(void *)(FILE *) drawable,
+	(void *)bgColor,
+	(void *)0,
+	(void *)0);
+  
 #endif /* #if defined(_MOTIF) || defined(_GTK) */
 
 #ifdef _NOGUI
@@ -2490,7 +2520,7 @@ unsigned char *ZoomPicture (unsigned char *cpic, int cWIDE, int cHIGH ,
     {
       /* run the rescaling algorithm */
       /* create a new pic of the appropriate size */
-      epic = (char *) TtaGetMemory((size_t) (eWIDE * eHIGH * bperpix));
+      epic = (unsigned char *) TtaGetMemory((size_t) (eWIDE * eHIGH * bperpix));
       if (!epic)
 	printf(" unable to TtaGetMemory memory for zoomed image \n");
       cxarr = (int *) TtaGetMemory (eWIDE * sizeof (int));
@@ -2513,7 +2543,7 @@ unsigned char *ZoomPicture (unsigned char *cpic, int cWIDE, int cHIGH ,
 	    }
 	  else
 	    {
-	      int j;  char *cp;
+	      int j;  unsigned char *cp;
 	      for (ex = 0, cxarrp = cxarr; ex < eWIDE; ex++,cxarrp++)
 		{
 		  cp = clptr + *cxarrp;
@@ -2581,7 +2611,7 @@ void *PutTextureOnImageDesc (unsigned char *pattern, int width, int height)
 #ifdef _GL
   PictInfo *imageDesc = NULL;
 
-  imageDesc = malloc (sizeof (PictInfo));  
+  imageDesc = (PictInfo*)malloc (sizeof (PictInfo));  
   imageDesc->PicFileName = NULL;  /*"testinggrad";*/
   imageDesc->RGBA = TRUE;
   imageDesc->PicWidth = width;
@@ -2903,8 +2933,17 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	      imageDesc->PicHArea = hBox = h;
 
 	      imageDesc->PicPixmap = (unsigned char *) 
-		(*(PictureHandlerTable[typeImage].Produce_Picture)) 
-		(frame, imageDesc, fileName);
+		(*(PictureHandlerTable[typeImage].Produce_Picture)) (
+			(void *)frame,
+		       	(void *)imageDesc,
+		       	(void *)fileName,
+			(void *)0,
+			(void *)0,
+			(void *)0,
+			(void *)0,
+			(void *)0,
+			(void *)0,
+			(void *)0 );
       
 	      xBox = imageDesc->PicXArea;
 	      yBox = imageDesc->PicYArea;
@@ -2926,17 +2965,31 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 		    yBox = h;
 		}
 	      imageDesc->PicPixmap = (unsigned char *) 
-		  (*(PictureHandlerTable[typeImage].Produce_Picture))
-		  (fileName, imageDesc, &xBox, &yBox, &wBox, &hBox,
-		   Bgcolor, &width, &height,
-		   ViewFrameTable[frame - 1].FrMagnification);
+		  (*(PictureHandlerTable[typeImage].Produce_Picture)) (
+		   (void *)fileName,
+		   (void *)imageDesc,
+		   (void *)&xBox,
+		   (void *)&yBox,
+		   (void *)&wBox,
+		   (void *)&hBox,
+		   (void *)Bgcolor,
+		   (void *)&width,
+		   (void *)&height,
+		   (void *)ViewFrameTable[frame - 1].FrMagnification );
 	      if  (width == 0 && height == 0)
 		{
 		  imageDesc->PicPixmap = (unsigned char *) 
-		    (*(PictureHandlerTable[typeImage].Produce_Picture))
-		    (fileName, imageDesc, &xBox, &yBox, &wBox, &hBox,
-		     Bgcolor, &width, &height,
-		     ViewFrameTable[frame - 1].FrMagnification);
+		    (*(PictureHandlerTable[typeImage].Produce_Picture)) (
+			(void *)fileName,
+		       	(void *)imageDesc,
+		       	(void *)&xBox,
+		       	(void *)&yBox,
+		       	(void *)&wBox,
+		       	(void *)&hBox,
+			(void *)Bgcolor,
+		       	(void *)&width,
+		       	(void *)&height,
+			(void *)ViewFrameTable[frame - 1].FrMagnification);
 		  imageDesc->TextureBind = 0;
 		}     
 
@@ -2979,7 +3032,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
       if (PictureLogo == None)
 	/* create a special logo for lost pictures */
 	CreateGifLogo ();
-      imageDesc->PicFileName = TtaGetMemory (strlen(LostPicturePath)+1);
+      imageDesc->PicFileName = (char *)TtaGetMemory (strlen(LostPicturePath)+1);
       strcpy (imageDesc->PicFileName,TtaStrdup (LostPicturePath));
       imageDesc->PicType = 3;
       imageDesc->PicPresent = RealSize;
@@ -3060,7 +3113,7 @@ void *Group_shot (int x, int y, int width, int height, int frame, ThotBool is_rg
 
   if (GL_prepare (frame))
     {
-      imageDesc = malloc (sizeof (PictInfo));  
+      imageDesc = (PictInfo *)malloc (sizeof (PictInfo));  
       imageDesc->PicFileName = "testing";
       imageDesc->RGBA = TRUE;
       imageDesc->PicWidth = width;
@@ -3082,7 +3135,7 @@ void *Group_shot (int x, int y, int width, int height, int frame, ThotBool is_rg
 	}
       else
 	{
-	  imageDesc->PicPixmap = TtaGetMemory (sizeof (unsigned char) * 
+	  imageDesc->PicPixmap = (unsigned char*)TtaGetMemory (sizeof (unsigned char) * 
 					       width * height * 4);
 	  glReadPixels (x, y, width, height, GL_RGBA, GL_UNSIGNED_BYTE, 
 			imageDesc->PicPixmap);
@@ -3297,7 +3350,17 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 #if defined(_MOTIF) || defined(_WINDOWS)
 	      imageDesc->PicWArea = wBox = w;
 	      imageDesc->PicHArea = hBox = h;
-	      drw = (*(PictureHandlerTable[typeImage].Produce_Picture)) (frame, imageDesc, fileName);
+	      drw = (*(PictureHandlerTable[typeImage].Produce_Picture)) (
+			(void *)frame,
+		       	(void *)imageDesc,
+		       	(void *)fileName,
+			(void *)0,
+			(void *)0,
+			(void *)0,
+			(void *)0,
+			(void *)0,
+			(void *)0,
+			(void *)0 );
 #endif /* #if defined(_MOTIF) || defined(_WINDOWS) */
         
 #ifdef _GTK
@@ -3334,18 +3397,32 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 		    yBox = h;
 		}
 #if defined(_MOTIF) || defined(_WINDOWS)
-	      drw = (*(PictureHandlerTable[typeImage].Produce_Picture))
-		(fileName, imageDesc, &xBox, &yBox, &wBox, &hBox,
-		 Bgcolor, &width, &height,
-		 ViewFrameTable[frame - 1].FrMagnification);
+	      drw = (*(PictureHandlerTable[typeImage].Produce_Picture)) (
+			(void *)fileName,
+			(void *)imageDesc,
+			(void *)&xBox,
+			(void *)&yBox,
+			(void *)&wBox,
+			(void *)&hBox,
+			(void *)Bgcolor,
+			(void *)&width,
+			(void *)&height,
+			(void *)ViewFrameTable[frame - 1].FrMagnification);
 #endif /* #if defined(_MOTIF) || defined(_WINDOWS) */
         
 #ifdef _GTK
 	      if (typeImage == EPS_FORMAT)
-		drw = (GdkPixmap *) (*(PictureHandlerTable[typeImage].Produce_Picture))
-		  (fileName, imageDesc, &xBox, &yBox, &wBox, &hBox,
-		   Bgcolor, &width, &height,
-		   ViewFrameTable[frame - 1].FrMagnification);
+		drw = (GdkPixmap *) (*(PictureHandlerTable[typeImage].Produce_Picture)) (
+			(void *)fileName,
+			(void *)imageDesc,
+			(void *)&xBox,
+			(void *)&yBox,
+			(void *)&wBox,
+			(void *)&hBox,
+			(void *)Bgcolor,
+			(void *)&width,
+			(void *)&height,
+			(void *)ViewFrameTable[frame - 1].FrMagnification);
 	      else
 		{
 		  /* load the picture using ImLib */

@@ -32,7 +32,7 @@
 #define THOT_EXPORT extern
 #include "edit_tv.h"
  /* Identification des messages */
-ThotBool            PrintErrorMessages;
+static ThotBool            PrintErrorMessages;
 
 
 /*----------------------------------------------------------------------

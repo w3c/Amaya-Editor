@@ -30,7 +30,7 @@ static ThotBool RestCoupler (Restruct restr, int indSrc, int indDst,
   if (restr->RSrcPrint->SNodes[indSrc] != NULL && 
       restr->RDestNodes[indDst] != NULL)
     {
-      restr->RCoupledNodes[indSrc] = TtaGetMemory (sizeof (StrRestCouple));
+      restr->RCoupledNodes[indSrc] = (StrRestCouple*)TtaGetMemory (sizeof (StrRestCouple));
       restr->RCoupledNodes[indSrc]->CDstNode = restr->RDestNodes[indDst];
       if (indRecFrom == 0 && indRecTo == 0)
 	{
@@ -299,7 +299,7 @@ static void RestCluster (Restruct resctx)
   V = &CDst[-1];
   LgU = strlen (CSrc);
   LgV = strlen (CDst);
-  indrec = TtaGetMemory (LgV * sizeof(int));
+  indrec = (int*)TtaGetMemory (LgV * sizeof(int));
   RestCalcIndRec (&indrec, CDst, LgV, resctx);
   if (LgU > LgV)
     LgMax = LgU;

@@ -324,6 +324,7 @@ char *Name_colors[] ={
 "DarkRuby1",
 "DarkRuby2",
 "DarkRuby3"
-};
+}
+;
 
 #endif /* THOT_PALETTE_VAR */

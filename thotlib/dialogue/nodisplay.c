@@ -38,7 +38,6 @@ ThotBool CallEventAttribute (NotifyAttribute * notifyAttr, ThotBool pre)
    return FALSE;
 }
 
-
 void CleanPictInfo (PictInfo *esc)
 {
 }
@@ -50,7 +49,7 @@ void AddInSelection (PtrElement pEl, ThotBool dernier)
 
 
 /* FreeAbEl est appele' par le module arbabs */
-void FreeAbEl (PtrElement pEl)
+void FreeAbEl (PtrElement pEl,PtrDocument pDoc)
 {
 }
 

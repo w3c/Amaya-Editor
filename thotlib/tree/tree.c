@@ -168,9 +168,9 @@ PtrElement GetOtherPairedElement (PtrElement pEl)
   ----------------------------------------------------------------------*/
 ThotBool ElementIsHidden (PtrElement pEl)
 {
-register Proc HiFunction;
+register Proc2 HiFunction;
 
-   if ((HiFunction = ThotLocalActions[T_checkHiddenElement]) == NULL)
+   if ((HiFunction = (Proc2)ThotLocalActions[T_checkHiddenElement]) == NULL)
      return FALSE; /* No function => Element not hidden! */
    else
      {
@@ -189,12 +189,12 @@ ThotBool isHI;
   ----------------------------------------------------------------------*/
 ThotBool ElementIsReadOnly (PtrElement pEl)
 {
-  Proc              Rofunction;
+  Proc2              Rofunction;
   ThotBool          isRO;
 
   if (!pEl)
     return FALSE;
-  else if ((Rofunction = ThotLocalActions[T_checkReadOnlyElement]) == NULL)
+  else if ((Rofunction = (Proc2)ThotLocalActions[T_checkReadOnlyElement]) == NULL)
     return FALSE; /* No function => Element not protected! */
   else
     {
@@ -216,14 +216,14 @@ ThotBool ElementIsReadOnly (PtrElement pEl)
   ----------------------------------------------------------------------*/
 ThotBool CannotInsertNearElement (PtrElement pEl, ThotBool beforeElement)
 {
-  register Proc InsertNearFunction;
+  register Proc3 InsertNearFunction;
   ThotBool      isForbidden;
 
-   if ((InsertNearFunction = ThotLocalActions[T_checkInsertNearElement]) == NULL)
+   if ((InsertNearFunction = (Proc3)ThotLocalActions[T_checkInsertNearElement]) == NULL)
      return FALSE; /* No function => Insertion is authorized! */
    else
      {
-       (*InsertNearFunction) (pEl, beforeElement, &isForbidden);
+       (*InsertNearFunction) ((void *)pEl, (void *)beforeElement, (void *)&isForbidden);
        return isForbidden;
      }
 
@@ -826,7 +826,7 @@ static void LeavesInheritLanguage (PtrElement pEl)
 	/* this Language attribute has a value */
 	{
 	  CopyBuffer2MBs (pAttr->AeAttrText, 0, text, 399);
-	  lang = TtaGetLanguageIdFromName (text);
+	  lang = TtaGetLanguageIdFromName ((char *)text);
 	  /* changes the language of the text leaves of the subtree */
 	  ChangeLanguageLeaves (pEl, lang);
 	}
@@ -2275,7 +2275,7 @@ void AttachRequiredAttributes (PtrElement pEl, SRule *pSRule, PtrSSchema pSS,
 	  break;
 	case AtTextAttr:
 	  GetTextBuffer (&pAttr->AeAttrText);
-	  CopyStringToBuffer (pSS->SsConstBuffer + pSRule->SrDefAttrValue[i] - 1, pAttr->AeAttrText, &l);
+	  CopyStringToBuffer ((unsigned char *)(pSS->SsConstBuffer + pSRule->SrDefAttrValue[i] - 1), pAttr->AeAttrText, &l);
 	  break;
 	case AtReferenceAttr:
 	  /* gets a reference descriptor */
@@ -3198,7 +3198,7 @@ PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
 		pEl->ElAnimation = TtaCopyAnim (pSource->ElAnimation);
 
 	      if (pSource->ElTransform)
-		pEl->ElTransform = TtaCopyTransform (pSource->ElTransform);
+		pEl->ElTransform = (Transform*)TtaCopyTransform (pSource->ElTransform);
 
 	      /* if (pSource->ElGradient) */
 	      /* 		pEl->ElGradient = TtaCopyGradient (pSource->ElGradient); */
@@ -3627,7 +3627,7 @@ void CheckLanguageAttr (PtrDocument pDoc, PtrElement pEl)
 	   if (pAttr && pAttr->AeAttrText)
 	     {
 	       CopyBuffer2MBs (pAttr->AeAttrText, 0, text, 99);
-	       lang = TtaGetLanguageIdFromName (text);
+	       lang = TtaGetLanguageIdFromName ((char *)text);
 	     }
 	 }
        /* changes the language of the text leaves */
@@ -3639,7 +3639,7 @@ void CheckLanguageAttr (PtrDocument pDoc, PtrElement pEl)
        pAttr->AeDefAttr = FALSE;
        pAttr->AeAttrType = AtTextAttr;
        GetTextBuffer (&pAttr->AeAttrText);
-       CopyStringToBuffer (TtaGetLanguageName (lang), pAttr->AeAttrText, &len);
+       CopyStringToBuffer ((unsigned char *)TtaGetLanguageName (lang), pAttr->AeAttrText, &len);
        if (pEl->ElFirstAttr == NULL)
 	 /* it's the first attribute of the element */
 	 pEl->ElFirstAttr = pAttr;

@@ -91,7 +91,7 @@ void             ParseCharset (Element el, Document doc)
        length = TtaGetTextAttributeLength (attr);
        if (length > 0)
 	 {
-	   text = TtaGetMemory (length + 1);
+	   text = (char *)TtaGetMemory (length + 1);
 	   TtaGiveTextAttributeValue (attr, text, &length);
 	   if (!strcasecmp (text, "content-type"))
 	     {
@@ -102,7 +102,7 @@ void             ParseCharset (Element el, Document doc)
 		   length = TtaGetTextAttributeLength (attr);
 		   if (length > 0)
 		     {
-		       text2 = TtaGetMemory (length + 1);
+		       text2 = (char *)TtaGetMemory (length + 1);
 		       TtaGiveTextAttributeValue (attr, text2, &length);
 		       ptrText = text2;
 		       while (*ptrText)
@@ -225,7 +225,7 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
 	   length = TtaGetTextAttributeLength (attr);
 	   if (length > 0)
 	     {
-	       name1 = TtaGetMemory (length + 1);
+	       name1 = (char *)TtaGetMemory (length + 1);
 	       TtaGiveTextAttributeValue (attr, name1, &length);
 	       if (!strcmp (name1, AM_MATHML_MIME_TYPE) ||
 		   !strcmp (name1, "application/postscript") ||
@@ -253,7 +253,7 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
 	   length = TtaGetTextAttributeLength (attr);
 	   if (length > 0)
 	     {
-	       data = TtaGetMemory (length + 1);
+	       data = (char *)TtaGetMemory (length + 1);
 	       TtaGiveTextAttributeValue (attr, data, &length);
 	       if (!isImage)
 		 if (!strcmp (&data[length-3], "mml") ||
@@ -317,7 +317,7 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
 	       length = TtaGetTextAttributeLength (attr);
 	       if (length > 0)
 		 {
-		   text = TtaGetMemory (length + 1);
+		   text = (char *)TtaGetMemory (length + 1);
 		   TtaGiveTextAttributeValue (attr, text, &length);
 		   /* create the corresponding attribute IntHeightPercent or */
 		   /* IntHeightPxl */
@@ -334,7 +334,7 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
 	       length = TtaGetTextAttributeLength (attr);
 	       if (length > 0)
 		 {
-		   text = TtaGetMemory (length + 1);
+		   text = (char *)TtaGetMemory (length + 1);
 		   TtaGiveTextAttributeValue (attr, text, &length);
 		   /* create the corresponding attribute IntWidthPercent or */
 		   /* IntWidthPxl */
@@ -511,9 +511,9 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
 		       if (childType.ElTypeNum == HTML_EL_TEXT_UNIT)
 			 {
 			   /* copy attribute value into the text leaf */
-			   text = TtaGetMemory (length + 1);
+			   text = (char *)TtaGetMemory (length + 1);
 			   TtaGiveTextAttributeValue (attr, text, &length);
-			   TtaSetTextContent (leaf, text, 
+			   TtaSetTextContent (leaf, (unsigned char *)text, 
 					      TtaGetDefaultLanguage (), doc);
 			   TtaFreeMemory (text);
 			 }
@@ -541,7 +541,7 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
 	       length = TtaGetTextLength (leaf);
 	       if (length > 0)
 		 {
-		   TtaGiveSubString (leaf, lastChar, length, 1);
+		   TtaGiveSubString (leaf, (unsigned char *)lastChar, length, 1);
 		   if (lastChar[0] == EOL)
 		     /* last character is new line, delete it */
 		     {
@@ -618,8 +618,8 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
 		       length++;
 		       attr = TtaNewAttribute (attrType);
 		       TtaAttachAttribute (el, attr, doc);
-		       text = TtaGetMemory (length);
-		       TtaGiveTextContent (desc, text, &length, &lang);
+		       text = (char *)TtaGetMemory (length);
+		       TtaGiveTextContent (desc, (unsigned char *)text, &length, &lang);
 		       TtaSetAttributeText (attr, text, el, doc);
 		       TtaFreeMemory (text);
 		     }
@@ -761,9 +761,9 @@ Element         PutInContent (char *ChrString, ParserData *context)
 	if (elType.ElTypeNum == 1)
 	   length = TtaGetTextLength (el);
 	if (length == 0)
-	   TtaSetTextContent (el, ChrString, context->language, context->doc);
+	   TtaSetTextContent (el, (unsigned char *)ChrString, context->language, context->doc);
 	else
-	   TtaAppendTextContent (el, ChrString, context->doc);
+	   TtaAppendTextContent (el, (unsigned char *)ChrString, context->doc);
      }
    return el;
 }
@@ -791,7 +791,7 @@ void UnknownXhtmlNameSpace (ParserData *context, Element *unknownEl,
        elText = TtaNewElement (context->doc, elType);
        XmlSetElemLineNumber (elText);
        TtaInsertFirstChild (&elText, *unknownEl, context->doc);
-       TtaSetTextContent (elText, content, context->language, context->doc);
+       TtaSetTextContent (elText, (unsigned char *)content, context->language, context->doc);
        TtaSetAccessRight (elText, ReadOnly, context->doc);
      }
 }
@@ -843,7 +843,7 @@ void CreateHTMLAttribute (Element       el,
 	 {
 	   length = strlen (text) + 2;
 	   length += TtaGetTextAttributeLength (attr);
-	   buffer = TtaGetMemory (length + 1);
+	   buffer = (char *)TtaGetMemory (length + 1);
 	   TtaGiveTextAttributeValue (attr, buffer, &length);
 	   strcat (buffer, " ");
 	   strcat (buffer, text);
@@ -935,12 +935,12 @@ void              XhtmlTypeAttrValue (char       *val,
 
   /* Look in the dummy section of the attribute value table */
   attrType.AttrTypeNum = DummyAttribute;
-  MapHTMLAttributeValue (val, attrType, &value);
+  MapHTMLAttributeValue (val, &attrType, &value);
   if (value <= 0)
     /* invalid value for the type attribute of an input element */
     {
       sprintf (msgBuffer, "Unknown attribute value \"type=%s\"", val);
-      XmlParseError (errorParsing, msgBuffer, 0);
+      XmlParseError (errorParsing, (unsigned char *)msgBuffer, 0);
       MapHTMLAttribute ("unknown_attr", &attrType, NULL,
 			&level, context->doc);
       sprintf (msgBuffer, "type=%s", val);
@@ -955,7 +955,7 @@ void              XhtmlTypeAttrValue (char       *val,
       if (elType.ElTypeNum != HTML_EL_Input)
 	{
 	  sprintf (msgBuffer, "Duplicate attribute \"type = %s\"", val);
-	  XmlParseError (errorParsing, msgBuffer, 0);
+	  XmlParseError (errorParsing, (unsigned char *)msgBuffer, 0);
 	}
       else
 	{
@@ -1329,7 +1329,7 @@ void EndOfHTMLAttributeValue (char *attrValue,
 	case 'C':	/* Content */
 	  child = PutInContent (attrValue, context);
 	  if (child != NULL)
-	    TtaAppendTextContent (child, "\" ", context->doc);
+	    TtaAppendTextContent (child, (unsigned char *)"\" ", context->doc);
 	  break;
 	  
 	case 'A':
@@ -1340,7 +1340,7 @@ void EndOfHTMLAttributeValue (char *attrValue,
 		{
 		case 0:	/* enumerate */
 		  if (isXML)
-		    MapHTMLAttributeValue (attrValue, attrType, &val);
+		    MapHTMLAttributeValue (attrValue, &attrType, &val);
 		  else
 		    val = MapAttrValue (lastMappedAttr->ThotAttribute,
 					attrValue);
@@ -1353,7 +1353,7 @@ void EndOfHTMLAttributeValue (char *attrValue,
 			       "Invalid attribute value \"%s = %s\"",
 			       attrName, attrValue);
 		      if (isXML)
-			XmlParseError (errorParsing, msgBuffer, 0);
+			XmlParseError (errorParsing, (unsigned char *)msgBuffer, 0);
 		      else
 			/* we are parsing an HTML file, not an XHTML file */
 			{
@@ -1410,7 +1410,7 @@ void EndOfHTMLAttributeValue (char *attrValue,
 			       "Unknown attribute value \"%s\"",
 			       attrValue);
 		      if (isXML)
-			XmlParseError (errorParsing, msgBuffer, 0);
+			XmlParseError (errorParsing, (unsigned char *)msgBuffer, 0);
 		      else
 			HTMLParseError (context->doc, msgBuffer);
 		    }
@@ -1430,7 +1430,7 @@ void EndOfHTMLAttributeValue (char *attrValue,
 				       "warning - unsupported language: %s",
 				       attrValue);
 			      if (isXML)
-				XmlParseError (warningMessage, msgBuffer, 0);
+				XmlParseError (warningMessage, (unsigned char *)msgBuffer, 0);
 			      else
 				HTMLParseError (context->doc, msgBuffer);
 			    }
@@ -1478,7 +1478,7 @@ void EndOfHTMLAttributeValue (char *attrValue,
 			{
 			  length = strlen (attrValue) + 2;
 			  length += TtaGetTextAttributeLength (currentAttribute);
-			  buffer = TtaGetMemory (length + 1);
+			  buffer = (char *)TtaGetMemory (length + 1);
 			  TtaGiveTextAttributeValue (currentAttribute,
 						     buffer, &length);
 			  strcat (buffer, "=");
@@ -1613,7 +1613,7 @@ void EndOfHTMLAttributeValue (char *attrValue,
    Search in the Attribute Value Mapping Table the entry for the attribute
    ThotAtt and its value attVal. Returns the corresponding Thot value.
   ----------------------------------------------------------------------*/
-void MapHTMLAttributeValue (char *attVal, AttributeType attrType, int *value)
+void MapHTMLAttributeValue (char *attVal, const AttributeType * attrType, int *value)
 {
   MapXMLAttributeValue (XHTML_TYPE, attVal, attrType, value);
 }

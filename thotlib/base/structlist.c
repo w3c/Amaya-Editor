@@ -337,7 +337,7 @@ static void WrText (PtrTextBuffer pBT, int ind, int length, FILE *fileDescriptor
 	      mbc[0] = '&';
 	      mbc[1] = '#';
 	      mbc[1] = 'x';
-	      sprintf (&mbc[2], "%x",
+	      sprintf ((char *)&mbc[2], "%x",
 		       (int)b->BuContent[i]);
 	      n = 0;
 	      while (mbc[n] != EOS)
@@ -564,7 +564,7 @@ static void WrTree (PtrElement pNode, int Indent, FILE *fileDescriptor,
 		case AtTextAttr:
 		  if (pAttr->AeAttrText)
 		    {
-		      CopyBuffer2MBs (pAttr->AeAttrText, 0, text, 99);
+		      CopyBuffer2MBs (pAttr->AeAttrText, 0, (unsigned char *)text, 99);
 		      fprintf (fileDescriptor, "%s", text);
 		      if (pAttr->AeAttrText->BuNext)
 			fprintf (fileDescriptor, "...");

@@ -16,7 +16,7 @@
 #include "constmedia.h"
 #include "typemedia.h"
 #include "frame.h"
-#define THOT_EXPORT
+#define THOT_EXPORT extern
 #include "units_tv.h"
 #undef THOT_EXPORT
 #define THOT_EXPORT extern

@@ -14,7 +14,8 @@
  */
 
 /* Included headerfiles */
-#define THOT_EXPORT
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "amaya.h"
 #include "XLink.h"
 
@@ -28,7 +29,7 @@ void SetXLinkTypeSimple (Element el, Document doc, ThotBool withUndo)
   AttributeType	attrType;
   Attribute	attr;
   SSchema       XLinkSchema;
-  ThotBool	new;
+  ThotBool	new_;
 
   XLinkSchema = TtaGetSSchema ("XLink", doc);
   attrType.AttrSSchema = XLinkSchema;
@@ -38,16 +39,16 @@ void SetXLinkTypeSimple (Element el, Document doc, ThotBool withUndo)
     {
       attr = TtaNewAttribute (attrType);
       TtaAttachAttribute (el, attr, doc);
-      new = TRUE;
+      new_ = TRUE;
     }
   else
     {
-      new = FALSE;
+      new_ = FALSE;
       if (withUndo)
 	TtaRegisterAttributeReplace (attr, el, doc);
     }
   TtaSetAttributeValue (attr, XLink_ATTR_type_VAL_simple, el, doc);
-  if (new && withUndo)
+  if (new_ && withUndo)
     TtaRegisterAttributeCreate (attr, el, doc);
 }
 

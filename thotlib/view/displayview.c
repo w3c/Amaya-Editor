@@ -415,7 +415,7 @@ void TCloseDocument (PtrDocument pDoc)
 	  /* if there is a "Spell checker" menu entry, close the spell checker
 	     dialog box */
 	  if (ThotLocalActions[T_clearhistory] != NULL)
-	    (*ThotLocalActions[T_clearhistory]) (pDoc);
+	    (*(Proc1)ThotLocalActions[T_clearhistory]) ((void *)pDoc);
 	  /* if some dialog boxes for attribute input are displayed
 	     for that document, close them */
 	  CloseAttributeDialogues (pDoc);
@@ -552,7 +552,7 @@ static void CleanImageView (int View, PtrDocument pDoc, ThotBool complete)
    FrameTable[frame].Anim_play = FALSE;
    if (FrameTable[frame].Animated_Boxes)
      {	    
-       FreeAnimatedBox (FrameTable[frame].Animated_Boxes);
+       FreeAnimatedBox ((Animated_Cell*)FrameTable[frame].Animated_Boxes);
        FrameTable[frame].Animated_Boxes = NULL;
      }	
 #endif /* _GL */
@@ -805,7 +805,7 @@ void                HideElement (PtrElement pEl, Document document)
    if (documentDisplayMode[document - 1] == NoComputedDisplay)
       return;
    if (ThotLocalActions[T_createhairline] != NULL)
-     (*ThotLocalActions[T_checksel]) (pEl, document);
+     (*(Proc2)ThotLocalActions[T_checksel]) ((void *)pEl, (void *)document);
    if (pEl->ElParent == NULL)
       /* c'est la racine d'un arbre, on detruit les paves des fils */
       /* pour garder au moins le pave racine */
@@ -1148,7 +1148,7 @@ void   TtaSetDisplayMode (Document doc, DisplayMode newDisplayMode)
 		    /* c'est une annulation de selection */
 		    {
 		      if (ThotLocalActions[T_resetsel])
-			(*ThotLocalActions[T_resetsel]) (pDoc);
+			(*(Proc1)ThotLocalActions[T_resetsel]) ((void *)pDoc);
 		    }
 		  else
 		    {
@@ -1160,10 +1160,11 @@ void   TtaSetDisplayMode (Document doc, DisplayMode newDisplayMode)
 		      else
 			/* selection d'une chaine */
 			if (ThotLocalActions[T_selstring])
-			  (*ThotLocalActions[T_selstring]) (pDoc,
-			      (PtrElement) (NewDocSelection[doc - 1].SDElemSel),
-			      NewDocSelection[doc - 1].SDPremCar,
-			      NewDocSelection[doc - 1].SDDerCar);
+			  (*(Proc4)ThotLocalActions[T_selstring]) (
+	(void *)pDoc,
+	(void *)(PtrElement) (NewDocSelection[doc - 1].SDElemSel),
+	(void *)NewDocSelection[doc - 1].SDPremCar,
+	(void *)NewDocSelection[doc - 1].SDDerCar);
 		      /* il n'y a plus de selection a etablir */
 		      NewDocSelection[doc - 1].SDElemSel = NULL;
 		    }

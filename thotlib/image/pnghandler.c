@@ -112,6 +112,11 @@ char  *typecouleur[] = {"grayscale", "undefined type", "RGB",
 			"colormap", "grayscale+alpha",
 			"undefined type", "RGB+alpha"};
 
+#if defined(_MOTIF) || defined(_GTK) 
+extern Pixmap MakeMask (Display *dsp, unsigned char *pixels, int w, int h,
+		 unsigned int bg, int bperpix);
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+
 #ifdef _GL
 
 
@@ -292,7 +297,7 @@ static unsigned char *ReadPng (FILE *infile, int *width, int *height,
 
   /* create the two png(-info) structures*/
   png_ptr = png_create_read_struct (PNG_LIBPNG_VER_STRING, (png_voidp)PError,
-				    (png_voidp)PError, (png_voidp)PWarning);
+				    (png_error_ptr)PError, (png_error_ptr)PWarning);
   if (png_ptr == NULL)
     return NULL;
 
@@ -385,7 +390,7 @@ static unsigned char *ReadPng (FILE *infile, int *width, int *height,
 	*ncolors = 256;
       else
 	*ncolors = info_ptr->num_palette;
-      colors = TtaGetMemory ((*ncolors) * sizeof (ThotColorStruct));
+      colors = (ThotColorStruct *)TtaGetMemory ((*ncolors) * sizeof (ThotColorStruct));
       for (i = 0; i < *ncolors; i++)
 	{
 #ifdef _WINDOWS
@@ -410,13 +415,13 @@ static unsigned char *ReadPng (FILE *infile, int *width, int *height,
       if (TtWDepth > 8)
 	{
 	  /* Generate the image palette */
-	  colors = TtaGetMemory (512 * sizeof (ThotColorStruct));
+	  colors = (ThotColorStruct *)TtaGetMemory (512 * sizeof (ThotColorStruct));
 	  *ncolors = 0; 
 	}
       else
 	{
 	  /* Use the standard palette */
-	  colors = TtaGetMemory (128 * sizeof (ThotColorStruct));
+	  colors = (ThotColorStruct *)TtaGetMemory (128 * sizeof (ThotColorStruct));
 	  *ncolors = 128;
 	  for (i = 0; i < *ncolors ; i++)
 	    {
@@ -443,14 +448,14 @@ static unsigned char *ReadPng (FILE *infile, int *width, int *height,
      if (TtWDepth > 8)
 	{
 	  /* Generate the image palette */
-	  colors = TtaGetMemory (512 * sizeof (ThotColorStruct));
+	  colors = (ThotColorStruct *)TtaGetMemory (512 * sizeof (ThotColorStruct));
 	  *grayScale = TRUE;
 	  *ncolors = 0;
 	}
       else
 	{
 	  /* Use the standard palette */
-	  colors = TtaGetMemory (16 * sizeof (ThotColorStruct));
+	  colors = (ThotColorStruct *)TtaGetMemory (16 * sizeof (ThotColorStruct));
 	  *ncolors = 16; 
 	  for (i = 0; i < 15; i++)
 	    {
@@ -477,7 +482,7 @@ static unsigned char *ReadPng (FILE *infile, int *width, int *height,
       png_read_row (png_ptr, NULL, row_pointers[j]);
 
   /* Generate the table that'll store an index in the color table for each pixel */
-  pixels = (char *) TtaGetMemory ((*width) * (*height) * sizeof (char));
+  pixels = (unsigned char *) TtaGetMemory ((*width) * (*height) * sizeof (char));
   if (pixels == NULL)
     png_error (png_ptr, "not enough memory ");
   pp = png_pixels;
@@ -655,8 +660,13 @@ static unsigned char *ReadPngToData (char *datafile, int *w, int *h,
 
   if (fp != NULL)
     {
-      bit_data = ReadPng (fp, w, h, ncolors, cpp, colrs, bg, withAlpha,
+#ifdef _GL
+      bit_data = ReadPng (fp, (unsigned int *)w, (unsigned int *)h, ncolors, cpp, colrs, bg, withAlpha,
 			  grayScale);
+#else /* #ifdef _GL */
+      bit_data = ReadPng (fp, w, h, ncolors, cpp, colrs, bg, withAlpha,
+			  grayScale);      
+#endif /* #ifdef _GL */      
       if (bit_data != NULL)
 	{
 	  if (fp != stdin) 
@@ -832,7 +842,7 @@ ThotBool IsPngFormat(char *fn)
    fclose(fp);
    if (ret != 8)
       return FALSE;
-   ret = png_check_sig(buf, 8);
+   ret = png_check_sig((png_byte*)buf, 8);
    if (ret) return (TRUE);
    return(FALSE);
 }
@@ -891,7 +901,7 @@ ThotBool SavePng (const char *filename,
 		PNG_FILTER_TYPE_DEFAULT);
   /* png_set_invert_alpha(png_ptr);*/
   png_write_info (png, pngInfo);  
-  rowPtrs = malloc (sizeof(unsigned char *) * m_height);
+  rowPtrs = (unsigned char**)malloc (sizeof(unsigned char *) * m_height);
   if (!rowPtrs)
     {
       fclose (pngFile);

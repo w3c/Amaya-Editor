@@ -24,7 +24,7 @@
 #include "message.h"
 
 #undef THOT_EXPORT
-#define THOT_EXPORT
+#define THOT_EXPORT extern /* to avoid redefinition */
 #include "edit_tv.h"
 
 #include "applicationapi_f.h"

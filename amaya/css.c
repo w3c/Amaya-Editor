@@ -13,13 +13,17 @@
  *
  */
 
-
-#define THOT_EXPORT extern
-#include "amaya.h"
 #undef THOT_EXPORT
-#define THOT_EXPORT
+#define THOT_EXPORT 
+#include "amaya.h"
+
+#undef THOT_EXPORT
+#define THOT_EXPORT 
 #include "css.h"
 
+
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "css_f.h"
 #include "init_f.h"
 #include "query_f.h"
@@ -163,7 +167,7 @@ void AttrMediaChanged (NotifyAttribute *event)
   elType = TtaGetElementType (el);
   /* get the new media value */
   length = TtaGetTextAttributeLength (attr);
-  name2 = TtaGetMemory (length + 1);
+  name2 = (char *)TtaGetMemory (length + 1);
   TtaGiveTextAttributeValue (attr, name2, &length);
   media = CheckMediaCSS (name2);
   TtaFreeMemory (name2);
@@ -177,7 +181,7 @@ void AttrMediaChanged (NotifyAttribute *event)
        DocumentMeta[doc]->method != CE_MAKEBOOK))
     {
       length = TtaGetTextAttributeLength (attr);
-      name2 = TtaGetMemory (length + 1);
+      name2 = (char *)TtaGetMemory (length + 1);
       TtaGiveTextAttributeValue (attr, name2, &length);
       /* load the stylesheet file found here ! */
       NormalizeURL (name2, doc, completeURL, tempname, NULL);
@@ -586,7 +590,7 @@ CSSInfoPtr AddCSS (Document doc, Document docRef, CSSCategory category,
   CSSInfoPtr          css, prev;
   int                 i;
 
-  css = TtaGetMemory (sizeof (CSSInfo));
+  css = (CSSInfoPtr)TtaGetMemory (sizeof (CSSInfo));
   if (css)
     {
       css->doc = doc;
@@ -935,7 +939,7 @@ char *GetStyleContents (Element el)
       if (length > 1)
 	{
 	  /* get the length of the included text */
-	  buffer = TtaGetMemory (length);
+	  buffer = (char *)TtaGetMemory (length);
 	  /* fill the buffer */
 	  elType = TtaGetElementType (el);
 	  elType.ElTypeNum = 1 /* 1 = TEXT_UNIT element */;
@@ -944,7 +948,7 @@ char *GetStyleContents (Element el)
 	  while (text != NULL)
 	    {
 	      j = length - i;
-	      TtaGiveTextContent (text, &buffer[i], &j, &lang);
+	      TtaGiveTextContent (text, (unsigned char *)&buffer[i], &j, &lang);
 	      i += TtaGetTextLength (text);
 	      text = TtaSearchTypedElementInTree (elType, SearchForward, el, text);
 	    }
@@ -1053,7 +1057,7 @@ void LoadStyleSheet (char *url, Document doc, Element link, CSSInfoPtr css,
 	    fclose (res);
 	    return;
 	  }
-      tmpBuff = TtaGetMemory (buf.st_size + 1000);
+      tmpBuff = (char *)TtaGetMemory (buf.st_size + 1000);
       if (tmpBuff == NULL)
 	{
 	  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);

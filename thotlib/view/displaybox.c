@@ -171,7 +171,7 @@ void AnimatedBoxAdd (PtrElement element)
 	  current = current->Next;
 	}
       
-      current->Next = TtaGetMemory (sizeof(Animated_Cell));
+      current->Next = (Animated_Cell *)TtaGetMemory (sizeof(Animated_Cell));
       current = current->Next;
     }
   current->Next = NULL;
@@ -1449,9 +1449,9 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 #else /*_GL*/
       if (script == 'Z' || script == 'A')
 #endif /*_GL*/
-	wbuffer = TtaGetMemory ((pBox->BxNChars + 1) * sizeof(wchar_t));
+	wbuffer = (wchar_t *)TtaGetMemory ((pBox->BxNChars + 1) * sizeof(wchar_t));
       else
-	buffer = TtaGetMemory (pBox->BxNChars + 1);
+	buffer = (unsigned char *)TtaGetMemory (pBox->BxNChars + 1);
       nbcar = 0;
       org = x;
       xpos = x; /* position of the new displayed character */
@@ -2234,7 +2234,10 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin,
 	    DisplayStringSelection (frame, 0, box->BxW, box,
 				    t, b, l, r);
 	  else if (ThotLocalActions[T_emptybox])
-	    (*ThotLocalActions[T_emptybox]) (box, frame, selfsel);
+	    (*(Proc3)ThotLocalActions[T_emptybox]) (
+		(void *)box,
+		(void *)frame,
+		(void *)selfsel);
 	}
     }
   else if (pAb->AbLeafType == LtText)

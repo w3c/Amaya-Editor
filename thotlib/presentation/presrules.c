@@ -1648,11 +1648,11 @@ void FillContent (PtrElement pEl, PtrAbstractBox pAb, PtrDocument pDoc)
       pAb->AbLeafType = LtText;
       GetConstantBuffer (pAb);
       pBu1 = pAb->AbText;
-      CopyStringToBuffer ("<", pBu1, &lg);
-      CopyStringToBuffer (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber-1]->SrName,
+      CopyStringToBuffer ((unsigned char *)"<", pBu1, &lg);
+      CopyStringToBuffer ((unsigned char *)pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber-1]->SrName,
 			pBu1, &i);
       lg += i;
-      CopyStringToBuffer (">", pBu1, &i);
+      CopyStringToBuffer ((unsigned char *)">", pBu1, &i);
       lg += i;
       pAb->AbVolume = lg;
       pAb->AbCanBeModified = FALSE;
@@ -1672,8 +1672,8 @@ void FillContent (PtrElement pEl, PtrAbstractBox pAb, PtrDocument pDoc)
 	    {
 	      /* initialize the new image context */
 	      lg = ustrlen (pEl->ElText->BuContent);
-	      text = TtaGetMemory (lg * 2 + 1);
-	      CopyBuffer2MBs (pEl->ElText, 0, text, lg);
+	      text = (char *)TtaGetMemory (lg * 2 + 1);
+	      CopyBuffer2MBs (pEl->ElText, 0, (unsigned char *)text, lg);
 	      NewPictInfo (pAb, text, UNKNOWN_FORMAT);
 	    }
 	  pAb->AbVolume = pEl->ElTextLength;
@@ -2048,7 +2048,11 @@ static void ApplyPos (AbPosition *PPos, PosRule *positionRule, PtrPRule pPRule,
 	 /* appelle l'exception des tableaux, au cas ou ce serait la */
 	 /* regle de hauteur d'un filet vertical d'un tableau */
 	 if (ThotLocalActions[T_abref] != NULL)
-	   (*ThotLocalActions[T_abref]) (pAbb1, pPosRule, pPRule, &pAbbPos);
+	   (*(Proc4)ThotLocalActions[T_abref]) (
+		(void *)pAbb1,
+	 	(void *)pPosRule,
+		(void *)pPRule,
+		(void *)&pAbbPos);
        /* si l'exception n'a pas ete traitee, effectue un traitement
 	  normal */
        if (pAbbPos == NULL)
@@ -3296,7 +3300,9 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 	  /* traitement special pour le debordement vertical des cellules */
 	  /* de tableau etendues verticalement */
 	  if (ThotLocalActions[T_vertspan] != NULL)
-	    (*ThotLocalActions[T_vertspan]) (pPRule, pAb);
+	    (*(Proc2)ThotLocalActions[T_vertspan]) (
+		(void *)pPRule,
+		(void *)pAb);
 	    break;
 	case PtWidth:
 	  ApplyDim (&pAb->AbWidth, pAb, pSchP, pAttr, &appl, pPRule, pDoc);
@@ -3395,7 +3401,9 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 	  /* traitement special pour le debordement vertical des cellules */
 	  /* de tableau etendues verticalement */
 	  if (ThotLocalActions[T_vertspan] != NULL)
-	    (*ThotLocalActions[T_vertspan]) (pPRule, pAb);
+	    (*(Proc2)ThotLocalActions[T_vertspan]) (
+		(void *)pPRule,
+		(void *)pAb);
 	  break;
 	case PtHorizPos:
 	  Posit = pAb->AbHorizPos;

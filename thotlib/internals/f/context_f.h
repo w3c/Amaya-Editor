@@ -11,6 +11,7 @@ extern void ThotInitDisplay ( char* name,
                               int dx,
                               int dy );
 extern void InitDocContexts ( void );
+extern void SelectionEvents ( void *ev );
 
 #else /* __STDC__ */
 
@@ -19,6 +20,7 @@ extern void ThotInitDisplay (/* char* name,
                                 int dx,
                                 int dy */);
 extern void InitDocContexts (/* void */);
+extern void SelectionEvents (/* void *ev */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

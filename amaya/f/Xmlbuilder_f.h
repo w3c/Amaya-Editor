@@ -18,7 +18,7 @@ extern void CreateXmlAttribute ( Element el,
                                  Attribute *lastAttribute,
                                  Element *lastAttrElement );
 extern void MapXmlAttributeValue ( char *AttrVal,
-                                   AttributeType attrType,
+                                   const AttributeType * attrType,
                                    int *value );
 extern void MapGenericXmlAttribute ( char *attrName,
                                      AttributeType *attrType,
@@ -55,7 +55,7 @@ extern void CreateXmlAttribute (/* Element el,
                                    Attribute *lastAttribute,
                                    Element *lastAttrElement */);
 extern void MapXmlAttributeValue (/* char *AttrVal,
-                                     AttributeType attrType,
+                                     const AttributeType * attrType,
                                      int *value */);
 extern void MapGenericXmlAttribute (/* char *attrName,
                                        AttributeType *attrType,

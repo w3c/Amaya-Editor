@@ -70,7 +70,7 @@ void SetTargetContent (Document doc, Attribute attrNAME)
    if (doc)
       {
        length = strlen (DocumentURLs[doc]);
-       TargetDocumentURL = TtaGetMemory (length + 1);
+       TargetDocumentURL = (char *)TtaGetMemory (length + 1);
        strcpy (TargetDocumentURL, DocumentURLs[doc]);
      }
 
@@ -83,7 +83,7 @@ void SetTargetContent (Document doc, Attribute attrNAME)
      {
 	/* get a buffer for the NAME */
 	length = TtaGetTextAttributeLength (attrNAME);
-	TargetName = TtaGetMemory (length + 1);
+	TargetName = (char *)TtaGetMemory (length + 1);
 	/* copy the NAME attribute into TargetName */
 	TtaGiveTextAttributeValue (attrNAME, TargetName, &length);
      }
@@ -232,7 +232,7 @@ void RemoveLink (Element el, Document doc)
 	  if (elText != NULL)
 	    {
 	      length = MAX_LENGTH - 1;
-	      TtaGiveTextContent (elText, buffer, &length, &lang);
+	      TtaGiveTextContent (elText, (unsigned char *)buffer, &length, &lang);
 	      buffer[length++] = EOS;
 	      /* Search the name of the stylesheet */
 	      ptr = strstr (buffer, "href");
@@ -305,11 +305,11 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
    char                tempURL[MAX_LENGTH];
    char                buffer[MAX_LENGTH];
    int                 length, piNum;
-   ThotBool            new, oldStructureChecking;
+   ThotBool            new_, oldStructureChecking;
    ThotBool            isHTML, isSVG;
 
    attr = 0;
-   new = FALSE;  
+   new_ = FALSE;  
    
    if (AttrHREFundoable)
      TtaOpenUndoSequence (doc, element, element, 0, 0);
@@ -376,11 +376,11 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
 	       TtaSetUriSSchema (attrType.AttrSSchema, XLink_URI);
 	       TtaSetANamespaceDeclaration (doc, element, XLink_PREFIX, XLink_URI);
 	     }
-	   new = TRUE;
+	   new_ = TRUE;
 	 }
        else
 	 {
-	   new = FALSE;
+	   new_ = FALSE;
 	   if (AttrHREFundoable)
 	     TtaRegisterAttributeReplace (attr, element, doc);
 	 }
@@ -434,7 +434,7 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
 		   else
 		     strcat (buffer, value);
 		   strcat (buffer, "\"");
-		   TtaSetTextContent (element, buffer, Latin_Script, doc);
+		   TtaSetTextContent (element, (unsigned char *)buffer, Latin_Script, doc);
 		 }
 	     }
 	 }
@@ -463,7 +463,7 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
 	 }
 
        /* register the new value of the HREF attribute in the undo queue */
-       if (AttrHREFundoable && new)
+       if (AttrHREFundoable && new_)
 	 TtaRegisterAttributeCreate (attr, element, doc);
      }
 
@@ -481,16 +481,16 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
 	       /* create an attribute HREF for the element */
 	       attr = TtaNewAttribute (attrType);
 	       TtaAttachAttribute (element, attr, doc);
-	       new = TRUE;
+	       new_ = TRUE;
 	     }
 	   else
 	     {
-	       new = FALSE;
+	       new_ = FALSE;
 	       if (AttrHREFundoable)
                   TtaRegisterAttributeReplace (attr, element, doc);
 	     }
 	   TtaSetAttributeText (attr, "stylesheet", element, doc);
-	   if (AttrHREFundoable && new)
+	   if (AttrHREFundoable && new_)
 	       TtaRegisterAttributeCreate (attr, element, doc);
 
 	   attrType.AttrTypeNum = HTML_ATTR_Link_type;
@@ -500,16 +500,16 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
 	       /* create an attribute HREF for the element */
 	       attr = TtaNewAttribute (attrType);
 	       TtaAttachAttribute (element, attr, doc);
-	       new = TRUE;
+	       new_ = TRUE;
 	     }
 	   else
 	     {
-	       new = FALSE;
+	       new_ = FALSE;
 	       if (AttrHREFundoable)
                   TtaRegisterAttributeReplace (attr, element, doc);
 	     }
 	   TtaSetAttributeText (attr, "text/css", element, doc);	   
-	   if (AttrHREFundoable && new)
+	   if (AttrHREFundoable && new_)
 	       TtaRegisterAttributeCreate (attr, element, doc);
 	 }
    if (AttrHREFundoable)
@@ -556,10 +556,10 @@ void ChangeTitle (Document doc, View view)
 	   TtaInsertFirstChild  (&child, el, doc);
 	 }
        length = MAX_LENGTH;
-       TtaGiveTextContent (child, Answer_text, &length, &lang);
+       TtaGiveTextContent (child, (unsigned char *)Answer_text, &length, &lang);
 #ifdef _I18N_
-       title = TtaConvertMbsToByte (Answer_text, TtaGetDefaultCharset ());
-       strcpy (Answer_text, title);
+       title = TtaConvertMbsToByte ((unsigned char *)Answer_text, TtaGetDefaultCharset ());
+       strcpy (Answer_text, (char *)title);
        TtaFreeMemory (title);
 #endif /* _I18N_ */
 
@@ -610,11 +610,11 @@ void SetNewTitle (Document doc)
 	  TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
 	  TtaRegisterElementReplace (el, doc);
 #ifdef _I18N_
-	  title = TtaConvertByteToMbs (Answer_text, ISO_8859_1);
-	  TtaSetTextContent (child, title, TtaGetDefaultLanguage (), doc);
+	  title = TtaConvertByteToMbs ((unsigned char *)Answer_text, ISO_8859_1);
+	  TtaSetTextContent (child, (unsigned char *)title, TtaGetDefaultLanguage (), doc);
 	  TtaFreeMemory (title);
 #else /* _I18N_ */
-	  TtaSetTextContent (child, Answer_text, TtaGetDefaultLanguage (),
+	  TtaSetTextContent (child, (unsigned char *)Answer_text, TtaGetDefaultLanguage (),
 			     doc);
 #endif /* _I18N_ */
 	  TtaCloseUndoSequence (doc);
@@ -751,7 +751,7 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo,
 	      {
 		/* get a buffer for the attribute value */
 		length = TtaGetTextAttributeLength (attr);
-		buffer = TtaGetMemory (length + 1);
+		buffer = (char *)TtaGetMemory (length + 1);
 		/* copy the HREF attribute into the buffer */
 		TtaGiveTextAttributeValue (attr, buffer, &length);
 		strcpy (AttrHREFvalue, buffer);
@@ -893,10 +893,10 @@ void CreateTargetAnchor (Document doc, Element el, ThotBool forceID,
    SSchema	       HTMLSSchema;
    Language            lang;
    char               *text;
-   char               *url = TtaGetMemory (MAX_LENGTH);
+   char               *url = (char *)TtaGetMemory (MAX_LENGTH);
    int                 length, i, space;
    ThotBool            found;
-   ThotBool            withinHTML, new;
+   ThotBool            withinHTML, new_;
 
    elType = TtaGetElementType (el);
    withinHTML = !strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML");
@@ -936,11 +936,11 @@ void CreateTargetAnchor (Document doc, Element el, ThotBool forceID,
      {
 	attr = TtaNewAttribute (attrType);
 	TtaAttachAttribute (el, attr, doc);
-	new = TRUE;
+	new_ = TRUE;
      }
    else
      {
-     new = FALSE;
+     new_ = FALSE;
      if (withUndo)
         TtaRegisterAttributeReplace (attr, el, doc);
      }
@@ -965,7 +965,7 @@ void CreateTargetAnchor (Document doc, Element el, ThotBool forceID,
 	  {
 	    /* first word longer than 3 characters */
 	    length = 50;
-	    TtaGiveTextContent (elText, url, &length, &lang);
+	    TtaGiveTextContent (elText, (unsigned char *)url, &length, &lang);
 	    space = 0;
 	    i = 0;
 	    found = FALSE;
@@ -1029,7 +1029,7 @@ void CreateTargetAnchor (Document doc, Element el, ThotBool forceID,
    MakeUniqueName (el, doc);
    /* set this new end-anchor as the new target */
    SetTargetContent (doc, attr);
-   if (withUndo && new)
+   if (withUndo && new_)
        TtaRegisterAttributeCreate (attr, el, doc);
    TtaFreeMemory (url);
 }
@@ -1253,7 +1253,7 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
 		  if (lg > 0)
 		    {
 		      lg++;
-		      buffer = TtaGetMemory (lg * sizeof(CHAR_T));
+		      buffer = (CHAR_T *)TtaGetMemory (lg * sizeof(CHAR_T));
 		      TtaGiveBufferContent (last, buffer, lg, &lang);
 		      if (last == first)
 			min = firstChar;
@@ -1341,7 +1341,7 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
 		  if (lg > 0)
 		    {
 		      lg++;
-		      buffer = TtaGetMemory (lg * sizeof(CHAR_T));
+		      buffer = (CHAR_T *)TtaGetMemory (lg * sizeof(CHAR_T));
 		      TtaGiveBufferContent (first, buffer, lg, &lang);
 		      if (last == first)
 			max = lastChar;
@@ -1596,7 +1596,7 @@ void MakeUniqueName (Element el, Document doc)
 	/* the element has an attribute NAME or ID. Check it */
 	{
 	  length = TtaGetTextAttributeLength (attr) + 10;
-	  value = TtaGetMemory (length);
+	  value = (char *)TtaGetMemory (length);
 	  change = FALSE;
 	  if (value)
 	    {
@@ -2042,10 +2042,10 @@ void ChangeURI (Element el, Attribute attr, Document originDocument,
 
   /* get a buffer for the URI */
   length = TtaGetTextAttributeLength (attr) + 1;
-  value = TtaGetMemory (length);
+  value = (char *)TtaGetMemory (length);
   if (value)
     {
-    tempURI = TtaGetMemory (MAX_LENGTH);
+    tempURI = (char *)TtaGetMemory (MAX_LENGTH);
     if (tempURI)
       {
       iName = 0;
@@ -2068,7 +2068,7 @@ void ChangeURI (Element el, Attribute attr, Document originDocument,
       else
 	{
 	  /* the target element is in another document */
-          documentURI = TtaGetMemory (MAX_LENGTH);
+          documentURI = (char *)TtaGetMemory (MAX_LENGTH);
 	  if (documentURI)
 	    {
 	    strcpy (documentURI, value);
@@ -2088,7 +2088,7 @@ void ChangeURI (Element el, Attribute attr, Document originDocument,
 	      }
 	    /* get the complete URI of the referred document */
 	    /* Add the base if necessary */
-	    path = TtaGetMemory (MAX_LENGTH);
+	    path = (char *)TtaGetMemory (MAX_LENGTH);
 	    if (path)
 	      {
 	      if (originDocument == 0)
@@ -2123,7 +2123,7 @@ void ChangeURI (Element el, Attribute attr, Document originDocument,
     }
 }
 
-static void CheckDescendants (/* Element el, Document doc */);  /* see below */
+static void CheckDescendants (Element el, Document doc);
 
 /*----------------------------------------------------------------------
    ElementOKforProfile
@@ -2320,7 +2320,7 @@ void ElementPasted (NotifyElement * event)
 		  length = TtaGetTextAttributeLength (attr);
 		  if (length > 0)
 		    {
-		      value = TtaGetMemory (MAX_LENGTH);
+		      value = (char *)TtaGetMemory (MAX_LENGTH);
 		      if (value != NULL)
 			{
 			  /* get the SRC itself */
@@ -2508,7 +2508,7 @@ void CheckNewLines (NotifyOnTarget *event)
        the selection */
     selEl = NULL;
   length++;
-  content = TtaGetMemory (length * sizeof(CHAR_T));
+  content = (CHAR_T *)TtaGetMemory (length * sizeof(CHAR_T));
   TtaGiveBufferContent (leaf, content, length, &lang);
   changed = FALSE;
   selChanged = FALSE;
@@ -2735,7 +2735,7 @@ void CheckNewLines (NotifyOnTarget *event)
 	      /* check the next character string */
 	      sibLength = TtaGetElementVolume (next);
 	      sibLength+= 2;
-	      sibContent = TtaGetMemory (sibLength * sizeof(CHAR_T));
+	      sibContent = (CHAR_T *)TtaGetMemory (sibLength * sizeof(CHAR_T));
 	      TtaGiveBufferContent (next, &sibContent[1], sibLength-1, &lang);
 	      if (sibContent[1] != SPACE)
 		/* no space at the beginning of the next text element */
@@ -2781,7 +2781,7 @@ void CheckNewLines (NotifyOnTarget *event)
 	      /* check the end of the previous character string */
 	      sibLength = TtaGetElementVolume (prev);
 	      sibLength+= 2;
-	      sibContent = TtaGetMemory (sibLength * sizeof(CHAR_T));
+	      sibContent = (CHAR_T *)TtaGetMemory (sibLength * sizeof(CHAR_T));
 	      TtaGiveBufferContent (prev, sibContent, sibLength-1, &lang);
 	      if (sibLength > 2 && sibContent[sibLength-3] != SPACE)
 		{
@@ -3045,7 +3045,7 @@ void AttrHeightModified (NotifyAttribute *event)
   int                 length;
 
   length = buflen - 1;
-  buffer = TtaGetMemory (buflen);
+  buffer = (char *)TtaGetMemory (buflen);
   TtaGiveTextAttributeValue (event->attribute, buffer, &length);
   CreateAttrHeightPercentPxl (buffer, event->element, event->document,
 			     OldHeight);
@@ -3107,7 +3107,7 @@ void AttrWidthModified (NotifyAttribute *event)
   int                 length;
 
   length = buflen - 1;
-  buffer = TtaGetMemory (buflen);
+  buffer = (char *)TtaGetMemory (buflen);
   TtaGiveTextAttributeValue (event->attribute, buffer, &length);
   CreateAttrWidthPercentPxl (buffer, event->element, event->document,
 			     OldWidth);
@@ -3146,7 +3146,7 @@ void AttrAreaSizeModified (NotifyAttribute *event)
   ----------------------------------------------------------------------*/
 void AttrFontSizeCreated (NotifyAttribute *event)
 {
-   char               *buffer = TtaGetMemory (buflen);
+   char               *buffer = (char *)TtaGetMemory (buflen);
    int                 length;
    DisplayMode         dispMode;
 
@@ -3196,7 +3196,7 @@ ThotBool AttrFontSizeDelete (NotifyAttribute * event)
   ----------------------------------------------------------------------*/
 void AttrColorCreated (NotifyAttribute * event)
 {
-   char            *value = TtaGetMemory (buflen);
+   char            *value = (char *)TtaGetMemory (buflen);
    int              length;
 
    value[0] = EOS;
@@ -3910,12 +3910,12 @@ void UpdateAtom (Document doc, char *url, char *title)
    win = XtWindow (XtParent (XtParent (XtParent (frame))));
    /* 13 is strlen("URL=0TITLE=00") */
    v_size = strlen (title) + strlen (url) + 13;
-   v = TtaGetMemory (v_size);
+   v = (char *)TtaGetMemory (v_size);
    sprintf (v, "URL=%s%cTITLE=%s%c", url, 0, title, 0);
    if (!property_name)
       property_name = XInternAtom (dpy, "BROWSER_HISTORY_INFO", FALSE);
    XChangeProperty (dpy, win, property_name, XA_STRING, 8, PropModeReplace,
-		    v, v_size);
+		    (unsigned char *)v, v_size);
    TtaFreeMemory (v);
 #endif /* _MOTIF */
 }

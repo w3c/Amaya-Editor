@@ -66,7 +66,7 @@ ThotBool DeleteMap (NotifyElement * event)
      {
        /* Search the IMAGE element associated with the MAP */
        length = MAX_LENGTH;
-       url = TtaGetMemory (MAX_LENGTH);
+       url = (char *)TtaGetMemory (MAX_LENGTH);
        TtaGiveReferenceAttributeValue (attr, &image, url, &length);
        TtaFreeMemory (url);
 
@@ -359,7 +359,7 @@ void CallbackImage (int ref, int typedata, char *data)
   ----------------------------------------------------------------------*/
 void InitImage (void)
 {
-   BaseImage = TtaSetCallback (CallbackImage, IMAGE_MAX_REF);
+   BaseImage = TtaSetCallback ((Proc)CallbackImage, IMAGE_MAX_REF);
    RepeatValue = 0;
    LastURLImage[0] = EOS;
    strcpy (ImgFilter, "*.png");
@@ -445,7 +445,7 @@ static void CreateAreaMap (Document doc, View view, char *shape)
    if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
      /* an image is selected. Create an area for it */
      {
-        url = TtaGetMemory (MAX_LENGTH);
+        url = (char *)TtaGetMemory (MAX_LENGTH);
 	image = el;
 	/* Search the USEMAP attribute */
 	attrType.AttrSSchema = elType.ElSSchema;
@@ -536,7 +536,7 @@ static void CreateAreaMap (Document doc, View view, char *shape)
 	      {
 		/* Search the IMAGE element associated with the MAP */
 		length = MAX_LENGTH;
-		url = TtaGetMemory (MAX_LENGTH);
+		url = (char *)TtaGetMemory (MAX_LENGTH);
 		TtaGiveReferenceAttributeValue (attr, &image, url, &length);
 		TtaFreeMemory (url);
 	      }
@@ -625,7 +625,7 @@ static void CreateAreaMap (Document doc, View view, char *shape)
 	TtaAttachAttribute (el, attr, doc);
 	GetAlt (doc, view);
 #ifdef _I18N_
-	tmp = TtaConvertByteToMbs (ImgAlt, TtaGetDefaultCharset ());
+	tmp = (char *)TtaConvertByteToMbs ((unsigned char *)ImgAlt, TtaGetDefaultCharset ());
 	TtaSetAttributeText (attr, tmp, el, doc);
 	TtaFreeMemory (tmp);
 #else /* _I18N_ */
@@ -754,7 +754,7 @@ char *GetImageURL (Document document, View view)
  -----------------------------------------------------------------------*/
 void ChangeBackgroundImage (Document document, View view)
 {
-   char           *s = TtaGetMemory (MAX_LENGTH);
+   char           *s = (char *)TtaGetMemory (MAX_LENGTH);
 #ifndef _WINDOWS
    int             i;
 
@@ -876,7 +876,7 @@ void ComputeSRCattribute (Element el, Document doc, Document sourceDocument,
 	  TtaSetAttributeText (attr, imagename, el, doc);
 
 	  /* set contents of the picture element */
-	  TtaSetTextContent (pict, desc->tempfile, SPACE, doc);
+	  TtaSetTextContent (pict, (unsigned char *)desc->tempfile, SPACE, doc);
 	  DisplayImage (doc, pict, desc, NULL, NULL);
 	}
       else
@@ -907,7 +907,7 @@ void ComputeSRCattribute (Element el, Document doc, Document sourceDocument,
 	  TtaFreeMemory (base);
 	  TtaFreeMemory (value);
 	  /* set the element content */
-	  TtaSetTextContent (pict, pathimage, SPACE, doc);
+	  TtaSetTextContent (pict, (unsigned char *)pathimage, SPACE, doc);
 	}
       else
 	{
@@ -925,7 +925,7 @@ void ComputeSRCattribute (Element el, Document doc, Document sourceDocument,
    UpdateSRCattribute  creates or updates the SRC attribute value	
    		when the contents of element IMG is set.		
   ----------------------------------------------------------------------*/
-void UpdateSRCattribute (NotifyElement *event)
+void UpdateSRCattribute (NotifyOnTarget *event)
 {
   AttributeType    attrType;
   Attribute        attr;
@@ -975,11 +975,12 @@ void UpdateSRCattribute (NotifyElement *event)
 	/* we are just updating attributes. Register the change */
 	TtaRegisterAttributeReplace (attr, elSRC, doc);
     }
+
    /* copy image name in ALT attribute */
    if (ImgAlt[0] == EOS)
      {
-       tmp = TtaGetMemory (MAX_LENGTH);
-       pathimage = TtaGetMemory (MAX_LENGTH);
+       tmp = (char *)TtaGetMemory (MAX_LENGTH);
+       pathimage = (char *)TtaGetMemory (MAX_LENGTH);
        strcpy (tmp, " ");
        TtaExtractName (text, pathimage, &tmp[1]);
        strcat (tmp, " ");
@@ -990,7 +991,7 @@ void UpdateSRCattribute (NotifyElement *event)
    else
      {
 #ifdef _I18N_
-       tmp = TtaConvertByteToMbs (ImgAlt, TtaGetDefaultCharset ());
+       tmp = (char *)TtaConvertByteToMbs ((unsigned char *)ImgAlt, TtaGetDefaultCharset ());
        TtaSetAttributeText (attr, tmp, elSRC, doc);
        TtaFreeMemory (tmp);
 #else /* _I18N_ */
@@ -1063,19 +1064,19 @@ void SvgImageCreated (NotifyElement *event)
      /* The user has not provided any alternate name. Copy the image name in
 	the desc element */
      {
-       imagename = TtaGetMemory (MAX_LENGTH);
-       pathimage = TtaGetMemory (MAX_LENGTH);
+       imagename = (char *)TtaGetMemory (MAX_LENGTH);
+       pathimage = (char *)TtaGetMemory (MAX_LENGTH);
        strcpy (imagename, " ");
        TtaExtractName (text, pathimage, &imagename[1]);
        strcat (imagename, " ");
        /* set the element content */
-       TtaSetTextContent (leaf, imagename, SPACE, doc);
+       TtaSetTextContent (leaf, (unsigned char *)imagename, SPACE, doc);
        TtaFreeMemory (pathimage);
        TtaFreeMemory (imagename);
      }
    else
      {
-       TtaSetTextContent (leaf, ImgAlt, SPACE, doc);
+       TtaSetTextContent (leaf, (unsigned char *)ImgAlt, SPACE, doc);
        ImgAlt[0] = EOS;
      }
    /* search the xlink:href attribute */
@@ -1110,9 +1111,9 @@ void                SRCattrModified (NotifyAttribute *event)
    attr = event->attribute;
    /* get a buffer for the attribute value */
    length = MAX_LENGTH;
-   buf1 = TtaGetMemory (length);
-   buf2 = TtaGetMemory (length);
-   imageName = TtaGetMemory (length);
+   buf1 = (char *)TtaGetMemory (length);
+   buf2 = (char *)TtaGetMemory (length);
+   imageName = (char *)TtaGetMemory (length);
    /* copy the SRC attribute into the buffer */
    TtaGiveTextAttributeValue (attr, buf1, &length);
    NormalizeURL (buf1, doc, buf2, imageName, NULL);
@@ -1125,7 +1126,7 @@ void                SRCattrModified (NotifyAttribute *event)
 	   /* remote image */
 	   localname = GetLocalPath (doc, buf2);
 	   /* load a remote image into a remote document */
-	   TtaSetTextContent (el, localname, SPACE, doc);
+	   TtaSetTextContent (el, (unsigned char *)localname, SPACE, doc);
 	   TtaFreeMemory (localname);
 	   ActiveTransfer (doc);
 	   FetchImage (doc, el, NULL, 0, NULL, NULL);
@@ -1141,12 +1142,12 @@ void                SRCattrModified (NotifyAttribute *event)
 	       AddLoadedImage (imageName, buf1, doc, &desc);
 	       desc->status = IMAGE_MODIFIED;
 	       TtaFileCopy (buf2, desc->localName);
-	       TtaSetTextContent (el, desc->localName, SPACE, doc);
+	       TtaSetTextContent (el, (unsigned char *)desc->localName, SPACE, doc);
 	     }
 	   else
 	     {
 	       /* load a local image into a local document */
-	       TtaSetTextContent (el, buf2, SPACE, doc);
+	       TtaSetTextContent (el, (unsigned char *)buf2, SPACE, doc);
 	     }
 	 }
      }
@@ -1167,7 +1168,7 @@ void CreateImage (Document doc, View view)
   AttributeType      attrType;
   char              *name, *shortURL, *docname;
   int                c1, i, j, cN, length;
-  NotifyElement     event;
+  NotifyOnTarget     event;
 
   TtaGiveFirstSelectedElement (doc, &firstSelEl, &c1, &i); 
   if (firstSelEl)
@@ -1195,8 +1196,8 @@ void CreateImage (Document doc, View view)
 		{
 		  /* get a buffer for the attribute value */
 		  length = MAX_LENGTH;
-		  shortURL = TtaGetMemory (length);
-		  docname = TtaGetMemory (length);
+		  shortURL = (char *)TtaGetMemory (length);
+		  docname = (char *)TtaGetMemory (length);
 		  /* copy the SRC attribute into the buffer */
 		  TtaGiveTextAttributeValue (attr, shortURL, &length);
 		  NormalizeURL (shortURL, doc, LastURLImage, docname, NULL);
@@ -1207,8 +1208,6 @@ void CreateImage (Document doc, View view)
 	  /* display the image dialogue box */
 	  event.element = firstSelEl;
 	  event.document = doc;
-	  event.elementType.ElSSchema = elType.ElSSchema;
-	  event.elementType.ElTypeNum = elType.ElTypeNum;
 	  CreateNewImage = FALSE;
 	  TtaOpenUndoSequence (doc, firstSelEl, lastSelEl, c1, cN);
 	  UpdateSRCattribute (&event);
@@ -1285,7 +1284,7 @@ ThotBool AddLocalImage (char *fullname, char *name, char *url, Document doc,
 	  pImage = (LoadedImageDesc *) TtaGetMemory (sizeof (LoadedImageDesc));
 	  /* clear the structure */
 	  memset ((void *) pImage, 0, sizeof (LoadedImageDesc));
-	  pImage->originalName = TtaGetMemory (strlen (url) + 1);
+	  pImage->originalName = (char *)TtaGetMemory (strlen (url) + 1);
 	  strcpy (pImage->originalName, url);
 	  pImage->localName = TtaStrdup (localname);
 	  pImage->tempfile = TtaStrdup (pImage->localName);

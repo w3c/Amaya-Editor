@@ -67,7 +67,7 @@ include .depends
 # C files
 #
 .c.o :  
-	$(CC) $(CFLAGS) $(AMAYA_ANNOT_OPTIONS) $(INCLUDES) $(OPTIONS) -c $< -o $@
+	$(CC) $(CXXFLAGS) $(AMAYA_ANNOT_OPTIONS) $(INCLUDES) $(OPTIONS) -c $< -o $@
 
 #
 # Structure schema compilation
@@ -107,7 +107,7 @@ include .depends
 	THOTDIR=`pwd`/../.. ;export THOTDIR; \
 	cd `dirname $<`; \
 	$$APP $(ALL_AMAYA_OPTIONS) `basename $<`)
-	$(CC) $(CFLAGS) $(INCLUDES) $(OPTIONS) \
+	$(CC) $(CXXFLAGS) $(INCLUDES) $(OPTIONS) \
 		-c `dirname $<`/`basename $< .A`APP.c;
 
 #########################################################################

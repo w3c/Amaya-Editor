@@ -101,11 +101,11 @@ typedef struct
 } GLcontext;
 
 /* public functions */
-
+/*
 #ifdef __cplusplus
 extern "C" {
 #endif
-
+*/
   GLint GLBeginPage (char *title, char *producer, 
 		     GLint viewport[4],
 		     FILE *stream, const char *filename);
@@ -146,9 +146,9 @@ extern "C" {
 
   void FinishPrintBox();
   void InitPrintBox ();
-
+/*
 #ifdef __cplusplus
 };
 #endif
-
+*/
 #endif /* __GLPRINT_H__ */

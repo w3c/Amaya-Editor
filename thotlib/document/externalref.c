@@ -66,7 +66,7 @@ void ReadLabel (char labelType, LabelString label, BinFile file)
 	       j = 0;
 	       do
 		 {
-		    TtaReadByte (file, &label[j]);
+		    TtaReadByte (file, (unsigned char *)&label[j]);
 		    /* drop last bytes if the label is too long */
 		    if (j < MAX_LABEL_LEN)
 		       j++;

@@ -29,11 +29,9 @@
 #include "typemedia.h"
 #include "registry.h"
 #include "application.h"
-
-#define THOT_EXPORT
-#include "platform_tv.h"
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
+#include "platform_tv.h"
 #include "edit_tv.h"
 
 #include "applicationapi_f.h"

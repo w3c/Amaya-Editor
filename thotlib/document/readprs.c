@@ -36,7 +36,7 @@ static PRuleType    ReadrdTypeRegle (BinFile file)
 {
    char c;
 
-   if (!TtaReadByte (file, &c))
+   if (!TtaReadByte (file, (unsigned char *)&c))
      {
 	c = SPACE;
 	error = True;
@@ -240,7 +240,7 @@ static PresMode     ReadPresMode (BinFile file)
 {
    char c;
 
-   if (!TtaReadByte (file, &c))
+   if (!TtaReadByte (file, (unsigned char *)&c))
      {
 	c = SPACE;
 	error = True;
@@ -271,7 +271,7 @@ static TypeUnit     rdUnit (BinFile file)
 {
    char c;
 
-   if (!TtaReadByte (file, &c))
+   if (!TtaReadByte (file, (unsigned char *)&c))
      {
 	c = SPACE;
 	error = True;
@@ -310,7 +310,7 @@ static InheritMode  ReadInheritMode (BinFile file)
 {
    char c;
 
-   if (!TtaReadByte (file, &c))
+   if (!TtaReadByte (file, (unsigned char *)&c))
      {
 	c = SPACE;
 	error = True;
@@ -349,7 +349,7 @@ static FunctionType ReadFunctionType (BinFile file, ThotBool * repeat)
    FunctionType functType;
 
    *repeat = FALSE;
-   if (!TtaReadByte (file, &c))
+   if (!TtaReadByte (file, (unsigned char *)&c))
      {
 	c = SPACE;
 	error = True;
@@ -444,7 +444,7 @@ static BAlignment   ReadAlignment (BinFile file)
    char                c;
    BAlignment          align;
 
-   if (!TtaReadByte (file, &c))
+   if (!TtaReadByte (file, (unsigned char *)&c))
      {
 	c = SPACE;
 	error = True;
@@ -484,7 +484,7 @@ static PresCondition ReadPresCondition (BinFile file)
    char                c;
    PresCondition       condtype;
 
-   if (!TtaReadByte (file, &c))
+   if (!TtaReadByte (file, (unsigned char *)&c))
      {
 	c = SPACE;
 	error = True;
@@ -585,7 +585,7 @@ static ArithRel     ReadArithRel (BinFile file)
    char                c;
    ArithRel            rel;
 
-   if (!TtaReadByte (file, &c))
+   if (!TtaReadByte (file, (unsigned char *)&c))
      {
 	c = SPACE;
 	error = True;
@@ -612,7 +612,7 @@ static BoxEdge      ReadBoxEdge (BinFile file)
    char                c;
    BoxEdge             edge;
 
-   if (!TtaReadByte (file, &c))
+   if (!TtaReadByte (file, (unsigned char *)&c))
      {
 	c = SPACE;
 	error = True;
@@ -663,7 +663,7 @@ static Level        ReadLevel (BinFile file)
    char                c;
    Level               level;
 
-   if (!TtaReadByte (file, &c))
+   if (!TtaReadByte (file, (unsigned char *)&c))
      {
 	c = SPACE;
 	error = True;
@@ -717,7 +717,7 @@ static CounterOp    ReadCounterOp (BinFile file)
    char                c;
    CounterOp           optype;
 
-   if (!TtaReadByte (file, &c))
+   if (!TtaReadByte (file, (unsigned char *)&c))
      {
 	c = SPACE;
 	error = True;
@@ -753,7 +753,7 @@ static BasicType    ReadBasicType (BinFile file)
    char                c;
    BasicType           basictyp;
 
-   if (!TtaReadByte (file, &c))
+   if (!TtaReadByte (file, (unsigned char *)&c))
      {
 	c = SPACE;
 	error = True;
@@ -794,7 +794,7 @@ static VariableType ReadVariableType (BinFile file)
    char                c;
    VariableType        vartyp;
 
-   if (!TtaReadByte (file, &c))
+   if (!TtaReadByte (file, (unsigned char *)&c))
      {
 	c = SPACE;
 	error = True;
@@ -848,7 +848,7 @@ static CounterStyle ReadCounterStyle (BinFile file)
    char                c;
    CounterStyle        countstyle;
 
-   if (!TtaReadByte (file, &c))
+   if (!TtaReadByte (file, (unsigned char *)&c))
      {
 	c = SPACE;
 	error = True;
@@ -887,7 +887,7 @@ static CounterValue ReadCounterValue (BinFile file)
    char                c;
    CounterValue        value;
 
-   if (!TtaReadByte (file, &c))
+   if (!TtaReadByte (file, (unsigned char *)&c))
      {
 	c = SPACE;
 	error = True;
@@ -919,7 +919,7 @@ ContentType         ReadContentType (BinFile file)
    char                c;
    ContentType         conttype;
 
-   if (!TtaReadByte (file, &c))
+   if (!TtaReadByte (file, (unsigned char *)&c))
      {
 	c = SPACE;
 	error = True;
@@ -951,7 +951,7 @@ PtrPRule     ReadPRulePtr (BinFile file, PtrPRule * pNextPRule)
 {
    char                c;
 
-   if (!TtaReadByte (file, &c))
+   if (!TtaReadByte (file, (unsigned char *)&c))
       return NULL;
    else if (c == EOS)
       return NULL;
@@ -966,7 +966,7 @@ static RefKind      ReadRefKind (BinFile file)
 {
    char c;
 
-   if (!TtaReadByte (file, &c))
+   if (!TtaReadByte (file, (unsigned char *)&c))
       c = SPACE;
    switch (c)
 	 {
@@ -1019,7 +1019,7 @@ AttrComparType      ReadAttrCompar (BinFile file)
 {
    char c;
 
-   if (!TtaReadByte (file, &c))
+   if (!TtaReadByte (file, (unsigned char *)&c))
       c = SPACE;
    switch (c)
 	 {
@@ -1094,9 +1094,9 @@ static void ReadPRules (BinFile file, PtrPRule *pPRule, PtrPRule *pNextPRule,
 		  TtaReadSignedShort (file, &pCond->CoTypeAncestor);
 		  if (pCond->CoTypeAncestor == 0)
 		    {
-		      TtaReadName (file, name);
+		      TtaReadName (file, (unsigned char *)name);
 		      pCond->CoAncestorName = TtaStrdup (name);
-		      TtaReadName (file, pCond->CoSSchemaName);
+		      TtaReadName (file, (unsigned char *)pCond->CoSSchemaName);
 		    }
 		  else
 		    {
@@ -1115,7 +1115,7 @@ static void ReadPRules (BinFile file, PtrPRule *pPRule, PtrPRule *pNextPRule,
 		    {
 		      if (pSS->SsAttribute->TtAttr[pCond->CoTypeAttr - 1]->AttrType == AtTextAttr)
 			{
-			  TtaReadName (file, name);
+			  TtaReadName (file, (unsigned char *)name);
 			  pCond->CoAttrTextValue = TtaStrdup (name);
 			  pCond->CoTextMatch = CoMatch;
 			}
@@ -1158,7 +1158,7 @@ static void ReadPRules (BinFile file, PtrPRule *pPRule, PtrPRule *pNextPRule,
 		    if (!error)
 		      {
 			if (pPR->PrNPresBoxes == 0)
-			  TtaReadName (file, pPR->PrPresBoxName);
+			  TtaReadName (file, (unsigned char *)pPR->PrPresBoxName);
 			else
 			  {
 			    for (i = 0; i < pPR->PrNPresBoxes; i++)
@@ -1202,7 +1202,7 @@ static void ReadPRules (BinFile file, PtrPRule *pPRule, PtrPRule *pNextPRule,
 		  case PtBorderRightStyle:
 		  case PtBorderBottomStyle:
 		  case PtBorderLeftStyle:
-		    if (!TtaReadByte (file, &pPR->PrChrValue))
+		    if (!TtaReadByte (file, (unsigned char *)&pPR->PrChrValue))
 		      error = True;
 		    break;
 		  case PtBreak1:
@@ -1345,13 +1345,13 @@ PtrPSchema      ReadPresentationSchema (Name fileName, PtrSSchema pSS)
       strncpy (pPSch->PsPresentName, fileName, MAX_NAME_LENGTH - 1);
       /* lit la partie fixe du schema de presentation */
       /* lit le nom du schema de structure correspondant */
-      TtaReadName (file, pPSch->PsStructName);
+      TtaReadName (file, (unsigned char *)pPSch->PsStructName);
       TtaReadShort (file, &pPSch->PsStructCode);
       /* read the name of all declared views */
       error = !TtaReadShort (file, &pPSch->PsNViews);
       if (!error)
 	for (i = 0; i < pPSch->PsNViews; i++)
-	  TtaReadName (file, pPSch->PsView[i]);
+	  TtaReadName (file, (unsigned char *)pPSch->PsView[i]);
       /* read the name of all host view for each declared view */
       if (!error)
 	for (i = 0; i < pPSch->PsNViews; i++)
@@ -1361,8 +1361,8 @@ PtrPSchema      ReadPresentationSchema (Name fileName, PtrSSchema pSS)
 	    if (!error)
 	      for (k = 0; k < j; k++)
 		{
-		  pHostView = TtaGetMemory (sizeof(HostView));
-		  TtaReadName (file, pHostView->HostViewName);
+		  pHostView = (PtrHostView)TtaGetMemory (sizeof(HostView));
+		  TtaReadName (file, (unsigned char *)pHostView->HostViewName);
 		  pHostView->NextHostView = NULL;
 		  if (prevHostView)
 		    prevHostView->NextHostView = pHostView;
@@ -1434,7 +1434,7 @@ PtrPSchema      ReadPresentationSchema (Name fileName, PtrSSchema pSS)
 		if (!error)
 		  for (j = 0; j < pCntr->CnNTransmAttrs; j++)
 		    {
-		      TtaReadName (file, pCntr->CnTransmAttr[j]);
+		      TtaReadName (file, (unsigned char *)pCntr->CnTransmAttr[j]);
 		      TtaReadShort (file, &pCntr->CnTransmSSchemaAttr[j]);
 		    }
 		error = !TtaReadShort (file, &pCntr->CnNCreators);
@@ -1462,12 +1462,12 @@ PtrPSchema      ReadPresentationSchema (Name fileName, PtrSSchema pSS)
 	      {
 		pConst = &pPSch->PsConstant[i];
 		pConst->PdType = ReadBasicType (file);
-		if (!TtaReadByte (file, &pConst->PdScript))
+		if (!TtaReadByte (file, (unsigned char *)&pConst->PdScript))
 		  error = True;
 		j = 0;
 		if (!error)
 		  do
-		    if (!TtaReadByte (file, &pConst->PdString[j++]))
+		    if (!TtaReadByte (file, (unsigned char *)&pConst->PdString[j++]))
 		      error = True;
 		  while (pConst->PdString[j - 1] != EOS && !error) ;
 	      }
@@ -1516,7 +1516,7 @@ PtrPSchema      ReadPresentationSchema (Name fileName, PtrSSchema pSS)
 	    {
 	      pBox = (PtrPresentationBox) malloc (sizeof (PresentationBox));
 	      pPSch->PsPresentBox->PresBox[i] = pBox;
-	      TtaReadName (file, pBox->PbName);
+	      TtaReadName (file, (unsigned char *)pBox->PbName);
 	      pBox->PbFirstPRule = ReadPRulePtr (file, &pNextPRule);
 	      TtaReadBool (file, &pBox->PbPageFooter);
 	      TtaReadBool (file, &pBox->PbPageHeader);
@@ -1603,7 +1603,7 @@ PtrPSchema      ReadPresentationSchema (Name fileName, PtrSSchema pSS)
 			  TtaReadBool (file, &ComparAttrValue);
 			  if (ComparAttrValue)
 			    {
-			      TtaReadName (file, name);
+			      TtaReadName (file, (unsigned char *)name);
 			      pAttrP->ApString = TtaStrdup (name);
 			    }
 			  else
@@ -1759,7 +1759,7 @@ PtrPSchema      ReadPresentationSchema (Name fileName, PtrSSchema pSS)
 	    for (i = 0; i < pPSch->PsNTransmElems; i++)
 	      {
 		TtaReadShort (file, &pPSch->PsTransmElem[i].TeTargetDoc);
-		TtaReadName (file, pPSch->PsTransmElem[i].TeTargetAttr);
+		TtaReadName (file, (unsigned char *)pPSch->PsTransmElem[i].TeTargetAttr);
 	      }
 	  FreePresentRule (pNextPRule, pSS);
 	}

@@ -191,18 +191,19 @@ struct _strMatchEnv
   strListElem        *ListSubTrees;
 #endif
   strTransSet	     *TransSets; 
-}
-strMatchEnv;
+};
+
+THOT_EXPORT struct _strMatchEnv strMatchEnv;
 
 
 
 
 #ifndef PPSTANDALONE
 /* document to wich a transformation is to be applied */
-Document            TransDoc;
+THOT_EXPORT Document            TransDoc;
 
 /* dialog and messages */
-int                 TransBaseDialog;
+THOT_EXPORT int                 TransBaseDialog;
 
 #define TransMenu 1
 #define MAX_TRANS_DLG 2

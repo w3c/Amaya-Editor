@@ -23,7 +23,13 @@
 #include "jconfig.h"
 
 /*#include "jinclude.h"*/
+#ifdef __cplusplus
+extern "C" {
+#endif /* #ifdef __cplusplus */
 #include "jpeglib.h"
+#ifdef __cplusplus
+}
+#endif /* #ifdef __cplusplus */
 
 #ifdef _WINDOWS
   #include "wininclude.h"
@@ -229,7 +235,11 @@ static unsigned char *ReadJpegToData (char *datafile, int * w, int* h,
   fp = fopen (datafile, "rb");
   if (fp != NULL)
     {
-      bit_data = (unsigned char *) ReadJPEG (fp, w, h, colrs);
+#ifdef _GL      
+      bit_data = (unsigned char *) ReadJPEG (fp, (unsigned int*)w, (unsigned int*)h, colrs);
+#else /* _GL */      
+      bit_data = (unsigned char *) ReadJPEG (fp, w, h, colrs);      
+#endif /* #ifdef _GL */      
       if (bit_data != NULL)
 	{
 	  if (fp != stdin)

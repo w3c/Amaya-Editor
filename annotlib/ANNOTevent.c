@@ -260,7 +260,7 @@ static void CopyAlgaeTemplateURL (char **dest, char *url)
       else
 	break;
     }
-  *dest = TtaGetMemory (i * strlen (url)
+  *dest = (char *)TtaGetMemory (i * strlen (url)
 			+ strlen (annotAlgaeText)
 			+ 30);
   in = annotAlgaeText;
@@ -317,7 +317,7 @@ void ANNOT_Init ()
   if (tmp)
     {
 #ifdef _I18N_
-      annotUser = TtaConvertByteToMbs (tmp, ISO_8859_1);
+      annotUser = (char *)TtaConvertByteToMbs ((unsigned char *)tmp, ISO_8859_1);
 #else
       annotUser = TtaStrdup (tmp);
 #endif /* _I18N_ */
@@ -695,15 +695,15 @@ static void ANNOT_Load2 (Document doc, View view, AnnotLoadMode mode)
       ptr = annotServers;
       while (ptr)
 	{
-	  server = ptr->object;
+	  server = (char *)ptr->object;
 	  ptr = ptr->next;
 	  if (!server || !strcasecmp (server, "localhost")
 	      || server[0] == '-' || server[0] == EOS)
 	    continue;
 	  /* create the context for the callback */
-	  ctx = TtaGetMemory (sizeof (REMOTELOAD_context));
+	  ctx = (REMOTELOAD_context*)TtaGetMemory (sizeof (REMOTELOAD_context));
 	  /* make some space to store the remote file name */
-	  ctx->remoteAnnotIndex = TtaGetMemory (MAX_LENGTH);
+	  ctx->remoteAnnotIndex = (char *)TtaGetMemory (MAX_LENGTH);
 	  /* store the source document infos */
 	  ctx->source_doc = doc;
 	  ctx->source_doc_url = TtaStrdup (tmp_doc_url);
@@ -715,7 +715,7 @@ static void ANNOT_Load2 (Document doc, View view, AnnotLoadMode mode)
 #ifdef ANNOT_ON_ANNOT
 	      if (DocumentTypes[doc] == docAnnot)
 		{
-		  annotURL = TtaGetMemory (strlen (tmp_doc_url)
+		  annotURL = (char *)TtaGetMemory (strlen (tmp_doc_url)
 					   + strlen (tmp_body_url)
 					   + sizeof ("w3c_annotates=&w3c_replyTree=")
 					   + 50);
@@ -726,7 +726,7 @@ static void ANNOT_Load2 (Document doc, View view, AnnotLoadMode mode)
 	      else
 #endif /* ANNOT_ON_ANNOT */
 		{
-		  annotURL = TtaGetMemory (strlen (tmp_body_url)
+		  annotURL = (char *)TtaGetMemory (strlen (tmp_body_url)
 					   + sizeof ("w3c_annotates=")
 					   + 50);
 		  sprintf (annotURL, "w3c_annotates=%s", tmp_body_url);
@@ -755,7 +755,7 @@ static void ANNOT_Load2 (Document doc, View view, AnnotLoadMode mode)
 			      AMAYA_ASYNC | AMAYA_FLUSH_REQUEST,
 			      NULL,
 			      NULL, 
-			      (void *)  RemoteLoad_callback,
+			      (void (*)(int, int, char*, char*, const AHTHeaders*, void*))  RemoteLoad_callback,
 			      (void *) ctx,
 			      NO,
 			      "application/xml");
@@ -779,9 +779,9 @@ void ANNOT_AutoLoad (Document doc, View view)
   AnnotLoadMode mode = AM_LOAD_NONE;
 
   if (annotLAutoLoad)
-    mode |= AM_LOAD_LOCAL;
+    mode = (AnnotLoadMode)(mode | AM_LOAD_LOCAL);
   if (annotRAutoLoad)
-    mode |= AM_LOAD_REMOTE;
+    mode = (AnnotLoadMode)(mode | AM_LOAD_REMOTE);
 
 #ifdef ANNOT_ON_ANNOT
   /* link the new metadata to the discussion thread */
@@ -805,7 +805,7 @@ void ANNOT_Load (Document doc, View view)
   AnnotThread_link2ThreadDoc (doc);
 #endif /* ANNOT_ON_ANNOT */
 
-  ANNOT_Load2 (doc, view, AM_LOAD_LOCAL | AM_LOAD_REMOTE);
+  ANNOT_Load2 (doc, view, (AnnotLoadMode)(AM_LOAD_LOCAL | AM_LOAD_REMOTE));
 }
 
 /*-----------------------------------------------------------------------
@@ -901,7 +901,7 @@ void ANNOT_Create (Document doc, View view, AnnotMode mode)
   annot->xptr = xptr;
 
   /* initialize everything */
-  mode |= ANNOT_initATitle | ANNOT_initBody;
+  mode = (AnnotMode)(mode | ANNOT_initATitle | ANNOT_initBody);
   ANNOT_InitDocumentStructure (doc, doc_annot, annot, mode);
 
   /* turn on/off entries in the menu bar */
@@ -1258,9 +1258,9 @@ void ANNOT_Post (Document doc, View view)
     /* there was an error while preparing the tmp.rdf file */
     return;
   /* create the context for the callback */
-  ctx = TtaGetMemory (sizeof (REMOTELOAD_context));
+  ctx = (REMOTELOAD_context*)TtaGetMemory (sizeof (REMOTELOAD_context));
   /* make some space to store the remote file name */
-  ctx->remoteAnnotIndex = TtaGetMemory (MAX_LENGTH);
+  ctx->remoteAnnotIndex = (char *)TtaGetMemory (MAX_LENGTH);
   ctx->remoteAnnotIndex[0]  = EOS;
   /* store the temporary filename */
   ctx->rdf_file = rdf_file;
@@ -1317,7 +1317,7 @@ void ANNOT_Post (Document doc, View view)
 			  AMAYA_FILE_POST | AMAYA_ASYNC | AMAYA_FLUSH_REQUEST,
 			  NULL,
 			  NULL, 
-			  (void *)  ANNOT_Post_callback,
+			  (void (*)(int, int, char*, char*, const AHTHeaders*, void*))ANNOT_Post_callback,
 			  (void *) ctx,
 			  NO,
 			  NULL);
@@ -1332,7 +1332,7 @@ void ANNOT_Post (Document doc, View view)
 			      that servers don't support the PUT yet. */
 	{
 	  /* we're saving a modification to an existing annotation */
-	  url = TtaGetMemory (strlen (annotPostServer)
+	  url = (char *)TtaGetMemory (strlen (annotPostServer)
 			      + sizeof ("?replace_source=")
 			      + strlen (annot->annot_url)
 			      + sizeof ("&rdftype=")
@@ -1352,7 +1352,7 @@ void ANNOT_Post (Document doc, View view)
 			      AMAYA_FILE_POST | AMAYA_ASYNC | AMAYA_FLUSH_REQUEST,
 			      NULL,
 			      NULL, 
-			      (void *)  ANNOT_Post_callback,
+			      (void (*)(int, int, char*, char*, const AHTHeaders*, void*))  ANNOT_Post_callback,
 			      (void *) ctx,
 			      NO,
 			      NULL);
@@ -1365,7 +1365,7 @@ void ANNOT_Post (Document doc, View view)
 	  
 	  res = PutObjectWWW (doc, rdf_file, url, "application/xml", ctx->remoteAnnotIndex,
 			      AMAYA_SIMPLE_PUT | AMAYA_SYNC | AMAYA_NOCACHE |  AMAYA_FLUSH_REQUEST,
-			      (void *)  ANNOT_Post_callback, (void *) ctx);
+			      (void (*)(int, int, char*, char*, const AHTHeaders*, void*))  ANNOT_Post_callback, (void *) ctx);
 	}
     }
 
@@ -1402,7 +1402,7 @@ void ANNOT_SaveDocument (Document doc_annot, View view)
       /* is this a reply to an annotation ? */
       isReplyTo = Annot_IsReplyTo (doc_annot);
       /* we skip the file: prefix if it's present */
-      filename = TtaGetMemory (strlen (DocumentURLs[doc_annot]) + 1);
+      filename = (char *)TtaGetMemory (strlen (DocumentURLs[doc_annot]) + 1);
       NormalizeFile (DocumentURLs[doc_annot], filename, AM_CONV_ALL);
       if (ANNOT_LocalSave (doc_annot, filename))
 	{
@@ -1458,7 +1458,7 @@ void ANNOT_SelectSourceDoc (int doc, Element sel)
     return;
   length = TtaGetTextAttributeLength (attr);
   length++;
-  annot_url = TtaGetMemory (length);
+  annot_url = (char *)TtaGetMemory (length);
   TtaGiveTextAttributeValue (attr, annot_url, &length);
 
   /* select the annotated text */
@@ -1569,7 +1569,7 @@ ThotBool Annot_RaiseSourceDoc (NotifyElement *event)
     {
       length = TtaGetTextAttributeLength (HrefAttr);
       length++;
-      url = TtaGetMemory (length);
+      url = (char *)TtaGetMemory (length);
       TtaGiveTextAttributeValue (HrefAttr, url, &length);
     }
 
@@ -1594,7 +1594,7 @@ ThotBool Annot_RaiseSourceDoc (NotifyElement *event)
 	  char *tmp_ptr;
 	  
 	  ExtractTarget (url, target);
-	  tmp_ptr = TtaGetMemory (strlen (DocumentURLs[tmp_doc]) + strlen (target) + 2);  
+	  tmp_ptr = (char *)TtaGetMemory (strlen (DocumentURLs[tmp_doc]) + strlen (target) + 2);  
 	  sprintf (tmp_ptr, "%s#%s", DocumentURLs[tmp_doc], target);
 	  TtaFreeMemory (url);
 	  url = tmp_ptr;
@@ -1611,7 +1611,7 @@ ThotBool Annot_RaiseSourceDoc (NotifyElement *event)
   
   /* @@ and now jump to the annotated document and put it on top,
      jump to the anchor... and if the document isn't there, download it? */
-  ctx = TtaGetMemory (sizeof (REMOTELOAD_context));
+  ctx = (RAISESOURCEDOC_context*)TtaGetMemory (sizeof (RAISESOURCEDOC_context));
   ctx->url = url;
   ctx->doc_annot = doc_annot;
   ctx->has_thread = has_thread;
@@ -1632,8 +1632,8 @@ ThotBool Annot_RaiseSourceDoc (NotifyElement *event)
   charset = TtaGetDocumentCharset (doc_annot);
 #endif /* _I18N_ */
   targetDocument = GetAmayaDoc (url, NULL, rel_doc,
-				doc_annot, method, FALSE, 
-				(void *) Annot_RaiseSourceDoc_callback,
+				doc_annot, (ClickEvent)method, FALSE, 
+				(void (*)(int, int, char*, char*, const AHTHeaders*, void*)) Annot_RaiseSourceDoc_callback,
 				(void *) ctx, charset);
 
   /* don't let Thot perform the normal operation */
@@ -1849,7 +1849,7 @@ void ANNOT_Delete (Document doc, View view)
 	  annot_is_remote = TRUE;
 	  if (DocumentMeta[doc]->form_data)
 	    {
-	      annot_url = TtaGetMemory (strlen (DocumentURLs[doc])
+	      annot_url = (char *)TtaGetMemory (strlen (DocumentURLs[doc])
 				       + strlen (DocumentMeta[doc]->form_data)
 					+ sizeof ("?")
 					+ 1);
@@ -1919,14 +1919,14 @@ void ANNOT_Delete (Document doc, View view)
 	return;
 
       i++;
-      annot_url = TtaGetMemory (i);
+      annot_url = (char *)TtaGetMemory (i);
       TtaGiveTextAttributeValue (attr, annot_url, &i);
 
       /* @@ JK: I may need to split the url and get the separate form_data */
       if (IsFilePath (annot_url))
 	{
 	  annot_is_remote = FALSE;
-	  char_ptr = TtaGetMemory (strlen (annot_url));
+	  char_ptr = (char *)TtaGetMemory (strlen (annot_url));
 	  NormalizeFile (annot_url, char_ptr, AM_CONV_NONE);
 	  annot_doc = IsDocumentLoaded (char_ptr, NULL);
 	  TtaFreeMemory (char_ptr);
@@ -1961,7 +1961,7 @@ void ANNOT_Delete (Document doc, View view)
 
   if (annot_is_remote)
     /* make some space to store any output file that the server would send */
-    ctx->output_file = TtaGetMemory (MAX_LENGTH + 1);
+    ctx->output_file = (char *)TtaGetMemory (MAX_LENGTH + 1);
   else
     ctx->output_file = NULL;
 
@@ -1976,7 +1976,7 @@ void ANNOT_Delete (Document doc, View view)
       annot_server = NULL;
       while (list_ptr)
 	{
-	  annot_server = list_ptr->object;
+	  annot_server = (char *)list_ptr->object;
 	  if (strcasecmp (annot_server, "localhost")
 	      && !strncasecmp (annot_server, annot->annot_url, 
 				strlen (annot_server)))
@@ -1996,7 +1996,7 @@ void ANNOT_Delete (Document doc, View view)
 			      AMAYA_ASYNC | AMAYA_DELETE | AMAYA_FLUSH_REQUEST,
 			      NULL,
 			      NULL, 
-			      (void *)  ANNOT_Delete_callback,
+			      (void (*)(int, int, char*, char*, const AHTHeaders*, void*))  ANNOT_Delete_callback,
 			      (void *) ctx,
 			      NO,
 			      NULL);
@@ -2090,7 +2090,7 @@ void ANNOT_Move (Document doc, View view, ThotBool useSel)
 	  /* it's a remote annotation */
 	  if (DocumentMeta[doc]->form_data)
 	    {
-	      annot_url = TtaGetMemory (strlen (DocumentURLs[doc])
+	      annot_url = (char *)TtaGetMemory (strlen (DocumentURLs[doc])
 				       + strlen (DocumentMeta[doc]->form_data)
 					+ sizeof ("?")
 					+ 1);
@@ -2175,7 +2175,8 @@ void ANNOT_Move (Document doc, View view, ThotBool useSel)
   ANNOT_UpdateTitle
   Updates the title of an annotation
   -----------------------------------------------------------------------*/
-ThotBool  Annot_UpdateTitle (NotifyElement *event)
+void Annot_UpdateTitle (NotifyOnTarget *event)
+//ThotBool  Annot_UpdateTitle (NotifyElement *event)
 {
 #ifdef ANNOT_ON_ANNOT
   AnnotMeta *annot;
@@ -2192,7 +2193,7 @@ ThotBool  Annot_UpdateTitle (NotifyElement *event)
   annot = GetMetaData (DocumentMeta[doc]->source_doc, doc);
   
   if (!annot)
-    return FALSE; /* let Thot perform normal operation */
+    return;/* FALSE; */ /* let Thot perform normal operation */
 
   /* update the metadata title field */
   if (annot->title)
@@ -2203,14 +2204,14 @@ ThotBool  Annot_UpdateTitle (NotifyElement *event)
     annot->title = NULL;
   else
     {
-      annot->title = TtaGetMemory (len);
-      TtaGiveTextContent (el, annot->title, &len, &lang);
+      annot->title = (char *)TtaGetMemory (len);
+      TtaGiveTextContent (el, (unsigned char *)annot->title, &len, &lang);
     }
   /* update the title of the window */
   ANNOT_UpdateThreadItem (doc, annot, annot->body_url);
-  return TRUE; /* don't let Thot perform normal operation */
+/*  return TRUE; */ /* don't let Thot perform normal operation */
 #endif /* ANNOT_ON_ANNOT */
-  return FALSE; /* let Thot perform normal operation */
+/*  return FALSE; */ /* let Thot perform normal operation */
 }
 
 /*----------------------------------------------------------------------

@@ -126,14 +126,14 @@ static ThotBool RestTransferContent (Element oldElem, Element newElem,
       case RestTypeTexte:
       case RestTypeImage:
         len = TtaGetTextLength (oldElem);
-        buffer = TtaGetMemory (len++);
-        TtaGiveTextContent (oldElem, buffer, &len, &lang); 
+        buffer = (char *)TtaGetMemory (len++);
+        TtaGiveTextContent (oldElem, (unsigned char *)buffer, &len, &lang); 
 #ifdef DEBUG
 	strncpy (msgbuf, buffer, 20);
 	strcat (msgbuf,"...");
 	printf("%s\n",msgbuf);
 #endif
-        TtaSetTextContent (newElem, buffer, lang, doc);
+        TtaSetTextContent (newElem, (unsigned char *)buffer, lang, doc);
         result = !TtaGetErrorCode();
         break;
       case RestTypeGraphique:
@@ -195,7 +195,7 @@ static ThotBool IsPresentInAggregate (Element elParent, int typeNum,
   
   typeParent = TtaGetElementType (elParent);
   card = TtaGetCardinalOfType (typeParent);
-  typesArray = TtaGetMemory (card * sizeof (ElementType));
+  typesArray = (ElementType *)TtaGetMemory (card * sizeof (ElementType));
   TtaGiveConstructorsOfType (&typesArray, &card, typeParent);
   elChild = TtaGetFirstChild (elParent);
   if (elChild == NULL)

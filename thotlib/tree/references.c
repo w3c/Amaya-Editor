@@ -22,8 +22,8 @@
 #include "appstruct.h"
 
 
-#undef THOT_EXPORT
-#define THOT_EXPORT
+/*#define THOT_EXPORT*/
+#define THOT_EXPORT extern	/* to avoid redefinitions */
 #include "edit_tv.h"
 
 #include "tree_f.h"

@@ -351,7 +351,7 @@ ThotBool IsXMLElementInline (ElementType elType, Document doc)
    Search in the Attribute Value Mapping Table the entry for the attribute
    ThotAtt and its value attVal. Returns the corresponding Thot value.
   ----------------------------------------------------------------------*/
-void MapXMLAttributeValue (int XMLtype, char *attVal, AttributeType attrType,
+void MapXMLAttributeValue (int XMLtype, char *attVal, const AttributeType *attrType,
 			      int *value)
 {
   AttrValueMapping   *ptr;
@@ -371,15 +371,15 @@ void MapXMLAttributeValue (int XMLtype, char *attVal, AttributeType attrType,
   i = 0;
   if (ptr == NULL)
     return;
-  while (ptr[i].ThotAttr != attrType.AttrTypeNum && ptr[i].ThotAttr != 0)
+  while (ptr[i].ThotAttr != attrType->AttrTypeNum && ptr[i].ThotAttr != 0)
     i++;
-  if (ptr[i].ThotAttr == attrType.AttrTypeNum)
+  if (ptr[i].ThotAttr == attrType->AttrTypeNum)
     do
       if (!strcmp (ptr[i].XMLattrValue, attVal))
 	*value = ptr[i].ThotAttrValue;
       else
 	i++;
-    while (*value == 0 && ptr[i].ThotAttr == attrType.AttrTypeNum);
+    while (*value == 0 && ptr[i].ThotAttr == attrType->AttrTypeNum);
 }
 
 

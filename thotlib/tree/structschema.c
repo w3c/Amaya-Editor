@@ -1237,7 +1237,7 @@ ThotBool CanCutElement (PtrElement pEl, PtrDocument pDoc, PtrElement pElCut)
 	   ret = FALSE;
 	   if (ThotLocalActions[T_singlecell] != NULL)
 	     {
-		(*ThotLocalActions[T_singlecell]) (pEl, pElCut, &InCutBuffer);
+		(*(Proc3)ThotLocalActions[T_singlecell]) (pEl, pElCut, &InCutBuffer);
 		if (InCutBuffer)
 		   /* C'est une cellule de tableau orpheline, sa colonne de
 		      reference a deja ete coupee */
@@ -2549,7 +2549,7 @@ ThotBool            CanSplitElement (PtrElement firstEl, int firstChar,
 	  }
 	exctab = FALSE;
 	if (ThotLocalActions[T_excepttable] != NULL)
-	   (*ThotLocalActions[T_excepttable]) (*pSplitEl, &exctab);
+	   (*(Proc2)ThotLocalActions[T_excepttable]) (*pSplitEl, &exctab);
 	if (exctab)
 	   /* c'est la division d'un tableau, on refuse */
 	  {

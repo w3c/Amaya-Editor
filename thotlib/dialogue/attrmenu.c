@@ -137,7 +137,7 @@ static void InitFormLanguage (Document doc, View view,
    /* Initialize the language selector */
    languageCode[0] = EOS;
    if (currAttr && currAttr->AeAttrText)
-     CopyBuffer2MBs (currAttr->AeAttrText, 0, languageCode, MAX_TXT_LEN);
+     CopyBuffer2MBs (currAttr->AeAttrText, 0, (unsigned char*)languageCode, MAX_TXT_LEN);
 #ifdef _WINDOWS
    ptr = GetListOfLanguages (WIN_buffMenu, MAX_TXT_LEN, languageCode, &nbItem, &defItem);
 #endif /* _WINDOWS */
@@ -180,7 +180,7 @@ static void InitFormLanguage (Document doc, View view,
 	 {
 	   /* the attribute value is a RFC-1766 code. Convert it into */
 	   /* a language name */
-	   CopyBuffer2MBs (pHeritAttr->AeAttrText, 0, languageCode, MAX_TXT_LEN);
+	   CopyBuffer2MBs (pHeritAttr->AeAttrText, 0, (unsigned char*)languageCode, MAX_TXT_LEN);
 	   language = TtaGetLanguageIdFromName (languageCode);
 	   strcat (label, TtaGetLanguageName(language));
 	 }
@@ -562,7 +562,7 @@ static void MenuValues (TtAttribute * pAttr1, ThotBool required,
        AttrFormExists = TRUE;
      }  
 
-   title = TtaGetMemory (strlen (pAttr1->AttrName) + 2);
+   title = (char *)TtaGetMemory (strlen (pAttr1->AttrName) + 2);
    strcpy (title, pAttr1->AttrName);
 
    switch (pAttr1->AttrType)
@@ -598,10 +598,10 @@ static void MenuValues (TtAttribute * pAttr1, ThotBool required,
        if (currAttr && currAttr->AeAttrText)
 	 {
 	   i = LgMaxAttrText - 2;
-	   i = CopyBuffer2MBs (currAttr->AeAttrText, 0, TextAttrValue, i);
+	   i = CopyBuffer2MBs (currAttr->AeAttrText, 0, (unsigned char*)TextAttrValue, i);
 #ifdef _I18N_
 	   /* convert to the dialogue encoding */
-	   tmp = TtaConvertMbsToByte (TextAttrValue, TtaGetDefaultCharset ());
+	   tmp = (char *)TtaConvertMbsToByte ((unsigned char *)TextAttrValue, TtaGetDefaultCharset ());
 	   strcpy (TextAttrValue, tmp);
 	   TtaFreeMemory (tmp);
 #endif /* _I18N_ */
@@ -712,7 +712,7 @@ void CallbackReqAttrMenu (int ref, int val, char *txt)
 	GetTextBuffer (&PtrReqAttr->AeAttrText);
       else
 	ClearText (PtrReqAttr->AeAttrText);
-      CopyStringToBuffer (txt, PtrReqAttr->AeAttrText, &length);
+      CopyStringToBuffer ((unsigned char*)txt, PtrReqAttr->AeAttrText, &length);
       break;
     case NumMenuAttrEnumNeeded:
       /* menu des valeurs d'un attribut a valeurs enumerees */
@@ -1143,7 +1143,7 @@ static void AttachAttrToElem (PtrAttribute pAttr, PtrElement pEl, PtrDocument pD
    	  /* de l'element */
    	  if (pAttr->AeAttrText)
 	    {
-	      CopyBuffer2MBs (pAttr->AeAttrText, 0, text, 99);
+	      CopyBuffer2MBs (pAttr->AeAttrText, 0, (unsigned char*)text, 99);
 	      lang = TtaGetLanguageIdFromName (text);
 	    }
    	  else
@@ -1161,7 +1161,7 @@ static void AttachAttrToElem (PtrAttribute pAttr, PtrElement pEl, PtrDocument pD
 	      if (pAttrAsc && pAttrAsc->AeAttrText)
 		{
 		  /* un ascendant definit la langue, on prend cette langue */
-		  CopyBuffer2MBs (pAttrAsc->AeAttrText, 0, text, 99);
+		  CopyBuffer2MBs (pAttrAsc->AeAttrText, 0, (unsigned char*)text, 99);
 		  lang = TtaGetLanguageIdFromName (text);
 		}
    	    }
@@ -1173,7 +1173,10 @@ static void AttachAttrToElem (PtrAttribute pAttr, PtrElement pEl, PtrDocument pD
       AttachAttrWithValue (pEl, pDoc, pAttr);
       /* special attributes */
       if (ThotLocalActions[T_attrtable])
-   	(*ThotLocalActions[T_attrtable]) (pEl, pAttr, pDoc);
+   	(*(Proc3)ThotLocalActions[T_attrtable]) (
+		(void *)pEl,
+		(void *)pAttr,
+		(void *)pDoc);
     }
 }
 
@@ -1195,8 +1198,13 @@ static void AttachAttrToRange (PtrAttribute pAttr, int lastChar,
    IsolateSelection (pDoc, &pFirstSel, &pLastSel, &firstChar, &lastChar, TRUE);
    /* start an operation sequence in editing history */
    if (ThotLocalActions[T_openhistory] != NULL)
-     (*ThotLocalActions[T_openhistory]) (pDoc, pFirstSel, pLastSel, NULL,
-					 firstChar, lastChar);
+     (*(Proc6)ThotLocalActions[T_openhistory]) (
+		(void *)pDoc,
+		(void *)pFirstSel,
+		(void *)pLastSel,
+		(void *)NULL,
+		(void *)firstChar,
+		(void *)lastChar);
    /* parcourt les elements selectionnes */
    pEl = pFirstSel;
    while (pEl != NULL)
@@ -1207,7 +1215,7 @@ static void AttachAttrToRange (PtrAttribute pAttr, int lastChar,
      }
    /* close the editing sequence */
    if (ThotLocalActions[T_closehistory] != NULL)
-	(*ThotLocalActions[T_closehistory]) (pDoc);
+	(*(Proc1)ThotLocalActions[T_closehistory]) ((void *)pDoc);
    /* parcourt a nouveau les elements selectionnes pour fusionner les */
    /* elements voisins de meme type ayant les memes attributs, reaffiche */
    /* toutes les vues et retablit la selection */
@@ -1288,7 +1296,7 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
 	      /* lock tables formatting */
 	      if (ThotLocalActions[T_islock])
 		{
-		  (*ThotLocalActions[T_islock]) (&lock);
+		  (*(Proc1)ThotLocalActions[T_islock]) ((void *)&lock);
 		  if (!lock)
 		    {
 		      doc = IdentDocument (SelDoc);
@@ -1334,8 +1342,8 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
 		      else
 			ClearText (pAttrNew->AeAttrText);
 #ifdef _I18N_
-		      tmp = TtaConvertByteToMbs (TextAttrValue, TtaGetDefaultCharset ());
-		      CopyMBs2Buffer (tmp, pAttrNew->AeAttrText, 0, strlen (tmp));
+		      tmp = (char *)TtaConvertByteToMbs ((unsigned char *)TextAttrValue, TtaGetDefaultCharset ());
+		      CopyMBs2Buffer ((unsigned char *)tmp, pAttrNew->AeAttrText, 0, strlen (tmp));
 		      TtaFreeMemory (tmp);
 #else /* _I18N_ */
 		      CopyMBs2Buffer (TextAttrValue, pAttrNew->AeAttrText, 0,
@@ -1435,8 +1443,11 @@ void CallbackAttrMenu (int refmenu, int att, int frame)
 	    /* demande a l'utilisateur l'element reference' */
 	    if (LinkReference (firstSel, pAttrNew, SelDoc))
 	      if (ThotLocalActions[T_checkextens] != NULL)
-		(*ThotLocalActions[T_checkextens])
-		  (pAttrNew, firstSel, lastSel, FALSE);
+		(*(Proc4)ThotLocalActions[T_checkextens]) (
+			(void *)pAttrNew,
+			(void *)firstSel,
+			(void *)lastSel,
+			(void *)FALSE);
 	    /* applique l'attribut a la partie selectionnee */
 	    AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel,
 			       firstSel, SelDoc, TRUE);

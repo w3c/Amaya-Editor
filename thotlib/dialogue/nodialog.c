@@ -6,7 +6,7 @@
  */
  
 /*
-   nodialog : empty functions for building the process print
+   nodialog : empty functions/globals variables for building the process print
  */
 
 #include "thot_sys.h"
@@ -16,6 +16,7 @@
 #include "frame.h"
 #include "application.h"
 #include "memory_f.h"
+#include "nodialog.h"
 
 /*----------------------------------------------------------------------
   DisplayPRule displays the presentation rule pointed by RP.
@@ -111,7 +112,7 @@ void NormalizeURL (char* orgName, Document doc, char* newName, char* docName, ch
    When returning, the parameter completeURL contains the normalized url
    and the parameter localfile the path of the local copy of the file.
   ----------------------------------------------------------------------*/
-ThotBool LoadRemoteStyleSheet (char *url, Document doc, Element el, void *css, char *completeURL, char *localfile)
+ThotBool LoadRemoteStyleSheet (char *url, Document doc, Element el, CSSInfoPtr css, char *completeURL, char *localfile)
 {
   strcpy (completeURL, url);
   strcpy (localfile, url);
@@ -122,10 +123,16 @@ ThotBool LoadRemoteStyleSheet (char *url, Document doc, Element el, void *css, c
    FetchImage loads an IMG from local file or from the web. The flags
    may indicate extra transfer parameters, for example bypassing the cache.		
   ----------------------------------------------------------------------*/
-void FetchImage (Document doc, Element el, char *URL, int flags, Proc callback, void *extra)
+void FetchImage (Document doc, Element el, char *URL, int flags,
+		 LoadedImageCallback callback, void *extra)
 {
   if (callback && URL)
-    callback (doc, el, URL, extra);
+	(*callback) (
+		doc,
+		el,
+		URL,
+		extra,
+		FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -186,7 +193,9 @@ void FreeTranslations ()
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void RedisplayCopies ()
+void RedisplayCopies ( PtrElement pEl,
+                       PtrDocument pDoc,
+                       ThotBool redisplay )
 {
 }
 
@@ -199,7 +208,7 @@ ThotBool IsASavedElement (PtrElement pEl)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-ThotBool CallEventType (int *notifyEvent, ThotBool pre)
+ThotBool CallEventType (NotifyEvent * notifyEvent, ThotBool pre)
 {
    return FALSE;
 }
@@ -210,7 +219,6 @@ ThotBool CallEventAttribute (NotifyAttribute * notifyAttr, ThotBool pre)
 {
    return FALSE;
 }
-
 
 /*----------------------------------------------------------------------
    TtaSetStatus affiche le status de la vue du document.                      
@@ -411,3 +419,4 @@ ThotBool OpenParsingErrors (Document document)
 {
   return TRUE;
 }
+

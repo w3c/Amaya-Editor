@@ -110,7 +110,7 @@ CallbackCTX;
 static PtrCallbackCTX FirstCallbackAPI;
 static int          FreeMenuAction;
 static Pixmap       wind_pixmap;
-static  void       *LastProcedure = NULL;   
+static  Proc 	    LastProcedure = NULL;   
 static  ThotBool    ActivatedButton = FALSE;   
 
 /* LISTES DES MENUS : chaque menu pointe sur une liste d'items.  */
@@ -124,6 +124,8 @@ static Menu_Ctl    *DocumentMenuList;
 
 /* CsList des menus attache's aux frames de documents particuliers */
 static SchemaMenu_Ctl *SchemasMenuList;
+
+void InitClue (ThotWidget toplevel);
 
 #ifdef _WINDOWS
 #define WM_ENTER (WM_USER)
@@ -423,7 +425,7 @@ void TteInitMenus (char *name, int number)
 #endif     /* ----- #ifdef _MOTIF  ----- */
 
    /* Definition de la procedure de retour des dialogues */
-   TtaDefineDialogueCallback (ThotCallback);
+   TtaDefineDialogueCallback ((Proc)ThotCallback);
    Dict_Init ();
    ThotInitDisplay (name, 0, 0);
 
@@ -450,7 +452,7 @@ void TteInitMenus (char *name, int number)
    for (i = FreeMenuAction; i < MaxMenuAction; i++)
      {
 	MenuActionList[i].ActionName = "";
-	MenuActionList[i].Call_Action = NULL;
+	MenuActionList[i].Call_Action = (Proc) NULL;
 	MenuActionList[i].ActionEquiv = NULL;
      }
 
@@ -711,7 +713,7 @@ void TteAddMenuAction (char *actionName, Proc procedure, ThotBool state)
    if (FreeMenuAction < MaxMenuAction && lg != 0)
      {
 	/* Alloue une chaine de caractere pour le nom de l'action */
-	ptr = TtaGetMemory (lg + 1);
+	ptr = (char *)TtaGetMemory (lg + 1);
 	strcpy (ptr, actionName);
 	MenuActionList[FreeMenuAction].ActionName = ptr;
 	MenuActionList[FreeMenuAction].Call_Action = procedure;
@@ -758,7 +760,7 @@ void TtaExecuteMenuAction (char *actionName, Document doc, View view)
       if (i > 0 && i < MaxMenuAction &&
 	  MenuActionList[i].ActionActive[frame] &&
 	  MenuActionList[i].Call_Action)
-	(*MenuActionList[i].Call_Action) (doc, view);
+	(*(Proc2)MenuActionList[i].Call_Action) ((void *)doc, (void *)view);
     }
 }
 
@@ -779,7 +781,7 @@ void TteZeroMenu (WindowType windowtype, char *schemaName)
 	  {
 	     /* creation et initialisation du contexte specifique au schema */
 	     ptrschema = (SchemaMenu_Ctl *) TtaGetMemory (sizeof (SchemaMenu_Ctl));
-	     ptrschema->SchemaName = TtaGetMemory (strlen (schemaName) + 1);
+	     ptrschema->SchemaName = (char *)TtaGetMemory (strlen (schemaName) + 1);
 	     strcpy (ptrschema->SchemaName, schemaName);
 	     ptrschema->SchemaMenu = NULL;
 	     ptrschema->NextSchema = NULL;
@@ -800,7 +802,7 @@ void TteZeroMenu (WindowType windowtype, char *schemaName)
 		  /* creation et initialisation du contexte specifique au schema */
 		  ptrschema->NextSchema = (SchemaMenu_Ctl *) TtaGetMemory (sizeof (SchemaMenu_Ctl));
 		  ptrschema = ptrschema->NextSchema;
-		  ptrschema->SchemaName = TtaGetMemory (strlen (schemaName) + 1);
+		  ptrschema->SchemaName = (char *)TtaGetMemory (strlen (schemaName) + 1);
 		  strcpy (ptrschema->SchemaName, schemaName);
 		  ptrschema->SchemaMenu = NULL;
 		  ptrschema->NextSchema = NULL;
@@ -882,7 +884,7 @@ void TteAddMenu (WindowType windowtype, char *schemaName, int view,
 		 {
 		    /* creation et initialisation du contexte specifique au schema */
 		    ptrschema = (SchemaMenu_Ctl *) TtaGetMemory (sizeof (SchemaMenu_Ctl));
-		    ptrschema->SchemaName = TtaGetMemory (strlen (schemaName) + 1);
+		    ptrschema->SchemaName = (char *)TtaGetMemory (strlen (schemaName) + 1);
 		    strcpy (ptrschema->SchemaName, schemaName);
 		    ptrschema->SchemaMenu = newmenu;
 		    ptrschema->NextSchema = NULL;
@@ -904,7 +906,7 @@ void TteAddMenu (WindowType windowtype, char *schemaName, int view,
 			 /* creation et initialisation du contexte specifique au schema */
 			 ptrschema->NextSchema = (SchemaMenu_Ctl *) TtaGetMemory (sizeof (SchemaMenu_Ctl));
 			 ptrschema = ptrschema->NextSchema;
-			 ptrschema->SchemaName = TtaGetMemory (strlen (schemaName) + 1);
+			 ptrschema->SchemaName = (char *)TtaGetMemory (strlen (schemaName) + 1);
 			 strcpy (ptrschema->SchemaName, schemaName);
 			 ptrschema->SchemaMenu = newmenu;
 			 ptrschema->NextSchema = NULL;
@@ -1502,12 +1504,12 @@ void TteOpenMainWindow (char *name, Pixmap logo, Pixmap icon)
 #ifdef  _MOTIF
 	wind_pixmap = XCreateBitmapFromData (TtDisplay,
 					     XDefaultRootWindow (TtDisplay),
-					     logowindow_bits,
+					     (char *)logowindow_bits,
 					     logowindow_width,
 					     logowindow_height);
 #endif     /* ----- #ifdef _MOTIF  ----- */
 #ifdef  _GTK
-	wind_pixmap = TtaCreateBitmapLogo (logowindow_width, logowindow_height, logowindow_bits);
+	wind_pixmap = TtaCreateBitmapLogo (logowindow_width, logowindow_height, (char *)logowindow_bits);
 #endif     /* ----- #ifdef _GTK  ----- */
 
   /**** creation des menus ****/
@@ -1549,7 +1551,7 @@ static gboolean APP_ButtonCallbackGTK (ThotButton w, int frame)
   Document            document;
   View                view;
   int                 i;
-
+ 
   i = 0;
   while (i < MAX_BUTTON && FrameTable[frame].Button[i] != w)
     i++;
@@ -1568,7 +1570,7 @@ static gboolean APP_ButtonCallbackGTK (ThotButton w, int frame)
       CloseInsertion ();
       FrameToView (frame, &document, &view);
       ActivatedButton = TRUE;
-      (*FrameTable[frame].Call_Button[i]) (document, view);
+      (*(Proc2)FrameTable[frame].Call_Button[i]) ((void *)document, (void *)view);
       ActivatedButton = FALSE;
 #ifdef _WINDOWS
       /* check the button status */
@@ -2137,7 +2139,10 @@ void APP_TextCallback (ThotWidget w, int frame, void *call_d)
       text = XmTextGetString (w);
 #endif /* _MOTIF */
 
-      (*FrameTable[frame].Call_Text) (doc, view, text);
+      (*(Proc3)FrameTable[frame].Call_Text) (
+		(void*)doc,
+		(void*)view,
+		(void*)text);
     }
 }
 #endif /* defined(_MOTIF) || defined(_WINDOWS) */
@@ -2159,7 +2164,7 @@ gboolean APP_TextCallbackGTK (GtkWidget *w, int frame)
       FrameToView (frame, &doc, &view);
       text_widget = GTK_ENTRY (w);
       text = gtk_entry_get_text (GTK_ENTRY (w));
-      (*FrameTable[frame].Call_Text) (doc, view, text);
+      (*(Proc3)FrameTable[frame].Call_Text) ((void *)doc, (void *)view, (void *)text);
       return TRUE;
     }
   /* False value permits the enter signal propagation
@@ -2174,7 +2179,7 @@ gboolean APP_PopWinSelect (GtkWidget *w)
 {
   GtkWidget *entry;
   int x,y;
-  GdkModifierType mask = 0;
+  GdkModifierType mask = (GdkModifierType)0;
   char *text;
  	     
   gdk_window_get_pointer (w->window, 
@@ -2189,7 +2194,7 @@ gboolean APP_PopWinSelect (GtkWidget *w)
     {				 
       gtk_signal_emit_by_name (GTK_OBJECT(entry),
 			       "activate");
-      text = gtk_object_get_data (GTK_OBJECT (w), 
+      text = (char *)gtk_object_get_data (GTK_OBJECT (w), 
 			   "PreviousSelect");
       TtaFreeMemory (text);
       gtk_object_set_data (GTK_OBJECT (w), 
@@ -2199,7 +2204,7 @@ gboolean APP_PopWinSelect (GtkWidget *w)
     }
   else
     {
-      text = gtk_object_get_data (GTK_OBJECT (w), 
+      text = (char *)gtk_object_get_data (GTK_OBJECT (w), 
 			   "PreviousSelect");
       gtk_entry_set_text (GTK_ENTRY (entry), text);
       TtaFreeMemory (text);
@@ -2221,7 +2226,7 @@ gboolean APP_PopWinShow (GtkWidget *w)
   entry = (GtkWidget *) gtk_object_get_data (GTK_OBJECT (w), 
 					     "entry");
   text = gtk_entry_get_text (GTK_ENTRY (entry));
-  old = TtaGetMemory (strlen (text) + 1);
+  old = (char *)TtaGetMemory (strlen (text) + 1);
   strcpy (old, text);
   gtk_object_set_data (GTK_OBJECT (w), 
 		       "PreviousSelect", 
@@ -2259,7 +2264,7 @@ gboolean APP_ComboEscape (GtkWidget *w,
 			     "activate",
 			     GTK_SIGNAL_FUNC (APP_TextCallbackGTK),
 			     (gpointer)frame);
-	  text = gtk_object_get_data (GTK_OBJECT (w), 
+	  text = (char *)gtk_object_get_data (GTK_OBJECT (w), 
 				      "PreviousSelect");
 	  gtk_entry_set_text (GTK_ENTRY (entry), text);
 	  TtaFreeMemory (text);
@@ -2270,7 +2275,7 @@ gboolean APP_ComboEscape (GtkWidget *w,
 	}
       else if (event->keyval == GDK_Return)
 	{
-	  text = gtk_object_get_data (GTK_OBJECT (w), 
+	  text = (char *)gtk_object_get_data (GTK_OBJECT (w), 
 				      "PreviousSelect");
 	  TtaFreeMemory (text);
 	  gtk_object_set_data (GTK_OBJECT (w), 
@@ -2924,8 +2929,8 @@ void selection_received (GtkWidget *widget, GtkSelectionData *sel_data,
     }
   if (Xbuffer == NULL)
     {
-      Xbuffer = TtaGetMemory ((sel_data->length + 1) * sizeof (unsigned char));
-      strcpy (Xbuffer, sel_data->data);
+      Xbuffer = (unsigned char*)TtaGetMemory ((sel_data->length + 1) * sizeof (unsigned char));
+      strcpy ((char *)Xbuffer, (char *)sel_data->data);
     }
   return;
 } 
@@ -2962,7 +2967,7 @@ void selection_handle (GtkWidget        *widget,
 			    GDK_SELECTION_TYPE_STRING,
 			    8, 
 			    Xbuffer, 
-			    strlen (Xbuffer));
+			    strlen ((char *)Xbuffer));
 }
 
 /*-----------------------------------------------------------------------
@@ -4078,7 +4083,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   BackgroundColor[frame] = DefaultBColor;
 	 }
        else
-	 ChangeFrameTitle (frame, name, TtaGetDefaultCharset ());
+	 ChangeFrameTitle (frame, (unsigned char*)name, TtaGetDefaultCharset ());
 
        /* Window volume in characters */
        *volume = GetCharsCapacity (width * height * 5);
@@ -4876,7 +4881,7 @@ void ThotCallback (int ref, int typedata, char *data)
 		  ctxCallback = ctxCallback->callbackNext;
 		}
 	    }
-	  (*ctxCallback->callbackProc) (ref, typedata, data);
+	  (*(Proc3)ctxCallback->callbackProc) ((void *)ref, (void *)typedata, (void *)data);
 	}
     }
   else if (ref < MAX_LocalMenu)
@@ -4884,53 +4889,87 @@ void ThotCallback (int ref, int typedata, char *data)
     switch (ref)
       {
       case NumMenuInsert:
-	(*ThotLocalActions[T_rcinsertpaste]) (TRUE, FALSE, (int) data + 1);
+	(*(Proc3)ThotLocalActions[T_rcinsertpaste]) (
+		(void *)TRUE,
+		(void *)FALSE,
+		(void *)((int) data + 1) );
 	break;
       case NumMenuPaste:
-	(*ThotLocalActions[T_rcinsertpaste]) (FALSE, TRUE, (int) data + 1);
+	(*(Proc3)ThotLocalActions[T_rcinsertpaste]) (
+		(void *)FALSE,
+		(void *)TRUE,
+	       	(void *)((int) data + 1));
 	break;
       case NumMenuInclude:
-	(*ThotLocalActions[T_rcinsertpaste]) (FALSE, FALSE, (int) data + 1);
+	(*(Proc3)ThotLocalActions[T_rcinsertpaste]) (
+		(void *)FALSE,
+		(void *)FALSE,
+	       	(void *)((int) data + 1));
 	break;
       case NumMenuElChoice:
-	(*ThotLocalActions[T_rchoice]) ((int) data + 1, NULL);
+	(*(Proc2)ThotLocalActions[T_rchoice]) (
+		(void *)((int) data + 1),
+		(void *)NULL);
 	break;
       case NumSelectNatureName:
-	(*ThotLocalActions[T_rchoice]) (0, data);
+	(*(Proc2)ThotLocalActions[T_rchoice]) (
+		(void *)0,
+		(void *)data);
 	break;
 	
       case NumMenuAttrRequired:
       case NumMenuAttrNumNeeded:
       case NumMenuAttrTextNeeded:
       case NumMenuAttrEnumNeeded:
-	(*ThotLocalActions[T_rattrreq]) (ref, (int) data, data);
+	(*(Proc3)ThotLocalActions[T_rattrreq]) (
+		(void *)ref,
+		(void *)((int) data),
+		(void *)data);
 	break;
       case NumMenuAttr:
       case NumMenuAttrNumber:
       case NumMenuAttrText:
       case NumMenuAttrEnum:
-	(*ThotLocalActions[T_rattrval]) (ref, (int) data, data);
+	(*(Proc3)ThotLocalActions[T_rattrval]) (
+		(void *)ref,
+		(void *)((int) data),
+	       	(void *)data);
 	break;
 	
       case NumSelectLanguage:
-	(*ThotLocalActions[T_rattrlang]) (ref, 0, data);
+	(*(Proc3)ThotLocalActions[T_rattrlang]) (
+		(void *)ref,
+	       	(void *)0,
+		(void *)data);
 	break;
       case NumFormLanguage:
       case NumMenuAlphaLanguage:
-	(*ThotLocalActions[T_rattrlang]) (ref, (int) data, NULL);
+	(*(Proc3)ThotLocalActions[T_rattrlang]) (
+		(void *)ref,
+		(void *)((int) data),
+		(void *)NULL);
 	break;
       case NumFormClose:
-	(*ThotLocalActions[T_rconfirmclose]) (ref, typedata, data);
+	(*(Proc3)ThotLocalActions[T_rconfirmclose]) (
+		(void *)ref,
+		(void *)typedata,
+		(void *)data);
 	break;
 	
       case NumFormPrint:
       case NumMenuOptions:
       case NumMenuSupport:
       case NumMenuPaperFormat:
-	(*ThotLocalActions[T_rprint]) (ref, (int) data, NULL);
+	(*(Proc3)ThotLocalActions[T_rprint]) (
+		(void *)ref,
+		(void *)((int) data),
+		(void *)NULL);
 	break;
       case NumZonePrinterName:
-	(*ThotLocalActions[T_rprint]) (ref, 0, data);
+	(*(Proc3)ThotLocalActions[T_rprint]) (
+		(void *)ref,
+		(void *)0,
+		(void *)data);
 	break;
 	
       case NumFormPresChar:
@@ -4952,33 +4991,49 @@ void ThotCallback (int ref, int typedata, char *data)
       case NumZoneStrokeWeight:
       case NumToggleWidthUnchanged:
       case NumTogglePatternUnchanged:
-	(*ThotLocalActions[T_present]) (ref, (int) data, NULL);
+	(*(Proc3)ThotLocalActions[T_present]) (
+		(void *)ref,
+		(void *)(int) data,
+		(void *)NULL);
 	break;
       case NumSelectPattern:
       case NumSelectForegroundColor:
       case NumSelectBackgroundColor:
-	(*ThotLocalActions[T_present]) (ref, 0, data);
+	(*(Proc3)ThotLocalActions[T_present]) (
+		(void *)ref,
+		(void *)0,
+		(void *)data);
 	break;
       case NumFormPresentStandard:
       case NumMenuPresentStandard:
-	(*ThotLocalActions[T_presentstd]) (ref, (int) data);
+	(*(Proc2)ThotLocalActions[T_presentstd]) (
+		(void *)ref,
+		(void *)((int) data));
 	break;
       case NumFormSearchText:
       case NumMenuReplaceMode:
       case NumToggleUpperEqualLower:
       case NumMenuSearchNature:
 	/* sous-menu mode de remplacement */
-	(*ThotLocalActions[T_searchtext]) (ref, (int) data, NULL);
+	(*(Proc3)ThotLocalActions[T_searchtext]) (
+		(void *)ref,
+		(void *)((int) data),
+	       	(void *)NULL);
 	break;
       case NumZoneTextSearch:
       case NumZoneTextReplace:
       case NumSelTypeToSearch:
       case NumSelAttributeToSearch:
 	/* zone de saisie du texte de remplacement */
-	(*ThotLocalActions[T_searchtext]) (ref, 0, data);
+	(*(Proc3)ThotLocalActions[T_searchtext]) (
+		(void *)ref,
+	       	(void *)0,
+		(void *)data);
 	break;
       case NumMenuOrSearchText:
-	(*ThotLocalActions[T_locatesearch]) (ref, (int) data);
+	(*(Proc2)ThotLocalActions[T_locatesearch]) (
+		(void *)ref,
+		(void *)((int) data));
 	break;  
 	
       default:
@@ -4988,7 +5043,10 @@ void ThotCallback (int ref, int typedata, char *data)
 #if defined(_GTK) || defined(_MOTIF)
 	    TtaSetDialoguePosition ();
 #endif /* #if defined(_GTK) || defined(_MOTIF) */
-	    (*ThotLocalActions[T_rattr]) (ref, (int) data, ActiveFrame);
+	    (*(Proc3)ThotLocalActions[T_rattr]) (
+		(void *)ref,
+		(void *)((int) data),
+		(void *)ActiveFrame);
 	  }
 	break;
       }
@@ -5019,7 +5077,10 @@ void ThotCallback (int ref, int typedata, char *data)
 #if defined(_GTK) || defined(_MOTIF)
 	      TtaSetDialoguePosition ();
 #endif /* #if defined(_GTK) || defined(_MOTIF) */
-	      (*ThotLocalActions[T_rattr]) (ref, (int) data, frame);
+	      (*(Proc3)ThotLocalActions[T_rattr]) (
+			(void *)ref,
+			(void *)((int) data),
+			(void *)frame);
 	      return;
 	    }
 	  menuThot = FindMenu (frame, FrameTable[frame].MenuSelect, &ptrmenu) - 1;
@@ -5029,7 +5090,10 @@ void ThotCallback (int ref, int typedata, char *data)
 #if defined(_GTK) || defined(_MOTIF)
 	      TtaSetDialoguePosition ();
 #endif /* #if defined(_GTK) || defined(_MOTIF) */
-	      (*ThotLocalActions[T_rselect]) (ref, (int) data + 1, frame);
+	      (*(Proc3)ThotLocalActions[T_rselect]) (
+			(void *)ref,
+			(void *)((int) data + 1),
+			(void *)frame);
 	      return;
 	    }
 	}
@@ -5075,7 +5139,7 @@ void ThotCallback (int ref, int typedata, char *data)
 	    if (MenuActionList[action].ActionActive[frame])
 	      {
 		if (MenuActionList[action].Call_Action)
-		  (*MenuActionList[action].Call_Action) (document, view);
+		  (*(Proc2)MenuActionList[action].Call_Action) ((void *)document, (void *)view);
 	      }
 	}
     }

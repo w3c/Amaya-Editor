@@ -22,10 +22,9 @@
 #include "typecorr.h"
 #include "appdialogue.h"
 
-#define THOT_EXPORT
-#include "edit_tv.h"
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
+#include "edit_tv.h"
 #ifndef NODISPLAY
 #include "frame_tv.h"
 #endif /* NODISPLAY */
@@ -265,7 +264,7 @@ void NewPosition (PtrAbstractBox pAb, int X, int xref, int Y, int yref,
 	    /* the new position will be stored in a specific presentation rule */
 	    {
 	      /* check if the specific presentation rule already exists */
-	      pRuleV = SearchPresRule (pEl, PtVertPos, 0, &isNew, pDoc, viewSch);
+	      pRuleV = SearchPresRule (pEl, PtVertPos, (FunctionType)0, &isNew, pDoc, viewSch);
 	      
 	      if (isNew)
 		{
@@ -416,7 +415,7 @@ void NewPosition (PtrAbstractBox pAb, int X, int xref, int Y, int yref,
 	    /* the new position will be stored in a specific presentation rule */
 	    {
 	      /* check if the specific presentation rule already exists */
-	      pRuleH = SearchPresRule (pEl, PtHorizPos, 0, &isNew, pDoc, viewSch);
+	      pRuleH = SearchPresRule (pEl, PtHorizPos, (FunctionType)0, &isNew, pDoc, viewSch);
 	      if (isNew)
 		{
 		  /* create a new rule for the element */
@@ -663,7 +662,7 @@ void NewDimension (PtrAbstractBox pAb, int width, int height, int frame,
 	    /* the new width will be stored in a specific presentation rule */
 	    {
 	      /* check if the specific presentation rule already exists */
-	      pRuleH = SearchPresRule (pEl, PtWidth, 0, &isNewH, pDoc, pAb->AbDocView);
+	      pRuleH = SearchPresRule (pEl, PtWidth, (FunctionType)0, &isNewH, pDoc, pAb->AbDocView);
 	      if (isNewH)
 		{
 		  /* create a new rule for the element */
@@ -837,7 +836,7 @@ void NewDimension (PtrAbstractBox pAb, int width, int height, int frame,
 	     /* the new height will be stored in a specific presentation rule */
 	     {
 	       /* check if the specific presentation rule already exists */
-	       pRuleV = SearchPresRule (pEl, PtHeight, 0, &isNewV, pDoc, pAb->AbDocView);
+	       pRuleV = SearchPresRule (pEl, PtHeight, (FunctionType)0, &isNewV, pDoc, pAb->AbDocView);
 	       if (isNewV)
 		 {
 		   /* create a new rule for the element */

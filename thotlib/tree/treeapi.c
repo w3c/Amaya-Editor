@@ -1182,7 +1182,7 @@ void TtaSetAccessRight (Element element, AccessRight right, Document document)
 {
 #ifndef NODISPLAY
   AccessRight         oldAccessRight;
-  AccessRight         newAccessRight = 0;
+  AccessRight         newAccessRight = (AccessRight)0;
   DisplayMode         SaveDisplayMode;
 #endif
 
@@ -1309,7 +1309,7 @@ void TtaHolophrastElement (Element element, ThotBool holophrast,
      {
 	CanHolo = TRUE;
 	if (ThotLocalActions[T_holotable] != NULL)
-	   (*ThotLocalActions[T_holotable]) (((PtrElement) element), &CanHolo);
+	   (*(Proc2)ThotLocalActions[T_holotable]) (((PtrElement) element), &CanHolo);
 	if ((((PtrElement) element)->ElTerminal &&
 	     ((PtrElement) element)->ElLeafType == LtPageColBreak) ||
 	    !CanHolo)

@@ -754,7 +754,7 @@ static void         Thread_deleteAll (void)
 	    }		/* while */
 	  
 	  /* erase the docid_status entities */
-	  while ((docid_status = (AHTDocId_Status *) HTList_removeLastObject ((void *) Amaya->docid_status)))
+	  while ((docid_status = (AHTDocId_Status *) HTList_removeLastObject ((HTList *) Amaya->docid_status)))
 	    TtaFreeMemory ((void *) docid_status);
 	  
 	}			/* if */
@@ -769,7 +769,7 @@ int                 AHTOpen_file (HTRequest * request)
 {
   AHTReqContext      *me;      /* current request */
 
-  me = HTRequest_context (request);
+  me = (AHTReqContext *)HTRequest_context (request);
   if (!me)
       return HT_ERROR;
 #ifdef DEBUG_LIBWWW
@@ -924,7 +924,7 @@ static int redirection_handler (HTRequest *request, HTResponse *response,
 				void *param, int status)
 {
   HTAnchor           *new_anchor = HTResponse_redirection (response);
-  AHTReqContext      *me = HTRequest_context (request);
+  AHTReqContext      *me = (AHTReqContext *)HTRequest_context (request);
   HTMethod            method = HTRequest_method (request);
   char               *ref;
   char               *escape_src, *dst;
@@ -1479,7 +1479,7 @@ static int terminate_handler (HTRequest *request, HTResponse *response,
    if (UserAborted_flag && me->method == METHOD_PUT)
      {
        HTRequest_addError (request, ERR_FATAL, NO, HTERR_INTERRUPTED,
-			   "Operation aborted by user", 0, NULL);
+			   (void *)"Operation aborted by user", 0, NULL);
      }
 
    if (error_flag)
@@ -1519,7 +1519,7 @@ int AHTLoadTerminate_handler (HTRequest *request, HTResponse *response,
 			      void *param, int status)
 {
   /** @@@@ use this with printstatus ?? */
-   AHTReqContext      *me = HTRequest_context (request);
+   AHTReqContext      *me = (AHTReqContext *)HTRequest_context (request);
    HTAlertCallback    *cbf;
    AHTDocId_Status    *docid_status;
 
@@ -1592,7 +1592,7 @@ int AHTLoadTerminate_handler (HTRequest *request, HTResponse *response,
 		    me->status_urlName ? me->status_urlName :"<UNKNOWN>"); 
        TtaSetStatus (me->docid, 1,
 		     TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
-		     me->status_urlName ? me->status_urlName : "<UNKNOWN>");
+		     me->status_urlName ? me->status_urlName : (char *)"<UNKNOWN>");
        break;
 
      case HTERR_TIMEOUT:
@@ -1604,7 +1604,7 @@ int AHTLoadTerminate_handler (HTRequest *request, HTResponse *response,
            HTTrace ("Load End.... REQUEST TIMEOUT: Can't access `%s\'\n",
 		    me->status_urlName ? me->status_urlName :"<UNKNOWN>"); 
        TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
-		     me->status_urlName ? me->status_urlName : "<UNKNOWN>");
+		     me->status_urlName ? me->status_urlName : (char *)"<UNKNOWN>");
        break;
 
      default:
@@ -1906,7 +1906,7 @@ static void         AHTAlertInit (void)
 #endif /* _WINDOWS */
    
    HTAlert_add (AHTError_print, HT_A_MESSAGE);
-   HTError_setShow (~((unsigned int) 0 ) & ~((unsigned int) HT_ERR_SHOW_DEBUG));	/* process all messages except debug ones*/
+   HTError_setShow ( (HTErrorShow)(~((unsigned int) 0 ) & ~((unsigned int) HT_ERR_SHOW_DEBUG)) );	/* process all messages except debug ones*/
    HTAlert_add (AHTConfirm, HT_A_CONFIRM);
    HTAlert_add (AHTPrompt, HT_A_PROMPT);
    HTAlert_add (AHTPromptUsernameAndPassword, HT_A_USER_PW);
@@ -2055,7 +2055,7 @@ void libwww_CleanCache (void)
 
   /* get something we can work on :) */
   tmp = HTWWWToLocal (cache_dir, "file:", NULL);
-  real_dir = TtaGetMemory (strlen (tmp) + 20);
+  real_dir = (char *)TtaGetMemory (strlen (tmp) + 20);
   strcpy (real_dir, tmp);
   HT_FREE (tmp);
 
@@ -2078,8 +2078,8 @@ void libwww_CleanCache (void)
   
   RecCleanCache (real_dir);
 
-  HTCacheMode_setExpires (cache_expire);
-  HTCacheMode_setDisconnected (cache_disconnect);
+  HTCacheMode_setExpires ((HTExpiresMode)cache_expire);
+  HTCacheMode_setDisconnected ((HTDisconnectedMode)cache_disconnect);
   HTCacheInit (cache_dir, cache_size);
   /* set a new concurrent cache lock */
   strcat (real_dir, ".lock");
@@ -2141,14 +2141,14 @@ int i;
   strptr = TtaGetEnvString ("CACHE_DIR");
   if (strptr && *strptr) 
     {
-      real_dir = TtaGetMemory (strlen (strptr) + strlen (CACHE_DIR_NAME) + 20);
+      real_dir = (char *)TtaGetMemory (strlen (strptr) + strlen (CACHE_DIR_NAME) + 20);
       strcpy (real_dir, strptr);
       if (*(real_dir + strlen (real_dir) - 1) != DIR_SEP)
 	strcat (real_dir, DIR_STR);
     }
   else
     {
-      real_dir = TtaGetMemory (strlen (TempFileDirectory) + strlen (CACHE_DIR_NAME) + 20);
+      real_dir = (char *)TtaGetMemory (strlen (TempFileDirectory) + strlen (CACHE_DIR_NAME) + 20);
       sprintf (real_dir, "%s%s", TempFileDirectory, CACHE_DIR_NAME);
     }
 
@@ -2179,7 +2179,7 @@ int i;
   if (cache_enabled) 
     {
       /* how to remove the lock? force remove it? */
-      cache_lockfile = TtaGetMemory (strlen (real_dir) + 20);
+      cache_lockfile = (char *)TtaGetMemory (strlen (real_dir) + 20);
       strcpy (cache_lockfile, real_dir);
       strcat (cache_lockfile, ".lock");
       cache_locked = FALSE;
@@ -2507,10 +2507,10 @@ void         QueryInit ()
 #endif /* _WINDOWS */
 
 #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
-   HTEvent_setRegisterCallback ((void *) AHTEvent_register);
-   HTEvent_setUnregisterCallback ((void *) AHTEvent_unregister);
-   HTTimer_registerSetTimerCallback ((void *) AMAYA_SetTimer);
-   HTTimer_registerDeleteTimerCallback ((void *) AMAYA_DeleteTimer);
+   HTEvent_setRegisterCallback ( AHTEvent_register);
+   HTEvent_setUnregisterCallback (AHTEvent_unregister);
+   HTTimer_registerSetTimerCallback ((BOOL (*)(HTTimer*)) AMAYA_SetTimer);
+   HTTimer_registerDeleteTimerCallback ((BOOL (*)(HTTimer*))AMAYA_DeleteTimer);
 #endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI) */
 
 #ifdef HTDEBUG
@@ -2567,7 +2567,7 @@ void         QueryInit ()
 	   /* Trace activation (for debugging) */
 	   char   *s, *tmp;
 	   s = TtaGetEnvString ("APP_TMPDIR");
-	   tmp = TtaGetMemory (strlen (s) + sizeof ("/libwww.log") + 1);
+	   tmp = (char *)TtaGetMemory (strlen (s) + sizeof ("/libwww.log") + 1);
 	   strcpy (tmp, s);
 	   strcat (tmp, "/libwww.log");
 	   trace_fp = fopen (tmp, "ab");
@@ -2785,7 +2785,7 @@ static   HTAssocList * PrepareFormdata (char *string)
      change
      */
   
-  tmp_string_ptr = TtaGetMemory (strlen (string) + 1);
+  tmp_string_ptr = (char *)TtaGetMemory (strlen (string) + 1);
   tmp_string = tmp_string_ptr;
   strcpy (tmp_string_ptr, string);
   formdata = HTAssocList_new();
@@ -2815,7 +2815,7 @@ void AHTRequest_setRefererHeader (AHTReqContext  *me)
     {
       request = me->request;
       rqhd = HTRequest_rqHd (request);
-      rqhd = rqhd & (~HT_C_REFERER);
+      rqhd = (HTRqHd)((int)rqhd & (~HT_C_REFERER));      
 
       HTRequest_setRqHd (request, rqhd);
       HTRequest_addExtraHeader (request, "Referer", me->refdocUrl);
@@ -2827,7 +2827,7 @@ void AHTRequest_setRefererHeader (AHTReqContext  *me)
 void AHTRequest_setCustomAcceptHeader (HTRequest *request, char *value)
 {				
   HTRqHd rqhd = HTRequest_rqHd (request);
-  rqhd = rqhd & (~HT_C_ACCEPT_TYPE);
+  rqhd = (HTRqHd)((int)rqhd & (~HT_C_ACCEPT_TYPE));
   HTRequest_setRqHd (request, rqhd);
   HTRequest_addExtraHeader (request, "Accept", value);
 }
@@ -3090,15 +3090,15 @@ int GetObjectWWW (int docid, int refdoc, char *urlName, char *formdata,
      {
        l = strlen (outputfile);
        if (l > MAX_LENGTH)
-	 me->outputfile = TtaGetMemory (l + 2);
+	 me->outputfile = (char *)TtaGetMemory (l + 2);
        else
-	 me->outputfile = TtaGetMemory (MAX_LENGTH + 2);
+	 me->outputfile = (char *)TtaGetMemory (MAX_LENGTH + 2);
        strcpy (me->outputfile, outputfile);
        l = strlen (urlName);
        if (l > MAX_LENGTH)
-	 me->urlName = TtaGetMemory (l + 2);
+	 me->urlName = (char *)TtaGetMemory (l + 2);
        else
-	 me->urlName = TtaGetMemory (MAX_LENGTH + 2);
+	 me->urlName = (char *)TtaGetMemory (MAX_LENGTH + 2);
        strcpy (me->urlName, urlName);
 #ifdef _WINDOWS
      /* force windows ASYNC requests to always be non preemptive */
@@ -3213,7 +3213,7 @@ int GetObjectWWW (int docid, int refdoc, char *urlName, char *formdata,
 	 int i;
 	 char c;
 
-	 me->document = TtaGetMemory (me->block_size + 1);
+	 me->document = (char *)TtaGetMemory (me->block_size + 1);
 	 fp = fopen (formdata, "r");
 	 i = 0; 
 	 c = getc (fp);
@@ -3408,7 +3408,7 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
        if (!tmp)
 	 {
 	   /* urlName does not include the resource name */
-	   me->default_put_name = TtaGetMemory (strlen (urlName)
+	   me->default_put_name = (char *)TtaGetMemory (strlen (urlName)
 						+ strlen (resource_name)
 						+ sizeof (URL_SEP)
 						+ 1);

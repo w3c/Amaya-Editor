@@ -609,7 +609,7 @@ static void         WriteActionList (char *fname)
       if (editingResource)
 	fprintf (AppFile, "  EditingLoadResources ();\n");
       fprintf (AppFile, "\n\n  image = TtaCreatePixmapLogo (logo_xpm);\n");
-      fprintf (AppFile, "  icon = TtaCreateBitmapLogo (logo_width, logo_height, logo_bits);\n");
+      fprintf (AppFile, "  icon = TtaCreateBitmapLogo (logo_width, logo_height, (char *)logo_bits);\n");
       fprintf (AppFile, "  TteOpenMainWindow (appName, image, icon);\n");
       fprintf (AppFile, "  TtaMainLoop ();\n  exit(0);\n");
       fprintf (AppFile, "}\n\n"); 

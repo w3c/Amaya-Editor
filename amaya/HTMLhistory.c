@@ -188,11 +188,11 @@ static ThotBool IsNextDocLoaded (const Document baseDoc, const char *url,
   if (url == NULL)
     return FALSE;
 
-  tempdocument = TtaGetMemory (MAX_LENGTH);
-  target = TtaGetMemory (MAX_LENGTH);
-  documentname = TtaGetMemory (MAX_LENGTH);
-  parameters = TtaGetMemory (MAX_LENGTH);
-  pathname = TtaGetMemory (MAX_LENGTH);
+  tempdocument = (char *)TtaGetMemory (MAX_LENGTH);
+  target = (char *)TtaGetMemory (MAX_LENGTH);
+  documentname = (char *)TtaGetMemory (MAX_LENGTH);
+  parameters = (char *)TtaGetMemory (MAX_LENGTH);
+  pathname = (char *)TtaGetMemory (MAX_LENGTH);
 
   strcpy (tempdocument, (char *) url);
   ExtractParameters (tempdocument, parameters);
@@ -339,7 +339,7 @@ void GotoPreviousHTML (Document doc, View view)
       (strcmp(DocumentURLs[doc], url) || !same_form_data))
     {
       /* is the next document already loaded? */
-      next_doc_loaded = IsNextDocLoaded (doc, url, form_data, method);
+      next_doc_loaded = IsNextDocLoaded (doc, url, form_data, (ClickEvent)method);
       if (!next_doc_loaded && !CanReplaceCurrentDocument (doc, view))
 	{
 	  /* out of the critic section */
@@ -390,7 +390,7 @@ void GotoPreviousHTML (Document doc, View view)
     }
 
   /* save the context */
-  ctx = TtaGetMemory (sizeof (GotoHistory_context));
+  ctx = (GotoHistory_context*)TtaGetMemory (sizeof (GotoHistory_context));
   ctx->prevnext = prev;
   ctx->last = last;
   ctx->doc = doc;
@@ -417,8 +417,8 @@ void GotoPreviousHTML (Document doc, View view)
   else
     {
       StopTransfer (doc, 1);
-      GetAmayaDoc (url, form_data, doc, doc, method, FALSE,
-		   (void *) GotoPreviousHTML_callback,(void *) ctx, UTF_8);
+      GetAmayaDoc (url, form_data, doc, doc, (ClickEvent)method, FALSE,
+		   (void (*)(int, int, char*, char*, const AHTHeaders*, void*)) GotoPreviousHTML_callback,(void *) ctx, UTF_8);
       /* out of the critic section */
       Back_Forward = FALSE;
     }
@@ -525,7 +525,7 @@ void GotoNextHTML (Document doc, View view)
        !same_form_data))
     {
       /* is the next document already loaded? */
-      next_doc_loaded = IsNextDocLoaded (doc, url, form_data, method);
+      next_doc_loaded = IsNextDocLoaded (doc, url, form_data, (ClickEvent)method);
       if (!CanReplaceCurrentDocument (doc, view))
 	{
 	  /* out of the critic section */
@@ -564,7 +564,7 @@ void GotoNextHTML (Document doc, View view)
     DocHistoryIndex[doc] = next;
 
   /* save the context */
-  ctx = TtaGetMemory (sizeof (GotoHistory_context));
+  ctx = (GotoHistory_context*)TtaGetMemory (sizeof (GotoHistory_context));
   ctx->prevnext = next;
   ctx->doc = doc;
   ctx->next_doc_loaded = next_doc_loaded;
@@ -577,8 +577,8 @@ void GotoNextHTML (Document doc, View view)
   else
     {
       StopTransfer (doc, 1);
-      GetAmayaDoc (url, form_data, doc, doc, method, FALSE,
-		   (void *) GotoNextHTML_callback, (void *) ctx,
+      GetAmayaDoc (url, form_data, doc, doc, (ClickEvent)method, FALSE,
+		   (void (*)(int, int, char*, char*, const AHTHeaders*, void*)) GotoNextHTML_callback, (void *) ctx,
 		   UTF_8);
       /* out of the critic section */
       Back_Forward = FALSE;

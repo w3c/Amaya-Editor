@@ -54,7 +54,7 @@ extern void EndOfHTMLAttributeValue ( char *attrValue,
                                       ParserData *context,
                                       ThotBool isXML );
 extern void MapHTMLAttributeValue ( char *attVal,
-                                    AttributeType attrType,
+                                    const AttributeType * attrType,
                                     int *value );
 
 #else /* __STDC__ */
@@ -107,7 +107,7 @@ extern void EndOfHTMLAttributeValue (/* char *attrValue,
                                         ParserData *context,
                                         ThotBool isXML */);
 extern void MapHTMLAttributeValue (/* char *attVal,
-                                      AttributeType attrType,
+                                      const AttributeType * attrType,
                                       int *value */);
 
 #endif /* __STDC__ */

@@ -619,7 +619,7 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
 {
   Element            *colElement;
   Element             row, nextRow, firstrow, colhead, prevColhead;
-  Element             cell, nextCell, group, prevGroup, new;
+  Element             cell, nextCell, group, prevGroup, new_;
   ElementType         elType;
   AttributeType       attrTypeHSpan, attrTypeVSpan, attrType;
   Attribute           attr;
@@ -631,8 +631,8 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
   if (table == NULL)
     return;
 
-  colElement = TtaGetMemory (sizeof (Element) * MAX_COLS);
-  colVSpan = TtaGetMemory (sizeof (int) * MAX_COLS);
+  colElement = (Element*)TtaGetMemory (sizeof (Element) * MAX_COLS);
+  colVSpan = (int *)TtaGetMemory (sizeof (int) * MAX_COLS);
   /* store the list of colheads */
   elType = TtaGetElementType (table);
   inMath = !TtaSameSSchemas (elType.ElSSchema,
@@ -717,9 +717,9 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
 	    {
 	    /* replace the Table_cell by a Data_cell */
 	    elType.ElTypeNum = HTML_EL_Data_cell;
-	    new = TtaNewTree (doc, elType, "");
-	    TtaInsertFirstChild (&new, cell, doc);
-	    cell = new;
+	    new_ = TtaNewTree (doc, elType, "");
+	    TtaInsertFirstChild (&new_, cell, doc);
+	    cell = new_;
 	    }
 	  
 	  /* process only cell elements */

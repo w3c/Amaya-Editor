@@ -14,6 +14,7 @@
  */
 
 /* Included headerfiles */
+#undef THOT_EXPORT
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "css.h"
@@ -296,7 +297,7 @@ static void SetFontOrPhraseOnText (Document document, Element elem,
 static void SetFontOrPhraseOnElement (Document document, Element elem,
 				      int elemtype, ThotBool remove)
 {
-   Element             child, parent, new, next;
+   Element             child, parent, new_, next;
    ElementType         elType, newType;
 
    child = TtaGetFirstChild (elem);
@@ -332,12 +333,12 @@ static void SetFontOrPhraseOnElement (Document document, Element elem,
 		 }
 	     }
 
-	   new = TtaNewElement (document, newType);
-	   TtaInsertSibling (new, elem, TRUE, document);
-	   TtaRegisterElementCreate (new, document);
+	   new_ = TtaNewElement (document, newType);
+	   TtaInsertSibling (new_, elem, TRUE, document);
+	   TtaRegisterElementCreate (new_, document);
 	   TtaRegisterElementDelete (elem, document);
 	   TtaDeleteTree (elem, document);
-	   elem = new;
+	   elem = new_;
 	 }
        }
      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
@@ -402,7 +403,7 @@ Element GetElemWithAttr (Document doc, AttributeType attrType, char *nameVal,
 	      {
 		length = TtaGetTextAttributeLength (nameAttr);
 		length++;
-		name = TtaGetMemory (length);
+		name = (char *)TtaGetMemory (length);
 		if (name != NULL)
 		  {
 		    TtaGiveTextAttributeValue (nameAttr, name, &length);
@@ -681,7 +682,7 @@ static ThotBool FollowTheLink (Element anchor, Element elSource,
    /* get a buffer for the target URL */
    length = TtaGetTextAttributeLength (HrefAttr);
    length++;
-   url = TtaGetMemory (length);
+   url = (char *)TtaGetMemory (length);
    if (url != NULL)
      {
        elType = TtaGetElementType (anchor);
@@ -707,10 +708,10 @@ static ThotBool FollowTheLink (Element anchor, Element elSource,
 	 url[length--] = EOS;
        /* save the complete URL of the source document */
        length = strlen (DocumentURLs[doc])+1;
-       sourceDocUrl = TtaGetMemory (length);
+       sourceDocUrl = (char *)TtaGetMemory (length);
        strcpy (sourceDocUrl, DocumentURLs[doc]);
        /* save the context */
-       ctx = TtaGetMemory (sizeof (FollowTheLink_context));
+       ctx = (FollowTheLink_context*)TtaGetMemory (sizeof (FollowTheLink_context));
        ctx->anchor = anchor;
        ctx->doc = doc;
        ctx->url = url;
@@ -803,8 +804,8 @@ static ThotBool FollowTheLink (Element anchor, Element elSource,
 	       charset = TtaGetDocumentCharset (doc);
 #endif /* _I18N_ */
 	       targetDocument = GetAmayaDoc (documentURL, NULL, reldoc, doc, 
-					     method, history, 
-					     (void *) FollowTheLink_callback,
+					     (ClickEvent)method, history, 
+					     (void (*)(int, int, char*, char*, const AHTHeaders*, void*)) FollowTheLink_callback,
 					     (void *) ctx, charset);
 	     }
 	   else
@@ -1038,13 +1039,13 @@ static void DisplayUrlAnchor (Element element, Document document)
        length = TtaGetTextAttributeLength (HrefAttr);
        length++;
 	
-       url = TtaGetMemory (length);
+       url = (char *)TtaGetMemory (length);
        if (url != NULL)
 	 {
 	   /* Get the URL */
 	   TtaGiveTextAttributeValue (HrefAttr, url, &length);
-	   pathname = TtaGetMemory (MAX_LENGTH);
-	   documentname = TtaGetMemory (MAX_LENGTH);
+	   pathname = (char *)TtaGetMemory (MAX_LENGTH);
+	   documentname = (char *)TtaGetMemory (MAX_LENGTH);
 	   if (url[0] == '#')
 	     {
 	       strcpy (pathname, DocumentURLs[document]);
@@ -1080,7 +1081,7 @@ static void DisplayUrlAnchor (Element element, Document document)
 		 TtaFreeMemory (url);
 	       length = TtaGetTextAttributeLength (titleAttr);
 	       length ++;
-	       url = TtaGetMemory (length);
+	       url = (char *)TtaGetMemory (length);
 	       if (url != NULL)
 		 {
 		   TtaGiveTextAttributeValue (titleAttr, url, &length);
@@ -1558,7 +1559,7 @@ void UpdateTitle (Element el, Document doc)
 	 }
        /* get the text of the title */
        length++;
-       text = TtaGetMemory (length);
+       text = (char *)TtaGetMemory (length);
        next = textElem;
        i = 0;
        while (next)
@@ -1567,7 +1568,7 @@ void UpdateTitle (Element el, Document doc)
 	   elType = TtaGetElementType (next);
 	   if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
 	     {
-	       TtaGiveTextContent (next, &text[i], &l, &lang);
+	       TtaGiveTextContent (next, (unsigned char *)&text[i], &l, &lang);
 	       i += l;
 	     }
 	   TtaNextSibling (&next);
@@ -1577,7 +1578,7 @@ void UpdateTitle (Element el, Document doc)
 	  TtaChangeWindowTitle (doc, 0, text, UTF_8);
     	if (DocumentTypes[doc] == docSource || DocumentSource[doc])
 	  {
-	    src = TtaGetMemory (length + 8);
+	    src = (char *)TtaGetMemory (length + 8);
 	    sprintf (src, "Source: %s", text);
 	    if (DocumentTypes[doc] == docSource)
 	      TtaChangeWindowTitle (doc, 1, src, UTF_8);
@@ -2615,8 +2616,8 @@ static ThotBool ShowLogLine (Element el, Document doc)
 	   len = TtaGetTextLength (el);
 	   if (len > 0)
 	     {
-	       buffer = TtaGetMemory (len + 1);
-	       TtaGiveTextContent (el, buffer, &len, &lang);
+	       buffer = (char *)TtaGetMemory (len + 1);
+	       TtaGiveTextContent (el, (unsigned char *)buffer, &len, &lang);
 	       /* extract the line number and the index within the line */
 	       ptr = strstr (buffer, "line ");
 	       if (ptr)
@@ -2638,8 +2639,8 @@ static ThotBool ShowLogLine (Element el, Document doc)
 	       TtaFreeMemory (buffer);
 	       otherEl = TtaSearchText (doc, el, FALSE, "***", ISO_8859_1);
 	       len = TtaGetTextLength (otherEl);
-	       buffer = TtaGetMemory (len + 1);
-	       TtaGiveTextContent (otherEl, buffer, &len, &lang);
+	       buffer = (char *)TtaGetMemory (len + 1);
+	       TtaGiveTextContent (otherEl, (unsigned char *)buffer, &len, &lang);
 	       ptr = strstr (buffer, " in ");
 	       if (ptr)
 		 ptr += 4;
@@ -2819,7 +2820,7 @@ void SetCharFontOrPhrase (int document, int elemtype)
 	      if (length > 0)
 		{
 		  length++;
-		  buffer = TtaGetMemory (length * sizeof(CHAR_T));
+		  buffer = (CHAR_T *)TtaGetMemory (length * sizeof(CHAR_T));
 		  TtaGiveBufferContent (lastEl, buffer, length, &lang);
 		  if (lastEl == firstSelectedElem)
 		    min = firstSelectedChar;
@@ -2889,7 +2890,7 @@ void SetCharFontOrPhrase (int document, int elemtype)
 		  if (length > 0)
 		    {
 		      length++;
-		      buffer = TtaGetMemory (length * sizeof(CHAR_T));
+		      buffer = (CHAR_T*)TtaGetMemory (length * sizeof(CHAR_T));
 		      TtaGiveBufferContent (selectedEl, buffer, length, &lang);
 		      if (lastEl == firstSelectedElem)
 			max = lastSelectedChar;

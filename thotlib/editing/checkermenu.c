@@ -40,7 +40,7 @@
 #include "appdialogue_tv.h"
 #include "frame_tv.h"
 #undef THOT_EXPORT
-#define THOT_EXPORT
+#define THOT_EXPORT extern
 #include "spell_tv.h"
 
 /* les variables locales */
@@ -152,7 +152,7 @@ static void         DisplayWords (void)
    TtaNewSelector (SpellingBase + ChkrSelectProp,
 		   SpellingBase + ChkrFormCorrect,
 		   TtaGetMessage (CORR, Correct), i - 1,
-		   ((i < 2) ? "" : BufMenu), 3, entry, TRUE, FALSE);
+		   ((i < 2) ? (char *)"" : BufMenu), 3, entry, TRUE, FALSE);
    /* selectionner la proposition 0 dans le selecteur - si elle existe */
    if (strcmp (ChkrCorrection[1], "$") != 0)
       TtaSetSelector (SpellingBase + ChkrSelectProp, -1, ChkrCorrection[1]);
@@ -386,7 +386,7 @@ void UnsetEntryMenu (int ref, int ent)
       TtaRedrawMenuEntry (ref, ent, NULL, InactiveB_Color, 0);
    else
      {
-	GetFontIdentifier ('L', 'T', 2, 11, 1, text, fontname);
+	GetFontIdentifier ('L', 'T', 2, 11, (TypeUnit)1, text, fontname);
 	TtaRedrawMenuEntry (ref, ent, fontname, -1, 0);
      }
 }
@@ -615,7 +615,7 @@ static ThotBool StartSpellChecker ()
      }
 
    /* en tenant compte des options choisies (par defaut) */
-   NextSpellingError (CurrentWord, ChkrFileDict);
+   NextSpellingError ((unsigned char*)CurrentWord, ChkrFileDict);
    if (CurrentWord[0] != EOS)
       /* calculer la 1ere liste des propositions ds selecteur */
       SetProposals (ChkrLanguage);
@@ -672,14 +672,14 @@ static void ApplyCommand (int val)
 		 (strcmp (CorrectWord, ChkrCorrection[1]) != 0))
 	       {
 		 /* ajouter le mot corroge dans le dictionaire */
-		 if (!CheckWord (CorrectWord, ChkrLanguage, ChkrFileDict))
-		   AddWord (CorrectWord, &ChkrFileDict);
+		 if (!CheckWord ((unsigned char*)CorrectWord, ChkrLanguage, ChkrFileDict))
+		   AddWord ((unsigned char*)CorrectWord, &ChkrFileDict);
 	       }
 	     else
 	       {
 		 /* ajouter le mot courant dans le dictionnaire */
-		 if (!CheckWord (CurrentWord, ChkrLanguage, ChkrFileDict))
-		   AddWord (CurrentWord, &ChkrFileDict);
+		 if (!CheckWord ((unsigned char*)CurrentWord, ChkrLanguage, ChkrFileDict))
+		   AddWord ((unsigned char*)CurrentWord, &ChkrFileDict);
 	       }
 	     }
 	   break;
@@ -688,7 +688,7 @@ static void ApplyCommand (int val)
 	   if (ToReplace)	/* CorrectWord est rempli */
 	     {		/* et ce n'est pas 1er lancement */
 	       if (ChkrElement != NULL && CurrentWord[0] != EOS)
-		 WordReplace (CurrentWord, CorrectWord);
+		 WordReplace ((unsigned char*)CurrentWord, (unsigned char*)CorrectWord);
 	       ToReplace = FALSE;
 	     }
 	   break;
@@ -698,11 +698,11 @@ static void ApplyCommand (int val)
 	     {		/* et ce n'est pas 1er lancement */
 	       if (ChkrElement != NULL && CurrentWord[0] != EOS)
 		 {
-		   WordReplace (CurrentWord, CorrectWord);
+		   WordReplace ((unsigned char*)CurrentWord, (unsigned char*)CorrectWord);
 		   /* mettre CorrectWord dans le dictionnaire */
-		   if (!CheckWord (CorrectWord, ChkrLanguage, ChkrFileDict))
+		   if (!CheckWord ((unsigned char*)CorrectWord, ChkrLanguage, ChkrFileDict))
 		     /* mettre ce nouveau mot dans le dictionnaire */
-		     AddWord (CorrectWord, &ChkrFileDict);
+		     AddWord ((unsigned char*)CorrectWord, &ChkrFileDict);
 		 }
 	       ToReplace = FALSE;
 	     }
@@ -843,7 +843,7 @@ void SpellCheckLoadResources ()
    if (SpellingBase == 0)
      {
 	CORR = TtaGetMessageTable ("corrdialogue", MSG_MAX_CHECK);
-	SpellingBase = TtaSetCallback (CallbackChecker, ChkrMaxDialogue);
+	SpellingBase = TtaSetCallback ((Proc)CallbackChecker, ChkrMaxDialogue);
 	/* Initialisation des variables globales */
 	ParametrizeChecker ();
 	ChkrFileDict = NULL;

@@ -46,7 +46,7 @@ batch: rebuild force
 
 tools: rebuild force
 	@(if test -d tools ; then cd tools ; \
-	  $(MAKE) CC="$(CC)" CFLAGS="-O" all ; fi)
+	  $(MAKE) CC="$(CC)" CFLAGS="-O -x c" all ; fi)
 
 thotlib: rebuild force
 	@(if test -d thotlib ; then cd thotlib ; \
@@ -126,7 +126,7 @@ zips: force
 # 	  cd $(THOTDIR)/classes ; $(MAKE) zips)
 
 tools/mkdep/mkdep :
-	@(cd tools/mkdep ; $(MAKE) CC="$(CC)" CFLAGS="-O" mkdep)
+	@(cd tools/mkdep ; $(MAKE) CC="$(CC)" CFLAGS="-O -x c" mkdep)
 
 depend depends : rebuild tools/mkdep/mkdep
 	@(for dir in $(SUBDIRS) ;\
@@ -282,7 +282,7 @@ libraptor_config: @MAKERAPTOR@ force
 	 @(localdir=`pwd` ; raptordir="$$localdir/../$(LIBRAPTOR)" ; \
 	  cd $(LIBRAPTOR) ; unset LANG; \
 	  if [ ! -f Makefile -o ! -f config.h ] ; then \
-	  	CFLAGS="-I$$raptordir/expat/lib" \
+	  	CFLAGS="-x c -I$$raptordir/expat/lib" \
 			$$raptordir/configure \
 			--without-shared \
 			--with-expat ; \
@@ -295,7 +295,7 @@ libraptor_make: @MAKERAPTOR@ force
 	  if [ ! -e .libs/libraptor.a -a -e libraptor.la ] ; then \
              $(RM) libraptor.la ; \
           fi ; \
-	  $(MAKE) CC="$(CC)" CFLAGS="-I$$localdir/../$(LIBRAPTOR)/expat/lib $(CFLAGS)" \
+	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS) -x c -I$$localdir/../$(LIBRAPTOR)/expat/lib " \
 		  CPPFLAGS="$(CPPFLAGS)" \
 	)
 
@@ -363,7 +363,7 @@ redland: @MAKEREDLAND@ redland_config redland_make
 
 libjpeg libjpeg.a : force
 	@($(RM) $(THOTDIR)/libjpeg/*.o)
-	@(cd libjpeg ; $(MAKE) CC="$(CC)" CFLAGS="-O")
+	@(cd libjpeg ; $(MAKE) CC="$(CC)" CFLAGS="-O -x c")
 
 #
 # Rules to rebuild the libpng package
@@ -371,7 +371,7 @@ libjpeg libjpeg.a : force
 
 libpng libpng.a : force
 	@($(RM) $(THOTDIR)/libpng/*.o)
-	@(cd libpng ; $(MAKE) CC="$(CC)" CFLAGS="-O")
+	@(cd libpng ; $(MAKE) CC="$(CC)" CFLAGS="-O -x c")
 
 #
 # Rules to rebuild the libpng package
@@ -379,7 +379,7 @@ libpng libpng.a : force
 
 libz libz.a : force
 	@($(RM) $(THOTDIR)/libpng/libz/*.o)
-	@(cd libpng/zlib ; $(MAKE) CC="$(CC)" CFLAGS="-O")
+	@(cd libpng/zlib ; $(MAKE) CC="$(CC)" CFLAGS="-O -x c")
 
 
 #

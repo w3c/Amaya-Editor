@@ -88,7 +88,7 @@ static int         AHTMemConv_write (HTStream * me, const char *s, int l)
 
    reqcont = (AHTReqContext *) HTRequest_context (me->request);
 
-   tmp = TtaGetMemory (l + 1);
+   tmp = (char *)TtaGetMemory (l + 1);
 
    if (!tmp)
      {

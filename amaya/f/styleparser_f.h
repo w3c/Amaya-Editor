@@ -24,7 +24,7 @@ extern void ParseHTMLSpecificStyle ( Element el,
                                      Document doc,
                                      int specificity,
                                      ThotBool destroy );
-extern int IsImplicitClassName ( char *class,
+extern int IsImplicitClassName ( char *class_,
                                  Document doc );
 extern void HTMLSetBackgroundColor ( Document doc,
                                      Element el,
@@ -85,7 +85,7 @@ extern void ParseHTMLSpecificStyle (/* Element el,
                                        Document doc,
                                        int specificity,
                                        ThotBool destroy */);
-extern int IsImplicitClassName (/* char *class,
+extern int IsImplicitClassName (/* char *class_,
                                    Document doc */);
 extern void HTMLSetBackgroundColor (/* Document doc,
                                        Element el,

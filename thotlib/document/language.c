@@ -215,14 +215,14 @@ char *TtaGetLanguageNameFromCode (char *code)
   Langbuffer[0] = EOS;
   for (i = 0; Langbuffer[0] == EOS && ISO639table[i].code[0] != EOS; i++)
     {
-      if (!strcasecmp (code, ISO639table[i].code))
-	strcpy (Langbuffer, ISO639table[i].fullName);
+      if (!strcasecmp (code, (const char *)ISO639table[i].code))
+	strcpy (Langbuffer, (const char *)ISO639table[i].fullName);
     }
   if (Langbuffer[0] == EOS)
     for (i = 0; Langbuffer[0] == EOS && OldLangTable[i].code[0] != EOS; i++)
       {
-	if (!strcasecmp (code, OldLangTable[i].code))
-	  strcpy (Langbuffer, OldLangTable[i].fullName);
+	if (!strcasecmp (code, (const char *)OldLangTable[i].code))
+	  strcpy (Langbuffer, (const char *)OldLangTable[i].fullName);
       }
   return Langbuffer;
 }
@@ -246,15 +246,15 @@ char *GetListOfLanguages (char *buffer, int length, char *languageCode,
   *defItem = -1;
    for (i = 0; ISO639table[i].code[0] != EOS; i++)
      {
-       l = strlen (ISO639table[i].fullName) + 1;
+       l = strlen ((const char *)ISO639table[i].fullName) + 1;
        if (l > 1 && l < length)
 	 {
 	   if (*defItem < 0 && languageCode && languageCode[0] != EOS &&
-	       strcasecmp (ISO639table[i].code, languageCode) == 0)
+	       strcasecmp ((const char *)ISO639table[i].code, languageCode) == 0)
 	     /* position of the selected language in the list */
 	       *defItem = i;
 	   (*nbItem)++;
-	   strcpy (buffer, ISO639table[i].fullName);
+	   strcpy (buffer, (const char *)ISO639table[i].fullName);
 	   buffer = buffer + l;
 	   length -= l;
 	 }
@@ -262,9 +262,9 @@ char *GetListOfLanguages (char *buffer, int length, char *languageCode,
 	 break;
      }
    if (*defItem >= 0)
-     return ISO639table[*defItem].fullName;
+     return (char *)ISO639table[*defItem].fullName;
    else
-     return NULL;
+     return (char *)NULL;
 }
 
 /*----------------------------------------------------------------------
@@ -278,14 +278,14 @@ char *TtaGetLanguageCodeFromName (char *name)
   CodeBuffer[0] = EOS;
   for (i = 0; CodeBuffer[0] == EOS && ISO639table[i].fullName[0] != EOS; i++)
     {
-      if (!strcasecmp (name, ISO639table[i].fullName))
-	strcpy (CodeBuffer, ISO639table[i].code);
+      if (!strcasecmp (name, (const char *)ISO639table[i].fullName))
+	strcpy (CodeBuffer, (const char *)ISO639table[i].code);
     }
   if (CodeBuffer[0] == EOS)
     for (i = 0; CodeBuffer[0] == EOS && OldLangTable[i].fullName[0] != EOS; i++)
       {
-	if (!strcasecmp (name, OldLangTable[i].fullName))
-	  strcpy (CodeBuffer, OldLangTable[i].code);
+	if (!strcasecmp (name, (const char *)OldLangTable[i].fullName))
+	  strcpy (CodeBuffer, (const char *)OldLangTable[i].code);
       }
   return CodeBuffer;
 }
@@ -891,15 +891,15 @@ ThotBool GetPatternList (Language langId)
    while ((fscanf (in, "%s %s", patternGot, weightGot)) != EOF)
      {
 	i++;
-	lg = strlen (patternGot);
+	lg = strlen ((const char *)patternGot);
 	if (lg != previousLength)
 	  {
 	     previousLength = lg;
 	     currentIndex++;
 	     LangTable[lang].LangTabPattern.ind_pattern[previousLength] = i;
 	  }
-	strcpy (LangTable[lang].LangTabPattern.liste_pattern[i].CarPattern, patternGot);
-	strcpy (LangTable[lang].LangTabPattern.liste_pattern[i].PoidsPattern, weightGot);
+	strcpy ((char *)LangTable[lang].LangTabPattern.liste_pattern[i].CarPattern, (const char *)patternGot);
+	strcpy ((char *)LangTable[lang].LangTabPattern.liste_pattern[i].PoidsPattern, weightGot);
      }
    LangTable[lang].LangTabPattern.NbPatt = i;
    LangTable[lang].LangTabPattern.Charge = 1;
@@ -919,7 +919,7 @@ static char *FoundPatternInList (Language langId,
   int                 i, max;
   struct PatternList *ptrTabPattern;
 
-  lgstring = strlen (substring);
+  lgstring = strlen ((const char *)substring);
   if (langId < 0 || lgstring >= MAX_LET_PATTERN)
     return (NULL);
   else
@@ -942,7 +942,7 @@ static char *FoundPatternInList (Language langId,
 	    }
 	  while (i < max)
 	    {
-	      if (!strcmp (ptrTabPattern->liste_pattern[i].CarPattern, substring))
+	      if (!strcmp ((const char *)ptrTabPattern->liste_pattern[i].CarPattern, (const char *)substring))
 		return (ptrTabPattern->liste_pattern[i].PoidsPattern);
 	      i++;
 	    }
@@ -975,9 +975,9 @@ static void FoundHyphenPoints (Language langId, char wordToCut[THOT_MAX_CHAR])
 
    for (i = 0; i < THOT_MAX_CHAR; i++)
       tab_weight[i] = 0;
-   strcpy (wordToTreat, ".");
-   strcat (wordToTreat, wordToCut);
-   strcat (wordToTreat, ".");
+   strcpy ((char *)wordToTreat, ".");
+   strcat ((char *)wordToTreat, wordToCut);
+   strcat ((char *)wordToTreat, ".");
    size_subword = 1;
    while ((size_subword <= wordLength) && (size_subword <= MAX_LET_PATTERN))
      {

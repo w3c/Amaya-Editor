@@ -48,6 +48,8 @@ extern void TtaSetStatus ( Document document,
                            View view,
                            char *text,
                            char *name );
+extern void FrameCallback ( int frame,
+                            void *evnt );
 extern void ThotGrab ( ThotWindow win,
                        ThotCursor cursor,
                        long events,
@@ -125,6 +127,8 @@ extern void TtaSetStatus (/* Document document,
                              View view,
                              char *text,
                              char *name */);
+extern void FrameCallback (/* int frame,
+                              void *evnt */);
 extern void ThotGrab (/* ThotWindow win,
                          ThotCursor cursor,
                          long events,

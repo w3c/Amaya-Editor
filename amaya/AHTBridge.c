@@ -38,7 +38,7 @@
   extern ThotAppContext app_cont;
 #endif /* #ifdef _MOTIF */
 
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
   /* Private functions */
   static void         RequestRegisterReadXtevent (SOCKET);
   static void         RequestKillReadXtevent (SOCKET);
@@ -59,9 +59,9 @@
  * BSD Unix semantics 
  */
 
-static const HTEventType ReadBits = HTEvent_READ | HTEvent_ACCEPT | HTEvent_CLOSE;
-static const HTEventType WriteBits = HTEvent_WRITE | HTEvent_CONNECT;
-static const HTEventType ExceptBits = HTEvent_OOB;
+static const HTEventType ReadBits = (HTEventType)(HTEvent_READ | HTEvent_ACCEPT | HTEvent_CLOSE);
+static const HTEventType WriteBits = (HTEventType)(HTEvent_WRITE | HTEvent_CONNECT);
+static const HTEventType ExceptBits = (HTEventType)HTEvent_OOB;
 
 #ifdef _MOTIF
   typedef struct sStatus {
@@ -210,7 +210,7 @@ static void AHTCallback_bridgeGTK (gpointer data,  gint source, GdkInputConditio
 void  ProcessTerminateRequest (HTRequest *request, HTResponse *response,
 			       void *param, int status)
 {   
-  AHTReqContext *me = HTRequest_context (request);
+  AHTReqContext *me = (AHTReqContext *)HTRequest_context (request);
 
   /* choose a correct treatment in function of the request's
      being associated with an error, with an interruption, or with a
@@ -835,7 +835,7 @@ void AMAYA_SetTimer (HTTimer *libwww_timer)
   else
     {
       /* create a new element */
-      me = TtaGetMemory (sizeof (AmayaTimer));
+      me = (AmayaTimer*)TtaGetMemory (sizeof (AmayaTimer));
       /* and add it to the list */
       HTList_addObject(last, (void *) me);
       me->libwww_timer = libwww_timer;

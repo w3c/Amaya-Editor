@@ -26,7 +26,7 @@
 /*#define DEBUG_MEMORY*/
 
 #undef  THOT_EXPORT
-#define THOT_EXPORT
+#define THOT_EXPORT extern
 #include "boxes_tv.h"
 #include "edit_tv.h"
 
@@ -142,7 +142,7 @@ PtrDict             PtFree_Dict;
 void  *TtaGetMemory (unsigned int n)
 {
   void               *res;
-
+  
   if (n == 0)
     n++;
   res = malloc ((size_t) n);
@@ -193,7 +193,7 @@ void *TtaNewTransform ()
 {
    PtrTransform pPa;
 
-   pPa = TtaGetMemory (sizeof (Transform));
+   pPa = (PtrTransform)TtaGetMemory (sizeof (Transform));
    memset (pPa, 0, sizeof (Transform));
    return (pPa);
 }
@@ -218,7 +218,7 @@ void *TtaNewAnimation ()
 {
   Animated_Element *anim_info;
 
-  anim_info = TtaGetMemory (sizeof (Animated_Element));
+  anim_info = (Animated_Element *)TtaGetMemory (sizeof (Animated_Element));
   memset (anim_info, 0, sizeof (Animated_Element));
   anim_info->action_time = -1;
   anim_info->repeatCount = 1;
@@ -503,7 +503,7 @@ char *TtaStrdup (char* str)
 
    if (str == NULL)
       return (NULL);
-   res = TtaGetMemory (strlen (str) + 1);
+   res = (char *)TtaGetMemory (strlen (str) + 1);
    if (res == NULL)
       return (res);
    strcpy (res, str);

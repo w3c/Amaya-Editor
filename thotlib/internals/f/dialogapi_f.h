@@ -8,7 +8,7 @@
 
 extern ThotWidget CatWidget ( int ref );
 extern ThotWidget TtaCatWidget ( int ref );
-extern void MyWarningHandler ( void );
+extern void MyWarningHandler ( char *s );
 extern void TtaInitDialogue ( char *server,
                               ThotAppContext *app_context );
 extern void InitDialogueFont ( void );
@@ -191,7 +191,7 @@ extern void TtaFreeAllCatalogs ( void );
 
 extern ThotWidget CatWidget (/* int ref */);
 extern ThotWidget TtaCatWidget (/* int ref */);
-extern void MyWarningHandler (/* void */);
+extern void MyWarningHandler (/* char *s */);
 extern void TtaInitDialogue (/* char *server,
                                 ThotAppContext *app_context */);
 extern void InitDialogueFont (/* void */);

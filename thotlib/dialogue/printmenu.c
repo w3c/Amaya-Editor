@@ -272,7 +272,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
        printArgc++;
 #else /* _WINDOWS_DLL */
        strcat (cmd, " -emptybox");
-#endif /* _WINDOWS_DLL */;
+#endif /* _WINDOWS_DLL */
      }
 
    /* transmit black/white output (default no) */
@@ -932,7 +932,10 @@ void TtaPrint (Document document, char *viewNames, char *cssNames)
    strncpy (docName, pDoc->DocDName, MAX_NAME_LENGTH);
    if (pFuncExportPrintDoc !=NULL)
      /* a export procedure is defined */
-       ok = (*pFuncExportPrintDoc)(document, PrintDocName, PrintDirName);
+       ok = (*(Func3)pFuncExportPrintDoc)(
+	   	(void *)document,
+		(void *)PrintDocName,
+		(void *)PrintDirName);
    else
      /* standard export */
      {

@@ -95,7 +95,7 @@ static void StrACat (char ** dest, const char * src)
 	status = TtaRealloc (*dest, length + strlen(src) + 1);
         if (status != NULL)
 	  {
-            *dest = status;
+            *dest = (char*)status;
 	    strcpy (*dest + length, src);
           }
       } 
@@ -150,7 +150,7 @@ static int CountInlineChars (Element *mark, int firstCh, selMode *mode)
 	 text sibling elements, adjust the selection mode flag */
       if (firstCh == 0)
 	{
-	  *mode |=  SEL_STRING_RANGE;
+	  *mode = (selMode)((int)mode | SEL_STRING_RANGE);
 	  /* START or END point? */
 	  el = *mark;
 	  TtaNextSibling (&el);
@@ -158,12 +158,12 @@ static int CountInlineChars (Element *mark, int firstCh, selMode *mode)
 	    {
 	      elType = TtaGetElementType (el);
 	      if (elType.ElTypeNum == THOT_TEXT_UNIT)
-		*mode |= SEL_START_POINT;
+		*mode = (selMode)((int)mode | SEL_START_POINT);
 	      else
-		*mode |= SEL_END_POINT;
+		*mode = (selMode)((int)mode | SEL_END_POINT);
 	    }
 	  else
-	    *mode |= SEL_END_POINT;
+	    *mode = (selMode)((int)mode | SEL_END_POINT);
 	}
 
       /* now point to the parent */
@@ -299,19 +299,19 @@ static void AdjustSelMode (Element *el, int *start, int index, selMode *mode, se
   if (*start > 0)
     {
       len = TtaGetTextLength (*el);
-      *mode |= SEL_STRING_RANGE;
+      *mode = (selMode)((int)mode | SEL_STRING_RANGE);
       if (*start > len)
 	{
-	  *mode |= SEL_END_POINT;
+	  *mode = (selMode)((int)mode | SEL_END_POINT);
 	  *start = len;
 	}
       else if (*start > index)
 	{
 	  if (type == SEL_FIRST_EL)
-	    *mode |= SEL_START_POINT;
+	    *mode = (selMode)((int)mode | SEL_START_POINT);
 	  else
 	    {
-	      *mode |= SEL_END_POINT;
+	      *mode = (selMode)((int)mode | SEL_END_POINT);
 	      *start = *start - 1;
 	    }
 	}
@@ -355,7 +355,7 @@ static char * GetIdValue (Element el)
     {
       /* there's an ID attribute */
       len = TtaGetTextAttributeLength (attr) + 1;
-      value = TtaGetMemory (len);
+      value = (char *)TtaGetMemory (len);
       TtaGiveTextAttributeValue (attr, value, &len);
       
     }
@@ -795,7 +795,7 @@ static char *XPointer_ThotEl2XPath (Element start, int firstCh, int len, selMode
 	    }
 	}
       /* add the info we found to the xpath list*/
-      xpath_item = TtaGetMemory (sizeof (XPathItem));
+      xpath_item = (XPathItem*)TtaGetMemory (sizeof (XPathItem));
       xpath_item->elType = elType;
       xpath_item->index = child_count;
       xpath_item->id_value = NULL;
@@ -807,7 +807,7 @@ static char *XPointer_ThotEl2XPath (Element start, int firstCh, int len, selMode
 
   if (id_value)
     {
-      xpath_item = TtaGetMemory (sizeof (XPathItem));
+      xpath_item = (XPathItem*)TtaGetMemory (sizeof (XPathItem));
       xpath_item->elType = TtaGetElementType (el);	
       xpath_item->id_value = id_value;
       xpath_item->next = xpath_list;
@@ -844,8 +844,8 @@ char * XPointer_build (Document doc, View view, ThotBool useDocRoot)
 
   char     *schemaName;
 
-  selMode    firstMode = 0;
-  selMode    lastMode = 0;
+  selMode    firstMode = (selMode)0;
+  selMode    lastMode = (selMode)0;
 
   /* @@ debug */
   char       *xptr_expr = NULL;
@@ -873,7 +873,7 @@ char * XPointer_build (Document doc, View view, ThotBool useDocRoot)
       firstLen = 0;
       firstCh = 0;
       lastEl = NULL;
-      firstMode  = firstMode & ~(SEL_START_POINT | SEL_END_POINT);
+      firstMode  = (selMode)((int)firstMode & ~(SEL_START_POINT | SEL_END_POINT));
     }
   else
     {
@@ -928,7 +928,7 @@ char * XPointer_build (Document doc, View view, ThotBool useDocRoot)
 	  if (lastCh != firstCh)
 	    {
 	      firstLen = lastCh - firstCh + 1;
-	      firstMode  = firstMode & ~(SEL_START_POINT | SEL_END_POINT);
+	      firstMode  = (selMode)((int)firstMode & ~(SEL_START_POINT | SEL_END_POINT));
 	    }
 	  else  /* the selection is only a caret */
 	    {
@@ -939,8 +939,8 @@ char * XPointer_build (Document doc, View view, ThotBool useDocRoot)
       else
 	{
 	  firstLen = 1;
-	  firstMode |= SEL_RANGE_TO;
-	  lastMode |= SEL_RANGE_TO;
+	  firstMode = (selMode)((int)firstMode | SEL_RANGE_TO);
+	  lastMode = (selMode)((int)lastMode | SEL_RANGE_TO);
 	}
     }
 
@@ -983,7 +983,7 @@ char * XPointer_build (Document doc, View view, ThotBool useDocRoot)
     {
       i = sizeof ("xpointer()/range-to()") + strlen (firstXpath) 
 	+ ((lastEl) ? strlen (lastXpath) : 0) + 1;
-      xptr_expr = TtaGetMemory (i);
+      xptr_expr = (char *)TtaGetMemory (i);
       
       if (lastEl)
 	sprintf (xptr_expr, "xpointer(%s/range-to(%s))", firstXpath, lastXpath);
@@ -1031,7 +1031,7 @@ void XPointer_bufferStore (Document doc, View view)
   /* make a full URI */
   if (xptr)
     {
-      xptr_buffer = TtaGetMemory (strlen (DocumentURLs[doc]) + strlen (xptr) + 2);
+      xptr_buffer = (char *)TtaGetMemory (strlen (DocumentURLs[doc]) + strlen (xptr) + 2);
       sprintf (xptr_buffer, "%s#%s", DocumentURLs[doc], xptr);
     }
 }

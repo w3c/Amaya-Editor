@@ -11,13 +11,13 @@ extern char *UpdateCSSBackgroundImage ( char *oldpath,
                                         char *imgpath,
                                         char *styleString );
 extern ThotBool UpdateStyleDelete ( NotifyAttribute * event );
-extern ThotBool ChangeStyle ( NotifyElement * event );
+extern ThotBool ChangeStyle ( NotifyOnTarget * event );
 extern ThotBool DeleteStyle ( NotifyElement *event );
 extern void EnableStyleElement ( Document doc,
                                  Element el );
 extern void DeleteStyleElement ( Document doc,
                                  Element el );
-extern void StyleChanged ( NotifyAttribute *event );
+extern void StyleChanged ( NotifyOnTarget *event );
 extern void UpdateStylePost ( NotifyAttribute * event );
 extern void GetHTMLStyleString ( Element el,
                                  Document doc,
@@ -43,13 +43,13 @@ extern char *UpdateCSSBackgroundImage (/* char *oldpath,
                                           char *imgpath,
                                           char *styleString */);
 extern ThotBool UpdateStyleDelete (/* NotifyAttribute * event */);
-extern ThotBool ChangeStyle (/* NotifyElement * event */);
+extern ThotBool ChangeStyle (/* NotifyOnTarget * event */);
 extern ThotBool DeleteStyle (/* NotifyElement *event */);
 extern void EnableStyleElement (/* Document doc,
                                    Element el */);
 extern void DeleteStyleElement (/* Document doc,
                                    Element el */);
-extern void StyleChanged (/* NotifyAttribute *event */);
+extern void StyleChanged (/* NotifyOnTarget *event */);
 extern void UpdateStylePost (/* NotifyAttribute * event */);
 extern void GetHTMLStyleString (/* Element el,
                                    Document doc,

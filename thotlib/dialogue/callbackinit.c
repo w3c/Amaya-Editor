@@ -19,7 +19,7 @@
 #include "appdialogue.h"
 
 #undef THOT_EXPORT
-#define THOT_EXPORT
+#define THOT_EXPORT extern
 #include "appevents_tv.h"
 #include "appdialogue_tv.h"
 

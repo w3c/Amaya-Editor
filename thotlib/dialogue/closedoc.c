@@ -157,7 +157,9 @@ ThotBool            CloseADocument (Document document, Document docform,
 		{
 		  if (save && ThotLocalActions[T_writedocument])
 		    /* l'utilisateur demande a sauver le document */
-		    ok = (* (Func)ThotLocalActions[T_writedocument]) (pDoc, 4);
+		    ok = (* (Func2)ThotLocalActions[T_writedocument]) (
+			(void *)pDoc,
+			(void *)4);
 		  if (ok)
 		    /* tout va bien, on ferme ce document */
 		    TCloseDocument (pDoc);

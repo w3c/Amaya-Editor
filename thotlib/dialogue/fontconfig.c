@@ -279,14 +279,14 @@ static ThotBool FontLoadFile ( FILE *file, FontScript **fontsscript_tab)
   fseek (file, 0L, 2);	/* end of the file */
   endfile = ftell (file) + 1;
   fseek (file, 0L, 0);	/* beginning of the file */
-  line = TtaGetMemory (endfile);
+  line = (char *)TtaGetMemory (endfile);
   indline = fread (line, 1, endfile, file);
   line[endfile-1] = EOS;
   indline = 0;
   while (indline < endfile && line[indline] != EOS)
     {
       /*reads the script*/
-      indline = getWord (indline, line, word);
+      indline = getWord (indline, (unsigned char*)line, word);
       if (indline < endfile && indline && word[0] != EOS)
 	{
 	  script = atoi (word);
@@ -295,7 +295,7 @@ static ThotBool FontLoadFile ( FILE *file, FontScript **fontsscript_tab)
 	      if (fontsscript_tab[script] == NULL)
 		{
 		  /* first loading */
-		  fontsscript_tab[script] = TtaGetMemory (sizeof (FontScript));
+		  fontsscript_tab[script] = (FontScript*)TtaGetMemory (sizeof (FontScript));
 		  for (face = 0; face < MAX_FONT_FACE; face++)
 		    fontsscript_tab[script]->family[face] = NULL;
 		}
@@ -303,7 +303,7 @@ static ThotBool FontLoadFile ( FILE *file, FontScript **fontsscript_tab)
 	      /* reads all family for a script */
 	      while (indline != 0 && indline < endfile)
 		{
-		  indline = getFontFamily (indline, line, word);
+		  indline = getFontFamily (indline, (unsigned char*)line, word);
 		  if (word[0] == EOS)
 		    break;
 		  face = atoi (word);
@@ -312,7 +312,7 @@ static ThotBool FontLoadFile ( FILE *file, FontScript **fontsscript_tab)
 		      if (fontsscript_tab[script]->family[face] == NULL)
 			{
 			  /* first loading */
-			  fontsscript_tab[script]->family[face] = TtaGetMemory (sizeof (FontFamilyConfig));
+			  fontsscript_tab[script]->family[face] = (FontFamilyConfig*)TtaGetMemory (sizeof (FontFamilyConfig));
 			  for (style = 0; style < MAX_FONT_STYLE; style++)
 			    fontsscript_tab[script]->family[face]->highlight[style] = NULL;
 			}
@@ -320,7 +320,7 @@ static ThotBool FontLoadFile ( FILE *file, FontScript **fontsscript_tab)
 		      style = 0;
 		      while (indline != 0 && indline < endfile)
 			{
-			  indline = getFontFace (indline, line, word);  
+			  indline = getFontFace (indline, (unsigned char*)line, word);  
 			  if (word[0] == EOS)
 			    break;
 			  style = atoi (word);
@@ -397,7 +397,7 @@ static FontScript **FontConfigLoad ()
     }
 
   /*Allocate the table */
-  fontsscript_tab = TtaGetMemory (31 * sizeof (FontScript *));
+  fontsscript_tab = (FontScript **)TtaGetMemory (31 * sizeof (FontScript *));
   for (script = 0; script < 30; script++)
     fontsscript_tab[script] = NULL;
   /* load the first config file */

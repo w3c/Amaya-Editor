@@ -121,7 +121,7 @@ void SetAccessMode (PtrDocument pDoc, int accessMode)
 	  }
       /* Redisplay views */
       if (ThotLocalActions[T_redisplay] != NULL)
-	(*ThotLocalActions[T_redisplay]) (pDoc);
+	(*(Proc1)ThotLocalActions[T_redisplay]) ((void *)pDoc);
     }
 }
 
@@ -527,7 +527,7 @@ void ConstantCopy (int NConst, PtrPSchema pSchP, PtrAbstractBox pAb)
       pAb->AbLeafType = LtText;
       if (pAb->AbText == NULL)
 	GetConstantBuffer (pAb);
-      CopyStringToBuffer (pConst->PdString, pAb->AbText, &l);
+      CopyStringToBuffer ((unsigned char *)pConst->PdString, pAb->AbText, &l);
       pAb->AbLang = TtaGetDefaultLanguage ();
       pAb->AbVolume = pAb->AbText->BuLength;
       break;
@@ -920,7 +920,9 @@ ThotBool CondPresentation (PtrCondition pCond, PtrElement pEl,
 	    found = pElSibling == NULL;
 	    /* traitement particulier pour les lignes de tableau */
 	    if (ThotLocalActions[T_condlast] != NULL)
-	      (*ThotLocalActions[T_condlast]) (pElem, &found);
+	      (*(Proc2)ThotLocalActions[T_condlast]) (
+			(void *)pElem,
+			(void *)&found);
 	    break;
        
 	  case PcReferred:
@@ -1300,7 +1302,7 @@ ThotBool CondPresentation (PtrCondition pCond, PtrElement pEl,
 			      {
 				CopyBuffer2MBs (pA->AeAttrText, 0, attrVal,
 						MAX_TXT_LEN);
-				found = !strcmp (pCond->CoAttrTextValue, attrVal);
+				found = !strcmp ((const char *)pCond->CoAttrTextValue, (const char *)attrVal);
 			      }
 			  }
 			else
@@ -1360,8 +1362,8 @@ ThotBool CondPresentation (PtrCondition pCond, PtrElement pEl,
 				  {
 				    CopyBuffer2MBs (pA->AeAttrText, 0, attrVal,
 						    MAX_TXT_LEN);
-				    found = !strcmp (pCond->CoAttrTextValue,
-						     attrVal);
+				    found = !strcmp ((const char *)pCond->CoAttrTextValue,
+						     (const char *)attrVal);
 				  }
 			      }
 			    else
@@ -2107,7 +2109,7 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
     {
     if (pAttr->AeAttrText)
       {
-	CopyBuffer2MBs (pAttr->AeAttrText, 0, buffer, 399);
+	CopyBuffer2MBs (pAttr->AeAttrText, 0, (unsigned char *)buffer, 399);
 	attrValue = buffer;
       }
 
@@ -3734,8 +3736,11 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 		      apply = TRUE;
 		      /* exceptions for attributes related to tables */
 		      if (ThotLocalActions[T_ruleattr] != NULL)
-			(*ThotLocalActions[T_ruleattr]) (pEl, pAttr, pDoc,
-							 &apply);
+			(*(Proc4)ThotLocalActions[T_ruleattr]) (
+				(void *)pEl,
+				(void *)pAttr,
+				(void *)pDoc,
+				(void *)&apply);
 		      if (apply)
 		        {
 			view = AppliedView (pEl, pAttr, pDoc, viewNb);
@@ -3840,7 +3845,11 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 	      apply = TRUE;
 	      /* exceptions for the attributes of a table */
 	      if (ThotLocalActions[T_ruleattr] != NULL)
-		(*ThotLocalActions[T_ruleattr]) (pEl, pAttr, pDoc, &apply);
+		(*(Proc4)ThotLocalActions[T_ruleattr]) (
+			(void *)pEl,
+			(void *)pAttr,
+			(void *)pDoc,
+		       	(void *)&apply);
 	      if (apply)
 		{
 		  view = AppliedView (pEl, pAttr, pDoc, viewNb);

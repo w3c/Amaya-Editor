@@ -4,7 +4,7 @@
 # Daniel Veillard, 1997
 #
 
-.SUFFIXES: .c .o ND.o
+.SUFFIXES: .cpp .c .o ND.o
 
 @VPATHOPT@= @srcdir@
 THOTDIR = @top_srcdir@
@@ -32,13 +32,19 @@ OBJDIRS = base content dialogue document editing image presentation tree unicode
 # Rule to build standard objects
 #
 .c.o :
-	$(CC) $(CFLAGS) $(THOT_OPTIONS) $(INCLUDES) -c $< -o $@
+	$(CC) $(CXXFLAGS) $(THOT_OPTIONS) $(INCLUDES) -c $< -o $@
+
+#
+# Rule to build c++ files
+#
+.cpp.o :
+	$(CXX) $(CXXFLAGS) $(THOT_OPTIONS) $(INCLUDES) -c $< -o $@
 
 #
 # Rule to build specific objects for libThotKernel.a
 #
 .cND.o :
-	$(CC) $(CFLAGS) $(THOT_OPTIONS) $(INCLUDES) -DNODISPLAY -c $< -o $@
+	$(CC) $(CXXFLAGS) $(THOT_OPTIONS) $(INCLUDES) -DNODISPLAY -c $< -o $@
 
 all : directories libThotKernel.a libThotEditor.a
 
@@ -77,6 +83,7 @@ include .depends
 #########################################################################
 
 THOTK_OBJ = \
+	base/global.o \
 	base/fileaccess.o \
 	base/memory.o \
 	base/message.o \
@@ -253,7 +260,7 @@ EDITOR_OBJ = \
 	view/glbox.o
 
 base/registry.o : @srcdir@/base/registry.c
-	$(CC) $(CFLAGS) $(THOT_OPTIONS) $(INCLUDES) \
+	$(CC) $(CXXFLAGS) $(THOT_OPTIONS) $(INCLUDES) \
 	   -DCOMPILED_IN_THOTDIR=\"@top_srcdir@\" \
 	   -DCOMPILED_IN_THOTDIR2=\"@prefix@/thot\" \
 	   -DNODISPLAY \
@@ -286,7 +293,7 @@ PRINT_OBJ= \
 	editing/print.o
 
 tree/paginatePP.o : @srcdir@/tree/paginate.c @srcdir@/include/thot_sys.h
-	$(CC) $(CFLAGS) $(THOT_OPTIONS) $(INCLUDES) -DPAGINEETIMPRIME -c @srcdir@/tree/paginate.c -o $@
+	$(CC) $(CXXFLAGS) $(THOT_OPTIONS) $(INCLUDES) -DPAGINEETIMPRIME -c @srcdir@/tree/paginate.c -o $@
 
 print : ../bin ../bin/print
 

@@ -4981,7 +4981,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	  if (kind == 0 && attrvals[i])
 	    {
 	      /* enumerated value */
-	      MapXMLAttributeValue (xmlType, attrvals[i], attrType, &kind);
+	      MapXMLAttributeValue (xmlType, attrvals[i], &attrType, &kind);
 	      /* store the attribute value */
 	      ctxt->attrText[j] = (char *) kind;
 	    }
@@ -5115,7 +5115,7 @@ static void ParseStyleDeclaration (Element el, char *cssRule, Document doc,
    implicit one, eg "H1" or "H2 EM" meaning it's a GI name       
    or an HTML context name.                                      
   ----------------------------------------------------------------------*/
-int IsImplicitClassName (char *class, Document doc)
+int IsImplicitClassName (char *class_, Document doc)
 {
    char         name[200];
    char        *cur = name;
@@ -5124,7 +5124,7 @@ int IsImplicitClassName (char *class, Document doc)
    SSchema      schema;
 
    /* make a local copy */
-   strncpy (name, class, 199);
+   strncpy (name, class_, 199);
    name[199] = 0;
 
    /* loop looking if each word is a GI */

@@ -12,7 +12,7 @@ extern void TransCallbackDialog ( int ref,
 extern void InitTransform ( void );
 extern void TransformType ( Document doc,
                             View view );
-extern ThotBool TransformIntoType ( ElementType resultType,
+extern ThotBool TransformIntoType ( ElementType * resultType,
                                     Document doc );
 
 #else /* __STDC__ */
@@ -23,7 +23,7 @@ extern void TransCallbackDialog (/* int ref,
 extern void InitTransform (/* void */);
 extern void TransformType (/* Document doc,
                               View view */);
-extern ThotBool TransformIntoType (/* ElementType resultType,
+extern ThotBool TransformIntoType (/* ElementType * resultType,
                                       Document doc */);
 
 #endif /* __STDC__ */

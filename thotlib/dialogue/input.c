@@ -589,7 +589,7 @@ gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
       else
 	{ 
 	  /* We're in the drawing so get the hidden textfield adress*/		 
-	  textzone = gtk_object_get_data (GTK_OBJECT (drawing_area), "Text_catcher");
+	  textzone = (GtkEntry*)gtk_object_get_data (GTK_OBJECT (drawing_area), "Text_catcher");
 	  gtk_widget_grab_focus (GTK_WIDGET(textzone));
 	}
     }
@@ -620,12 +620,15 @@ gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
       charset = TtaGetCharset (TtaGetEnvString ("Default_Charset"));
       if (charset != UNDEFINED_CHARSET)
 	{
-	  str = TtaConvertByteToWC (event->string, charset);
+	  str = TtaConvertByteToWC ((unsigned char*)event->string, charset);
 	  p = str;
 	  while (*p)
 	    {
 	      if (MenuActionList[0].Call_Action)
-		(*MenuActionList[0].Call_Action) (document, view, *p);
+		(*(Proc3)MenuActionList[0].Call_Action) (
+			(void *)document,
+			(void *)view,
+			(void *)*p);
 	      p++;
 	    }
 	  TtaFreeMemory (str);
@@ -770,7 +773,6 @@ gboolean KeyScrolledGTK (GtkWidget *w, GdkEvent* event, gpointer data)
 }
 #endif /* _GTK */
 
-#ifdef _MOTIF
 /*----------------------------------------------------------------------
    CharTranslation
    X-Window front-end to the character translation and handling.
@@ -779,6 +781,7 @@ gboolean KeyScrolledGTK (GtkWidget *w, GdkEvent* event, gpointer data)
   ----------------------------------------------------------------------*/
 void CharTranslation (ThotKeyEvent *event)
 {
+#ifdef _MOTIF
 #ifdef _I18N_
   CHARSET             charset;
   wchar_t            *str, *p;
@@ -802,9 +805,9 @@ void CharTranslation (ThotKeyEvent *event)
   /* control, alt and mouse status bits of the state are ignored */
   state = event->state & 127;
   if (event->state == 127)
-    status = TtaXLookupString (event, string, 2, &key, &comp);
+    status = TtaXLookupString (event, (char *)string, 2, &key, &comp);
   else
-    status = XLookupString (event, string, 2, &key, &comp);
+    status = XLookupString (event, (char *)string, 2, &key, &comp);
 
   PicMask = 0;
   if (state & ShiftMask)
@@ -826,11 +829,14 @@ void CharTranslation (ThotKeyEvent *event)
 	  while (*p)
 	    {
 	      if (MenuActionList[0].Call_Action)
-		(*MenuActionList[0].Call_Action) (document, view, *p);
+		(*(Proc3)MenuActionList[0].Call_Action) (
+			(void *)document,
+			(void *)view,
+			(void *)*p);
 	      p++;
 	    }
 	  TtaFreeMemory (str);
-	  return FALSE;
+	  return /* FALSE */;
 	}
     }
 #endif /* _I18N_ */
@@ -839,8 +845,9 @@ void CharTranslation (ThotKeyEvent *event)
   else
     command = 0;
   ThotInput (frame, (unsigned int) string[0], command, PicMask, key);
-}
 #endif /* _MOTIF */
+}
+
 
 /*----------------------------------------------------------------------
    APPKey send a message msg to the application.   
@@ -854,7 +861,7 @@ static ThotBool APPKey (int msg, PtrElement pEl, Document doc, ThotBool pre)
 
    result = FALSE;
    pParentEl = pEl;
-   notifyEl.event = msg;
+   notifyEl.event = (APPevent)msg;
    notifyEl.document = doc;
    notifyEl.targetdocument = doc;
    while (pParentEl != NULL)
@@ -970,7 +977,9 @@ ThotBool ThotInput (int frame, unsigned int value, int command, int PicMask, int
 		    {
 		      /* close the current insertion */
 		      CloseInsertion ();
-		      (*AccessKeyFunction) (document, ptr->K_Param);
+		      (*(Proc2)AccessKeyFunction) (
+				(void *)document,
+				(void *)ptr->K_Param);
 		      return TRUE;
 		    }
 		}
@@ -991,7 +1000,9 @@ ThotBool ThotInput (int frame, unsigned int value, int command, int PicMask, int
 		    {
 		      /* close the current insertion */
 		      CloseInsertion ();
-		      (*AccessKeyFunction) (document, ptr->K_Param);
+		      (*(Proc2)AccessKeyFunction) (
+				(void *)document,
+				(void *)ptr->K_Param);
 		      return TRUE;
 		    }
 		}
@@ -1151,7 +1162,9 @@ ThotBool ThotInput (int frame, unsigned int value, int command, int PicMask, int
 	    {
 	      /* available action for this frame or the main frame */
 	      if (MenuActionList[command].Call_Action)
-		(*MenuActionList[command].Call_Action) (document, view);
+		(*(Proc2)MenuActionList[command].Call_Action) (
+			(void *)document,
+			(void *)view);
 
 	      /* ***Check events TteElemReturn and TteElemTab*** */
 	      if (LoadedDocument[document - 1] == SelectedDocument &&
@@ -1182,7 +1195,9 @@ ThotBool ThotInput (int frame, unsigned int value, int command, int PicMask, int
 	      /* Par defaut BackSpace detruit le caractere precedent */
 	      /* sans se soucier de la langue courante */
 	      if (MenuActionList[CMD_DeletePrevChar].Call_Action)
-		(*MenuActionList[CMD_DeletePrevChar].Call_Action) (document, view);
+		(*(Proc2)MenuActionList[CMD_DeletePrevChar].Call_Action) (
+			(void *)document,
+			(void *)view);
 	      return FALSE;
 	    }
       
@@ -1191,7 +1206,10 @@ ThotBool ThotInput (int frame, unsigned int value, int command, int PicMask, int
 	      value == FOUR_PER_EM || value == UNBREAKABLE_SPACE)
 	    {
 	      if (MenuActionList[0].Call_Action)
-		(*MenuActionList[0].Call_Action) (document, view, value);
+		(*(Proc3)MenuActionList[0].Call_Action) (
+			(void *)document,
+			(void *)view,
+			(void *)value);
 	    }
 	  else if (value == 9 || value >= 32)
 	    {
@@ -1209,7 +1227,10 @@ ThotBool ThotInput (int frame, unsigned int value, int command, int PicMask, int
 		done = FALSE;
 	      /* on insere un caractere valide quelque soit la langue */
 	      if (!done && MenuActionList[0].Call_Action)
-		(*MenuActionList[0].Call_Action) (document, view, value);
+		(*(Proc3)MenuActionList[0].Call_Action) (
+			(void *)document,
+			(void *)view,
+			(void *)value);
 	      if (LoadedDocument[document - 1] == SelectedDocument &&
 		  value == TAB)
 		/* post treatment for the application */
@@ -1293,7 +1314,7 @@ static int      EndOfString (char *string, char *suffix)
   ----------------------------------------------------------------------*/
 void      TtaSetAccessKeyFunction (Proc procedure)
 {
-  AccessKeyFunction = procedure;
+  AccessKeyFunction = (Proc)procedure;
 }
 
 
@@ -1443,7 +1464,7 @@ void InitTranslations (char *appliname)
       fseek (file, 0L, 2);	/* fin du fichier */
       
       len = ftell (file) * 2 + 10;	/* pour assurer de la marge */
-      text = TtaGetMemory (len);
+      text = (char *)TtaGetMemory (len);
       fseek (file, 0L, 0);	/* debut du fichier */
       
       /* Initialise la lecture du fichier */
@@ -1648,7 +1669,7 @@ void InitTranslations (char *appliname)
 		  if (!strcmp (ch, "TtcInsertChar"))
 		    {
 		      strcat (text, "insert-string(");
-		      strcat (text, AsciiTranslate (&adr[1]));
+		      strcat (text, (char *)AsciiTranslate (&adr[1]));
 		    }
 		  else if (!strcmp (ch, "TtcDeleteSelection"))
 		    strcat (text, "delete-selection()");
@@ -1689,7 +1710,7 @@ void InitTranslations (char *appliname)
 		    }
 		  else
 		    {
-		      adr = AsciiTranslate (&transText[len]);
+		      adr = (char *)AsciiTranslate (&transText[len]);
 		      value = (unsigned char) adr[0];
 		    }
 		  MemoKey (mod1, key1, isSpecialKey1,

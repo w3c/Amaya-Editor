@@ -121,7 +121,7 @@ static void DifferFormatting (PtrAbstractBox table, PtrAbstractBox cell, int fra
     {
       /* Create a new block */
       i = 0;
-      pLockRel = TtaGetMemory (sizeof (LockRelations));
+      pLockRel = (PtrLockRelations)TtaGetMemory (sizeof (LockRelations));
       memset (pLockRel, 0, sizeof (LockRelations));
       if (pPreviousLockRel == NULL)
 	DifferedChecks = pLockRel;
@@ -585,7 +585,7 @@ static void CheckRowHeights (PtrAbstractBox table, int frame)
     }
   /* Redisplay views */
   if (ThotLocalActions[T_redisplay] != NULL)
-    (*ThotLocalActions[T_redisplay]) (pDoc);
+    (*(Proc1)ThotLocalActions[T_redisplay]) ((void*)pDoc);
 
   if (!modified)
     TtaSetDocumentUnmodified (doc);
@@ -673,9 +673,9 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
   /* get columns information */
   pTabRel = pBox->BxColumns;
   cRef = 0;
-  colBox = TtaGetMemory (sizeof (PtrAbstractBox) * cNumber);
-  colWidth = TtaGetMemory (sizeof (int) * cNumber);
-  colPercent = TtaGetMemory (sizeof (int) * cNumber);
+  colBox = (PtrAbstractBox *)TtaGetMemory (sizeof (PtrAbstractBox) * cNumber);
+  colWidth = (int *)TtaGetMemory (sizeof (int) * cNumber);
+  colPercent = (int *)TtaGetMemory (sizeof (int) * cNumber);
   sumPercent = 0;
   sum = 0;
   minOfPercent = 0;
@@ -1161,10 +1161,10 @@ static ThotBool SetTableWidths (PtrAbstractBox table, int frame)
   /* register widths of each columns */
   pTabRel = pBox->BxColumns;
   cRef = 0;
-  colBox = TtaGetMemory (sizeof (PtrAbstractBox) * cNumber);
-  colWidth = TtaGetMemory (sizeof (int) * cNumber);
-  colPercent = TtaGetMemory (sizeof (int) * cNumber);
-  colVSpan = TtaGetMemory (sizeof (int) * cNumber);
+  colBox = (PtrAbstractBox*)TtaGetMemory (sizeof (PtrAbstractBox) * cNumber);
+  colWidth = (int*)TtaGetMemory (sizeof (int) * cNumber);
+  colPercent = (int*)TtaGetMemory (sizeof (int) * cNumber);
+  colVSpan = (int*)TtaGetMemory (sizeof (int) * cNumber);
   while (pTabRel)
     {
       for (i = 0; i < MAX_RELAT_DIM &&
@@ -1246,14 +1246,14 @@ static ThotBool SetTableWidths (PtrAbstractBox table, int frame)
 					  if (pTabSpan == NULL)
 					    {
 					      rspanNumber = 0;
-					      pTabSpan = TtaGetMemory (sizeof (TabSpan));
+					      pTabSpan = (TabSpan*)TtaGetMemory (sizeof (TabSpan));
 					      memset (pTabSpan, 0, sizeof (TabSpan));
 					      pBox->BxSpans = pTabSpan;
 					    }
 					  else if (rspanNumber< MAX_RELAT_DIM)
 					    {
 					      rspanNumber = 0;
-					      pTabSpan->TaSpanNext = TtaGetMemory (sizeof (TabSpan));
+					      pTabSpan->TaSpanNext = (TabSpan*)TtaGetMemory (sizeof (TabSpan));
 					      pTabSpan = pTabSpan->TaSpanNext;
 					      memset (pTabSpan, 0, sizeof (TabSpan));
 					    }

@@ -34,7 +34,7 @@
 #include "boxes_tv.h"
 
 #undef THOT_EXPORT
-#define THOT_EXPORT
+#define THOT_EXPORT extern
 #include "font_tv.h"
 
 /* Store the list of frames that use each font */
@@ -1600,7 +1600,7 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 	  g_print ("\n XLFD selection : %s %s", textX, text);
 #endif /*_PCLDEBUG*/
 
-    ptfont = GL_LoadFont (script, family, highlight, size);
+    ptfont = (PtrFont)GL_LoadFont (script, family, highlight, size);
 #else /*_GL*/
 
 #ifdef _WINDOWS
@@ -1773,7 +1773,7 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 		GreekFontScript = 'G';
  	      else
 		{
-		  ptfont = LoadStixFont ('E', 10);
+		  ptfont = (PtrFont)LoadStixFont ('E', 10);
 		  if (ptfont)
 		    /* now we'll work with the Stix font */
 		    GreekFontScript = 'E';
@@ -2283,7 +2283,7 @@ static SpecFont LoadFontSet (char script, int family, int highlight,
   if (fontset == NULL)
     {
       /* create a new set */
-      fontset = TtaGetMemory (sizeof (FontSet));
+      fontset = (FontSet*)TtaGetMemory (sizeof (FontSet));
       if (fontset)
 	{
 	  memset (fontset, 0, sizeof (FontSet));
@@ -2430,7 +2430,7 @@ void InitDialogueFonts (char *name)
     GreekFontScript = '7';
 #endif /* #if defined(_GTK) || defined(_MOTIF) */
   
-  FontFamily = TtaGetMemory (8);
+  FontFamily = (char *)TtaGetMemory (8);
   strcpy (FontFamily, "-*");
   /* Is there any predefined size for menu fonts ? */
   value = TtaGetEnvString ("FontMenuSize");
@@ -2541,7 +2541,7 @@ void InitDialogueFonts (char *name)
   i = 1;
   while (DefaultGLFont == NULL && i < 3)
     {
-      DefaultGLFont = GL_LoadFont ('L', i, 1, 3);
+      DefaultGLFont = (PtrFont)GL_LoadFont ('L', i, 1, 3);
       i++;
     }
   if (DefaultGLFont == NULL)

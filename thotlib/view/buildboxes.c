@@ -25,10 +25,9 @@
 #include "wininclude.h"
 #endif /* _WINDOWS */
 
-#define THOT_EXPORT
-#include "boxes_tv.h"
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
+#include "boxes_tv.h"
 #include "font_tv.h"
 #include "edit_tv.h"
 #include "frame_tv.h"
@@ -1752,7 +1751,7 @@ static void AddFloatingBox (PtrAbstractBox pAb, ThotBool left)
 {
   PtrBox              pBox, box;
   PtrAbstractBox      pParent;
-  PtrFloat            previous, new;
+  PtrFloat            previous, new_;
 
   if (pAb && !pAb->AbDead)
     {
@@ -1782,9 +1781,9 @@ static void AddFloatingBox (PtrAbstractBox pAb, ThotBool left)
 		pParent->AbBox->BxType = BoFloatBlock;
 	      /* look for the float block */
 	      pBox = pParent->AbBox;
-	      new = (PtrFloat) TtaGetMemory (sizeof (BFloat));
-	      new->FlBox = box;
-	      new->FlNext = NULL;
+	      new_ = (PtrFloat) TtaGetMemory (sizeof (BFloat));
+	      new_->FlBox = box;
+	      new_->FlNext = NULL;
 	      previous = NULL;
 	      if (left)
 		{
@@ -1792,8 +1791,8 @@ static void AddFloatingBox (PtrAbstractBox pAb, ThotBool left)
 		  box->BxHorizEdge = Left;
 		  if (pBox->BxLeftFloat == NULL)
 		    {
-		      new->FlPrevious = NULL;
-		      pBox->BxLeftFloat = new;
+		      new_->FlPrevious = NULL;
+		      pBox->BxLeftFloat = new_;
 		    }
 		  else
 		    previous = pBox->BxLeftFloat;
@@ -1804,8 +1803,8 @@ static void AddFloatingBox (PtrAbstractBox pAb, ThotBool left)
 		  box->BxHorizEdge = Right;
 		  if (pBox->BxRightFloat == NULL)
 		    {
-		      new->FlPrevious = NULL;
-		      pBox->BxRightFloat = new;
+		      new_->FlPrevious = NULL;
+		      pBox->BxRightFloat = new_;
 		    }
 		  else
 		    previous = pBox->BxRightFloat;
@@ -1814,8 +1813,8 @@ static void AddFloatingBox (PtrAbstractBox pAb, ThotBool left)
 		{
 		  while (previous->FlNext)
 		    previous = previous->FlNext;
-		  previous->FlNext = new;
-		  new->FlPrevious = previous;
+		  previous->FlNext = new_;
+		  new_->FlPrevious = previous;
 		}
 	    }
 	}
@@ -2276,13 +2275,28 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
       pAb->AbNew = FALSE;	/* la regle de creation est interpretee */
       /* manage table exceptions */
       if (tableType == BoTable && ThotLocalActions[T_checktable])
-	(*ThotLocalActions[T_checktable]) (pAb, NULL, NULL, frame);
+	(*(Proc4)ThotLocalActions[T_checktable]) (
+		(void *)pAb,
+	       	(void *)NULL,
+	       	(void *)NULL,
+	       	(void *)frame);
       else if (tableType == BoColumn && ThotLocalActions[T_checktable])
-	(*ThotLocalActions[T_checktable]) (NULL, pAb, NULL, frame);
+	(*(Proc4)ThotLocalActions[T_checktable]) (
+		(void *)NULL,
+	       	(void *)pAb, 
+		(void *)NULL,
+	       	(void *)frame);
       else if (tableType == BoRow && ThotLocalActions[T_checktable])
-	(*ThotLocalActions[T_checktable]) (NULL, NULL, pAb, frame);
+	(*(Proc4)ThotLocalActions[T_checktable]) (
+		(void *)NULL,
+	       	(void *)NULL,
+	       	(void *)pAb,
+	       	(void *)frame);
       else if (tableType == BoCell && ThotLocalActions[T_checkcolumn])
-	(*ThotLocalActions[T_checkcolumn]) (pAb, NULL, frame);
+	(*(Proc3)ThotLocalActions[T_checkcolumn]) (
+		(void *)pAb,
+	        (void *)NULL,
+	       	(void *)frame);
     }
 #ifdef _GL
   pCurrentBox->BxClipX = pCurrentBox->BxXOrg + pCurrentBox->BxLMargin 
@@ -2614,11 +2628,19 @@ void RemoveBoxes (PtrAbstractBox pAb, ThotBool rebuild, int frame)
 			       &changeSelectBegin, &changeSelectEnd);
 		}
 	      else if (pBox->BxType == BoTable && ThotLocalActions[T_cleartable])
-		(*ThotLocalActions[T_cleartable]) (pAb);
+		(*(Proc1)ThotLocalActions[T_cleartable]) ((void *)pAb);
 	      else if (pBox->BxType == BoColumn && ThotLocalActions[T_checktable])
-		(*ThotLocalActions[T_checktable]) (NULL, pAb, NULL, frame);
+		(*(Proc4)ThotLocalActions[T_checktable]) (
+			(void *)NULL,
+		       	(void *)pAb,
+		       	(void *)NULL,
+		       	(void *)frame);
 	      else if (pBox->BxType == BoRow && ThotLocalActions[T_checktable])
-		(*ThotLocalActions[T_checktable]) (NULL, NULL, pAb, frame);
+		(*(Proc4)ThotLocalActions[T_checktable]) (
+			(void *)NULL,
+		       	(void *)NULL,
+		       	(void *)pAb, 
+			(void *)frame);
 	    }
 	  else if (pAb->AbLeafType == LtPolyLine)
 	    FreePolyline (pBox);
@@ -2676,7 +2698,8 @@ void RemoveBoxes (PtrAbstractBox pAb, ThotBool rebuild, int frame)
 
 	  /* Liberation de la boite */
 	  if (pBox->BxType == BoTable && ThotLocalActions[T_cleartable])
-	    (*ThotLocalActions[T_cleartable]) (pAb);
+	    (*(Proc1)ThotLocalActions[T_cleartable]) (
+		(void *)pAb );
 #ifdef _GL
 #ifdef _TRACE_GL_BUGS_GLISLIST
   if (pAb->AbBox->DisplayList)
@@ -3311,7 +3334,10 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	  if (pCell && ThotLocalActions[T_checkcolumn])
 	    {
 	      Propagate = ToChildren;
-	      (*ThotLocalActions[T_checkcolumn]) (pCell, NULL, frame);
+	      (*(Proc3)ThotLocalActions[T_checkcolumn]) (
+			(void *)pCell,
+		       	(void *)NULL,
+			(void *)frame);
 	    }
 
 	  result = TRUE;
@@ -3439,13 +3465,19 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
       
       /* Check table consistency */
       if (isCell && ThotLocalActions[T_checkcolumn])
-	(*ThotLocalActions[T_checkcolumn]) (pAb, NULL, frame);
+	(*(Proc3)ThotLocalActions[T_checkcolumn]) (
+		(void *)pAb,
+		(void *)NULL,
+		(void *)frame);
       /* check enclosing cell */
       else if (pCell && ThotLocalActions[T_checkcolumn] &&
 	       !IsDead (pAb) &&
 	       (pAb->AbNext == NULL ||
 		(!pAb->AbNext->AbDead && !pAb->AbNext->AbNew)))
-	(*ThotLocalActions[T_checkcolumn]) (pCell, NULL, frame);
+	(*(Proc3)ThotLocalActions[T_checkcolumn]) (
+		(void *)pCell,
+		(void *)NULL,
+		(void *)frame);
       result = TRUE;
     }
   else
@@ -3760,7 +3792,10 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		  /* check enclosing cell */
 		  pCell = GetParentCell (pBox);
 		  if (pCell && width && ThotLocalActions[T_checkcolumn])
-		    (*ThotLocalActions[T_checkcolumn]) (pCell, NULL, frame);
+		    (*(Proc3)ThotLocalActions[T_checkcolumn]) (
+			(void *)pCell,
+			(void *)NULL,
+			(void *)frame);
 		  result = TRUE;
 		}
 	      else
@@ -3829,9 +3864,16 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	  
 	  /* Check table consistency */
 	  if (pCurrentBox->BxType == BoColumn && ThotLocalActions[T_checktable])
-	    (*ThotLocalActions[T_checktable]) (NULL, pAb, NULL, frame);
+	    (*(Proc4)ThotLocalActions[T_checktable]) (
+		(void *)NULL,
+		(void *)pAb,
+	      	(void *)NULL,
+		(void *)frame);
 	  else if (pCurrentBox->BxType == BoCell && ThotLocalActions[T_checkcolumn])
-	    (*ThotLocalActions[T_checkcolumn]) (pAb, NULL, frame);
+	    (*(Proc3)ThotLocalActions[T_checkcolumn]) (
+		(void *)pAb,
+		(void *)NULL,
+		(void *)frame);
 	  /* check enclosing cell */
 	  pCell = GetParentCell (pCurrentBox);
 	  if (pCell != NULL && ThotLocalActions[T_checkcolumn])
@@ -3839,7 +3881,10 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	      pBlock = SearchEnclosingType (pAb, BoBlock, BoFloatBlock);
 	      if (pBlock != NULL)
 		RecomputeLines (pBlock, NULL, NULL, frame);
-	      (*ThotLocalActions[T_checkcolumn]) (pCell, NULL, frame);
+	      (*(Proc3)ThotLocalActions[T_checkcolumn]) (
+		(void *)pCell,
+	       	(void *)NULL,
+		(void *)frame);
 	    }
 	}
       /* CHANGE HEIGHT */
@@ -3905,9 +3950,16 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		MarkDisplayedBox (pBox);
 	      /* Check table consistency */
 	      if (pCurrentBox->BxType == BoColumn && ThotLocalActions[T_checktable])
-		(*ThotLocalActions[T_checktable]) (NULL, pAb, NULL, frame);
+		(*(Proc4)ThotLocalActions[T_checktable]) (
+			(void *)NULL,
+			(void *)pAb,
+			(void *)NULL,
+			(void *)frame);
 	      else if (pCurrentBox->BxType == BoCell && ThotLocalActions[T_checkcolumn])
-		(*ThotLocalActions[T_checkcolumn]) (pAb, NULL, frame);
+		(*(Proc3)ThotLocalActions[T_checkcolumn]) (
+			(void *)pAb,
+			(void *)NULL,
+			(void *)frame);
 	      /* check enclosing cell */
 	      pCell = GetParentCell (pCurrentBox);
 	      if (pBlock)
@@ -3917,7 +3969,10 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		  RecomputeLines (pBlock, NULL, NULL, frame);
 		}
 	      if (pCell && ThotLocalActions[T_checkcolumn])
-		(*ThotLocalActions[T_checkcolumn]) (pCell, NULL, frame);
+		(*(Proc3)ThotLocalActions[T_checkcolumn]) (
+			(void *)pCell,
+			(void *)NULL,
+			(void *)frame);
 	    }
 	  /* Restore the propagation */
 	  Propagate = savpropage;
@@ -4138,7 +4193,7 @@ void RebuildConcreteImage (int frame)
 	   /* lock tables formatting */
 	   if (ThotLocalActions[T_islock])
 	     {
-	       (*ThotLocalActions[T_islock]) (&lock);
+	       (*(Proc1)ThotLocalActions[T_islock]) ((void *)&lock);
 	       if (!lock)
 		 /* table formatting is not loked, lock it now */
 		 (*ThotLocalActions[T_lock]) ();
@@ -4755,7 +4810,7 @@ ThotBool ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
 	     /* lock the table formatting */
 	     if (ThotLocalActions[T_islock])
 	       {
-		 (*ThotLocalActions[T_islock]) (&lock);
+		 (*(Proc1)ThotLocalActions[T_islock]) ((void *)&lock);
 		 if (!lock)
 		   /* table formatting is not loked, lock it now */
 		   (*ThotLocalActions[T_lock]) ();

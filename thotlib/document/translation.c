@@ -217,27 +217,27 @@ static void ExportChar (wchar_t c, int fnum, char *outBuf, PtrDocument pDoc,
 	{
 	  if (c == 0x22) /* &quot; */
 	    {
-	      strcpy (&mbc[0], "&quot;");
+	      strcpy ((char *)&mbc[0], "&quot;");
 	      nb_bytes2write = 6;
 	    }
 	  else if (c == 0x26) /* &amp; */
 	    {
-	      strcpy (&mbc[0], "&amp;");
+	      strcpy ((char *)&mbc[0], "&amp;");
 	      nb_bytes2write = 5;
 	    }
 	  else if (c == 0x3C) /* &lt; */
 	    {
-	      strcpy (&mbc[0], "&lt;");
+	      strcpy ((char *)&mbc[0], "&lt;");
 	      nb_bytes2write = 4;
 	    }
 	  else if (c == 0x3E) /* &gt; */
 	    {
-	      strcpy (&mbc[0], "&gt;");
+	      strcpy ((char *)&mbc[0], "&gt;");
 	      nb_bytes2write = 4;
 	    }
 	  else if (c == 0xA0) /* &nbsp; */
 	    {
-	      strcpy (&mbc[0], "&nbsp;");
+	      strcpy ((char *)&mbc[0], "&nbsp;");
 	      nb_bytes2write = 6;
 	    }
 	}
@@ -247,22 +247,22 @@ static void ExportChar (wchar_t c, int fnum, char *outBuf, PtrDocument pDoc,
 	{
 	  /* generate an entity into an ASCII or ISO_8859_1 file */
 	  if (entityName && GetEntityFunction)
-	    (*GetEntityFunction) (c, &entity);
+	    (*(Proc2)GetEntityFunction) ((void *)c, (void *)&entity);
 	  else
 	    entity = NULL;
 	  mbc[0] = '&';
 	  if (entity)
 	    {
-	      strncpy (&mbc[1], entity, 40);
+	      strncpy ((char *)&mbc[1], entity, 40);
 	      mbc[42] = EOS;
 	    }
 	  else
 	    {
 	      mbc[1] = '#';
 	      mbc[2] = 'x';
-	      sprintf (&mbc[3], "%x", (int)c);
+	      sprintf ((char *)&mbc[3], "%x", (int)c);
 	    }
-	  nb_bytes2write = strlen (mbc);
+	  nb_bytes2write = strlen ((char *)mbc);
 	  mbc[nb_bytes2write++] = ';';
 	}
       else if (pDoc->DocCharset == UTF_8)
@@ -281,22 +281,22 @@ static void ExportChar (wchar_t c, int fnum, char *outBuf, PtrDocument pDoc,
 	    {
 	      /* generate an entity */
 	      if (entityName && GetEntityFunction)
-		(*GetEntityFunction) (c, &entity);
+		(*(Proc2)GetEntityFunction) ((void *)c, (void *)&entity);
 	      else
 		entity = NULL;
 	      mbc[0] = '&';
 	      if (entity)
 		{
-		  strncpy (&mbc[1], entity, 40);
+		  strncpy ((char *)&mbc[1], entity, 40);
 		  mbc[42] = EOS;
 		}
 	      else
 		{
 		  mbc[1] = '#';
 		  mbc[2] = 'x';
-		  sprintf (&mbc[3], "%x", (int)c);
+		  sprintf ((char *)&mbc[3], "%x", (int)c);
 		}
-	      nb_bytes2write = strlen (mbc);
+	      nb_bytes2write = strlen ((char *)mbc);
 	      mbc[nb_bytes2write++] = ';';
 	    }
 #else  /* _I18N_ */
@@ -326,7 +326,7 @@ static void ExportChar (wchar_t c, int fnum, char *outBuf, PtrDocument pDoc,
 	{
 	  tmp[0] =  mbc[index];
 	  tmp[1] = EOS;
-	  strcat (outBuf, tmp);
+	  strcat (outBuf, (char *)tmp);
 	}
     }
   else if (fnum == 0)
@@ -494,7 +494,7 @@ static ThotBool CheckDate (unsigned char c, int fnum, char *outBuf,
     {
       if (c == ':')
 	{
-	  if (!StartDate && !strncasecmp (DateString, "Date", DateIndex))
+	  if (!StartDate && !strncasecmp ((char *)DateString, "Date", DateIndex))
 	    {
 	      /* following characters will be skipped until the $ or EOL or EOS */
 	      StartDate = TRUE;
@@ -564,7 +564,7 @@ static void PutColor (int n, int fnum, PtrDocument pDoc, ThotBool lineBreak)
 
   if (n < NColors && n >= 0)
     {
-      ptr = Color_Table[n];
+      ptr = (unsigned char *)Color_Table[n];
       i = 0;
       while (ptr[i] != EOS)
 	{
@@ -586,7 +586,7 @@ static void PutPattern (int n, int fnum, PtrDocument pDoc, ThotBool lineBreak)
 
   if (n < NbPatterns && n >= 0)
     {
-      ptr = Patterns[n];
+      ptr = (unsigned char *)Patterns[n];
       i = 0;
       while (ptr[i] != EOS)
 	{
@@ -606,7 +606,7 @@ static void PutInt (int n, int fnum, char *outBuf, PtrDocument pDoc,
   unsigned char       buffer[20];
   int                 i;
 
-  sprintf (buffer, "%d", n);
+  sprintf ((char *)buffer, "%d", n);
   i = 0;
   while (buffer[i] != EOS)
     PutChar ((wchar_t) buffer[i++], fnum, outBuf, pDoc, lineBreak,
@@ -2196,7 +2196,7 @@ static void ApplyAttrRules (TOrder position, PtrElement pEl,
 		 ns_prefix = ExportAttrNsPrefix (pDoc, pEl, pAttr);
 		 if (ns_prefix != NULL)
 		   {
-		     buffer = TtaGetMemory (strlen (ns_prefix) + 2);
+		     buffer = (char *)TtaGetMemory (strlen (ns_prefix) + 2);
 		     strcpy (buffer, ns_prefix);
 		     strcat (buffer, ":");
 		     SetVariableBuffer (pTSch, "AttrPrefixBuffer", buffer);
@@ -2506,7 +2506,7 @@ static void PutVariable (PtrElement pEl, PtrAttribute pAttr,
 	       }
 	   }
 	 /* convertit la valeur du compteur dans le style demande' */
-	 GetCounterValue (i, varItem->TvCounterStyle, number, &j);
+	 GetCounterValue (i, varItem->TvCounterStyle, (char *)number, &j);
 	 /* sort la valeur du compteur */
 	 for (k = 0; k < j; k++)
 	   PutChar ((wchar_t) (number[k]), fnum, outBuf, pDoc,
@@ -3380,7 +3380,7 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
       if (pTRule->TrBufOrConst == ToConst)
 	{
 	  i = pTSch->TsConstBegin[pTRule->TrInclFile - 1] - 1;
-	  strncpy(secondaryFileName, &pTSch->TsConstant[i], MAX_PATH - 1);
+	  strncpy(secondaryFileName, (char *)&pTSch->TsConstant[i], MAX_PATH - 1);
 	}
       else if (pTRule->TrBufOrConst == ToBuffer)
 	/* le nom du fichier est dans un buffer */
@@ -3516,7 +3516,7 @@ static void TranslateTree (PtrElement pEl, PtrDocument pDoc,
 	 ns_prefix = ExportElemNsPrefix (pDoc, pEl);
 	 if (ns_prefix != NULL)
 	   {
-	     buffer = TtaGetMemory (strlen (ns_prefix) + 2);
+	     buffer = (char *)TtaGetMemory (strlen (ns_prefix) + 2);
 	     strcpy (buffer, ns_prefix);
 	     strcat (buffer, ":");
 	     SetVariableBuffer (pTSch, "ElemPrefixBuffer", buffer);
@@ -3997,17 +3997,17 @@ static void ExportNsDeclaration (PtrDocument pDoc, PtrElement pNode)
 	  if (prefixDecl->NsPrefixElem == pNode)
 	    {
 	      if (i > 0)
-		ExportXmlBuffer (pDoc, "\n");
+		ExportXmlBuffer (pDoc, (unsigned char *)"\n");
 	      /* A Namespace declaration has been found for this element */
-	      ExportXmlBuffer (pDoc, " xmlns");
+	      ExportXmlBuffer (pDoc, (unsigned char *)" xmlns");
 	      if (prefixDecl->NsPrefixName != NULL)
 		{
-		  ExportXmlBuffer (pDoc, ":");
-		  ExportXmlBuffer (pDoc, prefixDecl->NsPrefixName);
+		  ExportXmlBuffer (pDoc, (unsigned char *)":");
+		  ExportXmlBuffer (pDoc, (unsigned char *)prefixDecl->NsPrefixName);
 		}
-	      ExportXmlBuffer (pDoc, "=\"");
-	      ExportXmlBuffer (pDoc, uriDecl->NsUriName);
-	      ExportXmlBuffer (pDoc, "\"");
+	      ExportXmlBuffer (pDoc, (unsigned char *)"=\"");
+	      ExportXmlBuffer (pDoc, (unsigned char *)uriDecl->NsUriName);
+	      ExportXmlBuffer (pDoc, (unsigned char *)"\"");
 	      i++;
 	    }
 	  prefixDecl = prefixDecl->NsNextPrefixDecl;
@@ -4128,7 +4128,7 @@ void ExportXmlDocument (PtrDocument pDoc, PtrElement pNode, ThotBool recordLineN
 	      if (pNode == pDoc->DocDocElement)
 		{
 		  /* version */
-		  ExportXmlBuffer (pDoc, "<?xml version=\"1.0\"");
+		  ExportXmlBuffer (pDoc, (unsigned char *)"<?xml version=\"1.0\"");
 		  /* encoding */
 		  if (pDoc->DocDefaultCharset)
 		    charset = UNDEFINED_CHARSET;
@@ -4137,11 +4137,11 @@ void ExportXmlDocument (PtrDocument pDoc, PtrElement pNode, ThotBool recordLineN
 		  if (charset != UNDEFINED_CHARSET)
 		    {
 		      charset_name = TtaGetCharsetName (charset);
-		      ExportXmlBuffer (pDoc, " encoding=\"");
-		      ExportXmlBuffer (pDoc, charset_name);
-		      ExportXmlBuffer (pDoc, "\"");
+		      ExportXmlBuffer (pDoc, (unsigned char *)" encoding=\"");
+		      ExportXmlBuffer (pDoc, (unsigned char *)charset_name);
+		      ExportXmlBuffer (pDoc, (unsigned char *)"\"");
 		    }
-		  ExportXmlBuffer (pDoc, "?>");
+		  ExportXmlBuffer (pDoc, (unsigned char *)"?>");
 		}
 	      else
 		{
@@ -4151,8 +4151,8 @@ void ExportXmlDocument (PtrDocument pDoc, PtrElement pNode, ThotBool recordLineN
 		  len_ns = 0;
 		  if (ExportElemNsPrefix (pDoc, pNode) != NULL)
 		    len_ns = strlen (ExportElemNsPrefix (pDoc, pNode)) + 1;
-		  startName = TtaGetMemory (strlen (pRe1->SrOrigName) + 2 + len_ns + 1);
-		  endName = TtaGetMemory (strlen (pRe1->SrOrigName) + 3 + len_ns + 1);
+		  startName = (char *)TtaGetMemory (strlen (pRe1->SrOrigName) + 2 + len_ns + 1);
+		  endName = (char *)TtaGetMemory (strlen (pRe1->SrOrigName) + 3 + len_ns + 1);
 		  if (TypeHasException (ExcHidden, pNode->ElTypeNumber,	pNode->ElStructSchema))
 		    {
 		      /* Don't export hidden elements */
@@ -4166,7 +4166,7 @@ void ExportXmlDocument (PtrDocument pDoc, PtrElement pNode, ThotBool recordLineN
 		    }
 		  else
 		    {
-		      ExportXmlBuffer (pDoc, "\n");
+		      ExportXmlBuffer (pDoc, (unsigned char *)"\n");
 		      if (strcmp (pRe1->SrOrigName, "xmlcomment") == 0)
 			{
 			  strcpy (startName, "<!--");
@@ -4208,7 +4208,7 @@ void ExportXmlDocument (PtrDocument pDoc, PtrElement pNode, ThotBool recordLineN
 			  strcat (endName, ">");
 			}
 		    }
-		  ExportXmlBuffer (pDoc, startName);
+		  ExportXmlBuffer (pDoc, (unsigned char *)startName);
 
 		  /* if needed, record the current line number of the main
 		     output file in the element being translated */
@@ -4226,15 +4226,15 @@ void ExportXmlDocument (PtrDocument pDoc, PtrElement pNode, ThotBool recordLineN
 		      if (!AttrHasException (ExcInvisible, pAttr->AeAttrNum, pAttr->AeAttrSSchema))
 			/* Don't export invisible attributes */
 			{
-			  ExportXmlBuffer (pDoc, " ");
+			  ExportXmlBuffer (pDoc, (unsigned char *)" ");
 			  /* Export the attribute prefix if it exists */
 			  ns_prefix = ExportAttrNsPrefix (pDoc, pNode, pAttr);
 			  if (ns_prefix != NULL)
-			    ExportXmlBuffer (pDoc, ns_prefix); 
+			    ExportXmlBuffer (pDoc, (unsigned char *)ns_prefix); 
 			  /* Export the attribute name */
 			  pAttr1 = pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum-1];
-			  ExportXmlBuffer (pDoc, pAttr1->AttrName);
-			  ExportXmlBuffer (pDoc, "=");
+			  ExportXmlBuffer (pDoc, (unsigned char *)pAttr1->AttrName);
+			  ExportXmlBuffer (pDoc, (unsigned char *)"=");
 			  /* Export the attribute's value */
 			  switch (pAttr1->AttrType)
 			    {
@@ -4244,16 +4244,16 @@ void ExportXmlDocument (PtrDocument pDoc, PtrElement pNode, ThotBool recordLineN
 			    case AtTextAttr:
 			      if (pAttr->AeAttrText)
 				{
-				  ExportXmlBuffer (pDoc, "\"");
+				  ExportXmlBuffer (pDoc, (unsigned char *)"\"");
 				  /* Export the text buffer content */
 				  ExportXmlText (pDoc, pAttr->AeAttrText, TRUE, FALSE);
-				  ExportXmlBuffer (pDoc, "\"");
+				  ExportXmlBuffer (pDoc, (unsigned char *)"\"");
 				}
 			      break;
 			    case AtEnumAttr:
-			      ExportXmlBuffer (pDoc, "\"");
-			      ExportXmlBuffer (pDoc, pAttr1->AttrEnumValue[pAttr->AeAttrValue - 1]);
-			      ExportXmlBuffer (pDoc, "\"");
+			      ExportXmlBuffer (pDoc, (unsigned char *)"\"");
+			      ExportXmlBuffer (pDoc, (unsigned char *)pAttr1->AttrEnumValue[pAttr->AeAttrValue - 1]);
+			      ExportXmlBuffer (pDoc, (unsigned char *)"\"");
 			      
 			      break;
 			    default:
@@ -4264,7 +4264,7 @@ void ExportXmlDocument (PtrDocument pDoc, PtrElement pNode, ThotBool recordLineN
 		    }
 		  
 		  if ((startName[0] != EOS) && !specialTag)
-		    ExportXmlBuffer (pDoc, ">");
+		    ExportXmlBuffer (pDoc, (unsigned char *)">");
 		  if (startName != NULL)
 		    TtaFreeMemory (startName);
 		}
@@ -4279,7 +4279,7 @@ void ExportXmlDocument (PtrDocument pDoc, PtrElement pNode, ThotBool recordLineN
 	      
 	      /* Export End tag */
 	      if (pNode != pDoc->DocDocElement)
-		ExportXmlBuffer (pDoc, endName);
+		ExportXmlBuffer (pDoc, (unsigned char *)endName);
 	      if (endName != NULL)
 		TtaFreeMemory (endName);
 	    }

@@ -23,7 +23,7 @@
 #include "page_tv.h"
 #include "appdialogue_tv.h"
 #include "select_tv.h"
-
+#include "boxes_tv.h"
 #include "absboxes_f.h"
 #include "abspictures_f.h"
 #include "buildboxes_f.h"

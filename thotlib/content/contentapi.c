@@ -30,7 +30,8 @@
 #include "ustring.h"
 
 #undef THOT_EXPORT
-#define THOT_EXPORT
+/*#define THOT_EXPORT*/
+#define THOT_EXPORT extern	/* to avoid redefinitions */
 #include "edit_tv.h"
 #include "select_tv.h"
 #ifndef NODISPLAY
@@ -80,7 +81,7 @@ static void InsertText (PtrElement pEl, int position, unsigned char *content,
   int                 length, delta, lengthBefore;
   PtrElement          pElAsc;
 
-  length = strlen (content);
+  length = strlen ((char *)content);
   if (length > 0)
     {
       /* corrects the parameter position */
@@ -234,7 +235,7 @@ static void SetContent (Element element, unsigned char *content,
       /* store the contents of the element */
       if (content)
 	{
-	  max = strlen (content);
+	  max = strlen ((char *)content);
 	  pBuf = pEl->ElText;
 	  if (pBuf == NULL)
 	    {
@@ -292,7 +293,7 @@ static void SetContent (Element element, unsigned char *content,
 	  image->PicType = -1;
 	  /* change the filename of the image */
 	  TtaFreeMemory (image->PicFileName);
-	  image->PicFileName = TtaStrdup (content);
+	  image->PicFileName = (char *)TtaStrdup ((char *)content);
 	}
 
 #ifndef NODISPLAY
@@ -1402,7 +1403,7 @@ char *TtaTransformCurveIntoPath (Element el)
   if (pBox->BxPictInfo)
     {
       ctrlPoints = (C_points *) pBox->BxPictInfo;
-      path = TtaGetMemory (nbPoints * 40);
+      path = (char *)TtaGetMemory (nbPoints * 40);
       sprintf (path, "M %d,%d", adBuff->BuPoints[1].XCoord,
 	       adBuff->BuPoints[1].YCoord);
       len = strlen (path);
@@ -1684,7 +1685,7 @@ static RgbaDef *NewRgbaDef (Element el)
 {
   RgbaDef *seek;
  
-  seek = TtaGetMemory (sizeof (RgbaDef));
+  seek = (RgbaDef *)TtaGetMemory (sizeof (RgbaDef));
   seek->el = el;
   seek->next = NULL;
 
@@ -1697,7 +1698,7 @@ static GradDef *NewGradDef ()
 {
   GradDef *grad;
  
-  grad = TtaGetMemory (sizeof (GradDef));
+  grad = (GradDef *)TtaGetMemory (sizeof (GradDef));
   grad->x1 = 0;
   grad->x2 = 0;
   grad->y1 = 0;
@@ -1974,7 +1975,7 @@ void TtaAddTransform (Element element, void *transform,
 	     {
 	       if (pPa->TransType == ((PtrTransform)transform)->TransType)
 		 {
-		   TransformAddition (pPa, transform);
+		   TransformAddition (pPa, (Transform*)transform);
 		   TtaFreeMemory (transform);
 		  return;
 		 }	       
@@ -2049,7 +2050,7 @@ void TtaAppendAnim (Element element, void *anim)
 	  a_list = (Animated_Element *)((PtrElement)element)->ElParent->ElAnimation;
 	  while (a_list->next)
 	    a_list = a_list->next;
-	  a_list->next = anim;
+	  a_list->next = (Animated_Element *)anim;
 	}
       else
 	((PtrElement)element)->ElParent->ElAnimation = anim; 
@@ -2069,7 +2070,7 @@ void *TtaNewAnimPath (Document doc)
 #ifdef _GL
   AnimPath *anim_seg;
   
-  anim_seg = TtaGetMemory (sizeof (AnimPath));
+  anim_seg = (AnimPath *)TtaGetMemory (sizeof (AnimPath));
   memset (anim_seg, 0, sizeof (AnimPath));
   return ((void *) anim_seg);
 #else /* _GL */
@@ -2266,7 +2267,7 @@ void TtaAddAnimTo (void *info, void *anim)
   ----------------------------------------------------------------------*/
 void TtaAddAnimAttrName (void *info, void *anim)
 {    
-  ((Animated_Element *) anim)->AttrName = info;
+  ((Animated_Element *) anim)->AttrName = (char *)info;
 }
 
 /*----------------------------------------------------------------------
@@ -2427,7 +2428,7 @@ void TtaSetPictureType (Element element, char *mime_type)
 		!strcmp (mime_type, "application/mathml+xml"))
 	 typeImage = mathml_type;
        else 
-	 typeImage = UNKNOWN_FORMAT;
+	 typeImage = (PicType)UNKNOWN_FORMAT;
        imageDesc->PicType = typeImage;
      }
 }

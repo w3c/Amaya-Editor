@@ -464,7 +464,10 @@ void KbdCallbackHandler (ThotWidget w, unsigned int param, caddr_t call_d)
      }
 #endif /* _I18N_ */
    if (ThotLocalActions[T_insertchar] != NULL)
-      (*ThotLocalActions[T_insertchar]) (ActiveFrame, car, kbd);
+      (*(Proc3)ThotLocalActions[T_insertchar]) (
+		(void *)ActiveFrame,
+		(void *)car,
+		(void *)kbd);
    if (KeyboardMode == 3)
      /* character entered through the Symbol/Greek palette */
      CloseTextInsertion();

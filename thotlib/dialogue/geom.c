@@ -1875,7 +1875,7 @@ pBuffer->BuLength = 3;
   FreeTextBuffer (pBuffer);
 
   /* restore changed values */
-  pBox->BxAbstractBox->AbLeafType = boxType; 
+  pBox->BxAbstractBox->AbLeafType = (LeafType)boxType; 
   pBox->BxNChars = boxNChars;
   pBox->BxBuffer = NULL;
   pBox->BxAbstractBox->AbPolyLineShape = boxAbPolyLineShape;
@@ -3541,7 +3541,7 @@ void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
       if (XPending (TtDisplay) == 0)
 	{
 	  /* get the cursor location */
-	  XQueryPointer (TtDisplay, w, &wdum, &wdum, &dx, &dy, &newx, &newy, &e);
+	  XQueryPointer (TtDisplay, w, &wdum, &wdum, &dx, &dy, &newx, &newy, (unsigned int *)&e);
 	  /* check the coordinates are withing limits */
 	  newx = DO_ALIGN (newx - xmin);
 	  newx += xmin;
@@ -3616,17 +3616,17 @@ void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
 	  /* current pointer position */
 	  xwindow = (GdkWindowPrivate*) w;
 	  xwindow2 = (GdkWindowPrivate*) wdum;
-	  xwindow2 = TtaGetMemory (sizeof(GdkWindowPrivate*));
+	  xwindow2 = (GdkWindowPrivate*)TtaGetMemory (sizeof(GdkWindowPrivate)); /* SG 27.10.03 : I've replaced sizeof(GdkWindowPrivate*) by sizeof(GdkWindowPrivate) ... I think it was a 'faute de frappe' */
 	  XQueryPointer (GDK_DISPLAY(), 
 			 xwindow->xwindow, 
 			 &(xwindow2->xwindow), 
 			 &(xwindow2->xwindow), 
 			 &dx, &dy, 
 			 &newx, &newy, 
-			 &e);
+			 (unsigned int *)&e);
 	  TtaFreeMemory (xwindow2);
 	  /* coordinate in limits */
-	   newx = DO_ALIGN (newx - xmin);
+	  newx = DO_ALIGN (newx - xmin);
 	  newx += xmin;
 	  newy = DO_ALIGN (newy - ymin);
 	  newy += ymin;

@@ -165,7 +165,7 @@ char *UpdateCSSBackgroundImage (char *oldpath, char *newpath,
 		{
 		  oldptr = ptr;
 		  len = - len + strlen (oldptr) + strlen (new_url) + 1;
-		  ptr = TtaGetMemory (len);	  
+		  ptr = (char *)TtaGetMemory (len);	  
 		  len = (int)(b - oldptr);
 		  strncpy (ptr, oldptr, len);
 		  sString = &ptr[len];
@@ -178,7 +178,7 @@ char *UpdateCSSBackgroundImage (char *oldpath, char *newpath,
 	      else
 		{
 		  len = - len + strlen (styleString) + strlen (new_url) + 1;
-		  ptr = TtaGetMemory (len);
+		  ptr = (char *)TtaGetMemory (len);
 		  len = (int)(b - styleString);
 		  strncpy (ptr, styleString, len);
 		  sString = &ptr[len];
@@ -222,7 +222,7 @@ ThotBool UpdateStyleDelete (NotifyAttribute * event)
     {
       /* parse the content of the style attribute and remove the corresponding
 	 presentation rules from the element */
-      style = TtaGetMemory (len + 2);
+      style = (char *)TtaGetMemory (len + 2);
       if (!style)
 	return FALSE;
       TtaGiveTextAttributeValue (event->attribute, style, &len);
@@ -248,7 +248,7 @@ ThotBool UpdateStyleDelete (NotifyAttribute * event)
   ChangeStyle
   the STYLE element will be changed in the document HEAD.
   ----------------------------------------------------------------------*/
-ThotBool ChangeStyle (NotifyElement * event)
+ThotBool ChangeStyle (NotifyOnTarget * event)
 {
   OldBuffer = GetStyleContents (event->element);
   return FALSE;  /* let Thot perform normal operation */
@@ -349,7 +349,7 @@ void DeleteStyleElement (Document doc, Element el)
    StyleChanged
    A STYLE element has been changed in the HEAD
   ----------------------------------------------------------------------*/
-void StyleChanged (NotifyAttribute *event)
+void StyleChanged (NotifyOnTarget *event)
 {
   char               *buffer, *ptr1, *ptr2;
   char               *pEnd, *nEnd;
@@ -558,7 +558,7 @@ void UpdateStylePost (NotifyAttribute * event)
    else
      {
 	/* parse and apply the new style content */
-	style = TtaGetMemory (len + 2);
+	style = (char *)TtaGetMemory (len + 2);
 	if (style == NULL)
 	   return;
 	TtaGiveTextAttributeValue (event->attribute, style, &len);
@@ -657,7 +657,7 @@ static void DoApplyClass (Document doc)
 	 if (lg > 0)
 	   {
 	     lg++;
-	     buffer = TtaGetMemory (lg * sizeof(CHAR_T));
+	     buffer = (CHAR_T *)TtaGetMemory (lg * sizeof(CHAR_T));
 	     TtaGiveBufferContent (lastSelectedEl, buffer, lg, &lang);
 	     if (lastSelectedEl == firstSelectedEl)
 	       min = firstSelectedChar;
@@ -746,7 +746,7 @@ static void DoApplyClass (Document doc)
 	    if (lg > 0)
 	      {
 		lg++;
-		buffer = TtaGetMemory (lg * sizeof(CHAR_T));
+		buffer = (CHAR_T *)TtaGetMemory (lg * sizeof(CHAR_T));
 		TtaGiveBufferContent (firstSelectedEl, buffer, lg, &lang);
 		if (lastSelectedEl == firstSelectedEl)
 		  max = lastSelectedChar;
@@ -884,7 +884,7 @@ static void SpecificSettingsToCSS (Element el, Document doc,
 				   PresentationSetting settings, void *param)
 {
   LoadedImageDesc    *imgInfo;
-  char               *css_rules = param;
+  char               *css_rules = (char *)param;
   char                string[150];
   char               *ptr;
 
@@ -892,11 +892,11 @@ static void SpecificSettingsToCSS (Element el, Document doc,
   if (settings->type == PRBackgroundPicture)
     {
       /* transform absolute URL into relative URL */
-      imgInfo = SearchLoadedImage (settings->value.pointer, 0);
+      imgInfo = SearchLoadedImage ((char *)settings->value.pointer, 0);
       if (imgInfo != NULL)
 	ptr = MakeRelativeURL (imgInfo->originalName, DocumentURLs[doc]);
       else
-	ptr = MakeRelativeURL (settings->value.pointer, DocumentURLs[doc]);
+	ptr = MakeRelativeURL ((char *)settings->value.pointer, DocumentURLs[doc]);
       settings->value.pointer = ptr;
       TtaPToCss (settings, string, sizeof(string), el);
       TtaFreeMemory (ptr);
@@ -1016,7 +1016,7 @@ void HTMLSetBackgroundImage (Document doc, Element el, int repeat,
 	{
 	  /* concatenate the old value and the new text */
 	  len = TtaGetTextAttributeLength (attr) + 1;
-	  ptr = TtaGetMemory (len + strlen (txt));
+	  ptr = (char *)TtaGetMemory (len + strlen (txt));
 	  TtaGiveTextAttributeValue (attr, ptr, &len);
 	  strcat (ptr, txt);
 	  TtaRegisterAttributeReplace (attr, el, doc);
@@ -1129,7 +1129,7 @@ static void UpdateClass (Document doc)
 	  if (attr)
 	    {
 	      len = TtaGetTextAttributeLength (attr);
-	      a_class = TtaGetMemory (len + 1);
+	      a_class = (char *)TtaGetMemory (len + 1);
 	      TtaGiveTextAttributeValue (attr, a_class, &len);
 	      found = (!strcmp (a_class, "text/css"));
 	      TtaFreeMemory (a_class);
@@ -1192,7 +1192,7 @@ static void UpdateClass (Document doc)
   else
     len = base + 3;
   /* create a string containing the new CSS definition. */
-  stylestring = TtaGetMemory (len);
+  stylestring = (char *)TtaGetMemory (len);
   stylestring[0] = EOS;
   if (selType.ElTypeNum == 0)
     {
@@ -1278,8 +1278,8 @@ static void UpdateClass (Document doc)
 	 skip it */
       {
 	len = TtaGetTextLength (child) + 1;
-	text = TtaGetMemory (len);
-	TtaGiveTextContent (child, text, &len, &lang);
+	text = (char *)TtaGetMemory (len);
+	TtaGiveTextContent (child, (unsigned char *)text, &len, &lang);
 	empty = TRUE;
 	insertNewLine = TRUE;
 	for (i = len - 1; i >= 0 && empty; i--)
@@ -1316,8 +1316,8 @@ static void UpdateClass (Document doc)
 	      {
 		child = TtaGetLastChild (line);
 		len = TtaGetTextLength (child) + 1;
-		text = TtaGetMemory (len);
-		TtaGiveTextContent (child, text, &len, &lang);
+		text = (char *)TtaGetMemory (len);
+		TtaGiveTextContent (child, (unsigned char *)text, &len, &lang);
 		empty = TRUE;
 		insertNewLine = TRUE;
 		for (i = len - 1; i >= 0 && empty; i--)
@@ -1353,10 +1353,10 @@ static void UpdateClass (Document doc)
     len = TtaGetTextLength (child);
     if (insertNewLine)
       {
-       TtaInsertTextContent (child, len, "\n", doc);
+       TtaInsertTextContent (child, len, (unsigned char *)"\n", doc);
        len++;
       }
-    TtaInsertTextContent (child, len, stylestring, doc);
+    TtaInsertTextContent (child, len, (unsigned char *)stylestring, doc);
     /* parse and apply this new CSS to the current document */
     ReadCSSRules (doc, NULL, stylestring, NULL,
 		  TtaGetElementLineNumber (child), TRUE, styleEl);
@@ -1388,14 +1388,14 @@ static void PutClassName (Attribute attr, char *className, char *buf,
   if (attr)
     {
       len = 198;
-      TtaGiveTextAttributeValue (attr, selector, &len);
+      TtaGiveTextAttributeValue (attr, (char *)selector, &len);
       selector[len+1] = EOS;
       /* get the first name contained in the attribute */
       ptr = selector;
-      ptr = TtaSkipBlanks (ptr);
+      ptr = (unsigned char *)TtaSkipBlanks ((char *)ptr);
     }
   else
-    ptr = className;
+    ptr = (unsigned char *)className;
 
   while (ptr && *ptr != EOS)
     {
@@ -1413,25 +1413,25 @@ static void PutClassName (Attribute attr, char *className, char *buf,
 	  if (buf[cur] == '.')
 	    cur++;
 	  len = strlen (&buf[cur]) + 1;
-	  found = !strcmp (name, &buf[cur]);
+	  found = !strcmp ((char *)name, (char *)&buf[cur]);
 	  cur += len;
 	}
       if (!found)
 	/* this class name is not known, append it */
 	{
-	  len = strlen (name);
+	  len = strlen ((char *)name);
 	  if (len > *free)
 	    return;
 	  /* add this new class name with a dot */
 	  buf[(*index)++] = '.';
-	  strcpy (&buf[*index], name);
+	  strcpy ((char *)&buf[*index], (char *)name);
 	  len++; /* add the \0 */
 	  *free -= len;
 	  *index += len;
 	  (*nb)++;
 	}
       /* skip spaces after the name that has just been processed */
-      ptr = TtaSkipBlanks (ptr);
+      ptr = (unsigned char *)TtaSkipBlanks ((char *)ptr);
       /* and process the next name, if any */
     }
 }

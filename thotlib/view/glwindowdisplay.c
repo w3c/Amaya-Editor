@@ -1333,7 +1333,7 @@ AnimTime ComputeThotCurrentTime (int frame)
 void SetGlPipelineState ()
 {  
   const char *version = (const char *) gluGetString (GLU_VERSION);
-  const char *renderer = glGetString (GL_RENDERER);
+  const char *renderer = (const char*)glGetString (GL_RENDERER);
   ThotBool graph_aa = TRUE;
   ThotBool badbuffer = FALSE;
 
@@ -1556,7 +1556,7 @@ void GL_window_copy_area (int frame, int xf, int yf, int x_source, int y_source,
       /* glFinish (); */
       glDisable (GL_BLEND);
 
-      GL_UnsetClipping  (0, 0, 0, 0);
+      GL_UnsetClipping  (/*0, 0, 0, 0*/);
 
       glRasterPos2i (xf, yf+height);	  
       /*IF Rasterpos is outside canvas...
@@ -1657,7 +1657,7 @@ void saveBuffer (char *filename, int width, int height)
 
   glFlush ();
   /* glFinish (); */
-  Data = TtaGetMemory (sizeof (unsigned char) * width * height * 4);
+  Data = (unsigned char *)TtaGetMemory (sizeof (unsigned char) * width * height * 4);
   glReadPixels (0, 0, width, height, 
 		GL_RGBA, 
 		GL_UNSIGNED_BYTE, Data);

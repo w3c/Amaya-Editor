@@ -79,7 +79,7 @@ unsigned char *fill_linear_gradient_image (RgbaDef *First,
   int     int_grad_width;
 
   int_grad_width = 4 * width * height * sizeof (unsigned char);
-  pixel = malloc (int_grad_width);
+  pixel = (unsigned char *)malloc (int_grad_width);
   memset (pixel, 0, int_grad_width);
   current_gradient = First;
   p0 = pixel;

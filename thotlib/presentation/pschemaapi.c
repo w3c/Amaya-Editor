@@ -18,7 +18,7 @@
 #include "pschema.h"
 
 #undef THOT_EXPORT
-#define THOT_EXPORT
+#define THOT_EXPORT extern /* to avoid redefinition */
 #include "edit_tv.h"
 
 #include "memory_f.h"

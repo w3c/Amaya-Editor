@@ -33,7 +33,7 @@
 #include "appdialogue_tv.h"
 #include "platform_tv.h"
 
-ThotBool            error;
+static ThotBool     error;
 static ThotBool     msgOldFormat;
 
 /* table d'equivalence entre les couleurs de la version pivot 3 et celles */
@@ -130,7 +130,7 @@ static void PivotError (BinFile file, char *code)
   j = 0;
   while (!stop && i < 199)
   {
-    if (!TtaReadByte (file, &c))
+    if (!TtaReadByte (file, (unsigned char *)&c))
       stop = TRUE;
     else
 	 {
@@ -316,7 +316,7 @@ static ThotBool ReadDimensionType (BinFile file)
 {
    char c;
 
-   if (!TtaReadByte (file, &c))
+   if (!TtaReadByte (file, (unsigned char *)&c))
      {
 	c = EOS;
 	PivotError (file, "Dimension");
@@ -335,7 +335,7 @@ static TypeUnit     ReadUnit (BinFile file)
 {
    char c;
 
-   if (!TtaReadByte (file, &c))
+   if (!TtaReadByte (file, (unsigned char *)&c))
      {
 	c = EOS;
 	PivotError (file, "Unit");
@@ -367,7 +367,7 @@ static ThotBool     ReadSign (BinFile file)
 {
    char c;
 
-   if (!TtaReadByte (file, &c))
+   if (!TtaReadByte (file, (unsigned char *)&c))
      {
 	c = EOS;
 	PivotError (file, "Sign");
@@ -385,7 +385,7 @@ static ThotBool     ReadBoolean (BinFile file)
 {
    char c;
 
-   if (!TtaReadByte (file, &c))
+   if (!TtaReadByte (file, (unsigned char *)&c))
      {
 	c = EOS;
 	PivotError (file, "Boolean");
@@ -404,7 +404,7 @@ static BAlignment   ReadAlign (BinFile file)
    char       c;
    BAlignment align;
 
-   if (!TtaReadByte (file, &c))
+   if (!TtaReadByte (file, (unsigned char *)&c))
      {
 	c = EOS;
 	PivotError (file, "Align");
@@ -443,7 +443,7 @@ static PageType ReadPageType (BinFile file)
    char     c;
    PageType typ;
 
-   if (!TtaReadByte (file, &c))
+   if (!TtaReadByte (file, (unsigned char *)&c))
      {
        c = EOS;
        PivotError (file, "PivotError (PageType)");
@@ -496,7 +496,7 @@ static PictureScaling ReadPicturePresentation (BinFile pivFile)
    char           c;
    PictureScaling scaling;
 
-   if (!TtaReadByte (pivFile, &c))
+   if (!TtaReadByte (pivFile, (unsigned char *)&c))
      {
 	c = EOS;
 	PivotError (pivFile, "PicturePresentation)");
@@ -580,7 +580,7 @@ static void ReadReference (ReferenceType *refType, LabelString label,
 
    ClearDocIdent (docIdent);
    /* lit un octet */
-   if (!TtaReadByte (file, &c))
+   if (!TtaReadByte (file, (unsigned char *)&c))
      {
 	c = EOS;
 	PivotError (file, "PivotError: Reference");
@@ -617,7 +617,7 @@ static void ReadReference (ReferenceType *refType, LabelString label,
 			 break;
 		   }
 	     /* lit le type de label */
-	     if (!TtaReadByte (file, &c))
+	     if (!TtaReadByte (file, (unsigned char *)&c))
 	       {
 		  c = EOS;
 		  PivotError (file, "PivotError: Reference 3");
@@ -636,7 +636,7 @@ static void ReadReference (ReferenceType *refType, LabelString label,
 	     *refExt = FALSE;	/* il n'y a qu'un label court, sans tag */
 	     /* l'octet lu est l'octet de poids fort du label */
 	     j = 256 * ((int) c);	/* lit le 2eme octet du label */
-	     if (!TtaReadByte (file, &c))
+	     if (!TtaReadByte (file, (unsigned char *)&c))
 	       {
 		  c = EOS;
 		  PivotError (file, "PivotError: Reference 4");
@@ -666,7 +666,7 @@ static void ReadReference (ReferenceType *refType, LabelString label,
 	/* lit l'indicateur reference  interne/externe */
 	*refExt = !ReadBoolean (file);
 	/* lit le type de label */
-	if (!TtaReadByte (file, &c))
+	if (!TtaReadByte (file, (unsigned char *)&c))
 	  {
 	     c = EOS;
 	     PivotError (file, "PivotError: Reference 5");
@@ -810,7 +810,7 @@ static int ReadType (PtrDocument pDoc, PtrSSchema *pSS, BinFile pivFile, char *t
        /* lit le tag de type qui suit */
        if (!error)
 	 {
-	 if (!TtaReadByte (pivFile, tag))
+	 if (!TtaReadByte (pivFile, (unsigned char *)tag))
 	   PivotError (pivFile, "PivotError: TypeType");
          /* teste si le numero lu est celui de la structure generique du doc.*/
 	 else if (nat == 0)
@@ -1088,7 +1088,7 @@ void ReadAttributePiv (BinFile pivFile, PtrElement pEl,
 	   /* on consomme le texte de l'attribut, sans le garder */
 	   do
 	     {
-	       if (!TtaReadByte (pivFile, &c))
+	       if (!TtaReadByte (pivFile, (unsigned char *)&c))
 		 PivotError (pivFile, "Attribute");
 	     }
 	   while (!error && c != EOS);
@@ -1296,7 +1296,7 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
   /* lit le numero de la boite de presentation concernee par la regle */
   TtaReadShort (pivFile, &box);
   /* lit le type de la regle */
-  if (!TtaReadByte (pivFile, &ch))
+  if (!TtaReadByte (pivFile, (unsigned char *)&ch))
     PivotError (pivFile, "PresRule");
   switch (ch)
     {
@@ -1587,7 +1587,7 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
       case PtBorderRightStyle:
       case PtBorderBottomStyle:
       case PtBorderLeftStyle:
-	if (!TtaReadByte (pivFile, &ch))
+	if (!TtaReadByte (pivFile, (unsigned char *)&ch))
 	  PivotError (pivFile, "PivotError: PresRule 3");
 	break;
       case PtHyphenate:
@@ -1987,7 +1987,7 @@ static  LabelString         label;
       i = 1;
       while (!error && i < 200)
 	{
-	  if (!TtaReadByte (pivFile, &c))
+	  if (!TtaReadByte (pivFile, (unsigned char *)&c))
 	    PivotError (pivFile, "Type 1");
 	  else
 	    {
@@ -2112,7 +2112,7 @@ static  LabelString         label;
 		pEl->ElLabel[0] = EOS;
 	    }
 
-	  if (!TtaReadByte (pivFile, tag))
+	  if (!TtaReadByte (pivFile, (unsigned char *)tag))
 	    PivotError (pivFile, "PivotError: Type 2");
 	}
       inclusion = FALSE;	/* est-ce une reference a un element inclus? */
@@ -2129,7 +2129,7 @@ static  LabelString         label;
 			       docIdent, pDoc);
 	      pEl->ElIsCopy = TRUE;
 	    }
-	  if (!TtaReadByte (pivFile, tag))
+	  if (!TtaReadByte (pivFile, (unsigned char *)tag))
 	    PivotError (pivFile, "PivotError: Type 3");
 	}
       
@@ -2139,7 +2139,7 @@ static  LabelString         label;
 	if (*tag == C_PIV_REFERRED)
 	  {
 	    withReferences = TRUE;
-	    if (!TtaReadByte (pivFile, tag))
+	    if (!TtaReadByte (pivFile, (unsigned char *)tag))
 	      PivotError (pivFile, "PivotError: Type 4");
 	  }
 	else
@@ -2154,7 +2154,7 @@ static  LabelString         label;
 	  {
 	    ReadLabel (*tag, label, pivFile);
 	    /* lit le tag qui suit le label */
-	    if (!TtaReadByte (pivFile, tag))
+	    if (!TtaReadByte (pivFile, (unsigned char *)tag))
 	      PivotError (pivFile, "PivotError: Label");
 	  }
       if (!error && label[0] != EOS && create)
@@ -2198,7 +2198,7 @@ static  LabelString         label;
 	  if (create)
 	    pEl->ElHolophrast = TRUE;
 	  /* lit l'octet qui suit */
-	  if (!TtaReadByte (pivFile, tag))
+	  if (!TtaReadByte (pivFile, (unsigned char *)tag))
 	    PivotError (pivFile, "PivotError: Holophrast");
 	}
       /* lit les attributs de l'element s'il y en a */
@@ -2206,7 +2206,7 @@ static  LabelString         label;
 	{
 	  ReadAttribute (pivFile, pEl, pDoc, create, &pAttr);
 	  if (!error)
-	    if (!TtaReadByte (pivFile, tag))
+	    if (!TtaReadByte (pivFile, (unsigned char *)tag))
 	      PivotError (pivFile, "PivotError: Attr");
 	}
       /* tous les attributs de l'element sont lus, on verifie qu'il ne */
@@ -2225,7 +2225,7 @@ static  LabelString         label;
 	  ReadPRulePiv (pDoc, pivFile, pEl, create, &pPRule, TRUE);
 	  if (!error)
 	    /* lit l'octet qui suit la regle */
-	    if (!TtaReadByte (pivFile, tag))
+	    if (!TtaReadByte (pivFile, (unsigned char *)tag))
 	      PivotError (pivFile, "PivotError: Rule");
 	}
       if (!error)
@@ -2245,7 +2245,7 @@ static  LabelString         label;
 		  if (create)
 		    CreateReference (pEl->ElReference, refType, label, refExt,
 				     docIdent, pDoc);
-		  if (!TtaReadByte (pivFile, tag))
+		  if (!TtaReadByte (pivFile, (unsigned char *)tag))
 		    PivotError (pivFile, "Reference 1");
 		}
 	      break;
@@ -2261,12 +2261,12 @@ static  LabelString         label;
 		    pEl->ElPairIdent = i;
 		  if (i > pDoc->DocMaxPairIdent)
 		    pDoc->DocMaxPairIdent = i;
-		  if (!TtaReadByte (pivFile, tag))
+		  if (!TtaReadByte (pivFile, (unsigned char *)tag))
 		    PivotError (pivFile, "PivotError: PairedElement 1");
 		  if (*tag != C_PIV_END)
 		    /* erreur, pas de tag de fin */
 		    PivotError (pivFile, "PairedElement 2");
-		  else if (!TtaReadByte (pivFile, tag))
+		  else if (!TtaReadByte (pivFile, (unsigned char *)tag))
 		    PivotError (pivFile, "PivotError: PairedElement 3");
 		}
 	      break;
@@ -2284,12 +2284,12 @@ static  LabelString         label;
 		      {
 			/* lit le numero de langue (pour la table des langues
 			   du document */
-			if (!TtaReadByte (pivFile, tag))
+			if (!TtaReadByte (pivFile, (unsigned char *)tag))
 			  PivotError (pivFile, "Language");
 			else
 			  i = (int) (*tag);
 			/* lit l'octet suivant */
-			if (!TtaReadByte (pivFile, tag))
+			if (!TtaReadByte (pivFile, (unsigned char *)tag))
 			  PivotError (pivFile, "Laguage 1");
 		      }
 		    if (create && !error)
@@ -2319,7 +2319,7 @@ static  LabelString         label;
 		      {
 			script = *tag;
 			/* lit l'octet suivant */
-			if (!TtaReadByte (pivFile, tag))
+			if (!TtaReadByte (pivFile, (unsigned char *)tag))
 			  PivotError (pivFile, "PivotError: Script");
 		      }
 		    if (create)
@@ -2393,12 +2393,12 @@ static  LabelString         label;
 				  if (image != NULL)
 				    {
 				      l = ustrlen (pBuf->BuContent) * 2;
-				      image->PicFileName = TtaGetMemory (l + 1);
-				      CopyBuffer2MBs (pBuf, 0, image->PicFileName, l);
+				      image->PicFileName = (char*)TtaGetMemory (l + 1);
+				      CopyBuffer2MBs (pBuf, 0, (unsigned char*)image->PicFileName, l);
 				    }
 				}
 			    }
-			  if (!TtaReadByte (pivFile, tag))
+			  if (!TtaReadByte (pivFile, (unsigned char *)tag))
 			    PivotError (pivFile, "PivotError: Text 4");
 			}
 		    }
@@ -2416,12 +2416,12 @@ static  LabelString         label;
 			  pEl->ElPageType = pageType;
 			  pEl->ElPageModified = modif;
 			}
-		      if (!TtaReadByte (pivFile, tag))
+		      if (!TtaReadByte (pivFile, (unsigned char *)tag))
 			PivotError (pivFile, "PivotError: PageBreak");
 		    }
 		  else
 		    {
-		      if (!TtaReadByte (pivFile, tag))
+		      if (!TtaReadByte (pivFile, (unsigned char *)tag))
 			PivotError (pivFile, "PivotError: Text 1");
 		      if (*tag != C_PIV_END &&
 			  (leafType == Symbol || leafType == GraphicElem))
@@ -2429,7 +2429,7 @@ static  LabelString         label;
 			  /* the code that gives the form was read */
 			  c = *tag;
 			  /* read the next byte */
-			  if (!TtaReadByte (pivFile, tag))
+			  if (!TtaReadByte (pivFile, (unsigned char *)tag))
 			    PivotError (pivFile, "PivotError: Graphic 1");
 			  else if (*tag == C_PIV_POLYLINE)
 			    {
@@ -2467,7 +2467,7 @@ static  LabelString         label;
 				    }
 				}
 			      /* lit l'octet qui suit (tag de fin d'element) */
-			      if (!TtaReadByte (pivFile, tag))
+			      if (!TtaReadByte (pivFile, (unsigned char *)tag))
 				PivotError (pivFile, "PivotError: Polyline 1");
 			    }
 			  else if (*tag == C_PIV_PATH)
@@ -2484,7 +2484,7 @@ static  LabelString         label;
 				}
 			      /* lit l'octet qui suit (type d'element de path
 			         ou tag de fin d'element) */
-			      if (!TtaReadByte (pivFile, tag))
+			      if (!TtaReadByte (pivFile, (unsigned char *)tag))
 				PivotError (pivFile, "PivotError: Path 1");
 			      else
 				{
@@ -2587,7 +2587,7 @@ static  LabelString         label;
 				    }
 				  /* lit l'octet qui suit (type d'element de
 				     path ou tag de fin d'element) */
-			          if (!TtaReadByte (pivFile, tag))
+			          if (!TtaReadByte (pivFile, (unsigned char *)tag))
 				     PivotError (pivFile,
 					         "PivotError: Path 3");
 				  }
@@ -2632,17 +2632,17 @@ static  LabelString         label;
 			{
 			  if (Trans)
 			    {
-			      Trans->Next = TtaNewTransform ();
+			      Trans->Next = (Transform*)TtaNewTransform ();
 			      Trans = Trans->Next;
 			    }
 			  else
 			    {
-			      Trans = TtaNewTransform ();
+			      Trans = (Transform*)TtaNewTransform ();
 			      pEl->ElParent->ElTransform = Trans;
 			    }
 
 			  TtaReadInteger (pivFile, &n1);
-			  Trans->TransType = n1;
+			  Trans->TransType = (TransformType)n1;
 			    switch (n1)
 			      {
 				case PtElBoxTranslate:
@@ -2687,7 +2687,7 @@ static  LabelString         label;
 				default:
 				break;	  
 			      }  
-			    if (!TtaReadByte (pivFile, tag))
+			    if (!TtaReadByte (pivFile, (unsigned char *)tag))
 			      PivotError (pivFile,
 					  "PivotError: TransFormation");
 			}
@@ -2696,14 +2696,14 @@ static  LabelString         label;
 		      if (*tag != C_PIV_TRANS_END)
 			PivotError (pivFile, "PivotError: End");
 
-		      if (!TtaReadByte (pivFile, tag))
+		      if (!TtaReadByte (pivFile, (unsigned char *)tag))
 			PivotError (pivFile, "PivotError: End 1");
 		    }
 
 		  if (*tag != C_PIV_END)
 		    PivotError (pivFile, "PivotError: End");
 		  
-		  if (!TtaReadByte (pivFile, tag))
+		  if (!TtaReadByte (pivFile, (unsigned char *)tag))
 		    PivotError (pivFile, "PivotError: End 1");
 		}
 	      break;
@@ -2717,7 +2717,7 @@ static  LabelString         label;
 		  /* erreur: feuille avec contenu */
 		  if (!error)
 		    {
-		      if (!TtaReadByte (pivFile, tag))
+		      if (!TtaReadByte (pivFile, (unsigned char *)tag))
 			PivotError (pivFile, "PivotError: Begin 1");
 		      pPrevEl = NULL;
 		      while (*tag != C_PIV_END && !error)
@@ -2794,7 +2794,7 @@ static  LabelString         label;
 			      }
 			}
 		      if (!error)
-			if (!TtaReadByte (pivFile, tag))
+			if (!TtaReadByte (pivFile, (unsigned char *)tag))
 			  PivotError (pivFile,
 				      "PivotError: End element");
 		    }
@@ -3035,7 +3035,7 @@ void ReadSchemaNamesPiv (BinFile file, PtrDocument pDoc, char *tag,
    rank = 1;
    /* lit le type du document */
    do
-     if (!TtaReadByte (file, &SSName[i++]))
+     if (!TtaReadByte (file, (unsigned char *)&SSName[i++]))
        PivotError (file, "PivotError: Schema");
    while (!error && SSName[i - 1] != EOS && i != MAX_NAME_LENGTH) ;
    if (SSName[i - 1] != EOS)
@@ -3050,11 +3050,11 @@ void ReadSchemaNamesPiv (BinFile file, PtrDocument pDoc, char *tag,
        /* Lit le nom du schema de presentation associe' */
        i = 0;
        do
-	 if (!TtaReadByte (file, &PSchemaName[i++]))
+	 if (!TtaReadByte (file, (unsigned char *)&PSchemaName[i++]))
 	   PivotError (file, "PivotError: Schema 3");
        while (!error && PSchemaName[i - 1] != EOS && i != MAX_NAME_LENGTH);
 
-       if (!TtaReadByte (file, tag))
+       if (!TtaReadByte (file, (unsigned char *)tag))
 	 PivotError (file, "PivotError: Schema 4");
        if (withThisPSchema != NULL)
 	 (*withThisPSchema) ((Document) IdentDocument (pDoc), SSName,
@@ -3097,7 +3097,7 @@ void ReadSchemaNamesPiv (BinFile file, PtrDocument pDoc, char *tag,
        i = 0;
        rank++;
        do
-	 if (!TtaReadByte (file, &SSName[i++]))
+	 if (!TtaReadByte (file, (unsigned char *)&SSName[i++]))
 	   PivotError (file, "PivotError: Schema ext");
        while (SSName[i - 1] != EOS && !error) ;
        if (pDoc->DocPivotVersion >= 4)
@@ -3107,7 +3107,7 @@ void ReadSchemaNamesPiv (BinFile file, PtrDocument pDoc, char *tag,
 	     PivotError (file, "PivotError: Schema 7");
        /* Lit le nom du schema de presentation associe' */
        if (!error)
-	 if (!TtaReadByte (file, tag))
+	 if (!TtaReadByte (file, (unsigned char *)tag))
 	   PivotError (file, "PivotError: Schema 8");
        if (*tag >= '!' && *tag <= '~' && !error)
 	 /* il y a un nom de schema de presentation */
@@ -3115,11 +3115,11 @@ void ReadSchemaNamesPiv (BinFile file, PtrDocument pDoc, char *tag,
 	   PSchemaName[0] = *tag;
 	   i = 1;
 	   do
-	     if (!TtaReadByte (file, &PSchemaName[i++]))
+	     if (!TtaReadByte (file, (unsigned char *)&PSchemaName[i++]))
 	       PivotError (file, "PivotError: Schema 9");
 	   while (!error && PSchemaName[i - 1] != EOS && i != MAX_NAME_LENGTH);
 
-	   if (!TtaReadByte (file, tag))
+	   if (!TtaReadByte (file, (unsigned char *)tag))
 	     PivotError (file, "PivotError: Schema 10");
 	 }
        else
@@ -3185,7 +3185,7 @@ void ReadLanguageTablePiv (BinFile file, PtrDocument pDoc, char *tag)
        {
 	 i = 0;
 	 do
-	   if (!TtaReadByte (file, &languageName[i++]))
+	   if (!TtaReadByte (file, (unsigned char *)&languageName[i++]))
 	     PivotError (file, "PivotError: Language 2");
 	 while (!error && languageName[i - 1] != EOS &&
 		i != MAX_NAME_LENGTH) ;
@@ -3198,7 +3198,7 @@ void ReadLanguageTablePiv (BinFile file, PtrDocument pDoc, char *tag)
 		 pDoc->DocLanguages[pDoc->DocNLanguages++] =
 		                       TtaGetLanguageIdFromName (languageName);
 	     /* lit l'octet suivant le nom de langue */
-	     if (!TtaReadByte (file, tag))
+	     if (!TtaReadByte (file, (unsigned char *)tag))
 	       PivotError (file, "PivotError: Laguage 4");
 	   }
        }
@@ -3216,15 +3216,15 @@ int ReadVersionNumberPiv (BinFile file, PtrDocument pDoc)
 
    ret = 0;
    pDoc->DocPivotVersion = 1;
-   if (!TtaReadByte (file, &c))
+   if (!TtaReadByte (file, (unsigned char *)&c))
       ret = 10;
    else if (c != C_PIV_VERSION)
       ret = 10;
-   else if (!TtaReadByte (file, &c))
+   else if (!TtaReadByte (file, (unsigned char *)&c))
       ret = 10;
    else if (c != C_PIV_VERSION)
       ret = 10;
-   else if (!TtaReadByte (file, &c))
+   else if (!TtaReadByte (file, (unsigned char *)&c))
       ret = 10;
    else
       pDoc->DocPivotVersion = (int) c;
@@ -3241,18 +3241,18 @@ void ReadPivotHeader (BinFile file, PtrDocument pDoc, char *tag)
    char                c;
 
    /* lit le numero de version s'il est present */
-   if (!TtaReadByte (file, tag))
+   if (!TtaReadByte (file, (unsigned char *)tag))
       PivotError (file, "PivotError: Header");
    if (*tag == (char) C_PIV_VERSION)
      {
-	if (!TtaReadByte (file, tag))
+	if (!TtaReadByte (file, (unsigned char *)tag))
 	   PivotError (file, "PivotError: Header 1");
-	else if (!TtaReadByte (file, &c))
+	else if (!TtaReadByte (file, (unsigned char *)&c))
 	   PivotError (file, "PivotError: Header 2");
 	else
 	  {
 	     pDoc->DocPivotVersion = (int) c;
-	     if (!TtaReadByte (file, tag))
+	     if (!TtaReadByte (file, (unsigned char *)tag))
 		PivotError (file, "PivotError: Header 3");
 	  }
      }
@@ -3267,7 +3267,7 @@ void ReadPivotHeader (BinFile file, PtrDocument pDoc, char *tag)
 	ReadLabel (*tag, label, file);
 	LabelStringToInt (label, &i);
 	SetCurrentLabel (pDoc, i);
-	if (!TtaReadByte (file, tag))
+	if (!TtaReadByte (file, (unsigned char *)tag))
 	   PivotError (file, "PivotError: Header 4");
      }
    /* lit la table des langues utilisees par le document */
@@ -3365,7 +3365,7 @@ void LoadDocumentPiv (BinFile file, PtrDocument pDoc, ThotBool loadExternalDoc,
 	     PivotError (file, "Open");
 	   else
 	     {
-	       if (!TtaReadByte (file, &tag))
+	       if (!TtaReadByte (file, (unsigned char *)&tag))
 		 PivotError (file, "Open 1");
 	       if (tag != (char) C_PIV_TYPE && tag != (char) C_PIV_NATURE)
 		 PivotError (file, "Open 2");

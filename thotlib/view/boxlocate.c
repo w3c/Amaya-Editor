@@ -126,14 +126,24 @@ ThotBool APPgraphicModify (PtrElement pEl, int value, int frame,
 	  (pEl->ElLeafType == LtPath))
 	{
 	  if (ThotLocalActions[T_openhistory] != NULL)
-	    (*ThotLocalActions[T_openhistory]) (pDoc, pEl, pEl, NULL, 0, 0);
+	    (*(Proc6)ThotLocalActions[T_openhistory]) (
+			(void *)pDoc,
+			(void *)pEl,
+			(void *)pEl,
+			(void *)NULL,
+			(void *)0,
+			(void *)0);
 	  if (ThotLocalActions[T_addhistory] != NULL)
-	    (*ThotLocalActions[T_addhistory]) (pEl, pDoc, TRUE, TRUE);
+	    (*(Proc4)ThotLocalActions[T_addhistory]) (
+			(void *)pEl,
+			(void *)pDoc,
+			(void *)TRUE,
+			(void *)TRUE);
 	}
     }
   if (!pre && openclose && isGraph &&
       ThotLocalActions[T_closehistory] != NULL)
-    (*ThotLocalActions[T_closehistory]) (pDoc);
+    (*(Proc1)ThotLocalActions[T_closehistory]) ((void *)pDoc);
   return result;
 }
 
@@ -157,7 +167,7 @@ static ThotBool NotifyClick (int event, ThotBool pre, PtrElement pEl, int doc)
 	      pEl->ElLeafType == LtPolyLine ||
 	      pEl->ElLeafType == LtPath))
      pAsc = pAsc->ElParent;
-  notifyEl.event = event;
+  notifyEl.event = (APPevent)event;
   notifyEl.document = doc;
   notifyEl.position = 0;
   notifyEl.element = (Element) pAsc;
@@ -217,7 +227,7 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 	  FirstSelectedElement->ElLeafType == LtPolyLine &&
 	  ThotLocalActions[T_editfunc] != NULL)
 	/* adding new points in a polyline */
-	(*ThotLocalActions[T_editfunc]) (TEXT_INSERT);
+	(*(Proc1)ThotLocalActions[T_editfunc]) ((void *)TEXT_INSERT);
       else
 	{
 	  extend = (button == 0 || button == 1);
@@ -360,7 +370,9 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 			return;
 		    }
 		  if (MenuActionList[CMD_PasteFromClipboard].Call_Action != NULL)
-		    (*MenuActionList[CMD_PasteFromClipboard].Call_Action) (doc, view);
+		    (*(Proc2)MenuActionList[CMD_PasteFromClipboard].Call_Action) (
+			(void*)doc,
+		       	(void*)view);
 		  else if (x >= xOrg && x <= xOrg + width &&
 		      y >= yOrg && y <= yOrg + height)
 		    /* send event TteElemMClick.Post to the application */
@@ -379,7 +391,11 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 		    }
 		  TtaSetDialoguePosition ();
 		  if (ThotLocalActions[T_insertpaste] != NULL)
-		    (*ThotLocalActions[T_insertpaste]) (TRUE, FALSE, 'R', &ok);
+		    (*(Proc4)ThotLocalActions[T_insertpaste]) (
+				(void *)TRUE,
+				(void *)FALSE,
+				(void *)'R',
+				(void *)&ok);
 		  else if (x >= xOrg && x <= xOrg + pBox->BxW &&
 		      y >= yOrg && y <= yOrg + pBox->BxH)
 		    /* send event TteElemRClick.Post to the application */

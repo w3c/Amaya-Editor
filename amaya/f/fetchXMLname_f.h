@@ -31,7 +31,7 @@ extern ThotBool IsXMLElementInline ( ElementType elType,
                                      Document doc );
 extern void MapXMLAttributeValue ( int XMLtype,
                                    char *attVal,
-                                   AttributeType attrType,
+                                   const AttributeType *attrType,
                                    int *value );
 extern int MapXMLAttribute ( int XMLtype,
                              char *attrName,
@@ -75,7 +75,7 @@ extern ThotBool IsXMLElementInline (/* ElementType elType,
                                        Document doc */);
 extern void MapXMLAttributeValue (/* int XMLtype,
                                      char *attVal,
-                                     AttributeType attrType,
+                                     const AttributeType *attrType,
                                      int *value */);
 extern int MapXMLAttribute (/* int XMLtype,
                                char *attrName,

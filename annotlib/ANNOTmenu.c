@@ -186,7 +186,7 @@ View         view;
 
    /* initialize the base if it hasn't yet been done */
    if (!CustomQueryBase)
-     CustomQueryBase = TtaSetCallback (CustomQueryCallbackDialog, 
+     CustomQueryBase = TtaSetCallback ((Proc)CustomQueryCallbackDialog, 
 				       MAX_QUERYCONFMENU_DLG);
 
    /* Create the dialogue form */
@@ -517,7 +517,7 @@ ThotBool show;
 	/* this looks like an error! */
 	continue;
       length = TtaGetTextAttributeLength (attr) + 1;
-      annot_url = TtaGetMemory (length);
+      annot_url = (char *)TtaGetMemory (length);
       TtaGiveTextAttributeValue (attr, annot_url, &length);
       
       /* now look in the filters to see if we need to hide it or not */
@@ -636,7 +636,7 @@ ThotBool show;
   list_item = AnnotMetaData[document].annotations;
   for (; list_item; list_item = list_item->next)
     {
-      AnnotMeta *annot = list_item->object;
+      AnnotMeta *annot = (AnnotMeta *)list_item->object;
       if (annot && annot->is_visible && !(annot->is_orphan))
 	annot->show = show;
     }
@@ -922,7 +922,7 @@ char             *data;
 	    {
 	      AnnotSelType = (SelType) val;
 	      AnnotSelItem[0] = EOS;
-	      BuildAnnotFilterSelector (AnnotFilterDoc, val);
+	      BuildAnnotFilterSelector (AnnotFilterDoc, (SelType)val);
 	      TtaSetSelector (AnnotFilterBase + mFilterSelector, -1, "");
 	    }
 	  break;
@@ -958,7 +958,7 @@ View                view;
 #ifndef _WINDOWS
   /* initialize the base if it hasn't yet been done */
   if (AnnotFilterBase == 0)
-    AnnotFilterBase =  TtaSetCallback (AnnotFilterCallbackDialog,
+    AnnotFilterBase =  TtaSetCallback ((Proc)AnnotFilterCallbackDialog,
 					 MAX_ANNOTFILTER_DLG);
 #endif /* !_WINDOWS */
 
@@ -968,7 +968,7 @@ View                view;
   AnnotFilterView = view;
   AnnotSelItem[0] = EOS;
   AnnotSelIndex = -1;
-  AnnotSelType = 0;
+  AnnotSelType = (SelType)0;
 
   /* Create the dialogue form */
 #ifndef _WINDOWS
@@ -1071,11 +1071,11 @@ Document doc;
 #endif /* ANNOT_ON_ANNOT */
     annotClass = ANNOTATION_CLASS;
 
-  if (annotClass && annotClass->class)
+  if (annotClass && annotClass->class_)
     {
       List *item;
 
-      for (item=annotClass->class->subClasses; item; item=item->next)
+      for (item=annotClass->class_->subClasses; item; item=item->next)
 	{
 	  RDFClassP subType = (RDFClassP) item->object;
 	  TypeSelector *t = (TypeSelector *) TtaGetMemory (sizeof(TypeSelector));

@@ -44,10 +44,10 @@ LFUNC(FreeOldColorTable, void, (XpmColor **colorTable, int ncolors));
  * Create a colortable compatible with the old style colortable
  */
 static int
-CreateOldColorTable(ct, ncolors, oldct)
-    XpmColor *ct;
-    int ncolors;
-    XpmColor ***oldct;
+CreateOldColorTable(
+    XpmColor *ct,
+    int ncolors,
+    XpmColor ***oldct)
 {
     XpmColor **colorTable, **color;
     int a;
@@ -64,9 +64,9 @@ CreateOldColorTable(ct, ncolors, oldct)
 }
 
 static void
-FreeOldColorTable(colorTable, ncolors)
-    XpmColor **colorTable;
-    int ncolors;
+FreeOldColorTable(
+    XpmColor **colorTable,
+    int ncolors)
 {
     int a, b;
     XpmColor **color;
@@ -89,9 +89,9 @@ FreeOldColorTable(colorTable, ncolors)
  * Free the computed color table
  */
 void
-xpmFreeColorTable(colorTable, ncolors)
-    XpmColor *colorTable;
-    int ncolors;
+xpmFreeColorTable(
+    XpmColor *colorTable,
+    int ncolors)
 {
     int a, b;
     XpmColor *color;
@@ -111,9 +111,9 @@ xpmFreeColorTable(colorTable, ncolors)
  * Free array of extensions
  */
 void
-XpmFreeExtensions(extensions, nextensions)
-    XpmExtension *extensions;
-    int nextensions;
+XpmFreeExtensions(
+    XpmExtension *extensions,
+    int nextensions)
 {
     unsigned int i, j, nlines;
     XpmExtension *ext;
@@ -148,8 +148,8 @@ XpmAttributesSize()
  * Init returned data to free safely later on
  */
 void
-xpmInitAttributes(attributes)
-    XpmAttributes *attributes;
+xpmInitAttributes(
+    XpmAttributes *attributes)
 {
     if (attributes) {
 	attributes->pixels = NULL;
@@ -176,10 +176,10 @@ xpmInitAttributes(attributes)
  * Fill in the XpmAttributes with the XpmImage and the XpmInfo
  */
 void
-xpmSetAttributes(attributes, image, info)
-    XpmAttributes *attributes;
-    XpmImage *image;
-    XpmInfo *info;
+xpmSetAttributes(
+    XpmAttributes *attributes,
+    XpmImage *image,
+    XpmInfo *info)
 {
     if (attributes->valuemask & XpmReturnColorTable) {
 	attributes->colorTable = image->colorTable;
@@ -246,8 +246,8 @@ xpmSetAttributes(attributes, image, info)
  * but the structure itself
  */
 void
-XpmFreeAttributes(attributes)
-    XpmAttributes *attributes;
+XpmFreeAttributes(
+    XpmAttributes *attributes)
 {
     if (attributes->valuemask & XpmReturnPixels && attributes->npixels) {
 	XpmFree(attributes->pixels);

@@ -24,7 +24,7 @@ THOT_EXPORT int       FontZoom;         /* Zoom applied to fonts  */
 THOT_EXPORT HFONT     ActiveFont;
 #endif /* _WINDOWS */
 #ifdef _GL
-THOT_EXPORT PtrFont  *DefaultGLFont;	/* Standard font dialogue */
+THOT_EXPORT PtrFont   DefaultGLFont;	/* Standard font dialogue */
 #endif /* _GL */
 THOT_EXPORT ThotBool  StixExist;        /* Stix fonts are available */
 #endif

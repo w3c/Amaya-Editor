@@ -29,7 +29,6 @@
 #include "typemedia.h"
 #include "typegrm.h"
 #include "fileaccess.h"
-#include "fileaccess.h"
 
 #define MAX_SRULE_RECURS 15   /* maximum of included rule levels within a rule */
 #define MAX_EXTERNAL_TYPES 20 /* maximum of different external document types */
@@ -39,12 +38,10 @@ typedef enum
   }
 ContStrExt;
 
-#define THOT_EXPORT
-#include "compil_tv.h"
-#include "platform_tv.h"
-
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
+#include "compil_tv.h"
+#include "platform_tv.h"
 #include "analsynt_tv.h"
 
 #ifdef _WINDOWS
@@ -142,8 +139,8 @@ static void InitBasicType (SRule *pRule, char *name, BasicType typ)
 {
   if (pRule->SrName == NULL)
     {
-      pRule->SrName = TtaGetMemory (MAX_NAME_LENGTH);
-      pRule->SrOrigName = TtaGetMemory (MAX_NAME_LENGTH);
+      pRule->SrName = (char *)TtaGetMemory (MAX_NAME_LENGTH);
+      pRule->SrOrigName = (char *)TtaGetMemory (MAX_NAME_LENGTH);
     }
   strncpy (pRule->SrName, name, MAX_NAME_LENGTH);
   pRule->SrConstruct = CsBasicElement;
@@ -196,8 +193,8 @@ static void         Initialize ()
    /* create the language attribute */
    pAttr = (PtrTtAttribute) malloc (sizeof (TtAttribute));
    pSSchema->SsAttribute->TtAttr[0] = pAttr;
-   pAttr->AttrName = TtaGetMemory (MAX_NAME_LENGTH);   
-   pAttr->AttrOrigName = TtaGetMemory (MAX_NAME_LENGTH);   
+   pAttr->AttrName = (char *)TtaGetMemory (MAX_NAME_LENGTH);   
+   pAttr->AttrOrigName = (char *)TtaGetMemory (MAX_NAME_LENGTH);   
    strncpy (pAttr->AttrName, "Language", MAX_NAME_LENGTH);
    pAttr->AttrOrigName[0] = '\0';
    pAttr->AttrGlobal = True;
@@ -264,8 +261,8 @@ static void         Initialize ()
    pRule = (PtrSRule) malloc (sizeof (SRule));
    pSSchema->SsRule->SrElem[pSSchema->SsNRules++] = pRule;
    pSSchema->SsDocument = pSSchema->SsNRules;
-   pRule->SrName = TtaGetMemory (MAX_NAME_LENGTH);
-   pRule->SrOrigName = TtaGetMemory (MAX_NAME_LENGTH);
+   pRule->SrName = (char *)TtaGetMemory (MAX_NAME_LENGTH);
+   pRule->SrOrigName = (char *)TtaGetMemory (MAX_NAME_LENGTH);
    strcpy (pRule->SrName, "Document");
    pRule->SrConstruct = CsDocument;
    pRule->SrUnitElem = False;
@@ -376,8 +373,8 @@ static void      AllocateNewRule (PtrSSchema pSS)
    else
      {
        memset (pRule, 0, sizeof (SRule));
-       pRule->SrName = TtaGetMemory (MAX_NAME_LENGTH);
-       pRule->SrOrigName = TtaGetMemory (MAX_NAME_LENGTH);
+       pRule->SrName = (char *)TtaGetMemory (MAX_NAME_LENGTH);
+       pRule->SrOrigName = (char *)TtaGetMemory (MAX_NAME_LENGTH);
        pSS->SsRule->SrElem[pSS->SsNRules++] = pRule;
      }
 }
@@ -612,7 +609,7 @@ static void         CopyWord (Name name, indLine wi, indLine wl)
       CompilerMessage (wi, STR, FATAL, STR_WORD_TOO_LONG, inputLine, LineNum);
    else
      {
-	strncpy (name, &inputLine[wi - 1], wl);
+	strncpy ((char *)name, (char *)&inputLine[wi - 1], wl);
 	name[wl] = '\0';
      }
 }
@@ -2230,8 +2227,8 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 	     attrNum = Identifier[nb - 1].SrcIdentDefRule;
 	     if (attrNum == 0)
 	       /* new name within the schema */
-	       if (strncmp (&inputLine[wi - 1],
-			     pSSchema->SsAttribute->TtAttr[0]->AttrName, wl) == 0)
+	       if (strncmp ((char *)&inputLine[wi - 1],
+			     (char *)pSSchema->SsAttribute->TtAttr[0]->AttrName, wl) == 0)
 		 /* it's the language attribute */
 		 attrNum = 1;
 	     if (CompilAttr || CompilLocAttr)
@@ -2278,8 +2275,8 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 		     else
 		       {
 			 pSSchema->SsAttribute->TtAttr[pSSchema->SsNAttributes] = pAttr;
-			 pAttr->AttrName = TtaGetMemory (MAX_NAME_LENGTH);   
-			 pAttr->AttrOrigName = TtaGetMemory (MAX_NAME_LENGTH);   
+			 pAttr->AttrName = (char *)TtaGetMemory (MAX_NAME_LENGTH);   
+			 pAttr->AttrOrigName = (char *)TtaGetMemory (MAX_NAME_LENGTH);   
 			 CopyWord (pAttr->AttrName, wi, wl);
 			 pAttr->AttrOrigName[0] = '\0';
 			 pAttr->AttrGlobal = !CompilLocAttr;
@@ -2591,10 +2588,10 @@ static void         ExternalTypes ()
 	  {
 	     if (IncludedExternalType[j])
 		CompilerMessageString (0, STR, INFO, STR_CANNOT_BE_INCLUDED,
-				       inputLine, LineNum, pRule->SrName);
+				       (char *)inputLine, LineNum, pRule->SrName);
 	     else
 		CompilerMessageString (0, STR, INFO, STR_CANNOT_BE_EXTERN,
-				       inputLine, LineNum, pRule->SrName);
+				       (char *)inputLine, LineNum, pRule->SrName);
 	  }
 	else
 	   /* modify the CsNatureSchema rule */
@@ -2608,7 +2605,7 @@ static void         ExternalTypes ()
 		  /* cannot read the external schema */
 		  CompilerMessageString (0, STR, INFO,
 					 STR_EXTERNAL_STRUCT_NOT_FOUND,
-					 inputLine, LineNum, pRule->SrName);
+					 (char *)inputLine, LineNum, pRule->SrName);
 		  /* even if the external schema doesn't exist,
 		     modify the rule */
 		  pRule->SrReferredType = MAX_BASIC_TYPE + 1;
@@ -3120,7 +3117,7 @@ int main (int argc, char **argv)
                  else if (inputLine[0] == '#')
 		   {
 		     /* this line contains a cpp directive */
-		     sscanf (inputLine, "# %d %s", &LineNum, buffer);
+		     sscanf ((char *)inputLine, "# %d %s", &LineNum, buffer);
 		     LineNum--;
 		   }
 		 else

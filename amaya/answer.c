@@ -48,7 +48,7 @@ BOOL AHTProgress (HTRequest *request, HTAlertOpcode op,
 		  int msgnum, const char *dfault,
 		  void *input, HTAlertPar *reply)
 {
-   AHTReqContext      *me = HTRequest_context (request);
+   AHTReqContext      *me = (AHTReqContext *)HTRequest_context (request);
    HTParentAnchor     *anchor;
    char                text[MAX_LENGTH];
    char                tempbuf[MAX_LENGTH];
@@ -182,7 +182,7 @@ BOOL AHTConfirm (HTRequest * request, HTAlertOpcode op, int msgnum,
 {
   ThotBool         answer;
   char            *tmp_buf;
-  AHTReqContext   *me = HTRequest_context (request);
+  AHTReqContext   *me = (AHTReqContext *)HTRequest_context (request);
   AHTReqStatus     old_reqStatus;
 
     /* for the moment, we only take into account confirmation for
@@ -204,13 +204,13 @@ BOOL AHTConfirm (HTRequest * request, HTAlertOpcode op, int msgnum,
       InitConfirm (0, 0, TtaGetMessage (AMAYA, AM_REDIRECTION_CONFIRM));
       break;
     case HT_MSG_FILE_REPLACE:
-      tmp_buf = TtaGetMemory (strlen (me->urlName) + strlen (TtaGetMessage (AMAYA, AM_OVERWRITE_CHECK)) + 10); /*a bit more than enough memory */
+      tmp_buf = (char *)TtaGetMemory (strlen (me->urlName) + strlen (TtaGetMessage (AMAYA, AM_OVERWRITE_CHECK)) + 10); /*a bit more than enough memory */
       sprintf (tmp_buf, TtaGetMessage (AMAYA, AM_OVERWRITE_CHECK), me->urlName);
       InitConfirm (0, 0, tmp_buf);
       TtaFreeMemory (tmp_buf);
       break;
     case HT_MSG_RULES:
-      tmp_buf = TtaGetMemory (strlen (me->urlName) + strlen (TtaGetMessage (AMAYA, AM_ETAG_CHANGED)) + 10); /*a bit more than enough memory */
+      tmp_buf = (char *)TtaGetMemory (strlen (me->urlName) + strlen (TtaGetMessage (AMAYA, AM_ETAG_CHANGED)) + 10); /*a bit more than enough memory */
       sprintf (tmp_buf, TtaGetMessage (AMAYA, AM_ETAG_CHANGED), me->urlName);
       InitConfirm (0, 0, tmp_buf);
       TtaFreeMemory (tmp_buf);
@@ -219,7 +219,7 @@ BOOL AHTConfirm (HTRequest * request, HTAlertOpcode op, int msgnum,
       if (msgnum < 0)
 	{
 	  /* @@@@ IV */
-	  tmp_buf = TtaGetMemory (strlen (TtaGetMessage (AMAYA, AM_ERROR)) + 20);
+	  tmp_buf = (char *)TtaGetMemory (strlen (TtaGetMessage (AMAYA, AM_ERROR)) + 20);
 	  sprintf (tmp_buf, "%s %d", TtaGetMessage (AMAYA, AM_ERROR), msgnum);
 	  InitConfirm3L (0, 0, me->urlName, tmp_buf, NULL, FALSE);
 	  TtaFreeMemory (tmp_buf);
@@ -305,7 +305,7 @@ BOOL AHTPromptUsernameAndPassword (HTRequest *request, HTAlertOpcode op, int msg
 					    const char *dfault, 
 					    void *input, HTAlertPar * reply)
 {
-   AHTReqContext      *me = HTRequest_context (request);
+   AHTReqContext      *me = (AHTReqContext *)HTRequest_context (request);
    const char         *realm = HTRequest_realm (request);
    char               *server;
    AHTReqStatus        old_reqStatus;
@@ -369,7 +369,7 @@ ThotBool IsHTTP09Error (HTRequest *request)
 	  /* we set up a more explicit message, as I don't know what may be
 	     before this error. */
 	  HTRequest_addError (request, ERR_FATAL, NO, HTERR_BAD_REPLY,
-			      "Error: Server sent an unexpected reply.", 0,
+			      (void *)"Error: Server sent an unexpected reply.", 0,
 			      NULL);
 	  break;
 	}
@@ -479,7 +479,7 @@ void AHTError_MemPrint (HTRequest *request)
 	    break;	   
 	  default:
 	    if (pres->par)
-	      StrAllocCat (me->error_stream, pres->par);
+	      StrAllocCat (me->error_stream, (char *)pres->par);
 	    return;
 	    break;
 	  }
@@ -700,7 +700,7 @@ void PrintTerminateStatus (AHTReqContext *me, int status)
 	    {
 	      TtaSetStatus (me->docid, 1, 
 			    TtaGetMessage (AMAYA, AM_SERVER_INTERNAL_ERROR_500_CAUSE), 
-			    error->par);
+			    (char *)error->par);
 	      sprintf (AmayaLastHTTPErrorMsg, 
 			TtaGetMessage (AMAYA, AM_SERVER_INTERNAL_ERROR_500_CAUSE), 
 			error->par);

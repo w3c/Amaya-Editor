@@ -3233,7 +3233,7 @@ static void ApplyInheritPresRule (PtrAbstractBox pAb, PRuleType typeRule,
 	   if (ApplyRule (pRPres, pSPR, pAb, pDoc, pA))
 	      /* le pave est modifie' */
 	     {
-	       SetChange (pAb, typeRule, 0);
+	       SetChange (pAb, typeRule, (FunctionType)0);
 	       /* traite les paves fils */
 	       pAbbChild = pAb->AbFirstEnclosed;
 	       while (pAbbChild != NULL)

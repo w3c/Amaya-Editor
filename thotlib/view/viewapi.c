@@ -300,7 +300,7 @@ void TtaChangeWindowTitle (Document document, View view, char *title,
     {
       idwindow = GetWindowNumber (document, view);
       if (idwindow > 0) 
-	ChangeFrameTitle (idwindow, title, encoding);
+	ChangeFrameTitle (idwindow, (unsigned char *)title, encoding);
     }
   else
     {
@@ -308,7 +308,7 @@ void TtaChangeWindowTitle (Document document, View view, char *title,
       /* traite les vues du document */
       for (v = 0; v < MAX_VIEW_DOC; v++)
 	if (pDoc->DocView[v].DvPSchemaView > 0)
-	  ChangeFrameTitle (pDoc->DocViewFrame[v], title, encoding);
+	  ChangeFrameTitle (pDoc->DocViewFrame[v], (unsigned char *)title, encoding);
     }
 }
 
@@ -578,7 +578,7 @@ int TtaIsPSchemaValid (char *structureName, char *presentationName)
    else
      {
 	/* Gets the corresponding structure schema name */
-	TtaReadName (file, gotStructName);
+	TtaReadName (file, (unsigned char *)gotStructName);
 	if (strcmp (structureName, gotStructName) == 0)
 	   result = 1;
 	TtaReadClose (file);
@@ -1171,7 +1171,9 @@ void UndisplayElement (PtrElement pEl, Document document)
 	 }
      }
    if (ThotLocalActions[T_createhairline] != NULL)
-     (*ThotLocalActions[T_checksel]) (pEl, document);
+     (*(Proc2)ThotLocalActions[T_checksel]) (
+		(void*)pEl,
+		(void*)document);
    /* cherche l'element qui precede l'element a detruire : pPrevious */
    pPrevious = pEl->ElPrevious;
    /* saute les marques de page */
@@ -1259,7 +1261,10 @@ void UndisplayElement (PtrElement pEl, Document document)
 	   ChangeFirstLast (pPrevious, pDoc, FALSE, FALSE);
 	/* traitement particulier aux tableaux */
 	if (ThotLocalActions[T_createhairline] != NULL)
-	   (*ThotLocalActions[T_createhairline]) (pPrevious, pEl, pDoc);
+	   (*(Proc3)ThotLocalActions[T_createhairline]) (
+			(void*)pPrevious,
+			(void*)pEl,
+			(void*)pDoc);
      }
    /* reevalue l'image de toutes les vues */
    AbstractImageUpdated (pDoc);

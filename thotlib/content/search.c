@@ -228,10 +228,10 @@ void ReplaceString (PtrDocument pDoc, PtrElement pEl, int firstChar,
     {
       /* Update Abstract views */
       if (ThotLocalActions[T_AIupdate] != NULL)
-	(*ThotLocalActions[T_AIupdate]) (pDoc);
+	(*(Proc1)ThotLocalActions[T_AIupdate]) ((void *)pDoc);
       /* Redisplay views */
       if (ThotLocalActions[T_redisplay] != NULL)
-	(*ThotLocalActions[T_redisplay]) (pDoc);
+	(*(Proc1)ThotLocalActions[T_redisplay]) ((void *)pDoc);
     }
 
   /* si l'element TEXTE modifie' appartient soit a un element copie' */
@@ -707,7 +707,7 @@ Element TtaSearchText (Document document, Element element, ThotBool forward,
        pfirstEl = (PtrElement) element;
        plastEl = NULL;
 #ifdef _I18N_
-       ptr = TtaConvertByteToWC (text, encoding);
+       ptr = (CHAR_T *)TtaConvertByteToWC ((unsigned char *)text, encoding);
 #else /* _I18N_ */
        ptr = text;
 #endif /* _I18N_ */

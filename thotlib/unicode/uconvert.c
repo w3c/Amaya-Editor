@@ -741,52 +741,52 @@ wchar_t TtaGetWCFromJisChar (unsigned char c, CHARSET encoding)
   else if (b[0] == '\033') /* Escape */
     {
       more = 0;
-      if (TtaJisEscMatch(&b[1], "(B", &more))
+      if (TtaJisEscMatch(&b[1], (unsigned char *)"(B", &more))
 	{
 	  g0 = US_ASCII;
 	  n = 0;
 	}
-      else if (TtaJisEscMatch(&b[1], "(J", &more))
+      else if (TtaJisEscMatch(&b[1], (unsigned char *)"(J", &more))
 	{
 	  g0 = JIS_X_0201_ROMAN;
 	  n = 0;
 	}
-      else if (TtaJisEscMatch(&b[1], "$@", &more))
+      else if (TtaJisEscMatch(&b[1], (unsigned char *)"$@", &more))
 	{
 	  g0 = JIS_X_0208;
 	  n = 0;
 	}
-      else if (TtaJisEscMatch(&b[1], "$B", &more))
+      else if (TtaJisEscMatch(&b[1], (unsigned char *)"$B", &more))
 	{
 	  g0 = JIS_X_0208;
 	  n = 0;
 	}
-      else if (TtaJisEscMatch(&b[1], "$A", &more))
+      else if (TtaJisEscMatch(&b[1], (unsigned char *)"$A", &more))
 	{
 	  g0 = GB_2312;
 	  n = 0;
 	}
-      else if (TtaJisEscMatch(&b[1], "$(C", &more))
+      else if (TtaJisEscMatch(&b[1], (unsigned char *)"$(C", &more))
 	{
 	  g0 = KSC_5601;
 	  n = 0;
 	}
-      else if (TtaJisEscMatch(&b[1], "$(D", &more))
+      else if (TtaJisEscMatch(&b[1], (unsigned char *)"$(D", &more))
 	{
 	  g0 = JIS_X_0212;
 	  n = 0;
 	}
-      else if (TtaJisEscMatch(&b[1], ".A", &more))
+      else if (TtaJisEscMatch(&b[1], (unsigned char *)".A", &more))
 	{
 	  g2 = ISO_8859_1;
 	  n = 0;
 	}
-      else if (TtaJisEscMatch(&b[1], ".F", &more))
+      else if (TtaJisEscMatch(&b[1], (unsigned char *)".F", &more))
 	{
 	  g2 = ISO_8859_7;
 	  n = 0;
 	}
-      else if (TtaJisEscMatch(&b[1], "N", &more))
+      else if (TtaJisEscMatch(&b[1], (unsigned char *)"N", &more))
 	{
 	  if (n >= 3)
 	    {
@@ -1185,7 +1185,7 @@ unsigned char *TtaConvertWCToByte (wchar_t *src, CHARSET encoding)
       i = 0;
       while (src[i] != 0)
 	i++;
-      dest = TtaGetMemory (i + 1);
+      dest = (char *)TtaGetMemory (i + 1);
       i = 0;
       while (src[i] != 0)
 	{
@@ -1194,7 +1194,7 @@ unsigned char *TtaConvertWCToByte (wchar_t *src, CHARSET encoding)
 	}
       dest[i] = EOS;
     }
-  return dest;
+  return (unsigned char *)dest;
 }
 
 /*-------------------------------------------------------------
@@ -1212,8 +1212,8 @@ wchar_t *TtaConvertByteToWC (unsigned char *src, CHARSET encoding)
   dest = NULL;
   if (src)
     {
-      i = strlen (src) + 1;
-      dest = TtaGetMemory (i * sizeof (wchar_t));
+      i = strlen ((const char *)src) + 1;
+      dest = (wchar_t *)TtaGetMemory (i * sizeof (wchar_t));
       i = 0;
       while ((c = *src++) != EOS)
 	{
@@ -1241,13 +1241,13 @@ unsigned char *TtaConvertByteToMbs (unsigned char *src, CHARSET encoding)
   if (src)
     {
       if (encoding == UTF_8)
-	dest = TtaStrdup (src);
+	dest = (unsigned char *)TtaStrdup ((char *)src);
       else
 	{
 	  /* generate the WC string */
 	  tmp = TtaConvertByteToWC (src, encoding);
 	  /* now generate the Multi Byte string */
-	  dest = TtaGetMemory (4*strlen (src) + 1);
+	  dest = (unsigned char *)TtaGetMemory (4*strlen ((char *)src) + 1);
 	  i = 0;
 	  l = 0;
 	  while (tmp[i] != 0)
@@ -1278,7 +1278,7 @@ unsigned char *TtaConvertMbsToByte (unsigned char *src, CHARSET encoding)
   if (src)
     {
       /* generate the WC string */
-      tmp = TtaGetMemory ((strlen (src) + 1) * sizeof (wchar_t));
+      tmp = (wchar_t *)TtaGetMemory ((strlen ((char *)src) + 1) * sizeof (wchar_t));
       i = 0;
       l = 0;
       while (src[l] != 0)
@@ -1310,7 +1310,7 @@ CHAR_T *TtaConvertMbsToCHAR (unsigned char *src)
   if (src)
     {
       /* generate the WC string */
-      dest = TtaGetMemory ((strlen (src) + 1) * sizeof (CHAR_T));
+      dest = (CHAR_T *)TtaGetMemory ((strlen ((char *)src) + 1) * sizeof (CHAR_T));
       i = 0;
       l = 0;
       while (src[l] != 0)

@@ -264,7 +264,7 @@ static void StringRange (XPointerContextPtr ctx, int startC, int len)
 	    curNode->endC = pos + len;
 	  else
 	    curNode->endC = curNode->startC - 1;
-	  curNode->type |= STRING_RANGE;
+	  curNode->type = (nodeType)((int)curNode->type | STRING_RANGE);
 	}
     }
   
@@ -278,7 +278,7 @@ static void StartPoint (XPointerContextPtr ctx)
 {
   nodeInfo *curNode = ctx->curNode;
 
-  curNode->type |= START_POINT;
+  curNode->type = (nodeType)((int)curNode->type | START_POINT);
   curNode->endC = curNode->startC - 1;
 }
 
@@ -286,7 +286,7 @@ static void EndPoint (XPointerContextPtr ctx)
 {
   nodeInfo *curNode = ctx->curNode;
 
-  curNode->type |= END_POINT;
+  curNode->type = (nodeType)((int)curNode->type | END_POINT);
   curNode->startC++;
   curNode->endC = curNode->startC;
 }

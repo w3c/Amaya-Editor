@@ -516,7 +516,7 @@ static void CallbackError (int ref, int typedata, char *data)
   printf ("Toolkit error : No callback procedure ...\n");
 }
 
-static void (*CallbackDialogue) () = CallbackError;
+static void (*CallbackDialogue) () = (Proc)CallbackError;
 /*----------------------------------------------------------------------
    NewCatList Creates a new catalogue list
   ----------------------------------------------------------------------*/
@@ -709,7 +709,10 @@ static ThotBool CallMenuGTK (ThotWidget w, struct Cat_Context *catalogue)
     {
       if ((int) catalogue->Cat_Widget == -1)
 	/*** back to a simple button ***/
-	(*CallbackDialogue) (catalogue->Cat_Ref, INTEGER_DATA, 0);
+	(*(Proc3)CallbackDialogue) (
+		(void *)catalogue->Cat_Ref,
+		(void *)INTEGER_DATA,
+		(void *)0);
       else
 	{
 	  adbloc = catalogue->Cat_Entries;
@@ -743,7 +746,10 @@ static ThotBool CallMenuGTK (ThotWidget w, struct Cat_Context *catalogue)
 	      i = 0;
 	  }
 	  /*** Retour de l'entree du menu choisie vers l'application ***/
-	  (*CallbackDialogue) (catalogue->Cat_Ref, INTEGER_DATA, entry);
+	  (*(Proc3)CallbackDialogue) (
+		(void *)catalogue->Cat_Ref,
+		(void *)INTEGER_DATA,
+		(void *)entry);
 	}
     }
   return TRUE;
@@ -788,7 +794,10 @@ static ThotBool CallToggleGTK (ThotWidget w, struct Cat_Context *catalogue)
 		  adbloc->E_Free[i] = 'Y';
 		  /* signale que l'entree est basculee si le menu est reactif */
 		  if (catalogue->Cat_React)
-		    (*CallbackDialogue) (catalogue->Cat_Ref, INTEGER_DATA, ent);
+		    (*(Proc3)CallbackDialogue) (
+			(void *)catalogue->Cat_Ref,
+			(void *)INTEGER_DATA,
+			(void *)ent);
 		}
 	      i++;
 	      ent++;
@@ -839,7 +848,10 @@ static ThotBool CallRadio (ThotWidget w, struct Cat_Context *catalogue, caddr_t 
       catalogue->Cat_Data = entry;
       /* retourne la valeur si le menu est reactif */
       if (catalogue->Cat_React)
-	(*CallbackDialogue) (catalogue->Cat_Ref, INTEGER_DATA, entry);
+	(*(Proc3)CallbackDialogue) (
+		(void *)catalogue->Cat_Ref,
+		(void *)INTEGER_DATA,
+		(void *)entry);
     }
   return TRUE;  
 }
@@ -918,7 +930,10 @@ static ThotBool CallRadioGTK (ThotWidget w, struct Cat_Context *catalogue)
       catalogue->Cat_Data = entry;
       /* retourne la valeur si le menu est reactif */
       if (catalogue->Cat_React)
-	(*CallbackDialogue) (catalogue->Cat_Ref, INTEGER_DATA, entry);
+	(*(Proc3)CallbackDialogue) (
+		(void *)catalogue->Cat_Ref,
+		(void *)INTEGER_DATA,
+		(void *)entry);
     }
   return TRUE;  
 }
@@ -961,7 +976,10 @@ static ThotBool CallIconButtonGTK (ThotWidget w, struct Cat_Context *catalogue)
       catalogue->Cat_Data = entry;
       /* retourne la valeur si le menu est reactif */
       if (catalogue->Cat_React)
-	(*CallbackDialogue) (catalogue->Cat_Ref, INTEGER_DATA, entry);
+	(*(Proc3)CallbackDialogue) (
+		(void *)catalogue->Cat_Ref,
+		(void *)INTEGER_DATA,
+		(void *)entry);
     }
   return TRUE;  
 }
@@ -1419,7 +1437,10 @@ static void ReturnTogglevalues (struct Cat_Context *catalogue)
 	      /*** Retour les entrees selectionnees vers l'application ***/
 	      if (adbloc->E_Free[i] == 'Y')
 		{
-		  (*CallbackDialogue) (catalogue->Cat_Ref, INTEGER_DATA, index);
+		  (*(Proc3)CallbackDialogue) (
+			(void *)catalogue->Cat_Ref,
+			(void *)INTEGER_DATA,
+			(void *)index);
 		  adbloc->E_Free[i] = 'N';
 		}
 	      i++;
@@ -1586,7 +1607,10 @@ static void CallValueSet (ThotWidget w, struct Cat_Context *catalogue, caddr_t c
 	    }
 	  /* retourne la valeur saisie si la feuille de saisie est reactive */
 	  if (catalogue->Cat_React)
-	    (*CallbackDialogue) (catalogue->Cat_Ref, INTEGER_DATA, val);
+	    (*(Proc3)CallbackDialogue) (
+			(void *)catalogue->Cat_Ref,
+			(void *)INTEGER_DATA,
+			(void *)val);
 	}
     }
 }
@@ -1649,7 +1673,10 @@ static void ReturnSheet (struct Cat_Context *parentCatalogue, int entry,
 		  else if (catalogue->Cat_Type == CAT_FMENU)
 		    {
 		      i = catalogue->Cat_Data; /* a sub-menu */
-		      (*CallbackDialogue) (catalogue->Cat_Ref, INTEGER_DATA, i);
+		      (*(Proc3)CallbackDialogue) (
+				(void *)catalogue->Cat_Ref,
+				(void *)INTEGER_DATA,
+				(void *)i);
 		    }
 		  else if (catalogue->Cat_Type == CAT_TMENU)
 		    ReturnTogglevalues (catalogue); /* a toggle */
@@ -1668,17 +1695,25 @@ static void ReturnSheet (struct Cat_Context *parentCatalogue, int entry,
 			sscanf (text, "%d", &i);
 		      else
 			i = 0;
-		      (*CallbackDialogue) (catalogue->Cat_Ref, INTEGER_DATA, i);
+		      (*(Proc3)CallbackDialogue) (
+				(void *)catalogue->Cat_Ref,
+			       	(void *)INTEGER_DATA,
+				(void *)i);
 		    }
 		  else if (catalogue->Cat_Type == CAT_TEXT)
 		    {
 #ifdef _MOTIF
-		      (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA,
-					   XmTextGetString ((ThotWidget) catalogue->Cat_Entries));
+		      (*(Proc3)CallbackDialogue) (
+				(void *)catalogue->Cat_Ref,
+				(void *)STRING_DATA,
+				(void *)(XmTextGetString ((ThotWidget) catalogue->Cat_Entries)));
 #endif /* _MOTIF */
           
 #ifdef _GTK
-		      (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA, gtk_entry_get_text(GTK_ENTRY(catalogue->Cat_Entries)));
+		      (*(Proc3)CallbackDialogue) (
+				(void *)catalogue->Cat_Ref,
+				(void *)STRING_DATA,
+				(void *)gtk_entry_get_text(GTK_ENTRY(catalogue->Cat_Entries)));
 #endif /* _GTK */
 		    }
 		  else if (catalogue->Cat_Type == CAT_SELECT)
@@ -1694,7 +1729,10 @@ static void ReturnSheet (struct Cat_Context *parentCatalogue, int entry,
 			  ptr = text;
 			  if (strings)
 			    XmStringGetLtoR (strings[0], XmSTRING_DEFAULT_CHARSET, &ptr);
-			  (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA, ptr);
+			  (*(Proc3)CallbackDialogue) (
+				(void *)catalogue->Cat_Ref,
+				(void *)STRING_DATA,
+				(void *)ptr);
 			  if (strings)
 			    TtaFreeMemory (ptr);
 #endif /* _MOTIF */
@@ -1704,7 +1742,10 @@ static void ReturnSheet (struct Cat_Context *parentCatalogue, int entry,
 			  if(GTK_LIST(tmpw)->selection)
 			    {
 			      gtk_label_get(GTK_LABEL(gtk_object_get_data(GTK_OBJECT(GTK_LIST(tmpw)->selection->data), "ListElementLabel")),&ptr);
-			      (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA, ptr);
+			      (*(Proc3)CallbackDialogue) (
+					(void *)catalogue->Cat_Ref,
+				       	(void *)STRING_DATA,
+					(void *)ptr);
 			    }
 #endif /* _GTK */
 			}
@@ -1713,14 +1754,20 @@ static void ReturnSheet (struct Cat_Context *parentCatalogue, int entry,
 #ifdef _MOTIF
 			  wtext = XmSelectionBoxGetChild ((ThotWidget) catalogue->Cat_Entries, XmDIALOG_TEXT);
 			  /* Retourne la valeur dans tous les cas */
-			  (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA, XmTextGetString (wtext));
+			  (*(Proc3)CallbackDialogue) (
+				(void *)catalogue->Cat_Ref,
+				(void *)STRING_DATA,
+				(void *)XmTextGetString (wtext));
 #endif /* _MOTIF */
 
 #ifdef _GTK
 			  tmpw = GTK_WIDGET(catalogue->Cat_Entries);
 			  tmpw = GTK_WIDGET (gtk_object_get_data (GTK_OBJECT (tmpw), "EntryZone"));
 			  wtext = gtk_entry_get_text (GTK_ENTRY (tmpw));
-			  (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA, wtext);
+			  (*(Proc3)CallbackDialogue) (
+				(void *)catalogue->Cat_Ref,
+				(void *)STRING_DATA,
+				(void *)wtext);
 #endif /* _GTK */
 			}
 		    }
@@ -1756,7 +1803,10 @@ static void ReturnSheet (struct Cat_Context *parentCatalogue, int entry,
       if (catalogue == ShowCat && ShowReturn == 1)
 	ShowReturn = 0;
     }
-  (*CallbackDialogue) (parentCatalogue->Cat_Ref,INTEGER_DATA, entry);
+  (*(Proc3)CallbackDialogue) (
+		(void *)parentCatalogue->Cat_Ref,
+		(void *)INTEGER_DATA,
+		(void *)entry);
 }
 
 #endif /* #if defined(_MOTIF) || defined(_GTK) */
@@ -1833,7 +1883,10 @@ static ThotBool CallListGTK (ThotWidget w, struct Cat_Context *catalogue)
        /* retourne l'entree choisie */
        if (ok && text && text[0] != EOS && text[0] != SPACE)
 	 {
-	   (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA, text);
+	   (*(Proc3)CallbackDialogue) (
+		(void *)catalogue->Cat_Ref,
+		(void *)STRING_DATA,
+		(void *)text);
 	 }
        TtaFreeMemory (text);
      }
@@ -1853,7 +1906,10 @@ static ThotBool CallListGTK (ThotWidget w, struct Cat_Context *catalogue)
 	   if (GTK_LIST(tmpw)->selection)
 	     {
 	       gtk_label_get(GTK_LABEL(gtk_object_get_data (GTK_OBJECT (GTK_LIST(tmpw)->selection->data), "ListElementLabel")),&text);
-	       (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA, text);
+	       (*(Proc3)CallbackDialogue) (
+			(void *)catalogue->Cat_Ref,
+			(void *)STRING_DATA,
+			(void *)text);
 	     }
 	 }
        else
@@ -1898,7 +1954,10 @@ gboolean CallTextEnterGTK (ThotWidget w, GdkEventButton *bu, gpointer data)
 	  while (catalogue->Cat_PtParent)
 	    catalogue = catalogue->Cat_PtParent;
 	  i = catalogue->Cat_Default;
-	  (*CallbackDialogue) (catalogue->Cat_Ref, INTEGER_DATA, (char *)i);
+	  (*(Proc3)CallbackDialogue) (
+		(void *)catalogue->Cat_Ref,
+		(void *)INTEGER_DATA,
+		(void *)((char *)i));
 	  return TRUE;
 	}
     }
@@ -1929,8 +1988,10 @@ static ThotBool CallTextChangeGTK (ThotWidget w, struct Cat_Context *catalogue)
 	{
 #ifdef _MOTIF
 	  /* retourne la valeur saisie si la feuille de saisie est reactive */
-	  (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA,
-			       XmTextGetString ((ThotWidget) catalogue->Cat_Entries));
+	  (*(Proc3)CallbackDialogue) (
+		(void *)catalogue->Cat_Ref,
+		(void *)STRING_DATA,
+		(void *)XmTextGetString ((ThotWidget) catalogue->Cat_Entries));
 #endif /*_MOTIF*/
     
 #ifdef _GTK
@@ -1938,7 +1999,10 @@ static ThotBool CallTextChangeGTK (ThotWidget w, struct Cat_Context *catalogue)
 	    text = gtk_entry_get_text (GTK_ENTRY (catalogue->Cat_Entries));
 	  else
 	    text = gtk_editable_get_chars (GTK_EDITABLE(catalogue->Cat_Entries), 0, -1);
-	  (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA, text);
+	  (*(Proc3)CallbackDialogue) (
+		(void *)catalogue->Cat_Ref,
+		(void *)STRING_DATA,
+		(void *)text);
 #endif /* _GTK */
 	}
       else if (catalogue->Cat_Type == CAT_SELECT)
@@ -1948,13 +2012,19 @@ static ThotBool CallTextChangeGTK (ThotWidget w, struct Cat_Context *catalogue)
 					  XmDIALOG_TEXT);
 	  /* retourne la valeur saisie si la feuille de saisie est reactive */
 	  text = XmTextGetString (wtext);
-	  (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA, text);
+	  (*(Proc3)CallbackDialogue) (
+		(void *)catalogue->Cat_Ref,
+		(void *)STRING_DATA,
+		(void *)text);
 	  TtaFreeMemory (text);
 #endif /* _MOTIF */
 
 #ifdef _GTK
 	  text = gtk_entry_get_text (GTK_ENTRY (w));
-	  (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA, text);
+	  (*(Proc3)CallbackDialogue) (
+		(void *)catalogue->Cat_Ref,
+		(void *)STRING_DATA,
+		(void *)text);
 #endif /* _GTK */
 	}
      }
@@ -1988,7 +2058,10 @@ static ThotBool CallLabel (ThotWidget w, struct Cat_Context *catalogue, caddr_t 
 	{
 	  /* retourne la valeur du label */
 	  XmStringGetLtoR (text, XmSTRING_DEFAULT_CHARSET, &str);
-	  (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA, str);
+	  (*(Proc3)CallbackDialogue) (
+		(void *)catalogue->Cat_Ref,
+		(void *)STRING_DATA,
+		(void *)str);
 	  TtaFreeMemory (str);
 	}
       else
@@ -2002,7 +2075,10 @@ static ThotBool CallLabel (ThotWidget w, struct Cat_Context *catalogue, caddr_t 
    if (catalogue->Cat_Widget)
      {
        gtk_label_get(GTK_LABEL(gtk_object_get_data (GTK_OBJECT(w),"ButtonLabel")),&str);
-       (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA, str);
+       (*(Proc3)CallbackDialogue) (
+		(void *)catalogue->Cat_Ref,
+		(void *)STRING_DATA,
+		(void *)str);
      }
    return TRUE;
 #endif /* _GTK */
@@ -2013,7 +2089,7 @@ static ThotBool CallLabel (ThotWidget w, struct Cat_Context *catalogue, caddr_t 
 /*----------------------------------------------------------------------
   warning handler                                                    
   ----------------------------------------------------------------------*/
-void MyWarningHandler ()
+void MyWarningHandler (char *s)
 {
 }
 
@@ -2497,7 +2573,7 @@ void DisplayMessage (char *text, int msgType)
   ----------------------------------------------------------------------*/
 void TtaDefineDialogueCallback (void (*procedure) ())
 {
-   CallbackDialogue = procedure;
+   CallbackDialogue = (Proc)procedure;
 }
 
 
@@ -4009,8 +4085,10 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
 
 	  GTK_LIST (gtklist)->drag_selection = TRUE;
 	  gdk_pointer_grab (menu->window, TRUE,
-			    GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK |
-			    GDK_POINTER_MOTION_MASK,
+			    (GdkEventMask) (
+				GDK_BUTTON_PRESS_MASK |
+			       	GDK_BUTTON_RELEASE_MASK |
+    				GDK_POINTER_MOTION_MASK ),
 			    NULL, NULL, GDK_CURRENT_TIME);
  	  gtk_widget_grab_focus (menu);
 	  gdk_keyboard_grab (menu->window, TRUE, GDK_CURRENT_TIME);
@@ -8898,7 +8976,7 @@ ThotWidget TtaClearTree (ThotWidget tree)
     return NULL;
 
   /* get the tree */
-  tree_widget = children->data;
+  tree_widget = GTK_WIDGET(children->data);
   g_list_free (children);
 
   if (tree_widget && GTK_IS_CTREE (tree_widget))
@@ -9145,7 +9223,10 @@ static ThotBool ComboBoxGTK (ThotWidget w, struct Cat_Context *catalogue,
   val = gtk_entry_get_text (GTK_ENTRY (w));
   
   if (catalogue->Cat_React)
-    (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA, val);
+    (*(Proc3)CallbackDialogue) (
+	(void *)catalogue->Cat_Ref,
+	(void *)STRING_DATA,
+	(void *)val);
   return FALSE;
 }
 #endif /* _GTK */
@@ -9388,7 +9469,7 @@ void TtaSetDialoguePosition ()
    
 #ifdef _MOTIF
    wdum = RootWindow (GDp, DefaultScreen (GDp));
-   XQueryPointer (GDp, wdum, &wdum, &wdum, &xdum, &ydum, &ShowX, &ShowY, &xdum);
+   XQueryPointer (GDp, wdum, &wdum, &wdum, &xdum, &ydum, &ShowX, &ShowY, (unsigned int *)&xdum);
 #endif /* #ifdef _MOTIF */
    
 #ifdef _GTK

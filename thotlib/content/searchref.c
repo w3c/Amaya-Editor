@@ -469,8 +469,11 @@ void                CheckReferences (PtrElement pRoot, PtrDocument pDoc)
 		  /* cellule des tableaux */
 		  if (pRef->RdAttribute != NULL)
 		     if (ThotLocalActions[T_checkextens] != NULL)
-			(*ThotLocalActions[T_checkextens])
-			   (pRef->RdAttribute, pRef->RdElement, pRef->RdElement, TRUE);
+			(*(Proc4)ThotLocalActions[T_checkextens]) (
+			    (void *)pRef->RdAttribute,
+			    (void *)pRef->RdElement,
+			    (void *)pRef->RdElement,
+			    (void *)TRUE);
 	       }
 	     pRef = pNextRef;	/* passe a la reference suivante */
 	     pDocRef = pNextDocRef;
@@ -502,8 +505,11 @@ void                CheckReferences (PtrElement pRoot, PtrDocument pDoc)
 			     /* verifie la validite de l'attribut dans le cas des */
 			     /* extensions de cellule des tableaux */
 			     if (ThotLocalActions[T_checkextens] != NULL)
-			       (*ThotLocalActions[T_checkextens])
-				 (pAttr, pRoot, pRoot, TRUE);
+			       (*(Proc4)ThotLocalActions[T_checkextens]) (
+					(void *)pAttr,
+				       	(void *)pRoot,
+				       	(void *)pRoot,
+				       	(void *)TRUE);
 			     if (DocOfSavedElements != pDoc)
 			       /* reference et objet reference' sont */
 			       /* dans des documents differents, on */
@@ -512,8 +518,9 @@ void                CheckReferences (PtrElement pRoot, PtrDocument pDoc)
 			       {
 				 attrRef = TRUE;
 				 if (ThotLocalActions[T_refattr] != NULL)
-				   (*ThotLocalActions[T_refattr])
-				     (pAttr, &attrRef);
+				   (*(Proc2)ThotLocalActions[T_refattr]) (
+					(void *)pAttr,
+					(void *)&attrRef);
 				 if (!attrRef)
 				   {
 				   RemoveAttribute (pRoot, pAttr);

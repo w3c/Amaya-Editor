@@ -125,7 +125,7 @@ void MapMathMLAttribute (char *attrName, AttributeType *attrType,
    Search in the Attribute Value Mapping Table the entry for the attribute
    ThotAtt and its value AttrVal. Returns the corresponding Thot value.
   ----------------------------------------------------------------------*/
-void MapMathMLAttributeValue (char *attVal, AttributeType attrType, int *value)
+void MapMathMLAttributeValue (char *attVal, const AttributeType * attrType, int *value)
 {
   MapXMLAttributeValue (MATH_TYPE, attVal, attrType, value);
 }
@@ -415,7 +415,7 @@ static void	NextNotComment (Element* el, Element* prev)
  -----------------------------------------------------------------------*/
 void SetIntMovelimitsAttr (Element el, Document doc)
 {
-  Element	ancestor, child, base, operator, textEl;
+  Element	ancestor, child, base, operator_, textEl;
   int           value, len;
   ElementType   elType;
   AttributeType attrType;
@@ -466,20 +466,20 @@ void SetIntMovelimitsAttr (Element el, Document doc)
 	  if (base)
 	    {
 	      child = TtaGetFirstChild (base);
-	      operator = NULL;
+	      operator_ = NULL;
 	      do
 		{
 		  elType = TtaGetElementType (child);
 		  if (elType.ElTypeNum == MathML_EL_MO)
-		    operator = child;
+		    operator_ = child;
 		  else
 		    TtaNextSibling (&child);
 		}
-	      while (child && !operator);
-	      if (operator)
+	      while (child && !operator_);
+	      if (operator_)
 		{
 		  attrType.AttrTypeNum = MathML_ATTR_movablelimits;
-		  attr = TtaGetAttribute (operator, attrType);
+		  attr = TtaGetAttribute (operator_, attrType);
 		  if (attr)
 		    /* the operator has an attribute movablelimits */
 		    {
@@ -491,7 +491,7 @@ void SetIntMovelimitsAttr (Element el, Document doc)
 		    /* no attribute movablelimits. Look at the content of the
 		       operator element */
 		    {
-		      textEl = TtaGetFirstChild (operator);
+		      textEl = TtaGetFirstChild (operator_);
 		      if (textEl)
 			{
 			  elType = TtaGetElementType (textEl);
@@ -500,7 +500,7 @@ void SetIntMovelimitsAttr (Element el, Document doc)
 			      len = TtaGetElementVolume (textEl);
 			      if (len == 3)
 				{
-				  TtaGiveTextContent (textEl, buffer, &len, &lang);
+				  TtaGiveTextContent (textEl, (unsigned char *)buffer, &len, &lang);
 #ifndef _I18N_
 				  script = TtaGetScript (lang);
 				  if (script == 'L')
@@ -721,7 +721,7 @@ static void  CheckIntDisplaystyle (Element el, Document doc)
   ----------------------------------------------------------------------*/
 static ThotBool CheckMathSubExpressions (Element el, int type1, int type2, int type3, Document doc)
 {
-  Element	child, new, prev;
+  Element	child, new_, prev;
   ElementType	elType, childType;
   char          msgBuffer[200];
   ThotBool      result;
@@ -738,7 +738,7 @@ static ThotBool CheckMathSubExpressions (Element el, int type1, int type2, int t
       {
 	sprintf (msgBuffer, "No subexpression allowed in %s",
 		 TtaGetElementTypeName (TtaGetElementType (el)));
-	XmlParseError (errorParsing, msgBuffer, 0);
+	XmlParseError (errorParsing, (unsigned char *)msgBuffer, 0);
 	result = FALSE;
       }
     }
@@ -748,7 +748,7 @@ static ThotBool CheckMathSubExpressions (Element el, int type1, int type2, int t
       {
 	sprintf (msgBuffer, "Missing subexpression in %s",
 		 TtaGetElementTypeName (TtaGetElementType (el)));
-	XmlParseError (errorParsing, msgBuffer, 0);
+	XmlParseError (errorParsing, (unsigned char *)msgBuffer, 0);
 	result = FALSE;
       }
     else
@@ -758,15 +758,15 @@ static ThotBool CheckMathSubExpressions (Element el, int type1, int type2, int t
       if (TtaSameTypes (childType, elType) == 0)
 	{
 	  TtaRemoveTree (child, doc);	
-	  new = TtaNewElement (doc, elType);
+	  new_ = TtaNewElement (doc, elType);
 	  if (prev == NULL)
-	    TtaInsertFirstChild (&new, el, doc);
+	    TtaInsertFirstChild (&new_, el, doc);
 	  else
-	    TtaInsertSibling (new, prev, FALSE, doc);
-	  TtaInsertFirstChild (&child, new, doc);
+	    TtaInsertSibling (new_, prev, FALSE, doc);
+	  TtaInsertFirstChild (&child, new_, doc);
 	  CreatePlaceholders (child, doc);
-	  child = new;
-	  CheckIntDisplaystyle (new, doc);
+	  child = new_;
+	  CheckIntDisplaystyle (new_, doc);
 	}
       prev = child;
       TtaNextSibling (&child);
@@ -778,7 +778,7 @@ static ThotBool CheckMathSubExpressions (Element el, int type1, int type2, int t
 	  {
 	    sprintf (msgBuffer, "Only 1 subexpression allowed in %s",
 		     TtaGetElementTypeName (TtaGetElementType (el)));
-	    XmlParseError (errorParsing, msgBuffer, 0);
+	    XmlParseError (errorParsing, (unsigned char *)msgBuffer, 0);
 	    result = FALSE;
 	  }
         }
@@ -789,7 +789,7 @@ static ThotBool CheckMathSubExpressions (Element el, int type1, int type2, int t
 	    {
 	      sprintf (msgBuffer, "2 subexpressions required in %s",
 		       TtaGetElementTypeName (TtaGetElementType (el)));
-	      XmlParseError (errorParsing, msgBuffer, 0);
+	      XmlParseError (errorParsing, (unsigned char *)msgBuffer, 0);
 	      result = FALSE;
 	    }
 	  else
@@ -799,12 +799,12 @@ static ThotBool CheckMathSubExpressions (Element el, int type1, int type2, int t
 	      if (TtaSameTypes (childType, elType) == 0)
 		{
 		  TtaRemoveTree (child, doc);
-		  new = TtaNewElement (doc, elType);
-		  TtaInsertSibling (new, prev, FALSE, doc);
-		  TtaInsertFirstChild (&child, new, doc);
+		  new_ = TtaNewElement (doc, elType);
+		  TtaInsertSibling (new_, prev, FALSE, doc);
+		  TtaInsertFirstChild (&child, new_, doc);
 		  CreatePlaceholders (child, doc);
-		  child = new;
-		  CheckIntDisplaystyle (new, doc);
+		  child = new_;
+		  CheckIntDisplaystyle (new_, doc);
 		}
 	      prev = child;
 	      TtaNextSibling (&child);
@@ -816,7 +816,7 @@ static ThotBool CheckMathSubExpressions (Element el, int type1, int type2, int t
 		  {
 		    sprintf (msgBuffer, "Only 2 subexpressions allowed in %s",
 			     TtaGetElementTypeName (TtaGetElementType (el)));
-		    XmlParseError (errorParsing, msgBuffer, 0);
+		    XmlParseError (errorParsing, (unsigned char *)msgBuffer, 0);
 		    result = FALSE;
 		  }
 		}
@@ -827,7 +827,7 @@ static ThotBool CheckMathSubExpressions (Element el, int type1, int type2, int t
 		    {
 		      sprintf (msgBuffer, "3 subexpressions required in %s",
 			       TtaGetElementTypeName (TtaGetElementType (el)));
-		      XmlParseError (errorParsing, msgBuffer, 0);
+		      XmlParseError (errorParsing, (unsigned char *)msgBuffer, 0);
 		      result = FALSE;
 		    }
 		  else
@@ -837,12 +837,12 @@ static ThotBool CheckMathSubExpressions (Element el, int type1, int type2, int t
 		      if (TtaSameTypes (childType, elType) == 0)
 			{
 			  TtaRemoveTree (child, doc);
-			  new = TtaNewElement (doc, elType);
-			  TtaInsertSibling (new, prev, FALSE, doc);
-			  TtaInsertFirstChild (&child, new, doc);
+			  new_ = TtaNewElement (doc, elType);
+			  TtaInsertSibling (new_, prev, FALSE, doc);
+			  TtaInsertFirstChild (&child, new_, doc);
 			  CreatePlaceholders (child, doc);
-			  child = new;
-			  CheckIntDisplaystyle (new, doc);
+			  child = new_;
+			  CheckIntDisplaystyle (new_, doc);
 			}
 		    }
 		  prev = child;
@@ -853,7 +853,7 @@ static ThotBool CheckMathSubExpressions (Element el, int type1, int type2, int t
 		    {
 		      sprintf (msgBuffer,"Only 3 subexpressions allowed in %s",
 			       TtaGetElementTypeName (TtaGetElementType (el)));
-		      XmlParseError (errorParsing, msgBuffer, 0);
+		      XmlParseError (errorParsing, (unsigned char *)msgBuffer, 0);
 		      result = FALSE;
 		    }
 		}
@@ -1103,7 +1103,7 @@ static void SetIntHorizStretchAttr (Element el, Document doc)
  -----------------------------------------------------------------------*/
 void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
 {
-  Element	child, sibling, textEl, symbolEl, parent, operator, next;
+  Element	child, sibling, textEl, symbolEl, parent, operator_, next;
   ElementType	elType;
   Attribute	attr;
   AttributeType	attrType;
@@ -1118,7 +1118,7 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
 
   if (el == NULL)
     return;
-  operator = NULL;
+  operator_ = NULL;
   inbase = FALSE;
   MathMLSSchema = TtaGetElementType(el).ElSSchema;
   symbolEl = parent = NULL;
@@ -1141,7 +1141,7 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
 	       elType.ElTypeNum != MathML_EL_MUNDER &&
 	       elType.ElTypeNum != MathML_EL_MUNDEROVER &&
 	       elType.ElTypeNum != MathML_EL_MTD))
-	    operator = el;
+	    operator_ = el;
         }
     }
   else
@@ -1201,7 +1201,7 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
 		      if (sibling == NULL)
 			/* there is no other significant child */
 			{
-			  operator = child;
+			  operator_ = child;
 			  if (base == MathML_EL_Base ||
 			      base == MathML_EL_UnderOverBase)
 			    {
@@ -1214,9 +1214,9 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
 	    }
 	}
     }
-  if (operator)
+  if (operator_)
     {
-      textEl = TtaGetFirstChild (operator);
+      textEl = TtaGetFirstChild (operator_);
       if (textEl != NULL)
         {
 	  elType = TtaGetElementType (textEl);
@@ -1900,7 +1900,7 @@ void SetFontstyleAttr (Element el, Document doc)
 				len = TtaGetTextAttributeLength (attr);
 				if (len > 0)
 				  {
-				    value = TtaGetMemory (len+1);
+				    value = (char *)TtaGetMemory (len+1);
 				    TtaGiveTextAttributeValue (attr, value, &len);
 				    if (strcmp (&value[1], "ImaginaryI;") == 0 ||
 					strcmp (&value[1], "ExponentialE;") == 0 ||
@@ -2353,7 +2353,7 @@ void CreateFencedSeparators (Element fencedExpression, Document doc, ThotBool re
            sepValue[0] = text[sep];
            sepValue[1] = EOS;
 	   lang = TtaGetLanguageIdFromScript('L');
-           TtaSetTextContent (leaf, sepValue, lang, doc);
+           TtaSetTextContent (leaf, (unsigned char *)sepValue, lang, doc);
 	   SetIntAddSpaceAttr (separator, doc);
 	   SetIntVertStretchAttr (separator, doc, 0, NULL);
 	   CheckFence (separator, doc);
@@ -2420,7 +2420,7 @@ static void  CreateOpeningOrClosingFence (Element fencedExpression,
   elType.ElTypeNum = MathML_EL_TEXT_UNIT;
   leaf = TtaNewElement (doc, elType);
   TtaInsertFirstChild (&leaf, fence, doc);
-  TtaSetTextContent (leaf, text, TtaGetLanguageIdFromScript('L'), doc);
+  TtaSetTextContent (leaf, (unsigned char *)text, TtaGetLanguageIdFromScript('L'), doc);
   SetIntAddSpaceAttr (fence, doc);
   SetIntVertStretchAttr (fence, doc, 0, NULL);
   CheckFence (fence, doc);
@@ -2610,7 +2610,7 @@ static void SetScriptShift (Element el, Document doc, int att)
       length = TtaGetTextAttributeLength (attr);
       if (length > 0)
 	 {
-	 value = TtaGetMemory (length+1);
+	 value = (char *)TtaGetMemory (length+1);
 	 value[0] = EOS;
 	 TtaGiveTextAttributeValue (attr, value, &length);
 	 MathMLScriptShift (doc, el, value, att);
@@ -2678,7 +2678,7 @@ static void SetIntRowAlign (Element row, int val, Document doc)
    attributes of all enclosed mrow elements accordingly.
   ----------------------------------------------------------------------*/
 void HandleRowalignAttribute (Attribute attr, Element el, Document doc,
-			      ThotBool delete)
+			      ThotBool delete_)
 {
   char            *value;
   char            *ptr;
@@ -2694,19 +2694,19 @@ void HandleRowalignAttribute (Attribute attr, Element el, Document doc,
     return;
 
   value = NULL;
-  if (!delete)
+  if (!delete_)
     {
       length = TtaGetTextAttributeLength (attr);
       if (length > 0)
 	{
-	  value = TtaGetMemory (length+1);
+	  value = (char *)TtaGetMemory (length+1);
 	  value[0] = EOS;
 	  TtaGiveTextAttributeValue (attr, value, &length);
 	}
     }
   /* if attribute rowalign is created or updated but has no value, don't
      do anything */
-  if (!delete && !value)
+  if (!delete_ && !value)
     return;
 
   ptr = value;
@@ -2721,7 +2721,7 @@ void HandleRowalignAttribute (Attribute attr, Element el, Document doc,
 	 elType.ElTypeNum == MathML_EL_MLABELEDTR) &&
 	strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
       {
-      if (delete)
+      if (delete_)
 	DeleteIntRowAlign (row, doc);
       else
 	{
@@ -2862,7 +2862,7 @@ static void RowWithoutColalignAttr (Element *row, Element *cell,
    attribute, according to that attribute, otherwise skip those rows.
   ----------------------------------------------------------------------*/
 void HandleColalignAttribute (Attribute attr, Element el, Document doc,
-			      ThotBool delete, ThotBool allRows)
+			      ThotBool delete_, ThotBool allRows)
 {
   char            *value, *localValue;
   char            *ptr;
@@ -2884,19 +2884,19 @@ void HandleColalignAttribute (Attribute attr, Element el, Document doc,
   fullTable = (elType.ElTypeNum == MathML_EL_MTABLE);
   value = NULL;
   localValue = NULL;
-  if (!delete)
+  if (!delete_)
     {
       length = TtaGetTextAttributeLength (attr);
       if (length > 0)
 	{
-	  value = TtaGetMemory (length+1);
+	  value = (char *)TtaGetMemory (length+1);
 	  value[0] = EOS;
 	  TtaGiveTextAttributeValue (attr, value, &length);
 	}
     }
   /* if attribute columnalign is created or updated but has no value, don't
      do anything */
-  if (!delete && !value)
+  if (!delete_ && !value)
     return;
 
   ptr = value;
@@ -2916,7 +2916,7 @@ void HandleColalignAttribute (Attribute attr, Element el, Document doc,
 	  {
 	    if (localValue)
 	      TtaFreeMemory (localValue);
-	    localValue = TtaGetMemory (length+1);
+	    localValue = (char *)TtaGetMemory (length+1);
 	    localValue[0] = EOS;
 	    TtaGiveTextAttributeValue (localAttr, localValue, &length);
 	    ptr = localValue;
@@ -2930,7 +2930,7 @@ void HandleColalignAttribute (Attribute attr, Element el, Document doc,
     if (elType.ElTypeNum == MathML_EL_MTD &&
 	strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
       {
-        if (delete)
+        if (delete_)
 	  DeleteIntColAlign (cell, doc);
         else
 	  {
@@ -2976,7 +2976,7 @@ void HandleColalignAttribute (Attribute attr, Element el, Document doc,
 		{
 		  if (localValue)
 		    TtaFreeMemory (localValue);
-		  localValue = TtaGetMemory (length+1);
+		  localValue = (char *)TtaGetMemory (length+1);
 		  localValue[0] = EOS;
 		  TtaGiveTextAttributeValue (localAttr, localValue, &length);
 		  ptr = localValue;
@@ -2998,7 +2998,7 @@ void HandleColalignAttribute (Attribute attr, Element el, Document doc,
    of all cells accordingly.
   ----------------------------------------------------------------------*/
 void HandleRowspacingAttribute (Attribute attr, Element el, Document doc,
-                                ThotBool delete)
+                                ThotBool delete_)
 {
   ElementType         elType, rowType, cellType;
   int                 length, val, topVal, topValUnit, bottomVal,
@@ -3019,12 +3019,12 @@ void HandleRowspacingAttribute (Attribute attr, Element el, Document doc,
     return;
 
   value = NULL;
-  if (!delete && attr)
+  if (!delete_ && attr)
     {
       length = TtaGetTextAttributeLength (attr);
       if (length > 0)
 	{
-	  value = TtaGetMemory (length+1);
+	  value = (char *)TtaGetMemory (length+1);
 	  value[0] = EOS;
 	  TtaGiveTextAttributeValue (attr, value, &length);
 	}
@@ -3069,7 +3069,7 @@ void HandleRowspacingAttribute (Attribute attr, Element el, Document doc,
       /* prepare the value of the padding to be associated with the cells
 	 of that row */
       val = 0;
-      if (delete)
+      if (delete_)
 	/* remove the presentation rules */
 	pval.typed_data.value = 0;
       else
@@ -3138,7 +3138,7 @@ void HandleRowspacingAttribute (Attribute attr, Element el, Document doc,
 	    {
 	      /* by default, use the value for the current row */
 	      cellBottomVal = bottomVal;
-	      if (!delete && value)
+	      if (!delete_ && value)
 		/* take row spanning into account */
 		{
 		  /* is there a rowspan attribute on that cell? */
@@ -3147,7 +3147,7 @@ void HandleRowspacingAttribute (Attribute attr, Element el, Document doc,
 		    rowspan = 1;
 		  else
 		    rowspan = TtaGetAttributeValue (rowspanAttr);
-		  if (!delete)
+		  if (!delete_)
 		    {
 		      /* skip rowspan-1 words in the value of attribute
 			 rowlines */
@@ -3185,7 +3185,7 @@ void HandleRowspacingAttribute (Attribute attr, Element el, Document doc,
 		    }
 		}
 
-	      if ((delete || !value) && !firstRow)
+	      if ((delete_ || !value) && !firstRow)
 		ctxt->destroy = TRUE;
 	      else
 		{
@@ -3194,7 +3194,7 @@ void HandleRowspacingAttribute (Attribute attr, Element el, Document doc,
 		  ctxt->destroy = FALSE;
 		}
 	      TtaSetStylePresentation (PRPaddingTop, cell, NULL, ctxt, pval);
-	      if ((delete || !value) && nextRow)
+	      if ((delete_ || !value) && nextRow)
 		ctxt->destroy = TRUE;
 	      else
 		{
@@ -3271,7 +3271,7 @@ static char* ConvertNamedSpace (char *name, char *value)
    of all cells accordingly.
   ----------------------------------------------------------------------*/
 void HandleColumnspacingAttribute (Attribute attr, Element el, Document doc,
-                                ThotBool delete)
+                                ThotBool delete_)
 {
   ElementType         elType;
   int                 length, val, valUnit, leftVal, leftValUnit,
@@ -3292,12 +3292,12 @@ void HandleColumnspacingAttribute (Attribute attr, Element el, Document doc,
     return;
 
   value = NULL;
-  if (!delete && attr)
+  if (!delete_ && attr)
     {
       length = TtaGetTextAttributeLength (attr);
       if (length > 0)
 	{
-	  value = TtaGetMemory (length+1);
+	  value = (char *)TtaGetMemory (length+1);
 	  value[0] = EOS;
 	  TtaGiveTextAttributeValue (attr, value, &length);
 	}
@@ -3333,7 +3333,7 @@ void HandleColumnspacingAttribute (Attribute attr, Element el, Document doc,
 	    {
 	      /* prepare the value of the padding to be associated with the 
 		 cells */
-	      if (delete)
+	      if (delete_)
 		/* remove the presentation rules */
 		{
 		  pval.typed_data.value = 0;
@@ -3439,7 +3439,7 @@ void HandleColumnspacingAttribute (Attribute attr, Element el, Document doc,
 		}
 
 	      /* set the left and right padding for this cell */
-	      if ((delete || !value) && !firstCell)
+	      if ((delete_ || !value) && !firstCell)
 		ctxt->destroy = TRUE;
 	      else
 		{
@@ -3448,7 +3448,7 @@ void HandleColumnspacingAttribute (Attribute attr, Element el, Document doc,
 		  ctxt->destroy = FALSE;
 		}
 	      TtaSetStylePresentation (PRPaddingLeft, cell, NULL, ctxt, pval);
-	      if ((delete || !value) && nextCell)
+	      if ((delete_ || !value) && nextCell)
 		ctxt->destroy = TRUE;
 	      else
 		{
@@ -3475,7 +3475,7 @@ void HandleColumnspacingAttribute (Attribute attr, Element el, Document doc,
    of all cells accordingly.
   ----------------------------------------------------------------------*/
 void HandleRowlinesAttribute (Attribute attr, Element el, Document doc,
-			      ThotBool delete)
+			      ThotBool delete_)
 {
   char            *value;
   char            *ptr, *spanPtr;
@@ -3494,19 +3494,19 @@ void HandleRowlinesAttribute (Attribute attr, Element el, Document doc,
     return;
 
   value = NULL;
-  if (!delete)
+  if (!delete_)
     {
       length = TtaGetTextAttributeLength (attr);
       if (length > 0)
 	{
-	  value = TtaGetMemory (length+1);
+	  value = (char *)TtaGetMemory (length+1);
 	  value[0] = EOS;
 	  TtaGiveTextAttributeValue (attr, value, &length);
 	}
     }
   /* if attribute rowlines is created or updated but has no value, don't
      do anything */
-  if (!delete && !value)
+  if (!delete_ && !value)
     return;
 
   ptr = value;
@@ -3547,7 +3547,7 @@ void HandleRowlinesAttribute (Attribute attr, Element el, Document doc,
 	val = 0;
       else
 	{
-	  if (delete)
+	  if (delete_)
 	    val = 0;
 	  else
 	    if (*ptr != EOS)
@@ -3591,7 +3591,7 @@ void HandleRowlinesAttribute (Attribute attr, Element el, Document doc,
 		rowspan = TtaGetAttributeValue (rowspanAttr);
 	      /* by default, use the value for the current row */
 	      cellVal = val;
-	      if (!delete)
+	      if (!delete_)
 		{
 		  /* skip rowspan-1 words in the value of attribute rowlines */
 		  if (rowspan > 1)
@@ -3654,7 +3654,7 @@ void HandleRowlinesAttribute (Attribute attr, Element el, Document doc,
    of all cells accordingly.
   ----------------------------------------------------------------------*/
 void HandleColumnlinesAttribute (Attribute attr, Element el, Document doc,
-			         ThotBool delete)
+			         ThotBool delete_)
 {
   char            *value;
   char            *ptr;
@@ -3673,19 +3673,19 @@ void HandleColumnlinesAttribute (Attribute attr, Element el, Document doc,
     return;
 
   value = NULL;
-  if (!delete)
+  if (!delete_)
     {
       length = TtaGetTextAttributeLength (attr);
       if (length > 0)
 	{
-	  value = TtaGetMemory (length+1);
+	  value = (char *)TtaGetMemory (length+1);
 	  value[0] = EOS;
 	  TtaGiveTextAttributeValue (attr, value, &length);
 	}
     }
   /* if attribute columnlines is created or updated but has no value, don't
      do anything */
-  if (!delete && !value)
+  if (!delete_ && !value)
     return;
 
   val = 0;
@@ -3749,7 +3749,7 @@ void HandleColumnlinesAttribute (Attribute attr, Element el, Document doc,
 	      else
 		/* set the attribute MLineOnTheRight for this cell */
 		{
-		  if (delete)
+		  if (delete_)
 		    val = 0;
 		  else
 		    if (*ptr != EOS)
@@ -3820,7 +3820,7 @@ void HandleColumnlinesAttribute (Attribute attr, Element el, Document doc,
    properties of the concerned table(s).
   ----------------------------------------------------------------------*/
 void HandleFramespacingAttribute (Attribute attr, Element el, Document doc,
-				  ThotBool delete)
+				  ThotBool delete_)
 {
   ElementType         elType;
   char                *value, *ptr, valueOfNamedSpace[20];
@@ -3832,7 +3832,7 @@ void HandleFramespacingAttribute (Attribute attr, Element el, Document doc,
   PresentationContext ctxt;
   ThotBool            vertPaddingReal, horizPaddingReal;
 
-  if ((!delete && !attr) || !el)
+  if ((!delete_ && !attr) || !el)
     return;
   elType = TtaGetElementType (el);
   if (elType.ElTypeNum != MathML_EL_MTABLE ||
@@ -3842,12 +3842,12 @@ void HandleFramespacingAttribute (Attribute attr, Element el, Document doc,
     return;
 
   value = NULL;
-  if (!delete)
+  if (!delete_)
     {
       length = TtaGetTextAttributeLength (attr);
       if (length > 0)
 	{
-	  value = TtaGetMemory (length+1);
+	  value = (char *)TtaGetMemory (length+1);
 	  value[0] = EOS;
 	  TtaGiveTextAttributeValue (attr, value, &length);
 	}
@@ -3865,7 +3865,7 @@ void HandleFramespacingAttribute (Attribute attr, Element el, Document doc,
   attrType.AttrSSchema = elType.ElSSchema;
   attrType.AttrTypeNum = MathML_ATTR_frame;
   attrFrame = TtaGetAttribute (el, attrType);
-  if (!delete && value && attrFrame)
+  if (!delete_ && value && attrFrame)
     {
       ptr = value;
       /* parse the first part: horizontal spacing */
@@ -3912,7 +3912,7 @@ void HandleFramespacingAttribute (Attribute attr, Element el, Document doc,
 	    }
 	}
     }
-  if (delete)
+  if (delete_)
     ctxt->destroy = TRUE;
   else
     {
@@ -3923,7 +3923,7 @@ void HandleFramespacingAttribute (Attribute attr, Element el, Document doc,
     }
   TtaSetStylePresentation (PRPaddingLeft, el, NULL, ctxt, pval);
   TtaSetStylePresentation (PRPaddingRight, el, NULL, ctxt, pval);
-  if (!delete)
+  if (!delete_)
     {
       pval.typed_data.value = vertPadding;
       pval.typed_data.unit = vertPaddingUnit;
@@ -4075,7 +4075,7 @@ void EvaluateChildRendering (Element el, Document doc)
 		  length = TtaGetTextAttributeLength (attr);
 		  if (length > 0)
 		    {
-		      value = TtaGetMemory (length+1);
+		      value = (char *)TtaGetMemory (length+1);
 		      value[0] = EOS;
 		      TtaGiveTextAttributeValue (attr, value, &length);
 		      if (!strncmp (value, "image/svg", 9) ||
@@ -4106,7 +4106,7 @@ void      MathMLElementComplete (ParserData *context, Element el, int *error)
 {
    Document             doc;   
    ElementType		elType, parentType;
-   Element		child, parent, new, prev, next;
+   Element		child, parent, new_, prev, next;
    AttributeType        attrType;
    Attribute            attr;
    SSchema              MathMLSSchema;
@@ -4323,12 +4323,12 @@ void      MathMLElementComplete (ParserData *context, Element el, int *error)
 	     {
 	       elType.ElSSchema = MathMLSSchema;
 	       elType.ElTypeNum = MathML_EL_MathML;
-	       new = TtaNewElement (doc, elType);
-	       TtaInsertSibling (new, el, TRUE, doc);
+	       new_ = TtaNewElement (doc, elType);
+	       TtaInsertSibling (new_, el, TRUE, doc);
 	       next = el;
 	       TtaNextSibling (&next);
 	       TtaRemoveTree (el, doc);
-	       TtaInsertFirstChild (&el, new, doc);
+	       TtaInsertFirstChild (&el, new_, doc);
 	       prev = el;
 	       while (next != NULL)
 		 {
@@ -4340,9 +4340,9 @@ void      MathMLElementComplete (ParserData *context, Element el, int *error)
 		 }
 	       /* associate a IntDisplaystyle attribute with the element
 		  depending on its context */
-	       SetDisplaystyleMathElement (new, doc);
+	       SetDisplaystyleMathElement (new_, doc);
 	       /* Create placeholders within the MathML element */
-	       CreatePlaceholders (new, doc);
+	       CreatePlaceholders (new_, doc);
 	     }
        }
      }
@@ -4375,7 +4375,7 @@ void               UnknownMathMLNameSpace (ParserData *context,
        elText = TtaNewElement (context->doc, elType);
        XmlSetElemLineNumber (elText);
        TtaInsertFirstChild (&elText, *unknownEl, context->doc);
-       TtaSetTextContent (elText, content, context->language, context->doc);
+       TtaSetTextContent (elText, (unsigned char *)content, context->language, context->doc);
        TtaSetAccessRight (elText, ReadOnly, context->doc);
    }
 }
@@ -4604,7 +4604,7 @@ void MathMLSpacingAttr (Document doc, Element el, char *value, int attr)
    Generate or set the corresponding internal attribute accordingly.
   ----------------------------------------------------------------------*/
 void MathMLSetDisplaystyleAttr (Element el, Attribute attr, Document doc,
-				ThotBool delete)
+				ThotBool delete_)
 {
   int            val, intVal;
   ElementType    elType;
@@ -4617,7 +4617,7 @@ void MathMLSetDisplaystyleAttr (Element el, Attribute attr, Document doc,
   attrType.AttrSSchema = elType.ElSSchema;
   attrType.AttrTypeNum = MathML_ATTR_IntDisplaystyle;
   intAttr = TtaGetAttribute (el, attrType);
-  if (delete)
+  if (delete_)
     /* attribute displaystyle has been deleted */
     {
       if (elType.ElTypeNum == MathML_EL_MSTYLE)
@@ -4768,7 +4768,7 @@ void MathMLAttributeComplete (Attribute attr, Element el, Document doc)
          length = buflen - 1;
       if (length > 0)
 	 {
-	   value = TtaGetMemory (buflen);
+	   value = (char *)TtaGetMemory (buflen);
 	   value[0] = EOS;
 	   TtaGiveTextAttributeValue (attr, value, &length);
 	   switch (attrType.AttrTypeNum)

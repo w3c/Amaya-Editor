@@ -50,7 +50,7 @@ ThotBool is_gtk_font_2byte (PtrFont font)
 {
   XFontStruct *xfs;
   
-  xfs = GDK_FONT_XFONT(font);
+  xfs = (XFontStruct *)GDK_FONT_XFONT(font);
   if (xfs->min_byte1 != 0 || 
       xfs->max_byte1 != 0)
     {
@@ -124,7 +124,7 @@ static void InitDrawing (int style, int thick, int fg)
 	dash[0] = 8;
       dash[1] = 4;
 #ifdef _GTK
-      gdk_gc_set_dashes ( TtLineGC, 0, dash, 2); 
+      gdk_gc_set_dashes ( TtLineGC, 0, (gint8*)dash, 2); 
       gdk_gc_set_line_attributes (TtLineGC, thick, GDK_LINE_ON_OFF_DASH,
 				  GDK_CAP_BUTT, GDK_JOIN_MITER);
 
@@ -313,7 +313,7 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
 	    gdk_draw_text_wc (w, font,TtLineGC, x, y, 
 			     (GdkWChar *)buff, lg * 2);
 	  else
-	    gdk_draw_string (w, font,TtLineGC, x, y, buff);
+	    gdk_draw_string (w, font,TtLineGC, x, y, (char *)buff);
 #endif
 	  if (hyphen)
 	    /* draw the hyphen */
@@ -321,7 +321,7 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
 #endif /* _GTK */
 
 #ifdef _MOTIF    
-	  XDrawString (TtDisplay, w, TtLineGC, x, y, buff, lg);
+	  XDrawString (TtDisplay, w, TtLineGC, x, y, (char *)buff, lg);
 	  if (hyphen)
 	    /* draw the hyphen */
 	    XDrawString (TtDisplay, w, TtLineGC, x + width, y, "\255", 1);
@@ -353,7 +353,7 @@ int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
 #ifdef _MOTIF
   XChar2b            *buff2b;
 
-  buff2b = TtaGetMemory (lg * sizeof(XChar2b));
+  buff2b = (XChar2b*)TtaGetMemory (lg * sizeof(XChar2b));
 #endif /* _MOTIF */
   
   w = FrRef[frame];

@@ -33,9 +33,10 @@
   #include "windowdisplay_f.h"
 #endif /*_WINDOWS*/
 
-#if defined(_GTK) || defined(_MOTIF)
+#if defined(_GTK) || defined(_MOTIF) || defined(_NOGUI)
   #include "xwindowdisplay_f.h"
-#endif /*#if defined(_GTK) || defined(_MOTIF)*/
+#endif /*#if defined(_GTK) || defined(_MOTIF) || defined(_NOGUI)*/
+
 #include "font_f.h"
 #include "stix.h"
 
@@ -101,19 +102,19 @@ void DrawStixIntegral (int frame, int thick, int x, int y, int l, int h,
   if (h < LOW_CHAR)
      /* display a single glyph */
      {
-       font =  LoadStixFont (6, FontRelSize (h-15));
+       font =  (PtrFont)LoadStixFont (6, FontRelSize (h-15));
        DrawStixChar (font, 69, x, y, l, h, fg, frame);
      }
   else if (h < MID_CHAR)
     /* display a single glyph */
     {
-      font =  LoadStixFont (6, FontRelSize (h-5));
+      font =  (PtrFont)LoadStixFont (6, FontRelSize (h-5));
       DrawStixChar (font, 33, x, y, l, h, fg, frame);
     }
   else 
     /* display a single glyph */
     {
-      font =  LoadStixFont (6, FontRelSize (h-5));
+      font =  (PtrFont)LoadStixFont (6, FontRelSize (h-5));
       DrawStixChar (font, 52, x, y, l, h, fg, frame);
      }
    if (type == 2)		
@@ -468,7 +469,9 @@ void GiveStixSize (PtrFont pfont, PtrAbstractBox pAb, int *width,
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void GetMathFontFromChar (char typesymb, SpecFont fontset, void **font,
+void GetMathFontFromChar (char typesymb,
+    			  SpecFont fontset,
+			  void **font,
 			  int height)
 {
   switch (typesymb)

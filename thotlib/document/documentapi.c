@@ -21,7 +21,7 @@
      LastSelectedElement are defined here, to be used at the end of
      function MergeTextElements  ***/
 #undef THOT_EXPORT
-#define THOT_EXPORT
+#define THOT_EXPORT extern
 #include "select_tv.h"
 #endif
 
@@ -69,7 +69,7 @@ void CreateWithException (PtrElement pEl, PtrDocument pDoc)
 {
    /* If table creation */
    if (ThotLocalActions[T_createtable] != NULL)
-      (*ThotLocalActions[T_createtable]) (pEl, pDoc);
+      (*(Proc2)ThotLocalActions[T_createtable]) (pEl, pDoc);
 }
 
 /*----------------------------------------------------------------------
@@ -239,7 +239,7 @@ void UnloadTree (Document document)
      {
        /* remove the selection on the document */
        if (ThotLocalActions[T_resetsel])
-	 (*ThotLocalActions[T_resetsel]) (pDoc);
+	 (*(Proc1)ThotLocalActions[T_resetsel]) (pDoc);
 #ifndef NODISPLAY
        if (DocOfSavedElements == pDoc)
 	 DocOfSavedElements = NULL;
@@ -307,7 +307,7 @@ void TtaCloseDocument (Document document)
     {
       pDoc = LoadedDocument[document - 1];
       if (ThotLocalActions[T_clearhistory] != NULL)
-	(*ThotLocalActions[T_clearhistory]) (pDoc);
+	(*(Proc1)ThotLocalActions[T_clearhistory]) (pDoc);
 #ifndef NODISPLAY
       /* Closing all opened views relating to the document */
       /* close the views */
@@ -742,7 +742,7 @@ void  SetDocumentModified (PtrDocument pDoc, ThotBool status, int length)
       if (status)
 	{
 	  if (!pDoc->DocUpdated && ThotLocalActions[T_docmodified])
-	    (* ThotLocalActions[T_docmodified]) (IdentDocument (pDoc), TRUE);
+	    (*(Proc2)ThotLocalActions[T_docmodified]) ((void *)IdentDocument (pDoc), (void *)TRUE);
 	  pDoc->DocModified = TRUE;
 	  pDoc->DocUpdated = TRUE;
 	  /* pDoc->DocNTypedChars += length; */
@@ -750,7 +750,7 @@ void  SetDocumentModified (PtrDocument pDoc, ThotBool status, int length)
       else
 	{
 	  if (pDoc->DocUpdated && ThotLocalActions[T_docmodified])
-	    (* ThotLocalActions[T_docmodified]) (IdentDocument (pDoc), FALSE);
+	    (*(Proc2)ThotLocalActions[T_docmodified]) ((void *)IdentDocument (pDoc), (void *)FALSE);
 	  pDoc->DocModified = FALSE;
 	  pDoc->DocUpdated = FALSE;
 	  /* pDoc->DocNTypedChars = 0; */
@@ -1110,17 +1110,17 @@ void TtaGiveSchemasOfDocument (char *documentName, char *structureName,
      {
 	error = FALSE;
 	/* Gets the version number if it exists */
-	if (!TtaReadByte (file, &charGotten))
+	if (!TtaReadByte (file, (unsigned char *)&charGotten))
 	   error = TRUE;
 	if (charGotten == (char) C_PIV_VERSION)
 	  {
-	     if (!TtaReadByte (file, &charGotten))
+	     if (!TtaReadByte (file, (unsigned char *)&charGotten))
 		error = TRUE;
-	     if (!TtaReadByte (file, &charGotten))
+	     if (!TtaReadByte (file, (unsigned char *)&charGotten))
 		error = TRUE;
 	     else
 		currentVersion = (int) charGotten;
-	     if (!TtaReadByte (file, &charGotten))
+	     if (!TtaReadByte (file, (unsigned char *)&charGotten))
 		error = TRUE;
 	  }
 	/* Gets the label max. of the document if it is present */
@@ -1130,7 +1130,7 @@ void TtaGiveSchemasOfDocument (char *documentName, char *structureName,
 	     charGotten == (char) C_PIV_LABEL))
 	  {
 	     ReadLabel (charGotten, lab, file);
-	     if (!TtaReadByte (file, &charGotten))
+	     if (!TtaReadByte (file, (unsigned char *)&charGotten))
 		error = TRUE;
 	  }
 
@@ -1140,14 +1140,14 @@ void TtaGiveSchemasOfDocument (char *documentName, char *structureName,
 	     while (charGotten == (char) C_PIV_LANG && !error)
 	       {
 		  do
-		     if (!TtaReadByte (file, &charGotten))
+		     if (!TtaReadByte (file, (unsigned char *)&charGotten))
 			error = TRUE;
 		  while (!(error || charGotten == EOS)) ;
 		  if (charGotten != EOS)
 		     error = TRUE;
 		  else
 		     /* Gets the byte following the language name */
-		  if (!TtaReadByte (file, &charGotten))
+		  if (!TtaReadByte (file, (unsigned char *)&charGotten))
 		     error = TRUE;
 	       }
 	  }
@@ -1159,7 +1159,7 @@ void TtaGiveSchemasOfDocument (char *documentName, char *structureName,
 	  {
 	     i = 0;
 	     do
-		if (!TtaReadByte (file, &structureName[i++]))
+		if (!TtaReadByte (file, (unsigned char *)&structureName[i++]))
 		   error = TRUE;
 	     while (!(error || structureName[i - 1] == EOS || i == MAX_NAME_LENGTH)) ;
 	     if (structureName[i - 1] != EOS)
@@ -1175,7 +1175,7 @@ void TtaGiveSchemasOfDocument (char *documentName, char *structureName,
 		       /* Gets the name of the associated presentation schema */
 		       i = 0;
 		       do
-			  if (!TtaReadByte (file, &presentationName[i++]))
+			  if (!TtaReadByte (file, (unsigned char *)&presentationName[i++]))
 			     error = TRUE;
 		       while (!(error || presentationName[i - 1] == EOS || i == MAX_NAME_LENGTH)) ;
 		    }

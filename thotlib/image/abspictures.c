@@ -72,7 +72,7 @@ void CleanPictInfo (PictInfo *imageDesc)
 	imageDesc->PicHeight = 0;
       if (imageDesc->PicType >= InlineHandlers &&
 	  PictureHandlerTable[imageDesc->PicType].FreePicture)
-	(*(PictureHandlerTable[imageDesc->PicType].FreePicture)) (imageDesc);
+	(*(Proc1)(PictureHandlerTable[imageDesc->PicType].FreePicture)) (imageDesc);
     }
 }
 
@@ -162,7 +162,7 @@ void NewPictInfo (PtrAbstractBox pAb, PathBuffer filename, int imagetype)
 	      if (imageDesc->PicFileName == ptr)
 		imageDesc->PicFileName = NULL;
 	      TtaFreeMemory (ptr);
-	      ptr = TtaGetMemory (len);
+	      ptr = (char *)TtaGetMemory (len);
 	    }
 	  strcpy (ptr, filename);
 	}

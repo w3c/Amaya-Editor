@@ -482,8 +482,10 @@ static PtrElement PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
 	       CreatedElement[NCreatedElements] = newElement;
 	       NCreatedElements++;
 	       if (ThotLocalActions[T_pastesiblingtable] != NULL)
-		 (*ThotLocalActions[T_pastesiblingtable]) (newElement,
-							   &pOrig, pDoc);
+		 (*(Proc3)ThotLocalActions[T_pastesiblingtable]) (
+			(void *)newElement,
+			(void *)&pOrig,
+			(void *)pDoc);
 	     }
 	 }
      }
@@ -573,7 +575,7 @@ void PasteCommand ()
 	/* lock tables formatting */
 	if (ThotLocalActions[T_islock])
 	  {
-	    (*ThotLocalActions[T_islock]) (&lock);
+	    (*(Proc1)ThotLocalActions[T_islock]) ((void *)&lock);
 	    if (!lock)
 	      {
 		if (dispMode == DisplayImmediately)
@@ -1031,7 +1033,10 @@ static ThotBool NoSignificantSibling (PtrElement pEl, ThotBool before)
 void TtcInsertLineBreak (Document doc, View view)
 {
   if (MenuActionList[0].Call_Action)
-    (*MenuActionList[0].Call_Action) (doc, view, BREAK_LINE);
+    (*(Proc3)MenuActionList[0].Call_Action) (
+		(void *)doc,
+		(void *)view,
+		(void *)BREAK_LINE);
 }
 
 /*----------------------------------------------------------------------
@@ -1075,7 +1080,7 @@ void TtcCreateElement (Document doc, View view)
       /* lock the table formatting */
       if (ThotLocalActions[T_islock])
 	{
-	  (*ThotLocalActions[T_islock]) (&lock);
+	  (*(Proc1)ThotLocalActions[T_islock]) ((void *)&lock);
 	  if (!lock)
 	    /* table formatting is not loked, lock it now */
 	    (*ThotLocalActions[T_lock]) ();

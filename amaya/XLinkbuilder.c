@@ -63,23 +63,23 @@ void     MapXLinkAttribute (char *attrName, AttributeType *attrType,
    Search in the Attribute Value Mapping Table the entry for the attribute
    and its value AttrVal. Returns the corresponding Thot value.
   ----------------------------------------------------------------------*/
-void   MapXLinkAttributeValue (char* AttrVal, AttributeType attrType, int *value)
+void   MapXLinkAttributeValue (char* AttrVal, const AttributeType * attrType, int *value)
 {
   int                 i;
 
   *value = 0;
   i = 0;
-  while (XLinkAttrValueMappingTable[i].ThotAttr != attrType.AttrTypeNum &&
+  while (XLinkAttrValueMappingTable[i].ThotAttr != attrType->AttrTypeNum &&
 	 XLinkAttrValueMappingTable[i].ThotAttr != 0)
     i++;
-  if (XLinkAttrValueMappingTable[i].ThotAttr == attrType.AttrTypeNum)
+  if (XLinkAttrValueMappingTable[i].ThotAttr == attrType->AttrTypeNum)
     do
       if (!strcmp (XLinkAttrValueMappingTable[i].XMLattrValue, AttrVal))
 	*value = XLinkAttrValueMappingTable[i].ThotAttrValue;
       else
 	i++;
     while (*value == 0 &&
-	   XLinkAttrValueMappingTable[i].ThotAttr == attrType.AttrTypeNum);
+	   XLinkAttrValueMappingTable[i].ThotAttr == attrType->AttrTypeNum);
 }
 
 /*----------------------------------------------------------------------

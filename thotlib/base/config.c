@@ -231,8 +231,8 @@ static ThotBool readUntil (FILE *file, char *word1, char *word2)
 	 stop = TRUE;
       else
 	{
-	   getFirstWord (line, word);
-	   if (singleWord (line))
+	   getFirstWord ((unsigned char*)line, word);
+	   if (singleWord ((unsigned char*)line))
 	     {
 		if (*word1 != EOS)
 		   if (strcmp (word, word1) == 0)
@@ -738,13 +738,13 @@ int ConfigMakeMenuPres (char *schema, char *BufMenu)
 	   stop = TRUE;
 	 else
 	   {
-	     getFirstWord (line, word);
+	     getFirstWord ((unsigned char*)line, word);
 	     if (word[0] != EOS)
 	       /* la ligne n'est pas vide */
 	       {
 		 /* si la ligne contient un mot cle marquant le debut */
 		 /* d'une autre section, on a fini */
-		 if (singleWord (line))
+		 if (singleWord ((unsigned char*)line))
 		   {
 		     if (strcmp (word, "export") == 0)
 		       stop = TRUE;
@@ -755,22 +755,22 @@ int ConfigMakeMenuPres (char *schema, char *BufMenu)
 		   }
 		 if (!stop)
 		   {
-		     getStringAfterColon (line, text);
+		     getStringAfterColon ((unsigned char*)line, text);
 		     if (text[0] == EOS)
 		       fprintf (stderr, "invalid line in file %s\n   %s\n",
 				schema, line);
 		     else
 		       {
-			 strcpy (textISO, AsciiTranslate (text));
+			 strcpy (textISO, (char *)AsciiTranslate (text));
 			 if (pres_items[nbitem] != NULL)
 			   TtaFreeMemory (pres_items[nbitem]);
-			 pres_items[nbitem] = TtaGetMemory (strlen(word)+1);
-			 strcpy (pres_items[nbitem], word);
+			 pres_items[nbitem] = (char *)TtaGetMemory (strlen(word)+1);
+			 strcpy (pres_items[nbitem], (char *)word);
 			 if (pres_items_menu[nbitem] != NULL)
 			   TtaFreeMemory (pres_items_menu[nbitem]);
 			 len = strlen (textISO) + 1;
-			 pres_items_menu[nbitem] = TtaGetMemory (len);
-			 strcpy (pres_items_menu[nbitem], textISO);
+			 pres_items_menu[nbitem] = (char *)TtaGetMemory (len);
+			 strcpy (pres_items_menu[nbitem], (char *)textISO);
 			 if (BufMenu != NULL)
 			   {
 			     strcpy (&BufMenu[indmenu], textISO);
@@ -868,13 +868,13 @@ int ConfigMakeMenuExport (char *schema, char *BufMenu)
 	      stop = TRUE;
 	   else
 	     {
-		getFirstWord (line, word);
+		getFirstWord ((unsigned char*)line, word);
 		if (word[0] != EOS)
 		   /* la ligne n'est pas vide */
 		  {
 		    /* si la ligne contient un mot cle marquant le debut */
 		    /* d'une autre section, on a fini */
-		     if (singleWord (line))
+		     if (singleWord ((unsigned char*)line))
 		       {
 			if (strcmp (word, "presentation") == 0)
 			   stop = TRUE;
@@ -885,20 +885,20 @@ int ConfigMakeMenuExport (char *schema, char *BufMenu)
 		       }
 		     if (!stop)
 		       {
-			  getStringAfterColon (line, text);
+			  getStringAfterColon ((unsigned char*)line, text);
 			  if (text[0] == EOS)
 			     fprintf (stderr, "invalid line in file %s\n   %s\n", schema, line);
 			  else
 			    {
-			       strcpy (textISO, AsciiTranslate (text));
+			       strcpy (textISO, (char *)AsciiTranslate (text));
 			       if (export_items[nbitem] != NULL)
 				  TtaFreeMemory (export_items[nbitem]);
-			       export_items[nbitem] = TtaGetMemory (strlen (word) + 10);
+			       export_items[nbitem] = (char *)TtaGetMemory (strlen (word) + 10);
 			       strcpy (export_items[nbitem], word);
 			       if (export_items_menu[nbitem] != NULL)
 				  TtaFreeMemory (export_items_menu[nbitem]);
 			       len = strlen (textISO) + 1;
-			       export_items_menu[nbitem] = TtaGetMemory (len);
+			       export_items_menu[nbitem] = (char *)TtaGetMemory (len);
 			       strcpy (export_items_menu[nbitem], textISO);
 			       if (BufMenu != NULL)
 				 {
@@ -940,10 +940,10 @@ static ThotBool Translate (PtrSSchema pSS, char *word, char *trans)
    /* cherche le mot a traduire d'abord parmi les noms d'elements */
    for (i = 0; i < pSS->SsNRules; i++)
      if (pSS->SsRule->SrElem[i]->SrName != NULL &&
-	 strcmp (AsciiTranslate (word), pSS->SsRule->SrElem[i]->SrName) == 0)
+	 strcmp ((char *)AsciiTranslate (word), pSS->SsRule->SrElem[i]->SrName) == 0)
        {
 	 TtaFreeMemory (pSS->SsRule->SrElem[i]->SrName);
-	 pSS->SsRule->SrElem[i]->SrName = TtaStrdup (AsciiTranslate (trans));
+	 pSS->SsRule->SrElem[i]->SrName = TtaStrdup ((char *)AsciiTranslate (trans));
 	 found = TRUE;
        }
 
@@ -952,18 +952,18 @@ static ThotBool Translate (PtrSSchema pSS, char *word, char *trans)
 	{
 	   pAttr = pSS->SsAttribute->TtAttr[i];
 	   if (pAttr->AttrName != NULL &&
-	       strcmp (AsciiTranslate (word), pAttr->AttrName) == 0)
+	       strcmp ((char *)AsciiTranslate (word), pAttr->AttrName) == 0)
 	     {
 	       TtaFreeMemory (pAttr->AttrName);
-	       pAttr->AttrName = TtaStrdup (AsciiTranslate (trans));
+	       pAttr->AttrName = TtaStrdup ((char *)AsciiTranslate (trans));
 	       found = TRUE;
 	     }
 	   else if (pAttr->AttrType == AtEnumAttr)
 	      for (j = 0; j < pAttr->AttrNEnumValues; j++)
-		 if (strcmp (AsciiTranslate (word), pAttr->AttrEnumValue[j]) == 0)
+		 if (strcmp ((char *)AsciiTranslate (word), pAttr->AttrEnumValue[j]) == 0)
 		   {
 		      strncpy (pAttr->AttrEnumValue[j],
-			       AsciiTranslate (trans), MAX_NAME_LENGTH - 1);
+			       (char *)AsciiTranslate (trans), MAX_NAME_LENGTH - 1);
 		      found = TRUE;
 		   }
 	}
@@ -973,11 +973,11 @@ static ThotBool Translate (PtrSSchema pSS, char *word, char *trans)
       if (pSS->SsNExtensRules > 0 && pSS->SsExtensBlock != NULL)
 	 for (i = 0; i < pSS->SsNExtensRules; i++)
 	    if (pSS->SsExtensBlock->EbExtensRule[i].SrName != NULL &&
-		strcmp (AsciiTranslate (word), pSS->SsExtensBlock->EbExtensRule[i].SrName) == 0)
+		strcmp ((char *)AsciiTranslate (word), pSS->SsExtensBlock->EbExtensRule[i].SrName) == 0)
 	      {
 		TtaFreeMemory (pSS->SsExtensBlock->EbExtensRule[i].SrName);
 		pSS->SsExtensBlock->EbExtensRule[i].SrName =
-		  TtaStrdup (AsciiTranslate (trans));
+		  TtaStrdup ((char *)AsciiTranslate (trans));
 		found = TRUE;
 	      }
    return found;
@@ -1004,9 +1004,9 @@ void ConfigTranslateSSchema (PtrSSchema pSS)
    stop = FALSE;
    /* avance dans le fichier jusqu'a la ligne qui contient le seul */
    /* mot "translation" */
-   line = TtaGetMemory (MAX_TXT_LEN);
-   text = TtaGetMemory (MAX_TXT_LEN);
-   word = TtaGetMemory (MAX_TXT_LEN);
+   line = (char *)TtaGetMemory (MAX_TXT_LEN);
+   text = (char *)TtaGetMemory (MAX_TXT_LEN);
+   word = (char *)TtaGetMemory (MAX_TXT_LEN);
    if (readUntil (file, "translation", ""))
       /* lit le fichier ligne a ligne */
       do
@@ -1020,13 +1020,13 @@ void ConfigTranslateSSchema (PtrSSchema pSS)
 	   else
 	     {
 		/* prend le premier mot de la ligne */
-		getFirstWord (line, word);
+		getFirstWord ((unsigned char*)line, word);
 		if (word[0] != EOS)
 		   /* la ligne n'est pas vide */
 		  {
 		    /* si la ligne contient un mot cle marquant le debut */
 		    /* d'une autre section, on a fini */
-		    if (singleWord (line))
+		    if (singleWord ((unsigned char*)line))
 		      {
 			if (strcmp (word, "presentation") == 0)
 			  stop = TRUE;
@@ -1044,7 +1044,7 @@ void ConfigTranslateSSchema (PtrSSchema pSS)
 		    if (!stop && !error)
 		      {
 			/* cherche la chaine de caracteres qui suit ':' */
-			getStringAfterColon (line, text);
+			getStringAfterColon ((unsigned char*)line, text);
 			if (text[0] == EOS)
 			  fprintf (stderr, "invalid line in file %s\n   %s\n",
 				   pSS->SsName, line);
@@ -1091,12 +1091,12 @@ ThotBool ConfigDefaultPSchema (char *schstr, char *schpres)
 	   else
 	     {
 		/* prend le premier mot de la ligne */
-		getFirstWord (line, word);
+		getFirstWord ((unsigned char*)line, word);
 		if (strcmp (word, "style") == 0)
 		  {
 		     /* le 1er mot est "style". Cherche le mot qui suit : c'est le */
 		     /* nom du schema de presentation cherche' */
-		     getSecondWord (line, word);
+		     getSecondWord ((unsigned char *)line, word);
 		     if (word[0] != EOS)
 			/* il y a bien un 2eme mot : succes */
 		       {
@@ -1134,10 +1134,10 @@ static ThotBool readUntilStyle (FILE *file, char *namePSchema)
         stop = TRUE;
      else
         {
-           getFirstWord (line, word);
+           getFirstWord ((unsigned char*)line, word);
            if (strcmp (word, "style") == 0)
               {
-                 getSecondWord (line, word);
+                 getSecondWord ((unsigned char *)line, word);
                  strcpy (name, word);
                  if (strcmp (name, namePSchema) == 0 ||
 		     strcmp (name, "XMLP") == 0)
@@ -1209,13 +1209,13 @@ static ThotBool getNextLineInSection (FILE * file, char *line)
       else
 	{
 	   /* prend le permier mot de la ligne lue */
-	   getFirstWord (line, word1);
+	   getFirstWord ((unsigned char*)line, word1);
 	   if (word1[0] != EOS)
 	      /* la ligne n'est pas vide */
 	     {
 		/* si la ligne contient un mot cle marquant le debut d'une autre */
 		/* section, on a fini */
-		if (singleWord (line))
+		if (singleWord ((unsigned char*)line))
 		   /* la ligne contient un seul mot */
 		  {
 		     if (strcmp (word1, "open") == 0)
@@ -1234,7 +1234,7 @@ static ThotBool getNextLineInSection (FILE * file, char *line)
 		   /* la ligne contient plus d'un mot */
 		if (strcmp (word1, "style") == 0)
 		  {
-		     getSecondWord (line, word2);
+		     getSecondWord ((unsigned char *)line, word2);
 		     if (word2[0] != ':')
 			/* la ligne est du type "style xxxx". C'est une fin de section */
 			stop = TRUE;
@@ -1269,7 +1269,7 @@ void             ConfigKeyboard (int *x, int *y)
    getNextLineInSection (file, line);
 
    /* extrait la partie de la ligne qui suit les deux-points */
-   getStringAfterColon (line, seqLine);
+   getStringAfterColon ((unsigned char*)line, seqLine);
    if (seqLine[0] != EOS)
      /* extrait les 4 entiers */
      nbIntegers = sscanf (seqLine, "%d %d", x, y);
@@ -1291,7 +1291,7 @@ static ThotBool getXYWidthHeight (char *line, PtrDocument pDoc, int *x,
 
   result = FALSE;
   /* extrait la partie de la ligne qui suit les deux-points */
-  getStringAfterColon (line, seqLine);
+  getStringAfterColon ((unsigned char*)line, seqLine);
   if (seqLine[0] != EOS)
     {
       /* extrait les 4 entiers */
@@ -1326,7 +1326,7 @@ void ConfigOpenFirstViews (PtrDocument pDoc)
          while (getNextLineInSection (file, line))
                {
                   /* le 1er mot de la ligne est le nom d'une vue a ouvrir */
-                  getFirstWord (line, nameview);
+                  getFirstWord ((unsigned char*)line, nameview);
                   /* lit les coordonnees (x, y) et dimensions (width, height) de la */
                   /* frame ou doit s'afficher la vue */
                   if (getXYWidthHeight (line, pDoc, &x, &y, &width, &height))
@@ -1367,7 +1367,7 @@ void  ConfigGetViewGeometry (PtrDocument pDoc, char *view, int *x,
        while (!found && getNextLineInSection (file, line))
 	 {
 	   /* le 1er mot de la ligne est le nom d'une vue */
-	   getFirstWord (line, nameview);
+	   getFirstWord ((unsigned char*)line, nameview);
 	   /* est-ce le nom de la vue cherchee ? */
 	   found = (strcmp (nameview, view) == 0);
 	 }
@@ -1381,7 +1381,7 @@ void  ConfigGetViewGeometry (PtrDocument pDoc, char *view, int *x,
 	       while (!found && getNextLineInSection (file, line))
 		 {
 		   /* le 1er mot de la ligne est le nom d'une vue */
-		   getFirstWord (line, nameview);
+		   getFirstWord ((unsigned char*)line, nameview);
 		   /* est-ce le nom de la vue cherchee ? */
 		   found = (strcmp (nameview, view) == 0);
 		 }
@@ -1565,7 +1565,7 @@ ThotBool ConfigGetPSchemaNature (PtrSSchema pSS, char *nameNature,
 	while (!found && getNextLineInSection (file, line))
 	  {
 	     /* le 1er mot de la ligne est le nom d'une nature */
-	     getFirstWord (line, name);
+	     getFirstWord ((unsigned char*)line, name);
 	     /* est-ce le nom de la nature cherchee ? */
 	     found = (strcmp (name, nameNature) == 0);
 	  }
@@ -1575,7 +1575,7 @@ ThotBool ConfigGetPSchemaNature (PtrSSchema pSS, char *nameNature,
 	  {
 	     /* le nom de nature est suivi, apres ":", du nom du schema de */
 	     /* presentation a appliquer */
-	     getStringAfterColon (line, seqLine);
+	     getStringAfterColon ((unsigned char*)line, seqLine);
 	     if (seqLine[0] == EOS)
 		fprintf (stderr, "invalid line in file %s.conf\n   %s\n", pSS->SsName, line);
 	     else
@@ -1617,7 +1617,7 @@ void ConfigGetPresentationOption (PtrSSchema pSS, char *optionName,
 	while (!found && getNextLineInSection (file, line))
 	  {
 	     /* le 1er mot de la ligne est le nom d'une option */
-	     getFirstWord (line, name);
+	     getFirstWord ((unsigned char*)line, name);
 	     /* est-ce le nom de l'option cherchee ? */
 	     found = (strcmp (name, optionName) == 0);
 	  }
@@ -1626,7 +1626,7 @@ void ConfigGetPresentationOption (PtrSSchema pSS, char *optionName,
 	   /* le nom de l'option voulue */
 	  {
 	     /* le nom de l'option est suivi, apres ":", de la valeur de l'option */
-	     getStringAfterColon (line, seqLine);
+	     getStringAfterColon ((unsigned char*)line, seqLine);
 	     if (seqLine[0] == EOS)
 		fprintf (stderr, "invalid line in file %s.conf\n   %s\n", pSS->SsName, line);
 	     else
@@ -1680,12 +1680,12 @@ void ConfigGetPSchemaForPageSize (PtrSSchema pSS, char *pageSize,
 	   else
 	     {
 		/* prend le 1er mot de la ligne lue */
-		getFirstWord (line, word);
+		getFirstWord ((unsigned char*)line, word);
 		if (strcmp (word, "style") == 0)
 		   /* c'est une ligne "style". On conserve le nom du schema de */
 		   /* presentation qui suit le mot-cle "style" */
 		  {
-		    getSecondWord (line, lastStyle);
+		    getSecondWord ((unsigned char *)line, lastStyle);
 		    lastPrefixLen=0;
 		    while(lastStyle[lastPrefixLen]!=EOS &&
 			  (pSS->SsDefaultPSchema)[lastPrefixLen]!=EOS &&
@@ -1706,7 +1706,7 @@ void ConfigGetPSchemaForPageSize (PtrSSchema pSS, char *pageSize,
 		else if (strcmp (word, "pagesize") == 0)
 		   /* c'est une ligne "pagesize", on la traite */
 		  {
-		     getStringAfterColon (line, seqLine);
+		     getStringAfterColon ((unsigned char*)line, seqLine);
 		     if (seqLine[0] == EOS)
                 fprintf (stderr, "invalid line in file %s.conf\n   %s\n", pSS->SsName, line);
              else if (strcmp (seqLine, pageSize) == 0)
@@ -1851,7 +1851,7 @@ ThotBool ConfigDefaultTypoSchema (PtrSSchema pSS, char *nameNature,
 	while (!found && getNextLineInSection (file, line))
 	  {
 	     /* le 1er mot de la ligne est le nom d'une nature */
-	     getFirstWord (line, name);
+	     getFirstWord ((unsigned char*)line, name);
 	     /* est-ce le nom de la nature cherchee ? */
 	     found = (strcmp (name, nameNature) == 0);
 	  }
@@ -1861,7 +1861,7 @@ ThotBool ConfigDefaultTypoSchema (PtrSSchema pSS, char *nameNature,
 	  {
 	     /* le nom de nature est suivi, apres ":", du nom du schema de */
 	     /* typographie a appliquer */
-	     getStringAfterColon (line, seqLine);
+	     getStringAfterColon ((unsigned char*)line, seqLine);
 	     if (seqLine[0] == EOS)
 		fprintf (stderr, "invalid line in file %s.conf\n   %s\n", pSS->SsName, line);
 	     else
