@@ -77,25 +77,12 @@ typedef struct _typeSelector
   RDFResourceP type;
 } TypeSelector;
 
-#if defined(_WX) && !defined(__STDC__)
-/* SG compilation fix under wxWindows */
-#define __STDC__
-#endif /* #if defined(_WX) && !defined(__STDC__) */
-
 #ifndef _WINGUI
 /*----------------------------------------------------------------------
   CustomQueryCallbackDialog
   callback of the annot custom query menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         CustomQueryCallbackDialog (int ref, int typedata, char *data)
-#else
-static void         CustomQueryCallbackDialog (ref, typedata, data)
-int                 ref;
-int                 typedata;
-char              *data;
-
-#endif /* __STDC__ */
+static void CustomQueryCallbackDialog (int ref, int typedata, char *data)
 {
   int                 val;
 
@@ -177,13 +164,7 @@ char              *data;
   CustomQueryMenuInit
   Build and display the Query Menu dialog box and prepare for input.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         CustomQueryMenuInit (Document document, View view)
-#else
-void         CustomQueryMenuInit (document, view)
-Document     document;
-View         view;
-#endif /* __STDC__ */
 {
 #ifndef _WINGUI
    int              i;
@@ -326,13 +307,7 @@ static void WIN_AnnotFilterNewSelector (Document doc, char *entries, int nb_entr
 /*---------------------------------------------------------------
   BuildAnnotFilterSelector builds the list allowing to select a profile
 ------------------------------------------------------------------*/
-#ifdef __STDC__
 static void BuildAnnotFilterSelector (Document doc, SelType selector)
-#else
-static void BuildAnnotFilterSelector (doc, selector)
-Document doc;
-SelType  selector;
-#endif /* __STDC__ */
 {
   int                   nb_entries;
   int                   i;
@@ -419,16 +394,8 @@ SelType  selector;
 /*---------------------------------------------------------------
   ChangeAnnotVisibility
 ------------------------------------------------------------------*/
-#ifdef __STDC__
-static void ChangeAnnotVisibility (Document doc, SelType selector, char *object, ThotBool show)
-#else
-static void ChangeAnnotVisibility (doc, selector, object, show)
-Document doc;
-SelType selector;
-char *object;
-ThotBool show;
-
-#endif /* __STDC__ */
+static void ChangeAnnotVisibility (Document doc, SelType selector,
+				   char *object, ThotBool show)
 {
   List               *list_item;
   AnnotFilterData    *filter;
@@ -606,14 +573,7 @@ ThotBool show;
   Shows or hides the annotations in a given document according to the
   value of the show variable.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void DocAnnotVisibility (Document document, View view, ThotBool show)
-#else
-static void DocAnnotVisibility (document, view, show)
-Document document;
-View view;
-ThotBool show;
-#endif /* __STDC__ */
 {
   ElementType         elType;
   Element             el;
@@ -709,15 +669,8 @@ ThotBool show;
 /*-----------------------------------------------------------------------
  AnnotFilterDlgProc
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
-LRESULT CALLBACK WIN_AnnotFilterDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
-#else  /* !__STDC__ */
-LRESULT CALLBACK WIN_AnnotFilterDlgProc (hwnDlg, msg, wParam, lParam)
-ThotWindow   hwndParent;
-UINT   msg;
-WPARAM wParam;
-LPARAM lParam;
-#endif /* __STDC__ */
+LRESULT CALLBACK WIN_AnnotFilterDlgProc (ThotWindow hwnDlg, UINT msg,
+					 WPARAM wParam, LPARAM lParam)
 {
   int  index = 0;
   int itemIndex;
@@ -860,14 +813,7 @@ LPARAM lParam;
 /*----------------------------------------------------------------------
    callback of the AnnotFilter menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         AnnotFilterCallbackDialog (int ref, int typedata, char * data)
-#else
-static void         AnnotFilterCallbackDialog (ref, typedata, data)
-int                 ref;
-int                 typedata;
-char             *data;
-#endif /* __STDC__ */
+static void AnnotFilterCallbackDialog (int ref, int typedata, char * data)
 {
   int val;
 
@@ -944,13 +890,7 @@ char             *data;
   AnnotFilter
   Build and display the AnnotFilter Menu dialog box and prepare for input.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void         AnnotFilter (Document document, View view)
-#else
-void         AnnotFilter (document, view)
-Document            document;
-View                view;
-#endif /* __STDC__*/
+void AnnotFilter (Document document, View view)
 {
 	/* local variables */
 #ifndef _WINGUI
@@ -1054,12 +994,7 @@ View                view;
   builds the list showing the different annotation types.
   Returns the number of entries in the menu.
 ------------------------------------------------------------------*/
-#ifdef __STDC__
 static int BuildAnnotTypesSelector (Document doc)
-#else
-static	int BuildAnnotTypesSelector (doc)
-Document doc;
-#endif /* __STDC__ */
 {
   int                   nb_entries;
   int                   i;
@@ -1125,13 +1060,7 @@ Document doc;
   Returns the RDF Resource pointer that represents the type selection
   of the user. It is NULL if the user doesn't select a type.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 RDFResourceP AnnotTypes (Document document, View view)
-#else
-RDFResourceP AnnotTypes (document, view)
-Document            document;
-View                view;
-#endif /* __STDC__*/
 {
   RDFResourceP result = NULL;
   int nb_entries;
