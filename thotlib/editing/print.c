@@ -58,8 +58,6 @@
 #include "appdialogue_tv.h"
 #include "units_tv.h"
 
-extern RGBstruct RGB_colors[];
-
 int          PRINT;	/* Identification des messages */
 ptrfont      PoscriptFont;
 int          ColorPs;
@@ -1734,8 +1732,6 @@ static int PrintDocument (PtrDocument pDoc, int viewsCounter)
   int                 schView, v, firstFrame;
   ThotBool            found, withPages;
 #ifdef _WINDOWS
-  /* static DOCINFO docInfo = {sizeof (DOCINFO), "Amaya", NULL}; */
-  int    i;
   int    xRes, yRes, xSize, ySize;
   RECT   Rect;
 #endif /* _WINDOWS */
@@ -1752,10 +1748,6 @@ static int PrintDocument (PtrDocument pDoc, int viewsCounter)
 #ifdef _WINDOWS
   if (TtPrinterDC)
     {
-    for (i = 0; i < MAX_COLOR; i++) 
-      Pix_Color[i] = RGB (RGB_Table[i].red, RGB_Table[i].green,
-			  RGB_Table[i].blue);
-    
     xSize = GetDeviceCaps (TtPrinterDC, HORZRES);
     ySize = GetDeviceCaps (TtPrinterDC, VERTRES);
     xRes  = GetDeviceCaps (TtPrinterDC, LOGPIXELSX);
@@ -1768,8 +1760,7 @@ static int PrintDocument (PtrDocument pDoc, int viewsCounter)
     Rect.right  = xSize;
 
     /* ... and inform the driver */
-    Escape (TtPrinterDC, SET_BOUNDS, sizeof (RECT), (LPSTR)&Rect, NULL);
-    
+    Escape (TtPrinterDC, SET_BOUNDS, sizeof (RECT), (LPSTR)&Rect, NULL);    
     InitPrinting (TtPrinterDC, WIN_Main_Wd, hCurrentInstance, NULL);
     }
 #endif /* _WINDOWS */

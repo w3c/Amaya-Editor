@@ -23,6 +23,7 @@ extern int        WIN_TtaHandleMultiKeyEvent (UINT msg, WPARAM wParam, LPARAM lP
 extern void       WIN_CharTranslation (HWND hWnd, int frame, UINT msg, WPARAM wParam, LPARAM lParam, ThotBool isSpecial);
 extern void       WIN_InitDialogueFonts (HDC, char *);
 extern void       WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LPARAM lParam);
+extern unsigned char GetSystemColorIndex (unsigned short red, unsigned short green, unsigned short blue);
 extern void       APP_ButtonCallback (ThotButton, int, caddr_t);
 extern void       CleanFrameCatList (int frame, int ref);
 extern int        GetMainFrameNumber (ThotWindow);

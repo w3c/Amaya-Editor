@@ -71,61 +71,6 @@ static int          clear_code, end_code;
 static int          table[2][(1 << MAX_LWZ_BITS)];
 static int          stack[(1 << (MAX_LWZ_BITS)) * 2], *sp = stack;
 
-#ifdef _WINDOWS
-#define MAXNUMBER 256
-#define ALIGNLONG(i) ((i+3)/4*4)
-
-static signed int   tabCorres [256];
-static PALETTEENTRY sysPalEntries[256];
-ThotBool            peInitialized = FALSE;
-static int          nbSysColors;
-static int          best_dsquare = INT_MAX;
-
-/* ----------------------------------------------------------------------
-  WIN_InitSysColors						
-  ---------------------------------------------------------------------- */
-int WIN_InitSystemColors (HDC hDC)
-{
-  if (peInitialized)
-    return 1;
-  if (!(GetDeviceCaps (hDC, RASTERCAPS) & RC_PALETTE))
-    return 1;
-
-  nbSysColors = GetSystemPaletteEntries (hDC, 0, GetDeviceCaps (hDC, SIZEPALETTE), sysPalEntries);
-  peInitialized = TRUE;
-  return 0;
-}
-
-/* ---------------------------------------------------------------------- 
-   WIN_GetColorIndex
-   ---------------------------------------------------------------------- */
-BYTE WIN_GetColorIndex (int r, int g, int b)
-{
-  int                 best;
-  int                 i;
-  unsigned int      delred, delgreen, delblue;
-  unsigned int        dsquare;
-  unsigned int        best_dsquare = (unsigned int) -1;
-
-  for (i = 0; i < nbSysColors; i++)
-    {
-      delred   = sysPalEntries[i].peRed;
-      delgreen = sysPalEntries[i].peGreen;
-      delblue  = sysPalEntries[i].peBlue;
-      delred   -= r;
-      delgreen -= g;
-      delblue  -= b;
-      dsquare  = delred * delred + delgreen * delgreen + delblue * delblue;
-      if (dsquare < best_dsquare)
-	{
-	  best = i;
-	  best_dsquare = dsquare;
-        }
-    }
-  return ((BYTE)best);
-}
-#endif /* _WINDOWS */
-
 /*----------------------------------------------------------------------
   ReadGifImage
   ----------------------------------------------------------------------*/
@@ -1072,8 +1017,7 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
   unsigned short*sdata;
   unsigned int        col;
   int                 temp, w, h, ind;
-  int                 shiftstart, shiftstop, shiftinc;
-  int                 linepad, shiftnum;
+  int                 linepad;
   int                 bytesperline;
   int                 rshift, gshift, bshift;
 
@@ -1085,13 +1029,9 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
 	case 8:
       /* translate image palette to the system palette  */
       for (ind = 0; ind < ncolors; ind++)
-	{
-	  WIN_InitSystemColors (hDC);
-	  temp = WIN_GetColorIndex (colrs[ind].red,
-				  colrs[ind].green,
-				  colrs[ind].blue);
-	  colrs[ind].pixel = temp;
-	}
+	colrs[ind].pixel = GetSystemColorIndex (colrs[ind].red,
+						colrs[ind].green,
+						colrs[ind].blue);
       if (width % 2)
 	linepad = 1;
       else 
@@ -1109,7 +1049,7 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
 	      else
 		/* use two bytes per pixel */
 		col = sdata[ind++];
-	      *bitp++ = colrs[col].pixel & 0xff;
+	      *bitp++ = (unsigned char) colrs[col].pixel & 0xff;
 	    }
 	  if (linepad)
 	    *bitp++ = 0;	    

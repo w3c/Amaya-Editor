@@ -109,93 +109,7 @@ static unsigned char MirrorBytes[0x100] = {
    0x1f, 0x9f, 0x5f, 0xdf, 0x3f, 0xbf, 0x7f, 0xff
 };
 
-#ifdef _WINDOWS 
-/* Macro to determine to round off the given value to the closest byte */
-#define WIDTHBYTES(i)   ((i+31)/32*4)
-extern ThotBool peInitialized;
-
-
-#ifdef _WIN_PRINT
-/*----------------------------------------------------------------------
-  DibNumColors deetermines the number of colors in the DIB by looking
-  at the BitCount filed in the info block.
-  Returns the number of colors in the DIB.
-  ----------------------------------------------------------------------*/
-WORD DibNumColors (VOID FAR* pv)
-{
-  INT                 bits;
-  LPBITMAPINFOHEADER  lpbi;
-  LPBITMAPCOREHEADER  lpbc;
-
-  lpbi = ((LPBITMAPINFOHEADER)pv);
-  lpbc = ((LPBITMAPCOREHEADER)pv);
-
-  /*  With the BITMAPINFO format headers, the size of the palette
-   *  is in biClrUsed, whereas in the BITMAPCORE - style headers, it
-   *  is dependent on the bits per pixel ( = 2 raised to the power of
-   *  bits/pixel).
-   */
-  if (lpbi->biSize != sizeof (BITMAPCOREHEADER))
-    {
-      if (lpbi->biClrUsed != 0)
-	return (WORD)lpbi->biClrUsed;
-      bits = lpbi->biBitCount;
-    }
-  else
-    bits = lpbc->bcBitCount;
-
-  switch (bits)
-    {
-    case 1:  return   2;
-    case 4:  return  16;
-    case 8:  return 256;
-    default: return   0; /* A 24 bitcount DIB has no color table */
-    }
-}
-
-/*----------------------------------------------------------------------
-  PaletteSize
-  Calculates the palette size in bytes. If the info. block is of the
-  BITMAPCOREHEADER type, the number of colors is multiplied by 3 to give
-  the palette size, otherwise the number of colors is multiplied by 4.
-  Returns the palette size in number of bytes.
- ----------------------------------------------------------------------*/
-WORD PaletteSize (VOID FAR * pv)
-{
-  LPBITMAPINFOHEADER lpbi;
-  WORD               NumColors;
-
-  lpbi      = (LPBITMAPINFOHEADER)pv;
-  NumColors = DibNumColors(lpbi);
-  if (lpbi->biSize == sizeof(BITMAPCOREHEADER))
-    return (WORD)(NumColors * sizeof(RGBTRIPLE));
-  else
-    return (WORD)(NumColors * sizeof(RGBQUAD));
-}
-/*----------------------------------------------------------------------
-  DibInfo retrieves the DIB info associated with a CF_DIB format memory
-  block.
-  Returns TRUE if successful, FALSE otherwise
- ----------------------------------------------------------------------*/
-BOOL DibInfo (LPBITMAPINFOHEADER lpbi)
-{
-  if (lpbi)
-    {
-      /* fill in the default fields */
-      if (lpbi->biSize != sizeof (BITMAPCOREHEADER))
-	{
-          if (lpbi->biSizeImage == 0L)
-	    lpbi->biSizeImage = WIDTHBYTES (lpbi->biWidth * lpbi->biBitCount) * lpbi->biHeight;
-	  
-          if (lpbi->biClrUsed == 0L)
-	    lpbi->biClrUsed = DibNumColors (lpbi);
-	}
-      return TRUE;
-    }
-  return FALSE;
-}
-#endif /* _WIN_PRINT */
-
+#ifdef _WINDOWS
 /*----------------------------------------------------------------------
   TransparentPicture
   displays the image without background (pixels with the color bg).
@@ -204,27 +118,28 @@ BOOL DibInfo (LPBITMAPINFOHEADER lpbi)
 static void TransparentPicture (HBITMAP pixmap, int xFrame, int yFrame,
 				int w, int h, int bg)
 {
-   HDC      hMemDC;
-   HDC      hOrDC;
-   HDC      hAndDC;
-   HDC      hInvAndDC;
-   HDC      hDestDC;
-   HBITMAP  bitmap;
-   HBITMAP  bitmapOr;
-   HBITMAP  bitmapAnd;
-   HBITMAP  bitmapInvAnd;
-   HBITMAP  bitmapDest;
-   HBITMAP  pBitmapOr;
-   HBITMAP  pBitmapAnd;
-   HBITMAP  pBitmapInvAnd;
-   HBITMAP  pBitmapDest;
-   COLORREF crColor;
-   COLORREF crOldBkColor;
-   short      red, green, blue;
+   HDC            hMemDC, hOrDC;
+   HDC             hAndDC, hInvAndDC;
+   HDC            hDestDC;
+   HBITMAP        bitmap, bitmapOr;
+   HBITMAP        bitmapAnd, bitmapInvAnd;
+   HBITMAP        bitmapDest, pBitmapOr;
+   HBITMAP        pBitmapAnd, pBitmapInvAnd;
+   HBITMAP        pBitmapDest;
+   COLORREF       crColor;
+   COLORREF       crOldBkColor;
+   unsigned short red, green, blue;
 
-   /* give the RGB of the background color */
-   TtaGiveThotRGB (bg, &red, &green, &blue);
-   crColor = RGB ((int)red, (int)green, (int)blue);
+   if (TtIsTrueColor)
+     /* give the background color pixel */
+     crColor = ColorPixel (bg);
+   else
+     {
+       /* give the RGB of the background color */
+       TtaGiveThotRGB (bg, &red, &green, &blue);
+       /* give the system color index */
+       crColor = GetSystemColorIndex (red, green, blue);
+     }
    hMemDC = CreateCompatibleDC (TtDisplay);
    bitmap = SelectObject (hMemDC, pixmap);
    SetMapMode (hMemDC, GetMapMode (TtDisplay));
@@ -450,7 +365,6 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 #ifdef _WINDOWS
   if (!TtIsTrueColor)
     {
-      WIN_InitSystemColors (TtDisplay);
       SelectPalette (TtDisplay, TtCmap, FALSE);
       nbPalColors = RealizePalette (TtDisplay);
     }

@@ -17,11 +17,13 @@
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
-
 #include "libmsg.h"
 #include "message.h"
 #include "picture.h"
 #include "appdialogue.h"
+#ifdef _WINDOWS
+#include "wininclude.h"
+#endif /* _WINDOWS */
 
 
 #undef THOT_EXPORT
@@ -46,59 +48,12 @@ extern int              errno;
 #include "registry_f.h"
 #include "textcommands_f.h"
 
-#ifdef _WINDOWS
-#include "wininclude.h"
-
-static int       palSize;
-static int       initialized = 0;
-int              nbPalEntries;
-PALETTEENTRY     palEntries[256];
-int              nbSysColors;
-
-/*----------------------------------------------------------------------
- *      WinCreateGC is an emulation of the XWindows XCreateGC under
- *         MS-Windows.
- ----------------------------------------------------------------------*/
-ThotGC              WinCreateGC (void)
-{
-   ThotGC gc = (ThotGC) TtaGetMemory (sizeof (WIN_GC_BLK));
-   return (gc);
-}
-
-/*----------------------------------------------------------------------
- *      WinInitColors initialize the color table depending on the
- *         device capabilities under MS-Windows.
- ----------------------------------------------------------------------*/
-void WinInitColors (void)
-{
-   int        i;
-
-   if (initialized)
-      return;
-   palSize = GetDeviceCaps (TtDisplay, SIZEPALETTE);
-   if (palSize == 0)
-     TtIsTrueColor = TRUE;
-   else
-     TtIsTrueColor = FALSE;
-
-   /* Create a color palette for the Thot set of colors. */
-   /* fill-in the Pix_Color table */
-   for (i = 0; i < MAX_COLOR; i++) 
-       Pix_Color[i] = RGB (RGB_Table[i].red, RGB_Table[i].green, RGB_Table[i].blue);
-
-   /* set up the default background colors for all views. */
-   for (i = 0; i < (sizeof (BackgroundColor) / sizeof (BackgroundColor[0])); i++)
-       BackgroundColor[i] = 0;
-
-   initialized = 1;
-}
-#endif /* _WINDOWS */
 
 #ifndef _WINDOWS
 /*----------------------------------------------------------------------
  * XWindowError is the X-Windows non-fatal errors handler.
  ----------------------------------------------------------------------*/
-static int          XWindowError (Display *dpy, XErrorEvent *err)
+static int XWindowError (Display *dpy, XErrorEvent *err)
 {
    char                msg[200];
 
@@ -109,12 +64,14 @@ static int          XWindowError (Display *dpy, XErrorEvent *err)
 /*----------------------------------------------------------------------
  * XWindowFatalError is the X-Windows fatal errors handler.
  ----------------------------------------------------------------------*/
-static int          XWindowFatalError (Display * dpy)
+static int XWindowFatalError (Display * dpy)
 {
   if (errno != EPIPE)
-    TtaDisplayMessage (FATAL, TtaGetMessage (LIB, TMSG_LIB_X11_ERR), DisplayString (dpy));
+    TtaDisplayMessage (FATAL, TtaGetMessage (LIB, TMSG_LIB_X11_ERR),
+		       DisplayString (dpy));
   else
-    TtaDisplayMessage (FATAL, TtaGetMessage (LIB, TMSG_LIB_X11_ERR), DisplayString (dpy));
+    TtaDisplayMessage (FATAL, TtaGetMessage (LIB, TMSG_LIB_X11_ERR),
+		       DisplayString (dpy));
   CloseTextInsertion ();
   if (ThotLocalActions[T_backuponfatal] != NULL)
     (*ThotLocalActions[T_backuponfatal]) ();
@@ -208,9 +165,6 @@ void TtaUpdateEditorColors (void)
   Scroll_Color = BgMenu_Color;
   /* color for the inactive entries */
   found = FindColor (0, name, "InactiveItemColor", "LightGrey2", &InactiveB_Color);
-#ifdef _WINDOWS
-  /*WinInitColors ();*/
-#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -235,10 +189,7 @@ static void         InitColors (char* name)
    vptr = gdk_visual_get_best ();
    vinfo = gdk_visual_get_best_type ();
    if (vptr)
-     {
-       TtIsTrueColor = (vinfo == GDK_VISUAL_TRUE_COLOR || vinfo == GDK_VISUAL_DIRECT_COLOR );
-      // XFree (vptr);
-     }
+     TtIsTrueColor = (vinfo == GDK_VISUAL_TRUE_COLOR || vinfo == GDK_VISUAL_DIRECT_COLOR );
    else
      TtIsTrueColor = FALSE;
    /* Depending on the display Black and White order may be inverted */
@@ -303,18 +254,11 @@ static void         InitColors (char* name)
    Scroll_Color = BgMenu_Color = cwhite.pixel;
 #endif /* _GTK */
 #endif /* _WINDOWS */
-#ifdef _WINDOWS
-   WinInitColors ();
-#  endif /* _WINDOWS */
-
    if (TtWDepth > 1)
-     {
-       TtaUpdateEditorColors ();
-     }
+     TtaUpdateEditorColors ();
    else
      /* at least allocate the selection color */
      found = FindColor (0, name, "DocSelectColor", "White", &Select_Color);
-
 }
 
 #ifndef _WINDOWS

@@ -44,14 +44,11 @@ static int             have_colors = 0;
    FindOutColor finds the closest color by allocating it, or picking
    an already allocated color.
   ----------------------------------------------------------------------*/
-static void FindOutColor (Display *dsp, Colormap colormap, ThotColorStruct *colr)
+static void FindOutColor (Display *dsp, Colormap colormap,
+			  ThotColorStruct *colr)
 {
    int                 i, match;
-#ifdef MORE_ACCURATE
-   double              rd, gd, bd, dist, mindist;
-#else
    int                 rd, gd, bd, dist, mindist;
-#endif /* MORE_ACCURATE */
    int                 cindx;
    int                 NumCells;
 
@@ -79,24 +76,6 @@ static void FindOutColor (Display *dsp, Colormap colormap, ThotColorStruct *colr
 #endif /* _GTK */
 	     have_colors = 1;
 	  }
-#ifdef MORE_ACCURATE
-	mindist = 196608.0;	/* 256.0 * 256.0 * 3.0 */
-	cindx = colr->pixel;
-	for (i = 0; i < NumCells; i++)
-	  {
-	     rd = (def_colrs[i].red - colr->red) / 256.0;
-	     gd = (def_colrs[i].green - colr->green) / 256.0;
-	     bd = (def_colrs[i].blue - colr->blue) / 256.0;
-	     dist = (rd * rd) + (gd * gd) + (bd * bd);
-	     if (dist < mindist)
-	       {
-		  mindist = dist;
-		  cindx = def_colrs[i].pixel;
-		  if (dist == 0.0)
-		     break;
-	       }
-	  }
-#else
 	mindist = 196608;	/* 256 * 256 * 3 */
 	cindx = colr->pixel;
 	for (i = 0; i < NumCells; i++)
@@ -113,7 +92,6 @@ static void FindOutColor (Display *dsp, Colormap colormap, ThotColorStruct *colr
 		     break;
 	       }
 	  }
-#endif /* MORE_ACCURATE */
 	colr->pixel = cindx;
 	colr->red = def_colrs[cindx].red;
 	colr->green = def_colrs[cindx].green;
@@ -143,7 +121,6 @@ static void FindOutColor (Display *dsp, Colormap colormap, ThotColorStruct *colr
   ----------------------------------------------------------------------*/
 static void InstallColor (int i)
 {
-
 #ifdef _WINDOWS
    Pix_Color[i] = RGB (RGB_Table[i].red, RGB_Table[i].green, RGB_Table[i].blue);
 #else  /* _WINDOWS */
@@ -252,111 +229,167 @@ void         FreeDocColors ()
   ----------------------------------------------------------------------*/
 void InitDocColors (char *name)
 {
-#ifndef _WIN_PRINT
-   int                 i, j, k;
-   char               *value;
-   ThotBool            reducecolor;
-   ThotBool            colormap_full;
-#ifdef _GTK
-   ThotColorStruct     gdkwhite, gdkblack;
-#endif /* _GTK */
-
-   /* clean up everything with white */
-   for (i = 2; i < NColors; i++)
-       Pix_Color[i] = Pix_Color[0];
-
-   reducecolor = FALSE;
-   colormap_full = FALSE;
-   value = TtaGetEnvString ("ReduceColor");
-   if (value == NULL)
-      reducecolor = FALSE;
-   else if (!strcasecmp (value, "yes"))
-      reducecolor = TRUE;
-   else
-      reducecolor = FALSE;
-
-   /* set up black and white Pixels */
 #ifdef _WINDOWS
-   Pix_Color[0] = RGB (255, 255, 255);
-   Pix_Color[1] = RGB (0, 0, 0);
+  PALETTEENTRY        sysPalEntries[256];
+  int                 palSize, max;
+  int                 best;
+  int                 i, j;
+  unsigned int        delred, delgreen, delblue;
+  unsigned int        dsquare;
+  unsigned int        best_dsquare;
+
+  palSize = GetDeviceCaps (TtDisplay, SIZEPALETTE);
+  TtIsTrueColor = (palSize == 0);
+  Pix_Color[0] = RGB (255, 255, 255);
+  Pix_Color[1] = RGB (0, 0, 0);
+  /* Create a color palette for the Thot set of colors. */
+  /* fill-in the Pix_Color table */
+  max = GetSystemPaletteEntries (TtDisplay, 0, palSize, sysPalEntries);
+
+  if (TtIsTrueColor)
+    {
+      for (i = 0; i < MAX_COLOR; i++) 
+	Pix_Color[i] = RGB (RGB_Table[i].red, RGB_Table[i].green, RGB_Table[i].blue);
+      /* accept 512 any new colors */
+      Max_Extend_Colors = 512;
+      ExtRGB_Table = (RGBstruct *) TtaGetMemory (Max_Extend_Colors * sizeof (RGBstruct));
+      ExtColor = (ThotColor *) TtaGetMemory (Max_Extend_Colors * sizeof (ThotColor));
+      ExtCount_Table = (int *) TtaGetMemory (Max_Extend_Colors * sizeof (int));
+      NbExtColors = 0;
+    }
+  else
+    {
+      for (i = 2; i < MAX_COLOR; i++)
+	{
+      best = 0;
+	  best_dsquare = (unsigned int) -1;
+	  for (j = 0; j < max; j++)
+	    {
+	      delred   = sysPalEntries[j].peRed - RGB_Table[i].red;
+	      delgreen = sysPalEntries[j].peGreen - RGB_Table[i].green;
+	      delblue  = sysPalEntries[j].peBlue - RGB_Table[i].blue;
+	      dsquare  = delred * delred + delgreen * delgreen + delblue * delblue;
+	      if (dsquare < best_dsquare)
+		{
+		  best = j;
+		  best_dsquare = dsquare;
+		}
+	    }
+	  Pix_Color[i] = RGB (sysPalEntries[best].peRed, sysPalEntries[best].peGreen,
+			      sysPalEntries[best].peBlue);
+	}
+      /* accept only 256 system colors */
+      Max_Extend_Colors = max;
+      NbExtColors = max;
+      ExtRGB_Table = (RGBstruct *) TtaGetMemory (Max_Extend_Colors * sizeof (RGBstruct));
+      ExtColor = (ThotColor *) TtaGetMemory (Max_Extend_Colors * sizeof (ThotColor));
+      ExtCount_Table = (int *) TtaGetMemory (Max_Extend_Colors * sizeof (int));
+      for (j = 0; j < max; j++)
+	{
+	  ExtRGB_Table[j].red = sysPalEntries[j].peRed;
+	  ExtRGB_Table[j].green = sysPalEntries[j].peGreen;
+	  ExtRGB_Table[j].blue = sysPalEntries[j].peBlue;
+	  ExtCount_Table[j] = 1;
+	  ExtColor[j] = RGB (sysPalEntries[j].peRed, sysPalEntries[j].peGreen,
+			     sysPalEntries[j].peBlue);
+	}
+    }
 #else  /* _WINDOWS */
+  int                 i, j, k;
+  char               *value;
+  ThotBool            reducecolor;
+  ThotBool            colormap_full;
 #ifdef _GTK
-   gdk_color_white (TtCmap, &gdkwhite);  
-   gdk_color_black (TtCmap, &gdkblack);
-   Pix_Color[0] = gdkwhite.pixel;
-   Pix_Color[1] = gdkblack.pixel;
-#else /* _GTK */
-   Pix_Color[0] = WhitePixel (TtDisplay, DefaultScreen (TtDisplay));
-   Pix_Color[1] = BlackPixel (TtDisplay, DefaultScreen (TtDisplay));
+  ThotColorStruct     gdkwhite, gdkblack;
 #endif /* _GTK */
+  
+  reducecolor = FALSE;
+  colormap_full = FALSE;
+  value = TtaGetEnvString ("ReduceColor");
+  if (value == NULL)
+    reducecolor = FALSE;
+  else if (!strcasecmp (value, "yes"))
+    reducecolor = TRUE;
+  else
+    reducecolor = FALSE;
+
+  /* set up black and white Pixels */
+#ifdef _GTK
+  gdk_color_white (TtCmap, &gdkwhite);  
+  gdk_color_black (TtCmap, &gdkblack);
+  Pix_Color[0] = gdkwhite.pixel;
+  Pix_Color[1] = gdkblack.pixel;
+#else /* _GTK */
+  Pix_Color[0] = WhitePixel (TtDisplay, DefaultScreen (TtDisplay));
+  Pix_Color[1] = BlackPixel (TtDisplay, DefaultScreen (TtDisplay));
+#endif /* _GTK */
+  /* clean up everything with white */
+  for (i = 2; i < NColors; i++)
+    Pix_Color[i] = Pix_Color[0];
+  
+  /* setup greyscale colors */
+  for (i = 2; i < 8; i++)
+    InstallColor (i);
+  /* install the first row of primary colors */
+  i = 4;
+  for (i += 8; i < NColors; i += 8)
+    InstallColor (i);
+
+  /*
+   * ApproximateColors is also point less but we can show
+   * all the colors as issued from the primary, if allocated
+   */
+  if (colormap_full)
+    {
+      for (j = 1; j <= (NColors / 8); j++)
+	for (i = j * 8, k = 0; (i < NColors) && (k < 8); i++, k++)
+	  Pix_Color[i] = Pix_Color[j * 8 + 4];
+      return;
+    }
+  
+  /* install the second row of colors */
+  i = 2;
+  for (i += 8; i < NColors; i += 8)
+    InstallColor (i);
+  /* install the the third and fourth rows of colors */
+  i = 6;
+  for (i += 8; i < NColors; i += 8)
+    InstallColor (i);
+  i = 0;
+  for (i += 8; i < NColors; i += 8)
+    InstallColor (i);
+
+  /* here, if the user asked for reduced colormap, approximate colors */
+  if (reducecolor)
+    ApproximateColors ();
+  else
+    {
+      /* install the last rows of colors */
+      i = 3;
+      for (i += 8; i < NColors; i += 8)
+	InstallColor (i);
+      i = 7;
+      for (i += 8; i < NColors; i += 8)
+	InstallColor (i);
+      i = 5;
+      for (i += 8; i < NColors; i += 8)
+	InstallColor (i);
+      i = 1;
+      for (i += 8; i < NColors; i += 8)
+	InstallColor (i);
+      
+      if (colormap_full)
+	ApproximateColors ();
+    }
+  NbExtColors = 0;
+  if (TtWDepth <= 8)
+    Max_Extend_Colors = 256;
+  else
+    Max_Extend_Colors = 512;
+  ExtRGB_Table = (RGBstruct *) TtaGetMemory (Max_Extend_Colors * sizeof (RGBstruct));
+  ExtColor = (ThotColor *) TtaGetMemory (Max_Extend_Colors * sizeof (ThotColor));
+  ExtCount_Table = (int *) TtaGetMemory (Max_Extend_Colors * sizeof (int));
 #endif /* _WINDOWS */
-
-   /* setup greyscale colors */
-   for (i = 2; i < 8; i++)
-       InstallColor (i);
-
-   /* install the first row of primary colors */
-   i = 4;
-   for (i += 8; i < NColors; i += 8)
-       InstallColor (i);
-
-   /*
-    * ApproximateColors is also point less but we can show
-    * all the colors as issued from the primary, if allocated
-    */
-   if (colormap_full)
-     {
-	for (j = 1; j <= (NColors / 8); j++)
-	   for (i = j * 8, k = 0; (i < NColors) && (k < 8); i++, k++)
-	      Pix_Color[i] = Pix_Color[j * 8 + 4];
-	return;
-     }
-
-   /* install the second row of colors */
-   i = 2;
-   for (i += 8; i < NColors; i += 8)
-      InstallColor (i);
-
-   /* install the the third and fourth rows of colors */
-   i = 6;
-   for (i += 8; i < NColors; i += 8)
-      InstallColor (i);
-   i = 0;
-   for (i += 8; i < NColors; i += 8)
-      InstallColor (i);
-
-   /* here, if the user asked for reduced colormap, approximate colors */
-   if (reducecolor)
-      ApproximateColors ();
-   else
-     {
-	/* install the last rows of colors */
-	i = 3;
-	for (i += 8; i < NColors; i += 8)
-	   InstallColor (i);
-	i = 7;
-	for (i += 8; i < NColors; i += 8)
-	   InstallColor (i);
-	i = 5;
-	for (i += 8; i < NColors; i += 8)
-	   InstallColor (i);
-	i = 1;
-	for (i += 8; i < NColors; i += 8)
-	   InstallColor (i);
-
-	if (colormap_full)
-	   ApproximateColors ();
-     }
-
-#endif /* _WIN_PRINT */
-   NbExtColors = 0;
-   if (TtWDepth <= 8)
-     Max_Extend_Colors = 256;
-   else
-     Max_Extend_Colors = 512;
-   ExtRGB_Table = (RGBstruct *) TtaGetMemory (Max_Extend_Colors * sizeof (RGBstruct));
-   ExtColor = (ThotColor *) TtaGetMemory (Max_Extend_Colors * sizeof (ThotColor));
-   ExtCount_Table = (int *) TtaGetMemory (Max_Extend_Colors * sizeof (int));
 }
 
 /*----------------------------------------------------------------------
@@ -434,7 +467,8 @@ void             TtaFreeThotColor (int num)
   TtaGetThotColor returns the Thot Color.
   red, green, blue express the color RGB in 8 bits values
  ----------------------------------------------------------------------*/
-int TtaGetThotColor (unsigned short red, unsigned short green, unsigned short blue)
+int TtaGetThotColor (unsigned short red, unsigned short green,
+		     unsigned short blue)
 {
    short               delred, delgreen, delblue;
    int                 best;
@@ -533,12 +567,42 @@ int TtaGetThotColor (unsigned short red, unsigned short green, unsigned short bl
 	     /* it's an already allocated extended color */
 	     ExtCount_Table[best - NColors]++;
 	 }
-       else
+       else if (best >= NColors)
 	 ExtCount_Table[best - NColors]++;
      }
 
    return (best);
 }
+
+#ifdef _WINDOWS
+/*----------------------------------------------------------------------
+  GetSystemColorIndex returns the index in the system palette
+  ----------------------------------------------------------------------*/
+unsigned char GetSystemColorIndex (unsigned short red, unsigned short green,
+				   unsigned short blue)
+{
+  int                 best;
+  int                 i;
+  unsigned int        dr, dg, db;
+  unsigned int        dsquare;
+  unsigned int        best_dsquare = (unsigned int) -1;
+
+  best = 0;
+  for (i = 0; i < NbExtColors; i++)
+    {
+      dr = ExtRGB_Table[i].red - red;
+      dg = ExtRGB_Table[i].green - green;
+      db = ExtRGB_Table[i].blue - blue;
+      dsquare  = dr * dr + dg * dg + db * db;
+      if (dsquare < best_dsquare)
+	{
+	  best = i;
+	  best_dsquare = dsquare;
+	}
+    }
+   return (best);
+}
+#endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
    TtaGiveThotRGB returns the Red Green and Blue values corresponding
