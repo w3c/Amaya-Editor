@@ -230,6 +230,8 @@ typedef struct _RELOAD_context {
   ClickEvent method;
 } RELOAD_context;
 
+boolean HTMLErrorsFound = FALSE;
+
 /*----------------------------------------------------------------------
    IsDocumentLoaded returns the document identification if the        
    corresponding document is already loaded or 0.          
@@ -1409,6 +1411,10 @@ boolean		    history;
       StartParser (newdoc, tempdocument, documentname, tempdir, pathname,
 		       PlainText);
       TtaFreeMemory (tempdir);
+      if (HTMLErrorsFound)
+         TtaSetItemOn (newdoc, 1, Special, BShowLogFile);
+      else
+          TtaSetItemOff (doc, 1, Special, BShowLogFile);
       if (newdoc != doc)
 	/* the document is displayed in a different window */
 	/* reset the history of the new window */
@@ -3507,9 +3513,10 @@ View                view;
 /*----------------------------------------------------------------------
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void DisplayHelp (int index)
+static void DisplayHelp (int doc, int index)
 #else /* __STDC__*/
-static void DisplayHelp (index)
+static void DisplayHelp (doc, index)
+int         doc;
 int         index;
 #endif /* __STDC__*/
 {
@@ -3518,23 +3525,18 @@ int         index;
   char   *s;
   
   localname[0] = EOS;
-  s = (char *) TtaGetEnvString ("THOTDIR");
-  if (s != NULL)
-    {
-      strcat (localname, s);
-#     ifdef _WINDOWS
-      strcat (localname, "\\doc\\amaya\\");
-#     else /* !_WINDOWS */
-      strcat (localname, "/doc/amaya/");
-#     endif /* _WINDOWS */
-      strcat (localname, Manual[index]);
-    }
+  if (index == SHOWLOGFILE) 
+     sprintf (localname, "%s%c%d%cHTML.ERR", TempFileDirectory, DIR_SEP, doc, DIR_SEP);
+  else {
+       s = (char *) TtaGetEnvString ("THOTDIR");
+       if (s != NULL)
+          sprintf (localname, "%s%cdoc%camaya%c", s, DIR_SEP, DIR_SEP, DIR_SEP);
+  } 
 
-  if (!TtaFileExist (localname))
-    {
-      strcpy (localname, AMAYA_PAGE_DOC);
-      strcat (localname, Manual[index]);
-    }
+  if (!TtaFileExist (localname)) {
+     strcpy (localname, AMAYA_PAGE_DOC);
+     strcat (localname, Manual[index]);
+  }
   document = GetHTMLDocument (localname, NULL, 0, 0, CE_HELP, FALSE, NULL, NULL);
   InitDocHistory (document);
 }
@@ -3549,7 +3551,7 @@ void HelpBrowsing (document, view)
      View view;
 #endif /* __STDC__*/
 {
-  DisplayHelp (0);
+  DisplayHelp (document, BROWSING);
 }
 
 
@@ -3563,7 +3565,7 @@ void HelpSelecting (document, view)
      View view;
 #endif /* __STDC__*/
 {
-  DisplayHelp (1);
+  DisplayHelp (document, SELECTING);
 }
 
 
@@ -3577,7 +3579,7 @@ void HelpSearching (document, view)
      View view;
 #endif /* __STDC__*/
 {
-  DisplayHelp (2);
+  DisplayHelp (document, SEARCHING);
 }
 
 
@@ -3591,7 +3593,7 @@ void HelpViews (document, view)
      View view;
 #endif /* __STDC__*/
 {
-  DisplayHelp (3);
+  DisplayHelp (document, VIEWS);
 }
 
 
@@ -3605,7 +3607,7 @@ void HelpCreating (document, view)
      View view;
 #endif /* __STDC__*/
 {
-  DisplayHelp (4);
+  DisplayHelp (document, CREATING);
 }
 
 
@@ -3619,7 +3621,7 @@ void HelpLinks (document, view)
      View view;
 #endif /* __STDC__*/
 {
-  DisplayHelp (5);
+  DisplayHelp (document, LINKS);
 }
 
 
@@ -3633,7 +3635,7 @@ void HelpChanging (document, view)
      View view;
 #endif /* __STDC__*/
 {
-  DisplayHelp (6);
+  DisplayHelp (document, CHANGING);
 }
 
 
@@ -3647,7 +3649,7 @@ void HelpTables (document, view)
      View view;
 #endif /* __STDC__*/
 {
-  DisplayHelp (7);
+  DisplayHelp (document, TABLES);
 }
 
 
@@ -3661,7 +3663,7 @@ void HelpMath (document, view)
      View view;
 #endif /* __STDC__*/
 {
-  DisplayHelp (8);
+  DisplayHelp (document, MATH);
 }
 
 
@@ -3675,7 +3677,7 @@ void HelpImageMaps (document, view)
      View view;
 #endif /* __STDC__*/
 {
-  DisplayHelp (9);
+  DisplayHelp (document, IMAGEMAPS);
 }
 
 
@@ -3689,7 +3691,7 @@ void HelpStyleSheets (document, view)
      View view;
 #endif /* __STDC__*/
 {
-  DisplayHelp (10);
+  DisplayHelp (document, CSS);
 }
 
 
@@ -3703,7 +3705,7 @@ void HelpAttributes (document, view)
      View view;
 #endif /* __STDC__*/
 {
-  DisplayHelp (11);
+  DisplayHelp (document, ATTRIBUTES);
 }
 
 /*----------------------------------------------------------------------
@@ -3716,7 +3718,7 @@ void HelpSpellChecking (document, view)
      View view;
 #endif /* __STDC__*/
 {
-  DisplayHelp (12);
+  DisplayHelp (document, SPELLCHECKING);
 }
 
 
@@ -3730,7 +3732,7 @@ void HelpPublishing (document, view)
      View view;
 #endif /* __STDC__*/
 {
-  DisplayHelp (13);
+  DisplayHelp (document, PUBLISHING);
 }
 
 
@@ -3744,7 +3746,7 @@ void HelpPrinting (document, view)
      View view;
 #endif /* __STDC__*/
 {
-  DisplayHelp (14);
+  DisplayHelp (document, PRINTING);
 }
 
 
@@ -3758,7 +3760,7 @@ void HelpNumbering (document, view)
      View view;
 #endif /* __STDC__*/
 {
-  DisplayHelp (15);
+  DisplayHelp (document, NUMBERING);
 }
 
 
@@ -3772,7 +3774,7 @@ void HelpMakeBook (document, view)
      View view;
 #endif /* __STDC__*/
 {
-  DisplayHelp (16);
+  DisplayHelp (document, MAKEBOOK);
 }
 
 
@@ -3786,7 +3788,18 @@ void HelpConfigure (document, view)
      View view;
 #endif /* __STDC__*/
 {
-  DisplayHelp (17);
+  DisplayHelp (document, CONFIGURE);
+}
+
+#ifdef __STDC__
+void HelpParseErrors (Document document, View view)
+#else  /* __STDC__ */
+void HelpParseErrors (document, view)
+Document document; 
+View     view;
+#endif /* __STDC__ */
+{
+  DisplayHelp (document, SHOWLOGFILE);
 }
 
 

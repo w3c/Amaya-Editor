@@ -230,6 +230,8 @@
 #define IDB_GGROUP                      412
 #define GRAPHICSDIALOG                  413
 #define ATTR2ITEMSDIALOG                415
+#define TABLEDIALOG                     416
+#define MATRIXDIALOG                    417
 #define ID_CONFIRM                      1000
 #define ID_DONE                         1001
 #define IDC_URLEDIT                     1002
@@ -562,11 +564,17 @@
 #define IDC_GCPOLYLINE                  1407
 #define IDC_GCIRCLE                     1408
 #define IDC_GCCURVE                     1409
+#define IDC_NUMCOL                      1409
 #define IDC_GCURVE                      1410
+#define IDC_NUMCOLEDIT                  1410
 #define IDC_GRECT                       1411
+#define IDC_NUMROWSEDIT                 1411
 #define IDC_GALPHA1                     1412
+#define IDC_BORDEREDIT                  1412
 #define IDC_GPOLYLINE                   1413
+#define IDC_NUMROWS                     1413
 #define IDC_GALPHA2                     1414
+#define IDC_BORDER                      1414
 #define IDC_GGROUP                      1415
 #define ID_BUTTON40017                  40017
 #define ID_BUTTON40018                  40018
@@ -600,9 +608,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        416
+#define _APS_NEXT_RESOURCE_VALUE        418
 #define _APS_NEXT_COMMAND_VALUE         40046
-#define _APS_NEXT_CONTROL_VALUE         1409
+#define _APS_NEXT_CONTROL_VALUE         1411
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

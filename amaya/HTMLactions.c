@@ -62,6 +62,8 @@ typedef struct _FollowTheLink_context {
   char                *url;
 } FollowTheLink_context;
 
+extern boolean HTMLErrorsFound;
+
 /*----------------------------------------------------------------------
    SetFontOrPhraseOnElement                                
   ----------------------------------------------------------------------*/
@@ -710,9 +712,14 @@ Document       doc;
 {
   int                i;
   char              *tempdocument;
+  char               htmlErrFile [80];
 
   if (doc == 0)
     return;
+
+  TtaSetItemOff (doc, 1, Special, BShowLogFile);
+  HTMLErrorsFound = FALSE;
+
   if (DocumentURLs[doc] != NULL)
     {
       if (IsHTTPPath (DocumentURLs[doc]))
@@ -721,6 +728,9 @@ Document       doc;
 	  tempdocument = GetLocalPath (doc, DocumentURLs[doc]);
 	  TtaFileUnlink (tempdocument);
 	  TtaFreeMemory (tempdocument);
+      sprintf (htmlErrFile, "%s%c%d%cHTML.ERR", TempFileDirectory, DIR_SEP, doc, DIR_SEP);
+      if (TtaFileExist (htmlErrFile))
+         TtaFileUnlink (htmlErrFile);
 	}
       TtaFreeMemory (DocumentURLs[doc]);
       DocumentURLs[doc] = NULL;

@@ -618,6 +618,7 @@ int                 construct;
 	      NumberRows = 2;
 	      NumberCols = 2;
 #  ifdef _WINDOWS
+          CreateMatrixDlgWindow (BaseDialog, TableForm, TableCols, TableRows, NumberCols, NumberRows);
 #  else  /* !_WINDOWS */
 	      TtaNewForm (BaseDialog + TableForm, TtaGetViewFrame (doc, 1),
 			  TtaGetMessage (1, BMatrix), TRUE, 1, 'L', D_CANCEL);

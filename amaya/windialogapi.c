@@ -146,6 +146,13 @@ static int          Justification_num;
 static int          Old_lineSp; 
 static int          Line_spacingNum;
 static int          attDlgNbItems;
+static int          tabForm;
+static int          tabCols;
+static int      	tabRows;
+static int      	tabBorder;
+static int      	numCols;
+static int      	numRows;
+static int      	tBorder;
 static BOOL         manualFeed      = FALSE;
 static BOOL         tableOfContents = FALSE;
 static BOOL         numberedLinks   = FALSE;
@@ -184,6 +191,8 @@ LRESULT CALLBACK HelpDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK MathDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK AbortDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK PrintDlgProc (HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK TableDlgProc (HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK MatrixDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK SearchDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK SaveAsDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK OpenDocDlgProc (HWND, UINT, WPARAM, LPARAM);
@@ -212,6 +221,8 @@ LRESULT CALLBACK HelpDlgProc ();
 LRESULT CALLBACK MathDlgProc ();
 LRESULT CALLBACK AbortDlgProc ();
 LRESULT CALLBACK PrintDlgProc ();
+LRESULT CALLBACK TableDlgProc ();
+LRESULT CALLBACK MatrixDlgProc ();
 LRESULT CALLBACK SearchDlgProc ();
 LRESULT CALLBACK SaveAsDlgProc ();
 LRESULT CALLBACK OpenDocDlgProc ();
@@ -408,6 +419,61 @@ int       num_form_print;
        DestroyWindow (ghwndAbort);
 	}
 	TtPrinterDC = NULL;
+}
+
+/*-----------------------------------------------------------------------
+ CreateTableDlgWindow
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+void CreateTableDlgWindow (int base_dlg, int table_form, int table_cols, int table_rows, int table_border, int num_cols, int num_rows, int t_border)
+#else  /* !__STDC__ */
+void CreateTableDlgWindow (base_dlg, table_form, table_cols, table_rows, table_border, num_cols, num_rows, t_border)
+int base_dlg; 
+int table_form; 
+int table_cols; 
+int table_rows; 
+int table_border; 
+int num_cols; 
+int num_rows; 
+int t_border;
+#endif /* __STDC__ */
+{  
+    baseDlg   = base_dlg;
+    tabForm   = table_form;
+    tabCols   = table_cols;
+	tabRows   = table_rows;
+	tabBorder = table_border;
+	numCols   = num_cols;
+	numRows   = num_rows;
+	tBorder   = t_border;
+
+	DialogBox (hInstance, MAKEINTRESOURCE (TABLEDIALOG), NULL, (DLGPROC) TableDlgProc);
+}
+
+/*-----------------------------------------------------------------------
+ CreateMatrixDlgWindow
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+void CreateMatrixDlgWindow (int base_dlg, int table_form, int table_cols, int table_rows, int num_cols, int num_rows)
+#else  /* !__STDC__ */
+void CreateMatrixDlgWindow (base_dlg, table_form, table_cols, table_rows, num_cols, num_rows)
+int base_dlg; 
+int table_form; 
+int table_cols; 
+int table_rows; 
+int table_border; 
+int num_cols; 
+int num_rows;
+#endif /* __STDC__ */
+{
+    baseDlg   = base_dlg;
+    tabForm   = table_form;
+    tabCols   = table_cols;
+	tabRows   = table_rows;
+	numCols   = num_cols;
+	numRows   = num_rows;
+
+	DialogBox (hInstance, MAKEINTRESOURCE (MATRIXDIALOG), NULL, (DLGPROC) MatrixDlgProc);
 }
 
 /*-----------------------------------------------------------------------
@@ -1104,6 +1170,7 @@ LPARAM lParam;
 
                 if (numberedLinks)
                    CheckDlgButton (hwnDlg, IDC_LINKS, TRUE);
+                break;
 
 		   case WM_COMMAND:
 			    switch (LOWORD (wParam)) {
@@ -1152,6 +1219,115 @@ LPARAM lParam;
 				default: return FALSE;
 	}
 	return TRUE ;
+}
+
+/*-----------------------------------------------------------------------
+ TableDlgProc
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+LRESULT CALLBACK TableDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+#else  /* !__STDC__ */
+LRESULT CALLBACK TableDlgProc (hwnDlg, msg, wParam, lParam)
+HWND   hwndParent; 
+UINT   msg; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
+{
+    BOOL ok;
+	int  val;
+
+    switch (msg) {
+	       case WM_INITDIALOG:
+			    SetDlgItemInt (hwnDlg, IDC_NUMCOLEDIT, numCols, FALSE);
+			    SetDlgItemInt (hwnDlg, IDC_NUMROWSEDIT, numRows, FALSE);
+			    SetDlgItemInt (hwnDlg, IDC_BORDEREDIT, tBorder, FALSE);
+                break;
+
+		   case WM_COMMAND:
+                if (HIWORD (wParam) == EN_UPDATE) {
+				   if (LOWORD (wParam) == IDC_NUMCOLEDIT) {
+					  val = GetDlgItemInt (hwnDlg, IDC_NUMCOLEDIT, &ok, TRUE);
+                      if (ok)
+                         ThotCallback (baseDlg + tabCols, INTEGER_DATA, (char*) val);
+				   } else if (LOWORD (wParam) == IDC_NUMROWSEDIT) {
+                          val = GetDlgItemInt (hwnDlg, IDC_NUMROWSEDIT, &ok, TRUE);
+                          if (ok)
+                             ThotCallback (baseDlg + tabRows, INTEGER_DATA, (char*) val);
+				   } else if (LOWORD (wParam) == IDC_BORDEREDIT) {
+                          val = GetDlgItemInt (hwnDlg, IDC_BORDEREDIT, &ok, TRUE);
+                          if (ok)
+                             ThotCallback (baseDlg + tBorder, INTEGER_DATA, (char*) val);
+				   }
+				}
+
+                switch (LOWORD (wParam)) {
+                       case ID_CONFIRM:
+                            ThotCallback (baseDlg + tabForm, INTEGER_DATA, (char*) 1);
+					 	    EndDialog (hwnDlg, ID_CONFIRM);
+                            break;
+
+                       case IDCANCEL:
+                            ThotCallback (baseDlg + tabForm, INTEGER_DATA, (char*) 0);
+					 	    EndDialog (hwnDlg, IDCANCEL);
+                            break;
+				}
+                break;
+				default: return FALSE;
+	}
+    return TRUE;
+}
+
+/*-----------------------------------------------------------------------
+ MatrixDlgProc
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+LRESULT CALLBACK MatrixDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+#else  /* !__STDC__ */
+LRESULT CALLBACK MatrixDlgProc (hwnDlg, msg, wParam, lParam)
+HWND   hwndParent; 
+UINT   msg; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
+{
+    BOOL ok;
+	int  val;
+
+    switch (msg) {
+	       case WM_INITDIALOG:
+			    SetDlgItemInt (hwnDlg, IDC_NUMCOLEDIT, numCols, FALSE);
+			    SetDlgItemInt (hwnDlg, IDC_NUMROWSEDIT, numRows, FALSE);
+                break;
+
+		   case WM_COMMAND:
+                if (HIWORD (wParam) == EN_UPDATE) {
+				   if (LOWORD (wParam) == IDC_NUMCOLEDIT) {
+					  val = GetDlgItemInt (hwnDlg, IDC_NUMCOLEDIT, &ok, TRUE);
+                      if (ok)
+                         ThotCallback (baseDlg + tabCols, INTEGER_DATA, (char*) val);
+				   } else if (LOWORD (wParam) == IDC_NUMROWSEDIT) {
+                          val = GetDlgItemInt (hwnDlg, IDC_NUMROWSEDIT, &ok, TRUE);
+                          if (ok)
+                             ThotCallback (baseDlg + tabRows, INTEGER_DATA, (char*) val);
+				   } 
+				}
+
+                switch (LOWORD (wParam)) {
+                       case ID_CONFIRM:
+                            ThotCallback (baseDlg + tabForm, INTEGER_DATA, (char*) 1);
+					 	    EndDialog (hwnDlg, ID_CONFIRM);
+                            break;
+
+                       case IDCANCEL:
+                            ThotCallback (baseDlg + tabForm, INTEGER_DATA, (char*) 0);
+					 	    EndDialog (hwnDlg, IDCANCEL);
+                            break;
+				}
+                break;
+				default: return FALSE;
+	}
+    return TRUE;
 }
 
 /*-----------------------------------------------------------------------

@@ -1231,6 +1231,11 @@ static void         ProcessStartGI (char *GIname);
 #else
 static void         ProcessStartGI ();
 #endif
+
+static FILE*   ErrFile = (FILE*) 0;
+static char    ErrFileName [80];
+
+extern boolean HTMLErrorsFound;
  
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -1965,24 +1970,31 @@ unsigned char      *msg;
 
 #endif
 {
+   HTMLErrorsFound = TRUE;
+   if (!ErrFile) {
+      sprintf (ErrFileName, "%s%c%d%cHTML.ERR", TempFileDirectory, DIR_SEP, doc, DIR_SEP);
+     if ((ErrFile = fopen (ErrFileName, "w")) == NULL)
+        return;
+   }
+
    if (doc == theDocument)
       /* the error message is related to the document being parsed */
       {
       if (docURL != NULL)
 	 {
-	 fprintf (stderr, "*** Errors in %s\n", docURL);
+	 fprintf (ErrFile, "*** Errors in %s\n", docURL);
 #ifndef STANDALONE
 	 TtaFreeMemory (docURL);
 #endif /* STANDALONE */
 	 docURL = NULL;
 	 }
       /* print the line number and character number before the message */
-      fprintf (stderr, "   line %d, char %d: %s\n", numberOfLinesRead,
+      fprintf (ErrFile, "   line %d, char %d: %s\n", numberOfLinesRead,
 	       numberOfCharRead, msg);
       }
    else
       /* print only the error message */
-      fprintf (stderr, "%s\n", msg);
+      fprintf (ErrFile, "%s\n", msg);
 }
 
 /*----------------------------------------------------------------------
@@ -5965,6 +5977,10 @@ char               *HTMLbuf;
       EndOfDocument ();
    HTMLrootClosingTag = NULL;
    HTMLrootClosed = FALSE;
+   if (ErrFile) {
+      fclose (ErrFile);
+      ErrFile = (FILE*) 0;
+   } 
 }
 
 
