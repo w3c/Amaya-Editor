@@ -2727,6 +2727,9 @@ View                view;
    Document	sourceDoc;
    NotifyElement event;
 
+   if (!DocumentURLs[document])
+     /* the document is not loaded yet */
+     return;
    if (DocumentSource[document])
      /* the source code of this document is already shown */
      /* raise its window */
