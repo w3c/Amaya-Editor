@@ -1070,6 +1070,11 @@ int                 yDelta;
 		  yDelta = 0;
 		  found = FALSE;
 		}
+	      else
+		{
+		  *y = pBox->BxYOrg + yDelta;
+		  found = FALSE;
+		}
 	    }
 	  else if (pBox->BxAbstractBox->AbLeafType != LtText && pBox->BxNChars != 0)
 	    {

@@ -16,10 +16,10 @@ Fixed bugs 2.3:
 * User Interface:
   - when the backspace deleted a string, the final position of the cursor
     was wrong.
-  - the Delete command on an empty paragraph didn't do anything. It was also
+  - the Delete command on an empty paragraph didn't do anything. So it was
     impossible to merge two paragraphs with the Delete command.
   - when the selection was moved down with the arrow key, it was shifted one
-    position to the right.
+    position to the right. The selection was stuck on HR elements.
   - on Windows platform each return inserted two empty paragraphs instead of
     one.
   - the Windows kill command ([X]) closed the document window before proposing
