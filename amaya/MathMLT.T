@@ -520,15 +520,6 @@ RULES
 	create 'mphantom>\12' after;
 	end;
 
-   MCHAR:
-	begin
-	create SOT;
-	create 'mchar';
-	create Attributes;
-	create '/>';
-	Remove;
-	end;
-
    MGLYPH:
 	begin
 	create SOT;
@@ -1202,14 +1193,6 @@ ATTRIBUTES
 	begin
 	create SAN;
 	create 'edge="right"';
-	end;
-
-   name:
-	begin
-	create SAN;
-	create 'name="';
-	create name;
-	create '"';
 	end;
 
    alt:

@@ -47,7 +47,6 @@ MMULTISCRIPTS: mmultiscripts
 MTABLE: mtable
 MTR: mtr
 MLABELEDTR: mlabeledtr
-MCHAR: mchar
 MGLYPH: mglyph
 MACTION: maction
 SEP: sep

@@ -236,8 +236,7 @@ ThotBool            *mrowCreated;
   len = TtaGetTextLength (el);
   /* if it's a mchar, mglyph or an entity, don't split it */
   elType = TtaGetElementType (parent);
-  if (elType.ElTypeNum == MathML_EL_MCHAR ||
-      elType.ElTypeNum == MathML_EL_MGLYPH)
+  if (elType.ElTypeNum == MathML_EL_MGLYPH)
      {
      el = parent;
      parent = TtaGetParent (el);
@@ -1721,6 +1720,7 @@ static void CreateCharStringElement (typeNum, doc)
 #endif /* __STDC__*/
 {
    ElementType    elType;
+   AttributeType  attrType;
    Element        firstSel, lastSel, first, last, el, newEl, nextEl,
                   leaf, lastLeaf, nextLeaf, parent, selEl;
    int            firstChar, lastChar, i, j, oldStructureChecking;
@@ -1738,6 +1738,27 @@ static void CreateCharStringElement (typeNum, doc)
    /* check whether the selection is empty (just a caret) or contains some
       characters/elements */
    nonEmptySel = !TtaIsSelectionEmpty ();
+   if (!nonEmptySel)
+      /* selection seems to be empty. Let's see... */
+      {
+	elType = TtaGetElementType (firstSel);
+        if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")) == 0
+            && (elType.ElTypeNum == MathML_EL_MTEXT ||
+		elType.ElTypeNum == MathML_EL_MI ||
+		elType.ElTypeNum == MathML_EL_MN ||
+		elType.ElTypeNum == MathML_EL_MO))
+	  {
+	    leaf = TtaGetFirstChild (firstSel);
+	    if (leaf)
+	      {
+		attrType.AttrSSchema = elType.ElSSchema;
+		attrType.AttrTypeNum = MathML_ATTR_EntityName;
+		if (TtaGetAttribute (leaf, attrType))
+		  /* it's an entity that is rendered as an empty string */
+		  nonEmptySel = TRUE;
+	      }
+	  }
+      }
 
    if (!nonEmptySel)
      /* just a caret: create the requested element at that position */
@@ -1803,7 +1824,6 @@ static void CreateCharStringElement (typeNum, doc)
      elType = TtaGetElementType (firstSel);
      if (elType.ElTypeNum == MathML_EL_TEXT_UNIT ||
 	 elType.ElTypeNum == MathML_EL_SYMBOL_UNIT ||
-	 elType.ElTypeNum == MathML_EL_MCHAR ||
 	 elType.ElTypeNum == MathML_EL_MGLYPH)
         first = TtaGetParent (firstSel);
      else
@@ -1811,7 +1831,6 @@ static void CreateCharStringElement (typeNum, doc)
      elType = TtaGetElementType (lastSel);
      if (elType.ElTypeNum == MathML_EL_TEXT_UNIT ||
 	 elType.ElTypeNum == MathML_EL_SYMBOL_UNIT ||
-	 elType.ElTypeNum == MathML_EL_MCHAR ||
 	 elType.ElTypeNum == MathML_EL_MGLYPH)
         last = TtaGetParent (lastSel);
      else
@@ -1851,8 +1870,7 @@ static void CreateCharStringElement (typeNum, doc)
 	      lastChar = TtaGetTextLength (lastSel);
 	   el = SplitTextInMathML (doc, lastSel, lastChar+1, &mrowCreated);
 	   } 
-	 else if (elType.ElTypeNum == MathML_EL_MCHAR ||
-		  elType.ElTypeNum == MathML_EL_MGLYPH)
+	 else if (elType.ElTypeNum == MathML_EL_MGLYPH)
 	   {
 	   if (lastChar == 0)
 	      lastChar = TtaGetElementVolume (lastSel);
@@ -1860,7 +1878,6 @@ static void CreateCharStringElement (typeNum, doc)
 	   }
 	 elType = TtaGetElementType (firstSel);
 	 if (elType.ElTypeNum == MathML_EL_TEXT_UNIT ||
-	     elType.ElTypeNum == MathML_EL_MCHAR ||
 	     elType.ElTypeNum == MathML_EL_MGLYPH)
 	   /* the first selected element is a character string.
 	      Split it, as well as its parent (mtext, mi, mo, mn) */
@@ -2532,8 +2549,7 @@ static void ParseMathString (theText, theElem, doc)
   elType2 = TtaGetElementType (theText);
   if (elType2.ElTypeNum == MathML_EL_TEXT_UNIT)
      textEl = theText;
-  else if (elType2.ElTypeNum == MathML_EL_MCHAR ||
-	   elType2.ElTypeNum == MathML_EL_MGLYPH)
+  else if (elType2.ElTypeNum == MathML_EL_MGLYPH)
      textEl = TtaGetFirstChild (theText);
   else
      textEl = NULL;
@@ -2600,6 +2616,13 @@ static void ParseMathString (theText, theElem, doc)
        if (!attr)
 	  /* it's not an entity */
 	  empty = TRUE;
+       else
+	  if (totLen == 0)
+	    /* it's an entity rendered as an empty string */
+	    {
+	      mathType[0] = (char)MathML_EL_MO;
+	      totLen = 1;
+	    }
        }
 
   if (empty)
@@ -2769,6 +2792,8 @@ static void ParseMathString (theText, theElem, doc)
        if (mathType[i-1] == (char)MathML_EL_MO)
 	  /* the new element is an operator */
 	  {
+	  /* the new element may be a vertically stretchable symbol */
+	  CheckFence (newEl, doc);
 	  /* if the new element contains a single SYMBOL, placeholders may
 	     be needed before and/or after that operator */
 	  placeholderEl = InsertPlaceholder (newEl, TRUE, doc, TRUE);
@@ -2873,25 +2898,145 @@ static void SetAttrParseMe (el, doc)
 }
 
 /*----------------------------------------------------------------------
- CreateMCHAR
+   InsertMathEntity
+   Insert an entity at the currently selected position.
+   entityName is the name of the entity to be created.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-void CreateMCHAR (Document document, View view)
+static void InsertMathEntity (USTRING entityName, Document document)
 #else /* __STDC__*/
-void CreateMCHAR (document, view)
+static void InsertMathEntity (entityName, document)
+     USTRING entityName;
+     Document document;
+#endif /* __STDC__*/
+{
+  Element       firstSel, lastSel, el, el1, parent, sibling;
+  ElementType   elType, elType1;
+  Attribute     attr;
+  AttributeType attrType;
+  int           firstChar, lastChar, i, len;
+  ThotBool      before, done;
+  CHAR_T        buffer[MAX_LENGTH+2];
+  CHAR_T        value[8];
+  CHAR_T        alphabet;
+  Language      lang;
+
+  if (!TtaIsSelectionEmpty ())
+    return;
+  TtaGiveFirstSelectedElement (document, &firstSel, &firstChar, &i);
+  /* if not within a MathML element, nothing to do */
+  elType = TtaGetElementType (firstSel);
+  if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")) != 0)
+    return;
+  TtaGiveLastSelectedElement (document, &lastSel, &i, &lastChar);
+  TtaOpenUndoSequence (document, firstSel, lastSel, firstChar, lastChar);
+  TtaUnselect (document);
+  done = FALSE;
+  /* the new text element will be inserted before the first element
+     selected */
+  before = TRUE;
+  sibling = firstSel;
+
+  /* create a Thot TEXT element */
+  elType1.ElSSchema = elType.ElSSchema;
+  elType1.ElTypeNum = MathML_EL_TEXT_UNIT;
+  el = TtaNewElement (document, elType1);
+  if (elType.ElTypeNum == MathML_EL_Construct)
+    /* the selected element is an empty expression. Replace it by a
+       mtext element*/
+    {
+      TtaRegisterElementDelete (firstSel, document);
+      /* if it's a placeholder, delete attribute IntPlaceholder */
+      attrType.AttrSSchema = elType.ElSSchema;
+      attrType.AttrTypeNum = MathML_ATTR_IntPlaceholder;
+      attr = TtaGetAttribute (firstSel, attrType);
+      if (attr != NULL)
+	RemoveAttr (firstSel, document, MathML_ATTR_IntPlaceholder);
+      /* create and insert the mtext element, with a mchar child */
+      elType1.ElTypeNum = MathML_EL_MTEXT;
+      el1 = TtaNewElement (document, elType1);
+      TtaInsertFirstChild (&el1, firstSel, document);
+      TtaInsertFirstChild (&el, el1, document);
+      SetAttrParseMe (el1, document);
+      done = TRUE;
+      TtaRegisterElementCreate (el1, document);
+    }
+  else if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
+    /* current selection is in a text leaf */
+    {
+      parent = TtaGetParent (firstSel);
+      elType1 = TtaGetElementType (parent);
+      if (elType1.ElTypeNum == MathML_EL_MGLYPH)
+	/* the first selected element is within a mglyph. The new text
+	   leaf will be inserted as a sibling of this mglyph */
+	sibling = parent;
+      if (firstChar > 1)
+	{
+	  len = TtaGetTextLength (firstSel);
+	  if (firstChar > len)
+	    /* the caret is at the end of that character string */
+	    /* Create the new element after the character string */
+	    before = FALSE;
+	  else
+	    {
+	      /* split the text to insert the new text */
+	      TtaRegisterElementReplace (firstSel, document);
+	      TtaSplitText (firstSel, firstChar-1, document);
+	      /* take the second part of the split text element */
+	      sibling = firstSel;
+	      TtaNextSibling (&sibling);
+	      TtaRegisterElementCreate (sibling, document);
+	    }
+	}
+    }
+  if (!done)
+    {
+      TtaInsertSibling (el, sibling, before, document);
+      TtaRegisterElementCreate (el, document);
+    }
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = MathML_ATTR_EntityName;
+  attr =  TtaNewAttribute (attrType);
+  TtaAttachAttribute (el, attr, document);
+  ustrcpy (buffer, TEXT("&"));
+  ustrcat (buffer, entityName);
+  ustrcat (buffer, TEXT(";"));
+  TtaSetAttributeText (attr, buffer, el, document);
+  MapMathMLEntity (entityName, value, &alphabet);
+  if (alphabet == EOS)
+    /* unknown entity */
+    {
+      value[0] = '?';
+      value[1] = EOS;
+      lang = TtaGetLanguageIdFromAlphabet('L');
+    }
+  else
+    lang = TtaGetLanguageIdFromAlphabet(alphabet);
+  TtaSetTextContent (el, value, lang, document);
+  TtaSetAccessRight (el, ReadOnly, document);
+  len = TtaGetTextLength (el);     
+  TtaSelectString (document, el, len+1, len);
+  ParseMathString (el, TtaGetParent (el), document);
+  TtaSetDocumentModified (document);
+  TtaCloseUndoSequence (document);
+}
+
+/*----------------------------------------------------------------------
+ CreateMathEntity
+ Display a dialogue box to allow input of a character entity name
+ and create the corresponding entity at the current selection position
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void CreateMathEntity (Document document, View view)
+#else /* __STDC__*/
+void CreateMathEntity (document, view)
      Document document;
      View view;
 #endif /* __STDC__*/
 {
-   Element       firstSel, lastSel, el, el1, leaf, parent, sibling;
-   ElementType   elType, elType1;
-   Attribute     attr;
-   AttributeType attrType;
-   int           firstChar, lastChar, i, len;
-   ThotBool      before, done;
-   CHAR_T        value[8];
-   CHAR_T        alphabet;
-   Language      lang;
+   Element       firstSel;
+   ElementType   elType;
+   int           firstChar, i;
 
    if (!TtaGetDocumentAccessMode (document))
       /* the document is in ReadOnly mode */
@@ -2911,7 +3056,7 @@ void CreateMCHAR (document, view)
    CreateMCHARDlgWindow (TtaGetViewFrame (document, view), MathMLEntityName);
 #else
    TtaNewForm (BaseDialog + MathEntityForm, TtaGetViewFrame (document, view), 
-	       TtaGetMessage (1, BMCharacter), TRUE, 1, 'L', D_CANCEL);
+	       TtaGetMessage (1, BMEntity), TRUE, 1, 'L', D_CANCEL);
    TtaNewTextForm (BaseDialog + MathEntityText, BaseDialog + MathEntityForm,
 		   TtaGetMessage (AMAYA, AM_MATH_ENTITY_NAME), NAME_LENGTH, 1,
 		   FALSE);
@@ -2921,107 +3066,7 @@ void CreateMCHAR (document, view)
    TtaWaitShowDialogue ();
 #endif /* _WINDOWS */
    if (MathMLEntityName[0] != EOS)
-     {
-      if (!TtaIsSelectionEmpty ())
-	 return;
-      TtaGiveFirstSelectedElement (document, &firstSel, &firstChar, &i);
-      /* if not within a MathML element, nothing to do */
-      elType = TtaGetElementType (firstSel);
-      if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")) != 0)
-         return;
-      TtaGiveLastSelectedElement (document, &lastSel, &i, &lastChar);
-      TtaOpenUndoSequence (document, firstSel, lastSel, firstChar, lastChar);
-      TtaUnselect (document);
-      done = FALSE;
-      /* the new mchar element will be inserted before the first element
-	 selected */
-      before = TRUE;
-      sibling = firstSel;
-
-      elType1.ElSSchema = elType.ElSSchema;
-      elType1.ElTypeNum = MathML_EL_MCHAR;
-      el = TtaNewElement (document, elType1);
-      if (elType.ElTypeNum == MathML_EL_Construct)
-	 /*this element is an empty expression. Replace it by a mtext element*/
-	 {
-	 TtaRegisterElementDelete (firstSel, document);
-	 /* if it's a placeholder, delete attribute IntPlaceholder */
-	 attrType.AttrSSchema = elType.ElSSchema;
-	 attrType.AttrTypeNum = MathML_ATTR_IntPlaceholder;
-	 attr = TtaGetAttribute (firstSel, attrType);
-	 if (attr != NULL)
-	    RemoveAttr (firstSel, document, MathML_ATTR_IntPlaceholder);
-	 /* create and insert the mtext element, with a mchar child */
-	 elType1.ElTypeNum = MathML_EL_MTEXT;
-	 el1 = TtaNewElement (document, elType1);
-	 TtaInsertFirstChild (&el1, firstSel, document);
-	 TtaInsertFirstChild (&el, el1, document);
-	 SetAttrParseMe (el1, document);
-	 done = TRUE;
-	 TtaRegisterElementCreate (el1, document);
-	 }
-      else if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
-	 {
-	 parent = TtaGetParent (firstSel);
-	 elType1 = TtaGetElementType (parent);
-	 if (elType1.ElTypeNum == MathML_EL_MCHAR ||
-	     elType1.ElTypeNum == MathML_EL_MGLYPH)
-	    /* the first selected element is within a mchar or mglyph. The new
-	       mchar will be inserted as a sibling of this mchar or mglyph */
-	    sibling = parent;
-	 if (firstChar > 1)
-	    {
-	     len = TtaGetTextLength (firstSel);
-	     if (firstChar > len)
-	       /* the caret is at the end of that character string */
-	       /* Create the new element after the character string */
-	       before = FALSE;
-	     else if (elType1.ElTypeNum == MathML_EL_MTEXT)
-	       {
-		 /* split the text to insert the mchar */
-		 TtaRegisterElementReplace (firstSel, document);
-		 TtaSplitText (firstSel, firstChar-1, document);
-		 /* take the second part of the split text element */
-		 sibling = firstSel;
-		 TtaNextSibling (&sibling);
-		 TtaRegisterElementCreate (sibling, document);
-	       }
-	    }
-	 }
-     attrType.AttrSSchema = elType.ElSSchema;
-     attrType.AttrTypeNum = MathML_ATTR_name;
-     attr = TtaGetAttribute (el, attrType);
-     if (!attr)
-       {
-       attr =  TtaNewAttribute (attrType);
-       TtaAttachAttribute (el, attr, document);
-       }
-     TtaSetAttributeText (attr, MathMLEntityName, el, document);
-     if (!done)
-       {
-	 TtaInsertSibling (el, sibling, before, document);
-         TtaRegisterElementCreate (el, document);
-       }
-     MapMathMLEntity (MathMLEntityName, value, &alphabet);
-     if (alphabet == EOS)
-       /* unknown entity */
-       {
-       value[0] = '?';
-       value[1] = EOS;
-       lang = TtaGetLanguageIdFromAlphabet('L');
-       }
-     else
-       lang = TtaGetLanguageIdFromAlphabet(alphabet);
-     elType1.ElTypeNum = MathML_EL_TEXT_UNIT;
-     leaf = TtaNewElement (document, elType1);
-     TtaInsertFirstChild (&leaf, el, document);
-     TtaSetTextContent (leaf, value, lang, document);
-     TtaSetAccessRight (leaf, ReadOnly, document);
-     len = TtaGetTextLength (leaf);     
-     TtaSelectString (document, leaf, len+1, len);
-     ParseMathString (el, TtaGetParent (el), document);     
-     TtaCloseUndoSequence (document);
-     }
+      InsertMathEntity (MathMLEntityName, document);
 }
 
 /*----------------------------------------------------------------------
@@ -4281,20 +4326,4 @@ ThotBool AttrScriptShiftDelete (event)
   MathMLScriptShift (event->document, event->element, NULL,
 		     attrType.AttrTypeNum);
   return FALSE; /* let Thot perform normal operation */
-}
-
-/*----------------------------------------------------------------------
- AttrNameChanged
- Attribute name in a MCHAR element has been modified by the user.
- Change the content of the Thot leaf child accordingly.
- -----------------------------------------------------------------------*/
-#ifdef __STDC__
-void AttrNameChanged (NotifyAttribute *event)
-#else /* __STDC__*/
-void AttrNameChanged (event)
-     NotifyAttribute *event;
-#endif /* __STDC__*/
-{
-  if (event->element)
-    SetMcharContent (event->element, event->document);
 }

@@ -438,17 +438,6 @@ BOXES
 		END;
 	END;
 
- MCHAR_S: BEGIN
-	Content: Text 'mchar';
-	Visibility: 0;
-	IN Math_Structure_view BEGIN
-		Size: TAG_FONTSIZE;
-		Font: TAG_Font;
-		Style: TAG_Style; Weight: TAG_Weight;
-		Visibility: TAG_Visibility;  Foreground: TAG_Color;
-		END;
-	END;
-
  MGLYPH_S: BEGIN
 	Content: Text 'mglyph';
 	Visibility: 0;
@@ -1503,29 +1492,6 @@ BOXES
         END; 
  VALUE_minlabelspacing: BEGIN
         Content: (minlabelspacing);
-        Visibility: 0;
-        IN Math_Structure_view BEGIN
-                HorizPos: Left = Previous . Right;
-                VertPos: HRef = Previous . HRef;
-                Size: TAG_FONTSIZE;
-                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
-                Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-                END;
-        END;
-
- ATTR_name: BEGIN
-        Content: Text ' name=';
-        Visibility: 0;
-        IN Math_Structure_view BEGIN
-                HorizPos: Left = Previous . Right;
-                VertPos: HRef = Previous . HRef;
-                Size: TAG_FONTSIZE;
-                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
-                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-                END;
-        END; 
- VALUE_name: BEGIN
-        Content: (name);
         Visibility: 0;
         IN Math_Structure_view BEGIN
                 HorizPos: Left = Previous . Right;
@@ -2862,6 +2828,8 @@ RULES
 		Size: Enclosing =;
 		Width: Enclosing . Width;
 		Height: Enclosed . Height;
+                VertPos: Top = Previous . Bottom;
+                HorizPos: Left = Enclosing . Left;
 		END;
 	END;
 
@@ -2874,6 +2842,8 @@ RULES
 		Size: Enclosing =;
 		Width: Enclosing . Width;
 		Height: Enclosed . Height;
+                VertPos: Top = Previous . Bottom;
+                HorizPos: Left = Enclosing . Left;
 		END;
 	END;
 
@@ -2942,7 +2912,6 @@ RULES
 		Size: Enclosing =;
 		Width: Enclosing . Width;
 		Height: Enclosed . Height;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		END;
 	END;
 
@@ -2956,7 +2925,6 @@ RULES
 		Size: Enclosing =;
 		Width: Enclosing . Width;
 		Height: Enclosed . Height;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		END;
 	END;
 
@@ -3366,17 +3334,6 @@ RULES
 		END;
   	END;
 
-   MCHAR:
-	BEGIN
-	CreateBefore(MCHAR_S);
-	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
-	IN Math_Structure_view BEGIN
-		Size: DOC_FONTSIZE;
-		VertPos: Top =  Previous . Top;
-		Width: 1 pt;
-		END;
-	END;
-
    MGLYPH:
 	BEGIN
 	CreateBefore(MGLYPH_S);
@@ -3405,12 +3362,9 @@ RULES
 
    SYMBOL_UNIT:
 	BEGIN
-	if within UnderOverBase
-	   BEGIN
-	   Height: Enclosed . Height;
-	   HorizRef: * . HMiddle + 0.1;
-	   END;
-	if not within UnderOverBase
+	if immediately within UnderOverBase
+	   Height: 1;
+	if not immediately within UnderOverBase
 	   Height: Enclosing . Height;
 	Width: Enclosed . Width;
 	VertPos: Nil;
@@ -3446,8 +3400,6 @@ RULES
 	IF immediately within MF
 	   VertPos: HMiddle = Enclosing . HMiddle;
 	IN Math_Structure_view BEGIN
-		IF immediately within MCHAR
-		   Visibility: 0;
 		IF immediately within MGLYPH
 		   Visibility: 0;
 		if NOT within XMLcomment_line AND NOT within XMLPI_line
@@ -3505,6 +3457,20 @@ ATTRIBUTES
 	CreateBefore(ATTR_display_block);
   display = inline_ :
 	CreateBefore(ATTR_display_inline);
+  display(MFRAC) = block:
+	BEGIN
+        if within MFRAC
+		Size: Enclosing =;
+        if within BevelledMFRAC
+		Size: Enclosing =;
+	END;
+  display(BevelledMFRAC) = block:
+	BEGIN
+        if within MFRAC
+		Size: Enclosing =;
+        if within BevelledMFRAC
+		Size: Enclosing =;
+	END;
 
   overflow = scroll:
 	CreateBefore(ATTR_overflow_scroll);
@@ -3950,6 +3916,20 @@ ATTRIBUTES
 	CreateBefore(ATTR_displaystyle_true);
   displaystyle = false:
 	CreateBefore(ATTR_displaystyle_false);
+  displaystyle(MFRAC) = true:
+	BEGIN
+        if within MFRAC
+		Size: Enclosing =;
+        if within BevelledMFRAC
+		Size: Enclosing =;
+	END;
+  displaystyle(BevelledMFRAC) = true:
+	BEGIN
+        if within MFRAC
+		Size: Enclosing =;
+        if within BevelledMFRAC
+		Size: Enclosing =;
+	END;
 
   side = left\240:
 	CreateBefore(ATTR_side_left);
@@ -3964,12 +3944,6 @@ ATTRIBUTES
 	BEGIN
 	CreateBefore(ATTR_minlabelspacing);
 	CreateBefore(VALUE_minlabelspacing);
-	END;
-
-  name:
-	BEGIN
-	CreateBefore(ATTR_name);
-	CreateBefore(VALUE_name);
 	END;
 
   alt:
@@ -4095,6 +4069,12 @@ ATTRIBUTES
 		VertPos: Top = Previous . Bottom;
 		END;
 	END;
+  IntVertStretch (Superscript):
+	BEGIN
+	VertPos: Bottom = Base . Top + 0.5;
+	IN Math_Structure_view
+                VertPos: Top = Previous . Bottom;
+	END;
   IntVertStretch (Base):
 	BEGIN
 	IF within MSUBSUP BEGIN
@@ -4153,6 +4133,19 @@ ATTRIBUTES
 		Height: Enclosed . Height;
 		VertPos: Top = Previous . Bottom;
 		HorizRef: Enclosed . HRef;
+		END;
+	END;
+  IntVertStretch (SYMBOL_UNIT):
+	BEGIN
+	if immediately within UnderOverBase
+	   Height: 1;
+	if not immediately within UnderOverBase
+	   Height: Enclosing . Height;
+	VertPos: Top = Enclosing . Top;
+	IN Math_Structure_view BEGIN
+		Height: 1;
+		HorizPos: Left = Enclosing . Left;
+		VertPos: Top = Previous . Bottom;
 		END;
 	END;
 

@@ -314,10 +314,6 @@ STRUCT
 	    MTable_body = LIST OF (TableRow); 
 	    END;
 
-      MCHAR     {*** obsolete ***}
-	  (ATTR !name = TEXT)
-	  = TEXT;
-	
       MGLYPH
 	  (ATTR alt = TEXT;
 	        fontfamily;
@@ -382,7 +378,6 @@ STRUCT
    { MathMLCharacters }
    MathMLCharacters = CASE OF
 	     TEXT;
-	     MCHAR;
 	     MGLYPH;
 	     END;
 

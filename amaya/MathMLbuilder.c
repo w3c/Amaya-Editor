@@ -628,73 +628,6 @@ ParserData *XmlContext;
 }
 
 /*----------------------------------------------------------------------
-  CheckTextElement  Put the content of input buffer into the document.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void	CheckTextElement (Element *el, Document doc)
-#else
-static void     CheckTextElement (el, doc)
-Element *el;
-Document doc;
-
-#endif
-{
-   ElementType parentType, elType;
-   Element     parent, new;
-   int         len;
-   Language    lang;
-   CHAR_T      alphabet;
-   CHAR_T      text[4];
-
-   len = TtaGetTextLength (*el);
-   if (len == 1)
-      /* the element contains a single character */
-      {
-      /* get that character */
-      len = 2;
-      TtaGiveTextContent (*el, text, &len, &lang);
-      alphabet = TtaGetAlphabet (lang);
-      if (text[0] != WC_EOS)
-	 /* it's not a NULL character */
-	 {
-	 /* what's the parent of that character? */
-	 parent = TtaGetParent (*el);
-	 parentType = TtaGetElementType (parent);
-	 elType = parentType;
-	 if (parentType.ElTypeNum == MathML_EL_MF &&
-	     (text[0] == TEXT('(') ||
-	      text[0] == TEXT(')') ||
-	      text[0] == TEXT('[') ||
-	      text[0] == TEXT(']') ||
-	      text[0] == TEXT('{') ||
-	      text[0] == TEXT('}')))
-	   /* It's a stretchable character in a mf element */
-	   /* Transform the text element into a Thot SYMBOL */
-	   elType.ElTypeNum = MathML_EL_SYMBOL_UNIT;
-	 else if (parentType.ElTypeNum == MathML_EL_MF &&
-		  text[0] == TEXT('|'))
-	   /* It's a vertical bar in a mf element */
-	   /* Transform the text element into a Thot GRAPHIC */
-	   {
-	     elType.ElTypeNum = MathML_EL_GRAPHICS_UNIT;
-	     text[0] = TEXT('v');
-	   }
-	 else
-	   /* a TEXT element is OK */
-	   elType.ElTypeNum = MathML_EL_TEXT_UNIT;
-	 if (elType.ElTypeNum != MathML_EL_TEXT_UNIT)
-	   {
-	     new = TtaNewElement (doc, elType);
-	     TtaInsertSibling (new, *el, FALSE, doc);
-	     TtaDeleteTree (*el, doc);
-	     *el = new;
-	     TtaSetGraphicsShape (new, (char)text[0], doc);
-	   }
-	 }
-      }
-}
-
-/*----------------------------------------------------------------------
   ElementNeedsPlaceholder
   returns TRUE if element el needs a sibling placeholder.
   ----------------------------------------------------------------------*/
@@ -1209,43 +1142,45 @@ void SetIntVertStretchAttr (el, doc, base, selEl)
      }
   if (operator != NULL)
      {
-	   textEl = TtaGetFirstChild (operator);
-	   if (textEl != NULL)
+     textEl = TtaGetFirstChild (operator);
+     if (textEl != NULL)
+        {
+	elType = TtaGetElementType (textEl);
+	if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
+	   {
+	   len = TtaGetTextLength (textEl);
+	   if (len == 1)
 	      {
-	      elType = TtaGetElementType (textEl);
-	      if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
-	         {
-	         len = TtaGetTextLength (textEl);
-	         if (len == 1)
+	      len = 2;
+	      TtaGiveTextContent (textEl, text, &len, &lang); 
+	      alphabet = TtaGetAlphabet (lang);
+	      if (alphabet == 'G')
+		 /* a single Symbol character */
+		 if ((int)text[0] == 242)
+		    /* Integral */
 		    {
-		    len = 2;
-		    TtaGiveTextContent (textEl, text, &len, &lang); 
-		    alphabet = TtaGetAlphabet (lang);
-		    if (alphabet == 'G')
-		       /* a single Symbol character */
-		       if ((int)text[0] == 242)
-			 /* Integral */
-			 {
-			 /* attach a IntVertStretch attribute */
-			 attrType.AttrSSchema = elType.ElSSchema;
-			 attrType.AttrTypeNum = MathML_ATTR_IntVertStretch;
-			 attr = TtaNewAttribute (attrType);
-			 TtaAttachAttribute (el, attr, doc);
-			 TtaSetAttributeValue (attr, MathML_ATTR_IntVertStretch_VAL_yes_, el, doc);
-			 /* replace the TEXT element by a Thot SYMBOL element*/
-			 elType.ElTypeNum = MathML_EL_SYMBOL_UNIT;
-			 symbolEl = TtaNewElement (doc, elType);
-			 TtaInsertSibling (symbolEl, textEl, FALSE, doc);
-			 if (selEl != NULL)
-			   if (*selEl == textEl)
-			      *selEl = symbolEl;
-			 TtaDeleteTree (textEl, doc);
-			 c = 'i';
-			 TtaSetGraphicsShape (symbolEl, c, doc);
-			 }
+		    /* attach a IntVertStretch attribute */
+		    attrType.AttrSSchema = elType.ElSSchema;
+		    attrType.AttrTypeNum = MathML_ATTR_IntVertStretch;
+		    attr = TtaNewAttribute (attrType);
+		    TtaAttachAttribute (el, attr, doc);
+		    TtaSetAttributeValue (attr,
+					  MathML_ATTR_IntVertStretch_VAL_yes_,
+					  el, doc);
+		    /* replace the TEXT element by a Thot SYMBOL element*/
+		    elType.ElTypeNum = MathML_EL_SYMBOL_UNIT;
+		    symbolEl = TtaNewElement (doc, elType);
+		    TtaInsertSibling (symbolEl, textEl, FALSE, doc);
+		    if (selEl != NULL)
+		       if (*selEl == textEl)
+			  *selEl = symbolEl;
+		    TtaDeleteTree (textEl, doc);
+		    c = 'i';
+		    TtaSetGraphicsShape (symbolEl, c, doc);
 		    }
-	         }
 	      }
+	   }
+	}
      }
 }
 
@@ -1594,72 +1529,6 @@ void CheckMTable (elMTABLE, doc, placeholder)
 }
 
 /*----------------------------------------------------------------------
-   SetMcharContent
-   Set the content of the mchar element according to the value of
-   its name attribute
- -----------------------------------------------------------------------*/
-#ifdef __STDC__
-void SetMcharContent (Element el, Document doc)
-#else /* __STDC__*/
-void SetMcharContent (el, doc)
-  Element	el;
-  Document	doc;
-#endif /* __STDC__*/
-{
-  ElementType	elType;
-  AttributeType	attrType;
-  Attribute	attr;
-  Element       leaf;
-  int           length;
-  CHAR_T        name[MAX_ENTITY_LENGTH];
-  UCHAR_T	value[MAX_ENTITY_LENGTH];	
-  CHAR_T	alphabet;
-  Language	lang;
-
-  if (el)
-     {
-     /* get the name attribute */
-     elType = TtaGetElementType (el);
-     attrType.AttrSSchema = elType.ElSSchema;
-     attrType.AttrTypeNum = MathML_ATTR_name;
-     attr = TtaGetAttribute (el, attrType);
-     if (attr)
-        {
-	leaf = TtaGetFirstChild (el);
-	if (!leaf)
-	  /* there is no text leaf. Create one */
-	  {
-	  elType.ElTypeNum = MathML_EL_TEXT_UNIT;
-	  leaf = TtaNewElement (doc, elType);
-	  TtaInsertFirstChild (&leaf, el, doc);
-	  }
-        length = MAX_ENTITY_LENGTH - 1;
-        TtaGiveTextAttributeValue (attr, name, &length);
-	MapMathMLEntity (name, value, &alphabet);
-	if (alphabet == EOS)
-	   /* unknown name */
-	   {
-	   /* by default display a question mark */
-	   value[0] = '?';
-	   value[1] = EOS;
-	   lang = TtaGetLanguageIdFromAlphabet('L');
-	   }
-	else
-	   {
-	   lang = TtaGetLanguageIdFromAlphabet(alphabet);
-	   }
-#ifdef OLD_XML_PARSER
-        SetElemLineNumber (leaf);
-#else /* OLD_XML_PARSER */
-        XmlSetElemLineNumber (leaf);
-#endif /* OLD_XML_PARSER */
-	TtaSetTextContent (leaf, value, lang, doc);
-	TtaSetAccessRight (leaf, ReadOnly, doc);
-        }
-     }
-}
-
-/*----------------------------------------------------------------------
    SetFontstyleAttr
    The content of a MI element has been created or modified.
    Create or change attribute IntFontstyle for that element accordingly.
@@ -1967,14 +1836,17 @@ Element                 el;
 
 /*----------------------------------------------------------------------
    CheckFence
-   If el is a MO element, if it's a child of a MROW (or equivalent)
-   element and if it contains a single fence character, transform the MO
-   into a MF and the fence character into a Thot symbol.
+   If el is a MO element,
+    - if it's a large operator (&Sum; for instance), put a presentation
+      rule to enlarge the character.
+    - if it's a child of a MROW (or equivalent) element and if it contains
+      a single fence character, transform the MO into a MF and the fence
+      character into a Thot stretchable symbol.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void      CheckFence (Element el, Document doc)
+void      CheckFence (Element el, Document doc)
 #else
-static void      CheckFence (el, doc)
+void      CheckFence (el, doc)
 Element                 el;
 Document		doc;
 
@@ -1989,72 +1861,102 @@ Document		doc;
    CHAR_T	 alphabet;
    UCHAR_T       text[2];
    unsigned char c;
+   PresentationValue   pval;
+   PresentationContext ctxt;
 
    elType = TtaGetElementType (el);
    if (elType.ElTypeNum == MathML_EL_MO)
      /* the element is a MO */
      {
-     if (ChildOfMRowOrInferred (el))
-        {
-        content = TtaGetFirstChild (el);
-        if (content != NULL)
-	  {
-	  elType = TtaGetElementType (content);
-	  if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
-	    {
-	    len = TtaGetTextLength (content);
-	    if (len == 1)
+     content = TtaGetFirstChild (el);
+     if (content != NULL)
+       {
+       elType = TtaGetElementType (content);
+       if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
+	 {
+	 len = TtaGetTextLength (content);
+	 if (len == 1)
+	   /* the MO element contains a single character */
+	   {
+	   len = 2;
+	   TtaGiveTextContent (content, text, &len, &lang);
+	   alphabet = TtaGetAlphabet (lang);
+	   if ((alphabet == 'G') &&
+	       ((int)text[0] == 229 || (int)text[0] == 213))  /* Sigma,  Pi */
+	     /* it's a large operator */
+	     {
+	     ctxt = TtaGetSpecificStyleContext (doc);
+	     ctxt->destroy = FALSE;
+	     /* the specific presentation to be created is not a CSS rule */
+	     ctxt->cssLevel = 0;
+	     pval.typed_data.unit = STYLE_UNIT_PERCENT;
+	     pval.typed_data.real = FALSE;
+	     pval.typed_data.value = 180;
+	     TtaSetStylePresentation (PRSize, content, NULL, ctxt, pval);
+	     }
+	   else if (ChildOfMRowOrInferred (el))
+	     /* the MO element is a child of a MROW element */
 	      {
-	      len = 2;
-	      TtaGiveTextContent (content, text, &len, &lang);
-	      alphabet = TtaGetAlphabet (lang);
-	      if (alphabet == 'L')
-		 /* it contains a single character */
-		 if (text[0] == TEXT('(') || text[0] == TEXT(')') ||
-		     text[0] == TEXT('[') || text[0] == TEXT(']') ||
-		     text[0] == TEXT('{') || text[0] == TEXT('}') ||
-		     text[0] == TEXT('|'))
-		    {
-		    /* remove the content of the MO element */
-		    TtaDeleteTree (content, doc);
-		    /* change the MO element into a MF element */
-		    ChangeTypeOfElement (el, doc, MathML_EL_MF);
+	      if ((alphabet == 'L') &&
+		  (text[0] == TEXT('(') || text[0] == TEXT(')') ||
+		   text[0] == TEXT('[') || text[0] == TEXT(']') ||
+		   text[0] == TEXT('{') || text[0] == TEXT('}') ||
+		   text[0] == TEXT('|')))
+		/* it's a stretchable parenthesis or equivalent */
+		{
+		/* remove the content of the MO element */
+		TtaDeleteTree (content, doc);
+		/* change the MO element into a MF element */
+		ChangeTypeOfElement (el, doc, MathML_EL_MF);
 		    
-		    /* is there an attribute stretchy on this mo element? */
-		    attrType.AttrSSchema = elType.ElSSchema;
-		    attrType.AttrTypeNum = MathML_ATTR_stretchy;
-		    attrStretchy = TtaGetAttribute (el, attrType);
-		    if (attrStretchy)
-		       val = TtaGetAttributeValue (attrStretchy);
-		    else
-		       val = MathML_ATTR_stretchy_VAL_true;
-		    if (val == MathML_ATTR_stretchy_VAL_true)
-		       {
-		       /* attach a IntVertStretch attribute to the MF element*/
-		       attrType.AttrTypeNum = MathML_ATTR_IntVertStretch;
-		       attr = TtaNewAttribute (attrType);
-		       TtaAttachAttribute (el, attr, doc);
-		       TtaSetAttributeValue (attr,
-				MathML_ATTR_IntVertStretch_VAL_yes_, el, doc);
-		       }
-		    /* create a new content for the MF element */
-		    if (text[0] == TEXT('|'))
-		       {
-			 elType.ElTypeNum = MathML_EL_GRAPHICS_UNIT;
-			 c = 'v';
-			 }
-		      else
-			 {
-		         elType.ElTypeNum = MathML_EL_SYMBOL_UNIT;
-		         c = (char) text[0];
-			 }
-		      content = TtaNewElement (doc, elType);
-		      TtaInsertFirstChild (&content, el, doc);
-		      TtaSetGraphicsShape (content, c, doc);
-		      }
+		/* is there an attribute stretchy on this mo element? */
+		attrType.AttrSSchema = elType.ElSSchema;
+		attrType.AttrTypeNum = MathML_ATTR_stretchy;
+		attrStretchy = TtaGetAttribute (el, attrType);
+		if (attrStretchy)
+		  val = TtaGetAttributeValue (attrStretchy);
+		else
+		  val = MathML_ATTR_stretchy_VAL_true;
+		if (val == MathML_ATTR_stretchy_VAL_true)
+		  {
+		  /* attach a IntVertStretch attribute to the MF element*/
+		  attrType.AttrTypeNum = MathML_ATTR_IntVertStretch;
+		  attr = TtaNewAttribute (attrType);
+		  TtaAttachAttribute (el, attr, doc);
+		  TtaSetAttributeValue (attr,
+					MathML_ATTR_IntVertStretch_VAL_yes_,
+					el, doc);
+		  }
+		/* create a new content for the MF element */
+		if (text[0] == TEXT('|'))
+		  {
+		  elType.ElTypeNum = MathML_EL_GRAPHICS_UNIT;
+		  c = 'v';
+		  }
+		else
+		  {
+		  elType.ElTypeNum = MathML_EL_SYMBOL_UNIT;
+		  c = (char) text[0];
+		  }
+		content = TtaNewElement (doc, elType);
+		TtaInsertFirstChild (&content, el, doc);
+		TtaSetGraphicsShape (content, c, doc);
+		if (elType.ElTypeNum == MathML_EL_GRAPHICS_UNIT)
+		  {
+		  ctxt = TtaGetSpecificStyleContext (doc);
+		  ctxt->destroy = FALSE;
+		  /* the specific presentation to be created is not
+		     a CSS rule */
+		  ctxt->cssLevel = 0;
+		  pval.typed_data.unit = STYLE_UNIT_REL;
+		  pval.typed_data.real = TRUE;
+		  pval.typed_data.value = 200;
+		  TtaSetStylePresentation (PRWidth, content, NULL, ctxt, pval);
+		  }
+		}
 	      }
-	    }
-	  }
+	   }
+	 }
        }
      }
 }
@@ -2428,9 +2330,6 @@ int             *error;
        case MathML_EL_MathML:
 	  /* Create placeholders within the MathML element */
 	  CreatePlaceholders (TtaGetFirstChild (el), doc);
-       case MathML_EL_TEXT_UNIT:
-	  CheckTextElement (&el, doc);
-	  break;
        case MathML_EL_MI:
 	  SetFontstyleAttr (el, doc);
 	  break;
@@ -2539,11 +2438,6 @@ int             *error;
        case MathML_EL_MTD:
 	  /* Create placeholders within the table cell */
           CreatePlaceholders (TtaGetFirstChild (el), doc);
-	  break;
-       case MathML_EL_MCHAR:
-	 /* set the content of the mchar element according to the value of
-	    its name attribute */
-	  SetMcharContent (el, doc);
 	  break;
        case MathML_EL_MACTION:
 	  /* Create placeholders within the MACTION element */
@@ -2807,7 +2701,6 @@ void MathMLSpacingAttr (doc, el, value, attr)
     }
   TtaFreeMemory (ctxt);
 }
-
 
 /*----------------------------------------------------------------------
    MathMLAttributeComplete

@@ -10,7 +10,6 @@ static ElemMapping    MathMLElemMappingTable[] =
    {TEXT("maligngroup"), 'E', MathML_EL_MALIGNGROUP, L_Other, FALSE},
    {TEXT("malignmark"), 'E', MathML_EL_MALIGNMARK, L_Other, FALSE},
    {TEXT("math"), SPACE, MathML_EL_MathML, L_Other, FALSE},
-   {TEXT("mchar"), 'E', MathML_EL_MCHAR, L_Other, FALSE},
    {TEXT("menclose"), SPACE, MathML_EL_MENCLOSE, L_Other, FALSE},
    {TEXT("merror"), SPACE, MathML_EL_MERROR, L_Other, FALSE},
    {TEXT("mf"), SPACE, MathML_EL_MF, L_Other, FALSE},  /* for compatibility with an old version of MathML: WD-math-970704 */
@@ -99,7 +98,6 @@ static AttributeMapping MathMLAttributeMappingTable[] =
    {TEXT("minsize"), TEXT(""), 'A', MathML_ATTR_minsize, L_Other},
    {TEXT("mode"), TEXT(""), 'A', MathML_ATTR_display, L_Other},
    {TEXT("movablelimits"), TEXT(""), 'A', MathML_ATTR_movablelimits, L_Other},
-   {TEXT("name"), TEXT(""), 'A', MathML_ATTR_name, L_Other},
    {TEXT("notation"), TEXT(""), 'A', MathML_ATTR_notation, L_Other},
    {TEXT("numalign"), TEXT(""), 'A', MathML_ATTR_numalign, L_Other},
    {TEXT("open"), TEXT(""), 'A', MathML_ATTR_open, L_Other},

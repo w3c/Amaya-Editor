@@ -206,9 +206,4 @@ ATTRIBUTES
         AttrDelete.Pre ->  AttrScriptShiftDelete;
         END;
 
-   name:
-	BEGIN
-	AttrModify.Post -> AttrNameChanged;
-	END;
-
 END

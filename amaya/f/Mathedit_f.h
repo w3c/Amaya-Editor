@@ -48,8 +48,8 @@ extern void CreateMN ( Document document,
 extern void CreateMO ( Document document,
                        View view );
 extern void InitMathML ( void );
-extern void CreateMCHAR ( Document document,
-                          View view );
+extern void CreateMathEntity ( Document document,
+                               View view );
 extern void SetMathCharFont ( Document doc,
                               int attribute );
 extern void MtextCreated ( NotifyElement *event );
@@ -84,7 +84,6 @@ extern void FencedSeparatorModified ( NotifyOnTarget *event );
 extern void AttrSeparatorsChanged ( NotifyAttribute *event );
 extern void AttrScriptShiftCreated ( NotifyAttribute *event );
 extern ThotBool AttrScriptShiftDelete ( NotifyAttribute *event );
-extern void AttrNameChanged ( NotifyAttribute *event );
 
 #else /* __STDC__ */
 
@@ -130,8 +129,8 @@ extern void CreateMN (/* Document document,
 extern void CreateMO (/* Document document,
                          View view */);
 extern void InitMathML (/* void */);
-extern void CreateMCHAR (/* Document document,
-                            View view */);
+extern void CreateMathEntity (/* Document document,
+                                 View view */);
 extern void SetMathCharFont (/* Document doc,
                                 int attribute */);
 extern void MtextCreated (/* NotifyElement *event */);
@@ -166,7 +165,6 @@ extern void FencedSeparatorModified (/* NotifyOnTarget *event */);
 extern void AttrSeparatorsChanged (/* NotifyAttribute *event */);
 extern void AttrScriptShiftCreated (/* NotifyAttribute *event */);
 extern ThotBool AttrScriptShiftDelete (/* NotifyAttribute *event */);
-extern void AttrNameChanged (/* NotifyAttribute *event */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
