@@ -1328,12 +1328,15 @@ void   DrawPath (int frame, int thick, int style, int x, int y,
 	      break;
 
 	    case PtQuadraticBezier:
+	      x1 = (float) PixelToPoint (x + pPa->XStart);
+	      y1 = (float) PixelToPoint (y + pPa->YStart);
 	      cx1 = (float) PixelToPoint (x + pPa->XCtrlStart);
 	      cy1 = (float) PixelToPoint (y + pPa->YCtrlStart);
 	      x2 = (float) PixelToPoint (x + pPa->XEnd);
 	      y2 = (float) PixelToPoint (y + pPa->YEnd);
 	      fprintf (fout, "%f %f %f %f %f %f curveto ",
-		       cx1, -cy1, cx1, -cy1, x2, -y2);
+		       x1+((2*(cx1-x1))/3), -y1-((2*(cy1-y1))/3),
+                       x2+((2*(cx1-x2))/3), -y2-((2*(cy1-y2))/3), x2, -y2);
 	      break;
 
 	    case PtEllipticalArc:
