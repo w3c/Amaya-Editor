@@ -8194,25 +8194,129 @@ void TtaSetNumberForm (int ref, int val)
 }
 
 
+#ifdef _GTK
+typedef void Treecbf (ThotWidget w, ThotBool state, void *user_data);
+
+/*----------------------------------------------------------------------
+  TreeRecUnselectCBF
+  Clears all selected entries in tree thru a cbf function, except
+  for node_skip.
+  ----------------------------------------------------------------------*/
+static void TreeRecUnselectCBF (GtkCTree *tree,  GtkCTreeNode  *node, gpointer data)
+{
+  GtkCTreeNode *node_skip =  GTK_CTREE_NODE (data);
+  Treecbf  *cbf;
+  void *user_data;
+
+  if (node != node_skip) 
+    {
+      cbf = (Treecbf *) gtk_object_get_data (GTK_OBJECT(tree), "cbf");
+      user_data = gtk_ctree_node_get_row_data (tree, node);
+      gtk_ctree_unselect (GTK_CTREE (tree), GTK_CTREE_NODE (node));
+      if (cbf)
+	(*cbf) ((ThotWidget) node, FALSE, user_data);
+    }
+}
+
 /*----------------------------------------------------------------------
   TreeItemSelect
   Invokes the user callback if registred and gives the selected/
   deselected state
   ----------------------------------------------------------------------*/
-typedef void   Treecbf (ThotWidget w, ThotBool state, void *user_data);
-static void TreeItemSelect (ThotWidget w, ThotBool state, caddr_t call_d)
+static ThotBool TreeItemSelect (GtkCTree *tree, GtkCTreeNode *node, gint col,
+				 gpointer data)
 {
-#ifdef _GTK
-  Treecbf *cbf;
+  Treecbf  *cbf;
   void *user_data;
+  ThotBool state; 
+  gpointer has_control, has_multiple;
 
-  cbf = (Treecbf *) gtk_object_get_data (GTK_OBJECT(w), "cbf");
-  user_data = gtk_object_get_data (GTK_OBJECT(w), "user_data");
+  /* for some strange reason, we get col == -1 when doing a recursive operation.
+     Ignoring this seems to work well. */
+  if (col == -1)
+    return FALSE;
 
+  /* we can't assign state directly because gpointer > ThotBool. We do
+     an arithmetic comparition instead */
+  state = (data == 0) ? FALSE : TRUE;
+  
+  cbf = (Treecbf *) gtk_object_get_data (GTK_OBJECT(tree), "cbf");
+  user_data = gtk_ctree_node_get_row_data (tree, node);
+
+  has_multiple = gtk_object_get_data (GTK_OBJECT (tree), "multiple");
+  if (has_multiple)
+    has_control = gtk_object_get_data (GTK_OBJECT (tree), "control");
+
+  if (has_multiple && !has_control)
+    {
+      /* remove all the previous selections */
+      gtk_clist_freeze (GTK_CLIST (tree));
+      /* clear all the entries except the one that generated the event */
+      gtk_ctree_post_recursive (GTK_CTREE (tree), NULL, 
+				GTK_CTREE_FUNC (TreeRecUnselectCBF), (gpointer) node);
+      gtk_clist_thaw (GTK_CLIST (tree));
+    }
   if (cbf)
-      (*cbf) (w, state, user_data);
-#endif /* GTK */
+      (*cbf) ((ThotWidget) node, state, user_data);
+  return FALSE;
 }
+
+/*----------------------------------------------------------------------
+  TreeItemKeyPress
+  Detects if a control or F2 multiple selection modifier key is being
+  used in the tree widget. If this is the case, it stores this state
+  inside the tree widget.
+  ----------------------------------------------------------------------*/
+static ThotBool TreeItemKeyPress (ThotWidget w, GdkEventKey *ev,
+				  gpointer data)
+{
+  ThotBool state; 
+
+  if (!GTK_IS_CTREE (w)
+      || (ev->type != GDK_KEY_PRESS && ev->type != GDK_KEY_RELEASE))
+    return FALSE;
+
+    if (ev->keyval == GDK_Control_L || ev->keyval == GDK_F2)
+    {
+      /* we can't assign state directly because gpointer > ThotBool. We do
+	 an arithmetic comparition instead */
+      /* update the state indicator */
+      state = (data == 0) ? FALSE : TRUE;
+      if (state)
+	{
+ 	  gtk_object_set_data (GTK_OBJECT(w), "control", (gpointer) 1);
+	}
+      else
+	{
+	  gtk_object_remove_data (GTK_OBJECT(w), "control");
+	}
+    }
+  return FALSE;
+}
+
+/*----------------------------------------------------------------------
+  TreeFocus
+  Detects if the widget has lost focus and if yes, removes the
+  "control key pressed" state from the widget.
+  ----------------------------------------------------------------------*/
+static ThotBool TreeFocus (ThotWidget w, GdkEventFocus *ev,
+				  gpointer data)
+{
+  ThotBool state; 
+  
+  /* we can't assign state directly because gpointer > ThotBool. We do
+     an arithmetic comparition instead */
+  state = (data == 0) ? FALSE : TRUE;
+
+  if (!state)
+    {
+      /* delete the state indicator */
+      gtk_object_remove_data (GTK_OBJECT(w), "control");
+    }
+
+  return FALSE;
+}
+#endif /* GTK */
 
 /*----------------------------------------------------------------------
    TtaClearTree
@@ -8225,7 +8329,6 @@ ThotWidget TtaClearTree (ThotWidget tree)
   ThotWidget tree_widget = NULL;
 #ifdef _GTK
   GList *children;
-  ThotWidget tmp;
 
   if (!tree || !GTK_IS_SCROLLED_WINDOW (tree))
     return NULL;
@@ -8236,121 +8339,100 @@ ThotWidget TtaClearTree (ThotWidget tree)
     return NULL;
 
   /* get the tree */
-  tmp = children->data;
+  tree_widget = children->data;
   g_list_free (children);
-  children = gtk_container_children (GTK_CONTAINER (tmp));
-  if (children)
-    {
-      tree_widget = children->data;
-      g_list_free (children);
-      children = gtk_container_children (GTK_CONTAINER (tree_widget));
-      if (children)
-	{
-	  gtk_tree_remove_items (GTK_TREE (tree_widget), children);
-	  g_list_free (children);
-	}
-    }
+
+  if (tree_widget && GTK_IS_CTREE (tree_widget))
+    gtk_clist_clear (GTK_CLIST (tree_widget));
+  else
+    return NULL;
 #endif /* _GTK */
   return (tree_widget);
 }
 
 /*----------------------------------------------------------------------
-   TtaAddSubTree
-   Creates a new subtree and returns its reference.
-   Parent gives the widget to which the new subtree should be attached.
-  ----------------------------------------------------------------------*/
-ThotWidget TtaAddSubTree (ThotWidget tree_item)
-     /* add some tree stuff here */
-{
-  ThotWidget subtree = NULL;
-#ifdef _GTK
-
-  if (!tree_item)
-    return NULL;
-
-  subtree = gtk_tree_new();
-  gtk_tree_item_set_subtree (GTK_TREE_ITEM(tree_item),
-			    subtree);
-
-  gtk_tree_set_view_lines (GTK_TREE(subtree), TRUE);
-  gtk_tree_item_expand (GTK_TREE_ITEM(tree_item));
-  RemoveSignalGTK (GTK_OBJECT(subtree), "select_child");
-#endif
-  return (subtree);
-
-}
-
-/*----------------------------------------------------------------------
    TtaAddTreeItem
-   parent points to the parent of the tree.
-   label gives the item's label
-   callback is the function to be invoked when the widget is selected.
+   parent points to the parent of the tree. If it's NULL, it's
+   the first item.
+   sibling points to the immediate sibling of this item. If it's NULL
+   the item will be added as the first child of parent.
+   item_label gives the text that will be visible on the widget.
+   selected and expanded gives info on how to display the item.
    user_data is what the user wants to feed to the callback function.
    Returns the reference of the new widget.
   ----------------------------------------------------------------------*/
-ThotWidget TtaAddTreeItem (ThotWidget parent, char *item_label, 
-			   ThotBool selected, ThotBool collapsed, 
-			   void *callback, void *user_data)
+ThotWidget TtaAddTreeItem (ThotWidget tree, ThotWidget parent,
+			   ThotWidget sibling, char *item_label, 
+			  ThotBool selected, ThotBool expanded, 
+			  void *user_data)
 {
   ThotWidget tree_item = NULL;
-
 #ifdef _GTK
-  tree_item = gtk_tree_item_new_with_label ((item_label) ? item_label : "");
-  gtk_tree_append(GTK_TREE(parent), tree_item);
+  gchar *ctree_label[1];
+
+  ctree_label[0]= (item_label) ?  (gchar *) item_label : (gchar *) "";
+
+  tree_item = (ThotWidget) gtk_ctree_insert_node ((GtkCTree *) tree,
+						  (GtkCTreeNode *) parent,
+						  (GtkCTreeNode *) sibling,
+						  ctree_label,
+						  5,
+						  NULL,
+						  NULL,
+						  NULL,
+						  NULL,
+						  FALSE,
+						  expanded);
 
   if (selected)
-    gtk_tree_select_child (GTK_TREE(parent), GTK_WIDGET(tree_item));
+    {
+      RemoveSignalGTK (GTK_OBJECT(tree), "tree_select_row");
+      gtk_ctree_select (GTK_CTREE(tree), GTK_CTREE_NODE(tree_item));
+      ConnectSignalGTK (GTK_OBJECT (tree), "tree_select_row",
+			GTK_SIGNAL_FUNC (TreeItemSelect), (gpointer) TRUE);
+    }
 
-  /* connect the signals we're interested in */
-  ConnectSignalGTK (GTK_OBJECT(tree_item), "select", GTK_SIGNAL_FUNC(TreeItemSelect), 
-		    (gpointer) TRUE);
-  ConnectSignalGTK (GTK_OBJECT(tree_item), "deselect", GTK_SIGNAL_FUNC(TreeItemSelect), 
-		    (gpointer) FALSE);
-  
-  /* memorize callback function and client data */
-  gtk_object_set_data (GTK_OBJECT(tree_item), 
-		       "cbf", 
-		       (gpointer) callback);
-  gtk_object_set_data (GTK_OBJECT(tree_item), 
-		       "user_data", 
-		       (gpointer) user_data);
-  gtk_widget_ref (GTK_WIDGET(tree_item));
-  if (!collapsed)
-    gtk_tree_item_expand (GTK_TREE_ITEM(tree_item));
+  /* memorize client data */
+  gtk_ctree_node_set_row_data (GTK_CTREE (tree),
+			   GTK_CTREE_NODE(tree_item), 
+			   (gpointer) user_data);
 
-  gtk_widget_show_all (tree_item);
 #endif /* _GTK */
-
   return (tree_item);
 }
+
 
 /*----------------------------------------------------------------------
    TtaNewTreeForm
    The parameter ref gives the catalog reference
-   The parameter text gives the form's label
+   The paramet ref_parent gives the parents reference
+   The parameter label gives the form's label
    The parameter multiple says if mutliple selections are allowed inside
    the tree.
+   The Parameter callback gives the callback function.
+   Returns the pointer of the widget that was created or NULL.
   ----------------------------------------------------------------------*/
-ThotWidget TtaNewTreeForm (int ref, int ref_parent, char *label, ThotBool multiple)
+ThotWidget TtaNewTreeForm (int ref, int ref_parent, char *label, 
+			   ThotBool multiple, void *callback)
 {
   ThotWidget          tree = NULL;
 
 #ifdef _GTK
-   /* general stuff, move it up when adding win32 */
-   int                 i;
-   int                 ent;
-   int                 width, height;
-   int                 rebuilded;
-   struct E_List      *adbloc;
-   ThotWidget          w, tmpw;
-   struct Cat_Context *catalogue;
-   struct Cat_Context *parentCatalogue;
-   /* end of general info */
+  /* general stuff, move it up when adding win32 */
+  int                 i;
+  int                 ent;
+  int                 width, height;
+  int                 rebuilded;
+  struct E_List      *adbloc;
+  ThotWidget          w, tmpw;
+  struct Cat_Context *catalogue;
+  struct Cat_Context *parentCatalogue;
+  /* end of general info */
 
    if (ref == 0)
      {
-	TtaError (ERR_invalid_reference);
-	return NULL;
+       TtaError (ERR_invalid_reference);
+       return NULL;
      }
 
    catalogue = CatEntry (ref);
@@ -8362,89 +8444,125 @@ ThotWidget TtaNewTreeForm (int ref, int ref_parent, char *label, ThotBool multip
      }
    else if (catalogue->Cat_Widget && catalogue->Cat_Type == CAT_TREE)
      {
-	/* Modification du catalogue */
-	w = catalogue->Cat_Widget;
-	gtk_widget_show_all (w);
-	if (label)
-	  gtk_label_set_text (GTK_LABEL (w), label);	
+       /* Modification du catalogue */
+       w = catalogue->Cat_Widget;
+       gtk_widget_show_all (w);
+       if (label)
+	 gtk_label_set_text (GTK_LABEL (w), label);	
      }
    else
      {
-	if (catalogue->Cat_Widget)
-	   /* Le catalogue est a reconstruire completement */
-	   TtaDestroyDialogue (ref);
-	/*======================================> Recherche le catalogue parent */
-	parentCatalogue = CatEntry (ref_parent);
-	/*__________________________________ Le catalogue parent n'existe pas __*/
-	if (parentCatalogue == NULL)
-	  {
-	     TtaError (ERR_invalid_parent_dialogue);
-	     return NULL;
-	  }
-	else if (parentCatalogue->Cat_Widget == 0)
-	  {
-	     TtaError (ERR_invalid_parent_dialogue);
-	     return NULL;
-	  }
-	/*_________________________________________ Sous-menu d'un formulaire __*/
-	else if (parentCatalogue->Cat_Type != CAT_FORM
-		 && parentCatalogue->Cat_Type != CAT_SHEET
-		 && parentCatalogue->Cat_Type != CAT_DIALOG)
-	  {
-	     TtaError (ERR_invalid_parent_dialogue);
-	     return NULL;
-	  }
-	/* Recupere le widget parent */
-	w = AddInFormulary (parentCatalogue, &i, &ent, &adbloc);
-	if (label)
-	  {
-	    tmpw = gtk_label_new (label);
-	    gtk_misc_set_alignment (GTK_MISC (tmpw), 0.0, 0.5);
-	    tmpw->style->font=DefaultFont;
-	    gtk_label_set_justify (GTK_LABEL (tmpw), GTK_JUSTIFY_LEFT);
-	    gtk_box_pack_start (GTK_BOX(w), GTK_WIDGET(tmpw), FALSE, FALSE, 0);
-	    /* on fou les couleurs (A FAIRE)*/
-	    gtk_widget_set_name (tmpw, "Dialogue");
-	  }
+       if (catalogue->Cat_Widget)
+	 /* Le catalogue est a reconstruire completement */
+	 TtaDestroyDialogue (ref);
+       /*======================================> Recherche le catalogue parent */
+       parentCatalogue = CatEntry (ref_parent);
+       /*__________________________________ Le catalogue parent n'existe pas __*/
+       if (parentCatalogue == NULL)
+	 {
+	   TtaError (ERR_invalid_parent_dialogue);
+	   return NULL;
+	 }
+       else if (parentCatalogue->Cat_Widget == 0)
+	 {
+	   TtaError (ERR_invalid_parent_dialogue);
+	   return NULL;
+	 }
+       /*_________________________________________ Sous-menu d'un formulaire __*/
+       else if (parentCatalogue->Cat_Type != CAT_FORM
+		&& parentCatalogue->Cat_Type != CAT_SHEET
+		&& parentCatalogue->Cat_Type != CAT_DIALOG)
+	 {
+	   TtaError (ERR_invalid_parent_dialogue);
+	   return NULL;
+	 }
+       /* Recupere le widget parent */
+       w = AddInFormulary (parentCatalogue, &i, &ent, &adbloc);
+       /* this is necessary for getting the key release anywhere on the widget,
+	even if the pointer is elsewhere */
+       if (parentCatalogue && parentCatalogue->Cat_Widget)
+	 gtk_widget_add_events (GTK_WIDGET(parentCatalogue->Cat_Widget), 
+				GDK_KEY_RELEASE_MASK);
+       if (label)
+	 {
+	   tmpw = gtk_label_new (label);
+	   gtk_misc_set_alignment (GTK_MISC (tmpw), 0.0, 0.5);
+	   tmpw->style->font=DefaultFont;
+	   gtk_label_set_justify (GTK_LABEL (tmpw), GTK_JUSTIFY_LEFT);
+	   gtk_box_pack_start (GTK_BOX(w), GTK_WIDGET(tmpw), FALSE, FALSE, 0);
+	   gtk_widget_set_name (tmpw, "Dialogue");
+	 }
+       
+       /* add some tree stuff here */
+       {
+	 GtkWidget *scrolled_window;
+	 
+	 scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+	 gtk_scrolled_window_set_policy
+	   (GTK_SCROLLED_WINDOW(scrolled_window),
+	    GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+	 gtk_box_pack_start (GTK_BOX(w), scrolled_window,
+			     TRUE, TRUE, 0);
+	 /*
+	 How to say this?
+	 GTK_WIDGET_UNSET_FLAGS (GTK_SCROLLED_WINDOW (scrolled_window), GTK_CAN_FOCUS);
+	 */
+	 w = scrolled_window;
+	 /* make it at least 6 lines high and 15 chars long */
+	 width = 1;
+	 /* width =  150 * (gdk_char_width (DialogFont, 'm')); */
+	 height = 10 * (gdk_char_height (DialogFont, 'M'));
+	 gtk_widget_set_usize (GTK_WIDGET(w), width, height);
+	 gtk_widget_show (w);
 
-	/* add some tree stuff here */
-	{
-	  GtkWidget *scrolled_window;
-
-	  scrolled_window = gtk_scrolled_window_new(NULL, NULL);
-	  gtk_scrolled_window_set_policy
-	    (GTK_SCROLLED_WINDOW(scrolled_window),
-	     GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-	  gtk_box_pack_start (GTK_BOX(w), scrolled_window,
-			      TRUE, TRUE, 0);
-	  w = scrolled_window;
-
-	  /* make it at least 6 lines high and 15 chars long */
-	  width = 1;
-	  /* width =  150 * (gdk_char_width (DialogFont, 'm')); */
-	  height = 10 * (gdk_char_height (DialogFont, 'M'));
-	  gtk_widget_set_usize (GTK_WIDGET(w), width, height);
-
-	  tree = gtk_tree_new();
-	  gtk_tree_set_view_lines (GTK_TREE(tree), TRUE);
-	  gtk_tree_set_view_mode (GTK_TREE(tree), GTK_TREE_VIEW_ITEM);
-	  gtk_tree_set_selection_mode (GTK_TREE(tree),
+	 tree = gtk_ctree_new (1, 0);
+	 gtk_clist_set_selection_mode (GTK_CLIST(tree),
 				       (multiple) ? GTK_SELECTION_MULTIPLE :
 				       GTK_SELECTION_SINGLE);
-	  RemoveSignalGTK (GTK_OBJECT(tree), "select_child");
-	  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW(scrolled_window), 
-						 tree);
-	}
-	gtk_widget_show_all (w);
-	  
-	catalogue->Cat_Widget = w;
-	catalogue->Cat_Ref = ref;
-	catalogue->Cat_Type = CAT_TREE;
-	catalogue->Cat_PtParent = parentCatalogue;
-	adbloc->E_ThotWidget[ent] = (ThotWidget) (catalogue);
-	adbloc->E_Free[ent] = 'N';
-	catalogue->Cat_EntryParent = i;
-	catalogue->Cat_Entries = NULL;
+	 /* set  all the extra events we want */
+	 if (multiple)
+	   {
+	     gtk_object_set_data (GTK_OBJECT(tree), "multiple", (gpointer) 1);
+	     gtk_widget_add_events (GTK_WIDGET(tree), GDK_KEY_RELEASE_MASK);
+	     ConnectSignalGTK (GTK_OBJECT (tree),  "key_press_event",
+			       GTK_SIGNAL_FUNC (TreeItemKeyPress), (gpointer) TRUE);
+	     ConnectSignalGTK (GTK_OBJECT (tree),  "key_release_event",
+			       GTK_SIGNAL_FUNC (TreeItemKeyPress), (gpointer) FALSE);
+	     ConnectSignalAfterGTK (GTK_OBJECT (tree),  "focus_in_event",
+			       GTK_SIGNAL_FUNC (TreeFocus), (gpointer) TRUE);
+	     ConnectSignalAfterGTK (GTK_OBJECT (tree),  "focus_out_event",
+			       GTK_SIGNAL_FUNC (TreeFocus), (gpointer) FALSE);
+	   }
+	 ConnectSignalAfterGTK (GTK_OBJECT (tree), "tree_select_row",
+				GTK_SIGNAL_FUNC (TreeItemSelect), (gpointer) TRUE);
+	 ConnectSignalAfterGTK (GTK_OBJECT (tree), "tree_unselect_row",
+				GTK_SIGNAL_FUNC (TreeItemSelect), (gpointer) FALSE);
+
+	 /* make it be auto-sort, but I probably want to do this elsewhere  */
+	 gtk_clist_set_sort_type (GTK_CLIST (tree), GTK_SORT_ASCENDING);
+	 gtk_clist_set_auto_sort (GTK_CLIST (tree), TRUE);
+	 gtk_container_add (GTK_CONTAINER (w), 
+			    GTK_WIDGET (tree));
+	 gtk_widget_show (tree);
+       }	 
+       if (!parentCatalogue->Cat_Focus)
+	 {
+	   /* first entry in the form */
+	   gtk_widget_grab_focus (GTK_WIDGET(tree));
+	   parentCatalogue->Cat_Focus = TRUE;
+	 }
+       catalogue->Cat_Widget = w;
+       catalogue->Cat_Ref = ref;
+       catalogue->Cat_Type = CAT_TREE;
+       catalogue->Cat_PtParent = parentCatalogue;
+       adbloc->E_ThotWidget[ent] = (ThotWidget) (catalogue);
+       adbloc->E_Free[ent] = 'N';
+       catalogue->Cat_EntryParent = i;
+       catalogue->Cat_Entries = NULL;
+       /* memorize the callback */
+       gtk_object_set_data (GTK_OBJECT(tree),
+			    "cbf", 
+			    (gpointer) callback);
      }
 #endif /* GTK */
    return tree;

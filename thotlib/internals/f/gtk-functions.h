@@ -114,6 +114,8 @@ gboolean EnterCallbackGTK (GtkWidget *widget,
 			   GdkEventCrossing *event,
 			   gpointer user_data);
 void ConnectSignalGTK (GtkObject *w, gchar *signal_name, GtkSignalFunc callback, gpointer data);
+void ConnectSignalAfterGTK (GtkObject *w, gchar *signal_name, GtkSignalFunc callback, 
+			    gpointer data);
 
 
 void RemoveSignalGTK (GtkObject *w, gchar *signal_name);

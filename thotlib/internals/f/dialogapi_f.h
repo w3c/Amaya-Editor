@@ -171,17 +171,18 @@ extern void TtaNewNumberForm ( int ref,
 extern void TtaSetNumberForm ( int ref,
                                int val );
 extern ThotWidget TtaClearTree ( ThotWidget tree );
-extern ThotWidget TtaAddSubTree ( ThotWidget tree_item );
-extern ThotWidget TtaAddTreeItem ( ThotWidget parent,
+extern ThotWidget TtaAddTreeItem ( ThotWidget tree,
+                                   ThotWidget parent,
+                                   ThotWidget sibling,
                                    char *item_label,
                                    ThotBool selected,
-                                   ThotBool collapsed,
-                                   void *callback,
+                                   ThotBool expanded,
                                    void *user_data );
 extern ThotWidget TtaNewTreeForm ( int ref,
                                    int ref_parent,
                                    char *label,
-                                   ThotBool multiple );
+                                   ThotBool multiple,
+                                   void *callback );
 extern void TtaAbortShowDialogue ( void );
 extern void TtaSetDialoguePosition ( void );
 extern void TtaShowDialogue ( int ref,
@@ -358,17 +359,18 @@ extern void TtaNewNumberForm (/* int ref,
 extern void TtaSetNumberForm (/* int ref,
                                  int val */);
 extern ThotWidget TtaClearTree (/* ThotWidget tree */);
-extern ThotWidget TtaAddSubTree (/* ThotWidget tree_item */);
-extern ThotWidget TtaAddTreeItem (/* ThotWidget parent,
+extern ThotWidget TtaAddTreeItem (/* ThotWidget tree,
+                                     ThotWidget parent,
+                                     ThotWidget sibling,
                                      char *item_label,
                                      ThotBool selected,
-                                     ThotBool collapsed,
-                                     void *callback,
+                                     ThotBool expanded,
                                      void *user_data */);
 extern ThotWidget TtaNewTreeForm (/* int ref,
                                      int ref_parent,
                                      char *label,
-                                     ThotBool multiple */);
+                                     ThotBool multiple,
+                                     void *callback */);
 extern void TtaAbortShowDialogue (/* void */);
 extern void TtaSetDialoguePosition (/* void */);
 extern void TtaShowDialogue (/* int ref,

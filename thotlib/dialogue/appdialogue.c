@@ -2765,6 +2765,20 @@ void ConnectSignalGTK (GtkObject *w, gchar *signal_name, GtkSignalFunc callback,
   id = gtk_signal_connect (GTK_OBJECT(w), signal_name, GTK_SIGNAL_FUNC(callback), data);
   gtk_object_set_data (GTK_OBJECT (w), signal_name, (gpointer)id);
 }
+
+/*-----------------------------------------------------------------------
+  ConnectSignalAfterGTK
+  Function used by GTK version to attach the callback function to the
+  good event and to attache the signal connect ID to the widget in order
+  to disconnect it further. The signal  handler will be called after all
+  the other handlers.
+-------------------------------------------------------------------------*/
+void ConnectSignalAfterGTK (GtkObject *w, gchar *signal_name, GtkSignalFunc callback, gpointer data)
+{
+  guint id;
+  id = gtk_signal_connect_after (GTK_OBJECT(w), signal_name, GTK_SIGNAL_FUNC(callback), data);
+  gtk_object_set_data (GTK_OBJECT (w), signal_name, (gpointer)id);
+}
 /*-----------------------------------------------------------------------
   RemoveSignalGTK 
   Function used by GTK version to remove the callback function to the

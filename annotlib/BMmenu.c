@@ -542,12 +542,14 @@ void BM_BookmarkMenu (Document doc, View view, BookmarkP bookmark)
    label = TtaGetMessage (AMAYA, AM_BM_TOPIC_HIERARCHY);
    TtaNewPaddedLabel (BookmarkBase + mBMTopicTreeL,  BookmarkBase + BookmarkMenu, 
 		      label, longest_label);
+
    tree = TtaNewTreeForm (BookmarkBase + mBMTopicTree,
-			  BookmarkBase + BookmarkMenu,
-			  NULL,
-			  TRUE);
+			   BookmarkBase + BookmarkMenu,
+			   NULL,
+			   TRUE,
+			   (void *) BookmarkMenuSelect_cbf);
    if (tree)
-     BM_InitTreeWidget (tree, BTopicTree, (void *) BookmarkMenuSelect_cbf);
+     BM_InitTreeWidget (tree, BTopicTree);
 
    /* Title */
    label = TtaGetMessage (AMAYA, AM_BM_TITLE);
@@ -820,9 +822,10 @@ void BM_TopicMenu (Document doc, View view, BookmarkP bookmark)
    tree = TtaNewTreeForm (TopicBase + mTMTopicTree,
 			  TopicBase + TopicMenu,
 			  NULL,
-			  FALSE);
+			  FALSE,
+			  (void *) TopicMenuSelect_cbf);
    if (tree)
-     BM_InitTreeWidget (tree, TTopicTree, (void *) TopicMenuSelect_cbf);
+     BM_InitTreeWidget (tree, TTopicTree);
 
 #if 0 
    /* parent topic */
@@ -1099,7 +1102,7 @@ void BM_RefreshTopicTree ()
       aBookmark->self_url = BM_bufferContent (aDynBookmark->self_url);
       BM_topicsPreSelect (BTopicTree, aBookmark);
       aBookmark->self_url = NULL;
-      BM_InitTreeWidget (tree, BTopicTree, (void *) BookmarkMenuSelect_cbf);
+      BM_InitTreeWidget (tree, BTopicTree);
     }
 
   if (aTopic)
@@ -1115,6 +1118,6 @@ void BM_RefreshTopicTree ()
       BM_topicsPreSelect (TTopicTree, aTopic);
       aTopic->self_url = NULL;
       aTopic->parent_url = NULL;
-      BM_InitTreeWidget (tree, TTopicTree, (void *) TopicMenuSelect_cbf);
+      BM_InitTreeWidget (tree, TTopicTree);
     }
 }

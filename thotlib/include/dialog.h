@@ -367,33 +367,33 @@ extern void TtaSetNumberForm (int ref, int val);
 extern ThotWidget TtaClearTree (ThotWidget tree);
 
 /*----------------------------------------------------------------------
-   TtaAddSubTree
-   Creates a new subtree and returns its reference.
-   Parent gives the widget to which the new subtree should be attached.
-  ----------------------------------------------------------------------*/
-extern ThotWidget TtaAddSubTree (ThotWidget tree_item);
-
-/*----------------------------------------------------------------------
    TtaAddTreeItem
-   parent points to the parent of the tree.
-   label gives the item's label
-   callback is the function to be invoked when the widget is selected.
+   parent points to the parent of the tree. If it's NULL, it's
+   the first item.
+   sibling points to the immediate sibling of this item. If it's NULL
+   the item will be added as the first child of parent.
+   item_label gives the text that will be visible on the widget.
+   selected and expanded gives info on how to display the item.
    user_data is what the user wants to feed to the callback function.
    Returns the reference of the new widget.
   ----------------------------------------------------------------------*/
-extern ThotWidget TtaAddTreeItem (ThotWidget parent, char *item_label, 
-				  ThotBool selected, ThotBool collapsed,
-				  void *callback, void *user_data);
+extern ThotWidget TtaAddTreeItem (ThotWidget tree, ThotWidget parent, 
+				  ThotWidget sibling, char *item_label, 
+				  ThotBool selected, ThotBool expanded, 
+				  void *user_data);
 
 /*----------------------------------------------------------------------
    TtaNewTreeForm
    The parameter ref gives the catalog reference
-   The parameter text gives the form's label
+   The paramet ref_parent gives the parents reference
+   The parameter label gives the form's label
    The parameter multiple says if mutliple selections are allowed inside
    the tree.
+   The Parameter callback gives the callback function.
+   Returns the pointer of the widget that was created or NULL.
   ----------------------------------------------------------------------*/
 extern ThotWidget TtaNewTreeForm (int ref, int ref_parent, char *label, 
-				  ThotBool multiple);
+				  ThotBool multiple, void *callback);
 
 /*----------------------------------------------------------------------
    TtaSetDialoguePosition me'morise la position actuelle de la souris 

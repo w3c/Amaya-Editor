@@ -587,13 +587,18 @@ void BM_topicsPrune (Document doc, BookmarkP me)
 
 /*-----------------------------------------------------------------------
   -----------------------------------------------------------------------*/
-static void RecursiveInitTreeWidget (ThotWidget root_tree, Element root_el, void *cbf)
+static void RecursiveInitTreeWidget (ThotWidget tree,
+				      ThotWidget parent,
+				      ThotWidget sibling,
+				      Element root_el)
 {
-  ThotWidget tree_item, child_tree;
+  ThotWidget tree_item, previous;
   char *label;
   Element el, child_el;
   ThotBool select;
   el = root_el;
+
+  previous = sibling;
 
   while (el) 
     {
@@ -603,8 +608,8 @@ static void RecursiveInitTreeWidget (ThotWidget root_tree, Element root_el, void
       /* is it selected? */
       select = BM_topicIsSelected (el);
 
-      tree_item = TtaAddTreeItem (root_tree, label, select, 
-				  FALSE, cbf, (void *) el);
+      tree_item = TtaAddTreeItem (tree, parent, previous, label, select, 
+				  TRUE, (void *) el);
 
       if (label)
 	TtaFreeMemory (label);
@@ -613,11 +618,11 @@ static void RecursiveInitTreeWidget (ThotWidget root_tree, Element root_el, void
       child_el = BM_GetFirstChild (el);
       if (child_el)
 	{
-	  child_tree = TtaAddSubTree (tree_item);
-	  RecursiveInitTreeWidget (child_tree, child_el, cbf);
+	  RecursiveInitTreeWidget (tree, tree_item, NULL, child_el);
 	}
       /* do the same with its siblings */
       TtaNextSibling (&el);
+      previous = tree_item;
     }
 }
 
@@ -625,7 +630,7 @@ static void RecursiveInitTreeWidget (ThotWidget root_tree, Element root_el, void
   BM_InitTreeWidget
   Initializes the tree widget according to the topic tree
   ----------------------------------------------------------------------*/
-void BM_InitTreeWidget (ThotWidget tree, Document TopicTree, void *cbf)
+void BM_InitTreeWidget (ThotWidget tree, Document TopicTree)
 {
   Element el;
   ElementType elType;
@@ -635,9 +640,8 @@ void BM_InitTreeWidget (ThotWidget tree, Document TopicTree, void *cbf)
 
   elType = TtaGetElementType (el);
 
-  RecursiveInitTreeWidget (tree, el, cbf);
+  RecursiveInitTreeWidget (tree, NULL, NULL, el);
 }
-
 
 /*-----------------------------------------------------------------------
   RecursiveDumpTree

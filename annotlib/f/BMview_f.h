@@ -34,8 +34,7 @@ extern Document BM_NewDocument ( void );
 extern void BM_topicsPrune ( Document doc,
                              BookmarkP me );
 extern void BM_InitTreeWidget ( ThotWidget tree,
-                                Document TopicTree,
-                                void *cbf );
+                                Document TopicTree );
 extern void BM_dumpTopicTreeSelections ( Document TopicTree,
                                          List **list );
 extern Document BM_GetTopicTree ( void );
@@ -76,8 +75,7 @@ extern Document BM_NewDocument (/* void */);
 extern void BM_topicsPrune (/* Document doc,
                                BookmarkP me */);
 extern void BM_InitTreeWidget (/* ThotWidget tree,
-                                  Document TopicTree,
-                                  void *cbf */);
+                                  Document TopicTree */);
 extern void BM_dumpTopicTreeSelections (/* Document TopicTree,
                                            List **list */);
 extern Document BM_GetTopicTree (/* void */);
