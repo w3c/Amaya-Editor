@@ -103,7 +103,7 @@ PtrTSchema          LoadTranslationSchema (Name schName, PtrSSchema pSS)
    do
      {
 	if (LoadedTSchema[i].pTransSchema != NULL)
-	   found = (ustrcmp (schName, LoadedTSchema[i].TransSchemaName) == 0);
+	   found = (strcmp (schName, LoadedTSchema[i].TransSchemaName) == 0);
 	if (!found)
 	   i++;
      }
@@ -128,7 +128,7 @@ PtrTSchema          LoadTranslationSchema (Name schName, PtrSSchema pSS)
 	       {
 		  LoadedTSchema[i].pStructSchema = pSS;
 		  LoadedTSchema[i].pTransSchema = pTSch;
-		  ustrcpy (LoadedTSchema[i].TransSchemaName, schName);
+		  strcpy (LoadedTSchema[i].TransSchemaName, schName);
 	       }
 	  }
      }
@@ -157,10 +157,10 @@ static ThotBool     GetUSErule (PtrTRuleBlock pBlock, Name schName)
 		{
 		   if (pTRule->TrType == TUse)
 		      /* c'est une regle USE */
-		      if (ustrcmp (schName, pTRule->TrNature) == 0)
+		      if (strcmp (schName, pTRule->TrNature) == 0)
 			{
 			   found = TRUE;
-			   ustrncpy (schName, pTRule->TrTranslSchemaName, MAX_NAME_LENGTH);
+			   strncpy (schName, pTRule->TrTranslSchemaName, MAX_NAME_LENGTH);
 			}
 		   pTRule = pTRule->TrNextTRule;
 		}
@@ -199,7 +199,7 @@ static void         GetTransSchName (Name schName)
 	  {
 	     pSRule = &pSS->SsRule[i++];
 	     if (pSRule->SrConstruct == CsNatureSchema)
-            natureOK = ustrcmp (schName, pSRule->SrName) == 0;
+            natureOK = strcmp (schName, pSRule->SrName) == 0;
 	  }
 	while (i < pSS->SsNRules && !natureOK);
 	if (natureOK)
@@ -234,7 +234,7 @@ PtrTSchema          GetTranslationSchema (PtrSSchema pSS)
    do
      {
        if (LoadedTSchema[i].pStructSchema != NULL)
-	 found = (!ustrcmp (pSS->SsName, LoadedTSchema[i].pStructSchema->SsName));
+	 found = (!strcmp (pSS->SsName, LoadedTSchema[i].pStructSchema->SsName));
        if (!found)
 	 i++;
      }
@@ -243,7 +243,7 @@ PtrTSchema          GetTranslationSchema (PtrSSchema pSS)
       pTSchema = LoadedTSchema[i].pTransSchema;
    else
      {
-	ustrcpy (schemaName, pSS->SsName);
+	strcpy (schemaName, pSS->SsName);
 	GetTransSchName (schemaName);
 	if (schemaName[0] != EOS)
 	   /* cree un nouveau schema de traduction et le charge */

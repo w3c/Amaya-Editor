@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -38,7 +38,7 @@ ThotBool CallEventAttribute (NotifyAttribute * notifyAttr, ThotBool pre)
 }
 
 
-void FreePictInfo (PictInfo *esc)
+void CleanPictInfo (PictInfo *esc)
 {
 }
 

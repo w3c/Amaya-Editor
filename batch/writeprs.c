@@ -30,13 +30,7 @@ static BinFile      outfile;
 /*----------------------------------------------------------------------
    WriteShort							
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         WriteShort (int n)
-#else  /* __STDC__ */
-static void         WriteShort (n)
-int                 n;
-
-#endif /* __STDC__ */
+static void WriteShort (int n)
 {
    TtaWriteByte (outfile, (char) (n / 256));
    TtaWriteByte (outfile, (char) (n % 256));
@@ -45,13 +39,7 @@ int                 n;
 /*----------------------------------------------------------------------
    WriteSignedShort						
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         WriteSignedShort (int n)
-#else  /* __STDC__ */
-static void         WriteSignedShort (n)
-int                 n;
-
-#endif /* __STDC__ */
+static void WriteSignedShort (int n)
 {
    if (n >= 0)
       WriteShort (n);
@@ -62,19 +50,13 @@ int                 n;
 /*----------------------------------------------------------------------
    WriteName							
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         WriteName (Name n)
-#else  /* __STDC__ */
-static void         WriteName (n)
-Name                n;
-
-#endif /* __STDC__ */
+static void WriteName (Name n)
 {
    int                 i;
 
    i = 0;
    do
-      TtaWriteWideChar (outfile, n[i++], ISO_8859_1 /* UTF_8 */);
+      TtaWriteByte (outfile, n[i++]);
    while (n[i - 1] != '\0');
 }
 
@@ -82,13 +64,7 @@ Name                n;
 /*----------------------------------------------------------------------
    WriteRulePtr							
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         WriteRulePtr (PtrPRule p)
-#else  /* __STDC__ */
-static void         WriteRulePtr (p)
-PtrPRule            p;
-
-#endif /* __STDC__ */
+static void WriteRulePtr (PtrPRule p)
 {
    if (p == NULL)
       TtaWriteByte (outfile, '\0');
@@ -100,13 +76,7 @@ PtrPRule            p;
 /*----------------------------------------------------------------------
    WriteBoolean							
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         WriteBoolean (ThotBool b)
-#else  /* __STDC__ */
-static void         WriteBoolean (b)
-ThotBool             b;
-
-#endif /* __STDC__ */
+static void WriteBoolean (ThotBool b)
 {
    if (b)
       TtaWriteByte (outfile, '\1');
@@ -117,14 +87,7 @@ ThotBool             b;
 /*----------------------------------------------------------------------
    WriteUnit ecrit une unite dans le fichier sur un octet          
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         WriteUnit (TypeUnit unit)
-#else  /* __STDC__ */
-static void         WriteUnit (unit)
-BinFile             file;
-TypeUnit            unit;
-
-#endif /* __STDC__ */
+static void WriteUnit (TypeUnit unit)
 {
    switch (unit)
 	 {
@@ -156,13 +119,7 @@ TypeUnit            unit;
 /*----------------------------------------------------------------------
    WritePRuleType  ecrit un type de regle de presentation		
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                WritePRuleType (PRuleType ruleType)
-#else  /* __STDC__ */
-void                WritePRuleType (ruleType)
-PRuleType           ruleType;
-
-#endif /* __STDC__ */
 {
    switch (ruleType)
 	 {
@@ -329,14 +286,7 @@ PRuleType           ruleType;
 /*----------------------------------------------------------------------
    WritePresMode ecrit un mode de calcul dans le fichier		
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         WritePresMode (PresMode mode)
-
-#else  /* __STDC__ */
-static void         WritePresMode (mode)
-PresMode            mode;
-
-#endif /* __STDC__ */
+static void WritePresMode (PresMode mode)
 {
    switch (mode)
 	 {
@@ -359,13 +309,7 @@ PresMode            mode;
 /*----------------------------------------------------------------------
    WriteInheritMode       ecrit un type d'heritage dans le fichier	
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         WriteInheritMode (InheritMode mode)
-#else  /* __STDC__ */
-static void         WriteInheritMode (mode)
-InheritMode         mode;
-
-#endif /* __STDC__ */
+static void WriteInheritMode (InheritMode mode)
 {
    switch (mode)
 	 {
@@ -394,15 +338,7 @@ InheritMode         mode;
 /*----------------------------------------------------------------------
    WriteFunctionType  ecrit un type de fonction de presentation	
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         WriteFunctionType (FunctionType functType, ThotBool rep)
-
-#else  /* __STDC__ */
-static void         WriteFunctionType (functType, rep)
-FunctionType        functType;
-ThotBool             rep;
-
-#endif /* __STDC__ */
+static void WriteFunctionType (FunctionType functType, ThotBool rep)
 {
    switch (functType)
 	 {
@@ -482,13 +418,7 @@ ThotBool             rep;
 /*----------------------------------------------------------------------
    WriteAlignment    ecrit un mode d'alignement de lignes		
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         WriteAlignment (BAlignment align)
-#else  /* __STDC__ */
-static void         WriteAlignment (align)
-BAlignment          align;
-
-#endif /* __STDC__ */
 {
    switch (align)
 	 {
@@ -517,13 +447,7 @@ BAlignment          align;
 /*----------------------------------------------------------------------
    WritePresCondition      ecrit un type de condition		
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                WritePresCondition (PresCondition cond)
-#else  /* __STDC__ */
-void                WritePresCondition (cond)
-PresCondition       cond;
-
-#endif /* __STDC__ */
 {
    switch (cond)
 	 {
@@ -612,13 +536,7 @@ PresCondition       cond;
 /*----------------------------------------------------------------------
    WriteCounterValue ecrit la nature de la condition sur un compteur 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         WriteCounterValue (CounterValue val)
-#else  /* __STDC__ */
-static void         WriteCounterValue (val)
-CounterValue        val;
-
-#endif /* __STDC__ */
 {
    switch (val)
 	 {
@@ -641,13 +559,7 @@ CounterValue        val;
 /*----------------------------------------------------------------------
    WriteArithRel     ecrit la relation de la condition Within	
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         WriteArithRel (ArithRel rel)
-#else  /* __STDC__ */
-static void         WriteArithRel (rel)
-ArithRel            rel;
-
-#endif /* __STDC__ */
 {
    switch (rel)
 	 {
@@ -669,13 +581,7 @@ ArithRel            rel;
 /*----------------------------------------------------------------------
    WriteBoxEdge      ecrit un repere de boite			
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         WriteBoxEdge (BoxEdge edge)
-#else  /* __STDC__ */
-static void         WriteBoxEdge (edge)
-BoxEdge             edge;
-
-#endif /* __STDC__ */
 {
    switch (edge)
 	 {
@@ -716,13 +622,7 @@ BoxEdge             edge;
 /*----------------------------------------------------------------------
    WriteLevel     ecrit un niveau relatif de boite			
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         WriteLevel (Level level)
-#else  /* __STDC__ */
-static void         WriteLevel (level)
-Level               level;
-
-#endif /* __STDC__ */
 {
    switch (level)
 	 {
@@ -766,13 +666,7 @@ Level               level;
 /*----------------------------------------------------------------------
    WriteCounterOp  ecrit un type d'operation sur compteur		
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         WriteCounterOp (CounterOp op)
-#else  /* __STDC__ */
-static void         WriteCounterOp (op)
-CounterOp           op;
-
-#endif /* __STDC__ */
 {
    switch (op)
 	 {
@@ -798,13 +692,7 @@ CounterOp           op;
 /*----------------------------------------------------------------------
    WriteBasicType ecrit un type de base				
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         WriteBasicType (BasicType typ)
-#else  /* __STDC__ */
-static void         WriteBasicType (typ)
-BasicType           typ;
-
-#endif /* __STDC__ */
 {
    switch (typ)
 	 {
@@ -836,13 +724,7 @@ BasicType           typ;
 /*----------------------------------------------------------------------
    WriteVariableType    ecrit un type de variable			
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                WriteVariableType (VariableType typ)
-#else  /* __STDC__ */
-void                WriteVariableType (typ)
-VariableType        typ;
-
-#endif /* __STDC__ */
 {
    switch (typ)
 	 {
@@ -886,13 +768,7 @@ VariableType        typ;
 /*----------------------------------------------------------------------
    WriteCounterStyle ecrit un style de compteur			
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         WriteCounterStyle (CounterStyle style)
-#else  /* __STDC__ */
-static void         WriteCounterStyle (style)
-CounterStyle        style;
-
-#endif /* __STDC__ */
 {
    switch (style)
 	 {
@@ -921,13 +797,7 @@ CounterStyle        style;
 /*----------------------------------------------------------------------
    WriteContentType   ecrit un type de contenu			
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                WriteContentType (ContentType typ)
-#else  /* __STDC__ */
-void                WriteContentType (typ)
-ContentType         typ;
-
-#endif /* __STDC__ */
 {
    switch (typ)
 	 {
@@ -950,13 +820,7 @@ ContentType         typ;
 /*----------------------------------------------------------------------
    WriteAttrComparType						
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         WriteAttrComparType (AttrComparType typ)
-#else  /* __STDC__ */
-static void         WriteAttrComparType (typ)
-AttrComparType      typ;
-
-#endif /* __STDC__ */
 {
    switch (typ)
 	 {
@@ -975,13 +839,7 @@ AttrComparType      typ;
 /*----------------------------------------------------------------------
    WriteRefKind						
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         WriteRefKind (RefKind kind)
-#else  /* __STDC__ */
-static void         WriteRefKind (kind)
-RefKind      kind;
-
-#endif /* __STDC__ */
 {
    switch (kind)
 	 {
@@ -1003,13 +861,7 @@ RefKind      kind;
 /*----------------------------------------------------------------------
    WritePosRule   ecrit un positionnement relatif			
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         WritePosRule (PosRule posRule)
-#else  /* __STDC__ */
-static void         WritePosRule (posRule)
-PosRule             posRule;
-
-#endif /* __STDC__ */
 {
    WriteBoxEdge (posRule.PoPosDef);
    WriteBoxEdge (posRule.PoPosRef);
@@ -1028,13 +880,7 @@ PosRule             posRule;
    WritePRules   ecrit la chaine de regle de presentation qui	
    commence par la regle pointee par pPRule.			
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                WritePRules (PtrPRule pPRule)
-#else  /* __STDC__ */
-void                WritePRules (pPRule)
-PtrPRule            pPRule;
-
-#endif /* __STDC__ */
 {
    PtrPRule            currentRule;
    PtrCondition        pCond;
@@ -1227,18 +1073,7 @@ PtrPRule            pPRule;
    WritePresentationSchema    cree le fichier de sortie et y ecrit	
    le schema de presentation					
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-ThotBool             WritePresentationSchema (Name fileName, PtrPSchema pPSch, PtrSSchema pSS)
-
-#else  /* __STDC__ */
-ThotBool             WritePresentationSchema (fileName, pPSch, pSS)
-Name                fileName;
-PtrPSchema          pPSch;
-PtrSSchema          pSS;
-
-#endif /* __STDC__ */
-
+ThotBool WritePresentationSchema (Name fileName, PtrPSchema pPSch, PtrSSchema pSS)
 {
    Counter            *pCntr;
    CntrItem           *pCItem;
@@ -1357,7 +1192,7 @@ PtrSSchema          pSS;
 	TtaWriteByte (outfile, pConst->PdAlphabet);
 	j = 0;
 	do
-	   TtaWriteWideChar (outfile, pConst->PdString[j++], ISO_8859_1 /* UTF_8 */);
+	   TtaWriteByte (outfile, pConst->PdString[j++]);
 	while (pConst->PdString[j - 1] != '\0');
      }
 

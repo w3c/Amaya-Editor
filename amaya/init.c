@@ -1787,6 +1787,7 @@ Document InitDocView (Document doc, char *docname, DocumentType docType,
   int           x, y, w, h;
   int           requested_doc;
   ThotBool      isOpen, reinitialized, show;
+
 #ifdef _WINDOWS
 
   Window_Curs = IDC_WINCURSOR;

@@ -28,9 +28,4 @@ typedef struct
     int                dirLen;
 } ThotDirBrowse;
 
-
-int ThotDirBrowse_close(ThotDirBrowse * me);
-int ThotDirBrowse_next(ThotDirBrowse * me);
-int ThotDirBrowse_first(ThotDirBrowse * me, CHAR_T* dir, CHAR_T* name, CHAR_T* ext);
-
 #endif /* _THOT_DIR_H__ */

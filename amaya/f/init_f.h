@@ -125,8 +125,10 @@ extern void FreeAmayaStructures ( void );
 extern void InitAmaya ( NotifyEvent * event );
 extern void ChangeAttrOnRoot ( Document document,
                                int attrNum );
-extern void ShowMapAreas ( Document document,
+extern void ShowMapAreas ( Document doc,
                            View view );
+extern void SectionNumbering ( Document doc,
+                               View view );
 extern void MakeIDMenu ( Document doc,
                          View view );
 extern void HelpAmaya ( Document document,
@@ -306,8 +308,10 @@ extern void FreeAmayaStructures (/* void */);
 extern void InitAmaya (/* NotifyEvent * event */);
 extern void ChangeAttrOnRoot (/* Document document,
                                  int attrNum */);
-extern void ShowMapAreas (/* Document document,
+extern void ShowMapAreas (/* Document doc,
                              View view */);
+extern void SectionNumbering (/* Document doc,
+                                 View view */);
 extern void MakeIDMenu (/* Document doc,
                            View view */);
 extern void HelpAmaya (/* Document document,

@@ -986,7 +986,7 @@ SSchema TtaGetSSchema (char *name, Document document)
    the structure schema having this URI, or NULL if this structure
    schema is not loaded or not used by the document.
   ----------------------------------------------------------------------*/
-SSchema             TtaGetSSchemaByUri (CHAR_T* uriName, Document document)
+SSchema TtaGetSSchemaByUri (char *uriName, Document document)
 {
    SSchema          schema;
 

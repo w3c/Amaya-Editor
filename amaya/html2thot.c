@@ -4261,8 +4261,8 @@ static char    GetNextChar (FILE *infile, char* buffer, int *index,
     {
       /* read from a buffer */
       ptrextrabuf = &buffer[*index];
-      nbBytes = TtaGetNextWideCharFromMultibyteString (&wcharRead, &ptrextrabuf,
-						       HTMLcontext.encoding);
+      nbBytes = TtaGetNextWCFromString (&wcharRead, &ptrextrabuf,
+					HTMLcontext.encoding);
       (*index) += nbBytes;
       if (wcharRead != 0)
 	charRead = (char) wcharRead;
@@ -4321,15 +4321,15 @@ static char    GetNextChar (FILE *infile, char* buffer, int *index,
 		      charRead = EOS;
 		    }
 		  ptrextrabuf = (unsigned char *) &extrabuf[0];
-		  nbBytes = TtaGetNextWideCharFromMultibyteString (&wcharRead,
-								   &ptrextrabuf,
-								   UTF_8);
+		  nbBytes = TtaGetNextWCFromString (&wcharRead,
+						    &ptrextrabuf,
+						    UTF_8);
 		  *index = 0;
 		}
 	      else
 		{
-		  nbBytes = TtaGetNextWideCharFromMultibyteString (&wcharRead,
-								   &srcbuf, UTF_8);
+		  nbBytes = TtaGetNextWCFromString (&wcharRead,
+						    &srcbuf, UTF_8);
 		  (*index) += nbBytes;
 		}
 	      if (wcharRead < 0x100)

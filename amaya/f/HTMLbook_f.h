@@ -15,8 +15,6 @@ extern void CallbackPrint ( int ref,
 extern void InitPrint ( void );
 extern void SetupAndPrint ( Document doc,
                             View view );
-extern void SectionNumbering ( Document doc,
-                               View view );
 extern void GetIncludedDocuments_callback ( int newdoc,
                                             int status,
                                             char *urlName,
@@ -37,8 +35,6 @@ extern void CallbackPrint (/* int ref,
 extern void InitPrint (/* void */);
 extern void SetupAndPrint (/* Document doc,
                               View view */);
-extern void SectionNumbering (/* Document doc,
-                                 View view */);
 extern void GetIncludedDocuments_callback (/* int newdoc,
                                               int status,
                                               char *urlName,

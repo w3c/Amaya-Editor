@@ -7,9 +7,9 @@
 #ifdef __STDC__
 
 extern ThotBool TtaReadByte ( BinFile file,
-                              char *bval );
+                              unsigned char *bval );
 extern ThotBool TtaReadWideChar ( BinFile file,
-                                  char *bval,
+                                  CHAR_T *bval,
                                   CHARSET encoding );
 extern ThotBool TtaReadBool ( BinFile file,
                               ThotBool *bval );
@@ -28,7 +28,7 @@ extern void TtaWriteClose ( BinFile file );
 extern ThotBool TtaWriteByte ( BinFile file,
                                char bval );
 extern ThotBool TtaWriteWideChar ( BinFile file,
-                                   char val,
+                                   CHAR_T val,
                                    CHARSET encoding );
 extern ThotBool TtaWriteShort ( BinFile file,
                                 int sval );
@@ -74,9 +74,9 @@ extern ThotBool TtaCheckDirectory ( char *directory );
 #else /* __STDC__ */
 
 extern ThotBool TtaReadByte (/* BinFile file,
-                                char *bval */);
+                                unsigned char *bval */);
 extern ThotBool TtaReadWideChar (/* BinFile file,
-                                    char *bval,
+                                    CHAR_T *bval,
                                     CHARSET encoding */);
 extern ThotBool TtaReadBool (/* BinFile file,
                                 ThotBool *bval */);
@@ -95,7 +95,7 @@ extern void TtaWriteClose (/* BinFile file */);
 extern ThotBool TtaWriteByte (/* BinFile file,
                                  char bval */);
 extern ThotBool TtaWriteWideChar (/* BinFile file,
-                                     char val,
+                                     CHAR_T val,
                                      CHARSET encoding */);
 extern ThotBool TtaWriteShort (/* BinFile file,
                                   int sval */);

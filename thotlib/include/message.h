@@ -22,12 +22,12 @@
 
 #ifndef __CEXTRACT__
 
-extern int          TtaGetMessageTable (CONST CHAR_T* msgName, int msgNumber);
-extern STRING       TtaGetMessage (int, int);
-extern void         TtaDisplaySimpleMessage (int, int, int);
-extern void         TtaDisplaySimpleMessageString (int, int, int, STRING);
-extern void         TtaDisplaySimpleMessageNum (int, int, int, int);
-extern void	        TtaDisplayMessage (int msgType, STRING fmt, ...);
+extern int      TtaGetMessageTable (CONST char *msgName, int msgNumber);
+extern char    *TtaGetMessage (int, int);
+extern void     TtaDisplaySimpleMessage (int, int, int);
+extern void     TtaDisplaySimpleMessageString (int, int, int, char *);
+extern void     TtaDisplaySimpleMessageNum (int, int, int, int);
+extern void	TtaDisplayMessage (int msgType, char *fmt, ...);
 
 #endif /* __CEXTRACT__ */
 

@@ -190,7 +190,7 @@ void CreateComparAttrTable (PtrAttribute pAttr, PtrDocument pDoc)
   pDoc by the rule inclRule from the pSS structure schema.
   ----------------------------------------------------------------------*/
 void TransmitElementContent (PtrElement pEl, PtrDocument pDoc,
-			     CHAR_T* attrName, int inclRule, PtrSSchema pSS)
+			     char *attrName, int inclRule, PtrSSchema pSS)
 {
   PtrReferredDescr    pReferredD;
   PtrReference        pRef;
@@ -237,7 +237,7 @@ void TransmitElementContent (PtrElement pEl, PtrDocument pDoc,
 			 AttrDef = &(pIncludedEl->ElStructSchema->SsAttribute[att++]);
 			 if (AttrDef->AttrType == AtTextAttr)
 			   /* that's a text attribute */
-			   if (ustrcmp (AttrDef->AttrOrigName, attrName) == 0)
+			   if (strcmp (AttrDef->AttrOrigName, attrName) == 0)
 			     /* that's the rigth attribute */
 			     found = TRUE;
 		       }

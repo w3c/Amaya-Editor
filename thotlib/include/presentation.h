@@ -142,19 +142,16 @@ extern void TtaSetFontZoom (int zoom);
    PRWidth, PRHeight, PRVertPos, PRHorizPos.
    view: the view (this view must be open).
    document: the document.
-
    Return value:
    new presentation rule.
-
   ----------------------------------------------------------------------*/
-extern PRule        TtaNewPRule (int presentationType, View view, Document document);
+extern PRule TtaNewPRule (int presentationType, View view, Document document);
 
 /*----------------------------------------------------------------------
    TtaNewPRuleForView
 
    Creates a new presentation rule of a given type for a given view of a given
    document. The view is identified by its number.
-
    Parameter:
    presentationType: type of the presentation rule to be created. Available
    values are PRSize, PRStyle, PRWeight, PRFont, PRUnderline, PRThickness,
@@ -163,19 +160,16 @@ extern PRule        TtaNewPRule (int presentationType, View view, Document docum
    PRShowBox, PRNotInLine.
    viewName: the name of the view (this view does not need to be open).
    document: the document.
-
    Return value:
    new presentation rule.
-
   ----------------------------------------------------------------------*/
-extern PRule        TtaNewPRuleForView (int presentationType, int view, Document document);
+extern PRule TtaNewPRuleForView (int presentationType, int view, Document document);
 
 /*----------------------------------------------------------------------
    TtaNewPRuleForNamedView
 
    Creates a new presentation rule of a given type for a given view of a given
    document. The view is identified by its name.
-
    Parameter:
    presentationType: type of the presentation rule to be created. Available
    values are PRSize, PRStyle, PRWeight, PRFont, PRUnderline, PRThickness,
@@ -184,65 +178,54 @@ extern PRule        TtaNewPRuleForView (int presentationType, int view, Document
    PRShowBox, PRNotInLine.
    viewName: the name of the view (this view does not need to be open).
    document: the document.
-
    Return value:
    new presentation rule.
-
   ----------------------------------------------------------------------*/
-extern PRule        TtaNewPRuleForNamedView (int presentationType, STRING viewName, Document document);
+extern PRule TtaNewPRuleForNamedView (int presentationType, char *viewName, Document document);
 
 /*----------------------------------------------------------------------
    TtaCopyPRule
 
    Creates a new presentation rule and initializes it with a copy of an existing
    presentation rule.
-
    Parameter:
    pRule: presentation rule to be copied.
-
    Return value:
    new presentation rule.
-
   ----------------------------------------------------------------------*/
-extern PRule        TtaCopyPRule (PRule pRule);
+extern PRule TtaCopyPRule (PRule pRule);
 
 /*----------------------------------------------------------------------
    TtaAttachPRule
 
    Attaches a presentation rule to an element.
-
    Parameters:
    element: the element to which the presentation rule
    has to be attached.
    pRule: the presentation rule to be attached.
    document: the document to which the element belongs.
-
   ----------------------------------------------------------------------*/
-extern void         TtaAttachPRule (Element element, PRule pRule, Document document);
+extern void TtaAttachPRule (Element element, PRule pRule, Document document);
 
 /*----------------------------------------------------------------------
    TtaIsCSSPRule
 
    Check whether a presentation rule is associated with a CSS rule
-
    Parameters:
    pRule: the presentation rule to be tested.
-
    Return value:
    TRUE if pRule is a CSS rule
   ----------------------------------------------------------------------*/
-extern ThotBool    TtaIsCSSPRule (PRule pRule);
+extern ThotBool TtaIsCSSPRule (PRule pRule);
 
 /*----------------------------------------------------------------------
    TtaRemovePRule
 
    Removes a presentation rule from an element and release that rule.
-
    Parameters:
    element: the element with which the presentation rule is associated.
    pRule: the presentation rule to be removed.
    document: the document to which the element belongs.
-
   ----------------------------------------------------------------------*/
 extern void         TtaRemovePRule (Element element, PRule pRule, Document document);
 
@@ -251,13 +234,11 @@ extern void         TtaRemovePRule (Element element, PRule pRule, Document docum
 
    Changes the value of a presentation rule. The presentation rule must
    be attached to an element that is part of a document.
-
    Parameters:
    element: the element to which the presentation rule is attached.
    pRule: the presentation rule to be changed.
    value: the value to be set.
    document: the document to which the element belongs.
-
    Valid values according to rule type:
    PRDepth: an integer (z-index of the element).
    PRVisibility: an integer >= 0 (visibility level).
@@ -288,9 +269,8 @@ extern void         TtaRemovePRule (Element element, PRule pRule, Document docum
       an integer > 0 (border width in points).
    PRHyphenate: Hyphenation, NoHyphenation.
    PRAdjust: AdjustLeft, AdjustRight, Centered, LeftWithDots, Justify.
-
   ----------------------------------------------------------------------*/
-extern void         TtaSetPRuleValue (Element element, PRule pRule, int value, Document document);
+extern void TtaSetPRuleValue (Element element, PRule pRule, int value, Document document);
 
 /*----------------------------------------------------------------------
    TtaSetPRuleValueWithUnit
@@ -298,14 +278,12 @@ extern void         TtaSetPRuleValue (Element element, PRule pRule, int value, D
    Changes the value and the length unit of a presentation rule.
    The presentation rule must be attached to an element that is part of
    a document.
-
    Parameters:
    element: the element to which the presentation rule is attached.
    pRule: the presentation rule to be changed.
    value: the value to be set.
    unit: the length unit in which the value is expressed.
    document: the document to which the element belongs.
-
    Valid values according to rule type:
    PRNoBreak1, PRNoBreak2: a positive integer (distance).
    PRIndent: a positive, null or negative integer (indentation).
@@ -318,29 +296,25 @@ extern void         TtaSetPRuleValue (Element element, PRule pRule, int value, D
       > 0 (padding).
    PRBorderTopWidth, PRBorderRightWidth, PRBorderBottomWidth, PRBorderLeftWidth:
       an integer > 0 (border width).
-
   ----------------------------------------------------------------------*/
-extern void         TtaSetPRuleValueWithUnit (Element element, PRule pRule, int value, TypeUnit unit, Document document);
+extern void TtaSetPRuleValueWithUnit (Element element, PRule pRule, int value, TypeUnit unit, Document document);
 
 /*----------------------------------------------------------------------
    TtaSetPRuleView
 
    Sets the view to which a presentation rule applies. The presentation rule
    must not be attached yet to an element.
-
    Parameters:
    pRule: the presentation rule to be changed.
    view: the value to be set.
-
   ----------------------------------------------------------------------*/
-extern void         TtaSetPRuleView (PRule pRule, int view);
+extern void TtaSetPRuleView (PRule pRule, int view);
 
 /*----------------------------------------------------------------------
    TtaChangeBoxSize
 
    Changes the height and width of the box corresponding to an element in
    a given view.
-
    Parameters:
    element: the element of interest.
    document: the document to which the element belongs.
@@ -348,15 +322,13 @@ extern void         TtaSetPRuleView (PRule pRule, int view);
    deltaX: width increment in units (positive, negative or zero).
    deltaY: height increment in units (positive, negative or zero).
    unit: the unit used for the values.
-
   ----------------------------------------------------------------------*/
-extern void         TtaChangeBoxSize (Element element, Document document, View view, int deltaX, int deltaY, TypeUnit unit);
+extern void TtaChangeBoxSize (Element element, Document document, View view, int deltaX, int deltaY, TypeUnit unit);
 
 /*----------------------------------------------------------------------
    TtaChangeBoxPosition
 
    Moves the box of an element in a given view.
-
    Parameters:
    element: the element of interest.
    document: the document to which the element belongs.
@@ -364,9 +336,8 @@ extern void         TtaChangeBoxSize (Element element, Document document, View v
    deltaX: horizontal shift in units (positive, negative or zero).
    deltaY: vertical shift in units (positive, negative or zero).
    unit: the unit used for the values.
-
   ----------------------------------------------------------------------*/
-extern void         TtaChangeBoxPosition (Element element, Document document, View view, int X, int Y, TypeUnit unit);
+extern void TtaChangeBoxPosition (Element element, Document document, View view, int X, int Y, TypeUnit unit);
 
 /*----------------------------------------------------------------------
    TtaGetDepth
@@ -377,25 +348,22 @@ extern void         TtaChangeBoxPosition (Element element, Document document, Vi
    document: the document of interest.
    view: the view.
   ----------------------------------------------------------------------*/
-extern int          TtaGetDepth (Element element, Document document, View view);
+extern int TtaGetDepth (Element element, Document document, View view);
 
 /*----------------------------------------------------------------------
    TtaGiveBoxSize
 
    Returns the height and width of the box corresponding to an element in
    a given view.
-
    Parameters:
    element: the element of interest.
    view: the view.
    unit: the unit used for the values.
-
    Return parameters:
    width: box width in units.
    height: box height in units.
-
   ----------------------------------------------------------------------*/
-extern void         TtaGiveBoxSize (Element element, Document document, View view, TypeUnit unit, /*OUT*/ int *width, /*OUT*/ int *height);
+extern void TtaGiveBoxSize (Element element, Document document, View view, TypeUnit unit, /*OUT*/ int *width, /*OUT*/ int *height);
 
 /*----------------------------------------------------------------------
    TtaGiveBoxPosition
@@ -404,20 +372,17 @@ extern void         TtaGiveBoxSize (Element element, Document document, View vie
    a given view. The returned coordinates indicate the distance in points
    between the upper left corner of the box and the upper left corner of its
    parent box.
-
    Parameters:
    element: the element of interest.
    view: the view.
    unit: the unit used for the values.
-
    Return parameters:
    xCoord: distance from the left edge of the parent box to the left
    edge of the box, in units.
    yCoord:  distance from the upper edge of the parent box to the upper
    edge of the box, in units.
-
   ----------------------------------------------------------------------*/
-extern void         TtaGiveBoxPosition (Element element, Document document, View view, TypeUnit unit, /*OUT*/ int *xCoord, /*OUT*/ int *yCoord);
+extern void TtaGiveBoxPosition (Element element, Document document, View view, TypeUnit unit, /*OUT*/ int *xCoord, /*OUT*/ int *yCoord);
 
 /*----------------------------------------------------------------------
    TtaGiveBoxAbsPosition
@@ -426,43 +391,37 @@ extern void         TtaGiveBoxPosition (Element element, Document document, View
    a given view. The returned coordinates indicate the distance
    between the upper left corner of the box and the upper left corner of its
    window.
- 
    Parameters:
    element: the element of interest.
    document: the document of interest.
    view: the view.
    unit: the unit used for the values.
- 
    Return parameters:
    xCoord: distance from the left edge of the window to the left
    edge of the box.
    yCoord:  distance from the upper edge of the window to the upper
    edge of the box.
- 
   ----------------------------------------------------------------------*/
-extern void         TtaGiveBoxAbsPosition (Element element, Document document, View view, TypeUnit unit, int *xCoord, int *yCoord);
+extern void TtaGiveBoxAbsPosition (Element element, Document document, View view, TypeUnit unit, int *xCoord, int *yCoord);
 
 /*----------------------------------------------------------------------
    TtaGiveWindowSize
  
    Returns the height and width of the window corresponding to a given view.
- 
    Parameters:
    document: the document of interest.
    view: the view.
    unit: the unit used for the values (UnPixel or UnPoint only)
- 
    Return parameters:
    width: window width in units.
    height: window height in units.
- 
   ----------------------------------------------------------------------*/
-extern void        TtaGiveWindowSize (Document document, View view, TypeUnit unit, int *width, int *height);
+extern void TtaGiveWindowSize (Document document, View view, TypeUnit unit, int *width, int *height);
 
 /*----------------------------------------------------------------------
  *   TtaGiveRGB returns the RGB of the color.
  ----------------------------------------------------------------------*/
-extern CHAR_T      *TtaGiveRGB ( CHAR_T* colname, /*OUT*/ unsigned short *red, /*OUT*/ unsigned short *green, /*OUT*/ unsigned short *blue );
+extern char *TtaGiveRGB (char *colname, /*OUT*/ unsigned short *red, /*OUT*/ unsigned short *green, /*OUT*/ unsigned short *blue );
 
 /*----------------------------------------------------------------------
    TtaGiveThotRGB returns the Red Green and Blue values corresponding
@@ -470,7 +429,7 @@ extern CHAR_T      *TtaGiveRGB ( CHAR_T* colname, /*OUT*/ unsigned short *red, /
    If the color doesn't exist the function returns the values
    for the default color.
   ----------------------------------------------------------------------*/
-extern void         TtaGiveThotRGB (int num, /*OUT*/ unsigned short *red, /*OUT*/ unsigned short *green, /*OUT*/ unsigned short *blue);
+extern void TtaGiveThotRGB (int num, /*OUT*/ unsigned short *red, /*OUT*/ unsigned short *green, /*OUT*/ unsigned short *blue);
 
 /*----------------------------------------------------------------------
    TtaNextPRule
@@ -478,24 +437,20 @@ extern void         TtaGiveThotRGB (int num, /*OUT*/ unsigned short *red, /*OUT*
    Returns the first presentation rule associated with a given
    element (if pRule is NULL) or the presentation rule that
    follows a given rule of a given element.
-
    Parameters:
    element: the element of interest.
    pRule: a presentation rule of that element, or NULL
    if the first rule is asked.
-
    Return parameter:
    pRule: the next presentation rule, or NULL if
    pRule is the last rule of the element.
-
   ----------------------------------------------------------------------*/
-extern void         TtaNextPRule (Element element, /*INOUT*/ PRule * pRule);
+extern void TtaNextPRule (Element element, /*INOUT*/ PRule * pRule);
 
 /*----------------------------------------------------------------------
    TtaGetPRule
 
    Returns a presentation rule of a given type associated with a given element.
- 
    Parameters:
    element: the element of interest.
    presentationType: type of the desired presentation rule. Available
@@ -503,39 +458,32 @@ extern void         TtaNextPRule (Element element, /*INOUT*/ PRule * pRule);
    PRIndent, PRLineSpacing, PRDepth, PRAdjust, PRLineStyle,
    PRLineWeight, PRFillPattern, PRBackground, PRForeground, PRHyphenate,
    PRShowBox, PRNotInLine.
- 
    Return value:
    the presentation rule found, or NULL if the element
    does not have this type of presentation rule.
- 
   ----------------------------------------------------------------------*/
-extern PRule        TtaGetPRule (Element element, int presentationType);
+extern PRule TtaGetPRule (Element element, int presentationType);
 
 /*----------------------------------------------------------------------
    TtaGetPRuleType
 
    Returns the type of a presentation rule.
-
    Parameters:
    pRule: the presentation rule of interest.
-
    Return value:
    type of that presentation rule. Available values are RSize, PtStyle,
    RFont, RUnderline, RThickness, PRIndent, RLineSpacing, RDepth, RAdjust,
    RLineStyle, RLineWeight, RFillPattern, RBackground,
    RForeground, RHyphenate, PRShowBox, PRNotInLine.
-
   ----------------------------------------------------------------------*/
-extern int          TtaGetPRuleType (PRule pRule);
+extern int TtaGetPRuleType (PRule pRule);
 
 /*----------------------------------------------------------------------
    TtaGetPRuleValue
 
    Returns the value of a presentation rule.
-
    Parameters:
    pRule: the presentation rule of interest.
-
    Return values according to rule type:
    PRVisibility: an integer >= 0 (visibility level).
    PRDepth: an integer (z-index of the element).
@@ -565,55 +513,45 @@ extern int          TtaGetPRuleType (PRule pRule);
       an integer > 0 (border width in points).
    PRHyphenate: Hyphenation, NoHyphenation.
    PRAdjust: AdjustLeft, AdjustRight, Centered, LeftWithDots, Justify.
-
   ----------------------------------------------------------------------*/
-extern int          TtaGetPRuleValue (PRule pRule);
+extern int TtaGetPRuleValue (PRule pRule);
 
 /*----------------------------------------------------------------------
    TtaGetPRuleUnit
 
    Returns the unit of a presentation rule.
-
    Parameters:
    pRule: the presentation rule of interest.
-
    Return the unit of the rule type PRSize, PRIndent, PRLineSpacing, PRLineWeight,
    PRWidth, PRHeight, PRVertPos, PRHorizPos.
    This unit could be UnRelative, UnXHeight, UnPoint, UnPixel, UnPercent.
    Return UnRelative in other cases.
-
   ----------------------------------------------------------------------*/
-extern int         TtaGetPRuleUnit (PRule pRule);
+extern int TtaGetPRuleUnit (PRule pRule);
 
 /*----------------------------------------------------------------------
    TtaGetPRuleView
 
    Returns the number of the view to which a presentation rule applies.
-
    Parameters:
        pRule: the presentation rule of interest.
-
    Return value:
        number of the view to which the presentation rule applies.
-
   ----------------------------------------------------------------------*/
-extern int          TtaGetPRuleView (PRule pRule);
+extern int TtaGetPRuleView (PRule pRule);
 
 /*----------------------------------------------------------------------
    TtaSamePRules
 
    Compares two presentation rules associated with the same element or with
    different elements.
-
    Parameters:
    pRule1: first presentation rule to be compared.
    pRule2: second presentation rule to be compared.
-
    Return value:
    0 if both rules are different, 1 if they are identical.
-
   ----------------------------------------------------------------------*/
-extern int          TtaSamePRules (PRule pRule1, PRule pRule2);
+extern int TtaSamePRules (PRule pRule1, PRule pRule2);
 
 #endif /* __CEXTRACT__ */
 

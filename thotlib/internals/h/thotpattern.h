@@ -5,7 +5,7 @@
  *
  */
 
-STRING Name_patterns[] = {
+char *Name_patterns[] = {
 "nopattern",               
 "foregroundcolor",
 "backgroundcolor" ,

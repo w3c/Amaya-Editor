@@ -106,7 +106,7 @@ extern void TtaSetErrorMessages (int on);
    Return value:
    identifier of the current version.
   ----------------------------------------------------------------------*/
-extern STRING TtaGetVersion (void);
+extern char *TtaGetVersion (void);
 
 /*----------------------------------------------------------------------
    TtaGetErrorCode

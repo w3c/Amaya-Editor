@@ -44,7 +44,8 @@ typedef int        *SSchema;
    the document that has been created or 0 if the document has not
    been created.
   ----------------------------------------------------------------------*/
-extern Document     TtaInitDocument (CHAR_T* structureSchema, CHAR_T* documentName, Document document);
+extern Document TtaInitDocument (char *structureSchema, char *documentName,
+				 Document document);
 
 /*----------------------------------------------------------------------
    TtaNewDocument
@@ -65,7 +66,7 @@ extern Document     TtaInitDocument (CHAR_T* structureSchema, CHAR_T* documentNa
    the document that has been created or 0 if the document has not
    been created.
   ----------------------------------------------------------------------*/
-extern Document     TtaNewDocument (CHAR_T* structureSchema, CHAR_T* documentName);
+extern Document TtaNewDocument (char *structureSchema, char *documentName);
 
 /*----------------------------------------------------------------------
    TtaOpenDocument
@@ -82,7 +83,7 @@ extern Document     TtaNewDocument (CHAR_T* structureSchema, CHAR_T* documentNam
    the opened document, or 0 if the document cannot be open.
 
   ----------------------------------------------------------------------*/
-extern Document     TtaOpenDocument (STRING documentName, int accessMode);
+extern Document TtaOpenDocument (char *documentName, int accessMode);
 
 /*----------------------------------------------------------------------
    TtaSaveDocument
@@ -102,7 +103,7 @@ extern Document     TtaOpenDocument (STRING documentName, int accessMode);
    removed by the function TtaRemoveDocument.
 
   ----------------------------------------------------------------------*/
-extern void         TtaSaveDocument (Document document, STRING documentName);
+extern void TtaSaveDocument (Document document, char *documentName);
 
 /*----------------------------------------------------------------------
    TtaExportDocument
@@ -121,7 +122,8 @@ extern void         TtaSaveDocument (Document document, STRING documentName);
    
    Return: TRUE if done correctly
   ----------------------------------------------------------------------*/
-extern ThotBool     TtaExportDocument (Document document, STRING fileName, STRING TSchemaName);
+extern ThotBool TtaExportDocument (Document document, char *fileName,
+				   char *TSchemaName);
 
 /*----------------------------------------------------------------------
    TtaExportDocumentWithNewLineNumbers
@@ -142,9 +144,9 @@ extern ThotBool     TtaExportDocument (Document document, STRING fileName, STRIN
 
    Return: TRUE if done correctly
   ----------------------------------------------------------------------*/
-extern ThotBool     TtaExportDocumentWithNewLineNumbers (Document document,
-							 STRING fileName,
-							 STRING TSchemaName);
+extern ThotBool TtaExportDocumentWithNewLineNumbers (Document document,
+						     char *fileName,
+						     char *TSchemaName);
 
 /*----------------------------------------------------------------------
    TtaCloseDocument
@@ -156,7 +158,7 @@ extern ThotBool     TtaExportDocumentWithNewLineNumbers (Document document,
    document: the document to be closed.
 
   ----------------------------------------------------------------------*/
-extern void         TtaCloseDocument (Document document);
+extern void TtaCloseDocument (Document document);
 
 /*----------------------------------------------------------------------
    TtaRemoveDocument
@@ -168,7 +170,7 @@ extern void         TtaCloseDocument (Document document);
    Parameter:
    document: the document to be removed.
   ----------------------------------------------------------------------*/
-extern void         TtaRemoveDocument (Document document);
+extern void TtaRemoveDocument (Document document);
 
 /*----------------------------------------------------------------------
    TtaSetDocumentPath
@@ -184,7 +186,7 @@ extern void         TtaRemoveDocument (Document document);
    the character PATH_SEP.
 
   ----------------------------------------------------------------------*/
-extern void         TtaSetDocumentPath (STRING path);
+extern void TtaSetDocumentPath (char *path);
 
 /*----------------------------------------------------------------------
    TtaCheckPath
@@ -199,7 +201,7 @@ extern void         TtaSetDocumentPath (STRING path);
    accessed.
 
   ----------------------------------------------------------------------*/
-extern ThotBool     TtaCheckPath (char* path );
+extern ThotBool TtaCheckPath (char *path);
 
 /*----------------------------------------------------------------------
    TtaIsInDocumentPath
@@ -210,7 +212,7 @@ extern ThotBool     TtaCheckPath (char* path );
    directory: the new directory name.
 
   ----------------------------------------------------------------------*/
-extern ThotBool     TtaIsInDocumentPath (CHAR_T* aDirectory);
+extern ThotBool TtaIsInDocumentPath (char *aDirectory);
 
 /*----------------------------------------------------------------------
    TtaAppendDocumentPath
@@ -222,7 +224,7 @@ extern ThotBool     TtaIsInDocumentPath (CHAR_T* aDirectory);
    directory: the new directory name.
 
   ----------------------------------------------------------------------*/
-extern void         TtaAppendDocumentPath (CHAR_T* aDirectory);
+extern void TtaAppendDocumentPath (char *aDirectory);
 
 /*----------------------------------------------------------------------
    TtaSetSchemaPath
@@ -235,7 +237,7 @@ extern void         TtaAppendDocumentPath (CHAR_T* aDirectory);
    the character PATH_SEP.
 
   ----------------------------------------------------------------------*/
-extern void         TtaSetSchemaPath (STRING path);
+extern void TtaSetSchemaPath (char *path);
 
 /*----------------------------------------------------------------------
    TtaNewNature
@@ -258,7 +260,8 @@ extern void         TtaSetSchemaPath (STRING path);
    has not been loaded.
 
   ----------------------------------------------------------------------*/
-extern SSchema      TtaNewNature (Document document, SSchema schema, CHAR_T* natureName, CHAR_T* presentationName);
+extern SSchema TtaNewNature (Document document, SSchema schema,
+			     char *natureName, char *presentationName);
 
 /*----------------------------------------------------------------------
    TtaNewSchemaExtension
@@ -277,7 +280,8 @@ extern SSchema      TtaNewNature (Document document, SSchema schema, CHAR_T* nat
    the extension schema, NULL if the extension schema has not been loaded.
 
   ----------------------------------------------------------------------*/
-extern SSchema      TtaNewSchemaExtension (Document document, CHAR_T* extensionName, CHAR_T* presentationName);
+extern SSchema TtaNewSchemaExtension (Document document, char *extensionName,
+				      char *presentationName);
 
 /*----------------------------------------------------------------------
    TtaGetSchemaExtension
@@ -293,7 +297,7 @@ extern SSchema      TtaNewSchemaExtension (Document document, CHAR_T* extensionN
    NULL if the extension is not associated with the document.
 
   ----------------------------------------------------------------------*/
-extern SSchema      TtaGetSchemaExtension (Document document, STRING NomExtension);
+extern SSchema TtaGetSchemaExtension (Document document, char *NomExtension);
 
 /*----------------------------------------------------------------------
    TtaRemoveSchemaExtension
@@ -311,7 +315,8 @@ extern SSchema      TtaGetSchemaExtension (Document document, STRING NomExtensio
    removedAttributes: number of attributes actually removed.
 
   ----------------------------------------------------------------------*/
-extern void         TtaRemoveSchemaExtension (Document document, SSchema extension, int *removedElements, int *removedAttributes);
+extern void TtaRemoveSchemaExtension (Document document, SSchema extension,
+				      int *removedElements, int *removedAttributes);
 
 /*----------------------------------------------------------------------
    TtaSetPSchema
@@ -325,7 +330,7 @@ extern void         TtaRemoveSchemaExtension (Document document, SSchema extensi
    with the document.
 
   ----------------------------------------------------------------------*/
-extern void         TtaSetPSchema (Document document, CHAR_T* presentationName);
+extern void TtaSetPSchema (Document document, char *presentationName);
 
 /*----------------------------------------------------------------------
    TtaSetDocumentDirectory
@@ -337,7 +342,7 @@ extern void         TtaSetPSchema (Document document, CHAR_T* presentationName);
    directory: new document directory.
 
   ----------------------------------------------------------------------*/
-extern void         TtaSetDocumentDirectory (Document document, CHAR_T* directory);
+extern void TtaSetDocumentDirectory (Document document, char *directory);
 
 /*----------------------------------------------------------------------
    TtaRemoveSchemaExtension
@@ -355,7 +360,7 @@ extern void         TtaSetDocumentDirectory (Document document, CHAR_T* director
    removedAttributes: number of attributes actually removed.
 
   ----------------------------------------------------------------------*/
-extern void         TtaSetDocumentName (Document document, STRING documentName);
+extern void TtaSetDocumentName (Document document, char *documentName);
 
 /*----------------------------------------------------------------------
    TtaSetDocumentAccessMode
@@ -382,7 +387,7 @@ extern void         TtaSetDocumentAccessMode (Document document, int accessMode)
    automatic save of the document into a .BAK file.
 
   ----------------------------------------------------------------------*/
-extern void         TtaSetDocumentBackUpInterval (Document document, int interval);
+extern void TtaSetDocumentBackUpInterval (Document document, int interval);
 
 /*----------------------------------------------------------------------
    TtaSetNotificationMode
@@ -395,7 +400,7 @@ extern void         TtaSetDocumentBackUpInterval (Document document, int interva
    be notified.
 
   ----------------------------------------------------------------------*/
-extern void         TtaSetNotificationMode (Document document, int notificationMode);
+extern void TtaSetNotificationMode (Document document, int notificationMode);
 
 /*----------------------------------------------------------------------
    TtaSetDocumentModified
@@ -407,7 +412,7 @@ extern void         TtaSetNotificationMode (Document document, int notificationM
    document: the document.
 
   ----------------------------------------------------------------------*/
-extern void         TtaSetDocumentModified (Document document);
+extern void TtaSetDocumentModified (Document document);
 
 /*----------------------------------------------------------------------
    TtaSetDocumentUnmodified
@@ -421,7 +426,7 @@ extern void         TtaSetDocumentModified (Document document);
    document: the document.
 
   ----------------------------------------------------------------------*/
-extern void         TtaSetDocumentUnmodified (Document document);
+extern void TtaSetDocumentUnmodified (Document document);
 
 /*----------------------------------------------------------------------
    TtaSetDocumentUnupdated
@@ -435,7 +440,7 @@ extern void         TtaSetDocumentUnmodified (Document document);
    document: the document.
 
   ----------------------------------------------------------------------*/
-extern void         TtaSetDocumentUnupdated (Document document);
+extern void TtaSetDocumentUnupdated (Document document);
 
 /*----------------------------------------------------------------------
    TtaGetDocumentName
@@ -449,7 +454,7 @@ extern void         TtaSetDocumentUnupdated (Document document);
    name of that document.
 
   ----------------------------------------------------------------------*/
-extern CHAR_T*       TtaGetDocumentName (Document document);
+extern char *TtaGetDocumentName (Document document);
 
 /*----------------------------------------------------------------------
    TtaGetDocumentFromName
@@ -463,7 +468,7 @@ extern CHAR_T*       TtaGetDocumentName (Document document);
    the document having that name.
 
   ----------------------------------------------------------------------*/
-extern Document     TtaGetDocumentFromName (STRING documentName);
+extern Document TtaGetDocumentFromName (char *documentName);
 
 /*----------------------------------------------------------------------
    TtaGetDocumentDirectory
@@ -479,7 +484,8 @@ extern Document     TtaGetDocumentFromName (STRING documentName);
    buffer: the document directory.
 
   ----------------------------------------------------------------------*/
-extern void         TtaGetDocumentDirectory (Document document, STRING buffer, int bufferLength);
+extern void TtaGetDocumentDirectory (Document document, char *buffer,
+				     int bufferLength);
 
 /*----------------------------------------------------------------------
    TtaGetDocumentSSchema
@@ -493,7 +499,7 @@ extern void         TtaGetDocumentDirectory (Document document, STRING buffer, i
    the structure schema of that document.
 
   ----------------------------------------------------------------------*/
-extern SSchema      TtaGetDocumentSSchema (Document document);
+extern SSchema TtaGetDocumentSSchema (Document document);
 
 /*----------------------------------------------------------------------
    TtaGetSSchemaName
@@ -507,7 +513,7 @@ extern SSchema      TtaGetDocumentSSchema (Document document);
    name of that structure schema.
 
   ----------------------------------------------------------------------*/
-extern CHAR_T*        TtaGetSSchemaName (SSchema schema);
+extern char *TtaGetSSchemaName (SSchema schema);
 
 /*----------------------------------------------------------------------
    TtaGetPSchemaName
@@ -522,7 +528,7 @@ extern CHAR_T*        TtaGetSSchemaName (SSchema schema);
    name of the associated presentation schema.
 
   ----------------------------------------------------------------------*/
-extern CHAR_T*       TtaGetPSchemaName (SSchema schema);
+extern char *TtaGetPSchemaName (SSchema schema);
 
 /*----------------------------------------------------------------------
    TtaGetSSchema
@@ -539,7 +545,7 @@ extern CHAR_T*       TtaGetPSchemaName (SSchema schema);
    schema is not loaded or not used by the document.
 
   ----------------------------------------------------------------------*/
-extern SSchema      TtaGetSSchema (CHAR_T* name, Document document);
+extern SSchema TtaGetSSchema (char *name, Document document);
 
 /*----------------------------------------------------------------------
    TtaGetSSchemaByUri
@@ -556,7 +562,7 @@ extern SSchema      TtaGetSSchema (CHAR_T* name, Document document);
    schema is not loaded or not used by the document.
 
   ----------------------------------------------------------------------*/
-SSchema             TtaGetSSchemaByUri (CHAR_T* uriName, Document document);
+SSchema TtaGetSSchemaByUri (char *uriName, Document document);
 
 /*----------------------------------------------------------------------
    TtaSameSSchemas
@@ -571,7 +577,7 @@ SSchema             TtaGetSSchemaByUri (CHAR_T* uriName, Document document);
    0 if both schemas are different, 1 if they are identical.
 
   ----------------------------------------------------------------------*/
-extern int          TtaSameSSchemas (SSchema schema1, SSchema schema2);
+extern int TtaSameSSchemas (SSchema schema1, SSchema schema2);
 
 /*----------------------------------------------------------------------
    TtaGiveSchemasOfDocument
@@ -591,7 +597,9 @@ extern int          TtaSameSSchemas (SSchema schema1, SSchema schema2);
    presentationName: Name of the document presentation schema.
 
   ----------------------------------------------------------------------*/
-extern void         TtaGiveSchemasOfDocument (STRING documentName, /*OUT*/ char* structureName, /*OUT*/ char* presentationName);
+extern void TtaGiveSchemasOfDocument (char *documentName,
+				      /*OUT*/ char* structureName,
+				      /*OUT*/ char* presentationName);
 
 /*----------------------------------------------------------------------
    TtaNextSchemaExtension
@@ -608,7 +616,7 @@ extern void         TtaGiveSchemasOfDocument (STRING documentName, /*OUT*/ char*
    NULL if there is no more schema extension.
 
   ----------------------------------------------------------------------*/
-extern void         TtaNextSchemaExtension (Document document, /*INOUT*/ SSchema * extension);
+extern void TtaNextSchemaExtension (Document document, /*INOUT*/ SSchema * extension);
 
 /*----------------------------------------------------------------------
    TtaNextNature
@@ -626,7 +634,7 @@ extern void         TtaNextSchemaExtension (Document document, /*INOUT*/ SSchema
    NULL if there is no more nature for the document.
 
   ----------------------------------------------------------------------*/
-extern void         TtaNextNature (Document document, /*INOUT*/ SSchema * nature);
+extern void TtaNextNature (Document document, /*INOUT*/ SSchema *nature);
 
 /*----------------------------------------------------------------------
    TtaIsDocumentModified
@@ -643,7 +651,7 @@ extern void         TtaNextNature (Document document, /*INOUT*/ SSchema * nature
    loaded or created, 0 if it has not been modified.
 
   ----------------------------------------------------------------------*/
-extern int          TtaIsDocumentModified (Document document);
+extern int TtaIsDocumentModified (Document document);
 
 /*----------------------------------------------------------------------
    TtaIsDocumentUpdated
@@ -661,7 +669,7 @@ extern int          TtaIsDocumentModified (Document document);
    loaded or created, 0 if it has not been modified.
 
   ----------------------------------------------------------------------*/
-extern int          TtaIsDocumentUpdated (Document document);
+extern int TtaIsDocumentUpdated (Document document);
 
 /*----------------------------------------------------------------------
    TtaGetDocumentAccessMode
@@ -674,7 +682,7 @@ extern int          TtaIsDocumentUpdated (Document document);
    0 if access mode is read only, 1 if access mode is read-write.
 
   ----------------------------------------------------------------------*/
-extern int          TtaGetDocumentAccessMode (Document document);
+extern int TtaGetDocumentAccessMode (Document document);
 
 /*----------------------------------------------------------------------
    TtaGetDocumentBackUpInterval
@@ -689,7 +697,7 @@ extern int          TtaGetDocumentAccessMode (Document document);
    save of the document into a .BAK file.
 
   ----------------------------------------------------------------------*/
-extern int          TtaGetDocumentBackUpInterval (Document document);
+extern int TtaGetDocumentBackUpInterval (Document document);
 
 /*----------------------------------------------------------------------
    TtaGetNotificationMode
@@ -703,7 +711,7 @@ extern int          TtaGetDocumentBackUpInterval (Document document);
    1 = all elements of created and deleted subtrees must be notified.
 
   ----------------------------------------------------------------------*/
-extern int          TtaGetNotificationMode (Document document);
+extern int TtaGetNotificationMode (Document document);
 
 /*----------------------------------------------------------------------
    TtaGetDocumentPath
@@ -720,7 +728,7 @@ extern int          TtaGetNotificationMode (Document document);
    the character PATH_SEP.
 
   ----------------------------------------------------------------------*/
-extern void         TtaGetDocumentPath (/*OUT*/ STRING buffer, int bufferLength);
+extern void TtaGetDocumentPath (/*OUT*/ char *buffer, int bufferLength);
 
 /*----------------------------------------------------------------------
    TtaGetSchemaPath
@@ -736,7 +744,7 @@ extern void         TtaGetDocumentPath (/*OUT*/ STRING buffer, int bufferLength)
    the character PATH_SEP.
 
   ----------------------------------------------------------------------*/
-extern void         TtaGetSchemaPath (/*OUT*/ STRING buffer, int bufferLength);
+extern void TtaGetSchemaPath (/*OUT*/ char *buffer, int bufferLength);
 
 /*----------------------------------------------------------------------
    TtaGetDocumentOfSavedElements
@@ -752,7 +760,7 @@ extern void         TtaGetSchemaPath (/*OUT*/ STRING buffer, int bufferLength);
    0 if the clipboard is empty.
 
   ----------------------------------------------------------------------*/
-extern Document     TtaGetDocumentOfSavedElements ();
+extern Document TtaGetDocumentOfSavedElements ();
 
 
 /*----------------------------------------------------------------------
@@ -760,7 +768,7 @@ extern Document     TtaGetDocumentOfSavedElements ();
    structure (documents, natures et extensions) qui ont    
    des fichiers de langue dans les directories de schemas. 
   ----------------------------------------------------------------------*/
-extern void TtaConfigReadConfigFiles ( CHAR_T* aSchemaPath );
+extern void TtaConfigReadConfigFiles (char *aSchemaPath);
 
 /*----------------------------------------------------------------------
    TtaConfigSSchemaExternalName retourne dans nameUser le nom     
@@ -769,7 +777,8 @@ extern void TtaConfigReadConfigFiles ( CHAR_T* aSchemaPath );
    Typ indique s'il s'agit d'un schema de document (1), de         
    nature (2) ou d'extension (3).                                  
   ----------------------------------------------------------------------*/
-extern void TtaConfigSSchemaExternalName (/*OUT*/ CHAR_T* nameUser, CHAR_T* nameSchema, int Typ );
+extern void TtaConfigSSchemaExternalName (/*OUT*/ char *nameUser,
+					  char *nameSchema, int Typ );
 
 /*----------------------------------------------------------------------
   TtaGetDocumentCharset gets the document charset

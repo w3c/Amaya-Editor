@@ -9,7 +9,7 @@
 extern void NewPictInfo ( PtrAbstractBox pAb,
                           PathBuffer filename,
                           int imagetype );
-extern void FreePictInfo ( PictInfo *imageDesc );
+extern void CleanPictInfo ( PictInfo *imageDesc );
 extern void CopyPictInfo ( int *Imdcopie,
                            int *Imdsource );
 
@@ -18,7 +18,7 @@ extern void CopyPictInfo ( int *Imdcopie,
 extern void NewPictInfo (/* PtrAbstractBox pAb,
                             PathBuffer filename,
                             int imagetype */);
-extern void FreePictInfo (/* PictInfo *imageDesc */);
+extern void CleanPictInfo (/* PictInfo *imageDesc */);
 extern void CopyPictInfo (/* int *Imdcopie,
                              int *Imdsource */);
 

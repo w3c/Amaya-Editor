@@ -12,11 +12,11 @@
 
 #define NbLtr     120  /* maxm number of letters in the alphabet < 256 isolatin1 */
 
-typedef CHAR_T    FileName[MAX_NAME_LENGTH];    /* filename */
+typedef char     FileName[MAX_NAME_LENGTH];    /* filename */
 
-typedef  CHAR_T* PtrString;   /* pointer to the word list                     */
-typedef  char*   PtrCommons;  /* pointer to the list of shared prefix length  */
-typedef  int*    PtrWords;    /* pointer to the list of pointers to the words */
+typedef  char   *PtrString;   /* pointer to the word list                     */
+typedef  char   *PtrCommons;  /* pointer to the list of shared prefix length  */
+typedef  int    *PtrWords;    /* pointer to the list of pointers to the words */
 
 typedef struct _WordDict *PtrDict;
 

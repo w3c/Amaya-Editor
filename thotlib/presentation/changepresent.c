@@ -821,23 +821,24 @@ static PtrAbstractBox     NextAbstractBox (PtrAbstractBox pAb)
 static void RemoveFunctionPRule (PtrPRule pPres, PtrAbstractBox pAb,
 				 PtrDocument pDoc)
 {
-   if (pPres->PrPresFunction == FnBackgroundPicture &&
-       pAb->AbPictBackground != NULL)
-     {
-       TtaFreeMemory ((((PictInfo *) (pAb->AbPictBackground))->PicFileName));
-       FreePictInfo ((PictInfo *) (pAb->AbPictBackground));
-       TtaFreeMemory (pAb->AbPictBackground);
-       pAb->AbPictBackground = NULL;
-     }
-   else if (pPres->PrPresFunction == FnPictureMode &&
-	    pAb->AbPictBackground != NULL)
-       ((PictInfo *) (pAb->AbPictBackground))->PicPresent = FillFrame;
-   else if (pPres->PrPresFunction == FnShowBox)
-       pAb->AbFillBox = FALSE;
+  PictInfo      *image;
 
-   pAb->AbAspectChange = TRUE;
-   RedispAbsBox (pAb, pDoc);
-   /* pDoc->DocViewModifiedAb[view] = pAb; */
+  if (pPres->PrPresFunction == FnBackgroundPicture && pAb->AbPictBackground)
+    {
+      image = (PictInfo *)pAb->AbPictBackground;
+      CleanPictInfo (image);
+      TtaFreeMemory (image->PicFileName);
+      TtaFreeMemory (pAb->AbPictBackground);
+      pAb->AbPictBackground = NULL;
+    }
+  else if (pPres->PrPresFunction == FnPictureMode &&
+	   pAb->AbPictBackground)
+    ((PictInfo *) (pAb->AbPictBackground))->PicPresent = FillFrame;
+  else if (pPres->PrPresFunction == FnShowBox)
+    pAb->AbFillBox = FALSE;
+  
+  pAb->AbAspectChange = TRUE;
+  RedispAbsBox (pAb, pDoc);
 }
 
 /*----------------------------------------------------------------------
@@ -1004,7 +1005,7 @@ void  ApplyAGenericStyleRule (Document doc, PtrSSchema pSS, int elType,
 	  if (elType > 0)
 	    /* presentation rules are associated with an element type */
 	    found = (pAb->AbElement->ElTypeNumber == elType &&
-	             !ustrcmp (pAb->AbElement->ElStructSchema->SsName, pSS->SsName));
+	             !strcmp (pAb->AbElement->ElStructSchema->SsName, pSS->SsName));
 	  else if (attrType > 0)
 	    {
 	      /* presentation rules are associated with an attribute type */
@@ -1012,7 +1013,7 @@ void  ApplyAGenericStyleRule (Document doc, PtrSSchema pSS, int elType,
 	      while (!found && pAttr != NULL)
 		{
 		  found = (pAttr->AeAttrNum == attrType &&
-			   !ustrcmp (pAttr->AeAttrSSchema->SsName, pSS->SsName));
+			   !strcmp (pAttr->AeAttrSSchema->SsName, pSS->SsName));
 		  if (!found)
 		     pAttr = pAttr->AeNext;
 		}

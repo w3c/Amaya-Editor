@@ -404,9 +404,9 @@ extern int TtaGetThotColor (unsigned short red, unsigned short green, unsigned s
    TtaClearViewSelections unselects and clears all current displayed
    selections.                                  
   ----------------------------------------------------------------------*/
-extern void         TtaClearViewSelections ( void );
+extern void TtaClearViewSelections ( void );
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-extern void         TtaChangeWindowTitle (Document, View, STRING);
+extern void TtaChangeWindowTitle (Document doc, View view, char *title);
 #endif

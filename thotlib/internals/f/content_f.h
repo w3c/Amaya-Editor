@@ -23,26 +23,23 @@ extern ThotBool MergeTextElements ( PtrElement pEl,
 extern PtrTextBuffer CopyText ( PtrTextBuffer pBuf,
                                 PtrElement pEl );
 extern PtrPathSeg CopyPath ( PtrPathSeg firstPathEl );
-extern ThotBool StringAndTextEqual ( STRING String,
+extern ThotBool StringAndTextEqual ( char *text,
                                      PtrTextBuffer pBuf );
 extern ThotBool TextsEqual ( PtrTextBuffer pBuf1,
                              PtrTextBuffer pBuf2 );
 extern void CopyTextToText ( PtrTextBuffer pSrceBuf,
                              PtrTextBuffer pCopyBuf,
                              int *len );
-extern int CopyS2B ( unsigned char *src,
-                     int max,
-                     PtrTextBuffer pBuf,
-                     int pos );
-extern int CopyB2S ( PtrTextBuffer pBuf,
-                     int pos,
-                     unsigned char *des,
-                     int max );
+extern int CopyMBs2Buffer ( unsigned char *src,
+                            PtrTextBuffer pBuf,
+                            int pos,
+                            int max );
+extern int CopyBuffer2MBs ( PtrTextBuffer pBuf,
+                            int pos,
+                            unsigned char *des,
+                            int max );
 extern void CopyStringToBuffer ( unsigned char *src,
                                  PtrTextBuffer pDestBuf,
-                                 int *length );
-extern void CopyBufferToString ( PtrTextBuffer pSrceBuf,
-                                 char *dest,
                                  int *length );
 extern void ClearText ( PtrTextBuffer pBuf );
 extern void AddPointInPolyline ( PtrTextBuffer firstBuffer,
@@ -80,26 +77,23 @@ extern ThotBool MergeTextElements (/* PtrElement pEl,
 extern PtrTextBuffer CopyText (/* PtrTextBuffer pBuf,
                                   PtrElement pEl */);
 extern PtrPathSeg CopyPath (/* PtrPathSeg firstPathEl */);
-extern ThotBool StringAndTextEqual (/* STRING String,
+extern ThotBool StringAndTextEqual (/* char *text,
                                        PtrTextBuffer pBuf */);
 extern ThotBool TextsEqual (/* PtrTextBuffer pBuf1,
                                PtrTextBuffer pBuf2 */);
 extern void CopyTextToText (/* PtrTextBuffer pSrceBuf,
                                PtrTextBuffer pCopyBuf,
                                int *len */);
-extern int CopyS2B (/* unsigned char *src,
-                       int max,
-                       PtrTextBuffer pBuf,
-                       int pos */);
-extern int CopyB2S (/* PtrTextBuffer pBuf,
-                       int pos,
-                       unsigned char *des,
-                       int max */);
+extern int CopyMBs2Buffer (/* unsigned char *src,
+                              PtrTextBuffer pBuf,
+                              int pos,
+                              int max */);
+extern int CopyBuffer2MBs (/* PtrTextBuffer pBuf,
+                              int pos,
+                              unsigned char *des,
+                              int max */);
 extern void CopyStringToBuffer (/* unsigned char *src,
                                    PtrTextBuffer pDestBuf,
-                                   int *length */);
-extern void CopyBufferToString (/* PtrTextBuffer pSrceBuf,
-                                   char *dest,
                                    int *length */);
 extern void ClearText (/* PtrTextBuffer pBuf */);
 extern void AddPointInPolyline (/* PtrTextBuffer firstBuffer,

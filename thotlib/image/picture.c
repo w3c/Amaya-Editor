@@ -1424,7 +1424,6 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 #ifdef _WINDOWS
   ThotBool            releaseDC = FALSE;
 #endif
-
   left = box->BxLMargin + box->BxLBorder + box->BxLPadding;
   right = box->BxRMargin + box->BxRBorder + box->BxRPadding;
   top = box->BxTMargin + box->BxTBorder + box->BxTPadding;
@@ -1442,19 +1441,8 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
   w = 0;
   h = 0;
   Bgcolor = ColorPixel (pAb->AbBackground);
-
   /* clean up the current image descriptor */
-  if (imageDesc->PicPixmap)
-    {
-      FreePixmap (imageDesc->PicPixmap);
-#ifdef _WINDOWS
-      imageDesc->PicMask = -1;
-#else /* _WINDOWS */
-      FreePixmap (imageDesc->PicMask);
-      imageDesc->PicMask = None;
-#endif /* _WINDOWS */
-    }
-
+  /*CleanPictInfo (imageDesc);*/
   if (status != Supported_Format)
     {
 #ifdef _WINDOWS

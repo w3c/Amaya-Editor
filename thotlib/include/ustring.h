@@ -5,7 +5,6 @@
 #ifdef _WINDOWS
 #include <windows.h>
 #endif /* _WINDOWS */
-#include <wchar.h>
 
 #ifdef _WINDOWS
 #define strncasecmp _strnicmp
@@ -46,6 +45,7 @@ typedef enum {
    WINDOWS_1258
 } CHARSET;
 
+#include <wchar.h>
 #ifdef _I18N_
 typedef wchar_t  CHAR_T;
 typedef wchar_t *PCHAR_T;

@@ -58,7 +58,7 @@
    	AttrValue retourne la valeur que prend l'attribut numerique	
    		pointe' par pAttr.					
   ----------------------------------------------------------------------*/
-int                 AttrValue (PtrAttribute pAttr)
+int AttrValue (PtrAttribute pAttr)
 {
    int                 ret;
 
@@ -80,7 +80,7 @@ int                 AttrValue (PtrAttribute pAttr)
    		presentation. Si, a l'appel, pAbb est  un pave qui n'est	
    		pas un pave de presentation, alors pAbb reste inchange'.	
   ----------------------------------------------------------------------*/
-static void         FollowNotPres (PtrAbstractBox * pAbb)
+static void FollowNotPres (PtrAbstractBox * pAbb)
 {
    ThotBool            stop;
 
@@ -102,7 +102,8 @@ static void         FollowNotPres (PtrAbstractBox * pAbb)
 			  dans la vue view
    			  retourne ce pave dans pAbb ou NULL sinon
   ----------------------------------------------------------------------*/
-static void         AncestorAbsBox (PtrElement pE, DocViewNumber view, PtrAbstractBox * pAbb, PtrElement * pElAsc)
+static void AncestorAbsBox (PtrElement pE, DocViewNumber view,
+			    PtrAbstractBox *pAbb, PtrElement *pElAsc)
 {
 
    *pElAsc = pE;
@@ -126,7 +127,8 @@ static void         AncestorAbsBox (PtrElement pE, DocViewNumber view, PtrAbstra
    	qui sert de reference quand on applique la regle d'heritage	
    	pointe par pPRule a l'element pointe par pEl, dans la vue view.	
   ----------------------------------------------------------------------*/
-static PtrAbstractBox AbsBoxInherit (PtrPRule pPRule, PtrElement pEl, DocViewNumber view)
+static PtrAbstractBox AbsBoxInherit (PtrPRule pPRule, PtrElement pEl,
+				     DocViewNumber view)
 {
    PtrElement          pElInherit;
    PtrAbstractBox      pAbb;
@@ -162,7 +164,8 @@ static PtrAbstractBox AbsBoxInherit (PtrPRule pPRule, PtrElement pEl, DocViewNum
 		     AncestorAbsBox (pEl, view, &pAbb, &pElInherit);
 		  break;
 	       case InheritChild:
-		  while (!pElInherit->ElTerminal && pElInherit->ElFirstChild != NULL && pAbb == NULL)
+		  while (!pElInherit->ElTerminal && pElInherit->ElFirstChild &&
+			 pAbb == NULL)
 		    {
 		       pElInherit = pElInherit->ElFirstChild;
 		       pAbb = pElInherit->ElAbstractBox[view - 1];
@@ -195,7 +198,8 @@ static PtrAbstractBox AbsBoxInherit (PtrPRule pPRule, PtrElement pEl, DocViewNum
    		par pEl, dans la vue view. On ne considere que l'element	
    		immediatement voisin (pere, frere, fils).		
   ----------------------------------------------------------------------*/
-static PtrAbstractBox AbsBoxInheritImm (PtrPRule pPRule, PtrElement pEl, DocViewNumber view)
+static PtrAbstractBox AbsBoxInheritImm (PtrPRule pPRule, PtrElement pEl,
+					DocViewNumber view)
 {
    PtrAbstractBox      pAbb;
 
@@ -346,7 +350,7 @@ static int BorderStyleIntValue (char borderStyle)
    		etre faite. 						
   ----------------------------------------------------------------------*/
 static char CharRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
-		      ThotBool * ok)
+		      ThotBool *ok)
 {
    PtrAbstractBox      pAbb;
    char                val;
@@ -432,7 +436,8 @@ static char CharRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
    		auquel elle s'applique est pointe par pEl.		
    		Au result, ok indique si l'evaluation a pu etre faite.	
   ----------------------------------------------------------------------*/
-static BAlignment   AlignRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view, ThotBool * ok)
+static BAlignment AlignRule (PtrPRule pPRule, PtrElement pEl,
+			     DocViewNumber view, ThotBool *ok)
 {
    PtrAbstractBox      pAbb;
    BAlignment          val;
@@ -470,7 +475,7 @@ static BAlignment   AlignRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber vi
    		Au result, ok indique si l'evaluation a pu etre faite.	
   ----------------------------------------------------------------------*/
 ThotBool BoolRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
-		   ThotBool * ok)
+		   ThotBool *ok)
 {
    PtrAbstractBox      pAbb;
    ThotBool            val;
@@ -512,7 +517,8 @@ ThotBool BoolRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
   pEl or one of its ancestors.
   Return NULL is neither pEl nor any of its ancestor have such an attribute.
   ----------------------------------------------------------------------*/
-static PtrAttribute GetEnclosingAttr (PtrElement pEl, int attrNumber, PtrAttribute pAInit)
+static PtrAttribute GetEnclosingAttr (PtrElement pEl, int attrNumber,
+				      PtrAttribute pAInit)
 {
    PtrAttribute        pAttr, pA;
    PtrElement	       pAsc;
@@ -556,7 +562,8 @@ static PtrAttribute GetEnclosingAttr (PtrElement pEl, int attrNumber, PtrAttribu
 		If the abstract box for which the rule is evaluated exists,
 		it's pAb. Otherwise, pAb is NULL.
   ----------------------------------------------------------------------*/
-int                 IntegerRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view, ThotBool * ok, TypeUnit * unit, PtrAttribute pAttr, PtrAbstractBox pAb)
+int IntegerRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
+		 ThotBool *ok, TypeUnit *unit, PtrAttribute pAttr, PtrAbstractBox pAb)
 {
    PtrAbstractBox      pAbb;
    PtrElement          pElInherit;
@@ -955,7 +962,8 @@ int                 IntegerRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber 
    	Cela permet de determiner le pave pAb par rapport	
    	auquel le pave en cours de traitement va se positionner
   ----------------------------------------------------------------------*/
-static void         VerifyAbsBox (ThotBool * found, PtrPSchema pSP, RefKind refKind, int numAbType, ThotBool notType, PtrAbstractBox pAb)
+static void VerifyAbsBox (ThotBool *found, PtrPSchema pSP, RefKind refKind,
+			  int numAbType, ThotBool notType, PtrAbstractBox pAb)
 {
    PtrAttribute	    pAttr;
    ThotBool	    attrFound;
@@ -1181,7 +1189,7 @@ static ThotBool AttrCreatePresBox (PtrAttribute pAttr, PtrAbstractBox pAb,
    		Cela permet de determiner le pave pAb par rapport	
    		auquel le pave en cours de traitement va se positionner	
   ----------------------------------------------------------------------*/
-static void VerifyAbsBoxDescent (ThotBool * found, PtrPSchema pSP,
+static void VerifyAbsBoxDescent (ThotBool *found, PtrPSchema pSP,
 				 RefKind refKind, int numType,
 				 ThotBool notType, PtrAbstractBox pAb)
 {
@@ -1499,6 +1507,7 @@ void UpdateFreeVol (PtrAbstractBox pAb, PtrDocument pDoc)
   ----------------------------------------------------------------------*/
 void FillContent (PtrElement pEl, PtrAbstractBox pAb, PtrDocument pDoc)
 {
+  char               *text;
   int                 lg, i;
   PtrTextBuffer       pBu1;
   PtrReference        pPR1;
@@ -1527,10 +1536,16 @@ void FillContent (PtrElement pEl, PtrAbstractBox pAb, PtrDocument pDoc)
       switch (pEl->ElLeafType)
 	{
 	case LtPicture:
-	  /* saute les paves crees par FnCreateBefore */
-	  /* while (pAb->AbText != NULL && pAb->AbNext != NULL)
-	     pAb = pAb->AbNext; */
-	  NewPictInfo (pAb, pEl->ElText->BuContent, UNKNOWN_FORMAT);
+	  if (pAb->AbElement->ElPictInfo)
+	     pAb->AbPictInfo = pAb->AbElement->ElPictInfo;
+	  else
+	    {
+	      /* initialize the new image context */
+	      lg = ustrlen (pEl->ElText->BuContent);
+	      text = TtaGetMemory (lg + 1);
+	      CopyBuffer2MBs (pEl->ElText, 0, text, lg);
+	      NewPictInfo (pAb, text, UNKNOWN_FORMAT);
+	    }
 	  pAb->AbVolume = pEl->ElTextLength;
 	  break;
 	case LtText:
@@ -1661,7 +1676,7 @@ void FillContent (PtrElement pEl, PtrAbstractBox pAb, PtrDocument pDoc)
   ----------------------------------------------------------------------*/
 static ThotBool PageCreateRule (PtrPRule pPRule, PtrPSchema pSPR,
 				PtrAbstractBox pCree,
-				FunctionType * TypeCreation)
+				FunctionType *TypeCreation)
 {
    ThotBool            stop;
    ThotBool            result;
@@ -1782,8 +1797,8 @@ FunctionType TypeCreatedRule (PtrDocument pDoc, PtrAbstractBox pAbbCreator,
   dans pSchS un pointeur sur le schema de structure auquel
   correspond le schema de presentation retourne'.		
   ----------------------------------------------------------------------*/
-void SearchPresSchema (PtrElement pEl, PtrPSchema * pSchP, int *indexElType,
-		       PtrSSchema * pSchS, PtrDocument pDoc)
+void SearchPresSchema (PtrElement pEl, PtrPSchema *pSchP, int *indexElType,
+		       PtrSSchema *pSchS, PtrDocument pDoc)
 {
   ThotBool            found;
   int                 i;
@@ -1856,9 +1871,9 @@ static ThotBool CheckPPosUser (PtrAbstractBox pAb, PtrDocument pDoc)
   ApplyPos 	applique la regle de position PR-pPRule au pave pAbb1.
   rend vrai dans appl si la regle a ete appliquee.
   ----------------------------------------------------------------------*/
-static void ApplyPos (AbPosition * PPos, PosRule *positionRule, PtrPRule pPRule,
+static void ApplyPos (AbPosition *PPos, PosRule *positionRule, PtrPRule pPRule,
 		      PtrAttribute pAttr, PtrPSchema pSchP, PtrAbstractBox pAbb1,
-		      PtrDocument pDoc, ThotBool * appl)
+		      PtrDocument pDoc, ThotBool *appl)
 {
    PtrAbstractBox      pAbbPos;
    ThotBool            pageBreak;
@@ -2132,8 +2147,8 @@ static void ApplyPos (AbPosition * PPos, PosRule *positionRule, PtrPRule pPRule,
    	ApplyDim	 applique au pave pointe' par pAb la regle	
    		de dimension pointee par pPRule.			
   ----------------------------------------------------------------------*/
-static void ApplyDim (AbDimension * pdimAb, PtrAbstractBox pAb,
-		      PtrPSchema pSchP, PtrAttribute pAttr, ThotBool * appl,
+static void ApplyDim (AbDimension *pdimAb, PtrAbstractBox pAb,
+		      PtrPSchema pSchP, PtrAttribute pAttr, ThotBool *appl,
 		      PtrPRule pPRule, PtrDocument pDoc)
 {
    PtrAbstractBox      pAbbRef;
@@ -2443,7 +2458,7 @@ static void ApplyPage (PtrDocument pDoc, PtrAbstractBox pAb, int viewSch,
    		pointe sur le pave trouve'				
   ----------------------------------------------------------------------*/
 static ThotBool FindAbsBox (int Ntype, PtrPSchema pSchP, Name presBoxName,
-			    PtrAbstractBox * pAb)
+			    PtrAbstractBox *pAb)
 {
    ThotBool            result;
    PtrAbstractBox      pAbbCur;
@@ -2488,9 +2503,9 @@ static ThotBool FindAbsBox (int Ntype, PtrPSchema pSchP, Name presBoxName,
   Retourne Vrai si un tel element existe et dans ce cas,	
   pEl pointe sur l'element trouve'.			
   ----------------------------------------------------------------------*/
-static ThotBool SearchElCrPresBoxCopy (int *presBoxType, PtrPSchema * pSchP,
-				       PtrSSchema * pSchS, Name presBoxName,
-				       PtrElement * pEl)
+static ThotBool SearchElCrPresBoxCopy (int *presBoxType, PtrPSchema *pSchP,
+				       PtrSSchema *pSchS, Name presBoxName,
+				       PtrElement *pEl)
 {
    ThotBool            result, stop;
    PtrElement          pE1;
@@ -2574,8 +2589,8 @@ static ThotBool SearchElCrPresBoxCopy (int *presBoxType, PtrPSchema * pSchP,
    		feuilles de texte du sous-arbre de l'element pointe'	
    		par pEC							
   ----------------------------------------------------------------------*/
-static void CopyLeaves (PtrElement pEC, PtrAbstractBox * pAb,
-			PtrTextBuffer * pBuffPrec)
+static void CopyLeaves (PtrElement pEC, PtrAbstractBox *pAb,
+			PtrTextBuffer *pBuffPrec)
 {
    PtrTextBuffer       pBuffE;
    PtrAbstractBox      pAbb1;
@@ -2617,7 +2632,7 @@ static void CopyLeaves (PtrElement pEC, PtrAbstractBox * pAb,
 		  pBuffP->BuPrevious = *pBuffPrec;
 		  (*pBuffPrec)->BuNext = pBuffP;
 	       }
-	     strncpy (pBuffP->BuContent, pBuffE->BuContent, THOT_MAX_CHAR);
+	     ustrncpy (pBuffP->BuContent, pBuffE->BuContent, THOT_MAX_CHAR);
 	     /* copie le contenu */
 	     pBuffP->BuLength = pBuffE->BuLength;
 	     /* copie la longueur */
@@ -3765,7 +3780,7 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
   nouvellement creee ou non.
   ----------------------------------------------------------------------*/
 PtrPRule SearchPresRule (PtrElement pEl, PRuleType ruleType,
-			 FunctionType funcType, ThotBool * isNew,
+			 FunctionType funcType, ThotBool *isNew,
 			 PtrDocument pDoc, int view)
 {
    PtrPRule            pResultRule;

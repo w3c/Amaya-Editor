@@ -1229,12 +1229,13 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
   PtrPSchema          pSP;
   PtrAttribute        pSelAttr;
   PresentationBox    *pBox;
+  FunctionType        funct;
   TypeUnit            unit;
+  PictInfo           *image;
   int                 view, vis;
   int                 viewSch, viewIndex;
   int                 lqueue, pqueue;
   ThotBool            ok, stop, volok;
-  FunctionType        funct;
 
   pAbbCreated = NULL;
   pAb = NULL;
@@ -1663,26 +1664,25 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
 
 	   if (pAbbCreated == NULL)	/* pave deja cree' */
 	     {
-	       if (pAb->AbBox != NULL)
+	       if (pAb->AbBox &&
+		   pAb->AbLeafType == LtPicture && pAb->AbPresentationBox)
 		 {
-		   /* libere le pave */
-		   if (pAb->AbLeafType == LtPicture && pAb->AbPresentationBox)
-		     {
-		       /* ce n'est pas un element image */
-		       FreePictInfo ((PictInfo *)(pAb->AbPictInfo));
-		       TtaFreeMemory (pAb->AbPictInfo);
-		       pAb->AbPictInfo = NULL;
-		     }
+		   image = (PictInfo *)pAb->AbPictInfo;
+		   CleanPictInfo (image);
+		   TtaFreeMemory (pAb->AbPictInfo);
+		   pAb->AbPictInfo = NULL;
 		 }
 
-	       if (pAb->AbLeafType == LtCompound && pAb->AbPictBackground != NULL)
+	       if (pAb->AbLeafType == LtCompound && pAb->AbPictBackground)
 		 {
 		   /* in this particular case we need to free filename */
-		   TtaFreeMemory (((PictInfo *)(pAb->AbPictBackground))->PicFileName);
-		   FreePictInfo ((PictInfo *)(pAb->AbPictBackground));
+		   image = (PictInfo *)pAb->AbPictBackground;
+		   TtaFreeMemory (image->PicFileName);
+		   CleanPictInfo (image);
 		   TtaFreeMemory (pAb->AbPictBackground);
 		   pAb->AbPictBackground = NULL;
 		 }
+	       /* free the abstract box */
 	       FreeAbstractBox (pAb);
 	     }
 	   else

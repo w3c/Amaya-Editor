@@ -1881,7 +1881,6 @@ void RemoveBoxes (PtrAbstractBox pAb, ThotBool rebuild, int frame)
 	  else if (pAb->AbLeafType == LtPicture)
 	    {
 	      UnmapImage((PictInfo *)pBox->BxPictInfo);
-	      /*FreePictInfo ((PictInfo *)pAb->AbPictInfo);*/
 	    }
 	  else if (pBox->BxType == BoSplit)
 	    {
@@ -2585,7 +2584,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		  if (pAb->AbChange)
 		    {
 		      /* the picture change, RAZ the structure */
-		      FreePictInfo ((PictInfo *) pBox->BxPictInfo);
+		      CleanPictInfo ((PictInfo *) pBox->BxPictInfo);
 		      SetCursorWatch (frame);
 		      LoadPicture (frame, pBox, (PictInfo *) pBox->BxPictInfo);
 		      ResetCursorWatch (frame);

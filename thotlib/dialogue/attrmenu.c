@@ -863,7 +863,7 @@ static void MenuValues (TtAttribute * pAttr1, ThotBool required,
        if (currAttr && currAttr->AeAttrText)
 	 {
 	   i = LgMaxAttrText - 2;
-	   CopyBufferToString (currAttr->AeAttrText, TextAttrValue, &i);
+	   i = CopyBuffer2MBs (currAttr->AeAttrText, 0, TextAttrValue, i);
 	 }
        else
 	   TextAttrValue[0] = EOS;

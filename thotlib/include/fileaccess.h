@@ -14,7 +14,8 @@
 
 typedef FILE *BinFile;
 
-typedef struct { /* fill in with more elements as they are needed */
+typedef struct
+{ /* fill in with more elements as they are needed */
 #if defined(_WINDOWS) && !defined(__GNUC__)
     FILETIME atime; /* don't know yet what format will be used most */
     DWORD size;
@@ -83,8 +84,8 @@ extern void TtaFileCopy ( CONST char *sourceFileName,
                           CONST char *targetFileName );
 
 extern ThotBool TtaReadByte ( BinFile file,
-                             char* bval );
-extern ThotBool TtaReadWideChar (BinFile file, char *bval, CHARSET);
+                             unsigned char *bval );
+extern ThotBool TtaReadWideChar (BinFile file, CHAR_T *bval, CHARSET);
 
 extern ThotBool TtaReadBool ( BinFile file,
                              ThotBool * bval );
@@ -101,7 +102,7 @@ extern void TtaReadClose ( BinFile file );
 extern void TtaWriteClose ( BinFile file );
 extern ThotBool TtaWriteByte ( BinFile file,
                               char bval );
-extern ThotBool TtaWriteWideChar (BinFile, char, CHARSET);
+extern ThotBool TtaWriteWideChar (BinFile file, CHAR_T bval, CHARSET encoding);
 extern ThotBool TtaWriteShort ( BinFile file,
                                int sval );
 extern ThotBool TtaWriteInteger ( BinFile file,

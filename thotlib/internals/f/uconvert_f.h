@@ -13,18 +13,13 @@ extern unsigned char TtaGetCharFromUnicode ( const wchar_t wc,
                                              CHARSET encoding );
 extern wchar_t TtaGetUnicodeFromChar ( const unsigned char c,
                                        CHARSET encoding );
-extern int TtaWC2MB ( wchar_t src,
-                      char *dest,
-                      CHARSET encoding );
-extern int TtaWC2MBs ( wchar_t *src,
-                       unsigned char **dest,
-                       CHARSET encoding );
-extern int TtaMBs2WC ( unsigned char **src,
-                       wchar_t *dest,
-                       CHARSET encoding );
-extern int TtaGetNextWideCharFromMultibyteString ( wchar_t *car,
-                                                   unsigned char **txt,
-                                                   CHARSET encoding );
+extern int TtaWC2MBstring ( wchar_t src,
+                            unsigned char **dest );
+extern int TtaMBstring2WC ( unsigned char **src,
+                            wchar_t *dest );
+extern int TtaGetNextWCFromString ( wchar_t *car,
+                                    unsigned char **txt,
+                                    CHARSET encoding );
 extern int TtaGetNumberOfBytesToRead ( unsigned char **txt,
                                        CHARSET encoding );
 extern void TtaCopyWC2Iso ( unsigned char *dest,
@@ -43,18 +38,13 @@ extern unsigned char TtaGetCharFromUnicode (/* const wchar_t wc,
                                                CHARSET encoding */);
 extern wchar_t TtaGetUnicodeFromChar (/* const unsigned char c,
                                          CHARSET encoding */);
-extern int TtaWC2MB (/* wchar_t src,
-                        char *dest,
-                        CHARSET encoding */);
-extern int TtaWC2MBs (/* wchar_t *src,
-                         unsigned char **dest,
-                         CHARSET encoding */);
-extern int TtaMBs2WC (/* unsigned char **src,
-                         wchar_t *dest,
-                         CHARSET encoding */);
-extern int TtaGetNextWideCharFromMultibyteString (/* wchar_t *car,
-                                                     unsigned char **txt,
-                                                     CHARSET encoding */);
+extern int TtaWC2MBstring (/* wchar_t src,
+                              unsigned char **dest */);
+extern int TtaMBstring2WC (/* unsigned char **src,
+                              wchar_t *dest */);
+extern int TtaGetNextWCFromString (/* wchar_t *car,
+                                      unsigned char **txt,
+                                      CHARSET encoding */);
 extern int TtaGetNumberOfBytesToRead (/* unsigned char **txt,
                                          CHARSET encoding */);
 extern void TtaCopyWC2Iso (/* unsigned char *dest,

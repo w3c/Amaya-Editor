@@ -3502,9 +3502,8 @@ int main (int argc, char **argv)
 	       i = 0;
 	       do
 		 {
-		  /* fileOK = TtaReadByte (infile, &inputLine[i]); */
-		  fileOK = TtaReadWideChar (infile, &inputLine[i], ISO_8859_1);
-		    i++;
+		   fileOK = TtaReadByte (infile, &inputLine[i]);
+		   i++;
 		 }
 	       while (i < LINE_LENGTH && inputLine[i - 1] != '\n' && fileOK);
 	       /* marque la fin reelle de la ligne */

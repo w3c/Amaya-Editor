@@ -54,7 +54,7 @@ extern char *TtaGetSSchemaName ( SSchema schema );
 extern char *TtaGetPSchemaName ( SSchema schema );
 extern SSchema TtaGetSSchema ( char *name,
                                Document document );
-extern SSchema TtaGetSSchemaByUri ( CHAR_T* uriName,
+extern SSchema TtaGetSSchemaByUri ( char *uriName,
                                     Document document );
 extern int TtaSameSSchemas ( SSchema schema1,
                              SSchema schema2 );
@@ -127,7 +127,7 @@ extern char *TtaGetSSchemaName (/* SSchema schema */);
 extern char *TtaGetPSchemaName (/* SSchema schema */);
 extern SSchema TtaGetSSchema (/* char *name,
                                  Document document */);
-extern SSchema TtaGetSSchemaByUri (/* CHAR_T* uriName,
+extern SSchema TtaGetSSchemaByUri (/* char *uriName,
                                       Document document */);
 extern int TtaSameSSchemas (/* SSchema schema1,
                                SSchema schema2 */);

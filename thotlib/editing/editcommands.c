@@ -1336,88 +1336,14 @@ static void LoadPictFile (PtrLine pLine, ThotBool defaultHeight,
 			  ThotBool defaultWidth, PtrBox pBox, PtrAbstractBox pAb,
 			  int frame)
 {
-   CHAR_T                buffer[FULL_BUFFER];
-   STRING              ptr;
-   int                 i;
-   int                 xDelta, yDelta;
-   int                 type;
-   int                 pres;
-   PictInfo           *pictInfo;
-   ThotBool            ok;
-
-   if (pAb->AbLeafType == LtPicture)
-     {
-       pictInfo = (PictInfo *) pAb->AbPictInfo;
-       if ((pictInfo != NULL) && (pictInfo->PicFileName != NULL))
-	 {
-	   ustrcpy (buffer, pictInfo->PicFileName);
-	   type = pictInfo->PicType;
-	   pres = pictInfo->PicPresent;
-	   /* Is it an empty picture ? */
-	   if (type == -1)
-	     {
-	       type = GIF_FORMAT;
-	       pres = (int) ReScale;
-	     }
- 	 }
-       else
-	 {
-	   type = GIF_FORMAT;
-	   pres = (int) ReScale;
-	 }
-       /* dans quel document est-on ? */
-       /* saisit le nom du fichier image */
-       if (!APPtextModify (pAb->AbElement, frame, TRUE))
-	 {
-	   /* register the editing operation in the history */
-	   RegisterInHistory (pAb->AbElement, frame, 0, 0);	     
-
-	   if (ThotLocalActions[T_imagemenu] != NULL)
-	     (*ThotLocalActions[T_imagemenu]) (buffer, &ok, &type, &pres, pBox);
-	   else
-	     ok = FALSE;
-
-	   if (ok)
-	     {
-	       /* something change */
-	       i = ustrlen (buffer);
-	       /* longueur de la chaine a copier */
-	       if (i != 0)
-		 {
-		   pictInfo = (PictInfo *) pBox->BxPictInfo;
-		   /* free the pictInfo contents, but not the struture */
-		   FreePictInfo (pictInfo);
-		   ustrcpy (pictInfo->PicFileName, buffer);
-		   pictInfo->PicPresent = (PictureScaling) pres;
-		   pictInfo->PicType = type;
-		   SetCursorWatch (frame);
-		   LoadPicture (frame, pBox, pictInfo);
-		   ResetCursorWatch (frame);
-		   if (pictInfo->PicPixmap != 0)
-		     {
-		       pAb->AbVolume = ustrlen (buffer);
-		       /* met a jour la boite */
-		       if (!defaultWidth)
-			 xDelta = 0;
-		       else
-			 /* difference de largeur */
-			 xDelta = pictInfo->PicWArea - pBox->BxWidth;
-		       if (!defaultHeight)
-			 yDelta = 0;
-		       else
-			 /* difference de largeur */
-			 yDelta = pictInfo->PicHArea - pBox->BxHeight;
-		       BoxUpdate (pBox, pLine, 0, 0, xDelta, 0, yDelta, frame, FALSE);
-		     }
-		   else
-		     ptr = buffer;
-		 }
-	       NewContent (pAb);
-	       APPtextModify (pAb->AbElement, frame, FALSE);
-	     }		/*if BuildPictureMenu */
-	   pAb = NULL;	/* rien a faire de plus pour les images */
-	 }
-     }
+  printf ("LoadPicture\n");
+  if (pAb->AbLeafType == LtPicture)
+    {
+      /* give access to the application image menu */
+      if (!APPtextModify (pAb->AbElement, frame, TRUE))
+	/* register the editing operation in the history */
+	RegisterInHistory (pAb->AbElement, frame, 0, 0);	     
+    }
 }
 
 
@@ -1462,7 +1388,7 @@ static void SaveInClipboard (int *charsDelta, int *spacesDelta, int *xDelta,
    PtrTextBuffer       pTargetBuffer;
    ViewFrame          *pFrame;
    int                 i;
-   PictInfo           *pictInfo;
+   PictInfo           *image;
 
    /* detruit la sauvegarde precedente */
    ClearClipboard (clipboard);
@@ -1483,13 +1409,11 @@ static void SaveInClipboard (int *charsDelta, int *spacesDelta, int *xDelta,
 	       }
 	     else if (pAb->AbLeafType == LtPicture)
 	       {
-		  pictInfo = (PictInfo *) pAb->AbPictInfo;
-		  i = ustrlen (pictInfo->PicFileName);
+		  image = (PictInfo *) pAb->AbPictInfo;
+		  i = strlen (image->PicFileName);
 		  /* nom du fichier image */
-		  ustrcpy (&(clipboard->BuContent[0]), pictInfo->PicFileName);
-		  clipboard->BuLength = i;
-		  clipboard->BuContent[i] = EOS;	/* Termine la chaine */
-		  CopyPictInfo ((int *) &PictClipboard, (int *) pictInfo);
+		  CopyMBs2Buffer (image->PicFileName, clipboard, 0, i);
+		  CopyPictInfo ((int *) &PictClipboard, (int *) image);
 	       }
 	     else
 	       {
@@ -1535,7 +1459,7 @@ static void RemoveSelection (int charsDelta, int spacesDelta, int xDelta,
 {
   PtrTextBuffer       pTargetBuffer;
   PtrTextBuffer       pSourceBuffer;
-  PictInfo           *pictInfo;
+  PictInfo           *image;
   ViewFrame          *pFrame;
   ViewSelection      *pViewSel;
   ptrfont             font;
@@ -1689,19 +1613,17 @@ static void RemoveSelection (int charsDelta, int spacesDelta, int xDelta,
 	break;
 	
       case LtPicture:
-	/* pPa1->AbPictInfo->PicFileName->BuLength = 0; */
-	/*ustrcpy(pPa1->AbPictInfo->PicFileName, ""); */
 	pAb->AbVolume = 0;
 	/* met a jour la boite */
-	pictInfo = (PictInfo *) pBox->BxPictInfo;
-	if (pictInfo->PicPixmap != 0)
+	image = (PictInfo *) pBox->BxPictInfo;
+	if (image->PicPixmap != 0)
 	  {
 	    if (defaultWidth)
-	      xDelta = pictInfo->PicWArea - width;
+	      xDelta = image->PicWArea - width;
 	    else
 	      xDelta = 0;
 	    if (defaultHeight)
-	      yDelta = pictInfo->PicHArea - height;
+	      yDelta = image->PicHArea - height;
 	    else
 	      yDelta = 0;
 	    BoxUpdate (pBox, pLine, 0, 0, -xDelta, 0, -yDelta, frame, FALSE);
@@ -1800,14 +1722,14 @@ static void PasteClipboard (ThotBool defaultHeight, ThotBool defaultWidth,
    ViewSelection      *pViewSel;
    ViewSelection      *pViewSelEnd;
    PtrTextBuffer       pCurrentBuffer;
-   int                 i;
+   int                 i, l;
    int                 xDelta, yDelta;
    int                 spacesDelta, charsDelta;
    int                 adjust;
    ptrfont             font;
    int                 height;
    int                 width;
-   PictInfo           *pictInfo;
+   PictInfo           *image;
 
    font = pBox->BxFont;
    width = 2; /* see GiveTextSize function */
@@ -1892,22 +1814,24 @@ static void PasteClipboard (ThotBool defaultHeight, ThotBool defaultWidth,
 	    case LtPicture:
 	       pCurrentBuffer = pAb->AbElement->ElText;
 	       /* met a jour la boite */
+	       image = (PictInfo *) pBox->BxPictInfo;
+	       CopyPictInfo ((int *) image, (int *) &PictClipboard);
 	       i = clipboard->BuLength;
-	       ustrncpy (&pCurrentBuffer->BuContent[0], &clipboard->BuContent[0], i);
+	       ustrncpy (pCurrentBuffer->BuContent, clipboard->BuContent, i);
 	       /* Termine la chaine de caracteres */
 	       pCurrentBuffer->BuContent[i] = EOS;
 	       pCurrentBuffer->BuLength = i;
-	       pictInfo = (PictInfo *) pBox->BxPictInfo;
-	       CopyPictInfo ((int *) pictInfo, (int *) &PictClipboard);
-	       pictInfo->PicFileName = pCurrentBuffer->BuContent;
+	       image->PicFileName = TtaGetMemory (100);
+	       /* i should be too short to store non ascii characters */
+	       l = CopyBuffer2MBs (clipboard, 0, image->PicFileName, 99);
 	       SetCursorWatch (frame);
-	       LoadPicture (frame, pBox, pictInfo);
+	       LoadPicture (frame, pBox, image);
 	       ResetCursorWatch (frame);
-	       if (pictInfo->PicPixmap != 0)
+	       if (image->PicPixmap != 0)
 		 {
 		    pAb->AbVolume = i;
-		    xDelta = pictInfo->PicWArea - width;
-		    yDelta = pictInfo->PicHArea - height;
+		    xDelta = image->PicWArea - width;
+		    yDelta = image->PicHArea - height;
 		    BoxUpdate (pBox, pLine, 0, 0, xDelta, 0, yDelta, frame, FALSE);
 		 }
 	       break;

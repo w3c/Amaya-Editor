@@ -171,7 +171,7 @@ RGBstruct RGB_colors[] = {
 {127,   0,  65}
 };
 
-STRING Name_colors[] ={
+char *Name_colors[] ={
 "White",
 "Black",
 "LightGrey2",

@@ -779,7 +779,8 @@ char *GetActiveImageInfo (Document document, Element element)
    FetchImage loads an image from local file or from the web. The flags
    may indicate extra transfer parameters, for example bypassing the cache.		
   ----------------------------------------------------------------------*/
-void                FetchImage (Document doc, Element el, char *URL, int flags, LoadedImageCallback callback, void *extra)
+void FetchImage (Document doc, Element el, char *URL, int flags,
+		 LoadedImageCallback callback, void *extra)
 {
   ElemImage          *ctxEl;
   ElementType         elType;

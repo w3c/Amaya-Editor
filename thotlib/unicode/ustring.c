@@ -221,8 +221,8 @@ int ustrncasecmp (const CHAR_T *str1, const CHAR_T *str2,
   return _wcsnicmp ((wchar_t *)str1, (wchar_t *)str2, (size_t)count);
 #else  /* _WINDOWS */
   char      c1, c2;
-  int       len1 = ustrlen (str1);
-  int       len2 = ustrlen (str2);
+  unsigned int       len1 = ustrlen (str1);
+  unsigned int       len2 = ustrlen (str2);
   int       len, ndx;
 
   if (count < len1 && count < len2)

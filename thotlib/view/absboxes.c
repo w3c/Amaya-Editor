@@ -51,7 +51,7 @@
    le type de l'element de structure auquel correspond le  
    pave pointe' par pAb.                                  
   ----------------------------------------------------------------------*/
-CHAR_T*             AbsBoxType (PtrAbstractBox pAb, ThotBool origName)
+char *AbsBoxType (PtrAbstractBox pAb, ThotBool origName)
 {
   PtrElement       pEl;
   CHAR_T*          text;
@@ -89,6 +89,7 @@ void                FreeAbView (PtrAbstractBox pAb, int frame)
   PtrTextBuffer       pBT, pNextBT;
   PtrPathSeg          pPa, pNextPa;
   PtrDelayedPRule     pDelPR, pNextDelPR;
+  PictInfo           *image;
   ThotBool            libAb;
 
   if (pAb != NULL)
@@ -174,7 +175,8 @@ void                FreeAbView (PtrAbstractBox pAb, int frame)
 	    if (pAb->AbPresentationBox)
 	      {
 		/* c'est une boite de presentation image */
-		FreePictInfo ((PictInfo *)(pAb->AbPictInfo));
+		image = (PictInfo *)pAb->AbPictInfo;
+		CleanPictInfo (image);
 		TtaFreeMemory (pAb->AbPictInfo);
 		pAb->AbPictInfo = NULL;
 	      }
@@ -183,9 +185,10 @@ void                FreeAbView (PtrAbstractBox pAb, int frame)
 	    if (pAb->AbPictBackground != NULL)
 	      {
 		/* in this particular case we need to free filename */
-		TtaFreeMemory (((PictInfo *)(pAb->AbPictBackground))->PicFileName);
+		image = (PictInfo *)pAb->AbPictBackground;
+		TtaFreeMemory (image->PicFileName);
 		/* ce n'est pas un element image */
-		FreePictInfo ((PictInfo *)(pAb->AbPictBackground));
+		CleanPictInfo (image);
 		TtaFreeMemory (pAb->AbPictBackground);
 		pAb->AbPictBackground = NULL;
 	      }

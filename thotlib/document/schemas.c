@@ -1582,7 +1582,7 @@ void    TtaChangeGenericSchemaNames (char* sSchemaUri,
       
       /* Update the LoadedSSchema table */
       for (i = 0; i < MAX_SSCHEMAS &&
-	     ustrcmp ("XML", LoadedSSchema[i].StructSchemaName); i++);
+	     strcmp ("XML", LoadedSSchema[i].StructSchemaName); i++);
       if (i < MAX_SSCHEMAS)
 	{
 	  /* The generic schema is found in the table, modify its name */
@@ -1596,7 +1596,7 @@ void    TtaChangeGenericSchemaNames (char* sSchemaUri,
       /* Update the LoadedPSchema table */
 #ifndef NODISPLAY
       for (i = 0; i < MAX_SSCHEMAS &&
-	     ustrcmp ("XMLP", LoadedPSchema[i].PresSchemaName); i++);
+	     strcmp ("XMLP", LoadedPSchema[i].PresSchemaName); i++);
       if (i < MAX_SSCHEMAS)
 	{
 	  /* The generic schema is found in the table, modify its name */

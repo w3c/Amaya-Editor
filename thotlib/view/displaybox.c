@@ -48,7 +48,7 @@ static int GetLineWeight (PtrAbstractBox pAb, int frame)
 
 
 /*----------------------------------------------------------------------
-  DisplayImage displays a empty box in the frame.
+  DisplayImage displays an image in the frame.
   ----------------------------------------------------------------------*/
 static void  DisplayImage (PtrBox pBox, int frame, int xmin, int xmax,
 			   int ymin, int ymax, ThotBool selected)

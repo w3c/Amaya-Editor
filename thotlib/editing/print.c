@@ -10,7 +10,7 @@
  *
  * Authors: I. Vatton (INRIA)
  *          C. Roisin (INRIA) - Pagination at printing time
- *          R. Guetari (INRIA) - Unicode - Printing routines for Windows.
+ *          R. Guetari (INRIA) - Printing routines for Windows.
  *                               Integration of PostScript prologue. 
  *
  */

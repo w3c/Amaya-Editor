@@ -544,54 +544,70 @@ PtrPathSeg CopyPath (PtrPathSeg firstPathEl)
 }
 
 /*----------------------------------------------------------------------
-   StringAndTextEqual compare une chaine de caracteres (String) et 
-   un texte contenu dans une suite de buffers. Retourne TRUE si    
-   les contenus sont egaux.                                        
+   StringAndTextEqual compare a character string (text) and the contents
+   of text buffers.
+   Return TRUE if equals.
   ----------------------------------------------------------------------*/
-ThotBool StringAndTextEqual (STRING String, PtrTextBuffer pBuf)
+ThotBool StringAndTextEqual (char *text, PtrTextBuffer pBuf)
 {
-   ThotBool            equal;
-   int                 l, lenRest;
-   STRING              pChar;
+  unsigned char      *ptr;
+#ifdef _I18N_
+  wchar_t             wc;
+  int                 i;
+#endif /* _I18N_ */
+  int                 l, length;
+  ThotBool            equal;
 
-   equal = FALSE;
-   if (pBuf == NULL && String == NULL)
-      /* les deux sont vides, egalite' */
-      equal = TRUE;
-   else if (pBuf != NULL && String != NULL)
-     {
-      if (String[0] == EOS && pBuf->BuLength == 0)
-	 equal = TRUE;
+  equal = FALSE;
+  if (pBuf == NULL && text == NULL)
+    /* les deux sont vides, egalite' */
+    equal = TRUE;
+  else if (pBuf && text)
+    {
+      if (text[0] == EOS && pBuf->BuLength == 0)
+	equal = TRUE;
       else
 	{
-	   pChar = String;
-	   lenRest = ustrlen (String);
-	   equal = TRUE;
-	   /* parcourt les buffers de texte successifs */
-	   while (pBuf != NULL && lenRest > 0 && equal)
-	     {
-		if (pBuf->BuLength > 0)
-		  {
-		     if (pBuf->BuLength > lenRest)
-			equal = FALSE;
-		     else
-		       {
-			  if (pBuf->BuLength < lenRest)
-			     l = pBuf->BuLength;
-			  else
-			     l = lenRest;
-			  equal = (ustrncmp (pChar, pBuf->BuContent, l) == 0);
-			  pChar += l;
-			  lenRest -= l;
-		       }
-		  }
-		pBuf = pBuf->BuNext;
-	     }
-	   if (pBuf != NULL || lenRest > 0)
-	      equal = FALSE;
+	  length = strlen (text);
+	  ptr = text;
+	  equal = TRUE;
+	  /* parcourt les buffers de texte successifs */
+	  while (pBuf && length > 0 && equal)
+	    {
+	      if (pBuf->BuLength > 0)
+		{
+#ifdef _I18N_
+		  l = 0;
+		  i = 0;
+		  while (equal && l < length && i < pBuf->BuLength)
+		    {
+		      l += TtaMBstring2WC (&ptr, &wc);
+		      equal = (wc == pBuf->BuContent[i]);
+		      i++;
+		    }
+		  length -= l;
+#else /* _I18N_ */
+		  if (pBuf->BuLength > length)
+		    equal = FALSE;
+		  else
+		    {
+		      if (pBuf->BuLength < length)
+			l = pBuf->BuLength;
+		      else
+			l = length;
+		      equal = (ustrncmp (ptr, pBuf->BuContent, l) == 0);
+		      ptr += l;
+		      length -= l;
+		    }
+#endif /* _I18N_ */
+		}
+	      pBuf = pBuf->BuNext;
+	    }
+	  if (pBuf || length > 0)
+	    equal = FALSE;
 	}
-     }
-   return equal;
+    }
+  return equal;
 }
 
 
@@ -604,7 +620,7 @@ ThotBool TextsEqual (PtrTextBuffer pBuf1, PtrTextBuffer pBuf2)
   PtrTextBuffer       pTB1, pTB2;
   STRING              pChar1;
   STRING              pChar2;
-  int                 len, lenRest1, lenRest2;
+  int                 len, length1, length2;
   ThotBool            equal;
 
   equal = FALSE;
@@ -613,47 +629,47 @@ ThotBool TextsEqual (PtrTextBuffer pBuf1, PtrTextBuffer pBuf2)
   else if (pBuf1 != NULL && pBuf2 != NULL)
     {
       pTB1 = pBuf1;
-      lenRest1 = pTB1->BuLength;
+      length1 = pTB1->BuLength;
       pChar1 = &pTB1->BuContent[0];
       pTB2 = pBuf2;
-      lenRest2 = pTB2->BuLength;
+      length2 = pTB2->BuLength;
       pChar2 = &pTB2->BuContent[0];
       equal = TRUE;
       /* parcourt les deux chaines de buffers */
       while (pTB1 != NULL && pTB2 != NULL && equal)
 	{
-	  if (lenRest1 == 0)
+	  if (length1 == 0)
 	    {
 	      pTB1 = pTB1->BuNext;
 	      if (pTB1 != NULL)
 		{
-		  lenRest1 = pTB1->BuLength;
+		  length1 = pTB1->BuLength;
 		  pChar1 = &pTB1->BuContent[0];
 		}
 	    }
-	  if (lenRest2 == 0)
+	  if (length2 == 0)
 	    {
 	      pTB2 = pTB2->BuNext;
 	      if (pTB2 != NULL)
 		{
-		  lenRest2 = pTB2->BuLength;
+		  length2 = pTB2->BuLength;
 		  pChar2 = &pTB2->BuContent[0];
 		}
 	    }
-	  if (lenRest1 > 0 && lenRest2 > 0)
+	  if (length1 > 0 && length2 > 0)
 	    {
-	      if (lenRest1 > lenRest2)
-		len = lenRest2;
+	      if (length1 > length2)
+		len = length2;
 	      else
-		len = lenRest1;
+		len = length1;
 	      equal = (ustrncmp (pChar1, pChar2, len) == 0);
-	      lenRest1 -= len;
-	      lenRest2 -= len;
+	      length1 -= len;
+	      length2 -= len;
 	      pChar1 += len;
 	      pChar2 += len;
 	    }
 	}
-      if (pTB1 != NULL || pTB2 != NULL || lenRest1 > 0 || lenRest2 > 0)
+      if (pTB1 != NULL || pTB2 != NULL || length1 > 0 || length2 > 0)
 	equal = FALSE;
     }
   return equal;
@@ -704,14 +720,14 @@ void CopyTextToText (PtrTextBuffer pSrceBuf, PtrTextBuffer pCopyBuf, int *len)
 
 
 /*----------------------------------------------------------------------
-  CopyS2B copies max characters of the src string at the position pos in
+  CopyMBs2Buffer copies max characters of the src string at the position pos in
   the buffer pBuf.
-  In _I18N mode max is a UTF-8 string length;
+  In _I18N_ mode max is a UTF-8 string length;
   Adds new buffers if necessary and converts multibytes to wide characters
   if necessary.
   Returns the number of (wide )characters added in buffers.
   ----------------------------------------------------------------------*/
-int CopyS2B (unsigned char *src, int max, PtrTextBuffer pBuf, int pos)
+int CopyMBs2Buffer (unsigned char *src, PtrTextBuffer pBuf, int pos, int max)
 {
   PtrTextBuffer       pNext;
   int                 l, length;
@@ -721,15 +737,15 @@ int CopyS2B (unsigned char *src, int max, PtrTextBuffer pBuf, int pos)
   /* continue while there is still text */
   while (max > 0 && pBuf)
     {
-#ifdef _I18N
+#ifdef _I18N_
       l = 0;
-      while (pos < THOT_MAX_CHAR - 1 && max > 0)
+      while (pos < THOT_MAX_CHAR - 1 && max > l)
 	{
-	  l += TtaMBs2WC (&src, (wchar_t *)&pBuf->BuContent[pos], UTF_8);
+	  l += TtaMBstring2WC (&src, &pBuf->BuContent[pos]);
 	  pos++;
 	  length++;
 	}
-#else /* _I18N */
+#else /* _I18N_ */
       /* length of copied text in that buffer */
       l = THOT_MAX_CHAR - 1 - pos;
       if (max < l)
@@ -742,7 +758,7 @@ int CopyS2B (unsigned char *src, int max, PtrTextBuffer pBuf, int pos)
 	}
       else
 	l = 0;
-#endif /* _I18N */
+#endif /* _I18N_ */
       if (l)
 	{
 	  pBuf->BuLength = pos;
@@ -770,28 +786,28 @@ int CopyS2B (unsigned char *src, int max, PtrTextBuffer pBuf, int pos)
 }
 
 /*----------------------------------------------------------------------
-  CopyB2S copies max characters from the position pos in the buffer pBuf
-  to dest string.
-  In _I18N mode max a UTF-8 string length;
-  Returns the number of (wide )characters copied.
+  CopyBuffer2MBs copies max characters from the position pos in the
+  buffer pBuf to dest string.
+  In _I18N_ mode max a UTF-8 string length
+  Returns the number of Multi Byte characters copied in des.
   ----------------------------------------------------------------------*/
-int CopyB2S (PtrTextBuffer pBuf, int pos, unsigned char *des, int max)
+int CopyBuffer2MBs (PtrTextBuffer pBuf, int pos, unsigned char *des, int max)
 {
-#ifdef _I18N
+#ifdef _I18N_
   char                s[10], *ptr;
-#endif /* _I18N */
+#endif /* _I18N_ */
   int                 l, length;
 
   length = 0;
   /* continue while there is still text */
   while (max > 0 && pBuf)
     {
-#ifdef _I18N
+#ifdef _I18N_
       l = 0;
-      while (pos < THOT_MAX_CHAR - 1 && max > 0)
+      while (pos < pBuf->BuLength && max > 0)
 	{
 	  ptr = s;
-	  l = TtaWC2MBs ((wchar_t *)&pBuf->BuContent[pos], &ptr, UTF_8);
+	  l = TtaWC2MBstring (pBuf->BuContent[pos], &ptr);
 	  pos++;
 	  if (l < max)
 	    {
@@ -801,9 +817,9 @@ int CopyB2S (PtrTextBuffer pBuf, int pos, unsigned char *des, int max)
 	    }
 	  max -= l;
 	}
-#else /* _I18N */
+#else /* _I18N_ */
       /* length of copied text in that buffer */
-      l = THOT_MAX_CHAR - 1 - pos;
+      l = pBuf->BuLength - pos;
       if (max < l)
 	l = max;
       if (l > 0)
@@ -814,7 +830,7 @@ int CopyB2S (PtrTextBuffer pBuf, int pos, unsigned char *des, int max)
       else
 	l = 0;
       max -= l;
-#endif /* _I18N */
+#endif /* _I18N_ */
       if (max > 0)
 	{
 	  /* move to the new buffer */
@@ -822,13 +838,13 @@ int CopyB2S (PtrTextBuffer pBuf, int pos, unsigned char *des, int max)
 	  pos = 0;
 	}
     }
-  des[length - 1] = EOS;
+  des[length] = EOS;
   return length;
 }
 
 
 /*----------------------------------------------------------------------
-  CopyStringToBuffer copies the src string at the end of buffers.
+  CopyStringToBuffer adds the src string at the end of buffers.
   Adds new buffers if necessary and converts into wide characters.    
   Returns the number of copied characters.
   ----------------------------------------------------------------------*/
@@ -847,48 +863,7 @@ void CopyStringToBuffer (unsigned char *src, PtrTextBuffer pDestBuf, int *length
       /* look for the end of buffers */
       while (pBuf->BuNext != NULL)
 	pBuf = pBuf->BuNext;
-      CopyS2B (src, max, pBuf, pBuf->BuLength);
-    }
-}
-
-
-/*----------------------------------------------------------------------
-  CopyBufferToString copies the contents of the buffer pSrceBuf and
-  next buffers into the dest string.
-  The parameter length gives the maximum lenght to copy.
-  Return the string length.
-  ----------------------------------------------------------------------*/
-void CopyBufferToString (PtrTextBuffer pSrceBuf, char *dest, int *length)
-{
-  PtrTextBuffer       pBuf;
-  char               *ptr;
-  int                 max;
-  int                 l;
-
-  if (!pSrceBuf || !dest || *length <= 0)
-    *length = 0;
-  else
-    {
-      max = *length;
-      *length = 0;
-      pBuf = pSrceBuf;
-      ptr = dest;
-      while (pBuf != NULL && max > 0)
-	{
-	  if (pBuf->BuLength > 0)
-	    {
-	      if (pBuf->BuLength < max)
-		l = pBuf->BuLength;
-	      else
-		l = max;
-	      ustrncpy (ptr, pBuf->BuContent, l);
-	      ptr += l;
-	      *ptr = EOS;
-	      max -= l;
-	      *length += l;
-	    }
-	  pBuf = pBuf->BuNext;
-	}
+      CopyMBs2Buffer (src, pBuf, pBuf->BuLength, max);
     }
 }
 
@@ -1095,17 +1070,17 @@ void ModifyPointInPolyline (PtrTextBuffer firstBuffer, int rank, int x, int y)
    element of type Text.
    Return value:
    textLength: the number of characters contained in the element.
-   In _I18N mode the length corresponds to the UTF-8 string.
+   In _I18N_ mode the length corresponds to the UTF-8 string.
   ----------------------------------------------------------------------*/
 int TtaGetTextLength (Element element)
 {
   PtrElement          pEl;
   int                 length;
-#ifdef _I18N
+#ifdef _I18N_
   PtrTextBuffer       pBuf;
   unsigned char       c[10], *ptr;
   int                 i, l;
-#endif /* _I18N */
+#endif /* _I18N_ */
 
   UserErrorCode = 0;
   length = 0;
@@ -1118,16 +1093,16 @@ int TtaGetTextLength (Element element)
     TtaError (ERR_invalid_element_type);
   else
     length = pEl->ElTextLength;
-#ifdef _I18N
+#ifdef _I18N_
   pBuf = pEl->ElText;
   l = 0;
   while (pBuf != NULL && length > 0)
     {
       i = 0;
-      while (i < pBuf->BuLength && l < length)
+      while (i < pBuf->BuLength && i < length)
 	{
 	  ptr = c;
-	  l += TtaWC2MBs ((wchar_t *)&pBuf->BuContent[i], &ptr, UTF_8);
+	  l += TtaWC2MBstring (pBuf->BuContent[i], &ptr);
 	  i++;
 	}
       /* next buffer */
@@ -1135,9 +1110,9 @@ int TtaGetTextLength (Element element)
       pBuf = pBuf->BuNext;
     }
   return l;
-#else /* _I18N */
+#else /* _I18N_ */
   return length;
-#endif /* _I18N */
+#endif /* _I18N_ */
 }
 
 /*----------------------------------------------------------------------
@@ -1150,12 +1125,12 @@ int TtaGetTextLength (Element element)
    buffer: the buffer that will contain the text. This buffer
    must be at least of size length.
    length: maximum length of that buffer.
-   In _I18N mode the length corresponds to the UTF-8 string.
+   In _I18N_ mode the length corresponds to the UTF-8 string.
    Return parameters:
    buffer: (the buffer contains the text).
    length: actual length of the text in the buffer.
    language: language of the text.
-   In _I18N mode returns a UTF-8 string.
+   In _I18N_ mode returns a UTF-8 string.
   ----------------------------------------------------------------------*/
 void TtaGiveTextContent (Element element, unsigned char *buffer, int *length,
 			 Language *language)
@@ -1164,9 +1139,9 @@ void TtaGiveTextContent (Element element, unsigned char *buffer, int *length,
   PtrTextBuffer       pBuf;
   unsigned char      *ptr;
   int                 len, l;
-#ifdef _I18N
+#ifdef _I18N_
   int                 i;
-#endif /* _I18N */
+#endif /* _I18N_ */
 
   UserErrorCode = 0;
   pEl = (PtrElement) element;
@@ -1183,14 +1158,14 @@ void TtaGiveTextContent (Element element, unsigned char *buffer, int *length,
       ptr = buffer;
       while (pBuf != NULL && len < (*length) - 1)
 	{
-#ifdef _I18N
+#ifdef _I18N_
 	  l = 0;
 	  while (l < pBuf->BuLength && len < *length)
 	    {
-	      len += TtaWC2MBs ((wchar_t *) &pBuf->BuContent[l], &ptr, UTF_8);
+	      len += TtaWC2MBstring (pBuf->BuContent[l], &ptr);
 	      l++;
 	    }
-#else /* _I18N */
+#else /* _I18N_ */
 	  if ((*length) < len + pBuf->BuLength + 1)
 	    l = (*length) - len;
 	  else
@@ -1198,7 +1173,7 @@ void TtaGiveTextContent (Element element, unsigned char *buffer, int *length,
 	  ustrncpy (ptr, pBuf->BuContent, l);
 	  ptr = ptr + (l - 1);
 	  len = len + (l - 1);
-#endif /* _I18N */
+#endif /* _I18N_ */
 	  pBuf = pBuf->BuNext;
 	}
       *length = len;

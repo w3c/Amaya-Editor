@@ -57,7 +57,7 @@
    InsertText   inserts the string "content" in the element 
    pEl (which must be of type text), at the position
    "position". If "document" is null, we have not to consider
-   the selction nor the displaying
+   the selection nor the redisplay
   ----------------------------------------------------------------------*/
 static void InsertText (PtrElement pEl, int position, unsigned char *content,
 			Document document)
@@ -125,7 +125,7 @@ static void InsertText (PtrElement pEl, int position, unsigned char *content,
 	  }
 	pBuf->BuContent[lengthBefore] = WC_EOS;
 	pBuf->BuLength = lengthBefore;
-	length = CopyS2B (content, length, pBuf, lengthBefore);
+	length = CopyMBs2Buffer (content, pBuf, lengthBefore, length);
 	delta = length;
 	pEl->ElTextLength += length;
 	pEl->ElVolume += length;
@@ -191,9 +191,10 @@ static void SetContent (Element element, unsigned char *content,
 			Language language, Document document)
 {
   PtrTextBuffer       pBuf, pNextBuff;
+  PtrElement          pEl;
+  PictInfo           *image;
   int                 length, delta = 0, i;
   int                 max;
-  PtrElement          pEl;
 #ifndef NODISPLAY
   PtrDocument         selDoc;
   PtrElement          firstSelection, lastSelection;
@@ -232,7 +233,7 @@ static void SetContent (Element element, unsigned char *content,
 	      pBuf = pEl->ElText;
 	    }
 	  if (pBuf && max > 0)
-	    length = CopyS2B (content, max, pBuf, 0);
+	    length = CopyMBs2Buffer (content, pBuf, 0, max);
 	  else
 	    length = 0;
 	}
@@ -273,9 +274,14 @@ static void SetContent (Element element, unsigned char *content,
 	  pBuf = pNextBuff;
 	}
 
-      if (pEl->ElLeafType == LtPicture && pEl->ElPictInfo != NULL)
-	/* Releases the  pixmap */
-	FreePictInfo ((PictInfo *) ((pEl)->ElPictInfo));
+      if (pEl->ElLeafType == LtPicture && pEl->ElPictInfo)
+	{
+	  /* Releases the  pixmap */
+	  image = (PictInfo *)pEl->ElPictInfo;
+	  CleanPictInfo (image);
+	  TtaFreeMemory (image->PicFileName);
+	  image->PicFileName = TtaStrdup (content);
+	}
 
 #ifndef NODISPLAY
       /* modifies the selection if the element is within it */
@@ -1599,13 +1605,13 @@ void TtaSetPictureType (Element element, char *mime_type)
    element of type Text.
    buffer: the buffer that will contain the substring. This buffer
    must be at least of size length.
-   In _I18N mode the length corresponds to the UTF-8 string.
+   In _I18N_ mode the length corresponds to the UTF-8 string.
    position: the rank of the first character of the substring.
    rank must be strictly positive.
    length: the length of the substring. Must be strictly positive.
    Return parameter:
    buffer: (the buffer contains the substring).
-   In _I18N mode returns a UTF-8 string.
+   In _I18N_ mode returns a UTF-8 string.
   ----------------------------------------------------------------------*/
 void TtaGiveSubString (Element element, unsigned char *buffer, int position,
 		       int length)
@@ -1635,7 +1641,7 @@ void TtaGiveSubString (Element element, unsigned char *buffer, int position,
 	  pBuf = pBuf->BuNext;
 	}
       /* copying into the buffer */
-      length = CopyB2S (pBuf, position, buffer, length);
+      length = CopyBuffer2MBs (pBuf, position, buffer, length);
     }
 }
 

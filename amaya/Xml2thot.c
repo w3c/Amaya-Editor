@@ -2344,9 +2344,9 @@ static void       EndOfAttributeValue (unsigned char *attrValue,
 	   while (i < length)
 	     {
 	       srcbuf = (unsigned char *) &attrValue[i];
-	       nbBytesRead = TtaGetNextWideCharFromMultibyteString (&wcharRead,
-								    &srcbuf,
-								    UTF_8);
+	       nbBytesRead = TtaGetNextWCFromString (&wcharRead,
+						     &srcbuf,
+						     UTF_8);
 	       i += nbBytesRead;
 	       if (wcharRead <= 255)
 		 {
@@ -2545,8 +2545,8 @@ static void       CreateXmlComment (char *commentValue)
        while (i < length)
 	 {
 	   srcbuf = (unsigned char *) &commentValue[i];
-	   nbBytesRead = TtaGetNextWideCharFromMultibyteString (&wcharRead,
-								&srcbuf, UTF_8);
+	   nbBytesRead = TtaGetNextWCFromString (&wcharRead,
+						 &srcbuf, UTF_8);
 	   i += nbBytesRead;
 	   
 	   if (wcharRead < 0x100)
@@ -2851,8 +2851,8 @@ static void       CreateXmlPi (char *PiTarget, char *PiData)
        while (i < length && PiValue[i] != EOS)
 	 {
 	   srcbuf = (unsigned char *) &PiValue[i];
-	   nbBytesRead = TtaGetNextWideCharFromMultibyteString (&wcharRead,
-								&srcbuf, UTF_8);
+	   nbBytesRead = TtaGetNextWCFromString (&wcharRead,
+						 &srcbuf, UTF_8);
 	   i += nbBytesRead;
 	   
 	   if (wcharRead < 0x100)
@@ -3042,8 +3042,8 @@ static void       Hndl_CharacterData (void *userData,
    while (i < length)
      {
        srcbuf = (unsigned char *) &data[i];
-       nbBytesRead = TtaGetNextWideCharFromMultibyteString (&wcharRead,
-							    &srcbuf, UTF_8);
+       nbBytesRead = TtaGetNextWCFromString (&wcharRead,
+					     &srcbuf, UTF_8);
        i += nbBytesRead;
 
        if (wcharRead < 0x100)

@@ -45,7 +45,8 @@ typedef int        *Dictionary;
    Return value:
    identifier of the new language or 0 if the language cannot be added.
   ----------------------------------------------------------------------*/
-extern Language     TtaNewLanguage (CHAR_T* languageName, char languageAlphabet, STRING principalDictionary, STRING secondDictionary);
+extern Language TtaNewLanguage (char *languageName, char languageAlphabet,
+				char *principalDictionary, char *secondDictionary);
 
 /*----------------------------------------------------------------------
    TtaRemoveLanguage
@@ -55,7 +56,7 @@ extern Language     TtaNewLanguage (CHAR_T* languageName, char languageAlphabet,
    Parameters:
        language: the language to be removed.
   ----------------------------------------------------------------------*/
-extern void         TtaRemoveLanguage (Language language);
+extern void TtaRemoveLanguage (Language language);
 
 /*----------------------------------------------------------------------
    TtaGetLanguageIdFromName
@@ -70,7 +71,7 @@ extern void         TtaRemoveLanguage (Language language);
    Return value:
    identifier of that language or 0 if the language is unknown.
   ----------------------------------------------------------------------*/
-extern Language     TtaGetLanguageIdFromName (CHAR_T* languageName);
+extern Language TtaGetLanguageIdFromName (char *languageName);
 
 /*----------------------------------------------------------------------
    TtaGetVarLANG
@@ -80,7 +81,7 @@ extern Language     TtaGetLanguageIdFromName (CHAR_T* languageName);
    Return value:
    a string of 2 chars.
   ----------------------------------------------------------------------*/
-extern CHAR_T*       TtaGetVarLANG (void);
+extern char *TtaGetVarLANG (void);
 
 /*----------------------------------------------------------------------
    TtaGetDefaultLanguage
@@ -90,7 +91,7 @@ extern CHAR_T*       TtaGetVarLANG (void);
    Return value:
    identifier of the default language.
   ----------------------------------------------------------------------*/
-extern Language     TtaGetDefaultLanguage (void);
+extern Language TtaGetDefaultLanguage (void);
 
 /*----------------------------------------------------------------------
    TtaGetLanguageIdFromAlphabet
@@ -105,7 +106,7 @@ extern Language     TtaGetDefaultLanguage (void);
    Return value:
    identifier of that language or 0 if the language is unknown.
   ----------------------------------------------------------------------*/
-extern Language     TtaGetLanguageIdFromAlphabet (CHAR_T languageAlphabet);
+extern Language TtaGetLanguageIdFromAlphabet (char languageAlphabet);
 
 /*----------------------------------------------------------------------
    TtaGetAlphabet
@@ -120,7 +121,7 @@ extern Language     TtaGetLanguageIdFromAlphabet (CHAR_T languageAlphabet);
    Return value:
    a character that identifies the alphabet ('L' = latin, 'G' = greek).
   ----------------------------------------------------------------------*/
-extern char        TtaGetAlphabet (Language languageId);
+extern char TtaGetAlphabet (Language languageId);
 
 /*----------------------------------------------------------------------
    TtaGetLanguageName
@@ -135,7 +136,7 @@ extern char        TtaGetAlphabet (Language languageId);
    Return value:
    the name of the language.
   ----------------------------------------------------------------------*/
-extern CHAR_T*       TtaGetLanguageName (Language languageId);
+extern char *TtaGetLanguageName (Language languageId);
 
 /*----------------------------------------------------------------------
    TtaGetLanguageCode
@@ -150,7 +151,7 @@ extern CHAR_T*       TtaGetLanguageName (Language languageId);
    Return value:
    the code of the language.
   ----------------------------------------------------------------------*/
-extern CHAR_T*       TtaGetLanguageCode (Language languageId);
+extern char *TtaGetLanguageCode (Language languageId);
 
 /*----------------------------------------------------------------------
    TtaGetNumberOfLanguages
@@ -162,7 +163,7 @@ extern CHAR_T*       TtaGetLanguageCode (Language languageId);
    Return value:
    the current number of languages.
   ----------------------------------------------------------------------*/
-extern int          TtaGetNumberOfLanguages (void);
+extern int TtaGetNumberOfLanguages (void);
 
 /*----------------------------------------------------------------------
    TtaLoadLanguageDictionaries
@@ -178,7 +179,7 @@ extern int          TtaGetNumberOfLanguages (void);
    languageId: name of the concerned language.
 
   ----------------------------------------------------------------------*/
-extern ThotBool     TtaLoadLanguageDictionaries (Language languageId);
+extern ThotBool TtaLoadLanguageDictionaries (Language languageId);
 
 /*----------------------------------------------------------------------
    TtaUnLoadLanguageDictionaries
@@ -189,7 +190,7 @@ extern ThotBool     TtaLoadLanguageDictionaries (Language languageId);
    languageId: identifier of the language.
 
   ----------------------------------------------------------------------*/
-extern void         TtaUnLoadLanguageDictionaries (Language languageId);
+extern void TtaUnLoadLanguageDictionaries (Language languageId);
 
 /*----------------------------------------------------------------------
    TtaGetPrincipalDictionary
@@ -200,7 +201,7 @@ extern void         TtaUnLoadLanguageDictionaries (Language languageId);
    the pointer to that dictionary or NULL if there is no dictionary for
    this language.
   ----------------------------------------------------------------------*/
-extern Dictionary   TtaGetPrincipalDictionary (Language languageId);
+extern Dictionary TtaGetPrincipalDictionary (Language languageId);
 
 /*----------------------------------------------------------------------
    TtaGetSecondaryDictionary
@@ -211,7 +212,7 @@ extern Dictionary   TtaGetPrincipalDictionary (Language languageId);
    the pointer to that dictionary or NULL if there is no dictionary for
    this language.
   ----------------------------------------------------------------------*/
-extern Dictionary   TtaGetSecondaryDictionary (Language languageId);
+extern Dictionary TtaGetSecondaryDictionary (Language languageId);
 
 #endif /* __CEXTRACT__ */
 

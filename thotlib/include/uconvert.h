@@ -12,38 +12,37 @@ extern long uatol (const STRING string);
 extern CHAR_T utolower (CHAR_T c);
 
 /*----------------------------------------------------------------------
-  TtaGetCharFromUnicode: returns the char code in the corresponding encoding
-  of  the Unicode value wc.
+  TtaGetCharFromUnicode returns the ISO or Windows character code
+  of the Unicode value wc.
   ----------------------------------------------------------------------*/
 extern unsigned char TtaGetCharFromUnicode (const wchar_t wc, CHARSET encoding);
 
 /*----------------------------------------------------------------------
-  TtaGetUnicodeFromChar: return the Unicode val corresponding
-  to the ISO Latin 2 code c.
+  TtaGetUnicodeFromChar returns the Unicode value of the corresponding
+  ISO or Windows character code c.
   ----------------------------------------------------------------------*/
 extern wchar_t TtaGetUnicodeFromChar (const unsigned char c, CHARSET encoding);
 
 /*----------------------------------------------------------------------
-  TtaMBs2WCS converts a multibyte string into a wide character according
-  to the charset.
+  TtaMBstring2WCS converts a multibyte string into a wide character.
   Returns the number of bytes in the multibyte character or -1
   The pointer to the source multibyte string is updated.
   ----------------------------------------------------------------------*/
-extern int TtaMBs2WC (unsigned char **src, wchar_t *dest, CHARSET encoding);
+extern int TtaMBstring2WC (unsigned char **src, wchar_t *dest);
 
 /*----------------------------------------------------------------------
   TtaWCS2MBs converts a wide character into a multibyte string according to
   the charset.                                                                
   Return the number of bytes in the multibyte character or -1
-  The pointer to the source multibyte string is updated.
+  The pointer to the dest multibyte string is updated.
   ----------------------------------------------------------------------*/
-extern int TtaWC2MBs (wchar_t *src, unsigned char **dest, CHARSET encoding);
+extern int TtaWC2MBstring (wchar_t src, unsigned char **dest);
 
 /*----------------------------------------------------------------------
-  TtaGetNextWideCharFromMultibyteString: Looks for the next Wide character 
+  TtaGetNextWCFromString: Looks for the next Wide character 
   value in a multibyte character string.
   ----------------------------------------------------------------------*/
-extern int TtaGetNextWideCharFromMultibyteString (wchar_t *car, unsigned char **txt, CHARSET encoding);
+extern int TtaGetNextWCFromString (wchar_t *car, unsigned char **txt, CHARSET encoding);
 
 /*----------------------------------------------------------------------
   TtaGetNumberOfBytesToRead: 

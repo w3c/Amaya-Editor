@@ -783,29 +783,28 @@ void         ChangeLanguageLeaves (PtrElement pEl, Language lang)
    defined by Language attribute of pEl or, if it does not have one,
    by that of one of his ancestors.
   ----------------------------------------------------------------------*/
-static void         LeavesInheritLanguage (PtrElement pEl)
+static void LeavesInheritLanguage (PtrElement pEl)
 {
-   PtrAttribute        pAttr;
-   PtrElement          pElAttr;
-   Language            lang;
+  PtrAttribute        pAttr;
+  PtrElement          pElAttr;
+  unsigned char       text[100];
+  Language            lang;
 
-   if (GetTypedAttrForElem (pEl, 1, NULL) == NULL)
-      /* pEl does not have a Language attribute */
-
-     {
-	/* searches the ancestors of pEl for a Language attribute */
-	pAttr = GetTypedAttrAncestor (pEl, 1, NULL, &pElAttr);
-	if (pAttr != NULL)
-	   /* found a Language attribute in one ancestor */
-	   if (pAttr->AeAttrText != NULL)
-	      if (pAttr->AeAttrText->BuContent[0] != EOS)
-		 /* this Language attribute has a value */
-		{
-		   lang = TtaGetLanguageIdFromName (pAttr->AeAttrText->BuContent);
-		   /* changes the language of the text leaves of the subtree */
-		   ChangeLanguageLeaves (pEl, lang);
-		}
-     }
+  if (GetTypedAttrForElem (pEl, 1, NULL) == NULL)
+    /* pEl does not have a Language attribute */
+    {
+      /* searches the ancestors of pEl for a Language attribute */
+      pAttr = GetTypedAttrAncestor (pEl, 1, NULL, &pElAttr);
+      if (pAttr && pAttr->AeAttrText &&
+	  pAttr->AeAttrText->BuContent[0] != WC_EOS)
+	/* this Language attribute has a value */
+	{
+	  CopyBuffer2MBs (pAttr->AeAttrText, 0, text, 100);
+	  lang = TtaGetLanguageIdFromName (text);
+	  /* changes the language of the text leaves of the subtree */
+	  ChangeLanguageLeaves (pEl, lang);
+	}
+    }
 }
 
 
@@ -2771,147 +2770,150 @@ void                DeleteAttribute (PtrElement pEl, PtrAttribute pAttr)
    For each freed element, all corresponding abstract boxes, in all views,
    are also freed.
   ----------------------------------------------------------------------*/
-void                DeleteElement (PtrElement * pEl, PtrDocument pDoc)
+void DeleteElement (PtrElement * pEl, PtrDocument pDoc)
 {
-   PtrElement          pChild, pNextChild;
-   PtrTextBuffer       pBuf, pNextBuf;
-   PtrPathSeg          pPa, pNextPa;
-   int                 c;
-   PtrAttribute        pAttr, pNextAttr;
-   PtrPRule            pRule, pNextRule;
-   PtrElement          pEl1;
-   PtrCopyDescr        pCD, pNextCD;
+  PtrElement          pChild, pNextChild;
+  PtrTextBuffer       pBuf, pNextBuf;
+  PtrPathSeg          pPa, pNextPa;
+  PtrAttribute        pAttr, pNextAttr;
+  PtrPRule            pRule, pNextRule;
+  PtrElement          pEl1;
+  PtrCopyDescr        pCD, pNextCD;
+  PictInfo           *image;
+  int                 c;
 
-   if (*pEl != NULL && (*pEl)->ElStructSchema != NULL)
-     {
-       pEl1 = *pEl;
-       /* if its a text leaf, delete the text */
-       if (pEl1->ElTerminal)
-	 {
-	   if ((pEl1->ElLeafType == LtText || pEl1->ElLeafType == LtPicture)
-	       && pEl1->ElText != NULL)
-	     /* deletes all the text buffers associated to the element */
-	     {
-	       pBuf = pEl1->ElText;
-	       c = 0;
-	       do
-		 {
-		   pNextBuf = pBuf->BuNext;
-		   c += pBuf->BuLength;
-		   DeleteTextBuffer (&pBuf);
-		   pBuf = pNextBuf;
-		 }
-	       while (/*c < pEl1->ElTextLength &&*/ pBuf != NULL);
-	       pEl1->ElText = NULL;
-	       pEl1->ElTextLength = 0;
+  if (*pEl != NULL && (*pEl)->ElStructSchema != NULL)
+    {
+      pEl1 = *pEl;
+      /* if its a text leaf, delete the text */
+      if (pEl1->ElTerminal)
+	{
+	  if ((pEl1->ElLeafType == LtText || pEl1->ElLeafType == LtPicture)
+	      && pEl1->ElText != NULL)
+	    /* deletes all the text buffers associated to the element */
+	    {
+	      pBuf = pEl1->ElText;
+	      c = 0;
+	      do
+		{
+		  pNextBuf = pBuf->BuNext;
+		  c += pBuf->BuLength;
+		  DeleteTextBuffer (&pBuf);
+		  pBuf = pNextBuf;
+		}
+	      while (/*c < pEl1->ElTextLength &&*/ pBuf != NULL);
+	      pEl1->ElText = NULL;
+	      pEl1->ElTextLength = 0;
 
-	       /* frees the image descriptor */
-	       if (pEl1->ElLeafType == LtPicture)
-		 {
-		   FreePictInfo ((PictInfo *)(pEl1->ElPictInfo));
-		   TtaFreeMemory (pEl1->ElPictInfo);
-		   pEl1->ElPictInfo = NULL;
-		 }
-	     }
-	   if (pEl1->ElLeafType == LtPolyLine)
-	     /* frees all the coordinate buffers associated to the element */
-	     {
-	       pBuf = pEl1->ElPolyLineBuffer;
-	       while (pBuf != NULL)
-		 {
-		   pNextBuf = pBuf->BuNext;
-		   DeleteTextBuffer (&pBuf);
-		   pBuf = pNextBuf;
-		 }
-	       pEl1->ElPolyLineBuffer = NULL;
-	       pEl1->ElNPoints = 0;
-	     }
-	   if (pEl1->ElLeafType == LtPolyLine)
-	     /* frees all the path elements associated to the element */
-	     {
-	       pPa = pEl1->ElFirstPathSeg;
-	       while (pPa)
-		 {
-		   pNextPa = pPa->PaNext;
-		   FreePathSeg (pPa);
-		   pPa = pNextPa;
-		 }
-	       pEl1->ElFirstPathSeg = NULL;
-	     }
-	   if (pEl1->ElLeafType == LtReference)
-	     /* frees and unlinks the reference */
-	     {
-	       CancelReference (*pEl, pDoc);
-	       if (pEl1->ElReference != NULL)
-		 {
-		   FreeReference (pEl1->ElReference);
-		   pEl1->ElReference = NULL;
-		 }
-	     }
-	   if (pEl1->ElLeafType == LtPairedElem)
-	     if (pEl1->ElOtherPairedEl != NULL)
-	       pEl1->ElOtherPairedEl->ElOtherPairedEl = NULL;
-	 }
-       else
-	 /* it's not a leaf, so delete the element's childs */
-	 {
-	   pChild = pEl1->ElFirstChild;
-	   while (pChild != NULL)
-	     {
-	       pNextChild = pChild->ElNext;
-	       DeleteElement (&pChild, pDoc);
-	       pChild = pNextChild;
-	     }
-	 }
-       /* deletes all the descriptors of the copy elements */
-       pCD = pEl1->ElCopyDescr;
-       while (pCD != NULL)
-	 {
-	   if (pCD->CdCopiedAb != NULL)
-	     pCD->CdCopiedAb->AbCopyDescr = NULL;
-	   pNextCD = pCD->CdNext;
-	   FreeDescCopy (pCD);
-	   pCD = pNextCD;
-	 }
-
-       /* deletes the inclusion reference if it exists */
-       if (pEl1->ElSource != NULL)
-	 {
-	   CancelReference (*pEl, pDoc);
-	   FreeReference (pEl1->ElSource);
-	 }
-       /* deletes all the attributes */
-       pAttr = pEl1->ElFirstAttr;
-       while (pAttr != NULL)
-	 {
-	   pNextAttr = pAttr->AeNext;
-	   RemoveAttribute (*pEl, pAttr);
-	   DeleteAttribute (*pEl, pAttr);
-	   pAttr = pNextAttr;
-	 }
-       /* deletes all the presentation rules of the element */
-       pRule = pEl1->ElFirstPRule;
-       pEl1->ElFirstPRule = NULL;
-       while (pRule != NULL)
-	 {
-	   pNextRule = pRule->PrNextPRule;
-	   FreePresentRule (pRule);
-	   pRule = pNextRule;
-	 }
-       /* frees all the references to the element */
-       DeleteAllReferences (*pEl);
-       /* frees the descriptor of the referenced element */
-       DeleteReferredElDescr (pEl1->ElReferredDescr);
-       pEl1->ElReferredDescr = NULL;
-       /* removes the element from the tree */
-       RemoveElement (*pEl);
-       /* frees all the Abstract boxes */
-       if (pDoc)
-	 FreeAbEl (*pEl, pDoc);
-       /* frees the memory */
-       FreeElement (*pEl);
-       *pEl = NULL;
-     }
+	      /* frees the image descriptor */
+	      if (pEl1->ElLeafType == LtPicture && pEl1->ElPictInfo)
+		{
+		  image = (PictInfo *)pEl1->ElPictInfo;
+		  CleanPictInfo (image);
+		  TtaFreeMemory (image->PicFileName);
+		  TtaFreeMemory (pEl1->ElPictInfo);
+		  pEl1->ElPictInfo = NULL;
+		}
+	    }
+	  if (pEl1->ElLeafType == LtPolyLine)
+	    /* frees all the coordinate buffers associated to the element */
+	    {
+	      pBuf = pEl1->ElPolyLineBuffer;
+	      while (pBuf != NULL)
+		{
+		  pNextBuf = pBuf->BuNext;
+		  DeleteTextBuffer (&pBuf);
+		  pBuf = pNextBuf;
+		}
+	      pEl1->ElPolyLineBuffer = NULL;
+	      pEl1->ElNPoints = 0;
+	    }
+	  if (pEl1->ElLeafType == LtPolyLine)
+	    /* frees all the path elements associated to the element */
+	    {
+	      pPa = pEl1->ElFirstPathSeg;
+	      while (pPa)
+		{
+		  pNextPa = pPa->PaNext;
+		  FreePathSeg (pPa);
+		  pPa = pNextPa;
+		}
+	      pEl1->ElFirstPathSeg = NULL;
+	    }
+	  if (pEl1->ElLeafType == LtReference)
+	    /* frees and unlinks the reference */
+	    {
+	      CancelReference (*pEl, pDoc);
+	      if (pEl1->ElReference != NULL)
+		{
+		  FreeReference (pEl1->ElReference);
+		  pEl1->ElReference = NULL;
+		}
+	    }
+	  if (pEl1->ElLeafType == LtPairedElem)
+	    if (pEl1->ElOtherPairedEl != NULL)
+	      pEl1->ElOtherPairedEl->ElOtherPairedEl = NULL;
+	}
+      else
+	/* it's not a leaf, so delete the element's childs */
+	{
+	  pChild = pEl1->ElFirstChild;
+	  while (pChild != NULL)
+	    {
+	      pNextChild = pChild->ElNext;
+	      DeleteElement (&pChild, pDoc);
+	      pChild = pNextChild;
+	    }
+	}
+      /* deletes all the descriptors of the copy elements */
+      pCD = pEl1->ElCopyDescr;
+      while (pCD != NULL)
+	{
+	  if (pCD->CdCopiedAb != NULL)
+	    pCD->CdCopiedAb->AbCopyDescr = NULL;
+	  pNextCD = pCD->CdNext;
+	  FreeDescCopy (pCD);
+	  pCD = pNextCD;
+	}
+      
+      /* deletes the inclusion reference if it exists */
+      if (pEl1->ElSource != NULL)
+	{
+	  CancelReference (*pEl, pDoc);
+	  FreeReference (pEl1->ElSource);
+	}
+      /* deletes all the attributes */
+      pAttr = pEl1->ElFirstAttr;
+      while (pAttr != NULL)
+	{
+	  pNextAttr = pAttr->AeNext;
+	  RemoveAttribute (*pEl, pAttr);
+	  DeleteAttribute (*pEl, pAttr);
+	  pAttr = pNextAttr;
+	}
+      /* deletes all the presentation rules of the element */
+      pRule = pEl1->ElFirstPRule;
+      pEl1->ElFirstPRule = NULL;
+      while (pRule != NULL)
+	{
+	  pNextRule = pRule->PrNextPRule;
+	  FreePresentRule (pRule);
+	  pRule = pNextRule;
+	}
+      /* frees all the references to the element */
+      DeleteAllReferences (*pEl);
+      /* frees the descriptor of the referenced element */
+      DeleteReferredElDescr (pEl1->ElReferredDescr);
+      pEl1->ElReferredDescr = NULL;
+      /* removes the element from the tree */
+      RemoveElement (*pEl);
+      /* frees all the Abstract boxes */
+      if (pDoc)
+	FreeAbEl (*pEl, pDoc);
+      /* frees the memory */
+      FreeElement (*pEl);
+      *pEl = NULL;
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -3501,6 +3503,7 @@ void CheckLanguageAttr (PtrDocument pDoc, PtrElement pEl)
 {
   PtrAttribute        pAttr, pA;
   Language            lang;
+  unsigned char       text[100];
   int                 len;
  
    if (pEl && GetTypedAttrForElem (pEl, 1, NULL) == NULL)
@@ -3514,8 +3517,11 @@ void CheckLanguageAttr (PtrDocument pDoc, PtrElement pEl)
 	    we use that language */
 	 {
 	   pAttr = GetTypedAttrForElem (pDoc->DocDocElement, 1, NULL);
-	   if (pAttr && pAttr->AeAttrText != NULL)
-	     lang = TtaGetLanguageIdFromName (pAttr->AeAttrText->BuContent);
+	   if (pAttr && pAttr->AeAttrText)
+	     {
+	       CopyBuffer2MBs (pAttr->AeAttrText, 0, text, 100);
+		 lang = TtaGetLanguageIdFromName (text);
+	     }
 	 }
        /* changes the language of the text leaves */
        ChangeLanguageLeaves (pEl, lang);

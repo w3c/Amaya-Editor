@@ -50,29 +50,29 @@ extern int TtaAddButton ( Document document,
 extern void *TtaGetButtonCallback ( Document document,
                                     View view,
                                     int index );
-extern void TtaSwitchButton ( Document document,
+extern void TtaSwitchButton ( Document doc,
                               View view,
                               int index );
-extern void TtaChangeButton ( Document document,
+extern void TtaChangeButton ( Document doc,
                               View view,
                               int index,
                               ThotIcon picture,
                               ThotBool state );
-extern void TtcSwitchButtonBar ( Document document,
+extern void TtcSwitchButtonBar ( Document doc,
                                  View view );
 extern void APP_TextCallback ( ThotWidget w,
                                int frame,
                                void *call_d );
-extern int TtaAddTextZone ( Document document,
+extern int TtaAddTextZone ( Document doc,
                             View view,
                             char *label,
                             ThotBool editable,
                             void (*procedure) () );
-extern void TtaSetTextZone ( Document document,
+extern void TtaSetTextZone ( Document doc,
                              View view,
                              int index,
                              char *text );
-extern void TtcSwitchCommands ( Document document,
+extern void TtcSwitchCommands ( Document doc,
                                 View view );
 extern void DrawingInput ( int *w,
                            int frame,
@@ -167,29 +167,29 @@ extern int TtaAddButton (/* Document document,
 extern void *TtaGetButtonCallback (/* Document document,
                                       View view,
                                       int index */);
-extern void TtaSwitchButton (/* Document document,
+extern void TtaSwitchButton (/* Document doc,
                                 View view,
                                 int index */);
-extern void TtaChangeButton (/* Document document,
+extern void TtaChangeButton (/* Document doc,
                                 View view,
                                 int index,
                                 ThotIcon picture,
                                 ThotBool state */);
-extern void TtcSwitchButtonBar (/* Document document,
+extern void TtcSwitchButtonBar (/* Document doc,
                                    View view */);
 extern void APP_TextCallback (/* ThotWidget w,
                                  int frame,
                                  void *call_d */);
-extern int TtaAddTextZone (/* Document document,
+extern int TtaAddTextZone (/* Document doc,
                               View view,
                               char *label,
                               ThotBool editable,
                               void (*procedure) () */);
-extern void TtaSetTextZone (/* Document document,
+extern void TtaSetTextZone (/* Document doc,
                                View view,
                                int index,
                                char *text */);
-extern void TtcSwitchCommands (/* Document document,
+extern void TtcSwitchCommands (/* Document doc,
                                   View view */);
 extern void DrawingInput (/* int *w,
                              int frame,

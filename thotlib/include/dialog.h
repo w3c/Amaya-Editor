@@ -51,17 +51,18 @@ extern gint ExposeEvent (ThotWidget widget, GdkEventExpose *event, gpointer data
    des entre'es du menu.                                              
    Retourne un code d'erreur.                                         
   ----------------------------------------------------------------------*/
-extern void         TtaNewPulldown (int ref, ThotMenu parent, STRING title, int number, STRING text, char* equiv);
+extern void TtaNewPulldown (int ref, ThotMenu parent, char *title,
+			    int number, char *text, char* equiv);
 
 /*----------------------------------------------------------------------
    TtaSetPulldownOff suspend le pulldown                           
   ----------------------------------------------------------------------*/
-extern void         TtaSetPulldownOff (int ref, ThotWidget parent);
+extern void TtaSetPulldownOff (int ref, ThotWidget parent);
 
 /*----------------------------------------------------------------------
    TtaSetPulldownOn reactive le pulldown                           
   ----------------------------------------------------------------------*/
-extern void         TtaSetPulldownOn (int ref, ThotWidget parent);
+extern void TtaSetPulldownOn (int ref, ThotWidget parent);
 
 /*----------------------------------------------------------------------
    TtaNewPopup cre'e un pop-up menu :                                 
@@ -76,7 +77,8 @@ extern void         TtaSetPulldownOn (int ref, ThotWidget parent);
    Le parame`tre button indique le bouton de la souris qui active le  
    menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
   ----------------------------------------------------------------------*/
-extern void         TtaNewPopup (int ref, ThotWidget parent, STRING title, int number, STRING text, STRING equiv, char button);
+extern void TtaNewPopup (int ref, ThotWidget parent, char *title, int number,
+			 char *text, char *equiv, char button);
 
 /*----------------------------------------------------------------------
    TtaNewSubmenu cre'e un sous-menu :                                 
@@ -93,7 +95,8 @@ extern void         TtaNewPopup (int ref, ThotWidget parent, STRING title, int n
    Quand le parame`tre react est vrai, tout changement de se'lection  
    dans le sous-menu est imme'diatement signale' a` l'application.    
   ----------------------------------------------------------------------*/
-extern void         TtaNewSubmenu (int ref, int ref_parent, int entry, STRING title, int number, STRING text, char* equiv, ThotBool react);
+extern void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
+			   int number, char *text, char* equiv, ThotBool react);
 
 /*----------------------------------------------------------------------
    TtaNewIconMenu cre'e un sous-menu :                                        
@@ -106,14 +109,15 @@ extern void         TtaNewSubmenu (int ref, int ref_parent, int entry, STRING ti
    Tout changement de se'lection dans le sous-menu est imme'diatement 
    signale' a` l'application.                                         
   ----------------------------------------------------------------------*/
-extern void         TtaNewIconMenu (int ref, int ref_parent, int entry, STRING title, int number, Pixmap * icons, ThotBool horizontal);
+extern void TtaNewIconMenu (int ref, int ref_parent, int entry, char *title,
+			    int number, Pixmap * icons, ThotBool horizontal);
 
 /*----------------------------------------------------------------------
    TtaSetMenuForm fixe la selection dans un sous-menu de formulaire : 
    Le parame`tre ref donne la re'fe'rence du catalogue.               
    Le parame`tre val de'signe l'entre'e se'lectionne'e.               
   ----------------------------------------------------------------------*/
-extern void         TtaSetMenuForm (int ref, int val);
+extern void TtaSetMenuForm (int ref, int val);
 
 /*----------------------------------------------------------------------
    TtaNewToggleMenu cre'e un sous-menu a` choix multiples :           
@@ -129,7 +133,8 @@ extern void         TtaSetMenuForm (int ref, int val);
    Quand le parame`tre react est vrai, tout changement de se'lection  
    dans le sous-menu est imme'diatement signale' a` l'application.    
   ----------------------------------------------------------------------*/
-extern void         TtaNewToggleMenu (int ref, int ref_parent, STRING title, int number, STRING text, STRING equiv, ThotBool react);
+extern void TtaNewToggleMenu (int ref, int ref_parent, char *title, int number,
+			      char *text, char *equiv, ThotBool react);
 
 /*----------------------------------------------------------------------
    TtaSetToggleMenu fixe la selection dans un toggle-menu :           
@@ -138,24 +143,25 @@ extern void         TtaNewToggleMenu (int ref, int ref_parent, STRING title, int
    toutes les entre'es). Le parame`tre on indique que le bouton       
    correspondant doit e^tre allume' (on positif) ou e'teint (on nul). 
   ----------------------------------------------------------------------*/
-extern void         TtaSetToggleMenu (int ref, int val, ThotBool on);
+extern void TtaSetToggleMenu (int ref, int val, ThotBool on);
 
 /*----------------------------------------------------------------------
    TtaChangeMenuEntry modifie l'intitule' texte de l`entre'e entry    
    du menu de'signe' par sa re'fe'rence ref.                          
   ----------------------------------------------------------------------*/
-extern void         TtaChangeMenuEntry (int ref, int entry, STRING texte);
+extern void TtaChangeMenuEntry (int ref, int entry, char *texte);
 
 /*----------------------------------------------------------------------
    TtaRedrawMenuEntry modifie la couleur et/ou la police de l'entre'e 
    entry du menu de'signe' par sa re'fe'rence ref.                    
   ----------------------------------------------------------------------*/
-extern void         TtaRedrawMenuEntry (int ref, int entry, STRING fontname, Pixel color, int activate);
+extern void TtaRedrawMenuEntry (int ref, int entry, char *fontname,
+				Pixel color, int activate);
 
 /*----------------------------------------------------------------------
    TtaDestroyDialogue de'truit le catalogue de'signe' par ref.                
   ----------------------------------------------------------------------*/
-extern void         TtaDestroyDialogue (int ref);
+extern void TtaDestroyDialogue (int ref);
 
 /*----------------------------------------------------------------------
    TtaNewForm cre'e un formulaire :                                   
@@ -169,7 +175,8 @@ extern void         TtaDestroyDialogue (int ref);
    Le parame'tre button indique le bouton de la souris qui active le  
    menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
   ----------------------------------------------------------------------*/
-extern void         TtaNewForm (int ref, ThotWidget parent, STRING title, ThotBool horizontal, int packet, char button, int dbutton);
+extern void TtaNewForm (int ref, ThotWidget parent, char *title,
+			ThotBool horizontal, int packet, char button, int dbutton);
 
 /*----------------------------------------------------------------------
    TtaNewSheet cre'e un feuillet de commande :                        
@@ -188,7 +195,9 @@ extern void         TtaNewForm (int ref, ThotWidget parent, STRING title, ThotBo
    Le parame`tre button indique le bouton de la souris qui active le  
    menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
   ----------------------------------------------------------------------*/
-extern void         TtaNewSheet (int ref, ThotWidget parent, STRING title, int number, STRING text, ThotBool horizontal, int packet, CHAR_T button, int dbutton);
+extern void TtaNewSheet (int ref, ThotWidget parent, char *title, int number,
+			 char *text, ThotBool horizontal, int packet,
+			 char button, int dbutton);
 
 /*----------------------------------------------------------------------
    TtaNewDialogSheet cre'e un feuillet de dialogue :                  
@@ -206,7 +215,8 @@ extern void         TtaNewSheet (int ref, ThotWidget parent, STRING title, int n
    Le parame`tre button indique le bouton de la souris qui active le  
    menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
   ----------------------------------------------------------------------*/
-void                TtaNewDialogSheet (int ref, ThotWidget parent, STRING title, int number, STRING text, ThotBool horizontal, int packet, CHAR_T button);
+void TtaNewDialogSheet (int ref, ThotWidget parent, char *title, int number,
+			char *text, ThotBool horizontal, int packet, char button);
 
 /*----------------------------------------------------------------------
    TtaChangeFormTitle change le titre d'un formulaire ou d'une feuille        
@@ -214,19 +224,19 @@ void                TtaNewDialogSheet (int ref, ThotWidget parent, STRING title,
    Le parame`tre ref donne la re'fe'rence du catalogue.               
    Le parame'tre title donne le titre du catalogue.                   
   ----------------------------------------------------------------------*/
-extern void         TtaChangeFormTitle (int ref, STRING title);
+extern void TtaChangeFormTitle (int ref, char *title);
 
 /*----------------------------------------------------------------------
    TtaAttachForm attache le catalogue au formulaire ou au feuillet    
    dont il de'pend. Les catalogues sont cre'e's attache's.            
   ----------------------------------------------------------------------*/
-extern void         TtaAttachForm (int ref);
+extern void TtaAttachForm (int ref);
 
 /*----------------------------------------------------------------------
    TtaDetachForm detache le catalogue au formulaire ou au feuillet    
    dont il de'pend. Les catalogues sont cre'e's attache's.            
   ----------------------------------------------------------------------*/
-extern void         TtaDetachForm (int ref);
+extern void TtaDetachForm (int ref);
 
 /*----------------------------------------------------------------------
    TtaNewSelector cre'e un se'lecteur dans un formulaire :            
@@ -243,7 +253,9 @@ extern void         TtaDetachForm (int ref);
    Quand le parame`tre react est vrai, tout changement de se'lection  
    dans le se'lecteur est imme'diatement signale' a` l'application.   
   ----------------------------------------------------------------------*/
-extern void         TtaNewSelector (int ref, int ref_parent, STRING title, int number, STRING text, int height, STRING label, ThotBool withText, ThotBool react);
+extern void TtaNewSelector (int ref, int ref_parent, char *title, int number,
+			    char *text, int height, char *label,
+			    ThotBool withText, ThotBool react);
 
 /*----------------------------------------------------------------------
    TtaSetSelector initialise l'entre'e et/ou le texte du se'lecteur : 
@@ -252,14 +264,14 @@ extern void         TtaNewSelector (int ref, int ref_parent, STRING title, int n
    se'lectionne'e.                                                    
    Le parame`tre text donne le texte si entry vaut -1.                
   ----------------------------------------------------------------------*/
-extern void         TtaSetSelector (int ref, int entry, STRING text);
+extern void TtaSetSelector (int ref, int entry, char *text);
 
 /*----------------------------------------------------------------------
    TtaNewLabel cre'e un intitule' constant dans un formulaire :       
    Le parame`tre ref donne la re'fe'rence du catalogue.               
    Le parame`tre text donne l'intitule'.                              
   ----------------------------------------------------------------------*/
-extern void         TtaNewLabel (int ref, int ref_parent, STRING text);
+extern void TtaNewLabel (int ref, int ref_parent, char *text);
 
 /*----------------------------------------------------------------------
    TtaNewTextForm cre'e une feuille de saisie de texte :              
@@ -270,14 +282,15 @@ extern void         TtaNewLabel (int ref, int ref_parent, STRING text);
    Quand le parame`tre react est vrai, tout changement dans la        
    feuille de saisie est imme'diatement signale' a` l'application.    
   ----------------------------------------------------------------------*/
-extern void         TtaNewTextForm (int ref, int ref_parent, STRING title, int width, int height, ThotBool react);
+extern void TtaNewTextForm (int ref, int ref_parent, char *title, int width,
+			    int height, ThotBool react);
 
 /*----------------------------------------------------------------------
    TtaSetTextForm initialise une feuille de saisie de texte :         
    Le parame`tre ref donne la re'fe'rence du catalogue.               
    Le parame`tre text donne la valeur initiale.                       
   ----------------------------------------------------------------------*/
-extern void         TtaSetTextForm (int ref, STRING text);
+extern void TtaSetTextForm (int ref, char *text);
 
 /*----------------------------------------------------------------------
    TtaNewNumberForm cre'e une feuille de saisie de nombre :           
@@ -288,47 +301,48 @@ extern void         TtaSetTextForm (int ref, STRING text);
    Quand le parame`tre react est vrai, tout changement dans           
    la feuille de saisie est imme'diatement signale' a` l'application. 
   ----------------------------------------------------------------------*/
-extern void         TtaNewNumberForm (int ref, int ref_parent, STRING title, int min, int max, ThotBool react);
+extern void TtaNewNumberForm (int ref, int ref_parent, char *title, int min,
+			      int max, ThotBool react);
 
 /*----------------------------------------------------------------------
    TtaSetNumberForm fixe le contenu de la feuille de saisie de texte :        
    Le parame`tre ref donne la re'fe'rence du catalogue.               
    Le parame`tre val donne la valeur initiale.                        
   ----------------------------------------------------------------------*/
-extern void         TtaSetNumberForm (int ref, int val);
+extern void TtaSetNumberForm (int ref, int val);
 
 /*----------------------------------------------------------------------
    TtaSetDialoguePosition me'morise la position actuelle de la souris 
    comme position d'affichage des TtaShowDialogue().               
   ----------------------------------------------------------------------*/
-extern void         TtaSetDialoguePosition (void);
+extern void TtaSetDialoguePosition (void);
 
 /*----------------------------------------------------------------------
    TtaShowDialogue active le catalogue de'signe.                      
   ----------------------------------------------------------------------*/
-extern void         TtaShowDialogue (int ref, ThotBool remanent);
+extern void TtaShowDialogue (int ref, ThotBool remanent);
 
 /*----------------------------------------------------------------------
    TtaWaitShowDialogue attends le retour du catalogue affiche par     
    TtaShowDialogue.                                                   
   ----------------------------------------------------------------------*/
-extern void         TtaWaitShowDialogue (void);
+extern void TtaWaitShowDialogue (void);
 
 /*----------------------------------------------------------------------
    TtaTestWaitShowDialogue retourne Vrai (1) si un TtaWaitShowDialogue        
    est en cours, sinon Faux (0).                                      
   ----------------------------------------------------------------------*/
-extern ThotBool     TtaTestWaitShowDialogue (void);
+extern ThotBool TtaTestWaitShowDialogue (void);
 
 /*----------------------------------------------------------------------
    TtaAbortShowDialogue abandonne le TtaShowDialogue.                 
   ----------------------------------------------------------------------*/
-extern void         TtaAbortShowDialogue (void);
+extern void TtaAbortShowDialogue (void);
 
 /*----------------------------------------------------------------------
    TtaUnmapDialogue desactive le dialogue s'il est actif.             
   ----------------------------------------------------------------------*/
-extern void         TtaUnmapDialogue (int ref);
+extern void TtaUnmapDialogue (int ref);
 
 #endif /* __CEXTRACT__ */
 

@@ -847,8 +847,7 @@ void InitSyntax (char *fileName)
 	  j = 0;
 	  do
 	    {
-	      /* fileOK = TtaReadByte (grmFile, &inputLine[j]); */
-	      fileOK = TtaReadWideChar (grmFile, &inputLine[j], ISO_8859_1);
+	      fileOK = TtaReadByte (grmFile, &inputLine[j]);
 	      j++;
 	    }
 #ifdef _WINDOWS

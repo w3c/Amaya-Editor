@@ -49,7 +49,7 @@ static int MakeAliasTypeCount (Counter *pCounter, CounterOp op,
       return pCounter->CnItem[0].CiElemType;
 
    /* initialise l'alias temporaire */
-   ustrcpy (NewAlias->SrName, "Counter alias");
+   strcpy (NewAlias->SrName, "Counter alias");
    NewAlias->SrNDefAttrs = 0;
    NewAlias->SrNLocalAttrs = 0;
    NewAlias->SrUnitElem = FALSE;
@@ -126,7 +126,7 @@ static ThotBool InitCounterByAttribute (int *valinit, Counter * pCo,
 		if (pAttr == NULL)
 		   stop = TRUE;	/* dernier attribut */
 		else if (pAttr->AeAttrNum == pCo->CnItem[0].CiInitAttr &&
-			 !ustrcmp (pAttr->AeAttrSSchema->SsName, pSS->SsName))
+			 !strcmp (pAttr->AeAttrSSchema->SsName, pSS->SsName))
 		   stop = TRUE;	/* c'est l'attribut cherche' */
 		else
 		   pAttr = pAttr->AeNext;	/* au suivant */
@@ -167,7 +167,7 @@ static ThotBool CondAttrOK (CntrItem * pCountItem, PtrElement pEl,
 	if (pAttr == NULL)
 	   stop = TRUE;	/* dernier attribut */
 	else if (pAttr->AeAttrNum == pCountItem->CiCondAttr &&
-		 !ustrcmp (pAttr->AeAttrSSchema->SsName, pSS->SsName))
+		 !strcmp (pAttr->AeAttrSSchema->SsName, pSS->SsName))
 	   stop = TRUE;	/* c'est l'attribut cherche' */
 	else
 	   pAttr = pAttr->AeNext;	/* au suivant */
@@ -264,14 +264,14 @@ int CounterValMinMax (int counterNum, PtrSSchema pSS, PtrPSchema pSchP,
 		       stop = TRUE;
 		     else
 		       {
-			 if (ustrcmp (pElNum->ElStructSchema->SsName, pSSpr->SsName))
+			 if (strcmp (pElNum->ElStructSchema->SsName, pSSpr->SsName))
 			   /* Saut de page d'une view squelette */
 			   /* on ne que compte les pages etrangeres au schema */
 			   /* principal */
-			   pstop = ustrcmp (pEl->ElStructSchema->SsName,
+			   pstop = strcmp (pEl->ElStructSchema->SsName,
 					    pSSpr->SsName);
 			 else
-			   pstop = !ustrcmp (pEl->ElStructSchema->SsName,
+			   pstop = !strcmp (pEl->ElStructSchema->SsName,
 					     pSSpr->SsName);
 
 			 /* on ignore les pages qui ne concernent pas la view */
@@ -488,7 +488,7 @@ int CounterVal (int counterNum, PtrSSchema pSS, PtrPSchema pSchP,
 	while (pEl != NULL)
 	  {
 	     if (pEl->ElTypeNumber == TypeRLevel &&
-		 !ustrcmp (pEl->ElStructSchema->SsName,
+		 !strcmp (pEl->ElStructSchema->SsName,
 			   pElNum->ElStructSchema->SsName))
 		/* cet element englobant a le type qui incremente le compteur*/
 		/* if there is a condition about an attribute attached to the
@@ -527,13 +527,13 @@ int CounterVal (int counterNum, PtrSSchema pSS, PtrPSchema pSchP,
 		     stop = TRUE;
 		  else
 		    {
-		       if (ustrcmp (pElNum->ElStructSchema->SsName, pSSpr->SsName))
+		       if (strcmp (pElNum->ElStructSchema->SsName, pSSpr->SsName))
 			  /* Saut de page d'une view squelette */
 			  /*on ne que compte les pages etrangeres au schema principal */
-			  pstop = ustrcmp (pEl->ElStructSchema->SsName,
+			  pstop = strcmp (pEl->ElStructSchema->SsName,
 					   pSSpr->SsName);
 		       else
-			  pstop = !ustrcmp (pEl->ElStructSchema->SsName,
+			  pstop = !strcmp (pEl->ElStructSchema->SsName,
 					    pSSpr->SsName);
 
 		       /* on ignore les pages qui ne concernent pas la view */
@@ -588,7 +588,7 @@ int CounterVal (int counterNum, PtrSSchema pSS, PtrPSchema pSchP,
 		  while (level > 0 && pEl != NULL)
 		    {
 		       if (pEl->ElTypeNumber == TypeRank &&
-			   !ustrcmp (pEl->ElStructSchema->SsName,
+			   !strcmp (pEl->ElStructSchema->SsName,
 				     pElNum->ElStructSchema->SsName))
 			  /* cet element englobant a le type qui incremente le
 			     compteur */
@@ -632,7 +632,7 @@ int CounterVal (int counterNum, PtrSSchema pSS, PtrPSchema pSchP,
 			    if (pAttr == NULL)
 			      stop = TRUE;	/* dernier attribut */
 			    else if (pAttr->AeAttrNum == pCo1->CnItem[0].CiReinitAttr &&
-				     !ustrcmp (pAttr->AeAttrSSchema->SsName, pSS->SsName))
+				     !strcmp (pAttr->AeAttrSSchema->SsName, pSS->SsName))
 			      stop = TRUE;	/* c'est l'attribut cherche' */
 			    else
 			      pAttr = pAttr->AeNext;	/* au suivant */
@@ -952,7 +952,7 @@ ThotBool NewVariable (int varNum, PtrSSchema pSS, PtrPSchema pSchP,
 		    pA = pEl->ElFirstAttr;	/* premier attribut */
 		    while (!found && pA != NULL)
 		      if (pA->AeAttrNum == pVa1->ViAttr &&
-			  !ustrcmp (pA->AeAttrSSchema->SsName, pSS->SsName))
+			  !strcmp (pA->AeAttrSSchema->SsName, pSS->SsName))
 			found = TRUE;
 		      else
 			pA = pA->AeNext;

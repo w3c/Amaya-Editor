@@ -12,7 +12,7 @@
 
 typedef struct ColornameElem
   {
-     CHAR_T*             name;
+     char               *name;
      unsigned short      red;
      unsigned short      green;
      unsigned short      blue;

@@ -1261,5 +1261,6 @@ void TtaGiveTextAttributeValue (Attribute attribute, char *buffer, int *length)
    else if (((PtrAttribute) attribute)->AeAttrType != AtTextAttr)
     TtaError (ERR_invalid_attribute_type);
   else
-    CopyBufferToString (((PtrAttribute) attribute)->AeAttrText, buffer, length);
+    *length = CopyBuffer2MBs (((PtrAttribute) attribute)->AeAttrText, 0,
+			     buffer, *length);
 }

@@ -44,8 +44,7 @@ void NewPictInfo (PtrAbstractBox pAb, PathBuffer filename, int imagetype)
   int                 len;
 
   picPresent = DefaultPres;
-  if (!pAb->AbPresentationBox &&
-      pAb->AbElement->ElTerminal && pAb->AbElement->ElLeafType == LtPicture)
+  if (!pAb->AbPresentationBox && pAb->AbElement->ElLeafType == LtPicture)
     {
       /* image element -> attach the element descriptor to the abtract box */
       imageDesc = (PictInfo *) pAb->AbElement->ElPictInfo;
@@ -55,12 +54,15 @@ void NewPictInfo (PtrAbstractBox pAb, PathBuffer filename, int imagetype)
 	  imageDesc = (PictInfo *) TtaGetMemory (sizeof (PictInfo));
 	  memset (imageDesc, 0, sizeof (PictInfo));
 	  pAb->AbElement->ElPictInfo = (int *) imageDesc;
+	  pAb->AbPictInfo = (int *) imageDesc;
 	}
       else
+	{
 	  /* don't reset the presentation value */
-	  picPresent = imageDesc->PicPresent;
+	  pAb->AbPictInfo = pAb->AbElement->ElPictInfo;
+	  return;
+	}
 
-      pAb->AbPictInfo = pAb->AbElement->ElPictInfo;
       if (filename == NULL)
 	{
 	  GetTextBuffer (&pBuffer);
@@ -145,9 +147,9 @@ void NewPictInfo (PtrAbstractBox pAb, PathBuffer filename, int imagetype)
 
 
 /*----------------------------------------------------------------------
-  FreePictInfo  frees the picture information but not the structure itself
+  CleanPictInfo  frees the picture information but not the structure itself
   ----------------------------------------------------------------------*/
-void FreePictInfo (PictInfo *imageDesc)
+void CleanPictInfo (PictInfo *imageDesc)
 {
    if (imageDesc)
      {
@@ -172,9 +174,8 @@ void FreePictInfo (PictInfo *imageDesc)
 	   imageDesc->PicWidth = 0;
 	   imageDesc->PicHeight = 0;
 	 }
-
-       if ((imageDesc->PicType >= InlineHandlers) &&
-	   (PictureHandlerTable[imageDesc->PicType].FreePicture != NULL))
+       if (imageDesc->PicType >= InlineHandlers &&
+	   PictureHandlerTable[imageDesc->PicType].FreePicture)
 	 (*(PictureHandlerTable[imageDesc->PicType].FreePicture)) (imageDesc);
      }
 }
@@ -184,7 +185,7 @@ void FreePictInfo (PictInfo *imageDesc)
 /*----------------------------------------------------------------------
    Copie d'un PictInfo                                      
   ----------------------------------------------------------------------*/
-void                CopyPictInfo (int *Imdcopie, int *Imdsource)
+void CopyPictInfo (int *Imdcopie, int *Imdsource)
 {
    PictInfo           *imagec;
    PictInfo           *images;
@@ -200,4 +201,7 @@ void                CopyPictInfo (int *Imdcopie, int *Imdsource)
    imagec->PicPresent = images->PicPresent;
    imagec->PicType = images->PicType;
 }
+
+
+
 

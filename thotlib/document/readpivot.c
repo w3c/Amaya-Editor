@@ -1897,7 +1897,8 @@ static  LabelString         label;
   ReferenceType       refType;
   NotifyElement       notifyEl;
   PictInfo           *image;
-  int                 i, j, n, view, elType, rule, n1, n2, n3, n4;
+  int                 i, j, n, view, l, elType;
+  int                 rule, n1, n2, n3, n4;
   char                alphabet;
   char                c;
   CHAR_T              ctext;
@@ -2317,7 +2318,11 @@ static  LabelString         label;
 				  /* complete the Picture information block */
 				  image = (PictInfo *)pEl->ElPictInfo;
 				  if (image != NULL)
-				    image->PicFileName = pBuf->BuContent;
+				    {
+				      l = ustrlen (pBuf->BuContent);
+				      image->PicFileName = TtaGetMemory (l);
+				      CopyBuffer2MBs (pBuf, 0, image->PicFileName, l);
+				    }
 				}
 			    }
 			  if (!TtaReadByte (pivFile, tag))

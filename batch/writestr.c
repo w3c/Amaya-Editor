@@ -67,7 +67,7 @@ void                WriteName (Name name)
 
    i = 0;
    do
-      TtaWriteWideChar (outfile, name[i++], ISO_8859_1 /* UTF_8 */);
+      TtaWriteByte (outfile, name[i++]);
    while (name[i - 1] != '\0');
 }
 
@@ -316,7 +316,7 @@ ThotBool             WriteStructureSchema (Name fileName, PtrSSchema pSS,
    /* ecrit le texte des constantes */
    i = 0;
    do
-      TtaWriteWideChar (outfile, pSS->SsConstBuffer[i++], ISO_8859_1 /* UTF_8 */);
+      TtaWriteByte (outfile, pSS->SsConstBuffer[i++]);
    while (pSS->SsConstBuffer[i - 1] != '\0' || pSS->SsConstBuffer[i] != '\0');
 
    /* SsFirstDynNature */

@@ -51,23 +51,23 @@ extern CHARSET CharEncoding;
 /*----------------------------------------------------------------------
    TtaReadByte reads a character (or byte) value.
   ----------------------------------------------------------------------*/
-ThotBool TtaReadByte (BinFile file, char *bval)
+ThotBool TtaReadByte (BinFile file, unsigned char *bval)
 {
   unsigned char v;
 
   if (fread (&v, sizeof (unsigned char), 1, file) == 0)
     {
       *bval = (char) 0;
-      return (FALSE);
+      return FALSE;
     } 
   *bval = (char) v;
-  return (TRUE);
+  return TRUE;
 }
 
 /*----------------------------------------------------------------------
    TtaReadWideChar reads a wide character value.
   ----------------------------------------------------------------------*/
-ThotBool TtaReadWideChar (BinFile file, char *bval, CHARSET encoding)
+ThotBool TtaReadWideChar (BinFile file, CHAR_T *bval, CHARSET encoding)
 {
 #ifdef _I18N_
   int           nbBytesToRead;
@@ -225,14 +225,14 @@ ThotBool TtaReadShort (BinFile file, int *sval)
   ----------------------------------------------------------------------*/
 ThotBool TtaReadSignedShort (BinFile file, int *sval)
 {
-  char      car;
+  unsigned char      car;
  
   *sval = 0;
   if (!TtaReadByte (file, &car))
     return (FALSE);
   else
     {
-     if (((int) car) < 0 || ((int) car) > 127 )
+     if ((int) car > 127 )
        *sval = SIGNED_SHORT_MASK;
       *sval |= ((((int) car) & LMASK) << DECAL_1);
       if (!TtaReadByte (file, &car))
@@ -384,15 +384,15 @@ ThotBool TtaWriteByte (BinFile file, char bval)
 /*----------------------------------------------------------------------
    TtaWriteWideChar writes a wide character value.
   ----------------------------------------------------------------------*/
-ThotBool TtaWriteWideChar (BinFile file, char val, CHARSET encoding)
+ThotBool TtaWriteWideChar (BinFile file, CHAR_T val, CHARSET encoding)
 {
 #ifdef _I18N_
-   unsigned char mbc[MAX_BYTES + 1];
+   unsigned char mbc[MAX_BYTES + 1], *ptr;
    int           nbBytes;
-   int           i;
 
    mbc[0] = WC_EOS;
-   nbBytes = TtaWC2MB (val, mbc, encoding);
+   ptr = mbc;
+   nbBytes = TtaWC2MBstring (val, &ptr);
    if (nbBytes == -1)
       return FALSE;
    if (fwrite ((char *) mbc, sizeof (char), nbBytes, file) == 0)

@@ -161,7 +161,7 @@ static void PutChar (wchar_t c, int fnum, char *outBuf,
   PtrTSchema          pTSch;
   FILE               *fileDesc;
   unsigned char       tmp[2];
-  unsigned char       mbc [50];
+  unsigned char       mbc [50], *ptr;
   char               *entity;
   int                 i, j, indent;
   int                 nb_bytes2write, index;
@@ -209,18 +209,21 @@ static void PutChar (wchar_t c, int fnum, char *outBuf,
 	  nb_bytes2write = strlen (mbc);
 	  mbc[nb_bytes2write++] = ';';
 	}
-      else
-#ifdef _I18N_ 
-      nb_bytes2write = TtaWC2MB (c, mbc, pDoc->DocCharset);
-#else  /* !_I18N_ */
-      if (pDoc->DocCharset == UTF_8)
-	nb_bytes2write = TtaWC2MB ((wchar_t) c, mbc, pDoc->DocCharset);
+      else if (pDoc->DocCharset == UTF_8)
+	{
+	  ptr = mbc;
+	  nb_bytes2write = TtaWC2MBstring ((wchar_t) c, &ptr);
+	}
       else
 	{
+#ifdef _I18N_
 	  nb_bytes2write = 1;
-	  mbc[0] =  (unsigned char) c;
-	}
+	  mbc[0] = TtaGetCharFromUnicode (c, pDoc->DocCharset);
+#else  /* !_I18N_ */
+	  nb_bytes2write = 1;
+	  mbc[0] = (unsigned char) c;
 #endif /* !_I18N_ */
+	}
     }
   else
     {
