@@ -182,13 +182,13 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
   y += FrameTable[frame].FrTopMargin; 
   /* compute the width of the string */
   width = 0;
-  if (lg > 0 && w && fg >= 0)
+  if (w && fg >= 0)
     {
       /* Dealing with BR tag for windows */
       if (Printing)
 	width = GLString (buff, lg, frame, x, y, font, boxWidth, bl, hyphen, 
 			  startABlock, fg);
-      else
+      else if (lg > 0)
 	width = GL_DrawString (fg, (CHAR_T *) buff, 
 			       (float) x, (float) y, hyphen, font, lg);
     }
@@ -472,9 +472,9 @@ void DrawUnion (int frame, int x, int y, int l, int h, PtrFont font, int fg)
 static void ArrowDrawing (int frame, int x1, int y1, int x2, int y2,
 			  int thick, int fg)
 {
-   double               x, y, xb, yb, dx, dy, l, sina, cosa;
+   double              x, y, xb, yb, dx, dy, l, sina, cosa;
    int                 xc, yc, xd, yd;
-   double               width, height;
+   double              width, height;
    ThotPoint           point[3];
 
    width = (double) (5 + thick);
@@ -490,11 +490,11 @@ static void ArrowDrawing (int frame, int x1, int y1, int x2, int y2,
    yb = x2 * sina + y2 * cosa;
    x = xb - height;
    y = yb - width / 2;
-   xc = (double)(x * cosa + y * sina + .5);
-   yc = (double)(-x * sina + y * cosa + .5);
+   xc = (int)(x * cosa + y * sina + .5);
+   yc = (int)(-x * sina + y * cosa + .5);
    y = yb + width / 2;
-   xd = (double)(x * cosa + y * sina + .5);
-   yd = (double)(-x * sina + y * cosa + .5);
+   xd = (int)(x * cosa + y * sina + .5);
+   yd = (int)(-x * sina + y * cosa + .5);
 
    /* draw */
    point[0].x = x2;
@@ -1942,7 +1942,7 @@ void DrawRectangleFrame (int frame, int thick, int style, int x, int y,
   y = y + thick / 2;
 
   /* radius of arcs is 3mm */
-  arc = (3 * DOT_PER_INCH) / 25.4 + 0.5;
+  arc = (int)((3 * DOT_PER_INCH) / 25.4 + 0.5);
   arc2 = 2 * arc;
 
   xf = x + width;
@@ -2109,12 +2109,12 @@ void DrawEllipsFrame (int frame, int thick, int style, int x, int y,
      {
 	InitDrawing (style, thick, fg);
 	GL_DrawArc(x, y, width, height, 0, 360, FALSE); 
-	px7mm = (7 * DOT_PER_INCH) / 25.4 + 0.5;
+	px7mm = (int)((7 * DOT_PER_INCH) / 25.4 + 0.5);
 	if (height > 2 * px7mm)
 	  {
 	     A = ((double) height - 2 * px7mm) / height;
 	     A = 1.0 - sqrt (1 - A * A);
-	     shiftX = width * A * 0.5 + 0.5;
+	     shiftX = (int)(width * A * 0.5 + 0.5);
 	     GL_DrawLine(x + shiftX, y + px7mm, x + width - shiftX, y + px7mm, TRUE);
 	  }
      }

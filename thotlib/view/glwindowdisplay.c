@@ -401,13 +401,13 @@ void  GL_DrawEmptyRectangle (int fg, float x, float y, float width,
 			     float height, float thick)
 { 
   GL_SetForeground (fg);
-  if (IS_ZERO(thick - 1))
+  if (IS_ZERO (thick - 1))
     {      
       glBegin (GL_LINE_LOOP);
-      glVertex2i (x, y );
-      glVertex2i (x + width, y);
-      glVertex2i (x +  width, y + height);
-      glVertex2i (x, y + height);
+      glVertex2f (x, y );
+      glVertex2f (x + width, y);
+      glVertex2f (x +  width, y + height);
+      glVertex2f (x, y + height);
     }
   else
     {
@@ -422,7 +422,7 @@ void  GL_DrawEmptyRectangle (int fg, float x, float y, float width,
       glVertex2f (x - thick, y - thick + height);
       glVertex2f (x + thick + width, y - thick + height);
       glVertex2f (x + thick + width, y + thick + height);
-      glVertex2i (x - thick, y + thick + height);
+      glVertex2f (x - thick, y + thick + height);
 
       glVertex2f (x - thick, y - thick);
       glVertex2f (x + thick, y - thick);
@@ -762,8 +762,8 @@ ThotBool GetBoxTransformed (void *v_trans, int *x, int *y)
       switch (Trans->TransType)
 	{
 	case  PtElBoxTranslate:
-	  *x = Trans->XScale;
-	  *y = Trans->YScale;
+	  *x = (int)Trans->XScale;
+	  *y = (int)Trans->YScale;
           return TRUE;
 	default:
 	  break;	  
