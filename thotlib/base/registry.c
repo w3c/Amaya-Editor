@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
  * registry.c : common access method for all the configuration
  *              dependancies of Thot.
  *
@@ -23,11 +27,11 @@
 
 /* DEBUG_REGISTRY enable the Registry debug messages */
 
-/************************************************************************
- *									*
- * Constants, types, global variable and settings for the Registry	*
- *									*
- ************************************************************************/
+/*----------------------------------------------------------------------
+   									
+    Constants, types, global variable and settings for the Registry	
+   									
+  ----------------------------------------------------------------------*/
 
 #define THOT_INI_FILENAME	"thot.ini"
 #define THOT_CONFIG_FILENAME    "config"
@@ -89,11 +93,11 @@ extern void         MakeCompleteName ();
      { while (((*(ptr)) != '\0') && \
               ((*(ptr)) != '\n') && ((*(ptr)) != '\r')) ptr++; }
 
-/************************************************************************
- *									*
- * First part : reading / writing values to/from the memory structures.	*
- *									*
- ************************************************************************/
+/*----------------------------------------------------------------------
+   									
+    First part : reading / writing values to/from the memory structures.	
+   									
+  ----------------------------------------------------------------------*/
 
 /*
  * DoVariableSubstitution : do the substitution on an input
@@ -576,20 +580,20 @@ int                 overwrite;
 		     REGISTRY_USER, overwrite);
 }
 
-/************************************************************************
- *									*
- * Second part : reading / writing values from / to filesystem or	*
- *		 registry.						*
- *									*
- ************************************************************************/
+/*----------------------------------------------------------------------
+   									
+    Second part : reading / writing values from / to filesystem or	
+   		 registry.						
+   									
+  ----------------------------------------------------------------------*/
 
-/************************************************************************
- *                                                                      *
- *  IsThotDir : Check whether the given string is the THOTDIR value.    *
- *      The heuristic is to find a subdir named "config" and containing *
- *      the registry file.                                              *
- *                                                                      *
- ************************************************************************/
+/*----------------------------------------------------------------------
+                                                                         
+     IsThotDir : Check whether the given string is the THOTDIR value.    
+         The heuristic is to find a subdir named "config" and containing 
+         the registry file.                                              
+                                                                         
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static int         IsThotDir (const char *path)
@@ -612,13 +616,13 @@ static int         IsThotDir (const char *path)
 }
 
 #ifdef WWW_MSWINDOWS
-/* ---------------------------------------------------------------------- */
-/* |    WINReg_ge - simulates getenv in the WIN32 registry              | */
-/* |                                                                    | */
-/* | looks for <env> in                                                 | */
-/* | HKEY_CURRENT_USER\Software\OPERA\Amaya\<var>                       | */
-/* | HKEY_LOCAL_MACHINE\Software\OPERA\Amaya\<var>                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WINReg_ge - simulates getenv in the WIN32 registry              
+   
+   looks for <env> in                                                 
+   HKEY_CURRENT_USER\Software\OPERA\Amaya\<var>                       
+   HKEY_LOCAL_MACHINE\Software\OPERA\Amaya\<var>                      
+  ----------------------------------------------------------------------*/
 static char        *WINReg_get (const char *env)
 {
    static const char   userBase[] = "Software\\OPERA\\Amaya";
@@ -656,32 +660,32 @@ static char        *WINReg_get (const char *env)
 #if 0				/* optional code - malloc per request. problem, no way 
 				   to recover memory from last call */
 {
-   DWORD               dwcSubKeys;	// Number of sub keys.
+   DWORD               dwcSubKeys;	/ Number of sub keys.
 
-   DWORD               dwcMaxSubKey;	// Longest sub key size.
+   DWORD               dwcMaxSubKey;	/ Longest sub key size.
 
-   DWORD               dwcMaxClass;	// Longest class string.
+   DWORD               dwcMaxClass;	/ Longest class string.
 
-   DWORD               dwcValues;	// Number of values for this key.
+   DWORD               dwcValues;	/ Number of values for this key.
 
-   DWORD               dwcMaxValueName;		// Longest Value name.
+   DWORD               dwcMaxValueName;		/ Longest Value name.
 
-   DWORD               dwcMaxValueData;		// Longest Value data.
+   DWORD               dwcMaxValueData;		/ Longest Value data.
 
-   DWORD               dwcSecDesc;	// Security descriptor.
+   DWORD               dwcSecDesc;	/ Security descriptor.
 
-   FILETIME            ftLastWriteTime;		// Last write time.
+   FILETIME            ftLastWriteTime;		/ Last write time.
 
    success = RegQueryInfoKey (hKey, ret, &len,
-			      NULL,	// Reserved.
-			       &dwcSubKeys,	// Number of sub keys.
-			       &dwcMaxSubKey,	// Longest sub key size.
-			       &dwcMaxClass,	// Longest class string.
-			       &dwcValues,	// Number of values for this key.
-			       &dwcMaxValueName,	// Longest Value name.
-			       &dwcMaxValueData,	// Longest Value data.
-			       &dwcSecDesc,	// Security descriptor.
-			       &ftLastWriteTime)	// Last write time.
+			      NULL,	/ Reserved.
+			       &dwcSubKeys,	/ Number of sub keys.
+			       &dwcMaxSubKey,	/ Longest sub key size.
+			       &dwcMaxClass,	/ Longest class string.
+			       &dwcValues,	/ Number of values for this key.
+			       &dwcMaxValueName,	/ Longest Value name.
+			       &dwcMaxValueData,	/ Longest Value data.
+			       &dwcSecDesc,	/ Security descriptor.
+			       &ftLastWriteTime)	/ Last write time.
        == ERROR_SUCCESS;
    if (ret)
       free (ret);		/* free from last call */
@@ -690,10 +694,10 @@ static char        *WINReg_get (const char *env)
 #endif
 
 
-/* ---------------------------------------------------------------------- */
-/* |    WINIni_get - simulates getenv in the Windows/Amaya.ini file     | */
-/* |                                                                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WINIni_get - simulates getenv in the Windows/Amaya.ini file     
+   
+  ----------------------------------------------------------------------*/
 static char        *WINIni_get (const char *env)
 {
    DWORD               res;
@@ -852,12 +856,12 @@ char               *ThotDir ()
    return Thot_Dir;
 }
 
-/************************************************************************
- *									*
- *  InitEnviron : initialize the standard environment (i.e global	*
- *	variables) with values stored in the registry.			*
- *									*
- ************************************************************************/
+/*----------------------------------------------------------------------
+   									
+     InitEnviron : initialize the standard environment (i.e global	
+   	variables) with values stored in the registry.			
+   									
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         InitEnviron ()
@@ -1177,17 +1181,17 @@ char               *appArgv0;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    SearchFile recherche un fichier en suivant les indications      | */
-/* |            donnees par dir.                                        | */
-/* |            Retourne 1 avec le nom absolu dans fullName si on       | */
-/* |            le trouve et 0 sinon.                                   | */
-/* |            Suivant la valeur de dir, on cherche dans:              | */
-/* |            - 0 : /                                                 | */
-/* |            - 1 : ThotDir                                           | */
-/* |            - 2 : ThotDir/bin                                       | */
-/* |            - 3 : ThotDir/compil                                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SearchFile recherche un fichier en suivant les indications      
+   donnees par dir.                                        
+   Retourne 1 avec le nom absolu dans fullName si on       
+   le trouve et 0 sinon.                                   
+   Suivant la valeur de dir, on cherche dans:              
+   - 0 : /                                                 
+   - 1 : ThotDir                                           
+   - 2 : ThotDir/bin                                       
+   - 3 : ThotDir/compil                                    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 SearchFile (char *fileName, int dir, char *fullName)
 

@@ -1,6 +1,5 @@
-/* 
-   Module de trace et mise au point
-   V. Quint - Avril 1985        
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
  */
 
 #include "thot_sys.h"
@@ -25,10 +24,10 @@ extern int          UserErrorCode;
 #include "fileaccess_f.h"
 #include "viewapi_f.h"
 
-/* ---------------------------------------------------------------------- */
-/* |    wrTypeReglePres ecrit le type de la regle de presentation       | */
-/* |            pointee par pRegle, dans le fichier outfile.            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   wrTypeReglePres ecrit le type de la regle de presentation       
+   pointee par pRegle, dans le fichier outfile.            
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         wrTypeReglePres (PtrPRule pRegle, FILE * outfile)
 #else  /* __STDC__ */
@@ -128,11 +127,11 @@ FILE               *outfile;
 
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    Wrtext ecrit dans le fichier outfile le contenu de la chaine des| */
-/* |            buffers de texte commencant au buffer pointe' par pBT.  | */
-/* |            Lg: longueur maximum a` ecrire.                         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Wrtext ecrit dans le fichier outfile le contenu de la chaine des
+   buffers de texte commencant au buffer pointe' par pBT.  
+   Lg: longueur maximum a` ecrire.                         
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         Wrtext (PtrTextBuffer pBT, int Lg, FILE * outfile)
 #else  /* __STDC__ */
@@ -177,10 +176,10 @@ static int          NbFreresAscend[MAXNB];
 static int          NbNoeuds;
 static int          NbFeuilles;
 
-/* ---------------------------------------------------------------------- */
-/* |    CountNodes ecrit dans le fichier outfile les statistiques       | */
-/* |            sur le sous-arbre de racine Noeud.                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CountNodes ecrit dans le fichier outfile les statistiques       
+   sur le sous-arbre de racine Noeud.                      
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                CountNodes (PtrElement Noeud, FILE * outfile, int level)
@@ -308,9 +307,9 @@ int                 level;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |     wrRef ecrit une reference.                                     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   wrRef ecrit une reference.                                     
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         wrRef (PtrReference pRef, FILE * outfile)
 #else  /* __STDC__ */
@@ -358,14 +357,14 @@ FILE               *outfile;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    AffArbre ecrit dans le fichier outfile la representation        | */
-/* |            textuelle indentee du sous-arbre de la representation   | */
-/* |            interne commencant au noeud pointe par Noeud, avec      | */
-/* |            l'indentation Indent.                                   | */
-/* |            Si premierfils = true alors on ne traduit recursivement | */
-/* |            que le premier fils de chaque element.                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   AffArbre ecrit dans le fichier outfile la representation        
+   textuelle indentee du sous-arbre de la representation   
+   interne commencant au noeud pointe par Noeud, avec      
+   l'indentation Indent.                                   
+   Si premierfils = true alors on ne traduit recursivement 
+   que le premier fils de chaque element.                  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         AffArbre (PtrElement Noeud, int Indent, FILE * outfile, boolean premierfils)
 #else  /* __STDC__ */
@@ -607,7 +606,7 @@ boolean             premierfils;
      }
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaListAbstractTree
 
    Produces in a file a human-readable form of an abstract tree.
@@ -617,7 +616,7 @@ boolean             premierfils;
    fileDescriptor: file descriptor of the file that will contain the list.
    This file must be open when calling the function.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaListAbstractTree (Element root, FILE * fileDescriptor)
 #else  /* __STDC__ */
@@ -636,7 +635,7 @@ FILE               *fileDescriptor;
       AffArbre ((PtrElement) root, 0, fileDescriptor, FALSE);
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaListView
 
    Produces in a file a human-readable form of an abstract view.
@@ -647,7 +646,7 @@ FILE               *fileDescriptor;
    fileDescriptor: file descriptor of the file that will contain the list.
    This file must be open when calling the function.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaListView (Document document, View view, FILE * fileDescriptor)
 #else  /* __STDC__ */
@@ -700,10 +699,10 @@ FILE               *fileDescriptor;
 
 
 
-/* ---------------------------------------------------------------------- */
-/* |    NumeroPave numerote recursivement des paves a partir de pAb.   | */
-/* |            cptpave est le compte des paves.                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   NumeroPave numerote recursivement des paves a partir de pAb.   
+   cptpave est le compte des paves.                        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         NumeroPave (PtrAbstractBox pAb, int *cptpave)
 #else  /* __STDC__ */
@@ -725,10 +724,10 @@ int                *cptpave;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    NumberAbsBox numerote tous les paves du sous-arbre dont la racine est | */
-/* |            pointee par pP. Appelle NumeroPave.                     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   NumberAbsBox numerote tous les paves du sous-arbre dont la racine est 
+   pointee par pP. Appelle NumeroPave.                     
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                NumberAbsBox (PtrAbstractBox pP)
 #else  /* __STDC__ */
@@ -744,9 +743,9 @@ PtrAbstractBox             pP;
       NumeroPave (pP, &cptpave);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    wrboolean ecrit la valeur d'un booleen.                         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   wrboolean ecrit la valeur d'un booleen.                         
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         wrboolean (boolean b, FILE * outfile)
 #else  /* __STDC__ */
@@ -762,9 +761,9 @@ FILE               *outfile;
       fprintf (outfile, "N");
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    wrrepere ecrit la valeur du point de reference.                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   wrrepere ecrit la valeur du point de reference.                 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         wrrepere (BoxEdge r, FILE * outfile)
 #else  /* __STDC__ */
@@ -810,9 +809,9 @@ FILE               *outfile;
 
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    wrTypeUnit write a distance unit.                               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   wrTypeUnit write a distance unit.                               
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         wrTypeUnit (TypeUnit unit, FILE * outfile)
 #else  /* __STDC__ */
@@ -844,9 +843,9 @@ FILE               *outfile;
 	 }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    wrpos ecrit la valeur d'une position.                           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   wrpos ecrit la valeur d'une position.                           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         wrpos (AbPosition * pPos, boolean racine, FILE * outfile)
 #else  /* __STDC__ */
@@ -882,9 +881,9 @@ FILE               *outfile;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    wrdim ecrit la valeur d'une dimension.                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   wrdim ecrit la valeur d'une dimension.                          
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         wrdim (AbDimension * pDim, boolean racine, boolean larg, FILE * outfile)
 #else  /* __STDC__ */
@@ -933,11 +932,11 @@ FILE               *outfile;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ListAbsBox ecrit dans le fichier outfile le sous-arbre de paves   | */
-/* |            commencant au pave pointe' par pAb, et avec            | */
-/* |            l'indentation Indent.                                   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ListAbsBox ecrit dans le fichier outfile le sous-arbre de paves   
+   commencant au pave pointe' par pAb, et avec            
+   l'indentation Indent.                                   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ListAbsBox (PtrAbstractBox pAb, int Indent, FILE * outfile)
 #else  /* __STDC__ */

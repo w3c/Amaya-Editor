@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
    gestion des fichiers de configuration et de langue.
  */
 
@@ -41,9 +45,9 @@ static char        *pres_items_menu[MAX_ITEM_CONF];
 static char        *export_items[MAX_ITEM_CONF];
 static char        *export_items_menu[MAX_ITEM_CONF];
 
-/* ---------------------------------------------------------------------- */
-/* |    ConfigInit initialise le module de configuration.               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ConfigInit initialise le module de configuration.               
+  ----------------------------------------------------------------------*/
 void                ConfigInit ()
 {
    int                 i;
@@ -64,9 +68,9 @@ void                ConfigInit ()
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    getFirstWord                                                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   getFirstWord                                                    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         getFirstWord (unsigned char *line, unsigned char *word)
 #else  /* __STDC__ */
@@ -97,9 +101,9 @@ unsigned char      *word;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    getSecondWord                                                   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   getSecondWord                                                   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         getSecondWord (unsigned char *line, unsigned char *word)
 #else  /* __STDC__ */
@@ -138,9 +142,9 @@ unsigned char      *word;
    word[indword] = '\0';
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    singleWord                                                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   singleWord                                                      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      singleWord (unsigned char *line)
 #else  /* __STDC__ */
@@ -173,9 +177,9 @@ unsigned char      *line;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    getStringAfterColon                                             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   getStringAfterColon                                             
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         getStringAfterColon (unsigned char *line, unsigned char *text)
 #else  /* __STDC__ */
@@ -212,15 +216,15 @@ unsigned char      *text;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    readUntil       lit le fichier file (qui doit etre ouvert)      | */
-/* |            jusqu'a trouver une ligne qui contienne un seul mot,    | */
-/* |            soit word1 soit word2.                                  | */
-/* |            Retourne                                                | */
-/* |               0 si on ne trouve pas cette ligne,                   | */
-/* |               1 si on trouve le 1er mot,                           | */
-/* |               2 si on trouve le 2eme mot.                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   readUntil       lit le fichier file (qui doit etre ouvert)      
+   jusqu'a trouver une ligne qui contienne un seul mot,    
+   soit word1 soit word2.                                  
+   Retourne                                                
+   0 si on ne trouve pas cette ligne,                   
+   1 si on trouve le 1er mot,                           
+   2 si on trouve le 2eme mot.                          
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      readUntil (FILE * file, char *word1, char *word2)
 #else  /* __STDC__ */
@@ -259,9 +263,9 @@ char               *word2;
    return ret;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    namesOfDocType                                                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   namesOfDocType                                                  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         namesOfDocType (char *fname, char **doctypeOrig, char **doctypeTrans, int *typ, boolean * import)
 #else  /* __STDC__ */
@@ -407,11 +411,11 @@ boolean            *import;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ConfigReadConfigFiles (re)initialise les tables des schemas de  | */
-/* |            structure (documents, natures et extensions) qui ont    | */
-/* |            des fichiers de langue dans les directories de schemas. | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ConfigReadConfigFiles (re)initialise les tables des schemas de  
+   structure (documents, natures et extensions) qui ont    
+   des fichiers de langue dans les directories de schemas. 
+  ----------------------------------------------------------------------*/
 void                ConfigReadConfigFiles ()
 
 {
@@ -537,13 +541,13 @@ void                ConfigReadConfigFiles ()
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ConfigMakeDocTypeMenu cree dans BufMenu la liste des schemas de | */
-/* |            structure qui ont des fichiers de langue dans les       | */
-/* |            directories de schemas.                                 | */
-/* |            Si doc == TRUE on prend les schemas de documents, sinon | */
-/* |            les schemas de nature.                                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ConfigMakeDocTypeMenu cree dans BufMenu la liste des schemas de 
+   structure qui ont des fichiers de langue dans les       
+   directories de schemas.                                 
+   Si doc == TRUE on prend les schemas de documents, sinon 
+   les schemas de nature.                                  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 ConfigMakeDocTypeMenu (char *BufMenu, int *lgmenu, boolean doc)
 
@@ -607,13 +611,13 @@ boolean             doc;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ConfigSSchemaExternalName retourne dans nameUser le nom     | */
-/* |    externe, dans la langue de l'utilisateur, du schema de          | */
-/* |    structure dont le nom interne est nameSchema.                    | */
-/* |    Typ indique s'il s'agit d'un schema de document (1), de         | */
-/* |    nature (2) ou d'extension (3).                                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ConfigSSchemaExternalName retourne dans nameUser le nom     
+   externe, dans la langue de l'utilisateur, du schema de          
+   structure dont le nom interne est nameSchema.                    
+   Typ indique s'il s'agit d'un schema de document (1), de         
+   nature (2) ou d'extension (3).                                  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ConfigSSchemaExternalName (char *nameUser, char *nameSchema, int Typ)
 
@@ -679,12 +683,12 @@ int                 Typ;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ConfigSSchemaInternalName donne le nom du schema de structure qui | */
-/* |    correspond a un nom traduit dans la langue de l'utilisateur.    | */
-/* |    Si Doc est vrai, il s'agit d'un schema de document, sinon c'est | */
-/* |    un schema de nature.                                            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ConfigSSchemaInternalName donne le nom du schema de structure qui 
+   correspond a un nom traduit dans la langue de l'utilisateur.    
+   Si Doc est vrai, il s'agit d'un schema de document, sinon c'est 
+   un schema de nature.                                            
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                ConfigSSchemaInternalName (char *nameUser, char *nameSchema, boolean Doc)
@@ -731,9 +735,9 @@ boolean             Doc;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    openConfigFile                                                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   openConfigFile                                                  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static FILE        *openConfigFile (char *name, boolean lang)
 
@@ -769,11 +773,11 @@ boolean             lang;
    return file;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ConfigMakeMenuPres cree dans BufMenu la liste des schemas de    | */
-/* |    presentation qui peuvent s'appliquer au schema de structure de  | */
-/* |    nom schema.                                                     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ConfigMakeMenuPres cree dans BufMenu la liste des schemas de    
+   presentation qui peuvent s'appliquer au schema de structure de  
+   nom schema.                                                     
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 ConfigMakeMenuPres (char *schema, char *BufMenu)
 
@@ -854,11 +858,11 @@ char               *BufMenu;
    return nbitem;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ConfigGetPSchemaName recupere dans la table des schemas de       | */
-/* |            presentation le nom interne du schema qui se trouve     | */
-/* |            a l'entree de rang choix.                               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ConfigGetPSchemaName recupere dans la table des schemas de       
+   presentation le nom interne du schema qui se trouve     
+   a l'entree de rang choix.                               
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ConfigGetPSchemaName (int choix, char *schpres)
 
@@ -873,11 +877,11 @@ char               *schpres;
    strcpy (schpres, pres_items[choix - 1]);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ConfigMakeImportMenu cree dans BufMenu la liste des schemas de  | */
-/* |            structure qui ont des fichiers de langue dans les       | */
-/* |            directories de schemas.                                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ConfigMakeImportMenu cree dans BufMenu la liste des schemas de  
+   structure qui ont des fichiers de langue dans les       
+   directories de schemas.                                 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 ConfigMakeImportMenu (char *BufMenu)
 
@@ -921,11 +925,11 @@ char               *BufMenu;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ConfigMakeMenuExport cree dans BufMenu la liste des schemas de  | */
-/* |    traduction qui peuvent s'appliquer au schema de structure de    | */
-/* |    nom schema.                                                     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ConfigMakeMenuExport cree dans BufMenu la liste des schemas de  
+   traduction qui peuvent s'appliquer au schema de structure de    
+   nom schema.                                                     
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 ConfigMakeMenuExport (char *schema, char *BufMenu)
 
@@ -1007,11 +1011,11 @@ char               *BufMenu;
    return nbitem;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ConfigGetExportSchemaName recupere dans la table des schemas de  | */
-/* |            traduction le nom interne du schema qui se trouve       | */
-/* |            a l'entree de rang choix.                               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ConfigGetExportSchemaName recupere dans la table des schemas de  
+   traduction le nom interne du schema qui se trouve       
+   a l'entree de rang choix.                               
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ConfigGetExportSchemaName (int choix, char *schtrad)
 
@@ -1027,9 +1031,9 @@ char               *schtrad;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    Translate                                                       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Translate                                                       
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static boolean      Translate (PtrSSchema pSS, char *word, char *trans)
@@ -1089,9 +1093,9 @@ char               *trans;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ConfigTranslateSSchema                                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ConfigTranslateSSchema                                          
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                ConfigTranslateSSchema (PtrSSchema pSS)
@@ -1165,12 +1169,12 @@ PtrSSchema        pSS;
    fclose (file);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ConfigDefaultPSchema    retourne dans schpres le nom du 1er     | */
-/* |    schema de presentation associe' au schema de structure schstr   | */
-/* |    dans le fichier .conf correspondant.                            | */
-/* |    Retourne FALSE si pas trouve', TRUE si OK.                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ConfigDefaultPSchema    retourne dans schpres le nom du 1er     
+   schema de presentation associe' au schema de structure schstr   
+   dans le fichier .conf correspondant.                            
+   Retourne FALSE si pas trouve', TRUE si OK.                      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             ConfigDefaultPSchema (char *schstr, char *schpres)
 
@@ -1225,12 +1229,12 @@ char               *schpres;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    readUntilStyle  lit le fichier file (qui doit etre ouvert)      | */
-/* |            jusqu'a trouver une ligne qui contienne le mot "style"  | */
-/* |            suivi du nom namePSchema.                                | */
-/* |            Retourne TRUE si trouve, FALSE sinon.                   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   readUntilStyle  lit le fichier file (qui doit etre ouvert)      
+   jusqu'a trouver une ligne qui contienne le mot "style"  
+   suivi du nom namePSchema.                                
+   Retourne TRUE si trouve, FALSE sinon.                   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      readUntilStyle (FILE * file, char *namePSchema)
 #else  /* __STDC__ */
@@ -1265,13 +1269,13 @@ char               *namePSchema;
    return ok;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    openConfFileAndReadUntil ouvre le fichier .conf qui concerne    | */
-/* |            le schema de structure pSS et avance dans ce fichier    | */
-/* |            jusqu'a la ligne qui marque la section de nom sectName. | */
-/* |            Retourne le file descriptor du fichier si on a trouve'  | */
-/* |            le fichier .conf et la section, NULL sinon.             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   openConfFileAndReadUntil ouvre le fichier .conf qui concerne    
+   le schema de structure pSS et avance dans ce fichier    
+   jusqu'a la ligne qui marque la section de nom sectName. 
+   Retourne le file descriptor du fichier si on a trouve'  
+   le fichier .conf et la section, NULL sinon.             
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static FILE        *openConfFileAndReadUntil (PtrSSchema pSS, char *sectName)
 
@@ -1309,12 +1313,12 @@ char               *sectName;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    getNextLineInSection    lit dans line la prochaine ligne du     | */
-/* |            fichier file qui fasse partie de la meme section.       | */
-/* |            Retourne TRUE si succes, FALSE si on a atteint la fin   | */
-/* |            de la section courante ou du fichier.                   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   getNextLineInSection    lit dans line la prochaine ligne du     
+   fichier file qui fasse partie de la meme section.       
+   Retourne TRUE si succes, FALSE si on a atteint la fin   
+   de la section courante ou du fichier.                   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      getNextLineInSection (FILE * file, char *line)
 
@@ -1381,12 +1385,12 @@ char               *line;
    return ok;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    getXYWidthHeight        lit les 4 entiers x, y, width, height   | */
-/* |            suivent les deux-points dans une ligne de la section    | */
-/* |            open ou geometry d'un fichier .conf                     | */
-/* |            Retourne TRUE si succes.                                | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   getXYWidthHeight        lit les 4 entiers x, y, width, height   
+   suivent les deux-points dans une ligne de la section    
+   open ou geometry d'un fichier .conf                     
+   Retourne TRUE si succes.                                
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      getXYWidthHeight (char *line, PtrDocument pDoc, int *x, int *y,
 				      int *width, int *height)
@@ -1434,11 +1438,11 @@ int                *height;
    return result;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ConfigOpenFirstViews ouvre, pour le document pDoc, les vues     | */
-/* |            specifiees dans la section open du fichier de           | */
-/* |            configuration .conf                                     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ConfigOpenFirstViews ouvre, pour le document pDoc, les vues     
+   specifiees dans la section open du fichier de           
+   configuration .conf                                     
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ConfigOpenFirstViews (PtrDocument pDoc)
 #else  /* __STDC__ */
@@ -1473,11 +1477,11 @@ PtrDocument         pDoc;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ConfigGetViewGeometry retourne la position (x, y) et les        | */
-/* |            dimensions (width, height) de la fenetre ou doit        | */
-/* |            s'afficher la vue de non view pour le document pDoc.     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ConfigGetViewGeometry retourne la position (x, y) et les        
+   dimensions (width, height) de la fenetre ou doit        
+   s'afficher la vue de non view pour le document pDoc.     
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ConfigGetViewGeometry (PtrDocument pDoc, char *view, int *x, int *y, int *width, int *height)
 #else  /* __STDC__ */
@@ -1536,12 +1540,12 @@ int                *height;
 	   fclose (file);
      }
 }
-/* ---------------------------------------------------------------------- */
-/* |    TtaGetViewGeometry returns the position (x, y) and sizes        | */
-/* |            (width, height) of the frame wher view is displayed.    | */
-/* |            Parameters:    document: the document.                  | */
-/* |                           name: the name of the view in P schema.  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaGetViewGeometry returns the position (x, y) and sizes        
+   (width, height) of the frame wher view is displayed.    
+   Parameters:    document: the document.                  
+   name: the name of the view in P schema.  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaGetViewGeometry (Document document, char *name, int *x, int *y, int *width, int *height)
 #else  /* __STDC__ */
@@ -1566,11 +1570,11 @@ int                *height;
       ConfigGetViewGeometry (LoadedDocument[document - 1], name, x, y, width, height);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ConfigGetPSchemaNature retourne dans presNature le nom du       | */
-/* |            schema de presentation a appliquer a la nature de nom   | */
-/* |            nameNature dans le contexte du schema de structure pSS   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ConfigGetPSchemaNature retourne dans presNature le nom du       
+   schema de presentation a appliquer a la nature de nom   
+   nameNature dans le contexte du schema de structure pSS   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             ConfigGetPSchemaNature (PtrSSchema pSS, char *nameNature, char *presNature)
 #else  /* __STDC__ */
@@ -1625,13 +1629,13 @@ char               *presNature;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ConfigGetPresentationOption cherche, dans le fichier .conf      | */
-/* |            correspondant au schema de structure pSS, la valeur     | */
-/* |            de l'option de presentation de nom optionName.          | */
-/* |            Retourne la valeur trouvee dans optionValue, ou une     | */
-/* |            chaine vide si l'option n'est pas trouvee.              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ConfigGetPresentationOption cherche, dans le fichier .conf      
+   correspondant au schema de structure pSS, la valeur     
+   de l'option de presentation de nom optionName.          
+   Retourne la valeur trouvee dans optionValue, ou une     
+   chaine vide si l'option n'est pas trouvee.              
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                ConfigGetPresentationOption (PtrSSchema pSS, char *optionName, char *optionValue)
@@ -1683,14 +1687,14 @@ char               *optionValue;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ConfigGetPSchemaForPageSize cherche, dans le fichier .conf      | */
-/* |            correspondant au schema de structure pSS, le schema     | */
-/* |            de presentation qui comporte une option "pagesize"      | */
-/* |            ayant la valeur pageSize.                               | */
-/* |            Retourne le nom du schema trouve' dans schemaName, ou   | */
-/* |            une chaine vide si pas trouve'.                         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ConfigGetPSchemaForPageSize cherche, dans le fichier .conf      
+   correspondant au schema de structure pSS, le schema     
+   de presentation qui comporte une option "pagesize"      
+   ayant la valeur pageSize.                               
+   Retourne le nom du schema trouve' dans schemaName, ou   
+   une chaine vide si pas trouve'.                         
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                ConfigGetPSchemaForPageSize (PtrSSchema pSS, char *pageSize, char *schemaName)
@@ -1755,12 +1759,12 @@ char               *schemaName;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    MakeMenuPattern cree dans BufMenu la liste des motifs de        | */
-/* |    remplissage disponibles et retourne le nombre de motifs ou      | */
-/* |    0 si echec.                                                     | */
-/* |    LgMax indique la taille du buffer BufMenu.                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   MakeMenuPattern cree dans BufMenu la liste des motifs de        
+   remplissage disponibles et retourne le nombre de motifs ou      
+   0 si echec.                                                     
+   LgMax indique la taille du buffer BufMenu.                      
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 MakeMenuPattern (char *BufMenu, int LgMax)
@@ -1814,12 +1818,12 @@ int                 LgMax;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    MakeMenuColor cree dans le buffer BufMenu la liste des couleurs | */
-/* |    disponibles et retourne le nombre d'entrees creees ou           | */
-/* |    0 si echec.                                                     | */
-/* |    LgMax indique la taille du buffer BufMenu.                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   MakeMenuColor cree dans le buffer BufMenu la liste des couleurs 
+   disponibles et retourne le nombre d'entrees creees ou           
+   0 si echec.                                                     
+   LgMax indique la taille du buffer BufMenu.                      
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 MakeMenuColor (char *BufMenu, int LgMax)
@@ -1873,12 +1877,12 @@ int                 LgMax;
    return nbentree;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ConfigDefaultTypoSchema retourne dans schtypo le nom du         | */
-/* |    schema de typographie a appliquer a la nature de nom            | */
-/* |    nameNature dans le contexte du schema de structure pSS           | */
-/* |    Retourne FALSE si pas trouve', TRUE si OK.                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ConfigDefaultTypoSchema retourne dans schtypo le nom du         
+   schema de typographie a appliquer a la nature de nom            
+   nameNature dans le contexte du schema de structure pSS           
+   Retourne FALSE si pas trouve', TRUE si OK.                      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             ConfigDefaultTypoSchema (PtrSSchema pSS,
 					     char *nameNature,

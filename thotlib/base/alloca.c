@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
    alloca -- (mostly) portable public-domain implementation -- D A Gwyn
 
    last edit:   86/05/30        rms

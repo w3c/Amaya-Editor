@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
    This module handles messages displayed by Thot compilers.
  */
 
@@ -15,10 +19,10 @@
 
 int                 UserErrorCode;
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    DisplayConfirmMessage
    displays the given message (text).
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DisplayConfirmMessage (char *text)
 #else  /* __STDC__ */
@@ -30,10 +34,10 @@ char               *text;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    DisplayMessage
    displays the given message (text).
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DisplayMessage (char *text, int msgType)
 #else  /* __STDC__ */
@@ -45,10 +49,10 @@ int                 msgType;
    fprintf (stderr, text);
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaError
    sets the error code
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaError (int errorCode)
 #else  /* __STDC__ */
@@ -60,7 +64,7 @@ int                 errorCode;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    CompilerError
    displays an simple error message for a compiler.
 
@@ -70,7 +74,7 @@ int                 errorCode;
    origin: the compiler that raises the error.
    level: severity level
    msgCode: SynInteger of the message to be displayed
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                CompilerError (int index, int origin, int level, int msgCode, char *inputline, int lineNum)
@@ -99,7 +103,7 @@ int                 lineNum;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    CompilerErrorString
    displays an error message with a variable part for a compiler.
 
@@ -109,7 +113,7 @@ int                 lineNum;
    origin: the compiler that raises the error.
    level: severity level
    msgCode: SynInteger of the message to be displayed
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                CompilerErrorString (int index, int origin, int level, int msgCode, char *inputline, int lineNum, char *string)

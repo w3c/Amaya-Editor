@@ -1,6 +1,9 @@
 /*
-   thotmsg.c : affichage des messages d'erreur de different niveau 
-   IV : Mai 92   adaptation Tool Kit
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
+ * thotmsg.c : affichage des messages d'erreur de different niveau 
  */
 
 #include "thot_sys.h"
@@ -18,9 +21,9 @@ boolean             PrintErrorMessages;
 
 #include "viewcommands_f.h"
 
-/* ---------------------------------------------------------------------- */
-/* |    TtaError affiche les messsges d'erreur de l'API.                | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaError affiche les messsges d'erreur de l'API.                
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaError (int errorCode)
 #else  /* __STDC__ */

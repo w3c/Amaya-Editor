@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
    traitement des messages d'erreur venant de THOT, impression, traduction...
  */
 
@@ -37,10 +41,10 @@ static char         result[MAX_TXT_LEN];
 #define isascii(c) __isascii(c)
 #endif
 
-/* ---------------------------------------------------------------------- */
-/* |  AsciiTranslate convertit les code d'accents du fichier de message | */
-/* |            en accents.                                             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   AsciiTranslate convertit les code d'accents du fichier de message 
+   en accents.                                             
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 char               *AsciiTranslate (char *pBuffer)
 #else  /* __STDC__ */
@@ -114,13 +118,13 @@ char               *pBuffer;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    TtaGetMessageTable alloue et initialise la table des            | */
-/* |    messages a` partir du fichier indique' par la variable msgName  | */
-/* |    pour l'application. Cet ensemble de messages va e^tre           | */
-/* |    identifie' par la valeur origine rendue par la fonction.        | */
-/* |    La fonction rend la valeur -1 si la table n'est pas alloue'e.   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaGetMessageTable alloue et initialise la table des            
+   messages a` partir du fichier indique' par la variable msgName  
+   pour l'application. Cet ensemble de messages va e^tre           
+   identifie' par la valeur origine rendue par la fonction.        
+   La fonction rend la valeur -1 si la table n'est pas alloue'e.   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 TtaGetMessageTable (char *msgName, int msgNumber)
 #else  /* __STDC__ */
@@ -191,10 +195,10 @@ int                 msgNumber;
    return (origineid);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    TtaGetMessage retourne le message correspondant a` l'origine et | */
-/* |            l'indice 0 a` N donne'.                                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaGetMessage retourne le message correspondant a` l'origine et 
+   l'indice 0 a` N donne'.                                 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 char               *TtaGetMessage (int origin, int num)
 #else  /* __STDC__ */
@@ -231,8 +235,8 @@ int                 num;
       return (currenttable->TabMessages[num]);
 }
 
-/* ---------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #include <stdarg.h>
 #ifdef __STDC__
 void                TtaDisplayMessage (int msgType, char *fmt, ...)
@@ -302,9 +306,9 @@ int                 msgType;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    TtaDisplaySimpleMessage construit un message simple.            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaDisplaySimpleMessage construit un message simple.            
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaDisplaySimpleMessage (int msgType, int origin, int number)
 #else  /* __STDC__ */
@@ -318,10 +322,10 @@ int                 number;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    DisplayPivotMessage traite les erreurs survenues a` la lecture  | */
-/* |            d'un fichier pivot.                                     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   DisplayPivotMessage traite les erreurs survenues a` la lecture  
+   d'un fichier pivot.                                     
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DisplayPivotMessage (char *code)
 #else  /* __STDC__ */

@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
    Module dedicated to boxe management debuging.
  */
 
@@ -20,9 +24,9 @@ typedef int         L_Relations[30];
 #include "absboxlist_f.h"
 #include "fileaccess_f.h"
 
-/* ---------------------------------------------------------------------- */
-/* |    wrnumber ecrit un entier a` la console.                         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   wrnumber ecrit un entier a` la console.                         
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         wrnumber (int i, FILE * outfile)
 
@@ -37,9 +41,9 @@ FILE               *outfile;
    fprintf (outfile, "%d", i);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    wrtext ecrit du texte a` la console.                            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   wrtext ecrit du texte a` la console.                            
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         wrtext (char *Text, FILE * outfile)
@@ -55,9 +59,9 @@ FILE               *outfile;
    fprintf (outfile, "%s", Text);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    wrrep ecrit le type de repere a` la console.                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   wrrep ecrit le type de repere a` la console.                    
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         wrrep (BoxEdge r, FILE * outfile)
@@ -102,11 +106,11 @@ FILE               *outfile;
 	 }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ListAbsBoxes ecrit les informations sur la boite de pAb dans le       | */
-/* |            fichier outfile.                                        | */
-/**CP cette procedure n'est plus static car appelee ailleurs 	| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ListAbsBoxes ecrit les informations sur la boite de pAb dans le       
+   fichier outfile.                                        
+   *CP cette procedure n'est plus static car appelee ailleurs 	
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE * outfile)
 
@@ -479,10 +483,10 @@ FILE               *outfile;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ListBoxes cree un fichier fname qui contient la liste des     | */
-/* |            relations entre boites dans la fenetre frame.           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ListBoxes cree un fichier fname qui contient la liste des     
+   relations entre boites dans la fenetre frame.           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ListBoxes (Name fname, int frame)
 #else  /* __STDC__ */
@@ -520,10 +524,10 @@ int                 frame;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    StPav calcule le nombre d'entrees utilisees dans les blocs      | */
-/* |            relation.                                               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   StPav calcule le nombre d'entrees utilisees dans les blocs      
+   relation.                                               
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         StPav (PtrAbstractBox pAb, L_Relations TabPos, L_Relations TabDimH, L_Relations TabDimV)
 #else  /* __STDC__ */

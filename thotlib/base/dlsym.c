@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
 /*************Juste pour faire l'edition de lien statique sur SUN ********/
 void               *dlopen ()
 {

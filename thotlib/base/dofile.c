@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
 /* 
    Construction des noms de fichiers. 
  */
@@ -15,23 +19,23 @@
 #include "dofile_f.h"
 #include "platform_f.h"
 
-/* ---------------------------------------------------------------------- */
-/* |   MakeCompleteName compose un nom de fichier absolu en concatenant | */
-/* |            un nom de directory, le nom de fichier (fname) et       | */
-/* |            l'extension (fext).                                     | */
-/* |            Retourne le nom compose' dans nomabs.                   | */
-/* |            Si fname se termine deja par fext, alors copie          | */
-/* |            simplement fname dans nomabs.                           | */
-/* |            La chaine directory_list peut contenir un path          | */
-/* |            hierarchique ou` les noms de repertoires sont classe's  | */
-/* |            par ordre d'importance, et separes par PATH_SEP         | */
-/* |            Si le fichier existe, on retourne dans directory_list   | */
-/* |            le nom du directory qui le contient, sinon              | */
-/* |            directory_list n'est pas change'.                       | */
-/* |            Si le fichier n'existe pas, on retourne nomabs vide et  | */
-/* |            dans directory_list le 1er nom du path fourni a` l'appel| */
-/* |            (MakeCompleteName est utilise pour la lecture)          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   MakeCompleteName compose un nom de fichier absolu en concatenant 
+   un nom de directory, le nom de fichier (fname) et       
+   l'extension (fext).                                     
+   Retourne le nom compose' dans nomabs.                   
+   Si fname se termine deja par fext, alors copie          
+   simplement fname dans nomabs.                           
+   La chaine directory_list peut contenir un path          
+   hierarchique ou` les noms de repertoires sont classe's  
+   par ordre d'importance, et separes par PATH_SEP         
+   Si le fichier existe, on retourne dans directory_list   
+   le nom du directory qui le contient, sinon              
+   directory_list n'est pas change'.                       
+   Si le fichier n'existe pas, on retourne nomabs vide et  
+   dans directory_list le 1er nom du path fourni a` l'appel
+   (MakeCompleteName est utilise pour la lecture)          
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                MakeCompleteName (Name fname, char *fext, PathBuffer directory_list, PathBuffer completeName, int *length)
 #else  /* __STDC__ */
@@ -89,12 +93,12 @@ int                *length;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    GetPictureFileName construit dans fileName le nom absolu d'un   | */
-/* |            fichier image a` partir du nom contenu dans name et     | */
-/* |            des repertoires de documents ou de sche'mas.            | */
-/* |            Si le fichier n'existe pas retourne name.               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetPictureFileName construit dans fileName le nom absolu d'un   
+   fichier image a` partir du nom contenu dans name et     
+   des repertoires de documents ou de sche'mas.            
+   Si le fichier n'existe pas retourne name.               
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                GetPictureFileName (char *name, char *fileName)
 #else  /* __STDC__ */
@@ -122,10 +126,10 @@ char               *fileName;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    IsExtended compare la fin de fileName avec extension. Si la fin | */
-/* |            est identique, retourne Vrai.                           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   IsExtended compare la fin de fileName avec extension. Si la fin 
+   est identique, retourne Vrai.                           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      IsExtended (Name fileName, char *extension)
 #else  /* __STDC__ */
@@ -164,15 +168,15 @@ char               *extension;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |   FindCompleteName compose un nom de fichier absolu en concatenant | */
-/* |            le nom de directory, le nom de fichier (fileName) et    | */
-/* |            l'extension (extension).                                | */
-/* |            Retourne le nom compose dans completeName et la         | */
-/* |            longueur de ce nom dans length.                         | */
-/* |            Si fileName se termine deja par extension, alors copie  | */
-/* |            simplement fileName dans completeName.                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   FindCompleteName compose un nom de fichier absolu en concatenant 
+   le nom de directory, le nom de fichier (fileName) et    
+   l'extension (extension).                                
+   Retourne le nom compose dans completeName et la         
+   longueur de ce nom dans length.                         
+   Si fileName se termine deja par extension, alors copie  
+   simplement fileName dans completeName.                  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                FindCompleteName (Name fileName, char *extension, PathBuffer directory, PathBuffer completeName, int *length)
 #else  /* __STDC__ */

@@ -1,17 +1,18 @@
 /*
-   printmsg.c : affichage des messages d'erreur de different niveau 
-   B. Dulauroy  Avril 1991
-   Major changes 
-   IV : Mai 92  adaptation Tool Kit
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
+ * printmsg.c : affichage des messages d'erreur de different niveau 
  */
 
 #include "thot_sys.h"
 int                 UserErrorCode;
 
 
-/* ---------------------------------------------------------------------- */
-/* |    DisplayConfirmMessage displays the given message (text).        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   DisplayConfirmMessage displays the given message (text).        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DisplayConfirmMessage (char *text)
 #else  /* __STDC__ */
@@ -23,8 +24,8 @@ char               *text;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DisplayMessage (char *text, int msgType)
 #else  /* __STDC__ */
@@ -36,8 +37,8 @@ int                 msgType;
    fprintf (stderr, text);
 }
 
-/* ---------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaError (int errorCode)
 
