@@ -4128,7 +4128,7 @@ static char GetNextChar (FILE *infile, char* buffer, int *index,
   unsigned char  charRead;
   unsigned char  fallback[5];
   unsigned char *ptr;
-  int            res;
+  int            res = 0;
 #ifndef _I18N_
   unsigned char  extrabuf[7];
   Language       lang;
