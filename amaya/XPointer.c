@@ -90,6 +90,36 @@ static int AdjustChIndex (Element el, int index)
 }
 
 /*----------------------------------------------------------------------
+  CountInLineChars
+
+  returns the number of characters that may be found in inline
+  sibling elements from element Mark, such as in <p>an 
+  <strong>inline</strong> example</p>.
+  ----------------------------------------------------------------------*/
+static int CountInlineChars (Element mark)
+{
+  ElementType elType;
+  Element el;
+  int count = 0;
+
+  elType = TtaGetElementType (mark);
+
+  if (elType.ElTypeNum != THOT_TEXT_UNIT)
+    return 0;
+
+  el = TtaGetParent (mark);
+  while (1)
+    {
+      el = TtaSearchTypedElement (elType, SearchForward, el);
+      if (el == mark)
+	break;
+      count += TtaGetTextLength (el);
+    }
+
+  return count;
+}
+
+/*----------------------------------------------------------------------
   ElIsHidden
 
   returns TRUE if the element is hidden (an internal thotlib one),
@@ -325,6 +355,48 @@ Element SearchSiblingIndex (Element root, char *el_name, int *index)
   return (sibling);
 }
 
+/*----------------------------------------------------------------------
+  SearchTextPosition
+  
+  Searchs for a given text position (taking into account in-line elements)
+  and returns the element where the text is found.
+  ----------------------------------------------------------------------*/
+ThotBool SearchTextPosition (Element *mark, int *firstCh)
+{
+  ElementType elType;
+  Element el, root;
+  int pos;
+  int len;
+
+  el = root = *mark;
+  pos = *firstCh;
+
+  elType = TtaGetElementType (root);
+  /* point to the first text unit */
+  if (elType.ElTypeNum != THOT_TEXT_UNIT)
+    {
+      elType.ElTypeNum = THOT_TEXT_UNIT;
+      el = TtaSearchTypedElementInTree (elType, SearchForward, root, el);
+    }
+  else
+    elType.ElTypeNum = THOT_TEXT_UNIT;
+
+  while (1)
+    {
+      if (!el)
+	break;
+      len = TtaGetTextLength (el);
+      if (pos <= len)
+	break;
+      else
+	pos = pos - len;
+      el = TtaSearchTypedElementInTree (elType, SearchForward, root, el);
+    }
+
+  *mark = el;
+  *firstCh = pos;
+  return (el) ? TRUE : FALSE;
+}
 
 /*----------------------------------------------------------------------
   XPathList2Str
@@ -411,10 +483,15 @@ ThotBool firstF;
   char *xpath_expr;
   char *id_value = NULL;
 
+  /* if the user selected a text, adjust the start/end indexes according
+     to its siblings inlined text */
+  firstCh += CountInlineChars (start);
+
   el = start;
   /* if we chose a hidden element, climb up */
   if (ElIsHidden (el))
     el = GetParent (el);
+  
   /* browse the tree */
   while (el)
     {
@@ -611,6 +688,3 @@ View view;
   return NULL;
 }
 #endif ANNOTATIONS
-
-
-

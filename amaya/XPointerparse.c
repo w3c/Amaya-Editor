@@ -289,6 +289,8 @@ static void RangeTo (parserContextPtr ctx)
 
 static void StringRange (parserContextPtr ctx, int startC, int len)
 {
+  int pos = startC;
+
   nodeInfo *curNode = ctx->curNode;
 
   if (!curNode || curNode->el == 0)
@@ -298,10 +300,19 @@ static void StringRange (parserContextPtr ctx, int startC, int len)
     }
   
   GotoChild (ctx);
-  curNode->processed = 1;
-  curNode->startC = startC;
-  curNode->endC = startC + len;
-  curNode->type = curNode->type | HAS_STRING_RANGE;
+  if (!ctx->error)
+    {
+      if (!SearchTextPosition (&(curNode->el), &pos))
+	CtxAddError (ctx, "StringRange: couldn't find text position");
+      else
+	{
+	  curNode->processed = 1;
+	  curNode->startC = pos;
+	  curNode->endC = pos + len;
+	  curNode->type = curNode->type | HAS_STRING_RANGE;
+	}
+    }
+  
 #ifdef XPTR_ACTION_DEBUG
   printf ("StringRange: adding info startc %d, endc %d\n", 
 	  startC, startC + len);
