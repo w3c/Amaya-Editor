@@ -672,9 +672,9 @@ static void GL_SetupPixelFormat (HDC hDC)
       1,                              /* version */
       PFD_DRAW_TO_WINDOW |			  /* Format Must Support Window*/
       PFD_SUPPORT_OPENGL |			  /* Format Must Support OpenGL*/
-      PFD_DOUBLEBUFFER   |            /* support double-buffering */
-      PFD_DEPTH_DONTCARE |            /* If Depth is obligated by hardware*/
-      PFD_GENERIC_ACCELERATED ,       /* We try to get hardware here => PFD_GENERIC_ACCELERATED*/       
+      PFD_DOUBLEBUFFER  /* |    */        /* support double-buffering */
+      /*PFD_DEPTH_DONTCARE |  */          /* If Depth is obligated by hardware*/
+      /*PFD_GENERIC_ACCELERATED*/ ,       /* We try to get hardware here => PFD_GENERIC_ACCELERATED*/       
       PFD_TYPE_RGBA,                  /* color type */
       24,                             /* prefered color depth */
       0, 0, 0, 0, 0, 0,               /* color bits (ignored) */
