@@ -111,43 +111,45 @@ Document            document;
 	else
 	   /* parameter document is correct */
 	  {
+	     if (content)
+	       length = ustrlen (content);
+	     else
+	       length = 0;
 #ifndef NODISPLAY
 	     /* modifies the selection if the element is within it */
-	     selOk = GetCurrentSelection (&selDoc, &firstSelection, &lastSelection, &firstChar, &lastChar);
+	     selOk = GetCurrentSelection (&selDoc, &firstSelection,
+					  &lastSelection, &firstChar,
+					  &lastChar);
 	     changeSelection = FALSE;
 	     if (selOk && content != NULL)
 		if (selDoc == LoadedDocument[document - 1])
-		   if ((PtrElement) element == firstSelection ||
-		       (PtrElement) element == lastSelection)
-		      /* The selection starts and/or stops in the element */
-		      /* First, we abort the selection */
+		  {
+		  if ((PtrElement) element == firstSelection)
+		     /* The selection starts in the element */
 		     {
-			TtaSelectElement (document, NULL);
-			changeSelection = TRUE;
-			if (lastChar > 1)
-			   lastChar -= 1;
-			pEl = (PtrElement) element;
-			if (pEl == firstSelection)
-			   /* The element is at the begenning of the selection */
-			  {
-			     firstChar = 0;
-			     if (pEl == lastSelection)
-				/* The selection consists only in the element it self, 
-				 * one select the whole element */
-				lastChar = 0;
-			  }
-			else if (pEl == lastSelection)
-			   /* The element is at the end of the selection 
-			    * one select until the end of the element */
-			   lastChar = 0;
+		     TtaSelectElement (document, NULL);
+		     changeSelection = TRUE;
+		     if (firstChar > length + 1)
+		        /* Selection begins beyond the new length */
+			firstChar = length+1;
 		     }
+		  if ((PtrElement) element == lastSelection)
+		     /* The selection ends in the element */
+		     {
+		     if (!changeSelection)
+			TtaSelectElement (document, NULL);
+		     changeSelection = TRUE;
+		     if (lastChar > length + 1)
+		        /* Selection ends beyond the new length */
+			lastChar = length + 1;
+		     }
+		  }
 #endif
 	     if (((PtrElement) element)->ElLeafType == LtText)
 		((PtrElement) element)->ElLanguage = language;
 	     if (content != NULL)
 	       {
 	       ptr = content;
-	       length = ustrlen (content);
 	       delta = length - ((PtrElement) element)->ElTextLength;
 	       ((PtrElement) element)->ElTextLength = length;
 	       ((PtrElement) element)->ElVolume = length;
@@ -205,18 +207,26 @@ Document            document;
 		  if (((PtrElement) element)->ElPictInfo != NULL)
 		     FreePictInfo ((PictInfo *) (((PtrElement) element)->ElPictInfo));
 	         }
-	      }
+	       }
 #ifndef NODISPLAY
 	     RedisplayLeaf ((PtrElement) element, document, delta);
 	     /* Sets up a new selection if the element is within it */
 	     if (changeSelection)
 	       {
-		  if (firstChar > 0)
-		     TtaSelectString (document, (Element) firstSelection, firstChar, 0);
-		  else
+		  if (firstChar == 0)
 		     TtaSelectElement (document, (Element) firstSelection);
+		  else
+		     {
+		     if (lastSelection == firstSelection)
+		        TtaSelectString (document, (Element) firstSelection,
+				         firstChar, lastChar);
+		     else
+		        TtaSelectString (document, (Element) firstSelection,
+				         firstChar, 0);
+		     }
 		  if (lastSelection != firstSelection)
-		     TtaExtendSelection (document, (Element) lastSelection, lastChar);
+		     TtaExtendSelection (document, (Element) lastSelection,
+					 lastChar);
 	       }
 #endif
 	  }

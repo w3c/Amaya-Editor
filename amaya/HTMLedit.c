@@ -1565,7 +1565,8 @@ void CheckNewLines(event)
      return;
 
   /* replace every new line in the content of the element by a space */
-  content = TtaAllocString (length + 1);
+  length++;
+  content = TtaAllocString (length);
   TtaGiveTextContent (event->target, content, &length, &lang);
   changed = FALSE;
   for (i = 0; i < length; i++)

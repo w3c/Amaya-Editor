@@ -2888,6 +2888,9 @@ View                view;
 	 TtaSetMenuOff (sourceDoc, 1, Special);
 	 TtaSetMenuOff (sourceDoc, 1, Help_);
 
+    	 /* Switch the synchronization entry */
+    	 if (TtaIsDocumentModified (document))
+    	    DocStatusUpdate (document, TRUE);
 	 /* Synchronize selections */
 	 event.document = document;
 	 SynchronizeSourceView (&event);
