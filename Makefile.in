@@ -9,7 +9,6 @@ THOTDIR = @top_srcdir@
 THOTINCLUDES = @THOTINCLUDES@
 LIBZ = @LIBZ@
 
-include Options.orig
 include Options
 
 LIBWWW	   = libwww
