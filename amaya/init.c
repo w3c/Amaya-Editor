@@ -3438,8 +3438,13 @@ void*     context;
 	     newdoc = res;
 	   
 	   if (ok)
-	     /* fetch and display all images referred by the document */
-	     stopped_flag = FetchAndDisplayImages (newdoc, AMAYA_LOAD_IMAGE);
+	     {
+	       /* fetch and display all images referred by the document */
+	       if (method = CE_MAKEBOOK)
+		 stopped_flag = FetchAndDisplayImages (newdoc, AMAYA_LOAD_IMAGE | AMAYA_MBOOK_IMAGE);
+	       else
+		 stopped_flag = FetchAndDisplayImages (newdoc, AMAYA_LOAD_IMAGE);
+	     }
 	 }
        else
 	 {

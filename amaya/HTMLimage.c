@@ -753,7 +753,7 @@ void               *extra;
   STRING              imageName;
   CHAR_T              pathname[MAX_LENGTH];
   CHAR_T              tempfile[MAX_LENGTH];
-  int                 length, i;
+  int                 length, i, newflags;
   ThotBool            update;
   ThotBool            newImage;
   FetchImage_context  *FetchImage_ctx;
@@ -819,8 +819,13 @@ void               *extra;
 	      FetchImage_ctx->base_url =  TtaWCSdup (DocumentURLs[doc]);
 
 	      UpdateTransfer(doc);
+	      if (flags & AMAYA_MBOOK_IMAGE)
+		newflags = flags | AMAYA_SYNC;
+	      else
+		newflags = flags | AMAYA_ASYNC;
+
 	      i = GetObjectWWW (doc, pathname, NULL, tempfile,
-	                        AMAYA_ASYNC | flags, NULL, NULL,
+	                        newflags, NULL, NULL,
 				(void *) libWWWImageLoaded,
 				(void *) FetchImage_ctx, NO, NULL);
 	      if (i != -1) 
