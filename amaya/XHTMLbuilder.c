@@ -175,26 +175,29 @@ ThotBool XhtmlCannotContainText (ElementType elType)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-static void CheckALTAttribute (Element el, Document doc)
+static void CheckMandatoryAttribute (Element el, Document doc, int attrNum)
 {
   ElementType    elType;
   Attribute      attr;
   AttributeType  attrType;
+  char          *name;
+  char           msgBuffer[MaxMsgLength];
 
    elType = TtaGetElementType (el);
    attrType.AttrSSchema = elType.ElSSchema;
-   attrType.AttrTypeNum = HTML_ATTR_ALT;
+   attrType.AttrTypeNum = attrNum;
    attr = TtaGetAttribute (el, attrType);
    if (attr == NULL)
      {
-       if (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat)
-	 XmlParseError (errorParsing,
-			(unsigned char *)"Default mandatory attribute \"alt\" added", 0);
-       else
-	 HTMLParseError (doc, "Default mandatory attribute \"alt\" added");
-       attr = TtaNewAttribute (attrType);
-       TtaAttachAttribute (el, attr, doc);
-       TtaSetAttributeText (attr, "img", el, doc);
+       name = GetXMLAttributeName (attrType, elType, doc);
+       if (name)
+	 {
+	   sprintf (msgBuffer, "Missing mandatory attribute %s", name);
+	   if (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat)
+	     XmlParseError (errorParsing, (unsigned char *)msgBuffer, 0);
+	   else
+	     HTMLParseError (doc, msgBuffer);
+	 }
      }
 }
 
@@ -424,6 +427,11 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
 	 TtaFreeMemory (data);
        break;
 
+     case HTML_EL_Parameter:
+       /* Check the mandatory name attribute */
+       CheckMandatoryAttribute (el, doc, HTML_ATTR_Param_name);
+       break;
+
      case HTML_EL_IFRAME:	  /* it's an iframe */
        child = TtaGetFirstChild (el);
        /* is the Iframe_Content element already created ? */
@@ -559,6 +567,11 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
        TtaInsertFirstChild (&child, el, doc);
        /* now, process it like a Text_Input element */
 
+     case HTML_EL_Form:
+       /* Check the mandatory action attribute */
+       CheckMandatoryAttribute (el, doc, HTML_ATTR_Script_URL);
+       break;
+
      case HTML_EL_Text_Input:
      case HTML_EL_Password_Input:
      case HTML_EL_File_Input:
@@ -599,10 +612,29 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
 		 }
 	     }
 	 }
+       /* Check the mandatory name attribute */
+       CheckMandatoryAttribute (el, doc, HTML_ATTR_NAME);
        break;
        
      case HTML_EL_META:
        ParseCharsetAndContentType (el, doc);
+       /* Check the mandatory CONTENT attribute */
+       CheckMandatoryAttribute (el, doc, HTML_ATTR_meta_content);
+       break;
+
+     case HTML_EL_BASE:
+       /* Check the mandatory HREF attribute */
+       CheckMandatoryAttribute (el, doc, HTML_ATTR_HREF_);
+       break;
+
+     case HTML_EL_BaseFont:
+       /* Check the mandatory size attribute */
+       CheckMandatoryAttribute (el, doc, HTML_ATTR_BaseFontSize);
+       break;
+
+     case HTML_EL_BDO:
+       /* Check the mandatory DIR attribute */
+       CheckMandatoryAttribute (el, doc, HTML_ATTR_dir);
        break;
 
      case HTML_EL_STYLE_:	/* it's a STYLE element */
@@ -633,6 +665,14 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
 		 }
 	     }
 	 }
+
+       if (elType.ElTypeNum == HTML_EL_STYLE_)
+	 /* Check the mandatory TYPE attribute */
+	 CheckMandatoryAttribute (el, doc, HTML_ATTR_Notation);
+       else if (elType.ElTypeNum == HTML_EL_SCRIPT_)
+	 /* Check the mandatory TYPE attribute */
+	 CheckMandatoryAttribute (el, doc, HTML_ATTR_content_type);
+
        if (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat)
 	 {
 	   if (IsXmlParsingCSS ())
@@ -704,6 +744,10 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
 		 }
 	     }
 	 }
+       /* Check the mandatory rows attribute */
+       CheckMandatoryAttribute (el, doc, HTML_ATTR_Rows);
+       /* Check the mandatory columns attribute */
+       CheckMandatoryAttribute (el, doc, HTML_ATTR_Columns);
        break;
 
      case HTML_EL_Radio_Input:
@@ -718,16 +762,42 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
 	   TtaAttachAttribute (el, attr, doc);
 	   TtaSetAttributeValue (attr, HTML_ATTR_Checked_VAL_No_, el, doc);
 	 }
+       /* Check the mandatory name attribute */
+       CheckMandatoryAttribute (el, doc, HTML_ATTR_NAME);
+       break;
+       
+     case HTML_EL_Button_Input:
+     case HTML_EL_Hidden_Input:
+     case HTML_EL_BUTTON_:
+       /* Check the mandatory name attribute */
+       CheckMandatoryAttribute (el, doc, HTML_ATTR_NAME);
        break;
        
      case HTML_EL_Option_Menu:
        /* Check that at least one option has a SELECTED attribute */
        OnlyOneOptionSelected (el, doc, TRUE);
+       /* Check the mandatory name attribute */
+       CheckMandatoryAttribute (el, doc, HTML_ATTR_NAME);
+       break;
+
+     case HTML_EL_Option:
+       /* Check the mandatory value attribute */
+       CheckMandatoryAttribute (el, doc, HTML_ATTR_Value_);
+       break;
+
+     case HTML_EL_OptGroup:
+       /* Check the mandatory label attribute */
+       CheckMandatoryAttribute (el, doc, HTML_ATTR_label);
        break;
 
      case HTML_EL_PICTURE_UNIT:
        /* Check the mandatory ALT attribute */
-       CheckALTAttribute (el, doc);
+       attrType.AttrSSchema = htmlSchema;
+       attrType.AttrTypeNum = HTML_ATTR_IsInput;
+       if (TtaGetAttribute (el, attrType) == NULL)
+	 CheckMandatoryAttribute (el, doc, HTML_ATTR_ALT);
+       /* Check the mandatory SRC attribute */
+       CheckMandatoryAttribute (el, doc, HTML_ATTR_SRC);
        break;
        
      case HTML_EL_LINK:
@@ -842,7 +912,8 @@ Element         PutInContent (char *ChrString, ParserData *context)
 	if (elType.ElTypeNum == 1)
 	   length = TtaGetTextLength (el);
 	if (length == 0)
-	   TtaSetTextContent (el, (unsigned char *)ChrString, context->language, context->doc);
+	   TtaSetTextContent (el, (unsigned char *)ChrString,
+			      context->language, context->doc);
 	else
 	   TtaAppendTextContent (el, (unsigned char *)ChrString, context->doc);
      }

@@ -5,6 +5,7 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
+
 extern void WriteVersionNumber ( BinFile pivFile );
 extern void WriteNatureNumber ( PtrSSchema pSS,
                                 BinFile pivFile,
@@ -29,6 +30,7 @@ extern void SauveDoc ( BinFile pivFile,
 extern void TtaRemoveDocument ( Document document );
 
 #else /* __STDC__ */
+
 extern void WriteVersionNumber ( BinFile pivFile );
 extern void WriteNatureNumber ( PtrSSchema pSS,
                                   BinFile pivFile,

@@ -5,6 +5,7 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
+
 extern ContentType ReadContentType ( BinFile file );
 extern PtrPRule ReadPRulePtr ( BinFile file,
                                PtrPRule * pNextPRule );
@@ -15,6 +16,7 @@ extern PtrPSchema ReadPresentationSchema ( char *fileName,
                                            PtrSSchema pSS );
 
 #else /* __STDC__ */
+
 extern ContentType ReadContentType ( BinFile file );
 extern PtrPRule ReadPRulePtr ( BinFile file,
                                  PtrPRule * pNextPRule );

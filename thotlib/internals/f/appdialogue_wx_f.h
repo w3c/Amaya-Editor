@@ -90,6 +90,7 @@ extern void TtaToggleOnOffSidePanel ( int frame_id );
 extern void TtaToggleOnOffSplitView ( int frame_id );
 extern void TtaDoPostFrameCreation ( int frame_id );
 extern void TtaToggleOnOffFullScreen ( int frame_id );
+extern void TtaRegisterOpenURLCallback ( void (*callback) (void *) );
 
 #else /* __STDC__ */
 
@@ -177,6 +178,7 @@ extern void TtaToggleOnOffSidePanel ( int frame_id );
 extern void TtaToggleOnOffSplitView ( int frame_id );
 extern void TtaDoPostFrameCreation ( int frame_id );
 extern void TtaToggleOnOffFullScreen ( int frame_id );
+extern void TtaRegisterOpenURLCallback ( void (*callback) (void *) );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -5,6 +5,7 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
+
 extern void SCHEMA_AddStatement ( RDFResourceP s,
                                   RDFPropertyP p,
                                   RDFResourceP o );
@@ -22,6 +23,7 @@ extern void SCHEMA_FreeAnnotSchema ( void );
 extern void SCHEMA_FreeRDFModel ( List **model );
 
 #else /* __STDC__ */
+
 extern void SCHEMA_AddStatement ( RDFResourceP s,
                                     RDFPropertyP p,
                                     RDFResourceP o );

@@ -5,6 +5,7 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
+
 extern void TSchemaError ( int err );
 extern PtrTSchema ReadTranslationSchema ( Name fileName,
                                           PtrSSchema pSS );
@@ -12,6 +13,7 @@ extern void FreeTranslationSchema ( PtrTSchema pTSch,
                                     PtrSSchema pSS );
 
 #else /* __STDC__ */
+
 extern void TSchemaError ( int err );
 extern PtrTSchema ReadTranslationSchema ( Name fileName,
                                             PtrSSchema pSS );
