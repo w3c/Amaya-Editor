@@ -108,51 +108,54 @@ int                *LastSelectedChar;
 	/* on verifie si la selection commence ou se termine sur une marque */
 	/* de page qui va disparaitre et dans ce cas on change la selection */
 	pEl1 = first;		/* debut de la selection */
-	if (pEl1->ElTypeNumber == PageBreak + 1)
-	   if (pEl1->ElViewPSchema == schView)
-	      if (pEl1->ElPageType == PgComputed)
-		 /* c'est une marque de page qui va disparaitre */
-		 if (pEl1->ElNext != NULL)
-		    /* on selectionne l'element suivant la marque de page */
-		   {
-		      if (last == first)
-			 last = pEl1->ElNext;
-		      first = pEl1->ElNext;
-		   }
-		 else
-		    /* pas d'element suivant la marque de page */ if (pEl1->ElPrevious != NULL)
-		    /* on selectionne l'element precedent la marque de page */
-		   {
-		      if (last == first)
-			 last = pEl1->ElPrevious;
-		      first = pEl1->ElPrevious;
-		   }
-		 else
-		    /* pas de suivant ni de precedent */
-		    /* on selectionne l'element englobant la marque de page */
-		   {
-		      first = pEl1->ElParent;
-		      last = pEl1->ElParent;
-		   }
+	if (pEl1->ElTypeNumber == PageBreak + 1 &&
+	    pEl1->ElViewPSchema == schView &&
+	    pEl1->ElPageType == PgComputed)
+	  {
+	    /* c'est une marque de page qui va disparaitre */
+	    if (pEl1->ElNext != NULL)
+	      /* on selectionne l'element suivant la marque de page */
+	      {
+		if (last == first)
+		  last = pEl1->ElNext;
+		first = pEl1->ElNext;
+	      }
+	    else if (pEl1->ElPrevious != NULL)
+	      /* on selectionne l'element precedent la marque de page */
+	      {
+		if (last == first)
+		  last = pEl1->ElPrevious;
+		first = pEl1->ElPrevious;
+	      }
+	    else
+	      /* pas de suivant ni de precedent */
+	      /* on selectionne l'element englobant la marque de page */
+	      {
+		first = pEl1->ElParent;
+		last = pEl1->ElParent;
+	      }
+	  }
 	pEl1 = last;
 	/* dernier element de la selection */
-	if (pEl1->ElTypeNumber == PageBreak + 1)
-	   if (pEl1->ElViewPSchema == schView)
-	      if (pEl1->ElPageType == PgComputed)
-		 /* le dernier element de la selection est une marque de */
-		 /* page qui va disparaitre */
-		 if (pEl1->ElPrevious != NULL)
-		    last = pEl1->ElPrevious;
-	/* on selectionne le precedent */
-		 else if (pEl1->ElNext != NULL)
-		    last = pEl1->ElNext;
-	/* on selectionne le suivant */
-		 else
-		    /* on selectionne l'englobant */
-		   {
-		      first = pEl1->ElParent;
-		      last = pEl1->ElParent;
-		   }
+	if (pEl1->ElTypeNumber == PageBreak + 1 &&
+	    pEl1->ElViewPSchema == schView &&
+	    pEl1->ElPageType == PgComputed)
+	  {
+	    /* le dernier element de la selection est une marque de */
+	    /* page qui va disparaitre */
+	    if (pEl1->ElPrevious != NULL)
+	      last = pEl1->ElPrevious;
+	    /* on selectionne le precedent */
+	    else if (pEl1->ElNext != NULL)
+	      last = pEl1->ElNext;
+	    /* on selectionne le suivant */
+	    else
+	      /* on selectionne l'englobant */
+	      {
+		first = pEl1->ElParent;
+		last = pEl1->ElParent;
+	      }
+	  }
 	/* le debut de la selection est-il dans une feuille de texte qui
 	   n'est separee de la precedente que par une marque de page ? Dans
 	   ce cas il y aura fusion des deux feuilles et la deuxieme
@@ -327,27 +330,29 @@ int                 schView;
       /* cherche la prochaine marque de page */
      {
 	pEl = FwdSearchTypedElem (pEl, PageBreak + 1, NULL);
-	if (pEl != NULL)
-	   if (pEl->ElViewPSchema == schView)
-	      /* on a trouve' une marque de page concernant la vue */
-	      if (pEl->ElPageType == PgComputed)
-		 /* c'est une marque de page calculee */
-		{
-		   if (pElPage != NULL)
-		      /* il y a deja une marque de page a supprimer, on la supprime */
-		     {
-			SuppressPageMark (pElPage, pDoc, &pElLib);
-			if (pElLib != NULL)
-			   DeleteElement (&pElLib, pDoc);
-		     }
-		   /* on supprimera cette marque de page au tour suivant */
-		   pElPage = pEl;
-		}
-	      else
-		 /* c'est une marque de page a conserver */
-		 /* on ne creera pas tout de suite ses boites de haut de page */
-		 /* contenant des elements associes. */
-		 pEl->ElAssocHeader = FALSE;
+	if (pEl != NULL &&
+	    pEl->ElViewPSchema == schView)
+	  {
+	    /* on a trouve' une marque de page concernant la vue */
+	    if (pEl->ElPageType == PgComputed)
+	      /* c'est une marque de page calculee */
+	      {
+		if (pElPage != NULL)
+		  /* il y a deja une marque de page a supprimer, on la supprime */
+		  {
+		    SuppressPageMark (pElPage, pDoc, &pElLib);
+		    if (pElLib != NULL)
+		      DeleteElement (&pElLib, pDoc);
+		  }
+		/* on supprimera cette marque de page au tour suivant */
+		pElPage = pEl;
+	      }
+	    else
+	      /* c'est une marque de page a conserver */
+	      /* on ne creera pas tout de suite ses boites de haut de page */
+	      /* contenant des elements associes. */
+	      pEl->ElAssocHeader = FALSE;
+	  }
      }
    if (pElPage != NULL)
       /* il reste une marque de page a supprimer, on la supprime */
@@ -513,10 +518,12 @@ int                 nbView;
    UpdateAbsBoxVolume (pEl, nbView - 1, pDoc);
    /* prepare la creation des paves de la 2eme partie */
    if (!AssocView (pEl))
+     {
       if (pDoc->DocView[nbView - 1].DvPSchemaView > 0)
 	 pDoc->DocViewFreeVolume[nbView - 1] = THOT_MAXINT;
       else if (pDoc->DocAssocFrame[pEl->ElAssocNum - 1] != 0)
 	 pDoc->DocAssocFreeVolume[pEl->ElAssocNum - 1] = THOT_MAXINT;
+     }
    /* cree les paves de la deuxieme partie */
    CreateNewAbsBoxes (pSecond, pDoc, nbView);
    ApplDelayedRule (pSecond, pDoc);
@@ -782,6 +789,7 @@ int                 position;
 	 pEl = (*origCutAbsBox)->AbElement;
 
    if (pEl->ElParent == NULL)
+     {
       /* si pEl est la racine il faut descendre d'un niveau */
      if (ElemIsBefore)
        pEl = pEl->ElFirstChild;
@@ -791,6 +799,7 @@ int                 position;
 	 while (pEl->ElNext != NULL)
 	   pEl = pEl->ElNext;
        }
+     }
 
    if (ElemIsBefore)
      {
@@ -1114,6 +1123,7 @@ PtrElement         *pPage;
   if (pAb != NULL)
     {
       if (pAb->AbOnPageBreak)
+	{
 	/* le pave' est traverse' par la limite de page */
 	if (pAb->AbFirstEnclosed == NULL)
 	  /* c'est un pave' feuille */
@@ -1219,6 +1229,7 @@ PtrElement         *pPage;
 		  pAb = pAb->AbNext;
 	      }
 	  }
+	}
     }
 }
 

@@ -240,9 +240,11 @@ PtrAbstractBox     *RedispAbsBox;
 	  {
 	    SetPageHeight (pP, &haut, &y, &NCar);
 	    if (y < limit)
+	      {
 	      /* le haut du pave est au-dessus de la limite */
 	      /* on ne tue pas les paves qui contiennent une marque de page */
 	      if (y + haut <= limit && !pP->AbOnPageBreak)
+		{
 		if (pP->AbPresentationBox)
 		  /* Tue les paves de presentation */
 		  {
@@ -251,9 +253,11 @@ PtrAbstractBox     *RedispAbsBox;
 		  }
 		else
 		  DestroyAbsBoxesView (pP->AbElement, pDoc, FALSE, viewNb);
+		}
 	      else
 		/* le pave est traverse par la limite */
 		KillAbsBoxAboveLimit (pP, limit, viewNb, pDoc, RedispAbsBox);
+	      }
 	  }
       pP = pP->AbNext;
     }
@@ -383,6 +387,7 @@ int                *clipOrg;
 		  /* get the new page break line position */
 		  SetPageHeight (pNext, &h, &yTop, &NbCar);
 		  if (yTop < yThread)
+		    {
 		    if (yTop + h <= yThread && !pNext->AbOnPageBreak)
 		      {
 			/* the top of that box is above the page break */
@@ -398,6 +403,7 @@ int                *clipOrg;
 		    else
 		      /* the page break line crosses that box */
 		      KillAbsBoxAboveLimit (pNext, yThread, viewNb, pDoc, &RedispAbsBox);
+		    }
 		}
 	    }
 	  pNext = pNext->AbNext;

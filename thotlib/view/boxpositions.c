@@ -211,6 +211,7 @@ ThotBool           *isPageBreakChanged;
       pAb->AbAfterPageBreak = TRUE;
       pParentAb = pAb->AbEnclosing;
       if (pAb->AbVertEnclosing && pParentAb != NULL)
+	{
 	/* Le pere est sur la page ou hors de la page */
 	if (pParentAb->AbBox->BxType == BoGhost)
 	  {
@@ -233,6 +234,7 @@ ThotBool           *isPageBreakChanged;
 	    else
 	      OnPage (pParentAb, height, isPageBreakChanged);
 	  }
+	}
     }
 }
 
@@ -802,7 +804,6 @@ int                *nChars;
    PtrTextBuffer       adbuff;
    int                 height;
    int                 org, i;
-   int                 hfont;
    ThotBool            still;
 
    *nChars = 0;

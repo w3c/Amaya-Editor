@@ -1261,6 +1261,7 @@ PtrAbstractBox      pAb;
 
    i = 0;
    if (pAb)
+     {
       if (pAb->AbFontWeight == 1)	/* Weight: Bold */
 	 {
 	 if (pAb->AbFontStyle == 1)		/* Style: Italic */
@@ -1279,6 +1280,7 @@ PtrAbstractBox      pAb;
 	 else					/* Style: Roman (default) */
 	    i = 0;	 
 	 }
+     }
    return i;
 }
 
@@ -1942,10 +1944,12 @@ ThotBool            splitBox;
 	     MoveHorizRef (pAb->AbBox, NULL, j, frame);
 	  }
 	else if (pPosAb->PosAbRef == pMainBox->BxAbstractBox)
+	  {
 	   if (pPosAb->PosRefEdge == HorizMiddle)
 	      MoveHorizRef (pAb->AbBox, NULL, hDelta / 2, frame);
 	   else if (pPosAb->PosRefEdge == Bottom)
 	      MoveHorizRef (pAb->AbBox, NULL, hDelta, frame);
+	  }
 
 	/* Mise a jour des positions des boites suivantes */
 	box1 = pBox->BxNexChild;
@@ -2578,10 +2582,12 @@ int                 frame;
 	    pNextBox->BxPrevious = pCurrentBox;
 	    if (pNextBox->BxType == BoPiece &&
 		pNextBox->BxAbstractBox->AbBox != NULL)
+	      {
 	      if (pCurrentBox->BxType == BoPiece)
 		pNextBox->BxAbstractBox->AbBox->BxPrevious = pCurrentBox->BxAbstractBox->AbBox;
 	      else
 		pNextBox->BxAbstractBox->AbBox->BxPrevious = pCurrentBox;
+	      }
 	  }
 	if (pNextBox == pMainBox)
 	  /* last box in the list */
@@ -2590,12 +2596,16 @@ int                 frame;
 	  {
 	    /* forward link */
 	    pCurrentBox->BxNext = pNextBox;
+	    {
 	    if (pCurrentBox->BxType == BoPiece &&
 		pCurrentBox->BxAbstractBox->AbBox != NULL)
+	      {
 	      if (pNextBox->BxType == BoPiece)
 		pCurrentBox->BxAbstractBox->AbBox->BxPrevious = pNextBox->BxAbstractBox->AbBox;
 	      else
 		pCurrentBox->BxAbstractBox->AbBox->BxPrevious = pNextBox;
+	      }
+	    }
 
 	  }
 

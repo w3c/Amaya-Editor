@@ -92,9 +92,9 @@ PtrAbstractBox      pave;
 
 
 /*----------------------------------------------------------------------
-   MoveInLine deplace la selection textuelle.                      
-   - frame designe la fenetre de travail.                  
-   - toend indique que l'on va a la fin de la ligne.       
+  MoveInLine moves the text selection.
+  The parameter frame gives the concerned frame.
+  The parameter toend is TRUE when moving to the end of the line.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         MoveInLine (int frame, ThotBool toend)
@@ -119,7 +119,7 @@ ThotBool            toend;
       return;
    else if (toend)
      {
-	/* Prend la derniere boite de la ligne */
+	/* get the last box in the line */
 	if (pLine->LiLastPiece != NULL)
 	   pBox = pLine->LiLastPiece;
 	else
@@ -140,13 +140,13 @@ ThotBool            toend;
 	if (IsTextLeaf (pAb))
 	   nChars = pBox->BxIndChar + 1;
      }
-   /* Reinitialise la selection */
+   /* update the selection */
    ChangeSelection (frame, pAb, nChars, FALSE, TRUE, FALSE, FALSE);
 }
 
 
 /*----------------------------------------------------------------------
-   LocateLeafBox get the box located at the position x+xDelta, y+yDelta.
+   LocateLeafBox gets the box located at the position x+xDelta, y+yDelta.
    if the box is still the same (pFrom) the position is shifted by
    xDelta and yDelta.                     
   ----------------------------------------------------------------------*/
@@ -602,11 +602,17 @@ ThotBool            extendSel;
 	 case 3:	/* End of line (^E) */
 	   if (pBox != NULL)
 	     MoveInLine (frame, TRUE);
+	   if (pViewSel->VsBox)
+	     /* Get the last X position */
+	     ClickX = pViewSel->VsBox->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg;
 	   break;
 	   
 	 case 4:	/* Beginning of line (^A) */
 	   if (pBox != NULL)
 	     MoveInLine (frame, FALSE);
+	   if (pViewSel->VsBox)
+	     /* Get the last X position */
+	     ClickX = pViewSel->VsBox->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg;
 	   break;
 	   
 	 case 7:	/* Next line (^N) */
