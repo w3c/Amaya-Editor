@@ -102,6 +102,10 @@ void AmayaSimpleWindow::OnCloseButton(wxCommandEvent& event)
  */
 void AmayaSimpleWindow::OnClose(wxCloseEvent& event)
 {
+  // do nothing if the windows is allready closing itself
+  if ( m_IsClosing )
+      return;
+
   m_IsClosing = TRUE;
 
   // try to close the contained frame
@@ -197,7 +201,7 @@ AmayaFrame * AmayaSimpleWindow::DetachFrame()
 
   // if we detach the frame form a simple window, it's because we want to kill the window
   // so close it
-  //  Close();
+  Close();
   //  TtaHandlePendingEvents();
   //m_ShouldCleanUp = true;
 
