@@ -2140,8 +2140,6 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
   Document      old_doc;
   Element       root, comment, leaf;
   ElementType   elType;
-  Attribute     attr;
-  AttributeType attrType;
   char         *tmp, buffer[MAX_LENGTH];
   int           x, y, w, h;
   int           requested_doc;
