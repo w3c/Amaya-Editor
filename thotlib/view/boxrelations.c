@@ -767,6 +767,18 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef,
 		pBox->BxRMargin = 0;
 	    }
 	}
+      /* List-item presentation boxes take into account the left margin */
+      if (pAb->AbPrevious && pAb->AbPrevious->AbBox &&
+	  pAb->AbPrevious->AbPresentationBox &&
+	  pAb->AbPrevious->AbTypeNum == 0)
+	{
+	  if (pAb->AbDirection == 'L')
+	    pAb->AbPrevious->AbBox->BxXOrg = pBox->BxXOrg + pBox->BxLMargin
+	                             - pAb->AbPrevious->AbBox->BxWidth;
+	  else
+	    pAb->AbPrevious->AbBox->BxXOrg = pBox->BxXOrg + pBox->BxWidth
+	                  - pBox->BxRMargin;
+	}
     }
   else
     {
@@ -1246,6 +1258,14 @@ void ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horiz
 	  x = pRefBox->BxXOrg;
 	  y = pRefBox->BxYOrg;
 #endif /* _GL */
+	  /* List-item presentation boxes take into account the left margin */
+	  if (pAb->AbPresentationBox && pAb->AbTypeNum == 0)
+	    {
+	      if (pRefAb->AbDirection == 'L')
+		  x += pRefBox->BxLMargin;
+	      else
+		  x -= pRefBox->BxRMargin;
+	    }
 	}
 
       if (pRefAb == pAb->AbEnclosing)
