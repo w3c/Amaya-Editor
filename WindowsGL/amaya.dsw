@@ -45,7 +45,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "amayagl"=.\amayagl.dsp - Package Owner=<4>
+Project: "amaya"=.\amaya.dsp - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -77,6 +77,9 @@ Package=<4>
     Begin Project Dependency
     Project_Dep_Name Compilers
     End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name davlib
+    End Project Dependency
 }}}
 
 ###############################################################################
@@ -101,6 +104,9 @@ Package=<4>
     Begin Project Dependency
     Project_Dep_Name libwww
     End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name libraptor
+    End Project Dependency
 }}}
 
 ###############################################################################
@@ -121,6 +127,18 @@ Package=<4>
 ###############################################################################
 
 Project: "cpp"=.\cpp\cpp.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "davlib"=.\davlib\davlib.dsp - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -179,6 +197,18 @@ Package=<4>
     Begin Project Dependency
     Project_Dep_Name zlib
     End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "libraptor"=.\libraptor\libraptor.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
 }}}
 
 ###############################################################################
@@ -259,6 +289,9 @@ Package=<4>
     End Project Dependency
     Begin Project Dependency
     Project_Dep_Name libpng
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name Compilers
     End Project Dependency
 }}}
 
