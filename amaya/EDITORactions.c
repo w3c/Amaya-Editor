@@ -3587,12 +3587,11 @@ void  CreateNOSCRIPT (Document document, View view)
 void  CreateObject (Document document, View view)
 {
   ElementType         elType;
-  Element             el, image, content, textEl;
+  Element             el, image;
   Attribute           attr;
   AttributeType       attrType;
   char               *text;
   int                 length, firstchar, lastchar;
-  ThotBool            oldStructureChecking;
 
   if (HTMLelementAllowed (document))
     {
