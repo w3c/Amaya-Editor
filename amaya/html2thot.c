@@ -4832,7 +4832,7 @@ Document            doc;
 		   do
 		     {
 		     TtaRemoveTree (elem, doc);
-		     TtaInsertSibling (elem, prev, TRUE, doc);
+		     TtaInsertSibling (elem, prev, TRUE, doc); /**** FALSE? ****/
 		     prev = elem;
 		     elem = next;
 		     if (elem == last)
@@ -5424,19 +5424,16 @@ char               *pathURL;
 	     /* search the next MAP element in the abstract tree */
 	     el = TtaSearchTypedElement (elType, SearchForward, el);
 	     if (el != NULL)
-	       /* a MAP element has been found. */
-	       {
-#ifndef STANDALONE
-		 MakeUniqueName (el, theDocument);
-#endif /* !STANDALONE */
-		 parent = TtaGetParent(el);
-		 if (IsBlockElement (parent))
-		   /* its parent is a block element */
-		   {
-		     TtaRemoveTree (el, theDocument);
-		     TtaInsertSibling (el, parent, TRUE, theDocument);
-		   }
-	       }
+		/* a MAP element has been found. */
+		{
+		parent = TtaGetParent(el);
+		if (IsBlockElement (parent))
+		  /* its parent is a block element */
+		  {
+		  TtaRemoveTree (el, theDocument);
+		  TtaInsertSibling (el, parent, TRUE, theDocument);
+		  }
+		}
 	  }
 
 	/* add other checks here */

@@ -229,9 +229,11 @@ int                 docid;
    me->read_sock = INVSOC;
    me->write_sock = INVSOC;
    me->except_sock = INVSOC;
+#ifdef _WINDOWS
    me->read_fd_state  = 0;
    me->write_fd_state  = 0;
    me->except_fd_state  = 0;
+#endif
 
    /* Update the global context */
    HTList_appendObject (Amaya->reqlist, (void *) me);
