@@ -1391,6 +1391,12 @@ void TtcUndo (Document doc, View view)
    if (!pDoc->DocLastEdit)
      /* history is empty */
       return;
+   if (pDoc->DocEditSequence)
+     {
+       /* the last history sequence was not closed */
+       printf ("ERR: Undo an open history sequence\n*/");
+       CloseHistorySequence (pDoc);
+     }
 
    /* Start a new sequence in the Redo queue */
    OpenRedoSequence (doc);
