@@ -62,7 +62,7 @@ One Timer To Rule Them All
 using start value substract to get their own time)
 */
 static int      AnimTimer = 0; 
-
+static ThotBool BadGLCard = FALSE;
 /* Animation Smoothness*/
 #define FPS 25 /*Frame Per Second*/
 #define INTERVAL 0.02 /*1/FPS*/ /* should be 1/25 ... 1/50 */
@@ -208,7 +208,14 @@ void TtaSetDocumentCurrentTime (double current_time, Document doc)
   FrameTable[frame].LastTime = current_time;
   GL_DrawAll ();
 }
-
+/*----------------------------------------------------------------------
+  SetBadCard :  handle video cards that flush backbuffer after each
+  buffer swap
+  ----------------------------------------------------------------------*/
+void SetBadCard (ThotBool badbuffer)
+{
+  BadGLCard = !badbuffer;
+}
 /*----------------------------------------------------------------------
   GL_DrawAll : Really Draws opengl !!
   ----------------------------------------------------------------------*/
@@ -262,6 +269,9 @@ ThotBool GL_DrawAll ()
 			{
 			  if (GL_prepare (frame))
 			    {
+			      if (BadGLCard)
+				DefClip (frame, -1, -1, -1, -1);
+
 			      RedrawFrameBottom (frame, 0, NULL); 
 
 			      if (was_animation)

@@ -561,8 +561,8 @@ int GLString (unsigned char *buff, int lg, int frame, int x, int y,
   FILE               *fout;
   int                 j, i, encoding, width;
   int                 noJustifiedWhiteSp;
-  int                 X,Y;
-  int                 NbWhiteSp;
+  int                 X = 0,Y = 0;
+  int                 NbWhiteSp = 0;
   char                fontname[35];
   static  int         SameBox = 0;
 
@@ -849,5 +849,11 @@ void WinGL_Swap (HDC hDC)
  
 }
 #endif /*_WINDOWS*/
-
+/*----------------------------------------------------------------------
+  SetBadCard :  handle video cards that flush backbuffer after each
+  buffer swap
+  ----------------------------------------------------------------------*/
+void SetBadCard (ThotBool badbuffer)
+{
+}
 #endif /* _GL */

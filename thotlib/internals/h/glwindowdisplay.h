@@ -189,6 +189,8 @@ void GL_SetPrintForeground (int fg);
 void GL_KillFrame (int frame);
 void SetSoftware_Mode (ThotBool value);
 
+void SetBadCard (ThotBool badbuffer);
+
 #ifdef _WINDOWS
 void WinGL_Swap (HDC hDC);
 #endif /*_WINDOWS*/

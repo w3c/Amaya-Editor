@@ -1608,6 +1608,7 @@ void SetGlPipelineState ()
   const char *version = (const char *) gluGetString (GLU_VERSION);
   const char *renderer = glGetString (GL_RENDERER);
   ThotBool graph_aa = TRUE;
+  ThotBool badbuffer = FALSE;
 
   Software_Mode = FALSE;
   if (strstr (renderer, "Mesa")
@@ -1623,6 +1624,12 @@ void SetGlPipelineState ()
       fprintf( stderr, GLU_ERROR_MSG);
 #endif /* _WINDOWS */
       exit (1);
+    }
+
+  if (!Software_Mode)
+    {
+      TtaGetEnvBoolean ("ENABLE_BAD_BUFFER", &badbuffer);
+      SetBadCard (!badbuffer);
     }
 #ifdef _PCLDEBUG
   g_print ("\n%s", (Software_Mode)?
@@ -1651,6 +1658,7 @@ void SetGlPipelineState ()
 	     auxnumBuffers, acred, acgreen, acblue, acalpha);
   }
 #endif /*_PCLDEBUG*/
+
   /*glClearColor (1, 0, 0, 0);*/
   /* no fog*/
   glDisable (GL_FOG);
@@ -1708,6 +1716,7 @@ void SetGlPipelineState ()
   glClear (GL_COLOR_BUFFER_BIT);
   glEnable (GL_SCISSOR_TEST);  
   glShadeModel (GL_FLAT);
+
 
   /* Not recommended for hardware cards... 
      Global Antialiasing is done elsewhere...*/
