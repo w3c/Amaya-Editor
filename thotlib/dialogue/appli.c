@@ -1010,8 +1010,8 @@ void                InitializeOtherThings ()
   ----------------------------------------------------------------------*/
 void     TtaChangeWindowTitle (Document document, View view, STRING title)
 {
-    int idwindow, v;
-    PtrDocument pDoc;
+    int          idwindow, v;
+    PtrDocument  pDoc;
 
     if (view > 0)
       {

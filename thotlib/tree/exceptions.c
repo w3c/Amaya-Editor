@@ -1,19 +1,10 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
 /*
  * Traitement des exceptions definies dans les schemas  
  * de structure. 
@@ -38,15 +29,7 @@
    TypeHasException retourne Vrai si le numero d'exception exceptNum 
    est associe' au type typeNum du schema de structure pSS	
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            TypeHasException (int exceptNum, int typeNum, PtrSSchema pSS)
-#else  /* __STDC__ */
-ThotBool            TypeHasException (exceptNum, typeNum, pSS)
-int                 exceptNum;
-int                 typeNum;
-PtrSSchema          pSS;
-
-#endif /* __STDC__ */
+ThotBool TypeHasException (int exceptNum, int typeNum, PtrSSchema pSS)
 {
    ThotBool            ret;
    int                 e;
@@ -105,18 +88,7 @@ PtrSSchema          pSS;
    associe' a` l'attribut attr defini dans le schema de    
    structure pSS.						
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-ThotBool            AttrHasException (int exceptNum, int attr, PtrSSchema pSS)
-
-#else  /* __STDC__ */
-ThotBool            AttrHasException (exceptNum, attr, pSS)
-int                 exceptNum;
-int                 attr;
-PtrSSchema          pSS;
-
-#endif /* __STDC__ */
-
+ThotBool AttrHasException (int exceptNum, int attr, PtrSSchema pSS)
 {
    ThotBool            ret;
    int                 e;
@@ -149,17 +121,7 @@ PtrSSchema          pSS;
    exceptNum et retourne son numero d'attribut.		
    Retourne 0 en cas d'echec.				
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-int                 GetAttrWithException (int exceptNum, PtrSSchema pSS)
-
-#else  /* __STDC__ */
-int                 GetAttrWithException (exceptNum, pSS)
-int                 exceptNum;
-PtrSSchema          pSS;
-
-#endif /* __STDC__ */
-
+int GetAttrWithException (int exceptNum, PtrSSchema pSS)
 {
    int                 attr, ret;
 
@@ -183,17 +145,7 @@ PtrSSchema          pSS;
    d'exception exceptNum et retourne son numero de type.	
    Retourne 0 en cas d'echec.				
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-int                 GetElemWithException (int exceptNum, PtrSSchema pSS)
-
-#else  /* __STDC__ */
-int                 GetElemWithException (exceptNum, pSS)
-int                 exceptNum;
-PtrSSchema          pSS;
-
-#endif /* __STDC__ */
-
+int GetElemWithException (int exceptNum, PtrSSchema pSS)
 {
    int                 typ, ret;
 
