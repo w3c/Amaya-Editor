@@ -756,6 +756,8 @@ void ANNOT_BuildThread (Document thread_doc)
   annot_list = AnnotThread[thread_doc].annotations;
   /* sort the thread */
   AnnotThread_sortThreadList (&annot_list);
+  AnnotThread[thread_doc].annotations = annot_list;
+
   /* erase previous thread */
   while (annot_list)
     {

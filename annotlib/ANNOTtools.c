@@ -943,23 +943,148 @@ static void ConvertContainerToList (List **result, Container *container)
 
 /*------------------------------------------------------------
   Container_promoteChild
+  Put a child at the end of the parent list.
   ------------------------------------------------------------*/
-static void Container_promoteChild (Container *root, Container *tmp_entry)
+static void Container_promoteEntry (Container **parent, Container *tmp_entry)
 {
   Container *tmp;
 
-  if (tmp_entry == root)
+  if (tmp_entry == *parent)
     return;
 
-  if (!root)
-    root = tmp_entry;
+  if (*parent == NULL)
+    *parent = tmp_entry;
   else
     {
-      tmp = root;
+      tmp = *parent;
       while (tmp->next)
 	tmp = tmp->next;
       tmp->next = tmp_entry;
+      tmp_entry->parent = (*parent)->parent;
       tmp_entry->next = NULL;
+    }
+}
+
+/*------------------------------------------------------------
+  Container_prune
+  Remove the empty containers (those that don't have
+  any annotations) and upgrade their children.
+  ------------------------------------------------------------*/
+static void Container_prune (Container **parent)
+{
+  Container *tmp_entry, *previous, *child;
+  
+  tmp_entry = *parent;
+  previous = NULL;
+  while (tmp_entry)
+    {
+      if (!tmp_entry->annot && tmp_entry->child)
+	{
+	  if (!tmp_entry->child->next)
+	    {
+	      /* empty container has only one child. Promote it to the same level 
+		 and destroy the parent */
+	      child = tmp_entry->child;
+	      child->parent = tmp_entry->parent;
+	      if (!previous)
+		*parent = child;
+	      else
+		previous->next = child;
+	      child->next = tmp_entry->next;
+	      tmp_entry->child = NULL;
+	      tmp_entry->next = NULL;
+	      ThreadItem_delete (tmp_entry);
+	      tmp_entry = child;
+	      continue;
+	    }
+	  else if (tmp_entry->parent)
+	    {
+	      /* it's not the only child, promote all the children to the
+		 parents level, except if it would become parent */
+	      child = tmp_entry->child;
+	      if (tmp_entry == *parent)
+		  *parent = child;
+	      else
+		previous->next = child;
+	      /* fix the links of the child to the parent.
+		 insert the next tmp_entry element at the end
+		 of the last child. */
+	      while (child)
+		{
+		  child->parent = tmp_entry->parent;
+		  if (!child->next)
+		    {
+		      child->next = tmp_entry->next;
+		      break;
+		    }
+		  child = child->next;
+		}
+	      child = tmp_entry->child;
+	      tmp_entry->child = NULL;
+	      tmp_entry->next = NULL;
+	      ThreadItem_delete (tmp_entry);
+	      tmp_entry = child;
+	      continue;
+	    }
+	}
+      else if (tmp_entry->child)
+	Container_prune (&tmp_entry->child);
+      if (!tmp_entry)
+	break;
+      previous = tmp_entry;
+      tmp_entry = tmp_entry->next;
+    }
+}
+
+/*------------------------------------------------------------
+   Container_sortByDate
+   Sorts the annotations siblings in the container list
+   by most recent date.
+   ------------------------------------------------------------*/
+static void Container_sortByDate (Container **list)
+{
+  time_t date_cur;
+  time_t date_next;
+  ThotBool swap;
+  Container *entry_cur;
+  Container *entry_next;
+  Container *previous;
+
+  /* simple bubble sort */
+  while (1)
+    {
+      swap = FALSE;
+      previous = NULL;
+      entry_cur = *list;
+      while (entry_cur && entry_cur->next)
+	{
+	  entry_next = entry_cur->next;
+	  date_cur = StrDateToCalTime (entry_cur->annot->mdate);
+	  date_next = StrDateToCalTime (entry_next->annot->mdate);
+	  /* sort by most recent date */
+	  if (date_cur < date_next)
+	    {
+	      /* swap */
+	      swap = TRUE;
+	      entry_cur->next = entry_next->next;
+	      entry_next->next = entry_cur;
+	      if (previous)
+		previous->next = entry_next;
+	      else
+		{
+		  *list = entry_next;
+		  entry_next->parent->child = entry_next;
+		}
+	      previous = entry_next;
+	    }
+	  else
+	    {
+	      previous = entry_cur;
+	      entry_cur = entry_next;
+	    }
+	}
+      if (!swap)
+	break;
     }
 }
 #endif /* ANNOT_ON_ANNOT */
@@ -1042,15 +1167,16 @@ void AnnotThread_sortThreadList (List **thread_list)
       tmp_entry = (Container *) HTHashtable_object (id_table, HTArray_data (keys)[i]);
       if (tmp_entry->parent == NULL)
 	{
-	  if (tmp_entry->annot != NULL)
-	    Container_promoteChild (root, tmp_entry);
+	  if (tmp_entry == root)
+	    continue;
+	  else if (tmp_entry->annot || tmp_entry->child)
+	    /* promote to parent */
+	    Container_promoteEntry (&root, tmp_entry);
 	  else if (tmp_entry->child == NULL)
 	    /* destroy */
-	    ThreadItem_delete (tmp_entry);
-	  else 
 	    {
-	      /* promote to parent */
-	      Container_promoteChild (root, tmp_entry);
+	      tmp_entry->next = NULL;
+	      ThreadItem_delete (tmp_entry);
 	    }
 	}
     }
@@ -1060,8 +1186,29 @@ void AnnotThread_sortThreadList (List **thread_list)
   HTArray_delete (keys);
   HTHashtable_delete(id_table);
 
+  /* prune the empty containers */
+  tmp_entry = root;
+  while (tmp_entry)
+    {
+      Container_prune (&tmp_entry->child);
+      tmp_entry = tmp_entry->next;
+    }
+
   /* all is sorted by reply to, now sort it according to dates */
-  
+  tmp_entry = root;
+  while (tmp_entry)
+    {
+      Container *tmp_child;
+      
+      tmp_child = tmp_entry->child;
+      while (tmp_child)
+	{
+	  Container_sortByDate (&tmp_child);
+	  tmp_child = tmp_child->child;
+	}
+      tmp_entry = tmp_entry->next;
+    }
+
   /* copy the result to annot_list. The children of root are live replies.
    The brothers of root have messages that have lost their in-reply-to parents */
   annot_list = NULL;
@@ -1074,144 +1221,6 @@ void AnnotThread_sortThreadList (List **thread_list)
   *thread_list = annot_list;
 #endif /* ANNOT_ON_ANNOT */
 }
-
-#ifdef ANNOT_ON_ANNOT
-/*------------------------------------------------------------
-   AnnotThread_position
-   Returns the position of a thread item in a thread list.
-   ------------------------------------------------------------*/
-static int AnnotThread_position (List *list_item, List *thread_list)
-{
-  int i = 0;
-  List *tmp;
-
-  tmp = thread_list;
-  while (tmp && tmp != list_item)
-    {
-      i++;
-      tmp = tmp->next;
-    }
-  if (!tmp)
-    return 0;
-  else
-    return i;
-}
-
-/*------------------------------------------------------------
-   AnnotThread_sortByDate
-   Sorts the thread list pointed by annotlist by InReplyTo
-   and by modified date.
-   ------------------------------------------------------------*/
-static void AnnotThread_sortByDate (List **thread_list)
-{
-  char *rootOfThread;
-  char *annot_url;
-  char *annot_next_url;
-  time_t date_cur;
-  time_t date_next;
-  ThotBool swap;
-  List *annot_list, *list_cur, *list_next, *list_tmp, *list_tmp_next;
-
-  AnnotMeta *annot_cur, *annot_next;
-
-  annot_list = *thread_list;
-
-  if (!annot_list)
-    return;
-
-  /* sort of bubble sort on InReplyTo and mdate */
-  
-  list_cur = annot_list;
-  annot_cur = (AnnotMeta *) list_cur->object;
-  if (!annot_cur || !annot_cur->rootOfThread)
-    return;
-  rootOfThread = annot_cur->rootOfThread;
-
-  while (list_cur)
-    {
-      annot_cur = (AnnotMeta *) list_cur->object;
-      date_cur = StrDateToCalTime (annot_cur->mdate);
-      if (IsFilePath (annot_cur->annot_url))
-	annot_url = annot_cur->body_url;
-      else
-	annot_url = annot_cur->annot_url;
-
-      list_next = list_cur->next;
-      swap = FALSE;
-      while (list_next)
-	{
-	  if (list_next == list_cur)
-	    {
-	      list_next = list_next->next;
-	      continue;
-	    }
-	  annot_next = (AnnotMeta *) list_next->object;
-	  if (IsFilePath (annot_next->annot_url))
-	    annot_next_url = annot_next->body_url;
-	  else
-	    annot_next_url = annot_next->annot_url;
-
-	  date_next = StrDateToCalTime (annot_next->mdate);
-	  if (!strcasecmp (annot_next_url, annot_url)
-	      && date_cur > date_next)
-	    {
-	      /* swap */
-
-	      /* find the end of this mini thread (including its reply-tos) */
-	      list_tmp_next = list_next->next;
-	      while (list_tmp_next)
-		{
-		  annot_next = (AnnotMeta *) list_tmp_next->object;
-		  if (strcasecmp (annot_next->inReplyTo, annot_next_url))
-		    break;
-		  if (IsFilePath (annot_next->annot_url))
-		    annot_next_url = annot_next->body_url;
-		  else
-		    annot_next_url = annot_next->annot_url;
-		  list_tmp_next = list_tmp_next->next;
-		}
-
-	      /* move the next item of the mini-thread to the element before this one */
-	      list_tmp = list_cur;
-	      while (list_tmp->next != list_next)
-		list_tmp = list_tmp->next;
-	      list_tmp->next = list_tmp_next;
-	      
-	      /* insert the mini thread before the current item */
-	      if (list_cur == annot_list)
-		annot_list = list_next;
-	      else
-		{
-		  list_tmp = annot_list;
-		  while (list_tmp->next != list_cur)
-		    list_tmp = list_tmp->next;
-		  list_tmp->next = list_next;
-		}
-
-	      /* make the end point to list cur */
-	      list_tmp = list_next;
-	      while (list_tmp->next != list_tmp_next)
-		list_tmp = list_tmp->next;
-	      list_tmp->next = list_cur;
-
-	      /* start again from zero */
-	      list_cur = annot_list;
-	      swap = TRUE;
-	      break;
-	    }
-	  list_next = list_next->next;
-	}
-
-      if (!swap)
-	/* either there was no reply-to parent or the element
-	   was already in place. We leave it there for the moment. */
-	list_cur = list_cur->next;
-    }
-  
-  if (*thread_list != annot_list)
-    *thread_list = annot_list;
-}
-#endif /* ANNOT_ON_ANNOT */
 
 /*------------------------------------------------------------
    Annot_isSameURL
