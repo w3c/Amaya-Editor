@@ -662,7 +662,7 @@ void GetBoxTransformedCoord  (PtrAbstractBox pAbSeeked, int frame,
 
 #ifdef _GL
 /*----------------------------------------------------------------------
-  SyncBoundingboxes : sync Bounding box of a group according to openGL 
+  SyncBoundingboxesReal : sync Bounding box of a group according to openGL 
   Compued values
   ----------------------------------------------------------------------*/
 static void SyncBoundingboxesReal (PtrAbstractBox pInitAb, 
@@ -2050,8 +2050,8 @@ void ComputeABoundingBox (PtrAbstractBox pAbSeeked, int frame)
 	    }
 	} 
     }
-  else
-    ComputeBoundingBoxes (frame, 0, l, 0, h, pAbSeeked);
+  else    
+	SyncBoundingboxes (pAb, 0, 0, frame, pFrame->FrXOrg, pFrame->FrYOrg);
   FrameUpdating = FrameUpdatingStatus;
 
   glLoadIdentity ();
