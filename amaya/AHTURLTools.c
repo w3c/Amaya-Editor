@@ -99,8 +99,9 @@ char *EscapeURL (const char *url)
             {
               /* put here below all the chars that need to
                  be escaped into %xx */
-            case 0x27: /* &amp */
             case 0x20: /* space */
+            case 0x26: /* &amp */
+            case 0x27: /* antislash */
               new_chars = 3; 
               break;
 
@@ -129,11 +130,96 @@ char *EscapeURL (const char *url)
 		}
             }
 	  /* escape the char */
-          if (new_chars == 3)
-            {
+	  if (new_chars == 3)
+	    {
               buffer[buffer_len] = '%';
               EscapeChar (&buffer[buffer_len+1], *ptr);
             }
+          else
+            buffer[buffer_len] = *ptr;
+
+          /* update the status */
+          buffer_len += new_chars;
+          buffer_free_mem -= new_chars;
+          /* examine the next char */
+          ptr++;
+        }
+      buffer[buffer_len] = EOS;
+    }
+  else
+    buffer = NULL;
+
+  return (buffer);
+}
+
+/*----------------------------------------------------------------------
+  EscapeXML
+  Takes a string and escapes all protected chars into entity
+  sequences.
+  Returns either NULL or a new buffer, which must be freed by the caller
+  ----------------------------------------------------------------------*/
+char *EscapeXML (const char *string)
+{
+  char *buffer;
+  int   buffer_len;
+  int   buffer_free_mem;
+  char *ptr;
+  char *entity = NULL;
+  int   new_chars;
+  void *status;
+
+  if (string && *string)
+    {
+      buffer_free_mem = strlen (string) + 20;
+      buffer = TtaGetMemory (buffer_free_mem + 1);
+      ptr = (char *) string;
+      buffer_len = 0;
+
+      while (*ptr)
+        {
+          switch (*ptr)
+            {
+             case 0x26: /* &amp */
+	       entity = "&amp;";
+	       new_chars = 5;		  
+	       
+	    case '<':  /* lt; */
+	      entity = "&lt;";
+	      new_chars = 4;
+	      break;
+
+	    case '>':  /* gt; */
+	      entity = "&gt;";
+	      new_chars = 4;
+	      break;
+
+            default:
+	      new_chars = 1; 
+              break;
+            }
+
+          /* see if we need extra room in the buffer */
+          if (new_chars > buffer_free_mem)
+            {
+              buffer_free_mem = 20;
+              status = TtaRealloc (buffer, sizeof (char) 
+				   * (buffer_len + buffer_free_mem + 1));
+              if (status)
+                buffer = (char *) status;
+              else
+		{
+		  /* @@ maybe we should do some other behavior here, like
+		     freeing the buffer and return a void thing */
+		  buffer[buffer_len] = EOS;
+		  break;
+		}
+            }
+	  /* escape the char */
+	  if (entity)
+	    {
+	      sprintf (&buffer[buffer_len], "%s", entity);
+	      entity = NULL;
+	    }
           else
             buffer[buffer_len] = *ptr;
 
