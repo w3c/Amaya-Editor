@@ -162,10 +162,11 @@ static BOOL         numberedLinks   = FALSE;
 static BOOL         A4Format        = TRUE;
 static BOOL	        USFormat        = FALSE;
 static BOOL         printURL        = TRUE;
-static STRING        classList;
-static STRING        langList;
-static STRING        saveList;
-static STRING        cssList;
+static BOOL         nameGot         = FALSE;
+static STRING       classList;
+static STRING       langList;
+static STRING       saveList;
+static STRING       cssList;
 static HDC          hDC;
 static HDC          hMemDC;
 static HFONT        hFont;
@@ -219,7 +220,7 @@ LRESULT CALLBACK MathAttribDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK InitConfirmDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK ChangeFormatDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK GreekKeyboardDlgProc (HWND, UINT, WPARAM, LPARAM);
-LRESULT CALLBACK AuthenticationDlgProc (HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK AuthentificationDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK BackgroundImageDlgProc (HWND, UINT, WPARAM, LPARAM);
 #else  /* !__STDC__ */
 LRESULT CALLBACK CSSDlgProc ();
@@ -250,7 +251,7 @@ LRESULT CALLBACK MathAttribDlgProc ();
 LRESULT CALLBACK InitConfirmDlgProc ();
 LRESULT CALLBACK ChangeFormatDlgProc ();
 LRESULT CALLBACK GreekKeyboardDlgProc ();
-LRESULT CALLBACK AuthenticationDlgProc ();
+LRESULT CALLBACK AuthentificationDlgProc ();
 LRESULT CALLBACK BackgroundImageDlgProc ();
 #endif /* __STDC__ *
 /* ------------------------------------------------------------------------ *
@@ -897,7 +898,8 @@ void CreateAuthenticationDlgWindow (parent)
 HWND  parent;
 #endif /* __STDC__ */
 {  
-	DialogBox (hInstance, MAKEINTRESOURCE (AUTHENTIFICATIONDIALOG), parent, (DLGPROC) AuthenticationDlgProc);
+	DialogBox (hInstance, MAKEINTRESOURCE (AUTHENTIFICATIONDIALOG), parent, (DLGPROC) AuthentificationDlgProc);
+    nameGot = FALSE;
 }
 
 /*-----------------------------------------------------------------------
@@ -3336,7 +3338,7 @@ LPARAM lParam;
 }
 
 /*-----------------------------------------------------------------------
- AuthenticationDlgProc
+ GreekKeyboardDlgProc
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
 LRESULT CALLBACK GreekKeyboardDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -4005,25 +4007,38 @@ LPARAM lParam;
 }
 
 /*-----------------------------------------------------------------------
- AuthenticationDlgProc
+ AuthentificationDlgProc
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
-LRESULT CALLBACK AuthenticationDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK AuthentificationDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 #else  /* !__STDC__ */
-LRESULT CALLBACK AuthenticationDlgProc (hwnDlg, msg, wParam, lParam)
+LRESULT CALLBACK AuthentificationDlgProc (hwnDlg, msg, wParam, lParam)
 HWND   hwndParent; 
 UINT   msg; 
 WPARAM wParam; 
 LPARAM lParam;
 #endif /* __STDC__ */
 {
+	static HWND hwnNameEdit;
+    static HWND hwnPasswdEdit;
+
     switch (msg) {
 	       case WM_INITDIALOG:
-			    SetDlgItemText (hwnDlg, IDC_NAMEEDIT, "");
 			    SetDlgItemText (hwnDlg, IDC_PASSWDEDIT, "");
+			    SetDlgItemText (hwnDlg, IDC_NAMEEDIT, "");
+                hwnNameEdit = GetDlgItem (hwnDlg, IDC_NAMEEDIT);
+                hwnPasswdEdit = GetDlgItem (hwnDlg, IDC_PASSWDEDIT);
 				break;
 
 		   case WM_COMMAND:
+                if (HIWORD (wParam) == EN_UPDATE) {
+                   if (LOWORD (wParam) == IDC_NAMEEDIT) {
+                      GetDlgItemText (hwnDlg, IDC_NAMEEDIT, Answer_name, sizeof (Answer_name) + 1);
+					  if (Answer_name [0] != 0)
+                         nameGot = TRUE; 
+				   } else if (LOWORD (wParam) == IDC_PASSWDEDIT)
+                          SetFocus (hwnPasswdEdit);
+				}  
 			    switch (LOWORD (wParam)) {
 		               case ID_CONFIRM:
 						    GetDlgItemText (hwnDlg, IDC_NAMEEDIT, Answer_name, sizeof (Answer_name) + 1);
@@ -4037,7 +4052,9 @@ LPARAM lParam;
 				}
 				break;
 
-				default: return FALSE;
+				default: if (!nameGot)
+                            SetFocus (hwnNameEdit);
+                         return FALSE;
 	}
 	return TRUE;
 }
