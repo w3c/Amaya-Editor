@@ -3739,6 +3739,12 @@ ThotBool   withDoctype;
        return;
 
    XMLabort = FALSE;
+
+   /* Initialize local counters */
+   extraLineRead = 0;
+   extraOffset = 0;
+   htmlLineRead = 0;
+   htmlCharRead = 0;
      
    while (!endOfFile && !XMLabort)
      {
