@@ -708,8 +708,12 @@ LPARAM lParam;
     {
     case WM_INITDIALOG:
 	  FilterHwnd = hwnDlg;
-	  /* write the dialogue text */
+	  /* 
+	  ** write the dialogue text
+	  */
+	  /* window title */
       SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_AFILTER));
+	  /* buttons */
       SetWindowText (GetDlgItem (hwnDlg, ID_ANNOTSHOW), 
 		     TtaGetMessage (AMAYA, AM_AFILTER_SHOW));
       SetWindowText (GetDlgItem (hwnDlg, ID_ANNOTHIDE), 
@@ -719,6 +723,19 @@ LPARAM lParam;
       SetWindowText (GetDlgItem (hwnDlg, ID_ANNOTHIDEALL), 
 		     TtaGetMessage (AMAYA, AM_AFILTER_HIDE_ALL));
       SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
+      /* filter options */
+      SetWindowText (GetDlgItem (hwnDlg, IDC_TFILTEROPTIONS), 
+		     TtaGetMessage (AMAYA, AM_AFILTER_OPTIONS));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_FILTERBYAUTHOR), 
+		     TtaGetMessage (AMAYA, AM_AFILTER_BYAUTHOR));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_FILTERBYTYPE), 
+		     TtaGetMessage (AMAYA, AM_AFILTER_BYTYPE));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_FILTERBYSERVER), 
+		     TtaGetMessage (AMAYA, AM_AFILTER_BYSERVER));
+	  /* help label */
+	  SetWindowText (GetDlgItem (hwnDlg, IDC_TFILTERHELP), 
+		     TtaGetMessage (AMAYA, AM_AFILTER_HELP));
+
       /* display the by author items */
       BuildAnnotFilterSelector (AnnotFilterDoc, AnnotSelType);
       /* select the by author radio button */
