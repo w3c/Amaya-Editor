@@ -36,14 +36,20 @@ it into a target anchor.</p>
 <p>
 Just select a character string with the mouse and choose <strong>Create
 Target</strong> from the <strong>Links</strong> menu. The selected text is now
-<a href="Browsing.html#L515">displayed in green</a>, which identifies it as a
-target anchor. Amaya automatically generates the NAME attribute value:</p>
+a target. If you have set the status "Show targets" to your current Formatted
+view, the text is preceded by an a <a href="Browsing.html#target">target icon
+<img src="../Icons/target.gif" alt=" target.gif "></a>. In the  Links view
+target icons, which identify target anchors are always displayed (there is no
+option to show or hide target icons). When a target anchor is created, Amaya
+automatically generates the NAME attribute value:</p>
 <ul>
 <li><p>
 either by extracting a word longer than 3 characters form the anchor
 content,</p>
+</li>
 <li><p>
 or by generating a number.</p>
+</li>
 </ul>
 <p>
 In both cases, Amaya guarantees that the generated value is unique.</p>
@@ -62,6 +68,10 @@ the element itself and choose <strong>Create Target</strong> from the
 which identifies it as a target element. Amaya automatically generated this
 unique ID value.</p>
 <p>
+If you have set the status "Show targets" to your current Formatted view , the
+text is preceded by an a target icon <img src="../Icons/target.gif" alt="
+target.gif ">.<img src="../Icons/target.gif" alt=" target.gif "></p>
+<p>
 It's also possible to directly create the ID attribute by using the <strong><a
 href="Attributes.html#Attributes">Attributes</a></strong> menu when the
 element is selected. When the value has been entered, Amaya checks this value
@@ -77,10 +87,12 @@ To create an anchor that is a link to another document:</p>
 <li>
 <a href="Selecting.html#Selecting">Select</a> the extent of the anchor to be
 created
+</li>
 <li>
 Click the <img src="../Icons/Link.gif" align="middle">
  button or choose <strong>Create Link</strong> from the <strong>Links</strong>
 menu
+</li>
 <li>
 If the target document is displayed by <strong>Amaya</strong>, just click
 anywhere on it. The link is created.
@@ -88,22 +100,26 @@ anywhere on it. The link is created.
 If the target document is not displayed</p>
 <ul>
 <li>
-click anywhere in the current document, except on a green anchor
+click anywhere in the current document, except on a local target icon.
+</li>
 <li>
 a dialog box pops up: enter the URL of the target document and click on the
 <strong>Confirm</strong> button. The link is created.
+</li>
 </ul>
+</li>
 </ol>
 
 <h4>Internal links</h4>
 <p>
-To create a link to a particular anchor in the same document or in another,
-replace step 3 above by:</p>
+To create a link to a particular target anchor or a particular target element
+in the same document or in another, replace step 3 above by:</p>
 <ol>
 <li value="3">
-click in any view on the <a href="#L557">target anchor</a> or a target
-element, which should be displayed in green in the Formatted view. The link is
+click in any view on the <a href="Browsing.html#target">target icon</a>, which
+should be displayed in the Formatted view or in the Links view. The link is
 created.
+</li>
 </ol>
 
 <h3>Removing a link or a target anchor</h3>
@@ -118,15 +134,17 @@ Anchor</strong> command. The anchor is removed, but its content remains.</p>
 <p>
 If you want to keep an anchor but to change the target of the corresponding
 link, select any part of that anchor or just put the insertion point within
-the anchor, and choose <strong>Change Link</strong> from the
-<strong>Links</strong> menu. Then designate the new target of the anchor as
-above (step 3 in the <a href="#L245">creation of a link</a>).</p>
+the anchor, and click the <img src="../Icons/Link.gif" align="middle"> button
+or choose <strong>Change Link</strong> from the <strong>Links</strong> menu.
+Then designate the new target of the anchor as above (step 3 in the <a
+href="#L245">creation of a link</a>).</p>
 <p>
 To change the target of a link, you can also edit the <code>href</code>
 attribute, either directly in the Structure view or in the Links view or using
 the <a href="Attributes.html#Attributes"><strong>Attributes</strong></a>
 menu.</p>
 <hr>
+
 </div>
 </body>
 </html>

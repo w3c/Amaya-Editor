@@ -176,6 +176,17 @@ int                 specific;
   rule->PrType = (PRuleType) type;
   switch (type)
     {
+    case PtHorizPos:
+      rule->PrPresMode = PresImmediate;
+      rule->PrPosRule.PoPosRef = Left;
+      rule->PrPosRule.PoPosDef = Left;
+      rule->PrPosRule.PoDistAttr = FALSE;
+      rule->PrPosRule.PoRelation = RlEnclosing;
+      rule->PrPosRule.PoNotRel = FALSE;
+      rule->PrPosRule.PoUserSpecified = FALSE;
+      rule->PrPosRule.PoRefKind = RkPresBox;
+      rule->PrPosRule.PoRefIdent = 0;
+      break;
     case PtVertPos:
       rule->PrPresMode = PresImmediate;
       rule->PrPosRule.PoPosRef = Bottom;

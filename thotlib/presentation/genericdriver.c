@@ -1299,7 +1299,6 @@ PresentationValue   v;
    *	Function used to update the drawing given context.		*
    *									*
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 int                 GenericUpdatePresentation (PresentationTarget t, PresentationContext c,
 					      PresentationValue v)
@@ -1324,11 +1323,8 @@ PresentationValue   v;
    if ((tsch == NULL) || (ctxt == NULL))
      return(-1);
    doc = ctxt->doc;
-/*    pSS = (PtrSSchema) TtaGetDocumentSSchema (doc); */
    pSS = (PtrSSchema) ctxt->schema;
-   /*
-    * select the good starting point depending on the context
-    */
+   /*  select the good starting point depending on the context */
    if (ctxt->box != 0)
      {
 	presBox = ctxt->box;
@@ -1356,7 +1352,6 @@ PresentationValue   v;
       return (-1);
 
    ApplyPRules (doc, pSS, elType, attrType, presBox, pRule, FALSE);
-
    return(0);
 }
 
@@ -1368,7 +1363,6 @@ PresentationValue   v;
    *      from the internal memory representation of presentation rules.  *
    *									*
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void         etoi_convert (PtrPRule rule, GenericValue val1,
 				  GenericContext ctxt, int specific)
@@ -2093,7 +2087,20 @@ PresentationContext c;
 PresentationValue   v;
 #endif
 {
-   return (0);
+   GenericTarget       tsch = (GenericTarget) t;
+   GenericContext      cont = (GenericContext) c;
+   GenericValue        val = /* (GenericValue) - EGP */ v;
+   PtrPRule            rule;
+
+   if (cont->destroy) {
+       PresRuleRemove (tsch, cont, PtHorizPos, 0);
+       return(0);
+   }
+   rule = PresRuleInsert (tsch, cont, PtHorizPos, 0);
+   if (rule == NULL)
+      return (-1);
+   etoi_convert (rule, val, cont, 0);
+    return (0);
 }
 
 /*----------------------------------------------------------------------

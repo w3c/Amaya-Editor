@@ -1496,141 +1496,6 @@ char               *cssRule;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSMarginLeft : parse a CSS margin-left          
-   attribute string.                                          
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static char        *ParseCSSMarginLeft (PresentationTarget target,
-				 PresentationContext context, char *cssRule)
-#else
-static char        *ParseCSSMarginLeft (target, context, cssRule)
-PresentationTarget  target;
-PresentationContext context;
-char               *cssRule;
-#endif
-{
-  return (SkipProperty (cssRule));
-}
-
-/*----------------------------------------------------------------------
-   ParseCSSMarginRight : parse a CSS margin-right        
-   attribute string.                                          
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static char        *ParseCSSMarginRight (PresentationTarget target,
-				 PresentationContext context, char *cssRule)
-#else
-static char        *ParseCSSMarginRight (target, context, cssRule)
-PresentationTarget  target;
-PresentationContext context;
-char               *cssRule;
-#endif
-{
-  return (SkipProperty (cssRule));
-}
-
-/*----------------------------------------------------------------------
-   ParseCSSMargin : parse a CSS margin attribute string. 
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static char        *ParseCSSMargin (PresentationTarget target,
-				 PresentationContext context, char *cssRule)
-#else
-static char        *ParseCSSMargin (target, context, cssRule)
-PresentationTarget  target;
-PresentationContext context;
-char               *cssRule;
-#endif
-{
-  return (SkipProperty (cssRule));
-}
-
-/*----------------------------------------------------------------------
-   ParseCSSPaddingTop : parse a CSS PaddingTop
-   attribute string.                                          
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static char        *ParseCSSPaddingTop (PresentationTarget target,
-				 PresentationContext context, char *cssRule)
-#else
-static char        *ParseCSSPaddingTop (target, context, cssRule)
-PresentationTarget  target;
-PresentationContext context;
-char               *cssRule;
-#endif
-{
-  return (SkipProperty (cssRule));
-}
-
-/*----------------------------------------------------------------------
-   ParseCSSPaddingRight : parse a CSS PaddingRight
-   attribute string.                                          
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static char        *ParseCSSPaddingRight (PresentationTarget target,
-				 PresentationContext context, char *cssRule)
-#else
-static char        *ParseCSSPaddingRight (target, context, cssRule)
-PresentationTarget  target;
-PresentationContext context;
-char               *cssRule;
-#endif
-{
-  return (SkipProperty (cssRule));
-}
-
-
-/*----------------------------------------------------------------------
-   ParseCSSPaddingBottom : parse a CSS PaddingBottom
-   attribute string.                                          
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static char        *ParseCSSPaddingBottom (PresentationTarget target,
-				 PresentationContext context, char *cssRule)
-#else
-static char        *ParseCSSPaddingBottom (target, context, cssRule)
-PresentationTarget  target;
-PresentationContext context;
-char               *cssRule;
-#endif
-{
-  return (SkipProperty (cssRule));
-}
-
-/*----------------------------------------------------------------------
-   ParseCSSPaddingLeft : parse a CSS PaddingLeft
-   attribute string.                                          
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static char        *ParseCSSPaddingLeft (PresentationTarget target,
-				 PresentationContext context, char *cssRule)
-#else
-static char        *ParseCSSPaddingLeft (target, context, cssRule)
-PresentationTarget  target;
-PresentationContext context;
-char               *cssRule;
-#endif
-{
-  return (SkipProperty (cssRule));
-}
-
-/*----------------------------------------------------------------------
-   ParseCSSPadding : parse a CSS padding attribute string. 
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static char        *ParseCSSPadding (PresentationTarget target,
-				 PresentationContext context, char *cssRule)
-#else
-static char        *ParseCSSPadding (target, context, cssRule)
-PresentationTarget  target;
-PresentationContext context;
-char               *cssRule;
-#endif
-{
-  return (SkipProperty (cssRule));
-}
-
-/*----------------------------------------------------------------------
    ParseCSSTextAlign : parse a CSS text-align            
    attribute string.                                          
   ----------------------------------------------------------------------*/
@@ -1963,49 +1828,49 @@ char               *cssRule;
    weight.typed_data.value = 0;
    weight.typed_data.unit = 1;
    cssRule = SkipBlanks (cssRule);
-   if (!strncasecmp (cssRule, "100", 3))
+   if (!strncasecmp (cssRule, "100", 3) && !isalpha (cssRule[3]))
      {
 	weight.typed_data.value = -3;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!strncasecmp (cssRule, "200", 3))
+   else if (!strncasecmp (cssRule, "200", 3) && !isalpha (cssRule[3]))
      {
 	weight.typed_data.value = -2;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!strncasecmp (cssRule, "300", 3))
+   else if (!strncasecmp (cssRule, "300", 3) && !isalpha (cssRule[3]))
      {
 	weight.typed_data.value = -1;
 	cssRule = SkipWord (cssRule);
      }
    else if (!strncasecmp (cssRule, "normal", 6) ||
-	    !strncasecmp (cssRule, "400", 3))
+	    (!strncasecmp (cssRule, "400", 3) && !isalpha (cssRule[3])))
      {
 	weight.typed_data.value = 0;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!strncasecmp (cssRule, "500", 3))
+   else if (!strncasecmp (cssRule, "500", 3) && !isalpha (cssRule[3]))
      {
 	weight.typed_data.value = +1;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!strncasecmp (cssRule, "600", 3))
+   else if (!strncasecmp (cssRule, "600", 3) && !isalpha (cssRule[3]))
      {
 	weight.typed_data.value = +2;
 	cssRule = SkipWord (cssRule);
      }
    else if (!strncasecmp (cssRule, "bold", 4) ||
-	    !strncasecmp (cssRule, "700", 3))
+	    (!strncasecmp (cssRule, "700", 3) && !isalpha (cssRule[3])))
      {
 	weight.typed_data.value = +3;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!strncasecmp (cssRule, "800", 3))
+   else if (!strncasecmp (cssRule, "800", 3) && !isalpha (cssRule[3]))
      {
 	weight.typed_data.value = +4;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!strncasecmp (cssRule, "900", 3))
+   else if (!strncasecmp (cssRule, "900", 3) && !isalpha (cssRule[3]))
      {
 	weight.typed_data.value = +5;
 	cssRule = SkipWord (cssRule);
@@ -2383,7 +2248,7 @@ PresentationValue  *val;
   unsigned short      redval = (unsigned short) -1;
   unsigned short      greenval = 0;	/* composant of each RGB       */
   unsigned short      blueval = 0;	/* default to red if unknown ! */
-  int                 i, len;
+  int                 i, len, r, g, b;
   int                 best = 0;	/* best color in list found */
   boolean             failed;
 
@@ -2428,6 +2293,55 @@ PresentationValue  *val;
 	  blueval = hexa_val (cssRule[4]) * 16 + hexa_val (cssRule[5]);
 	}
     }
+  else if (!strncasecmp (cssRule, "rgb", 3))
+    {
+      cssRule += 3;
+      cssRule = SkipBlanks (cssRule);
+      if (*cssRule == '(')
+	{
+	  cssRule++;
+	  cssRule = SkipBlanks (cssRule);
+	  failed = FALSE;
+	  if (*cssRule == '%')
+	    {
+	      /* encoded as rgb(%red,%green,&blue) */
+	      sscanf (cssRule, "%%%d", &r);
+	      while (*cssRule != EOS && *cssRule != ',')
+		cssRule++;
+	      cssRule++;
+	      sscanf (cssRule, "%%%d", &g);
+	      while (*cssRule != EOS && *cssRule != ',')
+		cssRule++;
+	      cssRule++;
+	      sscanf (cssRule, "%%%d", &b);
+	      redval = (unsigned short)(r * 255 / 100);
+	      greenval = (unsigned short)(g * 255 / 100);
+	      blueval = (unsigned short)(b * 255 / 100);
+	    }
+	  else
+	    {
+	      /* encoded as rgb(red,green,blue) */
+	      sscanf (cssRule, "%d", &r);
+	      while (*cssRule != EOS && *cssRule != ',')
+		cssRule++;
+	      cssRule++;
+	      sscanf (cssRule, "%d", &g);
+	      while (*cssRule != EOS && *cssRule != ',')
+		cssRule++;
+	      cssRule++;
+	      sscanf (cssRule, "%d", &b);
+	      redval = (unsigned short)r;
+	      greenval = (unsigned short)g;
+	      blueval = (unsigned short)b;
+	    }
+	  /* search the rgb end */
+	  while (*cssRule != EOS && *cssRule != ')')
+	    cssRule++;
+	  cssRule++;
+	}
+      else
+	cssRule = SkipProperty (cssRule);
+    }
   else if (isalpha (*cssRule))
     {
       /* we expect a color name like "red", store it in colname */
@@ -2460,14 +2374,6 @@ PresentationValue  *val;
 	  failed = FALSE;
 	}
     }
-  else if (isdigit (*cssRule) || *cssRule == '.')
-    {
-      /*
-       * we expect a color defined by it's three components.
-       * like "255 0 0" or "1.0 0.0 0.0"
-       TODO
-       */
-    }
   
   if (failed)
     {
@@ -2484,43 +2390,8 @@ PresentationValue  *val;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSWidth : parse a CSS width attribute           
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static char        *ParseCSSWidth (PresentationTarget target,
-				 PresentationContext context, char *cssRule)
-#else
-static char        *ParseCSSWidth (target, context, cssRule)
-PresentationTarget  target;
-PresentationContext context;
-char               *cssRule;
-#endif
-{
-
-   cssRule = SkipBlanks (cssRule);
-
-   /*
-    * first parse the attribute string
-    */
-   if (!strcasecmp (cssRule, "auto"))
-     {
-	cssRule = SkipWord (cssRule);
-	return (cssRule);
-     }
-   /*
-    * install the new presentation.
-    mainview = TtaGetViewFromName(doc, "Document_View");
-    TtaGiveBoxSize(el, doc, mainview, UnPoint, &width, &height);
-    new_height = height;
-    TtaChangeBoxSize(el doc, mainview, 0, new_height - height, UnPoint);
-    */
-   return (cssRule);
-}
-
-/*----------------------------------------------------------------------
    ParseCSSMarginTop : parse a CSS margin-top attribute  
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static char        *ParseCSSMarginTop (PresentationTarget target,
 				 PresentationContext context, char *cssRule)
@@ -2529,25 +2400,19 @@ static char        *ParseCSSMarginTop (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
 char               *cssRule;
-
 #endif
 {
+  return (SkipProperty (cssRule));
+#ifdef IV
    PresentationValue   margin;
 
    cssRule = SkipBlanks (cssRule);
-
-   /*
-    * first parse the attribute string
-    */
+   /* first parse the attribute string */
    cssRule = ParseCSSUnit (cssRule, &margin);
-   if (margin.typed_data.unit == DRIVERP_UNIT_INVALID)
-     {
-       /* invalid margin top */
-	return (cssRule);
-     }
-   if (context->drv->SetVPos)
+   if (margin.typed_data.unit != DRIVERP_UNIT_INVALID && context->drv->SetVPos)
       context->drv->SetVPos (target, context, margin);
    return (cssRule);
+#endif
 }
 
 /*----------------------------------------------------------------------
@@ -2564,22 +2429,162 @@ PresentationContext context;
 char               *cssRule;
 #endif
 {
+  return (SkipProperty (cssRule));
+#ifdef IV
    PresentationValue   margin;
 
    cssRule = SkipBlanks (cssRule);
-
-   /*
-    * first parse the attribute string
-    */
+   /* first parse the attribute string */
    cssRule = ParseCSSUnit (cssRule, &margin);
-   if (margin.typed_data.unit == DRIVERP_UNIT_INVALID)
-     {
-       /* invalid margin top */
-	return (cssRule);
-     }
-   if (context->drv->SetVPos)
-      context->drv->SetVPos (target, context, margin);
+   if (margin.typed_data.unit != DRIVERP_UNIT_INVALID && context->drv->SetVPos)
+     context->drv->SetVPos (target, context, margin);
    return (cssRule);
+#endif
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSMarginLeft : parse a CSS margin-left          
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static char        *ParseCSSMarginLeft (PresentationTarget target,
+				 PresentationContext context, char *cssRule)
+#else
+static char        *ParseCSSMarginLeft (target, context, cssRule)
+PresentationTarget  target;
+PresentationContext context;
+char               *cssRule;
+#endif
+{
+  return (SkipProperty (cssRule));
+#ifdef IV
+   PresentationValue   margin;
+
+   cssRule = SkipBlanks (cssRule);
+   /* first parse the attribute string */
+   cssRule = ParseCSSUnit (cssRule, &margin);
+   if (margin.typed_data.unit != DRIVERP_UNIT_INVALID && context->drv->SetHPos)
+      context->drv->SetHPos (target, context, margin);
+   return (cssRule);
+#endif
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSMarginRight : parse a CSS margin-right        
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static char        *ParseCSSMarginRight (PresentationTarget target,
+				 PresentationContext context, char *cssRule)
+#else
+static char        *ParseCSSMarginRight (target, context, cssRule)
+PresentationTarget  target;
+PresentationContext context;
+char               *cssRule;
+#endif
+{
+  return (SkipProperty (cssRule));
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSMargin : parse a CSS margin attribute string. 
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static char        *ParseCSSMargin (PresentationTarget target,
+				 PresentationContext context, char *cssRule)
+#else
+static char        *ParseCSSMargin (target, context, cssRule)
+PresentationTarget  target;
+PresentationContext context;
+char               *cssRule;
+#endif
+{
+  return (SkipProperty (cssRule));
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSPaddingTop : parse a CSS PaddingTop
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static char        *ParseCSSPaddingTop (PresentationTarget target,
+				 PresentationContext context, char *cssRule)
+#else
+static char        *ParseCSSPaddingTop (target, context, cssRule)
+PresentationTarget  target;
+PresentationContext context;
+char               *cssRule;
+#endif
+{
+  return (SkipProperty (cssRule));
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSPaddingRight : parse a CSS PaddingRight
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static char        *ParseCSSPaddingRight (PresentationTarget target,
+				 PresentationContext context, char *cssRule)
+#else
+static char        *ParseCSSPaddingRight (target, context, cssRule)
+PresentationTarget  target;
+PresentationContext context;
+char               *cssRule;
+#endif
+{
+  return (SkipProperty (cssRule));
+}
+
+
+/*----------------------------------------------------------------------
+   ParseCSSPaddingBottom : parse a CSS PaddingBottom
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static char        *ParseCSSPaddingBottom (PresentationTarget target,
+				 PresentationContext context, char *cssRule)
+#else
+static char        *ParseCSSPaddingBottom (target, context, cssRule)
+PresentationTarget  target;
+PresentationContext context;
+char               *cssRule;
+#endif
+{
+  return (SkipProperty (cssRule));
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSPaddingLeft : parse a CSS PaddingLeft
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static char        *ParseCSSPaddingLeft (PresentationTarget target,
+				 PresentationContext context, char *cssRule)
+#else
+static char        *ParseCSSPaddingLeft (target, context, cssRule)
+PresentationTarget  target;
+PresentationContext context;
+char               *cssRule;
+#endif
+{
+  return (SkipProperty (cssRule));
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSPadding : parse a CSS padding attribute string. 
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static char        *ParseCSSPadding (PresentationTarget target,
+				 PresentationContext context, char *cssRule)
+#else
+static char        *ParseCSSPadding (target, context, cssRule)
+PresentationTarget  target;
+PresentationContext context;
+char               *cssRule;
+#endif
+{
+  return (SkipProperty (cssRule));
 }
 
 /*----------------------------------------------------------------------
@@ -2597,19 +2602,41 @@ char               *cssRule;
 {
    cssRule = SkipBlanks (cssRule);
 
-   /*
-    * first parse the attribute string
-    */
+   /* first parse the attribute string */
    if (!strcasecmp (cssRule, "auto"))
      {
 	cssRule = SkipWord (cssRule);
 	/* ParseCSSHeight : auto */
 	return (cssRule);
      }
-   /*
-    * read the value, and if necessary convert to point size
-    cssRule = ParseCSSUnit(cssRule, &new_height, &unit);
-    */
+   else
+     cssRule = SkipProperty (cssRule);
+   return (cssRule);
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSWidth : parse a CSS width attribute           
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static char        *ParseCSSWidth (PresentationTarget target,
+				 PresentationContext context, char *cssRule)
+#else
+static char        *ParseCSSWidth (target, context, cssRule)
+PresentationTarget  target;
+PresentationContext context;
+char               *cssRule;
+#endif
+{
+   cssRule = SkipBlanks (cssRule);
+
+   /* first parse the attribute string */
+   if (!strcasecmp (cssRule, "auto"))
+     {
+	cssRule = SkipWord (cssRule);
+	return (cssRule);
+     }
+   else
+     cssRule = SkipProperty (cssRule);
    return (cssRule);
 }
 
@@ -3174,6 +3201,8 @@ PresentationContext context;
 char               *cssRule;
 #endif
 {
+  char             *ptr;
+
   cssRule = SkipBlanks (cssRule);
   while (*cssRule != ';' && *cssRule != EOS && *cssRule != ',')
     {
@@ -3200,7 +3229,14 @@ char               *cssRule;
 	cssRule = ParseCSSBackgroundPosition (target, context, cssRule);
       /* perhaps a Background Color */
       else
-	cssRule = ParseCSSBackgroundColor (target, context, cssRule);
+	{
+	  /* check if the rule has been found */
+	  ptr = cssRule;
+	  cssRule = ParseCSSBackgroundColor (target, context, cssRule);
+	  if (ptr== cssRule)
+	    /* rule not found */
+	    cssRule = SkipProperty (cssRule);
+	}
       cssRule = SkipBlanks (cssRule);
     }
    return (cssRule);
