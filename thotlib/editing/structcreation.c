@@ -962,7 +962,6 @@ void NewContent (PtrAbstractBox pAb)
 	  DeleteAttribute (NULL, pNewAttr);
 	  /* apply these changes */
 	  AbstractImageUpdated (pDoc);
-	  AbstractImageUpdated (pDoc);
 	  RedisplayDocViews (pDoc);
 	  if (selInAttr)
 	    HighlightAttrSelection (pDoc, pEl, pAttr, FirstSelectedCharInAttr,
