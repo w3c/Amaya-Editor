@@ -798,9 +798,13 @@ ThotBool IsImageType (const char *type)
        temptype[i] = tolower (temptype[i]);
        i++;
      }
-   if (!strcmp (temptype, "gif") || !strcmp (temptype, "x-xbitmap") ||
-       !strcmp (temptype, "x-xpixmap") || !strcmp (temptype, "jpeg") ||
-       !strcmp (temptype, "png"))
+  if (!strncmp (temptype, "image/", sizeof ("image/") - 1))
+     i = sizeof ("image/") - 1;
+   else
+     i = 0;
+   if (!strcmp (&temptype[i], "gif") || !strcmp (&temptype[i], "x-xbitmap") ||
+       !strcmp (&temptype[i], "x-xpixmap") || !strcmp (&temptype[i], "jpeg") ||
+       !strcmp (&temptype[i], "png"))
       return (TRUE);
    return (FALSE);
 }

@@ -4945,18 +4945,6 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
 
 	   if (IsW3Path (pathname))
 	     {
-	       /* @@ JK: stop concatenating the / systematically.
-		if there are no side effects, I'll remove this bit of code 
-	       */
-#if 0
-	       if (method != CE_FORM_POST
-		   && !strcmp (documentname, "noname.html"))
-		 {
-		   slash = strlen (pathname);
-		   if (slash && pathname[slash - 1] != '/')
-		     strcat (pathname, "/");
-		 }
-#endif
 	       css = SearchCSS (0, pathname, NULL);
 	       if (css == NULL)
 		 toparse =  GetObjectWWW (newdoc, pathname, form_data,

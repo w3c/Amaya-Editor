@@ -573,7 +573,7 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
 	      else if (!strncmp (mime_type, "text/htm", 8)
 		  || !strcmp (mime_type, AM_XHTML_MIME_TYPE))
 		is_html = TRUE;
-	      else
+	      else if (!IsImageType (mime_type))
 		/* unknown mime_type, check with another method */
 		mime_type = NULL;
 	    }
