@@ -3135,6 +3135,7 @@ PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
 	      else
 		pEl->ElAccess = AccessInherited;
 	      pEl->ElHolophrast = pSource->ElHolophrast;
+	      pEl->ElSystemOrigin = pSource->ElSystemOrigin;
 	      pEl->ElTerminal = pSource->ElTerminal;
 	      if (!pEl->ElTerminal)
 		pEl->ElFirstChild = NULL;
