@@ -302,13 +302,19 @@ const char         *path;
    strcpy (temppath, path);
    ExtractSuffix (temppath, suffix);
 
-   if (!strcasecmp (suffix, "xml"))
+   if (!strcasecmp (suffix, "xml") ||
+       !strcasecmp (suffix, "xht") ||
+       !strcmp (suffix, "xhtm") ||
+       !strcmp (suffix, "xhtml"))
      return (TRUE);
    else if (!strcmp (suffix, "gz"))
      {
        /* take into account compressed files */
        ExtractSuffix (temppath, suffix);       
-       if (!strcasecmp (suffix, "xml"))
+       if (!strcasecmp (suffix, "xml") ||
+	   !strcasecmp (suffix, "xht") ||
+	   !strcmp (suffix, "xhtm") ||
+	   !strcmp (suffix, "xhtml"))
 	 return (TRUE);
        else
 	 return (FALSE);

@@ -355,7 +355,8 @@ PtrEventsSet        pAppli;
 {
    if (strcmp (fname, "EDITOR") == 0)
      {
-	fprintf (AppFile, "#include \"logo.xpm\"\n#include \"logo.xbm\"\n#include \"message.h\"\n\n");
+	fprintf (AppFile, "#include \"logo.xpm\"\n#include \"logo.xbm\"\n#include \"message.h\"\n");
+	fprintf (AppFile, "#ifdef _WINDOWS\n#include \"wininclude.h\"\n#endif\n\n");
 	fprintf (AppFile, "int    appArgc;\nchar    **appArgv;\n");
 	fprintf (AppFile, "Pixmap image;  /* logo pixmap */\n");
 	fprintf (AppFile, "Pixmap image;  /* logo pixmap */\n");

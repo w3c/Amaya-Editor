@@ -302,7 +302,6 @@ boolean         removed;
 #endif
 {
   CSSInfoPtr          css;
-  int                 i;
   boolean             found;
 
   css = CSSList;

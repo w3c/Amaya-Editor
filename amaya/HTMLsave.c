@@ -625,7 +625,8 @@ View                view;
 
 	   /* add the suffix .html for HTML documents */
 	   if (!TextFormat &&
-	       !IsHTMLName (SaveName) && !IsXMLName (SaveName))
+	       !IsHTMLName (SaveName) &&
+	       !IsXMLName (SaveName))
 	     {
 	       ustrcat (SaveName, ".html");
 	       ustrcpy (tempname, SavePath);
@@ -641,7 +642,8 @@ View                view;
 	   ustrcat (tempname, DIR_STR);
 	   /* add the suffix .html for HTML documents */
 	   if (!TextFormat &&
-	       !IsHTMLName (SaveName) && !IsXMLName (SaveName))
+	       !IsHTMLName (SaveName) &&
+	       !IsXMLName (SaveName))
 	     ustrcat (SaveName, ".html");
 	   ustrcat (tempname, SaveName);
 	 }
@@ -1094,7 +1096,10 @@ boolean          use_preconditions;
 
   /* First step : build the output and ask for confirmation */
   SetNamespacesAndDTD (doc);
-  TtaExportDocument (doc, tempname, "HTMLT");
+  if (SaveAsXHTML)
+    TtaExportDocument (doc, tempname, "HTMLTX");
+  else
+    TtaExportDocument (doc, tempname, "HTMLT");
   res = 0;
   if (confirm && with_images)
     {
@@ -1307,6 +1312,8 @@ View                view;
   fprintf(stderr, "SaveDocument : %d to %s\n", doc, tempname);
 #endif
 
+  /* the suffix fixes the output format of HTML saved document */
+  SaveAsXHTML = IsXMLName (tempname);
   if (IsW3Path (tempname))
     {
       if (AddNoName (doc, view, tempname, &ok))
@@ -1335,7 +1342,10 @@ View                view;
       else
 	{
 	  SetNamespacesAndDTD (doc);
-	  ok = TtaExportDocument (doc, tempname, "HTMLT");
+	  if (SaveAsXHTML)
+	    ok = TtaExportDocument (doc, tempname, "HTMLTX");
+	  else
+	    ok = TtaExportDocument (doc, tempname, "HTMLT");
 	}
     }
 

@@ -6166,7 +6166,6 @@ STRING              fileName;
 #endif
 {
   gzFile              stream;
-  UCHAR               charRead;
   int                 res, i;
   boolean             endOfFile, isXHTML;
 

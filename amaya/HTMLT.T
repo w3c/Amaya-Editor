@@ -48,15 +48,9 @@ RULES
 	END;
 
  HEAD:	BEGIN
-	Create '<head';
-	Create Attributes;
-	Create '>\12';
-#ifdef XML
-	{ elements TITLE and BASE must be generated as the first chidren
-	  of the HEAD element }
-	Get included TITLE;
-	Get included BASE;
-#endif
+	Create '<head' Before;
+	Create Attributes Before;
+	Create '>\12' Before;
 	Create '</head>\12' After;
 	END;
 
@@ -73,6 +67,12 @@ RULES
 	END;
 
  ISINDEX: BEGIN
+#ifdef XML
+	{ elements TITLE and BASE must be generated as the first chidren
+	  of the HEAD element }
+	Get TITLE Before;
+	Get BASE Before;
+#endif
 	Create '<isindex';
 	IF Prompt
 	   BEGIN
@@ -90,6 +90,11 @@ RULES
 	END;
 
  BASE:	BEGIN
+#ifdef XML
+	{ elements TITLE and BASE must be generated as the first chidren
+	  of the HEAD element }
+	Get TITLE Before;
+#endif
 	Create '<base ';
 	Create Attributes;
 	Remove;
@@ -101,6 +106,12 @@ RULES
 	END;
 
  STYLE_: BEGIN
+#ifdef XML
+	{ elements TITLE and BASE must be generated as the first chidren
+	  of the HEAD element }
+	Get TITLE Before;
+	Get BASE Before;
+#endif
 	Create '<style';
 	IF Notation
 	   BEGIN
@@ -116,6 +127,12 @@ RULES
 	END;
 
  SCRIPT: BEGIN
+#ifdef XML
+	{ elements TITLE and BASE must be generated as the first chidren
+	  of the HEAD element }
+	Get TITLE Before;
+	Get BASE Before;
+#endif
 	Create '<script';
 	Create Attributes;
 	Create '>\12';
@@ -125,17 +142,29 @@ RULES
 	END;
 
  META: BEGIN
-	Create '<meta';
-	Remove;
-	Create Attributes;
 #ifdef XML
-	Create ' />\12';
+	{ elements TITLE and BASE must be generated as the first chidren
+	  of the HEAD element }
+	Get TITLE Before;
+	Get BASE Before;
+#endif
+	Create '<meta' Before;
+	Create Attributes Before;
+	Remove;
+#ifdef XML
+	Create ' />\12' After;
 #else
-	Create '>\12';
+	Create '>\12' After;
 #endif
 	END;
 
  LINK:	BEGIN
+#ifdef XML
+	{ elements TITLE and BASE must be generated as the first chidren
+	  of the HEAD element }
+	Get TITLE Before;
+	Get BASE Before;
+#endif
 	Create '<link';
 	Remove;
 	Create Attributes;
@@ -896,6 +925,9 @@ RULES
 
  Invalid_element:
 	BEGIN
+#ifdef XML
+	Remove;
+#else
 	if Error_type = BadPosition
 	   Remove;
 	if not Error_type = BadPosition
@@ -906,6 +938,7 @@ RULES
 	   Create Attributes;
 	   Create '>';
 	   END;
+#endif
 	END;
 
  Comment\240: BEGIN
@@ -1933,7 +1966,11 @@ ATTRIBUTES
 	Create ' scrolling="auto"';
 
  Invalid_attribute:
+	BEGIN
+#ifndef XML
 	Create Invalid_attribute;
+#endif
+	END;
 
 #include "Text_SGML.inc"
 

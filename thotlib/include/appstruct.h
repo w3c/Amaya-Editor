@@ -58,19 +58,20 @@ typedef struct _EventsSet
   PtrEventsSet        EvSNext;	/* Next EventsSet in the list */
 } EventsSet;
 
+extern void         AttributeMenuLoadResources ();
+extern void	    BackupOnFatalErrorLoadResources ();
+extern void         DisplayEmptyBoxLoadResources ();
+extern void         EditingLoadResources ();
 extern void         GraphicssLoadResources ();
 extern void         KeyboardsLoadResources ();
+extern void         LookupLoadResources ();
+extern void         NoStructSelectLoadResources ();
+extern void	    PivotLoadResources ();
+extern void         SelectionMenuLoadResources ();
+extern void         SpellCheckLoadResources ();
 extern void         StructEditingLoadResources ();
 extern void         StructSelectLoadResources ();
-extern void         LookupLoadResources ();
-extern void         EditingLoadResources ();
-extern void         AttributeMenuLoadResources ();
-extern void         SelectionMenuLoadResources ();
-extern void         DisplayEmptyBoxLoadResources ();
-extern void         SpellCheckLoadResources ();
 extern void         TableHLoadResources ();
-extern void	    BackupOnFatalErrorLoadResources ();
-
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__

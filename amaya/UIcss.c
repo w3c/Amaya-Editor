@@ -153,7 +153,6 @@ Document            doc;
   CSSInfoPtr          css;
   CHAR                buf[400];
   STRING              ptr;
-  CHAR                s[MAX_LENGTH];
   int                 i, select;
   int                 len, nb;
   int                 index, size;

@@ -27,8 +27,9 @@
 #include "frame_tv.h"
 #include "thotcolor_tv.h"
 
-#include "registry_f.h"
 #include "context_f.h"
+#include "memory_f.h"
+#include "registry_f.h"
 
 #ifdef _WINDOWS
 #include "wininclude.h"
@@ -229,17 +230,16 @@ void         FreeDocColors ()
 #else /* _WINDOWS */
        XFreeColors (TtDisplay, TtCmap, &ExtColor[i], 1, (unsigned long) 0);
 #endif /* _WINDOWS */
-   TtaFreeMemory (ExtColor);
-   TtaFreeMemory (ExtRGB_Table);
-   TtaFreeMemory (ExtCount_Table);
 #ifdef _WINDOWS
    if (!TtIsTrueColor && TtCmap && !DeleteObject (TtCmap))
      WinErrorBox (WIN_Main_Wd);
 #endif /* _WINDOWS */
 #endif /* _WIN_PRINT */
+   TtaFreeMemory (ExtRGB_Table);
+   TtaFreeMemory (ExtColor);
+   TtaFreeMemory (ExtCount_Table);
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    InitDocColors initialize the Thot internal color table.
    If ReduceColor environment setting is set, less color
@@ -253,6 +253,7 @@ STRING              name;
 
 #endif /* __STDC__ */
 {
+#ifndef _WIN_PRINT
    int                 i, j, k;
    STRING              value;
    boolean             reducecolor;
@@ -338,12 +339,12 @@ STRING              name;
 	   ApproximateColors ();
      }
 
+#endif /* _WIN_PRINT */
    NbExtColors = 0;
-   ExtColor = (ThotColor *) TtaGetMemory (256 * sizeof (ThotColor));
    ExtRGB_Table = (RGBstruct *) TtaGetMemory (256 * sizeof (RGBstruct));
+   ExtColor = (ThotColor *) TtaGetMemory (256 * sizeof (ThotColor));
    ExtCount_Table = (int *) TtaGetMemory (256 * sizeof (int));
 }
-#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    NumberOfColors  returns the number of colors in Thot color table.
@@ -371,7 +372,6 @@ int                 num;
       return NULL;
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    ColorPixel      returns the value of a color in Thot color table.
   ----------------------------------------------------------------------*/
@@ -405,9 +405,7 @@ int              num;
       num -= NColors;
       if (ExtCount_Table[num] == 1)
 	{
-#ifdef _WINDOWS
-	  DeleteObject (ExtColor[num]);
-#else /* _WINDOWS */
+#ifndef _WINDOWS
 	  XFreeColors (TtDisplay, TtCmap, &ExtColor[num], 1, (unsigned long) 0);
 #endif /* _WINDOWS */
 	  ExtColor[num] = (ThotColor) 0;
@@ -506,9 +504,15 @@ unsigned short      blue;
 
 	   if (!found)
 	     {
+#ifdef _WINDOWS
+	       ExtRGB_Table[prev].red = red;
+	       ExtRGB_Table[prev].green = green;
+	       ExtRGB_Table[prev].blue = blue;
+#else  /* _WINDOWS */
 	       ExtRGB_Table[prev].red = col.red / 256;
 	       ExtRGB_Table[prev].green = col.green / 256;
 	       ExtRGB_Table[prev].blue = col.blue / 256;
+#endif /* _WINDOWS */
 	       best = prev + NColors;
 	       ExtCount_Table[prev] = 1;
 	       if (prev == NbExtColors)
@@ -561,7 +565,6 @@ unsigned short     *blue;
       *blue  = RGB_Table[1].blue;
     }
 }
-#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    ColorNumber     lookup in Thot color table for an entry given it's
@@ -653,7 +656,6 @@ STRING              name;
       return -1;
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    CreatePattern loads and return a pixmap pattern.
    active parameter indicate if the box is active.
@@ -691,6 +693,7 @@ int                 motif;
      }
    else
 #endif
+#ifndef _WIN_PRINT
    if (active && ShowReference ())
      {
 	/* Color for active boxes */
@@ -704,141 +707,20 @@ int                 motif;
 	BgPixel = ColorPixel (bg);
      }
    else
+#endif /* _WIN_PRINT */
      {
 	FgPixel = ColorPixel (fg);
 	BgPixel = ColorPixel (bg);
      }
 
-#ifndef _WINDOWS
-   switch (motif)
-	 {
-	    case 1:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray8_bits, gray8_width,
-				  gray8_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 2:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray0_bits, gray0_width,
-				  gray0_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 3:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray1_bits, gray1_width,
-				  gray1_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 4:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray2_bits, gray2_width,
-				  gray2_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 5:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray3_bits, gray3_width,
-				  gray3_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 6:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray4_bits, gray4_width,
-				  gray4_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 7:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray5_bits, gray5_width,
-				  gray5_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 8:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray6_bits, gray6_width,
-				  gray6_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 9:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray7_bits, gray7_width,
-				  gray7_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 10:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) horiz1_bits, horiz1_width,
-				 horiz1_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 11:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) horiz2_bits, horiz2_width,
-				 horiz2_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 12:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) horiz3_bits, horiz3_width,
-				 horiz3_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 13:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) vert1_bits, vert1_width,
-				  vert1_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 14:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) vert2_bits, vert2_width,
-				  vert2_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 15:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) vert3_bits, vert3_width,
-				  vert3_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 16:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) left1_bits, left1_width,
-				  left1_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 17:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) left2_bits, left2_width,
-				  left2_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 18:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) left3_bits, left3_width,
-				  left3_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 19:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) right1_bits, right1_width,
-				 right1_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 20:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) right2_bits, right2_width,
-				 right2_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 21:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) right3_bits, right3_width,
-				 right3_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 22:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) square1_bits, square1_width,
-				square1_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 23:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) square2_bits, square2_width,
-				square2_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 24:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) square3_bits, square3_width,
-				square3_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 25:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) lozenge_bits, lozenge_width,
-				lozenge_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 26:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) brick_bits, brick_width,
-				  brick_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 27:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) tile_bits, tile_width,
-				   tile_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 28:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) sea_bits, sea_width,
-				    sea_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 29:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) basket_bits, basket_width,
-				 basket_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    default:
-	       pixmap = None;
-	       break;
-	 }
-   XFlush (TtDisplay);
-#endif
 #ifdef _WINDOWS
    if (WIN_LastBitmap != 0)
      {
 	if (!DeleteObject (WIN_LastBitmap))
-       WinErrorBox (WIN_Main_Wd);
+#ifndef _WIN_PRINT
+	  WinErrorBox (WIN_Main_Wd);
+#endif /* _WIN_PRINT */
+	;
 	WIN_LastBitmap = 0;
      }
    switch (motif)
@@ -1054,8 +936,131 @@ int                 motif;
 	       break;
 	 }
    /* WIN_LastBitmap = hBitmap; */
-   pixmap = hBitmap ;
-#endif
+   pixmap = hBitmap;
+#else /* _WINDOWS */
+   switch (motif)
+	 {
+	    case 1:
+	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray8_bits, gray8_width,
+				  gray8_height, FgPixel, BgPixel, TtWDepth);
+	       break;
+	    case 2:
+	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray0_bits, gray0_width,
+				  gray0_height, FgPixel, BgPixel, TtWDepth);
+	       break;
+	    case 3:
+	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray1_bits, gray1_width,
+				  gray1_height, FgPixel, BgPixel, TtWDepth);
+	       break;
+	    case 4:
+	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray2_bits, gray2_width,
+				  gray2_height, FgPixel, BgPixel, TtWDepth);
+	       break;
+	    case 5:
+	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray3_bits, gray3_width,
+				  gray3_height, FgPixel, BgPixel, TtWDepth);
+	       break;
+	    case 6:
+	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray4_bits, gray4_width,
+				  gray4_height, FgPixel, BgPixel, TtWDepth);
+	       break;
+	    case 7:
+	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray5_bits, gray5_width,
+				  gray5_height, FgPixel, BgPixel, TtWDepth);
+	       break;
+	    case 8:
+	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray6_bits, gray6_width,
+				  gray6_height, FgPixel, BgPixel, TtWDepth);
+	       break;
+	    case 9:
+	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray7_bits, gray7_width,
+				  gray7_height, FgPixel, BgPixel, TtWDepth);
+	       break;
+	    case 10:
+	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) horiz1_bits, horiz1_width,
+				 horiz1_height, FgPixel, BgPixel, TtWDepth);
+	       break;
+	    case 11:
+	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) horiz2_bits, horiz2_width,
+				 horiz2_height, FgPixel, BgPixel, TtWDepth);
+	       break;
+	    case 12:
+	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) horiz3_bits, horiz3_width,
+				 horiz3_height, FgPixel, BgPixel, TtWDepth);
+	       break;
+	    case 13:
+	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) vert1_bits, vert1_width,
+				  vert1_height, FgPixel, BgPixel, TtWDepth);
+	       break;
+	    case 14:
+	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) vert2_bits, vert2_width,
+				  vert2_height, FgPixel, BgPixel, TtWDepth);
+	       break;
+	    case 15:
+	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) vert3_bits, vert3_width,
+				  vert3_height, FgPixel, BgPixel, TtWDepth);
+	       break;
+	    case 16:
+	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) left1_bits, left1_width,
+				  left1_height, FgPixel, BgPixel, TtWDepth);
+	       break;
+	    case 17:
+	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) left2_bits, left2_width,
+				  left2_height, FgPixel, BgPixel, TtWDepth);
+	       break;
+	    case 18:
+	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) left3_bits, left3_width,
+				  left3_height, FgPixel, BgPixel, TtWDepth);
+	       break;
+	    case 19:
+	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) right1_bits, right1_width,
+				 right1_height, FgPixel, BgPixel, TtWDepth);
+	       break;
+	    case 20:
+	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) right2_bits, right2_width,
+				 right2_height, FgPixel, BgPixel, TtWDepth);
+	       break;
+	    case 21:
+	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) right3_bits, right3_width,
+				 right3_height, FgPixel, BgPixel, TtWDepth);
+	       break;
+	    case 22:
+	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) square1_bits, square1_width,
+				square1_height, FgPixel, BgPixel, TtWDepth);
+	       break;
+	    case 23:
+	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) square2_bits, square2_width,
+				square2_height, FgPixel, BgPixel, TtWDepth);
+	       break;
+	    case 24:
+	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) square3_bits, square3_width,
+				square3_height, FgPixel, BgPixel, TtWDepth);
+	       break;
+	    case 25:
+	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) lozenge_bits, lozenge_width,
+				lozenge_height, FgPixel, BgPixel, TtWDepth);
+	       break;
+	    case 26:
+	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) brick_bits, brick_width,
+				  brick_height, FgPixel, BgPixel, TtWDepth);
+	       break;
+	    case 27:
+	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) tile_bits, tile_width,
+				   tile_height, FgPixel, BgPixel, TtWDepth);
+	       break;
+	    case 28:
+	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) sea_bits, sea_width,
+				    sea_height, FgPixel, BgPixel, TtWDepth);
+	       break;
+	    case 29:
+	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) basket_bits, basket_width,
+				 basket_height, FgPixel, BgPixel, TtWDepth);
+	       break;
+	    default:
+	       pixmap = None;
+	       break;
+	 }
+   XFlush (TtDisplay);
+#endif /* _WINDOWS */
    return ((unsigned long) pixmap);
 }
-#endif /* _WIN_PRINT */
