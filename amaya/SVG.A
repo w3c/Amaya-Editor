@@ -38,10 +38,7 @@ ELEMENTS
    polygon:
 	ElemGraphModify.Post -> ControlPointChanged;
    tspan:
-	BEGIN
 	ElemNew.Post ->         TspanCreated;
-	ElemPaste.Post ->       TspanCreated;
-	END;
    use_:
 	ElemPaste.Post ->       UsePasted;
    image:
