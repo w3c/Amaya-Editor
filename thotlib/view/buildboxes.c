@@ -1988,6 +1988,10 @@ PtrLine SearchLine (PtrBox pBox)
 		       still = FALSE;
 		       pBoxPiece = pLine->LiLastBox;
 		    }
+		  else if ((pBoxPiece->BxType == BoScript ||
+			    pBoxPiece->BxType == BoPiece) &&
+			   pBoxPiece->BxNexChild)
+		    pBoxInLine = pBoxPiece->BxNexChild;
 		  /* Sinon on passe a la boite suivante */
 		  else
 		     pBoxInLine = GetNextBox (pBoxInLine->BxAbstractBox);

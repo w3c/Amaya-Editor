@@ -132,7 +132,7 @@ void ClearViewSelection (int frame)
 		  DrawBoxSelection (frame, pBox1);
 		else
 		  {
-		    if (pFrame->FrSelectionBegin.VsIndBox == 0 ||
+		    if (/*pFrame->FrSelectionBegin.VsIndBox == 0 ||*/
 			pAb1->AbLeafType == LtPolyLine ||
 			pAb1->AbLeafType == LtPath)
 		      {
