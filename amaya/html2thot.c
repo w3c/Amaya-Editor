@@ -3148,7 +3148,7 @@ Element             el;
 	    length = TtaGetTextAttributeLength (attr);
 	    name1 = TtaGetMemory (length + 1);
 	    TtaGiveTextAttributeValue (attr, name1, &length);
-	    if ((!ustrcasecmp (name1, "STYLESHEET")) || (!ustrcasecmp (name1, "STYLE")))
+	    if (!ustrcasecmp (name1, "STYLESHEET") || !ustrcasecmp (name1, "STYLE"))
 	      {
 		 /* it's a link to a style sheet. Load that style sheet */
 		 attrType.AttrSSchema = DocumentSSchema;

@@ -2244,7 +2244,7 @@ PresentationContext c;
 	 pRule = NULL;
 
        if (pRule != NULL)
-	 ApplyPRules (doc, pSS, elType, attrType, presBox, pRule, FALSE);
+	 ApplyPRules (doc, pSS, elType, attrType, presBox, pRule, (boolean)c->destroy);
      }
    /* restore the display mode */
    if (dispMode == DisplayImmediately)

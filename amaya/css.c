@@ -46,8 +46,12 @@ CSSInfoPtr      css;
 {
   PInfoPtr            pInfo;
   PSchema             pSchema, nSchema, prevS;
-  Element             prevLink, nextLink;
+  Element             prevLink, nextLink, parent;
   ElementType	      elType;
+  AttributeType       attrType;
+  Attribute           attr;
+  CHAR_T              buffer[MAX_LENGTH];
+  int                 length;
   boolean             found, before;
 
   if (sSchema == NULL)
@@ -102,10 +106,50 @@ CSSInfoPtr      css;
       /* check the order among its external style sheets */
       if (pInfo->PiLink != NULL)
 	{
-	  elType = TtaGetElementType (pInfo->PiLink);
-	  prevLink = TtaSearchTypedElement (elType, SearchBackward, pInfo->PiLink);
+	  /* look for the previous link with rel="STYLESHEET" */
+	  prevLink = pInfo->PiLink;
+	  parent = TtaGetParent (prevLink);
+	  elType = TtaGetElementType (prevLink);
+	  attrType.AttrSSchema = elType.ElSSchema;
+	  attrType.AttrTypeNum = HTML_ATTR_REL;
+	  found = FALSE;
+	  while (!found && prevLink != NULL)
+	    {
+	      prevLink = TtaSearchTypedElementInTree (elType, SearchBackward, parent, prevLink);
+	      if (prevLink)
+		{
+		  attr = TtaGetAttribute (prevLink, attrType);
+		  if (attr != 0)
+		    {
+		      /* get a buffer for the attribute value */
+		      length = MAX_LENGTH;
+		      TtaGiveTextAttributeValue (attr, buffer, &length);
+		      found = (!ustrcasecmp (buffer, "STYLESHEET") || !ustrcasecmp (buffer, "STYLE"));
+		    }
+		}
+	    }
+	  nextLink = NULL;
 	  if (prevLink == NULL)
-	    nextLink = TtaSearchTypedElement (elType, SearchForward, pInfo->PiLink);
+	    {
+	      /* look for the next link with rel="STYLESHEET" */
+	      nextLink = pInfo->PiLink;
+	      found = FALSE;
+	      while (!found && nextLink != NULL)
+		{
+		  nextLink = TtaSearchTypedElementInTree (elType, SearchForward, parent, nextLink);
+		  if (nextLink)
+		    {
+		      attr = TtaGetAttribute (nextLink, attrType);
+		      if (attr != 0)
+			{
+			  /* get a buffer for the attribute value */
+			  length = MAX_LENGTH;
+			  TtaGiveTextAttributeValue (attr, buffer, &length);
+			  found = (!ustrcasecmp (buffer, "STYLESHEET") || !ustrcasecmp (buffer, "STYLE"));
+			}
+		    }
+		}
+	    }
 	}
       else
 	{
@@ -135,14 +179,14 @@ CSSInfoPtr      css;
 		while (pInfo != NULL && pInfo->PiDoc != doc)
 		  pInfo = pInfo->PiNext;
 		if (pInfo != NULL)
-		  if (pInfo->PiLink != prevLink)
+		  if (pInfo->PiLink == prevLink)
 		    {
 		      /* link after this presentation schema */
 		      before = FALSE;
 		      prevS = pInfo->PiPSchema;
 		      break;
 		    }
-		  else if (pInfo->PiLink != nextLink)
+		  else if (pInfo->PiLink == nextLink)
 		    {
 		      /* link before this presentation schema */
 		      before = TRUE;
@@ -413,14 +457,15 @@ CSSInfoPtr          css;
   PInfoPtr            pInfo;
   struct stat         buf;
   FILE               *res;
-  CHAR_T                tempfile[MAX_LENGTH];
-  CHAR_T                tempname[MAX_LENGTH];
-  CHAR_T                tempURL[MAX_LENGTH];
-  STRING               tempdocument;
-  STRING               buffer = NULL;
+  CHAR_T              tempfile[MAX_LENGTH];
+  CHAR_T              tempname[MAX_LENGTH];
+  CHAR_T              tempURL[MAX_LENGTH];
+  STRING              tempdocument;
+  STRING              buffer = NULL;
   int                 len;
   int                 local = FALSE;
   int                 toparse;
+  boolean             import = (css != NULL);
 
   if (TtaGetViewFrame (doc, 1) != 0)
     {
@@ -470,8 +515,10 @@ CSSInfoPtr          css;
 
       if (oldcss == NULL || oldcss->category != CSS_EXTERNAL_STYLE)
 	{
-	  /* It's a new CSS file: allocate a new Presentation structure */
-	  css = AddCSS (0, doc, CSS_EXTERNAL_STYLE, tempURL, tempfile);
+	  /* It could be a @import CSS */
+	  if (css == NULL)
+	    /* It's a new CSS file: allocate a new Presentation structure */
+	    css = AddCSS (0, doc, CSS_EXTERNAL_STYLE, tempURL, tempfile);
 	  oldcss = css;
 	}
       else
@@ -498,7 +545,7 @@ CSSInfoPtr          css;
 
 
       /* apply CSS rules in current Presentation structure (import) */
-      if ( pInfo->PiPSchema == NULL)
+      if ( pInfo->PiPSchema == NULL || import)
 	{
 	  /* load the resulting file in memory */
 	  res = fopen (tempfile, "r");

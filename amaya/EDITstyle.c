@@ -28,9 +28,9 @@
 #include "wininclude.h"
 #endif /* _WINDOWS */
 
-static CHAR_T         ListBuffer[MAX_CSS_LENGTH + 1];
+static STRING       ListBuffer;
 static int          NbClass = 0;
-static CHAR_T         CurrentClass[80];
+static CHAR_T       CurrentClass[80];
 static Element      ClassReference;
 static Document     DocReference;
 static Document	    ApplyClassDoc;
@@ -98,18 +98,33 @@ NotifyElement      *event;
 
 #endif /* __STDC__ */
 {
-  Element             el;
+  Element             el, first;
   Language            lang;
-  int                 buflen;
+  int                 buflen, i, j;
 
-  el = TtaGetFirstChild (event->element);
-  if (el != NULL)
+  el = event->element;
+  first = TtaGetFirstChild (el);
+  el = first;
+  /* get the length of the included text */
+  buflen = 1;
+  while (el != NULL)
     {
-      /*save buffer contents before any change */
-      buflen = MAX_CSS_LENGTH;
-      TtaGiveTextContent (el, ListBuffer, &buflen, &lang);
-      ListBuffer[MAX_CSS_LENGTH] = EOS;
+      buflen += TtaGetTextLength (el);
+      TtaNextSibling (&el);
     }
+  ListBuffer = TtaGetMemory (buflen);
+
+  /* now fill the buffer */
+  el = first;
+  i = 0;
+  while (el != NULL)
+    {
+      j = buflen - i;
+      TtaGiveTextContent (el, &ListBuffer[i], &j, &lang);
+      i += TtaGetTextLength (el);
+      TtaNextSibling (&el);
+    }
+  ListBuffer[i] = EOS;
    return FALSE;  /* let Thot perform normal operation */
 }
 
@@ -142,125 +157,142 @@ void                StyleChanged (event)
 NotifyAttribute    *event;
 #endif
 {
-  Element             el;
+  Element             el, first;
   Language            lang;
   STRING              buffer, ptr1, ptr2;
   STRING              pEnd, nEnd;
-  CHAR_T                c;
+  CHAR_T              c;
   int                 buflen, i, j;
   int                 previousEnd, nextEnd;
   int                 braces;
 
-  el = TtaGetFirstChild (event->element);
-  if (el != NULL)
+  el = event->element;
+  first = TtaGetFirstChild (el);
+  el = first;
+  /* get the length of the included text */
+  buflen = 1;
+  while (el != NULL)
     {
-      /*save buffer contents after any change */
-      buflen = MAX_CSS_LENGTH;
-      buffer = TtaGetMemory (buflen+1);
-      TtaGiveTextContent (el, buffer, &buflen, &lang);
-      buffer[MAX_CSS_LENGTH] = EOS;
-
-      /* compare both srings */
-      i = 0;
-      ptr1 = buffer;
-      previousEnd = i;
-      pEnd = ptr1;
-      braces = 0;
-      while (ListBuffer[i] == *ptr1 && *ptr1 != EOS)
-	{
-	  if (i > 0 && ListBuffer[i-1] == '{')
-	    braces++;
-	  if (i > 0 &&
-	      (ListBuffer[i-1] == '}' ||
-	       ((ListBuffer[i-1] == ';' || ListBuffer[i-1] == '>') && braces == 0)))
-	    {
-	      if (ListBuffer[i-1] == '}')
-		braces--;
-	      previousEnd = i;
-	      pEnd = ptr1;
-	    }
-	  i++;
-	  ptr1++;
-	}
-      /* now ptr1 and ListBuffer[i] point different strings */
-      if (*ptr1 != EOS)
-	{
-	  ptr2 = ptr1 + ustrlen (ptr1);
-	  j = i + ustrlen (&ListBuffer[i]);
-	  nextEnd = j;
-	  nEnd = ptr2;
-	  braces = 0;
-	  while (ListBuffer[j] == *ptr2 && ptr2 != ptr1)
-	    {
-	      if (j > i && ListBuffer[j-1] == '{')
-		braces++;
-	      if (j > i &&
-		  (ListBuffer[j-1] == '}' ||
-		   ((ListBuffer[j-1] == '@' || ListBuffer[j-1] == '<') && braces == 0)))
-		{
-		  if (ListBuffer[j-1] == '}')
-		    braces--;
-		  nextEnd = j;
-		  nEnd = ptr2;
-		}
-	      j--;
-	      ptr2--;
-	    }
-	  if (ptr1 != ptr2)
-	    {
-	      /* take complete CSS rules */
-	      ListBuffer[nextEnd] = EOS;
-	      *nEnd = EOS;
-
-	      /* remove previous rules */
-	      ptr1 = &ListBuffer[previousEnd];
-	      ptr2 = ptr1;
-	      do
-		{
-		  while (*ptr2 != '}' && *ptr2 != EOS)
-		    ptr2++;
-		  if (*ptr2 != EOS)
-		    ptr2++;
-		  /* cut here */
-		  c = *ptr2;
-		  *ptr2 = EOS;
-		  ApplyCSSRules (event->element, ptr1, event->document, TRUE);
-		  /**** update image contexts
-		    url1 = GetCSSBackgroundURL (ptr1);
-		    if (url1 != NUL)
-		    {
-		    sprintf (path, "%s%s%d%s", TempFileDirectory, DIR_STR, event->document, DIR_STR, url1);
-		    pImage = SearchLoadedImage (path, event->document);
-		    
-		    }
-		    ***/
-		  *ptr2 = c;
-		  ptr1 = ptr2;
-		}
-	      while (*ptr2 != EOS);
-
-	      /* add new rules */
-	      ptr1 = pEnd;
-	      ptr2 = ptr1;
-	      do
-		{
-		  while (*ptr2 != '}' && *ptr2 != EOS)
-		    ptr2++;
-		  if (*ptr2 != EOS)
-		    ptr2++;
-		  /* cut here */
-		  c = *ptr2;
-		  *ptr2 = EOS;
-		  ApplyCSSRules (event->element, ptr1, event->document, FALSE);
-		  *ptr2 = c;
-		  ptr1 = ptr2;
-		}
-	      while (*ptr2 != EOS);
-	    }
-	}
-      
-      TtaFreeMemory (buffer);
+      buflen += TtaGetTextLength (el);
+      TtaNextSibling (&el);
     }
+  buffer = TtaGetMemory (buflen);
+
+  /* now fill the buffer */
+  el = first;
+  i = 0;
+  while (el != NULL)
+    {
+      j = buflen - i;
+      TtaGiveTextContent (el, &buffer[i], &j, &lang);
+      i += TtaGetTextLength (el);
+      TtaNextSibling (&el);
+    }
+  buffer[i] = EOS;
+
+  /* compare both srings */
+  i = 0;
+  ptr1 = buffer;
+  previousEnd = i;
+  pEnd = ptr1;
+  braces = 0;
+  while (ListBuffer[i] == *ptr1 && *ptr1 != EOS)
+    {
+      if (i > 0 && ListBuffer[i-1] == '{')
+	braces++;
+      if (i > 0 &&
+	  (ListBuffer[i-1] == '}' ||
+	   ((ListBuffer[i-1] == ';' || ListBuffer[i-1] == '>') && braces == 0)))
+	{
+	  if (ListBuffer[i-1] == '}')
+	    braces--;
+	  previousEnd = i;
+	  pEnd = ptr1;
+	}
+      i++;
+      ptr1++;
+    }
+  /* now ptr1 and ListBuffer[i] point different strings */
+  if (*ptr1 != EOS)
+    {
+      ptr2 = ptr1 + ustrlen (ptr1);
+      j = i + ustrlen (&ListBuffer[i]);
+      nextEnd = j;
+      nEnd = ptr2;
+      braces = 0;
+      while (ListBuffer[j] == *ptr2 && ptr2 != ptr1)
+	{
+	  if (j > i && ListBuffer[j-1] == '{')
+	    braces++;
+	  if (j > i &&
+	      (ListBuffer[j-1] == '}' ||
+	       ((ListBuffer[j-1] == '@' || ListBuffer[j-1] == '<') &&
+		braces == 0)))
+	    {
+	      if (ListBuffer[j-1] == '}')
+		braces--;
+	      nextEnd = j;
+	      nEnd = ptr2;
+	    }
+	  j--;
+	  ptr2--;
+	}
+      if (ptr1 != ptr2)
+	{
+	  /* take complete CSS rules */
+	  ListBuffer[nextEnd] = EOS;
+	  *nEnd = EOS;
+	  
+	  /* remove previous rules */
+	  ptr1 = &ListBuffer[previousEnd];
+	  ptr2 = ptr1;
+	  do
+	    {
+	      while (*ptr2 != '}' && *ptr2 != EOS)
+		ptr2++;
+	      if (*ptr2 != EOS)
+		ptr2++;
+	      /* cut here */
+	      c = *ptr2;
+	      *ptr2 = EOS;
+	      ApplyCSSRules (event->element, ptr1, event->document, TRUE);
+	      /**** update image contexts
+		url1 = GetCSSBackgroundURL (ptr1);
+		if (url1 != NUL)
+		{
+		sprintf (path, "%s%s%d%s", TempFileDirectory, DIR_STR, event->document, DIR_STR, url1);
+		pImage = SearchLoadedImage (path, event->document);
+		
+		}
+		***/
+	      *ptr2 = c;
+	      ptr1 = ptr2;
+	    }
+	  while (*ptr2 != EOS);
+	  
+	  /* add new rules */
+	  ptr1 = pEnd;
+	  ptr2 = ptr1;
+	  do
+	    {
+	      while (*ptr2 != '}' && *ptr2 != EOS)
+		ptr2++;
+	      if (*ptr2 != EOS)
+		ptr2++;
+	      /* cut here */
+	      c = *ptr2;
+	      *ptr2 = EOS;
+	      ApplyCSSRules (event->element, ptr1, event->document, FALSE);
+	      *ptr2 = c;
+	      ptr1 = ptr2;
+	    }
+	  while (*ptr2 != EOS);
+	}
+    }
+      
+  TtaFreeMemory (ListBuffer);
+  ListBuffer = NULL;
+  TtaFreeMemory (buffer);
 }
 
 

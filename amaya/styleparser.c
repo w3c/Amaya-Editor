@@ -4272,7 +4272,10 @@ boolean             withUndo;
 		CSScomment = CSSindex - 1;
 	      break;
 	    case '/':
-	      if (CSSindex > 0 && CSSbuffer[CSSindex - 1] == '*' && CSScomment != MAX_CSS_LENGTH)
+	      if (CSSindex > 1 &&
+		  CSSbuffer[CSSindex - 2] == '*' &&
+		  CSSbuffer[CSSindex - 1] == '*' &&
+		  CSScomment != MAX_CSS_LENGTH)
 		{
 		  /* close a comment */
 		  CSSindex = CSScomment - 1; /* incremented later */
@@ -4283,7 +4286,10 @@ boolean             withUndo;
 		  /* this is the closing tag ! */
 		  CSSparsing = FALSE;
 		  CSSindex -= 2; /* remove </ from the CSS string */
-		}	    
+		}
+	      else if (CSScomment != MAX_CSS_LENGTH)
+		/* ignore a '/' within a comment which doesn't close it */
+		CSSindex--;;
 	      break;
 	    case '<':
 	      if (buffer != NULL)
@@ -4347,6 +4353,11 @@ boolean             withUndo;
 	  if (c != EOS)
 	    CSSindex++;
 	}
+      else if (CSSindex > 1 &&
+	       CSSbuffer[CSSindex - 2] == '*' &&
+	       CSSbuffer[CSSindex - 1] == '*')
+	/* ignore a '*' within the comment which is not followed by a '/' */
+	CSSindex--;
       if  (CSSindex >= MAX_CSS_LENGTH || !CSSparsing || toParse || noRule)
 	{
 	  CSSbuffer[CSSindex] = EOS;

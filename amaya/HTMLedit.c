@@ -100,25 +100,33 @@ Document            doc;
    ElementType	       elType;
    AttributeType       attrType;
    Attribute           attr;
-   CHAR_T                buffer[MAX_LENGTH];
-   CHAR_T                pathname[MAX_LENGTH], documentname[MAX_LENGTH];   
+   CHAR_T              buffer[MAX_LENGTH];
+   CHAR_T              pathname[MAX_LENGTH], documentname[MAX_LENGTH];   
    int                 length;
 
    /* Search the refered image */
    elType = TtaGetElementType (el);
    attrType.AttrSSchema = elType.ElSSchema;
-   attrType.AttrTypeNum = HTML_ATTR_HREF_;
+   attrType.AttrTypeNum = HTML_ATTR_REL;
    attr = TtaGetAttribute (el, attrType);
    if (attr != 0)
      {
        /* get a buffer for the attribute value */
        length = MAX_LENGTH;
-       /* copy the HREF attribute into the buffer */
        TtaGiveTextAttributeValue (attr, buffer, &length);
-       if (IsCSSName (buffer))
+       if (!ustrcasecmp (buffer, "STYLESHEET") || !ustrcasecmp (buffer, "STYLE"))
 	 {
-	   NormalizeURL (buffer, doc, pathname, documentname, NULL);
-	   RemoveStyleSheet (pathname, doc, TRUE);
+	   /* it's a link to a style sheet. Remove that style sheet */
+	   attrType.AttrTypeNum = HTML_ATTR_HREF_;
+	   attr = TtaGetAttribute (el, attrType);
+	   if (attr != 0)
+	     {
+	       /* copy the HREF attribute into the buffer */
+	       length = MAX_LENGTH;
+	       TtaGiveTextAttributeValue (attr, buffer, &length);
+	       NormalizeURL (buffer, doc, pathname, documentname, NULL);
+	       RemoveStyleSheet (pathname, doc, TRUE);
+	     }
 	 }
      }
 }
@@ -1162,11 +1170,13 @@ NotifyElement      *event;
 #endif /* __STDC__ */
 {
   Document            originDocument, doc;
+  Language            lang;
   Element             el, anchor, next, child, previous, nextchild, parent;
   ElementType         elType, parentType;
   AttributeType       attrType;
   Attribute           attr;
   SSchema             HTMLschema;
+  CSSInfoPtr          css;
   STRING              value, base;
   STRING              documentURL;
   STRING              tempURL;
@@ -1184,37 +1194,14 @@ NotifyElement      *event;
       anchor = el;
   else if (elType.ElTypeNum == HTML_EL_STYLE_)
     {
-      /* look at the link type */
-      attrType.AttrSSchema = elType.ElSSchema;
-      attrType.AttrTypeNum = HTML_ATTR_Link_type;
-      attr = TtaGetAttribute (el, attrType);
-      if (attr != NULL)
-	{
-	  length = TtaGetTextAttributeLength (attr);
-	  if (length > 0)
-	    value = TtaGetMemory (MAX_LENGTH);
-	  if (value != NULL)
-	    {
-	      /* is it a text/css */
-	      TtaGiveTextAttributeValue (attr, value, &length);
-	      if (ustrcasecmp (value, "text/css"))
-		{
-		  /* get the link destination */
-		  attrType.AttrTypeNum = HTML_ATTR_HREF_;
-		  attr = TtaGetAttribute (el, attrType);
-		  if (attr != NULL)
-		    {
-		      length = TtaGetTextAttributeLength (attr);
-		      if (length > 0)
-			{
-			  TtaGiveTextAttributeValue (attr, value, &length);
-			  LoadStyleSheet (value, doc, el, NULL);
-			}
-		    }
-		}
-	      TtaFreeMemory (value);
-	    }
-	}
+      /* read the text in a buffer */
+      child = TtaGetFirstChild (el);
+      length = TtaGetTextLength (child);
+      value = TtaGetMemory (length + 1);
+      TtaGiveTextContent (child, value, &length, &lang);
+      css = AddCSS (doc, doc, CSS_DOCUMENT_STYLE, NULL, NULL);
+      ReadCSSRules (0, doc, css, value, FALSE);
+      TtaFreeMemory (value);
     }
   else if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
     {  

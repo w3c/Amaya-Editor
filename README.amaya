@@ -95,8 +95,8 @@ Extract the source tar file: amaya-src-release.tar.gz
 Set up the environment and start the compiling
 ----------------------------------------------
 
-You have to create a new directory Thot/platform and go
-within this directory.
+You have to create a new directory platform or obj within the directory Amaya then you have
+to go within this new directory.
 In this directory, you call configure application:
 ../configure
 
