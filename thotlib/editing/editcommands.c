@@ -3620,7 +3620,8 @@ View                view;
 			    pViewSel->VsBox->BxAbstractBox->AbVolume == 0);
 	       ContentEditing (TEXT_SUP);
 	     }
-	   if (moveAfter)
+	   if (moveAfter &&
+	       pViewSel->VsBox && pViewSel->VsIndBox < pViewSel->VsBox->BxNChars)
 	     TtcPreviousChar (document, view);
 	 }
 
