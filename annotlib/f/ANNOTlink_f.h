@@ -9,7 +9,7 @@
 extern char *LINK_GetAnnotationIndexFile (char *source_url);
 extern void LINK_New ( Document source_doc, Document annot_doc, STRING labf, int c1, STRING labl, int cN );
 extern void LINK_RemoveImage ( Document document, STRING annotName );
-extern void LINK_AddLink ( Document source_doc, char *annot_file, STRING labf, int c1, STRING labl, int cN );
+extern void LINK_AddLinkToSource ( Document source_doc, char *annot_file, STRING labf, int c1, STRING labl, int cN );
 extern void LINK_SaveLink (Document source_doc, Document annot_doc, STRING labf, int c1, STRING labl, int cN );
 extern void LINK_RemoveLink ( Document document, STRING annotName );
 extern void LINK_LoadAnnotations ( Document document, char *annotIndex );
@@ -22,7 +22,7 @@ extern void LINK_UpdateAnnotations ( Document document );
 extern char *LINK_GetAnnotationIndexFile (/* char *source_url */);
 extern void LINK_New (/* Document source_doc, Document annot_doc, STRING labf, int c1, STRING labl, int cN */);
 extern void LINK_RemoveImage (/* Document document, STRING annotName */);
-extern void LINK_AddLink (/* Document source_doc, char *annot_file, STRING labf, int c1, STRING labl, int cN */);
+extern void LINK_AddLinkToSource (/* Document source_doc, char *annot_file, STRING labf, int c1, STRING labl, int cN */);
 extern void LINK_SaveLink (/* Document source_doc, Document annot_doc, STRING labf, int c1, STRING labl, int cN */);
 extern void LINK_RemoveLink (/* Document document, STRING annotName */);
 extern void LINK_LoadAnnotations (/* Document document, char *annotIndex */);

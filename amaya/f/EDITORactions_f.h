@@ -159,6 +159,9 @@ extern void AnnotateDocument ( Document doc,
                                View view );
 extern void LoadAnnotations ( Document doc,
                               View view );
+extern void PostAnnotation ( Document doc,
+			     View view );
+extern void ShowAnnotations ( Document document );
 
 #else /* __STDC__ */
 
@@ -315,6 +318,8 @@ extern void AnnotateDocument (/* Document doc,
                                  View view */);
 extern void LoadAnnotations (/* Document doc,
                                 View view */);
-
+extern void PostAnnotation (/*  Document doc,
+				View view */);
+extern void ShowAnnotations (/* Document document */);
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

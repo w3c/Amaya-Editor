@@ -125,7 +125,7 @@ int cN;
   STRING   annotName;
   Element  element;
 
-  LINK_AddLink (source_doc, DocumentURLs[annot_doc], labf, c1, labl, cN);
+  LINK_AddLinkToSource (source_doc, DocumentURLs[annot_doc], labf, c1, labl, cN);
   LINK_SaveLink (source_doc, annot_doc, labf, c1, labl, cN);
 
 #if 0
@@ -138,14 +138,14 @@ int cN;
   /* Si le lien d'annotation n'existe, on le rajoute dans le document et dans le fichier de liens */
   if (!SearchAnnotation (source_doc, annotName))
     {
-      LINK_AddLink (source_doc, DocumentURLs[annot_doc], labf, c1, labl, cN);
+      LINK_AddLinkToSource (source_doc, DocumentURLs[annot_doc], labf, c1, labl, cN);
       LINK_SaveLink (source_doc, annot_doc, labf, c1, labl, cN);
     }
 #endif
 }
 
 /*-----------------------------------------------------------------------
-   Procedure LINK_AddLink (doc, annotFile, labf, c1, labl, cN)
+   Procedure LINK_AddLinkToSource (doc, annotFile, labf, c1, labl, cN)
   -----------------------------------------------------------------------
    Ajoute un lien de type annotation dans un document donne vers le
    document de nom annotName. Le lien est cree juste avant l'element
@@ -153,9 +153,9 @@ int cN;
   -----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void LINK_AddLink (Document source_doc, char *annot_file, STRING labf, int c1, STRING labl, int cN)
+void LINK_AddLinkToSource (Document source_doc, char *annot_file, STRING labf, int c1, STRING labl, int cN)
 #else /* __STDC__*/
-void LINK_AddLink (source_doc, annot_file, labf, c1, labl, cN)
+void LINK_AddLinkToSource (source_doc, annot_file, labf, c1, labl, cN)
 Document source_doc; 
 STRING annot_file;
 STRING labf;
@@ -254,9 +254,65 @@ void LINK_SaveLink (source_doc, annot_doc, annotName, labf, c1, labl, cN)
   /* Add the new link */
   annot_user = GetAnnotUser ();
   fprintf (indexFile, "%s|%s|%s|%d|%s|%d\n", annot_user, DocumentURLs[annot_doc], labf, c1, labl, cN);
-
+ 
   /* clean up and quit */
   fclose (indexFile);
+}
+
+/*-----------------------------------------------------------------------
+   Procedure LINK_DelMetaToMemory
+  -----------------------------------------------------------------------
+  Copies the parsed metadata to memory
+  -----------------------------------------------------------------------*/
+void LINK_DelMetaFromMemory (Document doc)
+{
+  AnnotMetaDataElement *me, *next;
+  
+  if (!AnnotMetaDataList[doc])
+    return;
+
+  for (me = AnnotMetaDataList[doc]; me ; me = next)
+  {
+      next = me->next;
+      TtaFreeMemory (me->author);
+      TtaFreeMemory (me->date);
+      TtaFreeMemory (me->type);
+      TtaFreeMemory (me->annotFile);
+      TtaFreeMemory (me);
+    }
+
+  AnnotMetaDataList[doc] = NULL;
+}
+
+/*-----------------------------------------------------------------------
+   Procedure LINK_AddMetaToMemory
+  -----------------------------------------------------------------------
+  Copies the parsed metadata to memory
+  -----------------------------------------------------------------------*/
+void LINK_AddMetaToMemory (Document doc, STRING annotUser, STRING annotDate, STRING annotType, STRING annotFile)
+{
+  AnnotMetaDataElement *me;
+
+  /* create a new element */
+  me = TtaGetMemory (sizeof (AnnotMetaDataElement));
+  me->author = TtaStrdup (annotUser);
+  me->date = TtaStrdup (annotDate);
+  me->type = TtaStrdup (annotType);
+  me->annotFile = TtaStrdup (annotFile);
+
+  /* add it to the list structure */
+  if (!AnnotMetaDataList[doc]) 
+    {
+      /* the list was empty */
+      me->next = NULL;
+      AnnotMetaDataList[doc] = me;
+    }
+  else
+    {
+      /* adding new elements to the list */
+      me->next = AnnotMetaDataList[doc];
+      AnnotMetaDataList[doc] = me;
+    }
 }
 
 /*-----------------------------------------------------------------------
@@ -303,8 +359,12 @@ void LINK_LoadAnnotations (doc, annotIndex)
     sscanf (buffer, "%s %s %s %d %s %d\n", annotUser, annotFile, labf, &c1, labl, &cN);
     if ((el = TtaSearchElementByLabel (labf, body)) == NULL)
       fprintf (stderr, "This annotations has lost its parent!\n");
-    else
-      LINK_AddLink (doc, annotFile, labf, c1, labl, cN);
+    else 
+      {
+	LINK_AddLinkToSource (doc, annotFile, labf, c1, labl, cN);
+	LINK_AddMetaToMemory (doc, annotUser, TEXT("date"), TEXT("Something"),
+			      annotFile);
+      }
   }
   
   TtaFreeMemory (annotFile);
@@ -644,7 +704,7 @@ void LINK_UpdateAnnotations (document)
     else if (!SearchAnnotation (document, docName))
     {
 #if 0
-      LINK_AddLink (document, view, el, docName);
+      LINK_AddLinkToSource (document, view, el, docName);
 #endif
     }
   }

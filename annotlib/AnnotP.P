@@ -11,7 +11,8 @@ PRINT
 #define DOC_FONTSIZE 12 pt
 #define RDF_FONTSIZE 14 pt
 #define STRUCT_INDENT 0.5 cm
-#define RDF_Color Blue
+#define RDF_FgColor Black
+#define RDF_BgColor Yellow
 
 DEFAULT
 	BEGIN
@@ -48,7 +49,8 @@ BOXES
 	VertPos: Top = Enclosing . Top;
 	Width: Enclosing . Width;
 	Height: Enclosing . Height;
-	Foreground: RDF_Color;
+	Foreground: RDF_BgColor;
+	Background: RDF_FgColor;
 	LineWeight: 1 px;
 	Visibility: Creator =;
 	END;
@@ -60,6 +62,7 @@ BOXES
 	Width: Enclosing . Width;
 	Height: Enclosing . Height;
 	Foreground: White;
+	Background: Purple;
 	LineWeight: 1 px;
 	Visibility: Creator =;
 	END;
@@ -74,7 +77,8 @@ BOXES
 	Style: Creator =;
 	Weight: Creator =;
 	Size: RDF_FONTSIZE;
-	Foreground: RDF_Color;
+        Foreground: RDF_FgColor;
+        Background: RDF_BgColor;
 	END;
 
  SourceDoc_Box:
@@ -87,7 +91,9 @@ BOXES
 	Style: Creator =;
 	Weight: Creator =;
 	Size: RDF_FONTSIZE;
-	Foreground: RDF_Color;
+        Foreground: RDF_FgColor;
+        Background: RDF_BgColor;
+
 	END;
 
  RDFtype_Box:
@@ -100,7 +106,8 @@ BOXES
 	Style: Creator =;
 	Weight: Creator =;
 	Size: RDF_FONTSIZE;
-	Foreground: RDF_Color;
+        Foreground: RDF_FgColor;
+        Background: RDF_BgColor;
 	END;
 
  Date_Box:
@@ -113,7 +120,8 @@ BOXES
 	Style: Creator =;
 	Weight: Creator =;
 	Size: RDF_FONTSIZE;
-	Foreground: RDF_Color;
+        Foreground: RDF_FgColor;
+        Background: RDF_BgColor;
 	END;
 
  ValueType: BEGIN

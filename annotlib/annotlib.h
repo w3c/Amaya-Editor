@@ -41,23 +41,27 @@
 #endif
 #include "HTMLtable_f.h"
 
+/* Structures and global variables */
+
+/* an annot metadata element */ 
+typedef struct _AnnotMetaDataElement {
+  int annotNum;
+  STRING author;
+  STRING date;
+  STRING type;
+  STRING annotFile;
+  struct _AnnotMetaDataElement *next;
+} AnnotMetaDataElement;
+
 /* Annotation modules */
 #include "ANNOTtools_f.h"
 #include "ANNOTlink_f.h"
 #include "ANNOTevent_f.h"
 #include "ANNOTfiles_f.h"
 
-/* Structures and global variables */
 
-typedef struct _refAnnot
-{
-  char *docName;
-  char labf[20], labl[20];
-  int  c1, cN;
-  int annotNum;
-} refAnnot;
-
-refAnnot tabRefAnnot[10]; /* Tableau contenant les zones de chaque annotation */
+/* linked list of all annotations related to a document */
+AnnotMetaDataElement *AnnotMetaDataList[DocumentTableLength];
 
 /* Definition de constantes pour les annotations */
 
@@ -69,3 +73,10 @@ refAnnot tabRefAnnot[10]; /* Tableau contenant les zones de chaque annotation */
 #define ANNOT_ANAME "Annotation"
 
 #endif /* ANNOTATIONS_H */
+
+
+
+
+
+
+

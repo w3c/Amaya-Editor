@@ -10,7 +10,7 @@ CONST
 RULES
 
    Annot : BEGIN
-     Use HTMLT for HTML;
+     Use HTMLTX for HTML;
    END;
 
    Description : BEGIN

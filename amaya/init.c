@@ -724,13 +724,14 @@ Document            doc;
 
 	   TtaSetItemOff (document, 1, Edit_, BSpellCheck);
 	   TtaSetItemOff (document, 1, Edit_, BTransform);
-	   TtaSetItemOff (document, 1, Edit_, BAnnotate);
-	   TtaSetItemOff (document, 1, Edit_, BLoadAnnots);
 	   TtaSetMenuOff (document, 1, Types);
 	   TtaSetMenuOff (document, 1, Links);
 	   TtaSetMenuOff (document, 1, Style);
 	   TtaSetItemOff (document, 1, Special, TSectionNumber);
 	   TtaSetItemOff (document, 1, Special, BMakeBook);
+#ifdef ANNOTATIONS
+	   TtaSetMenuOff (document, 1, Annotations_);
+#endif /* ANNOTATIONS */
 	   view = TtaGetViewFromName (document, TEXT("Structure_view"));
 	   if (view != 0 && TtaIsViewOpened (document, view))
 	     {
@@ -848,13 +849,14 @@ Document            doc;
 #endif /* GRAPHML */
 	   TtaSetItemOn (document, 1, Edit_, BSpellCheck);
 	   TtaSetItemOn (document, 1, Edit_, BTransform);
-	   TtaSetItemOn (document, 1, Edit_, BAnnotate);
-	   TtaSetItemOn (document, 1, Edit_, BLoadAnnots);
 	   TtaSetMenuOn (document, 1, Types);
 	   TtaSetMenuOn (document, 1, Links);
 	   TtaSetMenuOn (document, 1, Style);
 	   TtaSetItemOn (document, 1, Special, TSectionNumber);
 	   TtaSetItemOn (document, 1, Special, BMakeBook);
+#ifdef ANNOTATIONS
+	   TtaSetMenuOn (document, 1, Annotations_);
+#endif /* ANNOTATIONS */
 	   view = TtaGetViewFromName (document, TEXT("Structure_view"));
 	   if (view != 0 && TtaIsViewOpened (document, view))
 	     {
@@ -1699,10 +1701,21 @@ ThotBool     logFile;
 #ifdef GRAPHML
 	   AddGraphicsButton (doc, 1);
 #endif /* GRAPHML */
+#ifdef ANNOTATIONS
+	   if (docType != docAnnot && docType != docAnnotRO)
+#endif /* ANNOTATIONS */
+	     {
 	   TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA, AM_LOCATION), TRUE,
 			   TextURL);
 	   TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA, AM_TITLE), TRUE,
 			   TextTitle);
+	     }
+#ifdef ANNOTATIONS
+	   else
+	   /* @@ patch for not seeing the icon, while waiting for Irene */
+	     TtcSwitchCommands (doc, 1);
+#endif /* ANNOTATIONS */
+
 	   /* initial state for menu entries */
 	   TtaSetItemOff (doc, 1, File, BBack);
 	   TtaSetItemOff (doc, 1, File, BForward);
@@ -1895,8 +1908,6 @@ ThotBool     logFile;
 
 	 TtaSetItemOff (doc, 1, Edit_, BSpellCheck);
 	 TtaSetItemOff (doc, 1, Edit_, BTransform);
-	 TtaSetItemOff (doc, 1, Edit_, BAnnotate);
-	 TtaSetItemOff (doc, 1, Edit_, BLoadAnnots);
 	 TtaSetMenuOff (doc, 1, Types);
 	 TtaSetMenuOff (doc, 1, Links);
 	 TtaSetMenuOff (doc, 1, Style);
@@ -1915,6 +1926,9 @@ ThotBool     logFile;
 	     TtaSetItemOff (doc, 1, Edit_, BPaste);
 	     TtaSetItemOff (doc, 1, Edit_, BClear);
 	     TtaSetToggleItem (doc, 1, Edit_, TEditMode, FALSE);
+#ifdef ANNOTATIONS
+             TtaSetMenuOff (document, 1, Annotations_);
+#endif /* ANNOTATIONS */
 #ifdef _WINDOWS 
 	     WIN_TtaSwitchButton (doc, 1, iEditor, iconEditor, TB_INDETERMINATE, TRUE);
 #else  /* _WINDOWS */
@@ -3310,6 +3324,14 @@ void *context;
 	 ResetStop(newdoc);
      }
 
+#ifdef ANNOTATIONS
+   /* if it's an annotation, add the existing metadata */
+   if (DocumentTypes[newdoc] == docAnnot
+       || DocumentTypes[newdoc] == docAnnotRO)
+     {
+       ANNOT_InitDocumentMeta (newdoc, baseDoc);
+     }
+#endif /* ANNOTATIONS */
    /* select the target if present */
    if (ok && !stopped_flag && target != NULL && target[0] != EOS && newdoc != 0)
      {
@@ -3498,6 +3520,10 @@ void               *ctx_cbf;
 		   newdoc = InitDocView (doc, documentname, docTextRO, TRUE);
 	       else if (CE_event == CE_HELP)
 		   newdoc = InitDocView (doc, documentname, docHTMLRO, FALSE);
+#ifdef ANNOTATIONS
+	       else if (CE_event == CE_ANNOT)
+		 newdoc = InitDocView (doc, documentname, docAnnot, FALSE);
+#endif /* ANNOTATIONS */
 	       else
 		   newdoc = InitDocView (doc, documentname, docHTML, FALSE);
 	       if (newdoc == 0)

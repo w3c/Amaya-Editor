@@ -2813,7 +2813,11 @@ STRING        content_type;
      }
 
    /* Specific initializations for POST and GET */
-   if (mode & AMAYA_FORM_POST)
+   if (mode & AMAYA_FORM_POST
+#ifdef ANNOTATIONS
+       || mode & AMAYA_ANNOT_POST
+#endif /* ANNOTATIONS */
+       ) 
      {
        me->method = METHOD_POST;
        HTRequest_setMethod (me->request, METHOD_POST);
@@ -2932,6 +2936,21 @@ STRING        content_type;
 				    me->request);
        status = posted ? YES : NO; 
      }
+#ifdef ANNOTATIONS
+   if (mode & AMAYA_ANNOT_POST)
+     {
+       /* @@@ a very ugly patch :))) */
+       HTParentAnchor * posted = NULL;
+
+       me->source =  HTAnchor_findAddress (DocumentURLs[docid]);
+       HTAnchor_setFormat (HTAnchor_parent (me->source),
+			   HTAtom_for ("application/xml"));
+       posted = HTPostAnchor (HTAnchor_parent (me->source), 
+			      (HTAnchor *) me->anchor, 
+			      me->request);
+       status = posted ? YES : NO; 
+     }
+#endif /* ANNOTATIONS */
    else if (formdata)
      status = HTGetFormAnchor(me->formdata, (HTAnchor *) me->anchor,
 			      me->request);
@@ -3076,11 +3095,11 @@ void               *context_tcbf;
      }
 
    fstat (fd, &file_stat);
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
    _close (fd);
-#  else /* _WINDOWS */
+#else /* _WINDOWS */
    close (fd);
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 
    if (file_stat.st_size == 0)
      {

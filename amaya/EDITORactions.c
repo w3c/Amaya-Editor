@@ -2638,5 +2638,33 @@ View view;
 #endif /* ANNOTATIONS */
 }
 
+/*----------------------------------------------------------------------
+  PostAnnotation
+  Frontend to the function that posts an annotation to the server
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void PostAnnotation (Document doc, View view)
+#else 
+void PostAnnotation (doc, view);
+Document doc;
+View view;
+#endif /* __STDC__ */
+{
+#ifdef ANNOTATIONS
+  ANNOT_Post (doc, view);
+#endif /* ANNOTATIONS */
+}
 
-
+/*----------------------------------------------------------------------
+   Show/Hide the annotations
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                ShowAnnotations (Document document)
+#else
+void                ShowAnnotations (document)
+Document            doc;
+#endif
+{
+#ifdef ANNOTATIONS
+#endif /* ANNOTATIONS */
+}

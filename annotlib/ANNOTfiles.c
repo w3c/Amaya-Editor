@@ -68,7 +68,8 @@ Document ANNOT_NewDocument (doc)
   TtaFreeMemory (tmpname);
   fname = urlname + 5;
 
-  annotDoc = InitDocView (0, "annot", docAnnot, FALSE);
+  /* @@ 10 should be docAnnot, but I have a problem to set it up */
+  annotDoc = InitDocView (0, "annot", 10, FALSE);
 
   if (annotDoc == 0) 
     {
@@ -89,22 +90,52 @@ Document ANNOT_NewDocument (doc)
       DocumentMeta[annotDoc]->method = CE_ABSOLUTE;
       DocumentSource[annotDoc] = 0;
       ANNOT_PrepareAnnotView (annotDoc);
-      ANNOT_InitDocumentStructureP (annotDoc, doc);      
+      ANNOT_InitDocumentStructure (annotDoc, doc);      
     }  
   return annotDoc;
 }
 
 /*-----------------------------------------------------------------------
-   Procedure ANNOT_InitDocumentStructureP (docAnnot, document)
+   Procedure ANNOT_InitDocumentMeta (docAnnot, document)
   -----------------------------------------------------------------------
    Initializes an annotation document by adding a BODY part
    and adding META elements for title, author, date, and type
   -----------------------------------------------------------------------*/
-
 #ifdef __STDC__
-void  ANNOT_InitDocumentStructureP (Document docAnnot, Document document)
+AnnotMetaDataElement *GetMetaData (Document doc, Document annotDoc)
+#endif
+{
+  AnnotMetaDataElement *me;
+  STRING annotFile;
+
+  /* @@@ why I can't use docAnnot??? what is interfering? */
+  if (DocumentTypes[doc] == 10
+      && DocumentTypes[doc] == 11)
+    return (NULL);
+
+  me = AnnotMetaDataList[doc];
+  if (me)
+    annotFile = me->annotFile;
+
+  while (me) 
+    {
+      if (ustrcasecmp (DocumentURLs[annotDoc], annotFile) ||
+	  ustrcasecmp (DocumentURLs[annotDoc], annotFile + 5))
+	break;
+    }
+  return me;
+}
+
+/*-----------------------------------------------------------------------
+   Procedure ANNOT_InitDocumentMeta (docAnnot, document)
+  -----------------------------------------------------------------------
+   Initializes an annotation document by adding a BODY part
+   and adding META elements for title, author, date, and type
+  -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void  ANNOT_InitDocumentMeta (Document docAnnot, Document document)
 #else /* __STDC__*/
-void  ANNOT_InitDocumentStructureP (docAnnot, document)
+void  ANNOT_InitDocumentMeta (docAnnot, document)
      Document docAnnot;
      Document document;
 #endif /* __STDC__*/
@@ -115,15 +146,47 @@ void  ANNOT_InitDocumentStructureP (docAnnot, document)
   AttributeType       attrType;
   time_t      curDate;
   struct tm   *localDate;
-  STRING      strDate;
+  STRING      annot_user;
+  STRING      annot_date;
   STRING      doc_anchor;
+  STRING      annot_type;
+  STRING      annot_source;
   CHAR_T      tempfile[MAX_LENGTH];
-  char       *annot_user;
+  AnnotMetaDataElement *annot_metadata;
 
-  annot_user = GetAnnotUser ();
+  /* if it's a new annotation, we compute the stuff, otherwise,
+     we copy it from the existing metadata */
+  annot_metadata = GetMetaData (document, docAnnot);
 
-  /* avoid refreshing the document while we're constructing it */
-  TtaSetDisplayMode (docAnnot, NoComputedDisplay);
+  if (annot_metadata) 
+    {
+      /* existing annotation, we reuse the existing data */
+      annot_user = annot_metadata->author;
+      annot_date = annot_metadata->date;
+      annot_type = annot_metadata->type;
+    }
+  else
+    {
+      /* it's a new annotation */
+
+      /* author */
+      annot_user = GetAnnotUser ();
+
+      /* date */
+      curDate = time (&curDate);
+      localDate = localtime (&curDate);
+      /* @@ possible memory bug */
+      annot_date = TtaGetMemory (25);
+      sprintf (annot_date, "%02d/%02d/%04d %02d:%02d", localDate->tm_mday, 
+	       localDate->tm_mon+1, localDate->tm_year+1900, localDate->tm_hour,
+	       localDate->tm_min);
+
+      /* Annotation type */
+      annot_type = TEXT("Proto-Annotation");
+    }
+
+  /* endpoint of the annotation */
+  annot_source = TtaGetDocumentName (document);
 
   /*
   ** initialize the METADATA 
@@ -147,15 +210,7 @@ void  ANNOT_InitDocumentStructureP (docAnnot, document)
   elType.ElTypeNum = Annot_EL_AnnotDate;
   el = TtaSearchTypedElement (elType, SearchInTree, head);
   el = TtaGetFirstChild (el);
-  curDate = time (&curDate);
-  localDate = localtime (&curDate);
-  /* @@ possible memory bug */
-  strDate = TtaGetMemory (25);
-  sprintf (strDate, "%02d/%02d/%04d %02d:%02d", localDate->tm_mday, 
-	   localDate->tm_mon+1, localDate->tm_year+1900, localDate->tm_hour,
-	   localDate->tm_min);
-  TtaSetTextContent (el, strDate, TtaGetDefaultLanguage (), docAnnot); 
-  TtaFreeMemory (strDate);
+  TtaSetTextContent (el, annot_date, TtaGetDefaultLanguage (), docAnnot); 
 
   /* Source doc metadata (add a link to the annoted paragraph itself) */
   elType.ElTypeNum = Annot_EL_SourceDoc;
@@ -164,6 +219,7 @@ void  ANNOT_InitDocumentStructureP (docAnnot, document)
   TtaSetTextContent (el, DocumentURLs[docAnnot], 
 		     TtaGetDefaultLanguage (), docAnnot);
 #if 0
+  /* this code is for adding a back link to the source document */
   TtaInsertSibling (el, tl, FALSE, docAnnot);
   elType.ElTypeNum = HTML_EL_Anchor;
   el = TtaCreateDescent (docAnnot, el, elType);
@@ -182,21 +238,52 @@ void  ANNOT_InitDocumentStructureP (docAnnot, document)
   elType.ElTypeNum = HTML_EL_TEXT_UNIT;
   el = TtaCreateDescent (docAnnot, el, elType);
 #endif
-  TtaSetTextContent (el, TtaGetDocumentName (document), 
+  TtaSetTextContent (el, DocumentURLs[document],
 		     TtaGetDefaultLanguage (), docAnnot);
 
   /* RDF type metadata */
   elType.ElTypeNum = Annot_EL_RDFtype;
   el = TtaSearchTypedElement (elType, SearchInTree, head);
   el = TtaGetFirstChild (el);
-  TtaSetTextContent (el, TEXT("Proto-Annotation"),
+  TtaSetTextContent (el, annot_type,
 		     TtaGetDefaultLanguage (), docAnnot);
+
+  /* memory cleanup when creating a new annotation */
+  if (!annot_metadata) 
+    {
+      TtaFreeMemory (annot_date);
+    }
+}
+
+/*-----------------------------------------------------------------------
+   Procedure ANNOT_InitDocumentBody (docAnnot, document)
+  -----------------------------------------------------------------------
+   Initializes an annotation document by adding a BODY part
+   and adding META elements for title, author, date, and type
+  -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void  ANNOT_InitDocumentBody (Document docAnnot, Document document)
+#else /* __STDC__*/
+void  ANNOT_InitDocumentBody (docAnnot, document)
+     Document docAnnot;
+     Document document;
+#endif /* __STDC__*/
+{
+  ElementType elType;
+  Element     root, head, body, el, di, tl, top, child, meta;
+  Attribute           attr;
+  AttributeType       attrType;
+  time_t      curDate;
+  struct tm   *localDate;
+  STRING      strDate;
+  STRING      doc_anchor;
+  CHAR_T      tempfile[MAX_LENGTH];
 
   /*
   ** HTML initialization
    */
 
-  /* we find the the HTML image */
+  /* we find the the HTML nature */
   elType = TtaGetElementType (root);
   head = TtaSearchTypedElement (elType, SearchInTree, root);
   elType.ElTypeNum = Annot_EL_Body;
@@ -256,11 +343,36 @@ void  ANNOT_InitDocumentStructureP (docAnnot, document)
       body = TtaNewTree (docAnnot, elType, _EMPTYSTR_);
       TtaInsertSibling (body, head, FALSE, docAnnot);
     }
+}
+
+/*-----------------------------------------------------------------------
+   Procedure ANNOT_InitDocumentStructureP (docAnnot, document)
+  -----------------------------------------------------------------------
+   Initializes an annotation document by adding a BODY part
+   and adding META elements for title, author, date, and type
+  -----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+void  ANNOT_InitDocumentStructure (Document docAnnot, Document document)
+#else /* __STDC__*/
+void  ANNOT_InitDocumentStructure (docAnnot, document)
+     Document docAnnot;
+     Document document;
+#endif /* __STDC__*/
+{
+  /* avoid refreshing the document while we're constructing it */
+  TtaSetDisplayMode (docAnnot, NoComputedDisplay);
+
+  /* initialize the meta data */
+  ANNOT_InitDocumentMeta (docAnnot, document);
+  /* initialize the html body */
+  ANNOT_InitDocumentBody (docAnnot, document);
 
   /* show the document */
   TtaSetDisplayMode (docAnnot, DisplayImmediately);
 }
 
+#if 0
 /*-----------------------------------------------------------------------
    Procedure ANNOT_InitDocumentStructure (docAnnot, document)
   -----------------------------------------------------------------------
@@ -434,6 +546,7 @@ void  ANNOT_InitDocumentStructure (docAnnot, document)
   /* show the document */
   TtaSetDisplayMode (docAnnot, DisplayImmediately);
 }
+#endif
 
 /*-----------------------------------------------------------------------
    Procedure ANNOT_PrepareannotView (document)

@@ -33,6 +33,12 @@ typedef struct _REMOTELOAD_context {
   char *remoteAnnotIndex;
 } REMOTELOAD_context;
 
+/* the structure used for storing the context of the 
+   RemoteLoad_callback function */
+typedef struct _REMOTESAVE_context {
+  char *remoteAnnotIndex;
+} REMOTESAVE_context;
+
 /*-----------------------------------------------------------------------
    Procedure GetAnnotUser
   -----------------------------------------------------------------------
@@ -313,6 +319,202 @@ void ANNOT_Create (doc, view)
   tabRefAnnot[docAnnot].cN = cN;
   tabRefAnnot[docAnnot].docName = TtaStrdup (TtaGetDocumentName (docAnnot));
 #endif
+}
+
+#ifdef __STDC__
+void CreateRDF (int doc)
+#else  /* __STDC__ */
+void CreateRDF (doc)
+int doc;
+#endif
+{
+  FILE *fp;
+  FILE *fp2;
+  char tmp_str[80];
+
+  char *source_doc;
+  char *author;
+  char *date;
+  char *type;
+  char *xpath = "";
+  char *ptr;
+
+  /* @@@ should be long */
+  int length = 0;
+  AnnotMetaDataElement *annot_metadata;
+
+  /* @@ grr, how can I find the orig doc? I need to store this info */
+  annot_metadata = GetMetaData (1, doc);
+
+  if (annot_metadata) 
+    {
+      /* existing annotation, we reuse the existing data */
+      author = annot_metadata->author;
+      date = annot_metadata->date;
+      type = annot_metadata->type;
+    }
+  else
+    {
+      /* what happened? */
+      author = "";
+      date = "";
+      type = "";
+    }
+
+  fp = fopen ("/tmp/rdf.tmp", "w");
+  fprintf (fp,
+	   "<r:RDF xmlns:r=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n"
+	   "xmlns:a=\"http://www.w3.org/1999/xx/annotation-ns#\"\n"
+	   "xmlns:d=\"http://purl.org/dc/elements/1.0/\">\n"
+	   "<r:Description>\n"
+	   "<xlink:href rdf:resource=\"%s#%s\"/>\n"
+	   "<d:creator>%s</d:creator>\n"
+	   "<d:date>%s</d:date>\n"
+	   "<a:body>\n"
+	   "<r:Description>\n"
+	   "<http:ContentType>text/html</http:ContentType>\n"
+	   "<http:ContentLength>%d</http:ContentLength>\n"
+	   "<http:Body parseType=\"literal\">\n",
+	   source_doc, xpath, author, date, length);
+
+  /* insert the HTML body */
+  ptr = DocumentURLs[doc];
+  /* skip any file: prefix */
+  if (!ustrncmp (ptr, "file:", 5))
+      ptr = ptr + 5;
+  fp2 = fopen (ptr, "r");
+  if (fp2)
+    {
+      fgets (tmp_str, 79, fp2);
+      while (!feof (fp2)) {
+	fprintf (fp, "  %s", tmp_str);
+	fgets (tmp_str, 79, fp2);
+      }
+      fclose (fp2);
+    }
+
+  /* finish writing the annotation */
+  fprintf (fp, 
+	   "</http:Body>\n"
+	   "</r:Description/>\n"
+	   "</a:body>\n"
+	   "</r:Description>\n"
+	   "</r:RDF>\n");
+
+  fclose (fp);
+}
+/*-----------------------------------------------------------------------
+   Procedure ANNOT_Post_callback
+  -----------------------------------------------------------------------
+  -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void               ANNOT_Post_callback (int doc, int status, 
+					 STRING urlName,
+					 STRING outputfile, 
+					 STRING content_type,
+					 void * context)
+#else  /* __STDC__ */
+void               ANNOT_Post_callback (doc, status, urlName,
+					outputfile, content_type, 
+					context)
+int doc;
+int status;
+STRING urlName;
+STRING outputfile;
+STRING content_type;
+void *context;
+
+#endif
+{
+  /* get the server's reply */
+  /* update the source doc link */
+  /* delete the temporary file */
+  /* the context gives the link's name and we'll use it to look up the
+     document ... */
+
+   char  *remoteAnnotIndex;
+   REMOTELOAD_context *ctx;
+
+   /* restore REMOTELOAD contextext's */  
+   ctx = (REMOTELOAD_context *) context;
+
+   if (!ctx)
+     return;
+   remoteAnnotIndex = ctx->remoteAnnotIndex;
+   TtaFreeMemory (ctx);
+   if (status == 0)
+     LINK_LoadAnnotations (doc, remoteAnnotIndex);
+   /* TtaFileUnlink (remoteAnnotIndex);*/
+   TtaFreeMemory (remoteAnnotIndex);
+}
+
+/*-----------------------------------------------------------------------
+   Procedure ANNOT_Post
+  -----------------------------------------------------------------------
+  -----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+void ANNOT_Post (Document doc, View view)
+#else /* __STDC__*/
+void ANNOT_Post (doc, view)
+Document doc;
+View view;
+#endif /* __STDC__*/
+{
+  ElementType elType;
+  char *annotIndex;
+  char *annotUrl;
+  char *tmpfile;
+  char *annotServer = "http://tuvalu.inrialpes.fr:46277";
+
+  REMOTELOAD_context *ctx;
+  int res;
+
+  elType.ElSSchema = TtaGetDocumentSSchema (doc);
+  /*
+  if (!annotServer
+      || DocumentTypes[doc] != 10
+      || DocumentTypes[doc] != 11)
+    return;
+  */
+
+  /* output the HTML body */
+  ANNOT_SaveDocument (doc);
+
+  /* create the RDF container */
+  CreateRDF (doc);
+
+  /* post it */
+  
+  /* create the context for the callback */
+  ctx = TtaGetMemory (sizeof (REMOTELOAD_context));
+  /* make some space to store the remote file name */
+  ctx->remoteAnnotIndex = TtaGetMemory (MAX_LENGTH);
+  /* "compute" the url we're looking up in the annotation server */
+  annotUrl = TtaGetMemory (MAX_LENGTH);
+  sprintf (annotUrl, "%s/%s", annotServer, "cgi-bin/printenv");
+  /* launch the request */
+  res = GetObjectWWW (doc,
+		      annotUrl,
+		      NULL,
+		      ctx->remoteAnnotIndex,
+		      AMAYA_ANNOT_POST | AMAYA_ASYNC | AMAYA_FLUSH_REQUEST,
+		      NULL,
+		      NULL, 
+		      (void *)  ANNOT_Post_callback,
+		      (void *) ctx,
+		      NO,
+		      NULL);
+  TtaFreeMemory (annotUrl);
+
+  if (res)
+    {
+      /* the document wasn't loaded off the web (because of an error),
+	 we clear up the context */
+      TtaFreeMemory (ctx->remoteAnnotIndex);
+      TtaFreeMemory (ctx);
+    }
+
 }
 
 /***************************************************

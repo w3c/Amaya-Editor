@@ -10,7 +10,7 @@ AMAYA_ANNOT_INCLUDES= -I$(THOTDIR)/annotlib -I$(THOTDIR)/annotlib/f
 
 AMAYA_ANNOT_OBJ=
 
-AMAYA_ANNOT_SRC=
+AMAYA_ANNOT_SRC= ../annotlib/libAnnot.a 
 
 AMAYA_ANNOT_LIBS= ../annotlib/libAnnot.a
 

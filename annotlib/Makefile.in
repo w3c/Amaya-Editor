@@ -23,7 +23,7 @@ libdir = @libdir@
 #
 # Rule to build objects
 #
-.c.o :
+.c.o :  
 	$(CC) $(CFLAGS) $(INCLUDES) $(OPTIONS) -c $< -o $@
 
 all : libAnnot
@@ -70,13 +70,11 @@ $(ANNOTLIB)/AnnotT.TRA : ../../annotlib/AnnotT.T ../bin/tra
 #
 compANNOTA: $(ANNOTLIB)/Annot.SCH
 
-$(ANNOTLIB)/AnnotAPP.c \
-$(ANNOTLIB)/Annot.SCH : $(ANNOTLIB)/Annot.A ../bin/app
+$(ANNOTLIB)/Annot.SCH : $(ANNOTLIB)/Annot.A $(ANNOTLIB)/Annot.STR \
+			$(ANNOTLIB)/AnnotP.PRS ../bin/app
 	APP=`pwd`/../bin/app;\
 	cd $(ANNOTLIB); THOTDIR=`pwd`/.. ;export THOTDIR; \
 	$$APP $(ALL_AMAYA_OPTIONS) Annot.A
-
-AnnotAPP.o : $(ANNOTLIB)/AnnotAPP.c
 
 #
 # Structure schema compilation
@@ -92,14 +90,14 @@ $(ANNOTLIB)/Annot.STR : ../../annotlib/Annot.S ../bin/str
 #
 # Presentation schemas compilation
 #
-compANNOTP: $(ANNOTLIB)/AnnotP.PRS
+compANNOTP: $(ANNOTLIB)/Annot.STR $(ANNOTLIB)/AnnotP.PRS
 
 $(ANNOTLIB)/AnnotP.PRS : ../../annotlib/AnnotP.P ../bin/prs
 	PRS=`pwd`/../bin/prs;\
 	cd $(ANNOTLIB); THOTDIR=`pwd`/.. ;export THOTDIR; \
 	$$PRS $(ALL_AMAYA_OPTIONS) AnnotP
 
-AMAYA_ANNOT_SCHEMA= compANNOTA compANNOTP compANNOTS compANNOTT
+amaya_annot_schema= compANNOTS compANNOTP compANNOTT compANNOTA
 
 AMAYA_ANNOT_OBJ= \
 	AnnotAPP.o \
@@ -108,7 +106,7 @@ AMAYA_ANNOT_OBJ= \
 	ANNOTlink.o \
 	ANNOTtools.o
 
-libAnnot : $(AMAYA_ANNOT_SCHEMA) libAnnot.a
+libAnnot : $(amaya_annot_schema) libAnnot.a
 
 libAnnot.a : $(AMAYA_ANNOT_OBJ)
 	$(AR) libAnnot.a $(AMAYA_ANNOT_OBJ)

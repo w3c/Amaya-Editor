@@ -8,21 +8,25 @@
 
 extern void ANNOT_SetPath ( Document document );
 extern Document ANNOT_NewDocument ( Document document);
+extern void ANNOT_InitDocumentMeta ( Document docAnnot, Document document );
+extern void ANNOT_InitDocumentBody ( Document docAnnot, Document document );
 extern void ANNOT_InitDocumentStructure ( Document docAnnot, Document document );
-extern void ANNOT_InitDocumentStructureP ( Document docAnnot, Document document );
 extern void ANNOT_PrepareAnnotView ( Document document );
 extern void ANNOT_CheckEmptyDoc ( Document docAnnot );
 extern ThotBool ANNOT_SaveDocument ( Document docAnnot);
+extern AnnotMetaDataElement *GetMetaData ( Document doc, Document annotDoc );
 
 #else /* __STDC__ */
 
 extern void ANNOT_SetPath (/* Document document */);
 extern Document ANNOT_NewDocument (/* Document document */);
+extern void ANNOT_InitDocumentMeta (/* Document docAnnot, Document document */);
+extern void ANNOT_InitDocumentBody (/* Document docAnnot, Document document */);
 extern void ANNOT_InitDocumentStructure (/* Document docAnnot, Document document */);
-extern void ANNOT_InitDocumentStructureP (/* Document docAnnot, Document document */);
 extern void ANNOT_PrepareAnnotView (/* Document document */);
 extern void ANNOT_CheckEmptyDoc (/* Document docAnnot */);
 extern ThotBool ANNOT_SaveDocument (/*  Document docAnnot */);
+extern AnnotMetaDataElement *GetMetaData (/* Document doc, Document annotDoc */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

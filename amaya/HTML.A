@@ -397,4 +397,12 @@ ATTRIBUTES
 	AttrExport.Pre ->  GenerateQuoteBefore;	
 	AttrExport.Post -> GenerateQuoteAfter;	
 	END;
+
+#ifdef ANNOTATIONS
+   Annotation:
+	BEGIN
+	AttrDelete.Pre -> DeleteAnnotation;
+	END;
+#endif
+
 END

@@ -61,10 +61,6 @@ MENUS
 	Edit_ button:BFind -> TtcSearchText;
 	Edit_ button:BSpellCheck -> SpellCheck;
 	Edit_ button:BTransform -> TransformType;
-	Edit_ Separator;
-	Edit_ button:BAnnotate -> AnnotateDocument;
-	Edit_ button:BLoadAnnots -> LoadAnnotations;
-
 
 	view:2 StructTypes button:BBase -> CreateBase;
 	view:2 StructTypes button:BMeta -> CreateMeta;
@@ -236,6 +232,13 @@ MENUS
 	
 
 	Attributes_;
+
+	view:1 Annotations_ button:BAnnotate -> AnnotateDocument;
+	view:1 Annotations_ toggle:TShowAnnotations -> ShowAnnotations;
+	Annotations_ Separator;
+	view:1 Annotations_ button:BLoadAnnots -> PostAnnotation;
+	Annotations_ Separator;
+	view:1 Annotations_ button:BPostAnnot -> PostAnnotation;
 
 	view:1 Help_ button:BInformation -> HelpAmaya;
 	view:1 Help_ button:BAtW3C -> HelpAtW3C;

@@ -1119,6 +1119,9 @@ Document       doc;
         TtaFreeMemory (DocumentMeta[doc]);
         DocumentMeta[doc] = NULL;
 	}
+#ifdef ANNOTATIONS
+       LINK_DelMetaFromMemory (doc);
+#endif /* ANNOTATIONS */
       if (HighlightDocument == doc)
 	ResetHighlightedElement ();
       if (DocumentSource[doc])
