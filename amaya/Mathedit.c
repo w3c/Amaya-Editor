@@ -5012,7 +5012,7 @@ ThotBool        delete;
   CHAR_T*          ptr;
   int              length, val;
   ElementType      elType;
-  Element          cell, row;
+  Element          cell, row, label;
   ThotBool         fullTable;
 
   elType = TtaGetElementType (el);
@@ -5047,18 +5047,27 @@ ThotBool        delete;
   cell = TtaSearchTypedElement (elType, SearchInTree, el);
   if (cell && fullTable)
     {
-    row = TtaGetParent (cell);
+    elType.ElTypeNum = MathML_EL_TableRow;
+    row = TtaGetTypedAncestor (cell, elType);
     RowWithoutColalignAttr (&row, &cell);
     }
   while (cell)
     {
-    TtaGetElementType (cell);
+    elType = TtaGetElementType (cell);
     /* skip comments and other non cell elements */
     if (elType.ElTypeNum == MathML_EL_MTD)
-      if (delete)
-	DeleteIntColAlign (cell, doc);
+      {
+      /* it's a cell, but skip it if it's wrapped in a RowLabel element
+	 (in that case that's the label in a mlabeledtr element) */
+      elType.ElTypeNum = MathML_EL_RowLabel;
+      label = TtaGetTypedAncestor (cell, elType);
+      if (label)
+	cell = label;
       else
-	{
+        if (delete)
+	  DeleteIntColAlign (cell, doc);
+        else
+	  {
 	  if (*ptr != WC_EOS)
 	    {
 	      /* get next word in the attribute value */
@@ -5081,7 +5090,8 @@ ThotBool        delete;
 	    }
 	  if (val > 0)
 	    SetIntColAlign (cell, val, doc);
-	}
+	  }
+      }
     TtaNextSibling (&cell);
     if (!cell && fullTable && row)
       /* no more sibling cell. If the columnalign attribute is for the

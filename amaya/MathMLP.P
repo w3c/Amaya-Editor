@@ -2903,8 +2903,9 @@ RULES
 	LineWeight: 1 pt;
 	if Root
 		BEGIN
-		Width: Enclosing . Width - 0.5 cm;
-		HorizPos: Left = Enclosing . Left + 0.5 cm;
+		Width: Enclosing . Width;
+		HorizPos: Left = Enclosing . Left;
+		MarginLeft: 3 em;
 		VertPos: Top = Enclosing . Top + 0.5 cm;
 		END;
 	if not Root

@@ -438,6 +438,7 @@ EXCEPT
    MC_Head:		Hidden, NoSelect;
    MTable_body:		Hidden;
    MTR:			IsRow;
+   MLABELEDTR:          IsRow;
    RowLabel:	        Hidden, NoMove, NoResize;
    MTD:			IsCell, NoMove, NoResize;
    CellWrapper:		NoCut, Hidden;

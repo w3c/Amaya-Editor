@@ -2913,12 +2913,10 @@ Document	doc;
        TtaSetAttributeValue (intAttr, val, el, doc);
      }
 
+   /* don't handle attribute columnalign now: the table or the row is not
+      complete yet. Handle it when the element is complete.
    else if (attrType.AttrTypeNum == MathML_ATTR_columnalign)
-     {
-       /* parse the attribute value and create a IntColAlign attribute
-	  for each cell */
-       HandleColalignAttribute (attr, el, doc, FALSE);
-     }
+   */
 
    else if (attrType.AttrTypeNum == MathML_ATTR_color ||
 	    attrType.AttrTypeNum == MathML_ATTR_mathcolor ||
