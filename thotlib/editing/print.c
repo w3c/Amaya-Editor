@@ -2684,7 +2684,7 @@ int main (int argc, char **argv)
 		    {
 		      i++;
 		      length = length + l + 1; /* +1 for the space */
-		      l = strlen (argv[argCounter+1]);
+		      l = strlen (argv[argCounter + i]);
 		    }
 		  /* store the printer name */
 		  length += l;
