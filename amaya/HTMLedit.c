@@ -155,7 +155,7 @@ STRING              targetName;
      }
 
    /* build the complete target URL */
-   if (targetURL != NULL && !ustrcmp(targetURL, DocumentURLs[doc]))
+   if (targetURL != NULL && ustrcmp(targetURL, DocumentURLs[doc]))
      ustrcpy (tempURL, targetURL);
    else
      tempURL[0] = EOS;
@@ -232,7 +232,7 @@ Element             el;
 	   SetTargetContent (targetDoc, attr);
 	 }
        else
-	 TargetName = NULL;
+	 SetTargetContent (targetDoc, NULL);
      }
    else
      {
