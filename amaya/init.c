@@ -3254,6 +3254,9 @@ NotifyEvent        *event;
       /* No argument in the command line. Try the variable HOME_PAGE */
       s = (char *) TtaGetEnvString ("HOME_PAGE");
 
+#  ifdef _WINDOWS
+   sprintf (LostPicturePath, "%s\\amaya\\lost.gif", TtaGetEnvString ("THOTDIR"));              
+#  endif /* _WINDOWS */
    if (!s)
       /* No argument in the command line, no HOME_PAGE variable. Open the */
       /* default Amaya URL */
@@ -3261,9 +3264,6 @@ NotifyEvent        *event;
        s = (char *) TtaGetEnvString ("THOTDIR");
        if (s != NULL)
 	 {
-#          ifdef _WINDOWS
-	   sprintf (LostPicturePath, "%s\\amaya\\lost.gif", s);              
-#          endif /* _WINDOWS */
 	   strcpy (LastURLName, s);
 	 }
        else
