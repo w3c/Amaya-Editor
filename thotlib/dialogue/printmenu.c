@@ -95,7 +95,11 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    char                   *ptr;
 #ifdef _WINDOWS
    HINSTANCE               hLib;
-   FARPROC                 ptrMainProc;
+   /* FARPROC                 ptrMainProc; */
+   typedef void (*MYPROC)(HWND, int, char **, HDC, ThotBool,
+			      int, char *, char *, HINSTANCE, ThotBool);
+   MYPROC  ptrMainProc;
+
    char                    tmp[MAX_TXT_LEN];
    char                   *printArgv [100];
    int                     printArgc = 0;
@@ -563,7 +567,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    hLib = LoadLibrary ("thotprinter");
    if (!hLib)
       return /* FATAL_EXIT_CODE */;
-   ptrMainProc = GetProcAddress (hLib, "PrintDoc");
+   ptrMainProc = (MYPROC) GetProcAddress (hLib, "PrintDoc");
    if (!ptrMainProc)
      {
        FreeLibrary (hLib);
@@ -572,7 +576,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    
    EnableWindow  (FrRef[frame], FALSE);
 
-   ptrMainProc (FrRef[frame], printArgc, printArgv,
+   (ptrMainProc) (FrRef[frame], printArgc, printArgv,
 		TtPrinterDC, TtIsTrueColor, 
 		TtWDepth, name, dir, hInstance, buttonCommand);
    FreeLibrary (hLib);
