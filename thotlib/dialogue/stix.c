@@ -55,6 +55,70 @@
   #define HIGH_CHAR 45
 #endif /*_GL*/
 
+typedef struct _MapEntry {
+  unsigned char MapFont;
+  unsigned char MapIndex;
+} MapEntry;
+
+/* Mapping of arrows in the stix fonts */
+unsigned int Stix_Arrows_Start = 0x2190;
+MapEntry     Stix_Arrows [] = {
+  {1, 0x21}, {1,0x37}
+};
+#define Stix_Arrows_length sizeof(Stix_Arrows) / sizeof(MapEntry)
+
+/*----------------------------------------------------------------------
+  GetStixFontAndIndex returns the glyph index and the font
+  used to display the wide character c
+  ----------------------------------------------------------------------*/
+int GetStixFontAndIndex (CHAR_T c, SpecFont fontset, ThotFont **font)
+{
+  MapEntry      entry;
+  int           val = c, index = 0, face = 0;
+
+  if (val >= Stix_Arrows_Start && val < Stix_Arrows_Start + Stix_Arrows_length)
+    {
+      entry = Stix_Arrows[val - Stix_Arrows_Start];
+      index = (int) (entry.MapIndex);
+      face = (int) (entry.MapFont);
+    }
+  if (face == 1)
+    *font = &(fontset->SFont_1);
+  else if (face == 2)
+    *font = &(fontset->SFont_2);
+  else if (face == 3)
+    *font = &(fontset->SFont_3);
+  else if (face == 4)
+    *font = &(fontset->SFont_4);
+  else if (face == 5)
+    *font = &(fontset->SFont_5);
+  else if (face == 6)
+    *font = &(fontset->SFont_6);
+  else if (face == 7)
+    *font = &(fontset->SFont_7);
+  else if (face == 8)
+    *font = &(fontset->SFont_8);
+  else if (face == 9)
+    *font = &(fontset->SFont_9);
+  else if (face == 10)
+    *font = &(fontset->SFont_10);
+  else if (face == 11)
+    *font = &(fontset->SFont_11);
+  else if (face == 12)
+    *font = &(fontset->SFont_12);
+  else if (face == 13)
+    *font = &(fontset->SFont_13);
+  else if (face == 14)
+    *font = &(fontset->SFont_14);
+  else if (face == 15)
+    *font = &(fontset->SFont_15);
+  else if (face == 16)
+    *font = &(fontset->SFont_16);
+  else if (face == 17)
+    *font = &(fontset->SFont_17);
+
+  return index;
+}
 
 /*----------------------------------------------------------------------
   DrawStixSigma
