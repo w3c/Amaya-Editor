@@ -95,7 +95,7 @@
                                       <size>40,30</size>
                                       <focused>1</focused>
                                       <tooltip>*Foreground*</tooltip>
-                                      <bitmap>../icons/mics/empty.png</bitmap>
+                                      <bitmap>../icons/misc/empty.png</bitmap>
                                     </object>
                                   </object>
                                   <flag>wxTOP|wxBOTTOM|wxLEFT|wxEXPAND</flag>
