@@ -2615,6 +2615,16 @@
 	<message xml:lang="pt">Publicar</message>
 	<message xml:lang="fi">Julkaisu</message>
 </label>
+<label define="BHelpWebDAV">
+	<message xml:lang="en">WebDAV</message>
+	<message xml:lang="fr">WebDAV</message>
+	<message xml:lang="de">WebDAV</message>
+	<message xml:lang="it">WebDAV</message>
+	<message xml:lang="tr">WebDAV</message>
+	<message xml:lang="es">WebDAV</message>
+	<message xml:lang="pt">WebDAV</message>
+	<message xml:lang="fi">WebDAV</message>
+</label>
 <label define="BHelpPrinting">
 	<message xml:lang="en">Printing</message>
 	<message xml:lang="fr">Imprimer</message>
@@ -2654,6 +2664,14 @@
 	<message xml:lang="pt">Anotações</message>
 	<message xml:lang="fi">Merkinnät</message>
 	<message xml:lang="tr">Not ekleme</message>
+</label>
+<label define="BHelpBookmarks">
+	<message xml:lang="en">&amp;Bookmarks</message>
+	<message xml:lang="fr">Ma&amp;rque-feuilles</message>
+	<message xml:lang="de">&amp;Lesezeichen</message>
+	<message xml:lang="it">F&amp;avorites</message>
+	<message xml:lang="tr">&amp;Birlikte çalışmak</message>
+	<message xml:lang="es">&amp;Favoritos</message>
 </label>
 <label define="BHelpConfigure">
 	<message xml:lang="en">Configuring Amaya</message>

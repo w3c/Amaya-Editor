@@ -42,7 +42,9 @@ static char *Manual[] = {
 "Annotations.html",
 "Configure.html",
 "ShortCuts.html",
-"Access.html"
+"Access.html",
+"bookmarks.html",
+"WebDAV.html"
 };
 
 /* index name... which relates to the precedent table */
@@ -72,6 +74,8 @@ static char *Manual[] = {
 #define CONFIGURE     23
 #define SHORTCUTS     24
 #define ACCESS        25
+#define BOOKMARKS     26
+#define WEBDAV        27
 
 #endif /* AMAYA_HELP_H */
 

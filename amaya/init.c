@@ -7397,6 +7397,13 @@ void HelpPublishing (Document document, View view)
   DisplayHelp (document, PUBLISHING);
 }
 
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+void HelpWebDAV (Document document, View view)
+{
+  DisplayHelp (document, WEBDAV);
+}
+
 
 /*----------------------------------------------------------------------
  -----------------------------------------------------------------------*/
@@ -7427,6 +7434,13 @@ void HelpMakeBook (Document document, View view)
 void HelpAnnotation (Document document, View view)
 {
   DisplayHelp (document, ANNOTATE);
+}
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+void HelpBookmarks (Document document, View view)
+{
+  DisplayHelp (document, BOOKMARKS);
 }
 
 

@@ -211,6 +211,7 @@ ZoomOut
 
 ######### DAV MODULES
 [davbase]
+HelpWebDAV
 LockDocument
 UnlockDocument
 PropDocument
@@ -548,6 +549,7 @@ ConfigAnnot
 HelpAnnotation
 
 [bookmarks]
+HelpBookmarks
 BookmarkFile
 ViewBookmarks
 EditTopics
