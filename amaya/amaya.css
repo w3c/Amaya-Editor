@@ -3,7 +3,7 @@ body {
  font-family: helvetica, arial, sans-serif;
  color: black;
  background-color: #F6F6F6;
-}
+}imp
 h1 {
  font-size: 200%;
  font-weight: bold;
@@ -23,13 +23,16 @@ h3 {
  padding: 4px; margin-bottom: .2em;
  color: #488B9B;
 }
-div p {
- margin-left: 170px;
+
+p {
  margin-bottom: 0;
 }
+div p {
+ margin-left: 170px;
+}
 div {
- margin-top: 2em;
- margin-bottom: 0;
+ margin-top: 0;
+ margin-bottom: 2em;
  margin-right: 0.5em;
 }
 div div {

@@ -2053,6 +2053,11 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
 		val = pBlock->BxW;
 	      if (pNextBox->BxAbstractBox->AbWidth.DimUnit == UnPercent)
 		val = val * pNextBox->BxAbstractBox->AbWidth.DimValue / 100;
+	      else if ((pNextBox->BxType == BoBlock ||
+		       pNextBox->BxType == BoFloatBlock) &&
+		       pNextBox->BxMaxWidth < val)
+		/* use the max between the enclosed and the enclosing widths */
+		val =  pNextBox->BxMaxWidth;
 	      ResizeWidth (pNextBox, pBlock, NULL,
 			   val - pNextBox->BxWidth, 0, 0, 0, frame);
 	      /* recheck if the line could be moved under floating boxes */
