@@ -2510,6 +2510,10 @@ void                DoSaveAs ()
 	{
 	  if (toUndo)
 	    TtaCancelLastRegisteredSequence (doc);
+	  /* add to the history the data of the previous document */
+	  AddDocHistory (doc, DocumentURLs[doc], 
+			 DocumentMeta[doc]->form_data,
+			 DocumentMeta[doc]->method);
 	  /* change the document url */
 	  if (TextFormat || !SaveAsText)
 	    {
