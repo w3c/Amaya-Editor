@@ -476,7 +476,7 @@ char   *HTTP_headers (AHTHeaders *me, AHTHeaderName param)
   
   ----------------------------------------------------------------------
   MKP: this function is now used in davlib.c file for the WebDAV requests 
-       ** static AHTReqContext *AHTReqContext_new (int docid) **
+
   ---------------------------------------------------------------------- */
 AHTReqContext *AHTReqContext_new (int docid)
 {
@@ -992,7 +992,7 @@ static int redirection_handler (HTRequest *request, HTResponse *response,
        HTRequest_deleteCredentialsAll (request);
 
 #ifdef DAV
-       /* remove the old If header */
+       /* remove the old header "If" (WebDAV lock information) */
        DAVRemoveIfHeader (me);
        
        /* search lock information for the new url */
