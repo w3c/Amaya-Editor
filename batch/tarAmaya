@@ -26,7 +26,6 @@ cd ..
 for MACH in $PLATFORMS
 do
    $TAR - \
-   Thot/COPYRIGHT \
    Thot/README.amaya \
    Thot/config/XKeysymDB \
    Thot/config/thot.ini \
@@ -93,6 +92,7 @@ do
    Thot/$MACH/bin/amaya \
    Thot/$MACH/bin/print \
    Thot/batch/MachineType \
+   Thot/amaya/COPYRIGHT* \
    Thot/amaya/AmayaPage.html \
    Thot/amaya/HTML.STR \
    Thot/amaya/HTML.conf \

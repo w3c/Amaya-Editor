@@ -19,7 +19,7 @@ cd $THOTDIR
 
 $TAR - \
 Thot/README.amaya \
-Thot/COPYRIGHT \
+Thot/README \
 Thot/Windows/*.* \
 Thot/config.guess \
 Thot/config.h.in \
@@ -43,6 +43,7 @@ Thot/thotlib/include/Makefile.in \
 Thot/tools/cextract-1.7/Makefile.in \
 Thot/tools/mkdep/Makefile.in \
 Thot/amaya/Makefile.in \
+Thot/amaya/COPYRIGHT* \
 Thot/amaya/Makefile.libwww \
 Thot/amaya/Makefile.math \
 Thot/amaya/Makefile.graph \
@@ -143,6 +144,7 @@ Thot/dicopar/*.ptn \
 Thot/dicopar/alphabet \
 Thot/dicopar/clavier \
 Thot/pluginlib/Makefile.in \
+Thot/pluginlib/COPYRIGHT* \
 Thot/pluginlib/Makefile.plugin \
 Thot/pluginlib/*.c \
 Thot/pluginlib/*.h \
@@ -188,6 +190,7 @@ Thot/libwww/config/ltconfig \
 Thot/libwww/config/makedefs.pl \
 Thot/libwww/config/makexprt.pl \
 Thot/libwww/config/mkinstalldirs \
+Thot/batch/COPYRIGHT* \
 Thot/batch/APP.LAN \
 Thot/batch/PRESEN.LAN \
 Thot/batch/STRUCT.LAN \
@@ -359,11 +362,14 @@ Thot/libpng/zlib/README \
 Thot/libpng/zlib/*.c \
 Thot/libpng/zlib/*.h \
 Thot/libpng/zlib/descrip.mms \
+Thot/pluginlib/COPYRIGHT* \
 Thot/pluginlib/*.h \
 Thot/pluginlib/*.c \
 Thot/pluginlib/f/*.h \
+Thot/tablelib/COPYRIGHT* \
 Thot/tablelib/*.c \
 Thot/tablelib/f/*.h \
+Thot/thotlib/COPYRIGHT* \
 Thot/thotlib/base/actions.c \
 Thot/thotlib/base/alloca.c \
 Thot/thotlib/base/batchmessage.c \

@@ -24,9 +24,9 @@ do
    Thot/README \
    Thot/NEWS.Thot.2.1 \
    Thot/NEWS.Thoteditor.2.1 \
-   Thot/COPYRIGHT \
    Thot/AboutThot \
    Thot/README.thoteditor \
+   Thot/thot/COPYRIGHT* \
    Thot/batch/PRESEN.GRM \
    Thot/batch/STRUCT.GRM \
    Thot/batch/TRANS.GRM \
