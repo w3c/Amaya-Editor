@@ -1239,14 +1239,6 @@
 	<message xml:lang="es">El botón central o derecho fija el color intercalado</message>
 	<message xml:lang="pt">Botão do meio ou da direita fixa a cor do cursor</message>
 </label>
-<label define="TMSG_CPBUTTON_2">
-	<message xml:lang="en">Middle or Right button sets the caret color</message>
-	<message xml:lang="fr">Bouton milieu ou droit change la couleur du curseur</message>
-	<message xml:lang="de">Mittlere oder rechte Maustaste: Auswahl der Cursorfarbe</message>
-	<message xml:lang="it">l tasto centrale o di destra setta il colore del cursore</message>
-	<message xml:lang="es">El botón central o derecho fija el color intercalado</message>
-	<message xml:lang="pt">Botão do meio ou da direita fixa a cor do cursor</message>
-</label>
 <label define="TMSG_CPMOREBUTTON">
 	<message xml:lang="en">More ...</message>
 	<message xml:lang="fr">Autre</message>
