@@ -196,7 +196,7 @@ static void PutChar (wchar_t c, int fnum, char *outBuf, PtrDocument pDoc,
   int                 nb_bytes2write, index;
   int                 len, lineLen;
   Name                tsEOL, tsTranslEOL;
-  
+
   if (translate)
     {
       if (c == START_ENTITY)
@@ -3865,8 +3865,9 @@ static void ExportNsDeclaration (PtrDocument pDoc, PtrElement pNode)
 }
 
 /*----------------------------------------------------------------------
-  ExportXmlText exports in the fileDescriptor file the content the text 
-  of a list of buffers pointed by pBT.
+  ExportXmlText 
+  Exports in the fileDescriptor file the content of a list of buffers
+  pointed by pBT.
   length gives the max length of exported lines or 0.                         
   ----------------------------------------------------------------------*/
 static void ExportXmlText (PtrDocument pDoc, PtrTextBuffer pBT,
@@ -3884,7 +3885,7 @@ static void ExportXmlText (PtrDocument pDoc, PtrTextBuffer pBT,
       while (i < b->BuLength && b->BuContent[i] != EOS)
 	{
 	  c = (wchar_t) b->BuContent[i];
-	  PutChar (c, fnum, NULL, pDoc, TRUE, translate, FALSE);
+	  PutChar (c, fnum, NULL, pDoc, TRUE, translate, TRUE);
 	  /* Next charcater */
 	  i++;
 	}
@@ -3894,8 +3895,8 @@ static void ExportXmlText (PtrDocument pDoc, PtrTextBuffer pBT,
 }
 
 /*----------------------------------------------------------------------
-  ExportXmlElText exports in the fileDescriptor file the content of the
-  element pNode.
+  ExportXmlElText 
+  Exports in the fileDescriptor file the content of the element pNode.
   pBT points the first text buffer.
   length gives the max length of exported lines or 0.                         
   ----------------------------------------------------------------------*/
