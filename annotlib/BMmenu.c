@@ -686,11 +686,14 @@ void BM_BookmarkMenu (Document doc, View view, int ref, BookmarkP bookmark)
    TtaSetDialoguePosition ();
    TtaShowDialogue (BookmarkBase + BookmarkMenu, TRUE);
 #else
+#if 0
+   /* @@@ JK: To be programmed in win32 */
   if (!AnnotHwnd)
     /* only activate the menu if it isn't active already */
      DialogBox (hInstance, MAKEINTRESOURCE (ANNOTMENU), NULL, (DLGPROC) WIN_AnnotDlgProc);
   else
      SetFocus (AnnotHwnd);
+#endif
 #endif /* !_WINGUI */
 }
 
@@ -1044,11 +1047,14 @@ void BM_TopicMenu (Document doc, View view, int ref, BookmarkP bookmark)
    TtaSetDialoguePosition ();
    TtaShowDialogue (TopicBase + TopicMenu, TRUE);
 #else
+#if 0
+   /* @@@ JK: To be programmed in win32 */
   if (!AnnotHwnd)
     /* only activate the menu if it isn't active already */
      DialogBox (hInstance, MAKEINTRESOURCE (ANNOTMENU), NULL, (DLGPROC) WIN_AnnotDlgProc);
   else
      SetFocus (AnnotHwnd);
+#endif
 #endif /* !_WINGUI */
 }
 

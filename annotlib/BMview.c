@@ -1286,7 +1286,7 @@ ThotBool BM_Move (Document doc, Element target)
   if (dest_ref != PasteBuffer.ref)
     {
       /* add the new bookmark to the model */
-      result = false;
+      result = FALSE;
     }
   else
     {
@@ -1487,7 +1487,7 @@ ThotBool BM_Copy (NotifyElement *event)
   Returns FALSE all the time because we want the thotlib
   to do its usual work.
   ------------------------------------------------------------*/
-ThotBool BM_IgnoreEvent (NotifyOnTarget *)
+ThotBool BM_IgnoreEvent (NotifyOnTarget *target)
 {
   return TRUE;
 }

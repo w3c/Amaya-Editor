@@ -786,7 +786,7 @@ static char* Model_getNodeAsStringControl (librdf_node *node, ThotBool isLiteral
       return NULL;
 
   if (type == LIBRDF_NODE_TYPE_LITERAL)
-    object_str = strdup ((char *) librdf_node_get_literal_value (node));
+    object_str = TtaStrdup ((char *) librdf_node_get_literal_value (node));
   else
     {
       uri = librdf_node_get_uri (node);
@@ -809,9 +809,9 @@ static char* Model_getNodeAsString (librdf_node *node)
   type = librdf_node_get_type (node);
 
   if (type == LIBRDF_NODE_TYPE_LITERAL)
-    object_str = strdup ((char *) librdf_node_get_literal_value (node));
+    object_str = TtaStrdup ((char *) librdf_node_get_literal_value (node));
   else if (type == LIBRDF_NODE_TYPE_BLANK)
-    object_str = strdup ((char *) librdf_node_get_blank_identifier (node));
+    object_str = TtaStrdup ((char *) librdf_node_get_blank_identifier (node));
   else
     {
       uri = librdf_node_get_uri (node);
@@ -833,7 +833,7 @@ static char* Model_getBlankNodeAsString (librdf_node *node)
   type = librdf_node_get_type (node);
 
   if (type == LIBRDF_NODE_TYPE_BLANK)
-    object_str = strdup ((char *) librdf_node_get_blank_identifier (node));
+    object_str = TtaStrdup ((char *) librdf_node_get_blank_identifier (node));
   else
     object_str = NULL;
 
@@ -865,7 +865,7 @@ static char* Model_getObjectAsString (librdf_world *world, librdf_model *model,
       type = librdf_node_get_type (node);
       /* why is this uri being parsed as a literal? */
       if (type == LIBRDF_NODE_TYPE_LITERAL)
-	object_str = strdup ((char *) librdf_node_get_literal_value (node));
+	object_str = TtaStrdup ((char *) librdf_node_get_literal_value (node));
       else
 	{
 	  uri = librdf_node_get_uri (node);
@@ -1414,8 +1414,6 @@ ThotBool BM_initializeCollection (int ref, BookmarkP new_item)
   librdf_node *object;
   librdf_statement *partial_statement;
 
-  librdf_node *rest = rest;
-
   if (new_item->bm_type != BME_TOPIC)  
     return FALSE;
 
@@ -1500,8 +1498,6 @@ ThotBool BM_addItemToCollection (int ref, char *topic_url,
   librdf_node *predicate_r;
   librdf_node *root;
   librdf_node *current;
-
-  librdf_node *rest = rest;
 
   char *tmp_url;
 

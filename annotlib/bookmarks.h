@@ -98,3 +98,10 @@ typedef struct _dynBookmark
 				    called */
 } dynBookmark, *dynBookmarkP;
 
+
+/* @@ JK: a quick hack to be able to compile under Windows */
+#ifdef _WINGUI
+#ifndef vprintf
+#  define vprintf _vprintf
+#endif
+#endif
