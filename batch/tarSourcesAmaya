@@ -115,7 +115,6 @@ config/en-amayamsg \
 config/fr-amayadialogue \
 config/fr-amayamsg \
 config/thot.ini \
-config/java.properties \
 pluginlib/Makefile.in \
 pluginlib/Makefile.plugin \
 pluginlib/*.c \
