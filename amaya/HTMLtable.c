@@ -931,9 +931,14 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
   if (table == NULL)
     return;
   /* get some memory to store the list of colheads */
-  colElement = (Element*)TtaGetMemory (sizeof (Element) * MAX_COLS);
-  delayedColExt = (Element*)TtaGetMemory (sizeof (Element) * MAX_COLS);
-  colVSpan = (int *)TtaGetMemory (sizeof (int) * MAX_COLS);
+  i = sizeof (Element) * MAX_COLS;
+  colElement = (Element*)TtaGetMemory (i);
+  memset (colElement, 0, i);
+  delayedColExt = (Element*)TtaGetMemory (i);
+  memset (delayedColExt, 0, i);
+  i = sizeof (int) * MAX_COLS;
+  colVSpan = (int *)TtaGetMemory (i);
+  memset (colVSpan, 0, i);
   elType = TtaGetElementType (table);
   tableSS = elType.ElSSchema;
   attrType.AttrSSchema = tableSS;
@@ -1122,7 +1127,8 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
 		  else if (i < span)
 		    {
 		      /* The colspan cannot be applied now */
-		      delayedColExt[cDelayed++] = cell;
+		      if (cDelayed < MAX_COLS)
+		        delayedColExt[cDelayed++] = cell;
 		      span = 1;
 		    }
 		  
