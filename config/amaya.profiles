@@ -192,7 +192,6 @@ HelpAtW3C
 +text-module
 ReplyToAnnotation
 PostAnnotation
-TtcCloseView
 &InsertBefore
 &InsertAfter
 
@@ -201,7 +200,6 @@ TtcCloseView
 EditTopics
 AddSeparator
 MoveItem
-TtcCloseView
 
 ################# Ruby
 {Ruby}
@@ -289,8 +287,12 @@ TtcSearchText
 
 ########### EDITING
 [edit]
++basic-style
 +clientside-module
++config
++css-style
 +davbase
++edit-bookmarks
 +hypertext-module
 +image-module
 +list-module
@@ -582,12 +584,9 @@ HelpStyleSheets
 &RemoveCSS
 
 [basic-css-style]
++basic-style
 +css-browsing
 &ApplyClass
-&ChangeBackgroundImage
-&TtcChangeCharacters
-&TtcChangeColors
-&TtcChangeFormat
 &LinkCSS
 &RemoveCSS
 
@@ -606,7 +605,6 @@ HelpShortCuts
 
 [templates]
 ConfigTemplates
-HelpConfigure
 &NewTemplate
 
 [spell]
@@ -639,5 +637,9 @@ HelpBookmarks
 BookmarkFile
 ViewBookmarks
 
+[edit-bookmarks]
+EditTopics
+AddSeparator
+MoveItem
 
 

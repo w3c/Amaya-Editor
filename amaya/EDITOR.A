@@ -45,9 +45,9 @@ MENUS
 	view:1 File button:BReload -> Reload;
 	view:1 File button:BBack -> GotoPreviousHTML;
 	view:1 File button:BForward -> GotoNextHTML;
+	view:1 File Separator;
 	view:1 File button:BSave -> SaveDocument;
 	view:1 File button:BSaveAs -> SaveDocumentAs;
-	view:1 File Separator;
 	view:1 File button:BSynchro -> Synchronize;
 	view:1 File.Doctype1 button:BRemoveDoctype -> RemoveDoctype;
 	view:1 File.Doctype1 button:BAddDoctype -> AddDoctype;
