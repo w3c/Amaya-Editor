@@ -92,11 +92,6 @@ typedef struct _AHTReqContext
      SOCKET             read_sock;              /* read socket associated with the request */
      SOCKET             write_sock;             /* write socket associated with the request */
      SOCKET             except_sock;            /* except socket associated with the request */
-#ifdef _WINDOWS_ASYNC___
-     int                read_fd_state;               /* gives the current state of the sockets */        
-     int                write_fd_state;               /* gives the current state of the sockets */        
-     int                except_fd_state;               /* gives the current state of the sockets */        
-#endif /* _WINDOWS_ASYNC___ */ 
     /*** End of experimental stuff ****/
 
      char               *outputfile;	/* file to receive incoming data         */

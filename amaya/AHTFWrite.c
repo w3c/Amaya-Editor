@@ -78,6 +78,11 @@ char                c;
    int                 status;
    AHTReqContext      *reqcont;
 
+#ifdef JOSE
+   if (me->fp == NULL)
+       fprintf (stderr, "ERROR:fp is NULL in AHTFWriter_new\n");
+#endif
+
    reqcont = (AHTReqContext *) HTRequest_context (me->request);
    status = (fputc (c, me->fp) == EOF) ? HT_ERROR : HT_OK;
 
@@ -101,6 +106,11 @@ const char         *s;
 {
    int                 status;
    AHTReqContext      *reqcont;
+
+#ifdef JOSE
+   if (me->fp == NULL)
+       fprintf (stderr, "ERROR:fp is NULL in AHTFWriter_new\n");
+#endif
 
    reqcont = (AHTReqContext *) HTRequest_context (me->request);
    if (*s)
@@ -132,7 +142,13 @@ int                 l;
    int                 status;
    AHTReqContext      *reqcont;
 
+#ifdef JOSE
+   if (me->fp == NULL)
+       fprintf (stderr, "ERROR:fp is NULL in AHTFWriter_new\n");
+#endif
+
    reqcont = (AHTReqContext *) HTRequest_context (me->request);
+
    status = (fwrite (s, 1, l, me->fp) != l) ? HT_ERROR : HT_OK;
    if (l > 1 && status == HT_OK)
       (void) AHTFWriter_flush (me);
@@ -153,6 +169,11 @@ static int         AHTFWriter_flush (me)
 HTStream           *me
 #endif				/* __STDC__ */
 {
+#ifdef JOSE
+   if (me->fp == NULL)
+       fprintf (stderr, "ERROR:fp is NULL in AHTFWriter_new\n");
+#endif
+
    return (fflush (me->fp) == EOF) ? HT_ERROR : HT_OK;
 }
 
@@ -199,6 +220,11 @@ HTList             *e;
 
 #endif /* __STDC__ */
 {
+#ifdef JOSE
+   if (me->fp == NULL)
+       fprintf (stderr, "ERROR:fp is NULL in AHTFWriter_abort\n");
+#endif
+
    if (STREAM_TRACE)
       HTTrace ("FileWriter.. ABORTING...\n");
    if (me)
@@ -252,6 +278,10 @@ BOOL                leave_open;
    if ((me = (HTStream *) HT_CALLOC (1, sizeof (HTStream))) == NULL)
       HT_OUTOFMEM ("HTFWriter_new");
    me->isa = &AHTFWriter;
+#ifdef JOSE
+   if (fp == NULL)
+       fprintf (stderr, "ERROR:fp is NULL in AHTFWriter_new\n");
+#endif
    me->fp = fp;
    me->leave_open = leave_open;
    me->request = request;
