@@ -7823,7 +7823,6 @@ void CheckAmayaClosed ()
       SVGLIB_FreeDocumentResource ();
 #endif /* _SVG */
       /* remove the AutoSave file */
-      RemoveSaveList (); 
       TtaQuit ();
     }
 }
@@ -7865,8 +7864,6 @@ void AmayaClose (Document document, View view)
 #ifdef _SVG
    SVGLIB_FreeDocumentResource ();
 #endif /* _SVG */
-   /* remove the AutoSave file */
-   RemoveSaveList (); 
    TtaQuit ();
 }
 
@@ -8007,22 +8004,6 @@ void InitStringForCombobox ()
   TtaFreeMemory (urlstring);
 }
 
-/*----------------------------------------------------------------------
-  RemoveSaveList remove the AutoSave list
-  ----------------------------------------------------------------------*/
-void RemoveSaveList ()
-{
-  char     *urlstring, *app_home;
-
-  /* open the file AutoSave.dat into APP_HOME directory */
-  urlstring = (char *) TtaGetMemory (MAX_LENGTH);
-  app_home = TtaGetEnvString ("APP_HOME");
-  sprintf (urlstring, "%s%cAutoSave.dat", app_home, DIR_SEP);
-  if (TtaFileExist (urlstring))
-    TtaFileUnlink (urlstring);
-  if (urlstring)
-    TtaFreeMemory (urlstring);
-}
 
 /*----------------------------------------------------------------------
   RemoveDocFromSaveList remove the file from the AutoSave list
@@ -8039,20 +8020,19 @@ void RemoveDocFromSaveList (char *save_name, char *initial_url, int doctype)
   if (initial_url == NULL || initial_url[0] == EOS)
     return;
 
-  name = (char *)TtaConvertMbsToByte ((unsigned char *)save_name, TtaGetDefaultCharset ());
-  url = (char *)TtaConvertMbsToByte ((unsigned char *)initial_url, TtaGetDefaultCharset ());
-
+  name = (char *)TtaConvertMbsToByte ((unsigned char *)save_name,
+				      TtaGetDefaultCharset ());
+  url = (char *)TtaConvertMbsToByte ((unsigned char *)initial_url,
+				     TtaGetDefaultCharset ());
   /* keep the previous list */
   ptr = AutoSave_list;
+
   /* create a new list */
   AutoSave_list = (char *)TtaGetMemory (AutoSave_list_len + 1);  
-
   len = strlen (url) + strlen (name) + 1;
   len += 17; /*doctype + quotation marks + spaces */
   list_item  = (char *)TtaGetMemory (len);
-
   sprintf (list_item, "\"%s\" \"%s\" %d", name, url, doctype);
-
   /* open the file AutoSave.dat into APP_HOME directory */
   app_home = TtaGetEnvString ("APP_HOME");
   urlstring = (char *) TtaGetMemory (MAX_LENGTH);
@@ -8061,15 +8041,15 @@ void RemoveDocFromSaveList (char *save_name, char *initial_url, int doctype)
   if (TtaFileExist (urlstring))
     {
       file = TtaWriteOpen (urlstring);
-      if (file && (AutoSave_list != NULL))
+      if (file && AutoSave_list)
 	{
 	  i = 0;
 	  j = 0;
-	  nb = 1;
+	  nb = 0;
 	  /* remove the line (write other urls) */
 	  if (ptr && *ptr != EOS)
 	    {
-	      while (ptr[i] != EOS && nb < MAX_AutoSave_list)
+	      while (ptr[i] != EOS && nb <= MAX_AutoSave_list)
 		{
 		  end = strlen (&ptr[i]) + 1;
 		  ptr_end = strrchr (&ptr[i], '\"');
@@ -8098,7 +8078,7 @@ void RemoveDocFromSaveList (char *save_name, char *initial_url, int doctype)
 	    }
 	  AutoSave_list[j] = EOS;
 	  TtaWriteClose (file);
-	  /* remove the empty file */
+	  /* remove the backup file */
 	  if (j == 0 && TtaFileExist (urlstring))
 	    {
 	      TtaFileUnlink (urlstring);

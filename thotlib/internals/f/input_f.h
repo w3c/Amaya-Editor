@@ -20,6 +20,8 @@ extern void TtaAddAccessKey ( Document doc,
 extern void TtaRemoveDocAccessKeys ( Document doc );
 extern void TtaRemoveAccessKey ( Document doc,
                                  unsigned int key );
+extern void TtaListShortcuts ( Document doc,
+                               FILE *fileDescriptor );
 extern void InitTranslations ( char *appliname );
 
 #else /* __STDC__ */
@@ -38,6 +40,8 @@ extern void TtaAddAccessKey (/* Document doc,
 extern void TtaRemoveDocAccessKeys (/* Document doc */);
 extern void TtaRemoveAccessKey (/* Document doc,
                                    unsigned int key */);
+extern void TtaListShortcuts (/* Document doc,
+                                 FILE *fileDescriptor */);
 extern void InitTranslations (/* char *appliname */);
 
 #endif /* __STDC__ */
