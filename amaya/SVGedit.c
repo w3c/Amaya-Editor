@@ -63,13 +63,14 @@ static ThotBool InCreation = FALSE;
 
 #include "EDITimage_f.h"
 #include "fetchXMLname_f.h"
-#include "SVGbuilder_f.h"
 #include "html2thot_f.h"
 #include "HTMLactions_f.h"
 #include "HTMLedit_f.h"
 #include "HTMLpresentation_f.h"
 #include "init_f.h"
+#include "SVGbuilder_f.h"
 #include "XLinkedit_f.h"
+#include "Xmlbuilder_f.h"
 
 #ifdef _GTK
   /* used for the close palette callback*/
@@ -1026,7 +1027,7 @@ void CheckSVGRoot (Document doc, Element el)
  -----------------------------------------------------------------------*/
 void GraphElemPasted (NotifyElement *event)
 {
-  ElementType    elType, parentType, siblingType;
+  ElementType    elType, siblingType;
   SSchema	 SvgSchema;
   AttributeType  attrType;
   Attribute      attr;
@@ -1091,6 +1092,31 @@ void GraphElemPasted (NotifyElement *event)
   /* Check attribute NAME or ID in order to make sure that its value */
   /* is unique in the document */
   MakeUniqueName (event->element, event->document);
+}
+
+/*----------------------------------------------------------------------
+   SVGTextPasted
+   Some text has been pasted in a text leaf.
+  ----------------------------------------------------------------------*/
+void SVGTextPasted (NotifyElement *event)
+{
+  Element      parent;
+  ElementType  elType;
+
+  parent = TtaGetParent (event->element);
+  if (parent)
+    {
+      elType = TtaGetElementType (parent);
+      if (elType.ElTypeNum == SVG_EL_title &&
+	  !strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG"))
+	/* the parent of the text leaf is a title element. If it's the main
+	   title of the SVG document, update the window title */
+	UpdateTitle (parent, event->document);
+      else
+	/* the parent of the text leaf is not a title. Check if it's a PI
+           referring to a style sheet */
+	XmlStyleSheetPasted (event);
+    }
 }
 
 /*----------------------------------------------------------------------

@@ -55,7 +55,7 @@ ELEMENTS
 	ElemPaste.Pre ->        PastePicture;
    TEXT_UNIT:
 	BEGIN
-	ElemPaste.Post -> XmlStyleSheetPasted;
+	ElemPaste.Post -> SVGTextPasted;
 	ElemDelete.Pre -> XmlStyleSheetDeleted;
 	END;
 
