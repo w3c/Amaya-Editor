@@ -16,7 +16,8 @@ extern void InvokeGetObjectWWW_callback ( int docid,
                                           char *urlName,
                                           char *outputfile,
                                           TTcbf *terminate_cbf,
-                                          void *context_tcbf );
+                                          void *context_tcbf,
+					  int status);
 extern int GetObjectWWW ( int docid,
                           char* urlName,
                           char* postString,
@@ -60,7 +61,8 @@ extern void InvokeGetObjectWWW_callback (/* int docid,
                                             char *urlName,
                                             char *outputfile,
                                             TTcbf *terminate_cbf,
-                                            void *context_tcbf */);
+                                            void *context_tcbf,
+					    int status */);
 extern int GetObjectWWW (/* int docid,
                             char* urlName,
                             char* postString,
