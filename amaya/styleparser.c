@@ -1658,6 +1658,23 @@ static char *ParseCSSFontSize (Element element, PSchema tsch,
 		 pval.typed_data.value *= 100;
 	       pval.typed_data.unit = STYLE_UNIT_PERCENT;
 	     }
+	   else if (pval.typed_data.unit == STYLE_UNIT_XHEIGHT)
+	     {
+	       /* a font size expressed in ex is converted into a percentage.
+		  For example, "3ex" is converted into "180%", supposing
+		  that 1ex is approximately 0.6 times the height of the
+		  current font */
+	       if (real)
+		 {
+		   pval.typed_data.value *= 6;
+		   pval.typed_data.value /= 100;
+		   pval.typed_data.real = FALSE;
+		   real = FALSE;
+		 }
+	       else
+		 pval.typed_data.value *= 60;
+	       pval.typed_data.unit = STYLE_UNIT_PERCENT;
+	     }
 	 }
 
      }
