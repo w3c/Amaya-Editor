@@ -58,6 +58,34 @@ extern void ShowMapAreas ( Document document,
                            View view );
 extern void HelpAmaya ( Document document,
                         View view );
+extern void HelpBrowsing ( Document document,
+                           View view );
+extern void HelpSelecting ( Document document,
+                            View view );
+extern void HelpSearching ( Document document,
+                            View view );
+extern void HelpViews ( Document document,
+                        View view );
+extern void HelpCreating ( Document document,
+                           View view );
+extern void HelpLinks ( Document document,
+                        View view );
+extern void HelpChanging ( Document document,
+                           View view );
+extern void HelpTables ( Document document,
+                         View view );
+extern void HelpImageMaps ( Document document,
+                            View view );
+extern void HelpStyleSheets ( Document document,
+                              View view );
+extern void HelpAttributes ( Document document,
+                             View view );
+extern void HelpPublishing ( Document document,
+                             View view );
+extern void HelpPrinting ( Document document,
+                           View view );
+extern void HelpMakeBook ( Document document,
+                           View view );
 extern void AmayaClose ( Document document,
                          View view );
 
@@ -115,6 +143,34 @@ extern void ShowMapAreas (/* Document document,
                              View view */);
 extern void HelpAmaya (/* Document document,
                           View view */);
+extern void HelpBrowsing (/* Document document,
+                             View view */);
+extern void HelpSelecting (/* Document document,
+                              View view */);
+extern void HelpSearching (/* Document document,
+                              View view */);
+extern void HelpViews (/* Document document,
+                          View view */);
+extern void HelpCreating (/* Document document,
+                             View view */);
+extern void HelpLinks (/* Document document,
+                          View view */);
+extern void HelpChanging (/* Document document,
+                             View view */);
+extern void HelpTables (/* Document document,
+                           View view */);
+extern void HelpImageMaps (/* Document document,
+                              View view */);
+extern void HelpStyleSheets (/* Document document,
+                                View view */);
+extern void HelpAttributes (/* Document document,
+                               View view */);
+extern void HelpPublishing (/* Document document,
+                               View view */);
+extern void HelpPrinting (/* Document document,
+                             View view */);
+extern void HelpMakeBook (/* Document document,
+                             View view */);
 extern void AmayaClose (/* Document document,
                            View view */);
 

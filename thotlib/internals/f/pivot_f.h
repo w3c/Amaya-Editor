@@ -7,7 +7,8 @@
 #ifdef __STDC__
 
 extern Document TtaAllocateDocument ( char *documentName,
-                                      char *documentIdentifier );
+                                      char *documentIdentifier,
+                                      char *documentSchemasPath );
 extern void TtaWritePivotHeader ( BinFile pivotFile,
                                   Document document );
 extern void TtaReadPivotHeader ( BinFile pivotFile,
@@ -64,7 +65,8 @@ extern void TtaSetLabelMax ( Document document,
 #else /* __STDC__ */
 
 extern Document TtaAllocateDocument (/* char *documentName,
-                                        char *documentIdentifier */);
+                                        char *documentIdentifier,
+                                        char *documentSchemasPath */);
 extern void TtaWritePivotHeader (/* BinFile pivotFile,
                                     Document document */);
 extern void TtaReadPivotHeader (/* BinFile pivotFile,

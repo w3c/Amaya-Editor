@@ -83,7 +83,7 @@ extern PtrAbstractBox AbsBoxesCreate ( PtrElement pEl,
                                        DocViewNumber viewNb,
                                        boolean forward,
                                        boolean descent,
-                                       boolean * complete );
+                                       boolean *complete );
 
 #else /* __STDC__ */
 
@@ -164,7 +164,7 @@ extern PtrAbstractBox AbsBoxesCreate (/* PtrElement pEl,
                                          DocViewNumber viewNb,
                                          boolean forward,
                                          boolean descent,
-                                         boolean * complete */);
+                                         boolean *complete */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

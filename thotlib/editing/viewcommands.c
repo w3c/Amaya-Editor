@@ -988,6 +988,57 @@ Name                newPSchemaName;
    strncpy (SchemaPath, schemaPath, MAX_PATH);
 }
 
+/***------------------------------------------------------------
+   TtaChangeNaturePresentSchema
+
+   Change the presentation schema of a document nature.
+
+   Parameters:
+   document: the document in which presentation must be changed.
+   natureSSchema: the nature
+   newPresentation: the name of the new presentation
+
+   Remark:
+   This function is only accessible by applications linked
+   with the libThotEditor library.
+
+------------------------------------------------------------***/
+
+#ifdef __STDC__
+void         TtaChangeNaturePresentSchema (Document document,
+                                           SSchema natureSSchema,
+                                           char *newPresentation)
+#else  /* __STDC__ */
+void         TtaChangeNaturePresentSchema (document,
+                                           natureSSchema,
+                                           newPresentation)
+Document            document;
+SSchema             natureSSchema;
+char               *newPresentation;
+ 
+#endif /* __STDC__ */
+ 
+{
+  PtrDocument         pDoc;
+
+  UserErrorCode = 0;
+  /* verifies the parameter document */
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else if (natureSSchema == NULL || newPresentation[0] == '\0')
+    TtaError (ERR_invalid_parameter);
+  else
+    /* parameter document is correct */
+    {
+      pDoc = LoadedDocument[document - 1];
+      ChangeNaturePSchema (pDoc,
+                           (PtrSSchema) natureSSchema,
+                           newPresentation);
+    }
+
+}
 
 /*----------------------------------------------------------------------
     ChangePresMenuInput traite les retours du menu des schemas de     

@@ -13,7 +13,7 @@ extern boolean OpenDocument ( Name docName,
                               boolean skeleton,
                               PtrSSchema pSS,
                               boolean withAppEvent,
-			      boolean removeExclusions );
+                              boolean removeExclusions );
 extern void DeleteAllTrees ( PtrDocument pDoc );
 extern PtrTextBuffer ReadComment ( BinFile file,
                                    boolean store,
@@ -67,7 +67,7 @@ extern void LoadDocumentPiv ( BinFile file,
                               boolean skeleton,
                               PtrSSchema pLoadedSS,
                               boolean withEvent,
-			      boolean removeExclusions );
+                              boolean removeExclusions );
 
 #else /* __STDC__ */
 
@@ -78,7 +78,7 @@ extern boolean OpenDocument (/* Name docName,
                                 boolean skeleton,
                                 PtrSSchema pSS,
                                 boolean withAppEvent,
-				boolean removeExclusions */);
+                                boolean removeExclusions */);
 extern void DeleteAllTrees (/* PtrDocument pDoc */);
 extern PtrTextBuffer ReadComment (/* BinFile file,
                                      boolean store,
@@ -132,7 +132,7 @@ extern void LoadDocumentPiv (/* BinFile file,
                                 boolean skeleton,
                                 PtrSSchema pLoadedSS,
                                 boolean withEvent,
-				boolean removeExclusions */);
+                                boolean removeExclusions */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

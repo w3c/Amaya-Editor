@@ -19,6 +19,9 @@ extern void ImportDocument ( Name SSchemaName,
                              PathBuffer directory,
                              Name fileName );
 extern void CloseAllViewsDoc ( PtrDocument pDoc );
+extern void TtaChangeNaturePresentSchema ( Document document,
+                                           SSchema natureSSchema,
+                                           char *newPresentation );
 extern void TtcChangePresentation ( Document document,
                                     View view );
 
@@ -37,6 +40,9 @@ extern void ImportDocument (/* Name SSchemaName,
                                PathBuffer directory,
                                Name fileName */);
 extern void CloseAllViewsDoc (/* PtrDocument pDoc */);
+extern void TtaChangeNaturePresentSchema (/* Document document,
+                                             SSchema natureSSchema,
+                                             char *newPresentation */);
 extern void TtcChangePresentation (/* Document document,
                                       View view */);
 

@@ -12,14 +12,14 @@ extern boolean AHTReqContext_delete ( AHTReqContext * me );
 extern void QueryInit ( void );
 extern void QueryClose ( void );
 extern int GetObjectWWW ( int docid,
-                          char *urlName,
-                          char *postString,
-                          char *outputfile,
+                          char* urlName,
+                          char* postString,
+                          char* outputfile,
                           int mode,
-                          TIcbf * incremental_cbf,
-                          void *context_icbf,
-                          TTcbf * terminate_cbf,
-                          void *context_tcbf,
+                          TIcbf* incremental_cbf,
+                          void* context_icbf,
+                          TTcbf* terminate_cbf,
+                          void* context_tcbf,
                           boolean error_html );
 extern int PutObjectWWW ( int docid,
                           char *fileName,
@@ -48,14 +48,14 @@ extern boolean AHTReqContext_delete (/* AHTReqContext * me */);
 extern void QueryInit (/* void */);
 extern void QueryClose (/* void */);
 extern int GetObjectWWW (/* int docid,
-                            char *urlName,
-                            char *postString,
-                            char *outputfile,
+                            char* urlName,
+                            char* postString,
+                            char* outputfile,
                             int mode,
-                            TIcbf * incremental_cbf,
-                            void *context_icbf,
-                            TTcbf * terminate_cbf,
-                            void *context_tcbf,
+                            TIcbf* incremental_cbf,
+                            void* context_icbf,
+                            TTcbf* terminate_cbf,
+                            void* context_tcbf,
                             boolean error_html */);
 extern int PutObjectWWW (/* int docid,
                             char *fileName,

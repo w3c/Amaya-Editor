@@ -18,6 +18,15 @@ extern boolean GetCurrentSelection ( PtrDocument * pDoc,
                                      PtrElement * lastEl,
                                      int *firstChar,
                                      int *lastChar );
+extern void DefineClipping ( int frame,
+                             int orgx,
+                             int orgy,
+                             int *xd,
+                             int *yd,
+                             int *xf,
+                             int *yf,
+                             int raz );
+extern void RemoveClipping ( int frame );
 extern void GetSizesFrame ( int frame,
                             int *width,
                             int *height );
@@ -53,6 +62,15 @@ extern boolean GetCurrentSelection (/* PtrDocument * pDoc,
                                        PtrElement * lastEl,
                                        int *firstChar,
                                        int *lastChar */);
+extern void DefineClipping (/* int frame,
+                               int orgx,
+                               int orgy,
+                               int *xd,
+                               int *yd,
+                               int *xf,
+                               int *yf,
+                               int raz */);
+extern void RemoveClipping (/* int frame */);
 extern void GetSizesFrame (/* int frame,
                               int *width,
                               int *height */);

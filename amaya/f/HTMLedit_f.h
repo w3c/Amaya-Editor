@@ -15,14 +15,15 @@ extern Attribute GetNameAttr ( Document doc,
                                Element selectedElement );
 extern void CreateTargetAnchor ( Document doc,
                                  Element el );
-extern void MakeUniqueName (Element el,
-			    Document doc);
+extern void MakeUniqueName ( Element el,
+                             Document doc );
 extern void ElementCreated ( NotifyElement * event );
 extern void ElementPasted ( NotifyElement * event );
 extern void CreateLink ( Document doc,
                          View view );
 extern void CreateTarget ( Document doc,
                            View view );
+extern void UpdateAttrID ( NotifyAttribute * event );
 extern void CoordsModified ( NotifyAttribute * event );
 extern void GraphicsModified ( NotifyAttribute * event );
 extern void AttrWidthCreated ( NotifyAttribute * event );
@@ -102,14 +103,15 @@ extern Attribute GetNameAttr (/* Document doc,
                                  Element selectedElement */);
 extern void CreateTargetAnchor (/* Document doc,
                                    Element el */);
-extern void MakeUniqueName (/*Element el,
-			      Document doc*/);
+extern void MakeUniqueName (/* Element el,
+                               Document doc */);
 extern void ElementCreated (/* NotifyElement * event */);
 extern void ElementPasted (/* NotifyElement * event */);
 extern void CreateLink (/* Document doc,
                            View view */);
 extern void CreateTarget (/* Document doc,
                              View view */);
+extern void UpdateAttrID (/* NotifyAttribute * event */);
 extern void CoordsModified (/* NotifyAttribute * event */);
 extern void GraphicsModified (/* NotifyAttribute * event */);
 extern void AttrWidthCreated (/* NotifyAttribute * event */);

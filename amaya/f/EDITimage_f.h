@@ -16,7 +16,7 @@ extern void ChangeBackgroundImage ( Document document,
                                     View view );
 extern void ComputeSRCattribute ( Element el,
                                   Document doc,
-                                  Document originDocument,
+                                  Document sourceDocument,
                                   Attribute attr,
                                   char *text );
 extern void UpdateSRCattribute ( NotifyElement * event );
@@ -44,7 +44,7 @@ extern void ChangeBackgroundImage (/* Document document,
                                       View view */);
 extern void ComputeSRCattribute (/* Element el,
                                     Document doc,
-                                    Document originDocument,
+                                    Document sourceDocument,
                                     Attribute attr,
                                     char *text */);
 extern void UpdateSRCattribute (/* NotifyElement * event */);

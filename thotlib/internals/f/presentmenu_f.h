@@ -6,6 +6,8 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void TtcStandardGeometry ( Document document,
+                                  View view );
 extern void TtcStandardPresentation ( Document document,
                                       View view );
 extern void CallbackStdPresMenu ( int ref,
@@ -22,6 +24,8 @@ extern void TtcChangeFormat ( Document document,
 
 #else /* __STDC__ */
 
+extern void TtcStandardGeometry (/* Document document,
+                                    View view */);
 extern void TtcStandardPresentation (/* Document document,
                                         View view */);
 extern void CallbackStdPresMenu (/* int ref,
