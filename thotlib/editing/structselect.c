@@ -443,6 +443,16 @@ int                *lastChar;
 		*lastChar = LastSelectedChar + 1;
 	  }
      }
+   else if (DocSelectedAttr)
+     {
+	/* there is a current selection */
+	ret = TRUE;
+	*pDoc = DocSelectedAttr;
+	*firstEl = AbsBoxSelectedAttr->AbElement;
+	*lastEl = *firstEl;
+	*firstChar = 0;
+	*lastChar = 0;
+     }
    else
       /* no current selection */
       ret = FALSE;
