@@ -780,35 +780,36 @@ static void XmlGetFallbackCharacter (wchar_t wcharRead, char *entityName,
 	   else
 	     TtaInsertSibling (elLeaf, lastChild, FALSE, XMLcontext.doc);
 	 }
-      /* Put the fallback character into the new text leaf */
+       /* Put the fallback character into the new text leaf */
        TtaSetTextContent (elLeaf, fallback, lang, XMLcontext.doc);
-       /* Associate an attribute EntityName with the new text leaf */
-       attrType.AttrSSchema = elType.ElSSchema;
-       ptr = TtaGetSSchemaName (elType.ElSSchema);
-       if (strcmp (ptr, "MathML") == 0)
-	 attrType.AttrTypeNum = MathML_ATTR_EntityName;
-       else if (strcmp (ptr, "HTML") == 0)
-	 attrType.AttrTypeNum = HTML_ATTR_EntityName;
-       else
-	 attrType.AttrTypeNum = HTML_ATTR_EntityName;
-       attr = TtaNewAttribute (attrType);
-       TtaAttachAttribute (elLeaf, attr, XMLcontext.doc);
-       if (entityName)
-	 /* store the given entity name */
-	 TtaSetAttributeText (attr, entityName, elLeaf, XMLcontext.doc);
-       else
-	 {
-	   /* it's a numerical entity */
-	   len = sprintf (buffer, "%d", (int) wcharRead);
-	   i = 0;
-	   bufName[i++] = START_ENTITY;
-	   bufName[i++] = '#';
-	   for (j = 0; j < len; j++)
-	     bufName[i++] = buffer[j];
-	   bufName[i++] = ';';
-	   bufName[i] = EOS;
-	   TtaSetAttributeText (attr, bufName, elLeaf, XMLcontext.doc);
-	 }
+     }
+   
+   /* Associate an attribute EntityName with the new leaf */
+   attrType.AttrSSchema = elType.ElSSchema;
+   ptr = TtaGetSSchemaName (elType.ElSSchema);
+   if (strcmp (ptr, "MathML") == 0)
+     attrType.AttrTypeNum = MathML_ATTR_EntityName;
+   else if (strcmp (ptr, "HTML") == 0)
+     attrType.AttrTypeNum = HTML_ATTR_EntityName;
+   else
+     attrType.AttrTypeNum = HTML_ATTR_EntityName;
+   attr = TtaNewAttribute (attrType);
+   TtaAttachAttribute (elLeaf, attr, XMLcontext.doc);
+   if (entityName)
+     /* store the given entity name */
+     TtaSetAttributeText (attr, entityName, elLeaf, XMLcontext.doc);
+   else
+     {
+       /* it's a numerical entity */
+       len = sprintf (buffer, "%d", (int) wcharRead);
+       i = 0;
+       bufName[i++] = START_ENTITY;
+       bufName[i++] = '#';
+       for (j = 0; j < len; j++)
+	 bufName[i++] = buffer[j];
+       bufName[i++] = ';';
+       bufName[i] = EOS;
+       TtaSetAttributeText (attr, bufName, elLeaf, XMLcontext.doc);
      }
 }
 
