@@ -1258,6 +1258,11 @@ void                QueryInit ()
 #ifdef CATCH_SIG
    signal (SIGPIPE, SIG_IGN);
 #endif
+
+#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)	&& defined (_WINDOWS)
+  /* forces libwww to do sync request if true and if in MakeBook mode */
+  WinMakeBookFlag = FALSE;
+#endif /* _WINDOWS */
 }
 
 #ifndef _WINDOWS
@@ -1502,7 +1507,6 @@ char 	     *content_type;
      if (!HasKnownFileSuffix (ref))
        HTRequest_setConversion(me->request, acceptTypes, TRUE);
    }
-
 
 #if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)	&& defined (_WINDOWS)
    /* forces libwww to do sync request if in MakeBook mode */
