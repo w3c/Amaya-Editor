@@ -372,6 +372,7 @@ ThotBool ReadStructureSchema (Name fileName, PtrSSchema pSS)
 	pSS->SsUriName = NULL;
 	pSS->SsNExtensRules = 0;
 	pSS->SsExtensBlock = NULL;
+	pSS->SsIsXml = FALSE;
 	TtaReadShort (file, &pSS->SsDocument);
 	TtaReadShort (file, &pSS->SsRootElem);
 	TtaReadShort (file, &pSS->SsNAttributes);

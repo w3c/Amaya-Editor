@@ -303,6 +303,7 @@ typedef struct _StructSchema
    Name             SsName;              /* generic structure name*/
    char            *SsUriName;           /* Pointer to the URI associated with
 					    this schema */
+   ThotBool         SsIsXml;             /* Indicates a generix XML schema */
    int              SsCode;              /* code to identify the version */
    Name             SsDefaultPSchema;    /* name of the default presentation 
 					    schema associated with this
