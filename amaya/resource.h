@@ -268,6 +268,7 @@
 #define REQATTRDIALOG                   570
 #define XMLDIALOG                       571
 #define XMLDIALOG1                      572
+#define DAVCONFMENU                     573
 #define ID_CONFIRM                      1000
 #define ID_DONE                         1001
 #define IDC_URLEDIT                     1002
@@ -715,12 +716,18 @@
 #define IDC_AALT                        1547
 #define IDC_ACTRL                       1548
 #define IDC_ANONE                       1549
+#define IDC_EXCLUSIVE_DAVSCOPE          1549
 #define IDC_ACCESSKEY                   1550
 #define IDC_DIURL                       1551
+#define IDC_DAVDEPTH                    1551
 #define IDC_DICONTENTTYPE               1552
+#define IDC_SHARED_DAVSCOPE             1552
 #define IDC_DICHARSET                   1553
+#define IDC_INFINITE_DAVTIMEOUT         1553
 #define IDC_DICONTENTLEN                1554
+#define IDC_OTHER_DAVTIMEOUT            1554
 #define IDC_DIDTYPE                     1555
+#define IDC_DAVTIMEOUT                  1555
 #define IDC_DICONTENTTYPE_VAL           1556
 #define IDC_DICHARSET_VAL               1557
 #define IDC_DICONTENTLEN_VAL            1558
@@ -767,6 +774,18 @@
 #define IDC_XMLLIST                     1604
 #define IDC_XMLEDIT                     1605
 #define IDC_XMLELEM                     1606
+#define IDC_TXT_DAVUSER                 1607
+#define IDC_DAVUSER                     1608
+#define IDC_ZERO_DAVDEPTH               1609
+#define IDC_INFINITE_DAVDEPTH           1610
+#define IDC_DAVSCOPE                    1611
+#define IDC_DAVAWARENESS                1612
+#define IDC_GENERAL_DAVAWARENESS        1613
+#define IDC_EXIT_DAVAWARENESS           1614
+#define IDC_TXT_DAVRESOURCES            1615
+#define IDC_DAVRESOURCES                1616
+#define IDC_TIMEOUT_VALUE               1617
+#define IDC_TIMEOUT_SECOND              1618
 #define ID_BUTTON40017                  40017
 #define ID_BUTTON40018                  40018
 #define ID_BUTTON40019                  40019
@@ -813,7 +832,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        571
 #define _APS_NEXT_COMMAND_VALUE         40052
-#define _APS_NEXT_CONTROL_VALUE         1607
+#define _APS_NEXT_CONTROL_VALUE         1617
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

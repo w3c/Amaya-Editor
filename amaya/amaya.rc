@@ -1739,6 +1739,43 @@ BEGIN
     PUSHBUTTON      "",ID_DONE,114,47,86,14
 END
 
+DAVCONFMENU DIALOG DISCARDABLE  100, 100, 256, 226
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "WebDAV Preferences"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "WebDAV user URL",IDC_TXT_DAVUSER,7,8,240,8
+    EDITTEXT        IDC_DAVUSER,7,19,240,14,ES_AUTOHSCROLL
+    GROUPBOX        "Lock depth",IDC_DAVDEPTH,6,42,108,33
+    CONTROL         "0",IDC_ZERO_DAVDEPTH,"Button",BS_AUTORADIOBUTTON | 
+                    WS_TABSTOP,14,51,20,10
+    CONTROL         "Infinite",IDC_INFINITE_DAVDEPTH,"Button",
+                    BS_AUTORADIOBUTTON,14,64,37,10
+    GROUPBOX        "Lock scope",IDC_DAVSCOPE,137,42,108,33
+    CONTROL         "Exclusive",IDC_EXCLUSIVE_DAVSCOPE,"Button",
+                    BS_AUTORADIOBUTTON | WS_TABSTOP,146,50,46,10
+    CONTROL         "Shared",IDC_SHARED_DAVSCOPE,"Button",BS_AUTORADIOBUTTON,
+                    146,63,39,10
+    GROUPBOX        "Lock time out",IDC_DAVTIMEOUT,7,78,237,36
+    CONTROL         "Infinite",IDC_INFINITE_DAVTIMEOUT,"Button",
+                    BS_AUTORADIOBUTTON | WS_TABSTOP,15,87,37,10
+    CONTROL         "Other",IDC_OTHER_DAVTIMEOUT,"Button",BS_AUTORADIOBUTTON,
+                    15,99,33,10
+    RTEXT           "Time out in seconds",IDC_TIMEOUT_SECOND,65,100,97,8
+    EDITTEXT        IDC_TIMEOUT_VALUE,175,97,40,14,ES_AUTOHSCROLL
+    LTEXT           "Awareness",IDC_DAVAWARENESS,7,117,240,8
+    CONTROL         "General",IDC_GENERAL_DAVAWARENESS,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,9,130,138,8
+    CONTROL         "On exit",IDC_EXIT_DAVAWARENESS,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,9,141,138,8
+    LTEXT           "User resources (URL URL)",IDC_TXT_DAVRESOURCES,7,163,
+                    240,8
+    EDITTEXT        IDC_DAVRESOURCES,7,174,240,14,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "Apply",ID_APPLY,7,203,63,14
+    PUSHBUTTON      "Defaults",ID_DEFAULTS,93,203,63,14
+    PUSHBUTTON      "Done",ID_DONE,183,203,63,14
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -2045,6 +2082,14 @@ BEGIN
         RIGHTMARGIN, 205
         VERTGUIDE, 8
         BOTTOMMARGIN, 133
+    END
+
+    DAVCONFMENU, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 247
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 210
     END
 END
 #endif    // APSTUDIO_INVOKED

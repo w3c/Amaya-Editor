@@ -15,7 +15,11 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.16  2004-09-22 09:25:20  cvs
+ ** Revision 1.17  2004-09-22 11:55:05  cvs
+ ** Amaya didn't compile when the DAV option is set.
+ ** Irene
+ **
+ ** Revision 1.16  2004/09/22 09:25:20  cvs
  ** Work on WebDAV preferences.
  ** Irene
  **
@@ -117,7 +121,9 @@
 static int      DAVPreferencesBase;
 extern Prop_DAV GProp_DAV;
 #ifdef _WINGUI
-static HWND     DAVHwnd;
+#include "resource.h"
+extern HINSTANCE    hInstance;
+static HWND     DAVDlg;
 #endif /* _WINGUI */
 
 
@@ -881,26 +887,27 @@ void DAVGetPreferences (void)
    GProp_DAV.toggleAwareness1 = (DAVAwareness)?TRUE:FALSE;
    GProp_DAV.toggleAwareness2 = (DAVAwarenessExit)?TRUE:FALSE;
 
-#ifdef _WINGUI_IV
-   SetWindowText (GetDlgItem (DAVHwnd, IDC_DAVUSER), GProp_DAV.textUserReference);
+#ifdef _WINGUI
+   SetWindowText (GetDlgItem (DAVDlg, IDC_DAVUSER), GProp_DAV.textUserReference);
    SetWindowText (GetDlgItem (DAVDlg, IDC_DAVRESOURCES), GProp_DAV.textUserResources);
    if (!strcmp (GProp_DAV.radioDepth, "0"))
-     CheckRadioButton (hwnDlg, IDC_DAVDEPTH, IDC_ZERO_DAVDEPTH, IDC_ZERO_DAVDEPTH);
+     CheckRadioButton (DAVDlg, IDC_DAVDEPTH, IDC_ZERO_DAVDEPTH, IDC_ZERO_DAVDEPTH);
    else
-     CheckRadioButton (hwnDlg, IDC_DAVDEPTH, IDC_ZERO_DAVDEPTH,
+     CheckRadioButton (DAVDlg, IDC_DAVDEPTH, IDC_ZERO_DAVDEPTH,
 		       IDC_INFINITE_DAVDEPTH);
    if (!strcmp (GProp_DAV.radioLockScope, "exclusive"))
-     CheckRadioButton (hwnDlg, IDC_DAVSCOPE, IDC_EXCLUSIVE_DAVSCOPE,
+     CheckRadioButton (DAVDlg, IDC_DAVSCOPE, IDC_EXCLUSIVE_DAVSCOPE,
 		       IDC_EXCLUSIVE_DAVSCOPE);
    else
-     CheckRadioButton (hwnDlg, IDC_DAVSCOPE, IDC_EXCLUSIVE_DAVSCOPE,
+     CheckRadioButton (DAVDlg, IDC_DAVSCOPE, IDC_EXCLUSIVE_DAVSCOPE,
 		       IDC_SHARED_DAVSCOPE);
    if (!strcmp (GProp_DAV.radioTimeout, "Infinite"))
-     CheckRadioButton (hwnDlg, IDC_DAVTIMEOUT, IDC_INFINITE_DAVTIMEOUT,
+     CheckRadioButton (DAVDlg, IDC_DAVTIMEOUT, IDC_INFINITE_DAVTIMEOUT,
 		       IDC_INFINITE_DAVTIMEOUT);
    else
-     CheckRadioButton (hwnDlg, IDC_DAVTIMEOUT, IDC_INFINITE_DAVTIMEOUT,
+     CheckRadioButton (DAVDlg, IDC_DAVTIMEOUT, IDC_INFINITE_DAVTIMEOUT,
 		       IDC_OTHER_DAVTIMEOUT);
+   SetDlgItemInt (DAVDlg, IDC_TIMEOUT_VALUE, GProp_DAV.numberTimeout, FALSE);
 #endif /* _WINGUI */
 #ifdef _WX
 #endif /* _WX */
@@ -931,7 +938,7 @@ void DAVGetPreferences (void)
 }
 
 
-#ifdef _WINGUI_IV
+#ifdef _WINGUI
 /*----------------------------------------------------------------------
   WIN_AnnotDlgProc
   Windows callback for the annot menu
@@ -939,13 +946,11 @@ void DAVGetPreferences (void)
 LRESULT CALLBACK WIN_DAVPreferencesDlg (HWND hwnDlg, UINT msg, WPARAM wParam,
 					LPARAM lParam)
 {
-  char       data[MAX_LENGTH];
-
   switch (msg)
     {
     case WM_INITDIALOG:
       /* initialize the menu text */
-      DAVHwnd = hwnDlg;
+      DAVDlg = hwnDlg;
       SetWindowText (GetDlgItem (hwnDlg, ID_APPLY),
 		     TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
       SetWindowText (GetDlgItem (hwnDlg, ID_DEFAULTS),
@@ -955,13 +960,12 @@ LRESULT CALLBACK WIN_DAVPreferencesDlg (HWND hwnDlg, UINT msg, WPARAM wParam,
 
       SetWindowText (GetDlgItem (hwnDlg, IDC_TXT_DAVUSER),
 		     TtaGetMessage (AMAYA, AM_DAV_USER_URL));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_TXT_DAVRESOUCES),
+      SetWindowText (GetDlgItem (hwnDlg, IDC_TXT_DAVRESOURCES),
 		     TtaGetMessage (AMAYA, AM_DAV_USER_RESOURCES));
 
       SetWindowText (GetDlgItem (hwnDlg, IDC_DAVDEPTH),
 		     TtaGetMessage (AMAYA, AM_DAV_DEPTH));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_ZERO_DAVDEPTH),
-		     TtaGetMessage (AMAYA, "0"));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_ZERO_DAVDEPTH), "0");
       SetWindowText (GetDlgItem (hwnDlg, IDC_INFINITE_DAVDEPTH),
 		     TtaGetMessage (AMAYA, AM_DAV_DEPTH_INFINITY));
 
@@ -978,14 +982,14 @@ LRESULT CALLBACK WIN_DAVPreferencesDlg (HWND hwnDlg, UINT msg, WPARAM wParam,
 		     TtaGetMessage (AMAYA, AM_DAV_TIMEOUT_INFINITE));
       SetWindowText (GetDlgItem (hwnDlg, IDC_OTHER_DAVTIMEOUT),
 		     TtaGetMessage (AMAYA, AM_DAV_TIMEOUT_OTHER));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_DAVTIMEOUT_VALUE),
+      SetWindowText (GetDlgItem (hwnDlg, IDC_TIMEOUT_SECOND),
 		     TtaGetMessage (AMAYA, AM_DAV_TIMEOUT_SECONDS));
 
-      SetWindowText (GetDlgItem (hwnDlg, IDC_DAVAWARNESS),
+      SetWindowText (GetDlgItem (hwnDlg, IDC_DAVAWARENESS),
 		     TtaGetMessage (AMAYA, AM_DAV_AWARENESS));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_GENERAL_DAVAWARNESS),
+      SetWindowText (GetDlgItem (hwnDlg, IDC_GENERAL_DAVAWARENESS),
 		     TtaGetMessage (AMAYA, AM_DAV_AWARENESS_GENERAL));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_EXIT_DAVAWARNESS),
+      SetWindowText (GetDlgItem (hwnDlg, IDC_EXIT_DAVAWARENESS),
 		     TtaGetMessage (AMAYA, AM_DAV_AWARENESS_ONEXIT));
       DAVGetPreferences();
       break;
@@ -993,7 +997,7 @@ LRESULT CALLBACK WIN_DAVPreferencesDlg (HWND hwnDlg, UINT msg, WPARAM wParam,
     case WM_CLOSE:
     case WM_DESTROY:
       /* reset the status flag */
-      DAVHwnd = NULL;
+      DAVDlg = NULL;
       EndDialog (hwnDlg, ID_DONE);
       break;
 
@@ -1010,10 +1014,9 @@ LRESULT CALLBACK WIN_DAVPreferencesDlg (HWND hwnDlg, UINT msg, WPARAM wParam,
 	      GetDlgItemText (hwnDlg, IDC_DAVRESOURCES, GProp_DAV.textUserResources,
 			      MAX_LENGTH - 1);
 	      break;
-	    case IDC_TIMEOUT:
-	      GetDlgItemText (hwnDlg, IDC_TIMEOUT, data,
-			      MAX_LENGTH - 1);
-	      sprintf (GProp_DAV.numberTimeout,"%d", data);
+	    case IDC_TIMEOUT_VALUE:
+	      GProp_DAV.numberTimeout = GetDlgItemInt (hwnDlg, IDC_TIMEOUT_VALUE,
+						     FALSE, FALSE);
 	      break;
 	    }
 	}
@@ -1054,7 +1057,7 @@ LRESULT CALLBACK WIN_DAVPreferencesDlg (HWND hwnDlg, UINT msg, WPARAM wParam,
 	case ID_DONE:
 	case IDCANCEL:
 	  /* reset the status flag */
-	  DAVHwnd = NULL;
+	  DAVDlg = NULL;
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	case ID_DEFAULTS:
@@ -1240,13 +1243,13 @@ void DAVShowPreferencesDlg (Document document)
   TtaSetDialoguePosition ();
   TtaShowDialogue (DAVPreferencesBase + DAVPreferencesDlg, TRUE);
 #endif /* _GTK */
-#ifdef _WINGUI_IV
-  if (!DAVHwnd)
+#ifdef _WINGUI
+  if (!DAVDlg)
     /* only activate the menu if it isn't active already */
      DialogBox (hInstance, MAKEINTRESOURCE (DAVCONFMENU), NULL,
 		(DLGPROC) WIN_DAVPreferencesDlg);
   else
-     SetFocus (DAVHwnd);
+     SetFocus (DAVDlg);
 #endif /* _WINGUI */
 #ifdef _WX
 #endif /* _WX */
