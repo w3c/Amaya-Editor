@@ -252,7 +252,8 @@ static ThotBool FillAnnotField( AnnotMeta* annot,
     }
   else if (contains (predicate, RDFMS_NS, RDFMS_TYPE)) 
     {
-      if (contains (object, ANNOT_NS, ANNOT_ANNOTATION) && annot->type)
+      if (annot->type && (contains (object, ANNOT_NS, ANNOT_ANNOTATION) ||
+			 (contains (object, THREAD_NS, THREAD_REPLY))))
 	{
 	  /* this is the default [annotation type], and
 	     we already have a type, so we don't save it */
