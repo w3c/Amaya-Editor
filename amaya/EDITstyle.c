@@ -201,41 +201,46 @@ char *UpdateCSSBackgroundImage (char *oldpath, char *newpath,
 }
 
 /*----------------------------------------------------------------------
-   UpdateStyleDelete : attribute Style will be deleted.            
+   UpdateStyleDelete : a style attribute will be deleted.            
    remove the existing style presentation.                      
   ----------------------------------------------------------------------*/
 ThotBool UpdateStyleDelete (NotifyAttribute * event)
 {
-   ElementType         elType;
-   Element             el;
-   char               *style = NULL;
-   int                 len;
+  ElementType         elType;
+  Element             el;
+  char               *style = NULL;
+  int                 len;
 
-   el = event->element;
-   /*  A rule applying to BODY is really meant to address the HTML element */
-   elType = TtaGetElementType (event->element);
-   if (elType.ElTypeNum == HTML_EL_BODY &&
-       strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
-      el = TtaGetParent (el);
-   len = TtaGetTextAttributeLength (event->attribute);
-   if ((len < 0) || (len > 10000))
-      /* error */
-      return FALSE;
-   if (len == 0)
-      /* empty Style attribute */
-      return FALSE;
-   else
-     {
-	/* parse the old content and remove the corresponding presentation
-	   rules */
-	style = TtaGetMemory (len + 2);
-	if (!style)
-	   return FALSE;
-	TtaGiveTextAttributeValue (event->attribute, style, &len);
-	style[len] = EOS;
-	ParseHTMLSpecificStyle (el, style, event->document, 100, TRUE);
-	TtaFreeMemory (style);
-     }
+  len = TtaGetTextAttributeLength (event->attribute);
+  if ((len < 0) || (len > 10000))
+    /* error */
+    return FALSE;
+  if (len == 0)
+    /* empty Style attribute */
+    return FALSE;
+  else
+    {
+      /* parse the content of the style attribute and remove the corresponding
+	 presentation rules from the element */
+      style = TtaGetMemory (len + 2);
+      if (!style)
+	return FALSE;
+      TtaGiveTextAttributeValue (event->attribute, style, &len);
+      style[len] = EOS;
+      el = event->element;
+      ParseHTMLSpecificStyle (el, style, event->document, 100, TRUE);
+      /* if it's the body element and the style attribute contains some
+	 background properties, the corresponding presentation rules have
+	 to be removed to the (parent) <html> element */
+      elType = TtaGetElementType (el);
+      if (elType.ElTypeNum == HTML_EL_BODY &&
+	  strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+	{
+	  el = TtaGetParent (el);
+	  ParseHTMLSpecificStyle (el, style, event->document, 100, TRUE);
+	}
+      TtaFreeMemory (style);
+    }
   return FALSE;  /* let Thot perform normal operation */
 }
 
@@ -821,7 +826,7 @@ static void SpecificSettingsToCSS (Element el, Document doc,
 
 /*----------------------------------------------------------------------
   GetHTMLStyleString : return a string corresponding to the CSS
-  description of the presentation attribute applied to a element.
+  description of the presentation attribute applied to an element.
   For stupid reasons, if the target element is HTML or BODY,
   one returns the concatenation of both element style strings.
   ----------------------------------------------------------------------*/
@@ -846,7 +851,7 @@ void GetHTMLStyleString (Element el, Document doc, char *buf, int *len)
   name = TtaGetSSchemaName (elType.ElSSchema);
   if (strcmp(name, "HTML") == 0)
     {
-      if (elType.ElTypeNum == HTML_EL_HTML)
+      if (elType.ElTypeNum == HTML_EL_Document)
 	{
 	  elType.ElTypeNum = HTML_EL_BODY;
 	  el = TtaSearchTypedElement(elType, SearchForward, el);
@@ -859,9 +864,10 @@ void GetHTMLStyleString (Element el, Document doc, char *buf, int *len)
 				       &buf[*len]);
 	  *len = strlen (buf);
 	}
-      else if (elType.ElTypeNum == HTML_EL_BODY)
+      else if (elType.ElTypeNum == HTML_EL_BODY ||
+	       elType.ElTypeNum == HTML_EL_HTML)
 	{
-	  el = TtaGetParent (el);
+	  el = TtaGetMainRoot (doc);
 	  if (!el)
 	    return;
 	  if (*len > 0)

@@ -392,9 +392,11 @@ ThotBool ChangePRule (NotifyPresentation *event)
   ret = FALSE;
   HTMLschema = TtaGetSSchema ("HTML", doc);
 
-  /* if it's a background rule on element BODY, move it to element HTML */
-  /* if it's a rule on element HTML and it's not a background rule, move
-     it to element BODY */
+  /* if it's a background rule on element BODY or HTML, move it to the root
+     element.
+     if it's a rule on the root or HTML element and it's not a background rule,
+     move it to element BODY: the HTML DTD does not allow a style attribute
+     on the HTML element */
   if (event->event != TtePRuleDelete)
     {
     if (elType.ElSSchema != HTMLschema)
@@ -411,18 +413,28 @@ ThotBool ChangePRule (NotifyPresentation *event)
     else
       /* it's an HTML element */
       {
-	if (elType.ElTypeNum == HTML_EL_BODY
+	if ((elType.ElTypeNum == HTML_EL_BODY ||
+	     elType.ElTypeNum == HTML_EL_HTML)
 	    && (presType == PRFillPattern || presType == PRBackground ||
 		presType == PRShowBox))
 	  {
-	    root = TtaGetParent (el);
 	    if (presType == PRBackground)
 	      {
+		root = TtaGetMainRoot (doc);
 		MovePRule (presRule, el, root, doc, TRUE);
 		ret = TRUE; /* don't let Thot perform normal operation */  
+		if (elType.ElTypeNum != HTML_EL_BODY)
+		  /* the style attribute must be created on the BODY element */
+		  {
+		    elType.ElTypeNum = HTML_EL_BODY;
+		    body = TtaSearchTypedElement (elType, SearchInTree, el);
+		    if (body)
+		      el = body;
+		  }
 	      }   
 	  }
-	else if (elType.ElTypeNum == HTML_EL_HTML)
+	else if (elType.ElTypeNum == HTML_EL_HTML ||
+		 elType.ElTypeNum == HTML_EL_Document)
 	  {
 	    elType.ElTypeNum = HTML_EL_BODY;
 	    body = TtaSearchTypedElement (elType, SearchInTree, el);
@@ -432,6 +444,7 @@ ThotBool ChangePRule (NotifyPresentation *event)
 		MovePRule (presRule, el, body, doc, TRUE);
 		ret = TRUE; /* don't let Thot perform normal operation */
 	      }      
+	    /* the style attribute must be created on the BODY element */
 	    el = body;
 	  }
 	else
