@@ -3881,7 +3881,7 @@ STRING              data;
 	   return;		/* pas de callback definis */
 	else
 	  {
-	     /* recherche le bon callback */
+	     /* recherc he le bon callback */
 	     ctxCallback = firstCallbackAPI;
 	     base = MAX_ThotMenu;
 	     while (ref >= base + ctxCallback->callbackSet)

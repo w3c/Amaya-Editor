@@ -130,6 +130,7 @@ static ThotWindow    thotWindow;
 #include "registry_f.h"
 #include "structlist_f.h"
 #include "structschema_f.h"
+#include "table2_f.h"
 #include "tree_f.h"
 
 #ifdef _WINDOWS 
@@ -2528,7 +2529,7 @@ char              **argv;
   CHAR                option [100];
   CHAR                name [MAX_PATH];             
   CHAR                cmd[800];
-  CHAR		      tempFile [MAX_PATH];
+  CHAR                tempFile [MAX_PATH];
   int                 i, l;
   int                 argCounter;
   int                 viewsCounter = 0;

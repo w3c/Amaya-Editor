@@ -170,7 +170,7 @@ int                 fg;
    HPEN                hPen;
    HPEN                hOldPen;
    ThotPoint           point[4];
-   int                 result;
+   /* int                 result; */
 
    width = (float) (5 + thick);
    height = 10;
@@ -400,13 +400,13 @@ int                 bg;
 int                 pattern;
 #endif /* __STDC__ */
 {
+#  ifdef _WINDOWS
+#  else  /* !_WINDOWS */
    unsigned short      red;
    unsigned short      green;
    unsigned short      blue;
    float               fact;
 
-#  ifdef _WINDOWS
-#  else  /* !_WINDOWS */
    fact = 255;
    /* Do the current stroke need to be filled ? */
    if (pattern == 0)
@@ -1905,7 +1905,7 @@ int                 pattern;
    LOGBRUSH logBrush;
    HPEN     hPen;
    HPEN     hOldPen;
-   int      result, t;
+   int      t;
 
    /* Allocate a table of points */
    points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * nb);
@@ -2287,7 +2287,7 @@ int                 pattern;
    LOGBRUSH            logBrush;
    HPEN                hPen = 0;
    HPEN                hOldPen;
-   int                 result, t;
+   int                 t;
 
    if (larg <= 0 || height <= 0) 
       return;
@@ -2959,7 +2959,7 @@ int                 fg;
 #  ifdef _WINDOWS
    HPEN  hPen, hOldPen;
    POINT ptArray [2];
-   int   r, g, b;
+   unsigned short   r, g, b;
 #  endif /* _WINDOWS */
 
    if (y < 0)
@@ -2975,7 +2975,7 @@ int                 fg;
       if (TtPrinterDC) {
          TtaGiveThotRGB (fg, &r, &g, &b);
          /* hPen = CreatePen (PS_DOT, 1, RGB (r, g, b)); */
-         hPen = CreatePen (PS_DOT, 0, RGB (r, g, b)); 
+         hPen = CreatePen (PS_DOT, 0, RGB ((BYTE) r, (BYTE) g, (BYTE) b)); 
 		 hOldPen = SelectObject (TtPrinterDC, hPen);
          ptArray [0].x = xcour;
          ptArray [0].y = ycour;

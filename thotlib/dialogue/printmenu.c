@@ -467,7 +467,7 @@ Document            document;
    sprintf  (printArgv [printArgc], "%s\\%s.PIV", dir, name);
    printArgc++;
    WIN_ReleaseDeviceContext ();
-   if (buttonCommand && TtPrinterDC == 0) {
+   if (buttonCommand || TtPrinterDC == 0) {
        EnumPrinters (PRINTER_ENUM_LOCAL, NULL, 5, (LPBYTE) "", 0, &dwNeeded, &dwReturned) ;
 
        // Alloue de l’espace pour le tableau PRINTER_INFO_5
