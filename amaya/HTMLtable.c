@@ -23,6 +23,7 @@
 #include "Mathedit_f.h"
 
 static Element      CurrentColumn = NULL;
+static Element      CurrentTable = NULL;
 static int          PreviousColspan;
 static int          PreviousRowspan;
 
@@ -1299,40 +1300,45 @@ void CheckTable (Element table, Document doc)
 {
   ElementType         elType;
   Element             el, columnHeads, thead, tfoot, firstcolhead,
-                      tbody, Tablebody, firstgroup, prevrow,
+                      tbody, Tablebody, prevrow,
                       foot, prevEl, nextEl,
 		      enclosingTable;
   AttributeType       attrType;
   Attribute           attr;
   int                 PreviousStuctureChecking;
-  ThotBool            before;
+  ThotBool            before, inMath;
 
   firstcolhead = NULL;
   PreviousStuctureChecking = 0;
-  if (table != NULL)
+  if (table)
     {
       /* what are the children of element table? */
       columnHeads = NULL;
       thead = NULL;
       tfoot = NULL;
       Tablebody = NULL;
+      elType = TtaGetElementType (table);
+      inMath = TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema ("MathML", doc));
       el = TtaGetFirstChild (table);
-      while (el != NULL)
+      while (el)
 	{
 	  elType = TtaGetElementType (el);
-	  if (elType.ElTypeNum == HTML_EL_Table_head)
+	  if ((inMath && elType.ElTypeNum == MathML_EL_MTable_head) ||
+	      (!inMath && elType.ElTypeNum == HTML_EL_Table_head))
 	    columnHeads = el;
-	  else if (elType.ElTypeNum == HTML_EL_Table_body)
+	  else if ((inMath && elType.ElTypeNum == MathML_EL_MTable_body) ||
+		   (!inMath && elType.ElTypeNum == HTML_EL_Table_body))
 	    {
 	      if (Tablebody == NULL)
 		Tablebody = el;
 	    }
-	  else if (elType.ElTypeNum == HTML_EL_thead)
+	  else if (!inMath && elType.ElTypeNum == HTML_EL_thead)
 	    thead = el;
-	  else if (elType.ElTypeNum == HTML_EL_tfoot)
+	  else if (!inMath && elType.ElTypeNum == HTML_EL_tfoot)
 	    tfoot = el;
 	  TtaNextSibling (&el);
 	}
+
       if (columnHeads != NULL)
 	/* this table has already been checked */
 	return;
@@ -1342,7 +1348,7 @@ void CheckTable (Element table, Document doc)
 	 of the the border attribute from the enclosing table */
       elType = TtaGetElementType (table);
       enclosingTable = TtaGetTypedAncestor (table, elType);
-      if (enclosingTable != NULL)
+      if (!inMath && enclosingTable)
 	/* there is an enclosing table */
 	{
 	  attrType.AttrSSchema = elType.ElSSchema;
@@ -1364,9 +1370,12 @@ void CheckTable (Element table, Document doc)
 
       /* create a Table_head element with a first Column_head */
       elType = TtaGetElementType (table);
-      elType.ElTypeNum = HTML_EL_Table_head;
+      if (inMath)
+	elType.ElTypeNum = MathML_EL_MTable_head;
+      else
+	elType.ElTypeNum = HTML_EL_Table_head;
       columnHeads = TtaNewTree (doc, elType, "");
-      if (columnHeads != NULL)
+      if (columnHeads)
 	{
 	  firstcolhead = TtaGetFirstChild (columnHeads);
 	  el = TtaGetFirstChild (table);
@@ -1377,7 +1386,7 @@ void CheckTable (Element table, Document doc)
 	      /* skip elements Comment and Invalid_element and insert the new
 	         element Table_head, after the element caption if it is
 		 present or as the first child if there is no caption */
-	      while (el != NULL)
+	      while (el)
 		{
 		  elType = TtaGetElementType (el);
 		  if (elType.ElTypeNum == HTML_EL_Invalid_element ||
@@ -1386,7 +1395,7 @@ void CheckTable (Element table, Document doc)
 		    TtaNextSibling (&el);
 		  else
 		    {
-		      before = elType.ElTypeNum != HTML_EL_CAPTION;
+		      before = (inMath || elType.ElTypeNum != HTML_EL_CAPTION);
 		      TtaInsertSibling (columnHeads, el, before, doc);
 		      el = NULL;
 		    }
@@ -1396,7 +1405,10 @@ void CheckTable (Element table, Document doc)
 	  if (Tablebody == NULL)
 	    {
 	      /* There is no Table_body element. Create a Table_body element */
-	      elType.ElTypeNum = HTML_EL_Table_body;
+	      if (inMath)
+		elType.ElTypeNum = MathML_EL_MTable_body;
+	      else
+		elType.ElTypeNum = HTML_EL_Table_body;
 	      Tablebody = TtaNewElement (doc, elType);
 	      if (Tablebody != NULL)
 		{
@@ -1417,7 +1429,8 @@ void CheckTable (Element table, Document doc)
 		      elType = TtaGetElementType (el);
 		      nextEl = el;
 		      TtaNextSibling (&nextEl);
-		      if (elType.ElTypeNum == HTML_EL_Table_row)
+		      if ((inMath && elType.ElTypeNum == MathML_EL_TableRow) ||
+			  (!inMath && elType.ElTypeNum == HTML_EL_Table_row))
 			{
 			  TtaRemoveTree (el, doc);
 			  if (prevrow == NULL)
@@ -1438,7 +1451,7 @@ void CheckTable (Element table, Document doc)
 			}
 		      else
 			{
-			  if (elType.ElTypeNum == HTML_EL_tbody)
+			  if (!inMath && elType.ElTypeNum == HTML_EL_tbody)
 			    {
 			      if (prevrow != NULL)
 				prevEl = TtaGetParent (prevrow);
@@ -1457,28 +1470,23 @@ void CheckTable (Element table, Document doc)
 	    }
 
 	  /* create a Table_foot element at the end */
-	  elType.ElTypeNum = HTML_EL_Table_foot;
-	  foot = TtaNewTree (doc, elType, "");
-	  if (foot != NULL)
+	  if (!inMath)
 	    {
-	    if (tfoot != NULL)
-	      {
-		/* move element tfoot at the end */
-		TtaRemoveTree (tfoot, doc);
-		TtaInsertSibling (tfoot, Tablebody, FALSE, doc);
-		TtaInsertSibling (foot, tfoot, FALSE, doc);
-	      }
-	    else
-	      TtaInsertSibling (foot, Tablebody, FALSE, doc);
+	      elType.ElTypeNum = HTML_EL_Table_foot;
+	      foot = TtaNewTree (doc, elType, "");
+	      if (foot)
+		{
+		  if (tfoot)
+		    {
+		      /* move element tfoot at the end */
+		      TtaRemoveTree (tfoot, doc);
+		      TtaInsertSibling (tfoot, Tablebody, FALSE, doc);
+		      TtaInsertSibling (foot, tfoot, FALSE, doc);
+		    }
+		  else
+		    TtaInsertSibling (foot, Tablebody, FALSE, doc);
+		}
 	    }
-	  
-	  if (thead != NULL)
-	    firstgroup = thead;
-	  else if (Tablebody != NULL)
-	    firstgroup = Tablebody;
-	  else
-	    firstgroup = tfoot;
-
 	  /* associate each cell with a column */
 	  CheckAllRows (table, doc, FALSE, FALSE);
 	}
@@ -2394,12 +2402,88 @@ void ColumnPasted (NotifyElement * event)
 }
 
 /*----------------------------------------------------------------------
+  TableCreated                                             
+  ----------------------------------------------------------------------*/
+void TableCreated (NotifyElement * event)
+{
+  CurrentTable = event->element;
+}
+
+/*----------------------------------------------------------------------
   TablePasted                                             
   ----------------------------------------------------------------------*/
 void TablePasted (NotifyElement * event)
 {
-  /* associate each cell with a column */
-  CheckAllRows (event->element, event->document, FALSE, FALSE);
+  Element             el;
+  ElementType         elType;
+  AttributeType       attrType;
+  Attribute           attr;
+  Document            doc;
+  char                *stylebuff;
+  int                 border, len;
+
+  el = event->element;
+  doc = event->document;
+  elType = TtaGetElementType (el);
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = HTML_ATTR_Border;
+  if (el == CurrentTable)
+    /* table created */
+    border = 1;
+  else
+    border = 0;
+  if (TtaGetDocumentProfile(doc) == L_Basic)
+    {
+      /* remove the border attribute within basic XHTML documents */
+      attr = TtaGetAttribute (el, attrType);
+      if (attr)
+	{
+	  border = TtaGetAttributeValue (attr);
+	  TtaRemoveAttribute (el, attr, doc);
+	}
+      if (border)
+	{
+	  /* generate a border style */
+	  attrType.AttrTypeNum = HTML_ATTR_Style_;
+	  attr = TtaNewAttribute (attrType);
+	  if (attr == NULL)
+	    {
+	      TtaAttachAttribute (el, attr, doc);
+	      len = 0;
+	      stylebuff = (char *)TtaGetMemory (50);
+	      stylebuff[0] = EOS;
+	    }
+	  else
+	    {
+	      len = TtaGetTextAttributeLength (attr);
+	      stylebuff = (char *)TtaGetMemory (len + 50);
+	      TtaGiveTextAttributeValue (attr, stylebuff, &len);
+	    }
+	  sprintf (&stylebuff[len], "border: solid %dpx", border);
+	  TtaSetAttributeText (attr, stylebuff, el, doc);
+	  TtaFreeMemory (stylebuff);
+	}
+    }
+  else if (border)
+    {
+      /* add a default border */
+      attr = TtaGetAttribute (el, attrType);
+      if (attr == NULL)
+	{
+	  attr = TtaNewAttribute (attrType);
+	  TtaAttachAttribute (el, attr, doc);
+	}
+      TtaSetAttributeValue (attr, 1, el, doc);
+    }
+
+  if (el == CurrentTable)
+    {
+      CheckTable (el, doc);
+      CurrentTable = NULL;
+    }
+  else
+    /* associate each cell with a column */
+    CheckAllRows (el, doc, FALSE, FALSE);
 }
 
 /*----------------------------------------------------------------------

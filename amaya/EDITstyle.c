@@ -940,7 +940,7 @@ void GetHTMLStyleString (Element el, Document doc, char *buf, int *len)
       if (elType.ElTypeNum == HTML_EL_Document)
 	{
 	  elType.ElTypeNum = HTML_EL_BODY;
-	  el = TtaSearchTypedElement(elType, SearchForward, el);
+	  el = TtaSearchTypedElement (elType, SearchForward, el);
 	  if (!el)
 	    return;
 	  if (*len > 0)

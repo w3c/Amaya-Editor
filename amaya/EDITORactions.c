@@ -1595,12 +1595,12 @@ void CreateAddress (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateTable (Document document, View view)
 {
-   ElementType         elType;
-   Element             el, new_, cell, row;
-   AttributeType       attrType;
-   Attribute           attr;
-   char              stylebuff[50];
-   int                 firstChar, i;
+  ElementType         elType;
+  Element             el, new_, cell, row;
+  AttributeType       attrType;
+  Attribute           attr;
+  char                stylebuff[50];
+  int                 firstChar, i;
 
    if (!HTMLelementAllowed (document))
       return;
@@ -1656,40 +1656,33 @@ void CreateTable (Document document, View view)
        if (el != NULL)
 	 {
 	   attrType.AttrSSchema = elType.ElSSchema;
+	   attrType.AttrTypeNum = HTML_ATTR_Border;
+	   attr = TtaGetAttribute (el, attrType);
 	   if (TtaGetDocumentProfile(document) == L_Basic)
 	     {
 	       /* remove the Border attribute */
-	       attrType.AttrTypeNum = HTML_ATTR_Border;
-	       attr = TtaGetAttribute (el, attrType);
 	       if (attr != NULL)
 		 TtaRemoveAttribute (el, attr, document);
 	       /* generate a border style */
 	       attrType.AttrTypeNum = HTML_ATTR_Style_;
 	       attr = TtaNewAttribute (attrType);
 	       TtaAttachAttribute (el, attr, document);
-	       strcpy (stylebuff, "border:  ");
 	       sprintf (stylebuff, "border: solid %dpx", TBorder);
 	       TtaSetAttributeText (attr, stylebuff, el, document);	       
 	     }
+	   else if (attr && TBorder == 0)
+	     /* the table has a Border attribute but the user don't want
+		any border. Remove the attribute */
+	     TtaRemoveAttribute (el, attr, document);
 	   else
 	     {
-	       /* take care of the Border attribute */
-	       attrType.AttrTypeNum = HTML_ATTR_Border;
-	       attr = TtaGetAttribute (el, attrType);
-	       if (attr != NULL && TBorder == 0)
-		 /* the table has a Border attribute but the user don't want
-		    any border. Remove the attribute */
-		 TtaRemoveAttribute (el, attr, document);
-	       else
+	       if (attr == NULL)
+		 /* the Table has no Border attribute, create one */
 		 {
-		   if (attr == NULL)
-		     /* the Table has no Border attribute, create one */
-		     {
-		       attr = TtaNewAttribute (attrType);
-		       TtaAttachAttribute (el, attr, document);
-		     }
-		   TtaSetAttributeValue (attr, TBorder, el, document);
+		   attr = TtaNewAttribute (attrType);
+		   TtaAttachAttribute (el, attr, document);
 		 }
+	       TtaSetAttributeValue (attr, TBorder, el, document);
 	     }
 
 	   elType.ElTypeNum = HTML_EL_Table_cell;
@@ -1706,6 +1699,7 @@ void CreateTable (Document document, View view)
 	       TtaRemoveTree (cell, document);
 	       cell = new_;
 	     }
+
 	   while (NumberCols > 1)
 	     {
 	       new_ = TtaNewTree (document, elType, "");
