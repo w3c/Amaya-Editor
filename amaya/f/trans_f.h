@@ -7,11 +7,6 @@
 #ifdef __STDC__
 
 extern void InitTransform ( void );
-extern void init_pile ( void );
-extern void empile ( Tagnode * t,
-                     ListSymb * v );
-extern void depile ( Tagnode ** t,
-                     ListSymb ** v );
 extern void TransCallbackDialog ( int ref,
                                   int typedata,
                                   char *data );
@@ -23,11 +18,6 @@ extern boolean TransformIntoType ( ElementType resultType,
 #else /* __STDC__ */
 
 extern void InitTransform (/* void */);
-extern void init_pile (/* void */);
-extern void empile (/* Tagnode * t,
-                       ListSymb * v */);
-extern void depile (/* Tagnode ** t,
-                       ListSymb ** v */);
 extern void TransCallbackDialog (/* int ref,
                                     int typedata,
                                     char *data */);

@@ -20,8 +20,8 @@ extern void CreateLink ( Document doc,
                          View view );
 extern void CreateTarget ( Document doc,
                            View view );
-extern void coordsModified ( NotifyAttribute * event );
-extern void graphicsModified ( NotifyAttribute * event );
+extern void CoordsModified ( NotifyAttribute * event );
+extern void GraphicsModified ( NotifyAttribute * event );
 extern void AttrWidthCreated ( NotifyAttribute * event );
 extern boolean AttrWidthDelete ( NotifyAttribute * event );
 extern void AttrWidthModified ( NotifyAttribute * event );
@@ -105,8 +105,8 @@ extern void CreateLink (/* Document doc,
                            View view */);
 extern void CreateTarget (/* Document doc,
                              View view */);
-extern void coordsModified (/* NotifyAttribute * event */);
-extern void graphicsModified (/* NotifyAttribute * event */);
+extern void CoordsModified (/* NotifyAttribute * event */);
+extern void GraphicsModified (/* NotifyAttribute * event */);
 extern void AttrWidthCreated (/* NotifyAttribute * event */);
 extern boolean AttrWidthDelete (/* NotifyAttribute * event */);
 extern void AttrWidthModified (/* NotifyAttribute * event */);

@@ -6,6 +6,8 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern boolean SaveDocumentStatus ( NotifyOnTarget *event );
+extern void RestoreDocumentStatus ( NotifyOnTarget *event );
 extern void SubmitForm ( Document doc,
                          Element element );
 extern void SelectCheckbox ( Document doc,
@@ -18,6 +20,8 @@ extern void SelectOneOption ( Document doc,
 
 #else /* __STDC__ */
 
+extern boolean SaveDocumentStatus (/* NotifyOnTarget *event */);
+extern void RestoreDocumentStatus (/* NotifyOnTarget *event */);
 extern void SubmitForm (/* Document doc,
                            Element element */);
 extern void SelectCheckbox (/* Document doc,

@@ -15,7 +15,8 @@
  */
 
 /*----------------------------------------------------------------------
-   	Parser du langage de transformations				
+   	Transformation language parser, see file HTML.trans for a 
+	description of the language				
    									
    	Author:	Stephane Bonhomme					
    	VarDate:	April 1996						
@@ -41,11 +42,11 @@
 extern PathBuffer   SchemaPath;
 
 
-/* structures de donees du parser */
+/* pattern and rules internal representation */
 typedef struct _parForest
   {
-     ListSymb           *first;
-     ListSymb           *last;
+     strListSymb           *first;
+     strListSymb           *last;
      boolean             optional;
      struct _parForest  *next;
   }
@@ -59,26 +60,26 @@ typedef struct _parChoice
 parChoice;
 
 static boolean      ppError;
-static boolean      ppisnamed;
+static boolean      ppIsNamed;
 static boolean      ppOptional;
 static boolean      ppIterTag;
-static char         ppname[20];
+static char         ppName[20];
 static parChoice   *ppChoice;	/* current forest descriptor */
 static parForest   *ppForest;	/* cuurent forest descriptor */
 static parChoice   *ppLastChoice;
-static TransDesc   *ppTrans;	/* current transformation descriptor */
-static SymbDesc    *ppSymb;	/* current pattern symbol descriptor */
-static AttrDesc    *ppAttr;	/* attribute descriptor */
-static NodeDesc    *ppNode;	/* node descriptor */
-static RuleDesc    *ppRule;	/* rule descriptor */
-static parChoice   *ChStack[MAXSTACK];
-static char         OpStack[MAXSTACK];
-static SymbDesc    *SymbStack[MAXSTACK];
-static int          SzStack;
+static strTransDesc   *ppTrans;	/* current transformation descriptor */
+static strSymbDesc    *ppSymb;	/* current pattern symbol descriptor */
+static strAttrDesc    *ppAttr;	/* attribute descriptor */
+static strNodeDesc    *ppNode;	/* node descriptor */
+static strRuleDesc    *ppRule;	/* rule descriptor */
+static parChoice   *choiceStack[MAX_STACK];
+static char         opStack[MAX_STACK];
+static strSymbDesc    *symbolStack[MAX_STACK];
+static int          sizeStack;
 static int          patDepth;
 static int          numberOfLinesRead;
 static int          numberOfCharRead;
-static boolean      NormalTransition;
+static boolean      normalTransition;
 
 #define MaxBufferLength   1000
 #define AllmostFullBuffer  700
@@ -92,86 +93,87 @@ static State        returnState;	/* return state from subautomaton */
 #include "transparse_f.h"
 
 /*----------------------------------------------------------------------
-   initialise toutes les transformations a valide     
-   mise a jour de match_env.maxdepth 
+  Init all transformation of the environement to valid,
+   sets the value  strMatchEnv.MaxDepth 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         SetTransValid (TransDesc * trans)
+static void         SetTransValid (strTransDesc * trans)
 #else
 static void         SetTransValid (trans)
-TransDesc          *trans;
+strTransDesc          *trans;
 
 #endif
 {
-   TransDesc          *td;
-   SymbDesc           *sd;
+   strTransDesc          *td;
+   strSymbDesc           *sd;
 
    td = trans;
    while (td)
      {
-	if (!(td->ActiveTrans))
+	if (!(td->IsActiveTrans))
 	  {
-	     td->ActiveTrans = TRUE;
-	     if (td->patdepth > match_env.maxdepth)
-		match_env.maxdepth = td->patdepth;
-	     sd = td->PatSymbs;
+	     td->IsActiveTrans = TRUE;
+	     if (td->PatDepth > strMatchEnv.MaxDepth)
+		strMatchEnv.MaxDepth = td->PatDepth;
+	     sd = td->Symbols;
 	     while (sd)
 	       {
-		  sd->ActiveSymb = TRUE;
-		  sd = sd->next;
+		  sd->IsActiveSymb = TRUE;
+		  sd = sd->Next;
 	       }
 	  }
-	td = td->next;
+	td = td->Next;
      }
 }
 
 /*----------------------------------------------------------------------
+  Frees a transformtion descriptor
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void         freetrans (TransDesc * td)
+static void         FreeTrans (strTransDesc * td)
 #else
-static void         freetrans (td)
-TransDesc          *td;
+static void         FreeTrans (td)
+strTransDesc          *td;
 
 #endif
 {
-   ListSymb           *ls, *ls2;
-   SymbDesc           *sd, *sd2;
-   AttrDesc           *ad, *ad2;
-   RuleDesc           *rd, *rd2;
-   NodeDesc           *n, *n2;
+   strListSymb           *ls, *ls2;
+   strSymbDesc           *sd, *sd2;
+   strAttrDesc           *ad, *ad2;
+   strRuleDesc           *rd, *rd2;
+   strNodeDesc           *n, *n2;
 
    TtaFreeMemory (td->NameTrans);
-   TtaFreeMemory (td->TagDest);
+   TtaFreeMemory (td->DestinationTag);
    ls = td->First;
    while (ls)
      {
-	ls2 = ls->next;
+	ls2 = ls->Next;
 	TtaFreeMemory ((char *) ls);
 	ls = ls2;
      }
-   if (td->rootdesc)
+   if (td->RootDesc)
      {
-	TtaFreeMemory (td->rootdesc->Tag);
-	TtaFreeMemory ((char *) td->rootdesc);
+	TtaFreeMemory (td->RootDesc->Tag);
+	TtaFreeMemory ((char *) td->RootDesc);
      }
-   sd = td->PatSymbs;
+   sd = td->Symbols;
    while (sd)
      {
-	TtaFreeMemory (sd->SName);
+	TtaFreeMemory (sd->SymbolName);
 	TtaFreeMemory (sd->Tag);
 	ls = sd->Children;
 	while (ls)
 	  {
-	     ls2 = ls->next;
+	     ls2 = ls->Next;
 	     TtaFreeMemory ((char *) ls);
 	     ls = ls2;
 	  }
-	ls = sd->Nexts;
+	ls = sd->Followings;
 	while (ls)
 	  {
-	     ls2 = ls->next;
+	     ls2 = ls->Next;
 	     TtaFreeMemory ((char *) ls);
 	     ls = ls2;
 	  }
@@ -187,18 +189,18 @@ TransDesc          *td;
 	     else if (!ad->IsInt)
 		TtaFreeMemory (ad->TextVal);
 
-	     ad2 = ad->next;
+	     ad2 = ad->Next;
 	     TtaFreeMemory ((char *) ad);
 	     ad = ad2;
 	  }
-	sd2 = sd->next;
+	sd2 = sd->Next;
 	TtaFreeMemory ((char *) sd);
 	sd = sd2;
      }
    rd = td->Rules;
    while (rd)
      {
-	n = rd->OptNodes;
+	n = rd->OptionNodes;
 	while (n)
 	  {
 	     ad = n->Attributes;
@@ -214,12 +216,12 @@ TransDesc          *td;
 		    {
 		       TtaFreeMemory (ad->TextVal);
 		    }
-		  ad2 = ad->next;
+		  ad2 = ad->Next;
 		  TtaFreeMemory ((char *) ad);
 		  ad = ad2;
 	       }
 	     TtaFreeMemory (n->Tag);
-	     n2 = n->next;
+	     n2 = n->Next;
 	     TtaFreeMemory ((char *) n);
 	     n = n2;
 	  }
@@ -239,16 +241,16 @@ TransDesc          *td;
 		    {
 		       TtaFreeMemory (ad->TextVal);
 		    }
-		  ad2 = ad->next;
+		  ad2 = ad->Next;
 		  TtaFreeMemory ((char *) ad);
 		  ad = ad2;
 	       }
 	     TtaFreeMemory (n->Tag);
-	     n2 = n->next;
+	     n2 = n->Next;
 	     TtaFreeMemory ((char *) n);
 	     n = n2;
 	  }
-	rd2 = rd->next;
+	rd2 = rd->Next;
 	TtaFreeMemory ((char *) rd);
 	rd = rd2;
      }
@@ -257,28 +259,30 @@ TransDesc          *td;
 
 
 /*----------------------------------------------------------------------
+  Frees a list descriptor
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                freelist (ListSymb * pl)
+void            FreeList (strListSymb * pl)
 #else
-void                freelist (pl)
-ListSymb           *pl;
+void            FreeList (pl)
+strListSymb           *pl;
 
 #endif
 {
    if (pl)
      {
-	freelist (pl->next);
+	FreeList (pl->Next);
 	TtaFreeMemory ((char *) pl);
      }
 }
 
 /*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
+  Frees a forest descriptor
+ ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         freeforest (parForest * pf)
+static void         FreeForest (parForest * pf)
 #else
-static void         freeforest (pf)
+static void         FreeForest (pf)
 parForest          *pf;
 
 #endif
@@ -287,37 +291,38 @@ parForest          *pf;
      {
 	if (pf == ppForest)
 	   ppForest = NULL;
-	freelist (pf->first);
-	freelist (pf->last);
-	freeforest (pf->next);
+	FreeList (pf->first);
+	FreeList (pf->last);
+	FreeForest (pf->next);
 	TtaFreeMemory ((char *) pf);
      }
 }
 
 /*----------------------------------------------------------------------
+  Frees a choice descriptor
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         freechoice (parChoice * pc)
+static void         FreeChoice (parChoice * pc)
 #else
-static void         freechoice (pc)
+static void         FreeChoice (pc)
 parChoice          *pc;
 
 #endif
 {
    if (pc)
      {
-	freeforest (pc->forests);
+	FreeForest (pc->forests);
 	TtaFreeMemory ((char *) pc);
      }
 }
 
 /*----------------------------------------------------------------------
-   	errorMessage	print the error message msg on stderr.		
+   	ErrorMessage	print the error message msg on stderr.		
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         errorMessage (unsigned char *msg)
+static void         ErrorMessage (unsigned char *msg)
 #else
-static void         errorMessage (msg)
+static void         ErrorMessage (msg)
 unsigned char      *msg;
 
 #endif
@@ -330,28 +335,29 @@ unsigned char      *msg;
 #else
    fprintf (stderr, "line %d, char %d: %s\n", numberOfLinesRead, numberOfCharRead, msg);
 #endif
-   NormalTransition = FALSE;
+   normalTransition = FALSE;
 }
 
 /*----------------------------------------------------------------------
+  adds the pattern symbol symb to the plist symbol list 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         addSymb2List (ListSymb ** pList, SymbDesc * symb)
+static void         AddSymbToList (strListSymb ** pList, strSymbDesc * symb)
 #else
-static void         addSymb2List (pList, symb)
-ListSymb          **pList;
-SymbDesc           *symb;
+static void         AddSymbToList (pList, symb)
+strListSymb          **pList;
+strSymbDesc           *symb;
 
 #endif
 {
    boolean             isjok, isnull, found;
-   ListSymb           *pl, *plnext;
+   strListSymb           *pl, *plnext;
 
    if (*pList == NULL)
      {
-	*pList = (ListSymb *) TtaGetMemory (sizeof (ListSymb));
-	(*pList)->next = NULL;
-	(*pList)->symb = symb;
+	*pList = (strListSymb *) TtaGetMemory (sizeof (strListSymb));
+	(*pList)->Next = NULL;
+	(*pList)->Symbol = symb;
      }
    else
      {
@@ -360,39 +366,39 @@ SymbDesc           *symb;
 	if (!isnull)
 	   isjok = (!strcmp (symb->Tag, "*"));
 	pl = *pList;
-	found = ((isnull && pl->symb == NULL) || (!isnull && pl->symb == symb));
-	if (pl->next == NULL && !isnull && !found)
+	found = ((isnull && pl->Symbol == NULL) || (!isnull && pl->Symbol == symb));
+	if (pl->Next == NULL && !isnull && !found)
 	  {
-	     if ((isjok && pl->symb == NULL) ||
-	     (!isjok && (pl->symb == NULL || !strcmp (pl->symb->Tag, "*"))))
+	     if ((isjok && pl->Symbol == NULL) ||
+	     (!isjok && (pl->Symbol == NULL || !strcmp (pl->Symbol->Tag, "*"))))
 	       {
-		  *pList = (ListSymb *) TtaGetMemory (sizeof (ListSymb));
-		  (*pList)->next = pl;
-		  (*pList)->symb = symb;
+		  *pList = (strListSymb *) TtaGetMemory (sizeof (strListSymb));
+		  (*pList)->Next = pl;
+		  (*pList)->Symbol = symb;
 	       }
 	     else
 	       {
-		  pl->next = (ListSymb *) TtaGetMemory (sizeof (ListSymb));
-		  pl->next->next = NULL;
-		  pl->next->symb = symb;
+		  pl->Next = (strListSymb *) TtaGetMemory (sizeof (strListSymb));
+		  pl->Next->Next = NULL;
+		  pl->Next->Symbol = symb;
 	       }
 	  }
 	else
 	  {
-	     while (!found && pl->next &&
-		    ((isjok || isnull) || (pl->next->symb && strcmp (pl->next->symb->Tag, "*")))
-		    && (isnull || pl->next->symb != NULL))
+	     while (!found && pl->Next &&
+		    ((isjok || isnull) || (pl->Next->Symbol && strcmp (pl->Next->Symbol->Tag, "*")))
+		    && (isnull || pl->Next->Symbol != NULL))
 	       {
-		  found = ((isnull && pl->symb == NULL) ||
-			   (!isnull && pl->symb == symb));
-		  pl = pl->next;
+		  found = ((isnull && pl->Symbol == NULL) ||
+			   (!isnull && pl->Symbol == symb));
+		  pl = pl->Next;
 	       }
 	     if (!found)
 	       {
-		  plnext = pl->next;
-		  pl->next = (ListSymb *) TtaGetMemory (sizeof (ListSymb));
-		  pl->next->next = plnext;
-		  pl->next->symb = symb;
+		  plnext = pl->Next;
+		  pl->Next = (strListSymb *) TtaGetMemory (sizeof (strListSymb));
+		  pl->Next->Next = plnext;
+		  pl->Next->Symbol = symb;
 	       }
 	  }
      }
@@ -402,16 +408,16 @@ SymbDesc           *symb;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         addterminal (parChoice * pc)
+static void         AddTerminal (parChoice * pc)
 #else
-static void         addterminal (pc)
+static void         AddTerminal (pc)
 parChoice          *pc;
 
 #endif
 {
-   ListSymb           *pl, *pl2;
+   strListSymb           *pl, *pl2;
    parForest          *pf;
-   SymbDesc           *ps;
+   strSymbDesc           *ps;
 
    pf = pc->forests;
    while (pf)
@@ -419,152 +425,155 @@ parChoice          *pc;
 	pl = pf->last;
 	while (pl)
 	  {
-	     ps = pl->symb;
+	     ps = pl->Symbol;
 	     if (ps)
 	       {
-		  pl2 = ps->Nexts;
-		  while (pl2 && pl2->next)
-		     pl2 = pl2->next;
+		  pl2 = ps->Followings;
+		  while (pl2 && pl2->Next)
+		     pl2 = pl2->Next;
 		  if (!pl2)
 		    {
-		       ps->Nexts = (ListSymb *) TtaGetMemory (sizeof (ListSymb));
-		       pl2 = ps->Nexts;
+		       ps->Followings = (strListSymb *) TtaGetMemory (sizeof (strListSymb));
+		       pl2 = ps->Followings;
 		    }
 		  else
 		    {
-		       pl2->next = (ListSymb *) TtaGetMemory (sizeof (ListSymb));
-		       pl2 = pl2->next;
+		       pl2->Next = (strListSymb *) TtaGetMemory (sizeof (strListSymb));
+		       pl2 = pl2->Next;
 		    }
-		  pl2->next = NULL;
-		  pl2->symb = NULL;
+		  pl2->Next = NULL;
+		  pl2->Symbol = NULL;
 	       }
-	     pl = pl->next;
+	     pl = pl->Next;
 	  }
 	pf = pf->next;
      }
 }
 
 /*----------------------------------------------------------------------
-   traite le symbole de pattern qui vient d'etre lu	
+  processes the previously read symbol
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         TraiteFinSymb (void)
+static void         ProcessSymbol (void)
 #else
-static void         TraiteFinSymb ()
+static void         ProcessSymbol ()
 #endif
 {
-   SymbDesc           *sd;
+   strSymbDesc           *sd;
    char                msgBuffer[MaxBufferLength];
 
    if (ppLgBuffer != 0)
-     {				/* cree un nouveau symbole dans le pattern */
-	ppTrans->nbPatSymb++;
-	ppSymb = (SymbDesc *) TtaGetMemory (sizeof (SymbDesc));
-	ppSymb->SName = (char *) TtaGetMemory (NAME_LENGTH);
+     {		
+       /* cr4eates a new symbol in the pattern internal representation */
+	ppTrans->NbPatSymb++;
+	ppSymb = (strSymbDesc *) TtaGetMemory (sizeof (strSymbDesc));
+	ppSymb->SymbolName = (char *) TtaGetMemory (NAME_LENGTH);
 	ppSymb->Tag = (char *) TtaGetMemory (NAME_LENGTH);
 	ppSymb->Rule = NULL;
 	ppSymb->Children = NULL;
-	ppSymb->Nexts = NULL;
-	ppSymb->Optional = ppOptional;
-	ppSymb->ActiveSymb = TRUE;
+	ppSymb->Followings = NULL;
+	ppSymb->IsOptional = ppOptional;
+	ppSymb->IsActiveSymb = TRUE;
 	ppSymb->Attributes = NULL;
-	ppSymb->next = NULL;
-	ppSymb->depth = patDepth;
-	if (ppisnamed)
+	ppSymb->Next = NULL;
+	ppSymb->Depth = patDepth;
+	if (ppIsNamed)
 	  {
-	     strcpy (ppSymb->SName, ppname);
-	     strcpy (ppname, "");
+	     strcpy (ppSymb->SymbolName, ppName);
+	     strcpy (ppName, "");
 	  }
 	else
-	   strcpy (ppSymb->SName, inputBuffer);
+	   strcpy (ppSymb->SymbolName, inputBuffer);
 	strcpy (ppSymb->Tag, inputBuffer);
 
-	ppisnamed = FALSE;
+	ppIsNamed = FALSE;
 	ppLgBuffer = 0;
 	ppOptional = FALSE;
      }
    if (ppSymb)
      {
-	/* on ajoute le nouveau symbole a ceux du pattern */
-	sd = ppTrans->PatSymbs;
+       /* adds the new symbol to those of the pattern */
+	sd = ppTrans->Symbols;
 	if (!sd)
-	   ppTrans->PatSymbs = ppSymb;
+	   ppTrans->Symbols = ppSymb;
 	else
 	  {
-	     while (sd->next)
-		sd = sd->next;
-	     sd->next = ppSymb;
+	     while (sd->Next)
+		sd = sd->Next;
+	     sd->Next = ppSymb;
 	  }
 	if (strcmp (ppSymb->Tag, "*") && (MapGI (ppSymb->Tag) == -1))
 	  {
 	     ppError = TRUE;
 	     sprintf (msgBuffer, "unknown tag </%s>", ppSymb->Tag);
-	     errorMessage (msgBuffer);
+	     ErrorMessage (msgBuffer);
 	  }
      }
 }
 
 /*----------------------------------------------------------------------
+  creates a new symbol descriptor and links it with the pattern representation
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         NouveauSymbole (void)
+static void         NewSymbol (void)
 #else
-static void         NouveauSymbole ()
+static void         NewSymbol ()
 #endif
 {
-   SymbDesc           *ps;
-   ListSymb           *pList;
+   strSymbDesc           *ps;
+   strListSymb           *pList;
 
    if (ppSymb)
      {
 	if (ppForest->first == NULL)
-	  {			/* le nouveau symbole est le premier et le dernier de la foret courante */
-	     ppForest->first = (ListSymb *) TtaGetMemory (sizeof (ListSymb));
-	     ppForest->first->next = NULL;
-	     ppForest->first->symb = ppSymb;
-	     ppForest->last = (ListSymb *) TtaGetMemory (sizeof (ListSymb));
-	     ppForest->last->next = NULL;
-	     ppForest->last->symb = ppSymb;
+	  {
+	    /* the new symbol is the first and last of current forest */
+	     ppForest->first = (strListSymb *) TtaGetMemory (sizeof (strListSymb));
+	     ppForest->first->Next = NULL;
+	     ppForest->first->Symbol = ppSymb;
+	     ppForest->last = (strListSymb *) TtaGetMemory (sizeof (strListSymb));
+	     ppForest->last->Next = NULL;
+	     ppForest->last->Symbol = ppSymb;
 	  }
 	else
-	  {			/* le symbole n'est pas le premier de la foret courante */
-	     /* le nouveau symbole est ajoute a la liste des suivants */
-	     /*de chaque dernier symbole de la foret */
+	  {
+	    /* the new symbol is not the first of current forest */
+	    /* it is added as a next possible symbol of each candidate to the last symbol of */
+	       /* current forest */
 	     pList = ppForest->last;
 	     while (pList)
 	       {
-		  ps = pList->symb;
+		  ps = pList->Symbol;
 		  if (ps)
 		    {
-		       addSymb2List (&ps->Nexts, ppSymb);
+		       AddSymbToList (&ps->Followings, ppSymb);
 		    }
-		  pList = pList->next;
+		  pList = pList->Next;
 	       }
 	     if (ppForest->optional)
 	       {
-		  /* si les symboles precedents sont tous optionnels, */
-		  /*on ajoute le symbole courant a la liste des premiers de la foret */
-		  addSymb2List (&ppForest->first, ppSymb);
-		  ppForest->optional = ppSymb->Optional;
+		 /* if all previous symbol of the forest are optional, adds the new symbol */
+		 /*as a candidate for the first symbol of the current forest */
+		 AddSymbToList (&ppForest->first, ppSymb);
+		 ppForest->optional = ppSymb->IsOptional;
 	       }
-	     if (ppSymb->Optional)
+	     if (ppSymb->IsOptional)
 	       {
-		  /* si le symbole est optionnel, */
-		  /* on l'ajoute a la liste des derniers de la foret courante */
-		  addSymb2List (&ppForest->last, ppSymb);
+		 /* if the symbol is optional, it is added to the list of last possible of the */
+		 /* current forest */
+		  AddSymbToList (&ppForest->last, ppSymb);
 	       }
 	     else
 	       {
-		  /* si le symbole est obligatoire, */
-		  /* il devient le dernier possible de la foret courante */
-		  freelist (ppForest->last);
-		  ppForest->last = (ListSymb *) TtaGetMemory (sizeof (ListSymb));
-		  ppForest->last->next = NULL;
-		  ppForest->last->symb = ppSymb;
+		 /* if the symbol is mandatory, it becomes the last possible of current forest */
+		  FreeList (ppForest->last);
+		  ppForest->last = (strListSymb *) TtaGetMemory (sizeof (strListSymb));
+		  ppForest->last->Next = NULL;
+		  ppForest->last->Symbol = ppSymb;
 	       }
 	  }
 	if (ppIterTag)
-	   addSymb2List (&ppSymb->Nexts, ppSymb);
+	   AddSymbToList (&ppSymb->Followings, ppSymb);
 	ppIterTag = FALSE;
      }
    ppSymb = NULL;
@@ -573,9 +582,9 @@ static void         NouveauSymbole ()
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         SymbName (unsigned char c)
+static void         SymbolName (unsigned char c)
 #else
-static void         SymbName (c)
+static void         SymbolName (c)
 unsigned char       c;
 
 #endif
@@ -583,16 +592,15 @@ unsigned char       c;
    if (ppLgBuffer == 0)
      {
 	ppError = TRUE;
-	errorMessage ("missing tag name");
+	ErrorMessage ("missing tag name");
      }
-   ppisnamed = TRUE;
-   strcpy (ppname, inputBuffer);
+   ppIsNamed = TRUE;
+   strcpy (ppName, inputBuffer);
    ppLgBuffer = 0;
 }
 
 /*----------------------------------------------------------------------
-   	un nom de transformation a ete lu, on alloue un descripteur de transformation	
-   modif : 20/05/96								
+  a transformation name has been read, allocates a new trasformation descriptor
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         EndNameTrans (unsigned char c)
@@ -604,24 +612,24 @@ unsigned char       c;
 {
 
    if (ppLgBuffer != 0)
-     {				/* on alloue un nouveau descripteur de transformation */
+     {	/* allocates the descriptor    */
 	patDepth = 0;
-	ppTrans = (TransDesc *) TtaGetMemory (sizeof (TransDesc));
+	ppTrans = (strTransDesc *) TtaGetMemory (sizeof (strTransDesc));
 	ppTrans->NameTrans = TtaGetMemory (NAME_LENGTH);
 	strcpy (ppTrans->NameTrans, inputBuffer);
-	ppTrans->nbPatSymb = 0;
-	ppTrans->nbRules = 0;
-	ppTrans->patdepth = 0;
+	ppTrans->NbPatSymb = 0;
+	ppTrans->NbRules = 0;
+	ppTrans->PatDepth = 0;
 	ppTrans->First = NULL;
-	ppTrans->rootdesc = NULL;
-	ppTrans->PatSymbs = NULL;
+	ppTrans->RootDesc = NULL;
+	ppTrans->Symbols = NULL;
 	ppTrans->Rules = NULL;
-	ppTrans->ActiveTrans = TRUE;
-	ppTrans->TagDest = NULL;
-	ppTrans->next = NULL;
+	ppTrans->IsActiveTrans = TRUE;
+	ppTrans->DestinationTag = NULL;
+	ppTrans->Next = NULL;
 	ppLgBuffer = 0;
 
-	/* on alloue de nouvelles structures choix et foret */
+	/* allocates new choice and forest descriptors */
 	ppChoice = (parChoice *) TtaGetMemory (sizeof (parChoice));
 	ppForest = (parForest *) TtaGetMemory (sizeof (parForest));
 	ppChoice->forests = ppForest;
@@ -634,7 +642,7 @@ unsigned char       c;
    else
      {
 	ppError = TRUE;
-	errorMessage ("Missing Transformation Name");
+	ErrorMessage ("Missing Transformation Name");
      }
 }
 
@@ -663,10 +671,10 @@ unsigned char       c;
 
 #endif
 {
-   /*   TraiteFinSymb(); */
-   ChStack[SzStack] = ppChoice;
-   OpStack[SzStack] = c;
-   SymbStack[SzStack++] = ppSymb;	/* on empile le symbole */
+   /*   ProcessSymbol(); */
+   choiceStack[sizeStack] = ppChoice;
+   opStack[sizeStack] = c;
+   symbolStack[sizeStack++] = ppSymb;
    ppChoice = (parChoice *) TtaGetMemory (sizeof (parChoice));
    ppForest = (parForest *) TtaGetMemory (sizeof (parForest));
    ppChoice->forests = ppForest;
@@ -691,20 +699,20 @@ unsigned char       c;
 {
 
    parForest          *pf;
-   SymbDesc           *ps;
-   ListSymb           *pList, *pL3;
+   strSymbDesc           *ps;
+   strListSymb           *pList, *pL3;
 
-   TraiteFinSymb ();
-   NouveauSymbole ();
-   if (SzStack < 1 || OpStack[SzStack - 1] != '(')
+   ProcessSymbol ();
+   NewSymbol ();
+   if (sizeStack < 1 || opStack[sizeStack - 1] != '(')
      {
 	ppError = TRUE;
-	errorMessage ("mismatched parenthesises");
+	ErrorMessage ("mismatched parenthesises");
      }
    else
      {
 	if (ppLastChoice)
-	   freechoice (ppLastChoice);
+	   FreeChoice (ppLastChoice);
 	ppLastChoice = ppChoice;
 	pf = ppChoice->forests;
 	while (pf && !ppChoice->optional)
@@ -712,32 +720,31 @@ unsigned char       c;
 	     ppChoice->optional = ppChoice->optional || pf->optional;
 	     pf = pf->next;
 	  }
-	/* depile le descripteur de choix */
-	ppChoice = ChStack[SzStack - 1];
-	SzStack--;
+	/* pops the choice descriptor */
+	ppChoice = choiceStack[sizeStack - 1];
+	sizeStack--;
 	ppForest = ppChoice->forests;
-	/* parcours les descripteurs fils du choix (le courant est le dernier) */
+	/* for each alternative of the choice, adds the symbols of parsed expression to the descriptor */
 	while (ppForest->next)
 	   ppForest = ppForest->next;
 
 	if (ppForest->first == NULL)
 	  {
-	     /* si le descripteur de foret est vide */
-	     /* on remplace les listes de noeuds par celles de l'expression parenthesee */
+	     /* if the forest descriptor is empty, replaces nodes lists by those of parsed expression */
 	     pf = ppLastChoice->forests;
 	     while (pf)
 	       {
 		  pList = pf->first;
 		  while (pList)
 		    {
-		       addSymb2List (&ppForest->first, pList->symb);
-		       pList = pList->next;
+		       AddSymbToList (&ppForest->first, pList->Symbol);
+		       pList = pList->Next;
 		    }
 		  pList = pf->last;
 		  while (pList)
 		    {
-		       addSymb2List (&ppForest->last, pList->symb);
-		       pList = pList->next;
+		       AddSymbToList (&ppForest->last, pList->Symbol);
+		       pList = pList->Next;
 		    }
 		  pf = pf->next;
 	       }
@@ -745,60 +752,60 @@ unsigned char       c;
 	  }
 	else
 	  {
-	     /* les premiers de l'expression parenthesee sont ajoutes aux suivants */
-	     /*possibles des derniers symboles de l'expression courante */
+	    /* the first symbol of parsed expressions are added to the list of first possible */
+	    /* symbols of the current forest */
 	     pList = ppForest->last;
 	     while (pList)
 	       {
-		  ps = pList->symb;
+		  ps = pList->Symbol;
 		  if (ps)
-		    {		/* ps: un symbole dernier */
+		    {	
 		       pf = ppLastChoice->forests;
 		       while (pf)
 			 {
 			    pL3 = pf->first;
 			    while (pL3)
 			      {
-				 addSymb2List (&ps->Nexts, pL3->symb);
-				 pL3 = pL3->next;
+				 AddSymbToList (&ps->Followings, pL3->Symbol);
+				 pL3 = pL3->Next;
 			      }
 			    pf = pf->next;
 			 }
 		    }
-		  pList = pList->next;
+		  pList = pList->Next;
 	       }
 
 	     if (ppForest->optional)
 	       {
-		  /* si les noeuds precedents sont tous optionnels, les premiers de l'expression */
-		  /* parenthesee sont ajoutes a ceux de l'expression courante */
+		 /* if all symbols are otional in current forest, the first possible symbol of parsed */
+		 /* expression are added to the first possible of current forest descriptor */
 		  pf = ppLastChoice->forests;
 		  while (pf)
 		    {
 		       pList = pf->first;
 		       while (pList)
 			 {
-			    addSymb2List (&ppForest->first, pList->symb);
-			    pList = pList->next;
+			    AddSymbToList (&ppForest->first, pList->Symbol);
+			    pList = pList->Next;
 			 }
 		       pf = pf->next;
 		    }
 	       }
 
 	     if (!ppLastChoice->optional)
-	       {		/* on remplace ppF->last par les derniers de ppLastChoice */
-		  freelist (ppForest->last);
+	       {
+		  FreeList (ppForest->last);
 		  ppForest->last = NULL;
 	       }
-	     /*on ajoute les derniers de ppLastChoice a ppF->last */
+	     /* adds the last possible of last parsed choice to the last pssoble of current forest descriptor */
 	     pf = ppLastChoice->forests;
 	     while (pf)
 	       {
 		  pList = pf->last;
 		  while (pList)
 		    {
-		       addSymb2List (&ppForest->last, pList->symb);
-		       pList = pList->next;
+		       AddSymbToList (&ppForest->last, pList->Symbol);
+		       pList = pList->Next;
 		    }
 		  pf = pf->next;
 	       }
@@ -831,12 +838,11 @@ unsigned char       c;
 #endif
 {
    parForest          *pf1, *pf2;
-   ListSymb           *plfirst, *pllast;
-   SymbDesc           *ps;
+   strListSymb           *plfirst, *pllast;
+   strSymbDesc           *ps;
 
    if (ppLastChoice)
-     {
-	/* on ajoute les premiers symboles de ppLastChoice aux suivants possibles des derniers */
+     { /* adds the first symbols of last choice descriptor as next possible of its last symbols */
 	pf1 = ppLastChoice->forests;
 	while (pf1)
 	  {
@@ -849,18 +855,18 @@ unsigned char       c;
 		       pllast = pf2->last;
 		       while (pllast)
 			 {
-			    ps = pllast->symb;
+			    ps = pllast->Symbol;
 			    if (ps)
-			       addSymb2List (&ps->Nexts, plfirst->symb);
-			    pllast = pllast->next;
+			       AddSymbToList (&ps->Followings, plfirst->Symbol);
+			    pllast = pllast->Next;
 			 }
 		       pf2 = pf2->next;
 		    }
-		  plfirst = plfirst->next;
+		  plfirst = plfirst->Next;
 	       }
 	     pf1 = pf1->next;
 	  }
-	freechoice (ppLastChoice);
+	FreeChoice (ppLastChoice);
 	ppLastChoice = NULL;
      }
 }
@@ -875,11 +881,11 @@ unsigned char       c;
 
 #endif
 {
-   TraiteFinSymb ();
-   SymbStack[SzStack] = ppSymb;
-   NouveauSymbole ();
-   OpStack[SzStack] = c;
-   ChStack[SzStack++] = ppChoice;
+   ProcessSymbol ();
+   symbolStack[sizeStack] = ppSymb;
+   NewSymbol ();
+   opStack[sizeStack] = c;
+   choiceStack[sizeStack++] = ppChoice;
    ppSymb = NULL;
    ppChoice = (parChoice *) TtaGetMemory (sizeof (parChoice));
    ppForest = (parForest *) TtaGetMemory (sizeof (parForest));
@@ -904,53 +910,52 @@ unsigned char       c;
 {
    parChoice          *pc;
    parForest          *pf;
-   ListSymb           *pl;
+   strListSymb           *pl;
 
-   if (SzStack < 1 || OpStack[SzStack - 1] != '{')
+   if (sizeStack < 1 || opStack[sizeStack - 1] != '{')
      {
 	ppError = TRUE;
-	errorMessage ("mismatched parenthesizes");
+	ErrorMessage ("mismatched parenthesizes");
      }
    else
      {
 	/* process the last read symbol */
-	TraiteFinSymb ();
-	NouveauSymbole ();
-	addterminal (ppChoice);
+	ProcessSymbol ();
+	NewSymbol ();
+	AddTerminal (ppChoice);
 	/* check if the current depth is the maximal depth */
-	if (patDepth > match_env.maxdepth)
-	   match_env.maxdepth = patDepth;
-	if (patDepth > ppTrans->patdepth)
-	   ppTrans->patdepth = patDepth;
+	if (patDepth > strMatchEnv.MaxDepth)
+	   strMatchEnv.MaxDepth = patDepth;
+	if (patDepth > ppTrans->PatDepth)
+	   ppTrans->PatDepth = patDepth;
 	patDepth--;
 
 	pc = ppChoice;
-	/*on depile le contexte precedent */
-	ppChoice = ChStack[SzStack - 1];
-	ppSymb = SymbStack[SzStack - 1];
-	SzStack--;
+	/* pops last context */
+	ppChoice = choiceStack[sizeStack - 1];
+	ppSymb = symbolStack[sizeStack - 1];
+	sizeStack--;
 	pf = pc->forests;
 	while (pf && !pc->optional)
 	  {
 	     pc->optional = pc->optional || pf->optional;
 	     pf = pf->next;
 	  }
-	ppSymb->OptChild = pc->optional;
+	ppSymb->IsOptChild = pc->optional;
 
-	/* on insere les premiers du contexte fils comme enfants du contexte pere */
-	/*ppSymb->Children; */
+	/* adds first symbols of child context as first children of parent context */
 	pf = pc->forests;
 	while (pf)
 	  {
 	     pl = pf->first;
 	     while (pl)
 	       {
-		  addSymb2List (&ppSymb->Children, pl->symb);
-		  pl = pl->next;
+		  AddSymbToList (&ppSymb->Children, pl->Symbol);
+		  pl = pl->Next;
 	       }
 	     pf = pf->next;
 	  }
-	freechoice (pc);
+	FreeChoice (pc);
 	pf = ppChoice->forests;
 	while (pf->next)
 	   pf = pf->next;
@@ -969,8 +974,8 @@ unsigned char       c;
 
 #endif
 {
-   TraiteFinSymb ();
-   NouveauSymbole ();
+   ProcessSymbol ();
+   NewSymbol ();
    ppForest->next = (parForest *) TtaGetMemory (sizeof (parForest));
    ppForest = ppForest->next;
    ppForest->first = NULL;
@@ -980,7 +985,7 @@ unsigned char       c;
    ppOptional = FALSE;
    if (ppLastChoice)
      {
-	freechoice (ppLastChoice);
+	FreeChoice (ppLastChoice);
 	ppLastChoice = NULL;
      }
 }
@@ -997,12 +1002,12 @@ unsigned char       c;
 #endif
 {
 
-   TraiteFinSymb ();
-   NouveauSymbole ();
+   ProcessSymbol ();
+   NewSymbol ();
    ppOptional = FALSE;
    if (ppLastChoice)
      {
-	freechoice (ppLastChoice);
+	FreeChoice (ppLastChoice);
 	ppLastChoice = NULL;
      }
 }
@@ -1018,18 +1023,18 @@ unsigned char       c;
 #endif
 {
    parForest          *pf;
-   ListSymb           *pl, *pl2;
+   strListSymb           *pl, *pl2;
 
-   TraiteFinSymb ();
-   NouveauSymbole ();
-   if (SzStack != 1)
+   ProcessSymbol ();
+   NewSymbol ();
+   if (sizeStack != 1)
      {
 	ppError = TRUE;
-	errorMessage ("Syntax error");
+	ErrorMessage ("Syntax error");
      }
    else
      {
-	addterminal (ppChoice);
+	AddTerminal (ppChoice);
 	pl2 = ppTrans->First;
 	pf = ppChoice->forests;
 	while (pf)
@@ -1045,20 +1050,19 @@ unsigned char       c;
 		    }
 		  else
 		    {
-		       while (pl2->next)
-			  pl2 = pl2->next;
-		       pl2->next = pl;
+		       while (pl2->Next)
+			  pl2 = pl2->Next;
+		       pl2->Next = pl;
 		    }
 	       }
 	     pf = pf->next;
 	  }
      }
-   freechoice (ppChoice);
+   FreeChoice (ppChoice);
    ppChoice = NULL;
    ppForest = NULL;
 }
 
-/* actions semantiques des tags */
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1072,26 +1076,26 @@ unsigned char       c;
    if (ppLgBuffer != 0)
      {
 	ppError = TRUE;
-	errorMessage ("Syntax Error");
+	ErrorMessage ("Syntax Error");
      }
    else
      {
-	ppSymb = (SymbDesc *) TtaGetMemory (sizeof (SymbDesc));
-	ppSymb->SName = (char *) TtaGetMemory (NAME_LENGTH);
+	ppSymb = (strSymbDesc *) TtaGetMemory (sizeof (strSymbDesc));
+	ppSymb->SymbolName = (char *) TtaGetMemory (NAME_LENGTH);
 	ppSymb->Tag = (char *) TtaGetMemory (NAME_LENGTH);
-	strcpy (ppSymb->SName, "");
+	strcpy (ppSymb->SymbolName, "");
 	strcpy (ppSymb->Tag, "");
 	ppSymb->Rule = NULL;
 	ppSymb->Children = NULL;
-	ppSymb->Nexts = NULL;
-	ppSymb->Optional = ppOptional;
-	ppSymb->ActiveSymb = TRUE;
+	ppSymb->Followings = NULL;
+	ppSymb->IsOptional = ppOptional;
+	ppSymb->IsActiveSymb = TRUE;
 	ppSymb->Attributes = NULL;
-	ppSymb->next = NULL;
-	if (ppisnamed)
+	ppSymb->Next = NULL;
+	if (ppIsNamed)
 	  {
-	     strcpy (ppSymb->SName, ppname);
-	     strcpy (ppname, "");
+	     strcpy (ppSymb->SymbolName, ppName);
+	     strcpy (ppName, "");
 	  }
      }
 }
@@ -1109,13 +1113,13 @@ unsigned char       c;
    if (ppLgBuffer != 0)
      {
 	ppError = TRUE;
-	errorMessage ("Syntax Error");
+	ErrorMessage ("Syntax Error");
      }
    else
      {
 	strcpy (ppNode->Tag, "");
 	ppNode->Attributes = NULL;
-	ppNode->next = NULL;
+	ppNode->Next = NULL;
      }
 }
 
@@ -1132,15 +1136,15 @@ unsigned char       c;
    if (ppLgBuffer != 0)
      {
 	strcpy (ppSymb->Tag, inputBuffer);
-	if (!ppisnamed)
-	   strcpy (ppSymb->SName, inputBuffer);
+	if (!ppIsNamed)
+	   strcpy (ppSymb->SymbolName, inputBuffer);
 	ppLgBuffer = 0;
-	ppisnamed = FALSE;
+	ppIsNamed = FALSE;
      }
    else if (!strcmp (ppSymb->Tag, ""))
      {
 	ppError = TRUE;
-	errorMessage ("Missing Tag Name");
+	ErrorMessage ("Missing Tag Name");
      }
 }
 
@@ -1162,7 +1166,7 @@ unsigned char       c;
    else if (!strcmp (ppNode->Tag, ""))
      {
 	ppError = TRUE;
-	errorMessage ("Missing Tag Name");
+	ErrorMessage ("Missing Tag Name");
      }
 }
 
@@ -1189,26 +1193,26 @@ unsigned char       c;
 	     ppAttr = ppSymb->Attributes;
 	     if (!ppAttr)
 	       {
-		  ppSymb->Attributes = (AttrDesc *) TtaGetMemory (sizeof (AttrDesc));
+		  ppSymb->Attributes = (strAttrDesc *) TtaGetMemory (sizeof (strAttrDesc));
 		  ppAttr = ppSymb->Attributes;
 		  ppAttr->NameAttr = (char *) TtaGetMemory (NAME_LENGTH);
-		  ppAttr->next = NULL;
+		  ppAttr->Next = NULL;
 	       }
 	     else
 	       {
-		  while (ppAttr->next && strcmp (ppAttr->NameAttr, inputBuffer))
-		     ppAttr = ppAttr->next;
+		  while (ppAttr->Next && strcmp (ppAttr->NameAttr, inputBuffer))
+		     ppAttr = ppAttr->Next;
 		  if (!strcmp (ppAttr->NameAttr, inputBuffer))
 		    {
 		       ppError = TRUE;
-		       errorMessage ("Multi valued attribute");
+		       ErrorMessage ("Multi valued attribute");
 		    }
 		  else
 		    {
-		       ppAttr->next = (AttrDesc *) TtaGetMemory (sizeof (AttrDesc));
-		       ppAttr = ppAttr->next;
+		       ppAttr->Next = (strAttrDesc *) TtaGetMemory (sizeof (strAttrDesc));
+		       ppAttr = ppAttr->Next;
 		       ppAttr->NameAttr = TtaGetMemory (NAME_LENGTH);
-		       ppAttr->next = NULL;
+		       ppAttr->Next = NULL;
 		    }
 	       }
 	     strcpy (ppAttr->NameAttr, inputBuffer);
@@ -1222,7 +1226,7 @@ unsigned char       c;
 	  {
 	     ppError = TRUE;
 	     sprintf (msgBuffer, "unknown attribute %s", inputBuffer);
-	     errorMessage (msgBuffer);
+	     ErrorMessage (msgBuffer);
 	  }
 #endif
 	ppLgBuffer = 0;
@@ -1230,7 +1234,7 @@ unsigned char       c;
    else
      {
 	ppError = TRUE;
-	errorMessage ("Missing Attribute Name");
+	ErrorMessage ("Missing Attribute Name");
      }
 }
 
@@ -1257,26 +1261,26 @@ unsigned char       c;
 	     ppAttr = ppNode->Attributes;
 	     if (!ppAttr)
 	       {
-		  ppNode->Attributes = (AttrDesc *) TtaGetMemory (sizeof (AttrDesc));
+		  ppNode->Attributes = (strAttrDesc *) TtaGetMemory (sizeof (strAttrDesc));
 		  ppAttr = ppNode->Attributes;
 		  ppAttr->NameAttr = (char *) TtaGetMemory (NAME_LENGTH);
-		  ppAttr->next = NULL;
+		  ppAttr->Next = NULL;
 	       }
 	     else
 	       {
-		  while (ppAttr->next && strcmp (ppAttr->NameAttr, inputBuffer))
-		     ppAttr = ppAttr->next;
+		  while (ppAttr->Next && strcmp (ppAttr->NameAttr, inputBuffer))
+		     ppAttr = ppAttr->Next;
 		  if (!strcmp (ppAttr->NameAttr, inputBuffer))
 		    {
 		       ppError = TRUE;
-		       errorMessage ("Multi valued attribute");
+		       ErrorMessage ("Multi valued attribute");
 		    }
 		  else
 		    {
-		       ppAttr->next = (AttrDesc *) TtaGetMemory (sizeof (AttrDesc));
-		       ppAttr = ppAttr->next;
+		       ppAttr->Next = (strAttrDesc *) TtaGetMemory (sizeof (strAttrDesc));
+		       ppAttr = ppAttr->Next;
 		       ppAttr->NameAttr = TtaGetMemory (NAME_LENGTH);
-		       ppAttr->next = NULL;
+		       ppAttr->Next = NULL;
 		    }
 	       }
 	     strcpy (ppAttr->NameAttr, inputBuffer);
@@ -1290,7 +1294,7 @@ unsigned char       c;
 	  {
 	     ppError = TRUE;
 	     sprintf (msgBuffer, "unknown attribute %s", inputBuffer);
-	     errorMessage (msgBuffer);
+	     ErrorMessage (msgBuffer);
 	  }
 #endif
 	ppLgBuffer = 0;
@@ -1298,7 +1302,7 @@ unsigned char       c;
    else
      {
 	ppError = TRUE;
-	errorMessage ("Missing Attribute Name");
+	ErrorMessage ("Missing Attribute Name");
      }
 }
 
@@ -1324,26 +1328,26 @@ unsigned char       c;
 	     ppAttr = ppNode->Attributes;
 	     if (!ppAttr)
 	       {
-		  ppNode->Attributes = (AttrDesc *) TtaGetMemory (sizeof (AttrDesc));
+		  ppNode->Attributes = (strAttrDesc *) TtaGetMemory (sizeof (strAttrDesc));
 		  ppAttr = ppNode->Attributes;
 		  ppAttr->NameAttr = (char *) TtaGetMemory (NAME_LENGTH);
-		  ppAttr->next = NULL;
+		  ppAttr->Next = NULL;
 	       }
 	     else
 	       {
-		  while (ppAttr->next && strcmp (ppAttr->NameAttr, inputBuffer))
-		     ppAttr = ppAttr->next;
+		  while (ppAttr->Next && strcmp (ppAttr->NameAttr, inputBuffer))
+		     ppAttr = ppAttr->Next;
 		  if (!strcmp (ppAttr->NameAttr, inputBuffer))
 		    {
 		       ppError = TRUE;
-		       errorMessage ("Multi valued attribute");
+		       ErrorMessage ("Multi valued attribute");
 		    }
 		  else
 		    {
-		       ppAttr->next = (AttrDesc *) TtaGetMemory (sizeof (AttrDesc));
-		       ppAttr = ppAttr->next;
+		       ppAttr->Next = (strAttrDesc *) TtaGetMemory (sizeof (strAttrDesc));
+		       ppAttr = ppAttr->Next;
 		       ppAttr->NameAttr = TtaGetMemory (NAME_LENGTH);
-		       ppAttr->next = NULL;
+		       ppAttr->Next = NULL;
 		    }
 	       }
 	     ppAttr->AttrTag = TtaGetMemory (NAME_LENGTH);
@@ -1357,7 +1361,7 @@ unsigned char       c;
 	else
 	  {
 	     ppError = TRUE;
-	     errorMessage ("Unknown attribute");
+	     ErrorMessage ("Unknown attribute");
 	  }
 #endif
 	ppLgBuffer = 0;
@@ -1365,7 +1369,7 @@ unsigned char       c;
    else
      {
 	ppError = TRUE;
-	errorMessage ("Missing Attribute Name");
+	ErrorMessage ("Missing Attribute Name");
      }
 }
 
@@ -1389,7 +1393,7 @@ unsigned char       c;
    else
      {
 	ppError = TRUE;
-	errorMessage ("Missing Tag Name");
+	ErrorMessage ("Missing Tag Name");
      }
 }
 
@@ -1416,7 +1420,7 @@ unsigned char       c;
    else
      {
 	ppError = TRUE;
-	errorMessage ("Missing Attribute Name");
+	ErrorMessage ("Missing Attribute Name");
      }
 }
 
@@ -1502,32 +1506,32 @@ unsigned char       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndPremisse (unsigned char c)
+static void         EndLeftPartRule (unsigned char c)
 #else
-static void         EndPremisse (c)
+static void         EndLeftPartRule (c)
 unsigned char       c;
 
 #endif
 {
    if (ppLgBuffer != 0)
      {				/* allocates a new rule descriptor */
-	ppRule = (RuleDesc *) TtaGetMemory (sizeof (RuleDesc));
-	ppRule->RName = TtaGetMemory (20);
-	strcpy (ppRule->RName, inputBuffer);
-	ppRule->next = NULL;
-	ppRule->OptNodes = (NodeDesc *) TtaGetMemory (sizeof (NodeDesc));
+	ppRule = (strRuleDesc *) TtaGetMemory (sizeof (strRuleDesc));
+	ppRule->RuleName = TtaGetMemory (20);
+	strcpy (ppRule->RuleName, inputBuffer);
+	ppRule->Next = NULL;
+	ppRule->OptionNodes = (strNodeDesc *) TtaGetMemory (sizeof (strNodeDesc));
 	ppRule->NewNodes = NULL;
-	ppNode = ppRule->OptNodes;
+	ppNode = ppRule->OptionNodes;
 	ppNode->Tag = TtaGetMemory (NAME_LENGTH);
 	strcpy (ppNode->Tag, "");
 	ppNode->Attributes = NULL;
-	ppNode->next = NULL;
+	ppNode->Next = NULL;
 	ppLgBuffer = 0;
      }
    else
      {
 	ppError = TRUE;
-	errorMessage ("Missing left part of rule");
+	ErrorMessage ("Missing left part of rule");
      }
 }
 
@@ -1552,17 +1556,17 @@ unsigned char       c;
 	  {
 	     ppError = TRUE;
 	     sprintf (msgBuffer, "unknown tag </%s>", ppNode->Tag);
-	     errorMessage (msgBuffer);
+	     ErrorMessage (msgBuffer);
 	  }
      }
    if (ppNode && c == '.')
      {				/* allocate the next node descriptor */
-	ppNode->next = (NodeDesc *) TtaGetMemory (sizeof (NodeDesc));
-	ppNode = ppNode->next;
+	ppNode->Next = (strNodeDesc *) TtaGetMemory (sizeof (strNodeDesc));
+	ppNode = ppNode->Next;
 	ppNode->Tag = TtaGetMemory (NAME_LENGTH);
 	strcpy (ppNode->Tag, "");
 	ppNode->Attributes = NULL;
-	ppNode->next = NULL;
+	ppNode->Next = NULL;
      }
 }
 /*----------------------------------------------------------------------
@@ -1575,7 +1579,7 @@ unsigned char       c;
 
 #endif
 {
-   AttrDesc           *ad, *ad2;
+   strAttrDesc           *ad, *ad2;
    char                msgBuffer[MaxBufferLength];
 
    if (ppLgBuffer != 0)
@@ -1586,13 +1590,13 @@ unsigned char       c;
 	  {
 	     ppError = TRUE;
 	     sprintf (msgBuffer, "unknown tag </%s>", ppNode->Tag);
-	     errorMessage (msgBuffer);
+	     ErrorMessage (msgBuffer);
 	  }
      }
-   if (!strcmp (ppRule->OptNodes->Tag, ""))
+   if (!strcmp (ppRule->OptionNodes->Tag, ""))
      {
 	/* frees the current node descriptor if it is empty (the rule has no opt. node */
-	ad = ppRule->OptNodes->Attributes;
+	ad = ppRule->OptionNodes->Attributes;
 	while (ad)
 	  {
 	     TtaFreeMemory (ad->NameAttr);
@@ -1603,21 +1607,21 @@ unsigned char       c;
 	       }
 	     else if (!ad->IsInt)
 		TtaFreeMemory (ad->TextVal);
-	     ad2 = ad->next;
+	     ad2 = ad->Next;
 	     TtaFreeMemory ((char *) ad);
 	     ad = ad2;
 	  }
-	TtaFreeMemory (ppRule->OptNodes->Tag);
-	TtaFreeMemory ((char *) ppRule->OptNodes);
-	ppRule->OptNodes = NULL;
+	TtaFreeMemory (ppRule->OptionNodes->Tag);
+	TtaFreeMemory ((char *) ppRule->OptionNodes);
+	ppRule->OptionNodes = NULL;
      }
    /* allocate a New node descriptor */
-   ppRule->NewNodes = (NodeDesc *) TtaGetMemory (sizeof (NodeDesc));
+   ppRule->NewNodes = (strNodeDesc *) TtaGetMemory (sizeof (strNodeDesc));
    ppNode = ppRule->NewNodes;
    ppNode->Tag = TtaGetMemory (NAME_LENGTH);
    strcpy (ppNode->Tag, "");
    ppNode->Attributes = NULL;
-   ppNode->next = NULL;
+   ppNode->Next = NULL;
 }
 
 /*----------------------------------------------------------------------
@@ -1631,10 +1635,10 @@ unsigned char       c;
 #endif
 {
    boolean             ok;
-   RuleDesc           *prule;
-   SymbDesc           *psymb;
-   NodeDesc           *pnode;
-   AttrDesc           *ad, *ad2;
+   strRuleDesc           *prule;
+   strSymbDesc           *psymb;
+   strNodeDesc           *pnode;
+   strAttrDesc           *ad, *ad2;
    char                msgBuffer[MaxBufferLength];
 
    if (ppLgBuffer != 0)
@@ -1645,12 +1649,12 @@ unsigned char       c;
 	  {
 	     ppError = TRUE;
 	     sprintf (msgBuffer, "unknown tag </%s>", ppNode->Tag);
-	     errorMessage (msgBuffer);
+	     ErrorMessage (msgBuffer);
 	  }
      }
-   if (ppRule->OptNodes && !strcmp (ppRule->OptNodes->Tag, ""))
+   if (ppRule->OptionNodes && !strcmp (ppRule->OptionNodes->Tag, ""))
      {				/* free the last node if it is empty */
-	ad = ppRule->OptNodes->Attributes;
+	ad = ppRule->OptionNodes->Attributes;
 	while (ad)
 	  {
 	     TtaFreeMemory (ad->NameAttr);
@@ -1661,12 +1665,12 @@ unsigned char       c;
 	       }
 	     else if (!ad->IsInt)
 		TtaFreeMemory (ad->TextVal);
-	     ad2 = ad->next;
+	     ad2 = ad->Next;
 	     TtaFreeMemory ((char *) ad);
 	     ad = ad2;
 	  }
-	TtaFreeMemory (ppRule->OptNodes->Tag);
-	TtaFreeMemory ((char *) ppRule->OptNodes);
+	TtaFreeMemory (ppRule->OptionNodes->Tag);
+	TtaFreeMemory ((char *) ppRule->OptionNodes);
 	ppRule->NewNodes = NULL;
      }
 
@@ -1683,7 +1687,7 @@ unsigned char       c;
 	       }
 	     else if (!ad->IsInt)
 		TtaFreeMemory (ad->TextVal);
-	     ad2 = ad->next;
+	     ad2 = ad->Next;
 	     TtaFreeMemory ((char *) ad);
 	     ad = ad2;
 	  }
@@ -1699,48 +1703,48 @@ unsigned char       c;
       ppTrans->Rules = ppRule;
    else
      {
-	while (prule->next)
-	   prule = prule->next;
-	prule->next = ppRule;
+	while (prule->Next)
+	   prule = prule->Next;
+	prule->Next = ppRule;
      }
-   ppTrans->nbRules++;
+   ppTrans->NbRules++;
 
    /* link the symbols of the pattern to the current rule */
-   psymb = ppTrans->PatSymbs;
+   psymb = ppTrans->Symbols;
    ok = FALSE;
    while (psymb)
      {
-	if (!strcmp (ppRule->RName, psymb->SName))
+	if (!strcmp (ppRule->RuleName, psymb->SymbolName))
 	  {
 	     psymb->Rule = ppRule;
 	     ok = TRUE;
 	  }
-	psymb = psymb->next;
+	psymb = psymb->Next;
      }
 
    if (ok)
      {				/* the rule is linked to 1 symbol at least */
 	/* check its consistence with the destination type of the current transformation */
-	if (ppRule->OptNodes)
-	   pnode = ppRule->OptNodes;
+	if (ppRule->OptionNodes)
+	   pnode = ppRule->OptionNodes;
 	else
 	   pnode = ppRule->NewNodes;
-	if (pnode && ppTrans->TagDest == NULL)
+	if (pnode && ppTrans->DestinationTag == NULL)
 	  {
 	     /* the destination type is undefined => the first tag of the rule defines */
 	     /* the destination type of the transformation */
-	     ppTrans->TagDest = TtaGetMemory (NAME_LENGTH);
-	     strcpy (ppTrans->TagDest, pnode->Tag);
+	     ppTrans->DestinationTag = TtaGetMemory (NAME_LENGTH);
+	     strcpy (ppTrans->DestinationTag, pnode->Tag);
 	  }
-	else if (pnode && strcmp (ppTrans->TagDest, pnode->Tag))
+	else if (pnode && strcmp (ppTrans->DestinationTag, pnode->Tag))
 	   /* the first tag of the rule is different from the destination type : the */
 	   /* rule has no destination type */
-	   strcpy (ppTrans->TagDest, "");
+	   strcpy (ppTrans->DestinationTag, "");
      }
    else
      {
 	ppError = TRUE;
-	errorMessage ("undefined pattern symbol");
+	ErrorMessage ("undefined pattern symbol");
      }
    ppRule = NULL;
 }
@@ -1755,32 +1759,32 @@ unsigned char       c;
 
 #endif
 {
-   TransDesc          *td;
+   strTransDesc          *td;
 
    /* create the pattern virtual root node */
-   ppTrans->rootdesc = (SymbDesc *) TtaGetMemory (sizeof (SymbDesc));
-   ppTrans->rootdesc->SName = ppTrans->NameTrans;
-   ppTrans->rootdesc->Tag = TtaGetMemory (NAME_LENGTH);
-   strcpy (ppTrans->rootdesc->Tag, "pattern_root");
+   ppTrans->RootDesc = (strSymbDesc *) TtaGetMemory (sizeof (strSymbDesc));
+   ppTrans->RootDesc->SymbolName = ppTrans->NameTrans;
+   ppTrans->RootDesc->Tag = TtaGetMemory (NAME_LENGTH);
+   strcpy (ppTrans->RootDesc->Tag, "pattern_root");
    /* warning : the Rule points the transformation record (no rule for the root node) */
-   ppTrans->rootdesc->Rule = (RuleDesc *) ppTrans;
-   ppTrans->rootdesc->Optional = FALSE;
-   ppTrans->rootdesc->ActiveSymb = TRUE;
-   ppTrans->rootdesc->OptChild = FALSE;
-   ppTrans->rootdesc->Children = ppTrans->First;
-   ppTrans->rootdesc->Nexts = NULL;
-   ppTrans->rootdesc->next = NULL;
+   ppTrans->RootDesc->Rule = (strRuleDesc *) ppTrans;
+   ppTrans->RootDesc->IsOptional = FALSE;
+   ppTrans->RootDesc->IsActiveSymb = TRUE;
+   ppTrans->RootDesc->IsOptChild = FALSE;
+   ppTrans->RootDesc->Children = ppTrans->First;
+   ppTrans->RootDesc->Followings = NULL;
+   ppTrans->RootDesc->Next = NULL;
 
    /* inserts the new transformation in the list of transformations */
-   td = match_env.Transformations;
-   match_env.nbTrans++;
+   td = strMatchEnv.Transformations;
+   strMatchEnv.NbTrans++;
    if (td == NULL)
-      match_env.Transformations = ppTrans;
+      strMatchEnv.Transformations = ppTrans;
    else
      {
-	while (td->next != NULL)
-	   td = td->next;
-	td->next = ppTrans;
+	while (td->Next != NULL)
+	   td = td->Next;
+	td->Next = ppTrans;
      }
    ppTrans = NULL;
 }
@@ -1802,7 +1806,7 @@ unsigned char       c;
        c == ',' || c == '|' || c == '>' || c == '<' || c == '.' || c == '!' || c == '?')
      {
 	ppError = TRUE;
-	errorMessage ("Invalid char");
+	ErrorMessage ("Invalid char");
      }
    else
      {
@@ -1816,7 +1820,7 @@ unsigned char       c;
 	     if (ppLgBuffer + len >= MaxBufferLength)
 	       {
 		  ppError = TRUE;
-		  errorMessage ("Panic: buffer overflow");
+		  ErrorMessage ("Panic: buffer overflow");
 		  ppLgBuffer = 0;
 	       }
 	     if (len == 1)
@@ -1910,7 +1914,7 @@ static sourceTransition ppsourceAutomaton[] =
 /* state 2:  */
    {2, '|', (Proc) EndChoice, 1},
    {2, ',', (Proc) EndPatNode, 1},
-   {2, ':', (Proc) SymbName, 1},
+   {2, ':', (Proc) SymbolName, 1},
    {2, '{', (Proc) BeginChild, 1},
    {2, '+', (Proc) IterationTag, 3},
    {2, ')', (Proc) EndExp, 3},
@@ -1953,9 +1957,9 @@ static sourceTransition ppsourceAutomaton[] =
 /* state 10: */
    {10, 'S', (Proc) Do_nothing, 10},
    {10, '{', (Proc) BeginRules, 11},
-/* state 11: reading the premisse */
+/* state 11: reading the LeftPartRule */
    {11, 'S', (Proc) Do_nothing, 11},
-   {11, '>', (Proc) EndPremisse, 12},
+   {11, '>', (Proc) EndLeftPartRule, 12},
    {11, '*', (Proc) ppPutInBuffer, 11},
 /* state 12: reading the position path */
    {12, 'S', (Proc) Do_nothing, 12},
@@ -2065,16 +2069,24 @@ static void         ppInitAutomaton ()
    	TRANSparse	parses the transformation file infile and builds the	
    			equivalent matching environment.			
   ----------------------------------------------------------------------*/
+#ifdef PPSTANDALONE
 #ifdef __STDC__
 static void         TRANSparse (FILE * infile)
 #else
 static void         TRANSparse (infile)
 FILE               *infile;
-
+#endif
+#else
+#ifdef __STDC__
+static void         TRANSparse (BinFile infile)
+#else
+static void         TRANSparse (infile)
+BinFile               infile;
+#endif
 #endif
 {
    unsigned char       charRead, oldcharRead;
-   boolean             match;
+   boolean             match,readOk;
    PtrTransition       trans;
 
    /* initialize automaton *//* parse the input file    */
@@ -2090,17 +2102,31 @@ FILE               *infile;
 	/* read one character from the input file, if the character read */
 	/* previously has already been processed */
 	if (charRead == EOS)
+#ifdef PPSTANDALONE
 	   charRead = getc (infile);
 	if (!feof (infile) && !ferror (infile))
+#else
+	  readOk = TtaReadByte(infile,&charRead);
+	if(readOk)
+#endif
 	  {
 	     if (charRead == '!' && numberOfCharRead == 0)
 	       {		/*comment */
 		  do
-		     charRead = getc (infile);
+#ifdef PPSTANDALONE
+		    charRead = getc (infile);
 		  while (charRead != EOL && !feof (infile) && !ferror (infile));
+#else
+		    readOk = TtaReadByte(infile,&charRead);
+		  while (charRead != EOL && readOk);
+#endif
 	       }
 	  }
+#ifdef PPSTANDALONE
 	if (!feof (infile) && !ferror (infile))
+#else
+	  if(readOk)
+#endif
 	  {
 	     if (charRead == EOL)
 	       {
@@ -2136,10 +2162,10 @@ FILE               *infile;
 			 {
 			    /* transition found. Activate the transition */
 			    /* call the procedure associated with the transition */
-			    NormalTransition = TRUE;
+			    normalTransition = TRUE;
 			    if (trans->action)
 			       (*(trans->action)) (charRead);
-			    if (NormalTransition)
+			    if (normalTransition)
 			      {
 				 /* the input character has been processed */
 				 charRead = EOS;
@@ -2160,6 +2186,7 @@ FILE               *infile;
 			      }
 			    else
 			      {	/* an error has been found skipping the transformation */
+#ifdef PPSTANDALONE
 				 oldcharRead = getc (infile);
 				 if (!feof (infile) && !ferror (infile))
 				    charRead = getc (infile);
@@ -2172,17 +2199,33 @@ FILE               *infile;
 					 charRead = getc (infile);
 				   }
 				 if (!feof (infile) && !ferror (infile))
+#else
+				 readOk=TtaReadByte(infile,&oldcharRead);
+				 if (readOk)
+				    readOk=TtaReadByte(infile,&charRead);
+				 while (readOk && (charRead != '}' || oldcharRead != ';'))
+				   {
+				      oldcharRead = charRead;
+				      readOk=TtaReadByte(infile,&charRead);
+				      while (readOk  && ((int) charRead == 9 ||
+							 (int) charRead == 10 || 
+							 (int) charRead == 12 || 
+							 (int) charRead == 13))
+					 readOk=TtaReadByte(infile,&charRead);
+				   }
+				 if (readOk)
+#endif
 				   {
 				      if (ppTrans)
 					{
 					   fprintf (stderr, "skipping transformation %s\n", ppTrans->NameTrans);
-					   freetrans (ppTrans);
+					   FreeTrans (ppTrans);
 					   ppTrans = NULL;
 					}
 				      else
 					 fprintf (stderr, "skipping transformation\n");
 				      if (ppChoice != NULL)
-					 freechoice (ppChoice);
+					 FreeChoice (ppChoice);
 				      ppChoice = NULL;
 				      ppError = FALSE;
 				      currentState = 0;
@@ -2193,12 +2236,12 @@ FILE               *infile;
 				      ppAttr = NULL;
 				      ppNode = NULL;
 				      ppRule = NULL;
-				      ppisnamed = FALSE;
-				      strcpy (ppname, "");
-				      OpStack[0] = EOS;
-				      SymbStack[0] = NULL;
-				      ChStack[0] = NULL;
-				      SzStack = 1;
+				      ppIsNamed = FALSE;
+				      strcpy (ppName, "");
+				      opStack[0] = EOS;
+				      symbolStack[0] = NULL;
+				      choiceStack[0] = NULL;
+				      sizeStack = 1;
 				   }
 			      }	/* done */
 			    trans = NULL;
@@ -2214,7 +2257,11 @@ FILE               *infile;
 	       }
 	  }
      }
+#ifdef PPSTANDALONE
    while (!feof (infile) && !ferror (infile) && !ppError);
+#else
+   while (readOk && !ppError);
+#endif
    /* end of HTML file */
 }
 
@@ -2228,19 +2275,19 @@ static void         initpparse (void)
 static void         initpparse ()
 #endif
 {
-   TransDesc          *td, *td2;
+   strTransDesc          *td, *td2;
 
-   /* liberation des anciens decripteurs de transformation */
-   td = match_env.Transformations;
+   /* frees old transformation descriptors */
+   td = strMatchEnv.Transformations;
    while (td)
      {
-	td2 = td->next;
-	freetrans (td);
+	td2 = td->Next;
+	FreeTrans (td);
 	td = td2;
      }
-   match_env.nbTrans = 0;
-   match_env.maxdepth = 0;
-   match_env.Transformations = NULL;
+   strMatchEnv.NbTrans = 0;
+   strMatchEnv.MaxDepth = 0;
+   strMatchEnv.Transformations = NULL;
 }
 
 
@@ -2255,84 +2302,95 @@ char               *name;
 
 #endif
 {
-   FILE               *infile = (FILE *) 0;
    char                msg[200];
 
-#ifndef PPSTANDALONE
-   PathBuffer          DirBuffer, filename;
+#ifdef PPSTANDALONE
+   FILE               *infile = (FILE *)0;
+#else
+   BinFile             infile = (BinFile)0;
+   char		       fileName[MAX_LENGTH];
    struct stat        *StatBuffer;
-   int                 i, status;
+   int                 len, status;
+#endif
 
-   /* compose le nom du fichier a ouvrir avec le nom du directory */
-   /* des schemas et le suffixe */
-   strncpy (DirBuffer, SchemaPath, MAX_PATH);
-   MakeCompleteName (name, "trans", DirBuffer, filename, &i);
+#ifndef PPSTANDALONE
+   /* build the transformation file name from schema directory and schema name */
+   
+   TtaGetSchemaPath(fileName,MAX_LENGTH);
+   len = strlen(fileName);
+   if (fileName[len]!= DIR_SEP)
+     strcat (fileName,DIR_STR);
+   strcat (fileName,name);
+   strcat (fileName,".trans");
 
-   /* verifie la date du fichier */
-   StatBuffer = (struct stat *) malloc (sizeof (struct stat));
-
-   status = stat (filename, StatBuffer);
+   /* check if the file is newer than last read */
+   StatBuffer = (struct stat *) TtaGetMemory (sizeof (struct stat));
+   
+   status = stat (fileName, StatBuffer);
    if (status != -1)
      {
-	if (StatBuffer->st_mtime == timeLastWrite)	/* the file is unchanged, activing all the transformations */
-	   SetTransValid (match_env.Transformations);
+	if (StatBuffer->st_mtime == timeLastWrite)
+	/* the file is unchanged, activing all the transformations */
+	   SetTransValid (strMatchEnv.Transformations);
 	else
-	  {			/* the file HTML.trans has been touched, parsing it */
+	  {
+       	/* the file xxx.trans has been touched, parsing it */
 	     timeLastWrite = StatBuffer->st_mtime;
-	     /* ouvre le fichier */
-	     infile = fopen (filename, "r");
+	     infile = TtaReadOpen(fileName);
 #else
    infile = fopen (name, "r");
 #endif
-   if (infile == 0)
-     {
-	sprintf (msg, "Can't open file %s.trans", name);
-	errorMessage (msg);
-	ppError = TRUE;
-     }
-   else
-     {
-	initpparse ();
-	ppError = FALSE;
-	ppOptional = FALSE;
-	ppIterTag = FALSE;
-	ppAttr = NULL;
-	ppNode = NULL;
-	ppRule = NULL;
-	ppisnamed = FALSE;
-	strcpy (ppname, "");
-	OpStack[0] = EOS;
-	SymbStack[0] = NULL;
-	ChStack[0] = NULL;
-	SzStack = 1;
-	inputBuffer[0] = EOS;	/* initialize input buffer */
-	ppLgBuffer = 0;
-	TRANSparse (infile);
-	fclose (infile);
-     }
+	   if (infile == 0)
+	     {
+		sprintf (msg, "Can't open file %s.trans", name);
+		ErrorMessage (msg);
+		ppError = TRUE;
+	     }
+	   else
+	     {
+		initpparse ();
+		ppError = FALSE;
+		ppOptional = FALSE;
+		ppIterTag = FALSE;
+		ppAttr = NULL;
+		ppNode = NULL;
+		ppRule = NULL;
+		ppIsNamed = FALSE;
+		strcpy (ppName, "");
+		opStack[0] = EOS;
+		symbolStack[0] = NULL;
+		choiceStack[0] = NULL;
+		sizeStack = 1;
+		inputBuffer[0] = EOS;	/* initialize input buffer */
+		ppLgBuffer = 0;
+		TRANSparse (infile);
 #ifndef PPSTANDALONE
-}
-}
-free (StatBuffer);
+	        TtaReadClose (infile);
+	      }
+          }
+     }
+   TtaFreeMemory ((char *)StatBuffer);
+#else
+	   	fclose (infile);
+  	       }
 #endif
-
-return !ppError;
+   return !ppError;
 }
 
 
 #ifdef PPSTANDALONE
 void                main ()
 {
-   TransDesc          *td;
-   SymbDesc           *sd;
-   ListSymb           *ls;
-   AttrDesc           *pa;
-   NodeDesc           *nd;
-   RuleDesc           *pr;
+   strTransDesc          *td;
+   strSymbDesc           *sd;
+   strListSymb           *ls;
+   strAttrDesc           *pa;
+   strNodeDesc           *nd;
+   strRuleDesc           *pr;
 
    ppStartParser ("test.trans");
    printf ("\n");
-   td = match_env.Transformations;
+   td = strMatchEnv.Transformations;
    while (td)
      {
 	printf ("transformation : %s\n", td->NameTrans);
@@ -2340,14 +2398,14 @@ void                main ()
 	ls = td->First;
 	while (ls)
 	  {
-	     printf ("%s, ", ls->symb->SName);
-	     ls = ls->next;
+	     printf ("%s, ", ls->Symbol->SymbolName);
+	     ls = ls->Next;
 	  }
 	printf ("\n");
-	sd = td->PatSymbs;
+	sd = td->Symbols;
 	while (sd)
 	  {
-	     printf ("%s  ", s d->SName);
+	     printf ("%s  ", s d->SymbolName);
 	     pa = sd->Attributes;
 	     while (pa)
 	       {
@@ -2356,33 +2414,33 @@ void                main ()
 		     printf ("%d ,", pa->IntVal);
 		  else
 		     printf ("%s ,", pa->TextVal);
-		  pa = pa->next;
+		  pa = pa->Next;
 	       }
 	     printf ("-- ");
-	     ls = sd->Nexts;
+	     ls = sd->Followings;
 	     while (ls)
 	       {
-		  if (ls->symb == NULL)
+		  if (ls->Symbol == NULL)
 		     printf ("end");
 		  else
-		     printf ("%s, ", ls->symb->SName);
-		  ls = ls->next;
+		     printf ("%s, ", ls->Symbol->SymbolName);
+		  ls = ls->Next;
 	       }
-	     printf ("%s ", sd->OptChild ? "-?" : "-");
+	     printf ("%s ", sd->IsOptChild ? "-?" : "-");
 	     ls = sd->Children;
 	     while (ls)
 	       {
-		  if (ls->symb == NULL)
+		  if (ls->Symbol == NULL)
 		     printf ("end");
 		  else
-		     printf ("%s, ", ls->symb->SName);
-		  ls = ls->next;
+		     printf ("%s, ", ls->Symbol->SymbolName);
+		  ls = ls->Next;
 	       }
 	     pr = sd->Rule;
 	     if (pr)
 	       {
-		  printf ("\n %s > ", pr->RName);
-		  nd = pr->OptNodes;
+		  printf ("\n %s > ", pr->RuleName);
+		  nd = pr->OptionNodes;
 		  while (nd)
 		    {
 		       if (nd->Attributes)
@@ -2398,13 +2456,13 @@ void                main ()
 			       printf ("%d", pa->IntVal);
 			    else
 			       printf ("%s", pa->TextVal);
-			    pa = pa->next;
+			    pa = pa->Next;
 			    if (pa)
 			       printf (" ");
 			 }
 		       if (nd->Attributes)
 			  printf (">");
-		       nd = nd->next;
+		       nd = nd->Next;
 		       if (nd)
 			  printf (".");
 		       else
@@ -2426,13 +2484,13 @@ void                main ()
 			       printf ("%d", pa->IntVal);
 			    else
 			       printf ("%s", pa->TextVal);
-			    pa = pa->next;
+			    pa = pa->Next;
 			    if (pa)
 			       printf (" ");
 			 }
 		       if (nd->Attributes)
 			  printf (">");
-		       nd = nd->next;
+		       nd = nd->Next;
 		       if (nd)
 			  printf (".");
 		       else
@@ -2440,10 +2498,10 @@ void                main ()
 		    }
 	       }
 	     printf ("\n");
-	     sd = sd->next;
+	     sd = sd->Next;
 	  }
 	printf ("\n");
-	td = td->next;
+	td = td->Next;
      }
    printf ("\n");
 }

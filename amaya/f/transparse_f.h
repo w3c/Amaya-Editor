@@ -6,12 +6,12 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void freelist ( ListSymb * pl );
+extern void FreeList ( strListSymb * pl );
 extern int ppStartParser ( char *name );
 
 #else /* __STDC__ */
 
-extern void freelist (/* ListSymb * pl */);
+extern void FreeList (/* strListSymb * pl */);
 extern int ppStartParser (/* char *name */);
 
 #endif /* __STDC__ */

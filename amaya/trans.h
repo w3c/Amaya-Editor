@@ -7,63 +7,61 @@
 
 #ifndef _TRANS_H__
 #define _TRANS_H__
-
-/* definition des types utilises par la transformation de structure */
-/* Stephane Bonhomme Apr 96 */
-#define MaxSizePat  500
-#define MaxWidthPat 50
-#define MaxPatterns 50
-#define MAXSTACK 500
-#define LGBUFFER 5000
+/*----------------------------------------------------------------------
+     Definitions of types and variables used in type transformation (trans.c and transparse.c)
+     Stephane Bonhomme Apr 96   
+  ----------------------------------------------------------------------*/
+#define MAX_STACK 100       /* size of html generation and pattern matching stacks */
+#define BUFFER_LEN 5000     /* size of html buffer */
 
 #ifndef PPSTANDALONE
 
-
-/* definition de la structure de l'arbre sujet */
-/* liste chainee des symboles correspondant a chaque fils */
-typedef struct _strmatchchild
+/*----------------------------------------------------------------------
+    structure definitions
+  ----------------------------------------------------------------------*/
+/*relation between pattern nodes (also called Symbols) and source structure tree nodes*/
+typedef struct _MatchChildren
   {
-     struct _SymbDesc   *patsymb;	/* symbole de la pattern matche */
-     struct _Tagnode    *node;	/* noeud de l'arbre sujet */
-     struct _strmatchchild *next;
+     struct _SymbDesc   *MatchSymb;	/* pattern symbol */
+     struct _Node       *MatchNode;	/* source tree node */
+     struct _MatchChildren *Next;
   }
-strmatchchildren;
+strMatchChildren;
 
-typedef struct _strmatch
+typedef struct _Match
   {
-     struct _SymbDesc   *patsymb;	/* symbole de la pattern matche */
-     struct _Tagnode    *node;	/* noeud de l'arbre sujet */
-     strmatchchildren   *childmatches;
-     struct _strmatch   *next;
+     struct _SymbDesc   *MatchSymb;	/* pattern symbol */
+     struct _Node       *MatchNode;	/* source tree node */
+     strMatchChildren   *MatchChildren;	/* relation between chidren in both pattern and source tree */
+     struct _Match   *Next;
   }
-strmatch;
+strMatch;
 
 
-/* definition d'un noeud de l'arbre sujet */
-typedef struct _Tagnode
+/* Source structure tree nodes definition */
+typedef struct _Node
   {
-     char               *tag;
-     Element             element;
-     struct _Tagnode    *parent;
-     struct _Tagnode    *child;
-     struct _Tagnode    *next;
-     struct _Tagnode    *prev;
-     boolean             isTrans;
-     struct _SymbDesc   *transsymb;
-     strmatch           *matches;
-     /* tableau des symboles candidats au resultat, associes aux symboles */
-     /*correspondant a un ss ensemble des fils du noeud */
-     struct _ListSymb   *inter;
-     int                 depth;
-  }
-Tagnode;
+     char               *Tag;		/* HTML tag */
+     Element             Elem;		/* element instance */
+     struct _Node       *Parent;	
+     struct _Node       *Child;
+     struct _Node       *Next;
+     struct _Node       *Previous;
+     int                 NodeDepth;
+     boolean             IsTrans;
+     struct _SymbDesc   *MatchSymb;	/* symbol matched (transformation phase) */
+     strMatch           *Matches;	/* Symbols Matched (pattern matching) */
+     struct _ListSymb   *Candidates;	/* list of symbols potientally matched */
+    }
+strNode;
 
-typedef Tagnode    *TagTree;
-
+typedef strNode   *StructureTree;
 
 #endif
-/* environnement de transformation */
 
+/* internal reprensentation of transformation rules */
+
+/* Attribute descriptor */
 typedef struct _AttrDesc
   {
      char               *NameAttr;
@@ -82,108 +80,108 @@ typedef struct _AttrDesc
 	  s0;
        }
      u;
-     struct _AttrDesc   *next;
+     struct _AttrDesc   *Next;
   }
-AttrDesc;
+strAttrDesc;
 
 #define TextVal u._TextVal
 #define IntVal u._IntVal
 #define AttrTag u.s0._Tag
 #define AttrAttr u.s0._Attr
 
-
-/* definition des structures internes des regles de transformation */
+/* node generated */
 typedef struct _NodeDesc
   {
      char               *Tag;
-     AttrDesc           *Attributes;
-     struct _NodeDesc   *next;
+     strAttrDesc           *Attributes;
+     struct _NodeDesc   *Next;
   }
-NodeDesc;
+strNodeDesc;
 
 typedef struct _RuleDesc
   {
-     char               *RName;
-     NodeDesc           *OptNodes;
-     NodeDesc           *NewNodes;
-     struct _RuleDesc   *next;
+     char               *RuleName;
+     strNodeDesc        *OptionNodes;
+     strNodeDesc        *NewNodes;
+     struct _RuleDesc   *Next;
   }
-RuleDesc;
+strRuleDesc;
 
 #ifndef PPSTANDALONE
 typedef struct _ListElem
   {
-     Element             element;
-     int                 id;
-     int                 rank;
-     struct _ListElem   *next;
+     Element             Elem;
+     int                 Id;
+     int                 Rank;
+     struct _ListElem   *Next;
   }
-ListElem;
+strListElem;
 
 #endif
 
 typedef struct _ListSymb
   {
-     struct _SymbDesc   *symb;
-     struct _ListSymb   *next;
+     struct _SymbDesc   *Symbol;
+     struct _ListSymb   *Next;
   }
-ListSymb;
+strListSymb;
 
+/* pattern node (symbol) */
 typedef struct _SymbDesc
   {
-     char               *SName;
+     char               *SymbolName;
      char               *Tag;
-     RuleDesc           *Rule;
-     boolean             Optional;
-     boolean             ActiveSymb;
-     boolean             OptChild;
-     int                 depth;
-     AttrDesc           *Attributes;
-     ListSymb           *Children;
-     ListSymb           *Nexts;
-     struct _SymbDesc   *next;
+     strRuleDesc        *Rule;
+     boolean             IsOptional;
+     boolean             IsActiveSymb;
+     boolean             IsOptChild;
+     int                 Depth;
+     strAttrDesc        *Attributes;
+     strListSymb        *Children;
+     strListSymb        *Followings;
+     struct _SymbDesc   *Next;
   }
-SymbDesc;
+strSymbDesc;
 
-/* descripteurs de transformation */
+/* transformation descriptor */
 typedef struct _TransDesc
   {
      char               *NameTrans;
-     int                 nbPatSymb;
-     int                 nbRules;
-     int                 patdepth;
-     ListSymb           *First;
-     SymbDesc           *rootdesc;
-     SymbDesc           *PatSymbs;
-     RuleDesc           *Rules;
-     boolean             ActiveTrans;
-     char               *TagDest;
-     struct _TransDesc  *next;
+     int                 NbPatSymb;
+     int                 NbRules;
+     int                 PatDepth;
+     strListSymb        *First;
+     strSymbDesc        *RootDesc;
+     strSymbDesc        *Symbols;
+     strRuleDesc        *Rules;
+     boolean             IsActiveTrans;
+     char               *DestinationTag;
+     struct _TransDesc  *Next;
   }
-TransDesc;
+strTransDesc;
 
-struct _match_env
+/* transformation environement */
+struct _strMatchEnv
   {
 #ifndef PPSTANDALONE
-     TagTree             subjecttree;
-     ListElem           *listSubTrees;
+     StructureTree       SourceTree;
+     strListElem        *ListSubTrees;
 #endif
-     /* nombre de transformations */
-     int                 nbTrans;
-     /* porfondeur max des patterns */
-     int                 maxdepth;
-     /* descripteurs de transformations */
-     TransDesc          *Transformations;
+     /* number of transformations */
+     int                 NbTrans;
+     /* patterns max depth*/
+     int                 MaxDepth;
+     strTransDesc       *Transformations;
   }
-match_env;
+strMatchEnv;
 
 
 
 #ifndef PPSTANDALONE
-/* document auquel est applique la transformation */
+/* document to wich a transformation is to be applied */
 Document            TransDoc;
 
-/* elements de dialogue et messages */
+/* dialog and messages */
 int                 TransBaseDialog;
 int                 TRANSDIAL;
 
@@ -192,7 +190,7 @@ int                 TRANSDIAL;
 #define TransMenu 1
 #define MAX_TRANS_DLG 2
 
-/*date de derniere modif du fichier de transformations */
+/*last modification date of transformation resource file */
 time_t              timeLastWrite;
 
 #endif
