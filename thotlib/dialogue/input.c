@@ -612,6 +612,8 @@ gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
        PicMask |= THOT_MOD_CTRL;
    if (state & GDK_MOD1_MASK || state & GDK_MOD4_MASK)
       PicMask |= THOT_MOD_ALT;
+   if (event->keyval == GDK_space)
+     event->length = 1;
    ThotInput (frame, &string[0], event->length, PicMask, KS);
    return FALSE;
 }

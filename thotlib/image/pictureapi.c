@@ -82,7 +82,7 @@ Pixmap TtaCreatePixmapLogo(char **d)
 						      &DefaultWindow->style->bg[GTK_STATE_NORMAL] ,
 						      (gchar **) d); 
      }
-  return (icon);
+  return ((Pixmap) icon);
 }
 #else /* !_GTK */
 Pixmap TtaCreatePixmapLogo (char **d)

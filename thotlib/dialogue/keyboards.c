@@ -685,7 +685,7 @@ static void CreateKeyboard (int number, char *title, PtrFont pFont,
   register ITEM      *it;
   ThotWidget          w;
   GtkWidget *vbox1;
-  GtkWidget *vbox5;
+  GtkWidget *vbox5=None;
   GtkWidget *frame2;
   GtkWidget *hbox1;
   GtkWidget *hbox2;

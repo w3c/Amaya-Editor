@@ -1426,7 +1426,9 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
   int                 typeImage;
   int                 xFrame = 0;
   int                 yFrame = 0;
-  int                 wFrame, hFrame, w, h;
+  int                 wFrame =0;
+  int                 hFrame = 0;
+  int                 w, h;
   int                 width, height;
   int                 left, right, top, bottom;
 
@@ -1471,7 +1473,11 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	 &hFrame, Bgcolor, &width, &height);
 #endif /* _WIN_PRINT */
 #else  /* !_WINDOWS */
+#ifdef _GTK
+      drw = (GdkPixmap *) PictureLogo;
+#else /* ! _GTK */
       drw = PictureLogo;
+#endif /* ! _GTK */
 #endif /* _WINDOWS */
       imageDesc->PicType = -1;
       wFrame = w = 40;
@@ -1559,7 +1565,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	      im = gdk_imlib_load_image (fileName);
 	      gdk_imlib_render(im, w, h);
 	      drw = gdk_imlib_move_image (im);
-	      imageDesc->PicMask = (GdkPixmap *)gdk_imlib_move_mask (im);
+	      imageDesc->PicMask = (Pixmap) gdk_imlib_move_mask (im);
 #else /* _GTK2 */
 	      im = gdk_pixbuf_new_from_file(fileName, &error);
 #endif /* !_GTK2 */
@@ -1605,8 +1611,8 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 		    h = im->rgb_height;
 		}
 	      gdk_imlib_render(im, (gint)w, (gint)h);
-	      drw = gdk_imlib_move_image (im);
-	      imageDesc->PicMask = (GdkPixmap *)gdk_imlib_move_mask (im);
+	      drw = (GdkPixmap *) gdk_imlib_move_image (im);
+	      imageDesc->PicMask = (Pixmap) gdk_imlib_move_mask (im);
 	      width = im->rgb_width;
 	      height = im->rgb_height;
 	      if (pres == RealSize)
@@ -1625,7 +1631,11 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
        
       if (drw == None)
 	{
+#ifdef _GTK
+	  drw = (GdkPixmap *) PictureLogo;
+#else /* ! _GTK */
 	  drw = PictureLogo;
+#endif /* ! GTK */
 	  imageDesc->PicType = -1;
 	  wFrame = w = 40;
 	  hFrame = h = 40;
@@ -1691,7 +1701,11 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
       imageDesc->PicWArea = w;
       imageDesc->PicHArea = h;
     }
+#ifdef _GTK
+  imageDesc->PicPixmap = (Pixmap) drw;
+#else /* ! _GTK */
   imageDesc->PicPixmap = drw;
+#endif /* ! GTK */ 
 
 #ifdef _WIN_PRINT
   if (releaseDC)

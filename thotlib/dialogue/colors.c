@@ -1194,7 +1194,7 @@ ThotBool ThotCreatePalette (int x, int y)
   GtkWidget *frame2;
   GtkWidget *vbox4;
   GtkWidget *hbox4;
-  GtkWidget *vbox5;
+  GtkWidget *vbox5 = None;
   GtkWidget *button4;
   GtkWidget *hbox1;
   GtkWidget *button1;

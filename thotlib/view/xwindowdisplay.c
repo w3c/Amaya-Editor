@@ -420,8 +420,11 @@ void DrawRadical (int frame, int thick, int x, int y, int l, int h,
 void DrawIntegral (int frame, int thick, int x, int y, int l, int h,
 		   int type, PtrFont font, int fg)
 {
-   int                 xm, yf, yend, exnum, delta;
+   int                 xm, yf, exnum;
+#ifndef _GTK
+   int                 yend, delta;
    int                 wd, asc, hd;
+#endif /* !_GTK */
 
    exnum = 0;
 #ifndef _GTK

@@ -3600,10 +3600,10 @@ void TtcPasteFromClipboard (Document document, View view)
 {
    DisplayMode         dispMode;
    int                 frame;
-#ifndef _WINDOWS
+#if !defined(_WINDOWS) && !defined(_GTK)
    int                 i;
    ThotWindow          w, wind;
-#endif /* _WINDOWS */
+#endif /* _WINDOWS && _GTK */
    ThotBool            lock = TRUE;
 
    if (document == 0)
@@ -3646,7 +3646,7 @@ if (Xbuffer)
      (*ThotLocalActions[T_unlock]) ();
    if (dispMode == DisplayImmediately)
      TtaSetDisplayMode (document, dispMode);
-  //TtcPaste (document, view);
+   /*TtcPaste (document, view);*/
 }
 
 
