@@ -961,7 +961,7 @@ ThotBool HandleReturn (NotifyOnTarget *event)
    ElementType         elType;
    Attribute           attr;
    AttributeType       attrType;
-   char               *action;
+   char               *action = NULL;
    int                 method, length;
 
    /* find the parent form element */
@@ -988,10 +988,13 @@ ThotBool HandleReturn (NotifyOnTarget *event)
 	     {
 	       action = TtaGetMemory (length + 1);
 	       TtaGiveTextAttributeValue (attr, action, &length);
+	       buffer = NULL;
 	       ParseForm (event->document, elForm, elForm, 
 			  HTML_EL_Submit_Input);
 	       DoSubmit (event->document, method, action);
 	       TtaFreeMemory (action);
+	       if (buffer && *buffer != EOS)
+		 TtaFreeMemory (buffer);
 	     }
 	 }
        else
