@@ -571,6 +571,7 @@ IDB_BSSMALL             BITMAP  DISCARDABLE     "bssmall.bmp"
 IDB_BSMEDIUM            BITMAP  DISCARDABLE     "bsmedium.bmp"
 IDB_BSLARGE             BITMAP  DISCARDABLE     "bslarge.bmp"
 IDR_TOOLBAR1            BITMAP  DISCARDABLE     "toolbar1.bmp"
+IDB_MATRIX              BITMAP  DISCARDABLE     "matrix.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -634,13 +635,13 @@ BEGIN
     CONTROL         182,IDC_LOGO,"Static",SS_BITMAP,7,7,38,30
 END
 
-MATHDIALOG DIALOGEX 400, 0, 55, 175
+MATHDIALOG DIALOGEX 400, 0, 55, 196
 STYLE DS_MODALFRAME | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_CLIENTEDGE
 CAPTION "Math"
-FONT 8, "MS Sans Serif", 0, 0, 0x1
+FONT 8, "MS Sans Serif"
 BEGIN
-    DEFPUSHBUTTON   "Done",ID_DONE,11,156,35,16
+    DEFPUSHBUTTON   "Done",ID_DONE,11,178,35,16
     CONTROL         183,IDC_MATH,"Static",SS_BITMAP | SS_NOTIFY,4,6,23,21,
                     WS_EX_DLGMODALFRAME | WS_EX_CLIENTEDGE | 
                     WS_EX_STATICEDGE
@@ -679,7 +680,10 @@ BEGIN
                     WS_EX_STATICEDGE
     CONTROL         195,IDC_UDLR,"Static",SS_BITMAP | SS_NOTIFY,4,132,23,21,
                     WS_EX_DLGMODALFRAME | WS_EX_CLIENTEDGE
-    CONTROL         196,IDC_SYM,"Static",SS_BITMAP | SS_NOTIFY,28,132,23,21,
+    CONTROL         397,IDC_MATRIX,"Static",SS_BITMAP | SS_NOTIFY,28,132,23,
+                    21,WS_EX_DLGMODALFRAME | WS_EX_CLIENTEDGE | 
+                    WS_EX_STATICEDGE
+    CONTROL         196,IDC_SYM,"Static",SS_BITMAP | SS_NOTIFY,17,155,23,21,
                     WS_EX_DLGMODALFRAME | WS_EX_CLIENTEDGE | 
                     WS_EX_STATICEDGE
 END

@@ -978,8 +978,12 @@ LPARAM lParam;
 						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (char*)12);
                             break;
 
-                       case IDC_SYM:
+                       case IDC_MATRIX:
 						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (char*)13);
+                            break;
+
+                       case IDC_SYM:
+						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (char*)14);
                             break;
 				}
 				break;
@@ -1106,6 +1110,7 @@ LPARAM lParam;
                                TtPrinterDC = NULL;
 							}
 							break;
+
 				       case IDCANCEL:
                             if (TtPrinterDC) {
                                DeleteDC (TtPrinterDC);
