@@ -41,27 +41,40 @@ extern XmlEntity *pMathEntityTable;
   ----------------------------------------------------------------------*/
 static ThotBool IsLargeOp (CHAR_T character, char script)
 {
-  /****** to be completed *****/
 #ifdef _I18N_
-  if (character == 8721 || character == 8719) /* large Sigma or Pi */
+  if (character == 0x22C1 || /* Vee */
+      character == 0x2296 || /* CircleMinus */
+      character == 0x2295 || /* CirclePlus */
+      character == 0x2211 || /* Sum */
+      character == 0x22C3 || /* Union */
+      character == 0x228E || /* UnionPlus */
+      character == 0x2232 || /* ClockwiseContourIntegral */
+      character == 0x222E || /* ContourIntegral */
+      character == 0x2233 || /* CounterClockwiseContourIntegral */
+      character == 0x222F || /* DoubleContourIntegral */
+      character == 0x222B || /* Integral */
+      character == 0x22C0 || /* Wedge */
+      character == 0x2297 || /* CircleTimes */
+      character == 0x2210 || /* Coproduct */
+      character == 0x220F || /* Product */
+      character == 0x22C2 ) /* Intersection */
 #else
   if ((script == 'G') &&
       (character == 229 || character == 213))  /* large Sigma or Pi */
 #endif
-    /* it's a large character */
+    /* it's a large operator */
     return TRUE;
   else
     return FALSE;
 }
 
 /*----------------------------------------------------------------------
-   IsStretchy
-   Return TRUE if character is listed as a stretchy operator in the MathML 2.0
+   IsStretchyFence
+   Return TRUE if character is listed as a stretchy fence in the MathML 2.0
    Operator dictionary (appendix F.5)
   ----------------------------------------------------------------------*/
-static ThotBool IsStretchy (CHAR_T character, char script)
+static ThotBool IsStretchyFence (CHAR_T character, char script)
 {
-  /****** to be completed *****/
   if ((
 #ifndef _I18N_
        (script == 'L') &&
@@ -69,14 +82,25 @@ static ThotBool IsStretchy (CHAR_T character, char script)
         (character == '(' || character == ')' ||
 	 character == '[' || character == ']' ||
 	 character == '{' || character == '}' ||
-	 character == '|'))  ||
+	 character == '|'))  ||   /* strangely enough, appendix F.5 does not
+				     consider this character as a fence */
       (
-       /* test left and right angle brackets */
 #ifdef _I18N_
-       (character == 9001 || character == 9002)
+       (character == 0x2329 || /* LeftAngleBracket */
+        /* LeftBracketingBar ??? */
+	character == 0x2308 || /* LeftCeiling */
+	character == 0x301A || /* LeftDoubleBracket */
+	/* LeftDoubleBracketingBar ??? */
+	character == 0x230A || /* LeftFloor */
+	character == 0x232A || /* RightAngleBracket */
+	/* RightBracketingBar ??? */
+	character == 0x2309 || /* RightCeiling */
+	character == 0x301B || /* RightDoubleBracket */
+	/* RightDoubleBracketingBar ??? */
+	character == 0x230B )  /* RightFloor */
 #else
        (script == 'G') &&
-       (character == 225 || character == 241)
+       (character == 225 || character == 241) /* left and right angle bracket*/
 #endif
      ))
     return TRUE;
@@ -2132,7 +2156,7 @@ void      CheckFence (Element el, Document doc)
 	     /* the MO or fence element is a child of a MROW element */
 	     /* Is it a stretchable symbol? */
 	      {
-	      if (IsStretchy (text[0], script))
+	      if (IsStretchyFence (text[0], script))
 		/* it's a stretchable parenthesis or equivalent */
 		{
 		/* remove the content of the MO element */
