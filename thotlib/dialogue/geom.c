@@ -1417,7 +1417,8 @@ int                 percentH;
 	  newx += xmin;
 	  newy = DO_ALIGN (cursorPos.y - FrameTable[frame].FrTopMargin - ymin);
 	  newy += ymin;
-	  if ((newx - rect.left) < xmin || (newx - rect.left) > xmax || (newy - rect.top) < ymin || (newy - rect.top) > ymax)
+	  if (newx - rect.left < xmin || newx - rect.left > xmax ||
+	      newy - rect.top < ymin || newy - rect.top > ymax)
             SetCursorPos (*x + rect.left, *y + rect.top);
 	  else if ((newx != *x && PosX) || (newy != *y && PosY))
 	    {

@@ -990,6 +990,9 @@ ThotBool            subTree;
 	case YRepeat:
 	  TtaWriteByte (pivFile, C_PIV_YREPEAT);
 	  break;
+	default:
+	  TtaWriteByte (pivFile, ' ');
+	  break;
 	}
       PutShort (pivFile, ((PictInfo *)(pEl1->ElPictInfo))->PicType);
     }

@@ -862,9 +862,7 @@ BinFile             pivFile;
        scaling = YRepeat;
        break;
      default:
-       PivotError (pivFile);
-       DisplayPivotMessage (TEXT("PICT"));
-       scaling = RealSize;
+       scaling = DefaultPres;
        break;
      }
 
