@@ -26,8 +26,8 @@ manipulate math expressions in the same way you manipulate the rest of HTML
 documents. All editing commands are available for math, and there are some
 additional controls to enter mathematical constructs.</p>
 <p>
-In the current version of Amaya only a (small) part of MathML is implemented,
-i.e. a subset of the <em>Presentation Markup</em>. The purpose of this version
+In the current version of Amaya only a part of MathML is implemented, i.e. a
+large subset of the <em>Presentation Markup</em>. The purpose of this version
 is to show how MathML may improve scientific communication over the Web. A
 more complete and more robust  implementation is planed for future
 releases.</p>
@@ -151,7 +151,19 @@ Expression within parentheses, MF: <math>
 </math>
 
 <li>
-A number (MN), an operator (MO), an identifier (MI), some text (MTEXT). 
+Expression with prescripts and tensor indices, MMULTISCRIPTS: <math>
+  <mmultiscripts>
+    <mi>X</mi>
+    <mi>i</mi>
+    <mi>j</mi>
+    <mprescripts/>
+    <mi>k</mi>
+    <mi>l</mi>
+  </mmultiscripts>
+</math>
+
+<li>
+A greek character or a mathematical symbol from the Symbol character set.
 </ul>
 
 <h3>Math_Structure view</h3>
@@ -161,12 +173,12 @@ href="Views.html#Structure">Show Structure</a> item from the
 <strong>Views</strong> menu actually opens two views:</p>
 <ul>
 <li>
-the Structure view shows the main structure of the HTML document. Only the
-<code>MATH</code> or <code>MATHDISP</code> elements are shown, not their
-contents. 
+the Structure view shows the main structure of the HTML document. Concerning
+math elements, only the <code>MATH</code> or <code>MATHDISP</code> elements
+are shown, not their contents. 
 <li>
 the Math_Structure view shows only MathML elements, but it shows all their
-components.
+components. 
 </ul>
 <p>
 You can edit math expressions either in the main view or in the Math_Structure
@@ -175,13 +187,14 @@ view.</p>
 <h3>Editing math elements</h3>
 <p>
 To edit math elements, just <a href="Selecting.html#Selecting">move the
-insertion point</a> to the desired position, with the mouse or the arrow keys,
-and type some character or select a construct from the <strong>Math</strong>
-menu.</p>
+insertion point</a> to the desired position, with the mouse or with the arrow
+keys, and type some characters or select a construct from the
+<strong>Math</strong> menu.</p>
 <p>
 You don't need to enter each element with the math menu. When you type a
 character string in a MathML element, Amaya parses that string and generates
-the MO, MN, MI, MTEXT elements automatically. For instance, to enter</p>
+the MO (operator), MN (number), MI (identifier), MTEXT elements automatically.
+For instance, to enter</p>
 <p>
 <math>
   <mrow>
@@ -195,7 +208,15 @@ the MO, MN, MI, MTEXT elements automatically. For instance, to enter</p>
 </math>
 </p>
 <p>
-just type <code>x=2a+b</code>.</p>
+just type <code>x=2a+b</code>, and you will get the following structure:</p>
+<pre>&lt;MI>x&lt;/MI>&lt;MO>=&lt;/MO>&lt;MN>2&lt;/MN>&lt;MI>a&lt;/MI>&lt;MO>+&lt;/MO>&lt;MI>b&lt;/MI></pre>
+
+<h3>Current limitations</h3>
+<p>
+The current version of Amaya only implements the <em>Presentation Tags</em>
+from MathML, not the <em>Content Markup</em>. All presentation elements are
+available, except tables and matrices (MTABLE, MTR, MTD), but attributes are
+not implemented.</p>
 <p>
 </p>
 <hr>
