@@ -1741,7 +1741,7 @@ ThotBool CheckMBP (PtrAbstractBox pAb, PtrBox pBox, int frame, ThotBool evalAuto
 static ThotBool HasFloatingChild (PtrAbstractBox pAb, ThotBool *directParent,
 				  ThotBool *uniqueChild, ThotBool *dummyChild)
 {
-  PtrAbstractBox      pChildAb, pInc;
+  PtrAbstractBox      pChildAb;
   int                 nb;
   ThotBool            found, unique, leaf;
 
@@ -1783,26 +1783,6 @@ static ThotBool HasFloatingChild (PtrAbstractBox pAb, ThotBool *directParent,
 	      if (!unique && !*directParent)
 		found = FALSE;
 	      *directParent = FALSE;
-#ifdef IV
-	      pInc = pChildAb->AbFirstEnclosed;
-	      if (pInc)
-		{
-		  if (pInc->AbFloat != 'N' &&
-		      pInc->AbNext == NULL &&
-		      (pInc->AbLeafType == LtPicture ||
-		       (pInc->AbLeafType == LtCompound &&
-			!pInc->AbWidth.DimIsPosition &&
-			pInc->AbWidth.DimAbRef == NULL)))
-		    found = TRUE;
-		  else if (pInc->AbPrevious == NULL && pInc->AbNext == NULL)
-		    {
-		      found = HasFloatingChild (pInc, directParent, &unique, &leaf);
-		      if (!unique && !*directParent)
-			found = FALSE;
-		      *directParent = FALSE;
-		    }
-		}
-#endif
 	    }
 	  pChildAb = pChildAb->AbNext;
 	  nb ++;
