@@ -71,6 +71,8 @@ and must be removed at the end of the debug */
 /********************************************************WINDOWS**/
 #ifdef _WINDOWS
 
+#define WM_ENTER (WM_USER)
+
 #include <direct.h>
 /*------------------------------------------------------GNUC--*/
 #if defined(__GNUC__) || defined(__GNUWIN32)

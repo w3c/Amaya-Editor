@@ -593,23 +593,32 @@ int        ref;
    int                 best = -1;
    /* struct Cat_Context* catval;*/
    struct Cat_Context* catalogue;
+   struct Cat_Context* Nearestcatalogue;
 
    if (frame == -1)
       return NULL;
 
-   catalogue = FrameCatList[frame].Cat_Table [0];
+   catalogue = Nearestcatalogue = FrameCatList[frame].Cat_Table [0];
    while (icat < MAX_FRAMECAT) {
-         if (catalogue && catalogue->Cat_Ref == ref)
-            return catalogue ;
-         if (catalogue && FrameCatList[frame].Cat_Table [icat] &&
-             (FrameCatList[frame].Cat_Table[icat]->Cat_Ref > ref) && (catalogue->Cat_Ref <= ref))
-            return catalogue ;
-		 if (FrameCatList[frame].Cat_Table [icat] != NULL)
-            catalogue = FrameCatList[frame].Cat_Table [icat];
+         if (catalogue) {
+            if (catalogue->Cat_Ref == ref)
+               return catalogue ;
+
+            /* if (FrameCatList[frame].Cat_Table [icat] && (FrameCatList[frame].Cat_Table[icat]->Cat_Ref > ref) && (catalogue->Cat_Ref <= ref))
+               return catalogue ; */
+
+            if ((abs (catalogue->Cat_Ref - ref) < abs (Nearestcatalogue->Cat_Ref - ref)) && ref >= catalogue->Cat_Ref)
+               Nearestcatalogue = catalogue;
+
+            if (FrameCatList[frame].Cat_Table [icat] != NULL)
+               catalogue = FrameCatList[frame].Cat_Table [icat];
+		 }
+
          icat++ ;
    }
-   if (catalogue->Cat_Ref <= ref)
-	  return catalogue ;
+   if (Nearestcatalogue->Cat_Ref <= ref)
+	  /* return catalogue ;*/
+      return Nearestcatalogue;
 
    return NULL ;
 }
@@ -6979,7 +6988,7 @@ void                TtaSetDialoguePosition ()
    wdum = RootWindow (GDp, DefaultScreen (GDp));
    XQueryPointer (GDp, wdum, &wdum, &wdum, &xdum, &ydum, &ShowX, &ShowY, &xdum);
 }
-
+#endif /* !_WINDOWS */
 /*----------------------------------------------------------------------
    TtaShowDialogue active le catalogue de'signe.                      
   ----------------------------------------------------------------------*/
@@ -6993,87 +7002,95 @@ ThotBool            remanent;
 #endif /* __STDC__ */
 {
    int                 n;
+#  ifndef _WINDOWS
    Arg                 args[MAX_ARGS];
+#  else  /* _WINDOWS */
+   POINT               curPoint;
+#  endif /* _WINDOWS */
 
    ThotWidget          w;
    struct Cat_Context *catalogue;
 
-   if (ref == 0)
-     {
-	TtaError (ERR_invalid_reference);
-	return;
-     }
+   if (ref == 0) {
+      TtaError (ERR_invalid_reference);
+      return;
+   } 
 
    catalogue = CatEntry (ref);
-   if (catalogue == NULL)
-     {
-	TtaError (ERR_invalid_reference);
-	return;
-     }
-   else
-      w = catalogue->Cat_Widget;
+   if (catalogue == NULL) {
+      TtaError (ERR_invalid_reference);
+      return;
+   } else
+          w = catalogue->Cat_Widget;
 
-   if (w == 0)
-     {
-	TtaError (ERR_invalid_reference);
-	return;
-     }
+   if (w == 0) {
+      TtaError (ERR_invalid_reference);
+      return;
+   } 
+
+#  ifdef _WINDOWS
+   if (catalogue->Cat_Type == CAT_POPUP) {
+      GetCursorPos (&curPoint);
+      if (!TrackPopupMenu (w,  TPM_LEFTALIGN, curPoint.x, curPoint.y, 0, currentParent, NULL))
+         WinErrorBox (WIN_Main_Wd);
+	} else {
+          ShowWindow (w, SW_SHOWNORMAL);
+          UpdateWindow (w);
+	}
+#  else  /* !_WINDOWS */
    else if (XtIsManaged (w))
-      XMapRaised (GDp, XtWindowOfObject (XtParent (w)));
+        XMapRaised (GDp, XtWindowOfObject (XtParent (w)));
    /*===========> Active un pop-up menu */
-   else if (catalogue->Cat_Type == CAT_POPUP || catalogue->Cat_Type == CAT_PULL)
-     {
-	/* Faut-il invalider un TtaShowDialogue precedent */
-	TtaAbortShowDialogue ();
+   else if (catalogue->Cat_Type == CAT_POPUP || catalogue->Cat_Type == CAT_PULL) {
+        /* Faut-il invalider un TtaShowDialogue precedent */
+        TtaAbortShowDialogue ();
 
-	/* Memorise qu'un retour sur le catalogue est attendu et */
-	/* qu'il peut etre aborte' si et seulement s'il n'est pas remanent */
-	if (!remanent)
-	  {
-	     ShowReturn = 1;
-	     ShowCat = catalogue;
-	  }
+        /* Memorise qu'un retour sur le catalogue est attendu et */
+        /* qu'il peut etre aborte' si et seulement s'il n'est pas remanent */
+        if (!remanent) {
+           ShowReturn = 1;
+           ShowCat = catalogue;
+		}
 
-	/*** Positionne le pop-up a la position courante du show ***/
-	n = 0;
-	XtSetArg (args[n], XmNx, (Position) ShowX);
-	n++;
-	XtSetArg (args[n], XmNy, (Position) ShowY);
-	n++;
-	XtSetValues (w, args, n);
-	XtManageChild (w);
-     }
+        /*** Positionne le pop-up a la position courante du show ***/
+        n = 0;
+
+        XtSetArg (args[n], XmNx, (Position) ShowX);
+        n++;
+        XtSetArg (args[n], XmNy, (Position) ShowY);
+        n++;
+        XtSetValues (w, args, n);
+        XtManageChild (w);
+   } 
    /*===========> Active un formulaire */
-   else if (((catalogue->Cat_Type == CAT_FORM)
-	     || (catalogue->Cat_Type == CAT_SHEET)
-	     || (catalogue->Cat_Type == CAT_DIALOG))
-	    && (catalogue->Cat_PtParent == NULL))
-     {
-	/* Faut-il invalider un TtaShowDialogue precedent */
-	TtaAbortShowDialogue ();
+   else if (((catalogue->Cat_Type == CAT_FORM) || 
+            (catalogue->Cat_Type == CAT_SHEET) || 
+            (catalogue->Cat_Type == CAT_DIALOG)) && 
+            (catalogue->Cat_PtParent == NULL)) {
+           /* Faut-il invalider un TtaShowDialogue precedent */
+           TtaAbortShowDialogue ();
+           /* Memorise qu'un retour sur le catalogue est attendu et */
+           /* qu'il peut etre aborter si et seulement s'il n'est pas remanent */
+           if (!remanent) {
+              ShowReturn = 1;
+              ShowCat = catalogue;
+		   }
 
-	/* Memorise qu'un retour sur le catalogue est attendu et */
-	/* qu'il peut etre aborter si et seulement s'il n'est pas remanent */
-	if (!remanent)
-	  {
-	     ShowReturn = 1;
-	     ShowCat = catalogue;
-	  }
-
-	/* Pour les feuilles de dialogue force le bouton par defaut */
-	if (catalogue->Cat_Type == CAT_SHEET
-	    || catalogue->Cat_Type == CAT_DIALOG
-	    || catalogue->Cat_Type == CAT_FORM)
-	  {
-	     XtSetArg (args[0], XmNdefaultButton, catalogue->Cat_Entries->E_ThotWidget[1]);
-	     XtSetValues (w, args, 1);
-	  }
-	INITform (w, catalogue, NULL);
+           /* Pour les feuilles de dialogue force le bouton par defaut */
+           if (catalogue->Cat_Type == CAT_SHEET  || 
+               catalogue->Cat_Type == CAT_DIALOG || 
+               catalogue->Cat_Type == CAT_FORM) {
+              XtSetArg (args[0], XmNdefaultButton, catalogue->Cat_Entries->E_ThotWidget[1]);
+              XtSetValues (w, args, 1);
+		   }
+           INITform (w, catalogue, NULL);
      }
    else
       TtaError (ERR_invalid_reference);
+#  endif /* !_WINDOWS */
 }
 
+#ifndef _WINDOWS
 /*----------------------------------------------------------------------
    TtaWaitShowDialogue attends le retour du catalogue affiche par     
    TtaShowDialogue.                                                   

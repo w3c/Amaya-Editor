@@ -811,6 +811,7 @@ int                 maxPoints;
   /* erase box frame */
 # ifdef _WINDOWS
   SetCursor (LoadCursor (NULL, IDC_ARROW));
+  ShowCursor (TRUE);
 #  endif /* *_WINDOWS */
   BoxGeometry (frame, x, y, width, height, x + width - 2, y + height - 2, TRUE);
 
@@ -1040,6 +1041,7 @@ ThotBool            close;
   
   /* erase the box border */
   SetCursor (LoadCursor (NULL, IDC_ARROW));
+  ShowCursor (TRUE);
   BoxGeometry (frame, x, y, width, height, x + width - 2, y + height - 2, TRUE);
 
   /* returns to previous state of the Thot library */
@@ -1572,53 +1574,53 @@ int                 percentH;
       ShowCursor (TRUE);
       GetMessage (&event, NULL, 0, 0);
       if (event.message == WM_MOUSEMOVE) {
-	GetCursorPos (&cursorPos);
-	/* check the coordinates are withing limits */
-	nx = DO_ALIGN (cursorPos.x - FrameTable[frame].FrLeftMargin - xmin);
-	nx += xmin;
-	ny = DO_ALIGN (cursorPos.y - FrameTable[frame].FrTopMargin - ymin);
-	ny += ymin;
-	if ((nx - rect.left) < xmin || (nx - rect.left) > xmax || (ny - rect.top) < ymin || (ny - rect.top) > ymax)
-	  SetCursorPos (*x + rect.left, *y + rect.top);
-	else if ((nx != *x && PosX) || (ny != *y && PosY)) {
-	  BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
-	  if (PosX)
-	    *x = nx - rect.left;
-	  if (PosY)
-	    *y = ny - rect.top;
+         GetCursorPos (&cursorPos);
+         /* check the coordinates are withing limits */
+         nx = DO_ALIGN (cursorPos.x - FrameTable[frame].FrLeftMargin - xmin);
+         nx += xmin;
+         ny = DO_ALIGN (cursorPos.y - FrameTable[frame].FrTopMargin - ymin);
+         ny += ymin;
+         if ((nx - rect.left) < xmin || (nx - rect.left) > xmax || (ny - rect.top) < ymin || (ny - rect.top) > ymax)
+            SetCursorPos (*x + rect.left, *y + rect.top);
+         else if ((nx != *x && PosX) || (ny != *y && PosY)) {
+              BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
+         if (PosX)
+            *x = nx - rect.left;
+         if (PosY)
+            *y = ny - rect.top;
 
-	  BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
-	  /* the postion is fixed */
-	  if (!PosX || !PosY)
-	    SetCursorPos (*x + rect.left, *y + rect.top);
-	}
-      } else {
-	switch (event.message) {
-	case WM_LBUTTONDOWN:
-	case WM_MBUTTONDOWN:
-	case WM_RBUTTONDOWN:	  
-	  GetCursorPos (&cursorPos);
-	  if (PosX)
-	    xm = xmin + DO_ALIGN ((int) cursorPos.x - FrameTable[frame].FrLeftMargin - xmin);
-	  else
-	    xm = *x;
-	  if (PosY)
-	    ym = ymin + DO_ALIGN ((int) cursorPos.y - FrameTable[frame].FrTopMargin - ymin);
-	  else
-	    ym = *y;
+         BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
+         /* the postion is fixed */
+         if (!PosX || !PosY)
+            SetCursorPos (*x + rect.left, *y + rect.top);
+		 }
+	  } else {
+             switch (event.message) {
+                    case WM_LBUTTONDOWN:
+                    case WM_MBUTTONDOWN:
+                    case WM_RBUTTONDOWN:	  
+                         GetCursorPos (&cursorPos);
+                         if (PosX)
+                            xm = xmin + DO_ALIGN ((int) cursorPos.x - FrameTable[frame].FrLeftMargin - xmin);
+                         else
+                              xm = *x;
+                         if (PosY)
+                            ym = ymin + DO_ALIGN ((int) cursorPos.y - FrameTable[frame].FrTopMargin - ymin);
+                         else
+                             ym = *y;
 			      
-	  /* check the coordinates */
-	  if ((xm - rect.left) < xmin || (xm - rect.left) > xmax || !PosX || (ym - rect.top) < ymin || (ym - rect.top) > ymax || !PosY) {
-	    SetCursorPos (xm + rect.left, ym + rect.top);
-	    if (!PosX && !PosY)
-	      ret = 1;
-	  } else
-	    ret = 1;
-	  break;
+                         /* check the coordinates */
+                         if ((xm - rect.left) < xmin || (xm - rect.left) > xmax || !PosX || (ym - rect.top) < ymin || (ym - rect.top) > ymax || !PosY) {
+                            SetCursorPos (xm + rect.left, ym + rect.top);
+                            if (!PosX && !PosY)
+                               ret = 1;
+						 } else
+                                ret = 1;
+	                     break; 
 
-	default: break;
-	}
-      }
+                    default: break;
+			 } 
+      } 
 #else  /* !_WINDOWS */
       if (XPending (TtDisplay) == 0)
 	{
@@ -1713,170 +1715,170 @@ int                 percentH;
     ShowCursor (TRUE);
     GetMessage (&event, NULL, 0, 0);
     switch (event.message) {
-    case WM_LBUTTONUP:
-    case WM_MBUTTONUP:
-    case WM_RBUTTONUP:
-      ret = 1;
-      break;
-    case WM_MOUSEMOVE:
-      warpx = -1;
-      warpy = -1;
+           case WM_LBUTTONUP:
+           case WM_MBUTTONUP:
+           case WM_RBUTTONUP:
+                GetCursorPos (&cursorPos);
+                SetCursor (LoadCursor (NULL, IDC_ARROW));
+                ret = 1;
+                break;
+           case WM_MOUSEMOVE:
+                warpx = -1;
+                warpy = -1;
       
-      if (DimX) {
-	dx = (int) event.pt.x - xm;
-	nx = xmin + DO_ALIGN (*x + *width + dx - xmin);
-	dx = nx - *x - *width;
-      } else
-	dx = 0;
+                if (DimX) {
+                   dx = (int) event.pt.x - xm;
+                   nx = xmin + DO_ALIGN (*x + *width + dx - xmin);
+                   dx = nx - *x - *width;
+				} else
+                       dx = 0;
       
-      if (DimY) {
-	dy = (int) event.pt.y - ym;
-	ny = ymin + DO_ALIGN (*y + *height + dy - ymin);
-	dy = ny - *y - *height;
-      } else
-	dy = 0;
+                if (DimY) {
+                   dy = (int) event.pt.y - ym;
+                   ny = ymin + DO_ALIGN (*y + *height + dy - ymin);
+                   dy = ny - *y - *height;
+				} else
+                       dy = 0;
       
-      xm += dx;
-      ym += dy;
-      /* Echange the defaults values by the actual one */
-      /* if the width and height are non zero */
-      if ((dx != 0 || !DimX) && (dy != 0 || !DimY) && RightOrLeft == 2) {
-	RightOrLeft = 1;
-	BottomOrTop = 1;
-	BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
-	if (DimX)
-	  {
-	    *width = 0;
-	    if (percentH != 0)
-	      *height = 0;
-	  }
-	if (DimY)
-	  {
-	    *height = 0;
-	    if (percentW != 0)
-	      *width = 0;
-	  }
-	BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
-      }
-      
-      /* left or right position to modify */
-      if (dx != 0)
-	if (RightOrLeft > 0) { /* right */
-	  /* should we swap left and right values */
-	  if (dx < 0 && -dx > *width) {
-	    RightOrLeft = 0;
-	    nx = *x + *width + dx; /* new origin, check that we are still within limits */
-	    if (nx < xmin) {
-	      nx = xmin;
-	      warpx = xmin;
-	    }
-	    dx = *x - nx; /* new width */
-	  } else {
-	    nx = *x; /* new origin */
-	    dx += *width; /* new width, check that we are still within limits */
-	    if (nx + dx > xmax) {
-	      dx = xmin + DO_ALIGN (xmax - xmin) - nx;
-	      warpx = xmax;
-	    }
-	  }
-	} else {
-	  /* left, treatment is similar to right */
-	  if (dx > *width) {
-	    RightOrLeft = 1;
-	    nx = *x + *width;
-	    dx -= *width;
-	    if (nx + dx > xmax) {
-	      dx = xmin + DO_ALIGN (xmax - xmin) - nx;
-	      warpx = xmax;
-	    }
-	  } else {
-	    nx = *x + dx;
-	    if (nx < xmin) {
-	      nx = xmin;
-	      warpx = xmin;
-	    }
-	    dx = *x + *width - nx;
-	  }
-	} 
-      else {
-	nx = *x;
-	dx = *width;
-      }
+                xm += dx;
+                ym += dy;
+                /* Echange the defaults values by the actual one */
+                /* if the width and height are non zero */
+                if ((dx != 0 || !DimX) && (dy != 0 || !DimY) && RightOrLeft == 2) {
+                   RightOrLeft = 1;
+                   BottomOrTop = 1;
+                   BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
+                   if (DimX) {
+                      *width = 0;
+                      if (percentH != 0)
+                         *height = 0;
+				   }
 
-      /* Top or bottom CHKR_LIMIT to modify */
-      if (dy != 0)
-	if (BottomOrTop > 0) { /* bottom */
-	  /* should we swap bottom and top ? */
-	  if (dy < 0 && -dy > *height) {
-	    BottomOrTop = 0;
-	    ny = *y + *height + dy; /* new origin, check for limits */
-	    if (ny < ymin) {
-	      ny = ymin;
-	      warpy = ymin;
-	    }
-	    dy = *y - ny; /* new height */
-	  } else {
-	    ny = *y; /*new origin */
-	    dy += *height; /*new height, check for limits */
-	    if (ny + dy > ymax) {
-	      dy = ymin + DO_ALIGN (ymax - ymin) - ny;
-	      warpy = ymax;
-	    }
-	  }
-	} else {
-	  /* Top treatemnt similar to bottom */
-	  if (dy > *height) {
-	    BottomOrTop = 1;
-	    ny = *y + *height;
-	    dy -= *height;
-	    if (ny + dy > ymax) {
-	      dy = ymin + DO_ALIGN (ymax - ymin) - ny;
-	      warpy = ymax;
-	    }
-	  } else {
-	    ny = *y + dy;
-	    if (ny < ymin) {
-	      ny = ymin;
-	      warpy = ymin;
-	    }
-	    dy = *y + *height - ny;
-	  }
-	}
-      else {
-	ny = *y;
-	dy = *height;
-      }  
+                   if (DimY) {
+                      *height = 0;
+                      if (percentW != 0)
+                         *width = 0;
+				   } 
+                   BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
+				} 
+      
+                /* left or right position to modify */
+                if (dx != 0)
+                   if (RightOrLeft > 0) { /* right */
+                      /* should we swap left and right values */
+                      if (dx < 0 && -dx > *width) {
+                         RightOrLeft = 0;
+                         nx = *x + *width + dx; /* new origin, check that we are still within limits */
+                         if (nx < xmin) {
+                            nx = xmin;
+                            warpx = xmin;
+						 } 
+                         dx = *x - nx; /* new width */
+					  } else {
+                             nx = *x; /* new origin */
+                             dx += *width; /* new width, check that we are still within limits */
+                             if (nx + dx > xmax) {
+                                dx = xmin + DO_ALIGN (xmax - xmin) - nx;
+                                warpx = xmax;
+							 } 
+					  } 
+				   } else {
+                          /* left, treatment is similar to right */
+                          if (dx > *width) {
+                             RightOrLeft = 1;
+                             nx = *x + *width;
+                             dx -= *width;
+                             if (nx + dx > xmax) {
+                                dx = xmin + DO_ALIGN (xmax - xmin) - nx;
+                                warpx = xmax;
+							 }
+						  } else {
+                                 nx = *x + dx;
+                                 if (nx < xmin) {
+                                    nx = xmin;
+                                    warpx = xmin;
+								 } 
+                                 dx = *x + *width - nx;
+						  } 
+				   }  
+                else {
+                     nx = *x;
+                     dx = *width;
+				} 
 
-      /* should we redraw the box because geometry has changed */
-      if (nx != *x || ny != *y || dx != *width || dy != *height)
-	{
-	  /* switch off the old box */
-	  BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
-	  /* is there any dependence between height and width */
-	  if (percentW != 0)
-	    dx = dy * percentW / 100;
-	  else if (percentH != 0)
-	    dy = dx * percentH / 100;
-	  /* switch on the new box */
-	  BoxGeometry (frame, nx, ny, dx, dy, nx + xr, ny + yr, FALSE);
-	  *x = nx;
-	  *y = ny;
-	  *width = dx;
-	  *height = dy;
-	}   
+                /* Top or bottom CHKR_LIMIT to modify */
+                if (dy != 0)
+                   if (BottomOrTop > 0) { /* bottom */
+                      /* should we swap bottom and top ? */
+                      if (dy < 0 && -dy > *height) {
+                         BottomOrTop = 0;
+                         ny = *y + *height + dy; /* new origin, check for limits */
+                         if (ny < ymin) {
+                            ny = ymin;
+                            warpy = ymin;
+						 } 
+                         dy = *y - ny; /* new height */
+					  } else {
+                             ny = *y; /*new origin */
+                             dy += *height; /*new height, check for limits */
+                             if (ny + dy > ymax) {
+                                dy = ymin + DO_ALIGN (ymax - ymin) - ny;
+                                warpy = ymax;
+							 } 
+					  } 
+				   } else {
+                          /* Top treatemnt similar to bottom */
+                          if (dy > *height) {
+                             BottomOrTop = 1;
+                             ny = *y + *height;
+                             dy -= *height;
+                             if (ny + dy > ymax) {
+                                dy = ymin + DO_ALIGN (ymax - ymin) - ny;
+                                warpy = ymax;
+							 } 
+						  } else {
+                                 ny = *y + dy;
+                                 if (ny < ymin) {
+                                    ny = ymin;
+                                    warpy = ymin;
+								 }
+                                 dy = *y + *height - ny;
+						  } 
+				   } 
+                else {
+                     ny = *y;
+                     dy = *height;
+				}   
+
+                /* should we redraw the box because geometry has changed */
+                if (nx != *x || ny != *y || dx != *width || dy != *height) {
+                   /* switch off the old box */
+                   BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
+                   /* is there any dependence between height and width */
+                   if (percentW != 0)
+                      dx = dy * percentW / 100;
+                   else if (percentH != 0)
+                        dy = dx * percentH / 100;
+                   /* switch on the new box */
+                   BoxGeometry (frame, nx, ny, dx, dy, nx + xr, ny + yr, FALSE);
+                   *x = nx;
+                   *y = ny;
+                   *width = dx;
+                   *height = dy;
+				}    
       
-      /* should we move the cursor */
-      if (warpx >= 0 || warpy >= 0) {
-	if (warpx >= 0)
-	  xm = warpx + FrameTable[frame].FrLeftMargin;
-	if (warpy >= 0)
-	  ym = warpy + FrameTable[frame].FrTopMargin;
-	if (!SetCursorPos (xm, ym))
-	  WinErrorBox (FrRef [frame]);
-      }
-      break;
+                /* should we move the cursor */
+                if (warpx >= 0 || warpy >= 0) {
+                   if (warpx >= 0)
+                      xm = warpx + FrameTable[frame].FrLeftMargin;
+                   if (warpy >= 0)
+                      ym = warpy + FrameTable[frame].FrTopMargin;
+                   if (!SetCursorPos (xm, ym))
+                      WinErrorBox (FrRef [frame]);
+				} 
+                break;
       
-    default: break;
+           default: break;
     }
 #else  /* !_WINDOWS */
     XNextEvent (TtDisplay, &event);

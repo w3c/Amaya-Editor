@@ -116,7 +116,8 @@ static SchemaMenu_Ctl *SchemasMenuList;
 extern TBADDBITMAP ThotTBBitmap;
 extern HWND        currentWindow;
 
-static WNDPROC lpfnTextZoneWndProc = (WNDPROC) 0;
+WNDPROC lpfnTextZoneWndProc = (WNDPROC) 0;
+
 static BOOL    doSwitchButton = TRUE;
 static int     FormattedViewXPos = 0;
 static int     FormattedViewYPos = 0;

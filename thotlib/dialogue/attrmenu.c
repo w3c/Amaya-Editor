@@ -50,7 +50,15 @@ static CHAR_T       WIN_Lab[1024];
 static int          WIN_nbItem;
 static CHAR_T       WIN_title[MAX_NAME_LENGTH + 2];
 
+extern WNDPROC      lpfnTextZoneWndProc ;
+
 CHAR_T              WIN_buffMenu[MAX_TXT_LEN];
+
+#ifdef __STDC__
+extern LRESULT CALLBACK textZoneProc (HWND, UINT, WPARAM, LPARAM);
+#else  /* !__STDC__ */
+extern LRESULT CALLBACK textZoneProc ();
+#endif /* !__STDC_ */
 #endif /* _WINDOWS */
 
 
@@ -350,6 +358,7 @@ LRESULT CALLBACK InitFormDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPA
       hwnEdit = CreateWindow (TEXT("EDIT"), Attr_text, 
 			      WS_CHILD | WS_VISIBLE | WS_BORDER | ES_LEFT | ES_AUTOHSCROLL,
 			      10, 25, 320, 20, hwnd, (HMENU) 1, ((LPCREATESTRUCT) lParam)->hInstance, NULL);
+
       /* Create Confirm button */
       confirmButton = CreateWindow (TEXT("BUTTON"), TtaGetMessage (LIB, TMSG_LIB_CONFIRM), 
 				    WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
@@ -437,7 +446,7 @@ STRING title	;
 
    hwnSheetDialog = CreateWindow (szAppName, title,
                                  DS_MODALFRAME | WS_POPUP | 
-                                 WS_VISIBLE | WS_CAPTION | WS_SYSMENU,
+                                 WS_VISIBLE | WS_CAPTION | WS_SYSMENU | WS_TABSTOP,
                                  ClickX, ClickY,
                                  340, 100,
                                  parent, NULL, hInstance, NULL);
@@ -486,12 +495,17 @@ LRESULT CALLBACK InitSheetDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LP
       
       /* Create Edit Window autoscrolled */
       hwnEdit = CreateWindow (TEXT("EDIT"), Attr_text, 
-			      WS_CHILD | WS_VISIBLE | WS_BORDER | ES_LEFT | ES_AUTOHSCROLL,
+			      WS_CHILD | WS_VISIBLE | WS_BORDER | ES_LEFT | ES_AUTOHSCROLL | WS_TABSTOP,
 			      10, 25, 310, 20, hwnd, (HMENU) 1, ((LPCREATESTRUCT) lParam)->hInstance, NULL);
 				
+      if (lpfnTextZoneWndProc == (WNDPROC) 0)
+         lpfnTextZoneWndProc = (WNDPROC) SetWindowLong (hwnEdit, GWL_WNDPROC, (DWORD) textZoneProc);
+	  else
+           SetWindowLong (hwnEdit, GWL_WNDPROC, (DWORD) textZoneProc);
+
       /* Create Apply button */
       applyButton = CreateWindow (TEXT("BUTTON"), TtaGetMessage (LIB, TMSG_APPLY), 
-				  WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
+				  WS_CHILD | BS_DEFPUSHBUTTON | WS_VISIBLE,
 				  10, 50, 80, 20, hwnd, 
 				  (HMENU) ID_APPLY, ((LPCREATESTRUCT) lParam)->hInstance, NULL);
       
@@ -508,6 +522,22 @@ LRESULT CALLBACK InitSheetDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LP
 				 (HMENU) ID_DONE, ((LPCREATESTRUCT) lParam)->hInstance, NULL);
       SetFocus (hwnEdit);
       break;
+
+    case WM_ENTER:
+         txtLength = GetWindowTextLength (hwnEdit);
+         if (txtLength >= LgMaxAttrText)
+            txtLength = LgMaxAttrText - 1;
+         GetWindowText (hwnEdit, Attr_text, txtLength + 1);
+         i = 0;
+         while (i < txtLength && Attr_text[i] != __CR__)
+               i++;
+         if (i < txtLength)
+            Attr_text[i] = EOS;
+         ThotCallback (NumMenuAttrText, STRING_DATA, Attr_text);
+         ThotCallback (NumMenuAttr, INTEGER_DATA, (STRING) 1);
+         ThotCallback (NumMenuAttr, INTEGER_DATA, (STRING) 0);
+         DestroyWindow (hwnd);
+         break;
       
     case WM_DESTROY :
       PostQuitMessage (0);
