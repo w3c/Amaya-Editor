@@ -66,6 +66,8 @@ bool AmayaFileDropTarget::OnDropFiles( wxCoord x, wxCoord y, const wxArrayString
 
   if (FrameTable[frame_id].Call_Text)
     (*(Proc3)FrameTable[frame_id].Call_Text) ((void *)doc, (void *)view, (void *)buffer);
+  
+  return TRUE;
 }
 
 #endif /* _WX */
