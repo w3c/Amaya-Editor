@@ -207,8 +207,11 @@ void *context;
    if (!ctx)
      return;
 
-   if (status == 0)
+   if (status == HT_OK)
      LINK_LoadAnnotationIndex (doc, ctx->remoteAnnotIndex);
+
+   TtaFreeMemory (ctx->remoteAnnotIndex);
+   TtaFreeMemory (ctx);
 }
 
 /*-----------------------------------------------------------------------
@@ -281,9 +284,6 @@ View view;
 			  NO,
 			  TEXT("application/rdf"));
       TtaFreeMemory (annotURL);
-
-      TtaFreeMemory (ctx->remoteAnnotIndex);
-      TtaFreeMemory (ctx);
     }
 }
 
@@ -386,10 +386,13 @@ void *context;
      return;
 
 #if 0
-   if (status == 0)
+   if (status == HT_OK)
      LINK_LoadAnnotationIndex (doc, ctx->remoteAnnotIndex);
    /* TtaFileUnlink (remoteAnnotIndex);*/
 #endif
+
+   TtaFreeMemory (ctx->remoteAnnotIndex);
+   TtaFreeMemory (ctx);
 }
 
 /*-----------------------------------------------------------------------
@@ -446,13 +449,10 @@ View view;
 		      NULL);
   TtaFreeMemory (annotUrl);
 
-  if (res)			/* @@ */
+  if (res)
     {
-      fprintf (stderr, "Failed to post the annotation!\n");
+      fprintf (stderr, "Failed to post the annotation!\n"); /* @@ */
     }
-
-  TtaFreeMemory (ctx->remoteAnnotIndex);
-  TtaFreeMemory (ctx);
 }
 
 /***************************************************
