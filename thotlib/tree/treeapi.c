@@ -91,7 +91,8 @@ int                 nAssoc;
 /* ----------------------------------------------------------------------
    ChangeElementType
 
-   Change the type of a given type.
+   Change the type of a given element.
+   CAUTION: THIS FUNCTION SHOULD BE USED VERY CARFULLY!
 
    Parameters:
    element: the concerned element

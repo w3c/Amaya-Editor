@@ -37,7 +37,7 @@
 #include "units_f.h"
 #include "frame_tv.h"
 #include "picture_f.h"
-
+#include "gifhandler_f.h"
 
 #define MAX(x,y)  (((x) > (y)) ? (x) : (y))
 #define min(a, b) (((a) < (b)) ? (a) : (b))
@@ -658,7 +658,6 @@ unsigned long  BackGroundPixel;
 
   int      delta;
   int      xtmp, ytmp;
-  float    Scx, Scy;
   unsigned char *pt;
   int       x, y, w, h;
   int	   wim /*, him*/ ;

@@ -68,6 +68,19 @@ Construct;
 #ifdef __STDC__
 
 /* ----------------------------------------------------------------------
+   ChangeElementType
+ 
+   Change the type of a given element.
+   CAUTION: THIS FUNCTION SHOULD BE USED VERY CARFULLY!
+ 
+   Parameters:
+   element: the concerned element
+   typeNum: new type for the element
+ 
+   ---------------------------------------------------------------------- */
+extern void          ChangeElementType (Element element, int typeNum);
+
+/* ----------------------------------------------------------------------
    TtaNewElement
 
    Creates a new element of a given type.
@@ -1049,6 +1062,7 @@ extern void         TtaAskFirstCreation ();
 
 #else  /* __STDC__ */
 
+extern void         ChangeElementType ( /* Element element, int typeNum */ );
 extern Element      TtaNewElement ( /* Document document, ElementType elementType */ );
 extern Element      TtaNewTree ( /* Document document, ElementType elementType, char *label */ );
 extern Element      TtaCopyTree ( /* Element sourceElement, Document sourceDocument, Document destinationDocument, Element parent */ );

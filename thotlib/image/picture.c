@@ -77,7 +77,6 @@ Pixmap          EpsfPictureLogo;
 static char    *PictureMenu;
 static Pixmap   PictureLogo;
 static ThotGC   tiledGC;
-static boolean  paletteRealized = FALSE ;
 #ifndef _WINDOWS
 XVisualInfo*    vptr;
 Visual*         theVisual;

@@ -1521,7 +1521,6 @@ unsigned long       BackGroundPixel;
 {
    int                 delta;
    int                 xtmp, ytmp;
-   float               Scx, Scy;
    unsigned char      *pt;
    int                 x, y, w, h;
    int                 wim;

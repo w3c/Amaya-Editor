@@ -39,7 +39,7 @@
 #include "picture_f.h"
 #include "font_f.h"
 #include "units_f.h"
-
+#include "gifhandler_f.h"
 
 struct my_error_mgr
   {
@@ -313,7 +313,6 @@ unsigned long       BackGroundPixel;
 {
    int                 delta;
    int                 xtmp, ytmp;
-   float               Scx, Scy;
    unsigned char      *pt;
    int                 x, y, w, h;
    int                 wim;

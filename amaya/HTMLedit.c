@@ -32,6 +32,7 @@ static char        *TargetDocumentURL = NULL;
 #include "HTMLactions_f.h"
 #include "HTMLedit_f.h"
 #include "HTMLstyle_f.h"
+#include "tree.h"
 
 /*----------------------------------------------------------------------
    SetTargetContent sets the new value of Target.                  

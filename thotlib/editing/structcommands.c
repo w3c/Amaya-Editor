@@ -2184,13 +2184,13 @@ PtrElement          pEl;
 
 
 /*----------------------------------------------------------------------
-   	ChangeElementType						
+   	ChangeTypeOfElements						
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      ChangeElementType (PtrElement firstEl, PtrElement lastEl,
+static boolean      ChangeTypeOfElements (PtrElement firstEl, PtrElement lastEl,
 		    PtrDocument pDoc, int newTypeNum, PtrSSchema newSSchema)
 #else  /* __STDC__ */
-static boolean      ChangeElementType (firstEl, lastEl, pDoc, newTypeNum, newSSchema)
+static boolean      ChangeTypeOfElements (firstEl, lastEl, pDoc, newTypeNum, newSSchema)
 PtrElement          firstEl;
 PtrElement          lastEl;
 PtrDocument         pDoc;
@@ -2492,7 +2492,7 @@ boolean             Before;
 	       {
 		  /* on essaie d'abord de transformer l'ensemble des elements
 		     selectionne's en un element du type demande' */
-		  ok = ChangeElementType (firstSel, lastSel, pSelDoc, typeNum,
+		  ok = ChangeTypeOfElements (firstSel, lastSel, pSelDoc, typeNum,
 					  pSS);
 		  if (!ok)
 		     /* ca n'a pas marche'. essaie les transformations de */
@@ -2539,7 +2539,7 @@ boolean             Before;
 			  do
 			    {
 			       /* essaie de transformer un element */
-			       ok = ChangeElementType (pEl, pEl, pSelDoc,
+			       ok = ChangeTypeOfElements (pEl, pEl, pSelDoc,
 						       typeNum, pSS);
 			       if (ok)
 				  /* cherche l'element suivant de la selection */

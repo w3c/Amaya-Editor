@@ -1096,7 +1096,7 @@ PtrPRule            pPRule;
 	      }
 
 	nextRule = currentRule->PrNextPRule;
-	FreePresentRuleCond (currentRule);
+	FreePresentRule (currentRule);
 	currentRule = nextRule;
      }
 }
