@@ -95,8 +95,8 @@ CONST CHAR_T*       filename;
 {
   if (filename)
     return (uunlink (filename));
-else
-  return 0;
+  else
+    return 0;
 }
 
 /*----------------------------------------------------------------------
@@ -111,7 +111,7 @@ ThotDirBrowse      *me;
 
 #endif /* __STDC__ */
 {
-#  if defined(_WINDOWS) && !defined(__GNUC__)
+#ifdef _WINDOWS
    DWORD               attr;
 
    if (ustrlen (me->data.cFileName) + me->dirLen > (size_t)me->bufLen)
@@ -119,17 +119,18 @@ ThotDirBrowse      *me;
    ustrcpy (me->buf + me->dirLen, me->data.cFileName);
    if ((attr = GetFileAttributes (me->buf)) == 0xFFFFFFFF)
       return -1;
-   if (attr & FILE_ATTRIBUTE_DIRECTORY && !(me->PicMask & ThotDirBrowse_DIRECTORIES))
+   if (attr & FILE_ATTRIBUTE_DIRECTORY &&
+       !(me->PicMask & ThotDirBrowse_DIRECTORIES))
       return 0;
-   if (attr & FILE_ATTRIBUTE_NORMAL && !(me->PicMask & ThotDirBrowse_FILES))
+   if (attr & FILE_ATTRIBUTE_NORMAL &&
+       !(me->PicMask & ThotDirBrowse_FILES))
       return 0;
    return 1;
-#  else  /* _WINDOWS && !__GNUC__ */
+#else  /* _WINDOWS */
    unsigned int        i;
    int                 ls_car;
    ThotBool            notEof;
    struct stat         fileStat;
-   char                fName[MAX_TXT_LEN];
 
    while (TRUE)
      {
@@ -161,21 +162,18 @@ ThotDirBrowse      *me;
 	if (notEof == FALSE && !i)
 	   return 0;
 
-#   ifdef _I18N_
-    wcstombs (fName, me->buf, MAX_TXT_LEN);
-	if (stat (fName, &fileStat) == -1)
-#   else  /* !_I18N_ */
 	if (stat (me->buf, &fileStat) == -1)
-#   endif /* !_I18N_ */
 	   return -1;
 	/* next if fileStat is not included in our PicMask */
-	if (S_ISDIR (fileStat.st_mode) && !(me->PicMask & ThotDirBrowse_DIRECTORIES))
+	if (S_ISDIR (fileStat.st_mode) &&
+	    !(me->PicMask & ThotDirBrowse_DIRECTORIES))
 	   continue;
-	if (S_ISREG (fileStat.st_mode) && !(me->PicMask & ThotDirBrowse_FILES))
+	if (S_ISREG (fileStat.st_mode) &&
+	    !(me->PicMask & ThotDirBrowse_FILES))
 	   continue;
 	return 1;
      }
-#  endif /* _WINDOWS && !__GNUC__ */
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -193,17 +191,17 @@ CHAR_T*             ext;
 
 #endif /* __STDC__ */
 {
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
    CHAR_T           space[MAX_PATH];
-#  else  /* !_WINDOWS */
+#else  /* !_WINDOWS */
    char             space[MAX_PATH];
-#  endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
    int              ret;
 
    me->dirLen = ustrlen (dir);
    ustrcpy (me->buf, dir);
    ustrcpy (me->buf + (me->dirLen++), WC_DIR_STR);
-#  if defined(_WINDOWS) && !defined(__GNUC__)
+#if defined(_WINDOWS) && !defined(__GNUC__)
    usprintf (space, TEXT("%s\\%s%s"), dir ? dir : TEXT(""), name ? name : TEXT(""), ext ? ext : TEXT(""));
    me->handle = INVALID_HANDLE_VALUE;
    if ((me->handle = FindFirstFile (space, &me->data)) == INVALID_HANDLE_VALUE)
@@ -214,7 +212,7 @@ CHAR_T*             ext;
    if (ret == -1)
       FindClose (me->handle);
    return ret;
-#  else  /* _WINDOWS && !__GNUC__ */
+#else  /* _WINDOWS && !__GNUC__ */
    /* sprintf (space, "/bin/ls%s %s/%s%s 2>/dev/null", 
       ext && *ext ? "" : " -d", dir ? dir : "", 
       name ? name : "", ext ? ext : ""); - EGP */
@@ -230,7 +228,7 @@ CHAR_T*             ext;
       return 1;
    pclose (me->ls_stream);
    me->ls_stream = NULL;
-#  endif /* _WINDOWS && !__GNUC__ */
+#endif /* _WINDOWS && !__GNUC__ */
    return ret;
 }
 
@@ -305,7 +303,8 @@ void                ThotFile_test (STRING name)
 
    space[sizeof (space) - 1] = 0;
    printf ("ThotFile_test: opening %s for CREATE/READ/WRITE\n", name);
-   handle = TtaFileOpen (name, ThotFile_CREATE | ThotFile_TRUNCATE | ThotFile_READWRITE);
+   handle = TtaFileOpen (name, ThotFile_CREATE | ThotFile_TRUNCATE |
+			 ThotFile_READWRITE);
    if (handle == ThotFile_BADHANDLE)
      {
 	printf ("ThotFile_test: handle == ThotFile_BADHANDLE\n");
@@ -349,8 +348,10 @@ void                ThotFile_test (STRING name)
 	return;
      }
    printf ("ThotFile_test: end found at %d\n", offset);
-   printf ("ThotFile_test: seeking to offset %d in %s\n", offset - 4 * sizeof (space), name);
-   offset = TtaFileSeek (handle, offset - 4 * sizeof (space), ThotFile_SEEKSET);
+   printf ("ThotFile_test: seeking to offset %d in %s\n",
+	   offset - 4 * sizeof (space), name);
+   offset = TtaFileSeek (handle, offset - 4 * sizeof (space),
+			 ThotFile_SEEKSET);
    if (offset == ThotFile_BADOFFSET)
      {
 	printf ("ThotFile_test: offset == ThotFile_BADOFFSET\n");
@@ -423,15 +424,15 @@ ThotFileMode        mode;
       creation = OPEN_EXISTING;
    ret = CreateFile (name, access, FILE_SHARE_READ, &secAttribs, creation, FILE_ATTRIBUTE_NORMAL, NULL);
 #else  /* _WINDOWS && !__GNUC__ */
-#  ifdef _I18N_
+#ifdef _I18N_
    char fName [MAX_TXT_LEN];
-#  else  /* !_I18N_ */
+#else  /* !_I18N_ */
    char* fName = name;
-#  endif /* !_I18N_ */
+#endif /* !_I18N_ */
 
-#  ifdef _I18N_
+#ifdef _I18N_
    wcstombs (fName, name, MAX_TXT_LEN);
-#  endif /* _I18N_ */
+#endif /* _I18N_ */
 #ifdef _WINDOWS_
    ret = open (fName, mode | _O_BINARY, 0777);
 #else
@@ -480,7 +481,8 @@ unsigned int        count;
 #if defined(_WINDOWS) && !defined(__GNUC__)
    DWORD               red;
 
-   ret = ReadFile (handle, buffer, count, &red, 0);	/* OK as long as we don't open for overlapped IO */
+   /* OK as long as we don't open for overlapped IO */
+   ret = ReadFile (handle, buffer, count, &red, 0);
    if (ret == TRUE)
       ret = (int) red;
    else
