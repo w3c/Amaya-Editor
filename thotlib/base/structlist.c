@@ -3753,17 +3753,17 @@ void DisplayPRule (PtrPRule rule, FILE *fileDescriptor,
   /* display the rule */
   fprintf (fileDescriptor, "@%s", buffer);
   DisplayedRuleCounter++;
-  fprintf (fileDescriptor, ";");
+  if (rule->PrImportant)
+    fprintf (fileDescriptor, "!important");
+  fprintf (fileDescriptor, "; ");
   l = strlen (buffer);
-  while (l < 30)
+  while (l < 29)
     {
       fprintf (fileDescriptor, " ");
       l++;
     }
-  if (rule->PrImportant)
-    fprintf (fileDescriptor, "!important");
   if (rule->PrSpecificity == 100)
-    fprintf (fileDescriptor, " Style Attribute\n");
+    fprintf (fileDescriptor, " line %d, Style Attribute\n", rule->PrCSSLine);
   else if (rule->PrCSSURL)
     fprintf (fileDescriptor, " line %d, File %s\n", rule->PrCSSLine, rule->PrCSSURL);
   else

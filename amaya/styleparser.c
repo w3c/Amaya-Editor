@@ -4170,6 +4170,7 @@ void  ParseHTMLSpecificStyle (Element el, char *cssRule, Document doc,
     return;
   ctxt->type = elType.ElTypeNum;
   ctxt->cssSpecificity = specificity;
+  ctxt->cssLine = LineNumber;
   ctxt->destroy = destroy;
   /* first use of the context */
   ctxt->uses = 1;

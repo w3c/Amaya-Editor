@@ -2555,7 +2555,7 @@ void GotoLine (Document doc, int line, int index, ThotBool selpos)
 	  child = TtaGetFirstChild (el);
 	  if (child)
 	    {
-	      if (index >= 0)
+	      if (index > 0)
 		{
 		  i = index;
 		  len = TtaGetElementVolume (child);
@@ -2579,7 +2579,7 @@ void GotoLine (Document doc, int line, int index, ThotBool selpos)
 		    TtaSelectString (doc, child, i, i);
 		}
 	      else
-		TtaSelectElement (doc, child);
+		TtaSelectElement (doc, el);
 	      sprintf (message, "line %d char %d", line, index);
 	      TtaSetStatus (doc, 1, message, NULL);
 	    }

@@ -339,7 +339,7 @@ static PtrPRule SearchElementPRule (PtrElement el, PRuleType type, unsigned int 
   ----------------------------------------------------------------------*/
 static PtrPRule InsertElementPRule (PtrElement el, PtrDocument pDoc,
 				    PRuleType type, unsigned int extra,
-				    int specificity)
+				    int specificity, int lineNum)
 {
    PtrPSchema          pSPR;
    PtrSSchema          pSSR;
@@ -395,6 +395,7 @@ static PtrPRule InsertElementPRule (PtrElement el, PtrDocument pDoc,
 	    pRule->PrCond = NULL;
 	    pRule->PrSpecifAttr = 0;
 	    pRule->PrSpecificity = specificity;
+            pRule->PrCSSLine = lineNum;
 	    pRule->PrSpecifAttrSSchema = NULL;
 	    /* set it specific to view 1 */
 	    pRule->PrViewNum = 1;
@@ -2695,7 +2696,8 @@ int TtaSetStylePresentation (unsigned int type, Element el, PSchema tsch,
 	pRule = PresRuleInsert ((PtrPSchema) tsch, ctxt, intRule, func);
       else
 	pRule = InsertElementPRule ((PtrElement) el, LoadedDocument[doc - 1],
-				    intRule, func, c->cssSpecificity);
+				    intRule, func, c->cssSpecificity,
+				    c->cssLine);
       if (pRule)
 	{
 	  if (type == PRBackgroundPicture)
