@@ -455,7 +455,7 @@ static void         CallbackCSS (int ref, int typedata, char *data)
 		  css = SearchCSS (0, CSSpath);
 		  css ->enabled[CSSdocument] = TRUE;
 		  /* apply CSS rules */
-		  if (!strcmp (CSSpath, UserCSS))
+		  if (UserCSS && !strcmp (CSSpath, UserCSS))
 		    LoadUserStyleSheet (CSSdocument);
 		  else
 		    LoadStyleSheet (CSSpath, CSSdocument, NULL, NULL,
