@@ -270,7 +270,6 @@ typedef struct _GETHTMLDocument_context
   char      *form_data;
   ClickEvent method;
   ThotBool   InNewWindow;
-  char      *tempdocument;
   TTcbf     *cbf;
   void      *ctx_cbf;
 } GETHTMLDocument_context;
@@ -4213,7 +4212,6 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
    char               *initial_url;
    char               *documentname;
    char               *form_data;
-   char               *tempdocument;
    char               *s;
    int                 i;
    ThotBool	       history;
@@ -4222,6 +4220,7 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
    ThotBool            stopped_flag = FALSE;
    ThotBool            local_link;
    void               *ctx_cbf;
+   char               tempdocument[MAX_LENGTH];
 
    /* restore GETHTMLDocument's context */  
    ctx = (GETHTMLDocument_context *) context;
@@ -4238,7 +4237,6 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
    initial_url = ctx->initial_url;
    form_data = ctx->form_data;
    method = ctx->method;
-   tempdocument = ctx->tempdocument;
    cbf = ctx->cbf;
    ctx_cbf = ctx->ctx_cbf;
    local_link = ctx->local_link;
@@ -4368,7 +4366,6 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
    TtaFreeMemory (initial_url);
    TtaFreeMemory (pathname);
    TtaFreeMemory (tempfile);
-   TtaFreeMemory (tempdocument);
    if (form_data)
      TtaFreeMemory (form_data);
    TtaFreeMemory (ctx);
@@ -4432,6 +4429,7 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
      NormalizeURL (tempdocument, baseDoc, pathname, documentname, NULL);
    else
      NormalizeURL (tempdocument, 0, pathname, documentname, NULL);
+   TtaFreeMemory (tempdocument);
    /* check the document suffix */
    if (IsMathMLName (documentname))
      docType = docMath;
@@ -4533,7 +4531,6 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
        else
            ctx->form_data = NULL;
        ctx->method = CE_event;
-       ctx->tempdocument = tempdocument;
        ctx->cbf = cbf;
        ctx->ctx_cbf = ctx_cbf;
        ctx->local_link = 0;
@@ -4682,7 +4679,6 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
        /* Free the memory associated with the context */
        TtaFreeMemory (target);
        TtaFreeMemory (documentname);
-       TtaFreeMemory (tempdocument);
      }
    TtaFreeMemory (parameters);
    TtaFreeMemory (tempfile);
