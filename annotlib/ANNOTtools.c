@@ -98,6 +98,10 @@ void AnnotList_free (List *annot_list)
 	free (annot->source_url);
       if (annot->author) 
 	free (annot->author);
+      if (annot->cdate) 
+	free (annot->cdate);
+      if (annot->mdate) 
+	free (annot->mdate);
       if (annot->content_type) 
 	free (annot->content_type);
       if (annot->content_length) 
@@ -183,14 +187,24 @@ void AnnotList_writeIndex (CHAR_T *indexFile, List *annot_list)
       if (IsFilePath (annot->body_url))
 	{
 	  fprintf (fp, 
-		   "<a:Annotation about=\"%s\">\n",
+		   "<r:Description about=\"%s\">\n",
+		   annot->body_url);
+
+	  fprintf (fp, 
+		   "<r:type resource=\"http://www.w3.org/1999/xx/annotation-ns#Annotation\" />\n");
+
+	  fprintf (fp, 
+		   "<r:type resource=\"http://www.w3.org/1999/xx/annotation-ns#%s\" />\n",
+		   annot->type);
+
+	  fprintf (fp, 
+		   "<a:annotates r:resource=\"%s\" />\n",
 		   annot->source_url);
-	  
+
 	  fprintf (fp,
-	      "<xlink:href r:resource=\"%s#id(%s|%d|%s|%d)\" />\n",
-		   annot->source_url,
-		   annot->labf
-		   ,	       annot->c1,
+	      "<a:context>#id(%s|%d|%s|%d)</a:context>\n",
+		   annot->labf,
+		   annot->c1,
 		   annot->labl,
 		   annot->cl);
 	  
@@ -199,22 +213,23 @@ void AnnotList_writeIndex (CHAR_T *indexFile, List *annot_list)
 		   annot->author);
 	  
 	  fprintf (fp,
-		   "<d:date>%s</d:date>\n",
+		   "<a:created>%s</a:created>\n",
 		   annot->cdate);
 
 	  fprintf (fp,
-		   "<r:type>%s</r:type>\n",
-		   annot->type);
-	  
+		   "<d:date>%s</d:date>\n",
+		   annot->mdate);
+
 	  fprintf (fp,
 		   "<a:body r:resource=\"%s\" />\n",
 		   annot->body_url);
 	  
 	  fprintf (fp, 
-		   "</a:Annotation>\n");
+		   "</r:Description>\n");
 	}
       annot_ptr = annot_ptr->next;
     }
+
   /* write the epiloge */
   fprintf (fp, 
 	   "</r:RDF>\n");
@@ -273,30 +288,46 @@ Document doc;
 
   /* beginning of the annotation's  metadata  */
   fprintf (fp,
-	   "<a:Annotation>\n");
-  /* the pointer to the source doc */
-  fprintf (fp,
-	   "<xlink:href r:resource=\"%s%s#id(%s|%d|%s|%d)\" />\n",
-	       proto,
-	       annot->source_url,
-	       annot->labf,
-	       annot->c1,
-	       annot->labl,
-	       annot->cl);
+	   "<r:Description>\n");
+
+	  fprintf (fp, 
+		   "<r:type resource=\"http://www.w3.org/1999/xx/annotation-ns#Annotation\" />\n");
+
+	  fprintf (fp, 
+		   "<r:type resource=\"http://www.w3.org/1999/xx/annotation-ns#%s\" />\n",
+		   annot->type);
+
+	  fprintf (fp, 
+		   "<a:annotates r:resource=\"%s%s\" />\n",
+		   proto, 
+		   annot->source_url);
+
+	  fprintf (fp,
+	      "<a:context>#id(%s|%d|%s|%d)</a:context>\n",
+		   annot->labf,
+		   annot->c1,
+		   annot->labl,
+		   annot->cl);
+	  
+	  fprintf (fp,
+		   "<d:creator>%s</d:creator>\n",
+		   annot->author);
+	  
+	  fprintf (fp,
+		   "<a:created>%s</a:created>\n",
+		   annot->cdate);
+
+	  fprintf (fp,
+		   "<d:date>%s</d:date>\n",
+		   annot->mdate);
 
   /* the rest of the metadata */
   fprintf (fp,
-	   "<d:creator>%s</d:creator>\n"
-	   "<d:date>%s</d:date>\n"
-	   "<r:type>%s</r:type>\n"
 	   "<a:body>\n"
-	   "<a:AnnotationBody>\n"
+	   "<r:Description>\n"
 	   "<http:ContentType>%s</http:ContentType>\n"
 	   "<http:ContentLength>%ld</http:ContentLength>\n"
-	   "<http:Body parseType=\"literal\">\n",
-	   annot->author,
-	   annot->cdate, 
-	   annot->type,
+	   "<http:Body r:parseType=\"literal\">\n",
 	   "text/html",
 	   content_length);
 
@@ -329,12 +360,42 @@ Document doc;
   /* finish writing the annotation */
   fprintf (fp, 
 	   "</http:Body>\n"
-	   "</a:AnnotationBody>\n"
+	   "</r:Description>\n"
 	   "</a:body>\n"
-	   "</a:Annotation>\n"
+	   "</r:Description>\n"
 	   "</r:RDF>\n");
 
   fclose (fp);  
+}
+
+/* ------------------------------------------------------------
+   StrDupDate
+   Returns a pointer to a memalloc'd string containing the current date.
+   It's up to the caller to free this memory.
+   ------------------------------------------------------------*/
+#ifdef __STDC__
+CHAR_T *StrdupDate (void)
+#else
+CHAR_T *StrdupDate ()
+#endif /* __STDC__ */
+{
+  time_t      curDate;
+  struct tm   *localDate;
+  CHAR_T      *strDate;
+  
+  curDate = time (&curDate);
+  localDate = localtime (&curDate);
+  /* @@ possible memory bug */
+  strDate = TtaGetMemory (25);
+  sprintf (strDate, 
+	   "%02d/%02d/%04d %02d:%02d:%02d", 
+	   localDate->tm_mday,
+	   localDate->tm_mon+1,
+           localDate->tm_year+1900,
+	   localDate->tm_hour,
+	   localDate->tm_min,
+	   localDate->tm_sec);
+  return (strDate);
 }
 
 /***************************************************

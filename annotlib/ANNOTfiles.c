@@ -186,8 +186,7 @@ void  ANNOT_InitDocumentMeta (doc, docAnnot, annot)
   user = annot->author;
   source_url = annot->source_url;
   cdate = annot->cdate;
-  /* @@ not adding it until I know how to put it in the schema */
-  mdate = annot->cdate;
+  mdate = annot->mdate;
   type = annot->type;
 
   /* save the docid of the annotated document */
@@ -277,9 +276,6 @@ void  ANNOT_InitDocumentBody (docAnnot)
   Element     root, head, body, el, di, tl, top, child, meta;
   Attribute           attr;
   AttributeType       attrType;
-  time_t      curDate;
-  struct tm   *localDate;
-  STRING      strDate;
   STRING      doc_anchor;
   CHAR_T      tempfile[MAX_LENGTH];
 
@@ -638,24 +634,49 @@ void  ANNOT_CheckEmptyDoc (docAnnot)
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            ANNOT_SaveDocument (Document doc)
+ThotBool            ANNOT_SaveDocument (Document doc_annot)
 #else  /* __STDC__ */
-ThotBool            ANNOT_SaveDocument (doc)
-Document            doc;
+ThotBool            ANNOT_SaveDocument (doc_annot)
+Document            doc_annot;
 
 #endif /* __STDC__ */
 {
   CHAR_T *filename;
-  
-  if (!TtaIsDocumentModified (doc))
+  Element el;
+  ElementType elType;
+  AnnotMeta *annot;
+
+  if (!TtaIsDocumentModified (doc_annot))
     return TRUE; /* prevent Thot from performing normal save operation */
 
-  filename =  TtaStrdup (DocumentURLs[doc]);
+  annot = GetMetaData (DocumentMeta[doc_annot]->source_doc, doc_annot);
+  /* update the modified date */
+  if (annot->mdate)
+    TtaFreeMemory (annot->mdate);
+  annot->mdate = StrdupDate ();
+
+  /* and show the new mdate on the document */
+  /* point to the root node */
+  el = TtaGetMainRoot (doc_annot);
+  elType = TtaGetElementType (el);
+
+  /* point to the metadata structure */
+  elType.ElTypeNum = Annot_EL_Description;
+  el = TtaSearchTypedElement (elType, SearchInTree, el);
+
+  /* Last modified date metadata */
+  elType.ElTypeNum = Annot_EL_AnnotMDate;
+  el = TtaSearchTypedElement (elType, SearchInTree, el);
+  el = TtaGetFirstChild (el);
+  TtaSetTextContent (el, annot->mdate, TtaGetDefaultLanguage (), doc_annot); 
+
+  /* save the file */
+  filename =  TtaStrdup (DocumentURLs[doc_annot]);
   /* we skip the file: prefix if it's present */
-  NormalizeFile (DocumentURLs[doc], filename, AM_CONV_ALL);
-  TtaExportDocument (doc, filename, TEXT("AnnotT"));
+  NormalizeFile (DocumentURLs[doc_annot], filename, AM_CONV_ALL);
+  TtaExportDocument (doc_annot, filename, TEXT("AnnotT"));
   TtaFreeMemory (filename);
-  TtaSetDocumentUnmodified (doc);
+  TtaSetDocumentUnmodified (doc_annot);
 
   return TRUE; /* prevent Thot from performing normal save operation */
 }

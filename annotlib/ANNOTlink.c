@@ -234,8 +234,6 @@ AnnotMeta* LINK_CreateMeta (source_doc, annot_doc, labf, c1, labl, cl)
 #endif /* __STDC__*/
 {
   AnnotMeta   *annot;
-  time_t      curDate;
-  struct tm   *localDate;
   List        *annot_list;
   CHAR_T      *annot_user;
 
@@ -255,13 +253,9 @@ AnnotMeta* LINK_CreateMeta (source_doc, annot_doc, labf, c1, labl, cl)
   ustrcpy (annot->labl, labl);
   annot->cl = cl;
 
-  curDate = time (&curDate);
-  localDate = localtime (&curDate);
-  /* @@ memory bug */
-  annot->cdate = TtaGetMemory (25);
-  sprintf (annot->cdate, "%02d/%02d/%04d %02d:%02d", localDate->tm_mday, 
-	   localDate->tm_mon+1, localDate->tm_year+1900, localDate->tm_hour,
-	   localDate->tm_min);
+  /* get the current date... cdate = mdate at this stage */
+  annot->cdate = StrdupDate ();
+  annot->mdate = TtaStrdup (annot->cdate);
 
   /* Annotation type */
   annot->type = TEXT("Proto-Annotation");
@@ -364,7 +358,6 @@ void LINK_Remove (document, annotName)
   int           lg;
   ThotBool       removeAnnot;
 
-  CHAR_T *textClass = TtaGetMemory (200);
   CHAR_T *textName =  TtaGetMemory (200);
 
   elCour = SearchElementInDoc (document, HTML_EL_BODY);

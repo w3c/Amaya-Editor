@@ -258,7 +258,7 @@ View view;
 	proto = "file://";
       else
 	proto = "";
-      sprintf (annotURL, "w3c_xlink=%s%s", proto, DocumentURLs[doc]);
+      sprintf (annotURL, "w3c_annotates=%s%s", proto, DocumentURLs[doc]);
       /* launch the request */
       res = GetObjectWWW (doc,
 			  annotServer,
@@ -270,7 +270,7 @@ View view;
 			  (void *)  RemoteLoad_callback,
 			  (void *) ctx,
 			  NO,
-			  TEXT("application/xml"));
+			  TEXT("application/rdf"));
       TtaFreeMemory (annotURL);
 
       if (res)
