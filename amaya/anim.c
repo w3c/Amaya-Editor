@@ -3753,7 +3753,7 @@ static void Generate_animate_motion (Document basedoc, int previous_x, int previ
   attrType.AttrTypeNum = SVG_ATTR_path_;
   attr = TtaNewAttribute (attrType);
   TtaAttachAttribute (animtag, attr, basedoc);
-  sprintf (buffer, "M %d %d L %d %d", previous_x, previous_y, x, y);
+  sprintf (buffer, "M %d %d L %d %d", 0, 0, x-previous_x, y-previous_y);
   TtaSetAttributeText (attr, buffer, animtag, basedoc);
 
 
