@@ -559,18 +559,25 @@ void DrawStixBracket (int frame, int x, int y, int l, int h,
 /* ----------------------------------------------------------------------
   StixBracketWidth
   ----------------------------------------------------------------------*/
-static int StixBracketWidth (int height)
+static int StixBracketWidth (int height, SpecFont font)
 {
   int             i;
-  ThotFont        font;
+  ThotFont        pfont;
 
-  font = (ThotFont)LoadStixFont (7, CharRelSize (height, 36, 7));
-  if (height < LOW_HEIGHT)
-    i = CharacterWidth (63, font);
-  else if (height < MID_HEIGHT)
-    i = CharacterWidth (36, font);
-  else 
-    i = CharacterWidth (50, font);
+  GetFontAndIndexFromSpec (32, font, &pfont);
+  if (pfont && height <= (int) (1.3 * FontHeight (pfont)))
+    /* use an ordinary parenthesis */
+    i = CharacterWidth ('(', pfont);
+  else
+    {
+      pfont = (ThotFont)LoadStixFont (7, CharRelSize (height, 36, 7));
+      if (height < LOW_HEIGHT)
+	i = CharacterWidth (63, pfont);
+      else if (height < MID_HEIGHT)
+	i = CharacterWidth (36, pfont);
+      else 
+	i = CharacterWidth (50, pfont);
+    }
   return i;
 }
 
@@ -691,18 +698,25 @@ void DrawStixParenthesis (int frame, int x, int y, int l, int h,
 /* ----------------------------------------------------------------------
   StixParenthesisWidth
   ----------------------------------------------------------------------*/
-static int StixParenthesisWidth (int height)
+static int StixParenthesisWidth (int height, SpecFont font)
 {
-  int i;
-  ThotFont        font;
+  int          i;
+  ThotFont     pfont;
 
-  font = (ThotFont)LoadStixFont (7, CharRelSize (height, 33, 7));  
-  if (height < LOW_HEIGHT)
-    i = CharacterWidth (61, font);
-  else if (height < MID_HEIGHT)
-    i = CharacterWidth (33, font);
-  else 
-    i = CharacterWidth (48, font);
+  GetFontAndIndexFromSpec (32, font, &pfont);
+  if (pfont && height <= (int) (1.3 * FontHeight (pfont)))
+    /* use an ordinary parenthesis */
+    i = CharacterWidth ('(', pfont);
+  else
+    {
+      pfont = (ThotFont)LoadStixFont (7, CharRelSize (height, 33, 7));  
+      if (height < LOW_HEIGHT)
+	i = CharacterWidth (61, pfont);
+      else if (height < MID_HEIGHT)
+	i = CharacterWidth (33, pfont);
+      else 
+	i = CharacterWidth (48, pfont);
+    }
   return i;
 }
 
@@ -759,18 +773,25 @@ void DrawStixBrace (int frame, int x, int y, int l, int h,
 /* ----------------------------------------------------------------------
   StixBraceWidth
   ----------------------------------------------------------------------*/
-static int StixBraceWidth (int height)
+static int StixBraceWidth (int height, SpecFont font)
 {
   int i;
-  ThotFont        font;
+  ThotFont        pfont;
 
-  font = (ThotFont)LoadStixFont (7, CharRelSize (height, 38, 7));
-  if (height < LOW_HEIGHT)
-    i = CharacterWidth (65, font);
-  else if (height < MID_HEIGHT)
-    i = CharacterWidth (38, font);
-  else 
-    i = CharacterWidth (52, font);
+  GetFontAndIndexFromSpec (32, font, &pfont);
+  if (pfont && height <= (int) (1.3 * FontHeight (pfont)))
+    /* use an ordinary parenthesis */
+    i = CharacterWidth ('(', pfont);
+  else
+    {
+      pfont = (ThotFont)LoadStixFont (7, CharRelSize (height, 38, 7));
+      if (height < LOW_HEIGHT)
+	i = CharacterWidth (65, pfont);
+      else if (height < MID_HEIGHT)
+	i = CharacterWidth (38, pfont);
+      else 
+	i = CharacterWidth (52, pfont);
+    }
   return i;
 }
 
@@ -880,7 +901,7 @@ void DrawStixHorizontalBrace (int frame, int x, int y, int l, int h,
 /*----------------------------------------------------------------------
   GetMathFontWidth : Calculates the width of the stix char
 ----------------------------------------------------------------------*/
-int GetMathFontWidth (char shape, int size, int height)
+int GetMathFontWidth (char shape, SpecFont font, int height)
 {
   int           i;
 
@@ -900,15 +921,15 @@ int GetMathFontWidth (char shape, int size, int height)
 	  break;
 	case '(':
 	case ')':
-	  i = StixParenthesisWidth (height); 
+	  i = StixParenthesisWidth (height, font);
 	  break;
 	case '{':
 	case '}':
-	  i = StixBraceWidth (height);
+	  i = StixBraceWidth (height, font);
 	  break;
 	case '[':
 	case ']':
-	  i = StixBracketWidth (height);	
+	  i = StixBracketWidth (height, font);	
 	  break;
 	case '<':
 	case '>':
@@ -947,18 +968,15 @@ void GiveStixSize (ThotFont pfont, PtrAbstractBox pAb, int *width,
       break;
     case '(':
     case ')':
-      *width = StixParenthesisWidth (*height); 
-      *width = *width + *width/2;
+      *width = StixParenthesisWidth (*height, pAb->AbBox->BxFont); 
       break;
     case '{':
     case '}':
-      *width = StixBraceWidth (*height);
-      *width = *width + *width/2;
+      *width = StixBraceWidth (*height, pAb->AbBox->BxFont);
       break;
     case '[':
     case ']':
-      *width = StixBracketWidth (*height);	
-      *width = *width + *width/2;
+      *width = StixBracketWidth (*height, pAb->AbBox->BxFont);	
       break;
     case '<':
     case '>':

@@ -92,7 +92,7 @@ static int init_done = 0;
  * -> FT_LOAD_FORCE_AUTOHINT : force the use of the FreeType auto-hinter when a glyph outline is loaded.
  * */
 static FT_Render_Mode thot_ft_render_mode = ft_render_mode_normal;
-static int            thot_ft_load_mode   = FT_LOAD_FORCE_AUTOHINT;
+static int            thot_ft_load_mode   = FT_LOAD_NO_HINTING;  /*** FT_LOAD_FORCE_AUTOHINT ***/
 
 /*--------------Font Caching---------------------------*/
 
@@ -305,7 +305,7 @@ void InitFreetype_Modes()
   if (noaliasing)
     {
       thot_ft_render_mode = ft_render_mode_normal;
-      thot_ft_load_mode   = FT_LOAD_FORCE_AUTOHINT;
+      thot_ft_load_mode   = FT_LOAD_NO_HINTING;  /**** FT_LOAD_FORCE_AUTOHINT ***/
     }
   else
     {

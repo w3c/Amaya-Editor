@@ -2857,7 +2857,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
       if (pCurrentAb->AbLeafType == LtSymbol)
 	{
 	  font = pBox->BxFont;
-	  i = GetMathFontWidth (pCurrentAb->AbShape, font->FontSize,pBox->BxH);
+	  i = GetMathFontWidth (pCurrentAb->AbShape, pBox->BxAbstractBox->AbEnclosing->AbBox->BxFont, pBox->BxH);
 	  switch (pCurrentAb->AbShape)
 	    {
 	    case 'd':	/* double integral */

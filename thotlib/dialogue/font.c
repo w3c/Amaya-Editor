@@ -782,23 +782,26 @@ static int XFontAscent (SpecFont specfont)
   ----------------------------------------------------------------------*/
 int FontHeight (ThotFont font)
 {
+  int      h;
+
   if (font == NULL)
-    return (0);
+     h = 0;
   else
 #ifdef _GL
-    return (gl_font_height (font));
+    h = gl_font_height (font);
 #else /* _GL */
 #ifdef _WINGUI
-    return (font->FiHeight);
+    h = font->FiHeight;
 #endif /* _WINGUI */
 #ifdef _GTK
-    return (font->ascent + font->descent);
+    h = font->ascent + font->descent;
 #endif /* _GTK */
 #ifdef _WX
     /* TODO : a faire si on desir porter la version non opengl de wxwindows */
-    return 0;
+    h = 0;
 #endif /* _WX */ 
 #endif /*_GL*/
+  return h;
 }
 
 /*----------------------------------------------------------------------

@@ -70,7 +70,7 @@ extern void DrawStixHorizontalBrace ( int frame,
 				      int size,
 				      int fg );
 extern int GetMathFontWidth ( char shape,
-                              int size,
+                              SpecFont font,
                               int height );
 extern void GiveStixSize ( ThotFont pfont,
                            PtrAbstractBox pAb,
@@ -151,7 +151,7 @@ extern void DrawStixHorizontalBrace ( int frame,
 				      int size,
 				      int fg );
 extern int GetMathFontWidth ( char shape,
-                                int size,
+                                SpecFont font,
                                 int height );
 extern void GiveStixSize ( ThotFont pfont,
                              PtrAbstractBox pAb,
