@@ -209,11 +209,11 @@ RULES
 #endif
 #ifdef MATHML
  Math:  BEGIN
-        Create '<math>';
+        Create '[math]';
 	Remove;
 	END;
  MathDisp: BEGIN
-        Create '\12<math>\12';
+        Create '\12[math]\12';
 	Remove;
 	END;
 #endif
