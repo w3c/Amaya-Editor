@@ -1530,7 +1530,7 @@ ThotBitmap         *mask1;
 #      ifndef _WINDOWS
        *mask1 = MakeMask (TtDisplay, buffer, w, h, i);
 #      else  /* _WINDOWS */
-           bgRed   = colrs[i].red;
+       bgRed   = colrs[i].red;
 	   bgGreen = colrs[i].green;
 	   bgBlue  = colrs[i].blue;
 #      endif /* _WINDOWS */
