@@ -907,10 +907,10 @@ EXCEPT
 	MAP:		IsDraw;
 	AREA:		MoveResize, ClickableSurface;
 	Password_Input: Shadow;
-	Preformatted:	ReturnCreateNL;
-	STYLE_:		ReturnCreateNL;
-	SCRIPT_:	ReturnCreateNL;
-	Text_Area:	ReturnCreateNL;
+	Preformatted:	ReturnCreateNL, NoReplicate;
+	STYLE_:		ReturnCreateNL, NoReplicate;
+	SCRIPT_:	ReturnCreateNL, NoReplicate;
+	Text_Area:	ReturnCreateNL, NoReplicate;
 	HTMLfragment:	NoMove, NoResize, Hidden;
 
 	ExternalLink:	Invisible;
@@ -945,7 +945,7 @@ EXCEPT
 	shape:		Invisible;
 	Data_cell:	IsCell, NoMove, NoResize;
 	Heading_cell:	IsCell, NoMove, NoResize;
-	Table:		IsTable, PageBreak;
+	Table:		IsTable, PageBreak, NoReplicate;
 	Column_head:	IsColHead, NoCut, Hidden;
 	Table_head:	NoCut, Hidden, NoSelect;
 	C_Head:		Hidden, NoSelect;

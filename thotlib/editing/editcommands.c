@@ -2898,7 +2898,6 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 			      pViewSelEnd->VsXPos = xDelta + 2;
 			      pViewSelEnd->VsIndBox = charsDelta;
 			      pViewSelEnd->VsNSpaces = spacesDelta;
-			      
 			      /* Le caractere insere' est un Ctrl Return ? */
 			      if (c == BREAK_LINE || c == NEW_LINE)
 				{
@@ -2906,7 +2905,6 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 				  toSplit = TRUE;
 				  xDelta = 0;
 				}
-			      
 			      DefClip (frame, pSelBox->BxXOrg, pSelBox->BxYOrg,
 				       pSelBox->BxXOrg + pSelBox->BxWidth,
 				       pSelBox->BxYOrg + pSelBox->BxHeight);
@@ -2923,11 +2921,9 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 			      /* Prepare la mise a jour de la boite */
 			      toSplit = TRUE;
 			      xDelta = BoxCharacterWidth (c, font);
-			      
 			      if (c == SPACE)
 				adjust = pSelBox->BxSpaceWidth;
 			      UpdateViewSelMarks (frame, xDelta, spacesDelta, charsDelta);
-			      
 			      /* Reevaluation du debut de la boite coupee ? */
 			      if (previousChars == 0 && pSelBox->BxFirstChar == 1)
 				pSelBox = pAb->AbBox;

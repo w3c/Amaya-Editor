@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001.
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -62,6 +62,7 @@
 #define ExcParagraphBreak 36
 #define ExcReturnCreateNL 37
 #define ExcReturnCreateWithin 38
+#define ExcNoReplicate 39
 
 /* Draw exceptions */
 #define ExcSelectParent 310

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -906,26 +906,31 @@ static void ReturnCreateNewElem (PtrElement pListEl, PtrElement pEl,
 }
 
 /*----------------------------------------------------------------------
-   AscentReturnCreateNL
-   return the ancestor of element pEl (or pEl itself) which has an
-   exception ExcReturnCreateNL.                                      
+  AscentReturnCreateNL
+  returns the ancestor of element pEl which has an exception
+  ExcReturnCreateNL.
   ----------------------------------------------------------------------*/
 static PtrElement AscentReturnCreateNL (PtrElement pEl)
 {
-   PtrElement          pAncest;
-   ThotBool            stop;
+  PtrElement          pAncest;
+  ThotBool            stop;
 
-   stop = FALSE;
-   pAncest = pEl;
-   while (!stop && pAncest != NULL)
-     {
-	if (TypeHasException (ExcReturnCreateNL, pAncest->ElTypeNumber,
-			      pAncest->ElStructSchema))
-	   stop = TRUE;
-	else
-	   pAncest = pAncest->ElParent;
-     }
-   return pAncest;
+  stop = FALSE;
+  if (pEl == NULL)
+    return pEl;
+  else
+    {
+      pAncest = pEl->ElParent;
+      while (!stop && pAncest)
+	{
+	  if (TypeHasException (ExcReturnCreateNL, pAncest->ElTypeNumber,
+				pAncest->ElStructSchema))
+	    stop = TRUE;
+	  else
+	    pAncest = pAncest->ElParent;
+	}
+      return pAncest;
+    }
 }
 
 
@@ -984,7 +989,7 @@ static ThotBool NoSignificantSibling (PtrElement pEl, ThotBool before)
 /*----------------------------------------------------------------------
   TtcInsertLineBreak handles the key "Control Return".
   ----------------------------------------------------------------------*/
-void     TtcInsertLineBreak (Document doc, View view)
+void TtcInsertLineBreak (Document doc, View view)
 {
   if (MenuActionList[0].Call_Action)
     (*MenuActionList[0].Call_Action) (doc, view, BREAK_LINE);
@@ -993,7 +998,7 @@ void     TtcInsertLineBreak (Document doc, View view)
 /*----------------------------------------------------------------------
   TtcCreateElement handles the key "Return".
   ----------------------------------------------------------------------*/
-void     TtcCreateElement (Document doc, View view)
+void TtcCreateElement (Document doc, View view)
 {
   PtrElement          firstSel, lastSel, pListEl, pE, pNew, pSibling;
   PtrElement          pClose, pAncest, pElem, pParent, pElDelete, pPrevious;
@@ -1363,7 +1368,11 @@ void     TtcCreateElement (Document doc, View view)
 	      /* a priori, on creera le meme type d'element */
 	      if (pElReplicate)
 		{
-		  typeNum = pElReplicate->ElTypeNumber;
+		  if (TypeHasException (ExcNoReplicate, pElReplicate->ElTypeNumber,
+					pElReplicate->ElStructSchema))
+		    selEnd = TRUE;
+		  else
+		    typeNum = pElReplicate->ElTypeNumber;
 		  pSS = pElReplicate->ElStructSchema;
 		}
 	    }
@@ -1575,27 +1584,27 @@ void     TtcCreateElement (Document doc, View view)
   ----------------------------------------------------------------------*/
 static PtrElement  AscentChildOfParagraph (PtrElement pEl)
 {
-   PtrElement          pAncest, pParent;
-   ThotBool            stop;
+  PtrElement          pAncest, pParent;
+  ThotBool            stop;
 
-   stop = FALSE;
-   pAncest = pEl;
-   do
-     {
-	pParent = pAncest->ElParent;
-	if (pParent == NULL)
-	  {
-	     stop = TRUE;
-	     pAncest = NULL;
-	  }
-	else if (TypeHasException (ExcParagraphBreak, pParent->ElTypeNumber,
-				   pParent->ElStructSchema))
-	   stop = TRUE;
-	else
-	   pAncest = pParent;
-     }
-   while (!stop);
-   return pAncest;
+  stop = FALSE;
+  pAncest = pEl;
+  do
+    {
+      pParent = pAncest->ElParent;
+      if (pParent == NULL)
+	{
+	  stop = TRUE;
+	  pAncest = NULL;
+	}
+      else if (TypeHasException (ExcParagraphBreak, pParent->ElTypeNumber,
+				 pParent->ElStructSchema))
+	stop = TRUE;
+      else
+	pAncest = pParent;
+    }
+  while (!stop);
+  return pAncest;
 }
 
 /*----------------------------------------------------------------------

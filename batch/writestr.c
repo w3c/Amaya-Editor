@@ -10,7 +10,6 @@
  * en memoire.
  *
  * Author: V. Quint (INRIA)
- *         R. Guetari (W3C/INRIA): Unicode.
  *
  */
 

@@ -1,6 +1,6 @@
 /* 
  *
- *  (c) COPYRIGHT INRIA 1996-2001
+ *  (c) COPYRIGHT INRIA 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -15,6 +15,7 @@
  *
  * Author: V. Quint
  *         R. Guetari: Windows adaptation
+ *         I. Vatton: new exceptions
  *
  */
 
@@ -1665,6 +1666,9 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 	 break;
        case KWD_NoCreate:
 	 ExceptionNum (ExcNoCreate, True, False, False, wi);
+	 break;
+       case KWD_NoReplicate:
+	 ExceptionNum (ExcNoReplicate, True, False, False, wi);
 	 break;
        case KWD_NoHMove:
 	 ExceptionNum (ExcNoHMove, True, False, False, wi);
