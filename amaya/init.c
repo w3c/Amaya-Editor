@@ -813,7 +813,6 @@ char               *documentname;
 	strcpy (pathname, DirectoryName);
 	strcat (pathname, DIR_STR);
 	strcat (pathname, tempdocument);
-	W3Loading = 0;		/* loading is complete now */
 	ResetStop (doc);
 	InitSaveObjectForm (doc, 1, SavingFile, pathname);
      }
@@ -826,14 +825,12 @@ char               *documentname;
 	   newdoc = doc;
 
 	/* what we have to do if doc and targetDocument are different */
-	W3Loading = 0;		/* loading is complete now */
 	if (tempfile[0] != EOS)
 	  {
 	     /* It is a document loaded from the Web */
 	     if (!TtaFileExist (tempfile))
 	       {
 		  /* Nothing is loaded */
-		  W3Loading = 0;
 		  ResetStop (doc);
 		  return (0);
 	       }
@@ -948,6 +945,7 @@ View                view;
         TtaSetCursorWatch (0, 0);
 	/* do we need to control the last slash here? */
 	res = LoadHTMLDocument (newdoc, pathname, tempfile, documentname);
+	W3Loading = 0;		/* loading is complete now */
 	TtaHandlePendingEvents ();
 	/* fetch and display all images referred by the document */
 	FetchAndDisplayImages (res, AMAYA_NOCACHE);
@@ -1218,8 +1216,13 @@ NotifyDialog       *event;
 
 
 /*----------------------------------------------------------------------
-   GetHTMLDocument loads the document if it is not loaded yet and    
-   calls the parser if the document can be parsed.         
+  GetHTMLDocument loads the document if it is not loaded yet and    
+  calls the parser if the document can be parsed.
+    - documentPath: can be relative or absolute adress.
+    - form_data: the text to be posted.
+    - doc: the document which can be removed if not updated.
+    - baseDoc: the document which documentPath is relative to.
+    - DC_event: DC_FORM_POST for a post request, DC_TRUE for a double click.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 Document            GetHTMLDocument (char *documentPath, char *form_data, Document doc, Document baseDoc, DoubleClickEvent DC_event)
@@ -1238,8 +1241,7 @@ DoubleClickEvent    DC_event;
    char                parameters[MAX_LENGTH];
    char                pathname[MAX_LENGTH];
    char                documentname[MAX_LENGTH];
-   Document            newdoc;
-   Document            res;
+   Document            newdoc, res;
    int                 toparse;
    int                 i;
    char               *s;
@@ -1273,12 +1275,11 @@ DoubleClickEvent    DC_event;
 	     TtaSetStatus (baseDoc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), pathname);
 	     return (0);
 	  }
-	/* we always have a fresh  newdoc for forms */
-	newdoc = (Document) None;
+	/* we always have a fresh newdoc for forms */
+	newdoc = 0;
      }
 
-   res = newdoc;
-   if (newdoc == (Document) None)
+   if (newdoc == 0)
      {
 	/* document not loaded yet */
 	if (DC_event & DC_TRUE && !IsW3Path (pathname) && !TtaFileExist (pathname))
@@ -1288,14 +1289,13 @@ DoubleClickEvent    DC_event;
 	  {
 	     tempfile[0] = EOS;
 	     toparse = 0;
-	     W3Loading = baseDoc;	/* this document is currently used */
 	     /* In case of initial document, open the view before loading */
 	     if (doc == 0)
 	       {
-		  newdoc = InitDocView (doc, pathname);
-		  if (newdoc == 0) {
-		     return (newdoc);
-		  }
+		 newdoc = InitDocView (doc, pathname);
+		 if (newdoc == 0)
+		   /* cannot display the new document */
+		   return (newdoc);
 	       }
 	     else
 	       {
@@ -1305,58 +1305,59 @@ DoubleClickEvent    DC_event;
 	       }
 
 #ifdef AMAYA_JAVA
-             /*
-	      * Check against concurrent loading on the same frame.
-	      */
-	     if (FilesLoading[newdoc]) {
-	         return(0);
-	     }
+             /* Check against concurrent loading on the same frame */
+	     if (FilesLoading[newdoc])
+	       return(0);
              FilesLoading[newdoc]++;
-	     res = newdoc;
-#else
-	     res = (Document) None;
 #endif /* AMAYA_JAVA */
 
-	     W3Loading = newdoc;	/* this document is currently in load */
+	     /* this document is currently in load */
+	     W3Loading = newdoc;
 	     ActiveTransfer (newdoc);
 	     if (IsW3Path (pathname))
 	       {
 		 /* load the document from the Web */
 		  if (DC_event & DC_FORM_POST)
-		    {
-		       toparse = GetObjectWWW (newdoc, pathname, form_data, tempfile,
-					       AMAYA_FORM_POST | AMAYA_SYNC,
-					       NULL, NULL, NULL, NULL, YES);
-		    }
+		    toparse = GetObjectWWW (newdoc, pathname, form_data, tempfile,
+					    AMAYA_FORM_POST | AMAYA_SYNC,
+					    NULL, NULL, NULL, NULL, YES);
 		  else
 		    {
-		       if (!strcmp (documentname, "noname.html"))
-			 {
-			    slash = strlen (pathname);
-			    if (slash && pathname[slash - 1] != DIR_SEP)
-			       strcat (pathname, DIR_STR);
-			    toparse = GetObjectWWW (newdoc, pathname, NULL, tempfile, AMAYA_SYNC, NULL, NULL, NULL, NULL, YES);
-			    /* keep the real name */
-			    NormalizeURL (pathname, 0, tempdocument, documentname);
-			 }
-		       else 
-			   toparse = GetObjectWWW (newdoc, pathname, NULL, tempfile, AMAYA_SYNC, NULL, NULL, NULL, NULL, YES);
+		      if (!strcmp (documentname, "noname.html"))
+			{
+			  slash = strlen (pathname);
+			  if (slash && pathname[slash - 1] != DIR_SEP)
+			    strcat (pathname, DIR_STR);
+			  toparse = GetObjectWWW (newdoc, pathname, NULL, tempfile, AMAYA_SYNC, NULL, NULL, NULL, NULL, YES);
+			  /* keep the real name */
+			  NormalizeURL (pathname, 0, tempdocument, documentname);
+			}
+		      else 
+			toparse = GetObjectWWW (newdoc, pathname, NULL, tempfile, AMAYA_SYNC, NULL, NULL, NULL, NULL, YES);
 		    }
 		  TtaHandlePendingEvents ();
 	       }
+
+	     /* memorize the initial newdoc value in doc because LoadHTMLDocument */
+	     /* will opem a new document if newdoc is a modified document */
 	     if (toparse != -1)
 	       {
 		  /* do we need to control the last slash here? */
-		  res = LoadHTMLDocument (newdoc, pathname, tempfile,
-		                             documentname);
-		  if (res == 0) {
+		  res = LoadHTMLDocument (newdoc, pathname, tempfile, documentname);
+		  W3Loading = 0;		/* loading is complete now */
+		  if (res == 0)
+		    {
+		      /* cannot load the document */
 #ifdef AMAYA_JAVA
-		     FilesLoading[newdoc]--;
+		      FilesLoading[newdoc]--;
 #else
-		     ResetStop(newdoc);
+		      ResetStop(newdoc);
 #endif /* AMAYA_JAVA */
-		     return (res);
-		  }
+		      return (res);
+		    }
+		  else if (newdoc != res)
+		    newdoc = res;
+
 		  TtaHandlePendingEvents ();
 		  /* fetch and display all images referred by the document */
 		  if (doc == baseDoc)
@@ -1365,25 +1366,25 @@ DoubleClickEvent    DC_event;
 	       }
 	     else
 	       {
-		  if (DocumentURLs[(int) newdoc] == NULL)
-		    {
-		       /* save the document name into the document table */
-		       i = strlen (pathname) + 1;
-		       s = TtaGetMemory (i);
-		       strcpy (s, pathname);
-		       DocumentURLs[(int) newdoc] = s;
-		       TtaSetTextZone (newdoc, 1, 1, s);
-		    }
-		  W3Loading = 0;	/* loading is complete now */
+		 if (DocumentURLs[(int) newdoc] == NULL)
+		   {
+		     /* save the document name into the document table */
+		     i = strlen (pathname) + 1;
+		     s = TtaGetMemory (i);
+		     strcpy (s, pathname);
+		     DocumentURLs[(int) newdoc] = s;
+		     TtaSetTextZone (newdoc, 1, 1, s);
+		   }
+		 W3Loading = 0;	/* loading is complete now */
 	       }
 #ifdef AMAYA_JAVA
              FilesLoading[newdoc]--;
 #else
-	     ResetStop( (res == (Document) None) ? newdoc : res);
+	     ResetStop(newdoc);
 #endif /* AMAYA_JAVA */
 	  }
      }
-   return (res);
+   return (newdoc);
 }
 
 

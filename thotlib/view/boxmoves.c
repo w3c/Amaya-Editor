@@ -1850,7 +1850,11 @@ int                 frame;
 		/* n'est pas encore placee dans l'image concrete   */
 		&& !pBox->BxXToCompute
 		&& !pBox->BxYToCompute
-		&& (orgTrans != 0 || pCurrentAb->AbFirstEnclosed == NULL))
+		&& (orgTrans != 0
+		    || pCurrentAb->AbFirstEnclosed == NULL
+		    /* redisplay filled boxes */
+		    || pCurrentAb->AbFillBox
+		    || pCurrentAb->AbPictBackground != NULL))
 	      {
 		if (pCurrentAb->AbLeafType == LtText)
 		  {
@@ -2285,7 +2289,11 @@ int                 frame;
 		 /* n'est pas encore placee dans l'image concrete   */
 		 && !pBox->BxXToCompute
 		 && !pBox->BxYToCompute
-		 && (orgTrans != 0 || pCurrentAb->AbFirstEnclosed == NULL))
+		 && (orgTrans != 0
+		     || pCurrentAb->AbFirstEnclosed == NULL
+		     /* redisplay filled boxes */
+		     || pCurrentAb->AbFillBox
+		     || pCurrentAb->AbPictBackground != NULL))
 	       {
 		 if (pCurrentAb->AbLeafType == LtText)
 		   {

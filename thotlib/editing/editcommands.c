@@ -1624,9 +1624,9 @@ PtrTextBuffer       clipboard;
    - xDelta la largeur de la chaine copiee                         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         CutSelection (int charsDelta, int spacesDelta, int xDelta, boolean defaultHeight, boolean defaultWidth, PtrLine pLine, PtrBox pBox, PtrAbstractBox pAb, int frame)
+static void         RemoveSelection (int charsDelta, int spacesDelta, int xDelta, boolean defaultHeight, boolean defaultWidth, PtrLine pLine, PtrBox pBox, PtrAbstractBox pAb, int frame)
 #else  /* __STDC__ */
-static void         CutSelection (charsDelta, spacesDelta, xDelta, defaultHeight, defaultWidth, pLine, pBox, pAb, frame)
+static void         RemoveSelection (charsDelta, spacesDelta, xDelta, defaultHeight, defaultWidth, pLine, pBox, pAb, frame)
 int                 charsDelta;
 int                 spacesDelta;
 int                 xDelta;
@@ -1882,7 +1882,7 @@ int                 frame;
 	  }
      }
    /* coupe le contenu de la selection courante */
-   CutSelection (charsDelta, spacesDelta, xDelta, defaultHeight, defaultWidth, pLine, pBox, pAb, frame);
+   RemoveSelection (charsDelta, spacesDelta, xDelta, defaultHeight, defaultWidth, pLine, pBox, pAb, frame);
 }
 
 
@@ -2345,7 +2345,7 @@ int                 editType;
 		       pAb = NULL;
 		    }
 		  else
-		     CutSelection (charsDelta, spacesDelta, xDelta, defaultHeight, defaultWidth, pLine, pBox, pAb, frame);
+		     RemoveSelection (charsDelta, spacesDelta, xDelta, defaultHeight, defaultWidth, pLine, pBox, pAb, frame);
 	       }
 	     else if (editType == TEXT_DEL && !FromKeyboard)
 		if (pAb->AbVolume == 0 ||

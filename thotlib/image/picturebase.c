@@ -158,8 +158,8 @@ Pixmap              pix;
      * allocate and fill a new structure.
      */
     NbImageEntry++;
-    cour = (ImageBaseEntryPtr) TtaGetMemory(sizeof(struct ImageBaseEntry));
-    cour->name = strdup(name);
+    cour = (ImageBaseEntryPtr) TtaGetMemory (sizeof(struct ImageBaseEntry));
+    cour->name = TtaStrdup (name);
     cour->pix = pix;
 
     /*

@@ -1601,6 +1601,13 @@ PtrElement          pEl;
 			       case PtForeground:
 				  pAb->AbAspectChange = TRUE;
 				  break;
+			       case PtFunction:
+				 if (pPRule->PrPresFunction == FnPictureMode
+				     || pPRule->PrPresFunction == FnBackgroundPicture)
+				   pAb->AbAspectChange = TRUE;
+				 else
+				   pAb->AbChange = TRUE;
+				  break;
 			       default:
 				  pAb->AbChange = TRUE;
 				  break;

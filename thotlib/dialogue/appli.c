@@ -48,7 +48,6 @@
 #include "edit_tv.h"
 #include "frame_tv.h"
 #include "appdialogue_tv.h"
-#include "applicationapi_f.h"
 
 #ifndef _WINDOWS
 static XmString     null_string;
@@ -81,33 +80,34 @@ DWORD  dwToolBarStyles   = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_TOP | C
 DWORD  dwStatusBarStyles = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM | SBARS_SIZEGRIP ;
 #endif /* _WINDOWS */
 
-#include "appli_f.h"
-#include "textcommands_f.h"
-#include "editcommands_f.h"
-#include "context_f.h"
-#include "structcreation_f.h"
-#include "scroll_f.h"
-#include "boxlocate_f.h"
-#include "views_f.h"
-#include "callback_f.h"
-#include "viewcommands_f.h"
-#include "windowdisplay_f.h"
-#include "font_f.h"
 #include "absboxes_f.h"
+#include "appli_f.h"
+#include "applicationapi_f.h"
+#include "boxlocate_f.h"
+#include "boxparams_f.h"
+#include "boxselection_f.h"
 #include "buildboxes_f.h"
+#include "callback_f.h"
+#include "context_f.h"
+#include "editcommands_f.h"
+#include "font_f.h"
+#include "frame_f.h"
 #include "input_f.h"
 #include "keyboards_f.h"
 #include "memory_f.h"
 #include "message_f.h"
-#include "structmodif_f.h"
-#include "structcommands_f.h"
-#include "boxparams_f.h"
-#include "boxselection_f.h"
-#include "structselect_f.h"
+#include "scroll_f.h"
 #include "selectmenu_f.h"
+#include "structcommands_f.h"
+#include "structcreation_f.h"
+#include "structmodif_f.h"
+#include "structselect_f.h"
+#include "textcommands_f.h"
 #include "thotmsg_f.h"
+#include "views_f.h"
+#include "viewcommands_f.h"
 #include "viewapi_f.h"
-#include "frame_f.h"
+#include "windowdisplay_f.h"
 
 /*----------------------------------------------------------------------
    FrameToView retourne, sous la forme qui convient a l'API Thot, 
@@ -1021,7 +1021,7 @@ char* label;
     RECT r ;
     HWND txtZone;
 
-    txtZoneLabel = strdup (label);
+    txtZoneLabel = TtaStrdup (label);
 
     txtZone = CreateWindow ("WinTxtZone", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER,
                             0, 0, width, 30, hwndParent, (HMENU) 1, hInstance, 0) ;

@@ -1739,9 +1739,9 @@ int                 frame;
    int                 nSpaces;
    int                 i, charDelta, adjustDelta;
    PtrLine             pLine;
-   PtrAbstractBox      pSiblingAb;
+   PtrAbstractBox      pCurrentAb;
    PtrBox              pNextBox;
-   PtrBox              pSiblingBox;
+   PtrBox              pCurrentBox;
    PtrBox              pMainBox;
    PtrBox              pLastBox;
    PtrBox              pBox;
@@ -1767,41 +1767,53 @@ int                 frame;
    result = FALSE;
 
    /* On prepare le reaffichage */
-   if (!pAb->AbNew
-       && (pAb->AbDead || pAb->AbChange
-       || pAb->AbWidthChange || pAb->AbHeightChange || pAb->AbHorizPosChange
-    || pAb->AbVertPosChange || pAb->AbHorizRefChange || pAb->AbVertRefChange
-	   || pAb->AbAspectChange || pAb->AbSizeChange))
+   if (pAb->AbNew || pAb->AbDead || pAb->AbChange
+       || pAb->AbWidthChange || pAb->AbHeightChange
+       || pAb->AbHorizPosChange || pAb->AbVertPosChange
+       || pAb->AbHorizRefChange || pAb->AbVertRefChange
+       || pAb->AbAspectChange || pAb->AbSizeChange)
      {
-	/* Est-ce que la boite est coupee ? */
-	pSiblingBox = pBox;
-	/* Si la boite est coupee on prend la premiere boite de coupure */
-	if (pSiblingBox->BxType == BoSplit)
-	   pSiblingBox = pSiblingBox->BxNexChild;
-	if ((pSiblingBox->BxWidth > 0 && pSiblingBox->BxHeight > 0) || pSiblingBox->BxType == BoPicture)
-	   DefClip (frame, pSiblingBox->BxXOrg, pSiblingBox->BxYOrg, pSiblingBox->BxXOrg + pSiblingBox->BxWidth,
-		    pSiblingBox->BxYOrg + pSiblingBox->BxHeight);
+       /* look at if the box or an enclosing box has a background */
+       pCurrentAb = pAb;
+       while (pCurrentAb != NULL && pCurrentAb->AbPictBackground == NULL && !pCurrentAb->AbFillBox)
+	 pCurrentAb = pCurrentAb->AbEnclosing;
+       if (pCurrentAb == NULL)
+	 /* no background found: clip the current box */
+	 pCurrentBox = pBox;
+       else
+	 /* background found: clip the first box with background */
+	 pCurrentBox = pCurrentAb->AbBox;
+
+       /* Si la boite est coupee on prend la premiere boite de coupure */
+       if (pCurrentBox != NULL)
+	 {
+	   if (pCurrentBox->BxType == BoSplit)
+	     pCurrentBox = pCurrentBox->BxNexChild;
+	   if ((pCurrentBox->BxWidth > 0 && pCurrentBox->BxHeight > 0) || pCurrentBox->BxType == BoPicture)
+	     DefClip (frame, pCurrentBox->BxXOrg, pCurrentBox->BxYOrg, pCurrentBox->BxXOrg + pCurrentBox->BxWidth,
+		      pCurrentBox->BxYOrg + pCurrentBox->BxHeight);
+	 }
      }
 
    /* NOUVEAU AbstractBox */
    if (pAb->AbNew)
      {
 	/* On situe la boite dans le chainage des boites terminales */
-	pSiblingAb = PreviousLeafAbstractBox (pAb);
+	pCurrentAb = PreviousLeafAbstractBox (pAb);
 	/* 1ere boite precedente */
-	if (pSiblingAb != NULL)
-	   pSiblingBox = pSiblingAb->AbBox;
+	if (pCurrentAb != NULL)
+	   pCurrentBox = pCurrentAb->AbBox;
 	else
-	   pSiblingBox = NULL;
+	   pCurrentBox = NULL;
 
-	if (pSiblingBox != NULL)
+	if (pCurrentBox != NULL)
 	  {
 	     i = 0;		/* Place dans le document */
 	     /* Est-ce que la boite est coupee ? */
-	     if (pSiblingBox->BxType == BoSplit)
-		while (pSiblingBox->BxNexChild != NULL)
-		   pSiblingBox = pSiblingBox->BxNexChild;
-	     pNextBox = pSiblingBox->BxNext;	/* 1ere boite suivante */
+	     if (pCurrentBox->BxType == BoSplit)
+		while (pCurrentBox->BxNexChild != NULL)
+		   pCurrentBox = pCurrentBox->BxNexChild;
+	     pNextBox = pCurrentBox->BxNext;	/* 1ere boite suivante */
 	  }
 	else
 	  {
@@ -1813,29 +1825,29 @@ int                 frame;
 	  }
 
 	/* Est-ce la boite racine ? */
-	pSiblingAb = pAb->AbEnclosing;
-	if (pSiblingAb == NULL)
+	pCurrentAb = pAb->AbEnclosing;
+	if (pCurrentAb == NULL)
 	   condition = FALSE;
 	else
 	  {
 	     /* Est-ce que la boite englobante doit etre eclatee ? */
-	     if (pSiblingAb->AbAcceptLineBreak && pSiblingAb->AbEnclosing != NULL)
-		if (pSiblingAb->AbEnclosing->AbInLine
-		    || pSiblingAb->AbEnclosing->AbBox->BxType == BoGhost)
-		   pSiblingAb->AbBox->BxType = BoGhost;
+	     if (pCurrentAb->AbAcceptLineBreak && pCurrentAb->AbEnclosing != NULL)
+		if (pCurrentAb->AbEnclosing->AbInLine
+		    || pCurrentAb->AbEnclosing->AbBox->BxType == BoGhost)
+		   pCurrentAb->AbBox->BxType = BoGhost;
 
 	     /* L'indicateur de mise en lignes depend de la boite englobante */
-	     condition = pSiblingAb->AbInLine || pSiblingAb->AbBox->BxType == BoGhost;
+	     condition = pCurrentAb->AbInLine || pCurrentAb->AbBox->BxType == BoGhost;
 
 	     /* Faut-il dechainer la boite englobante ? */
-	     if ((pNextBox != NULL) && (pNextBox == pSiblingAb->AbBox))
+	     if ((pNextBox != NULL) && (pNextBox == pCurrentAb->AbBox))
 		pNextBox = pNextBox->BxNext;
 	     /* On etabli le chainage pour inserer en fin les nouvelles boites */
 	     /* Faut-il dechainer la boite englobante ? */
-	     if (pSiblingBox == NULL)
+	     if (pCurrentBox == NULL)
 		pMainBox->BxNext = NULL;	/* debut du chainage */
 	     pLastBox = pMainBox->BxPrevious;	/* on memorise la derniere boite */
-	     pMainBox->BxPrevious = pSiblingBox;	/* fin provisoire du chainage */
+	     pMainBox->BxPrevious = pCurrentBox;	/* fin provisoire du chainage */
 	  }
 
 	/* Faut-il dechainer la boite englobante ? */
@@ -1860,7 +1872,7 @@ int                 frame;
 		pMainBox->BxNext = pNextBox;
 	  }
 
-	/* Si la boite a ete creee (pSiblingBox<>NULL) */
+	/* Si la boite a ete creee (pCurrentBox<>NULL) */
 	if (pBox == NULL)
 	   Propagate = savpropage;	/* Restaure la regle de propagation */
 	else
@@ -1880,10 +1892,10 @@ int                 frame;
 	       }
 
 	     /* On prepare le reaffichage */
-	     if (pSiblingAb == NULL)
+	     if (pCurrentAb == NULL)
 		condition = TRUE;
 	     else
-		condition = !pSiblingAb->AbInLine;
+		condition = !pCurrentAb->AbInLine;
 	     if (condition)
 	       {
 		  DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth,
@@ -1903,59 +1915,59 @@ int                 frame;
 	   FreePolyline (pBox);	/* libere la liste des buffers de la boite */
 
 	/* On situe la boite dans le chainage des boites terminales */
-	pSiblingAb = PreviousLeafAbstractBox (pAb);
+	pCurrentAb = PreviousLeafAbstractBox (pAb);
 
 	/* On recherche la derniere boite terminale avant */
-	if (pSiblingAb == NULL)
-	   pSiblingBox = pMainBox;	/* debut du chainage */
+	if (pCurrentAb == NULL)
+	   pCurrentBox = pMainBox;	/* debut du chainage */
 	else
 	  {
-	     pSiblingBox = pSiblingAb->AbBox;
+	     pCurrentBox = pCurrentAb->AbBox;
 	     /* Est-ce que la boite est coupee ? */
-	     if (pSiblingBox->BxType == BoSplit)
-		while (pSiblingBox->BxNexChild != NULL)
-		   pSiblingBox = pSiblingBox->BxNexChild;
+	     if (pCurrentBox->BxType == BoSplit)
+		while (pCurrentBox->BxNexChild != NULL)
+		   pCurrentBox = pCurrentBox->BxNexChild;
 	  }
 
 	/* Est-ce que la boite englobante devient terminale ? */
-	pSiblingAb = pAb->AbEnclosing;
-	if (IsAbstractBoxEmpty (pSiblingAb))
+	pCurrentAb = pAb->AbEnclosing;
+	if (IsAbstractBoxEmpty (pCurrentAb))
 	  {
-	     pNextBox = pSiblingAb->AbBox;
+	     pNextBox = pCurrentAb->AbBox;
 	     /* Si la boite etait eclatee, elle ne l'est plus */
 	     if (pNextBox->BxType == BoGhost)
 		pNextBox->BxType = BoComplete;
 
 	     /* On ne chaine qu'une seule fois la boite englobante */
-	     if (pNextBox != pSiblingBox->BxNext)
+	     if (pNextBox != pCurrentBox->BxNext)
 	       {
-		  if (pSiblingBox == pMainBox)
+		  if (pCurrentBox == pMainBox)
 		     pNextBox->BxPrevious = NULL;
 		  else
-		     pNextBox->BxPrevious = pSiblingBox;
+		     pNextBox->BxPrevious = pCurrentBox;
 
 		  /* On defait l'ancien chainage */
-		  pSiblingBox->BxNext->BxPrevious = pSiblingBox->BxNext;
-		  pSiblingBox->BxNext = pNextBox;
+		  pCurrentBox->BxNext->BxPrevious = pCurrentBox->BxNext;
+		  pCurrentBox->BxNext = pNextBox;
 	       }
-	     pSiblingBox = pNextBox;
+	     pCurrentBox = pNextBox;
 	  }
 
 	/* On recherche la premiere boite terminale apres */
-	pSiblingAb = pAb;
+	pCurrentAb = pAb;
 	pNextBox = NULL;
 	while (pNextBox == NULL)
 	  {
-	     while (pSiblingAb->AbEnclosing != NULL && pSiblingAb->AbNext == NULL)
-		pSiblingAb = pSiblingAb->AbEnclosing;
-	     pSiblingAb = pSiblingAb->AbNext;
-	     if (pSiblingAb == NULL)
+	     while (pCurrentAb->AbEnclosing != NULL && pCurrentAb->AbNext == NULL)
+		pCurrentAb = pCurrentAb->AbEnclosing;
+	     pCurrentAb = pCurrentAb->AbNext;
+	     if (pCurrentAb == NULL)
 		pNextBox = pMainBox;	/* 1ere boite suivante */
 	     else
 	       {
-		  while (pSiblingAb->AbBox != NULL && pSiblingAb->AbFirstEnclosed != NULL)
-		     pSiblingAb = pSiblingAb->AbFirstEnclosed;
-		  pNextBox = pSiblingAb->AbBox;
+		  while (pCurrentAb->AbBox != NULL && pCurrentAb->AbFirstEnclosed != NULL)
+		     pCurrentAb = pCurrentAb->AbFirstEnclosed;
+		  pNextBox = pCurrentAb->AbBox;
 	       }
 	  }
 
@@ -1971,15 +1983,15 @@ int                 frame;
 
 	/* Mise a jour de la liste des boites terminales */
 	/* premiere boite de la liste */
-	if (pSiblingBox == pMainBox)
+	if (pCurrentBox == pMainBox)
 	   pNextBox->BxPrevious = NULL;
 	else
-	   pNextBox->BxPrevious = pSiblingBox;
+	   pNextBox->BxPrevious = pCurrentBox;
 	/* derniere boite de la liste */
 	if (pNextBox == pMainBox)
-	   pSiblingBox->BxNext = NULL;
+	   pCurrentBox->BxNext = NULL;
 	else
-	   pSiblingBox->BxNext = pNextBox;
+	   pCurrentBox->BxNext = pNextBox;
 
 	/* On verifie la coherence des positions par defaut */
 	/***CheckDefaultPositions(pAb, frame);*/
@@ -2004,21 +2016,21 @@ int                 frame;
 	       {
 		  /* Si la boite est coupee on etend le clipping jusqu'a */
 		  /* la derniere boite de coupure non vide */
-		  pSiblingBox = pBox;
+		  pCurrentBox = pBox;
 		  result = TRUE;
 		  while (result)
 		    {
-		       if (pSiblingBox->BxNexChild == NULL)
+		       if (pCurrentBox->BxNexChild == NULL)
 			  result = FALSE;
-		       else if (pSiblingBox->BxNexChild->BxNChars == 0)
+		       else if (pCurrentBox->BxNexChild->BxNChars == 0)
 			  result = FALSE;
 		       else
-			  pSiblingBox = pSiblingBox->BxNexChild;
+			  pCurrentBox = pCurrentBox->BxNexChild;
 		    }
 		  /* mark the zone to be displayed */
-		  if (pSiblingBox->BxWidth > 0 && pSiblingBox->BxHeight > 0)
-		     DefClip (frame, pSiblingBox->BxXOrg, pSiblingBox->BxYOrg, pSiblingBox->BxXOrg + pSiblingBox->BxWidth,
-			      pSiblingBox->BxYOrg + pSiblingBox->BxHeight);
+		  if (pCurrentBox->BxWidth > 0 && pCurrentBox->BxHeight > 0)
+		     DefClip (frame, pCurrentBox->BxXOrg, pCurrentBox->BxYOrg, pCurrentBox->BxXOrg + pCurrentBox->BxWidth,
+			      pCurrentBox->BxYOrg + pCurrentBox->BxHeight);
 	       }
 	     else if (pAb->AbLeafType == LtCompound)
 	       {
@@ -2248,17 +2260,17 @@ int                 frame;
 				   pAb->AbRealShape = pAb->AbShape;
 
 				   /* remonte a la recherche d'un ancetre elastique */
-				   pSiblingAb = pAb;
-				   while (pSiblingAb != NULL)
+				   pCurrentAb = pAb;
+				   while (pCurrentAb != NULL)
 				     {
-					pSiblingBox = pSiblingAb->AbBox;
-					if (pSiblingBox->BxHorizFlex || pSiblingBox->BxVertFlex)
+					pCurrentBox = pCurrentAb->AbBox;
+					if (pCurrentBox->BxHorizFlex || pCurrentBox->BxVertFlex)
 					  {
-					     MirrorShape (pAb, pSiblingBox->BxHorizInverted, pSiblingBox->BxVertInverted, FALSE);
-					     pSiblingAb = NULL;		/* on arrete */
+					     MirrorShape (pAb, pCurrentBox->BxHorizInverted, pCurrentBox->BxVertInverted, FALSE);
+					     pCurrentAb = NULL;		/* on arrete */
 					  }
 					else
-					   pSiblingAb = pSiblingAb->AbEnclosing;
+					   pCurrentAb = pCurrentAb->AbEnclosing;
 				     }
 				}
 			      GiveGraphicSize (pAb, &width, &height);
@@ -2273,17 +2285,17 @@ int                 frame;
 				   pBox->BxNChars = pAb->AbVolume;
 
 				   /* remonte a la recherche d'un ancetre elastique */
-				   pSiblingAb = pAb;
-				   while (pSiblingAb != NULL)
+				   pCurrentAb = pAb;
+				   while (pCurrentAb != NULL)
 				     {
-					pSiblingBox = pSiblingAb->AbBox;
-					if (pSiblingBox->BxHorizFlex || pSiblingBox->BxVertFlex)
+					pCurrentBox = pCurrentAb->AbBox;
+					if (pCurrentBox->BxHorizFlex || pCurrentBox->BxVertFlex)
 					  {
-					     MirrorShape (pAb, pSiblingBox->BxHorizInverted, pSiblingBox->BxVertInverted, FALSE);
-					     pSiblingAb = NULL;		/* on arrete */
+					     MirrorShape (pAb, pCurrentBox->BxHorizInverted, pCurrentBox->BxVertInverted, FALSE);
+					     pCurrentAb = NULL;		/* on arrete */
 					  }
 					else
-					   pSiblingAb = pSiblingAb->AbEnclosing;
+					   pCurrentAb = pCurrentAb->AbEnclosing;
 				     }
 				}
 			      GivePolylineSize (pAb, &width, &height);

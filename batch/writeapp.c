@@ -884,7 +884,7 @@ PtrEventsSet        pAppli;
    FILE               *infoFILE;
 
    i = 0;
-   fileSuffix = strdup (fname);
+   fileSuffix = TtaStrdup (fname);
 
    /* met le suffixe APP.c a la fin du nom de fichier */
    while (fname[i] != ' ' && fname[i] != '\0')

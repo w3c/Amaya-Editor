@@ -1167,7 +1167,7 @@ FILE               *fileDescriptor;
 		 case LtCompound:
 		    image = (PictInfo *) pPa1->AbPictBackground;
 		    if (image != NULL)
-		      fprintf (fileDescriptor, "x = %d, y = %d, w = %d, h = %d, name = %s",
+		      fprintf (fileDescriptor, "Picture: x = %d, y = %d, w = %d, h = %d, name = %s ",
 			       image->PicXArea, image->PicYArea, image->PicWArea, image->PicHArea,
 			       image->PicFileName);
 		    fprintf (fileDescriptor, "Fill-Background:");
@@ -1181,13 +1181,13 @@ FILE               *fileDescriptor;
 		    if (image == NULL)
 		       fprintf (fileDescriptor, "AbPictInfo = NULL");
 		    else
-		       fprintf (fileDescriptor, "x = %d, y = %d, w = %d, h = %d, name = %s",
+		       fprintf (fileDescriptor, "Picture: x = %d, y = %d, w = %d, h = %d, name = %s",
 				image->PicXArea, image->PicYArea, image->PicWArea, image->PicHArea,
 				image->PicFileName);
 		    break;
 		 case LtText:
 		 case LtReference:
-		    fprintf (fileDescriptor, "language=%s", TtaGetLanguageName (pPa1->AbLanguage));
+		    fprintf (fileDescriptor, "language = %s", TtaGetLanguageName (pPa1->AbLanguage));
 		    fprintf (fileDescriptor, "\n");
 		    for (i = 1; i <= Indent + 6; i++)
 		       fprintf (fileDescriptor, " ");

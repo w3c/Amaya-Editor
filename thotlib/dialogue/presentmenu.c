@@ -250,8 +250,7 @@ int                 applyDomain;
 			    || applyDomain == Apply_All));
 	chngGraphics = (locChngLineStyle || locChngLineWeight || locChngTrame);
 	
-	if (ChngStandardColor
-	    || chngChars || chngGraphics || locChngHyphen)
+	if (ChngStandardColor || chngChars || chngGraphics || locChngHyphen)
 	  /* changement des caracteres */
 	  /* coupe les elements du debut et de la fin de la selection */
 	  /* s'ils sont partiellement selectionnes */
