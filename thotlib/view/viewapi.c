@@ -277,37 +277,29 @@ View TtaOpenSubView (Document document, STRING viewName, int x, int y,
 }
 
 /*----------------------------------------------------------------------
-   TtaCloseView
+   TtcCloseView
 
    Closes a view.
    Parameters:
    document: the document for which a view must be closed.
    view: the view to be closed.
   ----------------------------------------------------------------------*/
-void                TtaCloseView (Document document, View view)
+void TtaCloseView (Document document, View view)
 {
    PtrDocument         pDoc;
    int                 numAssoc;
 
-   UserErrorCode = 0;
    /* Checks the parameter document */
-   if (document < 1 || document > MAX_DOCUMENTS)
-      TtaError (ERR_invalid_document_parameter);
-   else if (LoadedDocument[document - 1] == NULL)
-      TtaError (ERR_invalid_document_parameter);
-   else
-      /* parameter document is ok */
+   if (document >= 1 && document <= MAX_DOCUMENTS &&
+       LoadedDocument[document - 1])
      {
 	pDoc = LoadedDocument[document - 1];
 	if (view < 100)
+	  {
 	   /* View of the main tree */
-	   if (view < 1 || view > MAX_VIEW_DOC)
-	      TtaError (ERR_invalid_parameter);
-	   else
-	     {
 		DestroyFrame (pDoc->DocViewFrame[view - 1]);
 		CloseDocumentView (pDoc, view, FALSE, FALSE);
-	     }
+	  }
 	else
 	   /* View of associated elements */
 	  {

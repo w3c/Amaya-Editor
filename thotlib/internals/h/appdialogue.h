@@ -117,7 +117,7 @@ typedef struct _SchemaMenu_Ctl
 #define T_checkHiddenElement		46
 #define T_checkReadOnlyElement		47
 #define T_checkInsertNearElement	48
-#define T_rchangetype			49
+#define T_AIupdate			49
 #define T_initevents			50
 #define T_rprint	51
 #define T_cancopyorcut	53
@@ -156,15 +156,13 @@ typedef struct _SchemaMenu_Ctl
 #define T_deletepageab          86
 #define T_redisplay		87
 #define T_writedocument         88
-#define T_openview	        89
-#define T_checktable                    90
-#define T_cleartable			91
-#define T_resizetable                   92
-#define T_firstcolumn			93
-#define T_checkcolumn			94
-#define T_checktableheight              95
-#define T_AIupdate			96
-#define MAX_LOCAL_ACTIONS               97
+#define T_checktable                    89
+#define T_cleartable			90
+#define T_resizetable                   91
+#define T_firstcolumn			92
+#define T_checkcolumn			93
+#define T_checktableheight              94
+#define MAX_LOCAL_ACTIONS               95
 
 /*
  Predefined idexes of Thot actions which could be linked to shortcuts even

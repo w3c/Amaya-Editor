@@ -421,13 +421,7 @@ void                TtcSearchText (Document document, View view)
       firstChar = lastChar = 0;
     }
 
-  /* fait disparaitre les autres formulaires de recherche qui sont affiches */
-#ifndef _WINDOWS
-  TtaDestroyDialogue (NumFormSearchEmptyElement);
-  TtaDestroyDialogue (NumFormSearchEmptyReference);
-#endif /* _WINDOWS */
   StartSearch = TRUE;
-  
   /* compose le titre du formulaire "Recherche dans le document..." */
   strcpy (bufTitle, TtaGetMessage (LIB, TMSG_SEARCH_IN));
   strcat (bufTitle, " ");

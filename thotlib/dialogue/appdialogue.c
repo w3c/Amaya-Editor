@@ -3947,10 +3947,6 @@ void      ThotCallback (int ref, int typedata, char *data)
       case NumSelectNatureName:
 	(*ThotLocalActions[T_rchoice]) (0, data);
 	break;
-      case NumMenuChangeType:
-	/* Pop-up menu 'ChangeType' */
-	(*ThotLocalActions[T_rchangetype]) ((int)data);
-	break;
 	
       case NumMenuAttrRequired:
       case NumMenuAttrNumNeeded:
@@ -3974,9 +3970,6 @@ void      ThotCallback (int ref, int typedata, char *data)
 	break;
       case NumFormClose:
 	(*ThotLocalActions[T_rconfirmclose]) (ref, typedata, data);
-	break;
-      case NumMenuViewsToOpen:
-	(*ThotLocalActions[T_openview]) (ref, typedata, data);
 	break;
 	
       case NumFormPrint:
@@ -4009,8 +4002,6 @@ void      ThotCallback (int ref, int typedata, char *data)
       case NumZoneStrokeWeight:
       case NumToggleWidthUnchanged:
       case NumTogglePatternUnchanged:
-      case NumToggleForegroundUnchanged:
-      case NumToggleBackgroundUnchanged:
 	(*ThotLocalActions[T_present]) (ref, (int) data, NULL);
 	break;
       case NumSelectPattern:

@@ -8,7 +8,7 @@
 
 extern ContentType ReadContentType ( BinFile file );
 extern PtrPRule ReadPRulePtr ( BinFile file,
-                               PtrPRule *pNextPRule );
+                               PtrPRule * pNextPRule );
 extern void ReadPosRule ( BinFile file,
                           PosRule *pPosRule );
 extern AttrComparType ReadAttrCompar ( BinFile file );
@@ -22,7 +22,7 @@ extern PtrPSchema ReadPresentationSchema ( Name fileName,
 
 extern ContentType ReadContentType (/* BinFile file */);
 extern PtrPRule ReadPRulePtr (/* BinFile file,
-                                 PtrPRule *pNextPRule */);
+                                 PtrPRule * pNextPRule */);
 extern void ReadPosRule (/* BinFile file,
                             PosRule *pPosRule */);
 extern AttrComparType ReadAttrCompar (/* BinFile file */);

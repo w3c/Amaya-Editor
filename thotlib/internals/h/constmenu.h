@@ -10,12 +10,28 @@
 
 /* ALLOCATION DES NUMEROS DE CATALOGUES					*/
 /* Catalogues reserves aux fonctions standards de l'editeur Thot	*/
-
+#define NumFormLanguage		1
+#define NumSelectLanguage	2
+#define NumLabelHeritedLanguage	3
+#define NumMenuAlphaLanguage    4
+#define NumMenuAttrName		5
+#define NumMenuElChoice		6
+#define NumMenuInsert		7
+#define NumMenuPaste		8
+#define NumMenuInclude		9
+#define	NumFormPresentStandard	10
+#define	NumMenuPresentStandard	11
+#define NumToggleWidthUnchanged	12
+#define NumTogglePatternUnchanged	13
+#define NumFormColors		14
+#define NumSelectBackgroundColor	15
+#define NumSelectForegroundColor	16
+#define NumFormPresFormat	17
 #define NumFormSpace		18
 #define NumMenuInputSpace	19
 #define NumMenuDisplaySpace	20
 #define NumLabelSpace		21
-
+#define NumMenuAlignment	22
 #define NumZoneFileCNRSe 	23
 #define NumMenuTypeCNRSe 	24
 #define NumMenuFrameCNRSe 	25
@@ -24,13 +40,27 @@
 #define	NumFormCNRSe 		28
 #define NumFormNature		29
 #define NumSelectNatureName	30
-
-#define NumFormPrint		47
+#define NumFormPresChar		31
+#define NumMenuCharFamily	32
+#define NumMenuCharFontStyle	33
+#define NumMenuCharFontWeight	34
+#define NumMenuCharFontSize	35
+#define NumMenuUnderlineType	36
+#define NumMenuUnderlineWeight	37
+#define NumFormSearchText	38
+#define NumMenuOrSearchText	39
+#define NumZoneTextSearch	40
+#define NumZoneTextReplace	41
+#define NumMenuReplaceMode	42
+#define NumMenuSearchNature	43
+#define NumSelTypeToSearch	44
+#define NumSelAttributeToSearch	45
+#define NumLabelAttributeValue	46
+#define NumToggleUpperEqualLower       47
 #define NumZoneScrollUp      	48
 #define NumZoneScrollLeft  	49
 #define NumMenuOrientation  	49
 #define NumMenuOptions	  	50
-#define NumMenuViewsToPrint 	51
 #define NumMenuNbPagesPerSheet 	52
 #define NumMenuSupport	 	53
 #define NumZoneReduction 	54
@@ -65,86 +95,20 @@
                          	/* valeur d'un attribut textuel obligatoire */
 #define NumMenuAttrEnumNeeded 95 /* numero du menu des valeurs d'un */
 #define NumMenuCharacters	96
+#define NumFormPrint		97
+#define NumFormSearchPage	98
+#define NumZoneSearchPage	99
+#define NumZoneRecess		100
+#define NumMenuRecessSense	101
+#define NumZoneLineSpacing	102
+#define NumMenuLineSpacing	103
+#define NumMenuWordBreak	104
+#define NumFormPresGraphics	155
+#define NumMenuStrokeStyle	106
+#define NumZoneStrokeWeight	107
+#define NumSelectPattern	108
 
-#define NumMenuElChoice		100
-#define NumMenuInsert		102
-#define NumMenuPaste		103
-#define NumMenuInclude		104
-
-#define NumMenuSurround 105  /* numero du menu Englobe */
-#define NumMenuChangeType 106 /* numero du menu Changer_en */
-
-#define NumMenuViewsToOpen	110
-#define NumMenuVisibility	111
-#define NumTextVisibility	112
-#define NumDocVisibility	113
-#define NumMenuZoom		114
-#define NumTextZoom		115
-#define NumDocZoom		116
-
-#define NumFormSearchText	120
-#define NumMenuOrSearchText	121
-#define NumZoneTextSearch	122
-#define NumZoneTextReplace	123
-#define NumMenuReplaceMode	124
-#define NumMenuSearchNature	125
-#define NumSelTypeToSearch	126
-#define NumSelAttributeToSearch	127
-#define NumLabelAttributeValue	128
-#define NumFormSearchEmptyElement	129
-#define NumLabelDocSearcheEmptyElement	130
-#define NumLabelDocSearchEmptyRef	131
-#define NumToggleUpperEqualLower	132
-#define NumMenuOrSearchEmptyElem	133
-#define NumLabelEmptyElemNotFound	134
-#define NumFormSearchEmptyReference	135
-#define NumMenuOrSearchEmptyReference	136
-#define NumLabelEmptyRefereneceNotFound	137
-#define NumFormSearchPage	138
-#define NumZoneSearchPage	139
-#define NumFormSearchReference	140
-#define NumLabelSearchReference	141
-#define NumLabelReferenceNotFound	142
-#define NumMenuReferenceChoice	143
-
-#define NumFormPresChar		150
-#define NumMenuCharFamily	151
-#define NumMenuCharFontStyle	152
-#define NumMenuCharFontWeight	153
-#define NumMenuCharFontSize	154
-#define NumMenuUnderlineType	155
-#define NumMenuUnderlineWeight	156
-
-#define NumFormPresFormat	157
-#define NumMenuAlignment	158
-
-#define NumZoneRecess		160
-#define NumMenuRecessSense	161
-#define NumZoneLineSpacing	162
-#define NumMenuLineSpacing	163
-#define NumMenuWordBreak	164
-#define NumFormPresGraphics	165
-#define NumMenuStrokeStyle	166
-#define NumZoneStrokeWeight	167
-#define NumSelectPattern	168
-#define NumFormColors		169
-#define NumSelectBackgroundColor	170
-#define NumSelectForegroundColor	171
-#define	NumFormPresentStandard	172
-#define	NumMenuPresentStandard	173
-#define NumToggleWidthUnchanged	174
-#define NumTogglePatternUnchanged	175
-#define NumToggleForegroundUnchanged	176
-#define NumToggleBackgroundUnchanged	177
-
-#define NumFormLanguage		178
-#define NumSelectLanguage		179
-#define NumLabelHeritedLanguage	180
-#define NumMenuAlphaLanguage    181
-#define NumMenuAttrName		182
-
-#define NumToggleDocTypeToOpen  183
-#define MAX_LocalMenu		190
+#define MAX_LocalMenu		109
 
 /* Number of references reserved by Thot       				*/
 /* MAX_ITEM >= MAX_FRAME for X-Windows applications			*/

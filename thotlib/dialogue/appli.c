@@ -32,7 +32,7 @@
 #include "wininclude.h"
 #else /* _WINDOWS */
 #define MAX_ARGS 20
-static Time         t1;
+static Time         T1;
 static XmString  null_string;
 #endif /* _WINDOWS */
 
@@ -1725,7 +1725,7 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 	FrRef[frame] = 0;
       PostQuitMessage (0);
       return 0;
-	       
+      
     default:
       break;
     }
@@ -1783,21 +1783,19 @@ void FrameCallback (int frame, void *evnt)
 	   
 	   /* Est-ce que la touche modifieur de geometrie est active ? */
 	   if ((ev->xbutton.state & THOT_KEY_ControlMask) != 0)
-	     {
-	       /* On change la position d'une boite */
-	       ApplyDirectTranslate (frame, ev->xbutton.x, ev->xbutton.y);
-	     }
-	   /* Est-ce que la touche modifieur d'extension est active ? */
+	     /* moving a box */
+	     ApplyDirectTranslate (frame, ev->xbutton.x, ev->xbutton.y);
 	   else if ((ev->xbutton.state & THOT_KEY_ShiftMask) != 0)
 	     {
+	       /* a selection extension */
 	       TtaAbortShowDialogue ();
 	       LocateSelectionInView (frame, ev->xbutton.x, ev->xbutton.y, 0);
 	       FrameToView (frame, &document, &view);
 	       TtcCopyToClipboard (document, view);
 	     }
-	   /* Est-ce un double clic */
-	   else if (t1 + (Time) DoubleClickDelay > ev->xbutton.time)
+	   else if (T1 + (Time) DoubleClickDelay > ev->xbutton.time)
 	     {
+	       /* double click */
 	       TtaAbortShowDialogue ();
 	       TtaFetchOneEvent (&event);
 	       while (event.type != ButtonRelease)
@@ -1806,7 +1804,7 @@ void FrameCallback (int frame, void *evnt)
 		   TtaFetchOneEvent (&event);
 		 }
 
-	       /* memorise la position de la souris */
+	       /* register the cursor position */
 	       if (ClickFrame == frame
 		   && (ClickX - ev->xbutton.x < 3 || ClickX - ev->xbutton.x > 3)
 		   && (ClickY - ev->xbutton.y < 3 || ClickY - ev->xbutton.y > 3))
@@ -1819,10 +1817,10 @@ void FrameCallback (int frame, void *evnt)
 	       ClickY = ev->xbutton.y;
 	       LocateSelectionInView (frame, ClickX, ClickY, sel);
 	     }
-	   /* Sinon c'est une selection normale */
 	   else
 	     {
-	       t1 = ev->xbutton.time;
+	       /* a simple selection */
+	       T1 = ev->xbutton.time;
 	       ClickFrame = frame;
 	       ClickX = ev->xbutton.x;
 	       ClickY = ev->xbutton.y;
@@ -1875,12 +1873,11 @@ void FrameCallback (int frame, void *evnt)
 	   break;
 	 case Button2:
 	   /* ==========MIDDLE BUTTON========== */
-	   /* Est-ce que la touche modifieur de geometrie est active ? */
 	   if ((ev->xbutton.state & THOT_KEY_ControlMask) != 0)
 	     {
 	       /* close the current insertion */
 	       CloseInsertion ();
-	       /* resize a box */
+	       /* resizing a box */
 	       ApplyDirectResize (frame, ev->xbutton.x, ev->xbutton.y);
 	     }
 	   else
@@ -1903,7 +1900,7 @@ void FrameCallback (int frame, void *evnt)
        break;
 
      case KeyPress:
-       t1 = 0;
+       T1 = 0;
        TtaAbortShowDialogue ();
 #ifndef _GTK
        CharTranslation ((ThotKeyEvent *)ev);
@@ -1911,11 +1908,11 @@ void FrameCallback (int frame, void *evnt)
        break;
 
      case EnterNotify:
-       t1 = 0;
+       T1 = 0;
        break;
 
      case LeaveNotify:
-       t1 = 0;
+       T1 = 0;
        break;
 
      default:

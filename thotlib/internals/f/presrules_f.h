@@ -27,7 +27,7 @@ extern void SearchPresSchema ( PtrElement pEl,
                                PtrPSchema * pSchP,
                                int *indexElType,
                                PtrSSchema * pSchS,
-			       PtrDocument pDoc );
+                               PtrDocument pDoc );
 extern void ApplyCopy ( PtrDocument pDoc,
                         PtrPRule pPRule,
                         PtrAbstractBox pAb,
@@ -69,7 +69,7 @@ extern void SearchPresSchema (/* PtrElement pEl,
                                  PtrPSchema * pSchP,
                                  int *indexElType,
                                  PtrSSchema * pSchS,
-			         PtrDocument pDoc */);
+                                 PtrDocument pDoc */);
 extern void ApplyCopy (/* PtrDocument pDoc,
                           PtrPRule pPRule,
                           PtrAbstractBox pAb,

@@ -19,6 +19,7 @@ extern void AddInSelection ( PtrElement pEl,
 extern void FreeAbEl ( PtrElement pEl );
 extern void ConfigTranslateSSchema ( PtrSSchema pSS );
 extern PtrPRule GlobalSearchRulepEl ( PtrElement pEl,
+                                      PtrDocument pDoc,
                                       PtrPSchema * pSPR,
                                       PtrSSchema * pSSR,
                                       int NumPres,
@@ -50,6 +51,7 @@ extern void AddInSelection (/* PtrElement pEl,
 extern void FreeAbEl (/* PtrElement pEl */);
 extern void ConfigTranslateSSchema (/* PtrSSchema pSS */);
 extern PtrPRule GlobalSearchRulepEl (/* PtrElement pEl,
+                                        PtrDocument pDoc,
                                         PtrPSchema * pSPR,
                                         PtrSSchema * pSSR,
                                         int NumPres,

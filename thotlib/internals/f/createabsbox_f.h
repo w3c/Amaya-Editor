@@ -13,7 +13,7 @@ extern PtrPRule GetRule ( PtrPRule * pRSpecif,
                           PtrElement pEl,
                           PtrAttribute pAttr,
                           PtrSSchema pSS,
-			  PtrDocument pDoc );
+                          PtrDocument pDoc );
 extern PtrPRule GetRuleView ( PtrPRule * pRSpecif,
                               PtrPRule * pRDefault,
                               PRuleType Typ,
@@ -21,7 +21,7 @@ extern PtrPRule GetRuleView ( PtrPRule * pRSpecif,
                               PtrElement pEl,
                               PtrAttribute pAttr,
                               PtrSSchema pSS,
-			      PtrDocument pDoc );
+                              PtrDocument pDoc );
 extern PtrAbstractBox InitAbsBoxes ( PtrElement pEl,
                                      DocViewNumber view,
                                      int Visib,
@@ -54,7 +54,7 @@ extern ThotBool CondPresentation ( PtrCondition pCond,
                                    PtrElement pElAttr,
                                    int view,
                                    PtrSSchema pSS,
-				   PtrDocument pDoc );
+                                   PtrDocument pDoc );
 extern PtrAbstractBox CrAbsBoxesPres ( PtrElement pEl,
                                        PtrDocument pDoc,
                                        PtrPRule pRCre,
@@ -101,7 +101,7 @@ extern PtrPRule GetRule (/* PtrPRule * pRSpecif,
                             PtrElement pEl,
                             PtrAttribute pAttr,
                             PtrSSchema pSS,
-			    PtrDocument pDoc */);
+                            PtrDocument pDoc */);
 extern PtrPRule GetRuleView (/* PtrPRule * pRSpecif,
                                 PtrPRule * pRDefault,
                                 PRuleType Typ,
@@ -109,7 +109,7 @@ extern PtrPRule GetRuleView (/* PtrPRule * pRSpecif,
                                 PtrElement pEl,
                                 PtrAttribute pAttr,
                                 PtrSSchema pSS,
-			        PtrDocument pDoc */);
+                                PtrDocument pDoc */);
 extern PtrAbstractBox InitAbsBoxes (/* PtrElement pEl,
                                        DocViewNumber view,
                                        int Visib,
@@ -142,7 +142,7 @@ extern ThotBool CondPresentation (/* PtrCondition pCond,
                                      PtrElement pElAttr,
                                      int view,
                                      PtrSSchema pSS,
-				     PtrDocument pDoc */);
+                                     PtrDocument pDoc */);
 extern PtrAbstractBox CrAbsBoxesPres (/* PtrElement pEl,
                                          PtrDocument pDoc,
                                          PtrPRule pRCre,

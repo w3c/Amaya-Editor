@@ -55,6 +55,8 @@ extern void BuildViewList ( PtrDocument pDoc,
 extern void CloseView ( PtrDocument pDoc,
                         int viewNb,
                         ThotBool assoc );
+extern void TtcCloseView ( Document document,
+                           View viewIn );
 
 #else /* __STDC__ */
 
@@ -107,6 +109,8 @@ extern void BuildViewList (/* PtrDocument pDoc,
 extern void CloseView (/* PtrDocument pDoc,
                           int viewNb,
                           ThotBool assoc */);
+extern void TtcCloseView (/* Document document,
+                             View viewIn */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

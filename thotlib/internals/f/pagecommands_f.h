@@ -7,14 +7,14 @@
 #ifdef __STDC__
 
 extern PtrPRule GetPageRule ( PtrElement pEl,
-			      PtrDocument pDoc,
+                              PtrDocument pDoc,
                               int view,
                               PtrPSchema * pSchP );
 extern PtrPRule GetPRulePage ( PRuleType TypeR,
                                int b,
                                PtrPSchema pSchP );
 extern void PageHeaderFooter ( PtrElement pElPage,
-			       PtrDocument pDoc,
+                               PtrDocument pDoc,
                                int view,
                                int *b,
                                PtrPSchema * pSchP );
@@ -33,14 +33,14 @@ extern ThotBool KillAbsBoxBeforePage ( PtrAbstractBox pPage,
 #else /* __STDC__ */
 
 extern PtrPRule GetPageRule (/* PtrElement pEl,
-				PtrDocument pDoc,
+                                PtrDocument pDoc,
                                 int view,
                                 PtrPSchema * pSchP */);
 extern PtrPRule GetPRulePage (/* PRuleType TypeR,
                                  int b,
                                  PtrPSchema pSchP */);
 extern void PageHeaderFooter (/* PtrElement pElPage,
-				 PtrDocument pDoc,
+                                 PtrDocument pDoc,
                                  int view,
                                  int *b,
                                  PtrPSchema * pSchP */);

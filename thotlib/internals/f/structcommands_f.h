@@ -32,9 +32,6 @@ extern void CreateNewElement ( int typeNum,
 extern void TtaCreateElement ( ElementType elementType,
                                Document document );
 extern void TtaSetTransformCallback ( Func callbackFunc );
-extern void ChangeTypeMenuInput ( int entree );
-extern void TtcChangeType ( Document document,
-                            View view );
 
 #else /* __STDC__ */
 
@@ -64,9 +61,6 @@ extern void CreateNewElement (/* int typeNum,
 extern void TtaCreateElement (/* ElementType elementType,
                                  Document document */);
 extern void TtaSetTransformCallback (/* Func callbackFunc */);
-extern void ChangeTypeMenuInput (/* int entree */);
-extern void TtcChangeType (/* Document document,
-                              View view */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

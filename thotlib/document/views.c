@@ -1267,3 +1267,20 @@ void CloseView (PtrDocument pDoc, int viewNb, ThotBool assoc)
 	 }
       }
 }
+/*----------------------------------------------------------------------
+   TtcCloseView
+   closes a document view.
+  ----------------------------------------------------------------------*/
+void TtcCloseView (Document document, View viewIn)
+{
+   PtrDocument         pDoc;
+   int                 view;
+   ThotBool            assoc;
+
+   pDoc = LoadedDocument[document - 1];
+   if (pDoc != NULL)
+     {
+        GetViewInfo (document, viewIn, &view, &assoc);
+        CloseView (pDoc, view, assoc);
+     }
+}

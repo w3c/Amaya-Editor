@@ -197,7 +197,6 @@ EDITOR_OBJ = \
 	dialogue/interface.o \
 	dialogue/keyboards.o \
 	dialogue/modiftype.o \
-	dialogue/openview.o \
 	dialogue/profiles.o \
 	dialogue/presentmenu.o \
 	dialogue/printmenu.o \

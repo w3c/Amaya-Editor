@@ -336,7 +336,7 @@ static void InitGraphicContexts (void)
    gdk_rgb_init ();
    white = ColorNumber ("White");
    black = ColorNumber ("Black");
-   pix = CreatePattern (0, 0, 0, black, white, 6);
+   pix = CreatePattern (0, black, white, 6);
 
   /* Create a Graphic Context to write white on black. */
   TtWhiteGC = gdk_gc_new (DefaultDrawable);
