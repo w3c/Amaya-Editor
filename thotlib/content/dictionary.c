@@ -141,20 +141,23 @@ PtrDict            *pDictionary;
 #endif /* __STDC__ */
 {
    int                 d;
+   PtrDict             pdict;
 
    if (*pDictionary != NULL)
       /* looks in the table for the descriptor of the dictionary to release */
      {
+       pdict = *pDictionary;
 	d = 0;
-	while (d < MaxDictionaries && dictTable[d] != *pDictionary)
+	while (d < MaxDictionaries && dictTable[d] != pdict)
 	   d++;
-	if (dictTable[d] == *pDictionary)
+	if (dictTable[d] == pdict)
 	  {
+	     TtaFreeMemory (pdict->DictDirectory);
 	     /* Releases the string and the list of words */
-	     FreeStringInDict (*pDictionary);
-	     FreeDictionary (*pDictionary);
+	     FreeStringInDict (pdict);
+	     FreeDictionary (pdict);
 	     dictTable[d] = NULL;
-	     *pDictionary = NULL;
+	     pdict = NULL;
 	  }
      }
 }
@@ -493,7 +496,7 @@ ThotBool            toTreat;
   pdict = *pDictionary;
   pdict->DictDoc = document;
   pdict->DictLanguage = lang;
-  ustrcpy (pdict->DictDirectory, dictDirectory);
+  pdict->DictDirectory = ustrdup (dictDirectory);
   ustrcpy (pdict->DictName, dictName);
   pdict->DictReadOnly = readonly;
   
@@ -679,7 +682,7 @@ PtrDict            *pDictionary;
    PtrDocument         document;
    int                 d;
    CHAR_T              dictName[MAX_NAME_LENGTH];
-   CHAR_T              dictDirectory[MAX_NAME_LENGTH]; 
+   CHAR_T              *dictDirectory;
 
    document = NULL;
    if (*pDictionary == NULL)
@@ -697,7 +700,8 @@ PtrDict            *pDictionary;
 	     /* Getting information about the dictionary */
 	     ustrcpy (dictName, pdict->DictName);
 	     document = pdict->DictDoc;
-             ustrcpy (dictDirectory, pdict->DictDirectory);
+	     /* save the dictionary directory */
+             dictDirectory = pdict->DictDirectory;
 	     /* Release the string and the list of words ... */
 	     FreeStringInDict (pdict);
 	     FreeDictionary (pdict);
@@ -707,6 +711,7 @@ PtrDict            *pDictionary;
      }
 
    d = LoadTreatedDict (pDictionary, 0, document, dictName, dictDirectory, FALSE, TRUE);
+   TtaFreeMemory (dictDirectory);
 
    if (d == -1)
       return (FALSE);

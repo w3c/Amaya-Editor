@@ -2566,7 +2566,7 @@ PtrDict            *pDict;
 	/* initialise le contexte de dictionnaire */
 	pdict = *pDict;
 	pdict->DictName[0] = WC_EOS;
-	pdict->DictDirectory[0] = EOS;
+	pdict->DictDirectory = NULL;
 	/* readonly */
 	pdict->DictReadOnly = TRUE;
 	/* contenu non charge' */

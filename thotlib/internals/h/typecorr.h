@@ -26,7 +26,7 @@ typedef struct _WordDict
       PtrDict     DictNext;             /* for linking to free blocks */
       PtrDocument DictDoc;              /* document which uses this dictionary */
       Name        DictName;             /* name of the dictionary */
-      Name        DictDirectory;        /* directory of the dictionary */
+      PtrString   DictDirectory;        /* directory of the dictionary */
       ThotBool    DictReadOnly;         /* dictionary is read only  */
       ThotBool    DictLoaded;           /* dictionary is loaded */
       ThotBool    DictModified;         /* dictionnary has been modified */
