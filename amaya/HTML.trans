@@ -226,6 +226,11 @@ Remove submenu: (OPTGROUP{*+})+;
         * > :*;
 	}
 
+Remove fieldset: (FIELDSET{*+})+;
+	{
+	* > :*;
+	}
+
 ! Lists to/from elements
 !!!!!!!!!!!!!!!!!!!!!!!!
 

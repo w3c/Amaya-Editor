@@ -385,6 +385,12 @@ RULES
 	Remove;
 	END;
 
+ FIELDSET: BEGIN
+	END;
+
+ LEGEND: BEGIN
+	END;
+
  LABEL: BEGIN
 	END;
 
@@ -973,6 +979,15 @@ ATTRIBUTES
 	END;
 
  accept: BEGIN
+	END;
+
+ LAlign = Top_: BEGIN
+	END;
+ LAlign = Bottom_: BEGIN
+	END;
+ LAlign = Left_: BEGIN
+	END;
+ LAlign = Right_: BEGIN
 	END;
 
  Area_Size: BEGIN

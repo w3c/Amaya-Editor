@@ -560,6 +560,7 @@ static GIMapping    HTMLGIMappingTable[] =
    {"DL", SPACE, HTML_EL_Definition_List, NULL},
    {"DT", SPACE, HTML_EL_Term, NULL},
    {"EM", SPACE, HTML_EL_Emphasis, NULL},
+   {"FIELDSET", SPACE, HTML_EL_FIELDSET, NULL},
    {"FONT", SPACE, HTML_EL_Font_, NULL},
    {"FORM", SPACE, HTML_EL_Form, NULL},
    {"FRAME", 'E', HTML_EL_FRAME, NULL},
@@ -581,6 +582,7 @@ static GIMapping    HTMLGIMappingTable[] =
    {"ISINDEX", 'E', HTML_EL_ISINDEX, NULL},
    {"KBD", SPACE, HTML_EL_Keyboard, NULL},
    {"LABEL", SPACE, HTML_EL_LABEL, NULL},
+   {"LEGEND", SPACE, HTML_EL_LEGEND, NULL},
    {"LI", SPACE, HTML_EL_List_Item, NULL},
    {"LINK", 'E', HTML_EL_LINK, NULL},
    {"LISTING", SPACE, HTML_EL_Preformatted, NULL},	/*converted to PRE */
@@ -642,7 +644,8 @@ static int          NoTextChild[] =
 {
    HTML_EL_HTML, HTML_EL_HEAD, HTML_EL_BODY,
    HTML_EL_Definition_List, HTML_EL_Block_Quote, HTML_EL_Directory,
-   HTML_EL_Form, HTML_EL_Menu, HTML_EL_Numbered_List, HTML_EL_Option_Menu,
+   HTML_EL_Form, HTML_EL_Menu, HTML_EL_FIELDSET,
+   HTML_EL_Numbered_List, HTML_EL_Option_Menu,
    HTML_EL_Unnumbered_List, HTML_EL_Definition, HTML_EL_List_Item,
    HTML_EL_MAP, HTML_EL_Applet,
    HTML_EL_Object, HTML_EL_IFRAME, HTML_EL_NOFRAMES,
@@ -700,7 +703,7 @@ static int          BlockLevelElement[] =
 {
    HTML_EL_Paragraph, HTML_EL_Pseudo_paragraph,
    HTML_EL_H1, HTML_EL_H2, HTML_EL_H3, HTML_EL_H4, HTML_EL_H5, HTML_EL_H6,
-   HTML_EL_TITLE, HTML_EL_Term, HTML_EL_CAPTION,
+   HTML_EL_TITLE, HTML_EL_Term, HTML_EL_CAPTION, HTML_EL_LEGEND,
    0};
 
 /* start tags that imply the end of a current element */
@@ -759,6 +762,7 @@ static oneLine      StartTagEndingElem[] =
    "TFOOT closes TH TD TR CAPTION THEAD TBODY",
    "TBODY closes TH TD TR CAPTION THEAD TFOOT TBODY",
    "OPTGROUP closes OPTION",
+   "FIELDSET closes LEGEND P P* HEAD H1 H2 H3 H4 H5 H6 PRE LISTING XMP A",
    ""};
 
 /* mapping table of HTML attributes */
@@ -788,6 +792,7 @@ static AttributeMapping HTMLAttributeMappingTable[] =
    {"ALIGN", "IFRAME", 'A', HTML_ATTR_Alignment},
    {"ALIGN", "IMG", 'A', HTML_ATTR_Alignment},
    {"ALIGN", "INPUT", 'A', HTML_ATTR_Alignment},
+   {"ALIGN", "LEGEND", 'A', HTML_ATTR_LAlign},
    {"ALIGN", "OBJECT", 'A', HTML_ATTR_Alignment},
    {"ALIGN", "P", 'A', HTML_ATTR_TextAlign},
    {"ALIGN", "TABLE", 'A', HTML_ATTR_Align},
@@ -1000,6 +1005,11 @@ static AttrValueMapping HTMLAttrValueMappingTable[] =
    {HTML_ATTR_Align, "LEFT", HTML_ATTR_Align_VAL_left_},
    {HTML_ATTR_Align, "CENTER", HTML_ATTR_Align_VAL_center_},
    {HTML_ATTR_Align, "RIGHT", HTML_ATTR_Align_VAL_right_},
+
+   {HTML_ATTR_LAlign, "TOP", HTML_ATTR_LAlign_VAL_Top_},
+   {HTML_ATTR_LAlign, "BOTTOM", HTML_ATTR_LAlign_VAL_Bottom_},
+   {HTML_ATTR_LAlign, "LEFT", HTML_ATTR_LAlign_VAL_Left_},
+   {HTML_ATTR_LAlign, "RIGHT", HTML_ATTR_LAlign_VAL_Right_},
 
    {HTML_ATTR_Clear, "LEFT", HTML_ATTR_Clear_VAL_Left_},
    {HTML_ATTR_Clear, "RIGHT", HTML_ATTR_Clear_VAL_Right_},

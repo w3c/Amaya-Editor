@@ -65,107 +65,108 @@
 64 Kopfzelle (TH)
 65 Formular
 66 Formular (FORM)
-67 Checkbutton, mehrere von... (CHECKBOX)
-68 Radiobutton, einer von... (RADIO)
-69 Option (OPTION)
-70 ** (OPTGROUP)
-71 Eingabezeile (TEXT)
-72 ** (PASSWORD)
-73 Texteingabe (TEXTAREA)
-74 ** (FILE)
-75 ** (HIDDEN)
-76 ** (LABEL)
-77 ** (BUTTON)
-78 SUBMIT
-79 RESET
-80 Aktiver Grafikbereich (AREA MAP)
-81 Rechteck
-82 Kreis
-83 Polygon
-84 Gruppierung (DIV)
-85 ** (NOSCRIPT)
-86 Objekt (OBJECT)
-87 Objekt
-88 Parameter (PARAM)
-89 ** (IFRAME)
-90 Formel
-91 Formel (MATH)
-92 Wurzel (MROOT)
-93 Quadratwurzel (MSQRT)
-94 Quotient (MFRAC)
-95 Term mit Index und Exponent (MSUBSUP)
-96 Term mit Index (MSUB)
-97 Term mit Exponent (MSUP)
-98 Term mit Unter- und Überschrift (MUNDEROVER)
-99 Term mit Unterschrift (MUNDER)
-100 Term mit Überschrift (MOVER)
-101 Term in Klammern (MFENCED)
-102 Term mit Indices links/rechts oben/unten (MMULTISCRIPT)
-103 **Matrix (MTABLE)
-104 Markierung als Verknüfung definieren...
-105 Markierung als Verknüpfungsziel definieren
-106 Verknüpfungsziel ändern...
-107 Verknüpfungsziel löschen
-108 Symbolleiste
-109 Dokumentadresse und -titel 
-110 Aktive Grafikbereiche markieren
-111 **Show Targets
-112 **Zoom In
-113 **Zoom Out
-114 Strukturfenster
-115 Textbrowserfenster
-116 Verknüpfungsfenster
-117 Inhaltsverzeichnisfenster
-118 Zeichen...
-119 Farben...
-120 Ausrichtung...
-121 Hintergrundbild...
-122 Format in Stylesheet übernehmen...
-123 Klasse anwenden...
-124 Stylesheets bearbeiten
-125 logische Formate
-126 Betont (EM)
-127 Hervorgehoben (STRONG)
-128 Zitat (CITE)
-129 Definition (DFN)
-130 Programmtext (CODE)
-131 Variablenwert (VAR)
-132 Beispiel (SAMP)
-133 Tastatureingabe (KBD)
-134 ** (ABBR)
-135 ** (ACRONYM)
-136 ** (INS)
-137 ** (DEL)
-138 direkte Zeichenformate
-139 kursiv (I)
-140 fett (B)
-141 Schreibmaschinenschrift (TT)
-142 größer (BIG)
-143 kleiner (SMALL)
-144 tiefgestellt (SUB)
-145 hochgestellt (SUP)
-146 ** (Q)
-147 ** (BDO)
-148 Umformatieren...
-149 Abschnittsnummern
-150 Buch zusammenfügen
-151 **Purge cache
-152 Info
-153 Verknüpfungen folgen/Dokumente öffnen
-154 Auswählen
-155 Suchen
-156 Ansichten
-157 Einfügen von Elementen
-158 Verknüpfungen bearbeiten
-159 Umformatieren
-160 Tabellen
-161 Formeln
-162 Aktive Grafikbereiche
-163 Formate/Stylesheets
-164 Attribute
-165 Rechtschreibung
-166 Speichern/Publizieren
-167 Drucken
-168 Abschnittsnummern
-169 Buch zusammenfügen
-170 Konfiguration
+67 ** (FIELDSET)
+68 Checkbutton, mehrere von... (CHECKBOX)
+69 Radiobutton, einer von... (RADIO)
+70 Option (OPTION)
+71 ** (OPTGROUP)
+72 Eingabezeile (TEXT)
+73 ** (PASSWORD)
+74 Texteingabe (TEXTAREA)
+75 ** (FILE)
+76 ** (HIDDEN)
+77 ** (LABEL)
+78 ** (BUTTON)
+79 SUBMIT
+80 RESET
+81 Aktiver Grafikbereich (AREA MAP)
+82 Rechteck
+83 Kreis
+84 Polygon
+85 Gruppierung (DIV)
+86 ** (NOSCRIPT)
+87 Objekt (OBJECT)
+88 Objekt
+89 Parameter (PARAM)
+90 ** (IFRAME)
+91 Formel
+92 Formel (MATH)
+93 Wurzel (MROOT)
+94 Quadratwurzel (MSQRT)
+95 Quotient (MFRAC)
+96 Term mit Index und Exponent (MSUBSUP)
+97 Term mit Index (MSUB)
+98 Term mit Exponent (MSUP)
+99 Term mit Unter- und Überschrift (MUNDEROVER)
+100 Term mit Unterschrift (MUNDER)
+101 Term mit Überschrift (MOVER)
+102 Term in Klammern (MFENCED)
+103 Term mit Indices links/rechts oben/unten (MMULTISCRIPT)
+104 **Matrix (MTABLE)
+105 Markierung als Verknüfung definieren...
+106 Markierung als Verknüpfungsziel definieren
+107 Verknüpfungsziel ändern...
+108 Verknüpfungsziel löschen
+109 Symbolleiste
+110 Dokumentadresse und -titel 
+111 Aktive Grafikbereiche markieren
+112 **Show Targets
+113 **Zoom In
+114 **Zoom Out
+115 Strukturfenster
+116 Textbrowserfenster
+117 Verknüpfungsfenster
+118 Inhaltsverzeichnisfenster
+119 Zeichen...
+120 Farben...
+121 Ausrichtung...
+122 Hintergrundbild...
+123 Format in Stylesheet übernehmen...
+124 Klasse anwenden...
+125 Stylesheets bearbeiten
+126 logische Formate
+127 Betont (EM)
+128 Hervorgehoben (STRONG)
+129 Zitat (CITE)
+130 Definition (DFN)
+131 Programmtext (CODE)
+132 Variablenwert (VAR)
+133 Beispiel (SAMP)
+134 Tastatureingabe (KBD)
+135 ** (ABBR)
+136 ** (ACRONYM)
+137 ** (INS)
+138 ** (DEL)
+139 direkte Zeichenformate
+140 kursiv (I)
+141 fett (B)
+142 Schreibmaschinenschrift (TT)
+143 größer (BIG)
+144 kleiner (SMALL)
+145 tiefgestellt (SUB)
+146 hochgestellt (SUP)
+147 ** (Q)
+148 ** (BDO)
+149 Umformatieren...
+150 Abschnittsnummern
+151 Buch zusammenfügen
+152 **Purge cache
+153 Info
+154 Verknüpfungen folgen/Dokumente öffnen
+155 Auswählen
+156 Suchen
+157 Ansichten
+158 Einfügen von Elementen
+159 Verknüpfungen bearbeiten
+160 Umformatieren
+161 Tabellen
+162 Formeln
+163 Aktive Grafikbereiche
+164 Formate/Stylesheets
+165 Attribute
+166 Rechtschreibung
+167 Speichern/Publizieren
+168 Drucken
+169 Abschnittsnummern
+170 Buch zusammenfügen
+171 Konfiguration

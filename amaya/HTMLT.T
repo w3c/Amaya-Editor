@@ -578,6 +578,22 @@ RULES
 	Create '</textarea>' After;
 	END;
 
+ FIELDSET: BEGIN
+	Create '<fieldset';
+	Create Attributes;
+	Create '>\12';
+        Indent +2;
+        Indent -2 After;
+	Create '</fieldset>\12' After;
+	END;
+
+ LEGEND: BEGIN
+	Create '<legend';
+	Create Attributes;
+	Create '>';
+	Create '</legend>' After;
+	END;
+
  LABEL: BEGIN
 	Create '<label';
 	Create Attributes;
@@ -1553,6 +1569,15 @@ ATTRIBUTES
 	Create accept;
 	Create DoubleQuote;
 	END;
+
+ LAlign = Top_:
+	Create ' align="top"';
+ LAlign = Bottom_:
+	Create ' align="bottom"';
+ LAlign = Left_:
+	Create ' align="left"';
+ LAlign = Right_:
+	Create ' align="right"';
 
  Area_Size: BEGIN
 	Create ' size="';

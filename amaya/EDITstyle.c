@@ -88,25 +88,25 @@ boolean           removeSpan;
    /*
     * remove any Class or ImplicitClass associated to the element.
     */
-   attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
+   attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
    attrType.AttrTypeNum = HTML_ATTR_Class;
-
    attr = TtaGetAttribute (el, attrType);
    if (attr != NULL)
      {
 	TtaRemoveAttribute (el, attr, doc);
 	if (removeSpan)
 	  DeleteSpanIfNoAttr (el, doc);
+	TtaSetDocumentModified (doc);
      }
-   attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
-   attrType.AttrTypeNum = HTML_ATTR_Style_;
 
+   attrType.AttrTypeNum = HTML_ATTR_Style_;
    attr = TtaGetAttribute (el, attrType);
    if (attr != NULL)
      {
 	TtaRemoveAttribute (el, attr, doc);
 	if (removeSpan)
 	  DeleteSpanIfNoAttr (el, doc);
+	TtaSetDocumentModified (doc);
      }
 
    /* remove all the presentation specific rules applied to the element */
@@ -325,7 +325,7 @@ NotifyAttribute    *event;
 	/*
 	 * suppress the Style Attribute.
 	 */
-	atType.AttrSSchema = TtaGetDocumentSSchema (doc);
+	atType.AttrSSchema = TtaGetSSchema ("HTML", doc);
 	atType.AttrTypeNum = HTML_ATTR_Style_;
 
 	at = TtaGetAttribute (el, atType);
@@ -333,6 +333,7 @@ NotifyAttribute    *event;
 	  {
 	     TtaRemoveAttribute (el, at, doc);
 	     DeleteSpanIfNoAttr (el, doc);
+	     TtaSetDocumentModified (doc);
 	  }
      }
    else
@@ -417,7 +418,7 @@ Document            doc;
 	  RemoveStyle (cour, doc, FALSE);
 	  
 	  /* set the Class attribute of the element */
-	  attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
+	  attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
 	  if (!IsImplicitClassName (CurrentClass, doc))
 	    {
 	      attrType.AttrTypeNum = HTML_ATTR_Class;
@@ -428,6 +429,7 @@ Document            doc;
 		  TtaAttachAttribute (cour, attr, doc);
 		}
 	      TtaSetAttributeText (attr, a_class, cour, doc);
+	      TtaSetDocumentModified (doc);
 	    }
 	  /* jump on next element until last one is reached. */
 	  if (cour == AClassLastReference)
@@ -483,7 +485,7 @@ Document            doc;
   /* change the selected element to be of the new class. */
   RemoveStyle (ClassReference, doc, FALSE);
 
-  attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
+  attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
   if (stylestring[1] == '.')
     {
       a_class = &CurrentClass[0];
@@ -497,6 +499,7 @@ Document            doc;
 	  TtaAttachAttribute (ClassReference, attr, doc);
 	}
       TtaSetAttributeText (attr, a_class, ClassReference, doc);
+      TtaSetDocumentModified (doc);
     }
   /* parse and apply this new CSS to the current document */
   /*ApplyCSSRules (NULL, stylestring, doc, FALSE);*/
@@ -640,7 +643,7 @@ View                view;
 #  endif /* !_WINDOWS */
   
   /* preselect the entry corresponding to the class of the element. */
-  attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
+  attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
   attrType.AttrTypeNum = HTML_ATTR_Class;
   
   attr = TtaGetAttribute (ClassReference, attrType);
@@ -777,7 +780,7 @@ View                view;
 #  endif /* !_WINDOWS */
 
   /* preselect the entry corresponding to the class of the element. */
-  attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
+  attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
   attrType.AttrTypeNum = HTML_ATTR_Class;
   attr = TtaGetAttribute (AClassFirstReference, attrType);
   if (attr)

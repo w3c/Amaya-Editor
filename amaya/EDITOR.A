@@ -92,6 +92,7 @@ MENUS
 
 	Types.Form button:BForm -> CreateForm;
 	Types.Form Separator;
+	Types.Form button:BFieldset -> CreateFieldset;
 	Types.Form button:BToggle -> CreateToggle;
 	Types.Form button:BRadio -> CreateRadio;
 	Types.Form button:BOption -> CreateOption;

@@ -129,6 +129,7 @@ STRUCT
 	ISINDEX;						{ ISINDEX }
 	Horizontal_Rule;					{ HR }
 	Table;							{ TABLE }
+	FIELDSET;						{ FIELDSET }
 	Address = LIST OF (AddressContent);			{ ADDRESS }
 	PICTURE							{ IMG }
 	    (ATTR SRC = Text; ALT = Text; longdesc = Text;
@@ -485,6 +486,17 @@ STRUCT
 	   Default_Value = Text) =
 	Text_With_Frame - (Input) with Rows ?= 4, Columns ?= 20;
 
+  FIELDSET =							{ FIELDSET }
+	BEGIN
+	LEGEND;
+	Basic_Set;
+	END;
+
+  LEGEND							{ LEGEND }
+     (ATTR accesskey; LAlign = Top_, Bottom_, Left_, Right_) =
+	 { accesskey  align    top   bottom   left   right }
+	Basic_Set;
+
   Input = CASE OF					{ formctrl }
 	Text_Input					{ INPUT / TEXT }
 	   (ATTR !NAME; Value_; disabled; readonly;
@@ -569,6 +581,7 @@ STRUCT
 		BEGIN
 		Frame;
 		END;
+
         BUTTON						{ BUTTON }
 	   (ATTR !NAME; Value_;
 		{ name  value }
@@ -578,7 +591,7 @@ STRUCT
 		{ disabled  tabindex  accesskey }
 		  onfocus; onblur) =
 		{ onfocus  onblur }
-		Basic_Set - (Anchor, Form, Fieldset, Input);
+		Basic_Set - (Anchor, Input, Form, FIELDSET, IFRAME);
         LABEL						{ LABEL }
 	   (ATTR  Associated_control = TEXT;
 		{ for }

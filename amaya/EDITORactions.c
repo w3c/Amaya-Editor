@@ -1270,6 +1270,29 @@ int                 elInput;
 
 
 /*----------------------------------------------------------------------
+  CreateFieldset
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                CreateFieldset (Document document, View view)
+#else  /* __STDC__ */
+void                CreateFieldset (document, view)
+Document            document;
+View                view;
+
+#endif /* __STDC__ */
+{
+   ElementType         elType;
+
+   elType.ElSSchema = TtaGetDocumentSSchema (document);
+   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+     {
+       elType.ElTypeNum = HTML_EL_FIELDSET;
+       TtaCreateElement (elType, document);
+     }
+}
+
+
+/*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateToggle (Document doc, View view)

@@ -1910,6 +1910,26 @@ BOXES
 		END;
 	END;
 
+ FIELDSET_S: BEGIN
+	Content: Text 'FIELDSET';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+ LEGEND_S: BEGIN
+	Content: Text 'LEGEND';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
  ATTR_Checkbox: BEGIN
 	Content: Text ' type=CHECKBOX';
 	HorizPos: Left = Previous . Right;
@@ -7314,7 +7334,6 @@ RULES
 
  Text_Area: BEGIN
 	CreateBefore(TEXTAREA_S);
-	{CreateBefore(Text_Space);}
 	Width: 20 ex;
 	Height: 2 Min;
 	LineBreak: No;
@@ -7330,6 +7349,37 @@ RULES
 		Width: Enclosed . Width;
 		Height: Enclosed . Height;
 		Size: Enclosing =;
+		END;
+	END;
+
+ FIELDSET: BEGIN
+	CreateBefore(FIELDSET_S);
+	CreateWith(VerticalLine);
+	Width: Enclosing . Width;
+	VertPos: Top = Previous NOT MAP . Bottom + 0.2;
+	IN Structure_view BEGIN
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		VertPos: Top = Previous . Bottom;
+		END;
+	IN Links_view
+		Visibility: 0;
+	END;
+
+ LEGEND: BEGIN
+	CreateBefore(LEGEND_S);
+	CreateWith(VerticalLine);
+	Line;
+#ifdef PAGE
+	PageBreak: No;
+	NoBreak1 : 2;
+	NoBreak2 : 2;
+#endif
+	Width : Enclosing . Width;
+	IN Structure_view BEGIN
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		NoLine;
 		END;
 	END;
 
@@ -9115,6 +9165,32 @@ ATTRIBUTES
 	BEGIN
 	CreateBefore(ATTR_ACCEPT);
 	CreateBefore(VALUE_ACCEPT);
+	END;
+
+ LAlign = Top_:
+	BEGIN
+	CreateBefore(ALIGN_TOP);
+	VertPos: Top = Enclosing . Top;
+	IN Structure_view
+		VertPos: Top = Previous . Bottom;
+	END;
+ LAlign = Bottom_:
+	BEGIN
+	CreateBefore(ALIGN_BOTTOM);
+	END;
+ LAlign = Left_:
+	BEGIN
+	CreateBefore(ALIGN_LEFT);
+	Adjust: Left;
+	IN Structure_view
+		Adjust: Enclosing =;
+	END;
+ LAlign = Right_:
+	BEGIN
+	CreateBefore(ALIGN_RIGHT);
+	Adjust: Right;
+	IN Structure_view
+		Adjust: Enclosing =;
 	END;
 
  Area_Size:

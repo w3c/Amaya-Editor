@@ -65,107 +65,108 @@
 64 Cellule de t\352te
 65 Formulaire
 66 Formulaire
-67 Bouton bascule
-68 Bouton radio
-69 Menu
-70 Sous-menu
-71 Saisie de texte
-72 Saisie de mot de passe
-73 Zone de texte
-74 S\351lecteur fichier
-75 Controle cach\351
-76 Etiquette
-77 Bouton poussoir
-78 Bouton de soumission
-79 Bouton de r\351initialisation
-80 Zone active
-81 Rectangle
-82 Cercle
-83 Polygone
-84 Division
-85 NoScript
-86 Objet
+67 Groupe de champs
+68 Bouton bascule
+69 Bouton radio
+70 Menu
+71 Sous-menu
+72 Saisie de texte
+73 Saisie de mot de passe
+74 Zone de texte
+75 S\351lecteur fichier
+76 Controle cach\351
+77 Etiquette
+78 Bouton poussoir
+79 Bouton de soumission
+80 Bouton de r\351initialisation
+81 Zone active
+82 Rectangle
+83 Cercle
+84 Polygone
+85 Division
+86 NoScript
 87 Objet
-88 Param\350tre
-89 Cadre en ligne
-90 Math
-91 Equation
-92 Racine
-93 Racine carr\351e
-94 Fraction
-95 Indice et exposant
-96 Indice
-97 Exposant
-98 Dessous et dessus
-99 Dessous
-100 Dessus
-101 Parenth\350ses
-102 Multiscripts
-103 Matrice
-104 Cr\351er lien...
-105 Cr\351er cible
-106 Changer lien...
-107 D\351truire ancre
-108 Montrer boutons
-109 Montrer adresse et titre
-110 Montrer les zones actives
-111 Montrer les cibles
-112 Grossir
-113 R\351duire
-114 Montrer la structure
-115 Montrer la vue altern\351e
-116 Montrer les liens
-117 Montrer la table des mati\350res
-118 Style de caract\350res...
-119 Couleurs...
-120 Format...
-121 Image de fond...
-122 Cr\351er une r\350gle...
-123 Appliquer une classe...
-124 Feuilles de style
-125 Types information
-126 Emphase
-127 Strong
-128 Cite
-129 D\351finition
-130 Code
-131 Variable
-132 Sample
-133 Keyboard
-134 Abr\351viation
-135 Acronyme
-136 Insertion
-137 Suppression
-138 El\351ments caract\350res
-139 Italique
-140 Gras
-141 T\351l\351type
-142 Gros
-143 Petit
-144 Indice
-145 Exposant
-146 Citation (Q)
-147 BiDi (BDO)
-148 Transformer...
-149 Num\351roter les sections
-150 Construire un livre
-151 Nettoyer le cache
-152 A propos de Amaya
-153 Naviguation
-154 S\351lection
-155 Chercher
-156 Vues
-157 Cr\351ation
-158 Liens
-159 Transformer
-160 Tables
-161 Math
-162 Zones actives
-163 Feuilles de style
-164 Attributs
-165 Corriger
-166 Publier
-167 Imprimer
-168 Num\351roter
-169 Construire un livre
-170 Configurer Amaya
+88 Objet
+89 Param\350tre
+90 Cadre en ligne
+91 Math
+92 Equation
+93 Racine
+94 Racine carr\351e
+95 Fraction
+96 Indice et exposant
+97 Indice
+98 Exposant
+99 Dessous et dessus
+100 Dessous
+101 Dessus
+102 Parenth\350ses
+103 Multiscripts
+104 Matrice
+105 Cr\351er lien...
+106 Cr\351er cible
+107 Changer lien...
+108 D\351truire ancre
+109 Montrer boutons
+110 Montrer adresse et titre
+111 Montrer les zones actives
+112 Montrer les cibles
+113 Grossir
+114 R\351duire
+115 Montrer la structure
+116 Montrer la vue altern\351e
+117 Montrer les liens
+118 Montrer la table des mati\350res
+119 Style de caract\350res...
+120 Couleurs...
+121 Format...
+122 Image de fond...
+123 Cr\351er une r\350gle...
+124 Appliquer une classe...
+125 Feuilles de style
+126 Types information
+127 Emphase
+128 Strong
+129 Cite
+130 D\351finition
+131 Code
+132 Variable
+133 Sample
+134 Keyboard
+135 Abr\351viation
+136 Acronyme
+137 Insertion
+138 Suppression
+139 El\351ments caract\350res
+140 Italique
+141 Gras
+142 T\351l\351type
+143 Gros
+144 Petit
+145 Indice
+146 Exposant
+147 Citation (Q)
+148 BiDi (BDO)
+149 Transformer...
+150 Num\351roter les sections
+151 Construire un livre
+152 Nettoyer le cache
+153 A propos de Amaya
+154 Naviguation
+155 S\351lection
+156 Chercher
+157 Vues
+158 Cr\351ation
+159 Liens
+160 Transformer
+161 Tables
+162 Math
+163 Zones actives
+164 Feuilles de style
+165 Attributs
+166 Corriger
+167 Publier
+168 Imprimer
+169 Num\351roter
+170 Construire un livre
+171 Configurer Amaya
