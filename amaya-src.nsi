@@ -305,12 +305,12 @@ Section "Amaya" SecAmaya
   File *.html
 
   ; libwww sources
-  SetOutPath "$INSTDIR\"
-  File /r ..\libwww
+  SetOutPath "$INSTDIR\libwww"
+  File /r ..\libwww\*
 
   ; redland sources
-  SetOutPath "$INSTDIR\"
-  File /r ..\redland
+  SetOutPath "$INSTDIR\redland"
+  File /r ..\redland\*
 
   ; freetype sources
   SetOutPath "$INSTDIR\freetype-2.1.9"
