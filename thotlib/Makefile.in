@@ -98,6 +98,8 @@ THOTK_OBJ = \
 	document/readstr.o \
 	document/readtra.o \
 	document/schtrad.o \
+	document/writeprs.o \
+	document/writestr.o \
 	tree/exceptions.o \
 	tree/tree.o \
 	tree/checkaccess.o \
