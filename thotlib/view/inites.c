@@ -40,7 +40,42 @@ static int          allocation_index[256];
 static int          have_colors = 0;
 
 
-#ifndef _WINDOWS
+#ifdef _WINDOWS
+
+/*----------------------------------------------------------------------
+ *      WinLoadGC has to be called before using an GC X-Windows
+ *         emulation under MS-Windows.
+ *   Full description of Device Context Attributes : Petzolt p 102
+ ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void WinLoadGC (HDC hDC, int fg, int RO)
+#else  /* __STDC__ */
+void WinLoadGC (hDC, fg, RO)
+HDC hDC;
+int fg;
+int RO;
+#endif /* __STDC__ */
+{
+  if (TtLineGC.capabilities & THOT_GC_PEN) {
+    if (RO && fg == 1)
+      TtLineGC.foreground = RO_Color;
+    else
+      TtLineGC.foreground = fg;
+  }
+  
+  if (TtLineGC.capabilities & THOT_GC_FOREGROUND)
+    if (RO && fg == 1)
+      SetTextColor (hDC, ColorPixel (RO_Color));
+    else         
+      SetTextColor (hDC, ColorPixel (fg));
+  
+  if (TtLineGC.capabilities & THOT_GC_BACKGROUND) {
+    SetBkMode (hDC, OPAQUE);
+    SetBkColor (hDC, TtLineGC.background);
+  } else 
+    SetBkMode (hDC, TRANSPARENT);
+}
+#else /* _WINDOWS */
 /*----------------------------------------------------------------------
    FindOutColor finds the closest color by allocating it, or picking
    an already allocated color.

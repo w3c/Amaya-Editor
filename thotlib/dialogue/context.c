@@ -67,45 +67,6 @@ ThotGC              WinCreateGC (void)
 }
 
 /*----------------------------------------------------------------------
- *      WinLoadGC has to be called before using an GC X-Windows
- *         emulation under MS-Windows.
- *   Full description of Device Context Attributes : Petzolt p 102
- ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void WinLoadGC (HDC hDC, int fg, int RO)
-#else  /* __STDC__ */
-void WinLoadGC (hDC, fg, RO)
-HDC hDC;
-int fg;
-int RO;
-#endif /* __STDC__ */
-{
-   
-   if (TtLineGC.capabilities & THOT_GC_PEN) {
-	  if (RO && fg == 1)
-         TtLineGC.foreground = RO_Color;
-      else
-	      TtLineGC.foreground = fg;
-   }
-
-   if (TtLineGC.capabilities & THOT_GC_FOREGROUND)
-      if (RO && fg == 1)
-         SetTextColor (hDC, ColorPixel (RO_Color));
-      else         
-         SetTextColor (hDC, ColorPixel (fg));
-
-   if (TtLineGC.capabilities & THOT_GC_BACKGROUND) {
-      SetBkMode (hDC, OPAQUE);
-      SetBkColor (hDC, TtLineGC.background);
-   } else 
-         SetBkMode (hDC, TRANSPARENT);
-/*
-   if (TtLineGC.capabilities & THOT_GC_FUNCTION)
-      SetROP2 (TtDisplay, TtLineGC.mode);
-	  */
-}
-
-/*----------------------------------------------------------------------
  *      WinInitColors initialize the color table depending on the
  *         device capabilities under MS-Windows.
  ----------------------------------------------------------------------*/

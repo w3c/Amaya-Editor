@@ -35,6 +35,7 @@ static PtrElement    ViewToOpenSubTree;
 static DocViewNumber ReferenceView;
 
 #include "appdialogue_f.h"
+#include "applicationapi_f.h"
 #include "documentapi_f.h"
 #include "viewapi_f.h"
 #include "views_f.h"

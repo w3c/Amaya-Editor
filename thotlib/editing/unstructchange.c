@@ -75,6 +75,7 @@
 #include "scroll_f.h"
 #include "search_f.h"
 #include "searchref_f.h"
+#include "schemas_f.h"
 #include "selectmenu_f.h"
 #include "structcommands_f.h"
 #include "structcreation_f.h"

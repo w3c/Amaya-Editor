@@ -149,6 +149,9 @@ static int          LastPrinted;
 #ifdef _WINDOWS
 #define PRINTPROGRESSDLG 389
 ThotWindow       WIN_curWin = (ThotWindow)(-1);
+ThotWindow       WIN_Main_Wd = (ThotWindow)(-1);
+HBITMAP          WIN_LastBitmap = 0;
+
 BOOL             bError;
 BOOL             gbAbort;
 HWND             hDlgPrint     = NULL;
@@ -157,6 +160,19 @@ HWND             currentWindow;
 HWND             ghwndAbort;
 static HWND      thotWindow    = (HWND) 0;
 static HINSTANCE hCurrentInstance ;
+
+/*----------------------------------------------------------------------
+   WinErrorBox :  Pops-up a message box when an MS-Window error      
+   occured.                                                    
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void WinErrorBox (HWND hWnd)
+#else  /* !__STDC__ */
+void WinErrorBox (hWnd)
+HWND hWnd;
+#endif /* __STDC__ */
+{
+}
 
 /* ----------------------------------------------------------------------
    ----------------------------------------------------------------------*/

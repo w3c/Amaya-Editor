@@ -48,8 +48,9 @@ extern ThotBool viewClosed;
 
 #include "actions_f.h"
 #include "appdialogue_f.h"
-#include "docs_f.h"
+#include "displayview_f.h"
 #include "documentapi_f.h"
+#include "docs_f.h"
 #include "viewcommands_f.h"
 #include "views_f.h"
 
