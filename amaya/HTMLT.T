@@ -458,8 +458,6 @@ RULES
 	END;
 
  TEXT_UNIT: BEGIN
-	IF Within Text_Area
-		Remove;
 	IF Within Text_Input
 		Remove;
 	END;
@@ -572,21 +570,21 @@ RULES
 	Create '<textarea';
 	Create Attributes;
 	Create '>';
-	Create '</textarea>';
+	Create '</textarea>' After;
 	END;
 
  LABEL: BEGIN
 	Create '<label';
 	Create Attributes;
 	Create '>';
-	Create '</label>';
+	Create '</label>' After;
 	END;
 
  BUTTON: BEGIN
 	Create '<button';
 	Create Attributes;
 	Create '>';
-	Create '</button>';
+	Create '</button>' After;
 	END;
 
  Checkbox_Input: BEGIN
