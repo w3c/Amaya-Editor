@@ -1572,7 +1572,7 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int indent,
       /* check if there is enough space between left and right floating boxes */
       if ((floatL || floatR) &&
 	  ((breakable && pLine->LiXMax < 10) ||
-	   (!breakable && pLine->LiXMax < pBox->BxWidth)))
+	   (!breakable && pBox && pLine->LiXMax < pBox->BxWidth)))
 	{
 	  /* update line information */
 	  if (bottomL < bottomR)
