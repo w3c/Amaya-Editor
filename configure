@@ -6874,6 +6874,9 @@ fi
 if test "$with_dav" = "yes" ; then
     
     dav_frag=$srcdir/davlib/Makefile.dav
+else
+    
+    dav_frag=/dev/null
 fi
 
 
