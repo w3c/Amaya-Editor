@@ -72,7 +72,7 @@ STRUCT
      (ATTR profile = Text) =
 	AGGREGATE
 	Document_URL = TEXT - (Head_misc);
-	TITLE = TEXT - (Head_misc);						{ TITLE }
+	TITLE = TEXT - (Head_misc);				{ TITLE }
       ? ISINDEX (ATTR Prompt = Text) = CONSTANT C_Empty;	{ ISINDEX }
 		    { prompt }
       ? BASE;							{ BASE }

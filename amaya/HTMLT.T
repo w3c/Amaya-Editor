@@ -1,7 +1,7 @@
 		{ Author: I. Vatton 	 1994-1995-1996  }
 
-{ If variable XML is set, the document is saved in the XML syntax.
-  Otherwise, it is saved in HTML }
+{ If variable XML is set, the document is saved in the XML (Voyager) syntax.
+  Otherwise, it is saved in plain HTML }
 
 TRANSLATION HTML;
 
@@ -15,7 +15,17 @@ RULES
  HTML : BEGIN
 #ifdef XML
 	Create '<?xml version="1.0"?>\12';
-	Create '<html xmlns="http://www.w3.org/TR/REC-html40"\12';
+	Create '<?xml-stylesheet type="text/css" href="voyager.css"?>\12';
+	if HtmlDTD = Frameset
+	   BEGIN
+	   Create '<!DOCTYPE html SYSTEM "http://www.w3.org/TR/WD-html-in-xml/DTD/frameset.dtd>\12"';
+	   Create '<html xmlns="http://www.w3.org/Profiles/voyager-frameset"';
+	   END;
+	if not HtmlDTD = Frameset
+	   BEGIN
+	   Create '<!DOCTYPE html SYSTEM "http://www.w3.org/TR/WD-html-in-xml/DTD/loose.dtd">\12';
+	   Create '<html xmlns="http://www.w3.org/Profiles/voyager-loose"';
+	   END;
 	Create Namespaces;
 #else
 	if HtmlDTD = Frameset
@@ -33,6 +43,12 @@ RULES
 	Create '<head';
 	Create Attributes;
 	Create '>\12';
+#ifdef XML
+	{ elements TITLE and BASE must be generated as the first chidren
+	  of the HEAD element }
+	Get included TITLE;
+	Get included BASE;
+#endif
 	Create '</head>\12' After;
 	END;
 
