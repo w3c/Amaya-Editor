@@ -234,7 +234,7 @@ void  ANNOT_InitDocumentMeta (doc, docAnnot, annot, title)
   */
 
   /* point to the first node */
-  root = TtaGetElementRoot (docAnnot);
+  root = TtaGetRootElement (docAnnot);
   elType = TtaGetElementType (root);
 
   /* point to the metadata structure */
