@@ -380,7 +380,10 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax, PtrBo
 		      /* the box itself doen't give right positions */
 		      box = pBox->BxNexChild;
 		      bt = box->BxYOrg;
-		      while (box->BxNexChild && box->BxNexChild->BxNChars > 0)
+		      /* don't take into account the last empty box */
+		      while (box->BxNexChild &&
+			     (box->BxNexChild->BxNChars > 0 ||
+			      box->BxNexChild->BxNexChild))
 			box = box->BxNexChild;
 		      bb = box->BxYOrg + box->BxHeight;
 		    }
