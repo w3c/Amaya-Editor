@@ -26,7 +26,6 @@
 
 
   Var STARTMENU_FOLDER
-
 ;--------------------------------
 ;Interface Settings
 
@@ -55,6 +54,14 @@
 
   !insertmacro MUI_PAGE_INSTFILES
   
+  !define MUI_FINISHPAGE_LINK "Visit the Amaya site for the latest news, FAQs and support"
+  !define MUI_FINISHPAGE_LINK_LOCATION "http://www.w3.org/Amaya"
+
+  !define MUI_FINISHPAGE_RUN "$INSTDIR\WindowsWX\bin\amaya.exe"
+  !define MUI_FINISHPAGE_NOREBOOTSUPPORT
+  
+  !insertmacro MUI_PAGE_FINISH
+
   !insertmacro MUI_UNPAGE_CONFIRM
   !insertmacro MUI_UNPAGE_INSTFILES
 
@@ -120,17 +127,19 @@
 Section "Amaya" SecAmaya
 
 
+  SetDetailsPrint textonly
+  DetailPrint "Testing supported OS..."
+  SetDetailsPrint listonly
+
  ;XXXXXXXXXXXXXXXXXXXXXXXXXX
  ;Test the platform
  ;XXXXXXXXXXXXXXXXXXXXXXXXXX
-   ReadRegStr $R0 HKLM \
-   "SOFTWARE\Microsoft\Windows NT\CurrentVersion" CurrentVersion
-
-   IfErrors 0 lbl_winnt
+   ReadRegStr $R0 HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion" CurrentVersion
+   StrCmp $R0 "" lbl_notwinnt lbl_winnt
    
    ; we are not NT
-   ReadRegStr $R0 HKLM \
-   "SOFTWARE\Microsoft\Windows\CurrentVersion" VersionNumber
+   lbl_notwinnt:
+   ReadRegStr $R0 HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion" VersionNumber
  
    StrCpy $R1 $R0 1
    StrCmp $R1 '4' 0 lbl_error
@@ -141,13 +150,13 @@ Section "Amaya" SecAmaya
    StrCmp $R1 '4.9' lbl_win32_ME lbl_win32_98
  
    lbl_win32_95:
-     Abort
+     Abort "Win95 not supported"
  
    lbl_win32_98:
-     Abort
+     Abort "Win98 not supported"
  
    lbl_win32_ME:
-     Abort
+     Abort "WinME not supported"
  
    lbl_winnt:
  
@@ -160,7 +169,8 @@ Section "Amaya" SecAmaya
  
    StrCmp $R1 '5.0' lbl_winnt_2000
    StrCmp $R1 '5.1' lbl_winnt_XP
-   StrCmp $R1 '5.2' lbl_winnt_2003 lbl_error
+   StrCmp $R1 '5.2' lbl_winnt_2003
+   Goto lbl_error
  
    lbl_winnt_x:
      StrCpy $R0 "NT $R0" 6
@@ -179,13 +189,16 @@ Section "Amaya" SecAmaya
    Goto lbl_done
  
    lbl_error:
-     Abort
+     Abort "Only WinXP/2k/NT are supported"
    lbl_done:
-   MessageBox MB_OK $R0 
   ;XXXXXXXXXXXXXXXXXXXXXXXXXX
 
   ;This section is required : readonly mode
   SectionIn RO
+
+  SetDetailsPrint textonly
+  DetailPrint "Installing Amaya binaries and wxWidgets DLL"
+  SetDetailsPrint listonly
 
   SetOutPath "$INSTDIR\WindowsWX\bin"
   File WindowsWX\bin\amaya.exe
@@ -198,6 +211,9 @@ Section "Amaya" SecAmaya
   File WindowsWX\bin\wxbase*u_xml_vc_custom.dll
 ;  File WindowsWX\bin\thotprinter.exe
 
+  SetDetailsPrint textonly
+  DetailPrint "Installing Amaya resources : icons, dialogues"
+  SetDetailsPrint listonly
 
   SetOutPath "$INSTDIR\resources\icons"
   File resources\icons\*.png
@@ -205,6 +221,9 @@ Section "Amaya" SecAmaya
   SetOutPath "$INSTDIR\resources\xrc"
   File resources\xrc\*.xrc
 
+  SetDetailsPrint textonly
+  DetailPrint "Installing Amaya schemas"
+  SetDetailsPrint listonly
 
   SetOutPath "$INSTDIR\amaya"
   File amaya\COPYRIGHT
@@ -221,6 +240,10 @@ Section "Amaya" SecAmaya
   File amaya\*.ico
   File amaya\*.svg
 
+  SetDetailsPrint textonly
+  DetailPrint "Installing annotlib schemas"
+  SetDetailsPrint listonly
+
   SetOutPath "$INSTDIR\annotlib"
   File annotlib\*.png
   File annotlib\*.gif
@@ -228,6 +251,10 @@ Section "Amaya" SecAmaya
   File annotlib\*.STR
   File annotlib\*.TRA
   File annotlib\*.en
+
+  SetDetailsPrint textonly
+  DetailPrint "Installing Amaya config files"
+  SetDetailsPrint listonly
 
   SetOutPath "$INSTDIR\config\libconfig"
   File config\libconfig\*.png
@@ -248,11 +275,19 @@ Section "Amaya" SecAmaya
   File config\annot.schemas
   File config\win-thot.rc
 
+  SetDetailsPrint textonly
+  DetailPrint "Installing Amaya dictionnaries"
+  SetDetailsPrint listonly
+
   SetOutPath "$INSTDIR\dicopar"
   File dicopar\alphabet
   File dicopar\*.ptn
   File dicopar\clavier
   File dicopar\*.dic
+
+  SetDetailsPrint textonly
+  DetailPrint "Installing Amaya documentation"
+  SetDetailsPrint listonly
 
   SetOutPath "$INSTDIR\doc\html"
   File doc\html\*
@@ -306,11 +341,27 @@ Section "Amaya" SecAmaya
   SetOutPath "$INSTDIR\doc\images"
   File doc\images\*
 
+  SetDetailsPrint textonly
+  DetailPrint "Installing Amaya ttf fonts"
+  SetDetailsPrint listonly
+
   SetOutPath "$INSTDIR\fonts"
   File fonts\*
 
+  SetDetailsPrint textonly
+  DetailPrint "Writting registry keys"
+  SetDetailsPrint listonly
+
   ;Store installation folder
-  WriteRegStr HKCU "Software\AmayaWX" "" $INSTDIR
+  WriteRegStr HKCU "Software\AmayaWX" "" $INSTDIR 
+  WriteRegExpandStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\AmayaWX" "UninstallString" '"$INSTDIR\Uninstall.exe"'
+  WriteRegExpandStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\AmayaWX" "InstallLocation" "$INSTDIR"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\AmayaWX" "DisplayName" "Amaya"
+  ;WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\AmayaWX" "DisplayIcon" "$INSTDIR\NSIS.exe,0"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\AmayaWX" "DisplayVersion" "${VERSION}"
+;  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\AmayaWX" "VersionMajor" "${VER_MAJOR}"
+;  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\AmayaWX" "VersionMinor" "${VER_MINOR}.${VER_REVISION}"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\AmayaWX" "URLInfoAbout" "http://www.w3.org/Amaya"
   
   ;Create uninstaller
   WriteUninstaller "$INSTDIR\Uninstall.exe"
@@ -352,29 +403,38 @@ FunctionEnd
 
 Section "Uninstall"
 
-  Delete "$INSTDIR\Uninstall.exe"
+  SetDetailsPrint textonly
+  DetailPrint "Uninstalling Amaya..."
+  SetDetailsPrint listonly
 
-  RMDir /r "$INSTDIR"
+  IfFileExists $INSTDIR\WindowsWX\bin\amaya.exe amaya_installed
+    MessageBox MB_YESNO "It does not appear that Amaya is installed in the directory '$INSTDIR'.$\r$\nContinue anyway (not recommended)?" IDYES amaya_installed
+    Abort "Uninstall aborted by user"
+  amaya_installed:
 
-  ;Start Menu uninstall
-;  !insertmacro MUI_STARTMENU_GETFOLDER Application $MUI_TEMP   
-;  Delete "$SMPROGRAMS\$MUI_TEMP\Uninstall.lnk"
-;  ;Delete empty start menu parent diretories
-;  StrCpy $MUI_TEMP "$SMPROGRAMS\$MUI_TEMP"
-;  startMenuDeleteLoop:
-;    ClearErrors
-;    RMDir $MUI_TEMP
-;    GetFullPathName $MUI_TEMP "$MUI_TEMP\.."    
-;    IfErrors startMenuDeleteLoopDone
-;    StrCmp $MUI_TEMP $SMPROGRAMS startMenuDeleteLoopDone startMenuDeleteLoop
-;  startMenuDeleteLoopDone:
 
+  SetDetailsPrint textonly
+  DetailPrint "Deleting Files..."
+  SetDetailsPrint listonly
+
+  ReadRegStr $STARTMENU_FOLDER HKCU "Software\AmayaWX" "Start Menu Folder"
+  IfFileExists "$SMPROGRAMS\$STARTMENU_FOLDER\Amaya.lnk" amaya_smp_installed
+    Goto amaya_smp_notinstalled
+  amaya_smp_installed:
   Delete "$SMPROGRAMS\$STARTMENU_FOLDER\Amaya.lnk"
   Delete "$SMPROGRAMS\$STARTMENU_FOLDER\Uninstall.lnk"
   RMDir "$SMPROGRAMS\$STARTMENU_FOLDER"
   Delete "$DESKTOP\AmayaWX.lnk"
+  amaya_smp_notinstalled:
 
-  DeleteRegKey /ifempty HKCU "Software\AmayaWX"
+  RMDir /r "$INSTDIR"
+
+  SetDetailsPrint textonly
+  DetailPrint "Deleting Registry Keys..."
+  SetDetailsPrint listonly
+
+  DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\AmayaWX"
+  DeleteRegKey HKLM "Software\AmayaWX"
 
 SectionEnd
 
