@@ -1455,23 +1455,19 @@ CHAR_T*             appArgv0;
   CHAR_T      username[MAX_LENGTH];
   CHAR_T      windir[MAX_PATH+1];
   DWORD       dwSize;
-# ifndef __CYGWIN32__
-  extern int    _fmode;
-# endif /* __CYGWIN32__ */
   ThotBool    status;
 #else /* ! _WINDOWS */
   struct stat stat_buf;
+  char        c_execname[MAX_LENGTH];
+  char        c_filename[MAX_LENGTH];
+  char       *c_end;
 #endif /* _WINDOWS */
   int         execname_len;
   int         len, round;
   ThotBool    found, ok;
-  char  fileNameStr1[MAX_LENGTH];
-  char  fileNameStr2[MAX_LENGTH];
   
 #ifdef _WINDOWS
-#ifndef __CYGWIN32__
   _fmode = _O_BINARY;
-#endif /* __CYGWIN32__ */
 #endif /* _WINDOWS */
   if (AppRegistryInitialized != 0)
     return;
@@ -1481,11 +1477,11 @@ CHAR_T*             appArgv0;
    */
   if ((appArgv0 == NULL) || (*appArgv0 == WC_EOS))
     {
-#     ifdef _WINDOWS
+#ifdef _WINDOWS
       MessageBox (NULL, TEXT("TtaInitializeAppRegistry called with invalid argv[0] value"), TEXT("Amaya"), MB_OK);
-#     else  /* !_WINDOWS */
+#else  /* !_WINDOWS */
       fprintf (stderr, "TtaInitializeAppRegistry called with invalid argv[0] value\n");
-#     endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
       exit (1);
     }
 
@@ -1497,13 +1493,13 @@ CHAR_T*             appArgv0;
    * i.e. start with / on unixes or \ or ?:\ on Windows.
    */
 
-# ifdef _WINDOWS
+#ifdef _WINDOWS
   if (appArgv0[0] == WC_DIR_SEP || (appArgv0[1] == TEXT(':') && appArgv0[2] == WC_DIR_SEP))
      ustrncpy (&execname[0], appArgv0, sizeof (execname) / sizeof (CHAR_T));
-# else  /* !_WINDOWS */
+#else  /* !_WINDOWS */
   if (appArgv0[0] == WC_DIR_SEP)
      ustrncpy (&execname[0], appArgv0, sizeof (execname) / sizeof (CHAR_T));
-# endif /* _WINDOWS */
+#endif /* _WINDOWS */
    
   /*
    * second case, the argv[0] indicate a relative path name.
@@ -1537,11 +1533,11 @@ CHAR_T*             appArgv0;
       path[len] = WC_EOS;
        
       execname_len = sizeof (execname) / sizeof (CHAR_T);
-#     ifdef _WINDOWS
+#ifdef _WINDOWS
       MakeCompleteName (appArgv0, TEXT("EXE"), path, execname, &execname_len);
-#     else
+#else
       MakeCompleteName (appArgv0, TEXT(""), path, execname, &execname_len);
-#     endif
+#endif
       if (execname[0] == WC_EOS)
 	{
 	  fprintf (stderr, "TtaInitializeAppRegistry internal error\n");
@@ -1579,7 +1575,6 @@ CHAR_T*             appArgv0;
 #endif /* _WINDOWS */
 
   AppRegistryEntryAppli = TtaWCSdup (appName);
-
   AppNameW = TtaWCSdup (appName);
 
 #ifdef HAVE_LSTAT
@@ -1588,33 +1583,33 @@ CHAR_T*             appArgv0;
     * to the real app in the real dir.
     */
   len = 1;
-  wc2iso_strcpy (fileNameStr1, execname);
-   while (lstat (fileNameStr1, &stat_buf) == 0 &&
-	  S_ISLNK (stat_buf.st_mode) &&
-	  len > 0)
-     {
-       wc2iso_strcpy (fileNameStr2, filename);
-       len = readlink (fileNameStr1, fileNameStr2, sizeof (filename) / sizeof (CHAR_T));
-       if (len > 0)
-	 {
-	   filename[len] = 0;
-	   /*
-	    * Two cases : can be an absolute link to the binary
-	    * or a relative link.
-	    */
-	   if (filename[0] == WC_DIR_SEP)
-	     {
-	       ustrcpy (execname, filename);
-	       dir_end = execname;
-	       while (*dir_end)
-		 dir_end++; /* go to the ending NUL */
-	       while (dir_end > execname && *dir_end != WC_DIR_SEP)
-		 dir_end--;
-	     }
-	   else
-	    ustrcpy (dir_end + 1, filename);
-	 } 
-     }
+  wc2iso_strcpy (c_execname, execname);
+  while (lstat (c_execname, &stat_buf) == 0 &&
+	 S_ISLNK (stat_buf.st_mode) &&
+	 len > 0)
+    {
+      len = readlink (c_execname, c_filename, sizeof (filename) / sizeof (CHAR_T));
+      if (len > 0)
+	{
+	  c_filename[len] = 0;
+	  /*
+	   * Two cases : can be an absolute link to the binary
+	   * or a relative link.
+	   */
+	  if (c_filename[0] == DIR_SEP)
+	    {
+	      strcpy (c_execname, c_filename);
+	      c_end = c_execname;
+	      while (*c_end)
+		c_end++; /* go to the ending NUL */
+	      while (c_end > c_execname && *c_end != DIR_SEP)
+		c_end--;
+	    }
+	  else
+	    strcpy (c_end + 1, c_filename);
+	} 
+    }
+  iso2wc_strcpy (execname, c_execname);
 #endif /* HAVE_LSTAT */
    
 #ifdef DEBUG_REGISTRY

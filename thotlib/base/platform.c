@@ -39,13 +39,10 @@ int                 TtaFileExist (CONST CHAR_T* filename)
 #else  /* __STDC__ */
 int                 TtaFileExist (filename)
 CONST CHAR_T*       filename;
-
 #endif /* __STDC__ */
 {
    int         status = 0;
-
-#  if defined(_WINDOWS) && !defined(__GNUC__)
-
+#ifdef _WINDOWS
    DWORD       attribs;
 
    attribs = GetFileAttributes ((LPCTSTR)filename);
@@ -57,26 +54,19 @@ CONST CHAR_T*       filename;
    else
        status = 1;
 
-#  else /* _WINDOWS && !__GNUC__ */
+#else /* _WINDOWS */
 
    int         filedes;
    struct stat statinfo;
-
-#  ifdef _I18N_
+#ifdef _I18N_
    char        mbs_filename[2 * MAX_TXT_LEN];
-#  else  /* !_I18N_ */
-   char*       mbs_filename = filename;
-#  endif /* !_I18N_ */
 
-#  ifdef _I18N_
    wcstombs (mbs_filename, filename, 2 * MAX_TXT_LEN);
-#  endif /* !_I18N_ */
+#else  /* !_I18N_ */
+   char*       mbs_filename = filename;
+#endif /* !_I18N_ */
 
-#  ifdef _WINDOWS
-   filedes = open (mbs_filename, _O_RDONLY | O_BINARY);
-#  else /* _WINDOWS */
    filedes = open (mbs_filename, O_RDONLY);
-#  endif /* _WINDOWS */
    if (filedes < 0)
       status = 0;
    else {
@@ -89,7 +79,7 @@ CONST CHAR_T*       filename;
         }
         close (filedes);
    }
-#  endif /* _WINDOWS && !__GNUC__ */
+#endif /* _WINDOWS */
    return status;
 }
 
@@ -101,7 +91,6 @@ int                 TtaFileUnlink (CONST CHAR_T* filename)
 #else  /* __STDC__ */
 int                 TtaFileUnlink (filename)
 CONST CHAR_T*       filename;
-
 #endif /* __STDC__ */
 {
   if (filename)
