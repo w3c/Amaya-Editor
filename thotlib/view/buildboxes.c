@@ -3411,10 +3411,12 @@ PtrAbstractBox      pAb;
 		      || pParentAb->AbBox->BxType == BoGhost)
 		     if (pAb->AbNew || pAb->AbDead)
 		       {
-			  /* Il faut refaire la mise en lignes sur la boite qui precede */
+			  /* need to rebuild lines starting form
+			     the previous box */
 			  pChildAb = pAb->AbPrevious;
-			  if (pChildAb == NULL)
-			     pLine = NULL;	/* toutes les lignes */
+			  if (pChildAb == NULL || pChildAb->AbBox == NULL)
+			    /* all l ines */
+			    pLine = NULL;
 			  else
 			    {
 			       pBox = pChildAb->AbBox;

@@ -54,6 +54,7 @@ Thot/amaya/HTML.S \
 Thot/amaya/HTML.conf \
 Thot/amaya/*.en \
 Thot/amaya/*.fr \
+Thot/amaya/EDITOR.A \
 Thot/amaya/HTMLP.P \
 Thot/amaya/HTMLT.T \
 Thot/amaya/HTMLTT.T \
