@@ -1,6 +1,3 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /*=======================================================================*/
 /*|                                                                     | */
 /*|     Thot Toolkit: Application Program Interface                     | */
@@ -25,7 +22,7 @@ struct Langue_Ctl   TypoLangTable[MAX_LANGUAGES];
 int                 FreeEntry;
 int                 FreeTypoEntry;
 static char         Langbuffer[2 * MAX_NAME_LENGTH];
-static int          Points_de_coupure[MAX_POINT_COUP];
+static int          breakPoints[MAX_POINT_COUP];
 static char         StandardLANG[3];
 
 #include "thotmsg_f.h"
@@ -84,7 +81,9 @@ static void         InitTypoLanguage ()
 
    FreeTypoEntry = 6;
 
-}				/* ---------------------------------------------------------------------- */
+}				
+
+/* ---------------------------------------------------------------------- */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 void                InitLanguage ()
@@ -96,7 +95,7 @@ void                InitLanguage ()
 {
    int                 i, j;
 
-   /* Initialisation du reste de la table */
+   /* Initialization of the remaining of the table */
    for (i = 0; i < MAX_LANGUAGES; i++)
      {
 	LangTable[i].LangNom[0] = '\0';
@@ -106,7 +105,7 @@ void                InitLanguage ()
 	LangTable[i].LangPattern[0] = '\0';
 	LangTable[i].LangTabPattern.Charge = 0;
      }
-   /* Chargement des langues par defaut */
+   /* Loading the default languages */
    strcpy (LangTable[0].LangNom, "ISO_latin_1");
    LangTable[0].LangAlphabet = 'L';
    strcpy (LangTable[0].LangPrincipal, "Usigle");
@@ -235,7 +234,7 @@ char               *secondDictionary;
    int                 i;
 
    i = 0;
-   /* Elimine les cas d'erreur */
+   /* Avoids error cases */
    if (languageName == NULL
        || (languageAlphabet != 'L' && languageAlphabet != 'G'))
       TtaError (ERR_invalid_parameter);
@@ -247,13 +246,13 @@ char               *secondDictionary;
       TtaError (ERR_too_many_languages);
    else
      {
-	/* Consulte la table des langues pour voir si la langue existe deja */
+	/* Consults the languages table to see if the language exists. */
 	for (i = 0; i < FreeEntry; i++)
 	   if (!strcmp (languageName, LangTable[i].LangNom))
-	      /* La langue est deja declaree */
+	      /* The language is already defined */
 	      return i;
 
-	/* Enregistre la nouvelle langue */
+	/* Saves the new language */
 	i = FreeEntry;
 	strcpy (LangTable[i].LangNom, languageName);
 	LangTable[i].LangAlphabet = languageAlphabet;
@@ -303,10 +302,10 @@ char               *languageName;
 
 {
    int                 i;
-   boolean             encore;
+   boolean             again;
 
    i = 0;
-   /* Elimine les cas d'erreur */
+   /* Avoids error cases */
    if (languageName == NULL)
       TtaError (ERR_invalid_parameter);
    else if (languageName[0] == '\0')
@@ -315,38 +314,38 @@ char               *languageName;
       TtaError (ERR_string_too_long);
    else
      {
-	/* Consulte la table des langues pour voir si la langue existe deja */
-	encore = TRUE;
-	while (encore && i < FreeEntry)
+	/* Consults the languages table to see if the language exists. */
+	again = TRUE;
+	while (again && i < FreeEntry)
 	  {
 	     if (!strcmp (languageName, LangTable[i].LangNom))
-		/* La langue est deja declaree */
-		encore = FALSE;
+	        /* The language is already defined */
+		again = FALSE;
 	     else
 		i++;
 	  }
-	if (encore)
+	if (again)
 	  {
-	     /* On n'a pas trouve la langue, chercher dans les TYPO langues */
+	     /* The language dose not exist, saerch intoTYPO languages */
 	     i = 0;
-	     while (encore && i < FreeTypoEntry)
+	     while (again && i < FreeTypoEntry)
 	       {
 		  if (!strcmp (languageName, TypoLangTable[i].LangNom))
-		     /* La langue TYPO est deja declaree */
-		     encore = FALSE;
+		     /* The TYPO language is already defined */
+		     again = FALSE;
 		  else
 		     i++;
 	       }
-	  }			/* end of if (encore) */
+	  }			/* end of if (again) */
 
-	if (encore)
+	if (again)
 	  {
-	     /* On n'a pas trouve la langue */
+	     /* The language does not exist */
 	     i = 0;
 	     TtaError (ERR_language_not_found);
 	  }
      }
-   /* Valeur retournee */
+   /* returned value */
    return (Language) i;
 }				/*TtaGetLanguageIdFromName */
 
@@ -388,26 +387,26 @@ char               *TtaGetVarLANG ()
 Language            TtaGetDefaultLanguage ()
 {
    char               *name;
-   char                langue[MAX_NAME_LENGTH];
+   char                language[MAX_NAME_LENGTH];
 
    name = TtaGetVarLANG ();
    if (!strncmp (name, "fr", 2))
-      strcpy (langue, "Fran\347ais");
+      strcpy (language, "Fran\347ais");
    else if (!strncmp (name, "en", 2))
-      strcpy (langue, "English");
+      strcpy (language, "English");
    else if (!strncmp (name, "es", 2))
-      strcpy (langue, "Espa\361ol");
+      strcpy (language, "Espa\361ol");
    else if (!strncmp (name, "it", 2))
-      strcpy (langue, "Italiano");
+      strcpy (language, "Italiano");
    else if (!strncmp (name, "de", 2))
-      strcpy (langue, "Deutsch");
+      strcpy (language, "Deutsch");
    else if (!strncmp (name, "sv", 2))
-      strcpy (langue, "Swedish");
+      strcpy (language, "Swedish");
    else if (!strncmp (name, "pt", 2))
-      strcpy (langue, "Portuguese");
+      strcpy (language, "Portuguese");
    else
-      strcpy (langue, "English");
-   return TtaGetLanguageIdFromName (langue);
+      strcpy (language, "English");
+   return TtaGetLanguageIdFromName (language);
 }
 
 /* ----------------------------------------------------------------------
@@ -436,28 +435,28 @@ char                languageAlphabet;
 
 {
    int                 i;
-   boolean             encore;
+   boolean             again;
 
    i = 0;
-   /* Elimine les cas d'erreur */
+   /* Avoids error cases */
    if (languageAlphabet != 'L' && languageAlphabet != 'G')
       TtaError (ERR_invalid_parameter);
    else
      {
-	/* Consulte la table des langues pour voir si la langue existe deja */
-	encore = TRUE;
-	while (encore && i < FreeEntry)
+	/* Consults the languages table to see if the language exists. */
+	again = TRUE;
+	while (again && i < FreeEntry)
 	  {
 	     if (languageAlphabet == LangTable[i].LangAlphabet)
-		/* La langue est deja declaree */
-		encore = FALSE;
+		/* The language is already defined */
+		again = FALSE;
 	     else
 		i++;
 	  }
 
-	if (encore)
+	if (again)
 	  {
-	     /* On n'a pas trouve la langue */
+	     /* Tha language does not exist */
 	     i = 0;
 	     TtaError (ERR_language_not_found);
 	  }
@@ -494,7 +493,7 @@ Language            languageId;
    int                 i;
 
    i = (int) languageId;
-   /* Verification du parametre */
+   /* Verification of the parameter */
    if (i >= FreeEntry)
      {
 	TtaError (ERR_language_not_found);
@@ -532,7 +531,6 @@ Language            languageId;
    int                 i;
 
    i = (int) languageId;
-   /* Verification du parametre */
    if (i >= FreeEntry)
      {
 	TtaError (ERR_language_not_found);
@@ -568,9 +566,10 @@ int                 TtaGetNumberOfLanguages ()
 }
 
 
-/* GetPatternList lit le fichier de pattern de la langue et
-   creer la stracture appropriee.
-   rend 0 si probleme, 1 sinon */
+/* 
+ * GetPatternList: Read the pattern file of the language and creates the appropriate structure.
+ * return 0 if problem else returns 1 
+ */
 #ifdef __STDC__
 boolean             GetPatternList (Language langageId)
 #else  /* __STDC__ */
@@ -580,51 +579,51 @@ Language            langageId;
 #endif /* __STDC__ */
 {
    int                 lang;
-   int                 indice_courant;
-   int                 taille_prec;
+   int                 currentIndex;
+   int                 previousLength;
    int                 i, lg;
-   unsigned char       pattern_lu[MAX_LET_PATTERN];
-   char                poids_lu[MAX_LET_PATTERN + 1];
-   char                nom_fichier_pattern[MAX_CHAR];
-   static char        *dicopath;	/* variable d'environnement DICOPAR */
+   unsigned char       patternGot[MAX_LET_PATTERN];
+   char                weightGot[MAX_LET_PATTERN + 1];
+   char                patternFileName[MAX_CHAR];
+   static char        *dictPath;	/* Environment variable DICOPAR */
    char               *ptPattern;
    FILE               *in;
 
-   dicopath = TtaGetEnvString ("DICOPAR");
-   if (dicopath == NULL)
+   dictPath = TtaGetEnvString ("DICOPAR");
+   if (dictPath == NULL)
      {
-	/* la variable d'environnement DICOPAR n'existe pas */
+	/* The environment variable DICOPAR does not exist */
 	TtaDisplayMessage (INFO, TtaGetMessage(LIB, MISSING_DICOPAR), "DICOPAR");
 	return (FALSE);
      }
 
-   strcpy (nom_fichier_pattern, dicopath);
-   strcat (nom_fichier_pattern, DIR_STR);
+   strcpy (patternFileName, dictPath);
+   strcat (patternFileName, DIR_STR);
    lang = (int) langageId;
    ptPattern = LangTable[lang].LangPattern;
-   strcat (nom_fichier_pattern, ptPattern);
-   if ((in = fopen (nom_fichier_pattern, "r")) == NULL)
+   strcat (patternFileName, ptPattern);
+   if ((in = fopen (patternFileName, "r")) == NULL)
      {
 	TtaDisplayMessage (INFO, TtaGetMessage(LIB, HYPHEN_FILE_NOT_OPEN), LangTable[lang].LangPattern);
 	return (FALSE);
      }
    TtaDisplayMessage (INFO, TtaGetMessage(LIB, HYPHEN_FILE_OPEN), ptPattern);
-   indice_courant = 0;
-   taille_prec = 0;
+   currentIndex = 0;
+   previousLength = 0;
    i = 0;
 
-   while ((fscanf (in, "%s %s", (char *) pattern_lu, poids_lu)) != EOF)
+   while ((fscanf (in, "%s %s", (char *) patternGot, weightGot)) != EOF)
      {
 	i++;
-	lg = strlen (pattern_lu);
-	if (lg != taille_prec)
+	lg = strlen (patternGot);
+	if (lg != previousLength)
 	  {
-	     taille_prec = lg;
-	     indice_courant++;
-	     LangTable[lang].LangTabPattern.ind_pattern[taille_prec] = i;
+	     previousLength = lg;
+	     currentIndex++;
+	     LangTable[lang].LangTabPattern.ind_pattern[previousLength] = i;
 	  }
-	strcpy (LangTable[lang].LangTabPattern.liste_pattern[i].CarPattern, pattern_lu);
-	strcpy (LangTable[lang].LangTabPattern.liste_pattern[i].PoidsPattern, poids_lu);
+	strcpy (LangTable[lang].LangTabPattern.liste_pattern[i].CarPattern, patternGot);
+	strcpy (LangTable[lang].LangTabPattern.liste_pattern[i].PoidsPattern, weightGot);
      }
    LangTable[lang].LangTabPattern.NbPatt = i;
    LangTable[lang].LangTabPattern.Charge = 1;
@@ -633,8 +632,10 @@ Language            langageId;
 }				/* GetPatternList */
 
 
-/* FoundPatternInList regarde si un chaine de caractere
-   est dans la liste de pattern. Si oui rends 1 sinon 0 */
+/* 
+ * FoundPatternInList regarde: verifies if a string belongs to the pattern list.
+ * if true, it returns 1 else 0 
+ */
 #ifdef __STDC
 char               *FoundPatternInList (Language langageId, unsigned char substring[MAX_LET_PATTERN])
 #else  /* __STDC__ */
@@ -644,14 +645,14 @@ unsigned char       substring[MAX_LET_PATTERN];
 
 #endif /* __STDC__ */
 {
-   int                 langue;
+   int                 language;
    int                 lgstring;
    int                 i;
    struct PatternList *ptrTabPattern;
 
-   langue = (int) langageId;
+   language = (int) langageId;
    lgstring = strlen (substring);
-   ptrTabPattern = &LangTable[langue].LangTabPattern;
+   ptrTabPattern = &LangTable[language].LangTabPattern;
    i = ptrTabPattern->ind_pattern[lgstring];
    if (i == 0)
       return (0);
@@ -667,71 +668,73 @@ unsigned char       substring[MAX_LET_PATTERN];
 }
 
 
-  /* FoundHyphenPoints applique l'algo de Liang sur un mot et rend
-     la liste des points de cesures
+  /* 
+   * FoundHyphenPoints: apply Liang algo. on a word and returns the 
+   * hypen points.
    */
 #ifdef __STDC__
-void                FoundHyphenPoints (Language langageId, char mot_a_couper[MAX_CHAR])
+void                FoundHyphenPoints (Language langageId, char wordToCut[MAX_CHAR])
 #else  /* __STDC__ */
-void                FoundHyphenPoints (langageId, mot_a_couper)
+void                FoundHyphenPoints (langageId, wordToCut)
 Language            langageId;
-char                mot_a_couper[MAX_CHAR];
+char                wordToCut[MAX_CHAR];
 
 #endif /* __STDC__ */
 {
    int                 lang;
-   unsigned char       mot_a_traiter[MAX_CHAR];	/* "." + mot_a_couper + "." */
+   unsigned char       wordToTreat[MAX_CHAR];	/* "." + wordToCut + "." */
    unsigned char       subword[MAX_CHAR];
    int                 tab_weight[MAX_CHAR];
-   char               *poids_subword;
-   int                 lgmot;
+   char               *weight_subword;
+   int                 wordLength;
    int                 size_subword;
-   int                 pos_courante;
+   int                 currentPosition;
    int                 i, j;
 
    lang = (int) langageId;
-   lgmot = strlen (mot_a_couper) + 2;
-   if (lgmot > MAX_CHAR)
+   wordLength = strlen (wordToCut) + 2;
+   if (wordLength > MAX_CHAR)
      {
-	TtaDisplayMessage (INFO, TtaGetMessage(LIB, HYPHEN_WORD_TOO_LONG), mot_a_couper);
+	TtaDisplayMessage (INFO, TtaGetMessage(LIB, HYPHEN_WORD_TOO_LONG), wordToCut);
 	return;
      }
    for (i = 0; i < MAX_CHAR; i++)
       tab_weight[i] = 0;
-   strcpy (mot_a_traiter, ".");
-   strcat (mot_a_traiter, mot_a_couper);
-   strcat (mot_a_traiter, ".");
+   strcpy (wordToTreat, ".");
+   strcat (wordToTreat, wordToCut);
+   strcat (wordToTreat, ".");
    size_subword = 1;
-   while ((size_subword <= lgmot) && (size_subword <= MAX_LET_PATTERN))
+   while ((size_subword <= wordLength) && (size_subword <= MAX_LET_PATTERN))
      {
-	pos_courante = 0;
-	while ((pos_courante + size_subword) <= lgmot)
+	currentPosition = 0;
+	while ((currentPosition + size_subword) <= wordLength)
 	  {
 	     j = 0;
-	     for (i = pos_courante; j < size_subword; i++)
-		subword[j++] = mot_a_traiter[i];
+	     for (i = currentPosition; j < size_subword; i++)
+		subword[j++] = wordToTreat[i];
 	     subword[j] = 0;
-	     if ((poids_subword = FoundPatternInList (lang, subword)))
+	     if ((weight_subword = FoundPatternInList (lang, subword)))
 	       {
 		  for (j = 0; j <= size_subword; j++)
-		     if (poids_subword[j] > tab_weight[pos_courante + j])
-			tab_weight[pos_courante + j] = poids_subword[j];
+		     if (weight_subword[j] > tab_weight[currentPosition + j])
+			tab_weight[currentPosition + j] = weight_subword[j];
 	       }
-	     pos_courante++;
+	     currentPosition++;
 	  }
 	size_subword++;
      }
    j = 0;
-   for (i = 3; i < (lgmot - 2); i++)
+   for (i = 3; i < (wordLength - 2); i++)
       if (ISHYPHENABLE (tab_weight[i]))
-	 Points_de_coupure[j++] = i - 1;
-   Points_de_coupure[j] = 0;
+	 breakPoints[j++] = i - 1;
+   breakPoints[j] = 0;
 }
 
 
 /* TtaGetPatternHyphenList --------------------------------------------
-   retourne un pointeur sur une liste de valeurs representant les
-   points de cesure possibles ou NULL s'il n'y en a pas              */
+   returns a pointer on the list of values representing the hyphen points
+   or NULL 
+ */
 #ifdef __STDC__
 int                *TtaGetPatternHyphenList (char word[MAX_CHAR], Language languageId)
 #else  /* __STDC__ */
@@ -741,33 +744,35 @@ Language            languageId;
 
 #endif /* __STDC__ */
 {
-   int                 langue;
+   int                 language;
    int                 i;
 
-   langue = (int) languageId;
+   language = (int) languageId;
    if (word[0] == '\0')
       return (NULL);
    if (strlen (word) < 2)
       return (NULL);
-   if (LangTable[langue].LangPattern[0] == '\0')
-      /* Langue sans pattern */
+   if (LangTable[language].LangPattern[0] == '\0')
+      /* Language without a pattern */
       return (NULL);
 
-   if (!LangTable[langue].LangTabPattern.Charge)
-      /* patterns non charges pour la langue */
+   if (!LangTable[language].LangTabPattern.Charge)
+      /* patterns not loaded by the language */
       if (!GetPatternList (languageId))
 	 return (NULL);
 
    for (i = 0; i < MAX_POINT_COUP; i++)
-      Points_de_coupure[i] = 0;
+      breakPoints[i] = 0;
 
    FoundHyphenPoints (languageId, word);
-   return (Points_de_coupure);
+   return (breakPoints);
 
 }
 
-/* TtaExistPatternList regarde si une liste de patterns est
-   definie pour une langue donnee.                         */
+/* 
+ * TtaExistPatternList verifies if a list of patterns is defined
+ * for a given language
+ */
 #ifdef __STDC__
 boolean             TtaExistPatternList (Language languageId)
 #else  /* __STDC__ */
@@ -776,10 +781,10 @@ Language            languageId;
 
 #endif /* __STDC__ */
 {
-   int                 langue;
+   int                 language;
 
-   langue = (int) languageId;
-   if (LangTable[langue].LangPattern[0] != '\0')
+   language = (int) languageId;
+   if (LangTable[language].LangPattern[0] != '\0')
       return TRUE;
    else
       return FALSE;
