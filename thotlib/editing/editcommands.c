@@ -3504,48 +3504,50 @@ CHAR_T                c;
 	    return;
 	}
 
-      /* avoid to redisplay step by step */
-      dispMode = TtaGetDisplayMode (document);
-      if (dispMode == DisplayImmediately)
-	TtaSetDisplayMode (document, DeferredDisplay);
-
       /* start the undo sequence */
       GetCurrentSelection (&pDoc, &firstEl, &lastEl, &firstChar, &lastChar);
-      OpenHistorySequence (pDoc, firstEl, lastEl, firstChar, lastChar);
-      /* lock tables formatting */
-      if (ThotLocalActions[T_islock])
+      if (pDoc)
 	{
-	  (*ThotLocalActions[T_islock]) (&lock);
-	  if (!lock)
-	    /* table formatting is not loked, lock it now */
-	    (*ThotLocalActions[T_lock]) ();
-	}
-      
-      if (!StructSelectionMode && !ViewFrameTable[frame - 1].FrSelectOnePosition)
-	{
-	  /* Delete the current selection */
-	  CloseTextInsertion ();
-	  if (pViewSel->VsBox != NULL)
+	  /* avoid to redisplay step by step */
+	  dispMode = TtaGetDisplayMode (document);
+	  if (dispMode == DisplayImmediately)
+	    TtaSetDisplayMode (document, DeferredDisplay);
+	  OpenHistorySequence (pDoc, firstEl, lastEl, firstChar, lastChar);
+	  /* lock tables formatting */
+	  if (ThotLocalActions[T_islock])
 	    {
-	      pAb = pViewSel->VsBox->BxAbstractBox;
-	      if (pAb->AbLeafType == LtPicture
-		  ||  pAb->AbLeafType == LtSymbol
-		  ||  pAb->AbLeafType == LtGraphics
-		  ||  pAb->AbLeafType == LtText)
-		ContentEditing (TEXT_SUP);
-	      else if (pAb->AbLeafType != LtCompound || pAb->AbVolume != 0)
-		TtcPreviousChar (document, view);
+	      (*ThotLocalActions[T_islock]) (&lock);
+	      if (!lock)
+		/* table formatting is not loked, lock it now */
+		(*ThotLocalActions[T_lock]) ();
 	    }
-	}
-      InsertChar (frame, c, -1);
-      if (!lock)
-	/* unlock table formatting */
-	(*ThotLocalActions[T_unlock]) ();
+      
+	  if (!StructSelectionMode && !ViewFrameTable[frame - 1].FrSelectOnePosition)
+	    {
+	      /* Delete the current selection */
+	      CloseTextInsertion ();
+	      if (pViewSel->VsBox != NULL)
+		{
+		  pAb = pViewSel->VsBox->BxAbstractBox;
+		  if (pAb->AbLeafType == LtPicture
+		      ||  pAb->AbLeafType == LtSymbol
+		      ||  pAb->AbLeafType == LtGraphics
+		      ||  pAb->AbLeafType == LtText)
+		    ContentEditing (TEXT_SUP);
+		  else if (pAb->AbLeafType != LtCompound || pAb->AbVolume != 0)
+		    TtcPreviousChar (document, view);
+		}
+	    }
+	  InsertChar (frame, c, -1);
+	  if (!lock)
+	    /* unlock table formatting */
+	    (*ThotLocalActions[T_unlock]) ();
 
-      /* close the undo sequence */
-      CloseHistorySequence (pDoc);
-      if (dispMode == DisplayImmediately)
-	TtaSetDisplayMode (document, dispMode);
+	  /* close the undo sequence */
+	  CloseHistorySequence (pDoc);
+	  if (dispMode == DisplayImmediately)
+	    TtaSetDisplayMode (document, dispMode);
+	}
     }
 }
 
@@ -3953,64 +3955,69 @@ View                view;
       frame = GetWindowNumber (document, view);
       CloseTextInsertion ();
       pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
-      /* avoid to redisplay step by step */
-      dispMode = TtaGetDisplayMode (document);
-      if (dispMode == DisplayImmediately)
-	TtaSetDisplayMode (document, DeferredDisplay);
 
       /* start the undo sequence */
       GetCurrentSelection (&pDoc, &firstEl, &lastEl, &firstChar, &lastChar);
-      OpenHistorySequence (pDoc, firstEl, lastEl, firstChar, lastChar);
-      /* lock tables formatting */
-      if (ThotLocalActions[T_islock])
+      if (pDoc)
 	{
-	  (*ThotLocalActions[T_islock]) (&lock);
-	  if (!lock)
-	    /* table formatting is not loked, lock it now */
-	    (*ThotLocalActions[T_lock]) ();
-	}
-      
-      if (!StructSelectionMode && !ViewFrameTable[frame - 1].FrSelectOnePosition)
-	{
-	  /* Delete the current selection */
-	  if (pViewSel->VsBox != NULL)
-	    {
-	      pAb = pViewSel->VsBox->BxAbstractBox;
-	      if (pAb->AbLeafType == LtPicture
-		  ||  pAb->AbLeafType == LtSymbol
-		  ||  pAb->AbLeafType == LtGraphics
-		  ||  pAb->AbLeafType == LtText)
-		ContentEditing (TEXT_SUP);
-	      else if (pAb->AbLeafType != LtCompound || pAb->AbVolume != 0)
-		TtcPreviousChar (document, view);
-	    }
-	}
-#ifdef _WINDOWS
-      OpenClipboard (FrRef [frame]);
-      if (hMem = GetClipboardData (CF_TEXT))
-	{
-	  lpData = GlobalLock (hMem);
-	  lpDatalength = ustrlen (lpData);
-	  if ((Xbuffer == NULL) || !sameString (Xbuffer, (USTRING)lpData))
-	    PasteXClipboard ((USTRING) lpData, lpDatalength);
-	  else  
-	    ContentEditing (TEXT_PASTE);
-	  GlobalUnlock (hMem);
-	}
-      else 
-	ContentEditing (TEXT_PASTE);
-      CloseClipboard ();
-#else /* _WINDOWS */
-      ContentEditing (TEXT_PASTE);
-#endif /* _WINDOWS */
-      if (!lock)
-	/* unlock table formatting */
-	(*ThotLocalActions[T_unlock]) ();
+	  /* avoid to redisplay step by step */
+	  dispMode = TtaGetDisplayMode (document);
+	  if (dispMode == DisplayImmediately)
+	    TtaSetDisplayMode (document, DeferredDisplay);
 
-      /* close the undo sequence */
-      CloseHistorySequence (pDoc);
-      if (dispMode == DisplayImmediately)
-	TtaSetDisplayMode (document, dispMode);
+	  /* start the undo sequence */
+	  OpenHistorySequence (pDoc, firstEl, lastEl, firstChar, lastChar);
+	  /* lock tables formatting */
+	  if (ThotLocalActions[T_islock])
+	    {
+	      (*ThotLocalActions[T_islock]) (&lock);
+	      if (!lock)
+		/* table formatting is not loked, lock it now */
+		(*ThotLocalActions[T_lock]) ();
+	    }
+	  
+	  if (!StructSelectionMode && !ViewFrameTable[frame - 1].FrSelectOnePosition)
+	    {
+	      /* Delete the current selection */
+	      if (pViewSel->VsBox != NULL)
+		{
+		  pAb = pViewSel->VsBox->BxAbstractBox;
+		  if (pAb->AbLeafType == LtPicture
+		      ||  pAb->AbLeafType == LtSymbol
+		      ||  pAb->AbLeafType == LtGraphics
+		      ||  pAb->AbLeafType == LtText)
+		    ContentEditing (TEXT_SUP);
+		  else if (pAb->AbLeafType != LtCompound || pAb->AbVolume != 0)
+		    TtcPreviousChar (document, view);
+		}
+	    }
+#ifdef _WINDOWS
+	  OpenClipboard (FrRef [frame]);
+	  if (hMem = GetClipboardData (CF_TEXT))
+	    {
+	      lpData = GlobalLock (hMem);
+	      lpDatalength = ustrlen (lpData);
+	      if ((Xbuffer == NULL) || !sameString (Xbuffer, (USTRING)lpData))
+		PasteXClipboard ((USTRING) lpData, lpDatalength);
+	      else  
+		ContentEditing (TEXT_PASTE);
+	      GlobalUnlock (hMem);
+	    }
+	  else 
+	    ContentEditing (TEXT_PASTE);
+	  CloseClipboard ();
+#else /* _WINDOWS */
+	  ContentEditing (TEXT_PASTE);
+#endif /* _WINDOWS */
+	  if (!lock)
+	    /* unlock table formatting */
+	    (*ThotLocalActions[T_unlock]) ();
+
+	  /* close the undo sequence */
+	  CloseHistorySequence (pDoc);
+	  if (dispMode == DisplayImmediately)
+	    TtaSetDisplayMode (document, dispMode);
+	}
     }
 }
 
