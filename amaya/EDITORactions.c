@@ -2200,15 +2200,30 @@ static Element InsertForm (Document doc, View view, ThotBool *withinP)
 
 /*----------------------------------------------------------------------
   CreateForm
+  Create a <form> element.
   ----------------------------------------------------------------------*/
 void CreateForm (Document doc, View view)
 {
   Element           el;
-  ThotBool          withinP;
+  int               firstchar, lastchar;
+  ElementType       elType;
 
-  el = InsertForm (doc, view, &withinP);
+  /* get the first selected element */
+  TtaGiveFirstSelectedElement (doc, &el, &firstchar, &lastchar);
+  if (el != NULL)
+    /* there is some selection */
+    {
+      elType = TtaGetElementType (el);
+      elType.ElTypeNum = HTML_EL_Form;
+      if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+	/* the selection is within some HTML document or fragment */
+	{
+	  /* create the form element */
+	  elType.ElTypeNum = HTML_EL_Form;
+	  TtaCreateElement (elType, doc);
+	}
+    }
 }
-
 
 /*----------------------------------------------------------------------
   CreateInputElement insert an input element:

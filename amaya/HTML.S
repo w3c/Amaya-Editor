@@ -146,6 +146,7 @@ STRUCT
 	ISINDEX;						{ ISINDEX }
 	Horizontal_Rule;					{ HR }
 	Table;							{ TABLE }
+	FIELDSET;						{ FIELDSET }
 	Address = LIST OF (AddressContent);			{ ADDRESS }
 	PICTURE							{ IMG }
 	    (ATTR SRC = Text; ALT = Text; longdesc = Text;
@@ -280,6 +281,7 @@ STRUCT
         TEXT;
 	Font;							{ fontstyle }
 	Phrase;							{ phrase }
+	Form_Element;                                           { formctrl }
 	Anchor;							{ A }
 	PICTURE;						{ IMG }
 	Applet;							{ APPLET }
@@ -487,23 +489,14 @@ STRUCT
 	 { enctype         onsubmit         onreset }
 	   target_; accept_charset = Text) =
 	 { target   accept-charset }
-	LIST OF (Form_Element) + (Input);
+	LIST OF (Element) + (Input) - (Form);
 
   Form_Element = CASE OF
-	Paragraph;						{ P }
-	Pseudo_paragraph;
-	FIELDSET;						{ FIELDSET }
+	Input;                                                  { INPUT }
 	Option_Menu;						{ SELECT }
 	Text_Area; 						{ TEXTAREA }
-	Heading;						{ heading }
-	List_;							{ list + DL }
-	Horizontal_Rule;					{ HR }
-	Block_Quote;						{ BLOCKQUOTE }
-	Preformatted;						{ PRE }
-	Division;						{ DIV }
-	Table;							{ TABLE }
-	Center;							{ CENTER }
-	ISINDEX;						{ ISINDEX }
+	LABEL;                                                  { LABEL }
+	BUTTON_;                                                { BUTTON }
 	END;
 
   Option_Menu   						{ SELECT }
