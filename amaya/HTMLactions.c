@@ -480,6 +480,10 @@ void *context;
   elSource = ctx->elSource;
   docSchema = TtaGetDocumentSSchema (doc);
 
+  if (url[0] == '#' && targetDocument != 0)
+    /* attribute HREF contains the NAME of a target anchor */
+    elFound = SearchNAMEattribute (targetDocument, &url[1], NULL);
+
   if ((doc != targetDocument || url[0] == '#') && anchor != NULL) 
     {
       /* search PseudoAttr attribute */
@@ -494,15 +498,23 @@ void *context;
 	if (strcmp (sourceDocUrl, DocumentURLs[targetDocument]))
 	  /* both document have different URLs */
 	  PseudoAttr = NULL;
-      
-      if (PseudoAttr != NULL)	
-	TtaSetAttributeText (PseudoAttr, "visited", anchor, doc);
+     
+      /* only turn off the link if it points that exists or that we can
+	 follow */
+      if (PseudoAttr != NULL && status != -1)
+	{
+	  if (url[0] == '#')
+	    {
+	      if (targetDocument != 0 && elFound)
+		TtaSetAttributeText (PseudoAttr, "visited", anchor, doc);
+	    }
+	  else
+	    TtaSetAttributeText (PseudoAttr, "visited", anchor, doc);
+	}
     }
 
   if (url[0] == '#' && targetDocument != 0)
     {
-      /* attribute HREF contains the NAME of a target anchor */
-      elFound = SearchNAMEattribute (targetDocument, &url[1], NULL);
       if (elFound != NULL)
 	{
 	  elType = TtaGetElementType (elFound);
@@ -635,7 +647,7 @@ Document            doc;
 		 /* the target element is part of the same document */
 		 targetDocument = doc;
 		 /* manually invoke the callback */
-		 FollowTheLink_callback (targetDocument, 1, NULL, NULL, NULL, 
+		 FollowTheLink_callback (targetDocument, 0, NULL, NULL, NULL, 
  					 (void *) ctx);
 		 /*
 		 if (PseudoAttr != NULL)

@@ -1606,6 +1606,49 @@ boolean local;
 }
 
 /*----------------------------------------------------------------------
+  MoveImageFile moves an image file (related to an HTML container) from 
+  one directory to another
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void MoveImageFile (Document source_doc, Document dest_doc,
+			   char *documentname)
+#else
+static void MoveImageFile (source_doc, dest_doc, documentname)
+Document source_doc;
+Document dest_doc;
+char *documentname;
+#endif
+{
+  char *source;
+  char *target;
+  char *imagefile;
+  char *ptr;
+  
+  /* generate the name of the file where is stored the image */
+  imagefile = TtaGetMemory (strlen (documentname) + 6);
+  strcpy (imagefile, documentname);
+  ptr = strrchr (imagefile, '.');
+  ptr++;
+  strcpy (ptr, "html");
+  
+  /* create the source and dest file names */
+  source = TtaGetMemory (strlen (TempFileDirectory) + strlen (imagefile) + 6);
+  sprintf (source, "%s%c%d%c%s", 
+	   TempFileDirectory, DIR_SEP, source_doc, DIR_SEP, imagefile);
+  target = TtaGetMemory (strlen (TempFileDirectory) + strlen (imagefile) + 6);
+  sprintf (target, "%s%c%d%c%s", 
+	   TempFileDirectory, DIR_SEP, dest_doc, DIR_SEP, imagefile);
+
+  /* move the file */
+  TtaFileCopy (source, target);
+  TtaFileUnlink (source);
+
+  TtaFreeMemory (source);
+  TtaFreeMemory (target);
+  TtaFreeMemory (imagefile);
+}
+
+/*----------------------------------------------------------------------
   LoadHTMLDocument parses of the new document and stores its path (or
   URL) into the document table.
   For a local loading tempfile must be an empty string, for a remote loading
@@ -1779,6 +1822,9 @@ boolean		    history;
 	      /* now we can rename the local name of a remote document */
 	      TtaFileCopy (tempfile, tempdocument);
 	      TtaFileUnlink (tempfile);
+	      /* if it's an IMAGEfile, we copy it too to the new directory */
+	      if (IMAGEfile) 
+		  MoveImageFile (doc, newdoc, documentname);
 	    }
 	  else
 	    /* now we can rename the local name of a remote document */
@@ -2835,23 +2881,21 @@ void               *ctx_cbf;
 				 (void *) ctx);
        TtaHandlePendingEvents ();
      }
-   else if (ok == FALSE)
-     /* if the document isn't loaded off the web (because of an error, or
+
+   if (ok == FALSE)
+     /* if the document isn't loaded off the web (because of an error, or 
 	because it was already loaded), we invoke the callback function */
      {
+       if (ctx->form_data)
+	 TtaFreeMemory (ctx->form_data);
+       if (ctx)
+	 TtaFreeMemory (ctx);
        if (cbf)
 	 (*cbf) (newdoc, -1, pathname, tempfile, NULL, ctx_cbf);
-     }
-
-   /* free the allocated memory */
-   if (ok == FALSE)
-     {
        /* Free the memory associated with the context */
        TtaFreeMemory (target);
        TtaFreeMemory (documentname);
        TtaFreeMemory (tempdocument);
-       if (ctx)
-	 TtaFreeMemory (ctx);
      }
 
    TtaFreeMemory (parameters);
