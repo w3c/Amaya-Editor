@@ -2520,8 +2520,8 @@
 	<message xml:lang="fr">Créer une librairie</message>
 </label>
 <label define="AM_SVGLIB_ADD_NEW_CATALOGUE">
-	<message xml:lang="en">Add library</message>
-	<message xml:lang="fr">Ajouter une librairie</message>
+	<message xml:lang="en">Browse library</message>
+	<message xml:lang="fr">Butiner librairies</message>
 </label>
 <label define="AM_SVGLIB_CREATE_NEW_CATALOGUE_DIALOG">
 	<message xml:lang="en">Create or search library</message>
@@ -2534,6 +2534,47 @@
 <label define="AM_SVGLIB_MISSING_TITLE">
 	<message xml:lang="en">The library title is mandatory</message>
 	<message xml:lang="fr">Le titre de la librairie est obligatoire</message>
+</label>
+<label define="AM_SVGLIB_COPY_STATIC">
+	<message xml:lang="en">Static copy</message>
+	<message xml:lang="fr">Copie statique</message>
+</label>
+<label define="AM_SVGLIB_COPY_DYNAMIC">
+	<message xml:lang="en">Dynamic copy</message>
+	<message xml:lang="fr">Copie dynamique</message>
+</label>
+<label define="AM_SVGANIM_MOTION_HINT1">
+	<message xml:lang="en">Move the position cursor in edited document to define a new key position...</message>
+	<message xml:lang="fr">Déplacer le curseur de position dans le document édité pour définir une nouvelle position clé...</message>
+</label>
+<label define="AM_SVGANIM_MOTION_HINT2">
+	<message xml:lang="en">Key position defined. Move the slider to define animation duration...</message>
+	<message xml:lang="fr">Position clé définie. Déplacer le curseur de temps pour définir la durée de l'animation...</message>
+</label>
+<label define="AM_SVGANIM_COLOR_HINT1">
+	<message xml:lang="en">Select starting color of element...</message>
+	<message xml:lang="fr">Sélectionner la couleur de départ de l'élément...</message>
+</label>
+<label define="AM_SVGANIM_COLOR_HINT2">
+	<message xml:lang="en">Starting color defined. Move the slider to 
+define animation duration...</message>
+	<message xml:lang="fr">Couleur de départ définie. Déplacer le curseur de temps pour définir la durée de l'animation...</message>
+</label>
+<label define="AM_SVGANIM_COLOR_HINT3">
+	<message xml:lang="en">Select ending color...</message>
+	<message xml:lang="fr">Sélectionner la couleur de fin...</message>
+</label>
+<label define="AM_SVGANIM_ANIM_DEFINED">
+	<message xml:lang="en">Animation defined.</message>
+	<message xml:lang="fr">Animation définie.</message>
+</label>
+<label define="AM_SVGANIM_ANIMATED_ATTR">
+	<message xml:lang="en">Animated attribute</message>
+	<message xml:lang="fr">Attribut animé</message>
+</label>
+<label define="AM_SVGANIM_NO_ID">
+	<message xml:lang="en">Element without id</message>
+	<message xml:lang="fr">Elément sans identificateur</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label>
