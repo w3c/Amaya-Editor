@@ -155,7 +155,7 @@ Amaya/batch/comp_toolbar.bmp \
 Amaya/batch/*.c \
 Amaya/batch/f/*.h \
 Amaya/doc/html/*.html \
-Amaya/doc/html/*.html \
+Amaya/doc/html/*/*.html \
 Amaya/doc/html/*.css \
 Amaya/doc/images/*.gif \
 Amaya/doc/images/*.png \
