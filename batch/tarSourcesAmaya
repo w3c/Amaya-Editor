@@ -9,7 +9,7 @@
 #       amaya-libs-$MACH-$AMAYAVERSION.tar.gz
 #
 AMAYAVERSION=1.5a
-THOTDIR=/tahiti/diffusion/Amaya
+THOTDIR=/tahiti/diffusion
 DEST=/tahiti/thottape
 
 TAR="tar cvbfh 200"
@@ -89,7 +89,6 @@ Amaya/config/en-libdialogue \
 Amaya/config/en-transdialogue \
 Amaya/config/en-corrdialogue \
 Amaya/config/en-appdialogue \
-Amaya/config/en-compdialogue \
 Amaya/config/en-compildialogue \
 Amaya/config/en-grmdialogue \
 Amaya/config/en-prsdialogue \
@@ -103,7 +102,6 @@ Amaya/config/fr-libdialogue \
 Amaya/config/fr-transdialogue \
 Amaya/config/fr-corrdialogue \
 Amaya/config/fr-appdialogue \
-Amaya/config/fr-compdialogue \
 Amaya/config/fr-compildialogue \
 Amaya/config/fr-prsdialogue \
 Amaya/config/fr-strdialogue \
