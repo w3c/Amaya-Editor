@@ -208,6 +208,7 @@ static MathEntity        MathEntityTable[] =
    {TEXT("mldr"), 188, 'G'},
    {TEXT("mu"), 109, 'G'},
    {TEXT("nabla"), 209, 'G'},
+   {TEXT("nbsp"), 160, 'L'},
    {TEXT("ne"), 185, 'G'},
    {TEXT("neq"), 185, 'G'},
    {TEXT("not"), 216, 'G'},
