@@ -2015,7 +2015,7 @@ static PresentationValue PRuleToPresentationValue (PtrPRule rule)
   int                 unit = -1;
   int                 type;
   ThotBool            real = FALSE;
-  ThotBool            main = TRUE;
+  ThotBool            mainVal = TRUE;
 
   /* read the value */
   switch (rule->PrType)
@@ -2449,7 +2449,7 @@ static PresentationValue PRuleToPresentationValue (PtrPRule rule)
   val.typed_data.value = value;
   val.typed_data.unit = unit;
   val.typed_data.real = real;
-  val.typed_data.mainValue = main;
+  val.typed_data.mainValue = mainVal;
   return (val);
 }
 
