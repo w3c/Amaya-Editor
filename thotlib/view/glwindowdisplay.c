@@ -1284,31 +1284,38 @@ void GL_DrawAll (ThotWidget widget, int frame)
 	}
     }    
 #else /*_GTK*/
- if (GL_Modif && !GL_Drawing && !FrameUpdating)	
-   { 
-     if (!(frame > 0 && frame <= MAX_FRAME)) 
-       frame = ActiveFrame;
-	 if (!(frame > 0 && frame <= MAX_FRAME)) 
-        for (frame = 0; frame <= MAX_FRAME; frame++)
-	      if (GL_Windows[frame] != 0)
-			break;
-	 
-	 if (GL_Windows[frame] != 0)
-	   if (wglMakeCurrent (GL_Windows[frame], GL_Context[frame]))
-	     { 
-	       GL_Drawing = TRUE; 
-	       RedrawFrameBottom (frame, 0, NULL);
-	       glFinish ();	 
-	       /*
-		 saveBuffer (FrameTable[frame].FrWidth, FrameTable[frame].FrHeight);
-	       */
-	       SwapBuffers (GL_Windows[frame]);
-	       if (GL_Err())
-		 WinErrorBox (NULL, "Bad drawing\n");
-	       GL_Drawing = FALSE;
-	     }        
-	 GL_Modif = FALSE;	 
-   }
+if (!GL_Drawing && !FrameUpdating )
+    {
+      for (frame = 1 ; frame < MAX_FRAME; frame++)
+	{
+	  if (GL_Windows[frame] != 0)
+	    {
+	      
+	      if (FrameTable[frame].DblBuffNeedSwap)
+		{
+		  if (documentDisplayMode[FrameTable[frame].FrDoc - 1] 
+		      != NoComputedDisplay)
+		    {
+		      
+		      if (wglMakeCurrent (GL_Windows[frame], GL_Context[frame]))
+			{ 
+			  GL_Drawing = TRUE; 
+			  RedrawFrameBottom (frame, 0, NULL);
+			  glFinish ();	 
+			  /*
+			    saveBuffer (FrameTable[frame].FrWidth, FrameTable[frame].FrHeight);
+			  */
+			  SwapBuffers (GL_Windows[frame]);
+			  if (GL_Err())
+			    WinErrorBox (NULL, "Bad drawing\n");
+			  GL_Drawing = FALSE;
+			}        
+		      FrameTable[frame].DblBuffNeedSwap = FALSE;
+		    }
+		}
+	    }
+	}
+    }
 #endif /*_GTK*/ 
 }
 
@@ -1483,8 +1490,12 @@ void GL_window_copy_area (int frame,
       if (GL_MakeCurrent (frame) || 
 	  FrRef[frame] == None)
       	return;  
-
-
+      /*  If not in software mode,
+	  glcopypixels is 1000x slower than a redraw	*/
+      
+      /*if (glMatroxBUG (frame, xf, yf, width, height))
+	return;*/
+      
       /* Horizontal Scroll problems...*/
       if (xf < 0)
 	{
@@ -1537,10 +1548,7 @@ void GL_window_copy_area (int frame,
 	    (y_source + height + 
 	    FrameTable[frame].FrTopMargin);
 	  
-	  /*  If not in software mode,
-	    glcopypixels is 1000x slower than a redraw	*/
-	  if (glMatroxBUG (frame, xf, yf, width, height))
-	    return;
+	  
 
 	  /* Copy from backbuffer to backbuffer */
 	  glFinish ();

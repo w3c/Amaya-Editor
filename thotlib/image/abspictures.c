@@ -152,6 +152,9 @@ void NewPictInfo (PtrAbstractBox pAb, PathBuffer filename, int imagetype)
       imageDesc->PicType    = imagetype;
       imageDesc->PicPresent = picPresent;
     }
+	else
+		if (ptr != NULL)
+			TtaFreeMemory (ptr);
 }
 
 

@@ -82,9 +82,16 @@ static ThotBool IsXLFDName (char *font)
   int k = 0;
     
   while (*font)
+  {
     if (*font++ == '-')
-      k++;
+		k++;
+  }
+#ifndef _WINDOWS
   return (k == 14) ? TRUE : FALSE;
+#else /*_WINDOWS*/
+  return (k == 2) ? TRUE : FALSE;
+#endif /*_WINDOWS*/
+
 }
 /*----------------------------------------------------------------------
    IsXLFDFont                                                    
@@ -123,7 +130,7 @@ static int IsXLFDPatterneAFont (char *pattern)
 /*----------------------------------------------------------------------
    isnum                                                    
   ----------------------------------------------------------------------*/
-static int isnum( char c )
+int isnum( char c )
 {
   return( c >= '0' && c <= '9' ? 1 : 0 );
 }
@@ -268,7 +275,11 @@ static FontScript **FontConfigLoad ()
   strcat (fname, "/config/fonts.unix");  
 #endif /*_WINDOWS*/
 #else /*_GL*/
+#ifdef _WINDOWS
+  strcat (fname, "/config/fonts.gl.win");  
+#else /*_WINDOWS*/
   strcat (fname, "/config/fonts.gl");  
+#endif /*_WINDOWS*/  
 #endif /*_GL*/
 
   /* open the fonts definition file */
@@ -294,7 +305,7 @@ static FontScript **FontConfigLoad ()
 	     if (indline && word[0] != EOS)
 	       {
 		 script = atoi (word);
-		 if (script < 30)
+		 if (script < 30 && Fonts[script] == NULL)
 		   {
 		     Fonts[script] = TtaGetMemory (sizeof (FontScript));
 		     for (family = 0; family < 6; family++)
@@ -307,7 +318,8 @@ static FontScript **FontConfigLoad ()
 			 if (word[0] == EOS)
 			   break;
 			 family = atoi (word);	
-			 if (family <= 6)
+			 if (family <= 6 && 
+				 Fonts[script]->family[family] == NULL)
 			   {
 			     Fonts[script]->family[family] = 
 			       TtaGetMemory (sizeof (FontScript));
@@ -321,7 +333,8 @@ static FontScript **FontConfigLoad ()
 				 if (word[0] == EOS)
 				   break;
 				 highlight = atoi (word);
-				 if (highlight < 6)
+				 if (highlight < 6 && 
+					 Fonts[script]->family[family]->highlight[highlight] == NULL)
 				   {
 				     /*Get the font-face in 
 				       1=font-face 
@@ -356,6 +369,9 @@ char *FontLoadFromConfig (char script,
   if (Fonttab == NULL)
     Fonttab = FontConfigLoad ();
   
+  if (Fonttab == NULL)
+	  return NULL;
+
   switch (script) 
     {
     case 'F':
@@ -415,18 +431,17 @@ char *FontLoadFromConfig (char script,
     {
       switch (highlight)
 	{
-	case 0:
-	  highlight = 1;
-	  break;
-	case 4:
+	 case 2:
+     case 3:
 	  highlight = 3;
 	  break;
-	case 5:
-	  highlight = 3;
+     case 1:
+     case 4:
+     case 5:
+	  highlight = 2;
 	  break;
 	default:
-	  if (highlight > 5 || highlight < 0)
-	    highlight = 1;
+	   highlight = 1;
 	  break;
 	}
     }
@@ -436,20 +451,18 @@ char *FontLoadFromConfig (char script,
 
   if (Fonttab[intscript])
     if (Fonttab[intscript]->family[family])
-    {
+		if (Fonttab[intscript]->family[family]->highlight[highlight])
+		{
+
 #ifdef _PCLFONTDEBUG
-      g_print ("\n%s",
+		g_print ("\n%s",
 	       Fonttab[intscript]->family[family]->highlight[highlight]);
 #endif /*_PCLFONTDEBUG*/
 #ifndef _GL
-#ifndef _WINDOWS
       if (IsXLFDPatterneAFont (Fonttab[intscript]->family[family]->highlight[highlight]))
       	return (Fonttab[intscript]->family[family]->highlight[highlight]);
       else
 	return NULL;
-#else /*_WINDOWS*/
-      return (Fonttab[intscript]->family[family]->highlight[highlight]);
-#endif /*_WINDOWS*/
 #else /*_GL*/
       return  (Fonttab[intscript]->family[family]->highlight[highlight]);
 #endif /*_GL*/
@@ -458,7 +471,6 @@ char *FontLoadFromConfig (char script,
   return NULL;
 }
 
-  
 
 /*----------------------------------------------------------------------
    FreeFontConfig : Free teh correspondance structure

@@ -68,8 +68,8 @@ static void          FontClose (GL_font *font);
 static int           FontDescender (GL_font *font);
 
 static int           FontFaceSize (GL_font *font,
-			   const unsigned int size,
-			   const unsigned int res,
+			   unsigned int size,
+			   unsigned int res,
 			   ThotBool Cached);
 
 static int           FontCharMap (GL_font *font,

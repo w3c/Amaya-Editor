@@ -1,4 +1,3 @@
-
 #font scripts 
 #        1-17 iso, then 
 #	50 unicode,
@@ -7,34 +6,90 @@
 #2 = sans-serif;normale face;bold face;italic face  
 #3 = monospace;normale face;bold face;italic face  
 #4 = cursive;normale face;bold face;italic face  
-#5 = fantasy;normale face;bold face;italic face  
+#5 = fantasy;normale face;bold face;italic face 
+#example  *-Comic Sans MS-* or *-Impact-* ...
 
 
 1;#easteurope
-1;1=c:\winnt\fonts\times.ttf;2=c:\winnt\fonts\timesbd.ttf;3=c:\winnt\fonts\timesi.ttf
-2;1=c:\winnt\fonts\arial.ttf;
-3;1=c:\winnt\fonts\courrier.ttf;
+1;1=*-Times New Roman-*;2=*-Times New Roman-b;3=*-Times New Roman-i;
+2;1=*-Arial-*;2=*-Arial-b;3=*-Arial-i;
+3;1=*-Courrier New-*;2=*-Courrier New-b;3=*-Courrier New-i;
+
+
+
+
 
 
 2;#baltic
-1;1=c:\winnt\fonts\times.ttf;
-2;1=c:\winnt\fonts\arial.ttf;
-3;1=c:\winnt\fonts\courrier.ttf;
+1;1=*-Times New Roman-*;2=*-Times New Roman-b;3=*-Times New Roman-i;
+2;1=*-Arial-*;2=*-Arial-b;3=*-Arial-i;
+3;1=*-Courrier New-*;2=*-Courrier New-b;3=*-Courrier New-i;
+
 
 
 
 3;#russian
+1;1=*-Times New Roman-*;2=*-Times New Roman-b;3=*-Times New Roman-i;
+2;1=*-Arial-*;2=*-Arial-b;3=*-Arial-i;
+3;1=*-Courrier New-*;2=*-Courrier New-b;3=*-Courrier New-i;
+
+
+
 
 
 
 6;#arabic
+1;1=*-Times New Roman-*;2=*-Times New Roman-b;3=*-Times New Roman-i;
+2;1=*-Arial-*;2=*-Arial-b;3=*-Arial-i;
+3;1=*-Courrier New-*;2=*-Courrier New-b;3=*-Courrier New-i;
+
+
+
 
 
 
 7;#greek
+1;1=*-Times New Roman-*;2=*-Times New Roman-b;3=*-Times New Roman-i;
+2;1=*-Arial-*;2=*-Arial-b;3=*-Arial-i;
+3;1=*-Courrier New-*;2=*-Courrier New-b;3=*-Courrier New-i;
+
+
+
 
 
 
 8;#hebrew;
+1;1=*-Times New Roman-*;2=*-Times New Roman-b;3=*-Times New Roman-i;
+2;1=*-Arial-*;2=*-Arial-b;3=*-Arial-i;
+3;1=*-Courrier New-*;2=*-Courrier New-b;3=*-Courrier New-i;
 
 
+
+
+9;#Latin5 (Turkish)
+1;1=*-Times New Roman-*;2=*-Times New Roman-b;3=*-Times New Roman-i;
+2;1=*-Arial-*;2=*-Arial-b;3=*-Arial-i;
+3;1=*-Courrier New-*;2=*-Courrier New-b;3=*-Courrier New-i;
+
+
+10;#Latin6 (Nordic)
+1;1=*-Times New Roman-*;2=*-Times New Roman-b;3=*-Times New Roman-i;
+2;1=*-Arial-*;2=*-Arial-b;3=*-Arial-i;
+3;1=*-Courrier New-*;2=*-Courrier New-b;3=*-Courrier New-i;
+
+
+
+20;#Symbols (...)
+1;1=*-Symbol-*;
+
+
+21;#esstix (uncomment if you have those fonts in your system)
+#2;1=*-ESSTIXSix-*;2=*-ESSTIXSeven-*;3=*-esstixheight-*;4=*-esstixnine-*;5=*-esstixten-*;
+
+
+
+
+0;#Unicode (.or ... JAPANESe)
+1;1=*-MS Gothic-*;2=*-MS Gothic-*;3=*-MS Gothic-*;
+2;1=*-MS Gothic-*;2=*-MS Gothic-*;3=*-MS Gothic-*;
+3;1=*-MS Gothic-*;2=*-MS Gothic-*;3=*-MS Gothic-*;

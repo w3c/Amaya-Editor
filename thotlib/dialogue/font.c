@@ -128,6 +128,268 @@ void *GL_LoadFont (char alphabet, int family,
 #ifdef _WINDOWS
 #include "wininclude.h"
 
+
+/*----------------------------------------------------------------------
+  String_To_Charset Transcode a string charset into a windows define 
+  ----------------------------------------------------------------------*/
+static DWORD String_To_Charset (char *string)
+{
+	int int_charset;
+
+	
+	int_charset = atoi (string);
+	
+	switch (int_charset)
+	{
+	case 1250:
+		return EASTEUROPE_CHARSET;/*FS_LATIN2*/
+	case 1251:
+		return RUSSIAN_CHARSET;/*FS_CYRILLIC*/	
+	case 1252:
+		return ANSI_CHARSET;/*FS_LATIN1*/
+	case 1253:
+		return GREEK_CHARSET;/*FS_GREEK*/
+	case 1254:
+		return TURKISH_CHARSET;/*FS_TURKISH*/
+	case 1255:
+		return HEBREW_CHARSET;/*FS_HEBREW*/
+	case 1256:
+		return ARABIC_CHARSET;/*FS_ARABIC*/
+	case 1257:
+		return BALTIC_CHARSET;/*FS_BALTIC*/
+	case 1361:
+		return JOHAB_CHARSET;/*FS_JOHAB*/
+	case 874:
+		return THAI_CHARSET;/*FS_THAI*/
+	case 932:
+		return SHIFTJIS_CHARSET;/*FS_JISJAPAN*/
+	case 936:
+		return GB2312_CHARSET;/*FS_CHINESESIMP*/
+	case 949:
+		return HANGEUL_CHARSET;/*FS_WANSUNG*/
+	case 950:
+		return CHINESEBIG5_CHARSET;/*FS_CHINESETRAD*/
+	default:
+		return ANSI_CHARSET;/*FS_LATIN1*/
+	}
+}
+/*----------------------------------------------------------------------
+  Win_Get_Charset Transcode Thot font attributes into Windows ones
+  ----------------------------------------------------------------------*/
+static void Win_Get_Charset (char script, DWORD *charset, 
+			     int *family)
+{
+  switch (script)
+     {
+     case 'G':
+       *charset = DEFAULT_CHARSET;/*SYMBOL_CHARSET;*/
+       *family = 0;
+	 break;
+     case '2':
+       *charset = EASTEUROPE_CHARSET;
+       break;
+     case '3':
+       *charset = BALTIC_CHARSET;
+       break;
+     case '4':
+       *charset = DEFAULT_CHARSET;
+       break;
+     case '5':
+       *charset = RUSSIAN_CHARSET;
+       break;
+     case '6':
+       *charset = ARABIC_CHARSET;
+       break;
+     case '7':
+       *charset = GREEK_CHARSET;
+       break;
+     case '8':
+       *charset = HEBREW_CHARSET;
+       break;
+     case '9':
+       *charset = TURKISH_CHARSET;
+       break;
+     case 'Z': /* fall through */
+ 	 default:
+       *charset = DEFAULT_CHARSET;
+       break;
+     }
+}
+   
+/*----------------------------------------------------------------------
+  Win_Get_FontFace Transcode Thot font attributes into Windows ones
+  ----------------------------------------------------------------------*/
+static void Win_Get_FontFace (char *lpszFace, int script, 
+			      int family, int *highlight)
+{
+   switch (family)
+     {
+     case 0:
+       sprintf (lpszFace, "Symbol");
+       break;
+     case 1:
+       sprintf (lpszFace, "Times New Roman");
+       break;
+     case 2:
+       sprintf (lpszFace, "Arial");
+       break;
+     case 3:
+       sprintf (lpszFace, "Courier New");
+       break;
+     default:
+        sprintf (lpszFace, "Arial");
+     }
+   if (script == 'Z')
+     sprintf (lpszFace, "Arial Unicode MS");
+     /* sprintf (&lpszFace[0], "Bitstream Cyberbit"); */
+   else if (script == 'E')
+   {
+     switch (family)
+       {
+       case 6:
+	 sprintf (lpszFace, "ESSTIXSix");
+	 break;
+       case 7:
+	 sprintf (lpszFace, "ESSTIXSeven");
+	 break;     
+       case 10:
+	 sprintf (lpszFace, "ESSTIXTen");
+	 break;
+       default:
+	 break;
+       }
+     *highlight = 0;
+   }
+}
+/*----------------------------------------------------------------------
+  Win_Get_Highlight Transcode Thot font attributes into Windows ones
+  ----------------------------------------------------------------------*/
+static void Win_Get_Highlight (int highlight, int *fdwItalic, 
+							   int *fnWeight)
+{  
+   switch (highlight)
+     {
+     case 0:
+       break;
+     case 2:
+     case 3:
+       *fdwItalic = TRUE;
+       break;
+     case 1:
+     case 4:
+     case 5:
+       *fnWeight = FW_BOLD;
+       break;
+     default:
+       break;
+	}
+}
+#ifdef _FONTCONFIG
+/*----------------------------------------------------------------------
+  GetWinFontConfig Get font description from configuration file (config/fonts.win)
+  ----------------------------------------------------------------------*/
+static HFONT GetWinFontConfig (char script, int family, int highlight, int size)
+{
+  char Result_string[MAX_LENGTH];
+  char *parsed, *result;
+  char font_family[32];
+  char font_charset[1024];
+  char font_highlight[1024];
+  DWORD charset;
+  int        Bold;
+  int        Italic;
+  int i;
+
+  result = FontLoadFromConfig (script, family, highlight);
+  if (result)
+    {
+      strcpy (Result_string, result);
+      result = &Result_string[0];
+      parsed = result;
+      i = 0;
+      while (*parsed++ != '-' && *parsed && i < 1024)
+	i++;
+      if (i == 1024)
+	return NULL;
+      *(parsed-1) = '\0';	
+      strcpy (font_charset, result);
+      result = parsed;
+      i = 0;
+      while (*parsed++ != '-' && *parsed && i < 32)
+	i++;
+      if (i == 32)
+	return NULL;
+      *(parsed-1) = '\0';
+      strcpy (font_family, result);
+      result = parsed;
+      i = 0;
+      while (*parsed++ != '-' && *parsed && i < 1024)
+	i++;
+      if (i == 1024)
+	return NULL;
+	  if (*parsed)
+         *(parsed-1) = '\0';
+      strcpy (font_highlight, result);
+            
+      charset = DEFAULT_CHARSET;
+      Bold = FW_NORMAL;
+      Italic = FALSE;
+      
+      if (*font_charset == '*')
+	Win_Get_Charset (script, &charset, &family);
+      else
+	{
+	  i = 0;
+	  while (!isnum(font_charset[i]) && font_charset[i] != '-')
+	    i++;
+	  if (font_charset[i] != '-')
+	   charset = String_To_Charset (font_charset);
+	  else 
+	    Win_Get_Charset (script, &charset, &family);
+	}
+      
+      if (font_family[0] == '*')
+	Win_Get_FontFace (font_family, script, family, &highlight);
+      if (script != 'E')
+	{
+	  if (font_highlight[0] == '*')
+	    Win_Get_Highlight (highlight, &Italic, &Bold);
+	  else
+	    {
+	      switch (font_highlight[0])
+		{
+		case 'r':
+		  break;
+		case 'i':
+		  Italic = TRUE;
+		  break;
+		case 'b':
+		  Bold = FW_BOLD;
+		  break;
+		default:
+		  break;
+		}
+	      if (font_highlight[1] == 'i')
+		Italic = TRUE;
+	    }
+	}
+      else 
+	{
+	  /*charset = 0;
+	  Bold = 0;*/
+	}
+      return CreateFont (size, 0, 0, 0, Bold,
+			 Italic, FALSE, FALSE,
+			 charset, 
+			 OUT_DEFAULT_PRECIS, 
+			 CLIP_DEFAULT_PRECIS,
+			 DEFAULT_QUALITY, 
+			 DEFAULT_PITCH | FF_DONTCARE,
+			 font_family);
+    }
+  return NULL;
+}
+#endif /*_FONTCONFIG*/
 /*----------------------------------------------------------------------
   WIN_LoadFont loads a Windows TrueType with a defined set of characteristics.
   ----------------------------------------------------------------------*/
@@ -142,107 +404,27 @@ static HFONT WIN_LoadFont (char script, int family, int highlight, int size)
    int        fdwItalic;
    int        fdwUnderline;
    int        fdwStrikeOut;
-
+ 
    nHeight = 0;
+   nHeight = -MulDiv(size, DOT_PER_INCH, 80);
+#ifdef _FONTCONFIG
+  hFont = GetWinFontConfig (script, family, highlight, nHeight);
+ 
+   if (hFont)
+	 return (hFont);
+#endif /*_FONTCONFIG*/
+
    nWidth = 0;
    fnWeight = FW_NORMAL;
    fdwItalic = FALSE;
    fdwUnderline = FALSE;
    fdwStrikeOut = FALSE;
-   switch (script)
-     {
-     case 'G':
-       charset = DEFAULT_CHARSET;/*SYMBOL_CHARSET;*/
-       family = 0;
-	 break;
-     case '2':
-       charset = EASTEUROPE_CHARSET;
-       break;
-     case '3':
-       charset = BALTIC_CHARSET;
-       break;
-     case '4':
-       charset = DEFAULT_CHARSET;
-       break;
-     case '5':
-       charset = RUSSIAN_CHARSET;
-       break;
-     case '6':
-       charset = ARABIC_CHARSET;
-       break;
-     case '7':
-       charset = GREEK_CHARSET;
-       break;
-     case '8':
-       charset = HEBREW_CHARSET;
-       break;
-     case '9':
-       charset = TURKISH_CHARSET;
-       break;
-     case 'Z': /* fall through */
- 	 default:
-       charset = DEFAULT_CHARSET;
-       break;
-     }
 
-   switch (family)
-     {
-     case 0:
-       sprintf (&lpszFace[0], "Symbol");
-       break;
-     case 1:
-       sprintf (&lpszFace[0], "Times New Roman");
-       break;
-     case 2:
-       sprintf (&lpszFace[0], "Arial");
-       break;
-     case 3:
-       sprintf (&lpszFace[0], "Courier New");
-       break;
-     default:
-        sprintf (&lpszFace[0], "Arial");
-     }
+   charset = DEFAULT_CHARSET;
+   Win_Get_Charset (script, &charset, &family);
+   Win_Get_FontFace (&lpszFace[0], script, family, &highlight);
+   Win_Get_Highlight (highlight, &fdwItalic, &fnWeight);
 
-   if (script == 'Z')
-     sprintf (&lpszFace[0], "Arial Unicode MS");
-     /* sprintf (&lpszFace[0], "Bitstream Cyberbit"); */
-   else if (script == 'E')
-   {
-	   switch (family)
-   {
-	case 6:
-		sprintf (&lpszFace[0], "ESSTIXSix");
-       break;
-     case 7:
-		 sprintf (&lpszFace[0], "ESSTIXSeven");
-		 break;     
-     case 10:
-		 sprintf (&lpszFace[0], "ESSTIXTen");
-		 break;
-     default:
-		 break;
-   }
-	highlight = 0;
-   }
-
-   switch (highlight)
-     {
-     case 0:
-       break;
-     case 2:
-     case 3:
-       fdwItalic = TRUE;
-       break;
-     case 1:
-     case 4:
-     case 5:
-       fnWeight = FW_BOLD;
-       break;
-     default:
-       break;
-     }
-
-   nHeight = -MulDiv(size, DOT_PER_INCH, 80);
    hFont = CreateFont (nHeight, nWidth, 0, 0, fnWeight,
                        fdwItalic, fdwUnderline, fdwStrikeOut,
                        charset, OUT_TT_ONLY_PRECIS, CLIP_DEFAULT_PRECIS,
@@ -267,13 +449,13 @@ HFONT WinLoadFont (HDC hdc, PtrFont font)
 	  DeleteObject (ActiveFont);
 	  ActiveFont = 0;
 	} 
+	  SetMapperFlags (hdc, 1);
       ActiveFont = WIN_LoadFont (font->FiScript, font->FiFamily,
 				 font->FiHighlight, font->FiSize);
     }
   return (OldFont = SelectObject (hdc, ActiveFont));
 }
 #endif /* _WINDOWS */
-
 
 /*----------------------------------------------------------------------
   NumberOfFonts returns the number of fonts.
@@ -1227,10 +1409,14 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
   PtrFont             ptfont;
 
 #ifdef _FONTCONFIG
+#ifndef _WINDOWS
   if (GetFontIdentifierFromConfig (script, family, highlight, 
 				   size, UnRelative, text, textX) == 0)
     FontIdentifier (script, family, highlight, 
 		    size, UnRelative, text, textX);   
+#else /*_WINDOWS*/
+  FontIdentifier (script, family, highlight, size, UnRelative, text, textX);
+#endif /*_WINDOWS*/
 #else /*_FONTCONFIG*/
   FontIdentifier (script, family, highlight, size, UnRelative, text, textX);
 #endif /*_FONTCONFIG*/

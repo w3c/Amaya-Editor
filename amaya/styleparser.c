@@ -399,7 +399,7 @@ char *ParseClampedUnit (char *text,
 	}
       else
 	{
-	  opacity = atof (text);
+	  opacity = (float) atof (text);
 	  if (opacity < 0.0
 	      || opacity > 1.0)
 	    intopacity = 1000;

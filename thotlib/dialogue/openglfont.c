@@ -352,8 +352,9 @@ static int FontFaceSize (GL_font *font,
 	FreeGlyphList (font);
       num = (*(font->face))->num_glyphs;
       font->glyphList = (GL_glyph **) TtaGetMemory ( sizeof(GL_glyph *) * num );
-      for (c=0 ; c < num; c++)
-	font->glyphList[c] = NULL;
+	  if (font->glyphList)
+		for (c=0 ; c < num; c++)
+			font->glyphList[c] = NULL;
     }
   font->size = size;
   return err;
@@ -495,11 +496,10 @@ void *gl_font_init (const char *font_filename,
  	  return NULL; 
  	}
       gl_font->size = 0;
-      /* (alphabet == 'E')
-	err = FontFaceSize (gl_font, (unsigned int) size, 0, FALSE);
-      else
-      */
-      err = FontFaceSize (gl_font, (unsigned int)size, 0, TRUE);
+      /*if (alphabet == 'E' || alphabet == 'Z')
+		err = FontFaceSize (gl_font, (unsigned int) size, 0, FALSE);
+      else    */  
+		err = FontFaceSize (gl_font, (unsigned int)size, 0, TRUE);
       if (err)
 	{
 	  FT_Done_Face (*(gl_font->face));
@@ -948,8 +948,8 @@ static void GL_TextureInit (unsigned char *Image,
   glTexImage2D (GL_TEXTURE_2D, 
 		0, 
 		GL_ALPHA,
-		width, 
-		height, 
+		(int)width, 
+		(int)height, 
 		0,
 		GL_ALPHA, 
 		GL_UNSIGNED_BYTE, 
@@ -962,25 +962,27 @@ static void GL_TextureInit (unsigned char *Image,
  Drawpixel Method for software implementation, as it's much faster for those
  Texture Method for hardware implementation as it's faster and better.
   ----------------------------------------------------------------------*/
-static void GL_TextureMap (float xFrame, float yFrame, 
+static void GL_TextureMap (float x, float y, 
 			   int width, 
 			   int miny,
 			   int maxy,
 			   GLfloat GL_w, 
 			   GLfloat GL_h)
 {
-  
+  int xFrame, yFrame;
   int height = maxy - miny;
 
+  xFrame = (int) x;
+  yFrame = (int) y;
   /*
   GL_w = ((GLfloat)width / GL_w);  
 
 
   GL_h = ((GLfloat)maxy / GL_h);
   */
-  height = SUPERSAMPLING (GL_h);
+  height = (int) SUPERSAMPLING (GL_h);
   
-  width = SUPERSAMPLING (GL_w);
+  width = (int) SUPERSAMPLING (GL_w);
   
 
   GL_w = 1;
@@ -1194,8 +1196,10 @@ int UnicodeFontRender (void *gl_font,
     ((bitmaps[n])?bitmaps[n]->dimension.x:0);
   */
 
-    GL_TextureMap ((x - SUPERSAMPLING(shift)), y, 
-		   pen_x, miny, maxy, 
+    GL_TextureMap ((x - SUPERSAMPLING(shift)), 
+		y, 
+		   pen_x, 
+		   miny, maxy, 
 		   (GLfloat)Width, (GLfloat)Height);
   
   
