@@ -301,7 +301,7 @@ void                UpdateStylePost (event)
 NotifyAttribute    *event;
 #endif
 {
-   Element             el, firstChild, lastChild;
+   Element             el, firstChild, lastChild, oldParent, newParent;
    Document            doc;
    Attribute           at;
    AttributeType       atType;
@@ -354,7 +354,13 @@ NotifyAttribute    *event;
 	TtaGiveTextAttributeValue (event->attribute, style, &len);
 	style[len] = EOS;
 	/* create a Span element if it's a TEXT leaf */
+	oldParent = TtaGetParent (el);
 	AttrToSpan (el, event->attribute, doc);
+	newParent = TtaGetParent (el);
+	if (newParent != oldParent)
+	   /* a new SPAN element has been created. Generate the PRules
+	      for the SPAN element */
+	   el = newParent;
 	ParseHTMLSpecificStyle (el, style, doc, FALSE);
 	TtaFreeMemory (style);
      }

@@ -45,23 +45,22 @@
 #include "appli_f.h"
 #include "applicationapi_f.h"
 #include "attributes_f.h"
+#include "boxpositions_f.h"
 #include "boxselection_f.h"
-#include "createabsbox_f.h"
 #include "callback_f.h"
+#include "changeabsbox_f.h"
+#include "changepresent_f.h"
+#include "createabsbox_f.h"
 #include "exceptions_f.h"
 #include "font_f.h"
 #include "memory_f.h"
-#include "changeabsbox_f.h"
-#include "changepresent_f.h"
-#include "boxpositions_f.h"
 #include "presrules_f.h"
 #include "structcreation_f.h"
 #include "structmodif_f.h"
 #include "structselect_f.h"
-#include "applicationapi_f.h"
-#include "unstructchange_f.h"
-#include "appli_f.h"
 #include "tree_f.h"
+#include "undo_f.h"
+#include "unstructchange_f.h"
 
 #ifdef __STDC__
 static void         ApplyInherit (PRuleType ruleType, PtrAbstractBox pAb, PtrDocument pDoc);
@@ -1978,6 +1977,7 @@ boolean             Background;
 	           }
 	   }
 
+	OpenHistorySequence (SelDoc, pElFirstSel, pElLastSel, firstChar, lastChar);
 	/* parcourt les elements selectionnes */
 	pEl = pElFirstSel;
 	while (pEl != NULL)
@@ -2034,6 +2034,7 @@ boolean             Background;
 	  }
 	/* tente de fusionner les elements voisins et reaffiche les paves */
 	/* modifie's et la selection */
+	CloseHistorySequence (SelDoc);
 	MergeAndSelect (SelDoc, pElFirstSel, pElLastSel, firstChar, lastChar);
      }
 }
@@ -2566,7 +2567,7 @@ PtrAbstractBox     pAb;
   ApplyPRules applies a set of PRules to all abstract boxes concerned by
   the given element type or the given attribute type or the given
   presentation box.
-  For each displayed abstract box check and each new presention rule
+  For each displayed abstract box and each new presention rule
   check if it is concerned by this new pRule.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__

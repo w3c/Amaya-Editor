@@ -41,24 +41,25 @@
 #include "appdialogue_tv.h"
 #include "frame_tv.h"
 
-#include "tree_f.h"
+#include "actions_f.h"
 #include "attributes_f.h"
+#include "boxselection_f.h"
+#include "changeabsbox_f.h"
+#include "changepresent_f.h"
 #include "config_f.h"
-#include "structcreation_f.h"
 #include "createabsbox_f.h"
-#include "viewcommands_f.h"
 #include "exceptions_f.h"
 #include "font_f.h"
 #include "inites_f.h"
-#include "structmodif_f.h"
-#include "changeabsbox_f.h"
-#include "changepresent_f.h"
 #include "presrules_f.h"
-#include "boxselection_f.h"
+#include "structcreation_f.h"
+#include "structmodif_f.h"
 #include "structselect_f.h"
-#include "unstructchange_f.h"
-#include "actions_f.h"
+#include "tree_f.h"
+#include "undo_f.h"
 #include "units_f.h"
+#include "unstructchange_f.h"
+#include "viewcommands_f.h"
 
 #ifdef _WINDOWS 
 #include "windialogapi_f.h"
@@ -585,6 +586,7 @@ int                 applyDomain;
 	   /* il y a quelque chose a changer, on parcourt la selection */
 	   /* courante et on change ce qu'a demande' l'utilisateur */
 	  {
+	    OpenHistorySequence (pSelDoc, pFirstSel, pLastSel, firstChar, lastChar);
 	    pEl = pFirstSel;
 	    pPrevBlock = NULL;
 	    while (pEl != NULL)
@@ -669,6 +671,7 @@ int                 applyDomain;
 	  }
 	/* tente de fusionner les elements voisins et reaffiche les paves */
 	/* modifie's et la selection */
+	CloseHistorySequence (pSelDoc);
 	MergeAndSelect (pSelDoc, pFirstSel, pLastSel, firstChar, lastChar);
       }
 }

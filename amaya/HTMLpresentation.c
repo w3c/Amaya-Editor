@@ -356,7 +356,6 @@ Element             elem;
    len = STYLELEN;
    style = (STRING) TtaGetMemory (sizeof (CHAR) * STYLELEN);
    GetHTMLStyleString (elem, doc, style, &len);
-   TtaOpenUndoSequence (doc, elem, elem, 0, 0);
    if (len == 0)
      {
 	/* delete the style attribute */
@@ -381,7 +380,6 @@ Element             elem;
 	else
 	   TtaRegisterAttributeCreate (styleAttr, elem, doc);
      }
-   TtaCloseUndoSequence (doc);
    TtaFreeMemory (style);
 }
 
