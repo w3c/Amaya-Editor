@@ -1055,7 +1055,7 @@ char  *GetBaseURL (Document doc)
    GetLocalPath
    Allocate and return the local document path associated to the url
   ----------------------------------------------------------------------*/
-char  *GetLocalPath (Document doc, char  *url)
+char *GetLocalPath (Document doc, char  *url)
 {
   char     *ptr;
   char     *n;
@@ -1110,7 +1110,7 @@ char  *GetLocalPath (Document doc, char  *url)
 /*----------------------------------------------------------------------
    ExtractTarget extract the target name from document nane.        
   ----------------------------------------------------------------------*/
-void         ExtractTarget (char *aName, char *target)
+void ExtractTarget (char *aName, char *target)
 {
    int    lg, i;
    char  *ptr;

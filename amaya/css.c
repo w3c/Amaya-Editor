@@ -85,15 +85,15 @@ PSchema GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css)
   nextLink = NULL;
   found = FALSE;
   pIS = NULL;
-  while (pInfo != NULL && !found)
+  while (pInfo && !found)
     {
       if (pInfo->PiDoc == doc)
 	{
 	  /* look for the list of document schemas */
 	  pIS = pInfo->PiSchemas;
-	  while (pIS != NULL && !found)
+	  while (pIS && !found)
 	    {
-	      if (sSchema == pIS->PiSSchema && pIS->PiPSchema != NULL)
+	      if (sSchema == pIS->PiSSchema && pIS->PiPSchema)
 		/* the pschema is already known */
 		return (pIS->PiPSchema);
 	      else
@@ -312,9 +312,9 @@ PSchema GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css)
 			/* check if it includes a presentation schema
 			   for that structure */
 			pInfo = oldcss->infos;
-			while (pInfo != NULL && pInfo->PiDoc != doc)
+			while (pInfo && pInfo->PiDoc != doc)
 			  pInfo = pInfo->PiNext;
-			if (pInfo != NULL && pInfo->PiLink == nextLink)
+			if (pInfo && pInfo->PiLink == nextLink)
 			  {
 			    pIS = pInfo->PiSchemas;
 			    while (pIS && pIS->PiSSchema != sSchema)
@@ -326,6 +326,8 @@ PSchema GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css)
 				prevS = pIS->PiPSchema;
 				before = TRUE;
 			      }
+			    else
+			      oldcss = oldcss->NextCSS;
 			  }
 		      }
 		    else

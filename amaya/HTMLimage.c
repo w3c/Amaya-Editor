@@ -38,7 +38,7 @@
    descriptor entry and the value FALSE.                           
   ----------------------------------------------------------------------*/
 ThotBool AddLoadedImage (char *name, char *pathname,
-			 Document doc, LoadedImageDesc ** desc)
+			 Document doc, LoadedImageDesc **desc)
 {
    LoadedImageDesc    *pImage, *previous, *sameImage;
    char               *localname;
@@ -86,10 +86,9 @@ ThotBool AddLoadedImage (char *name, char *pathname,
    pImage = (LoadedImageDesc *) TtaGetMemory (sizeof (LoadedImageDesc));
    pImage->originalName = TtaGetMemory (strlen (pathname) + 1);
    strcpy (pImage->originalName, pathname);
-   pImage->localName = TtaGetMemory (strlen (localname) + 1);
-   strcpy (pImage->localName, localname);
+   pImage->localName = TtaStrdup (localname);
    pImage->prevImage = previous;
-   if (previous != NULL)
+   if (previous)
       previous->nextImage = pImage;
    else
       ImageURLs = pImage;
@@ -99,7 +98,7 @@ ThotBool AddLoadedImage (char *name, char *pathname,
    pImage->imageType = unknown_type;
    *desc = pImage;
    TtaFreeMemory (localname);
-   if (sameImage != NULL)
+   if (sameImage)
      {
 	/* the image file exist for a different document */
 	pImage->status = IMAGE_LOADED;

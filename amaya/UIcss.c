@@ -52,7 +52,7 @@ ThotBool  LoadRemoteStyleSheet (char *url, Document doc, Element el,
   char                tempname[MAX_LENGTH];
   char               *tempdocument = NULL;
   int                 toparse;
-  ThotBool            local = FALSE;
+  ThotBool            remote = FALSE;
   ThotBool            import = (css != NULL);
 
   /* this document is displayed -> load the CSS */
@@ -64,46 +64,42 @@ ThotBool  LoadRemoteStyleSheet (char *url, Document doc, Element el,
   else
     NormalizeURL (url, doc, completeURL, tempname, NULL);
       
-  if (IsW3Path (completeURL))
+  /* check if the style sheet is already loaded */
+  oldcss = SearchCSS (0, completeURL, NULL);
+  remote = IsW3Path (completeURL);
+  if (oldcss)
+    strcpy (localfile, oldcss->localName);
+  else if (remote)
     {
-      /* check against double inclusion */
-      oldcss = SearchCSS (0, completeURL, NULL);
-      if (oldcss != NULL)
-	strcpy (localfile, oldcss->localName);
+      /* the CSS is not loaded yet */
+      /* changed this to doc */
+      toparse = GetObjectWWW (doc, completeURL, NULL, localfile,
+			      AMAYA_SYNC | AMAYA_LOAD_CSS, NULL, NULL,
+			      NULL, NULL, NO, NULL);
+      if (toparse || localfile[0] == EOS || !TtaFileExist (localfile))
+	TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
+		      completeURL);
       else
 	{
-	  /* the document is not loaded yet */
-	  /* changed this to doc */
-	  toparse = GetObjectWWW (doc, completeURL, NULL, localfile,
-				  AMAYA_SYNC | AMAYA_LOAD_CSS, NULL, NULL,
-				  NULL, NULL, NO, NULL);
-	  if (toparse || localfile[0] == EOS || !TtaFileExist (localfile))
-	    TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
-			  completeURL);
-	  else
-	    {
-	      /* store a copy of the remote CSS in .amaya/0 */
-	      /* allocate and initialize tempdocument */
-	      tempdocument = GetLocalPath (0, completeURL);
-	      TtaFileUnlink (tempdocument);
-	      /* now we can rename the local name of a remote document */
-	      rename (localfile, tempdocument);
-	      strcpy (localfile, tempdocument);
-	      TtaFreeMemory (tempdocument);
-	    }
+	  /* store a copy of the remote CSS in .amaya/0 */
+	  /* allocate and initialize tempdocument */
+	  tempdocument = GetLocalPath (0, completeURL);
+	  TtaFileUnlink (tempdocument);
+	  /* now we can rename the local name of a remote document */
+	  rename (localfile, tempdocument);
+	  strcpy (localfile, tempdocument);
+	  TtaFreeMemory (tempdocument);
 	}
-      local = TRUE;
     }
   else
     {
       /* store a copy of the local CSS in .amaya/0 */
       tempdocument = GetLocalPath (0, completeURL);
-      local = FALSE;
       strcpy (localfile, tempdocument);
       TtaFileCopy (completeURL, localfile);
       TtaFreeMemory (tempdocument);
     }
-  return (local);
+  return (remote);
 }
 
 
