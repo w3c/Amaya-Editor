@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>éléments d'entête</title>
+  <meta name="GENERATOR" content="amaya V4.0" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+</head>
+
+<body xml:lang="fr" lang="fr">
+
+<table border="0" width="100%" summary="toc">
+  <tbody>
+    <tr>
+      <td><p><img border="0" alt="W3C" src="../../../images/WWW/w3c_home" />
+        <img border="0" alt="Amaya" src="../../images/amaya.gif" /></p>
+      </td>
+      <td><p align="right"><a href="structure.html.fr"><img alt="previous"
+        border="0" src="../../images/left.gif" /></a> <a
+        href="../Manual.html.fr#There"><img alt="top" border="0"
+        src="../../images/up.gif" /></a> <a href="lists.html.fr"><img
+        alt="next" border="0" src="../../images/right.gif" /></a></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="Heading">
+<h1>Éléments d'entête</h1>
+
+<p>HTML fournit 6 niveaux d'entête : <a
+href="http://www.w3.org/TR/REC-html40/struct/global.html#edef-H1"><code>H1,
+H2, H3, H4, H5, and H6</code></a>. Ils devraient être utilisés pour marquer
+les entêtes selon leur importance, <code>H1</code> étant le plus important.
+Les entêtes sont des éléments bloc, et peuvent êre uniquement créées comme les
+filles d'éléments qui ont un contenu de type bloc. Notez que pour les tables
+de données, il existe des éléments spéciaux pour marquer les entêtes.</p>
+
+<p>Le premier des trois niveaux d'entête peut être créé depuis la barre
+d'outils en utilisant les icônes <img src="../../images/H1.gif" alt="H1 button"
+/>, <img src="../../images/H2.gif" alt="H2 button" />, <img
+src="../../images/H3.gif" alt="H3 button" />. Tous les niveaux d'entête peuvent
+être créés depuis le menu Éléments, ou en utilisant les raccourcis clavier.
+Les raccourcis clavier sont par défaut <kbd>control-1</kbd> pour
+<code>H1</code>, <kbd>control-2</kbd> pour <code>H2</code>, et pareil jusqu'à
+<kbd>control-6</kbd> for <code>H6</code>.</p>
+
+<p>Il existe des styles d'entête par défaut dans la plupart des navigateurs
+pour donner une idée de leur importance relative, mais l'auteur peut également
+utiliser les <a href="../StyleSheets.html">feuilles de style</a> pour fournir
+une autre présentation.</p>
+</div>
+
+<p align="right"><a href="infoTypes.html.fr"><img alt="previous" border="0"
+src="../../images/left.gif" /></a> <a href="../Manual.html.fr#There"><img
+alt="top" border="0" src="../../images/up.gif" /></a> <a
+href="structure.html.fr"><img alt="next" border="0"
+src="../../images/right.gif" /></a></p>
+<hr />
+
+<p></p>
+</body>
+</html>
