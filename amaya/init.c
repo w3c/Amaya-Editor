@@ -7304,6 +7304,7 @@ char *InitStringForCombobox()
   if (urlfile)
     {
       buffer = (char *) TtaGetMemory (MAX_LENGTH);
+      *buffer = EOS;
       while (fscanf (urlfile, "%s", urlstring) > 0)
 	{
 	  strcat (buffer, urlstring);
