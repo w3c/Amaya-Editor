@@ -675,18 +675,12 @@ static ThotBool     RedisplayNatureView (PtrDocument pDoc, PtrAbstractBox pAb,
 	      result = TRUE;
 	      /* on detruit les paves de l'element dans cette vue */
 	      DestroyAbsBoxesView (pEl, pDoc, FALSE, view);
-	      if (AssocView (pEl))
-		redispAb = pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1];
-	      else
-		redispAb = pDoc->DocViewModifiedAb[view - 1];
+	      redispAb = pDoc->DocViewModifiedAb[view - 1];
 	      h = 0;
 	      bool = ChangeConcreteImage (frame, &h, redispAb);
 	      FreeDeadAbstractBoxes (redispAb, frame);
 	      CreateNewAbsBoxes (pEl, pDoc, view);
-	      if (AssocView (pEl))
-		redispAb = pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1];
-	      else
-		redispAb = pDoc->DocViewModifiedAb[view - 1];
+	      redispAb = pDoc->DocViewModifiedAb[view - 1];
 	      bool = ChangeConcreteImage (frame, &h, redispAb);
 	    }
 	}

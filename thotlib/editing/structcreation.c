@@ -716,16 +716,7 @@ PtrAbstractBox CreateALeaf (PtrAbstractBox pAB, int *frame, LeafType leafType,
 		  view++;
 		while (pEl->ElAbstractBox[view - 1] == NULL && view != MAX_VIEW_DOC);
 	      }
-	    if (!AssocView (pEl))
-	      /* ce n'est pas dans une vue d'elements associes */
-	      *frame = pDoc->DocViewFrame[view - 1];
-	    else
-	      /* c'est dans un element associe, on prend sa frame */
-	      {
-		*frame = pDoc->DocAssocFrame[pEl->ElAssocNum - 1];
-		view = 1;
-		/* on prend la vue 1 */
-	      }
+	    *frame = pDoc->DocViewFrame[view - 1];
 	    if (pE != NULL)
 	      RemoveExcludedElem (&pE, pDoc);
 	    /* cree les paves des nouveaux elements et les affiche */
@@ -789,13 +780,11 @@ void RedisplayNewContent (PtrElement pEl, PtrDocument pDoc, int dVol,
    PtrAbstractBox      pAb;
    PictInfo           *picture1, *picture2;
    int                 view, frame, h;
-   ThotBool            assoc;
 
    for (view = 0; view < MAX_VIEW_DOC; view++)
      if (pEl->ElAbstractBox[view] != NULL)
        /* un pave correspondant existe dans la vue view */
        {
-	 assoc = AssocView (pEl);
 	 /* met a jour le volume dans les paves englobants */
 	 pAb = pEl->ElAbstractBox[view]->AbEnclosing;
 	 while (pAb != NULL)
@@ -874,10 +863,7 @@ void RedisplayNewContent (PtrElement pEl, PtrDocument pDoc, int dVol,
 		   }
 
 		 /* memorise le pave a reafficher */
-		 if (assoc)
-		   frame = pDoc->DocAssocFrame[pEl->ElAssocNum - 1];
-		 else
-		   frame = pDoc->DocViewFrame[view];
+		 frame = pDoc->DocViewFrame[view];
 		 if (pAb != NULL)
 		   {
 		     ClearViewSelection (frame);

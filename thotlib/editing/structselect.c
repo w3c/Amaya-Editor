@@ -1298,8 +1298,7 @@ static void SelectStringInAttr (PtrDocument pDoc, PtrAbstractBox pAb, int firstC
 {
    PtrElement          pEl;
    PtrAbstractBox      pAbView;
-   int                 frame, lastView, view;
-   ThotBool            assoc;
+   int                 frame, view;
 
    if (pAb == NULL || pDoc == NULL)
       return;
@@ -1315,22 +1314,12 @@ static void SelectStringInAttr (PtrDocument pDoc, PtrAbstractBox pAb, int firstC
 	AbsBoxSelectedAttr = pAb;
 	FirstSelectedCharInAttr = firstChar;
 	LastSelectedCharInAttr = lastChar;
-	/* determine the views to be processed */
-	assoc = AssocView (AbsBoxSelectedAttr->AbElement);
-	if (assoc)
-	   /* associated elements have only one view */
-	   lastView = 1;
-	else
-	   /* for other elements, process all views */
-	   lastView = MAX_VIEW_DOC;
 	SelPosition = !string;
 	/* highlight the new selection in all views */
-	for (view = 0; view < lastView; view++)
+	for (view = 0; view < MAX_VIEW_DOC; view++)
 	  {
 	     /* frame: window where the view is displayed */
-	     if (assoc)
-		frame = pDoc->DocAssocFrame[pAb->AbElement->ElAssocNum - 1];
-	     else if (pDoc->DocView[view].DvPSchemaView > 0)
+	     if (pDoc->DocView[view].DvPSchemaView > 0)
 		frame = pDoc->DocViewFrame[view];
 	     else
 		frame = 0;	/* vue non creee */
@@ -1421,13 +1410,6 @@ static void SelectStringOrPosition (PtrDocument pDoc, PtrElement pEl, int firstC
 		FirstSelectedElement = pEl;
 		SetActiveView (0);
 	     }
-	   else if (LastSelectedElement != NULL)
-	      if ((AssocView (pEl) || AssocView (LastSelectedElement))
-		  && pEl->ElAssocNum != LastSelectedElement->ElAssocNum)
-		{
-		   TtaClearViewSelections ();
-		   SetActiveView (0);
-		}
 
 	   LastSelectedElement = FirstSelectedElement;
 	   if (pEl->ElLeafType == LtPolyLine ||
@@ -1609,13 +1591,6 @@ void SelectElement (PtrDocument pDoc, PtrElement pEl, ThotBool begin, ThotBool c
 	     FirstSelectedElement = pEl;
 	     SetActiveView (0);
 	  }
-	else if (LastSelectedElement != NULL)
-	   if ((AssocView (pEl) || AssocView (LastSelectedElement))
-	       && pEl->ElAssocNum != LastSelectedElement->ElAssocNum)
-	     {
-		TtaClearViewSelections ();
-		SetActiveView (0);
-	     }
 	/* If the new selection is in the same tree, SelectAbsBoxes will */
 	/* switch the previous selection off */
 	/* ignore exception NoSelect */

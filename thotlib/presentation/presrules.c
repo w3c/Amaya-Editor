@@ -1472,14 +1472,7 @@ void                GetConstantBuffer (PtrAbstractBox pAb)
   ----------------------------------------------------------------------*/
 void                UpdateFreeVol (PtrAbstractBox pAb, PtrDocument pDoc)
 {
-
-
-   if (!AssocView (pAb->AbElement))
-     /* vue de l'arbre principal */
-     pDoc->DocViewFreeVolume[pAb->AbDocView - 1] -= pAb->AbVolume;
-   else
-     /* vue d'elements associes */
-     pDoc->DocAssocFreeVolume[pAb->AbElement->ElAssocNum - 1] -= pAb->AbVolume;
+  pDoc->DocViewFreeVolume[pAb->AbDocView - 1] -= pAb->AbVolume;
 }
 
 /*----------------------------------------------------------------------
@@ -1828,15 +1821,7 @@ void SearchPresSchema (PtrElement pEl, PtrPSchema * pSchP, int *indexElType,
   ----------------------------------------------------------------------*/
 static ThotBool     CheckPPosUser (PtrAbstractBox pAb, PtrDocument pDoc)
 {
-   int                 frame;
-   ThotBool            result;
-
-   if (AssocView (pAb->AbElement))
-      frame = pDoc->DocAssocFrame[pAb->AbElement->ElAssocNum - 1];
-   else
-      frame = pDoc->DocViewFrame[pAb->AbDocView - 1];
-   result = IsAbstractBoxDisplayed (pAb, frame);
-   return result;
+   return (IsAbstractBoxDisplayed (pAb, pDoc->DocViewFrame[pAb->AbDocView - 1]));
 }
 
 /*----------------------------------------------------------------------

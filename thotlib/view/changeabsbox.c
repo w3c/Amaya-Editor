@@ -117,11 +117,9 @@ void         UpdateAbsBoxVolume (PtrElement pEl, int view, PtrDocument pDoc)
   if (pAb != NULL)
     {
       pAb->AbChange = TRUE;
-      if (AssocView (pEl))
-	pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] = Enclosing (pAb, pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
-      else if (pDoc->DocView[view].DvPSchemaView > 0)
-	pDoc->DocViewModifiedAb[view] = Enclosing (pAb, pDoc->DocViewModifiedAb[view]);
-
+      if (pDoc->DocView[view].DvPSchemaView > 0)
+	pDoc->DocViewModifiedAb[view] = Enclosing (pAb,
+					       pDoc->DocViewModifiedAb[view]);
       dVol = pAb->AbVolume - pEl->ElTextLength;
       do
 	{
@@ -1425,13 +1423,7 @@ static void ApplFunctionPresRules (PtrPRule pRule, PtrPSchema pSchP,
 					  ApplyRefAbsBoxNew (pAb, pAb, &pAbbReDisp, pDoc);
 					  pAbbReDisp = Enclosing (pAb, pAbbReDisp);
 					  /* conserve le pointeur sur le pave a reafficher */
-					  if (AssocView (pEl))
-					     pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
-						Enclosing (pAbbReDisp,
-					      pDoc->DocAssocModifiedAb[pEl->
-							   ElAssocNum - 1]);
-					  else
-					     pDoc->DocViewModifiedAb[view - 1] =
+					  pDoc->DocViewModifiedAb[view - 1] =
 						Enclosing (pAbbReDisp, pDoc->DocViewModifiedAb[view - 1]);
 				       }
 				  }
@@ -1451,12 +1443,7 @@ static void ApplFunctionPresRules (PtrPRule pRule, PtrPSchema pSchP,
 					  ApplyRefAbsBoxSupp (pAb, &pAbbReDisp, pDoc);
 					  pAbbReDisp = Enclosing (pAb, pAbbReDisp);
 					  /* conserve le pointeur sur le pave a reafficher */
-					  if (AssocView (pEl))
-					     pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
-						Enclosing (pAbbReDisp, pDoc->
-							   DocAssocModifiedAb[pEl->ElAssocNum - 1]);
-					  else
-					     pDoc->DocViewModifiedAb[view - 1] =
+					  pDoc->DocViewModifiedAb[view - 1] =
 						Enclosing (pAbbReDisp, pDoc->DocViewModifiedAb[view - 1]);
 				       }
 				  }
@@ -1558,12 +1545,11 @@ void ChangeFirstLast (PtrElement pEl, PtrDocument pDoc, ThotBool first,
    pAbbFirst et pAbbLast, ainsi que tous les paves englobes.
    Ces paves n'ont pas encore ete vus par le Mediateur, inutile de lui signaler
    leur disparition si cette suite correspond a un element sur plusieurs    
-   pages, on parcours la chaine des dupliques.
-   Le parametre v donne le numero de vue sassocies - 1.
+   pages, on parcourt la chaine des dupliques.
   ----------------------------------------------------------------------*/
 static void DestroyNewAbsBox (PtrAbstractBox * pAbbFirst,
 			      PtrAbstractBox * pAbbLast, int frame,
-			      PtrDocument pDoc, ThotBool assoc, int v)
+			      PtrDocument pDoc)
 {
    int                 vol;
    PtrAbstractBox      pAb, pAbb;
@@ -1595,12 +1581,6 @@ static void DestroyNewAbsBox (PtrAbstractBox * pAbbFirst,
 	   /* passe au pave' suivant */
 	   pAb = pAb->AbNext;
      }
-   if (*pAbbFirst == *pAbbLast && assoc)
-     {
-       /* update the assoc view if pAb if the root */
-       if (pDoc->DocAssocRoot[v]->ElAbstractBox[0] == pAb)
-	 pDoc->DocAssocRoot[v]->ElAbstractBox[0] = NULL;
-     }
    *pAbbFirst = NULL;
    *pAbbLast = NULL;
 }
@@ -1612,27 +1592,21 @@ static void DestroyNewAbsBox (PtrAbstractBox * pAbbFirst,
   ----------------------------------------------------------------------*/
 void  CreateAllAbsBoxesOfEl (PtrElement pE, PtrDocument pDoc)
 {
-   int                 view;
+  int                 view;
 
-   if (pE == NULL || pE->ElStructSchema == NULL)
-     return;
-   /* indique qu'il faut creer tous les paves sans limite de volume */
-   if (!AssocView (pE))
-      /* nombre de vues du document */
-      for (view = 1; view <= MAX_VIEW_DOC; view++)
-	{
-	   if (pDoc->DocView[view - 1].DvPSchemaView > 0)
-	      /* la vue est ouverte */
-	      pDoc->DocViewFreeVolume[view - 1] = THOT_MAXINT;
-	}
-   else
-      /* vue d'elements associes */
-   if (pDoc->DocAssocFrame[pE->ElAssocNum - 1] != 0)
-      pDoc->DocAssocFreeVolume[pE->ElAssocNum - 1] = THOT_MAXINT;
-   /* cree effectivement les paves dans toutes les vues existantes */
-   CreateNewAbsBoxes (pE, pDoc, 0);
-   /* applique les regles retardees concernant les paves cree's */
-   ApplDelayedRule (pE, pDoc);
+  if (pE == NULL || pE->ElStructSchema == NULL)
+    return;
+  /* indique qu'il faut creer tous les paves sans limite de volume */
+  for (view = 1; view <= MAX_VIEW_DOC; view++)
+    {
+      if (pDoc->DocView[view - 1].DvPSchemaView > 0)
+	/* la vue est ouverte */
+	pDoc->DocViewFreeVolume[view - 1] = THOT_MAXINT;
+    }
+  /* cree effectivement les paves dans toutes les vues existantes */
+  CreateNewAbsBoxes (pE, pDoc, 0);
+  /* applique les regles retardees concernant les paves cree's */
+  ApplDelayedRule (pE, pDoc);
 }
 
 /*----------------------------------------------------------------------
@@ -1648,12 +1622,10 @@ void  CreateAllAbsBoxesOfEl (PtrElement pE, PtrDocument pDoc)
   ----------------------------------------------------------------------*/
 void CreateNewAbsBoxes (PtrElement pEl, PtrDocument pDoc, int viewNb)
 {
-   PtrAbstractBox      pAb, pAbbReDisp, pAbbR, pAbbFirst, pAbbLast, pAbbSibling;
-   PtrAbstractBox      pAbbox1;
-   int                 view, firstView, lastView;
-   int                 frame, v;
-   ThotBool            existingView, stop, assocView;
-   ThotBool            complete;
+   PtrAbstractBox      pAb, pAbbReDisp, pAbbR, pAbbFirst, pAbbLast,
+                       pAbbSibling, pAbbox1;
+   int                 view, firstView, lastView, frame;
+   ThotBool            stop, complete;
 
    if (pEl != NULL)
      {
@@ -1672,27 +1644,11 @@ void CreateNewAbsBoxes (PtrElement pEl, PtrDocument pDoc, int viewNb)
        /* pour toutes les vues demandees, cree les paves du sous-arbre de */
        /* l'element et reapplique les regles affectees par la creation des */
        /* nouveaux paves */
-       assocView = AssocView (pEl);
-       v = pEl->ElAssocNum - 1;
        for (view = firstView; view <= lastView; view++)
 	 {
-	   frame = 0;
-	   if (!assocView)
-	     {
-	       /* l'element ne s'affiche pas dans une vue d'elements associes */
-	       frame = pDoc->DocViewFrame[view - 1];
-	       existingView = pDoc->DocView[view - 1].DvPSchemaView > 0 && frame != 0;
-	     }
-	   else if (view == 1)
-	     {
-	       /* c'est une vue d'elements associes */
-	       frame = pDoc->DocAssocFrame[v];
-	       existingView = frame != 0;
-	     }
-	   else
-	     existingView = FALSE;
-
-	   if (existingView)
+	   frame = pDoc->DocViewFrame[view - 1];
+	   if (pDoc->DocView[view - 1].DvPSchemaView > 0 && frame != 0)
+	     /* la vue existe */
 	     {
 	       pAbbReDisp = NULL;
 	       /* il n'y a encore rien a reafficher */
@@ -1761,7 +1717,7 @@ void CreateNewAbsBoxes (PtrElement pEl, PtrDocument pDoc, int viewNb)
 			   && pAbbox1->AbTruncatedTail)
 			 {
 			 /* le pave precedent est incomplet a la fin */
-			 if (assocView || pDoc->DocView[view - 1].DvSync)
+			 if (pDoc->DocView[view - 1].DvSync)
 			   /* La vue est synchronisee, on supprime tous les paves */
 			   /* precedents */
 			   {
@@ -1796,7 +1752,7 @@ void CreateNewAbsBoxes (PtrElement pEl, PtrDocument pDoc, int viewNb)
 			 else
 			   /* ce n'est pas une vue synchronisee, on detruit les */
 			   /* paves que l'on vient de creer */
-			   DestroyNewAbsBox (&pAbbFirst, &pAbbLast, frame, pDoc, assocView, v);
+			   DestroyNewAbsBox (&pAbbFirst, &pAbbLast, frame, pDoc);
 			 }
 		     }
 		   if (pAbbLast != NULL &&
@@ -1808,7 +1764,7 @@ void CreateNewAbsBoxes (PtrElement pEl, PtrDocument pDoc, int viewNb)
 			   && pAbbox1->AbTruncatedHead)
 			 {
 			   /* le pave suivant est incomplet au debut */
-			   if (assocView || pDoc->DocView[view - 1].DvSync)
+			   if (pDoc->DocView[view - 1].DvSync)
 			     /* La vue est synchronisee, on supprime 
 				tous les paves suivants */
 			     {
@@ -1841,7 +1797,7 @@ void CreateNewAbsBoxes (PtrElement pEl, PtrDocument pDoc, int viewNb)
 			   else
 			     /* ce n'est pas une vue synchronisee, on detruit les */
 			     /* paves que l'on vient de creer */
-			     DestroyNewAbsBox (&pAbbFirst, &pAbbLast, frame, pDoc, assocView, v);
+			     DestroyNewAbsBox (&pAbbFirst, &pAbbLast, frame, pDoc);
 			 }
 		     }
 		   /* si on n'a pas pu creer tous les paves du contenu de */
@@ -1890,10 +1846,8 @@ void CreateNewAbsBoxes (PtrElement pEl, PtrDocument pDoc, int viewNb)
 		   ApplDelayedRule (pEl, pDoc);
 		   pAbbReDisp = Enclosing (pAbbR, pAbbReDisp);
 		   /* conserve le pointeur sur le pave a reafficher */
-		   if (AssocView (pEl))
-		     pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] = Enclosing (pAbbReDisp, pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
-		   else
-		     pDoc->DocViewModifiedAb[view - 1] = Enclosing (pAbbReDisp, pDoc->DocViewModifiedAb[view - 1]);
+		   pDoc->DocViewModifiedAb[view - 1] = Enclosing (pAbbReDisp,
+					   pDoc->DocViewModifiedAb[view - 1]);
 		 }
 	     }
 	 }
@@ -1918,7 +1872,6 @@ void DestroyAbsBoxesView (PtrElement pEl, PtrDocument pDoc, ThotBool verify,
   PtrAbstractBox      pAb, pAbbReDisp, pAbbR, pAbb, pElAscent, PcFirst;
   PtrAbstractBox      pAbbox1, PcLast;
   PtrElement          pElChild;
-  int                 v;
 
   pAb = pEl->ElAbstractBox[view - 1];
   if (pAb == NULL)
@@ -1991,16 +1944,7 @@ void DestroyAbsBoxesView (PtrElement pEl, PtrDocument pDoc, ThotBool verify,
 	  if (pAb->AbNew)
 	    {
 	      pAbbox1 = pAb;
-	      if (AssocView (pEl))
-		{
-		  v = pEl->ElAssocNum - 1;
-		  FreeAbView (pAb, pDoc->DocAssocFrame[v]);
-		  /* update the assoc view if pAb if the root */
-		  if (pDoc->DocAssocRoot[v]->ElAbstractBox[0] == pAb)
-		    pDoc->DocAssocRoot[v]->ElAbstractBox[0] = NULL;
-		}
-	      else
-		FreeAbView (pAb, pDoc->DocViewFrame[view - 1]);
+	      FreeAbView (pAb, pDoc->DocViewFrame[view - 1]);
 	      pAb = pAbbox1;
 	    }
 	  else
@@ -2052,10 +1996,8 @@ void DestroyAbsBoxesView (PtrElement pEl, PtrDocument pDoc, ThotBool verify,
 	}
       while (pAb != NULL);
       /* conserve le pointeur sur le pave a reafficher */
-      if (AssocView (pEl))
-	pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] = Enclosing (pAbbReDisp, pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
-      else
-	pDoc->DocViewModifiedAb[view - 1] = Enclosing (pAbbReDisp, pDoc->DocViewModifiedAb[view - 1]);
+      pDoc->DocViewModifiedAb[view - 1] = Enclosing (pAbbReDisp,
+                                            pDoc->DocViewModifiedAb[view - 1]);
     }
 }
 
@@ -2073,22 +2015,13 @@ void DestroyAbsBoxesView (PtrElement pEl, PtrDocument pDoc, ThotBool verify,
 void DestroyAbsBoxes (PtrElement pEl, PtrDocument pDoc, ThotBool verify)
 {
   int                 view;
-  ThotBool            existingView;
 
   if (pEl != NULL)
     /* traite les paves de toutes les vues */
     for (view = 1; view <= MAX_VIEW_DOC; view++)
-      /* teste si la vue  existe */
       {
-	if (!AssocView (pEl))
-	  /* ce n'est pas un element associe */
-	  existingView = pDoc->DocView[view - 1].DvPSchemaView > 0;
-	else if (pDoc->DocAssocFrame[pEl->ElAssocNum - 1] == 0)
-	  /* c'est un element associe */
-	  existingView = FALSE;
-	else
-	  existingView = view == 1;
-	if (existingView)
+	if (pDoc->DocView[view - 1].DvPSchemaView > 0)
+	  /* la vue  existe */
 	  /* detruit les paves de cette vue */
 	  DestroyAbsBoxesView (pEl, pDoc, verify, view);
       }
@@ -2145,18 +2078,8 @@ void RedispRef (PtrReference pRef, PtrAbstractBox pAb, PtrDocument pDocRef)
 		 /* deja fait */
 		 /* indique le volume que pourront prendre les paves cree's */
 		{
-		   if (!AssocView (pElRef))
-		     {
-			if (pDocRef->DocView[v - 1].DvPSchemaView > 0)
-			   pDocRef->DocViewFreeVolume[v - 1] = pDocRef->DocViewVolume[v - 1];
-		     }
-		   else
-		      /* element associe */
-		     {
-			if (pDocRef->DocAssocFrame[pElRef->ElAssocNum - 1] > 0)
-			   pDocRef->DocAssocFreeVolume[pElRef->ElAssocNum - 1] =
-			      pDocRef->DocAssocVolume[pElRef->ElAssocNum - 1];
-		     }
+		  if (pDocRef->DocView[v - 1].DvPSchemaView > 0)
+		    pDocRef->DocViewFreeVolume[v - 1] = pDocRef->DocViewVolume[v - 1];
 		   pAbb = AbsBoxesCreate (pElRef, pDocRef, v, TRUE, TRUE, &complete);
 		   redisp = pAbb != NULL;
 		}
@@ -2225,10 +2148,7 @@ void RedispRef (PtrReference pRef, PtrAbstractBox pAb, PtrDocument pDocRef)
 		 if (!pPavRef->AbNew)
 		   {
 		      pPavRef->AbChange = TRUE;
-		      if (AssocView (pElRef))
-			 frame = pDocRef->DocAssocFrame[pElRef->ElAssocNum - 1];
-		      else
-			 frame = pDocRef->DocViewFrame[v - 1];
+		      frame = pDocRef->DocViewFrame[v - 1];
 		      h = PageHeight;
 		      (void) ChangeConcreteImage (frame, &h, pPavRef);
 		      /* on ne reaffiche pas si on est en train de calculer */
@@ -2501,10 +2421,7 @@ static void ComputeContent (int boxType, int nv, PtrDocument pDoc,
 	      if (!pAb->AbNew)
 		{
 		   pAbbox1->AbChange = TRUE;
-		   if (AssocView (pElBegin))
-		      frame = pDoc->DocAssocFrame[pElBegin->ElAssocNum - 1];
-		   else
-		      frame = pDoc->DocViewFrame[nv - 1];
+		   frame = pDoc->DocViewFrame[nv - 1];
 		   h = PageHeight;
 		   ChangeConcreteImage (frame, &h, pAb);
 		   /* on ne reaffiche pas si on est en train de calculer les */
@@ -2594,10 +2511,7 @@ static void ComputeCrPresBoxes (int boxType, int nv, PtrPSchema pSchP,
 		     /* tue le pave */
 		     SetDeadAbsBox (pAb);
 		     /* signale le pave mort au mediateur */
-		     if (AssocView (pElBegin))
-			frame = pDoc->DocAssocFrame[pElBegin->ElAssocNum - 1];
-		     else
-			frame = pDoc->DocViewFrame[nv - 1];
+		     frame = pDoc->DocViewFrame[nv - 1];
 		     h = PageHeight;
 		     ChangeConcreteImage (frame, &h, pAb);
 		     /* on ne reaffiche pas si on est en train de calculer les */
@@ -2785,18 +2699,14 @@ static void ComputeCreation (int boxType, ThotBool presBox, int counter,
 					       pEl->ElAbstractBox[nv - 1] = pAbbNext;
 					    if (pAbb != NULL)
 					      {
-						 if (AssocView (pElBegin))
-						    frame =
-						       pDoc->DocAssocFrame[pElBegin->ElAssocNum - 1];
-						 else
-						    frame = pDoc->DocViewFrame[nv - 1];
-						 h = PageHeight;
-						 ChangeConcreteImage (frame, &h, pAbb);
-						 /* on ne reaffiche pas si on est en
-						    train de calculer les pages */
-						 if (PageHeight == 0 && redisp)
-						    DisplayFrame (frame);
-						 /* on passe a la regle suivante */
+						frame = pDoc->DocViewFrame[nv - 1];
+						h = PageHeight;
+						ChangeConcreteImage (frame, &h, pAbb);
+						/* on ne reaffiche pas si on est en
+						   train de calculer les pages */
+						if (PageHeight == 0 && redisp)
+						  DisplayFrame (frame);
+						/* on passe a la regle suivante */
 					      }
 					 }
 				    }
@@ -2904,142 +2814,126 @@ static void ChangeBoxesCounter (PtrElement pElBegin, PtrDocument pDoc,
 				int counter, PtrPSchema pSchP, PtrSSchema pSS,
 				ThotBool redisp)
 {
-   int                 util, view;
-   Counter            *pCo1;
-   PtrElement          pEl;
-   int                 regle;
-   Counter            *pCounter;
-   PtrElement          pElRoot;
+  int                 util, view;
+  Counter            *pCo1;
+  PtrElement          pEl;
+  int                 regle;
+  Counter            *pCounter;
+  PtrElement          pElRoot;
 
-   /* ce code etait precedemment plus loin */
-   /* On traite toutes les boites qui utilisent ce compteur comme contenu */
-   pCo1 = &pSchP->PsCounter[counter - 1];
-   for (util = 1; util <= pCo1->CnNPresBoxes; util++)
-      if (AssocView (pElBegin))
-	 ComputeContent (pCo1->CnPresBox[util - 1], 1, pDoc, pSS, pSchP, pElBegin,
-			 redisp);
-      else
-	 for (view = 1; view <= MAX_VIEW_DOC; view++)
-	    if (pDoc->DocView[view - 1].DvPSchemaView > 0)
-	      {
-		 /* Il faut determiner si on doit reevaluer du debut de l'image
-		    abstraite ou de pElBegin; on ne reevalue que si CnMinMaxPresBox est
-		    TRUE, i.e. une boite est creee par une condition de min ou de max
-		    du compteur */
-		 if (!pCo1->CnMinMaxPresBox[util - 1])
-		    ComputeContent (pCo1->CnPresBox[util - 1], view, pDoc, pSS, pSchP,
-				    pElBegin, redisp);
-		 else
-		   {
-		      /* On determine le debut de l'image abstraite */
-		      if (pDoc->DocViewRootAb[view - 1] != NULL)
-			 pElRoot = pDoc->DocViewRootAb[view - 1]->AbElement;
-		      else
-			 pElRoot = NULL;
-		      if (pElRoot != NULL)
-			{
-			   pAbbBegin[view - 1] = NULL;
-			   ComputeContent (pCo1->CnPresBox[util - 1], view, pDoc, pSS, pSchP,
-					   pElRoot, redisp);
-			}
-		      else
-			 ComputeContent (pCo1->CnPresBox[util - 1], view, pDoc, pSS, pSchP,
-					 pElBegin, redisp);
-		   }
-	      }
-   /* On traite toutes les boites dont la creation est conditionnee par */
-   /* la valeur de ce compteur */
-   for (util = 1; util <= pCo1->CnNCreatedBoxes; util++)
-      if (AssocView (pElBegin))
-	 ComputeCrPresBoxes (pCo1->CnCreatedBox[util - 1], 1, pSchP, pDoc,
-			     pElBegin, redisp);
-      else
-	 for (view = 1; view <= MAX_VIEW_DOC; view++)
-	    if (pDoc->DocView[view - 1].DvPSchemaView > 0)
-	      {
-		 /* Il faut determiner si on doit reevaluer depuis le debut de l'image
-		    abstraite ou depuis pElBegin; on ne reevalue que si CnMinMaxCreatedBox
-		    est TRUE, i.e. si une boite est creee par une condition de min ou
-		    de max du compteur */
-		 if (!pCo1->CnMinMaxCreatedBox[util - 1])
-		    ComputeCrPresBoxes (pCo1->CnCreatedBox[util - 1], view,
-					pSchP, pDoc, pElBegin, redisp);
-		 else
-		   {
-		      /* On determine le debut de l'image abstraite */
-		      if (pDoc->DocViewRootAb[view - 1] != NULL)
-			 pElRoot = pDoc->DocViewRootAb[view - 1]->AbElement;
-		      else
-			 pElRoot = NULL;
-		      if (pElRoot != NULL)
-			{
-			   pAbbBegin[view - 1] = NULL;
-			   ComputeCrPresBoxes (pCo1->CnCreatedBox[util - 1],
-					       view, pSchP, pDoc,
-					       pElRoot, redisp);
-			}
-		      else
-			 ComputeCrPresBoxes (pCo1->CnCreatedBox[util - 1],
-					     view, pSchP, pDoc,
-					     pElBegin, redisp);
-		   }
-	      }
-   /* On traite toutes les boites qui creent d'autres boites selon la */
-   /* valeur de ce compteur */
-   for (util = 1; util <= pCo1->CnNCreators; util++)
-      if (AssocView (pElBegin))
-	 ComputeCreation (pCo1->CnCreator[util - 1],
-		   pCo1->CnPresBoxCreator[util - 1], counter, 1, pSS, pSchP,
-			  pDoc, pElBegin, redisp);
-      else
-	 for (view = 1; view <= MAX_VIEW_DOC; view++)
-	    if (pDoc->DocView[view - 1].DvPSchemaView > 0)
-	      {
-		 /* Il faut determiner si on doit reevaluer du debut de l'image
-		    abstraite ou de pElBegin; on ne reevalue que si CnMinMaxCreator est
-		    TRUE, i.e. si une boite est creee par une condition de min ou de max
-		    du compteur */
-		 if (!pCo1->CnMinMaxCreator[util - 1])
-		    ComputeCreation (pCo1->CnCreator[util - 1],
-			    pCo1->CnPresBoxCreator[util - 1], counter, view,
-				     pSS, pSchP, pDoc, pElBegin, redisp);
-		 else
-		   {
-		      /* On determine le debut de l'image abstraite */
-		      if (pDoc->DocViewRootAb[view - 1] != NULL)
-			 pElRoot = pDoc->DocViewRootAb[view - 1]->AbElement;
-		      else
-			 pElRoot = NULL;
-		      if (pElRoot != NULL)
-			{
-			   pAbbBegin[view - 1] = NULL;
-			   ComputeCreation (pCo1->CnCreator[util - 1],
-			    pCo1->CnPresBoxCreator[util - 1], counter, view,
-					 pSS, pSchP, pDoc, pElRoot, redisp);
-			}
-		      else
-			 ComputeCreation (pCo1->CnCreator[util - 1],
-					  pCo1->CnPresBoxCreator[util - 1], counter, view, pSS, pSchP,
-					  pDoc, pElBegin, redisp);
-		   }
-	      }
-   /* On traite les regles de transmission des valeurs du compteur */
-   pCounter = &pSchP->PsCounter[counter - 1];
-   /* examine toutes les regles Transmit du compteur */
-   for (regle = 1; regle <= pCounter->CnNTransmAttrs; regle++)
-     {
-	pEl = pElBegin;
-	while (pEl != NULL)
-	  {
-	     if (pEl->ElTypeNumber == pCounter->CnTransmSSchemaAttr[regle - 1])
-		/* c'est le type de document auquel le compteur est */
-		/* transmis, on applique la regle de transmission */
-		TransmitCounterVal (pEl, pDoc, pCounter->CnTransmAttr[regle - 1],
-				    counter, pSchP, pSS);
-	     /* cherche le document inclus suivant */
-	     pEl = FwdSearchTypedElem (pEl, pCounter->CnTransmSSchemaAttr[regle - 1], pSS);
-	  }
-     }
+  /* On traite toutes les boites qui utilisent ce compteur comme contenu */
+  pCo1 = &pSchP->PsCounter[counter - 1];
+  for (util = 1; util <= pCo1->CnNPresBoxes; util++)
+    for (view = 1; view <= MAX_VIEW_DOC; view++)
+      if (pDoc->DocView[view - 1].DvPSchemaView > 0)
+	{
+	  /* Il faut determiner si on doit reevaluer du debut de l'image
+	     abstraite ou de pElBegin; on ne reevalue que si CnMinMaxPresBox
+	     est TRUE, i.e. une boite est creee par une condition de min ou de
+	     max du compteur */
+	  if (!pCo1->CnMinMaxPresBox[util - 1])
+	    ComputeContent (pCo1->CnPresBox[util - 1], view, pDoc, pSS, pSchP,
+			    pElBegin, redisp);
+	  else
+	    {
+	      /* On determine le debut de l'image abstraite */
+	      if (pDoc->DocViewRootAb[view - 1] != NULL)
+		pElRoot = pDoc->DocViewRootAb[view - 1]->AbElement;
+	      else
+		pElRoot = NULL;
+	      if (pElRoot != NULL)
+		{
+		  pAbbBegin[view - 1] = NULL;
+		  ComputeContent (pCo1->CnPresBox[util - 1], view, pDoc, pSS,
+				  pSchP, pElRoot, redisp);
+		}
+	      else
+		ComputeContent (pCo1->CnPresBox[util - 1], view, pDoc, pSS,
+				pSchP, pElBegin, redisp);
+	    }
+	}
+  /* On traite toutes les boites dont la creation est conditionnee par */
+  /* la valeur de ce compteur */
+  for (util = 1; util <= pCo1->CnNCreatedBoxes; util++)
+    for (view = 1; view <= MAX_VIEW_DOC; view++)
+      if (pDoc->DocView[view - 1].DvPSchemaView > 0)
+	{
+	  /* Il faut determiner si on doit reevaluer depuis le debut de
+	     l'image abstraite ou depuis pElBegin; on ne reevalue que si
+	     CnMinMaxCreatedBox est TRUE, i.e. si une boite est creee par
+	     une condition de min ou de max du compteur */
+	  if (!pCo1->CnMinMaxCreatedBox[util - 1])
+	    ComputeCrPresBoxes (pCo1->CnCreatedBox[util - 1], view,
+				pSchP, pDoc, pElBegin, redisp);
+	  else
+	    {
+	      /* On determine le debut de l'image abstraite */
+	      if (pDoc->DocViewRootAb[view - 1] != NULL)
+		pElRoot = pDoc->DocViewRootAb[view - 1]->AbElement;
+	      else
+		pElRoot = NULL;
+	      if (pElRoot != NULL)
+		{
+		  pAbbBegin[view - 1] = NULL;
+		  ComputeCrPresBoxes (pCo1->CnCreatedBox[util - 1], view,
+				      pSchP, pDoc, pElRoot, redisp);
+		}
+	      else
+		ComputeCrPresBoxes (pCo1->CnCreatedBox[util - 1], view,
+				    pSchP, pDoc, pElBegin, redisp);
+	    }
+	}
+  /* On traite toutes les boites qui creent d'autres boites selon la */
+  /* valeur de ce compteur */
+  for (util = 1; util <= pCo1->CnNCreators; util++)
+    for (view = 1; view <= MAX_VIEW_DOC; view++)
+      if (pDoc->DocView[view - 1].DvPSchemaView > 0)
+	{
+	  /* Il faut determiner si on doit reevaluer du debut de l'image
+	     abstraite ou de pElBegin; on ne reevalue que si CnMinMaxCreator
+	     est TRUE, i.e. si une boite est creee par une condition de min
+	     ou de max du compteur */
+	  if (!pCo1->CnMinMaxCreator[util - 1])
+	    ComputeCreation (pCo1->CnCreator[util - 1],
+			     pCo1->CnPresBoxCreator[util - 1], counter, view,
+			     pSS, pSchP, pDoc, pElBegin, redisp);
+	  else
+	    {
+	      /* On determine le debut de l'image abstraite */
+	      if (pDoc->DocViewRootAb[view - 1] != NULL)
+		pElRoot = pDoc->DocViewRootAb[view - 1]->AbElement;
+	      else
+		pElRoot = NULL;
+	      if (pElRoot != NULL)
+		{
+		  pAbbBegin[view - 1] = NULL;
+		  ComputeCreation (pCo1->CnCreator[util - 1],
+				   pCo1->CnPresBoxCreator[util - 1], counter,
+				   view, pSS, pSchP, pDoc, pElRoot, redisp);
+		}
+	      else
+		ComputeCreation (pCo1->CnCreator[util - 1],
+				 pCo1->CnPresBoxCreator[util - 1], counter,
+				 view, pSS, pSchP, pDoc, pElBegin, redisp);
+	    }
+	}
+  /* On traite les regles de transmission des valeurs du compteur */
+  pCounter = &pSchP->PsCounter[counter - 1];
+  /* examine toutes les regles Transmit du compteur */
+  for (regle = 1; regle <= pCounter->CnNTransmAttrs; regle++)
+    {
+      pEl = pElBegin;
+      while (pEl != NULL)
+	{
+	  if (pEl->ElTypeNumber == pCounter->CnTransmSSchemaAttr[regle - 1])
+	    /* c'est le type de document auquel le compteur est */
+	    /* transmis, on applique la regle de transmission */
+	    TransmitCounterVal (pEl, pDoc, pCounter->CnTransmAttr[regle - 1],
+				counter, pSchP, pSS);
+	  /* cherche le document inclus suivant */
+	  pEl = FwdSearchTypedElem (pEl, pCounter->CnTransmSSchemaAttr[regle - 1], pSS);
+	}
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -3541,14 +3435,13 @@ void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
   TypeUnit            unit;
   int                 view, viewSch, val;
   ThotBool            appl, stop, sameType, found;
-  ThotBool            existingView, assoc;
+  ThotBool            existingView;
   ThotBool            createBox, complete;
 
   viewSch = 0;
   pAbNext = NULL;
   typeRule = (PRuleType) 0;
   func = (FunctionType) 0;
-  assoc = AssocView (pEl);
   /* on applique successivement tous les schemas de presentation en commencant
      par le moins prioritaire : le schema de presentation principal */
   pHd = NULL;
@@ -3578,10 +3471,7 @@ void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
 	    {
 	      pR = firstOfType;
 	      /* check if the view exists */
-	      if (assoc)
-		existingView = pDoc->DocAssocFrame[pEl->ElAssocNum - 1] != 0 && view == 1;
-	      else
-		existingView = pDoc->DocView[view - 1].DvPSchemaView > 0;
+	      existingView = pDoc->DocView[view - 1].DvPSchemaView > 0;
 	      if (existingView)
 		{
 		  viewSch = AppliedView (pEl, pAttr, pDoc, view);
@@ -3646,10 +3536,7 @@ void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
 			   ou c'est une suppression et le pave etait rendu invisible par la regle
 			   on cree le pave et ses paves de presentation eventuels */
 			{
-			  if (assoc)
-			    pDoc->DocAssocFreeVolume[pEl->ElAssocNum - 1] = THOT_MAXINT;
-			  else
-			    pDoc->DocViewFreeVolume[view - 1] = THOT_MAXINT;
+			  pDoc->DocViewFreeVolume[view - 1] = THOT_MAXINT;
 			  pAb = AbsBoxesCreate (pEl, pDoc, view, TRUE, TRUE, &complete);
 			  if (pAb != NULL)
 			    /* au moins un pave a ete cree. pAb est le
@@ -3676,10 +3563,7 @@ void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
 		      !remove)
 		    /* il faut creer un pave de presentation */
 		    {
-		      if (assoc)
-			pDoc->DocAssocFreeVolume[pEl->ElAssocNum - 1] = THOT_MAXINT;
-		      else
-			pDoc->DocViewFreeVolume[view - 1] = THOT_MAXINT;
+		      pDoc->DocViewFreeVolume[view - 1] = THOT_MAXINT;
 		      pAb = CrAbsBoxesPres (pEl, pDoc, pR, pAttr->AeAttrSSchema, pAttr, view,
 					     pSchP, FALSE, TRUE);
 		      pAbNext = pAb;
@@ -3860,14 +3744,8 @@ void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
 		    }
 		  /* conserve le pointeur sur le pave a reafficher */
 		  if (pReaff != NULL)
-		    {
-		      if (assoc)
-			pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
-			  Enclosing (pReaff, pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
-		      else
-			pDoc->DocViewModifiedAb[view - 1] =
-			  Enclosing (pReaff, pDoc->DocViewModifiedAb[view - 1]);
-		    }
+		    pDoc->DocViewModifiedAb[view - 1] =
+			 Enclosing (pReaff, pDoc->DocViewModifiedAb[view - 1]);
 		}
 	    } /* fin de la boucle sur les vues */
 	  
@@ -3927,12 +3805,11 @@ ThotBool IsIdenticalTextType (PtrElement pEl, PtrDocument pDoc,
   PtrElement          pEl2, pEVoisin;
   PtrAbstractBox      pAb;
   int                 view, dvol;
-  ThotBool            equal, stop, assoc;
+  ThotBool            equal, stop;
 
   equal = FALSE;
   if (pEl != NULL)
     {
-      assoc = AssocView (pEl);
       pEl2 = pEl->ElNext;
       if (pEl2 != NULL && pEl->ElLeafType == LtText && pEl->ElTerminal &&
 	  pEl2->ElTerminal && pEl2->ElLeafType == LtText &&
@@ -3977,15 +3854,8 @@ ThotBool IsIdenticalTextType (PtrElement pEl, PtrDocument pDoc,
 	      if (pAb != NULL)
 		{
 		  pAb->AbChange = TRUE;
-		  if (!assoc)
-		    pDoc->DocViewModifiedAb[view - 1] =
-		      Enclosing (pAb, pDoc->DocViewModifiedAb[view - 1]);
-		  else
-		    {
-		      pEl2 = pEl;
-		      pDoc->DocAssocModifiedAb[pEl2->ElAssocNum - 1] =
-			Enclosing (pAb, pDoc->DocAssocModifiedAb[pEl2->ElAssocNum - 1]);
-		    }
+		  pDoc->DocViewModifiedAb[view - 1] =
+		           Enclosing (pAb, pDoc->DocViewModifiedAb[view - 1]);
 		  dvol = pEl->ElTextLength - pAb->AbVolume;
 		  
 		  if (pAb->AbDead && pAb->AbNext != NULL)

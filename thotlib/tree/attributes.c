@@ -618,25 +618,23 @@ void ChangeLanguage (PtrDocument pDoc, PtrElement pEl, Language lang,
 		{
 		   pAbsBox = pEl->ElAbstractBox[view];
 		   /* saute les paves de presentation de l'element */
-		   while (pAbsBox->AbPresentationBox && pAbsBox->AbElement == pEl)
+		   while (pAbsBox->AbPresentationBox &&
+			  pAbsBox->AbElement == pEl)
 		      pAbsBox = pAbsBox->AbNext;
 		   if (!pAbsBox->AbDead)
 		      /* traite le pave' principal de l'element */
 		      /* change la langue du pave */
 		     {
 			pAbsBox->AbLanguage = lang;
-			if (force || TtaGetAlphabet (oldElLang) != TtaGetAlphabet (lang))
+			if (force ||
+			    TtaGetAlphabet (oldElLang) != TtaGetAlphabet(lang))
 			  /* cette langue s'ecrit dans un alphabet different */
 			  /* ou la langue est forcee */
 			  {
 			    pAbsBox->AbChange = TRUE;
 			    /* conserve le pointeur sur le pave a reafficher */
-			    if (AssocView (pEl))
-			      pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
-				Enclosing (pAbsBox, pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
-			    else
-			      pDoc->DocViewModifiedAb[view] =
-				Enclosing (pAbsBox, pDoc->DocViewModifiedAb[view]);
+			    pDoc->DocViewModifiedAb[view] =
+			      Enclosing (pAbsBox, pDoc->DocViewModifiedAb[view]);
 			  }
 		     }
 		}

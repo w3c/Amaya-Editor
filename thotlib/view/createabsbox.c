@@ -533,22 +533,6 @@ void ConstantCopy (int NConst, PtrPSchema pSchP, PtrAbstractBox pAb)
 }
 
 /*----------------------------------------------------------------------
-   AssocView retourne vrai si l'element pEl s'affiche dans une vue  
-   d'elements associes.                                    
-  ----------------------------------------------------------------------*/
-ThotBool AssocView (PtrElement pEl)
-{
-   ThotBool            assocView;
-
-   assocView = FALSE;
-   if (pEl != NULL)
-      if (pEl->ElAssocNum != 0)
-	 /* l'element est dans un element associe */
-	 assocView = TRUE;
-   return assocView;
-}
-
-/*----------------------------------------------------------------------
    AttrIsAfter retourne vrai si attribut pAttr est un attribut qui suit
    l'attribut pRefAttr.
   ----------------------------------------------------------------------*/
@@ -576,25 +560,9 @@ static ThotBool AttrIsAfter (PtrAttribute pAttr, PtrAttribute pRefAttr)
   ----------------------------------------------------------------------*/
 ThotBool DoesViewExist (PtrElement pEl, PtrDocument pDoc, DocViewNumber viewNb)
 {
-  int                 v;    
-  ThotBool            existView;
-
-  if (AssocView (pEl))
-    {
-      /* c'est une vue d'elements associes, elle existe */
-      /* si la fenetre correspondante existe */
-      existView = pDoc->DocAssocVolume[pEl->ElAssocNum - 1] != 0;
-    }
-  else
-    {
-      /* c'est une vue de l'arbre principal du document, elle existe */
-      /* si l'entree correspondante de la table des vues du document */
-      /* n'est pas libre. */
-      v = pDoc->DocView[viewNb - 1].DvPSchemaView;
-      existView = (v == 1 ||
-		   (v > 1 /*&& pDoc->DocView[viewNb - 1].DvSSchema == pEl->ElStructSchema*/));
-    }
-  return existView;
+  /* la vue existe si l'entree correspondante de la table des vues
+     du document n'est pas libre. */
+  return (pDoc->DocView[viewNb - 1].DvPSchemaView > 0);
 }
 
 /*----------------------------------------------------------------------
@@ -816,17 +784,11 @@ void ApplDelayedRule (PtrElement pEl, PtrDocument pDoc)
    PtrPSchema          pSPres;
    PtrAttribute        pAttr;
    PtrAbstractBox      pAb, pAbb;
-   int                 view, lastView;
+   int                 view;
 
    if (pEl == NULL || pDoc == NULL)
       return;
-   if (AssocView (pEl))
-      /* vue d'elements associes */
-      lastView = 1;
-   else
-      /* nombre de vues du document */
-      lastView = MAX_VIEW_DOC;
-   for (view = 0; view < lastView; view++)
+   for (view = 0; view < MAX_VIEW_DOC; view++)
      {
 	pAb = pEl->ElAbstractBox[view];
 	if (pAb != NULL)
@@ -2484,21 +2446,10 @@ PtrAbstractBox TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate,
 ThotBool IsViewFull (DocViewNumber viewNb, PtrDocument pDoc, PtrElement pEl)
 {
   int               i;
-  ThotBool          full;
 
-  if (!AssocView (pEl))
-    {
-      /* ce n'est pas une vue d'elements associes */
-      i =  viewNb - 1;
-      full = (pDoc->DocView[i].DvPSchemaView == 0 || pDoc->DocViewFreeVolume[i] <= 0);
-    }
-  else
-    {
-      /* c'est une vue d'elements associes */
-      i = pEl->ElAssocNum - 1;
-      full = (pDoc->DocAssocFrame[i] == 0 || pDoc->DocAssocFreeVolume[i] < 0);
-    }
-  return (full);
+  i =  viewNb - 1;
+  return (pDoc->DocView[i].DvPSchemaView == 0 ||
+	  pDoc->DocViewFreeVolume[i] <= 0);
 }
 
 /*----------------------------------------------------------------------
@@ -3078,15 +3029,6 @@ static void ComputeVisib (PtrElement pEl, PtrDocument pDoc,
    if (!ok && pEl->ElParent == NULL)
       if (pEl->ElAssocNum == 0 || viewSch == 1)
 	 *vis = 10;
-
-   /* Si c'est un element associe', il n'est visible que dans la */
-   /* vue principale, meme s'il s'affiche en haut ou bas de page. */
-   /* NOTE : seule la vue principale peut afficher des */
-   /* elements associes en haut ou bas de page */
-   if (pEl->ElAssocNum != 0)
-      if (!AssocView (pEl))
-	 if (pDoc->DocView[viewNb - 1].DvPSchemaView != 1)
-	    *vis = 0;
 
    /* on ne cree une marque de page que si elle concerne la vue et */
    /* s'il existe des regles de presentation de la page */

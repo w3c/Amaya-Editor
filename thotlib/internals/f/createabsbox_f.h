@@ -29,7 +29,6 @@ extern PtrAbstractBox InitAbsBoxes ( PtrElement pEl,
 extern void ConstantCopy ( int NConst,
                            PtrPSchema pSchP,
                            PtrAbstractBox pAb );
-extern ThotBool AssocView ( PtrElement pEl );
 extern ThotBool DoesViewExist ( PtrElement pEl,
                                 PtrDocument pDoc,
                                 DocViewNumber viewNb );
@@ -117,7 +116,6 @@ extern PtrAbstractBox InitAbsBoxes (/* PtrElement pEl,
 extern void ConstantCopy (/* int NConst,
                              PtrPSchema pSchP,
                              PtrAbstractBox pAb */);
-extern ThotBool AssocView (/* PtrElement pEl */);
 extern ThotBool DoesViewExist (/* PtrElement pEl,
                                   PtrDocument pDoc,
                                   DocViewNumber viewNb */);

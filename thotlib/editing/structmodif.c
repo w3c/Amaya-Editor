@@ -144,10 +144,7 @@ static void CopyLeaf (PtrCopyDescr pCopyD, ThotBool redisplay)
 	     ApplyCopy (pDocPav, pCopyD->CdCopyRule, pCopyD->CdCopiedAb, FALSE);
 	     pCopyD->CdCopiedAb->AbChange = TRUE;
 	     /* reaffiche le pave' mis a jour */
-	     if (AssocView (pCopyD->CdCopiedAb->AbElement))
-		frame = pDocPav->DocAssocFrame[pCopyD->CdCopiedAb->AbElement->ElAssocNum - 1];
-	     else
-		frame = pDocPav->DocViewFrame[pCopyD->CdCopiedAb->AbDocView - 1];
+	     frame = pDocPav->DocViewFrame[pCopyD->CdCopiedAb->AbDocView - 1];
 	     /* on ne s'occupe pas de la hauteur de page */
 	     pageHeight = 0;
 	     ChangeConcreteImage (frame, &pageHeight, pCopyD->CdCopiedAb);
@@ -449,11 +446,7 @@ void RedisplayEmptyReferences (PtrElement pEl, PtrDocument *pDoc,
 			   pAb->AbVolume = 3;
 			   /* reaffiche le pave */
 			   pAb->AbChange = TRUE;
-			   if (AssocView (pElRef))
-			     frame =
-			       pRefDoc->DocAssocFrame[pElRef->ElAssocNum - 1];
-			   else
-			     frame = pRefDoc->DocViewFrame[view];
+			   frame = pRefDoc->DocViewFrame[view];
 			   h = 0;
 			   /* on ignore la hauteur de page */
 			   ChangeConcreteImage (frame, &h,

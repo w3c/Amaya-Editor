@@ -408,13 +408,10 @@ static void Cut (PtrElement pEl, int cutChar, PtrDocument pDoc, int nbView)
    /* vue traitee. */
    UpdateAbsBoxVolume (pEl, nbView - 1, pDoc);
    /* prepare la creation des paves de la 2eme partie */
-   if (!AssocView (pEl))
-     {
-      if (pDoc->DocView[nbView - 1].DvPSchemaView > 0)
-	 pDoc->DocViewFreeVolume[nbView - 1] = THOT_MAXINT;
-      else if (pDoc->DocAssocFrame[pEl->ElAssocNum - 1] != 0)
-	 pDoc->DocAssocFreeVolume[pEl->ElAssocNum - 1] = THOT_MAXINT;
-     }
+   if (pDoc->DocView[nbView - 1].DvPSchemaView > 0)
+     pDoc->DocViewFreeVolume[nbView - 1] = THOT_MAXINT;
+   else if (pDoc->DocAssocFrame[pEl->ElAssocNum - 1] != 0)
+     pDoc->DocAssocFreeVolume[pEl->ElAssocNum - 1] = THOT_MAXINT;
    /* cree les paves de la deuxieme partie */
    CreateNewAbsBoxes (pSecond, pDoc, nbView);
    ApplDelayedRule (pSecond, pDoc);
@@ -793,10 +790,7 @@ static PtrElement InsertMark (PtrAbstractBox pAb, int frame, int nbView,
       (*ThotLocalActions[T_insertpage]) (pElPage, pDoc, nbView, &cut);
    if (!cut)
       CreateNewAbsBoxes (pElPage, pDoc, nbView);
-   if (!AssocView (pEl))
-      modifAbsBox = pDoc->DocViewModifiedAb[nbView - 1];
-   else
-      modifAbsBox = pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1];
+   modifAbsBox = pDoc->DocViewModifiedAb[nbView - 1];
    /* signale ces paves au Mediateur, sans faire reevaluer la coupure de page. */
    if (modifAbsBox != NULL)
      {
@@ -1286,10 +1280,7 @@ static int       n = 1;
 		  if (WorkingPage == pPage)
 		    NbBoxesPageHeaderToCreate = 0;
 		  /* signale les paves morts au Mediateur */
-		  if (!AssocView (rootEl))
-		    redispAb = pDoc->DocViewModifiedAb[nbView - 1];
-		  else
-		    redispAb = pDoc->DocAssocModifiedAb[rootEl->ElAssocNum - 1];
+		  redispAb = pDoc->DocViewModifiedAb[nbView - 1];
 		  /*RealPageHeight = PageHeight;*/
 		  (void) ChangeConcreteImage (frame, &RealPageHeight, redispAb);
 		  /* libere tous les paves morts de la vue */
@@ -1299,10 +1290,7 @@ static int       n = 1;
 		  /* signale au Mediateur les paves morts par suite de */
 		  /* fusion des elements precedent et suivant les marques */
 		  /* supprimees. */
-		  if (!AssocView (rootEl))
-		    redispAb = pDoc->DocViewModifiedAb[nbView - 1];
-		  else
-		    redispAb = pDoc->DocAssocModifiedAb[rootEl->ElAssocNum - 1];
+		  redispAb = pDoc->DocViewModifiedAb[nbView - 1];
 		  if (redispAb != NULL)
 		    {
 		      h = RealPageHeight;

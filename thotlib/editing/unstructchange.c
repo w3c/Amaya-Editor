@@ -525,7 +525,7 @@ void PasteCommand ()
   before = FALSE;
   if (FirstSavedElement == NULL)
     return;
-  else if (GetCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar, &lastChar))
+  if (GetCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar, &lastChar))
     {
     /* on ne peut coller dans un document en lecture seule */
     if (!pDoc->DocReadOnly)
@@ -533,18 +533,12 @@ void PasteCommand ()
 	/* calcule le volume que pourront prendre les paves des elements
 	   colles */
 	numAssoc = firstSel->ElAssocNum;
-	if (!AssocView (firstSel))
-	  /* element de l'arbre principal */
-	  for (view = 0; view < MAX_VIEW_DOC; view++)
-	    {
-	      if (pDoc->DocView[view].DvPSchemaView > 0)
-		pDoc->DocViewFreeVolume[view] = pDoc->DocViewVolume[view];
-	    }
-	else if (pDoc->DocAssocFrame[numAssoc - 1] > 0)
-	  /* element associe */
-	  pDoc->DocAssocFreeVolume[numAssoc - 1] =
-	                                   pDoc->DocAssocVolume[numAssoc - 1];
-	
+	for (view = 0; view < MAX_VIEW_DOC; view++)
+	  {
+	    if (pDoc->DocView[view].DvPSchemaView > 0)
+	      pDoc->DocViewFreeVolume[view] = pDoc->DocViewVolume[view];
+	  }
+
 	pSplitText = NULL;
 	pNextEl = NULL;
 	doc = IdentDocument (pDoc);
@@ -724,18 +718,12 @@ void PasteCommand ()
 		  CreateNewAbsBoxes (CreatedElement[i], pDoc, 0);
 		  /* calcule le volume que pourront prendre les paves des */
 		  /* autres elements a coller */
-		  if (!AssocView (pPasted))
-		    for (view = 0; view < MAX_VIEW_DOC; view++)
-		      {
-			if (CreatedElement[i]->ElAbstractBox[view] != NULL)
-			  pDoc->DocViewFreeVolume[view] -=
-			    CreatedElement[i]->ElAbstractBox[view]->AbVolume;
-		      }
-		  else
-		    /* element affiche dans une vue associee */
-		    if (CreatedElement[i]->ElAbstractBox[0] != NULL)
-		      pDoc->DocAssocFreeVolume[numAssoc - 1] -=
-			CreatedElement[i]->ElAbstractBox[0]->AbVolume;
+		  for (view = 0; view < MAX_VIEW_DOC; view++)
+		    {
+		      if (CreatedElement[i]->ElAbstractBox[view] != NULL)
+			pDoc->DocViewFreeVolume[view] -=
+			  CreatedElement[i]->ElAbstractBox[view]->AbVolume;
+		    }
 		}
 	    /* applique les regle de presentation retardees qui restent
 	       encore */

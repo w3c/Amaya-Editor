@@ -124,47 +124,41 @@ void IsolateSelection (PtrDocument pDoc, PtrElement *pFirstSel,
 		       PtrElement *pLastSel, int *firstChar, int *lastChar,
 		       ThotBool createEmpty)
 {
-   PtrElement	       pEl;
-   int                 view;
-   ThotBool	       done;
+  PtrElement	       pEl;
+  int                 view;
+  ThotBool	       done;
 
-   if (*firstChar > 1)
-      if ((*pFirstSel)->ElTerminal && (*pFirstSel)->ElLeafType == LtText)
-	 /* la selection courante commence a l'interieur du premier element */
-	 /* selectionne */
-	 /* coupe le premier element selectionne' */
-	{
-	   SplitBeforeSelection (pFirstSel, firstChar, pLastSel, lastChar, pDoc);
-	   /* prepare la creation des paves de la 2eme partie */
-	   for (view = 0; view < MAX_VIEW_DOC; view++)
-	      if (!AssocView (*pFirstSel))
-		{
-		   if (pDoc->DocView[view].DvPSchemaView > 0)
-		      /* la vue est ouverte */
-		      pDoc->DocViewFreeVolume[view] = THOT_MAXINT;
-		}
-	      else if (pDoc->DocAssocFrame[(*pFirstSel)->ElAssocNum - 1] != 0)
-		 pDoc->DocAssocFreeVolume[(*pFirstSel)->ElAssocNum - 1] = THOT_MAXINT;
-	   /* cree les paves de la deuxieme partie */
-	   CreateNewAbsBoxes (*pFirstSel, pDoc, 0);
-	   ApplDelayedRule (*pFirstSel, pDoc);
-	}
-   done = FALSE;
-   if (createEmpty)
-     if (*firstChar == 1 && *lastChar == 1 && *pFirstSel == *pLastSel)
-       if ((*pLastSel)->ElTerminal && (*pLastSel)->ElLeafType == LtText)
+  if (*firstChar > 1)
+    if ((*pFirstSel)->ElTerminal && (*pFirstSel)->ElLeafType == LtText)
+      /* la selection courante commence a l'interieur du premier element */
+      /* selectionne */
+      /* coupe le premier element selectionne' */
+      {
+	SplitBeforeSelection (pFirstSel, firstChar, pLastSel, lastChar, pDoc);
+	/* prepare la creation des paves de la 2eme partie */
+	for (view = 0; view < MAX_VIEW_DOC; view++)
 	  {
+	    if (pDoc->DocView[view].DvPSchemaView > 0)
+	      /* la vue est ouverte */
+	      pDoc->DocViewFreeVolume[view] = THOT_MAXINT;
+	  }
+	/* cree les paves de la deuxieme partie */
+	CreateNewAbsBoxes (*pFirstSel, pDoc, 0);
+	ApplDelayedRule (*pFirstSel, pDoc);
+      }
+  done = FALSE;
+  if (createEmpty)
+    if (*firstChar == 1 && *lastChar == 1 && *pFirstSel == *pLastSel)
+      if ((*pLastSel)->ElTerminal && (*pLastSel)->ElLeafType == LtText)
+	{
 	  pEl = NewSubtree ((*pFirstSel)->ElTypeNumber, (*pFirstSel)->ElStructSchema, pDoc, (*pFirstSel)->ElAssocNum, FALSE, TRUE, FALSE, TRUE);
 	  InsertElementBefore (*pFirstSel, pEl);
 	  for (view = 0; view < MAX_VIEW_DOC; view++)
-	      if (!AssocView (*pFirstSel))
-		{
-		   if (pDoc->DocView[view].DvPSchemaView > 0)
-		      /* la vue est ouverte */
-		      pDoc->DocViewFreeVolume[view] = THOT_MAXINT;
-		}
-	      else if (pDoc->DocAssocFrame[(*pFirstSel)->ElAssocNum - 1] != 0)
-		 pDoc->DocAssocFreeVolume[(*pFirstSel)->ElAssocNum - 1] = THOT_MAXINT;
+	    {
+	      if (pDoc->DocView[view].DvPSchemaView > 0)
+		/* la vue est ouverte */
+		pDoc->DocViewFreeVolume[view] = THOT_MAXINT;
+	    }
 	  CreateNewAbsBoxes (pEl, pDoc, 0);
 	  ApplDelayedRule (pEl, pDoc);
 	  *pFirstSel = pEl;
@@ -172,11 +166,11 @@ void IsolateSelection (PtrDocument pDoc, PtrElement *pFirstSel,
 	  *firstChar = 0;
 	  *lastChar = 0;
 	  done = TRUE;
-	  }
-   if (!done)
-     if (*lastChar > 0 && *pLastSel != NULL)
-       if ((*pLastSel)->ElTerminal && (*pLastSel)->ElLeafType == LtText)
-	 SplitAfterSelection (*pLastSel, *lastChar, pDoc);
+	}
+  if (!done)
+    if (*lastChar > 0 && *pLastSel != NULL)
+      if ((*pLastSel)->ElTerminal && (*pLastSel)->ElLeafType == LtText)
+	SplitAfterSelection (*pLastSel, *lastChar, pDoc);
 }
 
 /*----------------------------------------------------------------------

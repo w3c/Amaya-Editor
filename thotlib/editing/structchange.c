@@ -143,18 +143,12 @@ static void         PasteBeforeOrAfter (PtrElement * pFirstPastedEl,
 	      colle's */
 	   if (updateVol)
 	     {
-		if (!AssocView (pEl))
-		   /* element de l'arbre principal */
-		   for (view = 0; view < MAX_VIEW_DOC; view++)
-		     {
-			if (pDoc->DocView[view].DvPSchemaView > 0)
-			   pDoc->DocViewFreeVolume[view] =
-			      pDoc->DocViewVolume[view];
-		     }
-		else if (pDoc->DocAssocFrame[numAssoc - 1] > 0)
-		   /* element associe */
-		   pDoc->DocAssocFreeVolume[numAssoc - 1] =
-		      pDoc->DocAssocVolume[numAssoc - 1];
+	       for (view = 0; view < MAX_VIEW_DOC; view++)
+		 {
+		   if (pDoc->DocView[view].DvPSchemaView > 0)
+		     pDoc->DocViewFreeVolume[view] =
+		       pDoc->DocViewVolume[view];
+		 }
 	     }
 	   /* boucle sur les elements sauvegarde's */
 	   while (pSavedEl != NULL)
@@ -515,15 +509,11 @@ static void         PasteBeforeOrAfter (PtrElement * pFirstPastedEl,
 		   CreateNewAbsBoxes (CreatedElement[i], pDoc, 0);
 		   /* calcule le volume que pourront prendre les paves des autres */
 		   /* elements a coller */
-		   if (!AssocView (pEl))
-		      for (view = 0; view < MAX_VIEW_DOC; view++)
-			{
-			   if (CreatedElement[i]->ElAbstractBox[view] != NULL)
-			      pDoc->DocViewFreeVolume[view] -= CreatedElement[i]->ElAbstractBox[view]->AbVolume;
-			}
-		   else if (CreatedElement[i]->ElAbstractBox[0] != NULL)
-		      /* element affiche dans une vue associee */
-		      pDoc->DocAssocFreeVolume[numAssoc - 1] -= CreatedElement[i]->ElAbstractBox[0]->AbVolume;
+		   for (view = 0; view < MAX_VIEW_DOC; view++)
+		     {
+		       if (CreatedElement[i]->ElAbstractBox[view] != NULL)
+			 pDoc->DocViewFreeVolume[view] -= CreatedElement[i]->ElAbstractBox[view]->AbVolume;
+		     }
 		}
 
 	   /* applique les regles de presentation retardees qui restent encore */
@@ -888,18 +878,12 @@ void PasteWithin (PtrElement * pFirstPastedEl, PtrDocument pDoc,
 				      IdentDocument (DocOfSavedElements));
 		       /* calcule le volume que pourront prendre les paves
 		          les paves des elements colles */
-		       if (!AssocView (pEl))
-			  for (view = 0; view < MAX_VIEW_DOC; view++)
-			    {
-			       if (pDoc->DocView[view].DvPSchemaView > 0)
-				  pDoc->DocViewFreeVolume[view] =
-				     pDoc->DocViewVolume[view];
-			    }
-		       else
-			  /* element associe */
-		       if (pDoc->DocAssocFrame[pEl->ElAssocNum - 1] > 0)
-			  pDoc->DocAssocFreeVolume[pEl->ElAssocNum - 1] =
-			     pDoc->DocAssocVolume[pEl->ElAssocNum - 1];
+		       for (view = 0; view < MAX_VIEW_DOC; view++)
+			 {
+			   if (pDoc->DocView[view].DvPSchemaView > 0)
+			     pDoc->DocViewFreeVolume[view] =
+			       pDoc->DocViewVolume[view];
+			 }
 		       /* cree dans toutes les vues les paves des nouveaux
 		          elements */
 		       CreateNewAbsBoxes (pPastedEl, pDoc, 0);

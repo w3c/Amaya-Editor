@@ -205,12 +205,8 @@ void ReplaceString (PtrDocument pDoc, PtrElement pEl, int firstChar,
 	{
 	  visible = TRUE;
 	  pAb->AbChange = TRUE;
-	  if (!AssocView (pEl))
-	    pDoc->DocViewModifiedAb[view] = Enclosing (pAb,
+	  pDoc->DocViewModifiedAb[view] = Enclosing (pAb,
 						pDoc->DocViewModifiedAb[view]);
-	  else
-	    pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
-	      Enclosing (pAb, pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
 	  dvol = pAb->AbVolume - pEl->ElTextLength;
 	  do
 	    {

@@ -260,87 +260,55 @@ static void SupprFollowingAbsBoxes (PtrElement pEl, PtrDocument pDoc, int view)
   ----------------------------------------------------------------------*/
 void BuildAbstractBoxes (PtrElement pEl, PtrDocument pDoc)
 {
-   PtrAbstractBox      pAb;
-   int                 view;
+  PtrAbstractBox      pAb;
+  int                 view;
 
-   /* on ne cree les paves que s'ils tombent dans la partie de l'image */
-   /* du document deja construite */
-   if (!AssocView (pEl))
-      /* traite toutes les vues du document */
-      for (view = 1; view <= MAX_VIEW_DOC; view++)
-	 {
-	 if (pDoc->DocView[view - 1].DvPSchemaView > 0)
-	    /* la vue est ouverte */
-	    if (ElemWithinImage (pEl, view, pDoc->DocViewRootAb[view-1], pDoc))
-	       /* l'element est a l'interieur de l'image deja construite */
-	       {
-	       if (!EnclosingAbsBoxesBreakable (pEl, view, pDoc) ||
-		    pEl->ElVolume + pDoc->DocViewRootAb[view - 1]->AbVolume
+  /* on ne cree les paves que s'ils tombent dans la partie de l'image */
+  /* du document deja construite */
+  /* traite toutes les vues du document */
+  for (view = 1; view <= MAX_VIEW_DOC; view++)
+    {
+      if (pDoc->DocView[view - 1].DvPSchemaView > 0)
+	/* la vue est ouverte */
+	if (ElemWithinImage (pEl, view, pDoc->DocViewRootAb[view-1], pDoc))
+	  /* l'element est a l'interieur de l'image deja construite */
+	  {
+	    if (!EnclosingAbsBoxesBreakable (pEl, view, pDoc) ||
+		pEl->ElVolume + pDoc->DocViewRootAb[view - 1]->AbVolume
 					< 2 * pDoc->DocViewVolume[view - 1])
-	          /* on cree tous les paves du nouvel element */
-	          pDoc->DocViewFreeVolume[view - 1] = THOT_MAXINT;
-	       else
-		  /* le volume du nouvel element ajoute' au volume existant
-		     de la vue est tres superieur a ce que la fenetre peut
-		     montrer d'un coup */
-		  {
-		  /* on detruit la partie de l'image abstraite qui suit le
-		     nouvel element */
-		  SupprFollowingAbsBoxes (pEl, pDoc, view);
-		  /* on creera seulement une partie des paves du nouvel
-		    element */
-		  pDoc->DocViewFreeVolume[view - 1] =
+	      /* on cree tous les paves du nouvel element */
+	      pDoc->DocViewFreeVolume[view - 1] = THOT_MAXINT;
+	    else
+	      /* le volume du nouvel element ajoute' au volume existant
+		 de la vue est tres superieur a ce que la fenetre peut
+		 montrer d'un coup */
+	      {
+		/* on detruit la partie de l'image abstraite qui suit le
+		   nouvel element */
+		SupprFollowingAbsBoxes (pEl, pDoc, view);
+		/* on creera seulement une partie des paves du nouvel
+		   element */
+		pDoc->DocViewFreeVolume[view - 1] =
 			pDoc->DocViewVolume[view - 1] - pDoc->DocViewRootAb[view - 1]->AbVolume;
-		  }
-	       /* cree effectivement les paves du nouvel element dans la vue */
-	       if (pDoc->DocViewFreeVolume[view - 1] > 0)
-	          CreateNewAbsBoxes (pEl, pDoc, view);
-	       else
-		 {
-		   /* mark enclosing abstract boxes as truncated */
-		   pAb = pEl->ElParent->ElAbstractBox[view - 1];
-		   while (pAb && !pAb->AbTruncatedTail)
-		     {
-		       pAb->AbTruncatedTail = TRUE;
-		       pAb = pAb->AbEnclosing;
-		     }
-		 }
-	       }
-	 }
-   else
-      /* View of associated elements */
-      if (pDoc->DocAssocFrame[pEl->ElAssocNum - 1] != 0)
-         /* la vue est ouverte */
-         if (ElemWithinImage (pEl, 1,
-	      pDoc->DocAssocRoot[pEl->ElAssocNum - 1]->ElAbstractBox[0], pDoc))
-	    /* l'element se trouve a l'interieur de l'image deja construite */
-	    {
-	       if (!EnclosingAbsBoxesBreakable (pEl, 1, pDoc) ||
-		    pEl->ElVolume + pDoc->DocAssocRoot[pEl->ElAssocNum - 1]->ElAbstractBox[0]->AbVolume
-			  < 2 * pDoc->DocAssocVolume[pEl->ElAssocNum - 1])
-	          /* on cree tous les paves du nouvel element */
-	          pDoc->DocAssocFreeVolume[pEl->ElAssocNum - 1] = THOT_MAXINT;
-	       else
-		  /* le volume du nouvel element ajoute' au volume existant
-		     de la vue est tres superieur a ce que la fenetre peut
-		     montrer d'un coup */
+	      }
+	    /* cree effectivement les paves du nouvel element dans la vue */
+	    if (pDoc->DocViewFreeVolume[view - 1] > 0)
+	      CreateNewAbsBoxes (pEl, pDoc, view);
+	    else
+	      {
+		/* mark enclosing abstract boxes as truncated */
+		pAb = pEl->ElParent->ElAbstractBox[view - 1];
+		while (pAb && !pAb->AbTruncatedTail)
 		  {
-		  /* on detruit la partie de l'image abstraite qui suit le
-		     nouvel element */
-		  SupprFollowingAbsBoxes (pEl, pDoc, 1);
-		  /* on creera seulement une partie des paves du nouvel
-		    element */
-		  pDoc->DocAssocFreeVolume[pEl->ElAssocNum - 1] =
-			pDoc->DocAssocVolume[pEl->ElAssocNum - 1]
-			- pDoc->DocAssocRoot[pEl->ElAssocNum - 1]->ElAbstractBox[0]->AbVolume;
+		    pAb->AbTruncatedTail = TRUE;
+		    pAb = pAb->AbEnclosing;
 		  }
-	       /* cree effectivement les paves du nouvel element dans la vue */
-	       if (pDoc->DocAssocFreeVolume[pEl->ElAssocNum - 1] > 0)
-	          CreateNewAbsBoxes (pEl, pDoc, 0);
-	    }
-   /* applique les regles retardees concernant les paves cree's */
-   ApplDelayedRule (pEl, pDoc);
-   AbstractImageUpdated (pDoc);
+	      }
+	  }
+    }
+  /* applique les regles retardees concernant les paves cree's */
+  ApplDelayedRule (pEl, pDoc);
+  AbstractImageUpdated (pDoc);
 }
 
 /*----------------------------------------------------------------------
@@ -761,53 +729,44 @@ static void  ChangeAbsBoxModifAttrIntoView (PtrElement pEl, int view,
 void                ChangeAbsBoxModif (PtrElement pEl, Document document,
 				       ThotBool newAbsModif)
 {
-   PtrDocument         pDoc;
-   int                 view;
-   PtrElement          pChild;
+  PtrDocument         pDoc;
+  int                 view;
+  PtrElement          pChild;
 
-   pDoc = LoadedDocument[document - 1];
-   if (pDoc == NULL)
-      return;
-   /* si le document n'a pas de schema de presentation, on ne fait rien */
-   if (PresentationSchema (pDoc->DocSSchema, pDoc) == NULL)
-      return;
-   /* si le document est en mode de non calcul de l'image, on ne fait rien */
-   if (documentDisplayMode[document - 1] == NoComputedDisplay)
-      return;
-   /* demande au mediateur si une couleur est associee a ReadOnly */
-   /* si oui, il faut reafficher les paves modifie's */
-   if (!AssocView (pEl))
-      /* on traite toutes les vues du document */
-      for (view = 1; view <= MAX_VIEW_DOC; view++)
+  pDoc = LoadedDocument[document - 1];
+  if (pDoc == NULL)
+    return;
+  /* si le document n'a pas de schema de presentation, on ne fait rien */
+  if (PresentationSchema (pDoc->DocSSchema, pDoc) == NULL)
+    return;
+  /* si le document est en mode de non calcul de l'image, on ne fait rien */
+  if (documentDisplayMode[document - 1] == NoComputedDisplay)
+    return;
+  /* demande au mediateur si une couleur est associee a ReadOnly */
+  /* si oui, il faut reafficher les paves modifie's */
+  /* on traite toutes les vues du document */
+  for (view = 1; view <= MAX_VIEW_DOC; view++)
+    {
+      /* on traite tous les paves de l'element dans cette vue */
+      ChangeAbsBoxModifAttrIntoView (pEl, view, newAbsModif, TRUE);
+      if (pEl->ElAbstractBox[view - 1] != NULL)
+	RedispAbsBox (pEl->ElAbstractBox[view - 1],
+		      LoadedDocument[document - 1]);
+    }
+  /* on fait reafficher pour visualiser le changement de couleur */
+  AbstractImageUpdated (LoadedDocument[document - 1]);
+  RedisplayCommand (document);
+  /* meme traitement pour les fils qui heritent les droits d'acces */
+  if (!pEl->ElTerminal)
+    {
+      pChild = pEl->ElFirstChild;
+      while (pChild != NULL)
 	{
-	   /* on traite tous les paves de l'element dans cette vue */
-	   ChangeAbsBoxModifAttrIntoView (pEl, view, newAbsModif, TRUE);
-	   if (pEl->ElAbstractBox[view - 1] != NULL)
-	      RedispAbsBox (pEl->ElAbstractBox[view - 1],
-			    LoadedDocument[document - 1]);
+	  if (pChild->ElAccess == AccessInherited)
+	    ChangeAbsBoxModif (pChild, document, newAbsModif);
+	  pChild = pChild->ElNext;
 	}
-   else
-      /* View of associated elements */
-     {
-	/* on traite tous les paves de l'element dans cette vue */
-	ChangeAbsBoxModifAttrIntoView (pEl, 1, newAbsModif, TRUE);
-	if (pEl->ElAbstractBox[0] != NULL)
-	   RedispAbsBox (pEl->ElAbstractBox[0], LoadedDocument[document - 1]);
-     }
-   /* on fait reafficher pour visualiser le changement de couleur */
-   AbstractImageUpdated (LoadedDocument[document - 1]);
-   RedisplayCommand (document);
-   /* meme traitement pour les fils qui heritent les droits d'acces */
-   if (!pEl->ElTerminal)
-     {
-	pChild = pEl->ElFirstChild;
-	while (pChild != NULL)
-	  {
-	     if (pChild->ElAccess == AccessInherited)
-		ChangeAbsBoxModif (pChild, document, newAbsModif);
-	     pChild = pChild->ElNext;
-	  }
-     }
+    }
 }
 
 

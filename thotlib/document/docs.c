@@ -420,12 +420,8 @@ void                UpdateIncludedElement (PtrElement pEl, PtrDocument pDoc)
    ThotBool            ToCreate[MAX_VIEW_DOC];
 
    /* conserve la liste des vues ou l'element a des paves */
-   if (!AssocView (pEl))
-      for (view = 0; view < MAX_VIEW_DOC; view++)
-	 ToCreate[view] = pEl->ElAbstractBox[view] != NULL;
-   else
-      /* vue d'elements associes */
-      ToCreate[0] = pEl->ElAbstractBox[0] != NULL;
+   for (view = 0; view < MAX_VIEW_DOC; view++)
+     ToCreate[view] = pEl->ElAbstractBox[view] != NULL;
    /* detruit les paves de l'element */
    DestroyAbsBoxes (pEl, pDoc, FALSE);
    /* Update Abstract views */
@@ -492,22 +488,11 @@ void                UpdateIncludedElement (PtrElement pEl, PtrDocument pDoc)
    CopyIncludedElem (pEl, pDoc);
    /* cree les paves de la nouvelle copie dans les vues ou il y avait */
    /* deja des paves */
-   if (!AssocView (pEl))
-     {
-       for (view = 0; view < MAX_VIEW_DOC; view++)
-	 if (ToCreate[view])
-	   {
-	     pDoc->DocViewFreeVolume[view] = pDoc->DocViewVolume[view];
-	     CreateNewAbsBoxes (pEl, pDoc, view + 1);
-	   }
-     }
-   else
-     /* vue d'elements associes */
-     if (ToCreate[0])
+   for (view = 0; view < MAX_VIEW_DOC; view++)
+     if (ToCreate[view])
        {
-	 pDoc->DocAssocFreeVolume[pEl->ElAssocNum - 1] =
-	   pDoc->DocAssocVolume[pEl->ElAssocNum - 1];
-	 CreateNewAbsBoxes (pEl, pDoc, 1);
+	 pDoc->DocViewFreeVolume[view] = pDoc->DocViewVolume[view];
+	 CreateNewAbsBoxes (pEl, pDoc, view + 1);
        }
    ApplDelayedRule (pEl, pDoc);
    /* reaffiche l'element dans toutes les vues ou il existe */

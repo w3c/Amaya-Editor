@@ -931,7 +931,7 @@ void RedisplayReference (PtrElement element, Document document)
 void RedisplayLeaf (PtrElement element, Document document, int delta)
 {
    PtrDocument         pDoc;
-   int                 view, frame, h;
+   int                 view, h;
    PtrAbstractBox      pAbb;
    PtrAbstractBox      pAbbox1;
 
@@ -1023,17 +1023,11 @@ void RedisplayLeaf (PtrElement element, Document document, int delta)
 	       break;
 	     }
 	   /* un pave correspondant existe dans la vue view */
-	   if (AssocView (element))
-	     /* vue d'element associe */
-	     frame = pDoc->DocAssocFrame[element->ElAssocNum - 1];
-	   else
-	     frame = pDoc->DocViewFrame[view];
-	   
 	   if (pAbbox1 != NULL)
 	     {
-	       h = 0;
 	       /* on ne s'occupe pas de la hauteur de page */
-	       ChangeConcreteImage (frame, &h, pAbbox1);
+	       h = 0;
+	       ChangeConcreteImage (pDoc->DocViewFrame[view], &h, pAbbox1);
 	     }
 	}
 
@@ -1092,72 +1086,64 @@ void RedisplaySplittedText (PtrElement element, int position,
   ----------------------------------------------------------------------*/
 void RedisplayMergedText (PtrElement element, Document document)
 {
-   PtrElement          pEl, pENeighbour;
-   ThotBool            stop;
-   PtrDocument         pDoc;
-   int                 view, dvol, h, frame;
-   PtrAbstractBox      pAb;
+  PtrElement          pEl, pENeighbour;
+  ThotBool            stop;
+  PtrDocument         pDoc;
+  int                 view, dvol, h;
+  PtrAbstractBox      pAb;
 
-   pDoc = LoadedDocument[document - 1];
-   if (pDoc == NULL)
-      return;
-   /* si le document n'a pas de schema de presentation, on ne fait rien */
-   if (PresentationSchema (pDoc->DocSSchema, pDoc) == NULL)
-      return;
-   pEl = element;
-   /* si le document est en mode de non calcul de l'image, on ne fait rien */
-   if (documentDisplayMode[document - 1] == NoComputedDisplay)
-      return;
-   /* teste si pEl est le dernier fils de son pere, */
-   /* abstraction faite des marques de page */
-   pENeighbour = pEl->ElNext;
-   stop = FALSE;
-   do
-     if (pENeighbour == NULL)
-       /* pEl devient le dernier fils de son pere */
-       {
-	 ChangeFirstLast (pEl, pDoc, FALSE, FALSE);
-	 stop = TRUE;
-       }
-     else if (!pENeighbour->ElTerminal ||
-	      pENeighbour->ElLeafType != LtPageColBreak)
-       stop = TRUE;
-     else
-       pENeighbour = pENeighbour->ElNext;
-   while (!(stop));
+  pDoc = LoadedDocument[document - 1];
+  if (pDoc == NULL)
+    return;
+  /* si le document n'a pas de schema de presentation, on ne fait rien */
+  if (PresentationSchema (pDoc->DocSSchema, pDoc) == NULL)
+    return;
+  pEl = element;
+  /* si le document est en mode de non calcul de l'image, on ne fait rien */
+  if (documentDisplayMode[document - 1] == NoComputedDisplay)
+    return;
+  /* teste si pEl est le dernier fils de son pere, */
+  /* abstraction faite des marques de page */
+  pENeighbour = pEl->ElNext;
+  stop = FALSE;
+  do
+    if (pENeighbour == NULL)
+      /* pEl devient le dernier fils de son pere */
+      {
+	ChangeFirstLast (pEl, pDoc, FALSE, FALSE);
+	stop = TRUE;
+      }
+    else if (!pENeighbour->ElTerminal ||
+	     pENeighbour->ElLeafType != LtPageColBreak)
+      stop = TRUE;
+    else
+      pENeighbour = pENeighbour->ElNext;
+  while (!(stop));
 
-   /* met a jour le volume des paves correspondants */
-   for (view = 0; view < MAX_VIEW_DOC; view++)
-     {
-       pAb = pEl->ElAbstractBox[view];
-       if (pAb != NULL)
-	 {
-	   dvol = pEl->ElTextLength - pAb->AbVolume;
-	   pAb->AbVolume += dvol;
-	   pAb->AbChange = TRUE;
-	   if (!AssocView (pEl))
-	     {
-	       pDoc->DocViewModifiedAb[view] = Enclosing (pAb, pDoc->DocViewModifiedAb[view]);
-	       frame = pDoc->DocViewFrame[view];
-	     }
-	   else
-	     {
-	       pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] = Enclosing (pAb, pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
-	       frame = pDoc->DocAssocFrame[pEl->ElAssocNum - 1];
-	     }
-	   h = 0;		/* on ne s'occupe pas de la hauteur de page */
-	   ChangeConcreteImage (frame, &h, pAb->AbEnclosing);
-	   if (pAb->AbDead && pAb->AbNext != NULL)
-	     pAb->AbNext->AbVolume += dvol;
-	   do
-	     {
-	       pAb->AbVolume += dvol;
-	       pAb = pAb->AbEnclosing;
-	     }
-	   while (!(pAb == NULL));
-	 }
-     }
-   RedisplayCommand (document);
+  /* met a jour le volume des paves correspondants */
+  for (view = 0; view < MAX_VIEW_DOC; view++)
+    {
+      pAb = pEl->ElAbstractBox[view];
+      if (pAb != NULL)
+	{
+	  dvol = pEl->ElTextLength - pAb->AbVolume;
+	  pAb->AbVolume += dvol;
+	  pAb->AbChange = TRUE;
+	  pDoc->DocViewModifiedAb[view] = Enclosing (pAb,
+					       pDoc->DocViewModifiedAb[view]);
+	  h = 0;		/* on ne s'occupe pas de la hauteur de page */
+	  ChangeConcreteImage (pDoc->DocViewFrame[view], &h, pAb->AbEnclosing);
+	  if (pAb->AbDead && pAb->AbNext != NULL)
+	    pAb->AbNext->AbVolume += dvol;
+	  do
+	    {
+	      pAb->AbVolume += dvol;
+	      pAb = pAb->AbEnclosing;
+	    }
+	  while (!(pAb == NULL));
+	}
+    }
+  RedisplayCommand (document);
 }
 
 /*----------------------------------------------------------------------

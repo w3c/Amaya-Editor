@@ -359,13 +359,8 @@ PtrDocument         pDoc;
 			   /* indique que la hauteur du pave' a change' */
 			   pAb->AbHeightChange = TRUE;
 			   /* conserve le pointeur sur le pave a reafficher */
-			   if (AssocView (pEl))
-			      pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
-				 Enclosing (pAb, pDoc->DocAssocModifiedAb[pEl->
-							   ElAssocNum - 1]);
-			   else
-			      pDoc->DocViewModifiedAb[view - 1] =
-				 Enclosing (pAb, pDoc->DocViewModifiedAb[view - 1]);
+			   pDoc->DocViewModifiedAb[view - 1] =
+			     Enclosing (pAb, pDoc->DocViewModifiedAb[view - 1]);
 			}
 	  }
      }
@@ -476,12 +471,7 @@ PtrDocument         pDoc;
 		   /* detruit le pave found' */
 		   SetDeadAbsBox (pAb);
 		   /* conserve le pointeur sur le pave a reafficher */
-		   if (AssocView (pEl))
-		      pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
-			 Enclosing (pAb, pDoc->DocAssocModifiedAb[pEl->
-							   ElAssocNum - 1]);
-		   else
-		      pDoc->DocViewModifiedAb[view - 1] =
+		   pDoc->DocViewModifiedAb[view - 1] =
 			 Enclosing (pAb, pDoc->DocViewModifiedAb[view - 1]);
 		}
 	   }
