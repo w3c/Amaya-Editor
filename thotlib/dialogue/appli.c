@@ -773,11 +773,14 @@ gboolean FrameResizedGTK (GtkWidget *widget,
 	    height = widget->allocation.height; 
 
 	    FrameTable[frame].FrWidth = width;
-	    FrameTable[frame].FrHeight = height;	    
+	    FrameTable[frame].FrHeight = height;
+	    if (GL_prepare (frame))
+      {
 	    GLResize (width, height, 0, 0);
 	    DefRegion (frame, 0, 0, width, height);
 	    FrameRedraw (frame, width, height);
 
+      }
 	    while (gtk_events_pending ())
 	      gtk_main_iteration ();
 
@@ -785,7 +788,10 @@ gboolean FrameResizedGTK (GtkWidget *widget,
 	  }
 	FrameTable[frame].DblBuffNeedSwap = TRUE; 
 	GL_SwapEnable (frame);
+    if (GL_prepare (frame))
+      {
 	GL_Swap (frame);
+      }
       }
   return TRUE;
 }
