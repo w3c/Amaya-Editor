@@ -787,13 +787,7 @@ PictInfo           *imageDesc;
 
   ViewFrame*        pFrame;
   int               delta;
-# ifndef _WINDOWS
-  XRectangle        rect;
-  XGCValues         values;
-  unsigned int      valuemask;
-# endif /* _WINDOWS */
-
-# ifdef _WINDOWS
+#ifdef _WINDOWS
   HDC     hMemDC;
   HBITMAP hBkgBmp;
   HBITMAP hOldBitmap1;
@@ -802,9 +796,15 @@ PictInfo           *imageDesc;
   BITMAP  bm;
   POINT   ptOrg, ptSize;
   int     x, y, clipWidth, clipHeight;
-  int     nbPalColors ;
+  int     nbPalColors;
+  int     i, j, iw, jh;
   HRGN    hrgn;
-# endif /* _WINDOWS */
+#else /* _WINDOWS */
+  XRectangle        rect;
+  XGCValues         values;
+  unsigned int      valuemask;
+#endif /* _WINDOWS */
+
 
   if (picXOrg < 0)
     {
@@ -817,7 +817,7 @@ PictInfo           *imageDesc;
       picYOrg = 0;
     }
 
-# ifdef _WINDOWS 		 
+#ifdef _WINDOWS 		 
   if (!TtIsTrueColor) {
      WIN_InitSystemColors (TtDisplay);
      SelectPalette (TtDisplay, TtCmap, FALSE);
@@ -831,7 +831,7 @@ PictInfo           *imageDesc;
       switch (imageDesc->PicPresent)
 	{
 	case ReScale:
-#         ifndef _WINDOWS
+#ifndef _WINDOWS
 #ifndef _GTK
 	  if (imageDesc->PicMask)
 	    {
@@ -845,7 +845,7 @@ PictInfo           *imageDesc;
 	       XSetClipOrigin (TtDisplay, TtGraphicGC, 0, 0);
 	     }
 #endif /* _GTK */
-#         else /* _WINDOWS */
+#else /* _WINDOWS */
 	case RealSize:
 	  if ((imageDesc->bgRed == -1 && imageDesc->bgGreen == -1 && imageDesc->bgBlue == -1) || imageDesc->PicType == -1) {
 	    hMemDC = CreateCompatibleDC (TtDisplay);
@@ -868,13 +868,13 @@ PictInfo           *imageDesc;
 	  } else {
            WIN_LayoutTransparentPicture (TtDisplay, pixmap, xFrame, yFrame, w, h, imageDesc->bgRed, imageDesc->bgGreen, imageDesc->bgBlue);
 	  }
-#         endif /* _WINDOWS */
+#endif /* _WINDOWS */
 	  break;
 	  
 	case FillFrame:
 	case XRepeat:
 	case YRepeat:
-#         ifndef _WINDOWS
+#ifndef _WINDOWS
 	case RealSize:
 
           valuemask = GCTile | GCFillStyle | GCTileStipXOrigin | GCTileStipYOrigin;
@@ -958,7 +958,7 @@ PictInfo           *imageDesc;
 	       XSetClipOrigin (TtDisplay, tiledGC, 0, 0);
 	     }
 #endif /* _GTK */
-#         else  /* _WINDOWS */
+#else  /* _WINDOWS */
           x          = pFrame->FrClipXBegin;
           y          = pFrame->FrClipYBegin;
           clipWidth  = pFrame->FrClipXEnd - x;
@@ -1009,17 +1009,28 @@ PictInfo           *imageDesc;
           hOldBitmap1 = SelectObject (hOrigDC, pixmap);
           hOldBitmap2 = SelectObject (hMemDC, hBkgBmp);
           
-          y = 0;
+          j = 0;
 
-	  do {
-             x = 0;
-             do {
-                if (!BitBlt (hMemDC, x, y, imageDesc->PicWArea, imageDesc->PicHArea, hOrigDC, 0, 0, SRCCOPY))
-                   WinErrorBox (WIN_Main_Wd, TEXT("LayoutPicture (3)"));
-                x += imageDesc->PicWArea;
-             } while (x < (w - xFrame));
-			 y += imageDesc->PicHArea;
-		  } while (y < (h - yFrame));
+	  do
+	  {
+        i = 0;
+        do
+		{
+		  /* check if the limits of the copied zone */
+		  if (i + imageDesc->PicWArea <= w)
+			iw = imageDesc->PicWArea;
+		  else
+			iw = w - i;
+		  if (j + imageDesc->PicHArea <= h)
+			jh = imageDesc->PicHArea;
+		  else
+			jh = h - j;
+          if (!BitBlt (hMemDC, i, j, iw, jh, hOrigDC, 0, 0, SRCCOPY))
+            WinErrorBox (WIN_Main_Wd, TEXT("LayoutPicture (3)"));
+          i += imageDesc->PicWArea;
+        } while (i < w);
+		j += imageDesc->PicHArea;
+	  } while (j < h);
 
           BitBlt (TtDisplay, xFrame, yFrame, w, h, hMemDC, 0, 0, SRCCOPY);
 
@@ -1040,7 +1051,7 @@ PictInfo           *imageDesc;
 		  if (hrgn && !DeleteObject (hrgn))
              WinErrorBox (NULL, TEXT("LayoutPicture (7)"));
           hrgn = (HRGN) 0;
-#         endif /* _WINDOWS */
+#endif /* _WINDOWS */
 	  break;
 	}
     }
