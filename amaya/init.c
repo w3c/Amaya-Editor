@@ -1855,6 +1855,7 @@ Document     sourceOfDoc;
      {
        if (DocumentTypes[doc] == docTextRO ||
 	   DocumentTypes[doc] == docImageRO ||
+	   DocumentTypes[doc] == docSourceRO ||
 	   DocumentTypes[doc] == docCSSRO)
 	 {
 	   /* we need to update menus and buttons */
@@ -1864,7 +1865,8 @@ Document     sourceOfDoc;
 	 }
        else if (DocumentTypes[doc] == docText ||
 		DocumentTypes[doc] == docImage ||
-	   DocumentTypes[doc] == docCSS)
+		DocumentTypes[doc] == docSource ||
+		DocumentTypes[doc] == docCSS)
 	 {
 	   /* we need to update menus and buttons */
 	   reinitialized = TRUE;
