@@ -2196,9 +2196,9 @@ void BackUpDocs ()
 	else
 	  TtaExtractName (DocumentURLs[doc], pathname, docname);
 	if (l == 0)
-	  sprintf (pathname, "%s%c%s.html", TempFileDirectory, DIR_SEP, docname);
+	  sprintf (pathname, "%s%c%d%s.html", TempFileDirectory, DIR_SEP, doc, docname);
 	else
-	  sprintf (pathname, "%s%c%s", TempFileDirectory, DIR_SEP, docname);
+	  sprintf (pathname, "%s%c%d%s", TempFileDirectory, DIR_SEP, doc, docname);
 
 	/* write the backup file */
         DocumentURLs[doc] = pathname;

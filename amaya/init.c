@@ -118,6 +118,7 @@ static int          NewDocType = 0;
 static int          NewDocProfile = 0;
 static ThotBool     ShowErrors;
 static ThotBool     BADMimeType = FALSE;
+static ThotBool     CriticConfirm = FALSE;
 /* the open document is the Amaya default page */
 static ThotBool     WelcomePage = FALSE;
 /* we have to mark the initial loading status to avoid to re-open the
@@ -1756,6 +1757,8 @@ void ConfirmError (Document document, View view, char *label,
    TtaShowDialogue (BaseDialog + ConfirmForm, FALSE);
    /* wait for an answer */
    TtaWaitShowDialogue ();
+   /* remove the critic section */
+   CriticConfirm = FALSE;
 #endif /* #if defined(_MOTIF) || defined(_GTK) */
    
 #ifdef _WINDOWS
@@ -1770,6 +1773,14 @@ void InitConfirm3L (Document document, View view, char *label1, char *label2,
 		    char *label3, ThotBool withCancel)
 {
 #if defined(_MOTIF) || defined(_GTK)
+   /* IV: This widget can't be called twice, but it happens when downloading a
+      document with protected images. This is a quick silution to avoid the
+      sigsev, although it doesn't fix the problem */
+   if (CriticConfirm)
+     return;
+   else
+     CriticConfirm = TRUE;
+
   /* Confirm form */
   if (withCancel)
     TtaNewForm (BaseDialog + ConfirmForm, TtaGetViewFrame (document, view),  
@@ -1807,7 +1818,6 @@ void InitConfirm3L (Document document, View view, char *label1, char *label2,
 
 }
 
-static ThotBool critic = FALSE;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void InitConfirm (Document document, View view, char *label)
@@ -1818,10 +1828,10 @@ void InitConfirm (Document document, View view, char *label)
    /* JK: This widget can't be called twice, but it happens when downloading a
       document with protected images. This is a quick silution to avoid the
       sigsev, although it doesn't fix the problem */
-   if (critic)
+   if (CriticConfirm)
      return;
    else
-     critic = TRUE;
+     CriticConfirm = TRUE;
 
    TtaNewForm (BaseDialog + ConfirmForm, TtaGetViewFrame (document, view),
                TtaGetMessage (LIB, TMSG_LIB_CONFIRM), TRUE, 2, 'L', D_CANCEL);
@@ -1831,7 +1841,7 @@ void InitConfirm (Document document, View view, char *label)
    /* wait for an answer */
    TtaWaitShowDialogue ();
    /* remove the critic section */
-   critic = FALSE;
+   CriticConfirm = FALSE;
 #endif /* #if defined(_MOTIF) || defined(_GTK) */   
    
 #ifdef _WINDOWS
@@ -6486,7 +6496,7 @@ static ThotBool RestoreAmayaDocs ()
   char        docname[MAX_LENGTH];  
   char        line[MAX_LENGTH * 2];
   int         docType, i, j;
-  ThotBool    aDoc, iscrash;
+  ThotBool    aDoc, iscrash, restore;
 
   /* no document is opened */
   aDoc = FALSE;
@@ -6504,6 +6514,7 @@ static ThotBool RestoreAmayaDocs ()
   if (TtaFileExist (tempname))
     {
       InitConfirm (0, 0, TtaGetMessage (AMAYA, AM_RELOAD_FILES));
+      restore = UserAnswer;
       f = fopen (tempname, "r");
       if (f != NULL)
 	{
@@ -6558,7 +6569,7 @@ static ThotBool RestoreAmayaDocs ()
 	      sscanf (&line[j], "%d",  &docType);
 	      if (tempdoc[0] != EOS && TtaFileExist (tempdoc))
 		{
-		  if (UserAnswer)
+		  if (restore)
 		    {
 		      if (RestoreOneAmayaDoc (0, tempdoc, docname, (DocumentType) docType, iscrash))
 			aDoc = TRUE;
