@@ -468,6 +468,7 @@ static ThotBool CloseTextInsertionWithControl ()
 	      LastInsertElText = NULL;
 	      APPtextModify (pEl, frame, FALSE);
 	      notified = TRUE;
+	      CloseHistorySequence (SelectedDocument);
 	    }
 	  else if (LastInsertAttr)
 	    {
@@ -476,6 +477,7 @@ static ThotBool CloseTextInsertionWithControl ()
 	      LastInsertAttrElem = NULL;
 	      /* the notification was already done by NewContent */
 	      notified = TRUE;
+	      CloseHistorySequence (DocSelectedAttr);
 	    }
 	}
     }
