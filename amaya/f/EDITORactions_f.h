@@ -30,14 +30,18 @@ extern void InitializeNewDoc ( char *url,
                                int profile );
 extern void RemoveDoctype ( Document document,
                             View view );
-extern void CreateDoctypeHtml11 ( Document document,
-                                  View view );
+extern void CreateDoctypeXhtml11 ( Document document,
+                                   View view );
+extern void CreateDoctypeXhtmlTransitional ( Document document,
+                                             View view );
+extern void CreateDoctypeXhtmlStrict ( Document document,
+                                       View view );
+extern void CreateDoctypeXhtmlBasic ( Document document,
+                                      View view );
 extern void CreateDoctypeHtmlTransitional ( Document document,
                                             View view );
 extern void CreateDoctypeHtmlStrict ( Document document,
                                       View view );
-extern void CreateDoctypeHtmlBasic ( Document document,
-                                     View view );
 extern void CreateDoctypeMathML ( Document document,
                                   View view );
 extern void CreateDoctypeSVG ( Document document,
@@ -217,6 +221,8 @@ extern void PropDocument ( Document document,
                            View view );
 extern void CopyLockInformation ( Document document,
                                   View view );
+extern void CooperationConfig ( Document document,
+                                View view );
 extern void LockIndicator ( Document document,
                             View view );
 
@@ -246,14 +252,18 @@ extern void InitializeNewDoc (/* char *url,
                                  int profile */);
 extern void RemoveDoctype (/* Document document,
                               View view */);
-extern void CreateDoctypeHtml11 (/* Document document,
-                                    View view */);
+extern void CreateDoctypeXhtml11 (/* Document document,
+                                     View view */);
+extern void CreateDoctypeXhtmlTransitional (/* Document document,
+                                               View view */);
+extern void CreateDoctypeXhtmlStrict (/* Document document,
+                                         View view */);
+extern void CreateDoctypeXhtmlBasic (/* Document document,
+                                        View view */);
 extern void CreateDoctypeHtmlTransitional (/* Document document,
                                               View view */);
 extern void CreateDoctypeHtmlStrict (/* Document document,
                                         View view */);
-extern void CreateDoctypeHtmlBasic (/* Document document,
-                                       View view */);
 extern void CreateDoctypeMathML (/* Document document,
                                     View view */);
 extern void CreateDoctypeSVG (/* Document document,
@@ -433,6 +443,8 @@ extern void PropDocument (/* Document document,
                              View view */);
 extern void CopyLockInformation (/* Document document,
                                     View view */);
+extern void CooperationConfig (/* Document document,
+                                  View view */);
 extern void LockIndicator (/* Document document,
                               View view */);
 

@@ -2143,6 +2143,10 @@ void UpdateDoctypeMenu (Document doc)
 	    }
 	  else
 	    {
+	      TtaSetItemOn (doc, 1, File, BDoctypeXhtmlTransitional);
+	      TtaSetItemOn (doc, 1, File, BDoctypeXhtmlStrict);
+	      TtaSetItemOn (doc, 1, File, BDoctypeXhtml11);
+	      TtaSetItemOn (doc, 1, File, BDoctypeXhtmlBasic);
 	      TtaSetItemOn (doc, 1, File, BDoctypeHtmlTransitional);
 	      TtaSetItemOn (doc, 1, File, BDoctypeHtmlStrict);
 	    }
@@ -2175,7 +2179,13 @@ void UpdateDoctypeMenu (Document doc)
 	  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlBasic);
 	}
       else
-	TtaSetItemOn (doc, 1, File, BDoctypeHtmlTransitional);
+	{
+	  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlTransitional);
+	  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlStrict);
+	  TtaSetItemOn (doc, 1, File, BDoctypeXhtml11);
+	  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlBasic);
+	  TtaSetItemOn (doc, 1, File, BDoctypeHtmlTransitional);
+	}
       break;
     case L_Transitional:
       if (DocumentMeta[doc]->xmlformat)
@@ -2185,7 +2195,13 @@ void UpdateDoctypeMenu (Document doc)
 	  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlBasic);
 	}
       else
-	TtaSetItemOn (doc, 1, File, BDoctypeHtmlStrict);
+	{
+	  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlTransitional);
+	  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlStrict);
+	  TtaSetItemOn (doc, 1, File, BDoctypeXhtml11);
+	  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlBasic);
+	  TtaSetItemOn (doc, 1, File, BDoctypeHtmlStrict);
+	}
       break;
     case L_MathML:
       TtaSetItemOn (doc, 1, File, BDoctypeMathML);

@@ -246,10 +246,12 @@ HelpXml
 &NewMathML
 &NewSVG
 &RemoveDoctype
-&CreateDoctypeHtml11
+&CreateDoctypeXhtml11
+&CreateDoctypeXhtmlTransitional
+&CreateDoctypeXhtmlStrict
+&CreateDoctypeXhtmlBasic
 &CreateDoctypeHtmlTransitional
 &CreateDoctypeHtmlStrict
-&CreateDoctypeHtmlBasic
 &CreateDoctypeMathML
 &CreateDoctypeSVG
 &SaveDocument

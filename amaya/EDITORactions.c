@@ -48,6 +48,8 @@
 #include "davlib_f.h"
 #endif
 
+/*  Does a modified doctype refer to an XML DTD ? */
+static ThotBool	     XmlDoctype = FALSE;
 
 /*----------------------------------------------------------------------
   NewXHTMLBasic: Create a new Basic XHTML document
@@ -547,6 +549,10 @@ static void CreateOrChangeDoctype (Document doc, View view, int profile)
   if (doctype != NULL)
     TtaDeleteTree (doctype, doc);
 
+  /* XHTML doctype instead of a HTML one */
+  if (!(DocumentMeta[doc]->xmlformat) && XmlDoctype)
+    DocumentMeta[doc]->xmlformat = TRUE;
+
   /* Add the new doctype */
   CreateDoctype (doc, profile, FALSE, FALSE);
 
@@ -587,39 +593,62 @@ static void CreateOrChangeDoctype (Document doc, View view, int profile)
 }
 
 /*--------------------------------------------------------------------------
-  CreateDoctypeHtml11
+  CreateDoctypeXhtml11
   Create or change the doctype for a XHTML 1.1 document
   --------------------------------------------------------------------------*/
-void CreateDoctypeHtml11 (Document document, View view)
+void CreateDoctypeXhtml11 (Document document, View view)
 {
+  XmlDoctype = TRUE;
   CreateOrChangeDoctype (document, view, L_Xhtml11);
 }
 
 /*--------------------------------------------------------------------------
-  CreateDoctypeHtmlTransitional
-  Create or change the doctype for a (X)HTML Transitional document
+  CreateDoctypeXhtmlTransitional
+  Create or change the doctype for a XHTML Transitional document
   --------------------------------------------------------------------------*/
-void CreateDoctypeHtmlTransitional (Document document, View view)
+void CreateDoctypeXhtmlTransitional (Document document, View view)
 {
-    CreateOrChangeDoctype (document, view, L_Transitional);
+  XmlDoctype = TRUE;
+  CreateOrChangeDoctype (document, view, L_Transitional);
 }
 
 /*--------------------------------------------------------------------------
-  CreateDoctypeHtmlStrict
-  Create or change the doctype for a (X)HTML 1.0 Strict document
+  CreateDoctypeXhtmlStrict
+  Create or change the doctype for a XHTML 1.0 Strict document
   --------------------------------------------------------------------------*/
-void CreateDoctypeHtmlStrict (Document document, View view)
+void CreateDoctypeXhtmlStrict (Document document, View view)
 {
+  XmlDoctype = TRUE;
   CreateOrChangeDoctype (document, view, L_Strict);
 }
 
 /*--------------------------------------------------------------------------
-  CreateDoctypeHtmlBasic
+  CreateDoctypeXhtmlBasic
   Create or change the doctype for a XHTML 1.0 Basic document
   --------------------------------------------------------------------------*/
-void CreateDoctypeHtmlBasic (Document document, View view)
+void CreateDoctypeXhtmlBasic (Document document, View view)
 {
+  XmlDoctype = TRUE;
   CreateOrChangeDoctype (document, view, L_Basic);
+}
+/*--------------------------------------------------------------------------
+  CreateDoctypeHtmlTransitional
+  Create or change the doctype for a HTML Transitional document
+  --------------------------------------------------------------------------*/
+void CreateDoctypeHtmlTransitional (Document document, View view)
+{
+  XmlDoctype = FALSE;
+  CreateOrChangeDoctype (document, view, L_Transitional);
+}
+
+/*--------------------------------------------------------------------------
+  CreateDoctypeHtmlStrict
+  Create or change the doctype for a HTML Strict document
+  --------------------------------------------------------------------------*/
+void CreateDoctypeHtmlStrict (Document document, View view)
+{
+  XmlDoctype = FALSE;
+  CreateOrChangeDoctype (document, view, L_Strict);
 }
 
 /*--------------------------------------------------------------------------
@@ -628,6 +657,7 @@ void CreateDoctypeHtmlBasic (Document document, View view)
   --------------------------------------------------------------------------*/
 void CreateDoctypeMathML (Document document, View view)
 {
+  XmlDoctype = TRUE;
   CreateOrChangeDoctype (document, view, L_MathML);
 }
 
@@ -637,6 +667,7 @@ void CreateDoctypeMathML (Document document, View view)
   --------------------------------------------------------------------------*/
 void CreateDoctypeSVG (Document document, View view)
 {
+  XmlDoctype = TRUE;
   CreateOrChangeDoctype (document, view, L_SVG);
 }
 
