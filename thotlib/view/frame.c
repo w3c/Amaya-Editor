@@ -306,7 +306,7 @@ int                 delta;
 				&& pBo1->BxYOrg <= frameymax
 				&& x >= framexmin
 				&& pBo1->BxXOrg <= framexmax)
-			       AfBoite (pBox, frame);
+			       DisplayBox (pBox, frame);
 			    /* On passe a la boite suivante */
 			    pBox = pBo1->BxPrevious;
 			 }
@@ -678,7 +678,7 @@ int                 delta;
 				&& pBox->BxYOrg <= frameymax
 				&& x >= framexmin
 				&& pBox->BxXOrg <= framexmax)
-			  AfBoite (pBox, frame);
+			  DisplayBox (pBox, frame);
 		       /* On passe a la boite suivante */
 		       pBox = pBox->BxNext;
 		    }

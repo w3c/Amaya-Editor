@@ -14,7 +14,7 @@ extern Pixmap TtaCreatePixmapLogo ( char **data );
 extern void ConfigTranslateSSchema ( PtrSSchema pSS );
 extern void ReaffPaveCopie ( void );
 extern void DrawAjAttr ( void );
-extern void AfCar ( char car,
+extern void DrawChar ( char car,
                     int frame,
                     int x,
                     int y,
@@ -183,7 +183,7 @@ extern Pixmap TtaCreatePixmapLogo (/* char **data */);
 extern void ConfigTranslateSSchema (/* PtrSSchema pSS */);
 extern void ReaffPaveCopie (/* void */);
 extern void DrawAjAttr (/* void */);
-extern void AfCar (/* char car,
+extern void DrawChar (/* char car,
                       int frame,
                       int x,
                       int y,

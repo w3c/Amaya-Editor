@@ -293,14 +293,14 @@ ptrfont             font;
 }				/*FontCourante */
 
 /* ---------------------------------------------------------------------- */
-/* |    AfPage regarde s'il faut engendrer un showpage.                 | */
+/* |    DrawPage regarde s'il faut engendrer un showpage.                 | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                AfPage (FILE * fout)
+void                DrawPage (FILE * fout)
 
 #else  /* __STDC__ */
-void                AfPage (fout)
+void                DrawPage (fout)
 FILE               *fout;
 
 #endif /* __STDC__ */
@@ -319,7 +319,7 @@ FILE               *fout;
 
 /*debut */
 /* ---------------------------------------------------------------------- */
-/* |    AfChaine affiche la chai^ne de caracte`res de longueur lg qui   | */
+/* |    DrawString affiche la chai^ne de caracte`res de longueur lg qui   | */
 /* |            de'bute par buff[i] a` la position x,y dans la fenetree^tre     | */
 /* |            frame en utilisant la police de caracte`res font.               | */
 /* |            Le parame`tre lgboite donne la largeur de la boi^te     | */
@@ -340,10 +340,10 @@ FILE               *fout;
 /**CO*/
 
 #ifdef __STDC__
-int                 AfChaine (char *buff, int i, int lg, int frame, int x, int y, ptrfont font, int lgboite, int bl, int hyphen, int debutbloc, int RO, int active, int fg)
+int                 DrawString (char *buff, int i, int lg, int frame, int x, int y, ptrfont font, int lgboite, int bl, int hyphen, int debutbloc, int RO, int active, int fg)
 
 #else  /* __STDC__ */
-int                 AfChaine (buff, i, lg, frame, x, y, font, lgboite, bl, hyphen, debutbloc, RO, active, fg)
+int                 DrawString (buff, i, lg, frame, x, y, font, lgboite, bl, hyphen, debutbloc, RO, active, fg)
 char               *buff;
 int                 i;
 int                 lg;
@@ -384,7 +384,7 @@ int                 fg;
 	Y = PixelToPoint (y + FontBase (font));
 	NbBcour = 0;
 	/* Faut-il ajouter un showpage ? */
-	AfPage (fout);
+	DrawPage (fout);
 
 	/* Faut-il changer de RGB */
 	CouleurCourante (fout, fg);
@@ -450,19 +450,19 @@ int                 fg;
      }
    else
       return (0);
-}				/*AfChaine */
+}				/*DrawString */
 
 
 /* ---------------------------------------------------------------------- */
-/* |    AfSoul trace un souligne                                        | */
+/* |    DisplayUnderline trace un souligne                                        | */
 /* ---------------------------------------------------------------------- */
 /**CO*/
 
 #ifdef __STDC__
-void                AfSoul (int frame, int x, int y, ptrfont font, int type, int epais, int lg, int RO, int func, int fg)
+void                DisplayUnderline (int frame, int x, int y, ptrfont font, int type, int epais, int lg, int RO, int func, int fg)
 
 #else  /* __STDC__ */
-void                AfSoul (frame, x, y, font, type, epais, lg, RO, func, fg)
+void                DisplayUnderline (frame, x, y, font, type, epais, lg, RO, func, fg)
 int                 frame;
 int                 x;
 int                 y;
@@ -501,7 +501,7 @@ int                 fg;
 	bas = y + ascent + (2 - epais) * epaisseur;
 	milieu = y + height / 2;
 	/*decal = epaisseur; *//* decalage entre les traits */
-	xdebut = X;		/* on recupere le X courant (cf AfChaine) */
+	xdebut = X;		/* on recupere le X courant (cf DrawString) */
 	xfin = X + PixelToPoint (lg);	/* on calcule la position de fin */
 
 	/* Valeur en dur pour ESM */
@@ -531,19 +531,19 @@ int                 fg;
 		    break;
 	      }
      }
-}				/*AfSoul */
+}				/*DisplayUnderline */
 
 
 /* ---------------------------------------------------------------------- */
-/* |    AfRadical trace un radical.                                     | */
+/* |    DrawRadical trace un radical.                                     | */
 /* ---------------------------------------------------------------------- */
 /**CO*/
 
 #ifdef __STDC__
-void                AfRadical (int frame, int epais, int x, int y, int l, int h, ptrfont font, int RO, int func, int fg)
+void                DrawRadical (int frame, int epais, int x, int y, int l, int h, ptrfont font, int RO, int func, int fg)
 
 #else  /* __STDC__ */
-void                AfRadical (frame, epais, x, y, l, h, font, RO, func, fg)
+void                DrawRadical (frame, epais, x, y, l, h, font, RO, func, fg)
 int                 frame;
 int                 epais;
 int                 x;
@@ -562,7 +562,7 @@ int                 fg;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-   AfPage (fout);		/* Faut-il ajouter un showpage ? */
+   DrawPage (fout);		/* Faut-il ajouter un showpage ? */
 
    /* Faut-il changer de RGB */
    CouleurCourante (fout, fg);
@@ -586,10 +586,10 @@ int                 fg;
 	       PixelToPoint (x + (fh / 2)), PixelToPoint (y + h),
 	       PixelToPoint (x), PixelToPoint (y + (2 * (h / 3))));
 
-}				/*AfRadical */
+}				/*DrawRadical */
 
 /* ---------------------------------------------------------------------- */
-/* |    AfIntegrale trace une integrale :                               | */
+/* |    DrawIntegral trace une integrale :                               | */
 /* |            - simple si type = 0                                    | */
 /* |            - curviligne si type = 1                                | */
 /* |            - double si type = 2                                    | */
@@ -597,10 +597,10 @@ int                 fg;
 /**CO*/
 
 #ifdef __STDC__
-void                AfIntegrale (int frame, int epais, int x, int y, int l, int h, int type, ptrfont font, int RO, int func, int fg)
+void                DrawIntegral (int frame, int epais, int x, int y, int l, int h, int type, ptrfont font, int RO, int func, int fg)
 
 #else  /* __STDC__ */
-void                AfIntegrale (frame, epais, x, y, l, h, type, font, RO, func, fg)
+void                DrawIntegral (frame, epais, x, y, l, h, type, font, RO, func, fg)
 int                 frame;
 int                 epais;
 int                 x;
@@ -626,7 +626,7 @@ int                 fg;
 
    fout = (FILE *) FrRef[frame];
    /* Faut-il ajouter un showpage ? */
-   AfPage (fout);
+   DrawPage (fout);
 
    /* Faut-il changer de RGB */
    CouleurCourante (fout, fg);
@@ -689,15 +689,15 @@ int                 fg;
 	  }
      }
 #endif
-}				/*AfIntegrale */
+}				/*DrawIntegral */
 
 /* ---------------------------------------------------------------------- */
-/* |    AfSigma trace un symbole sigma.                                 | */
+/* |    DrawSigma trace un symbole sigma.                                 | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                AfSigma (int frame, int x, int y, int l, int h, ptrfont font, int RO, int func, int fg)
+void                DrawSigma (int frame, int x, int y, int l, int h, ptrfont font, int RO, int func, int fg)
 #else  /* __STDC__ */
-void                AfSigma (frame, x, y, l, h, font, RO, func, fg)
+void                DrawSigma (frame, x, y, l, h, font, RO, func, fg)
 int                 frame;
 int                 x;
 int                 y;
@@ -719,7 +719,7 @@ int                 fg;
 
    fout = (FILE *) FrRef[frame];
    /* Faut-il ajouter un showpage ? */
-   AfPage (fout);
+   DrawPage (fout);
 
    /* Faut-il changer de RGB */
    CouleurCourante (fout, fg);
@@ -740,16 +740,16 @@ int                 fg;
    y = PixelToPoint (y + h - FontHeight (font) + FontBase (font));
    fprintf (fout, "-%d %d (\\345) c\n", y, x);
 #endif
-}				/*AfSigma */
+}				/*DrawSigma */
 
 
 /* ---------------------------------------------------------------------- */
-/* |    AfPi trace un symbole Pi.                                       | */
+/* |    DrawPi trace un symbole Pi.                                       | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                AfPi (int frame, int x, int y, int l, int h, ptrfont font, int RO, int func, int fg)
+void                DrawPi (int frame, int x, int y, int l, int h, ptrfont font, int RO, int func, int fg)
 #else  /* __STDC__ */
-void                AfPi (frame, x, y, l, h, font, RO, func, fg)
+void                DrawPi (frame, x, y, l, h, font, RO, func, fg)
 int                 frame;
 int                 x;
 int                 y;
@@ -765,7 +765,7 @@ int                 fg;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-   AfPage (fout);		/* Faut-il ajouter un showpage ? */
+   DrawPage (fout);		/* Faut-il ajouter un showpage ? */
 
    /* Faut-il changer de RGB */
    CouleurCourante (fout, fg);
@@ -785,15 +785,15 @@ int                 fg;
    y = PixelToPoint (y + h - FontHeight (font) + FontBase (font));
    fprintf (fout, "-%d %d (\\325) c\n", y, x);
 #endif
-}				/*AfPi */
+}				/*DrawPi */
 
 /* ---------------------------------------------------------------------- */
-/* |    AfUnion trace un symbole Union.                                 | */
+/* |    DrawUnion trace un symbole Union.                                 | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                AfUnion (int frame, int x, int y, int l, int h, ptrfont font, int RO, int func, int fg)
+void                DrawUnion (int frame, int x, int y, int l, int h, ptrfont font, int RO, int func, int fg)
 #else  /* __STDC__ */
-void                AfUnion (frame, x, y, l, h, font, RO, func, fg)
+void                DrawUnion (frame, x, y, l, h, font, RO, func, fg)
 int                 frame;
 int                 x;
 int                 y;
@@ -809,7 +809,7 @@ int                 fg;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-   AfPage (fout);		/* Faut-il ajouter un showpage ? */
+   DrawPage (fout);		/* Faut-il ajouter un showpage ? */
 
    /* Faut-il changer de RGB */
    CouleurCourante (fout, fg);
@@ -829,15 +829,15 @@ int                 fg;
    y = PixelToPoint (y + h - FontHeight (font) + FontBase (font));
    fprintf (fout, "-%d %d (\\310) c\n", y, x);
 #endif
-}				/*AfUnion */
+}				/*DrawUnion */
 
 /* ---------------------------------------------------------------------- */
-/* |    AfIntersection trace un symbole Intersection.                   | */
+/* |    DrawIntersection trace un symbole Intersection.                   | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                AfIntersection (int frame, int x, int y, int l, int h, ptrfont font, int RO, int func, int fg)
+void                DrawIntersection (int frame, int x, int y, int l, int h, ptrfont font, int RO, int func, int fg)
 #else  /* __STDC__ */
-void                AfIntersection (frame, x, y, l, h, font, RO, func, fg)
+void                DrawIntersection (frame, x, y, l, h, font, RO, func, fg)
 int                 frame;
 int                 x;
 int                 y;
@@ -853,7 +853,7 @@ int                 fg;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-   AfPage (fout);		/* Faut-il ajouter un showpage ? */
+   DrawPage (fout);		/* Faut-il ajouter un showpage ? */
 
    /* Faut-il changer de RGB */
    CouleurCourante (fout, fg);
@@ -864,18 +864,18 @@ int                 fg;
    x = PixelToPoint (x + (l / 2));
    y = PixelToPoint (y + h - FontHeight (font) + FontBase (font));
    fprintf (fout, "-%d %d (\\307) c\n", y, x);
-}				/*AfIntersection */
+}				/*DrawIntersection */
 
 
 /* ---------------------------------------------------------------------- */
-/* |    AfFleche trace une fleche orientee en fonction de l'angle donne | */
+/* |    DrawArrow trace une fleche orientee en fonction de l'angle donne | */
 /* |            (0 correspond a` une fleche vers la droite, 45, 90, 135,| */
 /* |             180, 225, 270, 315).                                   | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                AfFleche (int frame, int epais, int style, int x, int y, int l, int h, int orientation, int RO, int func, int fg)
+void                DrawArrow (int frame, int epais, int style, int x, int y, int l, int h, int orientation, int RO, int func, int fg)
 #else  /* __STDC__ */
-void                AfFleche (frame, epais, style, x, y, l, h, orientation, RO, func, fg)
+void                DrawArrow (frame, epais, style, x, y, l, h, orientation, RO, func, fg)
 int                 frame;
 int                 epais;
 int                 style;
@@ -897,7 +897,7 @@ int                 fg;
       return;			/* ce n'est pas la peine de se fatiguer */
 
    fout = (FILE *) FrRef[frame];
-   AfPage (fout);
+   DrawPage (fout);
    /* Faut-il ajouter un showpage ? */
 
    if (epais <= 0)
@@ -982,18 +982,18 @@ int                 fg;
 	fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", x, y, xf, yf, style, epais, 2);
 	fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, x, y, xf, yf, epais, lg, lg);
      }
-}				/*AfFleche */
+}				/*DrawArrow */
 
 /* ---------------------------------------------------------------------- */
-/* |    AfCrochet trace un symbole crochet ouvrant ou fermant.          | */
+/* |    DrawBracket trace un symbole crochet ouvrant ou fermant.          | */
 /* ---------------------------------------------------------------------- */
 /**CO*/
 
 #ifdef __STDC__
-void                AfCrochet (int frame, int epais, int x, int y, int l, int h, int sens, ptrfont font, int RO, int func, int fg)
+void                DrawBracket (int frame, int epais, int x, int y, int l, int h, int sens, ptrfont font, int RO, int func, int fg)
 
 #else  /* __STDC__ */
-void                AfCrochet (frame, epais, x, y, l, h, sens, font, RO, func, fg)
+void                DrawBracket (frame, epais, x, y, l, h, sens, font, RO, func, fg)
 int                 frame;
 int                 epais;
 int                 x;
@@ -1014,7 +1014,7 @@ int                 fg;
 
    fout = (FILE *) FrRef[frame];
    /* Faut-il ajouter un showpage ? */
-   AfPage (fout);
+   DrawPage (fout);
 
    /* Faut-il changer de RGB */
    CouleurCourante (fout, fg);
@@ -1059,18 +1059,18 @@ int                 fg;
 	   fprintf (fout, "%d -%d -%d %s (\\371) (\\372) (\\373) s3\n", x, yf, y, Scale);
      }
 #endif
-}				/*AfCrochet */
+}				/*DrawBracket */
 
 /* ---------------------------------------------------------------------- */
-/* |    AfParenthese trace un symbole parenthese ouvrant ou fermant.    | */
+/* |    DrawParenthesis trace un symbole parenthese ouvrant ou fermant.    | */
 /* ---------------------------------------------------------------------- */
 /**CO*/
 
 #ifdef __STDC__
-void                AfParenthese (int frame, int epais, int x, int y, int l, int h, int sens, ptrfont font, int RO, int func, int fg)
+void                DrawParenthesis (int frame, int epais, int x, int y, int l, int h, int sens, ptrfont font, int RO, int func, int fg)
 
 #else  /* __STDC__ */
-void                AfParenthese (frame, epais, x, y, l, h, sens, font, RO, func, fg)
+void                DrawParenthesis (frame, epais, x, y, l, h, sens, font, RO, func, fg)
 int                 frame;
 int                 epais;
 int                 x;
@@ -1091,7 +1091,7 @@ int                 fg;
 
    fout = (FILE *) FrRef[frame];
    /* Faut-il ajouter un showpage ? */
-   AfPage (fout);
+   DrawPage (fout);
 
    /* Faut-il changer de RGB */
    CouleurCourante (fout, fg);
@@ -1137,18 +1137,18 @@ int                 fg;
 	   fprintf (fout, "%d -%d -%d %s (\\366) (\\367) (\\370) s3\n", x, yf, y, Scale);
      }
 #endif
-}				/*AfParenthese */
+}				/*DrawParenthesis */
 
 /* ---------------------------------------------------------------------- */
-/* |    AfAccolade trace un symbole accolade ouvrant ou fermant.        | */
+/* |    DrawBrace trace un symbole accolade ouvrant ou fermant.        | */
 /* ---------------------------------------------------------------------- */
 /**CO*/
 
 #ifdef __STDC__
-void                AfAccolade (int frame, int epais, int x, int y, int l, int h, int sens, ptrfont font, int RO, int func, int fg)
+void                DrawBrace (int frame, int epais, int x, int y, int l, int h, int sens, ptrfont font, int RO, int func, int fg)
 
 #else  /* __STDC__ */
-void                AfAccolade (frame, epais, x, y, l, h, sens, font, RO, func, fg)
+void                DrawBrace (frame, epais, x, y, l, h, sens, font, RO, func, fg)
 int                 frame;
 int                 epais;
 int                 x;
@@ -1169,7 +1169,7 @@ int                 fg;
 
    fout = (FILE *) FrRef[frame];
    /* Faut-il ajouter un showpage ? */
-   AfPage (fout);
+   DrawPage (fout);
 
    /* Faut-il changer de RGB */
    CouleurCourante (fout, fg);
@@ -1215,10 +1215,10 @@ int                 fg;
 	   fprintf (fout, "%d -%d -%d %s (\\374) (\\375) (\\376) (\\357) s4\n", x, yf, y, Scale);
      }
 #endif
-}				/*AfAccolade */
+}				/*DrawBrace */
 
 /* ---------------------------------------------------------------------- */
-/* |    AfRectangle trace un rectangle d'origine x, y et de dimensions  | */
+/* |    DrawRectangle trace un rectangle d'origine x, y et de dimensions  | */
 /* |            larg, haut avec une e'paisseur epais dans la fenetree^tre       | */
 /* |            d'indice frame.                                         | */
 /* |            Les parame`tres fg, bg, motif indiquent la couleur du   | */
@@ -1227,10 +1227,10 @@ int                 fg;
 /**CO*/
 
 #ifdef __STDC__
-void                AfRectangle (int frame, int epais, int style, int x, int y, int larg, int haut, int RO, int active, int fg, int bg, int motif)
+void                DrawRectangle (int frame, int epais, int style, int x, int y, int larg, int haut, int RO, int active, int fg, int bg, int motif)
 
 #else  /* __STDC__ */
-void                AfRectangle (frame, epais, style, x, y, larg, haut, RO, active, fg, bg, motif)
+void                DrawRectangle (frame, epais, style, x, y, larg, haut, RO, active, fg, bg, motif)
 int                 frame;
 int                 epais;
 int                 style;
@@ -1252,7 +1252,7 @@ int                 motif;
 
    fout = (FILE *) FrRef[frame];
    /* Faut-il ajouter un showpage ? */
-   AfPage (fout);
+   DrawPage (fout);
 
    /* Faut-il changer de RGB */
    if (epais > 0)
@@ -1269,7 +1269,7 @@ int                 motif;
 
 /*debut */
 /* ---------------------------------------------------------------------- */
-/* |    AfBrisees trace des lignes brise'es.                            | */
+/* |    DrawSegments trace des lignes brise'es.                            | */
 /* |            Le parame`tre buffer pointe sur le 1er buffer qui       | */
 /* |            contient la liste des points de contro^le et le         | */
 /* |            parame`tre nb donne le nombre de points.                | */
@@ -1286,10 +1286,10 @@ int                 motif;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                AfBrisees (int frame, int epais, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int fleche)
+void                DrawSegments (int frame, int epais, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int fleche)
 
 #else  /* __STDC__ */
-void                AfBrisees (frame, epais, style, x, y, buffer, nb, RO, active, fg, fleche)
+void                DrawSegments (frame, epais, style, x, y, buffer, nb, RO, active, fg, fleche)
 int                 frame;
 int                 epais;
 int                 style;
@@ -1314,7 +1314,7 @@ int                 fleche;
 
    fout = (FILE *) FrRef[frame];
    /* Faut-il ajouter un showpage ? */
-   AfPage (fout);
+   DrawPage (fout);
 
    if (epais == 0)
       return;
@@ -1370,7 +1370,7 @@ int                 fleche;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    AfPolygone trace un polygone.                                   | */
+/* |    DrawPolygon trace un polygone.                                   | */
 /* |            Le parame`tre buffer pointe sur le 1er buffer qui       | */
 /* |            contient la liste des points de contro^le et le         | */
 /* |            parame`tre nb donne le nombre de points.                | */
@@ -1383,10 +1383,10 @@ int                 fleche;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                AfPolygone (int frame, int epais, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int bg, int motif)
+void                DrawPolygon (int frame, int epais, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int bg, int motif)
 
 #else  /* __STDC__ */
-void                AfPolygone (frame, epais, style, x, y, buffer, nb, RO, active, fg, bg, motif)
+void                DrawPolygon (frame, epais, style, x, y, buffer, nb, RO, active, fg, bg, motif)
 int                 frame;
 int                 epais;
 int                 style;
@@ -1410,7 +1410,7 @@ int                 motif;
 
    fout = (FILE *) FrRef[frame];
    /* Faut-il ajouter un showpage ? */
-   AfPage (fout);
+   DrawPage (fout);
 
    /* Faut-il changer de RGB */
    CouleurCourante (fout, fg);
@@ -1443,7 +1443,7 @@ int                 motif;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    AfCourbe trace une courbe ouverte.                              | */
+/* |    DrawCurb trace une courbe ouverte.                              | */
 /* |            Le parame`tre buffer pointe sur le 1er buffer qui       | */
 /* |            contient la liste des points de contro^le et le         | */
 /* |            parame`tre nb donne le nombre de points.                | */
@@ -1462,10 +1462,10 @@ int                 motif;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                AfCourbe (int frame, int epais, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int fleche, C_points * controls)
+void                DrawCurb (int frame, int epais, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int fleche, C_points * controls)
 
 #else  /* __STDC__ */
-void                AfCourbe (frame, epais, style, x, y, buffer, nb, RO, active, fg, fleche, controls)
+void                DrawCurb (frame, epais, style, x, y, buffer, nb, RO, active, fg, fleche, controls)
 int                 frame;
 int                 epais;
 int                 style;
@@ -1490,7 +1490,7 @@ C_points           *controls;
 
    fout = (FILE *) FrRef[frame];
    /* Faut-il ajouter un showpage ? */
-   AfPage (fout);
+   DrawPage (fout);
    if (epais == 0)
       return;
 
@@ -1566,7 +1566,7 @@ C_points           *controls;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    AfSpline trace une courbe fermee.                               | */
+/* |    DrawSpline trace une courbe fermee.                               | */
 /* |            Le parame`tre buffer pointe sur le 1er buffer qui       | */
 /* |            contient la liste des points de contro^le et le         | */
 /* |            parame`tre nb donne le nombre de points.                | */
@@ -1581,10 +1581,10 @@ C_points           *controls;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                AfSpline (int frame, int epais, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int bg, int motif, C_points * controls)
+void                DrawSpline (int frame, int epais, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int bg, int motif, C_points * controls)
 
 #else  /* __STDC__ */
-void                AfSpline (frame, epais, style, x, y, buffer, nb, RO, active, fg, bg, motif, controls)
+void                DrawSpline (frame, epais, style, x, y, buffer, nb, RO, active, fg, bg, motif, controls)
 int                 frame;
 int                 epais;
 int                 style;
@@ -1608,7 +1608,7 @@ C_points           *controls;
 
    fout = (FILE *) FrRef[frame];
    /* Faut-il ajouter un showpage ? */
-   AfPage (fout);
+   DrawPage (fout);
 
    /* Faut-il changer de RGB */
    CouleurCourante (fout, fg);
@@ -1654,17 +1654,17 @@ C_points           *controls;
 /*fin */
 
 /* ---------------------------------------------------------------------- */
-/* |    AfLosange trace un losange.                                     | */
+/* |    DrawDiamond trace un losange.                                     | */
 /* |            Les parame`tres fg, bg, motif indiquent la couleur du   | */
 /* |            trace', la couleur du fond et le motif de remplissage.  | */
 /* ---------------------------------------------------------------------- */
 /**CO*/
 
 #ifdef __STDC__
-void                AfLosange (int frame, int epais, int style, int x, int y, int larg, int haut, int RO, int active, int fg, int bg, int motif)
+void                DrawDiamond (int frame, int epais, int style, int x, int y, int larg, int haut, int RO, int active, int fg, int bg, int motif)
 
 #else  /* __STDC__ */
-void                AfLosange (frame, epais, style, x, y, larg, haut, RO, active, fg, bg, motif)
+void                DrawDiamond (frame, epais, style, x, y, larg, haut, RO, active, fg, bg, motif)
 int                 frame;
 int                 epais;
 int                 style;
@@ -1686,7 +1686,7 @@ int                 motif;
 
    fout = (FILE *) FrRef[frame];
    /* Faut-il ajouter un showpage ? */
-   AfPage (fout);
+   DrawPage (fout);
 
    /* Faut-il changer de RGB */
    CouleurCourante (fout, fg);
@@ -1702,17 +1702,17 @@ int                 motif;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    AfOvale trace un rectangle aux bords arrondis.                  | */
+/* |    DrawOval trace un rectangle aux bords arrondis.                  | */
 /* |            Les parame`tres fg, bg, motif indiquent la couleur du   | */
 /* |            trace', la couleur du fond et le motif de remplissage.  | */
 /* ---------------------------------------------------------------------- */
 /**CO*/
 
 #ifdef __STDC__
-void                AfOvale (int frame, int epais, int style, int x, int y, int larg, int haut, int RO, int active, int fg, int bg, int motif)
+void                DrawOval (int frame, int epais, int style, int x, int y, int larg, int haut, int RO, int active, int fg, int bg, int motif)
 
 #else  /* __STDC__ */
-void                AfOvale (frame, epais, style, x, y, larg, haut, RO, active, fg, bg, motif)
+void                DrawOval (frame, epais, style, x, y, larg, haut, RO, active, fg, bg, motif)
 int                 frame;
 int                 epais;
 int                 style;
@@ -1734,7 +1734,7 @@ int                 motif;
 
    fout = (FILE *) FrRef[frame];
    /* Faut-il ajouter un showpage ? */
-   AfPage (fout);
+   DrawPage (fout);
 
    /* Faut-il changer de RGB */
    if (epais > 0)
@@ -1754,17 +1754,17 @@ int                 motif;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    AfEllipse trace une ellipse (cas particulier un cercle).        | */
+/* |    DrawEllips trace une ellipse (cas particulier un cercle).        | */
 /* |            Les parame`tres fg, bg, motif indiquent la couleur du   | */
 /* |            trace', la couleur du fond et le motif de remplissage.  | */
 /* ---------------------------------------------------------------------- */
 /**CO*/
 
 #ifdef __STDC__
-void                AfEllipse (int frame, int epais, int style, int x, int y, int larg, int haut, int RO, int active, int fg, int bg, int motif)
+void                DrawEllips (int frame, int epais, int style, int x, int y, int larg, int haut, int RO, int active, int fg, int bg, int motif)
 
 #else  /* __STDC__ */
-void                AfEllipse (frame, epais, style, x, y, larg, haut, RO, active, fg, bg, motif)
+void                DrawEllips (frame, epais, style, x, y, larg, haut, RO, active, fg, bg, motif)
 int                 frame;
 int                 epais;
 int                 style;
@@ -1785,7 +1785,7 @@ int                 motif;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-   AfPage (fout);
+   DrawPage (fout);
 
    /* Faut-il changer de RGB */
    if (epais > 0)
@@ -1812,16 +1812,16 @@ int                 motif;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    AfCoin trace deux bords de rectangle. func indique s'il s'agit  | */
+/* |    DrawAngle trace deux bords de rectangle. func indique s'il s'agit  | */
 /* |            d'une boite active (1) ou non (0).                      | */
 /* ---------------------------------------------------------------------- */
 /**CO*/
 
 #ifdef __STDC__
-void                AfCoin (int frame, int epais, int style, int x, int y, int l, int h, int coin, int RO, int func, int fg)
+void                DrawAngle (int frame, int epais, int style, int x, int y, int l, int h, int coin, int RO, int func, int fg)
 
 #else  /* __STDC__ */
-void                AfCoin (frame, epais, style, x, y, l, h, coin, RO, func, fg)
+void                DrawAngle (frame, epais, style, x, y, l, h, coin, RO, func, fg)
 int                 frame;
 int                 epais;
 int                 style;
@@ -1841,7 +1841,7 @@ int                 fg;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-   AfPage (fout);
+   DrawPage (fout);
 
    if (epais <= 0)
       return;
@@ -1871,7 +1871,7 @@ int                 fg;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    AfCadreRect trace un rectangle a bords arrondis (diametre 3mm)  | */
+/* |    DrawRectangleFrame trace un rectangle a bords arrondis (diametre 3mm)  | */
 /* |            avec un trait horizontal a 6mm du bord superieur.       | */
 /* |            Les parame`tres fg, bg, motif indiquent la couleur du   | */
 /* |            trace', la couleur du fond et le motif de remplissage.  | */
@@ -1879,10 +1879,10 @@ int                 fg;
 /**CO*/
 
 #ifdef __STDC__
-void                AfCadreRect (int frame, int epais, int style, int x, int y, int larg, int haut, int RO, int active, int fg, int bg, int motif)
+void                DrawRectangleFrame (int frame, int epais, int style, int x, int y, int larg, int haut, int RO, int active, int fg, int bg, int motif)
 
 #else  /* __STDC__ */
-void                AfCadreRect (frame, epais, style, x, y, larg, haut, RO, active, fg, bg, motif)
+void                DrawRectangleFrame (frame, epais, style, x, y, larg, haut, RO, active, fg, bg, motif)
 int                 frame;
 int                 epais;
 int                 style;
@@ -1903,7 +1903,7 @@ int                 motif;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-   AfPage (fout);
+   DrawPage (fout);
 
    /* Faut-il changer de RGB */
    if (epais > 0)
@@ -1924,7 +1924,7 @@ int                 motif;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    AfCadreEllipse trace une ellipse avec trait horizontal a 7mm    | */
+/* |    DrawEllipsFrame trace une ellipse avec trait horizontal a 7mm    | */
 /* |            sous le sommet (pour SFGL).                             | */
 /* |            Les parame`tres fg, bg, motif indiquent la couleur du   | */
 /* |            trace', la couleur du fond et le motif de remplissage.  | */
@@ -1932,10 +1932,10 @@ int                 motif;
 /**CO*/
 
 #ifdef __STDC__
-void                AfCadreEllipse (int frame, int epais, int style, int x, int y, int larg, int haut, int RO, int active, int fg, int bg, int motif)
+void                DrawEllipsFrame (int frame, int epais, int style, int x, int y, int larg, int haut, int RO, int active, int fg, int bg, int motif)
 
 #else  /* __STDC__ */
-void                AfCadreEllipse (frame, epais, style, x, y, larg, haut, RO, active, fg, bg, motif)
+void                DrawEllipsFrame (frame, epais, style, x, y, larg, haut, RO, active, fg, bg, motif)
 int                 frame;
 int                 epais;
 int                 style;
@@ -1958,7 +1958,7 @@ int                 motif;
    double              A;
 
    fout = (FILE *) FrRef[frame];
-   AfPage (fout);
+   DrawPage (fout);
 
    /* Faut-il changer de RGB */
    if (epais > 0)
@@ -1994,16 +1994,16 @@ int                 motif;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    AfLigne trace une horizontale sur le bord superieur, au milieu  | */
+/* |    DrawLine trace une horizontale sur le bord superieur, au milieu  | */
 /* |            ou sur le bord inferieur.                               | */
 /* ---------------------------------------------------------------------- */
 /**CO*/
 
 #ifdef __STDC__
-void                AfLigne (int frame, int epais, int style, int x, int y, int l, int h, int cadrage, int RO, int func, int fg)
+void                DrawLine (int frame, int epais, int style, int x, int y, int l, int h, int cadrage, int RO, int func, int fg)
 
 #else  /* __STDC__ */
-void                AfLigne (frame, epais, style, x, y, l, h, cadrage, RO, func, fg)
+void                DrawLine (frame, epais, style, x, y, l, h, cadrage, RO, func, fg)
 int                 frame;
 int                 epais;
 int                 style;
@@ -2024,7 +2024,7 @@ int                 fg;
 
    fout = (FILE *) FrRef[frame];
    /* Faut-il ajouter un showpage ? */
-   AfPage (fout);
+   DrawPage (fout);
 
    if (epais <= 0)
       return;
@@ -2046,19 +2046,19 @@ int                 fg;
       fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xf, ym, x, ym, style, epais, 2);
    else
       fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xf, yf, x, yf, style, epais, 2);
-}				/*AfLigne */
+}				/*DrawLine */
 
 /* ---------------------------------------------------------------------- */
-/* |    AfTrait trace une verticale sur le bord gauche, au milieu ou sur| */
+/* |    DrawTrait trace une verticale sur le bord gauche, au milieu ou sur| */
 /* |            le bords droit.                                         | */
 /* ---------------------------------------------------------------------- */
 /**CO*/
 
 #ifdef __STDC__
-void                AfTrait (int frame, int epais, int style, int x, int y, int l, int h, int cadrage, int RO, int func, int fg)
+void                DrawTrait (int frame, int epais, int style, int x, int y, int l, int h, int cadrage, int RO, int func, int fg)
 
 #else  /* __STDC__ */
-void                AfTrait (frame, epais, style, x, y, l, h, cadrage, RO, func, fg)
+void                DrawTrait (frame, epais, style, x, y, l, h, cadrage, RO, func, fg)
 int                 frame;
 int                 epais;
 int                 style;
@@ -2082,7 +2082,7 @@ int                 fg;
 
    fout = (FILE *) FrRef[frame];
    /* Faut-il ajouter un showpage ? */
-   AfPage (fout);
+   DrawPage (fout);
 
    /* Faut-il changer de RGB */
    CouleurCourante (fout, fg);
@@ -2101,15 +2101,15 @@ int                 fg;
       fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xm, yf, xm, y, style, epais, 2);
    else
       fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xf, yf, xf, y, style, epais, 2);
-}				/*AfTrait */
+}				/*DrawTrait */
 
 /* ---------------------------------------------------------------------- */
-/* |    AfPoints trace un ligne de pointilles sur la longueur donnee.   | */
+/* |    DrawPoints trace un ligne de pointilles sur la longueur donnee.   | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                AfPoints (int frame, int x, int y, int lgboite, int RO, int func, int fg)
+void                DrawPoints (int frame, int x, int y, int lgboite, int RO, int func, int fg)
 #else  /* __STDC__ */
-void                AfPoints (frame, x, y, lgboite, RO, func, fg)
+void                DrawPoints (frame, x, y, lgboite, RO, func, fg)
 int                 frame;
 int                 x;
 int                 y;
@@ -2138,15 +2138,15 @@ int                 fg;
 
 	fprintf (fout, "%d -%d %d Pes\n", xcour, ycour, PixelToPoint (lgboite));
      }
-}				/*AfPoints */
+}				/*DrawPoints */
 
 /* ---------------------------------------------------------------------- */
-/* |    AfOblique trace une diagonale dans le sens precise'.            | */
+/* |    DrawSlash trace une diagonale dans le sens precise'.            | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                AfOblique (int frame, int epais, int style, int x, int y, int l, int h, int sens, int RO, int func, int fg)
+void                DrawSlash (int frame, int epais, int style, int x, int y, int l, int h, int sens, int RO, int func, int fg)
 #else  /* __STDC__ */
-void                AfOblique (frame, epais, style, x, y, l, h, sens, RO, func, fg)
+void                DrawSlash (frame, epais, style, x, y, l, h, sens, RO, func, fg)
 int                 frame;
 int                 epais;
 int                 style;
@@ -2166,7 +2166,7 @@ int                 fg;
 
    fout = (FILE *) FrRef[frame];
    /* Faut-il ajouter un showpage ? */
-   AfPage (fout);
+   DrawPage (fout);
 
    if (epais <= 0)
       return;
@@ -2185,11 +2185,11 @@ int                 fg;
       fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", x, yf, xf, y, style, epais, 2);
    else
       fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", x, y, xf, yf, style, epais, 2);
-}				/*AfOblique */
+}				/*DrawSlash */
 
 /* ---------------------------------------------------------------------- */
 /* |    PSPageInfo stocke les numeros, largeur et hauteur de la page    | */
-/* |            que AfPage utilisera                                    | */
+/* |            que DrawPage utilisera                                    | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 void                PSPageInfo (int pagenum, int width, int height)
@@ -2283,7 +2283,7 @@ int                 motif;
 
    fout = (FILE *) FrRef[frame];
    /* Faut-il ajouter un showpage ? */
-   AfPage (fout);
+   DrawPage (fout);
 
    /* Faut-il changer de RGB */
    CouleurCourante (fout, fg);

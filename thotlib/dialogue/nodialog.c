@@ -72,10 +72,10 @@ void                DrawAjAttr ()
 {
 }
 #ifdef __STDC__
-void                AfCar (char car, int frame, int x, int y, ptrfont font, int RO, int active, int fg)
+void                DrawChar (char car, int frame, int x, int y, ptrfont font, int RO, int active, int fg)
 
 #else  /* __STDC__ */
-void                AfCar (car, frame, x, y, font, RO, active, fg)
+void                DrawChar (car, frame, x, y, font, RO, active, fg)
 char                car;
 int                 frame;
 int                 x;

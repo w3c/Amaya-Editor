@@ -6,20 +6,20 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern void AfTrame ( PtrBox pBox,
+extern void DisplayEmptyBox ( PtrBox pBox,
                       int frame,
                       char modele );
 extern void PolyTransform ( PtrBox pBox );
-extern void AfBoite ( PtrBox pBox,
+extern void DisplayBox ( PtrBox pBox,
                       int frame );
 
 #else /* __STDC__ */
 
-extern void AfTrame (/* PtrBox pBox,
+extern void DisplayEmptyBox (/* PtrBox pBox,
                         int frame,
                         char modele */);
 extern void PolyTransform (/* PtrBox pBox */);
-extern void AfBoite (/* PtrBox pBox,
+extern void DisplayBox (/* PtrBox pBox,
                         int frame */);
 
 #endif /* __STDC__ */

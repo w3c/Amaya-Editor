@@ -52,9 +52,9 @@ static int          pile_profond;
 #include "buildlines_f.h"
 
 #ifdef __STDC__
-void                AfPage (FILE * fout)
+void                DrawPage (FILE * fout)
 #else  /* __STDC__ */
-void                AfPage (fout)
+void                DrawPage (fout)
 FILE               *fout;
 
 #endif /* __STDC__ */
@@ -266,7 +266,7 @@ unsigned char      *text;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    AfCar affiche le caracte`re car a` la position x,y de la        | */
+/* |    DrawChar affiche le caracte`re car a` la position x,y de la        | */
 /* |            framee^tre frame en utilisant la police de caracteres font.     | */
 /* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
 /* |            Read Only (1) ou non (0).                               | */
@@ -275,9 +275,9 @@ unsigned char      *text;
 /* |            Le parame`tre fg indique la couleur du trace'.          | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                AfCar (char car, int frame, int x, int y, ptrfont font, int RO, int active, int fg)
+void                DrawChar (char car, int frame, int x, int y, ptrfont font, int RO, int active, int fg)
 #else  /* __STDC__ */
-void                AfCar (car, frame, x, y, font, RO, active, fg)
+void                DrawChar (car, frame, x, y, font, RO, active, fg)
 char                car;
 int                 frame;
 int                 x;
@@ -317,7 +317,7 @@ int                 fg;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    AfChaine affiche la chai^ne de caracte`res de longueur lg qui   | */
+/* |    DrawString affiche la chai^ne de caracte`res de longueur lg qui   | */
 /* |            de'bute par buff[i] a` la position x,y dans la fenetree^tre     | */
 /* |            frame en utilisant la police de caracte`res font.               | */
 /* |            Le parame`tre lgboite donne la largeur de la boi^te     | */
@@ -338,9 +338,9 @@ int                 fg;
 /* |            Retourne la largeur de la chaine affichee.              | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-int                 AfChaine (char *buff, int i, int lg, int frame, int x, int y, ptrfont font, int lgboite, int bl, int hyphen, int debutbloc, int RO, int active, int fg)
+int                 DrawString (char *buff, int i, int lg, int frame, int x, int y, ptrfont font, int lgboite, int bl, int hyphen, int debutbloc, int RO, int active, int fg)
 #else  /* __STDC__ */
-int                 AfChaine (buff, i, lg, frame, x, y, font, lgboite, bl, hyphen, debutbloc, RO, active, fg)
+int                 DrawString (buff, i, lg, frame, x, y, font, lgboite, bl, hyphen, debutbloc, RO, active, fg)
 char               *buff;
 int                 i;
 int                 lg;
@@ -433,7 +433,7 @@ int                 fg;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    AfSoul affiche un souligne' sous la chaine de caracteres de     | */
+/* |    DisplayUnderline affiche un souligne' sous la chaine de caracteres de     | */
 /* |            longueur lg utilisant la police de caracteres font a`   | */
 /* |            la position x, y dans la fenetre frame.                 | */
 /* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
@@ -463,9 +463,9 @@ int                 fg;
 /* - le + indique l'origine des distances (x,y)                           */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                AfSoul (int frame, int x, int y, ptrfont font, int type, int epais, int lg, int RO, int active, int fg)
+void                DisplayUnderline (int frame, int x, int y, ptrfont font, int type, int epais, int lg, int RO, int active, int fg)
 #else  /* __STDC__ */
-void                AfSoul (frame, x, y, font, type, epais, lg, RO, active, fg)
+void                DisplayUnderline (frame, x, y, font, type, epais, lg, RO, active, fg)
 int                 frame;
 int                 x;
 int                 y;
@@ -537,7 +537,7 @@ int                 fg;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    AfPoints trace un ligne de pointille's sur la longueur donne'e. | */
+/* |    DrawPoints trace un ligne de pointille's sur la longueur donne'e. | */
 /* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
 /* |            Read Only (1) ou non (0).                               | */
 /* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
@@ -545,9 +545,9 @@ int                 fg;
 /* |            Le parame`tre fg indique la couleur du trace'.          | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                AfPoints (int frame, int x, int y, int lgboite, int RO, int active, int fg)
+void                DrawPoints (int frame, int x, int y, int lgboite, int RO, int active, int fg)
 #else  /* __STDC__ */
-void                AfPoints (frame, x, y, lgboite, RO, active, fg)
+void                DrawPoints (frame, x, y, lgboite, RO, active, fg)
 int                 frame;
 int                 x;
 int                 y;
@@ -596,7 +596,7 @@ int                 fg;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    AfRadical affiche un signe Radical.                             | */
+/* |    DrawRadical affiche un signe Radical.                             | */
 /* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
 /* |            Read Only (1) ou non (0).                               | */
 /* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
@@ -606,10 +606,10 @@ int                 fg;
 
 
 #ifdef __STDC__
-void                AfRadical (int frame, int epais, int x, int y, int l, int h, ptrfont font, int RO, int active, int fg)
+void                DrawRadical (int frame, int epais, int x, int y, int l, int h, ptrfont font, int RO, int active, int fg)
 
 #else  /* __STDC__ */
-void                AfRadical (frame, epais, x, y, l, h, font, RO, active, fg)
+void                DrawRadical (frame, epais, x, y, l, h, font, RO, active, fg)
 int                 frame;
 int                 epais;
 int                 x;
@@ -642,7 +642,7 @@ int                 fg;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    AfIntegrale trace une integrale :                               | */
+/* |    DrawIntegral trace une integrale :                               | */
 /* |            - simple si type = 0                                    | */
 /* |            - curviligne si type = 1                                | */
 /* |            - double si type = 2.                                   | */
@@ -655,10 +655,10 @@ int                 fg;
 
 
 #ifdef __STDC__
-void                AfIntegrale (int frame, int epais, int x, int y, int l, int h, int type, ptrfont font, int RO, int active, int fg)
+void                DrawIntegral (int frame, int epais, int x, int y, int l, int h, int type, ptrfont font, int RO, int active, int fg)
 
 #else  /* __STDC__ */
-void                AfIntegrale (frame, epais, x, y, l, h, type, font, RO, active, fg)
+void                DrawIntegral (frame, epais, x, y, l, h, type, font, RO, active, fg)
 int                 frame;
 int                 epais;
 int                 x;
@@ -680,9 +680,9 @@ int                 fg;
 
    xm = x + ((l - CarWidth ('\364', font)) / 2);
    yf = y - FontAscent (font) + CarAscent ('\363', font);
-   AfCar ('\363', frame, xm, yf, font, RO, active, fg);
+   DrawChar ('\363', frame, xm, yf, font, RO, active, fg);
    yend = y + h - CarHeight ('\365', font) - FontAscent (font) + CarAscent ('\365', font) - 1;
-   AfCar ('\365', frame, xm, yend, font, RO, active, fg);
+   DrawChar ('\365', frame, xm, yend, font, RO, active, fg);
 
    yf += CarHeight ('\363', font);
    delta = yend - yf;
@@ -692,20 +692,20 @@ int                 fg;
 	     yend -= CarHeight ('\364', font) - 1;
 	     yf < yend;
 	     yf += CarHeight ('\364', font), exnum++)
-	   AfCar ('\364', frame, xm, yf, font, RO, active, fg);
+	   DrawChar ('\364', frame, xm, yf, font, RO, active, fg);
 	if (exnum)
-	   AfCar ('\364', frame, xm, yend, font, RO, active, fg);
+	   DrawChar ('\364', frame, xm, yend, font, RO, active, fg);
 	else			/* on centre l'extension */
-	   AfCar ('\364', frame, xm, yf + ((delta - CarHeight ('\364', font)) / 2), font, RO, active, fg);
+	   DrawChar ('\364', frame, xm, yf + ((delta - CarHeight ('\364', font)) / 2), font, RO, active, fg);
      }
 
    if (type == 2)		/* integrale double */
-      AfIntegrale (frame, epais, x + (CarWidth ('\364', font) / 2),
+      DrawIntegral (frame, epais, x + (CarWidth ('\364', font) / 2),
 		   y, l, h, -1, font, RO, active, fg);
    /*    ^^  hack !! */
 
    else if (type == 1)		/* curviligne */
-      AfCar ('o', frame, x + ((l - CarWidth ('o', font)) / 2),
+      DrawChar ('o', frame, x + ((l - CarWidth ('o', font)) / 2),
 	     y + (h - CarHeight ('o', font)) / 2 - FontAscent (font) + CarAscent ('o', font),
 	     font, RO, active, fg);
 }
@@ -745,11 +745,11 @@ int                 fg;
    yf = y + ((h - CarHeight (symb, font)) / 2) - FontAscent (font) + CarAscent (symb, font);
    /*   ^^^^^^^^^ pour compenser le FontOrig dans Afcar */
 
-   AfCar (symb, frame, xm, yf, font, RO, active, fg);
+   DrawChar (symb, frame, xm, yf, font, RO, active, fg);
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    AfSigma trace un symbole Sigma.                                 | */
+/* |    DrawSigma trace un symbole Sigma.                                 | */
 /* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
 /* |            active (1) ou non (0).                                  | */
 /* |            Le parame`tre fg indique la couleur du trace'.          | */
@@ -757,10 +757,10 @@ int                 fg;
 
 
 #ifdef __STDC__
-void                AfSigma (int frame, int x, int y, int l, int h, ptrfont font, int RO, int active, int fg)
+void                DrawSigma (int frame, int x, int y, int l, int h, ptrfont font, int RO, int active, int fg)
 
 #else  /* __STDC__ */
-void                AfSigma (frame, x, y, l, h, font, RO, active, fg)
+void                DrawSigma (frame, x, y, l, h, font, RO, active, fg)
 int                 frame;
 int                 x;
 int                 y;
@@ -800,7 +800,7 @@ int                 fg;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    AfPi trace un symbole PI.                                       | */
+/* |    DrawPi trace un symbole PI.                                       | */
 /* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
 /* |            Read Only (1) ou non (0).                               | */
 /* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
@@ -811,10 +811,10 @@ int                 fg;
 
 
 #ifdef __STDC__
-void                AfPi (int frame, int x, int y, int l, int h, ptrfont font, int RO, int active, int fg)
+void                DrawPi (int frame, int x, int y, int l, int h, ptrfont font, int RO, int active, int fg)
 
 #else  /* __STDC__ */
-void                AfPi (frame, x, y, l, h, font, RO, active, fg)
+void                DrawPi (frame, x, y, l, h, font, RO, active, fg)
 int                 frame;
 int                 x;
 int                 y;
@@ -851,7 +851,7 @@ int                 fg;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    AfIntersection trace un symbole Intersection.                   | */
+/* |    DrawIntersection trace un symbole Intersection.                   | */
 /* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
 /* |            Read Only (1) ou non (0).                               | */
 /* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
@@ -861,10 +861,10 @@ int                 fg;
 
 
 #ifdef __STDC__
-void                AfIntersection (int frame, int x, int y, int l, int h, ptrfont font, int RO, int active, int fg)
+void                DrawIntersection (int frame, int x, int y, int l, int h, ptrfont font, int RO, int active, int fg)
 
 #else  /* __STDC__ */
-void                AfIntersection (frame, x, y, l, h, font, RO, active, fg)
+void                DrawIntersection (frame, x, y, l, h, font, RO, active, fg)
 int                 frame;
 int                 x;
 int                 y;
@@ -904,7 +904,7 @@ int                 fg;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    AfUnion trace un symbole Union.                                 | */
+/* |    DrawUnion trace un symbole Union.                                 | */
 /* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
 /* |            Read Only (1) ou non (0).                               | */
 /* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
@@ -914,10 +914,10 @@ int                 fg;
 
 
 #ifdef __STDC__
-void                AfUnion (int frame, int x, int y, int l, int h, ptrfont font, int RO, int active, int fg)
+void                DrawUnion (int frame, int x, int y, int l, int h, ptrfont font, int RO, int active, int fg)
 
 #else  /* __STDC__ */
-void                AfUnion (frame, x, y, l, h, font, RO, active, fg)
+void                DrawUnion (frame, x, y, l, h, font, RO, active, fg)
 int                 frame;
 int                 x;
 int                 y;
@@ -1016,7 +1016,7 @@ int                 fg;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    AfFleche trace une fle^che oriente'e en fonction de l'angle     | */
+/* |    DrawArrow trace une fle^che oriente'e en fonction de l'angle     | */
 /* |            donne' :0 (fle^che vers la droite), 45, 90, 135, 180,   | */
 /* |            225, 270 ou 315.                                        | */
 /* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
@@ -1028,10 +1028,10 @@ int                 fg;
 
 
 #ifdef __STDC__
-void                AfFleche (int frame, int epais, int style, int x, int y, int l, int h, int orientation, int RO, int active, int fg)
+void                DrawArrow (int frame, int epais, int style, int x, int y, int l, int h, int orientation, int RO, int active, int fg)
 
 #else  /* __STDC__ */
-void                AfFleche (frame, epais, style, x, y, l, h, orientation, RO, active, fg)
+void                DrawArrow (frame, epais, style, x, y, l, h, orientation, RO, active, fg)
 int                 frame;
 int                 epais;
 int                 style;
@@ -1105,7 +1105,7 @@ int                 fg;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    AfCrochet trace un symbole crochet ouvrant ou fermant.          | */
+/* |    DrawBracket trace un symbole crochet ouvrant ou fermant.          | */
 /* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
 /* |            Read Only (1) ou non (0).                               | */
 /* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
@@ -1115,10 +1115,10 @@ int                 fg;
 
 
 #ifdef __STDC__
-void                AfCrochet (int frame, int epais, int x, int y, int l, int h, int sens, ptrfont font, int RO, int active, int fg)
+void                DrawBracket (int frame, int epais, int x, int y, int l, int h, int sens, ptrfont font, int RO, int active, int fg)
 
 #else  /* __STDC__ */
-void                AfCrochet (frame, epais, x, y, l, h, sens, font, RO, active, fg)
+void                DrawBracket (frame, epais, x, y, l, h, sens, font, RO, active, fg)
 int                 frame;
 int                 epais;
 int                 x;
@@ -1145,7 +1145,7 @@ int                 fg;
 	     xm = x + ((l - CarWidth ('[', font)) / 2);
 	     yf = y + ((h - CarHeight ('[', font)) / 2) -
 		FontAscent (font) + CarAscent ('[', font);
-	     AfCar ('[', frame, xm, yf, font, RO, active, fg);
+	     DrawChar ('[', frame, xm, yf, font, RO, active, fg);
 	  }
 	else
 	  {
@@ -1153,7 +1153,7 @@ int                 fg;
 	     xm = x + ((l - CarWidth (']', font)) / 2);
 	     yf = y + ((h - CarHeight (']', font)) / 2) -
 		FontAscent (font) + CarAscent (']', font);
-	     AfCar (']', frame, xm, yf, font, RO, active, fg);
+	     DrawChar (']', frame, xm, yf, font, RO, active, fg);
 	  }
      }
    else
@@ -1164,36 +1164,36 @@ int                 fg;
 	     /* Trace un crochet ouvrant */
 	     xm = x + ((l - CarWidth ('\351', font)) / 2);
 	     yf = y - FontAscent (font) + CarAscent ('\351', font);
-	     AfCar ('\351', frame, xm, yf, font, RO, active, fg);
+	     DrawChar ('\351', frame, xm, yf, font, RO, active, fg);
 	     yend = y + h - CarHeight ('\353', font) -
 		FontAscent (font) + CarAscent ('\353', font);
-	     AfCar ('\353', frame, xm, yend, font, RO, active, fg);
+	     DrawChar ('\353', frame, xm, yend, font, RO, active, fg);
 	     for (yf = yf + CarHeight ('\351', font) -
 		  FontAscent (font) + CarAscent ('\352', font);
 		  yf < yend;
 		  yf += CarHeight ('\352', font))
-		AfCar ('\352', frame, xm, yf, font, RO, active, fg);
+		DrawChar ('\352', frame, xm, yf, font, RO, active, fg);
 	  }
 	else
 	  {
 	     /* Trace un crochet fermant */
 	     xm = x + ((l - CarWidth ('\371', font)) / 2);
 	     yf = y - FontAscent (font) + CarAscent ('\371', font);
-	     AfCar ('\371', frame, xm, yf, font, RO, active, fg);
+	     DrawChar ('\371', frame, xm, yf, font, RO, active, fg);
 	     yend = y + h - CarHeight ('\373', font) -
 		FontAscent (font) + CarAscent ('\373', font);
-	     AfCar ('\373', frame, xm, yend, font, RO, active, fg);
+	     DrawChar ('\373', frame, xm, yend, font, RO, active, fg);
 	     for (yf = yf + CarHeight ('\371', font) -
 		  FontAscent (font) + CarAscent ('\372', font);
 		  yf < yend;
 		  yf += CarHeight ('\372', font))
-		AfCar ('\372', frame, xm, yf, font, RO, active, fg);
+		DrawChar ('\372', frame, xm, yf, font, RO, active, fg);
 	  }
      }
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    AfParenthese trace un symbole parenthese ouvrant ou fermant.    | */
+/* |    DrawParenthesis trace un symbole parenthese ouvrant ou fermant.    | */
 /* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
 /* |            Read Only (1) ou non (0).                               | */
 /* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
@@ -1203,10 +1203,10 @@ int                 fg;
 
 
 #ifdef __STDC__
-void                AfParenthese (int frame, int epais, int x, int y, int l, int h, int sens, ptrfont font, int RO, int active, int fg)
+void                DrawParenthesis (int frame, int epais, int x, int y, int l, int h, int sens, ptrfont font, int RO, int active, int fg)
 
 #else  /* __STDC__ */
-void                AfParenthese (frame, epais, x, y, l, h, sens, font, RO, active, fg)
+void                DrawParenthesis (frame, epais, x, y, l, h, sens, font, RO, active, fg)
 int                 frame;
 int                 epais;
 int                 x;
@@ -1234,14 +1234,14 @@ int                 fg;
 	     /* Trace un parenthese ouvrant */
 	     xm = x + ((l - CarWidth ('(', font)) / 2);
 	     yf = y + ((h - CarHeight ('(', font)) / 2) - FontAscent (font) + CarAscent ('(', font);
-	     AfCar ('(', frame, xm, yf, font, RO, active, fg);
+	     DrawChar ('(', frame, xm, yf, font, RO, active, fg);
 	  }
 	else
 	  {
 	     /* Trace un parenthese fermant */
 	     xm = x + ((l - CarWidth (')', font)) / 2);
 	     yf = y + ((h - CarHeight (')', font)) / 2) - FontAscent (font) + CarAscent (')', font);
-	     AfCar (')', frame, xm, yf, font, RO, active, fg);
+	     DrawChar (')', frame, xm, yf, font, RO, active, fg);
 	  }
      }
 
@@ -1253,9 +1253,9 @@ int                 fg;
 	     /* Trace un parenthese ouvrant */
 	     xm = x + ((l - CarWidth ('\346', font)) / 2);
 	     yf = y - FontAscent (font) + CarAscent ('\346', font);
-	     AfCar ('\346', frame, xm, yf, font, RO, active, fg);
+	     DrawChar ('\346', frame, xm, yf, font, RO, active, fg);
 	     yend = y + h - CarHeight ('\350', font) - FontAscent (font) + CarAscent ('\350', font) - 1;
-	     AfCar ('\350', frame, xm, yend, font, RO, active, fg);
+	     DrawChar ('\350', frame, xm, yend, font, RO, active, fg);
 
 	     yf += CarHeight ('\346', font);
 	     delta = yend - yf;
@@ -1265,11 +1265,11 @@ int                 fg;
 		       yend -= CarHeight ('\347', font) - 1;
 		       yf < yend;
 		       yf += CarHeight ('\347', font), exnum++)
-		     AfCar ('\347', frame, xm, yf, font, RO, active, fg);
+		     DrawChar ('\347', frame, xm, yf, font, RO, active, fg);
 		  if (exnum)
-		     AfCar ('\347', frame, xm, yend, font, RO, active, fg);
+		     DrawChar ('\347', frame, xm, yend, font, RO, active, fg);
 		  else		/* on centre l'extension */
-		     AfCar ('\347', frame, xm, yf + ((delta - CarHeight ('\347', font)) / 2), font, RO, active, fg);
+		     DrawChar ('\347', frame, xm, yf + ((delta - CarHeight ('\347', font)) / 2), font, RO, active, fg);
 	       }
 	  }
 
@@ -1278,9 +1278,9 @@ int                 fg;
 	     /* Trace un parenthese fermant */
 	     xm = x + ((l - CarWidth ('\366', font)) / 2);
 	     yf = y - FontAscent (font) + CarAscent ('\366', font);
-	     AfCar ('\366', frame, xm, yf, font, RO, active, fg);
+	     DrawChar ('\366', frame, xm, yf, font, RO, active, fg);
 	     yend = y + h - CarHeight ('\370', font) - FontAscent (font) + CarAscent ('\370', font) - 1;
-	     AfCar ('\370', frame, xm, yend, font, RO, active, fg);
+	     DrawChar ('\370', frame, xm, yend, font, RO, active, fg);
 
 	     yf += CarHeight ('\366', font);
 	     delta = yend - yf;
@@ -1290,11 +1290,11 @@ int                 fg;
 		       yend -= CarHeight ('\367', font) - 1;
 		       yf < yend;
 		       yf += CarHeight ('\367', font), exnum++)
-		     AfCar ('\367', frame, xm, yf, font, RO, active, fg);
+		     DrawChar ('\367', frame, xm, yf, font, RO, active, fg);
 		  if (exnum)
-		     AfCar ('\367', frame, xm, yend, font, RO, active, fg);
+		     DrawChar ('\367', frame, xm, yend, font, RO, active, fg);
 		  else		/* on centre l'extension */
-		     AfCar ('\367', frame, xm, yf + ((delta - CarHeight ('\367', font)) / 2), font, RO, active, fg);
+		     DrawChar ('\367', frame, xm, yf + ((delta - CarHeight ('\367', font)) / 2), font, RO, active, fg);
 	       }
 	  }
      }
@@ -1302,7 +1302,7 @@ int                 fg;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    AfAccolade trace un symbole accolade ouvrant ou fermant.        | */
+/* |    DrawBrace trace un symbole accolade ouvrant ou fermant.        | */
 /* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
 /* |            Read Only (1) ou non (0).                               | */
 /* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
@@ -1312,10 +1312,10 @@ int                 fg;
 
 
 #ifdef __STDC__
-void                AfAccolade (int frame, int epais, int x, int y, int l, int h, int sens, ptrfont font, int RO, int active, int fg)
+void                DrawBrace (int frame, int epais, int x, int y, int l, int h, int sens, ptrfont font, int RO, int active, int fg)
 
 #else  /* __STDC__ */
-void                AfAccolade (frame, epais, x, y, l, h, sens, font, RO, active, fg)
+void                DrawBrace (frame, epais, x, y, l, h, sens, font, RO, active, fg)
 int                 frame;
 int                 epais;
 int                 x;
@@ -1343,14 +1343,14 @@ int                 fg;
 	     /* Trace un accolade ouvrant */
 	     xm = x + ((l - CarWidth ('{', font)) / 2);
 	     yf = y + ((h - CarHeight ('{', font)) / 2) - FontAscent (font) + CarAscent ('{', font);
-	     AfCar ('{', frame, xm, yf, font, RO, active, fg);
+	     DrawChar ('{', frame, xm, yf, font, RO, active, fg);
 	  }
 	else
 	  {
 	     /* Trace un accolade fermant */
 	     xm = x + ((l - CarWidth ('}', font)) / 2);
 	     yf = y + ((h - CarHeight ('}', font)) / 2) - FontAscent (font) + CarAscent ('}', font);
-	     AfCar ('}', frame, xm, yf, font, RO, active, fg);
+	     DrawChar ('}', frame, xm, yf, font, RO, active, fg);
 	  }
      }
 
@@ -1363,14 +1363,14 @@ int                 fg;
 	     /* le haut */
 	     xm = x + ((l - CarWidth ('\354', font)) / 2);
 	     yf = y - FontAscent (font) + CarAscent ('\354', font);
-	     AfCar ('\354', frame, xm, yf, font, RO, active, fg);
+	     DrawChar ('\354', frame, xm, yf, font, RO, active, fg);
 	     /* le milieu */
 	     ym = y + ((h - CarHeight ('\355', font)) / 2) - FontAscent (font)
 		+ CarAscent ('\355', font);
-	     AfCar ('\355', frame, xm, ym, font, RO, active, fg);
+	     DrawChar ('\355', frame, xm, ym, font, RO, active, fg);
 	     /* le bas */
 	     yend = y + h - CarHeight ('\356', font) - FontAscent (font) + CarAscent ('\356', font);
-	     AfCar ('\356', frame, xm, yend, font, RO, active, fg);
+	     DrawChar ('\356', frame, xm, yend, font, RO, active, fg);
 
 	     /* complement superieur */
 	     yf += CarHeight ('\354', font);
@@ -1381,11 +1381,11 @@ int                 fg;
 		       ym -= CarHeight ('\357', font);
 		       yf < ym;
 		       yf += CarHeight ('\357', font), exnum++)
-		     AfCar ('\357', frame, xm, yf, font, RO, active, fg);
+		     DrawChar ('\357', frame, xm, yf, font, RO, active, fg);
 		  if (exnum)
-		     AfCar ('\357', frame, xm, ym, font, RO, active, fg);
+		     DrawChar ('\357', frame, xm, ym, font, RO, active, fg);
 		  else		/* on centre l'extension */
-		     AfCar ('\357', frame, xm, yf + ((delta - CarHeight ('\357', font)) / 2), font, RO, active, fg);
+		     DrawChar ('\357', frame, xm, yf + ((delta - CarHeight ('\357', font)) / 2), font, RO, active, fg);
 	       }
 	     /* complement inferieur */
 	     yf = ym + CarHeight ('\355', font) + CarHeight ('\357', font);
@@ -1396,11 +1396,11 @@ int                 fg;
 		       yend -= CarHeight ('\357', font);
 		       yf < yend;
 		       yf += CarHeight ('\357', font), exnum++)
-		     AfCar ('\357', frame, xm, yf, font, RO, active, fg);
+		     DrawChar ('\357', frame, xm, yf, font, RO, active, fg);
 		  if (exnum)
-		     AfCar ('\357', frame, xm, yend, font, RO, active, fg);
+		     DrawChar ('\357', frame, xm, yend, font, RO, active, fg);
 		  else		/* on centre l'extension */
-		     AfCar ('\357', frame, xm, yf + ((delta - CarHeight ('\357', font)) / 2), font, RO, active, fg);
+		     DrawChar ('\357', frame, xm, yf + ((delta - CarHeight ('\357', font)) / 2), font, RO, active, fg);
 	       }
 	  }
 
@@ -1410,15 +1410,15 @@ int                 fg;
 	     /* le haut */
 	     xm = x + ((l - CarWidth ('\374', font)) / 2);
 	     yf = y - FontAscent (font) + CarAscent ('\374', font);
-	     AfCar ('\374', frame, xm, yf, font, RO, active, fg);
+	     DrawChar ('\374', frame, xm, yf, font, RO, active, fg);
 	     /* le milieu */
 	     ym = y + ((h - CarHeight ('\375', font)) / 2)
 		- FontAscent (font) + CarAscent ('\375', font);
-	     AfCar ('\375', frame, xm, ym, font, RO, active, fg);
+	     DrawChar ('\375', frame, xm, ym, font, RO, active, fg);
 	     /* le bas */
 	     yend = y + h - CarHeight ('\376', font)
 		- FontAscent (font) + CarAscent ('\376', font);
-	     AfCar ('\376', frame, xm, yend, font, RO, active, fg);
+	     DrawChar ('\376', frame, xm, yend, font, RO, active, fg);
 	     /* complement superieur */
 	     yf += CarHeight ('\374', font);
 	     delta = ym - yf;
@@ -1428,11 +1428,11 @@ int                 fg;
 		       ym -= CarHeight ('\357', font);
 		       yf < ym;
 		       yf += CarHeight ('\357', font), exnum++)
-		     AfCar ('\357', frame, xm, yf, font, RO, active, fg);
+		     DrawChar ('\357', frame, xm, yf, font, RO, active, fg);
 		  if (exnum)
-		     AfCar ('\357', frame, xm, ym, font, RO, active, fg);
+		     DrawChar ('\357', frame, xm, ym, font, RO, active, fg);
 		  else		/* on centre l'extension */
-		     AfCar ('\357', frame, xm, yf + ((delta - CarHeight ('\357', font)) / 2), font, RO, active, fg);
+		     DrawChar ('\357', frame, xm, yf + ((delta - CarHeight ('\357', font)) / 2), font, RO, active, fg);
 	       }
 	     /* complement inferieur */
 	     yf = ym + CarHeight ('\375', font) + CarHeight ('\357', font);
@@ -1443,18 +1443,18 @@ int                 fg;
 		       yend -= CarHeight ('\357', font);
 		       yf < yend;
 		       yf += CarHeight ('\357', font), exnum++)
-		     AfCar ('\357', frame, xm, yf, font, RO, active, fg);
+		     DrawChar ('\357', frame, xm, yf, font, RO, active, fg);
 		  if (exnum)
-		     AfCar ('\357', frame, xm, yend, font, RO, active, fg);
+		     DrawChar ('\357', frame, xm, yend, font, RO, active, fg);
 		  else		/* on centre l'extension */
-		     AfCar ('\357', frame, xm, yf + ((delta - CarHeight ('\357', font)) / 2), font, RO, active, fg);
+		     DrawChar ('\357', frame, xm, yf + ((delta - CarHeight ('\357', font)) / 2), font, RO, active, fg);
 	       }
 	  }
      }
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    AfRectangle trace un rectangle d'origine x, y et de dimensions  | */
+/* |    DrawRectangle trace un rectangle d'origine x, y et de dimensions  | */
 /* |            larg, haut avec une e'paisseur epais dans la fenetree^tre       | */
 /* |            d'indice frame.                                         | */
 /* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
@@ -1467,10 +1467,10 @@ int                 fg;
 
 
 #ifdef __STDC__
-void                AfRectangle (int frame, int epais, int style, int x, int y, int larg, int haut, int RO, int active, int fg, int bg, int motif)
+void                DrawRectangle (int frame, int epais, int style, int x, int y, int larg, int haut, int RO, int active, int fg, int bg, int motif)
 
 #else  /* __STDC__ */
-void                AfRectangle (frame, epais, style, x, y, larg, haut, RO, active, fg, bg, motif)
+void                DrawRectangle (frame, epais, style, x, y, larg, haut, RO, active, fg, bg, motif)
 int                 frame;
 int                 epais;
 int                 style;
@@ -1535,7 +1535,7 @@ int                 motif;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    AfLosange trace un losange.                                     | */
+/* |    DrawDiamond trace un losange.                                     | */
 /* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
 /* |            Read Only (1) ou non (0).                               | */
 /* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
@@ -1546,10 +1546,10 @@ int                 motif;
 
 
 #ifdef __STDC__
-void                AfLosange (int frame, int epais, int style, int x, int y, int larg, int haut, int RO, int active, int fg, int bg, int motif)
+void                DrawDiamond (int frame, int epais, int style, int x, int y, int larg, int haut, int RO, int active, int fg, int bg, int motif)
 
 #else  /* __STDC__ */
-void                AfLosange (frame, epais, style, x, y, larg, haut, RO, active, fg, bg, motif)
+void                DrawDiamond (frame, epais, style, x, y, larg, haut, RO, active, fg, bg, motif)
 int                 frame;
 int                 epais;
 int                 style;
@@ -1609,7 +1609,7 @@ int                 motif;
 
 /*debut */
 /* ---------------------------------------------------------------------- */
-/* |    AfBrisees trace des lignes brise'es.                            | */
+/* |    DrawSegments trace des lignes brise'es.                            | */
 /* |            Le parame`tre buffer pointe sur le 1er buffer qui       | */
 /* |            contient la liste des points de contro^le et le         | */
 /* |            parame`tre nb donne le nombre de points.                | */
@@ -1627,10 +1627,10 @@ int                 motif;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                AfBrisees (int frame, int epais, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int fleche)
+void                DrawSegments (int frame, int epais, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int fleche)
 
 #else  /* __STDC__ */
-void                AfBrisees (frame, epais, style, x, y, buffer, nb, RO, active, fg, fleche)
+void                DrawSegments (frame, epais, style, x, y, buffer, nb, RO, active, fg, fleche)
 int                 frame;
 int                 epais;
 int                 style;
@@ -1696,7 +1696,7 @@ int                 fleche;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    AfPolygone trace un polygone.                                   | */
+/* |    DrawPolygon trace un polygone.                                   | */
 /* |            Le parame`tre buffer pointe sur le 1er buffer qui       | */
 /* |            contient la liste des points de contro^le et le         | */
 /* |            parame`tre nb donne le nombre de points.                | */
@@ -1710,10 +1710,10 @@ int                 fleche;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                AfPolygone (int frame, int epais, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int bg, int motif)
+void                DrawPolygon (int frame, int epais, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int bg, int motif)
 
 #else  /* __STDC__ */
-void                AfPolygone (frame, epais, style, x, y, buffer, nb, RO, active, fg, bg, motif)
+void                DrawPolygon (frame, epais, style, x, y, buffer, nb, RO, active, fg, bg, motif)
 int                 frame;
 int                 epais;
 int                 style;
@@ -1922,7 +1922,7 @@ float               a1, b1, a2, b2, a3, b3, a4, b4;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    AfCourbe trace une courbe ouverte.                              | */
+/* |    DrawCurb trace une courbe ouverte.                              | */
 /* |            Le parame`tre buffer pointe sur le 1er buffer qui       | */
 /* |            contient la liste des points de contro^le et le         | */
 /* |            parame`tre nb donne le nombre de points.                | */
@@ -1941,10 +1941,10 @@ float               a1, b1, a2, b2, a3, b3, a4, b4;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                AfCourbe (int frame, int epais, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int fleche, C_points * controls)
+void                DrawCurb (int frame, int epais, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int fleche, C_points * controls)
 
 #else  /* __STDC__ */
-void                AfCourbe (frame, epais, style, x, y, buffer, nb, RO, active, fg, fleche, controls)
+void                DrawCurb (frame, epais, style, x, y, buffer, nb, RO, active, fg, fleche, controls)
 int                 frame;
 int                 epais;
 int                 style;
@@ -2049,7 +2049,7 @@ C_points           *controls;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    AfSpline trace une courbe fermee.                               | */
+/* |    DrawSpline trace une courbe fermee.                               | */
 /* |            Le parame`tre buffer pointe sur le 1er buffer qui       | */
 /* |            contient la liste des points de contro^le et le         | */
 /* |            parame`tre nb donne le nombre de points.                | */
@@ -2064,10 +2064,10 @@ C_points           *controls;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                AfSpline (int frame, int epais, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int bg, int motif, C_points * controls)
+void                DrawSpline (int frame, int epais, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int bg, int motif, C_points * controls)
 
 #else  /* __STDC__ */
-void                AfSpline (frame, epais, style, x, y, buffer, nb, RO, active, fg, bg, motif, controls)
+void                DrawSpline (frame, epais, style, x, y, buffer, nb, RO, active, fg, bg, motif, controls)
 int                 frame;
 int                 epais;
 int                 style;
@@ -2179,7 +2179,7 @@ C_points           *controls;
 /*fin */
 
 /* ---------------------------------------------------------------------- */
-/* |    AfOvale trace un rectangle aux angles arrondis.                 | */
+/* |    DrawOval trace un rectangle aux angles arrondis.                 | */
 /* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
 /* |            Read Only (1) ou non (0).                               | */
 /* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
@@ -2190,10 +2190,10 @@ C_points           *controls;
 
 
 #ifdef __STDC__
-void                AfOvale (int frame, int epais, int style, int x, int y, int larg, int haut, int RO, int active, int fg, int bg, int motif)
+void                DrawOval (int frame, int epais, int style, int x, int y, int larg, int haut, int RO, int active, int fg, int bg, int motif)
 
 #else  /* __STDC__ */
-void                AfOvale (frame, epais, style, x, y, larg, haut, RO, active, fg, bg, motif)
+void                DrawOval (frame, epais, style, x, y, larg, haut, RO, active, fg, bg, motif)
 int                 frame;
 int                 epais;
 int                 style;
@@ -2339,7 +2339,7 @@ int                 motif;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    AfEllipse trace une ellipse (cas particulier un cercle).        | */
+/* |    DrawEllips trace une ellipse (cas particulier un cercle).        | */
 /* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
 /* |            Read Only (1) ou non (0).                               | */
 /* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
@@ -2350,10 +2350,10 @@ int                 motif;
 
 
 #ifdef __STDC__
-void                AfEllipse (int frame, int epais, int style, int x, int y, int larg, int haut, int RO, int active, int fg, int bg, int motif)
+void                DrawEllips (int frame, int epais, int style, int x, int y, int larg, int haut, int RO, int active, int fg, int bg, int motif)
 
 #else  /* __STDC__ */
-void                AfEllipse (frame, epais, style, x, y, larg, haut, RO, active, fg, bg, motif)
+void                DrawEllips (frame, epais, style, x, y, larg, haut, RO, active, fg, bg, motif)
 int                 frame;
 int                 epais;
 int                 style;
@@ -2401,7 +2401,7 @@ int                 motif;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    AfLigne trace une horizontale sur le bord superieur, au milieu  | */
+/* |    DrawLine trace une horizontale sur le bord superieur, au milieu  | */
 /* |            ou sur le bord inferieur.                               | */
 /* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
 /* |            Read Only (1) ou non (0).                               | */
@@ -2412,10 +2412,10 @@ int                 motif;
 
 
 #ifdef __STDC__
-void                AfLigne (int frame, int epais, int style, int x, int y, int l, int h, int cadrage, int RO, int active, int fg)
+void                DrawLine (int frame, int epais, int style, int x, int y, int l, int h, int cadrage, int RO, int active, int fg)
 
 #else  /* __STDC__ */
-void                AfLigne (frame, epais, style, x, y, l, h, cadrage, RO, active, fg)
+void                DrawLine (frame, epais, style, x, y, l, h, cadrage, RO, active, fg)
 int                 frame;
 int                 epais;
 int                 style;
@@ -2448,7 +2448,7 @@ int                 fg;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    AfTrait trace une verticale a` gauche, au milieu ou a` droite.  | */
+/* |    DrawTrait trace une verticale a` gauche, au milieu ou a` droite.  | */
 /* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
 /* |            Read Only (1) ou non (0).                               | */
 /* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
@@ -2458,10 +2458,10 @@ int                 fg;
 
 
 #ifdef __STDC__
-void                AfTrait (int frame, int epais, int style, int x, int y, int l, int h, int cadrage, int RO, int active, int fg)
+void                DrawTrait (int frame, int epais, int style, int x, int y, int l, int h, int cadrage, int RO, int active, int fg)
 
 #else  /* __STDC__ */
-void                AfTrait (frame, epais, style, x, y, l, h, cadrage, RO, active, fg)
+void                DrawTrait (frame, epais, style, x, y, l, h, cadrage, RO, active, fg)
 int                 frame;
 int                 epais;
 int                 style;
@@ -2496,7 +2496,7 @@ int                 fg;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    AfOblique trace une diagonale dans le sens precise'.            | */
+/* |    DrawSlash trace une diagonale dans le sens precise'.            | */
 /* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
 /* |            Read Only (1) ou non (0).                               | */
 /* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
@@ -2506,10 +2506,10 @@ int                 fg;
 
 
 #ifdef __STDC__
-void                AfOblique (int frame, int epais, int style, int x, int y, int l, int h, int sens, int RO, int active, int fg)
+void                DrawSlash (int frame, int epais, int style, int x, int y, int l, int h, int sens, int RO, int active, int fg)
 
 #else  /* __STDC__ */
-void                AfOblique (frame, epais, style, x, y, l, h, sens, RO, active, fg)
+void                DrawSlash (frame, epais, style, x, y, l, h, sens, RO, active, fg)
 int                 frame;
 int                 epais;
 int                 style;
@@ -2542,7 +2542,7 @@ int                 fg;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    AfCoin trace deux bords de rectangle.                           | */
+/* |    DrawAngle trace deux bords de rectangle.                           | */
 /* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
 /* |            Read Only (1) ou non (0).                               | */
 /* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
@@ -2552,10 +2552,10 @@ int                 fg;
 
 
 #ifdef __STDC__
-void                AfCoin (int frame, int epais, int style, int x, int y, int l, int h, int coin, int RO, int active, int fg)
+void                DrawAngle (int frame, int epais, int style, int x, int y, int l, int h, int coin, int RO, int active, int fg)
 
 #else  /* __STDC__ */
-void                AfCoin (frame, epais, style, x, y, l, h, coin, RO, active, fg)
+void                DrawAngle (frame, epais, style, x, y, l, h, coin, RO, active, fg)
 int                 frame;
 int                 epais;
 int                 style;
@@ -2626,7 +2626,7 @@ int                 fg;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    AfCadreRect trace un rectangle a bords arrondis (diametre 3mm)  | */
+/* |    DrawRectangleFrame trace un rectangle a bords arrondis (diametre 3mm)  | */
 /* |            avec un trait horizontal a 6mm du bord superieur.       | */
 /* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
 /* |            Read Only (1) ou non (0).                               | */
@@ -2638,10 +2638,10 @@ int                 fg;
 
 
 #ifdef __STDC__
-void                AfCadreRect (int frame, int epais, int style, int x, int y, int larg, int haut, int RO, int active, int fg, int bg, int motif)
+void                DrawRectangleFrame (int frame, int epais, int style, int x, int y, int larg, int haut, int RO, int active, int fg, int bg, int motif)
 
 #else  /* __STDC__ */
-void                AfCadreRect (frame, epais, style, x, y, larg, haut, RO, active, fg, bg, motif)
+void                DrawRectangleFrame (frame, epais, style, x, y, larg, haut, RO, active, fg, bg, motif)
 int                 frame;
 int                 epais;
 int                 style;
@@ -2803,7 +2803,7 @@ int                 motif;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    AfCadreEllipse trace une ellipse avec trait horizontal a 7mm    | */
+/* |    DrawEllipsFrame trace une ellipse avec trait horizontal a 7mm    | */
 /* |            sous le sommet (pour SFGL).                             | */
 /* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
 /* |            Read Only (1) ou non (0).                               | */
@@ -2815,10 +2815,10 @@ int                 motif;
 
 
 #ifdef __STDC__
-void                AfCadreEllipse (int frame, int epais, int style, int x, int y, int larg, int haut, int RO, int active, int fg, int bg, int motif)
+void                DrawEllipsFrame (int frame, int epais, int style, int x, int y, int larg, int haut, int RO, int active, int fg, int bg, int motif)
 
 #else  /* __STDC__ */
-void                AfCadreEllipse (frame, epais, style, x, y, larg, haut, RO, active, fg, bg, motif)
+void                DrawEllipsFrame (frame, epais, style, x, y, larg, haut, RO, active, fg, bg, motif)
 int                 frame;
 int                 epais;
 int                 style;

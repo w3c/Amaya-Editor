@@ -1035,7 +1035,7 @@ void                DisplayEmptyBoxLoadResources ()
 {
    if (ThotLocalActions[T_emptybox] == NULL)
       /* Connecte l'affichage des boites vides */
-      TteConnectAction (T_emptybox, (Proc) AfTrame);
+      TteConnectAction (T_emptybox, (Proc) DisplayEmptyBox);
 }
 
 
