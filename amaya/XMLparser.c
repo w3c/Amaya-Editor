@@ -33,7 +33,7 @@ static EntityDictEntry XMLpredifinedEntities[] =
 {
    /* This table MUST be in alphabetical order */
 #  if defined (_I18N_) || defined (__JIS__)
-	{L"amp", 38},
+   {L"amp", 38},
    {L"apos", 39},
    {L"gt", 62},
    {L"lt", 60},
@@ -226,6 +226,7 @@ Element el;
      TtaInsertSibling (el, currentElement, FALSE, currentDocument);
   else
      TtaInsertFirstChild (&el, currentElement, currentDocument);
+  currentElement = el;
 }
 
 /*----------------------------------------------------------------------
@@ -282,7 +283,6 @@ Language lang;
   SetElemLineNumber (newElement);
   XMLInsertElement (newElement);
   TtaSetTextContent (newElement, text, lang, currentDocument);
-  currentElement = newElement;
   currentElementClosed = TRUE;
   XMLElementComplete (currentElement, currentDocument);
 }
@@ -624,7 +624,6 @@ CHAR_T                c;
 	  newElement = TtaNewElement (currentDocument, elType);
 	  SetElemLineNumber (newElement);
 	  XMLInsertElement (newElement);
-	  currentElement = newElement;
           currentElementClosed = FALSE;
 	  XMLelementType[stackLevel] = mappedName;
 	  elementStack[stackLevel] = newElement;
@@ -920,11 +919,11 @@ CHAR_T                c;
 
 #endif
 {
-   int         i;
-   UCHAR_T       msgBuffer[MAX_BUFFER_LENGTH];
-   UCHAR_T       entityValue[MAX_ENTITY_LENGTH];	
-   CHAR_T	       alphabet;
-   Language    lang;
+   int		i;
+   UCHAR_T	msgBuffer[MAX_BUFFER_LENGTH];
+   UCHAR_T	entityValue[MAX_ENTITY_LENGTH];	
+   CHAR_T	alphabet;
+   Language	lang;
 
    entityName[entityNameLength] = EOS;
 
@@ -941,41 +940,22 @@ CHAR_T                c;
       /* look in the entity table for the current DTD */
       (*(currentParserCtxt->MapEntity)) (entityName, entityValue,
 					 MAX_ENTITY_LENGTH-1, &alphabet);
+      lang = 0;
       if (alphabet == EOS)
 	 /* Unknown entity */
 	 {
-	 /* consider the entity as ordinary text */
-	 PutInBuffer ('&');
-	 for (i = 0; i < entityNameLength; i++)
-	     PutInBuffer (entityName[i]);
-	 PutInBuffer (';');
+         entityValue[0] = EOS;
+	 lang = -1;
 	 /* print an error message */
 	 usprintf (msgBuffer, TEXT("Unknown XML entity \"&%s;\""), entityName);
 	 ParseHTMLError (currentDocument, msgBuffer);
 	 }
       else
-	 {
 	 if (entityValue[0] != EOS)
-	    {
-	    lang = TtaGetLanguageIdFromAlphabet(alphabet);
-	    if (lang == currentLanguage)
-	       {
-	       i = 0;
-	       while (entityValue[i] != EOS)
-		  {
-		  PutInBuffer (entityValue[i]);
-		  i++;
-		  }
-	       }
-	    else
-	       {
-	       XMLTextToDocument ();
-	       CreateTextElement (entityValue, lang);
-	       }
-	    }
-	 (*(currentParserCtxt->EntityCreated)) (entityValue, entityName,
-						currentDocument);
-	 }
+	   lang = TtaGetLanguageIdFromAlphabet(alphabet);
+
+      (*(currentParserCtxt->EntityCreated)) (entityValue, lang, entityName,
+					     currentDocument);
       }
    entityNameLength = 0;
 }
@@ -1215,7 +1195,6 @@ CHAR_T                c;
        SetElemLineNumber (commentText);
        TtaInsertFirstChild (&commentText, commentLineEl, currentDocument);
        TtaSetTextContent (commentText, _EMPTYSTR_, currentLanguage, currentDocument);
-       currentElement = commentEl;
      }
    /* the input buffer is now empty */
    bufferLength = 0;

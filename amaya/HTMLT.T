@@ -2071,6 +2071,11 @@ ATTRIBUTES
 #endif
 	END;
 
+ IntEntity:
+	BEGIN
+	NoTranslation;	{ do not translate & into &amp; }
+	END;
+
 #include "Text_SGML.inc"
 
 #include "greek.sgml"

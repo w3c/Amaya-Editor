@@ -20,6 +20,7 @@ extern void MapGraphMLEntity ( STRING entityName,
                                int valueLength,
                                STRING alphabet );
 extern void GraphMLEntityCreated ( USTRING entityValue,
+				   Language lang,
                                    STRING entityName,
                                    Document doc );
 extern Element CreateGraphicLeaf ( Element el,
@@ -68,6 +69,7 @@ extern void MapGraphMLEntity (/* STRING entityName,
                                  int valueLength,
                                  STRING alphabet */);
 extern void GraphMLEntityCreated (/* USTRING entityValue,
+				     Language lang,
                                      STRING entityName,
                                      Document doc */);
 extern Element CreateGraphicLeaf (/* Element el,

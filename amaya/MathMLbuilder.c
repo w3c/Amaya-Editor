@@ -641,10 +641,11 @@ STRING alphabet;
    Create a text element containing the entity name.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void        MathMLEntityCreated (USTRING entityValue, STRING entityName, Document doc)
+void        MathMLEntityCreated (USTRING entityValue, Language lang, STRING entityName, Document doc)
 #else
-void        MathMLEntityCreated (entityValue, entityName, doc)
+void        MathMLEntityCreated (entityValue, lang, entityName, doc)
 USTRING entityValue;
+Language lang;
 STRING  entityName;
 Document doc;
 
@@ -654,41 +655,38 @@ Document doc;
    Element	 elText;
    AttributeType attrType;
    Attribute	 attr;
-   Language	 lang;
    int		 len;
 #define MAX_ENTITY_LENGTH 80
-   CHAR_T		 buffer[MAX_ENTITY_LENGTH];
+   CHAR_T	 buffer[MAX_ENTITY_LENGTH];
 
-   if (ustrlen (entityValue) <= 1)
-     if (entityValue[0] == EOS || entityValue[0] == SPACE ||
-        ((int)entityValue[0]) == 129 ||	/* thin space */
-        ((int)entityValue[0]) == 130 ||	/* en space */
-        ((int)entityValue[0]) == 160)	/* sticky space */
-        /* null character or space */
-        /* create a text element containing the entity name with an
-           attribute IntEntity */
-	{
-	XMLTextToDocument ();
-	len = ustrlen (entityName);
-	if (len > MAX_ENTITY_LENGTH -3)
-	   len = MAX_ENTITY_LENGTH -3;
-	buffer[0] = '&';
-	ustrncpy (&buffer[1], entityName, len);
-	buffer[len+1] = ';';
-	buffer[len+2] = EOS;
-	elType.ElTypeNum = MathML_EL_TEXT_UNIT;
-	elType.ElSSchema = GetMathMLSSchema (doc);
-	elText = TtaNewElement (doc, elType);
-	XMLInsertElement (elText);
-	lang = TtaGetLanguageIdFromAlphabet('L');
-	TtaSetTextContent (elText, buffer, lang, doc);
-	attrType.AttrSSchema = GetMathMLSSchema (doc);
-	attrType.AttrTypeNum = MathML_ATTR_IntEntity;
-        attr = TtaNewAttribute (attrType);
-        TtaAttachAttribute (elText, attr, doc);
-	TtaSetAttributeValue (attr, MathML_ATTR_IntEntity_VAL_yes_, elText, doc);
-	}
+   if (lang < 0)
+     /* unknown entity */
+     {
+       entityValue[0] = '?';
+       entityValue[1] = EOS;
+       lang = TtaGetLanguageIdFromAlphabet('L');
+     }
+   XMLTextToDocument ();
+   elType.ElTypeNum = MathML_EL_TEXT_UNIT;
+   elType.ElSSchema = GetMathMLSSchema (doc);
+   elText = TtaNewElement (doc, elType);
+   SetElemLineNumber (elText);
+   XMLInsertElement (elText);
+   TtaSetTextContent (elText, entityValue, lang, doc);
+   attrType.AttrSSchema = GetMathMLSSchema (doc);
+   attrType.AttrTypeNum = MathML_ATTR_EntityName;
+   attr = TtaNewAttribute (attrType);
+   TtaAttachAttribute (elText, attr, doc);
+   len = ustrlen (entityName);
+   if (len > MAX_ENTITY_LENGTH -3)
+     len = MAX_ENTITY_LENGTH -3;
+   buffer[0] = '&';
+   ustrncpy (&buffer[1], entityName, len);
+   buffer[len+1] = ';';
+   buffer[len+2] = EOS;
+   TtaSetAttributeText (attr, buffer, elText, doc);
 }
+
 
 /*----------------------------------------------------------------------
   CheckTextElement  Put the content of input buffer into the document.

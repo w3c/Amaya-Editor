@@ -4787,6 +4787,39 @@ int                 code;
 }
 
 /*----------------------------------------------------------------------
+   PutAmpersandInDoc
+   Put an '&' character in the document tree with an attribute
+   IntEntity.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         PutAmpersandInDoc ()
+#else
+static void         EndOfEntity ()
+#endif
+{
+   ElementType         elType;
+   Element             elText;
+   AttributeType       attrType;
+   Attribute           attr;
+
+   TextToDocument ();
+   /* create a TEXT element for '&'*/
+   elType.ElSSchema = DocumentSSchema;
+   elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+   elText = TtaNewElement (theDocument, elType);
+   TtaSetElementLineNumber (elText, NumberOfLinesRead);
+   InsertElement (&elText);
+   lastElementClosed = TRUE;
+   MergeText = FALSE;
+   TtaSetTextContent (elText, TEXT("&"), currentLanguage, theDocument);
+   attrType.AttrSSchema = DocumentSSchema;
+   attrType.AttrTypeNum = HTML_ATTR_IntEntity;
+   attr = TtaNewAttribute (attrType);
+   TtaAttachAttribute (elText, attr, theDocument);
+   TtaSetAttributeValue (attr, HTML_ATTR_IntEntity_VAL_Yes_, elText, theDocument);
+}
+
+/*----------------------------------------------------------------------
    EndOfEntity     End of a HTML entity. Search that entity in the
    entity table and put the corresponding character in the input buffer.
   ----------------------------------------------------------------------*/
@@ -4811,13 +4844,13 @@ CHAR_T                c;
    else
       /* entity not in the table. Print an error message */
      {
-	PutInBuffer ('&');
-	for (i = 0; i < LgEntityName; i++)
-	   PutInBuffer (EntityName[i]);
-	PutInBuffer (';');
-	/* print an error message */
-	usprintf (msgBuffer, TEXT("Invalid entity \"&%s;\""), EntityName);
-	ParseHTMLError (theDocument, msgBuffer);
+       PutAmpersandInDoc ();
+       for (i = 0; i < LgEntityName; i++)
+	  PutInBuffer (EntityName[i]);
+       PutInBuffer (';');
+       /* print an error message */
+       usprintf (msgBuffer, TEXT("Invalid entity \"&%s;\""), EntityName);
+       ParseHTMLError (theDocument, msgBuffer);
      }
    LgEntityName = 0;
 }
@@ -4906,7 +4939,7 @@ UCHAR_T       c;
 	     /* the entity name read so far is not in the table */
 	     /* invalid entity */
 	     /* put the entity name in the buffer */
-	     PutInBuffer ('&');
+	     PutAmpersandInDoc ();
 	     for (i = 0; i < LgEntityName; i++)
 		PutInBuffer (EntityName[i]);
 	     /* print an error message only if it's not the first character

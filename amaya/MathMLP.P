@@ -1780,6 +1780,24 @@ BOXES
                 END;
         END;
 
+ VALUE_EntityName: BEGIN
+        Content: (EntityName);
+        Visibility: 0;
+	IN Math_Structure_view BEGIN
+		END;
+        IN Math_Structure_view BEGIN
+                Visibility: ATTR_Visibility;	
+		Size: DOC_FONTSIZE;
+		if NOT within XMLcomment_line
+		   BEGIN
+		   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		   VertPos: Top = Previous . Bottom;
+		   END;
+		if within XMLcomment_line
+		   HorizPos: Left = Previous . Right;
+                END;
+        END;
+
  VerticalLine: BEGIN
 	Content: Graphics 'W';
 	Visibility: 0;
@@ -3075,11 +3093,11 @@ ATTRIBUTES
 	CreateBefore(VALUE_selection);
 	END;
 
-  IntEntity:
+  EntityName:
 	BEGIN
-	Visibility: 0;
+	CreateBefore(VALUE_EntityName);
 	IN Math_Structure_view
-		Visibility: Enclosing =;
+		Visibility: 1;
 	END;
 
   IntPlaceholder:

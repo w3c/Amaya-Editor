@@ -203,10 +203,11 @@ STRING alphabet;
    A GraphML entity has been created by the XML parser.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void        GraphMLEntityCreated (USTRING entityValue, STRING entityName, Document doc)
+void        GraphMLEntityCreated (USTRING entityValue, Language lang, STRING entityName, Document doc)
 #else
-void        GraphMLEntityCreated (entityValue, entityName, doc)
+void        GraphMLEntityCreated (entityValue, lang, entityName, doc)
 USTRING entityValue;
+Language lang;
 STRING entityName;
 Document doc;
 

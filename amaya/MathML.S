@@ -20,7 +20,7 @@ ATTR
 
    { generic attributes for internal use }
    Invalid_attribute = TEXT;	{ to store an unknown attribute }
-   IntEntity = yes_;		{ the content of the element is the name of
+   EntityName = TEXT;		{ the content of the element is the name of
 				  an entity }
    Ghost_restruct = TEXT;	{ to help structure transformation }
 
@@ -364,7 +364,6 @@ EXCEPT
    IntPlaceholder:   	Invisible;
    IntFontstyle:	Invisible;
    IntAddSpace:	  	Invisible;
-   IntEntity:	  	Invisible;
    IntHorizStretch:  	Invisible;
    IntVertStretch:  	Invisible;
    MRef_column:		ColRef, Invisible;

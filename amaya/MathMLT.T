@@ -986,9 +986,10 @@ ATTRIBUTES
 	create '"';
 	end;
 
-   IntEntity:
+   EntityName:
 	begin
-	notranslation;	{ do not translate & into &amp; }
+	create EntityName;
+	remove;	{ do no output the element content }
 	end;
 
 #include "Text_SGML.inc"

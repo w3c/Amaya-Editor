@@ -28,6 +28,7 @@ ATTR
    Invalid_attribute = Text;
    Ghost_restruct = Text;
    Highlight = Yes_;
+   IntEntity = Yes_; 
 
 CONST
 
@@ -869,6 +870,7 @@ EXCEPT
 	rowspan_:	RowSpan;
 	Object_Content: Hidden, NoCreate, NoCut;
 	Ghost_restruct:	Invisible;
+        IntEntity:	Invisible; 
 	onclick:	EventAttr;
 	ondblclick:	EventAttr;
 	onmousedown:	EventAttr;

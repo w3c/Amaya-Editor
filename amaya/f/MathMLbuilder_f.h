@@ -18,6 +18,7 @@ extern void MapMathMLEntity ( STRING entityName,
                               int valueLength,
                               STRING alphabet );
 extern void MathMLEntityCreated ( USTRING entityValue,
+				  Language lang,
                                   STRING entityName,
                                   Document doc );
 extern ThotBool ElementNeedsPlaceholder ( Element el );
@@ -72,6 +73,7 @@ extern void MapMathMLEntity (/* STRING entityName,
                                 int valueLength,
                                 STRING alphabet */);
 extern void MathMLEntityCreated (/* USTRING entityValue,
+				    Language lang,
                                     STRING entityName,
                                     Document doc */);
 extern ThotBool ElementNeedsPlaceholder (/* Element el */);
