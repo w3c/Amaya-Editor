@@ -1,0 +1,180 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<!-- Created by: Stephane Bonhomme, 22-Aug-1996 -->
+<TITLE>Use of the file HTML.trans</TITLE>
+</HEAD>
+<BODY>
+<P>
+<A href="../../"><IMG border="0" alt="W3C" src="../../Icons/WWW/w3c_home"></A>
+<A href="../"><IMG border="0" src="amaya.gif" alt="Amaya"></A> <A
+href="./"><IMG border="0" src="../../Icons/WWW/guide48x" alt="Using"></A></P>
+<H1 align=center>Use of the file HTML.trans</H1>
+<P>This document is an introduction to the complex structural transformation
+provided by the editor <STRONG>Amaya</STRONG>. It describes the syntax of the
+transformation language and the way transformations are performed in the
+editor.</P>
+<P>The file <CODE>Amaya/amaya/HTML.trans </CODE>contains the description of
+transformations. This file can be edited during an <STRONG>Amaya</STRONG>
+session. It will be dynamically parsed when the transformation tool is
+required by the editor. So new transformations can be added during he editing
+session.</P>
+<P><STRONG>Warning</STRONG>: as the description of transformations may contain
+tags, do<STRONG> not </STRONG>edit the file HTML.trans with
+<STRONG>Amaya</STRONG>.</P>
+
+<HR>
+<H2>Syntax of the transformation language for Amaya</H2>
+<P>Comments begin with<CODE><STRONG>!</STRONG></CODE>and continue until the
+end of the line.</P>
+<P>The file consist in a list of transformation description. Each
+transformation is described by three parts :</P>
+<UL>
+<LI>a <EM>name </EM>terminated by a colon <STRONG><CODE>:</CODE></STRONG>
+<LI>a <EM>source pattern</EM> terminated by a semi-colon
+<STRONG><CODE>;</CODE></STRONG>
+<LI>and a list of <EM>rules</EM> between braces <STRONG><CODE>{
+}</CODE></STRONG> , each one terminated by a semi-colon
+<STRONG><CODE>;</CODE></STRONG>
+</UL>
+<P><STRONG>The name</STRONG> will appear in the transform menu and identifies
+the transformation for the end-user.</P>
+<H3>The pattern</H3>
+<P>The pattern gives of a specific organization of the elements to be
+transformed. It acts as a filter over the HTML dtd. The goal of the pattern is
+the identification of particular orgination of elements to wich the
+transformation can be applied. In a pettern it is possible to express
+conditions on sequence of tag, on the content of a tag and on the existence
+and value of attributes.</P>
+<P>Formally, a pattern contains HTML tags (possibly with attributes) and
+SGML-like syntax for the composition operators:</P>
+<P><STRONG><CODE>| </CODE></STRONG>for choice</P>
+<P><STRONG><CODE>, </CODE></STRONG>for sibling</P>
+<P><STRONG><CODE>+ </CODE></STRONG>for sequence</P>
+<P><STRONG><CODE>? </CODE></STRONG>for option</P>
+<P><STRONG><CODE>( )</CODE></STRONG> for grouping nodes</P>
+<P>The braces <CODE><STRONG>{</STRONG></CODE> <CODE><STRONG>}</STRONG></CODE>
+define the content of a node.</P>
+<P>The symbol <STRONG><CODE>*</CODE></STRONG> is a token that matches any
+element type.</P>
+<P>It is possible to rename a tag by preceeding it with a name followed by a
+colon <STRONG><CODE>:</CODE></STRONG></P>
+<P>The tag may have attributes, if no value is given for an attribute, an
+element is matched if the attribute is present. If a value is specified for
+the attribute, an element is matched if the attribute is present and have the
+specified value.</P>
+<P><A href="#L235">Examples </A>of patterns are given at the end of the
+document.</P>
+<H3>The rules</H3>
+<P>A rule expresses how some elements identified in the pattern are
+transformed. A rule has two parts separated by the symbol <STRONG><CODE>>
+</CODE></STRONG>:</P>
+<UL>
+<LI>a source tag or a name defined in the pattern,
+<LI>a target tag list, giving the tags to be genrated, and the place where
+they are inserted when transforming the source element.
+<P></P>
+</UL>
+<P>The target tag list is itself divided into two parts separated by a colon
+<STRONG><CODE>:</CODE></STRONG> :</P>
+<UL>
+<LI>the generation location path (identifiates of the place where new tags
+have to be inserted).
+<LI>and the list of tags to be generated.
+<P></P>
+</UL>
+<P>The generation location path is searched in the leftmost branch of the
+document tree, starting from the parent of  the element matching the highest
+symbol of the pattern.</P>
+<P>In the target tag list, the dot symbol "<CODE><STRONG>.</STRONG></CODE>" is
+used for descending in the tree structure.</P>
+<P>If the special token star<CODE><STRONG> * </STRONG></CODE>ends the list of
+tags to be generated, the source element tag is not changed but it can be
+moved in a different place in the destination.</P>
+<P>If the source tag or the name in the left part of a rules is present more
+than once in the pattern, the rule wills transform all the elements matching
+an occurence of the tag in the pattern.</P>
+
+<HR>
+<H2>Process of transformation</H2>
+<P>When the user invokes the transform command from the menu Types, the
+<CODE>HTML.trans</CODE> file is parsed (if necessary). Then the selected
+elements are matched with the pattern of each transformation. The names of the
+matched transformations are proposed to the user in a pop-up menu.</P>
+<P>If several transformations with the same name match inside the selected
+elements, the higher-level matched transformation is proposed to the user. If
+several transformations match at the same level, the first onedeclared in the
+<CODE>HTML.trans</CODE> file is proposed. As a consequence it is recomended to
+specify the transformations with specific patterns before the more general
+ones.</P>
+<P>Once a transformation has been choosed by the user, the distination
+structure is built accordingly to the rules while selected elements are
+traversed.</P>
+<P>Eventually,  the content of the source structure elements (text and
+pictures, but also structured elements) are moved into the produced
+elements.</P>
+<P>The process of transofrmation of html documents using Amaya is fully
+described in <A
+href="http://opera.inrialpes.fr/OPERA/Papers/WWW96/WWW96.html"><EM>Interactively
+Restructuring HTML Documents</EM></A>, a paper presented at the <A
+href="http://www5conf.inria.fr/">5th international WWW conference</A> in
+Paris, May 96, by C&eacute;cile Roisin and St&eacute;phane Bonhomme.</P>
+
+<HR>
+<H2><A name="L235">Examples</A></H2>
+<UL>
+<LI>The first example merges several consecutive unumbered lists (UL) into an
+unique list.
+<PRE>Merge Lists: (UL{LI+})+;
+    { 
+    LI > UL:LI; 
+    }</PRE>
+<P>The pattern matches a sequence of unumbered lists, that is defined by a
+sequence of items.</P>
+<P>The rule expresses that each time a item is encoutered when traversing the
+matched elements, an new LI tag is created whithin an UL. When the rule is
+first applied, the result structure is empty, so there is no UL element in
+which the LI can be created. The UL is firstly created, then the rule can be
+applied.</P>
+<P></P>
+<LI>The second example transforms a definition list into a table.
+<PRE>Table: DL{(DT|DD)+}; 
+   { 
+   DT > &lt;TABLE border=1>.TBODY:TR.TD; 
+   DD > &lt;TABLE border=1>.TBODY.TR:TD; 
+   }</PRE>
+<P>The pattern matches any Defintion List element.</P>
+<P>The rules expresses how the table is incrementally built when the structure
+of the selected definition list is traversed :</P>
+<UL>
+<LI>Each DT involves the creation of a new row in the table body.
+<LI>Each DD involves the creation of a new cell in the last existing row of
+the table.
+</UL>
+<P></P>
+<LI>The third example removes a table element, keeping its content unchanged
+but extrcted from the table.
+<PRE>Remove Table:
+TABLE{?CAPTION,?(body:*{(TR{(TD{(?cell_content:*)+}|
+                             TH{(?cell_content:*)+}
+                           )})+})+};
+     { 
+     CAPTION>H3; 
+     cell_content>:*;
+     }</PRE>
+<P>The pattern matches any table and identifies the content of each cell of
+the table (cell_content).</P>
+<P>The second rule expresses that the content of each cell have to be moved at
+the place of the original table.</P>
+<P></P>
+<LI>see the file <CODE>Amaya/amaya/HTML.trans</CODE> for more transformation
+examples.
+</UL>
+
+<HR>
+<P><A href="mailto:Stephane.Bonhomme@inrialpes.fr">St&eacute;phane
+Bonhomme</A></P>
+<P><BR><A href="/opera/WWW/Help/Webmaster">Webmaster</A><BR>$Date: 1996/08/22
+10:10:41 $</P>
+</BODY>
+</HTML>
