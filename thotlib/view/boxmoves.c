@@ -1888,7 +1888,6 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
   pCurrentAb = pBox->BxAbstractBox;
   if (pCurrentAb == NULL)
     return;
-
   GetExtraMargins (pBox, NULL, &i, &j, &extraL, &extraR);
   if (!pCurrentAb->AbMBPChange && delta)
     {
@@ -2101,6 +2100,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	    }
 	  /* Moving included boxes or reevalution of the block of lines? */
 	  if (pCurrentAb->AbLeafType == LtCompound &&
+	      !pBox->BxContentWidth &&
 	      (absoluteMove ||
 	       pCurrentAb->AbWidth.DimAbRef ||
 	       pCurrentAb->AbWidth.DimValue >= 0))

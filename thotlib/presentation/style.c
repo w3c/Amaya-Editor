@@ -649,6 +649,8 @@ static int CompareCond (PtrCondition c1, PtrCondition c2, SSchema sch)
 	return (+1);
       if (c1->CoTestAttrValue && c2->CoTestAttrValue)
 	{
+	  attType.AttrSSchema = sch;
+	  attType.AttrTypeNum = c1->CoTypeAttr;
 	  kind = TtaGetAttributeKind (attType);
 	  if (kind == 0 || kind == 1)
 	    /* enumerated or integer value */

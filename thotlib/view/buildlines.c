@@ -3951,19 +3951,16 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
 	
 	RemoveLines (pBox, frame, pLine, FALSE, &changeSelectBegin,
 		     &changeSelectEnd);
-	if (pBox->BxFirstLine == NULL)
+	ComputeLines (pBox, frame, &height);
+	if (pBox->BxContentWidth ||
+	    (pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum && 
+	     pBox->BxMaxWidth > pBox->BxW))
 	  {
-	    /* fait reevaluer la mise en lignes et on recupere */
-	    /* la hauteur et la largeur du contenu de la boite */
-	    GiveEnclosureSize (pAb, frame, &width, &height);
-	  }
-	else
-	  {
-	    ComputeLines (pBox, frame, &height);
-	    if (pBox->BxContentWidth)
+	    /* it's an extensible block of lines */
+	    width = pBox->BxMaxWidth;
+	    if (pAb->AbFloat == 'N')
+	      /* don't update the enclosing block */
 	      {
-		/* it's an extensible block of lines */
-		width = pBox->BxMaxWidth;
 		h = 0;
 		pBox->BxW = pBox->BxMaxWidth;
 		GetExtraMargins (pBox, NULL, &t, &b, &l, &r);
@@ -3971,8 +3968,9 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
 		r += pBox->BxRMargin + pBox->BxRBorder + pBox->BxRPadding;
 		pBox->BxWidth = pBox->BxW + l + r;
 	      }
-	    width = 0;
 	  }
+	else
+	  width = 0;
 	ReadyToDisplay = status;
 
 	/* Zone affichee apres modification */
