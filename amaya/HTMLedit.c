@@ -1993,7 +1993,7 @@ NotifyAttribute    *event;
 
    HTMLSSchema = TtaGetSSchema (TEXT("HTML"), event->document);
    elType = TtaGetElementType (event->element);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
+   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
      /* it's not a HTML document */
       return TRUE;	/* don't put any HTML attribute in the menu */
 
