@@ -172,6 +172,7 @@ static HFONT WIN_LoadFont (char script, int family, int highlight,
      case '9':
        charset = TURKISH_CHARSET;
        break;
+     case 'Z': /* fall through */
  	 default:
        charset = DEFAULT_CHARSET;
        break;
@@ -194,6 +195,10 @@ static HFONT WIN_LoadFont (char script, int family, int highlight,
      default:
         sprintf (&lpszFace[0], "Arial");
      }
+
+   if (script == 'Z') {
+     sprintf (&lpszFace[0], "Arial Unicode MS");
+   }
 
    switch (highlight)
      {
