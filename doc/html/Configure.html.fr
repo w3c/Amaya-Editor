@@ -100,7 +100,8 @@ différentes architectures :</p>
       <td valign="top"><p class="TableText">Windows XP</p>
       </td>
       <td valign="top"><p
-        class="TableText"><code>$HOMEDRIVE\$HOMEPATH\Amaya\config</code></p>
+        class="TableText"><code>$HOMEDRIVE\$HOMEPATH\amaya<br />
+        par défaut c:\Documents and Settings\$user_name\amaya</code></p>
       </td>
     </tr>
   </tbody>
@@ -154,9 +155,15 @@ stocké dans les différents architectures :</p>
       <td>$HOME/.amaya</td>
     </tr>
     <tr>
-      <td>Windows</td>
+      <td>Windows 9x</td>
       <td><p>c :\temp\amaya (default value)</p>
       </td>
+    </tr>
+    <tr>
+      <td>Window XP</td>
+      <td>$HOMEDRIVE\$HOMEPATH\Local Settings\Temp\amaya<br />
+        par défaut c:\Documents and Settings\$user_name\Local
+        Settings\Temp\amaya</td>
     </tr>
   </tbody>
 </table>
