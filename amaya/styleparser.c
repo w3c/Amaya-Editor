@@ -4244,7 +4244,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
   int                att, maxAttr, kind;
   int                specificity, xmlType;
   ThotBool           isHTML;
-  ThotBool           level;
+  ThotBool           level, quoted;
 
   sel[0] = EOS;
   specificity = 0;
@@ -4306,7 +4306,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	 and cur to the next chain to be parsed */
       while (*selector == '.' || *selector == ':' ||
 	     *selector == '#' || *selector == '[' ||
-	     *selector == '*' || *selector == '>')
+	     *selector == '*')
       {
 	/* point to the following word in sel[] */
 	deb = cur;
@@ -4422,42 +4422,53 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 		/* look for a value "xxxx" */
 		selector++;
 		if (*selector != '"')
+		  quoted = FALSE;
+		else
+		  {
+		    quoted = TRUE;
+		    /* we are now parsing the attribute value */
+		    selector++;
+		  }
+		deb = cur;
+		while ((quoted &&
+			(*selector != '"' ||
+			 (*selector == '"' && selector[-1] == '\\'))) ||
+		       (!quoted && *selector != ']'))
+		  {
+		    if (*selector == EOS)
+		      {
+			CSSPrintError ("Invalid attribute value", deb);
+			DoApply = FALSE;
+		      }
+		    else
+		      {
+			*cur++ = tolower (*selector);
+			selector++;
+		      }
+		  }
+		/* there is a value */
+		if (quoted && *selector != '"')
+		  {
+		    selector++;
+		    quoted = FALSE;
+		  }
+		if (*selector != ']')
 		  {
 		    CSSPrintError ("Invalid attribute value", deb);
 		    DoApply = FALSE;
 		  }
 		else
 		  {
-		    /* we are now parsing the attribute value */
+		    *cur++ = EOS;
+		    attrvals[0] = deb;
 		    selector++;
-		    deb = cur;
-		    while (*selector != '"')
-		      {
-			if (*selector == EOS)
-			  {
-			    CSSPrintError ("Invalid attribute value", deb);
-			    DoApply = FALSE;
-			  }
-			else
-			  {
-			    *cur++ = tolower (*selector);
-			    selector++;
-			  }
-		      }
-		    /* there is a value */
-		    if (*selector == '"')
-		      {
-			selector++;
-			*cur++ = EOS;
-			attrvals[0] = deb;
-		      }
 		  }
 	      }
 	    /* end of the attribute */
-	    if (*selector != ']')
+	    else if (*selector != ']')
 	      {
 		selector[1] = EOS;
-		CSSPrintError ("Not supported selector", selector);
+		CSSPrintError ("Invalid attribute", selector);
 		selector += 2;
 		DoApply = FALSE;
 	      }
