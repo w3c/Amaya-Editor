@@ -257,6 +257,8 @@ static char     key;
 
 #define TAB     '\t'
 #define SPACE   ' '
+
+UINT subMenuID;
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
@@ -2854,7 +2856,7 @@ char               *equiv;
 	  }
 	else
 	  {
-	     menu = catalogue->Cat_Widget;
+        menu = catalogue->Cat_Widget;
 	  }
 
 	catalogue->Cat_Ref = ref;
@@ -3015,10 +3017,12 @@ char               *equiv;
 #                         ifdef _WINDOWS
               if (equiv_item && equiv_item [0] != 0) {
                  sprintf (menu_item, "%s\t%s", &text[index + 1], equiv_item); 
-                 AppendMenu (menu, MF_STRING | MF_UNCHECKED, ref + i, menu_item);
+                 /* AppendMenu (menu, MF_STRING | MF_UNCHECKED, ref + i, menu_item); */
+                 InsertMenu (menu, i, MF_STRING | MF_UNCHECKED, ref + i, menu_item);
                  equiv_item[0] = 0;
               } else 
-                   AppendMenu (menu, MF_STRING | MF_UNCHECKED, ref + i, &text[index + 1]);
+                   /* AppendMenu (menu, MF_STRING | MF_UNCHECKED, ref + i, &text[index + 1]); */
+                   InsertMenu (menu, i, MF_STRING | MF_UNCHECKED, ref + i, &text[index + 1]);
 			  adbloc->E_ThotWidget[ent] = (ThotWidget) i;
                           copyCat = catalogue;
                           WIN_AddFrameCatalogue (parent, copyCat) ;
@@ -3040,7 +3044,8 @@ char               *equiv;
               } else
                    sprintf (menu_item, "%s", &text[index + 1]);
 
-              AppendMenu (menu, MF_STRING | MF_UNCHECKED, ref + i, menu_item);
+              InsertMenu (menu, i, MF_STRING | MF_UNCHECKED, ref + i, menu_item);
+              /* AppendMenu (menu, MF_STRING | MF_UNCHECKED, ref + i, menu_item); */
 
 			  adbloc->E_ThotWidget[ent] = (ThotWidget) i;
                           copyCat = catalogue;
@@ -3059,13 +3064,15 @@ char               *equiv;
 		       {
 			  /* En attendant le sous-menu on cree un bouton */
 #                         ifdef _WINDOWS
-                          w = (HMENU) CreateMenu ();
+                          w = (HMENU) CreatePopupMenu ();
                           if (equiv_item && equiv_item [0] != 0) {
                              sprintf (menu_item, "%s\t%s", &text[index + 1], equiv_item); 
-                             AppendMenu (menu, MF_POPUP, (UINT) w, menu_item);
+                             InsertMenu (menu, i, MF_POPUP, (UINT) w, menu_item);
+                             /* AppendMenu (menu, MF_POPUP, (UINT) w, menu_item); */
                              equiv_item [0] = 0;
-                          } else 
-                               AppendMenu (menu, MF_POPUP, (UINT) w, &text[index + 1]);
+						  } else 
+                               InsertMenu (menu, i, MF_POPUP, (UINT) w, &text[index + 1]);
+                               /* AppendMenu (menu, MF_POPUP, (UINT) w, &text[index + 1]); */
                           adbloc->E_ThotWidget[ent] = w;
 						  /* *** T O    V E R I F Y *** */
                           copyCat = catalogue;
@@ -3083,7 +3090,8 @@ char               *equiv;
 			  strcat (heading, "...");
 #                         ifdef _WINDOWS
 			  w = (HMENU) CreateMenu ();
-			  AppendMenu (menu, MF_POPUP, (UINT) w, (LPCTSTR) (&heading));
+              InsertMenu (menu, i, MF_POPUP, (UINT) w, (LPCTSTR) (&heading));
+			  /* AppendMenu (menu, MF_POPUP, (UINT) w, (LPCTSTR) (&heading)); */
 			  adbloc->E_ThotWidget[ent] = (ThotWidget) w;
 #                         else  /* _WINDOWS */
 			  w = XmCreatePushButton (menu, heading, args, n);
@@ -3095,7 +3103,8 @@ char               *equiv;
 		       /*_________________________________ Creation d'un separateur __*/
 		       {
 #                         ifdef _WINDOWS
-			  AppendMenu (menu, MF_SEPARATOR, 0, NULL);
+			  /* AppendMenu (menu, MF_SEPARATOR, 0, NULL); */
+			  InsertMenu (menu, i, MF_SEPARATOR, 0, NULL);
 			  adbloc->E_ThotWidget[ent] = (ThotWidget) 0;
 #                         else  /* _WINDOWS */
 			  XtSetArg (args[n], XmNseparatorType, XmSINGLE_DASHED_LINE);
@@ -5453,7 +5462,9 @@ int                 ref;
    struct Cat_Context *parentCatalogue;
    int                 n;
 
-#  ifndef _WINDOWS
+#  ifdef _WINDOWS
+   int nbMenuItems, itNdx;
+#  else  /* _WINDOWS */
    Arg                 args[MAX_ARGS];
 #  endif /* _WINDOWS */
 
@@ -5514,6 +5525,13 @@ int                 ref;
 			      {
 /*** Delie le sous-menu du bouton du menu ***/
 				 w = adbloc->E_ThotWidget[entry];
+#                ifdef _WINDOWS
+                 nbMenuItems = GetMenuItemCount (w);
+                 for (itNdx = 0; itNdx < nbMenuItems; itNdx ++) 
+                     RemoveMenu (w, ref + itNdx, MF_BYCOMMAND);
+                 DestroyMenu (w);
+                 subMenuID = (UINT)w;
+#                endif /* _WINDOWS */
 				 n = 0;
 #                                ifndef _WINDOWS
 				 XtSetArg (args[n], XmNsubMenuId, 0);

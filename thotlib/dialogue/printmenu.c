@@ -84,16 +84,16 @@ static Name         PresSchema;
 #ifdef _WINDOWS
 #include "win_f.h"
 
+#if 0
 #ifdef __STDC__
 extern void PrintDoc (HWND, int, char**, HDC, BOOL, int, char*, char*, HINSTANCE, BOOL);
 #else  /* __STDC__ */
 extern void PrintDoc ();
 #endif /* __STDC__ */
-
+#endif /* 0000 */
 extern int  currentFrame;
 extern BOOL buttonCommand;
 #endif /* _WINDOWS */
-
 
 /*----------------------------------------------------------------------
   Print: interface to the Print program.
@@ -129,6 +129,8 @@ Document            document;
    char*                   printArgv [100];
    DWORD                   dwNeeded, dwReturned;
    static LPPRINTER_INFO_5 pInfo5;
+   HANDLE                  hLib;
+   FARPROC                 ptrMainProc;
 #  else  /* !_WINDOWS */
    char             cmd[1024];
    int              res;
@@ -482,7 +484,18 @@ Document            document;
            TtPrinterDC = CreateDC (NULL, pInfo5->pPrinterName,  NULL, NULL);
    }
 
-   PrintDoc (FrRef [currentFrame], printArgc, printArgv, TtPrinterDC, TtIsTrueColor, TtWDepth, name, dir, hInstance, buttonCommand);
+   hLib = LoadLibrary ("thotprinter");
+   if (!hLib)
+      return /* FATAL_EXIT_CODE */;
+   ptrMainProc = GetProcAddress (hLib, "PrintDoc");
+   if (!ptrMainProc) {
+      FreeLibrary (hLib);
+      return /* FATAL_EXIT_CODE */;
+   }
+
+   ptrMainProc (FrRef [currentFrame], printArgc, printArgv, TtPrinterDC, TtIsTrueColor, TtWDepth, name, dir, hInstance, buttonCommand);
+   /* PrintDoc (FrRef [currentFrame], printArgc, printArgv, TtPrinterDC, TtIsTrueColor, TtWDepth, name, dir, hInstance, buttonCommand); */
+   FreeLibrary (hLib);
    if (!IsWindowEnabled (FrRef[currentFrame]))
       EnableWindow (FrRef[currentFrame], TRUE);
    SetFocus (FrRef[currentFrame]);
@@ -502,7 +515,6 @@ Document            document;
       TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_ERROR_PS_TRANSLATION);
 #  endif /* _WINDOWS */
 }
-
 
 /*----------------------------------------------------------------------
    InitPrintParameters

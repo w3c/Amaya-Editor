@@ -104,6 +104,7 @@ static int          WIN_Language;
 
 extern HINSTANCE hInstance;
 extern LPCTSTR   iconID;
+extern UINT      subMenuID;
 #ifdef __STDC__
 extern BOOL RegisterWin95 (CONST WNDCLASS*);
 extern void CreateLanguageDlgWindow (HWND, char*, char*, int, char*, char*, int, int, int, char*);
@@ -417,7 +418,7 @@ LRESULT CALLBACK InitFormDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPA
                                               (HMENU) ID_CONFIRM, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
 
 				/* Create Done Button */
-				doneButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_DONE_ATTR), 
+				doneButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_DONE), 
                                            WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
                                            185, 150, 100, 20, hwnd, 
                                            (HMENU) ID_DONE, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
@@ -582,7 +583,7 @@ LRESULT CALLBACK InitSheetDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LP
                                            (HMENU) ID_DELETE, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
  
 				/* Create Done Button */
-				doneButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_DONE_ATTR), 
+				doneButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_DONE), 
                                            WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
                                            210, 170, 85, 30, hwnd, 
                                            (HMENU) ID_DONE, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
@@ -765,7 +766,7 @@ LRESULT CALLBACK InitNumAttrDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, 
                                              (HMENU) ID_DELETE, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
  
 				/* Create Done Button */
-				doneButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_DONE_ATTR), 
+				doneButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_DONE), 
                                            WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
                                            180, 120, 80, 25, hwnd, 
                                            (HMENU) ID_DONE, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
@@ -1348,14 +1349,23 @@ PtrDocument         pDoc;
 	  else
 	    {
 #ifdef _WINDOWS
+          HMENU sMenu;
 	      int nbOldItems = GetMenuItemCount (FrameTable[frame].WdMenus[menu]);
-	      for (i = 0; i < nbOldItems; i ++)
-		RemoveMenu (FrameTable[frame].WdMenus[menu], ref + i, MF_BYCOMMAND) ;
+		  for (i = 0; i < nbOldItems ; i ++) {
+              if (!DeleteMenu (FrameTable[frame].WdMenus[menu], ref + i, MF_BYCOMMAND))
+                 DeleteMenu (FrameTable[frame].WdMenus[menu], i, MF_BYPOSITION);
+		  }
 #endif /* _WINDOWS */
 	      if (EventMenu[frame - 1] != 0)
 		{
 		  /* destroy the submenu event */
 		  TtaDestroyDialogue (EventMenu[frame - 1]);
+#         ifdef _WINDOWS
+          if (subMenuID && !DeleteMenu (FrameTable[frame].WdMenus[menu], subMenuID, MF_BYCOMMAND))
+             WinErrorBox (NULL);
+          else 
+               subMenuID = 0;
+#         endif /* _WINDOWS */
 		  EventMenu[frame - 1] = 0;
 		}
 	      TtaNewPulldown (ref, FrameTable[frame].WdMenus[menu], NULL,
