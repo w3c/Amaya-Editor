@@ -1676,6 +1676,9 @@ void SetIntAddSpaceAttr (Element el, Document doc)
 			   text[0] == '}' ||
 			   text[0] == '.' ||
 			   text[0] == '@' ||
+#ifndef _I18N_
+			   text[0] == 'd' ||       /* probably DifferentialD */
+#endif
 			   (int)text[0] == 129 ||  /* thin space */
 			   (int)text[0] == 130 ||  /* en space */
 			   (int)text[0] == 160)    /* em space */

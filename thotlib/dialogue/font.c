@@ -399,12 +399,12 @@ int CharacterWidth (int c, PtrFont font)
   ----------------------------------------------------------------------*/
 int SpecialCharBoxWidth (CHAR_T c)
 {
-  if (c == 0x200C /* zwnj*/ || c == 0x200D /* zwj */ ||
+  if (c == 0x202A /* lre */ || c == 0x200B /* zwsp*/ ||
+      c == 0x200C /* zwnj*/ || c == 0x200D /* zwj */ ||
       c == 0x200E /* lrm */ || c == 0x200F /* rlm */ ||
-      c == 0x202A /* lre */ || c == 0x202B /* rle */ ||
+      c == 0x202B /* rle */ || c == 0x202C /* pdf */ ||
       c == 0x202D /* lro */ || c == 0x202E /* rlo */ ||
-      c == 0x202C /* pdf */ || c == 0x2061 /* ApplyFunction */ ||
-      c == 0x2062 /* InvisibleTimes */)
+      c == 0x2061 /* ApplyFunction */ || c == 0x2062 /* InvisibleTimes */)
     return 1;
   else
     return 0;
@@ -1336,12 +1336,12 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, PtrFont *font)
 	  *font = fontset->FontIso_1;
 	  car = (int) c;
 	}
-      else if (c == 0x200C /* zwnj*/ || c == 0x200D /* zwj */ || 
+      else if (c == 0x202A /* lre */ || c == 0x200B /* zwsp*/ ||
+	       c == 0x200C /* zwnj*/ || c == 0x200D /* zwj */ || 
 	       c == 0x200E /* lrm */ || c == 0x200F /* rlm */ ||
-	       c == 0x202A /* lre */ || c == 0x202B /* rle */ ||
+	       c == 0x202B /* rle */ || c == 0x202C /* pdf */ || 
 	       c == 0x202D /* lro */ || c == 0x202E /* rlo */ ||
-	       c == 0x202C /* pdf */ || c == 0x2061 /* ApplyFunction */ ||
-	       c == 0x2062 /* InvisibleTimes */)
+	       c == 0x2061 /*ApplyFunction*/ || c == 0x2062 /*InvisibleTimes*/)
 	car =  INVISIBLE_CHAR;
       else
 	{
@@ -1421,12 +1421,14 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, PtrFont *font)
 		    c = 94;
 		  else if (c == 0x2DC)  /*tilde*/
 		    c = 126;
+#if 0
 		  else if (c == 0x2002) /*ensp*/
 		    c = 130;
                   else if (c == 0x2003) /*emsp*/
 		    c = 160;
 		  else if (c == 0x2009) /*thinsp*/
 		    c = 129;
+#endif
 		  else if (c == 0x2018 || c == 0x201C)
 		    c = 96;
 		  else if (c == 0x2019 || c == 0x201D)

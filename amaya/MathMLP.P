@@ -1354,6 +1354,7 @@ RULES
 
    MTD:
 	BEGIN
+   	VertPos: HRef = Previous AnyElem . HRef;
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
 	PaddingRight: 0.4;
@@ -2353,7 +2354,7 @@ ATTRIBUTES
 	END;
   IntRowAlign(MTD) = IntBaseline:
 	BEGIN
-	VertPos: HRef = Enclosing . HRef;
+	VertPos: HRef = Previous AnyElem . HRef;
 	IN Structure_view
 		VertPos: Top = Previous . Bottom;
 	END;
