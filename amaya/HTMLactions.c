@@ -1501,6 +1501,9 @@ int                 elemtype;
    TtaGiveLastSelectedElement (document, &lastEl, &i, &lastSelectedChar);
    TtaUnselect (document);
 
+   TtaOpenUndoSequence (document, selectedEl, lastEl, firstSelectedChar,
+			lastSelectedChar);
+
    selType = TtaGetElementType (lastEl);
    if (selType.ElTypeNum == HTML_EL_TEXT_UNIT)
      /* the last selected element is a text leaf */
@@ -1521,7 +1524,13 @@ int                 elemtype;
 	  /* split that text leaf if it is not entirely selected */
 	  length = TtaGetTextLength (lastEl);
 	  if (lastSelectedChar != 0 && lastSelectedChar < length)
-	     TtaSplitText (lastEl, lastSelectedChar, document);
+	     {
+	       TtaRegisterElementReplace (lastEl, document);	     
+	       TtaSplitText (lastEl, lastSelectedChar, document);
+	       elem = lastEl;
+	       TtaNextSibling (&elem);
+	       TtaRegisterElementCreate (elem, document);
+	     }
        }
      }
    /* get the last leaf in the last selected element */
@@ -1557,8 +1566,10 @@ int                 elemtype;
 	  if (firstSelectedChar > 1)
 	    {
 	       elem = selectedEl;
+	       TtaRegisterElementReplace (selectedEl, document);
 	       TtaSplitText (selectedEl, firstSelectedChar - 1, document);
 	       TtaNextSibling (&selectedEl);
+	       TtaRegisterElementCreate (selectedEl, document);
 	       firstSelectedElem = selectedEl;
 	       firstSelectedChar = 0;
 	       if (elem == lastEl)
@@ -1566,9 +1577,6 @@ int                 elemtype;
 	    }
        }
      }
-
-   TtaOpenUndoSequence (document, selectedEl, lastEl, firstSelectedChar,
-			lastSelectedChar);
 
    /* process all selected elements */
    elem = NULL;
