@@ -137,8 +137,8 @@ modificar el formato de añadidos y eliminaciones.</p>
 </ol>
 
 <p>Puedes aplicar ambos tipos de énfasis mediante los botones <img
-src="../../images/Em.gif" alt="Emphasis" /> y <img
-src="../../images/Strong.gif" alt="Strong" /> de la barra de botones, o
+src="../../../resources/icons/22x22/XHTML_I.png" alt="Emphasis" /> y <img
+src="../../../resources/icons/22x22/XHTML_B.png" alt="Strong" /> de la barra de botones, o
 mediante el submenú <strong>XHTML &gt; Tipo de información</strong>. Los
 atajos de teclado correspondientes son <kbd>Ctrl i Ctrl e</kbd> para el
 énfasis normal (el énfasis se suele mostrar a menudo mediante itálicas) y
@@ -152,7 +152,7 @@ un elemento seleccionando el elemento y aplicando el énfasis correspondiente.
 Por ejemplo, sitúa el cursor en el interior de un elemento
 <code>strong</code>, pulsa <kbd>F2</kbd> para seleccionar el elemento y
 utiliza el atajo de teclado, la opción del menú o el botón <img
-src="../../images/Strong.gif" alt="Strong" /> para eliminar el elemento
+src="../../../resources/icons/22x22/XHTML_B.png" alt="Strong" /> para eliminar el elemento
 <code>strong</code>.</p>
 
 <p>Puedes utilizar <a href="../StyleSheets.html.es">hojas de estilo</a> para

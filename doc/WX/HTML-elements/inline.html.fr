@@ -143,8 +143,8 @@ utilisées pour changer la présentation des insertions et des suppressions.</p>
 </ol>
 
 <p>Deux types de mise en évidence peuvent être appliqués depuis la barre
-d'outils en utilisant les boutons <img src="../../images/Em.gif"
-alt="Emphasis" /> et <img src="../../images/Strong.gif" alt="Strong" /> , ou
+d'outils en utilisant les boutons <img src="../../../resources/icons/22x22/XHTML_I.png"
+alt="Emphasis" /> et <img src="../../../resources/icons/22x22/XHTML_B.png" alt="Strong" /> , ou
 depuis le formulaire du sous-menu <strong>Types information</strong> du menu
 <strong>XHTML</strong>. Il y a également des raccourcis clavier - <kbd>Ctrl i
 Cltr e</kbd> pour accentuer (parce que l'interprétation par défaut est
@@ -160,7 +160,7 @@ la mise en évidence appropriée. Par exemple, placez le curseur quelque part
 sur un élément <code>strong</code>, utilisez la touche <kbd>F2</kbd>
 (Windows) ou la touche <kbd>Esc</kbd> (Unix) pour sélectionner l'élément, et
 ensuite utilisez le raccourci clavier, menu item, ou le bouton <img
-src="../../images/Strong.gif" alt="Strong" /> - l'élément <code>strong</code>
+src="../../../resources/icons/22x22/XHTML_B.png" alt="Strong" /> - l'élément <code>strong</code>
 sera désactivé.</p>
 
 <p><a href="../StyleSheets.html.fr">Les feuilles de style</a> peuvent être
