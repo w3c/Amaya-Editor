@@ -2602,6 +2602,11 @@ int main (int argc, char **argv)
   FirstFrame (server);
 
 #ifdef _WINDOWS 
+  if (!PrinterDC)
+  {
+	  TtaFreeMemory (realName);
+	  return;
+  }
   TtPrinterDC = PrinterDC;
   TtIsTrueColor = isTrueColors;
   TtWDepth = depth;

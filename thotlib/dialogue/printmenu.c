@@ -573,6 +573,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    
    EnableWindow  (FrRef[frame], FALSE);
 
+   if (TtPrinterDC)
    (ptrMainProc) (FrRef[frame], printArgc, printArgv,
 		TtPrinterDC, TtIsTrueColor, 
 		TtWDepth, name, dir, hInstance, buttonCommand);
@@ -777,6 +778,8 @@ ThotBool TtaGetPrinterDC (ThotBool reuse, int *orientation, int *paper)
       if (Pdlg.hDevMode)
 	{
 	  lpDevMode = (LPDEVMODE) GlobalLock (Pdlg.hDevMode);
+	  if (!lpDevMode)
+		  return FALSE;
 	  TtPrinterDC = CreateDC (lpDriverName, lpDeviceName, lpPortName, lpDevMode);
 	  if (lpDevMode->dmOrientation == DMORIENT_LANDSCAPE)
 	    /* landscape */
@@ -801,6 +804,8 @@ ThotBool TtaGetPrinterDC (ThotBool reuse, int *orientation, int *paper)
       if (Pdlg.hDevMode)
 	{
 	  lpDevMode = (LPDEVMODE) GlobalLock (Pdlg.hDevMode);
+	  if (!lpDevMode)
+		 return FALSE;
 	  if (lpDevMode->dmOrientation == DMORIENT_LANDSCAPE)
 	    /* landscape */
 	    *orientation = 1;
