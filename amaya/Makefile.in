@@ -31,8 +31,8 @@ ANNOTFILES=Annot.STR AnnotP.PRS AnnotT.TRA
 
 DICOFILES= *.ptn *.dic alphabet clavier
 
-AMAYAFILES= *.STR *.conf *.trans *.en *.fr \
-           *.PRS *.TRA AmayaPage.html
+AMAYAFILES= *.STR *.conf *.trans *.en *.gif *.png \
+           *.PRS *.TRA AmayaPage.html AmayaPage.html.fr
 
 FONTSFILES=Families.list fonts.dir icones*
 
