@@ -110,6 +110,8 @@ void SetMainWindowBackgroundColor (int frame, int color)
 
   cr = ColorPixel (color);
   SetBkColor (TtDisplay, cr); 
+  SelectClipRgn(TtDisplay, NULL); 
+  Clear (frame, FrameTable[frame].FrWidth, FrameTable[frame].FrHeight, 0, 0);
 }
 #endif /* _WIN_PRINT */
 
