@@ -31,6 +31,10 @@ XmlEntity        *pMathEntityTable = MathEntityTable;
 
 #include "fetchXMLname_f.h"
 
+/* Global variables used by the entity mapping */
+static int        XHTMLSup = 0;
+static int        MathSup = 0;
+
 /*----------------------------------------------------------------------
    GetXHTMLSSchema returns the XHTML Thot schema for document doc.
   ----------------------------------------------------------------------*/
@@ -415,9 +419,19 @@ ThotBool   MapXMLEntity (int XMLtype, STRING entityName, int *entityValue)
 
   /* Select the right table */
   if (XMLtype == XHTML_TYPE)
-    ptr = XhtmlEntityTable;
+    {
+      ptr = XhtmlEntityTable;
+      if (XHTMLSup == 0)
+	for (XHTMLSup = 0; ptr[XHTMLSup].charCode > 0; XHTMLSup++);
+      sup = XHTMLSup;
+    }
   else if (XMLtype == MATH_TYPE)
-    ptr = MathEntityTable;
+    {
+      ptr = MathEntityTable;
+      if (MathSup == 0)
+	for (MathSup = 0; ptr[MathSup].charCode > 0; MathSup++);
+      sup = MathSup;
+    }
   else
     ptr = NULL;
   
@@ -425,8 +439,6 @@ ThotBool   MapXMLEntity (int XMLtype, STRING entityName, int *entityValue)
     return found;
 
   inf = 0;
-  for (sup = 0; ptr[sup].charCode > 0; sup++);
-
   while (sup >= inf && !found)
     /* Dichotomic research */
     {
@@ -448,3 +460,42 @@ ThotBool   MapXMLEntity (int XMLtype, STRING entityName, int *entityValue)
     }
   return found;
  }
+
+/*----------------------------------------------------------------------
+   MapEntityByCode
+   Generic function which searchs in the Entity Mapping Table (table)
+   the entry with code entityValue and give the corresponding name.
+   Returns FALSE if entityValue is not found.
+  ----------------------------------------------------------------------*/
+CHAR_T*   MapEntityByCode (int XMLtype, int entityValue)
+
+{
+  XmlEntity  *ptr;
+  ThotBool    found;
+  int         i;
+
+  /* Select the right table */
+  if (XMLtype == XHTML_TYPE)
+      ptr = XhtmlEntityTable;
+  else if (XMLtype == MATH_TYPE)
+      ptr = MathEntityTable;
+  else
+    ptr = NULL;
+  
+  if (ptr == NULL)
+    return ptr;
+
+  /* look for the first concerned entry in the table */
+  found = FALSE;
+  for (i = 0; ptr[i].charCode >= 0 && !found; i++)
+    found = (ptr[i].charCode == entityValue);
+  
+  if (found)
+    {
+      /* entity value found */
+       i--;
+       return ptr[i].charName;
+   }
+  else
+    return NULL;
+}
