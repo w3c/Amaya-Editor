@@ -382,16 +382,6 @@ void AddEditOpInHistory (PtrElement pEl, PtrDocument pDoc, ThotBool save,
 	  have been copied, change these references to the copies */
        ChangePointersOlderEdits (editOp, pEl);
      }
-
-   /* Trigger the autosave procedure if the number of modifications has been reached */
-   pDoc->DocNTypedChars += 1;
-   /* DocBackUpInterval = 0 means no automatic save */
-   if (pDoc->DocBackUpInterval > 0 && pDoc->DocNTypedChars >= pDoc->DocBackUpInterval)
-     if (ThotLocalActions[T_autosave] != NULL)
-       {
-	 (*ThotLocalActions[T_autosave]) ((Document) IdentDocument (pDoc));
-	 pDoc->DocNTypedChars = 0;
-       }
 }
 
 /*----------------------------------------------------------------------
@@ -846,7 +836,19 @@ ThotBool CloseHistorySequence (PtrDocument pDoc)
 	    }
 	  /* sequence closed */
 	  pDoc->DocEditSequence = FALSE;
-	}
+	  /* Trigger the autosave procedure if the number of modifications has been reached */
+	  /* DocBackUpInterval = 0 means no automatic save */
+	  if (pDoc->DocBackUpInterval > 0)
+	    {
+	      pDoc->DocNTypedChars += 1;
+	      if (pDoc->DocNTypedChars >= pDoc->DocBackUpInterval)
+		if (ThotLocalActions[T_autosave] != NULL)
+		  {
+		    (*ThotLocalActions[T_autosave]) ((Document) IdentDocument (pDoc));
+		    pDoc->DocNTypedChars = 0;
+		  }
+	    }
+	} 
     }
   return result;
 }

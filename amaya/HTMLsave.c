@@ -2284,7 +2284,7 @@ void RemoveAutoSavedDoc (Document doc, char *doc_url)
   int      l, interval = 0;
 
 #ifdef AMAYA_DEBUG
-  /* printf ("\nRemoveAutoSavedDoc - doc %d\n", doc); */
+  fprintf (stderr, "\nRemoveAutoSavedDoc - doc %d\n", doc);
 #endif
   
   TtaGetEnvInt ("AUTO_SAVE", &interval);
@@ -2346,7 +2346,7 @@ void GenerateAutoSavedDoc (Document doc)
   ThotBool        ok;
 
 #ifdef AMAYA_DEBUG
-  /* printf ("\nGenerateAutoSavedDoc - doc %d\n", doc); */
+  fprintf (stderr, "\nGenerateAutoSavedDoc - doc %d\n", doc);
 #endif
 
   TtaGetEnvInt ("AUTO_SAVE", &interval);

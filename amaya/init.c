@@ -653,8 +653,8 @@ Document IsDocumentLoaded (char *documentURL, char *form_data)
 
 /*----------------------------------------------------------------------
   CanReplaceCurrentDocument
-  Return TRUE if the document has not been modified of if the user
-  agrees to loose the changes he/she has made.
+  Return TRUE if the document has not been modified
+  and if the user agrees to loose the changes he/she has made.
   ----------------------------------------------------------------------*/
 ThotBool CanReplaceCurrentDocument (Document doc, View view)
 {
@@ -672,6 +672,8 @@ ThotBool CanReplaceCurrentDocument (Document doc, View view)
 	   TtaSetDocumentUnmodified (doc);
 	   if (DocumentSource[doc])
 	     TtaSetDocumentUnmodified (DocumentSource[doc]);
+	   /* remove the corrsponding auto saved doc */
+	   RemoveAutoSavedDoc (doc, NULL);
 	 }
        else
 	 ret = FALSE;
