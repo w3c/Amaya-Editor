@@ -15,8 +15,7 @@ INCLUDES =-DHAVE_CONFIG_H -I.. \
 	  -I../amaya -I@srcdir@/f -I@top_srcdir@/amaya \
 	  -I@top_srcdir@/amaya/f -I../libwww \
 	  -I@top_srcdir@/../libwww/Library/src \
-	  -I@top_srcdir@/../libwww/modules/expat/xmlparse \
-	  -I@top_srcdir@/../libwww/modules/expat/xmltok \
+	  -I@top_srcdir@/../libwww/modules/expat/lib \
 	  -I$(DAVLIB)/tree/h -I$(DAVLIB)/h \
 	  @THOTINCLUDES@ $(X_FLAGS)
 
@@ -41,10 +40,8 @@ LIBWWW_LIBS= \
 			-lwwwdav \
 		-L../$(LIBWWW)/modules/md5/.libs \
 			-lmd5 \
-		-L../$(LIBWWW)/modules/expat/xmlparse/.libs \
-			-lxmlparse \
-		-L../$(LIBWWW)/modules/expat/xmltok/.libs \
-			-lxmltok \
+		-L../$(LIBWWW)/modules/expat/.libs \
+			-lexpat \
 		-ldl -L/usr/lib
 
 
@@ -149,7 +146,6 @@ davlibUI.o :
 
 davlibRequests.o :
 	$(CC) $(CFLAGS) $(INCLUDES) $(OPTIONS) -c $(DAVLIB)/davlibRequests.c -o davlibRequests.o
-	
 
 davlib.a : $(AMAYA_DAV_OBJ)
 	$(AR) davlib.a $(AMAYA_DAV_OBJ) 

@@ -38,10 +38,8 @@ AMAYA_LIBWWW_LIBS= \
 			$(WWWDAV) \
 		-L../$(LIBWWW)/modules/md5/.libs \
 			-lmd5 \
-		-L../$(LIBWWW)/modules/expat/xmlparse/.libs \
-			-lxmlparse \
-		-L../$(LIBWWW)/modules/expat/xmltok/.libs \
-			-lxmltok
+		-L../$(LIBWWW)/modules/expat/.libs \
+			-lexpat \
 
 AMAYA_LIBWWW_EXTRA_LIBS=
 
