@@ -51,7 +51,6 @@ static PtrSSchema   AttrStruct[MAX_MENU * 2];
 static int          AttrNumber[MAX_MENU * 2];
 static int          ActiveAttr[MAX_MENU * 2];
 static ThotBool     AttrOblig[MAX_MENU * 2];
-static ThotBool     AttrInSchema[MAX_MENU * 2];
 static ThotBool     AttrEvent[MAX_MENU * 2];
 /* submenu of event attributes */
 static int          AttrEventNumber[MAX_MENU];
@@ -781,23 +780,25 @@ static ThotBool WIN_InitNumAttrDialog (ThotWindow parent)
    currAttr gives the current value of the attribute
   ----------------------------------------------------------------------*/
 static void MenuValues (TtAttribute * pAttr1, ThotBool required,
-				PtrAttribute currAttr,
-				PtrDocument pDoc, int view)
+			PtrAttribute currAttr, PtrDocument pDoc, int view)
 {
    Document          doc;
    char              bufMenu[MAX_TXT_LEN];
    char              title[MAX_NAME_LENGTH + 2];
-   int               i, lgmenu, val;
+   int               i, lgmenu, val, buttons;
    int               form, subform;
 
 #ifdef _WINDOWS
    WIN_pAttr1 = pAttr1;
 #endif /* _WINDOWS */
    doc = (Document) IdentDocument (pDoc);
-   /* detruit la feuille de dialogue et la recree */
+   buttons = 0;
    strcpy (bufMenu, TtaGetMessage (LIB, TMSG_APPLY));
+   buttons++;
    i = strlen (bufMenu) + 1;
    strcpy (&bufMenu[i], TtaGetMessage (LIB, TMSG_DEL_ATTR));
+   buttons++;
+   /* detruit la feuille de dialogue et la recree */
    if (required)
      {
        form = NumMenuAttrRequired;
@@ -826,7 +827,7 @@ static void MenuValues (TtAttribute * pAttr1, ThotBool required,
 	 } 
 #ifndef _WINDOWS
        TtaNewSheet (NumMenuAttr, TtaGetViewFrame (doc, view),
-		    TtaGetMessage (LIB, TMSG_ATTR), 2, bufMenu, FALSE, 2,
+		    TtaGetMessage (LIB, TMSG_ATTR), buttons, bufMenu, FALSE, 2,
 		    'L', D_DONE);
 #else  /* _WINDOWS */
        isForm = FALSE;
@@ -1094,7 +1095,6 @@ static int BuildAttrMenu (char *bufMenu, PtrDocument pDoc, int *nbEvent,
 			      AttrStruct[nbOfEntries] = pSS;
 			      AttrNumber[nbOfEntries] = att;
 			      AttrOblig[nbOfEntries] = FALSE;
-			      AttrInSchema[nbOfEntries] = TRUE;
 			      /* is it an event attribute */
 			      AttrEvent[nbOfEntries] =
 				AttrHasException (ExcEventAttr, att, pSS);
@@ -1132,7 +1132,6 @@ static int BuildAttrMenu (char *bufMenu, PtrDocument pDoc, int *nbEvent,
 		      AttrStruct[nbOfEntries] = pSS;
 		      AttrNumber[nbOfEntries] = pRe1->SrLocalAttr->Num[att];
 		      AttrOblig[nbOfEntries] = pRe1->SrRequiredAttr->Bln[att];
-		      AttrInSchema[nbOfEntries] = TRUE;
 		      /* is it an event attribute */
 		      AttrEvent[nbOfEntries] = AttrHasException (ExcEventAttr,
 					     pRe1->SrLocalAttr->Num[att], pSS);
@@ -1180,7 +1179,6 @@ static int BuildAttrMenu (char *bufMenu, PtrDocument pDoc, int *nbEvent,
 		  AttrStruct[nbOfEntries] = pAttr->AeAttrSSchema;
 		  AttrNumber[nbOfEntries] = pAttr->AeAttrNum;
 		  AttrOblig[nbOfEntries] = FALSE;
-		  AttrInSchema[nbOfEntries] = FALSE;
 		  /* is it an event attribute? */
 		  AttrEvent[nbOfEntries] = AttrHasException (ExcEventAttr,
 				       pAttr->AeAttrNum, pAttr->AeAttrSSchema);

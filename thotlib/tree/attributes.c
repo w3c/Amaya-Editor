@@ -884,229 +884,237 @@ PtrAttribute AddAttrToElem (PtrElement pEl, PtrAttribute pNewAttr,
    Egalement utilise' pour supprimer un attribut et desappliquer les
    regles de presentation correspondantes.
   ----------------------------------------------------------------------*/
-void AttachAttrWithValue (PtrElement pEl, PtrDocument pDoc, PtrAttribute pNewAttr)
+void AttachAttrWithValue (PtrElement pEl, PtrDocument pDoc,
+			  PtrAttribute pNewAttr)
 {
-   PtrAttribute        pAttr, pAttrAsc, pAttrNext;
-   PtrElement          pChild, pElAttr;
-   PtrPSchema          pPS;
-   ThotBool            suppress, compare, inherit, mandatory, create, allowed;
-   NotifyAttribute     notifyAttr;
+  PtrAttribute        pAttr, pAttrAsc, pAttrNext;
+  PtrElement          pChild, pElAttr;
+  PtrPSchema          pPS;
+  ThotBool            suppress, compare, inherit, mandatory, create, allowed;
+  NotifyAttribute     notifyAttr;
 
-   if (pNewAttr == NULL || pNewAttr->AeAttrNum == 0)
-     /* it's not a valid attribute */
-     return;
-   mandatory = FALSE;
-   pAttrNext = NULL;
-   /* l'element porte-t-il deja un attribut du meme type ? */
-   pAttr = AttributeValue (pEl, pNewAttr);
-   create = (pAttr == NULL);
+  if (pNewAttr == NULL || pNewAttr->AeAttrNum == 0)
+    /* it's not a valid attribute */
+    return;
+  mandatory = FALSE;
+  pAttrNext = NULL;
 
-   /* peut-on appliquer l'attribut a l'element ? */
-   allowed = CanAssociateAttr (pEl, pAttr, pNewAttr, &mandatory);
-   if (!allowed && create)
-      return;
+  /* l'element porte-t-il deja un attribut du meme type ? */
+  pAttr = AttributeValue (pEl, pNewAttr);
+  create = (pAttr == NULL);
 
-   /* est-ce une suppression d'attribut */
-   suppress = TRUE;
-   switch (pNewAttr->AeAttrType)
-	 {
-	    case AtEnumAttr:
-	       if (pNewAttr->AeAttrValue != 0)
-		  suppress = FALSE;
-	       break;
+  /* est-ce une suppression d'attribut */
+  suppress = TRUE;
+  switch (pNewAttr->AeAttrType)
+    {
+    case AtEnumAttr:
+      if (pNewAttr->AeAttrValue != 0)
+	suppress = FALSE;
+      break;
 
-	    case AtNumAttr:
-	       if (pNewAttr->AeAttrValue >= -MAX_INT_ATTR_VAL
-		   && pNewAttr->AeAttrValue <= MAX_INT_ATTR_VAL)
-		  suppress = FALSE;
-	       break;
+    case AtNumAttr:
+      if (pNewAttr->AeAttrValue >= -MAX_INT_ATTR_VAL
+	  && pNewAttr->AeAttrValue <= MAX_INT_ATTR_VAL)
+	suppress = FALSE;
+      break;
 
-	    case AtTextAttr:
-	       if (pNewAttr->AeAttrText != NULL)
-		  suppress = FALSE;
-	       break;
+    case AtTextAttr:
+      if (pNewAttr->AeAttrText != NULL)
+	suppress = FALSE;
+      break;
 
-	    case AtReferenceAttr:
-	       if (pNewAttr->AeAttrReference != NULL)
-		  if (pNewAttr->AeAttrReference->RdReferred != NULL)
-		     suppress = FALSE;
-	       break;
+    case AtReferenceAttr:
+      if (pNewAttr->AeAttrReference != NULL)
+	if (pNewAttr->AeAttrReference->RdReferred != NULL)
+	  suppress = FALSE;
+      break;
 
-	    default:
-	       break;
-	 }
-   if (suppress)
-     {
-	if (pAttr == NULL)
-	   /* suppression d'un attribut inexistant */
-	   return;
-	if (!mandatory)
-	   /* si c'est un attribut Langue sur un element racine, il est obligatoire */
-	   if (pEl->ElParent == NULL)
-	      if (pNewAttr->AeAttrNum == 1)
-		 mandatory = TRUE;
-	if (mandatory)
-	  /* suppression d'un attribut obligatoire. Interdit */
-	  return;
-     }
+    default:
+      break;
+    }
 
-   /* faut-il traiter des heritages et comparaisons d'attributs */
-   inherit = FALSE;
-   compare = FALSE;
-   pPS = PresentationSchema (pNewAttr->AeAttrSSchema, pDoc);
-   if (pPS != NULL)
-     {
-       inherit = (pPS->PsNHeirElems->Num[pNewAttr->AeAttrNum - 1] != 0);
-       compare = (pPS->PsNComparAttrs->Num[pNewAttr->AeAttrNum - 1] != 0);
-     }
-   if (inherit || compare)
-      /* cherche le premier attribut de meme type sur un ascendant de pEl */
-      pAttrAsc = GetTypedAttrAncestor (pEl, pNewAttr->AeAttrNum,
-				       pNewAttr->AeAttrSSchema, &pElAttr);
-   else
-      pAttrAsc = NULL;
+  /* peut-on appliquer l'attribut a l'element ? */
+  allowed = CanAssociateAttr (pEl, pAttr, pNewAttr, &mandatory);
+  if (!allowed && !suppress)
+    return;
 
-   /* prepare et envoie l'evenement pour l'application */
-   if (create)
-      notifyAttr.event = TteAttrCreate;
-   else if (suppress)
-      notifyAttr.event = TteAttrDelete;
-   else
-      notifyAttr.event = TteAttrModify;
-   notifyAttr.document = (Document) IdentDocument (pDoc);
-   notifyAttr.element = (Element) pEl;
-   notifyAttr.attribute = (Attribute) pAttr;
-   notifyAttr.attributeType.AttrSSchema = (SSchema) (pNewAttr->AeAttrSSchema);
-   notifyAttr.attributeType.AttrTypeNum = pNewAttr->AeAttrNum;
-   if (!CallEventAttribute (&notifyAttr, TRUE))
-     {
-	/* l'application accepte l'operation */
-	/* on supprime sur pEl et son sous arbre les regles de presentation
-	   anciennes liees a l'heritage d'un attribut du type pAttr porte'
-	   soit par pEl soit par un ascendant */
-	if (pAttr)
-	  {
-	    /* register the attribute in history */
-	    if (ThotLocalActions[T_attraddhistory] != NULL)
-	      (*ThotLocalActions[T_attraddhistory]) (pAttr, pEl, pDoc, TRUE, FALSE);
-	    /* detache l'attribut de l'element s'il y a lieu */
-	    pAttrNext = pAttr->AeNext;
-	    /* supprime l'attribut */
-	    RemoveAttribute (pEl, pAttr);
-	    /* heritage et comparaison sont lies a un attribut de pEl */
-	    /* On supprime d'abord les regles de presentation liees a
-	       l'attribut sur l'element lui-meme */
-	    RemoveAttrPresentation (pEl, pDoc, pAttr, pEl, FALSE, NULL);
-	    /* indique que le document a ete modifie' */
-	    /* un changement d'attribut vaut dix caracteres saisis */
-	    SetDocumentModified (pDoc, TRUE, 10);
-	    /* On supprime de pEl de son sous-arbre  la presentation venant
-	       de l'heritage de cet attribut par le sous-arbre, s'il existe
-	       des elements heritants de celui-ci */
-	    if (inherit)
-	       RemoveInheritedAttrPresent (pEl, pDoc, pAttr, pEl);
-	    /* On supprime des elements du sous arbre pEl la presentation
-	       venant de la comparaison d'un attribut du sous-arbre avec ce
-	       type d'attribut */
-	    if (!pEl->ElTerminal && compare)
-	      for (pChild = pEl->ElFirstChild; pChild != NULL; pChild = pChild->ElNext)
-		RemoveComparAttrPresent (pChild, pDoc, pAttr);
-	    DeleteAttribute (pEl, pAttr);
-	  }
+  if (suppress)
+    {
+      if (pAttr == NULL)
+	/* suppression d'un attribut inexistant */
+	return;
+      if (!mandatory)
+	/* si c'est un attribut Langue sur un element racine,
+	   il est obligatoire */
+	if (pEl->ElParent == NULL)
+	  if (pNewAttr->AeAttrNum == 1)
+	    mandatory = TRUE;
+      if (mandatory)
+	/* suppression d'un attribut obligatoire. Interdit */
+	return;
+    }
 
-	else if (pAttrAsc)
-	  {
-	     /* heritage et comparaison sont dus a un attribut d'un ascendant
-	        de pEl */
-	     /* on supprime du sous arbre pEl la presentation venant de
-	        l'heritage de cet attribut par le sous-arbre, s'il existe des
-	        elements heritants de celui-ci */
-	     if (inherit)
-		RemoveInheritedAttrPresent (pEl, pDoc, pAttrAsc, pElAttr);
-	     /* on supprime du sous-arbre pEl la presentation venant de la
-	        comparaison d'un attribut du sous-arbre avec ce type d'attribut */
-	     if (compare)
-		RemoveComparAttrPresent (pEl, pDoc, pAttrAsc);
-	  }
+  /* faut-il traiter des heritages et comparaisons d'attributs */
+  inherit = FALSE;
+  compare = FALSE;
+  pPS = PresentationSchema (pNewAttr->AeAttrSSchema, pDoc);
+  if (pPS != NULL)
+    {
+      inherit = (pPS->PsNHeirElems->Num[pNewAttr->AeAttrNum - 1] != 0);
+      compare = (pPS->PsNComparAttrs->Num[pNewAttr->AeAttrNum - 1] != 0);
+    }
+  if (inherit || compare)
+    /* cherche le premier attribut de meme type sur un ascendant de pEl */
+    pAttrAsc = GetTypedAttrAncestor (pEl, pNewAttr->AeAttrNum,
+				     pNewAttr->AeAttrSSchema, &pElAttr);
+  else
+    pAttrAsc = NULL;
 
-	if (inherit || compare)
-	   /* cherche le premier attribut de meme type sur un ascendant de pEl */
-	   pAttrAsc = GetTypedAttrAncestor (pEl, pNewAttr->AeAttrNum,
+  /* prepare et envoie l'evenement pour l'application */
+  if (create)
+    notifyAttr.event = TteAttrCreate;
+  else if (suppress)
+    notifyAttr.event = TteAttrDelete;
+  else
+    notifyAttr.event = TteAttrModify;
+  notifyAttr.document = (Document) IdentDocument (pDoc);
+  notifyAttr.element = (Element) pEl;
+  notifyAttr.attribute = (Attribute) pAttr;
+  notifyAttr.attributeType.AttrSSchema = (SSchema) (pNewAttr->AeAttrSSchema);
+  notifyAttr.attributeType.AttrTypeNum = pNewAttr->AeAttrNum;
+  if (!CallEventAttribute (&notifyAttr, TRUE))
+    {
+      /* l'application accepte l'operation */
+      /* on supprime sur pEl et son sous arbre les regles de presentation
+	 anciennes liees a l'heritage d'un attribut du type pAttr porte'
+	 soit par pEl soit par un ascendant */
+      if (pAttr)
+	{
+	  /* register the attribute in history */
+	  if (ThotLocalActions[T_attraddhistory] != NULL)
+	    (*ThotLocalActions[T_attraddhistory]) (pAttr, pEl, pDoc, TRUE,
+						   FALSE);
+	  /* detache l'attribut de l'element s'il y a lieu */
+	  pAttrNext = pAttr->AeNext;
+	  /* supprime l'attribut */
+	  RemoveAttribute (pEl, pAttr);
+	  /* heritage et comparaison sont lies a un attribut de pEl */
+	  /* On supprime d'abord les regles de presentation liees a
+	     l'attribut sur l'element lui-meme */
+	  RemoveAttrPresentation (pEl, pDoc, pAttr, pEl, FALSE, NULL);
+	  /* indique que le document a ete modifie' */
+	  /* un changement d'attribut vaut dix caracteres saisis */
+	  SetDocumentModified (pDoc, TRUE, 10);
+	  /* On supprime de pEl de son sous-arbre  la presentation venant
+	     de l'heritage de cet attribut par le sous-arbre, s'il existe
+	     des elements heritants de celui-ci */
+	  if (inherit)
+	    RemoveInheritedAttrPresent (pEl, pDoc, pAttr, pEl);
+	  /* On supprime des elements du sous arbre pEl la presentation
+	     venant de la comparaison d'un attribut du sous-arbre avec ce
+	     type d'attribut */
+	  if (!pEl->ElTerminal && compare)
+	    for (pChild = pEl->ElFirstChild; pChild != NULL;
+		 pChild = pChild->ElNext)
+	      RemoveComparAttrPresent (pChild, pDoc, pAttr);
+	  DeleteAttribute (pEl, pAttr);
+	}
+
+      else if (pAttrAsc)
+	{
+	  /* heritage et comparaison sont dus a un attribut d'un ascendant
+	     de pEl */
+	  /* on supprime du sous arbre pEl la presentation venant de
+	     l'heritage de cet attribut par le sous-arbre, s'il existe des
+	     elements heritants de celui-ci */
+	  if (inherit)
+	    RemoveInheritedAttrPresent (pEl, pDoc, pAttrAsc, pElAttr);
+	  /* on supprime du sous-arbre pEl la presentation venant de la
+	     comparaison d'un attribut du sous-arbre avec ce type d'attribut */
+	  if (compare)
+	    RemoveComparAttrPresent (pEl, pDoc, pAttrAsc);
+	}
+
+      if (inherit || compare)
+	/* cherche le premier attribut de meme type sur un ascendant de pEl */
+	pAttrAsc = GetTypedAttrAncestor (pEl, pNewAttr->AeAttrNum,
 					 pNewAttr->AeAttrSSchema, &pElAttr);
-	else
-	   pAttrAsc = NULL;
+      else
+	pAttrAsc = NULL;
 
-	/* on met l'attribut */
-	if (!suppress)
-	  {
-	    /* add a copy of the new attribute before pAttrNext */
-	    pAttr = AddAttrToElem (pEl, pNewAttr, pAttrNext);
-	    /* register the attribute in history */
-	    if (ThotLocalActions[T_attraddhistory] != NULL)
-	      (*ThotLocalActions[T_attraddhistory]) (pAttr, pEl, pDoc, FALSE, TRUE);
-	    /* indique que le document a ete modifie' */
-	    /* un changement d'attribut vaut dix caracteres saisis */
-	    SetDocumentModified (pDoc, TRUE, 10);
-	  }
+      /* on met l'attribut */
+      if (!suppress)
+	{
+	  /* add a copy of the new attribute before pAttrNext */
+	  pAttr = AddAttrToElem (pEl, pNewAttr, pAttrNext);
+	  /* register the attribute in history */
+	  if (ThotLocalActions[T_attraddhistory] != NULL)
+	    (*ThotLocalActions[T_attraddhistory]) (pAttr, pEl, pDoc, FALSE,
+						   TRUE);
+	  /* indique que le document a ete modifie' */
+	  /* un changement d'attribut vaut dix caracteres saisis */
+	  SetDocumentModified (pDoc, TRUE, 10);
+	}
 
-	else
-	   /* suppression */
-	  {
-	     /* valide les modifications */
-	     AbstractImageUpdated (pDoc);
-	     /* la suppression est maintenant prise en compte dans les
-	        copies-inclusions de l'element */
-	     RedisplayCopies (pEl, pDoc, TRUE);
-	  }
+      else
+	/* suppression */
+	{
+	  /* valide les modifications */
+	  AbstractImageUpdated (pDoc);
+	  /* la suppression est maintenant prise en compte dans les
+	     copies-inclusions de l'element */
+	  RedisplayCopies (pEl, pDoc, TRUE);
+	}
 
-	/* on applique les regles de presentation */
-	if (pAttr != NULL && !suppress)
-	  {
-	     /* applique les regles du nouvel attribut */
-	     /* applique d'abord les regles de presentation associees a
-	        l'attribut sur l'element lui-meme */
-	     ApplyAttrPRulesToElem (pEl, pDoc, pAttr, pEl, FALSE);
-	     /* applique les regles de presentation venant de l'heritage de
-	        cet attribut par le sous-arbre s'il existe des elements qui
-	        heritent */
-	     if (inherit)
-		ApplyAttrPRulesToSubtree (pEl, pDoc, pAttr, pEl);
-	     /* applique sur les elements du sous-arbre les regles de
-	        presentation venant de la comparaison d'un attribut du
-	        sous-arbre avec ce type d'attribut */
-	     if (!pEl->ElTerminal && compare)
-		for (pChild = pEl->ElFirstChild; pChild != NULL; pChild = pChild->ElNext)
-		   ApplyAttrPRules (pChild, pDoc, pAttr);
-	     if (pAttr->AeAttrType == AtNumAttr)
-		/* s'il s'agit d'un attribut initialisant un compteur, il */
-		/* faut mettre a jour les boites utilisant ce compteur */
-		UpdateCountersByAttr (pEl, pNewAttr, pDoc);
+      /* on applique les regles de presentation */
+      if (pAttr != NULL && !suppress)
+	{
+	  /* applique les regles du nouvel attribut */
+	  /* applique d'abord les regles de presentation associees a
+	     l'attribut sur l'element lui-meme */
+	  ApplyAttrPRulesToElem (pEl, pDoc, pAttr, pEl, FALSE);
+	  /* applique les regles de presentation venant de l'heritage de
+	     cet attribut par le sous-arbre s'il existe des elements qui
+	     heritent */
+	  if (inherit)
+	    ApplyAttrPRulesToSubtree (pEl, pDoc, pAttr, pEl);
+	  /* applique sur les elements du sous-arbre les regles de
+	     presentation venant de la comparaison d'un attribut du
+	     sous-arbre avec ce type d'attribut */
+	  if (!pEl->ElTerminal && compare)
+	    for (pChild = pEl->ElFirstChild; pChild != NULL;
+		 pChild = pChild->ElNext)
+	      ApplyAttrPRules (pChild, pDoc, pAttr);
+	  if (pAttr->AeAttrType == AtNumAttr)
+	    /* s'il s'agit d'un attribut initialisant un compteur, il */
+	    /* faut mettre a jour les boites utilisant ce compteur */
+	    UpdateCountersByAttr (pEl, pNewAttr, pDoc);
 
-	     /* le nouvel attribut est pris en compte dans les 
-	        les copies-inclusions de l'element */
-	     RedisplayCopies (pEl, pDoc, TRUE);
-	  }
-	else if (pAttrAsc != NULL && suppress)
-	  {
-	     /* applique les regles venant de l'heritage ou de la comparaison
-	        avec un ascendant */
-	     /* applique sur les elements du sous-arbre les regles de
-	        presentation venant de l'heritage de cet attribut par le
-	        sous-arbre, s'il existe des elements qui heritent */
-	     ApplyAttrPRulesToSubtree (pEl, pDoc, pAttrAsc, pElAttr);
-	     /* applique sur les elements du sous-arbre les regles de
-	        presentation venant de la comparaison d'un attribut de
-	        sous-arbre avec ce type d'attribut */
-	     ApplyAttrPRules (pEl, pDoc, pAttrAsc);
-	  }
+	  /* le nouvel attribut est pris en compte dans les 
+	     les copies-inclusions de l'element */
+	  RedisplayCopies (pEl, pDoc, TRUE);
+	}
+      else if (pAttrAsc != NULL && suppress)
+	{
+	  /* applique les regles venant de l'heritage ou de la comparaison
+	     avec un ascendant */
+	  /* applique sur les elements du sous-arbre les regles de
+	     presentation venant de l'heritage de cet attribut par le
+	     sous-arbre, s'il existe des elements qui heritent */
+	  ApplyAttrPRulesToSubtree (pEl, pDoc, pAttrAsc, pElAttr);
+	  /* applique sur les elements du sous-arbre les regles de
+	     presentation venant de la comparaison d'un attribut de
+	     sous-arbre avec ce type d'attribut */
+	  ApplyAttrPRules (pEl, pDoc, pAttrAsc);
+	}
 
-	/* prepare et envoie a l'application l'evenement TteAttrCreate.Post */
-	if (notifyAttr.event == TteAttrCreate)
-	  notifyAttr.attribute = (Attribute) pAttr;
-	else if (notifyAttr.event == TteAttrDelete)
-	  notifyAttr.attribute = NULL;
-	CallEventAttribute (&notifyAttr, FALSE);
-     }
+      /* prepare et envoie a l'application l'evenement TteAttrCreate.Post */
+      if (notifyAttr.event == TteAttrCreate)
+	notifyAttr.attribute = (Attribute) pAttr;
+      else if (notifyAttr.event == TteAttrDelete)
+	notifyAttr.attribute = NULL;
+      CallEventAttribute (&notifyAttr, FALSE);
+    }
 }
 
 /*----------------------------------------------------------------------
