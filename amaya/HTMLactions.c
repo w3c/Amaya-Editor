@@ -2613,7 +2613,7 @@ static ThotBool ShowLogLine (Element el, Document doc)
 	       buffer = TtaGetMemory (len + 1);
 	       TtaGiveTextContent (el, buffer, &len, &lang);
 	       /* extract the line number and the index within the line */
-	       ptr = strstr (buffer, "line");
+	       ptr = strstr (buffer, "line ");
 	       if (ptr)
 		 sscanf (&ptr[4], "%d", &line);
 	       if (ptr)

@@ -3753,6 +3753,7 @@ void DisplayPRule (PtrPRule rule, FILE *fileDescriptor,
   /* display the rule */
   fprintf (fileDescriptor, "@%s", buffer);
   DisplayedRuleCounter++;
+  fprintf (fileDescriptor, ";");
   l = strlen (buffer);
   while (l < 30)
     {
