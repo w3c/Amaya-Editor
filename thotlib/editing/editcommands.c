@@ -2031,6 +2031,7 @@ int                 frame;
 		  BoxUpdate (pAb->AbBox, pLine, -charsDelta, -spacesDelta, -xDelta, -adjust, 0, frame, FALSE);
 		  CloseTextInsertion ();
 		  break;
+
 	       case LtPicture:
 		  /* pPa1->AbPictInfo->PicFileName->BuLength = 0; */
 		  /*ustrcpy(pPa1->AbPictInfo->PicFileName, ""); */
@@ -2050,8 +2051,13 @@ int                 frame;
 		       BoxUpdate (pBox, pLine, 0, 0, -xDelta, 0, -yDelta, frame, FALSE);
 		    }
 		  break;
+
 	       case LtSymbol:
 	       case LtGraphics:
+		  /* send an event to the application and register the change
+		     in the Undo queue */
+		  APPgraphicModify (pBox->BxAbstractBox->AbElement,
+				    (int) pAb->AbShape, frame, TRUE);
 		  if (defaultWidth)
 		     xDelta = pBox->BxWidth - width;
 		  else
@@ -2064,6 +2070,7 @@ int                 frame;
 		  pAb->AbVolume = 0;
 		  pAb->AbShape = EOS;
 		  break;
+
 	       default:
 		  break;
 	    }
