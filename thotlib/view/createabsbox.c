@@ -388,7 +388,7 @@ PtrAbstractBox InitAbsBoxes (PtrElement pEl, DocViewNumber view, int Visib,
    pAb->AbBottomBorder = 0;
    pAb->AbLeftBorder = 0;
 
-   pAb->AbFont = 'T';
+   pAb->AbFont = 1;
    pAb->AbLineStyle = 'S';
    pAb->AbAdjust = AlignLeft;
    pAb->AbSizeUnit = UnRelative;

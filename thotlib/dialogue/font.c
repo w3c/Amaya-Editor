@@ -40,16 +40,16 @@ static char         StylesTable[MAX_HIGHLIGHT] = "rbiogq";
 static int          MaxNumberOfSizes;
 static int          LogicalPointsSizes[MAX_LOG_SIZE] =
 {6, 8, 10, 12, 14, 16, 20, 24, 30, 40, 60};
-static char*        FontFamily;
+static char        *FontFamily;
+static char         GreekFontAlphabet;
 static ThotBool     UseLucidaFamily;
 static ThotBool     UseAdobeFamily;
-
 #ifdef _WINDOWS
 typedef struct FontCharacteristics {
         int   highlight; 
         int   size;
+        int   family; 
         char  alphabet; 
-        char  family; 
 }FontCharacteristics;
 
 typedef FontCharacteristics* ptrFC;
@@ -78,7 +78,7 @@ static SpecFont   FirstFontSel = NULL;
   WIN_LoadFont :  load a Windows TrueType with a defined set of
   characteristics.
   ----------------------------------------------------------------------*/
-static HFONT WIN_LoadFont (char alphabet, char family, int highlight,
+static HFONT WIN_LoadFont (char alphabet, int family, int highlight,
 			   int size, TypeUnit unit)
 {
    HFONT hFont;
@@ -97,53 +97,43 @@ static HFONT WIN_LoadFont (char alphabet, char family, int highlight,
    fdwUnderline = FALSE;
    fdwStrikeOut = FALSE;
 
-   if (alphabet != 'L' && alphabet != 'G' && alphabet != 'g')
-      return NULL;
    if (alphabet == 'g' || alphabet == 'G')
      {
-      family    = 's';
-      highlight = 0 ;
+       family    = 0; /* symbol */
+      highlight = 0;
      }
+   else if (alphabet != 'L')
+      return NULL;
 
    switch (family)
      {
-     case 'T':
-     case 't':
-       sprintf (&lpszFace[0], "Times New Roman");
-       break;
-
-     case 'H':
-     case 'h':
-       sprintf (&lpszFace[0], "Arial");
-       break;
-
-     case 'C':
-     case 'c':
-       sprintf (&lpszFace[0], "Courier New");
-       break;
-
-     case 'S':
-     case 's':
+     case 0:
        sprintf (&lpszFace[0], "Symbol");
        break;
-
+     case 1:
+       sprintf (&lpszFace[0], "Times New Roman");
+       break;
+     case 2:
+       sprintf (&lpszFace[0], "Arial");
+       break;
+     case 3:
+       sprintf (&lpszFace[0], "Courier New");
+       break;
      default:
        return NULL;
      }
 
-   switch (StylesTable[highlight])
+   switch (highlight)
      {
-     case 'r':
+     case 0:
        break;
-
-     case 'i':
-     case 'o':
+     case2:
+     case 3:
        fdwItalic = TRUE;
        break;
-
-     case 'b':
-     case 'g':
-     case 'q':
+     case 1:
+     case 4:
+     case 5:
        fnWeight = FW_BOLD;
        break;
 
@@ -700,20 +690,14 @@ PtrFont LoadFont (char *name)
 /*----------------------------------------------------------------------
   FontIdentifier computes the name of a Thot font.
   ----------------------------------------------------------------------*/
-void FontIdentifier (char alphabet, char family, int highlight, int size,
+void FontIdentifier (char alphabet, int family, int highlight, int size,
 		     TypeUnit unit, char r_name[10], char r_nameX[100])
 {
+  char        *cfamily = "sthc";
+  char        *wght, *slant;
+
   if (highlight > MAX_HIGHLIGHT)
     highlight = MAX_HIGHLIGHT;
-  if (alphabet == 'g' || alphabet == 'G')
-    {
-      highlight = 0;		/* roman only for symbols */
-      family = 's';		/* times only for symbols */
-      strcpy (r_nameX, "-");
-      strcat (r_nameX, "*");
-    }
-  else
-    strcpy (r_nameX, FontFamily);
 
   /* apply the current font zoom */
   if (unit == UnRelative)
@@ -729,14 +713,40 @@ void FontIdentifier (char alphabet, char family, int highlight, int size,
   else if (unit == UnPixel)
     size = PixelToPoint (size);
 
+  if (alphabet == 'g' || alphabet == 'G')
+    {
+      highlight = 0;		/* roman only for symbols */
+      family = 0;		/* times only for symbols */
+      strcpy (r_nameX, "-");
+      strcat (r_nameX, "*");
+    }
+  else if (alphabet != 'L')
+    {
+      if (highlight == 0 || highlight == 2 || highlight == 3)
+	wght = "medium";
+      else
+	wght = "bold";
+      if (highlight == 0 || highlight == 1)
+	slant = "r";
+      else
+	slant = "o";
+      sprintf (r_nameX, "-*-fixed-%s-%s-*-*-*-%d-*-*-*-*-iso8859-%c", wght, slant, size * 10, alphabet);
+      if (family > (int) strlen (cfamily))
+	family = 1;
+      sprintf (r_name, "%c%c%c%d", TOLOWER (alphabet), cfamily[family],
+	       StylesTable[highlight], size);
+      return;
+    }
+  else
+    strcpy (r_nameX, FontFamily);
   if (UseLucidaFamily)
     {
-      switch (TOLOWER (family))
+      switch (family)
 	{
-	case 't':
+	case 1:
 	  strcat (r_nameX, "bright");
 	  break;
-	case 'c':
+	case 3:
 	  strcat (r_nameX, "typewriter");
 	  break;
 	default:
@@ -746,19 +756,19 @@ void FontIdentifier (char alphabet, char family, int highlight, int size,
   else if (UseAdobeFamily)
     {
       strcat (r_nameX, "-");
-      switch (TOLOWER (family))
+      switch (family)
 	{
-	case 't':
+	case 0:
+	  strcat (r_nameX, "Symbol");
+	  break;
+	case 1:
 	  strcat (r_nameX, "new century schoolbook");
 	  break;
-	case 'h':
+	case 2:
 	  strcat (r_nameX, "helvetica");
 	  break;
-	case 'c':
+	case 3:
 	  strcat (r_nameX, "courier");
-	  break;
-	case 's':
-	  strcat (r_nameX, "Symbol");
 	  break;
 	default:
 	  strcat (r_nameX, "*");
@@ -768,19 +778,19 @@ void FontIdentifier (char alphabet, char family, int highlight, int size,
   else
     {
       strcat (r_nameX, "-");
-      switch (TOLOWER (family))
+      switch (family)
 	{
-	case 't':
+	case 0:
+	  strcat (r_nameX, "Symbol");
+	  break;
+	case 1:
 	  strcat (r_nameX, "times");
 	  break;
-	case 'h':
+	case 2:
 	  strcat (r_nameX, "helvetica");
 	  break;
-	case 'c':
+	case 3:
 	  strcat (r_nameX, "courier");
-	  break;
-	case 's':
-	  strcat (r_nameX, "Symbol");
 	  break;
 	default:
 	  strcat (r_nameX, "*");
@@ -788,29 +798,29 @@ void FontIdentifier (char alphabet, char family, int highlight, int size,
     }
   
   strcat (r_nameX, "-");
-  switch (TOLOWER (StylesTable[highlight]))
+  switch (highlight)
     {
-    case 'r':
+    case 0:
       strcat (r_nameX, "medium-r");
       break;
-    case 'i':
-    case 'o':
-      if (TOLOWER (family) == 'h' || TOLOWER (family) == 'c')
+    case 2:
+    case 3:
+      if (family == 2 || family == 3)
 	strcat (r_nameX, "medium-o");
       else
 	strcat (r_nameX, "medium-i");
       break;
-    case 'b':
-      if (UseLucidaFamily && TOLOWER (family) == 't')
+    case 1:
+      if (UseLucidaFamily && family == 1)
 	strcat (r_nameX, "demibold-r");
       else
 	strcat (r_nameX, "bold-r");
       break;
-    case 'g':
-    case 'q':
-      if (UseLucidaFamily && TOLOWER (family) == 't')
+    case 4:
+    case 5:
+      if (UseLucidaFamily && family == 1)
 	strcat (r_nameX, "demibold-i");
-      else if (TOLOWER (family) == 'h' || TOLOWER (family) == 'c')
+      else if (family == 2 || family == 2)
 	strcat (r_nameX, "bold-o");
       else
 	strcat (r_nameX, "bold-i");
@@ -818,17 +828,17 @@ void FontIdentifier (char alphabet, char family, int highlight, int size,
     }
 
   strcat (r_nameX, "-");
-  if (TOLOWER (family) == 'h')
+  if (family == 2)
     strcat (r_nameX, "normal");  /* narrow helvetica does not exist */
   else
     strcat (r_nameX, "*");
-  if (TOLOWER (family) == 's')
+  if (family == 0)
     sprintf (r_nameX, "%s-*-%d-*-75-75-p-*-*-fontspecific", r_nameX, size);
   else
     {
       sprintf (r_nameX, "%s-*-%d-*-75-75", r_nameX, size);
       strcat (r_nameX, "-");
-      if (TOLOWER (family) == 'c')
+      if (family == 3)
 	strcat (r_nameX, "m");
       else
 	strcat (r_nameX, "p");
@@ -846,15 +856,17 @@ void FontIdentifier (char alphabet, char family, int highlight, int size,
 	  r_nameX[strlen (r_nameX) -1] = alphabet;
 	}
     }
-
-  sprintf (r_name, "%c%c%c%d", TOLOWER (alphabet), TOLOWER (family),
+  /* generate the Postscript name */
+  if (family > (int) strlen (cfamily))
+    family = 1;
+  sprintf (r_name, "%c%c%c%d", TOLOWER (alphabet), cfamily[family],
 	   StylesTable[highlight], size);
 }
 
 /*----------------------------------------------------------------------
   ReadFont do a raw Thot font loading (bypasses the font cache).
   ----------------------------------------------------------------------*/
-PtrFont ReadFont (char alphabet, char family, int highlight, int size,
+PtrFont ReadFont (char alphabet, int family, int highlight, int size,
 		  TypeUnit unit)
 {
   char             name[10], nameX[100];
@@ -871,7 +883,7 @@ PtrFont ReadFont (char alphabet, char family, int highlight, int size,
   LoadNearestFont load the nearest possible font given a set of attributes
   like alphabet, family, the size and for a given frame.
   ----------------------------------------------------------------------*/
-static PtrFont LoadNearestFont (char alphabet, char family, int highlight,
+static PtrFont LoadNearestFont (char alphabet, int family, int highlight,
 				int size, TypeUnit unit, int frame,
 				ThotBool increase)
 {
@@ -1096,19 +1108,21 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c,
 				       PtrFont *font)
 {
 #ifdef _I18N_
-  PtrFont            lfont;
+  PtrFont            lfont, *pfont;
+  CHARSET            encoding;
   unsigned char      car;
   int                mask, frame;
 
   lfont = NULL;
   if (fontset)
     {
-      if (c < 255)
+      if (c < 0xFF)
 	{
+	  /* 0 -> FF */
 	  lfont = fontset->FontIso_1;
 	  car = c;
 	}
-      else if (c >= 880 && c < 1023)
+      else if (c >= 0x370 && c < 0x3FF)
 	{
 	  if (fontset->FontIso_7 == NULL)
 	    {
@@ -1117,17 +1131,91 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c,
 		{
 		  mask = 1 << (frame - 1);
 		  if (fontset->FontMask | mask)
-		    lfont = LoadNearestFont ('G', fontset->FontFamily,
+		    lfont = LoadNearestFont (GreekFontAlphabet, fontset->FontFamily,
 					     fontset->FontHighlight,
 					     fontset->FontSize, UnPoint,
 					     frame, TRUE);
+		  if (GreekFontAlphabet == '7' && lfont == NULL)
+		    {
+		      /* use symbol instead of ISO_8859_7 */
+		      GreekFontAlphabet = 'G';
+		    lfont = LoadNearestFont (GreekFontAlphabet, fontset->FontFamily,
+					     fontset->FontHighlight,
+					     fontset->FontSize, UnPoint,
+					     frame, TRUE);
+		    }
 		}
 	      fontset->FontIso_7 = lfont;
 	    }
 	  else
 	    lfont = fontset->FontIso_7;
-	  /* using the font symbol instead of ISO_8859_7 */
-	  car = TtaGetCharFromWC (c, ISO_SYMBOL);
+	  if (GreekFontAlphabet == '7')
+	    car = TtaGetCharFromWC (c, ISO_8859_7);
+	  else
+	    /* using the font symbol instead of ISO_8859_7 */
+	    car = TtaGetCharFromWC (c, ISO_SYMBOL);
+	}
+      else
+	{
+	  if (c < 0x17F)
+	    {
+	      car = '2';
+	      pfont = &(fontset->FontIso_2);
+	      encoding = ISO_8859_2;
+	    }
+	  else if (c < 0x24F)
+	    {
+	      car = '3';
+	      pfont = &(fontset->FontIso_3);
+	      encoding = ISO_8859_3;
+	    }
+	  else if (c < 0x2AF)
+	    {
+	      car = '4';
+	      pfont = &(fontset->FontIso_4);
+	      encoding = ISO_8859_4;
+	    }
+	  else if (c < 0x2FF)
+	    {
+	      car = '5';
+	      pfont = &(fontset->FontIso_5);
+	      encoding = ISO_8859_5;
+	    }
+	  else if (c < 0x36F)
+	    {
+	      car = '6';
+	      pfont = &(fontset->FontIso_6);
+	      encoding = ISO_8859_6;
+	    }
+	  else if (c < 0x4FF)
+	    {
+	      car = '8';
+	      pfont = &(fontset->FontIso_8);
+	      encoding = ISO_8859_8;
+	    }
+	  else if (c < 0x5FF)
+	    {
+	      car = '9';
+	      pfont = &(fontset->FontIso_9);
+	      encoding = ISO_8859_9;
+	    }
+	  if (*pfont == NULL)
+	    {
+	      /* load that font */
+	      for (frame = 1; frame <= MAX_FRAME; frame++)
+		{
+		  mask = 1 << (frame - 1);
+		  if (fontset->FontMask | mask)
+		    lfont = LoadNearestFont ('2', fontset->FontFamily,
+					     fontset->FontHighlight,
+					     fontset->FontSize, UnPoint,
+					     frame, TRUE);
+		}
+	      *pfont = lfont;
+	    }
+	  else
+	    lfont = *pfont;
+	  car = TtaGetCharFromWC (c, encoding);
 	}
     }
   /* when any font is available */
@@ -1215,7 +1303,7 @@ static void RemoveFontInFontSets (PtrFont font, int mask)
 /*----------------------------------------------------------------------
   LoadFontSet allocate a font set and load the ISO-latin-1 font.
   ----------------------------------------------------------------------*/
-static SpecFont LoadFontSet (char alphabet, char family, int highlight,
+static SpecFont LoadFontSet (char alphabet, int family, int highlight,
 			     int size, TypeUnit unit, int frame,
 			     ThotBool increase)
 {
@@ -1264,7 +1352,7 @@ static SpecFont LoadFontSet (char alphabet, char family, int highlight,
   ThotLoadFont try to load a font given a set of attributes like alphabet,
   family, the size and for a given frame.
   ----------------------------------------------------------------------*/
-SpecFont ThotLoadFont (char alphabet, char family, int highlight, int size,
+SpecFont ThotLoadFont (char alphabet, int family, int highlight, int size,
 		       TypeUnit unit, int frame)
 {
   if (unit == UnPixel)
@@ -1337,6 +1425,7 @@ void InitDialogueFonts (char *name)
   TtaGetEnvInt ("ZOOM", &FontZoom);
   value = TtaGetEnvString ("FontFamily");
   MaxNumberOfSizes = 10;
+  GreekFontAlphabet = '7';
   if (value == NULL)
     {
       FontFamily = TtaGetMemory (8);

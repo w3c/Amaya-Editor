@@ -33,14 +33,14 @@ extern int FontRelSize ( int size );
 extern int FontPointSize ( int size );
 extern PtrFont LoadFont ( char *name );
 extern void FontIdentifier ( char alphabet,
-                             char family,
+                             int family,
                              int highlight,
                              int size,
                              TypeUnit unit,
                              char r_name[10],
                              char r_nameX[100] );
 extern PtrFont ReadFont ( char alphabet,
-                          char family,
+                          int family,
                           int highlight,
                           int size,
                           TypeUnit unit );
@@ -48,7 +48,7 @@ extern unsigned char GetFontAndIndexFromSpec ( CHAR_T c,
                                                SpecFont fontset,
                                                PtrFont *font );
 extern SpecFont ThotLoadFont ( char alphabet,
-                               char family,
+                               int family,
                                int highlight,
                                int size,
                                TypeUnit unit,
@@ -87,14 +87,14 @@ extern int FontRelSize (/* int size */);
 extern int FontPointSize (/* int size */);
 extern PtrFont LoadFont (/* char *name */);
 extern void FontIdentifier (/* char alphabet,
-                               char family,
+                               int family,
                                int highlight,
                                int size,
                                TypeUnit unit,
                                char r_name[10],
                                char r_nameX[100] */);
 extern PtrFont ReadFont (/* char alphabet,
-                            char family,
+                            int family,
                             int highlight,
                             int size,
                             TypeUnit unit */);
@@ -102,7 +102,7 @@ extern unsigned char GetFontAndIndexFromSpec (/* CHAR_T c,
                                                  SpecFont fontset,
                                                  PtrFont *font */);
 extern SpecFont ThotLoadFont (/* char alphabet,
-                                 char family,
+                                 int family,
                                  int highlight,
                                  int size,
                                  TypeUnit unit,

@@ -43,9 +43,9 @@
 
 typedef struct _item
   {
-     char          name;
+     char          index;
      unsigned char value;
-     char*         legend;
+     char         *legend;
   }
 ITEM;
 
@@ -411,17 +411,16 @@ static void KbdEndDisplay (ThotWidget w, int index, caddr_t call_d)
 }
 
 /*----------------------------------------------------------------------
-   KbdCallbackHandler
-   handles the keyboard keys.
+  KbdCallbackHandler handles the keyboard keys.
   ----------------------------------------------------------------------*/
 void KbdCallbackHandler (ThotWidget w, int param, caddr_t call_d)
 {
-   unsigned char       car;
+    CHAR_T             car;
    ThotWidget          wp;
    int                 i;
 
    /* Recupere la table des items */
-   car = (unsigned char) param % 256;
+   car = (CHAR_T) param % 256;
    /* Recupere le widget de la palette */
 #ifndef _GTK
 #ifndef _WINDOWS
@@ -440,7 +439,15 @@ void KbdCallbackHandler (ThotWidget w, int param, caddr_t call_d)
        if(Keyboards[i] == wp)
          KeyboardMode = i;
      }
-   /* Insere le caractere selectionne */
+   /* Insert the selected character */
+#ifdef _I18N_
+   if (KeyboardMode == 3 &&
+      (car >= 65 && car <= 90) || (car >= 97 && car <= 122))
+     {
+       /* give the unicode value instead of the symbol index */
+       car = TtaGetWCFromChar ((unsigned char) car, ISO_SYMBOL);
+     }
+#endif /* _I18N_ */
    if (ThotLocalActions[T_insertchar] != NULL)
       (*ThotLocalActions[T_insertchar]) (ActiveFrame, car, KeyboardMode);
 }
@@ -450,7 +457,8 @@ void KbdCallbackHandler (ThotWidget w, int param, caddr_t call_d)
 /*----------------------------------------------------------------------
   ExposeKbd displays the keyboard keys
   ----------------------------------------------------------------------*/
-static void ExposeKbd (ThotWidget w, int param, XmDrawnButtonCallbackStruct * infos)
+static void ExposeKbd (ThotWidget w, int param,
+		       XmDrawnButtonCallbackStruct *infos)
 {
   int                 y;
   int                 i, kb;
@@ -475,7 +483,7 @@ static void ExposeKbd (ThotWidget w, int param, XmDrawnButtonCallbackStruct * in
   y = 4;
   i = param % 256;		/* indice dans la table des items */
   it = (ITEM *) ((int) it + (sizeof (ITEM) * i));
-  WChar (infos->window, it->name, CharacterWidth (87, FontDialogue), y, GXcopy, KbFonts[kb], 0, GCkey);
+  WChar (infos->window, it->index, CharacterWidth (87, FontDialogue), y, GXcopy, KbFonts[kb], 0, GCkey);
   if (it->legend)
     {
       y = FontHeight (KbFonts[kb]);
@@ -635,7 +643,7 @@ static void CreateKeyboard (int number, char *title, PtrFont pFont,
 	n++;
 	for (i = 0; i < nbitem; i++, it++)
 	  {
-	     string[0] = it->name;
+	     string[0] = it->index;
 	     string[1] = EOS;
 	     w = XmCreatePushButton (row, string, args, n);
 	     XtManageChild (w);
@@ -657,7 +665,7 @@ static void CreateKeyboard (int number, char *title, PtrFont pFont,
 
 	for (i = 0; i < nbitem; i++, it++)
 	  {
-	     string[0] = it->name;
+	     string[0] = it->index;
 	     string[1] = '\n';
 	     w = XmCreateDrawnButton (row, "", args, n);
 	     XtManageChild (w);
@@ -744,7 +752,7 @@ static void CreateKeyboard (int number, char *title, PtrFont pFont,
 	      gtk_box_pack_start (GTK_BOX (hbox1), vbox5, TRUE, TRUE, 0);
 	      j++;
 	    }
-	  string[0] = it->name;
+	  string[0] = it->index;
 	  string[1] = EOS;
 	  button1 = gtk_button_new ();
 	  gtk_widget_show (button1);
@@ -775,7 +783,7 @@ static void CreateKeyboard (int number, char *title, PtrFont pFont,
 	      j++;
 	    }
 	  
-	  string[0] = it->name;
+	  string[0] = it->index;
 	  string[1] = '\n';
 	  button1 = gtk_button_new ();
 	  gtk_widget_show (button1);
@@ -819,7 +827,7 @@ static void LoadKbd (int number)
 	}
       break;
     case 2:		/* ISO latin 1 */
-      pFontAc = ReadFont ('L', 'T', 0, 14, UnPoint);
+      pFontAc = ReadFont ('L', 1, 0, 14, UnPoint);
       if (!pFontAc)
 	pFontAc = FontDialogue;
       KbFonts[number] = pFontAc;
@@ -828,7 +836,7 @@ static void LoadKbd (int number)
 			KbX, KbY, Items_Isol, sizeof (Items_Isol) / sizeof (ITEM));
       break;
     case 3:		/* Greek */
-      pFontIg = ReadFont ('G', 'T', 0, 14, UnPoint);
+      pFontIg = ReadFont ('G', 1, 0, 14, UnPoint);
       /*pFontIg = LoadFont ("-ttf-esstixone-*-*-*-*-14-*-*-*-*-*-*-*");*/
       if (!pFontIg)
 	pFontIg = FontDialogue;

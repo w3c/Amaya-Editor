@@ -351,7 +351,7 @@ void DrawPoints (int frame, int x, int y, int boxWidth, int fg)
    char               *ptcar;
    int                 xcour, width, nb;
 
-   font = ThotLoadFont ('L', 't', 0, 6, UnPoint, frame);
+   font = ThotLoadFont ('L', 1, 0, 6, UnPoint, frame);
    if (boxWidth > 0)
      {
 	w = FrRef[frame];

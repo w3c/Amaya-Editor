@@ -3319,7 +3319,10 @@ static void         StartOfEntity (char c)
   ----------------------------------------------------------------------*/
 void GetFallbackCharacter (int code, unsigned char *fallback, Language *lang)
 {  
-  int	     i;
+#ifdef _I18N_
+  unsigned char *ptr;
+#endif /* _I18N_ */
+  int	         i;
 
   fallback[0] = EOS;
   fallback[1] = EOS;
@@ -3334,10 +3337,11 @@ void GetFallbackCharacter (int code, unsigned char *fallback, Language *lang)
       fallback[0]= '?';
     }
 #ifdef _I18N_
-  else if (code >= 880 && code < code)
+  else if (code < 1023)
     {
-      /* get the UTF-8 string of the greek character */
-      i = TtaWCToMBstring (code, &fallback);
+      /* get the UTF-8 string of the unicode character */
+      ptr = fallback;
+      i = TtaWCToMBstring (code, &ptr);
       fallback[i] = EOS;
     }
 #endif /* _I18N_ */
@@ -3384,7 +3388,8 @@ void GetFallbackCharacter (int code, unsigned char *fallback, Language *lang)
 	{
 	  /* get the UTF-8 string */
 	  code = fallback[0];
-	  i = TtaWCToMBstring (code, &fallback);
+	  ptr = fallback;
+	  i = TtaWCToMBstring (code, &ptr);
 	  fallback[i] = EOS;
 	}
 #endif /* _I18N_ */
@@ -4315,9 +4320,7 @@ void                   FreeHTMLParser (void)
 static char GetNextChar (FILE *infile, char* buffer, int *index,
 			 ThotBool *endOfFile)
 {
-#ifndef _I18N_
   wchar_t        wcharRead = EOS;
-#endif /* _I18N_ */
   unsigned char  charRead;
   unsigned char  fallback[5];
   unsigned char  extrabuf[7];
@@ -4349,7 +4352,8 @@ static char GetNextChar (FILE *infile, char* buffer, int *index,
 	    {
 	      /* translate the ISO-latin-1 character into a UTF-8 string */
 	      ptr = fallback;
-	      res = TtaWCToMBstring ((wchar_t) charRead, &ptr);
+	      wcharRead = TtaGetWCFromChar (charRead, HTMLcontext.encoding);
+	      res = TtaWCToMBstring (wcharRead, &ptr);
 	      /* handle the first character */
 	      charRead = fallback[0];
 	      if (res > 1)
@@ -4417,7 +4421,8 @@ static char GetNextChar (FILE *infile, char* buffer, int *index,
 		{
 		  /* translate the ISO-latin-1 character into a UTF-8 string */
 		  ptr = fallback;
-		  res = TtaWCToMBstring ((wchar_t) charRead, &ptr);
+		  wcharRead = TtaGetWCFromChar (charRead, HTMLcontext.encoding);
+		  res = TtaWCToMBstring (wcharRead, &ptr);
 		  /* handle the first character */
 		  charRead = fallback[0];
 		  if (res > 1)

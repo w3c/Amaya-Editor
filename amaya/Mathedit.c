@@ -2976,10 +2976,10 @@ static void InsertMathEntity (unsigned char *entityName, Document document)
   AttributeType attrType;
   int           firstChar, lastChar, i, len;
   ThotBool      before, done, found;
-  char        buffer[MAX_LENGTH+2];
+  char          buffer[MAX_LENGTH+2];
+  char	        bufEntity[10], *ptr;
   int           value;
   Language      lang;
-  char	bufEntity[8];
 
   if (!TtaIsSelectionEmpty ())
     return;
@@ -2996,7 +2996,7 @@ static void InsertMathEntity (unsigned char *entityName, Document document)
      selected */
   before = TRUE;
   sibling = firstSel;
-
+  ptr = NULL;
   /* create a Thot TEXT element */
   elType1.ElSSchema = elType.ElSSchema;
   elType1.ElTypeNum = MathML_EL_TEXT_UNIT;
@@ -3072,6 +3072,15 @@ static void InsertMathEntity (unsigned char *entityName, Document document)
       bufEntity[1] = EOS;
       lang = TtaGetLanguageIdFromAlphabet('L');
     }
+#ifdef _I18N_
+  else if (value < 1023)
+    {
+      /* get the UTF-8 string of the unicode character */
+      ptr = bufEntity;
+      i = TtaWCToMBstring (value, &ptr);
+      bufEntity[i] = EOS;
+    }
+#endif /* _I18N_ */
   else
     {
       if (value < 255)

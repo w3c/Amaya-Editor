@@ -2134,8 +2134,8 @@ static unsigned char *HandleXMLstring (unsigned char *data, int *length,
 				       Element element, ThotBool stdText)
 {
   unsigned char *buffer;
-#ifndef _I18N_
   unsigned char *ptr;
+#ifndef _I18N_
   wchar_t        wcharRead;
   int            tmplen;
   unsigned char  tmpbuf[10];
@@ -2175,9 +2175,18 @@ static unsigned char *HandleXMLstring (unsigned char *data, int *length,
 		  entityName[l] = EOS;
 		  found = MapXMLEntity (currentParserCtxt->XMLtype,
 					&entityName[1], &entityValue);
+#ifdef _I18N_
+		  if (found && entityValue < 1023)
+		    {
+		      /* get the UTF-8 string of the unicode character */
+		      ptr = &buffer[j];
+		      j += TtaWCToMBstring (entityValue, &ptr);
+		    }
+#else /* _I18N_ */
 		  if (found && entityValue <= 255)
 		    /* store the ISO latin1 character */
 		    buffer[j++] = entityValue;
+#endif /* _I18N_ */
 		  else if (found && element)
 		    {
 		      if (stdText)

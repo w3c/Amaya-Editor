@@ -1104,7 +1104,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		  if (nbcar > 0)
 		    {
 		      x += DrawString (buffer, nbcar, frame, x, y,
-				       nextfont, 0, bl, 0, blockbegin, fg, shadow);
+				       prevfont, 0, bl, 0, blockbegin, fg, shadow);
 		      /* all previous spaces are declared */
 		      bl = 0;
 		    }
@@ -1153,7 +1153,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		  bl = 0;
 		  prevfont = nextfont;
 		  DrawRectangle (frame, 1, 5, x, y, 6, pBox->BxH - 1, fg, 0, 0);
-		  x += whitespace;
+		  x += 6;
 		}
 	      else
 		{
@@ -1196,14 +1196,14 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		call the function in any case to let Postscript justify the
 		text of the box.
 	      */
-	      x += DrawString (buffer, nbcar, frame, x, y, nextfont, width,
+	      x += DrawString (buffer, nbcar, frame, x, y, prevfont, width,
 			       bl, hyphen, blockbegin, fg, shadow);
 	      if (pBox->BxUnderline != 0)
 		DisplayUnderline (frame, x, y, nextfont,
 				  pBox->BxUnderline, width, fg);
 	      /* Next char lookup */
-	      if ((bchar == BREAK_LINE || bchar == NEW_LINE) && !ShowSpace)
-		DrawChar (SHOWN_BREAK_LINE, frame, x, y, nextfont, fg);
+	      /*if ((bchar == BREAK_LINE || bchar == NEW_LINE) && !ShowSpace)
+		DrawChar (SHOWN_BREAK_LINE, frame, x, y, nextfont, fg);*/
 	      nbcar = 0;
 	    }
 	} 

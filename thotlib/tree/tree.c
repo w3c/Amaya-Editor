@@ -2945,13 +2945,13 @@ PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
 
   pEl = NULL;
   /* pointer to the element that will be created */
-  if (pSource != NULL && pSSchema != NULL)
+  if (pSource && pSSchema)
     {
       doCopy = TRUE;
       /* we don't copy the page breaks */
       if (pSource->ElTerminal && pSource->ElLeafType == LtPageColBreak)
 	doCopy = FALSE;
-      else if (pSource->ElSource != NULL)
+      else if (pSource->ElSource)
 	{
 	  /* this element is an inclusion copy. We don't copy it if it was
 	     created before or after a page break (e.g., the table headers) */

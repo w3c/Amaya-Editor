@@ -357,13 +357,25 @@ static char CharRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
 
    val = SPACE;
    *ok = TRUE;
-   if (pPRule != NULL && pEl != NULL)
+   if (pPRule && pEl)
      {
      switch (pPRule->PrPresMode)
 	{
 	case PresFunction:
 	   break;
 	case PresImmediate:
+	  if (pPRule->PrType == PtFont)
+	    {
+	      if (pPRule->PrChrValue == 't' ||
+		  pPRule->PrChrValue == 'T')
+		val = 1;
+	      else if (pPRule->PrChrValue == 'h' ||
+		       pPRule->PrChrValue == 'H')
+		val = 2;
+	      else
+		val = 3;
+	    }
+	  else
 	   val = pPRule->PrChrValue;
 	   break;
 	case PresInherit:
@@ -573,7 +585,7 @@ int IntegerRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
    val = 0;
    *ok = TRUE;
    *unit = UnRelative;
-   if (pPRule != NULL && pEl != NULL)
+   if (pPRule && pEl)
      {
      done = FALSE;
      if (pAb && !pAb->AbInLine)
@@ -2949,7 +2961,7 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
   PresConstant	     *pConst;
   PathBuffer	      directoryName;
   char                fname[MAX_PATH];
-  char                c;
+  unsigned char       c;
   int                 viewSch, i;
   ThotBool            appl;
   ThotBool            insidePage, afterPageBreak;
@@ -3205,15 +3217,14 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 	    break;
 
 	  case PtFont:
-	    pAb->AbFont = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
+	    c = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
 	    if (!appl && pAb->AbElement->ElParent == NULL)
 	      {
-		pAb->AbFont = 'T';
+		pAb->AbFont = 1;
 		appl = TRUE;
 	      }
-	    if (pAb->AbFont >= 'a' && pAb->AbFont <= 'z')
-	      /* on n'utilise que des majuscules pour les noms de police */
-	      pAb->AbFont = (char) ((int) (pAb->AbFont) - 32);
+	    else
+	      pAb->AbFont = (int) c & 0xFF;
 	    break;
 
 	  case PtStyle:

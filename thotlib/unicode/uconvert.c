@@ -21,6 +21,26 @@
 
 extern unsigned long offset[6];
 
+unsigned short ISO_SYMBOL_Map [] = {
+    0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
+    0x0008, 0x0009, 0x000A, 0x000B, 0x000C, 0x000D, 0x000E, 0x000F,
+    0x0010, 0x0011, 0x0012, 0x0013, 0x0014, 0x0015, 0x0016, 0x0017,
+    0x0018, 0x0019, 0x001A, 0x001B, 0x001C, 0x001D, 0x001E, 0x001F,
+    0x0020, 0x0021, 0x0022, 0x0023, 0x0024, 0x0025, 0x0026, 0x0027,
+    0x0028, 0x0029, 0x002A, 0x002B, 0x002C, 0x002D, 0x002E, 0x002F,
+    0x0030, 0x0031, 0x0032, 0x0033, 0x0034, 0x0035, 0x0036, 0x0037,
+    0x0038, 0x0039, 0x003A, 0x003B, 0x003C, 0x003D, 0x003E, 0x003F,
+    0x0040, 0x0391, 0x0392, 0x02A7, 0x0394, 0x0295, 0x03A6, 0x0393,
+    0x0397, 0x0399, 0x03D1, 0x039A, 0x039B, 0x039C, 0x039D, 0x039F,
+    0x03A0, 0x0398, 0x03A1, 0x03A3, 0x03A4, 0x03A5, 0x03DA, 0x03A9,
+    0x039E, 0x03A8, 0x0396, 0x005B, 0x005C, 0x005D, 0x005E, 0x005F,
+    0x0060, 0x03B1, 0x03B2, 0x03C7, 0x03B4, 0x03B5, 0x03C6, 0x03B3,
+    0x03B7, 0x03B9, 0x03C6, 0x03BA, 0x03BB, 0x03BC, 0x03BD, 0x03BF,
+    0x03C0, 0x03B8, 0x03C1, 0x03C3, 0x03C4, 0x03C5, 0x03D6, 0x03C9,
+    0x03BE, 0x03C8, 0x03B6, 0x007B, 0x007C, 0x007D, 0x007E, 0x007F,
+};
+#define ISO_SYMBOL_length sizeof(ISO_SYMBOL_Map) / sizeof(unsigned short);
+
 unsigned short ISO_8859_2_Map [] = {
     0x0080, 0x0081, 0x0082, 0x0083, 0x0084, 0x0085, 0x0086, 0x0087,
     0x0088, 0x0089, 0x008A, 0x008B, 0x008C, 0x008D, 0x008E, 0x008F,
@@ -125,7 +145,6 @@ unsigned short ISO_8859_6_Map [] = {
 
 /* Greek */
 unsigned short ISO_8859_7_Map [] = {
-    0x007F,
     0x0080, 0x0081, 0x0082, 0x0083, 0x0084, 0x0085, 0x0086, 0x0087, 
     0x0088, 0x0089, 0x008A, 0x008B, 0x008C, 0x008D, 0x008E, 0x008F, 
     0x0090, 0x0091, 0x0092, 0x0093, 0x0094, 0x0095, 0x0096, 0x0097, 
@@ -364,24 +383,22 @@ unsigned short WIN1257CP [] = {
   ----------------------------------------------------------------------*/
 unsigned char TtaGetCharFromWC (wchar_t wc, CHARSET encoding)
 {
-  unsigned int  c, max;
+  unsigned int  c, max, base = 128;
   unsigned short *table;
 
-  if (wc < 127)
+  if (wc < 128)
     /* ASCII character */
     return (unsigned char) wc;
-  else if (encoding == ISO_SYMBOL &&
-	   wc >= 880 && wc < 1377)
-    {
-      /* using the font symbol instead of ISO_8859_7 */
-      wc -= 848;
-      return (unsigned char) wc;
-    }
   else
     {
       /* look for the right table */
       switch (encoding)
 	{
+	case ISO_SYMBOL:
+	  base = 0;
+	  table = ISO_SYMBOL_Map;
+	  max = ISO_SYMBOL_length;
+	  break;
 	case ISO_8859_2:
 	  table = ISO_8859_2_Map;
 	  max = ISO_8859_2_length;
@@ -455,7 +472,7 @@ unsigned char TtaGetCharFromWC (wchar_t wc, CHARSET encoding)
       while (table[c] != wc && c < max)
 	c++;
       if (c < max)
-	return (unsigned char) (c + 127);
+	return (unsigned char) (c + base);
       else
 	return (unsigned char) wc;
     }
@@ -471,21 +488,19 @@ wchar_t TtaGetWCFromChar (unsigned char c, CHARSET encoding)
   unsigned int  val, max;
   unsigned short *table;
 
-  if (c < 127)
-    {
-      /* using the font symbol instead of ISO_8859_7 */
-      if (encoding == ISO_SYMBOL)
-	/* not sure it works for Greek */
-	return (wchar_t)(c + 848);
-      else
-	return (wchar_t) c;
-    }
+  if (c < 128 && encoding != ISO_SYMBOL)
+    return (wchar_t) c;
   else
     {
-      val = c - 127;
+      if (encoding != ISO_SYMBOL)
+	val = c - 128;
       /* look for the right table */
       switch (encoding)
 	{
+	case ISO_SYMBOL:
+	  table = ISO_SYMBOL_Map;
+	  max = ISO_SYMBOL_length;
+	  break;
 	case ISO_8859_2:
 	  table = ISO_8859_2_Map;
 	  max = ISO_8859_2_length;

@@ -2590,7 +2590,7 @@ LRESULT CALLBACK ChangeFormatDlgProc (ThotWindow hwnDlg, UINT msg,
  GreekKeyboardDlgProc
  ------------------------------------------------------------------------*/
 LRESULT CALLBACK GreekKeyboardDlgProc (ThotWindow hwnDlg, UINT msg,
-									   WPARAM wParam, LPARAM lParam)
+				       WPARAM wParam, LPARAM lParam)
 {
   int    car;
 
@@ -3111,7 +3111,7 @@ LRESULT CALLBACK GreekKeyboardDlgProc (ThotWindow hwnDlg, UINT msg,
  AuthentificationDlgProc
  ------------------------------------------------------------------------*/
 LRESULT CALLBACK AuthentificationDlgProc (ThotWindow hwnDlg, UINT msg,
-										  WPARAM wParam, LPARAM lParam)
+					  WPARAM wParam, LPARAM lParam)
 {
   static ThotWindow hwnNameEdit;
   static ThotWindow hwnPasswdEdit;

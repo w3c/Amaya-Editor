@@ -2542,7 +2542,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	    pBox->BxFont = ThotLoadFont ('G', pAb->AbFont, FontStyleAndWeight (pAb),
 					 height, unit, frame);
 	  else
-	    pBox->BxFont = ThotLoadFont ('L', 'T', 0, height, unit, frame);
+	    pBox->BxFont = ThotLoadFont ('L', 1, 0, height, unit, frame);
 	  
 	  /* On transmet l'information souligne dans la boite */
 	  pBox->BxUnderline = pAb->AbUnderline;

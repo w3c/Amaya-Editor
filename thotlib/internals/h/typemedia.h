@@ -23,8 +23,8 @@
 typedef struct _FontSet      *SpecFont;
 typedef struct _FontSet {
   SpecFont      NextFontSet;
-  char          FontFamily; /* to be changed */
   ThotBool      specificFont; /* TRYE when the specific font is used */
+  int           FontFamily;
   int           FontHighlight;
   int           FontSize;
   int           FontFrames;
@@ -408,6 +408,7 @@ typedef struct _AbstractBox
   int             AbIndent;	/* Indentation for line breaking */
   int             AbDepth;	/* Abstract box display plane */
   int	          AbVisibility; /* Abstract box visibility degree */
+  int             AbFont;	/* Font family: index in the family table */
   int             AbFontStyle;	/* Font style: roman, italic, oblique */
   int             AbFontWeight;	/* Font weight: normal, bold */
   int             AbSize;	/* Character logical/real size */
@@ -439,7 +440,6 @@ typedef struct _AbstractBox
   int             AbBottomBorder;  /* Bottom Border */
   int             AbLeftBorder;    /* Left Border */
 
-  char            AbFont;	      /* Characteristics of the font used */
   char            AbLineStyle;        /* Line style */
   BAlignment      AbAdjust;	      /* Alignment of lines in the box */
   TypeUnit        AbSizeUnit;         /* Unit for the size */

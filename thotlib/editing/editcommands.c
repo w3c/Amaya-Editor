@@ -947,10 +947,7 @@ static ThotBool GiveAbsBoxForLanguage (int frame, PtrAbstractBox *pAb, int keybo
       language = TtaGetDefaultLanguage ();
   else if (keyboard == 3)
     /* insert a character form the greek palette */
-    if (TtaGetAlphabet (plang) == 'G')
-      language = plang;
-    else
-      language = TtaGetLanguageIdFromAlphabet ('G');
+    language = TtaGetLanguageIdFromAlphabet ('G');
   else
     language = 0;
 
