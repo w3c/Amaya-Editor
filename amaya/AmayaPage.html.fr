@@ -22,16 +22,9 @@
 </head>
 
 <body xml:lang="fr" lang="fr">
-<p align="center"><svg xmlns="http://www.w3.org/2000/svg" width="600"
-height="349">
-  <image id="backgroundImage" x="0" y="0" width="466" height="349"
-         xlink:href="amaya.png">
-    <desc>Leading the Web to its full potential</desc>
-  </image>
-  <text y="218px" x="477px" xmlns:xlink="http://www.w3.org/1999/xlink"
-  xlink:type="simple" xlink:href="http://www.w3.org"
-  style="fill:#dc5b53; font: bold 16px">W3C
-  </text>
+<p align="center"><svg xmlns="http://www.w3.org/2000/svg" width="604"
+height="352">
+  <rect x="0" y="0" width="604" height="352" style="fill: #E1E1E1"/>
   <text y="38px" x="477px" xmlns:xlink="http://www.w3.org/1999/xlink"
   xlink:type="simple" xlink:href="http://www.w3.org/Amaya"
   style="fill:#dc5b53; font: bold 16px">Amaya au W3C
@@ -56,69 +49,79 @@ height="349">
   xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple"
   xlink:href="../doc/amaya/SVG.html.fr">SVG
   </text>
-  <defs>
-    <symbol id="cube">
-      <polygon points="0,1  5,6  5,21  0,16" stroke-width="1"/>
-      <polygon points="1,0  16,0  21,5  6,5" stroke-width="1"/>
-      <rect x="6" y="6" width="15" height="15" stroke-width="1"/>
-    </symbol>
-  </defs>
-  <g id="cubes">
-    <use x="200" y="112" xlink:href="#cube" style="fill: #0192BF"/>
-    <use x="230" y="112" xlink:href="#cube" style="fill: #2B9FC3"/>
-    <use x="260" y="112" xlink:href="#cube" style="fill: #53AAC5"/>
-    <use x="290" y="112" xlink:href="#cube" style="fill: #7AB4C6"/>
-    <use x="320" y="112" xlink:href="#cube" style="fill: #A3C0C9"/>
-    <use x="350" y="112" xlink:href="#cube" style="fill: #A3C0C9"/>
-    <use x="380" y="112" xlink:href="#cube" style="fill: #A3C0C9"/>
-    <use x="410" y="112" xlink:href="#cube" style="fill: #EC1608"/>
-    <use x="410" y="142" xlink:href="#cube" style="fill: #E2372C"/>
-    <use x="350" y="172" xlink:href="#cube" style="fill: #DAAFAC"/>
-    <use x="380" y="172" xlink:href="#cube" style="fill: #DF8984"/>
-    <use x="410" y="172" xlink:href="#cube" style="fill: #DC5B53"/>
-  </g>
-  <text id="logo" x="304" y="162"
-  style="font: 24px helvetica; font-weight: bold; fill: #488B9B;">AMAYA
+  <text y="218px" x="477px" xmlns:xlink="http://www.w3.org/1999/xlink"
+  xlink:type="simple" xlink:href="http://www.w3.org"
+  style="fill:#dc5b53; font: bold 16px">W3C
   </text>
-  <text id="version" x="320px" y="306"
-  style="font: bold 16px italic; fill: #0192BF;">Release 5.0 alpha
-  </text>
-  <g id="polygonMask" style="stroke: none;">
-    <polygon style="fill: #0192BF;" points="30,60  30,230  108,208"
-             stroke-width="1"/>
-    <foreignObject y="156px" x="35px">
-      xmlns="http://www.w3.org/1999/xhtml" 
-      <math xmlns="http://www.w3.org/1998/Math/MathML"
-      style="color: #FFFFFF; font-family: times">
-        <mrow>
-          <mi>y</mi>
-          <mo>=</mo>
-          <mfrac>
-            <mn>1</mn>
-            <msqrt>
-              <mrow>
-                <msup>
-                  <mi>x</mi>
-                  <mn>2</mn>
-                </msup>
-                <mo>+</mo>
-                <mn>1</mn>
-              </mrow>
-            </msqrt>
-          </mfrac>
-        </mrow>
-      </math>
-    </foreignObject>
-    <polygon style="fill: #9EA4A6;" points="30,60  108,208  125,155"
-             stroke-width="1"/>
-    <polygon style="fill: #89A5C7;" points="30,60  125,155  144,161"
-             stroke-width="1"/>
-    <polygon style="fill: #488B9B;" points="30,60  144,161  138,115"
-             stroke-width="1"/>
-    <polygon style="fill: #9EA4A6;" points="30,60  138,115  180,114"
-             stroke-width="1"/>
-    <polygon style="fill: #EC1608;" points="30,60  180,114  160,60"
-             stroke-width="1"/>
+  <g transform="translate(2,2)">
+    <image id="backgroundImage" x="0" y="0" width="466" height="349"
+           xlink:href="amaya.png">
+      <desc>Leading the Web to its full potential</desc>
+    </image>
+    <defs>
+      <symbol id="cube">
+        <polygon points="0,1  5,6  5,21  0,16" stroke-width="1"/>
+        <polygon points="1,0  16,0  21,5  6,5" stroke-width="1"/>
+        <rect x="6" y="6" width="15" height="15" stroke-width="1"/>
+      </symbol>
+    </defs>
+    <g id="cubes">
+      <use x="200" y="112" xlink:href="#cube" style="fill: #0192BF"/>
+      <use x="230" y="112" xlink:href="#cube" style="fill: #2B9FC3"/>
+      <use x="260" y="112" xlink:href="#cube" style="fill: #53AAC5"/>
+      <use x="290" y="112" xlink:href="#cube" style="fill: #7AB4C6"/>
+      <use x="320" y="112" xlink:href="#cube" style="fill: #A3C0C9"/>
+      <use x="350" y="112" xlink:href="#cube" style="fill: #A3C0C9"/>
+      <use x="380" y="112" xlink:href="#cube" style="fill: #A3C0C9"/>
+      <use x="410" y="112" xlink:href="#cube" style="fill: #EC1608"/>
+      <use x="410" y="142" xlink:href="#cube" style="fill: #E2372C"/>
+      <use x="350" y="172" xlink:href="#cube" style="fill: #DAAFAC"/>
+      <use x="380" y="172" xlink:href="#cube" style="fill: #DF8984"/>
+      <use x="410" y="172" xlink:href="#cube" style="fill: #DC5B53"/>
+    </g>
+    <text id="logo" x="304" y="162"
+    style="font: 24px helvetica; font-weight: bold; fill: #488B9B;">AMAYA
+    </text>
+    <text id="version" x="320px" y="306"
+    style="font: bold 16px italic; fill: #0192BF;">Release 5.0 alpha
+    </text>
+    <g id="polygonMask" style="stroke: none;">
+      <polygon style="fill: #0192BF;" points="30,60  30,230  108,208"
+               stroke-width="1"/>
+      <foreignObject y="156px" x="35px">
+        xmlns="http://www.w3.org/1999/xhtml" 
+        <math xmlns="http://www.w3.org/1998/Math/MathML"
+        style="color: #FFFFFF; font-family: times">
+          <mrow>
+            <mi>y</mi>
+            <mo>=</mo>
+            <mfrac>
+              <mn>1</mn>
+              <msqrt>
+                <mrow>
+                  <msup>
+                    <mi>x</mi>
+                    <mn>2</mn>
+                  </msup>
+                  <mo>+</mo>
+                  <mn>1</mn>
+                </mrow>
+              </msqrt>
+            </mfrac>
+          </mrow>
+        </math>
+      </foreignObject>
+      <polygon style="fill: #9EA4A6;" points="30,60  108,208  125,155"
+               stroke-width="1"/>
+      <polygon style="fill: #89A5C7;" points="30,60  125,155  144,161"
+               stroke-width="1"/>
+      <polygon style="fill: #488B9B;" points="30,60  144,161  138,115"
+               stroke-width="1"/>
+      <polygon style="fill: #9EA4A6;" points="30,60  138,115  180,114"
+               stroke-width="1"/>
+      <polygon style="fill: #EC1608;" points="30,60  180,114  160,60"
+               stroke-width="1"/>
+    </g>
   </g>
 </svg>
 </p>
