@@ -1670,6 +1670,8 @@ void CheckCSSLink (Element el, Document doc, SSchema schema)
 	  length = TtaGetTextAttributeLength (attr);
 	  buff = TtaGetMemory (length + 1);
 	  TtaGiveTextAttributeValue (attr, buff, &length);
+	  /* get the CSS URI in UTF-8 */
+	  buff = ReallocUTF8String (buff, doc);
 	  /* load the stylesheet file found here ! */
 	  LoadStyleSheet (buff, doc, el, NULL, media, FALSE);
 	  TtaFreeMemory (buff);
@@ -1683,7 +1685,7 @@ void CheckCSSLink (Element el, Document doc, SSchema schema)
    at the end of that element.
    Return TRUE if spaces have been removed.
   ----------------------------------------------------------------------*/
-static ThotBool     RemoveEndingSpaces (Element el)
+static ThotBool RemoveEndingSpaces (Element el)
 {
    int              length, nbspaces;
    ElementType      elType;

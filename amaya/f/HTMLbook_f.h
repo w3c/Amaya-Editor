@@ -23,7 +23,7 @@ extern void GetIncludedDocuments_callback ( int newdoc,
                                             char *outputfile,
                                             AHTHeaders *http_headers,
                                             void * context );
-extern void MakeBook ( Document document,
+extern void MakeBook ( Document doc,
                        View view );
 
 #else /* __STDC__ */
@@ -45,7 +45,7 @@ extern void GetIncludedDocuments_callback (/* int newdoc,
                                               char *outputfile,
                                               AHTHeaders *http_headers,
                                               void * context */);
-extern void MakeBook (/* Document document,
+extern void MakeBook (/* Document doc,
                          View view */);
 
 #endif /* __STDC__ */

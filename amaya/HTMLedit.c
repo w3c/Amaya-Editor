@@ -60,7 +60,7 @@ static ThotBool AttrHREFundoable = FALSE;
    SetTargetContent
    Set the new value of Target.                  
   ----------------------------------------------------------------------*/
-void                SetTargetContent (Document doc, Attribute attrNAME)
+void SetTargetContent (Document doc, Attribute attrNAME)
 {
    int                 length;
 
@@ -290,7 +290,7 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
      }
 
    /* build the complete target URL */
-   if (targetURL != NULL && strcmp(targetURL, DocumentURLs[doc]))
+   if (targetURL && strcmp(targetURL, DocumentURLs[doc]))
      strcpy (tempURL, targetURL);
    else
      tempURL[0] = EOS;
@@ -416,7 +416,7 @@ void ChangeTitle (Document doc, View view)
        length = MAX_LENGTH;
        TtaGiveTextContent (child, Answer_text, &length, &lang);
 #ifdef _I18N_
-       title = TtaConverMbsToIso (Answer_text, ISO_8859_1);
+       title = TtaConvertMbsToIso (Answer_text, ISO_8859_1);
        strcpy (Answer_text, title);
        TtaFreeMemory (title);
 #endif /* _I18N_ */
@@ -1965,6 +1965,9 @@ void ElementPasted (NotifyElement * event)
   Attribute           attr;
   SSchema             HTMLschema;
   CSSInfoPtr          css;
+#ifndef _I18N_
+  char               *ptr;
+#endif /* _I18N_ */
   char               *value;
   int                 length, oldStructureChecking;
 

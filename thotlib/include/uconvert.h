@@ -77,14 +77,14 @@ extern unsigned char *TtaConvertIsoToMbs (unsigned char *src, CHARSET encoding);
   Iso string (8-bit).
   The returned string should be freed by the caller.
   -------------------------------------------------------------*/
-extern unsigned char *TtaConverMbsToIso (unsigned char *src, CHARSET encoding);
+extern unsigned char *TtaConvertMbsToIso (unsigned char *src, CHARSET encoding);
 
 /*-------------------------------------------------------------
   TtaConvertMbsToCHAR converts a UTF-8 string (8-bit) into CHAR_T
   string (8-bit or 16-bit).
   The returned string should be freed by the caller.
   -------------------------------------------------------------*/
-extern CHAR_T *TtaConverMbsToCHAR (unsigned char *src);
+extern CHAR_T *TtaConvertMbsToCHAR (unsigned char *src);
 
 /*-------------------------------------------------------------
   TtaConvertCHARToIso converts the src CHAR_T* into an ISO

@@ -368,11 +368,7 @@ void InitLanguage ()
    i = 12;
    strcpy (LangTable[i].LangName, "Japanese");
    strcpy (LangTable[i].LangCode, "ja");
-#ifdef _TH_
    LangTable[i].LangScript = 'Z';
-#else /* _TH_ */
-   LangTable[i].LangScript = 'C';
-#endif /* _TH_ */
    LangTable[i].LangPrincipal[0] = EOS;
    LangTable[i].LangSecondary[0] = EOS;
 
@@ -698,11 +694,7 @@ char TtaGetCharacterScript (wchar_t c)
   else if (c >= 0x600 && c < 0x700)
     return 'A'; /* Arabic */
   else if (c >= 0x2E80 && c < 0xA000)
-#ifdef _TH_
     return 'Z'; /* CJK */
-#else /* _TH_ */
-    return 'L'; /* CJK */
-#endif /* _TH_ */
   else
     return 'L'; /* Latin */
 }

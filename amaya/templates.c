@@ -1,6 +1,6 @@
 /*
  *
- *  COPYRIGHT MIT and INRIA, 1996-2001.
+ *  COPYRIGHT MIT and INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -38,7 +38,8 @@ void NewTemplate (Document doc, View view)
 
   url = TtaGetEnvString ("TEMPLATE_URL");
   if (url)
-    GetHTMLDocument (url, NULL, 0, 0, CE_ABSOLUTE, FALSE, NULL, NULL);
+    GetAmayaDoc (url, NULL, 0, 0, CE_ABSOLUTE, FALSE, NULL, NULL,
+		 TtaGetDefaultCharset ());
 }
 /*----------------------------------------------------------------------
    OpenTemplateDocument: Process the meta of a template document,

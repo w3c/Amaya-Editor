@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2001
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -727,6 +727,7 @@ static void ParseForm (Document doc, Element ancestor, Element el, int mode)
   ----------------------------------------------------------------------*/
 static void DoSubmit (Document doc, int method, char *action)
 {
+  CHARSET             charset;
   int                 buffer_size;
   int                 i;
   char               *urlName;
@@ -749,6 +750,11 @@ static void DoSubmit (Document doc, int method, char *action)
       buffer_size--;
     }
 
+#ifdef _I18N_
+  charset = UTF_8;
+#else /* _I18N_ */
+  charset = TtaGetDocumentCharset (doc);
+#endif /* _I18N_ */
   switch (method)
     {
     case -9999:	/* index attribute, not yet supported by Amaya */
@@ -768,14 +774,14 @@ static void DoSubmit (Document doc, int method, char *action)
       if (urlName != NULL)
 	{
 	  strcpy (urlName, action);
-	  GetHTMLDocument (urlName, buffer, doc, doc,
-			   CE_FORM_GET, TRUE, NULL, NULL);
+	  GetAmayaDoc (urlName, buffer, doc, doc, CE_FORM_GET, TRUE,
+		       NULL, NULL, charset);
 	  TtaFreeMemory (urlName);
 	}
       break;
     case HTML_ATTR_METHOD_VAL_Post_:
-      GetHTMLDocument (action, buffer, doc, doc,
-		       CE_FORM_POST, TRUE, NULL, NULL);
+      GetAmayaDoc (action, buffer, doc, doc, CE_FORM_POST, TRUE,
+		   NULL, NULL, charset);
       break;
     default:
       break;

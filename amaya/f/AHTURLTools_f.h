@@ -11,8 +11,6 @@ extern void EscapeChar ( char *string,
                          char c );
 extern char *EscapeURL ( const char *url );
 extern char *EscapeXML ( const char *string );
-extern char *URLToUTF8 ( char *url,
-                         Document doc );
 extern void ExplodeURL ( char *url,
                          char **proto,
                          char **host,
@@ -73,8 +71,6 @@ extern void EscapeChar (/* char *string,
                            char c */);
 extern char *EscapeURL (/* const char *url */);
 extern char *EscapeXML (/* const char *string */);
-extern char *URLToUTF8 (/* char *url,
-                           Document doc */);
 extern void ExplodeURL (/* char *url,
                            char **proto,
                            char **host,

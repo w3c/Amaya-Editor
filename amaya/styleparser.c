@@ -4832,7 +4832,7 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 {
   DisplayMode         dispMode;
   char                c;
-  char               *cssRule, *base, *saveDocURL;
+  char               *cssRule, *base, *saveDocURL, *ptr;
   int                 index;
   int                 CSSindex;
   int                 CSScomment;
@@ -5108,11 +5108,15 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 		    {
 		      /* save the displayed URL when an error is reported */
 		      saveDocURL = DocURL;
+		      ptr = TtaStrdup (base);
+		      /* get the CSS URI in UTF-8 */
+		      ptr = ReallocUTF8String (ptr, docRef);
 		      LoadStyleSheet (base, docRef, NULL, css,
 				      css->media[docRef],
 				      css->category == CSS_USER_STYLE);
 		      /* restore the displayed URL when an error is reported */
 		      DocURL = saveDocURL;
+		      TtaFreeMemory (ptr);
 		    }
 		  /* restore the number of lines */
 		  LineNumber = newlines;

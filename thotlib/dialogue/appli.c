@@ -3031,7 +3031,7 @@ void ChangeFrameTitle (int frame, char *text)
 #endif /* _GTK  && _WINDOWS*/
 
 #ifdef _I18N_
-  title = TtaConverMbsToIso (text, ISO_8859_1);
+  title = TtaConvertMbsToIso (text, ISO_8859_1);
 #else /* _I18N_ */
   title = text;
 #endif /* _I18N_ */

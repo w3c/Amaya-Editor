@@ -112,20 +112,21 @@ extern void ShowLinks ( Document document,
 extern void ShowToC ( Document document,
                       View view );
 extern ThotBool ViewToClose ( NotifyDialog * event );
-extern void GetHTMLDocument_callback ( int newdoc,
-                                       int status,
-                                       char *urlName,
-                                       char *outputfile,
-                                       AHTHeaders *http_headers,
-                                       void * context );
-extern Document GetHTMLDocument ( const char *documentPath,
-                                  char *form_data,
-                                  Document doc,
-                                  Document baseDoc,
-                                  ClickEvent CE_event,
-                                  ThotBool history,
-                                  TTcbf *cbf,
-                                  void *ctx_cbf );
+extern void GetAmayaDoc_callback ( int newdoc,
+                                   int status,
+                                   char *urlName,
+                                   char *outputfile,
+                                   AHTHeaders *http_headers,
+                                   void * context );
+extern Document GetAmayaDoc ( char *documentPath,
+                              char *form_data,
+                              Document doc,
+                              Document baseDoc,
+                              ClickEvent CE_event,
+                              ThotBool history,
+                              TTcbf *cbf,
+                              void *ctx_cbf,
+                              CHARSET charset );
 extern void CallbackDialogue ( int ref,
                                int typedata,
                                char *data );
@@ -311,20 +312,21 @@ extern void ShowLinks (/* Document document,
 extern void ShowToC (/* Document document,
                         View view */);
 extern ThotBool ViewToClose (/* NotifyDialog * event */);
-extern void GetHTMLDocument_callback (/* int newdoc,
-                                         int status,
-                                         char *urlName,
-                                         char *outputfile,
-                                         AHTHeaders *http_headers,
-                                         void * context */);
-extern Document GetHTMLDocument (/* const char *documentPath,
-                                    char *form_data,
-                                    Document doc,
-                                    Document baseDoc,
-                                    ClickEvent CE_event,
-                                    ThotBool history,
-                                    TTcbf *cbf,
-                                    void *ctx_cbf */);
+extern void GetAmayaDoc_callback (/* int newdoc,
+                                     int status,
+                                     char *urlName,
+                                     char *outputfile,
+                                     AHTHeaders *http_headers,
+                                     void * context */);
+extern Document GetAmayaDoc (/* char *documentPath,
+                                char *form_data,
+                                Document doc,
+                                Document baseDoc,
+                                ClickEvent CE_event,
+                                ThotBool history,
+                                TTcbf *cbf,
+                                void *ctx_cbf,
+                                CHARSET charset */);
 extern void CallbackDialogue (/* int ref,
                                  int typedata,
                                  char *data */);

@@ -256,7 +256,7 @@ extern void CreateFormPlugin (Document, View);
 #endif /* AMAYA_PLUGIN */
 
 /* the structure used for storing the context of the 
-   GetHTMLDocument_callback function */
+   GetAmayaDoc_callback function */
 typedef struct _GETHTMLDocument_context
 {
   Document   doc;
@@ -1219,7 +1219,8 @@ void ShowLogFile (Document doc, View view)
 
   sprintf (fileName, "%s%c%d%cPARSING.ERR",
 	   TempFileDirectory, DIR_SEP, doc, DIR_SEP);
-  newdoc = GetHTMLDocument (fileName, NULL, 0, doc, CE_LOG, FALSE, NULL, NULL);
+  newdoc = GetAmayaDoc (fileName, NULL, 0, doc, CE_LOG, FALSE, NULL,
+			NULL, TtaGetDefaultCharset ());
   /* store the relation with the original document */
   if (newdoc)
     DocumentSource[newdoc] = doc;
@@ -3684,18 +3685,14 @@ void Reload (Document doc, View view)
    if (DocumentURLs[doc] == NULL)
       /* the document has not been loaded yet */
       return;
-
    if (DocumentTypes[doc] == docSource)
       /* don't reload a source document */
       return;
-
    /* abort all current exchanges concerning this document */
    StopTransfer (doc, 1);
-
    if (!CanReplaceCurrentDocument (doc, view))
       /* abort the command */
       return;
-
    /* reload the document */
    pathname = TtaGetMemory (MAX_LENGTH);
    documentname = TtaGetMemory (MAX_LENGTH);
@@ -3759,7 +3756,6 @@ void Reload (Document doc, View view)
 
    TtaFreeMemory (tempfile);
    TtaFreeMemory (pathname);
-   
    TtaHandlePendingEvents ();
 }
 
@@ -4200,7 +4196,7 @@ ThotBool ViewToClose (NotifyDialog * event)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void GetHTMLDocument_callback (int newdoc, int status, char *urlName,
+void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
 			       char *outputfile, AHTHeaders *http_headers,
 			       void * context)
 {
@@ -4378,9 +4374,8 @@ void GetHTMLDocument_callback (int newdoc, int status, char *urlName,
    TtaFreeMemory (ctx);
 }
 
-
 /*----------------------------------------------------------------------
-  GetHTMLDocument loads the document if it is not loaded yet and    
+  GetAmayaDoc loads the document if it is not loaded yet and    
   calls the parser if the document can be parsed.
     - documentPath: can be relative or absolute address.
     - form_data: the text to be posted.
@@ -4390,9 +4385,10 @@ void GetHTMLDocument_callback (int newdoc, int status, char *urlName,
       click.
     - history: record the URL in the browsing history
   ----------------------------------------------------------------------*/
-Document GetHTMLDocument (const char *documentPath, char *form_data,
-			  Document doc, Document baseDoc, ClickEvent CE_event,
-			  ThotBool history, TTcbf *cbf, void *ctx_cbf)
+Document GetAmayaDoc (char *documentPath, char *form_data,
+		      Document doc, Document baseDoc, ClickEvent CE_event,
+		      ThotBool history, TTcbf *cbf, void *ctx_cbf,
+		      CHARSET charset)
 {
    Document            newdoc;
    CSSInfoPtr          css;
@@ -4418,17 +4414,15 @@ Document GetHTMLDocument (const char *documentPath, char *form_data,
    else
      /* clean up the status line */
      TtaSetStatus (baseDoc, 1, " ", NULL);
- 
    ok = TRUE;
-   tempdocument = TtaGetMemory (MAX_LENGTH);
    target       = TtaGetMemory (MAX_LENGTH);
    documentname = TtaGetMemory (MAX_LENGTH);
    parameters   = TtaGetMemory (MAX_LENGTH);
    tempfile     = TtaGetMemory (MAX_LENGTH);
    tempfile[0]  = EOS;
    pathname     = TtaGetMemory (MAX_LENGTH);
-
-   strcpy (tempdocument, documentPath);
+   /* Store DocumentURLs and DocHistory in UTF-8 */
+   tempdocument = TtaConvertIsoToMbs (documentPath, charset);
    ExtractParameters (tempdocument, parameters);
    /* Extract the target if necessary */
    ExtractTarget (tempdocument, target);
@@ -4438,7 +4432,6 @@ Document GetHTMLDocument (const char *documentPath, char *form_data,
      NormalizeURL (tempdocument, baseDoc, pathname, documentname, NULL);
    else
      NormalizeURL (tempdocument, 0, pathname, documentname, NULL);
-
    /* check the document suffix */
    if (IsMathMLName (documentname))
      docType = docMath;
@@ -4639,7 +4632,7 @@ Document GetHTMLDocument (const char *documentPath, char *form_data,
 	       if (css == NULL)
 		 toparse =  GetObjectWWW (newdoc, pathname, form_data,
 					  tempfile, mode, NULL, NULL,
-					  (void *) GetHTMLDocument_callback,
+					  (void *) GetAmayaDoc_callback,
 					  (void *) ctx, YES, content_type);
 	       else
 		 {
@@ -4648,7 +4641,7 @@ Document GetHTMLDocument (const char *documentPath, char *form_data,
 				 TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
 		   /* just take a copy of the local temporary file */
 		   strcpy (tempfile, css->localName);
-		   GetHTMLDocument_callback (newdoc, 0, pathname,
+		   GetAmayaDoc_callback (newdoc, 0, pathname,
 					     tempfile, NULL,
 					     (void *) ctx);
 		   TtaHandlePendingEvents ();
@@ -4660,7 +4653,7 @@ Document GetHTMLDocument (const char *documentPath, char *form_data,
 	       TtaSetStatus (newdoc, 1,
 			     TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED),
 			     NULL);
-	       GetHTMLDocument_callback (newdoc, 0, pathname, tempfile,
+	       GetAmayaDoc_callback (newdoc, 0, pathname, tempfile,
 					 NULL, (void *) ctx);
 	       TtaHandlePendingEvents ();
 	     }
@@ -4671,7 +4664,7 @@ Document GetHTMLDocument (const char *documentPath, char *form_data,
        /* following a local link */
        TtaSetStatus (newdoc, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
        ctx->local_link = 1;
-       GetHTMLDocument_callback (newdoc, 0, pathname, tempfile, NULL, (void *) ctx);
+       GetAmayaDoc_callback (newdoc, 0, pathname, tempfile, NULL, (void *) ctx);
        TtaHandlePendingEvents ();
      }
 
@@ -4927,12 +4920,12 @@ void CallbackDialogue (int ref, int typedata, char *data)
 		 InitializeNewDoc (LastURLName, NewDocType, 0, NewDocProfile);
 	       /* load an URL */ 
 	       else if (InNewWindow)
-		 GetHTMLDocument (LastURLName, NULL, 0, 0, Loading_method,
-				  FALSE, NULL, NULL);
+		 GetAmayaDoc (LastURLName, NULL, 0, 0, Loading_method,
+				  FALSE, NULL, NULL, TtaGetDefaultCharset ());
 	       else
-		 GetHTMLDocument (LastURLName, NULL, CurrentDocument,
+		 GetAmayaDoc (LastURLName, NULL, CurrentDocument,
 				  CurrentDocument, Loading_method, TRUE,
-				  NULL, NULL);
+				  NULL, NULL, TtaGetDefaultCharset ());
 	     }
 	   else if (DirectoryName[0] != EOS && DocumentName[0] != EOS)
 	     {
@@ -4944,12 +4937,12 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	       if (FileExistTarget (tempfile))
 		 {
 		   if (InNewWindow)
-		     GetHTMLDocument (tempfile, NULL, 0, 0, Loading_method,
-				      FALSE, NULL, NULL);
+		     GetAmayaDoc (tempfile, NULL, 0, 0, Loading_method,
+				      FALSE, NULL, NULL, TtaGetDefaultCharset ());
 		   else
-		     GetHTMLDocument (tempfile, NULL, CurrentDocument,
+		     GetAmayaDoc (tempfile, NULL, CurrentDocument,
 				      CurrentDocument, Loading_method,
-				      TRUE, NULL, NULL);
+				      TRUE, NULL, NULL, TtaGetDefaultCharset ());
 		 }
 	       else if (NewFile)
 		 InitializeNewDoc (tempfile, NewDocType, 0, NewDocProfile);
@@ -4974,12 +4967,12 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	     {
 	       CompleteUrl(&DocumentName);  
 	       if (InNewWindow)
-		   GetHTMLDocument (DocumentName, NULL, 0, 0, Loading_method,
-				    FALSE, NULL, NULL);
+		   GetAmayaDoc (DocumentName, NULL, 0, 0, Loading_method,
+				    FALSE, NULL, NULL, TtaGetDefaultCharset ());
 	       else
-		   GetHTMLDocument (DocumentName, NULL, CurrentDocument,
+		   GetAmayaDoc (DocumentName, NULL, CurrentDocument,
 				    CurrentDocument, Loading_method, TRUE,
-				    NULL, NULL);
+				    NULL, NULL, TtaGetDefaultCharset ());
 	     }
 	   else if (DirectoryName[0] != EOS)
 	     TtaSetStatus (CurrentDocument, 1,
@@ -5034,12 +5027,12 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	   if (!IsW3Path (tempfile))
 	    {
 		if (TtaCheckDirectory (tempfile))
-		{
+		  {
 		    strcpy (DirectoryName, tempfile);
 		    DocumentName[0] = EOS;
-		}
+		  }
 		else
-		    TtaExtractName (tempfile, DirectoryName, DocumentName);
+		  TtaExtractName (tempfile, DirectoryName, DocumentName);
 	    }
 	   else 
 	   {
@@ -6744,8 +6737,8 @@ void HelpAtW3C (Document document, View view)
   
   strcpy (localname, AMAYA_PAGE_DOC);
   strcat (localname, "BinDist.html");
-  document = GetHTMLDocument (localname, NULL, 0, 0, CE_HELP, FALSE, NULL,
-			      NULL);
+  document = GetAmayaDoc (localname, NULL, 0, 0, CE_HELP, FALSE, NULL,
+			  NULL, TtaGetDefaultCharset ());
   InitDocHistory (document);
 }
 
@@ -6771,8 +6764,8 @@ static void DisplayHelp (int doc, int index)
 	sprintf (localname, "%s%cdoc%chtml%c%s", s, DIR_SEP, DIR_SEP,
 		  DIR_SEP, Manual[index]);
     }
-  document = GetHTMLDocument (localname, NULL, 0, 0, CE_HELP, FALSE, NULL,
-			      NULL);
+  document = GetAmayaDoc (localname, NULL, 0, 0, CE_HELP, FALSE, NULL,
+			  NULL, TtaGetDefaultCharset ());
   InitDocHistory (document);
 }
 

@@ -287,7 +287,7 @@ void GotoPreviousHTML (Document doc, View view)
   char                *form_data = NULL;
   int                  prev, i;
   int                  method;
-  ThotBool	        last = FALSE;
+  ThotBool	       last = FALSE;
   ThotBool             hist = FALSE;
   ThotBool             same_form_data;
   ThotBool             next_doc_loaded = FALSE;
@@ -417,8 +417,9 @@ void GotoPreviousHTML (Document doc, View view)
   else
     {
       StopTransfer (doc, 1);
-      (void) GetHTMLDocument (url, form_data, doc, doc, method, FALSE,
-			      (void *) GotoPreviousHTML_callback, (void *) ctx);
+      (void) GetAmayaDoc (url, form_data, doc, doc, method, FALSE,
+			  (void *) GotoPreviousHTML_callback,(void *) ctx,
+			  UTF_8);
       /* out of the critic section */
       Back_Forward = FALSE;
     }
@@ -468,7 +469,7 @@ void GotoNextHTML_callback (int newdoc, int status, char *urlName,
    GotoNextHTML
    This function is called when the user presses the Next button
   ----------------------------------------------------------------------*/
-void                GotoNextHTML (Document doc, View view)
+void GotoNextHTML (Document doc, View view)
 {
   GotoHistory_context  *ctx;
   char                 *url = NULL;
@@ -577,7 +578,9 @@ void                GotoNextHTML (Document doc, View view)
   else
     {
       StopTransfer (doc, 1);
-      (void) GetHTMLDocument (url, form_data, doc, doc, method, FALSE, (void *) GotoNextHTML_callback, (void *) ctx);
+      (void) GetAmayaDoc (url, form_data, doc, doc, method, FALSE,
+			  (void *) GotoNextHTML_callback, (void *) ctx,
+			  UTF_8);
       /* out of the critic section */
       Back_Forward = FALSE;
     }

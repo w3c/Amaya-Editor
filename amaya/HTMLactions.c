@@ -670,6 +670,7 @@ static ThotBool FollowTheLink (Element anchor, Element elSource,
    ElementType            elType;
    Document               targetDocument, reldoc;
    SSchema                HTMLSSchema;
+   CHARSET                charset;
    char                   documentURL[MAX_LENGTH];
    char                   buffer[MAX_LENGTH], documentname[MAX_LENGTH];
    char                  *url, *info, *sourceDocUrl;
@@ -741,7 +742,6 @@ static ThotBool FollowTheLink (Element anchor, Element elSource,
 	     if (PseudoAttr != NULL)
 	     TtaSetAttributeText (PseudoAttr, "visited", anchor, doc);
 	   */
-	   
 	 }
        else
 	 /* the target element seems to be in another document */
@@ -813,10 +813,15 @@ static ThotBool FollowTheLink (Element anchor, Element elSource,
 		 /* it's not necessary to open a new window */
 		 InNewWindow = FALSE;
 	       /* Load the new document */
-	       targetDocument = GetHTMLDocument (documentURL, NULL, reldoc, doc, 
-						 method, history, 
-						 (void *) FollowTheLink_callback,
-						 (void *) ctx);
+#ifdef _I18N_
+	       charset = UTF_8;
+#else /* _I18N_ */
+	       charset = TtaGetDocumentCharset (doc);
+#endif /* _I18N_ */
+	       targetDocument = GetAmayaDoc (documentURL, NULL, reldoc, doc, 
+					     method, history, 
+					     (void *) FollowTheLink_callback,
+					     (void *) ctx, charset);
 	     }
 	 }
        return (TRUE);

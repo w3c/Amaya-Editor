@@ -439,14 +439,14 @@ static void CallbackCSS (int ref, int typedata, char *data)
     {
     case CSSForm:
       TtaDestroyDialogue (ref);
-      if (val == 1 && CSSpath != NULL)
+      if (val == 1 && CSSpath)
 	{
 	  switch (CSScase)
 	    {
 	    case 1:
 	      /* display the CSS file */
-	      GetHTMLDocument (CSSpath, NULL, 0, 0, CE_CSS, FALSE,
-			       NULL, NULL);
+	      GetAmayaDoc (CSSpath, NULL, 0, 0, CE_CSS, FALSE, NULL,
+			   NULL, UTF_8);
 	      break;
 	    case 2:
 	      /* disable the CSS file, but not remove */
@@ -517,8 +517,7 @@ static void CallbackCSS (int ref, int typedata, char *data)
       CSSpath = NULL;
       break;
     case CSSSelect:
-      if (CSSpath != NULL)
-	TtaFreeMemory (CSSpath);
+      TtaFreeMemory (CSSpath);
       length = strlen (data);
       CSSpath = TtaGetMemory (length + 1);
       strcpy (CSSpath, data);      
@@ -575,26 +574,32 @@ static void InitCSSDialog (Document doc, char *s)
 	      CSScase == 4)
 	    {
 	      /* filter enabled and disabled entries */
-	      /* build the CSS list */
+	      /* build the CSS list:
+		 use the dialogue encoding for buf and UTF-8 for CSS path  */
 	      if (css->category == CSS_DOCUMENT_STYLE)
-		ptr = TtaGetMessage (AMAYA, AM_LOCAL_CSS);
-	      else if (css->url == NULL)
-		ptr = css->localName;
+		ptr = TtaStrdup (TtaGetMessage (AMAYA, AM_LOCAL_CSS));
 	      else
-		ptr = css->url;
-
+		{
+		  if (css->url == NULL)
+		    ptr = TtaConvertMbsToIso (css->localName,
+					      TtaGetDefaultCharset ());
+		  else
+		    ptr = TtaConvertMbsToIso (css->url,
+					      TtaGetDefaultCharset ());
+		}
 	      len = strlen (ptr);
 	      len++;
 	      if (size < len)
 		break;
 	      strcpy (&buf[index], ptr);
+	      TtaFreeMemory (ptr);
 	      index += len;
 	      nb++;
 	      size -= len;
 	      if (select == -1 &&
 		  (CSScase < 4 || css->category == CSS_EXTERNAL_STYLE))
 		{
-		  if (CSSpath != NULL)
+		  if (CSSpath)
 		    TtaFreeMemory (CSSpath);
 		  if (css->category == CSS_DOCUMENT_STYLE)
 		    CSSpath = TtaStrdup (TtaGetMessage (AMAYA, AM_LOCAL_CSS));

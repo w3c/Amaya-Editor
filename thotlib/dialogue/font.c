@@ -313,11 +313,7 @@ static XCharStruct *CharacterStructure(CHAR_T c, XFontStruct *xf)
 /*----------------------------------------------------------------------
   CharacterWidth returns the width of a char in a given font.
   ----------------------------------------------------------------------*/
-#ifdef _TH_
-int CharacterWidth (CHAR_T c, PtrFont font)
-#else /* _TH_ */
-int CharacterWidth (unsigned char c, PtrFont font)
-#endif /* _TH_ */
+int CharacterWidth (int c, PtrFont font)
 {
 #if !defined(_WINDOWS) && !defined(_GTK)
   XFontStruct        *xf = (XFontStruct *) font;
@@ -412,11 +408,7 @@ int BoxCharacterWidth (CHAR_T c, SpecFont specfont)
 #ifndef _GL
 #ifdef _I18N_
   PtrFont         font;
-#ifdef _TH_
-  wchar_t         car;
-#else /* _TH_ */
-  unsigned char   car;
-#endif /* _TH_ */
+  int             car;
 
   if (SpecialCharBoxWidth (c))
     return 1;
@@ -443,11 +435,7 @@ int BoxCharacterWidth (CHAR_T c, SpecFont specfont)
 /*----------------------------------------------------------------------
   CharacterHeight returns the height of a char in a given font
   ----------------------------------------------------------------------*/
-#ifdef _TH_
-int CharacterHeight (CHAR_T c, PtrFont font)
-#else /* _TH_ */
-int CharacterHeight (unsigned char c, PtrFont font)
-#endif /* _TH_ */
+int CharacterHeight (int c, PtrFont font)
 {
   int              l;
 #if !defined (_WINDOWS) && !defined (_GTK)
@@ -482,11 +470,7 @@ int CharacterHeight (unsigned char c, PtrFont font)
 /*----------------------------------------------------------------------
   CharacterAscent returns the ascent of a char in a given font.
   ----------------------------------------------------------------------*/
-#ifdef _TH_
-int CharacterAscent (CHAR_T c, PtrFont font)
-#else /* _TH_ */
-int CharacterAscent (unsigned char c, PtrFont font)
-#endif /* _TH_ */
+int CharacterAscent (int c, PtrFont font)
 {
 #ifndef _WINDOWS
   int		    i;
@@ -496,6 +480,7 @@ int CharacterAscent (unsigned char c, PtrFont font)
 #endif /* _WINDOWS || _GL */
 #if !defined(_WINDOWS) && !defined(_GL)
 #ifdef _GTK
+  char              car;
   int               lbearing, rbearing, width, descent;
 #else /* _GTK */
   XFontStruct      *xf = (XFontStruct *) font;
@@ -527,7 +512,8 @@ else
   else
     {
 #ifdef _GTK
-      gdk_string_extents (font, &c, &lbearing, &rbearing, &width, &ascent, &descent);
+      car = (char) c;
+      gdk_string_extents (font, &car, &lbearing, &rbearing, &width, &ascent, &descent);
 #else /* _GTK */
       xc = CharacterStructure(c, xf);
       if (xc == NULL)
@@ -625,11 +611,7 @@ int BoxFontHeight (SpecFont specfont)
 {
 #ifdef _I18N_
   PtrFont         font;
-#ifdef _TH_
-  wchar_t         car;
-#else /* _TH_ */
-  unsigned char   car;
-#endif /* _TH_ */
+  int             car;
 
   car = GetFontAndIndexFromSpec (120, specfont, &font);
   return FontHeight (font);
@@ -645,66 +627,66 @@ int BoxFontHeight (SpecFont specfont)
   ----------------------------------------------------------------------*/
 int PixelValue (int val, TypeUnit unit, PtrAbstractBox pAb, int zoom)
 {
-   int              dist, i;
+  int              dist, i;
 
-   dist = 0;
-   switch (unit)
-     {
-     case UnRelative:
-       if (pAb == NULL || pAb->AbBox == NULL || pAb->AbBox->BxFont == NULL)
-	 dist = 0;
-       else
-	 dist = (val * BoxFontHeight (pAb->AbBox->BxFont) + 5) / 10;
-       break;
-     case UnXHeight:
-       if (pAb == NULL || pAb->AbBox == NULL || pAb->AbBox->BxFont == NULL)
-	 dist = 0;
-       else
-	 dist = (val * XFontAscent (pAb->AbBox->BxFont)) / 10;
-       break;
-     case UnPoint:
-       /* take zoom into account */
-       if (zoom != 0)
-	 {
-	   dist = val + (val * zoom / 10);
-	   if (dist == 0 && val > 0)
-	     dist = 1;
-	 }
-       else
-	 dist = val;
+  dist = 0;
+  switch (unit)
+    {
+    case UnRelative:
+      if (pAb == NULL || pAb->AbBox == NULL || pAb->AbBox->BxFont == NULL)
+	dist = 0;
+      else
+	dist = (val * BoxFontHeight (pAb->AbBox->BxFont) + 5) / 10;
+      break;
+    case UnXHeight:
+      if (pAb == NULL || pAb->AbBox == NULL || pAb->AbBox->BxFont == NULL)
+	dist = 0;
+      else
+	dist = (val * XFontAscent (pAb->AbBox->BxFont)) / 10;
+      break;
+    case UnPoint:
+      /* take zoom into account */
+      if (zoom != 0)
+	{
+	  dist = val + (val * zoom / 10);
+	  if (dist == 0 && val > 0)
+	    dist = 1;
+	}
+      else
+	dist = val;
 #ifndef _WIN_PRINT
-       if (!Printing)
-	 /* Postscript unit is the point instead of the pixel */
+      if (!Printing)
+	/* Postscript unit is the point instead of the pixel */
 #endif /* _WIN_PRINT */
-	 dist = PointToPixel (dist);
-       break;
-     case UnPixel:
-       /* take zoom into account */
-       if (zoom != 0)
-	 {
-	   dist = val + (val * zoom / 10);
-	   if (dist == 0 && val > 0)
-	     dist = 1;
-	 }
-       else
-	 dist = val;
+	dist = PointToPixel (dist);
+      break;
+    case UnPixel:
+      /* take zoom into account */
+      if (zoom != 0)
+	{
+	  dist = val + (val * zoom / 10);
+	  if (dist == 0 && val > 0)
+	    dist = 1;
+	}
+      else
+	dist = val;
 #ifdef _WIN_PRINT
-       if (TtPrinterDC && ScreenDPI)
-	 dist = (dist * PrinterDPI + ScreenDPI / 2) / ScreenDPI;
+      if (TtPrinterDC && ScreenDPI)
+	dist = (dist * PrinterDPI + ScreenDPI / 2) / ScreenDPI;
 #else /* _WIN_PRINT */
-       if (Printing)
-	 /* Postscript unit is the point instead of the pixel */
-	 dist = PixelToPoint (dist);
+      if (Printing)
+	/* Postscript unit is the point instead of the pixel */
+	dist = PixelToPoint (dist);
 #endif /* _WIN_PRINT */
-       break;
-     case UnPercent:
-       i = val * (int) pAb;
-       dist = i / 100;
-       break;
-     case UnAuto:
-       /* should not occur: reserved for margins */
-       break;
-     }
+      break;
+    case UnPercent:
+      i = val * (int) pAb;
+      dist = i / 100;
+      break;
+    case UnAuto:
+      /* should not occur: reserved for margins */
+      break;
+    }
   return (dist);
 }
 
@@ -881,11 +863,7 @@ void FontIdentifier (char script, int family, int highlight, int size,
   else if (unit == UnPixel)
     size = PixelToPoint (size);
 
-  if (script != 'L' && script != 'G'
-#ifdef _TH_
-      && script != 'Z'
-#endif /* _TH */
-      )
+  if (script != 'L' && script != 'G' && script != 'Z')
     {
       if (script == 'F')
 	strcpy (encoding, "15");
@@ -920,7 +898,6 @@ void FontIdentifier (char script, int family, int highlight, int size,
       highlight = 0;
       sprintf (r_nameX, "-*-symbol-medium-r-*-*-%d-*-*-*-*-*-*-fontspecific", size);
     }
-#ifdef _TH_
   else if (script == 'Z')
     {
       ffamily = "-ms-*";
@@ -944,7 +921,6 @@ void FontIdentifier (char script, int family, int highlight, int size,
 	sprintf (r_nameX, "%s-%s-%s-*-*-%d-*-*-*-*-*-iso10646-1",
 		 ffamily, wght, slant, size);
     }
-#endif /* _TH_ */
   else
     {
       if (UseLucidaFamily)
@@ -1241,22 +1217,13 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
   GetFontAndIndexFromSpec return the glyph index and the font
   used to display the wide character c;
   ----------------------------------------------------------------------*/
-#ifdef _TH_
-wchar_t GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
-				 PtrFont *font)
-#else /* _TH_ */
-unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
-				       PtrFont *font)
-#endif /* _TH_ */
+int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, PtrFont *font)
 {
 #ifdef _I18N_
   PtrFont            lfont, *pfont;
   CHARSET            encoding;
-#ifdef _TH_
-  wchar_t            car;
-#else /* _TH_ */
-  unsigned char      car;
-#endif /* _TH_ */
+  char               code;
+  int                car;
   int                mask, frame;
 
   lfont = NULL;
@@ -1266,7 +1233,7 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 	{
 	  /* 0 -> FF */
 	  lfont = fontset->FontIso_1;
-	  car = (char) c;
+	  car = (int) c;
 	}
       else if (c == 0x200C /* zwnj*/ || c == 0x200D /* zwj */ || 
 	       c == 0x200E /* lrm */ || c == 0x200F /* rlm */ ||
@@ -1280,7 +1247,7 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 	  if (c >= 0x370 && c < 0x3FF)
 	    {
 	      /* Greek characters */
-	      car = GreekFontScript;
+	      code = GreekFontScript;
 	      if (c == 0x3D1 || c == 0x3D2 || c == 0x3D6)
 		/* thetasym, upsih, piv */
 		{
@@ -1314,7 +1281,7 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 		   c == 0x20AC /*euro*/)
 	    {
 #ifdef _WINDOWS
-	      car = '1'; /* West Europe Latin */
+	      code = '1'; /* West Europe Latin */
 	      pfont = &(fontset->FontIso_1);
 	      encoding = WINDOWS_1252;
 #else /* _WINDOWS */
@@ -1323,7 +1290,7 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 		{
 		  if (Printing)
 		    {
-		      car = '1'; /* Extended Latin */
+		      code = '1'; /* Extended Latin */
 		      pfont = &(fontset->FontIso_1);
 		      encoding = ISO_8859_1;
 		      if (c == 0x152)
@@ -1337,7 +1304,7 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 		    }
 		  else
 		    {
-		      car = 'F'; /* Extended Latin */
+		      code = 'F'; /* Extended Latin */
 		      pfont = &(fontset->FontIso_15);
 		      encoding = ISO_8859_15;
 		    }
@@ -1346,7 +1313,7 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 		{
 		  /* use an approaching character */
 		  encoding = ISO_8859_1;
-		  car = '1';
+		  code = '1';
 		  pfont = &(fontset->FontIso_1);
 		  if (c == 0x2C6)       /*circ*/
 		    c = 94;
@@ -1370,7 +1337,7 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 		    c = 62;
 		  else
 		    {
-		      car = 'G';
+		      code = 'G';
 		      pfont = &(fontset->FontSymbol);
 		      if (c == 0x2013)  /* en dash */
 			c = 45;
@@ -1384,7 +1351,7 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 	    }
 	  else if (c < 0x17F)
 	    {
-	      car = '2'; /* Central Europe */
+	      code = '2'; /* Central Europe */
 	      pfont = &(fontset->FontIso_2);
 #ifdef _WINDOWS
 	      encoding = WINDOWS_1250;
@@ -1403,13 +1370,13 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 		   c == 0x192)     /* latin small letter f with hook */
 	    {
 	      /* Symbols */
-	      car = 'G';
+	      code = 'G';
 	      pfont = &(fontset->FontSymbol);
 	      encoding = ISO_SYMBOL;
 	    }
 	  else if (c < 0x24F)
 	    {
-	      car = '3';
+	      code = '3';
 	      pfont = &(fontset->FontIso_3);
 #ifdef _WINDOWS
 	      encoding = WINDOWS_1250;
@@ -1419,7 +1386,7 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 	    }
 	  else if (c < 0x2AF)
 	    {
-	      car = '4'; /* Baltic RIM */
+	      code = '4'; /* Baltic RIM */
 	      pfont = &(fontset->FontIso_4);
 #ifdef _WINDOWS
 	      encoding = WINDOWS_1257;
@@ -1429,7 +1396,7 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 	    }
 	  else if (c < 0x45F)
 	    {
-	      car = '5'; /* Cyrillic */
+	      code = '5'; /* Cyrillic */
 	      pfont = &(fontset->FontIso_5);
 #ifdef _WINDOWS
 	      encoding = WINDOWS_1251;
@@ -1439,7 +1406,7 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 	    }
 	  else if (c < 0x5FF)
 	    {
-	      car = '8'; /* Hebrew */
+	      code = '8'; /* Hebrew */
 	      pfont = &(fontset->FontIso_8);
 #ifdef _WINDOWS
 	      encoding = WINDOWS_1255;
@@ -1449,7 +1416,7 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 	    }
 	  else if (c < 0x5FF)
 	    {
-	      car = '9'; /* Turkish */
+	      code = '9'; /* Turkish */
 	      pfont = &(fontset->FontIso_9);
 #ifdef _WINDOWS
 	      encoding = WINDOWS_1254;
@@ -1459,7 +1426,7 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 	    }
 	  else if (c < 0x65F)
 	    {
-	      car = '6'; /* Arabic */
+	      code = '6'; /* Arabic */
 	      pfont = &(fontset->FontIso_6);
 #ifdef _WINDOWS
 	      encoding = WINDOWS_1256;
@@ -1469,32 +1436,24 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 	    }
 	  else
 	    {
-#ifdef _TH_
-	      car = 'Z'; /* Unicode */
+	      code = 'Z'; /* Unicode */
 	      pfont = &(fontset->FontUnicode);
 	      encoding = UNICODE_1_1;
-#else /* _TH_ */
-	      pfont = NULL;
-	      encoding = ISO_8859_1;
-	      car = '1';
-#endif /* _TH_ */
 	    }
 	  if (pfont)
 	  {
 	    if (*pfont == NULL)
 	      {
 		/* load that font */
-#if defined(WINDOWS) || !defined(_TH_)
 		for (frame = 1; frame <= MAX_FRAME; frame++)
 		  {
 		    mask = 1 << (frame - 1);
 		    if (fontset->FontMask | mask)
-#endif /* WINDOWS || !_TH_ */
-		      lfont = LoadNearestFont (car, fontset->FontFamily,
+		      lfont = LoadNearestFont (code, fontset->FontFamily,
 					       fontset->FontHighlight,
 					       fontset->FontSize,
 					       frame, TRUE, TRUE);
-		    if (car == GreekFontScript && car == '7' && lfont == NULL)
+		    if (code == GreekFontScript && code == '7' && lfont == NULL)
 		      {
 			/* use symbol instead of ISO_8859_7 */
 			GreekFontScript = 'G';
@@ -1504,9 +1463,7 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 						 fontset->FontSize,
 						 frame, TRUE, TRUE);
 		      }
-#if defined(WINDOWS) || !defined(_TH_)
 		  }
-#endif /* WINDOWS || !_TH_ */
 		if (lfont == NULL)
 		  /* font not found: avoid to retry later */
 		  lfont = (void *) -1;
@@ -1517,7 +1474,9 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 	  }
 	  else
 	    lfont = (void *) -1;
-	  car = TtaGetCharFromWC (c, encoding);
+	  if (code == 'Z')
+	    car = c;
+	  car = (int)TtaGetCharFromWC (c, encoding);
 	}
     }
   /* when any font is available */
@@ -1592,13 +1551,10 @@ static void RemoveFontInFontSets (PtrFont font, int mask)
 	fontset->FontIso_9 = NULL;
       else
 	used = (used || fontset->FontIso_9);
-#ifdef _TH_
       if (fontset->FontUnicode == font)
 	fontset->FontUnicode = NULL;
       else
 	used = (used || fontset->FontUnicode);
-#endif /* _TH_ */
-
       /* next set */
       nextset = fontset->NextFontSet;
       /* is it still in use? */
@@ -1824,42 +1780,45 @@ void InitDialogueFonts (char *name)
   f3 = MenuSize + 2;
   
 #ifndef _WINDOWS
-  fontpath = TtaGetEnvString ("THOTFONT");
-  if (fontpath)
+  if (!Printing)
     {
-      strcpy (FONT_PATH, fontpath);
-      strcat (FONT_PATH, "/");
-      
-      /* Add the directory to the X server font path */
-      currentlist = XGetFontPath (TtDisplay, &ncurrent);
-      ndir = 1;
-      /* check that the directory is not already in the list */
-      i = 0;
-      while ((ndir == 1) && (i < ncurrent))
+      fontpath = TtaGetEnvString ("THOTFONT");
+      if (fontpath)
 	{
-	  if (strncmp (currentlist[i], FONT_PATH, strlen (currentlist[i]) - 1) == 0)
-	    ndir = 0;
-	  else
-	    i++;
-	}
-      
-      /* Should we write down the new value ? */
-      if (ndir > 0)
-	{
-	  ndir += ncurrent;
-	  dirlist = (char**) TtaGetMemory (ndir * sizeof(char*));
+	  strcpy (FONT_PATH, fontpath);
+	  strcat (FONT_PATH, "/");
 	  
-	  if (currentlist != NULL)
+	  /* Add the directory to the X server font path */
+	  currentlist = XGetFontPath (TtDisplay, &ncurrent);
+	  ndir = 1;
+	  /* check that the directory is not already in the list */
+	  i = 0;
+	  while ((ndir == 1) && (i < ncurrent))
+	    {
+	      if (strncmp (currentlist[i], FONT_PATH, strlen (currentlist[i]) - 1) == 0)
+		ndir = 0;
+	      else
+		i++;
+	    }
+	  
+	  /* Should we write down the new value ? */
+	  if (ndir > 0)
+	    {
+	      ndir += ncurrent;
+	      dirlist = (char**) TtaGetMemory (ndir * sizeof(char*));
+	      
+	      if (currentlist != NULL)
 #ifdef SYSV
-	    memcpy (dirlist, currentlist, ncurrent * sizeof (char*));
+		memcpy (dirlist, currentlist, ncurrent * sizeof (char*));
 #else /* SYSV */
-	    bcopy (currentlist, dirlist, ncurrent * sizeof (char*));
+	      bcopy (currentlist, dirlist, ncurrent * sizeof (char*));
 #endif /* SYSV */
-	  dirlist[ncurrent] = FONT_PATH;
-	  XSetFontPath (TtDisplay, dirlist, ndir);
-	  TtaFreeMemory ( dirlist);
+	      dirlist[ncurrent] = FONT_PATH;
+	      XSetFontPath (TtDisplay, dirlist, ndir);
+	      TtaFreeMemory ( dirlist);
+	    }
+	  TtaFreeMemory ( currentlist);
 	}
-      TtaFreeMemory ( currentlist);
     }
   for (i = 0; i < MAX_FONT; i++)
     TtPatchedFont[i] = 0;

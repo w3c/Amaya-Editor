@@ -463,11 +463,7 @@ wchar_t KOI8 [] = {
   TtaGetCharFromWC returns the ISO or Windows character code
   of the Unicode value wc.
   ----------------------------------------------------------------------*/
-#ifdef _TH_
-wchar_t TtaGetCharFromWC (wchar_t wc, CHARSET encoding)
-#else /* _TH_ */
 unsigned char TtaGetCharFromWC (wchar_t wc, CHARSET encoding)
-#endif /* _TH_ */
 {
   unsigned int  c, max, base;
   wchar_t      *table;
@@ -568,11 +564,6 @@ unsigned char TtaGetCharFromWC (wchar_t wc, CHARSET encoding)
 	  table = KOI8;
 	  max = KOI8_length;
 	  break;
-#ifdef _TH_
-	case UNICODE_1_1:
-	  return wc;
-	  break;
-#endif /* _TH_ */
 	default:
 	  return EOS;
 	  break;
@@ -1208,13 +1199,6 @@ wchar_t *TtaConvertIsoToWC (unsigned char *src, CHARSET encoding)
   return dest;
 }
 
-#ifdef _TH_
-void TtaConvertIsoToMbsInit (CHARSET encoding)
-{
-
-}
-#endif /* _TH_ */
-
 /*-------------------------------------------------------------
   TtaConvertIsoToMbs converts the src (8-bit) into a UTF-8
   string (8-bit).
@@ -1252,7 +1236,7 @@ unsigned char *TtaConvertIsoToMbs (unsigned char *src, CHARSET encoding)
   Iso string (8-bit).
   The returned string should be freed by the caller.
   -------------------------------------------------------------*/
-unsigned char *TtaConverMbsToIso (unsigned char *src, CHARSET encoding)
+unsigned char *TtaConvertMbsToIso (unsigned char *src, CHARSET encoding)
 {
   wchar_t         *tmp;
   unsigned char   *dest, *ptr;
@@ -1284,7 +1268,7 @@ unsigned char *TtaConverMbsToIso (unsigned char *src, CHARSET encoding)
   string (8-bit or 16-bit).
   The returned string should be freed by the caller.
   -------------------------------------------------------------*/
-CHAR_T *TtaConverMbsToCHAR (unsigned char *src)
+CHAR_T *TtaConvertMbsToCHAR (unsigned char *src)
 {
   CHAR_T          *dest = NULL;
 #ifdef _I18N_

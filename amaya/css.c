@@ -29,6 +29,37 @@
 
 
 /*----------------------------------------------------------------------
+  ReallocUTF8String
+  If such convertion is needed, the string url is reallocated with
+  the converted string.
+  ----------------------------------------------------------------------*/
+char *ReallocUTF8String (char *url, Document doc)
+{
+#ifndef _I18N_
+  unsigned char *tmp;
+
+  if (!url || *url == EOS)
+    return NULL;
+  /* does the URL contain chars > 127 ? */
+  tmp = url;
+  while (*tmp)
+    {
+      if (*tmp > 127)
+        break;
+      tmp++;
+    }
+  if (*tmp == EOS)
+    return NULL;  /* no such chars found */
+  tmp = TtaConvertIsoToMbs (url, TtaGetDocumentCharset (doc));
+  if (tmp)
+    TtaFreeMemory (url);
+  return tmp;
+#else /* _I18N_ */
+  return url;
+#endif /* _I18N_ */
+}
+
+/*----------------------------------------------------------------------
   GetPExtension returns the Presentation Extension Schema associated with
   the document doc and the structure sSchema
   At the same time, this funciton updates the css context.

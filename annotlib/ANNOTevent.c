@@ -1403,6 +1403,7 @@ ThotBool Annot_RaiseSourceDoc (NotifyElement *event)
   ElementType      elType;
   AttributeType    attrType;
   Attribute	   HrefAttr;
+  CHARSET          charset;
   ThotBool	   docModified;
   ThotBool         has_thread = FALSE;
   int              length;
@@ -1508,12 +1509,15 @@ ThotBool Annot_RaiseSourceDoc (NotifyElement *event)
       rel_doc = doc_annot;
       method = CE_ABSOLUTE;
     }
-  targetDocument = GetHTMLDocument (url, NULL,
-				    rel_doc,
-				    doc_annot, 
-				    method, FALSE, 
-				    (void *) Annot_RaiseSourceDoc_callback,
-				    (void *) ctx);
+#ifdef _I18N_
+  charset = UTF_8;
+#else /* _I18N_ */
+  charset = TtaGetDocumentCharset (doc);
+#endif /* _I18N_ */
+  targetDocument = GetAmayaDoc (url, NULL, rel_doc,
+				doc_annot, method, FALSE, 
+				(void *) Annot_RaiseSourceDoc_callback,
+				(void *) ctx, charset);
 
   /* don't let Thot perform the normal operation */
   return TRUE;

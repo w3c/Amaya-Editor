@@ -3511,10 +3511,11 @@ static void      XmlStyleSheetPi (char *PiData)
 		   end[0] = EOS;
 		   strcpy (css_href, &ptr[1]);
 		   css_info = NULL;
+		   /* get the CSS URI in UTF-8 */
+		   css_href = ReallocUTF8String (css_href, XMLcontext.doc);
 		   LoadStyleSheet (css_href, XMLcontext.doc, NULL,
 				   css_info, css_media, FALSE);
-		   if (css_href != NULL)
-		     TtaFreeMemory (css_href);
+		   TtaFreeMemory (css_href);
 		 }
 	     }
 	 }

@@ -2789,7 +2789,6 @@ void InvokeGetObjectWWW_callback (int docid, char *urlName,
    Returns:
    HT_ERROR
    HT_OK
- 
   ----------------------------------------------------------------------*/
 int GetObjectWWW (int docid, char *urlName, char *formdata,
 		  char *outputfile, int mode, TIcbf *incremental_cbf, 
@@ -2797,9 +2796,8 @@ int GetObjectWWW (int docid, char *urlName, char *formdata,
 		  void *context_tcbf, ThotBool error_html, char *content_type)
 {
    AHTReqContext      *me;
-   char *              ref;
-   char *              tmp;
-   char *              esc_url;
+   char               *ref;
+   char               *esc_url;
    int                 status, l;
    int                 tempsubdir;
    ThotBool            bool_tmp;
@@ -2845,14 +2843,11 @@ int GetObjectWWW (int docid, char *urlName, char *formdata,
 
    /* we store CSS in subdir named 0; all the other files go to a subidr
       named after their own docid */
-   
    tempsubdir = (mode & AMAYA_LOAD_CSS) ? 0 : docid;
-
    /* create a tempfilename */
    sprintf (outputfile, "%s%c%d%c%04dAM", TempFileDirectory, DIR_SEP, tempsubdir, DIR_SEP, object_counter);
    /* update the object_counter (used for the tempfilename) */
    object_counter++;
-   
    /* normalize the URL */
    esc_url = EscapeURL (urlName);
    if (esc_url) 

@@ -1085,21 +1085,22 @@ void   GetIncludedDocuments_callback (int newdoc, int status,
   that link by the contents of the target document.
   Return TRUE if one inclusion is launched.
   ----------------------------------------------------------------------*/
-static ThotBool  GetIncludedDocuments (Element el, Element link,
-				       Document document, IncludeCtxt *prev)
+static ThotBool GetIncludedDocuments (Element el, Element link,
+				      Document doc, IncludeCtxt *prev)
 {
   ElementType           elType;
   Attribute		attr;
   AttributeType	        attrType;
   Document		newdoc;
   IncludeCtxt          *ctx = NULL;
+  CHARSET               charset;
   char		       *text, *ptr, *url = NULL;
   int			length;
   ThotBool              found = FALSE;
 
   /* look for anchors with the attribute rel within the element  el */
   attr = NULL;
-  attrType.AttrSSchema = TtaGetSSchema ("HTML", document);
+  attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
   elType.ElSSchema = attrType.AttrSSchema;
   elType.ElTypeNum = HTML_EL_Anchor;
 
@@ -1154,7 +1155,7 @@ static ThotBool  GetIncludedDocuments (Element el, Element link,
 	      IncludedDocument = TtaNewDocument ("HTML", "tmp");
 	      if (IncludedDocument != 0)
 		{
-		  TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_FETCHING), url);
+		  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_FETCHING), url);
 		  ctx = TtaGetMemory (sizeof (IncludeCtxt));
 		  ctx->div =  el;
 		  ctx->link = link;
@@ -1162,11 +1163,16 @@ static ThotBool  GetIncludedDocuments (Element el, Element link,
 		  ctx->name = ptr;
 		  ctx->ctxt = prev; /* previous context */
 		  /* Get the reference of the calling document */
-		  SetStopButton (document);
-		  newdoc = GetHTMLDocument (url, NULL, IncludedDocument,
-					    document, CE_MAKEBOOK, FALSE, 
-					    (void *) GetIncludedDocuments_callback,
-					    (void *) ctx);
+		  SetStopButton (doc);
+#ifdef _I18N_
+		  charset = UTF_8;
+#else /* _I18N_ */
+		  charset = TtaGetDocumentCharset (doc);
+#endif /* _I18N_ */
+		  newdoc = GetAmayaDoc (url, NULL, IncludedDocument,
+					doc, CE_MAKEBOOK, FALSE, 
+					(void *) GetIncludedDocuments_callback,
+					(void *) ctx, charset);
 		  found = TRUE;
 		}
 	    }
@@ -1183,21 +1189,21 @@ static ThotBool  GetIncludedDocuments (Element el, Element link,
   Replace all links in a document which have an attribute REL="chapter"
   or REL="subdocument" by the corresponding target document.
   ----------------------------------------------------------------------*/
-void MakeBook (Document document, View view)
+void MakeBook (Document doc, View view)
 {
   Element	    root, body;
   ElementType	    elType;
 
   /* stops all current transfers on this document */
-  StopTransfer (document, 1);
+  StopTransfer (doc, 1);
   /* simulate a transfert in the main document */
-  DocBook = document;
+  DocBook = doc;
   IncludedDocument = 0;
-  root = TtaGetMainRoot (document);
+  root = TtaGetMainRoot (doc);
   elType = TtaGetElementType (root);
   elType.ElTypeNum = HTML_EL_BODY;
   body = TtaSearchTypedElement (elType, SearchForward, root);
 
   if (body)
-    GetIncludedDocuments (body, body, document, NULL);
+    GetIncludedDocuments (body, body, doc, NULL);
 }

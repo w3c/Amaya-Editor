@@ -8,14 +8,14 @@
 
 extern int NumberOfFonts ( void );
 extern int GetCharsCapacity ( int volpixel );
-extern int CharacterWidth ( unsigned char c,
+extern int CharacterWidth ( int c,
                             PtrFont font );
 extern int SpecialCharBoxWidth ( CHAR_T c );
 extern int BoxCharacterWidth ( CHAR_T c,
                                SpecFont specfont );
-extern int CharacterHeight ( unsigned char c,
+extern int CharacterHeight ( int c,
                              PtrFont font );
-extern int CharacterAscent ( unsigned char c,
+extern int CharacterAscent ( int c,
                              PtrFont font );
 extern int FontAscent ( PtrFont font );
 extern int FontHeight ( PtrFont font );
@@ -45,9 +45,9 @@ extern PtrFont ReadFont ( char script,
                           int highlight,
                           int size,
                           TypeUnit unit );
-extern unsigned char GetFontAndIndexFromSpec ( CHAR_T c,
-                                               SpecFont fontset,
-                                               PtrFont *font );
+extern int GetFontAndIndexFromSpec ( CHAR_T c,
+                                     SpecFont fontset,
+                                     PtrFont *font );
 extern SpecFont ThotLoadFont ( char script,
                                int family,
                                int highlight,
@@ -63,14 +63,14 @@ extern void ThotFreeAllFonts ( void );
 
 extern int NumberOfFonts (/* void */);
 extern int GetCharsCapacity (/* int volpixel */);
-extern int CharacterWidth (/* unsigned char c,
+extern int CharacterWidth (/* int c,
                               PtrFont font */);
 extern int SpecialCharBoxWidth (/* CHAR_T c */);
 extern int BoxCharacterWidth (/* CHAR_T c,
                                  SpecFont specfont */);
-extern int CharacterHeight (/* unsigned char c,
+extern int CharacterHeight (/* int c,
                                PtrFont font */);
-extern int CharacterAscent (/* unsigned char c,
+extern int CharacterAscent (/* int c,
                                PtrFont font */);
 extern int FontAscent (/* PtrFont font */);
 extern int FontHeight (/* PtrFont font */);
@@ -100,9 +100,9 @@ extern PtrFont ReadFont (/* char script,
                             int highlight,
                             int size,
                             TypeUnit unit */);
-extern unsigned char GetFontAndIndexFromSpec (/* CHAR_T c,
-                                                 SpecFont fontset,
-                                                 PtrFont *font */);
+extern int GetFontAndIndexFromSpec (/* CHAR_T c,
+                                       SpecFont fontset,
+                                       PtrFont *font */);
 extern SpecFont ThotLoadFont (/* char script,
                                  int family,
                                  int highlight,

@@ -6,6 +6,8 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern char *ReallocUTF8String ( char *url,
+                                 Document doc );
 extern PSchema GetPExtension ( Document doc,
                                SSchema sSchema,
                                CSSInfoPtr css );
@@ -31,6 +33,8 @@ extern void LoadStyleSheet ( char *url,
 
 #else /* __STDC__ */
 
+extern char *ReallocUTF8String (/* char *url,
+                                   Document doc */);
 extern PSchema GetPExtension (/* Document doc,
                                  SSchema sSchema,
                                  CSSInfoPtr css */);
