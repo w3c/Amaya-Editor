@@ -2127,6 +2127,9 @@ int                *height;
 	    }
 	}
 
+      if (noWrappedWidth > pBox->BxMaxWidth)
+	pBox->BxMaxWidth = noWrappedWidth;
+      noWrappedWidth = 0;
       /* met a jour la base du bloc de lignes   */
       /* s'il depend de la premiere boite englobee */
       if (pAb->AbHorizRef.PosAbRef == pAb->AbFirstEnclosed && pBox->BxFirstLine != NULL)
@@ -2138,6 +2141,7 @@ int                *height;
     }
   else
     {
+      *height = FontHeight (pBox->BxFont);
       while (pNextBox != NULL && pNextBox->BxAbstractBox->AbNotInLine)
 	pNextBox = GetNextBox (pNextBox->BxAbstractBox);
       if (pNextBox != NULL)
@@ -2151,9 +2155,10 @@ int                *height;
 	  pLine->LiLastPiece = NULL;
 	  pBox->BxMinWidth = FillLine (pLine, pRootAb, pAb->AbTruncatedTail, &full, &toAdjust, &breakLine);
 	  pBox->BxMaxWidth = pLine->LiRealLength;
+	  if (pLine->LiHeight > *height)
+	    *height = pLine->LiHeight;
 	  FreeLine (pLine);
 	}
-      *height = FontHeight (pBox->BxFont);
     }
 }
 
@@ -2740,7 +2745,7 @@ int                 frame;
 	if (pBox->BxFirstLine == NULL)
 	  {
 	     /* fait reevaluer la mise en lignes et on recupere */
-	     /* la hautteur et la largeur du contenu de la boite */
+	     /* la hauteur et la largeur du contenu de la boite */
 	     GiveEnclosureSize (pAb, frame, &width, &height);
 	  }
 	else
@@ -2826,7 +2831,9 @@ int                 frame;
 	  {
 	     /* Il faut propager la modification de hauteur */
 	     propagateStatus = Propagate;
-	     /*if (propagateStatus == ToChildren) Propagate = ToAll; */
+	     /* We certainly need to re-check the height of enclosing element */
+	     /*if (propagateStatus == ToChildren)
+	       RecordEnclosing (pBox, FALSE);*/
 	     ChangeDefaultHeight (pBox, pFirstBox, height, frame);
 	     Propagate = propagateStatus;
 	  }

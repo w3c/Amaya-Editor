@@ -719,7 +719,7 @@ int                *height;
      /* La boite composee est mise en ligne */
      {
        if (pCurrentBox->BxType == BoBlock && pCurrentBox->BxFirstLine != NULL)
-	 /* we hahe to reformat the block of lines */
+	 /* we have to reformat the block of lines */
 	 RecomputeLines (pAb, NULL, NULL, frame);
        else
 	 {
@@ -1389,13 +1389,6 @@ int                *carIndex;
 			 pBox = CreateBox (pChildAb, frame, split || pAb->AbInLine, carIndex);
 			 pChildAb = pChildAb->AbNext;
 		      }
-		    if (pAb->AbLeafType == LtText)
-		      {
-			/* pas d'englobement vertical en cours */
-			pCurrentBox->BxSpaceWidth = 0;
-			/* pas d'englobement horizontal en cours */
-			pCurrentBox->BxNPixels = 0;
-		      }
 		    GiveEnclosureSize (pAb, frame, &width, &height);
 		    break;
 		 default:
@@ -1408,9 +1401,8 @@ int                *carIndex;
 	/* indirectement (parce que la boite contient un bloc de ligne) la  */
 	/* hauteur du contenu de la boite.                                  */
 	if (enclosedWidth && enclosedHeight && pAb->AbLeafType == LtCompound)
-	   GiveEnclosureSize (pAb, frame, &width, &height);
+	  GiveEnclosureSize (pAb, frame, &width, &height);
 	ChangeDefaultHeight (pCurrentBox, pCurrentBox, height, frame);
-
 	/* Positionnement des axes de la boite construite */
 	ComputeAxisRelation (pAb->AbVertRef, pCurrentBox, frame, TRUE);
 
@@ -1910,6 +1902,65 @@ int                 frame;
 
 
 /*----------------------------------------------------------------------
+   RecordEnclosing  enregistre les englobements diffe're's.        
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                RecordEnclosing (PtrBox pBox, boolean horizRef)
+#else  /* __STDC__ */
+void                RecordEnclosing (pBox, horizRef)
+PtrBox              pBox;
+boolean             horizRef;
+
+#endif /* __STDC__ */
+{
+   int                 i;
+   PtrDimRelations     pDimRel;
+   PtrDimRelations     pPreviousDimRel;
+   boolean             toCreate;
+
+   /* On recherche une entree libre */
+   pPreviousDimRel = NULL;
+   pDimRel = DifferedPackBlocks;
+   toCreate = TRUE;
+   i = 0;
+   while (toCreate && pDimRel != NULL)
+     {
+	i = 0;
+	pPreviousDimRel = pDimRel;
+	while (i < MAX_RELAT_DIM && pDimRel->DimRTable[i] != NULL)
+	  {
+	     if (pDimRel->DimRTable[i] == pBox && pDimRel->DimRSame[i] == horizRef)
+		/* La boite est deja enregistree */
+		return;
+	     else
+		i++;
+	  }
+
+	if (i == MAX_RELAT_DIM)
+	   /* Bloc suivant */
+	   pDimRel = pDimRel->DimRNext;
+	else
+	   toCreate = FALSE;
+     }
+
+   /* Faut-il creer un nouveau bloc de relations ? */
+   if (toCreate)
+     {
+        i = 0;
+	GetDimBlock (&pDimRel);
+	if (pPreviousDimRel == NULL)
+	   DifferedPackBlocks = pDimRel;
+	else
+	   pPreviousDimRel->DimRNext = pDimRel;
+     }
+
+   pDimRel->DimRTable[i] = pBox;
+   /* englobement horizontal */
+   pDimRel->DimRSame[i] = horizRef;
+}
+
+
+/*----------------------------------------------------------------------
    ComputeUpdates traite les modifications d'un pave correspondant 
    a` la fenetre frame. Rend la valeur vrai s'il y a       
    modification sur la boite du pave.                      
@@ -2190,6 +2241,7 @@ int                 frame;
 	ClearAllRelations (pBox);
 	ClearDimRelation (pBox, TRUE, frame);
 	ClearDimRelation (pBox, FALSE, frame);
+	pCell = GetParentCell (pCurrentBox);
 	RemoveBoxes (pAb, FALSE, frame);
 
 	/* Mise a jour de la liste des boites terminales */
@@ -2205,14 +2257,11 @@ int                 frame;
 	   pCurrentBox->BxNext = pNextBox;
 
 	/* Check table consistency */
-	if (pCurrentBox->BxType == BoColumn && ThotLocalActions[T_checktable])
-	  (*ThotLocalActions[T_checktable]) (NULL, pAb, NULL, frame);
-	else if (TypeHasException (ExcIsCell, pAb->AbElement->ElTypeNumber, pAb->AbElement->ElStructSchema) &&
+	if (TypeHasException (ExcIsCell, pAb->AbElement->ElTypeNumber, pAb->AbElement->ElStructSchema) &&
 		 ThotLocalActions[T_checkcolumn] && !pAb->AbPresentationBox)
 	  (*ThotLocalActions[T_checkcolumn]) (pAb, NULL, frame);
 	/* check enclosing cell */
-	pCell = GetParentCell (pCurrentBox);
-	if (pCell != NULL && ThotLocalActions[T_checkcolumn])
+	else if (pCell != NULL && ThotLocalActions[T_checkcolumn])
 	  {
 	    pBlock = SearchEnclosingType (pAb, BoBlock);
 	    if (pBlock != NULL)
@@ -2481,15 +2530,6 @@ int                 frame;
 				   LoadPicture (frame, pBox, (PictInfo *) pBox->BxPictInfo);
 				   ResetCursorWatch (frame);
 				   GivePictureSize (pAb, &width, &height);
-				   /* check enclosing cell */
-				   pCell = GetParentCell (pCurrentBox);
-				   if (pCell != NULL && ThotLocalActions[T_checkcolumn])
-				     {
-				       pBlock = SearchEnclosingType (pAb, BoBlock);
-				       if (pBlock != NULL)
-					 RecomputeLines (pBlock, NULL, NULL, frame);
-				       (*ThotLocalActions[T_checkcolumn]) (pCell, NULL, frame);
-				     }
 				}
 			      else
 				{
@@ -2541,7 +2581,8 @@ int                 frame;
 					if (pCurrentBox->BxHorizFlex || pCurrentBox->BxVertFlex)
 					  {
 					     MirrorShape (pAb, pCurrentBox->BxHorizInverted, pCurrentBox->BxVertInverted, FALSE);
-					     pCurrentAb = NULL;		/* on arrete */
+					     /* on arrete */
+					     pCurrentAb = NULL;	
 					  }
 					else
 					   pCurrentAb = pCurrentAb->AbEnclosing;
@@ -2570,6 +2611,12 @@ int                 frame;
 		     height -= pBox->BxHeight;	/* ecart de hauteur */
 		  pLine = NULL;
 		  BoxUpdate (pBox, pLine, charDelta, nSpaces, width, adjustDelta, height, frame, FALSE);
+		  /* check enclosing cell */
+		  pCell = GetParentCell (pBox);
+		  if (pCell != NULL && width != 0 && ThotLocalActions[T_checkcolumn])
+		    {
+		      (*ThotLocalActions[T_checkcolumn]) (pCell, NULL, frame);
+		    }
 		  result = TRUE;
 	       }
 
@@ -2687,65 +2734,6 @@ int                 frame;
 	  }
      }
    return result;
-}
-
-
-/*----------------------------------------------------------------------
-   RecordEnclosing  enregistre les englobements diffe're's.        
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                RecordEnclosing (PtrBox pBox, boolean horizRef)
-#else  /* __STDC__ */
-void                RecordEnclosing (pBox, horizRef)
-PtrBox              pBox;
-boolean             horizRef;
-
-#endif /* __STDC__ */
-{
-   int                 i;
-   PtrDimRelations     pDimRel;
-   PtrDimRelations     pPreviousDimRel;
-   boolean             toCreate;
-
-   /* On recherche une entree libre */
-   pPreviousDimRel = NULL;
-   pDimRel = DifferedPackBlocks;
-   toCreate = TRUE;
-   i = 0;
-   while (toCreate && pDimRel != NULL)
-     {
-	i = 0;
-	pPreviousDimRel = pDimRel;
-	while (i < MAX_RELAT_DIM && pDimRel->DimRTable[i] != NULL)
-	  {
-	     if (pDimRel->DimRTable[i] == pBox && pDimRel->DimRSame[i] == horizRef)
-		/* La boite est deja enregistree */
-		return;
-	     else
-		i++;
-	  }
-
-	if (i == MAX_RELAT_DIM)
-	   /* Bloc suivant */
-	   pDimRel = pDimRel->DimRNext;
-	else
-	   toCreate = FALSE;
-     }
-
-   /* Faut-il creer un nouveau bloc de relations ? */
-   if (toCreate)
-     {
-        i = 0;
-	GetDimBlock (&pDimRel);
-	if (pPreviousDimRel == NULL)
-	   DifferedPackBlocks = pDimRel;
-	else
-	   pPreviousDimRel->DimRNext = pDimRel;
-     }
-
-   pDimRel->DimRTable[i] = pBox;
-   /* englobement horizontal */
-   pDimRel->DimRSame[i] = horizRef;
 }
 
 

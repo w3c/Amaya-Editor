@@ -4688,7 +4688,7 @@ RULES
 	CreateBefore(P_S);
 	CreateWith(VerticalLine);
 	Line;
-	LineBreak: No;
+	LineBreak: Yes;
 #ifdef PAGE
 	NoBreak1 : 2;
 	NoBreak2 : 2;
@@ -4713,7 +4713,7 @@ RULES
 
  Pseudo_paragraph: BEGIN
 	Line;
-	LineBreak: No;
+	LineBreak: Yes;
 #ifdef PAGE
 	NoBreak1 : 2;
 	NoBreak2 : 2;

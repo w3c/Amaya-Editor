@@ -12,14 +12,7 @@ extern void NewCell (Element cell,
 		     Document doc);
 extern void CellCreated ( NotifyElement * event );
 extern void CellPasted ( NotifyElement * event );
-extern void UpdateRowExt ( Element row,
-                           Document doc,
-                           boolean NewRow );
-extern void PreDeleteRow ( Element row );
 extern boolean DeleteRow ( NotifyElement * event );
-extern void PostDeleteRow ( Element row,
-                            Element table,
-                            Document doc );
 extern void RowDeleted ( NotifyElement * event );
 extern boolean DeleteCell ( NotifyElement * event );
 extern void CellDeleted ( NotifyElement * event );
@@ -40,17 +33,10 @@ extern boolean RowspanDelete ( NotifyAttribute * event );
 extern void CheckTable (/* Element table,
                            Document doc */);
 extern void NewCell (/* Element cell,
-		     Document doc */);
+			Document doc*/);
 extern void CellCreated (/* NotifyElement * event */);
 extern void CellPasted (/* NotifyElement * event */);
-extern void UpdateRowExt (/* Element row,
-                             Document doc,
-                             boolean NewRow */);
-extern void PreDeleteRow (/* Element row */);
 extern boolean DeleteRow (/* NotifyElement * event */);
-extern void PostDeleteRow (/* Element row,
-                              Element table,
-                              Document doc */);
 extern void RowDeleted (/* NotifyElement * event */);
 extern boolean DeleteCell (/* NotifyElement * event */);
 extern void CellDeleted (/* NotifyElement * event */);

@@ -1193,6 +1193,11 @@ int                 frame;
    Drawable            drawable;
    int                 x, y;
    ThotColor           BackGroundPixel;
+
+   if (box->BxAbstractBox->AbVisibility < ViewFrameTable[frame - 1].FrVisibility)
+     /* the picture is not visible */
+     return;
+
 #  ifdef _WINDOWS
    WIN_GetDeviceContext (frame);
 #  endif /* _WINDOWS */
@@ -1394,6 +1399,10 @@ PictInfo           *imageDesc;
    Drawable            myDrawable = None;
    Picture_Report      status;
    unsigned long       Bgcolor;
+
+   if (box->BxAbstractBox->AbVisibility < ViewFrameTable[frame - 1].FrVisibility)
+     /* the picture is not visible */
+     return;
 
 #  ifdef _WINDOWS
    if (TtDisplay == 0)

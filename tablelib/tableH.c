@@ -31,7 +31,7 @@
 #include "exceptions_f.h"
 #include "memory_f.h"
 #define MAX_COLS 50
-#define TAB_DEBUG 1
+/*#define TAB_DEBUG 0*/
 
 #ifdef __STDC__
 static void UpdateColumnWidth (PtrAbstractBox cell, PtrAbstractBox col, int frame);
@@ -845,7 +845,7 @@ int             frame;
   int                *colSpan_First, *colSpan_Last;
   int                *colVSpan;
   int                *colSpan_MinWidth, *colSpan_MaxWidth;
-  int                *colSpan_Width, *colSpan_Percent;
+  /*int                *colSpan_Width, *colSpan_Percent;*/
   int                *colMinWidth, *colMaxWidth;
   int                *colWidth, *colPercent;
   int                 cNumber, spanNumber;
@@ -916,8 +916,8 @@ int             frame;
 
   colSpan_MinWidth = TtaGetMemory (sizeof (int) * MAX_COLS);
   colSpan_MaxWidth = TtaGetMemory (sizeof (int) * MAX_COLS);
-  colSpan_Width = TtaGetMemory (sizeof (int) * MAX_COLS);
-  colSpan_Percent = TtaGetMemory (sizeof (int) * MAX_COLS);
+  /*colSpan_Width = TtaGetMemory (sizeof (int) * MAX_COLS);
+  colSpan_Percent = TtaGetMemory (sizeof (int) * MAX_COLS);*/
   colSpan_First = TtaGetMemory (sizeof (int) * MAX_COLS);
   colSpan_Last = TtaGetMemory (sizeof (int) * MAX_COLS);
   attrVSpan = GetAttrWithException (ExcRowSpan, pSS);
@@ -1064,16 +1064,14 @@ int             frame;
 					max = pAb->AbBox->BxMaxWidth + delta;
 				      skip = TRUE;
 				    }
-				  else if (pAb->AbLeafType == LtPicture ||
-					   pAb->AbLeafType == LtText ||
-					   pAb->AbLeafType == LtSymbol ||
-					   pAb->AbLeafType == LtGraphics ||
-					   pAb->AbLeafType == LtPolyLine)
+				  else if (!IsParentBox (pAb->AbWidth.DimAbRef, pAb->AbBox))
 				    {
+				      /* the box width doesn't depend on cell width */
 				      if (min < pAb->AbBox->BxWidth + delta)
 					min = pAb->AbBox->BxWidth + delta;
 				      if (max < pAb->AbBox->BxWidth + delta)
 					max = pAb->AbBox->BxWidth + delta;
+				      skip = TRUE;
 				    }
 				}
 			    }
@@ -1083,8 +1081,8 @@ int             frame;
 			    {
 			      colSpan_MinWidth[spanNumber] = min;
 			      colSpan_MaxWidth[spanNumber] = max;
-			      colSpan_Width[spanNumber] = width;
-			      colSpan_Percent[spanNumber] = percent;
+			      /*colSpan_Width[spanNumber] = width;
+			      colSpan_Percent[spanNumber] = percent;*/
 			      colSpan_First[spanNumber] = cRef;
 			      colSpan_Last[spanNumber] = cRef + span - 1;
 			      spanNumber ++;
@@ -1214,8 +1212,8 @@ int             frame;
   TtaFreeMemory (colVSpan);
   TtaFreeMemory (colSpan_MinWidth);
   TtaFreeMemory (colSpan_MaxWidth);
-  TtaFreeMemory (colSpan_Width);
-  TtaFreeMemory (colSpan_Percent);
+  /*TtaFreeMemory (colSpan_Width);
+  TtaFreeMemory (colSpan_Percent);*/
   TtaFreeMemory (colSpan_First);
   TtaFreeMemory (colSpan_Last);
    /* Now check the table size */
