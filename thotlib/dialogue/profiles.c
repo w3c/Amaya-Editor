@@ -84,7 +84,7 @@ void Prof_InitTable()
   FILE *              Def_FILE;
   FILE *              Prof_FILE; 
   char *              ptr;
-  char                Def_File [MAX_PRO_LENGTH];
+  char *              ptr2;
   char                TempString [MAX_PRO_LENGTH];
   int                 i = 0;
 
@@ -94,7 +94,6 @@ void Prof_InitTable()
   else
 	  Prof_FILE = NULL;
 
-
   ptr = TtaGetEnvString ("Profile");
   if (ptr && *ptr)
     strcpy (UserProfile, AddHooks (ptr));
@@ -102,9 +101,15 @@ void Prof_InitTable()
 	 UserProfile[0] = EOS;
   
   ptr = TtaGetEnvString("THOTDIR");
-  sprintf (Def_File, "%s%c%s%c%s", ptr, DIR_SEP, "config", DIR_SEP, DEF_FILE);
-
-  Def_FILE = fopen(Def_File,"r");
+  ptr2 = TtaGetMemory (strlen (ptr) + strlen (DEF_FILE) + 10);
+  if (ptr2) 
+    {
+      sprintf (ptr2, "%s%c%s%c%s", ptr, DIR_SEP, "config", DIR_SEP, DEF_FILE);
+      Def_FILE = fopen(ptr2, "r");
+      TtaFreeMemory (ptr2);
+    }
+  else
+    Def_FILE = NULL;
  
   if (Def_FILE && Prof_FILE && UserProfile)
      {    
