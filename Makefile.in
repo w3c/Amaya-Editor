@@ -27,7 +27,7 @@ srcdir	= $(THOTDIR)
 
 @SET_MAKE@
 
-default : tools thotlib tablelib batch amaya_prog thot_prog print_prog
+default : tools thotlib tablelib batch amaya_prog print_prog
 
 amaya : tools thotlib tablelib amaya_prog
 

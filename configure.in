@@ -406,12 +406,11 @@ AC_PATH_MOTIF
 
 dnl  ***************************************************************
 dnl
-dnl    SPECIFIC STUFF : CONFIGURATION OPTIONS FOR THOT AND AMAYA
+dnl    SPECIFIC STUFF : CONFIGURATION OPTIONS FOR AMAYA
 dnl
 dnl  ***************************************************************
 
-THOT_VER="2.6"
-AMAYA_VER="4.3"
+AMAYA_VER="4.4"
 
 dnl
 dnl We use a special versoin of cextract patched for alignment
@@ -423,7 +422,7 @@ CEXTRACT_FLAGS="+O"
 
 dnl
 dnl Adjust the some variables depending on the host and compiler
-dnl Thot NEED signed chars !!!
+dnl Thotlib NEED signed chars !!!
 dnl
 
 if test "${CC}" = "gcc" ; then
@@ -440,19 +439,10 @@ if test "$ac_cv_c_const" = "no" ; then
 fi
 
 dnl
-dnl Check for availability of amaya and thot editor sources
+dnl Check for availability of amaya sources
 dnl
 
-build_thot="yes"
 build_amaya="yes"
-
-if test "$with_thot" = "no" ; then
-    build_thot="no"
-else
-  if test ! -f $srcdir/thot/Makefile.in ; then
-    build_thot="no"
-  fi
-fi
 
 if test "$with_amaya" = "no" ; then
     build_amaya="no"
@@ -566,8 +556,6 @@ API="\$(THOTDIR)/thotlib/include"
 VAR="\$(THOTDIR)/thotlib/internals/var"
 INCL="\$(THOTDIR)/thotlib/internals/h"
 FUNC="\$(THOTDIR)/thotlib/internals/f"
-SCHEMAS="\$(THOTDIR)/schemas"
-SCHEMASOPERA="\$(THOTDIR)/schemasOPERA"
 if test "${LIBPNG}" = "../libpng.a" ; then
 #there is a modified header file we need
 PNGINCL="-I\$(THOTDIR)/libpng -I\$(THOTDIR)/libpng/zlib"
@@ -581,7 +569,7 @@ dnl
 dnl Set up the include variables.
 dnl
 
-THOTINCLUDES="-I${API} -I${VAR} -I${INCL} -I${FUNC} -I${SCHEMAS} ${JPEGINCL} ${PNGINCL}"
+THOTINCLUDES="-I${API} -I${VAR} -I${INCL} -I${FUNC} ${JPEGINCL} ${PNGINCL}"
 APIINCLUDES=-I${API}
  
 if test "${VPATHOPT}" = "" ; then
@@ -592,7 +580,6 @@ dnl
 dnl Exports the current values of the variables.
 dnl
 
-AC_SUBST(THOT_VER)
 AC_SUBST(AMAYA_VER)
 AC_SUBST(CEXTRACT_VER)
 AC_SUBST(CEXTRACT_FLAGS)
@@ -679,58 +666,6 @@ $srcdir/pluginlib/Makefile.plugin"
     fi
 fi
 
-if test "$build_thot" = "yes" ; then
-
-    make_output="$make_output thot/Makefile \
-drawlib/Makefile indexlib/Makefile"
-    EXTRA_MAKEFILE_IN="$EXTRA_MAKEFILE_IN \
-$srcdir/thot/Makefile.in \
-$srcdir/drawlib/Makefile.in \
-$srcdir/indexlib/Makefile.in"
-
-    if test "$build_misc" = "yes" ; then
-
-	make_output="$make_output misc/Makefile"
-	EXTRA_MAKEFILE_IN="$EXTRA_MAKEFILE_IN \
-$srcdir/misc/Makefile.in"
-
-	if test "$build_annotations" = "yes" ; then
-	    make_output="$make_output misc/annotations/Makefile"
-	    EXTRA_MAKEFILE_IN="$EXTRA_MAKEFILE_IN \
-$srcdir/misc/annotations/Makefile.in"
-	fi
-
-	if test "$build_util" = "yes" ; then
-
-	    make_output="$make_output misc/util/Makefile"
-	    EXTRA_MAKEFILE_IN="$EXTRA_MAKEFILE_IN \
-$srcdir/misc/util/Makefile.in"
-
-	    if test "$build_tableaux" = "yes" ; then
-
-		make_output="$make_output misc/util/tableaux/Makefile"
-		EXTRA_MAKEFILE_IN="$EXTRA_MAKEFILE_IN \
-$srcdir/misc/util/tableaux/Makefile.in"
-
-	    fi
-	    if test "$build_transform" = "yes" ; then
-
-		make_output="$make_output misc/util/transform/Makefile"
-		EXTRA_MAKEFILE_IN="$EXTRA_MAKEFILE_IN \
-$srcdir/misc/util/transform/Makefile.in"
-
-	    fi
-	    if test "$build_versions" = "yes" ; then
-
-		make_output="$make_output misc/util/versions/Makefile"
-		EXTRA_MAKEFILE_IN="$EXTRA_MAKEFILE_IN \
-$srcdir/misc/util/versions/Makefile.in"
-
-	    fi
-	fi
-    fi
-fi
-
 AC_SUBST(EXTRA_MAKEFILE_IN)
 AC_OUTPUT($make_output , [
 dnl
@@ -756,21 +691,6 @@ if test -f Options ; then
 fi
 ])
 
-if test "$build_thot" = "yes" ; then
-    if test "$build_amaya" = "yes" ; then
-	echo Amaya and Thot packages are now configured
-    else
-	echo Thot package is now configured
-    fi
-else
-    if test "$build_amaya" = "yes" ; then
-	echo Amaya package is now configured
-    else
-	echo Nor Amaya nor Thot package found, get the corresponding archive
-    fi
-
-fi
-
 if test "$build_amaya" = "yes" ; then
     echo Amaya configured with libWWW
     if test "$with_plugin" = "yes" ; then
@@ -789,17 +709,16 @@ fi
 
 if test "$no_motif" = yes ; then
     echo "Motif seems not installed on this machine"
-    echo "Thot and Amaya need Motif 1.2 or 2.0"
-    echo "Thot and Amaya probably won't compile"
+    echo "Amaya need Motif 1.2 or 2.0"
 else
 if test "$motif_includes" = "" ; then
     echo "Motif includes were not found"
-    echo "Thot and Amaya might not compile"
+    echo "Amaya might not compile"
     echo "Edit your Option file"
 else
 if test "$motif_libraries" = "" ; then
     echo "Motif libraries were not found"
-    echo "Thot and Amaya might not compile"
+    echo "Amaya might not compile"
     echo "Edit your Option file"
 fi
 fi
