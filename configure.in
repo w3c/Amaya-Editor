@@ -231,6 +231,44 @@ AC_TYPE_SIGNAL
 AC_FUNC_VPRINTF
 AC_CHECK_FUNCS(getcwd gethostname gettimeofday getwd mkdir mktime putenv select socket strdup strerror strftime strstr strtod strtol uname lstat strcasecmp strncasecmp strchr memcpy)
 
+GTK_OPTIONS=
+AC_ARG_WITH(gtk, [  --with-gtk              use GTK instead of Motif])
+if test "$withval" = "yes" ; then
+  for ac_dir in               \
+    /usr/X11R6/include        \
+                              \
+    /usr/include/X11R6        \
+    /usr/local/X11R6/include  \
+    /usr/local/include/X11R6  \
+                              \
+    /usr/X11/include          \
+    /usr/include/X11          \
+    /usr/local/X11/include    \
+    /usr/local/include/X11    \
+                              \
+    /usr/X386/include         \
+    /usr/x386/include         \
+    /usr/XFree86/include/X11  \
+                              \
+    /usr/dt/include           \
+    /usr/include              \
+    /usr/local/include        \
+    /usr/local/lib/glib/include  \
+    ; \
+  do
+    if test -r "$ac_dir/gdk/gdk.h"; then
+      no_gtk= ac_gtk_includes=$ac_dir
+      break
+    fi
+  done
+
+GTK_INCLUDES="-I$ac_gtk_includes"
+AC_SUBST(GTK_INCLUDES)
+GTK_LIBRARIES="-lgtk -lgdk -rdynamic -lgmodule -lglib"
+AC_SUBST(GTK_LIBRARIES)
+GTK_OPTIONS=-DGTK
+  no_motif=yes
+else
 dnl
 dnl Checking for Motif libraries and includes
 dnl
@@ -352,30 +390,22 @@ motif_includes=NONE
 motif_libraries=NONE
 
 AC_MSG_CHECKING(for Motif)
-AC_ARG_WITH(motif, [  --with-motif            enable Motif tests])
-
-if test "${GCC}" = "yes"; then
-   CPP="${CPP} -x c"
-fi
-if test "x$with_motif" = xno; then
-  no_motif=yes
-else
-  if test "x$motif_includes" != xNONE && test "x$motif_libraries" != xNONE; then
+if test "x$motif_includes" != xNONE && test "x$motif_libraries" != xNONE; then
     no_motif=
-  else
+else
 AC_CACHE_VAL(ac_cv_path_motif,
 [# One or both of these vars are not set, and there is no cached value.
-no_motif=yes
+  no_motif=yes
 AC_PATH_MOTIF_DIRECT
 
 if test "$no_motif" = yes; then
-  ac_cv_path_motif="no_motif=yes"
+    ac_cv_path_motif="no_motif=yes"
 else
-  ac_cv_path_motif="no_motif= ac_motif_includes=$ac_motif_includes ac_motif_libraries=$ac_motif_libraries"
+    ac_cv_path_motif="no_motif= ac_motif_includes=$ac_motif_includes ac_motif_libraries=$ac_motif_libraries"
 fi])dnl
   fi
   eval "$ac_cv_path_motif"
-fi # with_motif != no
+fi
 
 if test "$no_motif" = yes; then
   AC_MSG_RESULT(no)
@@ -403,6 +433,10 @@ AC_SUBST(MOTIF_LIBRARIES)
 ])
 
 AC_PATH_MOTIF
+
+if test "${GCC}" = "yes"; then
+   CPP="${CPP} -x c"
+fi
 
 dnl  ***************************************************************
 dnl
@@ -541,8 +575,8 @@ dnl
 dnl The options for each library or binary
 dnl
 
-THOT_OPTIONS=
-AMAYA_OPTIONS=$MATH_OPTIONS $GRAPH_OPTIONS
+THOT_OPTIONS="$GTK_OPTIONS"
+AMAYA_OPTIONS="$MATH_OPTIONS $GRAPH_OPTIONS $GTK_OPTIONS"
 #PLUGIN_OPTIONS="-DPLUGIN_TRACE -DXP_UNIX"
 AMAYA_ANNOT_OPTIONS=
 IMGLIBS="-ljpeg -lpng -lz"
@@ -588,6 +622,7 @@ AC_SUBST(THOTINCLUDES)
 AC_SUBST(APIINCLUDES)
 AC_SUBST(VPATHOPT)
 
+AC_SUBST(GTK_OPTIONS)
 AC_SUBST(THOT_OPTIONS)
 AC_SUBST(AMAYA_OPTIONS)
 AC_SUBST(PLUGIN_OPTIONS)

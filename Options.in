@@ -3,7 +3,7 @@
 # Generated from Options.in
 #
 # Increase the Version number each time one entry is added
-# Version : 1.7
+# Version : 1.8
 #
 
 SHELL	= /bin/sh
@@ -44,8 +44,8 @@ EXPAT_INCLUDES=
 EXPAT_LIBRARIES=
 EXPAT_OPTIONS=-DXML_DTD -DXML_NS
 
-#GTK_INCLUDES=-I/usr/local/lib/glib/include
-#GTK_LIBRARIES=-lgtk -lgdk -rdynamic -lgmodule -lglib
+GTK_INCLUDES=@GTK_INCLUDES@
+GTK_LIBRARIES=@GTK_LIBRARIES@
 
 X_FLAGS=$(MOTIF_INCLUDES) $(GTK_INCLUDES) @X_CFLAGS@
 X_EXTRA_LIBS=@X_EXTRA_LIBS@
