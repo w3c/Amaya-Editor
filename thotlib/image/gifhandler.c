@@ -932,17 +932,17 @@ static XImage *MakeImage (Display *dsp, unsigned char *data, int width,
 	      r = data[ind++];
 	      g = data[ind++];
 	      b = data[ind++];
-	      temp = ((r & theVisual->red_mask) | 
-		      ((g >> gshift) & theVisual->green_mask) |
-		      ((b >> bshift) & theVisual->blue_mask));
+	      temp = (((r << 8) & theVisual->red_mask) | 
+		      (((g << 8) >> gshift) & theVisual->green_mask) |
+		      (((b << 8) >> bshift) & theVisual->blue_mask));
 	    }
 	  else
 	    {
 	      /* use one byte per pixel */
 	      col = data[ind++];
-	      temp = (((colrs[col].red >> 8) & theVisual->red_mask) | 
-		      (((colrs[col].green >> 8) >> gshift) & theVisual->green_mask) |
-		      (((colrs[col].blue >> 8) >> bshift) & theVisual->blue_mask));
+	      temp = ((colrs[col].red & theVisual->red_mask) | 
+		      ((colrs[col].green >> gshift) & theVisual->green_mask) |
+		      ((colrs[col].blue >> bshift) & theVisual->blue_mask));
 	    }
 	  if (BitmapBitOrder (dsp) == MSBFirst)
 	    {
@@ -1418,6 +1418,12 @@ void DataToPrint (unsigned char *data, PictureScaling pres, int xif, int yif,
     }
 
   fprintf(fd, "\n");
+  if (ncolors == 0)
+    {
+      /* using 3 bytes per pixel */
+      xtmp = xtmp * 3;
+      picW = picW * 3;
+    }
   for (y = 0 ; y < hif; y++)
     {
       ind = ((ytmp + y) * picW) + xtmp;
