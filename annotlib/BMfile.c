@@ -624,6 +624,8 @@ ThotBool BM_addTopic (BookmarkP me, ThotBool generateID)
       sprintf (topicid, "%s", base_uri);
       sprintf (topicid + strlen (base_uri), template, genid_counter++);
     }
+  else
+    strcpy (topicid, me->self_url);
 
 #if 0 /* the following block let's the user type his own URL. USeful for
 	 debugging. */
