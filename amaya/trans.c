@@ -1558,7 +1558,7 @@ strNode            *TN;
 		{		/* the attribute has been found, writing the attribute name */
 		  res = res && PutInHtmlBuffer (TEXT(" "));
 		  res = res && PutInHtmlBuffer (AD->AttrAttr);
-		  res = res && PutInHtmlBuffer (EQ_OP);
+		  res = res && PutInHtmlBuffer (TEXT("="));
 		  /* writing the attribute value */
 		  TtaGiveAttributeType (attr, &attrType, &attrKind);
 		  if (attrKind == 2)
@@ -1583,7 +1583,7 @@ strNode            *TN;
 	{			/* creation of an attribute */
 	  res = res && PutInHtmlBuffer (TEXT(" "));
 	  res = res && PutInHtmlBuffer (AD->NameAttr);
-	  res = res && PutInHtmlBuffer (EQ_OP);
+	  res = res && PutInHtmlBuffer (TEXT("="));
 	  if (AD->IsInt)
 	    {		/* int attribute */
 	      usprintf (attrValue, TEXT("%d"), AD->IntVal);

@@ -1469,13 +1469,13 @@ LPARAM lParam;
 
     switch (msg) {
            case WM_INITDIALOG:
-				messageWnd1 = CreateWindow (_STATICCST_, currentPathName, WS_CHILD | WS_VISIBLE | SS_LEFT,
+				messageWnd1 = CreateWindow (TEXT("STATIC"), currentPathName, WS_CHILD | WS_VISIBLE | SS_LEFT,
 					                       15, 70, 400, 20, hwnDlg, (HMENU) 9, 
 										   (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
-				messageWnd2 = CreateWindow (_STATICCST_, message, WS_CHILD | WS_VISIBLE | SS_LEFT,
+				messageWnd2 = CreateWindow (TEXT("STATIC"), message, WS_CHILD | WS_VISIBLE | SS_LEFT,
 					                       15, 90, 400, 60, hwnDlg, (HMENU) 99, 
 										   (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
-				messageWnd3 = CreateWindow (_STATICCST_, message2, WS_CHILD | WS_VISIBLE | SS_LEFT,
+				messageWnd3 = CreateWindow (TEXT("STATIC"), message2, WS_CHILD | WS_VISIBLE | SS_LEFT,
 					                       15, 110, 400, 60, hwnDlg, (HMENU) 999, 
 										   (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 			    break;
@@ -1810,12 +1810,12 @@ LPARAM lParam;
                 cxChar = tm.tmAveCharWidth;
                 cyChar = tm.tmHeight + tm.tmExternalLeading;
 
-                radio1 = CreateWindow (_BUTTONCST_, &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                radio1 = CreateWindow (TEXT("BUTTON"), &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
                 ndx += ustrlen (&WIN_buffMenu [ndx]) + 1;
 				i++;
-                radio2 = CreateWindow (_BUTTONCST_, &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT2, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                radio2 = CreateWindow (TEXT("BUTTON"), &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT2, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
                 i++;
-                groupBx = CreateWindow (_BUTTONCST_, attDlgTitle, WS_CHILD | WS_VISIBLE | BS_GROUPBOX, cxChar, 0, rect.right - (2 * cxChar), i * (2 * cyChar) + cyChar, hwnDlg, (HMENU) 1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);                switch (currAttrVal) {
+                groupBx = CreateWindow (TEXT("BUTTON"), attDlgTitle, WS_CHILD | WS_VISIBLE | BS_GROUPBOX, cxChar, 0, rect.right - (2 * cxChar), i * (2 * cyChar) + cyChar, hwnDlg, (HMENU) 1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);                switch (currAttrVal) {
                        case 1: CheckRadioButton (hwnDlg, OPT1, OPT2, OPT1);
                                break;
 
@@ -1901,15 +1901,15 @@ LPARAM lParam;
                 cyChar = tm.tmHeight + tm.tmExternalLeading;
                 ReleaseDC (hwnDlg, hDC);
 
-                radio1 = CreateWindow (_BUTTONCST_, &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                radio1 = CreateWindow (TEXT("BUTTON"), &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
                 ndx += ustrlen (&WIN_buffMenu [ndx]) + 1;
 				i++;
-                radio2 = CreateWindow (_BUTTONCST_, &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT2, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                radio2 = CreateWindow (TEXT("BUTTON"), &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT2, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
                 ndx += ustrlen (&WIN_buffMenu [ndx]) + 1;
 				i++;
-                radio3 = CreateWindow (_BUTTONCST_, &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT3, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                radio3 = CreateWindow (TEXT("BUTTON"), &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT3, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
                 i++;
-                groupBx = CreateWindow (_BUTTONCST_, attDlgTitle, WS_CHILD | WS_VISIBLE | BS_GROUPBOX, cxChar, 0, rect.right - (2 * cxChar), i * (2 * cyChar) + cyChar, hwnDlg, (HMENU) 1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                groupBx = CreateWindow (TEXT("BUTTON"), attDlgTitle, WS_CHILD | WS_VISIBLE | BS_GROUPBOX, cxChar, 0, rect.right - (2 * cxChar), i * (2 * cyChar) + cyChar, hwnDlg, (HMENU) 1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
                 switch (currAttrVal) {
                        case 1: CheckRadioButton (hwnDlg, OPT1, OPT3, OPT1);
                                break;
@@ -2004,18 +2004,18 @@ LPARAM lParam;
                 cyChar = tm.tmHeight + tm.tmExternalLeading;
                 ReleaseDC (hwnDlg, hDC);
 
-                hwndRadio1 = CreateWindow (_BUTTONCST_, &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                hwndRadio1 = CreateWindow (TEXT("BUTTON"), &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
                 ndx += ustrlen (&WIN_buffMenu [ndx]) + 1;
 				i++;
-                hwndRadio2 = CreateWindow (_BUTTONCST_, &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT2, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                hwndRadio2 = CreateWindow (TEXT("BUTTON"), &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT2, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
                 ndx += ustrlen (&WIN_buffMenu [ndx]) + 1;
 				i++;
-                hwndRadio3 = CreateWindow (_BUTTONCST_, &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT3, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                hwndRadio3 = CreateWindow (TEXT("BUTTON"), &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT3, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
                 ndx += ustrlen (&WIN_buffMenu [ndx]) + 1;
 				i++;
-                hwndRadio3 = CreateWindow (_BUTTONCST_, &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT4, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                hwndRadio3 = CreateWindow (TEXT("BUTTON"), &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT4, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 				i++;
-                groupBx = CreateWindow (_BUTTONCST_, attDlgTitle, WS_CHILD | WS_VISIBLE | BS_GROUPBOX, cxChar, 0, rect.right - (2 * cxChar), i * (2 * cyChar) + cyChar, hwnDlg, (HMENU) 1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                groupBx = CreateWindow (TEXT("BUTTON"), attDlgTitle, WS_CHILD | WS_VISIBLE | BS_GROUPBOX, cxChar, 0, rect.right - (2 * cxChar), i * (2 * cyChar) + cyChar, hwnDlg, (HMENU) 1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
                 switch (currAttrVal) {
                        case 1: CheckRadioButton (hwnDlg, OPT1, OPT4, OPT1);
                                break;
@@ -2120,21 +2120,21 @@ LPARAM lParam;
                 cyChar = tm.tmHeight + tm.tmExternalLeading;
                 ReleaseDC (hwnDlg, hDC);
 
-                radio1 = CreateWindow (_BUTTONCST_, &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                radio1 = CreateWindow (TEXT("BUTTON"), &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
                 ndx += ustrlen (&WIN_buffMenu [ndx]) + 1;
 				i++;
-                radio2 = CreateWindow (_BUTTONCST_, &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT2, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                radio2 = CreateWindow (TEXT("BUTTON"), &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT2, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
                 ndx += ustrlen (&WIN_buffMenu [ndx]) + 1;
 				i++;
-                radio3 = CreateWindow (_BUTTONCST_, &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT3, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                radio3 = CreateWindow (TEXT("BUTTON"), &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT3, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
                 ndx += ustrlen (&WIN_buffMenu [ndx]) + 1;
 				i++;
-                radio4 = CreateWindow (_BUTTONCST_, &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT4, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                radio4 = CreateWindow (TEXT("BUTTON"), &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT4, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
                 ndx += ustrlen (&WIN_buffMenu [ndx]) + 1;
 				i++;
-                radio5 = CreateWindow (_BUTTONCST_, &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT5, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                radio5 = CreateWindow (TEXT("BUTTON"), &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT5, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
                 i++;
-                groupBx = CreateWindow (_BUTTONCST_, attDlgTitle, WS_CHILD | WS_VISIBLE | BS_GROUPBOX, cxChar, 0, rect.right - (2 * cxChar), i * (2 * cyChar) + cyChar, hwnDlg, (HMENU) 1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                groupBx = CreateWindow (TEXT("BUTTON"), attDlgTitle, WS_CHILD | WS_VISIBLE | BS_GROUPBOX, cxChar, 0, rect.right - (2 * cxChar), i * (2 * cyChar) + cyChar, hwnDlg, (HMENU) 1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
                 switch (currAttrVal) {
                        case 1: CheckRadioButton (hwnDlg, OPT1, OPT5, OPT1);
                                break;
@@ -2750,7 +2750,7 @@ LPARAM lParam;
     switch (msg) {
 	       case WM_INITDIALOG:
 			    SetWindowText (hwnDlg, wndTitle);
-				messageWnd = CreateWindow (_STATICCST_, message, WS_CHILD | WS_VISIBLE | SS_LEFT,
+				messageWnd = CreateWindow (TEXT("STATIC"), message, WS_CHILD | WS_VISIBLE | SS_LEFT,
 					                       15, 15, 400, 60, hwnDlg, (HMENU) 99, 
 										   (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 				break;
@@ -3139,7 +3139,7 @@ LPARAM lParam;
 					  i++;
 				}
 
-				wndEditRule	= CreateWindow (_EDITCST_, NULL, WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER,
+				wndEditRule	= CreateWindow (TEXT("EDIT"), NULL, WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER,
 					                        10, 150, 200, 30, hwnDlg, (HMENU) IDC_EDITRULE, 
 											(HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 
@@ -3274,11 +3274,11 @@ LPARAM lParam;
 
     switch (msg) {
 	       case WM_INITDIALOG:
-                hwndLanguage = CreateWindow (_STATICCST_, NULL, WS_CHILD | WS_VISIBLE | SS_LEFT,
+                hwndLanguage = CreateWindow (TEXT("STATIC"), NULL, WS_CHILD | WS_VISIBLE | SS_LEFT,
                                              13, 10, 150, 16, hwnDlg, (HMENU) 2,  
                                              (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 
-			    wndLabel = CreateWindow (_STATICCST_, currentLabel, WS_CHILD | WS_VISIBLE | SS_LEFT,
+			    wndLabel = CreateWindow (TEXT("STATIC"), currentLabel, WS_CHILD | WS_VISIBLE | SS_LEFT,
 					                     13, 29, 150, 16, hwnDlg, (HMENU) 99, 
 										 (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 
@@ -3290,7 +3290,7 @@ LPARAM lParam;
 					                         13, 72, 150, 70, hwnDlg, (HMENU) 1, 
 											 (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 
-				hwndCurrentWord = CreateWindow (_EDITCST_, NULL, WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER,
+				hwndCurrentWord = CreateWindow (TEXT("EDIT"), NULL, WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER,
 					                            13, 146, 150, 20, hwnDlg, (HMENU) IDC_LANGEDIT, 
 											 (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
  
@@ -3444,7 +3444,7 @@ LPARAM lParam;
     switch (msg) {
 	       case WM_INITDIALOG:
 			    SetWindowText (hwnDlg, wndTitle);
-				messageWnd = CreateWindow (_STATICCST_, message, WS_CHILD | WS_VISIBLE | SS_LEFT,
+				messageWnd = CreateWindow (TEXT("STATIC"), message, WS_CHILD | WS_VISIBLE | SS_LEFT,
 					                       15, 15, 303, 60, hwnDlg, (HMENU) 99, 
 										   (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 				break;

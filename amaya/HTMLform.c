@@ -259,10 +259,10 @@ STRING              name, value,
 #endif
 {
    AddElement (name);
-   AddToBuffer (EQ_OP);
+   AddToBuffer (TEXT("="));
    if (value)
       AddElement (value);
-   AddToBuffer (AND_OP);
+   AddToBuffer (TEXT("&"));
 }
 
 /*----------------------------------------------------------------------

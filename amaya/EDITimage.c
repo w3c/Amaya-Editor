@@ -686,7 +686,7 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   CreateAreaMap (doc, view, _R_);
+   CreateAreaMap (doc, view, TEXT("R"));
 }
 
 /*----------------------------------------------------------------------
@@ -700,7 +700,7 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   CreateAreaMap (doc, view, _a_);
+   CreateAreaMap (doc, view, TEXT("a"));
 }
 
 /*----------------------------------------------------------------------
@@ -714,7 +714,7 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   CreateAreaMap (doc, view, _p_);
+   CreateAreaMap (doc, view, TEXT("p"));
 }
 
 /*----------------------------------------------------------------------

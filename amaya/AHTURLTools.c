@@ -692,7 +692,7 @@ STRING     url;
     {
       /* check whether the file name exists */
       len = ustrlen (url) - 1;
-      if (IsW3Path)
+      if (IsW3Path (url))
 	url_sep = TEXT('/');
       else 
 	url_sep = DIR_SEP;

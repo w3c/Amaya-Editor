@@ -5211,7 +5211,7 @@ CHAR_T                c;
 			 buffer = TtaAllocString (length + 1);
 			 TtaGiveTextAttributeValue (lastAttribute, buffer,
 						    &length);
-			 ustrcat (buffer, EQ_OP);
+			 ustrcat (buffer, TEXT("="));
 			 ustrcat (buffer, inputBuffer);
 			 TtaSetAttributeText (lastAttribute, buffer,
 					      lastAttrElement, theDocument);
