@@ -624,7 +624,8 @@ PtrDocument     pDoc;
          /* table de traduction, on ne le traduit donc pas */
 	{
 	   ft = textTransBegin;
-	   PutChar (c, fileNum, NULL, pDoc, lineBreak);
+	   if (c != EOS)
+	      PutChar (c, fileNum, NULL, pDoc, lineBreak);
 	}
       else
 	 /* on avait commence' a analyser une sequence de caracteres. */
@@ -643,7 +644,8 @@ PtrDocument     pDoc;
 		pBufT = pPrevBufT;
 		i = pBufT->BuLength + i - b;
 	     }
-	   PutChar (pBufT->BuContent[i - 1], fileNum, NULL, pDoc, lineBreak);
+	   if (c != EOS)
+	     PutChar (pBufT->BuContent[i - 1], fileNum, NULL, pDoc, lineBreak);
 	   b = 0;
 	   ft = textTransBegin;
 	   lt = textTransEnd;
