@@ -21,18 +21,18 @@ extern boolean MergeTextElements ( PtrElement pEl,
                                    boolean removeAbsBox );
 extern PtrTextBuffer CopyText ( PtrTextBuffer pBuf,
                                 PtrElement pEl );
-extern boolean StringAndTextEqual ( char *String,
+extern boolean StringAndTextEqual ( STRING String,
                                     PtrTextBuffer pBuf );
 extern boolean TextsEqual ( PtrTextBuffer pBuf1,
                             PtrTextBuffer pBuf2 );
 extern void CopyTextToText ( PtrTextBuffer pSrceBuf,
                              PtrTextBuffer pCopyBuf,
                              int *len );
-extern void CopyStringToText ( char *srceStrn,
+extern void CopyStringToText ( STRING srceStrn,
                                PtrTextBuffer pCopyBuf,
                                int *LgCopiee );
 extern void CopyTextToString ( PtrTextBuffer pSrceBuf,
-                               char *pStrCpy,
+                               STRING pStrCpy,
                                int *len );
 extern void ClearText ( PtrTextBuffer pBuf );
 extern void AddPointInPolyline ( PtrTextBuffer firstBuffer,
@@ -63,18 +63,18 @@ extern boolean MergeTextElements (/* PtrElement pEl,
                                      boolean removeAbsBox */);
 extern PtrTextBuffer CopyText (/* PtrTextBuffer pBuf,
                                   PtrElement pEl */);
-extern boolean StringAndTextEqual (/* char *String,
+extern boolean StringAndTextEqual (/* STRING String,
                                       PtrTextBuffer pBuf */);
 extern boolean TextsEqual (/* PtrTextBuffer pBuf1,
                               PtrTextBuffer pBuf2 */);
 extern void CopyTextToText (/* PtrTextBuffer pSrceBuf,
                                PtrTextBuffer pCopyBuf,
                                int *len */);
-extern void CopyStringToText (/* char *srceStrn,
+extern void CopyStringToText (/* STRING srceStrn,
                                  PtrTextBuffer pCopyBuf,
                                  int *LgCopiee */);
 extern void CopyTextToString (/* PtrTextBuffer pSrceBuf,
-                                 char *pStrCpy,
+                                 STRING pStrCpy,
                                  int *len */);
 extern void ClearText (/* PtrTextBuffer pBuf */);
 extern void AddPointInPolyline (/* PtrTextBuffer firstBuffer,

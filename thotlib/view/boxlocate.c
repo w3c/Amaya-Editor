@@ -21,6 +21,7 @@
  *
  */
 
+#include "ustring.h"
 #include "libmsg.h"
 #include "thot_sys.h"
 
@@ -2290,7 +2291,7 @@ int                *spacesNumber;
    int                 charWidth;
    int                 newIndex;
    ptrfont             font;
-   unsigned char       c;
+   UCHAR       c;
    boolean             notfound;
 
 
@@ -2330,7 +2331,7 @@ int                *spacesNumber;
 	notfound = (dx < *x);
 #else
 	/* largeur du caractere suivant */
-	c = (unsigned char) ((*pBuffer)->BuContent[newIndex - 1]);
+	c = (UCHAR) ((*pBuffer)->BuContent[newIndex - 1]);
 	if (c == 0)
 	   charWidth = 0;
 	else if (c == _SPACE_)
@@ -2343,7 +2344,7 @@ int                *spacesNumber;
 	  {
 #ifdef STRUCT_EDIT
 	     /* largeur du caractere courant */
-	     c = (unsigned char) ((*pBuffer)->BuContent[newIndex - 1]);
+	     c = (UCHAR) ((*pBuffer)->BuContent[newIndex - 1]);
 	     if (c == 0)
 		charWidth = 0;
 	     else if (c == _SPACE_)
@@ -2384,7 +2385,7 @@ int                *spacesNumber;
 	     notfound = (dx < *x);
 #else
 	     /* largeur du caractere suivant */
-	     c = (unsigned char) ((*pBuffer)->BuContent[newIndex - 1]);
+	     c = (UCHAR) ((*pBuffer)->BuContent[newIndex - 1]);
 	     if (c == 0)
 		charWidth = 0;
 	     else if (c == _SPACE_)

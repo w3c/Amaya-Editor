@@ -9,7 +9,7 @@
 extern void *TtaGetMemory ( unsigned int n );
 extern void TtaFreeMemory ( void* ptr );
 extern void FreeAll ( void );
-extern char *TtaStrdup ( char *str );
+extern STRING TtaStrdup ( STRING str );
 extern void *TtaRealloc ( void *ptr,
                           unsigned int n );
 extern void InitEditorMemory ( void );
@@ -82,7 +82,7 @@ extern void FreeDictionary ( PtrDict pDict );
 extern void *TtaGetMemory (/* unsigned int n */);
 extern void TtaFreeMemory (/* void* ptr */);
 extern void FreeAll (/* void */);
-extern char *TtaStrdup (/* char *str */);
+extern STRING TtaStrdup (/* STRING str */);
 extern void *TtaRealloc (/* void *ptr,
                             unsigned int n */);
 extern void InitEditorMemory (/* void */);

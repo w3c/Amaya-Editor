@@ -6,45 +6,45 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void BuildPathDocBuffer ( char *bufDir,
-                                 char separator,
+extern void BuildPathDocBuffer ( STRING bufDir,
+                                 CHAR separator,
                                  int *nbItems );
-extern int SearchStringInBuffer ( char *buffer,
-                                  char *s,
+extern int SearchStringInBuffer ( STRING buffer,
+                                  STRING s,
                                   int nbStr );
 extern void BuildSchPresNameMenu ( PtrSSchema pSchStr,
                                    Name name );
 extern void CallbackSchPresNameMenu ( int ref,
                                       int typedata,
-                                      char *data );
+                                      STRING data );
 extern void CallbackImportMenu ( int ref,
                                  int typedata,
-                                 char *data );
+                                 STRING data );
 extern void CallbackOpenDocMenu ( int ref,
                                   int typedata,
-                                  char *data );
+                                  STRING data );
 extern void TtcOpenDocument ( Document document,
                               View view );
 
 #else /* __STDC__ */
 
-extern void BuildPathDocBuffer (/* char *bufDir,
-                                   char separator,
+extern void BuildPathDocBuffer (/* STRING bufDir,
+                                   CHAR separator,
                                    int *nbItems */);
-extern int SearchStringInBuffer (/* char *buffer,
-                                    char *s,
+extern int SearchStringInBuffer (/* STRING buffer,
+                                    STRING s,
                                     int nbStr */);
 extern void BuildSchPresNameMenu (/* PtrSSchema pSchStr,
                                      Name name */);
 extern void CallbackSchPresNameMenu (/* int ref,
                                         int typedata,
-                                        char *data */);
+                                        STRING data */);
 extern void CallbackImportMenu (/* int ref,
                                    int typedata,
-                                   char *data */);
+                                   STRING data */);
 extern void CallbackOpenDocMenu (/* int ref,
                                     int typedata,
-                                    char *data */);
+                                    STRING data */);
 extern void TtcOpenDocument (/* Document document,
                                 View view */);
 

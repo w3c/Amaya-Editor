@@ -22,6 +22,7 @@
  *
  */
 
+#include "ustring.h"
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "thot_key.h"
@@ -41,7 +42,7 @@
 #ifndef _WINDOWS
 static XmString  null_string;
 #endif
-static char         OldMsgSelect[MAX_TXT_LEN];
+static CHAR         OldMsgSelect[MAX_TXT_LEN];
 static PtrDocument  OldDocMsgSelect;
 
 #undef THOT_EXPORT
@@ -94,13 +95,13 @@ static PtrDocument  OldDocMsgSelect;
     (BOOL)SendMessage((hwnd), TTM_ADDTOOL, 0, (LPARAM) (LPTOOLINFO) lpti)
 
 #ifdef __STDC__
-extern int WIN_TtaHandleMultiKeyEvent (UINT, WPARAM, LPARAM, char*);
+extern int WIN_TtaHandleMultiKeyEvent (UINT, WPARAM, LPARAM, STRING);
 #else  /* __STDC__ */
 extern int WIN_TtaHandleMultiKeyEvent ();
 UINT    msg; 
 WPARAM wParam; 
 LPARAM lParam;
-char*  k;
+STRING  k;
 #endif /* __STDC__ */
 
 extern HWND      hwndClient;
@@ -121,11 +122,11 @@ int         bmpID;
 #endif /* !_WIN_PRINT */
 
 static HWND      hwndHead;
-static char*     txtZoneLabel;
+static STRING     txtZoneLabel;
 static BOOL      paletteRealized = FALSE;
 
-static char      URL_txt [500];
-static char      doc_title [500];
+static CHAR      URL_txt [500];
+static CHAR      doc_title [500];
 
 static int       oldXPos;
 static int       oldYPos;
@@ -136,7 +137,7 @@ int         X_Pos;
 int         Y_Pos;
 int         cyToolBar;
 int         CommandToString [MAX_FRAME][MAX_BUTTON];
-char        szTbStrings [4096];
+CHAR        szTbStrings [4096];
 BOOL        autoScroll = FALSE;
 boolean viewClosed = FALSE;
 DWORD       dwToolBarStyles   = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_TOP | TBSTYLE_TOOLTIPS;
@@ -1081,17 +1082,17 @@ View                view;
    la fenetre active.                                            
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                DisplaySelMessage (char *text, PtrDocument pDoc)
+void                DisplaySelMessage (STRING text, PtrDocument pDoc)
 #else  /* __STDC__ */
 void                DisplaySelMessage (text, pDoc)
-char               *text;
+STRING              text;
 PtrDocument         pDoc;
 #endif /* __STDC__ */
 {
    int                 doc;
    int                 view;
 
-   if (ActiveFrame != 0 && (strcmp (OldMsgSelect, text) ||pDoc != OldDocMsgSelect))
+   if (ActiveFrame != 0 && (ustrcmp (OldMsgSelect, text) ||pDoc != OldDocMsgSelect))
      {
 	/* recupere le document concerne */
 	doc = FrameTable[ActiveFrame].FrDoc;
@@ -1102,7 +1103,7 @@ PtrDocument         pDoc;
                TtaSetStatus ((Document) doc, view + 100, text, NULL);
 	  }
 	/* sel old message */
-	strncpy (OldMsgSelect, text, MAX_TXT_LEN);
+	ustrncpy (OldMsgSelect, text, MAX_TXT_LEN);
 	OldDocMsgSelect = pDoc;
      }
 }
@@ -1112,17 +1113,17 @@ PtrDocument         pDoc;
    TtaSetStatus affiche le status de la vue du document.                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaSetStatus (Document document, View view, CONST char *text, CONST char *name)
+void                TtaSetStatus (Document document, View view, CONST STRING text, CONST STRING name)
 #else  /* __STDC__ */
 void                TtaSetStatus (document, view, text, name)
 Document            document;
 View                view;
-CONST char         *text;
-CONST char         *name;
+CONST STRING        text;
+CONST STRING        name;
 #endif /* __STDC__ */
 {
    int                 frame;
-   char                s[1024];
+   CHAR                s[1024];
 
 #  ifndef _WINDOWS
    Arg                 args[MAX_ARGS];
@@ -1152,7 +1153,7 @@ CONST char         *name;
 	       }
 	     else
 #               ifdef _WINDOWS
-		strncpy (&s[0], text, sizeof (s));
+		ustrncpy (&s[0], text, sizeof (s));
 #               else  /* !_WINDOWS */
 		title_string = XmStringCreateSimple (text);
 #               endif /* !_WINDOWS */
@@ -1216,7 +1217,7 @@ LPARAM      lParam;
     HWND   hwndToolTip ;
     RECT   rect;
     int    doc, view ;
-    char*  viewName ;
+    STRING  viewName ;
 	static HPALETTE hPal;
 	/*
 	HDC    hDC, hMemDC;
@@ -1325,7 +1326,7 @@ LPARAM      lParam;
                 if (!viewClosed) {
                    FrameToView (frame, &doc, &view);
                    viewName = TtaGetViewName (doc, view);
-                   if (!strcmp (viewName, "Formatted_view"))
+                   if (!ustrcmp (viewName, "Formatted_view"))
                       TtcCloseDocument (doc, view);
                    else
                        TtcCloseView (doc, view);
@@ -2158,12 +2159,12 @@ PtrAbstractBox     *pave;
    Modifie le titre de la fenetre d'indice frame.                     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ChangeFrameTitle (int frame, char *text)
+void                ChangeFrameTitle (int frame, STRING text)
 
 #else  /* __STDC__ */
 void                ChangeFrameTitle (frame, text)
 int                 frame;
-char               *text;
+STRING              text;
 
 #endif /* __STDC__ */
 {

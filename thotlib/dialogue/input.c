@@ -24,6 +24,7 @@
  *
  */
 
+#include "ustring.h"
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "thot_key.h"
@@ -119,29 +120,29 @@ static BOOL specialKey;
    Motif translations.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char        *NameCode (char *name)
+static STRING       NameCode (STRING name)
 
 #else  /* __STDC__ */
-static char        *NameCode (name)
-char               *name;
+static STRING       NameCode (name)
+STRING              name;
 
 #endif /* __STDC__ */
 
 {
-   if (strlen (name) < 5)
+   if (ustrlen (name) < 5)
       if (name[0] == ',')
 	 return ("0x2c");
       else
 	 return (name);
-   else if (!strcasecmp (name, "return"))
+   else if (!ustrcasecmp (name, "return"))
       return ("0x0d");
-   else if (!strcasecmp (name, "backspace"))
+   else if (!ustrcasecmp (name, "backspace"))
       return ("0x08");
-   else if (!strcasecmp (name, "space"))
+   else if (!ustrcasecmp (name, "space"))
       return ("0x20");
-   else if (!strcasecmp (name, "escape"))
+   else if (!ustrcasecmp (name, "escape"))
       return ("0x18");
-   else if (!strcasecmp (name, "delete"))
+   else if (!ustrcasecmp (name, "delete"))
       return ("0x7f");
    else
       return (name);
@@ -154,107 +155,107 @@ char               *name;
    which Thot can use.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static unsigned int SpecialKey (char *name)
+static unsigned int SpecialKey (STRING name)
 #else  /* __STDC__ */
 static unsigned int SpecialKey (name)
-char               *name;
+STRING              name;
 
 #endif /* __STDC__ */
 {
    /* is it the name of a special character? */
-   if (!strcasecmp (name, "return"))
+   if (!ustrcasecmp (name, "return"))
       return (unsigned int) THOT_KEY_Return;
-   else if (!strcasecmp (name, "backspace"))
+   else if (!ustrcasecmp (name, "backspace"))
       return (unsigned int) THOT_KEY_BackSpace;
-   else if (!strcasecmp (name, "space"))
+   else if (!ustrcasecmp (name, "space"))
       return 32;
-   else if (!strcasecmp (name, "escape"))
+   else if (!ustrcasecmp (name, "escape"))
       return (unsigned int) THOT_KEY_Escape;
-   else if (!strcasecmp (name, "delete"))
+   else if (!ustrcasecmp (name, "delete"))
       return (unsigned int) THOT_KEY_Delete;
-   else if (!strcasecmp (name, "f1"))
+   else if (!ustrcasecmp (name, "f1"))
       return (unsigned int) THOT_KEY_F1;
-   else if (!strcasecmp (name, "f2"))
+   else if (!ustrcasecmp (name, "f2"))
       return (unsigned int) THOT_KEY_F2;
-   else if (!strcasecmp (name, "f3"))
+   else if (!ustrcasecmp (name, "f3"))
       return (unsigned int) THOT_KEY_F3;
-   else if (!strcasecmp (name, "f4"))
+   else if (!ustrcasecmp (name, "f4"))
       return (unsigned int) THOT_KEY_F4;
-   else if (!strcasecmp (name, "f5"))
+   else if (!ustrcasecmp (name, "f5"))
       return (unsigned int) THOT_KEY_F5;
-   else if (!strcasecmp (name, "f6"))
+   else if (!ustrcasecmp (name, "f6"))
       return (unsigned int) THOT_KEY_F6;
-   else if (!strcasecmp (name, "f7"))
+   else if (!ustrcasecmp (name, "f7"))
       return (unsigned int) THOT_KEY_F7;
-   else if (!strcasecmp (name, "f8"))
+   else if (!ustrcasecmp (name, "f8"))
       return (unsigned int) THOT_KEY_F8;
-   else if (!strcasecmp (name, "f9"))
+   else if (!ustrcasecmp (name, "f9"))
       return (unsigned int) THOT_KEY_F9;
-   else if (!strcasecmp (name, "f10"))
+   else if (!ustrcasecmp (name, "f10"))
       return (unsigned int) THOT_KEY_F10;
-   else if (!strcasecmp (name, "f11") || !strcasecmp (name, "l1"))
+   else if (!ustrcasecmp (name, "f11") || !ustrcasecmp (name, "l1"))
       return (unsigned int) THOT_KEY_F11;
-   else if (!strcasecmp (name, "f12") || !strcasecmp (name, "l2"))
+   else if (!ustrcasecmp (name, "f12") || !ustrcasecmp (name, "l2"))
       return (unsigned int) THOT_KEY_F12;
-   else if (!strcasecmp (name, "f13") || !strcasecmp (name, "l3"))
+   else if (!ustrcasecmp (name, "f13") || !ustrcasecmp (name, "l3"))
       return (unsigned int) THOT_KEY_F13;
-   else if (!strcasecmp (name, "f14") || !strcasecmp (name, "l4"))
+   else if (!ustrcasecmp (name, "f14") || !ustrcasecmp (name, "l4"))
       return (unsigned int) THOT_KEY_F14;
-   else if (!strcasecmp (name, "f15") || !strcasecmp (name, "l5"))
+   else if (!ustrcasecmp (name, "f15") || !ustrcasecmp (name, "l5"))
       return (unsigned int) THOT_KEY_F15;
-   else if (!strcasecmp (name, "f16") || !strcasecmp (name, "l6"))
+   else if (!ustrcasecmp (name, "f16") || !ustrcasecmp (name, "l6"))
       return (unsigned int) THOT_KEY_F16;
-   else if (!strcasecmp (name, "f17") || !strcasecmp (name, "l7"))
+   else if (!ustrcasecmp (name, "f17") || !ustrcasecmp (name, "l7"))
       return (unsigned int) THOT_KEY_F17;
-   else if (!strcasecmp (name, "f18") || !strcasecmp (name, "l8"))
+   else if (!ustrcasecmp (name, "f18") || !ustrcasecmp (name, "l8"))
       return (unsigned int) THOT_KEY_F18;
-   else if (!strcasecmp (name, "f19") || !strcasecmp (name, "l9"))
+   else if (!ustrcasecmp (name, "f19") || !ustrcasecmp (name, "l9"))
       return (unsigned int) THOT_KEY_F19;
-   else if (!strcasecmp (name, "f20") || !strcasecmp (name, "l10"))
+   else if (!ustrcasecmp (name, "f20") || !ustrcasecmp (name, "l10"))
       return (unsigned int) THOT_KEY_F20;
 #ifdef THOT_KEY_R1
-   else if (!strcasecmp (name, "f21") || !strcasecmp (name, "r1"))
+   else if (!ustrcasecmp (name, "f21") || !ustrcasecmp (name, "r1"))
       return (unsigned int) THOT_KEY_R1;
-   else if (!strcasecmp (name, "f22") || !strcasecmp (name, "r2"))
+   else if (!ustrcasecmp (name, "f22") || !ustrcasecmp (name, "r2"))
       return (unsigned int) THOT_KEY_R2;
-   else if (!strcasecmp (name, "f23") || !strcasecmp (name, "r3"))
+   else if (!ustrcasecmp (name, "f23") || !ustrcasecmp (name, "r3"))
       return (unsigned int) THOT_KEY_R3;
-   else if (!strcasecmp (name, "f24") || !strcasecmp (name, "r4"))
+   else if (!ustrcasecmp (name, "f24") || !ustrcasecmp (name, "r4"))
       return (unsigned int) THOT_KEY_R4;
-   else if (!strcasecmp (name, "f25") || !strcasecmp (name, "r5"))
+   else if (!ustrcasecmp (name, "f25") || !ustrcasecmp (name, "r5"))
       return (unsigned int) THOT_KEY_R5;
-   else if (!strcasecmp (name, "f26") || !strcasecmp (name, "r6"))
+   else if (!ustrcasecmp (name, "f26") || !ustrcasecmp (name, "r6"))
       return (unsigned int) THOT_KEY_R6;
-   else if (!strcasecmp (name, "f27") || !strcasecmp (name, "r7"))
+   else if (!ustrcasecmp (name, "f27") || !ustrcasecmp (name, "r7"))
       return (unsigned int) THOT_KEY_R7;
-   else if (!strcasecmp (name, "f28") || !strcasecmp (name, "r8"))
+   else if (!ustrcasecmp (name, "f28") || !ustrcasecmp (name, "r8"))
       return (unsigned int) THOT_KEY_R8;
-   else if (!strcasecmp (name, "f29") || !strcasecmp (name, "r9"))
+   else if (!ustrcasecmp (name, "f29") || !ustrcasecmp (name, "r9"))
       return (unsigned int) THOT_KEY_R9;
-   else if (!strcasecmp (name, "f30") || !strcasecmp (name, "r10"))
+   else if (!ustrcasecmp (name, "f30") || !ustrcasecmp (name, "r10"))
       return (unsigned int) THOT_KEY_R10;
-   else if (!strcasecmp (name, "f31") || !strcasecmp (name, "r11"))
+   else if (!ustrcasecmp (name, "f31") || !ustrcasecmp (name, "r11"))
       return (unsigned int) THOT_KEY_R11;
-   else if (!strcasecmp (name, "f32") || !strcasecmp (name, "r12"))
+   else if (!ustrcasecmp (name, "f32") || !ustrcasecmp (name, "r12"))
       return (unsigned int) THOT_KEY_R12;
-   else if (!strcasecmp (name, "f33") || !strcasecmp (name, "r13"))
+   else if (!ustrcasecmp (name, "f33") || !ustrcasecmp (name, "r13"))
       return (unsigned int) THOT_KEY_R13;
-   else if (!strcasecmp (name, "f34") || !strcasecmp (name, "r14"))
+   else if (!ustrcasecmp (name, "f34") || !ustrcasecmp (name, "r14"))
       return (unsigned int) THOT_KEY_R14;
-   else if (!strcasecmp (name, "f35") || !strcasecmp (name, "r15"))
+   else if (!ustrcasecmp (name, "f35") || !ustrcasecmp (name, "r15"))
       return (unsigned int) THOT_KEY_R15;
 #endif /* THOT_KEY_R1 */
-   else if (!strcasecmp (name, "up"))
+   else if (!ustrcasecmp (name, "up"))
       return (unsigned int) THOT_KEY_Up;
-   else if (!strcasecmp (name, "down"))
+   else if (!ustrcasecmp (name, "down"))
       return (unsigned int) THOT_KEY_Down;
-   else if (!strcasecmp (name, "left"))
+   else if (!ustrcasecmp (name, "left"))
       return (unsigned int) THOT_KEY_Left;
-   else if (!strcasecmp (name, "right"))
+   else if (!ustrcasecmp (name, "right"))
       return (unsigned int) THOT_KEY_Right;
-   else if (!strcasecmp (name, "home"))
+   else if (!ustrcasecmp (name, "home"))
       return (unsigned int) THOT_KEY_Home;
-   else if (!strcasecmp (name, "end"))
+   else if (!ustrcasecmp (name, "end"))
       return (unsigned int) THOT_KEY_End;
    else
       return (unsigned int) name[0];
@@ -456,7 +457,7 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {   
-   int  keyboard_mask = 0;   int  status;   char string[2];
+   int  keyboard_mask = 0;   int  status;   CHAR string[2];
    int  len = 0;
 
    if ((msg != WM_KEYDOWN) && (msg != WM_CHAR))
@@ -502,7 +503,7 @@ LPARAM lParam;
 
    if (msg == WM_CHAR){
       len = 1;
-      string[0] = (char) wParam;
+      string[0] = (CHAR) wParam;
       ThotInput (frame, &string[0], len, keyboard_mask, wParam);
    } else if ((wParam == VK_CANCEL)  ||
 			  (wParam == VK_RETURN)  ||
@@ -518,7 +519,7 @@ LPARAM lParam;
 			  (wParam == VK_INSERT)  ||
 			  (wParam == VK_DELETE))   
    {
-	  string[0] = (char) wParam;
+	  string[0] = (CHAR) wParam;
 	  ThotInput (frame, &string[0], len, keyboard_mask, wParam);
    }
 }
@@ -544,7 +545,7 @@ ThotEvent             *event;
    int                 PicMask;
    int                 frame;
    unsigned int        state, save;
-   unsigned char       string[2];
+   UCHAR       string[2];
    ThotComposeStatus      ComS;
    KeySym              KS;
 
@@ -584,12 +585,12 @@ ThotEvent             *event;
    handles the character encoding.                     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ThotInput (int frame, unsigned char *string, unsigned int nb,
+void                ThotInput (int frame, USTRING string, unsigned int nb,
 			       int PicMask, int key)
 #else  /* __STDC__ */
 void                ThotInput (frame, string, nb, PicMask, key)
 int                 frame;
-unsigned char      *string;
+USTRING             string;
 unsigned int        nb;
 int                 PicMask;
 int                 key;
@@ -677,7 +678,7 @@ int                 key;
 	   
 	   if (found)
 	     {
-	       value = (unsigned char) ptr->K_Value;
+	       value = (UCHAR) ptr->K_Value;
 	       command = ptr->K_Command;
 	     }
 	 }
@@ -731,7 +732,7 @@ int                 key;
 			   if (Automata_current == NULL)
 			     {
 			       /* il s'agit d'une valeur definie a premier niveau */
-			       value = (unsigned char) ptr->K_Value;
+			       value = (UCHAR) ptr->K_Value;
 			       command = ptr->K_Command;
 			     }
 #                             ifdef _WINDOWS
@@ -993,17 +994,18 @@ void FreeTranslations ()
    intializes the keybord encoding.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotTranslations      InitTranslations (char *appliname)
+ThotTranslations      InitTranslations (STRING appliname)
 #else  /* __STDC__ */
 ThotTranslations      InitTranslations (appliname)
-char               *appliname;
+STRING              appliname;
 
 #endif /* __STDC__ */
 {
-   char               *text;	   /* fichier de translation transmis a motif */
-   char                line[200];  /* ligne en construction pour motif */
-   char                home[200], name[80], ch[80], *adr;
-   char                equiv[MAX_EQUIV]; /* equivalents caracteres pour motif */
+   STRING              text;	   /* fichier de translation transmis a motif */
+   CHAR                line[200];  /* ligne en construction pour motif */
+   CHAR                home[200], name[80], ch[80]; 
+   STRING              adr;
+   CHAR                equiv[MAX_EQUIV]; /* equivalents caracteres pour motif */
    unsigned int        key1, key2; /* 1ere & 2eme cles sous forme de keysym X */
    int                 e, i;
    int                 mod1, mod2; /* 1er/ 2eme modifieurs : voir THOT_MOD_xx */
@@ -1017,18 +1019,18 @@ char               *appliname;
    text = TtaGetEnvString ("HOME");
 #  endif /* _WINDOWS */
 
-   strcpy (name, appliname);
+   ustrcpy (name, appliname);
 #  ifdef _WINDOWS
-   strcat (name, ".kb");
+   ustrcat (name, ".kb");
 #  else  /* _WINDOWS */
-   strcat (name, ".keyboard");
+   ustrcat (name, ".keyboard");
 #  endif /* _WINDOWS */
 
    if (text != NULL)
      {
-	strcpy (home, text);
-	strcat (home, DIR_STR);
-	strcat (home, name);
+	ustrcpy (home, text);
+	ustrcat (home, DIR_STR);
+	ustrcat (home, name);
 	if (!SearchFile (home, 0, line))
 	   SearchFile (name, 2, line);
      }
@@ -1054,33 +1056,33 @@ char               *appliname;
 	/* Initialise la lecture du fichier */
 	e = 1;
 	max = MaxMenuAction;
-	len = strlen (CST_InsertChar) + 2;
+	len = ustrlen (CST_InsertChar) + 2;
 
 	/* FnCopy la premiere ligne du fichier (#override, ou #...) */
-	strcpy (text, "#override\n");
+	ustrcpy (text, "#override\n");
 	fscanf (file, "%80s", ch);
 	do
 	  {
 	     /* Initialisations */
 	     mod1 = mod2 = THOT_NO_MOD;
 	     key1 = key2 = 0;
-	     strcpy (line, "!");	/* initialisation de la ligne */
+	     ustrcpy (line, "!");	/* initialisation de la ligne */
 
 	     /* Est-ce la fin de fichier ? */
-	     if (strlen (ch) == 0 || EndOfString (ch, "^"))
+	     if (ustrlen (ch) == 0 || EndOfString (ch, "^"))
 		e = 0;
 	     else if (ch[0] != '#')
 		/* it is not a comment */
 		/* -------> Lecture des autres champs */
 	       {
-		  if (!strcasecmp (ch, "shift"))
+		  if (!ustrcasecmp (ch, "shift"))
 		    {
 		      mod1 = THOT_MOD_SHIFT;
 		      /* copie 1er modifieur */
-		      strcpy (equiv, "Shift");
-		      strcat (equiv, " ");
-		      strcat (line, "Shift");
-		      strcat (line, " ");
+		      ustrcpy (equiv, "Shift");
+		      ustrcat (equiv, " ");
+		      ustrcat (line, "Shift");
+		      ustrcat (line, " ");
 		      /* Lecture enventuelle d'un deuxieme modifieur */
 		      ch[0] = EOS;
 		      fscanf (file, "%80s", ch);
@@ -1091,26 +1093,26 @@ char               *appliname;
 		       equiv[0] = EOS;
 		    }
 
-		  if (!strcasecmp (ch, "ctrl"))
+		  if (!ustrcasecmp (ch, "ctrl"))
 		    {
 		      mod1 += THOT_MOD_CTRL;
 		      /* copie 2eme modifieur */
-		      strcat (equiv, "Ctrl");
-		      strcat (equiv, " ");
-		      strcat (line, "Ctrl");
-		      strcat (line, " ");
+		      ustrcat (equiv, "Ctrl");
+		      ustrcat (equiv, " ");
+		      ustrcat (line, "Ctrl");
+		      ustrcat (line, " ");
 		      /* Lecture de la cle */
 		      ch[0] = EOS;
 		      fscanf (file, "%80s", ch);
 		    }
-		  else if (!strcasecmp (ch, "alt") || !strcasecmp (ch, "meta"))
+		  else if (!ustrcasecmp (ch, "alt") || !ustrcasecmp (ch, "meta"))
 		    {
 		      mod1 += THOT_MOD_ALT;
 		      /* copie 2eme modifieur */
-		      strcat (equiv, "Alt");
-		      strcat (equiv, " ");
-		      strcat (line, "Alt");
-		      strcat (line, " ");
+		      ustrcat (equiv, "Alt");
+		      ustrcat (equiv, " ");
+		      ustrcat (line, "Alt");
+		      ustrcat (line, " ");
 		      /* Lecture de la cle */
 		      ch[0] = EOS;
 		      fscanf (file, "%80s", ch);
@@ -1122,8 +1124,8 @@ char               *appliname;
 		  if (name[0] != EOS)
 		    {
 		      /* copie de la cle */
-		       strcat (line, "<Key>");
-		       i = strlen (name);
+		       ustrcat (line, "<Key>");
+		       i = ustrlen (name);
 		       /* Elimine le : a la fin du nom */
 		       if ((name[i - 1] == ':') && i != 1)
 			 {
@@ -1134,35 +1136,35 @@ char               *appliname;
 		       else
 			  i = 0;
 		       /* copie le nom normalise */
-		       strcat (line, NameCode (name));
+		       ustrcat (line, NameCode (name));
 		       if (i == 1)
-			  strcat (line, ": ");
+			  ustrcat (line, ": ");
 		       else
-			  strcat (line, " ");
+			  ustrcat (line, " ");
 		    }
 
 		  /* convertion vers keysym pour l'automate */
 		  key1 = SpecialKey (name);
-		  strcat (equiv, name);
+		  ustrcat (equiv, name);
 
 		  /* Lecture eventuelle d'une deuxieme composition */
-		  strcpy (name, "");
+		  ustrcpy (name, "");
 		  fscanf (file, "%80s", name);
 		  if (name[0] == ',')
 		    {
 		      /* copie du separateur */
-		      strcat (line, ", ");
-		      strcpy (ch, "");
+		      ustrcat (line, ", ");
+		      ustrcpy (ch, "");
 		      fscanf (file, "%80s", ch);
 		      
-		      if (!strcasecmp (ch, "shift"))
+		      if (!ustrcasecmp (ch, "shift"))
 			{
 			  mod2 = THOT_MOD_SHIFT;
 			  /* copie du 2eme modifieur */
-			  strcat (equiv, "Shift");
-			  strcat (equiv, " ");
-			  strcat (line, "Shift");
-			  strcat (line, " ");
+			  ustrcat (equiv, "Shift");
+			  ustrcat (equiv, " ");
+			  ustrcat (line, "Shift");
+			  ustrcat (line, " ");
 			  /* Lecture enventuelle d'un deuxieme modifieur */
 			  ch[0] = EOS;
 			  fscanf (file, "%80s", ch);
@@ -1170,45 +1172,45 @@ char               *appliname;
 		      else
 			{
 			  mod2 = THOT_NO_MOD;
-			  strcat (equiv, " ");
+			  ustrcat (equiv, " ");
 			}
 
-		      if (!strcasecmp (ch, "ctrl"))
+		      if (!ustrcasecmp (ch, "ctrl"))
 			{
 			  mod2 += THOT_MOD_CTRL;
 			  /* copie 2eme modifieur */
-			  strcat (equiv, "Ctrl");
-			  strcat (equiv, " ");
-			  strcat (line, "Ctrl");
-			  strcat (line, " ");
+			  ustrcat (equiv, "Ctrl");
+			  ustrcat (equiv, " ");
+			  ustrcat (line, "Ctrl");
+			  ustrcat (line, " ");
 			  /* copie de la cle */
 			  ch[0] = EOS;
 			  fscanf (file, "%80s", ch);
-			  strcat (line, ch);
-			  strcat (line, " ");
+			  ustrcat (line, ch);
+			  ustrcat (line, " ");
 			}
-		      else if (!strcasecmp (ch, "alt") || !strcasecmp (ch, "meta"))
+		      else if (!ustrcasecmp (ch, "alt") || !ustrcasecmp (ch, "meta"))
 			{
 			  mod2 += THOT_MOD_ALT;
 			  /* copie 2eme modifieur */
-			  strcat (equiv, "Alt");
-			  strcat (equiv, " ");
-			  strcat (line, "Alt");
-			  strcat (line, " ");
+			  ustrcat (equiv, "Alt");
+			  ustrcat (equiv, " ");
+			  ustrcat (line, "Alt");
+			  ustrcat (line, " ");
 			  /* copie de la cle */
 			  ch[0] = EOS;
 			  fscanf (file, "%80s", ch);
-			  strcat (line, ch);
-			  strcat (line, " ");
+			  ustrcat (line, ch);
+			  ustrcat (line, " ");
 			}
 
 		       /* Extrait la valeur de la cle */
-		       strcpy (name, "");
+		       ustrcpy (name, "");
 		       sscanf (ch, "<Key>%80s", name);
 		       if (name != "")
 			 {
-			    strcat (line, "<Key>");	/* copie de la cle */
-			    i = strlen (name);
+			    ustrcat (line, "<Key>");	/* copie de la cle */
+			    i = ustrlen (name);
 			    /* Elimine le : a la fin du nom */
 			    if (name[i - 1] == ':' && i != 1)
 			      {
@@ -1218,25 +1220,25 @@ char               *appliname;
 			      }
 			    else
 			       i = 0;
-			    strcat (line, NameCode (name));	/* copie le nom normalise */
+			    ustrcat (line, NameCode (name));	/* copie le nom normalise */
 			    if (i == 1)
-			       strcat (line, ": ");
+			       ustrcat (line, ": ");
 			    else
-			       strcat (line, " ");
+			       ustrcat (line, " ");
 			 }
 		       key2 = SpecialKey (name);
-		       strcat (equiv, name);
+		       ustrcat (equiv, name);
 
 		       /* Lecture de l'action */
-		       strcpy (name, "");
+		       ustrcpy (name, "");
 		       fscanf (file, "%80s", name);
 		    }
 
 		  /* Isole l'intitule de la commande */
-		  strncpy (ch, name, 80);
-		  adr = strchr (ch, '(');
+		  ustrncpy (ch, name, 80);
+		  adr = ustrchr (ch, '(');
 		  if (adr == NULL)
-		    adr = strchr (ch, ' ');
+		    adr = ustrchr (ch, ' ');
 		  if (adr == NULL)
 		     i = max;
 		  else
@@ -1244,7 +1246,7 @@ char               *appliname;
 		       adr[0] = EOS;
 		       /* Selection de la bonne commande */
 		       for (i = 0; i < max; i++)
-			  if (!strcmp (ch, MenuActionList[i].ActionName))
+			  if (!ustrcmp (ch, MenuActionList[i].ActionName))
 			     break;
 		    }
 
@@ -1252,38 +1254,38 @@ char               *appliname;
 		  if (i <= 8)
 		    {
 		       /* FnCopy la ligne dans le source de la table de translations */
-		       strcat (text, line);
-		       if (!strcmp (ch, CST_InsertChar))
+		       ustrcat (text, line);
+		       if (!ustrcmp (ch, CST_InsertChar))
 			 {
-			    strcat (text, "insert-string(");
-			    strcat (text, AsciiTranslate (&adr[1]));
+			    ustrcat (text, "insert-string(");
+			    ustrcat (text, AsciiTranslate (&adr[1]));
 			 }
-		       else if (!strcmp (ch, CST_DeleteSelection))
-			  strcat (text, "delete-selection()");
-		       else if (!strcmp (ch, CST_DeletePrevChar))
-			  strcat (text, "delete-prev-char()");
-		       else if (!strcmp (ch, CST_BackwardChar))
-			  strcat (text, "backward-char()");
-		       else if (!strcmp (ch, CST_ForwardChar))
-			  strcat (text, "forward-char()");
-		       else if (!strcmp (ch, CST_PreviousLine))
-			  strcat (text, "previous-line()");
-		       else if (!strcmp (ch, CST_NextLine))
-			  strcat (text, "next-line()");
-		       else if (!strcmp (ch, CST_BeginningOfLine))
-			  strcat (text, "beginning-of-line()");
-		       else if (!strcmp (ch, CST_EndOfLine))
-			  strcat (text, "end-of-line()");
-		       strcat (text, "\n");
+		       else if (!ustrcmp (ch, CST_DeleteSelection))
+			  ustrcat (text, "delete-selection()");
+		       else if (!ustrcmp (ch, CST_DeletePrevChar))
+			  ustrcat (text, "delete-prev-char()");
+		       else if (!ustrcmp (ch, CST_BackwardChar))
+			  ustrcat (text, "backward-char()");
+		       else if (!ustrcmp (ch, CST_ForwardChar))
+			  ustrcat (text, "forward-char()");
+		       else if (!ustrcmp (ch, CST_PreviousLine))
+			  ustrcat (text, "previous-line()");
+		       else if (!ustrcmp (ch, CST_NextLine))
+			  ustrcat (text, "next-line()");
+		       else if (!ustrcmp (ch, CST_BeginningOfLine))
+			  ustrcat (text, "beginning-of-line()");
+		       else if (!ustrcmp (ch, CST_EndOfLine))
+			  ustrcat (text, "end-of-line()");
+		       ustrcat (text, "\n");
 		    }
 
 		  if (i == 0)
 		    {
 		       /* C'est l'action insert-string */
 		       /* FnCopy la ligne dans le source de la table de translations */
-		       strcat (text, line);
-		       strcat (text, AsciiTranslate (name));
-		       strcat (text, "\n");
+		       ustrcat (text, line);
+		       ustrcat (text, AsciiTranslate (name));
+		       ustrcat (text, "\n");
 		       /* C'est un encodage de caractere */
 		       adr = AsciiTranslate (&name[len]);
 		       MemoKey (mod1, key1, mod2, key2, (unsigned int) adr[0], 0);
@@ -1293,8 +1295,8 @@ char               *appliname;
 		       /* C'est une autre action Thot */
 		       MemoKey (mod1, key1, mod2, key2, /*255+i */ 0, i);
 		       /* On met a jour l'equivalent clavier */
-		       MenuActionList[i].ActionEquiv = TtaGetMemory (strlen (equiv) + 1);
-		       strcpy (MenuActionList[i].ActionEquiv, equiv);
+		       MenuActionList[i].ActionEquiv = TtaGetMemory (ustrlen (equiv) + 1);
+		       ustrcpy (MenuActionList[i].ActionEquiv, equiv);
 		    }
 	       }
 	     else

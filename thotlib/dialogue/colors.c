@@ -22,6 +22,7 @@
  *
  */
 
+#include "ustring.h"
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"
@@ -238,7 +239,7 @@ static void         ColorsExpose ()
 #  ifndef _WINDOWS 
    register int        i;
    int                 x;
-   char               *ptr;
+   STRING              ptr;
    int                 fground, bground;
 #  endif /* !_WINDOWS */
    int                 wcase, hcase;
@@ -266,7 +267,7 @@ static void         ColorsExpose ()
    XSetForeground (TtDisplay, TtLineGC, ColorPixel (1));
    ptr = TtaGetMessage (LIB, TMSG_STD_COLORS);
    WChaine (Color_Window, ptr,
-	    (w / 2) - (XTextWidth ((XFontStruct *) SmallFontDialogue, ptr, strlen (ptr)) / 2),
+	    (w / 2) - (XTextWidth ((XFontStruct *) SmallFontDialogue, ptr, ustrlen (ptr)) / 2),
 	    0, FontDialogue, TtLineGC);
 
    /* grille */
@@ -283,7 +284,7 @@ static void         ColorsExpose ()
 	   x = (i % COLORS_COL) * wcase;
 	   y = ((i / COLORS_COL) + 1) * hcase;
 	   WChaine (Color_Window, ColorName (i),
-		    x + (wcase / 2) - (XTextWidth ((XFontStruct *) SmallFontDialogue, ColorName (i), strlen (ColorName (i))) / 2),
+		    x + (wcase / 2) - (XTextWidth ((XFontStruct *) SmallFontDialogue, ColorName (i), ustrlen (ColorName (i))) / 2),
 		    y, SmallFontDialogue, TtLineGC);
 	}
    else
@@ -447,7 +448,7 @@ int                 y;
    XmString            title_string;
    XmFontList          xfont;
    XGCValues           GCmodel;
-   char                string[10];
+   CHAR                string[10];
 
    xfont = XmFontListCreate ((XFontStruct *) FontDialogue, XmSTRING_DEFAULT_CHARSET);
    if (SmallFontDialogue == NULL)
@@ -659,7 +660,7 @@ int                 y;
    WNDCLASSEX  wndThotPaletteClass ;
    HWND  HwndColorPal;
    int   frame;
-   static char szAppName[] = "ThotColorPalette" ;
+   static CHAR szAppName[] = "ThotColorPalette" ;
    MSG         msg;
 
    WIN_LastBg = -1;

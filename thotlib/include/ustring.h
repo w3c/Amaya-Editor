@@ -7,7 +7,9 @@
 #include <string.h>
 
 typedef char           CHAR;
+typedef char*          PCHAR;
 typedef unsigned char  UCHAR;
+typedef unsigned char* PUCHAR;
 typedef char*          STRING;
 typedef unsigned char* USTRING;
 
@@ -48,3 +50,5 @@ extern STRING       ustrtok      ();
 #endif /* __STDC__ */
 
 #endif /* _USTRING_H */
+
+

@@ -12,6 +12,7 @@
  *
  */
 
+#include "ustring.h"
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "libmsg.h"
@@ -96,17 +97,17 @@ static boolean      FromKeyboard;
 
 #ifdef _WINDOWS
 #ifdef __STDC__
-static BOOL sameString (unsigned char* str1, unsigned char* str2)
+static BOOL sameString (USTRING str1, USTRING str2)
 #else  /* __STDC__ */
-static BOOL sameString (unsigned char* str1, unsigned char* str2)
-unsigned char* str1;
-unsigned char* str2;
+static BOOL sameString (str1, str2)
+USTRING str1;
+USTRING str2;
 #endif /* __STDC__ */
 {
    int i;
 
-   int l1 = strlen (str1);
-   int l2 = strlen (str2);
+   int l1 = ustrlen (str1);
+   int l2 = ustrlen (str2);
    if (l1 != l2)
       return FALSE;
    for (i = 0; i < l1; i++)
@@ -137,7 +138,7 @@ int                *nChars;
 #endif /* __STDC__ */
 {
    int                 nb;
-   char                car;
+   CHAR                car;
 
    nb = 0;
    while (nb < count)
@@ -157,7 +158,7 @@ int                *nChars;
 	     (*nChars)++;
 	     if (car == ' ')
 		(*nSpaces)++;
-	     *width += CharacterWidth ((unsigned char) car, font);
+	     *width += CharacterWidth ((UCHAR) car, font);
 	  }
      }
 }
@@ -410,7 +411,7 @@ static boolean CloseTextInsertionWithControl ()
 		     pbuff = DeleteBuffer (pbuff, frame);
 		  else if (nChars < 50 && i >= nChars)
 		    {
-		       strncpy (&pbuff->BuContent[pbuff->BuLength], &pBuffer->BuContent[0], nChars);
+		       ustrncpy (&pbuff->BuContent[pbuff->BuLength], &pBuffer->BuContent[0], nChars);
 		       i = pbuff->BuLength;	/* Ancienne longueur */
 		       /* met a jour les indices de debut des boites de coupure */
 		       if (j == 0)
@@ -806,7 +807,7 @@ int                *nChars;
 #endif /* __STDC__ */
 {
    PtrTextBuffer       pBuffer;
-   char               *target;
+   STRING              target;
    int                 sourceInd;
    int                 sourceLength;
    int                 targetlength;
@@ -826,7 +827,7 @@ int                *nChars;
 	     target = NULL;
 	  }
 	else
-	   target = (char*) &((*pTargetBuffer)->BuContent);
+	   target = (STRING) &((*pTargetBuffer)->BuContent);
 
 	if (pBuffer == pEndBuffer)
 	  {
@@ -978,9 +979,9 @@ int                 prev;
 		pNewBuffer = pBuffer;
 		i = ind;
 		pBuffer = GetNewBuffer (pBuffer, frame);
-		k = strlen (&pNewBuffer->BuContent[i - 1]);
+		k = ustrlen (&pNewBuffer->BuContent[i - 1]);
 		/* longueur a copier */
-		strncpy (&pBuffer->BuContent[0], &pNewBuffer->BuContent[i - 1], k);
+		ustrncpy (&pBuffer->BuContent[0], &pNewBuffer->BuContent[i - 1], k);
 		pBuffer->BuContent[k] = EOS;
 		pBuffer->BuLength = k;
 		pNewBuffer->BuContent[i - 1] = EOS;
@@ -1172,13 +1173,13 @@ int                 charWidth;
    active (1) ou non (0).                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         RedisplayOneChar (int frame, int x, int y, char c, ptrfont font, PtrBox pBox)
+static void         RedisplayOneChar (int frame, int x, int y, CHAR c, ptrfont font, PtrBox pBox)
 #else  /* __STDC__ */
 static void         RedisplayOneChar (frame, x, y, c, font, pBox)
 int                 frame;
 int                 x;
 int                 y;
-char                c;
+CHAR                c;
 ptrfont             font;
 PtrBox              pBox;
 
@@ -1211,12 +1212,12 @@ PtrBox              pBox;
    TtcInsertChar insert a character                                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtcInsertChar (Document document, View view, char c)
+void                TtcInsertChar (Document document, View view, CHAR c)
 #else  /* __STDC__ */
 void                TtcInsertChar (document, view, c)
 Document            document;
 View                view;
-char                c;
+CHAR                c;
 
 #endif /* __STDC__ */
 {
@@ -1278,12 +1279,12 @@ char                c;
    TtcInsertGraph insert a graphics                                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtcInsertGraph (Document document, View view, char c)
+void                TtcInsertGraph (Document document, View view, CHAR c)
 #else  /* __STDC__ */
 void                TtcInsertGraph (document, view, c)
 Document            document;
 View                view;
-char                c;
+CHAR                c;
 
 #endif /* __STDC__ */
 {
@@ -1423,10 +1424,10 @@ int                 frame;
    insere dans la boite pBox.                                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         LoadSymbol (char c, PtrLine pLine, boolean defaultHeight, boolean defaultWidth, PtrBox pBox, PtrAbstractBox pAb, int frame)
+static void         LoadSymbol (CHAR c, PtrLine pLine, boolean defaultHeight, boolean defaultWidth, PtrBox pBox, PtrAbstractBox pAb, int frame)
 #else  /* __STDC__ */
 static void         LoadSymbol (c, pLine, defaultHeight, defaultWidth, pBox, pAb, frame)
-char                c;
+CHAR                c;
 PtrLine             pLine;
 boolean             defaultHeight;
 boolean             defaultWidth;
@@ -1469,10 +1470,10 @@ int                 frame;
    Charge un graphique ou une polyline.                            
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         LoadShape (char c, PtrLine pLine, boolean defaultHeight, boolean defaultWidth, PtrBox pBox, PtrAbstractBox pAb, int frame)
+static void         LoadShape (CHAR c, PtrLine pLine, boolean defaultHeight, boolean defaultWidth, PtrBox pBox, PtrAbstractBox pAb, int frame)
 #else  /* __STDC__ */
 static void         LoadShape (c, pLine, defaultHeight, defaultWidth, pBox, pAb, frame)
-char                c;
+CHAR                c;
 PtrLine             pLine;
 boolean             defaultHeight;
 boolean             defaultWidth;
@@ -1573,7 +1574,7 @@ int                 frame;
 	      /* libere les points de controle */
 	      if (pBox->BxPictInfo != NULL)
 		{
-		  free ((char *) pBox->BxPictInfo);
+		  free ((STRING) pBox->BxPictInfo);
 		  pBox->BxPictInfo = NULL;
 		}
 	      /* il faut liberer les buffers */
@@ -1631,8 +1632,8 @@ int                 frame;
 
 #endif /* __STDC__ */
 {
-   char                buffer[FULL_BUFFER];
-   char               *ptr;
+   CHAR                buffer[FULL_BUFFER];
+   STRING              ptr;
    int                 i;
    int                 xDelta, yDelta;
    int                 type;
@@ -1645,7 +1646,7 @@ int                 frame;
        pictInfo = (PictInfo *) pAb->AbPictInfo;
        if ((pictInfo != NULL) && (pictInfo->PicFileName != NULL))
 	 {
-	   strcpy (buffer, pictInfo->PicFileName);
+	   ustrcpy (buffer, pictInfo->PicFileName);
 	   type = pictInfo->PicType;
 	   pres = pictInfo->PicPresent;
 	   /* Is it an empty picture ? */
@@ -1675,13 +1676,13 @@ int                 frame;
 	   if (ok)
 	     {
 	       /* something change */
-	       i = strlen (buffer);
+	       i = ustrlen (buffer);
 	       /* longueur de la chaine a copier */
 	       if (i != 0)
 		 {
 		   pictInfo = (PictInfo *) pBox->BxPictInfo;
 		   FreePicture (pictInfo);
-		   strcpy (pictInfo->PicFileName, buffer);
+		   ustrcpy (pictInfo->PicFileName, buffer);
 		   pictInfo->PicPresent = (PictureScaling) pres;
 		   pictInfo->PicType = type;
 		   SetCursorWatch (frame);
@@ -1689,7 +1690,7 @@ int                 frame;
 		   ResetCursorWatch (frame);
 		   if (pictInfo->PicPixmap != 0)
 		     {
-		       pAb->AbVolume = strlen (buffer);
+		       pAb->AbVolume = ustrlen (buffer);
 		       /* met a jour la boite */
 		       if (!defaultWidth)
 			 xDelta = 0;
@@ -1800,9 +1801,9 @@ PtrTextBuffer       clipboard;
 	     else if (pAb->AbLeafType == LtPicture)
 	       {
 		  pictInfo = (PictInfo *) pAb->AbPictInfo;
-		  i = strlen (pictInfo->PicFileName);
+		  i = ustrlen (pictInfo->PicFileName);
 		  /* nom du fichier image */
-		  strcpy (&(clipboard->BuContent[0]), pictInfo->PicFileName);
+		  ustrcpy (&(clipboard->BuContent[0]), pictInfo->PicFileName);
 		  clipboard->BuLength = i;
 		  clipboard->BuContent[i] = EOS;	/* Termine la chaine */
 		  CopyPictInfo ((int *) &PictClipboard, (int *) pictInfo);
@@ -1911,7 +1912,7 @@ int                 frame;
 		       /* deplace en deux fois? */
 		       if (i > length)
 			 {
-			    strncpy (&pTargetBuffer->BuContent[targetInd - 1], &pSourceBuffer->BuContent[sourceInd], length);
+			    ustrncpy (&pTargetBuffer->BuContent[targetInd - 1], &pSourceBuffer->BuContent[sourceInd], length);
 			    pTargetBuffer->BuLength = FULL_BUFFER;
 			    pTargetBuffer->BuContent[THOT_MAX_CHAR - 1] = EOS;
 			    targetInd = 1;
@@ -1919,7 +1920,7 @@ int                 frame;
 			    i -= length;
 			    pTargetBuffer = pTargetBuffer->BuNext;
 			 }
-		       strncpy (&pTargetBuffer->BuContent[targetInd - 1], &pSourceBuffer->BuContent[sourceInd], i);
+		       ustrncpy (&pTargetBuffer->BuContent[targetInd - 1], &pSourceBuffer->BuContent[sourceInd], i);
 		       i = i + targetInd - 1;
 		    }
 
@@ -2020,7 +2021,7 @@ int                 frame;
 		  break;
 	       case LtPicture:
 		  /* pPa1->AbPictInfo->PicFileName->BuLength = 0; */
-		  /*strcpy(pPa1->AbPictInfo->PicFileName, ""); */
+		  /*ustrcpy(pPa1->AbPictInfo->PicFileName, ""); */
 		  pAb->AbVolume = 0;
 		  /* met a jour la boite */
 		  pictInfo = (PictInfo *) pBox->BxPictInfo;
@@ -2233,7 +2234,7 @@ PtrTextBuffer       clipboard;
 	       pCurrentBuffer = pAb->AbElement->ElText;
 	       /* met a jour la boite */
 	       i = clipboard->BuLength;
-	       strncpy (&pCurrentBuffer->BuContent[0], &clipboard->BuContent[0], i);
+	       ustrncpy (&pCurrentBuffer->BuContent[0], &clipboard->BuContent[0], i);
 	       /* Termine la chaine de caracteres */
 	       pCurrentBuffer->BuContent[i] = EOS;
 	       pCurrentBuffer->BuLength = i;
@@ -2391,7 +2392,7 @@ int                 editType;
 			if (pBox->BxPictInfo != NULL)
 			  {
 			    /* reevalue les points de controle */
-			    free ((char *) pBox->BxPictInfo);
+			    free ((STRING) pBox->BxPictInfo);
 			    pBox->BxPictInfo = NULL;
 			  }
 #endif
@@ -2512,7 +2513,7 @@ int                 editType;
 			if (pBox->BxPictInfo != NULL)
 			  {
 			    /* reevalue les points de controle */
-			    free ((char *) pBox->BxPictInfo);
+			    free ((STRING) pBox->BxPictInfo);
 			    pBox->BxPictInfo = NULL;
 			  }
 			(pAb->AbVolume)--;
@@ -2669,9 +2670,9 @@ int                 editType;
 		else if (pAb->AbLeafType == LtPicture && FromKeyboard)
 		  LoadPictFile (pLine, defaultHeight, defaultWidth, pBox, pAb, frame);
 		else if (pAb->AbLeafType == LtSymbol && FromKeyboard)
-		  LoadSymbol ((char) (editType), pLine, defaultHeight, defaultWidth, pBox, pAb, frame);
+		  LoadSymbol ((CHAR) (editType), pLine, defaultHeight, defaultWidth, pBox, pAb, frame);
 		else if ((pAb->AbLeafType == LtGraphics || pAb->AbLeafType == LtPolyLine) && FromKeyboard)
-		  LoadShape ((char) (editType), pLine, defaultHeight, defaultWidth, pBox, pAb, frame);
+		  LoadShape ((CHAR) (editType), pLine, defaultHeight, defaultWidth, pBox, pAb, frame);
 	      }
           }
 
@@ -2806,11 +2807,11 @@ PtrDocument pDoc;
    Insere un caractere dans une boite de texte.                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                InsertChar (int frame, unsigned char c, int keyboard)
+void                InsertChar (int frame, UCHAR c, int keyboard)
 #else  /* __STDC__ */
 void                InsertChar (frame, c, keyboard)
 int                 frame;
-unsigned char       c;
+UCHAR       c;
 int                 keyboard;
 #endif /* __STDC__ */
 {
@@ -2841,7 +2842,7 @@ int                 keyboard;
   boolean             saveinsert;
   boolean             notification = FALSE;
 
-  toDelete = (c == (char) (127));
+  toDelete = (c == (CHAR) (127));
   /* Selon la valeur du parametre keyboard on essaie d'inserer */
   if (keyboard == 0)
     nat = LtSymbol;
@@ -3105,8 +3106,8 @@ int                 keyboard;
 				toSplit = TRUE;
 				
 				/* Est-ce un boite qui ne contenait qu'un Ctrl Return ? */
-				if ((c == (unsigned char) BREAK_LINE ||
-				     c == (unsigned char) NEW_LINE) &&
+				if ((c == (UCHAR) BREAK_LINE ||
+				     c == (UCHAR) NEW_LINE) &&
 				    pAb->AbBox->BxNChars == 1)
 				  {
 				    /* La boite entiere devient vide */
@@ -3267,8 +3268,8 @@ int                 keyboard;
 				  }
 			      
 			      /* Le caractere insere' est un Ctrl Return ? */
-			      if (c == (unsigned char) BREAK_LINE ||
-				  c == (unsigned char) NEW_LINE)
+			      if (c == (UCHAR) BREAK_LINE ||
+				  c == (UCHAR) NEW_LINE)
 				{
 				  /* il faut reevaluer la mise en ligne */
 				  toSplit = TRUE;
@@ -3319,8 +3320,8 @@ int                 keyboard;
 				    if (pSelBox->BxNPixels > pViewSel->VsNSpaces)
 				      pix = 1;
 				}
-			      else if (c == (unsigned char) BREAK_LINE ||
-				       c == (unsigned char) NEW_LINE)
+			      else if (c == (UCHAR) BREAK_LINE ||
+				       c == (UCHAR) NEW_LINE)
 				/* Ctrl Return */
 				{
 				  /* il faut reevaluer la mise en ligne */
@@ -3448,10 +3449,10 @@ int                 keyboard;
    fois que necessaire Paste_X sur les caracteres lus.     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                PasteXClipboard (unsigned char *Xbuffer, int nbytes)
+void                PasteXClipboard (USTRING Xbuffer, int nbytes)
 #else  /* __STDC__ */
 void                PasteXClipboard (Xbuffer, nbytes)
-unsigned char      *Xbuffer;
+USTRING     Xbuffer;
 int                 nbytes;
 
 #endif /* __STDC__ */
@@ -3691,7 +3692,7 @@ View                view;
    if (w == None)
      {
 	/* Pas de selection courante -> on regarde s'il y a un cutbuffer */
-	Xbuffer = (unsigned char *) XFetchBytes (TtDisplay, &i);
+	Xbuffer = (USTRING) XFetchBytes (TtDisplay, &i);
 	if (Xbuffer)
 	   PasteXClipboard (Xbuffer, i);
      }
@@ -3782,9 +3783,9 @@ View                view;
    OpenClipboard (FrRef [frame]);
    if (hMem = GetClipboardData (CF_TEXT)) {
       lpData = GlobalLock (hMem);
-      lpDatalength = strlen (lpData);
-	  if ((Xbuffer == NULL) || !sameString (Xbuffer, (unsigned char*)lpData))
-         PasteXClipboard ((unsigned char*) lpData, lpDatalength);
+      lpDatalength = ustrlen (lpData);
+	  if ((Xbuffer == NULL) || !sameString (Xbuffer, (USTRING)lpData))
+         PasteXClipboard ((USTRING) lpData, lpDatalength);
 	  else  
          ContentEditing (TEXT_PASTE);
       GlobalUnlock (hMem);

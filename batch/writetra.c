@@ -22,6 +22,7 @@
  *
  */
 
+#include "ustring.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "consttra.h"
@@ -46,8 +47,8 @@ int                 n;
 
 #endif /* __STDC__ */
 {
-   TtaWriteByte (outfile, (char) (n / 256));
-   TtaWriteByte (outfile, (char) (n % 256));
+   TtaWriteByte (outfile, (CHAR) (n / 256));
+   TtaWriteByte (outfile, (CHAR) (n % 256));
 }
 
 /*----------------------------------------------------------------------

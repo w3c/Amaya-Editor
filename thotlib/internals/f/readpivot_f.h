@@ -37,7 +37,7 @@ extern void SendEventAttrRead ( PtrElement pEl,
 extern PtrElement ReadTreePiv ( BinFile pivFile,
                                 PtrSSchema pSSchema,
                                 PtrDocument pDoc,
-                                char *tag,
+                                STRING tag,
                                 int assocNum,
                                 boolean createParam,
                                 boolean createAll,
@@ -53,19 +53,19 @@ extern boolean AbstractTreeOK ( PtrElement pEl,
 extern void AssociatePairs ( PtrElement pRoot );
 extern void ReadSchemaNamesPiv ( BinFile file,
                                  PtrDocument pDoc,
-                                 char *tag,
+                                 STRING tag,
                                  PtrSSchema pLoadedSS,
                                  void (*withThisPSchema) (Document document,
-                                 char *natSchema,
-                                 char *presentSchema) );
+                                 STRING natSchema,
+                                 STRING presentSchema) );
 extern void ReadLanguageTablePiv ( BinFile file,
                                    PtrDocument pDoc,
-                                   char *tag );
+                                   STRING tag );
 extern int ReadVersionNumberPiv ( BinFile file,
                                   PtrDocument pDoc );
 extern void ReadPivotHeader ( BinFile file,
                               PtrDocument pDoc,
-                              char *tag );
+                              STRING tag );
 extern void LoadDocumentPiv ( BinFile file,
                               PtrDocument pDoc,
                               boolean loadExternalDoc,
@@ -107,7 +107,7 @@ extern void SendEventAttrRead (/* PtrElement pEl,
 extern PtrElement ReadTreePiv (/* BinFile pivFile,
                                   PtrSSchema pSSchema,
                                   PtrDocument pDoc,
-                                  char *tag,
+                                  STRING tag,
                                   int assocNum,
                                   boolean createParam,
                                   boolean createAll,
@@ -123,19 +123,19 @@ extern boolean AbstractTreeOK (/* PtrElement pEl,
 extern void AssociatePairs (/* PtrElement pRoot */);
 extern void ReadSchemaNamesPiv (/* BinFile file,
                                    PtrDocument pDoc,
-                                   char *tag,
+                                   STRING tag,
                                    PtrSSchema pLoadedSS,
                                    void (*withThisPSchema) (Document document,
-                                   char *natSchema,
-                                   char *presentSchema) */);
+                                   STRING natSchema,
+                                   STRING presentSchema) */);
 extern void ReadLanguageTablePiv (/* BinFile file,
                                      PtrDocument pDoc,
-                                     char *tag */);
+                                     STRING tag */);
 extern int ReadVersionNumberPiv (/* BinFile file,
                                     PtrDocument pDoc */);
 extern void ReadPivotHeader (/* BinFile file,
                                 PtrDocument pDoc,
-                                char *tag */);
+                                STRING tag */);
 extern void LoadDocumentPiv (/* BinFile file,
                                 PtrDocument pDoc,
                                 boolean loadExternalDoc,

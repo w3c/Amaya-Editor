@@ -20,6 +20,7 @@
  *          R. Guetari (W3C/INRIA) Windows 95/NT routines
  */
  
+#include "ustring.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"

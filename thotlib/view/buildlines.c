@@ -21,6 +21,7 @@
  *
  */
 
+#include "ustring.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -413,7 +414,7 @@ PtrTextBuffer      *pNewBuff;
    int                 dummySpaces, spaceWidth;
    int                 spaceAdjust;
    int                 spaceCount;
-   unsigned char       character;
+   UCHAR               character;
    PtrTextBuffer       pBuffer;
    PtrBox              pParentBox;
    boolean             still;
@@ -461,7 +462,7 @@ PtrTextBuffer      *pNewBuff;
    while (still)
      {
 	/* Largeur du caractere suivant */
-	character = (unsigned char) (pBuffer->BuContent[charIndex - 1]);
+	character = (UCHAR) (pBuffer->BuContent[charIndex - 1]);
 	if (character == NUL)
 	   carWidth = 0;
 	else if (character == _SPACE_)
@@ -1138,7 +1139,7 @@ int                *wordWidth;
 {
    PtrTextBuffer       pBuffer;
    ptrfont             font;
-   unsigned char       character;
+   UCHAR               character;
    int                 i, j, l;
    int                 nChars;
    int                 wWidth;
@@ -2698,7 +2699,7 @@ int                 frame;
    boolean             changeSelectEnd;
    boolean             status;
    Propagation         propagateStatus;
-   unsigned char       charIndex;
+   UCHAR               charIndex;
    PtrLine             pLine;
    PtrBox              pBox;
    PtrBox              pSelBox;

@@ -21,6 +21,7 @@
  *         R. Guetari (W3C/INRIA) - Adaptation to Windows platforms.
  */
 
+#include "ustring.h"
 #include "thot_gui.h"
 #include "thot_sys.h"
 
@@ -48,10 +49,10 @@
    fn. updates the wif, hif, xif , yif                     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Drawable            XpmCreate (char *fn, PictureScaling pres, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, Drawable *mask1, int *width, int *height, int zoom)
+Drawable            XpmCreate (STRING fn, PictureScaling pres, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, Drawable *mask1, int *width, int *height, int zoom)
 #else  /* __STDC__ */
 Drawable            XpmCreate (fn, pres, xif, yif, wif, hif, BackGroundPixel, mask1, width, height, zoom)
-char               *fn;
+STRING              fn;
 PictureScaling      pres;
 int                *xif;
 int                *yif;
@@ -129,10 +130,10 @@ int                 zoom;
    XpmPrint converts an xpm file to PostScript.                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                XpmPrint (char *fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, int fd, unsigned long BackGroundPixel)
+void                XpmPrint (STRING fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, int fd, unsigned long BackGroundPixel)
 #else  /* __STDC__ */
 void                XpmPrint (fn, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHArea, fd, BackGroundPixel)
-char               *fn;
+STRING              fn;
 PictureScaling           pres;
 int                 xif;
 int                 yif;
@@ -151,7 +152,7 @@ unsigned long       BackGroundPixel;
    float               Scx, Scy;
    register int        i;
    unsigned int       *pt;
-   unsigned char       pt1;
+   UCHAR               pt1;
    int                 x, y;
    int                 wim ;
 #  ifndef _WINDOWS 
@@ -241,7 +242,7 @@ unsigned long       BackGroundPixel;
 
    for (i = 0; i < image.ncolors; i++)
      {
-	if (strncmp (image.colorTable[i].c_color, "None", 4) == 0)
+	if (ustrncmp (image.colorTable[i].c_color, "None", 4) == 0)
 
 	  {
 	     TtaGiveThotRGB ((int) BackGroundPixel, &red, &green, &blue);
@@ -285,7 +286,7 @@ unsigned long       BackGroundPixel;
 	  {
 
 	     /* RGB components generation */
-	     pt1 = (unsigned char) (*pt);
+	     pt1 = (UCHAR) (*pt);
 	     fprintf ((FILE *) fd, "%02x%02x%02x",
 		      (colorTab[pt1].red) & 0xff,
 		      (colorTab[pt1].green) & 0xff,
@@ -310,14 +311,14 @@ unsigned long       BackGroundPixel;
    IsXpmFormat check if the file header is of a pixmap                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean                IsXpmFormat (char *fn)
+boolean                IsXpmFormat (STRING fn)
 #else  /* __STDC__ */
 boolean                IsXpmFormat (fn)
-char               *fn;
+STRING              fn;
 #endif /* __STDC__ */
 {
    FILE               *f;
-   char                c;
+   CHAR                c;
    boolean                res;
 
    res = FALSE;

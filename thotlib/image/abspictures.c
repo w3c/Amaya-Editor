@@ -20,8 +20,9 @@
  *          N. Layaida (INRIA) - New picture formats
  *
  */
-#include "thot_sys.h"
 
+#include "ustring.h"
+#include "thot_sys.h"
 
 #include "constmedia.h"
 #include "typemedia.h"
@@ -40,17 +41,17 @@
    procedure commence par creer le descripteur.            
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                NewPictInfo (PtrAbstractBox pAb, char *filename, int imagetype)
+void                NewPictInfo (PtrAbstractBox pAb, STRING filename, int imagetype)
 #else  /* __STDC__ */
 void                NewPictInfo (pAb, filename, imagetype)
 PtrAbstractBox      pAb;
-char               *filename;
+STRING              filename;
 int                 imagetype;
 #endif /* __STDC__ */
 {
   PtrTextBuffer       pBuffer;
   PictInfo           *image = NULL;
-  char               *ptr = NULL;
+  STRING              ptr = NULL;
   int                 picPresent, len;
 
   if (imagetype == XBM_FORMAT || imagetype == XPM_FORMAT)
@@ -125,13 +126,13 @@ int                 imagetype;
 	}
       else
 	{
-	  len = strlen (filename) + 1;
-	  if (ptr == NULL || len > strlen (ptr) + 1)
+	  len = ustrlen (filename) + 1;
+	  if (ptr == NULL || len > ustrlen (ptr) + 1)
 	    {
 	      TtaFreeMemory (ptr);
 	      ptr = TtaGetMemory (len);
 	    }
-	  strcpy (ptr, filename);
+	  ustrcpy (ptr, filename);
 	}
      }
 

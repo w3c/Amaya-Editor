@@ -21,7 +21,8 @@
  *         R. Guetari (W3C/INRIA) - Windows NT/95 routines
  *
  */
- 
+
+#include "ustring.h" 
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmenu.h"
@@ -54,7 +55,7 @@ extern boolean viewClosed;
 
 #ifdef _WINDOWS
 #ifdef __STDC__
-extern void CreateCloseDocDlgWindow (HWND, char*, char*, BOOL*, BOOL*);
+extern void CreateCloseDocDlgWindow (HWND, STRING, STRING, BOOL*, BOOL*);
 #else /* __STDC__ */
 extern void CreateCloseDocDlgWindow ();
 #endif /* __STDC__ */
@@ -65,12 +66,12 @@ extern void CreateCloseDocDlgWindow ();
    handles the callbacks of the CloseDoc menu
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CallbackCloseDocMenu (int ref, int typedata, char *data)
+void                CallbackCloseDocMenu (int ref, int typedata, STRING data)
 #else  /* __STDC__ */
 void                CallbackCloseDocMenu (ref, typedata, data)
 int                 ref;
 int                 typedata;
-char               *data;
+STRING              data;
 
 #endif /* __STDC__ */
 {
@@ -112,8 +113,8 @@ boolean            *save;
 #endif /* __STDC__ */
 {
 #  ifndef _WINDOWS
-   char                buftext[300];
-   char                bufbutton[300];
+   CHAR                buftext[300];
+   CHAR                bufbutton[300];
    int                 i;
 
    CloseDontSave = TRUE;
@@ -121,20 +122,20 @@ boolean            *save;
    /* le document a ete modifie', on propose de le sauver */
    /* initialise le label du formulaire "Fermer" en y mettant le nom */
    /* du document */
-   strcpy (buftext, TtaGetMessage (LIB, TMSG_SAVE_DOC));
-   strcat (buftext, " ");
-   strcat (buftext, pDoc->DocDName);
-   strcat (buftext, " ");
-   strcat (buftext, TtaGetMessage (LIB, TMSG_BEFORE_CLOSING));
+   ustrcpy (buftext, TtaGetMessage (LIB, TMSG_SAVE_DOC));
+   ustrcat (buftext, " ");
+   ustrcat (buftext, pDoc->DocDName);
+   ustrcat (buftext, " ");
+   ustrcat (buftext, TtaGetMessage (LIB, TMSG_BEFORE_CLOSING));
 
 #  ifdef _WINDOWS
    sprintf (message, buftext);
 #  endif /* _WINDOWS */
 
    /* Feuille de dialogue Fermer */
-   strcpy (bufbutton, TtaGetMessage (LIB, TMSG_SAVE_DOC));
-   i = strlen (TtaGetMessage (LIB, TMSG_SAVE_DOC)) + 1;
-   strcpy (bufbutton + i, TtaGetMessage (LIB, TMSG_CLOSE_DON_T_SAVE));
+   ustrcpy (bufbutton, TtaGetMessage (LIB, TMSG_SAVE_DOC));
+   i = ustrlen (TtaGetMessage (LIB, TMSG_SAVE_DOC)) + 1;
+   ustrcpy (bufbutton + i, TtaGetMessage (LIB, TMSG_CLOSE_DON_T_SAVE));
    TtaNewSheet (NumFormClose, TtaGetViewFrame(document,view), 
 		TtaGetMessage (LIB, TMSG_CLOSE_DOC), 2, bufbutton, TRUE, 1, 'L', D_CANCEL);
    /* label indiquant le nom du document a sauver avant de fermer */
@@ -145,13 +146,13 @@ boolean            *save;
    /* attend le retour de ce formulaire (traite' par CallbackCloseDocMenu) */
    TtaWaitShowDialogue ();
 #  else  /* _WINDOWS */
-   char    buftext[300];
+   CHAR    buftext[300];
    BOOL    save_befor, close_dont_save;
-   strcpy (buftext, TtaGetMessage (LIB, TMSG_SAVE_DOC));
-   strcat (buftext, " ");
-   strcat (buftext, pDoc->DocDName);
-   strcat (buftext, " ");
-   strcat (buftext, TtaGetMessage (LIB, TMSG_BEFORE_CLOSING));
+   ustrcpy (buftext, TtaGetMessage (LIB, TMSG_SAVE_DOC));
+   ustrcat (buftext, " ");
+   ustrcat (buftext, pDoc->DocDName);
+   ustrcat (buftext, " ");
+   ustrcat (buftext, TtaGetMessage (LIB, TMSG_BEFORE_CLOSING));
 #  ifndef _WIN_PRINT 
    CreateCloseDocDlgWindow (TtaGetViewFrame(document,view), TtaGetMessage (LIB, TMSG_CLOSE_DOC), buftext, &save_befor, &close_dont_save);
 #  endif /* _WIN_PRINT */

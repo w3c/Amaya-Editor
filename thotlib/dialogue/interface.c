@@ -17,6 +17,7 @@
 /*#define DEBUG_MULTIKEY 1*/
 #define OWN_XLOOKUPSTRING	/* Do NOT remove it, it change thot_gui.h includes */
 
+#include "ustring.h"
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmenu.h"
@@ -63,14 +64,14 @@
 #include "views_f.h"
 
 
-static char*         Enable_Multikey;
-static unsigned char previous_value = 0;
+static STRING         Enable_Multikey;
+static UCHAR previous_value = 0;
 static int           mk_state = 0;
 static int           TtaKeyboardMapInstalled = 0;
 static unsigned int  previous_state = 0;
 
 #ifdef _WINDOWS
-static char        previous_keysym;
+static CHAR        previous_keysym;
 #else  /* !_WINDOWS */
 static KeySym      previous_keysym;
 #endif /* !_WINDOWS */
@@ -119,8 +120,8 @@ XK_uacute, XK_ucircumflex, XK_udiaeresis, XK_yacute, XK_thorn, XK_ydiaeresis,
 typedef struct multi_key
   {
 #    ifdef _WINDOWS
-     char                c;
-     char                m;
+     CHAR                c;
+     CHAR                m;
      int                 r;
 #    else  /* !_WINDOWS */
      KeySym              c;
@@ -515,7 +516,7 @@ int                 TtaUseOwnXLookupString = 0;
   ----------------------------------------------------------------------*/
 int               TtaXLookupString (event, buffer, nbytes, keysym, status)
 register ThotKeyEvent *event;
-char               *buffer;	/* buffer */
+STRING              buffer;	/* buffer */
 int                 nbytes;	/* space in buffer for characters */
 KeySym             *keysym;
 ThotComposeStatus  *status;	/* not implemented */
@@ -673,7 +674,7 @@ void                TtaInstallMultiKey ()
 {
 # ifdef _WINDOWS 
   Enable_Multikey = TtaGetEnvString ("ENABLE_MULTIKEY");
-  if (Enable_Multikey != NULL && !strcasecmp (Enable_Multikey, "no"))
+  if (Enable_Multikey != NULL && !ustrcasecmp (Enable_Multikey, "no"))
       Enable_Multikey = NULL;
    TtaKeyboardMapInstalled = 1;
 # else  /* _WINDOWS */
@@ -691,7 +692,7 @@ void                TtaInstallMultiKey ()
   TtaDisplay = dpy;
   /* check whether multi-key is enabled */
   Enable_Multikey = TtaGetEnvString ("ENABLE_MULTIKEY");
-  if (Enable_Multikey != NULL && !strcasecmp (Enable_Multikey, "no"))
+  if (Enable_Multikey != NULL && !ustrcasecmp (Enable_Multikey, "no"))
       Enable_Multikey = NULL;
 
   /* load the current keyboard mapping */
@@ -905,7 +906,7 @@ ThotEvent             *event;
 #endif /* __STDC__ */
 {
    KeySym              KS;
-   char                buf[2];
+   CHAR                buf[2];
    ThotComposeStatus   status;
    unsigned int        state;
    int                 keycode;
@@ -993,14 +994,14 @@ int*   k;
 {
    int          index;
    int          keycode;
-   char         KS;
+   CHAR         KS;
    unsigned int state;
 
    if (Enable_Multikey == NULL) /* no multi-key allowed */
       return 1;
 
    if (msg == WM_CHAR)
-      KS = (char) wParam;
+      KS = (CHAR) wParam;
    
    if (mk_state == 1 && msg == WM_CHAR) {
       /* we have already read the stressed character */ 
@@ -1008,12 +1009,12 @@ int*   k;
 
       mk_state = 0;
       for (index = 0; index < NB_MK; index++)
-          if ((mk_tab[index].m == previous_keysym) && (mk_tab[index].c == (char) wParam)) {
+          if ((mk_tab[index].m == previous_keysym) && (mk_tab[index].c == (CHAR) wParam)) {
              /*
               * The corresponding sequence is found. 
               * Generation of the corresponding character
               */
-	         (char) *k = mk_tab[index].r;
+	         (CHAR) *k = mk_tab[index].r;
              return 1;
 		  }
 
@@ -1219,7 +1220,7 @@ ThotEvent             *ev;
   int                 vue, i;
   boolean             assoc;
   ThotWindow          w;
-  char               *s;
+  STRING              s;
 
   /* Keep client messages */
   if (ev->type == ClientMessage)
@@ -1227,12 +1228,12 @@ ThotEvent             *ev;
       s = XGetAtomName (ev->xany.display, ((XClientMessageEvent *) ev)->message_type);
       if (s == NULL)
 	return;
-      if (!strcmp (s, "WM_PROTOCOLS"))
+      if (!ustrcmp (s, "WM_PROTOCOLS"))
 	{
 	  /* The client message comes from the Window Manager */
 	  w = ev->xany.window;
 	  s = XGetAtomName (ev->xany.display, ((XClientMessageEvent *) ev)->data.l[0]);
-	  if (!strcmp (s, "WM_DELETE_WINDOW"))
+	  if (!ustrcmp (s, "WM_DELETE_WINDOW"))
 	    {
 	      if (FrRef[0] != 0 && XtWindowOfObject (XtParent (FrameTable[0].WdFrame)) == w)
 		TtcQuit (0, 0);
@@ -1252,7 +1253,7 @@ ThotEvent             *ev;
 		}
 	    }
 	}
-      else if (!strcmp (s, "THOT_MESSAGES"))
+      else if (!ustrcmp (s, "THOT_MESSAGES"))
 	{
 	  /* The client message comes from print */
 	  s = XGetAtomName (ev->xany.display, ((XClientMessageEvent *) ev)->data.l[0]);

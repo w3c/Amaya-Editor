@@ -12,6 +12,7 @@
  *
  */
 
+#include "ustring.h"
 #include "thot_sys.h"
 #include "compilmsg.h"
 #include "message.h"
@@ -30,10 +31,10 @@ int                 UserErrorCode;
    displays the given message (text).
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                DisplayConfirmMessage (char *text)
+void                DisplayConfirmMessage (STRING text)
 #else  /* __STDC__ */
 void                DisplayConfirmMessage (text)
-char               *text;
+STRING              text;
 
 #endif /* __STDC__ */
 {
@@ -55,7 +56,7 @@ char               *text;
 
       _CY_ += cyChar;
 
-      if (!TextOut (compilersDC, 5, _CY_, text, strlen (text)))
+      if (!TextOut (compilersDC, 5, _CY_, text, ustrlen (text)))
          MessageBox (NULL, "Error Writing text", "Thot Compilers", MB_OK);
 
       SelectObject (compilersDC, hOldFont);
@@ -72,10 +73,10 @@ char               *text;
    displays the given message (text).
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                DisplayMessage (char *text, int msgType)
+void                DisplayMessage (STRING text, int msgType)
 #else  /* __STDC__ */
 void                DisplayMessage (text, msgType)
-char               *text;
+STRING              text;
 int                 msgType;
 
 #endif /* __STDC__ */
@@ -105,7 +106,7 @@ int                 msgType;
 	  } else
            _CY_ += cyChar;
 
-      if (!TextOut (compilersDC, 5, _CY_, text, strlen (text)))
+      if (!TextOut (compilersDC, 5, _CY_, text, ustrlen (text)))
          MessageBox (NULL, "Error Writing text", "Thot Compilers", MB_OK);
 
       SelectObject (compilersDC, hOldFont);
@@ -145,19 +146,19 @@ int                 errorCode;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                CompilerMessage (int index, int origin, int level, int msgCode, unsigned char *inputline, int lineNum)
+void                CompilerMessage (int index, int origin, int level, int msgCode, USTRING inputline, int lineNum)
 #else  /* __STDC__ */
 void                CompilerMessage (index, origin, level, msgCode, inputline, lineNum)
 int                 index;
 int                 origin;
 int                 level;
 int                 msgCode;
-unsigned char      *inputline;
+USTRING             inputline;
 int                 lineNum;
 
 #endif /* __STDC__ */
 {
-   char                buffer[LINE_LENGTH];
+   CHAR                buffer[LINE_LENGTH];
    int                 i;
 
    TtaDisplayMessage (INFO, TtaGetMessage (COMPIL, ERR_LINE), lineNum);
@@ -186,21 +187,21 @@ int                 lineNum;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                CompilerMessageString (int index, int origin, int level, int msgCode, char *inputline, int lineNum, char *string)
+void                CompilerMessageString (int index, int origin, int level, int msgCode, STRING inputline, int lineNum, STRING string)
 #else  /* __STDC__ */
 void                CompilerMessageString (index, origin, level, msgCode, inputline, lineNum, string)
 int                 index;
 int                 origin;
 int                 level;
 int                 msgCode;
-char               *inputline;
+STRING              inputline;
 int                 lineNum;
-char               *string;
+STRING              string;
 
 #endif /* __STDC__ */
 
 {
-   char                buffer[LINE_LENGTH];
+   CHAR                buffer[LINE_LENGTH];
    int                 i;
 
    TtaDisplayMessage (INFO, TtaGetMessage (COMPIL, ERR_LINE), lineNum);

@@ -25,6 +25,7 @@
 
  */
 
+#include "ustring.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -283,7 +284,7 @@ PtrAbstractBox      pAb;
 		  /* Dans la vue "Source_View" du schema de presentation HTMLP.P */
 		  /* les cellules etendues verticalement doivent quand meme   */
 		  /* respecter l'englobement */
-		  if (pRule->PrViewNum != 2 || strcmp (pAb->AbElement->ElStructSchema->SsName, "HTML") != 0)
+		  if (pRule->PrViewNum != 2 || ustrcmp (pAb->AbElement->ElStructSchema->SsName, "HTML") != 0)
 		     pAb->AbVertEnclosing = FALSE;
 	       }
 	     else

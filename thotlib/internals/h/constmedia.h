@@ -45,7 +45,7 @@
 #define MAX_TXT_LEN 1024	/* Max. length of strings */
 #define MAX_ENTRY 40		/* Max. number of entries for a catalog */
 #define INTEGER 0
-#define STRING 1
+#define _STRING_ 1
 #define CLICK 2
 #define EMPTY 3
 #define ENUMERATE 4

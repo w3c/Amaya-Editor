@@ -6,10 +6,10 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern unsigned char NextCharacter ( PtrTextBuffer * buffer,
-                                     int *rank );
-extern unsigned char PreviousCharacter ( PtrTextBuffer * buffer,
-                                         int *rank );
+extern UCHAR NextCharacter ( PtrTextBuffer * buffer,
+                             int *rank );
+extern UCHAR PreviousCharacter ( PtrTextBuffer * buffer,
+                                 int *rank );
 extern boolean MotOk ( PtrElement firstEl,
                        int firstChar,
                        PtrElement lastEl,
@@ -24,19 +24,19 @@ extern boolean NextTree ( PtrElement * pEl,
                           PtrSearchContext context );
 extern boolean SearchNextWord ( PtrElement * curEl,
                                 int *curChar,
-                                char word[MAX_WORD_LEN],
+                                CHAR word[MAX_WORD_LEN],
                                 PtrSearchContext context );
 extern boolean SearchPreviousWord ( PtrElement * curEl,
                                     int *curChar,
-                                    char word[MAX_WORD_LEN],
+                                    CHAR word[MAX_WORD_LEN],
                                     PtrSearchContext context );
 
 #else /* __STDC__ */
 
-extern unsigned char NextCharacter (/* PtrTextBuffer * buffer,
-                                       int *rank */);
-extern unsigned char PreviousCharacter (/* PtrTextBuffer * buffer,
-                                           int *rank */);
+extern UCHAR NextCharacter (/* PtrTextBuffer * buffer,
+                               int *rank */);
+extern UCHAR PreviousCharacter (/* PtrTextBuffer * buffer,
+                                   int *rank */);
 extern boolean MotOk (/* PtrElement firstEl,
                          int firstChar,
                          PtrElement lastEl,
@@ -51,11 +51,11 @@ extern boolean NextTree (/* PtrElement * pEl,
                             PtrSearchContext context */);
 extern boolean SearchNextWord (/* PtrElement * curEl,
                                   int *curChar,
-                                  char word[MAX_WORD_LEN],
+                                  CHAR word[MAX_WORD_LEN],
                                   PtrSearchContext context */);
 extern boolean SearchPreviousWord (/* PtrElement * curEl,
                                       int *curChar,
-                                      char word[MAX_WORD_LEN],
+                                      CHAR word[MAX_WORD_LEN],
                                       PtrSearchContext context */);
 
 #endif /* __STDC__ */

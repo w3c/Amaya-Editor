@@ -19,6 +19,7 @@
  *
  */
 
+#include "ustring.h"
 #include "libmsg.h"
 #include "thot_sys.h"
 #include "constmedia.h"
@@ -42,7 +43,7 @@ static PathBuffer   SaveFileName;
 static boolean      SaveDocWithCopy;
 static boolean      SaveDocWithMove;
 static PtrDocument  DocumentToSave;
-extern char         DefaultFileSuffix[5];
+extern CHAR         DefaultFileSuffix[5];
 
 /*----------------------------------------------------------------------
   XmlSetWriteDirectory sets the directory, filename, if the next write 
@@ -59,8 +60,8 @@ boolean        withCopy;
 boolean        withMove;
 #endif /* __STDC__ */
 {
-  strcpy (SaveFileName, fileName);
-  strcpy (SaveDirectoryName, directoryName);
+  ustrcpy (SaveFileName, fileName);
+  ustrcpy (SaveDirectoryName, directoryName);
   SaveDocWithCopy = withCopy;
   SaveDocWithMove = withMove;
   DocumentToSave = pDoc;
@@ -73,11 +74,11 @@ boolean        withMove;
 		  Returns FALSE if problem               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      XmlSimpleSave (Document doc, char *name, boolean withEvent)
+static boolean      XmlSimpleSave (Document doc, STRING name, boolean withEvent)
 #else  /* __STDC__ */
 static boolean      XmlSimpleSave (doc, name, withEvent)
 Document            doc;
-char               *name;
+STRING              name;
 boolean             withEvent;
 #endif /* __STDC__ */
 {
@@ -103,15 +104,15 @@ boolean             withEvent;
                                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      saveWithExtension (PtrDocument pDoc, char *extension)
+static boolean      saveWithExtension (PtrDocument pDoc, STRING extension)
 #else  /* __STDC__ */
 static boolean      saveWithExtension (pDoc, extension)
 PtrDocument         pDoc;
-char               *extension;
+STRING              extension;
 
 #endif /* __STDC__ */
 {
-   char                buf[MAX_TXT_LEN];
+   CHAR                buf[MAX_TXT_LEN];
    int                 i;
 
    if (pDoc == NULL)
@@ -142,9 +143,9 @@ PtrDocument         pDoc;
 
 {
    boolean             ok;
-   char                docname[MAX_TXT_LEN];
-   char                buf[MAX_TXT_LEN];
-   char                buf2[MAX_TXT_LEN];
+   CHAR                docname[MAX_TXT_LEN];
+   CHAR                buf[MAX_TXT_LEN];
+   CHAR                buf2[MAX_TXT_LEN];
    int                 i;
    NotifyDialog         notifyDoc;
 
@@ -208,8 +209,8 @@ PtrDocument         pDoc;
 		       pDoc->DocNTypedChars = 0;
 
 		       /* should update external references files */
-		       if ((strcmp (SaveFileName, pDoc->DocDName) != 0 ||
-			    strcmp (SaveDirectoryName, pDoc->DocDirectory) != 0) &&
+		       if ((ustrcmp (SaveFileName, pDoc->DocDName) != 0 ||
+			    ustrcmp (SaveDirectoryName, pDoc->DocDirectory) != 0) &&
 			   SaveDocWithMove)
 			 {
 			   FindCompleteName (pDoc->DocDName, "xml", 
@@ -218,9 +219,9 @@ PtrDocument         pDoc;
 			 }
 			   
 			 			     
-		       strncpy (pDoc->DocDName, SaveFileName, MAX_NAME_LENGTH);
-		       strncpy (pDoc->DocIdent, SaveFileName, MAX_DOC_IDENT_LEN);
-		       strncpy (pDoc->DocDirectory, SaveDirectoryName, MAX_PATH);
+		       ustrncpy (pDoc->DocDName, SaveFileName, MAX_NAME_LENGTH);
+		       ustrncpy (pDoc->DocIdent, SaveFileName, MAX_DOC_IDENT_LEN);
+		       ustrncpy (pDoc->DocDirectory, SaveDirectoryName, MAX_PATH);
 		       ChangeDocumentName (pDoc, SaveFileName);
 		       notifyDoc.event = TteDocSave;
 		       notifyDoc.document = (Document) IdentDocument (pDoc);
@@ -302,6 +303,6 @@ void XmlLoadResources()
       TteConnectAction (T_setwritedirectory, (Proc) XmlSetWriteDirectory);
     }
   XmlParserLoadResources ();
-  strcpy (DefaultFileSuffix, ".xml");
+  ustrcpy (DefaultFileSuffix, ".xml");
 
 }

@@ -8,7 +8,7 @@
 
 extern void DisplayEmptyBox ( PtrBox pBox,
                               int frame,
-                              char modele );
+                              CHAR modele );
 extern void PolyTransform ( PtrBox pBox );
 extern void DisplayBox ( PtrBox pBox,
                          int frame );
@@ -17,7 +17,7 @@ extern void DisplayBox ( PtrBox pBox,
 
 extern void DisplayEmptyBox (/* PtrBox pBox,
                                 int frame,
-                                char modele */);
+                                CHAR modele */);
 extern void PolyTransform (/* PtrBox pBox */);
 extern void DisplayBox (/* PtrBox pBox,
                            int frame */);

@@ -18,13 +18,13 @@ extern View TtaOpenMainView ( Document document,
                               int w,
                               int h );
 extern View TtaOpenView ( Document document,
-                          char *viewName,
+                          STRING viewName,
                           int x,
                           int y,
                           int w,
                           int h );
 extern View TtaOpenSubView ( Document document,
-                             char *viewName,
+                             STRING viewName,
                              int x,
                              int y,
                              int w,
@@ -36,7 +36,7 @@ extern void TtaFreeView ( Document document,
                           View view );
 extern void TtaChangeViewTitle ( Document document,
                                  View view,
-                                 char *title );
+                                 STRING title );
 extern void TtaSetSensibility ( Document document,
                                 View view,
                                 int value );
@@ -54,17 +54,17 @@ extern int TtaGetSensibility ( Document document,
                                View view );
 extern int TtaGetZoom ( Document document,
                         View view );
-extern int TtaIsPSchemaValid ( char *structureName,
-                               char *presentationName );
+extern int TtaIsPSchemaValid ( STRING structureName,
+                               STRING presentationName );
 extern void TtaGiveViewsToOpen ( Document document,
-                                 char *buffer,
+                                 STRING buffer,
                                  int *nbViews );
-extern char *TtaGetViewName ( Document document,
-                              View view );
+extern STRING TtaGetViewName ( Document document,
+                               View view );
 extern boolean TtaIsViewOpened ( Document document,
                                  View view );
 extern View TtaGetViewFromName ( Document document,
-                                 char *viewName );
+                                 STRING viewName );
 extern void TtaGiveActiveView ( Document * document,
                                 View * view );
 extern void RedisplayNewElement ( Document document,
@@ -143,13 +143,13 @@ extern View TtaOpenMainView (/* Document document,
                                 int w,
                                 int h */);
 extern View TtaOpenView (/* Document document,
-                            char *viewName,
+                            STRING viewName,
                             int x,
                             int y,
                             int w,
                             int h */);
 extern View TtaOpenSubView (/* Document document,
-                               char *viewName,
+                               STRING viewName,
                                int x,
                                int y,
                                int w,
@@ -161,7 +161,7 @@ extern void TtaFreeView (/* Document document,
                             View view */);
 extern void TtaChangeViewTitle (/* Document document,
                                    View view,
-                                   char *title */);
+                                   STRING title */);
 extern void TtaSetSensibility (/* Document document,
                                   View view,
                                   int value */);
@@ -179,17 +179,17 @@ extern int TtaGetSensibility (/* Document document,
                                  View view */);
 extern int TtaGetZoom (/* Document document,
                           View view */);
-extern int TtaIsPSchemaValid (/* char *structureName,
-                                 char *presentationName */);
+extern int TtaIsPSchemaValid (/* STRING structureName,
+                                 STRING presentationName */);
 extern void TtaGiveViewsToOpen (/* Document document,
-                                   char *buffer,
+                                   STRING buffer,
                                    int *nbViews */);
-extern char *TtaGetViewName (/* Document document,
-                                View view */);
+extern STRING TtaGetViewName (/* Document document,
+                                 View view */);
 extern boolean TtaIsViewOpened (/* Document document,
                                    View view */);
 extern View TtaGetViewFromName (/* Document document,
-                                   char *viewName */);
+                                   STRING viewName */);
 extern void TtaGiveActiveView (/* Document * document,
                                   View * view */);
 extern void RedisplayNewElement (/* Document document,

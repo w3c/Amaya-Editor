@@ -9,13 +9,13 @@
 extern int TtaGetThotColor ( unsigned short red,
                              unsigned short green,
                              unsigned short blue );
-extern void TtaGiveRGB ( char *colname,
+extern void TtaGiveRGB ( STRING colname,
                          unsigned short *red,
                          unsigned short *green,
                          unsigned short *blue );
 extern boolean ShowReference ( void );
 extern boolean ShowReadOnly ( void );
-extern void ThotInitDisplay ( char *name,
+extern void ThotInitDisplay ( STRING name,
                               int dx,
                               int dy );
 extern void InitDocContexts ( void );
@@ -26,13 +26,13 @@ extern void SelectionEvents ( void *ev );
 extern int TtaGetThotColor (/* unsigned short red,
                                unsigned short green,
                                unsigned short blue */);
-extern void TtaGiveRGB (/* char *colname,
+extern void TtaGiveRGB (/* STRING colname,
                            unsigned short *red,
                            unsigned short *green,
                            unsigned short *blue */);
 extern boolean ShowReference (/* void */);
 extern boolean ShowReadOnly (/* void */);
-extern void ThotInitDisplay (/* char *name,
+extern void ThotInitDisplay (/* STRING name,
                                 int dx,
                                 int dy */);
 extern void InitDocContexts (/* void */);

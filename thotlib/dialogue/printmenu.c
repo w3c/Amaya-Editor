@@ -9,6 +9,7 @@
  * Messages and printing management.
  */
 
+#include "ustring.h"
 #include "thot_sys.h"
 #include "libmsg.h"
 #include "message.h"
@@ -68,7 +69,7 @@
 #endif /* _WIN_PRINT */
 #endif /* _WINDOWS */
 
-static char         Orientation[MAX_NAME_LENGTH];
+static CHAR         Orientation[MAX_NAME_LENGTH];
 static Func         pFuncExportPrintDoc = NULL;
 static int          defPaperPrint;
 static int          defManualFeed;
@@ -83,21 +84,29 @@ static Name         PresSchema;
 
 #ifdef _WINDOWS
 #include "win_f.h"
+
+#if 0
+#ifdef __STDC__
+extern void PrintDoc (HWND, int, STRING*, HDC, BOOL, int, STRING, STRING, HINSTANCE, BOOL);
+#else  /* __STDC__ */
+extern void PrintDoc ();
+#endif /* __STDC__ */
+#endif /* 0000 */
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
   Print: interface to the Print program.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         Print (char *name, char *dir, char *thotSch, char *thotDoc, char *realName, char *output, int firstPage, int lastPage, int nCopies, int hShift, int vShift, int userOrientation, int reduction, int nbPagesPerSheet, int suppFrame, int manualFeed, int blackAndWhite, int repaginate, char *viewsToPrint, Document document)
+static void         Print (STRING name, STRING dir, STRING thotSch, STRING thotDoc, STRING realName, STRING output, int firstPage, int lastPage, int nCopies, int hShift, int vShift, int userOrientation, int reduction, int nbPagesPerSheet, int suppFrame, int manualFeed, int blackAndWhite, int repaginate, STRING viewsToPrint, Document document)
 #else  /* __STDC__ */
 static void         Print (name, dir, thotSch, thotDoc, realName, output, firstPage, lastPage, nCopies, hShift, vShift, userOrientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, repaginate, viewsToPrint, document)
-char               *name;
-char               *dir;
-char               *thotSch;
-char               *thotDoc;
-char               *realName;
-char               *output;
+STRING              name;
+STRING              dir;
+STRING              thotSch;
+STRING              thotDoc;
+STRING              realName;
+STRING              output;
 int                 firstPage;
 int                 lastPage;
 int                 nCopies;
@@ -110,19 +119,19 @@ int                 suppFrame;
 int                 manualFeed;
 int                 blackAndWhite;
 int                 repaginate;
-char               *viewsToPrint;
+STRING              viewsToPrint;
 Document            document;
 #endif /* __STDC__ */
 { 
 #  ifdef _WINDOWS
    int                     printArgc = 0;
-   char*                   printArgv [100];
+   STRING                   printArgv [100];
    DWORD                   dwNeeded, dwReturned;
    static LPPRINTER_INFO_5 pInfo5;
    HANDLE                  hLib;
    FARPROC                 ptrMainProc;
 #  else  /* !_WINDOWS */
-   char             cmd[1024];
+   CHAR             cmd[1024];
    int              res;
 #  endif /* _WINDOWS */
    int              i, j;
@@ -137,30 +146,30 @@ Document            document;
    if ((thotSch != NULL) && (thotSch[0] != EOS))
      {
 #      ifdef _WINDOWS
-	   printArgv [printArgc] = (char*) TtaGetMemory (5);
-	   strcpy (printArgv [printArgc], "-sch");
+	   printArgv [printArgc] = (STRING) TtaGetMemory (5);
+	   ustrcpy (printArgv [printArgc], "-sch");
 	   printArgc++;
-	   printArgv [printArgc] = (char*) TtaGetMemory (strlen (thotSch) + 1);
-	   strcpy (printArgv [printArgc], thotSch);
+	   printArgv [printArgc] = (STRING) TtaGetMemory (ustrlen (thotSch) + 1);
+	   ustrcpy (printArgv [printArgc], thotSch);
 	   printArgc++;
 #      else  /* !_WINDOWS */
-       strcat (cmd, " -sch ");
-       strcat (cmd, thotSch);
+       ustrcat (cmd, " -sch ");
+       ustrcat (cmd, thotSch);
 #      endif /* _WINDOWS */
      };
 
    if ((thotDoc != NULL) && (thotDoc[0] != EOS))
      {
 #      ifdef _WINDOWS
-	   printArgv [printArgc] = (char*) TtaGetMemory (5);
-	   strcpy (printArgv [printArgc], "-doc");
+	   printArgv [printArgc] = (STRING) TtaGetMemory (5);
+	   ustrcpy (printArgv [printArgc], "-doc");
 	   printArgc++;
-	   printArgv [printArgc] = (char*) TtaGetMemory (strlen (thotDoc) + 1);
-	   strcpy (printArgv [printArgc], thotDoc);
+	   printArgv [printArgc] = (STRING) TtaGetMemory (ustrlen (thotDoc) + 1);
+	   ustrcpy (printArgv [printArgc], thotDoc);
 	   printArgc++;
 #      else  /* _WINDOWS */
-       strcat (cmd, " -doc ");
-       strcat (cmd, thotDoc);
+       ustrcat (cmd, " -doc ");
+       ustrcat (cmd, thotDoc);
 #      endif /* _WINDOWS */
      };
 
@@ -168,15 +177,15 @@ Document            document;
    if (servername && servername[0] != EOS)
      { 
 #      ifdef _WINDOWS
-	   printArgv [printArgc] = (char*) TtaGetMemory (9);
-	   strcpy (printArgv [printArgc], "-display");
+	   printArgv [printArgc] = (STRING) TtaGetMemory (9);
+	   ustrcpy (printArgv [printArgc], "-display");
 	   printArgc++;
-	   printArgv [printArgc] = (char*) TtaGetMemory (strlen (servername) + 1);
-	   strcpy (printArgv [printArgc], servername);
+	   printArgv [printArgc] = (STRING) TtaGetMemory (ustrlen (servername) + 1);
+	   ustrcpy (printArgv [printArgc], servername);
 	   printArgc++;
 #      else  /* _WINDOWS */
-       strcat (cmd, " -display ");
-       strcat (cmd, servername);
+       ustrcat (cmd, " -display ");
+       ustrcat (cmd, servername);
 #      endif /* _WINDOWS */
      }
 
@@ -184,15 +193,15 @@ Document            document;
    if (realName)
      { 
 #      ifdef _WINDOWS
-	   printArgv [printArgc] = (char*) TtaGetMemory (6);
-	   strcpy (printArgv [printArgc], "-name");
+	   printArgv [printArgc] = (STRING) TtaGetMemory (6);
+	   ustrcpy (printArgv [printArgc], "-name");
 	   printArgc++;
-	   printArgv [printArgc] = (char*) TtaGetMemory (strlen (realName) + 1);
-	   strcpy (printArgv [printArgc], realName);
+	   printArgv [printArgc] = (STRING) TtaGetMemory (ustrlen (realName) + 1);
+	   ustrcpy (printArgv [printArgc], realName);
 	   printArgc++;
 #      else  /* _WINDOWS */
-       strcat (cmd, " -name ");
-       strcat (cmd, realName);
+       ustrcat (cmd, " -name ");
+       ustrcat (cmd, realName);
 #      endif /* _WINDOWS */
      }
 
@@ -200,124 +209,124 @@ Document            document;
    if (userOrientation != 0)
 #      ifdef _WINDOWS
    {
-	   printArgv [printArgc] = (char*) TtaGetMemory (11);
-       strcpy (printArgv [printArgc], "-landscape");
+	   printArgv [printArgc] = (STRING) TtaGetMemory (11);
+       ustrcpy (printArgv [printArgc], "-landscape");
 	   printArgc++;
    }
 #      else  /* _WINDOWS */
-       strcat (cmd, " -landscape");
+       ustrcat (cmd, " -landscape");
 #      endif /* _WINDOWS */
 
    /* transmit the output command */
    if (PaperPrint)
 #      ifdef _WINDOWS
    {
-	   printArgv [printArgc] = (char*) TtaGetMemory (5);
-       strcpy (printArgv [printArgc], "-out");
+	   printArgv [printArgc] = (STRING) TtaGetMemory (5);
+       ustrcpy (printArgv [printArgc], "-out");
 	   printArgc++;
    }
 #      else  /* _WINDOWS */
-       strcat (cmd, " -out \"");
+       ustrcat (cmd, " -out \"");
 #      endif /* _WINDOWS */
    else
 #      ifdef _WINDOWS
    {
-	   printArgv [printArgc] = (char*) TtaGetMemory (4);
-       strcpy (printArgv [printArgc], "-ps");
+	   printArgv [printArgc] = (STRING) TtaGetMemory (4);
+       ustrcpy (printArgv [printArgc], "-ps");
 	   printArgc++;
    }
 #      else  /* _WINDOWS */
-       strcat (cmd, " -ps \"");
+       ustrcat (cmd, " -ps \"");
 #      endif /* _WINDOWS */
 
    if (output[0] != EOS)
 #      ifdef _WINDOWS
    {
-	   printArgv [printArgc] = (char*) TtaGetMemory (strlen (output) + 1);
-       strcpy (printArgv [printArgc], output);
+	   printArgv [printArgc] = (STRING) TtaGetMemory (ustrlen (output) + 1);
+       ustrcpy (printArgv [printArgc], output);
 	   printArgc++;
    }
 #      else  /* _WINDOWS */
-       strcat (cmd, output);
+       ustrcat (cmd, output);
 #      endif /* _WINDOWS */
    else
 #      ifdef _WINDOWS
    {
-	   printArgv [printArgc] = (char*) TtaGetMemory (3);
-       strcpy (printArgv [printArgc], "lp");
+	   printArgv [printArgc] = (STRING) TtaGetMemory (3);
+       ustrcpy (printArgv [printArgc], "lp");
 	   printArgc++;
    }
 #      else  /* _WINDOWS */
-       strcat (cmd, "lp");
-   strcat (cmd, "\" ");
+       ustrcat (cmd, "lp");
+   ustrcat (cmd, "\" ");
 #      endif /* _WINDOWS */
 
    /* transmit visualization of empty boxes (default no) */
    if (suppFrame == 0)
 #      ifdef _WINDOWS
    {
-	   printArgv [printArgc] = (char*) TtaGetMemory (10);
-       strcpy (printArgv [printArgc], "-emptybox");
+	   printArgv [printArgc] = (STRING) TtaGetMemory (10);
+       ustrcpy (printArgv [printArgc], "-emptybox");
 	   printArgc++;
    }
 #      else  /* _WINDOWS */
-       strcat (cmd, " -emptybox");
+       ustrcat (cmd, " -emptybox");
 #      endif /* _WINDOWS */
 
    /* transmit black/white output (default no) */
    if (blackAndWhite != 0)
 #      ifdef _WINDOWS
    {
-	   printArgv [printArgc] = (char*) TtaGetMemory (4);
-       strcpy (printArgv [printArgc], "-bw");
+	   printArgv [printArgc] = (STRING) TtaGetMemory (4);
+       ustrcpy (printArgv [printArgc], "-bw");
 	   printArgc++;
    }
 #      else  /* _WINDOWS */
-       strcat (cmd, " -bw");
+       ustrcat (cmd, " -bw");
 #      endif /* _WINDOWS */
 
    /* transmit manualfeed (default no) */
    if (manualFeed != 0)
 #      ifdef _WINDOWS
    {
-	   printArgv [printArgc] = (char*) TtaGetMemory (12);
-       strcpy (printArgv [printArgc], "-manualfeed");
+	   printArgv [printArgc] = (STRING) TtaGetMemory (12);
+       ustrcpy (printArgv [printArgc], "-manualfeed");
 	   printArgc++;
    }
 #      else  /* _WINDOWS */
-       strcat (cmd, " -manualfeed");
+       ustrcat (cmd, " -manualfeed");
 #      endif /* _WINDOWS */
 
    /* transmit repaginate (default no) */
    if (repaginate != 0)
 #      ifdef _WINDOWS
    {
-	   printArgv [printArgc] = (char*) TtaGetMemory (10);
-       strcpy (printArgv [printArgc], "-paginate");
+	   printArgv [printArgc] = (STRING) TtaGetMemory (10);
+       ustrcpy (printArgv [printArgc], "-paginate");
 	   printArgc++;
    }
 #      else  /* _WINDOWS */
-       strcat (cmd, " -paginate");
+       ustrcat (cmd, " -paginate");
 #      endif /* _WINDOWS */
 
    /* transmit page format */
 #  ifdef _WINDOWS
-   printArgv [printArgc] = (char*) TtaGetMemory (strlen (PageSize) + 3);
+   printArgv [printArgc] = (STRING) TtaGetMemory (ustrlen (PageSize) + 3);
    sprintf (printArgv [printArgc], "-P%s", PageSize);
    printArgc++;
 #  else  /* _WINDOWS */
-   strcat (cmd, " -P");
-   strcat (cmd, PageSize);
+   ustrcat (cmd, " -P");
+   ustrcat (cmd, PageSize);
 #  endif /* _WINDOWS */
 
    /* transmit window id */
 #  ifndef _WINDOWS 
-   i = strlen (cmd);
+   i = ustrlen (cmd);
 #  endif /* _WINDOWS */
    if (FrRef[0] != 0)
 #     ifdef _WINDOWS
    {
-      printArgv [printArgc] = (char*) TtaGetMemory (20);
+      printArgv [printArgc] = (STRING) TtaGetMemory (20);
       sprintf (printArgv [printArgc], "-w%ld", FrRef[0]);
       printArgc++;
    }
@@ -332,7 +341,7 @@ Document            document;
 	if (frame <= MAX_FRAME)
 #     ifdef _WINDOWS
 	{
-      printArgv [printArgc] = (char*) TtaGetMemory (20);
+      printArgv [printArgc] = (STRING) TtaGetMemory (20);
       sprintf (printArgv [printArgc], "-w%ld", FrRef[frame]);
       printArgc++;
 	}
@@ -342,7 +351,7 @@ Document            document;
 	else
 #     ifdef _WINDOWS
 	{
-      printArgv [printArgc] = (char*) TtaGetMemory (20);
+      printArgv [printArgc] = (STRING) TtaGetMemory (20);
       sprintf (printArgv [printArgc], "-w%ld", FrRef[0]);
       printArgc++;
 	}
@@ -353,39 +362,39 @@ Document            document;
 
    /* transmit values */
 #  ifdef _WINDOWS
-   printArgv [printArgc] = (char*) TtaGetMemory (6);
-   strcpy (printArgv [printArgc], "-npps");
+   printArgv [printArgc] = (STRING) TtaGetMemory (6);
+   ustrcpy (printArgv [printArgc], "-npps");
    printArgc++;
-   printArgv [printArgc] = (char*) TtaGetMemory (5);
+   printArgv [printArgc] = (STRING) TtaGetMemory (5);
    sprintf (printArgv [printArgc], "%d", nbPagesPerSheet);
    printArgc++;
-   printArgv [printArgc] = (char*) TtaGetMemory (7);
+   printArgv [printArgc] = (STRING) TtaGetMemory (7);
    sprintf (printArgv [printArgc], "-F%d", firstPage);
    printArgc++;
-   printArgv [printArgc] = (char*) TtaGetMemory (7);
+   printArgv [printArgc] = (STRING) TtaGetMemory (7);
    sprintf (printArgv [printArgc], "-L%d", lastPage);
    printArgc++;
-   printArgv [printArgc] = (char*) TtaGetMemory (8);
+   printArgv [printArgc] = (STRING) TtaGetMemory (8);
    sprintf (printArgv [printArgc], "-#%d", nCopies);
    printArgc++;
-   printArgv [printArgc] = (char*) TtaGetMemory (7);
+   printArgv [printArgc] = (STRING) TtaGetMemory (7);
    sprintf (printArgv [printArgc], "-H%d", hShift);
    printArgc++;
-   printArgv [printArgc] = (char*) TtaGetMemory (7);
+   printArgv [printArgc] = (STRING) TtaGetMemory (7);
    sprintf (printArgv [printArgc], "-V%d", vShift);
    printArgc++;
-   printArgv [printArgc] = (char*) TtaGetMemory (7);
+   printArgv [printArgc] = (STRING) TtaGetMemory (7);
    sprintf (printArgv [printArgc], "-%%%d", reduction);
    printArgc++;
 #  else  /* _WINDOWS */
-   i = strlen (cmd);
+   i = ustrlen (cmd);
    sprintf (&cmd[i], " -npps %d -F%d -L%d -#%d -H%d -V%d -%%%d ", nbPagesPerSheet, firstPage, lastPage, nCopies, hShift, vShift, reduction);
 #  endif /* _WINDOWS */
 
    /* insert the flag -v before each view name */
    i = 0;
 #  ifndef _WINDOWS
-   j = strlen (cmd);
+   j = ustrlen (cmd);
 #  endif /* _WINDOWS */
    /* skip leading spaces */ 
    while(viewsToPrint[i] == ' ')
@@ -394,8 +403,8 @@ Document            document;
    if(viewsToPrint[i] != EOS)
      {
 #      ifdef _WINDOWS
-       printArgv [printArgc] = (char*) TtaGetMemory (3);
-       strcpy (printArgv [printArgc], "-v");
+       printArgv [printArgc] = (STRING) TtaGetMemory (3);
+       ustrcpy (printArgv [printArgc], "-v");
        printArgc++;
 #      else  /* _WINDOWS */
        cmd[j++] = '-';
@@ -406,7 +415,7 @@ Document            document;
    /* process from the first view name */
 
 #  ifdef _WINDOWS
-   printArgv [printArgc] = (char*) TtaGetMemory (50);
+   printArgv [printArgc] = (STRING) TtaGetMemory (50);
    j = 0;
 #  endif /* _WINDOWS */
 
@@ -433,10 +442,10 @@ Document            document;
             if(viewsToPrint[i+1] != EOS)
               {
 #               ifdef _WINDOWS
-                printArgv [printArgc] = (char*) TtaGetMemory (3);
-                strcpy (printArgv [printArgc], "-v");
+                printArgv [printArgc] = (STRING) TtaGetMemory (3);
+                ustrcpy (printArgv [printArgc], "-v");
                 printArgc++;
-                printArgv [printArgc] = (char*) TtaGetMemory (50);
+                printArgv [printArgc] = (STRING) TtaGetMemory (50);
                 j = 0;
 #               else  /* _WINDOWS */
                 cmd[j++] = '-';
@@ -451,10 +460,10 @@ Document            document;
 
    /* transmit the path or source file */
 #  ifdef _WINDOWS 
-   printArgv [printArgc] = (char*) TtaGetMemory (11);
-   strcpy (printArgv [printArgc], "-removedir");
+   printArgv [printArgc] = (STRING) TtaGetMemory (11);
+   ustrcpy (printArgv [printArgc], "-removedir");
    printArgc++;
-   printArgv [printArgc] = (char*) TtaGetMemory (strlen (dir) + strlen (name) + 6);
+   printArgv [printArgc] = (STRING) TtaGetMemory (ustrlen (dir) + ustrlen (name) + 6);
    sprintf  (printArgv [printArgc], "%s\\%s.PIV", dir, name);
    printArgc++;
    WIN_ReleaseDeviceContext ();
@@ -497,7 +506,7 @@ Document            document;
    }
 #  else /* !_WINDOWS */
    cmd[j] = EOS;
-   i = strlen (cmd);
+   i = ustrlen (cmd);
 
    sprintf (&cmd[i], " -removedir %s/%s.PIV &", dir, name);
    res = system (cmd);
@@ -518,7 +527,7 @@ Document document;
 #endif /* __STDC__ */
 {
    PtrDocument pDoc;
-   char               *ptr;
+   STRING              ptr;
    int                 lg;
 
    if (document == 0)
@@ -533,9 +542,9 @@ Document document;
        /* read DEFAULTPRINTER variable */
        ptr = TtaGetEnvString ("THOTPRINT");
        if (ptr == NULL)
-	 strcpy (pPrinter, "");
+	 ustrcpy (pPrinter, "");
        else
-	 strcpy (pPrinter, ptr);
+	 ustrcpy (pPrinter, ptr);
        PSdir[0] = EOS;
        PrintingDoc = 0;
        defPaperPrint = TRUE;
@@ -563,9 +572,9 @@ Document document;
        PagesPerSheet = defPagesPerSheet;
        Paginate = defPaginate;
        if (defPageSize == PP_A4)
-         strcpy(PageSize,"A4");
+         ustrcpy(PageSize,"A4");
        else
-         strcpy(PageSize,"US");
+         ustrcpy(PageSize,"US");
        if (pDoc != NULL)
 	 {
 	   if (pDoc->DocDirectory[0] == DIR_SEP)
@@ -576,19 +585,19 @@ Document document;
 	       ptr = TtaGetEnvString ("TMPDIR");
 	       if (ptr != NULL && TtaCheckDirectory (ptr))
 		 {
-		   strcpy(PSdir,ptr);
-		   lg = strlen(PSdir);
+		   ustrcpy(PSdir,ptr);
+		   lg = ustrlen(PSdir);
 		   if (PSdir[lg - 1] == DIR_SEP)
 		     PSdir[--lg] = EOS;
 		 }
 	       else
 		 {
 #                  ifdef _WINDOWS
-		   strcpy (PSdir,"C:\\TEMP");
+		   ustrcpy (PSdir,"C:\\TEMP");
 #                  else  /* !_WINDOWS */
-		   strcpy (PSdir,"/tmp");
+		   ustrcpy (PSdir,"/tmp");
 #                  endif /* !_WINDOWS */
-		   lg = strlen (PSdir);
+		   lg = ustrlen (PSdir);
 		 }
 	       sprintf (&PSdir[lg], "/%s.ps", pDoc->DocDName);
 	     }
@@ -611,8 +620,8 @@ View                view;
 {
    PathBuffer          viewsToPrint;
 
-   strcpy (viewsToPrint, TtaGetViewName (document, view));
-   strcat (viewsToPrint, " ");
+   ustrcpy (viewsToPrint, TtaGetViewName (document, view));
+   ustrcat (viewsToPrint, " ");
    TtaPrint (document, viewsToPrint);
 }
 
@@ -621,11 +630,11 @@ View                view;
    interface to the multiview print command.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaPrint (Document document, char* viewNames)
+void                TtaPrint (Document document, STRING viewNames)
 #else  /* __STDC__ */
 void                TtaPrint (document, viewNames)
 Document            document;
-char               *viewNames;
+STRING              viewNames;
 
 #endif /* __STDC__ */
 {
@@ -634,26 +643,26 @@ char               *viewNames;
    Name                docName,tmpDocName;
    Name                savePres, newPres;
    ThotPid             pid = ThotPid_get ();
-   char               *dirString;
+   STRING              dirString;
    int                 orientation, lg;
    boolean	       docReadOnly;
    boolean             ok;
 #  ifndef _WINDOWS 
-   char                cmd[100];
+   CHAR                cmd[100];
 #  endif /* _WINDOWS */
 
    pDoc = LoadedDocument[document - 1];
    /* prepares the execution of the print command */
-   strcpy (savePres, pDoc->DocSSchema->SsDefaultPSchema);
+   ustrcpy (savePres, pDoc->DocSSchema->SsDefaultPSchema);
    if (PresSchema[0] != EOS)
-     strcpy (newPres, PresSchema);
+     ustrcpy (newPres, PresSchema);
    else
      ConfigGetPSchemaForPageSize (pDoc->DocSSchema, PageSize, newPres);
      
    if (newPres[0] != EOS)
-      strcpy (pDoc->DocSSchema->SsDefaultPSchema, newPres);
+      ustrcpy (pDoc->DocSSchema->SsDefaultPSchema, newPres);
    if (ThotLocalActions[T_rextprint]!=NULL && 
-       strcmp(pDoc->DocSSchema->SsDefaultPSchema, savePres))
+       ustrcmp(pDoc->DocSSchema->SsDefaultPSchema, savePres))
      {
        TtaDisplayMessage(INFO, TtaGetMessage(LIB,TMSG_CHANGE_PSCH), newPres);
      }
@@ -667,25 +676,25 @@ char               *viewNames;
            TtaDisplayMessage(INFO, TtaGetMessage(LIB,TMSG_MISSING_DIR), dirString);
            return;
          }
-       strcpy (tmpDirName, dirString);
-       lg = strlen(tmpDirName);
+       ustrcpy (tmpDirName, dirString);
+       lg = ustrlen(tmpDirName);
        if (tmpDirName[lg - 1] == DIR_SEP)
          tmpDirName[--lg] = EOS;
      }
    else
      {
 #      ifdef _WINDOWS
-       strcpy (tmpDirName,"C:\\TEMP");
+       ustrcpy (tmpDirName,"C:\\TEMP");
        lg = 7;
 #      else /* !_WINDOWS */
-       strcpy (tmpDirName,"/tmp");
+       ustrcpy (tmpDirName,"/tmp");
        lg = 4;
 #      endif /* _WINDOWS */
      }
 
    sprintf (tmpDocName, "Thot%ld", (long) pid + numOfJobs);
-   strcpy(&tmpDirName[lg], DIR_STR);
-   strcat(&tmpDirName[lg], tmpDocName);
+   ustrcpy(&tmpDirName[lg], DIR_STR);
+   ustrcat(&tmpDirName[lg], tmpDocName);
 #ifdef DEBUG
    fprintf (stderr,"printmenu : temp dir %s \n",tmpDirName);
 #endif
@@ -699,8 +708,8 @@ char               *viewNames;
 #  endif /* _WINDOWS */
    numOfJobs++;
 
-   strncpy (dirName, pDoc->DocDirectory, MAX_PATH);
-   strncpy (docName, pDoc->DocDName, MAX_NAME_LENGTH);
+   ustrncpy (dirName, pDoc->DocDirectory, MAX_PATH);
+   ustrncpy (docName, pDoc->DocDName, MAX_NAME_LENGTH);
    if (pFuncExportPrintDoc !=NULL)
      /* a export procedure is defined */
        ok = (*pFuncExportPrintDoc)(document, tmpDocName, tmpDirName);
@@ -709,26 +718,26 @@ char               *viewNames;
      {
        docReadOnly = pDoc->DocReadOnly;
 
-       strcpy (pDoc->DocDirectory, tmpDirName);
-       strcpy (pDoc->DocDName, tmpDocName);
+       ustrcpy (pDoc->DocDirectory, tmpDirName);
+       ustrcpy (pDoc->DocDName, tmpDocName);
        pDoc->DocReadOnly = FALSE;
 
        ok = WriteDocument (pDoc, 5);
 
        pDoc->DocReadOnly = docReadOnly;
-       strncpy (pDoc->DocDirectory, dirName, MAX_PATH);
-       strncpy (pDoc->DocDName, docName, MAX_NAME_LENGTH);
+       ustrncpy (pDoc->DocDirectory, dirName, MAX_PATH);
+       ustrncpy (pDoc->DocDName, docName, MAX_NAME_LENGTH);
      }
 
    /* searches the paper orientation for the presentation scheme */
    ConfigGetPresentationOption(pDoc->DocSSchema, "orientation", Orientation);
-   if (!strcmp (Orientation, "Landscape"))
+   if (!ustrcmp (Orientation, "Landscape"))
      orientation = 1;
    else
      orientation = 0;
 
    /* restores the presentation scheme */
-   strcpy (pDoc->DocSSchema->SsDefaultPSchema, savePres);
+   ustrcpy (pDoc->DocSSchema->SsDefaultPSchema, savePres);
 
    /* make an automatic backup */
    if (ok)
@@ -761,7 +770,7 @@ char               *viewNames;
 		  document);
      }
    /* restores the presentation scheme */
-   strcpy (pDoc->DocSSchema->SsDefaultPSchema, savePres);
+   ustrcpy (pDoc->DocSSchema->SsDefaultPSchema, savePres);
 }
 
 /*----------------------------------------------------------------------
@@ -842,9 +851,9 @@ int value;
        break;
      case PP_PaperSize:
        if (value == PP_A4)
-	 strcpy (PageSize, "A4");
+	 ustrcpy (PageSize, "A4");
        else if (value == PP_US)
-	 strcpy (PageSize, "US");
+	 ustrcpy (PageSize, "US");
        else
 	 TtaError(ERR_invalid_parameter);
        break;
@@ -903,7 +912,7 @@ int value;
       return (PagesPerSheet);
       break;
     case PP_PaperSize:
-      if (!strcmp (PageSize, "A4"))
+      if (!ustrcmp (PageSize, "A4"))
 	return (PP_A4);
       else
 	return (PP_US);
@@ -925,13 +934,13 @@ int value;
   TtaSetPrintCommand sets the print command.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaSetPrintCommand (char *command)
+void                TtaSetPrintCommand (STRING command)
 #else  /* __STDC__ */
 void                TtaSetPrintCommand (command)
-char *command;
+STRING command;
 #endif /* __STDC__ */
 {
-  strcpy (pPrinter, command);
+  ustrcpy (pPrinter, command);
 }
 
 
@@ -939,16 +948,16 @@ char *command;
   TtaGetPrintCommand returns the print command.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaGetPrintCommand (char *command)
+void                TtaGetPrintCommand (STRING command)
 #else  /* __STDC__ */
 void                TtaGetPrintCommand (command)
-char *command;
+STRING command;
 #endif /* __STDC__ */
 {
   if (command == NULL)
     TtaError(ERR_invalid_parameter);
   else
-    strcpy (command, pPrinter);
+    ustrcpy (command, pPrinter);
 }
 
 
@@ -956,16 +965,16 @@ char *command;
   TtaSetPrintSchema fixes the printing schema.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaSetPrintSchema (char *name)
+void                TtaSetPrintSchema (STRING name)
 #else  /* __STDC__ */
 void                TtaSetPrintSchema (name)
-char *name;
+STRING name;
 #endif /* __STDC__ */
 {
-  if (strlen(name) >= MAX_NAME_LENGTH)
+  if (ustrlen(name) >= MAX_NAME_LENGTH)
     TtaError(ERR_invalid_parameter);
   else
-    strcpy (PresSchema, name);
+    ustrcpy (PresSchema, name);
 }
 
 
@@ -973,13 +982,13 @@ char *name;
   TtaSetPrintCommand sets the path of ps file.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaSetPsFile (char *path)
+void                TtaSetPsFile (STRING path)
 #else  /* __STDC__ */
 void                TtaSetPsFile (path)
-char *command;
+STRING command;
 #endif /* __STDC__ */
 {
-  strcpy (PSdir, path);
+  ustrcpy (PSdir, path);
 }
 
 
@@ -987,16 +996,16 @@ char *command;
   TtaGetPsFile returns the path of ps file.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaGetPsFile (char *path)
+void                TtaGetPsFile (STRING path)
 #else  /* __STDC__ */
 void                TtaGetPsFile (/*char *path*/)
-char *path;
+STRING path;
 #endif /* __STDC__ */
 {
   if (path == NULL)
     TtaError(ERR_invalid_parameter);
   else
-    strcpy (path, PSdir);
+    ustrcpy (path, PSdir);
 }
 
 
@@ -1005,12 +1014,12 @@ char *path;
   callback associated to the PrintSetup form 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CallbackPrintmenu (int ref, int val, char *txt)
+void                CallbackPrintmenu (int ref, int val, STRING txt)
 #else  /* __STDC__ */
 void                CallbackPrintmenu (ref, val, txt)
 int                 ref;
 int                 val;
-char               *txt;
+STRING              txt;
 
 #endif /* __STDC__ */
 {
@@ -1049,10 +1058,10 @@ char               *txt;
 	  switch (val)
 	    {
 	    case 0:
-	      strcpy (PageSize, "A4");
+	      ustrcpy (PageSize, "A4");
 	      break;
 	    case 1:
-	      strcpy (PageSize, "US");
+	      ustrcpy (PageSize, "US");
 	      break;
 	    }
 	  break;
@@ -1073,10 +1082,10 @@ char               *txt;
 	  if (txt[0] != EOS)
 	    if (NewPaperPrint)
 	      /* text capture zone for the printer name */
-	      strncpy (pPrinter, txt, MAX_PATH);
+	      ustrncpy (pPrinter, txt, MAX_PATH);
 	    else
 	      /* text capture zone for the name of the PostScript file */
-	      strncpy (PSdir, txt, MAX_PATH);
+	      ustrncpy (PSdir, txt, MAX_PATH);
 	  break;
 	case NumFormPrint:
 	  /* Print form option */
@@ -1118,7 +1127,7 @@ View                view;
 #endif /* __STDC__ */
 {
    int              i;
-   char             bufMenu[MAX_TXT_LEN];
+   CHAR             bufMenu[MAX_TXT_LEN];
 
    if (document == 0)
      return;
@@ -1140,11 +1149,11 @@ View                view;
    /* Paper format submenu */
    i = 0;
    sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_A4));
-   i += strlen (&bufMenu[i]) + 1;
+   i += ustrlen (&bufMenu[i]) + 1;
    sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_US));
    TtaNewSubmenu (NumMenuPaperFormat, NumFormPrint, 0,
 	     TtaGetMessage (LIB, TMSG_PAPER_SIZE), 2, bufMenu, NULL, FALSE);
-   if (!strcmp (PageSize, "US"))
+   if (!ustrcmp (PageSize, "US"))
       TtaSetMenuForm (NumMenuPaperFormat, 1);
    else
       TtaSetMenuForm (NumMenuPaperFormat, 0);
@@ -1152,7 +1161,7 @@ View                view;
    /* Print to paper/ Print to file submenu */
    i = 0;
    sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_PRINTER));
-   i += strlen (&bufMenu[i]) + 1;
+   i += ustrlen (&bufMenu[i]) + 1;
    sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_PS_FILE));
    TtaNewSubmenu (NumMenuSupport, NumFormPrint, 0,
                   TtaGetMessage (LIB, TMSG_OUTPUT), 2, bufMenu, NULL, TRUE);

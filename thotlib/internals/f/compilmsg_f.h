@@ -6,43 +6,43 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void DisplayConfirmMessage ( char *text );
-extern void DisplayMessage ( char *text,
+extern void DisplayConfirmMessage ( STRING text );
+extern void DisplayMessage ( STRING text,
                              int msgType );
 extern void TtaError ( int errorCode );
 extern void CompilerMessage ( int index,
                               int origin,
                               int level,
                               int msgCode,
-                              unsigned char *inputline,
+                              USTRING inputline,
                               int lineNum );
 extern void CompilerMessageString ( int index,
                                     int origin,
                                     int level,
                                     int msgCode,
-                                    char *inputline,
+                                    STRING inputline,
                                     int lineNum,
-                                    char *string );
+                                    STRING string );
 
 #else /* __STDC__ */
 
-extern void DisplayConfirmMessage (/* char *text */);
-extern void DisplayMessage (/* char *text,
+extern void DisplayConfirmMessage (/* STRING text */);
+extern void DisplayMessage (/* STRING text,
                                int msgType */);
 extern void TtaError (/* int errorCode */);
 extern void CompilerMessage (/* int index,
                                 int origin,
                                 int level,
                                 int msgCode,
-                                unsigned char *inputline,
+                                USTRING inputline,
                                 int lineNum */);
 extern void CompilerMessageString (/* int index,
                                       int origin,
                                       int level,
                                       int msgCode,
-                                      char *inputline,
+                                      STRING inputline,
                                       int lineNum,
-                                      char *string */);
+                                      STRING string */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

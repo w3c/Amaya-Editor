@@ -22,6 +22,7 @@
  *
  */
 
+#include "ustring.h"
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "message.h"
@@ -59,54 +60,54 @@
    Selection et retourne le nombre d'entrees de ce menu.         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 BuildSelectMenu (char BufMenu[MAX_TXT_LEN])
+int                 BuildSelectMenu (CHAR BufMenu[MAX_TXT_LEN])
 #else  /* __STDC__ */
 int                 BuildSelectMenu (BufMenu)
-char                BufMenu[MAX_TXT_LEN];
+CHAR                BufMenu[MAX_TXT_LEN];
 
 #endif /* __STDC__ */
 {
    int                 i;
    PtrElement          pEl;
-   char               *NomElem;
+   STRING              NomElem;
 
    /* element englobant non cache' */
    i = 0;
-   strcpy (&BufMenu[i], "B^ ");
+   ustrcpy (&BufMenu[i], "B^ ");
    pEl = SelMenuParentEl;
    if (pEl != NULL && pEl->ElStructSchema != NULL)
-      strcat (&BufMenu[i], pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
-   i += strlen (&BufMenu[i]) + 1;
+      ustrcat (&BufMenu[i], pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
+   i += ustrlen (&BufMenu[i]) + 1;
 
    /* element selectionable precedent */
-   strcpy (&BufMenu[i], "B< ");
+   ustrcpy (&BufMenu[i], "B< ");
    pEl = SelMenuPreviousEl;
    if (pEl != NULL && pEl->ElStructSchema != NULL)
      {
 	NomElem = pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName;
-	strcat (&BufMenu[i], NomElem);
+	ustrcat (&BufMenu[i], NomElem);
      }
-   i += strlen (&BufMenu[i]) + 1;
+   i += ustrlen (&BufMenu[i]) + 1;
 
    /* element selectionable suivant */
-   strcpy (&BufMenu[i], "B> ");
+   ustrcpy (&BufMenu[i], "B> ");
    pEl = SelMenuNextEl;
    if (pEl != NULL && pEl->ElStructSchema != NULL)
      {
 	NomElem = pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName;
-	strcat (&BufMenu[i], NomElem);
+	ustrcat (&BufMenu[i], NomElem);
      }
-   i += strlen (&BufMenu[i]) + 1;
+   i += ustrlen (&BufMenu[i]) + 1;
 
    /* cherche le type du 1er element englobe' selectionable */
-   strcpy (&BufMenu[i], "B_ ");
+   ustrcpy (&BufMenu[i], "B_ ");
    pEl = SelMenuChildEl;
    if (pEl != NULL && pEl->ElStructSchema != NULL)
      {
 	NomElem = pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName;
-	strcat (&BufMenu[i], NomElem);
+	ustrcat (&BufMenu[i], NomElem);
      }
-   i += strlen (&BufMenu[i]) + 1;
+   i += ustrlen (&BufMenu[i]) + 1;
    return (4);
 }
 
@@ -124,7 +125,7 @@ PtrDocument         pDoc;
 #endif /* __STDC__ */
 {
    int                 NbItemSel;
-   char                BufMenuSel[MAX_TXT_LEN];
+   CHAR                BufMenuSel[MAX_TXT_LEN];
    int                 vue, menu, menuID;
    int                 frame, ref;
    Document            document;

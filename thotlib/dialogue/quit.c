@@ -19,7 +19,8 @@
  * Author: I. Vatton (INRIA)
  *
  */
- 
+
+#include "ustring.h" 
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmenu.h"

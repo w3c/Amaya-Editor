@@ -8,38 +8,38 @@
 
 extern void CallbackReqAttrMenu ( int ref,
                                   int val,
-                                  char *txt );
+                                  STRING txt );
 extern void BuildReqAttrMenu ( PtrAttribute pAttr,
                                PtrDocument pDoc );
 extern void UpdateAttrMenu ( PtrDocument pDoc );
 extern void CallbackValAttrMenu ( int ref,
                                   int valmenu,
-                                  char *valtext );
+                                  STRING valtext );
 extern void CallbackAttrMenu ( int refmenu,
                                int att,
                                int frame );
 extern void CallbackLanguageMenu ( int ref,
                                    int val,
-                                   char *txt );
+                                   STRING txt );
 extern void AttributeMenuLoadResources ( void );
 
 #else /* __STDC__ */
 
 extern void CallbackReqAttrMenu (/* int ref,
                                     int val,
-                                    char *txt */);
+                                    STRING txt */);
 extern void BuildReqAttrMenu (/* PtrAttribute pAttr,
                                  PtrDocument pDoc */);
 extern void UpdateAttrMenu (/* PtrDocument pDoc */);
 extern void CallbackValAttrMenu (/* int ref,
                                     int valmenu,
-                                    char *valtext */);
+                                    STRING valtext */);
 extern void CallbackAttrMenu (/* int refmenu,
                                  int att,
                                  int frame */);
 extern void CallbackLanguageMenu (/* int ref,
                                      int val,
-                                     char *txt */);
+                                     STRING txt */);
 extern void AttributeMenuLoadResources (/* void */);
 
 #endif /* __STDC__ */

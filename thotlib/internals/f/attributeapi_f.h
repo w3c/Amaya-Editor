@@ -18,7 +18,7 @@ extern void TtaSetAttributeValue ( Attribute attribute,
                                    Element element,
                                    Document document );
 extern void TtaSetAttributeText ( Attribute attribute,
-                                  char *buffer,
+                                  STRING buffer,
                                   Element element,
                                   Document document );
 extern void TtaNextAttribute ( Element element,
@@ -28,30 +28,30 @@ extern Attribute TtaGetAttribute ( Element element,
 extern void TtaGiveAttributeType ( Attribute attribute,
                                    AttributeType * attributeType,
                                    int *attrKind );
-extern void TtaGiveAttributeTypeFromName ( char *name,
+extern void TtaGiveAttributeTypeFromName ( STRING name,
                                            Element element,
                                            AttributeType * attributeType,
                                            int *attrKind );
-extern void TtaGiveAttributeTypeFromOriginalName ( char *name,
+extern void TtaGiveAttributeTypeFromOriginalName ( STRING name,
                                                    Element element,
                                                    AttributeType * attributeType,
                                                    int *attrKind );
-extern char *TtaGetAttributeName ( AttributeType attributeType );
-extern char *TtaGetAttributeOriginalName ( AttributeType attributeType );
+extern STRING TtaGetAttributeName ( AttributeType attributeType );
+extern STRING TtaGetAttributeOriginalName ( AttributeType attributeType );
 extern int TtaSameAttributeTypes ( AttributeType type1,
                                    AttributeType type2 );
 extern int TtaGetAttributeValue ( Attribute attribute );
-extern char *TtaGetAttributeValueOriginalName ( AttributeType attributeType,
-                                                int value );
-extern char *TtaGetAttributeValueName ( AttributeType attributeType,
-                                        int value );
-extern int TtaGetAttributeValueFromOriginalName ( char *name,
+extern STRING TtaGetAttributeValueOriginalName ( AttributeType attributeType,
+                                                 int value );
+extern STRING TtaGetAttributeValueName ( AttributeType attributeType,
+                                         int value );
+extern int TtaGetAttributeValueFromOriginalName ( STRING name,
                                                   AttributeType attributeType );
-extern int TtaGetAttributeValueFromName ( char *name,
+extern int TtaGetAttributeValueFromName ( STRING name,
                                           AttributeType attributeType );
 extern int TtaGetTextAttributeLength ( Attribute attribute );
 extern void TtaGiveTextAttributeValue ( Attribute attribute,
-                                        char *buffer,
+                                        STRING buffer,
                                         int *length );
 extern void TtaSearchAttribute ( AttributeType searchedAttribute,
                                  SearchDomain scope,
@@ -73,7 +73,7 @@ extern void TtaSetAttributeValue (/* Attribute attribute,
                                      Element element,
                                      Document document */);
 extern void TtaSetAttributeText (/* Attribute attribute,
-                                    char *buffer,
+                                    STRING buffer,
                                     Element element,
                                     Document document */);
 extern void TtaNextAttribute (/* Element element,
@@ -83,30 +83,30 @@ extern Attribute TtaGetAttribute (/* Element element,
 extern void TtaGiveAttributeType (/* Attribute attribute,
                                      AttributeType * attributeType,
                                      int *attrKind */);
-extern void TtaGiveAttributeTypeFromName (/* char *name,
+extern void TtaGiveAttributeTypeFromName (/* STRING name,
                                              Element element,
                                              AttributeType * attributeType,
                                              int *attrKind */);
-extern void TtaGiveAttributeTypeFromOriginalName (/* char *name,
+extern void TtaGiveAttributeTypeFromOriginalName (/* STRING name,
                                                      Element element,
                                                      AttributeType * attributeType,
                                                      int *attrKind */);
-extern char *TtaGetAttributeName (/* AttributeType attributeType */);
-extern char *TtaGetAttributeOriginalName (/* AttributeType attributeType */);
+extern STRING TtaGetAttributeName (/* AttributeType attributeType */);
+extern STRING TtaGetAttributeOriginalName (/* AttributeType attributeType */);
 extern int TtaSameAttributeTypes (/* AttributeType type1,
                                      AttributeType type2 */);
 extern int TtaGetAttributeValue (/* Attribute attribute */);
-extern char *TtaGetAttributeValueOriginalName (/* AttributeType attributeType,
-                                                  int value */);
-extern char *TtaGetAttributeValueName (/* AttributeType attributeType,
-                                          int value */);
-extern int TtaGetAttributeValueFromOriginalName (/* char *name,
+extern STRING TtaGetAttributeValueOriginalName (/* AttributeType attributeType,
+                                                   int value */);
+extern STRING TtaGetAttributeValueName (/* AttributeType attributeType,
+                                           int value */);
+extern int TtaGetAttributeValueFromOriginalName (/* STRING name,
                                                     AttributeType attributeType */);
-extern int TtaGetAttributeValueFromName (/* char *name,
+extern int TtaGetAttributeValueFromName (/* STRING name,
                                             AttributeType attributeType */);
 extern int TtaGetTextAttributeLength (/* Attribute attribute */);
 extern void TtaGiveTextAttributeValue (/* Attribute attribute,
-                                          char *buffer,
+                                          STRING buffer,
                                           int *length */);
 extern void TtaSearchAttribute (/* AttributeType searchedAttribute,
                                    SearchDomain scope,

@@ -8,10 +8,10 @@
 
 extern void CallbackConfirmMenu ( int ref,
                                   int typeData,
-                                  char *data );
+                                  STRING data );
 extern void CallbackNewDocMenu ( int ref,
                                  int typeData,
-                                 char *data );
+                                 STRING data );
 extern void TtcCreateDocument ( Document document,
                                 View view );
 
@@ -19,10 +19,10 @@ extern void TtcCreateDocument ( Document document,
 
 extern void CallbackConfirmMenu (/* int ref,
                                     int typeData,
-                                    char *data */);
+                                    STRING data */);
 extern void CallbackNewDocMenu (/* int ref,
                                    int typeData,
-                                   char *data */);
+                                   STRING data */);
 extern void TtcCreateDocument (/* Document document,
                                   View view */);
 

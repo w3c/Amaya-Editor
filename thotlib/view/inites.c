@@ -13,6 +13,7 @@
  *         R. Guetari (W3C/INRIA) Windows NT/95 routines
  */
 
+#include "ustring.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "constmenu.h"
@@ -245,15 +246,15 @@ static void ApproximateColors ()
    are allocated.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                InitDocColors (char *name)
+void                InitDocColors (STRING name)
 #else  /* __STDC__ */
 void                InitDocColors (name)
-char               *name;
+STRING              name;
 
 #endif /* __STDC__ */
 {
    int                 i, j, k;
-   char               *value;
+   STRING              value;
    boolean             reducecolor;
    boolean             colormap_full;
 
@@ -266,7 +267,7 @@ char               *name;
    value = TtaGetEnvString ("ReduceColor");
    if (value == NULL)
       reducecolor = FALSE;
-   else if (!strcasecmp (value, "yes"))
+   else if (!ustrcasecmp (value, "yes"))
       reducecolor = TRUE;
    else
       reducecolor = FALSE;
@@ -352,9 +353,9 @@ int                 NumberOfColors ()
    ColorName       returns the name of a color in Thot color table.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char               *ColorName (int num)
+STRING              ColorName (int num)
 #else  /* __STDC__ */
-char               *ColorName (num)
+STRING              ColorName (num)
 int                 num;
 
 #endif /* __STDC__ */
@@ -388,10 +389,10 @@ int                 num;
    name. Returns the index or -1 if not found.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 ColorNumber (char *name)
+int                 ColorNumber (STRING name)
 #else  /* __STDC__ */
 int                 ColorNumber (name)
-char               *name;
+STRING              name;
 
 #endif /* __STDC__ */
 {
@@ -403,7 +404,7 @@ char               *name;
    if (Color_Table[i] == NULL)
       return -1;		/* the table is empty */
    do
-      if (strcasecmp (Color_Table[i], name) == 0)
+      if (ustrcasecmp (Color_Table[i], name) == 0)
 	 found = TRUE;
       else
 	 i++;
@@ -428,9 +429,9 @@ int                 NumberOfPatterns ()
    PatternName     returns the name of a pattern available.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char               *PatternName (int num)
+STRING              PatternName (int num)
 #else  /* __STDC__ */
-char               *PatternName (num)
+STRING              PatternName (num)
 int                 num;
 
 #endif /* __STDC__ */
@@ -447,10 +448,10 @@ int                 num;
    index or -1 if not found.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 PatternNumber (char *name)
+int                 PatternNumber (STRING name)
 #else  /* __STDC__ */
 int                 PatternNumber (name)
-char               *name;
+STRING              name;
 
 #endif /* __STDC__ */
 {
@@ -462,7 +463,7 @@ char               *name;
    i = 0;
    max = NumberOfPatterns ();
    do
-      if (strcmp (Patterns[i], name) == 0)
+      if (ustrcmp (Patterns[i], name) == 0)
 	 found = TRUE;
       else
 	 i++;

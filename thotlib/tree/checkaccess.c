@@ -14,6 +14,7 @@
  * 
  */
 
+#include "ustring.h"
 #include "libmsg.h"
 #include "thot_sys.h"
 #include "message.h"

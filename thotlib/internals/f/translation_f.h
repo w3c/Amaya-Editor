@@ -7,22 +7,22 @@
 #ifdef __STDC__
 
 extern boolean ExportDocument ( PtrDocument pDoc,
-                                char *fName,
-                                char *TSchemaName );
+                                STRING fName,
+                                STRING TSchemaName );
 extern void ExportTree ( PtrElement pEl,
                          PtrDocument pDoc,
-                         char *fName,
-                         char *TSchemaName );
+                         STRING fName,
+                         STRING TSchemaName );
 
 #else /* __STDC__ */
 
 extern boolean ExportDocument (/* PtrDocument pDoc,
-                                  char *fName,
-                                  char *TSchemaName */);
+                                  STRING fName,
+                                  STRING TSchemaName */);
 extern void ExportTree (/* PtrElement pEl,
                            PtrDocument pDoc,
-                           char *fName,
-                           char *TSchemaName */);
+                           STRING fName,
+                           STRING TSchemaName */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

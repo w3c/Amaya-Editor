@@ -20,7 +20,8 @@
  * Author: I. Vatton (INRIA)
  *
  */
- 
+
+#include "ustring.h" 
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmenu.h"
@@ -43,9 +44,9 @@
 #include "platform_tv.h"
 int                 CurrentDialog;
 
-static char         NameDocToCreate[100] = "";
-static char         ClassDocToCreate[100] = "";
-static char         DirectoryDocToCreate[MAX_PATH] = "";
+static CHAR         NameDocToCreate[100] = "";
+static CHAR         ClassDocToCreate[100] = "";
+static CHAR         DirectoryDocToCreate[MAX_PATH] = "";
 
 #include "structschema_f.h"
 #include "browser_f.h"
@@ -63,12 +64,12 @@ static char         DirectoryDocToCreate[MAX_PATH] = "";
    updates the confirmation menu.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CallbackConfirmMenu (int ref, int typeData, char *data)
+void                CallbackConfirmMenu (int ref, int typeData, STRING data)
 #else  /* __STDC__ */
 void                CallbackConfirmMenu (ref, typeData, data)
 int                 ref;
 int                 typeData;
-char               *data;
+STRING              data;
 
 #endif /* __STDC__ */
 
@@ -108,22 +109,22 @@ char               *data;
    updates the createdoc menu
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CallbackNewDocMenu (int ref, int typeData, char *data)
+void                CallbackNewDocMenu (int ref, int typeData, STRING data)
 #else  /* __STDC__ */
 void                CallbackNewDocMenu (ref, typeData, data)
 int                 ref;
 int                 typeData;
-char               *data;
+STRING              data;
 
 #endif /* __STDC__ */
 
 {
    PathBuffer          docName;
    int                 i;
-   char                BufDir[MAX_PATH];
-   char                URL_DIR_SEP;
+   CHAR                BufDir[MAX_PATH];
+   CHAR                URL_DIR_SEP;
 
-   if (typeData == STRING_DATA && data && strchr (data, '/'))
+   if (typeData == STRING_DATA && data && ustrchr (data, '/'))
      URL_DIR_SEP = '/';
    else 
      URL_DIR_SEP = DIR_SEP;
@@ -134,16 +135,16 @@ char               *data;
 	       /* le formulaire "Creer un document" lui-meme */
 	       if (NameDocToCreate[0] == EOS)
 		  /* le nom par defaut */
-		  strcpy (NameDocToCreate, TtaGetMessage (LIB, TMSG_NO_NAME));
+		  ustrcpy (NameDocToCreate, TtaGetMessage (LIB, TMSG_NO_NAME));
 	       CurrentDialog = NumFormCreateDoc;
 	       if (ClassDocToCreate[0] != EOS && ((int) data) == 1)
 		 {
 		    /* on a tous les parametres */
 		    /* ******** verifier que le document n'esixte pas deja **** */
-		    strcpy (docName, DirectoryDocToCreate);
-		    strcat (docName, DIR_STR);
-		    strcat (docName, NameDocToCreate);
-		    strcat (docName, ".PIV");
+		    ustrcpy (docName, DirectoryDocToCreate);
+		    ustrcat (docName, DIR_STR);
+		    ustrcat (docName, NameDocToCreate);
+		    ustrcat (docName, ".PIV");
 
 		    if (!TtaCheckDirectory (DirectoryDocToCreate))
 		       TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_MISSING_DIR), DirectoryDocToCreate);
@@ -161,31 +162,31 @@ char               *data;
 			 else
 			    /* traite la confirmation */
 			 if (ThotLocalActions[T_confirmcreate] != NULL)
-			    (*ThotLocalActions[T_confirmcreate]) (NumFormConfirm, 1, (char *) 1);
+			    (*ThotLocalActions[T_confirmcreate]) (NumFormConfirm, 1, (STRING) 1);
 		      }
 		 }
 	       else
 		  /* annulation : on detruit les dialogues */
 		 {
 		    if (ThotLocalActions[T_confirmcreate] != NULL)
-		       (*ThotLocalActions[T_confirmcreate]) (0, 1, (char *) 1);
+		       (*ThotLocalActions[T_confirmcreate]) (0, 1, (STRING) 1);
 		 }
 	       /*ClassDocToCreate[0] = EOS; */
 	       break;
 	    case NumZoneDocNameToCreate:
 	       /* zone de saisie du nom du document a creer */
-	       if (TtaCheckDirectory (data) && data[strlen (data) - 1] != URL_DIR_SEP)
+	       if (TtaCheckDirectory (data) && data[ustrlen (data) - 1] != URL_DIR_SEP)
 		 {
-		    strcpy (DirectoryDocToCreate, data);
+		    ustrcpy (DirectoryDocToCreate, data);
 		    NameDocToCreate[0] = EOS;
 		 }
 	       else
 		 {
 		    /* conserve le nom du document a ouvrir */
 		    TtaExtractName (data, DirectoryDocToCreate, docName);
-		    if (strlen (docName) >= MAX_NAME_LENGTH)
+		    if (ustrlen (docName) >= MAX_NAME_LENGTH)
 		       docName[MAX_NAME_LENGTH - 1] = EOS;	/* limite la longueur des noms */
-		    strcpy (NameDocToCreate, docName);
+		    ustrcpy (NameDocToCreate, docName);
 		 }
 	       if (TtaCheckDirectory (DirectoryDocToCreate))
 		 {
@@ -194,11 +195,11 @@ char               *data;
 		       if (TtaIsSuffixFileIn (DirectoryDocToCreate, ".PIV"))
 			 {
 			    /* il faut ajouter le directory au path */
-			    i = strlen (DocumentPath);
-			    if (i + strlen (DirectoryDocToCreate) + 2 < MAX_PATH)
+			    i = ustrlen (DocumentPath);
+			    if (i + ustrlen (DirectoryDocToCreate) + 2 < MAX_PATH)
 			      {
-				 strcat (DocumentPath, PATH_STR);
-				 strcat (DocumentPath, DirectoryDocToCreate);
+				 ustrcat (DocumentPath, PATH_STR);
+				 ustrcat (DocumentPath, DirectoryDocToCreate);
 				 BuildPathDocBuffer (BufDir, EOS, &i);
 				 TtaNewSelector (NumZoneDocDirToCreate, NumFormCreateDoc, TtaGetMessage (LIB, TMSG_DOC_DIR), i, BufDir, 9, NULL, FALSE, TRUE);
 			      }
@@ -207,15 +208,15 @@ char               *data;
 	       break;
 	    case NumZoneDocDirToCreate:
 	       /* zone de saisie du directory ou le document doit etre cree */
-	       strcpy (DirectoryDocToCreate, data);
-	       strcpy (docName, DirectoryDocToCreate);
-	       strcat (docName, DIR_STR);
-	       strcat (docName, NameDocToCreate);
+	       ustrcpy (DirectoryDocToCreate, data);
+	       ustrcpy (docName, DirectoryDocToCreate);
+	       ustrcat (docName, DIR_STR);
+	       ustrcat (docName, NameDocToCreate);
 	       TtaSetTextForm (NumZoneDocNameToCreate, docName);
 	       break;
 	    case NumSelDocClassToCreate:
 	       /* selecteur classe du document a creer */
-	       strncpy (ClassDocToCreate, data, MAX_NAME_LENGTH);
+	       ustrncpy (ClassDocToCreate, data, MAX_NAME_LENGTH);
 	       break;
 	 }
 }
@@ -236,11 +237,11 @@ View                view;
 #endif /* __STDC__ */
 {
    PathBuffer          docName;
-   char               *ptr;
+   STRING              ptr;
    int                 i = 0, length, nbitem;
    int		       entry = 0;
-   char                BufMenu[MAX_TXT_LEN];
-   char                BufDir[MAX_PATH];
+   CHAR                BufMenu[MAX_TXT_LEN];
+   CHAR                BufDir[MAX_PATH];
    ThotWidget	       parentWidget;
 
    if (ThotLocalActions[T_createdoc] == NULL)
@@ -266,20 +267,20 @@ View                view;
    /* nom du document a creer */
    if (DocumentPath!=NULL && (DirectoryDocToCreate[i] == EOS || entry == -1))
      {
-	ptr = strstr (DocumentPath, PATH_STR);
+	ptr = ustrstr (DocumentPath, PATH_STR);
 	if (ptr == NULL)
-	   strcpy (DirectoryDocToCreate, DocumentPath);
+	   ustrcpy (DirectoryDocToCreate, DocumentPath);
 	else
 	  {
 	     i = (int) ptr - (int) DocumentPath;
-	     strncpy (DirectoryDocToCreate, DocumentPath, i);
+	     ustrncpy (DirectoryDocToCreate, DocumentPath, i);
 	     DirectoryDocToCreate[i] = EOS;
 	  }
      }
-   strcpy (NameDocToCreate, TtaGetMessage (LIB, TMSG_NO_NAME));
-   strcpy (docName, DirectoryDocToCreate);
-   strcat (docName, DIR_STR);
-   strcat (docName, NameDocToCreate);
+   ustrcpy (NameDocToCreate, TtaGetMessage (LIB, TMSG_NO_NAME));
+   ustrcpy (docName, DirectoryDocToCreate);
+   ustrcat (docName, DIR_STR);
+   ustrcat (docName, NameDocToCreate);
    /* compose le selecteur des types de documents que l'utilisateur peut */
    /* creer */
    nbitem = ConfigMakeDocTypeMenu (BufMenu, &length, TRUE);
@@ -316,9 +317,9 @@ View                view;
 
    /* Formulaire Confirmation creation */
    /* ++++++++++++++++++++++++++++++++ */
-   strcpy (BufMenu, TtaGetMessage (LIB, TMSG_RENAME));
-   i = strlen (BufMenu) + 1;
-   strcpy (&BufMenu[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+   ustrcpy (BufMenu, TtaGetMessage (LIB, TMSG_RENAME));
+   i = ustrlen (BufMenu) + 1;
+   ustrcpy (&BufMenu[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
    TtaNewDialogSheet (NumFormConfirm, parentWidget, NULL, 2, BufMenu, FALSE, 1, 'L');
 
 /* affichage du formulaire Creer document */

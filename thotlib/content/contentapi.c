@@ -12,7 +12,8 @@
  *          I. Vatton (INRIA) - Polylines
  *
  */
- 
+
+#include "ustring.h" 
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -74,12 +75,12 @@ extern int          UserErrorCode;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaSetTextContent (Element element, char *content, Language language, Document document)
+void                TtaSetTextContent (Element element, STRING content, Language language, Document document)
 
 #else  /* __STDC__ */
 void                TtaSetTextContent (element, content, language, document)
 Element             element;
-char               *content;
+STRING              content;
 Language            language;
 Document            document;
 
@@ -87,7 +88,7 @@ Document            document;
 
 {
    PtrTextBuffer       pBuf, pPreviousBuff, pNextBuff;
-   char               *ptr;
+   STRING              ptr;
    int                 length, l, delta = 0;
    PtrElement          pEl;
 
@@ -153,7 +154,7 @@ Document            document;
 	     if (content != NULL)
 	       {
 	       ptr = content;
-	       length = strlen (content);
+	       length = ustrlen (content);
 	       delta = length - ((PtrElement) element)->ElTextLength;
 	       ((PtrElement) element)->ElTextLength = length;
 	       ((PtrElement) element)->ElVolume = length;
@@ -170,7 +171,7 @@ Document            document;
 		     l = length;
 		  if (l > 0)
 		    {
-		       strncpy (pBuf->BuContent, ptr, l);
+		       ustrncpy (pBuf->BuContent, ptr, l);
 		       ptr += l;
 		       length -= l;
 		    }
@@ -237,20 +238,20 @@ Document            document;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                InsertText (PtrElement pEl, int position, char *content, Document document)
+void                InsertText (PtrElement pEl, int position, STRING content, Document document)
 
 #else  /* __STDC__ */
 void                InsertText (pEl, position, content, document)
 PtrElement          pEl;
 int                 position;
-char               *content;
+STRING              content;
 Document            document;
 
 #endif /* __STDC__ */
 
 {
    PtrTextBuffer       pBuf, pPreviousBuff, newBuf;
-   char               *ptr;
+   STRING              ptr;
    int                 stringLength, l, delta, lengthBefore;
    PtrElement          pElAsc;
 
@@ -261,7 +262,7 @@ Document            document;
    boolean             selOk, changeSelection = FALSE;
 #endif
 
-   stringLength = strlen (content);
+   stringLength = ustrlen (content);
    if (stringLength > 0)
      {
 	/* corrects the parameter position */
@@ -327,7 +328,7 @@ Document            document;
 	if (lengthBefore < pBuf->BuLength)
 	  {
 	     newBuf = NewTextBuffer (pBuf);
-	     strcpy (newBuf->BuContent, pBuf->BuContent + lengthBefore);
+	     ustrcpy (newBuf->BuContent, pBuf->BuContent + lengthBefore);
 	     newBuf->BuLength = pBuf->BuLength - lengthBefore;
 	  }
 	pBuf->BuContent[lengthBefore] = EOS;
@@ -335,7 +336,7 @@ Document            document;
 	/* If there is enough space in the buffer, one add a string at its end */
 	if (stringLength < THOT_MAX_CHAR - lengthBefore)
 	  {
-	     strncpy (pBuf->BuContent + lengthBefore, content, stringLength);
+	     ustrncpy (pBuf->BuContent + lengthBefore, content, stringLength);
 	     pBuf->BuLength += stringLength;
 	     pBuf->BuContent[pBuf->BuLength] = EOS;
 	  }
@@ -353,7 +354,7 @@ Document            document;
 		     l = THOT_MAX_CHAR - 1;
 		  else
 		     l = stringLength;
-		  strncpy (pBuf->BuContent, ptr, l);
+		  ustrncpy (pBuf->BuContent, ptr, l);
 		  ptr += l;
 		  stringLength -= l;
 		  pBuf->BuLength = l;
@@ -405,12 +406,12 @@ Document            document;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                TtaAppendTextContent (Element element, char *content, Document document)
+void                TtaAppendTextContent (Element element, STRING content, Document document)
 
 #else  /* __STDC__ */
 void                TtaAppendTextContent (element, content, document)
 Element             element;
-char               *content;
+STRING              content;
 Document            document;
 
 #endif /* __STDC__ */
@@ -453,13 +454,13 @@ Document            document;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                TtaInsertTextContent (Element element, int position, char *content, Document document)
+void                TtaInsertTextContent (Element element, int position, STRING content, Document document)
 
 #else  /* __STDC__ */
 void                TtaInsertTextContent (element, position, content, document)
 Element             element;
 int                 position;
-char               *content;
+STRING              content;
 Document            document;
 
 #endif /* __STDC__ */
@@ -511,7 +512,7 @@ Document            document;
 
 {
    PtrTextBuffer       pBufFirst, pBufLast, pBufNext;
-   char               *dest, *source;
+   STRING              dest, source;
    int                 delta, lengthBefore, firstDeleted, lastDeleted,
                        l;
    PtrElement          pElAsc;
@@ -882,11 +883,11 @@ Document            document;
    document: the document containing that element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaSetGraphicsShape (Element element, char shape, Document document)
+void                TtaSetGraphicsShape (Element element, CHAR shape, Document document)
 #else  /* __STDC__ */
 void                TtaSetGraphicsShape (element, shape, document)
 Element             element;
-char                shape;
+CHAR                shape;
 Document            document;
 #endif /* __STDC__ */
 {
@@ -1474,18 +1475,18 @@ Element             element;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaGiveTextContent (Element element, char *buffer, int *length, Language * language)
+void                TtaGiveTextContent (Element element, STRING buffer, int *length, Language * language)
 #else  /* __STDC__ */
 void                TtaGiveTextContent (element, buffer, length, language)
 Element             element;
-char               *buffer;
+STRING              buffer;
 int                *length;
 Language           *language;
 
 #endif /* __STDC__ */
 {
    PtrTextBuffer       pBuf;
-   char               *ptr;
+   STRING              ptr;
    int                 len, l;
 
    UserErrorCode = 0;
@@ -1507,7 +1508,7 @@ Language           *language;
 		l = (*length) - len;
 	     else
 		l = pBuf->BuLength + 1;
-	     strncpy (ptr, pBuf->BuContent, l);
+	     ustrncpy (ptr, pBuf->BuContent, l);
 	     ptr = ptr + (l - 1);
 	     len = len + (l - 1);
 	     pBuf = pBuf->BuNext;
@@ -1538,12 +1539,12 @@ Language           *language;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                TtaGiveSubString (Element element, char *buffer, int position, int length)
+void                TtaGiveSubString (Element element, STRING buffer, int position, int length)
 
 #else  /* __STDC__ */
 void                TtaGiveSubString (element, buffer, position, length)
 Element             element;
-char               *buffer;
+STRING              buffer;
 int                 position;
 int                 length;
 
@@ -1551,7 +1552,7 @@ int                 length;
 
 {
    PtrTextBuffer       pBuf;
-   char               *ptr;
+   STRING              ptr;
    int                 len, l;
 
    UserErrorCode = 0;
@@ -1594,7 +1595,7 @@ int                 length;
 		l = length;
 	     else
 		l = pBuf->BuLength - position;
-	     strncpy (ptr, pBuf->BuContent + position, l);
+	     ustrncpy (ptr, pBuf->BuContent + position, l);
 	     ptr = ptr + l;
 	     length = length - l;
 	     pBuf = pBuf->BuNext;
@@ -1618,13 +1619,13 @@ int                 length;
    symbol contained in the element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char                TtaGetGraphicsShape (Element element)
+CHAR                TtaGetGraphicsShape (Element element)
 #else  /* __STDC__ */
-char                TtaGetGraphicsShape (element)
+CHAR                TtaGetGraphicsShape (element)
 Element             element;
 #endif /* __STDC__ */
 {
-   char                content;
+   CHAR                content;
 
    UserErrorCode = 0;
    content = EOS;

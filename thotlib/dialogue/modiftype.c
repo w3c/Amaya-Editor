@@ -21,6 +21,7 @@
  *
  */
 
+#include "ustring.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -63,10 +64,10 @@
    the Edit menu.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ComposeItemSplit (char *bufItemSplit)
+static void         ComposeItemSplit (STRING bufItemSplit)
 #else  /* __STDC__ */
 static void         ComposeItemSplit (bufItemSplit)
-char               *bufItemSplit;
+STRING              bufItemSplit;
 
 #endif /* __STDC__ */
 {
@@ -113,7 +114,7 @@ PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 {
-   char                bufItemSplit[MAX_TXT_LEN];
+   CHAR                bufItemSplit[MAX_TXT_LEN];
 
    bufItemSplit[0] = EOS;
    if (pDoc == NULL || pDoc != SelectedDocument)

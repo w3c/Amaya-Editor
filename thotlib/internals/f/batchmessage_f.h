@@ -6,15 +6,15 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void DisplayConfirmMessage ( char *text );
-extern void DisplayMessage ( char *text,
+extern void DisplayConfirmMessage ( STRING text );
+extern void DisplayMessage ( STRING text,
                              int msgType );
 extern void TtaError ( int errorCode );
 
 #else /* __STDC__ */
 
-extern void DisplayConfirmMessage (/* char *text */);
-extern void DisplayMessage (/* char *text,
+extern void DisplayConfirmMessage (/* STRING text */);
+extern void DisplayMessage (/* STRING text,
                                int msgType */);
 extern void TtaError (/* int errorCode */);
 

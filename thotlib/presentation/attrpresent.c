@@ -12,7 +12,7 @@
  *
  */
 
-
+#include "ustring.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -226,7 +226,7 @@ PtrSSchema          pSS;
 				 AttrDef = &(pIncludedEl->ElStructSchema->SsAttribute[att++]);
 				 if (AttrDef->AttrType == AtTextAttr)
 				    /* that's a text attribute */
-				    if (strcmp (AttrDef->AttrOrigName, attrName) == 0)
+				    if (ustrcmp (AttrDef->AttrOrigName, attrName) == 0)
 				       /* that's the rigth attribute */
 				       found = TRUE;
 			      }

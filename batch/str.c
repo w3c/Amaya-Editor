@@ -17,6 +17,7 @@
  *
  */
 
+#include "ustring.h"
 #include "thot_sys.h"
 #include "strdef.h"
 #include "constmedia.h"
@@ -132,15 +133,15 @@ static boolean      ImportExcept;/* we met exception ImportLine or ImportParagra
    InitBasicType                                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         InitBasicType (SRule * pRule, char *name, BasicType typ)
+static void         InitBasicType (SRule * pRule, STRING name, BasicType typ)
 #else  /* __STDC__ */
 static void         InitBasicType (pRule, name, typ)
 SRule              *pRule;
-char               *name;
+STRING              name;
 BasicType           typ;
 #endif /* __STDC__ */
 {
-   strncpy (pRule->SrName, name, MAX_NAME_LENGTH);
+   ustrncpy (pRule->SrName, name, MAX_NAME_LENGTH);
    pRule->SrConstruct = CsBasicElement;
    pRule->SrBasicType = typ;
    pRule->SrAssocElem = False;
@@ -191,7 +192,7 @@ static void         Initialize ()
      }
    /* create the language attribute */
    pAttr = &pSSchema->SsAttribute[0];
-   strncpy (pAttr->AttrName, "Langue", MAX_NAME_LENGTH);
+   ustrncpy (pAttr->AttrName, "Langue", MAX_NAME_LENGTH);
    pAttr->AttrOrigName[0] = '\0';
    pAttr->AttrGlobal = True;
    pAttr->AttrType = AtTextAttr;
@@ -279,13 +280,13 @@ static boolean      RuleNameExist ()
    /* initialize the function return */
    ret = False;
    /* keep the last rule name */
-   strncpy (name, pSSchema->SsRule[pSSchema->SsNRules - 1].SrName, MAX_NAME_LENGTH);
+   ustrncpy (name, pSSchema->SsRule[pSSchema->SsNRules - 1].SrName, MAX_NAME_LENGTH);
    if (name[0] != '\0')
      {
 	/* index of the rule in the table */
 	r = 0;
 	do
-	   ret = strcmp (name, pSSchema->SsRule[r++].SrName) == 0;
+	   ret = ustrcmp (name, pSSchema->SsRule[r++].SrName) == 0;
 	while (!ret && r < pSSchema->SsNRules - 1);
      }
    return ret;
@@ -533,7 +534,7 @@ indLine             wl;
       CompilerMessage (wi, STR, FATAL, STR_WORD_TOO_LONG, inputLine, LineNum);
    else
      {
-	strncpy (name, &inputLine[wi - 1], wl);
+	ustrncpy (name, &inputLine[wi - 1], wl);
 	name[wl] = '\0';
      }
 }
@@ -659,7 +660,7 @@ indLine             wi;
 	if (Rules)
 	   RRight[RecursLevel - 1] = True;
 	pRule = &pSSchema->SsRule[pSSchema->SsNRules - 1];
-	strncpy (pRule->SrName, CurName, MAX_NAME_LENGTH);
+	ustrncpy (pRule->SrName, CurName, MAX_NAME_LENGTH);
 	pRule->SrNDefAttrs = 0;
 	if (pRule->SrNLocalAttrs > 0)
 	   /* this element has already local attributes */
@@ -687,7 +688,7 @@ indLine             wi;
 	if (RootRule)
 	  {
 	     /* compare this name with the schema name */
-	     if (strcmp (pSSchema->SsName, CurName) == 0)
+	     if (ustrcmp (pSSchema->SsName, CurName) == 0)
 		/* it is the root element of the schema */
 		pSSchema->SsRootElem = pSSchema->SsNRules;
 	     else if (!pSSchema->SsExtension)
@@ -725,7 +726,7 @@ indLine             wi;
    CopyWord (N, wi, wl);
    RuleNum = 0;
    do
-      ok = strcmp (N, pSSchema->SsRule[RuleNum++].SrName) == 0;
+      ok = ustrcmp (N, pSSchema->SsRule[RuleNum++].SrName) == 0;
    while (!ok && RuleNum < pSSchema->SsNRules);
    if (!ok)
       RuleNum = 0;
@@ -753,7 +754,7 @@ indLine             wi;
    CopyWord (N, wi, wl);
    AttrNum = 0;
    do
-      ok = strcmp (N, pSSchema->SsAttribute[AttrNum++].AttrName) == 0;
+      ok = ustrcmp (N, pSSchema->SsAttribute[AttrNum++].AttrName) == 0;
    while (!ok && AttrNum < pSSchema->SsNAttributes);
    if (!ok)
       AttrNum = 0;
@@ -972,7 +973,7 @@ static void         DuplicatePairRule ()
 	pSSchema->SsNRules++;
 	newRule = &pSSchema->SsRule[pSSchema->SsNRules - 1];
 	InitRule (newRule);
-	strncpy (newRule->SrName, prevRule->SrName, MAX_NAME_LENGTH);
+	ustrncpy (newRule->SrName, prevRule->SrName, MAX_NAME_LENGTH);
 	newRule->SrConstruct = CsPairedElement;
 	newRule->SrFirstOfPair = False;
      }
@@ -1004,7 +1005,7 @@ indLine             wl;
 	while (!found && r < pSSchema->SsNExtensRules)
 	  {
 	     pRule = &pSSchema->SsExtensBlock->EbExtensRule[r];
-	     if (strncmp (n, pRule->SrName, MAX_NAME_LENGTH) == 0)
+	     if (ustrncmp (n, pRule->SrName, MAX_NAME_LENGTH) == 0)
 		found = True;
 	     else
 		r++;
@@ -1244,7 +1245,7 @@ SyntRuleNum         pr;
 			    i = 0;
 			    do
 			      {
-				 ok = strcmp (ReferredTypeName, pSSchema->SsRule[i].SrName) == 0;
+				 ok = ustrcmp (ReferredTypeName, pSSchema->SsRule[i].SrName) == 0;
 				 /* next rule */
 				 i++;
 			      }
@@ -1568,14 +1569,14 @@ SyntRuleNum         pr;
 		       {
 			  NExternalTypes++;
 			  IncludedExternalType[NExternalTypes - 1] = False;
-			  strncpy (ExternalType[NExternalTypes - 1], PreviousIdent, MAX_NAME_LENGTH);
-			  if (strcmp (PreviousIdent, pSSchema->
+			  ustrncpy (ExternalType[NExternalTypes - 1], PreviousIdent, MAX_NAME_LENGTH);
+			  if (ustrcmp (PreviousIdent, pSSchema->
 			      SsRule[pSSchema->SsRootElem - 1].SrName) == 0)
 			     /* the document type is used as external */
 			    {
 			       /* add a SyntacticType rule at the end of the schema */
 			       pRule = &pSSchema->SsRule[pSSchema->SsNRules++];
-			       strncpy (pRule->SrName, PreviousIdent, MAX_NAME_LENGTH);
+			       ustrncpy (pRule->SrName, PreviousIdent, MAX_NAME_LENGTH);
 			       pRule->SrNLocalAttrs = 0;
 			       pRule->SrNDefAttrs = 0;
 			       pRule->SrAssocElem = False;
@@ -1600,7 +1601,7 @@ SyntRuleNum         pr;
 		     /* add into the table the new external type */
 		    {
 		       IncludedExternalType[NExternalTypes] = True;
-		       strncpy (ExternalType[NExternalTypes], PreviousIdent, MAX_NAME_LENGTH);
+		       ustrncpy (ExternalType[NExternalTypes], PreviousIdent, MAX_NAME_LENGTH);
 		       NExternalTypes++;
 		    }
 		  break;
@@ -1836,7 +1837,7 @@ SyntRuleNum         pr;
 				   CopyWord (pSSchema->SsName, wi, wl);
 				   /* compare this name with the file name */
 
-				   if (strcmp (pSSchema->SsName, srceFileName) != 0)
+				   if (ustrcmp (pSSchema->SsName, srceFileName) != 0)
 				      /* names differ */
 				      CompilerMessage (wi, STR, FATAL, STR_FILE_NAME_AND_STRUCT_NAME_DIFFERENT, inputLine, LineNum);
 				}
@@ -1913,10 +1914,10 @@ SyntRuleNum         pr;
 				      /* search the referred element within */
 				     {
 					i = 0;
-					while (strcmp (ReferredTypeName, pExternSSchema->SsRule[i].SrName) != 0
+					while (ustrcmp (ReferredTypeName, pExternSSchema->SsRule[i].SrName) != 0
 					&& i - 1 < pExternSSchema->SsNRules)
 					   i++;
-					if (strcmp (ReferredTypeName, pExternSSchema->SsRule[i].SrName) != 0)
+					if (ustrcmp (ReferredTypeName, pExternSSchema->SsRule[i].SrName) != 0)
 					   /* unknown type */
 					   CompilerMessage (BeginReferredTypeName, STR, FATAL, STR_TYPE_UNKNOWN, inputLine, LineNum);
 					else
@@ -1930,7 +1931,7 @@ SyntRuleNum         pr;
 							  pAttr->AttrTypeRef = i + 2;
 						       else
 							  pAttr->AttrTypeRef = i + 1;
-						       strncpy (pAttr->AttrTypeRefNature, N, MAX_NAME_LENGTH);
+						       ustrncpy (pAttr->AttrTypeRefNature, N, MAX_NAME_LENGTH);
 						       FirstInPair = False;
 						       SecondInPair = False;
 						       break;
@@ -1941,7 +1942,7 @@ SyntRuleNum         pr;
 							  pRule->SrReferredType = i + 2;
 						       else
 							  pRule->SrReferredType = i + 1;
-						       strncpy (pRule->SrRefTypeNat, N, MAX_NAME_LENGTH);
+						       ustrncpy (pRule->SrRefTypeNat, N, MAX_NAME_LENGTH);
 						       FirstInPair = False;
 						       SecondInPair = False;
 						       break;
@@ -1949,14 +1950,14 @@ SyntRuleNum         pr;
 						       /* within exported element contents */
 						       pRule = &pSSchema->SsRule[RuleExportWith - 1];
 						       pRule->SrExportContent = i + 1;
-						       strncpy (pRule->SrNatExpContent, N, MAX_NAME_LENGTH);
+						       ustrncpy (pRule->SrNatExpContent, N, MAX_NAME_LENGTH);
 						       UnknownContent = False;
 						       if (pRule->SrConstruct == CsChoice)
 							  if (pRule->SrNChoices >= 1)
 							     for (j = 0; j < pRule->SrNChoices; j++)
 							       {
 								  pSSchema->SsRule[pRule->SrChoice[j] - 1].SrExportContent = i + 1;
-								  strncpy (pSSchema->SsRule[pRule->
+								  ustrncpy (pSSchema->SsRule[pRule->
 											    SrChoice[j] - 1].SrNatExpContent, N, MAX_NAME_LENGTH);
 							       }
 						       break;
@@ -2050,14 +2051,14 @@ SyntRuleNum         pr;
 				     {
 					pRule = &pSSchema->SsRule[RuleExportWith - 1];
 					pRule->SrExportContent = pExternSSchema->SsRootElem;
-					strncpy (pRule->SrNatExpContent, pExternSSchema->SsName, MAX_NAME_LENGTH);
+					ustrncpy (pRule->SrNatExpContent, pExternSSchema->SsName, MAX_NAME_LENGTH);
 					if (pRule->SrConstruct == CsChoice)
 					   if (pRule->SrNChoices >= 1)
 					      for (j = 0; j < pRule->SrNChoices; j++)
 						{
 						   pSSchema->SsRule[pRule->SrChoice[j] - 1].
 						      SrExportContent = pExternSSchema->SsRootElem;
-						   strncpy (pSSchema->
+						   ustrncpy (pSSchema->
 							    SsRule[pRule->SrChoice[j] - 1].SrNatExpContent,
 							    pExternSSchema->SsName, MAX_NAME_LENGTH);
 						}
@@ -2142,7 +2143,7 @@ SyntRuleNum         pr;
 			      attrNum = Identifier[nb - 1].SrcIdentDefRule;
 			      if (attrNum == 0)
 				 /* new name within the schema */
-				 if (strncmp (&inputLine[wi - 1], pSSchema->SsAttribute[0].AttrName, wl) == 0)
+				 if (ustrncmp (&inputLine[wi - 1], pSSchema->SsAttribute[0].AttrName, wl) == 0)
 				    /* it's the language attribute */
 				    attrNum = 1;
 			      if (CompilAttr || CompilLocAttr)
@@ -2260,7 +2261,7 @@ SyntRuleNum         pr;
 					/* check if the value already exists */
 					i = 1;
 					while (i < pAttr->AttrNEnumValues && !error)
-					   if (!strcmp (pAttr->AttrEnumValue[i - 1], pAttr->AttrEnumValue[pAttr->AttrNEnumValues - 1]))
+					   if (!ustrcmp (pAttr->AttrEnumValue[i - 1], pAttr->AttrEnumValue[pAttr->AttrNEnumValues - 1]))
 					      /* the same value two times */
 					      CompilerMessage (wi, STR, FATAL, STR_VALUE_ALREADY_DECLARED, inputLine, LineNum);
 					   else
@@ -2295,7 +2296,7 @@ SyntRuleNum         pr;
 					ok = False;
 					CopyWord (N, wi, wl);
 					while (i <= pAttr->AttrNEnumValues && !ok)
-					   if (strcmp (N, pAttr->AttrEnumValue[i - 1]) == 0)
+					   if (ustrcmp (N, pAttr->AttrEnumValue[i - 1]) == 0)
 					      ok = True;
 					   else
 					      i++;
@@ -2428,7 +2429,7 @@ static void         ExternalTypes ()
       /* search the external type in the schema starting from the end */
      {
 	i = pSSchema->SsNRules - 1;
-	while (strcmp (ExternalType[j], pSSchema->SsRule[i].SrName) != 0)
+	while (ustrcmp (ExternalType[j], pSSchema->SsRule[i].SrName) != 0)
 	   i--;
 	/* the external type is defined by the i rule number */
 	pRule = &pSSchema->SsRule[i];
@@ -2444,7 +2445,7 @@ static void         ExternalTypes ()
 	   /* modify the CsNatureSchema rule */
 	  {
 	    /* don't read the schema if it is the schema currently compiled */
-	    if (strcmp(pRule->SrName, pSSchema->SsName) == 0)
+	    if (ustrcmp(pRule->SrName, pSSchema->SsName) == 0)
 	      pRule->SrReferredType = pSSchema->SsRootElem;
 	    else
 	      if (!ReadStructureSchema (pRule->SrName, pExternSSchema))
@@ -2457,7 +2458,7 @@ static void         ExternalTypes ()
 	      else
 		pRule->SrReferredType = pExternSSchema->SsRootElem;
 	     /* change the rule into CsReference rule */
-	     strncpy (pRule->SrRefTypeNat, pRule->SrName, MAX_NAME_LENGTH);
+	     ustrncpy (pRule->SrRefTypeNat, pRule->SrName, MAX_NAME_LENGTH);
 	     pRule->SrRefImportedDoc = True;
 	     pRule->SrConstruct = CsReference;
 	  }
@@ -2560,7 +2561,7 @@ static void         ChkRecurs ()
      {
 	pRule = &pSSchema->SsRule[i];
 	if (pRule->SrRecursive)
-	   TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_RECURSIVE_ELEM), (char *) pRule->SrName);
+	   TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_RECURSIVE_ELEM), (STRING) pRule->SrName);
      }
 }
 
@@ -2582,7 +2583,7 @@ static void         ListAssocElem ()
      {
 	if (pSSchema->SsRule[i].SrParamElem)
 	   /* display a message */
-	   TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_PARAMETER), (char *) pSSchema->SsRule[i].SrName);
+	   TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_PARAMETER), (STRING) pSSchema->SsRule[i].SrName);
 	if (pSSchema->SsRule[i].SrAssocElem)
 	   if (!pSSchema->SsRule[i].SrRecursDone)
 	      /* the associated element associe is used within another rule */
@@ -2600,10 +2601,10 @@ static void         ListAssocElem ()
 		   pSSchema->SsNRules++;
 		pRule = &pSSchema->SsRule[pSSchema->SsNRules - 1];
 		/* the new list rule takes the name of its elements... */
-		strncpy (pRule->SrName, pSSchema->SsRule[i].SrName, MAX_NAME_LENGTH - 2);
+		ustrncpy (pRule->SrName, pSSchema->SsRule[i].SrName, MAX_NAME_LENGTH - 2);
 		/* ... followed by 's' */
 		pRule->SrName[MAX_NAME_LENGTH - 2] = '\0';
-		strcat (pRule->SrName, "s");
+		ustrcat (pRule->SrName, "s");
 		pRule->SrNDefAttrs = 0;
 		pRule->SrNLocalAttrs = 0;
 		pRule->SrNInclusions = 0;
@@ -2621,7 +2622,7 @@ static void         ListAssocElem ()
 		pRule->SrMinItems = 0;
 		pRule->SrMaxItems = 32000;
 		/* write a message */
-		TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_ASSOC_ELEMS), (char *) pRule->SrName);
+		TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_ASSOC_ELEMS), (STRING) pRule->SrName);
 		if (RuleNameExist ())
 		   TtaDisplaySimpleMessage (FATAL, STR, STR_NAME_ALREADY_DECLARED);
 	     }
@@ -2636,14 +2637,14 @@ static void         ListAssocElem ()
 		  {
 		     NAlias++;
 		     Alias[NAlias - 1] = i + 1;
-		     TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_ALIAS), (char *) pSSchema->SsRule[i].SrName);
+		     TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_ALIAS), (STRING) pSSchema->SsRule[i].SrName);
 		  }
 		else
 		   /* the second elements of a CsPairedElement are never referenced */
 		   if (pSSchema->SsRule[i].SrConstruct != CsPairedElement ||
 		       pSSchema->SsRule[i].SrFirstOfPair)
 		   /* unnecessary definition */
-		   TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_UNUSED), (char *) pSSchema->SsRule[i].SrName);
+		   TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_UNUSED), (STRING) pSSchema->SsRule[i].SrName);
 	     }
      }
 }
@@ -2771,13 +2772,13 @@ static void         ListNotCreated ()
 		      /* element found, don't create */
 		      temp = False;
 	     if (temp)
-		TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_IS_A_TEMPORARY_ELEM), (char *) pRule->SrName);
+		TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_IS_A_TEMPORARY_ELEM), (STRING) pRule->SrName);
 	  }
 	else if (!pRule->SrRecursDone)
 	   /* units cannot used in the schema */
 	   if (!pRule->SrUnitElem)
 	     {
-		TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_WON_T_BE_CREATED), (char *) pRule->SrName);
+		TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_WON_T_BE_CREATED), (STRING) pRule->SrName);
 		/* search if there are REFERENCES to this element type */
 		for (rr = 0; rr < pSSchema->SsNRules; rr++)
 		  {
@@ -2785,7 +2786,7 @@ static void         ListNotCreated ()
 		     if (pRule2->SrConstruct == CsReference)
 			if (pRule2->SrRefTypeNat[0] == '\0')
 			   if (pRule2->SrReferredType == r + 1)
-			      TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_WON_T_BE_CREATED_AND_IS_REFD), (char *) pRule->SrName);
+			      TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_WON_T_BE_CREATED_AND_IS_REFD), (STRING) pRule->SrName);
 		  }
 	     }
      }
@@ -2797,12 +2798,12 @@ static void         ListNotCreated ()
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS 
 #ifdef __STDC__
-int                 STRmain (HWND hwnd, int argc, char **argv, int* Y)
+int                 STRmain (HWND hwnd, int argc, STRING *argv, int* Y)
 #else  /* __STDC__ */
 int                 STRmain (hwnd, argc, argv, hDC, Y)
 HWND                hwnd;
 int                 argc;
-char**              argv;
+STRING*              argv;
 int*                Y;
 #endif /* __STDC__ */
 #else  /* !_WINDOWS */
@@ -2816,8 +2817,8 @@ char              **argv;
 #endif /* _WINDOWS */
 {
    FILE               *inputFile;
-   char                buffer[200], fname[200];
-   char               *pwd, *ptr;
+   CHAR                buffer[200], fname[200];
+   STRING              pwd, ptr;
    indLine             i;	/* current position in current line */
    indLine             wi;	/* start position of current word in the line */
    indLine             wl;	/* word length */
@@ -2830,21 +2831,21 @@ char              **argv;
 				   an indentifier */
    int                 param;
 #  ifdef _WINDOWS 
-   char*               cmd [100];
+   STRING               cmd [100];
    int                 ndx, pIndex = 0;
-   char                msg [800];
+   CHAR                msg [800];
 #  else  /* !_WINDOWS */
-   char                cmd[800];
+   CHAR                cmd[800];
 #  endif /* _WINDOWS */
 
 #  ifdef _WINDOWS
    COMPWnd = hwnd;
    compilersDC = GetDC (hwnd);
    _CY_ = *Y;
-   strcpy (msg, "Executing str ");
+   ustrcpy (msg, "Executing str ");
    for (ndx = 1; ndx < argc; ndx++) {
-       strcat (msg, argv [ndx]);
-       strcat (msg, " ");
+       ustrcat (msg, argv [ndx]);
+       ustrcat (msg, " ");
    }
    TtaDisplayMessage (INFO, msg);
 #  endif /* _WINDOWS */
@@ -2860,20 +2861,20 @@ char              **argv;
    if (!error) {
       /* prepare the cpp command */
 #     ifdef _WINDOWS 
-      cmd [pIndex] = (char*) malloc (4 * sizeof (char));
-      strcpy (cmd [pIndex++], "cpp");
+      cmd [pIndex] = (STRING) malloc (4 * sizeof (CHAR));
+      ustrcpy (cmd [pIndex++], "cpp");
 #     else  /* !_WINDOWS */
-      strcpy (cmd, CPP " ");
+      ustrcpy (cmd, CPP " ");
 #     endif /* _WINDOWS */
       param = 1;
       while (param < argc && argv[param][0] == '-') {
             /* keep cpp params */
 #           ifdef _WINDOWS
-            cmd [pIndex] = (char*) malloc (strlen (argv[param]) + 1);
-            strcpy (cmd [pIndex++], argv[param]);
+            cmd [pIndex] = (STRING) malloc (ustrlen (argv[param]) + 1);
+            ustrcpy (cmd [pIndex++], argv[param]);
 #           else  /* !_WINDOWS */
-            strcat (cmd, argv[param]);
-            strcat (cmd, " ");
+            ustrcat (cmd, argv[param]);
+            ustrcat (cmd, " ");
 #           endif /* _WINDOWS */
             param++;
 	  }
@@ -2889,16 +2890,16 @@ char              **argv;
 	  } 
 
       /* get the name of the file to be compiled */
-      strncpy (srceFileName, argv[param], MAX_NAME_LENGTH - 1);
+      ustrncpy (srceFileName, argv[param], MAX_NAME_LENGTH - 1);
       srceFileName[MAX_NAME_LENGTH - 1] = '\0';
       param++;
-      strcpy (fname, srceFileName);
+      ustrcpy (fname, srceFileName);
       /* check if the name contains a suffix */
-      ptr = strrchr(fname, '.');
-      nb = strlen (srceFileName);
+      ptr = ustrrchr(fname, '.');
+      nb = ustrlen (srceFileName);
       if (!ptr) /* there is no suffix */
-         strcat (srceFileName, ".S");
-      else if (strcmp (ptr, ".S")) {
+         ustrcat (srceFileName, ".S");
+      else if (ustrcmp (ptr, ".S")) {
            /* it's not the valid suffix */
            TtaDisplayMessage (FATAL, TtaGetMessage (STR, STR_INVALID_FILE), srceFileName);
 #          ifdef _WINDOWS 
@@ -2913,7 +2914,7 @@ char              **argv;
              nb -= 2; /* length without the suffix */
 	  } 
       /* add the suffix .SCH in srceFileName */
-      strcat (fname, ".SCH");
+      ustrcat (fname, ".SCH");
 	
       /* does the file to compile exist */
       if (TtaFileExist (srceFileName) == 0)
@@ -2923,31 +2924,31 @@ char              **argv;
            TtaFileUnlink (fname);
            pwd = TtaGetEnvString ("PWD");
 #          ifndef _WINDOWS
-           i = strlen (cmd);
+           i = ustrlen (cmd);
 #          endif /* _WINDOWS */
            if (pwd != NULL) {
 #             ifdef _WINDOWS
-              cmd [pIndex] = (char*) malloc (3 + strlen (pwd));
+              cmd [pIndex] = (STRING) malloc (3 + ustrlen (pwd));
               sprintf (cmd [pIndex++], "-I%s", pwd);
-              cmd [pIndex] = (char*) malloc (3);
-              strcpy (cmd [pIndex++], "-C");
-              cmd [pIndex] = (char*) malloc (strlen (srceFileName) + 1);
-              strcpy (cmd [pIndex++], srceFileName);
-              cmd [pIndex] = (char*) malloc (strlen (fname) + 1);
-              strcpy (cmd [pIndex++], fname);
+              cmd [pIndex] = (STRING) malloc (3);
+              ustrcpy (cmd [pIndex++], "-C");
+              cmd [pIndex] = (STRING) malloc (ustrlen (srceFileName) + 1);
+              ustrcpy (cmd [pIndex++], srceFileName);
+              cmd [pIndex] = (STRING) malloc (ustrlen (fname) + 1);
+              ustrcpy (cmd [pIndex++], fname);
 #             else  /* !_WINDOWS */
               sprintf (&cmd[i], "-I%s -C %s > %s", pwd, srceFileName, fname);
 #             endif /* _WINDOWS */
 		   } else {
 #                 ifdef _WINDOWS
-                  cmd [pIndex] = (char*) malloc (3);
-                  strcpy (cmd [pIndex++], "-C");
-                  cmd [pIndex] = (char*) malloc (strlen (srceFileName) + 1);
-                  strcpy (cmd [pIndex++], srceFileName);
-                  cmd [pIndex] = (char*) malloc (2);
-                  strcpy (cmd [pIndex++], ">");
-                  cmd [pIndex] = (char*) malloc (strlen (fname) + 1);
-                  strcpy (cmd [pIndex++], fname);
+                  cmd [pIndex] = (STRING) malloc (3);
+                  ustrcpy (cmd [pIndex++], "-C");
+                  cmd [pIndex] = (STRING) malloc (ustrlen (srceFileName) + 1);
+                  ustrcpy (cmd [pIndex++], srceFileName);
+                  cmd [pIndex] = (STRING) malloc (2);
+                  ustrcpy (cmd [pIndex++], ">");
+                  cmd [pIndex] = (STRING) malloc (ustrlen (fname) + 1);
+                  ustrcpy (cmd [pIndex++], fname);
 #                 else  /* !_WINDOWS */
                   sprintf (&cmd[i], "-C %s > %s", srceFileName, fname);
 #                 endif /* _WINDOWS */
@@ -2956,7 +2957,7 @@ char              **argv;
            i = CPPmain (hwnd, pIndex, cmd, &_CY_);
            for (ndx = 0; ndx < pIndex; ndx++) {
                free (cmd [ndx]);
-               cmd [ndx] = (char*) 0;
+               cmd [ndx] = (STRING) 0;
 		   }
 #          else  /* !_WINDOWS */
            i = system (cmd);
@@ -3048,7 +3049,7 @@ char              **argv;
               if (!error) {
                  /* remove temporary file */
                  TtaFileUnlink (fname);
-                 strcat (srceFileName, ".STR");
+                 ustrcat (srceFileName, ".STR");
                  fileOK = WriteStructureSchema (srceFileName, pSSchema, 0);
                  if (!fileOK)
                     TtaDisplayMessage (FATAL, TtaGetMessage (STR, STR_CANNOT_WRITE), srceFileName);

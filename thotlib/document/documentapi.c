@@ -4,7 +4,8 @@
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
- 
+
+#include "ustring.h" 
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -98,11 +99,11 @@ PtrDocument         pDoc;
    been created.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Document            TtaNewDocument (char *structureSchema, char *documentName)
+Document            TtaNewDocument (STRING structureSchema, STRING documentName)
 #else  /* __STDC__ */
 Document            TtaNewDocument (structureSchema, documentName)
-char               *structureSchema;
-char               *documentName;
+STRING              structureSchema;
+STRING              documentName;
 #endif /* __STDC__ */
 {
   PtrDocument         pDoc;
@@ -126,7 +127,7 @@ char               *documentName;
 	{
 	  Name sschemaName;
 	  
-	  strncpy(sschemaName, structureSchema, MAX_NAME_LENGTH);
+	  ustrncpy(sschemaName, structureSchema, MAX_NAME_LENGTH);
 	  /* charge le schema de structure */
 	  GetSchStruct (&pDoc->DocSSchema);
 	  pDoc->DocSSchema->SsExtension = FALSE;
@@ -170,14 +171,14 @@ char               *documentName;
 		  /* An attribut Language is stored in the root */
 		  CheckLanguageAttr (pDoc, pDoc->DocRootElement);
 		  /* The document is named */
-		  strncpy (pDoc->DocDName, documentName, MAX_NAME_LENGTH);
+		  ustrncpy (pDoc->DocDName, documentName, MAX_NAME_LENGTH);
 		  pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
 		  /* one get an identifier to the document */
 		  GetDocIdent (&pDoc->DocIdent, documentName);
 		  /* keep the actual schema path in the document context */
-		  strncpy (pDoc->DocSchemasPath, SchemaPath, MAX_PATH);
+		  ustrncpy (pDoc->DocSchemasPath, SchemaPath, MAX_PATH);
 		  /* initializes the directory of the document */
-		  strncpy (pDoc->DocDirectory, DocumentPath, MAX_PATH);
+		  ustrncpy (pDoc->DocDirectory, DocumentPath, MAX_PATH);
 		  /* if path, keep only the first directory */
 		  i = 1;
 		  while (pDoc->DocDirectory[i - 1] != EOS &&
@@ -210,10 +211,10 @@ char               *documentName;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Document            TtaOpenDocument (char *documentName, int accessMode)
+Document            TtaOpenDocument (STRING documentName, int accessMode)
 #else  /* __STDC__ */
 Document            TtaOpenDocument (documentName, accessMode)
-char               *documentName;
+STRING              documentName;
 int                 accessMode;
 #endif /* __STDC__ */
 {
@@ -231,19 +232,19 @@ int                 accessMode;
      TtaError (ERR_too_many_documents);
    else
      {
-	lg = strlen (documentName);
+	lg = ustrlen (documentName);
 	if (lg >= MAX_NAME_LENGTH)
 	   TtaError (ERR_string_too_long);
 	else
 	  {
-	     strncpy (pDoc->DocDName, documentName, MAX_NAME_LENGTH);
+	     ustrncpy (pDoc->DocDName, documentName, MAX_NAME_LENGTH);
 	     pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
 	     /* suppresses the .PIV suffix if found */
 	     if (lg > 4)
-		if (strcmp (&(pDoc->DocDName[lg - 4]), ".PIV") == 0)
+		if (ustrcmp (&(pDoc->DocDName[lg - 4]), ".PIV") == 0)
 		   pDoc->DocDName[lg - 4] = EOS;
 	     GetDocIdent (&pDoc->DocIdent, pDoc->DocDName);
-	     strncpy (pDoc->DocDirectory, DocumentPath, MAX_PATH);
+	     ustrncpy (pDoc->DocDirectory, DocumentPath, MAX_PATH);
 	     ok = OpenDocument (pDoc->DocDName, pDoc, TRUE, FALSE, NULL,
 				FALSE, TRUE);
 	     if (!ok)
@@ -255,7 +256,7 @@ int                 accessMode;
 	     else
 	       {
 		  /* keep the actual schema path into the document context */
-		  strncpy (pDoc->DocSchemasPath, SchemaPath, MAX_PATH);
+		  ustrncpy (pDoc->DocSchemasPath, SchemaPath, MAX_PATH);
 		  document = IdentDocument (pDoc);
 		  if (!pDoc->DocReadOnly)
 		     pDoc->DocReadOnly = (accessMode == 0);
@@ -285,16 +286,16 @@ int                 accessMode;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaSaveDocument (Document document, char *documentName)
+void                TtaSaveDocument (Document document, STRING documentName)
 #else  /* __STDC__ */
 void                TtaSaveDocument (document, documentName)
 Document            document;
-char               *documentName;
+STRING              documentName;
 #endif /* __STDC__ */
 {
   PtrDocument         pDoc;
   BinFile             pivotFile;
-  char                path[250];
+  CHAR                path[250];
   int                 i;
 
   UserErrorCode = 0;
@@ -327,7 +328,7 @@ char               *documentName;
 	      /* modifies files .REF of documents that reference elements which are
 		 no more in the document and updates the .EXT file relating to the document */
 	      UpdateRef (pDoc);
-	      if (strcmp (documentName, pDoc->DocDName) != 0)
+	      if (ustrcmp (documentName, pDoc->DocDName) != 0)
 		/* The document is saved under a new name */
 		{
 		  /* The application wants to create a copy of the document */
@@ -335,9 +336,9 @@ char               *documentName;
 		     referenced documents */
 		  ChangeNomExt (pDoc, documentName, TRUE);
 		  /* Puts the new name into the document descriptor */
-		  strncpy (pDoc->DocDName, documentName, MAX_NAME_LENGTH);
+		  ustrncpy (pDoc->DocDName, documentName, MAX_NAME_LENGTH);
 		  pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
-		  strncpy (pDoc->DocIdent, documentName, MAX_DOC_IDENT_LEN);
+		  ustrncpy (pDoc->DocIdent, documentName, MAX_DOC_IDENT_LEN);
 		  pDoc->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
 #ifndef NODISPLAY
 		  /* changes the title of frames */
@@ -366,12 +367,12 @@ char               *documentName;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             TtaExportDocument (Document document, char *fileName, char *TSchemaName)
+boolean             TtaExportDocument (Document document, STRING fileName, STRING TSchemaName)
 #else  /* __STDC__ */
 boolean             TtaExportDocument (document, fileName, TSchemaName)
 Document            document;
-char               *fileName;
-char               *TSchemaName;
+STRING              fileName;
+STRING              TSchemaName;
 #endif /* __STDC__ */
 {
   boolean ok = FALSE;
@@ -465,7 +466,7 @@ Document            document;
   PtrDocument         pDoc;
   int                 i;
   PathBuffer          DirectoryOrig;
-  char                text[MAX_TXT_LEN];
+  CHAR                text[MAX_TXT_LEN];
 
   UserErrorCode = 0;
   /* verifies the parameter document */
@@ -500,16 +501,16 @@ Document            document;
       /* modifies files .REF of documents referencing inexisting documents */
       UpdateRef (pDoc);
       /* destroys files .PIV, .EXT, .REF et .BAK of the document */
-      strncpy (DirectoryOrig, pDoc->DocDirectory, MAX_PATH);
+      ustrncpy (DirectoryOrig, pDoc->DocDirectory, MAX_PATH);
       FindCompleteName (pDoc->DocDName, "PIV", DirectoryOrig, text, &i);
       TtaFileUnlink (text);
-      strncpy (DirectoryOrig, pDoc->DocDirectory, MAX_PATH);
+      ustrncpy (DirectoryOrig, pDoc->DocDirectory, MAX_PATH);
       FindCompleteName (pDoc->DocDName, "EXT", DirectoryOrig, text, &i);
       TtaFileUnlink (text);
-      strncpy (DirectoryOrig, pDoc->DocDirectory, MAX_PATH);
+      ustrncpy (DirectoryOrig, pDoc->DocDirectory, MAX_PATH);
       FindCompleteName (pDoc->DocDName, "REF", DirectoryOrig, text, &i);
       TtaFileUnlink (text);
-      strncpy (DirectoryOrig, pDoc->DocDirectory, MAX_PATH);
+      ustrncpy (DirectoryOrig, pDoc->DocDirectory, MAX_PATH);
       FindCompleteName (pDoc->DocDName, "BAK", DirectoryOrig, text, &i);
       /* now close the document */
       TtaCloseDocument (document);
@@ -532,18 +533,18 @@ Document            document;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaSetDocumentPath (char *path)
+void                TtaSetDocumentPath (STRING path)
 #else  /* __STDC__ */
 void                TtaSetDocumentPath (path)
-char               *path;
+STRING              path;
 #endif /* __STDC__ */
 {
    UserErrorCode = 0;
-   if (strlen (path) >= MAX_PATH)
+   if (ustrlen (path) >= MAX_PATH)
       TtaError (ERR_string_too_long);
    else
      {
-	strcpy (DocumentPath, path);
+	ustrcpy (DocumentPath, path);
      }
 }
 
@@ -560,11 +561,11 @@ char               *path;
 	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             TtaCheckDirectory (char *directory)
+boolean             TtaCheckDirectory (STRING directory)
 
 #else  /* __STDC__ */
 boolean             TtaCheckDirectory (directory)
-char               *directory;
+STRING              directory;
 
 #endif /* __STDC__ */
 
@@ -585,7 +586,7 @@ char               *directory;
    struct stat         fileStat;
 
    /* does the directory exist ? */
-   if (strlen (directory) < 1)
+   if (ustrlen (directory) < 1)
       return (FALSE);
    else if (stat (directory, &fileStat) != 0)
       return (FALSE);
@@ -656,20 +657,20 @@ PathBuffer          path;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             TtaIsInDocumentPath (char *directory)
+boolean             TtaIsInDocumentPath (STRING directory)
 
 #else  /* __STDC__ */
 boolean             TtaIsInDocumentPath (directory)
-char               *directory;
+STRING              directory;
 
 #endif /* __STDC__ */
 
 {
    int                 i;
-   char               *ptr;
+   STRING              ptr;
 
    /* Verify if this directory is already in the list  */
-   ptr = strstr (DocumentPath, directory);
+   ptr = ustrstr (DocumentPath, directory);
    i = strlen (directory);
    while (ptr != NULL && ptr[i] != PATH_SEP && ptr[i] != EOS)
      {
@@ -693,11 +694,11 @@ char               *directory;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                TtaAppendDocumentPath (char *directory)
+void                TtaAppendDocumentPath (STRING directory)
 
 #else  /* __STDC__ */
 void                TtaAppendDocumentPath (directory)
-char               *directory;
+STRING              directory;
 
 #endif /* __STDC__ */
 
@@ -740,11 +741,11 @@ char               *directory;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                TtaSetSchemaPath (char *path)
+void                TtaSetSchemaPath (STRING path)
 
 #else  /* __STDC__ */
 void                TtaSetSchemaPath (path)
-char               *path;
+STRING              path;
 
 #endif /* __STDC__ */
 
@@ -778,13 +779,13 @@ char               *path;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-SSchema             TtaNewNature (SSchema schema, char *natureName, char *presentationName)
+SSchema             TtaNewNature (SSchema schema, STRING natureName, STRING presentationName)
 
 #else  /* __STDC__ */
 SSchema             TtaNewNature (schema, natureName, presentationName)
 SSchema             schema;
-char               *natureName;
-char               *presentationName;
+STRING              natureName;
+STRING              presentationName;
 
 #endif /* __STDC__ */
 
@@ -832,13 +833,13 @@ char               *presentationName;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-SSchema             TtaNewSchemaExtension (Document document, char *extensionName, char *presentationName)
+SSchema             TtaNewSchemaExtension (Document document, STRING extensionName, STRING presentationName)
 
 #else  /* __STDC__ */
 SSchema             TtaNewSchemaExtension (document, extensionName, presentationName)
 Document            document;
-char               *extensionName;
-char               *presentationName;
+STRING              extensionName;
+STRING              presentationName;
 
 #endif /* __STDC__ */
 
@@ -1044,11 +1045,11 @@ int                *removedAttributes;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaSetPSchema (Document document, char *presentationName)
+void                TtaSetPSchema (Document document, STRING presentationName)
 #else  /* __STDC__ */
 void                TtaSetPSchema (document, presentationName)
 Document            document;
-char               *presentationName;
+STRING              presentationName;
 #endif /* __STDC__ */
 
 {
@@ -1124,11 +1125,11 @@ char               *presentationName;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaSetDocumentDirectory (Document document, char *directory)
+void                TtaSetDocumentDirectory (Document document, STRING directory)
 #else  /* __STDC__ */
 void                TtaSetDocumentDirectory (document, directory)
 Document            document;
-char               *directory;
+STRING              directory;
 #endif /* __STDC__ */
 
 {
@@ -1162,11 +1163,11 @@ char               *directory;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaSetDocumentName (Document document, char *documentName)
+void                TtaSetDocumentName (Document document, STRING documentName)
 #else  /* __STDC__ */
 void                TtaSetDocumentName (document, documentName)
 Document            document;
-char               *documentName;
+STRING              documentName;
 #endif /* __STDC__ */
 
 {
@@ -1418,10 +1419,10 @@ Document            document;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-char               *TtaGetDocumentName (Document document)
+STRING              TtaGetDocumentName (Document document)
 
 #else  /* __STDC__ */
-char               *TtaGetDocumentName (document)
+STRING              TtaGetDocumentName (document)
 Document            document;
 
 #endif /* __STDC__ */
@@ -1461,11 +1462,11 @@ Document            document;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-Document            TtaGetDocumentFromName (char *documentName)
+Document            TtaGetDocumentFromName (STRING documentName)
 
 #else  /* __STDC__ */
 Document            TtaGetDocumentFromName (documentName)
-char               *documentName;
+STRING              documentName;
 
 #endif /* __STDC__ */
 
@@ -1506,12 +1507,12 @@ char               *documentName;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                TtaGetDocumentDirectory (Document document, char *buffer, int bufferLength)
+void                TtaGetDocumentDirectory (Document document, STRING buffer, int bufferLength)
 
 #else  /* __STDC__ */
 void                TtaGetDocumentDirectory (document, buffer, bufferLength)
 Document            document;
-char               *buffer;
+STRING              buffer;
 int                 bufferLength;
 
 #endif /* __STDC__ */
@@ -1595,10 +1596,10 @@ Document            document;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-char               *TtaGetSSchemaName (SSchema schema)
+STRING              TtaGetSSchemaName (SSchema schema)
 
 #else  /* __STDC__ */
-char               *TtaGetSSchemaName (schema)
+STRING              TtaGetSSchemaName (schema)
 SSchema             schema;
 
 #endif /* __STDC__ */
@@ -1632,10 +1633,10 @@ SSchema             schema;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-char               *TtaGetPSchemaName (SSchema schema)
+STRING              TtaGetPSchemaName (SSchema schema)
 
 #else  /* __STDC__ */
-char               *TtaGetPSchemaName (schema)
+STRING              TtaGetPSchemaName (schema)
 SSchema             schema;
 
 #endif /* __STDC__ */
@@ -1658,12 +1659,12 @@ SSchema             schema;
    nature schema and extension schema used by pSS. It returns a pointer
    which references this schema or NULL if not found. */
 #ifdef __STDC__
-static SSchema      ChSchStruct (PtrSSchema pSS, char *name)
+static SSchema      ChSchStruct (PtrSSchema pSS, STRING name)
 
 #else  /* __STDC__ */
 static SSchema      ChSchStruct (pSS, name)
 PtrSSchema          pSS;
-char               *name;
+STRING              name;
 
 #endif /* __STDC__ */
 
@@ -1705,10 +1706,10 @@ char               *name;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-SSchema             TtaGetSSchema (char *name, Document document)
+SSchema             TtaGetSSchema (STRING name, Document document)
 #else  /* __STDC__ */
 SSchema             TtaGetSSchema (name, document)
-char               *name;
+STRING              name;
 Document            document;
 #endif /* __STDC__ */
 
@@ -1784,21 +1785,21 @@ SSchema             schema2;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaGiveSchemasOfDocument (char *documentName, char *structureName, char *presentationName)
+void                TtaGiveSchemasOfDocument (STRING documentName, STRING structureName, STRING presentationName)
 #else  /* __STDC__ */
 void                TtaGiveSchemasOfDocument (documentName, structureName, presentationName)
-char               *documentName;
-char               *structureName;
-char               *presentationName;
+STRING              documentName;
+STRING              structureName;
+STRING              presentationName;
 #endif /* __STDC__ */
 
 {
    PathBuffer          DirBuffer;
    BinFile             file;
-   char                text[MAX_TXT_LEN];
+   CHAR                text[MAX_TXT_LEN];
    int                 i;
    boolean             error;
-   char                charGotten;
+   CHAR                charGotten;
    LabelString         lab;
    int                 currentVersion = 0;
 
@@ -1820,7 +1821,7 @@ char               *presentationName;
 	/* Gets the version number if it exists */
 	if (!TtaReadByte (file, &charGotten))
 	   error = TRUE;
-	if (charGotten == (char) C_PIV_VERSION)
+	if (charGotten == (CHAR) C_PIV_VERSION)
 	  {
 	     if (!TtaReadByte (file, &charGotten))
 		error = TRUE;
@@ -1832,8 +1833,8 @@ char               *presentationName;
 		error = TRUE;
 	  }
 	/* Gets the label max. of the document if it is present */
-	if (!error && (charGotten == (char) C_PIV_SHORT_LABEL || charGotten == (char) C_PIV_LONG_LABEL ||
-		       charGotten == (char) C_PIV_LABEL))
+	if (!error && (charGotten == (CHAR) C_PIV_SHORT_LABEL || charGotten == (CHAR) C_PIV_LONG_LABEL ||
+		       charGotten == (CHAR) C_PIV_LABEL))
 	  {
 	     ReadLabel (charGotten, lab, file);
 	     if (!TtaReadByte (file, &charGotten))
@@ -1843,7 +1844,7 @@ char               *presentationName;
 	if (currentVersion >= 4)
 	  {
 	     /* Gets the table of laguages used by the document */
-	     while (charGotten == (char) C_PIV_LANG && !error)
+	     while (charGotten == (CHAR) C_PIV_LANG && !error)
 	       {
 		  do
 		     if (!TtaReadByte (file, &charGotten))
@@ -1859,14 +1860,14 @@ char               *presentationName;
 	  }
 
 	/* Gets the comment of the document if it exists */
-	if (!error && (charGotten == (char) C_PIV_COMMENT || charGotten == (char) C_PIV_OLD_COMMENT))
+	if (!error && (charGotten == (CHAR) C_PIV_COMMENT || charGotten == (CHAR) C_PIV_OLD_COMMENT))
 	  {
 	     /* Get the byte following the comment */
 	     if (!TtaReadByte (file, &charGotten))
 		error = TRUE;
 	  }
 	/* Gets the name of the schema structure which is at the begenning of the pivot file */
-	if (!error && charGotten != (char) C_PIV_NATURE)
+	if (!error && charGotten != (CHAR) C_PIV_NATURE)
 	   error = TRUE;
 	if (!error)
 	  {
@@ -2222,11 +2223,11 @@ Document            document;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                TtaGetDocumentPath (char *buffer, int bufferLength)
+void                TtaGetDocumentPath (STRING buffer, int bufferLength)
 
 #else  /* __STDC__ */
 void                TtaGetDocumentPath (buffer, bufferLength)
-char               *buffer;
+STRING              buffer;
 int                 bufferLength;
 
 #endif /* __STDC__ */
@@ -2255,11 +2256,11 @@ int                 bufferLength;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                TtaGetSchemaPath (char *buffer, int bufferLength)
+void                TtaGetSchemaPath (STRING buffer, int bufferLength)
 
 #else  /* __STDC__ */
 void                TtaGetSchemaPath (buffer, bufferLength)
-char               *buffer;
+STRING              buffer;
 int                 bufferLength;
 
 #endif /* __STDC__ */

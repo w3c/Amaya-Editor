@@ -7,10 +7,10 @@
 #ifdef __STDC__
 
 extern void FontOrig ( ptrfont font,
-                       char firstchar,
+                       CHAR firstchar,
                        int *pX,
                        int *pY );
-extern void DrawChar ( unsigned char car,
+extern void DrawChar ( UCHAR car,
                        int frame,
                        int x,
                        int y,
@@ -18,7 +18,7 @@ extern void DrawChar ( unsigned char car,
                        int RO,
                        int active,
                        int fg );
-extern int DrawString ( char *buff,
+extern int DrawString ( STRING buff,
                         int i,
                         int lg,
                         int frame,
@@ -329,7 +329,7 @@ extern void Clear ( int frame,
                     int x,
                     int y );
 extern void WChaine ( ThotWindow w,
-                      char *string,
+                      STRING string,
                       int x,
                       int y,
                       ptrfont font,
@@ -346,8 +346,8 @@ extern void Scroll ( int frame,
                      int yd,
                      int xf,
                      int yf );
-extern int EndOfString ( char *string,
-                         char *suffix );
+extern int EndOfString ( STRING string,
+                         STRING suffix );
 extern void XFlushOutput ( int frame );
 extern void PaintWithPattern ( int frame,
                                int x,
@@ -364,10 +364,10 @@ extern void PaintWithPattern ( int frame,
 #else /* __STDC__ */
 
 extern void FontOrig (/* ptrfont font,
-                         char firstchar,
+                         CHAR firstchar,
                          int *pX,
                          int *pY */);
-extern void DrawChar (/* unsigned char car,
+extern void DrawChar (/* UCHAR car,
                          int frame,
                          int x,
                          int y,
@@ -375,7 +375,7 @@ extern void DrawChar (/* unsigned char car,
                          int RO,
                          int active,
                          int fg */);
-extern int DrawString (/* char *buff,
+extern int DrawString (/* STRING buff,
                           int i,
                           int lg,
                           int frame,
@@ -686,7 +686,7 @@ extern void Clear (/* int frame,
                       int x,
                       int y */);
 extern void WChaine (/* ThotWindow w,
-                        char *string,
+                        STRING string,
                         int x,
                         int y,
                         ptrfont font,
@@ -703,8 +703,8 @@ extern void Scroll (/* int frame,
                        int yd,
                        int xf,
                        int yf */);
-extern int EndOfString (/* char *string,
-                           char *suffix */);
+extern int EndOfString (/* STRING string,
+                           STRING suffix */);
 extern void XFlushOutput (/* int frame */);
 extern void PaintWithPattern (/* int frame,
                                  int x,

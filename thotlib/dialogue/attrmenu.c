@@ -20,7 +20,9 @@
  * Author: I. Vatton (INRIA)
  *         R. Guetari (W3C/INRIA): Windows NT/95
  *
- */ 
+ */
+
+#include "ustring.h" 
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "dialog.h"
@@ -46,12 +48,12 @@ static boolean      AttrFormExists = FALSE;
 static boolean      MandatoryAttrFormExists = FALSE;
 #ifdef _WINDOWS
 static boolean      dlgInitialized = FALSE; 
-static char         WIN_Lab [1024];
+static CHAR         WIN_Lab [1024];
 static int          WIN_nbItem;
-static char         WIN_title [MAX_NAME_LENGTH + 2];
+static CHAR         WIN_title [MAX_NAME_LENGTH + 2];
 
 int                 WIN_MenuAlphabet;
-char                WIN_buffMenu [MAX_TXT_LEN];
+CHAR                WIN_buffMenu [MAX_TXT_LEN];
 #endif /* _WINDOWS */
 
 
@@ -61,7 +63,7 @@ static PtrSSchema   AttrStruct[MAX_MENU * 2];
 static int          AttrNumber[MAX_MENU * 2];
 static boolean      AttrOblig[MAX_MENU * 2];
 static boolean      AttrEvent[MAX_MENU* 2];
-static char         TextAttrValue[LgMaxAttrText];
+static CHAR         TextAttrValue[LgMaxAttrText];
 static PtrSSchema   SchCurrentAttr = NULL;
 static int          EventMenu[MAX_FRAME];
 static int          NumCurrentAttr = 0;
@@ -95,8 +97,8 @@ static BOOL         WIN_AtTextAttr = FALSE;
 static BOOL         WIN_AtEnumAttr = FALSE;
 static BOOL         isForm         = FALSE ;
 static PtrAttribute WIN_currAttr;
-static char         formRange [100];
-static char         attr_text [500];
+static CHAR         formRange [100];
+static CHAR         attr_text [500];
 static int          formValue;
 static int          nbDlgItems ;
 static int          WIN_Language;
@@ -106,7 +108,7 @@ extern LPCTSTR   iconID;
 extern UINT      subMenuID [MAX_FRAME];
 #ifdef __STDC__
 extern BOOL RegisterWin95 (CONST WNDCLASS*);
-extern void CreateLanguageDlgWindow (HWND, char*, char*, int, char*, char*, int, int, int, char*);
+extern void CreateLanguageDlgWindow (HWND, STRING, STRING, int, STRING, STRING, int, int, int, STRING);
 extern void CreateAlign1DlgWindow (HWND, int);
 extern void CreateAlign2DlgWindow (HWND, int);
 
@@ -164,12 +166,12 @@ PtrAttribute        currAttr;
 #endif /* __STDC__ */
 {
    int                 i, defItem, nbItem, nbLanguages, firstLanguage, length;
-   char                bufMenu[MAX_TXT_LEN];
-   char                string[MAX_TXT_LEN];
-   char               *ptr;
+   CHAR                bufMenu[MAX_TXT_LEN];
+   CHAR                string[MAX_TXT_LEN];
+   STRING              ptr;
    Language            language;
    Name                languageValue;
-   char                Lab[200];
+   CHAR                Lab[200];
    PtrAttribute        pHeritAttr;
    PtrElement          pElAttr;
 
@@ -177,12 +179,12 @@ PtrAttribute        currAttr;
    languageValue[0] = EOS;
    if (currAttr != NULL)
       if (currAttr->AeAttrText != NULL)
-	 strncpy (languageValue, currAttr->AeAttrText->BuContent, MAX_NAME_LENGTH);
+	 ustrncpy (languageValue, currAttr->AeAttrText->BuContent, MAX_NAME_LENGTH);
 
    /* cree le formulaire avec les deux boutons Appliquer et Supprimer */
-   strcpy (bufMenu, TtaGetMessage (LIB, TMSG_APPLY));
-   i = strlen (bufMenu) + 1;
-   strcpy (&bufMenu[i], TtaGetMessage (LIB, TMSG_DEL_ATTR));
+   ustrcpy (bufMenu, TtaGetMessage (LIB, TMSG_APPLY));
+   i = ustrlen (bufMenu) + 1;
+   ustrcpy (&bufMenu[i], TtaGetMessage (LIB, TMSG_DEL_ATTR));
 #  ifndef _WINDOWS
    TtaNewSheet (NumFormLanguage, TtaGetViewFrame (doc, view),
      TtaGetMessage (LIB, TMSG_LANGUAGE), 2, bufMenu, FALSE, 2, 'L', D_DONE);
@@ -199,18 +201,18 @@ PtrAttribute        currAttr;
    firstLanguage = TtaGetFirstUserLanguage ();
    for (language = firstLanguage; language < nbLanguages; language++)
      {
-	strcpy (string, TtaGetLanguageName (language));
-	length = strlen (string);
+	ustrcpy (string, TtaGetLanguageName (language));
+	length = ustrlen (string);
 	if (length > 0)
 	  {
 	     if (defItem < 0)
-	        if (strcasecmp(TtaGetLanguageCode(language), languageValue) == 0)
+	        if (ustrcasecmp(TtaGetLanguageCode(language), languageValue) == 0)
 		  {
 		  defItem = nbItem;
-		  strcpy (languageValue, string);
+		  ustrcpy (languageValue, string);
 		  }
 	     nbItem++;
-	     strcpy (ptr, string);
+	     ustrcpy (ptr, string);
 	     ptr += length + 1;
 	  }
      }
@@ -245,7 +247,7 @@ PtrAttribute        currAttr;
 	    TtaSetSelector (NumSelectLanguage, -1, NULL);
 	    MenuAlphaLangValue = -1;
 	    /* cherche la valeur heritee de l'attribut Langue */
-	    strcpy (Lab, TtaGetMessage (LIB, TMSG_INHERITED_LANG));
+	    ustrcpy (Lab, TtaGetMessage (LIB, TMSG_INHERITED_LANG));
 	    pHeritAttr = GetTypedAttrAncestor (firstSel, 1, NULL, &pElAttr);
 	    if (pHeritAttr != NULL)
 	      if (pHeritAttr->AeAttrText != NULL)
@@ -253,7 +255,7 @@ PtrAttribute        currAttr;
 		  /* the attribute value is a RFC-1766 code. Convert it into */
 		  /* a language name */
 		  language = TtaGetLanguageIdFromName (pHeritAttr->AeAttrText->BuContent);
-		  strcat (Lab, TtaGetLanguageName(language));
+		  ustrcat (Lab, TtaGetLanguageName(language));
 	 }
 	  }
 	else
@@ -284,8 +286,8 @@ PtrAttribute        currAttr;
    nbLanguages = TtaGetFirstUserLanguage ();
    for (language = 0; language < nbLanguages; language++)
      {
-	strcpy (string, TtaGetLanguageName (language));
-	length = strlen (string);
+	ustrcpy (string, TtaGetLanguageName (language));
+	length = ustrlen (string);
 	if (length > 0)
 	  {
 	    nbItem++;
@@ -310,15 +312,15 @@ PtrAttribute        currAttr;
   WIN_InitFormDialog
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static BOOL WIN_InitFormDialog (HWND parent, char* title)
+static BOOL WIN_InitFormDialog (HWND parent, STRING title)
 #else  /* __STDC__ */
 static BOOL WIN_InitFormDialog (parent, title)
 HWND  parent;
-char* title	;
+STRING title	;
 #endif /* __STDC__ */
 {
    WNDCLASS    wndFormClass ;
-   static char szAppName[] = "FormClass" ;
+   static CHAR szAppName[] = "FormClass" ;
    HWND        hwnFromDialog;
    MSG         msg;
    int         frame;
@@ -384,8 +386,8 @@ LRESULT CALLBACK InitFormDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPA
 	HWND        hwnTitle;
 	HWND        confirmButton;
 	HWND        doneButton;
-	char*       pBuffer;
-	/* char        attr_text [500]; */
+	STRING       pBuffer;
+	/* CHAR        attr_text [500]; */
 	int         i, index;
 	static PSTR pWinBuffer;
 	static int  txtLength;
@@ -435,7 +437,7 @@ LRESULT CALLBACK InitFormDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPA
 							if ((pWinBuffer = (PSTR) TtaGetMemory (txtLength + 1))) {
 							   GetWindowText (hwnEdit, pWinBuffer, txtLength + 1);
 							   index = 0;
-							   pBuffer = (char*) TtaGetMemory (txtLength + 1);
+							   pBuffer = (STRING) TtaGetMemory (txtLength + 1);
 							   for (i = 0; i < txtLength; i ++) 
 								   if (pWinBuffer [i] != '\r') {
 									  pBuffer [index++] = pWinBuffer[i];
@@ -448,12 +450,12 @@ LRESULT CALLBACK InitFormDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPA
 							}
 
 							ThotCallback (NumMenuAttrTextNeeded, STRING_DATA, pBuffer);
-							ThotCallback (NumMenuAttrRequired, INTEGER_DATA, (char*) 1);
+							ThotCallback (NumMenuAttrRequired, INTEGER_DATA, (STRING) 1);
 						    DestroyWindow (hwnd);
 						    break;
 
 					   case ID_DONE:
-							ThotCallback (NumMenuAttrRequired, INTEGER_DATA, (char*) 0);
+							ThotCallback (NumMenuAttrRequired, INTEGER_DATA, (STRING) 0);
 						    DestroyWindow (hwnd);
 						    /* Traitement ID_DONE */
 						    break;
@@ -467,15 +469,15 @@ LRESULT CALLBACK InitFormDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPA
   WIN_InitSheetDialog
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static BOOL WIN_InitSheetDialog (HWND parent, char* title)
+static BOOL WIN_InitSheetDialog (HWND parent, STRING title)
 #else  /* __STDC__ */
 static BOOL WIN_InitSheetDialog (parent, title)
 HWND  parent;
-char* title	;
+STRING title	;
 #endif /* __STDC__ */
 {
    WNDCLASSEX    wndSheetClass ;
-   static char szAppName[] = "SheetClass" ;
+   static CHAR szAppName[] = "SheetClass" ;
    HWND        hwnSheetDialog;
    MSG         msg;
    int         frame;
@@ -541,7 +543,7 @@ LRESULT CALLBACK InitSheetDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LP
 	HWND        applyButton;
 	HWND        deleteButton;
 	HWND        doneButton;
-	char*       pBuffer;
+	STRING       pBuffer;
 	int         i, index;
 	static PSTR pWinBuffer;
 	static int  txtLength;
@@ -599,7 +601,7 @@ LRESULT CALLBACK InitSheetDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LP
 							if ((pWinBuffer = (PSTR) TtaGetMemory (txtLength + 1))) {
 							   GetWindowText (hwnEdit, pWinBuffer, txtLength + 1);
 							   index = 0;
-							   pBuffer = (char*) TtaGetMemory (txtLength + 1);
+							   pBuffer = (STRING) TtaGetMemory (txtLength + 1);
 							   for (i = 0; i < txtLength; i ++) 
 								   if (pWinBuffer [i] != '\r') {
 									  pBuffer [index++] = pWinBuffer[i];
@@ -612,7 +614,7 @@ LRESULT CALLBACK InitSheetDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LP
 							}
 
 							ThotCallback (NumMenuAttrText, STRING_DATA, pBuffer);
-							ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 1);
+							ThotCallback (NumMenuAttr, INTEGER_DATA, (STRING) 1);
 						    break;
 
 					   case ID_DELETE:
@@ -620,7 +622,7 @@ LRESULT CALLBACK InitSheetDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LP
 							if ((pWinBuffer = (PSTR) TtaGetMemory (txtLength + 1))) {
 							   GetWindowText (hwnEdit, pWinBuffer, txtLength + 1);
 							   index = 0;
-							   pBuffer = (char*) TtaGetMemory (txtLength + 1);
+							   pBuffer = (STRING) TtaGetMemory (txtLength + 1);
 							   for (i = 0; i < txtLength; i ++) 
 								   if (pWinBuffer [i] != '\r') {
 									  pBuffer [index++] = pWinBuffer[i];
@@ -633,12 +635,12 @@ LRESULT CALLBACK InitSheetDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LP
 							}
 
 							ThotCallback (NumMenuAttrText, STRING_DATA, pBuffer);
-							ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 2);
+							ThotCallback (NumMenuAttr, INTEGER_DATA, (STRING) 2);
                             DestroyWindow (hwnd);
 						    break;
 
 					   case ID_DONE:
-							ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 0);
+							ThotCallback (NumMenuAttr, INTEGER_DATA, (STRING) 0);
 						    DestroyWindow (hwnd);
 							dlgInitialized = FALSE;
 						    break;
@@ -652,15 +654,15 @@ LRESULT CALLBACK InitSheetDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LP
   WIN_InitNumAttrDialog
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static BOOL WIN_InitNumAttrDialog (HWND parent, char* title)
+static BOOL WIN_InitNumAttrDialog (HWND parent, STRING title)
 #else  /* __STDC__ */
 static BOOL WIN_InitNumAttrDialog (parent, title)
 HWND  parent;
-char* title	;
+STRING title	;
 #endif /* __STDC__ */
 {
    WNDCLASSEX    wndNumAttrClass ;
-   static char szAppName[] = "NumAttrClass" ;
+   static CHAR szAppName[] = "NumAttrClass" ;
    HWND        hwnNumAttrDialog;
    MSG         msg;
    int         frame;
@@ -780,22 +782,22 @@ LRESULT CALLBACK InitNumAttrDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, 
 				       case ID_APPLY:
 						    val = GetDlgItemInt (hwnd, ID_EDITVALUE, &ok, TRUE);
 							if (ok) {
-						       ThotCallback (NumMenuAttrNumber, INTEGER_DATA, (char*) val);
-						       ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 1);
+						       ThotCallback (NumMenuAttrNumber, INTEGER_DATA, (STRING) val);
+						       ThotCallback (NumMenuAttr, INTEGER_DATA, (STRING) 1);
 							}
 						    break;
 
 					   case ID_DELETE:
 						    val = GetDlgItemInt (hwnd, ID_EDITVALUE, &ok, TRUE);
 							if (ok) {
-						       ThotCallback (NumMenuAttrNumber, INTEGER_DATA, (char*) val);
-						       ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 2);
+						       ThotCallback (NumMenuAttrNumber, INTEGER_DATA, (STRING) val);
+						       ThotCallback (NumMenuAttr, INTEGER_DATA, (STRING) 2);
                                DestroyWindow (hwnd);
 							}
 						    break;
 
 					   case ID_DONE:
-						    ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 0);
+						    ThotCallback (NumMenuAttr, INTEGER_DATA, (STRING) 0);
 						    DestroyWindow (hwnd);
 						    break;
 				}
@@ -828,8 +830,8 @@ int                 view;
 {
   int                 i, lgmenu, val;
   int                 form, subform;
-  char                title[MAX_NAME_LENGTH + 2];
-  char                bufMenu[MAX_TXT_LEN];
+  CHAR                title[MAX_NAME_LENGTH + 2];
+  CHAR                bufMenu[MAX_TXT_LEN];
   Document            doc;
 
 #ifdef _WINDOWS
@@ -839,9 +841,9 @@ int                 view;
 
   doc = (Document) IdentDocument (pDoc);
   /* detruit la feuille de dialogue et la recree */
-  strcpy (bufMenu, TtaGetMessage (LIB, TMSG_APPLY));
-  i = strlen (bufMenu) + 1;
-  strcpy (&bufMenu[i], TtaGetMessage (LIB, TMSG_DEL_ATTR));
+  ustrcpy (bufMenu, TtaGetMessage (LIB, TMSG_APPLY));
+  i = ustrlen (bufMenu) + 1;
+  ustrcpy (&bufMenu[i], TtaGetMessage (LIB, TMSG_DEL_ATTR));
   if (required)
     {
       form = NumMenuAttrRequired;
@@ -877,9 +879,9 @@ int                 view;
     }
 
 #  ifdef _WINDOWS
-   strncpy (WIN_title, pAttr1->AttrName, MAX_NAME_LENGTH);
+   ustrncpy (WIN_title, pAttr1->AttrName, MAX_NAME_LENGTH);
 #  else  /* !_WINDOWS */
-   strncpy (title, pAttr1->AttrName, MAX_NAME_LENGTH);
+   ustrncpy (title, pAttr1->AttrName, MAX_NAME_LENGTH);
 #  endif /* _WINDOWS */
    switch (pAttr1->AttrType)
      {
@@ -935,17 +937,17 @@ int                 view;
        while (val < pAttr1->AttrNEnumValues)
 	 {
 #      ifdef _WINDOWS
-	   i = strlen (pAttr1->AttrEnumValue[val]) + 1;	/* for 'B' and EOS */
+	   i = ustrlen (pAttr1->AttrEnumValue[val]) + 1;	/* for 'B' and EOS */
 #      else  /* !_WINDOWS */
-	   i = strlen (pAttr1->AttrEnumValue[val]) + 2;	/* for 'B' and EOS */
+	   i = ustrlen (pAttr1->AttrEnumValue[val]) + 2;	/* for 'B' and EOS */
 #      endif /* _WINDOWS */
 	   if (lgmenu + i < MAX_TXT_LEN)
 	     {
 #          ifndef _WINDOWS
 	       bufMenu[lgmenu] = 'B';
-	       strcpy (&bufMenu[lgmenu + 1], pAttr1->AttrEnumValue[val]);
+	       ustrcpy (&bufMenu[lgmenu + 1], pAttr1->AttrEnumValue[val]);
 #          else  /* _WINDOWS */
-	       strcpy (&WIN_buffMenu[lgmenu], pAttr1->AttrEnumValue[val]);
+	       ustrcpy (&WIN_buffMenu[lgmenu], pAttr1->AttrEnumValue[val]);
 #          endif /* _WINDOWS */
 	       val++;
 	     }
@@ -984,12 +986,12 @@ int                 view;
    handles the callback of the menu which captures the required attributes.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CallbackReqAttrMenu (int ref, int val, char *txt)
+void                CallbackReqAttrMenu (int ref, int val, STRING txt)
 #else  /* __STDC__ */
 void                CallbackReqAttrMenu (ref, val, txt)
 int                 ref;
 int                 val;
-char               *txt;
+STRING              txt;
 
 #endif /* __STDC__ */
 {
@@ -1099,13 +1101,13 @@ PtrDocument         pDoc;
    buffer.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int    BuildAttrMenu (char *bufMenu, PtrDocument pDoc, int *nbEvent, char *bufEventAttr)
+static int    BuildAttrMenu (STRING bufMenu, PtrDocument pDoc, int *nbEvent, STRING bufEventAttr)
 #else  /* __STDC__ */
 static int    BuildAttrMenu (bufMenu, pDoc, nbEvent, bufEventAttr)
-char         *bufMenu;
+STRING        bufMenu;
 PtrDocument   pDoc;
 int          *nbEvent;
-char         *bufEventAttr;
+STRING        bufEventAttr;
 #endif /* __STDC__ */
 {
   PtrDocument         SelDoc;
@@ -1115,7 +1117,7 @@ char         *bufEventAttr;
   PtrAttribute        pAttrNew;
   SRule              *pRe1;
   TtAttribute        *pAttr;
-  char                tempBuffer[MAX_NAME_LENGTH + 1];
+  CHAR                tempBuffer[MAX_NAME_LENGTH + 1];
   int                 i, j, k;
   int                 firstChar, lastChar;
   int                 lgmenu, lgsubmenu;
@@ -1253,11 +1255,11 @@ char         *bufEventAttr;
 		sprintf (tempBuffer, "T%s", pAttr->AttrName);
 	      else
 		sprintf (tempBuffer, "T%s...", pAttr->AttrName);
-	      i = strlen (tempBuffer) + 1;
+	      i = ustrlen (tempBuffer) + 1;
 	      if (AttrEvent[att])
 		{
 		  if (lgsubmenu + i < MAX_TXT_LEN)
-		    strcpy (&bufEventAttr[lgsubmenu], tempBuffer);
+		    ustrcpy (&bufEventAttr[lgsubmenu], tempBuffer);
 		  lgsubmenu += i;
 		  /* mark all active enties*/
 		  if (AttributeValue (firstSel, pAttrNew) != NULL)
@@ -1270,7 +1272,7 @@ char         *bufEventAttr;
 	      else
 		{
 		  if (lgmenu + i < MAX_TXT_LEN)
-		    strcpy (&bufMenu[lgmenu], tempBuffer);
+		    ustrcpy (&bufMenu[lgmenu], tempBuffer);
 		  lgmenu += i;
 		  /* mark all active enties*/
 		  if (AttributeValue (firstSel, pAttrNew) != NULL)
@@ -1286,10 +1288,10 @@ char         *bufEventAttr;
 	{
 	  /* add the event entry if needed */
 	  sprintf (tempBuffer, "M%s", TtaGetMessage (LIB, TMSG_EVENTS));
-	  i = strlen (tempBuffer) + 1;
+	  i = ustrlen (tempBuffer) + 1;
 	  if (lgmenu + i < MAX_TXT_LEN)
 	    {
-	      strcpy (&bufMenu[lgmenu], tempBuffer);
+	      ustrcpy (&bufMenu[lgmenu], tempBuffer);
 	      nbOfEntries++;
 	    }
 	}
@@ -1314,8 +1316,8 @@ PtrDocument         pDoc;
 {
   Document            document;
   Menu_Ctl           *pMenu;
-  char                bufMenuAttr[MAX_TXT_LEN];
-  char                bufEventAttr[MAX_TXT_LEN];
+  CHAR                bufMenuAttr[MAX_TXT_LEN];
+  CHAR                bufEventAttr[MAX_TXT_LEN];
   int                 view, menu, menuID;
   int                 frame, ref, nbEvent;
   int                 nbItemAttr, i, max;
@@ -1444,12 +1446,12 @@ PtrDocument         pDoc;
    valtexte: pointer to the captured text in this dialogue element
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CallbackValAttrMenu (int ref, int valmenu, char *valtext)
+void                CallbackValAttrMenu (int ref, int valmenu, STRING valtext)
 #else  /* __STDC__ */
 void                CallbackValAttrMenu (ref, valmenu, valtext)
 int                 ref;
 int                 valmenu;
-char               *valtext;
+STRING              valtext;
 
 #endif /* __STDC__ */
 {
@@ -1469,7 +1471,7 @@ char               *valtext;
       break;
     case NumMenuAttrText:
       /* valeur d'un attribut textuel */
-      strncpy (TextAttrValue, valtext, LgMaxAttrText);
+      ustrncpy (TextAttrValue, valtext, LgMaxAttrText);
       act = 0;
       break;
     case NumMenuAttrEnum:
@@ -1725,12 +1727,12 @@ int                 frame;
    handles the callbacks of the Language form.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CallbackLanguageMenu (int ref, int val, char *txt)
+void                CallbackLanguageMenu (int ref, int val, STRING txt)
 #else  /* __STDC__ */
 void                CallbackLanguageMenu (ref, val, txt)
 int                 ref;
 int                 val;
-char               *txt;
+STRING              txt;
 
 #endif /* __STDC__ */
 {
@@ -1745,7 +1747,7 @@ char               *txt;
       else
 	{
 	  i = TtaGetLanguageIdFromName (txt);
-	  strncpy (TextAttrValue, TtaGetLanguageCode (i), LgMaxAttrText);
+	  ustrncpy (TextAttrValue, TtaGetLanguageCode (i), LgMaxAttrText);
 	  i = TtaGetLanguageIdFromAlphabet(TtaGetAlphabet (i));
 	  if ((int)i != MenuAlphaLangValue)
 	    {
@@ -1765,7 +1767,7 @@ char               *txt;
       break;
     case NumMenuAlphaLanguage:
       /* retour de l'alphabet choisi par l'utilisateur */
-      strncpy (TextAttrValue, TtaGetLanguageCode ((int)val), LgMaxAttrText);
+      ustrncpy (TextAttrValue, TtaGetLanguageCode ((int)val), LgMaxAttrText);
       TtaSetSelector (NumSelectLanguage, -1, TtaGetMessage (LIB, TMSG_NO_LANGUAGE));
       CallbackValAttrMenu (NumMenuAttr, 1, NULL);
       MenuAlphaLangValue =  (int)val;

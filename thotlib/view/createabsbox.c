@@ -22,6 +22,7 @@
  *
  */
 
+#include "ustring.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -563,9 +564,9 @@ PtrAbstractBox      pAb;
 	       pAb->AbLeafType = LtText;
 	       if (pAb->AbText == NULL)
 		  GetConstantBuffer (pAb);
-	       strncpy (pAb->AbText->BuContent, pConst->PdString, THOT_MAX_CHAR - 1);
+	       ustrncpy (pAb->AbText->BuContent, pConst->PdString, THOT_MAX_CHAR - 1);
 	       pAb->AbText->BuContent[THOT_MAX_CHAR - 1] = EOS;
-	       pAb->AbText->BuLength = strlen (pAb->AbText->BuContent);
+	       pAb->AbText->BuLength = ustrlen (pAb->AbText->BuContent);
 	       pAb->AbLanguage = TtaGetLanguageIdFromAlphabet (pConst->PdAlphabet);
 	       pAb->AbVolume = pAb->AbText->BuLength;
 	       break;
@@ -1244,8 +1245,8 @@ PtrSSchema          pSS;
 				       equal = ((pAsc->ElTypeNumber == pCond->CoTypeAncestor) &&
 						(pAsc->ElStructSchema->SsCode == pSS->SsCode));
 				    else
-				       equal = (strcmp (pCond->CoAncestorName, pAsc->ElStructSchema->SsRule[pAsc->ElTypeNumber - 1].SrName) == 0 &&
-						strcmp (pCond->CoSSchemaName, pAsc->ElStructSchema->SsName) == 0);
+				       equal = (ustrcmp (pCond->CoAncestorName, pAsc->ElStructSchema->SsRule[pAsc->ElTypeNumber - 1].SrName) == 0 &&
+						ustrcmp (pCond->CoSSchemaName, pAsc->ElStructSchema->SsName) == 0);
 				    if (equal)
 				      {
 					 i++;
@@ -1263,8 +1264,8 @@ PtrSSchema          pSS;
 				       equal = ((pAsc->ElTypeNumber == pCond->CoTypeAncestor) &&
 						(pAsc->ElStructSchema->SsCode == pSS->SsCode));
 				    else
-				       equal = (strcmp (pCond->CoAncestorName, pAsc->ElStructSchema->SsRule[pAsc->ElTypeNumber - 1].SrName) == 0 &&
-						strcmp (pCond->CoSSchemaName, pAsc->ElStructSchema->SsName) == 0);
+				       equal = (ustrcmp (pCond->CoAncestorName, pAsc->ElStructSchema->SsRule[pAsc->ElTypeNumber - 1].SrName) == 0 &&
+						ustrcmp (pCond->CoSSchemaName, pAsc->ElStructSchema->SsName) == 0);
 				    if (equal)
 				       i++;
 				    pAsc = pAsc->ElParent;	/* passe a l'element ascendant */

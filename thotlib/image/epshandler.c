@@ -21,7 +21,7 @@
  *
  */
 
-
+#include "ustring.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "libmsg.h"
@@ -52,10 +52,10 @@ extern Pixmap       EpsfPictureLogo;
    Find EPS picture bounding box.      		             
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         GetPictureBoundaries (char *fn, int *xif, int *yif, int *wif, int *hif)
+static void         GetPictureBoundaries (STRING fn, int *xif, int *yif, int *wif, int *hif)
 #else  /* __STDC__ */
 static void         GetPictureBoundaries (fn, xif, yif, wif, hif)
-char               *fn;
+STRING              fn;
 int                *xif;
 int                *yif;
 int                *wif;
@@ -67,7 +67,8 @@ int                *hif;
 #define BUFSIZE 1023
    FILE               *fin;
    int                 c;
-   char               *pt, buff[BUFSIZE];
+   STRING              pt; 
+   CHAR                buff[BUFSIZE];
    int                 X2, Y2;
 
    *xif = 0;
@@ -103,10 +104,10 @@ int                *hif;
    Read the bounding box of an eps file  no picture to produce here
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBitmap          EpsCreate (char *fn, PictureScaling pres, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, ThotBitmap *PicMask, int *width, int *height, int zoom)
+ThotBitmap          EpsCreate (STRING fn, PictureScaling pres, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, ThotBitmap *PicMask, int *width, int *height, int zoom)
 #else  /* __STDC__ */
 ThotBitmap          EpsCreate (fn, pres, xif, yif, wif, hif, BackGroundPixel, PicMask, width, height, zoom)
-char               *fn;
+STRING              fn;
 PictureScaling      pres;
 int                *xif;
 int                *yif;
@@ -142,10 +143,10 @@ int                 zoom;
    Print the eps picture with the right scale and positions    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                EpsPrint (char *fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, FILE * fd, unsigned long BackGroundPixel)
+void                EpsPrint (STRING fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, FILE * fd, unsigned long BackGroundPixel)
 #else  /* __STDC__ */
 void                EpsPrint (fn, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHArea, fd, BackGroundPixel)
-char               *fn;
+STRING              fn;
 PictureScaling      pres;
 int                 xif;
 int                 yif;
@@ -248,10 +249,10 @@ unsigned long       BackGroundPixel;
    Chech if the picture header is of an eps file                   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             IsEpsFormat (char *fn)
+boolean             IsEpsFormat (STRING fn)
 #else  /* __STDC__ */
 boolean             IsEpsFormat (fn)
-char               *fn;
+STRING              fn;
 
 #endif /* __STDC__ */
 {

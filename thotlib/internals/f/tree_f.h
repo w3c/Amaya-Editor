@@ -14,9 +14,9 @@ extern boolean ElementIsReadOnly ( PtrElement pEl );
 extern boolean CannotInsertNearElement ( PtrElement pEl,
                                          boolean beforeElement );
 extern PtrElement FwdSearchElemByTypeName ( PtrElement pEl,
-                                            char *typeName );
+                                            STRING typeName );
 extern PtrElement BackSearchElemByTypeName ( PtrElement pEl,
-                                             char *typeName );
+                                             STRING typeName );
 extern PtrElement FwdSearchRefOrEmptyElem ( PtrElement pEl,
                                             int Kind );
 extern PtrElement BackSearchRefOrEmptyElem ( PtrElement pEl,
@@ -63,12 +63,12 @@ extern PtrElement BackSearchVisibleElem ( PtrElement pRoot,
 extern PtrElement FwdSearchAttribute ( PtrElement pEl,
                                        int attrNum,
                                        int val,
-                                       char *textVal,
+                                       STRING textVal,
                                        PtrSSchema pSS );
 extern PtrElement BackSearchAttribute ( PtrElement pEl,
                                         int attNum,
                                         int val,
-                                        char *textVal,
+                                        STRING textVal,
                                         PtrSSchema pSS );
 extern void FwdSkipPageBreak ( PtrElement * pEl );
 extern void FwdSkipPageBreakAndExtension ( PtrElement * pEl );
@@ -144,9 +144,9 @@ extern boolean ElementIsReadOnly (/* PtrElement pEl */);
 extern boolean CannotInsertNearElement (/* PtrElement pEl,
                                            boolean beforeElement */);
 extern PtrElement FwdSearchElemByTypeName (/* PtrElement pEl,
-                                              char *typeName */);
+                                              STRING typeName */);
 extern PtrElement BackSearchElemByTypeName (/* PtrElement pEl,
-                                               char *typeName */);
+                                               STRING typeName */);
 extern PtrElement FwdSearchRefOrEmptyElem (/* PtrElement pEl,
                                               int Kind */);
 extern PtrElement BackSearchRefOrEmptyElem (/* PtrElement pEl,
@@ -193,12 +193,12 @@ extern PtrElement BackSearchVisibleElem (/* PtrElement pRoot,
 extern PtrElement FwdSearchAttribute (/* PtrElement pEl,
                                          int attrNum,
                                          int val,
-                                         char *textVal,
+                                         STRING textVal,
                                          PtrSSchema pSS */);
 extern PtrElement BackSearchAttribute (/* PtrElement pEl,
                                           int attNum,
                                           int val,
-                                          char *textVal,
+                                          STRING textVal,
                                           PtrSSchema pSS */);
 extern void FwdSkipPageBreak (/* PtrElement * pEl */);
 extern void FwdSkipPageBreakAndExtension (/* PtrElement * pEl */);

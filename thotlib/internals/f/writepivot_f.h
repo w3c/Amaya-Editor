@@ -30,7 +30,7 @@ extern void WritePivotHeader ( BinFile pivFile,
                                PtrDocument pDoc );
 extern void SauveDoc ( BinFile pivFile,
                        PtrDocument pDoc );
-extern void SauveRefSortantes ( char *fileName,
+extern void SauveRefSortantes ( STRING fileName,
                                 PtrDocument pDoc );
 extern void SauveRef ( PtrChangedReferredEl firstChng,
                        PathBuffer fileName );
@@ -70,7 +70,7 @@ extern void WritePivotHeader (/* BinFile pivFile,
                                  PtrDocument pDoc */);
 extern void SauveDoc (/* BinFile pivFile,
                          PtrDocument pDoc */);
-extern void SauveRefSortantes (/* char *fileName,
+extern void SauveRefSortantes (/* STRING fileName,
                                   PtrDocument pDoc */);
 extern void SauveRef (/* PtrChangedReferredEl firstChng,
                          PathBuffer fileName */);

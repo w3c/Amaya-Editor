@@ -8,10 +8,10 @@
 
 extern void TtcInsertChar ( Document document,
                             View view,
-                            char c );
+                            CHAR c );
 extern void TtcInsertGraph ( Document document,
                              View view,
-                             char c );
+                             CHAR c );
 extern void TtcDeletePreviousChar ( Document document,
                                     View view );
 extern void CloseTextInsertion ( void );
@@ -19,9 +19,9 @@ extern void CloseParagraphInsertion ( PtrAbstractBox pAb,
                                       int frame );
 extern void ClearClipboard ( PtrTextBuffer clipboard );
 extern void InsertChar ( int frame,
-                         unsigned char c,
+                         UCHAR c,
                          int keyboard );
-extern void PasteXClipboard ( unsigned char *Xbuffer,
+extern void PasteXClipboard ( USTRING Xbuffer,
                               int nbytes );
 extern void TtcCutSelection ( Document document,
                               View view );
@@ -43,10 +43,10 @@ extern void EditingLoadResources ( void );
 
 extern void TtcInsertChar (/* Document document,
                               View view,
-                              char c */);
+                              CHAR c */);
 extern void TtcInsertGraph (/* Document document,
                                View view,
-                               char c */);
+                               CHAR c */);
 extern void TtcDeletePreviousChar (/* Document document,
                                       View view */);
 extern void CloseTextInsertion (/* void */);
@@ -54,9 +54,9 @@ extern void CloseParagraphInsertion (/* PtrAbstractBox pAb,
                                         int frame */);
 extern void ClearClipboard (/* PtrTextBuffer clipboard */);
 extern void InsertChar (/* int frame,
-                           unsigned char c,
+                           UCHAR c,
                            int keyboard */);
-extern void PasteXClipboard (/* unsigned char *Xbuffer,
+extern void PasteXClipboard (/* USTRING Xbuffer,
                                 int nbytes */);
 extern void TtcCutSelection (/* Document document,
                                 View view */);

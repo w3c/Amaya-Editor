@@ -13,6 +13,7 @@
  *                                unstructured editing modes
  */
 
+#include "ustring.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "constmenu.h"
@@ -198,14 +199,14 @@ int                 typeNum2;
 	   switch (pSRule1->SrConstruct)
 		 {
 		    case CsNatureSchema:
-		       ret = (strcmp (pSRule1->SrName, pSRule2->SrName) == 0);
+		       ret = (ustrcmp (pSRule1->SrName, pSRule2->SrName) == 0);
 		       break;
 		    case CsBasicElement:
 		       ret = (pSRule1->SrBasicType == pSRule2->SrBasicType);
 		       break;
 		    case CsReference:
 		       ret = (pSRule1->SrReferredType == pSRule2->SrReferredType &&
-			      strcmp (pSRule1->SrRefTypeNat, pSRule2->SrRefTypeNat) == 0);
+			      ustrcmp (pSRule1->SrRefTypeNat, pSRule2->SrRefTypeNat) == 0);
 		       break;
 		    case CsIdentity:
 		       ret = (pSRule1->SrIdentRule == pSRule2->SrIdentRule);
@@ -261,7 +262,7 @@ int                 typeNum;
    int                 choice;
    boolean             found;
    int                 i;
-   char		      *strResDyn;
+   STRING	       strResDyn;
 
    /* on ne propose pas le type qu'a deja l'element */
    if (pEl->ElTypeNumber != typeNum ||
@@ -2197,7 +2198,7 @@ PtrElement          pEl;
    PtrSSchema          pSSasc;
    PtrElement          pAncest, pPrev;
    int                 choice, typeNum;
-   char		      *strResDyn;
+   STRING	       strResDyn;
 
    NChangeTypeItems = 0;	/* la table est vide pour l'instant */
    if (pEl != NULL)
@@ -3087,7 +3088,7 @@ PtrDocument         pDoc;
 #endif /* __STDC__ */
 {
    Name                menuTitle;
-   char                choiceMenuBuf[MAX_TXT_LEN];
+   CHAR                choiceMenuBuf[MAX_TXT_LEN];
    int                 choiceTypeNum[MAX_MENU];
    PtrSSchema          choicePSSchema[MAX_MENU];
    int                 i, NChoiceItems;
@@ -3173,10 +3174,10 @@ int                 item;
    commande Surround est inapplicable).                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         BuildSurroundMenu (char *menuBuffer, int *NItems)
+static void         BuildSurroundMenu (STRING menuBuffer, int *NItems)
 #else
 static void         BuildSurroundMenu (menuBuffer, NItems)
-char               *menuBuffer;
+STRING              menuBuffer;
 int                *NItems;
 
 #endif /* __STDC__ */
@@ -3190,7 +3191,7 @@ int                *NItems;
    int                 typeNum, i, NChoiceItems, firstChar, lastChar, menuInd,
                        len;
    Name                menuTitle, typeName;
-   char                choiceMenuBuf[MAX_TXT_LEN];
+   CHAR                choiceMenuBuf[MAX_TXT_LEN];
 
    if (ThotLocalActions[T_rsurround] == NULL)
      TteConnectAction (T_rsurround, SurroundMenuInput);
@@ -3309,12 +3310,12 @@ int                *NItems;
 	  {
 	     GetExternalTypeName (pSSSurround[i], typeNumSurround[i],
 				  typeName);
-	     len = strlen (typeName) + 2;
+	     len = ustrlen (typeName) + 2;
 	     if (len + menuInd + 1 < MAX_TXT_LEN)
 	       {
 		  /* indique une nouvelle entree */
 		  menuBuffer[menuInd] = 'B';
-		  strcpy (&(menuBuffer[menuInd + 1]), typeName);
+		  ustrcpy (&(menuBuffer[menuInd + 1]), typeName);
 		  menuInd += len;
 		  (*NItems)++;
 	       }
@@ -3338,7 +3339,7 @@ View                view;
    PtrDocument         pSelDoc;
    int                 firstChar, lastChar, NItems;
    Name                title;
-   char                menuBuffer[MAX_TXT_LEN];
+   CHAR                menuBuffer[MAX_TXT_LEN];
    boolean             protected;
 
    /* terminer une insertion eventuelle */
@@ -3374,7 +3375,7 @@ View                view;
 	     if (NItems > 0)
 		/* le menu n'est pas vide */
 	       {
-		  strncpy (title, TtaGetMessage (LIB, TMSG_SURROUND), MAX_NAME_LENGTH);
+		  ustrncpy (title, TtaGetMessage (LIB, TMSG_SURROUND), MAX_NAME_LENGTH);
 		  /* cree le pop-up menu Surround */
 		  TtaNewPopup (NumMenuSurround, 0, title, NItems,
 			       menuBuffer, NULL, 'L');
@@ -3439,10 +3440,10 @@ int                 entree;
    ne peut pas changer de type).                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void  BuildChangeTypeMenu (char *menuBuffer, int *NItems, PtrElement pEl)
+static void  BuildChangeTypeMenu (STRING menuBuffer, int *NItems, PtrElement pEl)
 #else
 static void  BuildChangeTypeMenu (menuBuffer, NItems, pEl)
-char        *menuBuffer;
+STRING       menuBuffer;
 int         *NItems;
 PtrElement   pEl;
 
@@ -3460,11 +3461,11 @@ PtrElement   pEl;
    for (i = 0; i < NChangeTypeItems; i++)
      {
        GetExternalTypeName (ChangeTypeSSchema[i], ChangeTypeTypeNum[i], typeName);
-       len = strlen (typeName) + 2;
+       len = ustrlen (typeName) + 2;
        if (len + menuInd + 1 < MAX_TXT_LEN)
 	 {
 	   menuBuffer[menuInd] = 'B';
-	   strcpy (&(menuBuffer[menuInd + 1]), typeName);
+	   ustrcpy (&(menuBuffer[menuInd + 1]), typeName);
 	   menuInd += len;
 	   (*NItems)++;
 	 }
@@ -3487,7 +3488,7 @@ View                view;
    PtrElement          firstSel, lastSel;
    PtrDocument         pSelDoc;
    int                 firstChar, lastChar, NItems;
-   char                menuBuffer[MAX_TXT_LEN];
+   CHAR                menuBuffer[MAX_TXT_LEN];
    Name                title;
 
    if (ThotLocalActions[T_rchangetype] == NULL)
@@ -3515,7 +3516,7 @@ View                view;
 	      if (NItems > 0)
 		 /* le menu n'est pas vide */
 		{
-		   strncpy (title, TtaGetMessage (LIB, TMSG_CHANGE_TYPE),
+		   ustrncpy (title, TtaGetMessage (LIB, TMSG_CHANGE_TYPE),
 			    MAX_NAME_LENGTH);
 		   /* cree le pop-up menu Change Type */
 		   TtaNewPopup (NumMenuChangeType, 0, title, NItems,

@@ -6,37 +6,37 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern PtrAction FetchAction ( char *actionName );
-extern void TteAddAction ( char *actionName,
+extern PtrAction FetchAction ( STRING actionName );
+extern void TteAddAction ( STRING actionName,
                            Proc doIt );
-extern int TteAddUserAction ( char *actionName,
+extern int TteAddUserAction ( STRING actionName,
                               UserProc procedure,
                               void *arg );
-extern PtrEventsSet TteGetEventsSet ( char *name );
+extern PtrEventsSet TteGetEventsSet ( STRING name );
 extern PtrEventsSet TteNewEventsSet ( int structureId,
-                                      char *name );
+                                      STRING name );
 extern void TteAddActionEvent ( PtrEventsSet eventsList,
                                 int typeId,
                                 APPevent event,
                                 boolean pre,
-                                char *actionName );
+                                STRING actionName );
 
 #else /* __STDC__ */
 
-extern PtrAction FetchAction (/* char *actionName */);
-extern void TteAddAction (/* char *actionName,
+extern PtrAction FetchAction (/* STRING actionName */);
+extern void TteAddAction (/* STRING actionName,
                              Proc doIt */);
-extern int TteAddUserAction (/* char *actionName,
+extern int TteAddUserAction (/* STRING actionName,
                                 UserProc procedure,
                                 void *arg */);
-extern PtrEventsSet TteGetEventsSet (/* char *name */);
+extern PtrEventsSet TteGetEventsSet (/* STRING name */);
 extern PtrEventsSet TteNewEventsSet (/* int structureId,
-                                        char *name */);
+                                        STRING name */);
 extern void TteAddActionEvent (/* PtrEventsSet eventsList,
                                   int typeId,
                                   APPevent event,
                                   boolean pre,
-                                  char *actionName */);
+                                  STRING actionName */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -8,7 +8,7 @@
 
 extern void CallbackCloseDocMenu ( int ref,
                                    int typedata,
-                                   char *data );
+                                   STRING data );
 extern void AskToConfirm ( PtrDocument pDoc,
                            Document document,
                            View view,
@@ -24,7 +24,7 @@ extern void TtcCloseDocument ( Document document,
 
 extern void CallbackCloseDocMenu (/* int ref,
                                      int typedata,
-                                     char *data */);
+                                     STRING data */);
 extern void AskToConfirm (/* PtrDocument pDoc,
                              Document document,
                              View view,

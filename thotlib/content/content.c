@@ -22,6 +22,7 @@
  *
  */
 
+#include "ustring.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -580,11 +581,11 @@ PtrElement          pEl;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-boolean             StringAndTextEqual (char *String, PtrTextBuffer pBuf)
+boolean             StringAndTextEqual (STRING String, PtrTextBuffer pBuf)
 
 #else  /* __STDC__ */
 boolean             StringAndTextEqual (String, pBuf)
-char               *String;
+STRING              String;
 PtrTextBuffer       pBuf;
 
 #endif /* __STDC__ */
@@ -592,7 +593,7 @@ PtrTextBuffer       pBuf;
 {
    boolean             equal;
    int                 l, lenRest;
-   char               *pChar;
+   STRING              pChar;
 
    equal = FALSE;
    if (pBuf == NULL && String == NULL)
@@ -604,7 +605,7 @@ PtrTextBuffer       pBuf;
       else
 	{
 	   pChar = String;
-	   lenRest = strlen (String);
+	   lenRest = ustrlen (String);
 	   equal = TRUE;
 	   /* parcourt les buffers de texte successifs */
 	   while (pBuf != NULL && lenRest > 0 && equal)
@@ -619,7 +620,7 @@ PtrTextBuffer       pBuf;
 			     l = pBuf->BuLength;
 			  else
 			     l = lenRest;
-			  equal = (strncmp (pChar, pBuf->BuContent, l) == 0);
+			  equal = (ustrncmp (pChar, pBuf->BuContent, l) == 0);
 			  pChar += l;
 			  lenRest -= l;
 		       }
@@ -651,8 +652,8 @@ PtrTextBuffer       pBuf2;
 {
    boolean             equal;
    PtrTextBuffer       pTB1, pTB2;
-   char               *pChar1;
-   char               *pChar2;
+   STRING              pChar1;
+   STRING              pChar2;
    int                 len, lenRest1, lenRest2;
 
    equal = FALSE;
@@ -694,7 +695,7 @@ PtrTextBuffer       pBuf2;
 		     len = lenRest2;
 		  else
 		     len = lenRest1;
-		  equal = (strncmp (pChar1, pChar2, len) == 0);
+		  equal = (ustrncmp (pChar1, pChar2, len) == 0);
 		  lenRest1 -= len;
 		  lenRest2 -= len;
 		  pChar1 += len;
@@ -750,7 +751,7 @@ int                *len;
 		     /* pour copier tout le texte du buffer source, on */
 		     /* prend un nouveau buffer destination */
 		     pTBDest = NewTextBuffer (pTBDest);
-		  strcpy (pTBDest->BuContent + pTBDest->BuLength, pTBSrce->BuContent);
+		  ustrcpy (pTBDest->BuContent + pTBDest->BuLength, pTBSrce->BuContent);
 		  pTBDest->BuLength += pTBSrce->BuLength;
 		  *len += pTBSrce->BuLength;
 	       }
@@ -770,11 +771,11 @@ int                *len;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                CopyStringToText (char *srceStrn, PtrTextBuffer pCopyBuf, int *LgCopiee)
+void                CopyStringToText (STRING srceStrn, PtrTextBuffer pCopyBuf, int *LgCopiee)
 
 #else  /* __STDC__ */
 void                CopyStringToText (srceStrn, pCopyBuf, LgCopiee)
-char               *srceStrn;
+STRING              srceStrn;
 PtrTextBuffer       pCopyBuf;
 int                *LgCopiee;
 
@@ -782,7 +783,7 @@ int                *LgCopiee;
 
 {
    PtrTextBuffer       pTBDest;
-   char               *pSrce;
+   STRING              pSrce;
    int                 lenRest, len;
 
    *LgCopiee = 0;
@@ -790,7 +791,7 @@ int                *LgCopiee;
      {
 	pTBDest = pCopyBuf;
 	/* longueur restant a copier */
-	lenRest = strlen (srceStrn);
+	lenRest = ustrlen (srceStrn);
 	*LgCopiee = lenRest;
 	pSrce = srceStrn;
 	/* cherche le dernier buffer de la chaine de destination */
@@ -816,7 +817,7 @@ int                *LgCopiee;
 	     if (len > 0)
 		/* on fait la copie */
 	       {
-		  strncpy (pTBDest->BuContent + pTBDest->BuLength, pSrce, len);
+		  ustrncpy (pTBDest->BuContent + pTBDest->BuLength, pSrce, len);
 		  pSrce += len;
 		  pTBDest->BuLength += len;
 		  pTBDest->BuContent[pTBDest->BuLength] = EOS;
@@ -834,12 +835,12 @@ int                *LgCopiee;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                CopyTextToString (PtrTextBuffer pSrceBuf, char *pStrCpy, int *len)
+void                CopyTextToString (PtrTextBuffer pSrceBuf, STRING pStrCpy, int *len)
 
 #else  /* __STDC__ */
 void                CopyTextToString (pSrceBuf, pStrCpy, len)
 PtrTextBuffer       pSrceBuf;
-char               *pStrCpy;
+STRING              pStrCpy;
 int                *len;
 
 #endif /* __STDC__ */
@@ -848,7 +849,7 @@ int                *len;
    int                 LgMax;
    int                 l;
    PtrTextBuffer       pTBSrce;
-   char               *pDest;
+   STRING              pDest;
 
    if (pSrceBuf == NULL || pStrCpy == NULL || *len <= 0)
       *len = 0;
@@ -866,7 +867,7 @@ int                *len;
 		     l = pTBSrce->BuLength;
 		  else
 		     l = LgMax;
-		  strncpy (pDest, pTBSrce->BuContent, l);
+		  ustrncpy (pDest, pTBSrce->BuContent, l);
 		  pDest += l;
 		  *pDest = EOS;
 		  LgMax -= l;

@@ -10,7 +10,8 @@
  * Author: V. Quint (INRIA)
  *
  */
- 
+
+#include "ustring.h" 
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -626,13 +627,13 @@ boolean		removeExclusions;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                TtaGiveReferredElement (Element element, Element * target, char *targetDocumentName, Document * targetDocument)
+void                TtaGiveReferredElement (Element element, Element * target, STRING targetDocumentName, Document * targetDocument)
 
 #else  /* __STDC__ */
 void                TtaGiveReferredElement (element, target, targetDocumentName, targetDocument)
 Element             element;
 Element            *target;
-char               *targetDocumentName;
+STRING              targetDocumentName;
 Document           *targetDocument;
 
 #endif /* __STDC__ */
@@ -662,7 +663,7 @@ Document           *targetDocument;
 						&iDocExt, &pDocExt);
 	if (!DocIdentIsNull (iDocExt))
 	  {
-	     strncpy (targetDocumentName, iDocExt, MAX_DOC_IDENT_LEN);
+	     ustrncpy (targetDocumentName, iDocExt, MAX_DOC_IDENT_LEN);
 	     targetDocumentName[MAX_DOC_IDENT_LEN - 1] = EOS;
 	  }
 	if (pDocExt != NULL)
@@ -774,13 +775,13 @@ Element             element2;
 		   /* Internal references */
 		  {
 		     if (pRef1->ReReferredElem != NULL && pRef2->ReReferredElem != NULL)
-			if (strcmp (pRef1->ReReferredElem->ElLabel, pRef2->ReReferredElem->ElLabel) == 0)
+			if (ustrcmp (pRef1->ReReferredElem->ElLabel, pRef2->ReReferredElem->ElLabel) == 0)
 			   result = 1;
 		  }
 		else
 		   /* external references */
-		if (strcmp (pRef1->ReReferredLabel, pRef2->ReReferredLabel) == 0)
-		   if (strcmp (pRef1->ReExtDocument, pRef2->ReExtDocument) == 0)
+		if (ustrcmp (pRef1->ReReferredLabel, pRef2->ReReferredLabel) == 0)
+		   if (ustrcmp (pRef1->ReExtDocument, pRef2->ReExtDocument) == 0)
 		      result = 1;
 	     }
      }
@@ -809,13 +810,13 @@ Element             element2;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                TtaGiveReferenceAttributeValue (Attribute attribute, Element * target, char *targetDocumentName, Document * targetDocument)
+void                TtaGiveReferenceAttributeValue (Attribute attribute, Element * target, STRING targetDocumentName, Document * targetDocument)
 
 #else  /* __STDC__ */
 void                TtaGiveReferenceAttributeValue (attribute, target, targetDocumentName, targetDocument)
 Attribute           attribute;
 Element            *target;
-char               *targetDocumentName;
+STRING              targetDocumentName;
 Document           *targetDocument;
 
 #endif /* __STDC__ */
@@ -839,7 +840,7 @@ Document           *targetDocument;
 						&iDocExt, &pDocExt);
 	if (!DocIdentIsNull (iDocExt))
 	  {
-	     strncpy (targetDocumentName, iDocExt, MAX_DOC_IDENT_LEN);
+	     ustrncpy (targetDocumentName, iDocExt, MAX_DOC_IDENT_LEN);
 	     targetDocumentName[MAX_DOC_IDENT_LEN - 1] = EOS;
 	  }
 	if (pDocExt != NULL)
@@ -943,13 +944,13 @@ Attribute           attribute2;
 		   /* Internal references */
 		  {
 		     if (pRef1->ReReferredElem != NULL && pRef2->ReReferredElem != NULL)
-			if (strcmp (pRef1->ReReferredElem->ElLabel, pRef1->ReReferredElem->ElLabel) == 0)
+			if (ustrcmp (pRef1->ReReferredElem->ElLabel, pRef1->ReReferredElem->ElLabel) == 0)
 			   result = 1;
 		  }
 		else
 		   /* External references */
-		if (strcmp (pRef1->ReReferredLabel, pRef2->ReReferredLabel) == 0)
-		   if (strcmp (pRef1->ReExtDocument, pRef2->ReExtDocument) == 0)
+		if (ustrcmp (pRef1->ReReferredLabel, pRef2->ReReferredLabel) == 0)
+		   if (ustrcmp (pRef1->ReExtDocument, pRef2->ReExtDocument) == 0)
 		      result = 1;
 	     }
      }
@@ -1156,13 +1157,13 @@ Document           *referenceDocument;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                TtaNextUnloadedReferringDocument (Element target, Document targetDocument, char *referringDocumentName)
+void                TtaNextUnloadedReferringDocument (Element target, Document targetDocument, STRING referringDocumentName)
 
 #else  /* __STDC__ */
 void                TtaNextUnloadedReferringDocument (target, targetDocument, referringDocumentName)
 Element             target;
 Document            targetDocument;
-char               *referringDocumentName;
+STRING              referringDocumentName;
 
 #endif /* __STDC__ */
 
@@ -1198,7 +1199,7 @@ char               *referringDocumentName;
 	     found = FALSE;
 	     while (pDE != NULL && !found)
 	       {
-		  if (strcmp (pDE->EdDocIdent, referringDocumentName) == 0)
+		  if (ustrcmp (pDE->EdDocIdent, referringDocumentName) == 0)
 		     found = TRUE;
 		  /* Go to the next document */
 		  pDE = pDE->EdNext;
@@ -1220,7 +1221,7 @@ char               *referringDocumentName;
 	if (pDE == NULL)
 	   referringDocumentName[0] = EOS;
 	else
-	   strcpy (referringDocumentName, pDE->EdDocIdent);
+	   ustrcpy (referringDocumentName, pDE->EdDocIdent);
      }
 }
 

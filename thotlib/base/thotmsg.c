@@ -21,6 +21,7 @@
  *
  */
 
+#include "ustring.h"
 #include "thot_sys.h"
 #include "libmsg.h"
 #include "constmedia.h"
@@ -48,7 +49,7 @@ int                 errorCode;
 
 #endif /* __STDC__ */
 {
-   char                buffer[50];
+   CHAR                buffer[50];
 
    UserErrorCode = errorCode;
    if (PrintErrorMessages)

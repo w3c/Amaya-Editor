@@ -21,6 +21,7 @@
  *
  */
 
+#include "ustring.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -111,7 +112,7 @@ PtrDocument         pDoc;
 	{
 	  /* detruit toutes les vues ouvertes du document */
 	  if (ThotLocalActions[T_corrector] != NULL)
-	    (*ThotLocalActions[T_rscorrector]) (-1, 0, (char *) pDoc);
+	    (*ThotLocalActions[T_rscorrector]) (-1, 0, (STRING) pDoc);
 	  CloseAllViewsDoc (pDoc);
 	  /* free document contents */
 	  UnloadTree (document);
@@ -151,18 +152,18 @@ int                 height;
 #  ifndef _WIN_PRINT
    int                 createdFrame;
 #  endif /* _WIN_PRINT */
-   char                buf[MAX_TXT_LEN];
+   CHAR                buf[MAX_TXT_LEN];
 
    /* met dans le buffer le nom du document... */
-   strncpy (buf, pDoc->DocDName, MAX_NAME_LENGTH);
-   strcat (buf, "  ");
+   ustrncpy (buf, pDoc->DocDName, MAX_NAME_LENGTH);
+   ustrcat (buf, "  ");
    /* ...suivi du nom de la vue */
-   strncat (buf, viewName, MAX_NAME_LENGTH);
+   ustrncat (buf, viewName, MAX_NAME_LENGTH);
    /* ...suivi eventuellement de la mention 'Read only' */
    if (pDoc->DocReadOnly)
      {
-	strcat (buf, " ");
-	strcat (buf, TtaGetMessage (LIB, TMSG_READ_ONLY));
+	ustrcat (buf, " ");
+	ustrcat (buf, TtaGetMessage (LIB, TMSG_READ_ONLY));
      }
    /* creation d'une frame pour la vue */
 #  ifndef _WIN_PRINT
@@ -320,7 +321,7 @@ PtrDocument         pDoc;
 {
    PtrElement          pEl, pListEl, pTextEl, pDesc, pPrev, pAncest;
    int                 typeNum, exceptNum, len, i;
-   unsigned char       line[MAX_TXT_LEN];
+   UCHAR               line[MAX_TXT_LEN];
    boolean             ok, paragraph, emptyLine;
 
    ok = FALSE;
@@ -364,7 +365,7 @@ PtrDocument         pDoc;
 		    {
 		       /* une ligne a ete lue dans line */
 		       /* traite le caractere '\n' en fin de ligne */
-		       len = strlen (line);
+		       len = ustrlen (line);
 		       if (line[len - 1] == '\n')
 			 {
 			    if (paragraph)
@@ -471,7 +472,7 @@ Name                fileName;
      {
 	if (directory[0] == EOS)
 	   /* pas de directory precise'. On prend le path des documents */
-	   strncpy (directory, DocumentPath, MAX_PATH);
+	   ustrncpy (directory, DocumentPath, MAX_PATH);
 	/* construit le nom complet du fichier a importer */
 	MakeCompleteName (fileName, "", directory, fullName, &i);
 	TtaDisplaySimpleMessage (INFO, LIB, TMSG_IMPORTING_FILE);
@@ -511,13 +512,13 @@ Name                fileName;
 		       /* complete le descripteur du document */
 		       pDoc->DocRootElement->ElAccess = AccessReadWrite;
 		       CheckLanguageAttr (pDoc, pDoc->DocRootElement);
-		       strncpy (pDoc->DocDName, fileName, MAX_NAME_LENGTH);
+		       ustrncpy (pDoc->DocDName, fileName, MAX_NAME_LENGTH);
 		       pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
-		       strncpy (pDoc->DocIdent, fileName, MAX_DOC_IDENT_LEN);
+		       ustrncpy (pDoc->DocIdent, fileName, MAX_DOC_IDENT_LEN);
 		       pDoc->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
-		       strncpy (pDoc->DocDirectory, directory, MAX_PATH);
+		       ustrncpy (pDoc->DocDirectory, directory, MAX_PATH);
 		       /* conserve le path actuel des schemas dans le contexte du doc. */
-		       strncpy (pDoc->DocSchemasPath, SchemaPath, MAX_PATH);
+		       ustrncpy (pDoc->DocSchemasPath, SchemaPath, MAX_PATH);
 		       /* lit le fichier a importer et met son contenu dans le document */
 		       ok = ReadImportFile (file, pDoc);
 		       if (!ok)
@@ -697,10 +698,10 @@ boolean             withEvent;
    int                 NnaturePSchemas, nat, assoc;
 
    /* sauve le path courant des schemas */
-   strncpy (schemaPath, SchemaPath, MAX_PATH);
+   ustrncpy (schemaPath, SchemaPath, MAX_PATH);
    /* le path des schemas valide lors du chargement du document */
    /* devient le nouveau path courant des schemas */
-   strncpy (SchemaPath, pDoc->DocSchemasPath, MAX_PATH);
+   ustrncpy (SchemaPath, pDoc->DocSchemasPath, MAX_PATH);
    /* charge le nouveau schema de presentation */
    pPSchema = LoadPresentationSchema (newPSchemaName, pDoc->DocSSchema);
    if (pPSchema == NULL)
@@ -728,7 +729,7 @@ boolean             withEvent;
 				       naturePSchema[nat]->SsName, nomPres))
 	      /* le fichier .conf donne un schema de presentation pour la */
 	      /* nature */
-	      if (strcmp (nomPres, naturePSchema[nat]->SsDefaultPSchema) != 0)
+	      if (ustrcmp (nomPres, naturePSchema[nat]->SsDefaultPSchema) != 0)
 		 /* c'est un schema different de celui qui est charge' */
 		{
 		   /* charge le nouveau schema de presentation */
@@ -757,9 +758,9 @@ NotifyNaturePresent notifyDoc;
         };
 
      }
-   strncpy (pDoc->DocSchemasPath, SchemaPath, MAX_PATH);
+   ustrncpy (pDoc->DocSchemasPath, SchemaPath, MAX_PATH);
    /* restaure le path courant des schemas */
-   strncpy (SchemaPath, schemaPath, MAX_PATH);
+   ustrncpy (SchemaPath, schemaPath, MAX_PATH);
 }
 
 
@@ -918,10 +919,10 @@ boolean             withEvent;
    int                 NnaturePSchemas, nat;
 
    /* sauve le path courant des schemas */
-   strncpy (schemaPath, SchemaPath, MAX_PATH);
+   ustrncpy (schemaPath, SchemaPath, MAX_PATH);
    /* le path des schemas valide lors du chargement du document */
    /* devient le nouveau path courant des schemas */
-   strncpy (SchemaPath, pDoc->DocSchemasPath, MAX_PATH);
+   ustrncpy (SchemaPath, pDoc->DocSchemasPath, MAX_PATH);
    /* charge le nouveau schema de presentation */
    pPSchema = LoadPresentationSchema (newPSchemaName, pNatSSchema);
    if (pPSchema == NULL)
@@ -943,7 +944,7 @@ boolean             withEvent;
 	      /* c'est la nature concernee */
 	      if (naturePSchema[nat] != pNatSSchema)
 		 /* ce n'est pas celle qu'on a deja traite' */
-		 if (strcmp (newPSchemaName, naturePSchema[nat]->SsDefaultPSchema) != 0)
+		 if (ustrcmp (newPSchemaName, naturePSchema[nat]->SsDefaultPSchema) != 0)
 		    /* c'est un schema different de celui qui est charge' */
 		   {
 		      /* charge le nouveau schema de presentation */
@@ -972,9 +973,9 @@ NotifyNaturePresent notifyDoc;
         };
 
      }
-   strncpy (pDoc->DocSchemasPath, SchemaPath, MAX_PATH);
+   ustrncpy (pDoc->DocSchemasPath, SchemaPath, MAX_PATH);
    /* restaure le path courant des schemas */
-   strncpy (SchemaPath, schemaPath, MAX_PATH);
+   ustrncpy (SchemaPath, schemaPath, MAX_PATH);
 
 }
 
@@ -993,12 +994,12 @@ NotifyNaturePresent notifyDoc;
    with the libThotEditor library.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void        TtaChangeNaturePresentSchema (Document document, SSchema natureSSchema, char *newPresentation)
+void        TtaChangeNaturePresentSchema (Document document, SSchema natureSSchema, STRING newPresentation)
 #else  /* __STDC__ */
 void        TtaChangeNaturePresentSchema (document, natureSSchema, newPresentation)
 Document            document;
 SSchema             natureSSchema;
-char               *newPresentation;
+STRING              newPresentation;
 #endif /* __STDC__ */
 {
   PtrDocument         pDoc;
@@ -1093,18 +1094,18 @@ View                view;
    int                 entreeDesact[LgMaxTableNature];
    int                 LgTableNatures;
    int                 nbPres;
-   char                BufMenuNatures[MAX_TXT_LEN];
-   char                BufMenu[MAX_TXT_LEN];
-   char                BufMenuB[MAX_TXT_LEN];
-   char               *ptrBufNat;
-   char               *src;
-   char               *dest;
+   CHAR                BufMenuNatures[MAX_TXT_LEN];
+   CHAR                BufMenu[MAX_TXT_LEN];
+   CHAR                BufMenuB[MAX_TXT_LEN];
+   STRING              ptrBufNat;
+   STRING              src;
+   STRING              dest;
    int                 nat;
    int                 NumSousMenu;
    int                 MenuAActiver;
    int                 i, k, l;
    Name                 NomPres;
-   char                NomUtilisateur[50];
+   CHAR                NomUtilisateur[50];
    PtrDocument         pDoc;
 
    if (ThotLocalActions[T_rchangepres] == NULL)
@@ -1143,7 +1144,7 @@ View                view;
                {
                   /* demande le nom reel du schema de presentation */
                   ConfigGetPSchemaName (k, NomPres);
-                  if (strcmp (TableNatures[nat]->SsPSchema->PsPresentName,
+                  if (ustrcmp (TableNatures[nat]->SsPSchema->PsPresentName,
                               NomPres) == 0)
                      /* c'est le nom du schema de presentation actuel */
                      /* on desactivera l'entree correspondante dans le sous-menu */
@@ -1174,10 +1175,10 @@ View                view;
                                            TableNatures[nat]->SsName,
                                                 i);
                   if (NomUtilisateur[0] == EOS)
-                     strcpy (ptrBufNat, TableNatures[nat]->SsName);
+                     ustrcpy (ptrBufNat, TableNatures[nat]->SsName);
                   else
-                     strcpy (ptrBufNat, NomUtilisateur);
-                  l = strlen (ptrBufNat) + 1;
+                     ustrcpy (ptrBufNat, NomUtilisateur);
+                  l = ustrlen (ptrBufNat) + 1;
                   ptrBufNat += l;
                }
           }
@@ -1212,10 +1213,10 @@ View                view;
                      for (k = 1; k <= nbPres; k++)
                        {
                           /* ajoute 'B' au debut de chaque entree */
-                          strcpy (dest, "B");
+                          ustrcpy (dest, "B");
                           dest++;
-                          l = strlen (src);
-                          strcpy (dest, src);
+                          l = ustrlen (src);
+                          ustrcpy (dest, src);
                           dest += l + 1;
                           src += l + 1;
                        }
@@ -1233,7 +1234,7 @@ View                view;
                                            TableNatures[nat]->SsName,
                                                    i);
                      if (NomUtilisateur[0] == EOS)
-                        strcpy (NomUtilisateur, TableNatures[nat]->SsName);
+                        ustrcpy (NomUtilisateur, TableNatures[nat]->SsName);
                      if (nbNatures == 1)
                        {
                           /* il n'y a qu'une nature, c'est un pop-up menu */

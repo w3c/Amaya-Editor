@@ -12,6 +12,7 @@
  *
  */
 
+#include "ustring.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -283,12 +284,12 @@ int                 frame;
   A specific background is drawn in the box area.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                DisplayEmptyBox (PtrBox pBox, int frame, char modele)
+void                DisplayEmptyBox (PtrBox pBox, int frame, CHAR modele)
 #else  /* __STDC__ */
 void                DisplayEmptyBox (pBox, frame, modele)
 PtrBox              pBox;
 int                 frame;
-char                modele;
+CHAR                modele;
 #endif /* __STDC__ */
 {
    PtrBox              mbox;
@@ -843,7 +844,7 @@ int                 frame;
    PtrTextBuffer       newbuff;
    PtrAbstractBox      pAbbox1;
    ViewFrame          *pFrame;
-   unsigned char       car;
+   UCHAR       car;
    PtrBox              mbox;
    int                 indbuff;
    int                 restbl;
@@ -955,7 +956,7 @@ int                 frame;
 		      indbuff = newind;
 		      restbl = newbl;
 		      x += lg;
-		      car = (unsigned char) (adbuff->BuContent[indbuff - 1]);
+		      car = (UCHAR) (adbuff->BuContent[indbuff - 1]);
 		      if (car == _SPACE_)
 			{
 			   lg = lgspace;
@@ -1009,7 +1010,7 @@ int                 frame;
 		   /* handle each char in the buffer */
 		   while (indbuff <= indmax)
 		     {
-			car = (unsigned char) (adbuff->BuContent[indbuff - 1]);
+			car = (UCHAR) (adbuff->BuContent[indbuff - 1]);
 
 			if (car == _SPACE_ || car == THIN_SPACE
 			    || car == HALF_EM || car == UNBREAKABLE_SPACE)
@@ -1070,8 +1071,8 @@ int                 frame;
 			   DisplayUnderline (frame, x, y, pBox->BxFont, pBox->BxUnderline,
 			        pBox->BxThickness, pBox->BxWidth, RO, op, fg);
 			/* Next char lookup */
-			if (((unsigned char) adbuff->BuContent[indbuff - 1] == BREAK_LINE ||
-			     (unsigned char) adbuff->BuContent[indbuff - 1] == NEW_LINE)
+			if (((UCHAR) adbuff->BuContent[indbuff - 1] == BREAK_LINE ||
+			     (UCHAR) adbuff->BuContent[indbuff - 1] == NEW_LINE)
 			    && !ShowSpace)
 			   DrawChar (SHOWN_BREAK_LINE, frame, x, y, pBox->BxFont, RO, op, fg);
 		     }

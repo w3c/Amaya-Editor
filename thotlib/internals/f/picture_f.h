@@ -6,11 +6,11 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern Picture_Report PictureFileOk ( char *fileName,
+extern Picture_Report PictureFileOk ( STRING fileName,
                                       int *typeImage );
 extern void InitPictureHandlers ( boolean printing );
 extern void GetPictHandlersList ( int *count,
-                                  char *buffer );
+                                  STRING buffer );
 extern void DrawPicture ( PtrBox box,
                           PictInfo * imageDesc,
                           int frame );
@@ -29,17 +29,17 @@ extern int GetPictureType ( int GUIIndex );
 extern int GetPictTypeIndex ( int picType );
 extern int GetPictPresIndex ( PictureScaling picPresent );
 extern void GetPictureHandlersList ( int *count,
-                                     char *buffer );
+                                     STRING buffer );
 extern void LittleXBigEndian ( unsigned char *b,
                                long n );
 
 #else /* __STDC__ */
 
-extern Picture_Report PictureFileOk (/* char *fileName,
+extern Picture_Report PictureFileOk (/* STRING fileName,
                                         int *typeImage */);
 extern void InitPictureHandlers (/* boolean printing */);
 extern void GetPictHandlersList (/* int *count,
-                                    char *buffer */);
+                                    STRING buffer */);
 extern void DrawPicture (/* PtrBox box,
                             PictInfo * imageDesc,
                             int frame */);
@@ -58,7 +58,7 @@ extern int GetPictureType (/* int GUIIndex */);
 extern int GetPictTypeIndex (/* int picType */);
 extern int GetPictPresIndex (/* PictureScaling picPresent */);
 extern void GetPictureHandlersList (/* int *count,
-                                       char *buffer */);
+                                       STRING buffer */);
 extern void LittleXBigEndian (/* unsigned char *b,
                                  long n */);
 

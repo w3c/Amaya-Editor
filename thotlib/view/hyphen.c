@@ -22,6 +22,7 @@
  *
  */
 
+#include "ustring.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -31,7 +32,7 @@
 #define THOT_EXPORT extern
 #include "boxes_tv.h"
 
-static char         sepcar[] =
+static CHAR         sepcar[] =
 {
    ' ', '.', ',', '`', '\47', '-', ';', ':', '[', ']', '(', ')', '{', '}', '<', '>',
    '/', '!', '?', '\240', '\241', '\277', '\253', '\273', '\212', '"', '\201', '\202'};
@@ -48,10 +49,10 @@ static char         sepcar[] =
    faut inse'rer un tiret a` la position de coupure ou non.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int          PatternHyphen (char *word, int length, Language language, boolean * addHyphen)
+static int          PatternHyphen (STRING word, int length, Language language, boolean * addHyphen)
 #else  /* __STDC__ */
 static int          PatternHyphen (word, length, language, addHyphen)
-char               *word;
+STRING              word;
 int                 length;
 Language            language;
 boolean            *addHyphen;
@@ -92,10 +93,10 @@ boolean            *addHyphen;
    FALSE sinon                               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             IsSeparatorChar (char c)
+boolean             IsSeparatorChar (CHAR c)
 #else  /* __STDC__ */
 boolean             IsSeparatorChar (c)
-char                c;
+CHAR                c;
 #endif /* __STDC__ */
 {
    int              i, lg;
@@ -114,13 +115,13 @@ char                c;
    SmallLettering convertit les caracte`res majuscules en minuscules.   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                SmallLettering (char *word)
+void                SmallLettering (STRING word)
 #else  /* __STDC__ */
 void                SmallLettering (word)
-char               *word;
+STRING              word;
 #endif /* __STDC__ */
 {
-   unsigned char       c;
+   UCHAR       c;
    int                 j;
 
    j = 0;
@@ -128,9 +129,9 @@ char               *word;
      {
 	c = word[j];
 	if (c >= 65 && c <= 90)
-	   word[j] = (char) (c + 32);		/* Majuscules */
+	   word[j] = (CHAR) (c + 32);		/* Majuscules */
 	else if (c >= 192 && c <= 222)
-	   word[j] = (char) (c + 32);		/* Majuscules accentue'es */
+	   word[j] = (CHAR) (c + 32);		/* Majuscules accentue'es */
 	j++;
      }
 }
@@ -149,14 +150,14 @@ char               *word;
    de'but du mot.                                        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int          NextWord (ptrfont font, PtrTextBuffer * buffer, int *rank, char word[THOT_MAX_CHAR], int *width)
+static int          NextWord (ptrfont font, PtrTextBuffer * buffer, int *rank, CHAR word[THOT_MAX_CHAR], int *width)
 
 #else  /* __STDC__ */
 static int          NextWord (font, buffer, rank, word, width)
 ptrfont             font;
 PtrTextBuffer      *buffer;
 int                *rank;
-char                word[THOT_MAX_CHAR];
+CHAR                word[THOT_MAX_CHAR];
 int                *width;
 #endif /* __STDC__ */
 {
@@ -201,10 +202,10 @@ int                *width;
 		if (j <= 1)
 		  {
 		     changedebut = TRUE;
-		     lg += CharacterWidth ((unsigned char) word[j], font);
+		     lg += CharacterWidth ((UCHAR) word[j], font);
 		     if (j == 1)
 			/* Il faut comptabiliser le caractere precedent */
-			lg += CharacterWidth ((unsigned char) word[j - 1], font);
+			lg += CharacterWidth ((UCHAR) word[j - 1], font);
 		     nbChars += j + 1;
 		     j = 0;
 		  }
@@ -222,7 +223,7 @@ int                *width;
 		    {
 		       /* Le debut du mot est deplace */
 		       changedebut = TRUE;
-		       lg += CharacterWidth ((unsigned char) word[j], font);
+		       lg += CharacterWidth ((UCHAR) word[j], font);
 		       nbChars++;
 		    }
 	       }
@@ -263,10 +264,10 @@ int                *width;
    la table des langues courante.                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int          WordHyphen (char *word, int length, Language language, boolean * hyphen)
+static int          WordHyphen (STRING word, int length, Language language, boolean * hyphen)
 #else  /* __STDC__ */
 static int          WordHyphen (word, length, language, hyphen)
-char               *word;
+STRING              word;
 int                 length;
 Language            language;
 boolean            *hyphen;
@@ -310,7 +311,7 @@ boolean            *hyphen;
    int                 largeur, charWidth;
    int                 longretour, lgreste;
    int                 wordLength;
-   char                mot[THOT_MAX_CHAR];
+   CHAR                mot[THOT_MAX_CHAR];
 
    /* Si la coupure de mots est active */
    longretour = 0;
@@ -341,18 +342,18 @@ boolean            *hyphen;
 
 	if (mot != NULL)
 	   /* On a isole un mot assez long */
-	   wordLength = strlen (mot);	/* nombre de caraceteres du mot isole */
+	   wordLength = ustrlen (mot);	/* nombre de caraceteres du mot isole */
 	if (wordLength > 4 && lgreste > 0)
 	  {
 	     /* Recherche le nombre de caracteres du mot qui rentrent */
 	     /* dans la ligne */
 	     longueur = 0;
-	     charWidth = CharacterWidth ((unsigned char) mot[longueur], font);
+	     charWidth = CharacterWidth ((UCHAR) mot[longueur], font);
 	     while (lgreste >= charWidth && longueur < wordLength)
 	       {
 		  lgreste -= charWidth;
 		  longueur++;
-		  charWidth = CharacterWidth ((unsigned char) mot[longueur], font);
+		  charWidth = CharacterWidth ((UCHAR) mot[longueur], font);
 	       }
 
 	     if (longueur > 1)
@@ -380,7 +381,7 @@ boolean            *hyphen;
 			      {
 				 /* comptabilise le caractere */
 				 longueur--;
-				 *width += CharacterWidth ((unsigned char) (adbuff->BuContent[i++]), font);
+				 *width += CharacterWidth ((UCHAR) (adbuff->BuContent[i++]), font);
 			      }
 			 }	/*while */
 

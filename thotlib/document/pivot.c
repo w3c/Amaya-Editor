@@ -20,6 +20,7 @@
 /*      la forme pivot des documents.                           */
 /*                                                              */
 
+#include "ustring.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -67,17 +68,17 @@ extern int          UserErrorCode;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Document            TtaAllocateDocument (char *documentName,
-                                         char *documentIdentifier,
-                                         char *documentSchemasPath)
+Document            TtaAllocateDocument (STRING documentName,
+                                         STRING documentIdentifier,
+                                         STRING documentSchemasPath)
 
 #else  /* __STDC__ */
 Document            TtaAllocateDocument (documentName,
                                          documentIdentifier,
                                          documentSchemasPath)
-char               *documentName;
-char               *documentIdentifier;
-char               *documentSchemasPath;
+STRING              documentName;
+STRING              documentIdentifier;
+STRING              documentSchemasPath;
 
 #endif /* __STDC__ */
 
@@ -97,12 +98,12 @@ char               *documentSchemasPath;
 	pDoc->DocRootElement = NULL;
 	pDoc->DocLabels = NULL;
 	/* on donne son nom au document */
-	strncpy (pDoc->DocDName, documentName, MAX_NAME_LENGTH);
+	ustrncpy (pDoc->DocDName, documentName, MAX_NAME_LENGTH);
 	pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
 	/* on acquiert un identificateur pour le document */
 	GetDocIdent (&pDoc->DocIdent, documentIdentifier);
         /* on stocke le path de schemas du document */
-        strncpy (pDoc->DocSchemasPath,
+        ustrncpy (pDoc->DocSchemasPath,
                  documentSchemasPath,
                  MAX_PATH);
 	/* document en lecture-ecriture */
@@ -162,13 +163,13 @@ Document            document;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                TtaReadPivotHeader (BinFile pivotFile, Document document, char *nextChar)
+void                TtaReadPivotHeader (BinFile pivotFile, Document document, PCHAR nextChar)
 
 #else  /* __STDC__ */
 void                TtaReadPivotHeader (pivotFile, document, nextChar)
 BinFile             pivotFile;
 Document            document;
-char               *nextChar;
+PCHAR               nextChar;
 
 #endif /* __STDC__ */
 
@@ -237,13 +238,13 @@ Document            document;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                TtaReadLanguageTable (BinFile pivotFile, Document document, char *nextChar)
+void                TtaReadLanguageTable (BinFile pivotFile, Document document, PCHAR nextChar)
 
 #else  /* __STDC__ */
 void                TtaReadLanguageTable (pivotFile, document, nextChar)
 BinFile             pivotFile;
 Document            document;
-char               *nextChar;
+PCHAR               nextChar;
 
 #endif /* __STDC__ */
 
@@ -313,13 +314,13 @@ Document            document;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                TtaReadSchemaNames (BinFile pivotFile, Document document, char *nextChar, void (*withThisPSchema) (Document document, char *natSchema, char *presentSchema))
+void                TtaReadSchemaNames (BinFile pivotFile, Document document, PCHAR nextChar, void (*withThisPSchema) (Document document, STRING natSchema, STRING presentSchema))
 
 #else  /* __STDC__ */
 void                TtaReadSchemaNames (pivotFile, document, nextChar, withThisPSchema)
 BinFile             pivotFile;
 Document            document;
-char               *nextChar;
+PCHAR               nextChar;
 void (*withThisPSchema) ();
 
 #endif /* __STDC__ */
@@ -455,7 +456,7 @@ PRule              *pRule;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                TtaReadTree (BinFile pivotFile, SSchema pSchema, Element element, Document document, char *byte, Element * elementRead)
+void                TtaReadTree (BinFile pivotFile, SSchema pSchema, Element element, Document document, PCHAR byte, Element * elementRead)
 
 #else  /* __STDC__ */
 void                TtaReadTree (pivotFile, pSchema, element, document, byte, elementRead)
@@ -463,7 +464,7 @@ BinFile             pivotFile;
 SSchema          pSchema;
 Element             element;
 Document            document;
-char               *byte;
+PCHAR               byte;
 Element            *elementRead;
 
 #endif /* __STDC__ */
@@ -751,13 +752,13 @@ Document            document;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                TtaReadLabel (BinFile pivotFile, char byte, char *labelRead)
+void                TtaReadLabel (BinFile pivotFile, CHAR byte, STRING labelRead)
 
 #else  /* __STDC__ */
 void                TtaReadLabel (pivotFile, byte, labelRead)
 BinFile             pivotFile;
-char                byte;
-char               *labelRead;
+CHAR                byte;
+STRING              labelRead;
 
 #endif /* __STDC__ */
 
@@ -780,12 +781,12 @@ char               *labelRead;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                TtaWriteLabel (BinFile pivotFile, char *label)
+void                TtaWriteLabel (BinFile pivotFile, STRING label)
 
 #else  /* __STDC__ */
 void                TtaWriteLabel (pivotFile, label)
 BinFile             pivotFile;
-char               *label;
+STRING              label;
 
 #endif /* __STDC__ */
 
@@ -812,13 +813,13 @@ char               *label;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-Element             TtaNewElementWithLabel (Document document, ElementType elemType, char *label)
+Element             TtaNewElementWithLabel (Document document, ElementType elemType, STRING label)
 
 #else  /* __STDC__ */
 Element             TtaNewElementWithLabel (document, elemType, label)
 Document            document;
 ElementType         elemType;
-char               *label;
+STRING              label;
 
 #endif /* __STDC__ */
 
@@ -845,7 +846,7 @@ char               *label;
 	element = (Element) NewSubtree (elemType.ElTypeNum, (PtrSSchema) (elemType.ElSSchema),
 					LoadedDocument[document - 1], 0, FALSE, TRUE, TRUE, (*label) == EOS);
 	if (*label != EOS)
-	   strncpy (((PtrElement) element)->ElLabel, label, MAX_LABEL_LEN);
+	   ustrncpy (((PtrElement) element)->ElLabel, label, MAX_LABEL_LEN);
      }
    return element;
 }

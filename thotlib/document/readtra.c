@@ -18,6 +18,7 @@
    Ce module charge un schema de traduction depuis un fichier .TRA
  */
 
+#include "ustring.h"
 #include "thot_sys.h"
 #include "libmsg.h"
 #include "message.h"
@@ -63,7 +64,7 @@ static TransCondition ReadTransCondition (file)
 BinFile             file;
 #endif /* __STDC__ */
 {
-   char                c;
+   CHAR                c;
    TransCondition      cond;
 
    cond = TcondFirst;
@@ -160,7 +161,7 @@ static TRuleType    ReadTRuleType (file)
 BinFile             file;
 #endif /* __STDC__ */
 {
-   char                c;
+   CHAR                c;
    TRuleType           ruleType;
 
    ruleType = TRemove;
@@ -234,7 +235,7 @@ static RelatNAscend ReadRelatNAscend (file)
 BinFile             file;
 #endif /* __STDC__ */
 {
-   char                c;
+   CHAR                c;
    RelatNAscend        relat;
 
    relat = RelEquals;		/* valeur par defaut */
@@ -268,7 +269,7 @@ static TOrder       ReadTOrder (file)
 BinFile             file;
 #endif /* __STDC__ */
 {
-   char                c;
+   CHAR                c;
    TOrder              order;
 
    order = TAfter;
@@ -304,7 +305,7 @@ static CreatedObject ReadCreatedObject (file)
 BinFile             file;
 #endif /* __STDC__ */
 {
-   char                c;
+   CHAR                c;
    CreatedObject       obj;
 
    obj = ToConst;
@@ -400,7 +401,7 @@ BinFile             file;
 #endif /* __STDC__ */
 
 {
-   char                c;
+   CHAR                c;
    TRelatPosition      position;
 
    position = RpSibling;
@@ -441,7 +442,7 @@ BinFile             file;
 #endif /* __STDC__ */
 
 {
-   char                c;
+   CHAR                c;
    TCounterOp          op;
 
    op = TCntrNoOp;
@@ -482,7 +483,7 @@ static TranslVarType ReadTranslVarType (file)
 BinFile             file;
 #endif /* __STDC__ */
 {
-   char                c;
+   CHAR                c;
    TranslVarType       varType;
 
    varType = VtText;
@@ -539,7 +540,7 @@ static CounterStyle ReadCounterStyle (file)
 BinFile             file;
 #endif /* __STDC__ */
 {
-   char                c;
+   CHAR                c;
    CounterStyle        style;
 
 
@@ -585,7 +586,7 @@ BinFile             file;
 PtrTRule           *pNextTRule;
 #endif /* __STDC__ */
 {
-   char                c;
+   CHAR                c;
    PtrTRule            pTRule;
 
    if (!TtaReadByte (file, &c))
@@ -634,19 +635,19 @@ PtrTRule           *pNextTRule;
 		       case TWrite:
 			  pTRule->TrObject = ReadCreatedObject (file);
 			  TtaReadShort (file, &pTRule->TrObjectNum);
-			  TtaReadName (file, (char *) &pTRule->TrObjectNature);
+			  TtaReadName (file, (STRING) &pTRule->TrObjectNature);
 			  TtaReadBool (file, &pTRule->TrReferredObj);
 			  TtaReadShort (file, &pTRule->TrFileNameVar);
 			  break;
 		       case TGet:
 		       case TCopy:
 			  TtaReadShort (file, &pTRule->TrElemType);
-			  TtaReadName (file, (char *) &pTRule->TrElemNature);
+			  TtaReadName (file, (STRING) &pTRule->TrElemNature);
 			  pTRule->TrRelPosition = ReadTRelatPosition (file);
 			  break;
 		       case TUse:
-			  TtaReadName (file, (char *) &pTRule->TrNature);
-			  TtaReadName (file, (char *) &pTRule->TrTranslSchemaName);
+			  TtaReadName (file, (STRING) &pTRule->TrNature);
+			  TtaReadName (file, (STRING) &pTRule->TrTranslSchemaName);
 			  break;
 		       case TRemove:
 		       case TNoTranslation:
@@ -697,7 +698,7 @@ BinFile             file;
 PtrTRuleBlock      *pNextBlock;
 #endif /* __STDC__ */
 {
-   char                c;
+   CHAR                c;
 
    TtaReadByte (file, &c);
    if (c == EOS)
@@ -748,7 +749,7 @@ PtrTRuleBlock      *pNextBlock;
 		  TtaReadBool (file, &pCond->TcNegativeCond);
 		  TtaReadBool (file, &pCond->TcTarget);
 		  TtaReadShort (file, &pCond->TcAscendType);
-		  TtaReadName (file, (char *) &pCond->TcAscendNature);
+		  TtaReadName (file, (STRING) &pCond->TcAscendNature);
 		  TtaReadSignedShort (file, &pCond->TcAscendRelLevel);
 		  switch (pCond->TcCondition)
 			{
@@ -758,7 +759,7 @@ PtrTRuleBlock      *pNextBlock;
 			   case TcondWithin:
 			   case TcondFirstWithin:
 			      TtaReadShort (file, &pCond->TcElemType);
-			      TtaReadName (file, (char *) &pCond->TcElemNature);
+			      TtaReadName (file, (STRING) &pCond->TcElemNature);
 			      TtaReadBool (file, &pCond->TcImmediatelyWithin);
 			      pCond->TcAscendRel = ReadRelatNAscend (file);
 			      TtaReadShort (file, &pCond->TcAscendLevel);
@@ -773,7 +774,7 @@ PtrTRuleBlock      *pNextBlock;
 					     TtaReadSignedShort (file, &pCond->TcUpperBound);
 					     break;
 					  case AtTextAttr:
-					     TtaReadName (file, (char *) &pCond->TcTextValue);
+					     TtaReadName (file, (STRING) &pCond->TcTextValue);
 					     break;
 					  case AtReferenceAttr:
 
@@ -890,7 +891,7 @@ PtrTSchema         *pTSch;
 			 }
 		    break;
 		 case AtTextAttr:
-		    TtaReadName (file, (char *) &pAttrT->AtrTextValue);
+		    TtaReadName (file, (STRING) &pAttrT->AtrTextValue);
 		    ReadBlocks (file, &pAttrT->AtrTxtTRuleBlock, pNextTRule,
 				pSS, pNextBlock);
 		    break;
@@ -1052,21 +1053,21 @@ PtrSSchema          pSS;
    StringTransl       *pStringTr;
    PRuleTransl        *pPRuleTr;
    PathBuffer          dirBuffer;
-   char                buf[MAX_TXT_LEN];
+   CHAR                buf[MAX_TXT_LEN];
    int                 InitialNElems, i, j;
 
    error = FALSE;
    pTSch = NULL;
    /* compose le nom du fichier a ouvrir */
-   strncpy (dirBuffer, (char *) SchemaPath, MAX_PATH);
+   ustrncpy (dirBuffer, (STRING) SchemaPath, MAX_PATH);
    MakeCompleteName (fileName, "TRA", dirBuffer, buf, &i);
 
    /* ouvre le fichier */
    file = TtaReadOpen (buf);
    if (file == 0)
      {
-	strncpy (buf, fileName, MAX_PATH);
-	strcat (buf, ".TRA");
+	ustrncpy (buf, fileName, MAX_PATH);
+	ustrcat (buf, ".TRA");
 	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE), buf);
      }
    else
@@ -1092,11 +1093,11 @@ PtrSSchema          pSS;
 	  memset (pNextBlock, 0, sizeof (TRuleBlock));
 
 	/* lit la partie fixe du schema de traduction */
-	TtaReadName (file, (char *) &pTSch->TsStructName);
+	TtaReadName (file, (STRING) &pTSch->TsStructName);
 	TtaReadShort (file, &pTSch->TsStructCode);
 	TtaReadShort (file, &pTSch->TsLineLength);
-	TtaReadName (file, (char *) &pTSch->TsEOL);
-	TtaReadName (file, (char *) &pTSch->TsTranslEOL);
+	TtaReadName (file, (STRING) &pTSch->TsEOL);
+	TtaReadName (file, (STRING) &pTSch->TsTranslEOL);
 	TtaReadShort (file, &pTSch->TsNConstants);
 	TtaReadShort (file, &pTSch->TsNCounters);
 	TtaReadShort (file, &pTSch->TsNVariables);

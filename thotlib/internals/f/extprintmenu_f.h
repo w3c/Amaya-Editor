@@ -8,7 +8,7 @@
 
 extern void CallbackExtPrintmenu ( int ref,
                                    int val,
-                                   char *txt );
+                                   STRING txt );
 extern void TtcSetupAndPrint ( Document document,
                                View view );
 
@@ -16,7 +16,7 @@ extern void TtcSetupAndPrint ( Document document,
 
 extern void CallbackExtPrintmenu (/* int ref,
                                      int val,
-                                     char *txt */);
+                                     STRING txt */);
 extern void TtcSetupAndPrint (/* Document document,
                                  View view */);
 

@@ -7,19 +7,19 @@
 #ifdef __STDC__
 
 extern void TtaSetTextContent ( Element element,
-                                char *content,
+                                STRING content,
                                 Language language,
                                 Document document );
 extern void InsertText ( PtrElement pEl,
                          int position,
-                         char *content,
+                         STRING content,
                          Document document );
 extern void TtaAppendTextContent ( Element element,
-                                   char *content,
+                                   STRING content,
                                    Document document );
 extern void TtaInsertTextContent ( Element element,
                                    int position,
-                                   char *content,
+                                   STRING content,
                                    Document document );
 extern void TtaDeleteTextContent ( Element element,
                                    int position,
@@ -31,7 +31,7 @@ extern void TtaSplitText ( Element element,
 extern boolean TtaMergeText ( Element element,
                               Document document );
 extern void TtaSetGraphicsShape ( Element element,
-                                  char shape,
+                                  CHAR shape,
                                   Document document );
 extern void TtaAddPointInPolyline ( Element element,
                                     int rank,
@@ -59,14 +59,14 @@ extern int TtaGetVolume ( Element element );
 extern int TtaGetTextLength ( Element element );
 extern PicType TtaGetPictureType ( Element element );
 extern void TtaGiveTextContent ( Element element,
-                                 char *buffer,
+                                 STRING buffer,
                                  int *length,
                                  Language * language );
 extern void TtaGiveSubString ( Element element,
-                               char *buffer,
+                               STRING buffer,
                                int position,
                                int length );
-extern char TtaGetGraphicsShape ( Element element );
+extern CHAR TtaGetGraphicsShape ( Element element );
 extern int TtaGetPolylineLength ( Element element );
 extern void TtaGivePolylinePoint ( Element element,
                                    int rank,
@@ -79,19 +79,19 @@ extern int TtaGetPageView ( Element pageElement );
 #else /* __STDC__ */
 
 extern void TtaSetTextContent (/* Element element,
-                                  char *content,
+                                  STRING content,
                                   Language language,
                                   Document document */);
 extern void InsertText (/* PtrElement pEl,
                            int position,
-                           char *content,
+                           STRING content,
                            Document document */);
 extern void TtaAppendTextContent (/* Element element,
-                                     char *content,
+                                     STRING content,
                                      Document document */);
 extern void TtaInsertTextContent (/* Element element,
                                      int position,
-                                     char *content,
+                                     STRING content,
                                      Document document */);
 extern void TtaDeleteTextContent (/* Element element,
                                      int position,
@@ -103,7 +103,7 @@ extern void TtaSplitText (/* Element element,
 extern boolean TtaMergeText (/* Element element,
                                 Document document */);
 extern void TtaSetGraphicsShape (/* Element element,
-                                    char shape,
+                                    CHAR shape,
                                     Document document */);
 extern void TtaAddPointInPolyline (/* Element element,
                                       int rank,
@@ -131,14 +131,14 @@ extern int TtaGetVolume (/* Element element */);
 extern int TtaGetTextLength (/* Element element */);
 extern PicType TtaGetPictureType (/* Element element */);
 extern void TtaGiveTextContent (/* Element element,
-                                   char *buffer,
+                                   STRING buffer,
                                    int *length,
                                    Language * language */);
 extern void TtaGiveSubString (/* Element element,
-                                 char *buffer,
+                                 STRING buffer,
                                  int position,
                                  int length */);
-extern char TtaGetGraphicsShape (/* Element element */);
+extern CHAR TtaGetGraphicsShape (/* Element element */);
 extern int TtaGetPolylineLength (/* Element element */);
 extern void TtaGivePolylinePoint (/* Element element,
                                      int rank,

@@ -21,6 +21,7 @@
  *
  */
 
+#include "ustring.h"
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"
@@ -38,14 +39,14 @@ typedef struct _TabMsg
   {
      PtrTabMsg           TabNext;
      int                 TabLength;
-     char              **TabMessages;
+     STRING*             TabMessages;
   }
 TabMsg;
 
  /* Identification des messages Thot */
 static PtrTabMsg    FirstTableMsg = NULL;
-static char         EmptyMsg[] = "";
-static char         result[MAX_TXT_LEN];
+static CHAR         EmptyMsg[] = "";
+static CHAR         result[MAX_TXT_LEN];
 
 #include "dialogapi_f.h"
 #include "memory_f.h"
@@ -61,14 +62,14 @@ static char         result[MAX_TXT_LEN];
    en accents.                                             
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char               *AsciiTranslate (char *pBuffer)
+STRING              AsciiTranslate (STRING pBuffer)
 #else  /* __STDC__ */
-char               *AsciiTranslate (pBuffer)
-char               *pBuffer;
+STRING              AsciiTranslate (pBuffer)
+STRING              pBuffer;
 
 #endif /* __STDC__ */
 {
-   char                nombre[4];
+   CHAR                nombre[4];
    int                 uniteid, dixid, centid;
    int                 i = 0, j = 0, k;
 
@@ -106,25 +107,25 @@ char               *pBuffer;
 		   nombre[k++] = pBuffer[i++];
 		nombre[k] = EOS;
 
-		switch (strlen (nombre))
+		switch (ustrlen (nombre))
 		      {
 			 case 0:
 			    result[j++] = pBuffer[i++];
 			    break;
 			 case 1:
 			    uniteid = nombre[0] - '0';
-			    result[j++] = (char) uniteid;
+			    result[j++] = (CHAR) uniteid;
 			    break;
 			 case 2:
 			    uniteid = nombre[1] - '0';
 			    dixid = nombre[0] - '0';
-			    result[j++] = (char) (uniteid + 8 * dixid);
+			    result[j++] = (CHAR) (uniteid + 8 * dixid);
 			    break;
 			 case 3:
 			    uniteid = nombre[2] - '0';
 			    dixid = nombre[1] - '0';
 			    centid = nombre[0] - '0';
-			    result[j++] = (char) (uniteid + 8 * dixid + 64 * centid);
+			    result[j++] = (CHAR) (uniteid + 8 * dixid + 64 * centid);
 			    break;
 		      }
 	     }
@@ -142,28 +143,28 @@ char               *pBuffer;
    La fonction rend la valeur -1 si la table n'est pas alloue'e.   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 TtaGetMessageTable (CONST char *msgName, int msgNumber)
+int                 TtaGetMessageTable (CONST STRING msgName, int msgNumber)
 #else  /* __STDC__ */
 int                 TtaGetMessageTable (msgName, msgNumber)
-CONST char         *msgName;
+CONST STRING        msgName;
 int                 msgNumber;
 
 #endif /* __STDC__ */
 {
-   char               *s;
+   STRING              s;
    FILE               *file;
    int                 origineid;
    int                 num;
    PtrTabMsg           currenttable;
    PtrTabMsg           previoustable;
-   char                pBuffer[MAX_TXT_LEN];
-   char                fileName[200];
+   CHAR                pBuffer[MAX_TXT_LEN];
+   CHAR                fileName[200];
 
    /* contruction du nom $THOTDIR/bin/$LANG-msgName */
    s = TtaGetVarLANG ();
-   strcpy (fileName, s);
+   ustrcpy (fileName, s);
    fileName[2] = '-';
-   strcpy (&fileName[3], msgName);
+   ustrcpy (&fileName[3], msgName);
    SearchFile (fileName, 2, pBuffer);
    file = fopen (pBuffer, "r");
    if (file == NULL)
@@ -176,7 +177,7 @@ int                 msgNumber;
 	/* Alloue une nouvelle table */
 	currenttable = (PtrTabMsg) TtaGetMemory (sizeof (struct _TabMsg));
 
-	currenttable->TabMessages = (char **) TtaGetMemory (sizeof (char *) * msgNumber);
+	currenttable->TabMessages = (STRING*) TtaGetMemory (sizeof (STRING) * msgNumber);
 
 	currenttable->TabNext = NULL;
 	currenttable->TabLength = msgNumber;
@@ -202,8 +203,8 @@ int                 msgNumber;
 	/* Charge les messages */
 	while (((fscanf (file, "%d %[^#\r\n]", &num, pBuffer)) != EOF) && (num < msgNumber))
 	  {
-	     s = (char *) TtaGetMemory (strlen (pBuffer) + 1);
-	     strcpy (s, AsciiTranslate (pBuffer));
+	     s = (STRING) TtaGetMemory (ustrlen (pBuffer) + 1);
+	     ustrcpy (s, AsciiTranslate (pBuffer));
 	     currenttable->TabMessages[num] = s;
 	  }
 	fclose (file);
@@ -237,9 +238,9 @@ void              FreeAllMessages ()
    l'indice 0 a` N donne'.                                 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char               *TtaGetMessage (int origin, int num)
+STRING              TtaGetMessage (int origin, int num)
 #else  /* __STDC__ */
-char               *TtaGetMessage (origin, num)
+STRING              TtaGetMessage (origin, num)
 int                 origin;
 int                 num;
 
@@ -276,20 +277,20 @@ int                 num;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaDisplayMessage (int msgType, char *fmt,...)
+void                TtaDisplayMessage (int msgType, STRING fmt,...)
 #else  /* __STDC__ */
 void                TtaDisplayMessage (msgType, fmt,...)
 int                 msgType;
-char               *fmt;
+STRING              fmt;
 #endif /* __STDC__ */
 {
    va_list             pa;
    int                 i, lg, vald;
-   char               *vals, *p;
-   char                pBuffer[MAX_PATH];
+   STRING              vals, p;
+   CHAR                pBuffer[MAX_PATH];
 
 #  ifdef _WINDOWS
-   int len = strlen (fmt);
+   int len = ustrlen (fmt);
     for (i = 0; i < len; i++)
         if (fmt [i] == '\n')
            fmt [i] = ' ';
@@ -315,18 +316,18 @@ char               *fmt;
 
                            if (i + 10 < MAX_PATH) {
                               sprintf (&pBuffer[i], "%d", vald);
-                              i += strlen (&pBuffer[i]);
+                              i += ustrlen (&pBuffer[i]);
 						   } else
                                   i = MAX_PATH;
 			               break;
 
                       case 's':
                            /* it is a string */
-                           vals = va_arg (pa, char *);
+                           vals = va_arg (pa, char*);
 
-                           lg = strlen (vals);
+                           lg = ustrlen (vals);
                            if (i + lg < MAX_PATH) {
-                              strcpy (&pBuffer[i], vals);
+                              ustrcpy (&pBuffer[i], vals);
                               i += lg;
 						   } else
                                   i = MAX_PATH;
@@ -371,17 +372,17 @@ int                 number;
    d'un fichier pivot.                                     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                DisplayPivotMessage (char *code)
+void                DisplayPivotMessage (STRING code)
 #else  /* __STDC__ */
 void                DisplayPivotMessage (code)
-char               *code;
+STRING              code;
 
 #endif /* __STDC__ */
 {
 #ifndef _WINDOWS
-   char                pBuffer[THOT_MAX_CHAR];
+   CHAR                pBuffer[THOT_MAX_CHAR];
 
-   strncpy (pBuffer, code, THOT_MAX_CHAR);
+   ustrncpy (pBuffer, code, THOT_MAX_CHAR);
    TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_ERR_PIV), pBuffer);
 #endif /* _WINDOWS */
 }

@@ -7,116 +7,116 @@
 #ifdef __STDC__
 
 extern void ConfigInit ( void );
-extern void TtaConfigReadConfigFiles ( char *aSchemaPath );
-extern int ConfigMakeDocTypeMenu ( char *BufMenu,
+extern void TtaConfigReadConfigFiles ( STRING aSchemaPath );
+extern int ConfigMakeDocTypeMenu ( STRING BufMenu,
                                    int *lgmenu,
                                    boolean doc );
-extern void TtaConfigSSchemaExternalName ( char *nameUser,
-                                           char *nameSchema,
+extern void TtaConfigSSchemaExternalName ( STRING nameUser,
+                                           STRING nameSchema,
                                            int Typ );
-extern void ConfigSSchemaInternalName ( char *nameUser,
-                                        char *nameSchema,
+extern void ConfigSSchemaInternalName ( STRING nameUser,
+                                        STRING nameSchema,
                                         boolean Doc );
-extern int ConfigMakeMenuPres ( char *schema,
-                                char *BufMenu );
+extern int ConfigMakeMenuPres ( STRING schema,
+                                STRING BufMenu );
 extern void ConfigGetPSchemaName ( int choix,
-                                   char *schpres );
-extern int ConfigMakeImportMenu ( char *BufMenu );
-extern int ConfigMakeMenuExport ( char *schema,
-                                  char *BufMenu );
+                                   STRING schpres );
+extern int ConfigMakeImportMenu ( STRING BufMenu );
+extern int ConfigMakeMenuExport ( STRING schema,
+                                  STRING BufMenu );
 extern void ConfigGetExportSchemaName ( int choix,
-                                        char *schtrad );
+                                        STRING schtrad );
 extern void ConfigTranslateSSchema ( PtrSSchema pSS );
-extern boolean ConfigDefaultPSchema ( char *schstr,
-                                      char *schpres );
+extern boolean ConfigDefaultPSchema ( STRING schstr,
+                                      STRING schpres );
 extern void ConfigKeyboard ( int *x,
                              int *y );
 extern void ConfigOpenFirstViews ( PtrDocument pDoc );
 extern void ConfigGetViewGeometry ( PtrDocument pDoc,
-                                    char *view,
+                                    STRING view,
                                     int *x,
                                     int *y,
                                     int *width,
                                     int *height );
 extern void TtaGetViewGeometry ( Document document,
-                                 char *name,
+                                 STRING name,
                                  int *x,
                                  int *y,
                                  int *width,
                                  int *height );
 extern boolean ConfigGetPSchemaNature ( PtrSSchema pSS,
-                                        char *nameNature,
-                                        char *presNature );
+                                        STRING nameNature,
+                                        STRING presNature );
 extern void ConfigGetPresentationOption ( PtrSSchema pSS,
-                                          char *optionName,
-                                          char *optionValue );
+                                          STRING optionName,
+                                          STRING optionValue );
 extern void ConfigGetPSchemaForPageSize ( PtrSSchema pSS,
-                                          char *pageSize,
-                                          char *schemaName );
-extern int MakeMenuPattern ( char *BufMenu,
+                                          STRING pageSize,
+                                          STRING schemaName );
+extern int MakeMenuPattern ( STRING BufMenu,
                              int LgMax );
-extern int MakeMenuColor ( char *BufMenu,
+extern int MakeMenuColor ( STRING BufMenu,
                            int LgMax );
 extern boolean ConfigDefaultTypoSchema ( PtrSSchema pSS,
-                                         char *nameNature,
-                                         char *schtypo );
+                                         STRING nameNature,
+                                         STRING schtypo );
 
 #else /* __STDC__ */
 
 extern void ConfigInit (/* void */);
-extern void TtaConfigReadConfigFiles (/* char *aSchemaPath */);
-extern int ConfigMakeDocTypeMenu (/* char *BufMenu,
+extern void TtaConfigReadConfigFiles (/* STRING aSchemaPath */);
+extern int ConfigMakeDocTypeMenu (/* STRING BufMenu,
                                      int *lgmenu,
                                      boolean doc */);
-extern void TtaConfigSSchemaExternalName (/* char *nameUser,
-                                             char *nameSchema,
+extern void TtaConfigSSchemaExternalName (/* STRING nameUser,
+                                             STRING nameSchema,
                                              int Typ */);
-extern void ConfigSSchemaInternalName (/* char *nameUser,
-                                          char *nameSchema,
+extern void ConfigSSchemaInternalName (/* STRING nameUser,
+                                          STRING nameSchema,
                                           boolean Doc */);
-extern int ConfigMakeMenuPres (/* char *schema,
-                                  char *BufMenu */);
+extern int ConfigMakeMenuPres (/* STRING schema,
+                                  STRING BufMenu */);
 extern void ConfigGetPSchemaName (/* int choix,
-                                     char *schpres */);
-extern int ConfigMakeImportMenu (/* char *BufMenu */);
-extern int ConfigMakeMenuExport (/* char *schema,
-                                    char *BufMenu */);
+                                     STRING schpres */);
+extern int ConfigMakeImportMenu (/* STRING BufMenu */);
+extern int ConfigMakeMenuExport (/* STRING schema,
+                                    STRING BufMenu */);
 extern void ConfigGetExportSchemaName (/* int choix,
-                                          char *schtrad */);
+                                          STRING schtrad */);
 extern void ConfigTranslateSSchema (/* PtrSSchema pSS */);
-extern boolean ConfigDefaultPSchema (/* char *schstr,
-                                        char *schpres */);
+extern boolean ConfigDefaultPSchema (/* STRING schstr,
+                                        STRING schpres */);
 extern void ConfigKeyboard (/* int *x,
                                int *y */);
 extern void ConfigOpenFirstViews (/* PtrDocument pDoc */);
 extern void ConfigGetViewGeometry (/* PtrDocument pDoc,
-                                      char *view,
+                                      STRING view,
                                       int *x,
                                       int *y,
                                       int *width,
                                       int *height */);
 extern void TtaGetViewGeometry (/* Document document,
-                                   char *name,
+                                   STRING name,
                                    int *x,
                                    int *y,
                                    int *width,
                                    int *height */);
 extern boolean ConfigGetPSchemaNature (/* PtrSSchema pSS,
-                                          char *nameNature,
-                                          char *presNature */);
+                                          STRING nameNature,
+                                          STRING presNature */);
 extern void ConfigGetPresentationOption (/* PtrSSchema pSS,
-                                            char *optionName,
-                                            char *optionValue */);
+                                            STRING optionName,
+                                            STRING optionValue */);
 extern void ConfigGetPSchemaForPageSize (/* PtrSSchema pSS,
-                                            char *pageSize,
-                                            char *schemaName */);
-extern int MakeMenuPattern (/* char *BufMenu,
+                                            STRING pageSize,
+                                            STRING schemaName */);
+extern int MakeMenuPattern (/* STRING BufMenu,
                                int LgMax */);
-extern int MakeMenuColor (/* char *BufMenu,
+extern int MakeMenuColor (/* STRING BufMenu,
                              int LgMax */);
 extern boolean ConfigDefaultTypoSchema (/* PtrSSchema pSS,
-                                           char *nameNature,
-                                           char *schtypo */);
+                                           STRING nameNature,
+                                           STRING schtypo */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

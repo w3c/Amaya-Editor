@@ -11,6 +11,7 @@
  *
  */
  
+#include "ustring.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -234,7 +235,7 @@ SSchema		    nature;
 	/* number of documents using this schema */
 	((PtrPSchema) schema)->PsStructCode++;
 	/* name of associated structure schema */
-	strncpy (((PtrPSchema) schema)->PsStructName, pSchS->SsName,
+	ustrncpy (((PtrPSchema) schema)->PsStructName, pSchS->SsName,
 		 MAX_NAME_LENGTH);
      }
 }

@@ -19,6 +19,7 @@
  *         R. Guetari (W3C/INRIA) Windows NT/95
  */
 
+#include "ustring.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -38,10 +39,10 @@
    fn. updates the wif, hif, xif , yif                     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Drawable XbmCreate (char* fn, PictureScaling pres, int* xif, int* yif, int* wif, int* hif, unsigned long BackGroundPixel, ThotBitmap *mask1, int *width, int *height, int zoom)
+Drawable XbmCreate (STRING fn, PictureScaling pres, int* xif, int* yif, int* wif, int* hif, unsigned long BackGroundPixel, ThotBitmap *mask1, int *width, int *height, int zoom)
 #else  /* __STDC__ */
 Drawable XbmCreate (fn, pres, xif, yif, wif, hif, BackGroundPixel, mask1, width, height, zoom)
-char               *fn;
+STRING              fn;
 PictureScaling      pres;
 int                *xif;
 int                *yif;
@@ -160,10 +161,10 @@ int                 zoom;
    XbmPrint produces postscript frome an xbm file                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                XbmPrint (char *fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, int fd, unsigned int BackGroundPixel)
+void                XbmPrint (STRING fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, int fd, unsigned int BackGroundPixel)
 #else  /* __STDC__ */
 void                XbmPrint (fn, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHArea, fd, BackGroundPixel)
-char               *fn;
+STRING              fn;
 PictureScaling      pres;
 int                 xif;
 int                 yif;
@@ -276,10 +277,10 @@ unsigned int        BackGroundPixel;
    IsXbmFormat check if the file header is of an xbm format        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             IsXbmFormat (char *fn)
+boolean             IsXbmFormat (STRING fn)
 #else  /* __STDC__ */
 boolean             IsXbmFormat (fn)
-char               *fn;
+STRING              fn;
 
 #endif /* __STDC__ */
 {

@@ -12,6 +12,7 @@
  *
  */
 
+#include "ustring.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -34,11 +35,11 @@ extern struct Langue_Ctl LangTable[MAX_LANGUAGES];
 extern struct Langue_Ctl TypoLangTable[MAX_LANGUAGES];
 extern int          FreeEntry;
 
-static char        *dictPath;	/* environment variable DICOPAR */
+static STRING       dictPath;	/* environment variable DICOPAR */
 static PtrDict      dictTable[MaxDictionaries];
 
 unsigned            ReverseCode[NbLtr];
-unsigned char       Code[256];	/* Alphabet characters */
+UCHAR       Code[256];	/* Alphabet characters */
 
 #include "memory_f.h"
 #include "fileaccess_f.h"
@@ -52,28 +53,28 @@ static void           LoadAlphabet ()
 {
   FILE               *falpha;
   Buffer              alphaName;
-  unsigned char       x;
+  UCHAR       x;
   int                 i;
   
   if (dictPath != NULL)
-    strcpy (alphaName, dictPath);
+    ustrcpy (alphaName, dictPath);
   else
-    strcpy (alphaName, "");
+    ustrcpy (alphaName, "");
   
 # ifdef _WINDOWS
-  strcat (alphaName, "\\alphabet");	/* iso alphabet */
+  ustrcat (alphaName, "\\alphabet");	/* iso alphabet */
 # else  /* _WINDOWS */
-  strcat (alphaName, "/alphabet");	/* iso alphabet */
+  ustrcat (alphaName, "/alphabet");	/* iso alphabet */
 # endif /* _WINDOWS */
   if ((falpha = fopen (alphaName, "r")) != NULL)
     {
       for (i = 0; i < 256; i++)
-	Code[i] = (unsigned char) 100;
+	Code[i] = (UCHAR) 100;
       i = 1;
       while ((fscanf (falpha, "%c ", &x) != EOF) && (i < NbLtr))
 	{
-	  Code[x] = (unsigned char) i;
-	  ReverseCode[i++] = (unsigned char) x;
+	  Code[x] = (UCHAR) i;
+	  ReverseCode[i++] = (UCHAR) x;
 	}
       fclose (falpha);
     }
@@ -93,8 +94,8 @@ PtrDict             dict;
 #endif /* __STDC__ */
 {
    int                 word, i;
-   char                lastWord[MAX_WORD_LEN];
-   char                currentWord[MAX_WORD_LEN];
+   CHAR                lastWord[MAX_WORD_LEN];
+   CHAR                currentWord[MAX_WORD_LEN];
 
    /* An empty dictionary is not considered  (DictNbWords = -1) */
    if (dict->DictNbWords >= 0)
@@ -106,10 +107,10 @@ PtrDict             dict;
 	  {
 	     int                 k = 0;
 
-	     strcpy (lastWord, currentWord);
-	     strcpy (currentWord, &dict->DictString[dict->DictWords[word]]);
+	     ustrcpy (lastWord, currentWord);
+	     ustrcpy (currentWord, &dict->DictString[dict->DictWords[word]]);
 
-	     if (strlen (lastWord) != strlen (currentWord))
+	     if (ustrlen (lastWord) != ustrlen (currentWord))
 	       {
 		  /* changing the size of the word */
 		  /* => no calculation for the common letters */
@@ -219,12 +220,12 @@ PtrDocument         document;
    a pointer (pDictionary) referencing its descriptor or NULL    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         SearchDictName (PtrDict * pDictionary, char *dictName, char *dictDirectory)
+static void         SearchDictName (PtrDict * pDictionary, STRING dictName, STRING dictDirectory)
 #else  /* __STDC__ */
 static void         SearchDictName (pDictionary, dictName, dictDirectory)
 PtrDict            *pDictionary;
-char               *dictName;
-char               *dictDirectory;
+STRING              dictName;
+STRING              dictDirectory;
 #endif /* __STDC__ */
 {
    int                 d;
@@ -234,8 +235,8 @@ char               *dictDirectory;
    d = 0;
    while (d < MaxDictionaries && (dictTable[d] != NULL) && (!found))
      {
-	found = (strcmp (dictTable[d]->DictName, dictName) == 0
-	       && strcmp (dictTable[d]->DictDirectory, dictDirectory) == 0);
+	found = (ustrcmp (dictTable[d]->DictName, dictName) == 0
+	       && ustrcmp (dictTable[d]->DictDirectory, dictDirectory) == 0);
 	d++;
      }
    if (found)
@@ -252,16 +253,16 @@ char               *dictDirectory;
    returns  1 if the file .DCT exists (treated)                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int          TestDictionary (char *dictName, char *dictDirectory)
+static int          TestDictionary (STRING dictName, STRING dictDirectory)
 #else  /* __STDC__ */
 static int          TestDictionary (dictName, dictDirectory)
-char               *dictName;
-char               *dictDirectory;
+STRING              dictName;
+STRING              dictDirectory;
 
 #endif /* __STDC__ */
 {
   int                 ret, i;
-  char                tempbuffer[THOT_MAX_CHAR];
+  CHAR                tempbuffer[THOT_MAX_CHAR];
 
   FindCompleteName (dictName, "dic", dictDirectory, tempbuffer, &i);
   if (TtaFileExist (tempbuffer) == 0)	/* Unknown file */
@@ -343,9 +344,9 @@ FILE               *dictFile;
 PtrDict             dict;
 #endif /* __STDC__ */
 {
-   char             wordGotten[MAX_WORD_LEN];
-   char             lineGotten[MAXLIGNE];
-   char            *plineGotten;
+   CHAR             wordGotten[MAX_WORD_LEN];
+   CHAR             lineGotten[MAXLIGNE];
+   STRING           plineGotten;
    int              i, k, length, nbGotten, last_word;
    int              MaxWord, maxWord;
    int              currentLength = 0;
@@ -363,7 +364,7 @@ PtrDict             dict;
 	nbGotten = sscanf (plineGotten, "%s", wordGotten);
 	if ((nbGotten > 0)
 	    && (dict->DictNbWords < maxWord - 1)
-	    && ((length = strlen (wordGotten)) < MAX_WORD_LEN)
+	    && ((length = ustrlen (wordGotten)) < MAX_WORD_LEN)
 	    && (length + nbChar + 1 < MaxWord - 1))
 	  {
 	     dict->DictNbWords++;
@@ -376,7 +377,7 @@ PtrDict             dict;
 		  currentLength = length;
 	       }
 	     for (k = 0; k < length; k++)
-		dict->DictString[nbChar++] = (char) Code[(unsigned char) wordGotten[k]];
+		dict->DictString[nbChar++] = (CHAR) Code[(UCHAR) wordGotten[k]];
 	     /* End of a word */
 	     dict->DictString[nbChar++] = EOS;
 
@@ -415,20 +416,20 @@ PtrDict             dict;
    retourne dans pDictionary le pointeur sur son descripteur ou NULL        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PrepareDictionary (PtrDict * pDictionary, char *dictName, PtrDocument document, char *dictDirectory, Language lang, boolean readonly, boolean treated, boolean toTreat)
+static void         PrepareDictionary (PtrDict * pDictionary, STRING dictName, PtrDocument document, STRING dictDirectory, Language lang, boolean readonly, boolean treated, boolean toTreat)
 #else  /* __STDC__ */
 static void         PrepareDictionary (pDictionary, dictName, document, dictDirectory, lang, readonly, treated, toTreat)
 PtrDict            *pDictionary;
-char               *dictName;
+STRING              dictName;
 PtrDocument         document;
-char               *dictDirectory;
+STRING              dictDirectory;
 Language            lang;
 boolean             readonly;
 boolean             treated;
 boolean             toTreat;
 #endif /* __STDC__ */
 {
-  char                tempbuffer[THOT_MAX_CHAR];
+  CHAR                tempbuffer[THOT_MAX_CHAR];
   boolean             new = FALSE;
   boolean             ret;
   FILE               *dictFile;
@@ -491,8 +492,8 @@ boolean             toTreat;
   pdict = *pDictionary;
   pdict->DictDoc = document;
   pdict->DictLanguage = lang;
-  strcpy (pdict->DictDirectory, dictDirectory);
-  strcpy (pdict->DictName, dictName);
+  ustrcpy (pdict->DictDirectory, dictDirectory);
+  ustrcpy (pdict->DictName, dictName);
   pdict->DictReadOnly = readonly;
   
   /* calculation of the memory size needed by the dictionary */
@@ -590,14 +591,14 @@ boolean             toTreat;
   toCreate = TRUE
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 LoadTreatedDict (PtrDict * pDictionary, Language lang, PtrDocument document, char *dictName, char *dictDirectory, boolean readonly, boolean toCreate)
+int                 LoadTreatedDict (PtrDict * pDictionary, Language lang, PtrDocument document, STRING dictName, STRING dictDirectory, boolean readonly, boolean toCreate)
 #else  /* __STDC__ */
 int                 LoadTreatedDict (pDictionary, lang, document, dictName, dictDirectory, readonly, toCreate)
 PtrDict            *pDictionary;
 Language            lang;
 PtrDocument         document;
-char               *dictName;
-char               *dictDirectory;
+STRING              dictName;
+STRING              dictDirectory;
 boolean             readonly;
 boolean             toCreate;
 #endif /* __STDC__ */
@@ -692,7 +693,7 @@ PtrDict            *pDictionary;
 	if (dictTable[d] == pdict)
 	  {
 	     /* Getting information about the dictionary */
-	     strcpy (dictName, pdict->DictName);
+	     ustrcpy (dictName, pdict->DictName);
 	     document = pdict->DictDoc;
 	     /* Release the string and the list of words ... */
 	     FreeStringInDict (pdict);

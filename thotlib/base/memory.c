@@ -23,6 +23,7 @@
  *
  */
 
+#include "ustring.h"
 #include "thot_sys.h" 
 #include "constmedia.h"
 #include "typemedia.h"
@@ -423,20 +424,20 @@ void                FreeAll ()
    TtaGetMemory.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char               *TtaStrdup (char *str)
+STRING              TtaStrdup (STRING str)
 #else  /* __STDC__ */
-char               *TtaStrdup (str)
-char               *str;
+STRING              TtaStrdup (str)
+STRING              str;
 #endif /* __STDC__ */
 {
-   char               *res;
+   STRING              res;
 
    if (str == NULL)
       return (NULL);
-   res = (char *) TtaGetMemory (strlen (str) + 1);
+   res = (STRING) TtaGetMemory (ustrlen (str) + 1);
    if (res == NULL)
       return (res);
-   strcpy (res, str);
+   ustrcpy (res, str);
    return (res);
 }
 
@@ -2343,7 +2344,7 @@ unsigned int        n;
 #endif /* __STDC__ */
 {
    if (n > 0)
-      return ((char *) TtaGetMemory ((size_t) n));
+      return ((STRING) TtaGetMemory ((size_t) n));
    return (NULL);
 }
 

@@ -12,6 +12,7 @@
  *
  */
 
+#include "ustring.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -3162,7 +3163,7 @@ void                BuildSelectionMessage ()
 {
    PtrElement          pEl;
    PtrDocument         pDoc;
-   char                msgBuf[MAX_TXT_LEN];
+   CHAR                msgBuf[MAX_TXT_LEN];
    int                 nbasc;
 
    if (DocSelectedAttr != NULL && AbsBoxSelectedAttr != NULL)
@@ -3178,7 +3179,7 @@ void                BuildSelectionMessage ()
 	pEl = FirstSelectedElement;
      }
    /* put the type name of the first selected element */
-      strncpy (msgBuf, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName,
+      ustrncpy (msgBuf, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName,
 	       MAX_NAME_LENGTH);
    /* add the types of the ancestors */
    pEl = pEl->ElParent;
@@ -3189,9 +3190,9 @@ void                BuildSelectionMessage ()
 	if (!HiddenType (pEl))
 	  {
 	     /* put a separator */
-	     strcat (&msgBuf[strlen (msgBuf)], " \\ ");
+	     ustrcat (&msgBuf[ustrlen (msgBuf)], " \\ ");
 	     /* put the element type */
-	     strcat (&msgBuf[strlen (msgBuf)], pEl->ElStructSchema->
+	     ustrcat (&msgBuf[ustrlen (msgBuf)], pEl->ElStructSchema->
 		     SsRule[pEl->ElTypeNumber - 1].SrName);
 	     nbasc++;
 	  }
@@ -3369,7 +3370,7 @@ void                TtcParentElement (Document document, View view)
 void                TtcParentElement (document, view)
 Document            document;
 View                view;
-char                c;
+CHAR                c;
 
 #endif /* __STDC__ */
 {
@@ -3388,7 +3389,7 @@ void                TtcPreviousElement (Document document, View view)
 void                TtcPreviousElement (document, view)
 Document            document;
 View                view;
-char                c;
+CHAR                c;
 
 #endif /* __STDC__ */
 {
@@ -3407,7 +3408,7 @@ void                TtcNextElement (Document document, View view)
 void                TtcNextElement (document, view)
 Document            document;
 View                view;
-char                c;
+CHAR                c;
 
 #endif /* __STDC__ */
 {
@@ -3425,7 +3426,7 @@ void                TtcChildElement (Document document, View view)
 void                TtcChildElement (document, view)
 Document            document;
 View                view;
-char                c;
+CHAR                c;
 
 #endif /* __STDC__ */
 {

@@ -23,6 +23,7 @@
  * Last modification: Jan 09 1997
  */
 
+#include "ustring.h"
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"
@@ -83,21 +84,21 @@ ThotGC          GCpicture;
 THOT_VInfo      THOT_vInfo;
 Pixmap          EpsfPictureLogo ;
 
-static char    *PictureMenu;
+static STRING   PictureMenu;
 static Pixmap   PictureLogo;
 static ThotGC   tiledGC;
 #ifndef _WINDOWS
 XVisualInfo*    vptr;
 Visual*         theVisual;
 #else   /* _WINDOWS */
-char LostPicturePath [512];
+CHAR LostPicturePath [512];
 #endif  /* _WINDOWS */
 
-char* FileExtension[] = {
+STRING FileExtension[] = {
       ".xbm", ".eps", ".xpm", ".gif", ".jpg", ".png"
 };
 
-static unsigned char MirrorBytes[0x100] = {
+static UCHAR MirrorBytes[0x100] = {
    0x00, 0x80, 0x40, 0xc0, 0x20, 0xa0, 0x60, 0xe0,
    0x10, 0x90, 0x50, 0xd0, 0x30, 0xb0, 0x70, 0xf0,
    0x08, 0x88, 0x48, 0xc8, 0x28, 0xa8, 0x68, 0xe8,
@@ -625,11 +626,11 @@ int      blue;
    the image file description, FALSE in the the other cases        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      Match_Format (int typeImage, char *fileName)
+static boolean      Match_Format (int typeImage, STRING fileName)
 #else  /* __STDC__ */
 static boolean      Match_Format (typeImage, fileName)
 int                 typeImage;
-char               *fileName;
+STRING              fileName;
 #endif /* __STDC__ */
 {
    if (PictureHandlerTable[typeImage].Match_Format != NULL)
@@ -1100,10 +1101,10 @@ PictInfo           *imageDesc;
    the file  fileName or UNKNOWN_FORMAT if not recognized          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int          GetPictureFormat (char *fileName)
+static int          GetPictureFormat (STRING fileName)
 #else  /* __STDC__ */
 static int          GetPictureFormat (fileName)
-char               *fileName;
+STRING              fileName;
 
 #endif /* __STDC__ */
 {
@@ -1111,7 +1112,7 @@ char               *fileName;
    int                 l = 0;
 
    i = 0 ;
-   l = strlen (fileName);
+   l = ustrlen (fileName);
 
    while (i < HandlersCounter) {
          if (i >= InlineHandlers)
@@ -1133,10 +1134,10 @@ char               *fileName;
    and Corrupted_File in the other cases                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Picture_Report PictureFileOk (char *fileName, int *typeImage)
+Picture_Report PictureFileOk (STRING fileName, int *typeImage)
 #else  /* __STDC__ */
 Picture_Report PictureFileOk (fileName, typeImage)
-char               *fileName;
+STRING              fileName;
 int                *typeImage;
 
 #endif /* __STDC__ */
@@ -1246,7 +1247,7 @@ boolean             printing;
    /* by default no plugins loaded */
    HandlersCounter = 0;
    currentExtraHandler = 0;
-   strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, XbmName, MAX_FORMAT_NAMELENGHT);
+   ustrncpy (PictureHandlerTable[HandlersCounter].GUI_Name, XbmName, MAX_FORMAT_NAMELENGHT);
    PictureHandlerTable[HandlersCounter].Produce_Picture = XbmCreate;
    PictureHandlerTable[HandlersCounter].Produce_Postscript = XbmPrint;
    PictureHandlerTable[HandlersCounter].Match_Format = IsXbmFormat;
@@ -1255,7 +1256,7 @@ boolean             printing;
    PictureMenuType[HandlersCounter] = XBM_FORMAT;
    HandlersCounter++;
 
-   strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, EpsName, MAX_FORMAT_NAMELENGHT);
+   ustrncpy (PictureHandlerTable[HandlersCounter].GUI_Name, EpsName, MAX_FORMAT_NAMELENGHT);
    PictureHandlerTable[HandlersCounter].Produce_Picture = EpsCreate;
    PictureHandlerTable[HandlersCounter].Produce_Postscript = EpsPrint;
    PictureHandlerTable[HandlersCounter].Match_Format = IsEpsFormat;
@@ -1264,7 +1265,7 @@ boolean             printing;
    PictureMenuType[HandlersCounter] = EPS_FORMAT;
    HandlersCounter++;
 
-   strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, XpmName, MAX_FORMAT_NAMELENGHT);
+   ustrncpy (PictureHandlerTable[HandlersCounter].GUI_Name, XpmName, MAX_FORMAT_NAMELENGHT);
    PictureHandlerTable[HandlersCounter].Produce_Picture = XpmCreate;
    PictureHandlerTable[HandlersCounter].Produce_Postscript = XpmPrint;
    PictureHandlerTable[HandlersCounter].Match_Format = IsXpmFormat;
@@ -1273,7 +1274,7 @@ boolean             printing;
    PictureMenuType[HandlersCounter] = XPM_FORMAT;
    HandlersCounter++;
 
-   strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, GifName, MAX_FORMAT_NAMELENGHT);
+   ustrncpy (PictureHandlerTable[HandlersCounter].GUI_Name, GifName, MAX_FORMAT_NAMELENGHT);
    PictureHandlerTable[HandlersCounter].Produce_Picture = GifCreate;
    PictureHandlerTable[HandlersCounter].Produce_Postscript = GifPrint;
    PictureHandlerTable[HandlersCounter].Match_Format = IsGifFormat;
@@ -1282,7 +1283,7 @@ boolean             printing;
    PictureMenuType[HandlersCounter] = GIF_FORMAT;
    HandlersCounter++;
 
-   strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, PngName, MAX_FORMAT_NAMELENGHT);
+   ustrncpy (PictureHandlerTable[HandlersCounter].GUI_Name, PngName, MAX_FORMAT_NAMELENGHT);
    PictureHandlerTable[HandlersCounter].Produce_Picture = PngCreate;
    PictureHandlerTable[HandlersCounter].Produce_Postscript = PngPrint;
    PictureHandlerTable[HandlersCounter].Match_Format = IsPngFormat;
@@ -1291,7 +1292,7 @@ boolean             printing;
    PictureMenuType[HandlersCounter] = PNG_FORMAT;
    HandlersCounter++;
 
-   strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, JpegName, MAX_FORMAT_NAMELENGHT);
+   ustrncpy (PictureHandlerTable[HandlersCounter].GUI_Name, JpegName, MAX_FORMAT_NAMELENGHT);
    PictureHandlerTable[HandlersCounter].Produce_Picture = JpegCreate;
    PictureHandlerTable[HandlersCounter].Produce_Postscript = JpegPrint;
    PictureHandlerTable[HandlersCounter].Match_Format = IsJpegFormat;
@@ -1309,24 +1310,24 @@ boolean             printing;
    We return in count the number of handlers               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                GetPictHandlersList (int *count, char *buffer)
+void                GetPictHandlersList (int *count, STRING buffer)
 #else  /* __STDC__ */
 void                GetPictHandlersList (count, buffer)
 int                *count;
-char               *buffer;
+STRING              buffer;
 
 #endif /* __STDC__ */
 {
    int                 i = 0;
    int                 index = 0;
-   char               *item;
+   STRING              item;
 
    *count = HandlersCounter;
    while (i < HandlersCounter)
      {
 	item = PictureHandlerTable[i].GUI_Name;
-	strcpy (buffer + index, item);
-	index += strlen (item) + 1;
+	ustrcpy (buffer + index, item);
+	index += ustrlen (item) + 1;
 	i++;
      }
    buffer = PictureMenu;
@@ -1340,18 +1341,18 @@ char               *buffer;
    simple du fichier.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         SimpleName (char *filename, char *simplename)
+static void         SimpleName (STRING filename, STRING simplename)
 #else  /* __STDC__ */
 static void         SimpleName (filename, simplename)
-char               *filename;
-char               *simplename;
+STRING              filename;
+STRING              simplename;
 
 #endif /* __STDC__ */
 {
-   register char      *from, *to;
-   char                URL_DIR_SEP;
+   register STRING     from, to;
+   CHAR                URL_DIR_SEP;
 
-   if (filename && strchr (filename, '/'))
+   if (filename && ustrchr (filename, '/'))
 	  URL_DIR_SEP = '/';
    else 
 	   URL_DIR_SEP = DIR_SEP;
@@ -1395,7 +1396,7 @@ int                 hlogo;
 #  ifndef _WINDOWS
    int                 fileNameWidth;
    int                 fnposx, fnposy;
-   char                filename[255];
+   CHAR                filename[255];
 #  endif /* !_WINDOWS */
    Drawable            drawable;
    Pixmap              pixmap;
@@ -1543,13 +1544,13 @@ int                 hlogo;
 
    /* Display the filename in the bottom of the Picture Box */
    SimpleName (imageDesc->PicFileName, filename);
-   fileNameWidth = XTextWidth ((XFontStruct *) FontDialogue, filename, strlen (filename));
+   fileNameWidth = XTextWidth ((XFontStruct *) FontDialogue, filename, ustrlen (filename));
    if ((fileNameWidth + wlogo <= wFrame) && (FontHeight (FontDialogue) + hlogo <= hFrame))
      {
        fnposx = (wFrame - fileNameWidth) / 2 + xFrame;
        fnposy = hFrame - 5 + yFrame;
        XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) FontDialogue)->fid);
-       XDrawString (TtDisplay, drawable, TtLineGC, fnposx, fnposy, filename, strlen (filename));
+       XDrawString (TtDisplay, drawable, TtLineGC, fnposx, fnposy, filename, ustrlen (filename));
      }
 #  endif /* _WINDOWS */
 }
@@ -2267,24 +2268,24 @@ PictureScaling      picPresent;
    It returns the number of handlers in count.             
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                GetPictureHandlersList (int *count, char *buffer)
+void                GetPictureHandlersList (int *count, STRING buffer)
 #else  /* __STDC__ */
 void                GetPictureHandlersList (count, buffer)
 int                *count;
-char               *buffer;
+STRING              buffer;
 
 #endif /* __STDC__ */
 {
    int                 i = 0;
    int                 index = 0;
-   char               *item;
+   STRING              item;
 
    *count = HandlersCounter;
    while (i < HandlersCounter)
      {
 	item = PictureHandlerTable[i].GUI_Name;
-	strcpy (buffer + index, item);
-	index += strlen (item) + 1;
+	ustrcpy (buffer + index, item);
+	index += ustrlen (item) + 1;
 	i++;
      }
    buffer = PictureMenu;

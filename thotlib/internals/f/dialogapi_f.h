@@ -8,133 +8,133 @@
 
 extern int GetFrameNumber ( ThotWindow win );
 extern void MyWarningHandler ( void );
-extern void TtaInitDialogue ( char *server,
+extern void TtaInitDialogue ( STRING server,
                               ThotAppContext * app_context,
                               Display ** Dp );
 extern void TtaInitDialogueTranslations ( ThotTranslations translations );
-extern void TtaChangeDialogueFonts ( char *menufont,
-                                     char *formfont );
+extern void TtaChangeDialogueFonts ( STRING menufont,
+                                     STRING formfont );
 extern int TtaGetReferencesBase ( int number );
-extern void TtaInitDialogueWindow ( char *name,
-                                    char *geometry,
+extern void TtaInitDialogueWindow ( STRING name,
+                                    STRING geometry,
                                     Pixmap logo,
                                     Pixmap icon,
                                     int number,
-                                    char *textmenu );
-extern void DisplayConfirmMessage ( char *text );
-extern void DisplayMessage ( char *text,
+                                    STRING textmenu );
+extern void DisplayConfirmMessage ( STRING text );
+extern void DisplayMessage ( STRING text,
                              int msgType );
 extern void TtaDefineDialogueCallback ( void (*procedure) () );
 extern void TtaNewPulldown ( int ref,
                              ThotWidget parent,
-                             char *title,
+                             STRING title,
                              int number,
-                             char *text,
-                             char *equiv );
+                             STRING text,
+                             STRING equiv );
 extern void TtaSetPulldownOff ( int ref,
                                 ThotWidget parent );
 extern void TtaSetPulldownOn ( int ref,
                                ThotWidget parent );
 extern void TtaNewPopup ( int ref,
                           ThotWidget parent,
-                          char *title,
+                          STRING title,
                           int number,
-                          char *text,
-                          char *equiv,
-                          char button );
+                          STRING text,
+                          STRING equiv,
+                          CHAR button );
 extern void TtaNewIconMenu ( int ref,
                              int ref_parent,
                              int entry,
-                             char *title,
+                             STRING title,
                              int number,
                              Pixmap * icons,
                              boolean horizontal );
 extern void TtaNewSubmenu ( int ref,
                             int ref_parent,
                             int entry,
-                            char *title,
+                            STRING title,
                             int number,
-                            char *text,
-                            char *equiv,
+                            STRING text,
+                            STRING equiv,
                             boolean react );
 extern void TtaSetMenuForm ( int ref,
                              int val );
 extern void TtaNewToggleMenu ( int ref,
                                int ref_parent,
-                               char *title,
+                               STRING title,
                                int number,
-                               char *text,
-                               char *equiv,
+                               STRING text,
+                               STRING equiv,
                                boolean react );
 extern void TtaSetToggleMenu ( int ref,
                                int val,
                                boolean on );
 extern void TtaChangeMenuEntry ( int ref,
                                  int entry,
-                                 char *text );
+                                 STRING text );
 extern void TtaRedrawMenuEntry ( int ref,
                                  int entry,
-                                 char *fontname,
+                                 STRING fontname,
                                  Pixel color,
                                  int activate );
 extern void TtaUnmapDialogue ( int ref );
 extern void TtaDestroyDialogue ( int ref );
 extern void TtaChangeFormTitle ( int ref,
-                                 char *title );
+                                 STRING title );
 extern void TtaNewForm ( int ref,
                          ThotWidget parent,
-                         char *title,
+                         STRING title,
                          boolean horizontal,
                          int package,
-                         char button,
+                         CHAR button,
                          int dbutton );
 extern void TtaNewSheet ( int ref,
                           ThotWidget parent,
-                          char *title,
+                          STRING title,
                           int number,
-                          char *text,
+                          STRING text,
                           boolean horizontal,
                           int package,
-                          char button,
+                          CHAR button,
                           int dbutton );
 extern void TtaNewDialogSheet ( int ref,
                                 ThotWidget parent,
-                                char *title,
+                                STRING title,
                                 int number,
-                                char *text,
+                                STRING text,
                                 boolean horizontal,
                                 int package,
-                                char button );
+                                CHAR button );
 extern void TtaAttachForm ( int ref );
 extern void TtaDetachForm ( int ref );
 extern void TtaNewSelector ( int ref,
                              int ref_parent,
-                             char *title,
+                             STRING title,
                              int number,
-                             char *text,
+                             STRING text,
                              int height,
-                             char *label,
+                             STRING label,
                              boolean withText,
                              boolean react );
 extern void TtaActiveSelector ( int ref );
 extern void TtaDesactiveSelector ( int ref );
 extern void TtaSetSelector ( int ref,
                              int entry,
-                             char *text );
+                             STRING text );
 extern void TtaNewLabel ( int ref,
                           int ref_parent,
-                          char *text );
+                          STRING text );
 extern void TtaNewTextForm ( int ref,
                              int ref_parent,
-                             char *title,
+                             STRING title,
                              int width,
                              int height,
                              boolean react );
 extern void TtaSetTextForm ( int ref,
-                             char *text );
+                             STRING text );
 extern void TtaNewNumberForm ( int ref,
                                int ref_parent,
-                               char *title,
+                               STRING title,
                                int min,
                                int max,
                                boolean react );
@@ -151,133 +151,133 @@ extern void TtaAbortShowDialogue ( void );
 
 extern int GetFrameNumber (/* ThotWindow win */);
 extern void MyWarningHandler (/* void */);
-extern void TtaInitDialogue (/* char *server,
+extern void TtaInitDialogue (/* STRING server,
                                 ThotAppContext * app_context,
                                 Display ** Dp */);
 extern void TtaInitDialogueTranslations (/* ThotTranslations translations */);
-extern void TtaChangeDialogueFonts (/* char *menufont,
-                                       char *formfont */);
+extern void TtaChangeDialogueFonts (/* STRING menufont,
+                                       STRING formfont */);
 extern int TtaGetReferencesBase (/* int number */);
-extern void TtaInitDialogueWindow (/* char *name,
-                                      char *geometry,
+extern void TtaInitDialogueWindow (/* STRING name,
+                                      STRING geometry,
                                       Pixmap logo,
                                       Pixmap icon,
                                       int number,
-                                      char *textmenu */);
-extern void DisplayConfirmMessage (/* char *text */);
-extern void DisplayMessage (/* char *text,
+                                      STRING textmenu */);
+extern void DisplayConfirmMessage (/* STRING text */);
+extern void DisplayMessage (/* STRING text,
                                int msgType */);
 extern void TtaDefineDialogueCallback (/* void (*procedure) () */);
 extern void TtaNewPulldown (/* int ref,
                                ThotWidget parent,
-                               char *title,
+                               STRING title,
                                int number,
-                               char *text,
-                               char *equiv */);
+                               STRING text,
+                               STRING equiv */);
 extern void TtaSetPulldownOff (/* int ref,
                                   ThotWidget parent */);
 extern void TtaSetPulldownOn (/* int ref,
                                  ThotWidget parent */);
 extern void TtaNewPopup (/* int ref,
                             ThotWidget parent,
-                            char *title,
+                            STRING title,
                             int number,
-                            char *text,
-                            char *equiv,
-                            char button */);
+                            STRING text,
+                            STRING equiv,
+                            CHAR button */);
 extern void TtaNewIconMenu (/* int ref,
                                int ref_parent,
                                int entry,
-                               char *title,
+                               STRING title,
                                int number,
                                Pixmap * icons,
                                boolean horizontal */);
 extern void TtaNewSubmenu (/* int ref,
                               int ref_parent,
                               int entry,
-                              char *title,
+                              STRING title,
                               int number,
-                              char *text,
-                              char *equiv,
+                              STRING text,
+                              STRING equiv,
                               boolean react */);
 extern void TtaSetMenuForm (/* int ref,
                                int val */);
 extern void TtaNewToggleMenu (/* int ref,
                                  int ref_parent,
-                                 char *title,
+                                 STRING title,
                                  int number,
-                                 char *text,
-                                 char *equiv,
+                                 STRING text,
+                                 STRING equiv,
                                  boolean react */);
 extern void TtaSetToggleMenu (/* int ref,
                                  int val,
                                  boolean on */);
 extern void TtaChangeMenuEntry (/* int ref,
                                    int entry,
-                                   char *text */);
+                                   STRING text */);
 extern void TtaRedrawMenuEntry (/* int ref,
                                    int entry,
-                                   char *fontname,
+                                   STRING fontname,
                                    Pixel color,
                                    int activate */);
 extern void TtaUnmapDialogue (/* int ref */);
 extern void TtaDestroyDialogue (/* int ref */);
 extern void TtaChangeFormTitle (/* int ref,
-                                   char *title */);
+                                   STRING title */);
 extern void TtaNewForm (/* int ref,
                            ThotWidget parent,
-                           char *title,
+                           STRING title,
                            boolean horizontal,
                            int package,
-                           char button,
+                           CHAR button,
                            int dbutton */);
 extern void TtaNewSheet (/* int ref,
                             ThotWidget parent,
-                            char *title,
+                            STRING title,
                             int number,
-                            char *text,
+                            STRING text,
                             boolean horizontal,
                             int package,
-                            char button,
+                            CHAR button,
                             int dbutton */);
 extern void TtaNewDialogSheet (/* int ref,
                                   ThotWidget parent,
-                                  char *title,
+                                  STRING title,
                                   int number,
-                                  char *text,
+                                  STRING text,
                                   boolean horizontal,
                                   int package,
-                                  char button */);
+                                  CHAR button */);
 extern void TtaAttachForm (/* int ref */);
 extern void TtaDetachForm (/* int ref */);
 extern void TtaNewSelector (/* int ref,
                                int ref_parent,
-                               char *title,
+                               STRING title,
                                int number,
-                               char *text,
+                               STRING text,
                                int height,
-                               char *label,
+                               STRING label,
                                boolean withText,
                                boolean react */);
 extern void TtaActiveSelector (/* int ref */);
 extern void TtaDesactiveSelector (/* int ref */);
 extern void TtaSetSelector (/* int ref,
                                int entry,
-                               char *text */);
+                               STRING text */);
 extern void TtaNewLabel (/* int ref,
                             int ref_parent,
-                            char *text */);
+                            STRING text */);
 extern void TtaNewTextForm (/* int ref,
                                int ref_parent,
-                               char *title,
+                               STRING title,
                                int width,
                                int height,
                                boolean react */);
 extern void TtaSetTextForm (/* int ref,
-                               char *text */);
+                               STRING text */);
 extern void TtaNewNumberForm (/* int ref,
                                  int ref_parent,
-                                 char *title,
+                                 STRING title,
                                  int min,
                                  int max,
                                  boolean react */);

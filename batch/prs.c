@@ -26,6 +26,7 @@
  *
  */
 
+#include "ustring.h"
 #include "thot_sys.h"
 #include "constgrm.h"
 #include "constmedia.h"
@@ -284,7 +285,7 @@ indLine             wl;
       CompilerMessage (wi, PRS, FATAL, WORD_SIZE_OVERFLOW, inputLine, LineNum);
    else
      {
-	strncpy (n, &inputLine[wi - 1], MAX_NAME_LENGTH);
+	ustrncpy (n, &inputLine[wi - 1], MAX_NAME_LENGTH);
 	n[wl] = '\0';
      }
 }
@@ -1007,7 +1008,7 @@ indLine             wi;
 	       break;
 
 	    case AtTextAttr:
-	       strcpy (pPRuleA->ApString, CurTextEqual);
+	       ustrcpy (pPRuleA->ApString, CurTextEqual);
 	       CurTextEqual[0] = '\0';
 	       pPRuleA->ApTextFirstPRule = NextRule;
 	       FirstRule = NextRule;
@@ -2197,9 +2198,9 @@ PtrCondition        pCond2;
 			sameRules = False;
 		     else if (curCond1->CoAncestorRel != curCond2->CoAncestorRel)
 			sameRules = False;
-		     else if (strcmp (curCond1->CoAncestorName, curCond2->CoAncestorName) != 0)
+		     else if (ustrcmp (curCond1->CoAncestorName, curCond2->CoAncestorName) != 0)
 			sameRules = False;
-		     else if (strcmp (curCond1->CoSSchemaName, curCond2->CoSSchemaName) != 0)
+		     else if (ustrcmp (curCond1->CoSSchemaName, curCond2->CoSSchemaName) != 0)
 			sameRules = False;
 
 		  if (sameRules)
@@ -3341,10 +3342,10 @@ Name                typeName;
    CopyName (typeName, wi, wl);
    /* verifie si le type est declare' dans le schema de structure */
    i = 1;
-   while (strcmp (typeName, pSSchema->SsRule[i - 1].SrName)
+   while (ustrcmp (typeName, pSSchema->SsRule[i - 1].SrName)
 	  && i < pSSchema->SsNRules)
       i++;
-   if (strcmp (typeName, pSSchema->SsRule[i - 1].SrName))
+   if (ustrcmp (typeName, pSSchema->SsRule[i - 1].SrName))
       i = 0;
    else if (InclusionRefName)
       /* on cherche une reference a un document importe' */
@@ -3355,7 +3356,7 @@ Name                typeName;
 	   /* ce n'est pas ce que l'on cherche, on continue */
 	  {
 	     i++;
-	     while (strcmp (typeName, pSSchema->SsRule[i - 1].SrName) &&
+	     while (ustrcmp (typeName, pSSchema->SsRule[i - 1].SrName) &&
 		    i < pSSchema->SsNRules)
 		i++;
 	  }
@@ -3752,12 +3753,12 @@ indLine             wi;
 		    if (!ReadStructureSchema (n, pSSchema))
 		       TtaDisplaySimpleMessage (FATAL, PRS, MISSING_STRUCT_SCHEM);
 		    /* echec lecture du schema de structure */
-		    else if (strcmp (n, pSSchema->SsName))
+		    else if (ustrcmp (n, pSSchema->SsName))
 		       CompilerMessage (wi, PRS, FATAL, STRUCT_SCHEM_DOES_NOT_MATCH, inputLine, LineNum);
 		    else
 		      {
 			 Initialize ();
-			 strncpy (pPSchema->PsStructName, n, MAX_NAME_LENGTH);
+			 ustrncpy (pPSchema->PsStructName, n, MAX_NAME_LENGTH);
 		      }
 		 }
 	       else if (prevRule == RULE_ExtStruct)
@@ -3772,10 +3773,10 @@ indLine             wi;
 		       /* le schema de structure externe a ete charge' */
 		      {
 			 i = 1;
-			 while (strcmp (CopyType, pExternalSS->SsRule[i - 1].SrName) != 0
+			 while (ustrcmp (CopyType, pExternalSS->SsRule[i - 1].SrName) != 0
 				&& i < pExternalSS->SsNRules)
 			    i++;
-			 if (strcmp (CopyType, pExternalSS->SsRule[i - 1].SrName) != 0)
+			 if (ustrcmp (CopyType, pExternalSS->SsRule[i - 1].SrName) != 0)
 			    /* type inconnu */
 			    if (PresBoxDef || InWithinCond)
 			       /* on est dans une boite de presentation, erreur */
@@ -3796,14 +3797,14 @@ indLine             wi;
 				    CompilerMessage (wi, PRS, FATAL, REDEFINITION_OF_CONTENT, inputLine, LineNum);
 				 else
 				   {
-				      strncpy (CurRule->PrPresBoxName, CopyType, MAX_NAME_LENGTH);
+				      ustrncpy (CurRule->PrPresBoxName, CopyType, MAX_NAME_LENGTH);
 				      /* indique qu'on copie une boite de presentation et non un element */
 				      CurRule->PrElement = False;
 				   }
 			      }
 			 else if (InWithinCond)
 			   {
-			      strncpy (Conditions->CoAncestorName, CopyType, MAX_NAME_LENGTH);
+			      ustrncpy (Conditions->CoAncestorName, CopyType, MAX_NAME_LENGTH);
 			      CopyName (Conditions->CoSSchemaName, wi, wl);
 			      Conditions->CoTypeAncestor = 0;
 			   }
@@ -3813,7 +3814,7 @@ indLine             wi;
 			      /* indique qu'on copie un element et non une boite de presentation */
 			      CurRule->PrElement = True;
 			      /* nom du type d'element a copier */
-			      strncpy (CurRule->PrPresBoxName, CopyType, MAX_NAME_LENGTH);
+			      ustrncpy (CurRule->PrPresBoxName, CopyType, MAX_NAME_LENGTH);
 			      /* indique que PrPresBoxName est un nom de type defini */
 			      /* dans un autre schema */
 			      CurRule->PrExternal = True;
@@ -3829,13 +3830,13 @@ indLine             wi;
 		    CopyName (n, wi, wl);
 		    /* verifie si le type existe dans le schema de structure */
 		    i = 1;
-		    while (strcmp (n, pSSchema->SsRule[i - 1].SrName)
+		    while (ustrcmp (n, pSSchema->SsRule[i - 1].SrName)
 			   && i < pSSchema->SsNRules)
 		       i++;
 		    if (InWithinCond)
 		       /* un nom de type d'element dans une condition Within */
 		      {
-			 if (strcmp (n, pSSchema->SsRule[i - 1].SrName))
+			 if (ustrcmp (n, pSSchema->SsRule[i - 1].SrName))
 			    /* type inconnu */
 			   {
 			      /* c'est peut-etre un type defini dans un autre schema */
@@ -3851,7 +3852,7 @@ indLine             wi;
 		    else
 		       /* on est dans une condition, mais pas apres Within */
 		      {
-			 if (!strcmp (n, pSSchema->SsRule[i - 1].SrName))
+			 if (!ustrcmp (n, pSSchema->SsRule[i - 1].SrName))
 			    /* c'est bien un nom de type d'element */
 			   {
 			      /* la regle est-elle bien pour un attribut ? */
@@ -3869,10 +3870,10 @@ indLine             wi;
 			   {
 			      /* cherche ce nom parmi les attributs du schema de structure */
 			      i = 1;
-			      while (strcmp (n, pSSchema->SsAttribute[i - 1].AttrName)
+			      while (ustrcmp (n, pSSchema->SsAttribute[i - 1].AttrName)
 				     && i < pSSchema->SsNAttributes)
 				 i++;
-			      if (strcmp (n, pSSchema->SsAttribute[i - 1].AttrName))
+			      if (ustrcmp (n, pSSchema->SsAttribute[i - 1].AttrName))
 				 /* on ne l'a pas trouve, erreur */
 				 CompilerMessage (wi, PRS, FATAL, UNDECLARED_IDENTIFIER,
 						inputLine, LineNum);
@@ -3895,10 +3896,10 @@ indLine             wi;
 		    CopyName (n, wi, wl);
 		    /* verifie si le type existe dans le schema de structure */
 		    i = 1;
-		    while (strcmp (n, pSSchema->SsRule[i - 1].SrName)
+		    while (ustrcmp (n, pSSchema->SsRule[i - 1].SrName)
 			   && i < pSSchema->SsNRules)
 		       i++;
-		    if (strcmp (n, pSSchema->SsRule[i - 1].SrName))
+		    if (ustrcmp (n, pSSchema->SsRule[i - 1].SrName))
 		       /* type inconnu */
 		       CompilerMessage (wi, PRS, FATAL, UNKNOWN_TYPE, inputLine, LineNum);
 		    else
@@ -4014,10 +4015,10 @@ indLine             wi;
 		       /* cherche ce nom parmi les attributs du schema de structure */
 		       CopyName (n, wi, wl);
 		       i = 1;
-		       while (strcmp (n, pSSchema->SsAttribute[i - 1].AttrName)
+		       while (ustrcmp (n, pSSchema->SsAttribute[i - 1].AttrName)
 			      && i < pSSchema->SsNAttributes)
 			  i++;
-		       if (strcmp (n, pSSchema->SsAttribute[i - 1].AttrName))
+		       if (ustrcmp (n, pSSchema->SsAttribute[i - 1].AttrName))
 			  CompilerMessage (wi, PRS, FATAL, UNDECLARED_IDENTIFIER, inputLine, LineNum);	/* on ne l'a pas trouve, erreur */
 		       else
 			  /* c'est un nom d'attribut apres VALUE */
@@ -4108,10 +4109,10 @@ indLine             wi;
 	       /* cherche ce nom d'attribut dans le schema de structure */
 	       CopyName (n, wi, wl);
 	       i = 1;
-	       while (strcmp (n, pSSchema->SsAttribute[i - 1].AttrName)
+	       while (ustrcmp (n, pSSchema->SsAttribute[i - 1].AttrName)
 		      && i < pSSchema->SsNAttributes)
 		  i++;
-	       if (strcmp (n, pSSchema->SsAttribute[i - 1].AttrName))
+	       if (ustrcmp (n, pSSchema->SsAttribute[i - 1].AttrName))
 		  CompilerMessage (wi, PRS, FATAL, NO_SUCH__ATTR, inputLine, LineNum);
 	       /* on ne l'a pas trouve, erreur */
 
@@ -4280,10 +4281,10 @@ indLine             wi;
 		    {
 		       CopyName (n, wi, wl);
 		       i = 1;
-		       while (strcmp (n, pSSchema->SsAttribute[i - 1].AttrName)
+		       while (ustrcmp (n, pSSchema->SsAttribute[i - 1].AttrName)
 			      && i < pSSchema->SsNAttributes)
 			  i++;
-		       if (strcmp (n, pSSchema->SsAttribute[i - 1].AttrName))
+		       if (ustrcmp (n, pSSchema->SsAttribute[i - 1].AttrName))
 			  CompilerMessage (wi, PRS, FATAL, UNDECLARED_IDENTIFIER, inputLine, LineNum);
 		       /* on ne l'a pas trouve, erreur */
 		       else
@@ -4586,11 +4587,11 @@ indLine             wi;
 		    i = 0;
 		    ok = False;
 		    do
-		       if (strcmp (n, Name_patterns[i]) == 0)
+		       if (ustrcmp (n, Name_patterns[i]) == 0)
 			  ok = True;
 		       else
 			  i++;
-		    while (!ok && i < sizeof (Name_patterns) / sizeof (char *));
+		    while (!ok && i < sizeof (Name_patterns) / sizeof (STRING));
 
 		    if (!ok)
 		       CompilerMessage (wi, PRS, FATAL, MISSING_PATTERN, inputLine, LineNum);
@@ -4605,7 +4606,7 @@ indLine             wi;
 		 {
 		    i = 0;
 		    CopyName (n, wi, wl);
-		    while (i < MAX_COLOR && strcmp (Name_colors[i], n))
+		    while (i < MAX_COLOR && ustrcmp (Name_colors[i], n))
 		       i++;
 		    if (i == MAX_COLOR)
 		       CompilerMessage (wi, PRS, FATAL, MISSING_COLOR, inputLine, LineNum);
@@ -4631,9 +4632,9 @@ indLine             wi;
 	       else
 		 {
 		    i = 1;
-		    while (strcmp (n, pAttr->AttrEnumValue[i - 1]) && i < pAttr->AttrNEnumValues)
+		    while (ustrcmp (n, pAttr->AttrEnumValue[i - 1]) && i < pAttr->AttrNEnumValues)
 		       i++;
-		    if (strcmp (n, pAttr->AttrEnumValue[i - 1]))
+		    if (ustrcmp (n, pAttr->AttrEnumValue[i - 1]))
 		       CompilerMessage (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine, LineNum);
 		    /* on ne trouve pas cette valeur, erreur */
 		    else
@@ -6204,12 +6205,12 @@ static void         CheckAllBoxesUsed ()
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS 
 #ifdef __STDC__
-int                 PRSmain (HWND hwnd, int argc, char **argv, int* Y)
+int                 PRSmain (HWND hwnd, int argc, STRING *argv, int* Y)
 #else  /* __STDC__ */
 int                 PRSmain (hwnd, argc, argv, Y)
 HWND                hwnd;
 int                 argc;
-char**              argv;
+STRING*              argv;
 int*                Y;
 #endif /* __STDC__ */
 #else  /* !_WINDOWS */
@@ -6224,8 +6225,8 @@ char              **argv;
 {
    FILE               *infile;
    boolean             fileOK;
-   char                fname[200], buffer[200];
-   char               *pwd, *ptr;
+   CHAR                fname[200], buffer[200];
+   STRING              pwd, ptr;
    Name                srceFileName;	/* nom du fichier a compiler */
    indLine             wi;	/* position du debut du mot courant dans la
 				   ligne en cours */
@@ -6239,21 +6240,21 @@ char              **argv;
    int                 i;
    int                 param;
 #  ifdef _WINDOWS
-   char*               cmd [100];
+   STRING               cmd [100];
    int                 ndx, pIndex = 0;
-   char                msg [800];
+   CHAR                msg [800];
 #  else  /* !_WINDOWS */
-   char                cmd [800];
+   CHAR                cmd [800];
 #  endif /* _WINDOWS */
 
 #  ifdef _WINDOWS 
    COMPWnd = hwnd;
    compilersDC = GetDC (hwnd);
    _CY_ = *Y;
-   strcpy (msg, "Executing prs ");
+   ustrcpy (msg, "Executing prs ");
    for (ndx = 1; ndx < argc; ndx++) {
-       strcat (msg, argv [ndx]);
-       strcat (msg, " ");
+       ustrcat (msg, argv [ndx]);
+       ustrcat (msg, " ");
    }
    TtaDisplayMessage (INFO, msg);
 #  endif /* _WINDOWS */
@@ -6270,20 +6271,20 @@ char              **argv;
    if (!error) {
       /* prepare the cpp command */
 #     ifdef _WINDOWS
-      cmd [pIndex] = (char*) malloc (4 * sizeof (char));
-      strcpy (cmd [pIndex++], "cpp");
+      cmd [pIndex] = (STRING) malloc (4 * sizeof (CHAR));
+      ustrcpy (cmd [pIndex++], "cpp");
 #     else  /* !_WINDOWS */
-      strcpy (cmd, CPP " ");
+      ustrcpy (cmd, CPP " ");
 #     endif /* _WINDOWS */
       param = 1;
       while (param < argc && argv[param][0] == '-') {
             /* keep cpp params */
 #           ifdef _WINDOWS
-            cmd [pIndex] = (char*) malloc (strlen (argv[param]) + 1);
-            strcpy (cmd [pIndex++], argv[param]);
+            cmd [pIndex] = (STRING) malloc (ustrlen (argv[param]) + 1);
+            ustrcpy (cmd [pIndex++], argv[param]);
 #           else  /* !_WINDOWS */
-            strcat (cmd, argv[param]);
-            strcat (cmd, " ");
+            ustrcat (cmd, argv[param]);
+            ustrcat (cmd, " ");
 #           endif /* _WINDOWS */
             param++;
 	  } 
@@ -6298,16 +6299,16 @@ char              **argv;
 	     exit (1);
 #        endif /* _WINDOWS */
 	  } 
-      strncpy (srceFileName, argv[param], MAX_NAME_LENGTH - 1);
+      ustrncpy (srceFileName, argv[param], MAX_NAME_LENGTH - 1);
       srceFileName[MAX_NAME_LENGTH - 1] = '\0';
       param++;
-      strcpy (fname, srceFileName);
+      ustrcpy (fname, srceFileName);
       /* check if the name contains a suffix */
-      ptr = strrchr(fname, '.');
-      nb = strlen (srceFileName);
+      ptr = ustrrchr(fname, '.');
+      nb = ustrlen (srceFileName);
       if (!ptr) /* there is no suffix */
-         strcat (srceFileName, ".P");
-      else if (strcmp(ptr, ".P")) { /* it's not the valid suffix */
+         ustrcat (srceFileName, ".P");
+      else if (ustrcmp(ptr, ".P")) { /* it's not the valid suffix */
            TtaDisplayMessage (FATAL, TtaGetMessage (PRS, INVALID_FILE), srceFileName);
 #          ifdef _WINDOWS 
            ReleaseDC (hwnd, compilersDC);
@@ -6321,7 +6322,7 @@ char              **argv;
              nb -= 2; /* length without the suffix */
 	  } 
       /* add the suffix .SCH in srceFileName */
-      strcat (fname, ".SCH");
+      ustrcat (fname, ".SCH");
 	
       /* does the file to compile exist */
       if (TtaFileExist (srceFileName) == 0)
@@ -6331,29 +6332,29 @@ char              **argv;
            TtaFileUnlink (fname);
            pwd = TtaGetEnvString ("PWD");
 #          ifndef _WINDOWS
-           i = strlen (cmd);
+           i = ustrlen (cmd);
 #          endif /* _WINDOWS */
            if (pwd != NULL) {
 #             ifdef _WINDOWS
-              cmd [pIndex] = (char*) malloc (3 + strlen (pwd));
+              cmd [pIndex] = (STRING) malloc (3 + ustrlen (pwd));
               sprintf (cmd [pIndex++], "-I%s", pwd);
-              cmd [pIndex] = (char*) malloc (3);
-              strcpy (cmd [pIndex++], "-C");
-              cmd [pIndex] = (char*) malloc (strlen (srceFileName) + 1);
-              strcpy (cmd [pIndex++], srceFileName);
-              cmd [pIndex] = (char*) malloc (strlen (fname) + 1);
-              strcpy (cmd [pIndex++], fname);
+              cmd [pIndex] = (STRING) malloc (3);
+              ustrcpy (cmd [pIndex++], "-C");
+              cmd [pIndex] = (STRING) malloc (ustrlen (srceFileName) + 1);
+              ustrcpy (cmd [pIndex++], srceFileName);
+              cmd [pIndex] = (STRING) malloc (ustrlen (fname) + 1);
+              ustrcpy (cmd [pIndex++], fname);
 #             else  /* !_WINDOWS */
               sprintf (&cmd[i], "-I%s -C %s > %s", pwd, srceFileName, fname);
 #             endif /* _WINDOWS */
            } else {
 #                 ifdef _WINDOWS
-                  cmd [pIndex] = (char*) malloc (3);
-                  strcpy (cmd [pIndex++], "-C");
-                  cmd [pIndex] = (char*) malloc (strlen (srceFileName) + 1);
-                  strcpy (cmd [pIndex++], srceFileName);
-                  cmd [pIndex] = (char*) malloc (strlen (fname) + 1);
-                  strcpy (cmd [pIndex++], fname);
+                  cmd [pIndex] = (STRING) malloc (3);
+                  ustrcpy (cmd [pIndex++], "-C");
+                  cmd [pIndex] = (STRING) malloc (ustrlen (srceFileName) + 1);
+                  ustrcpy (cmd [pIndex++], srceFileName);
+                  cmd [pIndex] = (STRING) malloc (ustrlen (fname) + 1);
+                  ustrcpy (cmd [pIndex++], fname);
 #                 else  /* !_WINDOWS */
                   sprintf (&cmd[i], "-C %s > %s", srceFileName, fname);
 #                 endif /* _WINDOWS */
@@ -6362,7 +6363,7 @@ char              **argv;
            i = CPPmain (hwnd, pIndex, cmd, &_CY_);
            for (ndx = 0; ndx < pIndex; ndx++) {
                free (cmd [ndx]);
-               cmd [ndx] = (char*) 0;
+               cmd [ndx] = (STRING) 0;
 		   }
 #          else  /* _WINDOWS */
            i = system (cmd);
@@ -6380,7 +6381,7 @@ char              **argv;
               srceFileName[nb] = '\0';
            else
               /* read the output name */
-              strncpy (srceFileName, argv[param], MAX_NAME_LENGTH - 1);
+              ustrncpy (srceFileName, argv[param], MAX_NAME_LENGTH - 1);
            /* le fichier a compiler est ouvert */
            NIdentifiers = 0;	/* table des identificateurs vide */
            LineNum = 0;	/* encore aucune ligne lue */
@@ -6438,7 +6439,7 @@ char              **argv;
               /* standard */
               if (pPSchema->PsNViews == 0) {
                  pPSchema->PsNViews = 1;
-                 strcpy (pPSchema->PsView[0], TtaGetMessage (PRS, SINGLE_VIEW));
+                 ustrcpy (pPSchema->PsView[0], TtaGetMessage (PRS, SINGLE_VIEW));
 			  }
               /* verifie que toutes les boites de presentation declarees pour les */
               /* pages sont bien utilisees et adapte les regles. */
@@ -6449,7 +6450,7 @@ char              **argv;
               /* write the compiled schema into the output file */
               /* remove temporary file */
               TtaFileUnlink (fname);
-              strcat (srceFileName, ".PRS");
+              ustrcat (srceFileName, ".PRS");
               fileOK = WritePresentationSchema (srceFileName, pPSchema, pSSchema);
               if (!fileOK)
                  TtaDisplayMessage (FATAL, TtaGetMessage (PRS, WRITE_ERROR), srceFileName);

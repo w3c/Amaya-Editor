@@ -12,6 +12,7 @@
  *
  */
 
+#include "ustring.h"
 #include "libmsg.h"
 #include "thot_sys.h"
 #include "message.h"
@@ -271,12 +272,12 @@ boolean isForbidden;
    FwdSearchTypeNameInSubtree					
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static PtrElement   FwdSearchTypeNameInSubtree (PtrElement pEl, boolean test, char *typeName)
+static PtrElement   FwdSearchTypeNameInSubtree (PtrElement pEl, boolean test, STRING typeName)
 #else  /* __STDC__ */
 static PtrElement   FwdSearchTypeNameInSubtree (pEl, test, typeName)
 PtrElement          pEl;
 boolean             test;
-char               *typeName;
+STRING              typeName;
 #endif /* __STDC__ */
 
 {
@@ -284,7 +285,7 @@ char               *typeName;
 
    pRet = NULL;
    if (test)
-      if (strcmp (typeName, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName) == 0)
+      if (ustrcmp (typeName, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName) == 0)
 	 /* got a hit on the element */
 	 pRet = pEl;
    if (pRet == NULL && !pEl->ElTerminal)
@@ -307,11 +308,11 @@ char               *typeName;
    pointer to the element if there's a hit, NULL otherwise.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrElement          FwdSearchElemByTypeName (PtrElement pEl, char *typeName)
+PtrElement          FwdSearchElemByTypeName (PtrElement pEl, STRING typeName)
 #else  /* __STDC__ */
 PtrElement          FwdSearchElemByTypeName (pEl, typeName)
 PtrElement          pEl;
-char               *typeName;
+STRING              typeName;
 #endif /* __STDC__ */
 
 {
@@ -354,7 +355,7 @@ char               *typeName;
 		    {
 		       pAsc = pAsc->ElNext;
 		       if (pAsc != NULL)
-			  if (strcmp (typeName, pAsc->ElStructSchema->SsRule[pAsc->ElTypeNumber - 1].SrName) == 0)
+			  if (ustrcmp (typeName, pAsc->ElStructSchema->SsRule[pAsc->ElTypeNumber - 1].SrName) == 0)
 			     /* found */
 			     pRet = pAsc;
 			  else
@@ -370,11 +371,11 @@ char               *typeName;
    BackSearchTypeNameInSubtree				       
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static PtrElement   BackSearchTypeNameInSubtree (PtrElement pEl, char *typeName)
+static PtrElement   BackSearchTypeNameInSubtree (PtrElement pEl, STRING typeName)
 #else  /* __STDC__ */
 static PtrElement   BackSearchTypeNameInSubtree (pEl, typeName)
 PtrElement          pEl;
-char               *typeName;
+STRING              typeName;
 #endif /* __STDC__ */
 
 {
@@ -397,7 +398,7 @@ char               *typeName;
      }
    if (pRet == NULL)
      {
-	if (strcmp (typeName, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName) == 0)
+	if (ustrcmp (typeName, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName) == 0)
 	   pRet = pEl;		/* found ! it's the element itself */
      }
    return pRet;
@@ -410,11 +411,11 @@ char               *typeName;
    NULL.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrElement          BackSearchElemByTypeName (PtrElement pEl, char *typeName)
+PtrElement          BackSearchElemByTypeName (PtrElement pEl, STRING typeName)
 #else  /* __STDC__ */
 PtrElement          BackSearchElemByTypeName (pEl, typeName)
 PtrElement          pEl;
-char               *typeName;
+STRING              typeName;
 #endif /* __STDC__ */
 
 {
@@ -436,7 +437,7 @@ char               *typeName;
 	   if (pEl->ElParent != NULL)
 	     {
 		pEl = pEl->ElParent;
-		if (strcmp (typeName, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName) == 0)
+		if (ustrcmp (typeName, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName) == 0)
 		   pRet = pEl;	/* found, it's the parent */
 		else
 		   pRet = BackSearchElemByTypeName (pEl, typeName);
@@ -488,11 +489,11 @@ int                *view;
    for, FALSE otherwise.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      AttrFound (PtrElement pEl, char *textVal, int val, int attrNum, PtrSSchema pSS)
+static boolean      AttrFound (PtrElement pEl, STRING textVal, int val, int attrNum, PtrSSchema pSS)
 #else  /* __STDC__ */
 static boolean      AttrFound (pEl, textVal, val, attrNum, pSS)
 PtrElement          pEl;
-char               *textVal;
+STRING              textVal;
 int                 val;
 int                 attrNum;
 PtrSSchema          pSS;
@@ -547,7 +548,7 @@ PtrSSchema          pSS;
    FwdSearchAttrInSubtree                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static PtrElement   FwdSearchAttrInSubtree (PtrElement pEl, boolean test, PtrSSchema pSS, int attrNum, int val, char *textVal)
+static PtrElement   FwdSearchAttrInSubtree (PtrElement pEl, boolean test, PtrSSchema pSS, int attrNum, int val, STRING textVal)
 #else  /* __STDC__ */
 static PtrElement   FwdSearchAttrInSubtree (pEl, test, pSS, attrNum, val, textVal)
 PtrElement          pEl;
@@ -555,7 +556,7 @@ boolean             test;
 PtrSSchema          pSS;
 int                 attrNum;
 int                 val;
-char               *textVal;
+STRING              textVal;
 
 #endif /* __STDC__ */
 
@@ -584,11 +585,11 @@ char               *textVal;
    BackSearchAttrInSubtree                                         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static PtrElement   BackSearchAttrInSubtree (PtrElement pEl, char *textVal, int val, int attrNum, PtrSSchema pSS)
+static PtrElement   BackSearchAttrInSubtree (PtrElement pEl, STRING textVal, int val, int attrNum, PtrSSchema pSS)
 #else  /* __STDC__ */
 static PtrElement   BackSearchAttrInSubtree (pEl, textVal, val, attrNum, pSS)
 PtrElement          pEl;
-char               *textVal;
+STRING              textVal;
 int                 val;
 int                 attrNum;
 PtrSSchema          pSS;
@@ -1188,7 +1189,7 @@ boolean             Check;
 		    {
 		       pAsc = pEl2;
 		       do
-			  if (strcmp (pAsc->ElStructSchema->SsName, pAttr2->
+			  if (ustrcmp (pAsc->ElStructSchema->SsName, pAttr2->
 				      AeAttrSSchema->SsName) == 0)
 			    {
 			       pAttr2->AeAttrSSchema = pAsc->ElStructSchema;
@@ -1628,7 +1629,7 @@ PtrSSchema          pSS;
 		if (pEl1->ElTypeNumber == pEl1->ElStructSchema->SsRootElem)
 		   /* the current element is the root of a nature, the current element
 		      is appropriate if we have the same structure schemes */
-		   found = (strcmp (pEl1->ElStructSchema->SsName,
+		   found = (ustrcmp (pEl1->ElStructSchema->SsName,
 				  pSS->SsRule[typeNum - 1].SrOrigNat) == 0);
 	     }
 	   else
@@ -1956,13 +1957,13 @@ int                 view;
    The function returns a pointer to the found element or NULL.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrElement          FwdSearchAttribute (PtrElement pEl, int attrNum, int val, char *textVal, PtrSSchema pSS)
+PtrElement          FwdSearchAttribute (PtrElement pEl, int attrNum, int val, STRING textVal, PtrSSchema pSS)
 #else  /* __STDC__ */
 PtrElement          FwdSearchAttribute (pEl, attrNum, val, textVal, pSS)
 PtrElement          pEl;
 int                 attrNum;
 int                 val;
-char               *textVal;
+STRING              textVal;
 PtrSSchema          pSS;
 
 #endif /* __STDC__ */
@@ -2026,13 +2027,13 @@ PtrSSchema          pSS;
    The function returns a pointer to the found element or NULL.   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrElement          BackSearchAttribute (PtrElement pEl, int attNum, int val, char *textVal, PtrSSchema pSS)
+PtrElement          BackSearchAttribute (PtrElement pEl, int attNum, int val, STRING textVal, PtrSSchema pSS)
 #else  /* __STDC__ */
 PtrElement          BackSearchAttribute (pEl, attNum, val, textVal, pSS)
 PtrElement          pEl;
 int                 attNum;
 int                 val;
-char               *textVal;
+STRING              textVal;
 PtrSSchema          pSS;
 #endif /* __STDC__ */
 
@@ -3058,7 +3059,7 @@ PtrDocument         pDoc;
 				  if (pRuleExcl->SrConstruct == CsNatureSchema)
 				     /* the exclusion is a nature, the exclusion can be applied */
 				     /* if the nature names are the same */
-				     exclus = (strcmp ((*pEl)->ElStructSchema->SsName,
+				     exclus = (ustrcmp ((*pEl)->ElStructSchema->SsName,
 						   pRuleExcl->SrName) == 0);
 			       }
 			  /* the 2nd element of a pair is excluded if the first one is excluded */
@@ -3454,8 +3455,8 @@ PtrDocument         pDoc;
 			     stop = TRUE;
 			     while (n < pDoc->DocNNatures)
 			       {
-				 strcpy (pDoc->DocNatureName[n - 1], pDoc->DocNatureName[n]);
-				 strcpy (pDoc->DocNaturePresName[n - 1], pDoc->DocNaturePresName[n]);
+				 ustrcpy (pDoc->DocNatureName[n - 1], pDoc->DocNatureName[n]);
+				 ustrcpy (pDoc->DocNaturePresName[n - 1], pDoc->DocNaturePresName[n]);
 				 pDoc->DocNatureSSchema[n - 1] = pDoc->DocNatureSSchema[n];
 				 n++;
 			       }
@@ -3558,7 +3559,7 @@ boolean             shareRef;
 	if (doCopy)
 	  {
 	     copyType = pSource->ElTypeNumber;
-	     if (strcmp (pSource->ElStructSchema->SsName, pSSchema->SsName) != 0)
+	     if (ustrcmp (pSource->ElStructSchema->SsName, pSSchema->SsName) != 0)
 		/* change the generic structure */
 		if (pSource->ElStructSchema->SsRule[pSource->ElTypeNumber - 1].SrUnitElem ||
 		    pSource->ElStructSchema->SsExtension || pSource->ElTypeNumber <= MAX_BASIC_TYPE)
@@ -3672,7 +3673,7 @@ boolean             shareRef;
 		     pEl->ElComment = CopyText (pSource->ElComment, pEl);
 		  if (shareRef)
 		    {
-		       strncpy (pEl->ElLabel, pSource->ElLabel, MAX_LABEL_LEN);
+		       ustrncpy (pEl->ElLabel, pSource->ElLabel, MAX_LABEL_LEN);
 		       pEl->ElReferredDescr = pSource->ElReferredDescr;	
 		       /* (temporarily) shares the descriptor of the element
 			  referenced between the source element and the copy element

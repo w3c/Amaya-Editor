@@ -24,6 +24,7 @@
  *
  */
 
+#include "ustring.h"
 #include "thot_sys.h"
 #include "constgrm.h"
 #include "typegrm.h"
@@ -65,13 +66,14 @@ static ParserStackItem Stack[STACKSIZE];	/* pile d'analyse */
 #include "parser_f.h"
 #include "registry_f.h"
 
+#if 0
 #ifdef _WINDOWS
 #ifdef __STD__
-int strncasecmp (const char* s1, const char* s2, size_t n)
+int strncasecmp (const STRING s1, const STRING s2, size_t n)
 #else  /* __STDC__ */
 strncasecmp (s1, s2, n)
-const char* s1;
-const char* s2;
+const STRING s1;
+const STRING s2;
 size_t      n;
 #endif /* __STDC__ */
 {
@@ -87,6 +89,7 @@ size_t      n;
    return (toupper (*s1) - toupper (*s2));
 }
 #endif /* _WINDOWS */
+#endif /* 000 */
 
 /*----------------------------------------------------------------------
    InitParser initialise les donnees de l'analyseur syntaxique.    
@@ -165,7 +168,7 @@ SyntacticCode      *ret;
    do
      {
 	if (Keywords[i].SrcKeywordLen == len)
-	   if (strncasecmp (&inputLine[index - 1], Keywords[i].SrcKeyword, len) == 0)
+	   if (ustrncasecmp (&inputLine[index - 1], Keywords[i].SrcKeyword, len) == 0)
 	      *ret = Keywords[i].SrcKeywordCode;
 	i++;
      }
@@ -203,7 +206,7 @@ int                *rank;
    do
      {
 	if (Identifier[i].SrcIdentLen == len)
-	   if (strncmp (&inputLine[index - 1], Identifier[i].SrcIdentifier, len) == 0)
+	   if (ustrncmp (&inputLine[index - 1], Identifier[i].SrcIdentifier, len) == 0)
 	     {
 		*rank = i + 1;
 		*ret = Identifier[i].SrcIdentCode;
@@ -321,7 +324,7 @@ void                OctalToChar ()
 				    inputLine, LineNum);
 		  else
 		    {
-		       inputLine[i] = (unsigned char) n;
+		       inputLine[i] = (UCHAR) n;
 		       shift = k - i - 1;
 		    }
 	       }
@@ -423,7 +426,7 @@ SyntacticType      *wn;
 	if (inputLine[j] >= '0' && inputLine[j] <= '9')
 	   *wn = SynInteger;
 	else if ((inputLine[j] >= 'A' && inputLine[j] <= 'Z')
-		 || inputLine[j] == (unsigned char) '\240'	/*nobreakspace */
+		 || inputLine[j] == (UCHAR) '\240'	/*nobreakspace */
 		 || (inputLine[j] >= 'a' && inputLine[j] <= 'z')
 
 		 || (((int) inputLine[j]) >= 192 &&
@@ -444,7 +447,7 @@ SyntacticType      *wn;
 		    || (inputLine[j] >= ':' && inputLine[j] <= '@')
 		    || (inputLine[j] >= '[' && inputLine[j] <= '^')
 		    || (inputLine[j] >= '{' && inputLine[j] <= '~')
-		    || inputLine[j] == (char) (127)
+		    || inputLine[j] == (CHAR) (127)
 		    || inputLine[j] == '`')
 		   /* on a trouve un separateur */
 		   stop = True;	/* verifie l'homogeneite */
@@ -463,7 +466,7 @@ SyntacticType      *wn;
 				 break;
 			      case SynIdentifier:
 				 if (!((inputLine[j] >= 'A' && inputLine[j] <= 'Z')
-				       || (inputLine[j] == (unsigned char) '\240' /*nobreakspace */ )
+				       || (inputLine[j] == (UCHAR) '\240' /*nobreakspace */ )
 
 				       || (inputLine[j] >= 'a' && inputLine[j] <= 'z')
 				       || (inputLine[j] >= '0' && inputLine[j] <= '9')
@@ -952,11 +955,11 @@ void                ParserEnd ()
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                InitSyntax (char *fileName)
+void                InitSyntax (STRING fileName)
 
 #else  /* __STDC__ */
 void                InitSyntax (fileName)
-char               *fileName;
+STRING              fileName;
 
 #endif /* __STDC__ */
 
@@ -967,13 +970,13 @@ char               *fileName;
    boolean             readingKeywordTable;
    int                 ruleptr;
    int                 currule;
-   char                pgrname[200];
-   char                pnomcourt[200];
+   CHAR                pgrname[200];
+   CHAR                pnomcourt[200];
    SrcKeywordDesc     *pkw1;
    BinFile             grmFile;
    boolean             fileOK;
 
-   strcpy (pnomcourt, fileName);
+   ustrcpy (pnomcourt, fileName);
    /* cherche dans le directory compil si le fichier grammaire existe */
    if (SearchFile (pnomcourt, 3, pgrname) == 0)
       CompilerMessage (0, COMPIL, FATAL, GRM_FILE_NOT_FOUND,
@@ -1038,9 +1041,9 @@ char               *fileName;
 			    for (l = 0; l < wlen; l++)
 			      {
 				 pkw1->SrcKeyword[l] = inputLine[wind + l - 1];
-				 if ((char) (((int) pkw1->SrcKeyword[l]) - 32) >= 'A'
-				     && (char) (((int) pkw1->SrcKeyword[l]) - 32) <= 'Z')
-				    pkw1->SrcKeyword[l] = (char) (((int) pkw1->SrcKeyword[l]) - 32);
+				 if ((CHAR) (((int) pkw1->SrcKeyword[l]) - 32) >= 'A'
+				     && (CHAR) (((int) pkw1->SrcKeyword[l]) - 32) <= 'Z')
+				    pkw1->SrcKeyword[l] = (CHAR) (((int) pkw1->SrcKeyword[l]) - 32);
 			      }
 			    /* traduit le mot-cle en majuscules */
 			    j = wind + wlen;

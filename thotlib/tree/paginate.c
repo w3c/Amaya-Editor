@@ -26,6 +26,7 @@
  *
  */
 
+#include "ustring.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -387,7 +388,7 @@ boolean            *firstPage;
 
 #endif /* __STDC__ */
 {
-   char               *name;
+   STRING name;
 
    /* affiche un message avec le numero de page */
    /* affiche d'abord le nom de la vue */
@@ -399,12 +400,12 @@ boolean            *firstPage;
    if (*firstPage)
      {
 	/* Affiche un message normal pour la 1ere fois */
-	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_PAGE), name, (char *) pEl->ElPageNumber);
+	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_PAGE), name, (STRING) pEl->ElPageNumber);
 	*firstPage = FALSE;
      }
    else
       /* Sinon ecrase le message precedent */
-      TtaDisplayMessage (OVERHEAD, TtaGetMessage (LIB, TMSG_PAGE), name, (char *) pEl->ElPageNumber);
+      TtaDisplayMessage (OVERHEAD, TtaGetMessage (LIB, TMSG_PAGE), name, (STRING) pEl->ElPageNumber);
 }
 #endif /* PAGINEETIMPRIME */
 
@@ -1271,7 +1272,7 @@ PtrElement          rootEl;
 
 #ifdef PRINT_DEBUG
 FILE     *list;
-char      localname[50];
+CHAR      localname[50];
 static int       n = 1;
 
    sprintf (localname, "/users/guetari/.amaya/print%d.debug", n);

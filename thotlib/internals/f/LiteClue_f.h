@@ -11,7 +11,7 @@ extern void free_widget_context ( XcgLiteClueWidget cw,
                                   struct liteClue_context_str * obj );
 extern void XcgLiteClueAddWidget ( Widget w,
                                    Widget watch,
-                                   char * text,
+                                   STRING text,
                                    int size,
                                    int option );
 extern void XcgLiteClueDeleteWidget ( Widget w,
@@ -31,7 +31,7 @@ extern void free_widget_context (/* XcgLiteClueWidget cw,
                                     struct liteClue_context_str * obj */);
 extern void XcgLiteClueAddWidget (/* Widget w,
                                      Widget watch,
-                                     char * text,
+                                     STRING text,
                                      int size,
                                      int option */);
 extern void XcgLiteClueDeleteWidget (/* Widget w,

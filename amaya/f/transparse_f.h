@@ -7,14 +7,14 @@
 #ifdef __STDC__
 
 extern void FreeList ( strListSymb * pl );
-extern int ppStartParser ( char *name,
+extern int ppStartParser ( STRING name,
                            SSchema tStrSchema,
                            strTransSet **resTrSet );
 
 #else /* __STDC__ */
 
 extern void FreeList (/* strListSymb * pl */);
-extern int ppStartParser (/* char *name,
+extern int ppStartParser (/* STRING name,
                              SSchema tStrSchema,
                              strTransSet **resTrSet */);
 

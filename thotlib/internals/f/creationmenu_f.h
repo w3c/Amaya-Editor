@@ -9,38 +9,38 @@
 extern boolean AskForNew_RemplRefer ( boolean * generate,
                                       Name typeName );
 extern void CallbackAskForNew ( int Val );
-extern void BuildChoiceMenu ( char *bufMenu,
+extern void BuildChoiceMenu ( STRING bufMenu,
                               Name menuTitle,
                               int nbEntries,
                               boolean natureChoice );
 extern void InsertSeparatorInMenu ( int *prevMenuInd,
                                     int *nbEntries,
                                     int *menuInd,
-                                    char *bufMenu );
+                                    STRING bufMenu );
 extern void BuildPasteMenu ( int RefMenu,
-                             char *bufMenu,
+                             STRING bufMenu,
                              Name title,
                              int nbEntries,
-                             char button );
+                             CHAR button );
 
 #else /* __STDC__ */
 
 extern boolean AskForNew_RemplRefer (/* boolean * generate,
                                         Name typeName */);
 extern void CallbackAskForNew (/* int Val */);
-extern void BuildChoiceMenu (/* char *bufMenu,
+extern void BuildChoiceMenu (/* STRING bufMenu,
                                 Name menuTitle,
                                 int nbEntries,
                                 boolean natureChoice */);
 extern void InsertSeparatorInMenu (/* int *prevMenuInd,
                                       int *nbEntries,
                                       int *menuInd,
-                                      char *bufMenu */);
+                                      STRING bufMenu */);
 extern void BuildPasteMenu (/* int RefMenu,
-                               char *bufMenu,
+                               STRING bufMenu,
                                Name title,
                                int nbEntries,
-                               char button */);
+                               CHAR button */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

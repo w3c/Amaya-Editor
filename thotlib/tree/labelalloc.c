@@ -17,6 +17,7 @@
  *
  */	    
 
+#include "ustring.h"
 #include "thot_sys.h"
 #include "constint.h"
 #include "typeint.h"

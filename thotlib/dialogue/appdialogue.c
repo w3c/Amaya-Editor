@@ -19,6 +19,7 @@
  *
  */
 
+#include "ustring.h"
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"
@@ -56,7 +57,7 @@ extern boolean      WithMessages;	/* partage avec le module dialog.c */
 extern Pixmap       image;
 #ifndef _WIN_PRINT
 extern int          appArgc;
-extern char**       appArgv;
+extern STRING*       appArgv;
 extern int          iString;
 #endif /* !_WIN_PRINT */
 extern ThotWidget   WIN_curWin;
@@ -113,7 +114,7 @@ static int   strIndex ;
 
 extern int     tipIndex;
 extern int     CommandToString [MAX_FRAME][MAX_BUTTON];
-extern char    szTbStrings [4096];
+extern CHAR    szTbStrings [4096];
 
 #define ToolBar_InsertButton(hwnd, idButton, lpButton) \
     (BOOL)SendMessage((hwnd), TB_INSERTBUTTON, (WPARAM)idButton, (LPARAM)(LPTBBUTTON)lpButton)
@@ -245,19 +246,19 @@ HWND GetCurrentWindow () {
    TteInitMenuActions alloue la table des actions.                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TteInitMenus (char *name, int number)
+void                TteInitMenus (STRING name, int number)
 #else  /* __STDC__ */
 void                TteInitMenus (name, number)
-char               *name;
+STRING              name;
 int                 number;
 
 #endif /* __STDC__ */
 {
    int                 i;
-   char                namef1[100];
-   char                namef2[100];
-   char                text[100];
-   char                alphabet;
+   CHAR                namef1[100];
+   CHAR                namef2[100];
+   CHAR                text[100];
+   CHAR                alphabet;
 
 #  ifndef _WINDOWS
    Display            *Dp;
@@ -278,7 +279,7 @@ int                 number;
      {
 	i = 1;
 	while (i < appArgc - 1)
-	   if (strcmp (appArgv[i], "-display") != 0)
+	   if (ustrcmp (appArgv[i], "-display") != 0)
 	      i++;
 	   else
 	     {
@@ -436,28 +437,28 @@ int                 number;
    actions d'interface.                                            
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TteAddMenuAction (char *actionName, Proc procedure)
+void                TteAddMenuAction (STRING actionName, Proc procedure)
 
 #else  /* __STDC__ */
 void                TteAddMenuAction (actionName, procedure)
-char               *actionName;
+STRING              actionName;
 Proc                procedure;
 
 #endif /* __STDC__ */
 {
-   char               *ptr;
+   STRING              ptr;
    int                 lg;
    int                 i;
 
    if (actionName == NULL)
       return;			/* pas de nom d'action declare */
 
-   lg = strlen (actionName);
+   lg = ustrlen (actionName);
    if (FreeMenuAction < MaxMenuAction && lg != 0)
      {
 	/* Alloue une chaine de caractere pour le nom de l'action */
 	ptr = TtaGetMemory (lg + 1);
-	strcpy (ptr, actionName);
+	ustrcpy (ptr, actionName);
 	MenuActionList[FreeMenuAction].ActionName = ptr;
 	MenuActionList[FreeMenuAction].Call_Action = procedure;
 	MenuActionList[FreeMenuAction].User_Action = (UserProc) NULL;
@@ -475,17 +476,17 @@ Proc                procedure;
    built-in action, or override a previously defined user action.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                TteAddUserMenuAction (char *actionName, UserProc procedure, void *arg)
+int                TteAddUserMenuAction (STRING actionName, UserProc procedure, void *arg)
 
 #else  /* __STDC__ */
 int                TteAddUserMenuAction (actionName, procedure, arg)
-char               *actionName;
+STRING              actionName;
 UserProc            procedure;
 void               *arg;
 
 #endif /* __STDC__ */
 {
-   char               *ptr;
+   STRING              ptr;
    int                 lg;
    int                 i;
 
@@ -494,14 +495,14 @@ void               *arg;
     */
    if (actionName == NULL)
       return(-1);
-   lg = strlen (actionName);
+   lg = ustrlen (actionName);
    if (lg == 0) return(-1);
 
    /*
     * Search in the menu actions table for a predefined action with this name
     */
    for (i = 0;i < FreeMenuAction;i++) {
-       if (!strcmp(MenuActionList[i].ActionName, actionName)) {
+       if (!ustrcmp(MenuActionList[i].ActionName, actionName)) {
            /*
 	    * This action already exists, register the user procedure.
 	    */
@@ -519,7 +520,7 @@ void               *arg;
      {
 	/* Dup' the action name string */
 	ptr = TtaGetMemory (lg + 1);
-	strcpy (ptr, actionName);
+	ustrcpy (ptr, actionName);
 	MenuActionList[FreeMenuAction].ActionName = ptr;
 	MenuActionList[FreeMenuAction].Call_Action = (Proc) NULL;
 	MenuActionList[FreeMenuAction].User_Action = procedure;
@@ -540,11 +541,11 @@ void               *arg;
    d'interface.                                                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int          FindMenuAction (char *actionName)
+static int          FindMenuAction (STRING actionName)
 
 #else  /* __STDC__ */
 static int          FindMenuAction (actionName)
-char               *actionName;
+STRING              actionName;
 
 #endif /* __STDC__ */
 {
@@ -552,7 +553,7 @@ char               *actionName;
 
    for (i = 0; i < MaxMenuAction; i++)
      {
-	if (!strcmp (actionName, MenuActionList[i].ActionName))
+	if (!ustrcmp (actionName, MenuActionList[i].ActionName))
 	   return (i);
      }
    return (i);
@@ -564,12 +565,12 @@ char               *actionName;
    fenentre.                                                       
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TteZeroMenu (WindowType windowtype, char *schemaName)
+void                TteZeroMenu (WindowType windowtype, STRING schemaName)
 
 #else  /* __STDC__ */
 void                TteZeroMenu (windowtype, schemaName)
 WindowType          windowtype;
-char               *schemaName;
+STRING              schemaName;
 
 #endif /* __STDC__ */
 {
@@ -583,8 +584,8 @@ char               *schemaName;
 	  {
 	     /* creation et initialisation du contexte specifique au schema */
 	     ptrschema = (SchemaMenu_Ctl *) TtaGetMemory (sizeof (SchemaMenu_Ctl));
-	     ptrschema->SchemaName = TtaGetMemory (strlen (schemaName) + 1);
-	     strcpy (ptrschema->SchemaName, schemaName);
+	     ptrschema->SchemaName = TtaGetMemory (ustrlen (schemaName) + 1);
+	     ustrcpy (ptrschema->SchemaName, schemaName);
 	     ptrschema->SchemaMenu = NULL;
 	     ptrschema->NextSchema = NULL;
 	     SchemasMenuList = ptrschema;
@@ -592,11 +593,11 @@ char               *schemaName;
 	else
 	  {
 	     ptrschema = SchemasMenuList;
-	     ok = strcmp (schemaName, ptrschema->SchemaName);
+	     ok = ustrcmp (schemaName, ptrschema->SchemaName);
 	     while (!ok && ptrschema->NextSchema != NULL)
 	       {
 		  ptrschema = ptrschema->NextSchema;
-		  ok = strcmp (schemaName, ptrschema->SchemaName);
+		  ok = ustrcmp (schemaName, ptrschema->SchemaName);
 	       }
 
 	     if (!ok)
@@ -604,8 +605,8 @@ char               *schemaName;
 		  /* creation et initialisation du contexte specifique au schema */
 		  ptrschema->NextSchema = (SchemaMenu_Ctl *) TtaGetMemory (sizeof (SchemaMenu_Ctl));
 		  ptrschema = ptrschema->NextSchema;
-		  ptrschema->SchemaName = TtaGetMemory (strlen (schemaName) + 1);
-		  strcpy (ptrschema->SchemaName, schemaName);
+		  ptrschema->SchemaName = TtaGetMemory (ustrlen (schemaName) + 1);
+		  ustrcpy (ptrschema->SchemaName, schemaName);
 		  ptrschema->SchemaMenu = NULL;
 		  ptrschema->NextSchema = NULL;
 	       }
@@ -619,16 +620,16 @@ char               *schemaName;
    nom de schema est Null, il s'agit des menus pris par defaut.    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TteAddMenu (WindowType windowtype, char *schemaName, int view, int menuID, int itemsNumber, char *menuName)
+void                TteAddMenu (WindowType windowtype, STRING schemaName, int view, int menuID, int itemsNumber, STRING menuName)
 
 #else  /* __STDC__ */
 void                TteAddMenu (windowtype, schemaName, view, menuID, itemsNumber, menuName)
 WindowType          windowtype;
-char               *schemaName;
+STRING              schemaName;
 int                 view;
 int                 menuID;
 int                 itemsNumber;
-char               *menuName;
+STRING              menuName;
 
 #endif /* __STDC__ */
 {
@@ -648,11 +649,11 @@ char               *menuName;
    newmenu->MenuAttr = FALSE;
    newmenu->MenuSelect = FALSE;
    newmenu->MenuHelp = FALSE;
-   if (!strcmp (menuName, "MenuAttribute"))
+   if (!ustrcmp (menuName, "MenuAttribute"))
       newmenu->MenuAttr = TRUE;
-   else if (!strcmp (menuName, "MenuSelection"))
+   else if (!ustrcmp (menuName, "MenuSelection"))
       newmenu->MenuSelect = TRUE;
-   else if (!strcmp (menuName, "MenuHelp"))
+   else if (!ustrcmp (menuName, "MenuHelp"))
       newmenu->MenuHelp = TRUE;
 
    /* creation et initialisation de la table des items */
@@ -697,8 +698,8 @@ char               *menuName;
 		 {
 		    /* creation et initialisation du contexte specifique au schema */
 		    ptrschema = (SchemaMenu_Ctl *) TtaGetMemory (sizeof (SchemaMenu_Ctl));
-		    ptrschema->SchemaName = TtaGetMemory (strlen (schemaName) + 1);
-		    strcpy (ptrschema->SchemaName, schemaName);
+		    ptrschema->SchemaName = TtaGetMemory (ustrlen (schemaName) + 1);
+		    ustrcpy (ptrschema->SchemaName, schemaName);
 		    ptrschema->SchemaMenu = newmenu;
 		    ptrschema->NextSchema = NULL;
 		    ptrmenu = NULL;
@@ -707,11 +708,11 @@ char               *menuName;
 	       else
 		 {
 		    ptrschema = SchemasMenuList;
-		    ok = strcmp (schemaName, ptrschema->SchemaName);
+		    ok = ustrcmp (schemaName, ptrschema->SchemaName);
 		    while (ok && ptrschema->NextSchema != NULL)
 		      {
 			 ptrschema = ptrschema->NextSchema;
-			 ok = strcmp (schemaName, ptrschema->SchemaName);
+			 ok = ustrcmp (schemaName, ptrschema->SchemaName);
 		      }
 
 		    if (ok)
@@ -719,8 +720,8 @@ char               *menuName;
 			 /* creation et initialisation du contexte specifique au schema */
 			 ptrschema->NextSchema = (SchemaMenu_Ctl *) TtaGetMemory (sizeof (SchemaMenu_Ctl));
 			 ptrschema = ptrschema->NextSchema;
-			 ptrschema->SchemaName = TtaGetMemory (strlen (schemaName) + 1);
-			 strcpy (ptrschema->SchemaName, schemaName);
+			 ptrschema->SchemaName = TtaGetMemory (ustrlen (schemaName) + 1);
+			 ustrcpy (ptrschema->SchemaName, schemaName);
 			 ptrschema->SchemaMenu = newmenu;
 			 ptrschema->NextSchema = NULL;
 			 ptrmenu = NULL;
@@ -745,12 +746,12 @@ char               *menuName;
    TteAddSubMenu ajoute un sous-menu pour le schema donne.            
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TteAddSubMenu (WindowType windowtype, char *schemaName, int menuID, int itemID, int itemsNumber)
+void                TteAddSubMenu (WindowType windowtype, STRING schemaName, int menuID, int itemID, int itemsNumber)
 
 #else  /* __STDC__ */
 void                TteAddSubMenu (windowtype, schemaName, menuID, itemID, itemsNumber)
 WindowType          windowtype;
-char               *schemaName;
+STRING              schemaName;
 int                 menuID;
 int                 itemID;
 int                 itemsNumber;
@@ -782,7 +783,7 @@ int                 itemsNumber;
 	    case DocTypeWindow:
 	       /* il s'agit d'un menu d'un schema particulier */
 	       ptrschema = SchemasMenuList;
-	       while (ptrschema != NULL && strcmp (schemaName, ptrschema->SchemaName))
+	       while (ptrschema != NULL && ustrcmp (schemaName, ptrschema->SchemaName))
 		  ptrschema = ptrschema->NextSchema;
 	       if (ptrschema != NULL)
 		  ptrmenu = ptrschema->SchemaMenu;
@@ -834,17 +835,17 @@ int                 itemsNumber;
    TteAddMenuItem ajoute une nouvel item dans un menu.                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TteAddMenuItem (WindowType windowtype, char *schemaName, int menuID, int subMenu, int itemID, char *actionName, char itemType)
+void                TteAddMenuItem (WindowType windowtype, STRING schemaName, int menuID, int subMenu, int itemID, STRING actionName, CHAR itemType)
 
 #else  /* __STDC__ */
 void                TteAddMenuItem (windowtype, schemaName, menuID, subMenu, itemID, actionName, itemType)
 WindowType          windowtype;
-char               *schemaName;
+STRING              schemaName;
 int                 menuID;
 int                 subMenu;
 int                 itemID;
-char               *actionName;
-char                itemType;
+STRING              actionName;
+CHAR                itemType;
 
 #endif /* __STDC__ */
 {
@@ -872,7 +873,7 @@ char                itemType;
 	    case DocTypeWindow:
 	       /* il s'agit d'un menu d'un schema particulier */
 	       ptrschema = SchemasMenuList;
-	       while (ptrschema != NULL && strcmp (schemaName, ptrschema->SchemaName))
+	       while (ptrschema != NULL && ustrcmp (schemaName, ptrschema->SchemaName))
 		  ptrschema = ptrschema->NextSchema;
 	       if (ptrschema != NULL)
 		  ptrmenu = ptrschema->SchemaMenu;
@@ -951,12 +952,12 @@ int                 frame;
    int                 lg, sref;
    int                 item;
    int                 action;
-   char                string[700];
+   CHAR                string[700];
 #define MaxEquivLen 200
-   char                equiv[MaxEquivLen];
+   CHAR                equiv[MaxEquivLen];
    boolean             withEquiv;
    Item_Ctl           *ptritem;
-   char               *ptr;
+   STRING              ptr;
 
    /* Construit le sous-menu attache a l'item */
 #  ifdef _WINDOWS
@@ -972,10 +973,10 @@ int                 frame;
      {
 	/* Regarde si le texte des commandes ne deborde pas */
 	ptr = TtaGetMessage (THOT, ptritem[item].ItemID);
-	lg = strlen (ptr) + 1;
+	lg = ustrlen (ptr) + 1;
 	if (ptritem[item].ItemType == 'S' && i + 2 < 700)
 	  {
-	     strcpy (&string[i], "S");
+	     ustrcpy (&string[i], "S");
 	     i += 2;
 	  }
 	else if (i + lg < 699)
@@ -984,7 +985,7 @@ int                 frame;
 		string[i] = 'B';
 	     else
 		string[i] = ptritem[item].ItemType;
-	     strcpy (&string[i + 1], ptr);
+	     ustrcpy (&string[i + 1], ptr);
 	     i += lg + 1;
 	  }
 	else
@@ -999,10 +1000,10 @@ int                 frame;
 	     if (MenuActionList[action].ActionEquiv != NULL)
 	       {
 		  withEquiv = TRUE;
-		  lg = strlen (MenuActionList[action].ActionEquiv);
+		  lg = ustrlen (MenuActionList[action].ActionEquiv);
 		  if (lg + j < MaxEquivLen)
 		    {
-		       strcpy (&equiv[j], MenuActionList[action].ActionEquiv);
+		       ustrcpy (&equiv[j], MenuActionList[action].ActionEquiv);
 		       j += lg;
 		    }
 	       }
@@ -1039,14 +1040,14 @@ int                 doc;
    int                 lg;
    int                 item;
    int                 action;
-   char                string[700];
-   char                equiv[MaxEquivLen];
+   CHAR                string[700];
+   CHAR                equiv[MaxEquivLen];
    boolean             withEquiv;
    Item_Ctl           *ptritem;
-   char               *ptr;
+   STRING              ptr;
 #ifndef _WINDOWS 
-   char                fontname[100];
-   char                text[20];
+   CHAR                fontname[100];
+   CHAR                text[20];
 #else _WINDOWS
    HMENU               hMenu;
 
@@ -1066,10 +1067,10 @@ int                 doc;
 	action = ptritem[item].ItemAction;
 	/* Regarde si le texte des commandes ne deborde pas */
 	ptr = TtaGetMessage (THOT, ptritem[item].ItemID);
-	lg = strlen (ptr) + 1;
+	lg = ustrlen (ptr) + 1;
 	if (ptritem[item].ItemType == 'S' && i + 2 < 700)
 	  {
-	     strcpy (&string[i], "S");
+	     ustrcpy (&string[i], "S");
 	     i += 2;
 	  }
 	else if (i + lg < 699)
@@ -1078,7 +1079,7 @@ int                 doc;
 		string[i] = 'B';
 	     else
 		string[i] = ptritem[item].ItemType;
-	     strcpy (&string[i + 1], ptr);
+	     ustrcpy (&string[i + 1], ptr);
 	     i += lg + 1;
 	  }
 	else
@@ -1094,21 +1095,21 @@ int                 doc;
 		  if (MenuActionList[action].ActionEquiv != NULL)
 		    {
 		       withEquiv = TRUE;
-		       lg = strlen (MenuActionList[action].ActionEquiv);
+		       lg = ustrlen (MenuActionList[action].ActionEquiv);
 		       if (lg + j < MaxEquivLen)
 			 {
-			    strcpy (&equiv[j], MenuActionList[action].ActionEquiv);
+			    ustrcpy (&equiv[j], MenuActionList[action].ActionEquiv);
 			    j += lg;
 			 }
 		    }
 		  /* Is it the Paste command */
-		  if (!strcmp (MenuActionList[action].ActionName, "TtcPaste"))
+		  if (!ustrcmp (MenuActionList[action].ActionName, "TtcPaste"))
 		    {
 		      FrameTable[frame].MenuPaste = ref;
 		      FrameTable[frame].EntryPaste = item;
 		    }
 		  /* Is it the Undo command */
-		  if (!strcmp (MenuActionList[action].ActionName, "TtcUndo"))
+		  if (!ustrcmp (MenuActionList[action].ActionName, "TtcUndo"))
 		    {
 		      FrameTable[frame].MenuUndo = ref;
 		      FrameTable[frame].EntryUndo = item;
@@ -1197,10 +1198,10 @@ int                 doc;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TteOpenMainWindow (char *name, Pixmap logo, Pixmap icon)
+void                TteOpenMainWindow (STRING name, Pixmap logo, Pixmap icon)
 #else  /* __STDC__ */
 void                TteOpenMainWindow (name, logo, icon)
-char               *name;
+STRING              name;
 Pixmap              logo;
 Pixmap              icon;
 
@@ -1209,9 +1210,9 @@ Pixmap              icon;
    int                 i, n;
    int                 ref;
    int                 lg;
-   char                string[700];
+   CHAR                string[700];
    Menu_Ctl           *ptrmenu;
-   char               *ptr;
+   STRING              ptr;
 
    /* Creation de la fenetre principale */
    UserErrorCode = 0;
@@ -1244,10 +1245,10 @@ Pixmap              icon;
 	        ptr = TtaGetMessage(EDIT_DIALOG, ptrmenu->MenuID);
 	      */
 	     ptr = TtaGetMessage (THOT, ptrmenu->MenuID);
-	     lg = strlen (ptr) + 1;
+	     lg = ustrlen (ptr) + 1;
 	     if (i + lg < 700)
 	       {
-		  strcpy (&string[i], ptr);
+		  ustrcpy (&string[i], ptr);
 		  i += lg;
 		  ptrmenu = ptrmenu->NextMenu;
 	       }
@@ -1356,7 +1357,7 @@ ThotWidget   toplevel;
    Arg                 args[MAX_ARGS];
    int                 n;
    int                 wait_ms = 500; /* 500 ms i.e. 1/2 second */
-   char                *user_delay;
+   STRING              user_delay;
    ThotColor           bg;
 
    if (liteClue != NULL) return;
@@ -1401,27 +1402,27 @@ ThotWidget   toplevel;
 #ifndef _WIN_PRINT
 #ifdef _WINDOWS
 #ifdef __STDC__
-int WIN_TtaAddButton (Document document, View view, int picture, void (*procedure) (), char *info, BYTE type, BOOL state)
+int WIN_TtaAddButton (Document document, View view, int picture, void (*procedure) (), STRING info, BYTE type, BOOL state)
 #else  /* __STDC__ */
 int WIN_TtaAddButton (document, view, picture, procedure, info, type, state)
 Document document;
 View     view;
 int      picture;
 void     (*procedure) ();
-char*    info;
+STRING    info;
 BYTE     type;
 BOOL     state;
 #endif /* __STDC__ */
 #else  /* !_WINDOWS */
 #ifdef __STDC__
-int                 TtaAddButton (Document document, View view, Pixmap picture, void (*procedure) (), char *info)
+int                 TtaAddButton (Document document, View view, Pixmap picture, void (*procedure) (), STRING info)
 #else  /* __STDC__ */
 int                 TtaAddButton (document, view, picture, procedure, info)
 Document            document;
 View                view;
 Pixmap              picture;
 void                (*procedure) ();
-char               *info;
+STRING              info;
 #endif /* __STDC__ */
 #endif /* _WINDOWS */
 {
@@ -1544,11 +1545,11 @@ char               *info;
                   if (info != NULL) {
 #                    ifdef _WINDOWS
                      if (!tbStringsInitialized) {                   
-		                strcat (&szTbStrings [strIndex], info);
-	                    strIndex += (strlen (info) + 1);
+		                ustrcat (&szTbStrings [strIndex], info);
+	                    strIndex += (ustrlen (info) + 1);
 					 }
 #                    else  /* !_WINDOWS */
-		     XcgLiteClueAddWidget(liteClue, w,  info, strlen(info), 0);
+		     XcgLiteClueAddWidget(liteClue, w,  info, ustrlen(info), 0);
 #                    endif /* _WINDOWS */
                   }
 	       }
@@ -1982,9 +1983,9 @@ XmTextVerifyCallbackStruct *call_d;
    View                view;
    int                 i;
 #  ifndef _WINDOWS
-   char               *text;
+   STRING              text;
 #  else  /* _WINDOWS */
-   static char text [1024];
+   static CHAR text [1024];
 #  endif /* _WINDOWS */
 
    CloseInsertion ();
@@ -2017,12 +2018,12 @@ XmTextVerifyCallbackStruct *call_d;
    user.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 TtaAddTextZone (Document document, View view, char *label, boolean editable, void (*procedure) ())
+int                 TtaAddTextZone (Document document, View view, STRING label, boolean editable, void (*procedure) ())
 #else  /* __STDC__ */
 int                 TtaAddTextZone (document, view, label, editable, procedure)
 Document            document;
 View                view;
-char               *label;
+STRING              label;
 boolean             editable;
 void                (*procedure) ();
 
@@ -2214,13 +2215,13 @@ void                (*procedure) ();
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaSetTextZone (Document document, View view, int index, char *text)
+void                TtaSetTextZone (Document document, View view, int index, STRING text)
 #else  /* __STDC__ */
 void                TtaSetTextZone (document, view, index, text)
 Document            document;
 View                view;
 int                 index;
-char               *text;
+STRING              text;
 
 #endif /* __STDC__ */
 {
@@ -2394,12 +2395,12 @@ int                *infos;
    - L'indice de la fenetre allouee ou 0 en cas d'echec.              
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 MakeFrame (char *schema, int view, char *name, int X, int Y, int large, int haut, int *volume, int doc)
+int                 MakeFrame (STRING schema, int view, STRING name, int X, int Y, int large, int haut, int *volume, int doc)
 #else  /* __STDC__ */
 int                 MakeFrame (schema, view, name, X, Y, large, haut, volume, doc)
-char               *schema;
+STRING              schema;
 int                 view;
-char               *name;
+STRING              name;
 int                 X;
 int                 Y;
 int                 large;
@@ -2419,14 +2420,14 @@ int                 doc;
    Arg                 args[MAX_ARGS], argument[5];
    XmString            title_string;
    Dimension           dx, dy;
-   char                string[700];
+   CHAR                string[700];
 #  endif /* _WINDOWS */
    ThotWidget          Main_Wd = (ThotWidget) 0;
    ThotWidget          hscrl;
    ThotWidget          vscrl;
    SchemaMenu_Ctl     *SCHmenu;
    Menu_Ctl           *ptrmenu;
-   char		      *visiStr, *zoomStr;
+   STRING	       visiStr, zoomStr;
    int                 i, n;
    int                 ref;
    int		       visiVal, zoomVal;
@@ -2596,7 +2597,7 @@ int                 doc;
 	   ptrmenu = NULL;
 	   while (SCHmenu != NULL && ptrmenu == NULL)
 	     {
-	       if (!strcmp (schema, SCHmenu->SchemaName))
+	       if (!ustrcmp (schema, SCHmenu->SchemaName))
 		 /* c'est un document d'un type particulier */
 		 ptrmenu = SCHmenu->SchemaMenu;
 	       else
@@ -3275,8 +3276,8 @@ boolean      on;
 #endif /* __STDC__ */
 {
 #ifndef _WINDOWS 
-  char                fontname[100];
-  char                text[20];
+  CHAR                fontname[100];
+  CHAR                text[20];
 #else _WINDOWS
   HMENU               hMenu;
 #endif /* _WINDOWS */
@@ -3354,8 +3355,8 @@ boolean      on;
 #endif /* __STDC__ */
 {
 #ifndef _WINDOWS 
-  char                fontname[100];
-  char                text[20];
+  CHAR                fontname[100];
+  CHAR                text[20];
 #else _WINDOWS
   HMENU               hMenu;
 #endif /* _WINDOWS */
@@ -3633,8 +3634,8 @@ int                 itemID;
    int                 item;
    int                 action;
 #ifndef _WINDOWS 
-   char                fontname[100];
-   char                text[20];
+   CHAR                fontname[100];
+   CHAR                text[20];
 #else _WINDOWS
    HMENU               hMenu;
 #endif /* _WINDOWS */
@@ -3795,13 +3796,13 @@ int                 set;
    ThotCallback ge`re tous les retours du dialogue de Thot.        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ThotCallback (int ref, int typedata, char *data)
+void                ThotCallback (int ref, int typedata, STRING data)
 
 #else  /* __STDC__ */
 void                ThotCallback (ref, typedata, data)
 int                 ref;
 int                 typedata;
-char               *data;
+STRING              data;
 
 #endif /* __STDC__ */
 
@@ -3860,7 +3861,7 @@ char               *data;
 		  (*ThotLocalActions[T_rchoice]) ((int) data + 1, NULL);
 		  break;
 	       case NumSelectNatureName:
-		  (*ThotLocalActions[T_rchoice]) (0, (char *) data);
+		  (*ThotLocalActions[T_rchoice]) (0, (STRING) data);
 		  break;
 	       case NumMenuCreateReferenceElem:
 		  /* Pop-up menu 'Creation element reference'' */

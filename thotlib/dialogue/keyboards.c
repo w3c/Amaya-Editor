@@ -22,6 +22,7 @@
  *
  */
 
+#include "ustring.h"
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"
@@ -45,9 +46,9 @@
 
 typedef struct _item
   {
-     char                name;
-     unsigned char       value;
-     char               *legend;
+     CHAR                name;
+     UCHAR       value;
+     STRING              legend;
   }
 ITEM;
 
@@ -409,11 +410,11 @@ extern void CreateGreekKeyboardDlgWindow ();
    Function func indicates if it's an active box (1) or not (0).
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         WChar (ThotWindow w, char ch, int x, int y, int func, ptrfont font, int disp, ThotGC GClocal)
+static void         WChar (ThotWindow w, CHAR ch, int x, int y, int func, ptrfont font, int disp, ThotGC GClocal)
 #else  /* __STDC__ */
 static void         WChar (w, ch, x, y, func, font, disp, GClocal)
 ThotWindow          w;
-char                ch;
+CHAR                ch;
 int                 x;
 int                 y;
 int                 func;
@@ -469,12 +470,12 @@ caddr_t             call_d;
 
 #endif /* __STDC__ */
 {
-   unsigned char       car;
+   UCHAR       car;
    ThotWidget          wp;
    int                 i;
 
    /* Recupere la table des items */
-   car = (unsigned char) param % 256;
+   car = (UCHAR) param % 256;
    /* Recupere le widget de la palette */
 #  ifndef _WINDOWS
    wp=XtParent(XtParent(XtParent(XtParent(w))));
@@ -550,11 +551,11 @@ XmDrawnButtonCallbackStruct *infos;
    creates a keyboard.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         CreateKeyboard (int number, char *title, ptrfont pFont, int col, int x, int y, ITEM * items, int nbitem)
+static void         CreateKeyboard (int number, STRING title, ptrfont pFont, int col, int x, int y, ITEM * items, int nbitem)
 #else  /* __STDC__ */
 static void         CreateKeyboard (number, title, font, col, x, y, items, nbitem)
 int                 number;
-char               *title;
+STRING              title;
 ptrfont             pFont;
 int                 col;
 int                 x;
@@ -572,7 +573,7 @@ int                 nbitem;
    Arg                 args[MAX_ARGS];
    XmString            title_string;
    XmFontList          xfont;
-   char                string[10];
+   CHAR                string[10];
    int                 param;
    XGCValues           GCmodel;
 

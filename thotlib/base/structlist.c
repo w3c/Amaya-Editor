@@ -13,6 +13,7 @@
  *
  */
 
+#include "ustring.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -1389,10 +1390,10 @@ FILE               *fileDescriptor;
    wrtext ecrit du texte
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         wrtext (char *Text, FILE * fileDescriptor)
+static void         wrtext (STRING Text, FILE * fileDescriptor)
 #else  /* __STDC__ */
 static void         wrtext (Text, fileDescriptor)
-char               *Text;
+STRING              Text;
 FILE               *fileDescriptor;
 #endif /* __STDC__ */
 

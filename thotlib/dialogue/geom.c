@@ -14,6 +14,7 @@
  *
  */
 
+#include "ustring.h"
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"
@@ -246,7 +247,7 @@ int                *y3;
          XDrawLines (TtDisplay, FrRef[frame], TtInvertGC, points, nb - 1, CoordModeOrigin);
 #        endif /* _WINDOWS */
   /* free the table of points */
-  free ((char *) points);
+  free ((STRING) points);
 }
 
 
@@ -366,7 +367,7 @@ int                 nbPoints;
 	  pBox->BxAbstractBox->AbPolyLineShape == 's')
 	{
 	  if (pBox->BxPictInfo != NULL)
-	    free ((char *) pBox->BxPictInfo);
+	    free ((STRING) pBox->BxPictInfo);
 	  controls = ComputeControlPoints (Bbuffer, pBox->BxNChars);
 	  pBox->BxPictInfo = (int *) controls;
 	  /* save previous xMin and yMin */

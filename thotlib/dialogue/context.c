@@ -13,6 +13,7 @@
  *         R. Guetari (W3C/INRIA) Windows 95/NT routines.
  */
 
+#include "ustring.h"
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"
@@ -159,7 +160,7 @@ XErrorEvent        *err;
 
 #endif /* __STDC__ */
 {
-   char                msg[200];
+   CHAR                msg[200];
 
    XGetErrorText (dpy, err->error_code, msg, 200);
    return (0);
@@ -237,10 +238,10 @@ unsigned short      blue;
  *   TtaGiveRGB returns the RGB of the color.
  ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaGiveRGB (char *colname, unsigned short *red, unsigned short *green, unsigned short *blue)
+void                TtaGiveRGB (STRING colname, unsigned short *red, unsigned short *green, unsigned short *blue)
 #else  /* __STDC__ */
 void                TtaGiveRGB (colname, red, green, blue)
-char               *colname;
+STRING              colname;
 unsigned short     *red;
 unsigned short     *green;
 unsigned short     *blue;
@@ -257,7 +258,7 @@ unsigned short     *blue;
     */
    maxcolor = NumberOfColors ();
    for (i = 0; i < maxcolor; i++)
-       if (!strcasecmp (ColorName (i), colname))
+       if (!ustrcasecmp (ColorName (i), colname))
 	  TtaGiveThotRGB (i, red, green, blue);
 
 #  ifndef _WINDOWS
@@ -281,24 +282,24 @@ unsigned short     *blue;
  * The result is the closest color found the Thot color table.
  ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      FindColor (int disp, char *name, char *colorplace, char *defaultcolor, ThotColor *colorpixel)
+static boolean      FindColor (int disp, STRING name, STRING colorplace, STRING defaultcolor, ThotColor *colorpixel)
 #else  /* __STDC__ */
 static boolean      FindColor (disp, name, colorplace, defaultcolor, colorpixel)
 int        disp;
-char*      name;
-char*      colorplace;
-char*      defaultcolor;
+STRING      name;
+STRING      colorplace;
+STRING      defaultcolor;
 ThotColor* colorpixel;
 
 #endif /* __STDC__ */
 {
    int                 col;
-   char               *value;
+   STRING              value;
    unsigned short      red;
    unsigned short      green;
    unsigned short      blue;
 
-   value = (char*) TtaGetEnvString (colorplace);
+   value = (STRING) TtaGetEnvString (colorplace);
    /* do you need to take the default color? */
    if (value == NULL && defaultcolor != NULL)
        value = defaultcolor;
@@ -308,7 +309,7 @@ ThotColor* colorpixel;
 	TtaGiveRGB (value, &red, &green, &blue);
 	col = TtaGetThotColor (red, green, blue);
 	/* register the default background color */
-	if (strcmp (colorplace, "BackgroundColor") == 0)
+	if (ustrcmp (colorplace, "BackgroundColor") == 0)
 	   DefaultBColor = col;
 #   ifdef _WINDOWS 
 	*colorpixel = col;
@@ -339,10 +340,10 @@ static void         InitCurs ()
  *      InitColors initialize the Thot predefined X-Window colors.
  ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         InitColors (char *name)
+static void         InitColors (STRING name)
 #else  /* __STDC__ */
 static void         InitColors (name)
-char               *name;
+STRING              name;
 
 #endif /* __STDC__ */
 {
@@ -610,10 +611,10 @@ static void InitGraphicContexts ()
  *      ThotInitDisplay initialize all the output settings.
  ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ThotInitDisplay (char *name, int dx, int dy)
+void                ThotInitDisplay (STRING name, int dx, int dy)
 #else  /* __STDC__ */
 void                ThotInitDisplay (name, dx, dy)
-char               *name;
+STRING              name;
 int                 dx;
 int                 dy;
 
@@ -695,7 +696,7 @@ void               *ev;
    Atom                type;
    int                 format, r, frame;
    unsigned long       nbitems, bytes_after;
-   unsigned char      *buffer;
+   USTRING             buffer;
    XSelectionEvent    *event = (XSelectionEvent *) ev;
 
    switch (event->type)
@@ -740,7 +741,7 @@ void               *ev;
 		    if (event->property == None)
 		      {
 			 /* No current selection, look for the cut buffer */
-			 buffer = (unsigned char *) XFetchBytes (TtDisplay, &r);
+			 buffer = (USTRING) XFetchBytes (TtDisplay, &r);
 			 if (buffer != NULL)
 			   {
 			      /* returns the cut buffer */
@@ -750,7 +751,7 @@ void               *ev;
 		      }
 		    else
 		      {
-			unsigned char *partbuffer;
+			USTRING partbuffer;
 			/* receive the data */
 			r = XGetWindowProperty (event->display, 
 						event->requestor,
@@ -769,7 +770,7 @@ void               *ev;
 			    if (bytes_after > 0)
 			      {
 				buffer = TtaGetMemory (nbitems + bytes_after);
-				strcpy (buffer, partbuffer);
+				ustrcpy (buffer, partbuffer);
 				r = XGetWindowProperty (event->display, 
 							event->requestor,
 							event->property, 
@@ -782,7 +783,7 @@ void               *ev;
 							&nbitems,
 							&bytes_after, 
 							&partbuffer);
-				strcpy (&buffer[256 * 4], partbuffer);
+				ustrcpy (&buffer[256 * 4], partbuffer);
 				nbitems = (256 * 4) + nbitems;
 			      }
 			    else

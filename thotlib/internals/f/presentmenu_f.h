@@ -14,7 +14,7 @@ extern void CallbackStdPresMenu ( int ref,
                                   int val );
 extern void CallbackPresMenu ( int ref,
                                int val,
-                               char *txt );
+                               STRING txt );
 extern void TtcChangeCharacters ( Document document,
                                   View view );
 extern void TtcChangeGraphics ( Document document,
@@ -32,7 +32,7 @@ extern void CallbackStdPresMenu (/* int ref,
                                     int val */);
 extern void CallbackPresMenu (/* int ref,
                                  int val,
-                                 char *txt */);
+                                 STRING txt */);
 extern void TtcChangeCharacters (/* Document document,
                                     View view */);
 extern void TtcChangeGraphics (/* Document document,

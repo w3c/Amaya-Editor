@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern void NewPictInfo ( PtrAbstractBox pAb,
-                          char *filename,
+                          STRING filename,
                           int imagetype );
 extern void FreePictInfo ( int *desc );
 extern void CopyPictInfo ( int *Imdcopie,
@@ -16,7 +16,7 @@ extern void CopyPictInfo ( int *Imdcopie,
 #else /* __STDC__ */
 
 extern void NewPictInfo (/* PtrAbstractBox pAb,
-                            char *filename,
+                            STRING filename,
                             int imagetype */);
 extern void FreePictInfo (/* int *desc */);
 extern void CopyPictInfo (/* int *Imdcopie,

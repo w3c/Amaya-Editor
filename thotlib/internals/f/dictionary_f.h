@@ -10,8 +10,8 @@ extern void TreateDictionary ( PtrDict dict );
 extern int LoadTreatedDict ( PtrDict * pDictionary,
                              Language lang,
                              PtrDocument document,
-                             char *dictName,
-                             char *dictDirectory,
+                             STRING dictName,
+                             STRING dictDirectory,
                              boolean readonly,
                              boolean toCreate );
 extern boolean ReloadDictionary ( PtrDict * pDictionary );
@@ -31,8 +31,8 @@ extern void TreateDictionary (/* PtrDict dict */);
 extern int LoadTreatedDict (/* PtrDict * pDictionary,
                                Language lang,
                                PtrDocument document,
-                               char *dictName,
-                               char *dictDirectory,
+                               STRING dictName,
+                               STRING dictDirectory,
                                boolean readonly,
                                boolean toCreate */);
 extern boolean ReloadDictionary (/* PtrDict * pDictionary */);

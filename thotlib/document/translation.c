@@ -22,6 +22,7 @@
 
  */
 
+#include "ustring.h"
 #include "thot_sys.h"
 #include "message.h"
 #include "constmedia.h"
@@ -50,12 +51,12 @@
 /* information about an output file */
 typedef struct _AnOutputFile
   {
-     char                OfFileName[MAX_PATH];	/* file name */
+     CHAR                OfFileName[MAX_PATH];	/* file name */
      FILE               *OfFileDesc;	/* file descriptor */
      int                 OfBufferLen;	/* current length of output buffer */
      int		 OfIndent;	/* current value of indentation */
      boolean		 OfStartOfLine;	/* start a new line */
-     char                OfBuffer[MAX_BUFFER_LEN];	/* output buffer */
+     CHAR                OfBuffer[MAX_BUFFER_LEN];	/* output buffer */
      boolean		 OfCannotOpen;	/* open failure */
   }
 AnOutputFile;
@@ -71,13 +72,13 @@ static AnOutputFile OutputFile[MAX_OUTPUT_FILES];
 	/* other entries: secondary output files */
 
 /* directory of output files */
-static char         fileDirectory[MAX_PATH];
+static CHAR         fileDirectory[MAX_PATH];
 
 /* name of main output file */
-static char         fileName[MAX_PATH];
+static CHAR         fileName[MAX_PATH];
 
 /* file extension */
-static char         fileExtension[MAX_PATH];
+static CHAR         fileExtension[MAX_PATH];
 
 #include "tree_f.h"
 
@@ -103,11 +104,11 @@ static char         fileExtension[MAX_PATH];
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static int          GetSecondaryFile (char *fName, PtrDocument pDoc, boolean open)
+static int          GetSecondaryFile (STRING fName, PtrDocument pDoc, boolean open)
 
 #else  /* __STDC__ */
 static int          GetSecondaryFile (fName, pDoc, open)
-char               *fName;
+STRING              fName;
 PtrDocument         pDoc;
 boolean		    open;
 
@@ -119,9 +120,9 @@ boolean		    open;
    /* fichiers secondaires ouverts */
    /* on saute les deux premiers fichiers, qui sont stdout et le fichier de */
    /* sortie principal */
-   for (i = 2; i < NOutputFiles && strcmp (fName, OutputFile[i].OfFileName) != 0; i++) ;
+   for (i = 2; i < NOutputFiles && ustrcmp (fName, OutputFile[i].OfFileName) != 0; i++) ;
    if (i < NOutputFiles &&
-       strcmp (fName, OutputFile[i].OfFileName) == 0)
+       ustrcmp (fName, OutputFile[i].OfFileName) == 0)
       /* le fichier est dans la table, on retourne son rang */
       return i;
    else if (!open)
@@ -147,7 +148,7 @@ boolean		    open;
 	else
 	   /* fichier ouvert */
 	     OutputFile[NOutputFiles].OfCannotOpen = FALSE;
-	strcpy (OutputFile[NOutputFiles].OfFileName, fName);
+	ustrcpy (OutputFile[NOutputFiles].OfFileName, fName);
 	OutputFile[NOutputFiles].OfBufferLen = 0;
 	OutputFile[NOutputFiles].OfIndent = 0;
 	OutputFile[NOutputFiles].OfStartOfLine = TRUE;
@@ -166,14 +167,14 @@ boolean		    open;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void         PutChar (char c, int fileNum, char *outBuffer, PtrDocument pDoc,
+static void         PutChar (CHAR c, int fileNum, STRING outBuffer, PtrDocument pDoc,
 			     boolean lineBreak)
 
 #else  /* __STDC__ */
 static void         PutChar (c, fileNum, outBuffer, pDoc, lineBreak)
-char                c;
+CHAR                c;
 int                 fileNum;
-char               *outBuffer;
+STRING              outBuffer;
 PtrDocument         pDoc;
 boolean             lineBreak;
 
@@ -183,7 +184,7 @@ boolean             lineBreak;
    int                 i, j, indent;
    PtrTSchema          pTSch;
    FILE               *fileDesc;
-   char                tmp[2];
+   CHAR                tmp[2];
 
    if (outBuffer != NULL)
       /* la sortie doit se faire dans le buffer outBuffer. On ajoute le */
@@ -191,7 +192,7 @@ boolean             lineBreak;
      {
 	tmp[0] = c;
 	tmp[1] = EOS;
-	strcat (outBuffer, tmp);
+	ustrcat (outBuffer, tmp);
      }
    else if (fileNum == 0)
       /* la sortie doit se faire dans stdout. On sort le caractere */
@@ -311,7 +312,7 @@ boolean             lineBreak;
 #endif /* __STDC__ */
 {
    int                 i;
-   char               *ptr;
+   STRING              ptr;
 
    if (n < NColors && n >= 0)
      {
@@ -339,7 +340,7 @@ boolean             lineBreak;
 #endif /* __STDC__ */
 {
    int                 i;
-   char               *ptr;
+   STRING              ptr;
 
    if (n < NbPatterns && n >= 0)
      {
@@ -356,21 +357,21 @@ boolean             lineBreak;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void         PutInt (int n, int fileNum, char *outBuffer, PtrDocument pDoc,
+static void         PutInt (int n, int fileNum, STRING outBuffer, PtrDocument pDoc,
 			    boolean lineBreak)
 
 #else  /* __STDC__ */
 static void         PutInt (n, fileNum, outBuffer, pDoc, lineBreak)
 int                 n;
 int                 fileNum;
-char               *outBuffer;
+STRING              outBuffer;
 PtrDocument         pDoc;
 boolean             lineBreak;
 
 #endif /* __STDC__ */
 
 {
-   char                buffer[20];
+   CHAR                buffer[20];
    int                 i;
 
    sprintf (buffer, "%d", n);
@@ -401,7 +402,7 @@ AlphabetTransl** pTransAlph;
    PtrSSchema   pSS;
    PtrElement   pAncestor;
    int          i;
-   char         alphabet;
+   CHAR         alphabet;
    boolean      transExist;
    
    pSS = NULL;
@@ -484,7 +485,7 @@ PtrDocument     pDoc;
 {
    PtrTextBuffer        pNextBufT, pPrevBufT;
    int                  i, j, k, b, ft, lt;
-   char                 c, cs;
+   CHAR                 c, cs;
    boolean              continu, equal, stop;
    int                  textTransBegin, textTransEnd;
    StringTransl         *pTrans;   
@@ -688,7 +689,7 @@ PtrDocument         pDoc;
 {
    PtrTSchema          pTSch;
    PtrTextBuffer       pBufT;
-   char                c;
+   CHAR                c;
    int                 i, j, b, ft, lt;
    AlphabetTransl     *pTransAlph;
    StringTransl       *pTrans;
@@ -853,16 +854,16 @@ PtrDocument         pDoc;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static char         PresRuleValue (PtrPRule pPRule)
+static CHAR         PresRuleValue (PtrPRule pPRule)
 
 #else  /* __STDC__ */
-static char         PresRuleValue (pPRule)
+static CHAR         PresRuleValue (pPRule)
 PtrPRule            pPRule;
 
 #endif /* __STDC__ */
 
 {
-   char                val;
+   CHAR                val;
 
    val = ' ';
    switch (pPRule->PrType)
@@ -1062,7 +1063,7 @@ PtrDocument         pDoc;
 							  pElem->ElTypeNumber, pElem->ElStructSchema, pElem->ElParent);
 			    else
 			       /* le type de l'ascendant est defini dans un autre schema */
-			       if (strcmp (Cond->TcAscendNature,
+			       if (ustrcmp (Cond->TcAscendNature,
 					pElem->ElStructSchema->SsName) == 0)
 			       typeOK = EquivalentSRules (Cond->TcAscendType,
 				 pElem->ElStructSchema, pElem->ElTypeNumber,
@@ -1261,7 +1262,7 @@ PtrDocument         pDoc;
 						{
 						   if (pSS != NULL)
 						      typeOK = EquivalentType (pEl1, Cond->TcElemType, pSS);
-						   else if (strcmp (Cond->TcElemNature, pEl1->ElStructSchema->SsName) == 0)
+						   else if (ustrcmp (Cond->TcElemNature, pEl1->ElStructSchema->SsName) == 0)
 						      typeOK = EquivalentType (pEl1, Cond->TcElemType, pEl1->ElStructSchema);
 						   else
 						      typeOK = FALSE;
@@ -1280,7 +1281,7 @@ PtrDocument         pDoc;
 						{
 						   if (pSS != NULL)
 						      typeOK = EquivalentType (pEl1, Cond->TcElemType, pSS);
-						   else if (strcmp (Cond->TcElemNature, pEl1->ElStructSchema->SsName) == 0)
+						   else if (ustrcmp (Cond->TcElemNature, pEl1->ElStructSchema->SsName) == 0)
 						      typeOK = EquivalentType (pEl1, Cond->TcElemType, pEl1->ElStructSchema);
 						   else
 						      typeOK = FALSE;
@@ -1690,7 +1691,7 @@ Name                schemaName;
 	     /* le fils a-t-il le type cherche' ? */
 	     if (pSS == NULL)
 	       {
-		  SSchemaOK = strcmp (schemaName, pChild->ElStructSchema->SsName) == 0;
+		  SSchemaOK = ustrcmp (schemaName, pChild->ElStructSchema->SsName) == 0;
 		  pSSchema = pChild->ElStructSchema;
 	       }
 	     else
@@ -2032,7 +2033,7 @@ PtrDocument         pDoc;
    PtrTRuleBlock       pBlock;
    TranslNumAttrCase  *pTCase;
    int                 i, nPRules = 0;
-   char                val;
+   CHAR                val;
 
 #define MAX_PRULE_TABLE 50
    PtrPRule            PRuleTable[MAX_PRULE_TABLE];
@@ -2169,7 +2170,7 @@ PtrDocument         pDoc;
 #ifdef __STDC__
 static void         PutVariable (PtrElement pEl, PtrAttribute pAttr,
 			       PtrTSchema pTSch, PtrSSchema pSS, int varNum,
-		boolean ref, char *outBuffer, int fileNum, PtrDocument pDoc,
+		boolean ref, STRING outBuffer, int fileNum, PtrDocument pDoc,
 				 boolean lineBreak)
 
 #else  /* __STDC__ */
@@ -2181,7 +2182,7 @@ PtrTSchema          pTSch;
 PtrSSchema          pSS;
 int                 varNum;
 boolean             ref;
-char               *outBuffer;
+STRING              outBuffer;
 int                 fileNum;
 PtrDocument         pDoc;
 boolean             lineBreak;
@@ -2199,7 +2200,7 @@ boolean             lineBreak;
    PtrTextBuffer       pBuf;
    int                 item, i, j, k;
    boolean             found;
-   char                number[20];
+   CHAR                number[20];
 
    pA = NULL;
    if (outBuffer != NULL)
@@ -2429,17 +2430,17 @@ boolean            *removeEl;
    AlphabetTransl      *pTransAlph;
    int                 fileNum;
    int                 i;
-   char                secondaryFileName[MAX_PATH];
-   char               *nameBuffer;
-   char                fname[MAX_PATH];
-   char                fullName[MAX_PATH];	/* nom d'un fichier a inclure */
+   CHAR                secondaryFileName[MAX_PATH];
+   STRING              nameBuffer;
+   CHAR                fname[MAX_PATH];
+   CHAR                fullName[MAX_PATH];	/* nom d'un fichier a inclure */
    PathBuffer          directoryName;
    FILE               *newFile;
-   char                currentFileName[MAX_PATH];	/* nom du fichier principal */
+   CHAR                currentFileName[MAX_PATH];	/* nom du fichier principal */
    boolean             found, possibleRef;
-   char                c;
+   CHAR                c;
 #  ifndef _WINDOWS 
-   char		       cmd[MAX_PATH];
+   CHAR		       cmd[MAX_PATH];
 #  endif /* _WINDOWS */
 
    n[0] = EOS;
@@ -2713,7 +2714,7 @@ boolean            *removeEl;
 					else
 					   /* le document reference' n'est pas charge' */
 					  {
-					     strncpy (directoryName, DocumentPath, MAX_PATH);
+					     ustrncpy (directoryName, DocumentPath, MAX_PATH);
 					     MakeCompleteName (docIdent, "PIV", directoryName, fullName, &i);
 					     if (fullName[0] != EOS)
 						/* on a trouve' le fichier */
@@ -2758,7 +2759,7 @@ boolean            *removeEl;
 					    EquivalentSRules (pTRule->TrObjectNum, pSS, pRefEl->ElTypeNumber, pRefEl->ElStructSchema, pRefEl->ElParent)
 					   )
 					   || (pSS == NULL &&
-					       strcmp (pTRule->TrObjectNature, pRefEl->ElStructSchema->SsName) == 0
+					       ustrcmp (pTRule->TrObjectNature, pRefEl->ElStructSchema->SsName) == 0
 					       && EquivalentSRules (pTRule->TrObjectNum, pRefEl->ElStructSchema,
 								    pRefEl->ElTypeNumber, pRefEl->ElStructSchema, pRefEl->ElParent)
 					   )
@@ -2982,7 +2983,7 @@ boolean            *removeEl;
 			   found = FALSE;
 			   do
 			      if ((pElGet->ElStructSchema->SsCode == pEl->ElStructSchema->SsCode ||
-				   (strcmp (pTRule->TrElemNature, pElGet->ElStructSchema->SsName) == 0))
+				   (ustrcmp (pTRule->TrElemNature, pElGet->ElStructSchema->SsName) == 0))
 				  && EquivalentSRules (pTRule->TrElemType, pElGet->ElStructSchema,
 						       pElGet->ElTypeNumber, pElGet->ElStructSchema, pElGet->ElParent))
 				 found = TRUE;
@@ -3030,7 +3031,7 @@ boolean            *removeEl;
 				       EquivalentSRules (pTRule->TrElemType, pSS, pElGet->ElTypeNumber, pElGet->ElStructSchema, pElGet->ElParent)
 				      )
 				      || (pSS == NULL &&
-					  strcmp (pTRule->TrElemNature, pElGet->ElStructSchema->SsName) == 0
+					  ustrcmp (pTRule->TrElemNature, pElGet->ElStructSchema->SsName) == 0
 					  && EquivalentSRules (pTRule->TrElemType, pElGet->ElStructSchema,
 							       pElGet->ElTypeNumber, pElGet->ElStructSchema, pElGet->ElParent)
 				      )
@@ -3087,23 +3088,23 @@ boolean            *removeEl;
 	       if (pTRule->TrBufOrConst == ToConst)
 		 {
 		    i = pTSch->TsConstBegin[pTRule->TrInclFile - 1] - 1;
-		    strncpy(fname, &pTSch->TsConstant[i], MAX_PATH - 1);
+		    ustrncpy(fname, &pTSch->TsConstant[i], MAX_PATH - 1);
 		 }
 	       else if (pTRule->TrBufOrConst == ToBuffer)
 		  /* le nom du fichier est dans un buffer */
-		  strncpy (fname, pTSch->TsBuffer[pTRule->TrInclFile - 1],
+		  ustrncpy (fname, pTSch->TsBuffer[pTRule->TrInclFile - 1],
 			   MAX_PATH - 1);
 	       if (fname[0] == EOS)
 		  /* pas de nom de fichier */
 		  fullName[0] = EOS;
 	       else if (fname[0] == '/')
 		  /* nom de fichier absolu */
-	          strcpy (fullName, fname);
+	          ustrcpy (fullName, fname);
 	       else
 		 {
 	           /* compose le nom du fichier a ouvrir avec le nom du
 		      directory des schemas... */
-		    strncpy (directoryName, SchemaPath, MAX_PATH);
+		    ustrncpy (directoryName, SchemaPath, MAX_PATH);
 		    MakeCompleteName (fname, "", directoryName, fullName, &i);
 		 }
 	       /* si le fichier a inclure est deja ouvert en ecriture, on
@@ -3467,13 +3468,13 @@ PtrDocument         pDoc;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-boolean       ExportDocument (PtrDocument pDoc, char *fName, char *TSchemaName)
+boolean       ExportDocument (PtrDocument pDoc, STRING fName, STRING TSchemaName)
 
 #else  /* __STDC__ */
 boolean       ExportDocument (pDoc, fName, TSchemaName)
 PtrDocument         pDoc;
-char               *fName;
-char               *TSchemaName;
+STRING              fName;
+STRING              TSchemaName;
 
 #endif /* __STDC__ */
 
@@ -3490,19 +3491,19 @@ char               *TSchemaName;
       /* le fichier de sortie principal a ete cree' */
      {
 	/* separe nom de directory et nom de fichier */
-	strncpy (fileDirectory, fName, MAX_PATH);
+	ustrncpy (fileDirectory, fName, MAX_PATH);
 	fileDirectory[MAX_PATH - 1] = EOS;
-	i = strlen (fileDirectory);
+	i = ustrlen (fileDirectory);
 	while (i > 0 && fileDirectory[i] != DIR_SEP)
 	   i--;
 	if (fileDirectory[i] == DIR_SEP)
 	  {
-	     strcpy (fileName, &fileDirectory[i + 1]);
+	     ustrcpy (fileName, &fileDirectory[i + 1]);
 	     fileDirectory[i + 1] = EOS;
 	  }
 	else
 	  {
-	     strcpy (fileName, &fileDirectory[i]);
+	     ustrcpy (fileName, &fileDirectory[i]);
 	     fileDirectory[i] = EOS;
 	  }
 	/* charge le schema de traduction du document */
@@ -3516,13 +3517,13 @@ char               *TSchemaName;
 	  {
 	     /* separe nom de fichier et extension */
 	     fileExtension[0] = EOS;
-	     i = strlen (fileName);
+	     i = ustrlen (fileName);
 	     i--;
 	     while (i > 0 && fileName[i] != '.')
 		i--;
 	     if (fileName[i] == '.')
 	       {
-		  strncpy (fileExtension, &fileName[i], MAX_PATH);
+		  ustrncpy (fileExtension, &fileName[i], MAX_PATH);
 		  fileName[i] = EOS;
 	       }
 	     InitOutputFiles (outputFile, pDoc);
@@ -3558,14 +3559,14 @@ char               *TSchemaName;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                ExportTree (PtrElement pEl, PtrDocument pDoc, char *fName, char *TSchemaName)
+void                ExportTree (PtrElement pEl, PtrDocument pDoc, STRING fName, STRING TSchemaName)
 
 #else  /* __STDC__ */
 void                ExportTree (pEl, pDoc, fName, TSchemaName)
 PtrElement	    pEl;
 PtrDocument         pDoc;
-char               *fName;
-char               *TSchemaName;
+STRING              fName;
+STRING              TSchemaName;
 #endif /* __STDC__ */
 
 {
@@ -3584,19 +3585,19 @@ char               *TSchemaName;
     /* le fichier de sortie principal a ete cree' */
     {
       /* separe nom de directory et nom de fichier */
-      strncpy (fileDirectory, fName, MAX_PATH);
+      ustrncpy (fileDirectory, fName, MAX_PATH);
       fileDirectory[MAX_PATH - 1] = EOS;
-      i = strlen (fileDirectory);
+      i = ustrlen (fileDirectory);
       while (i > 0 && fileDirectory[i] != DIR_SEP)
 	i--;
       if (fileDirectory[i] == DIR_SEP)
 	{
-	  strcpy (fileName, &fileDirectory[i + 1]);
+	  ustrcpy (fileName, &fileDirectory[i + 1]);
 	  fileDirectory[i + 1] = EOS;
 	}
       else
 	{
-	  strcpy (fileName, &fileDirectory[i]);
+	  ustrcpy (fileName, &fileDirectory[i]);
 	  fileDirectory[i] = EOS;
 	}
       /* charge le schema de traduction du document */
@@ -3608,13 +3609,13 @@ char               *TSchemaName;
 	{
 	  /* separe nom de fichier et extension */
 	  fileExtension[0] = EOS;
-	  i = strlen (fileName);
+	  i = ustrlen (fileName);
 	  i--;
 	  while (i > 0 && fileName[i] != '.')
 	    i--;
 	  if (fileName[i] == '.')
 	    {
-	      strncpy (fileExtension, &fileName[i], MAX_PATH);
+	      ustrncpy (fileExtension, &fileName[i], MAX_PATH);
 	      fileName[i] = EOS;
 	    }
 	  InitOutputFiles (outputFile, pDoc);

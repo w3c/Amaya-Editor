@@ -11,7 +11,8 @@
  *         R. Guetari - Adaptation to Windows platforms.
  *
  */
- 
+
+#include "ustring.h" 
 #include "thot_sys.h"
 #include "constmenu.h"
 #include "constmedia.h"
@@ -47,12 +48,12 @@ extern boolean viewClosed ;
    updates the openview form
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CallbackOpenView (int ref, int dataType, char *data)
+void                CallbackOpenView (int ref, int dataType, STRING data)
 #else  /* __STDC__ */
 void                CallbackOpenView (ref, dataType, data)
 int                 ref;
 int                 dataType;
-char               *data;
+STRING              data;
 
 #endif /* __STDC__ */
 {
@@ -81,10 +82,10 @@ View                view;
 #endif /* __STDC__ */
 {
    int                 k, l, nbItems;
-   char               *src;
-   char               *dest;
-   char                buf[MAX_TXT_LEN];
-   char                bufMenu[MAX_TXT_LEN];
+   STRING              src;
+   STRING              dest;
+   CHAR                buf[MAX_TXT_LEN];
+   CHAR                bufMenu[MAX_TXT_LEN];
 
    PtrDocument         pDoc;
 
@@ -113,10 +114,10 @@ View                view;
 	     src = &buf[0];
 	     for (k = 1; k <= nbItems; k++)
 	       {
-		  strcpy (dest, "B");
+		  ustrcpy (dest, "B");
 		  dest++;
-		  l = strlen (src);
-		  strcpy (dest, src);
+		  l = ustrlen (src);
+		  ustrcpy (dest, src);
 		  dest += l + 1;
 		  src += l + 1;
 	       }

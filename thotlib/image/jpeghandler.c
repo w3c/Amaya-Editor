@@ -23,7 +23,8 @@
 #ifdef _WINDOWS
 #include "jconfig.h"
 #endif /* _WINDOWS */
- 
+
+#include "ustring.h" 
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"

@@ -12,6 +12,7 @@
  *
  */
 
+#include "ustring.h"
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"
@@ -41,7 +42,7 @@ extern int             InlineHandlers;
 
 typedef struct ImageBaseEntry {
     struct ImageBaseEntry *next;
-    char *name;
+    STRING name;
     Pixmap pix;
 } ImageBaseEntry, *ImageBaseEntryPtr;
 
@@ -62,16 +63,16 @@ static int ImageBaseHashInitialized = 0;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int          GetHash (CONST char *name)
+static int          GetHash (CONST STRING name)
 #else  /* __STDC__ */
 static int          GetHash (name)
-CONST char         *name;
+CONST STRING        name;
 
 #endif /* __STDC__ */
 {
-    unsigned char idx = 0;
+    UCHAR idx = 0;
 
-    while (*name != EOS) idx += (unsigned char) *name++;
+    while (*name != EOS) idx += (UCHAR) *name++;
     return((int) idx);
 }
 
@@ -116,10 +117,10 @@ static void          InitImageBase ()
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaRegisterPixmap (char *name, Pixmap pix)
+void                TtaRegisterPixmap (STRING name, Pixmap pix)
 #else  /* __STDC__ */
 void                TtaRegisterPixmap (name, pix)
-char               *name;
+STRING              name;
 Pixmap              pix;
 
 #endif /* __STDC__ */
@@ -143,7 +144,7 @@ Pixmap              pix;
      * place to insert it.
      */
     while (cour != NULL) {
-        res = strcmp(cour->name, name);
+        res = ustrcmp(cour->name, name);
         if (res <= 0) break;
         prev = cour;
         cour = cour->next;
@@ -189,17 +190,17 @@ Pixmap              pix;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Pixmap              TtaLoadImage (char *name, char *path)
+Pixmap              TtaLoadImage (STRING name, STRING path)
 #else  /* __STDC__ */
 Pixmap              TtaLoadImage (name, path)
-char               *name;
-char               *path;
+STRING              name;
+STRING              path;
 
 #endif /* __STDC__ */
 
 {
     int                 typeImage;
-    char                fileName[1023];
+    CHAR                fileName[1023];
     PictureScaling      pres = RealSize;
     int                 xif = 0;
     int                 yif = 0;
@@ -251,10 +252,10 @@ char               *path;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Pixmap              TtaGetImage (char *name)
+Pixmap              TtaGetImage (STRING name)
 #else  /* __STDC__ */
 Pixmap              TtaGetImage (name)
-char               *name;
+STRING              name;
 
 #endif /* __STDC__ */
 
@@ -276,7 +277,7 @@ char               *name;
      * place to insert it.
      */
     while (cour != NULL) {
-        res = strcmp(cour->name, name);
+        res = ustrcmp(cour->name, name);
         if (res == 0) {
 	    return(cour->pix);
 	}

@@ -11,7 +11,8 @@
  *          R. Guetari (W3C/INRIA): Adaptation for Windows NT/95 
  *
  */	
- 
+
+#include "ustring.h" 
 #include "thot_sys.h"
 #include "constmenu.h"
 #include "constmedia.h"
@@ -184,17 +185,17 @@ void                InitErrorHandler ()
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaInitialize (char *applicationName)
+void                TtaInitialize (STRING applicationName)
 #else  /* __STDC__ */
 void                TtaInitialize (applicationName)
-char               *applicationName;
+STRING              applicationName;
 
 #endif /* __STDC__ */
 {
    int                 i;
 
    UserErrorCode = 0;
-   strcpy (DefaultDocumentName, "");
+   ustrcpy (DefaultDocumentName, "");
    InitEditorMemory ();		/* Initializes the memory managment of the editor */
    InitNatures ();		/* Initializes the table of Natures */
 
@@ -227,7 +228,7 @@ char               *applicationName;
 #  endif /* _WINDOWS */
    numOfJobs = 0;
    /* Initializes patterns */
-   NbPatterns = sizeof (Name_patterns) / sizeof (char *);
+   NbPatterns = sizeof (Name_patterns) / sizeof (STRING);
 
    Patterns = Name_patterns;
    /* load the message table of the Thot Library */
@@ -319,7 +320,7 @@ int                 on;
    identifier of the current version.
 
   ----------------------------------------------------------------------*/
-char               *TtaGetVersion ()
+STRING              TtaGetVersion ()
 {
    UserErrorCode = 0;
    return (VersionId);
@@ -355,14 +356,14 @@ int                 TtaGetErrorCode ()
    TtaGetErrorCode
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char               *TtaGetStrError (int errorCode)
+STRING              TtaGetStrError (int errorCode)
 #else  /* __STDC__ */
-char               *TtaGetStrError (errorCode)
+STRING              TtaGetStrError (errorCode)
 int                 errorCode;
 
 #endif /* __STDC__ */
 {
-   char               *strError = NULL;
+   STRING              strError = NULL;
 
    switch (errorCode)
 	 {
@@ -503,24 +504,24 @@ int                 result;
    the file name.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaExtractName (char *text, char *aDirectory, char *aName)
+void                TtaExtractName (STRING text, STRING aDirectory, STRING aName)
 
 #else  /* __STDC__ */
 void                TtaExtractName (text, aDirectory, aName)
-char               *text;
-char               *aDirectory;
-char               *aName;
+STRING              text;
+STRING              aDirectory;
+STRING              aName;
 
 #endif /* __STDC__ */
 {
    int                 lg, i, j;
-   char               *ptr, *oldptr;
-   char                URL_DIR_SEP;
+   STRING              ptr, oldptr;
+   CHAR                URL_DIR_SEP;
 
    if (text == NULL || aDirectory == NULL || aName == NULL)
       return;			/* No input text or error in input parameters */
 
-   if (text && strchr (text, '/'))
+   if (text && ustrchr (text, '/'))
 	  URL_DIR_SEP = '/';
    else 
 	   URL_DIR_SEP = DIR_SEP;
@@ -528,7 +529,7 @@ char               *aName;
    aDirectory[0] = EOS;
    aName[0] = EOS;
 
-   lg = strlen (text);
+   lg = ustrlen (text);
    if (lg)
      {
 	/* the text is not empty */
@@ -536,9 +537,9 @@ char               *aName;
 	do
 	  {
 #        ifndef _WINDOWS
-	     ptr = strrchr (oldptr, DIR_SEP);
+	     ptr = ustrrchr (oldptr, DIR_SEP);
 #        else  /* _WINDOWS */
-	     ptr = strrchr (oldptr, URL_DIR_SEP);
+	     ptr = ustrrchr (oldptr, URL_DIR_SEP);
 #        endif /* _WINDOWS */
 		 if (ptr != NULL)
 		oldptr = &ptr[1];
@@ -548,18 +549,18 @@ char               *aName;
 	i = (int) (oldptr) - (int) (text);	/* the length of the directory part */
 	if (i > 1)
 	  {
-	     strncpy (aDirectory, text, i);
+	     ustrncpy (aDirectory, text, i);
 	     j = i - 1;
 	     /* Suppresses the / characters at the end of the path */
 	     while (aDirectory[j] == URL_DIR_SEP)
 		aDirectory[j--] = EOS;
 	  }
 	if (i != lg)
-	   strcpy (aName, oldptr);
+	   ustrcpy (aName, oldptr);
      }
 #    ifdef _WINDOWS
-     lg = strlen (aName);
-     if (!strcasecmp (&aName[lg - 4], ".exe"))
+     lg = ustrlen (aName);
+     if (!ustrcasecmp (&aName[lg - 4], ".exe"))
         aName[lg - 4] = EOS;
 #    endif /* _WINDOWS */
 }

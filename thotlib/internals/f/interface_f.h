@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern int TtaXLookupString ( ThotKeyEvent *event,
-                              char *buffer,
+                              STRING buffer,
                               int nbytes,
                               KeySym *keysym,
                               ThotComposeStatus *status );
@@ -45,7 +45,7 @@ extern void TtaGiveSelectPosition ( Document document,
 #else /* __STDC__ */
 
 extern int TtaXLookupString (/* ThotKeyEvent *event,
-                                char *buffer,
+                                STRING buffer,
                                 int nbytes,
                                 KeySym *keysym,
                                 ThotComposeStatus *status */);

@@ -21,6 +21,7 @@
 
  */
 
+#include "ustring.h"
 #include "thot_sys.h"
 #include "libmsg.h"
 #include "message.h"
@@ -162,11 +163,11 @@ BinFile             pivFile;
 {
    int                 version;
 
-   TtaWriteByte (pivFile, (char) C_PIV_VERSION);
-   TtaWriteByte (pivFile, (char) C_PIV_VERSION);
+   TtaWriteByte (pivFile, (CHAR) C_PIV_VERSION);
+   TtaWriteByte (pivFile, (CHAR) C_PIV_VERSION);
    /* Version courante de PIVOT: 4 */
    version = 4;
-   TtaWriteByte (pivFile, (char) version);
+   TtaWriteByte (pivFile, (CHAR) version);
 }
 
 /*----------------------------------------------------------------------
@@ -181,8 +182,8 @@ int                 n;
 
 #endif /* __STDC__ */
 {
-   TtaWriteByte (pivFile, (char) (n / 256));
-   TtaWriteByte (pivFile, (char) (n % 256));
+   TtaWriteByte (pivFile, (CHAR) (n / 256));
+   TtaWriteByte (pivFile, (CHAR) (n % 256));
 }
 
 /*----------------------------------------------------------------------
@@ -400,7 +401,7 @@ PtrTextBuffer       pBuf;
    PtrTextBuffer       pBuf1;
 
    /* ecrit la marque de commentaire */
-   TtaWriteByte (pivFile, (char) C_PIV_COMMENT);
+   TtaWriteByte (pivFile, (CHAR) C_PIV_COMMENT);
    /* calcule la longeur du commentaire */
    pBuf1 = pBuf;
    len = 0;
@@ -444,12 +445,12 @@ PtrDocument         pDoc;
    int                 n;
    boolean             stop;
 
-   TtaWriteByte (pivFile, (char) C_PIV_NATURE);
+   TtaWriteByte (pivFile, (CHAR) C_PIV_NATURE);
    /* cherche le schema de structure */
    n = 0;
    stop = FALSE;
    do
-      if (strcmp (pSS->SsName, pDoc->DocNatureName[n]) == 0)
+      if (ustrcmp (pSS->SsName, pDoc->DocNatureName[n]) == 0)
 	 stop = TRUE;
       else if (n < pDoc->DocNNatures - 1)
 	 n++;
@@ -476,7 +477,7 @@ LabelString         label;
 {
    int              i;
 
-   TtaWriteByte (pivFile, (char) C_PIV_LABEL);
+   TtaWriteByte (pivFile, (CHAR) C_PIV_LABEL);
    i = 0;
    do
       TtaWriteByte (pivFile, label[i++]);
@@ -535,7 +536,7 @@ PtrReference        pRef;
 		label[0] = EOS;
 	     else
 		/* label: label de l'element designe' */
-		strncpy (label, pRefD->ReReferredElem->ElLabel, MAX_LABEL_LEN);
+		ustrncpy (label, pRefD->ReReferredElem->ElLabel, MAX_LABEL_LEN);
 	     /* ecrit le label de l'objet designe' */
 	     PutLabel (pivFile, label);
 	  }
@@ -590,7 +591,7 @@ PtrDocument         pDoc;
 	n = 0;
 	stop = FALSE;
 	do
-	   if (strcmp (pAttr->AeAttrSSchema->SsName, pDoc->DocNatureName[n]) == 0)
+	   if (ustrcmp (pAttr->AeAttrSSchema->SsName, pDoc->DocNatureName[n]) == 0)
 	      stop = TRUE;
 	   else if (n < pDoc->DocNNatures - 1)
 	      n++;
@@ -600,7 +601,7 @@ PtrDocument         pDoc;
 		stop = TRUE;
 	     }
 	while (!stop);
-	TtaWriteByte (pivFile, (char) C_PIV_ATTR);
+	TtaWriteByte (pivFile, (CHAR) C_PIV_ATTR);
 	PutShort (pivFile, n);
 	/* numero de la nature de l'attribut */
 	PutShort (pivFile, pAttr->AeAttrNum);
@@ -669,7 +670,7 @@ PtrPRule      pPRule;
       && pPRule->PrPresMode == PresImmediate)
     {
       /* ecrit la marque de regle */
-      TtaWriteByte (pivFile, (char) C_PIV_PRESENT);
+      TtaWriteByte (pivFile, (CHAR) C_PIV_PRESENT);
       /* ecrit le numero de vue */
       PutShort (pivFile, pPRule->PrViewNum);
       /* ecrit le numero de la boite de presentation concernee */
@@ -819,7 +820,7 @@ boolean             subTree;
   /* on ecrit effectivement la forme pivot de l'element */
   pEl1 = *pEl;
   /* ecrit la marque de type */
-  TtaWriteByte (pivFile, (char) C_PIV_TYPE);
+  TtaWriteByte (pivFile, (CHAR) C_PIV_TYPE);
   /* ecrit le numero de la regle definissant le type */
   PutShort (pivFile, pEl1->ElTypeNumber);
   /* si c'est une copie d'element inclus, ecrit la reference a */
@@ -827,7 +828,7 @@ boolean             subTree;
   if (pEl1->ElSource != NULL)
     /* ecrit la marque d'element inclus */
     {
-      TtaWriteByte (pivFile, (char) C_PIV_INCLUDED);
+      TtaWriteByte (pivFile, (CHAR) C_PIV_INCLUDED);
       PutReference (pivFile, pEl1->ElSource);
     }
   /* ecrit la marque "Element-reference'" si l'element est */
@@ -836,13 +837,13 @@ boolean             subTree;
     if (pEl1->ElReferredDescr->ReFirstReference != NULL ||
 	pEl1->ElReferredDescr->ReExtDocRef != NULL)
       /* l'element est effectivement reference' */
-      TtaWriteByte (pivFile, (char) C_PIV_REFERRED);
+      TtaWriteByte (pivFile, (CHAR) C_PIV_REFERRED);
   /* ecrit le label de l'element */
   PutLabel (pivFile, pEl1->ElLabel);
   
   /* Ecrit la marque d'holophraste si l'element est holophraste' */
   if (pEl1->ElHolophrast)
-    TtaWriteByte (pivFile, (char) C_PIV_HOLOPHRAST);
+    TtaWriteByte (pivFile, (CHAR) C_PIV_HOLOPHRAST);
   
   /* ecrit les attributs de l'element, mais pas les attributs imposes, */
   /* a moins qu'ils soient du type reference */
@@ -879,7 +880,7 @@ boolean             subTree;
   if (pEl1->ElTerminal && pEl1->ElLeafType == LtPicture && pEl1->ElPictInfo != NULL)
     {
       /* write the rule mark */
-      TtaWriteByte (pivFile, (char) C_PIV_PRESENT);
+      TtaWriteByte (pivFile, (CHAR) C_PIV_PRESENT);
       /* write the view number */
       PutShort (pivFile, 1);
       /* write the presentation box number */
@@ -946,12 +947,12 @@ boolean             subTree;
 		    i++;
 		  if (i > 0)
 		    {
-		      TtaWriteByte (pivFile, (char) C_PIV_LANG);
-		      TtaWriteByte (pivFile, (char) i);
+		      TtaWriteByte (pivFile, (CHAR) C_PIV_LANG);
+		      TtaWriteByte (pivFile, (CHAR) i);
 		    }
 		}
 	      if (pEl1->ElLeafType != LtReference)
-		TtaWriteByte (pivFile, (char) C_PIV_BEGIN);
+		TtaWriteByte (pivFile, (CHAR) C_PIV_BEGIN);
 	      switch (pEl1->ElLeafType)
 		{
 		case LtPicture:
@@ -1007,7 +1008,7 @@ boolean             subTree;
 		case LtReference:
 		  /* ecrit une marque de reference et le label de */
 		  /* l'element qui est reference' */
-		  TtaWriteByte (pivFile, (char) C_PIV_REFERENCE);
+		  TtaWriteByte (pivFile, (CHAR) C_PIV_REFERENCE);
 		  PutReference (pivFile, pEl1->ElReference);
 		  break;
 		case LtSymbol:
@@ -1029,7 +1030,7 @@ boolean             subTree;
 		  /* ecrit le code representant la forme de la ligne */
 		  TtaWriteByte (pivFile, pEl1->ElPolyLineType);
 		  /* ecrit une marque indiquant que c'est une Polyline */
-		  TtaWriteByte (pivFile, (char) C_PIV_POLYLINE);
+		  TtaWriteByte (pivFile, (CHAR) C_PIV_POLYLINE);
 		  /* ecrit le nombre de points de la ligne */
 		  PutShort (pivFile, pEl1->ElNPoints);
 		  /* ecrit tous les points */
@@ -1050,7 +1051,7 @@ boolean             subTree;
 		  break;
 		}
 	      if (pEl1->ElLeafType != LtReference)
-		TtaWriteByte (pivFile, (char) C_PIV_END);
+		TtaWriteByte (pivFile, (CHAR) C_PIV_END);
 	    }
 	}
       else
@@ -1061,7 +1062,7 @@ boolean             subTree;
 	    /* on n'ecrit pas le contenu des parametres */
 	    {
 	      /* ecrit une marque de debut */
-	      TtaWriteByte (pivFile, (char) C_PIV_BEGIN);
+	      TtaWriteByte (pivFile, (CHAR) C_PIV_BEGIN);
 	      pChild = pEl1->ElFirstChild;
 	      /* ecrit successivement la representation pivot de tous */
 	      /* les fils de l'element */
@@ -1098,7 +1099,7 @@ boolean             subTree;
 		  pChild = pChild->ElNext;
 		}
 	      /* ecrit une marque de fin */
-	      TtaWriteByte (pivFile, (char) C_PIV_END);
+	      TtaWriteByte (pivFile, (CHAR) C_PIV_END);
 	    }
     }
 }
@@ -1177,7 +1178,7 @@ PtrDocument         pDoc;
 			nat = 0;
 			present = FALSE;
 			while (nat < pDoc->DocNNatures && !present)
-			   if (strcmp (pDoc->DocNatureName[nat],
+			   if (ustrcmp (pDoc->DocNatureName[nat],
 				       pSRule->SrSSchemaNat->SsName) == 0)
 			      present = TRUE;
 			   else
@@ -1188,9 +1189,9 @@ PtrDocument         pDoc;
 			  {
 			     if (pDoc->DocNNatures < MAX_NATURES_DOC)
 			       {
-				  strncpy (pDoc->DocNatureName[pDoc->DocNNatures],
+				  ustrncpy (pDoc->DocNatureName[pDoc->DocNNatures],
 					   pSRule->SrSSchemaNat->SsName, MAX_NAME_LENGTH);
-				  strncpy (pDoc->DocNaturePresName[pDoc->DocNNatures],
+				  ustrncpy (pDoc->DocNaturePresName[pDoc->DocNNatures],
 					   pSRule->SrSSchemaNat->SsDefaultPSchema, MAX_NAME_LENGTH);
 				  pDoc->DocNatureSSchema[pDoc->DocNNatures] =
 				     pSRule->SrSSchemaNat;
@@ -1224,8 +1225,8 @@ PtrDocument         pDoc;
    /* met le schema de structure du document en tete de la table des */
    /* natures utilisees */
    pDoc->DocNatureSSchema[0] = pDoc->DocSSchema;
-   strncpy (pDoc->DocNatureName[0], pDoc->DocSSchema->SsName, MAX_NAME_LENGTH);
-   strncpy (pDoc->DocNaturePresName[0], pDoc->DocSSchema->SsDefaultPSchema, MAX_NAME_LENGTH);
+   ustrncpy (pDoc->DocNatureName[0], pDoc->DocSSchema->SsName, MAX_NAME_LENGTH);
+   ustrncpy (pDoc->DocNaturePresName[0], pDoc->DocSSchema->SsDefaultPSchema, MAX_NAME_LENGTH);
    pDoc->DocNNatures = 1;
    /* met dans la table des natures du document les */
    /* extensions du schema de structure du document */
@@ -1235,9 +1236,9 @@ PtrDocument         pDoc;
 	/* met ce schema d'extension dans la table des natures */
 	if (pDoc->DocNNatures < MAX_NATURES_DOC)
 	  {
-	     strncpy (pDoc->DocNatureName[pDoc->DocNNatures],
+	     ustrncpy (pDoc->DocNatureName[pDoc->DocNNatures],
 		      pSSExtens->SsName, MAX_NAME_LENGTH);
-	     strncpy (pDoc->DocNaturePresName[pDoc->DocNNatures],
+	     ustrncpy (pDoc->DocNaturePresName[pDoc->DocNNatures],
 		      pSSExtens->SsDefaultPSchema, MAX_NAME_LENGTH);
 	     pDoc->DocNatureSSchema[pDoc->DocNNatures] = pSSExtens;
 	     pDoc->DocNNatures++;
@@ -1274,9 +1275,9 @@ PtrDocument         pDoc;
      {
 	/* ecrit la marque de classe ou d'extension */
 	if (pDoc->DocNatureSSchema[nat]->SsExtension)
-	   TtaWriteByte (pivFile, (char) C_PIV_SSCHEMA_EXT);
+	   TtaWriteByte (pivFile, (CHAR) C_PIV_SSCHEMA_EXT);
 	else
-	   TtaWriteByte (pivFile, (char) C_PIV_NATURE);
+	   TtaWriteByte (pivFile, (CHAR) C_PIV_NATURE);
 	/* ecrit le nom de schema de structure dans le fichier */
 	PutName (pivFile, pDoc->DocNatureSSchema[nat]->SsName);
 	/* ecrit le code du schema de structure */
@@ -1342,7 +1343,7 @@ PtrDocument         pDoc;
    UpdateLanguageTable (pDoc, pDoc->DocRootElement);
    for (i = 0; i < pDoc->DocNLanguages; i++)
      {
-	TtaWriteByte (pivFile, (char) C_PIV_LANG);
+	TtaWriteByte (pivFile, (CHAR) C_PIV_LANG);
 	PutName (pivFile, TtaGetLanguageCode (pDoc->DocLanguages[i]));
      }
 }
@@ -1417,7 +1418,7 @@ PtrDocument         pDoc;
 	   if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
 	      /* l'application accepte que Thot sauve l'element */
 	     {
-		TtaWriteByte (pivFile, (char) C_PIV_PARAM);
+		TtaWriteByte (pivFile, (CHAR) C_PIV_PARAM);
 		/* Ecrit l'element */
 		Externalise (pivFile, &pEl, pDoc, TRUE);
 		/* envoie l'evenement ElemSave.Post a l'application, si */
@@ -1467,7 +1468,7 @@ PtrDocument         pDoc;
 			/* l'application accepte que Thot sauve l'element */
 		       {
 			  /* ecrit une marque d'element associe' */
-			  TtaWriteByte (pivFile, (char) C_PIV_ASSOC);
+			  TtaWriteByte (pivFile, (CHAR) C_PIV_ASSOC);
 			  /* si ces elements associes sont definis dans une extension */
 			  /* du schema de structure du document, on ecrit un */
 			  /* changement de nature */
@@ -1503,7 +1504,7 @@ PtrDocument         pDoc;
 	if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
 	   /* l'application accepte que Thot sauve l'element */
 	  {
-	     TtaWriteByte (pivFile, (char) C_PIV_STRUCTURE);
+	     TtaWriteByte (pivFile, (CHAR) C_PIV_STRUCTURE);
 	     /* ecrit la forme pivot de tout l'arbre */
 	     Externalise (pivFile, &pEl, pDoc, TRUE);
 	     /* envoie l'evenement ElemSave.Post a l'application, si */
@@ -1517,7 +1518,7 @@ PtrDocument         pDoc;
 	     CallEventType ((NotifyEvent *) & notifyEl, FALSE);
 	  }
      }
-   TtaWriteByte (pivFile, (char) C_PIV_DOC_END);
+   TtaWriteByte (pivFile, (CHAR) C_PIV_DOC_END);
 }
 
 
@@ -1532,10 +1533,10 @@ PtrDocument         pDoc;
    S'il n'y a aucune reference sortante, le fichier est detruit.      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                SauveRefSortantes (char *fileName, PtrDocument pDoc)
+void                SauveRefSortantes (STRING fileName, PtrDocument pDoc)
 #else  /* __STDC__ */
 void                SauveRefSortantes (fileName, pDoc)
-char               *fileName;
+STRING              fileName;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
@@ -1637,11 +1638,11 @@ PathBuffer          fileName;
 	     /* ecrit le nouveau label de l'element */
 	     PutLabel (refFile, pChnRef->CrNewLabel);
 	     /* ecrit une marque de nom de document */
-	     TtaWriteByte (refFile, (char) C_PIV_DOCNAME);
+	     TtaWriteByte (refFile, (CHAR) C_PIV_DOCNAME);
 	     /* ecrit le nom de l'ancien document de l'element */
 	     TtaWriteDocIdent (refFile, pChnRef->CrOldDocument);
 	     /* ecrit une marque de nom de document */
-	     TtaWriteByte (refFile, (char) C_PIV_DOCNAME);
+	     TtaWriteByte (refFile, (CHAR) C_PIV_DOCNAME);
 	     /* ecrit l'identificateur du nouveau document de l'element */
 	     TtaWriteDocIdent (refFile, pChnRef->CrNewDocument);
 	     /* on libere le descripteur qu'on vient d'ecrire */
@@ -1711,7 +1712,7 @@ PathBuffer          fileName;
 		  do
 		    {
 		       /* ecrit une marque de nom de document */
-		       TtaWriteByte (extFile, (char) C_PIV_DOCNAME);
+		       TtaWriteByte (extFile, (CHAR) C_PIV_DOCNAME);
 		       /* ecrit le nom du document referencant */
 		       TtaWriteDocIdent (extFile, pExtDoc->EdDocIdent);
 		       /* passe au descripteur de document referencant suivant */
@@ -1803,7 +1804,7 @@ PtrDocument         pDoc;
 	pFirstRefD = NULL;
 	/* Charge le fichier .EXT du document externe */
 	/* demande d'abord dans quel directory se trouve le fichier .PIV */
-	strncpy (directoryName, DocumentPath, MAX_PATH);
+	ustrncpy (directoryName, DocumentPath, MAX_PATH);
 	MakeCompleteName (extDocIdent, "PIV", directoryName, fileName, &i);
 	/* cherche le fichier .EXT dans le meme directory */
 	FindCompleteName (extDocIdent, "EXT", directoryName, fileName, &i);
@@ -1848,7 +1849,7 @@ PtrDocument         pDoc;
 		  pRefD = pFirstRefD;
 		  found = FALSE;
 		  while (!found && pRefD != NULL)
-		     if (strcmp (pOutRef->OrLabel, pRefD->ReReferredLabel) == 0)
+		     if (ustrcmp (pOutRef->OrLabel, pRefD->ReReferredLabel) == 0)
 			found = TRUE;
 		     else
 			pRefD = pRefD->ReNext;
@@ -1861,7 +1862,7 @@ PtrDocument         pDoc;
 			  /* descripteur d'element reference' */
 			 {
 			    GetReferredDescr (&pRefD);
-			    strncpy (pRefD->ReReferredLabel, pOutRef->OrLabel, MAX_LABEL_LEN);
+			    ustrncpy (pRefD->ReReferredLabel, pOutRef->OrLabel, MAX_LABEL_LEN);
 			    /* chaine le descripteur en tete */
 			    pRefD->ReNext = pFirstRefD;
 			    pRefD->RePrevious = NULL;
@@ -2017,12 +2018,12 @@ PtrDocument         pDoc;
 	/* acquiert d'abord un descripteur de ce fichier */
 	GetInputRef (&pExtFileD);
 	/* ce fichier est dans le meme directory que le document */
-	strncpy (directoryName, pDoc->DocDirectory, MAX_PATH);
+	ustrncpy (directoryName, pDoc->DocDirectory, MAX_PATH);
 	FindCompleteName (pDoc->DocDName, "EXT", directoryName, fileName, &i);
 	/* initialise le descripteur du fichier .EXT */
 	pExtFileD->ErFirstReferredEl = NULL;
 	CopyDocIdent (&pExtFileD->ErDocIdent, pDoc->DocIdent);
-	strncpy (pExtFileD->ErFileName, fileName, MAX_PATH);
+	ustrncpy (pExtFileD->ErFileName, fileName, MAX_PATH);
 	if (fileName[0] != EOS)
 	  {
 	     extFile = TtaReadOpen (fileName);
@@ -2047,7 +2048,7 @@ PtrDocument         pDoc;
 		  /* cherche le descripteur */
 		  pRefD = pExtFileD->ErFirstReferredEl;
 		  while (pRefD != NULL)
-		     if (strcmp (pChnRef->CrOldLabel, pRefD->ReReferredLabel) == 0)
+		     if (ustrcmp (pChnRef->CrOldLabel, pRefD->ReReferredLabel) == 0)
 			/* supprime ce descripteur */
 		       {
 			  /* on le retire d'abord de sa chaine */
@@ -2080,7 +2081,7 @@ PtrDocument         pDoc;
 	       {
 
 		  GetReferredDescr (&pRefD);
-		  strncpy (pRefD->ReReferredLabel, pChnRef->CrNewLabel, MAX_LABEL_LEN);
+		  ustrncpy (pRefD->ReReferredLabel, pChnRef->CrNewLabel, MAX_LABEL_LEN);
 		  /* chaine le descripteur en tete */
 		  pRefD->ReNext = pExtFileD->ErFirstReferredEl;
 		  pRefD->RePrevious = NULL;
@@ -2126,11 +2127,11 @@ PtrDocument         pDoc;
 		       CopyDocIdent (&pFile->RcDocIdent, pExtDoc->EdDocIdent);
 		       /* demande d'abord dans quel directory se trouve le */
 		       /* fichier .PIV de ce document */
-		       strncpy (directoryName, DocumentPath, MAX_PATH);
+		       ustrncpy (directoryName, DocumentPath, MAX_PATH);
 		       MakeCompleteName (pFile->RcDocIdent, "PIV", directoryName, fileName, &i);
 		       /* cherche le fichier .REF dans le meme directory */
 		       FindCompleteName (pFile->RcDocIdent, "REF", directoryName, fileName, &i);
-		       strncpy (pFile->RcFileName, fileName, MAX_PATH);
+		       ustrncpy (pFile->RcFileName, fileName, MAX_PATH);
 		       if (fileName[0] != EOS)
 			 {
 			    refFile = TtaReadOpen (fileName);
@@ -2151,7 +2152,7 @@ PtrDocument         pDoc;
 		       found = FALSE;
 		       while (pChnRefRead != NULL && !found)
 			 {
-			    if (strcmp (pChnRefRead->CrOldLabel, pChnRef->CrOldLabel) == 0)
+			    if (ustrcmp (pChnRefRead->CrOldLabel, pChnRef->CrOldLabel) == 0)
 			       if (SameDocIdent (pChnRefRead->CrOldDocument, pChnRef->CrOldDocument))
 				  /* il s'agit du meme ancien element */
 				  if (pChnRefRead->CrNewLabel[0] == EOS)
@@ -2162,7 +2163,7 @@ PtrDocument         pDoc;
 					  /* c'est un deplacement, on transforme la */
 					  /* destruction en deplacement */
 					 {
-					    strncpy (pChnRefRead->CrNewLabel,
+					    ustrncpy (pChnRefRead->CrNewLabel,
 						     pChnRef->CrNewLabel, MAX_LABEL_LEN);
 					    CopyDocIdent (&pChnRefRead->CrNewDocument,
 						    pChnRef->CrNewDocument);
@@ -2181,13 +2182,13 @@ PtrDocument         pDoc;
 			       if (pChnRefRead->CrNewLabel[0] != EOS &&
 				   pChnRef->CrNewLabel[0] != EOS)
 				  /* ce sont deux deplacements d'element */
-				  if (strcmp (pChnRefRead->CrNewLabel, pChnRef->CrOldLabel) == 0)
+				  if (ustrcmp (pChnRefRead->CrNewLabel, pChnRef->CrOldLabel) == 0)
 				     if (SameDocIdent (pChnRefRead->CrNewDocument, pChnRef->CrOldDocument))
 					/* deux deplacements successifs du meme element */
 					/* on reduit a un seul deplacement */
 				       {
 					  found = TRUE;
-					  strncpy (pChnRefRead->CrNewLabel, pChnRef->CrNewLabel, MAX_LABEL_LEN);
+					  ustrncpy (pChnRefRead->CrNewLabel, pChnRef->CrNewLabel, MAX_LABEL_LEN);
 					  CopyDocIdent (&pChnRefRead->CrNewDocument,
 						    pChnRef->CrNewDocument);
 				       }
@@ -2200,8 +2201,8 @@ PtrDocument         pDoc;
 			    GetChangedReferredEl (&pNewChnRef);
 			    pNewChnRef->CrNext = pFile->RcFirstChange;
 			    pFile->RcFirstChange = pNewChnRef;
-			    strncpy (pNewChnRef->CrOldLabel, pChnRef->CrOldLabel, MAX_LABEL_LEN);
-			    strncpy (pNewChnRef->CrNewLabel, pChnRef->CrNewLabel, MAX_LABEL_LEN);
+			    ustrncpy (pNewChnRef->CrOldLabel, pChnRef->CrOldLabel, MAX_LABEL_LEN);
+			    ustrncpy (pNewChnRef->CrNewLabel, pChnRef->CrNewLabel, MAX_LABEL_LEN);
 			    CopyDocIdent (&pNewChnRef->CrOldDocument, pChnRef->CrOldDocument);
 			    CopyDocIdent (&pNewChnRef->CrNewDocument, pChnRef->CrNewDocument);
 			 }
@@ -2303,7 +2304,7 @@ boolean             copyDoc;
 			  /* il s'agit d'un element reference' appartenant au */
 			  /* document */
 			  if (pElemRefD->ReReferredElem != NULL)
-			     if (strcmp (pElemRefD->ReReferredElem->ElLabel, pRefD->ReReferredLabel) == 0)
+			     if (ustrcmp (pElemRefD->ReReferredElem->ElLabel, pRefD->ReReferredLabel) == 0)
 				/* c'est le descripteur de notre element */
 				found = TRUE;
 		       if (!found)
@@ -2349,7 +2350,7 @@ boolean             copyDoc;
 		  pFirstRefD = NULL;
 		  /* demande d'abord dans quel directory se trouve le */
 		  /* fichier .PIV */
-		  strncpy (directoryName, DocumentPath, MAX_PATH);
+		  ustrncpy (directoryName, DocumentPath, MAX_PATH);
 		  MakeCompleteName (pRefD->ReExtDocument, "PIV", directoryName,
 				    fileName, &i);
 		  /* cherche le fichier .EXT dans le meme directory */
@@ -2374,7 +2375,7 @@ boolean             copyDoc;
 		       pFirstInRef = pInRef;
 		       pInRef->ErFirstReferredEl = pFirstRefD;
 		       CopyDocIdent (&pInRef->ErDocIdent, pRefD->ReExtDocument);
-		       strncpy (pInRef->ErFileName, fileName, MAX_PATH);
+		       ustrncpy (pInRef->ErFileName, fileName, MAX_PATH);
 		    }
 	       }
 	  }
@@ -2487,7 +2488,7 @@ Name                newName;
 		       CopyDocIdent (&pFile->RcDocIdent, pExtDoc->EdDocIdent);
 		       /* demande dans quel directory se trouve le fichier */
 		       /* .PIV de ce document */
-		       strncpy (directoryName, DocumentPath, MAX_PATH);
+		       ustrncpy (directoryName, DocumentPath, MAX_PATH);
 		       MakeCompleteName (pFile->RcDocIdent, "PIV", directoryName, fileName, &i);
 		       /* cherche le fichier .REF dans le meme directory */
 		       FindCompleteName (pFile->RcDocIdent, "REF", directoryName, pFile->RcFileName, &i);
@@ -2521,10 +2522,10 @@ Name                newName;
 	       {
 		  if (pElemRefD->ReExternalRef)
 		     /* il s'agit d'un element reference' externe */
-		     if (strcmp (pElemRefD->ReExtDocument, pDoc->DocIdent) == 0)
+		     if (ustrcmp (pElemRefD->ReExtDocument, pDoc->DocIdent) == 0)
 			/* l'element reference' se trouve dans le document */
 			/* qui change de nom, on change le nom */
-			strncpy (pElemRefD->ReExtDocument, newName, MAX_DOC_IDENT_LEN);
+			ustrncpy (pElemRefD->ReExtDocument, newName, MAX_DOC_IDENT_LEN);
 		  /* passe au descripteur d'element reference' suivant */
 		  /* dans le document externe */
 		  pElemRefD = pElemRefD->ReNext;

@@ -52,11 +52,11 @@ extern boolean LinkReference ( PtrElement pEl,
 extern int MenuChoixElem ( PtrSSchema pSS,
                            int rule,
                            PtrElement pEl,
-                           char *menuBuf,
+                           STRING menuBuf,
                            Name menuTitle,
                            PtrDocument pDoc );
 extern void ChoiceMenuCallback ( int item,
-                                 char *natureName );
+                                 STRING natureName );
 extern PtrElement CreateSibling ( PtrDocument pDoc,
                                   PtrElement pEl,
                                   boolean before,
@@ -75,7 +75,7 @@ extern PtrElement CreateOrPasteInText ( boolean create,
 extern void CreateInsertPageMenu ( void );
 extern void CreatePasteIncludeCmd ( boolean create,
                                     boolean paste,
-                                    char button,
+                                    CHAR button,
                                     boolean * ret );
 extern void CreatePasteIncludeMenuCallback ( boolean create,
                                              boolean paste,
@@ -129,11 +129,11 @@ extern boolean LinkReference (/* PtrElement pEl,
 extern int MenuChoixElem (/* PtrSSchema pSS,
                              int rule,
                              PtrElement pEl,
-                             char *menuBuf,
+                             STRING menuBuf,
                              Name menuTitle,
                              PtrDocument pDoc */);
 extern void ChoiceMenuCallback (/* int item,
-                                   char *natureName */);
+                                   STRING natureName */);
 extern PtrElement CreateSibling (/* PtrDocument pDoc,
                                     PtrElement pEl,
                                     boolean before,
@@ -152,7 +152,7 @@ extern PtrElement CreateOrPasteInText (/* boolean create,
 extern void CreateInsertPageMenu (/* void */);
 extern void CreatePasteIncludeCmd (/* boolean create,
                                       boolean paste,
-                                      char button,
+                                      CHAR button,
                                       boolean * ret */);
 extern void CreatePasteIncludeMenuCallback (/* boolean create,
                                                boolean paste,

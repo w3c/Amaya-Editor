@@ -23,6 +23,7 @@
  *
  */
 
+#include "ustring.h"
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"
@@ -332,20 +333,20 @@ Name                typeName;
    if (!TypeHasException (ExcHidden, typeNum, pSS))
       /* ce type d'element ne porte pas l'exception Hidden, on retourne
          le nom de la regle qui le definit */
-      strncpy (typeName, pSS->SsRule[typeNum - 1].SrName, MAX_NAME_LENGTH);
+      ustrncpy (typeName, pSS->SsRule[typeNum - 1].SrName, MAX_NAME_LENGTH);
    else
       /* ce type d'element porte l'exception Hidden */
    if (pSS->SsRule[typeNum - 1].SrConstruct == CsList)
       /* c'est une liste, on retourne le nom de ses elements */
-      strncpy (typeName, pSS->SsRule[pSS->SsRule[typeNum - 1].SrListItem - 1].SrName, MAX_NAME_LENGTH);
+      ustrncpy (typeName, pSS->SsRule[pSS->SsRule[typeNum - 1].SrListItem - 1].SrName, MAX_NAME_LENGTH);
    else if (pSS->SsRule[typeNum - 1].SrConstruct == CsAggregate ||
 	    pSS->SsRule[typeNum - 1].SrConstruct == CsUnorderedAggregate)
       /* c'est un agregat, on retourne le nom de son 1er element */
-      strncpy (typeName, pSS->SsRule[pSS->SsRule[typeNum - 1].SrComponent[0] - 1].SrName, MAX_NAME_LENGTH);
+      ustrncpy (typeName, pSS->SsRule[pSS->SsRule[typeNum - 1].SrComponent[0] - 1].SrName, MAX_NAME_LENGTH);
    else
       /* ce n'est ni une liste ni un agregat, on ignore */
       /* l'exception Hidden */
-      strncpy (typeName, pSS->SsRule[typeNum - 1].SrName, MAX_NAME_LENGTH);
+      ustrncpy (typeName, pSS->SsRule[typeNum - 1].SrName, MAX_NAME_LENGTH);
 }
 
 
@@ -1109,7 +1110,7 @@ PtrAbstractBox      pAb;
 		    pEl->ElTextLength = pAb->AbVolume;
 		    pEl->ElVolume = 100;
 		    dVol = pAb->AbVolume - pEl->ElVolume;
-		    pEl->ElText->BuLength = strlen (pEl->ElText->BuContent);
+		    pEl->ElText->BuLength = ustrlen (pEl->ElText->BuContent);
 		    break;
 		 case LtText:
 		    dVol = pAb->AbVolume - pEl->ElTextLength;
@@ -1580,7 +1581,7 @@ PtrElement         *pSelEl;
       typeName[0] = EOS;
    else
      {
-	strncpy (typeName, pSS->SsRule[referredTypeNum - 1].SrName, MAX_NAME_LENGTH);
+	ustrncpy (typeName, pSS->SsRule[referredTypeNum - 1].SrName, MAX_NAME_LENGTH);
 	assoc = pSS->SsRule[referredTypeNum - 1].SrAssocElem;
      }
    if (assoc && FirstAssociatedElement (pDoc, referredTypeNum, pSS) == NULL)
@@ -1703,21 +1704,21 @@ PtrElement         *pSelEl;
    menu contenu dans le buffer menuBuf.			
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         AddChoiceMenuItem (Name item, int *menuInd, char *menuBuf)
+static void         AddChoiceMenuItem (Name item, int *menuInd, STRING menuBuf)
 #else  /* __STDC__ */
 static void         AddChoiceMenuItem (item, menuInd, menuBuf)
 Name                item;
 int                *menuInd;
-char               *menuBuf;
+STRING              menuBuf;
 
 #endif /* __STDC__ */
 {
    int                 len;
 
-   len = strlen (item) + 1;
+   len = ustrlen (item) + 1;
    if (len + *menuInd < MAX_TXT_LEN)
      {
-	strcpy (menuBuf + *menuInd, item);
+	ustrcpy (menuBuf + *menuInd, item);
 	(*menuInd) += len;
      }
 }
@@ -1746,7 +1747,7 @@ Name                ret;
       /* ce type d'element ne porte pas l'exception Hidden */
      {
 	/* par defaut on retourne le type de l'element lui-meme */
-	strncpy (ret, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName, MAX_NAME_LENGTH);
+	ustrncpy (ret, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName, MAX_NAME_LENGTH);
 	/* la regle qui definit le type de l'element */
 	pSRule = &pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1];
 	if (pSRule->SrConstruct == CsChoice)
@@ -1754,14 +1755,14 @@ Name                ret;
 	      /* c'est un choix avec un fils */
 	      if (pEl->ElSource == NULL)
 		 /* ce n'est pas une inclusion, on prend le nom du fils */
-		 strncpy (ret, pEl->ElFirstChild->ElStructSchema->SsRule[pEl->ElFirstChild->ElTypeNumber - 1].SrName, MAX_NAME_LENGTH);
+		 ustrncpy (ret, pEl->ElFirstChild->ElStructSchema->SsRule[pEl->ElFirstChild->ElTypeNumber - 1].SrName, MAX_NAME_LENGTH);
      }
    else
       /* ce type d'element porte l'exception Hidden */
    if (pEl->ElTerminal || pEl->ElFirstChild == NULL)
       /* l'element n'a pas de fils, on retourne quand meme */
       /* le type de l'element lui-meme */
-      strncpy (ret, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName, MAX_NAME_LENGTH);
+      ustrncpy (ret, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName, MAX_NAME_LENGTH);
    else
      {
 	/* on retourne le type du premier ou dernier fils de */
@@ -1837,13 +1838,13 @@ MenuItemAction      action;
    menu.                                                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 MenuChoixElem (PtrSSchema pSS, int rule, PtrElement pEl, char *menuBuf, Name menuTitle, PtrDocument pDoc)
+int                 MenuChoixElem (PtrSSchema pSS, int rule, PtrElement pEl, STRING menuBuf, Name menuTitle, PtrDocument pDoc)
 #else  /* __STDC__ */
 int                 MenuChoixElem (pSS, rule, pEl, menuBuf, menuTitle, pDoc)
 PtrSSchema          pSS;
 int                 rule;
 PtrElement          pEl;
-char               *menuBuf;
+STRING              menuBuf;
 Name                menuTitle;
 PtrDocument         pDoc;
 
@@ -1969,7 +1970,7 @@ PtrDocument         pDoc;
 		       pAncest = pAncest->ElParent;
 		       /* passe a l'element englobant */
 		    }
-		  strncpy (menuTitle, TtaGetMessage (LIB, TMSG_EL_TYPE), MAX_NAME_LENGTH);
+		  ustrncpy (menuTitle, TtaGetMessage (LIB, TMSG_EL_TYPE), MAX_NAME_LENGTH);
 	       }
 	     else
 		/* c'est un choix avec indication des types possibles */
@@ -1997,7 +1998,7 @@ PtrDocument         pDoc;
 			       }
 		       typeNum++;
 		    }
-		  strncpy (menuTitle, pSRule->SrName, MAX_NAME_LENGTH);
+		  ustrncpy (menuTitle, pSRule->SrName, MAX_NAME_LENGTH);
 	       }
 	  }
      }
@@ -2013,11 +2014,11 @@ PtrDocument         pDoc;
    nature a ete saisie.					
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ChoiceMenuCallback (int item, char *natureName)
+void                ChoiceMenuCallback (int item, STRING natureName)
 #else  /* __STDC__ */
 void                ChoiceMenuCallback (item, natureName)
 int                 item;
-char               *natureName;
+STRING              natureName;
 
 #endif /* __STDC__ */
 {
@@ -2036,7 +2037,7 @@ char               *natureName;
 	     if (SSchemaName[0] == EOS)
 		/* ce nom n'est pas dans le fichier langue, on le */
 		/* prend tel quel */
-		strncpy (SSchemaName, natureName, MAX_NAME_LENGTH);
+		ustrncpy (SSchemaName, natureName, MAX_NAME_LENGTH);
 	     PSchemaName[0] = EOS;
 	     /* cree une nouvelle nature */
 	     ChosenTypeNum = CreateNature (SSchemaName, PSchemaName, ChoiceMenuSSchema[0]);
@@ -2077,7 +2078,7 @@ boolean             desc;
 {
    PtrElement          pNewEl, pChild, pRet;
    int                 choiceTypeNum;
-   char                menuBuf[MAX_TXT_LEN];
+   CHAR                menuBuf[MAX_TXT_LEN];
    Name                menuTitle;
    int                 nItems;
    boolean             ret, ok, stop;
@@ -3200,7 +3201,7 @@ PtrElement         *pFree;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static boolean      AddInsertMenuItem (Name word1, Name word2, Name word3, int *prevMenuInd, int *nItems, int *menuInd, char *menuBuf)
+static boolean      AddInsertMenuItem (Name word1, Name word2, Name word3, int *prevMenuInd, int *nItems, int *menuInd, STRING menuBuf)
 
 #else  /* __STDC__ */
 static boolean      AddInsertMenuItem (word1, word2, word3, prevMenuInd, nItems, menuInd, menuBuf)
@@ -3210,7 +3211,7 @@ Name                word3;
 int                *prevMenuInd;
 int                *nItems;
 int                *menuInd;
-char               *menuBuf;
+STRING              menuBuf;
 
 #endif /* __STDC__ */
 
@@ -3228,21 +3229,21 @@ char               *menuBuf;
 	*prevMenuInd = *menuInd;
 	/* pour le cas ou l'on supprime l'item... */
 	/* copie le premier mot */
-	j = strlen (word1) + 1;
+	j = ustrlen (word1) + 1;
 	if (j >= MAX_TXT_LEN - *menuInd)
 	   j = MAX_TXT_LEN - *menuInd;
-	strncpy (&menuBuf[*menuInd], word1, j);
+	ustrncpy (&menuBuf[*menuInd], word1, j);
 	*menuInd += j;
 	menuBuf[*menuInd - 1] = EOS;
 
 	/* copie le deuxieme mot */
 	if (*menuInd < MAX_TXT_LEN - 1 && word2[0] != EOS)
 	  {
-	     strcat (&menuBuf[*menuInd - 1], " ");
-	     j = strlen (word2) + 1;
+	     ustrcat (&menuBuf[*menuInd - 1], " ");
+	     j = ustrlen (word2) + 1;
 	     if (j >= MAX_TXT_LEN - *menuInd)
 		j = MAX_TXT_LEN - *menuInd;
-	     strncpy (&menuBuf[*menuInd], word2, j);
+	     ustrncpy (&menuBuf[*menuInd], word2, j);
 	     *menuInd += j;
 	     menuBuf[*menuInd - 1] = EOS;
 	  }
@@ -3250,11 +3251,11 @@ char               *menuBuf;
 	/* copie le troisieme mot */
 	if (*menuInd < MAX_TXT_LEN - 1 && word3[0] != EOS)
 	  {
-	     strcat (&menuBuf[*menuInd - 1], " ");
-	     j = strlen (word3) + 1;
+	     ustrcat (&menuBuf[*menuInd - 1], " ");
+	     j = ustrlen (word3) + 1;
 	     if (j >= MAX_TXT_LEN - *menuInd)
 		j = MAX_TXT_LEN - *menuInd;
-	     strncpy (&menuBuf[*menuInd], word3, j);
+	     ustrncpy (&menuBuf[*menuInd], word3, j);
 	     *menuInd += j;
 	     menuBuf[*menuInd - 1] = EOS;
 	  }
@@ -3298,7 +3299,7 @@ int                *nItems;
 	       {
 		  UserElementName (ElemAction[i], Action[i] == InsertBefore, typeName1);
 		  UserElementName (ElemAction[*nItems - 1], Action[i] == InsertBefore, typeName2);
-		  if (strcmp (typeName1, typeName2) == 0)
+		  if (ustrcmp (typeName1, typeName2) == 0)
 		     found = TRUE;
 	       }
 	  }
@@ -3315,14 +3316,14 @@ int                *nItems;
    AddSeparatorInMenu                                               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         AddSeparatorInMenu (int *prevMenuInd, int *nItems, int *menuInd, char *menuBuf)
+static void         AddSeparatorInMenu (int *prevMenuInd, int *nItems, int *menuInd, STRING menuBuf)
 
 #else  /* __STDC__ */
 static void         AddSeparatorInMenu (prevMenuInd, nItems, menuInd, menuBuf)
 int                *prevMenuInd;
 int                *nItems;
 int                *menuInd;
-char               *menuBuf;
+STRING              menuBuf;
 
 #endif /* __STDC__ */
 
@@ -3349,7 +3350,7 @@ char               *menuBuf;
 #ifdef __STDC__
 static void         AddItemWithinSiblimg (PtrElement pEl, boolean before, int *menuInd,
 		   int *nItems, int *prevMenuInd, boolean * separatorBefore,
-		  boolean * separatorAfter, char *menuBuf, PtrDocument pDoc)
+		  boolean * separatorAfter, STRING menuBuf, PtrDocument pDoc)
 
 #else  /* __STDC__ */
 static void         AddItemWithinSiblimg (pEl, before, menuInd, nItems, prevMenuInd, separatorBefore, separatorAfter, menuBuf, pDoc)
@@ -3360,7 +3361,7 @@ int                *nItems;
 int                *prevMenuInd;
 boolean            *separatorBefore;
 boolean            *separatorAfter;
-char               *menuBuf;
+STRING              menuBuf;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
@@ -3407,9 +3408,9 @@ PtrDocument         pDoc;
 	    /* on cree une nouvelle entree dans le menu */
 	   {
 	      if (before)
-		 strncpy (N, TtaGetMessage (LIB, TMSG_AFTER), MAX_NAME_LENGTH);
+		 ustrncpy (N, TtaGetMessage (LIB, TMSG_AFTER), MAX_NAME_LENGTH);
 	      else
-		 strncpy (N, TtaGetMessage (LIB, TMSG_BEFORE), MAX_NAME_LENGTH);
+		 ustrncpy (N, TtaGetMessage (LIB, TMSG_BEFORE), MAX_NAME_LENGTH);
 	      GetExternalTypeName (pSS, typeNum, typeName);
 	      if (*separatorBefore)
 		{
@@ -3448,9 +3449,9 @@ PtrDocument         pDoc;
 			{
 			   distance = 1;
 			   if (before)
-			      strncpy (N, TtaGetMessage (LIB, TMSG_AFTER), MAX_NAME_LENGTH);
+			      ustrncpy (N, TtaGetMessage (LIB, TMSG_AFTER), MAX_NAME_LENGTH);
 			   else
-			      strncpy (N, TtaGetMessage (LIB, TMSG_BEFORE), MAX_NAME_LENGTH);
+			      ustrncpy (N, TtaGetMessage (LIB, TMSG_BEFORE), MAX_NAME_LENGTH);
 			   do
 			      /* boucle sur les voisins suivants */
 			     {
@@ -3574,7 +3575,7 @@ void                CreateInsertPageMenu ()
    PtrDocument         pDoc;
    int                 firstChar, lastChar, nItems, prevMenuInd, menuInd;
    Name                titre;
-   char                menuBuf[MAX_TXT_LEN];
+   CHAR                menuBuf[MAX_TXT_LEN];
    Name                typeName;
 
    menuInd = 0;
@@ -3630,7 +3631,7 @@ void                CreateInsertPageMenu ()
 		  }
 	     }
 
-	strncpy (titre, TtaGetMessage (LIB, TMSG_INSERT), MAX_NAME_LENGTH);
+	ustrncpy (titre, TtaGetMessage (LIB, TMSG_INSERT), MAX_NAME_LENGTH);
 	if (nItems > 0)
 	   BuildPasteMenu (NumMenuInsert, menuBuf, titre, nItems, 'L');
      }
@@ -3647,12 +3648,12 @@ void                CreateInsertPageMenu ()
    Au retour, ret= vrai si le travail a ete fait, faux sinon.	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CreatePasteIncludeCmd (boolean create, boolean paste, char button, boolean * ret)
+void                CreatePasteIncludeCmd (boolean create, boolean paste, CHAR button, boolean * ret)
 #else  /* __STDC__ */
 void                CreatePasteIncludeCmd (create, paste, button, ret)
 boolean             create;
 boolean             paste;
-char                button;
+CHAR                button;
 boolean            *ret;
 
 #endif /* __STDC__ */
@@ -3662,7 +3663,7 @@ boolean            *ret;
    int                 firstChar, lastChar, menuRef, nItems, prevMenuInd,
                        menuInd, i, distance, typeNum, refTypeNum;
    Name                menuTitle;
-   char                menuBuf[MAX_TXT_LEN];
+   CHAR                menuBuf[MAX_TXT_LEN];
    boolean             isList, emptyRef, optional, ok;
    SRule              *pSRule, *pParentSRule;
    PtrSSchema          pSS, pAncestSS, pSSExt;
@@ -3847,12 +3848,12 @@ boolean            *ret;
 					      SrConstruct == CsPairedElement)
 					     /* une paire de marques autour de la selection */
 					    {
-					       strncpy (N, TtaGetMessage (LIB, TMSG_AROUND), MAX_NAME_LENGTH);
+					       ustrncpy (N, TtaGetMessage (LIB, TMSG_AROUND), MAX_NAME_LENGTH);
 					       typeName2[0] = EOS;
 					       ok = TteItemMenuInsert (pAncestSS, pSRule->SrInclusion[i] + 1, lastSel, pDoc, InsertAfter);
 					    }
 					  else
-					     strncpy (N, TtaGetMessage (LIB, TMSG_BEFORE), MAX_NAME_LENGTH);
+					     ustrncpy (N, TtaGetMessage (LIB, TMSG_BEFORE), MAX_NAME_LENGTH);
 					  if (ok)
 					     /* envoie l'evenement item a creer */
 					     if (TteItemMenuInsert (pAncestSS, pSRule->SrInclusion[i],
@@ -3942,12 +3943,12 @@ boolean            *ret;
 				  if (pSS->SsRule[typeNum - 1].SrConstruct == CsPairedElement)
 				     /* une paire de marques autour de la selection */
 				    {
-				       strncpy (N, TtaGetMessage (LIB, TMSG_AROUND), MAX_NAME_LENGTH);
+				       ustrncpy (N, TtaGetMessage (LIB, TMSG_AROUND), MAX_NAME_LENGTH);
 				       typeName2[0] = EOS;
 				       ok = TteItemMenuInsert (pSS, typeNum + 1, lastSel, pDoc, InsertAfter);
 				    }
 				  else
-				     strncpy (N, TtaGetMessage (LIB, TMSG_BEFORE), MAX_NAME_LENGTH);
+				     ustrncpy (N, TtaGetMessage (LIB, TMSG_BEFORE), MAX_NAME_LENGTH);
 				  if (ok)
 				     /* envoie l'evenement item a creer */
 				     if (TteItemMenuInsert (pSS, typeNum, pEl, pDoc, InsertBefore))
@@ -4268,16 +4269,16 @@ boolean            *ret;
 	  {
 	     createPasteMenuOK = FALSE;
 	     if (create)
-		strncpy (menuTitle, TtaGetMessage (LIB, TMSG_INSERT), MAX_NAME_LENGTH);
+		ustrncpy (menuTitle, TtaGetMessage (LIB, TMSG_INSERT), MAX_NAME_LENGTH);
 	     else if (paste)
 	       {
-		  strncpy (menuTitle, TtaGetMessage (LIB, TMSG_PASTE), MAX_NAME_LENGTH);
+		  ustrncpy (menuTitle, TtaGetMessage (LIB, TMSG_PASTE), MAX_NAME_LENGTH);
 		  if (FirstSavedElement != NULL)
 		     if (ThotLocalActions[T_indexverif] != NULL)
 			(*ThotLocalActions[T_indexverif]) (&FirstSavedElement->PeElement, pDoc);
 	       }
 	     else
-		strncpy (menuTitle, TtaGetMessage (LIB, TMSG_INCLUDE), MAX_NAME_LENGTH);
+		ustrncpy (menuTitle, TtaGetMessage (LIB, TMSG_INCLUDE), MAX_NAME_LENGTH);
 
 	     BuildPasteMenu (menuRef, menuBuf, menuTitle, nItems, button);
 	  }

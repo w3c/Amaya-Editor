@@ -207,11 +207,6 @@ extern void         TtaSetItemOn (Document document, View view, int menuID, int 
 extern int          TtaSetCallback (void (*callbakProcedure) (), int set);
 
 /*----------------------------------------------------------------------
-   TtaSetStatus affiche le status de la vue du document.                      
-  ----------------------------------------------------------------------*/
-extern void         TtaSetStatus (Document document, View view, CONST char *text, CONST char *name);
-
-/*----------------------------------------------------------------------
    TtaGetViewFrame retourne le widget du frame de la vue document.    
   ----------------------------------------------------------------------*/
 extern ThotWidget   TtaGetViewFrame (Document document, View view);
@@ -390,7 +385,6 @@ extern void         TtaSetToggleItem ( /*Document document, View view, int menuI
 extern void         TtaSetItemOff ( /*Document document, View view, int menuID, int itemID */ );
 extern void         TtaSetItemOn ( /*Document document, View view, int menuID, int itemID */ );
 extern int          TtaSetCallback ( /*void (*callbakProcedure) (), int set */ );
-extern void         TtaSetStatus ( /*Document document, View view, CONST char *text, CONST char *name */ );
 
 #ifndef _WINDOWS
 extern void         TtaFetchOneEvent ( /*ThotEvent *ev */ );

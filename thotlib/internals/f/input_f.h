@@ -8,23 +8,23 @@
 
 extern void XCharTranslation ( ThotEvent * event );
 extern void ThotInput ( int frame,
-                        unsigned char *string,
+                        USTRING string,
                         unsigned int nb,
                         int PicMask,
                         int key );
 extern void FreeTranslations ( void );
-extern ThotTranslations InitTranslations ( char *appliname );
+extern ThotTranslations InitTranslations ( STRING appliname );
 
 #else /* __STDC__ */
 
 extern void XCharTranslation (/* ThotEvent * event */);
 extern void ThotInput (/* int frame,
-                          unsigned char *string,
+                          USTRING string,
                           unsigned int nb,
                           int PicMask,
                           int key */);
 extern void FreeTranslations (/* void */);
-extern ThotTranslations InitTranslations (/* char *appliname */);
+extern ThotTranslations InitTranslations (/* STRING appliname */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -22,6 +22,7 @@
  *
  */
 
+#include "ustring.h"
 #include "thot_sys.h"
 #include "constmenu.h"
 #include "constmedia.h"
@@ -47,15 +48,15 @@
 #define MAX_IMAGE_MENU		7
 extern PathBuffer   DocumentPath;
 extern PathBuffer   SchemaPath;
-extern char        *FileExtension[];
+extern STRING       FileExtension[];
 
 #undef THOT_EXPORT
 #define THOT_EXPORT static
 
 static int          IndexTypeImage, IndexPresImage, BaseDlgImage;
 static boolean      RedisplayPicture;
-static char         ImageName[100] = "";
-static char         DirectoryImage[MAX_PATH] = "";
+static CHAR         ImageName[100] = "";
+static CHAR         DirectoryImage[MAX_PATH] = "";
 
 #include "browser_f.h"
 #include "fileaccess_f.h"
@@ -115,7 +116,7 @@ int                 indexType;
   ----------------------------------------------------------------------*/
 static void         InitPathImage ()
 {
-   char                bufDir[MAX_PATH * 2];
+   CHAR                bufDir[MAX_PATH * 2];
    int                 i, j;
    int                 nb;
    int                 max;
@@ -170,21 +171,21 @@ static void         InitPathImage ()
    records the return values of the Picture form.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CallbackPictureMenu (int ref, int typeData, char *txt)
+void                CallbackPictureMenu (int ref, int typeData, STRING txt)
 
 #else  /* __STDC__ */
 void                CallbackPictureMenu (ref, typeData, txt)
 int                 ref;
 int                 typeData;
-char               *txt;
+STRING              txt;
 
 #endif /* __STDC__ */
 {
    PathBuffer          completeName;
    int                 i, val;
-   char                URL_DIR_SEP;
+   CHAR                URL_DIR_SEP;
 
-   if (typeData == STRING_DATA && txt && strchr (txt, '/'))
+   if (typeData == STRING_DATA && txt && ustrchr (txt, '/'))
      URL_DIR_SEP = '/';
    else 
      URL_DIR_SEP = DIR_SEP;
@@ -193,9 +194,9 @@ char               *txt;
    switch (ref - BaseDlgImage)
      {
      case _ZONE_IMAGE_FILE:
-       if (TtaCheckDirectory (txt) && txt[strlen (txt) - 1] != URL_DIR_SEP)
+       if (TtaCheckDirectory (txt) && txt[ustrlen (txt) - 1] != URL_DIR_SEP)
 	 {
-	   strcpy (DirectoryImage, txt);
+	   ustrcpy (DirectoryImage, txt);
 	   ImageName[0] = EOS;
 	 }
        else
@@ -205,7 +206,7 @@ char               *txt;
 	   if (ImageName[0] == EOS && !TtaCheckDirectory (DirectoryImage))
 	     {
 	       /* Le texte correspond au nom de l'image sans directory */
-	       strncpy (ImageName, DirectoryImage, 100);
+	       ustrncpy (ImageName, DirectoryImage, 100);
 	       DirectoryImage[0] = EOS;
 	     }
 	 }
@@ -217,11 +218,11 @@ char               *txt;
 	     if (TtaIsSuffixFileIn (DirectoryImage, FileExtension[IndexTypeImage]))
 	       {
 		 /* il faut ajouter le directory au path */
-		 i = strlen (DocumentPath);
-		 if (i + strlen (DirectoryImage) + 2 < MAX_PATH)
+		 i = ustrlen (DocumentPath);
+		 if (i + ustrlen (DirectoryImage) + 2 < MAX_PATH)
 		   {
-		     strcat (DocumentPath, PATH_STR);
-		     strcat (DocumentPath, DirectoryImage);
+		     ustrcat (DocumentPath, PATH_STR);
+		     ustrcat (DocumentPath, DirectoryImage);
 		     InitPathImage ();
 		     TtaListDirectory (DirectoryImage, BaseDlgImage + _IMAGE_FORM, NULL, -1,
 				       FileExtension[IndexTypeImage], TtaGetMessage (LIB, TMSG_FILES), BaseDlgImage + _IMAGE_SEL);
@@ -233,7 +234,7 @@ char               *txt;
        if (DirectoryImage[0] == EOS)
 	 {
 	   /* compose le path complet du fichier pivot */
-	   strncpy (DirectoryImage, DocumentPath, MAX_PATH);
+	   ustrncpy (DirectoryImage, DocumentPath, MAX_PATH);
 	   /* recheche indirectement le directory */
 	   MakeCompleteName (txt, "", DirectoryImage, completeName, &i);
 	   /* separe directory et nom */
@@ -241,10 +242,10 @@ char               *txt;
 	 }
        else
 	 {
-	   strcpy (completeName, DirectoryImage);
-	   strcat (completeName, "/");
-	   strcat (completeName, txt);
-	   strcpy (ImageName, txt);
+	   ustrcpy (completeName, DirectoryImage);
+	   ustrcat (completeName, "/");
+	   ustrcat (completeName, txt);
+	   ustrcpy (ImageName, txt);
 	 }
        TtaSetTextForm (BaseDlgImage + _ZONE_IMAGE_FILE, completeName);
        break;
@@ -259,11 +260,11 @@ char               *txt;
 		 if (TtaIsSuffixFileIn (DirectoryImage, FileExtension[IndexTypeImage]))
 		   {
 		     /* il faut ajouter le directory au path */
-		     i = strlen (DocumentPath);
-		     if (i + strlen (DirectoryImage) + 2 < MAX_PATH)
+		     i = ustrlen (DocumentPath);
+		     if (i + ustrlen (DirectoryImage) + 2 < MAX_PATH)
 		       {
-			 strcat (DocumentPath, ":");
-			 strcat (DocumentPath, DirectoryImage);
+			 ustrcat (DocumentPath, ":");
+			 ustrcat (DocumentPath, DirectoryImage);
 			 InitPathImage ();
 		       }
 		   }
@@ -284,7 +285,7 @@ char               *txt;
 	 }
        break;
      case _ZONE_DIR_IMAGE:
-       strcpy (DirectoryImage, txt);
+       ustrcpy (DirectoryImage, txt);
        TtaSetTextForm (BaseDlgImage + _ZONE_IMAGE_FILE, DirectoryImage);
        TtaListDirectory (DirectoryImage, BaseDlgImage + _IMAGE_FORM, NULL, -1,
 			 FileExtension[IndexTypeImage], TtaGetMessage (LIB, TMSG_FILES), BaseDlgImage + _IMAGE_SEL);
@@ -306,10 +307,10 @@ char               *txt;
   This menu is called whenever an image is modified.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                BuildPictureMenu (char *name, boolean * result, int *typim, int *pres, PtrBox pBox)
+void                BuildPictureMenu (STRING name, boolean * result, int *typim, int *pres, PtrBox pBox)
 #else  /* __STDC__ */
 void                BuildPictureMenu (name, result, typim, pres, pBox)
-char               *name;
+STRING              name;
 boolean            *result;
 int                *typim;
 int                *pres;
@@ -318,15 +319,15 @@ PtrBox              pBox;
 #endif /* __STDC__ */
 {
    int                 i, indx;
-   char                bufTypeImage[MAX_TXT_LEN];
-   char               *source;
+   CHAR                bufTypeImage[MAX_TXT_LEN];
+   STRING              source;
    int                 imageTypeCount, length;
-   char                bufMenu[MAX_TXT_LEN];
+   CHAR                bufMenu[MAX_TXT_LEN];
    PictInfo           *image;
 
    IndexTypeImage = GetPictTypeIndex (*typim);
    IndexPresImage = GetPictPresIndex (*pres);
-   strcpy (ImageName, name);
+   ustrcpy (ImageName, name);
    DirectoryImage[0] = EOS;
    RedisplayPicture = FALSE;
 
@@ -345,10 +346,10 @@ PtrBox              pBox;
      {
 	bufMenu[indx] = 'B';
 	indx++;
-	length = strlen (source) + 1;
+	length = ustrlen (source) + 1;
 	if (indx + length < MAX_TXT_LEN)
 	  {
-	     strcpy ((bufMenu) + indx, source);
+	     ustrcpy ((bufMenu) + indx, source);
 	     indx += length;
 	  }
 	source += length;
@@ -359,13 +360,13 @@ PtrBox              pBox;
    /* sous-menu cadrage du formulaire Picture */
    indx = 0;
    sprintf (&bufMenu[indx], "%s%s", "B", TtaGetMessage (LIB, TMSG_REALSIZE));
-   indx += strlen (&bufMenu[indx]) + 1;
+   indx += ustrlen (&bufMenu[indx]) + 1;
    sprintf (&bufMenu[indx], "%s%s", "B", TtaGetMessage (LIB, TMSG_RESCALE));
-   indx += strlen (&bufMenu[indx]) + 1;
+   indx += ustrlen (&bufMenu[indx]) + 1;
    sprintf (&bufMenu[indx], "%s%s", "B", TtaGetMessage (LIB, TMSG_FILLFRAME));
-   indx += strlen (&bufMenu[indx]) + 1;
+   indx += ustrlen (&bufMenu[indx]) + 1;
    sprintf (&bufMenu[indx], "%s%s", "B", TtaGetMessage (LIB, TMSG_XREPEAT));
-   indx += strlen (&bufMenu[indx]) + 1;
+   indx += ustrlen (&bufMenu[indx]) + 1;
    sprintf (&bufMenu[indx], "%s%s", "B", TtaGetMessage (LIB, TMSG_YREPEAT));
    TtaNewSubmenu (BaseDlgImage + _MENU_IMAGE_FRAME, BaseDlgImage + _IMAGE_FORM, 0,
 		  TtaGetMessage (LIB, TMSG_PICT_PRES), 5, bufMenu, NULL, FALSE);
@@ -388,11 +389,11 @@ PtrBox              pBox;
 
    if (RedisplayPicture)
      {
-	strcpy (name, ImageName);
+	ustrcpy (name, ImageName);
 	*typim = GetPictureType (IndexTypeImage);
 	*pres = (PictureScaling) (IndexPresImage);
 	image = (PictInfo *) pBox->BxPictInfo;
-	strcpy (image->PicFileName, name);
+	ustrcpy (image->PicFileName, name);
 	image->PicPresent = (PictureScaling) *pres;
 	image->PicType = *typim;
      }

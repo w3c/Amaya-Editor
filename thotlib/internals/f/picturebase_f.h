@@ -6,19 +6,19 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void TtaRegisterPixmap ( char *name,
+extern void TtaRegisterPixmap ( STRING name,
                                 Pixmap pix );
-extern Pixmap TtaLoadImage ( char *name,
-                             char *path );
-extern Pixmap TtaGetImage ( char *name );
+extern Pixmap TtaLoadImage ( STRING name,
+                             STRING path );
+extern Pixmap TtaGetImage ( STRING name );
 
 #else /* __STDC__ */
 
-extern void TtaRegisterPixmap (/* char *name,
+extern void TtaRegisterPixmap (/* STRING name,
                                   Pixmap pix */);
-extern Pixmap TtaLoadImage (/* char *name,
-                               char *path */);
-extern Pixmap TtaGetImage (/* char *name */);
+extern Pixmap TtaLoadImage (/* STRING name,
+                               STRING path */);
+extern Pixmap TtaGetImage (/* STRING name */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -20,6 +20,8 @@
  * Author: H. Richy (INRISA)
  *
  */
+
+#include "ustring.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -40,7 +42,7 @@
 #define THOT_EXPORT
 #include "word_tv.h"
 
-extern unsigned char Code[256];
+extern UCHAR Code[256];
 extern unsigned      ReverseCode[NbLtr];
 static boolean       Clavier_charge;
 static int           Tsub[NbLtr][NbLtr];
@@ -83,25 +85,25 @@ int                *pDictionary;
 boolean             ToCreate;
 #endif /* __STDC__ */
 {
-  char              *extenddic;
+  STRING            extenddic;
 # ifdef _WINDOWS
-  char              *ptr;
+  STRING            ptr;
 # endif /* !_WINDOWS */
-  char               path[MAX_PATH], dictname[MAX_PATH];
+  CHAR               path[MAX_PATH], dictname[MAX_PATH];
 
   /* dictionary name = document name */
   *pDictionary = (int) NULL;
   
-  extenddic = (char *) TtaGetEnvString ("EXTENDDICT");
+  extenddic = (STRING) TtaGetEnvString ("EXTENDDICT");
   if (extenddic != NULL)
     {
       TtaExtractName (extenddic, path, dictname);
       if (dictname[0] == EOS)
-	strcpy (dictname, ".thot");
+	ustrcpy (dictname, ".thot");
     }
   else
     {
-      strcpy (dictname, ".thot");
+      ustrcpy (dictname, ".thot");
       path[0] = EOS;
     }
 
@@ -110,17 +112,17 @@ boolean             ToCreate;
     {
       ptr = TtaGetEnvString ("HOME");
       if (ptr != NULL)
-	strcpy (path, ptr);
+	ustrcpy (path, ptr);
       else
 	{
-	  strcpy (path, "C:\\TEMP");
+	  ustrcpy (path, "C:\\TEMP");
 	  if (!TtaCheckDirectory (path))
 	    _mkdir (path);
 	}
     }
 # else  /* !_WINDOWS */
   if (path[0] == EOS ||  !TtaCheckDirectory (path))
-    strcpy (path, TtaGetEnvString ("HOME"));
+    ustrcpy (path, TtaGetEnvString ("HOME"));
 # endif /* !_WINDOWS */
   LoadTreatedDict ((PtrDict *) pDictionary, 0, document, dictname,
 		   path, FALSE, ToCreate);
@@ -131,10 +133,10 @@ boolean             ToCreate;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         Asci2Code (char *string)
+static void         Asci2Code (STRING string)
 #else  /* __STDC__ */
 static void         Asci2Code (string)
-char               *string;
+STRING              string;
 #endif /* __STDC__ */
 {
    int                 i;
@@ -142,7 +144,7 @@ char               *string;
    i = 0;
    while (string[i] != EOS)
      {
-	string[i] = Code[(unsigned char) string[i]];
+	string[i] = Code[(UCHAR) string[i]];
 	i++;
      }
 }
@@ -151,17 +153,17 @@ char               *string;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         Code2Asci (char *string)
+static void         Code2Asci (STRING string)
 #else  /* __STDC__ */
 static void         Code2Asci (string)
-char               *string;
+STRING              string;
 #endif /* __STDC__ */
 {
    int                 i = 0;
 
    while (string[i] != EOS)
      {
-	string[i] = ReverseCode[(unsigned char) string[i]];
+	string[i] = ReverseCode[(UCHAR) string[i]];
 	i++;
      }
 }
@@ -171,15 +173,15 @@ char               *string;
   minMAJ returns TRUE if the string doesn't contains only lowercases 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             minMAJ (char *string)
+boolean             minMAJ (STRING string)
 #else  /* __STDC__ */
 boolean             minMAJ (string)
-char               *string;
+STRING              string;
 #endif /* __STDC__ */
 {
    int                 maj = 0;
    int                 i = 0;
-   char                c;
+   CHAR                c;
 
    while ((c = string[i]) != EOS && (maj == 0))
      {
@@ -193,13 +195,13 @@ char               *string;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char                tomin (char caract)
+CHAR                tomin (CHAR caract)
 #else  /* __STDC__ */
-char                tomin (caract)
-char                caract;
+CHAR                tomin (caract)
+CHAR                caract;
 #endif /* __STDC__ */
 {
-   char                c;
+   CHAR                c;
 
    c = caract;
    if (isimaj (caract) != 0)
@@ -212,10 +214,10 @@ char                caract;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void         SetUpperCase (char *string)
+void         SetUpperCase (STRING string)
 #else  /* __STDC__ */
 void         SetUpperCase (string)
-char               *string;
+STRING              string;
 #endif /* __STDC__ */
 {
    int                 i = 0;
@@ -232,10 +234,10 @@ char               *string;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void         SetCapital (char *string)
+void         SetCapital (STRING string)
 #else  /* __STDC__ */
 void         SetCapital (string)
-char               *string;
+STRING              string;
 #endif /* __STDC__ */
 {
    if (isimin (string[0]) != 0)
@@ -247,15 +249,15 @@ char               *string;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean      IsUpperCase (char *string)
+boolean      IsUpperCase (STRING string)
 #else  /* __STDC__ */
 boolean      IsUpperCase (string)
-char               *string;
+STRING              string;
 #endif /* __STDC__ */
 {
    int                 maj = 1;
    int                 i = 0;
-   char                c;
+   CHAR                c;
 
    while ((c = string[i]) != EOS && (maj != 0))
      {
@@ -269,15 +271,15 @@ char               *string;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean      IsCapital (char *string)
+boolean      IsCapital (STRING string)
 #else  /* __STDC__ */
 boolean      IsCapital (string)
-char               *string;
+STRING              string;
 #endif /* __STDC__ */
 {
    int                 cap = 0;
    int                 i = 0;
-   char                c;
+   CHAR                c;
 
    if (string[0] != EOS && isimaj (string[0]) != 0)
      {
@@ -295,10 +297,10 @@ char               *string;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             IsIso (char *string)
+boolean             IsIso (STRING string)
 #else  /* __STDC__ */
 boolean             IsIso (string)
-char               *string;
+STRING              string;
 #endif /* __STDC__ */
 {
    int                 iso = 1;
@@ -321,10 +323,10 @@ char               *string;
    retourne >=0 si le mot n'est pas dans le dict (indice de sa place future) 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 WordInDictionary (char word[MAX_WORD_LEN], PtrDict dict)
+int                 WordInDictionary (CHAR word[MAX_WORD_LEN], PtrDict dict)
 #else  /* __STDC__ */
 int                 WordInDictionary (word, dict)
-char                word[MAX_WORD_LEN];
+CHAR                word[MAX_WORD_LEN];
 PtrDict             dict;
 #endif /* __STDC__ */
 {
@@ -337,7 +339,7 @@ PtrDict             dict;
      /* dictionnaire vide */
      return (-1);
 
-   size = strlen (word);
+   size = ustrlen (word);
    /* premier mot */
    inf = dict->DictLengths[size];
    if (size >= MAX_WORD_LEN || (dict->DictLengths[size + 1] - 1 > dict->DictNbWords))
@@ -350,7 +352,7 @@ PtrDict             dict;
      /* Recherche dichotomique */
      {
 	med = (sup + inf) / 2;
-	rescomp = strcmp (&dict->DictString[dict->DictWords[med]], word);
+	rescomp = ustrcmp (&dict->DictString[dict->DictWords[med]], word);
 	if (rescomp == 0)
 	  /* Mot present dans le dict */
 	  return (-3);
@@ -373,18 +375,18 @@ PtrDict             dict;
    -1 s'il n'y a pas de dictionnaire pour verifier ce mot   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 CheckWord (char word[MAX_WORD_LEN], Language language, PtrDict dict)
+int                 CheckWord (CHAR word[MAX_WORD_LEN], Language language, PtrDict dict)
 #else  /* __STDC__ */
 int                 CheckWord (word, language, dict)
-char                word[MAX_WORD_LEN];
+CHAR                word[MAX_WORD_LEN];
 Language            language;
 PtrDict             dict;
 #endif /* __STDC__ */
 {
    boolean             present = TRUE;
    int                 res;
-   char                word1[MAX_WORD_LEN];
-   char                wordmin[MAX_WORD_LEN];
+   CHAR                word1[MAX_WORD_LEN];
+   CHAR                wordmin[MAX_WORD_LEN];
    PtrDict             globalDict;
    PtrDict             personalDict;
    PtrDict             dictsigle;
@@ -397,11 +399,11 @@ PtrDict             dict;
    if (word[0] == EOS)
       return (0);		/* mot vide */
 
-   if (strlen (word) >= 2)
+   if (ustrlen (word) >= 2)
      {
-	strcpy (word1, word);
+	ustrcpy (word1, word);
 	SmallLettering (word1);
-	strcpy (wordmin, word1);
+	ustrcpy (wordmin, word1);
 	Asci2Code (word1);
 
 	globalDict = (PtrDict) TtaGetPrincipalDictionary (language);
@@ -442,7 +444,7 @@ PtrDict             dict;
 		     type_err = 1;	/* SmallLettering ou melange */
 	       }
 	     /* recopier ce mot errone' dans ChkrErrWord */
-	     strcpy (ChkrErrWord, word);
+	     ustrcpy (ChkrErrWord, word);
 	  }
      }
    res = (present == TRUE) ? 1 : 0;
@@ -490,11 +492,11 @@ PtrDict             dict;
    par defaut : tous les mots nouveaux sont insecables        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int          InsertWord (PtrDict dict, char word[MAX_WORD_LEN])
+static int          InsertWord (PtrDict dict, CHAR word[MAX_WORD_LEN])
 #else  /* __STDC__ */
 static int          InsertWord (dict, word)
 PtrDict             dict;
-char                word[MAX_WORD_LEN];
+CHAR                word[MAX_WORD_LEN];
 #endif /* __STDC__ */
 {
    int                 size, place, i, k;
@@ -506,7 +508,7 @@ char                word[MAX_WORD_LEN];
       return (0);		/* mot deja present dans le dictionnaire */
    if (place == -1)		/* dictionnaire vide */
       place = 0;		/* indice pour inserer dans ce dictionaire */
-   size = strlen (word) + 1;
+   size = ustrlen (word) + 1;
    if ((dict->DictNbWords >= dict->DictMaxWords - 1) || (dict->DictNbChars >= dict->DictMaxChars + size))
       return (-1);
    else
@@ -523,7 +525,7 @@ char                word[MAX_WORD_LEN];
 		dict->DictString[index--] = dict->DictString[k];
 	  }
 	/* insertion nouveau mot */
-	strcpy (&dict->DictString[dict->DictWords[place]], word);
+	ustrcpy (&dict->DictString[dict->DictWords[place]], word);
 	/* mise a jour des pointeurs sur les mots */
 	for (i = dict->DictNbWords + 1; i >= place; i--)
 	   dict->DictWords[i + 1] = dict->DictWords[i] + size;
@@ -542,19 +544,19 @@ char                word[MAX_WORD_LEN];
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         Cmp (char wordtest[], PtrDict dict)
+static void         Cmp (CHAR wordtest[], PtrDict dict)
 #else  /* __STDC__ */
 static void         Cmp (wordtest, dict)
-char                wordtest[];
+CHAR                wordtest[];
 PtrDict             dict;
 #endif /* __STDC__ */
 {
   int                 dist[MAX_WORD_LEN][MAX_WORD_LEN];
-  unsigned char       wordcmp[MAX_WORD_LEN];
+  UCHAR       wordcmp[MAX_WORD_LEN];
   int                 Lg, idx, sup, pWord, seuilCourant;
   int                 i, j, k, x, y, z;
   int                 difference, iteration, size, largeur, word;
-  unsigned char       currentWord[MAX_WORD_LEN];
+  UCHAR       currentWord[MAX_WORD_LEN];
   int                 minimum;
   int                 deb, fin;
   int                 derniere_ligne = MAX_WORD_LEN; /* last computed line */
@@ -575,10 +577,10 @@ PtrDict             dict;
   for (i = 1; i < MAX_WORD_LEN; i++)
     dist[0][i] = dist[0][i - 1] + KI;
   
-  strcpy (wordcmp, wordtest);
+  ustrcpy (wordcmp, wordtest);
   SmallLettering (wordcmp);
   Asci2Code (wordcmp);
-  Lg = strlen (wordcmp);
+  Lg = ustrlen (wordcmp);
   seuilCourant = Seuil[Lg];
   largeur = Delta[Lg];
   
@@ -637,7 +639,7 @@ PtrDict             dict;
 	     a cette valeur, il est inutile de faire le calcul */
 	  if (k <= derniere_ligne)
 	    {
-	      strcpy (currentWord, &dict->DictString[pWord]);
+	      ustrcpy (currentWord, &dict->DictString[pWord]);
 	      
 	      /* calcul */
 	      for (j = k; j <= size; j++)
@@ -695,13 +697,13 @@ static void         LoadSpellChecker ()
    int                 i;
    int                 pWord;
 
-   strcpy (ChkrCorrection[0], ChkrErrWord);
+   ustrcpy (ChkrCorrection[0], ChkrErrWord);
    for (i = 0; i < NC; i++)
      {
 	pWord = WordsList[i];
 	if (pWord >= 0)
 	  {
-	     strcpy (ChkrCorrection[i + 1], &DictsList[i]->DictString[pWord]);
+	     ustrcpy (ChkrCorrection[i + 1], &DictsList[i]->DictString[pWord]);
 	     Code2Asci (ChkrCorrection[i + 1]);
 	     switch (type_err)
 		   {
@@ -730,8 +732,8 @@ PtrDict             docDict;
 {
    FILE               *f;
    int                 i, j;
-   char                tempbuffer[THOT_MAX_CHAR];
-   char                word[MAX_WORD_LEN];
+   CHAR                tempbuffer[THOT_MAX_CHAR];
+   CHAR                word[MAX_WORD_LEN];
 
    FindCompleteName (docDict->DictName, "DCT", docDict->DictDirectory, tempbuffer, &i);
    if (docDict->DictNbWords >= 0)
@@ -746,7 +748,7 @@ PtrDict             docDict;
 
 	     for (i = 0; i <= docDict->DictNbWords; i++)
 	       {
-		  strcpy (word, &docDict->DictString[docDict->DictWords[i]]);
+		  ustrcpy (word, &docDict->DictString[docDict->DictWords[i]]);
 		  Code2Asci (word);
 		  fprintf (f, "%s\n", word);
 		  /* ajouter le CR de fin de ligne */
@@ -772,21 +774,21 @@ PtrDict             docDict;
    creation eventuelle et initialisation de ChkrFileDict             
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                AddWord (char word[MAX_WORD_LEN], PtrDict * pDict)
+void                AddWord (CHAR word[MAX_WORD_LEN], PtrDict * pDict)
 #else  /* __STDC__ */
 void                AddWord (word, pDict)
-char                word[MAX_WORD_LEN];
+CHAR                word[MAX_WORD_LEN];
 PtrDict            *pDict;
 #endif /* __STDC__ */
 {
-   char                word1[MAX_WORD_LEN];
+   CHAR                word1[MAX_WORD_LEN];
    int                 ret;
    Name                DiNom;
    boolean             OKinsere = TRUE;
    PtrDict             docDict;
 
    docDict = *pDict;
-   strcpy (word1, word);
+   ustrcpy (word1, word);
    /* verifier que ce mot est bien en caracteres iso */
    if (IsIso (word1))
      {
@@ -816,7 +818,7 @@ PtrDict            *pDict;
 		    /* dictionnaire plein */
 		    SaveDictFile (docDict);
 		    /* rechargement du dictionnaire avec plus de memoire */
-		    strcpy (DiNom, docDict->DictName);
+		    ustrcpy (DiNom, docDict->DictName);
 		    if (ReloadDictionary (pDict) == TRUE)
 		      {
 			 docDict = *pDict;
@@ -866,7 +868,7 @@ static void            InitChecker ()
 
    /* Initialisation de la correction */
    for (j = 0; j <= NC; j++)
-      strcpy (ChkrCorrection[j], "$");
+      ustrcpy (ChkrCorrection[j], "$");
 }
 
 
@@ -931,7 +933,7 @@ FILE               *ftsub;
 #endif /* __STDC__ */
 {
    int                 i, j;
-   unsigned char       ch1[80], ch2[80], ch3[80];
+   UCHAR       ch1[80], ch2[80], ch3[80];
 
    /* initialisation de Tsub */
    for (i = 0; i < NbLtr; i++)
@@ -940,7 +942,7 @@ FILE               *ftsub;
    while (fscanf (ftsub, "%s%s%s", ch1, ch2, ch3) != EOF)
      {
 	int                 coeff;
-	unsigned char       x, y, valeur;
+	UCHAR       x, y, valeur;
 
 	sscanf (ch1, "%c", &x);
 	sscanf (ch2, "%c", &y);
@@ -1044,7 +1046,7 @@ int                 ParametrizeChecker ()
    Buffer              paramnom;
    FILE               *ftsub;
    Buffer              clavnom;
-   char               *corrpath;
+   STRING              corrpath;
 
    ret = 1;
    /* initialisations des parametres du correcteur */
@@ -1061,8 +1063,8 @@ int                 ParametrizeChecker ()
 	else
 	  {
 	     /* Lecture du fichier parametres */
-	     strcpy (paramnom, corrpath);
-	     strcat (paramnom, "/param");
+	     ustrcpy (paramnom, corrpath);
+	     ustrcat (paramnom, "/param");
 	     if ((fparam = fopen (paramnom, "r")) != NULL)
 	       /* Existence du fichier */
 		init_param (fparam);
@@ -1073,8 +1075,8 @@ int                 ParametrizeChecker ()
 	       }
 
 	     /* Lecture du  fichier clavier */
-	     strcpy (clavnom, corrpath);
-	     strcat (clavnom, "/clavier");
+	     ustrcpy (clavnom, corrpath);
+	     ustrcat (clavnom, "/clavier");
 	     if ((ftsub = fopen (clavnom, "r")) != NULL)
 	       /* Existence du fichier */
 	       {
@@ -1096,23 +1098,23 @@ int                 ParametrizeChecker ()
    WordReplace                                               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                WordReplace (char orgWord[MAX_WORD_LEN], char newWord[MAX_WORD_LEN])
+void                WordReplace (CHAR orgWord[MAX_WORD_LEN], CHAR newWord[MAX_WORD_LEN])
 #else  /* __STDC__ */
 void                WordReplace (orgWord, newWord)
-char                orgWord[MAX_WORD_LEN];
-char                newWord[MAX_WORD_LEN];
+CHAR                orgWord[MAX_WORD_LEN];
+CHAR                newWord[MAX_WORD_LEN];
 #endif /* __STDC__ */
 {
    int                 idx;
    int                 stringLength;	/* longueur de cette chaine */
-   char                pChaineRemplace[MAX_WORD_LEN]; /* la chaine de remplacement */
+   CHAR                pChaineRemplace[MAX_WORD_LEN]; /* la chaine de remplacement */
    int                 LgChaineRempl;	/* longueur de cette chaine */
 
    /* remplacer le mot errone par le mot corrige */
-   stringLength = strlen (orgWord);
+   stringLength = ustrlen (orgWord);
    /* initialiser LgChaineRempl et pChaineRemplace */
-   LgChaineRempl = strlen (newWord);
-   strcpy (pChaineRemplace, newWord);
+   LgChaineRempl = ustrlen (newWord);
+   ustrcpy (pChaineRemplace, newWord);
 
    /* substitue la nouvelle chaine et la selectionne */
    if (ChkrRange->SStartToEnd)
@@ -1202,16 +1204,16 @@ boolean             CheckChangeSelection ()
    FALSE sinon                               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      CheckCharList (char car, char *listcar)
+static boolean      CheckCharList (CHAR car, STRING listcar)
 #else  /* __STDC__ */
 static boolean      CheckCharList (car, listcar)
-char                car;
-char               *listcar;
+CHAR                car;
+STRING              listcar;
 #endif /* __STDC__ */
 {
    int                 i;
 
-   for (i = 0; i < strlen (listcar); i++)
+   for (i = 0; i < ustrlen (listcar); i++)
      {
 	if (car == listcar[i])
 	   return (TRUE);
@@ -1224,10 +1226,10 @@ char               *listcar;
    contenu dans ListCar.                                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      ACeCar (char word[MAX_WORD_LEN])
+static boolean      ACeCar (CHAR word[MAX_WORD_LEN])
 #else  /* __STDC__ */
 static boolean      ACeCar (word)
-char                word[MAX_WORD_LEN];
+CHAR                word[MAX_WORD_LEN];
 #endif /* __STDC__ */
 {
 
@@ -1236,7 +1238,7 @@ char                word[MAX_WORD_LEN];
    int                 longueur;
 
    result = FALSE;
-   longueur = strlen (word);
+   longueur = ustrlen (word);
    if (longueur > 0)
      {
 	for (i = 0; i < longueur && (result == FALSE); i++)
@@ -1251,10 +1253,10 @@ char                word[MAX_WORD_LEN];
    retourne TRUE si le mot contient au moins un chiffre arabe.     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      IncludeANumber (char word[MAX_WORD_LEN])
+static boolean      IncludeANumber (CHAR word[MAX_WORD_LEN])
 #else  /* __STDC__ */
 static boolean      IncludeANumber (word)
-char                word[MAX_WORD_LEN];
+CHAR                word[MAX_WORD_LEN];
 #endif /* __STDC__ */
 {
 
@@ -1263,7 +1265,7 @@ char                word[MAX_WORD_LEN];
    int                 longueur;
 
    result = FALSE;
-   longueur = strlen (word);
+   longueur = ustrlen (word);
    if (longueur > 0)
      {
 	for (i = 0; i < longueur && (result == FALSE); i++)
@@ -1278,10 +1280,10 @@ char                word[MAX_WORD_LEN];
    chiffres decimaux arabes.                                       
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      IsANumber (char word[MAX_WORD_LEN])
+static boolean      IsANumber (CHAR word[MAX_WORD_LEN])
 #else  /* __STDC__ */
 static boolean      IsANumber (word)
-char                word[MAX_WORD_LEN];
+CHAR                word[MAX_WORD_LEN];
 #endif /* __STDC__ */
 {
 
@@ -1290,7 +1292,7 @@ char                word[MAX_WORD_LEN];
    int                 longueur;
 
    result = FALSE;
-   longueur = strlen (word);
+   longueur = ustrlen (word);
    if (longueur > 0)
      {
 
@@ -1307,25 +1309,25 @@ char                word[MAX_WORD_LEN];
    chiffres romains.                                               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      InRoman (char word[MAX_WORD_LEN])
+static boolean      InRoman (CHAR word[MAX_WORD_LEN])
 #else  /* __STDC__ */
 static boolean      InRoman (word)
-char                word[MAX_WORD_LEN];
+CHAR                word[MAX_WORD_LEN];
 #endif /* __STDC__ */
 {
    /* description des chiffres romains (majuscule) */
-   static char         NRomain[] =
+   static CHAR         NRomain[] =
    {'M', 'C', 'D', 'L', 'X', 'V', 'I'};
-   static char         NRomainIsole[] =
+   static CHAR         NRomainIsole[] =
    {'C', 'L', 'V'};
 
    boolean             result;
    int                 i, j, nbcar;
    int                 longueur, lg1;
-   char                cecar;
+   CHAR                cecar;
 
    result = FALSE;
-   longueur = strlen (word);
+   longueur = ustrlen (word);
    if (longueur > 0)
      {
 	result = TRUE;
@@ -1360,7 +1362,7 @@ char                word[MAX_WORD_LEN];
 	  }
 
 	/* ne pas considerer "M" comme un romain */
- if (strlen (word) == 1 && word[0] == 'M')
+ if (ustrlen (word) == 1 && word[0] == 'M')
  result = FALSE;
 	/* verifier aussi l'ordre des I V X L C D M */
 	/* A FAIRE */
@@ -1376,10 +1378,10 @@ char                word[MAX_WORD_LEN];
    retourne FALSE sinon : le mot sera alors verifie par le correcteur 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      IgnoreWord (char word[MAX_WORD_LEN])
+static boolean      IgnoreWord (CHAR word[MAX_WORD_LEN])
 #else  /* __STDC__ */
 static boolean      IgnoreWord (word)
-char                word[MAX_WORD_LEN];
+CHAR                word[MAX_WORD_LEN];
 #endif /* __STDC__ */
 {
 
@@ -1414,10 +1416,10 @@ char                word[MAX_WORD_LEN];
    Le mot errone' est mis dans ChkrErrWord.                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                NextSpellingError (char word[MAX_WORD_LEN], PtrDict docDict)
+void                NextSpellingError (CHAR word[MAX_WORD_LEN], PtrDict docDict)
 #else  /* __STDC__ */
 void                NextSpellingError (word, docDict)
-char                word[MAX_WORD_LEN];
+CHAR                word[MAX_WORD_LEN];
 PtrDict             docDict;
 
 #endif /* __STDC__ */
@@ -1470,7 +1472,7 @@ PtrDict             docDict;
    /* saute les mots qui sont dans une langue SANS dictionnaire */
    while (ok && (i > 0 || i == -1));
 
-   i = strlen (word);
+   i = ustrlen (word);
    if (i > 0)
      {
 	/* on a trouve un mot */
@@ -1480,5 +1482,5 @@ PtrDict             docDict;
 	else
 	   SelectString (ChkrRange->SDocument, ChkrElement, ChkrIndChar + 1, ChkrIndChar + i);
      }
-   strcpy (ChkrErrWord, word);
+   ustrcpy (ChkrErrWord, word);
 }

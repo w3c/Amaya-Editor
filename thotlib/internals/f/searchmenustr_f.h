@@ -9,7 +9,7 @@
 extern void BuildStructSearchMenu ( int pDoc );
 extern void CallbackStructSearchMenu ( int ref,
                                        int val,
-                                       char *txt,
+                                       STRING txt,
                                        PtrSearchContext DomaineCherche );
 extern void BuildSearchOptions ( boolean * erreur,
                                  PtrSearchContext DomaineCherche );
@@ -26,7 +26,7 @@ extern void StructSearchLoadResources ( void );
 extern void BuildStructSearchMenu (/* int pDoc */);
 extern void CallbackStructSearchMenu (/* int ref,
                                          int val,
-                                         char *txt,
+                                         STRING txt,
                                          PtrSearchContext DomaineCherche */);
 extern void BuildSearchOptions (/* boolean * erreur,
                                    PtrSearchContext DomaineCherche */);

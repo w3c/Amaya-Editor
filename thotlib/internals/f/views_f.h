@@ -26,7 +26,7 @@ extern void CloseDocumentView ( PtrDocument pDoc,
                                 boolean assoc,
                                 boolean closeDoc );
 extern void ChangeDocumentName ( PtrDocument pDoc,
-                                 char *newName );
+                                 STRING newName );
 extern void ViewClosed ( int nFrame );
 extern void OpenDefaultViews ( PtrDocument pDoc );
 extern int CreateAbstractImage ( PtrDocument pDoc,
@@ -54,7 +54,7 @@ extern void OpenViewByMenu ( PtrDocument pDoc,
                              PtrElement subTree,
                              DocViewNumber selectedView );
 extern void BuildViewList ( PtrDocument pDoc,
-                            char *buffer,
+                            STRING buffer,
                             int *nItems );
 extern void CloseView ( PtrDocument pDoc,
                         int viewNb,
@@ -82,7 +82,7 @@ extern void CloseDocumentView (/* PtrDocument pDoc,
                                   boolean assoc,
                                   boolean closeDoc */);
 extern void ChangeDocumentName (/* PtrDocument pDoc,
-                                   char *newName */);
+                                   STRING newName */);
 extern void ViewClosed (/* int nFrame */);
 extern void OpenDefaultViews (/* PtrDocument pDoc */);
 extern int CreateAbstractImage (/* PtrDocument pDoc,
@@ -110,7 +110,7 @@ extern void OpenViewByMenu (/* PtrDocument pDoc,
                                PtrElement subTree,
                                DocViewNumber selectedView */);
 extern void BuildViewList (/* PtrDocument pDoc,
-                              char *buffer,
+                              STRING buffer,
                               int *nItems */);
 extern void CloseView (/* PtrDocument pDoc,
                           int viewNb,

@@ -10,6 +10,8 @@
  * Author: V. Quint (INRIA)
  *
  */ 
+
+#include "ustring.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -205,13 +207,13 @@ ElementType         elementType;
    ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-Element             TtaNewTree (Document document, ElementType elementType, char *label)
+Element             TtaNewTree (Document document, ElementType elementType, STRING label)
 
 #else  /* __STDC__ */
 Element             TtaNewTree (document, elementType, label)
 Document            document;
 ElementType         elementType;
-char               *label;
+STRING              label;
 
 #endif /* __STDC__ */
 
@@ -250,7 +252,7 @@ char               *label;
 	   if (!element->ElStructSchema->SsRule[element->ElTypeNumber - 1].SrFirstOfPair)
 	      element->ElPairIdent = 0;
 	if (*label != EOS)
-	   strncpy (element->ElLabel, label, MAX_LABEL_LEN);
+	   ustrncpy (element->ElLabel, label, MAX_LABEL_LEN);
      }
    return ((Element) element);
 }
@@ -308,7 +310,7 @@ PtrDocument         pDoc;
 		       if (!pElem->ElReferredDescr->ReExternalRef)
 			  pElem->ElReferredDescr->ReReferredElem = pElem;
 		    }
-		  strncpy (pElem->ElReferredDescr->ReReferredLabel, pElem->ElLabel, MAX_LABEL_LEN);
+		  ustrncpy (pElem->ElReferredDescr->ReReferredLabel, pElem->ElLabel, MAX_LABEL_LEN);
 		  /* bind the reference descriptor and the referenced element 
 		     descriptor of the treated element */
 		  pPR1 = pRef;
@@ -984,13 +986,13 @@ Document            document;
  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaExportTree (Element element, Document document, char *fileName, char *TSchemaName)
+void                TtaExportTree (Element element, Document document, STRING fileName, STRING TSchemaName)
 #else  /* __STDC__ */
 void                TtaExportTree (element, document, fileName, TSchemaName)
 Element             element;
 Document            document;
-char               *fileName;
-char               *TSchemaName;
+STRING              fileName;
+STRING              TSchemaName;
 #endif /* __STDC__ */
 {
   UserErrorCode = 0;
@@ -2249,10 +2251,10 @@ Element             element;
 
    ---------------------------------------------------------------------- */
 #ifdef __STDC__
-char               *TtaGetElementTypeName (ElementType elementType)
+STRING              TtaGetElementTypeName (ElementType elementType)
 
 #else  /* __STDC__ */
-char               *TtaGetElementTypeName (elementType)
+STRING              TtaGetElementTypeName (elementType)
 ElementType         elementType;
 
 #endif /* __STDC__ */
@@ -2267,7 +2269,7 @@ ElementType         elementType;
 	    elementType.ElTypeNum < 1)
 	TtaError (ERR_invalid_element_type);
    else
-	strncpy (nameBuffer, ((PtrSSchema) (elementType.ElSSchema))->SsRule[elementType.ElTypeNum - 1].SrName, MAX_NAME_LENGTH);
+	ustrncpy (nameBuffer, ((PtrSSchema) (elementType.ElSSchema))->SsRule[elementType.ElTypeNum - 1].SrName, MAX_NAME_LENGTH);
    return nameBuffer;
 }
 
@@ -2285,10 +2287,10 @@ ElementType         elementType;
 
    ---------------------------------------------------------------------- */
 #ifdef __STDC__
-char               *TtaGetElementTypeOriginalName (ElementType elementType)
+STRING              TtaGetElementTypeOriginalName (ElementType elementType)
 
 #else  /* __STDC__ */
-char               *TtaGetElementTypeOriginalName (elementType)
+STRING              TtaGetElementTypeOriginalName (elementType)
 ElementType         elementType;
 
 #endif /* __STDC__ */
@@ -2303,7 +2305,7 @@ ElementType         elementType;
 	    elementType.ElTypeNum < 1)
 	TtaError (ERR_invalid_element_type);
    else
-	strncpy (nameBuffer, ((PtrSSchema) (elementType.ElSSchema))->SsRule[elementType.ElTypeNum - 1].SrOrigName, MAX_NAME_LENGTH);
+	ustrncpy (nameBuffer, ((PtrSSchema) (elementType.ElSSchema))->SsRule[elementType.ElTypeNum - 1].SrOrigName, MAX_NAME_LENGTH);
    return nameBuffer;
 }
 
@@ -2327,12 +2329,12 @@ ElementType         elementType;
    ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                TtaGiveTypeFromName (ElementType * elementType, char *name)
+void                TtaGiveTypeFromName (ElementType * elementType, STRING name)
 
 #else  /* __STDC__ */
 void                TtaGiveTypeFromName (elementType, name)
 ElementType        *elementType;
-char               *name;
+STRING              name;
 
 #endif /* __STDC__ */
 
@@ -2370,12 +2372,12 @@ char               *name;
    ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                TtaGiveTypeFromOriginalName (ElementType * elementType, char *name)
+void                TtaGiveTypeFromOriginalName (ElementType * elementType, STRING name)
 
 #else  /* __STDC__ */
 void                TtaGiveTypeFromOriginalName (elementType, name)
 ElementType        *elementType;
-char               *name;
+STRING              name;
 
 #endif /* __STDC__ */
 
@@ -2457,9 +2459,9 @@ ElementType         type2;
 
    ---------------------------------------------------------------------- */
 #ifdef __STDC__
-char               *TtaGetElementLabel (Element element)
+STRING              TtaGetElementLabel (Element element)
 #else  /* __STDC__ */
-char               *TtaGetElementLabel (element)
+STRING              TtaGetElementLabel (element)
 Element             element;
 #endif /* __STDC__ */
 {
@@ -2469,7 +2471,7 @@ Element             element;
    if (element == NULL)
 	TtaError (ERR_invalid_parameter);
    else
-	strncpy (nameBuffer, ((PtrElement) element)->ElLabel, MAX_NAME_LENGTH);
+	ustrncpy (nameBuffer, ((PtrElement) element)->ElLabel, MAX_NAME_LENGTH);
    return nameBuffer;
 }
 
@@ -3718,17 +3720,17 @@ Element             element;
 /* ----------------------------------------------------------------------
    ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static PtrElement   SearchLabel (char *label, PtrElement pEl)
+static PtrElement   SearchLabel (STRING label, PtrElement pEl)
 #else  /* __STDC__ */
 static PtrElement   SearchLabel (label, pEl)
-char               *label;
+STRING              label;
 PtrElement          pEl;
 #endif /* __STDC__ */
 {
    PtrElement          pE, pFound;
 
    pFound = NULL;
-   if (strcmp (label, pEl->ElLabel) == 0)
+   if (ustrcmp (label, pEl->ElLabel) == 0)
       pFound = pEl;
    else if (!pEl->ElTerminal && pEl->ElFirstChild != NULL)
      {
@@ -3762,10 +3764,10 @@ PtrElement          pEl;
 
    ---------------------------------------------------------------------- */
 #ifdef __STDC__
-Element             TtaSearchElementByLabel (char *searchedLabel, Element element)
+Element             TtaSearchElementByLabel (STRING searchedLabel, Element element)
 #else  /* __STDC__ */
 Element             TtaSearchElementByLabel (searchedLabel, element)
-char               *searchedLabel;
+STRING              searchedLabel;
 Element             element;
 #endif /* __STDC__ */
 {

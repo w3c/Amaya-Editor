@@ -18,6 +18,7 @@
    Ce module charge un schema de structure depuis un fichier .STR
  */
 
+#include "ustring.h"
 #include "thot_sys.h"
 #include "libmsg.h"
 #include "message.h"
@@ -50,7 +51,7 @@ AttribType         *attrType;
 #endif /* __STDC__ */
 
 {
-   char                c;
+   CHAR                c;
 
    TtaReadByte (file, &c);
    switch (c)
@@ -92,7 +93,7 @@ RConstruct         *constr;
 #endif /* __STDC__ */
 
 {
-   char                c;
+   CHAR                c;
 
    TtaReadByte (file, &c);
    switch (c)
@@ -154,7 +155,7 @@ BasicType          *typ;
 #endif /* __STDC__ */
 
 {
-   char                c;
+   CHAR                c;
 
    TtaReadByte (file, &c);
    switch (c)
@@ -207,7 +208,7 @@ TtAttribute        *pAttr;
    int                 j;
 
    TtaReadName (file, pAttr->AttrName);
-   strcpy (pAttr->AttrOrigName, pAttr->AttrName);
+   ustrcpy (pAttr->AttrOrigName, pAttr->AttrName);
    TtaReadBool (file, &pAttr->AttrGlobal);
    TtaReadShort (file, &pAttr->AttrFirstExcept);
    TtaReadShort (file, &pAttr->AttrLastExcept);
@@ -228,7 +229,7 @@ TtAttribute        *pAttr;
 		    for (j = 0; j < pAttr->AttrNEnumValues; j++)
 		      {
 			TtaReadName (file, pAttr->AttrEnumValue[j]);
-			strcpy (pAttr->AttrEnumOrigValue[j], pAttr->AttrEnumValue[j]);
+			ustrcpy (pAttr->AttrEnumOrigValue[j], pAttr->AttrEnumValue[j]);
 		      }
 		    break;
 	      }
@@ -258,7 +259,7 @@ SRule              *pSRule;
    int                 j;
 
    TtaReadName (file, pSRule->SrName);
-   strcpy (pSRule->SrOrigName, pSRule->SrName);
+   ustrcpy (pSRule->SrOrigName, pSRule->SrName);
    TtaReadShort (file, &pSRule->SrNDefAttrs);
    for (j = 0; j < pSRule->SrNDefAttrs; j++)
       TtaReadShort (file, &pSRule->SrDefAttr[j]);
@@ -304,7 +305,7 @@ SRule              *pSRule;
    switch (pSRule->SrConstruct)
 	 {
 	    case CsNatureSchema:
-	       strcpy (pSRule->SrOrigNat, pSRule->SrName);
+	       ustrcpy (pSRule->SrOrigNat, pSRule->SrName);
 	       pSRule->SrSSchemaNat = NULL;
 	       break;
 	    case CsBasicElement:
@@ -364,7 +365,7 @@ PtrSSchema          pSS;
 #endif /* __STDC__ */
 
 {
-   char                c;
+   CHAR                c;
    int                 i;
 
    i = 0;
@@ -412,15 +413,15 @@ PtrSSchema          pSS;
    PathBuffer          dirBuffer;
    int                 i;
 #  ifdef _WINDOWS
-   char*               pwdPath;
+   STRING              pwdPath;
 #  endif /* _WINDOWS */
 
    /* compose le nom du fichier a ouvrir */
 #  if 0 
    pwdPath = TtaGetEnvString ("PWD");
-   strncpy (dirBuffer, pwdPath, MAX_PATH);
+   ustrncpy (dirBuffer, pwdPath, MAX_PATH);
 #  endif  /* !_WINDOWS_COMPILERS */
-   strncpy (dirBuffer, SchemaPath, MAX_PATH);
+   ustrncpy (dirBuffer, SchemaPath, MAX_PATH);
 /* #  endif * _WINDOWS_COMPILERS */
    MakeCompleteName (fileName, "STR", dirBuffer, buf, &i);
 
@@ -429,8 +430,8 @@ PtrSSchema          pSS;
    if (file == 0)
       /* echec */
      {
-	strncpy (buf, fileName, MAX_PATH);
-	strcat (buf, ".STR");
+	ustrncpy (buf, fileName, MAX_PATH);
+	ustrcat (buf, ".STR");
 	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE), buf);
 	return FALSE;
      }

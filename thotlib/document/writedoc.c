@@ -14,6 +14,7 @@
  * 
  */
 
+#include "ustring.h"
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmenu.h"
@@ -77,7 +78,7 @@ static PathBuffer   SaveFileName;
 static boolean      SaveDocWithCopy;
 static boolean      SaveDocWithMove;
 static PtrDocument  DocumentToSave;
-extern char         DefaultFileSuffix[5];        
+extern CHAR         DefaultFileSuffix[5];        
 
 
 /*----------------------------------------------------------------------
@@ -86,11 +87,11 @@ extern char         DefaultFileSuffix[5];
    Rend false si l'ecriture n'a pu se faire.               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      simpleSave (PtrDocument pDoc, char *name, boolean withEvent)
+static boolean      simpleSave (PtrDocument pDoc, STRING name, boolean withEvent)
 #else  /* __STDC__ */
 static boolean      simpleSave (pDoc, name, withEvent)
 PtrDocument         pDoc;
-char               *name;
+STRING              name;
 boolean             withEvent;
 #endif /* __STDC__ */
 {
@@ -144,15 +145,15 @@ boolean             withEvent;
    faire.                                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      saveWithExtension (PtrDocument pDoc, char *extension)
+static boolean      saveWithExtension (PtrDocument pDoc, STRING extension)
 #else  /* __STDC__ */
 static boolean      saveWithExtension (pDoc, extension)
 PtrDocument         pDoc;
-char               *extension;
+STRING              extension;
 
 #endif /* __STDC__ */
 {
-   char                buf[MAX_TXT_LEN];
+   CHAR                buf[MAX_TXT_LEN];
    int                 i;
 
    if (pDoc == NULL)
@@ -187,7 +188,7 @@ boolean             move;
 {
    PathBuffer          bakName, pivName, tempName, backName, oldDir;
    NotifyDialog        notifyDoc;
-   char                buf[MAX_TXT_LEN];
+   CHAR                buf[MAX_TXT_LEN];
    int                 i;
    boolean             sameFile, status, ok;
 
@@ -202,14 +203,14 @@ boolean             move;
      {
 	status = TRUE;
 	sameFile = TRUE;
-	if (strcmp (docName, pDoc->DocDName) != 0)
+	if (ustrcmp (docName, pDoc->DocDName) != 0)
 	   sameFile = FALSE;
-	if (strcmp (dirName, pDoc->DocDirectory) != 0)
+	if (ustrcmp (dirName, pDoc->DocDirectory) != 0)
 	   sameFile = FALSE;
 
 	/* construit le nom complet de l'ancien fichier de sauvegarde */
 	FindCompleteName (pDoc->DocDName, "BAK", pDoc->DocDirectory, bakName, &i);
-	strncpy (oldDir, pDoc->DocDirectory, MAX_PATH);
+	ustrncpy (oldDir, pDoc->DocDirectory, MAX_PATH);
 	/*     SECURITE:                                         */
 	/*     on ecrit sur un fichier nomme' X.Tmp et non pas   */
 	/*     directement X.PIV ...                             */
@@ -279,8 +280,8 @@ boolean             move;
 		  TtaFileUnlink (buf);
 		  if (!sameFile)
 		    {
-		       if (strcmp (dirName, oldDir) != 0 &&
-			   strcmp (docName, pDoc->DocDName) == 0)
+		       if (ustrcmp (dirName, oldDir) != 0 &&
+			   ustrcmp (docName, pDoc->DocDName) == 0)
 			  /* changement de directory sans changement de nom */
 			  if (move)
 			    {
@@ -293,7 +294,7 @@ boolean             move;
 			       TtaFileUnlink (buf);
 			    }
 
-		       if (strcmp (docName, pDoc->DocDName) != 0)
+		       if (ustrcmp (docName, pDoc->DocDName) != 0)
 			 {
 			    /* il y a effectivement changement de nom */
 			    if (copy)
@@ -323,9 +324,9 @@ boolean             move;
 				 TtaFileUnlink (buf);
 			      }
 			 }
-		       strncpy (pDoc->DocDName, docName, MAX_NAME_LENGTH);
-		       strncpy (pDoc->DocIdent, docName, MAX_DOC_IDENT_LEN);
-		       strncpy (pDoc->DocDirectory, dirName, MAX_PATH);
+		       ustrncpy (pDoc->DocDName, docName, MAX_NAME_LENGTH);
+		       ustrncpy (pDoc->DocIdent, docName, MAX_DOC_IDENT_LEN);
+		       ustrncpy (pDoc->DocDirectory, dirName, MAX_PATH);
 		       ChangeDocumentName (pDoc, docName);
 		    }
 	       }
@@ -387,9 +388,9 @@ boolean        withCopy;
 boolean        withMove;
 #endif /* __STDC__ */
 {
-  strcpy (SaveFileName, fileName);
-  strcat (SaveFileName, ".PIV");
-  strcpy (SaveDirectoryName, directoryName);
+  ustrcpy (SaveFileName, fileName);
+  ustrcat (SaveFileName, ".PIV");
+  ustrcpy (SaveDirectoryName, directoryName);
   SaveDocWithCopy = withCopy;
   SaveDocWithMove = withMove;
   DocumentToSave = pDoc;
@@ -461,6 +462,6 @@ void PivotLoadResources()
       TteConnectAction (T_writedocument, (Proc) WriteDocument);  
       TteConnectAction (T_setwritedirectory, (Proc) SetWriteDirectory);
     }
-  strcpy (DefaultFileSuffix, ".PIV");
+  ustrcpy (DefaultFileSuffix, ".PIV");
 }
 

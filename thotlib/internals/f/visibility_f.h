@@ -8,7 +8,7 @@
 
 extern void changevisibilityview ( int ref,
                                    int typedata,
-                                   char *data );
+                                   STRING data );
 extern void reTtcSetVisibilityView ( int frame );
 extern void TtcSetVisibilityView ( Document document,
                                    View view );
@@ -17,7 +17,7 @@ extern void TtcSetVisibilityView ( Document document,
 
 extern void changevisibilityview (/* int ref,
                                      int typedata,
-                                     char *data */);
+                                     STRING data */);
 extern void reTtcSetVisibilityView (/* int frame */);
 extern void TtcSetVisibilityView (/* Document document,
                                      View view */);

@@ -19,6 +19,7 @@
 
  */
 
+#include "ustring.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "constpiv.h"
@@ -63,11 +64,11 @@ LabelString         strng;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                ReadLabel (char labelType, LabelString label, BinFile file)
+void                ReadLabel (CHAR labelType, LabelString label, BinFile file)
 
 #else  /* __STDC__ */
 void                ReadLabel (labelType, label, file)
-char                labelType;
+CHAR                labelType;
 LabelString         label;
 BinFile             file;
 
@@ -139,7 +140,7 @@ boolean             labelsOnly;
    LabelString         label;
    DocumentIdentifier  docIdent;
    boolean             stop, error;
-   char                c;
+   CHAR                c;
 
    error = FALSE;
    /* lit la 1ere marque de label */
@@ -156,7 +157,7 @@ boolean             labelsOnly;
 	     /* acquiert un descripteur d'element reference' */
 	     GetReferredDescr (&pRefD);
 	     /* met le label lu dans le descripteur */
-	     strncpy (pRefD->ReReferredLabel, label, MAX_LABEL_LEN);
+	     ustrncpy (pRefD->ReReferredLabel, label, MAX_LABEL_LEN);
 	     /* chaine le descripteur */
 	     if (pPrevRefD == NULL)
 		/* premier descripteur de la chaine */
@@ -183,7 +184,7 @@ boolean             labelsOnly;
 		     stop = TRUE;	/* dernier descripteur du document */
 		  else if (!pRefD->ReExternalRef)
 		     if (pRefD->ReReferredElem != NULL)
-			if (strcmp (pRefD->ReReferredElem->ElLabel, label) == 0)
+			if (ustrcmp (pRefD->ReReferredElem->ElLabel, label) == 0)
 			   /* trouve' */
 			   stop = TRUE;
 		  if (!stop)
@@ -201,13 +202,13 @@ boolean             labelsOnly;
 	/* lit la 1ere marque de nom de document */
 	if (!TtaReadByte (file, &c))
 	   error = TRUE;
-	if (c != (char) C_PIV_DOCNAME || error)
+	if (c != (CHAR) C_PIV_DOCNAME || error)
 	  {
 	     /* ce n'est pas une marque de nom */
 	     DisplayPivotMessage ("T");
 	     error = TRUE;
 	  }
-	while (c == (char) C_PIV_DOCNAME && !error)
+	while (c == (CHAR) C_PIV_DOCNAME && !error)
 	   /* lit l'identificateur du document referencant */
 	  {
 	     TtaReadDocIdent (file, &docIdent);
@@ -253,7 +254,7 @@ PtrChangedReferredEl *Anchor;
 
 {
    PtrChangedReferredEl pChnRef, pPrevChnRef;
-   char                c;
+   CHAR                c;
    boolean             error;
    LabelString         label;
 
@@ -278,19 +279,19 @@ PtrChangedReferredEl *Anchor;
 	   pPrevChnRef->CrNext = pChnRef;
 	pPrevChnRef = pChnRef;
 	/* lit l'ancien label */
-	strncpy (pChnRef->CrOldLabel, label, MAX_LABEL_LEN);
+	ustrncpy (pChnRef->CrOldLabel, label, MAX_LABEL_LEN);
 	/* lit le nouveau label */
 	if (!TtaReadByte (file, &c))
 	   error = TRUE;
 	ReadLabel (c, label, file);
 	if (!error)
 	  {
-	     strncpy (pChnRef->CrNewLabel, label, MAX_LABEL_LEN);
+	     ustrncpy (pChnRef->CrNewLabel, label, MAX_LABEL_LEN);
 	     /* lit le nom de l'ancien document */
 	     /* lit la marque de nom de document */
 	     if (!TtaReadByte (file, &c))
 		error = TRUE;
-	     if (c != (char) C_PIV_DOCNAME)
+	     if (c != (CHAR) C_PIV_DOCNAME)
 	       {
 		  /* a name was expected */
 		  DisplayPivotMessage ("T");
@@ -305,7 +306,7 @@ PtrChangedReferredEl *Anchor;
 		     /* lit la marque de nom de document */
 		     if (!TtaReadByte (file, &c))
 			error = TRUE;
-		  if (c != (char) C_PIV_DOCNAME)
+		  if (c != (CHAR) C_PIV_DOCNAME)
 		    {
 		       /* a name was expected */
 		       DisplayPivotMessage ("T");
@@ -382,7 +383,7 @@ PtrDocument         pDoc;
 	     while (pRefD != NULL && !found)
 	       {
 		  if (pRefD->ReExternalRef)
-		     if (strcmp (pRefD->ReReferredLabel, pChnRef->CrOldLabel) == 0)
+		     if (ustrcmp (pRefD->ReReferredLabel, pChnRef->CrOldLabel) == 0)
 			if (SameDocIdent (pRefD->ReExtDocument, pChnRef->CrOldDocument))
 			   found = TRUE;
 		  if (!found)
@@ -394,7 +395,7 @@ PtrDocument         pDoc;
 		  if (pChnRef->CrNewLabel[0] != EOS)
 		     /* l'element reference' a change' de document */
 		    {
-		       strncpy (pRefD->ReReferredLabel, pChnRef->CrNewLabel, MAX_LABEL_LEN);
+		       ustrncpy (pRefD->ReReferredLabel, pChnRef->CrNewLabel, MAX_LABEL_LEN);
 		       CopyDocIdent (&pRefD->ReExtDocument, pChnRef->CrNewDocument);
 		    }
 		  else

@@ -12,6 +12,7 @@
  *         R. Guetari (W3C/INRIA) Windows 95/NT routines
  */
 
+#include "ustring.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -23,7 +24,7 @@
 #define THOT_EXPORT extern
 #include "frame_tv.h"
 #include "platform_tv.h"
-static char         NoneTxt[] = "None";
+static CHAR         NoneTxt[] = "None";
 
 #include "memory_f.h"
 

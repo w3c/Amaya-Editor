@@ -21,6 +21,7 @@
  *
  */
 
+#include "ustring.h"
 #include "thot_sys.h"
 #include "libmsg.h"
 #include "constmedia.h"
@@ -645,8 +646,8 @@ RuleSet             RuleS1;
 
 #endif /* __STDC__ */
 {
-   unsigned char      *s1;
-   int                 num;
+   USTRING s1;
+   int     num;
 
    s1 = RuleS1;
    for (num = SETSIZE; --num >= 0;)
@@ -1607,7 +1608,7 @@ PtrElement          pEl;
   les graphiques demandes par l'utilisateur.		
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ModifyGraphics (PtrElement pEl, PtrDocument pDoc, int viewToApply, boolean modifLineStyle, char LineStyle, boolean modifLineWeight, int LineWeight, TypeUnit LineWeightUnit, boolean modifFillPattern, int FillPattern, boolean modifColorBackground, int ColorBackground, boolean modifLineColor, int LineColor)
+void                ModifyGraphics (PtrElement pEl, PtrDocument pDoc, int viewToApply, boolean modifLineStyle, CHAR LineStyle, boolean modifLineWeight, int LineWeight, TypeUnit LineWeightUnit, boolean modifFillPattern, int FillPattern, boolean modifColorBackground, int ColorBackground, boolean modifLineColor, int LineColor)
 
 #else  /* __STDC__ */
 void                ModifyGraphics (pEl, pDoc, viewToApply, modifLineStyle, LineStyle, modifLineWeight, LineWeight, LineWeightUnit, modifFillPattern, FillPattern, modifColorBackground, ColorBackground, modifLineColor, LineColor)
@@ -1615,7 +1616,7 @@ PtrElement          pEl;
 PtrDocument         pDoc;
 int                 viewToApply;
 boolean             modifLineStyle;
-char                LineStyle;
+CHAR                LineStyle;
 boolean             modifLineWeight;
 int                 LineWeight;
 TypeUnit            LineWeightUnit;
@@ -1657,7 +1658,7 @@ int                 LineColor;
 	}
       else if (!isNew)
 	/* reset the previous value */
-	pPRule->PrChrValue = (char) value;
+	pPRule->PrChrValue = (CHAR) value;
     }
 
   /* epaisseur des traits dans le graphique */
@@ -2038,7 +2039,7 @@ boolean             Background;
   les caracteres demandes par l'utilisateur.		
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ModifyChar (PtrElement pEl, PtrDocument pDoc, int viewToApply, boolean modifFamily, char family, boolean modifStyle, int charStyle, boolean modifsize, int size, boolean modifUnderline, int underline, boolean modifWeight, int weightUnderline)
+void                ModifyChar (PtrElement pEl, PtrDocument pDoc, int viewToApply, boolean modifFamily, CHAR family, boolean modifStyle, int charStyle, boolean modifsize, int size, boolean modifUnderline, int underline, boolean modifWeight, int weightUnderline)
 
 #else  /* __STDC__ */
 void                ModifyChar (pEl, pDoc, viewToApply, modifFamily, family, modifStyle, charStyle, modifsize, size, modifUnderline, underline, modifWeight, weightUnderline)
@@ -2046,7 +2047,7 @@ PtrElement          pEl;
 PtrDocument         pDoc;
 int                 viewToApply;
 boolean             modifFamily;
-char                family;
+CHAR                family;
 boolean             modifStyle;
 int                 charStyle;
 boolean             modifsize;
@@ -2063,7 +2064,7 @@ int                 weightUnderline;
    PtrPRule            pPRule;
    int                 viewSch;
    int                 intValue;
-   char                value;
+   CHAR                value;
 
    /* numero de cette view */
    viewSch = AppliedView (pEl, NULL, pDoc, viewToApply);

@@ -21,6 +21,7 @@
  *
  */
 
+#include "ustring.h"
 #include "thot_sys.h"
 int                 UserErrorCode;
 
@@ -29,10 +30,10 @@ int                 UserErrorCode;
    DisplayConfirmMessage displays the given message (text).        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                DisplayConfirmMessage (char *text)
+void                DisplayConfirmMessage (STRING text)
 #else  /* __STDC__ */
 void                DisplayConfirmMessage (text)
-char               *text;
+STRING              text;
 
 #endif /* __STDC__ */
 {
@@ -43,10 +44,10 @@ char               *text;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                DisplayMessage (char *text, int msgType)
+void                DisplayMessage (STRING text, int msgType)
 #else  /* __STDC__ */
 void                DisplayMessage (text, msgType)
-char               *text;
+STRING              text;
 int                 msgType;
 
 #endif /* __STDC__ */

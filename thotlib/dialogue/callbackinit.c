@@ -20,7 +20,8 @@
  * Author: I. Vatton (INRIA)
  *
  */
- 
+
+#include "ustring.h" 
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -39,17 +40,17 @@
    FetchAction finds and returns an action with the name actionName 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrAction    FetchAction (char *actionName)
+PtrAction    FetchAction (STRING actionName)
 #else  /* __STDC__ */
 PtrAction    FetchAction (actionName)
-char               *actionName;
+STRING              actionName;
 
 #endif /* __STDC__ */
 {
    PtrAction           pAction;
 
    pAction = ActionList;
-   while (pAction != NULL && strcmp (actionName, pAction->ActName) != 0)
+   while (pAction != NULL && ustrcmp (actionName, pAction->ActName) != 0)
       pAction = pAction->ActNext;
    return pAction;
 }
@@ -60,10 +61,10 @@ char               *actionName;
    pointed to by the global variable ActionList.           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TteAddAction (char *actionName, Proc doIt)
+void                TteAddAction (STRING actionName, Proc doIt)
 #else  /* __STDC__ */
 void                TteAddAction (actionName, doIt)
-char               *actionName;
+STRING              actionName;
 Proc                doIt;
 
 #endif /* __STDC__ */
@@ -76,12 +77,12 @@ Proc                doIt;
      {
 	/* following actions are treated */
 	newAction = pAction->ActNext;
-	while (newAction != NULL && strcmp (actionName, pAction->ActName) != 0)
+	while (newAction != NULL && ustrcmp (actionName, pAction->ActName) != 0)
 	  {
 	     pAction = pAction->ActNext;
 	     newAction = newAction->ActNext;
 	  }
-	if (strcmp (actionName, pAction->ActName) == 0)
+	if (ustrcmp (actionName, pAction->ActName) == 0)
 	   newAction = pAction;
      }
    else
@@ -112,12 +113,12 @@ Proc                doIt;
    We don't support adding a new action currently !!!
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                TteAddUserAction (char *actionName, UserProc procedure,
+int                TteAddUserAction (STRING actionName, UserProc procedure,
                                       void *arg)
 
 #else  /* __STDC__ */
 int                TteAddUserAction (actionName, procedure, arg)
-char               *actionName;
+STRING              actionName;
 UserProc            procedure;
 void               *arg;
 
@@ -133,7 +134,7 @@ void               *arg;
     */
    if (actionName == NULL)
       return(-1);
-   lg = strlen (actionName);
+   lg = ustrlen (actionName);
    if (lg == 0) return(-1);
 
    pAction = ActionList;
@@ -141,12 +142,12 @@ void               *arg;
      {
 	/* following actions are treated */
 	newAction = pAction->ActNext;
-	while (newAction != NULL && strcmp (actionName, pAction->ActName) != 0)
+	while (newAction != NULL && ustrcmp (actionName, pAction->ActName) != 0)
 	  {
 	     pAction = pAction->ActNext;
 	     newAction = newAction->ActNext;
 	  }
-	if (strcmp (actionName, pAction->ActName) == 0)
+	if (ustrcmp (actionName, pAction->ActName) == 0)
 	   newAction = pAction;
      }
    else
@@ -179,17 +180,17 @@ void               *arg;
    TteGetEventsSet returns a pointer to an existing events set.		
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrEventsSet        TteGetEventsSet (char *name)
+PtrEventsSet        TteGetEventsSet (STRING name)
 #else  /* __STDC__ */
 PtrEventsSet        TteGetEventsSet (name)
-char               *name;
+STRING              name;
 
 #endif /* __STDC__ */
 {
    PtrEventsSet        pevset;
 
    /* Find it */
-   if (strcmp (name, "EDITOR") == 0)
+   if (ustrcmp (name, "EDITOR") == 0)
      /* it is the global set */
      return(EditorEvents);
    else
@@ -197,7 +198,7 @@ char               *name;
        pevset = SchemasEvents;
        while (pevset != NULL)
 	 {
-	   if (!strcmp(pevset->EvSName, name))
+	   if (!ustrcmp(pevset->EvSName, name))
 	     return(pevset);
 	   pevset = pevset->EvSNext;
 	 }
@@ -211,11 +212,11 @@ char               *name;
    It is added to the global list.       			
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrEventsSet        TteNewEventsSet (int structureId, char *name)
+PtrEventsSet        TteNewEventsSet (int structureId, STRING name)
 #else  /* __STDC__ */
 PtrEventsSet        TteNewEventsSet (structureId, name)
 int                 structureId;
-char               *name;
+STRING              name;
 
 #endif /* __STDC__ */
 {
@@ -231,7 +232,7 @@ char               *name;
    newEvSet->EvSNext = NULL;
 
    /* Link it */
-   if (strcmp (name, "EDITOR") == 0)
+   if (ustrcmp (name, "EDITOR") == 0)
      {
 	/* it is the global set */
 	EditorEvents = newEvSet;
@@ -257,14 +258,14 @@ char               *name;
    eventsList.				                        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TteAddActionEvent (PtrEventsSet eventsList, int typeId, APPevent event, boolean pre, char *actionName)
+void                TteAddActionEvent (PtrEventsSet eventsList, int typeId, APPevent event, boolean pre, STRING actionName)
 #else  /* __STDC__ */
 void                TteAddActionEvent (eventsList, typeId, event, pre, actionName)
 PtrEventsSet        eventsList;
 int                 typeId;
 APPevent            event;
 boolean             pre;
-char               *actionName;
+STRING              actionName;
 
 #endif /* __STDC__ */
 {

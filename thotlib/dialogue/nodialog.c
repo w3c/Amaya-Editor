@@ -9,6 +9,7 @@
    nodialog : fonctions vides pour l'edition de lien
  */
 
+#include "ustring.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -20,10 +21,10 @@
 
 
 #ifdef __STDC__
-Pixmap              TtaCreatePixmapLogo (char **data)
+Pixmap              TtaCreatePixmapLogo (STRING *data)
 #else  /* __STDC__ */
 Pixmap              TtaCreatePixmapLogo (data)
-char              **data;
+STRING*             data;
 
 #endif /* __STDC__ */
 {
@@ -49,11 +50,11 @@ void                DrawAddAttr ()
 {
 }
 #ifdef __STDC__
-void                DrawChar (unsigned char car, int frame, int x, int y, ptrfont font, int RO, int active, int fg)
+void                DrawChar (UCHAR car, int frame, int x, int y, ptrfont font, int RO, int active, int fg)
 
 #else  /* __STDC__ */
 void                DrawChar (car, frame, x, y, font, RO, active, fg)
-unsigned char       car;
+UCHAR       car;
 int                 frame;
 int                 x;
 int                 y;
@@ -213,11 +214,11 @@ int                 frame;
 }
 
 #ifdef __STDC__
-void                ChangeFrameTitle (int frame, char *texte)
+void                ChangeFrameTitle (int frame, STRING texte)
 #else  /* __STDC__ */
 void                ChangeFrameTitle (frame, texte)
 int                 frame;
-char               *texte;
+STRING              texte;
 
 #endif /* __STDC__ */
 {
@@ -445,12 +446,12 @@ int                 y;
 }
 
 #ifdef __STDC__
-boolean             ConfigGetPSchemaNature (PtrSSchema pSS, char *nomNature, char *presNature)
+boolean             ConfigGetPSchemaNature (PtrSSchema pSS, STRING nomNature, STRING presNature)
 #else  /* __STDC__ */
 boolean             ConfigGetPSchemaNature (pSS, nomNature, presNature)
 PtrSSchema          pSS;
-char               *nomNature;
-char               *presNature;
+STRING              nomNature;
+STRING              presNature;
 
 #endif /* __STDC__ */
 {
@@ -459,12 +460,12 @@ char               *presNature;
 
 
 #ifdef __STDC__
-boolean             ConfigDefaultPSchema (char *schema, char *schpres)
+boolean             ConfigDefaultPSchema (STRING schema, STRING schpres)
 
 #else  /* __STDC__ */
 boolean             ConfigDefaultPSchema (schema, schpres)
-char               *schema;
-char               *schpres;
+STRING              schema;
+STRING              schpres;
 
 #endif /* __STDC__ */
 {

@@ -22,6 +22,7 @@
  *
  */
 
+#include "ustring.h"
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"
@@ -70,16 +71,16 @@
 struct E_List
   {
      struct E_List      *E_Next;	         /* CsList d'entrees suivante         */
-     char                E_Free[C_NUMBER];	 /* Disponibilite des entrees         */
-     char                E_Type[C_NUMBER];	 /* CsList des types des entrees      */
+     CHAR                E_Free[C_NUMBER];	 /* Disponibilite des entrees         */
+     CHAR                E_Type[C_NUMBER];	 /* CsList des types des entrees      */
      ThotWidget          E_ThotWidget[C_NUMBER]; /* ThotWidgets associes aux entrees  */
   };
 
 struct Cat_Context
   {
      int                 Cat_Ref;	         /* CsReference appli du catalogue    */
-     unsigned char       Cat_Type;	         /* Type du catalogue                 */
-     unsigned char       Cat_Button;	         /* Le bouton qui active              */
+     UCHAR       Cat_Type;	         /* Type du catalogue                 */
+     UCHAR       Cat_Button;	         /* Le bouton qui active              */
      union {
 	 int             Catu_Data;	         /* Valeur de retour                  */
 	 ThotWidget	 Catu_XtWParent;
@@ -158,7 +159,7 @@ static Display*       GDp;
 #ifdef _WINDOWS
 typedef struct struct_winerror {
         WORD  errNo;
-        char* errstr;
+        STRING errstr;
 };
 
 struct struct_winerror win_errtab[] = {
@@ -196,7 +197,7 @@ LRESULT CALLBACK TxtZoneWndProc () ;
 
 /* following variables are declared as extern in frame_tv.h */
 HINSTANCE           hInstance = 0;
-char*               tszAppName;
+STRING               tszAppName;
 int                 nAmayaShow;
 DWORD               WinLastError;
 ThotWindow          WinToolBar[MAX_FRAME + 2];
@@ -224,9 +225,9 @@ int                 WIN_DesFen;	/* selected ViewFrame               */
 int                 WIN_DesX;	/* Position X of the selection      */
 int                 WIN_DesY;	/* Position Y of the selection      */
 int                 WIN_DesReturn;	/* Selection indicator              */
-unsigned char*      WIN_buffer;	/* Buffer for exchanges with Window */
+USTRING      WIN_buffer;	/* Buffer for exchanges with Window */
 int                 WIN_Lgbuffer;
-extern char         docToOpen [256];
+extern CHAR         docToOpen [256];
 #ifdef  APPFILENAMEFILTER
 #       undef  APPFILENAMEFILTER
 #endif  /* APPFILENAMEFILTER */
@@ -247,7 +248,7 @@ static int      bIndex   = 0;
 static int      bAbsBase = 60 ;
 static WIN_Form formulary ;
 static BYTE     fVirt;
-static char     key;
+static CHAR     key;
 
 #define TAB     '\t'
 #define SPACE   ' '
@@ -259,15 +260,15 @@ UINT subMenuID [MAX_FRAME];
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-BOOL parseAccelerator (char* accelerator)
+BOOL parseAccelerator (STRING accelerator)
 #else  /* !__STDC */
 BOOL parseAccelerator (accelrator)
-char* accelerator;
+STRING accelerator;
 #endif /* __STDC__ */
 {
-   char*   pc;
-   char*   pw;
-   char    word [1024];
+   STRING   pc;
+   STRING   pw;
+   CHAR    word [1024];
    BOOL    getEquivChar = FALSE;
 
    fVirt = FNOINVERT;
@@ -283,11 +284,11 @@ char* accelerator;
                *pw++ = *pc++;
          *pw = EOS;
 
-         if (!strcmp (word, "Ctrl")) 
+         if (!ustrcmp (word, "Ctrl")) 
             return FALSE;
-         else if (!strcmp (word, "Alt"))
+         else if (!ustrcmp (word, "Alt"))
               fVirt |= FALT;
-         else if (!strcmp (word, "Shift"))
+         else if (!ustrcmp (word, "Shift"))
               fVirt |= FSHIFT;
 
          while (*pc == SPACE || *pc == TAB)			  
@@ -298,64 +299,64 @@ char* accelerator;
                     *pw++ = *pc++;
          *pw = EOS;
 
-         if (!strcmp (word, "Ctrl")) 
+         if (!ustrcmp (word, "Ctrl")) 
             return FALSE;
-         else if (!strcmp (word, "Alt")) {
+         else if (!ustrcmp (word, "Alt")) {
               fVirt |= FALT;
               getEquivChar = TRUE;
-         } else if (!strcmp (word, "Shift")) {
+         } else if (!ustrcmp (word, "Shift")) {
                 fVirt |= FSHIFT;
                 getEquivChar = TRUE;
          } else {
-              if (!strcmp (word, "F1")) {
+              if (!ustrcmp (word, "F1")) {
                  fVirt |= FVIRTKEY;
                  key = VK_F1;
-			  } else if (!strcmp (word, "F2")) {
+			  } else if (!ustrcmp (word, "F2")) {
                      fVirt |= FVIRTKEY;
                      key = VK_F2;
-			  } else if (!strcmp (word, "F3")) {
+			  } else if (!ustrcmp (word, "F3")) {
                      fVirt |= FVIRTKEY;
                      key = VK_F3;
-			  } else if (!strcmp (word, "F4")) {
+			  } else if (!ustrcmp (word, "F4")) {
                      fVirt |= FVIRTKEY;
                      key = VK_F4;
-			  } else if (!strcmp (word, "F5")) {
+			  } else if (!ustrcmp (word, "F5")) {
                      fVirt |= FVIRTKEY;
                      key = VK_F5;
-			  } else if (!strcmp (word, "F6")) {
+			  } else if (!ustrcmp (word, "F6")) {
                      fVirt |= FVIRTKEY;
                      key = VK_F6;
-			  } else if (!strcmp (word, "F7")) {
+			  } else if (!ustrcmp (word, "F7")) {
                      fVirt |= FVIRTKEY;
                      key = VK_F7;
-			  } else if (!strcmp (word, "F8")) {
+			  } else if (!ustrcmp (word, "F8")) {
                      fVirt |= FVIRTKEY;
                      key = VK_F8;
-			  } else if (!strcmp (word, "F9")) {
+			  } else if (!ustrcmp (word, "F9")) {
                      fVirt |= FVIRTKEY;
                      key = VK_F9;
-			  } else if (!strcmp (word, "F10")) {
+			  } else if (!ustrcmp (word, "F10")) {
                      fVirt |= FVIRTKEY;
                      key = VK_F10;
-			  } else if (!strcmp (word, "F11")) {
+			  } else if (!ustrcmp (word, "F11")) {
                      fVirt |= FVIRTKEY;
                      key = VK_F11;
-			  } else if (!strcmp (word, "F12")) {
+			  } else if (!ustrcmp (word, "F12")) {
                      fVirt |= FVIRTKEY;
                      key = VK_F12;
-			  } else if (!strcmp (word, "F13")) {
+			  } else if (!ustrcmp (word, "F13")) {
                      fVirt |= FVIRTKEY;
                      key = VK_F13;
-			  } else if (!strcmp (word, "F14")) {
+			  } else if (!ustrcmp (word, "F14")) {
                      fVirt |= FVIRTKEY;
                      key = VK_F14;
-			  } else if (!strcmp (word, "F15")) {
+			  } else if (!ustrcmp (word, "F15")) {
                      fVirt |= FVIRTKEY;
                      key = VK_F15;
-			  } else if (!strcmp (word, "F16")) {
+			  } else if (!ustrcmp (word, "F16")) {
                      fVirt |= FVIRTKEY;
                      key = VK_F16;
-			  } else if (strlen (word) == 1)
+			  } else if (ustrlen (word) == 1)
                      key = word [0];
               else 
                   return FALSE;
@@ -370,58 +371,58 @@ char* accelerator;
                   *pw++ = *pc++;
             *pw = EOS;
               	
-            if (!strcmp (word, "F1")) {
+            if (!ustrcmp (word, "F1")) {
                fVirt |= FVIRTKEY;
                key = VK_F1;
-            } else if (!strcmp (word, "F2")) {
+            } else if (!ustrcmp (word, "F2")) {
                    fVirt |= FVIRTKEY;
                    key = VK_F2;
-            } else if (!strcmp (word, "F3")) {
+            } else if (!ustrcmp (word, "F3")) {
                    fVirt |= FVIRTKEY;
                    key = VK_F3;
-            } else if (!strcmp (word, "F4")) {
+            } else if (!ustrcmp (word, "F4")) {
                    fVirt |= FVIRTKEY;
                    key = VK_F4;
-            } else if (!strcmp (word, "F5")) {
+            } else if (!ustrcmp (word, "F5")) {
                    fVirt |= FVIRTKEY;
                    key = VK_F5;
-            } else if (!strcmp (word, "F6")) {
+            } else if (!ustrcmp (word, "F6")) {
                    fVirt |= FVIRTKEY;
                    key = VK_F6;
-			} else if (!strcmp (word, "F7")) {
+			} else if (!ustrcmp (word, "F7")) {
                    fVirt |= FVIRTKEY;
                    key = VK_F7;
-            } else if (!strcmp (word, "F8")) {
+            } else if (!ustrcmp (word, "F8")) {
                    fVirt |= FVIRTKEY;
                    key = VK_F8;
-            } else if (!strcmp (word, "F9")) {
+            } else if (!ustrcmp (word, "F9")) {
                    fVirt |= FVIRTKEY;
                    key = VK_F9;
-            } else if (!strcmp (word, "F10")) {
+            } else if (!ustrcmp (word, "F10")) {
                    fVirt |= FVIRTKEY;
                    key = VK_F10;
-            } else if (!strcmp (word, "F11")) {
+            } else if (!ustrcmp (word, "F11")) {
                    fVirt |= FVIRTKEY;
                    key = VK_F11;
-            } else if (!strcmp (word, "F12")) {
+            } else if (!ustrcmp (word, "F12")) {
                    fVirt |= FVIRTKEY;
                    key = VK_F12;
-            } else if (!strcmp (word, "F13")) {
+            } else if (!ustrcmp (word, "F13")) {
                    fVirt |= FVIRTKEY;
                    key = VK_F13;
-            } else if (!strcmp (word, "F14")) {
+            } else if (!ustrcmp (word, "F14")) {
                    fVirt |= FVIRTKEY;
                    key = VK_F14;
-            } else if (!strcmp (word, "F15")) {
+            } else if (!ustrcmp (word, "F15")) {
                    fVirt |= FVIRTKEY;
                    key = VK_F15;
-            } else if (!strcmp (word, "F16")) {
+            } else if (!ustrcmp (word, "F16")) {
                    fVirt |= FVIRTKEY;
                    key = VK_F16;
-			} else if (!strcmp (word, "Return")) {
+			} else if (!ustrcmp (word, "Return")) {
                    fVirt |= FVIRTKEY;
                    key = VK_RETURN;
-            } else if (strlen (word) == 1)
+            } else if (ustrlen (word) == 1)
                    key = word [0];
             else
                 return FALSE;
@@ -436,11 +437,11 @@ char* accelerator;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void addAccelerator (int frame, BYTE fVirt, char key, int cmd)
+void addAccelerator (int frame, BYTE fVirt, CHAR key, int cmd)
 #else  /* __STDC__ */
 void addAccelerator (fVirt, key, cmd)
 BYTE fVirt; 
-char key;
+CHAR key;
 int  cmd;
 #endif /* __STDC__ */
 {
@@ -493,13 +494,13 @@ int  cmd;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean isOnlyBlank (CONST char* text)
+static boolean isOnlyBlank (CONST STRING text)
 #else  /* __STDC__ */
 static boolean isOnlyBlank (text)
-CONST char* text;
+CONST STRING text;
 #endif /* __STDC__ */
 {
-    char *pText = text;
+    STRING pText = text;
     while (pText && *pText == ' ')
 	  pText++;
     if (*pText == EOS)
@@ -854,7 +855,7 @@ HWND hWnd;
 #endif /* __STDC__ */
 {
    int                 msg;
-   char                str[200];
+   CHAR                str[200];
 
    WinLastError = GetLastError ();
    if (WinLastError == 0)
@@ -875,19 +876,19 @@ HWND hWnd;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int makeArgcArgv (HINSTANCE hInst, char*** pArgv, char* commandLine)
+int makeArgcArgv (HINSTANCE hInst, STRING** pArgv, STRING commandLine)
 #else  /* __STDC__ */
 int makeArgcArgv (hInst, pArgv, commandLine)
 HINSTANCE hInst; 
-char***   pArgv; 
-char*     commandLine;
+STRING**   pArgv; 
+STRING     commandLine;
 #endif /* __STDC__ */
 {
     int          argc;
-    static char* argv[20];
-    static char  argv0[256];
-    char*        ptr     = commandLine;
-    char         lookFor = 0;
+    static STRING argv[20];
+    static CHAR  argv0[256];
+    STRING        ptr     = commandLine;
+    CHAR         lookFor = 0;
 
     enum {
 	nowAt_start, 
@@ -949,7 +950,7 @@ int       nShow;
 #endif /* __STDC__ */
 { 
    int    argc ;
-   char** argv;
+   STRING* argv;
 
    hInstance  = hInst;
    nAmayaShow = nShow;
@@ -988,13 +989,13 @@ ThotWindow win;
    Procedure de retour par defaut.                                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         CallbackError (int ref, int typedata, char *data)
+static void         CallbackError (int ref, int typedata, STRING data)
 
 #else  /* __STDC__ */
 static void         CallbackError (ref, typedata, data)
 int                 ref;
 int                 typedata;
-char               *data;
+STRING              data;
 
 #endif /* __STDC__ */
 {
@@ -1451,8 +1452,8 @@ caddr_t             call_d;
    int                 i;
    int                 ent;
    int                 entry;
-   char                text[100];
-   char               *ptr;
+   CHAR                text[100];
+   STRING              ptr;
    Arg                 args[MAX_ARGS];
    XmStringTable       strings;
    struct E_List      *adbloc;
@@ -1512,7 +1513,7 @@ caddr_t             call_d;
 /*______________________________ Une feuille de saisie d'entier __*/
 			    else if (catalogue->Cat_Type == CAT_INT)
 			      {
-				 strncpy (text, XmTextGetString (catalogue->Cat_Entries->E_ThotWidget[1]), 10);
+				 ustrncpy (text, XmTextGetString (catalogue->Cat_Entries->E_ThotWidget[1]), 10);
 
 				 text[10] = EOS;
 				 if (text[0] != EOS)
@@ -1599,7 +1600,7 @@ caddr_t             call_d;
 #endif /* __STDC__ */
 {
    int                 val, val1;
-   char                text[11];
+   CHAR                text[11];
    ThotWidget          wtext;
 
    /* Indication de valeur */
@@ -1609,7 +1610,7 @@ caddr_t             call_d;
 	   catalogue->Cat_Data = 0;
 	   wtext = catalogue->Cat_Entries->E_ThotWidget[1];
 
-	   strncpy (text, XmTextGetString (wtext), 10);
+	   ustrncpy (text, XmTextGetString (wtext), 10);
 	   text[10] = EOS;
 	   if (text[0] != EOS)
 	     {
@@ -1635,7 +1636,7 @@ caddr_t             call_d;
 		     XtRemoveCallback (wtext, XmNvalueChangedCallback, (XtCallbackProc) CallValueSet, catalogue);
 
 		     XmTextSetString (wtext, text);
-		     val = strlen (text);
+		     val = ustrlen (text);
 		     XmTextSetSelection (wtext, val, val, 500);
 
 		     /* Reactive la procedure de Callback */
@@ -1665,7 +1666,7 @@ XmListCallbackStruct *infos;
 #endif /* __STDC__ */
 
 {
-   char               *text;
+   STRING              text;
    boolean             ok;
 
    if (catalogue->Cat_Widget != 0)
@@ -1727,7 +1728,7 @@ caddr_t             call_d;
 {
    Arg                 args[MAX_ARGS];
    XmString            text;
-   char               *str;
+   STRING              str;
 
    if (catalogue->Cat_Widget != 0)
      {
@@ -1771,18 +1772,18 @@ void                MyWarningHandler ()
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS
 #ifdef __STDC__
-BOOL             WIN_TtaInitDialogue (char *server)
+BOOL             WIN_TtaInitDialogue (STRING server)
 #else  /* !__STDC__ */
 BOOL             WIN_TtaInitDialogue (server)
-char* server; 
+STRING server; 
 #endif /* __STDC__ */
 #else  /* _WINDOWS */
 #ifdef __STDC__
-void             TtaInitDialogue (char *server, ThotAppContext * app_context, Display ** Dp)
+void             TtaInitDialogue (STRING server, ThotAppContext * app_context, Display ** Dp)
 
 #else  /* __STDC__ */
 void             TtaInitDialogue (server, app_context, Dp)
-char               *server;
+STRING              server;
 ThotAppContext     *app_context;
 Display           **Dp;
 
@@ -1916,11 +1917,11 @@ ThotTranslations      translations;
    TtaChangeDialogueFonts change les polices de caracteres du dialogue.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaChangeDialogueFonts (char *menufont, char *formfont)
+void                TtaChangeDialogueFonts (STRING menufont, STRING formfont)
 #else  /* __STDC__ */
 void                TtaChangeDialogueFonts (menufont, formfont)
-char               *menufont;
-char               *formfont;
+STRING              menufont;
+STRING              formfont;
 #endif /* __STDC__ */
 {
 #  ifdef _WINDOWS
@@ -1962,15 +1963,15 @@ int                 number;
    principale d'une application.                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaInitDialogueWindow (char *name, char *geometry, Pixmap logo, Pixmap icon, int number, char *textmenu)
+void                TtaInitDialogueWindow (STRING name, STRING geometry, Pixmap logo, Pixmap icon, int number, STRING textmenu)
 #else  /* __STDC__ */
 void                TtaInitDialogueWindow (name, geometry, logo, icon, number, textmenu)
-char               *name;
-char               *geometry;
+STRING              name;
+STRING              geometry;
 Pixmap              logo;
 Pixmap              icon;
 int                 number;
-char               *textmenu;
+STRING              textmenu;
 
 #endif /* __STDC__ */
 {
@@ -1987,7 +1988,7 @@ char               *textmenu;
 #endif /* !_WINDOWS */
 
    int                 n;
-   char               *value;
+   STRING              value;
 
 #  ifndef _WINDOWS
    Pixmap              lthot;
@@ -2070,7 +2071,7 @@ char               *textmenu;
 		  w = XmCreateCascadeButton (menu_bar, &textmenu[index], args, n);
 		  XtManageChild (w);
 		  FrameTable[0].WdMenus[k] = w;
-		  index += strlen (&textmenu[index]) + 1;
+		  index += ustrlen (&textmenu[index]) + 1;
 	       }
 	  }
 	else
@@ -2221,10 +2222,10 @@ caddr_t             call_d;
    DisplayConfirmMessage displays the given message (text).        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                DisplayConfirmMessage (char *text)
+void                DisplayConfirmMessage (STRING text)
 #else  /* __STDC__ */
 void                DisplayConfirmMessage (text)
-char               *text;
+STRING              text;
 
 #endif /* __STDC__ */
 {
@@ -2356,10 +2357,10 @@ char               *text;
    - OVERHEAD : instead of the previous message.           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                DisplayMessage (char *text, int msgType)
+void                DisplayMessage (STRING text, int msgType)
 #else  /* __STDC__ */
 void                DisplayMessage (text, msgType)
-char               *text;
+STRING              text;
 int                 msgType;
 
 #endif /* __STDC__ */
@@ -2367,16 +2368,16 @@ int                 msgType;
 #  ifndef _WINDOWS
    int                 lg;
    int                 n;
-   char                buff[500 + 1];
-   char               *pointer;
+   CHAR                buff[500 + 1];
+   STRING              pointer;
 
    /* Is the initialisation done ? */
-   lg = strlen (text);
+   lg = ustrlen (text);
    if (MainShell != 0 && WithMessages && lg > 0)
      {
 	/* take current messages */
-	strncpy (buff, XmTextGetString (FrameTable[0].WdStatus), 500);
-	n = strlen (buff);
+	ustrncpy (buff, XmTextGetString (FrameTable[0].WdStatus), 500);
+	n = ustrlen (buff);
 
 	if (msgType == INFO)
 	  {
@@ -2388,20 +2389,20 @@ int                 msgType;
 		  while (n + lg + 1 >= 450)
 		    {
 		       /* search next New Line */
-		       pointer = strchr (buff, '\n');
+		       pointer = ustrchr (buff, '\n');
 		       if (pointer == NULL)
 			  n = 0;
 		       else
 			 {
-			    strcpy (buff, &pointer[1]);
-			    n = strlen (buff);
+			    ustrcpy (buff, &pointer[1]);
+			    n = ustrlen (buff);
 			 }
 		    }
 
 		  /* add message */
 		  if (n > 0)
-		     strcpy (&buff[n++], "\n");
-		  strncpy (&buff[n], text, 500 - n);
+		     ustrcpy (&buff[n++], "\n");
+		  ustrncpy (&buff[n], text, 500 - n);
 		  lg += n;
 
 		  /* copy text */
@@ -2410,8 +2411,8 @@ int                 msgType;
 	     else
 	       {
 		  /* enough space, just add new message at the end */
-		  strcpy (buff, "\n");
-		  strcat (buff, text);
+		  ustrcpy (buff, "\n");
+		  ustrcat (buff, text);
 		  XmTextInsert (FrameTable[0].WdStatus, n, buff);
 		  lg += n;
 	       }
@@ -2424,7 +2425,7 @@ int                 msgType;
 	     while (buff[n] != '\n' && n >= 0)
 		n--;
 	     /* replace last message by the new one */
-	     XmTextReplace (FrameTable[0].WdStatus, n + 1, strlen (buff), text);
+	     XmTextReplace (FrameTable[0].WdStatus, n + 1, ustrlen (buff), text);
 	  }
 	XFlush (GDp);
      }
@@ -2578,11 +2579,11 @@ int                 ref;
   WIN_ListOpenDirectory
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void WIN_ListOpenDirectory (HWND parent, char* fileName)
+void WIN_ListOpenDirectory (HWND parent, STRING fileName)
 #else  /* __STDC__ */
 void WIN_ListOpenDirectory (parent, fileName)
 HWND parent;
-char* fileName;
+STRING fileName;
 #endif /* __STDC__ */
 {
 
@@ -2607,7 +2608,7 @@ char* fileName;
     OpenFileName.Flags             = OFN_SHOWHELP | OFN_HIDEREADONLY; 
  
     if (GetOpenFileName (&OpenFileName)) {
-	   strcpy (fileName, OpenFileName.lpstrFile);
+	   ustrcpy (fileName, OpenFileName.lpstrFile);
 	}
 
 }
@@ -2616,11 +2617,11 @@ char* fileName;
   WIN_ListSaveDirectory
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void WIN_ListSaveDirectory (int parentRef, char* fileName)
+void WIN_ListSaveDirectory (int parentRef, STRING fileName)
 #else  /* __STDC__ */
 void WIN_ListSaveDirectory (parentRef, fileName)
 int   parentRef; 
-char* fileName; 
+STRING fileName; 
 #endif /* __STDC__ */
 {
 
@@ -2643,7 +2644,7 @@ char* fileName;
     OpenFileName.Flags             = OFN_SHOWHELP | OFN_OVERWRITEPROMPT | OFN_HIDEREADONLY ;
 
     if (GetSaveFileName (&OpenFileName)) { 
-	   strcpy (fileName, OpenFileName.lpstrFile);
+	   ustrcpy (fileName, OpenFileName.lpstrFile);
     } 
 }
 #endif /* _WINDOWS */
@@ -2755,15 +2756,15 @@ struct Cat_Context *catalogue;
    Retourne un code d'erreur.                                         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaNewPulldown (int ref, ThotWidget parent, char *title, int number, char *text, char *equiv)
+void                TtaNewPulldown (int ref, ThotWidget parent, STRING title, int number, STRING text, STRING equiv)
 #else  /* __STDC__ */
 void                TtaNewPulldown (ref, parent, title, number, text, equiv)
 int                 ref;
 ThotWidget          parent;
-char               *title;
+STRING              title;
 int                 number;
-char               *text;
-char               *equiv;
+STRING              text;
+STRING              equiv;
 
 #endif /* __STDC__ */
 {
@@ -2779,12 +2780,12 @@ char               *equiv;
 
    ThotWidget          menu;
    ThotWidget          w;
-   char                heading[200];
+   CHAR                heading[200];
 
 #  ifdef _WINDOWS
    struct Cat_Context *copyCat;
-   char                menu_item [1024];
-   char                equiv_item [255];
+   CHAR                menu_item [1024];
+   CHAR                equiv_item [255];
 #  endif /* _WINDOWS */
 
 #  ifndef _WINDOWS
@@ -2964,7 +2965,7 @@ char               *equiv;
 	if (text != NULL)
 	   while (i < number)
 	     {
-		count = strlen (&text[index]);	/* Longueur de l'intitule */
+		count = ustrlen (&text[index]);	/* Longueur de l'intitule */
 		/* S'il n'y a plus d'intitule -> on arrete */
 		if (count == 0)
 		  {
@@ -2996,10 +2997,10 @@ char               *equiv;
                                 addAccelerator (currentFrame, fVirt, key, ref + i);
                              sprintf (equiv_item, "%s", &equiv[eindex]); 
                           }
-                          eindex += strlen (&equiv[eindex]) + 1;
+                          eindex += ustrlen (&equiv[eindex]) + 1;
 #                         else  /* !_WINDOWS */
 			  title_string = XmStringCreate (&equiv[eindex], XmSTRING_DEFAULT_CHARSET);
-			  eindex += strlen (&equiv[eindex]) + 1;
+			  eindex += ustrlen (&equiv[eindex]) + 1;
 			  XtSetArg (args[n - 1], XmNacceleratorText, title_string);
 #                         endif /* _WINDOWS */
 		       }
@@ -3080,8 +3081,8 @@ char               *equiv;
 		     else if (text[index] == 'F')
 		       /*_________________________________ Creation d'un sous-formulaire __*/
 		       {
-			  strcpy (heading, &text[index + 1]);
-			  strcat (heading, "...");
+			  ustrcpy (heading, &text[index + 1]);
+			  ustrcat (heading, "...");
 #                         ifdef _WINDOWS
 			  w = (HMENU) CreateMenu ();
               /* InsertMenu (menu, i, MF_POPUP, (UINT) w, (LPCTSTR) (&heading)); */
@@ -3267,16 +3268,16 @@ ThotWidget          parent;
    menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaNewPopup (int ref, ThotWidget parent, char *title, int number, char *text, char *equiv, char button)
+void                TtaNewPopup (int ref, ThotWidget parent, STRING title, int number, STRING text, STRING equiv, CHAR button)
 #else  /* __STDC__ */
 void                TtaNewPopup (ref, parent, title, number, text, equiv, button)
 int                 ref;
 ThotWidget          parent;
-char               *title;
+STRING              title;
 int                 number;
-char               *text;
-char               *equiv;
-char                button;
+STRING              text;
+STRING              equiv;
+CHAR                button;
 
 #endif /* __STDC__ */
 {
@@ -3288,7 +3289,7 @@ char                button;
    boolean             rebuilded;
    struct Cat_Context *catalogue;
    struct E_List      *adbloc;
-   char                heading[200];
+   CHAR                heading[200];
 
 #  ifdef _WINDOWS
    HMENU               menu;
@@ -3401,7 +3402,7 @@ char                button;
 	     menu = catalogue->Cat_Widget;
 	     adbloc = catalogue->Cat_Entries;
 	     /* Si on a change de bouton on met a jour le widget avec args[0] */
-	     if (catalogue->Cat_Button != (unsigned char) button)
+	     if (catalogue->Cat_Button != (UCHAR) button)
 	       {
 #                 ifndef _WINDOWS
 		  XtSetValues (menu, args, 1);
@@ -3498,7 +3499,7 @@ char                button;
 	if (text != NULL)
 	   while (i < number)
 	     {
-		count = strlen (&text[index]);	/* Longueur de l'intitule */
+		count = ustrlen (&text[index]);	/* Longueur de l'intitule */
 		/* S'il n'y a plus d'intitule -> on arrete */
 		if (count == 0)
 		  {
@@ -3529,10 +3530,10 @@ char                button;
                              if (parseAccelerator (&equiv[eindex]))
                                 addAccelerator (1, fVirt, key, ref + i);
                           }
-                          eindex += strlen (&equiv[eindex]) + 1;
+                          eindex += ustrlen (&equiv[eindex]) + 1;
 #                         else  /* !_WINDOWS */
 			  title_string = XmStringCreate (&equiv[eindex], XmSTRING_DEFAULT_CHARSET);
-			  eindex += strlen (&equiv[eindex]) + 1;
+			  eindex += ustrlen (&equiv[eindex]) + 1;
 			  XtSetArg (args[n - 1], XmNacceleratorText, title_string);
 #                         endif /* !_WINDOWS */
 		       }
@@ -3583,8 +3584,8 @@ char                button;
 		     else if (text[index] == 'F')
 		       /*_________________________________ Creation d'un sous-formulaire __*/
 		       {
-			  strcpy (heading, &text[index + 1]);
-			  strcat (heading, "...");
+			  ustrcpy (heading, &text[index + 1]);
+			  ustrcat (heading, "...");
 #                         ifdef _WINDOWS
 			  AppendMenu (menu, MF_STRING, (UINT) (ref + i), (LPCTSTR) (&heading));
 			  adbloc->E_ThotWidget[ent] = (ThotWidget) i;
@@ -3755,13 +3756,13 @@ struct E_List     **adbloc;
    signale' a` l'application.                                         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaNewIconMenu (int ref, int ref_parent, int entry, char *title, int number, Pixmap * icons, boolean horizontal)
+void                TtaNewIconMenu (int ref, int ref_parent, int entry, STRING title, int number, Pixmap * icons, boolean horizontal)
 #else  /* __STDC__ */
 void                TtaNewIconMenu (ref, ref_parent, entry, title, number, icons, horizontal)
 int                 ref;
 int                 ref_parent;
 int                 entry;
-char               *title;
+STRING              title;
 int                 number;
 Pixmap             *icons;
 boolean             horizontal;
@@ -3952,16 +3953,16 @@ boolean             horizontal;
    dans le sous-menu est imme'diatement signale' a` l'application.    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaNewSubmenu (int ref, int ref_parent, int entry, char *title, int number, char *text, char *equiv, boolean react)
+void                TtaNewSubmenu (int ref, int ref_parent, int entry, STRING title, int number, STRING text, STRING equiv, boolean react)
 #else  /* __STDC__ */
 void                TtaNewSubmenu (ref, ref_parent, entry, title, number, text, equiv, react)
 int                 ref;
 int                 ref_parent;
 int                 entry;
-char               *title;
+STRING              title;
 int                 number;
-char               *text;
-char               *equiv;
+STRING              text;
+STRING              equiv;
 boolean             react;
 
 #endif /* __STDC__ */
@@ -3981,18 +3982,18 @@ boolean             react;
    Arg                 args[MAX_ARGS];
    XmString            title_string;
    ThotWidget          menu;
-   char                heading[200];
+   CHAR                heading[200];
 #  endif /* !_WINDOWS */
 
    ThotWidget          w;
    ThotWidget          row;
-   char                button;
+   CHAR                button;
 
 #  ifdef _WINDOWS
    HMENU               menu;
-   char               *title_string;
-   char                equiv_item [255];
-   char                menu_item [1024];
+   STRING              title_string;
+   CHAR                equiv_item [255];
+   CHAR                menu_item [1024];
    struct Cat_Context *copyCat;
 
    equiv_item[0] = 0;
@@ -4186,7 +4187,7 @@ boolean             react;
 	     ent = 2;
 	     while (i < number)
 	       {
-		  count = strlen (&text[index]);	/* Longueur de l'intitule */
+		  count = ustrlen (&text[index]);	/* Longueur de l'intitule */
 		  /* S'il n'y a plus d'intitule -> on arrete */
 		  if (count == 0)
 		     i = number;
@@ -4212,11 +4213,11 @@ boolean             react;
                                if (parseAccelerator (&equiv[eindex]))
                                   addAccelerator (1, fVirt, key, ref);
                             }
-                            eindex += strlen (&equiv[eindex]) + 1;
+                            eindex += ustrlen (&equiv[eindex]) + 1;
 #                           else  /* _WINDOWS */
 			    title_string = XmStringCreate (&equiv[eindex], XmSTRING_DEFAULT_CHARSET);
 			    XtSetArg (args[n + 1], XmNacceleratorText, title_string);
-			    eindex += strlen (&equiv[eindex]) + 1;
+			    eindex += ustrlen (&equiv[eindex]) + 1;
 #                           endif /* !_WINDOWS */
 			 }
 #                      ifdef _WINDOWS
@@ -4412,7 +4413,7 @@ boolean             react;
 	     ent = 2;
 	     while (i < number)
 	       {
-		  count = strlen (&text[index]);	/* Longueur de l'intitule */
+		  count = ustrlen (&text[index]);	/* Longueur de l'intitule */
 		  /* S'il n'y a plus d'intitule -> on arrete */
 		  if (count == 0)
 		    {
@@ -4444,10 +4445,10 @@ boolean             react;
                                   addAccelerator (currentFrame, fVirt, key, ref + i);
                                sprintf (equiv_item, "%s", &equiv[eindex]);
                             }
-                            eindex += strlen (&equiv[eindex]) + 1;
+                            eindex += ustrlen (&equiv[eindex]) + 1;
 #                           else  /* !_WINDOWS */
 			    title_string = XmStringCreate (&equiv[eindex], XmSTRING_DEFAULT_CHARSET);
-			    eindex += strlen (&equiv[eindex]) + 1;
+			    eindex += ustrlen (&equiv[eindex]) + 1;
 			    XtSetArg (args[n - 1], XmNacceleratorText, title_string);
 #                           endif /* !_WINDOWS */
 			 }
@@ -4509,8 +4510,8 @@ boolean             react;
 			 {
 #                           ifdef _WINDOWS
 #                           else  /* _WINDOWS */
-			    strcpy (heading, &text[index + 1]);
-			    strcat (heading, "...");
+			    ustrcpy (heading, &text[index + 1]);
+			    ustrcat (heading, "...");
 			    w = XmCreatePushButton (menu, heading, args, n);
 			    XtManageChild (w);
 			    adbloc->E_ThotWidget[ent] = w;
@@ -4654,15 +4655,15 @@ int                 val;
    dans le sous-menu est imme'diatement signale' a` l'application.    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaNewToggleMenu (int ref, int ref_parent, char *title, int number, char *text, char *equiv, boolean react)
+void                TtaNewToggleMenu (int ref, int ref_parent, STRING title, int number, STRING text, STRING equiv, boolean react)
 #else  /* __STDC__ */
 void                TtaNewToggleMenu (ref, ref_parent, title, number, text, equiv, react)
 int                 ref;
 int                 ref_parent;
-char               *title;
+STRING              title;
 int                 number;
-char               *text;
-char               *equiv;
+STRING              text;
+STRING              equiv;
 boolean             react;
 
 #endif /* __STDC__ */
@@ -4850,7 +4851,7 @@ boolean             react;
 	     ent = 2;		/* decalage de 2 pour le widget titre */
 	     while (i < number)
 	       {
-		  count = strlen (&text[index]);	/* Longueur de l'intitule */
+		  count = ustrlen (&text[index]);	/* Longueur de l'intitule */
 		  /* S'il n'y a plus d'intitule -> on arrete */
 		  if (count == 0)
 		    {
@@ -4880,7 +4881,7 @@ boolean             react;
 		       if (equiv != NULL)
 			 {
 			    title_string = XmStringCreate (&equiv[eindex], XmSTRING_DEFAULT_CHARSET);
-			    eindex += strlen (&equiv[eindex]) + 1;
+			    eindex += ustrlen (&equiv[eindex]) + 1;
 			 }
 		       /* On accepte toggles, boutons et separateurs */
 		       if (text[index] == 'B' || text[index] == 'T')
@@ -5085,12 +5086,12 @@ boolean             on;
    du menu de'signe' par sa re'fe'rence ref.                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaChangeMenuEntry (int ref, int entry, char *text)
+void                TtaChangeMenuEntry (int ref, int entry, STRING text)
 #else  /* __STDC__ */
 void                TtaChangeMenuEntry (ref, entry, text)
 int                 ref;
 int                 entry;
-char               *text;
+STRING              text;
 
 #endif /* __STDC__ */
 {
@@ -5163,12 +5164,12 @@ char               *text;
    entry du menu de'signe' par sa re'fe'rence ref.                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaRedrawMenuEntry (int ref, int entry, char *fontname, Pixel color, int activate)
+void                TtaRedrawMenuEntry (int ref, int entry, STRING fontname, Pixel color, int activate)
 #else  /* __STDC__ */
 void                TtaRedrawMenuEntry (ref, entry, fontname, color, activate)
 int                 ref;
 int                 entry;
-char               *fontname;
+STRING              fontname;
 Pixel               color;
 int                 activate;
 
@@ -5592,11 +5593,11 @@ int                 ref;
    Le parame'tre title donne le titre du catalogue.                   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaChangeFormTitle (int ref, char *title)
+void                TtaChangeFormTitle (int ref, STRING title)
 #else  /* __STDC__ */
 void                TtaChangeFormTitle (ref, title)
 int                 ref;
-char               *title;
+STRING              title;
 
 #endif /* __STDC__ */
 {
@@ -5637,17 +5638,17 @@ char               *title;
   NewSheet
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         NewSheet (int ref, ThotWidget parent, char *title, int number, char *text, boolean horizontal, int package, char button, int dbutton, int cattype)
+static void         NewSheet (int ref, ThotWidget parent, STRING title, int number, STRING text, boolean horizontal, int package, CHAR button, int dbutton, int cattype)
 #else  /* __STDC__ */
 static void         NewSheet (ref, parent, title, number, text, horizontal, package, button, dbutton, cattype)
 int                 ref;
 ThotWidget          parent;
-char               *title;
+STRING              title;
 int                 number;
-char               *text;
+STRING              text;
 boolean             horizontal;
 int                 package;
-char                button;
+CHAR                button;
 int                 dbutton;
 int                 cattype;
 
@@ -5661,7 +5662,7 @@ int                 cattype;
    struct E_List*      adbloc;
    ThotWidget          form;
    ThotWidget          w;
-   char*               ptr = NULL;
+   STRING               ptr = NULL;
 
 #  ifdef _WINDOWS
    struct Cat_Context* copyCat;
@@ -5884,7 +5885,7 @@ int                 cattype;
 	     XtSetArg (argform[0], XmNdefaultButton, w);
 	     XtSetValues (form, argform, 1);
 #            else  /* _WINDOWS */
-             strSize = strlen (TtaGetMessage (LIB, TMSG_LIB_CONFIRM)) * charWidth + 20;
+             strSize = ustrlen (TtaGetMessage (LIB, TMSG_LIB_CONFIRM)) * charWidth + 20;
              formulary.Buttons[bIndex] = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_LIB_CONFIRM), 
                                                        WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
                                                        bAbsBase, 300, strSize, 20, parent, 
@@ -5901,7 +5902,7 @@ int                 cattype;
 	index = 0;
 	while (ent < C_NUMBER && ent <= number && text != NULL)
 	  {
-	     count = strlen (&text[index]);	/* Longueur de l'intitule */
+	     count = ustrlen (&text[index]);	/* Longueur de l'intitule */
 	     /* S'il n'y a plus d'intitule -> on arrete */
 	     if (count == 0)
 		ent = number;
@@ -5918,7 +5919,7 @@ int                 cattype;
 		       XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) CallSheet, catalogue);
 		       adbloc->E_ThotWidget[ent] = w;
 #                      else  /* _WINDOWS */
-                       strSize = strlen (&text[index]) * charWidth + 10;
+                       strSize = ustrlen (&text[index]) * charWidth + 10;
                        formulary.Buttons[bIndex] = CreateWindow ("BUTTON", &text[index], 
                                                                  WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
                                                                  bAbsBase, 300, strSize, 20, parent, 
@@ -5947,7 +5948,7 @@ int                 cattype;
 #                      ifndef _WINDOWS
 		       w = XmCreatePushButton (row, TtaGetMessage (LIB, TMSG_CANCEL), args, n);
 #                      else  /* _WINDOWS */
-                       strSize = strlen (TtaGetMessage (LIB, TMSG_CANCEL)) * charWidth + 10;
+                       strSize = ustrlen (TtaGetMessage (LIB, TMSG_CANCEL)) * charWidth + 10;
                        formulary.Buttons[bIndex] = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_CANCEL), 
                                                                  WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
                                                                  bAbsBase, 300, strSize, 20, parent, 
@@ -5960,7 +5961,7 @@ int                 cattype;
 #                      ifndef _WINDOWS
 		       w = XmCreatePushButton (row, TtaGetMessage (LIB, TMSG_DONE), args, n);
 #                      else  /* _WINDOWS */
-                       strSize = strlen (TtaGetMessage (LIB, TMSG_DONE)) * charWidth + 10;
+                       strSize = ustrlen (TtaGetMessage (LIB, TMSG_DONE)) * charWidth + 10;
                        formulary.Buttons[bIndex] = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_DONE), 
                                                                  WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
                                                                  bAbsBase, 300, strSize, 20, parent, 
@@ -5975,7 +5976,7 @@ int                 cattype;
 	   w = XmCreatePushButton (row, ptr, args, n);
 #          else  /* _WINDOWS */
 	  {
-             strSize = strlen (ptr) * charWidth + 10;
+             strSize = ustrlen (ptr) * charWidth + 10;
              formulary.Buttons[bIndex] = CreateWindow ("BUTTON", ptr, 
                                                        WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
                                                        bAbsBase, 300, strSize, 20, parent, 
@@ -6117,15 +6118,15 @@ LPARAM lParam;
    menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaNewForm (int ref, ThotWidget parent, char *title, boolean horizontal, int package, char button, int dbutton)
+void                TtaNewForm (int ref, ThotWidget parent, STRING title, boolean horizontal, int package, CHAR button, int dbutton)
 #else  /* __STDC__ */
 void                TtaNewForm (ref, parent, title, horizontal, package, button, dbutton)
 int                 ref;
 ThotWidget          parent;
-char               *title;
+STRING              title;
 boolean             horizontal;
 int                 package;
-char                button;
+CHAR                button;
 int                 dbutton;
 
 #endif /* __STDC__ */
@@ -6152,17 +6153,17 @@ int                 dbutton;
    menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaNewSheet (int ref, ThotWidget parent, char *title, int number, char *text, boolean horizontal, int package, char button, int dbutton)
+void                TtaNewSheet (int ref, ThotWidget parent, STRING title, int number, STRING text, boolean horizontal, int package, CHAR button, int dbutton)
 #else  /* __STDC__ */
 void                TtaNewSheet (ref, parent, title, number, text, horizontal, package, button, dbutton)
 int                 ref;
 ThotWidget          parent;
-char               *title;
+STRING              title;
 int                 number;
-char               *text;
+STRING              text;
 boolean             horizontal;
 int                 package;
-char                button;
+CHAR                button;
 int                 dbutton;
 
 #endif /* __STDC__ */
@@ -6189,18 +6190,18 @@ int                 dbutton;
    menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaNewDialogSheet (int ref, ThotWidget parent, char *title, int number, char *text, boolean horizontal, int package, char button)
+void                TtaNewDialogSheet (int ref, ThotWidget parent, STRING title, int number, STRING text, boolean horizontal, int package, CHAR button)
 
 #else  /* __STDC__ */
 void                TtaNewDialogSheet (ref, parent, title, number, text, horizontal, package, button)
 int                 ref;
 ThotWidget          parent;
-char               *title;
+STRING              title;
 int                 number;
-char               *text;
+STRING              text;
 boolean             horizontal;
 int                 package;
-char                button;
+CHAR                button;
 
 #endif /* __STDC__ */
 {
@@ -6377,16 +6378,16 @@ int                 ref;
    dans le se'lecteur est imme'diatement signale' a` l'application.   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaNewSelector (int ref, int ref_parent, char *title, int number, char *text, int height, char *label, boolean withText, boolean react)
+void                TtaNewSelector (int ref, int ref_parent, STRING title, int number, STRING text, int height, STRING label, boolean withText, boolean react)
 #else  /* __STDC__ */
 void                TtaNewSelector (ref, ref_parent, title, number, text, height, label, withText, react)
 int                 ref;
 int                 ref_parent;
-char               *title;
+STRING              title;
 int                 number;
-char               *text;
+STRING              text;
 int                 height;
-char               *label;
+STRING              label;
 boolean             withText;
 boolean             react;
 
@@ -6482,7 +6483,7 @@ boolean             react;
 	while (i < number && text[index] != EOS)
 	  {
 	     item[i++] = XmStringCreateLtoR (&text[index], XmSTRING_DEFAULT_CHARSET);
-	     index += strlen (&text[index]) + 1;	/* Longueur de l'intitule */
+	     index += ustrlen (&text[index]) + 1;	/* Longueur de l'intitule */
 	  }
 	number = i;
      }
@@ -6805,12 +6806,12 @@ int                 ref;
    Le parame`tre text donne le texte si entry vaut -1.                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaSetSelector (int ref, int entry, char *text)
+void                TtaSetSelector (int ref, int entry, STRING text)
 #else  /* __STDC__ */
 void                TtaSetSelector (ref, entry, text)
 int                 ref;
 int                 entry;
-char               *text;
+STRING              text;
 
 #endif /* __STDC__ */
 {
@@ -6871,7 +6872,7 @@ char               *text;
 
 	     XmTextSetString (wt, text);
       /*----------------------------------------------------------------------
-   lg = strlen(text);
+   lg = ustrlen(text);
    XmTextSetSelection(wt, lg, lg, 500);
   ----------------------------------------------------------------------*/
 	  }
@@ -6892,12 +6893,12 @@ char               *text;
    Le parame`tre text donne l'intitule'.                              
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaNewLabel (int ref, int ref_parent, char *text)
+void                TtaNewLabel (int ref, int ref_parent, STRING text)
 #else  /* __STDC__ */
 void                TtaNewLabel (ref, ref_parent, text)
 int                 ref;
 int                 ref_parent;
-char               *text;
+STRING              text;
 
 #endif /* __STDC__ */
 {
@@ -7046,12 +7047,12 @@ char               *text;
    feuille de saisie est imme'diatement signale' a` l'application.    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaNewTextForm (int ref, int ref_parent, char *title, int width, int height, boolean react)
+void                TtaNewTextForm (int ref, int ref_parent, STRING title, int width, int height, boolean react)
 #else  /* __STDC__ */
 void                TtaNewTextForm (ref, ref_parent, title, width, height, react)
 int                 ref;
 int                 ref_parent;
-char               *title;
+STRING              title;
 int                 width;
 int                 height;
 boolean             react;
@@ -7235,11 +7236,11 @@ boolean             react;
    Le parame`tre text donne la valeur initiale.                       
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaSetTextForm (int ref, char *text)
+void                TtaSetTextForm (int ref, STRING text)
 #else  /* __STDC__ */
 void                TtaSetTextForm (ref, text)
 int                 ref;
-char               *text;
+STRING              text;
 
 #endif /* __STDC__ */
 {
@@ -7267,7 +7268,7 @@ char               *text;
 	   XtRemoveCallback (w, XmNvalueChangedCallback, (XtCallbackProc) CallTextChange, catalogue);
 
 	XmTextSetString (w, text);
-	lg = strlen (text);
+	lg = ustrlen (text);
 	XmTextSetSelection (w, lg, lg, 500);
 
 	/* Si la feuille de saisie est reactive */
@@ -7290,12 +7291,12 @@ char               *text;
    la feuille de saisie est imme'diatement signale' a` l'application. 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaNewNumberForm (int ref, int ref_parent, char *title, int min, int max, boolean react)
+void                TtaNewNumberForm (int ref, int ref_parent, STRING title, int min, int max, boolean react)
 #else  /* __STDC__ */
 void                TtaNewNumberForm (ref, ref_parent, title, min, max, react)
 int                 ref;
 int                 ref_parent;
-char               *title;
+STRING              title;
 int                 min;
 int                 max;
 boolean             react;
@@ -7313,7 +7314,7 @@ boolean             react;
    ThotWidget          w;
    ThotWidget          row;
    XmString            title_string;
-   char                bounds[100];
+   CHAR                bounds[100];
 
    if (ref == 0)
      {
@@ -7424,8 +7425,8 @@ boolean             react;
 	       {
 		  /* Note les bornes de l'echelle */
 		  sprintf (bounds, "%d", min);
-		  strcat (&bounds[strlen (bounds)], "..");
-		  sprintf (&bounds[strlen (bounds)], "%d", max);
+		  ustrcat (&bounds[ustrlen (bounds)], "..");
+		  sprintf (&bounds[ustrlen (bounds)], "%d", max);
 		  catalogue->Cat_Entries->E_ThotWidget[2] = (ThotWidget) min;
 		  catalogue->Cat_Entries->E_ThotWidget[3] = (ThotWidget) max;
 		  ent = max;
@@ -7434,8 +7435,8 @@ boolean             react;
 	       {
 		  /* Note les bornes de l'echelle */
 		  sprintf (bounds, "%d", max);
-		  strcat (&bounds[strlen (bounds)], "..");
-		  sprintf (&bounds[strlen (bounds)], "%d", min);
+		  ustrcat (&bounds[ustrlen (bounds)], "..");
+		  sprintf (&bounds[ustrlen (bounds)], "%d", min);
 		  catalogue->Cat_Entries->E_ThotWidget[2] = (ThotWidget) max;
 		  catalogue->Cat_Entries->E_ThotWidget[3] = (ThotWidget) min;
 		  ent = min;
@@ -7505,7 +7506,7 @@ int                 val;
 #endif /* __STDC__ */
 {
 #  ifndef _WINDOWS 
-   char                text[10];
+   CHAR                text[10];
    int                 lg;
 #  endif /* !_WINDOWS */
    ThotWidget          wtext;
@@ -7540,7 +7541,7 @@ int                 val;
 
 	sprintf (text, "%d", val);
 	XmTextSetString (wtext, text);
-	lg = strlen (text);
+	lg = ustrlen (text);
 	XmTextSetSelection (wtext, lg, lg, 500);
 
 	/* Reactive la procedure de Callback */

@@ -6,31 +6,31 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern char *TtaSkipBlanks ( char *ptr );
-extern boolean TtaIsBlank ( char *ptr );
-extern char *TtaGetEnvString ( char *name );
-extern void TtaSetEnvString ( char *name,
-                              char *value,
+extern STRING TtaSkipBlanks ( STRING ptr );
+extern boolean TtaIsBlank ( STRING ptr );
+extern STRING TtaGetEnvString ( STRING name );
+extern void TtaSetEnvString ( STRING name,
+                              STRING value,
                               int overwrite );
 extern void TtaSaveAppRegistry ( void );
-extern void TtaInitializeAppRegistry ( char *appArgv0 );
-extern int SearchFile ( char *fileName,
+extern void TtaInitializeAppRegistry ( STRING appArgv0 );
+extern int SearchFile ( STRING fileName,
                         int dir,
-                        char *fullName );
+                        STRING fullName );
 
 #else /* __STDC__ */
 
-extern char *TtaSkipBlanks (/* char *ptr */);
-extern boolean TtaIsBlank (/* char *ptr */);
-extern char *TtaGetEnvString (/* char *name */);
-extern void TtaSetEnvString (/* char *name,
-                                char *value,
+extern STRING TtaSkipBlanks (/* STRING ptr */);
+extern boolean TtaIsBlank (/* STRING ptr */);
+extern STRING TtaGetEnvString (/* STRING name */);
+extern void TtaSetEnvString (/* STRING name,
+                                STRING value,
                                 int overwrite */);
 extern void TtaSaveAppRegistry (/* void */);
-extern void TtaInitializeAppRegistry (/* char *appArgv0 */);
-extern int SearchFile (/* char *fileName,
+extern void TtaInitializeAppRegistry (/* STRING appArgv0 */);
+extern int SearchFile (/* STRING fileName,
                           int dir,
-                          char *fullName */);
+                          STRING fullName */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (C) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -12,6 +12,7 @@
  *
  */
 
+#include "ustring.h"
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "message.h"
@@ -33,7 +34,7 @@ static boolean      AnswerCreateAskForNew;	/* answer AnswerCreateAskForNew to th
 #include "structcreation_f.h"
  
 #ifdef __STDC__
-extern int          ConfigMakeDocTypeMenu (char *, int *, boolean);
+extern int          ConfigMakeDocTypeMenu (STRING, int*, boolean);
 
 #else  /* __STDC__ */
 extern int          ConfigMakeDocTypeMenu ();
@@ -59,12 +60,12 @@ Name                typeName;
 #endif /* __STDC__ */
 {
    int                 i;
-   char                bufMenu[MAX_TXT_LEN];
+   CHAR                bufMenu[MAX_TXT_LEN];
 
    /* creates and activates the menu */
    i = 0;
    sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_CREATE_EL_REF));
-   i += strlen (&bufMenu[i]) + 1;
+   i += ustrlen (&bufMenu[i]) + 1;
    sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_SHOW_EL_REF));
    TtaNewPopup (NumMenuCreateReferenceElem, 0,
 	      TtaGetMessage (LIB, TMSG_MODE_INSERT), 2, bufMenu, NULL, 'L');
@@ -106,10 +107,10 @@ int                 Val;
   BuildChoiceMenu
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                BuildChoiceMenu (char *bufMenu, Name menuTitle, int nbEntries, boolean natureChoice)
+void                BuildChoiceMenu (STRING bufMenu, Name menuTitle, int nbEntries, boolean natureChoice)
 #else  /* __STDC__ */
 void                BuildChoiceMenu (bufMenu, menuTitle, nbEntries, natureChoice)
-char               *bufMenu;
+STRING              bufMenu;
 Name                menuTitle;
 int                 nbEntries;
 boolean             natureChoice;
@@ -117,9 +118,9 @@ boolean             natureChoice;
 #endif /* __STDC__ */
 {
    int                 menu;
-   char                bufMenuB[MAX_TXT_LEN];
-   char               *src;
-   char               *dest;
+   CHAR                bufMenuB[MAX_TXT_LEN];
+   STRING              src;
+   STRING              dest;
    int                 k, l, nbitem, length;
 
    if (natureChoice)
@@ -158,10 +159,10 @@ boolean             natureChoice;
 	src = &bufMenu[0];
 	for (k = 1; k <= nbEntries; k++)
 	  {
-	     strcpy (dest, "B");
+	     ustrcpy (dest, "B");
 	     dest++;
-	     l = strlen (src);
-	     strcpy (dest, src);
+	     l = ustrlen (src);
+	     ustrcpy (dest, src);
 	     dest += l + 1;
 	     src += l + 1;
 	  }
@@ -179,13 +180,13 @@ boolean             natureChoice;
    Inserts a separator in the menu Insert/Paste/Include
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                InsertSeparatorInMenu (int *prevMenuInd, int *nbEntries, int *menuInd, char *bufMenu)
+void                InsertSeparatorInMenu (int *prevMenuInd, int *nbEntries, int *menuInd, STRING bufMenu)
 #else  /* __STDC__ */
 void                InsertSeparatorInMenu (prevMenuInd, nbEntries, menuInd, bufMenu)
 int                *prevMenuInd;
 int                *nbEntries;
 int                *menuInd;
-char               *bufMenu;
+STRING              bufMenu;
 
 #endif /* __STDC__ */
 {
@@ -202,20 +203,20 @@ char               *bufMenu;
   BuildPasteMenu
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                BuildPasteMenu (int RefMenu, char *bufMenu, Name title, int nbEntries, char button)
+void                BuildPasteMenu (int RefMenu, STRING bufMenu, Name title, int nbEntries, CHAR button)
 #else  /* __STDC__ */
 void                BuildPasteMenu (RefMenu, bufMenu, title, nbEntries, button)
 int                 RefMenu;
-char               *bufMenu;
+STRING              bufMenu;
 Name                title;
 int                 nbEntries;
-char                button;
+CHAR                button;
 
 #endif /* __STDC__ */
 {
-   char                bufMenuB[MAX_TXT_LEN];
-   char               *src;
-   char               *dest;
+   CHAR                bufMenuB[MAX_TXT_LEN];
+   STRING              src;
+   STRING              dest;
    int                 k, l;
 
    /* adds 'B' to the beginning of each entry of the menu */
@@ -223,14 +224,14 @@ char                button;
    src = &bufMenu[0];
    for (k = 1; k <= nbEntries; k++)
      {
-	l = strlen (src);
+	l = ustrlen (src);
 	/* don't add 'B' to the beginning of separators */
 	if (*src != 'S' || l != 1)
 	  {
-	     strcpy (dest, "B");
+	     ustrcpy (dest, "B");
 	     dest++;
 	  }
-	strcpy (dest, src);
+	ustrcpy (dest, src);
 	dest += l + 1;
 	src += l + 1;
      }

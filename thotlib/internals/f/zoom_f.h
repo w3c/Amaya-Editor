@@ -8,7 +8,7 @@
 
 extern void changezoomview ( int ref,
                              int typedata,
-                             char *data );
+                             STRING data );
 extern void reTtcSetZoomView ( int frame );
 extern void TtcSetZoomView ( Document document,
                              View view );
@@ -17,7 +17,7 @@ extern void TtcSetZoomView ( Document document,
 
 extern void changezoomview (/* int ref,
                                int typedata,
-                               char *data */);
+                               STRING data */);
 extern void reTtcSetZoomView (/* int frame */);
 extern void TtcSetZoomView (/* Document document,
                                View view */);

@@ -22,6 +22,7 @@
  *
  */
 
+#include "ustring.h"
 #include "thot_sys.h"
 
 #include "constmedia.h"
@@ -305,10 +306,10 @@ DocViewNumber       view;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static char         CharRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view, boolean * ok)
+static CHAR         CharRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view, boolean * ok)
 
 #else  /* __STDC__ */
-static char         CharRule (pPRule, pEl, view, ok)
+static CHAR         CharRule (pPRule, pEl, view, ok)
 PtrPRule            pPRule;
 PtrElement          pEl;
 DocViewNumber       view;
@@ -318,7 +319,7 @@ boolean            *ok;
 
 {
    PtrAbstractBox      pAbb;
-   char                val;
+   CHAR                val;
    PtrAbstractBox      pAbba1;
 
    val = ' ';
@@ -2430,10 +2431,10 @@ PtrAbstractBox     *pAb;
    if ((*pAb)->AbPresentationBox)
       if ((*pAb)->AbLeafType == LtText)
 	 if (Ntype != 0)
-	    result = strcmp ((*pAb)->AbPSchema->PsPresentBox[(*pAb)->AbTypeNum - 1].PbName,
+	    result = ustrcmp ((*pAb)->AbPSchema->PsPresentBox[(*pAb)->AbTypeNum - 1].PbName,
 			     pSchP->PsPresentBox[Ntype - 1].PbName) == 0;
 	 else
-	    result = strcmp ((*pAb)->AbPSchema->PsPresentBox[(*pAb)->AbTypeNum - 1].PbName,
+	    result = ustrcmp ((*pAb)->AbPSchema->PsPresentBox[(*pAb)->AbTypeNum - 1].PbName,
 			     presBoxName) == 0;
    if (!result)
       if ((*pAb)->AbFirstEnclosed == NULL)
@@ -2512,7 +2513,7 @@ PtrElement         *pEl;
 		{
 		   result = pPRule->PrPresBox[0] == *presBoxType;
 		   if (result)
-		      result = strcmp (pSS->SsName, (*pSchS)->SsName) == 0;
+		      result = ustrcmp (pSS->SsName, (*pSchS)->SsName) == 0;
 		   /* on supprime le test sur l'egalite des schemas P et on teste uniquement */
 		   /* les schemas de structure : cela permet a des chapitres de se referencer */
 		   /* mutuellement meme si leur schema de presentation different legerement */
@@ -2520,7 +2521,7 @@ PtrElement         *pEl;
 		   /* en copie */
 		}
 	      else
-		 result = strcmp (pSP->PsPresentBox[pPRule->PrPresBox[0] - 1].PbName, presBoxName)
+		 result = ustrcmp (pSP->PsPresentBox[pPRule->PrPresBox[0] - 1].PbName, presBoxName)
 		    == 0;
 	   if (result && (pSP != *pSchP))
 	      /* retourne le schema de presentation et le */
@@ -2613,7 +2614,7 @@ PtrTextBuffer      *pBuffPrec;
 		  pBuffP->BuPrevious = *pBuffPrec;
 		  (*pBuffPrec)->BuNext = pBuffP;
 	       }
-	     strncpy (pBuffP->BuContent, pBuffE->BuContent, THOT_MAX_CHAR);
+	     ustrncpy (pBuffP->BuContent, pBuffE->BuContent, THOT_MAX_CHAR);
 	     /* copie le contenu */
 	     pBuffP->BuLength = pBuffE->BuLength;
 	     /* copie la longueur */
@@ -2655,7 +2656,7 @@ Name                typeName;
    if (typeName[0] != EOS)
       /* on compare les noms de type */
      {
-	if (strcmp (typeName, pElRoot->ElStructSchema->SsRule[pElRoot->ElTypeNumber - 1].SrName) == 0)
+	if (ustrcmp (typeName, pElRoot->ElStructSchema->SsRule[pElRoot->ElTypeNumber - 1].SrName) == 0)
 	   pEC = pElRoot;
      }
    else
@@ -2783,7 +2784,7 @@ boolean             withDescCopy;
 		   /* la boite de presentation a copier est definie par son nom */
 		  {
 		     boxType = 0;
-		     strncpy (boxName, pPRule->PrPresBoxName, MAX_NAME_LENGTH);
+		     ustrncpy (boxName, pPRule->PrPresBoxName, MAX_NAME_LENGTH);
 		     /* nom de la boite a cherche */
 		  }
 		else
@@ -2981,8 +2982,8 @@ PtrAttribute        pAttr;
   PtrAbstractBox      pAbb1;
   PresConstant	     *pConst;
   PathBuffer	      directoryName;
-  char		      fname[MAX_PATH];
-  char                c;
+  CHAR		      fname[MAX_PATH];
+  CHAR                c;
   int                 viewSch, i;
   boolean             appl;
   boolean             insidePage, afterPageBreak;
@@ -3075,7 +3076,7 @@ PtrAttribute        pAttr;
 	      }
 	    if (pAbb1->AbFont >= 'a' && pAbb1->AbFont <= 'z')
 	      /* on n'utilise que des majuscules pour les noms de police */
-	      pAbb1->AbFont = (char) ((int) (pAbb1->AbFont) - 32);
+	      pAbb1->AbFont = (CHAR) ((int) (pAbb1->AbFont) - 32);
 	    break;
 	  case PtAdjust:
 	    pAbb1->AbAdjust = AlignRule (pPRule, pAbb1->AbElement,
@@ -3418,11 +3419,11 @@ PtrAttribute        pAttr;
 			if (pConst->PdString[0] == DIR_SEP || (pConst->PdString[1] == ':' && pConst->PdString[2] == DIR_SEP))
 # endif /* _WINDOWS */
 			  /* absolute file name */
-			  strncpy (fname, pConst->PdString, MAX_PATH - 1);
+			  ustrncpy (fname, pConst->PdString, MAX_PATH - 1);
 			else
 			  /* relative file name */
 			  {
-			    strncpy (directoryName, SchemaPath, MAX_PATH - 1);
+			    ustrncpy (directoryName, SchemaPath, MAX_PATH - 1);
 			    MakeCompleteName (pConst->PdString, "", directoryName, fname, &i);
 			  }
 			NewPictInfo (pAbb1, fname, UNKNOWN_FORMAT);

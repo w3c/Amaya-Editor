@@ -19,6 +19,7 @@
  *          R. Guetari (W3C/INRIA) for Windows 95/NT routines
  */
 
+#include "ustring.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -91,7 +92,7 @@ typedef struct _SelectionDescriptor
 SelectionDescriptor;
 
 static SelectionDescriptor documentNewSelection[MAX_DOCUMENTS];
-static char         nameBuffer[MAX_NAME_LENGTH];
+static CHAR         nameBuffer[MAX_NAME_LENGTH];
 
 
 /*----------------------------------------------------------------------
@@ -252,11 +253,11 @@ int                 h;
    the view opened or 0 if the view cannot be opened.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static View         OpenView (Document document, char *viewName, int x, int y, int w, int h, Element subtree)
+static View         OpenView (Document document, STRING viewName, int x, int y, int w, int h, Element subtree)
 #else  /* __STDC__ */
 static View         OpenView (document, viewName, x, y, w, h, subtree)
 Document            document;
-char               *viewName;
+STRING              viewName;
 int                 x;
 int                 y;
 int                 w;
@@ -298,7 +299,7 @@ Element             subtree;
 	found = FALSE;
 	for (i = 0; i < nbViews && !found; i++)
 	  {
-	     found = strcmp (viewName, allViews[i].VdViewName) == 0;
+	     found = ustrcmp (viewName, allViews[i].VdViewName) == 0;
 	     if (found)
 		v = i;
 	  }
@@ -367,11 +368,11 @@ Element             subtree;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-View                TtaOpenView (Document document, char *viewName, int x, int y, int w, int h)
+View                TtaOpenView (Document document, STRING viewName, int x, int y, int w, int h)
 #else  /* __STDC__ */
 View                TtaOpenView (document, viewName, x, y, w, h)
 Document            document;
-char               *viewName;
+STRING              viewName;
 int                 x;
 int                 y;
 int                 w;
@@ -403,11 +404,11 @@ int                 h;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-View                TtaOpenSubView (Document document, char *viewName, int x, int y, int w, int h, Element subtree)
+View                TtaOpenSubView (Document document, STRING viewName, int x, int y, int w, int h, Element subtree)
 #else  /* __STDC__ */
 View                TtaOpenSubView (document, viewName, x, y, w, h, subtree)
 Document            document;
-char               *viewName;
+STRING              viewName;
 int                 x;
 int                 y;
 int                 w;
@@ -607,12 +608,12 @@ View                view;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                TtaChangeViewTitle (Document document, View view, char *title)
+void                TtaChangeViewTitle (Document document, View view, STRING title)
 #else  /* __STDC__ */
 void                TtaChangeViewTitle (document, view, title)
 Document            document;
 View                view;
-char               *title;
+STRING              title;
 #endif /* __STDC__ */
 {
    PtrDocument         pDoc;
@@ -940,16 +941,16 @@ View                view;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 TtaIsPSchemaValid (char *structureName, char *presentationName)
+int                 TtaIsPSchemaValid (STRING structureName, STRING presentationName)
 #else  /* __STDC__ */
 int                 TtaIsPSchemaValid (structureName, presentationName)
-char               *structureName;
-char               *presentationName;
+STRING              structureName;
+STRING              presentationName;
 #endif /* __STDC__ */
 {
    PathBuffer          DirBuffer;
    BinFile             file;
-   char                text[MAX_TXT_LEN];
+   CHAR                text[MAX_TXT_LEN];
    int                 i;
    Name                gotStructName;
    int                 result;
@@ -957,7 +958,7 @@ char               *presentationName;
    UserErrorCode = 0;
    result = 0;
    /* Arrange the name of the file to be opened with the schema directory name */
-   strncpy (DirBuffer, SchemaPath, MAX_PATH);
+   ustrncpy (DirBuffer, SchemaPath, MAX_PATH);
    MakeCompleteName (presentationName, "PRS", DirBuffer, text, &i);
    /* Checks if the file exists */
    file = TtaReadOpen (text);
@@ -968,7 +969,7 @@ char               *presentationName;
      {
 	/* Gets the corresponding structure schema name */
 	TtaReadName (file, gotStructName);
-	if (strcmp (structureName, gotStructName) == 0)
+	if (ustrcmp (structureName, gotStructName) == 0)
 	   result = 1;
 	TtaReadClose (file);
      }
@@ -993,11 +994,11 @@ char               *presentationName;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaGiveViewsToOpen (Document document, char *buffer, int *nbViews)
+void                TtaGiveViewsToOpen (Document document, STRING buffer, int *nbViews)
 #else  /* __STDC__ */
 void                TtaGiveViewsToOpen (document, buffer, nbViews)
 Document            document;
-char               *buffer;
+STRING              buffer;
 int                *nbViews;
 #endif /* __STDC__ */
 {
@@ -1028,9 +1029,9 @@ int                *nbViews;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char               *TtaGetViewName (Document document, View view)
+STRING              TtaGetViewName (Document document, View view)
 #else  /* __STDC__ */
-char               *TtaGetViewName (document, view)
+STRING              TtaGetViewName (document, view)
 Document            document;
 View                view;
 #endif /* __STDC__ */
@@ -1059,7 +1060,7 @@ View                view;
 	     {
 		dView = pDoc->DocView[view - 1];
 		if (dView.DvSSchema != NULL || dView.DvPSchemaView != 0)
-		   strncpy (nameBuffer, dView.DvSSchema->SsPSchema->PsView[dView.DvPSchemaView - 1], MAX_NAME_LENGTH);
+		   ustrncpy (nameBuffer, dView.DvSSchema->SsPSchema->PsView[dView.DvPSchemaView - 1], MAX_NAME_LENGTH);
 	     }
 	else
 	   /* View of associated elements */
@@ -1071,7 +1072,7 @@ View                view;
 	       {
 		  pEl = pDoc->DocAssocRoot[numAssoc - 1];
 		  if (pEl != NULL)
-		     strncpy (nameBuffer, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName, MAX_NAME_LENGTH);
+		     ustrncpy (nameBuffer, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName, MAX_NAME_LENGTH);
 	       }
 	  }
      }
@@ -1158,11 +1159,11 @@ View                view;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-View                TtaGetViewFromName (Document document, char *viewName)
+View                TtaGetViewFromName (Document document, STRING viewName)
 #else  /* __STDC__ */
 View                TtaGetViewFromName (document, viewName)
 Document            document;
-char               *viewName;
+STRING              viewName;
 #endif /* __STDC__ */
 {
    View                view;
@@ -1191,7 +1192,7 @@ char               *viewName;
 	  {
 	     dView = pDoc->DocView[aView - 1];
 	     if (dView.DvSSchema != NULL && dView.DvPSchemaView != 0)
-		if (strcmp (viewName, dView.DvSSchema->SsPSchema->PsView[dView.DvPSchemaView - 1]) == 0)
+		if (ustrcmp (viewName, dView.DvSSchema->SsPSchema->PsView[dView.DvPSchemaView - 1]) == 0)
 		   view = aView;
 	  }
 	if (view == 0)
@@ -1201,7 +1202,7 @@ char               *viewName;
 		pEl = pDoc->DocAssocRoot[aView - 1];
 		if (pEl != NULL)
 		   if (pDoc->DocAssocFrame[aView - 1] != 0)
-		      if (strcmp (viewName, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName) == 0)
+		      if (ustrcmp (viewName, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName) == 0)
 			 view = aView + 100;
 	     }
      }

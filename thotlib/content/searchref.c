@@ -21,6 +21,7 @@
  *
  */
 
+#include "ustring.h"
 #include "thot_sys.h"
 #include "libmsg.h"
 
@@ -302,7 +303,7 @@ void                FindReferredEl ()
    DocumentIdentifier  docIdent;
    PtrDocument         pDoc;
    int                 nMenuItems;
-   char                menuBuf[MAX_TXT_LEN];
+   CHAR                menuBuf[MAX_TXT_LEN];
    int                 menuBufLen;
    PtrReference        pRefTable[MAX_ITEM_MENU_REF];
    int                 chosenItem;
@@ -324,8 +325,8 @@ void                FindReferredEl ()
 	     {
 		pRefTable[nMenuItems] = firstSel->ElReference;
 		nMenuItems++;
-		strcpy (menuBuf + menuBufLen, firstSel->ElStructSchema->SsRule[firstSel->ElTypeNumber - 1].SrName);
-		menuBufLen += strlen (menuBuf) + 1;
+		ustrcpy (menuBuf + menuBufLen, firstSel->ElStructSchema->SsRule[firstSel->ElTypeNumber - 1].SrName);
+		menuBufLen += ustrlen (menuBuf) + 1;
 	     }
 	if (firstSel->ElSource != NULL)
 	   /* la selection est un element inclus */
@@ -347,8 +348,8 @@ void                FindReferredEl ()
 		     {
 			pRefTable[nMenuItems] = pAttr->AeAttrReference;
 			nMenuItems++;
-			strcpy (menuBuf + menuBufLen, pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrName);
-			menuBufLen += strlen (pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrName) + 1;
+			ustrcpy (menuBuf + menuBufLen, pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrName);
+			menuBufLen += ustrlen (pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrName) + 1;
 		     }
 	     pAttr = pAttr->AeNext;
 	  }
@@ -440,8 +441,8 @@ LabelString         oldLabel;
 	{
 	   /* acquiert un descripteur et le remplit */
 	   GetChangedReferredEl (&pChnRef);
-	   strncpy (pChnRef->CrOldLabel, oldLabel, MAX_LABEL_LEN);
-	   strncpy (pChnRef->CrNewLabel, pEl->ElLabel, MAX_LABEL_LEN);
+	   ustrncpy (pChnRef->CrOldLabel, oldLabel, MAX_LABEL_LEN);
+	   ustrncpy (pChnRef->CrNewLabel, pEl->ElLabel, MAX_LABEL_LEN);
 	   CopyDocIdent (&pChnRef->CrOldDocument, DocOfSavedElements->DocIdent);
 	   CopyDocIdent (&pChnRef->CrNewDocument, pDoc->DocIdent);
 	   pChnRef->CrReferringDoc = NULL;
@@ -565,7 +566,7 @@ PtrDocument         pDoc;
    PtrReference        pRefClipboard;
 
    /* on se souvient du label de l'original */
-   strncpy (oldLabel, pRoot->ElLabel, MAX_LABEL_LEN);
+   ustrncpy (oldLabel, pRoot->ElLabel, MAX_LABEL_LEN);
    if (ChangeLabel || pDoc != DocOfSavedElements)
      {
 	/* on affecte un nouveau label a l'element */
@@ -594,7 +595,7 @@ PtrDocument         pDoc;
 	pRoot->ElReferredDescr->ReReferredElem = pRoot;
 	if (!ChangeLabel && pSource != NULL && pDoc == DocOfSavedElements)
 	   /* l'element prend le meme label que l'element original */
-	   strncpy (pRoot->ElLabel, pSource->ElLabel, MAX_LABEL_LEN);
+	   ustrncpy (pRoot->ElLabel, pSource->ElLabel, MAX_LABEL_LEN);
 	if (!ChangeLabel && pSource != NULL)
 	  {
 	     /* l'element prend les memes descripteurs de documents */

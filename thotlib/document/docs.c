@@ -19,6 +19,7 @@
 
  */
 
+#include "ustring.h"
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmenu.h"
@@ -153,20 +154,20 @@ PtrDocument         pDoc;
    charge.                                                 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                LoadDocument (PtrDocument * pDoc, char *fileName)
+void                LoadDocument (PtrDocument * pDoc, STRING fileName)
 #else  /* __STDC__ */
 void                LoadDocument (pDoc, fileName)
 PtrDocument        *pDoc;
-char               *fileName;
+STRING              fileName;
 
 #endif /* __STDC__ */
 {
    PathBuffer          directoryBuffer;
    int                 i, j, len;
    boolean             ok;
-   char                URL_DIR_SEP;
+   CHAR                URL_DIR_SEP;
 
-   if (fileName && strchr (fileName, '/'))
+   if (fileName && ustrchr (fileName, '/'))
 	  URL_DIR_SEP = '/';
    else 
 	   URL_DIR_SEP = DIR_SEP;
@@ -178,21 +179,21 @@ char               *fileName;
        if (fileName != NULL)
 	 /* nom de document fourni a l'appel, on le recopie dans DefaultDocumentName */
 	 {
-	   len = strlen (fileName);
+	   len = ustrlen (fileName);
 	   if (len > 4)
-	     if (strcmp (fileName + len - 4, ".PIV") == 0)
+	     if (ustrcmp (fileName + len - 4, ".PIV") == 0)
 	       fileName[len - 4] = EOS;
 	   if (fileName[0] != URL_DIR_SEP)
 	     {
 	       if (fileName != DefaultDocumentName)
-		 strncpy (DefaultDocumentName, fileName, MAX_NAME_LENGTH);
+		 ustrncpy (DefaultDocumentName, fileName, MAX_NAME_LENGTH);
 	       /* nom de document relatif */
-	       strncpy ((*pDoc)->DocDName, DefaultDocumentName, MAX_NAME_LENGTH);
+	       ustrncpy ((*pDoc)->DocDName, DefaultDocumentName, MAX_NAME_LENGTH);
 	       (*pDoc)->DocDName[MAX_NAME_LENGTH - 1] = EOS;
-	       strncpy ((*pDoc)->DocIdent, DefaultDocumentName, MAX_DOC_IDENT_LEN);
+	       ustrncpy ((*pDoc)->DocIdent, DefaultDocumentName, MAX_DOC_IDENT_LEN);
 	       (*pDoc)->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
 	       if ((*pDoc)->DocDirectory[0] == EOS)
-		 strncpy ((*pDoc)->DocDirectory, DocumentPath, MAX_PATH);
+		 ustrncpy ((*pDoc)->DocDirectory, DocumentPath, MAX_PATH);
 	     }
 	   else
 	     {
@@ -215,13 +216,13 @@ char               *fileName;
 		   j++;
 		 }
 	       DefaultDocumentName[i] = EOS;
-	       strncpy ((*pDoc)->DocDName, DefaultDocumentName, MAX_NAME_LENGTH);
+	       ustrncpy ((*pDoc)->DocDName, DefaultDocumentName, MAX_NAME_LENGTH);
 	       (*pDoc)->DocDName[MAX_NAME_LENGTH - 1] = EOS;
-	       strncpy ((*pDoc)->DocIdent, DefaultDocumentName, MAX_DOC_IDENT_LEN);
+	       ustrncpy ((*pDoc)->DocIdent, DefaultDocumentName, MAX_DOC_IDENT_LEN);
 	       (*pDoc)->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
 	       /* sauve le path des documents avant de l'ecraser */
-	       strncpy (directoryBuffer, DocumentPath, MAX_PATH);
-	       strncpy (DocumentPath, (*pDoc)->DocDirectory, MAX_PATH);
+	       ustrncpy (directoryBuffer, DocumentPath, MAX_PATH);
+	       ustrncpy (DocumentPath, (*pDoc)->DocDirectory, MAX_PATH);
 	     }
 	 }
 
@@ -231,7 +232,7 @@ char               *fileName;
        ok = OpenDocument (DefaultDocumentName, *pDoc, TRUE, FALSE, NULL, TRUE, TRUE);
        /* restaure le path des documents s'il a ete ecrase */
        if (directoryBuffer[0] != EOS)
-	 strncpy (DocumentPath, directoryBuffer, MAX_PATH);
+	 ustrncpy (DocumentPath, directoryBuffer, MAX_PATH);
        if (!ok)
 	 {
 	   TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_OPEN_DOC_IMP), DefaultDocumentName);
@@ -243,7 +244,7 @@ char               *fileName;
    if (*pDoc != NULL)
      {
        /* conserve le path actuel des schemas dans le contexte du document */
-       strncpy ((*pDoc)->DocSchemasPath, SchemaPath, MAX_PATH);
+       ustrncpy ((*pDoc)->DocSchemasPath, SchemaPath, MAX_PATH);
        /* ouvre les vues a ouvrir */
        OpenDefaultViews (*pDoc);
        if ((*pDoc)->DocRootElement != NULL)
@@ -263,11 +264,11 @@ char               *fileName;
    charge.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                LoadXmlDocument (PtrDocument * pDoc, char *fileName)
+void                LoadXmlDocument (PtrDocument * pDoc, STRING fileName)
 #else  /* __STDC__ */
 void                LoadXmlDocument (pDoc, fileName)
 PtrDocument        *pDoc;
-char               *fileName;
+STRING              fileName;
 
 #endif  /* __STDC__ */
 {
@@ -284,7 +285,7 @@ char               *fileName;
      {
        
        /* conserve le path actuel des schemas dans le contexte du document */
-       strncpy ((*pDoc)->DocSchemasPath, SchemaPath, MAX_PATH);
+       ustrncpy ((*pDoc)->DocSchemasPath, SchemaPath, MAX_PATH);
        /* ouvre les vues a ouvrir */
        OpenDefaultViews (*pDoc);
        dispMode = TtaGetDisplayMode (doc);
@@ -340,7 +341,7 @@ PathBuffer          directory;
 	 UnloadDocument (pDoc);
       else
 	{
-	   strncpy ((*pDoc)->DocDirectory, DocumentPath, MAX_PATH);
+	   ustrncpy ((*pDoc)->DocDirectory, DocumentPath, MAX_PATH);
 	   /* si c'est un path, retient seulement le 1er directory */
 	   i = 0;
 	   while ((*pDoc)->DocDirectory[i] != EOS &&
@@ -349,21 +350,21 @@ PathBuffer          directory;
 	   (*pDoc)->DocDirectory[i] = EOS;
 	   /* on suppose que le mon de schema est dans la langue de */
 	   /* l'utilisateur: on le traduit en nom interne */
-	   ConfigSSchemaInternalName ((char *) SSchemaName, docType, TRUE);
+	   ConfigSSchemaInternalName ((STRING) SSchemaName, docType, TRUE);
 	   if (docType[0] == EOS)
 	      /* ce nom n'est pas dans le fichier langue, on le prend */
 	      /* tel quel */
-	      strncpy (docType, (char *) SSchemaName, MAX_NAME_LENGTH);
+	      ustrncpy (docType, (STRING) SSchemaName, MAX_NAME_LENGTH);
 	   /* compose le nom du fichier a ouvrir avec le nom du directory */
 	   /* des schemas... */
-	   strncpy (directoryBuffer, SchemaPath, MAX_PATH);
+	   ustrncpy (directoryBuffer, SchemaPath, MAX_PATH);
 	   MakeCompleteName (docType, "STR", directoryBuffer, fileNameBuffer, &i);
 	   /* teste si le fichier '.STR' existe */
 
 	   if (TtaFileExist (fileNameBuffer) == 0)
 	     {
-		strncpy (fileNameBuffer, docType, MAX_NAME_LENGTH);
-		strcat (fileNameBuffer, ".STR");
+		ustrncpy (fileNameBuffer, docType, MAX_NAME_LENGTH);
+		ustrcat (fileNameBuffer, ".STR");
 		TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_SCHEMA_NOT_FIND), fileNameBuffer);
 	     }
 	   else
@@ -374,11 +375,11 @@ PathBuffer          directory;
 		/* presentation particulier */
 		LoadSchemas (docType, PSchemaName, &((*pDoc)->DocSSchema), NULL, FALSE);
 		if (docName[0] != EOS)
-		   strncpy (docNameBuffer, docName, MAX_NAME_LENGTH);
+		   ustrncpy (docNameBuffer, docName, MAX_NAME_LENGTH);
 		else
 		  {
-		     strncpy (docNameBuffer, (char *) SSchemaName, MAX_NAME_LENGTH);
-		     strcat (docNameBuffer, "X");
+		     ustrncpy (docNameBuffer, (STRING) SSchemaName, MAX_NAME_LENGTH);
+		     ustrcat (docNameBuffer, "X");
 		  }
 		if ((*pDoc)->DocSSchema != NULL)
 		   if ((*pDoc)->DocSSchema->SsPSchema != NULL)
@@ -416,10 +417,10 @@ PathBuffer          directory;
 		      AddLastPageBreak ((*pDoc)->DocRootElement, view + 1, *pDoc, TRUE);
 		/* le document appartient au directory courant */
 		if (directory[0] != EOS)
-		   strncpy (directoryBuffer, directory, MAX_PATH);
+		   ustrncpy (directoryBuffer, directory, MAX_PATH);
 		else
 		  {
-		     strncpy (directoryBuffer, DocumentPath, MAX_PATH);
+		     ustrncpy (directoryBuffer, DocumentPath, MAX_PATH);
 		     /* si c'est un path, retient seulement le 1er directory */
 		     i = 0;
 		     while (directoryBuffer[i] != EOS &&
@@ -428,15 +429,15 @@ PathBuffer          directory;
 		     directoryBuffer[i] = EOS;
 		  }
 		FindCompleteName (docNameBuffer, "PIV", directoryBuffer, fileNameBuffer, &i);
-		strncpy ((*pDoc)->DocDName, docNameBuffer, MAX_NAME_LENGTH);
+		ustrncpy ((*pDoc)->DocDName, docNameBuffer, MAX_NAME_LENGTH);
 		(*pDoc)->DocDName[MAX_NAME_LENGTH - 1] = EOS;
-		strncpy ((*pDoc)->DocIdent, docNameBuffer, MAX_DOC_IDENT_LEN);
+		ustrncpy ((*pDoc)->DocIdent, docNameBuffer, MAX_DOC_IDENT_LEN);
 		(*pDoc)->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
 		/* le document appartient au directory courant */
-		strncpy ((*pDoc)->DocDirectory, directoryBuffer, MAX_PATH);
+		ustrncpy ((*pDoc)->DocDirectory, directoryBuffer, MAX_PATH);
 		/* conserve le path actuel des schemas dans le contexte du
 		   document */
-		strncpy ((*pDoc)->DocSchemasPath, SchemaPath, MAX_PATH);
+		ustrncpy ((*pDoc)->DocSchemasPath, SchemaPath, MAX_PATH);
 		notifyDoc.event = TteDocCreate;
 		notifyDoc.document = (Document) IdentDocument (*pDoc);
 		notifyDoc.view = 0;
@@ -773,11 +774,11 @@ PtrDocument         pDoc;
    Rend false si l'ecriture n'a pu se faire.               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      simpleSave (PtrDocument pDoc, char *name, boolean withEvent)
+static boolean      simpleSave (PtrDocument pDoc, STRING name, boolean withEvent)
 #else  /* __STDC__ */
 static boolean      simpleSave (pDoc, name, withEvent)
 PtrDocument         pDoc;
-char               *name;
+STRING              name;
 boolean             withEvent;
 #endif /* __STDC__ */
 {
@@ -831,15 +832,15 @@ boolean             withEvent;
    faire.                                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      saveWithExtension (PtrDocument pDoc, char *extension)
+static boolean      saveWithExtension (PtrDocument pDoc, STRING extension)
 #else  /* __STDC__ */
 static boolean      saveWithExtension (pDoc, extension)
 PtrDocument         pDoc;
-char               *extension;
+STRING              extension;
 
 #endif /* __STDC__ */
 {
-   char                buf[MAX_TXT_LEN];
+   CHAR                buf[MAX_TXT_LEN];
    int                 i;
 
    if (pDoc == NULL)
@@ -874,7 +875,7 @@ boolean             move;
 {
    PathBuffer          bakName, pivName, tempName, backName, oldDir;
    NotifyDialog        notifyDoc;
-   char                buf[MAX_TXT_LEN];
+   CHAR                buf[MAX_TXT_LEN];
    int                 i;
    boolean             sameFile, status, ok;
 
@@ -889,14 +890,14 @@ boolean             move;
      {
 	status = TRUE;
 	sameFile = TRUE;
-	if (strcmp (docName, pDoc->DocDName) != 0)
+	if (ustrcmp (docName, pDoc->DocDName) != 0)
 	   sameFile = FALSE;
-	if (strcmp (dirName, pDoc->DocDirectory) != 0)
+	if (ustrcmp (dirName, pDoc->DocDirectory) != 0)
 	   sameFile = FALSE;
 
 	/* construit le nom complet de l'ancien fichier de sauvegarde */
 	FindCompleteName (pDoc->DocDName, "BAK", pDoc->DocDirectory, bakName, &i);
-	strncpy (oldDir, pDoc->DocDirectory, MAX_PATH);
+	ustrncpy (oldDir, pDoc->DocDirectory, MAX_PATH);
 	/*     SECURITE:                                         */
 	/*     on ecrit sur un fichier nomme' X.Tmp et non pas   */
 	/*     directement X.PIV ...                             */
@@ -966,8 +967,8 @@ boolean             move;
 		  TtaFileUnlink (buf);
 		  if (!sameFile)
 		    {
-		       if (strcmp (dirName, oldDir) != 0 &&
-			   strcmp (docName, pDoc->DocDName) == 0)
+		       if (ustrcmp (dirName, oldDir) != 0 &&
+			   ustrcmp (docName, pDoc->DocDName) == 0)
 			  /* changement de directory sans changement de nom */
 			  if (move)
 			    {
@@ -980,7 +981,7 @@ boolean             move;
 			       TtaFileUnlink (buf);
 			    }
 
-		       if (strcmp (docName, pDoc->DocDName) != 0)
+		       if (ustrcmp (docName, pDoc->DocDName) != 0)
 			 {
 			    /* il y a effectivement changement de nom */
 			    if (copy)
@@ -1010,11 +1011,11 @@ boolean             move;
 				 TtaFileUnlink (buf);
 			      }
 			 }
-		       strncpy (pDoc->DocDName, docName, MAX_NAME_LENGTH);
+		       ustrncpy (pDoc->DocDName, docName, MAX_NAME_LENGTH);
 		       pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
-		       strncpy (pDoc->DocIdent, docName, MAX_DOC_IDENT_LEN);
+		       ustrncpy (pDoc->DocIdent, docName, MAX_DOC_IDENT_LEN);
 		       pDoc->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
-		       strncpy (pDoc->DocDirectory, dirName, MAX_PATH);
+		       ustrncpy (pDoc->DocDirectory, dirName, MAX_PATH);
 		       ChangeDocumentName (pDoc, docName);
 		    }
 	       }
@@ -1045,7 +1046,7 @@ boolean             ask;
 
 {
    Name                docName;
-   char                directory[MAX_PATH];
+   CHAR                directory[MAX_PATH];
    boolean             ok;
    boolean             status;
 
@@ -1057,9 +1058,9 @@ boolean             ask;
       TtaDisplaySimpleMessage (INFO, LIB, TMSG_EMPTY_DOC_NOT_WRITTEN);
    else
      {
-	strncpy (docName, pDoc->DocDName, MAX_NAME_LENGTH);
+	ustrncpy (docName, pDoc->DocDName, MAX_NAME_LENGTH);
 	/* on prend le directory ou le document a ete lu */
-	strncpy (directory, pDoc->DocDirectory, MAX_PATH);
+	ustrncpy (directory, pDoc->DocDirectory, MAX_PATH);
 	/* recherche le nom du fichier en proposant le nom courant */
 	ok = !ask;
 	if (ok && !pDoc->DocReadOnly)

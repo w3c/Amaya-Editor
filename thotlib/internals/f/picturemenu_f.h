@@ -8,8 +8,8 @@
 
 extern void CallbackPictureMenu ( int ref,
                                   int typeData,
-                                  char *txt );
-extern void BuildPictureMenu ( char *name,
+                                  STRING txt );
+extern void BuildPictureMenu ( STRING name,
                                boolean * result,
                                int *typim,
                                int *pres,
@@ -20,8 +20,8 @@ extern void ImageMenuLoadResources ( void );
 
 extern void CallbackPictureMenu (/* int ref,
                                     int typeData,
-                                    char *txt */);
-extern void BuildPictureMenu (/* char *name,
+                                    STRING txt */);
+extern void BuildPictureMenu (/* STRING name,
                                  boolean * result,
                                  int *typim,
                                  int *pres,

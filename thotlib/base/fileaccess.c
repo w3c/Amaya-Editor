@@ -13,6 +13,7 @@
  *
  */
 
+#include "ustring.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -44,15 +45,15 @@
    TtaReadByte reads a character (or byte) value.                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             TtaReadByte (BinFile file, char *bval)
+boolean             TtaReadByte (BinFile file, PCHAR bval)
 #else  /* __STDC__ */
 boolean             TtaReadByte (file, bval)
 BinFile             file;
-char         *bval;
+PCHAR               bval;
 
 #endif /* __STDC__ */
 {
-   if (fread (bval, sizeof (char), 1, file) == 0)
+   if (fread (bval, sizeof (CHAR), 1, file) == 0)
      {
 	*bval = EOS;
 	return (FALSE);
@@ -73,7 +74,7 @@ boolean            *bval;
 
 #endif /* __STDC__ */
 {
-   char       b1;
+   CHAR       b1;
 
    if (!TtaReadByte (file, &b1))
      {
@@ -100,7 +101,7 @@ int                *sval;
 
 #endif /* __STDC__ */
 {
-  char      car;
+  CHAR      car;
  
   *sval = 0; 
   if (!TtaReadByte (file, &car))
@@ -134,7 +135,7 @@ int                *sval;
 
 #endif /* __STDC__ */
 {
-  char      car;
+  CHAR      car;
  
   *sval = 0;
   if (!TtaReadByte (file, &car))
@@ -170,7 +171,7 @@ int                *sval;
 
 #endif /* __STDC__ */
 {
-  char      car;
+  CHAR      car;
  
   *sval = 0;
    if (!TtaReadByte (file, &car))
@@ -214,11 +215,11 @@ int                *sval;
    TtaReadName reads a string value.                               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             TtaReadName (BinFile file, char *name)
+boolean             TtaReadName (BinFile file, STRING name)
 #else  /* __STDC__ */
 boolean             TtaReadName (file, name)
 BinFile             file;
-char               *name;
+STRING              name;
 
 #endif /* __STDC__ */
 {
@@ -248,10 +249,10 @@ char               *name;
    TtaReadOpen opens a file for reading.                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-BinFile             TtaReadOpen (CONST char *filename)
+BinFile             TtaReadOpen (CONST STRING filename)
 #else  /* __STDC__ */
 BinFile             TtaReadOpen (filename)
-CONST char         *filename;
+CONST STRING        filename;
 
 #endif /* __STDC__ */
 {
@@ -286,10 +287,10 @@ BinFile             file;
    TtaWriteOpen opens a file for writing.                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-BinFile             TtaWriteOpen (CONST char *filename)
+BinFile             TtaWriteOpen (CONST STRING filename)
 #else  /* __STDC__ */
 BinFile             TtaWriteOpen (filename)
-CONST char         *filename;
+CONST STRING        filename;
 
 #endif /* __STDC__ */
 {
@@ -320,15 +321,15 @@ BinFile             file;
    TtaWriteByte writes a character (or byte) value.                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             TtaWriteByte (BinFile file, char bval)
+boolean             TtaWriteByte (BinFile file, CHAR bval)
 #else  /* __STDC__ */
 boolean             TtaWriteByte (file, bval)
 BinFile             file;
-char                bval;
+CHAR                bval;
 
 #endif /* __STDC__ */
 {
-   if (fwrite (&bval, sizeof (char), 1, file) == 0)
+   if (fwrite (&bval, sizeof (CHAR), 1, file) == 0)
       return FALSE;
    return TRUE;
 }
@@ -349,10 +350,10 @@ int       sval;
 
 {
 
-   if (!TtaWriteByte (file, (char) ((sval >> DECAL_1) & LMASK)))
+   if (!TtaWriteByte (file, (CHAR) ((sval >> DECAL_1) & LMASK)))
       return FALSE;
 
-   if (!TtaWriteByte (file, (char) (sval & LMASK)))
+   if (!TtaWriteByte (file, (CHAR) (sval & LMASK)))
       return FALSE;
 
    return TRUE;
@@ -373,16 +374,16 @@ int       lval;
 
 {
 
-   if (!TtaWriteByte (file, (char) ((lval >> DECAL_3) & LMASK)))
+   if (!TtaWriteByte (file, (CHAR) ((lval >> DECAL_3) & LMASK)))
       return FALSE;
 
-   if (!TtaWriteByte (file, (char) ((lval >> DECAL_2) & LMASK)))
+   if (!TtaWriteByte (file, (CHAR) ((lval >> DECAL_2) & LMASK)))
       return FALSE;
 
-   if (!TtaWriteByte (file, (char) ((lval >> DECAL_1) & LMASK)))
+   if (!TtaWriteByte (file, (CHAR) ((lval >> DECAL_1) & LMASK)))
       return FALSE;
 
-   if (!TtaWriteByte (file, (char) (lval & LMASK)))
+   if (!TtaWriteByte (file, (CHAR) (lval & LMASK)))
       return FALSE;
 
    return TRUE;
@@ -446,7 +447,7 @@ DocumentIdentifier  Source;
 
 #endif /* __STDC__ */
 {
-   strncpy (*Dest, Source, MAX_DOC_IDENT_LEN);
+   ustrncpy (*Dest, Source, MAX_DOC_IDENT_LEN);
 }
 
 /*----------------------------------------------------------------------
@@ -463,7 +464,7 @@ DocumentIdentifier  Ident2;
 {
    boolean             ret;
 
-   ret = (strcmp (Ident1, Ident2) == 0);
+   ret = (ustrcmp (Ident1, Ident2) == 0);
    return ret;
 }
 
@@ -514,11 +515,11 @@ DocumentIdentifier  Ident;
    (MakeCompleteName est utilise pour la lecture)          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                MakeCompleteName (char *fname, char *fext, PathBuffer directory_list, PathBuffer completeName, int *length)
+void                MakeCompleteName (STRING fname, STRING fext, PathBuffer directory_list, PathBuffer completeName, int *length)
 #else  /* __STDC__ */
 void                MakeCompleteName (fname, fext, directory_list, completeName, length)
-char               *fname;
-char               *fext;
+STRING              fname;
+STRING              fext;
 PathBuffer          directory_list;
 PathBuffer          completeName;
 int                *length;
@@ -550,13 +551,13 @@ int                *length;
 	single_directory[j - 1] = EOS;
 	/* on sauve ce nom de directory si c'est le 1er */
 	if (first_directory[0] == EOS)
-	   strncpy (first_directory, single_directory, MAX_PATH);
+	   ustrncpy (first_directory, single_directory, MAX_PATH);
 	/* on construit le nom */
 	FindCompleteName (fname, fext, single_directory, completeName, length);
 	if (TtaFileExist (completeName))
 	  {
 	     found = TRUE;
-	     strncpy (directory_list, single_directory, MAX_PATH);
+	     ustrncpy (directory_list, single_directory, MAX_PATH);
 	  }
 	else
 	   /* on essaie avec un autre directory en sautant le PATH_SEP */
@@ -567,7 +568,7 @@ int                *length;
      {
 	completeName[0] = EOS;
 	if (first_directory[0] != EOS)
-	   strncpy (directory_list, first_directory, MAX_PATH);
+	   ustrncpy (directory_list, first_directory, MAX_PATH);
      }
 }
 
@@ -578,34 +579,34 @@ int                *length;
    Si le fichier n'existe pas retourne name.               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                GetPictureFileName (char *name, char *fileName)
+void                GetPictureFileName (STRING name, STRING fileName)
 #else  /* __STDC__ */
 void                GetPictureFileName (name, fileName)
-char               *name;
-char               *fileName;
+STRING              name;
+STRING              fileName;
 
 #endif /* __STDC__ */
 {
    int                 length;
    PathBuffer          directory;
-   char                URL_DIR_SEP;
+   CHAR                URL_DIR_SEP;
 
-   if (name && strchr (name, '/'))
+   if (name && ustrchr (name, '/'))
      URL_DIR_SEP = '/';
    else 
      URL_DIR_SEP = DIR_SEP;
 
    /* Recherche le fichier dans les repertoires de documents */
    if (name[0] == URL_DIR_SEP || name [1] == ':')
-     strcpy (fileName, name);
+     ustrcpy (fileName, name);
    else
      {
-       strcpy (directory, DocumentPath);
+       ustrcpy (directory, DocumentPath);
        MakeCompleteName (name, "", directory, fileName, &length);
        if (!TtaFileExist (fileName))
 	 {
 	   /* Recherche le fichier dans les repertoires de schemas */
-	   strcpy (directory, SchemaPath);
+	   ustrcpy (directory, SchemaPath);
 	   MakeCompleteName (name, "", directory, fileName, &length);
 	 }
      }
@@ -616,11 +617,11 @@ char               *fileName;
    est identique, retourne Vrai.                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      IsExtended (char *fileName, char *extension)
+static boolean      IsExtended (STRING fileName, STRING extension)
 #else  /* __STDC__ */
 static boolean      IsExtended (fileName, extension)
-char               *fileName;
-char               *extension;
+STRING              fileName;
+STRING              extension;
 
 #endif /* __STDC__ */
 {
@@ -632,9 +633,9 @@ char               *extension;
    extLength = 0;
 
    /* on mesure extension */
-   extLength = strlen (extension);
+   extLength = ustrlen (extension);
    /* on mesure fileName */
-   nameLength = strlen (fileName);
+   nameLength = ustrlen (fileName);
    if (nameLength >= THOT_MAX_CHAR)
       ok = FALSE;
    else if (extLength > 0 && nameLength > extLength)
@@ -664,11 +665,11 @@ char               *extension;
    simplement fileName dans completeName.                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                FindCompleteName (char *fileName, char *extension, PathBuffer directory, PathBuffer completeName, int *length)
+void                FindCompleteName (STRING fileName, STRING extension, PathBuffer directory, PathBuffer completeName, int *length)
 #else  /* __STDC__ */
 void                FindCompleteName (fileName, extension, directory, completeName, length)
-char               *fileName;
-char               *extension;
+STRING              fileName;
+STRING              extension;
 PathBuffer          directory;
 PathBuffer          completeName;
 int                *length;
@@ -676,11 +677,11 @@ int                *length;
 #endif /* __STDC__ */
 {
    int                 i, j, k, h = 0;
-   char               *home_dir = NULL;
+   STRING              home_dir = NULL;
 
    /* on recopie le repertoire */
-   i = strlen (directory);
-   j = strlen (fileName);
+   i = ustrlen (directory);
+   j = ustrlen (fileName);
 
    /* check for tilde indicating the HOME directory */
    if (directory[0] == '~')
@@ -695,7 +696,7 @@ int                *length;
 	  {
 	    /* tilde will not be copied */
 	    i--;
-	    h = strlen (home_dir);
+	    h = ustrlen (home_dir);
 	  }
      }
    if (i > 1)
@@ -704,7 +705,7 @@ int                *length;
 
    /* si on cherche a ouvrir un fichier pivot et que le nom de fichier se
       termine par ".piv", on remplace ce suffixe par ".PIV" */
-   if (strcmp (extension, "PIV") == 0)
+   if (ustrcmp (extension, "PIV") == 0)
      {
 	if (j > 4)
 	   if (fileName[j - 4] == '.')
@@ -718,7 +719,7 @@ int                *length;
 		      }
      }
    if (!IsExtended (fileName, extension) && extension[0] != EOS)
-      k = strlen (extension) + 1;	/* dont forget the '.' */
+      k = ustrlen (extension) + 1;	/* dont forget the '.' */
    else
       k = 0;
    if (i + j + k + h >= MAX_PATH)
@@ -727,23 +728,23 @@ int                *length;
    completeName[0] = EOS;
    if (home_dir)
      {
-       strcat (completeName, home_dir);
-       strcat (completeName, &directory[1]);
+       ustrcat (completeName, home_dir);
+       ustrcat (completeName, &directory[1]);
      }
    else
-     strcat (completeName, directory);
+     ustrcat (completeName, directory);
 
    /* on ajoute un DIR_STR */
    if (i >= 1)
-     strcat (completeName, DIR_STR);
+     ustrcat (completeName, DIR_STR);
 
    /* on recopie le nom */
-   strcat (completeName, fileName);
+   ustrcat (completeName, fileName);
    if (k != 0)
      {
 	/* on ajoute l'extension */
-	strcat (completeName, ".");
-	strcat (completeName, extension);
+	ustrcat (completeName, ".");
+	ustrcat (completeName, extension);
      }
    /* on termine la chaine */
    *length = i + j + k + h;
@@ -763,7 +764,7 @@ Name                docName;
 #endif /* __STDC__ */
 
 {
-   strncpy (*Ident, docName, MAX_DOC_IDENT_LEN);
+   ustrncpy (*Ident, docName, MAX_DOC_IDENT_LEN);
    *Ident[MAX_DOC_IDENT_LEN - 1] = EOS;
 }
 
@@ -779,7 +780,7 @@ Name                docName;
 
 #endif /* __STDC__ */
 {
-   strncpy (docName, Ident, MAX_NAME_LENGTH);
+   ustrncpy (docName, Ident, MAX_NAME_LENGTH);
    docName[MAX_NAME_LENGTH - 1] = EOS;
 }
 
@@ -788,18 +789,18 @@ Name                docName;
    FileWriteAccess	returns the write access right for a file	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 FileWriteAccess (char *fileName)
+int                 FileWriteAccess (STRING fileName)
 #else  /* __STDC__ */
 int                 FileWriteAccess (fileName)
-char               *fileName;
+STRING              fileName;
 
 #endif /* __STDC__ */
 {
    int                 ret, i;
-   char                c;
-   char                URL_DIR_SEP;
+   CHAR                c;
+   CHAR                URL_DIR_SEP;
 
-   if (fileName && strchr (fileName, '/'))
+   if (fileName && ustrchr (fileName, '/'))
 	  URL_DIR_SEP = '/';
    else 
 	   URL_DIR_SEP = DIR_SEP;
@@ -813,7 +814,7 @@ char               *fileName;
       /* file does not exist */
      {
 	/* check its directory */
-	i = strlen (fileName);
+	i = ustrlen (fileName);
 	while ((i >= 0) && (fileName[i] != URL_DIR_SEP))
 	   i--;
 	if (i < 0)
@@ -840,12 +841,12 @@ char               *fileName;
    	string according to a given style (arabic, roman, letter).	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                GetCounterValue (int number, CounterStyle style, char *string, int *len)
+void                GetCounterValue (int number, CounterStyle style, STRING string, int *len)
 #else  /* __STDC__ */
 void                GetCounterValue (number, style, string, len)
 int                 number;
 CounterStyle        style;
-char               *string;
+STRING              string;
 int                *len;
 
 #endif /* __STDC__ */
@@ -881,7 +882,7 @@ int                *len;
 	       i = *len;
 	       do
 		 {
-		    string[i - 1] = (char) ((int) ('0') + number % 10);
+		    string[i - 1] = (CHAR) ((int) ('0') + number % 10);
 		    i--;
 		    number = number / 10;
 		 }
@@ -970,7 +971,7 @@ int                *len;
 		       /* UPPERCASE --> lowercase */
 		       for (i = begin; i <= *len; i++)
 			  if (string[i - 1] != '?')
-			     string[i - 1] = (char) ((int) (string[i - 1]) + 32);
+			     string[i - 1] = (CHAR) ((int) (string[i - 1]) + 32);
 		 }
 	       break;
 
@@ -995,9 +996,9 @@ int                *len;
 		 {
 	          number --;
 	          if (style == CntUppercase)
-		     string[i - 1] = (char) ((number % 26) + (int) ('A'));
+		     string[i - 1] = (CHAR) ((number % 26) + (int) ('A'));
 	          else
-		     string[i - 1] = (char) ((number % 26) + (int) ('a'));
+		     string[i - 1] = (CHAR) ((number % 26) + (int) ('a'));
 		  i --;
 		  c --;
 		  number = number / 26;

@@ -9,7 +9,7 @@
 extern void InitTransform ( void );
 extern void TransCallbackDialog ( int ref,
                                   int typedata,
-                                  char *data );
+                                  STRING data );
 extern void TransformType ( Document doc,
                             View view );
 extern boolean TransformIntoType ( ElementType resultType,
@@ -20,7 +20,7 @@ extern boolean TransformIntoType ( ElementType resultType,
 extern void InitTransform (/* void */);
 extern void TransCallbackDialog (/* int ref,
                                     int typedata,
-                                    char *data */);
+                                    STRING data */);
 extern void TransformType (/* Document doc,
                               View view */);
 extern boolean TransformIntoType (/* ElementType resultType,

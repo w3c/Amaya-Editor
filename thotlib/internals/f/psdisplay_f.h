@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern int DrawString ( char *buff,
+extern int DrawString ( STRING buff,
                         int i,
                         int lg,
                         int frame,
@@ -309,8 +309,8 @@ extern void StorePageInfo ( int pagenum,
 extern void psBoundingBox ( int frame,
                             int width,
                             int height );
-extern int EndOfString ( char *string,
-                         char *suffix );
+extern int EndOfString ( STRING string,
+                         STRING suffix );
 extern void PaintWithPattern ( int frame,
                                int x,
                                int y,
@@ -325,7 +325,7 @@ extern void PaintWithPattern ( int frame,
 
 #else /* __STDC__ */
 
-extern int DrawString (/* char *buff,
+extern int DrawString (/* STRING buff,
                           int i,
                           int lg,
                           int frame,
@@ -628,8 +628,8 @@ extern void StorePageInfo (/* int pagenum,
 extern void psBoundingBox (/* int frame,
                               int width,
                               int height */);
-extern int EndOfString (/* char *string,
-                           char *suffix */);
+extern int EndOfString (/* STRING string,
+                           STRING suffix */);
 extern void PaintWithPattern (/* int frame,
                                  int x,
                                  int y,

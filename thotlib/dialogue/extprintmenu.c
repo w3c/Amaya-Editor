@@ -9,6 +9,7 @@
  * Messages and printing management.
  */
 
+#include "ustring.h"
 #include "thot_sys.h"
 #include "libmsg.h"
 #include "message.h"
@@ -48,11 +49,11 @@ static Document		docPrint;
 /* |                    document pDoc.                                  | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         ComposePrintMenu (PtrDocument pDoc, char *buffer, int *nbEntry)
+static void         ComposePrintMenu (PtrDocument pDoc, STRING buffer, int *nbEntry)
 #else  /* __STDC__ */
 static void         ComposePrintMenu (pDoc, buffer, nbEntry)
 PtrDocument         pDoc;
-char               *buffer;
+STRING              buffer;
 int                *nbEntry;
 
 #endif /* __STDC__ */
@@ -97,12 +98,12 @@ int                *nbEntry;
 	if (trouve)
 	  {
 	     /* met le nom de la vue dans le menu */
-	     lgentree = strlen (LesVuesImprimables[i - 1].VdViewName) + 1;
+	     lgentree = ustrlen (LesVuesImprimables[i - 1].VdViewName) + 1;
 	     if (lgmenu + lgentree < MAX_TXT_LEN)
 	       {
 		  buffer[lgmenu] = 'B';
 		  lgmenu++;
-		  strcpy (buffer + lgmenu, LesVuesImprimables[i - 1].VdViewName);
+		  ustrcpy (buffer + lgmenu, LesVuesImprimables[i - 1].VdViewName);
 		  lgmenu += lgentree;
 		  if (!LesVuesImprimables[i - 1].VdPaginated)
 		     /* vue sans pages, on met une etoile a la fin du nom */
@@ -127,12 +128,12 @@ int                *nbEntry;
 	   /* (pas encore) imprimer les vues de natures */
 	   if (!LesVuesImprimables[i - 1].VdNature)
 	     {
-		lgentree = strlen (LesVuesImprimables[i - 1].VdViewName) + 1;
+		lgentree = ustrlen (LesVuesImprimables[i - 1].VdViewName) + 1;
 		if (lgmenu + lgentree < MAX_TXT_LEN)
 		  {
 		     buffer[lgmenu] = 'B';
 		     lgmenu++;
-		     strcpy (buffer + lgmenu, LesVuesImprimables[i - 1].VdViewName);
+		     ustrcpy (buffer + lgmenu, LesVuesImprimables[i - 1].VdViewName);
 		     lgmenu += lgentree;
 		     if (!LesVuesImprimables[i - 1].VdPaginated)
 			/* vue sans pages, on met une etoile a la fin du nom */
@@ -155,18 +156,18 @@ int                *nbEntry;
    CallbackExtPrintmenu analyse les retours des extensions du formulaire d'impression. 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CallbackExtPrintmenu (int ref, int val, char *txt)
+void                CallbackExtPrintmenu (int ref, int val, STRING txt)
 #else  /* __STDC__ */
 void                CallbackExtPrintmenu (ref, val, txt)
 int                 ref;
 int                 val;
-char               *txt;
+STRING              txt;
 
 #endif /* __STDC__ */
 {
   int i;
   boolean okprint;
-  char BufMenu[MAX_TXT_LEN];
+  CHAR BufMenu[MAX_TXT_LEN];
 
   switch (ref)
     {
@@ -213,13 +214,13 @@ char               *txt;
 	  if( LesVuesImprimables[EntreesMenuVuesAImprimer[i]-1].VdOpen )
 	    {
 	      okprint=TRUE;
-	      strcat(BufMenu,LesVuesImprimables[EntreesMenuVuesAImprimer[i]-1].VdViewName);
-	      strcat(BufMenu," ");
+	      ustrcat(BufMenu,LesVuesImprimables[EntreesMenuVuesAImprimer[i]-1].VdViewName);
+	      ustrcat(BufMenu," ");
 	    }
 	}
       if(okprint)
 	{
-	  i=strlen(BufMenu);
+	  i=ustrlen(BufMenu);
 	  BufMenu[i-1]=EOS;
 	  TtaPrint(docPrint,BufMenu);
 	}
@@ -246,7 +247,7 @@ View                view;
 {
    PtrDocument         pDoc;
    int                 i;
-   char                BufMenu[MAX_TXT_LEN];
+   CHAR                BufMenu[MAX_TXT_LEN];
 
    docPrint = document;
    pDoc = LoadedDocument[document - 1];
@@ -281,7 +282,7 @@ View                view;
    /* sous menu options */
    i = 0;
    sprintf (&BufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_MANUAL_FEED));
-   i = strlen(BufMenu) +1;
+   i = ustrlen(BufMenu) +1;
    sprintf (&BufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_PAGINATE));
    TtaNewToggleMenu (NumMenuOptions, NumFormPrint,
 		TtaGetMessage (LIB, TMSG_OPTIONS), 2, BufMenu, NULL, FALSE);
@@ -321,9 +322,9 @@ View                view;
    /* sous-menu nombre de pages par feuille */
    i = 0;
    sprintf (&BufMenu[i],"%s%s","B", TtaGetMessage (LIB, TMSG_1_PAGE_SHEET));
-   i += strlen(&BufMenu[i]) + 1;
+   i += ustrlen(&BufMenu[i]) + 1;
    sprintf (&BufMenu[i],"%s%s","B", TtaGetMessage (LIB, TMSG_2_PAGE_SHEET));
-   i += strlen(&BufMenu[i]) + 1;
+   i += ustrlen(&BufMenu[i]) + 1;
    sprintf (&BufMenu[i],"%s%s","B", TtaGetMessage (LIB, TMSG_4_PAGE_SHEET));
    TtaNewSubmenu (NumMenuNbPagesPerSheet, NumFormPrint, 0,
 		 TtaGetMessage (LIB, TMSG_NB_PAGE_SHEET), 
@@ -343,7 +344,7 @@ View                view;
    /* sous-menu imprimer papier / sauver PostScript */
    i = 0;
    sprintf (&BufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_PRINTER));
-   i += strlen (&BufMenu[i]) + 1;
+   i += ustrlen (&BufMenu[i]) + 1;
    sprintf (&BufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_PS_FILE));
    TtaNewSubmenu (NumMenuSupport, NumFormPrint, 0,
 		  TtaGetMessage (LIB, TMSG_OUTPUT), 2, BufMenu, NULL, TRUE);
@@ -367,11 +368,11 @@ View                view;
    /* sous-menu format papier */
    i = 0;
    sprintf (&BufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_A4));
-   i += strlen (&BufMenu[i]) + 1;
+   i += ustrlen (&BufMenu[i]) + 1;
    sprintf (&BufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_US));
    TtaNewSubmenu (NumMenuPaperFormat, NumFormPrint, 0,
 	     TtaGetMessage (LIB, TMSG_PAPER_SIZE), 2, BufMenu, NULL, FALSE);
-   if (!strcmp (PageSize, "US"))
+   if (!ustrcmp (PageSize, "US"))
       TtaSetMenuForm (NumMenuPaperFormat, 1);
    else
       TtaSetMenuForm (NumMenuPaperFormat, 0);

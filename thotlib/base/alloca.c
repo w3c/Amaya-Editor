@@ -26,6 +26,9 @@
    allocating any.  It is a good idea to use alloca(0) in
    your main control loop, etc. to force garbage collection.
  */
+
+#include "ustring.h"
+
 #ifdef SYSV
 
 #ifdef emacs
@@ -87,10 +90,10 @@ static void         find_stack_direction ()
 #endif				/* __STDC__ */
 
 {
-   static char        *addr = NULL;	/* address of first
+   static STRING       addr = NULL;	/* address of first
 
 					   `dummy', once known */
-   auto char           dummy;	/* to get stack address */
+   auto CHAR           dummy;	/* to get stack address */
 
    if (addr == NULL)
      {				/* initial entry */
@@ -122,11 +125,11 @@ static void         find_stack_direction ()
 
 typedef union hdr
 {
-   char                align[ALIGN_SIZE];	/* to force sizeof(header) */
+   CHAR                align[ALIGN_SIZE];	/* to force sizeof(header) */
    struct
      {
 	union hdr          *next;	/* for chaining headers */
-	char               *deep;	/* for stack depth measure */
+	STRING              deep;	/* for stack depth measure */
      }
    h;
 }
@@ -151,8 +154,8 @@ unsigned            size;
 #endif /* __STDC__ */
 
 {
-   auto char           probe;	/* probes stack depth: */
-   register char      *depth = &probe;
+   auto CHAR           probe;	/* probes stack depth: */
+   register CHAR*      depth = &probe;
 
 #if STACK_DIRECTION == 0
    if (STACK_DIR == 0)		/* unknown growth direction */
@@ -196,7 +199,7 @@ unsigned            size;
 
       /* User storage begins just after header. */
 
-      return (pointer) ((char *) pNew + sizeof (header));
+      return (pointer) ((STRING) pNew + sizeof (header));
    }
 }
 #else

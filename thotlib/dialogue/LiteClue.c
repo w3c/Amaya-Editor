@@ -29,6 +29,7 @@ Thanks to Contributers:
 J Satchell, Eric Marttila 
 */
 
+#include "ustring.h"
 #ifndef _WINDOWS
 #include "thot_gui.h"
 #include "thot_sys.h"
@@ -52,7 +53,7 @@ struct liteClue_context_str
 	XcgLiteClueWidget cw;	/* pointer back to the liteClue widget */
 	Position  abs_x, abs_y;
 	Boolean sensitive;	/* if False, liteClue is suppressed */
-	char * text;		/* text to display */
+	STRING  text;		/* text to display */
 	short text_size;	/* its size */
 };
 
@@ -205,7 +206,7 @@ The font_information is derived
 Return XFontSet for passed font_string. 
 return status
 */
-static int string_to_FontSet (XcgLiteClueWidget cw, char * font_string, XFontStruct ** out) 
+static int string_to_FontSet (XcgLiteClueWidget cw, STRING  font_string, XFontStruct ** out) 
 {
 	Boolean sts;
 	XrmValue from;
@@ -213,7 +214,7 @@ static int string_to_FontSet (XcgLiteClueWidget cw, char * font_string, XFontStr
 	
 	to.size = sizeof(out);
 	to.addr = (void *) out;
-	from.size = strlen(from.addr = font_string );
+	from.size = ustrlen(from.addr = font_string );
 	sts = XtConvertAndStore((Widget) cw, XtRString, &from, XtRFontStruct, &to);
 	return sts;
 }
@@ -245,7 +246,7 @@ static void compute_font_info(XcgLiteClueWidget cw)
 Return XFontSet for passed font_string. 
 return status
 */
-static int string_to_FontSet (XcgLiteClueWidget cw, char * font_string, XFontSet * out) 
+static int string_to_FontSet (XcgLiteClueWidget cw, STRING  font_string, XFontSet * out) 
 {
 	Boolean sts;
 	XrmValue from;
@@ -253,7 +254,7 @@ static int string_to_FontSet (XcgLiteClueWidget cw, char * font_string, XFontSet
 	
 	to.size = sizeof(out);
 	to.addr = (void *) out;
-	from.size = strlen(from.addr = font_string );
+	from.size = ustrlen(from.addr = font_string );
 	sts = XtConvertAndStore((Widget) cw, XtRString, &from, XtRFontSet, &to);
 	return sts;
 }
@@ -309,7 +310,7 @@ static void create_GC(XcgLiteClueWidget cw )
 a core dump for debugging analysis	
 when a public routine is called with the wrong class of widget
 */
-static void wrong_widget(char * routine)
+static void wrong_widget(STRING  routine)
 {
 	int mypid = getpid(); 
 	fprintf(stderr, "Wrong class of widget passed to %s\n", routine);
@@ -371,7 +372,7 @@ void free_widget_context(XcgLiteClueWidget cw, struct liteClue_context_str * obj
 	obj->sensitive = False;
 	if (obj->text )
 		XtFree(obj->text);
-	XtFree((char *) obj);
+	XtFree((char*) obj);
 }
 
 
@@ -428,7 +429,7 @@ static void timeout_event( XtPointer client_data, XtIntervalId *id)
 	{
 	int direction_return = 0;
 	int font_ascent_return = 0, font_descent_return = 0; 
-	XCharStruct oret;
+	XCharStruct oret;
 	XTextExtents( cw->liteClue.fontset ,obj->text , obj->text_size,
 		&direction_return,
 		&font_ascent_return, &font_descent_return, &oret); 
@@ -547,7 +548,7 @@ Return:
 
 ;-
 */
-void XcgLiteClueAddWidget(Widget w, Widget watch,  char * text, int size, int option )
+void XcgLiteClueAddWidget(Widget w, Widget watch,  STRING  text, int size, int option )
 {
 #	define ROUTINE "XcgLiteClueAddWidget"
 	XcgLiteClueWidget cw = (XcgLiteClueWidget) w;
@@ -575,7 +576,7 @@ void XcgLiteClueAddWidget(Widget w, Widget watch,  char * text, int size, int op
 	if (text && !(obj->text))
 	{
 		if (!size)
-			size = strlen(text);
+			size = ustrlen(text);
 		obj->text = XtMalloc(size+1);
 		memcpy(obj->text, text, size);
 		obj->text[size] = 0;

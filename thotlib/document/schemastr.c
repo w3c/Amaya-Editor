@@ -19,6 +19,7 @@
    de presentation
  */
 
+#include "ustring.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "libmsg.h"
@@ -60,7 +61,7 @@ int                 rule;
 
    /* utilise le nom de la nature comme nom de fichier. */
    /* copie le nom de nature dans schName */
-   strncpy (schName, pSS->SsRule[rule - 1].SrOrigNat, MAX_NAME_LENGTH);
+   ustrncpy (schName, pSS->SsRule[rule - 1].SrOrigNat, MAX_NAME_LENGTH);
    /* cree un schema de structure et le charge depuis le fichier */
    GetSchStruct (&pNatureSS);
    if (!ReadStructureSchema (schName, pNatureSS))
@@ -151,7 +152,7 @@ PtrSSchema          pSS;
      {
 	pRule = &pSS->SsRule[ret++];
 	if (pRule->SrConstruct == CsNatureSchema)
-	   if (strcmp (pRule->SrOrigNat, SSchName) == 0)
+	   if (ustrcmp (pRule->SrOrigNat, SSchName) == 0)
 	      found = TRUE;
      }
    while (!found && ret < pSS->SsNRules);
@@ -181,8 +182,8 @@ PtrSSchema          pSS;
 	   /* remplit la regle nature */
 	  {
 	     pRule = &pSS->SsRule[ret - 1];
-	     strncpy (pRule->SrOrigNat, SSchName, MAX_NAME_LENGTH);
-	     strncpy (pRule->SrName, SSchName, MAX_NAME_LENGTH);
+	     ustrncpy (pRule->SrOrigNat, SSchName, MAX_NAME_LENGTH);
+	     ustrncpy (pRule->SrName, SSchName, MAX_NAME_LENGTH);
 	     pRule->SrAssocElem = FALSE;
 	     pRule->SrNDefAttrs = 0;
 	     pRule->SrConstruct = CsNatureSchema;
@@ -230,7 +231,7 @@ boolean             Extension;
 {
    Name                schName;
 
-   strncpy (schName, SSchName, MAX_NAME_LENGTH);
+   ustrncpy (schName, SSchName, MAX_NAME_LENGTH);
    /* cree le schema de structure et charge le fichier dedans */
    if (pLoadedSS == NULL)
      {
@@ -280,7 +281,7 @@ PtrDocument         pDoc;
 	if (pExtens != NULL)
 	  {
 	     if (PSchName[0] != EOS)
-		strncpy (pExtens->SsDefaultPSchema, PSchName,
+		ustrncpy (pExtens->SsDefaultPSchema, PSchName,
 			 MAX_NAME_LENGTH - 1);
 	     /* cherche le dernier schema d'extension du document */
 	     pPrevExtens = pDoc->DocSSchema;

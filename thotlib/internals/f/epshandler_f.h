@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern ThotBitmap EpsCreate ( char *fn,
+extern ThotBitmap EpsCreate ( STRING fn,
                               PictureScaling pres,
                               int *xif,
                               int *yif,
@@ -17,7 +17,7 @@ extern ThotBitmap EpsCreate ( char *fn,
                               int *width,
                               int *height,
                               int zoom );
-extern void EpsPrint ( char *fn,
+extern void EpsPrint ( STRING fn,
                        PictureScaling pres,
                        int xif,
                        int yif,
@@ -29,11 +29,11 @@ extern void EpsPrint ( char *fn,
                        int PicHArea,
                        FILE * fd,
                        unsigned long BackGroundPixel );
-extern boolean IsEpsFormat ( char *fn );
+extern boolean IsEpsFormat ( STRING fn );
 
 #else /* __STDC__ */
 
-extern ThotBitmap EpsCreate (/* char *fn,
+extern ThotBitmap EpsCreate (/* STRING fn,
                                 PictureScaling pres,
                                 int *xif,
                                 int *yif,
@@ -44,7 +44,7 @@ extern ThotBitmap EpsCreate (/* char *fn,
                                 int *width,
                                 int *height,
                                 int zoom */);
-extern void EpsPrint (/* char *fn,
+extern void EpsPrint (/* STRING fn,
                          PictureScaling pres,
                          int xif,
                          int yif,
@@ -56,7 +56,7 @@ extern void EpsPrint (/* char *fn,
                          int PicHArea,
                          FILE * fd,
                          unsigned long BackGroundPixel */);
-extern boolean IsEpsFormat (/* char *fn */);
+extern boolean IsEpsFormat (/* STRING fn */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

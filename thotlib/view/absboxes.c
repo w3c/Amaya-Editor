@@ -22,7 +22,7 @@
  *
  */
 
-
+#include "ustring.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -50,7 +50,7 @@
 
 
 #define MaxAsc 30
-static char         text[MAX_TXT_LEN];
+static CHAR         text[MAX_TXT_LEN];
 
 
 /*----------------------------------------------------------------------
@@ -59,10 +59,10 @@ static char         text[MAX_TXT_LEN];
    pave pointe' par pAb.                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char               *AbsBoxType (PtrAbstractBox pAb, boolean origName)
+STRING              AbsBoxType (PtrAbstractBox pAb, boolean origName)
 
 #else  /* __STDC__ */
-char               *AbsBoxType (pAb, origName)
+STRING              AbsBoxType (pAb, origName)
 PtrAbstractBox      pAb;
 boolean		    origName;
 
@@ -72,20 +72,20 @@ boolean		    origName;
    PtrElement          pEl;
 
    if (pAb == NULL)
-      strcpy (text, " ");
+      ustrcpy (text, " ");
    else
      {
 	pEl = pAb->AbElement;
 	/* copie le nom du type d'element structure auquel appartient la boite */
 	if (origName)
-	   strcpy (text, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrOrigName);
+	   ustrcpy (text, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrOrigName);
 	else
-	   strcpy (text, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
+	   ustrcpy (text, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
 	if (pAb->AbPresentationBox)
 	  /* Ajoute le nom du type de boite de presentation */
 	  {
-	     strcat (text, ".");
-	     strcat (text, pAb->AbPSchema->PsPresentBox[pAb->AbTypeNum - 1].PbName);
+	     ustrcat (text, ".");
+	     ustrcat (text, pAb->AbPSchema->PsPresentBox[pAb->AbTypeNum - 1].PbName);
 	  }
      }
    return (text);

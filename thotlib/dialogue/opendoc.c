@@ -13,7 +13,8 @@
  * will be available in English in the next release.
  * 
  */
- 
+
+#include "ustring.h" 
 #include "thot_sys.h"
 #include "constmenu.h"
 #include "constmedia.h"
@@ -36,15 +37,15 @@
 /*----------------------------------------------------------------------
    strstr
   ----------------------------------------------------------------------*/
-char               *strstr (s1, s2)
-char               *s1, *s2;
+STRING              strstr (s1, s2)
+STRING              s1, s2;
 {
-   char               *tmp;
+   STRING              tmp;
    int                 i, length;
    boolean             continue;
 
    tmp = s1;
-   length = strlen (s2);
+   length = ustrlen (s2);
    continue = (tmp != NULL);
    while (continue)
      {
@@ -77,8 +78,8 @@ char               *s1, *s2;
 static PathBuffer   DirectoryName;
 static Name         SchStrImport;
 static int          NbDocSuffix = 1;
-static char         tabDocSuffix [10][10] = {".PIV", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0"};
-static char         docSuffix [5];
+static CHAR         tabDocSuffix [10][10] = {".PIV", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0"};
+static CHAR         docSuffix [5];
 /* static PathBuffer DirectoryDocImport; */
 static Name         NewSchemaName;
 
@@ -103,18 +104,18 @@ static Name         NewSchemaName;
    nbItems returns the number of entries.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                BuildPathDocBuffer (char *bufDir, char separator, int *nbItems)
+void                BuildPathDocBuffer (STRING bufDir, CHAR separator, int *nbItems)
 #else  /* __STDC__ */
 void                BuildPathDocBuffer (bufDir, separator, nbItems)
-char               *bufDir;
-char                separator;
+STRING              bufDir;
+CHAR                separator;
 int                *nbItems;
 
 #endif /* __STDC__ */
 {
    int                 i, nb;
 
-   strncpy (bufDir, DocumentPath, MAX_PATH);
+   ustrncpy (bufDir, DocumentPath, MAX_PATH);
 
    /* remplace PATH_SEP par separator pour le formulaire de saisie des documents */
    nb = 1;
@@ -134,27 +135,27 @@ int                *nbItems;
    Returns the rank of s in buffer or -1 if s doesn't occur.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int SearchStringInBuffer(char *buffer, char *s,int nbStr)
+int SearchStringInBuffer(STRING buffer, STRING s,int nbStr)
 #else  /* __STDC__ */
 int  SearchStringInBuffer(buffer, s, nbStr)
-char *buffer;
-char *s;
+STRING buffer;
+STRING s;
 int nbStr;
 #endif /* __STDC__ */
 {
   int occ;
-  char *pBuf;
+  STRING pBuf;
   boolean found = FALSE;
 
   occ=0;
   pBuf = buffer;
   while (!found && occ < nbStr)
     {
-      if(!strcmp(pBuf,s))
+      if(!ustrcmp(pBuf,s))
 	found = TRUE;
       else
 	{
-	  pBuf = pBuf + strlen(pBuf) + 1;
+	  pBuf = pBuf + ustrlen(pBuf) + 1;
 	  occ++;
 	}
     }
@@ -210,7 +211,7 @@ Name                name;
    TtaShowDialogue (NumFormPresentationSchema, FALSE);
    /* attend la reponse de l'utilisateur */
    TtaWaitShowDialogue ();
-   strncpy (name, NewSchemaName, MAX_NAME_LENGTH);
+   ustrncpy (name, NewSchemaName, MAX_NAME_LENGTH);
    /* efface le message */
 
    /* detruit le formulaire */
@@ -223,13 +224,13 @@ Name                name;
    updates the presentation scheme choice.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CallbackSchPresNameMenu (int ref, int typedata, char *data)
+void                CallbackSchPresNameMenu (int ref, int typedata, STRING data)
 
 #else  /* __STDC__ */
 void                CallbackSchPresNameMenu (ref, typedata, data)
 int                 ref;
 int                 typedata;
-char               *data;
+STRING              data;
 
 #endif /* __STDC__ */
 {
@@ -241,7 +242,7 @@ char               *data;
 	       break;
 	    case NumZonePresentationSchema:
 	       /* zone de saisie du nom du schema de presentation */
-	       strncpy (NewSchemaName, data, MAX_NAME_LENGTH);
+	       ustrncpy (NewSchemaName, data, MAX_NAME_LENGTH);
 	       break;
 	 }
 }
@@ -251,7 +252,7 @@ BuildImportForm : cree Le formulaire d'importation de documents.
 static void BuildImportForm()
 {
   int nbItems,length;
-  char bufMenu[MAX_TXT_LEN];
+  CHAR bufMenu[MAX_TXT_LEN];
  
  /* Formulaire Classe du document a importer */
    TtaNewForm (NumFormImportClass,  0,
@@ -281,13 +282,13 @@ static void BuildImportForm()
    updates the ImportMenu form.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CallbackImportMenu (int ref, int typedata, char *data)
+void                CallbackImportMenu (int ref, int typedata, STRING data)
 
 #else  /* __STDC__ */
 void                CallbackImportMenu (ref, typedata, data)
 int                 ref;
 int                 typedata;
-char               *data;
+STRING              data;
 
 #endif /* __STDC__ */
 {
@@ -302,7 +303,7 @@ char               *data;
 	       if (SchStrImport[0] == EOS)
 		  /* pas de fichier .langue, on prend le nom tel quel */
 		 {
-		    strncpy (SchStrImport, data, MAX_NAME_LENGTH - 1);
+		    ustrncpy (SchStrImport, data, MAX_NAME_LENGTH - 1);
 		    SchStrImport[MAX_NAME_LENGTH - 1] = EOS;
 		 }
 	       break;
@@ -322,13 +323,13 @@ char               *data;
    updates the OpenDoc form.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CallbackOpenDocMenu (int ref, int typedata, char *data)
+void                CallbackOpenDocMenu (int ref, int typedata, STRING data)
 
 #else  /* __STDC__ */
 void                CallbackOpenDocMenu (ref, typedata, data)
 int                 ref;
 int                 typedata;
-char               *data;
+STRING              data;
 
 #endif /* __STDC__ */
 {
@@ -336,10 +337,10 @@ char               *data;
    PathBuffer          docName;
    PtrDocument         pDoc;
    int                 i;
-   char                bufDir[MAX_PATH];
-   char                URL_DIR_SEP;
+   CHAR                bufDir[MAX_PATH];
+   CHAR                URL_DIR_SEP;
 
-   if (typedata == STRING_DATA && data && strchr (data, '/'))
+   if (typedata == STRING_DATA && data && ustrchr (data, '/'))
      URL_DIR_SEP = '/';
    else 
      URL_DIR_SEP = DIR_SEP;
@@ -349,7 +350,7 @@ char               *data;
 	 {
 	    case NumToggleDocTypeToOpen:
                {
-                  strcpy (docSuffix, tabDocSuffix[(int)data]);
+                  ustrcpy (docSuffix, tabDocSuffix[(int)data]);
 		  if (TtaCheckDirectory (DirectoryName))
                      TtaListDirectory (DirectoryName, NumFormOpenDoc, NULL, -1,
                                        docSuffix, TtaGetMessage (LIB, TMSG_FILES), NumSelDoc);
@@ -357,22 +358,22 @@ char               *data;
 		break;
 
 	    case NumZoneDocNameToOpen:
-	       if (TtaCheckDirectory (data) && data[strlen (data) - 1] != URL_DIR_SEP)
+	       if (TtaCheckDirectory (data) && data[ustrlen (data) - 1] != URL_DIR_SEP)
 		 {
-		    strcpy (DirectoryName, data);
+		    ustrcpy (DirectoryName, data);
 		    DefaultDocumentName[0] = EOS;
 		 }
 	       else
 		 {
 		    /* conserve le nom du document a ouvrir */
 		    TtaExtractName (data, DirectoryName, docName);
-		    i = strlen (docName);
+		    i = ustrlen (docName);
 		    if (i >= MAX_NAME_LENGTH)
 		      {
 			 i = MAX_NAME_LENGTH;	/*Longueur du nom limitee */
 			 docName[i] = EOS;
 		      }
-		    strcpy (DefaultDocumentName, docName);
+		    ustrcpy (DefaultDocumentName, docName);
 		 }
 
 	       if (TtaCheckDirectory (DirectoryName))
@@ -382,11 +383,11 @@ char               *data;
 		       if (TtaIsSuffixFileIn (DirectoryName, docSuffix))
 			 {
 			    /* il faut ajouter le directory au path */
-			    i = strlen (DocumentPath);
-			    if (i + strlen (DirectoryName) + 2 < MAX_PATH)
+			    i = ustrlen (DocumentPath);
+			    if (i + ustrlen (DirectoryName) + 2 < MAX_PATH)
 			      {
-				 strcat (DocumentPath, PATH_STR);
-				 strcat (DocumentPath, DirectoryName);
+				 ustrcat (DocumentPath, PATH_STR);
+				 ustrcat (DocumentPath, DirectoryName);
 				 BuildPathDocBuffer (bufDir, EOS, &i);
 				 TtaNewSelector (NumZoneDirOpenDoc, NumFormOpenDoc,
 						 TtaGetMessage (LIB, TMSG_DOC_DIR), i, bufDir, 9, NULL, FALSE, TRUE);
@@ -398,7 +399,7 @@ char               *data;
 		 }
 	       break;
 	    case NumZoneDirOpenDoc:
-	       strcpy (DirectoryName, data);
+	       ustrcpy (DirectoryName, data);
 	       TtaSetTextForm (NumZoneDocNameToOpen, DirectoryName);
 	       TtaListDirectory (data, NumFormOpenDoc, NULL, -1,
 			docSuffix, TtaGetMessage (LIB, TMSG_FILES), NumSelDoc);
@@ -407,24 +408,24 @@ char               *data;
 	       if (DirectoryName[0] == EOS)
 		 {
 		    /* compose le path complet du fichier pivot */
-		    strncpy (DirectoryName, DocumentPath, MAX_PATH);
+		    ustrncpy (DirectoryName, DocumentPath, MAX_PATH);
 		    MakeCompleteName (docName, &docSuffix[1], DirectoryName, data, &i);
 		    TtaExtractName (docName, DirectoryName, DefaultDocumentName);
 		 }
 	       else
 		 {
-		    strcpy (docName, DirectoryName);
-		    strcat (docName, DIR_STR);
-		    i = strlen (data);
+		    ustrcpy (docName, DirectoryName);
+		    ustrcat (docName, DIR_STR);
+		    i = ustrlen (data);
 		    if (i >= MAX_NAME_LENGTH)
 		      {
 			 /* RemoveElement le suffixe du nom de fichier */
-			 if (!strcmp (&data[i - 4], docSuffix))
+			 if (!ustrcmp (&data[i - 4], docSuffix))
 			    data[i - 4] = EOS;
 		      }
-		    strncpy (DefaultDocumentName, data, MAX_NAME_LENGTH);
+		    ustrncpy (DefaultDocumentName, data, MAX_NAME_LENGTH);
 		    DefaultDocumentName[MAX_NAME_LENGTH - 1] = EOS;
-		    strcat (docName, DefaultDocumentName);
+		    ustrcat (docName, DefaultDocumentName);
 		 }
 	       TtaSetTextForm (NumZoneDocNameToOpen, docName);
 	       break;
@@ -437,17 +438,17 @@ char               *data;
 	       /* le formulaire Ouvrir Document */
 	       if (DirectoryName[0] == EOS)
 		  /* compose le path complet du fichier pivot */
-		  strncpy (DirectoryName, DocumentPath, MAX_PATH);
+		  ustrncpy (DirectoryName, DocumentPath, MAX_PATH);
 	       else if (TtaCheckDirectory (DirectoryName))
 		  /* Est-ce un nouveau directory de documents */
 		  if (!TtaIsInDocumentPath (DirectoryName))
 		    {
 		       /* il faut ajouter le directory au path */
-		       i = strlen (DocumentPath);
-		       if (i + strlen (DirectoryName) + 2 < MAX_PATH)
+		       i = ustrlen (DocumentPath);
+		       if (i + ustrlen (DirectoryName) + 2 < MAX_PATH)
 			 {
-			    strcat (DocumentPath, PATH_STR);
-			    strcat (DocumentPath, DirectoryName);
+			    ustrcat (DocumentPath, PATH_STR);
+			    ustrcat (DocumentPath, DirectoryName);
 			 }
 		    }
 
@@ -457,19 +458,19 @@ char               *data;
 		  /* le fichier existe, on ouvre le document */
 		 {
 		   /* charge le document */
-		   if ((!strcmp (docSuffix, ".xml")) && 
+		   if ((!ustrcmp (docSuffix, ".xml")) && 
 		       ThotLocalActions[T_xmlparsedoc] != NULL)
                       LoadXmlDocument (&pDoc, docName);
                    else
 		      LoadDocument (&pDoc, docName);
 		   if (pDoc != NULL)
-		     strcpy (pDoc->DocDirectory, DirectoryName);
+		     ustrcpy (pDoc->DocDirectory, DirectoryName);
 		 }
 	       else
 		  /* Le fichier n'existe pas */
 		 {
 		    /* cherche s'il existe un fichier de ce nom, sans extension */
-		    strncpy (DirectoryName, DocumentPath, MAX_PATH);
+		    ustrncpy (DirectoryName, DocumentPath, MAX_PATH);
 		    MakeCompleteName (DefaultDocumentName, "", DirectoryName, docName, &i);
 		    if (TtaFileExist (docName) == 0)
 		       /* le fichier n'existe pas */
@@ -505,10 +506,10 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   char                bufDir[MAX_PATH];
+   CHAR                bufDir[MAX_PATH];
    PathBuffer          docName;
    int                 length, nbItems, entry;
-   char                URL_DIR_SEP;
+   CHAR                URL_DIR_SEP;
    ThotWidget	       parentWidget;
    if (ThotLocalActions[T_opendoc] == NULL)
      {
@@ -521,7 +522,7 @@ View                view;
      }
    if (ThotLocalActions[T_xmlparsedoc] != NULL && NbDocSuffix <= 1)
     {
-      strcpy (tabDocSuffix[NbDocSuffix++], ".xml");
+      ustrcpy (tabDocSuffix[NbDocSuffix++], ".xml");
     }
 
    /* Creation du Formulaire Ouvrir */
@@ -535,13 +536,13 @@ View                view;
    if (DirectoryName[0] == EOS && nbItems >= 1)
       /* si pas de dossier courant, on initialise avec le premier de bufDir */
      {
-	strcpy (DirectoryName, bufDir);
-	strcpy (DefaultDocumentName, bufDir);
+	ustrcpy (DirectoryName, bufDir);
+	ustrcpy (DefaultDocumentName, bufDir);
 	TtaSetSelector (NumZoneDirOpenDoc, 0, NULL);
      }
    else if (DirectoryName[0] != EOS)
      {
-       if (strchr (DirectoryName, '/'))
+       if (ustrchr (DirectoryName, '/'))
 	 URL_DIR_SEP = '/';
        else 
 	 URL_DIR_SEP = DIR_SEP;
@@ -549,14 +550,14 @@ View                view;
        entry = SearchStringInBuffer(bufDir, DirectoryName, nbItems);
        if(entry != -1)
 	 TtaSetSelector (NumZoneDirOpenDoc,entry,NULL);
-       strcpy (docName, DirectoryName);
-       length = strlen (docName);
+       ustrcpy (docName, DirectoryName);
+       length = ustrlen (docName);
        docName[length] = URL_DIR_SEP;
        docName[length + 1] = EOS;
-       strcpy (DefaultDocumentName, docName);
+       ustrcpy (DefaultDocumentName, docName);
      }
    /* liste des fichiers existants */
-   strcpy (docSuffix, tabDocSuffix[0]);
+   ustrcpy (docSuffix, tabDocSuffix[0]);
    TtaListDirectory (DirectoryName, NumFormOpenDoc, NULL, -1, docSuffix,
                      TtaGetMessage (LIB, TMSG_FILES), NumSelDoc);
 
@@ -575,8 +576,8 @@ View                view;
    	length = 0;
    	for (entry=0; entry<NbDocSuffix; entry++)
      	  {
-            sprintf (&bufDir[length], "T%s", (char *)(tabDocSuffix[entry]+1) );
-            length += strlen (&bufDir[length])+1;
+            sprintf (&bufDir[length], "T%s", (STRING)(tabDocSuffix[entry]+1) );
+            length += ustrlen (&bufDir[length])+1;
           }
         TtaNewSubmenu (NumToggleDocTypeToOpen, NumFormOpenDoc, 0, TtaGetMessage (LIB, TMSG_DOCUMENT_FORMAT),
                           NbDocSuffix, bufDir, NULL, TRUE);

@@ -7,9 +7,9 @@
 #ifdef __STDC__
 
 extern void LoadDocument ( PtrDocument * pDoc,
-                           char *fileName );
+                           STRING fileName );
 extern void LoadXmlDocument ( PtrDocument * pDoc,
-                              char *fileName );
+                              STRING fileName );
 extern void NewDocument ( PtrDocument * pDoc,
                           PtrBuffer SSchemaName,
                           Name docName,
@@ -28,9 +28,9 @@ extern void BackupOnFatalErrorLoadResources ( void );
 #else /* __STDC__ */
 
 extern void LoadDocument (/* PtrDocument * pDoc,
-                             char *fileName */);
+                             STRING fileName */);
 extern void LoadXmlDocument (/* PtrDocument * pDoc,
-                                char *fileName */);
+                                STRING fileName */);
 extern void NewDocument (/* PtrDocument * pDoc,
                             PtrBuffer SSchemaName,
                             Name docName,

@@ -22,6 +22,7 @@
  *
  */
 
+#include "ustring.h"
 #include "math.h"
 #include "thot_sys.h"
 #include "message.h"
@@ -44,7 +45,7 @@
 #define EmptyPixmap (Pixmap)(-2)
 #define HL 4
 
-static char        *Patterns_PS[] =
+static STRING       Patterns_PS[] =
 {
    "2222222222222222",		/*horiz1 */
    "6666666666666666",
@@ -73,7 +74,7 @@ static char        *Patterns_PS[] =
 extern ptrfont      PoscriptFont;
 extern int          ColorPs;
 extern int          LastPageNumber, LastPageWidth, LastPageHeight;
-static char        *Scale = NULL;
+static STRING       Scale = NULL;
 int                 X, Y;
 static int          SameBox = 0; /* 1 if the text is in the same box */
 static int          NbWhiteSp;
@@ -217,14 +218,14 @@ int                 fg;
    WriteCar writes s1 or s2 depending on encoding.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         WriteCar (FILE * fout, int encoding, char *s1, char *s2)
+static void         WriteCar (FILE * fout, int encoding, STRING s1, STRING s2)
 
 #else  /* __STDC__ */
 static void         WriteCar (fout, encoding, s1, s2)
 FILE               *fout;
 int                 encoding;
-char               *s1;
-char               *s2;
+STRING              s1;
+STRING              s2;
 
 #endif /* __STDC__ */
 
@@ -243,13 +244,13 @@ char               *s2;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void         Transcode (FILE * fout, int encoding, char car)
+static void         Transcode (FILE * fout, int encoding, CHAR car)
 
 #else  /* __STDC__ */
 static void         Transcode (fout, encoding, car)
 FILE               *fout;
 int                 encoding;
-char                car;
+CHAR                car;
 
 #endif /* __STDC__ */
 
@@ -274,7 +275,7 @@ char                car;
 		  fputs ("\\\\", fout);
 		  break;
 	       default:
-		  fprintf (fout, "\\%o", (unsigned char) car);
+		  fprintf (fout, "\\%o", (UCHAR) car);
 	    }
 #  endif /* _WINDOWS */
 }
@@ -325,10 +326,10 @@ int                 num;
   indicates if the box is active parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                WIN_DrawChar (unsigned char car, int frame, int x, int y, ptrfont font, int RO, int active, int fg)
+void                WIN_DrawChar (UCHAR car, int frame, int x, int y, ptrfont font, int RO, int active, int fg)
 #else  /* __STDC__ */
 void                WIN_DrawChar (car, frame, x, y, font, RO, active, fg)
-unsigned char       car;
+UCHAR       car;
 int                 frame;
 int                 x;
 int                 y;
@@ -339,7 +340,7 @@ int                 fg;
 
 #endif /* __STDC__ */
 {
-   char  str[2] = {car, 0};
+   CHAR  str[2] = {car, 0};
    HFONT hOldFont;
 
    CurrentColor (NULL, fg);
@@ -347,7 +348,7 @@ int                 fg;
    WinLoadGC (TtPrinterDC, fg, RO);
    SetMapperFlags (TtPrinterDC, 1);
    hOldFont = WinLoadFont (TtPrinterDC, font);
-   TextOut (TtPrinterDC, x, y, (unsigned char*) str, 1);   
+   TextOut (TtPrinterDC, x, y, (USTRING) str, 1);   
    SelectObject (TtPrinterDC, hOldFont);
 }
 
@@ -358,10 +359,10 @@ int                 fg;
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void WIN_DrawMonoSymb (char symb, int frame, int x, int y, int l, int h, int RO, int active, ptrfont font, int fg)
+static void WIN_DrawMonoSymb (CHAR symb, int frame, int x, int y, int l, int h, int RO, int active, ptrfont font, int fg)
 #else  /* __STDC__ */
 static void WIN_DrawMonoSymb (symb, frame, x, y, l, h, RO, active, font, fg)
-char                symb;
+CHAR                symb;
 int                 frame;
 int                 x;
 int                 y;
@@ -454,7 +455,7 @@ ptrfont             font;
 #endif /* __STDC__ */
 {
    int                 i, retour;
-   char                c1, c2;
+   CHAR                c1, c2;
 
    /* browse the table of fonts */
    i = 0;
@@ -515,10 +516,10 @@ ptrfont             font;
    Returns the lenght of the string drawn.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 DrawString (char *buff, int i, int lg, int frame, int x, int y, ptrfont font, int lgboite, int bl, int hyphen, int StartOfCurrentBlock, int RO, int active, int fg, int shadow)
+int                 DrawString (STRING buff, int i, int lg, int frame, int x, int y, ptrfont font, int lgboite, int bl, int hyphen, int StartOfCurrentBlock, int RO, int active, int fg, int shadow)
 #else  /* __STDC__ */
 int                 DrawString (buff, i, lg, frame, x, y, font, lgboite, bl, hyphen, StartOfCurrentBlock, RO, active, fg, shadow)
-char               *buff;
+STRING              buff;
 int                 i;
 int                 lg;
 int                 frame;
@@ -535,7 +536,7 @@ int                 fg;
 int                 shadow;
 #endif /* __STDC__ */
 {
-   char               *ptcar;
+   STRING              ptcar;
    int                 j, encoding, width;
    int                 NonJustifiedWhiteSp;
    FILE               *fout;
@@ -613,7 +614,7 @@ int                 shadow;
 	  }
 
       if (lg > 0)
-         if (!TextOut (TtPrinterDC, x, y, (unsigned char*) ptcar, lg))
+         if (!TextOut (TtPrinterDC, x, y, (USTRING) ptcar, lg))
             WinErrorBox (NULL);
 
       if (hyphen) /* draw the hyphen */
@@ -1797,7 +1798,7 @@ int                 arrow;
       DrawArrowHead (points[nb - 3].x, points[nb - 3].y, points[nb - 2].x, points[nb - 2].y, thick, RO, active, fg);
 
    /* free the table of points */
-   free ((char *) points);
+   free (points);
 #  else  /* !_WINDOWS */
    int                 i, j;
    float               xp, yp;
@@ -1961,7 +1962,7 @@ int                 pattern;
          WinErrorBox (WIN_Main_Wd);
    }
    /* free the table of points */
-   free ((char *) points);
+   free (points);
 #  else  /* !_WINDOWS */
    int                 i, j;
    float               xp, yp;
@@ -3107,21 +3108,21 @@ int                 height;
    EndOfString check wether string end by suffix.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 EndOfString (char *string, char *suffix)
+int                 EndOfString (STRING string, STRING suffix)
 #else  /* __STDC__ */
 int                 EndOfString (string, suffix)
-char               *string;
-char               *suffix;
+STRING              string;
+STRING              suffix;
 #endif /* __STDC__ */
 {
    int                 string_lenght, suffix_lenght;
 
-   string_lenght = strlen (string);
-   suffix_lenght = strlen (suffix);
+   string_lenght = ustrlen (string);
+   suffix_lenght = ustrlen (suffix);
    if (string_lenght < suffix_lenght)
       return 0;
    else
-      return (strcmp (string + string_lenght - suffix_lenght, suffix) == 0);
+      return (ustrcmp (string + string_lenght - suffix_lenght, suffix) == 0);
 }
 
 

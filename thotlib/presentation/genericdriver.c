@@ -41,6 +41,7 @@
  *
  */
 
+#include "ustring.h"
 #include "thot_sys.h"
 #include "libmsg.h"
 #include "message.h"
@@ -150,7 +151,7 @@ Name               *boxname;
 {
    int                 i;
    int                 len;
-   char                buffer[100];
+   CHAR                buffer[100];
 
    buffer[0] = 0;
    len = 0;
@@ -163,19 +164,19 @@ Name               *boxname;
 		    ctxt->ancestors[i], ctxt->ancestors_nb[i]);
 	else
 	   sprintf (&buffer[len], "%d/", ctxt->ancestors[i]);
-	len = strlen (buffer);
+	len = ustrlen (buffer);
      }
    if (ctxt->type)
       sprintf (&buffer[len], "%d,", ctxt->type);
-   len = strlen (buffer);
+   len = ustrlen (buffer);
    if (ctxt->attr)
       sprintf (&buffer[len], "%d:%d,", ctxt->attr, ctxt->attrval);
-   len = strlen (buffer);
+   len = ustrlen (buffer);
    if (ctxt->class)
       sprintf (&buffer[len], "%d.%s,", ctxt->classattr, ctxt->class);
-   len = strlen (buffer);
+   len = ustrlen (buffer);
 
-   strncpy ((char *) boxname, buffer, sizeof (Name));
+   ustrncpy ((STRING) boxname, buffer, sizeof (Name));
 }
 
 /*----------------------------------------------------------------------
@@ -216,7 +217,7 @@ GenericContext      ctxt;
    /* search for the BOXE in the Presentation Schema */
    for (i = 1; i <= pSchemaPrs->PsNPresentBoxes; i++)
      {
-	if (!strcmp (ctxt->class, pSchemaPrs->PsPresentBox[i - 1].PbName))
+	if (!ustrcmp (ctxt->class, pSchemaPrs->PsPresentBox[i - 1].PbName))
 	  {
 	     ctxt->box = i;
 	     return (pSchemaPrs->PsPresentBox[i - 1].PbFirstPRule);
@@ -267,7 +268,7 @@ GenericContext      ctxt;
    /* search for the BOXE in the Presentation Schema */
    for (i = 1; i <= pSchemaPrs->PsNPresentBoxes; i++)
      {
-	if (!strcmp (boxname, pSchemaPrs->PsPresentBox[i - 1].PbName))
+	if (!ustrcmp (boxname, pSchemaPrs->PsPresentBox[i - 1].PbName))
 	  {
 	     ctxt->box = i;
 	     return (&pSchemaPrs->PsPresentBox[i - 1].PbFirstPRule);
@@ -286,7 +287,7 @@ GenericContext      ctxt;
    pSchemaPrs->PsNPresentBoxes++;
    ctxt->box = pSchemaPrs->PsNPresentBoxes;
    box = &pSchemaPrs->PsPresentBox[pSchemaPrs->PsNPresentBoxes - 1];
-   strncpy (box->PbName, boxname, sizeof (box->PbName));
+   ustrncpy (box->PbName, boxname, sizeof (box->PbName));
    box->PbFirstPRule = NULL;
    box->PbAcceptPageBreak = TRUE;
    box->PbAcceptLineBreak = TRUE;
@@ -786,7 +787,7 @@ GenericContext      ctxt;
      {
 	if (ctxt->class != NULL)
 	  {
-	     if (!strcmp (attrs[i].ApString, ctxt->class))
+	     if (!ustrcmp (attrs[i].ApString, ctxt->class))
 	       {
 		  found = &attrs[i];
 		  break;
@@ -854,7 +855,7 @@ GenericContext      ctxt;
      {
 	if (ctxt->class)
 	  {
-	     if (!strcmp (attrs[i].ApString, ctxt->class))
+	     if (!ustrcmp (attrs[i].ApString, ctxt->class))
 	       {
 		  found = &attrs[i];
 		  break;
@@ -900,7 +901,7 @@ GenericContext      ctxt;
 	found = &found[nbrules - 1];
 	memset (found, 0, sizeof (AttributePres));
 	if (ctxt->class != NULL)
-	   strcpy (&found->ApString[0], ctxt->class);
+	   ustrcpy (&found->ApString[0], ctxt->class);
 	else
 	   found->ApString[0] = 0;
 	found->ApTextFirstPRule = NULL;
@@ -1205,7 +1206,7 @@ PresentationValue   v;
      {
 	if (ctxt->class != NULL)
 	  {
-	     if (!strcmp (attrs[i].ApString, ctxt->class))
+	     if (!ustrcmp (attrs[i].ApString, ctxt->class))
 	       {
 		  found = &attrs[i];
 		  break;

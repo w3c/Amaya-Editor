@@ -22,6 +22,7 @@
  *
  */
 
+#include "ustring.h"
 #include "thot_gui.h"
 #include "thot_sys.h"
 
@@ -51,10 +52,10 @@ static int          OldNC;
 static int          SpellingBase;
 static boolean      FirstStep;
 static boolean      ToReplace;
-static char         CorrectWord[MAX_WORD_LEN];
-static char         CurrentWord[MAX_WORD_LEN];
+static CHAR         CorrectWord[MAX_WORD_LEN];
+static CHAR         CurrentWord[MAX_WORD_LEN];
 static PtrDocument  pDocSel;
-static char         SpecialChars[] =
+static CHAR         SpecialChars[] =
 {"@#$&+~"};
 
 /* les variables importees de l'editeur */
@@ -75,10 +76,10 @@ extern HWND wordButton;
 extern HWND hwnListWords;
 extern HWND hwndCurrentWord;
 extern HWND hwndLanguage;
-extern char currentWord [30];
+extern CHAR currentWord [30];
 
 #ifdef __STDC__
-extern void CreateSpellCheckDlgWindow (HWND, char*, char*,	int, int, int, int, int, int, int);
+extern void CreateSpellCheckDlgWindow (HWND, STRING, STRING, int, int, int, int, int, int, int);
 #else  /* __STDC__ */
 extern void CreateSpellCheckDlgWindow ();
 #endif /* __STDC__ */
@@ -109,19 +110,19 @@ static void         DisplayWords ()
 #endif
 {
    int                 i, indx, length;
-   char               *entry;
-   char                BufMenu[MAX_TXT_LEN];
+   STRING              entry;
+   CHAR                BufMenu[MAX_TXT_LEN];
 
    /* recopie les propositions */
    indx = 0;
    /* commencer a 1 parce qu'en 0 il y a CurrentWord */
-   for (i = 1; (i <= NC && strcmp (ChkrCorrection[i], "$") != 0); i++)
+   for (i = 1; (i <= NC && ustrcmp (ChkrCorrection[i], "$") != 0); i++)
      {
 	entry = ChkrCorrection[i];
-	length = strlen (entry) + 1;
+	length = ustrlen (entry) + 1;
 	if (length + indx < MAX_TXT_LEN)
 	  {
-	     strcpy ((BufMenu) + indx, entry);
+	     ustrcpy ((BufMenu) + indx, entry);
 	     indx += length;
 	  }
      }
@@ -133,7 +134,7 @@ static void         DisplayWords ()
 		   TtaGetMessage (CORR, Correct), i - 1,
 		   ((i < 2) ? "" : BufMenu), 3, entry, TRUE, FALSE);
    /* selectionner la proposition 0 dans le selecteur - si elle existe */
-   if (strcmp (ChkrCorrection[1], "$") != 0)
+   if (ustrcmp (ChkrCorrection[1], "$") != 0)
       TtaSetSelector (SpellingBase + ChkrSelectProp, -1, ChkrCorrection[1]);
    else
       TtaSetSelector (SpellingBase + ChkrSelectProp, -1, "");
@@ -154,14 +155,14 @@ void WIN_DisplayWords ()
 
 	SetWindowText (wordButton, ChkrCorrection[0]);
 	SendMessage (hwnListWords, LB_RESETCONTENT, 0, 0);
-    if ((strcmp (ChkrCorrection[1], "$")) == 0)	{
+    if ((ustrcmp (ChkrCorrection[1], "$")) == 0)	{
        currentWord [0] = EOS;
        SetWindowText (hwndCurrentWord, "");
 	   SendMessage (hwnListWords, LB_ADDSTRING, 0, (LPARAM) ((LPCTSTR)""));  
     } else {
          sprintf (currentWord, "%s", ChkrCorrection[1]);
          SetWindowText (hwndCurrentWord, ChkrCorrection[1]);
-	     for (i = 1; (i <= NC && strcmp (ChkrCorrection[i], "$") != 0); i++) {
+	     for (i = 1; (i <= NC && ustrcmp (ChkrCorrection[i], "$") != 0); i++) {
 	         SendMessage (hwnListWords, LB_INSERTSTRING, i - 1, (LPARAM) ((LPCTSTR)ChkrCorrection[i]));  
 	   }
 	}
@@ -187,7 +188,7 @@ view                view;
    PtrElement          pEl1, pElN;
    int                 c1, cN;
    int                 indx;
-   char                BufMenu[MAX_TXT_LEN];
+   CHAR                BufMenu[MAX_TXT_LEN];
    boolean             ok;
 #  endif /* !_WINDOWS */
 
@@ -205,13 +206,13 @@ view                view;
    /* creer la feuille de dialogue de CORRECTION */
    /* attache'e au bouton Confirmer du formulaire (1) CORRIGER */
    indx = 0;			/* tous les boutons du dialogue de correction */
-   strcpy (&BufMenu[indx], TtaGetMessage (CORR, Pass_Without));
-   indx += strlen(&BufMenu[indx]) + 1;
-   strcpy(&BufMenu[indx], TtaGetMessage(CORR, Pass_With));
-   indx += strlen (&BufMenu[indx]) + 1;
-   strcpy (&BufMenu[indx], TtaGetMessage (CORR, Replace_Without));
-   indx += strlen(&BufMenu[indx]) + 1;
-   strcpy(&BufMenu[indx], TtaGetMessage(CORR, Replace_With));
+   ustrcpy (&BufMenu[indx], TtaGetMessage (CORR, Pass_Without));
+   indx += ustrlen(&BufMenu[indx]) + 1;
+   ustrcpy(&BufMenu[indx], TtaGetMessage(CORR, Pass_With));
+   indx += ustrlen (&BufMenu[indx]) + 1;
+   ustrcpy (&BufMenu[indx], TtaGetMessage (CORR, Replace_Without));
+   indx += ustrlen(&BufMenu[indx]) + 1;
+   ustrcpy(&BufMenu[indx], TtaGetMessage(CORR, Replace_With));
    /* ne pas afficher cette feuille maintenant */
    TtaNewSheet (SpellingBase + ChkrFormCorrect, TtaGetViewFrame (doc, view), 
 		TtaGetMessage (CORR, Correct), 4, BufMenu, FALSE, 4, 'L', D_DONE);
@@ -221,9 +222,9 @@ view                view;
 #  endif /* !_WINDOWS */
 
    /* Afficher une liste de mots EMPTY */
-   strcpy (ChkrCorrection[0], " ");
+   ustrcpy (ChkrCorrection[0], " ");
    for (i = 1; i <= NC; i++)
-      strcpy (ChkrCorrection[i], "$");
+      ustrcpy (ChkrCorrection[i], "$");
 
 #  ifndef _WINDOWS 
    DisplayWords ();
@@ -231,11 +232,11 @@ view                view;
    /* creer le sous-menu OU dans la feuille OPTIONS */
    indx = 0;			/* Ou commencer la correction ? */
    sprintf (&BufMenu[indx], "B%s", TtaGetMessage (LIB, TMSG_BEFORE_SEL));
-   indx += strlen (&BufMenu[indx]) + 1;
+   indx += ustrlen (&BufMenu[indx]) + 1;
    sprintf (&BufMenu[indx], "B%s", TtaGetMessage (LIB, TMSG_WITHIN_SEL));
-   indx += strlen (&BufMenu[indx]) + 1;
+   indx += ustrlen (&BufMenu[indx]) + 1;
    sprintf (&BufMenu[indx], "B%s", TtaGetMessage (LIB, TMSG_AFTER_SEL));
-   indx += strlen (&BufMenu[indx]) + 1;
+   indx += ustrlen (&BufMenu[indx]) + 1;
    sprintf (&BufMenu[indx], "B%s", TtaGetMessage (LIB, TMSG_IN_WHOLE_DOC));
    TtaNewSubmenu (SpellingBase + ChkrMenuOR, SpellingBase + ChkrFormCorrect, 0,
 		  TtaGetMessage (CORR, What), 4, BufMenu, NULL, FALSE);
@@ -270,11 +271,11 @@ view                view;
    /* sous-menu Mots a ignorer */
    indx = 0;
    sprintf (&BufMenu[indx], "B%s", TtaGetMessage (CORR, Capitals));
-   indx += strlen (&BufMenu[indx]) + 1;
+   indx += ustrlen (&BufMenu[indx]) + 1;
    sprintf (&BufMenu[indx], "B%s", TtaGetMessage (CORR, Arabics));
-   indx += strlen (&BufMenu[indx]) + 1;
+   indx += ustrlen (&BufMenu[indx]) + 1;
    sprintf (&BufMenu[indx], "B%s", TtaGetMessage (CORR, Romans));
-   indx += strlen (&BufMenu[indx]) + 1;
+   indx += ustrlen (&BufMenu[indx]) + 1;
    sprintf (&BufMenu[indx], "B%s", TtaGetMessage (CORR, Specials));
    TtaNewToggleMenu (SpellingBase + ChkrMenuIgnore,
 		     SpellingBase + ChkrFormCorrect,
@@ -288,7 +289,7 @@ view                view;
 
 /* ne pas ignorer les mots en capitale, chiffres romains */
    /* ou contenant des chiffres arabes,  certains car. speciaux */
-   strncpy (RejectedChar, SpecialChars, MAX_REJECTED_CHARS);	/* liste par defaut */
+   ustrncpy (RejectedChar, SpecialChars, MAX_REJECTED_CHARS);	/* liste par defaut */
 
    IgnoreUppercase = FALSE;
    IgnoreArabic = FALSE;
@@ -338,7 +339,7 @@ static void         SetProposals (language)
 Language            language;
 #endif /* __STDC__ */
 {
-   char             Lab[200];
+   CHAR             Lab[200];
 
    /* calculer les propositions de correction du mot courant */
    GiveProposal (language, ChkrFileDict);
@@ -349,8 +350,8 @@ Language            language;
    WIN_DisplayWords ();
 #  endif /* _WINDOWS */
    /* recopier la premiere proposition dans CorrectWord */
-   if (strcmp (ChkrCorrection[1], "$") != 0)
-      strcpy (CorrectWord, ChkrCorrection[1]);
+   if (ustrcmp (ChkrCorrection[1], "$") != 0)
+      ustrcpy (CorrectWord, ChkrCorrection[1]);
    else
       CorrectWord[0] = EOS;
 
@@ -447,7 +448,7 @@ int                 val;
 		    /* Passer apres maj du dictionnaire */
 		    /* mettre CurrentWord dans le dictionnaire */
 		    if (ChkrElement != NULL)	/* Sauf au 1er lancement */
-		       if (CorrectWord[0] != EOS && (strcmp (CorrectWord, ChkrCorrection[1]) != 0))
+		       if (CorrectWord[0] != EOS && (ustrcmp (CorrectWord, ChkrCorrection[1]) != 0))
 			 {
 			    /* ajouter le mot corroge dans le dictionaire */
 			    if (!CheckWord (CorrectWord, ChkrLanguage, ChkrFileDict))
@@ -497,12 +498,12 @@ int                 val;
    CallbackCorrector                                                 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CallbackCorrector (int ref, int dataType, char *data)
+void                CallbackCorrector (int ref, int dataType, STRING data)
 #else  /* __STDC__ */
 void                CallbackCorrector (ref, dataType, data)
 int                 ref;
 int                 dataType;
-char               *data;
+STRING              data;
 #endif /* __STDC__ */
 {
   PtrElement          pEl1, pElN;
@@ -539,7 +540,7 @@ char               *data;
 	break;
       case ChkrSpecial:
 	/* recopier la liste des car. speciaux dans RejectedChar[] */
-	strncpy (RejectedChar, data, MAX_REJECTED_CHARS);
+	ustrncpy (RejectedChar, data, MAX_REJECTED_CHARS);
 	/* bascule automatiquement l'indicateur IgnoreSpecial */
 	if (!IgnoreSpecial)
 	  {
@@ -606,10 +607,10 @@ char               *data;
       case ChkrSelectProp:
 	/* retour du selecteur de propositions */
 	/* recopier le choix dans CorrectWord */
-	strcpy (CorrectWord, data);
+	ustrcpy (CorrectWord, data);
 	if (CorrectWord[0] != EOS
 	    && CurrentWord != EOS
-	    && strcmp (CorrectWord, CurrentWord) != 0)
+	    && ustrcmp (CorrectWord, CurrentWord) != 0)
 	  ToReplace = TRUE;
 	break;
       case ChkrFormCorrect:

@@ -4,7 +4,8 @@
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
- 
+
+#include "ustring.h" 
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"

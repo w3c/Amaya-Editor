@@ -6,35 +6,35 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern char *AsciiTranslate ( char *pBuffer );
-extern int TtaGetMessageTable ( CONST char *msgName,
+extern STRING AsciiTranslate ( STRING pBuffer );
+extern int TtaGetMessageTable ( CONST STRING msgName,
                                 int msgNumber );
 extern void FreeAllMessages ( void );
-extern char *TtaGetMessage ( int origin,
-                             int num );
+extern STRING TtaGetMessage ( int origin,
+                              int num );
 extern void TtaDisplayMessage ( int msgType,
-                                char *fmt,
+                                STRING fmt,
                                 ... );
 extern void TtaDisplaySimpleMessage ( int msgType,
                                       int origin,
                                       int number );
-extern void DisplayPivotMessage ( char *code );
+extern void DisplayPivotMessage ( STRING code );
 
 #else /* __STDC__ */
 
-extern char *AsciiTranslate (/* char *pBuffer */);
-extern int TtaGetMessageTable (/* CONST char *msgName,
+extern STRING AsciiTranslate (/* STRING pBuffer */);
+extern int TtaGetMessageTable (/* CONST STRING msgName,
                                   int msgNumber */);
 extern void FreeAllMessages (/* void */);
-extern char *TtaGetMessage (/* int origin,
-                               int num */);
+extern STRING TtaGetMessage (/* int origin,
+                                int num */);
 extern void TtaDisplayMessage (/* int msgType,
-                                  char *fmt,
+                                  STRING fmt,
                                   ... */);
 extern void TtaDisplaySimpleMessage (/* int msgType,
                                         int origin,
                                         int number */);
-extern void DisplayPivotMessage (/* char *code */);
+extern void DisplayPivotMessage (/* STRING code */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

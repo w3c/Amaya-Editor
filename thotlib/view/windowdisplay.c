@@ -14,6 +14,7 @@
  *
  */
 
+#include "ustring.h"
 #include "math.h"
 #include "thot_sys.h"
 #include "constmedia.h"
@@ -65,11 +66,11 @@ extern BOOL autoScroll;
   accordingly to the ascent of the font used.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                FontOrig (ptrfont font, char firstchar, int *pX, int *pY)
+void                FontOrig (ptrfont font, CHAR firstchar, int *pX, int *pY)
 #else  /* __STDC__ */
 void                FontOrig (font, firstchar, pX, pY)
 ptrfont             font;
-char                firstchar;
+CHAR                firstchar;
 int                *pX;
 int                *pY;
 
@@ -144,13 +145,13 @@ int                 fg;
 #endif /* __STDC__ */
 {
 #  ifndef _WINDOWS
-    char                dash[2];
+    CHAR                dash[2];
   if (style == 0)
       XSetLineAttributes (TtDisplay, TtLineGC, thick, LineSolid, CapButt, JoinMiter);
    else
      {
-	dash[0] = (char) (style * 4);
-	dash[1] = (char) 4;
+	dash[0] = (CHAR) (style * 4);
+	dash[1] = (CHAR) 4;
 	XSetDashes (TtDisplay, TtLineGC, 0, dash, 2);
 	XSetLineAttributes (TtDisplay, TtLineGC, thick, LineOnOffDash, CapButt, JoinMiter);
      }
@@ -253,10 +254,10 @@ int                 y2;
   equivalents.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         SpaceToChar (unsigned char *text)
+static void         SpaceToChar (USTRING text)
 #else  /* __STDC__ */
 static void         SpaceToChar (text)
-unsigned char      *text;
+USTRING             text;
 
 #endif /* __STDC__ */
 {
@@ -271,19 +272,19 @@ unsigned char      *text;
 	switch (text[i])
 	      {
 		 case BREAK_LINE:
-		    text[i] = (unsigned char) SHOWN_BREAK_LINE;
+		    text[i] = (UCHAR) SHOWN_BREAK_LINE;
 		    break;
 		 case THIN_SPACE:
-		    text[i] = (unsigned char) SHOWN_THIN_SPACE;
+		    text[i] = (UCHAR) SHOWN_THIN_SPACE;
 		    break;
 		 case HALF_EM:
-		    text[i] = (unsigned char) SHOWN_HALF_EM;
+		    text[i] = (UCHAR) SHOWN_HALF_EM;
 		    break;
 		 case UNBREAKABLE_SPACE:
-		    text[i] = (unsigned char) SHOWN_UNBREAKABLE_SPACE;
+		    text[i] = (UCHAR) SHOWN_UNBREAKABLE_SPACE;
 		    break;
 		 case _SPACE_:
-		    text[i] = (unsigned char) SHOWN_SPACE;
+		    text[i] = (UCHAR) SHOWN_SPACE;
 		    break;
 	      }
 	i++;
@@ -297,10 +298,10 @@ unsigned char      *text;
   indicates if the box is active parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                DrawChar (unsigned char car, int frame, int x, int y, ptrfont font, int RO, int active, int fg)
+void                DrawChar (UCHAR car, int frame, int x, int y, ptrfont font, int RO, int active, int fg)
 #else  /* __STDC__ */
 void                DrawChar (car, frame, x, y, font, RO, active, fg)
-unsigned char       car;
+UCHAR       car;
 int                 frame;
 int                 x;
 int                 y;
@@ -313,7 +314,7 @@ int                 fg;
 {
    ThotWindow          w;
 #  ifdef _WINDOWS
-   char                str[2] = {car, 0};
+   CHAR                str[2] = {car, 0};
    HFONT               hOldFont;
    int                 result;
 #  endif /* _WINDOWS */
@@ -334,7 +335,7 @@ int                 fg;
       MessageBox (FrMainRef [frame], "Cannot select clipping region", "Warning", MB_OK);
    /* if (!GetClipRgn(TtDisplay, clipRgn))
       WinErrorBox (NULL); */
-   TextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, (unsigned char*) str, 1);   
+   TextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, (USTRING) str, 1);   
    SelectObject (TtDisplay, hOldFont);
    WIN_ReleaseDeviceContext ();
 #  else  /* _WINDOWS */
@@ -361,10 +362,10 @@ int                 fg;
   Returns the lenght of the string drawn.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 DrawString (char *buff, int i, int lg, int frame, int x, int y, ptrfont font, int lgboite, int bl, int hyphen, int debutbloc, int RO, int active, int fg, int shadow)
+int                 DrawString (STRING buff, int i, int lg, int frame, int x, int y, ptrfont font, int lgboite, int bl, int hyphen, int debutbloc, int RO, int active, int fg, int shadow)
 #else  /* __STDC__ */
 int                 DrawString (buff, i, lg, frame, x, y, font, lgboite, bl, hyphen, debutbloc, RO, active, fg, shadow)
-char               *buff;
+STRING              buff;
 int                 i;
 int                 lg;
 int                 frame;
@@ -382,7 +383,7 @@ int                 shadow;
 #endif /* __STDC__ */
 {
    ThotWindow          w;
-   char               *ptcar;
+   STRING              ptcar;
    int                 width;
    register int        j;
 #  ifdef _WINDOWS
@@ -438,13 +439,13 @@ int                 shadow;
 	   }
 	 else
 	   {
-	     strncpy (ptcar, &buff[i - 1], lg);
+	     ustrncpy (ptcar, &buff[i - 1], lg);
 	     ptcar[lg] = EOS;
 	     SpaceToChar (ptcar);	/* substitute spaces */
 	   }
 #        ifdef _WINDOWS
          GetClientRect (TtDisplay, &rect);
-         TextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, (unsigned char*) ptcar, lg);
+         TextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, (USTRING) ptcar, lg);
 #        else  /* _WINDOWS */
          XDrawString (TtDisplay, w, TtLineGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin + FontBase (font), ptcar, lg);
 #        endif /* _WINDOWS */
@@ -458,7 +459,7 @@ int                 shadow;
            if (lg != 0) {
 #             ifdef _WINDOWS
               /* GetClipRgn(TtDisplay, clipRgn); */
-              TextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, (unsigned char*) ptcar, lg);
+              TextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, (USTRING) ptcar, lg);
 #             else  /* _WINDOWS */
 	      XDrawString (TtDisplay, w, TtLineGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin + FontBase (font), ptcar, lg);
 #             endif /* _WINDOWS */
@@ -611,7 +612,7 @@ int                 fg;
    ThotWindow          w;
    ptrfont             font;
    int                 xcour, width, nb;
-   char               *ptcar;
+   STRING              ptcar;
 
    font = ThotLoadFont ('L', 't', 0, 6, UnPoint, frame);
    if (lgboite > 0)
@@ -772,10 +773,10 @@ int                 fg;
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         DrawMonoSymb (char symb, int frame, int x, int y, int l, int h, int RO, int active, ptrfont font, int fg)
+static void         DrawMonoSymb (CHAR symb, int frame, int x, int y, int l, int h, int RO, int active, ptrfont font, int fg)
 #else  /* __STDC__ */
 static void         DrawMonoSymb (symb, frame, x, y, l, h, RO, active, font, fg)
-char                symb;
+CHAR                symb;
 int                 frame;
 int                 x;
 int                 y;
@@ -1774,7 +1775,7 @@ int                 arrow;
       TraceFleche (frame, points[nb - 3].x, points[nb - 3].y, points[nb - 2].x, points[nb - 2].y, thick, RO, active, fg);
 
    /* free the table of points */
-   free ((char *) points);
+   free (points);
 }
 
 /*----------------------------------------------------------------------
@@ -1880,7 +1881,7 @@ int                 pattern;
 #     endif /* !_WINDOWS */
    }
    /* free the table of points */
-   free ((char *) points);
+   free (points);
 }
 #endif /* _WIN_PRINT */
 
@@ -2142,7 +2143,7 @@ C_points           *controls;
 
    FinishDrawing (0, RO, active);
    /* free the table of points */
-   free ((char *) points);
+   free (points);
 }
 
 /*----------------------------------------------------------------------
@@ -2285,7 +2286,7 @@ C_points           *controls;
    }
 
    /* free the table of points */
-   free ((char *) points);
+   free (points);
 }
 
 /*----------------------------------------------------------------------
@@ -3231,11 +3232,11 @@ int                 y;
   WChaine draw a string in frame, at location (x, y) and using font.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                WChaine (ThotWindow w, char *string, int x, int y, ptrfont font, ThotGC GClocal)
+void                WChaine (ThotWindow w, STRING string, int x, int y, ptrfont font, ThotGC GClocal)
 #else  /* __STDC__ */
 void                WChaine (w, string, x, y, font, GClocal)
 ThotWindow          w;
-char               *string;
+STRING              string;
 int                 x;
 int                 y;
 ptrfont             font;
@@ -3246,7 +3247,7 @@ ThotGC              GClocal;
 #  ifndef _WINDOWS
    XSetFont (TtDisplay, GClocal, ((XFontStruct *) font)->fid);
    FontOrig (font, string[0], &x, &y);
-   XDrawString (TtDisplay, w, GClocal, x, y, string, strlen (string));
+   XDrawString (TtDisplay, w, GClocal, x, y, string, ustrlen (string));
 #  else /* _WINDOWS */
    HFONT hOldFont;
    int   result;
@@ -3259,7 +3260,7 @@ ThotGC              GClocal;
       MessageBox (NULL, "Cannot select clipping region", "Warning", MB_OK);
    /* if (!GetClipRgn(TtDisplay, clipRgn))
       WinErrorBox (NULL); */
-   TextOut(TtDisplay, x, y, string, strlen(string));
+   TextOut(TtDisplay, x, y, string, ustrlen(string));
    SelectObject (TtDisplay, hOldFont);
 #  endif /* _WINDOWS */
 }
@@ -3340,22 +3341,22 @@ int yf;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 EndOfString (char *string, char *suffix)
+int                 EndOfString (STRING string, STRING suffix)
 #else  /* __STDC__ */
 int                 EndOfString (string, suffix)
-char               *string;
-char               *suffix;
+STRING              string;
+STRING              suffix;
 
 #endif /* __STDC__ */
 {
    int                 string_lenght, suffix_lenght;
 
-   string_lenght = strlen (string);
-   suffix_lenght = strlen (suffix);
+   string_lenght = ustrlen (string);
+   suffix_lenght = ustrlen (suffix);
    if (string_lenght < suffix_lenght)
       return 0;
    else
-      return (strcmp (string + string_lenght - suffix_lenght, suffix) == 0);
+      return (ustrcmp (string + string_lenght - suffix_lenght, suffix) == 0);
 }
 #endif /* _WIN_PRINT */
 

@@ -10,19 +10,19 @@ extern void InitPrintParameters ( Document document );
 extern void TtcPrint ( Document document,
                        View view );
 extern void TtaPrint ( Document document,
-                       char* viewNames );
+                       STRING viewNames );
 extern void TtaSetPrintExportFunc ( Func exportFunc );
 extern void TtaSetPrintParameter ( PrintParameter parameter,
                                    int value );
 extern int TtaGetPrintParameter ( PrintParameter parameter );
-extern void TtaSetPrintCommand ( char *command );
-extern void TtaGetPrintCommand ( char *command );
-extern void TtaSetPrintSchema ( char *name );
-extern void TtaSetPsFile ( char *path );
-extern void TtaGetPsFile ( char *path );
+extern void TtaSetPrintCommand ( STRING command );
+extern void TtaGetPrintCommand ( STRING command );
+extern void TtaSetPrintSchema ( STRING name );
+extern void TtaSetPsFile ( STRING path );
+extern void TtaGetPsFile ( STRING path );
 extern void CallbackPrintmenu ( int ref,
                                 int val,
-                                char *txt );
+                                STRING txt );
 extern void TtcPrintSetup ( Document document,
                             View view );
 
@@ -32,19 +32,19 @@ extern void InitPrintParameters (/* Document document */);
 extern void TtcPrint (/* Document document,
                          View view */);
 extern void TtaPrint (/* Document document,
-                         char* viewNames */);
+                         STRING viewNames */);
 extern void TtaSetPrintExportFunc (/* Func exportFunc */);
 extern void TtaSetPrintParameter (/* PrintParameter parameter,
                                      int value */);
 extern int TtaGetPrintParameter (/* PrintParameter parameter */);
-extern void TtaSetPrintCommand (/* char *command */);
-extern void TtaGetPrintCommand (/* char *command */);
-extern void TtaSetPrintSchema (/* char *name */);
-extern void TtaSetPsFile (/* char *path */);
-extern void TtaGetPsFile (/* char *path */);
+extern void TtaSetPrintCommand (/* STRING command */);
+extern void TtaGetPrintCommand (/* STRING command */);
+extern void TtaSetPrintSchema (/* STRING name */);
+extern void TtaSetPsFile (/* STRING path */);
+extern void TtaGetPsFile (/* STRING path */);
 extern void CallbackPrintmenu (/* int ref,
                                   int val,
-                                  char *txt */);
+                                  STRING txt */);
 extern void TtcPrintSetup (/* Document document,
                               View view */);
 

@@ -21,6 +21,8 @@
  *          C. Roisin (INRIA) - Columns and pages
  *
  */
+
+#include "ustring.h"
 #include "math.h"
 #include "thot_sys.h"
 #include "constmedia.h"
@@ -388,7 +390,7 @@ int                *nSpaces;
    int                 i, j;
    int                 charWidth;
    int                 spaceWidth;
-   unsigned char       car;
+   UCHAR               car;
 
    /* Calcule la largeur des blancs */
    if (*nSpaces == 0)
@@ -403,7 +405,7 @@ int                *nSpaces;
    while (j <= nChars)
      {
 	/* On traite les differents caracteres */
-	car = (unsigned char) (pBuffer->BuContent[i - 1]);
+	car = (UCHAR) (pBuffer->BuContent[i - 1]);
 	if (car == _SPACE_)
 	  {
 	     (*nSpaces)++;	/* caractere blanc */
@@ -656,7 +658,7 @@ PtrBox              pBox;
    if (pBox->BxPictInfo != NULL)
      {
 	/* libere les points de controle */
-	free ((char *) pBox->BxPictInfo);
+	free (pBox->BxPictInfo);
 	pBox->BxPictInfo = NULL;
      }
 }
@@ -1219,7 +1221,7 @@ int                *carIndex;
    ptrfont             font;
    PictInfo           *picture;
    BoxType             tableType;
-   char                alphabet = 'L';
+   CHAR                alphabet = 'L';
    int                 width, i;
    int                 height;
    boolean             enclosedWidth;

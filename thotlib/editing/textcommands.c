@@ -23,6 +23,7 @@
  *
  */
 
+#include "ustring.h"
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "libmsg.h"
@@ -437,10 +438,10 @@ View                view;
    le Xbuffer pour transmettre la selection X.             
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int          CopyXClipboard (unsigned char **buffer, View view)
+static int          CopyXClipboard (USTRING* buffer, View view)
 #else  /* __STDC__ */
 static int          CopyXClipboard (buffer, view)
-unsigned char     **buffer;
+USTRING*            buffer;
 View                view;
 #endif /* __STDC__ */
 {
@@ -449,7 +450,7 @@ View                view;
    PtrElement          pFirstEl, pLastEl;
    PtrElement          pEl;
    PtrAbstractBox      pBlock, pOldBlock;
-   unsigned char      *Xbuffer;
+   USTRING             Xbuffer;
    int                 i, j, max;
    int                 k, lg, maxLength;
    int                 firstChar, lastChar;
@@ -497,7 +498,7 @@ View                view;
    /* On reserve un volant de 100 caracteres pour ajouter des CR */
    max = maxLength + 100;
    /* Alloue un Xbuffer de la longueur voulue */
-   Xbuffer = (unsigned char *) TtaGetMemory (sizeof (char) * max);
+   Xbuffer = (USTRING) TtaGetMemory (sizeof (CHAR) * max);
 
    *buffer = Xbuffer;
    /* Recopie le texte dans le Xbuffer */
@@ -546,7 +547,7 @@ View                view;
 		j = max - i - 1;	/* deborde du buffer */
 	     if (j > maxLength - lg)
 		j = maxLength - lg;	/* fin du texte a copier */
-	     strncpy (&Xbuffer[i], &clipboard->BuContent[k], j);
+	     ustrncpy (&Xbuffer[i], &clipboard->BuContent[k], j);
 	     i += j;
 	     lg += j;
 	     k = 0;
@@ -576,7 +577,7 @@ View                view;
                   pBlock = SearchEnclosingType (pEl->ElAbstractBox[v], BoBlock);
 		  if (i != 0 && pBlock != pOldBlock && pOldBlock != NULL)
 		     /* Ajoute un \n en fin d'element */
-		     strcpy (&Xbuffer[i++], "\n\n");
+		     ustrcpy (&Xbuffer[i++], "\n\n");
 
 		  /* Recopie le texte de l'element */
 		  pOldBlock = pBlock;
@@ -588,7 +589,7 @@ View                view;
 			  j = max - i - 1;
 		       if (j > maxLength - lg)
 			  j = maxLength - lg;
-		       strncpy (&Xbuffer[i], clipboard->BuContent, j);
+		       ustrncpy (&Xbuffer[i], clipboard->BuContent, j);
 		       i += j;
 		       lg += j;
 		       clipboard = clipboard->BuNext;

@@ -18,7 +18,8 @@
  * Author: N. Layaida (INRIA)
  *         R. Guetari (W3C/INRIA) Windows 95/NT routines
  */
- 
+
+#include "ustring.h" 
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "png.h"
@@ -131,7 +132,7 @@ int Magic64[256] =    /* for 4 levels of red and blue */
 
 };
 
-char *typecouleur[] = {"grayscale", "undefined type", "RGB",
+STRING typecouleur[] = {"grayscale", "undefined type", "RGB",
 		       "colormap", "grayscale+alpha",
 		       "undefined type", "RGB+alpha"};
 
@@ -140,11 +141,11 @@ extern BOOL pic2print;
 #endif /* _WINDOWS */
 
 #ifdef __STDC__
-static void my_png_error (png_struct* png_ptr, char* message)
+static void my_png_error (png_struct* png_ptr, STRING message)
 #else  /* !__STDC__ */
 static void my_png_error (png_ptr, message)
 png_struct* png_ptr; 
-char*       message;
+STRING       message;
 #endif /* __STDC__ */
 {
    fprintf(stderr,"libpng error: %s\n", message);
@@ -152,11 +153,11 @@ char*       message;
 }
 
 #ifdef __STDC__
-static void my_png_warning (png_struct* png_ptr, char* message)
+static void my_png_warning (png_struct* png_ptr, STRING message)
 #else  /* !__STDC__ */
 static void my_png_warning (png_ptr, message)
 png_struct* png_ptr; 
-char*       message;
+STRING       message;
 #endif /* __STDC__ */
 {
    if (!png_ptr)
@@ -837,10 +838,10 @@ int *bg;
    	ReadPngToData decompresses and return the main picture info     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-unsigned char* ReadPngToData (char* datafile, int* w, int* h, int* ncolors, int* cpp, ThotColorStruct colrs[256], int* bg)
+unsigned char* ReadPngToData (STRING datafile, int* w, int* h, int* ncolors, int* cpp, ThotColorStruct colrs[256], int* bg)
 #else /* __STDC__ */
 unsigned char* ReadPngToData (datafile, w, h, ncolors, cpp, colrs, bg)
-char*           datafile;
+STRING           datafile;
 int*            w;
 int*            h;
 int*            ncolors;
@@ -876,10 +877,10 @@ int*            bg;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBitmap PngCreate (char* fn, PictureScaling pres, int* xif, int* yif, int* wif, int* hif, unsigned long BackGroundPixel, ThotBitmap *mask1, int *width, int *height, int zoom)
+ThotBitmap PngCreate (STRING fn, PictureScaling pres, int* xif, int* yif, int* wif, int* hif, unsigned long BackGroundPixel, ThotBitmap *mask1, int *width, int *height, int zoom)
 #else /* __STDC__ */
 ThotBitmap PngCreate (fn, pres, xif, yif, wif, hif, BackGroundPixel, mask1, width, height, zoom)
-char*          fn;
+STRING          fn;
 PictureScaling pres;
 int*           xif;
 int*           yif;
@@ -971,10 +972,10 @@ int            zoom;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void PngPrint (char* fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, int fd, unsigned long BackGroundPixel)
+void PngPrint (STRING fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, int fd, unsigned long BackGroundPixel)
 #else /* __STDC__ */
 void PngPrint (fn, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHArea, fd, BackGroundPixel)
-char*          fn;
+STRING          fn;
 PictureScaling pres;
 int            xif;
 int            yif;
@@ -1091,15 +1092,15 @@ unsigned long  BackGroundPixel;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean IsPngFormat(char * fn)
+boolean IsPngFormat(STRING fn)
 #else /* __STDC__ */
 boolean IsPngFormat(fn)
-	char * fn;
+STRING  fn;
 #endif /* __STDC__ */
 {
   
    FILE *fp;
-   char buf[8];
+   CHAR buf[8];
    int ret;
 
    fp = fopen(fn , "rb");

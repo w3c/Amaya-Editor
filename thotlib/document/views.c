@@ -19,6 +19,7 @@
 
  */
 
+#include "ustring.h"
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmenu.h"
@@ -267,7 +268,7 @@ boolean             nature;
 			    /* on met la vue dans la liste */
 			    viewList[*nViews].VdView = view + 1;
 			    viewList[*nViews].VdAssocNum = 0;
-			    strncpy (viewList[*nViews].VdViewName, pPSchema->PsView[view], MAX_NAME_LENGTH);
+			    ustrncpy (viewList[*nViews].VdViewName, pPSchema->PsView[view], MAX_NAME_LENGTH);
 			    viewList[*nViews].VdSSchema = pSS;
 			    viewList[*nViews].VdAssoc = FALSE;
 			    viewList[*nViews].VdExist = FALSE;
@@ -438,7 +439,7 @@ AvailableView       viewList;
 			     else
 				viewList[nViews].VdView = 0;
 			     viewList[nViews].VdAssocNum = rule + 1;
-			     strncpy (viewList[nViews].VdViewName,
+			     ustrncpy (viewList[nViews].VdViewName,
 				 pSS->SsRule[rule].SrName, MAX_NAME_LENGTH);
 			     viewList[nViews].VdSSchema = pSS;
 			     viewList[nViews].VdOpen = present;
@@ -555,40 +556,40 @@ boolean             closeDoc;
    ChangeDocumentName change le nom d'un document pDoc en newName	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ChangeDocumentName (PtrDocument pDoc, char *newName)
+void                ChangeDocumentName (PtrDocument pDoc, STRING newName)
 #else  /* __STDC__ */
 void                ChangeDocumentName (pDoc, newName)
 PtrDocument         pDoc;
-char               *newName;
+STRING              newName;
 
 #endif /* __STDC__ */
 {
    DocViewDescr       *pView;
    int                 len, view;
-   char                buffer[MAX_TXT_LEN];
+   CHAR                buffer[MAX_TXT_LEN];
 
    len = 0;
-   strcpy (buffer, newName);
-   strncpy (pDoc->DocDName, newName, MAX_NAME_LENGTH);
+   ustrcpy (buffer, newName);
+   ustrncpy (pDoc->DocDName, newName, MAX_NAME_LENGTH);
    pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
-   strncpy (pDoc->DocIdent, newName, MAX_DOC_IDENT_LEN);
+   ustrncpy (pDoc->DocIdent, newName, MAX_DOC_IDENT_LEN);
    pDoc->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
-   len = strlen (newName);
-   if (strcmp (newName + len - 4, ".PIV") == 0)
+   len = ustrlen (newName);
+   if (ustrcmp (newName + len - 4, ".PIV") == 0)
      {
 	buffer[len - 4] = EOS;
 	pDoc->DocDName[len - 4] = EOS;
 	pDoc->DocIdent[len - 4] = EOS;
      }
-   strcat (buffer, "  ");
-   len = strlen (buffer);
+   ustrcat (buffer, "  ");
+   len = ustrlen (buffer);
    /* traite les vues de l'arbre principal */
    for (view = 0; view < MAX_VIEW_DOC; view++)
       if (pDoc->DocView[view].DvPSchemaView > 0)
 	 /* met dans le buffer le nom de la vue */
 	{
 	   pView = &pDoc->DocView[view];
-	   strncpy (&buffer[len], pView->DvSSchema->SsPSchema->PsView[pView->DvPSchemaView - 1], MAX_NAME_LENGTH);
+	   ustrncpy (&buffer[len], pView->DvSSchema->SsPSchema->PsView[pView->DvPSchemaView - 1], MAX_NAME_LENGTH);
 	   ChangeFrameTitle (pDoc->DocViewFrame[view], buffer);
 	}
    /* traite les vues des elements associes */
@@ -597,7 +598,7 @@ char               *newName;
 	 if (pDoc->DocAssocFrame[view] != 0)
 	    /* met dans le buffer le nom des elements associes */
 	   {
-	      strncpy (&buffer[len], pDoc->DocAssocRoot[view]->ElStructSchema->SsRule[pDoc->DocAssocRoot[view]->ElTypeNumber - 1].SrName,
+	      ustrncpy (&buffer[len], pDoc->DocAssocRoot[view]->ElStructSchema->SsRule[pDoc->DocAssocRoot[view]->ElTypeNumber - 1].SrName,
 		       MAX_NAME_LENGTH);
 	      /* change le titre de la fenetre */
 	      ChangeFrameTitle (pDoc->DocAssocFrame[view], buffer);
@@ -1029,12 +1030,12 @@ int                 height;
 	  {
 	     schView = 1;
 	     pEl = pDoc->DocAssocRoot[view - 1];
-	     strncpy (viewName, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName, MAX_NAME_LENGTH);
+	     ustrncpy (viewName, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName, MAX_NAME_LENGTH);
 	  }
 	else
 	  {
 	     schView = pDoc->DocView[view - 1].DvPSchemaView;
-	     strncpy (viewName, pDoc->DocView[view - 1].DvSSchema->SsPSchema->PsView[schView - 1], MAX_NAME_LENGTH);
+	     ustrncpy (viewName, pDoc->DocView[view - 1].DvSSchema->SsPSchema->PsView[schView - 1], MAX_NAME_LENGTH);
 	  }
 	/* creation d'une fenetre pour la vue */
 	frame = CreateWindowWithTitle (pDoc, schView, viewName, &volume, X, Y, width, height);
@@ -1111,7 +1112,7 @@ PtrSSchema         *pSS;
 	   if (pDoc->DocView[viewDoc].DvPSchemaView == viewSch)
 	      open = TRUE;
 	if (!open)
-	   if (strcmp (pPSch->PsView[viewSch - 1], viewName) == 0)
+	   if (ustrcmp (pPSch->PsView[viewSch - 1], viewName) == 0)
 	     {
 		*view = viewSch;
 		*assoc = FALSE;
@@ -1161,7 +1162,7 @@ PtrSSchema         *pSS;
 			     if (!present)
 			       {
 				  pSRule = &pSSch->SsRule[rule];
-				  if (strcmp (pSRule->SrName, viewName) == 0)
+				  if (ustrcmp (pSRule->SrName, viewName) == 0)
 				    {
 				       *view = rule + 1;
 				       *assoc = TRUE;
@@ -1317,12 +1318,12 @@ DocViewNumber       selectedView;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                BuildViewList (PtrDocument pDoc, char *buffer, int *nItems)
+void                BuildViewList (PtrDocument pDoc, STRING buffer, int *nItems)
 
 #else  /* __STDC__ */
 void                BuildViewList (pDoc, buffer, nItems)
 PtrDocument         pDoc;
-char               *buffer;
+STRING              buffer;
 int                *nItems;
 
 #endif /* __STDC__ */
@@ -1363,10 +1364,10 @@ int                *nItems;
 	       {
 		  /* L'entree nItems du menu est l'entree j dans AllViews. */
 		  ViewMenuItem[(*nItems)++] = j + 1;
-		  longueur = strlen (AllViews[j].VdViewName) + 1;
+		  longueur = ustrlen (AllViews[j].VdViewName) + 1;
 		  if (longueur + i < MAX_TXT_LEN)
 		    {
-		       strcpy (buffer + i, AllViews[j].VdViewName);
+		       ustrcpy (buffer + i, AllViews[j].VdViewName);
 		       i += longueur;
 		    }
 		  if (AllViews[j].VdOpen)

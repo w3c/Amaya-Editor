@@ -8,7 +8,7 @@
 
 extern void ConvertIntToLabel ( int num,
                                 LabelString strng );
-extern void ReadLabel ( char labelType,
+extern void ReadLabel ( CHAR labelType,
                         LabelString label,
                         BinFile file );
 extern void LoadEXTfile ( BinFile file,
@@ -24,7 +24,7 @@ extern void UpdateREFdescriptors ( PtrChangedReferredEl Anchor,
 
 extern void ConvertIntToLabel (/* int num,
                                   LabelString strng */);
-extern void ReadLabel (/* char labelType,
+extern void ReadLabel (/* CHAR labelType,
                           LabelString label,
                           BinFile file */);
 extern void LoadEXTfile (/* BinFile file,

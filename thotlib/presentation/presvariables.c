@@ -22,6 +22,7 @@
  *
  */
 
+#include "ustring.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -69,7 +70,7 @@ PtrSSchema          pSchStr;
       return pCounter->CnItem[0].CiElemType;
 
    /* initialise l'alias temporaire */
-   strcpy (NewAlias->SrName, "Counter alias");
+   ustrcpy (NewAlias->SrName, "Counter alias");
    NewAlias->SrNDefAttrs = 0;
    NewAlias->SrNLocalAttrs = 0;
    NewAlias->SrAssocElem = FALSE;
@@ -1011,7 +1012,7 @@ PtrDocument         pDoc;
    TtAttribute        *pAttr1;
    PtrElement          pEl;
    Counter            *pCo1;
-   char                number[20];
+   CHAR                number[20];
    PtrTextBuffer       pBTN, pBTA, pBTAPrec;
 
    /* sauve temporairement le contenu de ce pave de presentation */
@@ -1240,7 +1241,7 @@ PtrDocument         pDoc;
 	       {
 		  if (pBTA == NULL)
 		     pBTA = NewTextBuffer (pBTAPrec);
-		  strcpy (pBTA->BuContent, pBTN->BuContent);
+		  ustrcpy (pBTA->BuContent, pBTN->BuContent);
 		  pBTA->BuLength = pBTN->BuLength;
 		  pBTN = pBTN->BuNext;
 		  pBTAPrec = pBTA;

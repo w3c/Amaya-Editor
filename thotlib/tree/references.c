@@ -21,6 +21,7 @@
  *
  */
 
+#include "ustring.h"
 #include "libmsg.h"
 #include "thot_sys.h"
 #include "message.h"
@@ -70,7 +71,7 @@ LabelString         label;
    PtrElement          result, pChild;
 
    result = NULL;
-   if (strcmp (pEl->ElLabel, label) == 0)
+   if (ustrcmp (pEl->ElLabel, label) == 0)
       /* c'est l'element cherche' */
       result = pEl;
    else if (!pEl->ElTerminal)
@@ -153,7 +154,7 @@ PtrDocument        *pDoc;
 		       {
 			  if (!pRefD->ReExternalRef)
 			     if (pRefD->ReReferredElem != NULL)
-				if (strcmp (pRefD->ReReferredElem->ElLabel, pRefD1->ReReferredLabel) == 0)
+				if (ustrcmp (pRefD->ReReferredElem->ElLabel, pRefD1->ReReferredLabel) == 0)
 				   found = TRUE;
 			  if (!found)
 			     pRefD = pRefD->ReNext;
@@ -316,7 +317,7 @@ boolean             nextExtDoc;
 	     while (pRefD != NULL && !found)
 	       {
 		  if (pRefD->ReExternalRef)
-		     if (strcmp (pRefD->ReReferredLabel, pEl->ElLabel) == 0)
+		     if (ustrcmp (pRefD->ReReferredLabel, pEl->ElLabel) == 0)
 			if (SameDocIdent (pRefD->ReExtDocument, pDocEl->DocIdent))
 			   found = TRUE;
 		  if (!found)
@@ -777,7 +778,7 @@ boolean             IsNew;
 			  {
 			     if (!pRefD->ReExternalRef)
 				if (pRefD->ReReferredElem != NULL)
-				   if (strcmp (pRefD->ReReferredElem->ElLabel, pDElemRef->ReReferredLabel) == 0)
+				   if (ustrcmp (pRefD->ReReferredElem->ElLabel, pDElemRef->ReReferredLabel) == 0)
 				      found = TRUE;
 			     if (!found)
 				pRefD = pRefD->ReNext;
@@ -801,7 +802,7 @@ boolean             IsNew;
 	      pRefSortPrec = NULL;
 	      while (pRefSort != NULL && !found)
 		{
-		   if (strcmp (pRefSort->OrLabel, pDElemRef->ReReferredLabel) == 0)
+		   if (ustrcmp (pRefSort->OrLabel, pDElemRef->ReReferredLabel) == 0)
 		      if (SameDocIdent (pRefSort->OrDocIdent, pDElemRef->ReExtDocument))
 			 found = TRUE;
 		   if (!found)
@@ -834,7 +835,7 @@ boolean             IsNew;
 		   /* acquiert un descripteur de ref sortante */
 		   GetOutputRef (&pRefSort);
 		   /* remplit ce descripteur */
-		   strncpy (pRefSort->OrLabel, pDElemRef->ReReferredLabel, MAX_LABEL_LEN);
+		   ustrncpy (pRefSort->OrLabel, pDElemRef->ReReferredLabel, MAX_LABEL_LEN);
 		   CopyDocIdent (&(pRefSort->OrDocIdent), pDElemRef->ReExtDocument);
 		   /* on l'insere en tete de sa liste */
 		   if (IsNew)
@@ -931,7 +932,7 @@ PtrDocument         pDoc2;
 
    if (pEl != NULL)
       if (pEl->ElReferredDescr != NULL)
-	 if (strcmp (pDoc2->DocIdent, docIdent) != 0)
+	 if (ustrcmp (pDoc2->DocIdent, docIdent) != 0)
 	    if (pEl->ElReferredDescr->ReExtDocRef == NULL)
 	       /* cet element n'est encore reference' par aucun document externe, */
 	       /* on lui acquiert un premier descripteur de document externe      */
@@ -1102,7 +1103,7 @@ boolean             withAppEvent;
 		    {
 		       pEl->ElReferredDescr = NewReferredElDescr (pTargetDoc);
 		       pEl->ElReferredDescr->ReReferredElem = pEl;
-		       strncpy (pEl->ElReferredDescr->ReReferredLabel, pEl->ElLabel, MAX_LABEL_LEN);
+		       ustrncpy (pEl->ElReferredDescr->ReReferredLabel, pEl->ElLabel, MAX_LABEL_LEN);
 		    }
 		  if (pDoc == pTargetDoc)
 		     /* reference et element reference' dans le meme document */
@@ -1131,7 +1132,7 @@ boolean             withAppEvent;
 			    if (pRefD == NULL)
 			       stop = TRUE;
 			    else if (pRefD->ReExternalRef)
-			       if (strcmp (pRefD->ReReferredLabel, pEl->ElLabel) == 0)
+			       if (ustrcmp (pRefD->ReReferredLabel, pEl->ElLabel) == 0)
 				  if (SameDocIdent (pRefD->ReExtDocument,
 						    pTargetDoc->DocIdent))
 				     stop = TRUE;
@@ -1146,7 +1147,7 @@ boolean             withAppEvent;
 			 {
 			    pRefD = NewReferredElDescr (pDoc);
 			    pRefD->ReExternalRef = TRUE;
-			    strncpy (pRefD->ReReferredLabel, pEl->ElLabel, MAX_LABEL_LEN);
+			    ustrncpy (pRefD->ReReferredLabel, pEl->ElLabel, MAX_LABEL_LEN);
 			    CopyDocIdent (&(pRefD->ReExtDocument), pTargetDoc->DocIdent);
 			 }
 		       /* on ajoute la nouvelle reference en tete de la chaine */
@@ -1256,7 +1257,7 @@ PtrDocument         pDoc;
 	{
 	   /* acquiert un descripteur et le remplit */
 	   GetChangedReferredEl (&pChngRef);
-	   strncpy (pChngRef->CrOldLabel, pEl->ElLabel, MAX_LABEL_LEN);
+	   ustrncpy (pChngRef->CrOldLabel, pEl->ElLabel, MAX_LABEL_LEN);
 	   pChngRef->CrNewLabel[0] = EOS;
 	   CopyDocIdent (&(pChngRef->CrOldDocument), pDoc->DocIdent);
 	   ClearDocIdent (&(pChngRef->CrNewDocument));

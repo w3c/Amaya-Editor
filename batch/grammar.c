@@ -26,6 +26,7 @@
  *
  */
 
+#include "ustring.h"
 #include "thot_sys.h"
 #include "grmmsg.h"
 #include "compilmsg.h"
@@ -40,7 +41,7 @@
 #include "fileaccess.h"
 #include "thotdir.h"
 
-typedef char        fname[30];	/* nom de fichier */
+typedef CHAR        fname[30];	/* nom de fichier */
 
 #undef THOT_EXPORT
 #define THOT_EXPORT
@@ -90,7 +91,7 @@ static FILE         *listFile;	/* fichier des listes */
 #include "message_f.h"
 
 #ifdef __STDC__
-extern void         TtaInitializeAppRegistry (char *);
+extern void         TtaInitializeAppRegistry (STRING);
 extern void         TtaSaveAppRegistry (void);
 
 #else
@@ -365,17 +366,17 @@ static void         InitGrammar ()
    Keywords[6].SrcKeyword[0] = '>';
    Keywords[6].SrcKeywordCode = 1007;
    LastShortKeyword = 7;
-   strncpy (Keywords[7].SrcKeyword, "END", KEWWORD_LENGTH);
-   Keywords[7].SrcKeywordLen = strlen (Keywords[7].SrcKeyword);
+   ustrncpy (Keywords[7].SrcKeyword, "END", KEWWORD_LENGTH);
+   Keywords[7].SrcKeywordLen = ustrlen (Keywords[7].SrcKeyword);
    Keywords[7].SrcKeywordCode = 1101;
-   strncpy (Keywords[8].SrcKeyword, "NAME", KEWWORD_LENGTH);
-   Keywords[8].SrcKeywordLen = strlen (Keywords[8].SrcKeyword);
+   ustrncpy (Keywords[8].SrcKeyword, "NAME", KEWWORD_LENGTH);
+   Keywords[8].SrcKeywordLen = ustrlen (Keywords[8].SrcKeyword);
    Keywords[8].SrcKeywordCode = 1102;
-   strncpy (Keywords[9].SrcKeyword, "STRING", KEWWORD_LENGTH);
-   Keywords[9].SrcKeywordLen = strlen (Keywords[9].SrcKeyword);
+   ustrncpy (Keywords[9].SrcKeyword, "STRING", KEWWORD_LENGTH);
+   Keywords[9].SrcKeywordLen = ustrlen (Keywords[9].SrcKeyword);
    Keywords[9].SrcKeywordCode = 1103;
-   strncpy (Keywords[10].SrcKeyword, "NUMBER", KEWWORD_LENGTH);
-   Keywords[10].SrcKeywordLen = strlen (Keywords[10].SrcKeyword);
+   ustrncpy (Keywords[10].SrcKeyword, "NUMBER", KEWWORD_LENGTH);
+   Keywords[10].SrcKeywordLen = ustrlen (Keywords[10].SrcKeyword);
    Keywords[10].SrcKeywordCode = 1104;
    NKeywords = 11;
    GramRule[0][1] = 2;
@@ -462,12 +463,12 @@ static void         WriteFiles ()
    lineLength = 0;
    while (fileName[lineLength] != '.')
       lineLength++;
-   strcpy (&fileName[lineLength + 1], "GRM");
+   ustrcpy (&fileName[lineLength + 1], "GRM");
    /* cree le fichier .GRM */
    GRMfile = fopen (fileName, "w");
 
    /* cree le fichier .h */
-   strcpy (&fileName[lineLength + 1], "h");
+   ustrcpy (&fileName[lineLength + 1], "h");
    Hfile = fopen (fileName, "w");
    if (Hfile == NULL)
      {
@@ -778,12 +779,12 @@ static boolean      CheckDefAndRef ()
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS
 #ifdef __STDC__
-int                 GRMmain (HWND hwnd, int argc, char **argv, int* Y)
+int                 GRMmain (HWND hwnd, int argc, STRING *argv, int* Y)
 #else  /* __STDC__ */
 int                 GRMmain (hwnd, argc, argv, Y)
 HWND                hwnd;
 int                 argc;
-char**              argv;
+STRING*              argv;
 int*                Y;
 #endif /* __STDC__ */
 #else  /* !_WINDOWS */
@@ -808,7 +809,7 @@ char              **argv;
    SyntacticCode       code;	/* code grammatical du mot trouve */
    int                 rank;	/* indice dans Identifier du mot trouve, si identificateur */
 #  ifdef _WINDOWS 
-   char                msg [800];
+   CHAR                msg [800];
    int                 ndx;
 #  endif /* _WINDOWS */
 
@@ -816,10 +817,10 @@ char              **argv;
    hWnd = hwnd;
    compilersDC = GetDC (hwnd);
    _CY_ = *Y;
-   strcpy (msg, "Executing grm ");
+   ustrcpy (msg, "Executing grm ");
    for (ndx = 1; ndx < argc; ndx++) {
-       strcat (msg, argv [ndx]);
-       strcat (msg, " ");
+       ustrcat (msg, argv [ndx]);
+       ustrcat (msg, " ");
    }
    TtaDisplayMessage (INFO, msg);
 #  endif /* _WINDOWS */
@@ -832,10 +833,10 @@ char              **argv;
       TtaDisplaySimpleMessage (FATAL, GRM, UNKNOWN_FILE);
    else
      {
-	strncpy (fileName, argv[1], MAX_NAME_LENGTH - 1);
-	i = strlen (fileName);
+	ustrncpy (fileName, argv[1], MAX_NAME_LENGTH - 1);
+	i = ustrlen (fileName);
 	/* ajoute le suffixe .LAN */
-	strcat (fileName, ".LAN");
+	ustrcat (fileName, ".LAN");
 
 	if (TtaFileExist (fileName) == 0)
 	   TtaDisplaySimpleMessage (FATAL, GRM, UNKNOWN_FILE);
@@ -855,7 +856,7 @@ char              **argv;
 	     InitRefTables ();	/* initialise la table des references */
 	     InitParser ();	/* initialise l'analyseur syntaxique */
 	     /* met le suffixe LST a la fin du nom de fichier */
-	     strcpy (&fileName[i + 1], "LST");
+	     ustrcpy (&fileName[i + 1], "LST");
 	     /* cree le fichier .LST */
 	     listFile = fopen (fileName, "w");
 	     fprintf (listFile, "GRAMMAR OF FILE ");
@@ -879,7 +880,7 @@ char              **argv;
 		  /* marque la fin reelle de la ligne */
 		  inputLine[i - 1] = '\0';
 		  /* garde une copie de la ligne avant traduction */
-		  strncpy ((char *) sourceLine, (char *) inputLine, LINE_LENGTH);
+		  ustrncpy ((STRING) sourceLine, (STRING) inputLine, LINE_LENGTH);
 		  LineNum++;
 		  /* traduit les caracteres de la ligne */
 		  OctalToChar ();

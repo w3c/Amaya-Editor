@@ -22,6 +22,7 @@
  *
  */
 
+#include "ustring.h"
 #include "thot_sys.h"
 #include "libmsg.h"
 #include "message.h"
@@ -108,7 +109,7 @@ int                 whichName;
 {
    int                 ruleNum;
    PtrSSchema          pSSch;
-   char                *ruleName;
+   STRING              ruleName;
 
    /* on n'a pas encore trouve' */
    *typeNum = 0;
@@ -126,7 +127,7 @@ int                 whichName;
 	      ruleName = pSSch->SsRule[ruleNum].SrOrigName;
 	    else
 	      ruleName = pSSch->SsRule[ruleNum].SrName;
-	    if (strcmp (typeName, ruleName) == 0
+	    if (ustrcmp (typeName, ruleName) == 0
 		 && pSSch->SsRule[ruleNum].SrConstruct != CsNatureSchema)
 		/* trouve' */
 	       {
@@ -184,7 +185,7 @@ int                 whichName;
 #define MaxSch 20
   PtrSSchema          attrStruct[MaxSch];
   int                 att, schNumber;
-  char               *name;
+  STRING              name;
 
   name = NULL;
   pSS = NULL;
@@ -226,7 +227,7 @@ int                 whichName;
 			name = pSS->SsAttribute[att - 1].AttrOrigName;
 		      else
 			name = pSS->SsAttribute[att - 1].AttrName;
-		      if (strcmp (attrName, name) == 0)
+		      if (ustrcmp (attrName, name) == 0)
 			found = TRUE;
 		    }
 		}
@@ -255,7 +256,7 @@ int                 whichName;
 		  name = pSS->SsAttribute[att - 1].AttrOrigName;
 		else
 		  name = pSS->SsAttribute[att - 1].AttrName;
-		if (strcmp (attrName, name) == 0)
+		if (ustrcmp (attrName, name) == 0)
 		  found = TRUE;
 	      }
 	  if (!found)
@@ -2385,11 +2386,11 @@ PtrSSchema          pDescSS;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-SSchema             TtaGetSchemaExtension (Document document, char *NomExtension)
+SSchema             TtaGetSchemaExtension (Document document, STRING NomExtension)
 #else  /* __STDC__ */
 SSchema             TtaGetSchemaExtension (document, NomExtension)
 Document            document;
-char               *NomExtension;
+STRING              NomExtension;
 
 #endif /* __STDC__ */
 {
@@ -2403,7 +2404,7 @@ char               *NomExtension;
      {
 	pSS = pDoc->DocSSchema;
 	while (pSS != NULL && pExtSS == NULL)
-	   if (strcmp (pSS->SsName, NomExtension) == 0)
+	   if (ustrcmp (pSS->SsName, NomExtension) == 0)
 	      pExtSS = pSS;
 	   else
 	      pSS = pSS->SsNextExtens;
@@ -2441,10 +2442,10 @@ PtrSSchema          pExtSS;
       if (pExtSS->SsExtension && !pSS->SsExtension)
 	{
 	   /*on cherche d'abord une regle d'extension ayant le nom du type */
-	   strncpy (typeName, pSS->SsRule[typeNum - 1].SrName, MAX_NAME_LENGTH);
+	   ustrncpy (typeName, pSS->SsRule[typeNum - 1].SrName, MAX_NAME_LENGTH);
 	   r = 0;
 	   while (RegleExt == NULL && r < pExtSS->SsNExtensRules)
-	      if (strcmp (typeName, pExtSS->SsExtensBlock->EbExtensRule[r].SrName) == 0)
+	      if (ustrcmp (typeName, pExtSS->SsExtensBlock->EbExtensRule[r].SrName) == 0)
 		 RegleExt = &(pExtSS->SsExtensBlock->EbExtensRule[r]);
 	      else
 		 r++;

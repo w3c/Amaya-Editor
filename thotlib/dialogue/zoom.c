@@ -19,7 +19,8 @@
  * Author: I. Vatton (INRIA)
  *
  */
- 
+
+#include "ustring.h" 
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"
@@ -50,20 +51,20 @@ static int          Fenzoomview;
    changezoomview met a jour le formulaire de zoom.                   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                changezoomview (int ref, int typedata, char *data)
+void                changezoomview (int ref, int typedata, STRING data)
 
 #else  /* __STDC__ */
 void                changezoomview (ref, typedata, data)
 int                 ref;
 int                 typedata;
-char               *data;
+STRING               data;
 
 #endif /* __STDC__ */
 {
    int                 valvisib;
    int                 valzoom;
    int                 bouton;
-   char                chaine[100];
+   CHAR                chaine[100];
 
    bouton = (int) data;
    GetFrameParams (Fenzoomview, &valvisib, &valzoom);
@@ -135,7 +136,7 @@ View                view;
 #endif /* __STDC__ */
 {
    int                 i;
-   char                chaine[100];
+   CHAR                chaine[100];
 
    /* Faut-il creer le formulaire Zoom */
    if (ThotLocalActions[T_chzoom] == NULL)
@@ -146,9 +147,9 @@ View                view;
      }
 
    /* Creation du formulaire */
-   strcpy (chaine, TtaGetMessage (LIB, TMSG_INCREASE));
-   i = strlen (chaine) + 1;
-   strcpy (&chaine[i], TtaGetMessage (LIB, TMSG_DECREASE));
+   ustrcpy (chaine, TtaGetMessage (LIB, TMSG_INCREASE));
+   i = ustrlen (chaine) + 1;
+   ustrcpy (&chaine[i], TtaGetMessage (LIB, TMSG_DECREASE));
    TtaNewSheet (NumMenuZoom,  0, TtaGetMessage (LIB, TMSG_LIB_ZOOM),
 		2, chaine, FALSE, 4, 'L', D_DONE);
 
@@ -158,6 +159,6 @@ View                view;
    Fenzoomview = GetWindowNumber (document, view);
    TtaNewLabel (NumDocZoom, NumMenuZoom, chaine);
    /* Initialisation du formulaire affiche */
-   changezoomview (NumMenuZoom, INTEGER_DATA, (char *) 4);
+   changezoomview (NumMenuZoom, INTEGER_DATA, (STRING) 4);
    TtaShowDialogue (NumMenuZoom, TRUE);
 }

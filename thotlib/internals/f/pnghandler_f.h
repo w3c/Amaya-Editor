@@ -13,14 +13,14 @@ extern unsigned char *ReadPng ( FILE* infile,
                                 int* cpp,
                                 ThotColorStruct colrs[256],
                                 int* bg );
-extern unsigned char* ReadPngToData ( char* datafile,
+extern unsigned char* ReadPngToData ( STRING datafile,
                                       int* w,
                                       int* h,
                                       int* ncolors,
                                       int* cpp,
                                       ThotColorStruct colrs[256],
                                       int* bg );
-extern ThotBitmap PngCreate ( char* fn,
+extern ThotBitmap PngCreate ( STRING fn,
                               PictureScaling pres,
                               int* xif,
                               int* yif,
@@ -31,7 +31,7 @@ extern ThotBitmap PngCreate ( char* fn,
                               int *width,
                               int *height,
                               int zoom );
-extern void PngPrint ( char* fn,
+extern void PngPrint ( STRING fn,
                        PictureScaling pres,
                        int xif,
                        int yif,
@@ -43,7 +43,7 @@ extern void PngPrint ( char* fn,
                        int PicHArea,
                        int fd,
                        unsigned long BackGroundPixel );
-extern boolean IsPngFormat ( char * fn );
+extern boolean IsPngFormat ( STRING fn );
 
 #else /* __STDC__ */
 
@@ -54,14 +54,14 @@ extern unsigned char *ReadPng (/* FILE* infile,
                                   int* cpp,
                                   ThotColorStruct colrs[256],
                                   int* bg */);
-extern unsigned char* ReadPngToData (/* char* datafile,
+extern unsigned char* ReadPngToData (/* STRING datafile,
                                         int* w,
                                         int* h,
                                         int* ncolors,
                                         int* cpp,
                                         ThotColorStruct colrs[256],
                                         int* bg */);
-extern ThotBitmap PngCreate (/* char* fn,
+extern ThotBitmap PngCreate (/* STRING fn,
                                 PictureScaling pres,
                                 int* xif,
                                 int* yif,
@@ -72,7 +72,7 @@ extern ThotBitmap PngCreate (/* char* fn,
                                 int *width,
                                 int *height,
                                 int zoom */);
-extern void PngPrint (/* char* fn,
+extern void PngPrint (/* STRING fn,
                          PictureScaling pres,
                          int xif,
                          int yif,
@@ -84,7 +84,7 @@ extern void PngPrint (/* char* fn,
                          int PicHArea,
                          int fd,
                          unsigned long BackGroundPixel */);
-extern boolean IsPngFormat (/* char * fn */);
+extern boolean IsPngFormat (/* STRING fn */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

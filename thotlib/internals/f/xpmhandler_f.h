@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern Drawable XpmCreate ( char *fn,
+extern Drawable XpmCreate ( STRING fn,
                             PictureScaling pres,
                             int *xif,
                             int *yif,
@@ -17,7 +17,7 @@ extern Drawable XpmCreate ( char *fn,
                             int *width,
                             int *height,
                             int zoom );
-extern void XpmPrint ( char *fn,
+extern void XpmPrint ( STRING fn,
                        PictureScaling pres,
                        int xif,
                        int yif,
@@ -29,11 +29,11 @@ extern void XpmPrint ( char *fn,
                        int PicHArea,
                        int fd,
                        unsigned long BackGroundPixel );
-extern boolean IsXpmFormat ( char *fn );
+extern boolean IsXpmFormat ( STRING fn );
 
 #else /* __STDC__ */
 
-extern Drawable XpmCreate (/* char *fn,
+extern Drawable XpmCreate (/* STRING fn,
                               PictureScaling pres,
                               int *xif,
                               int *yif,
@@ -44,7 +44,7 @@ extern Drawable XpmCreate (/* char *fn,
                               int *width,
                               int *height,
                               int zoom */);
-extern void XpmPrint (/* char *fn,
+extern void XpmPrint (/* STRING fn,
                          PictureScaling pres,
                          int xif,
                          int yif,
@@ -56,7 +56,7 @@ extern void XpmPrint (/* char *fn,
                          int PicHArea,
                          int fd,
                          unsigned long BackGroundPixel */);
-extern boolean IsXpmFormat (/* char *fn */);
+extern boolean IsXpmFormat (/* STRING fn */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -41,12 +41,12 @@ extern void TtaRaiseView ( Document document,
                            View view );
 extern ThotWidget TtaGetViewFrame ( Document document,
                                     View view );
-extern void DisplaySelMessage ( char *text,
+extern void DisplaySelMessage ( STRING text,
                                 PtrDocument pDoc );
 extern void TtaSetStatus ( Document document,
                            View view,
-                           CONST char *text,
-                           CONST char *name );
+                           CONST STRING text,
+                           CONST STRING name );
 extern void FrameCallback ( int frame,
                             void *evnt );
 extern void ThotGrab ( ThotWindow win,
@@ -64,7 +64,7 @@ extern void TtaResetCursor ( Document document,
 extern void GiveClickedAbsBox ( int *frame,
                                 PtrAbstractBox *pave );
 extern void ChangeFrameTitle ( int frame,
-                               char *text );
+                               STRING text );
 extern void ChangeSelFrame ( int frame );
 extern int GetWindowFrame ( ThotWindow w );
 extern void GetSizesFrame ( int frame,
@@ -118,12 +118,12 @@ extern void TtaRaiseView (/* Document document,
                              View view */);
 extern ThotWidget TtaGetViewFrame (/* Document document,
                                       View view */);
-extern void DisplaySelMessage (/* char *text,
+extern void DisplaySelMessage (/* STRING text,
                                   PtrDocument pDoc */);
 extern void TtaSetStatus (/* Document document,
                              View view,
-                             CONST char *text,
-                             CONST char *name */);
+                             CONST STRING text,
+                             CONST STRING name */);
 extern void FrameCallback (/* int frame,
                               void *evnt */);
 extern void ThotGrab (/* ThotWindow win,
@@ -141,7 +141,7 @@ extern void TtaResetCursor (/* Document document,
 extern void GiveClickedAbsBox (/* int *frame,
                                   PtrAbstractBox *pave */);
 extern void ChangeFrameTitle (/* int frame,
-                                 char *text */);
+                                 STRING text */);
 extern void ChangeSelFrame (/* int frame */);
 extern int GetWindowFrame (/* ThotWindow w */);
 extern void GetSizesFrame (/* int frame,

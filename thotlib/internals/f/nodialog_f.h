@@ -6,11 +6,11 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern Pixmap TtaCreatePixmapLogo ( char **data );
+extern Pixmap TtaCreatePixmapLogo ( STRING *data );
 extern void ConfigTranslateSSchema ( PtrSSchema pSS );
 extern void RedisplayCopies ( void );
 extern void DrawAddAttr ( void );
-extern void DrawChar ( unsigned char car,
+extern void DrawChar ( UCHAR car,
                        int frame,
                        int x,
                        int y,
@@ -46,7 +46,7 @@ extern void CloseParagraphInsertion ( PtrAbstractBox pAb,
                                       int frame );
 extern void UpdateScrollbars ( int frame );
 extern void ChangeFrameTitle ( int frame,
-                               char *texte );
+                               STRING texte );
 extern void SetCursorWatch ( int thotWindowid );
 extern void ResetCursorWatch ( int thotWindowid );
 extern void InsertOption ( PtrElement pEl,
@@ -90,18 +90,18 @@ extern void Clear ( int frame,
                     int x,
                     int y );
 extern boolean ConfigGetPSchemaNature ( PtrSSchema pSS,
-                                        char *nomNature,
-                                        char *presNature );
-extern boolean ConfigDefaultPSchema ( char *schema,
-                                      char *schpres );
+                                        STRING nomNature,
+                                        STRING presNature );
+extern boolean ConfigDefaultPSchema ( STRING schema,
+                                      STRING schpres );
 
 #else /* __STDC__ */
 
-extern Pixmap TtaCreatePixmapLogo (/* char **data */);
+extern Pixmap TtaCreatePixmapLogo (/* STRING *data */);
 extern void ConfigTranslateSSchema (/* PtrSSchema pSS */);
 extern void RedisplayCopies (/* void */);
 extern void DrawAddAttr (/* void */);
-extern void DrawChar (/* unsigned char car,
+extern void DrawChar (/* UCHAR car,
                          int frame,
                          int x,
                          int y,
@@ -137,7 +137,7 @@ extern void CloseParagraphInsertion (/* PtrAbstractBox pAb,
                                         int frame */);
 extern void UpdateScrollbars (/* int frame */);
 extern void ChangeFrameTitle (/* int frame,
-                                 char *texte */);
+                                 STRING texte */);
 extern void SetCursorWatch (/* int thotWindowid */);
 extern void ResetCursorWatch (/* int thotWindowid */);
 extern void InsertOption (/* PtrElement pEl,
@@ -181,10 +181,10 @@ extern void Clear (/* int frame,
                       int x,
                       int y */);
 extern boolean ConfigGetPSchemaNature (/* PtrSSchema pSS,
-                                          char *nomNature,
-                                          char *presNature */);
-extern boolean ConfigDefaultPSchema (/* char *schema,
-                                        char *schpres */);
+                                          STRING nomNature,
+                                          STRING presNature */);
+extern boolean ConfigDefaultPSchema (/* STRING schema,
+                                        STRING schpres */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

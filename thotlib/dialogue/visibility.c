@@ -19,7 +19,8 @@
  * Author: I. Vatton (INRIA)
  *
  */
- 
+
+#include "ustring.h" 
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmenu.h"
@@ -56,20 +57,20 @@ extern int          GetWindowNumber ();
    changevisibilityview met a jour le formulaire de visibilite.               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                changevisibilityview (int ref, int typedata, char *data)
+void                changevisibilityview (int ref, int typedata, STRING data)
 
 #else  /* __STDC__ */
 void                changevisibilityview (ref, typedata, data)
 int                 ref;
 int                 typedata;
-char               *data;
+STRING              data;
 
 #endif /* __STDC__ */
 {
    int                 valvisib;
    int                 valzoom;
    int                 bouton;
-   char                chaine[100];
+   CHAR                chaine[100];
 
    bouton = (int) data;
    GetFrameParams (Fenvisibilityview, &valvisib, &valzoom);
@@ -139,7 +140,7 @@ View                view;
 #endif /* __STDC__ */
 {
    int                 i;
-   char                chaine[100];
+   CHAR                chaine[100];
 
    /* Faut-il creer le formulaire visibilite */
    if (ThotLocalActions[T_chvisibility] == NULL)
@@ -151,9 +152,9 @@ View                view;
    /* Creation du formulaire */
 
 
-   strcpy (chaine, TtaGetMessage (LIB, TMSG_INCREASE));
-   i = strlen (chaine) + 1;
-   strcpy (&chaine[i], TtaGetMessage (LIB, TMSG_DECREASE));
+   ustrcpy (chaine, TtaGetMessage (LIB, TMSG_INCREASE));
+   i = ustrlen (chaine) + 1;
+   ustrcpy (&chaine[i], TtaGetMessage (LIB, TMSG_DECREASE));
    TtaNewSheet (NumMenuVisibility,  0, TtaGetMessage (LIB, TMSG_VISIB),
 		2, chaine, FALSE, 4, 'L', D_DONE);
 
@@ -164,6 +165,6 @@ View                view;
    Fenvisibilityview = GetWindowNumber (document, view);
    TtaNewLabel (NumDocVisibility, NumMenuVisibility, chaine);
    /* Initialisation du reste du formulaire */
-   changevisibilityview (NumMenuVisibility, INTEGER_DATA, (char *) 4);
+   changevisibilityview (NumMenuVisibility, INTEGER_DATA, (STRING) 4);
    TtaShowDialogue (NumMenuVisibility, TRUE);
 }

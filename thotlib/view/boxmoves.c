@@ -21,6 +21,7 @@
  *
  */
 
+#include "ustring.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -293,7 +294,7 @@ boolean             inAbtractBox;
    if (pBox->BxPictInfo != NULL && !inAbtractBox)
      {
 	/* le calcul des points de controle doit etre reexecute */
-	free ((char *) pBox->BxPictInfo);
+	free ((STRING) pBox->BxPictInfo);
 	pBox->BxPictInfo = NULL;
      }
 }
@@ -322,7 +323,7 @@ boolean             inAbtractBox;
 #endif /* __STDC__ */
 {
    PtrAbstractBox      pChildAb;
-   char                shape;
+   CHAR                shape;
 
    if (pAb->AbLeafType == LtCompound && !inAbtractBox)
      {
@@ -1838,7 +1839,7 @@ int                 frame;
 	    if (pCurrentAb->AbLeafType == LtPolyLine && pBox->BxPictInfo != NULL)
 	      {
 		/* libere les points de controle */
-		free ((char *) pBox->BxPictInfo);
+		free ((STRING) pBox->BxPictInfo);
 		pBox->BxPictInfo = NULL;
 	      }
 	    
@@ -2296,7 +2297,7 @@ int                 frame;
 	     if (pCurrentAb->AbLeafType == LtPolyLine && pBox->BxPictInfo != NULL)
 	       {
 		 /* libere les points de controle */
-		 free ((char *) pBox->BxPictInfo);
+		 free ((STRING) pBox->BxPictInfo);
 		 pBox->BxPictInfo = NULL;
 	       }
 	     
