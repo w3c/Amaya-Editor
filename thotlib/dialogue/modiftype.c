@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -33,10 +37,10 @@
 #include "structschema_f.h"
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ComposeItemSplitsele compose dans le buffer BufItemSplit        | */
-/* |            l'intitule' de l'entree Split du menu Edit.             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ComposeItemSplitsele compose dans le buffer BufItemSplit        
+   l'intitule' de l'entree Split du menu Edit.             
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ComposeItemSplit (char *bufItemSplit)
 #else  /* __STDC__ */
@@ -75,10 +79,10 @@ char               *bufItemSplit;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    UpdateSplitItem    met a jour l'intitule' de l'item Split du menu  | */
-/* |            Edit dans toutes les frame du document pDoc.            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   UpdateSplitItem    met a jour l'intitule' de l'item Split du menu  
+   Edit dans toutes les frame du document pDoc.            
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                UpdateSplitItem (PtrDocument pDoc)
 #else  /* __STDC__ */
@@ -100,9 +104,9 @@ PtrDocument         pDoc;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* | TtcSplit coupe un element.                                         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtcSplit coupe un element.                                         
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcSplit (Document document, View view)
 #else  /* __STDC__ */
@@ -120,10 +124,10 @@ View                view;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | StructEditingingLoadResources connecte les fonctions               | */
-/* |            de  modification de structure.                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   StructEditingingLoadResources connecte les fonctions               
+   de  modification de structure.                          
+  ----------------------------------------------------------------------*/
 void                StructEditingLoadResources ()
 {
    if (ThotLocalActions[T_chsplit] == NULL)

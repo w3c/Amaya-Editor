@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
    cherche.c : gestion de la commande de recherche.
 
  */
@@ -107,9 +111,9 @@ void                SearchLoadResources ();
 
 #endif /* __STDC__ */
 
-/* ---------------------------------------------------------------------- */
-/* |  Initialise le sous-menu "Ou rechercher"                           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Initialise le sous-menu "Ou rechercher"                           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         InitMenuWhereToSearch (int ref)
 #else  /* __STDC__ */
@@ -135,9 +139,9 @@ int                 ref;
    TtaSetMenuForm (NumMenuOrSearchText, 2);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |  Active le sous-menu "Ou rechercher"                               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Active le sous-menu "Ou rechercher"                               
+  ----------------------------------------------------------------------*/
 static void         ActivateMenuWhereToSearch ()
 {
    TtaRedrawMenuEntry (NumMenuOrSearchText, 0, NULL, -1, 1);
@@ -146,9 +150,9 @@ static void         ActivateMenuWhereToSearch ()
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |  CallbackWhereToSearch traite le retour du sous-menu "Ou rechercher" | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CallbackWhereToSearch traite le retour du sous-menu "Ou rechercher" 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CallbackWhereToSearch (int ref, int val)
 #else  /* __STDC__ */
@@ -192,13 +196,13 @@ int                 menu;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ChElemVide cherche dans le domaine decrit par context et a      | */
-/* |            partir de (et a l'interieur de) l'element elCour,       | */
-/* |            le premier element vide.                                | */
-/* |            Retourne vrai si trouve', et dans ce cas selectionne    | */
-/* |            l'element trouve'.                                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ChElemVide cherche dans le domaine decrit par context et a      
+   partir de (et a l'interieur de) l'element elCour,       
+   le premier element vide.                                
+   Retourne vrai si trouve', et dans ce cas selectionne    
+   l'element trouve'.                                      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      SearchEmptyElem (PtrElement pCurrEl, PtrSearchContext pContext)
 #else  /* __STDC__ */
@@ -292,13 +296,13 @@ PtrSearchContext    pContext;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ChReferVide cherche dans le domaine decrit par pContext et a     | */
-/* |            partir de (et a l'interieur de) l'element pCurrEl,       | */
-/* |            la premiere reference vide.                             | */
-/* |            Retourne vrai si trouve', et dans ce cas selectionne    | */
-/* |            l'element trouve'.                                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ChReferVide cherche dans le domaine decrit par pContext et a     
+   partir de (et a l'interieur de) l'element pCurrEl,       
+   la premiere reference vide.                             
+   Retourne vrai si trouve', et dans ce cas selectionne    
+   l'element trouve'.                                      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      SearchEmptyRefer (PtrElement pCurrEl, PtrSearchContext pContext)
 #else  /* __STDC__ */
@@ -404,12 +408,12 @@ PtrSearchContext    pContext;
 }
 
 
-/* ----------------------------------------------------------------------- */
-/* | CallbackSearchEmptyEl traite les retours du formulaire Recherche   | */
-/* |            elements vides.                                          | */
-/* |            ref: reference de l'element de dialogue a traiter        | */
-/* |            val: valeur de l'element de dialogue                     | */
-/* ----------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CallbackSearchEmptyEl traite les retours du formulaire Recherche   
+   elements vides.                                          
+   ref: reference de l'element de dialogue a traiter        
+   val: valeur de l'element de dialogue                     
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CallbackSearchEmptyEl (int ref, int val)
 #else  /* __STDC__ */
@@ -479,10 +483,10 @@ int                 val;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ChercherElementVide lance la commande de recherche des elements | */
-/* |            vides pour le document pDoc.                            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ChercherElementVide lance la commande de recherche des elements 
+   vides pour le document pDoc.                            
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcSearchEmptyElement (Document document, View view)
 #else  /* __STDC__ */
@@ -544,12 +548,12 @@ View                view;
 }
 
 
-/* ----------------------------------------------------------------------- */
-/* | CallbackSearchEmptyref traite les retours du formulaire Recherche  | */
-/* |            references vides.                                        | */
-/* |            ref: reference de l'element de dialogue a traiter        | */
-/* |            val: valeur de l'element de dialogue                     | */
-/* ----------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CallbackSearchEmptyref traite les retours du formulaire Recherche  
+   references vides.                                        
+   ref: reference de l'element de dialogue a traiter        
+   val: valeur de l'element de dialogue                     
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CallbackSearchEmptyref (int ref, int val)
 #else  /* __STDC__ */
@@ -622,10 +626,10 @@ int                 val;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ChercherReferenceVide lance la commande de recherche des        | */
-/* |            references vides pour le document pDoc.                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ChercherReferenceVide lance la commande de recherche des        
+   references vides pour le document pDoc.                 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcSearchEmptyReference (Document document, View view)
 #else  /* __STDC__ */
@@ -689,8 +693,8 @@ View                view;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                CallbackReferenceMenu (int val)
@@ -703,8 +707,8 @@ int                 val;
    ReturnValueSelectReferMenu = val;
 }
 
-/* ---------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                BuildReferenceMenu (char *bufMenu, int nbEntries, int *selEntry)
 #else  /* __STDC__ */
@@ -743,8 +747,8 @@ int                *selEntry;
    *selEntry = ReturnValueSelectReferMenu;
 }
 
-/* ---------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         SearchAReference (boolean docExtNext)
 #else  /* __STDC__ */
@@ -777,11 +781,11 @@ boolean             docExtNext;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    BuildSearchReferences lance la commande de recherche des        | */
-/* |            references qui designent l'element selectionne' du      | */
-/* |            document pDoc.                                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   BuildSearchReferences lance la commande de recherche des        
+   references qui designent l'element selectionne' du      
+   document pDoc.                                          
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                BuildSearchReferences (PtrDocument pDoc)
 #else  /* __STDC__ */
@@ -843,8 +847,8 @@ PtrDocument         pDoc;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcSearchReference (Document document, View view)
 #else  /* __STDC__ */
@@ -880,10 +884,10 @@ View                view;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    CallbackReferenceTo      traite les retours de la feuille de     | */
-/* |            dialogue "Recherche les references a`".                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CallbackReferenceTo      traite les retours de la feuille de     
+   dialogue "Recherche les references a`".                 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CallbackReferenceTo (int ref, int data)
 #else  /* __STDC__ */
@@ -941,11 +945,11 @@ int                 data;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ChercherRemplacerTexte lance la commande de recherche et/ou     | */
-/* |            remplacement de texte, type d'element et attribut       | */
-/* |            pour le document pDoc.                                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ChercherRemplacerTexte lance la commande de recherche et/ou     
+   remplacement de texte, type d'element et attribut       
+   pour le document pDoc.                                  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcSearchText (Document document, View view)
 #else  /* __STDC__ */
@@ -1066,12 +1070,12 @@ View                view;
 }
 
 
-/* ----------------------------------------------------------------------- */
-/* | CallbackTextReplace traite les retours du formulaire Recherche-   | */
-/* |            Remplacement de texte.                                   | */
-/* |            ref: reference de l'element de dialogue a traiter        | */
-/* |            val: valeur de l'element de dialogue                     | */
-/* ----------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CallbackTextReplace traite les retours du formulaire Recherche-   
+   Remplacement de texte.                                   
+   ref: reference de l'element de dialogue a traiter        
+   val: valeur de l'element de dialogue                     
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CallbackTextReplace (int ref, int val, char *txt)
 #else  /* __STDC__ */
@@ -1392,9 +1396,9 @@ char               *txt;
 	       }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    BuildGoToPageMenu traite la commande Aller page numero              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   BuildGoToPageMenu traite la commande Aller page numero              
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                BuildGoToPageMenu (PtrDocument pDoc, int docView, int schView, boolean assoc)
 #else  /* __STDC__ */
@@ -1451,9 +1455,9 @@ boolean             assoc;
 }
 
 #ifdef IV
-/* ---------------------------------------------------------------------- */
-/* |    MoveToPage effectue un deplacement sur les pages.               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   MoveToPage effectue un deplacement sur les pages.               
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                MoveToPage (int frame, int func)
 #else  /* __STDC__ */
@@ -1524,10 +1528,10 @@ int                 func;
 }
 #endif
 
-/* ---------------------------------------------------------------------- */
-/* |    CallbackGoToPageMenu traite les retours du formulaire de saisie du  | */
-/* |            numero de la page ou aller.                             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CallbackGoToPageMenu traite les retours du formulaire de saisie du  
+   numero de la page ou aller.                             
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CallbackGoToPageMenu (int ref, int val)
 #else  /* __STDC__ */
@@ -1562,9 +1566,9 @@ int                 val;
 
 /* End Of Module cherche */
 
-/* ---------------------------------------------------------------------- */
-/* |    Initialise les variables des commandes de recherche.            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Initialise les variables des commandes de recherche.            
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                SearchLoadResources (void)

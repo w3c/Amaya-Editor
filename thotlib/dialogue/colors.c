@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
 /* Module de visualisation des claviers. */
 
 
@@ -42,9 +46,9 @@ extern ThotWidget   XmCreateBulletinBoard ();
 
 #endif /* __STDC__ */
 
-/* ---------------------------------------------------------------------- */
-/* |    FinPalette termine l'affichage de la palette.                   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   FinPalette termine l'affichage de la palette.                   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ThotSelectPalette (int bground, int fground)
 #else  /* __STDC__ */
@@ -140,9 +144,9 @@ int                 fground;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    FinPalette termine l'affichage de la palette.                   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   FinPalette termine l'affichage de la palette.                   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         FinPalette (ThotWidget w, int index, caddr_t call_d)
 
@@ -160,9 +164,9 @@ caddr_t             call_d;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    KillPalette detruit la palette.                                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   KillPalette detruit la palette.                                 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         KillPalette (ThotWidget w, int index, caddr_t call_d)
 
@@ -179,9 +183,9 @@ caddr_t             call_d;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ColorsExpose reaffiche un clavier des couleurs.                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ColorsExpose reaffiche un clavier des couleurs.                 
+  ----------------------------------------------------------------------*/
 static void         ColorsExpose ()
 {
    register int        i;
@@ -252,9 +256,9 @@ static void         ColorsExpose ()
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ColorsPress traite un clic dans la palette des couleurs.        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ColorsPress traite un clic dans la palette des couleurs.        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ColorsPress (int button, int x, int y)
 #else  /* __STDC__ */
@@ -317,9 +321,9 @@ int                 y;
 
 
 #ifdef WWW_XWINDOWS
-/* ---------------------------------------------------------------------- */
-/* |    ColorsEvent traite les Evenements X sur la palette.             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ColorsEvent traite les Evenements X sur la palette.             
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ColorsEvent (XEvent * event)
 #else  /* __STDC__ */
@@ -339,9 +343,9 @@ XEvent             *event;
 #endif /* WWW_XWINDOWS */
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ThotCreatePalette cree la palette de couleurs.                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ThotCreatePalette cree la palette de couleurs.                      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ThotCreatePalette (int x, int y)
 #else  /* __STDC__ */
@@ -573,13 +577,13 @@ int                 y;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    TtcChangeColors L'utilisateur demande a modifier les            | */
-/* |            couleurs (presentation specifique) pour la vue          | */
-/* |            Vue du document pDoc (si Assoc = FALSE) ou les elements | */
-/* |            associes de numero Vue (si Assoc = Vrai)                | */
-/* |            Initialise et active le formulaire correspondant.       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtcChangeColors L'utilisateur demande a modifier les            
+   couleurs (presentation specifique) pour la vue          
+   Vue du document pDoc (si Assoc = FALSE) ou les elements 
+   associes de numero Vue (si Assoc = Vrai)                
+   Initialise et active le formulaire correspondant.       
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcChangeColors (Document document, View view)
 #else  /* __STDC__ */

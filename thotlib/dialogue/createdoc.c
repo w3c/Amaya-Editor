@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmenu.h"
@@ -40,9 +44,9 @@ extern void         TtaExtractName ();
 
 #endif /* __STDC__ */
 
-/* ---------------------------------------------------------------------- */
-/* | CallbackConfirmMenu met a jour le formulaire de confirm.                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CallbackConfirmMenu met a jour le formulaire de confirm.                    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CallbackConfirmMenu (int ref, int typedata, char *data)
 #else  /* __STDC__ */
@@ -84,9 +88,9 @@ char               *data;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | CallbackNewDocMenu met a jour le formulaire de createdoc.                | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CallbackNewDocMenu met a jour le formulaire de createdoc.                
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CallbackNewDocMenu (int ref, int typedata, char *data)
 #else  /* __STDC__ */
@@ -195,9 +199,9 @@ char               *data;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | TtcCreateDocument initialise le changement de createdoc.           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtcCreateDocument initialise le changement de createdoc.           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcCreateDocument (Document document, View view)
 

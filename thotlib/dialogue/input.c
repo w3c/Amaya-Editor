@@ -1,8 +1,12 @@
-/*=======================================================================*/
-/*|                                                                     | */
-/*|               Module de gestion des entrees clavier.                | */
-/*|                                                                     | */
-/*=======================================================================*/
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*----------------------------------------------------------------------
+   
+   Module de gestion des entrees clavier.                
+   
+  ----------------------------------------------------------------------*/
 
 /* D.V. : Removed X remapping of keys, lead to crash in some configurations  */
 				   /* #define WITH_X_REBIND_KEYSYMS *//* old X remapping for 1 key translations */
@@ -94,10 +98,10 @@ static KEY      *Automata_META = NULL;
 static KEY      *Automata_ALT = NULL;
 static KEY      *Automata_current = NULL;
 
-/* ---------------------------------------------------------------------- */
-/* |    NomCle traduit les noms de cle's non supporte's par             | */
-/* |            l'interpre'teur des translations Motif.                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   NomCle traduit les noms de cle's non supporte's par             
+   l'interpre'teur des translations Motif.                 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *NameCode (char *name)
 
@@ -128,10 +132,10 @@ char               *name;
 }				/*NameCode */
 
 
-/* ---------------------------------------------------------------------- */
-/* |    CleSpecial traduit le nom fourni dans le fichier thot.keyboard  | */
-/* |            en une valeur de cle' exploitable par Thot.             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CleSpecial traduit le nom fourni dans le fichier thot.keyboard  
+   en une valeur de cle' exploitable par Thot.             
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static unsigned int SpecialKey (char *name)
 #else  /* __STDC__ */
@@ -241,15 +245,15 @@ char               *name;
 
 
 
-/* ---------------------------------------------------------------------- */
-/* |    MemoKey memorise un raccourci clavier dans les automates.    | */
-/* |            mod1 = 1ere modifieur                                   | */
-/* |            key1 = 1ere cle                                         | */
-/* |            key2 = 2eme modifieur                                   | */
-/* |            key2 = 2eme cle                                         | */
-/* |            key  = valeur du keysym ou 0                            | */
-/* |            command = numero de commande dans MesActions           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   MemoKey memorise un raccourci clavier dans les automates.    
+   mod1 = 1ere modifieur                                   
+   key1 = 1ere cle                                         
+   key2 = 2eme modifieur                                   
+   key2 = 2eme cle                                         
+   key  = valeur du keysym ou 0                            
+   command = numero de commande dans MesActions           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         MemoKey (int mod1, int key1, int mod2, int key2, int key, int command)
 #else  /* __STDC__ */
@@ -417,11 +421,11 @@ int                 command;
 
 
 #ifdef NEW_WILLOWS
-/* ---------------------------------------------------------------------- */
-/* |    MSCharTranslation is the MS-Window front-end to the character   | */
-/* |       translation and handling. Decodes the MS-Window callback     | */
-/* |       parameters and calls the generic character handling routine. | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   MSCharTranslation is the MS-Window front-end to the character   
+   translation and handling. Decodes the MS-Window callback     
+   parameters and calls the generic character handling routine. 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                MSCharTranslation (HWND hWnd, int frame, UINT msg,
 				       WPARAM wParam, LPARAM lParam)
@@ -459,11 +463,11 @@ void                MSCharTranslation (HWND hWnd, int frame, UINT msg,
 
 
 #ifdef WWW_XWINDOWS
-/* ---------------------------------------------------------------------- */
-/* |    XCharTranslation is the X-Window front-end to the character     | */
-/* |         translation and handling. Decodes the X-Window event       | */
-/* |         and calls the generic character handling routine.          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   XCharTranslation is the X-Window front-end to the character     
+   translation and handling. Decodes the X-Window event       
+   and calls the generic character handling routine.          
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                XCharTranslation (XEvent * event)
 #else  /* __STDC__ */
@@ -518,9 +522,9 @@ XEvent             *event;
 }
 #endif /* WWW_XWINDOWS */
 
-/* ---------------------------------------------------------------------- */
-/* |    ThotInput handle the caracter encoding.                     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ThotInput handle the caracter encoding.                     
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ThotInput (int frame, unsigned char *string, unsigned int nb,
 				   int PicMask, int key)
@@ -794,9 +798,9 @@ int                 key;
 
 
 #ifdef WWW_XWINDOWS
-/* ---------------------------------------------------------------------- */
-/* |    InitTranslations initialise l'encodage du clavier.              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   InitTranslations initialise l'encodage du clavier.              
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 XtTranslations      InitTranslations (char *appliname)
 #else  /* __STDC__ */

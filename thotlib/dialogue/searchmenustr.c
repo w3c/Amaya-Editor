@@ -1,7 +1,9 @@
 /*
-   cherche.c : gestion de la commande de recherche.
-   Major Changes:
-   V. Quint     Mai 1992 
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
+   gestion de la commande de recherche.
  */
 
 #include "thot_gui.h"
@@ -75,10 +77,10 @@ static PtrSSchema pStrTypeCherche;
 static int          NumTypeCherche;
 static PtrAttribute  pAttrTrouve;
 
-/* ---------------------------------------------------------------------- */
-/* |    ConstruitSelecteurAttributs construit le selecteur des attributs| */
-/* |            a chercher pour le document pDoc.                       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ConstruitSelecteurAttributs construit le selecteur des attributs
+   a chercher pour le document pDoc.                       
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ConstruitSelecteurAttributs (PtrDocument pDoc)
 #else
@@ -164,11 +166,11 @@ PtrDocument         pDoc;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | ConstruitSelecteurTypes construit le selecteur qui donne le choix  | */
-/* |            des types definis dans les schemas de nature demandees  | */
-/* |            par l'utilisateur.                                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ConstruitSelecteurTypes construit le selecteur qui donne le choix  
+   des types definis dans les schemas de nature demandees  
+   par l'utilisateur.                                      
+  ----------------------------------------------------------------------*/
 static void         ConstruitSelecteurTypes ()
 {
 #define LgMaxListeTypes 980
@@ -224,15 +226,15 @@ static void         ConstruitSelecteurTypes ()
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ChAttr  cherche dans le domaine decrit par context et a partir  | */
-/* |            partir de (et a l'interieur de) l'element elCour, le    | */
-/* |            premier element portant l'attribut GetAttributeOfElement (cet attribut   | */
-/* |            est defini dans le schema de structure pointe' par pSS).| */
-/* |            Retourne NULL si pas trouve', sinon retourne un         | */
-/* |            pointeur sur le bloc attribut trouve' et selectionne    | */
-/* |            l'element trouve'.                                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ChAttr  cherche dans le domaine decrit par context et a partir  
+   partir de (et a l'interieur de) l'element elCour, le    
+   premier element portant l'attribut GetAttributeOfElement (cet attribut   
+   est defini dans le schema de structure pointe' par pSS).
+   Retourne NULL si pas trouve', sinon retourne un         
+   pointeur sur le bloc attribut trouve' et selectionne    
+   l'element trouve'.                                      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static PtrAttribute  ChAttr (PtrElement elCour, PtrSearchContext context, int GetAttributeOfElement, PtrSSchema pSS)
 #else
@@ -343,13 +345,13 @@ PtrSSchema        pSS;
    return (pAttr);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ChType  cherche dans le domaine decrit par context, a partir de | */
-/* |            (et a l'interieur de) l'element elCour, le premier      | */
-/* |            element dont le type a pour nom NomType.                | */
-/* |            Retourne un pointeur sur l'element si trouve', ou NULL  | */
-/* |            si echec.                                               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ChType  cherche dans le domaine decrit par context, a partir de 
+   (et a l'interieur de) l'element elCour, le premier      
+   element dont le type a pour nom NomType.                
+   Retourne un pointeur sur l'element si trouve', ou NULL  
+   si echec.                                               
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static PtrElement   ChType (PtrElement elCour, PtrSearchContext context, char *NomType)
 #else
@@ -430,10 +432,10 @@ char               *NomType;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | InitMenuNatures    initialise le menu des natures a chercher       | */
-/* |            pour le document pDoc.                                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   InitMenuNatures    initialise le menu des natures a chercher       
+   pour le document pDoc.                                  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         InitMenuNatures (PtrDocument pDoc)
 #else
@@ -495,7 +497,8 @@ PtrDocument         pDoc;
       TableNaturesCherchees[nat] = FALSE;
 }
 
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void                BuildStructSearchMenu (pDoc)
 {
    /* menu des natures utilisees dans le document */
@@ -540,12 +543,12 @@ void                BuildStructSearchMenu (pDoc)
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ElPossedeAttr   Si l'element pEl possede l'attribut de numero   | */
-/* |            NumAttr defini dans le schema de structure pSchAttr,    | */
-/* |            retourne un pointeur sur ce bloc attribut,              | */
-/* |            sinon, retourne NULL.                                   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ElPossedeAttr   Si l'element pEl possede l'attribut de numero   
+   NumAttr defini dans le schema de structure pSchAttr,    
+   retourne un pointeur sur ce bloc attribut,              
+   sinon, retourne NULL.                                   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static PtrAttribute  ElPossedeAttr (PtrElement pEl, int NumAttr, PtrSSchema pSchAttr)
 #else
@@ -603,8 +606,8 @@ PtrSSchema        pSchAttr;
    return pA;
 }
 
-/* ---------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static PtrElement   ChTypeAttr (PtrElement elCour, PtrSearchContext context, char *NomType, boolean AvecAttribut, int NumAttrCherche, PtrSSchema SchAttrCherche, PtrAttribute * AttrTrouve)
 #else
@@ -719,9 +722,9 @@ PtrSearchContext           DomaineCherche;
 	 }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    BuildGoToPageMenu traite la commande Aller page numero              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   BuildGoToPageMenu traite la commande Aller page numero              
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                BuildSearchOptions (boolean * erreur, PtrSearchContext DomaineCherche)
 #else

@@ -1,11 +1,15 @@
-/* ====================================================================== */
-/* |                                                                    | */
-/* |                           THOT                                     | */
-/* |                                                                    | */
-/* |            Ce module traite les commandes de creation              | */
-/* |            appelees par le mediateur.                              | */
-/* |                                                                    | */
-/* ====================================================================== */
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*----------------------------------------------------------------------
+   
+   THOT                                     
+   
+   Ce module traite les commandes de creation              
+   appelees par le mediateur.                              
+   
+  ----------------------------------------------------------------------*/
 
 #include "thot_gui.h"
 #include "thot_sys.h"
@@ -42,14 +46,14 @@ extern int          ConfigMakeDocTypeMenu ();
 
 #endif /* __STDC__ */
 
-/* --------------------------------------------------------------------  */
-/* AskForNew_RemplRefer Lors de l'etablissement d'une reference, demande */
-/* a l'utilisateur s'il veut creer en meme temps l'element reference' */
-/* ou s'il veut simplement designer un element existant */
-/* Au retour, la fonction retourne Faux si l'utilisateur abandonne la */
-/* commande, et sinon Creer vaut Vrai si l'utilisateur veut creer */
-/* l'element reference', Faux s'il veut simplement le designer. */
-/* --------------------------------------------------------------------  */
+/*----------------------------------------------------------------------
+   AskForNew_RemplRefer Lors de l'etablissement d'une reference, demande 
+   a l'utilisateur s'il veut creer en meme temps l'element reference' 
+   ou s'il veut simplement designer un element existant 
+   Au retour, la fonction retourne Faux si l'utilisateur abandonne la 
+   commande, et sinon Creer vaut Vrai si l'utilisateur veut creer 
+   l'element reference', Faux s'il veut simplement le designer. 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             AskForNew_RemplRefer (boolean * generate, Name typeName)
 #else  /* __STDC__ */
@@ -76,11 +80,11 @@ Name                typeName;
    return AnswerMenuAskForNew;
 }
 
-/* --------------------------------------------------------------------  */
-/* | CallbackAskForNew   traite le retour du menu qui demande a         | */
-/* |    l'utilisateur s'il veut designer un element a referencer       | */
-/* |    s'il prefere creer un nouvel element.                          | */
-/* --------------------------------------------------------------------  */
+/*----------------------------------------------------------------------
+   CallbackAskForNew   traite le retour du menu qui demande a         
+   l'utilisateur s'il veut designer un element a referencer       
+   s'il prefere creer un nouvel element.                          
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CallbackAskForNew (int Val)
 #else  /* __STDC__ */
@@ -102,8 +106,8 @@ int                 Val;
 }
 
 
-/*  --------------------------------------------------------------------  */
-/*  --------------------------------------------------------------------  */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                BuildChoiceMenu (char *bufMenu, Name menuTitle, int nbEntries, boolean natureChoice)
 #else  /* __STDC__ */
@@ -173,10 +177,10 @@ boolean             natureChoice;
 }
 
 
-/*  --------------------------------------------------------------------  */
-/* |    InsertSeparatorInMenu      met un separateur dans le menu Inserer/ | */
-/* |                            Coller / Inclure                        | */
-/*  --------------------------------------------------------------------  */
+/*----------------------------------------------------------------------
+   InsertSeparatorInMenu      met un separateur dans le menu Inserer/ 
+   Coller / Inclure                        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                InsertSeparatorInMenu (int *prevMenuInd, int *nbEntries, int *menuInd, char *bufMenu)
 #else  /* __STDC__ */
@@ -197,8 +201,8 @@ char               *bufMenu;
    (*nbEntries)++;
 }
 
-/*  --------------------------------------------------------------------  */
-/*  --------------------------------------------------------------------  */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                BuildPasteMenu (int RefMenu, char *bufMenu, Name title, int nbEntries, char button)
 #else  /* __STDC__ */

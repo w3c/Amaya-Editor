@@ -1,8 +1,12 @@
-/*=======================================================================*/
-/*|                                                                     | */
-/*|     Module de gestion des frames d'application.                     | */
-/*|                                                                     | */
-/*=======================================================================*/
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*----------------------------------------------------------------------
+   
+   Module de gestion des frames d'application.                     
+   
+  ----------------------------------------------------------------------*/
 
 #include "thot_gui.h"
 #include "thot_sys.h"
@@ -76,11 +80,11 @@ extern PtrAbstractBox      GetClickedAbsBox ();
 
 #endif
 
-/* ---------------------------------------------------------------------- */
-/* |    FrameToView retourne, sous la forme qui convient a l'API Thot, | */
-/* |            les parametres identifiant le document et la vue        | */
-/* |            qui correspondent a une frame donnee.                   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   FrameToView retourne, sous la forme qui convient a l'API Thot, 
+   les parametres identifiant le document et la vue        
+   qui correspondent a une frame donnee.                   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                FrameToView (int frame, int *doc, int *view)
 #else  /* __STDC__ */
@@ -115,9 +119,9 @@ int                *view;
 }
 
 
-/* -------------------------------------------------------------------- */
-/* | Evenement sur une frame document.                              | */
-/* -------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Evenement sur une frame document.                              
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                FrameKilled (int *w, int frame, int *info)
 
@@ -138,10 +142,10 @@ int                *info;
 
 
 #ifdef NEW_WILLOWS
-/* ---------------------------------------------------------------------- */
-/* |  WIN_HandleExpose deal with the redrawing of the Client Area when  | */
-/* |            a WM_PAINT has been received in MS-Windows.             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WIN_HandleExpose deal with the redrawing of the Client Area when  
+   a WM_PAINT has been received in MS-Windows.             
+  ----------------------------------------------------------------------*/
 void                WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LPARAM lParam)
 {
    PAINTSTRUCT         ps;
@@ -166,10 +170,10 @@ void                WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LP
 #endif /* NEW_WILLOWS */
 
 #ifndef NEW_WILLOWS
-/* ---------------------------------------------------------------------- */
-/* |    FrameToRedisplay effectue le traitement des expositions X11 des     | */
-/* |            frames de dialogue et de documents.                   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   FrameToRedisplay effectue le traitement des expositions X11 des     
+   frames de dialogue et de documents.                   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                FrameToRedisplay (ThotWindow w, int frame, XExposeEvent * event)
 #else  /* __STDC__ */
@@ -205,10 +209,10 @@ XExposeEvent       *event;
 #endif /* !NEW_WILLOWS */
 
 #ifdef NEW_WILLOWS
-/* -------------------------------------------------------------------- */
-/* | MSChangeTaille : function called when a view is resized under    | */
-/* |    MS-Windows.                                                   | */
-/* -------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   MSChangeTaille : function called when a view is resized under    
+   MS-Windows.                                                   
+  ----------------------------------------------------------------------*/
 void                MSChangeTaille (int frame, int width, int height, int top_delta, int bottom_delta)
 {
    int                 n, dx, dy, view;
@@ -236,9 +240,9 @@ void                MSChangeTaille (int frame, int width, int height, int top_de
 
 
 #ifndef NEW_WILLOWS
-/* -------------------------------------------------------------------- */
-/* | Evenement sur une frame document.                              | */
-/* -------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Evenement sur une frame document.                              
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                FrameResized (int *w, int frame, int *info)
 #else  /* __STDC__ */
@@ -304,13 +308,13 @@ int                *info;
 		     XtGetValues(FrameTable[frame].Text_Zone[i], argument, 1); */
 		  /* retire l'indicateur non-editable pour mettre a jour la taille */
 		  XtSetValues (FrameTable[frame].Text_Zone[i], args, n);
-	    /***
+	    /*
 	    if (!editable)
 	      {
 		XtSetArg(argument[0], XmNeditable, editable);
 		XtSetValues(FrameTable[frame].Text_Zone[i], argument, 1);
 	      }
-	    ***/
+	    */
 		  i++;
 	       }
 #endif
@@ -321,9 +325,9 @@ int                *info;
 #endif /* !NEW_WILLOWS */
 
 #ifdef NEW_WILLOWS
-/* -------------------------------------------------------------------- */
-/* | Demande de scroll vertical.                                      | */
-/* -------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Demande de scroll vertical.                                      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                MSChangeVScroll (int frame, int reason, int value)
 #else  /* __STDC__ */
@@ -372,12 +376,12 @@ int                 value;
 	       delta = FrameTable[frame].FrHeight;
 	       VerticalScroll (frame, delta, TRUE);
 	       break;
-	/*************************
+	/*
 	case SB_THUMBPOSITION:
 	    fprintf(stderr,"SB_THUMBPOSITION\n");
 	    JumpIntoView(frame, value);
 	    break;
-	 *************************/
+	 */
 	    case SB_THUMBTRACK:
 	       JumpIntoView (frame, value);
 	       break;
@@ -414,9 +418,9 @@ int                 value;
 #endif /* NEW_WILLOWS */
 
 #ifndef NEW_WILLOWS
-/* -------------------------------------------------------------------- */
-/* | Demande de scroll horizontal.                                    | */
-/* -------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Demande de scroll horizontal.                                    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                FrameHScrolled (int *w, int frame, int *param)
 #else  /* __STDC__ */
@@ -494,9 +498,9 @@ int                *param;
      }
 }				/*FrameHScrolled */
 
-/* -------------------------------------------------------------------- */
-/* | Demande de scroll vertical.                                      | */
-/* -------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Demande de scroll vertical.                                      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                FrameVScrolled (int *w, int frame, int *param)
 #else  /* __STDC__ */
@@ -623,9 +627,9 @@ int                *param;
 
 #endif /* !NEW_WILLOWS */
 
-/* -------------------------------------------------------------------- */
-/* | PageUp scrolls one screen up.                                    | */
-/* -------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PageUp scrolls one screen up.                                    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcPageUp (Document document, View view)
 #else  /* __STDC__ */
@@ -647,9 +651,9 @@ View                view;
 #endif /* NEW_WILLOWS */
 }
 
-/* -------------------------------------------------------------------- */
-/* | PageDown scrolls one screen down.                                | */
-/* -------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PageDown scrolls one screen down.                                
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcPageDown (Document document, View view)
 #else  /* __STDC__ */
@@ -672,9 +676,9 @@ View                view;
 }
 
 
-/* -------------------------------------------------------------------- */
-/* | PageTop goes to the document top.                                | */
-/* -------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PageTop goes to the document top.                                
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcPageTop (Document document, View view)
 #else  /* __STDC__ */
@@ -696,9 +700,9 @@ View                view;
 #endif /* NEW_WILLOWS */
 }
 
-/* -------------------------------------------------------------------- */
-/* | PageEnd goes to the document end.                                | */
-/* -------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PageEnd goes to the document end.                                
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcPageEnd (Document document, View view)
 #else  /* __STDC__ */
@@ -723,9 +727,9 @@ View                view;
 
 
 
-/* ---------------------------------------------------------------------- */
-/* |    InitializeOtherThings initialise les contextes complementaires.     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   InitializeOtherThings initialise les contextes complementaires.     
+  ----------------------------------------------------------------------*/
 void                InitializeOtherThings ()
 {
    int                 i;
@@ -748,9 +752,9 @@ void                InitializeOtherThings ()
 }				/*InitializeOtherThings */
 
 
-/* -------------------------------------------------------------------- */
-/* | Map and raise the corresponding window.                          | */
-/* -------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Map and raise the corresponding window.                          
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaRaiseView (Document document, View view)
 #else  /* __STDC__ */
@@ -776,9 +780,9 @@ View                view;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | TtaGetViewFrame retourne le widget du frame de la vue document.    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaGetViewFrame retourne le widget du frame de la vue document.    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 ThotWidget          TtaGetViewFrame (Document document, View view)
 #else  /* __STDC__ */
@@ -805,10 +809,10 @@ View                view;
       return (FrameTable[frame].WdFrame);
 }
 
-/* ---------------------------------------------------------------------- */
-/* | DisplaySelMessage affiche la se'lection donne'e en parame`tre (texte) dans | */
-/* | la fenetree^tre active.                                            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   DisplaySelMessage affiche la se'lection donne'e en parame`tre (texte) dans 
+   la fenetree^tre active.                                            
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DisplaySelMessage (char *text)
 
@@ -835,9 +839,9 @@ char               *text;
 }				/*DisplaySelMessage */
 
 
-/* ---------------------------------------------------------------------- */
-/* | TtaSetStatus affiche le status de la vue du document.                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaSetStatus affiche le status de la vue du document.                      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaSetStatus (Document document, View view, char *text, char *name)
 #else  /* __STDC__ */
@@ -896,10 +900,10 @@ char               *name;
 
 
 #ifdef NEW_WILLOWS
-/* ---------------------------------------------------------------------- */
-/* |  WndProc :  The main MS-Windows event handler for the Thot         | */
-/* |        Library.                                                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WndProc :  The main MS-Windows event handler for the Thot         
+   Library.                                                    
+  ----------------------------------------------------------------------*/
 LRESULT CALLBACK    WndProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
    int                 comm;
@@ -1073,10 +1077,10 @@ LRESULT CALLBACK    WndProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 #endif /* NEW_WILLOWS */
 
 #ifndef NEW_WILLOWS
-/* -------------------------------------------------------------------- */
-/* | Evenement sur une frame document.                              | */
-/* |   D.V. equivalent de la fontion MS-Windows ci dessus !           | */
-/* -------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Evenement sur une frame document.                              
+   D.V. equivalent de la fontion MS-Windows ci dessus !           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                FrameCallback (int frame, XEvent * ev)
 
@@ -1232,7 +1236,6 @@ XEvent             *ev;
 	       break;
 
 	    case KeyPress:
-/*________________________________________________________*/
 	       TtaAbortShowDialogue ();
 	       XCharTranslation (ev);
 	       break;
@@ -1244,9 +1247,9 @@ XEvent             *ev;
 #endif /* NEW_WILLOWS */
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ThotGrab fait un XGrabPointer.                                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ThotGrab fait un XGrabPointer.                                  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ThotGrab (ThotWindow win, ThotCursor cursor, long events, int disp)
 #else  /* __STDC__ */
@@ -1265,9 +1268,9 @@ int                 disp;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ThotGrabRoot fait un XGrabPointer dans la root window.          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ThotGrabRoot fait un XGrabPointer dans la root window.          
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ThotGrabRoot (ThotCursor cursor, int disp)
 #else  /* __STDC__ */
@@ -1284,9 +1287,9 @@ int                 disp;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ThotUngrab est une fonction d'interface pour UnGrab.            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ThotUngrab est une fonction d'interface pour UnGrab.            
+  ----------------------------------------------------------------------*/
 void                ThotUngrab ()
 {
 #ifndef NEW_WILLOWS
@@ -1295,8 +1298,8 @@ void                ThotUngrab ()
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ManageCSS (Document document, View view)
 #else  /* __STDC__ */
@@ -1309,9 +1312,9 @@ View                view;
    /* This function has to be written */
 }
 
-/* ------------------------------------------------------------------- */
-/* |    TtaGetThotWindow recupere le numero de la fenetre.           | */
-/* ------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaGetThotWindow recupere le numero de la fenetre.           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 ThotWindow          TtaGetThotWindow (int frame)
 #else  /* __STDC__ */
@@ -1324,9 +1327,9 @@ int                 frame;
 }
 
 
-/* ------------------------------------------------------------------- */
-/* |    SetCursorWatch affiche le curseur "montre".                  | */
-/* ------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SetCursorWatch affiche le curseur "montre".                  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SetCursorWatch (int thotThotWindowid)
 #else  /* __STDC__ */
@@ -1344,9 +1347,9 @@ int                 thotThotWindowid;
 }
 
 
-/* ------------------------------------------------------------------- */
-/* |    ResetCursorWatch enleve le curseur "montre".                 | */
-/* ------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ResetCursorWatch enleve le curseur "montre".                 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ResetCursorWatch (int thotThotWindowid)
 #else  /* __STDC__ */
@@ -1363,8 +1366,8 @@ int                 thotThotWindowid;
 #endif /* NEW_WILLOWS */
 }
 
-/* ----------------------------------------------------------------------
-   ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaSetCursorWatch (Document document, View view)
 
@@ -1401,8 +1404,8 @@ View                view;
      }
 }
 
-/* ----------------------------------------------------------------------
-   ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaResetCursor (Document document, View view)
 
@@ -1439,10 +1442,10 @@ View                view;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* | GiveClickedAbsBox retourne l'identification de la fenetre et du pave | */
-/* |            designe.                                                | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GiveClickedAbsBox retourne l'identification de la fenetre et du pave 
+   designe.                                                
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                GiveClickedAbsBox (int *frame, int *pave)
 
@@ -1502,9 +1505,9 @@ int                *pave;
 }				/*GiveClickedAbsBox */
 
 
-/* -------------------------------------------------------------------- */
-/* | Modifie le titre de la fenetre d'indice frame.                     | */
-/* -------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Modifie le titre de la fenetre d'indice frame.                     
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ChangeFrameTitle (int frame, char *text)
 
@@ -1535,9 +1538,9 @@ char               *text;
 }				/*ChangeFrameTitle */
 
 
-/* -------------------------------------------------------------------- */
-/* | La frame d'indice frame devient la fenetre active.               | */
-/* -------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   La frame d'indice frame devient la fenetre active.               
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ChangeSelFrame (int frame)
 #else  /* __STDC__ */
@@ -1563,10 +1566,10 @@ int                 frame;
 }				/*ChangeSelFrame */
 
 
-/* ---------------------------------------------------------------------- */
-/* |    GetWindowFrame retourne l'indice de la table des Cadres associe'    | */
-/* |            a` la fenetre w.                                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetWindowFrame retourne l'indice de la table des Cadres associe'    
+   a` la fenetre w.                                        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 GetWindowFrame (ThotWindow w)
 #else  /* __STDC__ */
@@ -1587,9 +1590,9 @@ ThotWindow          w;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    GetSizesFrame retourne les dimensions de la fenetre d'indice frame.        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetSizesFrame retourne les dimensions de la fenetre d'indice frame.        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                GetSizesFrame (int frame, int *width, int *height)
 
@@ -1607,10 +1610,10 @@ int                *height;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    DefineClipping limite la zone de reaffichage sur la fenetre frame et   | */
-/* |            recalcule ses limites sur l'image concrete.             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   DefineClipping limite la zone de reaffichage sur la fenetre frame et   
+   recalcule ses limites sur l'image concrete.             
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd, int *xf, int *yf, int raz)
 
@@ -1677,9 +1680,9 @@ int                 raz;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    RemoveClipping annule le rectangle de clipping de la fenetre frame.  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RemoveClipping annule le rectangle de clipping de la fenetre frame.  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                RemoveClipping (int frame)
 #else  /* __STDC__ */
@@ -1703,9 +1706,9 @@ int                 frame;
 }
 
 
-/* -------------------------------------------------------------------- */
-/* | UpdateScrollbars met a jour les bandes de defilement de la fenetree^tre    | */
-/* -------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   UpdateScrollbars met a jour les bandes de defilement de la fenetree^tre    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                UpdateScrollbars (int frame)
 

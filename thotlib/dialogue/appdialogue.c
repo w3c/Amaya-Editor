@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"
@@ -95,9 +99,9 @@ extern ThotWidget   XmCreateForem ();
 
 #endif
 
-/* ---------------------------------------------------------------------- */
-/* | TteConnectAction rend accessible une action locale (Callback).     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TteConnectAction rend accessible une action locale (Callback).     
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TteConnectAction (int id, Proc procedure)
 #else  /* __STDC__ */
@@ -111,9 +115,9 @@ Proc                procedure;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | TteInitMenuActions alloue la table des actions.                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TteInitMenuActions alloue la table des actions.                    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TteInitMenus (char *name, int number)
 #else  /* __STDC__ */
@@ -264,10 +268,10 @@ int                 number;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | TteAddMenuAction ajoute une nouvelle action dans la table des      | */
-/* |    actions d'interface.                                            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TteAddMenuAction ajoute une nouvelle action dans la table des      
+   actions d'interface.                                            
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TteAddMenuAction (char *actionName, Proc procedure)
 
@@ -302,10 +306,10 @@ Proc                procedure;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | FindMenuAction recherche l'action dans la table des actions        | */
-/* |    d'interface.                                                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   FindMenuAction recherche l'action dans la table des actions        
+   d'interface.                                                    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          FindMenuAction (char *actionName)
 
@@ -326,10 +330,10 @@ char               *actionName;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | TteZeroMenu signale qu'il n'y a pas de menu dans ce type de        | */
-/* |    fenentre.                                                       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TteZeroMenu signale qu'il n'y a pas de menu dans ce type de        
+   fenentre.                                                       
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TteZeroMenu (WindowType windowtype, char *schemaName)
 
@@ -381,10 +385,10 @@ char               *schemaName;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | TteAddMenu ajoute un nouveau menu pour le schema donne. Si le      | */
-/* |    nom de schema est Null, il s'agit des menus pris par defaut.    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TteAddMenu ajoute un nouveau menu pour le schema donne. Si le      
+   nom de schema est Null, il s'agit des menus pris par defaut.    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TteAddMenu (WindowType windowtype, char *schemaName, int view, int menuID, int itemsNumber, char *menuName)
 
@@ -508,9 +512,9 @@ char               *menuName;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | TteAddSubMenu ajoute un sous-menu pour le schema donne.            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TteAddSubMenu ajoute un sous-menu pour le schema donne.            
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TteAddSubMenu (WindowType windowtype, char *schemaName, int menuID, int itemID, int itemsNumber)
 
@@ -597,9 +601,9 @@ int                 itemsNumber;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | TteAddMenuItem ajoute une nouvel item dans un menu.                | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TteAddMenuItem ajoute une nouvel item dans un menu.                
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TteAddMenuItem (WindowType windowtype, char *schemaName, int menuID, int subMenu, int itemID, char *actionName, char itemType)
 
@@ -680,9 +684,9 @@ char                itemType;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    mmtopixel convertit des mm en pixels.                           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   mmtopixel convertit des mm en pixels.                           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          mmtopixel (int N, int horiz)
 #else  /* __STDC__ */
@@ -699,10 +703,10 @@ int                 horiz;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | BuildSubmenu construit un sous-menu attache' a l'item item     | */
-/* |            du menu ref.                                            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   BuildSubmenu construit un sous-menu attache' a l'item item     
+   du menu ref.                                            
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         BuildSubMenu (Menu_Ctl * ptrmenu, int ref, int entry, int frame)
 #else  /* __STDC__ */
@@ -783,10 +787,10 @@ int                 frame;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | BuildPopdown construit un menu popdown attache' au bouton      | */
-/* |            de menu.                                                | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   BuildPopdown construit un menu popdown attache' au bouton      
+   de menu.                                                
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         BuildPopdown (Menu_Ctl * ptrmenu, int ref, ThotWidget button, int frame)
 #else  /* __STDC__ */
@@ -888,7 +892,7 @@ int                 frame;
      }
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TteOpenMainWindow opens the application main window.
 
    Parameters:
@@ -896,7 +900,7 @@ int                 frame;
    logo: the logo pixmap to be displayed in the window or NULL.
    icon: the icon pixmap to be displayed in the window or NULL.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TteOpenMainWindow (char *name, Pixmap logo, Pixmap icon)
 #else  /* __STDC__ */
@@ -943,9 +947,9 @@ Pixmap              icon;
 	     n++;
 	     /* Regarde si le texte des commandes ne deborde pas */
 
-	  /************************************************
+	  /*
 	  ptr = TtaGetMessage(EDIT_DIALOG, ptrmenu->MenuID);
-          *************************************************/
+          */
 	     ptr = TtaGetMessage (THOT, ptrmenu->MenuID);
 	     lg = strlen (ptr) + 1;
 	     if (i + lg < 700)
@@ -1000,9 +1004,9 @@ Pixmap              icon;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ButtonAction                                                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ButtonAction                                                    
+  ----------------------------------------------------------------------*/
 #ifndef NEW_WILLOWS
 #ifdef __STDC__
 static void         APP_ButtonCallback (ThotWidget w, int frame, caddr_t call_d)
@@ -1031,7 +1035,7 @@ caddr_t             call_d;
 }
 #endif /* NEW_WILLOWS */
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaAddButton
 
    Adds a new button entry in a document view.
@@ -1044,7 +1048,7 @@ caddr_t             call_d;
    procedure: procedure to be executed when the new entry is
    selected by the user. Null creates a cascade button.
    Returns index
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 TtaAddButton (Document document, View view, Pixmap picture, void (*procedure) ())
 #else  /* __STDC__ */
@@ -1143,7 +1147,7 @@ void                (*procedure) ();
 }				/*TtaAddButton */
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaSwitchButton
 
    Change the status of the button entry in a document view.
@@ -1153,7 +1157,7 @@ void                (*procedure) ();
    document: the concerned document.
    view: the concerned view.
    index: the index.
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaSwitchButton (Document document, View view, int index)
 #else  /* __STDC__ */
@@ -1210,7 +1214,7 @@ int                 index;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaChangeButton
 
    Change the button entry in a document view.
@@ -1221,7 +1225,7 @@ int                 index;
    view: the concerned view.
    index: the index.
    picture: the new icon.
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaChangeButton (Document document, View view, int index, Pixmap picture)
 #else  /* __STDC__ */
@@ -1270,7 +1274,7 @@ Pixmap              picture;
      }
 }				/*TtaChangeButton */
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtcSwitchButtonBar
 
    Shows the buttonbar in a document view.
@@ -1280,7 +1284,7 @@ Pixmap              picture;
    document: identifier of the document.
    view: identifier of the view.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcSwitchButtonBar (Document document, View view)
 #else  /* __STDC__ */
@@ -1344,9 +1348,9 @@ View                view;
 }				/*TtcSwitchButtonBar */
 
 
-/* ---------------------------------------------------------------------- */
-/* |    TextAction                                                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TextAction                                                      
+  ----------------------------------------------------------------------*/
 #ifndef NEW_WILLOWS
 #ifdef __STDC__
 static void         APP_TextCallback (ThotWidget w, int frame, XmTextVerifyCallbackStruct * call_d)
@@ -1376,7 +1380,7 @@ XmTextVerifyCallbackStruct *call_d;
 }
 #endif /* NEW_WILLOWS */
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaAddTextZone
 
    Adds a new textual command in a document view.
@@ -1388,7 +1392,7 @@ XmTextVerifyCallbackStruct *call_d;
    label: label of the new entry.
    procedure: procedure to be executed when the new entry is changed by the
    user.
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 TtaAddTextZone (Document document, View view, char *label, boolean editable, void (*procedure) ())
 #else  /* __STDC__ */
@@ -1545,7 +1549,7 @@ void                (*procedure) ();
 }				/*TtaAddTextZone */
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaSetTextZone
 
    Sets the text in text-zone in a document view.
@@ -1556,7 +1560,7 @@ void                (*procedure) ();
    view: identifier of the view.
    index: 
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaSetTextZone (Document document, View view, int index, char *text)
 #else  /* __STDC__ */
@@ -1597,7 +1601,7 @@ char               *text;
 }				/*TtaSetTextZone */
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtcSwitchCommands
 
    Shows or hides the commands part in a document view.
@@ -1607,7 +1611,7 @@ char               *text;
    document: identifier of the document.
    view: identifier of the view.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcSwitchCommands (Document document, View view)
 #else  /* __STDC__ */
@@ -1672,9 +1676,9 @@ View                view;
 }				/*TtcSwitchCommands */
 
 
-/* -------------------------------------------------------------------- */
-/* | Evenement sur une frame document.                              | */
-/* -------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Evenement sur une frame document.                              
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DrawingInput (int *w, int frame, int *infos)
 #else  /* __STDC__ */
@@ -1688,18 +1692,18 @@ int                *infos;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | Cree une frame a' la position X,Y et aux dimensions large et       | */
-/* | haut (s'ils sont positifs).                                        | */
-/* | Le parametre texte donne le titre de la fenetree^tre.                      | */
-/* | Le parametre schema donne le nom du sche'ma pour lequel on cre'e   | */
-/* | la fenetree^tre de document (NULL pour la fenetree^tre application).       | */
-/* | Le parametre name donne le titre de la fenetree^tre.                       | */
-/* | Le paramentre doc donne le numero du document.                     | */
-/* | Retourne :                                                         | */
-/* | - Le volume affichable dans la fenetre en equivalent caracteres.   | */
-/* | - L'indice de la fenetre allouee ou 0 en cas d'echec.              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Cree une frame a' la position X,Y et aux dimensions large et       
+   haut (s'ils sont positifs).                                        
+   Le parametre texte donne le titre de la fenetree^tre.                      
+   Le parametre schema donne le nom du sche'ma pour lequel on cre'e   
+   la fenetree^tre de document (NULL pour la fenetree^tre application).       
+   Le parametre name donne le titre de la fenetree^tre.                       
+   Le paramentre doc donne le numero du document.                     
+   Retourne :                                                         
+   - Le volume affichable dans la fenetre en equivalent caracteres.   
+   - L'indice de la fenetre allouee ou 0 en cas d'echec.              
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 MakeFrame (char *schema, int view, char *name, int X, int Y, int large, int haut, int *volume, int doc)
 #else  /* __STDC__ */
@@ -2320,11 +2324,11 @@ int                 doc;
 }
 
 
-/* -------------------------------------------------------------------- */
-/* | Si l'entree existe :                                             | */
-/* |    Ferme la fenetre, detruit le fichier et libere l'entree.      | */
-/* |    Libere toutes les boites allouees a la fenetre.                   | */
-/* -------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Si l'entree existe :                                             
+   Ferme la fenetre, detruit le fichier et libere l'entree.      
+   Libere toutes les boites allouees a la fenetre.                   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DestroyFrame (int frame)
 #else  /* __STDC__ */
@@ -2400,9 +2404,9 @@ int                 frame;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | GetMenu_Ctl donne le contexte du menu associe' a` la fenetree^tre. | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetMenu_Ctl donne le contexte du menu associe' a` la fenetree^tre. 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static Menu_Ctl    *GetMenu_Ctl (int frame, int menu)
 #else  /* __STDC__ */
@@ -2426,9 +2430,9 @@ int                 menu;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | FindMenu recherche le menu menuID dans la fenetree^tre.            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   FindMenu recherche le menu menuID dans la fenetree^tre.            
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 FindMenu (int frame, int menuID, Menu_Ctl ** ctxmenu)
 #else  /* __STDC__ */
@@ -2462,9 +2466,9 @@ Menu_Ctl          **ctxmenu;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | FindItemMenu recherche le menu, et l'item de la fenetree^tre.              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   FindItemMenu recherche le menu, et l'item de la fenetree^tre.              
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         FindItemMenu (int frame, int menuID, int itemID, int *menu, int *submenu, int *item, int *action)
 #else  /* __STDC__ */
@@ -2551,10 +2555,10 @@ int                *action;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* | TtaSetMenuOff desactive le menu (1 a n) de la vue du document ou   | */
-/* | de la fenetre principale (document = 0, view = 0).                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaSetMenuOff desactive le menu (1 a n) de la vue du document ou   
+   de la fenetre principale (document = 0, view = 0).                 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaSetMenuOff (Document document, View view, int menuID)
 #else  /* __STDC__ */
@@ -2632,10 +2636,10 @@ int                 menuID;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | TtaSetMenuOn reactive le menu (1 a n) de la vue du document ou     | */
-/* | de la fenetre principale (document = 0, view = 0).                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaSetMenuOn reactive le menu (1 a n) de la vue du document ou     
+   de la fenetre principale (document = 0, view = 0).                 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaSetMenuOn (Document document, View view, int menuID)
 #else  /* __STDC__ */
@@ -2706,10 +2710,10 @@ int                 menuID;
 }				/*TtaSetMenuOn */
 
 
-/* ---------------------------------------------------------------------- */
-/* | TtaSetToggleItem positionne l'item du menu de la vue du document   | */
-/* |            ou de la fenetre principale (document = 0, view = 0).   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaSetToggleItem positionne l'item du menu de la vue du document   
+   ou de la fenetre principale (document = 0, view = 0).   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaSetToggleItem (Document document, View view, int menuID, int itemID, boolean on)
 #else  /* __STDC__ */
@@ -2753,10 +2757,10 @@ int                 itemID;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | TtaSetActionOff desactive l'item actionName de la vue du document  | */
-/* |            ou de la fenetre principale (document = 0, view = 0).   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaSetActionOff desactive l'item actionName de la vue du document  
+   ou de la fenetre principale (document = 0, view = 0).   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaSetActionOff (Document document, View view, int menuID, int itemID)
 #else  /* __STDC__ */
@@ -2809,10 +2813,10 @@ int                 itemID;
 }				/*TtaSetActionOff */
 
 
-/* ---------------------------------------------------------------------- */
-/* | TtaSetActionOn active l'item actionName de la vue du document      | */
-/* |            ou de la fenetre principale (document = 0, view = 0).   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaSetActionOn active l'item actionName de la vue du document      
+   ou de la fenetre principale (document = 0, view = 0).   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaSetActionOn (Document document, View view, int menuID, int itemID)
 #else  /* __STDC__ */
@@ -2857,7 +2861,7 @@ int                 itemID;
 }				/*TtaSetActionOn */
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaSetCallback
 
    Specifies the procedure that is called when the user activates a set of forms
@@ -2880,7 +2884,7 @@ int                 itemID;
    set: the number of forms and/or menus managed.
    Return:
    reference of the first form or menu.
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 TtaSetCallback (void (*callbakProcedure) (), int set)
 #else  /* __STDC__ */
@@ -2915,9 +2919,9 @@ int                 set;
 }				/*TtaSetCallback */
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ThotCallback ge`re tous les retours du dialogue de Thot.        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ThotCallback ge`re tous les retours du dialogue de Thot.        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ThotCallback (int ref, int typedata, char *data)
 

@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmenu.h"
@@ -29,9 +33,9 @@ extern int          GetWindowNumber ();
 
 #endif /* __STDC__ */
 
-/* ---------------------------------------------------------------------- */
-/* | changevisibilityview met a jour le formulaire de visibilite.               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   changevisibilityview met a jour le formulaire de visibilite.               
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                changevisibilityview (int ref, int typedata, char *data)
 
@@ -81,9 +85,9 @@ char               *data;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | reTtcSetVisibilityView desactive le formulaire de visibilite.              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   reTtcSetVisibilityView desactive le formulaire de visibilite.              
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                reTtcSetVisibilityView (int frame)
 
@@ -102,9 +106,9 @@ int                 frame;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | TtcSetVisibilityView initialise le changement de visibilite.               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtcSetVisibilityView initialise le changement de visibilite.               
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcSetVisibilityView (Document document, View view)
 

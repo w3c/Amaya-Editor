@@ -1,7 +1,9 @@
 /*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
    nodialog : fonctions vides pour l'edition de lien
-   Major changes:
-   I. Vatton - Mai 1994
  */
 
 #include "thot_sys.h"
@@ -13,7 +15,6 @@ int                 EndOfPage = 0;
 
 #include "memory_f.h"
 
-/*******************************************************************/
 /* Les fonctions vides pour l'edition de lien */
 
 #ifdef __STDC__
@@ -626,9 +627,3 @@ boolean             close;
 #endif /* __STDC__ */
 {
 }
-/*******************************************************************/
-
-/*******************************************************************/
-
-/* procedures vides de page.c (cas de la pagination depuis print)  */
-/*******************************************************************/

@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
    gestion des messages et menus de l'impression.
 
  */
@@ -58,9 +62,9 @@ static PtrDocument  pDocPrint;
 static char	    PageSize[MAX_NAME_LENGTH];
 static char	    Orientation[MAX_NAME_LENGTH];
 
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
 
-/* ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         initImpression (int userOrientation, char *thotDir, char *tempDir, char *dir, char *name, char *realName,
 				    char *printer, int pid, long thotWin, char *thotSch, char *thotDoc, char *printProcessing)
@@ -139,9 +143,9 @@ char               *printProcessing;
    system (cmd);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    Print effectue le lancement du shell pour l'impression.      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Print effectue le lancement du shell pour l'impression.      
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void          Print (char *name, char *dir, char *thotSch, char *thotDoc, char *thotpres, char *realName, char *realDir, char *printer, int firstPage, int lastPage, int nbCopies, int hShift, int vShift, int userOrientation, int reduction, int nbPagesPerSheet, int suppFrame, int manualFeed, int blackAndWhite, int repaginate, char *viewsToPrint)
@@ -204,9 +208,9 @@ char               *viewsToPrint;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    SauverPS effectue le lancement du shell pour sauvegarde PS.     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SauverPS effectue le lancement du shell pour sauvegarde PS.     
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void          SauverPS (char *name, char *dir, char *thotSch, char *thotDoc, char *thotpres, char *realName, char *realDir, char *psName, int firstPage, int lastPage, int nbCopies, int hShift, int vShift, int userOrientation, int reduction, int nbPagesPerSheet, int suppFrame, int manualFeed, int blackAndWhite, int repaginate, char *viewsToPrint)
@@ -269,9 +273,9 @@ char               *viewsToPrint;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |  ConnectPrint initialise les valeurs du formulaire d'impression.   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ConnectPrint initialise les valeurs du formulaire d'impression.   
+  ----------------------------------------------------------------------*/
 static void         ConnectPrint ()
 {
    char               *ptr;
@@ -294,9 +298,9 @@ static void         ConnectPrint ()
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |  TraiteMenuImprimer traite les retours du formulaire d'impression. | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TraiteMenuImprimer traite les retours du formulaire d'impression. 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcPrint (Document document, View view)
 #else  /* __STDC__ */
@@ -372,9 +376,9 @@ View                view;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    CallbackPrintmenu analyse les retours du formulaire d'impression. | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CallbackPrintmenu analyse les retours du formulaire d'impression. 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CallbackPrintmenu (int ref, int val, char *txt)
 #else  /* __STDC__ */
@@ -454,10 +458,10 @@ char               *txt;
 	       }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    TtcPrintSetup construit les catalogues qui seront utilises      | */
-/* |            par l'editeur pour le formulaire d'impression.          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtcPrintSetup construit les catalogues qui seront utilises      
+   par l'editeur pour le formulaire d'impression.          
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcPrintSetup (Document document, View view)
 #else  /* __STDC__ */

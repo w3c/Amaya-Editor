@@ -1,5 +1,8 @@
 /*
-   modpres.c -- Modifications de la presentation specifique.
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
    Modifications de la presentation specifique.
 */
 
@@ -78,12 +81,12 @@ static int          OldLineSp;
 static void         ResetMenus ();
 
 
-/* ---------------------------------------------------------------------- */
-/* | ApplyPresentMod applique les modifications de presentation      | */
-/* |    demandees par le formulaire Caracteres, le formulaire Format,   | */
-/* |    le formulaire Graphiques, ou l'entree Geometrie Standard du     | */
-/* |    menu Presenter.                                                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ApplyPresentMod applique les modifications de presentation      
+   demandees par le formulaire Caracteres, le formulaire Format,   
+   le formulaire Graphiques, ou l'entree Geometrie Standard du     
+   menu Presenter.                                                 
+  ----------------------------------------------------------------------*/
 static void         ApplyPresentMod ()
 {
    PtrElement          pEl;
@@ -343,10 +346,10 @@ static void         ApplyPresentMod ()
 	}
 }
 
-/* ---------------------------------------------------------------------- */
-/* | ModPresentStandard traite le retour de l'entree Presentation       | */
-/* |    Standard du menu Presenter.                                     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ModPresentStandard traite le retour de l'entree Presentation       
+   Standard du menu Presenter.                                     
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcStandardPresentation (Document document, View view)
 #else  /* __STDC__ */
@@ -395,10 +398,10 @@ View                view;
    TtaShowDialogue (NumFormPresentStandard, TRUE);
 }
 
-/* ---------------------------------------------------------------------- */
-/* | CallbackStdPresMenu traite le retour du popup Presentation      | */
-/* |    Standard.                                                       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CallbackStdPresMenu traite le retour du popup Presentation      
+   Standard.                                                       
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CallbackStdPresMenu (int ref, int val)
 #else  /* __STDC__ */
@@ -466,9 +469,9 @@ int                 val;
 
 }
 
-/* ---------------------------------------------------------------------- */
-/* | CallbackPresMenu traite les retours des formulaires de Presentation  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CallbackPresMenu traite les retours des formulaires de Presentation  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CallbackPresMenu (int ref, int val, char *txt)
 #else  /* __STDC__ */
@@ -702,13 +705,13 @@ char               *txt;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ModPresentCaracteres    L'utilisateur demande a modifier la     | */
-/* |            presentation specifique des caracteres pour la vue      | */
-/* |            Vue du document pDoc (si Assoc = FALSE) ou les elements | */
-/* |            associes de numero Vue (si Assoc = Vrai)                | */
-/* |            Initialise et active le formulaire correspondant.       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ModPresentCaracteres    L'utilisateur demande a modifier la     
+   presentation specifique des caracteres pour la vue      
+   Vue du document pDoc (si Assoc = FALSE) ou les elements 
+   associes de numero Vue (si Assoc = Vrai)                
+   Initialise et active le formulaire correspondant.       
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcChangeCharacters (Document document, View view)
 #else  /* __STDC__ */
@@ -872,13 +875,13 @@ View                view;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ModPresentGraphiques    L'utilisateur demande a modifier la     | */
-/* |            presentation specifique des graphiques pour la vue      | */
-/* |            Vue du document pDoc (si Assoc = FALSE) ou les elements | */
-/* |            associes de numero Vue (si Assoc = Vrai)                | */
-/* |            Initialise et active le formulaire correspondant.       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ModPresentGraphiques    L'utilisateur demande a modifier la     
+   presentation specifique des graphiques pour la vue      
+   Vue du document pDoc (si Assoc = FALSE) ou les elements 
+   associes de numero Vue (si Assoc = Vrai)                
+   Initialise et active le formulaire correspondant.       
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcChangeGraphics (Document document, View view)
 #else  /* __STDC__ */
@@ -1013,13 +1016,13 @@ View                view;
 
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ModPresentFormat        L'utilisateur demande a modifier la     | */
-/* |            presentation specifique (le format) pour la vue         | */
-/* |            Vue du document pDoc (si Assoc = FALSE) ou les elements | */
-/* |            associes de numero Vue (si Assoc = Vrai)                | */
-/* |            Initialise et active le formulaire correspondant.       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ModPresentFormat        L'utilisateur demande a modifier la     
+   presentation specifique (le format) pour la vue         
+   Vue du document pDoc (si Assoc = FALSE) ou les elements 
+   associes de numero Vue (si Assoc = Vrai)                
+   Initialise et active le formulaire correspondant.       
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcChangeFormat (Document document, View view)
 #else  /* __STDC__ */
@@ -1203,8 +1206,8 @@ View                view;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 static void         ResetMenus ()
 {
    if (ThotLocalActions[T_presentstd] == NULL)

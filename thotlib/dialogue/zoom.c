@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"
@@ -29,9 +33,9 @@ extern int          GetWindowNumber ();
 
 #endif /* __STDC__ */
 
-/* ---------------------------------------------------------------------- */
-/* | changezoomview met a jour le formulaire de zoom.                   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   changezoomview met a jour le formulaire de zoom.                   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                changezoomview (int ref, int typedata, char *data)
 
@@ -82,9 +86,9 @@ char               *data;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | reTtcSetZoomView desactive le formulaire de zoom.                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   reTtcSetZoomView desactive le formulaire de zoom.                  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                reTtcSetZoomView (int frame)
 
@@ -104,9 +108,9 @@ int                 frame;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | TtcSetZoomView initialise le changement de Zoom.                   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtcSetZoomView initialise le changement de Zoom.                   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcSetZoomView (Document document, View view)
 

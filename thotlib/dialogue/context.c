@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
  * context.c : 
  *     Module de gestion des contextes de documents.
  */
@@ -67,11 +71,11 @@ ThotGC              gc;
      {
 	SelectObject (hdc, gc->pen);
      }
-    /*******************
-    if (gc->capabilities & THOT_GC_BRUSH) {
-        SelectObject(hdc, gc->brush);
-    }
-     *******************/
+    /*----------------------------------------------------------------------
+   if (gc->capabilities & THOT_GC_BRUSH) {
+   SelectObject(hdc, gc->brush);
+   }
+  ----------------------------------------------------------------------*/
    if (gc->capabilities & THOT_GC_FOREGROUND)
      {
 	SetTextColor (hdc, gc->foreground);
@@ -89,11 +93,11 @@ ThotGC              gc;
      {
 	SetROP2 (hdc, gc->mode);
      }
-    /*******************
-    if (gc->capabilities & THOT_GC_FONT) {
-        SelectObject(hdc, gc->font);
-    }
-     *******************/
+    /*----------------------------------------------------------------------
+   if (gc->capabilities & THOT_GC_FONT) {
+   SelectObject(hdc, gc->font);
+   }
+  ----------------------------------------------------------------------*/
 }
 
 /**
@@ -171,10 +175,10 @@ void                WinInitColors (void)
       Pix_Color[i] = PALETTERGB (RGB_Table[i].red,
 				 RGB_Table[i].green,
 				 RGB_Table[i].blue);
-    /***********
-	Pix_Color[i] = GetNearestColor(WIN_curHdc,
-	   RGB(RGB_Table[i].red, RGB_Table[i].green, RGB_Table[i].blue));
-     ***********/
+    /*----------------------------------------------------------------------
+   Pix_Color[i] = GetNearestColor(WIN_curHdc,
+   RGB(RGB_Table[i].red, RGB_Table[i].green, RGB_Table[i].blue));
+  ----------------------------------------------------------------------*/
 
    /*
     * initialize some standard colors.

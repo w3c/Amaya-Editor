@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
  * geom.c : boxes geometry handling, i.e. interracting with the user
  *          concerning a box position, or size.
  */

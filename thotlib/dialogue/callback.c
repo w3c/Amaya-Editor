@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -25,11 +29,11 @@ PtrElement          pEl;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    CallAction looks for the concerned action in event list.
    It returns TRUE if the event action takes place of the editor action
    else it returns FALSE.
- ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      CallAction (NotifyEvent * notifyEvent, APPevent event, boolean pre, int type, Element element, PtrSSchema schStruct)
 #else  /* __STDC__ */
@@ -131,13 +135,13 @@ PtrSSchema        schStruct;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    CallEventAttribute notifies the possible application that     | */
-/* |            an attribute has been created, deleted, modified, read  | */
-/* |            or saved.                                               | */
-/* |            It returns TRUE if it executed an action,               | */
-/* |            else it returns FALSE.                                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CallEventAttribute notifies the possible application that     
+   an attribute has been created, deleted, modified, read  
+   or saved.                                               
+   It returns TRUE if it executed an action,               
+   else it returns FALSE.                                  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             CallEventAttribute (NotifyAttribute * notifyAttr, boolean pre)
 #else  /* __STDC__ */
@@ -161,13 +165,13 @@ boolean             pre;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    CallEventType sends a pointer to a actionstruct               | */
-/* |            and a structure-element and executes the                | */
-/* |            corresponding action (if any). If an action was         | */
-/* |            executed the function returns 'TRUE' else it returns    | */
-/* |            'FALSE'.                                                | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CallEventType sends a pointer to a actionstruct               
+   and a structure-element and executes the                
+   corresponding action (if any). If an action was         
+   executed the function returns 'TRUE' else it returns    
+   'FALSE'.                                                
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             CallEventType (NotifyEvent * notifyEvent, boolean pre)
 

@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmenu.h"
@@ -21,9 +25,9 @@ static boolean      SaveBeforeClosing;
 #include "views_f.h"
 #include "appdialogue_f.h"
 
-/* ---------------------------------------------------------------------- */
-/* |    CallbackCloseDocMenu   traite les retours du formulaire "Fermer"| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CallbackCloseDocMenu   traite les retours du formulaire "Fermer"
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CallbackCloseDocMenu (int ref, int typedata, char *data)
 #else  /* __STDC__ */
@@ -52,14 +56,14 @@ char               *data;
    TtaDestroyDialogue (NumFormClose);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    AskToConfirm demande a` l'utilisateur s'il veut sauver puis     | */
-/* |            fermer le document dont le contexte est pointe' par     | */
-/* |            pDoc.                                                   | */
-/* |            Retourne un booleen indiquant si la fermeture du        | */
-/* |            document doit avoir lieu.                               | */
-/* |            Au retour, Sauver indique si la sauvegarde est demandee.| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   AskToConfirm demande a` l'utilisateur s'il veut sauver puis     
+   fermer le document dont le contexte est pointe' par     
+   pDoc.                                                   
+   Retourne un booleen indiquant si la fermeture du        
+   document doit avoir lieu.                               
+   Au retour, Sauver indique si la sauvegarde est demandee.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                AskToConfirm (PtrDocument pDoc, Document document, View view, boolean * confirmation, boolean * save)
 #else  /* __STDC__ */
@@ -88,7 +92,6 @@ boolean            *save;
    strcat (buftext, TtaGetMessage (LIB, BEFORE_CLOSING));
 
    /* Feuille de dialogue Fermer */
-   /* ++++++++++++++++++++++++++ */
    strcpy (bufbutton, TtaGetMessage (LIB, SAVE_DOC));
    i = strlen (TtaGetMessage (LIB, SAVE_DOC)) + 1;
    strcpy (bufbutton + i, TtaGetMessage (LIB, CLOSE_DON_T_SAVE));
@@ -105,9 +108,9 @@ boolean            *save;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | CloseADocument ferme un document.                                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CloseADocument ferme un document.                                  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             CloseADocument (Document document, Document docform, View viewform)
 #else  /* __STDC__ */
@@ -158,9 +161,9 @@ View                view;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | TtcCloseDocument initialise la fermeture de document.              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtcCloseDocument initialise la fermeture de document.              
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcCloseDocument (Document document, View view)
 #else  /* __STDC__ */

@@ -1,12 +1,16 @@
-/*=======================================================================*/
-/*|                                                                     | */
-/*|               Module de gestion des catalogues de dialogue.         | */
-/*|                                                                     | */
-/*|                                                                     | */
-/*|                     I. Vatton       Novembre 89                     | */
-/*|                                                                     | */
-/*|                                                                     | */
-/*=======================================================================*/
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*----------------------------------------------------------------------
+   
+   Module de gestion des catalogues de dialogue.         
+   
+   
+   I. Vatton       Novembre 89                     
+   
+   
+  ----------------------------------------------------------------------*/
 
 #include "thot_gui.h"
 #include "thot_sys.h"
@@ -231,10 +235,10 @@ void                terminate__Fv (void)
 {
 }
 
-/* ---------------------------------------------------------------------- */
-/* |  GetFen :  returns the Thot window number associated to an         | */
-/* |        X-Window window.                                            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetFen :  returns the Thot window number associated to an         
+   X-Window window.                                            
+  ----------------------------------------------------------------------*/
 
 int                 GetFen (ThotWindow win)
 {
@@ -249,10 +253,10 @@ int                 GetFen (ThotWindow win)
    return (-1);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |  WIN_GetFen :  returns the Thot window number associated to an     | */
-/* |        MS-Windows window.                                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WIN_GetFen :  returns the Thot window number associated to an     
+   MS-Windows window.                                          
+  ----------------------------------------------------------------------*/
 
 int                 WIN_GetFen (ThotWindow win)
 {
@@ -267,10 +271,10 @@ int                 WIN_GetFen (ThotWindow win)
    return (1);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |  WIN_GetDeviceContext :  select a Device Context for a given       | */
-/* |        thot window.                                                | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WIN_GetDeviceContext :  select a Device Context for a given       
+   thot window.                                                
+  ----------------------------------------------------------------------*/
 
 HDC                 WIN_curHdc = 0;
 ThotWindow          WIN_curWin = -1;
@@ -329,10 +333,10 @@ void                WIN_GetDeviceContext (int frame)
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |  WIN_GetWinDeviceContext :  select a Device Context for a given    | */
-/* |        MS-Windows window.                                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WIN_GetWinDeviceContext :  select a Device Context for a given    
+   MS-Windows window.                                          
+  ----------------------------------------------------------------------*/
 
 void                WIN_GetWinDeviceContext (ThotWindow win)
 {
@@ -370,9 +374,9 @@ void                WIN_GetWinDeviceContext (ThotWindow win)
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |  WIN_ReleaseDeviceContext :  unselect the Device Context           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WIN_ReleaseDeviceContext :  unselect the Device Context           
+  ----------------------------------------------------------------------*/
 
 void                WIN_ReleaseDeviceContext (void)
 {
@@ -385,10 +389,10 @@ void                WIN_ReleaseDeviceContext (void)
    WIN_curHdc = 0;
 }
 
-/* ---------------------------------------------------------------------- */
-/* | WinLookupCatEntry Lookup the Catalogue table for an entry          | */
-/* |            corresponding to an existing Window.                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WinLookupCatEntry Lookup the Catalogue table for an entry          
+   corresponding to an existing Window.                    
+  ----------------------------------------------------------------------*/
 static struct Cat_Context *WinLookupCatEntry (int ref)
 {
    register int        icat;
@@ -430,10 +434,10 @@ static struct Cat_Context *WinLookupCatEntry (int ref)
    return (catval);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |  WinErrorBox :  Pops-up a message box when an MS-Window error      | */
-/* |        occured.                                                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WinErrorBox :  Pops-up a message box when an MS-Window error      
+   occured.                                                    
+  ----------------------------------------------------------------------*/
 
 void                WinErrorBox (void)
 {
@@ -473,9 +477,9 @@ BOOL                PASCAL WinMain (HINSTANCE hInst,
 
 #endif /* NEW_WILLOWS */
 
-/* ---------------------------------------------------------------------- */
-/* | Procedure de retour par defaut.                                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Procedure de retour par defaut.                                    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         CallbackError (int ref, int typedata, char *data)
 
@@ -492,9 +496,9 @@ char               *data;
 
 static void         (*CallbackDialogue) () = CallbackError;
 
-/* ---------------------------------------------------------------------- */
-/* | NewCatList Creates a new catalogue list.                           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   NewCatList Creates a new catalogue list.                           
+  ----------------------------------------------------------------------*/
 static struct Cat_List *NewCatList ()
 {
    register int        i;
@@ -513,9 +517,9 @@ static struct Cat_List *NewCatList ()
 }				/*NewCatList */
 
 
-/* ---------------------------------------------------------------------- */
-/* | NewEList: creates a new block of elements.                         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   NewEList: creates a new block of elements.                         
+  ----------------------------------------------------------------------*/
 static struct E_List *NewEList ()
 {
    register int        i;
@@ -544,9 +548,9 @@ static struct E_List *NewEList ()
 }				/*NewEList */
 
 
-/* ---------------------------------------------------------------------- */
-/* | FreeEList: Releases all blocks of elements.                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   FreeEList: Releases all blocks of elements.                        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         FreeEList (struct E_List *adbloc)
 
@@ -574,9 +578,9 @@ struct E_List      *adbloc;
 }				/*FreeEList */
 
 
-/* ---------------------------------------------------------------------- */
-/* | Callback for closing a menu                                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Callback for closing a menu                                        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         UnmapMenu (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
 
@@ -600,9 +604,9 @@ caddr_t             call_d;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | Callback for a menu button                                         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Callback for a menu button                                         
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         CallMenu (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
 
@@ -660,9 +664,9 @@ caddr_t             call_d;
 }				/*CallMenu */
 
 
-/* ---------------------------------------------------------------------- */
-/* | Callback pour un bouton du sous-menu de formulaire                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Callback pour un bouton du sous-menu de formulaire                 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         CallRadio (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
 
@@ -709,9 +713,9 @@ caddr_t             call_d;
 }				/*CallRadio */
 
 
-/* ---------------------------------------------------------------------- */
-/* | Callback pour un bouton du toggle-menu                             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Callback pour un bouton du toggle-menu                             
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         CallToggle (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
 
@@ -762,10 +766,10 @@ caddr_t             call_d;
 }				/*CallToggle */
 
 
-/* ---------------------------------------------------------------------- */
-/* | ReturnTogglevalues retourne les entre'es bascule'es du             | */
-/* | toggle-menu catalogue.                                             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReturnTogglevalues retourne les entre'es bascule'es du             
+   toggle-menu catalogue.                                             
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ReturnTogglevalues (struct Cat_Context *catalogue)
 
@@ -811,9 +815,9 @@ struct Cat_Context *catalogue;
 }				/*ReturnTogglevalues */
 
 
-/* ---------------------------------------------------------------------- */
-/* | Callback d'initialisation d'un formulaire.                         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Callback d'initialisation d'un formulaire.                         
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         INITform (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_t call_d)
 
@@ -886,9 +890,9 @@ caddr_t             call_d;
 }				/*INITform */
 
 
-/* ---------------------------------------------------------------------- */
-/* | Callback d'initialisation d'un formulaire avec positionnement.     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Callback d'initialisation d'un formulaire avec positionnement.     
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         INITetPOSform (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_t call_d)
 
@@ -905,9 +909,9 @@ caddr_t             call_d;
 }				/*INITetPOSform */
 
 
-/* ---------------------------------------------------------------------- */
-/* | Destruction de feuillet.                                           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Destruction de feuillet.                                           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         formKill (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_t call_d)
 
@@ -924,9 +928,9 @@ caddr_t             call_d;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | Callback de feuillet.                                              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Callback de feuillet.                                              
+  ----------------------------------------------------------------------*/
 #ifndef NEW_WILLOWS
 #ifdef __STDC__
 static void         CallSheet (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_t call_d)
@@ -1077,9 +1081,9 @@ caddr_t             call_d;
 }				/*CallSheet */
 
 
-/* ---------------------------------------------------------------------- */
-/* | Callback de saisie de valeur.                                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Callback de saisie de valeur.                                      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         CallValueSet (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
 #else  /* __STDC__ */
@@ -1143,9 +1147,9 @@ caddr_t             call_d;
 }				/*CallValueSet */
 
 
-/* ---------------------------------------------------------------------- */
-/* | Callback de selection dans une liste.                              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Callback de selection dans une liste.                              
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         CallList (ThotWidget w, struct Cat_Context *catalogue, XmListCallbackStruct * infos)
 #else  /* __STDC__ */
@@ -1172,9 +1176,9 @@ XmListCallbackStruct *infos;
 }				/*CallList */
 
 
-/* ---------------------------------------------------------------------- */
-/* | Callback de saisie de texte.                                       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Callback de saisie de texte.                                       
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         CallTextChange (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
 
@@ -1203,9 +1207,9 @@ caddr_t             call_d;
 }				/*CallTextChange */
 
 
-/* ---------------------------------------------------------------------- */
-/* | Callback pour un bouton du label de selecteur                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Callback pour un bouton du label de selecteur                      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         CallLabel (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
 
@@ -1241,15 +1245,15 @@ caddr_t             call_d;
 }				/*CallLabel */
 #endif /* NEW_WILLOWS */
 
-/* ---------------------------------------------------------------------- */
-/* | warning handler                                                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   warning handler                                                    
+  ----------------------------------------------------------------------*/
 void                MyWarningHandler ()
 {
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaInitDialogue
 
    Initialise la connexion au serveur X  et le contexte du dialogue.
@@ -1261,7 +1265,7 @@ void                MyWarningHandler ()
    X-Specific stuff :
    app_context: contient au retour l'identification du contexte d'application.
    display:  contient au retour l'identification de l'e'cran.
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef WWW_XWINDOWS
 #ifdef __STDC__
 void                TtaInitDialogue (char *server, char *txtOK, char *txtRAZ, char *txtDone, XtAppContext * app_context, Display ** Dp)
@@ -1367,10 +1371,10 @@ void                TtaInitDialogueWindows (char *server, char *txtOK, char *txt
 
 
 #ifdef WWW_XWINDOWS
-/* ---------------------------------------------------------------------- */
-/* | TtaInitDialogueTranslations initialise les translations du         | */
-/* | dialogue. Ce sont tous les racoursis claviers.                     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaInitDialogueTranslations initialise les translations du         
+   dialogue. Ce sont tous les racoursis claviers.                     
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaInitDialogueTranslations (XtTranslations translations)
 #else  /* __STDC__ */
@@ -1384,9 +1388,9 @@ XtTranslations      translations;
 #endif /* WWW_XWINDOWS */
 
 
-/* ---------------------------------------------------------------------- */
-/* | TtaChangeDialogueFonts change les polices de caracteres du dialogue.| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaChangeDialogueFonts change les polices de caracteres du dialogue.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaChangeDialogueFonts (char *menufont, char *formfont)
 #else  /* __STDC__ */
@@ -1408,11 +1412,11 @@ char               *formfont;
 }				/*TtaChangeDialogueFonts */
 
 
-/* ---------------------------------------------------------------------- */
-/* |    TtaGetReferencesBase re'serve number re'fe'rences pour          | */
-/* |            l'application a` partir de la base courante.            | */
-/* |            La fonction retourne la base courante.                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaGetReferencesBase re'serve number re'fe'rences pour          
+   l'application a` partir de la base courante.            
+   La fonction retourne la base courante.                  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 TtaGetReferencesBase (int number)
 #else  /* __STDC__ */
@@ -1429,10 +1433,10 @@ int                 number;
    return (base);
 }				/*TtaGetReferencesBase */
 
-/* ---------------------------------------------------------------------- */
-/* |    TtaInitDialogueWindow Cre'ation et initialisation de la fenetree^tre    | */
-/* |            principale d'une application.                           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaInitDialogueWindow Cre'ation et initialisation de la fenetree^tre    
+   principale d'une application.                           
+  ----------------------------------------------------------------------*/
 
 #ifdef NEW_WILLOWS
 extern HINSTANCE    hInstance;
@@ -1674,8 +1678,8 @@ char               *textmenu;
 }				/*TtaInitDialogueWindow */
 
 #ifdef WWW_XWINDOWS
-/* ---------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ConfirmMessage (Widget w, Widget MsgBox, caddr_t call_d)
 #else  /* __STDC__ */
@@ -1691,9 +1695,9 @@ caddr_t             call_d;
 #endif /* WWW_XWINDOWS */
 
 
-/* ---------------------------------------------------------------------- */
-/* |    DisplayConfirmMessage displays the given message (text).        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   DisplayConfirmMessage displays the given message (text).        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DisplayConfirmMessage (char *text)
 #else  /* __STDC__ */
@@ -1823,12 +1827,12 @@ char               *text;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    DisplayMessage display the given messge (text) in main window   | */
-/* |            according to is msgType.		                | */
-/* |            - INFO : bellow the previous message.                   | */
-/* |            - OVERHEAD : instead of the previous message.           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   DisplayMessage display the given messge (text) in main window   
+   according to is msgType.		                
+   - INFO : bellow the previous message.                   
+   - OVERHEAD : instead of the previous message.           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DisplayMessage (char *text, int msgType)
 #else  /* __STDC__ */
@@ -1905,10 +1909,10 @@ int                msgType;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | DefineCallbackDialog de'finit la proce'dure de traitement des      | */
-/* | retoursde catalogues dans l'application.                           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   DefineCallbackDialog de'finit la proce'dure de traitement des      
+   retoursde catalogues dans l'application.                           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaDefineDialogueCallback (void (*procedure) ())
 #else  /* __STDC__ */
@@ -1922,9 +1926,9 @@ void                (*procedure) ();
 
 
 
-/* ---------------------------------------------------------------------- */
-/* | ClearChildren nettoie tous les catalalogues fils du catalogue.     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ClearChildren nettoie tous les catalalogues fils du catalogue.     
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ClearChildren (struct Cat_Context *parentCatalogue)
 #else  /* __STDC__ */
@@ -1978,11 +1982,11 @@ struct Cat_Context *parentCatalogue;
      }				/*while */
 }				/*ClearChildren */
 
-/* ---------------------------------------------------------------------- */
-/* | CatEntry recherche si le catalogue de'signe' par sa re'fe'rence   | */
-/* | existe de'ja` ou une entre'e libre dans la table des catalogues.   | */
-/* | Retourne l'adresse du catalogue cre'e' ou NULL.                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CatEntry recherche si le catalogue de'signe' par sa re'fe'rence   
+   existe de'ja` ou une entre'e libre dans la table des catalogues.   
+   Retourne l'adresse du catalogue cre'e' ou NULL.                    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static struct Cat_Context *CatEntry (int ref)
 #else  /* __STDC__ */
@@ -2049,11 +2053,11 @@ int                 ref;
 }				/*CatEntry */
 
 
-/* ---------------------------------------------------------------------- */
-/* | DestContenuMenu de'truit les entre'es du catalogue de'signe' par   | */
-/* | son index.                                                         | */
-/* | Retourne un code d'erreur.                                         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   DestContenuMenu de'truit les entre'es du catalogue de'signe' par   
+   son index.                                                         
+   Retourne un code d'erreur.                                         
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          DestContenuMenu (struct Cat_Context *catalogue)
 
@@ -2135,19 +2139,19 @@ struct Cat_Context *catalogue;
 }				/*DestContenuMenu */
 
 
-/* ---------------------------------------------------------------------- */
-/* | TtaNewPulldown cre'e un pull-down menu :                           | */
-/* | Le parame`tre ref donne la re'fe'rence pour l'application.         | */
-/* | Le parame`tre parent identifie le widget pe`re du pull-down menu.  | */
-/* | Le parame`tre title donne le titre du catalogue.                   | */
-/* | Le parame`tre number indique le nombre d'entre'es dans le menu.    | */
-/* | Le parame`tre text contient la liste des intitule's du catalogue.  | */
-/* | Chaque intitule' commence par un caracte`re qui donne le type de   | */
-/* | l'entre'e et se termine par un caracte`re de fin de chai^ne \0.    | */
-/* | S'il n'est pas nul, le parame`tre equiv donne les acce'le'rateurs  | */
-/* | des entre'es du menu.                                              | */
-/* | Retourne un code d'erreur.                                         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaNewPulldown cre'e un pull-down menu :                           
+   Le parame`tre ref donne la re'fe'rence pour l'application.         
+   Le parame`tre parent identifie le widget pe`re du pull-down menu.  
+   Le parame`tre title donne le titre du catalogue.                   
+   Le parame`tre number indique le nombre d'entre'es dans le menu.    
+   Le parame`tre text contient la liste des intitule's du catalogue.  
+   Chaque intitule' commence par un caracte`re qui donne le type de   
+   l'entre'e et se termine par un caracte`re de fin de chai^ne \0.    
+   S'il n'est pas nul, le parame`tre equiv donne les acce'le'rateurs  
+   des entre'es du menu.                                              
+   Retourne un code d'erreur.                                         
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaNewPulldown (int ref, ThotWidget parent, char *title, int number, char *text, char *equiv)
 #else  /* __STDC__ */
@@ -2481,9 +2485,9 @@ char               *equiv;
 
 }				/*TtaNewPulldown */
 
-/* ---------------------------------------------------------------------- */
-/* |    TtaSetPulldownOff suspend le pulldown                           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaSetPulldownOff suspend le pulldown                           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaSetPulldownOff (int ref, ThotWidget parent)
 #else  /* __STDC__ */
@@ -2520,9 +2524,9 @@ ThotWidget          parent;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    TtaSetPulldownOn reactive le pulldown                           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaSetPulldownOn reactive le pulldown                           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaSetPulldownOn (int ref, ThotWidget parent)
 #else  /* __STDC__ */
@@ -2561,19 +2565,19 @@ ThotWidget          parent;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* | TtaNewPopup cre'e un pop-up menu :                                 | */
-/* | Le parame`tre ref donne la re'fe'rence pour l'application.         | */
-/* | Le parame`tre title donne le titre du catalogue.                   | */
-/* | Le parame`tre number indique le nombre d'entre'es dans le menu.    | */
-/* | Le parame`tre text contient la liste des intitule's du catalogue.  | */
-/* | Chaque intitule' commence par un caracte`re qui donne le type de   | */
-/* | l'entre'e et se termine par un caracte`re de fin de chai^ne \0.    | */
-/* | S'il n'est pas nul, le parame`tre equiv donne les acce'le'rateurs  | */
-/* | des entre'es du menu.                                              | */
-/* | Le parame`tre button indique le bouton de la souris qui active le  | */
-/* | menu : 'L' pour left, 'M' pour middle et 'R' pour right.           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaNewPopup cre'e un pop-up menu :                                 
+   Le parame`tre ref donne la re'fe'rence pour l'application.         
+   Le parame`tre title donne le titre du catalogue.                   
+   Le parame`tre number indique le nombre d'entre'es dans le menu.    
+   Le parame`tre text contient la liste des intitule's du catalogue.  
+   Chaque intitule' commence par un caracte`re qui donne le type de   
+   l'entre'e et se termine par un caracte`re de fin de chai^ne \0.    
+   S'il n'est pas nul, le parame`tre equiv donne les acce'le'rateurs  
+   des entre'es du menu.                                              
+   Le parame`tre button indique le bouton de la souris qui active le  
+   menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaNewPopup (int ref, ThotWidget parent, char *title, int number, char *text, char *equiv, char button)
 #else  /* __STDC__ */
@@ -2914,15 +2918,15 @@ char                button;
 
 }				/*TtaNewPopup */
 
-/* ---------------------------------------------------------------------- */
-/* | AddInFormulary recherche une entree libre dans le formulaire  | */
-/* | et cre'e e'ventuellement un nouveau bloc d'entre'es et un nouveau  | */
-/* | Row-Column.                                                        | */
-/* | Retourne :                                                         | */
-/* | + index -> le nume'ro d'entre'e sur l'ensemble des blocs.          | */
-/* | + entry -> l'index dans le bloc des entre'es concerne'.            | */
-/* | + adbloc -> le bloc des entre'es concerne'.                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   AddInFormulary recherche une entree libre dans le formulaire  
+   et cre'e e'ventuellement un nouveau bloc d'entre'es et un nouveau  
+   Row-Column.                                                        
+   Retourne :                                                         
+   + index -> le nume'ro d'entre'e sur l'ensemble des blocs.          
+   + entry -> l'index dans le bloc des entre'es concerne'.            
+   + adbloc -> le bloc des entre'es concerne'.                        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static ThotWidget   AddInFormulary (struct Cat_Context *catalogue, int *index, int *entry, struct E_List **adbloc)
 #else  /* __STDC__ */
@@ -3017,17 +3021,17 @@ struct E_List     **adbloc;
 }				/*AddInFormulary */
 
 
-/* ---------------------------------------------------------------------- */
-/* | TtaNewIconMenu cre'e un sous-menu :                                        | */
-/* | Le parame`tre ref donne la re'fe'rence pour l'application.         | */
-/* | Le parame`tre ref_parent identifie le formulaire pe`re.            | */
-/* | Le parametre entry de'signe l'entre'e correspondante dans le menu  | */
-/* | pe`re. Le parame`tre title donne le titre du catalogue.            | */
-/* | Le parame`tre number indique le nombre d'entre'es dans le menu.    | */
-/* | Le parame`tre icons contient la liste des icones du catalogue.     | */
-/* | Tout changement de se'lection dans le sous-menu est imme'diatement | */
-/* | signale' a` l'application.                                         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaNewIconMenu cre'e un sous-menu :                                        
+   Le parame`tre ref donne la re'fe'rence pour l'application.         
+   Le parame`tre ref_parent identifie le formulaire pe`re.            
+   Le parametre entry de'signe l'entre'e correspondante dans le menu  
+   pe`re. Le parame`tre title donne le titre du catalogue.            
+   Le parame`tre number indique le nombre d'entre'es dans le menu.    
+   Le parame`tre icons contient la liste des icones du catalogue.     
+   Tout changement de se'lection dans le sous-menu est imme'diatement 
+   signale' a` l'application.                                         
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaNewIconMenu (int ref, int ref_parent, int entry, char *title, int number, Pixmap * icons, boolean horizontal)
 #else  /* __STDC__ */
@@ -3209,21 +3213,21 @@ boolean             horizontal;
 #endif /* NEW_WILLOWS */
 }
 
-/* ---------------------------------------------------------------------- */
-/* | TtaNewSubmenu cre'e un sous-menu :                                 | */
-/* | Le parame`tre ref donne la re'fe'rence pour l'application.         | */
-/* | Le parame`tre ref_parent identifie le formulaire pe`re.            | */
-/* | Le parametre entry de'signe l'entre'e correspondante dans le menu  | */
-/* | pe`re. Le parame`tre title donne le titre du catalogue.            | */
-/* | Le parame`tre number indique le nombre d'entre'es dans le menu.    | */
-/* | Le parame`tre text contient la liste des intitule's du catalogue.  | */
-/* | Chaque intitule' commence par un caracte`re qui donne le type de   | */
-/* | l'entre'e et se termine par un caracte`re de fin de chai^ne \0.    | */
-/* | S'il n'est pas nul, le parame`tre equiv donne les acce'le'rateurs  | */
-/* | des entre'es du menu.                                              | */
-/* | Quand le parame`tre react est vrai, tout changement de se'lection  | */
-/* | dans le sous-menu est imme'diatement signale' a` l'application.    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaNewSubmenu cre'e un sous-menu :                                 
+   Le parame`tre ref donne la re'fe'rence pour l'application.         
+   Le parame`tre ref_parent identifie le formulaire pe`re.            
+   Le parametre entry de'signe l'entre'e correspondante dans le menu  
+   pe`re. Le parame`tre title donne le titre du catalogue.            
+   Le parame`tre number indique le nombre d'entre'es dans le menu.    
+   Le parame`tre text contient la liste des intitule's du catalogue.  
+   Chaque intitule' commence par un caracte`re qui donne le type de   
+   l'entre'e et se termine par un caracte`re de fin de chai^ne \0.    
+   S'il n'est pas nul, le parame`tre equiv donne les acce'le'rateurs  
+   des entre'es du menu.                                              
+   Quand le parame`tre react est vrai, tout changement de se'lection  
+   dans le sous-menu est imme'diatement signale' a` l'application.    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaNewSubmenu (int ref, int ref_parent, int entry, char *title, int number, char *text, char *equiv, boolean react)
 #else  /* __STDC__ */
@@ -3794,11 +3798,11 @@ boolean             react;
 }				/*TtaNewSubmenu */
 
 
-/* ---------------------------------------------------------------------- */
-/* | TtaSetMenuForm fixe la selection dans un sous-menu de formulaire : | */
-/* | Le parame`tre ref donne la re'fe'rence du catalogue.               | */
-/* | Le parame`tre val de'signe l'entre'e se'lectionne'e.               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaSetMenuForm fixe la selection dans un sous-menu de formulaire : 
+   Le parame`tre ref donne la re'fe'rence du catalogue.               
+   Le parame`tre val de'signe l'entre'e se'lectionne'e.               
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaSetMenuForm (int ref, int val)
 #else  /* __STDC__ */
@@ -3884,20 +3888,20 @@ int                 val;
 }				/*TtaSetMenuForm */
 
 
-/* ---------------------------------------------------------------------- */
-/* | TtaNewToggleMenu cre'e un sous-menu a` choix multiples :           | */
-/* | Le parame`tre ref donne la re'fe'rence pour l'application.         | */
-/* | Le parame`tre ref_parent identifie le formulaire pe`re.            | */
-/* | Le parame`tre title donne le titre du catalogue.                   | */
-/* | Le parame`tre number indique le nombre d'entre'es dans le menu.    | */
-/* | Le parame`tre text contient la liste des intitule's du catalogue.  | */
-/* | Chaque intitule' commence par un caracte`re qui donne le type de   | */
-/* | l'entre'e et se termine par un caracte`re de fin de chai^ne \0.    | */
-/* | S'il n'est pas nul, le parame`tre equiv donne les acce'le'rateurs  | */
-/* | des entre'es du menu.                                              | */
-/* | Quand le parame`tre react est vrai, tout changement de se'lection  | */
-/* | dans le sous-menu est imme'diatement signale' a` l'application.    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaNewToggleMenu cre'e un sous-menu a` choix multiples :           
+   Le parame`tre ref donne la re'fe'rence pour l'application.         
+   Le parame`tre ref_parent identifie le formulaire pe`re.            
+   Le parame`tre title donne le titre du catalogue.                   
+   Le parame`tre number indique le nombre d'entre'es dans le menu.    
+   Le parame`tre text contient la liste des intitule's du catalogue.  
+   Chaque intitule' commence par un caracte`re qui donne le type de   
+   l'entre'e et se termine par un caracte`re de fin de chai^ne \0.    
+   S'il n'est pas nul, le parame`tre equiv donne les acce'le'rateurs  
+   des entre'es du menu.                                              
+   Quand le parame`tre react est vrai, tout changement de se'lection  
+   dans le sous-menu est imme'diatement signale' a` l'application.    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaNewToggleMenu (int ref, int ref_parent, char *title, int number, char *text, char *equiv, boolean react)
 #else  /* __STDC__ */
@@ -4150,13 +4154,13 @@ boolean             react;
 }				/*TtaNewToggleMenu */
 
 
-/* ---------------------------------------------------------------------- */
-/* | TtaSetToggleMenu fixe la selection dans un toggle-menu :           | */
-/* | Le parame`tre ref donne la re'fe'rence du catalogue.               | */
-/* | Le parame`tre val de'signe l'entre'e se'lectionne'e (-1 pour       | */
-/* | toutes les entre'es). Le parame`tre on indique que le bouton       | */
-/* | correspondant doit e^tre allume' (on positif) ou e'teint (on nul). |  */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaSetToggleMenu fixe la selection dans un toggle-menu :           
+   Le parame`tre ref donne la re'fe'rence du catalogue.               
+   Le parame`tre val de'signe l'entre'e se'lectionne'e (-1 pour       
+   toutes les entre'es). Le parame`tre on indique que le bouton       
+   correspondant doit e^tre allume' (on positif) ou e'teint (on nul). 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaSetToggleMenu (int ref, int val, boolean on)
 #else  /* __STDC__ */
@@ -4280,10 +4284,10 @@ boolean             on;
 }				/*TtaSetToggleMenu */
 
 
-/* ---------------------------------------------------------------------- */
-/* | TtaChangeMenuEntry modifie l'intitule' texte de l`entre'e entry    | */
-/* | du menu de'signe' par sa re'fe'rence ref.                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaChangeMenuEntry modifie l'intitule' texte de l`entre'e entry    
+   du menu de'signe' par sa re'fe'rence ref.                          
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaChangeMenuEntry (int ref, int entry, char *text)
 #else  /* __STDC__ */
@@ -4359,10 +4363,10 @@ char               *text;
 }				/*TtaChangeMenuEntry */
 
 
-/* ---------------------------------------------------------------------- */
-/* | TtaRedrawMenuEntry modifie la couleur et/ou la police de l'entre'e | */
-/* | entry du menu de'signe' par sa re'fe'rence ref.                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaRedrawMenuEntry modifie la couleur et/ou la police de l'entre'e 
+   entry du menu de'signe' par sa re'fe'rence ref.                    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaRedrawMenuEntry (int ref, int entry, char *fontname, Pixel color, int activate)
 #else  /* __STDC__ */
@@ -4484,10 +4488,10 @@ int                 activate;
 }				/*TtaRedrawMenuEntry */
 
 
-/* ---------------------------------------------------------------------- */
-/* | DestForm de'truit un formulaire ou une feuille de saisie:          | */
-/* | Le parame`tre ref donne la re'fe'rence du catalogue.               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   DestForm de'truit un formulaire ou une feuille de saisie:          
+   Le parame`tre ref donne la re'fe'rence du catalogue.               
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          DestForm (int ref)
 #else  /* __STDC__ */
@@ -4596,9 +4600,9 @@ int                 ref;
 }				/*DestForm */
 
 
-/* ---------------------------------------------------------------------- */
-/* | TtaUnmapDialogue desactive le dialogue s'il est actif.             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaUnmapDialogue desactive le dialogue s'il est actif.             
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaUnmapDialogue (int ref)
 
@@ -4644,9 +4648,9 @@ int                 ref;
 }				/*TtaUnmapDialogue */
 
 
-/* ---------------------------------------------------------------------- */
-/* | TtaDestroyDialogue de'truit le catalogue de'signe' par ref.                | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaDestroyDialogue de'truit le catalogue de'signe' par ref.                
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaDestroyDialogue (int ref)
 #else  /* __STDC__ */
@@ -4770,12 +4774,12 @@ int                 ref;
 }				/*TtaDestroyDialogue */
 
 
-/* ---------------------------------------------------------------------- */
-/* | TtaChangeFormTitle change le titre d'un formulaire ou d'une feuille        | */
-/* |    de dialogue :                                                   | */
-/* | Le parame`tre ref donne la re'fe'rence du catalogue.               | */
-/* | Le parame'tre title donne le titre du catalogue.                   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaChangeFormTitle change le titre d'un formulaire ou d'une feuille        
+   de dialogue :                                                   
+   Le parame`tre ref donne la re'fe'rence du catalogue.               
+   Le parame'tre title donne le titre du catalogue.                   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaChangeFormTitle (int ref, char *title)
 #else  /* __STDC__ */
@@ -4819,7 +4823,8 @@ char               *title;
 }
 
 
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         NewSheet (int ref, ThotWidget parent, int ref_parent, int entry, char *title, int number, char *text, boolean horizontal, int package, char button, int dbutton, int cattype)
 #else  /* __STDC__ */
@@ -5174,19 +5179,19 @@ int                 cattype;
 }				/*NewSheet */
 
 
-/* ---------------------------------------------------------------------- */
-/* | TtaNewForm cre'e un formulaire :                                   | */
-/* | Le parame`tre ref donne la reference et parent le ThotWidget pe're | */
-/* | Si parent est nul, le parame`tre ref_parent identifie le           | */
-/* | menu pe`re et entry de'signe l'entre'e correspondante dans le menu | */
-/* | pe`re. Le parame'tre title donne le titre du catalogue.            | */
-/* | Le parame`tre horizontal indique que le formulaire est compose' en | */
-/* | lignes (TRUE) ou en colonnes (FALSE).                              | */
-/* | Le parame`tre package donne le facteur de blocage du formulaire    | */
-/* | (nombre d'entre'es par ligne ou par colonne).                      | */
-/* | Le parame'tre button indique le bouton de la souris qui active le  | */
-/* | menu : 'L' pour left, 'M' pour middle et 'R' pour right.           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaNewForm cre'e un formulaire :                                   
+   Le parame`tre ref donne la reference et parent le ThotWidget pe're 
+   Si parent est nul, le parame`tre ref_parent identifie le           
+   menu pe`re et entry de'signe l'entre'e correspondante dans le menu 
+   pe`re. Le parame'tre title donne le titre du catalogue.            
+   Le parame`tre horizontal indique que le formulaire est compose' en 
+   lignes (TRUE) ou en colonnes (FALSE).                              
+   Le parame`tre package donne le facteur de blocage du formulaire    
+   (nombre d'entre'es par ligne ou par colonne).                      
+   Le parame'tre button indique le bouton de la souris qui active le  
+   menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaNewForm (int ref, ThotWidget parent, int ref_parent, int entry, char *title, boolean horizontal, int package, char button, int dbutton)
 #else  /* __STDC__ */
@@ -5207,24 +5212,24 @@ int                 dbutton;
 }				/*TtaNewForm */
 
 
-/* ---------------------------------------------------------------------- */
-/* | TtaNewSheet cre'e un feuillet de commande :                        | */
-/* | Le parame`tre ref donne la reference et parent le ThotWidget pe're | */
-/* | Si parent est nul, le parame`tre ref_parent identifie le           | */
-/* | menu pe`re et entry de'signe l'entre'e correspondante dans le menu | */
-/* | p`ere. Le parame`tre title donne le titre du catalogue.            | */
-/* | Le parame`tre number indique le nombre de boutons ajoute's au      | */
-/* | bouton 'QUIT' mis par de'faut.                                     | */
-/* | Le parame`tre text contient la liste des intitule's des boutons    | */
-/* | ajoute's au bouton 'QUIT'.                                         | */
-/* | Chaque intitule' se termine par le caracte`re de fin de chai^ne \0.| */
-/* | Le parame`tre horizontal indique que le formulaire est compose' en | */
-/* | lignes (TRUE) ou en colonnes (FALSE).                              | */
-/* | Le parame`tre package donne le facteur de blocage du formulaire    | */
-/* | (nombre d'entre'es par ligne ou par colonne).                      | */
-/* | Le parame`tre button indique le bouton de la souris qui active le  | */
-/* | menu : 'L' pour left, 'M' pour middle et 'R' pour right.           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaNewSheet cre'e un feuillet de commande :                        
+   Le parame`tre ref donne la reference et parent le ThotWidget pe're 
+   Si parent est nul, le parame`tre ref_parent identifie le           
+   menu pe`re et entry de'signe l'entre'e correspondante dans le menu 
+   p`ere. Le parame`tre title donne le titre du catalogue.            
+   Le parame`tre number indique le nombre de boutons ajoute's au      
+   bouton 'QUIT' mis par de'faut.                                     
+   Le parame`tre text contient la liste des intitule's des boutons    
+   ajoute's au bouton 'QUIT'.                                         
+   Chaque intitule' se termine par le caracte`re de fin de chai^ne \0.
+   Le parame`tre horizontal indique que le formulaire est compose' en 
+   lignes (TRUE) ou en colonnes (FALSE).                              
+   Le parame`tre package donne le facteur de blocage du formulaire    
+   (nombre d'entre'es par ligne ou par colonne).                      
+   Le parame`tre button indique le bouton de la souris qui active le  
+   menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaNewSheet (int ref, ThotWidget parent, int ref_parent, int entry, char *title, int number, char *text, boolean horizontal, int package, char button, int dbutton)
 #else  /* __STDC__ */
@@ -5247,24 +5252,24 @@ int                 dbutton;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | TtaNewDialogSheet cre'e un feuillet de dialogue :                  | */
-/* | Le parame`tre ref donne la reference et parent le ThotWidget pe're | */
-/* | Si parent est nul, le parame`tre ref_parent identifie le           | */
-/* | menu pe`re et entry de'signe l'entre'e correspondante dans le menu | */
-/* | p`ere. Le parame`tre title donne le titre du catalogue.            | */
-/* | Le parame`tre number indique le nombre de boutons ajoute's au      | */
-/* | bouton 'QUIT' mis par de'faut.                                     | */
-/* | Le parame`tre text contient la liste des intitule's des boutons    | */
-/* | ajoute's au bouton 'QUIT'.                                         | */
-/* | Chaque intitule' se termine par le caracte`re de fin de chai^ne \0.| */
-/* | Le parame`tre horizontal indique que le formulaire est compose' en | */
-/* | lignes (TRUE) ou en colonnes (FALSE).                              | */
-/* | Le parame`tre package donne le facteur de blocage du formulaire    | */
-/* | (nombre d'entre'es par ligne ou par colonne).                      | */
-/* | Le parame`tre button indique le bouton de la souris qui active le  | */
-/* | menu : 'L' pour left, 'M' pour middle et 'R' pour right.           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaNewDialogSheet cre'e un feuillet de dialogue :                  
+   Le parame`tre ref donne la reference et parent le ThotWidget pe're 
+   Si parent est nul, le parame`tre ref_parent identifie le           
+   menu pe`re et entry de'signe l'entre'e correspondante dans le menu 
+   p`ere. Le parame`tre title donne le titre du catalogue.            
+   Le parame`tre number indique le nombre de boutons ajoute's au      
+   bouton 'QUIT' mis par de'faut.                                     
+   Le parame`tre text contient la liste des intitule's des boutons    
+   ajoute's au bouton 'QUIT'.                                         
+   Chaque intitule' se termine par le caracte`re de fin de chai^ne \0.
+   Le parame`tre horizontal indique que le formulaire est compose' en 
+   lignes (TRUE) ou en colonnes (FALSE).                              
+   Le parame`tre package donne le facteur de blocage du formulaire    
+   (nombre d'entre'es par ligne ou par colonne).                      
+   Le parame`tre button indique le bouton de la souris qui active le  
+   menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaNewDialogSheet (int ref, ThotWidget parent, int ref_parent, int entry, char *title, int number, char *text, boolean horizontal, int package, char button, int dbutton)
 
@@ -5288,10 +5293,10 @@ int                 dbutton;
 }				/*TtaNewDialogSheet */
 
 
-/* ---------------------------------------------------------------------- */
-/* | TtaAttachForm attache le catalogue au formulaire ou au feuillet    | */
-/* | dont il de'pend. Les catalogues sont cre'e's attache's.            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaAttachForm attache le catalogue au formulaire ou au feuillet    
+   dont il de'pend. Les catalogues sont cre'e's attache's.            
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaAttachForm (int ref)
 #else  /* __STDC__ */
@@ -5364,10 +5369,10 @@ int                 ref;
 }				/*TtaAttachForm */
 
 
-/* ---------------------------------------------------------------------- */
-/* | TtaDetachForm detache le catalogue au formulaire ou au feuillet    | */
-/* | dont il de'pend. Les catalogues sont cre'e's attache's.            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaDetachForm detache le catalogue au formulaire ou au feuillet    
+   dont il de'pend. Les catalogues sont cre'e's attache's.            
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaDetachForm (int ref)
 #else  /* __STDC__ */
@@ -5441,21 +5446,21 @@ int                 ref;
 }				/*TtaDetachForm */
 
 
-/* ---------------------------------------------------------------------- */
-/* | TtaNewSelector cre'e un se'lecteur dans un formulaire :            | */
-/* | Le parame`tre ref donne la re'fe'rence pour l'application.         | */
-/* | Le parame`tre title donne le titre du catalogue.                   | */
-/* | Le parame`tre number donne le nombre d'intitule's.                 | */
-/* | Le parame`tre text contient la liste des intitule's.               | */
-/* | Le parame`tre height donne le nombre d'intitule's visibles a` la   | */
-/* | fois (hauteur de la fenetree^tre de visualisation).                        | */
-/* | Le parame`tre label ajoute un choix supple'mentaire a` la liste    | */
-/* | des choix possibles. Ce choix est affiche' se'pare'ment et donc    | */
-/* | mis en e'vidence.                                                  | */
-/* | Le parame`tre withText indique s'il faut creer une zone texte.     | */
-/* | Quand le parame`tre react est vrai, tout changement de se'lection  | */
-/* | dans le se'lecteur est imme'diatement signale' a` l'application.   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaNewSelector cre'e un se'lecteur dans un formulaire :            
+   Le parame`tre ref donne la re'fe'rence pour l'application.         
+   Le parame`tre title donne le titre du catalogue.                   
+   Le parame`tre number donne le nombre d'intitule's.                 
+   Le parame`tre text contient la liste des intitule's.               
+   Le parame`tre height donne le nombre d'intitule's visibles a` la   
+   fois (hauteur de la fenetree^tre de visualisation).                        
+   Le parame`tre label ajoute un choix supple'mentaire a` la liste    
+   des choix possibles. Ce choix est affiche' se'pare'ment et donc    
+   mis en e'vidence.                                                  
+   Le parame`tre withText indique s'il faut creer une zone texte.     
+   Quand le parame`tre react est vrai, tout changement de se'lection  
+   dans le se'lecteur est imme'diatement signale' a` l'application.   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaNewSelector (int ref, int ref_parent, char *title, int number, char *text, int height, char *label, boolean withText, boolean react)
 #else  /* __STDC__ */
@@ -5805,9 +5810,9 @@ boolean             react;
 }				/*TtaNewSelector */
 
 
-/* ---------------------------------------------------------------------- */
-/* | TtaActiveSelector rend actif le  se'lecteur.                       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaActiveSelector rend actif le  se'lecteur.                       
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaActiveSelector (int ref)
 #else  /* __STDC__ */
@@ -5844,9 +5849,9 @@ int                 ref;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | TtaDesactiveSelector rend non actif le  se'lecteur.                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaDesactiveSelector rend non actif le  se'lecteur.                        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaDesactiveSelector (int ref)
 #else  /* __STDC__ */
@@ -5884,13 +5889,13 @@ int                 ref;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | TtaSetSelector initialise l'entre'e et/ou le texte du se'lecteur : | */
-/* | Le parame`tre ref donne la re'fe'rence du catalogue.               | */
-/* | Le parame`tre entry positif ou nul donne l'index de l'entre'e      | */
-/* | se'lectionne'e.                                                    | */
-/* | Le parame`tre text donne le texte si entry vaut -1.                | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaSetSelector initialise l'entre'e et/ou le texte du se'lecteur : 
+   Le parame`tre ref donne la re'fe'rence du catalogue.               
+   Le parame`tre entry positif ou nul donne l'index de l'entre'e      
+   se'lectionne'e.                                                    
+   Le parame`tre text donne le texte si entry vaut -1.                
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaSetSelector (int ref, int entry, char *text)
 #else  /* __STDC__ */
@@ -5960,10 +5965,10 @@ char               *text;
 	       }
 
 	     XmTextSetString (wt, text);
-      /****
-      lg = strlen(text);
-      XmTextSetSelection(wt, lg, lg, 500);
-      ***/
+      /*----------------------------------------------------------------------
+   lg = strlen(text);
+   XmTextSetSelection(wt, lg, lg, 500);
+  ----------------------------------------------------------------------*/
 	  }
 
 	/* Si le selecteur est reactif */
@@ -5976,11 +5981,11 @@ char               *text;
      }
 }				/*TtaSetSelector */
 
-/* ---------------------------------------------------------------------- */
-/* | TtaNewLabel cre'e un intitule' constant dans un formulaire :       | */
-/* | Le parame`tre ref donne la re'fe'rence du catalogue.               | */
-/* | Le parame`tre text donne l'intitule'.                              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaNewLabel cre'e un intitule' constant dans un formulaire :       
+   Le parame`tre ref donne la re'fe'rence du catalogue.               
+   Le parame`tre text donne l'intitule'.                              
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaNewLabel (int ref, int ref_parent, char *text)
 #else  /* __STDC__ */
@@ -6097,15 +6102,15 @@ char               *text;
 #endif /* NEW_WILLOWS */
 }				/*TtaNewLabel */
 
-/* ---------------------------------------------------------------------- */
-/* | TtaNewTextForm cre'e une feuille de saisie de texte :              | */
-/* | Le parame`tre ref donne la re'fe'rence pour l'application.         | */
-/* | Le parame`tre title donne le titre du catalogue.                   | */
-/* | Les parame`tres width et height indiquent la taille en caracte`ree | */
-/* | de la feuille de saisie de texte.                                  | */
-/* | Quand le parame`tre react est vrai, tout changement dans la        | */
-/* | feuille de saisie est imme'diatement signale' a` l'application.    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaNewTextForm cre'e une feuille de saisie de texte :              
+   Le parame`tre ref donne la re'fe'rence pour l'application.         
+   Le parame`tre title donne le titre du catalogue.                   
+   Les parame`tres width et height indiquent la taille en caracte`ree 
+   de la feuille de saisie de texte.                                  
+   Quand le parame`tre react est vrai, tout changement dans la        
+   feuille de saisie est imme'diatement signale' a` l'application.    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaNewTextForm (int ref, int ref_parent, char *title, int width, int height, boolean react)
 #else  /* __STDC__ */
@@ -6270,11 +6275,11 @@ boolean             react;
 }				/*TtaNewTextForm */
 
 
-/* ---------------------------------------------------------------------- */
-/* | TtaSetTextForm initialise une feuille de saisie de texte :         | */
-/* | Le parame`tre ref donne la re'fe'rence du catalogue.               | */
-/* | Le parame`tre text donne la valeur initiale.                       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaSetTextForm initialise une feuille de saisie de texte :         
+   Le parame`tre ref donne la re'fe'rence du catalogue.               
+   Le parame`tre text donne la valeur initiale.                       
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaSetTextForm (int ref, char *text)
 #else  /* __STDC__ */
@@ -6317,15 +6322,15 @@ char               *text;
 }				/*TtaSetTextForm */
 
 
-/* ---------------------------------------------------------------------- */
-/* | TtaNewNumberForm cre'e une feuille de saisie de nombre :           | */
-/* | Le parame`tre ref donne la re'fe'rence pour l'application.         | */
-/* | Le parame`tre ref_parent identifie le formulaire pe`re.            | */
-/* | Le parame`tre title donne le titre du catalogue.                   | */
-/* | Les parame`tres min et max fixent les bornes valides du nombre.    | */
-/* | Quand le parame`tre react est vrai, tout changement dans           | */
-/* | la feuille de saisie est imme'diatement signale' a` l'application. | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaNewNumberForm cre'e une feuille de saisie de nombre :           
+   Le parame`tre ref donne la re'fe'rence pour l'application.         
+   Le parame`tre ref_parent identifie le formulaire pe`re.            
+   Le parame`tre title donne le titre du catalogue.                   
+   Les parame`tres min et max fixent les bornes valides du nombre.    
+   Quand le parame`tre react est vrai, tout changement dans           
+   la feuille de saisie est imme'diatement signale' a` l'application. 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaNewNumberForm (int ref, int ref_parent, char *title, int min, int max, boolean react)
 #else  /* __STDC__ */
@@ -6528,11 +6533,11 @@ boolean             react;
 }				/*TtaNewNumberForm */
 
 
-/* ---------------------------------------------------------------------- */
-/* | TtaSetNumberForm fixe le contenu de la feuille de saisie de texte :        | */
-/* | Le parame`tre ref donne la re'fe'rence du catalogue.               | */
-/* | Le parame`tre val donne la valeur initiale.                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaSetNumberForm fixe le contenu de la feuille de saisie de texte :        
+   Le parame`tre ref donne la re'fe'rence du catalogue.               
+   Le parame`tre val donne la valeur initiale.                        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaSetNumberForm (int ref, int val)
 #else  /* __STDC__ */
@@ -6586,10 +6591,10 @@ int                 val;
 }				/*TtaSetNumberForm */
 
 
-/* ---------------------------------------------------------------------- */
-/* | TtaSetDialoguePosition me'morise la position actuelle de la souris | */
-/* |    comme position d'affichage des TtaShowDialogue().               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaSetDialoguePosition me'morise la position actuelle de la souris 
+   comme position d'affichage des TtaShowDialogue().               
+  ----------------------------------------------------------------------*/
 void                TtaSetDialoguePosition ()
 {
    ThotWindow          wdum;
@@ -6604,9 +6609,9 @@ void                TtaSetDialoguePosition ()
 }				/*TtaSetDialoguePosition */
 
 
-/* ---------------------------------------------------------------------- */
-/* | TtaShowDialogue active le catalogue de'signe.                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaShowDialogue active le catalogue de'signe.                      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaShowDialogue (int ref, boolean remanent)
 #else  /* __STDC__ */
@@ -6708,10 +6713,10 @@ boolean             remanent;
 }				/*TtaShowDialogue */
 
 
-/* ---------------------------------------------------------------------- */
-/* | TtaWaitShowDialogue attends le retour du catalogue affiche par     | */
-/* | TtaShowDialogue.                                                   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaWaitShowDialogue attends le retour du catalogue affiche par     
+   TtaShowDialogue.                                                   
+  ----------------------------------------------------------------------*/
 void                TtaWaitShowDialogue ()
 {
 #ifndef NEW_WILLOWS
@@ -6732,19 +6737,19 @@ void                TtaWaitShowDialogue ()
 }				/*TtaWaitShowDialogue */
 
 
-/* ---------------------------------------------------------------------- */
-/* | TtaTestWaitShowDialogue retourne Vrai (1) si un TtaWaitShowDialogue        | */
-/* | est en cours, sinon Faux (0).                                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaTestWaitShowDialogue retourne Vrai (1) si un TtaWaitShowDialogue        
+   est en cours, sinon Faux (0).                                      
+  ----------------------------------------------------------------------*/
 boolean             TtaTestWaitShowDialogue ()
 {
    return (CurrentWait);
 }				/*TtaTestWaitShowDialogue */
 
 
-/* ---------------------------------------------------------------------- */
-/* | TtaAbortShowDialogue abandonne le TtaShowDialogue.                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaAbortShowDialogue abandonne le TtaShowDialogue.                 
+  ----------------------------------------------------------------------*/
 void                TtaAbortShowDialogue ()
 {
 
@@ -6780,9 +6785,9 @@ void                TtaAbortShowDialogue ()
 }				/*TtaAbortShowDialogue */
 
 #ifdef NEW_WILLOWS
-/* ---------------------------------------------------------------------- */
-/* | Callback pour un bouton du menu                                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Callback pour un bouton du menu                                    
+  ----------------------------------------------------------------------*/
 void                WinThotCallBack (HWND hWnd, WPARAM wParam, LPARAM lParam)
 {
    struct Cat_Context *catalogue;

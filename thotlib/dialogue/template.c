@@ -1,4 +1,6 @@
-/* I. Vatton    Mai 1994 */
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
 
 #include "thot_gui.h"
 #include "thot_sys.h"
@@ -16,9 +18,9 @@
 #include "viewcommands_f.h"
 
 
-/* ---------------------------------------------------------------------- */
-/* | retXXX met a jour le formulaire de XXX.                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   retXXX met a jour le formulaire de XXX.                    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                retXXX (int ref, int typedata, char *data)
 
@@ -33,9 +35,9 @@ char               *data;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | XXX initialise le changement de XXX.                       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   XXX initialise le changement de XXX.                       
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                XXX (Document document, View view)
 

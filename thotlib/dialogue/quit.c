@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmenu.h"
@@ -25,9 +29,9 @@ extern void         QuitEditor ();
 
 #endif
 
-/* ---------------------------------------------------------------------- */
-/* | TtcQuit initialise le changement de TtcQuit.                       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtcQuit initialise le changement de TtcQuit.                       
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcQuit (Document document, View view)
 

@@ -1,5 +1,9 @@
 /*
-   editmenu.c : fonctions d'edition -- menus fichier, vue, import export.
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
+   fonctions d'edition -- menus fichier, vue, import export.
  */
 
 #include "thot_sys.h"
@@ -57,10 +61,10 @@ extern void         EntreeMenu ();
 
 #endif /* __STDC__ */
 
-/* ---------------------------------------------------------------------- */
-/* |    CheckPresImage valide ou invalide le type de presentation en    | */
-/* |            fonction du type d'image.                               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CheckPresImage valide ou invalide le type de presentation en    
+   fonction du type d'image.                               
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         CheckPresImage (int indexType)
 #else  /* __STDC__ */
@@ -86,9 +90,9 @@ int                 indexType;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    InitPathImage   initialise les paths des images.                | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   InitPathImage   initialise les paths des images.                
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         InitPathImage ()
 
@@ -147,9 +151,9 @@ static void         InitPathImage ()
 }
 
 
-/* ----------------------------------------------------------------------- */
-/* |  CallbackPictureMenu enregistre les retours du formulaire Picture            | */
-/* ----------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CallbackPictureMenu enregistre les retours du formulaire Picture            
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CallbackPictureMenu (int ref, int typeData, char *txt)
 
@@ -277,9 +281,9 @@ char               *txt;
 }
 
 
-/* ----------------------------------------------------------------------- */
-/* |  Menu appele lors de la modification d'une image                    | */
-/* ----------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Menu appele lors de la modification d'une image                    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void BuildPictureMenu (char *name, boolean *result, int *typim, int *pres, PtrBox pBox)
 
@@ -378,7 +382,8 @@ PtrBox            pBox;
      }
    *result = RedisplayPicture;
 }
-/* ----------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void                ImageMenuLoadResources ()
 {
    BaseDlgImage = TtaSetCallback (CallbackPictureMenu, MAX_IMAGE_MENU);

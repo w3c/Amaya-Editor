@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -192,10 +196,10 @@ PtrElement          pEl2;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    UnloadDocument libere le document dont le descripteur est pointe'  | */
-/* |            par pDoc.                                               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   UnloadDocument libere le document dont le descripteur est pointe'  
+   par pDoc.                                               
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                UnloadDocument (PtrDocument * pDoc)
 #else  /* __STDC__ */

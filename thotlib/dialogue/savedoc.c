@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
 #include "thot_sys.h"
 #include "constmenu.h"
 #include "constmedia.h"
@@ -19,6 +23,7 @@
 #include "frame_tv.h"
 #include "opendoc_f.h"
 #include "createdoc_f.h"
+
 extern int          CurrentDialog;
 static PathBuffer   SaveDirectoryName;
 static PathBuffer   SaveFileName;
@@ -59,10 +64,10 @@ extern boolean      WriteDocument ();
 
 #endif /* __STDC__ */
 
-/* ---------------------------------------------------------------------- */
-/* | UnsetEntryMenu visualise comme non active l'entree ent du menu    | */
-/* | dont la re'fe'rence est passe'e en parame`tre.                     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   UnsetEntryMenu visualise comme non active l'entree ent du menu    
+   dont la re'fe'rence est passe'e en parame`tre.                     
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                UnsetEntryMenu (int ref, int ent)
 #else  /* __STDC__ */
@@ -84,9 +89,9 @@ int                 ent;
      }
 }				/*UnsetEntryMenu */
 
-/* ----------------------------------------------------------------------- */
-/* | BuildSaveDocMenu traite la Sauvegarde du Fichier                     | */
-/* ----------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   BuildSaveDocMenu traite la Sauvegarde du Fichier                     
+  ----------------------------------------------------------------------*/
 void                BuildSaveDocMenu ()
 
 {
@@ -129,9 +134,9 @@ void                BuildSaveDocMenu ()
      }
 }
 
-/* ----------------------------------------------------------------------- */
-/* | CallbackSaveDocMenu traite les retours du menu Sauver Fichier          | */
-/* ----------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CallbackSaveDocMenu traite les retours du menu Sauver Fichier          
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CallbackSaveDocMenu (int ref, int typedata, char *txt)
 
@@ -305,10 +310,10 @@ char               *txt;
 	 }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    SaveDocAs   cree, initialise et active le formulaire "Sauver comme"| */
-/* |            pour le document pDoc.                                   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SaveDocAs   cree, initialise et active le formulaire "Sauver comme"
+   pour le document pDoc.                                   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         SaveDocAs (PtrDocument pDoc)
 #else  /* __STDC__ */
@@ -399,7 +404,6 @@ PtrDocument         pDoc;
 	      SaveDocWithCopy = TRUE;
 	      SaveDocWithMove = FALSE;
 	      /* Formulaire Confirmation creation */
-	      /* ++++++++++++++++++++++++++++++++ */
 	      strcpy (BufMenu, TtaGetMessage (LIB, SAVE_AS));
 	      i = strlen (BufMenu) + 1;
 	      strcpy (&BufMenu[i], TtaGetMessage (LIB, LIB_CONFIRM));
@@ -410,7 +414,8 @@ PtrDocument         pDoc;
 	   }
 }
 
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcSaveDocumentAs (Document document, View view)
 #else  /* __STDC__ */
@@ -445,7 +450,8 @@ View                view;
 }
 
 
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcSaveDocument (Document document, View view)
 #else  /* __STDC__ */

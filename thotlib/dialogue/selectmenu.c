@@ -1,8 +1,9 @@
 /*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
    Gestion de la selection dans l'arbre abstrait.
-   V. Quint     Mai 1992
-   Major changes:
-   I. Vatton    Mars 1996
  */
 
 #include "thot_gui.h"
@@ -36,10 +37,10 @@
 
 
 
-/* ---------------------------------------------------------------------- */
-/* |  BuildSelectMenu compose dans le buffer BufMenu le menu       | */
-/* |      Selection et retourne le nombre d'entrees de ce menu.         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   BuildSelectMenu compose dans le buffer BufMenu le menu       
+   Selection et retourne le nombre d'entrees de ce menu.         
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 BuildSelectMenu (char BufMenu[MAX_TXT_LEN])
 #else  /* __STDC__ */
@@ -477,11 +478,11 @@ char                BufMenu[MAX_TXT_LEN];
 #endif /* __COLPAGE__ */
 }
 
-/* ---------------------------------------------------------------------- */
-/* |  UpdateSelectMenu                                                     | */
-/* |  Met a jour le menu de Selection                                   | */
-/* |    - de toutes les frames ouvertes du document pDoc                | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   UpdateSelectMenu                                                     
+   Met a jour le menu de Selection                                   
+   - de toutes les frames ouvertes du document pDoc                
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                UpdateSelectMenu (PtrDocument pDoc)
 #else  /* __STDC__ */
@@ -553,10 +554,10 @@ PtrDocument         pDoc;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    CallbackAttrMenu traite les retours du menu 'Attributs':        | */
-/* |    cree un formulaire pour saisir la valeur de l'attribut choisi.  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CallbackAttrMenu traite les retours du menu 'Attributs':        
+   cree un formulaire pour saisir la valeur de l'attribut choisi.  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CallbackSelectMenu (int refmenu, int val, int frame)
 #else  /* __STDC__ */
@@ -570,9 +571,9 @@ int                 frame;
    SelectAround (val);
 }
 
-/* ---------------------------------------------------------------------- */
-/* | EditingLoadResources connecte les fonctions de selection.          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   EditingLoadResources connecte les fonctions de selection.          
+  ----------------------------------------------------------------------*/
 void                SelectionMenuLoadResources ()
 {
    if (ThotLocalActions[T_chselect] == NULL)

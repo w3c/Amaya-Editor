@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
 #include "thot_sys.h"
 #include "constmenu.h"
 #include "constmedia.h"
@@ -71,13 +75,13 @@ static Name          NewSchemaName;
 #include "structschema_f.h"
 
 
-/* ---------------------------------------------------------------------- */
-/* | BuildPathDocBuffer construit une chaine des paths de documents     | */
-/* |                    pour les dialogues de l'editeur Thot.                   | */
-/* |                    la chaine est construite dans bufDir et les entrees sont        | */
-/* |                    separees par separator, le nombre d'entrees est | */
-/* |                    retourne dans nbItems                            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   BuildPathDocBuffer construit une chaine des paths de documents     
+   pour les dialogues de l'editeur Thot.                   
+   la chaine est construite dans bufDir et les entrees sont        
+   separees par separator, le nombre d'entrees est 
+   retourne dans nbItems                            
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                BuildPathDocBuffer (char *bufDir, char separator, int *nbItems)
 #else  /* __STDC__ */
@@ -104,12 +108,12 @@ int                *nbItems;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    BuildSchPresNameMenu        demande a l'utilisateur le schema de    | */
-/* |    presentation a charger pour le schema de structure pSchStr.     | */
-/* |    A l'appel, name contient le nom du schema propose' par Thot,    | */
-/* |    au retour, name contient le nom entre' par l'utilisateur.       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   BuildSchPresNameMenu        demande a l'utilisateur le schema de    
+   presentation a charger pour le schema de structure pSchStr.     
+   A l'appel, name contient le nom du schema propose' par Thot,    
+   au retour, name contient le nom entre' par l'utilisateur.       
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                BuildSchPresNameMenu (PtrSSchema pSchStr, Name name)
 
@@ -123,7 +127,6 @@ Name                 name;
 {
 
    /* Formulaire du schema de presentation */
-   /* ++++++++++++++++++++++++++++++++++++ */
    TtaNewForm (NumFormPresentationSchema, 0, 0, 0,
 	       TtaGetMessage (LIB, PRES), TRUE, 1, 'L', D_DONE);
 
@@ -155,9 +158,9 @@ Name                 name;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | CallbackSchPresNameMenu met a jour le choix du schema de presentation.     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CallbackSchPresNameMenu met a jour le choix du schema de presentation.     
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CallbackSchPresNameMenu (int ref, int typedata, char *data)
 
@@ -183,9 +186,9 @@ char               *data;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | CallbackImportMenu met a jour le formulaire de import.                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CallbackImportMenu met a jour le formulaire de import.                      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CallbackImportMenu (int ref, int typedata, char *data)
 
@@ -223,9 +226,9 @@ char               *data;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | CallbackOpenDocMenu met a jour le formulaire de opendoc.                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CallbackOpenDocMenu met a jour le formulaire de opendoc.                    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CallbackOpenDocMenu (int ref, int typedata, char *data)
 
@@ -381,9 +384,9 @@ char               *data;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | TtcOpenDocument initialise le changement de opendoc.                       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtcOpenDocument initialise le changement de opendoc.                       
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcOpenDocument (Document document, View view)
 
@@ -409,7 +412,6 @@ View                view;
 	TteConnectAction (T_buildpathdocbuffer, (Proc) BuildPathDocBuffer);
      }
    /* Creation du Formulaire Ouvrir */
-   /* +++++++++++++++++++++++++++++ */
    TtaNewForm (NumFormOpenDoc, 0, 0, 0,
 	  TtaGetMessage (LIB, OPEN_DOC), TRUE, 2, 'L', D_CANCEL);
    /* zone de saisie des dossiers documents */
@@ -439,7 +441,6 @@ View                view;
    TtaSetTextForm (NumZoneDocNameToOpen, DefaultDocumentName);
 
    /* Formulaire Classe du document a importer */
-   /* ++++++++++++++++++++++++++++++++++++++++ */
    TtaNewForm (NumFormImportClass, 0, 0, 0,
 	   TtaGetMessage (LIB, IMPORT_DOC_TYPE), FALSE, 1, 'L', D_DONE);
    /* selecteur ou zone de saisie Classe du document a importer */

@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
  * lookup.c -- Binding of TtaXLookupString in place of the X11
  *             XLookupString function.
  */
@@ -34,9 +38,9 @@ XComposeStatus     *status;
 }
 #endif /* ! _WINDOWS */
 
-/* ---------------------------------------------------------------------- */
-/* | LookupLoadResources : link in the XLookupString replacement        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   LookupLoadResources : link in the XLookupString replacement        
+  ----------------------------------------------------------------------*/
 void                LookupLoadResources ()
 {
    /*

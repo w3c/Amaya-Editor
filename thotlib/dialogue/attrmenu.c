@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "dialog.h"
@@ -55,10 +59,10 @@ static PtrAttribute  PtrReqAttr;
 #include "content_f.h"
 
 
-/* ---------------------------------------------------------------------- */
-/* |    InitFormLangue intialise le formulaire pour la saisie des       | */
-/* |            valeurs de l'attribut Langue.                           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   InitFormLangue intialise le formulaire pour la saisie des       
+   valeurs de l'attribut Langue.                           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         InitFormLanguage (Document doc, View view, PtrElement firstSel, PtrAttribute CurrAttr)
 #else  /* __STDC__ */
@@ -149,12 +153,12 @@ PtrAttribute        CurrAttr;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    MenuValues construit la feuille de saisie des valeurs de       | */
-/* |            l'attribut defini par la regle pAttr1.                  | */
-/* |            required indique s'il s'agit d'un attribut obligatoire.   | */
-/* |            CurrAttr donne la valeur courante de l'attribut.         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   MenuValues construit la feuille de saisie des valeurs de       
+   l'attribut defini par la regle pAttr1.                  
+   required indique s'il s'agit d'un attribut obligatoire.   
+   CurrAttr donne la valeur courante de l'attribut.         
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         MenuValues (TtAttribute * pAttr1, boolean required, PtrAttribute CurrAttr,
 				 PtrDocument pDoc, int view)
@@ -271,10 +275,10 @@ int                 view;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | CallbackReqAttrMenu traite le retour du menu de saisie des           | */
-/* |    attributs obligatoires.                                         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CallbackReqAttrMenu traite le retour du menu de saisie des           
+   attributs obligatoires.                                         
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CallbackReqAttrMenu (int ref, int val, char *txt)
 #else  /* __STDC__ */
@@ -324,10 +328,10 @@ char               *txt;
 	 }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    BuildReqAttrMenu construit le menu de saisie de la valeur| */
-/* |            de l'attribut requis defini par la regle pRuleAttr.    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   BuildReqAttrMenu construit le menu de saisie de la valeur
+   de l'attribut requis defini par la regle pRuleAttr.    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                BuildReqAttrMenu (PtrAttribute pAttr, PtrDocument pDoc)
 #else  /* __STDC__ */
@@ -348,13 +352,13 @@ PtrDocument         pDoc;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    TteItemMenuAttr         envoie le message AttrMenu.Pre qui      | */
-/* |            indique que l'editeur va mettre dans le menu Attributs  | */
-/* |            l'item pour la creation d'un attribut de type           | */
-/* |            (pSS, att) pour l'element pEl et retourne               | */
-/* |            la reponse de l'application.                            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TteItemMenuAttr         envoie le message AttrMenu.Pre qui      
+   indique que l'editeur va mettre dans le menu Attributs  
+   l'item pour la creation d'un attribut de type           
+   (pSS, att) pour l'element pEl et retourne               
+   la reponse de l'application.                            
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      TteItemMenuAttr (PtrSSchema pSS, int att, PtrElement pEl, PtrDocument pDoc)
 #else  /* __STDC__ */
@@ -380,10 +384,10 @@ PtrDocument         pDoc;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |  BuildAttrMenu construit le menu Attributs et               | */
-/* |  retourne le nombre d'attributs mis dans le menu compose'.         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   BuildAttrMenu construit le menu Attributs et               
+   retourne le nombre d'attributs mis dans le menu compose'.         
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 BuildAttrMenu (char *BufMenu, PtrDocument pDoc, int ActiveAttr[])
 #else  /* __STDC__ */
@@ -537,11 +541,11 @@ int                 ActiveAttr[];
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |  UpdateAttrMenu                                                       | */
-/* |  Met a jour le menu des Attributs                                  | */
-/* |    - de toutes les frames ouvertes du document pDoc.               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   UpdateAttrMenu                                                       
+   Met a jour le menu des Attributs                                  
+   - de toutes les frames ouvertes du document pDoc.               
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                UpdateAttrMenu (PtrDocument pDoc)
 #else  /* __STDC__ */
@@ -621,14 +625,14 @@ PtrDocument         pDoc;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* | CallbackValAttrMenu traite le retour du formulaire de saisie des        | */
-/* |    valeurs d'attribut : applique aux elements selectionne's les    | */
-/* |    attributs choisis par l'utilisateur.                            | */
-/* |    ref: reference de l'element de dialogue dont on traite le retour| */
-/* |    valmenu: valeur choisie ou saisie dans cet element de dialogue. | */
-/* |    valtexte: pointeur sur le texte saisi dans cet element de dialogue */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CallbackValAttrMenu traite le retour du formulaire de saisie des        
+   valeurs d'attribut : applique aux elements selectionne's les    
+   attributs choisis par l'utilisateur.                            
+   ref: reference de l'element de dialogue dont on traite le retour
+   valmenu: valeur choisie ou saisie dans cet element de dialogue. 
+   valtexte: pointeur sur le texte saisi dans cet element de dialogue 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CallbackValAttrMenu (int ref, int valmenu, char *valtext)
 #else  /* __STDC__ */
@@ -744,10 +748,10 @@ char               *valtext;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    CallbackAttrMenu traite les retours du menu 'Attributs':        | */
-/* |    cree un formulaire pour saisir la valeur de l'attribut choisi.  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CallbackAttrMenu traite les retours du menu 'Attributs':        
+   cree un formulaire pour saisir la valeur de l'attribut choisi.  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CallbackAttrMenu (int refmenu, int att, int frame)
 #else  /* __STDC__ */
@@ -850,9 +854,9 @@ int                 frame;
 	}
 }
 
-/* ---------------------------------------------------------------------- */
-/* | CallbackLanguageMenu traite les retours du formulaire Langue.             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CallbackLanguageMenu traite les retours du formulaire Langue.             
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CallbackLanguageMenu (int ref, int val, char *txt)
 #else  /* __STDC__ */
@@ -890,9 +894,9 @@ char               *txt;
 	 }
 }
 
-/* ---------------------------------------------------------------------- */
-/* | AttributeMenuLoadResources connecte les fonctions d'edition        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   AttributeMenuLoadResources connecte les fonctions d'edition        
+  ----------------------------------------------------------------------*/
 void                AttributeMenuLoadResources ()
 {
    if (ThotLocalActions[T_chattr] == NULL)

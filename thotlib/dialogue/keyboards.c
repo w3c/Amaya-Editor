@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
 /* Module de visualisation des claviers. */
 
 
@@ -381,12 +385,12 @@ extern ThotWidget   XmCreateBulletinBoard ();
 
 #endif /* __STDC__ */
 
-/* ---------------------------------------------------------------------- */
-/* |    WChar affiche le caractere ch a` la position x,y de la fenetre w| */
-/* |            en utilisant la police de caracteres font.              | */
-/* |            La fonction func indique s'il s'agit d'une boite        | */
-/* |            active (1) ou non (0).                                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WChar affiche le caractere ch a` la position x,y de la fenetre w
+   en utilisant la police de caracteres font.              
+   La fonction func indique s'il s'agit d'une boite        
+   active (1) ou non (0).                                  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         WChar (ThotWindow w, char ch, int x, int y, int func, ptrfont font, int disp, ThotGC GClocal)
 #else  /* __STDC__ */
@@ -414,9 +418,9 @@ ThotGC              GClocal;
 #endif
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    FinKbd termine l'affichage du clavier.                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   FinKbd termine l'affichage du clavier.                          
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         FinKbd (ThotWidget w, int index, caddr_t call_d)
 
@@ -433,9 +437,9 @@ caddr_t             call_d;
 #endif /* NEW_WILLOWS */
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    RetourKbd traite les touches du clavier.                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RetourKbd traite les touches du clavier.                        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         RetourKbd (ThotWidget w, int param, caddr_t call_d)
 #else  /* __STDC__ */
@@ -457,9 +461,9 @@ caddr_t             call_d;
 
 
 #ifndef NEW_WILLOWS
-/* ---------------------------------------------------------------------- */
-/* |    ExposeKbd affiche les touches du clavier.                       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ExposeKbd affiche les touches du clavier.                       
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ExposeKbd (ThotWidget w, int param, XmDrawnButtonCallbackStruct * infos)
 #else  /* __STDC__ */
@@ -505,9 +509,9 @@ XmDrawnButtonCallbackStruct *infos;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    CreateKeyboard cree un clavier.                                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CreateKeyboard cree un clavier.                                 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         CreateKeyboard (int number, char *title, ptrfont pFont, int col, int x, int y, ITEM * items, int nbitem)
 #else  /* __STDC__ */
@@ -657,7 +661,6 @@ int                 nbitem;
    n++;
 
    /* Affiche les differents boutons du clavier */
-   /* ----------------------------------------- */
    it = items;
    /* Prepare les parametres des procedures RetourKbd et ExposeKbd */
    param = number * 256;	/* indice du clavier */
@@ -707,9 +710,9 @@ int                 nbitem;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    LoadKbd charge un des claviers.                                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   LoadKbd charge un des claviers.                                 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         LoadKbd (int number)
@@ -759,9 +762,9 @@ int                 number;
 #endif /* NEW_WILLOWS */
 
 
-/* ---------------------------------------------------------------------- */
-/* |    KeyboardMap mappe un clavier.                                         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   KeyboardMap mappe un clavier.                                         
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                KeyboardMap (int kb)
 #else  /* __STDC__ */
@@ -791,9 +794,9 @@ int                 kb;
 #endif /* NEW_WILLOWS */
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    Initialisation des claviers.                                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Initialisation des claviers.                                    
+  ----------------------------------------------------------------------*/
 void                KeyboardsLoadResources ()
 {
    int                 i;
@@ -830,9 +833,9 @@ void                KeyboardsLoadResources ()
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | TtcDisplayMathKeyboard initialise le changement du clavier math.           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtcDisplayMathKeyboard initialise le changement du clavier math.           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcDisplayMathKeyboard (Document document, View view)
 
@@ -850,9 +853,9 @@ View                view;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | TtcDisplayGraphicsKeyboard initialise le changement clavier graphics       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtcDisplayGraphicsKeyboard initialise le changement clavier graphics       
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcDisplayGraphicsKeyboard (Document document, View view)
 
@@ -870,9 +873,9 @@ View                view;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | TtcDisplayLatinKeyboard initialise le changement du clavier latin.         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtcDisplayLatinKeyboard initialise le changement du clavier latin.         
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcDisplayLatinKeyboard (Document document, View view)
 
@@ -890,9 +893,9 @@ View                view;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | TtcDisplayGreekKeyboard initialise le changement du clavier greek.         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtcDisplayGreekKeyboard initialise le changement du clavier greek.         
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcDisplayGreekKeyboard (Document document, View view)
 

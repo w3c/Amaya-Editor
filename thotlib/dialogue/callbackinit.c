@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -12,9 +16,9 @@
 #include "appevents_tv.h"
 
 
-/* ---------------------------------------------------------------------- */
-/* |    FetchAction finds and returns an action with the name actionName | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   FetchAction finds and returns an action with the name actionName 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static PtrAction    FetchAction (char *actionName)
 #else  /* __STDC__ */
@@ -31,10 +35,10 @@ char               *actionName;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    TteAddAction inserts an action in the list of actions           | */
-/* |            pointed to by the global variable ActionList.           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TteAddAction inserts an action in the list of actions           
+   pointed to by the global variable ActionList.           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TteAddAction (char *actionName, Proc doIt)
 #else  /* __STDC__ */
@@ -79,10 +83,10 @@ Proc                doIt;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    TteNewEventsSet returns a pointer to a new events set.		| */
-/* |            It is added to the global list.       			| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TteNewEventsSet returns a pointer to a new events set.		
+   It is added to the global list.       			
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 PtrEventsSet  TteNewEventsSet (int structureId, char *name)
 #else  /* __STDC__ */
@@ -124,10 +128,10 @@ char               *name;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    TteAddActionEvent inserts a new structure event/action into     | */
-/* |        eventsList.				                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TteAddActionEvent inserts a new structure event/action into     
+   eventsList.				                        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TteAddActionEvent (PtrEventsSet eventsList, int typeId, APPevent event, boolean pre, char *actionName)
 #else  /* __STDC__ */

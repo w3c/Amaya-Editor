@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
 #include "thot_sys.h"
 #include "constmenu.h"
 #include "constmedia.h"
@@ -24,9 +28,9 @@ static DocViewNumber    ReferenceView;
 #include "appdialogue_f.h"
 
 
-/* ---------------------------------------------------------------------- */
-/* | CallbackOpenView met a jour le formulaire de openview.               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CallbackOpenView met a jour le formulaire de openview.               
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CallbackOpenView (int ref, int dataType, char *data)
 #else  /* __STDC__ */
@@ -48,9 +52,9 @@ char               *data;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | TtcOpenView initialise le menu de openview.                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtcOpenView initialise le menu de openview.                        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcOpenView (Document document, View view)
 #else  /* __STDC__ */
@@ -108,9 +112,9 @@ View                view;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | TtcCloseView ferme une frame de document.                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtcCloseView ferme une frame de document.                          
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcCloseView (Document document, View viewIn)
 #else  /* __STDC__ */
@@ -133,10 +137,10 @@ View                viewIn;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    TtcSynchronizeView l'utilisateur demande le changement du mode  | */
-/* |            de synchronisation de la vue indiquee du document.      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtcSynchronizeView l'utilisateur demande le changement du mode  
+   de synchronisation de la vue indiquee du document.      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SwitchSynchronize (Document document, View view)
 #else  /* __STDC__ */

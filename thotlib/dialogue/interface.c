@@ -1,13 +1,17 @@
-/*=======================================================================*/
-/*|                                                                     | */
-/*|     Thot Toolkit: Application Program Interface level 3             | */
-/*|     --->document windows managment                                  | */
-/*|                                                                     | */
-/*|                     I. Vatton       September 92                    | */
-/*|                                                                     | */
-/*|  D. Veillard October 95 : add multikey support                      | */
-/*|                                                                     | */
-/*=======================================================================*/
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*----------------------------------------------------------------------
+   
+   Thot Toolkit: Application Program Interface level 3             
+   --->document windows managment                                  
+   
+   I. Vatton       September 92                    
+   
+   D. Veillard October 95 : add multikey support                      
+   
+  ----------------------------------------------------------------------*/
 
 /* #define DEBUG_MULTIKEY */
 #define OWN_XLOOKUPSTRING	/* Do NOT remove it, it change thot_gui.h includes */
@@ -56,13 +60,13 @@
 
 
 #ifndef NEW_WILLOWS
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    Handling of Multikey sequences used to produce ISO-Latin-1.
    The corresponding keysyms are installed in the keyboard map
    and a filter catch all keypressed event to detect sequence and
    dynamically change the event flow to produce event corresponding
    to the extended character set.
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 /* #define DEBUG_KEYMAP *//* give debug information when installing keymap */
 /* #define DEBUG_MULTIKEY *//* give debug information when using multikey */
@@ -498,14 +502,14 @@ XComposeStatus     *status;	/* not implemented */
    return (0);
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaIsKeycodeOK
 
    Heuristic on where to place the new Keysyms on the Keymap layout.
    We should avoid to put them on keycode used for modifiers or
    (this is due to Sun Xserver behavior probably X11R5) on Keycode
    assigned to Keypad keys :-( .
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static int          TtaIsKeycodeOK (int keycode)
@@ -535,12 +539,12 @@ KeySym              k;
    return (res);
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaInstallMultiKey
 
    Install support for Iso-Latin-1 KeySyms in the Keyboard Map managed
    by X-Windows.
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 /*
  * Seems there is no more problems, keep the ability
@@ -756,11 +760,11 @@ void                TtaInstallMultiKey ()
 
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGetIsoKeysym
 
    Modify the XEvent given as the argument to reference a given KeySym.
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 TtaGetIsoKeysym (XEvent * event, KeySym keysym)
 #else  /* __STDC__ */
@@ -815,7 +819,7 @@ KeySym              keysym;
    return (0);
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaHandleMultiKeyEvent
 
    handle multi-key input to provide Iso-Latin-1 in a consistent manner
@@ -830,7 +834,7 @@ KeySym              keysym;
 
    If the whole sequence correspond to a valid MultiKey sequence, the
    event corresponding to a KeyPress for the result character is generated
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 TtaHandleMultiKeyEvent (XEvent * event)
@@ -1017,9 +1021,9 @@ XEvent             *event;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | DisplayEmptyBoxLoadResources: displays the empty boxes.            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   DisplayEmptyBoxLoadResources: displays the empty boxes.            
+  ----------------------------------------------------------------------*/
 void                DisplayEmptyBoxLoadResources ()
 {
    if (ThotLocalActions[T_emptybox] == NULL)
@@ -1027,11 +1031,11 @@ void                DisplayEmptyBoxLoadResources ()
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaHandleOneEvent
 
    Processes one given event in the application.
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaHandleOneEvent (XEvent * ev)
 #else  /* __STDC__ */
@@ -1115,11 +1119,11 @@ XEvent             *ev;
 #endif /* !NEW_WILLOWS */
 
 #ifdef NEW_WILLOWS
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaHandleOneWindowEvent
 
    Processes one given event in the Window application.
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaHandleOneWindowEvent (MSG * msg)
 #else  /* __STDC__ */
@@ -1137,11 +1141,11 @@ MSG                *msg;
 #endif
 
 
-/* ----------------------------------------------------------------------
- * TtaHandlePendingEvents
+/*----------------------------------------------------------------------
+   * TtaHandlePendingEvents
  *
- * Processes all pending events in an application.
- ---------------------------------------------------------------------- */
+   * Processes all pending events in an application.
+  ----------------------------------------------------------------------*/
 void                TtaHandlePendingEvents ()
 {
 #ifndef NEW_WILLOWS
@@ -1167,13 +1171,13 @@ void                TtaHandlePendingEvents ()
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaMainLoop
 
    Starts the main loop for processing all events in an application. This
    function must be called after all initializations have been made.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 void                TtaMainLoop ()
 {
    NotifyEvent         notifyEvt;
@@ -1228,11 +1232,11 @@ void                TtaMainLoop ()
      }
 }				/*TtaMainLoop */
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGetMenuColor
 
    Returns the color used for the background of dialogue windows.
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 Pixel               TtaGetMenuColor ()
 {
    UserErrorCode = 0;
@@ -1240,12 +1244,12 @@ Pixel               TtaGetMenuColor ()
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGetButtonColor
 
    Returns the color used for displaying active buttons in forms.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 Pixel               TtaGetButtonColor ()
 {
    UserErrorCode = 0;
@@ -1254,12 +1258,12 @@ Pixel               TtaGetButtonColor ()
 
 
 #ifdef WWW_XWINDOWS
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGetCurrentDisplay
 
    Returns the current display descriptor.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 Display            *TtaGetCurrentDisplay ()
 {
    UserErrorCode = 0;
@@ -1268,24 +1272,24 @@ Display            *TtaGetCurrentDisplay ()
 #endif /* WWW_XWINDOWS */
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGetScreenDepth
 
    Returns the current screen depth.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 int                 TtaGetScreenDepth ()
 {
    UserErrorCode = 0;
    return TtWDepth;
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaClickElement
 
    Returns document and element clicked.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaClickElement (Document * document, Element * element)
 #else  /* __STDC__ */
@@ -1323,10 +1327,10 @@ Element            *element;
 }
 
 
-/* ----------------------------------------------------------------------- */
-/* | TtaGiveSelectPosition: returns the mouse position for the last click |*/
-/* |            with respect to the element (position in pixel)            |*/
-/* ----------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaGiveSelectPosition: returns the mouse position for the last click 
+   with respect to the element (position in pixel)            
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaGiveSelectPosition (Document document, Element element, View view, int *X, int *Y)
 #else  /* __STDC__ */

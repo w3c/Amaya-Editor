@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "thotdir.h"
@@ -14,9 +18,9 @@ static char         ls_unixFiles[MAX_NAME * NAME_LENGTH];
 static int          ls_fileNbr;
 static char         EmptyMsg[] = "";
 
-/* ---------------------------------------------------------------------- */
-/* |    ExtractFileName extrait un nom de fichier de ls_stream.             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ExtractFileName extrait un nom de fichier de ls_stream.             
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ExtractFileName (char *word)
 #else  /* __STDC__ */
@@ -49,10 +53,10 @@ char               *word;
    i++;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    TtaIsSuffixFileIn retourne Vrai si le directory contient des    | */
-/* |            fichiers avec le suffixe demande'.                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaIsSuffixFileIn retourne Vrai si le directory contient des    
+   fichiers avec le suffixe demande'.                      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             TtaIsSuffixFileIn (char *aDirectory, char *suffix)
 #else  /* __STDC__ */
@@ -106,19 +110,19 @@ char               *suffix;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    TtaListDirectory lance la lecture du contenu du directory.      | */
-/* |            aDirectory indique le directory concerne' (!=/afs).     | */
-/* |            dirTitle donne le titre du selecteur des directories.   | */
-/* |            formRef est la reference du formulaire utilise'.        | */
-/* |            dirRef est la reference du selecteur des directories.   | */
-/* |            suffix donne le suffixe de tri des fichiers.            | */
-/* |            fileTitle donne le titre du selecteur des fichiers.     | */
-/* |            fileRef est la reference du selecteur des fichiers.     | */
-/* |            Si dirRef ou fileRef sont des valeurs negatives, le     | */
-/* |            selecteur correspondant n'est pas cree.                 | */
-/* |            Si aDirectory n'existe pas les selecteurs sont vide.    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaListDirectory lance la lecture du contenu du directory.      
+   aDirectory indique le directory concerne' (!=/afs).     
+   dirTitle donne le titre du selecteur des directories.   
+   formRef est la reference du formulaire utilise'.        
+   dirRef est la reference du selecteur des directories.   
+   suffix donne le suffixe de tri des fichiers.            
+   fileTitle donne le titre du selecteur des fichiers.     
+   fileRef est la reference du selecteur des fichiers.     
+   Si dirRef ou fileRef sont des valeurs negatives, le     
+   selecteur correspondant n'est pas cree.                 
+   Si aDirectory n'existe pas les selecteurs sont vide.    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaListDirectory (char *aDirectory, int formRef, char *dirTitle, int dirRef, char *suffix, char *fileTitle, int fileRef)
 #else  /* __STDC__ */
@@ -151,7 +155,6 @@ int                 fileRef;
        && strcmp (aDirectory, "/afs/") != 0)
      {
 	/* CsList les directories du directory */
-	/* ---------------------------------- */
 	if (dirRef >= 0)
 	  {
 	     ThotDirBrowse       thotDir;
@@ -195,7 +198,6 @@ int                 fileRef;
 	     TtaSetSelector (dirRef, -1, "");
 	  }
 	/* CsList les fichiers du directory */
-	/* ------------------------------- */
 	if (fileRef >= 0)
 	  {
 	     ThotDirBrowse       thotDir;
