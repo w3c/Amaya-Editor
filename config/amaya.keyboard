@@ -253,6 +253,11 @@ Ctrl <Key>n , Ctrl <Key>l:	   LoadAnnotations()
 Ctrl <Key>n , Ctrl <Key>f:	   FilterAnnot()
 Ctrl <Key>n , Ctrl <Key>o:	   ConfigAnnot()
 
+#Bookmarks
+Ctrl <Key>n , Ctrl <Key>b:	   BookmarkFile()
+Ctrl <Key>n , Ctrl <Key>t:	   EditTopics()
+Ctrl <Key>n , Ctrl <Key>v:	   ViewBookmarks()
+
 #Try to override bizzare behaviour
 Shift <Key>End:     TtcSelEndOfLine()
 Shift <Key>Home:    TtcSelStartOfLine()
