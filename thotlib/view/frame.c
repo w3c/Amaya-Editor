@@ -448,6 +448,29 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 		  if (pAb->AbVisibility >= pFrame->FrVisibility &&
 		      (pBox->BxDisplay || pAb->AbSelected))
 		    DrawFilledBox (pAb, frame, xmin, xmax, ymin, ymax);
+		  if (pBox->BxNew && pAb->AbFirstEnclosed == NULL)
+		    {
+		      /* this is a new box */
+		      pBox->BxNew = 0;
+		      specAb = pAb;
+		      while (!userSpec && specAb)
+			{
+			  if (specAb->AbWidth.DimIsPosition ||
+			      specAb->AbHeight.DimIsPosition)
+			    specAb = NULL;
+			  else if (specAb->AbHorizPos.PosUserSpecified ||
+				   specAb->AbVertPos.PosUserSpecified ||
+				   specAb->AbWidth.DimUserSpecified ||
+				   specAb->AbHeight.DimUserSpecified)
+			    {
+			      /* one paramater is given by the user */
+			      AddBoxToCreate (create, specAb->AbBox, frame);
+			      userSpec = TRUE;
+			    }
+			  else
+			    specAb = specAb->AbEnclosing;
+			}
+		    }
 		}
 	      else
 		{
@@ -925,7 +948,7 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
 		}
 #ifdef _GL 
 		  GL_realize ();
-		    }
+	    }
 #endif /* _GL */
 	  /* Interactive creation of boxes */
 	  if (create)

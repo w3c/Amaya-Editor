@@ -867,7 +867,7 @@ STRUCT
 
 EXCEPT
 	HTML:           NoMove, NoResize;
-	BODY:		NoCut, CssBackground;
+	BODY:		NoCut, CssBackground, NoMove, NoResize;
 	HEAD:		NoCut;
 	TITLE:		NoCut;
 	Document_URL:	Hidden, NoSpellCheck, NoCut;
@@ -912,6 +912,7 @@ EXCEPT
 	SCRIPT_:	ReturnCreateNL, NoReplicate;
 	Text_Area:	ReturnCreateNL, NoReplicate;
 	HTMLfragment:	NoMove, NoResize, Hidden;
+	Division:	NoMove, NoResize;
 
 	ExternalLink:	Invisible;
 	InternalLink:	Invisible;

@@ -172,7 +172,7 @@ static void SetEmptyShapeAttrSubTree (Element el, Document doc)
  This attribute is used by the translation schema (SVGT.T) to
  generate a closing tag.
  -----------------------------------------------------------------------*/
-ThotBool       SetEmptyShapeAttribute (NotifyElement *event)
+ThotBool SetEmptyShapeAttribute (NotifyElement *event)
 {
   SetEmptyShapeAttrSubTree (event->element, event->document);
   return FALSE; /* let Thot perform normal operation */
@@ -183,7 +183,7 @@ ThotBool       SetEmptyShapeAttribute (NotifyElement *event)
    Check that this element can be selected.
    Synchronize selection in source view.      
   ----------------------------------------------------------------------*/
-void                GraphicsSelectionChanged (NotifyElement * event)
+void GraphicsSelectionChanged (NotifyElement * event)
 {
   Element      asc, use;
   ElementType  elType;
@@ -214,7 +214,7 @@ void                GraphicsSelectionChanged (NotifyElement * event)
  ExtendSelectSVGElement
  The user wants to add a new element in the current selection.
  -----------------------------------------------------------------------*/
-ThotBool       ExtendSelectSVGElement (NotifyElement *event)
+ThotBool ExtendSelectSVGElement (NotifyElement *event)
 {
    Element	firstSel, newFirstSel, ancestor, parent, selEl;
    ElementType	elType, ancestType, parentType;
@@ -314,7 +314,7 @@ ThotBool       ExtendSelectSVGElement (NotifyElement *event)
 /*----------------------------------------------------------------------
  AttrCoordChanged
  -----------------------------------------------------------------------*/
-void             AttrCoordChanged (NotifyAttribute *event)
+void AttrCoordChanged (NotifyAttribute *event)
 {
    ParseCoordAttribute (event->attribute, event->element, event->document);
 }
@@ -322,7 +322,7 @@ void             AttrCoordChanged (NotifyAttribute *event)
 /*----------------------------------------------------------------------
  AttrTransformChanged
  -----------------------------------------------------------------------*/
-void             AttrTransformChanged (NotifyAttribute *event)
+void AttrTransformChanged (NotifyAttribute *event)
 {
    ParseTransformAttribute (event->attribute, event->element, event->document,
 			    FALSE);
@@ -332,7 +332,7 @@ void             AttrTransformChanged (NotifyAttribute *event)
    AttrTransformDelete : attribute transform will be
    deleted. Remove the corresponding style presentation.
   ----------------------------------------------------------------------*/
-ThotBool         AttrTransformDelete (NotifyAttribute * event)
+ThotBool AttrTransformDelete (NotifyAttribute * event)
 {
   ParseTransformAttribute (event->attribute, event->element, event->document,
 			  TRUE);
@@ -346,7 +346,7 @@ ThotBool         AttrTransformDelete (NotifyAttribute * event)
  If the parent is a switch element, reevaluate the test attributes
  for all children of the switch element.
  -----------------------------------------------------------------------*/
-void             EvaluateSwitch (NotifyAttribute *event)
+void EvaluateSwitch (NotifyAttribute *event)
 {
   Element         parent;
   ElementType     elType;
@@ -364,7 +364,7 @@ void             EvaluateSwitch (NotifyAttribute *event)
 /*----------------------------------------------------------------------
  AttrPathDataChanged
  -----------------------------------------------------------------------*/
-void             AttrPathDataChanged (NotifyAttribute *event)
+void AttrPathDataChanged (NotifyAttribute *event)
 {
    ParsePathDataAttribute (event->attribute, event->element, event->document);
 }
@@ -374,7 +374,7 @@ void             AttrPathDataChanged (NotifyAttribute *event)
    The user tries to delete attribute d of a path element.
    Don't let him/her do that!
   ----------------------------------------------------------------------*/
-ThotBool         AttrPathDataDelete (NotifyAttribute * event)
+ThotBool AttrPathDataDelete (NotifyAttribute * event)
 {
   return TRUE; /* don't let Thot perform normal operation */
 }
@@ -533,7 +533,8 @@ static void TranslatePointsAttribute (Element el, Document doc, int delta,
   The parameter delta is TRUE when the value is 
   The parameter update is TRUE when the attribute must be parsed after the change.
  -----------------------------------------------------------------------*/
-static void   UpdateAttrText (Element el, Document doc, AttributeType attrType, int value, ThotBool delta, ThotBool update)
+static void UpdateAttrText (Element el, Document doc, AttributeType attrType,
+			    int value, ThotBool delta, ThotBool update)
 {
   char		buffer[32], unit[32];
   Attribute             attr;
@@ -645,7 +646,8 @@ static void   UpdateAttrText (Element el, Document doc, AttributeType attrType, 
  update attribute "position" for element el according its attributes
  "IntPosX" and "IntPosY".
  -----------------------------------------------------------------------*/
-static void UpdatePositionAttribute (Element el, Document doc, int org, int dim, ThotBool horiz)
+static void UpdatePositionAttribute (Element el, Document doc, int org,
+				     int dim, ThotBool horiz)
 {
   ElementType		elType;
   AttributeType	        attrType;
@@ -690,7 +692,7 @@ static void UpdatePositionAttribute (Element el, Document doc, int org, int dim,
 /*----------------------------------------------------------------------
  AttrWidthHeightChanged
  -----------------------------------------------------------------------*/
-void             AttrWidthHeightChanged (NotifyAttribute *event)
+void AttrWidthHeightChanged (NotifyAttribute *event)
 {
    ParseWidthHeightAttribute (event->attribute, event->element,
 			      event->document, FALSE);
@@ -710,7 +712,8 @@ ThotBool         AttrWidthHeightDelete (NotifyAttribute *event)
  Attribute "IntWidth" or "IntHeight" has been modified for element el.
  Update the corresponding attribute "height_" or "width_" accordingly.
  -----------------------------------------------------------------------*/
-static void UpdateWidthHeightAttribute (Element el, Document doc, int dim, ThotBool horiz)
+static void UpdateWidthHeightAttribute (Element el, Document doc, int dim,
+					ThotBool horiz)
 {
   ElementType		elType;
   AttributeType	        attrType;
@@ -763,7 +766,7 @@ static void UpdateWidthHeightAttribute (Element el, Document doc, int dim, ThotB
 /*----------------------------------------------------------------------
  AttrCSSequivModified
  -----------------------------------------------------------------------*/
-void             AttrCSSequivModified(NotifyAttribute *event)
+void AttrCSSequivModified(NotifyAttribute *event)
 {
   ParseCSSequivAttribute (event->attributeType.AttrTypeNum,
 			  event->attribute, event->element,
@@ -774,7 +777,7 @@ void             AttrCSSequivModified(NotifyAttribute *event)
    AttrCSSequivDelete : attribute fill, stroke or stroke-width will be
    deleted. Remove the corresponding style presentation.
   ----------------------------------------------------------------------*/
-ThotBool            AttrCSSequivDelete (NotifyAttribute * event)
+ThotBool AttrCSSequivDelete (NotifyAttribute * event)
 {
   ParseCSSequivAttribute (event->attributeType.AttrTypeNum,
 			  event->attribute, event->element,
@@ -785,7 +788,7 @@ ThotBool            AttrCSSequivDelete (NotifyAttribute * event)
 /*----------------------------------------------------------------------
  AttrTextAnchorModified
  -----------------------------------------------------------------------*/
-void             AttrTextAnchorModified (NotifyAttribute *event)
+void AttrTextAnchorModified (NotifyAttribute *event)
 {
   SetTextAnchor (event->attribute, event->element, event->document, FALSE);
 }
@@ -794,7 +797,7 @@ void             AttrTextAnchorModified (NotifyAttribute *event)
    AttrTextAnchorDelete : attribute text_anchor will be
    deleted. Remove the corresponding presentation.
   ----------------------------------------------------------------------*/
-ThotBool            AttrTextAnchorDelete (NotifyAttribute * event)
+ThotBool AttrTextAnchorDelete (NotifyAttribute * event)
 {
   SetTextAnchor (event->attribute, event->element, event->document, TRUE);
   return FALSE; /* let Thot perform normal operation */
@@ -803,7 +806,7 @@ ThotBool            AttrTextAnchorDelete (NotifyAttribute * event)
 /*----------------------------------------------------------------------
  DeleteAttrPoints
  -----------------------------------------------------------------------*/
-ThotBool         DeleteAttrPoints (NotifyAttribute *event)
+ThotBool DeleteAttrPoints (NotifyAttribute *event)
 {
   /* prevents Thot from deleting the points attribute */
   return TRUE;
@@ -813,7 +816,7 @@ ThotBool         DeleteAttrPoints (NotifyAttribute *event)
 /*----------------------------------------------------------------------
  AttrPointsModified
  -----------------------------------------------------------------------*/
-void             AttrPointsModified (NotifyAttribute *event)
+void AttrPointsModified (NotifyAttribute *event)
 {
   ParsePointsAttribute (event->attribute, event->element, event->document);
 }
@@ -821,7 +824,7 @@ void             AttrPointsModified (NotifyAttribute *event)
 /*----------------------------------------------------------------------
   CheckSVGRoot checks that the svg root element includes element el.
  -----------------------------------------------------------------------*/
-void             CheckSVGRoot (Document doc, Element el)
+void CheckSVGRoot (Document doc, Element el)
 {
   Element          SvgRoot, child;
   ElementType      elType;
@@ -1028,7 +1031,7 @@ void             CheckSVGRoot (Document doc, Element el)
  An element has been pasted.
  If the element is an XLink, update the link.
  -----------------------------------------------------------------------*/
-void           GraphElemPasted (NotifyElement *event)
+void GraphElemPasted (NotifyElement *event)
 {
   XLinkPasted (event);
   /* check that the svg element includes that element */
@@ -1042,7 +1045,7 @@ void           GraphElemPasted (NotifyElement *event)
    Prevent Thot from including a global attribute in the menu if the selected
    element does not accept this attribute.
   ----------------------------------------------------------------------*/
-ThotBool  GlobalSVGAttrInMenu (NotifyAttribute * event)
+ThotBool GlobalSVGAttrInMenu (NotifyAttribute * event)
 {
    ElementType         elType, parentType;
    Element             parent;
@@ -1102,7 +1105,7 @@ ThotBool  GlobalSVGAttrInMenu (NotifyAttribute * event)
  GraphicsPRuleChanged
  A presentation rule is going to be changed by Thot.
  -----------------------------------------------------------------------*/
-void                GraphicsChanged (NotifyOnValue *event)
+void GraphicsChanged (NotifyOnValue *event)
 {
   if (InCreation)
     /* don't check anything during the creation */
@@ -1117,7 +1120,7 @@ void                GraphicsChanged (NotifyOnValue *event)
  GraphicsPRuleChange
  A presentation rule is going to be changed by Thot.
  -----------------------------------------------------------------------*/
-ThotBool            GraphicsPRuleChange (NotifyPresentation *event)
+ThotBool GraphicsPRuleChange (NotifyPresentation *event)
 {
   Element       el, span, sibling;
   PRule         presRule;
@@ -1354,7 +1357,7 @@ ThotBool ExportForeignObject (NotifyElement *event)
  An attribute Namespace has been generated for a child of a foreign
  element. Delete that attribute.
  -----------------------------------------------------------------------*/
-void             NameSpaceGenerated (NotifyAttribute *event)
+void NameSpaceGenerated (NotifyAttribute *event)
 {
    TtaRemoveAttribute (event->element, event->attribute, event->document);
 }
@@ -1365,7 +1368,7 @@ void             NameSpaceGenerated (NotifyAttribute *event)
  and return the attribute found or NULL if not found.
  Check only ancestors defined in the same Thot schema (name space) as el.
  -----------------------------------------------------------------------*/
-static Attribute     InheritAttribute (Element el, AttributeType attrType)
+static Attribute InheritAttribute (Element el, AttributeType attrType)
 {
   Element     asc;
   SSchema     sch;
@@ -1394,7 +1397,7 @@ static Attribute     InheritAttribute (Element el, AttributeType attrType)
    entry is the number of the entry chosen by the user in the Graphics
    palette.
   ----------------------------------------------------------------------*/
-void         CreateGraphicElement (int entry)
+void CreateGraphicElement (int entry)
 {
   Document	    doc;
   Element	    first, SvgRoot, newEl, sibling, selEl;
@@ -1579,8 +1582,7 @@ void         CreateGraphicElement (int entry)
       if (newType.ElTypeNum == SVG_EL_rect ||
 	  newType.ElTypeNum == SVG_EL_circle ||
 	  newType.ElTypeNum == SVG_EL_ellipse ||
-	  newType.ElTypeNum == SVG_EL_text_ ||
-	  newType.ElTypeNum == SVG_EL_switch)
+	  newType.ElTypeNum == SVG_EL_text_)
 	TtaAskFirstCreation ();
       /* create the new element */
       newEl = TtaNewElement (doc, newType);
@@ -1659,9 +1661,12 @@ void         CreateGraphicElement (int entry)
 	{
           childType.ElSSchema = SvgSchema;
 	  childType.ElTypeNum = SVG_EL_foreignObject;
+	  TtaAskFirstCreation ();
 	  foreignObj = TtaNewElement (doc, childType);
 	  TtaInsertFirstChild (&foreignObj, newEl, doc);
 	  attrType.AttrTypeNum = SVG_ATTR_width_;
+	  UpdateAttrText (foreignObj, doc, attrType, 100, FALSE, TRUE);
+	  attrType.AttrTypeNum = SVG_ATTR_height_;
 	  UpdateAttrText (foreignObj, doc, attrType, 100, FALSE, TRUE);
 	  /* the document is supposed to be HTML */
 	  childType.ElSSchema = TtaNewNature (doc, docSchema, "HTML", "HTMLP");
@@ -1789,7 +1794,7 @@ void         CreateGraphicElement (int entry)
    CreateGroup
    Create a g element surrounding the selected elements
   ----------------------------------------------------------------------*/
-static void         CreateGroup ()
+static void CreateGroup ()
 {
   Document	doc;
   Element	el, prevSel, prevChild, group;
@@ -1962,7 +1967,7 @@ static void ShowGraphicsPalette (Document doc, View view)
 /*----------------------------------------------------------------------
    InitSVG initializes SVG context.
   ----------------------------------------------------------------------*/
-void                InitSVG ()
+void InitSVG ()
 {
 #ifdef _SVG
 #  ifndef _WINDOWS
@@ -1991,7 +1996,8 @@ void                InitSVG ()
 void AddGraphicsButton (Document doc, View view)
 {
 #ifdef _SVG
-  GraphButton = TtaAddButton (doc, 1, (ThotIcon)iconGraph, ShowGraphicsPalette, "ShowGraphicsPalette",
+  GraphButton = TtaAddButton (doc, 1, (ThotIcon)iconGraph, ShowGraphicsPalette,
+			      "ShowGraphicsPalette",
 			      TtaGetMessage (AMAYA, AM_BUTTON_GRAPHICS),
 			      TBSTYLE_BUTTON, TRUE);
 #endif /* _SVG */
@@ -2016,7 +2022,7 @@ void SwitchIconGraph (Document doc, View view, ThotBool state)
    It has at least two attributes (width and height) that are made
    mandatory by the S schema. Parse the value of these attributes.
   ----------------------------------------------------------------------*/
-void                SVGCreated (NotifyElement * event)
+void SVGCreated (NotifyElement * event)
 {
   ElementType	elType;
   AttributeType	attrType;
@@ -2039,7 +2045,7 @@ void                SVGCreated (NotifyElement * event)
    A tspan element has been created by the user hitting a Enter key
    witihn a text element. Create attributes x and dy.
   ----------------------------------------------------------------------*/
-void                TspanCreated (NotifyElement * event)
+void TspanCreated (NotifyElement * event)
 {
   ElementType	elType;
   AttributeType	attrType;
@@ -2074,7 +2080,7 @@ void                TspanCreated (NotifyElement * event)
    A use element has been pasted by the user.
    Copy the referred element.
   ----------------------------------------------------------------------*/
-void                UsePasted (NotifyElement * event)
+void UsePasted (NotifyElement * event)
 {
   ElementType	elType;
   AttributeType	attrType;
@@ -2103,7 +2109,7 @@ void                UsePasted (NotifyElement * event)
    AttrXlinkHrefWillBeChanged: attribute xlink:href will be modified.
    Keep its initial value in case an invalid value be entered.
   ----------------------------------------------------------------------*/
-ThotBool            AttrXlinkHrefWillBeChanged (NotifyAttribute * event)
+ThotBool AttrXlinkHrefWillBeChanged (NotifyAttribute * event)
 {
    Element             el;
    int                 len;
@@ -2120,7 +2126,7 @@ ThotBool            AttrXlinkHrefWillBeChanged (NotifyAttribute * event)
 /*----------------------------------------------------------------------
  AttrXlinkHrefChanged
  -----------------------------------------------------------------------*/
-void             AttrXlinkHrefChanged (NotifyAttribute *event)
+void AttrXlinkHrefChanged (NotifyAttribute *event)
 {
    ElementType   elType;
    char         *text;
@@ -2148,7 +2154,7 @@ void             AttrXlinkHrefChanged (NotifyAttribute *event)
 /*----------------------------------------------------------------------
  DeleteAttrXlinkHref
  -----------------------------------------------------------------------*/
-ThotBool         DeleteAttrXlinkHref (NotifyAttribute *event)
+ThotBool DeleteAttrXlinkHref (NotifyAttribute *event)
 {
   /* prevents Thot from deleting the xlink:href attribute */
   return TRUE;
@@ -2188,7 +2194,7 @@ ThotBool TextWillChangeInGroup (NotifyOnTarget *event)
    If the g element has an attribute class="animatable", exchange that g
    element with the one that has the same number.
   ----------------------------------------------------------------------*/
-void                TextChangedInGroup (NotifyOnTarget *event)
+void TextChangedInGroup (NotifyOnTarget *event)
 {
   Element       group1, group2, leaf1, leaf2, parent, child;
   ElementType   elType;
