@@ -2104,7 +2104,7 @@ C_points           *controls;
    int                 i, j;
    float               x1, y1, x2, y2;
    float               cx1, cy1, cx2, cy2;
-   Pixmap              pat;
+   Pixmap              pat = (Pixmap) 0;
    HPEN                hPen;
    HPEN                hOldPen;
    int                 result;
@@ -2169,8 +2169,6 @@ C_points           *controls;
 
    /* Fill in the polygone */
    pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
-   if (pat != 0) {
-     }
 
    /* Draw the border */
    if (thick > 0) {
@@ -2195,6 +2193,10 @@ C_points           *controls;
       hPen = (HPEN) 0;
       FinishDrawing (0, RO, active);
    }
+
+   if (pat != (Pixmap)0)
+      if (!DeleteObject ((HGDIOBJ) pat))
+         WinErrorBox (NULL);
 
    /* free the table of points */
    free (points);
@@ -2228,7 +2230,7 @@ int                 pattern;
 #endif /* __STDC__ */
 
 {
-   Pixmap              pat;
+   Pixmap              pat = (Pixmap) 0;
    int                 arc;
    HBRUSH              hBrush = (HBRUSH)0;
    HBRUSH              hOldBrush;
@@ -2311,6 +2313,10 @@ int                 pattern;
       hBrush = (HBRUSH)0;
    }
    WIN_ReleaseDeviceContext ();
+   
+   if (pat != (Pixmap) 0)
+      if (!DeleteObject ((HGDIOBJ) pat))
+         WinErrorBox (NULL);
 }
 
 /*----------------------------------------------------------------------
@@ -2359,6 +2365,7 @@ int                 pattern;
 
    if (pattern > 2 && pat == 0 && thick <= 0)
       return;
+
    WIN_GetDeviceContext (frame);
 
    WinLoadGC (TtDisplay, fg, RO);
@@ -2438,6 +2445,7 @@ int                 pattern;
    if (pat != (Pixmap)0)
       if (!DeleteObject ((HGDIOBJ) pat))
          WinErrorBox (NULL);
+   pat = (Pixmap) 0;
 }
 
 /*----------------------------------------------------------------------

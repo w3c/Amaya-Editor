@@ -41,7 +41,7 @@ static DocViewNumber ReferenceView;
 #include "views_f.h"
 
 #ifdef _WINDOWS
-extern ThotBool viewClosed ;
+extern ThotBool IsViewClosed ;
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
@@ -149,7 +149,7 @@ View                viewIn;
    ThotBool            assoc;
 
 #  ifdef _WINDOWS
-   viewClosed = TRUE;
+   IsViewClosed = TRUE;
 #  endif /* _WINDOWS */
 
    pDoc = LoadedDocument[document - 1];
