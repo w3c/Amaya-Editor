@@ -4005,16 +4005,14 @@ Language  lang;
    Parses the XML file infile and builds the equivalent Thot abstract tree.
   ---------------------------------------------------------------------------*/
 #ifdef __STDC__
-static void        XmlParse (FILE *infile,
-			     ThotBool xmlDec,
-			     ThotBool withDoctype)
+static void   XmlParse (FILE     *infile,
+			ThotBool *xmlDec,
+			ThotBool *xmlDoctype)
 #else
-static void        XmlParse (infile,
-			     xmlDec,
-			     withDoctype)
+static void   XmlParse (infile, xmlDec, xmlDoctype)
 FILE      *infile;
-ThotBool   xmlDec;
-ThotBool   withDoctype;
+ThotBool  *xmlDec;
+ThotBool  *xmlDoctype;
 
 #endif
 {
@@ -4046,19 +4044,19 @@ ThotBool   withDoctype;
        if (res < COPY_BUFFER_SIZE)
 	   endOfFile = TRUE;
        
-       if (!withDoctype)
+       if (!*xmlDoctype)
 	 /* There is no DOCTYPE Declaration 
 	    We include a virtual DOCTYPE declaration so that EXPAT parser
 	    doesn't stop processing when it finds an external entity */	  
 	 {
-	   if (xmlDec)
+	   if (*xmlDec)
 	     /* There is a XML declaration */
-	     /* We look for first '<' character */
+	     /* We look for first '>' character */
 	     {
 	       strcpy (tmpBuffer, bufferRead);
-	       if ((ptr = strchr (tmpBuffer, TEXT('>'))))
+	       if ((ptr = ustrchr (tmpBuffer, TEXT('>'))))
 		 {
-		   *ptr++;
+		   ptr++;
 		   strcpy (tmp2Buffer, ptr);
 		   *ptr = WC_EOS;
 		   tmplen = strlen (tmpBuffer);
@@ -4075,14 +4073,13 @@ ThotBool   withDoctype;
 
 	   /* Virtual DOCTYPE Declaration */
 	   tmpLineRead = XML_GetCurrentLineNumber (parser);
-	   if (!XML_Parse (parser, DECL_DOCTYPE,
-			   DECL_DOCTYPE_LEN, 0))
+	   if (!XML_Parse (parser, DECL_DOCTYPE, DECL_DOCTYPE_LEN, 0))
 	     {
 	       XmlParseError (XMLcontext.doc,
 			      (CHAR_T *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
 	       XMLabort = TRUE;
 	     }
-	   withDoctype = TRUE;
+	   *xmlDoctype = TRUE;
 	   extraLineRead = XML_GetCurrentLineNumber (parser) - tmpLineRead;
 	 }
 
@@ -4114,7 +4111,7 @@ void       StartXmlParser (Document doc,
 			   CHAR_T*  documentDirectory,
 			   CHAR_T*  pathURL,
 			   ThotBool xmlDec,
-			   ThotBool withDoctype)
+			   ThotBool xmlDoctype)
 #else
 void       StartXmlParser (doc,
 			   htmlFileName,
@@ -4122,14 +4119,14 @@ void       StartXmlParser (doc,
 			   documentDirectory,
 			   pathURL,
 			   xmlDec,
-			   withDoctype)
+			   xmlDoctype)
 Document    doc;
 CHAR_T*     htmlFileName;
 CHAR_T*     documentName;
 CHAR_T*     documentDirectory;
 CHAR_T*     pathURL;
 ThotBool    xmlDec;
-ThotBool    withDoctype;
+ThotBool    xmlDoctype;
 #endif
 
 {
@@ -4254,7 +4251,7 @@ ThotBool    withDoctype;
       InitializeExpatParser ();
 	
       /* Parse the input file and build the Thot document */
-      XmlParse (stream, xmlDec, withDoctype);
+      XmlParse (stream, &xmlDec, &xmlDoctype);
       
       /* Completes all unclosed elements */
       if (currentParserCtxt != NULL)
