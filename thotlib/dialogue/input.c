@@ -469,17 +469,6 @@ LPARAM lParam;
    if (frame < 0)
       return;
 
-   if ((msg != WM_SYSKEYDOWN) && (msg != WM_KEYDOWN) && (msg != WM_CHAR))
-      return;
-
-   /* If you ignore this test, Back Space will be treated twice. This because */
-   /* if you press the Back space key, Windows generates a message WM_KEYDOWN */
-   /* with a parameter wParam == VK_BACK and another message  WM_CHAR  with a */
-   /* parameter wParam == VK_BACK and in both cases, ThotInput will  insert a */
-   /* a backspace and deletes two characters                                  */
-   if (msg == WM_KEYDOWN && wParam == VK_BACK)
-      return;
-
    /* If the message is WM_CHAR then this is a character to insert and  not a */
    /* particular key as a short cut for example                               */
    if (msg == WM_CHAR)
@@ -515,27 +504,19 @@ LPARAM lParam;
       escChar = TRUE;
    }
 
-   if ((msg == WM_SYSKEYDOWN || msg == WM_KEYDOWN) && 
-       wParam != 0xBB && wParam != 0xBD)
+   if (msg == WM_SYSCHAR)
       len = 0;
    else
         len = 1;
 
-   /* Alt + '+' return 0xBB and this needs to be converted into Alt + '+' */
-   /* Alt + '-' return 0xBD and this needs to be converted into Alt + '-' */
-   /* There are probabely some other cases to deal  with in the  same way */ 
-   /* than Alt + '+' or Alt + '-'                                         */
-   if (keyboard_mask & THOT_MOD_ALT) {
-      if (wParam == 0xBD)
-         wParam = '-';
-      else if (keyboard_mask & THOT_MOD_SHIFT && wParam == 0xBB)
-           wParam = '+';
-   }
-
-   if (wParam == VK_MENU || wParam == VK_CONTROL)
+   if (wParam == VK_MENU)
       return;
 
    string[0] = (CHAR_T) wParam;
+   if (msg == WM_SYSCHAR)
+      if (wParam >= 'a' && wParam <= 'z')
+         wParam -= 'a' - 'A';
+
    ThotInput (frame, &string[0], len, keyboard_mask, wParam);
 }
 #endif /* _WINDOWS */
@@ -628,8 +609,8 @@ int                 key;
 
 #  ifdef _WINDOWS
    if (key == 0xD && nb == 1)
-      specialKey = FALSE;
-   else if (((key >= 0x1 && key <= 0x1A) || key == 0xBB || key == 0xBD) && nb == 1)
+      specialKey = TRUE;
+   else if ((key >= 0x1 && key <= 0x1A) && nb == 1)
         specialKey = TRUE;
    else if (escChar) {
         specialKey = TRUE;

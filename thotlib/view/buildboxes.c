@@ -3578,7 +3578,7 @@ PtrAbstractBox      pAb;
 	  }
      }
 #  ifdef _WINDOWS
-   /* >>>>>>>>>>>>> WIN_ReleaseDeviceContext (); <<<<<<<<<<<< */
+   WIN_ReleaseDeviceContext ();
 #  endif /* _WINDOWS */
    return result;
 }

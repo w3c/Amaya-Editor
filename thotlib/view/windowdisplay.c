@@ -503,7 +503,7 @@ int                 shadow;
 	  } 
       FinishDrawing (0, RO, active);
       SelectObject (TtDisplay, hOldFont);
-      /* >>>>>>>>>>>>>>> WIN_ReleaseDeviceContext (); <<<<<<<<<<<<<<< */
+      WIN_ReleaseDeviceContext ();
       return (width);
      } else
      return (0);

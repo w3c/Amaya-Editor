@@ -323,7 +323,7 @@ LPARAM     lParam;
 	 if (ThotLocalActions[T_switchsel])
 	   (*ThotLocalActions[T_switchsel]) (frame, TRUE);
          EndPaint (w, &ps);
-         /* WIN_ReleaseDeviceContext (); */
+         WIN_ReleaseDeviceContext ();
       }
    }
 }
@@ -1540,6 +1540,34 @@ LPARAM lParam;
 
             case WM_SYSKEYDOWN:
             case WM_KEYDOWN:
+                 if (wParam != VK_F2     &&
+                     wParam != VK_F3     &&
+                     wParam != VK_F4     &&
+                     wParam != VK_F5     &&
+                     wParam != VK_F6     &&
+                     wParam != VK_F7     &&
+                     wParam != VK_F8     &&
+                     wParam != VK_F9     &&
+                     wParam != VK_F10    &&
+                     wParam != VK_F11    &&
+                     wParam != VK_F12    &&
+                     wParam != VK_F13    &&
+                     wParam != VK_F14    &&
+                     wParam != VK_F15    &&
+                     wParam != VK_F16    &&
+                     wParam != VK_INSERT &&
+                     wParam != VK_DELETE &&
+                     wParam != VK_HOME   &&
+                     wParam != VK_END    &&
+                     wParam != VK_PRIOR  &&
+                     wParam != VK_NEXT   &&
+                     wParam != VK_LEFT   &&
+                     wParam != VK_RIGHT  &&
+                     wParam != VK_UP     &&
+                     wParam != VK_DOWN)
+				 return 0;
+
+            case WM_SYSCHAR:
             case WM_CHAR:
                  TtaAbortShowDialogue ();
 				 key = (int) wParam;

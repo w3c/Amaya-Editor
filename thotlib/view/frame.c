@@ -1106,7 +1106,7 @@ int                 scroll;
    FirstCreation = FALSE;
 
 #  ifdef _WINDOWS
-   /* >>>>>>>>>>>> WIN_ReleaseDeviceContext (); <<<<<<<<<<<< */
+   WIN_ReleaseDeviceContext ();
 #  endif /* _WINDOWS */
    return toadd;
 }
