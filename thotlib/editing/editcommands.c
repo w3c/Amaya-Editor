@@ -897,6 +897,46 @@ static void StartTextInsertion (PtrAbstractBox pAb, int frame, PtrBox pSelBox,
      }
 }
 
+/*----------------------------------------------------------------------
+   Assure la presence d'un atome texte de la bonne langue a la      
+   position indiquee (qui doit etre un atome texte).
+  ----------------------------------------------------------------------*/
+static void NewTextLanguage (PtrAbstractBox pAb, int charIndex, Language lang)
+{
+  PtrElement          pEl, pNextEl, pSecond, pNext;
+  PtrDocument         pDoc;
+
+  pEl = pAb->AbElement;
+  if (pEl != NULL && pEl->ElStructSchema != NULL)
+    if (pEl->ElLeafType == LtText)
+      {
+	pDoc = DocumentOfElement (pEl);
+	if (pEl->ElTextLength > 0)
+	  {
+	    pNext = pEl->ElNext;
+	    SplitTextElement (pEl, charIndex, pDoc, FALSE, &pNextEl, FALSE);
+	    BuildAbsBoxSpliText (pEl, pNextEl, pNext, pDoc);
+	    if (pEl->ElTextLength > 0 && pNextEl->ElTextLength > 0)
+	      {
+		pNext = pNextEl->ElNext;
+		SplitTextElement (pNextEl, 1, pDoc, FALSE, &pSecond, FALSE);
+		BuildAbsBoxSpliText (pNextEl, pSecond, pNext, pDoc);
+		pEl = pNextEl;
+	      }
+	    else if (pEl->ElTextLength > 0)
+	      pEl = pNextEl;
+	    AbstractImageUpdated (pDoc);
+	  }
+	if (pEl != NULL && pEl->ElStructSchema != NULL)
+	  {
+	    /* change la langue dans la feuille de texte */
+	    ChangeLanguage (pDoc, pEl, lang, TRUE);
+	    AbstractImageUpdated (pDoc);
+	    RedisplayDocViews (pDoc);
+	    SelectElement (pDoc, pEl, FALSE, FALSE);
+	  }
+      }
+}
 
 /*----------------------------------------------------------------------
    Create a new element or move to previous element if the language changes
@@ -915,18 +955,17 @@ static ThotBool GiveAbsBoxForLanguage (int frame, PtrAbstractBox *pAb, int keybo
   int                 index;
   ThotBool            cut;
   ThotBool            notification;
-  ThotBool	      setAttribute;
 
   language = 0;
-  setAttribute = TRUE;
   pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
   notification = FALSE;
   pSelAb = *pAb;
   plang = pSelAb->AbLanguage;
   if (keyboard == -1)
+    /* l'utilisateur a saisi un caractere au clavier */
     if (plang < TtaGetFirstUserLanguage())
-      /* le contenu du pave a ete saisi par palette */
-      /* et on a saisi au clavier : recherche la langue dans les ancetres */
+      /* le contenu du pave courant avait ete saisi par palette */
+      /* recherche la langue dans les ancetres */
       {
 	pHeritAttr = GetTypedAttrAncestor (pSelAb->AbElement->ElParent, 1,
 					   NULL, &pElAttr); 
@@ -935,7 +974,9 @@ static ThotBool GiveAbsBoxForLanguage (int frame, PtrAbstractBox *pAb, int keybo
 	    CopyBuffer2MBs (pHeritAttr->AeAttrText, 0, text, 100);
 	    language = TtaGetLanguageIdFromName (text);
 	  }
-	setAttribute = FALSE;
+	else
+	  /* les ancetres n'ont pas d'attribut langue */
+	  language = TtaGetDefaultLanguage ();
       }
     else
       language = plang;
@@ -950,9 +991,6 @@ static ThotBool GiveAbsBoxForLanguage (int frame, PtrAbstractBox *pAb, int keybo
     language = TtaGetLanguageIdFromAlphabet ('G');
   else
     language = 0;
-
-  if (language == 0)
-    setAttribute = FALSE;
 
   if (pSelAb->AbLeafType == LtText)
     if (plang != language && plang != 0)
@@ -982,7 +1020,7 @@ static ThotBool GiveAbsBoxForLanguage (int frame, PtrAbstractBox *pAb, int keybo
 		
 		/* S'il faut couper, on appelle l'editeur */
 		if (cut)
-		  NewTextLanguage (*pAb, index, language, setAttribute);
+		  NewTextLanguage (*pAb, index, language);
 		/* la boite peut avoir change */
 		pBox = pViewSel->VsBox;
 		if (pBox != NULL)
@@ -2298,11 +2336,13 @@ static void         ContentEditing (int editType)
 		     du pave */
 		  if (ClipboardLanguage == 0)
 		    ClipboardLanguage = TtaGetDefaultLanguage ();
-		  if (pAb->AbLeafType != LtText && pAb->AbLanguage != ClipboardLanguage)
+		  if (pAb->AbLeafType != LtText &&
+		      pAb->AbLanguage != ClipboardLanguage)
 		    {
 		      /* charsDelta contient le nombre de carateres qui
 			 precedent dans la boite */
-		      NewTextLanguage (pAb, charsDelta + pBox->BxIndChar + 1, ClipboardLanguage, TRUE);
+		      NewTextLanguage (pAb, charsDelta + pBox->BxIndChar + 1,
+				       ClipboardLanguage);
 		      pBox = pViewSel->VsBox;
 		      if (pBox != NULL)
 			{

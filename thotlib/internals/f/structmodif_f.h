@@ -24,10 +24,6 @@ extern void TtcHolophrast ( Document document,
                             View view );
 extern void DeHolophrast ( PtrElement pEl,
                            PtrDocument pDoc );
-extern void NewTextLanguage ( PtrAbstractBox pAb,
-                              int charIndex,
-                              Language lang,
-                              ThotBool setLangAttr );
 extern ThotBool CompleteElement ( PtrElement pEl,
                                   PtrDocument pDoc );
 extern ThotBool BreakElement ( PtrElement pElReplicate,
@@ -61,10 +57,6 @@ extern void TtcHolophrast (/* Document document,
                               View view */);
 extern void DeHolophrast (/* PtrElement pEl,
                              PtrDocument pDoc */);
-extern void NewTextLanguage (/* PtrAbstractBox pAb,
-                                int charIndex,
-                                Language lang,
-                                ThotBool setLangAttr */);
 extern ThotBool CompleteElement (/* PtrElement pEl,
                                     PtrDocument pDoc */);
 extern ThotBool BreakElement (/* PtrElement pElReplicate,

@@ -567,69 +567,6 @@ void DeHolophrast (PtrElement pEl, PtrDocument pDoc)
    RedisplayDocViews (pDoc);
 }
 
-
-/*----------------------------------------------------------------------
-   Assure la presence d'un atome texte de la bonne langue a la      
-   position indiquee (qui doit etre un atome texte), cree l'attribut
-   langue sur cet atome si setLangAttr est vrai.
-  ----------------------------------------------------------------------*/
-void NewTextLanguage (PtrAbstractBox pAb, int charIndex, Language lang,
-		      ThotBool setLangAttr)
-{
-   PtrElement          pEl, pNextEl, pSecond, pNext;
-   PtrDocument         pDoc;
-   PtrAttribute        pAttr;
-   int                 len;
-
-   pEl = pAb->AbElement;
-   if (pEl != NULL && pEl->ElStructSchema != NULL)
-     if (pEl->ElLeafType == LtText)
-     {
-	pDoc = DocumentOfElement (pEl);
-	if (pEl->ElTextLength > 0)
-	  {
-	     pNext = pEl->ElNext;
-	     SplitTextElement (pEl, charIndex, pDoc, FALSE, &pNextEl, FALSE);
-	     BuildAbsBoxSpliText (pEl, pNextEl, pNext, pDoc);
-	     if (pEl->ElTextLength > 0 && pNextEl->ElTextLength > 0)
-	       {
-	          pNext = pNextEl->ElNext;
-		  SplitTextElement (pNextEl, 1, pDoc, FALSE, &pSecond, FALSE);
-		  BuildAbsBoxSpliText (pNextEl, pSecond, pNext, pDoc);
-		  pEl = pNextEl;
-	       }
-	     else if (pEl->ElTextLength > 0)
-		pEl = pNextEl;
-	     AbstractImageUpdated (pDoc);
-	  }
-	if (pEl != NULL && pEl->ElStructSchema != NULL)
-	  {
-	    /* change la langue dans la feuille de texte */
-	    ChangeLanguage (pDoc, pEl, lang, TRUE);
-	    /* met l'attribut langue sur l'element */
-	    GetAttribute (&pAttr);
-	    pAttr->AeAttrSSchema = pEl->ElStructSchema;
-	    pAttr->AeAttrNum = 1;
-	    pAttr->AeDefAttr = FALSE;
-	    pAttr->AeAttrType = AtTextAttr;
-	    if (setLangAttr)
-	      {
-		GetTextBuffer (&pAttr->AeAttrText);
-		CopyStringToBuffer (TtaGetLanguageName (lang), pAttr->AeAttrText, &len);
-	      }
-	    else
-	      {
-		pAttr->AeAttrText = NULL;
-	      }
-	    AttachAttrWithValue (pEl, pDoc, pAttr);
-	    DeleteAttribute (NULL, pAttr);
-	    AbstractImageUpdated (pDoc);
-	    RedisplayDocViews (pDoc);
-	    SelectElement (pDoc, pEl, FALSE, FALSE);
-	  }
-     }
-}
-
 /*----------------------------------------------------------------------
    CompleteElement cree dans l'element pEl les elements absents    
    obligatoires.                                           
