@@ -130,6 +130,7 @@ int         Y_Pos;
 int         cyToolBar;
 int         CommandToString [MAX_FRAME][MAX_BUTTON];
 char        szTbStrings [4096];
+BOOL        buttonCommand;
 
 boolean viewClosed = FALSE;
 #ifdef THOT_TOOLTIPS
@@ -139,6 +140,8 @@ DWORD       dwToolBarStyles   = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_TO
 #endif /* THOT_TOOLTIPS */
 DWORD       dwStatusBarStyles = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM | SBARS_SIZEGRIP;
 TBADDBITMAP ThotTBBitmap;
+
+#include "win_f.h"
 
 #ifdef THOT_TOOLTIPS
 #ifdef __STDC__
@@ -1310,10 +1313,13 @@ LPARAM      lParam;
 #          endif /* THOT_TOOLTIPS */
 
            case WM_COMMAND:
-                if (LOWORD (wParam) >= TBBUTTONS_BASE)
+                if (LOWORD (wParam) >= TBBUTTONS_BASE) {
+                   buttonCommand = TRUE;
                    APP_ButtonCallback (FrameTable[frame].Button[LOWORD (wParam) - TBBUTTONS_BASE], frame, "\n");
-                else 
-                    WIN_ThotCallBack (hwnd, wParam, lParam);
+                } else {
+                     buttonCommand = FALSE;
+                     WIN_ThotCallBack (hwnd, wParam, lParam);
+				}
                 return 0;
 
            case WM_DESTROY:
@@ -1577,6 +1583,17 @@ LPARAM lParam;
                  ClickFrame = frame;
                  ClickX = LOWORD (lParam);
                  ClickY = HIWORD (lParam);
+                 /* stop any current insertion of text */
+                 CloseInsertion ();
+		    
+                 /* if the CTRL key is pressed this is a size change */
+                 status = GetKeyState (VK_CONTROL);
+                 if (HIBYTE (status)) {
+                    /* changes the box size */
+                    /* ApplyDirectResize (frame, LOWORD (lParam), HIWORD (lParam)); */
+                    ApplyDirectResize (frame, ClickX, ClickY);
+                    /* memorize the click position */
+                 } 
 				 return 0;
 
             case WM_MOUSEMOVE:

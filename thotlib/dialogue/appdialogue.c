@@ -86,6 +86,7 @@ static Menu_Ctl    *DocumentMenuList;
 static SchemaMenu_Ctl *SchemasMenuList;
 
 #ifdef _WINDOWS
+#include "win_f.h"
 #define WM_ENTER (WM_USER)
 
 extern TBADDBITMAP ThotTBBitmap;

@@ -83,6 +83,10 @@ static ThotGC       GCkey;
 #include "structselect_f.h"
 #include "inites_f.h"
 
+#ifdef _WINDOWS
+#include "win_f.h"
+#endif /* _WINDOWS */
+
 /*----------------------------------------------------------------------
    ThotSelectPalette
    Shows the current selection.

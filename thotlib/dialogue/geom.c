@@ -38,6 +38,7 @@ static int          GridSize = 1;
 #include "windowdisplay_f.h"
 
 #ifdef _WINDOWS
+#include "win_f.h"
 /* BOOL WIN_UserGeometry = FALSE ; */
 
 extern int X_Pos;
@@ -440,22 +441,25 @@ PtrAbstractBox      draw;
 int                 maxPoints;
 #endif /* __STDC__ */
 {
-  ThotWindow          w, wdum;
+  ThotWindow          w;
   ThotEvent           event;
   PtrTextBuffer       Pbuffer;
   PtrTextBuffer       Bbuffer;
   float               ratioX, ratioY;
   int                 width, height;
-  int                 e, dx, dy;
-  int                 ret, f;
+  int                 ret;
   int                 x, y;
   int                 newx, newy, lastx, lasty;
   int                 xMin, yMin, xMax, yMax;
   int                 x1, y1, nbpoints;
-#ifdef _WINDOWS
+# ifdef _WINDOWS
   RECT  rect;
   POINT cursorPos;
-#endif /* _WINDOWS */
+# else  /* _WINDOWS */
+  int        e, f;
+  int        dx, dy;
+  ThotWindow wdum;
+# endif /* _WINDOWS */
 
   if (pBox == NULL || pBox->BxAbstractBox == NULL)
     return (0);
@@ -1462,16 +1466,19 @@ int                 percentH;
 
 {
   int                 xm, ym;
-  int                 ret, e, dx, dy;
-  int                 nx, ny, f;
-  ThotEvent              event;
-  ThotWindow          w, wdum;
+  int                 ret, dx, dy;
+  int                 nx, ny;
+  ThotEvent           event;
+  ThotWindow          w;
   int                 RightOrLeft, BottomOrTop;
   int                 warpx, warpy;
-#ifdef _WINDOWS
+# ifdef _WINDOWS
   RECT            rect;
-  POINT cursorPos;     
-#endif /* _WINDOWS */
+  POINT cursorPos;    
+# else  /* _WINDOWS */
+  int        e, f;
+  ThotWindow wdum;
+# endif /* _WINDOWS */
 
   /* use relative coordinates */
   xr -= *x;
@@ -2287,7 +2294,7 @@ int                 percentH;
 #define C_VCENTER 1
 #define C_RIGHT 2
 
-  int                 ret, e, dx, dy, dl, dh;
+  int                 ret, dx, dy, dl, dh;
   int                 ref_h, ref_v, HorizontalDirection, VerticalDirection;
   ThotEvent           event;
   ThotWindow          w;
@@ -2295,6 +2302,8 @@ int                 percentH;
 # ifdef _WINDOWS
   RECT                rect;
   POINT               cursorPos;
+# else  /* _WINDOWS */
+  int e;
 # endif /* _WINDOWS */
 
   /* Use the reference point to move the box */
@@ -2366,6 +2375,7 @@ int                 percentH;
 
         switch (event.message) {
                case WM_MBUTTONUP:
+               case WM_RBUTTONUP:
                     ret = 1;
                     break;
 

@@ -55,6 +55,8 @@ static boolean      UseBitStreamFamily;
 #include "windowdisplay_f.h"
 
 #ifdef _WINDOWS
+#include "win_f.h"
+
 static char  WIN_lpszFace [255];
 static int   WIN_nHeight;
 static int   WIN_nWidth;
@@ -395,14 +397,13 @@ int                 zoom;
        break;
      case UnPixel:
 #      ifdef _WINDOWS
-       if (TtPrinterDC)
-	 {
-	   if (PrinterDPI == 0)
-	     PrinterDPI = GetDeviceCaps (GetDC (NULL), LOGPIXELSY);
-	   if (ScreenDPI == 0)
-	     ScreenDPI = GetDeviceCaps (TtPrinterDC, LOGPIXELSY);
-	   dist = (val * PrinterDPI + ScreenDPI / 2) / ScreenDPI;
-	 }
+       if (TtPrinterDC) {
+          if (PrinterDPI == 0)
+             PrinterDPI = GetDeviceCaps (GetDC (NULL), LOGPIXELSY);
+          if (ScreenDPI == 0)
+             ScreenDPI = GetDeviceCaps (TtPrinterDC, LOGPIXELSY);
+          dist = (val * PrinterDPI + ScreenDPI / 2) / ScreenDPI;
+	   }
        else
 #      endif /* _WINDOWS */
 	 dist = val;
@@ -881,7 +882,7 @@ boolean             increase;
                ptfont->FiHeight = 0;
 		 }
          for (c = 0; c < 256; c++) {
-             GetTextExtentPoint (TtPrinterDC, &c, 1, &wsize);
+             GetTextExtentPoint (TtPrinterDC, (LPCTSTR) (&c), 1, (LPSIZE) (&wsize));
              ptfont->FiWidths[c] = wsize.cx;
              ptfont->FiHeights[c] = wsize.cy;
 		 }
@@ -898,7 +899,7 @@ boolean             increase;
                 ptfont->FiHeight = 0;
 		   }
            for (c = 0; c < 256; c++) {
-               GetTextExtentPoint (TtDisplay, &c, 1, &wsize);
+               GetTextExtentPoint (TtDisplay, (LPCTSTR) (&c), 1, (LPSIZE) (&wsize));
                ptfont->FiWidths[c] = wsize.cx;
                ptfont->FiHeights[c] = wsize.cy;
 		   }

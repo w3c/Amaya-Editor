@@ -99,6 +99,11 @@ static boolean      FromKeyboard;
 #include "viewapi_f.h"
 #include "views_f.h"
 #include "windowdisplay_f.h"
+#include "language_f.h"
+
+#ifdef _WINDOWS 
+#include "win_f.h"
+#endif /* _WINDOWS */
 
 #ifdef _WINDOWS
 #ifdef __STDC__

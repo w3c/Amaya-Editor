@@ -52,6 +52,14 @@ extern boolean viewClosed;
 #include "docs_f.h"
 #include "viewcommands_f.h"
 
+#ifdef _WINDOWS
+#ifdef __STDC__
+extern void CreateCloseDocDlgWindow (HWND, char*, char*, BOOL*, BOOL*);
+#else /* __STDC__ */
+extern void CreateCloseDocDlgWindow ();
+#endif /* __STDC__ */
+#endif /* _WINDOWS */
+
 /*----------------------------------------------------------------------
    CallbackCloseDocMenu 
    handles the callbacks of the CloseDoc menu
@@ -138,7 +146,7 @@ boolean            *save;
    TtaWaitShowDialogue ();
 #  else  /* _WINDOWS */
    char    buftext[300];
-   boolean save_befor, close_dont_save;
+   BOOL    save_befor, close_dont_save;
    strcpy (buftext, TtaGetMessage (LIB, TMSG_SAVE_DOC));
    strcat (buftext, " ");
    strcat (buftext, pDoc->DocDName);

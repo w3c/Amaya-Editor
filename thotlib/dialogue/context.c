@@ -44,6 +44,8 @@ static ThotColorStruct cwhite;
 #include "registry_f.h"
 
 #ifdef _WINDOWS
+#include "win_f.h"
+
 static int palSize ;
 int nbPalEntries;
 PALETTEENTRY palEntries[256];

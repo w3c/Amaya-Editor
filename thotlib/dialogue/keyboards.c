@@ -394,6 +394,14 @@ static ITEM         Items_Graph[] =
 #include "textcommands_f.h"
 #include "windowdisplay_f.h"
 
+#ifdef _WINDOWS
+#ifdef __STDC__
+extern void CreateGreekKeyboardDlgWindow (HWND);
+#else /* __STDC__ */
+extern void CreateGreekKeyboardDlgWindow ();
+#endif /* __STDC__ */
+#endif /* _WINDOWS */
+
 /*----------------------------------------------------------------------
    WChar
    displays character ch at position <x,y> of window w using the character

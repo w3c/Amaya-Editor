@@ -99,12 +99,18 @@ extern HINSTANCE hInstance;
 extern LPCTSTR   iconID;
 #ifdef __STDC__
 extern BOOL RegisterWin95 (CONST WNDCLASS*);
+extern void CreateLanguageDlgWindow (HWND, char*, char*, int, char*, char*, int, int, int, char*);
+extern void CreateAlign1DlgWindow (HWND, int);
+extern void CreateAlign2DlgWindow (HWND, int);
 
 LRESULT CALLBACK InitFormDialogWndProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK InitSheetDialogWndProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK InitNumAttrDialogWndProc (HWND, UINT, WPARAM, LPARAM);
 #else  /* __STDC__ */
 extern BOOL RegisterWin95 ();
+extern void CreateLanguageDlgWindow ();
+extern void CreateAlign1DlgWindow ();
+extern void CreateAlign2DlgWindow ();
 
 LRESULT CALLBACK InitFormDialogWndProc ();
 LRESULT CALLBACK InitSheetDialogWndProc ();
@@ -129,6 +135,10 @@ LRESULT CALLBACK InitNumAttrDialogWndProc ();
 #include "content_f.h"
 #include "applicationapi_f.h"
 #include "language_f.h"
+
+#ifdef _WINDOWS
+#include "win_f.h"
+#endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
   InitFormLangue

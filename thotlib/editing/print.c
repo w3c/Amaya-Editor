@@ -134,6 +134,10 @@ static ThotWindow   thotWindow;
 #include "nodialog_f.h"
 #include "structlist_f.h"
 
+#ifdef _WINDOWS 
+#include "win_f.h"
+#endif /* _WINDOWS */
+
 static int          manualFeed;
 static char         pageSize [3];
 static int          BlackAndWhite;
@@ -152,6 +156,7 @@ static int          lastPage;
 extern HDC       TtPrinterDC;
 extern int       currentFrame;
 extern HINSTANCE hInstance;
+extern BOOL      buttonCommand;
 
 BOOL             bError;
 BOOL             gbAbort;
@@ -2968,9 +2973,9 @@ PtrDocument         pDoc;
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS
 #ifdef __STDC__
-void PrintDoc (HWND hWnd, int argc, char** argv, HDC PrinterDC, BOOL isTrueColors, int depth, char* tmpDocName, char* tmpDir, HINSTANCE hInst)
+void PrintDoc (HWND hWnd, int argc, char** argv, HDC PrinterDC, BOOL isTrueColors, int depth, char* tmpDocName, char* tmpDir, HINSTANCE hInst, BOOL buttonCmd)
 #else  /* !__STDC__ */
-void PrintDoc (hWnd, argc, argc, PrinterDC, isTrueColors, depth, tmpDocName, tmpDir, hInstance)
+void PrintDoc (hWnd, argc, argc, PrinterDC, isTrueColors, depth, tmpDocName, tmpDir, hInstance, buttonCmd)
 HWND      hWnd;
 int       argc;
 char**    argv;
@@ -2980,6 +2985,7 @@ int       depth;
 char*     tmpDocName; 
 char*     tmpDir;
 HINSTANCE hInst;
+BOOL      buttonCmd;
 #endif /* __STDC__ */
 #else  /* !_WINDOWS */
 #ifdef __STDC__
@@ -3019,10 +3025,14 @@ char              **argv;
   hCurrentInstance = hInst;
   WIN_GetDeviceContext (-1);
   ScreenDPI        = GetDeviceCaps (TtDisplay, LOGPIXELSY);
-  DOT_PER_INCHE    = ScreenDPI;
+  if (buttonCmd == FALSE && TtPrinterDC == 0)
+     DOT_PER_INCHE = 72;
+  else 
+      DOT_PER_INCHE    = ScreenDPI;
   WIN_ReleaseDeviceContext ();
   PrinterDPI       = GetDeviceCaps (TtPrinterDC, LOGPIXELSY);
   ghwndMain        = hWnd;
+  buttonCommand    = buttonCmd;
 # endif /* _WINDOWS */
 
   removeDirectory = FALSE;

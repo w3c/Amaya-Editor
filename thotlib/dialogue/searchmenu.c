@@ -113,6 +113,14 @@ void                SearchLoadResources ();
 
 #endif /* __STDC__ */
 
+#ifdef _WINDOWS
+#ifdef __STDC__
+extern void CreateSearchDlgWindow (HWND);
+#else /* __STDC__ */
+extern void CreateSearchDlgWindow ();
+#endif /* __STDC__ */
+#endif /* _WINDOWS */
+
 /*----------------------------------------------------------------------
   InitMenuWhereToSearch 
   inits the "Where to search" submenu.

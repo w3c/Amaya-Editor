@@ -60,11 +60,16 @@
 #include "structselect_f.h"
 #include "tree_f.h"
 #include "applicationapi_f.h"
+#include "message_f.h"
 
 #define VersionId "V2.0"
 
 int                 UserErrorCode;
 boolean             PrintErrorMessages = TRUE;
+
+#ifdef _WINDOWS
+#include "win_f.h"
+#endif /* _WINDOWS */
 
 #ifndef _WIN_PRINT
 /*----------------------------------------------------------------------

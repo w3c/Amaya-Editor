@@ -81,7 +81,16 @@ static int          defPageSize;
 static Name         PresSchema;
 
 #ifdef _WINDOWS
+#include "win_f.h"
+
+#ifdef __STDC__
+extern void PrintDoc (HWND, int, char**, HDC, BOOL, int, char*, char*, HINSTANCE, BOOL);
+#else  /* __STDC__ */
+extern void PrintDoc ();
+#endif /* __STDC__ */
+
 extern int  currentFrame;
+extern BOOL buttonCommand;
 #endif /* _WINDOWS */
 
 
@@ -121,8 +130,9 @@ Document            document;
    static LPPRINTER_INFO_5 pInfo5;
 #  else  /* !_WINDOWS */
    char             cmd[1024];
+   int              res;
 #  endif /* _WINDOWS */
-   int              i, j, res;
+   int              i, j;
    int              frame;
 
    /* initialize the print command */
@@ -455,7 +465,7 @@ Document            document;
    sprintf  (printArgv [printArgc], "%s\\%s.PIV", dir, name);
    printArgc++;
    WIN_ReleaseDeviceContext ();
-   if (TtPrinterDC == 0) {
+   if (buttonCommand && TtPrinterDC == 0) {
        EnumPrinters (PRINTER_ENUM_LOCAL, NULL, 5, (LPBYTE) "", 0, &dwNeeded, &dwReturned) ;
 
        // Alloue de l’espace pour le tableau PRINTER_INFO_5
@@ -471,7 +481,7 @@ Document            document;
            TtPrinterDC = CreateDC (NULL, pInfo5->pPrinterName,  NULL, NULL);
    }
 
-   PrintDoc (FrRef [currentFrame], printArgc, printArgv, TtPrinterDC, TtIsTrueColor, TtWDepth, name, dir, hInstance);
+   PrintDoc (FrRef [currentFrame], printArgc, printArgv, TtPrinterDC, TtIsTrueColor, TtWDepth, name, dir, hInstance, buttonCommand);
    if (!IsWindowEnabled (FrRef[currentFrame]))
       EnableWindow (FrRef[currentFrame], TRUE);
    SetFocus (FrRef[currentFrame]);

@@ -1608,8 +1608,8 @@ int                 frame;
    int                 x, y;
    ThotColor           BackGroundPixel;
 
-#  ifdef _WINDOWS 
-   LPBITMAPINFO  lpBmpInfo;
+#  ifdef _WINDOWS
+   LPBITMAPINFO lpBmpInfo;
 #  endif /* _WINDOWS */
 
    if (box->BxAbstractBox->AbVisibility < ViewFrameTable[frame - 1].FrVisibility)

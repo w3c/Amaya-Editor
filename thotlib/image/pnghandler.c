@@ -36,6 +36,7 @@
 #include "frame_tv.h"
 #include "picture_f.h"
 #include "gifhandler_f.h"
+#include "memory_f.h"
 
 #define MAX(x,y)  (((x) > (y)) ? (x) : (y))
 #define min(a, b) (((a) < (b)) ? (a) : (b))

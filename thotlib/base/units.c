@@ -24,6 +24,8 @@
 #include "frame_tv.h"
 
 #ifdef _WINDOWS
+#include "win_f.h"
+
 extern int ScreenDPI;
 extern int PrinterDPI;
 #endif /* _WINDOWS */
@@ -61,6 +63,8 @@ int                 value;
 {
 #  ifdef _WINDOWS
    WIN_GetDeviceContext (-1);
+   if (DOT_PER_INCHE == 0)
+      DOT_PER_INCHE = 72;
    /* return ((value * 72 + GetDeviceCaps (TtDisplay, LOGPIXELSY) / 2) / GetDeviceCaps (TtDisplay, LOGPIXELSY)); */
    return ((value * 72 + DOT_PER_INCHE / 2) / DOT_PER_INCHE);
    WIN_ReleaseDeviceContext ();

@@ -76,6 +76,12 @@ extern HWND hwnListWords;
 extern HWND hwndCurrentWord;
 extern HWND hwndLanguage;
 extern char currentWord [30];
+
+#ifdef __STDC__
+extern void CreateSpellCheckDlgWindow (HWND, char*, char*,	int, int, int, int, int, int, int);
+#else  /* __STDC__ */
+extern void CreateSpellCheckDlgWindow ();
+#endif /* __STDC__ */
 #endif /* _WINDOWS */
 
 
@@ -151,12 +157,12 @@ void WIN_DisplayWords ()
     if ((strcmp (ChkrCorrection[1], "$")) == 0)	{
        currentWord [0] = EOS;
        SetWindowText (hwndCurrentWord, "");
-	   SendMessage (hwnListWords, LB_ADDSTRING, 0, "");  
+	   SendMessage (hwnListWords, LB_ADDSTRING, 0, (LPARAM) ((LPCTSTR)""));  
     } else {
          sprintf (currentWord, "%s", ChkrCorrection[1]);
          SetWindowText (hwndCurrentWord, ChkrCorrection[1]);
 	     for (i = 1; (i <= NC && strcmp (ChkrCorrection[i], "$") != 0); i++) {
-	         SendMessage (hwnListWords, LB_INSERTSTRING, i - 1, ChkrCorrection[i]);  
+	         SendMessage (hwnListWords, LB_INSERTSTRING, i - 1, (LPARAM) ((LPCTSTR)ChkrCorrection[i]));  
 	   }
 	}
     OldNC = NC;

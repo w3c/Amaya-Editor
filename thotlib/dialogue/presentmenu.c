@@ -129,6 +129,15 @@ static int          OldLineSp;
 static int          NormalLineSpacing;
 static void         ResetMenus ();
 
+#ifdef _WINDOWS 
+#ifdef __STDC__
+extern void CreateCharacterDlgWindow (HWND, int, int, int, int);
+extern void CreateChangeFormatDlgWindow (HWND);
+#else /* __STDC__ */
+extern void CreateCharacterDlgWindow ();
+extern void CreateChangeFormatDlgWindow ();
+#endif /* __STDC__ */
+#endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
    GetEnclosingBlock

@@ -148,7 +148,9 @@ int                 height;
 
 #endif /* __STDC__ */
 {
+#  ifndef _WIN_PRINT
    int                 createdFrame;
+#  endif /* _WIN_PRINT */
    char                buf[MAX_TXT_LEN];
    char                *debugstr;
 

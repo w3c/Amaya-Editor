@@ -3055,7 +3055,7 @@ char               *equiv;
 			  strcat (heading, "...");
 #                         ifdef _WINDOWS
 			  w = (HMENU) CreateMenu ();
-			  AppendMenu (menu, MF_POPUP, (UINT) w, &heading);
+			  AppendMenu (menu, MF_POPUP, (UINT) w, (LPCTSTR) (&heading));
 			  adbloc->E_ThotWidget[ent] = (ThotWidget) w;
 #                         else  /* _WINDOWS */
 			  w = XmCreatePushButton (menu, heading, args, n);
@@ -3551,7 +3551,7 @@ char                button;
 			  strcpy (heading, &text[index + 1]);
 			  strcat (heading, "...");
 #                         ifdef _WINDOWS
-			  AppendMenu (menu, MF_STRING, ref + i, &heading);
+			  AppendMenu (menu, MF_STRING, (UINT) (ref + i), (LPCTSTR) (&heading));
 			  adbloc->E_ThotWidget[ent] = (ThotWidget) i;
 #                         else  /* _WINDOWS */
 			  w = XmCreatePushButton (menu, heading, args, n);
