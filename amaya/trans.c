@@ -1922,6 +1922,7 @@ Document            doc;
 	  }
 	TtaSetErrorMessages (1);
      }
+   TtaFreeMemory (ND);
    return res;
 }
 

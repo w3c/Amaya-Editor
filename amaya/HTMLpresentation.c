@@ -824,6 +824,7 @@ void AttrLangCreated(event)
      TtaSetAttributeValue (attr, HTML_ATTR_RealLang_VAL_Yes_, elem,
 			   event->document);
      }
+  TtaFreeMemory (value);
 }
 
 /*----------------------------------------------------------------------

@@ -72,7 +72,7 @@ void                FreeDocHistory ()
   for (doc = 0; doc < DocumentTableLength; doc++)
     {
       if (DocHistoryIndex[doc] > 0)
-	for (i = 0; i < DocHistoryIndex[doc]; i++)
+	for (i = 0; i < DOC_HISTORY_SIZE; i++)
 	  {
 	    if (DocHistory[doc][i].HistUrl != NULL)
 	      TtaFreeMemory (DocHistory[doc][i].HistUrl);
