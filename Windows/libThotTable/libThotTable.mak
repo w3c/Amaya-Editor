@@ -50,7 +50,7 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP=cl.exe
-CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\tablelib\f" /I "..\..\schemas" /D "NDEBUG" /D "__STDC__" /D "STDC_HEADERS" /D "_WIN_PRINT" /D "WIN32" /D "_WINDOWS" /D "_AMAYA_RELEASE_" /Fp"$(INTDIR)\libThotTable.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\tablelib\f" /I "..\..\schemas" /D "NDEBUG" /D "__STDC__" /D "STDC_HEADERS" /D "_WIN_PRINT" /D "WIN32" /D "_WINDOWS" /Fp"$(INTDIR)\libThotTable.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 
 .c{$(INTDIR)}.obj::
    $(CPP) @<<

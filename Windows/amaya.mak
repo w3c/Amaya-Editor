@@ -100,7 +100,7 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP=cl.exe
-CPP_PROJ=/nologo /ML /W3 /GX /O2 /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\libpng\zlib" /I "..\thotlib\internals\h" /I "..\thotlib\internals\var" /I "..\thotlib\internals\f" /D "NDEBUG" /D "COUGAR" /D "WIN32" /D "_WINDOWS" /D "__STDC__" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "SOCKS" /D "MATHML" /D "THOT_TOOLTIPS" /D "_AMAYA_RELEASE_" /Fp"$(INTDIR)\amaya.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/nologo /ML /W3 /GX /O2 /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\libpng\zlib" /I "..\thotlib\internals\h" /I "..\thotlib\internals\var" /I "..\thotlib\internals\f" /D "NDEBUG" /D "COUGAR" /D "WIN32" /D "_WINDOWS" /D "__STDC__" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "SOCKS" /D "MATHML" /D "THOT_TOOLTIPS" /D "GRAPHML" /Fp"$(INTDIR)\amaya.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 
 .c{$(INTDIR)}.obj::
    $(CPP) @<<
@@ -141,7 +141,7 @@ BSC32_FLAGS=/nologo /o"$(OUTDIR)\amaya.bsc"
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /incremental:no /pdb:"$(OUTDIR)\amaya.pdb" /machine:I386 /out:"$(OUTDIR)\amaya.exe" 
+LINK32_FLAGS=kernel32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib wsock32.lib user32.lib gdi32.lib advapi32.lib comdlg32.lib shell32.lib winspool.lib /nologo /subsystem:windows /incremental:no /pdb:"$(OUTDIR)\amaya.pdb" /machine:I386 /out:"$(OUTDIR)\amaya.exe" 
 LINK32_OBJS= \
 	"$(INTDIR)\AHTBridge.obj" \
 	"$(INTDIR)\AHTFWrite.obj" \
@@ -187,6 +187,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\amaya.res" \
 	".\libThotEditor.lib" \
 	".\libwww.lib" \
+	".\Plugins.lib" \
 	"$(OUTDIR)\thotprinter.lib"
 
 "$(OUTDIR)\amaya.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
@@ -272,7 +273,7 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP=cl.exe
-CPP_PROJ=/nologo /MLd /W3 /Gm /GX /ZI /Od /I "..\thotlib\internals\h" /I "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\libpng\zlib" /I "..\thotlib\internals\f" /D "_DEBUG" /D "_AMAYA_RELEASE_" /D "WIN32" /D "_WINDOWS" /D "__STDC__" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "SOCKS" /D "MATHML" /D "THOT_TOOLTIPS" /D "GRAPHML" /Fp"$(INTDIR)\amaya.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/nologo /MLd /W3 /Gm /GX /ZI /Od /I "..\thotlib\internals\h" /I "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\libpng\zlib" /I "..\thotlib\internals\f" /D "_DEBUG" /D "_AMAYA_RELEASE_" /D "GRAPHML" /D "WIN32" /D "_WINDOWS" /D "__STDC__" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "SOCKS" /D "MATHML" /D "THOT_TOOLTIPS" /Fp"$(INTDIR)\amaya.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 
 .c{$(INTDIR)}.obj::
    $(CPP) @<<
@@ -313,7 +314,7 @@ BSC32_FLAGS=/nologo /o"$(OUTDIR)\amaya.bsc"
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib gdi32.lib winspool.lib comctl32.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib wsock32.lib /nologo /subsystem:windows /incremental:yes /pdb:"$(OUTDIR)\amaya.pdb" /debug /machine:I386 /out:"$(OUTDIR)\amaya.exe" /pdbtype:sept 
+LINK32_FLAGS=comctl32.lib wsock32.lib user32.lib gdi32.lib advapi32.lib comdlg32.lib shell32.lib winspool.lib /nologo /subsystem:windows /incremental:yes /pdb:"$(OUTDIR)\amaya.pdb" /debug /machine:I386 /out:"$(OUTDIR)\amaya.exe" /pdbtype:sept 
 LINK32_OBJS= \
 	"$(INTDIR)\AHTBridge.obj" \
 	"$(INTDIR)\AHTFWrite.obj" \
@@ -359,6 +360,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\amaya.res" \
 	".\libThotEditor.lib" \
 	".\libwww.lib" \
+	".\Plugins.lib" \
 	"$(OUTDIR)\thotprinter.lib"
 
 "$(OUTDIR)\amaya.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
@@ -488,14 +490,14 @@ SOURCE=..\amaya\amaya.rc
 
 
 "$(INTDIR)\amaya.res" : $(SOURCE) "$(INTDIR)"
-	$(RSC) /l 0x409 /fo"$(INTDIR)\amaya.res" /i "..\amaya" /d "NDEBUG" $(SOURCE)
+	$(RSC) /l 0x409 /fo"$(INTDIR)\amaya.res" /i "\users\guetari\Amaya\amaya" /d "NDEBUG" $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "amaya - Win32 Debug"
 
 
 "$(INTDIR)\amaya.res" : $(SOURCE) "$(INTDIR)"
-	$(RSC) /l 0x409 /fo"$(INTDIR)\amaya.res" /i "..\amaya" /d "_DEBUG" $(SOURCE)
+	$(RSC) /l 0x409 /fo"$(INTDIR)\amaya.res" /i "\users\guetari\Amaya\amaya" /d "_DEBUG" $(SOURCE)
 
 
 !ENDIF 

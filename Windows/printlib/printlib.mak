@@ -123,7 +123,7 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP=cl.exe
-CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I "..\..\libpng\zlib" /D "NDEBUG" /D "__STDC_HEADERS" /D "WIN32" /D "_WINDOWS" /D "__STDC__" /D "STDC_HEADERS" /D "_WIN_PRINT" /D "_AMAYA_RELEASE_" /Fp"$(INTDIR)\printlib.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I "..\..\libpng\zlib" /D "NDEBUG" /D "__STDC_HEADERS" /D "STDC_HEADERS" /D "_AMAYA_RELEASE_" /D "WIN32" /D "_WINDOWS" /D "__STDC__" /D "_WIN_PRINT" /Fp"$(INTDIR)\printlib.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 
 .c{$(INTDIR)}.obj::
    $(CPP) @<<
@@ -335,7 +335,7 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP=cl.exe
-CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I "..\..\libpng\zlib" /D "_DEBUG" /D "STDC_HEADERS" /D "_AMAYA_RELEASE_" /D "WIN32" /D "_WINDOWS" /D "__STDC__" /D "_WIN_PRINT" /Fp"$(INTDIR)\printlib.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I "..\..\libpng\zlib" /D "_DEBUG" /D "_AMAYA_RELEASE_" /D "STDC_HEADERS" /D "WIN32" /D "_WINDOWS" /D "__STDC__" /D "_WIN_PRINT" /Fp"$(INTDIR)\printlib.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 
 .c{$(INTDIR)}.obj::
    $(CPP) @<<
@@ -466,24 +466,24 @@ LIB32_OBJS= \
 !IF  "$(CFG)" == "printlib - Win32 Release"
 
 "libjpeg - Win32 Release" : 
-   cd "..\libjpeg"
+   cd "\users\guetari\Amaya\Windows\libjpeg"
    $(MAKE) /$(MAKEFLAGS) /F .\libjpeg.mak CFG="libjpeg - Win32 Release" 
    cd "..\printlib"
 
 "libjpeg - Win32 ReleaseCLEAN" : 
-   cd "..\libjpeg"
+   cd "\users\guetari\Amaya\Windows\libjpeg"
    $(MAKE) /$(MAKEFLAGS) /F .\libjpeg.mak CFG="libjpeg - Win32 Release" RECURSE=1 CLEAN 
    cd "..\printlib"
 
 !ELSEIF  "$(CFG)" == "printlib - Win32 Debug"
 
 "libjpeg - Win32 Debug" : 
-   cd "..\libjpeg"
+   cd "\users\guetari\Amaya\Windows\libjpeg"
    $(MAKE) /$(MAKEFLAGS) /F .\libjpeg.mak CFG="libjpeg - Win32 Debug" 
    cd "..\printlib"
 
 "libjpeg - Win32 DebugCLEAN" : 
-   cd "..\libjpeg"
+   cd "\users\guetari\Amaya\Windows\libjpeg"
    $(MAKE) /$(MAKEFLAGS) /F .\libjpeg.mak CFG="libjpeg - Win32 Debug" RECURSE=1 CLEAN 
    cd "..\printlib"
 
@@ -492,24 +492,24 @@ LIB32_OBJS= \
 !IF  "$(CFG)" == "printlib - Win32 Release"
 
 "libpng - Win32 Release" : 
-   cd "..\libpng"
+   cd "\users\guetari\Amaya\Windows\libpng"
    $(MAKE) /$(MAKEFLAGS) /F .\libpng.mak CFG="libpng - Win32 Release" 
    cd "..\printlib"
 
 "libpng - Win32 ReleaseCLEAN" : 
-   cd "..\libpng"
+   cd "\users\guetari\Amaya\Windows\libpng"
    $(MAKE) /$(MAKEFLAGS) /F .\libpng.mak CFG="libpng - Win32 Release" RECURSE=1 CLEAN 
    cd "..\printlib"
 
 !ELSEIF  "$(CFG)" == "printlib - Win32 Debug"
 
 "libpng - Win32 Debug" : 
-   cd "..\libpng"
+   cd "\users\guetari\Amaya\Windows\libpng"
    $(MAKE) /$(MAKEFLAGS) /F .\libpng.mak CFG="libpng - Win32 Debug" 
    cd "..\printlib"
 
 "libpng - Win32 DebugCLEAN" : 
-   cd "..\libpng"
+   cd "\users\guetari\Amaya\Windows\libpng"
    $(MAKE) /$(MAKEFLAGS) /F .\libpng.mak CFG="libpng - Win32 Debug" RECURSE=1 CLEAN 
    cd "..\printlib"
 
@@ -518,24 +518,24 @@ LIB32_OBJS= \
 !IF  "$(CFG)" == "printlib - Win32 Release"
 
 "libThotTable - Win32 Release" : 
-   cd "..\libThotTable"
+   cd "\users\guetari\Amaya\Windows\libThotTable"
    $(MAKE) /$(MAKEFLAGS) /F .\libThotTable.mak CFG="libThotTable - Win32 Release" 
    cd "..\printlib"
 
 "libThotTable - Win32 ReleaseCLEAN" : 
-   cd "..\libThotTable"
+   cd "\users\guetari\Amaya\Windows\libThotTable"
    $(MAKE) /$(MAKEFLAGS) /F .\libThotTable.mak CFG="libThotTable - Win32 Release" RECURSE=1 CLEAN 
    cd "..\printlib"
 
 !ELSEIF  "$(CFG)" == "printlib - Win32 Debug"
 
 "libThotTable - Win32 Debug" : 
-   cd "..\libThotTable"
+   cd "\users\guetari\Amaya\Windows\libThotTable"
    $(MAKE) /$(MAKEFLAGS) /F .\libThotTable.mak CFG="libThotTable - Win32 Debug" 
    cd "..\printlib"
 
 "libThotTable - Win32 DebugCLEAN" : 
-   cd "..\libThotTable"
+   cd "\users\guetari\Amaya\Windows\libThotTable"
    $(MAKE) /$(MAKEFLAGS) /F .\libThotTable.mak CFG="libThotTable - Win32 Debug" RECURSE=1 CLEAN 
    cd "..\printlib"
 

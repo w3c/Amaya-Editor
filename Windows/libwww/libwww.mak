@@ -168,7 +168,7 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP=cl.exe
-CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\..\libwww\modules\md5" /I "..\..\..\libwww\modules\expat\xmlparse" /I "..\..\..\libwww\modules\expat\xmltok" /I "..\..\..\libwww\Library\src" /I "..\..\libpng\zlib" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "WWW_WIN_ASYNC" /Fp"$(INTDIR)\libwww.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\..\libwww\modules\md5" /I "..\..\..\libwww\modules\expat\xmlparse" /I "..\..\..\libwww\modules\expat\xmltok" /I "..\..\..\libwww\Library\src" /I "..\..\libpng\zlib" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "WWW_WIN_ASYNC" /D "HT_ZLIB" /Fp"$(INTDIR)\libwww.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 
 .c{$(INTDIR)}.obj::
    $(CPP) @<<
@@ -468,7 +468,7 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP=cl.exe
-CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\..\libwww\modules\md5" /I "..\..\..\libwww\modules\expat\xmlparse" /I "..\..\..\libwww\modules\expat\xmltok" /I "..\..\libpng\zlib" /I "..\..\..\libwww\Library\src" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "WWW_WIN_ASYNC" /D "HT_ZLIB" /Fp"$(INTDIR)\libwww.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\..\libwww\modules\md5" /I "..\..\..\libwww\modules\expat\xmlparse" /I "..\..\..\libwww\modules\expat\xmltok" /I "..\..\libpng\zlib" /I "..\..\..\libwww\Library\src" /D "_DEBUG" /D "HT_ZLIB" /D "WIN32" /D "_WINDOWS" /D "WWW_WIN_ASYNC" /Fp"$(INTDIR)\libwww.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 
 .c{$(INTDIR)}.obj::
    $(CPP) @<<
@@ -642,24 +642,24 @@ LIB32_OBJS= \
 !IF  "$(CFG)" == "libwww - Win32 Release"
 
 "zlib - Win32 Release" : 
-   cd "..\zlib"
+   cd "\users\guetari\Amaya\Windows\zlib"
    $(MAKE) /$(MAKEFLAGS) /F .\zlib.mak CFG="zlib - Win32 Release" 
    cd "..\libwww"
 
 "zlib - Win32 ReleaseCLEAN" : 
-   cd "..\zlib"
+   cd "\users\guetari\Amaya\Windows\zlib"
    $(MAKE) /$(MAKEFLAGS) /F .\zlib.mak CFG="zlib - Win32 Release" RECURSE=1 CLEAN 
    cd "..\libwww"
 
 !ELSEIF  "$(CFG)" == "libwww - Win32 Debug"
 
 "zlib - Win32 Debug" : 
-   cd "..\zlib"
+   cd "\users\guetari\Amaya\Windows\zlib"
    $(MAKE) /$(MAKEFLAGS) /F .\zlib.mak CFG="zlib - Win32 Debug" 
    cd "..\libwww"
 
 "zlib - Win32 DebugCLEAN" : 
-   cd "..\zlib"
+   cd "\users\guetari\Amaya\Windows\zlib"
    $(MAKE) /$(MAKEFLAGS) /F .\zlib.mak CFG="zlib - Win32 Debug" RECURSE=1 CLEAN 
    cd "..\libwww"
 
@@ -939,7 +939,7 @@ SOURCE=..\..\..\libwww\Library\src\HTInit.c
 
 !IF  "$(CFG)" == "libwww - Win32 Release"
 
-CPP_SWITCHES=/nologo /ML /W3 /GX /O2 /I "..\..\..\libwww\modules\md5" /I "..\..\..\libwww\modules\expat\xmlparse" /I "..\..\..\libwww\modules\expat\xmltok" /I "..\..\..\libwww\Library\src" /I "..\..\libpng\zlib" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "WWW_WIN_ASYNC" /Fp"$(INTDIR)\libwww.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_SWITCHES=/nologo /ML /W3 /GX /O2 /I "..\..\..\libwww\modules\md5" /I "..\..\..\libwww\modules\expat\xmlparse" /I "..\..\..\libwww\modules\expat\xmltok" /I "..\..\..\libwww\Library\src" /I "..\..\libpng\zlib" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "WWW_WIN_ASYNC" /D "HT_ZLIB" /Fp"$(INTDIR)\libwww.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 
 "$(INTDIR)\HTInit.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) @<<
@@ -949,7 +949,7 @@ CPP_SWITCHES=/nologo /ML /W3 /GX /O2 /I "..\..\..\libwww\modules\md5" /I "..\..\
 
 !ELSEIF  "$(CFG)" == "libwww - Win32 Debug"
 
-CPP_SWITCHES=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\..\libwww\modules\md5" /I "..\..\..\libwww\modules\expat\xmlparse" /I "..\..\..\libwww\modules\expat\xmltok" /I "..\..\libpng\zlib" /I "..\..\..\..\libwww\Library\src" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "WWW_WIN_ASYNC" /D "HT_ZLIB" /Fp"$(INTDIR)\libwww.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_SWITCHES=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\..\libwww\modules\md5" /I "..\..\..\libwww\modules\expat\xmlparse" /I "..\..\..\libwww\modules\expat\xmltok" /I "..\..\libpng\zlib" /I "..\..\..\..\libwww\Library\src" /D "_DEBUG" /D "HT_ZLIB" /D "WIN32" /D "_WINDOWS" /D "WWW_WIN_ASYNC" /Fp"$(INTDIR)\libwww.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 
 "$(INTDIR)\HTInit.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) @<<

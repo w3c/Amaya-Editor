@@ -118,7 +118,6 @@ CLEAN :
 	-@erase "$(INTDIR)\openview.obj"
 	-@erase "$(INTDIR)\pagecommands.obj"
 	-@erase "$(INTDIR)\paginate.obj"
-	-@erase "$(INTDIR)\parsexml.obj"
 	-@erase "$(INTDIR)\picture.obj"
 	-@erase "$(INTDIR)\pictureapi.obj"
 	-@erase "$(INTDIR)\picturebase.obj"
@@ -145,7 +144,6 @@ CLEAN :
 	-@erase "$(INTDIR)\resgen.obj"
 	-@erase "$(INTDIR)\resmatch.obj"
 	-@erase "$(INTDIR)\savedoc.obj"
-	-@erase "$(INTDIR)\savexml.obj"
 	-@erase "$(INTDIR)\schemas.obj"
 	-@erase "$(INTDIR)\schtrad.obj"
 	-@erase "$(INTDIR)\scroll.obj"
@@ -165,9 +163,7 @@ CLEAN :
 	-@erase "$(INTDIR)\structselect.obj"
 	-@erase "$(INTDIR)\style.obj"
 	-@erase "$(INTDIR)\textcommands.obj"
-	-@erase "$(INTDIR)\thotmodule.obj"
 	-@erase "$(INTDIR)\thotmsg.obj"
-	-@erase "$(INTDIR)\translatexml.obj"
 	-@erase "$(INTDIR)\translation.obj"
 	-@erase "$(INTDIR)\tree.obj"
 	-@erase "$(INTDIR)\treeapi.obj"
@@ -189,9 +185,7 @@ CLEAN :
 	-@erase "$(INTDIR)\word.obj"
 	-@erase "$(INTDIR)\writedoc.obj"
 	-@erase "$(INTDIR)\writepivot.obj"
-	-@erase "$(INTDIR)\writexml.obj"
 	-@erase "$(INTDIR)\xbmhandler.obj"
-	-@erase "$(INTDIR)\xmlmodule.obj"
 	-@erase "$(INTDIR)\xpmhandler.obj"
 	-@erase "$(INTDIR)\zoom.obj"
 	-@erase "$(OUTDIR)\libThotEditor.lib"
@@ -203,7 +197,7 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP=cl.exe
-CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I "..\..\libpng\zlib" /D "NDEBUG" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "WIN32" /D "_WINDOWS" /D "__STDC__" /D "STDC_HEADERS" /D "SOCKS" /D "MATHML" /D "THOT_TOOLTIPS" /D "_AMAYA_RELEASE_" /Fp"$(INTDIR)\libThotEditor.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I "..\..\libpng\zlib" /D "NDEBUG" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "WIN32" /D "_WINDOWS" /D "__STDC__" /D "STDC_HEADERS" /D "SOCKS" /D "MATHML" /D "THOT_TOOLTIPS" /Fp"$(INTDIR)\libThotEditor.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 
 .c{$(INTDIR)}.obj::
    $(CPP) @<<
@@ -313,7 +307,6 @@ LIB32_OBJS= \
 	"$(INTDIR)\openview.obj" \
 	"$(INTDIR)\pagecommands.obj" \
 	"$(INTDIR)\paginate.obj" \
-	"$(INTDIR)\parsexml.obj" \
 	"$(INTDIR)\picture.obj" \
 	"$(INTDIR)\pictureapi.obj" \
 	"$(INTDIR)\picturebase.obj" \
@@ -340,7 +333,6 @@ LIB32_OBJS= \
 	"$(INTDIR)\resgen.obj" \
 	"$(INTDIR)\resmatch.obj" \
 	"$(INTDIR)\savedoc.obj" \
-	"$(INTDIR)\savexml.obj" \
 	"$(INTDIR)\schemas.obj" \
 	"$(INTDIR)\schtrad.obj" \
 	"$(INTDIR)\scroll.obj" \
@@ -360,9 +352,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\structselect.obj" \
 	"$(INTDIR)\style.obj" \
 	"$(INTDIR)\textcommands.obj" \
-	"$(INTDIR)\thotmodule.obj" \
 	"$(INTDIR)\thotmsg.obj" \
-	"$(INTDIR)\translatexml.obj" \
 	"$(INTDIR)\translation.obj" \
 	"$(INTDIR)\tree.obj" \
 	"$(INTDIR)\treeapi.obj" \
@@ -383,9 +373,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\word.obj" \
 	"$(INTDIR)\writedoc.obj" \
 	"$(INTDIR)\writepivot.obj" \
-	"$(INTDIR)\writexml.obj" \
 	"$(INTDIR)\xbmhandler.obj" \
-	"$(INTDIR)\xmlmodule.obj" \
 	"$(INTDIR)\xpmhandler.obj" \
 	"$(INTDIR)\zoom.obj" \
 	"$(OUTDIR)\libjpeg.lib" \
@@ -489,7 +477,6 @@ CLEAN :
 	-@erase "$(INTDIR)\openview.obj"
 	-@erase "$(INTDIR)\pagecommands.obj"
 	-@erase "$(INTDIR)\paginate.obj"
-	-@erase "$(INTDIR)\parsexml.obj"
 	-@erase "$(INTDIR)\picture.obj"
 	-@erase "$(INTDIR)\pictureapi.obj"
 	-@erase "$(INTDIR)\picturebase.obj"
@@ -516,7 +503,6 @@ CLEAN :
 	-@erase "$(INTDIR)\resgen.obj"
 	-@erase "$(INTDIR)\resmatch.obj"
 	-@erase "$(INTDIR)\savedoc.obj"
-	-@erase "$(INTDIR)\savexml.obj"
 	-@erase "$(INTDIR)\schemas.obj"
 	-@erase "$(INTDIR)\schtrad.obj"
 	-@erase "$(INTDIR)\scroll.obj"
@@ -536,9 +522,7 @@ CLEAN :
 	-@erase "$(INTDIR)\structselect.obj"
 	-@erase "$(INTDIR)\style.obj"
 	-@erase "$(INTDIR)\textcommands.obj"
-	-@erase "$(INTDIR)\thotmodule.obj"
 	-@erase "$(INTDIR)\thotmsg.obj"
-	-@erase "$(INTDIR)\translatexml.obj"
 	-@erase "$(INTDIR)\translation.obj"
 	-@erase "$(INTDIR)\tree.obj"
 	-@erase "$(INTDIR)\treeapi.obj"
@@ -560,9 +544,7 @@ CLEAN :
 	-@erase "$(INTDIR)\word.obj"
 	-@erase "$(INTDIR)\writedoc.obj"
 	-@erase "$(INTDIR)\writepivot.obj"
-	-@erase "$(INTDIR)\writexml.obj"
 	-@erase "$(INTDIR)\xbmhandler.obj"
-	-@erase "$(INTDIR)\xmlmodule.obj"
 	-@erase "$(INTDIR)\xpmhandler.obj"
 	-@erase "$(INTDIR)\zoom.obj"
 	-@erase "$(OUTDIR)\libThotEditor.lib"
@@ -684,7 +666,6 @@ LIB32_OBJS= \
 	"$(INTDIR)\openview.obj" \
 	"$(INTDIR)\pagecommands.obj" \
 	"$(INTDIR)\paginate.obj" \
-	"$(INTDIR)\parsexml.obj" \
 	"$(INTDIR)\picture.obj" \
 	"$(INTDIR)\pictureapi.obj" \
 	"$(INTDIR)\picturebase.obj" \
@@ -711,7 +692,6 @@ LIB32_OBJS= \
 	"$(INTDIR)\resgen.obj" \
 	"$(INTDIR)\resmatch.obj" \
 	"$(INTDIR)\savedoc.obj" \
-	"$(INTDIR)\savexml.obj" \
 	"$(INTDIR)\schemas.obj" \
 	"$(INTDIR)\schtrad.obj" \
 	"$(INTDIR)\scroll.obj" \
@@ -731,9 +711,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\structselect.obj" \
 	"$(INTDIR)\style.obj" \
 	"$(INTDIR)\textcommands.obj" \
-	"$(INTDIR)\thotmodule.obj" \
 	"$(INTDIR)\thotmsg.obj" \
-	"$(INTDIR)\translatexml.obj" \
 	"$(INTDIR)\translation.obj" \
 	"$(INTDIR)\tree.obj" \
 	"$(INTDIR)\treeapi.obj" \
@@ -754,9 +732,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\word.obj" \
 	"$(INTDIR)\writedoc.obj" \
 	"$(INTDIR)\writepivot.obj" \
-	"$(INTDIR)\writexml.obj" \
 	"$(INTDIR)\xbmhandler.obj" \
-	"$(INTDIR)\xmlmodule.obj" \
 	"$(INTDIR)\xpmhandler.obj" \
 	"$(INTDIR)\zoom.obj" \
 	"$(OUTDIR)\libjpeg.lib" \
@@ -784,24 +760,24 @@ LIB32_OBJS= \
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
 "libjpeg - Win32 Release" : 
-   cd "..\libjpeg"
+   cd "\users\guetari\Amaya\Windows\libjpeg"
    $(MAKE) /$(MAKEFLAGS) /F .\libjpeg.mak CFG="libjpeg - Win32 Release" 
    cd "..\LibThotEditor"
 
 "libjpeg - Win32 ReleaseCLEAN" : 
-   cd "..\libjpeg"
+   cd "\users\guetari\Amaya\Windows\libjpeg"
    $(MAKE) /$(MAKEFLAGS) /F .\libjpeg.mak CFG="libjpeg - Win32 Release" RECURSE=1 CLEAN 
    cd "..\LibThotEditor"
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
 "libjpeg - Win32 Debug" : 
-   cd "..\libjpeg"
+   cd "\users\guetari\Amaya\Windows\libjpeg"
    $(MAKE) /$(MAKEFLAGS) /F .\libjpeg.mak CFG="libjpeg - Win32 Debug" 
    cd "..\LibThotEditor"
 
 "libjpeg - Win32 DebugCLEAN" : 
-   cd "..\libjpeg"
+   cd "\users\guetari\Amaya\Windows\libjpeg"
    $(MAKE) /$(MAKEFLAGS) /F .\libjpeg.mak CFG="libjpeg - Win32 Debug" RECURSE=1 CLEAN 
    cd "..\LibThotEditor"
 
@@ -810,24 +786,24 @@ LIB32_OBJS= \
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
 "libpng - Win32 Release" : 
-   cd "..\libpng"
+   cd "\users\guetari\Amaya\Windows\libpng"
    $(MAKE) /$(MAKEFLAGS) /F .\libpng.mak CFG="libpng - Win32 Release" 
    cd "..\LibThotEditor"
 
 "libpng - Win32 ReleaseCLEAN" : 
-   cd "..\libpng"
+   cd "\users\guetari\Amaya\Windows\libpng"
    $(MAKE) /$(MAKEFLAGS) /F .\libpng.mak CFG="libpng - Win32 Release" RECURSE=1 CLEAN 
    cd "..\LibThotEditor"
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
 "libpng - Win32 Debug" : 
-   cd "..\libpng"
+   cd "\users\guetari\Amaya\Windows\libpng"
    $(MAKE) /$(MAKEFLAGS) /F .\libpng.mak CFG="libpng - Win32 Debug" 
    cd "..\LibThotEditor"
 
 "libpng - Win32 DebugCLEAN" : 
-   cd "..\libpng"
+   cd "\users\guetari\Amaya\Windows\libpng"
    $(MAKE) /$(MAKEFLAGS) /F .\libpng.mak CFG="libpng - Win32 Debug" RECURSE=1 CLEAN 
    cd "..\LibThotEditor"
 
@@ -1253,12 +1229,6 @@ SOURCE=..\..\thotlib\tree\paginate.c
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
-SOURCE=..\..\thotlib\xml\parsexml.c
-
-"$(INTDIR)\parsexml.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
 SOURCE=..\..\thotlib\image\picture.c
 
 "$(INTDIR)\picture.obj" : $(SOURCE) "$(INTDIR)"
@@ -1415,12 +1385,6 @@ SOURCE=..\..\thotlib\dialogue\savedoc.c
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
-SOURCE=..\..\thotlib\xml\savexml.c
-
-"$(INTDIR)\savexml.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
 SOURCE=..\..\thotlib\document\schemas.c
 
 "$(INTDIR)\schemas.obj" : $(SOURCE) "$(INTDIR)"
@@ -1535,21 +1499,9 @@ SOURCE=..\..\thotlib\editing\textcommands.c
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
-SOURCE=..\..\thotlib\xml\thotmodule.c
-
-"$(INTDIR)\thotmodule.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
 SOURCE=..\..\thotlib\base\thotmsg.c
 
 "$(INTDIR)\thotmsg.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-SOURCE=..\..\thotlib\xml\translatexml.c
-
-"$(INTDIR)\translatexml.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -1673,21 +1625,9 @@ SOURCE=..\..\thotlib\document\writepivot.c
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
-SOURCE=..\..\thotlib\xml\writexml.c
-
-"$(INTDIR)\writexml.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
 SOURCE=..\..\thotlib\image\xbmhandler.c
 
 "$(INTDIR)\xbmhandler.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-SOURCE=..\..\thotlib\xml\xmlmodule.c
-
-"$(INTDIR)\xmlmodule.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 

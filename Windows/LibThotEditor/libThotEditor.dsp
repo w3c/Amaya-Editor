@@ -41,7 +41,7 @@ RSC=rc.exe
 # PROP Intermediate_Dir "Release"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /W3 /GX /O2 /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I "..\..\libpng\zlib" /D "NDEBUG" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "WIN32" /D "_WINDOWS" /D "__STDC__" /D "STDC_HEADERS" /D "SOCKS" /D "MATHML" /D "THOT_TOOLTIPS" /D "_AMAYA_RELEASE_" /YX /FD /c
+# ADD CPP /nologo /W3 /GX /O2 /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I "..\..\libpng\zlib" /D "NDEBUG" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "WIN32" /D "_WINDOWS" /D "__STDC__" /D "STDC_HEADERS" /D "SOCKS" /D "MATHML" /D "THOT_TOOLTIPS" /YX /FD /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe
@@ -362,10 +362,6 @@ SOURCE=..\..\thotlib\tree\paginate.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\xml\parsexml.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\thotlib\image\picture.c
 # End Source File
 # Begin Source File
@@ -470,10 +466,6 @@ SOURCE=..\..\thotlib\dialogue\savedoc.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\xml\savexml.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\thotlib\document\schemas.c
 # End Source File
 # Begin Source File
@@ -550,15 +542,7 @@ SOURCE=..\..\thotlib\editing\textcommands.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\xml\thotmodule.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\thotlib\base\thotmsg.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\thotlib\xml\translatexml.c
 # End Source File
 # Begin Source File
 
@@ -642,15 +626,7 @@ SOURCE=..\..\thotlib\document\writepivot.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\xml\writexml.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\thotlib\image\xbmhandler.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\thotlib\xml\xmlmodule.c
 # End Source File
 # Begin Source File
 

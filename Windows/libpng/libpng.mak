@@ -262,24 +262,24 @@ LIB32_OBJS= \
 !IF  "$(CFG)" == "libpng - Win32 Release"
 
 "zlib - Win32 Release" : 
-   cd "..\zlib"
+   cd "\users\guetari\Amaya\Windows\zlib"
    $(MAKE) /$(MAKEFLAGS) /F .\zlib.mak CFG="zlib - Win32 Release" 
    cd "..\libpng"
 
 "zlib - Win32 ReleaseCLEAN" : 
-   cd "..\zlib"
+   cd "\users\guetari\Amaya\Windows\zlib"
    $(MAKE) /$(MAKEFLAGS) /F .\zlib.mak CFG="zlib - Win32 Release" RECURSE=1 CLEAN 
    cd "..\libpng"
 
 !ELSEIF  "$(CFG)" == "libpng - Win32 Debug"
 
 "zlib - Win32 Debug" : 
-   cd "..\zlib"
+   cd "\users\guetari\Amaya\Windows\zlib"
    $(MAKE) /$(MAKEFLAGS) /F .\zlib.mak CFG="zlib - Win32 Debug" 
    cd "..\libpng"
 
 "zlib - Win32 DebugCLEAN" : 
-   cd "..\zlib"
+   cd "\users\guetari\Amaya\Windows\zlib"
    $(MAKE) /$(MAKEFLAGS) /F .\zlib.mak CFG="zlib - Win32 Debug" RECURSE=1 CLEAN 
    cd "..\libpng"
 
