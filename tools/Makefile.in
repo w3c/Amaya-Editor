@@ -1,0 +1,37 @@
+#
+# Makefile for tools directory
+# Generated from tools/Makefile.in
+# Daniel Veillard, 1997
+#
+@VPATHOPT@= @srcdir@
+CC	= @CC@
+CFLAGS	= @CFLAGS@
+
+SUBDIRS = mkdep dns_daemon javastub cextract-1.7
+
+@SET_MAKE@
+
+all : 
+	@(for dir in $(SUBDIRS) ;\
+	  do if test -d $$dir ; then cd $$dir ; \
+	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" all ; \
+	  cd .. ; fi ;done )
+
+clean :
+	@(for dir in $(SUBDIRS) ;\
+	  do if test -d $$dir ; then cd $$dir ; \
+	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" clean ; \
+	  cd .. ; fi ;done )
+
+install :
+	@(for dir in $(SUBDIRS) ;\
+	  do if test -d $$dir ; then cd $$dir ; \
+	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" install ; \
+	  cd .. ; fi ;done )
+
+depend : 
+	@(for dir in $(SUBDIRS) ;\
+	  do if test -d $$dir ; then cd $$dir ; \
+	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" depend ; \
+	  cd .. ; fi ;done )
+

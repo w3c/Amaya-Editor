@@ -1,0 +1,235 @@
+#
+# Main Makefile for Thot/Amaya source tree
+# Generated from Makefile.in
+# Daniel Veillard, 1997
+#
+
+@VPATHOPT@= @srcdir@
+THOTDIR = @top_srcdir@
+
+CC	= @CC@
+CFLAGS	= @CFLAGS@
+CP	= @CP@
+MV	= @MV@
+RM	= @RM@ -f
+LN_S	= @LN_S@
+MKDIR	= @MKDIR@
+ECHO	= @ECHO@
+
+LIBWWW	= w3c-libwww-@LIBWWW_VER@
+KAFFE	= kaffe-@KAFFE_VER@
+LIBJPEG	= libjpeg
+LIBPNG	= libpng
+LIBZ	= libz
+
+LINKS	= schemas schemasOPERA config
+SUBDIRS	= tools tablelib thotlib batch drawlib indexlib thot amaya
+
+srcdir	= @top_srcdir@
+
+@SET_MAKE@
+
+default : amaya thot
+
+force :
+
+thot: rebuild force
+	@(if test -d thot ; then cd thot ; \
+	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" thot ; fi)
+
+amaya: rebuild force
+	@(if test -d amaya ; then cd amaya ; \
+	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" amaya ; fi)
+
+all : rebuild
+	@(for dir in $(SUBDIRS) ;\
+	  do if test -d $$dir ; then cd $$dir ; \
+	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" all ; \
+	  cd .. ; fi ;done )
+
+clean : rebuild
+	@(for dir in $(SUBDIRS) ;\
+	  do if test -d $$dir ; then cd $$dir ; \
+	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" clean ; \
+	  cd .. ; fi ;done )
+
+install : rebuild
+	@(for dir in $(SUBDIRS) ;\
+	  do if test -d $$dir ; then cd $$dir ; \
+	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" install ; \
+	  cd .. ; fi ;done )
+
+depend : rebuild tools/mkdep/mkdep
+	@(for dir in $(SUBDIRS) ;\
+	  do if test -d $$dir ; then cd $$dir ; \
+	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" depend ; \
+	  cd .. ; fi ;done )
+
+tools/mkdep/mkdep :
+	@(cd tools/mkdep ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)")
+
+#
+# Rule du rebuild the Thot schemas
+#
+
+bin/str : force
+	@(cd batch ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" str prs tra printstr)
+
+schemas : rebuild bin/str
+	@(bindir=`pwd`/bin ; cd @top_srcdir@/schemas ; \
+	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" THOTDIR=".." THOTSCH="../schemas:../schemasOPERA" \
+	  COMPSCH="."  COMPSTR="$$bindir/str" COMPPRS="$$bindir/prs" \
+	  COMPTRA="$$bindir/tra" PRINTSTR="$$bindir/printstr" all)
+
+#
+# Rules to rebuild the libWWW package
+#
+
+libwww libwww.a :
+	@(if [ ! -d @top_srcdir@/$(LIBWWW) ] ; \
+	  then \
+	      cd @top_srcdir@ ; cvs update -d $(LIBWWW) ; \
+	  fi)
+	@(if test ! -d $(LIBWWW) ; then $(MKDIR) $(LIBWWW) ;  fi)
+	@(localdir=`pwd` ; libwwwdir="@top_srcdir@/$(LIBWWW)" ; cd $(LIBWWW) ; \
+	  unset LANG; if [ -x $$libwwwdir/configure ] ; then \
+	      $$libwwwdir/configure ; \
+	  else \
+	      ../$$libwwwdir/configure ; \
+	  fi)
+	-@(cd @top_srcdir@/$(LIBWWW)/Library/src ; \
+	   touch *.html ; touch *.h ; touch *.c)
+	@(cd $(LIBWWW)/Library/src ; $(MAKE) CC=$(CC) CFLAGS="-O" libwww.a)
+	@($(CP) $(LIBWWW)/Library/src/libwww.a libwww.a)
+	@echo libwww.a reinstalled
+
+#
+# Rules to rebuild the libjpeg package
+#
+
+libjpeg libjpeg.a : force
+	@($(RM) @top_srcdir@/libjpeg/*.o)
+	@(cd libjpeg ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)")
+
+#
+# Rules to rebuild the libpng package
+#
+
+libpng libpng.a : force
+	@($(RM) @top_srcdir@/libpng/*.o)
+	@(cd libpng ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)")
+
+#
+# Rules to rebuild the libpng package
+#
+
+libz libz.a : force
+	@($(RM) @top_srcdir@/libpng/libz/*.o)
+	@(cd libpng/libz ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)")
+
+#
+# Rules to rebuild the Kaffe package
+#
+
+kaffe_get :
+	@(if [ ! -d @top_srcdir@/$(KAFFE) ] ; \
+	  then \
+	      cd @top_srcdir@ ; cvs get $(KAFFE) ; \
+	  fi)
+	@(if [ ! -d @top_srcdir@/classes ] ; \
+	  then \
+	      cd @top_srcdir@ ; cvs get classes ; \
+	  fi)
+	@(if [ ! -d @top_srcdir@/javalib ] ; \
+	  then \
+	      cd @top_srcdir@ ; cvs get javalib ; \
+	  fi)
+	@(if [ ! -d $(KAFFE) ] ; \
+	  then \
+	      mkdir $(KAFFE) ; \
+	  fi)
+
+kaffe_clean :
+	@($(RM) -f libkaffe*)
+
+kaffe_config :
+	@(localdir=`pwd` ; kaffedir="@top_srcdir@/$(KAFFE)" ; cd $(KAFFE) ; \
+	  unset LANG; if [ -x $$kaffedir/configure ] ; then \
+	      $$kaffedir/configure --prefix=$$localdir --libdir=$$localdir \
+	      --bindir=$$localdir/bin  --enable-staticlib --with-x ; \
+	  else
+	      ../$$kaffedir/configure --prefix=$$localdir --libdir=$$localdir \
+	      --bindir=$$localdir/bin  --enable-staticlib --with-x ; \
+	  fi)
+
+kaffe_make :
+	@(cd $(KAFFE) ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)")
+
+kaffe_install:
+	@(cd $(KAFFE) ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" install)
+	@(if [ ! -d @top_srcdir@/classes ] ; \
+	  then \
+	      $(MKDIR) @top_srcdir@/classes ; \
+	  fi)
+	@(if [ ! -d @top_srcdir@/classes/lib ] ; \
+	  then \
+	      $(MKDIR) @top_srcdir@/classes/lib ; \
+	  fi)
+	@($(MV) include/kaffe/StubPreamble.h @top_srcdir@/javalib)
+	@($(MV) include/kaffe/jtypes.h @top_srcdir@/javalib)
+	@($(MV) include/kaffe/native.h @top_srcdir@/javalib)
+	@($(MV) include/kaffe/java_lang_String.h @top_srcdir@/javalib)
+	@($(CP) -R share/kaffe/. @top_srcdir@/classes)
+	@$(ECHO) Cleaning temp $(KAFFE) files
+	@($(RM) -r share include man )
+
+kaffe : kaffe_get kaffe_clean kaffe_config kaffe_make kaffe_install
+	@(echo $(KAFFE) reinstalled)
+
+#
+# This section try to maintain the Makefile(s) up-to-date in
+# case the autoconf sources are modified.
+#
+
+MAKEFILE_IN= \
+@EXTRA_MAKEFILE_IN@ \
+@top_srcdir@/configure.in \
+@top_srcdir@/Makefile.in \
+@top_srcdir@/libjpeg/Makefile.in \
+@top_srcdir@/batch/Makefile.in \
+@top_srcdir@/libjpeg/Makefile.in \
+@top_srcdir@/libpng/Makefile.in \
+@top_srcdir@/libpng/zlib/Makefile.in \
+@top_srcdir@/drawlib/Makefile.in \
+@top_srcdir@/indexlib/Makefile.in \
+@top_srcdir@/tablelib/Makefile.in \
+@top_srcdir@/javalib/Makefile.in \
+@top_srcdir@/javalib/Makefile.java \
+@top_srcdir@/pluginlib/Makefile.in \
+@top_srcdir@/pluginlib/Makefile.plugin \
+@top_srcdir@/thotlib/Makefile.in \
+@top_srcdir@/thotlib/dialogue/Makefile.in \
+@top_srcdir@/thotlib/include/Makefile.in \
+@top_srcdir@/tools/Makefile.in \
+@top_srcdir@/tools/dns_daemon/Makefile.in \
+@top_srcdir@/tools/mkdep/Makefile.in \
+@top_srcdir@/tools/javastub/Makefile.in \
+@top_srcdir@/tools/cextract-1.7/Makefile.in
+
+rebuild : Makefile
+
+${srcdir}/config.h.in: stamp-h.in
+
+${srcdir}/stamp-h.in: configure.in config.h.in
+	cd ${srcdir} && autoheader
+	echo timestamp > ${srcdir}/stamp-h.in
+
+stamp.h: config.h.in config.status
+	./config.status
+
+Makefile: $(MAKEFILE_IN) config.status
+	./config.status
+
+config.status: configure
+	./config.status --recheck
+

@@ -1,0 +1,40 @@
+#
+# Makefile for mkdep
+# Automatically generated from tools/mkdep/Makefile.in
+# Daniel Veillard, 1997
+#
+CC	= @CC@
+CFLAGS	= @CFLAGS@
+LD	= @CC@
+LDFLAGS	= @LDFLAGS@
+LIBS	= @LIBS@
+INSTALL = @INSTALL@
+RM	= @RM@ -f
+
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+bindir = @bindir@
+
+all : mkdep
+
+mkdep : mkdep.o
+	$(LD) $(LDFLAGS) -o $@ mkdep.o
+
+mkdep.o : @srcdir@/mkdep.c
+	$(CC) $(CFLAGS) -I../.. -c @srcdir@/mkdep.c
+
+clean :
+	$(RM) *.o 
+
+install :
+
+test: all
+	./mkdep -I../../../w3c-libwww-5.0a/Library/src \
+	        -I../../../thotlib/internals/h \
+		-I../../../thotlib/internals/var \
+		-I../../../thotlib/internals/f \
+		-I../../../thotlib/include \
+		../../../thotlib/*/*.c
+
+depend :
+

@@ -1,0 +1,22 @@
+#
+# Makefile.libwww
+# Autoconf Fragment when using libWWW
+# Daniel Veillard, 1997
+#
+
+AMAYA_LIBWWW_OPTIONS=
+
+AMAYA_LIBWWW_OBJ= \
+	AHTBridge.o \
+	AHTFWrite.o \
+	answer.o \
+	query.o \
+	AHTMemConv.o 
+
+AMAYA_LIBWWW_LIBS= ../libwww.a
+
+AMAYA_LIBWWW_INCLUDES= -I$(THOTDIR)/w3c-libwww-5.0a/Library/src
+
+../libwww.a :
+	@(cd .. ; $(MAKE) libwww.a)
+

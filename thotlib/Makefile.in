@@ -1,0 +1,294 @@
+#
+# Makefile for thotlib directory
+# Generated from thotlib/Makefile.in
+# Daniel Veillard, 1997
+#
+
+.SUFFIXES: .c .o ND.o
+
+@VPATHOPT@= @srcdir@
+THOTDIR = @top_srcdir@
+CC	= @CC@
+CFLAGS	= @CFLAGS@
+AR	= @AR@ rc
+RANLIB	= @RANLIB@
+MKDIR	= @MKDIR@
+INSTALL = @INSTALL@
+INCLUDES= -DHAVE_CONFIG_H -I.. @THOTINCLUDES@ @X_CFLAGS@
+RM	= @RM@ -f
+LDFLAGS = @LDFLAGS@ -L../tablelib -L. -L..
+LIBS	= @IMGLIBS@ @X_LIBS@ -lXext @X_PRE_LIBS@ -lX11 @X_EXTRA_LIBS@ @LIBS@ -lm 
+ECHO	= @ECHO@
+
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+libdir = @libdir@
+
+SUBDIRS = include
+OBJDIRS = base content dialogue document editing image presentation tree view
+
+@SET_MAKE@
+
+#
+# Rule to build standard objects
+#
+.c.o :
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+#
+# Rule to build specific objects for libThotKernel.a
+#
+.cND.o :
+	$(CC) $(CFLAGS) $(INCLUDES) -DNODISPLAY -c $< -o $@
+
+all : directories libThotKernel.a libThotEditor.a print
+
+clean :
+	$(RM) libThotKernel.a libThotEditor.a
+	$(RM) -r $(OBJDIRS)
+
+install : all
+	@(for dir in $(SUBDIRS) ; \
+	  do if test -d $$dir ; then cd $$dir ; \
+	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" install ; \
+	  cd .. ; fi ;done )
+	$(INSTALL) libThotKernel.a $(libdir)
+	$(INSTALL) libThotEditor.a $(libdir)
+	$(INSTALL) ../bin/print $(bindir)
+
+directories :
+	@(for dir in $(OBJDIRS) ; \
+	  do if test ! -d $$dir ; then $(MKDIR) $$dir ; fi ; done)
+
+force :
+
+../tablelib/libThotTable.a : force
+	@(cd ../tablelib ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" libThotTable.a)
+
+../libjpeg.a :
+	@(cd ../libjpeg ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)")
+
+../libpng.a :
+	@(cd ../libpng ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)")
+
+../libz.a :
+	@(cd ../libpng/zlib ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)")
+
+include .depends
+
+../tools/mkdep/mkdep : 
+	@(cd ../tools/mkdep ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)")
+
+.depends depend : ../tools/mkdep/mkdep
+	../tools/mkdep/mkdep -relative -vpath $(VPATH) $(INCLUDES) $(VPATH)/*/*.c  > .depends
+
+#########################################################################
+#									#
+#		Rules to build the main libraries			#
+#									#
+#########################################################################
+
+THOTK_OBJ = \
+	base/fileaccess.o \
+	base/memory.o \
+	base/message.o \
+	base/platform.o \
+	base/registry.o \
+	base/structlist.o \
+	base/actions.o \
+	base/units.o \
+	document/externalref.o \
+	document/language.o \
+	document/pivot.o \
+	document/readprs.o \
+	document/readstr.o \
+	document/readtra.o \
+	document/schtrad.o \
+	document/translation.o \
+	tree/draw.o \
+	tree/exceptions.o \
+	tree/references.o \
+	tree/structschema.o \
+	tree/tree.o \
+	tree/checkaccess.o \
+	tree/labelalloc.o
+
+KERNEL_OBJ = \
+	base/batchmessage.o \
+	content/contentapiND.o \
+	content/contentND.o \
+	dialogue/nodisplay.o \
+	document/documentapiND.o \
+	document/readpivot.o \
+	document/schemastr.o \
+	document/writepivotND.o \
+	editing/applicationapiND.o \
+	presentation/presentationapiND.o \
+	tree/attributeapiND.o \
+	tree/referenceapiND.o \
+	tree/treeapiND.o
+
+EDITOR_OBJ = \
+	image/xbmhandler.o \
+	image/epshandler.o \
+	image/gifhandler.o	\
+	image/jpeghandler.o \
+	image/picture.o \
+	image/picturebase.o \
+	image/xpmhandler.o \
+	image/pnghandler.o \
+	image/xpmcrbuffri.o\
+	image/xpmcrbuffrp.o\
+	image/xpmcrdatafri.o\
+	image/xpmcrdatafrp.o\
+	image/xpmcreate.o\
+	image/xpmcrifrbuf.o\
+	image/xpmcrifrdata.o\
+	image/xpmcrpfrbuf.o\
+	image/xpmcrpfrdata.o\
+	image/xpmdata.o\
+	image/xpmhashtable.o\
+	image/xpmmisc.o\
+	image/xpmparse.o\
+	image/xpmrdftodata.o\
+	image/xpmrdftoi.o\
+	image/xpmrdftop.o\
+	image/xpmrgb.o\
+	base/alloca.o \
+	base/config.o \
+	base/thotmsg.o \
+	content/contentapi.o \
+	content/content.o \
+	content/dictionary.o \
+	content/search.o \
+	content/searchref.o \
+	content/word.o \
+	dialogue/callback.o\
+	dialogue/callbackinit.o \
+	dialogue/font.o \
+	dialogue/geom.o \
+	editing/scroll.o \
+	editing/selectionapi.o \
+	editing/spellchecker.o \
+	image/abspictures.o \
+	image/pictureapi.o \
+	presentation/changepresent.o \
+	presentation/genericdriver.o \
+	presentation/presentationapi.o \
+	presentation/presentdriver.o \
+	presentation/presvariables.o \
+	presentation/pschemaapi.o \
+	presentation/specificdriver.o \
+	presentation/attrpresent.o \
+	tree/attributeapi.o \
+	tree/pagecommands.o \
+	tree/paginate.o \
+	tree/referenceapi.o \
+	tree/treeapi.o \
+	view/absboxes.o \
+	view/boxmoves.o \
+	view/boxparams.o \
+	view/boxpositions.o \
+	view/boxrelations.o \
+	view/buildboxes.o \
+	view/buildlines.o \
+	view/changeabsbox.o \
+	view/createabsbox.o \
+	view/createpages.o \
+	view/frame.o \
+	view/hyphen.o \
+	view/inites.o \
+	view/windowdisplay.o
+
+DIALOGUE_OBJ = \
+	dialogue/LiteClue.o \
+	dialogue/appdialogue.o \
+	dialogue/appli.o \
+	dialogue/attrmenu.o \
+	dialogue/browser.o \
+	dialogue/closedoc.o \
+	dialogue/colors.o \
+	dialogue/context.o \
+	dialogue/createdoc.o \
+	dialogue/creationmenu.o \
+	dialogue/dialogapi.o \
+	dialogue/input.o \
+	dialogue/interface.o \
+	dialogue/keyboards.o \
+	dialogue/lookup.o \
+	dialogue/modiftype.o \
+	dialogue/opendoc.o \
+	dialogue/openview.o \
+	dialogue/picturemenu.o \
+	dialogue/presentmenu.o \
+	dialogue/printmenu.o \
+	dialogue/extprintmenu.o \
+	dialogue/quit.o \
+	dialogue/savedoc.o \
+	dialogue/searchmenu.o \
+	dialogue/searchmenustr.o \
+	dialogue/selectmenu.o \
+	dialogue/visibility.o \
+	dialogue/zoom.o \
+	document/documentapi.o \
+	document/readpivot.o \
+	document/schemas.o \
+	document/views.o \
+	document/docs.o \
+	document/writepivot.o \
+	editing/applicationapi.o \
+	editing/checkermenu.o \
+	editing/editcommands.o \
+	editing/selectionapi.o \
+	editing/structchange.o\
+	editing/structcommands.o \
+	editing/structcreation.o \
+	editing/structmodif.o \
+	editing/structselect.o \
+	editing/textcommands.o \
+	editing/unstructchange.o\
+	editing/viewcommands.o \
+	presentation/presrules.o \
+	tree/attributes.o \
+	view/boxlocate.o \
+	view/boxselection.o \
+	view/displaybox.o \
+	view/displayselect.o \
+	view/structlocate.o\
+	view/unstructlocate.o\
+	view/viewapi.o 
+
+base/registry.o : @srcdir@/base/registry.c
+	$(CC) $(CFLAGS) $(INCLUDES) -DCOMPILED_IN_THOTDIR=\"@top_srcdir@\" \
+	   -DCOMPILED_IN_THOTDIR2=\"@datadir@/thot\" -c @srcdir@/base/registry.c -o $@
+
+libThotKernel.a : $(THOTK_OBJ) $(KERNEL_OBJ)
+	$(AR) libThotKernel.a $(THOTK_OBJ) $(KERNEL_OBJ)
+	$(RANLIB) libThotKernel.a
+	@$(ECHO) "====>" libThotKernel is done
+
+libThotEditor.a : $(THOTK_OBJ) $(EDITOR_OBJ) $(DIALOGUE_OBJ)
+	$(AR) libThotEditor.a $(THOTK_OBJ) $(EDITOR_OBJ) $(DIALOGUE_OBJ)
+	$(RANLIB) libThotEditor.a
+	@$(ECHO) "====>" libThotEditor is done
+
+#
+# Rules for producing the print binary
+#
+
+PRINT_OBJ= \
+	dialogue/nodialog.o \
+	tree/paginatePP.o \
+	view/initpses.o \
+	view/psdisplay.o \
+	editing/print.o
+
+tree/paginatePP.o : @srcdir@/tree/paginate.c
+	$(CC) $(CFLAGS) $(INCLUDES) -DPAGINEETIMPRIME -c @srcdir@/tree/paginate.c -o $@
+
+print : ../bin/print
+
+../bin/print : $(PRINT_OBJ) libThotEditor.a ../tablelib/libThotTable.a ../libpng.a ../libz.a ../libjpeg.a
+	$(CC) $(LDFLAGS) -o $@ $(PRINT_OBJ) -lThotTable -lThotEditor $(LIBS)
+	@$(ECHO) "====>" print is done
+

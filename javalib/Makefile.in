@@ -1,0 +1,180 @@
+#
+# Makefile for javalib directory
+# Generated from javalib/Makefile.in
+# Daniel Veillard, 1997
+#
+
+@VPATHOPT@= @srcdir@
+THOTDIR = @top_srcdir@
+CC	= @CC@
+CFLAGS	= @CFLAGS@
+AR	= @AR@ rc
+RANLIB	= @RANLIB@
+INSTALL = @INSTALL@
+INCLUDES= -DHAVE_CONFIG_H -I@srcdir@ -I.. -I. -I@srcdir@/f @THOTINCLUDES@ @X_CFLAGS@
+RM	= @RM@ -f
+ECHO	= @ECHO@
+
+JAVASTUB= ../tools/javastub/javastub
+JAVAC	= ../bin/javac
+KAFFEH	= ../bin/kaffeh
+
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+libdir = @libdir@
+
+#
+# Rule to build objects
+#
+.c.o :
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+all : libThotJava.a libAmayaJava.a
+
+clean :
+	$(RM) libThotJava.a libAmayaJava.a
+	$(RM) *.o
+
+install : all
+	$(INSTALL) libThotJava.a $(libdir)
+	$(INSTALL) libAmayaJava.a $(libdir)
+
+include .depends
+
+../tools/mkdep/mkdep : 
+	@(cd ../tools/mkdep ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)")
+
+.depends depend : ../tools/mkdep/mkdep
+	../tools/mkdep/mkdep -relative -vpath $(VPATH) $(INCLUDES) $(VPATH)/*.c  > .depends
+
+#########################################################################
+#									#
+#		Rules to build the library				#
+#									#
+#########################################################################
+
+THOT_JAVA_OBJ = \
+	kaffeine.o \
+	JavaTypes.o \
+	JavaDialog.o \
+	thotlib_APIExtra_stubs.o \
+	biss_awt_APIstubs.o \
+	thotlib_APIApplication_stubs.o \
+	thotlib_APIDocument_stubs.o \
+	thotlib_APITree_stubs.o \
+	thotlib_APIContent_stubs.o \
+	thotlib_APIAttribute_stubs.o \
+	thotlib_APIReference_stubs.o \
+	thotlib_APILanguage_stubs.o \
+	thotlib_APIPresentation_stubs.o \
+	thotlib_APIView_stubs.o \
+	thotlib_APISelection_stubs.o \
+	thotlib_APIInterface_stubs.o \
+	thotlib_APIRegistry_stubs.o \
+	thotlib_APIDialog_stubs.o
+
+libThotJava.a : $(THOT_JAVA_OBJ)
+	$(AR) libThotJava.a $(THOT_JAVA_OBJ)
+	$(RANLIB) libThotJava.a
+	@$(ECHO) "====>" libThotJava is done
+
+AMAYA_JAVA_OBJ = \
+	JavaWWWInterf.o \
+	amaya_APIHtml_stubs.o \
+	amaya_APIJavaAmaya_stubs.o \
+	amaya_APIAmayaMsg_stubs.o
+
+libAmayaJava.a : $(AMAYA_JAVA_OBJ)
+	$(AR) libAmayaJava.a $(AMAYA_JAVA_OBJ)
+	$(RANLIB) libAmayaJava.a
+	@$(ECHO) "====>" libAmayaJava is done
+
+#########################################################################
+#									#
+#		Rules to build the stubs				#
+#									#
+#########################################################################
+
+APICLASSES=Application Document Tree Content Attribute Reference \
+        Language Presentation View Selection Interface Registry \
+	Dialog LibMsg AppAction
+        
+CLASSES=Element SSchema Document ElementType Attribute \
+        AttributeType PRule Extra Language IntPtr Action
+	
+HEADER=StringBuffer
+
+AMAYAAPI_CLASSES=JavaAmaya AmayaMsg
+AMAYAAPI_CLASSES_UP=Html
+AMAYA_CLASSES=HTTPRequest
+
+stubs : thotlib_itf amaya_itf amaya_itf_up
+
+thotlib_itf:
+	@(mv -f JavaTypes.err JavaTypes.err.old ; \
+	  for classe in $(APICLASSES) ; do \
+	   include=`echo $$classe | gawk '{print tolower($$0)}'`.h ; \
+	   echo "Producing stubs and API class for $$classe from $$include" ; \
+	   $(JAVASTUB) -M thotlib_API$$classe \
+	               -J @top_srcdir@/classes/thotlib/API$$classe.java \
+		       @top_srcdir@/thotlib/include/$$include 2>> JavaTypes.err ; \
+	   echo "Compiling new Java class API$$classe" ; \
+	   (cd @top_srcdir@/classes ; $(JAVAC) thotlib/API$$classe.java) ; \
+	   echo "Producing header for class API$$classe" ; \
+	   $(KAFFEH) thotlib.API$$classe ; \
+	  done ; \
+	  for classe in $(CLASSES) ; do \
+           echo "Compiling Java class $$classe" ; \
+	   (cd @top_srcdir@/classes ; $(JAVAC) thotlib/$$classe.java) ; \
+           echo "Producing header for class $$classe" ; \
+	   $(KAFFEH) thotlib.$$classe ; \
+	  done ; \
+	  for classe in $(HEADER) ; do \
+           echo "Producing header for class $$classe" ; \
+	   $(KAFFEH) java.lang.$$classe ; \
+	  done ; \
+	 )
+
+amaya_itf:
+	@(mv -f JavaTypes.err JavaTypes.err.old ; \
+	  for classe in $(AMAYAAPI_CLASSES) ; do \
+	   include=`echo $$classe | gawk '{print tolower($$0)}'`.h ; \
+	   echo "Producing stubs and API class for $$classe from $$include" ; \
+	   $(JAVASTUB) -M amaya_API$$classe \
+	               -J @top_srcdir@/classes/amaya/API$$classe.java \
+		       @top_srcdir@/amaya/$$include 2>> JavaTypes.err ; \
+	   echo "Compiling new Java class API$$classe" ; \
+	   (cd @top_srcdir@/classes ; $(JAVAC) amaya/API$$classe.java) ; \
+	   echo "Producing header for class API$$classe" ; \
+	   $(KAFFEH) amaya.API$$classe ; \
+	  done ; \
+	  for classe in $(AMAYA_CLASSES) ; do \
+           echo "Compiling Java class $$classe" ; \
+	   (cd @top_srcdir@/classes ; $(JAVAC) amaya/$$classe.java) ; \
+           echo "Producing header for class $$classe" ; \
+	   $(KAFFEH) amaya.$$classe ; \
+	  done ; \
+	 )
+
+
+amaya_itf_up:
+	 @(mv -f JavaTypes.err JavaTypes.err.old ; \
+	   for classe in $(AMAYAAPI_CLASSES_UP) ; do \
+	    include=`echo $$classe | gawk '{print toupper($$0)}'`.h ; \
+	    echo "Producing stubs and API class for $$classe from $$include" ; \
+	    $(JAVASTUB) -M amaya_API$$classe \
+			-J @top_srcdir@/classes/amaya/API$$classe.java \
+			@top_srcdir@/amaya/$$include 2>> JavaTypes.err ; \
+	    echo "Compiling new Java class API$$classe" ; \
+	    (cd @top_srcdir@/classes ; $(JAVAC) amaya/API$$classe.java) ; \
+	    echo "Producing header for class API$$classe" ; \
+	    $(KAFFEH) amaya.API$$classe ; \
+	   done ; \
+	   for classe in $(AMAYA_CLASSES) ; do \
+	    echo "Compiling Java class $$classe" ; \
+	    (cd @top_srcdir@/classes ; $(JAVAC) amaya/$$classe.java) ; \
+	    echo "Producing header for class $$classe" ; \
+	    $(KAFFEH) amaya.$$classe ; \
+	   done ; \
+	  )
+

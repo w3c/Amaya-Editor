@@ -1,0 +1,18 @@
+#
+# Makefile fragment when using the plugin package
+#
+
+AMAYA_PLUGIN_OPTIONS= -DAMAYA_PLUGIN
+
+AMAYA_PLUGIN_INCLUDES= -I$(THOTDIR)/pluginlib -I$(THOTDIR)/pluginlib/f
+
+AMAYA_PLUGIN_OBJ= 
+
+AMAYA_PLUGIN_LIBS= ../pluginlib/libThotPlugin.a
+
+plugin_force :
+
+../pluginlib/libThotPlugin.a : plugin_force
+	@(cd ../pluginlib ; make libThotPlugin.a)
+
+

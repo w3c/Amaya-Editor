@@ -1,0 +1,195 @@
+#
+# Makefile for batch directory, the schemas compilers' directory
+# Generated from batch/Makefile.in
+# Daniel Veillard, 1997
+#
+
+.SUFFIXES: .c .o
+
+@VPATHOPT@= @srcdir@
+THOTDIR = @top_srcdir@
+CC	= @CC@
+CFLAGS	= @CFLAGS@
+LD	= @CC@
+LDFLAGS	= @LDFLAGS@
+LIBS	= ../thotlib/libThotKernel.a @LIBS@
+INSTALL = @INSTALL@
+INCLUDES= -DHAVE_CONFIG_H -I.. -I@srcdir@/f @THOTINCLUDES@ @X_CFLAGS@
+RM	= @RM@
+MKDIR	= @MKDIR@
+ECHO	= @ECHO@
+
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+bindir = @bindir@
+
+COMPILERS=../bin/grm ../bin/str ../bin/prs ../bin/typ ../bin/tra ../bin/app \
+          ../bin/printstr ../bin/printprs ../bin/printtyp
+
+.c.o :
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+all : ../bin $(COMPILERS)
+
+force :
+
+../thotlib/libThotKernel.a : force
+	@(cd ../thotlib ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" libThotKernel.a)
+
+../bin :
+	$(MKDIR) ../bin
+
+#
+# grm : compiler
+#
+GRM_OBJ= \
+	../thotlib/base/compilmsg.o \
+	parser.o \
+	grammar.o 
+
+grm : ../bin ../bin/grm
+	
+
+../bin/grm : $(GRM_OBJ) ../thotlib/libThotKernel.a
+	$(CC) $(LDFLAGS) -o $@ $(GRM_OBJ) $(LIBS)
+	@$(ECHO) "====>" grm is done
+
+#
+# str : compiler
+#
+STR_OBJ = \
+        ../thotlib/base/compilmsg.o \
+	parser.o \
+	writestr.o \
+	str.o
+
+str : ../bin ../bin/str
+	
+
+../bin/str : $(STR_OBJ) ../thotlib/libThotKernel.a
+	$(CC) $(LDFLAGS) -o $@ $(STR_OBJ) $(LIBS)
+	@$(ECHO) "====>" str is done
+
+#
+# prs : compiler
+#
+PRS_OBJ = \
+	../thotlib/base/compilmsg.o \
+	parser.o \
+	writeprs.o \
+	prs.o
+
+prs : ../bin ../bin/prs
+	
+
+../bin/prs : $(PRS_OBJ) ../thotlib/libThotKernel.a
+	$(CC) $(LDFLAGS) -o $@ $(PRS_OBJ) $(LIBS)
+	@$(ECHO) "====>" prs is done
+
+#
+# typ : compiler
+#
+TYP_OBJ = \
+	../thotlib/base/compilmsg.o \
+	parser.o \
+	writetyp.o \
+	typ.o
+
+typ : ../bin ../bin/typ
+	
+
+../bin/typ : $(TYP_OBJ) ../thotlib/libThotKernel.a
+	$(CC) $(LDFLAGS) -o $@ $(TYP_OBJ) $(LIBS)
+	@$(ECHO) "====>" typ is done
+
+#
+# tra : compiler
+#
+TRA_OBJ = \
+	../thotlib/base/compilmsg.o \
+	parser.o \
+	writetra.o \
+	tra.o
+
+tra : ../bin ../bin/tra
+	
+
+../bin/tra : $(TRA_OBJ) ../thotlib/libThotKernel.a
+	$(CC) $(LDFLAGS) -o $@ $(TRA_OBJ) $(LIBS)
+	@$(ECHO) "====>" tra is done
+
+#
+# app : compiler
+#
+APP_OBJ = \
+	../thotlib/base/compilmsg.o \
+	../thotlib/dialogue/callbackinit.o \
+	parser.o \
+	writeapp.o \
+	app.o
+
+app : ../bin ../bin/app
+	
+
+../bin/app : $(APP_OBJ) ../thotlib/libThotKernel.a
+	$(CC) $(LDFLAGS) -o $@ $(APP_OBJ) $(LIBS)
+	@$(ECHO) "====>" app is done
+
+#
+# printstr : decompiler
+#
+PRINTSTR_OBJ = \
+	printstr.o
+
+printstr : ../bin ../bin/printstr
+	
+
+../bin/printstr : $(PRINTSTR_OBJ) ../thotlib/libThotKernel.a
+	$(CC) $(LDFLAGS) -o $@ $(PRINTSTR_OBJ) $(LIBS)
+	@$(ECHO) "====>" printstr is done
+
+#
+# printprs : decompiler
+#
+PRINTPRS_OBJ = \
+	../thotlib/document/readprs.o \
+	printprs.o
+
+printprs : ../bin ../bin/printprs
+	
+
+../bin/printprs : $(PRINTPRS_OBJ) ../thotlib/libThotKernel.a
+	$(CC) $(LDFLAGS) -o $@ $(PRINTPRS_OBJ) $(LIBS)
+	@$(ECHO) "====>" printprs is done
+
+#
+# printtyp : decompiler
+#
+PRINTTYP_OBJ = \
+	../thotlib/document/readtyp.o \
+	printtyp.o
+
+printtyp : ../bin ../bin/printtyp
+	
+
+../bin/printtyp : $(PRINTTYP_OBJ) ../thotlib/libThotKernel.a
+	$(CC) $(LDFLAGS) -o $@ $(PRINTTYP_OBJ) $(LIBS)
+	@$(ECHO) "====>" printtyp is done
+
+
+clean :
+	$(RM) -f *.o dns_daemon
+
+install : all
+	@(for i in $(COMPILERS) ; do \
+	  $(INSTALL) $$i @bindir@ ; done)
+
+include .depends
+
+../tools/mkdep/mkdep : 
+	@(cd ../tools/mkdep ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)")
+
+.depends depend : ../tools/mkdep/mkdep
+	../tools/mkdep/mkdep -relative -vpath $(VPATH) $(INCLUDES) $(VPATH)/*.c  > .depends
+
+

@@ -11,13 +11,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "config.h"
+
 #include <ctype.h>
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#ifdef HAVE_FCNTL_H
+#include <fcntl.h>
+#else
+#ifdef HAVE_SYS_FCNTL_H
 #include <sys/fcntl.h>
+#endif
+#endif
+#ifdef HAVE_MMAP
 #include <sys/mman.h>
+#endif
 
 #define DEBUG_STUB
 /* #define DEBUG_HASH */

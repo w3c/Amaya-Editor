@@ -1,0 +1,64 @@
+#
+# Makefile for pluginlib directory
+# Generated from pluginlib/Makefile.in
+# Daniel Veillard, 1997
+#
+
+@VPATHOPT@= @srcdir@
+THOTDIR = @top_srcdir@
+CC	= @CC@
+CFLAGS	= @CFLAGS@
+AR	= @AR@ rc
+RANLIB	= @RANLIB@
+INSTALL = @INSTALL@
+INCLUDES= -DHAVE_CONFIG_H -I.. -I@srcdir@/f -I@top_srcdir@/amaya \
+          -I@top_srcdir@/amaya/f @THOTINCLUDES@ @X_CFLAGS@
+RM	= @RM@ -f
+
+OPTIONS	= @AMAYA_OPTIONS@ @PLUGIN_OPTIONS@ \
+          -I@top_srcdir@/w3c-libwww-5.0a/Library/src
+
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+libdir = @libdir@
+
+#
+# Rule to build objects
+#
+.c.o :
+	$(CC) $(CFLAGS) $(OPTIONS) $(INCLUDES) -c $< -o $@
+
+all : libThotPlugin.a
+
+clean :
+	$(RM) libThotPlugin.a
+	$(RM) *.o
+
+install : all
+	$(INSTALL) libThotPlugin.a $(libdir)
+
+include .depends
+
+../tools/mkdep/mkdep : 
+	@(cd ../tools/mkdep ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)")
+
+.depends depend : ../tools/mkdep/mkdep
+	../tools/mkdep/mkdep -relative -vpath $(VPATH) $(INCLUDES) $(VPATH)/*.c  > .depends
+
+#########################################################################
+#									#
+#		Rules to build the library				#
+#									#
+#########################################################################
+
+PLUGIN_OBJ = \
+	pluginhandler.o \
+	pluginapi.o \
+	pluginbrowse.o \
+	editplugin.o
+
+libThotPlugin.a : $(PLUGIN_OBJ)
+	$(AR) libThotPlugin.a $(PLUGIN_OBJ)
+	$(RANLIB) libThotPlugin.a
+
+

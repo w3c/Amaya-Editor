@@ -1114,7 +1114,7 @@ char               *appArgv0;
      }
 #endif
 #ifdef COMPILED_IN_THOTDIR
-   /* Check a compiled-in value (non standard) */
+   /* Check a compiled-in value */
    if (IsThotDir (COMPILED_IN_THOTDIR))
      {
         strcpy(execname, COMPILED_IN_THOTDIR);
@@ -1122,12 +1122,17 @@ char               *appArgv0;
 			  REGISTRY_INSTALL, TRUE);
 	goto load_system_settings;
      }
-   else
-     {
-        fprintf(stderr,"Invalid COMPILED_IN_THOTDIR compile-time value : %s\n",
-	        COMPILED_IN_THOTDIR);
-     }
 #endif /* COMPILED_IN_THOTDIR */
+#ifdef COMPILED_IN_THOTDIR2
+   /* Check a compiled-in value */
+   if (IsThotDir (COMPILED_IN_THOTDIR2))
+     {
+        strcpy(execname, COMPILED_IN_THOTDIR2);
+	AddRegisterEntry ("System", "THOTDIR", COMPILED_IN_THOTDIR2,
+			  REGISTRY_INSTALL, TRUE);
+	goto load_system_settings;
+     }
+#endif /* COMPILED_IN_THOTDIR2 */
 
    /* if all else fails, scan up from where we found the binary */ 
 

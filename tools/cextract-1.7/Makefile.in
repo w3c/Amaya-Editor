@@ -1,0 +1,47 @@
+#
+# Makefile for cextract-1.7
+# Generated from tools/cextract-1.7/Makefile.in
+# Daniel Veillard, 1997
+#
+@VPATHOPT@= @srcdir@
+THOTDIR = @top_srcdir@
+CC	= @CC@
+CFLAGS	= @CFLAGS@
+LD	= @CC@
+LDFLAGS	= @LDFLAGS@
+LIBS	= @LIBS@ -lm
+INSTALL = @INSTALL@
+RM	= @RM@
+MKDIR	= @MKDIR@
+
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+bindir = @bindir@
+
+OBJS = \
+      	parse.o \
+	main.o \
+	io.o
+
+all cextract : ../../bin ../../bin/cextract
+
+../../bin:
+	@($(MKDIR) ../../bin)
+
+../../bin/cextract : $(OBJS)
+	$(LD) $(LDFLAGS) -o $@ $(OBJS) $(LIBS)
+
+clean :
+	$(RM) -f *.o cextract
+
+install :
+
+include .depends
+
+../../tools/mkdep/mkdep : 
+	@(cd ../../tools/mkdep ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)")
+
+.depends depend : ../../tools/mkdep/mkdep
+	../../tools/mkdep/mkdep -relative -vpath $(VPATH) $(INCLUDES) $(VPATH)/*.c  > .depends
+
+
