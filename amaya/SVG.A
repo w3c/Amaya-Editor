@@ -21,6 +21,8 @@ ELEMENTS
 	ElemNew.Post ->         SVGCreated;
 	ElemDelete.Pre ->       SVGWillBeDeleted;
 	END;
+   title:
+	ElemTextModify.Post ->  TitleModified;
    polyline:
 	ElemGraphModify.Post -> ControlPointChanged;
    polygon:

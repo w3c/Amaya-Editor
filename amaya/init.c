@@ -1591,19 +1591,40 @@ static void TextURL (Document doc, View view, char *text)
 void SetWindowTitle (Document sourceDoc, Document targetDoc, View view)
 {
    ElementType         elType;
-   Element             el;
+   Element             root, title;
+#ifdef _SVG
+   Element             child;
+#endif /* _SVG */
+   SSchema             docSSchema;
 
-   el = TtaGetMainRoot (sourceDoc);
-   elType.ElSSchema = TtaGetDocumentSSchema (sourceDoc);
-   if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+   title = NULL;
+   root = TtaGetRootElement (sourceDoc);
+   docSSchema = TtaGetDocumentSSchema (sourceDoc);
+   if (!strcmp (TtaGetSSchemaName (docSSchema), "HTML"))
      /* sourceDoc is a HTML document */
      {
        /* search the Title element in sourceDoc */
+       elType.ElSSchema = docSSchema;
        elType.ElTypeNum = HTML_EL_TITLE;
-       el = TtaSearchTypedElement (elType, SearchForward, el);
-       if (el)
-	 UpdateTitle (el, sourceDoc);
+       title = TtaSearchTypedElement (elType, SearchForward, root);
      }
+#ifdef _SVG
+   else if (!strcmp (TtaGetSSchemaName (docSSchema), "SVG"))
+     {
+       child = TtaGetFirstChild (root);
+       while (child && !title)
+	 {
+	   elType = TtaGetElementType (child);
+	   if (elType.ElSSchema == docSSchema &&
+	       elType.ElTypeNum == SVG_EL_title)
+	     title = child;
+	   else
+	     TtaNextSibling (&child);
+	 }
+     }
+#endif /* _SVG */
+   if (title)
+     UpdateTitle (title, sourceDoc);
 }
 
 /*----------------------------------------------------------------------
@@ -3127,6 +3148,37 @@ void ParseAsHTML (Document doc, View view)
    TtaFreeMemory (tempdocument);
 }
 
+#ifdef _SVG
+/*----------------------------------------------------------------------
+  DisplaySVGtitle
+  Get the first child of the root element of document doc that is of
+  type title and display it as the title of the document window.
+  doc must be a SVG document.
+  ----------------------------------------------------------------------*/
+static void DisplaySVGtitle (Document doc)
+{
+  Element       root, child;
+  SSchema       SVGschema;
+  ElementType   elType;
+  ThotBool      found;
+
+  root = TtaGetRootElement (doc);
+  SVGschema = TtaGetDocumentSSchema (doc);
+  child = TtaGetFirstChild (root);
+  found = FALSE;
+  while (child && !found)
+    {
+      elType = TtaGetElementType (child);
+      if (elType.ElSSchema == SVGschema && elType.ElTypeNum == SVG_EL_title)
+	found = TRUE;
+      else
+	TtaNextSibling (&child);
+    }
+  if (found)
+    UpdateTitle (child, doc);
+}
+#endif /* _SVG */
+
 /*----------------------------------------------------------------------
   LoadDocument parses the new document and stores its path (or
   URL) into the document table.
@@ -3821,6 +3873,15 @@ static Document LoadDocument (Document doc, char *pathname,
 	/* the document is displayed in a different window */
 	/* reset the history of the new window */
 	InitDocHistory (newdoc);
+
+#ifdef _SVG
+      if (docType == docSVG)
+	/* for a SVG document, get the first title element that is a child
+	   of the SVG root element and display its contents as the window
+	   title */
+	DisplaySVGtitle (newdoc);
+#endif /* _SVG */
+
       /* the document is loaded now */
       *inNewWindow = FALSE;
       /* hide template entry if no template server is configured */

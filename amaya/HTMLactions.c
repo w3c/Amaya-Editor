@@ -1546,8 +1546,8 @@ ThotBool AnnotSimpleClick (NotifyElement *event)
   ----------------------------------------------------------------------*/
 void UpdateTitle (Element el, Document doc)
 {
-   Element             textElem, next;
-   ElementType         elType;
+   Element             textElem, next, sibling;
+   ElementType         elType, siblingType;
    Language            lang;
    char               *text, *src;
    int                 length, i, l;
@@ -1555,6 +1555,29 @@ void UpdateTitle (Element el, Document doc)
    if (TtaGetViewFrame (doc, 1) == 0)
       /* this document is not displayed */
       return;
+
+   elType = TtaGetElementType (el);
+   if (!strcmp (TtaGetSSchemaName (elType.ElSSchema),"SVG"))
+     /* it's a SVG title */
+     {
+       if (TtaGetParent (el) != TtaGetRootElement(doc))
+	 /* it's not a child of the root SVG element, ignore */
+	 return;
+       /* this title element is a child of the root element */
+       sibling = el;
+       do
+	 {
+	   TtaPreviousSibling (&sibling);
+	   if (sibling)
+	     siblingType = TtaGetElementType (sibling);
+	 }
+       while (sibling && (siblingType.ElTypeNum != SVG_EL_title ||
+			  siblingType.ElSSchema != elType.ElSSchema));
+       if (sibling)
+	 /* this title element has a previous title sibling. Ignore */
+	 return;
+     }
+
    textElem = TtaGetFirstChild (el);
    if (textElem != NULL)
      {

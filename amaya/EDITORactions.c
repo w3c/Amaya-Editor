@@ -492,6 +492,19 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
 	  attr = TtaNewAttribute (attrType);
 	  TtaAttachAttribute (root, attr, doc);
 	  TtaSetAttributeText (attr, SVG_VERSION, root, doc);
+
+	  /* create a default title if there is no title element */
+	  elType.ElTypeNum = SVG_EL_title;
+	  title = TtaSearchTypedElement (elType, SearchInTree, root);
+	  if (!title)
+	    {
+	      title = TtaNewTree (doc, elType, "");
+	      TtaInsertFirstChild (&title, root, doc);
+	    }
+	  text = TtaGetFirstChild (title);
+	  if (text && TtaGetTextLength (text) == 0)
+	    TtaSetTextContent (text, (unsigned char*)"No title", language,doc);
+	  UpdateTitle (title, doc);
 	}
 
       /* force the XML parsing */
