@@ -1543,6 +1543,8 @@ STRING       *url;
   STRING   orig, dest, end;
 
   CHAR_T   used_sep;
+  ThotBool ddot_simplify; /* used to desactivate the double dot simplifcation:
+			     something/../ simplification in relative URLs when they start with a ../ */
 
 
   if (!url || !*url)
@@ -1556,6 +1558,13 @@ STRING       *url;
     {
       used_sep = DIR_SEP;
     }
+
+  /* should we simplify double dot? */
+  path = *url;
+  if (*path == TEXT('.') && *(path + 1) == TEXT('.'))
+    ddot_simplify = FALSE;
+  else
+    ddot_simplify = TRUE;
 
   /* Find any scheme name */
   if ((path = ustrstr(*url, TEXT("://"))) != NULL)
@@ -1604,6 +1613,10 @@ STRING       *url;
       p = path;
       while (p < end)
 	{
+	  /* if we're pointing to a char, it's safe to reactivate the ../ convertion */
+	  if (!ddot_simplify && *p != TEXT('.') && *p != used_sep)
+	    ddot_simplify = TRUE;
+
 	  if (*p==used_sep)
 	    {
 	      if (p > *url && *(p+1) == TEXT('.') && (*(p+2) == used_sep || !*(p+2)))
@@ -1613,7 +1626,8 @@ STRING       *url;
 		  while ((*orig++ = *dest++)); /* Remove a used_sep and a dot*/
 		  end = orig - 1;
 		}
-	      else if (*(p+1) == TEXT('.') && *(p+2) == TEXT('.') && (*(p+3) == used_sep || !*(p+3)))
+	      else if (ddot_simplify && *(p+1) == TEXT('.') && *(p+2) == TEXT('.') 
+		       && (*(p+3) == used_sep || !*(p+3)))
 		{
 		  newptr = p;
 		  while (newptr>path && *--newptr!=used_sep); /* prev used_sep */
@@ -1649,7 +1663,8 @@ STRING       *url;
     /*
     **  Check for host/../.. kind of things
     */
-    if (*path == used_sep && *(path+1) == TEXT('.') && *(path+2) == TEXT('.') && (!*(path+3) || *(path+3) == used_sep))
+    if (*path == used_sep && *(path+1) == TEXT('.') && *(path+2) == TEXT('.') 
+	&& (!*(path+3) || *(path+3) == used_sep))
 	*(path+1) = EOS;
 
   return;
