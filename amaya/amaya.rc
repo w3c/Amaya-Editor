@@ -2157,7 +2157,6 @@ IDB_GKEY160             BITMAP  DISCARDABLE     "gkey160.bmp"
 //
 
 IDC_WINCURSOR           CURSOR  DISCARDABLE     "wincurso.cur"
-IDC_CURSOR1             CURSOR  DISCARDABLE     "cursor1.cur"
 
 #ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////
