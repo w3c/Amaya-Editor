@@ -5482,8 +5482,7 @@ PtrAttribute        pAttrComp;
 #endif /* __STDC__ */
 
 {
-   PtrPRule            pR, pRuleView1, pRuleNext, pRNA, pRSpecif, pRS,
-                       pRP;
+   PtrPRule            pR, pRuleView1, pRNA, pRSpecif, pRS, firstOfType, pRP;
    PRuleType           typeRule;
    FunctionType        TFonct;
    PtrAbstractBox      pAbb, pReaff, pPR, pAbbNext, pAbbChild;
@@ -5519,7 +5518,13 @@ PtrAttribute        pAttrComp;
      {
 	/* pR: premiere regle correspondant a l'attribut */
 	pR = AttrPresRule (pAttr, pEl, inherit, pAttrComp, pSchP);
-	if (pR != NULL)
+	firstOfType = pR;
+
+	/* traite toutes les regles associees a cette valeur d'attribut dans */
+	/* ce schema de presentation */
+	while (firstOfType != NULL)
+	  /* Les regles de chaque type sont traitees dans toutes les vues ou
+	     l'element a un pave */
 	  {
 	     typeRule = pR->PrType;
 	     /* type des regles courantes */
@@ -5532,19 +5537,11 @@ PtrAttribute        pAttrComp;
 #else  /* __COLPAGE__ */
 		TFonct = pR->PrPresFunction;
 #endif /* __COLPAGE__ */
-	  }
-	pRuleView1 = NULL;
-	/* regle de ce type pour la vue 1 */
-	/* traite toutes les regles associees a cette valeur d'attribut dans ce */
-	/* schema de presentation */
-	while (pR != NULL)
-	   /* chaque regle est traitee dans toutes les vues ou l'element */
-	   /* a un pave */
-	  {
+	     pRuleView1 = NULL;
 	     if (pR->PrViewNum == 1)
 		/* regle pour la vue 1 */
 		pRuleView1 = pR;	/* on la garde pour le cas ou on ne trouve pas mieux */
-	     pRuleNext = pR->PrNextPRule;	/* regle suivante */
+
 	     for (view = 1; view <= MAX_VIEW_DOC; view++)
 	       {
 		  /* verifie d'abord si la vue existe */
@@ -5561,41 +5558,51 @@ PtrAttribute        pAttrComp;
 		       existingView = (pHd == NULL || viewSch == 1);
 		    }
 		  if (existingView)
-		     if (pR->PrCond != NULL)
-			if (!CondPresentation (pR->PrCond, pEl, pAttr, viewSch,
-					       pAttr->AeAttrSSchema))
-			   /* les conditions d'application de la regle ne sont pas */
-			   /* satisfaites, on n'applique pas la regle */
-			   existingView = FALSE;
-		  if (existingView)
 		    {
 		       /* si c'est une regle de creation on l'applique a toutes les */
 		       /* vues */
-		       if (pR->PrType != PtFunction
-			   || !(pR->PrPresFunction == FnCreateBefore || pR->PrPresFunction == FnCreateFirst
+		       if (typeRule != PtFunction
+			   || !(TFonct == FnCreateBefore || TFonct == FnCreateFirst
 #ifndef __COLPAGE__
-				|| pR->PrPresFunction == FnCreateWith
+				|| TFonct == FnCreateWith
 #endif /* __COLPAGE__ */
-				|| pR->PrPresFunction == FnCreateLast || pR->PrPresFunction == FnCreateAfter))
-			  /* ce n'est pas une regle de creation ; on cherche la regle */
-			  /* de meme type qui concerne cette vue */
-			  if (pRuleNext != NULL)
-			    {
+				|| TFonct == FnCreateLast || TFonct == FnCreateAfter))
+			  /* ce n'est pas une regle de creation ; on cherche la
+			     regle de meme type qui concerne cette vue */
+			  {
+			  pR = firstOfType;
+			  stop = FALSE;
+			  do
+			     {
 			       sameType = FALSE;
-			       if (pRuleNext->PrType == typeRule)
-				  if (typeRule == PtFunction)
-				    {
-				       if (pR->PrPresFunction == pRuleNext->PrPresFunction)
-					  sameType = TRUE;
-				    }
-				  else
+			       if (pR->PrType == typeRule)
+				  if (typeRule != PtFunction)
 				     sameType = TRUE;
-			       if (sameType && pRuleNext->PrViewNum == viewSch)
-				 {
-				    pR = pRuleNext;
-				    pRuleNext = pR->PrNextPRule;
-				 }
-			    }
+				  else
+				     if (pR->PrPresFunction == TFonct)
+					sameType = TRUE;
+			       if (!sameType)
+				  pR = NULL;
+			       else
+				  if (pR->PrViewNum == viewSch)
+				     stop = TRUE;
+				  else
+				     pR = pR->PrNextPRule;
+			     }
+			  while (!stop && pR != NULL);
+			  
+			  if (pR == NULL)
+			     pR = pRuleView1;
+			  }
+		       if (pR && pR->PrCond)
+			  if (!CondPresentation (pR->PrCond, pEl, pAttr, viewSch,
+					         pAttr->AeAttrSSchema))
+			     /* les conditions d'application de la regle ne
+				sont pas satisfaites, on n'applique pas la regle */
+			     pR = NULL;
+		    }
+		  if (pR != NULL)
+		    {
 		       pReaff = NULL;
 		       /* il n'y a rien (encore) a reafficher */
 		       pAbb = NULL;
@@ -5687,16 +5694,16 @@ PtrAttribute        pAttrComp;
 					  appl = ApplyPresRuleAb (pR, pSchP, pAbb, pDoc, pAttr);
 				    else
 				       /* applique la regle de la vue 1 si elle existe */
-				    if (pRuleView1 != NULL)
-				       if (remove)
-					 {
+				       if (pRuleView1 != NULL)
+				          if (remove)
+					    {
 					    pRNA = SearchRulepAb (pDoc, pAbb, &pSPR, typeRule, TFonct, TRUE, &pAttrib);
 					    appl = ApplyPresRuleAb (pRNA, pSPR, pAbb, pDoc, pAttrib);
-					 }
+					    }
+				          else
+					    appl = ApplyPresRuleAb (pRuleView1, pSchP, pAbb, pDoc, pAttr);
 				       else
-					  appl = ApplyPresRuleAb (pRuleView1, pSchP, pAbb, pDoc, pAttr);
-				    else
-				       appl = FALSE;
+				          appl = FALSE;
 				 if (!appl)
 				    if (remove)
 				       if (pR->PrType == PtFunction && pR->PrPresFunction == FnNotInLine)
@@ -5935,18 +5942,14 @@ PtrAttribute        pAttrComp;
 		    }
 	       }
 
-	     /* passe a la regle de presentation suivante pour l'attribut */
-	     pR = pRuleNext;
-	     if (pR != NULL)
-		if (pR->PrType != typeRule ||
-		    (typeRule == PtFunction && pR->PrPresFunction != TFonct))
-		   /* on change de type de regle */
-		  {
-		     typeRule = pR->PrType;
-		     if (typeRule == PtFunction)
-			TFonct = pR->PrPresFunction;
-		     pRuleView1 = NULL;
-		  }
+	     /* passe a la premiere regle de presentation suivante d'un
+		type different */
+	     pR = firstOfType;
+             while (pR != NULL &&
+		    pR->PrType == firstOfType->PrType &&
+		    (pR->PrType != PtFunction || pR->PrPresFunction == TFonct))
+	        pR = pR->PrNextPRule;
+	     firstOfType = pR;
 	  }
 	/* on traite les schemas de presentation de moindre priorite' */
 	if (pHd == NULL)

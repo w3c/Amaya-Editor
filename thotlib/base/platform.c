@@ -576,18 +576,18 @@ CONST char         *targetFileName;
    if (strcmp (sourceFileName, targetFileName) != 0)
      {
 #ifdef _WINDOWS
-	if (targetf = fopen (targetFileName, "wb") == NULL)
+	if ((targetf = fopen (targetFileName, "wb")) == NULL)
 #else
-	if (targetf = fopen (targetFileName, "w") == NULL)
+	if ((targetf = fopen (targetFileName, "w")) == NULL)
 #endif
 	   /* cannot write into the target file */
 	   return;
 	else
 	  {
 #ifdef _WINDOWS
-	     if (sourcef = fopen (sourceFileName, "rb") == NULL)
+	     if ((sourcef = fopen (sourceFileName, "rb")) == NULL)
 #else
-	     if (sourcef = fopen (sourceFileName, "r") == NULL)
+	     if ((sourcef = fopen (sourceFileName, "r")) == NULL)
 #endif
 	       {
 		  /* cannot read the source file */

@@ -959,7 +959,7 @@ void                TtcCreateElement (doc, view)
    PtrDocument         pDoc;
    PtrSSchema          pSS;
    NotifyElement       notifyEl;
-   int                 firstChar, lastChar, NSiblings, typeNum;
+   int                 firstChar, lastChar, NSiblings, typeNum, nComp;
    boolean             ok, replicate, createAfter, selBegin, selEnd, ready,
                        empty, list, optional;
 
@@ -1001,7 +1001,7 @@ void                TtcCreateElement (doc, view)
 		     pListEl = AncestorList (pParent);
 		     if (pListEl == NULL)
 		       {
-			  if (GetElementConstruct (pParent->ElParent) == CsAggregate)
+			  if (GetElementConstruct (pParent->ElParent, &nComp) == CsAggregate)
 			    {
 			    SRuleForSibling (pDoc, pParent, FALSE, 1, &typeNum, &pSS,
 					     &list, &optional);

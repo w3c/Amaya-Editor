@@ -2483,7 +2483,7 @@ boolean             Before;
   NotifyElement       notifyEl;
   NotifyOnElementType notifyElType;
   int                 firstChar, lastChar, NSiblings, ancestorRule,
-		      rule, prevrule, prevprevrule;
+		      rule, prevrule, prevprevrule, nComp;
   boolean             InsertionPoint, ok, createAfter, splitElem, elConst;
   boolean             empty, selHead, selTail, done, deleted;
 
@@ -2514,7 +2514,7 @@ boolean             Before;
       if (!InsertionPoint)
 	if (firstSel == lastSel)
 	  /* un seul element selectionne' */
-	  if (GetElementConstruct (firstSel) == CsConstant)
+	  if (GetElementConstruct (firstSel, &nComp) == CsConstant)
 	    /* c'est une constante, on va creer le nouvel element devant */
 	    {
 	      InsertionPoint = TRUE;

@@ -846,15 +846,18 @@ PtrSSchema         *pSS;
 
 
 /*----------------------------------------------------------------------
-   Rend le type de constructeur d'un element                        
+   Rend le type de constructeur d'un element
+   et, dans nComp, le nombre de composants definis par le schema s'il
+   s'agit d'un agregat.
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-RConstruct          GetElementConstruct (PtrElement pEl)
+RConstruct          GetElementConstruct (PtrElement pEl, int *nComp)
 
 #else  /* __STDC__ */
-RConstruct          GetElementConstruct (pEl)
+RConstruct          GetElementConstruct (pEl, nComp)
 PtrElement          pEl;
+int		   *nComp;
 
 #endif /* __STDC__ */
 
@@ -863,16 +866,19 @@ PtrElement          pEl;
    int                 typ;
 
    constr = CsNatureSchema;
+   *nComp = 0;
    if (pEl != NULL)
      {
-	constr = pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct;
 	typ = pEl->ElTypeNumber;
+	constr = pEl->ElStructSchema->SsRule[typ - 1].SrConstruct;
 	while (constr == CsIdentity)
 	  {
 	     typ = pEl->ElStructSchema->SsRule[typ - 1].SrIdentRule;
 	     constr = pEl->ElStructSchema->SsRule[typ - 1].SrConstruct;
 	  }
      }
+   if (constr == CsUnorderedAggregate || constr == CsAggregate)
+      *nComp = pEl->ElStructSchema->SsRule[typ - 1].SrNComponents;
    return constr;
 }
 
@@ -895,6 +901,7 @@ PtrElement          pEl;
 {
    boolean             stop;
    RConstruct          constr;
+   int		       nComp;
 
    stop = FALSE;
    if (pEl != NULL)
@@ -905,8 +912,9 @@ PtrElement          pEl;
 	    stop = TRUE;
          else
 	   {
-	     constr = GetElementConstruct (pEl);
-	     if (constr == CsAggregate || constr == CsUnorderedAggregate)
+	     constr = GetElementConstruct (pEl, &nComp);
+	     if ((constr == CsAggregate || constr == CsUnorderedAggregate) &&
+		 nComp > 1)
 	       {
 		  pEl = NULL;
 		  stop = TRUE;
@@ -2681,6 +2689,7 @@ PtrElement         *pSplitEl;
 #endif /* __STDC__ */
 {
    PtrElement          pE;
+   int		       nComp;
    boolean             exctab;
 
    *pList = NULL;
@@ -2714,15 +2723,15 @@ PtrElement         *pSplitEl;
 				 else
 				    pE = pE->ElParent;
 			      if (*pList == NULL)
-				 if (GetElementConstruct (firstEl->ElParent) == CsList)
+				 if (GetElementConstruct (firstEl->ElParent, &nComp) == CsList)
 				    *pList = AncestorList (firstEl->ElParent);
 				 else
 				   {
 				      pE = firstEl;
-				      if (GetElementConstruct (firstEl->ElParent) ==
+				      if (GetElementConstruct (firstEl->ElParent, &nComp) ==
 								      CsChoice)
 					 if (firstEl->ElParent->ElParent != NULL)
-					    if (GetElementConstruct (firstEl->ElParent->ElParent) == CsList)
+					    if (GetElementConstruct (firstEl->ElParent->ElParent, &nComp) == CsList)
 					       pE = firstEl->ElParent->ElParent;
 				      *pList = AncestorList (pE);
 				   }
@@ -2759,7 +2768,7 @@ PtrElement         *pSplitEl;
 		    {
 		       pE = pE->ElParent;
 		       if (pE != NULL)
-			  if (GetElementConstruct (pE) == CsList)
+			  if (GetElementConstruct (pE, &nComp) == CsList)
 			     *pList = pE;
 		    }
 	       }

@@ -42,7 +42,8 @@ extern void ListOrAggregateRule ( PtrDocument pDoc,
                                   PtrElement pEl,
                                   int *typeNum,
                                   PtrSSchema * pSS );
-extern RConstruct GetElementConstruct ( PtrElement pEl );
+extern RConstruct GetElementConstruct ( PtrElement pEl,
+                                        int *nComp );
 extern PtrElement AncestorList ( PtrElement pEl );
 extern boolean CanChangeNumberOfElem ( PtrElement pEl,
                                        int delta );
@@ -148,7 +149,8 @@ extern void ListOrAggregateRule (/* PtrDocument pDoc,
                                     PtrElement pEl,
                                     int *typeNum,
                                     PtrSSchema * pSS */);
-extern RConstruct GetElementConstruct (/* PtrElement pEl */);
+extern RConstruct GetElementConstruct (/* PtrElement pEl,
+                                          int *nComp */);
 extern PtrElement AncestorList (/* PtrElement pEl */);
 extern boolean CanChangeNumberOfElem (/* PtrElement pEl,
                                          int delta */);
