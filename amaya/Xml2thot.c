@@ -5585,7 +5585,6 @@ void StartXmlParser (Document doc, char *fileName,
     RootElement = TtaGetMainRoot (doc);
 
   InitializeXmlParsingContext (doc, RootElement, FALSE, FALSE);
-
   /* Specific Initialization */
   XMLcontext.language = TtaGetDefaultLanguage ();
 #ifdef ANNOTATIONS
@@ -5597,7 +5596,6 @@ void StartXmlParser (Document doc, char *fileName,
   
   /* Reading of the file */
   stream = gzopen (fileName, "r");
-
   if (stream != 0)
     {
       if (documentName[0] == EOS &&
@@ -5624,10 +5622,8 @@ void StartXmlParser (Document doc, char *fileName,
       /* For example, a <tbody> as a child of a <table> would be considered */
       /* invalid because the Thot SSchema requires a Table_body element in between */
       TtaSetStructureChecking (0, doc);
-
       /* Set the notification mode for the new document */
       TtaSetNotificationMode (doc, 1);
-
       TtaSetDisplayMode (doc, NoComputedDisplay);
 
       /* Delete all element except the root element */
@@ -5711,9 +5707,7 @@ void StartXmlParser (Document doc, char *fileName,
 
       /* Load specific user style */
       LoadUserStyleSheet (doc);
-
       TtaSetDisplayMode (doc, DisplayImmediately);
-
       /* Check the Thot abstract tree against the structure schema. */
       TtaSetStructureChecking (1, doc);
       DocumentSSchema = NULL;

@@ -2428,7 +2428,6 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	      middleTrans = pBox->BxHeight / 2 - (pBox->BxHeight + delta + diff) / 2;
 	      endTrans = 0;
 	    }
-
 	  /* inside height */
 	  pBox->BxH += delta;
 	  /* outside height */

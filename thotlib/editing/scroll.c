@@ -444,19 +444,19 @@ void ComputeDisplayedChars (int frame, int *Xpos, int *Ypos, int *width, int *he
 
    /***     Vertical scrolling             ***/
    /*      +-------------+                   */
-   /*      |  Document   |a                  */
+   /*      |  Document   |min                */
    /*    +-+-------------+-+     +-+         */
    /*    |    Concrete     |\    | |         */
-   /*    |                 | \   | |a        */
+   /*    |                 | \   | |max      */
    /*    |+---------------+|  \  | |         */
    /*    ||               ||\  --|-|         */
    /*    ||   ViewFrame   || ====|=|slider   */
    /*    ||               ||/  --|-|         */
    /*    |+---------------+|  /  | |         */
-   /*    |                 | /   | |b        */
+   /*    |                 | /   | |max      */
    /*    |     Image       |/    | |         */
    /*    +-+-------------+-+     +-+         */
-   /*      |             |b                  */
+   /*      |             |max                */
    /*      +-------------+                   */
 
    /** Compute the part of the document which is not formatted **/
@@ -464,25 +464,8 @@ void ComputeDisplayedChars (int frame, int *Xpos, int *Ypos, int *width, int *he
        (!pFrame->FrAbstractBox->AbTruncatedTail))
      {
 	/* The whole document is formatted */
-	if (pFrame->FrYOrg - pBox->BxYOrg <= 0)
-	   /* The beginning of the document */
-	   min = 0;
-	else if (pFrame->FrYOrg >= pBox->BxYOrg)
-	   /* le debordement du haut n'est pas visualible */
-	   min = 0;
-	else
-	   min = - pFrame->FrYOrg + pBox->BxYOrg;	/* marge haut */
-
-	if (pBox->BxYOrg + pBox->BxHeight <= pFrame->FrYOrg + h)
-	   /* Le bas de l'Picture Concrete + le debordement du bas sont
-	      visibles */
-	   max = 0;
-	else if (pBox->BxYOrg + pBox->BxHeight >= pFrame->FrYOrg + h)
-	   /* le debordement du bas n'est pas visualible */
-	   max = 0;
-	else
-	   /* marge restant en bas */
-	   max = pBox->BxYOrg + pBox->BxHeight - pFrame->FrYOrg - h;
+       min = 0;
+       max = 0;
      }
    else
      {

@@ -3969,6 +3969,7 @@ void EncloseInLine (PtrBox pBox, int frame, PtrAbstractBox pAb)
 	      /* rebuild adjacent lines of that floating box */
 	      RecomputeLines (pAb, pLine, NULL, frame);
 	      pNextLine = NULL;
+	      h = pParentBox->BxH;
 	    }
 
 	  /* move next lines */
