@@ -2220,7 +2220,7 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
       SetCapture (hwnd);
       /* stop any current insertion of text in the old frame */
       ActiveFrame = ClickFrame;
-      CloseInsertion ();
+      CloseTextInsertion ();
       ClickFrame = frame;
       ActiveFrame = frame;
       oldXPos = ClickX = LOWORD (lParam);
@@ -2266,7 +2266,7 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
       ClickX = LOWORD (lParam);
       ClickY = HIWORD (lParam);
       /* stop any current insertion of text */
-      CloseInsertion ();
+      CloseTextInsertion ();
       
       /* if the CTRL key is pressed this is a size change */
       status = GetKeyState (VK_CONTROL);
@@ -2285,7 +2285,7 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
       ClickX = LOWORD (lParam);
       ClickY = HIWORD (lParam);
       /* stop any current insertion of text */
-      CloseInsertion ();
+      CloseTextInsertion ();
 		    
       /* if the CTRL key is pressed this is a size change */
       status = GetKeyState (VK_CONTROL);
@@ -2460,7 +2460,7 @@ ThotBool FrameButtonDownCallback(
     case THOT_LEFT_BUTTON:
     {
       /* stop any current insertion of text */
-      CloseInsertion ();
+      CloseTextInsertion ();
 
       /* Est-ce que la touche modifieur de geometrie est active ? */
       if ((thot_mod_mask & THOT_MOD_CTRL) == THOT_MOD_CTRL)
@@ -2863,7 +2863,7 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event,
 	/* ==========LEFT BUTTON========== */
 	case 1:
 	  /* stop any current insertion of text */
-	  CloseInsertion ();
+	  CloseTextInsertion ();
 	  /* Est-ce que la touche modifieur de geometrie est active ? */
 	
 	  if ((event->state & GDK_CONTROL_MASK ) == GDK_CONTROL_MASK)

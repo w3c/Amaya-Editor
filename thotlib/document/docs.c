@@ -412,8 +412,7 @@ void UpdateIncludedElement (PtrElement pEl, PtrDocument pDoc)
    /* detruit les paves de l'element */
    DestroyAbsBoxes (pEl, pDoc, FALSE);
    /* Update Abstract views */
-   if (ThotLocalActions[T_AIupdate] != NULL)
-     (*(Proc1)ThotLocalActions[T_AIupdate]) ((void *)pDoc);
+   AbstractImageUpdated (pDoc);
    if (pEl->ElTerminal)
      switch (pEl->ElLeafType)
        {
@@ -484,11 +483,9 @@ void UpdateIncludedElement (PtrElement pEl, PtrDocument pDoc)
    ApplDelayedRule (pEl, pDoc);
    /* reaffiche l'element dans toutes les vues ou il existe */
    /* Update Abstract views */
-   if (ThotLocalActions[T_AIupdate] != NULL)
-     (*(Proc1)ThotLocalActions[T_AIupdate]) ((void *)pDoc);
+   AbstractImageUpdated (pDoc);
    /* Redisplay views */
-   if (ThotLocalActions[T_redisplay] != NULL)
-     (*(Proc1)ThotLocalActions[T_redisplay]) ((void *)pDoc);
+   RedisplayDocViews (pDoc);
    /* Reaffiche les numeros suivants qui changent */
    UpdateNumbers (NextElement (pEl), pEl, pDoc, TRUE);
 }

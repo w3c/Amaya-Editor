@@ -43,6 +43,8 @@
 #include "changepresent_f.h"
 #include "dialogapi_f.h"
 #include "displaybox_f.h"
+#include "displayview_f.h"
+#include "editcommands_f.h"
 #include "exceptions_f.h"
 #include "font_f.h"
 #include "frame_f.h"
@@ -50,6 +52,7 @@
 #include "hyphen_f.h"
 #include "memory_f.h"
 #include "presentationapi_f.h"
+#include "spline_f.h"
 #include "structcreation_f.h"
 #include "structselect_f.h"
 #include "textcommands_f.h"
@@ -58,8 +61,6 @@
 #include "units_f.h"
 #include "unstructlocate_f.h"
 #include "views_f.h"
-#include "displayview_f.h"
-#include "spline_f.h"
 #include "word_f.h"
 
 #ifdef _GL
@@ -224,10 +225,8 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 	  FirstSelectedElement &&
 	  FirstSelectedElement == LastSelectedElement &&
 	  FirstSelectedElement->ElTerminal &&
-	  FirstSelectedElement->ElLeafType == LtPolyLine &&
-	  ThotLocalActions[T_editfunc] != NULL)
-	/* adding new points in a polyline */
-	(*(Proc1)ThotLocalActions[T_editfunc]) ((void *)TEXT_INSERT);
+	  FirstSelectedElement->ElLeafType == LtPolyLine)
+	ContentEditing (TEXT_INSERT);
       else
 	{
 	  extend = (button == 0 || button == 1);
@@ -300,8 +299,7 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 	      width = 0;
 	      height = 0;
 	    }
-#
-	  /*CloseInsertion ();*/
+
 	  FrameToView (frame, &doc, &view);
 	  if (pAb)
 	    {

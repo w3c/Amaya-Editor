@@ -75,7 +75,7 @@ extern ThotBool Ratio_Calculate ( PtrAbstractBox pAb,
 extern void LoadPicture ( int frame,
                           PtrBox box,
                           PictInfo *imageDesc );
-extern int GetPictureType ( int GUIIndex );
+extern int GetPictureType ( int index );
 extern int GetPictTypeIndex ( int picType );
 extern int GetPictPresIndex ( PictureScaling picPresent );
 extern void GetPictureHandlersList ( int *count,
@@ -156,7 +156,7 @@ extern ThotBool Ratio_Calculate ( PtrAbstractBox pAb,
 extern void LoadPicture ( int frame,
                             PtrBox box,
                             PictInfo *imageDesc );
-extern int GetPictureType ( int GUIIndex );
+extern int GetPictureType ( int index );
 extern int GetPictTypeIndex ( int picType );
 extern int GetPictPresIndex ( PictureScaling picPresent );
 extern void GetPictureHandlersList ( int *count,

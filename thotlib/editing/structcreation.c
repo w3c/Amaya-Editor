@@ -3844,13 +3844,10 @@ void CreatePasteIncludeMenuCallback (ThotBool create, ThotBool paste, int item)
 
 		  }
 
-		if (newsel != NULL)
-		   if (newsel->ElTerminal && newsel->ElLeafType == LtPicture)
-		     {
-			/* traitement particulier des images inserees et vides */
-			if (ThotLocalActions[T_editfunc] != NULL)
-			   (*(Proc1)ThotLocalActions[T_editfunc]) ((void *)TEXT_INSERT);
-		     }
+		if (newsel &&
+		    newsel->ElTerminal && newsel->ElLeafType == LtPicture)
+		  /* traitement particulier des images inserees et vides */
+		  ContentEditing (TEXT_INSERT);
 	     }
 	}
 

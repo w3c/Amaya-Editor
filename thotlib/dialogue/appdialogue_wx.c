@@ -17,6 +17,7 @@
 #include "appdialogue_wx_f.h"
 #include "applicationapi_f.h"
 #include "font_f.h"
+#include "editcommands_f.h"
 #include "profiles_f.h"
 #include "displayview_f.h"
 
@@ -771,7 +772,7 @@ void APP_Callback_URLActivate (int frame_id, const char *text)
   Document            doc;
   View                view;
 
-  CloseInsertion ();
+  CloseTextInsertion ();
   if (text && strlen(text) > 0)
     {
       FrameToView (frame_id, &doc, &view);
@@ -804,7 +805,7 @@ void APP_Callback_ToolBarButtonActivate (int frame_id, int button_id)
       if ( window_id < 0 )
 	return; /* there is no parents */
 
-      CloseInsertion ();
+      CloseTextInsertion ();
       FrameToView (frame_id, &document, &view);
       TtaSetButtonActivatedStatus (TRUE);
       (*(Proc2)WindowTable[window_id].Call_Button[button_id]) ((void *)document, (void *)view);

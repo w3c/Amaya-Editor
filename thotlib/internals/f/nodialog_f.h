@@ -19,6 +19,11 @@ extern void ExtendSelection ( PtrElement pEl,
                               ThotBool fixed,
                               ThotBool begin,
                               ThotBool drag );
+extern void ResetSelection ( PtrDocument pDoc );
+extern void SelectString ( PtrDocument pDoc,
+                           PtrElement pEl,
+                           int firstChar,
+                           int lastChar );
 extern void ConfigFree ( void );
 extern void TtaFreeAllCatalogs ( void );
 extern void InitDialogueFont ( void );
@@ -68,6 +73,8 @@ extern void RedisplayCopies ( PtrElement pEl,
                               PtrDocument pDoc,
                               ThotBool redisplay );
 extern ThotBool IsASavedElement ( PtrElement pEl );
+extern void FreeSavedElements ( void );
+extern void CleanSearchContext ( void );
 extern ThotBool CallEventType ( NotifyEvent * notifyEvent,
                                 ThotBool pre );
 extern ThotBool CallEventAttribute ( NotifyAttribute * notifyAttr,
@@ -160,6 +167,11 @@ extern void ExtendSelection ( PtrElement pEl,
                                 ThotBool fixed,
                                 ThotBool begin,
                                 ThotBool drag );
+extern void ResetSelection ( PtrDocument pDoc );
+extern void SelectString ( PtrDocument pDoc,
+                             PtrElement pEl,
+                             int firstChar,
+                             int lastChar );
 extern void ConfigFree ( void );
 extern void TtaFreeAllCatalogs ( void );
 extern void InitDialogueFont ( void );
@@ -209,6 +221,8 @@ extern void RedisplayCopies ( PtrElement pEl,
                                 PtrDocument pDoc,
                                 ThotBool redisplay );
 extern ThotBool IsASavedElement ( PtrElement pEl );
+extern void FreeSavedElements ( void );
+extern void CleanSearchContext ( void );
 extern ThotBool CallEventType ( NotifyEvent * notifyEvent,
                                   ThotBool pre );
 extern ThotBool CallEventAttribute ( NotifyAttribute * notifyAttr,

@@ -1139,15 +1139,11 @@ void   TtaSetDisplayMode (Document doc, DisplayMode newDisplayMode)
 		    HighlightSelection (TRUE, FALSE);
 		}
 	      else
-		/* la selection a change', on etablit la selection */
-		/* enregistree */
+		/* restore the registerd selection */
 		{
 		  if (NewDocSelection[doc - 1].SDElemSel == NULL)
-		    /* c'est une annulation de selection */
-		    {
-		      if (ThotLocalActions[T_resetsel])
-			(*(Proc1)ThotLocalActions[T_resetsel]) ((void *)pDoc);
-		    }
+		    /* cancel the selection */
+		    ResetSelection (pDoc);
 		  else
 		    {
 		      /* il y a effectivement une selection a etablir */
@@ -1156,14 +1152,11 @@ void   TtaSetDisplayMode (Document doc, DisplayMode newDisplayMode)
 			/* selection d'un element complet */
 			SelectElement (pDoc, (PtrElement) (NewDocSelection[doc - 1].SDElemSel), TRUE, TRUE);
 		      else
-			/* selection d'une chaine */
-			if (ThotLocalActions[T_selstring])
-			  (*(Proc4)ThotLocalActions[T_selstring]) (
-	(void *)pDoc,
-	(void *)(PtrElement) (NewDocSelection[doc - 1].SDElemSel),
-	(void *)NewDocSelection[doc - 1].SDPremCar,
-	(void *)NewDocSelection[doc - 1].SDDerCar);
-		      /* il n'y a plus de selection a etablir */
+			SelectString (pDoc,
+				      (PtrElement)(NewDocSelection[doc-1].SDElemSel),
+				      NewDocSelection[doc - 1].SDPremCar,
+				      NewDocSelection[doc - 1].SDDerCar);
+		      /* the selection is done */
 		      NewDocSelection[doc - 1].SDElemSel = NULL;
 		    }
 		  /* etablit l'extension de selection enregistree */

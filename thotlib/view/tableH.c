@@ -52,8 +52,10 @@ static ThotBool          DoUnlock2 = FALSE;
 #include "buildboxes_f.h"
 #include "buildlines_f.h"
 #include "createabsbox_f.h"
-#include "font_f.h"
+#include "displayview_f.h"
+#include "editcommands_f.h"
 #include "exceptions_f.h"
+#include "font_f.h"
 #include "frame_f.h"
 #include "memory_f.h"
 #include "tree_f.h"
@@ -619,8 +621,7 @@ static void CheckRowHeights (PtrAbstractBox table, int frame)
       HeightPack (table, rowList[0]->AbBox, frame);
     }
   /* Redisplay views */
-  if (ThotLocalActions[T_redisplay] != NULL)
-    (*(Proc1)ThotLocalActions[T_redisplay]) ((void*)pDoc);
+  RedisplayDocViews (pDoc);
 
   if (!modified)
     TtaSetDocumentUnmodified (doc);

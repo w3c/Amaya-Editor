@@ -53,6 +53,7 @@
 #include "displayview_f.h"
 #include "documentapi_f.h"
 #include "docs_f.h"
+#include "editcommands_f.h"
 #include "exceptions_f.h"
 #include "externalref_f.h"
 #include "fileaccess_f.h"
@@ -907,7 +908,7 @@ ThotBool BreakElement (PtrElement pElReplicate, PtrElement pSplitEl,
 
   ret = FALSE;
   NSiblings = 0;
-  CloseInsertion ();
+  CloseTextInsertion ();
   pAncest = NULL;
   /* y-a-t'il une selection courante ? */
   if (!GetCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar, &lastChar))

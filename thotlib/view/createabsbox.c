@@ -44,6 +44,8 @@
 #include "content_f.h"
 #include "createabsbox_f.h"
 #include "createpages_f.h"
+#include "displayview_f.h"
+#include "editcommands_f.h"
 #include "exceptions_f.h"
 #include "memory_f.h"
 #include "presrules_f.h"
@@ -120,8 +122,7 @@ void SetAccessMode (PtrDocument pDoc, int accessMode)
 	    ChangeConcreteImage (pDoc->DocViewFrame[view], &h, pAb);
 	  }
       /* Redisplay views */
-      if (ThotLocalActions[T_redisplay] != NULL)
-	(*(Proc1)ThotLocalActions[T_redisplay]) ((void *)pDoc);
+      RedisplayDocViews (pDoc);
     }
 }
 

@@ -24,12 +24,13 @@
 #include "appdialogue_tv.h"
 
 #include "applicationapi_f.h"
+#include "boxparams_f.h"
+#include "boxselection_f.h"
 #include "buildboxes_f.h"
-#include "textcommands_f.h"
+#include "editcommands_f.h"
 #include "font_f.h"
 #include "frame_f.h"
-#include "boxselection_f.h"
-#include "boxparams_f.h"
+#include "textcommands_f.h"
 
 
 /*----------------------------------------------------------------------
@@ -84,7 +85,7 @@ void SetFrameParams (int frame, int Visibilite, int Zoom)
    int                 h;
    ThotBool            unique;
 
-   CloseInsertion ();
+   CloseTextInsertion ();
    /* On enregistre le seuil de visibilite et facteur de zoom de la fenetre */
    pFrame = &ViewFrameTable[frame - 1];
    pFrame->FrVisibility = Visibilite;

@@ -105,17 +105,7 @@ int IdentDocument (PtrDocument pDoc)
       return 0;
 }
 
-/*----------------------------------------------------------------------
-   Termine l'insertion de caracteres dans une boite de texte       
-  ----------------------------------------------------------------------*/
-void CloseInsertion ()
-{
-   if (ThotLocalActions[T_stopinsert] != NULL)
-      (*ThotLocalActions[T_stopinsert]) ();
-}
-
 #ifndef NODISPLAY
-
 /*----------------------------------------------------------------------
    GetWindowNumber returns the frame corresponding to the view of 
    the document.                                           
@@ -410,11 +400,9 @@ void TtaQuit ()
       }
 #ifndef NODISPLAY
   /* remove the contents of the cut buffer related to the document */
-  if (ThotLocalActions[T_freesavedel])
-    (*ThotLocalActions[T_freesavedel]) ();
+  FreeSavedElements ();
   /* free all context related to search commands */
-  if (ThotLocalActions[T_freesearch])
-    (*ThotLocalActions[T_freesearch]) ();
+  CleanSearchContext ();
   FreeDocColors ();
   FreeAllMessages ();
   Prof_FreeTable ();

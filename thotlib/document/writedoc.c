@@ -42,6 +42,7 @@
 #include "createpages_f.h"
 #include "documentapi_f.h"
 #include "docs_f.h"
+#include "editcommands_f.h"
 #include "fileaccess_f.h"
 #include "memory_f.h"
 #include "paginate_f.h"
@@ -192,7 +193,7 @@ static ThotBool simpleSave (PtrDocument pDoc, char *name, ThotBool withEvent)
    Envoie un message et rend false si l'ecriture n'a pu se 
    faire.                                                  
   ----------------------------------------------------------------------*/
-static ThotBool     saveWithExtension (PtrDocument pDoc, char *extension)
+static ThotBool saveWithExtension (PtrDocument pDoc, char *extension)
 {
    char                buf[MAX_TXT_LEN];
    int                 i;
@@ -221,7 +222,7 @@ ThotBool StoreDocument (PtrDocument pDoc, PathBuffer docName,
    int                 i;
    ThotBool            sameFile, status, ok;
 
-   CloseInsertion ();
+   CloseTextInsertion ();
    notifyDoc.event = TteDocSave;
    notifyDoc.document = (Document) IdentDocument (pDoc);
    notifyDoc.view = 0;

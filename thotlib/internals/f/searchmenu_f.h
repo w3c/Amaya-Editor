@@ -11,6 +11,7 @@ extern void CallbackWhereToSearch ( int ref,
                                     int val );
 extern void TtcSearchText ( Document document,
                             View view );
+extern void CleanSearchContext ( void );
 extern void CallbackTextReplace ( int ref,
                                   int val,
                                   char *txt );
@@ -23,6 +24,7 @@ extern void CallbackWhereToSearch ( int ref,
                                       int val );
 extern void TtcSearchText ( Document document,
                               View view );
+extern void CleanSearchContext ( void );
 extern void CallbackTextReplace ( int ref,
                                     int val,
                                     char *txt );

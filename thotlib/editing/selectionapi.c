@@ -96,9 +96,9 @@ void TtaSelectElement (Document document, Element selectedElement)
      {
        dispMode = TtaGetDisplayMode (document);
        if (dispMode == DisplayImmediately)
-	 if (selectedElement == NULL && ThotLocalActions[T_resetsel])
+	 if (selectedElement == NULL)
 	   /* Abort the selection */
-	 (*(Proc1)ThotLocalActions[T_resetsel]) ((void *)LoadedDocument[document - 1]);
+	 ResetSelection (LoadedDocument[document - 1]);
 	 else
 	   SelectElement (LoadedDocument[document - 1],
 			  (PtrElement) selectedElement, TRUE, FALSE);

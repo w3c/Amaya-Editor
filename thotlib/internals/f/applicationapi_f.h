@@ -7,7 +7,6 @@
 #ifdef __STDC__
 
 extern int IdentDocument ( PtrDocument pDoc );
-extern void CloseInsertion ( void );
 extern int GetWindowNumber ( Document document,
                              View view );
 extern ThotBool TtaIsPrinting ( void );
@@ -27,7 +26,6 @@ extern void ThotExit ( int result );
 #else /* __STDC__ */
 
 extern int IdentDocument ( PtrDocument pDoc );
-extern void CloseInsertion ( void );
 extern int GetWindowNumber ( Document document,
                                View view );
 extern ThotBool TtaIsPrinting ( void );

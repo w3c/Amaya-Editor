@@ -5,7 +5,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Añadir filas a una tabla</title>
-  <meta name="generator" content="amaya 8.3-, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 8.6, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -34,27 +34,26 @@
 <ol>
   <li>Para crear una nueva fila antes de una fila ya existente, sitúa el
     cursor al principio de la primera celda de la fila y elige la opción
-    <strong>Insertar fila delante</strong> del submenú <strong>Tabla</strong>
+    <strong>Insertar fila</strong> del submenú <strong>Tabla</strong>
     (<kbd>Ctrl t Ctrl i</kbd>)</li>
   <li>Para crear una nueva fila después de una fila ya existente, sitúa el
     cursor al final de la última celda de la fila y elige la opción
-    <strong>Insertar fila detrás</strong> del submenú <strong>Tabla</strong>
+    <strong>Añadir fila</strong> del submenú <strong>Tabla</strong>
     (<kbd>Ctrl t Ctrl n</kbd>)</li>
 </ol>
 
 <p>También se pueden añadir fácilmente filas a una tabla mediante la tecla
 <kbd>Intro</kbd>. Tras seleccionar una fila completa (pulsando la tecla
-<kbd>F2</kbd> en Windows y <kbd>Escape</kbd> en Linux), al pulsar la
-tecla <kbd>Intro</kbd> se creará una nueva fila después de la fila
-seleccionada.</p>
+<kbd>F2</kbd> en Windows y <kbd>Escape</kbd> en Linux), al pulsar la tecla
+<kbd>Intro</kbd> se creará una nueva fila después de la fila seleccionada.</p>
 
 <p class="ProcedureCaption">Para seleccionar una fila:</p>
 <ol>
   <li>Elige la opción <strong>Seleccionar fila</strong> del submenú
     <strong>Tabla</strong> (<kbd>Ctrl t Ctrl r</kbd>).</li>
   <li>También puedes situar el cursor en una celda y pulsar la tecla
-    <kbd>F2</kbd> en Windows (o la tecla <kbd>Escape</kbd> en Linux),
-    hasta extender la selección a la fila completa.</li>
+    <kbd>F2</kbd> en Windows (o la tecla <kbd>Escape</kbd> en Linux), hasta
+    extender la selección a la fila completa.</li>
 </ol>
 
 <p class="ProcedureCaption">Para borrar o copiar/pegar una fila:</p>

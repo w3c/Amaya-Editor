@@ -25,7 +25,7 @@ body {padding-left: 2em}</style>
 <h1 id="Amaya">Amaya - Guide utilisateur</h1>
 
 <p class="head"><span class="author">Irène Vatton</span> <br />
-Dernière mise à jour&nbsp;: <!--$date=-->Wednesday 26 May 2004 - 17:04:43<!--$-->
+Dernière mise à jour&nbsp;: <!--$date=-->Tuesday 08 June 2004 - 10:53:53<!--$-->
 </p>
 </div>
 
@@ -923,15 +923,15 @@ d'entre elles au hasard et y insérer du texte, des images et autre. On peut
 également déplacer le point d'insertion de cellule en cellule par
 l'intermédiaire des flèches du clavier.</p>
 
-<h3><a id="Adding3">Ajouter une colonne</a></h3>
+<h3><a id="Adding3">Insérer/Ajouter une colonne</a></h3>
 
 <p>Il n'existe deux commandes spécifiques pour créer une nouvelle
 colonne&nbsp;:</p>
 <ul>
-  <li><strong>Insérer une colonne avant</strong> dans le sous-menu
+  <li><strong>Insérer une colonne</strong> dans le sous-menu
     <strong>Table</strong> (<code>Ctrl t Ctrl b</code>) ajoute une nouvelle
     colonne avant la colonne sélectionnée.</li>
-  <li><strong>Insérer une colonne après</strong> dans le sous-menu
+  <li><strong>Ajouter une colonne</strong> dans le sous-menu
     <strong>Table</strong> (<code>Ctrl t Ctrl a</code>)ajoute une nouvelle
     colonne après la colonne sélectionnée.</li>
 </ul>
@@ -1000,15 +1000,15 @@ sélectionner une colonne :</p>
   </li>
 </ol>
 
-<h3><a id="Adding11">Ajouter une ligne</a></h3>
+<h3><a id="Adding11">Insérer/Ajouter une ligne</a></h3>
 
 <p>Il n'existe deux commandes spécifiques pour créer une nouvelle
 ligne&nbsp;:</p>
 <ul>
-  <li><strong>Insérer une ligne avant</strong> dans le sous-menu
+  <li><strong>Insérer une ligne</strong> dans le sous-menu
     <strong>Table</strong> (<code>Ctrl t Ctrl i</code>) ajoute une nouvelle
     ligne avant la ligne sélectionnée.</li>
-  <li><strong>Insérer une ligne après</strong> dans le sous-menu
+  <li><strong>Ajouter une ligne</strong> dans le sous-menu
     <strong>Table</strong> (<code>Ctrl t Ctrl n</code>)ajoute une nouvelle
     ligne après la ligne sélectionnée.</li>
 </ul>

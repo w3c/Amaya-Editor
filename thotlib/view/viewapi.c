@@ -209,10 +209,10 @@ static View OpenView (Document document, char *viewName,
 		  {
                     /* look for the current windows, current page, and current page position (top/bottom)*/
 		    int schView = -1; /*pDoc->DocView[view - 1].DvPSchemaView;*/
-		    int window_id = TtaGetDocumentWindowId( document, -1 );
+		    int window_id = TtaGetDocumentWindowId (document, -1);
 		    int page_id;
 		    int page_position;
-		    TtaGetDocumentPageId( document, -1, &page_id, &page_position );
+		    TtaGetDocumentPageId (document, -1, &page_id, &page_position);
 		    
 		    /* force to see the view in the second frame */
 		    page_position = 2;

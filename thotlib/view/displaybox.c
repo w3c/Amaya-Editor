@@ -2232,11 +2232,8 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin,
 	{
 	  if (selfsel)
 	    DisplayStringSelection (frame, 0, box->BxW, t, box);
-	  else if (ThotLocalActions[T_emptybox])
-	    (*(Proc3)ThotLocalActions[T_emptybox]) (
-		(void *)box,
-		(void *)frame,
-		(void *)selfsel);
+	  else
+	    DisplayEmptyBox (box, frame, selfsel, t, b, l, r);
 	}
     }
   else if (pAb->AbLeafType == LtText)

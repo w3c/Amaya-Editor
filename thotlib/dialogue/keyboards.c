@@ -21,7 +21,6 @@
 #include "appdialogue.h"
 #include "dialog.h"
 #include "message.h"
-
 #ifdef _WINGUI
   #include "wininclude.h"
 #endif /* _WINGUI */
@@ -373,7 +372,7 @@ static ITEM         Items_Graph[] =
 #include "xwindowdisplay_f.h"
 
 
-#if defined(_MOTIF) || defined(_WINGUI)
+#ifdef _WINGUI
 /*----------------------------------------------------------------------
    WChar
    displays character ch at position <x,y> of window w using the character
@@ -385,21 +384,10 @@ static void WChar (ThotWindow w, char ch, int x, int y, int func,
 {
    int                 length;
 
-   length = 1;
-   
-#ifdef _WINGUI
+   length = 1;  
    /* DrawTextEx or some such thing - @@@ */
-#endif /* _WINGUI */
-
-#ifdef _MOTIF
-   XSetFont (TtDisplay, GClocal, ((XFontStruct *) font)->fid);
-   FontOrig (font, ch, &x, &y);
-   XDrawString (TtDisplay, w, GClocal, x, y, &ch, length);
-#endif /* _MOTIF*/
-   
 }
-
-#endif /* #if defined(_MOTIF) || defined(_WINGUI) */
+#endif /* _WINGUI */
 
 /*----------------------------------------------------------------------
    KbdEndDisplay
@@ -407,13 +395,9 @@ static void WChar (ThotWindow w, char ch, int x, int y, int func,
   ----------------------------------------------------------------------*/
 static void KbdEndDisplay (ThotWidget w, int index, caddr_t call_d)
 {
-#ifdef _MOTIF
-   XtPopdown (Keyboards[index]);
-#endif /* _MOTIF */
-   
 #ifdef _GTK
    gtk_widget_hide (GTK_WIDGET(Keyboards[index]));
-#endif /* !_GTK */
+#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -428,19 +412,12 @@ void KbdCallbackHandler (ThotWidget w, unsigned int param, caddr_t call_d)
    /* Recupere la table des items */
    car = (CHAR_T) (param % 256);
    /* Recupere le widget de la palette */
-
-#ifdef _MOTIF
-   wp=XtParent(XtParent(XtParent(XtParent(w))));
-#endif /* #ifdef _MOTIF */
-   
 #ifdef _WINGUI
    wp = GetParent (GetParent (GetParent (GetParent (w))));
 #endif /* _WINGUI */
-
 #ifdef _GTK
    wp = GTK_WIDGET (w)->parent->parent->parent->parent;
-#endif /* !_GTK */
-   
+#endif /* _GTK */
    /* met a jour l'indicateur de palette */
    if (Keyboards[KeyboardMode] != wp)
      {
@@ -462,238 +439,11 @@ void KbdCallbackHandler (ThotWidget w, unsigned int param, caddr_t call_d)
 	 kbd = -1;
      }
 
-   if (ThotLocalActions[T_insertchar] != NULL)
-      (*(Proc3)ThotLocalActions[T_insertchar]) (
-		(void *)ActiveFrame,
-		(void *)car,
-		(void *)kbd);
+   InsertChar (ActiveFrame, car, kbd);
    if (KeyboardMode == 3)
      /* character entered through the Symbol/Greek palette */
      CloseTextInsertion();
 }
-
-#ifdef _MOTIF
-/*----------------------------------------------------------------------
-  ExposeKbd displays the keyboard keys
-  ----------------------------------------------------------------------*/
-static void ExposeKbd (ThotWidget w, int param,
-		       XmDrawnButtonCallbackStruct *infos)
-{
-  int                 y;
-  int                 i, kb;
-  ITEM               *it;
-
-  /* Recupere la table des items */
-  kb = param / 256;
-  switch (kb)
-    {
-    case 1:
-      it = Items_Graph;
-      break;
-    case 2:
-      it = Items_Isol;
-      break;
-    case 4:
-      it = Items_Grec;
-      break;
-    default:
-      return;
-    }
-  y = 4;
-  i = param % 256;		/* indice dans la table des items */
-  it = (ITEM *) ((int) it + (sizeof (ITEM) * i));
-  WChar (infos->window, it->index, CharacterWidth (87, DialogFont), y, GXcopy, KbFonts[kb], 0, GCkey);
-  if (it->legend)
-    {
-      y = FontHeight (KbFonts[kb]);
-      WChaine (infos->window, it->legend, 4, y, DialogFont, GCkey);
-    }
-}
-
-/*----------------------------------------------------------------------
-   CreateKeyboard creates a keyboard.
-  ----------------------------------------------------------------------*/
-static void CreateKeyboard (int number, char *title, ThotFont pFont,
-			    int col, int x, int y, ITEM *items, int nbitem)
-{
-   int                 n;
-   int                 i;
-   register ITEM      *it;
-   ThotWidget          w;
-   ThotWidget          row;
-   Arg                 args[MAX_ARGS];
-   XmString            title_string;
-   XmFontList          xfont;
-   char                string[10];
-   int                 param;
-   XGCValues           GCmodel;
-
-   n = 0;
-   sprintf (string, "+%d+%d", x, y);
-   XtSetArg (args[n], XmNx, (Position) x);
-   n++;
-   XtSetArg (args[n], XmNy, (Position) y);
-   n++;
-   XtSetArg (args[n], XmNallowShellResize, TRUE);
-   n++;
-   XtSetArg (args[n], XmNuseAsyncGeometry, TRUE);
-   n++;
-   w = XtCreatePopupShell (title, applicationShellWidgetClass, RootShell, args, n);
-   /*** Cree le clavier dans sa frame ***/
-   n = 0;
-   XtSetArg (args[n], XmNbackground, BgMenu_Color);
-   n++;
-   XtSetArg (args[n], XmNborderColor, BgMenu_Color);
-   n++;
-   xfont = XmFontListCreate ((XFontStruct *) DialogFont, XmSTRING_DEFAULT_CHARSET);
-   XtSetArg (args[n], XmNfontList, xfont);
-   n++;
-   title_string = XmStringCreateSimple (title);
-   XtSetArg (args[n], XmNdialogTitle, title_string);
-   n++;
-   XtSetArg (args[n], XmNautoUnmanage, FALSE);
-   n++;
-   /**XtSetArg(args[n], XmNdefaultPosition, FALSE); n++;**/
-   XtSetArg (args[n], XmNmarginWidth, 0);
-   n++;
-   XtSetArg (args[n], XmNmarginHeight, 0);
-   n++;
-   XtSetArg (args[n], XmNspacing, 0);
-   n++;
-   Keyboards[number] = w;
-   w = XmCreateBulletinBoard (w, "Dialogue", args, n);
-   XtManageChild (w);
-   XmStringFree (title_string);
-
-   /*** Cree un Row-Column pour mettre le bouton Quit ***/
-   /*** en dessous des touches du clavier.    ***/
-   n = 3;
-   XtSetArg (args[n], XmNadjustLast, FALSE);
-   n++;
-   XtSetArg (args[n], XmNmarginWidth, 0);
-   n++;
-   XtSetArg (args[n], XmNmarginHeight, 0);
-   n++;
-/*SN */ XtSetArg (args[n], XmNpacking, XmPACK_TIGHT);
-   n++;
-   XtSetArg (args[n], XmNspacing, 0);
-   n++;
-   w = XmCreateRowColumn (w, "Dialogue", args, n);
-   XtManageChild (w);
-
-   /*** Cree un Row-Column pour contenir les touches du clavier ***/
-   n = 3;
-   XtSetArg (args[n], XmNadjustLast, FALSE);
-   n++;
-   XtSetArg (args[n], XmNmarginWidth, 0);
-   n++;
-   XtSetArg (args[n], XmNmarginHeight, 0);
-   n++;
-   XtSetArg (args[n], XmNspacing, 0);
-   n++;
-   XtSetArg (args[n], XmNpacking, XmPACK_COLUMN);
-   n++;
-   XtSetArg (args[n], XmNnumColumns, col);
-   n++;
-   XtSetArg (args[n], XmNorientation, XmHORIZONTAL);
-   n++;
-   row = XmCreateRowColumn (w, "Dialogue", args, n);
-   XtManageChild (row);
-
-   /*** Cree un Row-Column pour contenir le bouton Quit ***/
-   n = 3;
-   XtSetArg (args[n], XmNorientation, XmHORIZONTAL);
-   n++;
-   XtSetArg (args[n], XmNmarginWidth, 60);
-   n++;
-   XtSetArg (args[n], XmNmarginHeight, 0);
-   n++;
-   w = XmCreateRowColumn (w, "Dialogue", args, n);
-   XtManageChild (w);
-
-   GCmodel.function = GXcopy;
-   GCmodel.foreground = FgMenu_Color;
-   GCmodel.background = BgMenu_Color;
-   GCkey = XCreateGC (TtDisplay, TtRootWindow, GCForeground | GCBackground | GCFunction, &GCmodel);
-
-   /*** Cree le bouton Quit ***/
-   n = 0;
-   XtSetArg (args[n], XmNbackground, BgMenu_Color);
-   n++;
-   XtSetArg (args[n], XmNbottomShadowColor, BgMenu_Color);
-   n++;
-   XtSetArg (args[n], XmNforeground, FgMenu_Color);
-   n++;
-   XtSetArg (args[n], XmNfontList, xfont);
-   n++;
-   w = XmCreatePushButton (w, TtaGetMessage (LIB, TMSG_CANCEL), args, n);
-   XtManageChild (w);
-   XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) KbdEndDisplay, (XtPointer) number);
-   XmFontListFree (xfont);
-
-   /* Definit le bouton d'annulation comme bouton par defaut */
-   n = 0;
-   XtSetArg (args[n], XmNdefaultButton, w);
-   n++;
-   XtSetValues (Keyboards[number], args, n);
-
-   n = 0;
-   XtSetArg (args[n], XmNbackground, BgMenu_Color);
-   n++;
-   XtSetArg (args[n], XmNforeground, FgMenu_Color);
-   n++;
-   XtSetArg (args[n], XmNborderColor, BgMenu_Color);
-   n++;
-
-   /* Affiche les differents boutons du clavier */
-   it = items;
-   /* Prepare les parametres des procedures KbdCallbackHandler et ExposeKbd */
-   param = number * 256;	/* indice du clavier */
-
-   if (it->legend == 0)
-     {
-	/* Un clavier sans legende */
-	XtSetArg (args[n], XmNmarginWidth, 4);
-	n++;
-	XtSetArg (args[n], XmNmarginHeight, 4);
-	n++;
-	xfont = XmFontListCreate ((XFontStruct *) pFont, XmSTRING_DEFAULT_CHARSET);
-	XtSetArg (args[n], XmNfontList, xfont);
-	n++;
-	for (i = 0; i < nbitem; i++, it++)
-	  {
-	     string[0] = it->index;
-	     string[1] = EOS;
-	     w = XmCreatePushButton (row, string, args, n);
-	     XtManageChild (w);
-	     XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) KbdCallbackHandler, (XtPointer) (param + (int) (it->value)));
-	  }			/*for */
-	XmFontListFree (xfont);
-     }
-   else
-     {
-	/* Un clavier avec legende */
-	XtSetArg (args[n], XmNmarginWidth, 0);
-	n++;
-	XtSetArg (args[n], XmNmarginHeight, 0);
-	n++;
-	XtSetArg (args[n], XmNwidth, (Dimension) CharacterWidth (87, DialogFont) * 3);
-	n++;
-	XtSetArg (args[n], XmNheight, (Dimension) FontHeight (pFont) + FontHeight (DialogFont) + 4);
-	n++;
-
-	for (i = 0; i < nbitem; i++, it++)
-	  {
-	     string[0] = it->index;
-	     string[1] = '\n';
-	     w = XmCreateDrawnButton (row, "", args, n);
-	     XtManageChild (w);
-	     XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) KbdCallbackHandler, (XtPointer) (param + (int) (it->value)));
-	     XtAddCallback (w, XmNexposeCallback, (XtCallbackProc) ExposeKbd, (XtPointer) (param + i));
-	  }
-     }
-}
-#endif /*#ifdef _MOTIF*/
 
 #ifdef _GTK
 /*----------------------------------------------------------------------
@@ -702,7 +452,7 @@ static void CreateKeyboard (int number, char *title, ThotFont pFont,
 static void CreateKeyboard (int number, char *title, ThotFont pFont,
 			    int col, int x, int y, ITEM *items, int nbitem)
 {
-  int                 i,j;
+  int                 i, j;
   register ITEM      *it;
   ThotWidget          w;
   GtkWidget *vbox1;
@@ -826,9 +576,7 @@ static void CreateKeyboard (int number, char *title, ThotFont pFont,
   gtk_widget_show_all (w);
   Keyboards[number] = w;
 }
-#endif /* _GTK */
 
-#if defined(_GTK) || defined(_MOTIF)
 
 /*----------------------------------------------------------------------
    LoadKbd
@@ -874,7 +622,7 @@ static void LoadKbd (int number)
     }
 }
 
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* _GTK */
 
 
 /*----------------------------------------------------------------------
@@ -883,59 +631,20 @@ static void LoadKbd (int number)
   ----------------------------------------------------------------------*/
 void KeyboardMap (int kb)
 {
-#if defined(_GTK) || defined(_MOTIF)  
+#ifdef _GTK
 
   if (kb >= 0 && kb < MAX_KEYBOARD)
-  {
+    {
 	/* Faut-il charger le clavier avant de l'afficher ? */
 	if (Keyboards[kb] == 0)
 	   LoadKbd (kb);
 	if (Keyboards[kb] != 0)
 	  {
-      
-#ifdef _MOTIF
-	    XtPopup (Keyboards[kb], XtGrabNonexclusive);
-	    XMapRaised (TtDisplay, XtWindowOfObject (Keyboards[kb]));
-#endif /* #ifdef _MOTIF */
-      
-#ifdef _GTK
 	    gtk_widget_show_all (GTK_WIDGET(Keyboards[kb]));
 	    gdk_window_raise (GTK_WIDGET(Keyboards[kb])->window);
-#endif /* !_GTK */
-      
 	  }
-  }
-
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
-}
-
-/*----------------------------------------------------------------------
-  GraphicsLoadResource
-  Initializes the keyboards.
-  ----------------------------------------------------------------------*/
-void GraphicsLoadResources ()
-{
-   int                 i;
-
-   if (ThotLocalActions[T_keyboard] == NULL)
-     {
-	TteConnectAction (T_keyboard, (Proc) KeyboardMap);
-
-	/* Initialise la table des claviers */
-	for (i = 0; i < MAX_KEYBOARD; i++)
-	   Keyboards[i] = 0;
-	if (SmallDialogFont == NULL)
-	   SmallDialogFont = ReadFont ('L', 2, 0, 9, UnPoint);
-	if (SmallDialogFont == NULL)
-	   SmallDialogFont = DialogFont;
-     }
-
-#if defined(_GTK) || defined(_MOTIF)
-   GraphicsIcons = LoadFont ("ivgraf");
-#endif /*  #if defined(_GTK) || defined(_MOTIF) */
-   
-   if (GraphicsIcons == NULL)
-     GraphicsIcons = DialogFont;
+    }
+#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -963,6 +672,21 @@ void KeyboardsLoadResources ()
 
 
 /*----------------------------------------------------------------------
+  GraphicsLoadResource
+  Initializes the keyboards.
+  ----------------------------------------------------------------------*/
+void GraphicsLoadResources ()
+{
+   KeyboardsLoadResources ();
+#ifdef _GTK
+   GraphicsIcons = LoadFont ("ivgraf");
+#endif /* _GTK */
+   if (GraphicsIcons == NULL)
+     GraphicsIcons = DialogFont;
+}
+
+
+/*----------------------------------------------------------------------
    TtcDisplayMathKeyboard
    displays the math keyboard
   ----------------------------------------------------------------------*/
@@ -970,9 +694,9 @@ void TtcDisplayMathKeyboard (Document document, View view)
 {
    KeyboardsLoadResources ();
    /* Enregistre la position pour le dialogue */
-#if defined(_GTK) || defined(_MOTIF)
+#ifdef _GTK
    TtaSetDialoguePosition ();
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* _GTK */
    TtaSetCurrentKeyboard (0);
 }
 
@@ -985,9 +709,9 @@ void TtcDisplayGraphicsKeyboard (Document document, View view)
 {
    KeyboardsLoadResources ();
    /* Enregistre la position pour le dialogue */
-#if defined(_GTK) || defined(_MOTIF)
+#ifdef _GTK
    TtaSetDialoguePosition ();
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* _GTK */
    TtaSetCurrentKeyboard (1);
 }
 
@@ -1000,9 +724,9 @@ void TtcDisplayLatinKeyboard (Document document, View view)
 {
    KeyboardsLoadResources ();
    /* Enregistre la position pour le dialogue */
-#if defined(_GTK) || defined(_MOTIF)
+#ifdef _GTK
    TtaSetDialoguePosition ();
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* _GTK */
    TtaSetCurrentKeyboard (2);
 }
 
@@ -1014,9 +738,9 @@ void TtcDisplayGreekKeyboard (Document document, View view)
 {
    KeyboardsLoadResources ();
    /* Enregistre la position pour le dialogue */
-#if defined(_GTK) || defined(_MOTIF)
+#ifdef _GTK
    TtaSetDialoguePosition ();
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* _GTK */
    TtaSetCurrentKeyboard (3);
 #ifdef _WINGUI
    CreateGreekKeyboardDlgWindow (NULL);

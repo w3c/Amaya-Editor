@@ -45,6 +45,7 @@
 #include "config_f.h"
 #include "createabsbox_f.h"
 #include "documentapi_f.h"
+#include "editcommands_f.h"
 #include "exceptions_f.h"
 #include "font_f.h"
 #include "inites_f.h"
@@ -376,7 +377,7 @@ void ModifyColor (int colorNum, ThotBool Background)
    int                 fillPatternNum;
    RuleSet             rulesS;
 
-   CloseInsertion ();
+   CloseTextInsertion ();
    /* demande quelle est la selection courante */
    selok = GetCurrentSelection (&SelDoc, &pElFirstSel, &pElLastSel, 
 				&firstChar, &lastChar);
@@ -415,12 +416,7 @@ void ModifyColor (int colorNum, ThotBool Background)
 	   {
 	   /* set selection to the highest level elements having the same
 	      content */
-	     if (ThotLocalActions[T_selectsiblings] != NULL)
-	       (*(Proc4)ThotLocalActions[T_selectsiblings]) (
-			(void *)&pElFirstSel,
-			(void *)&pElLastSel,
-			(void *)&firstChar,
-		       	(void *)&lastChar);
+	     SelectSiblings (&pElFirstSel, &pElLastSel, &firstChar, &lastChar);
 	     if (firstChar == 0 && lastChar == 0)
 	       if (pElFirstSel->ElPrevious == NULL &&
 		   pElLastSel->ElNext == NULL)
@@ -1112,23 +1108,18 @@ static void         ApplyPresentMod (int applyDomain)
 	     IsolateSelection (pSelDoc, &pFirstSel, &pLastSel, &firstChar,
 			       &lastChar, TRUE);
 	if (!addPresRule)
-	   /* only changes to standard presentation */
-	   {
-	     if (ThotLocalActions[T_selectsiblings] != NULL)
-	       (*(Proc4)ThotLocalActions[T_selectsiblings]) (
-			(void *)&pFirstSel,
-			(void *)&pLastSel,
-			(void *)&firstChar,
-			(void *)&lastChar);
-	   }
+	  /* only changes to standard presentation */
+	  SelectSiblings (&pFirstSel, &pLastSel, &firstChar, &lastChar);
 	
 	/* evalue les difference entre le pave traite' et les demandes
 	   de l'utilisateur */
 	pAb = AbsBoxOfEl (pFirstSel, SelectedView);
 	if (pAb != NULL)
 	  {
-	     currentFontSize = PixelToPoint(PixelValue (pAb->AbSize,
-							pAb->AbSizeUnit, pAb, ViewFrameTable[ActiveFrame - 1].FrMagnification));
+	    currentFontSize = PixelToPoint(PixelValue (pAb->AbSize,
+						       pAb->AbSizeUnit,
+						       pAb,
+						       ViewFrameTable[ActiveFrame - 1].FrMagnification));
 	    
 	    /* famille de polices de caracteres */
 	    if (locChngFontFamily)
@@ -1498,12 +1489,7 @@ void TtcStandardGeometry (Document document, View view)
 	TtaClearViewSelections ();
 	/* set selection to the highest level elements having the same
 	   content */
-	if (ThotLocalActions[T_selectsiblings] != NULL)
-	  (*(Proc4)ThotLocalActions[T_selectsiblings]) (
-		(void *)&pFirstSel,
-		(void *)&pLastSel,
-		(void *)&firstChar,
-		(void *)&lastChar);
+	SelectSiblings (&pFirstSel, &pLastSel, &firstChar, &lastChar);
 	if (firstChar == 0 && lastChar == 0)
 	  if (pFirstSel->ElPrevious == NULL && pLastSel->ElNext == NULL)
 	    if (pFirstSel->ElParent != NULL &&

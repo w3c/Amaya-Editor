@@ -323,16 +323,13 @@ static void MovingCommands (int code, Document doc, View view,
 
   indpos = 0;
   xpos = 0;
-  CloseInsertion ();
+  CloseTextInsertion ();
   frame = GetWindowNumber (doc, view);
   if (frame > 0)
     {
       pFrame = &ViewFrameTable[frame - 1];
       /* reformat the current paragraph if necessary */
-      if (ThotLocalActions[T_updateparagraph])
-	(*(Proc2)ThotLocalActions[T_updateparagraph]) (
-		(void *)pFrame->FrAbstractBox,
-		(void *)frame);
+      CloseParagraphInsertion (pFrame->FrAbstractBox, frame);
       pViewSel = &(pFrame->FrSelectionBegin);
       pViewSelEnd = &(pFrame->FrSelectionEnd);
       /* beginning of the selection */

@@ -1502,7 +1502,7 @@ static gboolean APP_ButtonCallbackGTK (ThotButton w, int frame)
     return FALSE;
 #endif     /* ----- #ifdef _GTK  ----- */
 	}
-      CloseInsertion ();
+      CloseTextInsertion ();
       FrameToView (frame, &document, &view);
       TtaSetButtonActivatedStatus (TRUE);
       (*(Proc2)FrameTable[frame].Call_Button[i]) ((void *)document, (void *)view);
@@ -1950,7 +1950,7 @@ void APP_TextCallback (ThotWidget w, int frame, void *call_d)
   char                text[1024];
   
   w = GetParent (w);
-  CloseInsertion ();
+  CloseTextInsertion ();
   if (FrameTable[frame].Text_Zone == w)
     {
       FrameToView (frame, &doc, &view);
@@ -1971,7 +1971,7 @@ gboolean APP_TextCallbackGTK (GtkWidget *w, int frame)
   char               *text;
   GtkEntry           *text_widget;
 
-  CloseInsertion ();
+  CloseTextInsertion ();
   if (FrameTable[frame].Text_Zone == w)
     {
       FrameToView (frame, &doc, &view);
@@ -3464,8 +3464,7 @@ void DestroyFrame (int frame)
   GL_DestroyFrame (frame);
 #endif /* _GL */
   
-  if (ThotLocalActions[T_stopinsert] != NULL)
-    (*ThotLocalActions[T_stopinsert]) ();
+  CloseTextInsertion ();
   w = FrameTable[frame].WdFrame;
   if (w != 0)
     {
@@ -4141,7 +4140,7 @@ void ThotCallback (int ref, int typedata, char *data)
 #ifdef _WINGUI
   menu_item = ref + (int) data;
 #endif /* _WINGUI */
-  CloseInsertion ();
+  CloseTextInsertion ();
 
   if (ref >= MAX_ThotMenu)
     {

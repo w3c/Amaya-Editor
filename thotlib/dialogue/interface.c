@@ -1228,19 +1228,7 @@ ThotColor TtaGetMenuColor ()
    return (ThotColor) BgMenu_Color;
 }
 
-
-/*----------------------------------------------------------------------
-   DisplayEmptyBoxLoadResources: displays the empty boxes.            
-  ----------------------------------------------------------------------*/
-void DisplayEmptyBoxLoadResources ()
-{
-   if (ThotLocalActions[T_emptybox] == NULL)
-      TteConnectAction (T_emptybox, (Proc) DisplayEmptyBox);
-}
-
-
-
-#if defined(_MOTIF) || defined(_GTK)
+#ifdef _GTK
 /*----------------------------------------------------------------------
    TtaGetCurrentDisplay
    Returns the current display descriptor.
@@ -1250,7 +1238,7 @@ Display *TtaGetCurrentDisplay ()
    UserErrorCode = 0;
    return TtDisplay;
 }
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* _GTK */
 
 
 /*----------------------------------------------------------------------

@@ -28,6 +28,7 @@
 #include "applicationapi_f.h"
 #include "boxselection_f.h"
 #include "buildboxes_f.h"
+#include "editcommands_f.h"
 #include "frame_f.h"
 #include "structselect_f.h"
 #include "textcommands_f.h"
@@ -61,7 +62,7 @@ void VerticalScroll (int frame, int delta, int selection)
 	  {
 	     pAbb = pFrame->FrAbstractBox;
 	     /* On termine l'insertion courante */
-	     CloseInsertion ();
+	     CloseTextInsertion ();
 	     srcbox = pAbb->AbBox;
 	     /* Limites du scroll */
 	     if (srcbox != NULL)
@@ -159,7 +160,7 @@ void HorizontalScroll (int frame, int delta, int selection)
       pFrame = &ViewFrameTable[frame - 1];
       if (pFrame->FrReady && pFrame->FrAbstractBox != NULL)
 	{
-	  CloseInsertion ();
+	  CloseTextInsertion ();
 	  /* finish the current insertion */
 	  srcbox = pFrame->FrAbstractBox->AbBox;
 	  GetSizesFrame (frame, &lframe, &hframe);

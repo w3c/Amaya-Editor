@@ -2360,7 +2360,7 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
 		   /* set selection before the first character of the string */
 		   SelectElement (pDoc, pSibling, FALSE, FALSE);
 		   /* and delete the selected element */
-		   CutCommand (FALSE);
+		   CutCommand (FALSE, FALSE);
 		 }
 	     }
 	   /* done */
@@ -2621,15 +2621,8 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
   ----------------------------------------------------------------------*/
 void NoStructSelectLoadResources ()
 {
-   if (ThotLocalActions[T_selectsiblings] == NULL)
+   if (MenuActionList[CMD_CreateElement].Call_Action == NULL)
      {
-	TteConnectAction (T_selectsiblings, (Proc) SelectSiblings);
-	TteConnectAction (T_checksel, (Proc) CheckSelectedElement);
-	TteConnectAction (T_resetsel, (Proc) ResetSelection);
-	TteConnectAction (T_selstring, (Proc) SelectString);
-	TteConnectAction (T_deletenextchar, (Proc) DeleteNextChar);
-	TteConnectAction (T_cmdpaste, (Proc) PasteCommand);
-	TteConnectAction (T_enter, (Proc) TtcCreateElement);
 	MenuActionList[CMD_CreateElement].Call_Action = (Proc)TtcCreateElement;
 	InitSelection ();
      }

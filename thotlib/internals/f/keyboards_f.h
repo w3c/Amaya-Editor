@@ -10,8 +10,8 @@ extern void KbdCallbackHandler ( ThotWidget w,
                                  unsigned int param,
                                  caddr_t call_d );
 extern void KeyboardMap ( int kb );
-extern void GraphicsLoadResources ( void );
 extern void KeyboardsLoadResources ( void );
+extern void GraphicsLoadResources ( void );
 extern void TtcDisplayMathKeyboard ( Document document,
                                      View view );
 extern void TtcDisplayGraphicsKeyboard ( Document document,
@@ -27,8 +27,8 @@ extern void KbdCallbackHandler ( ThotWidget w,
                                    unsigned int param,
                                    caddr_t call_d );
 extern void KeyboardMap ( int kb );
-extern void GraphicsLoadResources ( void );
 extern void KeyboardsLoadResources ( void );
+extern void GraphicsLoadResources ( void );
 extern void TtcDisplayMathKeyboard ( Document document,
                                        View view );
 extern void TtcDisplayGraphicsKeyboard ( Document document,

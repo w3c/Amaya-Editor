@@ -40,6 +40,18 @@ void ExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin,
 }
 
 /*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void ResetSelection (PtrDocument pDoc)
+{
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void SelectString (PtrDocument pDoc, PtrElement pEl, int firstChar, int lastChar)
+{
+}
+
+/*----------------------------------------------------------------------
    ConfigFree
    Frees the table entries of all the document types, natures and
    extensions.
@@ -206,6 +218,17 @@ ThotBool IsASavedElement (PtrElement pEl)
    return FALSE;
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void FreeSavedElements ()
+{
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void CleanSearchContext ()
+{
+}
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 ThotBool CallEventType (NotifyEvent * notifyEvent, ThotBool pre)

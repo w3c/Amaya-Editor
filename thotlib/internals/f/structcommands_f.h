@@ -26,7 +26,8 @@ extern PtrElement PreviousNotPage ( PtrElement pEl );
 extern void ProcessFirstLast ( PtrElement pPrev,
                                PtrElement pNext,
                                PtrDocument pDoc );
-extern void CutCommand ( ThotBool save );
+extern void CutCommand ( ThotBool save,
+                         ThotBool replace );
 extern void TtaSetCopyAndCutFunction ( Proc procedure );
 extern void TtaSetCopyCellFunction ( Proc3 procedure );
 extern void TtaSetCopyRowFunction ( Proc3 procedure );
@@ -40,6 +41,8 @@ extern void TtaCreateElement ( ElementType elementType,
                                Document document );
 extern void TtaInsertElement ( ElementType elementType,
                                Document document );
+extern void TtaInsertAnyElement ( Document document,
+                                  ThotBool before );
 extern void TtaSetTransformCallback ( Func callbackFunc );
 
 #else /* __STDC__ */
@@ -64,7 +67,8 @@ extern PtrElement PreviousNotPage ( PtrElement pEl );
 extern void ProcessFirstLast ( PtrElement pPrev,
                                  PtrElement pNext,
                                  PtrDocument pDoc );
-extern void CutCommand ( ThotBool save );
+extern void CutCommand ( ThotBool save,
+                           ThotBool replace );
 extern void TtaSetCopyAndCutFunction ( Proc procedure );
 extern void TtaSetCopyCellFunction ( Proc3 procedure );
 extern void TtaSetCopyRowFunction ( Proc3 procedure );
@@ -78,6 +82,8 @@ extern void TtaCreateElement ( ElementType elementType,
                                  Document document );
 extern void TtaInsertElement ( ElementType elementType,
                                  Document document );
+extern void TtaInsertAnyElement ( Document document,
+                                    ThotBool before );
 extern void TtaSetTransformCallback ( Func callbackFunc );
 
 #endif /* __STDC__ */

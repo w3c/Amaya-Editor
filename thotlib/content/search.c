@@ -40,6 +40,7 @@
 #include "callback_f.h"
 #include "changeabsbox_f.h"
 #include "createabsbox_f.h"
+#include "displayview_f.h"
 #include "documentapi_f.h"
 #include "exceptions_f.h"
 #include "fileaccess_f.h"
@@ -227,11 +228,9 @@ void ReplaceString (PtrDocument pDoc, PtrElement pEl, int firstChar,
   if (visible)
     {
       /* Update Abstract views */
-      if (ThotLocalActions[T_AIupdate] != NULL)
-	(*(Proc1)ThotLocalActions[T_AIupdate]) ((void *)pDoc);
+      AbstractImageUpdated (pDoc);
       /* Redisplay views */
-      if (ThotLocalActions[T_redisplay] != NULL)
-	(*(Proc1)ThotLocalActions[T_redisplay]) ((void *)pDoc);
+      RedisplayDocViews (pDoc);
     }
 
   /* si l'element TEXTE modifie' appartient soit a un element copie' */

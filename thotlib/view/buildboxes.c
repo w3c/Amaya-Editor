@@ -4526,7 +4526,7 @@ void ClearConcreteImage (int frame)
     {
       pFrame->FrReady = FALSE;	/* La frame n'est pas affichable */
       /* Faut-il retirer les marques de selection dans la fenetre */
-      CloseInsertion ();
+      CloseTextInsertion ();
       /*ClearViewSelection (frame);*/
       /* Liberation de la hierarchie */
       RemoveBoxes (pFrame->FrAbstractBox, FALSE, frame);

@@ -61,7 +61,7 @@ extern ThotBool BM_Move ( Document doc,
                           Element target );
 extern ThotBool BM_PastePost ( NotifyOnValue *event );
 extern ThotBool BM_Copy ( NotifyElement *event );
-extern ThotBool BM_IgnoreEvent ( NotifyOnTarget * );
+extern ThotBool BM_IgnoreEvent ( NotifyOnTarget *target );
 extern void BM_selectNextItem ( Document doc,
                                 char *item_url );
 extern ThotBool BM_GetModelReferences ( int ref,
@@ -130,7 +130,7 @@ extern ThotBool BM_Move ( Document doc,
                             Element target );
 extern ThotBool BM_PastePost ( NotifyOnValue *event );
 extern ThotBool BM_Copy ( NotifyElement *event );
-extern ThotBool BM_IgnoreEvent ( NotifyOnTarget * );
+extern ThotBool BM_IgnoreEvent ( NotifyOnTarget *target );
 extern void BM_selectNextItem ( Document doc,
                                   char *item_url );
 extern ThotBool BM_GetModelReferences ( int ref,

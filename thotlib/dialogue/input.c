@@ -1047,7 +1047,7 @@ ThotBool ThotInput (int frame, unsigned int value, int command, int PicMask, int
 		  if (ptr)
 		    {
 		      /* close the current insertion */
-		      CloseInsertion ();
+		      CloseTextInsertion ();
 		      (*(Proc2)AccessKeyFunction) (
 				(void *)document,
 				(void *)ptr->K_Param);
@@ -1070,7 +1070,7 @@ ThotBool ThotInput (int frame, unsigned int value, int command, int PicMask, int
 		  if (ptr)
 		    {
 		      /* close the current insertion */
-		      CloseInsertion ();
+		      CloseTextInsertion ();
 		      (*(Proc2)AccessKeyFunction) (
 				(void *)document,
 				(void *)ptr->K_Param);
@@ -1201,7 +1201,7 @@ ThotBool ThotInput (int frame, unsigned int value, int command, int PicMask, int
 	      command != CMD_PasteFromClipboard &&
 	      command != CMD_Paste)
 	    /* It's not a delete, close the current insertion */
-	    CloseInsertion ();
+	    CloseTextInsertion ();
 
 	  /* ***Check events TteElemReturn and TteElemTab*** */
 	  if (LoadedDocument[document - 1] == SelectedDocument &&

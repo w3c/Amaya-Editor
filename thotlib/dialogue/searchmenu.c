@@ -519,7 +519,7 @@ void TtcSearchText (Document document, View view)
 /*----------------------------------------------------------------------
   CleanSearchContext free all context related to search commands.
   ----------------------------------------------------------------------*/
-static void CleanSearchContext ()
+void CleanSearchContext ()
 {
   FreeSearchContext (&SearchingD);
   TtaFreeMemory (SString);
@@ -883,7 +883,6 @@ void SearchLoadResources (void)
 	/* Connecte les actions liees au traitement du search */
 	TteConnectAction (T_searchtext, (Proc) CallbackTextReplace);
 	TteConnectAction (T_locatesearch, (Proc) CallbackWhereToSearch);
-	TteConnectAction (T_freesearch, (Proc) CleanSearchContext);
 	CurrRef = NULL;
 	CurrRefDoc = NULL;
 	CurrRefElem = NULL;

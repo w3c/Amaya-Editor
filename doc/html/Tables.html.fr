@@ -5,7 +5,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Editer des tables</title>
-  <meta name="GENERATOR" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.6, see http://www.w3.org/Amaya/" />
 </head>
 
 <body xml:lang="en" lang="en">
@@ -72,15 +72,15 @@ l'une d'entre elles au hasard et y insérer du texte, des images et autre.
 Vous pouvez également faire glisser le point d'insertion de cellule en
 cellule par l'intermédiaire des flèches du clavier.</p>
 
-<h3><a id="Adding">Ajouter une colonne</a></h3>
+<h3><a id="Adding">Insérer/Ajouter une colonne</a></h3>
 
 <p>Il n'existe deux commandes spécifiques pour créer une nouvelle
 colonne&nbsp;:</p>
 <ul>
-  <li><strong>Insérer une colonne avant</strong> dans le sous-menu
+  <li><strong>Insérer une colonne</strong> dans le sous-menu
     <strong>Table</strong> (<code>Ctrl t Ctrl b</code>) ajoute une nouvelle
     colonne avant la colonne sélectionnée.</li>
-  <li><strong>Insérer une colonne après</strong> dans le sous-menu
+  <li><strong>Ajouter une colonne</strong> dans le sous-menu
     <strong>Table</strong> (<code>Ctrl t Ctrl a</code>)ajoute une nouvelle
     colonne après la colonne sélectionnée.</li>
 </ul>
@@ -149,15 +149,15 @@ sélectionner une colonne :</p>
   </li>
 </ol>
 
-<h3><a id="Adding1">Ajouter une ligne</a></h3>
+<h3><a id="Adding1">Insérer/Ajouter une ligne</a></h3>
 
 <p>Il n'existe deux commandes spécifiques pour créer une nouvelle
 ligne&nbsp;:</p>
 <ul>
-  <li><strong>Insérer une ligne avant</strong> dans le sous-menu
+  <li><strong>Insérer une ligne</strong> dans le sous-menu
     <strong>Table</strong> (<code>Ctrl t Ctrl i</code>) ajoute une nouvelle
     ligne avant la ligne sélectionnée.</li>
-  <li><strong>Insérer une ligne après</strong> dans le sous-menu
+  <li><strong>Ajouter une ligne</strong> dans le sous-menu
     <strong>Table</strong> (<code>Ctrl t Ctrl n</code>)ajoute une nouvelle
     ligne après la ligne sélectionnée.</li>
 </ul>

@@ -13,7 +13,6 @@ extern void TtaHandleOneEvent ( ThotEvent *ev );
 extern void TtaHandlePendingEvents ( void );
 extern void TtaMainLoop ( void );
 extern ThotColor TtaGetMenuColor ( void );
-extern void DisplayEmptyBoxLoadResources ( void );
 extern int TtaGetScreenDepth ( void );
 extern void TtaClickElement ( Document * document,
                               Element * element );
@@ -32,7 +31,6 @@ extern void TtaHandleOneEvent ( ThotEvent *ev );
 extern void TtaHandlePendingEvents ( void );
 extern void TtaMainLoop ( void );
 extern ThotColor TtaGetMenuColor ( void );
-extern void DisplayEmptyBoxLoadResources ( void );
 extern int TtaGetScreenDepth ( void );
 extern void TtaClickElement ( Document * document,
                                 Element * element );

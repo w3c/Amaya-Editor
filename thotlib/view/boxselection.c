@@ -562,10 +562,7 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
   ThotBool            graphSel, rtl;
 
   /* Check if a paragraph should be reformatted after an edit */
-  if (ThotLocalActions[T_updateparagraph] != NULL)
-    (*(Proc2)ThotLocalActions[T_updateparagraph]) (
-	(void*)pAb,
-	(void*)frame);
+  CloseParagraphInsertion (pAb, frame);
 
   if (pAb && frame > 0)
     {

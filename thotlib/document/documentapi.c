@@ -53,6 +53,7 @@
 #include "references_f.h"
 #include "schemas_f.h"
 #include "structschema_f.h"
+#include "structselect_f.h"
 #include "thotmsg_f.h"
 #include "translation_f.h"
 #include "tree_f.h"
@@ -228,10 +229,9 @@ void UnloadTree (Document document)
   pDoc = LoadedDocument[document - 1];
   if (pDoc)
      {
-       /* remove the selection on the document */
-       if (ThotLocalActions[T_resetsel])
-	 (*(Proc1)ThotLocalActions[T_resetsel]) (pDoc);
 #ifndef NODISPLAY
+       /* remove the selection on the document */
+       ResetSelection (pDoc);
        if (DocOfSavedElements == pDoc)
 	 DocOfSavedElements = NULL;
 #endif /* NODISPLAY */
