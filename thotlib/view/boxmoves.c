@@ -2294,17 +2294,20 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 			}
 		    }
 		}
-	      else if (!pCurrentAb->AbNew
-		       && Propagate == ToSiblings
-		       && pCurrentAb->AbLeafType == LtCompound
-		       && pCurrentAb->AbInLine && !pBox->BxYToCompute)
+	      else if (!pCurrentAb->AbNew &&
+		       Propagate == ToSiblings &&
+		       pCurrentAb->AbLeafType == LtCompound &&
+		       pCurrentAb->AbInLine && !pBox->BxYToCompute)
 		{
 		  /* the width of the block of lines is given by the next box
 		     -> check vertical enclosing */
 		  if (pAb->AbBox->BxType != BoTable)
 		    HeightPack (pAb, pSourceBox, frame);
+		  /* retore the value if necessary */
 		  Propagate = ToSiblings;
 		}
+	      else
+		RecordEnclosing (pAb->AbBox, TRUE);
 	    }
 
 	  if (delta && pBox->BxType == BoTable && pBox->BxCycles == 0 &&
@@ -2812,6 +2815,8 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 			HeightPack (pAb, pSourceBox, frame);
 		    }
 		}
+	      else
+		RecordEnclosing (pAb->AbBox, FALSE);
 	    }
 	  else if (pBox->BxType == BoCell &&
 		   ThotLocalActions[T_checktableheight])

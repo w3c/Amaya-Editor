@@ -1504,6 +1504,32 @@ static void AddBoxInLine (PtrBox pBox, int *descent, int *ascent, PtrLine pLine)
     pLine->LiNoOverlap = TRUE;
 }
 
+/*----------------------------------------------------------------------
+   ClearFloats
+  ----------------------------------------------------------------------*/
+void ClearFloats (PtrBox pBox)
+{
+  PtrFloat            pfloat;
+
+  if (pBox &&
+      (pBox->BxType == BoBlock || pBox->BxType == BoFloatBlock))
+    {
+      /* free floating contexts */
+      while (pBox->BxLeftFloat)
+	{
+	  pfloat = pBox->BxLeftFloat;
+	  pBox->BxLeftFloat = pfloat->FlNext;
+	  TtaFreeMemory (pfloat);
+	}
+      while (pBox->BxRightFloat)
+	{
+	  pfloat = pBox->BxRightFloat;
+	  pBox->BxRightFloat = pfloat->FlNext;
+	  TtaFreeMemory (pfloat);
+	}
+    }
+}
+ 
 
 /*----------------------------------------------------------------------
   InitLine computes the x,y position and the max width of the line pLine
@@ -1568,7 +1594,11 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int indent,
 	       pAbRef->AbBox->BxType == BoFloatGhost))))));
   /* minimum width needed to format the line */
   if (variable && (pBox->BxType == BoBlock || pBox->BxType == BoFloatBlock))
-    width = pBox->BxMinWidth;
+    {
+      width = pBox->BxMinWidth;
+      if (width == 0)
+	width = 20 + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding + pBox->BxRMargin + pBox->BxRBorder + pBox->BxRPadding;
+    }
   else if (!variable && pBox)
     width = pBox->BxWidth;
   else if (pBox)
@@ -2737,6 +2767,14 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   ThotBool            still;
   ThotBool            standard;
 
+  /* avoid any cycle */
+  if (pBox->BxCycles > 0)
+    {
+      *height = pBox->BxHeight;
+      return;
+    }
+  pBox->BxCycles++;
+
   /* Fill the block box */
   noWrappedWidth = 0;
   pAb = pBox->BxAbstractBox;
@@ -2769,10 +2807,10 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	/* Is the abstract box dead? */
 	else if (pChildAb->AbDead || pChildAb->AbNew)
 	  pChildAb = pChildAb->AbNext;
-	else if  (pChildAb->AbNotInLine &&
+      /*else if  (pChildAb->AbNotInLine &&
 		  pChildAb->AbDisplay == 'U' &&
 		  pChildAb->AbFloat == 'N')
-	  pChildAb = pChildAb->AbNext;
+		  pChildAb = pChildAb->AbNext;*/
 	else if (pChildAb->AbBox->BxType == BoGhost ||
 		 pChildAb->AbBox->BxType == BoFloatGhost)
 	  /* go down into the hierarchy */
@@ -2917,6 +2955,8 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 		indent = 0;
 	      pLine->LiFirstBox = pNextBox;
 	      pLine->LiFirstPiece = pBoxToBreak;
+	      /*if (!strcmp (pNextBox->BxAbstractBox->AbElement->ElLabel, "L454"))
+		printf ("Label 454 line=%d\n", pLine->LiYOrg);*/
 	      /* Fill the line */
 	      minWidth = FillLine (pLine, pBox, pRootAb, xAbs, yAbs,
 				   pAb->AbTruncatedTail,
@@ -3133,6 +3173,8 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   pBox->BxMaxWidth += left + right;
   UpdateBlockWithFloat (pBox, xAbs, yAbs, TRUE, height);
   *height = *height + spacing;
+  /* restore the value */
+  pBox->BxCycles--;
 }
 
 
@@ -3522,22 +3564,22 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
 	RemoveLines (pBox, frame, pLine, FALSE, &changeSelectBegin, &changeSelectEnd);
 	if (pBox->BxFirstLine == NULL)
 	  {
-	     /* fait reevaluer la mise en lignes et on recupere */
-	     /* la hauteur et la largeur du contenu de la boite */
-	     GiveEnclosureSize (pAb, frame, &width, &height);
+	  /* fait reevaluer la mise en lignes et on recupere */
+	  /* la hauteur et la largeur du contenu de la boite */
+	  GiveEnclosureSize (pAb, frame, &width, &height);
 	  }
 	else
 	  {
-	     ComputeLines (pBox, frame, &height);
-	     if (pBox->BxContentWidth)
-	       {
-		 /* it's an extensible bloc of lines */
-		 width = pBox->BxMaxWidth;
-		 h = pBox->BxYOrg;
-		 pBox->BxW = pBox->BxMaxWidth;
-		 pBox->BxWidth = pBox->BxW + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding + pBox->BxRMargin + pBox->BxRBorder + pBox->BxRPadding;
-	       }
-	     width = 0;
+	    ComputeLines (pBox, frame, &height);
+	    if (pBox->BxContentWidth)
+	      {
+		/* it's an extensible bloc of lines */
+		width = pBox->BxMaxWidth;
+		h = pBox->BxYOrg;
+		pBox->BxW = pBox->BxMaxWidth;
+		pBox->BxWidth = pBox->BxW + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding + pBox->BxRMargin + pBox->BxRBorder + pBox->BxRPadding;
+	      }
+	    width = 0;
 	  }
 	ReadyToDisplay = status;
 

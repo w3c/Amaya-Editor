@@ -1869,7 +1869,6 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
 
   if (pAb->AbDead)
     return (NULL);
-
   /* by default it's not a table element */
   tableType = BoComplete;
   pSS = pAb->AbElement->ElStructSchema;
@@ -2391,9 +2390,9 @@ PtrLine SearchLine (PtrBox pBox)
    if (pBox)
      {
        pAb = pBox->BxAbstractBox;
-       if (pAb && (pAb->AbNotInLine || !pAb->AbHorizEnclosing))
+       /*if (pAb && (pAb->AbNotInLine || !pAb->AbHorizEnclosing))
 	 pAb = NULL;
-       else
+	 else*/
 	 pAb = pAb->AbEnclosing;
      }
 
@@ -2639,7 +2638,6 @@ void RemoveBoxes (PtrAbstractBox pAb, ThotBool rebuild, int frame)
 {
   PtrAbstractBox      pChildAb;
   PtrBox              pBox, pPieceBox;
-  PtrFloat            pfloat;
   ThotBool            changeSelectBegin;
   ThotBool            changeSelectEnd;
 
@@ -2659,18 +2657,7 @@ void RemoveBoxes (PtrAbstractBox pAb, ThotBool rebuild, int frame)
 	      if (pBox->BxType == BoBlock || pBox->BxType == BoFloatBlock)
 		{
 		  /* free floating contexts */
-		  while (pBox->BxLeftFloat)
-		    {
-		      pfloat = pBox->BxLeftFloat;
-		      pBox->BxLeftFloat = pfloat->FlNext;
-		      TtaFreeMemory (pfloat);
-		    }
-		  while (pBox->BxRightFloat)
-		    {
-		      pfloat = pBox->BxRightFloat;
-		      pBox->BxRightFloat = pfloat->FlNext;
-		      TtaFreeMemory (pfloat);
-		    }
+		  ClearFloats (pBox);
 		  RemoveLines (pBox, frame, pBox->BxFirstLine, TRUE,
 			       &changeSelectBegin, &changeSelectEnd);
 		}
@@ -3332,14 +3319,14 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	  
 	  pAb->AbChange = FALSE;
 	  pAb->AbFloatChange = FALSE;
-	  /* check enclosing cell */
-	  pCell = GetParentCell (pBox);
 	  if (pBlock)
 	    {
 	      /* update the enclosing block of line */
 	      Propagate = ToChildren;
 	      RecomputeLines (pBlock, NULL, NULL, frame);
 	    }
+	  /* check enclosing cell */
+	  pCell = GetParentCell (pBox);
 	  if (pCell && ThotLocalActions[T_checkcolumn])
 	    {
 	      Propagate = ToChildren;
@@ -3798,13 +3785,11 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	      pLine = NULL;
 	      if (width || height)
 		{
-		  pCell = GetParentCell (pBox);
 		  BoxUpdate (pBox, pLine, charDelta, nSpaces, width,
 			     adjustDelta, height, frame, FALSE);
-		  /* check enclosing cell */
+#ifdef IV
 		  if (pAb->AbLeafType == LtPicture)
 		    {
-		      pBlock = SearchEnclosingType (pAb, BoBlock, BoFloatBlock);
 		      if (pBlock)
 			{
 			  RecomputeLines (pBlock, NULL, NULL, frame);
@@ -3813,6 +3798,9 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 			    RecordEnclosing (pBlock->AbEnclosing->AbBox, FALSE);
 			}
 		    }
+#endif
+		  /* check enclosing cell */
+		  pCell = GetParentCell (pBox);
 		  if (pCell && width && ThotLocalActions[T_checkcolumn])
 		    (*ThotLocalActions[T_checkcolumn]) (pCell, NULL, frame);
 		}
