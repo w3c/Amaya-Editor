@@ -6084,7 +6084,7 @@ RULES
 	CreateBefore(META_S);
 	Visibility: 0;
 	IN Structure_view BEGIN
-		Width: Enclosing . Width - STRUCT_INDENT;
+		Width: 1 px;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous META_S . Top;
 		Foreground: Enclosing =;
@@ -6099,7 +6099,7 @@ RULES
 #endif
 	Visibility: 0;
 	IN Structure_view BEGIN
-		Width: Enclosing . Width - STRUCT_INDENT;
+		Width: 1 px;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous LINK_S . Top;
 		Foreground: Enclosing =;
