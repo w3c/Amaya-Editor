@@ -56,6 +56,7 @@ static ThotBool     FromKeyboard;
 #include "appdialogue_f.h"
 #include "appli_f.h"
 #include "applicationapi_f.h"
+#include "attributes_f.h"
 #include "boxmoves_f.h"
 #include "boxlocate_f.h"
 #include "boxparams_f.h"
@@ -96,7 +97,6 @@ static ThotBool     FromKeyboard;
 #ifdef _WINDOWS 
 #include "wininclude.h"
 #endif /* _WINDOWS */
-
 
 /*----------------------------------------------------------------------
    CopyString computes the width of the source text and copies it into the

@@ -1452,6 +1452,9 @@ void SetIntAddSpaceAttr (Element el, Document doc)
 	 case MathML_ATTR_form_VAL_postfix:
 	   val = MathML_ATTR_IntAddSpace_VAL_spaceafter;
 	   break;
+	 default:
+	   val = MathML_ATTR_IntAddSpace_VAL_both;
+	   break;
 	 } 
        }
      else
@@ -1520,6 +1523,9 @@ void SetIntAddSpaceAttr (Element el, Document doc)
 			   (int)text[0] == 130 ||  /* en space */
 			   (int)text[0] == 160)    /* em space */
 		     val = MathML_ATTR_IntAddSpace_VAL_nospace;
+		  else
+		    /* default */
+		    val = MathML_ATTR_IntAddSpace_VAL_both;
 		  }
 	       else if (alphabet == 'G')
 		 /* Symbol character set */
@@ -1546,7 +1552,6 @@ void SetIntAddSpaceAttr (Element el, Document doc)
      TtaSetAttributeValue (attr, val, el, doc);
      }
 }
-
 
 /*----------------------------------------------------------------------
    ChildOfMRowOrInferred
