@@ -91,8 +91,8 @@ STRING url;
 
   if (url && *url)
     {
-      buffer_free_mem = 20;
-      buffer = TtaAllocString (ustrlen (url) + buffer_free_mem + 1);
+      buffer_free_mem = ustrlen (url) + 20;
+      buffer = TtaAllocString (buffer_free_mem + 1);
       ptr = url;
       buffer_len = 0;
 
@@ -115,7 +115,7 @@ STRING url;
           /* see if we need extra room in the buffer */
           if (new_chars > buffer_free_mem)
             {
-              buffer_free_mem += 20;
+              buffer_free_mem = 20;
               status = TtaRealloc (buffer, sizeof (CHAR_T) 
 				   * (buffer_len + buffer_free_mem + 1));
               if (status)
@@ -123,7 +123,7 @@ STRING url;
               else {
                 /* @@ maybe we should do some other behavior here, like
                    freeing the buffer and return a void thing */
-                buffer[buffer_len+1] = EOS;
+                buffer[buffer_len] = EOS;
                 break;
               }
             }
@@ -144,6 +144,9 @@ STRING url;
         }
       buffer[buffer_len] = EOS;
     }
+  else
+    buffer = NULL;
+
   return (buffer);
 }
 
