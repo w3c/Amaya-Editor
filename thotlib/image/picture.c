@@ -2849,37 +2849,29 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	  w = box->BxW;
 	  h = box->BxH;
 	}
-
-
       if (imageDesc->PicWidth && imageDesc->PicHeight)
 	{
 	  imageDesc->PicWArea = w;
 	  imageDesc->PicHArea = h;
-
-	  if (imageDesc->PicWidth && imageDesc->PicHeight)
+	  width = imageDesc->PicWidth;
+	  height = imageDesc->PicHeight;
+	  if (Ratio_Calculate (pAb, &w, &h,
+			       width, height))
 	    {
-	      width = imageDesc->PicWidth;
-	      height = imageDesc->PicHeight;
-
-	      if (Ratio_Calculate (pAb, &wBox, &hBox,
-				   width, height))
-		{
-		if (imageDesc->PicWArea != w)
-		    ChangeWidth (box,
-				 box, NULL,
-				 (w + left + right) - box->BxW, 0, frame);		  
-		  if (imageDesc->PicHArea != h)
-		    ChangeHeight (box,
-				  box, NULL,
-				  (h + top + bottom + top + bottom) - box->BxH, frame);
-
-		  DefClip (frame, box->BxXOrg, box->BxYOrg,
-			   box->BxXOrg + w, box->BxYOrg + h);
-		}	      
-	    }
+	      if (imageDesc->PicWArea != w)
+		ChangeWidth (box,
+			     box, NULL,
+			     (w + left + right) - box->BxW, 0, frame);		  
+	      if (imageDesc->PicHArea != h)
+		ChangeHeight (box,
+			      box, NULL,
+			      (h + top + bottom + top + bottom) - box->BxH, frame);
+	      
+	      DefClip (frame, box->BxXOrg, box->BxYOrg,
+		       box->BxXOrg + w, box->BxYOrg + h);
+	    }	      
 	}
       
-
       if (!Printing)
 	{
 #ifndef _WINDOWS
@@ -3007,10 +2999,8 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	      /* intrinsic width and height */
 	      imageDesc->PicWidth  = width;
 	      imageDesc->PicHeight = height;
-
 	      imageDesc->PicWArea = w;
 	      imageDesc->PicHArea = h;
-
 	      if (Ratio_Calculate (pAb, &w, &h,
 				   width, height))
 		{
