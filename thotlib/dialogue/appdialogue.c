@@ -3038,16 +3038,21 @@ void selection_handle (GtkWidget        *widget,
 		       guint             time_stamp,
 		       gpointer          data)
 {
+  unsigned char      *s;
+
   /* When we return a single string, it should not be null terminated.
      That will be done for us */
   if (Xbuffer)
     {
       if (info == 2)
-	gtk_selection_data_set (selection_data,
-				String_Type,
-				8, 
-				Xbuffer, 
-				strlen ((char *)Xbuffer));
+	{
+	  s = TtaConvertMbsToByte (Xbuffer, TtaGetDefaultCharset ());
+	  gtk_selection_data_set (selection_data,
+				  String_Type,
+				  8, 
+				  s, 
+				  strlen ((char *)s));
+	}
       else
 	gtk_selection_data_set (selection_data,
 				Utf8_Type,

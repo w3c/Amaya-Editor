@@ -3445,6 +3445,7 @@ void PasteXClipboard (unsigned char *src, int nbytes, CHARSET charset)
     {
       /* What is the encoding used by external applications ??? */
       buffer = TtaConvertByteToCHAR (src, charset);
+      nbytes = ustrlen (buffer);
       doc = IdentDocument (pDoc);
       dispMode = TtaGetDisplayMode (doc);
       if (dispMode == DisplayImmediately)

@@ -87,7 +87,7 @@
       </symbol>
     </defs>
     <g id="cubes">
-       <use x="200" y="112" xlink:href="#cube" style="fill: #0192BF"/>
+      <use x="200" y="112" xlink:href="#cube" style="fill: #0192BF"/>
       <use x="230" y="112" xlink:href="#cube" style="fill: #2B9FC3"/>
       <use x="260" y="112" xlink:href="#cube" style="fill: #53AAC5"/>
       <use x="290" y="112" xlink:href="#cube" style="fill: #7AB4C6"/>
@@ -101,12 +101,12 @@
       <use x="410" y="172" xlink:href="#cube" style="fill: #DC5B53"/>
     </g>
     <text id="version" x="360" y="320" fill="#f22"
-          style="font: bold 16px italic; fill: #0192BF;">Release 8.4
+          style="font: bold 16px italic; fill: #0192BF;">Release 8.5
     </text>
     <text id="logo" x="304" y="162"
           style="font: 24px helvetica; font-weight: bold; fill: #488B9B;">AMAYA 
       <animateTransform attributeName="transform" attributeType="XML"
-                        type="translate" from="-304,-162" to="0,0" begin="1s"
+                        type="translate" from="-304,-162" to="0,0" begin="0s"
                         dur="6s" fill="freeze"/>
     </text>
     <g id="polygonMask" style="stroke: none;">
@@ -114,10 +114,10 @@
                transform="translate(30,60)" stroke-width="1" opacity="1"/>
       <polygon style="fill: #9EA4A6;" points="0,0 78,148 95,95"
                transform="translate(30,60)scale(1.000000,1.000000)"
-               stroke-width="1" opacity="80%"/>
+               stroke-width="1" opacity=".8"/>
       <polygon style="fill: #89A5C7;" points="0,0 95,95 114,101"
                transform="translate(30,60)scale(1.000000,1.000000)"
-               stroke-width="1" opacity="90%"/>
+               stroke-width="1" opacity=".9"/>
       <polygon style="fill: #488B9B;" points="0,0 114,101 108,55"
                transform="translate(30,60)scale(1.000000,1.000000)"
                stroke-width="1" opacity="0.6"/>

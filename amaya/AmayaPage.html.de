@@ -106,27 +106,32 @@
       <use x="410" y="172" xlink:href="#cube" style="fill: #DC5B53"/>
     </g>
     <text id="version" x="360" y="320" fill="#f22"
-          style="font: bold 16px italic; fill: #0192BF;">Release 8.4
+          style="font: bold 16px italic; fill: #0192BF;">Release 8.5
     </text>
     <text id="logo" x="304" y="162"
           style="font: 24px helvetica; font-weight: bold; fill: #488B9B;">AMAYA 
       <animateTransform attributeName="transform" attributeType="XML"
-                        type="translate" from="-304,-162" to="0,0" begin="1s"
+                        type="translate" from="-304,-162" to="0,0" begin="0s"
                         dur="6s" fill="freeze"/>
     </text>
     <g id="polygonMask" style="stroke: none;">
       <polygon style="fill: #0192BF;" points="0,0 0,170 78,148"
-               transform="translate(30,60)" stroke-width="1"/>
+               transform="translate(30,60)" stroke-width="1" opacity="1"/>
       <polygon style="fill: #9EA4A6;" points="0,0 78,148 95,95"
-               transform="translate(30,60)" stroke-width="1"/>
+               transform="translate(30,60)scale(1.000000,1.000000)"
+               stroke-width="1" opacity=".8"/>
       <polygon style="fill: #89A5C7;" points="0,0 95,95 114,101"
-               transform="translate(30,60)" stroke-width="1"/>
+               transform="translate(30,60)scale(1.000000,1.000000)"
+               stroke-width="1" opacity=".9"/>
       <polygon style="fill: #488B9B;" points="0,0 114,101 108,55"
-               transform="translate(30,60)" stroke-width="1"/>
+               transform="translate(30,60)scale(1.000000,1.000000)"
+               stroke-width="1" opacity="0.6"/>
       <polygon style="fill: #9EA4A6;" points="0,0 108,55 150,54"
-               transform="translate(30,60)" stroke-width="1"/>
+               transform="translate(30,60)scale(1.000000,1.000000)"
+               stroke-width="1" opacity="0.4"/>
       <polygon style="fill: #EC1608;" points="0,0 150,54 130,0"
-               transform="translate(30,60)" stroke-width="1"/>
+               transform="translate(30,60)scale(1.000000,1.000000)"
+               stroke-width="1" opacity="0.2"/>
       <switch>
         <foreignObject y="156px" x="35px">
           <math xmlns="http://www.w3.org/1998/Math/MathML"
