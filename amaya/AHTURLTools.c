@@ -1053,7 +1053,7 @@ CHAR_T*             otherPath;
        && (length == 0 || tempOrgName[length-1] != TEXT('.')))
 	 tempOrgName[length] = WC_EOS;
 
-   if (IsW3Path (tempOrgName) || IsFilePath (tempOrgName))
+   if (IsW3Path (tempOrgName))
      {
        /* the name is complete, go to the Sixth Step */
        ustrcpy (newName, tempOrgName);
@@ -1722,6 +1722,11 @@ CHAR_T**     url;
   if (*path == used_sep && *(path+1) == used_sep)
     /* Some URLs start //<foo> */
     path += 1;
+  else if (IsFilePath (path))
+    {
+      /* doesn't need to do anything more */
+      return;
+    }
   else if (!ustrncmp (path, TEXT("news:"), 5))
     {
       newptr = ustrchr (path+5, TEXT('@'));
@@ -1837,13 +1842,28 @@ CHAR_T*              target;
        /* remove the prefix file: */
        start_index += 5;
    
-       if (ustrncmp (&src[start_index], TEXT("/localhost"), 10) == 0)
        /* remove the localhost prefix */
-	 start_index += 10;
+       if (ustrncmp (&src[start_index], TEXT("//localhost/"), 12) == 0)
+	   start_index += 11;
+       
+       /* remove the first two slashes in / / /path */
+       while (src[start_index] &&
+	      src[start_index] == TEXT('/') 
+	      && src[start_index + 1] == TEXT('/'))
+	 start_index++;
+
+#ifdef _WINDOWS
+       /* remove any extra slash before the drive name */
+       if (src[start_index] == TEXT('/')
+	   &&src[start_index+2] == TEXT(':'))
+	 start_index++;
+#endif /* _WINDOWS */
 
        if (src[start_index] == WC_EOS)
        /* if there's nothing afterwards, add a DIR_STR */
 	 ustrcpy (target, WC_DIR_STR);
+#ifdef 0
+       /* JK: removed the conversion of homedir in a file: url */
 #ifndef _WINDOWS
        else if (src[start_index] == TEXT('~'))
 	 {
@@ -1855,6 +1875,7 @@ CHAR_T*              target;
 	   ustrcat (&target[i], &src[start_index]);
 	 }
 #endif /* _WINDOWS */
+#endif /* 0 */
        else
 	 {
 	   CleanCopyFileURL (target, &src[start_index]);
