@@ -2460,7 +2460,7 @@ LRESULT CALLBACK InitConfirmDlgProc (ThotWindow hwnDlg, UINT msg,
 	  EndDialog (hwnDlg, ID_CONFIRM);
 	  ThotCallback (BaseDialog + ConfirmForm, INTEGER_DATA, (char*) 1);
 	  break;
-	case ID_SHOW:
+	case ID_MIDDLE:
 	  EndDialog (hwnDlg, ID_CONFIRM);
 	  ThotCallback (BaseDialog + ConfirmForm, INTEGER_DATA, (char*) 2);
 	  break;
@@ -4098,11 +4098,11 @@ void CreateInitConfirmDlgWindow (ThotWindow parent, char *extrabutton,
   if (extrabutton && extrabutton[0] != EOS)
   {
 	/* a meesage with 3 buttons */
-    strcpy (Message2, extrabutton);
+    strcpy (Message3, extrabutton);
 	if (confirmbutton && confirmbutton[0] != EOS)
-      strcpy (Message3, confirmbutton);
+      strcpy (Message2, confirmbutton);
 	else
-      strcpy (Message3, TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+      strcpy (Message2, TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
 
     DialogBox (hInstance, MAKEINTRESOURCE (INITCONFIRMDIALOG1), parent,
                (DLGPROC) InitConfirmDlgProc);
