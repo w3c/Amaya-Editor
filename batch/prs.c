@@ -508,13 +508,13 @@ static void         EndOfRulesForType ()
    NumAttrCase        *pAttrCase;
    int                 l;
 
-   if (RuleDef)
+   if (RuleDef && CurType > 0)
      {
       if (pPSchema->PsElemPRule[CurType - 1] == NextRule)
 	 /* aucune regle de presentation pour ce type d'element */
 	 pPSchema->PsElemPRule[CurType - 1] = NULL;
      }
-   else if (AttributeDef)
+   else if (AttributeDef && CurAttrNum > 0)
      {
 	pPRuleA = pPSchema->PsAttrPRule->AttrPres[CurAttrNum - 1];
 	for (l = pPSchema->PsNAttrPRule->Num[CurAttrNum - 1]; --l > 0;
