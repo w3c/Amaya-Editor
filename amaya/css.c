@@ -294,7 +294,15 @@ CSSInfoPtr          css;
 	{
 	  /* check against double inclusion */
 	  oldcss = SearchCSS (0, tempURL);
-	  if (oldcss == NULL)
+	  if (oldcss != NULL)
+	    {
+	      if (!oldcss->documents[doc])
+		{
+		  oldcss->documents[doc] = TRUE;
+		  strcpy (tempfile, oldcss->localName);
+		}
+	    }
+	  else
 	    {
 	      /* the document is not loaded yet */
 	      /* changed this to doc */
@@ -455,7 +463,7 @@ Document            doc;
       css->documents[doc] = TRUE;
     }
 
-  if (ptr[0] != EOS  && TtaFileExist (tempfile))
+  if (ptr[0] != EOS  && TtaFileExist (ptr))
     {
       /* read User preferences */
       res = fopen (ptr, "r");
