@@ -747,6 +747,8 @@ void               *extra;
 #endif /* __STDC__ */
 {
   ElemImage           *ctxEl;
+  ElementType         elType;
+  Element             elAttr;
   AttributeType       attrType;
   Attribute           attr;
   LoadedImageDesc     *desc;
@@ -769,11 +771,22 @@ void               *extra;
       if (URL == NULL)
 	{
 	  /* prepare the attribute to be searched */
-	  attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
-	  attrType.AttrTypeNum = HTML_ATTR_SRC;
-	  attr = TtaGetAttribute (el, attrType);
+	  elType = TtaGetElementType (el);
+	  attrType.AttrSSchema = elType.ElSSchema;
+	  if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")))
+	    /* it's not a SVG element, it's then a HTML img element */
+	    {
+	    attrType.AttrTypeNum = HTML_ATTR_SRC;
+	    elAttr = el;
+	    }
+          else
+	    {
+            attrType.AttrTypeNum = GraphML_ATTR_xlink_href;
+	    elAttr = TtaGetParent (el);
+	    }
+	  attr = TtaGetAttribute (elAttr, attrType);
 	  if (attr != NULL)
-	    /* an element with an attribute SRC has been found */
+	    /* an element with an attribute SRC or xlink:href has been found */
 	    {
 	      /* get the attribute value */
 	      length = TtaGetTextAttributeLength (attr);

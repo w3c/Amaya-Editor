@@ -3563,7 +3563,7 @@ ThotBool            shareRef;
 
    pEl = NULL;
    /* pointer to the element that will be created */
-   if (pSource != NULL)
+   if (pSource != NULL && pSSchema != NULL)
       {
       doCopy = TRUE;
       /* we don't copy the page breaks */

@@ -1318,6 +1318,20 @@ void GraphLeafDeleted(event)
 }
 
 /*----------------------------------------------------------------------
+ PastePicture
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool PastePicture (NotifyOnValue *event)
+#else /* __STDC__*/
+ThotBool PastePicture(event)
+     NotifyOnValue *event;
+#endif /* __STDC__*/
+{
+  /* code to be written */
+  return FALSE; /* let Thot perform normal operation */
+}
+
+/*----------------------------------------------------------------------
  ExportForeignObject
  A foreignObject element will be generated in the output file.
  Associate a Namespace attribute with its child. This attribute will be
