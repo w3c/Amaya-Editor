@@ -2626,6 +2626,50 @@ ThotBool            isHTML;
   return (cssRule);
 }
 
+
+/*----------------------------------------------------------------------
+  ParseSVGFill: parse a SVG fill property
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static CHAR_T*      ParseSVGFill (Element element, PSchema tsch,
+                    PresentationContext context, CHAR_T* cssRule, CSSInfoPtr css, ThotBool isHTML)
+#else
+static CHAR_T*      ParseSVGFill (element, tsch, context, cssRule, css, isHTML)
+Element             element;
+PSchema             tsch;
+PresentationContext context;
+CHAR_T*             cssRule;
+CSSInfoPtr          css;
+ThotBool            isHTML;
+#endif
+{
+  PresentationValue     best;
+
+  best.typed_data.unit = STYLE_UNIT_INVALID;
+  best.typed_data.real = FALSE;
+  if (!ustrncasecmp (cssRule, TEXT("none"), strlen ("none")))
+    {
+      best.typed_data.value = STYLE_PATTERN_NONE;
+      best.typed_data.unit = STYLE_UNIT_REL;
+      TtaSetStylePresentation (PRFillPattern, element, tsch, context, best);
+    }
+  else
+    {
+      cssRule = ParseCSSColor (cssRule, &best);
+      if (best.typed_data.unit != STYLE_UNIT_INVALID)
+	{
+	  /* install the new presentation. */
+	  TtaSetStylePresentation (PRBackground, element, tsch, context, best);
+	  /* thot specificity: need to set fill pattern for background color */
+	  best.typed_data.value = STYLE_PATTERN_BACKGROUND;
+	  best.typed_data.unit = STYLE_UNIT_REL;
+	  TtaSetStylePresentation (PRFillPattern, element, tsch, context, best);
+	}
+    }
+  cssRule = SkipWord (cssRule);
+  return (cssRule);
+}
+
 /*----------------------------------------------------------------------
   ParseCSSBackgroundImageCallback: Callback called asynchronously by
   FetchImage when a background image has been fetched.
@@ -3079,17 +3123,20 @@ ThotBool            isHTML;
     {
       /* perhaps a Backgroud Image */
       if (!ustrncasecmp (cssRule, TEXT("url"), 3))
-         cssRule = ParseCSSBackgroundImage (element, tsch, context, cssRule, css, isHTML);
+         cssRule = ParseCSSBackgroundImage (element, tsch, context, cssRule,
+					    css, isHTML);
       /* perhaps a Background Attachment */
       else if (!ustrncasecmp (cssRule, TEXT("scroll"), 6) ||
                !ustrncasecmp (cssRule, TEXT("fixed"), 5))
-           cssRule = ParseCSSBackgroundAttachment (element, tsch, context, cssRule, css, isHTML);
+	cssRule = ParseCSSBackgroundAttachment (element, tsch, context,
+						cssRule, css, isHTML);
       /* perhaps a Background Repeat */
       else if (!ustrncasecmp (cssRule, TEXT("no-repeat"), 9) ||
                !ustrncasecmp (cssRule, TEXT("repeat-y"), 8)  ||
                !ustrncasecmp (cssRule, TEXT("repeat-x"), 8)  ||
                !ustrncasecmp (cssRule, TEXT("repeat"), 6))
-	cssRule = ParseCSSBackgroundRepeat (element, tsch, context, cssRule, css, isHTML);
+	cssRule = ParseCSSBackgroundRepeat (element, tsch, context, cssRule,
+					    css, isHTML);
       /* perhaps a Background Position */
       else if (!ustrncasecmp (cssRule, TEXT("left"), 4)   ||
                !ustrncasecmp (cssRule, TEXT("right"), 5)  ||
@@ -3097,13 +3144,15 @@ ThotBool            isHTML;
                !ustrncasecmp (cssRule, TEXT("top"), 3)    ||
                !ustrncasecmp (cssRule, TEXT("bottom"), 6) ||
                TtaIsDigit (*cssRule))
-           cssRule = ParseCSSBackgroundPosition (element, tsch, context, cssRule, css, isHTML);
+           cssRule = ParseCSSBackgroundPosition (element, tsch, context,
+						 cssRule, css, isHTML);
       /* perhaps a Background Color */
       else
 	{
 	  /* check if the rule has been found */
 	  ptr = cssRule;
-	  cssRule = ParseCSSBackgroundColor (element, tsch, context, cssRule, css, isHTML);
+	  cssRule = ParseCSSBackgroundColor (element, tsch, context, cssRule,
+					     css, isHTML);
 	  if (ptr == cssRule)
 	    /* rule not found */
 	    cssRule = SkipProperty (cssRule);
@@ -3276,15 +3325,14 @@ ThotBool            isHTML;
 
 
 /*----------------------------------------------------------------------
-   ParseCSSStrokeWidth: parse a CSS stroke-width
-   attribute string.                                          
+   ParseSVGStrokeWidth: parse a SVG stroke-width property value.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static CHAR_T*      ParseCSSStrokeWidth (Element element, PSchema tsch,
+static CHAR_T*      ParseSVGStrokeWidth (Element element, PSchema tsch,
                                 PresentationContext context, CHAR_T* cssRule,
 		                CSSInfoPtr css, ThotBool isHTML)
 #else
-static CHAR_T*      ParseCSSStrokeWidth (element, tsch, context, cssRule, css,
+static CHAR_T*      ParseSVGStrokeWidth (element, tsch, context, cssRule, css,
                                 isHTML)
 Element             element;
 PSchema             tsch;
@@ -3397,9 +3445,9 @@ static CSSProperty CSSProperties[] =
    {TEXT("page-break-inside"), ParseCSSPageBreakInside},
 
    /* SVG extensions */
-   {TEXT("stroke-width"), ParseCSSStrokeWidth},
+   {TEXT("stroke-width"), ParseSVGStrokeWidth},
    {TEXT("stroke"), ParseCSSForeground},
-   {TEXT("fill"), ParseCSSBackgroundColor}
+   {TEXT("fill"), ParseSVGFill}
 };
 #define NB_CSSSTYLEATTRIBUTE (sizeof(CSSProperties) / sizeof(CSSProperty))
 

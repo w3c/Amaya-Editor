@@ -270,6 +270,17 @@ BOXES
 		END;
 	END;
 
+   IMAGE_S:
+	BEGIN
+	Content: Text 'image';
+	Visibility: 0;
+	IN Graph_Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Font: TAG_Font;
+		Style: TAG_Style; Weight: TAG_Weight;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
 
   ATTR_class: BEGIN
         Content: Text ' class=';
@@ -664,6 +675,29 @@ BOXES
 	END;
    VALUE_dy: BEGIN
 	Content: (dy);
+	Visibility: 0;
+	IN Graph_Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
+	END;
+
+   ATTR_xlink_href: BEGIN
+	Content: Text '  xlink:href=';
+	Visibility: 0;
+	IN Graph_Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+   VALUE_xlink_href: BEGIN
+	Content: (xlink_href);
 	Visibility: 0;
 	IN Graph_Structure_view BEGIN
 		HorizPos: Left = Previous . Right;
@@ -1119,6 +1153,33 @@ RULES
 		END;
 	END;
 
+   image:
+	BEGIN
+	CreateBefore (IMAGE_S);
+	CreateWith (VerticalLine);
+	Width: Enclosed . Width;
+        Height: Enclosed . Height;
+	IN Graph_Structure_view BEGIN
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		END;
+	IN Graph_Alternate_view BEGIN
+		Height: Enclosed . Height;
+		Width: Enclosing . Width;
+		END;
+	END;
+
+   PICTURE_UNIT:
+	BEGIN
+	Width: Enclosing . Width min;
+        Height: Enclosing . Height min;
+	IN Graph_Structure_view
+		Visibility: 0;
+	IN Graph_Alternate_view
+		Visibility: 0;
+	END;
+
    TEXT_UNIT:
 	BEGIN
 	HorizPos: Left = Previous . Right;
@@ -1302,6 +1363,12 @@ ATTRIBUTES
 	BEGIN
 	CreateBefore (ATTR_dy);
 	CreateBefore (VALUE_dy);
+	END;
+
+  xlink_href:
+	BEGIN
+	CreateBefore (ATTR_xlink_href);
+	CreateBefore (VALUE_xlink_href);
 	END;
 
   ShowGroup (g):

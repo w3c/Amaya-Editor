@@ -16,7 +16,7 @@
 /* Included headerfiles */
 #define THOT_EXPORT extern
 #include "amaya.h"
-
+#include "GraphML.h"
 
 #include "init_f.h"
 #include "query_f.h"
@@ -730,7 +730,7 @@ Element             element;
 }
 
 /*----------------------------------------------------------------------
-   FetchImage loads an IMG from local file or from the web. The flags
+   FetchImage loads an image from local file or from the web. The flags
    may indicate extra transfer parameters, for example bypassing the cache.		
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -746,13 +746,13 @@ void               *extra;
 
 #endif /* __STDC__ */
 {
-  ElemImage          *ctxEl;
+  ElemImage           *ctxEl;
   AttributeType       attrType;
   Attribute           attr;
-  LoadedImageDesc    *desc;
+  LoadedImageDesc     *desc;
   STRING              imageName;
-  CHAR_T                pathname[MAX_LENGTH];
-  CHAR_T                tempfile[MAX_LENGTH];
+  CHAR_T              pathname[MAX_LENGTH];
+  CHAR_T              tempfile[MAX_LENGTH];
   int                 length, i;
   ThotBool            update;
   ThotBool            newImage;
@@ -903,9 +903,10 @@ int                 flags;
 {
    AttributeType       attrType;
    Attribute           attr;
-   Element             el, elFound;
    ElementType         elType;
-   STRING              currentURL;
+   Element             el, elFound, pic;
+   STRING              currentURL, imageURI;
+   int                 length;
    ThotBool            stopped_flag;
 
    /* JK: verify if StopTransfer was previously called */
@@ -924,16 +925,14 @@ int                 flags;
 
    /* register the current URL */
    currentURL = TtaWCSdup (DocumentURLs[doc]);
-   /* get the root element */
-   el = TtaGetMainRoot (doc);
-   /* prepare the type of element to be searched */
-   elType = TtaGetElementType (el);
    /* prepare the attribute to be searched */
-   attrType.AttrSSchema = elType.ElSSchema;
+   attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
    attrType.AttrTypeNum = HTML_ATTR_SRC;
    /* We are currently fetching images for this document */
    /* during this time LoadImage has not to stop transfer */
    /* search all elements having an attribute SRC */
+   /* Start from the root element */
+   el = TtaGetMainRoot (doc);
    do
      {
 	TtaHandlePendingEvents ();
@@ -952,6 +951,53 @@ int                 flags;
 	    FetchImage (doc, el, NULL, flags, NULL, NULL);
      }
    while (el != NULL);
+
+   /* Now, load all SVG images */
+   /* prepare the attribute to be searched */
+   attrType.AttrSSchema = TtaGetSSchema (TEXT("GraphML"), doc);
+   if (attrType.AttrSSchema)
+     {
+     attrType.AttrTypeNum = GraphML_ATTR_xlink_href;
+     /* Start from the root element */
+     el = TtaGetMainRoot (doc);
+     do
+       {
+	 TtaHandlePendingEvents ();
+	 /* verify if StopTransfer was called */
+	 if (DocumentURLs[doc] == NULL ||
+	     ustrcmp (currentURL, DocumentURLs[doc]))
+	   /* the document has been removed */
+	   break;
+	 
+	 if (W3Loading == doc || DocNetworkStatus[doc] & AMAYA_NET_INACTIVE)
+	   break;
+	 /* search the next element having an attribute xlink_href */
+	 TtaSearchAttribute (attrType, SearchForward, el, &elFound, &attr);
+	 el = elFound;
+	 /* FetchImage increments FilesLoading[doc] for each new get request */
+	 if (el != NULL)
+	   {
+	   /* get the PICTURE_UNIT element within the image element */
+	   elType = TtaGetElementType (el);
+	   elType.ElTypeNum = GraphML_EL_PICTURE_UNIT;
+	   pic = TtaSearchTypedElement (elType, SearchInTree, el);
+           if (pic)
+	     {
+	       /* get the attribute value */
+	       length = TtaGetTextAttributeLength (attr);
+	       if (length > 0)
+		 {
+		   /* allocate some memory */
+		   imageURI = TtaAllocString (length + 7);
+		   TtaGiveTextAttributeValue (attr, imageURI, &length);
+		   FetchImage (doc, pic, imageURI, flags, NULL, NULL);
+		   TtaFreeMemory (imageURI);
+		 }
+	     }
+	   }
+       }
+     while (el != NULL);
+     }
 
    if (W3Loading != doc)
        stopped_flag = FALSE;

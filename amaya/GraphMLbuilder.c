@@ -427,13 +427,13 @@ int             *error
      if (TtaGetFirstChild (el) == NULL && !TtaIsLeaf (elType))
 	/* this element is empty. Create a GraphML element as it's child */
 	{
-	elType.ElSSchema = GraphMLSSchema;
-	elType.ElTypeNum = GraphML_EL_GraphML;
-	new = TtaNewElement (doc, elType);
+	newType.ElSSchema = GraphMLSSchema;
+	newType.ElTypeNum = GraphML_EL_GraphML;
+	new = TtaNewElement (doc, newType);
 	TtaInsertFirstChild (&new, el, doc);
 	/* Create a placeholder within the GraphML element */
-        elType.ElTypeNum = GraphML_EL_GraphicsElement;
-	child = TtaNewElement (doc, elType);
+        newType.ElTypeNum = GraphML_EL_GraphicsElement;
+	child = TtaNewElement (doc, newType);
 	TtaInsertFirstChild (&child, new, doc);
 	}
      }
@@ -458,24 +458,38 @@ int             *error
 	child = TtaGetFirstChild (el);
 	if (child != NULL)
 	   {
-	   elType.ElSSchema = TtaGetSSchema (TEXT("HTML"), doc);
-	   elType.ElTypeNum = HTML_EL_HTMLfragment;
-	   CreateEnclosingElement (child, elType, doc);
+	   newType.ElSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+	   newType.ElTypeNum = HTML_EL_HTMLfragment;
+	   CreateEnclosingElement (child, newType, doc);
 	   }
 	}
+
+     /* if it's an image element, create a PICTURE_UNIT child */
+     else if (elType.ElTypeNum == GraphML_EL_image)
+       {
+	 /* create the graphical element */
+	 newType.ElSSchema = elType.ElSSchema;
+	 newType.ElTypeNum = GraphML_EL_PICTURE_UNIT;
+	 leaf = TtaNewElement (doc, newType);
+	 TtaInsertFirstChild (&leaf, el, doc);
+       }
+
      /* if it's a graphic primitive, create a GRAPHIC_UNIT leaf as a child
 	of the element, if it has not been done when creating attributes
 	(points, arrowhead) */
-     leaf = CreateGraphicLeaf (el, doc, &closedShape, 0);
-     /* if it's a closed shape, move the FillPattern rule to that leaf */
-     if (closedShape && leaf)
+     else
        {
-	 fillPatternRule = TtaGetPRule (el, PRFillPattern);
-	 if (fillPatternRule != NULL)
+	 leaf = CreateGraphicLeaf (el, doc, &closedShape, 0);
+	 /* if it's a closed shape, move the FillPattern rule to that leaf */
+	 if (closedShape && leaf)
 	   {
-	     newPRule = TtaCopyPRule (fillPatternRule);
-	     TtaAttachPRule (leaf, newPRule, doc);
-	     TtaRemovePRule (el, fillPatternRule, doc);
+	     fillPatternRule = TtaGetPRule (el, PRFillPattern);
+	     if (fillPatternRule != NULL)
+	       {
+		 newPRule = TtaCopyPRule (fillPatternRule);
+		 TtaAttachPRule (leaf, newPRule, doc);
+		 TtaRemovePRule (el, fillPatternRule, doc);
+	       }
 	   }
        }
      }

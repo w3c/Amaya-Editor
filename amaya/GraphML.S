@@ -165,6 +165,14 @@ STRUCT
                       depth_;
                                 ShowGroup = Yes_)
                 = LIST OF (GraphicsElement);
+
+	    image
+		(ATTR xlink_href = Text;
+		      x; 
+		      y;
+	              width_;
+	              height_)
+	        = PICTURE;
             END;
 	
    TextComponent = CASE OF

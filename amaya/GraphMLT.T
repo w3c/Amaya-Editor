@@ -278,8 +278,23 @@ RULES
 	create 'g>\12' after;
 	END;
 
+   image:
+	BEGIN
+	create SOT;
+	create 'image';
+	create attributes;
+	create CloseTagNL;
+	indent +2;
+	indent -2 after;
+	create SCT after;
+	create 'image>\12' after;
+	END;
+
+   PICTURE_UNIT:
+	Remove;
+
    GRAPHICS_UNIT:
-	    Remove;
+	Remove;
 
 ATTRIBUTES
 
@@ -445,6 +460,14 @@ ATTRIBUTES
 	create SAN;
 	create 'dy="';
 	create dy;
+	create DoubleQuote;
+	END;
+
+   xlink_href:
+	BEGIN
+	create SAN;
+	create 'xlink:href="';
+	create xlink_href;
 	create DoubleQuote;
 	END;
 
