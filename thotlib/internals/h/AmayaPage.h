@@ -112,6 +112,7 @@ public:
 
  protected:
   void AdjustSplitterPos( int height = -1, int width = -1 );
+  void ShowQuickSplitButton( bool show );
 
  protected:
   DECLARE_EVENT_TABLE()

@@ -75,16 +75,18 @@ AmayaPage::AmayaPage( wxWindow * p_parent_window )
   m_pSplitterWindow = new wxSplitterWindow( this, -1,
 					    wxDefaultPosition, wxDefaultSize,
 					    /*wxSP_FULLSASH |*/
-					    wxSP_3DSASH
+					    wxSP_3DSASH |
+					    wxSP_BORDER |
+					    wxSP_3D 
 					    /* | wxSP_NOBORDER*/
-					    | wxSP_PERMIT_UNSPLIT );
+					    /*| wxSP_PERMIT_UNSPLIT*/ ); // TODO: permettre le unsplit a la souris plus tard
   m_pSizerTop->Add( m_pSplitterWindow, 1, wxGROW, 0 );
 
 
   // Split button creation
   // this button is used to quickly split the page 
-  wxBitmap button_split_icon1( TtaGetResourcePathWX( WX_RESOURCES_ICON, "split_black.xpm"), wxBITMAP_TYPE_XPM );
-  wxBitmap button_split_icon2( TtaGetResourcePathWX( WX_RESOURCES_ICON, "split_red.xpm"), wxBITMAP_TYPE_XPM );
+  wxBitmap button_split_icon1( TtaGetResourcePathWX( WX_RESOURCES_ICON, "split_black.gif"), wxBITMAP_TYPE_GIF );
+  wxBitmap button_split_icon2( TtaGetResourcePathWX( WX_RESOURCES_ICON, "split_red.gif"), wxBITMAP_TYPE_GIF );
   m_pSplitButton = new wxBitmapButton( this
 				       ,-1
 				       ,button_split_icon1
@@ -92,10 +94,8 @@ AmayaPage::AmayaPage( wxWindow * p_parent_window )
 				       ,wxDefaultSize
 				       ,wxBU_AUTODRAW );
   m_pSplitButton->SetBitmapFocus(button_split_icon2);
-
   m_pSizerTop->Add( m_pSplitButton, 0, wxGROW, 0 );
-  m_pSizerTop->SetItemMinSize( m_pSplitButton,
-			      wxSize( m_pSplitButton->GetSize().GetWidth(), 10 ) );
+  ShowQuickSplitButton( true );
   /// Insert to area : Top / bottom
   m_pTopFrame     = NULL;
   m_pBottomFrame  = NULL;
@@ -208,9 +208,7 @@ AmayaFrame * AmayaPage::AttachFrame( AmayaFrame * p_frame, int position )
   if ( m_pTopFrame && m_pBottomFrame )
     {
       /* hide the split button */
-      m_pSizerTop->SetItemMinSize( m_pSplitButton,
-				   wxSize( m_pSplitButton->GetSize().GetWidth(), 0 ) );
-      m_pSizerTop->Layout();
+      ShowQuickSplitButton( false );
     }
 
   // return the old frame : needs to be manualy deleted ..
@@ -299,9 +297,7 @@ AmayaFrame * AmayaPage::DetachFrame( int position )
   if ( !(m_pTopFrame && m_pBottomFrame) )
     {
       /* show again the split button */
-      m_pSizerTop->SetItemMinSize( m_pSplitButton,
-				   wxSize( m_pSplitButton->GetSize().GetWidth(), 10 ) );
-      m_pSizerTop->Layout();
+      ShowQuickSplitButton( true );
     }
 
   return oldframe;
@@ -400,6 +396,9 @@ void AmayaPage::OnSplitterUnsplit( wxSplitterEvent& event )
       m_pBottomFrame = NULL;
       break;
     }
+
+  // we should show the quick split bar when frames are unsplited
+  ShowQuickSplitButton( true );
 
   event.Skip();  
 }
@@ -852,6 +851,31 @@ void AmayaPage::OnSetFocus( wxFocusEvent & event )
   p_frame->DistributeFocus();
 
   event.Skip();
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaPage
+ *      Method:  ShowQuickSplitButton
+ * Description:  this function will show/hide the quick splitbar button
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaPage::ShowQuickSplitButton( bool show )
+{
+  if (show)
+    {
+      // show
+      m_pSizerTop->SetItemMinSize( m_pSplitButton,
+				   wxSize( m_pSplitButton->GetSize().GetWidth(), 10 ) );
+    }
+  else
+    {
+      // hide
+      m_pSizerTop->SetItemMinSize( m_pSplitButton,
+				   wxSize( m_pSplitButton->GetSize().GetWidth(), 0 ) );
+    }
+  // re layout the top sizer
+  m_pSizerTop->Layout();
 }
 
 
