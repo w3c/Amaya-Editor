@@ -1521,7 +1521,7 @@ PSchema             gPres;
 	break;
       type = attr = attrval = 0;
       GIType (ancestors[i], &type);
-      if (ancestors[i] == HTML_EL_BODY) ancestors[i] = HTML_EL_HTML;
+      if (type == HTML_EL_BODY) type = HTML_EL_HTML;
       if (type == 0)
 	continue;
       for (j = 0; j < MAX_ANCESTORS; j++)
