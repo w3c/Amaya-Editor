@@ -302,7 +302,52 @@ void                DocumentMetaClear (DocumentMetaDataElement *me)
   ----------------------------------------------------------------------*/
 void                DocumentInfo (Document document, View view)
 {
-  printf ("\nBe patient, please\n");
+
+#ifndef _WINDOWS
+   TtaNewSheet (BaseDialog + DocInfoForm, TtaGetViewFrame (document, 1),
+		/*TtaGetMessage (AMAYA, AM_DOC_INFO_TITLE)*/
+		"AM_DOC_INFO_TITLE", 0, NULL,
+		TRUE, 2, 'L', D_DONE);
+   /*
+   TtaNewLabel(BaseDialog + About1, BaseDialog + AboutForm,
+	       TtaGetMessage(AMAYA, AM_ABOUT1));
+   */
+   TtaNewLabel (BaseDialog + DocInfoMimeTypeTitle,
+		BaseDialog + DocInfoForm,
+		/*TtaGetMessage (AMAYA, AM_DOC_INFO_TYPE_TITLE)*/
+		"DocInfoMimeTypeTitle : ");
+   TtaNewLabel (BaseDialog + DocInfoMimeType,
+		BaseDialog + DocInfoForm, "  ");
+
+   TtaNewLabel (BaseDialog + DocInfoCharsetTitle,
+		BaseDialog + DocInfoForm,
+		/*TtaGetMessage (AMAYA, AM_DOC_INFO_CHARSET_TITLE)*/
+		"DocInfoCharsetTitle : ");
+   TtaNewLabel (BaseDialog + DocInfoCharset,
+		BaseDialog + DocInfoForm, "  ");
+
+   TtaNewLabel (BaseDialog + DocInfoContentTitle,
+		BaseDialog + DocInfoForm,
+		/*TtaGetMessage (AMAYA, AM_DOC_INFO_CONTENT_TITLE)*/
+		"DocInfoContentTitle : ");
+   TtaNewLabel (BaseDialog + DocInfoContent,
+		BaseDialog + DocInfoForm, "  ");
+
+   TtaNewLabel (BaseDialog + DocInfoLocationTitle,
+		BaseDialog + DocInfoForm,
+		/*TtaGetMessage (AMAYA, AM_DOC_INFO_LOCATION_TITLE)*/
+		"DocInfoLocationTitle : ");
+   TtaNewLabel (BaseDialog + DocInfoLocation,
+		BaseDialog + DocInfoForm, "  ");
+
+   TtaSetDialoguePosition ();
+   TtaShowDialogue (BaseDialog + DocInfoForm, FALSE);
+#else /* _WINDOWS */
+   /*
+   DocumentInfoDlgWindow (TtaGetViewFrame (document, view),
+			  title, s, DocSelect, DirSelect, 2);
+   */
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------

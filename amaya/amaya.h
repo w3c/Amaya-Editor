@@ -167,7 +167,16 @@ typedef enum _ClickEvent {
 #define MathEntityText  460
 #define TitleForm       461
 #define TitleText       462
-#define MAX_REF         463
+#define DocInfoForm           463
+#define DocInfoMimeTypeTitle  464
+#define DocInfoMimeType       465
+#define DocInfoCharsetTitle   466
+#define DocInfoCharset        467
+#define DocInfoContentTitle   468
+#define DocInfoContent        469
+#define DocInfoLocationTitle  470
+#define DocInfoLocation       471
+#define MAX_REF         472
 
 #define FormPrint        1
 #define PrintOptions     2
