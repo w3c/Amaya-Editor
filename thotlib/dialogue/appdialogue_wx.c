@@ -1756,7 +1756,12 @@ ThotBool TtaHandleUnicodeKey( wxKeyEvent& event )
 		thotMask |= THOT_MOD_ALT;
 	      if (event.ShiftDown())
 		thotMask |= THOT_MOD_SHIFT; 
-	      ThotInput (TtaGiveActiveFrame(), thot_keysym, 0, thotMask, thot_keysym);
+
+	      if ( ThotInput (TtaGiveActiveFrame(), thot_keysym, 0, thotMask, thot_keysym) == 3 )
+		/* if a simple caractere has been entred, give focus to canvas
+		 * it resolves accesibility problems when the focus is blocked on a panel */
+		TtaRedirectFocus();
+
 	      return true;
 	    }
 	  else
