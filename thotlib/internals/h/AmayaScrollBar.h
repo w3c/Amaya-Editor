@@ -26,7 +26,6 @@ protected:
   void OnLineUp( wxScrollEvent& event );
   void OnBottom( wxScrollEvent& event );
   void OnTop( wxScrollEvent& event );
-  void OnScroll( wxScrollEvent& event );
 
  protected:
   int m_ParentFrameID;

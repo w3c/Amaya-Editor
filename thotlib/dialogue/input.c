@@ -783,7 +783,7 @@ gboolean GtkLiningUp (gpointer data)
    recursivly the FrameVScrolled callback.   
   ----------------------------------------------------------------------*/
 gboolean KeyScrolledGTK (GtkWidget *w, GdkEvent* event, gpointer data)
-{ 
+{
   int                 frame;
   GdkEventKey         *eventkey;
   GdkEventButton      *eventmouse;

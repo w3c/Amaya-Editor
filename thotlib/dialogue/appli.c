@@ -1314,7 +1314,7 @@ void FrameVScrolledGTK (GtkAdjustment *w, int frame)
   ----------------------------------------------------------------------*/
 void FrameVScrolledCallback (int frame, int position)
 {
-  int delta, x, y, width, height, viewed, left;
+  int delta, x, y, width, height, left, viewed;
 
   if (FrameTable[frame].FrDoc &&
       documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
@@ -1322,7 +1322,7 @@ void FrameVScrolledCallback (int frame, int position)
   ComputeDisplayedChars (frame, &x, &y, &width, &height);
   delta = position - y;
   viewed = abs (delta) / height;
-  left = abs (delta) - (height * viewed);
+  left   = abs (delta) - (int)(height * viewed);
   if (viewed <= 3)
     {
       if (delta > 0)
@@ -3738,7 +3738,7 @@ void UpdateScrollbars (int frame)
   if (width < l || x > 0)
   {
     FrameTable[frame].WdFrame->ShowScrollbar(2);
-    FrameTable[frame].WdScrollH->SetScrollbar( x, width, l, width );
+    FrameTable[frame].WdScrollH->SetScrollbar( x, width, l, width-13 );
   }
   else
     FrameTable[frame].WdFrame->HideScrollbar(2);    

@@ -412,9 +412,9 @@ int TtaMakeFrame( const char * schema_name,
   FrameTable[frame_id].FrPageId       = -1; /* this attribut is set when TtaAttachFrame is called */
   FrameTable[frame_id].FrTopMargin    = 0; // TODO
   FrameTable[frame_id].FrScrollOrg    = 0; // TODO
-  FrameTable[frame_id].FrScrollWidth  = 0; // TODO
-  FrameTable[frame_id].FrWidth        = 0; //width
-  FrameTable[frame_id].FrHeight       = 0; // height
+  FrameTable[frame_id].FrScrollWidth  = width; // TODO
+  FrameTable[frame_id].FrWidth        = width; //width
+  FrameTable[frame_id].FrHeight       = height; // height
   strcpy( FrameTable[frame_id].FrViewName, viewName );
   
   /* Initialise la visibilite et le zoom de la fenetre */
