@@ -13720,7 +13720,7 @@ echo "$as_me: WARNING: Disabling redland build !" >&2;}
         if test "$with_annot" = "yes" -a "$with_redland" = "no" ; then
        { echo "$as_me:$LINENO: WARNING: Disabling annotations build as redland is disabled !" >&5
 echo "$as_me: WARNING: Disabling annotations build as redland is disabled !" >&2;}
-       with_bookmarks="no"
+       with_annotations="no"
     fi
     if test "$with_bookmarks" = "yes" -a "$with_annot" = "no" ; then
        { echo "$as_me:$LINENO: WARNING: Disabling bookmarks build as annotations are disabled !" >&5
