@@ -128,6 +128,22 @@ static int          lastPage;
 
 
 /*----------------------------------------------------------------------
+   TteConnectAction rend accessible une action locale (Callback).     
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TteConnectAction (int id, Proc procedure)
+#else  /* __STDC__ */
+void                TteConnectAction (id, procedure)
+int                 id;
+Proc                procedure;
+
+#endif /* __STDC__ */
+{
+   ThotLocalActions[id] = procedure;
+}
+
+
+/*----------------------------------------------------------------------
    DrawPage check whether a showpage is needed.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -2804,6 +2820,9 @@ char              **argv;
    /* Initialisation de la table des actions locales */
    for (i = 0; i < MAX_LOCAL_ACTIONS; i++)
       ThotLocalActions[i] = NULL;
+
+   /* initialisation des actions pour les tableaux */
+   Table2LoadResources (); 
 
    /* Initialize Picture Drivers for printing */
    InitPictureHandlers (TRUE);
