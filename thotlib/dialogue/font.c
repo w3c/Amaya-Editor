@@ -74,6 +74,34 @@ static SpecFont   FirstFontSel = NULL;
 #include "units_f.h"
 #include "windowdisplay_f.h"
 
+#ifdef _GL
+
+#include <gtkgl/gtkglarea.h>
+#include <GL/glu.h>
+/* Texture Font */
+/* ~/Amaya/thotlib/internals/h */
+#include "openglfont.h"
+
+/*----------------------------------------------------------------------
+ GL_FontIInit 
+ Use Freetype2 and 
+ the FTGL lib :
+ http://homepages.paradise.net.nz/henryj/code/index.html
+  ----------------------------------------------------------------------*/
+void *GL_LoadFont (char alphabet, int family, 
+		   int highlight, int size,
+		   char *xlfd)
+{    
+  char filename[2048];
+
+  size = LogicalPointsSizes[size];
+  /* if (gtk_gl_area_make_current (GTK_GL_AREA(FrameTable[ActiveFrame].WdFrame))) */
+    if (GetFontFilename(xlfd, filename))
+      return ( gl_font_init (filename, alphabet, size)); 
+  return NULL;
+}
+#endif /* _GL */
+
 #ifdef _WINDOWS
 #include "wininclude.h"
 
@@ -176,7 +204,6 @@ static HFONT WIN_LoadFont (char script, int family, int highlight,
                        lpszFace);
    if (hFont == (HFONT)0)
 	WinErrorBox (NULL, "CreateFont");
-
    return (hFont);
 }
 
@@ -269,7 +296,11 @@ int CharacterWidth (unsigned char c, PtrFont font)
     l = (font->FiWidths[32] + 3) / 4;
 #else  /* _WINDOWS */
 #ifdef _GTK
+#ifndef _GL
     l = gdk_char_width (font, 32) / 4;
+#else /*  _GL */
+    l = gl_font_char_width ((void *) font, 32) / 4;
+#endif /*  _GL */
 #else /* _GTK */
     l = (xf->per_char[32 - xf->min_char_or_byte2].width + 3) / 4;
 #endif  /* _GTK */
@@ -279,7 +310,11 @@ int CharacterWidth (unsigned char c, PtrFont font)
     l = (font->FiWidths[32] + 3) / 2;
 #else  /* _WINDOWS */
 #ifdef _GTK
+#ifndef _GL
     l = gdk_char_width (font, 32) / 2;
+#else /*  _GL */
+    l = gl_font_char_width ((void *) font, 32) / 2;
+#endif /*  _GL */
 #else /* _GTK */
     l = (xf->per_char[32 - xf->min_char_or_byte2].width + 3) / 2;
 #endif  /* _GTK */
@@ -296,7 +331,11 @@ int CharacterWidth (unsigned char c, PtrFont font)
       l = font->FiWidths[c];
 #else  /* _WINDOWS */
 #ifdef _GTK
+#ifndef _GL
       l = gdk_char_width (font, c);
+#else /*  _GL */
+      l = gl_font_char_width ((void *) font, c);
+#endif /*  _GL */
 #else /* _GTK */
       l = xf->per_char[c - xf->min_char_or_byte2].width;
 #endif /* _GTK */
@@ -362,7 +401,11 @@ int CharacterHeight (unsigned char c, PtrFont font)
 #else  /* _WINDOWS */
 #ifdef _GTK
   else
+#ifndef _GL
     l = gdk_char_height (font, c);
+#else /* _GL */
+    l =  gl_font_char_height (font, &c);
+#endif /* _GL */
     return (l);
 #else /* _GTK */
   else if (((XFontStruct *) font)->per_char == NULL)
@@ -381,7 +424,9 @@ int CharacterAscent (unsigned char c, PtrFont font)
 {
 #ifndef _WINDOWS
 #ifdef _GTK
-  int               lbearing, rbearing, width, descent;
+#ifndef _GL
+  int lbearing, rbearing, width, descent;
+#endif/*  _GL */
 #else /* _GTK */
   XFontStruct      *xf = (XFontStruct *) font;
 #endif /* _GTK */
@@ -398,24 +443,28 @@ int CharacterAscent (unsigned char c, PtrFont font)
   else
     {
 #ifdef _GTK
+#ifndef _GL
       gdk_string_extents (font, &c, &lbearing, &rbearing, &width, &ascent, &descent);
+#else /*  _GL */
+      ascent = gl_font_char_ascent (font, &c);
+#endif /* _GL */ 
 #else /* _GTK */
       /* a patch due to errors in standard symbol fonts */
       if (xf->per_char == NULL)
 	return (xf->max_bounds.ascent);
       ascent = xf->per_char[c - xf->min_char_or_byte2].ascent;
 #endif /* _GTK */
-      if (c == 244)
-	{
-	  /* a patch due to errors in standard symbol fonts */
-	  i = 0;
-	  while (i < MAX_FONT && font != TtFonts[i])
-	    i++;
-	  if (TtPatchedFont[i])
-	    ascent -= 2;
-	}
-      return (ascent);
     }
+  if (c == 244)
+    {
+      /* a patch due to errors in standard symbol fonts */
+      i = 0;
+      while (i < MAX_FONT && font != TtFonts[i])
+	i++;
+      if (TtPatchedFont[i])
+	ascent -= 2;
+    }
+  return (ascent);
 #endif /* _WINDOWS */
 }
 
@@ -432,7 +481,11 @@ int FontAscent (PtrFont font)
 #else  /* _WINDOWS */
   else
 #ifdef _GTK
+#ifndef _GL
     return (font->ascent);
+#else /*  _GL */
+    return (gl_font_ascent(font));
+#endif /*  _GL */
 #else /* _GTK */
     return (((XFontStruct *) font)->ascent);
 #endif /* _GTK */
@@ -464,17 +517,19 @@ int FontHeight (PtrFont font)
 {
   if (font == NULL)
     return (0);
+  else
 #ifdef _WINDOWS
-   else
      return (font->FiHeight);
 #else  /* _WINDOWS */
 #ifdef _GTK
-  else
+#ifndef _GL
     /* in the string below, 'r' represents the greek character rho (lowercase)
        and produces a descender in the string when using the Symbol font */
     return (gdk_string_height (font, "AXpr") + 3); /* need some extra space */
+#else/*  _GL */
+    return (gl_font_height (font));
+#endif /* _GL */
 #else /* _GTK */
-   else
      return ((XFontStruct *) font)->max_bounds.ascent + ((XFontStruct *) font)->max_bounds.descent;
 #endif /* _GTK */
 #endif /* !_WINDOWS */
@@ -893,8 +948,8 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 
   FontIdentifier (script, family, highlight, size, UnRelative, text, textX);
   /* initialize the PostScript font name */
-  strcpy (PsName, text);
-   
+  strcpy (PsName, text);   
+
   /* Font cache lookup */
   j = 0;
   i = 0;
@@ -912,8 +967,8 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 	  i++;
 	  deb += MAX_FONTNAME;
 	}
-    }
-   
+    }   
+
   /* Load a new font */
   if (ptfont == NULL)
     {
@@ -924,8 +979,8 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
       else
 	{
 	  strcpy (&TtFontName[deb], text);
-	  strcpy (&TtPsFontName[i * 8], PsName);
-	   
+	  strcpy (&TtPsFontName[i * 8], PsName);	   
+
 #ifdef _WINDOWS
 	  /* Allocate the font structure */
 	  ptfont = TtaGetMemory (sizeof (FontInfo));
@@ -983,7 +1038,11 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 	      ActiveFont = 0;
 	    }
 #else  /* _WINDOWS */
+#ifndef _GL
 	  ptfont = LoadFont (textX);
+#else /* _GL */
+	  ptfont = GL_LoadFont (script, family, highlight, size, textX);/*alphabet=>script*/
+#endif/*  _GL */
 #endif /* !_WINDOWS */
 	  /* Loading failed try to find a neighbour */
 	  if (ptfont == NULL)
@@ -1013,7 +1072,6 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 		}
 	    }
 	}
-
       if (ptfont == NULL)
 	{
 	  if (script != 'L' && script != 'G' && size != -1)
@@ -1045,7 +1103,6 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 		}
 	    }
 	}
-
       if (i >= MAX_FONT)
 	i = j;		/* existing entry in the cache */
       else
@@ -1062,7 +1119,6 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 	  TtFontFrames[i] = 0;
 	}
     }
-
   /* Compute window frame */
   mask = 1 << (frame - 1);
   /* store window frame number */
@@ -1636,7 +1692,6 @@ void InitDialogueFonts (char *name)
     }
   FirstRemovableFont = 3;
 }
-
 /*----------------------------------------------------------------------
  *      ThotFreeFont free the font familly loaded by a frame.
   ----------------------------------------------------------------------*/
@@ -1682,7 +1737,11 @@ void ThotFreeFont (int frame)
 #else  /* _WINDOWS */
 #ifdef _GTK
 	      if (j == MAX_FONT)
+#ifndef _GL 
 	        gdk_font_unref (TtFonts[i]);
+#else /*_GL */
+	        gl_font_delete (TtFonts[i]);
+#endif /*_GL*/
 #else /* _GTK */
 	      if (j == MAX_FONT)
 		{

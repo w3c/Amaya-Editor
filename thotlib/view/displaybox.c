@@ -35,6 +35,14 @@
 #include "units_f.h"
 #include "xwindowdisplay_f.h"
 
+#ifdef _GTK
+#ifdef _GL
+#include <gtkgl/gtkglarea.h>
+#include <GL/gl.h>
+
+#endif /*_GL*/
+#endif /*_GTK*/
+
 /*----------------------------------------------------------------------
   GetLineWeight computes the line weight of an abstract box.
   ----------------------------------------------------------------------*/
@@ -1581,6 +1589,68 @@ void DisplayBorders (PtrBox box, int frame, int x, int y, int w, int h)
 }
 
 
+#ifdef _GL 
+
+/*-------------------------------
+ saveBuffer :
+ Take a picture (tga) of the backbuffer.
+ mainly for debug purpose, but could be used for a
+ C remplacment of Batik 
+--------------------------------*/
+void saveBuffer (int width, int height)
+{
+  static int z = 0;
+  FILE *screenFile;
+  unsigned char *Data;
+  int length;
+
+  unsigned char cGarbage = 0, type,mode,aux, pixelDepth;
+  short int iGarbage = 0;
+  int i;
+
+  z++;
+  if (z != 500)
+    return;
+  length = width * height * 4;
+  Data = TtaGetMemory (sizeof (unsigned char) * length);
+  glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, Data);
+  screenFile = fopen("screenshot.tga", "w");
+  pixelDepth = 32;
+  /* compute image type: 2 for RGB(A), 3 for greyscale*/
+  mode = pixelDepth / 8;
+  if ((pixelDepth == 24) || (pixelDepth == 32))
+    type = 2;
+  else
+    type = 3;
+  /* convert the image data from RGB(a) to BGR(A)*/
+  if (mode >= 3)
+    for (i=0; i < width * height * mode ; i+= mode) {
+      aux = Data[i];
+      Data[i] = Data[i+2];
+      Data[i+2] = aux;
+      Data[i+3] = 255;
+    }
+  /* write the header*/
+  fwrite(&cGarbage, sizeof(unsigned char), 1,screenFile);
+  fwrite(&cGarbage, sizeof(unsigned char), 1, screenFile);  
+  fwrite(&type, sizeof(unsigned char), 1, screenFile);  
+  fwrite(&iGarbage, sizeof(short int), 1, screenFile);
+  fwrite(&iGarbage, sizeof(short int), 1, screenFile);
+  fwrite(&cGarbage, sizeof(unsigned char), 1, screenFile);
+  fwrite(&iGarbage, sizeof(short int), 1, screenFile);
+  fwrite(&iGarbage, sizeof(short int), 1, screenFile);  
+  fwrite(&width, sizeof(short int), 1, screenFile);
+  fwrite(&height, sizeof(short int), 1, screenFile);
+  fwrite(&pixelDepth, sizeof(unsigned char), 1, screenFile);  
+  fwrite(&cGarbage, sizeof(unsigned char), 1, screenFile);  
+  fwrite(Data, sizeof(unsigned char), length, screenFile);
+  fclose(screenFile);
+  free(Data);
+}
+
+extern ThotBool GL_Drawing;
+#endif /*_GL*/
+
 /*----------------------------------------------------------------------
   DisplayBox display a box depending on its content.
   ----------------------------------------------------------------------*/
@@ -1592,9 +1662,25 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
   int                x, y;
   int                xd, yd, width, height;
   ThotBool           selected;
+#ifdef _GL
+  ThotBool           AbstractBoxModified;
 
+  AbstractBoxModified = ComputeUpdates (box->BxAbstractBox, frame);
+  /* No modification and no drawing
+   so there is no need to compute anything !!*/
+  /*are we drawing ?*/
+  if (!GL_Drawing) 
+    { 
+      /*does box need to be recomputed 
+	in a new display list*/
+      if (!AbstractBoxModified)  
+	return; 
+    }  
+#endif /* _GL */
+ 
   pFrame = &ViewFrameTable[frame - 1];
   pAb = box->BxAbstractBox;
+
   x = ViewFrameTable[frame - 1].FrXOrg;
   y = ViewFrameTable[frame - 1].FrYOrg;
   xd = box->BxXOrg + box->BxLMargin;
@@ -1621,7 +1707,6 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
       if (yd + height > ymax)
 	height = ymax - yd;
     }
-
   /* is the box selected? */
   selected = (pAb->AbSelected || box == pFrame->FrSelectionBegin.VsBox);
   /* Search for the enclosing box */
@@ -1643,6 +1728,8 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
 	}
     } 
 
+
+  
   if (pAb->AbVolume == 0 ||
       (pAb->AbLeafType == LtPolyLine && box->BxNChars == 1))
     {
@@ -1664,7 +1751,7 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
   else if (pAb->AbLeafType == LtText)
     /* Display a Text box */
     DisplayJustifiedText (box, mbox, frame, selected);
-  else if (box->BxType == BoPicture)
+  else if (box->BxType == BoPicture || pAb->AbLeafType == LtPicture)
     /* Picture */
     DisplayImage (box, frame, xmin, xmax, ymin, ymax, selected);
   else if (pAb->AbLeafType == LtSymbol)
@@ -1692,4 +1779,5 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
       && xd + width >= xmin
       && xd <= xmax)
     DisplayBorders (box, frame, xd - x, yd - y, width, height);
+
 }

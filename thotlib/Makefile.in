@@ -118,6 +118,8 @@ KERNEL_OBJ = \
 DISPLAY_OBJ = \
 	content/content.o \
 	content/dictionary.o \
+	dialogue/openglfont.o \
+	dialogue/fontserver.o \
 	dialogue/font.o \
 	document/documentapi.o \
 	document/readpivot.o \

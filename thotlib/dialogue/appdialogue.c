@@ -64,6 +64,22 @@
 #ifdef _GL
 /* Some GL in it */
 #include <gtkgl/gtkglarea.h>
+
+gboolean GL_DrawCallback (ThotWidget widget, 
+			  GdkEventExpose *event, 
+			  gpointer data);
+gboolean  GL_Init (ThotWidget widget, 
+		   GdkEventExpose *event, 
+		   gpointer data);
+gboolean GL_FocusIn (ThotWidget widget, 
+		     GdkEventExpose *event, 
+		     gpointer data);
+gboolean GL_FocusOut (ThotWidget widget, 
+		      GdkEventExpose *event, 
+		      gpointer data);
+gboolean  GL_Destroy (ThotWidget widget, 
+		      GdkEventExpose *event, 
+		      gpointer data);
 #endif/*  _GL */
 /*static    Time   t1;*/
 #else /* _GTK */
@@ -2420,10 +2436,11 @@ void RemoveSignalGTK (GtkObject *w, gchar *signal_name)
   guint id;
   id = 0;
   id = (guint)gtk_object_get_data (GTK_OBJECT (w), signal_name);
-  if (id){
+  if (id)
+    {
       gtk_signal_disconnect (GTK_OBJECT (w), id);
       gtk_object_remove_data (GTK_OBJECT (w), signal_name);
-  }
+    }
 }
 
 /*-----------------------------------------------------------------------
@@ -2581,14 +2598,15 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
       double buffering or not...
    */
    int attrlist[] = {
-     GDK_GL_RGBA,
-     GDK_GL_RED_SIZE,1,
-     GDK_GL_GREEN_SIZE,1,
-     GDK_GL_BLUE_SIZE,1,
-     GDK_GL_ALPHA_SIZE, 1,
-    /*  GDK_GL_DOUBLEBUFFER,  */
-     GDK_GL_NONE
+      GDK_GL_RGBA,
+      GDK_GL_DOUBLEBUFFER,
+      /* GDK_GL_ALPHA_SIZE, 1, */
+      /* GDK_GL_DEPTH_SIZE, 1, */
+      GDK_GL_NONE
    };
+   /* in order to share textures 
+      and displays list between windows*/
+   static GtkGLArea *GL_context = NULL;
 #endif/*  _GL */
 #else /* _GTK */
    ThotWidget          table1;
@@ -2725,6 +2743,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 			     "delete_event",
 			     GTK_SIGNAL_FUNC(KillFrameGTK),
 			     (gpointer)frame);
+	   
 	   /* adding an accelerator group for menu shortcuts */
 	   /*accel_group = gtk_accel_group_new ();
 	     gtk_window_add_accel_group (GTK_WINDOW (Main_Wd), accel_group);*/
@@ -2954,10 +2973,26 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	     g_print("OpenGL not supported!\n");
 	     exit(0);
 	   }
-	   if ((drawing_area = gtk_gl_area_new(attrlist)) == NULL) {
-	     g_print("Error creating GtkGLArea!\n");
-	     exit(0);
-	   }
+	   /* can we create a new opengl context 
+	      (or shall we share it with the first one
+	      we had in order to share display list and texture binding ?)*/
+	   if (GL_context == NULL)
+	     {
+	       if ((drawing_area = gtk_gl_area_new (attrlist)) == NULL) 
+		 {
+		   g_print("Error creating GtkGLArea!\n");
+		   exit(0);
+		 }
+	       GL_context = drawing_area;
+	     }
+	   else
+	     {
+	       if ((drawing_area = gtk_gl_area_share_new(attrlist, GL_context)) == NULL) 
+	       {
+		 g_print("Error creating GtkGLArea!\n");
+		 exit(0);
+	       }
+	     }
 #else /*  _GL */
 	   drawing_area = gtk_drawing_area_new ();
 #endif /*  _GL */	  
@@ -2967,7 +3002,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   /* Attach input context to a drawing with a hidden 
 	      entry text catcher that will handle 
 	      advanced keboard typing (ie : multikey)*/	   
-	   wrap_text = gtk_entry_new ();
+	   wrap_text = gtk_entry_new (); 
 	   gtk_box_pack_start (GTK_BOX (vbox1), GTK_WIDGET(wrap_text), FALSE, FALSE, 1);
 	   GTK_WIDGET_SET_FLAGS (GTK_WIDGET(wrap_text), GTK_CAN_FOCUS);
 	   GTK_WIDGET_SET_FLAGS (GTK_WIDGET(wrap_text), GTK_CAN_DEFAULT);
@@ -2978,7 +3013,9 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	    /* A storage for a pointer on the text catcher 
 	      (so we can acess it in the future)  */
 	   gtk_object_set_data (GTK_OBJECT (drawing_area), 
-	       "Text_catcher", wrap_text);
+	       "Text_catcher", wrap_text); 
+	   gtk_object_set_data (GTK_OBJECT (wrap_text), 
+	       "Drawing_area", drawing_area);
 	   /* Callback connection on events */
 	   /*   GDK_BUTTON_PRESS_MASK used to detect if a mouse button is pressed */
 	   /*   GDK_BUTTON_RELEASE_MASK used to detect if a mouse button is relesed */
@@ -2991,12 +3028,9 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 				  | GDK_BUTTON_MOTION_MASK
 				  | GDK_KEY_PRESS_MASK
 				  | GDK_KEY_RELEASE_MASK
-				  /*| GDK_POINTER_MOTION_HINT_MASK*/
-				  /*| GDK_POINTER_MOTION_MASK*/
-				  /*| GDK_ENTER_NOTIFY*/
-				  /*| GDK_LEAVE_NOTIFY*/
+				 /*  | GDK_POINTER_MOTION_HINT_MASK   */
+				 /*  | GDK_POINTER_MOTION_MASK  */
 				  | GDK_EXPOSURE_MASK
-	                          /*| GDK_FOCUS_CHANGE_MASK*/
 				  );
 	   ConnectSignalGTK (GTK_OBJECT (drawing_area),
 	       "button_press_event",
@@ -3050,8 +3084,6 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	       "selection_get", 
 	       GTK_SIGNAL_FUNC (selection_handle), 
 	       NULL); 
-
-
 	   /* the key press event is intercepted by the main frame, 
 	      not by the drawing area.
 	      the result is analysed in the callback */
@@ -3062,9 +3094,45 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   /* callbacks to know if it's necessary to redisplay */
 	   ConnectSignalGTK (GTK_OBJECT (drawing_area),
 			     "expose_event",
-			     GTK_SIGNAL_FUNC(ExposeCallbackGTK),
+			     GTK_SIGNAL_FUNC (ExposeCallbackGTK),
+			     (gpointer)frame); 
+#ifdef _GL
+	   /* whenever a draw event is send, 
+	      we draw all the opengl canvas*/
+	   ConnectSignalGTK (GTK_OBJECT (drawing_area),
+			     "draw",
+			     GTK_SIGNAL_FUNC (GL_DrawCallback),
 			     (gpointer)frame);
-
+	   /* when widget is initialized, 
+	      we define opengl pipeline state */
+	   ConnectSignalGTK (GTK_OBJECT (drawing_area),
+			     "realize",
+			     GTK_SIGNAL_FUNC (GL_Init),
+			     (gpointer)frame); 
+	   /* When it is destroyed */
+	   ConnectSignalGTK (GTK_OBJECT (drawing_area),
+			     "unrealize",
+			     GTK_SIGNAL_FUNC (GL_Destroy),
+			     (gpointer)frame);
+	   /* when widget is focused */
+	   ConnectSignalGTK (GTK_OBJECT (Main_Wd),
+			     "focus-in-event",
+			     GTK_SIGNAL_FUNC (GL_FocusIn),
+			     (gpointer)frame);
+	    /* when widget is initialized, 
+	    we define opengl pipeline state*/
+	   ConnectSignalGTK (GTK_OBJECT (Main_Wd),
+			     "focus-out-event",
+			     GTK_SIGNAL_FUNC (GL_FocusOut),
+			     (gpointer)frame);
+	   gtk_object_set_data (GTK_OBJECT (drawing_area),
+				"frame",
+				(gpointer) frame); 
+	   gtk_object_set_data (GTK_OBJECT (Main_Wd),
+				"Drawing_area",
+				(gpointer) drawing_area);
+	   InitDialogueFonts ("");
+#endif /* _GL */
 
 	   ConnectSignalGTK (GTK_OBJECT (drawing_area),
 			     "configure_event",
@@ -3168,22 +3236,6 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   /* Add App icone */
 	   gdk_window_set_icon_name (Main_Wd->window, "Amaya");
 	   gdk_window_set_icon (Main_Wd->window, NULL, (GdkPixmap *)wind_pixmap, NULL);
-#ifdef _GL
-	   /* animation based on timer...
-	    Is this a good place ?
-	    I'm more on putting it in the framecallback (appli.c)
-	    
-	     gtk_timeout_add (40, 
-			     (GtkFunction)Idle_draw_GTK, 
-			     	     drawing_area);
-	   */
-	   /* Enable Opengl Flags so that 
-	      we can begin to draw into 
-	      (thotlib do incremental drawing...)*/
-	   GL_prepare(drawing_area);
-#endif /* _GL */
- 
-
 #else /* !_GTK */
 	   /*** Creation of scrollbars ***/
 	   n = 0;

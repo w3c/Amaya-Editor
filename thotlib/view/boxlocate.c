@@ -59,6 +59,50 @@
 #include "views_f.h"
 #include "word_f.h"
 
+/*
+ * Math Macros conversion from
+ * degrees to radians and so on...
+ * All for EllipticSplit and/or GL_DrawArc
+ */
+#include <math.h>
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+#define M_PI_DOUBLE (6.2831853718027492)
+
+/* ((A)*(M_PI/180.0)) */
+#define DEG_TO_RAD(A)   ((float)A)/57.29577957795135
+#define RAD_TO_DEG(A)   ((float)A)*57.29577957795135
+
+/*If we should use a static table instead for
+  performance bottleneck...*/
+#define DCOS(A) ((float)cos (A))
+#define DSIN(A) ((float)sin (A))
+#define DACOS(A) ((float)acos (A))
+#define A_DEGREE 0.017453293
+
+/* Precision of a degree/1 
+   If we need more precision 
+   dision is our friend 
+   1/2 degree = 0.0087266465
+   1/4 degree = 0.0043633233
+   or the inverse 
+   24 degree = 0.41887903
+   5 degree = 0.087266465
+   2 degree = 0.034906586
+   but best is a degree...
+*/
+#define TRIGO_PRECISION 1;
+#define A_DEGREE_PART A_DEGREE/TRIGO_RECISION
+
+/* Must find better one... 
+   Bits methods...*/
+/*for float => ( pow (N, 2))*/
+/*for int  => (((int)N)<<1)*/
+#define P2(N) (N*N)
+
+
 #define Y_RATIO 200		/* penalisation en Y */
 #define ANCHOR_SIZE 3		/* taille des ancres */
 #define	MAX_STACK	50
@@ -316,10 +360,12 @@ ThotBool PolyNewPoint (int x, int y, ThotPoint **points, int *npoints,
 	     *maxpoints = size;
 	  }
      }
+#ifndef _GL
    /* ignore identical points */
    if (*npoints > 0 &&
        (*points)[*npoints - 1].x == x && (*points)[*npoints - 1].y == y)
       return (FALSE);
+#endif/*  _GL */
 
    (*points)[*npoints].x = x;
    (*points)[*npoints].y = y;
@@ -450,7 +496,134 @@ void QuadraticSplit (float a1, float b1, float a2, float b2,
 	  }
      }
 }
+ 
+/*----------------------------------------------------------------------
+  EllipticSplit : creates points on the given elliptic arc 
+  (using endpoint parameterization)
+  see http://www.w3.org/TR/SVG/implnote.html for implementations notes
+  ----------------------------------------------------------------------*/
+void  EllipticSplit (double x1, double y1, double x2, double y2, 
+			    double xradius, double yradius, 
+			    int Phi, int large, int sweep, 
+			    ThotPoint **points, int *npoints, int *maxpoints)
+{
+  double xmid, ymid, 
+    Phicos, Phisin, 
+    rx_p2, ry_p2, 
+    translate, xprim, yprim,
+    cprim, cxprim, cyprim,
+    Rxcos, Rysin, cX, cY,
+    xtheta, ytheta, xthetaprim, ythetaprim,
+    x3, y3, theta, deltatheta, inveangle,
+    thetabegin ;
 
+  if (xradius == 0 || yradius == 0)
+      return;
+  xradius = (xradius<0)?abs (xradius):xradius;
+  yradius = (yradius<0)?abs (yradius):yradius;
+  
+  /*local var init*/
+
+  Phicos = cos (DEG_TO_RAD(Phi));
+  Phisin = sin (DEG_TO_RAD(Phi));
+  
+  /* Math Recall : dot matrix multiplication => 
+     V . D = (Vx * Dx) + (Vy * Dy) + (Vz * Dz) 
+     and dot product =>
+     (a b) (I) = aI + bS;
+     (c d) (S) = cI + bS;
+     and vector scalar product =>
+     A.B = |A||B|cos (theta)
+     (where |A| = sqrt (x_p2 + y_p2))
+  */
+  
+  /* Step 1: Compute (x1', y1')*/
+  xmid = ((x1 - x2) / 2);
+  ymid = ((y1 - y2) / 2);
+  xprim = Phicos*xmid + Phisin*ymid;
+  yprim = -Phisin*xmid + Phicos*ymid;
+  
+  /* step 1bis:  verify & correct radius 
+   to get at least one solution */
+  rx_p2 = (double) P2 (xradius);
+  ry_p2 = (double) P2 (yradius);
+  translate = (double) P2 (xprim)/rx_p2 + P2 (yprim) / ry_p2;
+  if ( translate > 1 )
+    {
+      translate = sqrt (translate);
+      xradius = translate*xradius;
+      yradius = translate*yradius; 
+      rx_p2 = P2 (xradius);
+      ry_p2 = P2 (yradius);
+    }
+
+  /* Step 2: Compute (cX ', cY ') */ 
+  cprim = (large ==  sweep) ? -1 : 1;
+  translate = (double)( rx_p2*P2 (yprim) + ry_p2*P2 (xprim));
+  if (translate == 0)
+    {
+      /*cannot happen... 'a priori' !!
+       (according to math demonstration 
+       (mainly caus'of the radius correction))*/
+      return;
+    }
+  cprim =  (double) cprim * sqrt ((rx_p2*ry_p2 - translate) / translate);
+  cxprim = cprim * ((xradius*yprim)/yradius);
+  cyprim = -cprim * ((yradius*xprim)/xradius);
+  
+  /* Step3: Compute (cX, Cy) from (cX ', cY ') */
+  xmid = ((x1 + x2) / 2);
+  ymid = ((y1 + y2) / 2);
+  cX = Phicos * cxprim - Phisin * cyprim + xmid;
+  cY = Phisin * cxprim + Phicos * cyprim + ymid;
+  
+  /* Step 4: Compute theta and delta_theta */
+  /*thetasign =  (yprim - cyprim) / yradius; 
+    REALLY ? 
+    apart svg immplementation 
+    It's not in any doc about angle between vectors...
+  More tests to come then a mail...*/
+  xtheta = (xprim - cxprim) / xradius;
+  ytheta = (yprim - cyprim) / yradius;
+  /*could also use hypot(x,y) = sqrt(x*x+y*Y),
+   but further optimisation could be harder..*/
+  inveangle = (double) (xtheta) /  (double) sqrt (P2 (xtheta) + P2 (ytheta));
+  cprim = 1;
+  cprim = ( ytheta < 0) ?-1 : 1;
+  theta = cprim * DACOS (inveangle);
+  xthetaprim = (double) (-xprim - cxprim) / xradius;
+  ythetaprim = (double) (-yprim - cyprim) / yradius;
+  inveangle =  (double) (xtheta*xthetaprim + ytheta*ythetaprim) /  
+    (double) (sqrt (P2 (xtheta) + P2 (ytheta))* sqrt (P2 (xthetaprim) + P2 (ythetaprim)) );
+  cprim = ( xtheta*ythetaprim - ytheta*xthetaprim < 0) ? -1 : 1;
+  deltatheta = fmod (cprim * DACOS (inveangle), M_PI_DOUBLE);
+  if (sweep && deltatheta < 0)
+    deltatheta += M_PI_DOUBLE;
+  else
+    if (sweep == 0 && deltatheta > 0)
+      deltatheta -= M_PI_DOUBLE;
+
+ /* Step 5: NOW that we have the center and the angles
+     we can at least and at last 
+     compute the points. */
+  thetabegin = theta;
+  translate = 0;  
+  theta = 0;
+  if (sweep)
+    cprim = A_DEGREE;
+  else
+    cprim = -1 * A_DEGREE;
+  deltatheta = fabs(deltatheta);
+  while (fabs (theta) < deltatheta)
+    {
+      Rxcos = xradius * cos (thetabegin + theta);
+      Rysin = yradius * sin (thetabegin + theta);
+      x3 = Phicos*Rxcos - Phisin*Rysin + cX;
+      y3 = Phisin*Rxcos + Phicos*Rysin + cY;
+      PolyNewPoint ((int) x3, (int) y3, points, npoints, maxpoints); 
+      theta += cprim;
+    }  
+}
 /*----------------------------------------------------------------------
   IsOnSegment checks if the point x, y is on the segment x1, y1 to
   x2, y2 with DELTA_SEL precision.

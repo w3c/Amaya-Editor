@@ -543,11 +543,10 @@ AC_ARG_WITH(GL,              [  --with-gl               enable Opengl canvas (ex
 dnl
 dnl GL canvas is disabled by default
 dnl
-dnl needs Opengl, glut, glu, 
+dnl needs Opengl, glu, Xft (xfree 4 font server)
 dnl needs GTK
 dnl text WILL need freetype2, ftgl
 dnl GL is for opengl
-dnl Xmu is for a linking in Glut
 dnl Glu is for text drawing (until we switch) 
 dnl GLU is for tesselation algortihms (until we extract it from this lib)
 dnl (tesselation is used for polygons with holes in it...)
@@ -573,20 +572,7 @@ if test "$with_gl" = "yes" ; then
                 gl_inc="yes"
        	 	break	
     	    fi
-	done	
-	for ac_dir in               		\
-		/usr/include/GL			\
-		/usr/include 			\
-		/usr/X11R6/include/GL   	\
-		/usr/X11R6/include 		\
-		/usr/local/include		\
-		/usr/local/include/GL		\
-		; \
-	do  if test -r "$ac_dir/glut.h" ; then
-                glut_inc="yes"
-       	 	break	
-    	    fi
-	done	
+	done		
 	for ac_dir in               		\
 		/usr/include/GL			\
 		/usr/include 			\
@@ -621,14 +607,6 @@ if test "$with_gl" = "yes" ; then
 	        GL_INCLUDES=	
 		GL_LIBRARIES=
 	fi
-	if test "$glut_inc" = "" ; then
-	 	AC_MSG_WARN(Glut headers (glut.h) not found !!)
-	   	AC_MSG_WARN(Disabling opengl build !)
-	   	with_gl="no"
-	    	GL_OPTIONS=	
-	        GL_INCLUDES=	
-		GL_LIBRARIES=
-	fi
 	if test "$glu_inc" = "" ; then
 	 	AC_MSG_WARN(Glu headers (glu.h) not found !!)
 	   	AC_MSG_WARN(Disabling opengl build !)
@@ -646,14 +624,12 @@ if test "$with_gl" = "yes" ; then
 		GL_LIBRARIES=
 	fi
 	if test "$gl_inc" = "yes" ; then
-		if test "$glut_inc" = "yes" ; then
-			if test "$glu_inc" = "yes" ; then
-				if test "$gtkgl_inc" = "yes" ; then
-					GL_INCLUDES="-I$ac_dir "
-					GL_LIBRARIES=" -lXmu  -lGL -lglut -lGLU -lgtkgl "
-					GL_OPTIONS=-D_GL 
-	  				no_motif=yes
-				fi
+		if test "$glu_inc" = "yes" ; then
+			if test "$gtkgl_inc" = "yes" ; then
+				GL_INCLUDES="-I$ac_dir "
+				GL_LIBRARIES=" -lXmu -lXft -lGL -lGLU -lgtkgl "
+				GL_OPTIONS=-D_GL 
+	  			no_motif=yes
 			fi
 		fi
 	fi

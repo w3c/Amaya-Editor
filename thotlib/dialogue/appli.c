@@ -37,9 +37,17 @@ static Time         T1, T2, T3;
 static XmString     null_string;
 #else /* _GTK */
 #ifdef _GL
+ 
 #include <gtkgl/gtkglarea.h>
 #include <GL/gl.h>
+#ifdef GL_MESA_window_pos
+#define MESA
+#endif
+/* timer */
+#include <unistd.h>
+#include <sys/timeb.h>
 #endif /*_GL*/
+
 static gchar *null_string;
 #endif /*_GTK*/
 #endif /* _WINDOWS */
@@ -487,8 +495,51 @@ void FrameRedraw (int frame, Dimension width, Dimension height)
   evenement de type exposer.
 -------------------------------------------------------------------------*/
 #ifdef _GTK
+
 #ifdef _GL
-/*----------------------------------------------------------------------
+
+/* if a refresh is needed, it is TRUE*/
+ThotBool GL_Modif = FALSE;
+ThotBool GL_Drawing = FALSE;
+#define TIMER_PRECISION 5
+void DrawGrid(width, height)
+{  
+  GLfloat grid2x2[2][2][3];
+
+
+  grid2x2[0][0][0] = 0.0;
+  grid2x2[0][0][1] = 0.0;
+  grid2x2[0][0][2] = 0.0;
+
+  grid2x2[0][1][0] = width;
+  grid2x2[0][1][1] = 0.0;
+  grid2x2[0][1][2] = 0.0;
+
+
+  grid2x2[1][0][0] = 0.0;
+  grid2x2[1][0][1] = height;
+  grid2x2[1][0][2] = 0.0;
+
+  grid2x2[1][1][0] = width;
+  grid2x2[1][1][1] = height;
+  grid2x2[1][1][2] = 0.0;
+  
+  glColor3f(1.0, 0.0, 0.0);
+  glEnable(GL_MAP2_VERTEX_3);  
+  glMap2f(GL_MAP2_VERTEX_3,    
+	  0.0, 1.0,  /* U ranges 0..1 */    
+	  3,         /* U stride, 3 floats per coord */    
+	  2,         /* U is 2nd order, ie. linear */    
+	  0.0, 1.0,  /* V ranges 0..1 */    
+	  2 * 3,     /* V stride, row is 2 coords, 3 floats per coord */    
+	  2,         /* V is 2nd order, ie linear */    
+	  grid2x2);  /* control points */ 
+  glMapGrid2f(    5, 0.0, 1.0,    6, 0.0, 1.0);
+  glEvalMesh2(GL_LINE,    0, 5,   
+	      /* Starting at 0 mesh 5 steps (rows). */    
+	      0, 6);  /* Starting at 0 mesh 6 steps (columns). */
+}
+/*---------------------------------------------------------------------
  Idle_draw_GTK :
  Animation handling : 
  A timer is preferred to an idle function as it gives more control on
@@ -496,31 +547,292 @@ void FrameRedraw (int frame, Dimension width, Dimension height)
  (so I guess the function name is wrong...)
  ----------------------------------------------------------------------*/
 gboolean Idle_draw_GTK (GtkWidget *widget)
-{  
-  static  GTimer *gtimer = NULL;
-  gdouble sec, old_sec;
+{
+  struct timeb	before;
+  struct timeb	after;
+  int	dsec;	
+  int	dms; 
+  int   fps;
+
+  int   frame;
+
+  /* permits user to do dialog action*/
+  /*  while (gtk_events_pending())   */
+  /*  {  */ 
+  /* gtk_main_iteration();   */
+  /*  }   */
   
-  if ( gtimer == NULL ){
-    gtimer = g_timer_new ();
-    g_timer_reset (gtimer);
-  }
-  else
-    {
-      while (gtk_events_pending()){
-	sec = g_timer_elapsed (gtimer, NULL);
-	if (sec - old_sec > 0.2)
-	  g_print ("dialogue ps = %g\n", 1/sec);
-	gtk_main_iteration();
-	g_timer_reset (gtimer);
-      g_timer_start (gtimer);
-      }
-      sec = g_timer_elapsed (gtimer, NULL);
-      g_print ("fps = %g\n", 1/sec);
-      g_timer_reset (gtimer);
-      g_timer_start (gtimer);
-  }
-  gtk_widget_draw (GTK_WIDGET(widget), NULL);
+  /* draw and calculate draw time 
+     bench that helps finding bottlenecks...*/
+
+  /*uncomment below for animated mode*/
+  /*  ftime(&before); */
+   /*    if (before.time > 7) */
+   /*      GL_Modif=TRUE; */
+   if (GL_Modif && !GL_Drawing && !FrameUpdating)	
+     { 
+       ftime(&before);
+
+      frame = (int ) gtk_object_get_data (GTK_OBJECT (widget), "frame");
+      ActiveFrame = frame;
+      
+      GL_DrawAll (widget, frame);
+      GL_Modif = FALSE;
+      
+      ftime(&after);	
+
+      dsec = after.time - before.time;	
+      dms = after.millitm - before.millitm;
+      if (dms > 0 )
+	{
+	  g_print (" %d fps \t", (int) 1000/dms);
+	  g_print ("=>\t %is %ims / frame\n", dsec, dms);
+	}
+    }
   return TRUE;
+}
+/*----------------------------------------------------------------------
+  GL_FocusIn :
+  Manage Drawing Timer upon Frame focus by user
+  ----------------------------------------------------------------------*/
+gboolean GL_FocusIn (ThotWidget widget, 
+			  GdkEventExpose *event, 
+			  gpointer data)
+{
+  int timer = 0;
+  ThotWidget Drawing_area;
+
+  Drawing_area = (ThotWidget) gtk_object_get_data (GTK_OBJECT (widget), "Drawing_area");
+  timer = (int) gtk_object_get_data (GTK_OBJECT (Drawing_area), "timeout");
+  if (timer == 0)
+    {
+      timer = gtk_timeout_add (TIMER_PRECISION, (GtkFunction) Idle_draw_GTK, Drawing_area);
+      gtk_object_set_data (GTK_OBJECT (Drawing_area), "timeout", (gpointer) timer);
+    }
+  return TRUE;
+}  
+/*----------------------------------------------------------------------
+  GL_FocusOut :
+  Manage Drawing Timer upon Frame focus by user
+  ----------------------------------------------------------------------*/
+gboolean GL_FocusOut (ThotWidget widget, 
+			  GdkEventExpose *event, 
+			  gpointer data)
+{
+  int timer = 0;
+  ThotWidget Drawing_area;
+
+  Drawing_area = (ThotWidget) gtk_object_get_data (GTK_OBJECT (widget), "Drawing_area");
+  timer = (int) gtk_object_get_data (GTK_OBJECT (Drawing_area), "timeout");
+  if (timer != 0)
+    {
+      gtk_timeout_remove (timer);
+      timer = 0;
+      gtk_object_set_data (GTK_OBJECT (Drawing_area), "timeout", (gpointer) timer);       
+    }
+  return TRUE ;
+}
+/*----------------------------------------------------------------------
+ GL_DrawAll : Only function that Really Draw opengl !!
+  ----------------------------------------------------------------------*/
+static void GL_DrawAll (ThotWidget widget, int frame)
+{  
+  if (gtk_gl_area_make_current (GTK_GL_AREA(widget)))
+    { 	  
+      /* prevent other computation at 
+       the same time*/
+      GL_Drawing = TRUE;  
+     
+      /* Redraw ALL THE CANVAS (Animation testing)
+       usually only modified buffer will be copied 
+      into the frame buffer */      
+            
+     /*  DrawGrid (FrameTable[frame].WdFrame->allocation.width,  */
+      /* 		FrameTable[frame].WdFrame->allocation.height); */
+
+      DefClip (frame, -1, -1, -1, -1); 
+      RedrawFrameBottom (frame, 0, NULL);      
+      /*a resfresh indicator*/
+     /*  make_carre();	  */  
+
+      /* Double Buffering */
+      gtk_gl_area_swapbuffers (GTK_GL_AREA(widget)); 
+      glFlush ();
+      /* Paints a background color 
+	 Have to discard it if 
+	 background image exist in document
+      Clear is after buffer swapping as it take 
+      times and is asynchronous with Amaya computation*/     
+      glClear(GL_COLOR_BUFFER_BIT);          
+
+      GL_Drawing = FALSE;
+    }
+}
+
+
+/*----------------------------------------------------------------------
+  DrawGL :
+  After all transformation Draw all canvas
+  TODO : Use of display lists in 
+  the pbox tree rendering by redrawframebottom with another function
+  (use of pAb->change ...)
+  ----------------------------------------------------------------------*/
+gboolean GL_DrawCallback (ThotWidget widget, GdkEventExpose *event, gpointer data)
+{
+  int nframe;
+
+  nframe = (int ) gtk_object_get_data (GTK_OBJECT (widget), "frame");
+  if (nframe > 0 && nframe <= MAX_FRAME)
+     GL_DrawAll (widget, nframe); 
+  return TRUE;
+}
+/*----------------------------------------------------------------------
+ GL_Destroy :
+ Close Opengl pipeline
+ ----------------------------------------------------------------------*/
+gboolean  GL_Destroy (ThotWidget widget, 
+		   GdkEventExpose *event, 
+		   gpointer data)
+{
+  int      timer, frame;
+ 
+  frame = (int) data;
+  timer = (int) gtk_object_get_data (GTK_OBJECT (widget), "timeout");
+  if (timer != 0)
+    {
+      gtk_timeout_remove (timer);
+      timer = 0;
+      gtk_object_set_data (GTK_OBJECT (widget), "timeout", (gpointer) timer);       
+    }
+  return TRUE ;
+}
+/*----------------------------------------------------------------------
+ GL_Init :
+ Opengl pipeline state initialization
+ ----------------------------------------------------------------------*/
+gboolean  GL_Init (ThotWidget widget, 
+		   GdkEventExpose *event, 
+		   gpointer data)
+{
+  int      timer, frame;
+  GTimer   *gtimer;
+  static dialogfont_enabled = FALSE;
+
+  frame = (int) data;
+  if (gtk_gl_area_make_current (GTK_GL_AREA(widget)))
+    { 
+      /* Display Opengl Vendor Name,  Opengl Version, Opengl Renderer*/
+      g_print("%s, %s, %s", (char *)glGetString(GL_VENDOR), 
+	      (char *)glGetString(GL_VERSION), 
+	      (char *)glGetString(GL_RENDERER));   
+      /* g_print("%s\n", (char *)glGetString(GL_EXTENSIONS));  */   
+
+
+      glClearColor (1, 1, 1, 0);
+      /* only enable it when needed 
+	 (color mix and better antialiasing)*/
+      glDisable (GL_BLEND);
+      /* Fast Transparency*/
+      glAlphaFunc (GL_GREATER, .01);
+      glEnable (GL_ALPHA_TEST); 
+      /* no fog*/
+      glDisable (GL_FOG);
+      /* No lights */
+      glDisable (GL_LIGHTING);
+      glDisable (GL_LIGHT0);
+      glDisable (GL_AUTO_NORMAL);
+      glDisable (GL_NORMALIZE);
+      glDisable (GL_COLOR_MATERIAL);
+      /* No z axis (SVG is 2d) until X3D */
+      glDisable (GL_DEPTH_TEST);
+      /* No stencil buffer (one day perhaps, for background)*/
+      glDisable (GL_STENCIL_TEST);
+
+      /* svg viewports will use it, one day*/
+      glDisable (GL_SCISSOR_TEST);	 
+
+      /* Polygon are alway filled (until now)
+	 Because Thot draws outlined polygons with lines
+	 so...  if blending svg => GL_FRONT_AND_BACK*/
+      glPolygonMode( GL_FRONT, GL_FILL );
+     
+      /* Doesn't compute hidden drawing 
+	 Doesn't work for our tesselated
+	 polygons   not CGW oriented...*/
+      /* glEnable (GL_CULL_FACE); */
+      /* glCullFace (GL_FRONT_AND_BACK.,GL_BACK, GL_FRONT); */
+
+      /*(needed for gradients)*/
+      glShadeModel (GL_SMOOTH);
+#ifdef MESA
+      /* No Texture and pixel drawing enhancement*/
+      glDisable (GL_DITHER); 
+      if (1)
+	{
+	  glEnable (GL_POINT_SMOOTH); 
+	  glEnable (GL_LINE_SMOOTH);    
+	  /* glEnable (GL_POLYGON_SMOOTH); */  
+	  
+	  /* glHint(GL_POINT_SMOOTH_HINT, GL_NICEST); */
+	  /* 	  glHint(GL_LINE_SMOOTH_HINT, GL_NICEST); */
+	  /* 	  glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);  */
+	  
+	  glEnable (GL_BLEND);  
+	  glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  
+	}
+      else
+	{
+	  /* No AntiAliasing*/ 
+	  glDisable (GL_LINE_SMOOTH); 
+	  glDisable (GL_POINT_SMOOTH);
+	  glDisable (GL_POLYGON_SMOOTH); 
+	}
+      glHint( GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST ); 
+#else /*!MESA*/
+      /*Hardware opengl may support better rendering*/
+      glEnable (GL_DITHER);
+      /*  Antialiasing 
+	  Those Options give better 
+	  quality image upon performance loss
+	  Must be a user Option  */
+      glEnable (GL_LINE_SMOOTH); 
+      glEnable (GL_POINT_SMOOTH); 
+      glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
+      glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+
+      /* Not recommended for hardware cards... 
+	 Global Antialiasing is done elsewhere...*/
+      /*  glEnable (GL_POLYGON_SMOOTH);   */
+      /* smooth polygon antialiasing */
+      /* glBlendFunc (GL_SRC_ALPHA_SATURATE, GL_ONE); */
+      /* glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST); */
+
+      /* For transparency and beautiful antialiasing*/
+       glEnable (GL_BLEND); 
+       glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
+#endif /*MESA*/    
+
+      /* Bitmap font Text writing (even in texture font)*/
+      glPixelStorei( GL_UNPACK_ALIGNMENT, 1); 
+
+      if (!dialogfont_enabled)
+	{
+	  InitDialogueFonts ("");
+	  dialogfont_enabled = TRUE;
+	}
+
+      if (GL_Err())
+	g_print ("Bad INIT\n"); 
+
+      timer = gtk_timeout_add (TIMER_PRECISION, (GtkFunction) Idle_draw_GTK, widget);  
+      gtk_object_set_data (GTK_OBJECT (widget),"timeout",(gpointer) timer);  
+      gtimer = g_timer_new (); 
+      g_timer_reset (gtimer); 
+      gtk_object_set_data (GTK_OBJECT (widget),"timer",(gpointer) gtimer);
+      return TRUE;
+    }
+  else
+    return FALSE;   
 }
 /*----------------------------------------------------------------------
   ExposeCallbackGTK : 
@@ -529,84 +841,72 @@ gboolean Idle_draw_GTK (GtkWidget *widget)
   ----------------------------------------------------------------------*/
 gboolean ExposeCallbackGTK (ThotWidget widget, GdkEventExpose *event, gpointer data)
 {
-  int nframe;
+  int                 frame;
   int                 x;
   int                 y;
-  int                 l;
-  int                 h;
-  
-  if (event->count > 0) {
-    return TRUE;
-  }
-  nframe = (int )data;
+  int                 width;
+  int                 height;
+
+  frame = (int )data;
   x = event->area.x;
   y = event->area.y;
-  l = event->area.width;
-  h = event->area.height;
-
-  if (nframe > 0 && nframe <= MAX_FRAME)
-    {     
-       DefRegion (nframe, x, y, l+x, h+y );
-       RedrawFrameBottom(nframe, 0, NULL);
-       /* Dble Buffering needs this one !!*/
-       /*   DisplayFrame (nframe);     */
-       /*   FrameRedraw(nframe, l, h);  */
-       /*   DefClip (nframe, -1, -1, -1, -1); */
-       /*   RedrawFrameBottom (nframe, 0, NULL); */
-       GL_realize(widget);
+  width = event->area.width;
+  height = event->area.height;  
+  if (frame > 0 && frame <= MAX_FRAME 
+      /* && event->count == 0 */
+      && gtk_gl_area_make_current (GTK_GL_AREA(widget)))
+    {
+      if (height < (widget->allocation.height - 50))
+	{
+	  /*We copy region content of the back buffer 
+	    on the exposed region 
+	    => opengl region buffer swapping */
+	  y = y + height;
+	  glRasterPos2i (x, y);
+	  glDrawBuffer (GL_FRONT);       
+	  glReadBuffer (GL_BACK);
+	  y = widget->allocation.height - y;
+	  glCopyPixels (x, y, width, height, GL_COLOR);  
+	  glDrawBuffer (GL_BACK);
+	  glFlush ();
+	}
+      else
+	GL_DrawAll (widget, frame);
     }
-  return TRUE;
+  return FALSE;
 }
 /*----------------------------------------------------------------------
    FrameResizedGTK When user resize window
   ----------------------------------------------------------------------*/
-void FrameResizedGTK (GtkWidget *w, GdkEventConfigure *event, gpointer data)
+void FrameResizedGTK (GtkWidget *widget, 
+		      GdkEventConfigure *event, 
+		      gpointer data)
 {
-  int frame;
+  int                 frame;
   Dimension           width, height;
 
   frame = (int )data;
   width = event->width;
-  height = event->height;
-  if (FrameTable[frame].WdFrame)
-    if (gtk_gl_area_make_current (GTK_GL_AREA(FrameTable[frame].WdFrame)))
+  height = event->height; 
+  if (widget)
+    if (gtk_gl_area_make_current (GTK_GL_AREA(widget)))
       {
-	glViewport (0, 0, 
-		    FrameTable[frame].WdFrame->allocation.width, 
-		    FrameTable[frame].WdFrame->allocation.height);
+	glViewport (0, 0, width, height);
+	glMatrixMode (GL_PROJECTION);      
+	glLoadIdentity (); 
+	/* Invert the opengl coordinate system
+	   to get the same as Thot	  
+	   (opengl Y origin  is the left up corner
+	   and the left bottom is negative !!)	*/
+	glOrtho (0,  width, height, 0, -1, 1); 
+	/* Needed for 3d only...*/
+        glMatrixMode (GL_MODELVIEW);
+	glLoadIdentity (); 
+	GL_DrawAll (widget, frame);
       }
 }
 
 #else /* !_GL*/
-/*----------------------------------------------------------------------
-  ExposeCallbackGTK : 
-  When a part of the canvas is hidden by a window or menu 
-  It permit to Redraw frames 
-  ----------------------------------------------------------------------*/
-gboolean ExposeCallbackGTK (ThotWidget widget, GdkEventExpose *event, gpointer data)
-{
-  int nframe;
-  int                 x;
-  int                 y;
-  int                 l;
-  int                 h;
-
-  nframe = (int )data;
-  x = event->area.x;
-  y = event->area.y;
-  l = event->area.width;
-  h = event->area.height;
-  
-  
-  if (nframe > 0 && nframe <= MAX_FRAME)
-    {
-      DefRegion (nframe, x, y, l+x, y+h );
-      RedrawFrameBottom(nframe, 0, NULL);
-      /*      FrameRedraw (nframe, l, h);*/
-    }
-  return FALSE;
-}
-
 /*----------------------------------------------------------------------
    FrameResizedGTK When user resize window
   ----------------------------------------------------------------------*/
@@ -620,7 +920,34 @@ void FrameResizedGTK (GtkWidget *w, GdkEventConfigure *event, gpointer data)
   height = event->height;
   FrameRedraw (frame, width, height);
 }
+/*----------------------------------------------------------------------
+  ExposeCallbackGTK : 
+  When a part of the canvas is hidden by a window or menu 
+  It permit to Redraw frames 
+  ----------------------------------------------------------------------*/
+gboolean ExposeCallbackGTK (ThotWidget widget, GdkEventExpose *event, gpointer data)
+{
+  int nframe;
+  int                 x;
+  int                 y;
+  int                 l;
+  int                 h;
 
+  nframe = (int )data;
+  x = event->area.x;
+  y = event->area.y;
+  l = event->area.width;
+  h = event->area.height;
+  
+  
+  if (nframe > 0 && nframe <= MAX_FRAME)
+    { 
+      DefRegion (nframe, x, y, l+x, y+h );
+      RedrawFrameBottom(nframe, 0, NULL);
+      /*    FrameRedraw (nframe, l, h);*/
+    }
+  return FALSE;
+}
 #endif /* !_GL */
 #else /* !_GTK */
 
@@ -1124,7 +1451,7 @@ void TtcScrollRight (Document document, View view)
   ----------------------------------------------------------------------*/
 void TtcPageUp (Document document, View view)
 {
-
+ 
 #if !defined(_WINDOWS) && !defined(_GTK)
    XmScrollBarCallbackStruct infos;
 #else   /* _WINDOWS && GTK */
@@ -2047,13 +2374,10 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
   ThotEvent          *ev = (ThotEvent *) evnt;
   int                 comm, dx, dy, sel, h;
 #else /* _GTK */
-  /*  int                 nframe;
-  int                 x;
-  int                 y;
-  int                 l;*/
   int                 frame;
-  GtkEntry           *textzone;
+  GtkEntry            *textzone;
   static int          timer = None;
+  static ThotBool     selecting = FALSE;
 #endif /* _GTK */
   Document            document;
   View                view;
@@ -2320,9 +2644,11 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	{
 	  gtk_timeout_remove (timer);
 	  timer = None;
+	  selecting = FALSE;
 	} 
       switch (event->button)
 	{
+	   /* ==========LEFT BUTTON========== */
 	case 1:
 	  /* Est-ce que la touche modifieur de geometrie est active ? */	  
 	  if ((event->state & GDK_CONTROL_MASK ) == GDK_CONTROL_MASK)
@@ -2334,8 +2660,6 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	      TtaAbortShowDialogue ();
 	      LocateSelectionInView (frame, event->x, event->y, 0);
 	      FrameToView (frame, &document, &view);
-
-	      /* IL FAUT TRADUIRE CETTE FONCTION EN GTK */
 	      TtcCopyToClipboard (document, view);
 	    }
 	  else
@@ -2345,13 +2669,14 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	      ClickX = event->x;
 	      ClickY = event->y;
 	      LocateSelectionInView (frame, ClickX, ClickY, 2);
+	      selecting = TRUE;
 	    }
 	  break;
 	case 2:
 	  /* ==========MIDDLE BUTTON========== */
 	  if ((event->state & GDK_CONTROL_MASK) != 0)
 	    /* resizing a box */
-	    /* ApplyDirectResize (frame, event->x, event->y) */;
+	    ApplyDirectResize (frame, event->x, event->y);
 	  else
 	    {
 	      ClickFrame = frame;
@@ -2372,7 +2697,7 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	  /* ==========RIGHT BUTTON========== */
 	  if ((event->state & GDK_CONTROL_MASK) != 0)
 	    /* resize a box */
-	    /* ApplyDirectResize (frame, event->x, event->y) */;
+	    ApplyDirectResize (frame, event->x, event->y);
 	  else
 	    {
 	      ClickFrame = frame;
@@ -2428,16 +2753,20 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
       /* extend the current selection */
       Motion_y = event->y;
       Motion_x = event->x;
-      /* We add a callback timer caller */
-      if (timer == None)
-	timer = gtk_timeout_add (100, 
-				 GtkLiningSelection, 
-				 (gpointer) frame);
+      if (selecting == TRUE)
+	{
+	  /* We add a callback timer caller */
+	  if (timer == None)
+	    timer = gtk_timeout_add (100, 
+				     GtkLiningSelection, 
+				     (gpointer) frame);
+	}
       break;
     case GDK_BUTTON_RELEASE:
       /* if a button release, we save the selection in the clipboard */
       /* drag is finished */
       /* we stop the callback calling timer */
+      selecting = FALSE;
       if (timer != None)
 	{
 	  gtk_timeout_remove (timer);
@@ -2459,9 +2788,6 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
     default:
       break;
     }
-#ifdef _GL
-/*       gtk_widget_draw(GTK_WIDGET(FrameTable[frame].WdFrame), NULL);     */
-#endif /* _GL */
   return FALSE;
 #endif /* _GTK */
 }
@@ -2551,10 +2877,13 @@ gboolean ButtonReleaseCallbackGTK (GtkWidget *widget,
 void ThotGrab (ThotWindow win, ThotCursor cursor, long events, int disp)
 {
 #ifndef _WINDOWS
-#ifndef _GTK
+#ifndef _GTK 
+  /*GTK n'a pas de fonction equivalente !!!*/
    XGrabPointer (TtDisplay, win, FALSE, events, GrabModeAsync, GrabModeAsync,
 		 win, cursor, CurrentTime);
-#endif /* !_GTK */
+#else /* _GTK */
+  /*GTK n'a pas de fonction equivalente !!!*/
+#endif /* _GTK */
 #endif /* _WINDOWS */
 }
 
@@ -3018,8 +3347,9 @@ void  DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd, int *xf, 
 #else /*_GL*/
 	/* defines what part of the buffer is swapped
 	 so here we swap only what we do..*/
-	/* if (FrameTable[frame].WdFrame) */
-	/* 	 win32 solution only  glAddSwapHintRectWIN (clipx, clipy, clipwidth, clipheight);	 */
+
+
+	
 #endif /*_GL*/
 #else /* _GTK */
 	rect.x = 0;
@@ -3058,8 +3388,10 @@ void RemoveClipping (int frame)
  gdk_gc_set_clip_rectangle (TtGraphicGC, &rect);
  gdk_gc_set_clip_rectangle (TtGreyGC, &rect);
 #else
+
  /* defines what part of the buffer is swapped
     so here we swap only what we do..*/
+
 #endif /*_GL*/
 #else /* !_GTK */
    XRectangle          rect;

@@ -69,15 +69,53 @@
 
 #include <gtkgl/gtkglarea.h>
 #include <GL/gl.h>
-#include <GL/glut.h>
+
+#ifdef GL_MESA_window_pos
+#define MESA
+#endif
+
+
 /*----------------------------------------------------------------------
   p2 :  Lowest power of two bigger than the argument.
   ----------------------------------------------------------------------*/
-static int p2 (int p)
+/*All these work on UNSIGNED BITS !!! 
+ if little-big endianess is involved,
+ all those atre wrong !!!*/
+
+#define lowest_bit(x) (x & -x)
+#define is_pow2(x) (x != 0 && x == lowest_bit(x))
+
+static int ceil_pow2_minus_1(unsigned int x)
 {
-    return 1 << (int) ceilf(logf((float) p) / M_LN2);
+  unsigned int i;
+  
+  for (i=1; i; i <<= 1)
+    x |= x >> i;
+  return x;
 }
-/*----------------------------------------------------------------------
+#define p2(p) (is_pow2(p)?p:ceil_pow2_minus_1((unsigned int) p) + 1)
+  
+/* Don't know exactly wich is faster...
+ this on is pretty good too...*/
+
+/* 
+int p2(p){
+p -= 1; 
+p |= p >> 16; 
+p |= p >> 8; 
+p |= p >> 4; 
+p |= p >> 2; 
+p |= p >> 1; 
+return p + 1;
+
+otherwise, identical, formulical,
+but VERY VERY VERY slower 
+(int to float, log, ceil, and finally float to int...)
+return 1 << (int) ceilf(logf((float) p) / M_LN2);
+} 
+*/
+
+ /*----------------------------------------------------------------------
    GL_MakeTexture :
    Opengl texture have size that is a power of 2
    So we add black points in the resize process 
@@ -86,7 +124,7 @@ static int p2 (int p)
           @See Gliv project
 	  - Png supporting 256 levels of transparency ?
   ----------------------------------------------------------------------*/
-static unsigned char *GL_MakeTexture( GdkImlibImage *imageDesc, int w, int h)
+static unsigned char *GL_MakeTransparentRGB( GdkImlibImage *imageDesc, int w, int h)
 {
   unsigned char      *data;
   int                 GL_w, GL_h;
@@ -94,8 +132,8 @@ static unsigned char *GL_MakeTexture( GdkImlibImage *imageDesc, int w, int h)
   unsigned char      *ptr1, *ptr2;
   unsigned char      red, blue, green;
   
-  GL_w = p2(w);
-  GL_h = p2(h);
+  GL_w = w;
+  GL_h = h;
   red = imageDesc->shape_color.r;
   green = imageDesc->shape_color.g;
   blue =  imageDesc->shape_color.b;
@@ -111,87 +149,225 @@ static unsigned char *GL_MakeTexture( GdkImlibImage *imageDesc, int w, int h)
       /* pixel by pixel*/
       for (x = 0; x < w; x++)
 	{		    
-	  *ptr2 = *ptr1++;/*red*/
-	  *(ptr2 + 1) = *ptr1++;/*green*/
-	  *(ptr2 + 2) = *ptr1++;/*blue*/
-	  /*alpha*/
+	  /* copy R,G,B */
+	  memcpy(ptr2, ptr1, 3); 
+	  /* Then compute alpha if RGB = transparent color*/
 	  if (red == *ptr2 && green == *(ptr2+1) && blue ==  *(ptr2+2))
 	    *(ptr2+3) = 0;
 	  else
 	    *(ptr2+3) = 255;
-	  /*next pixel */
+	  /* next pixel */
 	  ptr2 += 4;
-	}
-      while (x++ < GL_w)
-	{
-	  *ptr2++ = 0;*ptr2++ = 0;*ptr2++ = 0;*ptr2++ = 0;
-	}			  
+	  ptr1 += 3; 
+	}	  
     }	
-  while (y++ < GL_h)
+  return data; 
+}    
+/*----------------------------------------------------------------------
+   GL_MakeTexture :
+   Opengl texture have size that is a power of 2
+   So we add black points in the resize process 
+   (but they won't be displayed as we crop the texture to a Quad of the orignal size)
+   TODO : - cut big texture in small ones (Much Faster display...)
+          @See Gliv project
+	  - Png supporting 256 levels of transparency ?
+  ----------------------------------------------------------------------*/
+static unsigned char *GL_MakeTexture( GdkImlibImage *imageDesc, int w, int h)
+{
+  unsigned char      *data;
+  int                 xdiff;
+  int                 GL_w, GL_h;
+  int                 x, y;
+  unsigned char      *ptr1, *ptr2;
+  unsigned char      red, blue, green;
+  
+  GL_w = p2(w);
+  GL_h = p2(h);
+  red = imageDesc->shape_color.r;
+  green = imageDesc->shape_color.g;
+  blue =  imageDesc->shape_color.b;
+ 
+  /* In this algo, just remember that a 
+     RGB pixel value is a list of 3 value in source data
+     and 4 for destination RGBA texture */
+  data = TtaGetMemory (sizeof (unsigned char) * GL_w * GL_h * 4);
+
+  /* Black transparent filling */
+  memset (data, 0, sizeof (unsigned char) * GL_w * GL_h * 4);
+  /* For faster black filling we create a black pixel memory block*/
+  /* black[0] = 0;black[1] = 0;black[2] = 0;black[3] = 0; */
+
+  ptr1 = imageDesc->rgb_data;
+  ptr2 = data;
+  xdiff = (GL_w - w) * 4;
+  for (y = 0; y < h; y++)
     {
-      *ptr2++ = 0;*ptr2++ = 0;*ptr2++ = 0;*ptr2++ = 0;
-    }
+      /* pixel by pixel*/
+      for (x = 0; x < w; x++)
+	{		    
+	  /* copy R,G,B */
+	  memcpy(ptr2, ptr1, 3); 
+	  /* Then compute alpha if RGB = transparent color*/
+	  if (red == *ptr2 && green == *(ptr2+1) && blue ==  *(ptr2+2))
+	    *(ptr2+3) = 0;
+	  else
+	    *(ptr2+3) = 255;
+	  /* next pixel */
+	  ptr2 += 4;
+	  ptr1 += 3; 
+	}
+      /* jump over the black transparent zone*/
+      ptr2 += xdiff;
+    }	
   return data; 
 }
 
+/* In case of old opengl version where
+ Texture Objects were an extension */
+/* #if defined(GL_VERSION_1_1) */
+/* #define TEXTURE_OBJECT 1 */
+/* #elif defined(GL_EXT_texture_object) */
+/* #define TEXTURE_OBJECT 1 */
+/* #define glBindTexture(A,B)     glBindTextureEXT(A,B) */
+/* #define glGenTextures(A,B)     glGenTexturesEXT(A,B) */
+/* #define glDeleteTextures(A,B)  glDeleteTexturesEXT(A,B) */
+/* #endif */
+
+
 /*----------------------------------------------------------------------
  GL_TextureMap : map texture on a Quad (sort of a rectangle)
+ Drawpixel Method for software implementation, as it's much faster for those
+ Texture Method for hardware implementation as it's faster and better.
   ----------------------------------------------------------------------*/
 static void GL_TextureMap (PictInfo *Image, int xFrame, int yFrame, int w , int h)
-{
+{  
+#ifdef MESA
+  int       p2_w, p2_h, GL_h;
+  
+  if (Image->PicPixmap)
+      { 
+	/* The other Way  with texture... 
+	   but without texture power...(mippmapping)
+	   Faster on software implementation
+	   (Actually slower on hardware accelerated system) */
+	GL_h = FrameTable[ActiveFrame].WdFrame->allocation.height;
+	if (xFrame > 0 && yFrame+h < GL_h)
+	  glRasterPos2i (xFrame,  yFrame + h );
+	else
+	  {
+	    GL_h = FrameTable[ActiveFrame].WdFrame->allocation.height;
+	    /* Raster Pos must be inside viewport 
+	       if not, it's not displayed at all*/
+	    p2_w = p2_h =0;
+	    if (xFrame < 0)
+	      {
+		p2_w = xFrame;
+		xFrame = 0;
+	      }
+	    if (yFrame+h > GL_h && yFrame < GL_h)
+	      { 
+		p2_h = - (yFrame + h - GL_h); 
+		yFrame = GL_h - h; 
+	      } 
+	    glRasterPos2i (xFrame,  yFrame + h); 
+	    glBitmap (0, 0, 0, 0,
+		     p2_w,
+		     p2_h,
+		     NULL);
+	  }
+	glDrawPixels( w, h, 
+		      GL_RGBA, 
+		      GL_UNSIGNED_BYTE, 
+		      (GLvoid *)Image->PicPixmap); 
+      }
+#else /*!MESA*/
   int       p2_w, p2_h;
   GLfloat   GL_w, GL_h;
 
-  /* Texture like display list ... must use !!*/
-  /* glBindTexture(GL_TEXTURE_2D,  identifiant); */
-  if (Image->PicPixmap)
-    { 
-      /* The other Way  with texture... but without texture power...(mippmapping)*/
-      /* glRasterPos2i (xFrame,  yFrame); */
-      /*       glDrawPixels( w, h, */
-      /* 		    GL_RGB, */
-      /* 		    GL_UNSIGNED_BYTE, */
-      /* 		    (GLvoid *)Pixmap); */   
-   
-      /* 
-	 Another way is to split texture in 256x256 pieces and render them on different quads
-	 Declared to be the faster
-      */
-      p2_w = p2 (Image->PicWidth);
-      p2_h = p2 (Image->PicHeight);
-      glTexImage2D (GL_TEXTURE_2D, 0, GL_RGBA, p2_w, p2_h, 0,
-		    GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid *) Image->PicPixmap); 
-      glColor4f (1.0, 1.0, 1.0, 1.0);      
-      /* We have resized the picture to match a power of 2
-       We don't want to see all the picture, just the w and h 
-       portion*/
-      GL_w = (GLfloat) Image->PicWidth/p2_w;
-      GL_h = (GLfloat) Image->PicHeight/p2_h;
-      /* Texture mapping */
-      glEnable (GL_TEXTURE_2D); 
-      glEnable (GL_BLEND); 
-      glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-      /* Not sure of the vertex order 
-	 (not the faster one, I think) */
-      glBegin (GL_QUADS);
-      /* Texture coordinates are unrelative 
-	 to the size of the square */      
-      /* lower left */
-      glTexCoord2i (0,    0); 
-      glVertex2i (xFrame,     yFrame + h);
-      /* upper right*/
-      glTexCoord2f (GL_w, 0.0); 
-      glVertex2i (xFrame + w, yFrame + h);
-      /* lower right */
-      glTexCoord2f (GL_w, GL_h); 
-      glVertex2i (xFrame + w, yFrame); 
-      /* upper left */
-      glTexCoord2f (0.0,  GL_h); 
-      glVertex2i (xFrame,     yFrame);      
-      glEnd ();
-      glDisable (GL_TEXTURE_2D);
-      glDisable (GL_BLEND);
-    }
+    /* using Display list is slower than not using it
+     As this isn't normal... 
+     Code will remains here til I found why!
+  (tests no different configurations may help)*/
+
+  /* if (glIsList (Image->DisplayList))  */
+  /*     {   */
+  /*       glPushMatrix ();  */
+  /*       glTranslated ( xFrame - Image->xorig, yFrame - Image->yorig, 0);  */
+  /*       glCallList (Image->DisplayList);   */
+  /*       glPopMatrix ();  */
+  /*     }  */
+  /*   else  */
+    if (Image->PicPixmap)
+      { 	
+	/* Image->DisplayList = glGenLists (1);  */
+	/* 	Image->xorig = xFrame; */
+	/* 	Image->yorig = yFrame;   */
+	/*         glNewList (Image->DisplayList,  GL_COMPILE_AND_EXECUTE); */
+		
+	/* Another way is to split texture in 256x256 
+	   pieces and render them on different quads
+	   Declared to be the faster  */
+	p2_w = p2 (Image->PicWidth);
+	p2_h = p2 (Image->PicHeight);
+	
+	
+	glEnable (GL_TEXTURE_2D); 
+	/* Put texture in 3d card memory */
+	if (!glIsTexture (Image->TextureBind))
+	  {
+	    glGenTextures (1, &(Image->TextureBind));
+	    glBindTexture (GL_TEXTURE_2D, Image->TextureBind);
+	    
+	    /*TEXTURE ZOOM : GL_NEAREST is fastest and GL_LINEAR is second fastest*/
+	    glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	    glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	    /* How texture is mapped... initially GL_REPEAT
+	       GL_REPEAT, GL_CLAMP, GL_CLAMP_TO_EDGE are another option.. Bench !!*/	    
+	    glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	    glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP); 
+	    /* does current Color modify texture no = GL_REPLACE, 
+	       else => GL_MODULATE, GL_DECAL, ou GL_BLEND */
+	    glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+	    /* We give te texture to opengl Pipeline system */
+	    glTexImage2D (GL_TEXTURE_2D, 0, GL_RGBA, p2_w, p2_h, 0,
+			  GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid *) Image->PicPixmap);
+	     
+	  }
+	else
+	  {
+	    glBindTexture(GL_TEXTURE_2D, Image->TextureBind);
+	  }
+	/* We have resized the picture to match a power of 2
+	   We don't want to see all the picture, just the w and h 
+	   portion*/
+	GL_w = (GLfloat) Image->PicWidth/p2_w;
+	GL_h = (GLfloat) Image->PicHeight/p2_h;   
+	
+	/* Not sure of the vertex order 
+	   (not the faster one, I think) */
+	glBegin (GL_QUADS);
+	/* Texture coordinates are unrelative 
+	   to the size of the square */      
+	/* lower left */
+	glTexCoord2i (0,    0); 
+	glVertex2i (xFrame,     yFrame + h);
+	/* upper right*/
+	glTexCoord2f (GL_w, 0.0); 
+	glVertex2i (xFrame + w, yFrame + h);
+	/* lower right */
+	glTexCoord2f (GL_w, GL_h); 
+	glVertex2i (xFrame + w, yFrame); 
+	   /* upper left */
+	glTexCoord2f (0.0,  GL_h); 
+	glVertex2i (xFrame,     yFrame);      
+	glEnd ();
+	
+	/* State disabling */
+	glDisable (GL_TEXTURE_2D); 
+
+	/*  glEndList ();  */
+       }
+#endif /*MESA*/
 }
 #endif /* _GL */
 
@@ -477,7 +653,9 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
   XGCValues         values;
   unsigned int      valuemask;
 #else /* _GTK*/
+#ifndef _GL
   GdkImlibImage     *im;
+#endif /* _GL */
 #endif /* _GTK */
 #endif /* _WINDOWS */
 
@@ -1716,7 +1894,12 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	      /* opengl draw in the other way...*/
 	      gdk_imlib_flip_image_vertical (im);
 	      /* opengl texture have size that is a power of 2*/
+#ifndef MESA
+	      /* opengl texture have size that is a power of 2*/
 	      drw = GL_MakeTexture (im, w ,h);
+#else /* MESA*/
+	      drw = GL_MakeTransparentRGB(im, w ,h);
+#endif/*  MESA */
 #endif /* _GL */
 #else /* _GTK2 */
 	      im = gdk_pixbuf_new_from_file(fileName, &error);
@@ -1769,8 +1952,12 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 #else /* _GL */
 	      /* opengl draw in the other way...*/
 	      gdk_imlib_flip_image_vertical (im);
+#ifndef MESA
 	      /* opengl texture have size that is a power of 2*/
-	      drw = GL_MakeTexture (im, (gint)wBox , (gint)hBox);
+	      drw = GL_MakeTexture (im, (gint)wBox ,(gint)hBox);
+#else /* MESA*/
+	      drw = GL_MakeTransparentRGB(im, (gint)wBox, (gint)hBox);
+#endif/*  MESA */
 #endif /* _GL */
 	      width = (gint) wBox;
 	      height = (gint) hBox;

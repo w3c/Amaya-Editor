@@ -20,7 +20,6 @@
 #include "typemedia.h"
 #include "frame.h"
 
-
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
 #include "boxes_tv.h"
@@ -41,49 +40,136 @@
 #include "units_f.h"
 #include "xwindowdisplay_f.h"
 
+/*
+ * Math Macros conversion from
+ * degrees to radians and so on...
+ * All for EllipticSplit and/or GL_DrawArc
+ */
+#include <math.h>
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+#define M_PI_DOUBLE (6.2831853718027492)
+
+/* ((A)*(M_PI/180.0)) */
+#define DEG_TO_RAD(A)   ((float)A)/57.29577957795135
+#define RAD_TO_DEG(A)   ((float)A)*57.29577957795135
+
+/*If we should use a static table instead for
+  performance bottleneck...*/
+#define DCOS(A) ((float)cos (A))
+#define DSIN(A) ((float)sin (A))
+#define DACOS(A) ((float)acos (A))
+#define A_DEGREE 0.017453293
+
+/* Precision of a degree/1 
+   If we need more precision 
+   dision is our friend 
+   1/2 degree = 0.0087266465
+   1/4 degree = 0.0043633233
+   or the inverse 
+   24 degree = 0.41887903
+   5 degree = 0.087266465
+   2 degree = 0.034906586
+   but best is a degree...
+*/
+#define TRIGO_PRECISION 1;
+#define A_DEGREE_PART A_DEGREE/TRIGO_RECISION
+
+/* Must find better one... 
+   Bits methods...*/
+/*for float => ( pow (N, 2))*/
+/*for int  => (((int)N)<<1)*/
+#define P2(N) (N*N)
+
 
 #ifdef _GL
 
 #include <gtkgl/gtkglarea.h>
 #include <GL/gl.h>
-#include <GL/glut.h>
+#include <GL/glu.h>
 
-#ifdef GLU_VERSION_1_2
- /* Vertex list when tesselation is called */
-  typedef struct listmem {
-    GLint *data;
-    struct listmem *next;
-  } ListMem;
+#ifdef GL_MESA_window_pos
+#define MESA
+#endif
 
-  ListMem root;
-#endif/*  GLU_VERSION_1_2 */
+/* Texture Font */
+/* ~/Amaya/thotlib/internals/h */
+#include "openglfont.h"
 
-/* tesselation mode */
-typedef enum {
-  DEFINE, TESSELATED
-} mode_type;
+/* Vertex list when tesselation is called 
+   This list is filled with all new vertex 
+   created by the tesselation 
+   (all the list must stay in 
+   memory until tesselation is finished)*/
+typedef struct listmem {
+  ThotPoint *data;
+  struct listmem *next;
+} ListMem;
 
-extern int BG_Frame;
+static ListMem SAddedVertex;
+
+ThotBool GL_Err() 
+{
+  GLenum errCode = GL_NO_ERROR;
+
+  if((errCode = glGetError()) != GL_NO_ERROR)
+    {
+      g_print ("\n%s :", (char*) gluErrorString(errCode));
+      return TRUE;
+    }
+  else 
+    return FALSE;
+}
+
+static int BG_Frame;
+static int S_thick;
+/*----------------------------------------------------------------------
+ GL_SetForeground : set color before drawing a or many vertex
+  ----------------------------------------------------------------------*/
+void GL_SetForeground (int fg)
+{
+    unsigned short red, green, blue;
+
+    TtaGiveThotRGB (fg, &red, &green, &blue);
+    glColor4ub (red, green, blue, 255);
+}
+/*----------------------------------------------------------------------
+   GL_DrawEmptyRectangle Outlined rectangle
+  ----------------------------------------------------------------------*/
+void  GL_ClearBackground (int width, int height)
+{
+  GL_SetForeground (BG_Frame);
+  glBegin (GL_QUADS);
+  glVertex2f (  0, 0 );
+  glVertex2f (  0, 0 + height);
+  glVertex2f (  0 +  width, 0 + height);
+  glVertex2f (  0 + width, 0);
+  glEnd ();
+}
 /*----------------------------------------------------------------------
   GL_SetBackground : Save background color ('cause also used in GL_Clear)
   ----------------------------------------------------------------------*/
-static void GL_SetBackground (int bg)
+static void GL_SetBackground (int bg, int frame)
 {   
   BG_Frame = bg;
+  return;
 }
-
 /*----------------------------------------------------------------------
    GL_VideoInvert : 
    using a transparent yellow instead of inverting... much simpler !   
   ----------------------------------------------------------------------*/
-static void GL_VideoInvert(int width, int height, int x, int y)
-{
-  glBegin(GL_QUADS);
-  glColor4ub (127, 127, 50, 127);
-  glVertex2i (x, y);
-  glVertex2i (x + width, y);
-  glVertex2i (x +  width, y + height);
-  glVertex2i (x, y + height);
+static void GL_VideoInvert (int width, int height, int x, int y)
+{ 
+  /*a blend func like that could be coool ? 
+    (GL_ONE_MINUS_DST_COLOR,GL_ZERO) */
+  glColor4ub (127, 127, 127, 80);
+  glBegin (GL_QUADS);
+  glVertex2f (x, y);
+  glVertex2f (x + width, y);
+  glVertex2f (x +  width, y + height);
+  glVertex2f (x, y + height);
   glEnd (); 
 }
 
@@ -93,36 +179,42 @@ static void GL_VideoInvert(int width, int height, int x, int y)
     at the size of the clear area
     (sort of an erase tool, corresponding to a gdk_clear...)
   ----------------------------------------------------------------------*/
-static void GL_ClearArea(int width, int height, int x, int y)
+static void GL_ClearArea (int x, int y, int width, int height)
 {
-  if (!FrameTable[ActiveFrame].WdFrame)
+   if (width == 0 || height == 0)
     return;
-  GL_SetForeground (BG_Frame);
-  glBegin (GL_QUADS);
-  glVertex2i (x, y);
-  glVertex2i (x + width, y);
-  glVertex2i (x +  width, y + height);
-  glVertex2i (x, y + height);
+  GL_SetForeground (BG_Frame); 
+  glBegin (GL_QUADS); 
+  glVertex2f (x, y); 
+  glVertex2f (x, y + height);
+  glVertex2f (x +  width, y + height);
+  glVertex2f (x + width, y);
   glEnd ();
 }
 /*----------------------------------------------------------------------
    GL_DrawEmptyRectangle Outlined rectangle
   ----------------------------------------------------------------------*/
 static void  GL_DrawEmptyRectangle (int fg, int x, int y, int width, int height)
-{
-  y = (GLdouble) y;
-  x = (GLdouble) x;
-  width = (GLdouble) width;
-  height = (GLdouble) height; 
+{ 
   GL_SetForeground (fg);
-  glBegin (GL_LINE_STRIP);
-  glVertex2d (  x, y );
-  glVertex2d (  x, y + height);
-  glVertex2d (  x +  width, y + height);
-  glVertex2d (  x + width, y);
-  glVertex2d (  x, y );
-  glEnd ();
-
+  if (S_thick > 1)
+    {
+      glBegin (GL_POINTS);/*joining angles*/
+      glVertex2f (  x, y );
+      glVertex2f (  x, y + height);
+      glVertex2f (  x +  width, y + height);
+      glVertex2f (  x + width, y);
+      glVertex2f (  x, y );
+      glEnd ();
+    }  
+  glBegin (GL_LINE_LOOP);
+  glVertex2f (  x, y );
+  glVertex2f (  x, y + height);
+  glVertex2f (  x +  width, y + height);
+  glVertex2f (  x + width, y);
+  glVertex2f (  x, y );
+  glEnd (); 
+  
 }
 /*----------------------------------------------------------------------
    GL_DrawRectangle
@@ -130,17 +222,12 @@ static void  GL_DrawEmptyRectangle (int fg, int x, int y, int width, int height)
   ----------------------------------------------------------------------*/
 static void GL_DrawRectangle (int fg, int x, int y, int width, int height)
 {
-  
-  y = (GLdouble) y;
-  x = (GLdouble) x;
-  width = (GLdouble) width;
-  height = (GLdouble) height;    
   GL_SetForeground (fg);
-  glBegin (GL_POLYGON);
-  glVertex2d (  x, y );
-  glVertex2d (  x + width, y);
-  glVertex2d (  x +  width, y + height);
-  glVertex2d (  x, y + height);
+  glBegin (GL_QUADS);
+  glVertex2f (  x, y );
+  glVertex2f (  x + width, y);
+  glVertex2f (  x +  width, y + height);
+  glVertex2f (  x, y + height);
   glEnd ();
 }
 /*----------------------------------------------------------------------
@@ -148,27 +235,23 @@ static void GL_DrawRectangle (int fg, int x, int y, int width, int height)
   ----------------------------------------------------------------------*/
 static void GL_DrawLine (int x1, int y1, int x2, int y2)
 {
-    glBegin (GL_LINES) ;
-    glVertex2d ((GLdouble) x1, 
-		(GLdouble) y1);
-    glVertex2d ((GLdouble) x2, 
+   if (S_thick > 1)
+    {
+      /* round line join*/ 
+      glBegin (GL_POINTS);
+      glVertex2f ((GLdouble) x1, 
+		  (GLdouble) y1);
+      glVertex2f ((GLdouble) x2, 
+		  (GLdouble) y2);
+      glEnd ();
+    }
+   glBegin (GL_LINES) ;
+   glVertex2f ((GLdouble) x1, 
+	       (GLdouble) y1);
+   glVertex2f ((GLdouble) x2, 
 		(GLdouble) y2);
-    glEnd () ;
-}
-/*----------------------------------------------------------------------
-   GL_DrawLines
-  ----------------------------------------------------------------------*/
-static void GL_DrawLines (ThotPoint *point, int npoints)
-{
-  int i;
-
-    glBegin (GL_LINE_STRIP) ;
-    for(i=0; i<npoints; i++) 
-      {
-	glVertex2d ((point + i)->x , 
-		   (point + i)->y) ;
-      }
     glEnd ();
+    
 }
 /*----------------------------------------------------------------------
   GL_DrawSegments
@@ -176,67 +259,70 @@ static void GL_DrawLines (ThotPoint *point, int npoints)
 static void GL_DrawSegments (XSegment *point, int npoints)
 {
   int i;
-
-  for(i=0; i<npoints; i++) 
+  
+  if (S_thick > 1)
     {
-      glBegin (GL_LINE_STRIP) ;
-      glVertex2d ((point + i)->x1 , 
-		  (point + i)->y1) ;
-      glVertex2d ((point + i)->x2 , 
-		  (point + i)->y2) ;
-      glEnd ();	
+      glBegin (GL_POINTS); 
+      for(i=0; i < npoints; i++) 
+	{
+	  glVertex2f ((point + i)->x1 , 
+		      (point + i)->y1);
+	  glVertex2f ((point + i)->x2 , 
+		      (point + i)->y2);
+	}
+      glEnd ();
     }
+  glBegin (GL_LINES) ;
+  for(i=0; i < npoints; i++) 
+    {
+      glVertex2f ((point + i)->x1 , 
+		  (point + i)->y1);
+      glVertex2f ((point + i)->x2 , 
+		  (point + i)->y2);   	
+    }    
+  glEnd ();
 }
-#ifdef GLU_VERSION_1_2
 /*----------------------------------------------------------------------
   combineCallback :  used to create a new vertex when edges
   intersect.  coordinate location is trivial to calculate,
   but weight[4] may be used to average color, normal, or texture 
-  coordinate data.
+  coordinate data. 
+  Here we add generated vertex to our list (so we can free it after tesselation)
+  and give it to the tesselation engine. (dataout)
   ----------------------------------------------------------------------*/
-/* ARGSUSED */
-void CALLBACK
-myCombine(GLdouble coords[3], void *vertex_data[4], 
+static void myCombine (GLdouble coords[3], void *vertex_data[4], 
 	  GLfloat weight[4], void **dataOut)
 {
-  ListMem *ptr = &root;
+  ListMem *ptr = &SAddedVertex;
+  
   while (ptr->next) 
     ptr = ptr->next;
-  ptr->next = malloc(sizeof(ListMem));
+  ptr->next = TtaGetMemory (sizeof (ListMem));
   ptr = ptr->next;
   ptr->next = 0;
-  ptr->data = malloc(3 * sizeof(GLint));
-  ptr->data[0] = (GLint) coords[0];
-  ptr->data[1] = (GLint) coords[1];
-  ptr->data[2] = (GLint) coords[2];
+  ptr->data = TtaGetMemory (sizeof (ThotPoint));
+  ptr->data->x = (GLfloat) coords[0];
+  ptr->data->y = (GLfloat) coords[1];
   *dataOut = ptr->data;
 }
-#endif
 /*----------------------------------------------------------------------
  my_error : Displays GLU error 
  (VERY useful on 50000000000 vertex polygon... 
  see jasc webdraw butterfly sample )
   ----------------------------------------------------------------------*/
-void CALLBACK
-my_error(GLenum err)
+static void my_error (GLenum err)
 {
   g_print ("%s \n", gluErrorString(err));
 }
-
-
-/* 
-   Number of contour in the 
-   polygon that must be tesselated
-   also used in draw path
-   (don't worry, those static horror 
-   will move when Drawpath will be complete
-   (Elliptic Arc rewrite)
-*/ 
-/***************************/ 
-/* To be malloc'ed !!!!!!!!!!*/
+/* To be malloc'ed !!!!!!!!!! 
+   just don't when and how many... */
 static int tab[1000];
+/* Number of contour in the 
+   polygon that must be tesselated
+   also used in draw path 
+   (ORDER and place of new countour 
+   are the key of tesselation)*/ 
 static int n_polygon;
-/****************************/
 
 /*----------------------------------------------------------------------
  tesse :  Tesselation that use GLU library tesselation 
@@ -248,80 +334,70 @@ static int n_polygon;
    as it calls mycombine to create them
    (in this case triangles...)
   ----------------------------------------------------------------------*/
-void 
-tesse(ThotPoint *contours, int contour_cnt)
+static void tesse(ThotPoint *contours, int contour_cnt, ThotBool only_countour)
 { 
   int i;
-  mode_type mode;
   GLdouble data[3];
-  /****************************/
-  /* To be malloc'ed !!!!!!!!!!*/
-  GLint p[100000][2];
-  /****************************/
-  GLUtriangulatorObj *tobj = NULL;
   int n_poly_count = 0;
-  if (tobj == NULL)
-    tobj = gluNewTess();
+  GLUtesselator *tobj = NULL;
 
-/*
-Winding possibilities are :
-GLU_TESS_WINDING_ODD = Classique
-GLU_TESS_WINDING_NONZERO
-GLU_TESS_WINDING_POSITIVE
-GLU_TESS_WINDING_NEGATIVE
-GLU_TESS_WINDING_ABS_GEQ_TWO
-*/ 
-  glEdgeFlag(GL_TRUE);
-  gluTessProperty(tobj,
+  tobj = gluNewTess();
+  /* Winding possibilities are :
+  GLU_TESS_WINDING_ODD = Classique
+  GLU_TESS_WINDING_NONZERO
+  GLU_TESS_WINDING_POSITIVE
+  GLU_TESS_WINDING_NEGATIVE
+  GLU_TESS_WINDING_ABS_GEQ_TWO */ 
+  gluTessProperty (tobj,
 		  GLU_TESS_WINDING_RULE, 
 		  GLU_TESS_WINDING_ODD);
-  gluTessProperty(tobj,
+  gluTessProperty (tobj,
 		  GLU_TESS_BOUNDARY_ONLY,
-		  GL_FALSE);
-  gluTessProperty(tobj,
+		  only_countour);
+  gluTessProperty (tobj,
 		  GLU_TESS_TOLERANCE, 
-		  0);
+		   0);
   if (tobj != NULL) 
     {
-      gluTessCallback(tobj, GLU_BEGIN, 
-		      (void (CALLBACK*)())glBegin);
-      gluTessCallback(tobj, GLU_END, 
-		      (void (CALLBACK*)())glEnd);
-      gluTessCallback(tobj, GLU_ERROR, 
-		      (void (CALLBACK*)()) my_error); 
-      gluTessCallback(tobj, GLU_VERTEX, 
-		      (void (CALLBACK*)()) glVertex2iv);
-#ifdef GLU_VERSION_1_2
-      root.data = 0;
-      root.next = 0;
-      gluTessCallback(tobj, GLU_TESS_COMBINE, 
-		      (void (CALLBACK*)()) myCombine);
-#endif      
-      gluBeginPolygon(tobj); 
-      /*
-	GLU_EXTERIOR , GLU_INTERIOR, GLU_UNKNOWN, GLU_CCW, GLU_CW
-      */
-      gluNextContour(tobj, GLU_UNKNOWN); 
+      gluTessCallback (tobj, GLU_BEGIN, 
+		      (void (*)())glBegin);
+      gluTessCallback (tobj, GLU_END, 
+		      (void (*)())glEnd);
+      gluTessCallback (tobj, GLU_ERROR, 
+		      (void (*)()) my_error); 
+      gluTessCallback (tobj, GLU_VERTEX, 
+		      (void (*)()) glVertex2fv);
+      SAddedVertex.data = 0;
+      SAddedVertex.next = 0;
+      gluTessCallback (tobj, GLU_TESS_COMBINE, 
+		      (void (*)()) myCombine);
+      gluTessBeginPolygon( tobj, NULL );
+      gluTessBeginContour (tobj);
       for (i = 0; i < contour_cnt; i++) 
 	{ 
 	  if (i == tab[n_poly_count] 
 	      &&  n_poly_count < n_polygon)
 	    {
 	      n_poly_count++;
-	      gluNextContour(tobj, GLU_UNKNOWN); 
+	      gluTessEndContour (tobj);
+	      /* maybe calculation if not a new polygon...
+	       if it's not inside this one,
+	      but must calculate it for all the next polygon
+	      */ 
+	      glEdgeFlag(GL_TRUE);
+	      gluTessBeginContour (tobj);
 	    }
+	  else
+	    glEdgeFlag(GL_FALSE);
 	  data[0] = (GLdouble) (contours[i].x);
 	  data[1] = (GLdouble) (contours[i].y);
 	  data[2] = 0.0;
-	  p[i][0] = (GLint) (contours[i].x);
-	  p[i][1] = (GLint) (contours[i].y);
-	  gluTessVertex(tobj, data, p[i]);
+	  gluTessVertex (tobj, data, (GLfloat *) &contours[i]);
 	} 
-      gluEndPolygon(tobj);
-      mode = TESSELATED;
-#ifdef GLU_VERSION_1_2
+      gluTessEndContour (tobj);
+      gluTessEndPolygon (tobj);
       {
-	ListMem *fptr = root.next;
+	ListMem *fptr = SAddedVertex.next;
 	ListMem *tmp;
 	while (fptr) 
 	  {
@@ -331,83 +407,157 @@ GLU_TESS_WINDING_ABS_GEQ_TWO
 	    fptr = tmp;
 	  }
       }
-#endif
       gluDeleteTess(tobj);
     }
 }
 /*----------------------------------------------------------------------
- GL_DrawPolygon
+ GL_DrawArc : receive angle at 64* their values...
+ but
+  ----------------------------------------------------------------------*/
+static void GL_DrawArc (int x, int y, int w, int h, int angle1, int angle2, ThotBool filled)
+{  
+  float angle, anglefinal, fastx, fasty;
+
+  /*The formula is simple :
+       y + (h/2)*(1 - sin (DEG_TO_RAD (Angle/64)))
+       x + (w/2)*(1 + cos (DEG_TO_RAD (Angle/64)))
+    But if we put all those calculation in the while
+    Cpu will overheat with 5 *,  2 / and 2 +!!!
+    That's why there is those preliminary steps */
+
+  angle2 = angle1 + angle2;
+  angle1 = angle1 / 64;
+  angle2 = angle2 / 64;
+  w =  w / 2;
+  h =  h / 2;
+  fastx = x + w;
+  fasty = y + h;
+  
+  angle =  DEG_TO_RAD (angle2);
+  anglefinal = DEG_TO_RAD (angle1);
+  /* A good optimization is that
+   cos(A)*cos(B)=(cos(A+B)+cos(A-B))/2 
+   based on trigo decomposition
+   sin(A+B)=sin A cos B + cos A sin B
+   sin(A-B)=sin A cos B - cos A sin B
+   cos(A+B)=cos A cos B - sin A sin B
+   cos(A-B)=cos A cos B + sin A sin B
+  it could eliminate MULs... 
+  but need to calculate cos and sin more times
+  perhaps precalculated tables...*/  
+  if (!filled && 0)
+    {
+      angle =  DEG_TO_RAD (angle2);
+      glBegin (GL_POINTS);
+      /* another one is to extend the use of Vertex array...
+	 but not only for here... for all computations*/
+      while (angle1 <= angle2)
+	{
+	  glVertex2f ( fastx + w * DCOS(angle),
+		       fasty - h * DSIN(angle));
+	  angle -= A_DEGREE;
+	  angle2--;
+	}
+      glVertex2f ( fastx + w * DCOS (angle),
+		   fasty - h * DSIN (angle));
+      glEnd();
+    }
+  angle = DEG_TO_RAD (angle2);
+  if (filled)
+    {
+      glBegin (GL_TRIANGLE_FAN);
+      /* The center */
+      glVertex2f (fastx, fasty);
+    }
+  else
+    {
+      glDisable (GL_BLEND);
+      glBegin (GL_LINE_STRIP);
+    }
+  while (angle1 <= angle2)
+    {
+      glVertex2f ( fastx + w * DCOS(angle),
+		   fasty - h * DSIN(angle));
+      angle -= A_DEGREE;
+      angle2--;
+    }
+  glVertex2f ( fastx + w * DCOS (angle),
+	       fasty - h * DSIN (angle));
+  glEnd();
+  if (!filled)
+    glEnable (GL_BLEND);
+}
+/*----------------------------------------------------------------------
+   GL_DrawLines
+   (Not static because used in geom.c)
+  ----------------------------------------------------------------------*/
+void GL_DrawLines (ThotPoint *point, int npoints)
+{
+  int i, k;
+  
+  if (S_thick > 1)
+    {
+      /* Joinning if a certain thickness ?*/
+      glBegin (GL_POINTS); 
+      for (i=0; i<npoints; i++)
+	{	  
+	  glVertex2fv ((GLfloat *) (point+i));
+	}
+      glEnd (); 
+    }
+  k = 0;
+  glBegin (GL_LINE_STRIP);
+  for (i=0; i < npoints; i++)
+    {
+      if (i == tab[k] &&  k < n_polygon)
+	{
+	  glEnd ();
+	  glBegin (GL_LINE_STRIP);
+	  k++; 
+	}
+      
+      glVertex2fv ((GLfloat *) (point+i));
+    }
+  glEnd ();
+  
+}
+/*----------------------------------------------------------------------
+ GL_DrawPolygon : tesselation handles 
+ convex, concave and polygon with holes
   ----------------------------------------------------------------------*/
 static void GL_DrawPolygon (ThotPoint *points, int npoints)
 {
-  /*
-    perhaps we ca extract the tesselation algorithms from 
-    the GLu library as 
-    http://www.vterrain.org/Implementation/Libs/triangulate.html
-    suggests...
-    so I just let this interface for now...
-   */
-  tesse (points, npoints);
-}
-
-/* 
-   the *64 is here to have more precise 
-   angle without having cpu eating floating point calculations...
-*/
-#define FULLCIRCLE 360*64 
-/*----------------------------------------------------------------------
- GL_DrawArc 
-  ----------------------------------------------------------------------*/
-static void GL_DrawArc (int x, int y, int w, int h, int angle1, int angle2)
-{
-  int angle;
-
-    if (angle2 > FULLCIRCLE)
-      angle2 =  FULLCIRCLE;
-    else if (angle2 < -FULLCIRCLE)
-      angle2 = - FULLCIRCLE;
-  /*
-    selfJoin = angle2 == FULLCIRCLE || angle2 == -FULLCIRCLE; 
-    if selfjoin GL_LINE_LOOP ?
-   */
-  glBegin (GL_LINES) ; 
-  for (angle = angle1; angle < angle2; angle++) 
-    {
-      glVertex2d( x + w / 2 * (1 + cos (angle)),
-		  y + h / 2 * (1 - sin (angle)));
-    }
-  glEnd();
-}
-
-
-/*----------------------------------------------------------------------
- GL_DrawString : Draw a string  
- Use Glut lib for now
- to be modified upon the integration of the FTGL lib :
- http://homepages.paradise.net.nz/henryj/code/index.html
-  ----------------------------------------------------------------------*/
-static void GL_DrawString (char const *str, float x, float y)
-{
-   int i;
-   
-   i = 0;
-   glRasterPos2i (x,  y);
-   while (*(str+i))
-     glutBitmapCharacter (GLUT_BITMAP_HELVETICA_10,  *(str+i++));
-   
+    tesse (points, npoints, FALSE);
 }
 /*----------------------------------------------------------------------
-  GL_DrawChar : draw a character... 
-  Use Glut lib for now
-  to be modified upon the integration of the FTGL lib :
-  http://homepages.paradise.net.nz/henryj/code/index.html
+ GL_DrawString : Draw a string in a texture or a bitmap 
   ----------------------------------------------------------------------*/
-static void GL_DrawChar (char const c, float x, float y)
+static void GL_DrawString (char const *str, float x, float y, void *GL_font)
 {
-  glRasterPos2i (x, y);
-  glutBitmapCharacter (GLUT_BITMAP_HELVETICA_10,  c);
+#ifdef MESA
+  glRasterPos2f (x, y);
+  gl_draw_text (GL_font, str);
+#else /* MESA */
+  glPushMatrix ();
+  glTranslatef (x, y, 0.0);
+  glScalef (1.0, -1.0, 1.0);
+  glEnable (GL_TEXTURE_2D);
+  gl_draw_text (GL_font, str); 
+  glDisable (GL_TEXTURE_2D);  
+  glPopMatrix ();
+#endif /* MESA */
 }
+/*----------------------------------------------------------------------
+  GL_DrawChar : draw a character in a texture or a bitmap 
+  ----------------------------------------------------------------------*/
+static void GL_DrawChar (char const c, float x, float y, void *GL_font)
+{
+  char str[2];
 
+  str[0] = c;
+  str[1] = '\0';
+  GL_DrawString (str, x, y, GL_font);
+}
 #endif /*_GL*/
 
 /*----------------------------------------------------------------------
@@ -457,7 +607,17 @@ static void InitDrawing (int style, int thick, int fg)
       gdk_gc_set_line_attributes (TtLineGC, thick, GDK_LINE_SOLID,
 				  GDK_CAP_BUTT, GDK_JOIN_MITER);
 #else /*_GL*/    
-      glLineWidth(thick);
+       if (thick)
+	{
+	  S_thick = thick;
+	  glLineWidth ((GLfloat) thick); 
+	  glPointSize ((GLfloat) thick); 
+	}
+       else
+	 {
+	   glLineWidth (0.1); 
+	   glPointSize (0.1); 
+	 }
 #endif /*_GL*/
 #else /* _GTK */
       XSetLineAttributes (TtDisplay, TtLineGC, thick, LineSolid,
@@ -478,9 +638,20 @@ static void InitDrawing (int style, int thick, int fg)
       gdk_gc_set_dashes ( TtLineGC, 0, dash, 2); 
       gdk_gc_set_line_attributes (TtLineGC, thick, GDK_LINE_ON_OFF_DASH,
 				  GDK_CAP_BUTT, GDK_JOIN_MITER);
-#else /*_GL*/   
-     glLineWidth(thick); 
-     glLineStipple(2, dash); 
+#else /*_GL*/
+      if (thick)
+	{
+	  S_thick = thick;
+	  glLineWidth ((GLfloat) thick); 
+	  glPointSize ((GLfloat) thick); 
+	}
+      else
+	{
+	  glLineWidth (0.1); 
+	  glPointSize (0.1); 
+	}
+     glEnable (GL_LINE_STIPPLE);
+     glLineStipple (2, *((int *) (&dash[0]))); 
 #endif /*_GL*/
 #else /* _GTK */
       XSetDashes (TtDisplay, TtLineGC, 0, dash, 2);
@@ -570,7 +741,7 @@ void DrawChar (char car, int frame, int x, int y, PtrFont font, int fg)
 #ifndef _GL
     gdk_draw_text (w, font, TtLineGC, x, y, &car, 1);
 #else /* _GL */
-   GL_DrawChar(car, x, y);
+   GL_DrawChar(car, x, y, font);
 #endif/*  _GL */
 #else /* _GTK */
    XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) font)->fid); 
@@ -636,7 +807,7 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
 #ifndef _GL
 	 gdk_draw_string (w, font,TtLineGC, x, y, buff);
 #else /* _GL */
-	 GL_DrawString (buff, x, y);
+	 GL_DrawString (buff, x, y, font);
 #endif /* _GL */
 #else /* _GTK */
 	  XDrawString (TtDisplay, w, TtLineGC, x, y, buff, lg);
@@ -647,7 +818,7 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
 #ifndef _GL
 	    gdk_draw_string (w, font,TtLineGC, x + width, y, "\255");
 #else /* _GL */
-	  GL_DrawString ("\255", x, y);
+	  GL_DrawString ("\255", x + width, y, font);
 #endif /* _GL */
 #else /* _GTK */
 	    XDrawString (TtDisplay, w, TtLineGC, x + width, y, "\255", 1);
@@ -773,7 +944,7 @@ void DrawPoints (int frame, int x, int y, int boxWidth, int fg)
 #ifndef _GL
 	    gdk_draw_string (w,font, TtLineGC, xcour, y, ptcar);
 #else /* _GL */
-	  GL_DrawString( ptcar, xcour, y);
+	  GL_DrawString( ptcar, xcour, y, font);
 #endif /* _GL */
 #else /* _GTK */
 	     XDrawString (TtDisplay, w, TtLineGC, xcour, y, ptcar, 2);
@@ -791,7 +962,7 @@ void DrawPoints (int frame, int x, int y, int boxWidth, int fg)
 void DrawRadical (int frame, int thick, int x, int y, int l, int h,
 		  PtrFont font, int fg)
 {
-   int                 xm, xp, fh;
+  int                 xm, xp, fh;
 
    if (fg < 0)
      return;
@@ -974,7 +1145,7 @@ void DrawIntersection (int frame, int x, int y, int l, int h, PtrFont font,
 #ifndef _GL
 	gdk_draw_arc (FrRef[frame], TtLineGC,FALSE, x + 1, y + 1, l - 3, arc * 2, 0 * 64, 180 * 64);
 #else /* _GL */
-	GL_DrawArc(x + 1, y + 1, l - 3, arc * 2, 0 * 64, 180 * 64);
+	GL_DrawArc(x + 1, y + 1, l - 3, arc * 2, 0 * 64, 180 * 64, FALSE);
 #endif /* _GL */
 #else /* _GTK */
 	XDrawArc (TtDisplay, FrRef[frame], TtLineGC, x + 1, y + 1, l - 3, arc * 2, 0 * 64, 180 * 64);
@@ -1017,8 +1188,9 @@ void DrawUnion (int frame, int x, int y, int l, int h, PtrFont font, int fg)
 		      -0 * 64, -180 * 64);
 #else /*_GL*/
 	GL_DrawArc (x + 1, y + h - arc * 2 - 2,
-		      l - 3, arc * 2,
-		      -0 * 64, -180 * 64);
+		    l - 3, arc * 2,
+		    -0 * 64, -180 * 64,
+		    FALSE);
 #endif /* _GL */
 #else /* _GTK */
 	XDrawArc (TtDisplay, FrRef[frame], TtLineGC, x + 1, y + h - arc * 2 - 2, l - 3, arc * 2, -0 * 64, -180 * 64);
@@ -1043,7 +1215,7 @@ static void ArrowDrawing (int frame, int x1, int y1, int x2, int y2,
    dx = (float) (x2 - x1);
    dy = (float) (y1 - y2);
    l = (float) sqrt ((double) (dx * dx + dy * dy));
-   if (l == 0)
+   if (l == 0) 
       return;
    sina = dy / l;
    cosa = dx / l;
@@ -1544,7 +1716,7 @@ void DrawDiamond (int frame, int thick, int style, int x, int y, int width,
       gdk_draw_polygon (FrRef[frame], TtGreyGC, TRUE, point, 5);
       gdk_pixmap_unref ((GdkPixmap *)pat); 
 #else /*_GL*/
-      LoadColor(pattern);
+       LoadColor(bg);
       GL_DrawPolygon (point, 5);
 #endif /*_GL*/
 #else /* _GTK */
@@ -1675,13 +1847,12 @@ static void DoDrawLines (int frame, int thick, int style,
    if (pat != 0) 
      {
 #ifdef _GTK
-
 #ifndef _GL
        gdk_gc_set_tile (TtGreyGC, (GdkPixmap *)pat);
        gdk_draw_polygon (FrRef[frame], TtGreyGC, TRUE, points, npoints); 
        gdk_pixmap_unref ((GdkPixmap *)pat);
 #else /*_GL*/
-       LoadColor(bg);
+       GL_SetForeground (bg);
        GL_DrawPolygon (points, npoints);
 #endif /*_GL*/
 
@@ -1701,7 +1872,8 @@ static void DoDrawLines (int frame, int thick, int style,
 #ifndef _GL
        gdk_draw_lines (FrRef[frame], TtLineGC, points, npoints); 
 #else /*_GL*/
-       GL_DrawLines(points, npoints);
+       /**/
+       GL_DrawLines (points, npoints);
 #endif /*_GL*/
 
 #else /* _GTK */
@@ -1984,7 +2156,7 @@ void DrawSpline (int frame, int thick, int style, int x, int y,
       gdk_draw_polygon (FrRef[frame], TtGreyGC, TRUE , points, npoints); 
       gdk_pixmap_unref ((GdkPixmap *)pat);
 #else /*_GL*/
-      LoadColor(pattern);
+      GL_SetForeground (bg);
       GL_DrawPolygon (points, npoints);
 #endif /*_GL*/
 #else /* _GTK */
@@ -2038,7 +2210,7 @@ static void  DrawCurrent (int frame, int thick, int style,
 	DoDrawLines (frame, thick, style, points, npoints, fg, bg, pattern);
     }
 }
-
+ 
 /*----------------------------------------------------------------------
   DrawPath draws a path.
   Parameter path is a pointer to the list of path segments
@@ -2061,16 +2233,20 @@ void DrawPath (int frame, int thick, int style, int x, int y,
       npoints = 0;
       pPa = path; 
 #ifdef _GL
+      /* counts how many countours there are in Path
+       (countours is M or m, known or similar as a
+       hand leverage when drawing)*/
       n_polygon = 0;
 #endif /* _GL */
       while (pPa)
 	{
 	  if (pPa->PaNewSubpath)
-	    /* this path segment starts a new subpath */
-	    /* if some points are already stored, display the line
+	    /* this path segment starts a new subpath 
+	       (M or m attribute parameter)
+	       if some points are already stored, display the line
 	       they represent */
 #ifndef _GL
-	     if (npoints > 1)
+	    if (npoints > 1)
 	      {
 		DrawCurrent (frame, thick, style, points, npoints, fg, bg,
 			     pattern);
@@ -2078,13 +2254,11 @@ void DrawPath (int frame, int thick, int style, int x, int y,
 	      }
 #else /* _GL */
 	    {
-	      /* 
-		 We get here the contour separation nedded
-		 for the tesseleation 
-		 (handles polygon with holes)
-	      */
+	      /* We get here the contour separation nedded
+		     for the tesselation 
+		     that handles polygon with holes) */
 	      tab[n_polygon++] = npoints;
-	    }
+	    } 
 #endif /* _GL */
 	  switch (pPa->PaShape)
 	    {
@@ -2142,117 +2316,24 @@ void DrawPath (int frame, int thick, int style, int x, int y,
 	      break;
 
 	    case PtEllipticalArc:
-	      /**** to do ****/
-	      /* draws a Bezier if it's a half or quarter of a circle */
-	      if (pPa->XRadius == pPa->YRadius)
-		/* it's an arc of a circle */
-		{
-		  x1 = (float) (x + PixelValue (pPa->XStart, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
-		  y1 = (float) (y + PixelValue (pPa->YStart, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
-		  x2 = (float) (x + PixelValue (pPa->XEnd, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
-		  y2 = (float) (y + PixelValue (pPa->YEnd, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
-		  if (pPa->XStart == pPa->XEnd &&
-		      abs (pPa->YEnd - pPa->YStart) == 2 * pPa->XRadius)
-		    /* half circle (vertical) */
-		    {
-		    if ((pPa->Sweep  && pPa->YEnd > pPa->YStart) ||
-			(!pPa->Sweep && pPa->YEnd < pPa->YStart))
-		      cx1 = (float) (x + PixelValue (pPa->XStart + 1.36 * pPa->XRadius, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
-		    else
-		      cx1 = (float) (x + PixelValue (pPa->XStart - 1.36 * pPa->XRadius, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
-		    cy1 = y1;
-		    cx2 = cx1;
-		    cy2 = y2;
-		    PolySplit (x1, y1, cx1, cy1, cx2, cy2, x2, y2,
-			       &points, &npoints, &maxpoints);
-		    PolyNewPoint ((int) x2, (int) y2, &points, &npoints,
-				  &maxpoints);
-		    }
-		  else if (pPa->YStart == pPa->YEnd &&
-		      abs (pPa->XEnd - pPa->XStart) == 2 * pPa->XRadius)
-		    /* half circle (horizontal) */
-		    {
-		    if ((pPa->Sweep  && pPa->XEnd < pPa->XStart) ||
-			(!pPa->Sweep && pPa->XEnd > pPa->XStart))
-		      cy1 = (float) (y + PixelValue (pPa->YStart + 1.36 * pPa->YRadius, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
-		    else
-		      cy1 = (float) (y + PixelValue (pPa->YStart - 1.36 * pPa->YRadius, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
-		    cy2 = cy1;
-		    cx1 = x1;
-		    cx2 = x2;
-		    PolySplit (x1, y1, cx1, cy1, cx2, cy2, x2, y2,
-			       &points, &npoints, &maxpoints);
-		    PolyNewPoint ((int) x2, (int) y2, &points, &npoints,
-				  &maxpoints);
-		    }
-		  else if (abs (pPa->YEnd - pPa->YStart) == pPa->YRadius &&
-			   abs (pPa->XEnd - pPa->XStart) == pPa->XRadius)
-		    /* a quarter or 3/4 of a circle */
-		    {
-		      if (!pPa->LargeArc)
-			/* a quarter of a circle */
-			{
-			  if (pPa->XStart < pPa->XEnd)
-			    if (pPa->YStart < pPa->YEnd)
-			      if (pPa->Sweep)
-			        {
-			          cx1 = x2;
-			          cy1 = y1;
-			        }
-			      else
-			        {
-			          cx1 = x1;
-			          cy1 = y2;
-			        }
-			    else
-			      if (pPa->Sweep)
-			        {
-			          cx1 = x1;
-			          cy1 = y2;
-			        }
-			      else
-			        {
-			          cx1 = x2;
-			          cy1 = y1;
-			        }
-			  else
-			    if (pPa->YStart < pPa->YEnd)
-			      if (pPa->Sweep)
-			        {
-			          cx1 = x1;
-			          cy1 = y2;
-			        }
-			      else
-			        {
-			          cx1 = x2;
-			          cy1 = y1;
-			        }
-			    else
-			      if (pPa->Sweep)
-			        {
-			          cx1 = x2;
-			          cy1 = y1;
-			        }
-			      else
-			        {
-			          cx1 = x1;
-			          cy1 = y2;
-			        }
-		        QuadraticSplit (x1, y1, cx1, cy1, x2, y2,
-					&points, &npoints, &maxpoints);
-		        PolyNewPoint ((int) x2, (int) y2, &points, &npoints,
-				      &maxpoints);
-			}
-		    }
-		}
+	      x1 = (float) (x + PixelValue (pPa->XStart, UnPixel, NULL,
+					    ViewFrameTable[frame - 1].FrMagnification));
+	      y1 = (float) (y + PixelValue (pPa->YStart, UnPixel, NULL,
+					    ViewFrameTable[frame - 1].FrMagnification));
+	      x2 = (float) (x + PixelValue (pPa->XEnd, UnPixel, NULL,
+					    ViewFrameTable[frame - 1].FrMagnification));
+	      y2 = (float) (y + PixelValue (pPa->YEnd, UnPixel, NULL,
+					    ViewFrameTable[frame - 1].FrMagnification));
+	      cx1 = pPa->XRadius;
+	      cy1 = pPa->YRadius;
+	      EllipticSplit ((double) x1, (double) y1, 
+			     (double) x2, (double) y2, 
+			     (double) cx1, (double) cy1,
+			     fmod(pPa->XAxisRotation, 360), 
+			     pPa->LargeArc, pPa->Sweep,
+			     &points, &npoints, &maxpoints);
+	      PolyNewPoint ((int) x2, (int) y2, &points, &npoints, 
+ 			    &maxpoints);
 	      break;
 	    }
 	  pPa = pPa->PaNext;
@@ -2263,7 +2344,10 @@ void DrawPath (int frame, int thick, int style, int x, int y,
 	DrawCurrent (frame, thick, style, points, npoints, fg, bg, pattern);
       /* free the table of points */
       free (points);
-    }
+    }  
+#ifdef _GL
+  n_polygon = 0;
+#endif /* _GL */
 }
 
 /*----------------------------------------------------------------------
@@ -2413,12 +2497,13 @@ void DrawOval (int frame, int thick, int style, int x, int y, int width,
 	}
 	gdk_pixmap_unref ((GdkPixmap *)pat);
 #else /*_GL*/
-	LoadColor (fg);
+      GL_SetForeground (bg);
 	GL_DrawPolygon (point, 13);
 	for (i=0;i<4;i++){
 	  GL_DrawArc (xarc[i].x, xarc[i].y, 
-			xarc[i].width, xarc[i].height, 
-			xarc[i].angle1,xarc[i].angle2); 
+		      xarc[i].width, xarc[i].height, 
+		      xarc[i].angle1,xarc[i].angle2,
+		      TRUE); 
 	}
 #endif /*_GL*/
 
@@ -2449,7 +2534,8 @@ void DrawOval (int frame, int thick, int style, int x, int y, int width,
 	for (i=0;i<4;i++){
 	  GL_DrawArc (xarc[i].x, xarc[i].y, 
 		      xarc[i].width, xarc[i].height, 
-		      xarc[i].angle1,xarc[i].angle2);
+		      xarc[i].angle1,xarc[i].angle2,
+		      FALSE);
 	} 
 	GL_DrawSegments (seg, 4);
         /*gl_segments ?*/
@@ -2482,6 +2568,29 @@ void DrawEllips (int frame, int thick, int style, int x, int y, int width,
    if (pat == 0 && thick <= 0)
       return;
 
+#ifdef _GL
+   if (width == height && width < 10)
+     {
+       if (thick > 0 && fg >= 0)
+	 {
+	   GL_SetForeground (fg);
+	   glPointSize (width);
+	   glBegin (GL_POINTS);
+	   glVertex2f (x, y+height/2);
+	   glEnd ();
+	 }
+       else
+	 if (pat != 0)
+	   {
+	     GL_SetForeground (bg);
+	     glPointSize (width);
+	     glBegin (GL_POINTS);
+	     glVertex2f (x, y);
+	     glEnd ();
+	   }
+       return;
+     }
+#endif /* _GL */
    if (pat != 0)
      {
 #ifdef _GTK 
@@ -2490,7 +2599,8 @@ void DrawEllips (int frame, int thick, int style, int x, int y, int width,
       gdk_draw_arc (FrRef[frame], TtGreyGC, TRUE, x, y, width, height, 0, 360 * 64);
       gdk_pixmap_unref ((GdkPixmap *)pat);
 #else /*_GL*/
-      GL_DrawArc ( x, y, width, height, 0, 360 * 64);
+      GL_SetForeground (bg);
+      GL_DrawArc ( x, y, width, height, 0, 360 * 64, TRUE);
 #endif /*_GL*/
 #else /* _GTK */
       XSetTile (TtDisplay, TtGreyGC, pat);
@@ -2507,7 +2617,7 @@ void DrawEllips (int frame, int thick, int style, int x, int y, int width,
 #ifndef _GL
       gdk_draw_arc (FrRef[frame], TtLineGC, FALSE,  x, y, width, height, 0, 360 * 64);
 #else /*_GL*/
-      GL_DrawArc ( x, y, width, height, 0, 360 * 64);
+      GL_DrawArc ( x, y, width, height, 0, 360 * 64, FALSE);
 #endif /*_GL*/
 #else /* _GTK */
       XDrawArc (TtDisplay, FrRef[frame], TtLineGC, x, y, width, height, 0, 360 * 64);
@@ -2854,13 +2964,14 @@ void DrawRectangleFrame (int frame, int thick, int style, int x, int y,
 	  }
 	gdk_pixmap_unref ((GdkPixmap *)pat);
 #else /*_GL*/
-	LoadColor (fg);
+      GL_SetForeground (bg);
 	GL_DrawPolygon (point, 13);
 	for (i = 0; i < 4; i++)
 	  {  
 	    GL_DrawArc	(xarc[i].x, xarc[i].y, 
 			 xarc[i].width, xarc[i].height, 
-			 xarc[i].angle1, xarc[i].angle2);
+			 xarc[i].angle1, xarc[i].angle2,
+			 TRUE);
 	  }
 #endif /*_GL*/
 #else /* _GTK */
@@ -2888,8 +2999,9 @@ void DrawRectangleFrame (int frame, int thick, int style, int x, int y,
 	  
 #else /*_GL*/
 	GL_DrawArc (xarc[i].x, xarc[i].y, 
-			xarc[i].width, xarc[i].height, 
-			xarc[i].angle1, xarc[i].angle2); 
+		    xarc[i].width, xarc[i].height, 
+		    xarc[i].angle1, xarc[i].angle2,
+		    FALSE); 
 #endif /*_GL*/
 }
 #else /* _GTK */
@@ -2952,7 +3064,8 @@ void DrawEllipsFrame (int frame, int thick, int style, int x, int y,
 		  x, y, width, height, 0, 360 * 64);
 	gdk_pixmap_unref ((GdkPixmap *)pat);
 #else /*_GL*/
-	GL_DrawArc (x, y, width, height, 0, 360 * 64);
+	GL_SetForeground (bg);
+	GL_DrawArc (x, y, width, height, 0, 360 * 64, TRUE);
 #endif /*_GL*/
 #else /* _GTK */
 	XSetTile (TtDisplay, TtGreyGC, pat);
@@ -2971,7 +3084,7 @@ void DrawEllipsFrame (int frame, int thick, int style, int x, int y,
 	gdk_draw_arc (FrRef[frame], TtLineGC, FALSE,
 		      x, y, width, height, 0, 360 * 64); 
 #else /*_GL*/
-	GL_DrawArc(x, y, width, height, 0, 360 * 64); 
+	GL_DrawArc(x, y, width, height, 0, 360 * 64, FALSE); 
 #endif /*_GL*/
 #else /* _GTK */
 	XDrawArc (TtDisplay, FrRef[frame], TtLineGC,
@@ -3026,7 +3139,7 @@ void SetMainWindowBackgroundColor (int frame, int color)
    gdkcolor.pixel = gdk_rgb_xpixel_from_rgb (ColorPixel (color));
    gdk_window_set_background (FrRef[frame], &gdkcolor);
 #else /*_GL*/ 
-   GL_SetBackground(color);
+   GL_SetBackground(color, frame);
 #endif /*_GL*/
 #else /* _GTK */
    XSetWindowBackground (TtDisplay, FrRef[frame], ColorPixel (color));
@@ -3047,13 +3160,14 @@ void Clear (int frame, int width, int height, int x, int y)
 
   w = FrRef[frame];
 #endif /* _GL */
+
   if (w != None)
     {
 #ifdef _GTK
 #ifndef _GL
-	gdk_window_clear_area (w, x, y + FrameTable[frame].FrTopMargin, width, height);
+      gdk_window_clear_area (w, x, y + FrameTable[frame].FrTopMargin, width, height);
 #else /*_GL*/ 
-	GL_ClearArea(x, y + FrameTable[frame].FrTopMargin, width, height);
+      GL_ClearArea(x, y + FrameTable[frame].FrTopMargin, width, height);
 #endif /*_GL*/
 #else /* _GTK */
       XClearArea (TtDisplay, w, x, y + FrameTable[frame].FrTopMargin, width, height, FALSE);
@@ -3124,7 +3238,11 @@ void Scroll (int frame, int width, int height, int xd, int yd, int xf, int yf)
 			    width,
 			    height);
 #else /*_GL*/
-
+      glRasterPos2i (xf, 
+		     yf + FrameTable[frame].FrTopMargin+height);
+      glCopyPixels(xd, 
+		   FrameTable[frame].WdFrame->allocation.height + FrameTable[frame].FrTopMargin - yd - height,
+		   width, height, GL_COLOR);
 #endif /*_GL*/
 #else /* _GTK */
       XCopyArea (TtDisplay, FrRef[frame], FrRef[frame], TtWhiteGC,

@@ -53,8 +53,8 @@
 
 /* 
    stupid animation render testing
-   in order to make bench
- */
+   in order to vizualise renderings 
+   times */
 void make_carre()
 {
   static float k = 0.0;
@@ -65,145 +65,40 @@ glPushMatrix();
          k = k > 500.0 ? 0 : k;
 	 l += 0.05;
 	 l = l > 1.0 ? 0 : l;
-	 glTranslatef(k, 50.0, 0.0);
+	 glTranslatef( 0.0, k, 0.0);
 	 glBegin(GL_QUADS);
 	 glColor4f(1.0-l, 0.0, 1.0, 1-l);
-	 glVertex2i(  0, 200 );/* haut gauche*/
+	 glVertex2i(  0, 20 );/* haut gauche*/
 	 glColor4f(1.0, 0.0, 1.0-l, 0.75-l);
-	 glVertex2i( 200, 200);/* haut droit*/
+	 glVertex2i( 20, 20);/* haut droit*/
 	 glColor4f(0.5, 0.5, 1.0-l, 0.75-l);
-	 glVertex2i( 200, 0);/* bas droit*/
+	 glVertex2i( 20, 0);/* bas droit*/
 	 glColor4f(0.5, 0.5, 1.0-l, 0.25-l);
 	 glVertex2i(  0, 0);/* bas gauche */
 	 glEnd();
 glPopMatrix(); 
 }
 
-/*----------------------------------------------------------------------
- GL_SetForeground : set color before drawing a or many vertex
-  ----------------------------------------------------------------------*/
-void GL_SetForeground (int fg)
-{
-    unsigned short red, green, blue;
-
-    TtaGiveThotRGB (fg, &red, &green, &blue);
-    glColor4ub (red, green, blue, 255);
-}
-
-static ThotBool GL_Buffering;
-int BG_Frame = 0;
+extern ThotBool GL_Modif;
 
 /*----------------------------------------------------------------------
-   GL_DrawEmptyRectangle Outlined rectangle
-  ----------------------------------------------------------------------*/
-static void  GL_ClearBackground (int width, int height)
-{
-  GL_SetForeground (BG_Frame);
-  glBegin (GL_LINE_STRIP);
-  glVertex2d (  0, 0 );
-  glVertex2d (  0, 0 + height);
-  glVertex2d (  0 +  width, 0 + height);
-  glVertex2d (  0 + width, 0);
-  glVertex2d (  0, 0 );
-  glEnd ();
-
-}
-/*----------------------------------------------------------------------
-   GL_prepare: Defines Opengl Buffer properties, 
-   must be called before drawing (or Sigsev on some platforms...)
+   GL_prepare: If a modif has been done
   ----------------------------------------------------------------------*/
 ThotBool GL_prepare (GtkWidget *widget)
-{
-  int l,h;
-  
-  if (gtk_gl_area_make_current (GTK_GL_AREA(widget)))
-    {  
-      if (GL_Buffering)
-	return TRUE;
-      else
-	GL_Buffering = TRUE;
-      l = widget->allocation.width;
-      h = widget->allocation.height;
-      /* 
-	 Defining Opengl Area 
-	 and matrix calculation system
-      */
-      glViewport (0, 0, l, h);
-      glMatrixMode (GL_PROJECTION);      
-      glLoadIdentity ();
-      glOrtho (0, l, 0, h, -1, 1);
-      glMatrixMode (GL_MODELVIEW);
-      glLoadIdentity();	
-      /* Simple Lighting model*/
-      glShadeModel(GL_FLAT); 
-      /* Transparency */
-      glEnable (GL_BLEND); 
-      glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);	 
-      /* 
-	 Antialiasing 
-	 Those Options give better quality image upon performance loss
-	 Must be a user Option
-       */
-      glEnable (GL_LINE_SMOOTH); 
-      glEnable (GL_POINT_SMOOTH); 
-      /*glEnable (GL_POLYGON_SMOOTH); */
-
-      /* Texture mapping Options 
-       Later, with zoom, we'll surely enable Mipmapping (better quality)*/
-      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-      /* How texture is mapped... GL_REPEAT is another option.. Bench !!*/
-      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,  GL_CLAMP);
-      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-      /* 
-	 This matters on 3d scene,  does it here ?
-	 More Benchs to come...*/
-      /*  glHint( GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST );  */
-
-      /* 
-	 Polygon are alway filled (until now)
-	 Because Thot draws outlined polygons with joined lines
-	 so...
-       */
-     glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );  
-      /* 
-	 Invert the opengl coordinate system
-	 to the same as Thot	  
-	 (opengl Y origin  is the left up corner
-	 and the left bottom is negative !!)
-      */
-      glScalef (1.0, -1.0, 1.0);
-      glTranslated (0, (GLdouble) -h, 0);
-      /* 
-	 Erase  Screen buffer 
-	 Big Memory copy Consumption... 
-	 if we can do another Way, it will be faster !!
-      */
-      glClearColor (1, 1, 1, 1);
-      glClear(GL_COLOR_BUFFER_BIT);
-      /* Paint a background color */
-      GL_ClearBackground(l, h);
-      return TRUE;
-    }
-  else
-    return FALSE;
+{  
+  GL_Modif = TRUE; 
+  return TRUE;
 }
 
 /*----------------------------------------------------------------------
-   GL_realize : 
-   Switch Buffer in double buffer mode
-   and Force drawing in all mode
+   GL_realize : can we cancel if no modifs ?
   ----------------------------------------------------------------------*/
 void GL_realize (GtkWidget *widget)
 {
-  if (GL_Buffering == TRUE)
-    { 
-      glFlush();
-      /* gtk_gl_area_swapbuffers (GTK_GL_AREA(widget));  */
-      GL_Buffering = FALSE;
-    }
+  return;
 }
 #endif /*_GL*/
+
 /*----------------------------------------------------------------------
    GetXYOrg : do a coordinate shift related to current frame.
   ----------------------------------------------------------------------*/
@@ -223,6 +118,7 @@ void DefClip (int frame, int xd, int yd, int xf, int yf)
 {
    int                 width, height;
    ViewFrame          *pFrame;
+   int                xb, xe, yb, ye, y;
 
    GetSizesFrame (frame, &width, &height);
 
@@ -232,6 +128,12 @@ void DefClip (int frame, int xd, int yd, int xf, int yf)
    if (frame > 0 && frame <= MAX_FRAME)
      {
 	pFrame = &ViewFrameTable[frame - 1];
+	
+	xb = pFrame->FrClipXBegin - pFrame->FrXOrg;
+	xe = pFrame->FrClipXEnd - pFrame->FrXOrg - xb; 
+	yb = pFrame->FrClipYBegin - pFrame->FrYOrg;
+	ye = pFrame->FrClipYEnd - pFrame->FrYOrg - yb;	
+	
 	/* Should we take the whole width of the frame ? */
 	if (xd == xf && xd == -1)
 	  {
@@ -381,7 +283,7 @@ static void DrawFilledBox (PtrAbstractBox pAb, int frame, int xmin,
   int                 xd, yd;
   int                 width, height;
   int                 w, h;
- 
+
   pBox = pAb->AbBox;
   if (pBox->BxType == BoGhost)
     return;
@@ -704,6 +606,8 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
   return topBox;
 }
 
+extern ThotBool GL_Drawing;
+
 /*----------------------------------------------------------------------
    RedrawFrameTop redraw from bottom to top a frame.
    The scroll parameter indicates the height of a scroll
@@ -729,7 +633,7 @@ ThotBool            RedrawFrameTop (int frame, int scroll)
   int                 ymax;
   int                 delta;
   ThotBool            toadd;  
-  
+
   /* are new abstract boxes needed */
   toadd = FALSE;
   pFrame = &ViewFrameTable[frame - 1];
@@ -864,6 +768,7 @@ ThotBool            RedrawFrameTop (int frame, int scroll)
 	      FrameUpdating = FALSE;
 	    }
 #ifdef _GL
+	  GL_realize (FrameTable[frame].WdFrame);
 	}
 #endif /* _GL */
     }
@@ -1046,7 +951,8 @@ ThotBool     RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
 		  /* update of image is finished */
 		  FrameUpdating = FALSE;
 		}
-#ifdef _GL
+#ifdef _GL 
+	      GL_realize (FrameTable[frame].WdFrame);
 	    }
 #endif /* _GL */
 	  /* Interactive creation of boxes */
@@ -1057,24 +963,17 @@ ThotBool     RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
 	      /* Should son's boxes being handled too ? */
 	      while (pAb && pAb->AbFirstEnclosed)
 		{
-		  pAb = pAb->AbFirstEnclosed;
-		  stop = FALSE;
-		  while (!stop && pAb)
-		    {
-		      if (pAb->AbHorizPos.PosUserSpecified ||
-			  pAb->AbVertPos.PosUserSpecified ||
-			  pAb->AbWidth.DimUserSpecified ||
-			  pAb->AbHeight.DimUserSpecified)
-			DirectCreation (pAb->AbBox, frame);
-		      if (pAb->AbNext)
-			pAb = pAb->AbNext;
-		      else
-			stop = TRUE;
-		    }
+		  /* Volume computed is sufficient */
+		  /* Is a cleanup of the bottom of frame needed ? */
+		  if (y > 0)
+		    Clear (frame, l, y, 0, pRootBox->BxYOrg + pRootBox->BxHeight);
+		  pFrame->FrVolume = pFrame->FrAbstractBox->AbVolume;
 		}
-	      return (FALSE);
+	      
+	      /* update of image is finished */
+	      FrameUpdating = FALSE;
 	    }
-       }
+	}
     }
   else
     {
