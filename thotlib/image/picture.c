@@ -2607,7 +2607,7 @@ ThotBool Ratio_Calculate (PtrAbstractBox pAb, PictInfo *imageDesc,
 	  pAb->AbHeight.DimAbRef == NULL)
 	constrained_Height = FALSE;
     
-      if (!constrained_Width && constrained_Height)
+      if (!constrained_Width && constrained_Height && h)
 	{
 	  w = (width * h) / height;
 	  if (w != imageDesc->PicWArea)
@@ -2619,7 +2619,7 @@ ThotBool Ratio_Calculate (PtrAbstractBox pAb, PictInfo *imageDesc,
 			   0, 0, 0, frame);		  
 	    }
 	}
-      else if (constrained_Width && !constrained_Height)
+      else if (constrained_Width && !constrained_Height && w)
 	{
 	  h = (height * w) / width;
 	  if (h != imageDesc->PicHArea)
@@ -2982,9 +2982,9 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
     {
       /* one of box size is unknown, keep the image size */
       if (w == 0)
-	w = wBox;
+	w = wBox = imageDesc->PicWidth;
       if (h == 0)
-	h = hBox;
+	h = hBox = imageDesc->PicHeight;
       ClipAndBoxUpdate (pAb, box, w, h, top, bottom, left, right, frame);
     }
 

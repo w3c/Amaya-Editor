@@ -3996,6 +3996,8 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
       /* CHANGE HEIGHT */
       if (pAb->AbHeightChange)
 	{
+	  savedW = pBox->BxW;
+	  savedH = pBox->BxH;
 	  /* Remove the old value */
 	  ClearDimRelation (pBox, FALSE, frame);
 	  /* New height */
@@ -4011,6 +4013,13 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		case LtPicture:
 		  imageDesc = (PictInfo *) pBox->BxPictInfo;
 		  pBox->BxH = 0;
+		  /* force the reevaluation of the baseline */
+		  pAb->AbHorizRefChange = TRUE;
+		  if (!pAb->AbWidth.DimIsPosition &&
+		      pAb->AbWidth.DimValue == -1 &&
+		      pAb->AbWidth.DimAbRef == NULL)
+		    /* due to hte ration, the height changes too */
+		    pBox->BxW = 0;
 		  LoadPicture (frame, pBox, imageDesc);
 		  GivePictureSize (pAb, ViewFrameTable[frame -1].FrMagnification, &width, &height);
 		  break;
@@ -4032,11 +4041,14 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		}
 
 	      /* Change the height of the contents */
-	      result = height != pBox->BxH;
+	      result = height != savedH;
 	      ChangeDefaultHeight (pBox, NULL, height, frame);
-	      if (pAb->AbLeafType == LtPicture && width != pBox->BxW)
-		/* clear the ratio */
-		ChangeDefaultWidth (pBox, NULL, width, 0, frame);
+	      if (pAb->AbLeafType == LtPicture && width != savedW)
+		{
+		  /* clear the ratio */
+		  pBox->BxW = savedW;
+		  ChangeDefaultWidth (pBox, NULL, width, 0, frame);
+		}
 	    }
 	  else
 	    {
