@@ -436,7 +436,7 @@ void ANNOT_Quit ()
 }
 
 /*-----------------------------------------------------------------------
-   ANNOT_FreeDocumentResource
+   ANNOT_FreeAnnotResource
    Frees all the annotation resources that are associated with
    annotation annot (doesn't remove this annotation yet).
   -----------------------------------------------------------------------*/
@@ -624,6 +624,10 @@ AnnotLoadMode mode;
   if (mode == AM_LOAD_NONE)
     return;
 
+  /* we can only annotate some types of documents */
+  if (!ANNOT_CanAnnotate(doc))
+    return;
+
   if (!schema_init)
     {
       /* @@ RRS unfinished; this is temporary while the code is raw
@@ -633,11 +637,6 @@ AnnotLoadMode mode;
       SCHEMA_InitSchemas (doc);
       schema_init = TRUE;
     }
-
-  /* don't annotate other annotations, text only documents, or
-     graphic documents */
-  if (!ANNOT_CanAnnotate(doc))
-    return;
 
   /*
    * Parsing test!
@@ -797,8 +796,24 @@ void ANNOT_Create (doc, view)
   ElementType elType;
 #endif
 
+  /* we can only annotate some types of documents and saved documents */
   if (!ANNOT_CanAnnotate (doc))
     return;
+
+  /* It's risky to annotate modified documents as we may end having instant
+     orphan or misleading annotations. If it's an annotation document, 
+     the document may be marked as not modified even if it has not yet been
+     saved, so we verify if the file exists. */
+  if (TtaIsDocumentModified (doc)
+     || (DocumentTypes[doc] == docAnnot
+	 && !IsW3Path (DocumentURLs[doc])
+	 && !TtaFileExist (DocumentURLs[doc])))
+    {
+      InitInfo ("Error",
+		"You cannot annotate a modified document. Please save it first.");
+      return;
+    }
+
 #ifdef ANNOT_ON_ANNOT
   /* @@ JK Exp stuff to add a new thread item */
 #if 0
@@ -1134,7 +1149,7 @@ View view;
 }
 
 /*----------------------------------------------------------------------
-  ANNOT_Save
+  ANNOT_SaveDocument
   Frontend function that decides if an annotation should be saved and if
   it should be saved remotely or locally. It then calls the appropriate 
   function to do this operation.
@@ -1151,7 +1166,7 @@ View view;
   CHAR_T *filename;
 
   if (!TtaIsDocumentModified (doc_annot))
-    return; /* prevent Thot from performing normal save operation */
+      return; /* prevent Thot from performing normal save operation */
 
   if (IsW3Path (DocumentURLs[doc_annot]))
     ANNOT_Post (doc_annot, view);

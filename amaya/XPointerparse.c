@@ -851,7 +851,7 @@ XPointerContextPtr XPointer_parse (Document doc, char *buffer)
   context->curNode = &(context->nodeStart);
   /* and initialize the document root */
   context->doc = doc;
-  context->root = TtaGetRootElement (doc);
+  context->root = AGetRootElement (doc);
 
   /* start parsing */
   context->lookahead = LexAn (context);

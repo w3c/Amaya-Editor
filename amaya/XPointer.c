@@ -31,6 +31,9 @@
 #include "MathML.h"
 #include "GraphML.h"
 #include "XLink.h"
+#ifdef ANNOTATIONS
+#include "Annot.h"
+#endif /* ANNOTATIONS */
 #include "XPointer.h"
 #include "XPointerparse_f.h"
 #undef THOT_EXPORT
@@ -68,6 +71,9 @@ typedef enum _selType {
 
 static char * xptr_buffer; /* temporary buffer where the user may store
 			      an XPointer */
+
+static Element RootElement; /* the root of the tree we're parsing (so that
+			    we can stop the parsing */
 
 /*----------------------------------------------------------------------
   StrACat
@@ -380,6 +386,37 @@ static ThotBool TestElName (Element el, char *name)
 }
 
 /*----------------------------------------------------------------------
+  AGetRootElement
+
+  returns the first root element of the document.
+  ----------------------------------------------------------------------*/
+Element AGetRootElement (Document doc)
+{
+  Element el;
+
+  if (doc == 0)
+    return NULL;
+
+  el = TtaGetRootElement (doc);
+
+#ifdef ANNOTATIONS
+  if (DocumentTypes[doc] == docAnnot)
+    {
+      ElementType elType;
+
+      /* use the first child of the Annotation body as the root element */
+      elType = TtaGetElementType (el);
+      elType.ElTypeNum = Annot_EL_Body;
+      el = TtaSearchTypedElement (elType, SearchInTree, 
+				   el);
+      if (el)
+	el = TtaGetFirstChild (el);
+    }
+#endif /* ANNOTATIONS */
+  return el;
+}
+
+/*----------------------------------------------------------------------
   AGetParent
 
   returns the first parent element which doesn't have
@@ -388,8 +425,9 @@ static ThotBool TestElName (Element el, char *name)
 static Element AGetParent (Element el)
 {
   Element parent;
-  
-  if (!el)
+
+  /* stop if we're already at the Root Element */
+  if (!el || el == RootElement)
     return NULL;
 
   parent = el;
@@ -399,9 +437,10 @@ static Element AGetParent (Element el)
     }
   while (parent && ElIsHidden (parent));
 
-  /* the document root doesn't have any parent */
-  if (parent && !TtaGetParent (parent))
+#if 0
+  if (parent  && !TtaGetParent (parent))
     parent = NULL;
+#endif
 
   return parent;
 }
@@ -770,13 +809,14 @@ char * XPointer_build (Document doc, View view, ThotBool useDocRoot)
       && strcmp(schemaName, "XHTML")
       && strcmp(schemaName, "XML")
       && strcmp(schemaName, "MathML")
-      && strcmp(schemaName, "GraphML"))
+      && strcmp(schemaName, "GraphML")
+      && strcmp(schemaName, "Annot"))
     return NULL;
 
   /* is the document selected? */
   if (useDocRoot)
     {
-      firstEl = TtaGetRootElement (doc);
+      firstEl = AGetRootElement (doc);
       if (!firstEl)
 	return NULL; /* something went wrong */
       firstLen = 0;
@@ -837,7 +877,11 @@ char * XPointer_build (Document doc, View view, ThotBool useDocRoot)
       if (elType.ElTypeNum == THOT_SYMBOL_UNIT)
 	return NULL;
     }
-  
+
+  /* remember the root of the tree we are annotating, so that we can stop
+     walking the tree when we reach it */
+  RootElement = AGetRootElement (doc);
+
   firstXpath = XPointer_ThotEl2XPath (firstEl, firstCh, firstLen, mode, TRUE);
 #ifdef DEBUG_XPOINTER
   fprintf (stderr, "\nfirst xpointer is %s", firstXpath);

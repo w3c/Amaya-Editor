@@ -6,6 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern Element AGetRootElement ( Document doc );
 extern Element SearchAttrId ( Element root,
                               char *val );
 extern Element SearchSiblingIndex ( Element root,
@@ -23,6 +24,7 @@ extern void XPointer_bufferFree ( void );
 
 #else /* __STDC__ */
 
+extern Element AGetRootElement (/* Document doc */);
 extern Element SearchAttrId (/* Element root,
                                 char *val */);
 extern Element SearchSiblingIndex (/* Element root,
