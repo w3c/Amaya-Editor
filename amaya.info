@@ -1,5 +1,5 @@
 Package: 	amaya
-Version:	8.6
+Version:	8.7
 Revision:	2
 Maintainer:	Stephane GULLY <stephane.gully@inrialpes.fr>
 Depends:	glib-shlibs, imlib-shlibs (>= 1.9.14-2), gtk+-shlibs, gettext, libjpeg-shlibs, libpng3-shlibs
@@ -8,7 +8,7 @@ Conflicts:	amaya-gtk
 Replaces:	amaya-gtk
 Source:		mirror:custom:amaya-src-%v.tgz
 CustomMirror: <<
-	Primary:  ftp://ftp.w3.org/pub/amaya
+	Primary:  http://www.w3.org/Amaya/Distribution
 	ftp-US:   ftp://ftp.w3.org/pub/amaya
 <<
 SourceDirectory: Amaya
@@ -21,7 +21,7 @@ CompileScript: <<
 <<
 InstallScript: <<
 	cd 'Darwin' && make install prefix=%i/share bindir=%i/bin
-	cd %i/bin && ln -sf ../share/Amaya/applis/bin/amaya amaya
+	cd %i/bin && ln -sf ../share/Amaya/gtk/bin/amaya amaya
 <<
 DocFiles:	README README.amaya amaya/COPYRIGHT
 Description:	W3C's Editor/Browser
@@ -44,4 +44,4 @@ DescPackaging: <<
 <<
 License:	OSI-Approved
 Homepage:	http://www.w3.org/Amaya/
-Source-MD5:	a70d4fcb5c3f8d81eff78522dc7f8b01
+Source-MD5:	59b2d70d400a2d9378523eb121feaff9
