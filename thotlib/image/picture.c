@@ -1973,30 +1973,28 @@ PictInfo           *imageDesc;
 	    DefClip (frame, box->BxXOrg, box->BxYOrg, box->BxXOrg + box->BxRMargin + box->BxRBorder + box->BxRPadding + w, box->BxYOrg + box->BxBMargin + box->BxBBorder + box->BxBPadding + h);
 	  if (!pAb->AbPresentationBox)
 	    NewDimPicture (pAb);
-
-	  /* transmit picture dimensions */
-	  if (!pAb->AbWidth.DimIsPosition)
+	  if (pAb->AbLeafType == LtPicture)
 	    {
-	      if (pAb->AbWidth.DimMinimum)
-		/* the rule min is applied to this box */
-		ChangeDefaultWidth (box, box, w, 0, frame);
-	      else if (pAb->AbEnclosing && pAb->AbWidth.DimAbRef == pAb->AbEnclosing &&
-		       pAb->AbNext == NULL && pAb->AbPrevious == NULL)
+	      /* transmit picture dimensions */
+	      if (!pAb->AbWidth.DimIsPosition)
 		{
-		  /* the parent box should inherit the picture width */
-		  ChangeWidth (pAb->AbEnclosing->AbBox, pAb->AbEnclosing->AbBox, NULL, w, 0, frame);
+		  if (pAb->AbWidth.DimMinimum)
+		    /* the rule min is applied to this box */
+		    ChangeDefaultWidth (box, box, w, 0, frame);
+		  else if (pAb->AbEnclosing && pAb->AbWidth.DimAbRef == pAb->AbEnclosing &&
+			   pAb->AbNext == NULL && pAb->AbPrevious == NULL)
+		    /* the parent box should inherit the picture width */
+		    ChangeWidth (pAb->AbEnclosing->AbBox, pAb->AbEnclosing->AbBox, NULL, w, 0, frame);
 		}
-	    }
-	  if (!pAb->AbHeight.DimIsPosition)
-	    {
-	      if (pAb->AbHeight.DimMinimum)
-		/* the rule min is applied to this box */
-		ChangeDefaultHeight (box, box, h, frame);
-	      else if (pAb->AbEnclosing && pAb->AbWidth.DimAbRef == pAb->AbEnclosing &&
-		       pAb->AbNext == NULL && pAb->AbPrevious == NULL)
+	      if (!pAb->AbHeight.DimIsPosition)
 		{
-		  /* the parent box should inherit the picture height */
-		  ChangeHeight (pAb->AbEnclosing->AbBox, pAb->AbEnclosing->AbBox, NULL, h, frame);
+		  if (pAb->AbHeight.DimMinimum)
+		    /* the rule min is applied to this box */
+		    ChangeDefaultHeight (box, box, h, frame);
+		  else if (pAb->AbEnclosing && pAb->AbWidth.DimAbRef == pAb->AbEnclosing &&
+			   pAb->AbNext == NULL && pAb->AbPrevious == NULL)
+		    /* the parent box should inherit the picture height */
+		    ChangeHeight (pAb->AbEnclosing->AbBox, pAb->AbEnclosing->AbBox, NULL, h, frame);
 		}
 	    }
 	}

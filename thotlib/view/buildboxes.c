@@ -157,7 +157,7 @@ PtrBox              pBox;
 
 
 /*----------------------------------------------------------------------
-  GetParentCell returns the enlcosing Draw or NULL.                
+  GetParentDraw returns the enlcosing Draw or NULL.                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 PtrAbstractBox      GetParentDraw (PtrBox pBox)
@@ -726,7 +726,6 @@ PtrAbstractBox      pAb;
 int                 frame;
 int                *width;
 int                *height;
-
 #endif /* __STDC__ */
 {
   PtrAbstractBox      pChildAb;
@@ -735,13 +734,15 @@ int                *height;
   PtrBox              pChildBox, pBox;
   PtrBox              pCurrentBox;
   int                 val, x, y;
-  ThotBool            still;
+  ThotBool            still, hMin, vMin;
 
   pBox = NULL;
   pCurrentBox = pAb->AbBox;
   /* PcFirst fils vivant */
   pFirstAb = pAb->AbFirstEnclosed;
   still = TRUE;
+  hMin = !pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum;
+  vMin = !pAb->AbHeight.DimIsPosition && pAb->AbHeight.DimMinimum;
   while (still)
     if (pFirstAb == NULL)
       still = FALSE;
@@ -792,8 +793,7 @@ int                *height;
 	  else
 	    {
 	      /* Si la largeur du contenu depasse le minimum */
-	      if (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum
-		  && pCurrentBox->BxMaxWidth > pCurrentBox->BxW)
+	      if (hMin && pCurrentBox->BxMaxWidth > pCurrentBox->BxW)
 		{
 		  /* Il faut prendre la largeur du contenu */
 		  pCurrentBox->BxContentWidth = TRUE;
@@ -820,7 +820,7 @@ int                *height;
 	  pChildBox = pChildAb->AbBox;
 	  if (!pChildAb->AbDead && pChildBox != NULL)
 	    {
-	      if (pCurrentBox->BxContentWidth &&
+	      if ((hMin || pCurrentBox->BxContentWidth) &&
 		  pChildAb->AbHorizEnclosing &&
 		  pChildBox->BxXOrg < x &&
 		  pChildAb->AbWidth.DimAbRef != pAb)
@@ -835,7 +835,7 @@ int                *height;
 			XMove (pChildBox, NULL, x - pChildBox->BxXOrg, frame);
 		    }
 		}
-	      if (pCurrentBox->BxContentHeight && 
+	      if ((vMin || pCurrentBox->BxContentHeight) &&
 		  pChildAb->AbVertEnclosing &&
 		  pChildBox->BxYOrg < y &&
 		  pChildAb->AbHeight.DimAbRef != pAb)
@@ -3757,10 +3757,9 @@ PtrAbstractBox      pAb;
    ThotBool            result;
    ThotBool            lock = TRUE;
 
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
    WIN_GetDeviceContext (frame);
-#  endif /* _WINDOWS */
-
+#endif /* _WINDOWS */
    result = TRUE;
    document = FrameTable[frame].FrDoc;
    if (document == 0)
@@ -3842,8 +3841,8 @@ PtrAbstractBox      pAb;
 		    pParentAb = pParentAb->AbEnclosing;
 
 		  /* On prepare la mise a jour d'un bloc de lignes */
-		  if (pParentAb->AbInLine
-		      || pParentAb->AbBox->BxType == BoGhost)
+		  if (pParentAb->AbInLine || pParentAb->AbBox->BxType == BoGhost)
+		    {
 		     if (pAb->AbNew || pAb->AbDead)
 		       {
 			  /* need to rebuild lines starting form
@@ -3869,6 +3868,7 @@ PtrAbstractBox      pAb;
 			     pBox = pBox->BxNexChild;
 			  pLine = SearchLine (pBox);
 		       }
+		    }
 	       }
 
 	     /* lock the table formatting */
@@ -3965,8 +3965,12 @@ PtrAbstractBox      pAb;
 	     pFrame->FrReady = TRUE;	/* La frame est affichable */
 	  }
      }
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
    WIN_ReleaseDeviceContext ();
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
    return result;
 }
+
+
+
+

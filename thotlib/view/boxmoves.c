@@ -2234,7 +2234,7 @@ int                 frame;
 }
 
 /*----------------------------------------------------------------------
-  ResizeHeight updates the inside box width BxH then the outside one BxHeight.
+  ResizeHeight updates the inside box height BxH then the outside one BxHeight.
   The parameter origin of the change is pSourceBox.
   Check positionning and sizing constraints:
   - any box attached to a box edge is moved
@@ -2313,7 +2313,6 @@ int                 frame;
 	  if (pCurrentAb->AbEnclosing != NULL)
 	    if (pCurrentAb->AbEnclosing->AbBox != NULL)
 	      toMove = pCurrentAb->AbEnclosing->AbBox->BxType != BoGhost;
-	  
 	  /* Check the validity of dependency rules */
 	  if (!toMove || pBox->BxVertEdge == Top || pBox->BxVertEdge == HorizRef)
 	    {
@@ -2341,7 +2340,7 @@ int                 frame;
 	      middleTrans = pBox->BxHeight / 2 - (pBox->BxHeight + delta + diff) / 2;
 	      endTrans = 0;
 	    }
-	  
+
 	  /* inside height */
 	  pBox->BxH += delta;
 	  /* outside height */
@@ -3187,6 +3186,7 @@ int                 frame;
   AbDimension        *pDimAb;
   AbPosition         *pPosAb;
   int                 val, width;
+  int                 left, right;
   int                 x, i, j, k;
   ThotBool            notEmpty;
   ThotBool            toMove;
@@ -3218,8 +3218,8 @@ int                 frame;
       
       /* Initially the inside left and the inside right are the equal */
       width = x;
-      /* val registers the current right limit */
-      val = x + pBox->BxW;
+      /* left registers the current left limit */
+      left = x + pBox->BxW;
       notEmpty = FALSE;
       /* nothing is moved */
       toMove = FALSE;
@@ -3249,9 +3249,9 @@ int                 frame;
 		      {
 			/* mobile box */
 			notEmpty = TRUE;
-			if (pChildBox->BxXOrg < val)
+			if (pChildBox->BxXOrg < left)
 			  /* minimum value */
-			  val = pChildBox->BxXOrg;
+			  left = pChildBox->BxXOrg;
 			i = pChildBox->BxXOrg + pChildBox->BxWidth;
 		      }
 		    /* the box position depends on the enclosing width? */
@@ -3288,7 +3288,7 @@ int                 frame;
 	  pChildAb = pChildAb->AbNext;
 	}
       
-      val = -val + x; /* Shift of the extra left edge */
+      val = x - left; /* Shift of the extra left edge */
       if (notEmpty)
 	width += val; /* Nex position of the extra right edge */
       if (width == x && pAb->AbVolume == 0)
@@ -3414,8 +3414,6 @@ int                 frame;
 
 #endif /* __STDC__ */
 {
-  int                 val, height;
-  int                 y, i, j, k;
   PtrAbstractBox      pChildAb;
   PtrAbstractBox      pRelativeAb;
   PtrAbstractBox      pRefAb;
@@ -3424,6 +3422,8 @@ int                 frame;
   PtrBox              pBox;
   AbDimension        *pDimAb;
   AbPosition         *pPosAb;
+  int                 val, height;
+  int                 y, i, j, k, top;
   ThotBool            notEmpty;
   ThotBool            toMove;
   ThotBool            absoluteMove;
@@ -3441,7 +3441,6 @@ int                 frame;
     return;
   else if (pBox->BxContentHeight || (!pDimAb->DimIsPosition && pDimAb->DimMinimum))
     {
-      
       /* register that we're preforming the job */
       pBox->BxPacking += 1;
       
@@ -3454,8 +3453,8 @@ int                 frame;
       
       /* Initially the inside top and the inside bottom are the equal */
       height = y;
-      /* val registers the current bottom limit */
-      val = y + pBox->BxH;
+      /* top registers the current top limit */
+      top = y + pBox->BxH;
       notEmpty = FALSE;
       /* nothing is moved */
       toMove = FALSE;
@@ -3487,8 +3486,8 @@ int                 frame;
 			/* mobile box */
 			notEmpty = TRUE;
 			/* minimum value */
-			if (pChildBox->BxYOrg < val)
-			  val = pChildBox->BxYOrg;
+			if (pChildBox->BxYOrg < top)
+			  top = pChildBox->BxYOrg;
 			i = pChildBox->BxYOrg + pChildBox->BxHeight;
 		      }
 		    /* the box position depends on the enclosing height? */
@@ -3525,7 +3524,7 @@ int                 frame;
 	  pChildAb = pChildAb->AbNext;
 	}
       
-      val = -val + y; /* Shift of the extra top edge */
+      val = y - top; /* Shift of the extra top edge */
       if (notEmpty)
 	height += val; /* Nex position of the extra bottom edge */
       if (height == y && pAb->AbVolume == 0)
