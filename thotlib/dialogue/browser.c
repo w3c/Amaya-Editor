@@ -26,7 +26,8 @@
 #include "thotdir.h"
 #include "dialog.h"
 #include "message.h"
-#include "constint.h"
+#include "constmedia.h"
+#include "typeint.h"
 #include "application.h"
 
 #ifdef _GTK
@@ -55,7 +56,8 @@ static int          ls_car;
 static CHAR_T       ls_unixFiles[MAX_NAME * NAME_LENGTH];
 static int          ls_fileNbr;
 
-/* static STRING       EmptyMsg = ""; */
+#include "browser_f.h"
+#include "fileaccess_f.h"
 
 /*----------------------------------------------------------------------
    ExtractFileName
