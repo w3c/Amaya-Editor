@@ -24,7 +24,7 @@ STRUCT
 
 EXCEPT
 	TextFile: 	NoMove, NoResize, ImportLine;
-        Document_URL:	Hidden, NoCut;
+        Document_URL:	Hidden, NoSpellCheck, NoCut;
 	BODY:           Hidden, NoCut, NoBreakByReturn;
         Language:	Invisible; 
 	Highlight:	Invisible;

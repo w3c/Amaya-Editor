@@ -100,6 +100,9 @@ void ReplaceString (PtrDocument pDoc, PtrElement pEl, int firstChar,
   /* buffer of the first character to be replaced */
   pBuf1 = pEl->ElText;
   len = 0;
+  /* the first character index must be > 0 */
+  if (firstChar == 0)
+    firstChar = 1;
   while (len + pBuf1->BuLength < firstChar)
     {
       len += pBuf1->BuLength;
