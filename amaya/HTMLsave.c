@@ -533,27 +533,6 @@ static void InitSaveForm (Document document, View view, char *pathname)
 		D_CANCEL);
 
    /* first line */
-   if (!TextFormat)
-     {
-       /* choice between html, xhtml and text */
-       sprintf (buffer, "B%s%cB%s",
-		TtaGetMessage (AMAYA, AM_BCOPY_IMAGES), EOS,
-		TtaGetMessage (AMAYA, AM_BTRANSFORM_URL));
-       TtaNewToggleMenu (BaseDialog + ToggleSave, BaseDialog + SaveForm,
-			 TtaGetMessage (LIB, TMSG_DOCUMENT_FORMAT), 2, buffer,
-			 NULL, TRUE);
-       if (DocumentTypes[document] == docMath)
-	 TtaRedrawMenuEntry (BaseDialog + ToggleSave, 1, NULL, -1, FALSE);
-       else
-	 TtaSetToggleMenu (BaseDialog + ToggleSave, 4, CopyImages);
-       TtaSetToggleMenu (BaseDialog + ToggleSave, 5, UpdateURLs);
-     }
-   else
-     TtaNewLabel (BaseDialog + ToggleSave, BaseDialog + SaveForm, "");
-   TtaNewTextForm (BaseDialog + NameSave, BaseDialog + SaveForm,
-		   TtaGetMessage (AMAYA, AM_DOC_LOCATION), 50, 1, FALSE);
-   TtaSetTextForm (BaseDialog + NameSave, pathname);
-   /* second line */
    if (!TextFormat && DocumentTypes[document] != docMath &&
        DocumentTypes[document] != docSVG)
      {
@@ -572,6 +551,27 @@ static void InitSaveForm (Document document, View view, char *pathname)
      }
    else
      TtaNewLabel (BaseDialog + RadioSave, BaseDialog + SaveForm, "");
+   TtaNewTextForm (BaseDialog + NameSave, BaseDialog + SaveForm,
+		   TtaGetMessage (AMAYA, AM_DOC_LOCATION), 50, 1, FALSE);
+   TtaSetTextForm (BaseDialog + NameSave, pathname);
+   /* second line */
+   if (!TextFormat)
+     {
+       /* choice between html, xhtml and text */
+       sprintf (buffer, "B%s%cB%s",
+		TtaGetMessage (AMAYA, AM_BCOPY_IMAGES), EOS,
+		TtaGetMessage (AMAYA, AM_BTRANSFORM_URL));
+       TtaNewToggleMenu (BaseDialog + ToggleSave, BaseDialog + SaveForm,
+			 TtaGetMessage (LIB, TMSG_OPTIONS), 2, buffer,
+			 NULL, TRUE);
+       if (DocumentTypes[document] == docMath)
+	 TtaRedrawMenuEntry (BaseDialog + ToggleSave, 0, NULL, -1, FALSE);
+       else
+	 TtaSetToggleMenu (BaseDialog + ToggleSave, 0, CopyImages);
+       TtaSetToggleMenu (BaseDialog + ToggleSave, 1, UpdateURLs);
+     }
+   else
+     TtaNewLabel (BaseDialog + ToggleSave, BaseDialog + SaveForm, "");
 
    if (!TextFormat && DocumentTypes[document] != docMath)
      {
@@ -2601,19 +2601,21 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
   /* Check information before starting the operation */
   if (ok && !TextFormat)
     {
-      /* search if there is a BASE element within the document */
+     /* search if there is a BASE element within the document */
       root = TtaGetMainRoot (doc);
       elType.ElSSchema = TtaGetDocumentSSchema (doc);
-      attrType.AttrSSchema = elType.ElSSchema;
-      /* search the BASE element */
-      elType.ElTypeNum = HTML_EL_BASE;
-      el = TtaSearchTypedElement (elType, SearchInTree, root);
-      if (el)
-	/* URLs are still relative to the document base */
-	base = GetBaseURL (doc);
+      if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+	{
+	  attrType.AttrSSchema = elType.ElSSchema;
+	  /* search the BASE element */
+	  elType.ElTypeNum = HTML_EL_BASE;
+	  el = TtaSearchTypedElement (elType, SearchInTree, root);
+	  if (el)
+	    /* URLs are still relative to the document base */
+	    base = GetBaseURL (doc);
+	}
       else
 	base = NULL;
-      
       /* Create the base directory/url for the images output */
       if (CopyImages && SaveImgsURL[0] != EOS)
 	{
@@ -2744,6 +2746,7 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
 	   * picture SRC attribute. If pictures are saved locally, make the
 	   * copy else add them to the list of remote images to be copied.
 	   */
+	  if (DocumentTypes[doc] != docMath)
 	  UpdateImages (doc, src_is_local, dst_is_local, imgbase, documentFile);
 	  toUndo = TtaCloseUndoSequence (doc);
 	  if (dst_is_local)

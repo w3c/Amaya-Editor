@@ -1464,10 +1464,10 @@ void InitCharset (Document document, View view, char *url)
   i += strlen (&s[i]) + 1;
   if (!strcmp (UserCharset, "us-ascii"))
     i = 0;
-  else if (!strcmp (UserCharset, "UTF-8"))
-    i = 1;
-  else
+  else if (!strcmp (UserCharset, "iso-8859-1"))
     i = 2;
+  else
+    i = 1;
       
   TtaNewForm (BaseDialog + CharsetForm, TtaGetViewFrame (document, view),
 	      "Charset query", TRUE, 1, 'L', D_CANCEL);
