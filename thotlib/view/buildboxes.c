@@ -2013,9 +2013,9 @@ ThotBool            splitBox;
 	   ChangeDefaultWidth (pBox, pBox, pBox->BxW + adjustDelta, spaceDelta, frame);
 	 else if (wDelta != 0)
 	   {
-	     if (pBox->BxNChars == charDelta)
-	       ChangeDefaultWidth (pBox, pBox, wDelta, spaceDelta, frame);
-	     else
+	     /*if (pBox->BxNChars == charDelta)
+	       ChangeDefaultWidth (pBox, pBox, wDelta + 2, spaceDelta, frame);
+	       else*/
 	       ChangeDefaultWidth (pBox, pBox, pBox->BxW + wDelta,
 				   spaceDelta, frame);
 	   }

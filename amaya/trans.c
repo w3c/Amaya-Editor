@@ -1018,10 +1018,9 @@ Document        doc;
    if (ustrcmp (bufHTML, TEXT("")))
      {
 #ifdef AMAYA_DEBUG
-       printf("%s\n\n",bufHTML);
+       printf("%s\n\n", bufHTML);
 #endif
 	TtaSetStructureChecking (0, doc);
-
 	/* Calling of the appropriate parser */
 	if (DocumentMeta[doc]->xmlformat)
 	  ParseXmlSubTree (bufHTML, &myFirstSelect, &isClosed,

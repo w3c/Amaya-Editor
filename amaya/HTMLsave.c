@@ -790,6 +790,7 @@ Document     doc;
    ElementType		elType;
    AttributeType	attrType;
    Attribute		attr, charsetAttr;
+   SSchema              nature;
    CHARSET              charset;
    STRING               ptr;
 #define MAX_CHARSET_LEN 50
@@ -802,11 +803,22 @@ Document     doc;
      {
      useMathML = FALSE;
      useGraphML = FALSE;
-     if (TtaGetSSchema (TEXT("MathML"), doc) != NULL)
-       useMathML = TRUE;
-     if (TtaGetSSchema (TEXT("GraphML"), doc) != NULL)
-       useGraphML = TRUE;
-     
+     /* look for all natures used in the document */
+     nature = NULL;
+     do
+       {
+	 TtaNextNature (doc, &nature);
+	 if (nature)
+	   {
+	     ptr = TtaGetSSchemaName (nature);
+             if (!ustrcmp (ptr, TEXT("MathML")))
+	       useMathML = TRUE;
+	     if (!ustrcmp (ptr, TEXT("GraphML")))
+	       useGraphML = TRUE;
+	   }
+       }
+     while (nature);
+
      attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
      /* looks for a FRAMESET element and set attribute HtmlDTD */
      useFrames = FALSE;

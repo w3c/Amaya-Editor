@@ -2085,6 +2085,9 @@ PtrTextBuffer       clipboard;
 	       pFrame->FrSelectOnePosition = TRUE;
 	       /* the new selection is not shown */
 	       pFrame->FrSelectShown = FALSE;
+    	       if (pAb->AbVolume == charsDelta)
+		 /* the box was empty */
+		 xDelta -= /*width*/pBox->BxWidth;
 	       if (pBox->BxSpaceWidth != 0)
 		 {
 		    /* Si la boite est adjustifiee */
@@ -3409,12 +3412,12 @@ int                 nbytes;
 	  if (b == EOL)
 	    clipboard->BuContent[j++] = EOL;
 	  /* Sinon on ne filtre que les caracteres imprimables */
-#     ifdef _I18N_
+#ifdef _I18N_
       else if (iswprint ((CHAR_T)b))
-#     else  /* !_I18N_ */
+#else  /* !_I18N_ */
 	  else if ((b >= 32 && b < 127)
 		   || (b > 143 && b <= 255))
-#     endif /* !_I18N_ */
+#endif /* !_I18N_ */
 	    clipboard->BuContent[j++] = Xbuffer[i];
 	}
       /* Paste the last X clipboard buffer */
