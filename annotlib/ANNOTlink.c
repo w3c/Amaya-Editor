@@ -143,14 +143,19 @@ AnnotMeta *annot;
   CHAR_T       *annot_user;
   CHAR_T       *tmp;
   CHAR_T       server[MAX_LENGTH];
+  int          c1, cN;
 
   annot_user = GetAnnotUser ();
   
   if (annot->xptr)
     {
       parserContextPtr ctx;
+      nodeInfo *node;
       ctx = XPointer_parse (source_doc, annot->xptr);
-      first = XPointer_el (XPointer_nodeStart (ctx));
+      node = XPointer_nodeStart (ctx);
+      first = XPointer_el (node);
+      c1 = XPointer_startC (node);
+      cN = XPointer_endC (node);
       XPointer_free (ctx);
     }
   else
@@ -160,6 +165,10 @@ AnnotMeta *annot;
   elType = TtaGetElementType (first);
   elType.ElTypeNum = HTML_EL_Anchor;
   anchor = TtaNewElement (source_doc, elType);
+
+  /*
+  ** insert the anchor 
+  */
 
   /* is the user trying to annotate an anchor? */
   el = TtaGetTypedAncestor (first, elType);
@@ -171,8 +180,28 @@ AnnotMeta *annot;
     }
   else
     {
-      /* no, add it to the beginning of the selection */
-      TtaInsertSibling (anchor, first, TRUE, source_doc);
+      if (c1 == 0)
+	{
+	  /* add it to the beginning */
+	  TtaInsertSibling (anchor, first, TRUE, source_doc);
+	}
+      else if (c1 > 0)
+	{
+	  /* split the text */
+	  int len;
+
+	  len = TtaGetTextLength (first);
+	  if (cN > len)
+	    /* add it to the end */
+	    TtaInsertSibling (anchor, first, FALSE, source_doc);
+	  else
+	    {
+	      /* add it in the midle */
+	      TtaSplitText (first, c1 - 1, source_doc);
+	      TtaNextSibling (&first);
+	      TtaInsertSibling (anchor, first, TRUE, source_doc);
+	    }
+	}
     }
 
   /* add the annotation attribute */
@@ -427,7 +456,7 @@ void LINK_LoadAnnotationIndex (doc, annotIndex)
 #endif /* __STDC__*/
 {
   View    view;
-  Element el, body;
+  Element body;
   List *annot_list, *list_ptr;
   AnnotMeta *annot;
   AnnotMeta *old_annot;
