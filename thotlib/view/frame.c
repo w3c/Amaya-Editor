@@ -227,6 +227,14 @@ int                 ymax;
   /* clipping on the height */
   if (yd + height > ymax)
     height = ymax - yd;
+  if (pAb->AbFillBox)
+    {
+      /* paint the whole window */
+      /* todo: clip when backgroud will be printed */
+      DrawRectangle (frame, 0, 0,
+		     xd - x, yd - y, width, height, 0, 0, pAb->AbForeground,
+		     pAb->AbBackground, pAb->AbFillPattern);
+    }
   imageDesc = (PictInfo *) pAb->AbPictBackground;
   if (imageDesc && imageDesc->PicHeight && imageDesc->PicWidth)
     {
@@ -263,14 +271,6 @@ int                 ymax;
 
       if (width > 0 && height > 0)
 	DrawPicture (pBox, imageDesc, frame, xd - x, yd - y, width, height);
-    }
-  else if (pAb->AbFillBox)
-    {
-      /* paint the whole window */
-      /* todo: clip when backgroud will be printed */
-      DrawRectangle (frame, 0, 0,
-		     xd - x, yd - y, width, height, 0, 0, pAb->AbForeground,
-		     pAb->AbBackground, pAb->AbFillPattern);
     }
   
   /* Background and borders of leaf boxes are managed by DisplayBox */

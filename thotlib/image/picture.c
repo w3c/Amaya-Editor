@@ -243,11 +243,11 @@ void PrintDIB (LPBITMAPINFO lpBmpInfo, LPBYTE lpBits, HWND hWnd, HDC hDC, int x,
 void PrintDIB (lpBmpInfo, lpBits, hWnd, hDC, x, y, dx, dy)
 LPBITMAPINFOHEADER lpBmpInfo;
 LPBYTE             lpBits;
-HWND               hWnd; 
-HDC                hDC; 
-int                x; 
-int                y; 
-int                dx; 
+HWND               hWnd;
+HDC                hDC;
+int                x;
+int                y;
+int                dx;
 int                dy;
 #endif /* __STDC__*/
 {
@@ -261,81 +261,71 @@ int                dy;
 LPBITMAPINFO CreateBitmapInfoStruct(HWND hwnd, HBITMAP hBmp) 
 #else /* !__STDC__ */
 LPBITMAPINFO CreateBitmapInfoStruct(hwnd, hBmp) 
-HWND    hwnd; 
-HBITMAP hBmp; 
+HWND    hwnd;
+HBITMAP hBmp;
 #endif /* __STDC__ */
 { 
-    BITMAP      bmp; 
-    LPBITMAPINFO pbmi; 
-    WORD        cClrBits; 
+  BITMAP       bmp;
+  LPBITMAPINFO pbmi;
+  WORD         cClrBits;
  
-    /* Retrieve the bitmap's color format, width, and height. */ 
+  /* Retrieve the bitmap's color format, width, and height. */ 
+  if (!GetObject (hBmp, sizeof(BITMAP), (LPSTR)&bmp))
+    WinErrorBox (hwnd, TEXT("CreateBitmapInfoStruct (1)"));
  
-    if (!GetObject (hBmp, sizeof(BITMAP), (LPSTR)&bmp))
-       WinErrorBox (hwnd, TEXT("CreateBitmapInfoStruct (1)")); 
+  /* Convert the color format to a count of bits. */ 
+  cClrBits = (WORD) (bmp.bmPlanes * bmp.bmBitsPixel);
  
+  if (cClrBits != 1)
+    { 
+      if (cClrBits <= 4) 
+	cClrBits = 4;
+      else if (cClrBits <= 8) 
+	cClrBits = 8;
+      else if (cClrBits <= 16) 
+	cClrBits = 16;
+      else if (cClrBits <= 24) 
+	cClrBits = 24;
+      else 
+	cClrBits = 32;
+    }
+ 
+  /* 
+   * Allocate memory for the BITMAPINFO structure. (This structure 
+   * contains a BITMAPINFOHEADER structure and an array of RGBQUAD data 
+   * structures.) 
+   */ 
+  if (cClrBits != 24) 
+    pbmi = (LPBITMAPINFO) LocalAlloc (LPTR, sizeof (BITMAPINFOHEADER) + sizeof (RGBQUAD) * (2^cClrBits));
+  
+  else 
+    /* There is no RGBQUAD array for the 24-bit-per-pixel format */ 
+    pbmi = (LPBITMAPINFO) LocalAlloc(LPTR, sizeof(BITMAPINFOHEADER));
+ 
+  /* Initialize the fields in the BITMAPINFO structure. */
+  pbmi->bmiHeader.biSize     = sizeof (BITMAPINFOHEADER);
+  pbmi->bmiHeader.biWidth    = bmp.bmWidth;
+  pbmi->bmiHeader.biHeight   = bmp.bmHeight;
+  pbmi->bmiHeader.biPlanes   = bmp.bmPlanes;
+  pbmi->bmiHeader.biBitCount = bmp.bmBitsPixel;
+  if (cClrBits < 24)
+    pbmi->bmiHeader.biClrUsed = 2^cClrBits;
 
-    /* Convert the color format to a count of bits. */ 
+  /* If the bitmap is not compressed, set the BI_RGB flag. */  
+  pbmi->bmiHeader.biCompression = BI_RGB;
  
-    cClrBits = (WORD) (bmp.bmPlanes * bmp.bmBitsPixel); 
+  /* 
+   * Compute the number of bytes in the array of color 
+   * indices and store the result in biSizeImage. 
+   */
+  pbmi->bmiHeader.biSizeImage = (pbmi->bmiHeader.biWidth + 7) / 8 * pbmi->bmiHeader.biHeight * cClrBits;
  
-    if (cClrBits != 1) { 
-       if (cClrBits <= 4) 
-          cClrBits = 4; 
-       else if (cClrBits <= 8) 
-            cClrBits = 8; 
-       else if (cClrBits <= 16) 
-            cClrBits = 16; 
-       else if (cClrBits <= 24) 
-            cClrBits = 24; 
-       else 
-           cClrBits = 32; 
-	}
- 
-    /* 
-     * Allocate memory for the BITMAPINFO structure. (This structure 
-     * contains a BITMAPINFOHEADER structure and an array of RGBQUAD data 
-     * structures.) 
-     */ 
- 
-    if (cClrBits != 24) 
-       pbmi = (LPBITMAPINFO) LocalAlloc (LPTR, sizeof (BITMAPINFOHEADER) + sizeof (RGBQUAD) * (2^cClrBits)); 
- 
-    /* 
-     * There is no RGBQUAD array for the 24-bit-per-pixel format. 
-     */ 
- 
-    else 
-         pbmi = (LPBITMAPINFO) LocalAlloc(LPTR, sizeof(BITMAPINFOHEADER)); 
- 
-    /* Initialize the fields in the BITMAPINFO structure. */ 
- 
-    pbmi->bmiHeader.biSize     = sizeof (BITMAPINFOHEADER); 
-    pbmi->bmiHeader.biWidth    = bmp.bmWidth; 
-    pbmi->bmiHeader.biHeight   = bmp.bmHeight; 
-    pbmi->bmiHeader.biPlanes   = bmp.bmPlanes; 
-    pbmi->bmiHeader.biBitCount = bmp.bmBitsPixel; 
-    if (cClrBits < 24) 
-       pbmi->bmiHeader.biClrUsed = 2^cClrBits; 
-
-    /* If the bitmap is not compressed, set the BI_RGB flag. */  
-    pbmi->bmiHeader.biCompression = BI_RGB; 
- 
-    /* 
-     * Compute the number of bytes in the array of color 
-     * indices and store the result in biSizeImage. 
-     */ 
- 
-    pbmi->bmiHeader.biSizeImage = (pbmi->bmiHeader.biWidth + 7) / 8 * pbmi->bmiHeader.biHeight * cClrBits; 
- 
-    /* 
-     * Set biClrImportant to 0, indicating that all of the 
-     * device colors are important. 
-     */ 
- 
-    pbmi->bmiHeader.biClrImportant = 0; 
- 
-    return pbmi; 
+  /* 
+   * Set biClrImportant to 0, indicating that all of the 
+   * device colors are important. 
+   */
+  pbmi->bmiHeader.biClrImportant = 0;
+  return pbmi;
 } 
 
 /*----------------------------------------------------------------------*
@@ -351,8 +341,8 @@ int     frame;
 HBITMAP pixmap;
 int          x;
 int          y;
-int          width; 
-int          height,;
+int          width;
+int          height;
 int          red;
 int          green;
 int          blue;
@@ -440,7 +430,7 @@ LPBITMAPINFO* lpBmpInfo;
       WinErrorBox (NULL, TEXT("GetTransparentDIBits (1)"));
 
    if (!GetDIBits (hDC, (HBITMAP) bitmapDest, 0, (WORD)(*lpBmpInfo)->bmiHeader.biHeight, lpBits, *lpBmpInfo, DIB_RGB_COLORS))
-      WinErrorBox (NULL, TEXT("GetTransparentDIBits (2)")); 
+      WinErrorBox (NULL, TEXT("GetTransparentDIBits (2)"));
 
    SelectObject (hDestDC, pOldBitmapDest);
    SelectObject (hInvAndDC, pOldBitmapInvAnd);
@@ -501,126 +491,122 @@ LPBITMAPINFO* lpBmpInfo;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void WIN_LayoutTransparentPicture (HDC hDC, HBITMAP pixmap, int x, int y, int width, int height, int red, int green, int blue)
+static void TransparentPicture (HBITMAP pixmap, int xFrame, int yFrame, int w, int h, int red, int green, int blue)
 #else  /* !__STDC__ */
-void WIN_LayoutTransparentPicture (hDC, pixmap, x, y, width, height, red, green, blue)
-HDC      hDC;
-HBITMAP  pixmap; 
-int      x;
-int      y;
-int      width; 
-int      height; 
+static void TransparentPicture (pixmap, xFrame, yFrame, w, h, red, green, blue)
+HBITMAP  pixmap;
+int      xFrame;
+int      yFrame;
+int      w;
+int      h;
 int      red;
 int      green;
 int      blue;
 #endif /* __STDC__ */
 {
-   HDC      hImageDC;
+   HDC      hMemDC;
    HDC      hOrDC;
    HDC      hAndDC;
    HDC      hInvAndDC;
    HDC      hDestDC;
    HBITMAP  bitmap;
    HBITMAP  bitmapOr;
-   HBITMAP  pOldBitmapOr;
    HBITMAP  bitmapAnd;
-   HBITMAP  pOldBitmapAnd;
    HBITMAP  bitmapInvAnd;
-   HBITMAP  pOldBitmapInvAnd;
    HBITMAP  bitmapDest;
-   HBITMAP  pOldBitmapDest;
+   HBITMAP  pBitmapOr;
+   HBITMAP  pBitmapAnd;
+   HBITMAP  pBitmapInvAnd;
+   HBITMAP  pBitmapDest;
    COLORREF crColor = RGB (red, green, blue);
-   COLORREF crOldBkColor ;
+   COLORREF crOldBkColor;
 
-   hImageDC = CreateCompatibleDC (hDC);
-   bitmap = SelectObject (hImageDC, pixmap);
-   SetMapMode (hImageDC, GetMapMode (hDC));
+   hMemDC = CreateCompatibleDC (TtDisplay);
+   bitmap = SelectObject (hMemDC, pixmap);
+   SetMapMode (hMemDC, GetMapMode (TtDisplay));
    
-   hOrDC = CreateCompatibleDC (hDC);
-   SetMapMode (hOrDC, GetMapMode (hDC));
-   bitmapOr = CreateCompatibleBitmap (hImageDC, width, height);
-   pOldBitmapOr = SelectObject (hOrDC, bitmapOr);
-   BitBlt (hOrDC, 0, 0, width, height, hImageDC, 0, 0, SRCCOPY);
+   hOrDC = CreateCompatibleDC (TtDisplay);
+   SetMapMode (hOrDC, GetMapMode (TtDisplay));
+   bitmapOr = CreateCompatibleBitmap (hMemDC, w, h);
+   pBitmapOr = SelectObject (hOrDC, bitmapOr);
+   /* hOrDC = */
+   BitBlt (hOrDC, 0, 0, w, h, hMemDC, 0, 0, SRCCOPY);
 
-   hAndDC = CreateCompatibleDC (hDC);
-   SetMapMode (hAndDC, GetMapMode (hDC));
-   bitmapAnd = CreateBitmap (width, height, 1, 1, NULL);
-   pOldBitmapAnd = SelectObject (hAndDC, bitmapAnd);
+   hAndDC = CreateCompatibleDC (TtDisplay);
+   SetMapMode (hAndDC, GetMapMode (TtDisplay));
+   bitmapAnd = CreateBitmap (w, h, 1, 1, NULL);
+   pBitmapAnd = SelectObject (hAndDC, bitmapAnd);
+   crOldBkColor = SetBkColor (hMemDC, crColor);
+   /* hAndDC = */
+   BitBlt (hAndDC, 0, 0, w, h, hMemDC, 0, 0, SRCCOPY);
 
-   crOldBkColor = SetBkColor (hImageDC, crColor);
-   BitBlt (hAndDC, 0, 0, width, height, hImageDC, 0, 0, SRCCOPY);
+   SetBkColor (hMemDC, crOldBkColor);
+   hInvAndDC = CreateCompatibleDC (TtDisplay);
+   SetMapMode (hInvAndDC, GetMapMode (TtDisplay));
+   bitmapInvAnd = CreateBitmap (w, h, 1, 1, NULL);
+   pBitmapInvAnd = SelectObject (hInvAndDC, bitmapInvAnd);
+   /* hInvAndDC = */
+   BitBlt (hInvAndDC, 0, 0, w, h, hAndDC, 0, 0, NOTSRCCOPY);
+   /* hOrDC = */
+   BitBlt (hOrDC, 0, 0, w, h, hInvAndDC, 0, 0, SRCAND);
+   hDestDC = CreateCompatibleDC (TtDisplay);
+   SetMapMode (hDestDC, GetMapMode (TtDisplay));
+   bitmapDest = CreateCompatibleBitmap (hMemDC, w, h);
+   pBitmapDest = SelectObject (hDestDC, bitmapDest);
+   /* hDEstDC = */
+   BitBlt (hDestDC, 0, 0, w, h, TtDisplay, xFrame, y, SRCCOPY);
+   BitBlt (hDestDC, 0, 0, w, h, hAndDC, 0, 0, SRCAND);
+   BitBlt (hDestDC, 0, 0, w, h, hOrDC, 0, 0, SRCINVERT);
+   BitBlt (TtDisplay, xFrame, yFrame, w, h, hDestDC, 0, 0, SRCCOPY);
 
-   SetBkColor (hImageDC, crOldBkColor);
-
-   hInvAndDC = CreateCompatibleDC (hDC);
-   SetMapMode (hInvAndDC, GetMapMode (hDC));
-   bitmapInvAnd = CreateBitmap (width, height, 1, 1, NULL);
-   pOldBitmapInvAnd = SelectObject (hInvAndDC, bitmapInvAnd);
-   BitBlt (hInvAndDC, 0, 0, width, height, hAndDC, 0, 0, NOTSRCCOPY);
-
-   BitBlt (hOrDC, 0, 0, width, height, hInvAndDC, 0, 0, SRCAND);
-
-   hDestDC = CreateCompatibleDC (hDC);
-   SetMapMode (hDestDC, GetMapMode (hDC));
-   bitmapDest = CreateCompatibleBitmap (hImageDC, width, height);
-   pOldBitmapDest = SelectObject (hDestDC, bitmapDest);
-   BitBlt (hDestDC, 0, 0, width, height, hDC, x, y, SRCCOPY);
-
-   BitBlt (hDestDC, 0, 0, width, height, hAndDC, 0, 0, SRCAND);
-
-   BitBlt (hDestDC, 0, 0, width, height, hOrDC, 0, 0, SRCINVERT);
-
-   BitBlt (hDC, x, y, width, height, hDestDC, 0, 0, SRCCOPY);
-
-   SelectObject (hDestDC, pOldBitmapDest);
-   SelectObject (hInvAndDC, pOldBitmapInvAnd);
-   SelectObject (hAndDC, pOldBitmapAnd);
-   SelectObject (hOrDC, pOldBitmapOr);
-   SelectObject (hImageDC, bitmap);
-
+   SelectObject (hDestDC, pBitmapDest);
+   SelectObject (hInvAndDC, pBitmapInvAnd);
+   SelectObject (hAndDC, pBitmapAnd);
+   SelectObject (hOrDC, pBitmapOr);
+   SelectObject (hMemDC, bitmap);
    if (hDestDC && !DeleteDC (hDestDC))
-      WinErrorBox (WIN_Main_Wd, TEXT("WIN_LayoutTransparentPicture (1)"));
+      WinErrorBox (WIN_Main_Wd, TEXT("TransparentPicture (1)"));
    hDestDC = (HDC) 0;
    if (hInvAndDC && !DeleteDC (hInvAndDC))
-      WinErrorBox (WIN_Main_Wd, TEXT("WIN_LayoutTransparentPicture (2)"));
+      WinErrorBox (WIN_Main_Wd, TEXT("TransparentPicture (2)"));
    hInvAndDC = (HDC) 0;
    if (hAndDC && !DeleteDC (hAndDC))
-      WinErrorBox (WIN_Main_Wd, TEXT("WIN_LayoutTransparentPicture (3)"));
+      WinErrorBox (WIN_Main_Wd, TEXT("TransparentPicture (3)"));
    hAndDC = (HDC) 0;
    if (hOrDC && !DeleteDC (hOrDC))
-      WinErrorBox (WIN_Main_Wd, TEXT("WIN_LayoutTransparentPicture (4)"));
+      WinErrorBox (WIN_Main_Wd, TEXT("TransparentPicture (4)"));
    hOrDC = (HDC) 0;
-   if (hImageDC && !DeleteDC (hImageDC))
-      WinErrorBox (WIN_Main_Wd, TEXT("WIN_LayoutTransparentPicture (5)"));
-   hImageDC = (HDC) 0;
+   if (hMemDC && !DeleteDC (hMemDC))
+      WinErrorBox (WIN_Main_Wd, TEXT("TransparentPicture (5)"));
+   hMemDC = (HDC) 0;
 
    if (bitmap && !DeleteObject (bitmap))
-      WinErrorBox (WIN_Main_Wd, TEXT("WIN_LayoutTransparentPicture (6)"));
+      WinErrorBox (WIN_Main_Wd, TEXT("TransparentPicture (6)"));
    bitmap = (HBITMAP) 0;
    if (bitmapOr && !DeleteObject (bitmapOr))
-      WinErrorBox (WIN_Main_Wd, TEXT("WIN_LayoutTransparentPicture (7)"));
+      WinErrorBox (WIN_Main_Wd, TEXT("TransparentPicture (7)"));
    bitmapOr = (HBITMAP) 0;
-   if (pOldBitmapOr && !DeleteObject (pOldBitmapOr))
-      WinErrorBox (WIN_Main_Wd, TEXT("WIN_LayoutTransparentPicture (8)"));
-   pOldBitmapOr = (HBITMAP) 0;
+   if (pBitmapOr && !DeleteObject (pBitmapOr))
+      WinErrorBox (WIN_Main_Wd, TEXT("TransparentPicture (8)"));
+   pBitmapOr = (HBITMAP) 0;
    if (bitmapAnd && !DeleteObject (bitmapAnd))
-      WinErrorBox (WIN_Main_Wd, TEXT("WIN_LayoutTransparentPicture (9)"));
+      WinErrorBox (WIN_Main_Wd, TEXT("TransparentPicture (9)"));
    bitmapAnd = (HBITMAP) 0;
-   if (pOldBitmapAnd && !DeleteObject (pOldBitmapAnd))
-      WinErrorBox (WIN_Main_Wd, TEXT("WIN_LayoutTransparentPicture (10)"));
-   pOldBitmapAnd = (HBITMAP) 0;
+   if (pBitmapAnd && !DeleteObject (pBitmapAnd))
+      WinErrorBox (WIN_Main_Wd, TEXT("TransparentPicture (10)"));
+   pBitmapAnd = (HBITMAP) 0;
    if (bitmapInvAnd && !DeleteObject (bitmapInvAnd))
-      WinErrorBox (WIN_Main_Wd, TEXT("WIN_LayoutTransparentPicture (11)"));
+      WinErrorBox (WIN_Main_Wd, TEXT("TransparentPicture (11)"));
    bitmapInvAnd = (HBITMAP) 0;
-   if (pOldBitmapInvAnd && !DeleteObject (pOldBitmapInvAnd))
-      WinErrorBox (WIN_Main_Wd, TEXT("WIN_LayoutTransparentPicture (12)"));
-   pOldBitmapInvAnd = (HBITMAP) 0;
+   if (pBitmapInvAnd && !DeleteObject (pBitmapInvAnd))
+      WinErrorBox (WIN_Main_Wd, TEXT("TransparentPicture (12)"));
+   pBitmapInvAnd = (HBITMAP) 0;
    if (bitmapDest && !DeleteObject (bitmapDest))
-      WinErrorBox (WIN_Main_Wd, TEXT("WIN_LayoutTransparentPicture (13)"));
+      WinErrorBox (WIN_Main_Wd, TEXT("TransparentPicture (13)"));
    bitmapDest = (HBITMAP) 0;
-   if (pOldBitmapDest && !DeleteObject (pOldBitmapDest))
-      WinErrorBox (WIN_Main_Wd, TEXT("WIN_LayoutTransparentPicture (14)"));
-   pOldBitmapDest = (HBITMAP) 0;
+   if (pBitmapDest && !DeleteObject (pBitmapDest))
+      WinErrorBox (WIN_Main_Wd, TEXT("TransparentPicture (14)"));
+   pBitmapDest = (HBITMAP) 0;
 }
 #endif /* _WINDOWS */
 
@@ -788,17 +774,17 @@ PictInfo           *imageDesc;
   ViewFrame*        pFrame;
   int               delta;
 #ifdef _WINDOWS
-  HDC     hMemDC;
-  HBITMAP hBkgBmp;
-  HBITMAP hOldBitmap1;
-  HBITMAP hOldBitmap2;
-  HDC     hOrigDC;
-  BITMAP  bm;
-  POINT   ptOrg, ptSize;
-  int     x, y, clipWidth, clipHeight;
-  int     nbPalColors;
-  int     i, j, iw, jh;
-  HRGN    hrgn;
+  HDC               hMemDC;
+  BITMAP            bm;
+  HBITMAP           bitmap;
+  HBITMAP           bitmapTiled;
+  HBITMAP           pBitmapTiled;
+  HDC               hOrigDC;
+  POINT             ptOrg, ptSize;
+  int               x, y, clipWidth, clipHeight;
+  int               nbPalColors;
+  int               i, j, iw, jh;
+  HRGN              hrgn;
 #else /* _WINDOWS */
   XRectangle        rect;
   XGCValues         values;
@@ -818,13 +804,13 @@ PictInfo           *imageDesc;
     }
 
 #ifdef _WINDOWS 		 
-  if (!TtIsTrueColor) {
-     WIN_InitSystemColors (TtDisplay);
-     SelectPalette (TtDisplay, TtCmap, FALSE);
-     nbPalColors = RealizePalette (TtDisplay);
-  }
+  if (!TtIsTrueColor)
+    {
+      WIN_InitSystemColors (TtDisplay);
+      SelectPalette (TtDisplay, TtCmap, FALSE);
+      nbPalColors = RealizePalette (TtDisplay);
+    }
 # endif /* _WINDOWS */
-
   pFrame = &ViewFrameTable[frame - 1];
   if (pixmap != None)
     {
@@ -847,27 +833,32 @@ PictInfo           *imageDesc;
 #endif /* _GTK */
 #else /* _WINDOWS */
 	case RealSize:
-	  if ((imageDesc->bgRed == -1 && imageDesc->bgGreen == -1 && imageDesc->bgBlue == -1) || imageDesc->PicType == -1) {
-	    hMemDC = CreateCompatibleDC (TtDisplay);
-	    hOldBitmap1 = SelectObject (hMemDC, pixmap);
-	    SetMapMode (hMemDC, GetMapMode (TtDisplay));
-	    GetObject (pixmap, sizeof (BITMAP), (LPVOID) &bm) ;
-	    ptSize.x = bm.bmWidth;
-	    ptSize.y = bm.bmHeight;
-	    DPtoLP (TtDisplay, &ptSize, 1);
-	    ptOrg.x = 0;
-	    ptOrg.y = 0;
-	    DPtoLP (hMemDC, &ptOrg, 1);
+	  if ((imageDesc->bgRed == -1 && imageDesc->bgGreen == -1 &&
+	       imageDesc->bgBlue == -1) || imageDesc->PicType == -1)
+	    {
+	      /* bitmap is the */
+	      hMemDC = CreateCompatibleDC (TtDisplay);
+	      bitmap = SelectObject (hMemDC, pixmap);
+	      SetMapMode (hMemDC, GetMapMode (TtDisplay));
+
+	      GetObject (pixmap, sizeof (BITMAP), (LPVOID) &bm);
+	      ptSize.x = bm.bmWidth;
+	      ptSize.y = bm.bmHeight;
+	      DPtoLP (TtDisplay, &ptSize, 1);
+	      ptOrg.x = 0;
+	      ptOrg.y = 0;
+	      DPtoLP (hMemDC, &ptOrg, 1);
 	    
-	    if (!BitBlt (TtDisplay, xFrame, yFrame, ptSize.x, ptSize.y, hMemDC, ptOrg.x, ptOrg.y, SRCCOPY))
-           WinErrorBox (NULL, TEXT("LayoutPicture (1)"));
-		SelectObject (hMemDC, hOldBitmap1);
-	    if (hMemDC && !DeleteDC (hMemDC))
-           WinErrorBox (NULL, TEXT("LayoutPicture (2)"));
-        hMemDC = (HDC) 0;
-	  } else {
-           WIN_LayoutTransparentPicture (TtDisplay, pixmap, xFrame, yFrame, w, h, imageDesc->bgRed, imageDesc->bgGreen, imageDesc->bgBlue);
-	  }
+	      if (!BitBlt (TtDisplay, xFrame, yFrame, ptSize.x, ptSize.y, hMemDC, ptOrg.x, ptOrg.y, SRCCOPY))
+		WinErrorBox (NULL, TEXT("LayoutPicture (1)"));
+	      SelectObject (hMemDC, bitmap);
+	      if (hMemDC && !DeleteDC (hMemDC))
+		WinErrorBox (NULL, TEXT("LayoutPicture (2)"));
+	      hMemDC = (HDC) 0;
+	    }
+	  else
+	    TransparentPicture (TtDisplay, pixmap, xFrame, yFrame, w, h,
+				imageDesc->bgRed, imageDesc->bgGreen, imageDesc->bgBlue);
 #endif /* _WINDOWS */
 	  break;
 	  
@@ -876,16 +867,6 @@ PictInfo           *imageDesc;
 	case YRepeat:
 #ifndef _WINDOWS
 	case RealSize:
-
-          valuemask = GCTile | GCFillStyle | GCTileStipXOrigin | GCTileStipYOrigin;
-	  values.fill_style = FillTiled;
-          values.tile = pixmap;
-          values.ts_x_origin = xFrame;
-          values.ts_y_origin = yFrame;
-#ifndef _GTK 
-          XChangeGC (TtDisplay, tiledGC, valuemask, &values);
-#endif /* _GTK */
-	  
           rect.x = pFrame->FrClipXBegin;
           rect.y = pFrame->FrClipYBegin;
           rect.width = pFrame->FrClipXEnd - rect.x;
@@ -938,25 +919,39 @@ PictInfo           *imageDesc;
                   rect.width = delta;
 	    }
 #ifndef _GTK 
-	  if (imageDesc->PicMask)
+
+          valuemask = GCTile | GCFillStyle | GCTileStipXOrigin | GCTileStipYOrigin;
+	  values.fill_style = FillTiled;
+          values.tile = pixmap;
+          values.ts_x_origin = xFrame;
+          values.ts_y_origin = yFrame;
+          XChangeGC (TtDisplay, tiledGC, valuemask, &values);
+	  if (imageDesc->PicPresent == RealSize
+	      /* || w <= imageDesc->PicWArea && h <= imageDesc->PicHArea */)
 	    {
-	      XSetClipOrigin (TtDisplay, tiledGC, xFrame - picXOrg, yFrame - picYOrg);
-	      XSetClipMask (TtDisplay, tiledGC, imageDesc->PicMask);
+	      if (imageDesc->PicMask)
+		{
+		  XSetClipOrigin (TtDisplay, tiledGC, xFrame - picXOrg, yFrame - picYOrg);
+		  XSetClipMask (TtDisplay, tiledGC, imageDesc->PicMask);
+		}
+	      XFillRectangle (TtDisplay, drawable, tiledGC, xFrame, yFrame, w, h);
 	    }
 	  else
-	    XSetClipRectangles (TtDisplay, tiledGC, 0, 0, &rect, 1, Unsorted);
-          XFillRectangle (TtDisplay, drawable, tiledGC, xFrame, yFrame, w, h);
-          /* remove clipping */
+	    {
+	      XSetClipRectangles (TtDisplay, tiledGC, 0, 0, &rect, 1, Unsorted);
+	      XFillRectangle (TtDisplay, drawable, tiledGC, xFrame, yFrame, w, h);
+	    }
+	  /* remove clipping */
           rect.x = 0;
           rect.y = 0;
           rect.width = MAX_SIZE;
           rect.height = MAX_SIZE;
           XSetClipRectangles (TtDisplay, tiledGC, 0, 0, &rect, 1, Unsorted);
-	   if (imageDesc->PicMask)
-	     {
-	       XSetClipMask (TtDisplay, tiledGC, None);
-	       XSetClipOrigin (TtDisplay, tiledGC, 0, 0);
-	     }
+	  if (imageDesc->PicMask)
+	    {
+	      XSetClipMask (TtDisplay, tiledGC, None);
+	      XSetClipOrigin (TtDisplay, tiledGC, 0, 0);
+	    }
 #endif /* _GTK */
 #else  /* _WINDOWS */
           x          = pFrame->FrClipXBegin;
@@ -965,91 +960,100 @@ PictInfo           *imageDesc;
           clipHeight = pFrame->FrClipYEnd - y;
           x          -= pFrame->FrXOrg;
           y          -= pFrame->FrYOrg;
-          if (imageDesc->PicPresent == FillFrame || imageDesc->PicPresent == YRepeat) {
-             /* clipping height is done by the box height */
-             if (y < yFrame) {
-                /* reduce the height in delta value */
-                clipHeight = clipHeight + y - yFrame;
-                y = yFrame;
-             }
-             if (clipHeight > h)
+          if (imageDesc->PicPresent == FillFrame || imageDesc->PicPresent == YRepeat)
+	    {
+	      /* clipping height is done by the box height */
+	      if (y < yFrame)
+		{
+		  /* reduce the height in delta value */
+		  clipHeight = clipHeight + y - yFrame;
+		  y = yFrame;
+		}
+	      if (clipHeight > h)
                 clipHeight = h;
-          } else {
-               /* clipping height is done by the image height */
-               delta = yFrame + imageDesc->PicHArea - y;
-               if (delta <= 0)
-                  clipHeight = 0;
-               else
-                  clipHeight = delta;
-          }
+	    }
+	  else
+	    {
+	      /* clipping height is done by the image height */
+	      delta = yFrame + imageDesc->PicHArea - y;
+	      if (delta <= 0)
+		clipHeight = 0;
+	      else
+		clipHeight = delta;
+	    }
 	  
-          if (imageDesc->PicPresent == FillFrame || imageDesc->PicPresent == XRepeat) {
-             /* clipping width is done by the box width */
-             if (x < xFrame) {
-                /* reduce the width in delta value */
-                clipWidth = clipWidth + x - xFrame;
-                x = xFrame;
-             }
-             if (clipWidth > w)
-                clipWidth = w;
-          } else {
-               /* clipping width is done by the image width */
-               delta = xFrame + imageDesc->PicWArea - x;
-               if (delta <= 0)
-                  clipWidth = 0;
-               else
-                  clipWidth = delta;
-		  }
+          if (imageDesc->PicPresent == FillFrame || imageDesc->PicPresent == XRepeat)
+	    {
+	      /* clipping width is done by the box width */
+	      if (x < xFrame)
+		{
+		  /* reduce the width in delta value */
+		  clipWidth = clipWidth + x - xFrame;
+		  x = xFrame;
+		}
+	      if (clipWidth > w)
+		clipWidth = w;
+	    }
+	  else
+	    {
+	      /* clipping width is done by the image width */
+	      delta = xFrame + imageDesc->PicWArea - x;
+	      if (delta <= 0)
+		clipWidth = 0;
+	      else
+		clipWidth = delta;
+	    }
 	  
           hMemDC  = CreateCompatibleDC (TtDisplay);
-          hBkgBmp = CreateCompatibleBitmap (TtDisplay, w, h);
+          bitmapTiled = CreateCompatibleBitmap (TtDisplay, w, h);
           hOrigDC = CreateCompatibleDC (TtDisplay);
           hrgn = CreateRectRgn (x, y, x + clipWidth, y + clipHeight);
-          SelectClipRgn(TtDisplay, hrgn); 
-          hOldBitmap1 = SelectObject (hOrigDC, pixmap);
-          hOldBitmap2 = SelectObject (hMemDC, hBkgBmp);
+          SelectClipRgn(TtDisplay, hrgn);
+          bitmap = SelectObject (hOrigDC, pixmap);
+          pBitmapTiled = SelectObject (hMemDC, bitmapTiled);
           
           j = 0;
-
 	  do
-	  {
-        i = 0;
-        do
+	    {
+	      i = 0;
+	      do
 		{
 		  /* check if the limits of the copied zone */
 		  if (i + imageDesc->PicWArea <= w)
-			iw = imageDesc->PicWArea;
+		    iw = imageDesc->PicWArea;
 		  else
-			iw = w - i;
+		    iw = w - i;
 		  if (j + imageDesc->PicHArea <= h)
-			jh = imageDesc->PicHArea;
+		    jh = imageDesc->PicHArea;
 		  else
-			jh = h - j;
-          if (!BitBlt (hMemDC, i, j, iw, jh, hOrigDC, 0, 0, SRCCOPY))
-            WinErrorBox (WIN_Main_Wd, TEXT("LayoutPicture (3)"));
-          i += imageDesc->PicWArea;
-        } while (i < w);
-		j += imageDesc->PicHArea;
-	  } while (j < h);
-
+		    jh = h - j;
+		  if (!BitBlt (hMemDC, i, j, iw, jh, hOrigDC, 0, 0, SRCCOPY))
+		    WinErrorBox (WIN_Main_Wd, TEXT("LayoutPicture (3)"));
+		  i += imageDesc->PicWArea;
+		} while (i < w);
+	      j += imageDesc->PicHArea;
+	    } while (j < h);
+#ifndef IV
           BitBlt (TtDisplay, xFrame, yFrame, w, h, hMemDC, 0, 0, SRCCOPY);
-
-		  SelectObject (hOrigDC, hOldBitmap1);
-		  SelectObject (hMemDC, hOldBitmap2);
-
-          SelectClipRgn(TtDisplay, NULL); 
+#else /* IV */
+	  TransparentPicture (bitmapTiled, xFrame, yFrame, w, h,
+			      imageDesc->bgRed, imageDesc->bgGreen, imageDesc->bgBlue);
+#endif /* IV */
+	  SelectObject (hOrigDC, bitmap);
+	  SelectObject (hMemDC, pBitmapTiled);
+          SelectClipRgn(TtDisplay, NULL);
 
           if (hMemDC && !DeleteDC (hMemDC))
-             WinErrorBox (WIN_Main_Wd, TEXT("LayoutPicture (4)"));
+	    WinErrorBox (WIN_Main_Wd, TEXT("LayoutPicture (4)"));
           hMemDC = (HDC) 0;
           if (hOrigDC && !DeleteDC (hOrigDC))
-             WinErrorBox (WIN_Main_Wd, TEXT("LayoutPicture (5)"));
+	    WinErrorBox (WIN_Main_Wd, TEXT("LayoutPicture (5)"));
           hOrigDC = (HDC) 0;
-          if (hBkgBmp && !DeleteObject (hBkgBmp))
-             WinErrorBox (WIN_Main_Wd, TEXT("LayoutPicture (6)"));
-          hBkgBmp = (HBITMAP) 0;
-		  if (hrgn && !DeleteObject (hrgn))
-             WinErrorBox (NULL, TEXT("LayoutPicture (7)"));
+          if (bitmapTiled && !DeleteObject (bitmapTiled))
+	    WinErrorBox (WIN_Main_Wd, TEXT("LayoutPicture (6)"));
+          bitmapTiled = (HBITMAP) 0;
+	  if (hrgn && !DeleteObject (hrgn))
+	    WinErrorBox (NULL, TEXT("LayoutPicture (7)"));
           hrgn = (HRGN) 0;
 #endif /* _WINDOWS */
 	  break;
@@ -1671,7 +1675,7 @@ int                 frame;
 
 	    if (!GetDIBits (TtDisplay, (HBITMAP) (imageDesc->PicPixmap), 0, (UINT)lpBmpInfo->bmiHeader.biHeight, lpBits, lpBmpInfo, DIB_RGB_COLORS)) 
 	      WinErrorBox (NULL, TEXT("DrawPicture (3)"));
-			    
+	    
 	    PrintDIB (lpBmpInfo, lpBits, FrRef[frame], TtPrinterDC, x, y, w, h);
                if (GlobalFree (lpBits) != NULL)
                   WinErrorBox (NULL, TEXT("DrawPicture (4)"));
@@ -1740,7 +1744,7 @@ int            bperpix;
 
   clptr = NULL;
   cxarrp = NULL;
-  cy = 0; 
+  cy = 0;
   /* check for size */
   if ((cWIDE < 0) || (cHIGH < 0) || (eWIDE < 0) || (eHIGH < 0) ||
       (cWIDE > 2000) || (cHIGH > 2000) || (eWIDE > 2000) || (eHIGH > 2000))
@@ -2009,6 +2013,7 @@ PictInfo           *imageDesc;
       imageDesc->PicWArea = w;
       imageDesc->PicHArea = h;
     }
+#ifdef IV
   if (box->BxType != BoPicture)
     {
       /* we don't use mask for background picture till we don't change
@@ -2016,6 +2021,7 @@ PictInfo           *imageDesc;
       FreePixmap (picMask);
       picMask = None;
     }
+#endif /* IV */
   FreePixmap (imageDesc->PicPixmap);
   imageDesc->PicPixmap = myDrawable;
 #ifdef _WINDOWS

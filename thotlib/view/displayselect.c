@@ -494,7 +494,8 @@ ThotBool            status;
 	  {
 	     pFrame = &ViewFrameTable[frame - 1];
 	     pAb->AbSelected = status;
-	     if ( pFrame->FrClipXBegin == 0 && pFrame->FrClipXEnd == 0)
+	     if ( pFrame->FrClipXBegin == 0 && pFrame->FrClipXEnd == 0 &&
+		  pAb->AbVolume != 0)
 	       /* ready to un/display the current selection */
 	       /* doesn't display selection limits */
 	       if (pFrame->FrSelectionBegin.VsBox == NULL ||
