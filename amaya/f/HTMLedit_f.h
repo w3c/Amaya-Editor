@@ -47,6 +47,8 @@ extern void CreateRemoveIDAttribute ( char *elName,
                                       Document doc,
                                       ThotBool createID,
                                       ThotBool inSelection );
+extern void CheckPseudoParagraph ( Element el,
+                                   Document doc );
 extern void ElementCreated ( NotifyElement *event );
 extern ThotBool ElementWillBeDeleted ( NotifyElement *event );
 extern void ElementDeleted ( NotifyElement *event );
@@ -170,6 +172,8 @@ extern void CreateRemoveIDAttribute ( char *elName,
                                         Document doc,
                                         ThotBool createID,
                                         ThotBool inSelection );
+extern void CheckPseudoParagraph ( Element el,
+                                     Document doc );
 extern void ElementCreated ( NotifyElement *event );
 extern ThotBool ElementWillBeDeleted ( NotifyElement *event );
 extern void ElementDeleted ( NotifyElement *event );

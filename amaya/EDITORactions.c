@@ -3199,7 +3199,7 @@ Element GetEnclosingForm (Document document, View view)
   Return the selected element and make sure there is at least a space
   character before the insertion point.
   withinP is TRUE if the current selection is within a paragraph or
-  a pseudo-paragraph.
+  a pseudo-paragraph, or Hi.
   ----------------------------------------------------------------------*/
 static Element PrepareFormControl (Document doc, ThotBool *withinP)
 {
@@ -3215,19 +3215,10 @@ static Element PrepareFormControl (Document doc, ThotBool *withinP)
      /* some element is selected */
      {
        /* check whether the selected element is within a P element */
-       elType = TtaGetElementType (el);
        parent = el;
-       while (parent &&
-	      elType.ElTypeNum != HTML_EL_Paragraph &&
-	      elType.ElTypeNum != HTML_EL_Pseudo_paragraph &&
-	      !strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
-	 {
-	   parent = TtaGetParent (parent);
-	   elType = TtaGetElementType (parent);
-	 }
-       *withinP = ((elType.ElTypeNum == HTML_EL_Paragraph ||
-		    elType.ElTypeNum == HTML_EL_Pseudo_paragraph) &&
-		   !strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"));
+       while (parent && !IsBlockElement (parent))
+	 parent = TtaGetParent (parent);
+       *withinP =  (parent != NULL);
        if (*withinP)
 	 {
 	   elType = TtaGetElementType (el);
@@ -3321,10 +3312,12 @@ static void CreateInputElement (Document doc, View view, int elInput)
        elType = TtaGetElementType (el);
        if (!withinP)
 	 {
-	   /* create the paragraph element */
-	   elType.ElTypeNum = HTML_EL_Paragraph;
+	   /* create the pseudo paragraph element */
+	   elType.ElTypeNum = HTML_EL_Pseudo_paragraph;
 	   TtaInsertElement (elType, doc);
 	   TtaGiveFirstSelectedElement (doc, &parent, &firstchar, &lastchar);
+	   /* check if the pseudo paragraph should becomes a paragraph */
+	   CheckPseudoParagraph (parent, doc);
 	   /* create the input element */
 	   elType.ElTypeNum = elInput;
 	   input = TtaNewTree (doc, elType, "");

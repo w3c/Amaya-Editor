@@ -1990,7 +1990,7 @@ void CreateRemoveIDAttribute (char *elName, Document doc, ThotBool createID,
    an ordinary Paragraph.
    Rule: only the first child of any element can be a Pseudo_paragraph.
   ----------------------------------------------------------------------*/
-static void CheckPseudoParagraph (Element el, Document doc)
+void CheckPseudoParagraph (Element el, Document doc)
 {
   Element		prev, next, parent, sibling, child;
   Attribute             attr;
