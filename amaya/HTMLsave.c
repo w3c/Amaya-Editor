@@ -924,7 +924,7 @@ char *UpdateDocumentCharset (Document doc)
   ----------------------------------------------------------------------*/
 void SetNamespacesAndDTD (Document doc)
 {
-   Element		root, el, head, meta, docEl, doctype, elFound;
+   Element		root, el, head, meta, docEl, doctype, elFound, text;
    ElementType		elType;
    Attribute		attr;
    AttributeType	attrType;
@@ -935,13 +935,14 @@ void SetNamespacesAndDTD (Document doc)
    char		        buffer[300];
    char                *attrText;
    int                  length, profile;
-   ThotBool		useMathML, useSVG, useHTML, useXML, usePI, xhtml_mimetype;
+   ThotBool		useMathML, useSVG, useHTML, useXML, mathPI;
+   ThotBool             xmlDecl, xhtml_mimetype;
 
    useMathML = FALSE;
    useHTML = FALSE;
    useSVG = FALSE;
    useXML = FALSE;
-   nature = NULL; 
+   nature = NULL;
    doctype = NULL; /* no DOCTYPE */
 #ifdef ANNOTATIONS
    if (DocumentTypes[doc] == docAnnot)
@@ -984,7 +985,7 @@ void SetNamespacesAndDTD (Document doc)
    docEl = TtaGetMainRoot (doc);
    /* a PI is generated when the XHTML document includes math elements and
     doesn't include a DOCTYPE */
-   usePI = useMathML && DocumentMeta[doc]->xmlformat;
+   mathPI = useMathML && DocumentMeta[doc]->xmlformat;
 
    /* check if the document has a DOCTYPE declaration */
 #ifdef ANNOTATIONS
@@ -1016,8 +1017,8 @@ void SetNamespacesAndDTD (Document doc)
 	   if ((useMathML || useSVG) && profile == L_Xhtml11)
 	     {
 	       CreateDoctype (doc, doctype, L_Xhtml11, useMathML, useSVG);
-	       /* it's not necessary to generate a PI attribute */
-	       usePI = FALSE;
+	       /* it's not necessary to generate the math PI */
+	       mathPI = FALSE;
 	     }
 	 }
        else if (doctype)
@@ -1039,51 +1040,75 @@ void SetNamespacesAndDTD (Document doc)
        attr = TtaGetAttribute (root, attrType);
        if (attr)
 	 TtaRemoveAttribute (root, attr, doc);
-       if (usePI)
+
+       /* check if XML declaration or the math PI are already defined */
+       xmlDecl = !doctype && DocumentMeta[doc]->xmlformat;
+       el = TtaGetFirstChild (docEl);
+       elType = TtaGetElementType (el);
+       if (elType.ElTypeNum == HTML_EL_XMLPI)
 	 {
-	   /* check if this PI is not already defined */
-	   elType.ElTypeNum = HTML_EL_XMLPI;
-	   el = TtaSearchTypedElement (elType, SearchInTree, docEl);
-	   if (el)
+	   /* get PI lines */
+	   elFound = TtaGetFirstChild (el);
+	   while (elFound)
 	     {
-	       el = TtaGetFirstChild (el);
-	       while (el)
+	       /* get PI text */
+	       text = TtaGetFirstChild (elFound);
+	       if (text == NULL)
+		 text = elFound;
+	       length = 300;
+	       TtaGiveTextContent (text, (unsigned char *)buffer, &length, &lang);
+	       if (strstr (buffer, "pmathml.xsl"))
 		 {
-		   elFound = TtaGetFirstChild (el);
-		   if (elFound == NULL)
-		     elFound = el;
-		   length = 300;
-		   TtaGiveTextContent (elFound, (unsigned char *)buffer, &length, &lang);
-		   if (strstr (buffer, "pmathml.xsl"))
-		     {
-		       usePI = FALSE;
-		       el = NULL;
-		     }
-		   else
-		     TtaNextSibling (&el);
+		   /* it's not necessary to generate the math PI */
+		   mathPI = FALSE;
+		   elFound = NULL;
 		 }
-	     }
-	   if (usePI && !doctype)
-	     {
-	       /* generate the David Carliste's xsl stylesheet for MathML */
-	       attr = TtaNewAttribute (attrType);
-	       TtaAttachAttribute (root, attr, doc);
-	       strcpy (buffer, MATHML_XSLT_URI);
-	       strcat (buffer, MATHML_XSLT_NAME);
-	       strcat (buffer, "\"?>\n");
-	       TtaSetAttributeText (attr, buffer, root, doc);
+	       else if (strstr (buffer, "xml version="))
+		 {
+		   /* it's not necessary to generate the XML declaration */
+		   xmlDecl = FALSE;
+		   /* next PI ? */
+		   TtaNextSibling (&el);
+		   if (el)
+		     {
+		       elType = TtaGetElementType (el);
+		       if (elType.ElTypeNum == HTML_EL_XMLPI)
+			 /* get PI lines */
+			 elFound = TtaGetFirstChild (el);
+		       else
+			 elFound = NULL;
+		     }
+		 }
+	       else
+		 TtaNextSibling (&el);
 	     }
 	 }
-       else if (DocumentMeta[doc]->xmlformat &&
-		(DocumentTypes[doc] != docHTML || doctype == NULL))
+
+       if (mathPI)
+	 {
+	   /* generate the David Carliste's xsl stylesheet for MathML */
+	   elType.ElTypeNum = HTML_EL_XMLPI;
+	   el = TtaNewTree (doc, elType, "");
+	   TtaInsertFirstChild (&el, docEl, doc);
+	   elFound = TtaGetFirstChild (el);
+	   text = TtaGetFirstChild (elFound);
+	   strcpy (buffer, MATHML_XSLT_URI);
+	   strcat (buffer, MATHML_XSLT_NAME);
+	   strcat (buffer, "\"");
+	   TtaSetTextContent (text, (unsigned char*)buffer,  Latin_Script, doc);
+	 }
+       if (xmlDecl)
 	 {
 	   /* generate the XML declaration */
-	   attr = TtaNewAttribute (attrType);
-	   TtaAttachAttribute (root, attr, doc);
-	   strcpy (buffer, "<?xml version=\"1.0\" encoding=\"");
+	   elType.ElTypeNum = HTML_EL_XMLPI;
+	   el = TtaNewTree (doc, elType, "");
+	   TtaInsertFirstChild (&el, docEl, doc);
+	   elFound = TtaGetFirstChild (el);
+	   text = TtaGetFirstChild (elFound);
+	   strcpy (buffer, "xml version=\"1.0\" encoding=\"");
 	   strcat (buffer, charsetname);
-	   strcat (buffer, "\"?>\n");
-	   TtaSetAttributeText (attr, buffer, root, doc);
+	   strcat (buffer, "\"");
+	   TtaSetTextContent (text, (unsigned char*)buffer,  Latin_Script, doc);
 	 }
      }
 

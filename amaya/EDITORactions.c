@@ -190,22 +190,14 @@ void CreateDoctype (Document doc, Element doctype, int profile,
 	TtaSetTextContent (text, (unsigned char*)DOCTYPE1_HTML_STRICT, language, doc);
       else if (profile == L_Xhtml11 && useMathML && !useSVG)
 	{
-	   /* generate David Carlisle's xsl stylesheet for MathML */
-	   strcpy (buffer, MATHML_XSLT_URI);
-	   strcat (buffer, MATHML_XSLT_NAME);
-	   strcat (buffer, "\"?>\n");
-	   strcat (buffer, DOCTYPE1_XHTML11_PLUS_MATHML);
-	   TtaSetTextContent (text, (unsigned char*)buffer, language, doc);
+	  strcpy (buffer, DOCTYPE1_XHTML11_PLUS_MATHML);
+	  TtaSetTextContent (text, (unsigned char*)buffer, language, doc);
 	}
       else if (profile == L_Xhtml11 && useSVG)
 	{
 	  if (useMathML)
 	    {
-	      /* generate David Carlisle's xsl stylesheet for MathML */
-	      strcpy (buffer, MATHML_XSLT_URI);
-	      strcat (buffer, MATHML_XSLT_NAME);
-	      strcat (buffer, "\"?>\n");
-	      strcat (buffer, DOCTYPE1_XHTML11_PLUS_MATHML_PLUS_SVG);
+	      strcpy (buffer, DOCTYPE1_XHTML11_PLUS_MATHML_PLUS_SVG);
 	      TtaSetTextContent (text, (unsigned char*)buffer, language, doc);
 	    }
 	  else
