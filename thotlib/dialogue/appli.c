@@ -673,11 +673,12 @@ gboolean FrameResizedGTK (GtkWidget *widget,
   if (widget)
     if (GL_prepare (frame))
       {
-	/*FrameTable[frame].FrWidth = width;
-	  FrameTable[frame].FrHeight = height;*/
 	GLResize (width, 
 		  height, 
-		  0, 0);	
+		  0, 0);
+	DefRegion (frame, 
+ 		   0, 0,
+ 		   width, height);	
 	FrameRedraw (frame, width, height);
 	glFlush();
 	glFinish ();
@@ -3351,17 +3352,6 @@ void RemoveClipping (int frame)
 #endif /*_GL*/
 }
 
-#ifdef _GTK
-void gtk_window_resize (GtkWidget *widget, gint width, gint height)
-{
-#ifndef _GL
-  GtkWindow *window = GTK_WINDOW(widget);
-  
-  gtk_window_set_default_size(window, width, height);
-  gdk_window_resize(GTK_WIDGET(window)->window, width, height);
-#endif /* _GL */
-}
-#endif /*_GTK*/
 
 /*----------------------------------------------------------------------
    UpdateScrollbars met a jour les bandes de defilement de la fenetre    
@@ -3377,9 +3367,7 @@ void UpdateScrollbars (int frame)
   Arg                 args[MAX_ARGS];
   int                 n;
 #else /* _GTK */
-  GtkAdjustment      *tmpw;
-  GtkWidget          *main_window;
-  int                new_width, new_height;  
+  GtkAdjustment      *tmpw;  
 #endif /* _GTK */
 #else /* _WINDOWS */
   SCROLLINFO          scrollInfo;
@@ -3416,11 +3404,8 @@ void UpdateScrollbars (int frame)
       XtSetValues (vscroll, args, n);
     }
 #else /*_GTK*/
-  main_window = gtk_object_get_data (GTK_OBJECT (FrameTable[frame].WdFrame),
-				     "Main_Wd");
+ 
 
-  new_width = main_window->allocation.width;
-  new_height =  main_window->allocation.height;
   if ((width + vscroll->allocation.width) >= l && 
       x == 0 && 
       width > 60)
@@ -3428,8 +3413,9 @@ void UpdateScrollbars (int frame)
       if (GTK_WIDGET_VISIBLE(GTK_WIDGET (hscroll)))
 	{	  
 	  gtk_widget_hide (GTK_WIDGET (hscroll));
-	  new_height -= hscroll->allocation.height;
-	  gtk_window_resize(main_window, new_width, new_height);  
+#ifdef _GL
+	  gl_window_resize(frame, 0, -hscroll->allocation.height);
+#endif /*_GL*/
 	}
     }  
   else 
@@ -3446,19 +3432,22 @@ void UpdateScrollbars (int frame)
 	if (GTK_WIDGET_VISIBLE(GTK_WIDGET (hscroll)) == FALSE)
 	  {
 	    gtk_widget_show (GTK_WIDGET (hscroll));
-	    new_height += hscroll->allocation.height;
-	    gtk_window_resize(main_window, new_width, new_height);
+	    gtk_widget_draw_default (GTK_WIDGET (hscroll));
+#ifdef _GL
+	    gl_window_resize(frame, 0, hscroll->allocation.height);
+#endif /*_GL*/
 	  }  
       }
   
-  if (height >= h && 
+  if ((height + hscroll->allocation.height) >= h && 
       y == 0)
     {
       if (GTK_WIDGET_VISIBLE(GTK_WIDGET (vscroll)))
 	{
 	  gtk_widget_hide (GTK_WIDGET (vscroll));
-	  new_width += hscroll->allocation.width;
-	  gtk_window_resize(main_window, new_width, new_height);
+#ifdef _GL
+	  gl_window_resize (frame, -vscroll->allocation.width, 0);
+#endif /*_GL*/
 	}
     }  
     else 
@@ -3475,8 +3464,10 @@ void UpdateScrollbars (int frame)
 	  if (GTK_WIDGET_VISIBLE(GTK_WIDGET (vscroll)) == FALSE)
 	    {
 	      gtk_widget_show (GTK_WIDGET (vscroll));
-	      new_width += hscroll->allocation.width;
-	      gtk_window_resize(main_window, new_width, new_height);
+	      gtk_widget_draw_default (GTK_WIDGET (vscroll));
+#ifdef _GL
+	      gl_window_resize (frame, vscroll->allocation.width, 0);
+#endif /*_GL*/
 	    }
 	}
   

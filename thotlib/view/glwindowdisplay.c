@@ -1269,8 +1269,7 @@ void GL_DrawAll (ThotWidget widget, int frame)
   
   /* if (GL_ANIM)
      RefreshAnimation (frame); */
-  return;
-  
+ 
   if (!GL_Drawing && !FrameUpdating )
     {
       for (frame = 1 ; frame < MAX_FRAME; frame++)
@@ -1592,8 +1591,6 @@ void GL_window_copy_area (int frame,
 	  FrameTable[frame].DblBuffNeedSwap = TRUE;
 	}
 }
-
-
 /*-----------------------------------
  GLResize : 
  remake the current coordonate system 
@@ -1603,7 +1600,7 @@ void GLResize (int width, int height, int x, int y)
 {
 #ifdef _GTK
   gdk_gl_wait_gdk();
-#endif /*_GTK*/
+#endif /*_GTK*/ 
   glViewport (0, 0, width, height);
   glMatrixMode (GL_PROJECTION);      
   glLoadIdentity (); 
@@ -1616,6 +1613,31 @@ void GLResize (int width, int height, int x, int y)
   /* Needed for 3d only...*/
   glMatrixMode (GL_MODELVIEW);
   glLoadIdentity (); 
+
+}
+/*-----------------------------------
+ gl_window_resize : Some video cards or software 
+implementations  mechanisms clears when resizing 
+viewport so we redraw all
+------------------------------------*/
+void gl_window_resize (int frame, int width, int height)
+{
+  GtkWidget *widget;
+  
+  if (GL_prepare (frame))
+      {
+	widget = FrameTable[frame].WdFrame;	
+	GLResize (widget->allocation.width+width, 
+		  widget->allocation.height+height, 
+	    0, 0);
+	DefRegion (frame, 
+ 		   0, 0,
+ 		   width, height);
+	FrameRedraw (frame, width, height);
+	glFlush();
+	glFinish ();
+	GL_Swap (frame);
+      }
 
 }
 /*-----------------------------------

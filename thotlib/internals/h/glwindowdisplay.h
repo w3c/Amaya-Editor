@@ -82,6 +82,7 @@ void GL_DrawUnicodeChar (CHAR_T const c,
 void GL_Swap (int frame);
 void SetGlPipelineState ();
 void GLResize (int width, int height, int x, int y);
+void gl_window_resize (int frame, int width, int height);
 void GL_SetForeground (int fg);
 void GL_SetBackground (int bg, int frame);
 void GL_ClearArea (int x, int y, int width, int height);
@@ -105,4 +106,4 @@ ThotBool SavePng (const char *filename,
 
 void saveBuffer (int width, int height);
 
-#endif
+#endif /*_GLWINDOWDISPLAY_H_*/

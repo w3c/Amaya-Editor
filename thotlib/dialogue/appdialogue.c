@@ -2365,7 +2365,7 @@ int TtaAddTextZone (Document doc, View view, char *label,
 	  XtManageChild (XtParent (XtParent (row)));
 #else /* _GTK */
 	  /* row est de type GTK_HBOX */
-	  gtk_widget_hide (row->parent->parent);
+	  /*gtk_widget_hide (row->parent->parent);*/
 	  /* Insert a label for the entry text */	      
 	  if (label)
 	    {
@@ -2414,10 +2414,10 @@ int TtaAddTextZone (Document doc, View view, char *label,
 				      GTK_SIGNAL_FUNC (APP_ComboEscape),
 				      (gpointer) frame);
 		  FrameTable[frame].Call_Text = (Proc) procedure;
-		  gtk_widget_show_all (row->parent->parent);
+		  gtk_widget_show_all (row);
 		}
 	      else
-		gtk_widget_show_all (row->parent);
+		gtk_widget_show_all (row);
 	    } 
 	  else
 	    {/* Open SVG library in Amaya */
@@ -2852,8 +2852,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 #else  /* _WINDOWS */
    ThotWidget          menu_bar;
    ThotWidget          w; /* menu button */
-   ThotWidget          drawing_area;
-   ThotWidget          drawing_frame;  
+   ThotWidget          drawing_area; 
    ThotWidget          hbox1, hbox2;
    ThotWidget          vbox1;
    Dimension           dx, dy;
@@ -2887,6 +2886,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
      };
 #endif/*  _GL */
 #else /* _GTK */
+   ThotWidget          drawing_frame; 
    ThotWidget          table1;
    ThotWidget          shell;
    Arg                 args[MAX_ARGS], argument[5];
@@ -3033,9 +3033,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	     gtk_window_add_accel_group (GTK_WINDOW (Main_Wd), accel_group);*/
 	   accel_group = NULL;
 	   /* Create the vbox which contain all the elements of the view */
-	   vbox1 = gtk_vbox_new (FALSE, 0);
- 	   gtk_widget_show (vbox1); 
- 	   gtk_container_add (GTK_CONTAINER (Main_Wd), vbox1); 
+	   
 
 
 #else /* _GTK */
@@ -3141,7 +3139,6 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 		       /*** The menu bar ***/
 		       menu_bar = gtk_menu_bar_new ();
 		       gtk_widget_show (menu_bar);
-		       gtk_box_pack_start (GTK_BOX (vbox1), menu_bar, FALSE, FALSE, 0);
 		     }
 		   menu_item = gtk_menu_item_new_with_label (TtaGetMessage (THOT, ptrmenu->MenuID));
 		   gtk_widget_show (menu_item);
@@ -3208,16 +3205,8 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	      it's difficulte to manipulate it */
 	   toolbar = gtk_hbox_new (FALSE, 0);
 	   gtk_widget_show (toolbar);
-	   gtk_box_pack_start (GTK_BOX (vbox1), toolbar, FALSE, FALSE, 2);
-
 	   for (i=1; i<MAX_BUTTON ; i++)
 	     FrameTable[frame].Button[i] = NULL;
-	   FrameTable[frame].Button[0] = toolbar;
-
-	   /* The hbox which includes the logo and text zone (URL) */
-	   hbox1 = gtk_hbox_new (FALSE, 5);
-	   gtk_widget_show (hbox1);
-	   gtk_box_pack_start (GTK_BOX (vbox1), hbox1, FALSE, FALSE, 5);
 	   /* Put the logo */
 	   amaya_pixmap = gdk_pixmap_create_from_xpm_d (DefaultWindow->window, &amaya_mask,
 						      &DefaultWindow->style->bg[GTK_STATE_NORMAL],
@@ -3226,21 +3215,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   gtk_widget_show (logo_pixmap);
 	   gdk_pixmap_unref (amaya_pixmap);
 	   gdk_bitmap_unref (amaya_mask);
-	   gtk_box_pack_start (GTK_BOX (hbox1), logo_pixmap, FALSE, FALSE, 5);
-	   gtk_misc_set_alignment (GTK_MISC (logo_pixmap), 0.5, 0.5);
 
-	   /* Put the edit zone for the label and url edit zone */
-	   hbox2 = gtk_hbox_new (FALSE, 0);
-	   gtk_widget_show (hbox2);
-	   gtk_box_pack_start (GTK_BOX (hbox1), hbox2, TRUE, TRUE, 0);
-	   FrameTable[frame].Text_Zone = 0;
-	   FrameTable[frame].Row_Zone = hbox2;
-
-	 
-
-	   drawing_frame = gtk_frame_new (NULL);
-	   gtk_widget_show (drawing_frame);
-   /* Put the drawing area */
 #ifdef _GL
 	   /* Is opengl working ? */
 	   if(gdk_gl_query() == FALSE) 
@@ -3280,15 +3255,10 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 #else /*  _GL */
 	   drawing_area = gtk_drawing_area_new ();
 #endif /*  _GL */	  
-	   gtk_widget_show (drawing_area);
-
-	   
-	  
 	   /* Attach input context to a drawing with a hidden 
 	      entry text catcher that will handle 
 	      advanced keyboard typing (ie : multikey)*/	   
 	   wrap_text = gtk_entry_new (); 
-	   gtk_box_pack_start (GTK_BOX (vbox1), GTK_WIDGET(wrap_text), FALSE, FALSE, 1);
 	   GTK_WIDGET_SET_FLAGS (GTK_WIDGET(wrap_text), GTK_CAN_FOCUS);
 	   GTK_WIDGET_SET_FLAGS (GTK_WIDGET(wrap_text), GTK_CAN_DEFAULT);
 	   gtk_widget_grab_focus (GTK_WIDGET(wrap_text));
@@ -3420,13 +3390,10 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   gtk_object_set_data (GTK_OBJECT (drawing_area),
 				"Main_Wd",
 				(gpointer) Main_Wd);
-
 	   ConnectSignalGTK (GTK_OBJECT (drawing_area),
 			     "configure_event",
 			     GTK_SIGNAL_FUNC(FrameResizedGTK),
 			     (gpointer)frame);
-
-
 	   /* Put the scrollbars */
 	   tmpw = gtk_adjustment_new (0, 0, dy, 6, dy-13, dy);
 	   ConnectSignalGTK (GTK_OBJECT (tmpw),
@@ -3484,30 +3451,6 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 			     (gpointer)frame);
       	   hscrl = gtk_hscrollbar_new (GTK_ADJUSTMENT(tmpw)); 
 	   
-
-	   /* Creation of the table which includes 
-	      drawingarea 
-	      and scrollbars */
-      	   table2 = gtk_table_new (2, 2, FALSE);
-	   gtk_widget_show (table2);
-
-	   gtk_box_pack_start (GTK_BOX (vbox1), table2, TRUE, TRUE, 0);
-	   
-	   /* Put the drawing frame */	   
-	   gtk_table_attach (GTK_TABLE (table2), drawing_frame, 0, 1, 0, 1,
-			     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-			     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
-   	  
-           gtk_container_add (GTK_CONTAINER (drawing_frame), drawing_area);
-
-
-	   gtk_table_attach (GTK_TABLE (table2), hscrl, 0, 1, 1, 2,
-			     (GtkAttachOptions) (GTK_FILL | GTK_SHRINK),
-			     (GtkAttachOptions) (GTK_FILL | GTK_SHRINK), 0, 0);
-	   gtk_table_attach (GTK_TABLE (table2), vscrl, 1, 2, 0, 1,
-			     (GtkAttachOptions) (GTK_FILL | GTK_SHRINK),
-			     (GtkAttachOptions) (GTK_FILL | GTK_SHRINK), 0, 0);
-
 #ifdef _GTKRULERS
 	   {
 	     ThotWidget button;
@@ -3531,35 +3474,74 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   statusbar = gtk_statusbar_new ();
 	   gtk_widget_ref (statusbar);
 	   gtk_widget_show (statusbar);
-	   gtk_box_pack_start (GTK_BOX (vbox1), statusbar, FALSE, TRUE, 0);
 	   gtk_object_set_data(GTK_OBJECT(statusbar), "MainSerie", 	   
 			       (gpointer)gtk_statusbar_get_context_id(GTK_STATUSBAR (statusbar), "MainSerie"));
 	   gtk_statusbar_push(GTK_STATUSBAR(statusbar),
 			      (guint)gtk_object_get_data (GTK_OBJECT(statusbar), "MainSerie"),
 			      "");
+	   
+	   /* The hbox which includes the logo and Comboboxzone (URL) */
+	   hbox1 = gtk_hbox_new (FALSE, 5);
+	   gtk_box_pack_start (GTK_BOX (hbox1), logo_pixmap, FALSE, FALSE, 5);
+	   gtk_misc_set_alignment (GTK_MISC (logo_pixmap), 0.5, 0.5);
+
+	   /*box that will be used to put in combobox */
+	   hbox2 = gtk_hbox_new (FALSE, 0);
+	   gtk_box_pack_start (GTK_BOX (hbox1), hbox2, TRUE, TRUE, 0);
+
+	   /*if we want to get a shadowed frame ?*/
+	   /* drawing_frame = gtk_frame_new (NULL); */
+           /*gtk_container_add (GTK_CONTAINER (drawing_frame), drawing_area);*/
+	   
+
+	   /*Put the drawing frame  it's a 4*4 table (grid)
+	    that permits us to place scrollbars on the left 
+	    and the bottom of the  drawing zone*/
+	   table2 = gtk_table_new (2, 2, FALSE);
+	   gtk_table_attach (GTK_TABLE (table2), drawing_area, 0, 1, 0, 1,
+			     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+			     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
+   	  
+
+	   gtk_table_attach (GTK_TABLE (table2), hscrl, 0, 1, 1, 2,
+			     (GtkAttachOptions) (GTK_FILL | GTK_SHRINK),
+			     (GtkAttachOptions) (GTK_FILL | GTK_SHRINK), 0, 0);
+	   gtk_table_attach (GTK_TABLE (table2), vscrl, 1, 2, 0, 1,
+			     (GtkAttachOptions) (GTK_FILL | GTK_SHRINK),
+			     (GtkAttachOptions) (GTK_FILL | GTK_SHRINK), 0, 0);
+	   
+	   /* main box of the windows : a Vertical One */
+	   vbox1 = gtk_vbox_new (FALSE, 0);
+	   /* compose the main Vertical Box */
+	   gtk_box_pack_start (GTK_BOX (vbox1), GTK_WIDGET(menu_bar), FALSE, FALSE, 0);		     
+	   gtk_box_pack_start (GTK_BOX (vbox1), GTK_WIDGET(toolbar), FALSE, FALSE, 2);
+	   gtk_box_pack_start (GTK_BOX (vbox1), GTK_WIDGET(hbox1), FALSE, FALSE, 5);
+	   gtk_box_pack_start (GTK_BOX (vbox1), GTK_WIDGET(wrap_text), FALSE, FALSE, 0);
+	   gtk_box_pack_start (GTK_BOX(vbox1), GTK_WIDGET(table2), TRUE, TRUE, 0);
+	   gtk_box_pack_end (GTK_BOX(vbox1), GTK_WIDGET(statusbar), FALSE, FALSE, 0);
+	   /* add it to the window */
+ 	   gtk_container_add (GTK_CONTAINER (Main_Wd), vbox1); 
+	  	   
+	   FrameTable[frame].Button[0] = toolbar;
+	   FrameTable[frame].Text_Zone = 0;
+	   FrameTable[frame].Row_Zone = hbox2;
 	   FrameTable[frame].WdStatus = statusbar;
 	   FrameTable[frame].WdScrollH = hscrl;
 	   FrameTable[frame].WdScrollV = vscrl;
 	   /* approximate the real size of the drawing area */
-#ifdef _GL	   
-	   gtk_gl_area_size(GTK_GL_AREA(drawing_area),
-			    drawing_area->allocation.width,
-			    drawing_area->allocation.height);
-#endif /*_GL*/
-
 	   FrameTable[frame].FrWidth  = (int) drawing_area->allocation.width;
 	   FrameTable[frame].FrScrollWidth  = (int) drawing_area->allocation.width;
 	   FrameTable[frame].FrHeight = (int) drawing_area->allocation.height;
-
-
-
+	   FrameTable[frame].WdFrame =  drawing_area;
 	   /* show the main window */
 	   gtk_widget_show_all (Main_Wd);
-           FrameTable[frame].WdFrame =  drawing_area;
+	   /* Must be called after the show all
+	      (otherwise ->window is NULL)*/
            FrRef[frame] = drawing_area->window;
 	   /* Add App icone */
 	   gdk_window_set_icon_name (Main_Wd->window, "Amaya");
 	   gdk_window_set_icon (Main_Wd->window, NULL, (GdkPixmap *)wind_pixmap, NULL);
+	   
 #else /* !_GTK */
 	   /*** Creation of scrollbars ***/
 	   n = 0;

@@ -8,3 +8,4 @@ char *FontLoadFromConfig (char script,
 			  int highlight);
 
 #endif /*__FONTCONFIG_H*/
+
