@@ -1420,7 +1420,7 @@ static void CallList (ThotWidget w, struct Cat_Context *catalogue, XmListCallbac
 
 
 /*----------------------------------------------------------------------
-   Callback de saisie de texte.                                       
+   Callback de saisie de texte.                                   
   ----------------------------------------------------------------------*/
 #ifndef _GTK
 static void CallTextChange (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
@@ -1459,8 +1459,8 @@ static void CallTextChange (ThotWidget w, struct Cat_Context *catalogue)
 	    {
 	      gtk_label_get(GTK_LABEL(gtk_object_get_data(GTK_OBJECT(GTK_LIST(tmpw)->selection->data),
 							  "ListElementLabel")),&text);
-	      printf("le text vo: %s",text);
-	      /*	            (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA, text);*/
+	      printf("le text vo: %s\n",text);
+	      (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA, text);
 	    }
 #endif /* !_GTK */
 	}
@@ -6512,7 +6512,7 @@ void TtaNewSizedSelector (int ref, int ref_parent, char *title,
 	/* Cree un selecteur avec une entree a blanc */
        tmpw = gtk_list_item_new();
        tmpw2 = gtk_label_new (" ");
-       gtk_widget_show (tmpw);
+       gtk_widget_show (GTK_WIDGET(tmpw));
        gtk_widget_show (GTK_WIDGET(tmpw2));
        gtk_container_add (GTK_CONTAINER (tmpw), tmpw2);
        gtk_object_set_data (GTK_OBJECT(tmpw), "ListElementLabel", (gpointer)tmpw2);
@@ -6526,15 +6526,17 @@ void TtaNewSizedSelector (int ref, int ref_parent, char *title,
 	index = 0;
 	while (i < number && text[index] != EOS)
 	  {
-	    printf("le text de la liste vo: %s\n", &text[index]);
+	    /* create the list and the label */ 
 	    tmpw = gtk_list_item_new();
 	    tmpw2 = gtk_label_new (&text[index]);
-	    gtk_widget_show (tmpw);
+	    gtk_widget_show (GTK_WIDGET(tmpw));
 	    gtk_widget_show (GTK_WIDGET(tmpw2));
 	    gtk_container_add (GTK_CONTAINER (tmpw), tmpw2);
+	    /* put a reference of the label into the list widget */
 	    gtk_object_set_data (GTK_OBJECT(tmpw), "ListElementLabel", (gpointer)tmpw2);
+	    /* add the new item to the GList */
 	    item = g_list_append (item, tmpw);
-	    i++;	     
+	    i++;
 	    index += strlen (&text[index]) + 1;	/* Longueur de l'intitule */
 	  }
 	number = i;
@@ -6544,6 +6546,9 @@ void TtaNewSizedSelector (int ref, int ref_parent, char *title,
    /* Faut-il simplement mettre a jour le selecteur ? */
    if (rebuilded)
      {
+#ifdef _GTK
+       printf("on met a jour\n");
+#endif
 
 	/* On met a jour le titre du selecteur */
 	if (catalogue->Cat_Title != 0 && title != NULL)
@@ -6557,6 +6562,7 @@ void TtaNewSizedSelector (int ref, int ref_parent, char *title,
 	     XtManageChild (catalogue->Cat_Title);
 	     XmStringFree (title_string);
 #else /* _GTK */
+	     /* update the title label */
 	     gtk_label_set_text(GTK_LABEL(catalogue->Cat_Title),title);
 	     gtk_widget_show(GTK_WIDGET(catalogue->Cat_Title));
 #endif /* !_GTK */
@@ -6574,6 +6580,7 @@ void TtaNewSizedSelector (int ref, int ref_parent, char *title,
 	     XtManageChild (catalogue->Cat_SelectLabel);
 	     XmStringFree (title_string);
 #else /* _GTK */
+	     /* update the selector label*/
 	     gtk_label_set_text (GTK_LABEL(gtk_object_get_data (GTK_OBJECT(catalogue->Cat_SelectLabel),"ButtonLabel")), label);
 	     gtk_widget_show (GTK_WIDGET (catalogue->Cat_SelectLabel));
 #endif /* !_GTK */
@@ -6620,13 +6627,22 @@ void TtaNewSizedSelector (int ref, int ref_parent, char *title,
 	  }
 	XtManageChild (w);
 #else /* _GTK */
-	gtk_list_clear_items (GTK_LIST(w), 0, number);
-	gtk_list_append_items (GTK_LIST(w),item);
+	/* delete the old list elements */
+	if ((gint)gtk_object_get_data(GTK_OBJECT(w), "GList")>0)
+	  gtk_list_clear_items (GTK_LIST(w), 0, (gint)gtk_object_get_data(GTK_OBJECT(w), "GList"));
+	/* add the new list elements */
+	gtk_list_append_items (GTK_LIST(w), item);
+	/* update the number of list element */
+	gtk_object_set_data(GTK_OBJECT(w), "GList", (gpointer)g_list_length(item));
 	gtk_widget_show_all (GTK_WIDGET(w));
 #endif /* !_GTK */
      }
    else
      {
+#ifdef _GTK
+       printf("on rebuild\n");
+#endif
+
        /*_______________________________________ C'est un nouveau formulaire __*/
 	w = AddInFormulary (parentCatalogue, &i, &ent, &adbloc);
 
@@ -6814,14 +6830,15 @@ void TtaNewSizedSelector (int ref, int ref_parent, char *title,
 	  }
 #else /* _GTK */
 	     tmpw = gtk_scrolled_window_new (NULL, NULL);
+	     gtk_scrolled_window_set_policy(tmpw, GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 	     gtk_box_pack_start (GTK_BOX(row), tmpw, FALSE, FALSE, 0);
-	     
 	     gtk_widget_set_usize (tmpw, width, height*20);
-
 	     w = gtk_list_new ();
+	     gtk_widget_show(GTK_WIDGET(w));
+	     gtk_list_set_selection_mode(GTK_LIST(w),GTK_SELECTION_SINGLE);
 	     gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(tmpw),w);
 	     gtk_list_append_items (GTK_LIST(w), item);
-	     /*	     gtk_object_set_data(GTK_OBJECT(w), "GList", (gpointer)item);*/
+      	     gtk_object_set_data(GTK_OBJECT(w), "GList", (gpointer)g_list_length(item));
 	     gtk_widget_show_all (tmpw);
 	     if(react)
 	       gtk_signal_connect (GTK_OBJECT(w), "selection_changed", GTK_SIGNAL_FUNC(CallTextChange), catalogue);
