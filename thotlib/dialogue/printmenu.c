@@ -59,7 +59,7 @@
 static char         Orientation[MAX_NAME_LENGTH];
 
 /*----------------------------------------------------------------------
-  PrintInit: 
+  PrintInit
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         PrintInit (int userOrientation, char *tempDir, char *dir, char *name)
@@ -95,7 +95,8 @@ char               *name;
 }
 
 /*----------------------------------------------------------------------
-  Running the printing program.
+  Print
+  Interface to the Print program.
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -160,7 +161,8 @@ char               *viewsToPrint;
 
 
 /*----------------------------------------------------------------------
-   PostScriptSave: Saves the file into Postscript format.
+   PostScriptSave
+   saves the PostScript version of a document into a file.
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -225,7 +227,8 @@ char               *viewsToPrint;
 
 
 /*----------------------------------------------------------------------
-   ConnectPrint:  Initializes printing parameters.
+   ConnectPrint
+   initializes the printing parameters.
   ----------------------------------------------------------------------*/
 void ConnectPrint ()
 {
@@ -257,7 +260,9 @@ void ConnectPrint ()
 }
 
 /*----------------------------------------------------------------------
-   TtcPrint traite les retours du formulaire d'impression. 
+   TtcPrint
+   standard action for the Print menu. Calls TtaPrint to print the
+   current view.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcPrint (Document document, View view)
@@ -276,7 +281,8 @@ View                view;
 }
 
 /*----------------------------------------------------------------------
-   TtcPrint traite les retours du formulaire d'impression. 
+   TtaPrint
+   interface to the multiview print command.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaPrint (Document document, char* viewNames)
@@ -295,13 +301,13 @@ char               *viewNames;
 
    pDocPrint = LoadedDocument[document - 1];
    ConnectPrint ();
-   /* prepare le lancement de l'impression */
+   /* prepares the execution of the print command */
    strcpy (savePres, pDocPrint->DocSSchema->SsDefaultPSchema);
    ConfigGetPSchemaForPageSize (pDocPrint->DocSSchema, PageSize, newPres);
    if (newPres[0] != '\0')
       strcpy (pDocPrint->DocSSchema->SsDefaultPSchema, newPres);
 
-   /* la repagination se fait dans le programme d'impression */
+   /* the print program takes care of the repagination */
    strncpy (dirName, pDocPrint->DocDirectory, MAX_PATH);
    strncpy (docName, pDocPrint->DocDName, MAX_NAME_LENGTH);
 
@@ -315,10 +321,10 @@ char               *viewNames;
 
    ok = WriteDocument (pDocPrint, 2);
 
-   /* restaure le schema de presentation */
+   /* restores the presentation scheme */
    strcpy (pDocPrint->DocSSchema->SsDefaultPSchema, savePres);
 
-   /* on fait une sauvegarde automatique */
+   /* make an automatic backup */
    if (ok)
      {
 	if (PaperPrint)
@@ -355,7 +361,8 @@ char               *viewNames;
 
 
 /*----------------------------------------------------------------------
-   CallbackPrintmenu analyse les retours du formulaire d'impression. 
+  CallbackPrintmenu
+  callback associated to the PrintSetup form 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CallbackPrintmenu (int ref, int val, char *txt)
@@ -441,8 +448,9 @@ char               *txt;
 }
 
 /*----------------------------------------------------------------------
-   TtcPrintSetup construit les catalogues qui seront utilises      
-   par l'editeur pour le formulaire d'impression.          
+   TtcPrintSetup
+   default action for the PrintSetup menu. Prepares and displays
+   a form.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcPrintSetup (Document document, View view)
@@ -458,7 +466,7 @@ View                view;
 
    pDocPrint = LoadedDocument[document - 1];
 
-   /* formulaire Imprimer */
+   /* Print form */
    ConnectPrint ();
    TtaNewSheet (NumFormPrint, TtaGetViewFrame (document, view), 0, 0,
 		TtaGetMessage (LIB, TMSG_LIB_PRINT),
@@ -470,7 +478,7 @@ View                view;
    if (ManualFeed)
       TtaSetToggleMenu (NumMenuOptions, 0, TRUE);
 
-   /* sous-menu format papier */
+   /* Paper format submenu */
    i = 0;
    sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_A4));
    i += strlen (&bufMenu[i]) + 1;
@@ -482,17 +490,17 @@ View                view;
    else
       TtaSetMenuForm (NumMenuPaperFormat, 0);
 
-   /* sous-menu imprimer papier / sauver PostScript */
+   /* Print to paper/ Print to file submenu */
    i = 0;
    sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_PRINTER));
    i += strlen (&bufMenu[i]) + 1;
    sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_PS_FILE));
    TtaNewSubmenu (NumMenuSupport, NumFormPrint, 0,
 		  TtaGetMessage (LIB, TMSG_OUTPUT), 2, bufMenu, NULL, TRUE);
-   /* zone de saisie du nom de l'imprimante */
+   /* zone for capturing the name of the printer */
    TtaNewTextForm (NumZonePrinterName, NumFormPrint, NULL, 30, 1, FALSE);
 
-   /* initialisation du selecteur PaperPrint */
+   /* initialization of the PaperPrint selector */
    NewPaperPrint = PaperPrint;
    if (PaperPrint)
      {
@@ -505,7 +513,7 @@ View                view;
 	TtaSetTextForm (NumZonePrinterName, PSdir);
      }
 
-   /* active le formulaire "Imprimer" */
+   /* activates the Print form */
    TtaShowDialogue (NumFormPrint, FALSE);
 
 }
