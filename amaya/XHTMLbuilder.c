@@ -1328,22 +1328,20 @@ STRING    alphabet;
 
 {
 #ifdef EXPAT_PARSER
-   int            i;
+  int            i;
 
-   for (i = 0; XhtmlEntityTable[i].charCode >= 0 &&
-	       ustrcmp (XhtmlEntityTable[i].charName, entityName);
-	       i++);
+  for (i = 0; XhtmlEntityTable[i].charCode >= 0 &&
+	 ustrcmp (XhtmlEntityTable[i].charName, entityName);
+       i++);
 
-   if (!ustrcmp (XhtmlEntityTable[i].charName, entityName))
-     {
-       /* entity found */
-       *entityValue = XhtmlEntityTable[i].charCode;
-       *alphabet = 'L';
-     }
-   else
-     {
-       *alphabet = EOS;
-     }
+  if (!ustrcmp (XhtmlEntityTable[i].charName, entityName))
+    {
+      /* entity found */
+      *entityValue = XhtmlEntityTable[i].charCode;
+      *alphabet = 'L';
+    }
+  else
+    *alphabet = EOS;
 #endif /* EXPAT_PARSER */
 }
 
@@ -1361,6 +1359,7 @@ STRING    entityName;
 Document  doc;
 #endif
 { 
+#ifdef EXPAT_PARSER
   if (lang < 0)
       PutInXmlElement (entityName);
   else
@@ -1373,6 +1372,7 @@ Document  doc;
       else
 	  PutNonISOlatin1Char (entityVal, TEXT(""), entityName, doc);
     }
+#endif /* EXPAT_PARSER */
 }
 
 /*--------------------  Entities  (end)  ---------------------*/
