@@ -2918,7 +2918,7 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 					   typeNum, pSS);
 		CloseHistorySequence (pSelDoc);
 		}
-	      if (!ok && typeNum <= 7 /* should be a constant */)
+	      if (!ok && typeNum > 7 /* should be a constant */)
 		/* ca n'a pas marche'. essaie les transformations de */
 		/* type par patterns */
 		{
