@@ -3062,7 +3062,7 @@ void TtaCleanElementPresentation (Element el, Document doc)
 
 
 /*----------------------------------------------------------------------
-  ApplyAllSpecificSettings browses all the PRules structures,
+  TtaApplyAllSpecificSettings browses all the PRules structures,
   associated to the corresponding Specific Context 
   structure, and calls the given handler for each one.
   ----------------------------------------------------------------------*/

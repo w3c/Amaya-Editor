@@ -3043,7 +3043,7 @@ void SetCharFontOrPhrase (int document, int elemtype)
 
   TtaOpenUndoSequence (document, selectedEl, lastEl, firstSelectedChar,
 		       lastSelectedChar);
-  
+
   /* split the last selected elements if it's a text leaf in a HTML element */
   selType = TtaGetElementType (lastEl);
   if (selType.ElTypeNum == HTML_EL_TEXT_UNIT &&
@@ -3069,12 +3069,17 @@ void SetCharFontOrPhrase (int document, int elemtype)
 	    /* it's a caret */
 	    lastSelectedChar = firstSelectedChar;
 	  length = TtaGetElementVolume (lastEl);
+	  if (firstSelectedElem == lastEl &&
+	      lastSelectedChar == 0 && firstSelectedChar == 0)
+	    {
+	      firstSelectedChar = 1;
+	      lastSelectedChar = length + 1;
+	    }
 	  /* exclude trailing spaces from the selection */
 	  if (length > 0)
 	    {
-	      length++;
-	      buffer = (CHAR_T *)TtaGetMemory(length * sizeof(CHAR_T));
-	      TtaGiveBufferContent (lastEl, buffer, length, &lang);
+	      buffer = (CHAR_T *)TtaGetMemory((length+1) * sizeof(CHAR_T));
+	      TtaGiveBufferContent (lastEl, buffer, length+1, &lang);
 	      if (lastEl == firstSelectedElem)
 		min = firstSelectedChar;
 	      else
