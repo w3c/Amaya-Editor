@@ -72,7 +72,7 @@
 70 il editor/browser del W3C
 71 (scrivere a www-amaya@w3.org per informazioni)
 72 Impossibile gestire URL composti da piú di %s caratteri
-73 È consentito il solo tipo di default
+73  consentito il solo tipo di default
 74 Aggiornamento dei collegamenti: %s%% è stato fatto
 75 Niente di nuovo da salvare
 76 repeat-y
@@ -203,3 +203,6 @@
 201 Caricamento automatico delle annotazioni
 202 **Selection color
 203 **Caret color
+204 **Orientation
+205 **Portrait
+206 **Landscape

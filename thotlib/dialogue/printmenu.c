@@ -792,8 +792,9 @@ STRING              cssNames;
    Name                docName;
    Name                savePres, newPres;
    STRING              tmpDirName, tmpDocName;
+   CHAR_T              value[MAX_NAME_LENGTH];
    int                 orientation;
-   ThotBool	           docReadOnly;
+   ThotBool	       docReadOnly;
    ThotBool            ok;
 
    pDoc = LoadedDocument[document - 1];
@@ -838,7 +839,9 @@ STRING              cssNames;
      }
 
    /* searches the paper orientation for the presentation scheme */
-   ConfigGetPresentationOption(pDoc->DocSSchema, TEXT("orientation"), Orientation);
+   ConfigGetPresentationOption(pDoc->DocSSchema, TEXT("orientation"), value);
+   if (value[0] != WC_EOS)
+     ustrcmp (Orientation, value);
    if (!ustrcmp (Orientation, TEXT("Landscape")))
      orientation = 1;
    else
@@ -907,77 +910,83 @@ PrintParameter parameter;
 int value;
 #endif /*__STDC__ */
 {
-   if (ThotLocalActions[T_rprint] == NULL)
-     /* force the initialization of printing parameters */
-     InitPrintParameters (0);
+  if (ThotLocalActions[T_rprint] == NULL)
+    /* force the initialization of printing parameters */
+    InitPrintParameters (0);
 
-   switch (parameter)
-     {
-     case PP_FirstPage:
-       if (value <0 || value >999)
-          TtaError(ERR_invalid_parameter);
-       else
-	 FirstPage = value;
-       break;
-     case PP_LastPage:
-       if (value <0 || value >999)
-	 TtaError(ERR_invalid_parameter);
-       else
-	 LastPage = value;
-       break;
-     case PP_Scale:
-       if (value <0 || value >999)
-	 TtaError(ERR_invalid_parameter);
-       else
-	 Reduction = value;
-       break;
-     case PP_NumberCopies:
-       if (value <0 || value >999)
-	 TtaError(ERR_invalid_parameter);
-       else
-	 NbCopies = value;
-       break;
-     case PP_Paginate:
-       if (value == PP_ON)
-	 Paginate = TRUE;
-       else if (value == PP_OFF)
-	 Paginate = FALSE;
-       else
-	 TtaError(ERR_invalid_parameter);
-       break;
-     case PP_ManualFeed:
-       if (value == PP_ON)
-	 ManualFeed = TRUE;
-       else if (value == PP_OFF)
-	 ManualFeed = FALSE;
-       else
-	 TtaError(ERR_invalid_parameter);
-       break;
-     case PP_PagesPerSheet:
-       if (value != 1 || value != 2 || value != 4)
-	 TtaError(ERR_invalid_parameter);
-       else
-	 PagesPerSheet = value;
-       break;
-     case PP_PaperSize:
-       if (value == PP_A4)
-          ustrcpy (PageSize, TEXT("A4"));
-       else if (value == PP_US)
-            ustrcpy (PageSize, TEXT("US"));
-       else
-	 TtaError(ERR_invalid_parameter);
-       break;
-     case PP_Destination:
-       if (value == PP_PRINTER)
-	 PaperPrint = TRUE;
-       else if (value == PP_PS)
-	 PaperPrint = FALSE;
-       else
-	 TtaError(ERR_invalid_parameter);
-       break;
-      default:
-       TtaError(ERR_invalid_parameter);
-     }
+  switch (parameter)
+    {
+    case PP_Orientation:
+      if (value == PP_Landscape)
+	ustrcpy (Orientation, TEXT("Landscape"));
+      else
+	ustrcpy (Orientation, TEXT("Portrait"));
+      break;
+    case PP_FirstPage:
+      if (value  <0 || value > 999)
+	TtaError(ERR_invalid_parameter);
+      else
+	FirstPage = value;
+      break;
+    case PP_LastPage:
+      if (value < 0 || value > 999)
+	TtaError(ERR_invalid_parameter);
+      else
+	LastPage = value;
+      break;
+    case PP_Scale:
+      if (value < 0 || value > 999)
+	TtaError(ERR_invalid_parameter);
+      else
+	Reduction = value;
+      break;
+    case PP_NumberCopies:
+      if (value < 0 || value > 999)
+	TtaError(ERR_invalid_parameter);
+      else
+	NbCopies = value;
+      break;
+    case PP_Paginate:
+      if (value == PP_ON)
+	Paginate = TRUE;
+      else if (value == PP_OFF)
+	Paginate = FALSE;
+      else
+	TtaError(ERR_invalid_parameter);
+      break;
+    case PP_ManualFeed:
+      if (value == PP_ON)
+	ManualFeed = TRUE;
+      else if (value == PP_OFF)
+	ManualFeed = FALSE;
+      else
+	TtaError(ERR_invalid_parameter);
+      break;
+    case PP_PagesPerSheet:
+      if (value != 1 || value != 2 || value != 4)
+	TtaError(ERR_invalid_parameter);
+      else
+	PagesPerSheet = value;
+      break;
+    case PP_PaperSize:
+      if (value == PP_A4)
+	ustrcpy (PageSize, TEXT("A4"));
+      else if (value == PP_US)
+	ustrcpy (PageSize, TEXT("US"));
+      else
+	TtaError(ERR_invalid_parameter);
+      break;
+    case PP_Destination:
+      if (value == PP_PRINTER)
+	PaperPrint = TRUE;
+      else if (value == PP_PS)
+	PaperPrint = FALSE;
+      else
+	TtaError(ERR_invalid_parameter);
+      break;
+    default:
+      TtaError(ERR_invalid_parameter);
+    }
 }
 
 
@@ -994,6 +1003,12 @@ int value;
 {
   switch (parameter)
     {
+    case PP_Orientation:
+      if (!ustrcmp (Orientation, TEXT("Landscape")))
+	return (PP_Landscape);
+      else
+	return (PP_Portrait);
+      break;
     case PP_FirstPage:
       return (FirstPage);
       break;

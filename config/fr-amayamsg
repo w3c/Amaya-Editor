@@ -24,7 +24,7 @@
 22 Création impossible du document %s
 23 En attente d'un socket
 24 Lecture %s
-25 Écriture %s
+25 criture %s
 26 En attente d'une connexion
 27 Connexion vers %s
 28 Recherche de %s
@@ -53,7 +53,7 @@
 51 Graphique
 52 Sauvegarder sous
 53 Authentification requise pour le domaine \'%s\' du serveur \'%s\'
-54 Éditeur/Navigateur
+54 diteur/Navigateur
 55 Délai expiré - le serveur n'a pas répondu
 56 %s existe déjà. Forcer l'écriture ?
 57 %s a changé. Forcer l'écriture ?
@@ -76,7 +76,7 @@
 74 Mise à jour des liens : %s%% a été traité
 75 Rien à sauver
 76 repeat-y
-77 <HTML><HEAD><TITLE>ERREUR : URL inaccessible</TITLE></HEAD><BODY><H1>ERREUR : l'URL recherchée n'est pas accessible</H1><HR><P>Lors de la recherche de l'URL <A HREF=\"%s\">%s</A></P><P>l'erreur suivante s'est produite :</P><UL><LI><STRONG>Échec connexion</STRONG></UL><P>Le système indique:</P><PRE><I>(%d) %s</I></PRE><P>Ce qui veut dire :</P><PRE>Le site ou le serveur distant pourrait être en panne ou n'existe pas.</PRE><PRE>Essayer plus tard.</PRE><P></P><HR>\n</BODY></HTML>
+77 <HTML><HEAD><TITLE>ERREUR : URL inaccessible</TITLE></HEAD><BODY><H1>ERREUR : l'URL recherchée n'est pas accessible</H1><HR><P>Lors de la recherche de l'URL <A HREF=\"%s\">%s</A></P><P>l'erreur suivante s'est produite :</P><UL><LI><STRONG>chec connexion</STRONG></UL><P>Le système indique:</P><PRE><I>(%d) %s</I></PRE><P>Ce qui veut dire :</P><PRE>Le site ou le serveur distant pourrait être en panne ou n'existe pas.</PRE><PRE>Essayer plus tard.</PRE><P></P><HR>\n</BODY></HTML>
 78 Entrer le nom utilisateur :
 79 Il y a %d requêtes en cours
 80 Pas de fichier CSS possible
@@ -130,11 +130,11 @@
 128 repeat
 129 repeat-x
 130 Votre précédente session Amaya a planté. Voulez-vous recharger les documents modifiés ?
-131 Échec de l'authentification. Voulez-vous réessayer ?
+131 chec de l'authentification. Voulez-vous réessayer ?
 132 L'opération sera redirigée. Voulez-vous continuer ?
 133 Nombre de lignes
 134 Nombre de colonnes
-135 Épaisseur des traits
+135 paisseur des traits
 136 Texte de remplacement
 137 Le texte remplacement est obligatoire
 138 Imprimer l'URL
@@ -203,3 +203,6 @@
 201 Charger automatiquement les annoations
 202 Couleur de sélection
 203 Couleur du curseur d'insertion
+204 Orientation
+205 Portrait
+206 Paysage

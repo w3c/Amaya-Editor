@@ -154,12 +154,14 @@ typedef enum _ClickEvent {
 #define TitleText       447
 #define MAX_REF         448
 
-#define FormPrint       1
-#define PrintOptions    2
-#define PaperFormat     3
-#define PrintSupport    4
-#define PPrinterName    5
-#define PRINT_MAX_REF	6
+#define FormPrint        1
+#define PrintOptions     2
+#define PaperFormat      3
+#define PrintSupport     4
+#define PPrinterName     5
+#define PaperOrientation 6
+#define PPagesPerSheet   7
+#define PRINT_MAX_REF	 8
 
 #define ImageURL	1
 #define ImageLabel	2

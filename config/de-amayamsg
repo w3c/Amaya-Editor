@@ -1,4 +1,4 @@
-# encoding= latin1
+	# encoding= latin1
 0 Dateien
 1 Datei
 2 Löschen
@@ -18,7 +18,7 @@
 16 Ungültiges Ziel
 17 Adresse
 18 Titel
-19 Alle Änderungen gehen verloren - Möchten Sie fortfahren ?
+19 Alle nderungen gehen verloren - Möchten Sie fortfahren ?
 20 Lade Weiterleitung: %s
 21 Zu viele Weiterleitungen
 22 Kann lokale Datei nicht anlegen: %s
@@ -203,3 +203,6 @@
 201 **Autoload annotations
 202 **Selection color
 203 **Caret color
+204 **Orientation
+205 **Portrait
+206 **Landscape

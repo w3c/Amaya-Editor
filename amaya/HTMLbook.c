@@ -50,7 +50,9 @@ static CHAR_T           PPrinter[MAX_PATH];
 static Document		DocPrint;
 static int              PaperPrint;
 static int              ManualFeed;
+static int              Orientation;
 static int              PageSize;
+static int              PagePerSheet;
 
 #include "init_f.h"
 #include "HTMLactions_f.h"
@@ -399,6 +401,8 @@ Document            document;
        /* no manual feed */
        ManualFeed = PP_OFF;
        TtaSetPrintParameter (PP_ManualFeed, ManualFeed);
+       PagePerSheet = 1;
+       TtaSetPrintParameter (PP_PagesPerSheet, PagePerSheet);
      }
 }
 
@@ -429,7 +433,25 @@ Document            doc;
    ustrcpy (viewsToPrint, TEXT("Formatted_view "));
    if (!textFile && WithToC)
      ustrcat (viewsToPrint, TEXT("Table_of_contents "));
-   if (!textFile && NumberLinks)
+
+   if (textFile)
+     {
+        if (PageSize == PP_A4)
+	  {
+	   if (Orientation == PP_Landscape)
+	     TtaSetPrintSchema (TEXT("TextFilePL"));
+	   else
+	     TtaSetPrintSchema (TEXT("TextFilePP"));
+	  }
+	else
+	  {
+	   if (Orientation == PP_Landscape)
+	     TtaSetPrintSchema (TEXT("TextFileUSL"));
+	   else
+	     TtaSetPrintSchema (TEXT("TextFilePPUS"));
+	  }
+     }
+   else if (NumberLinks)
      /* display numbered links */
      {
        /* associate an attribute InternalLink with all anchors refering
@@ -437,28 +459,36 @@ Document            doc;
 	  properly */
        SetInternalLinks (DocPrint);
        if (PageSize == PP_A4)
-	 TtaSetPrintSchema (TEXT("HTMLPLP"));
-       else
-	 TtaSetPrintSchema (TEXT("HTMLPLPUS"));
-       ustrcat (viewsToPrint, TEXT("Links_view "));
-     }
-   else
-     {
-       if (PageSize == PP_A4)
 	 {
-	   if (textFile)
-	     TtaSetPrintSchema (TEXT("TextFilePP"));
+	   if (Orientation == PP_Landscape)
+	     TtaSetPrintSchema (TEXT("HTMLPLL"));
 	   else
-	     TtaSetPrintSchema (TEXT("HTMLPP"));
+	     TtaSetPrintSchema (TEXT("HTMLPLP"));
 	 }
        else
 	 {
-	   if (textFile)
-	     TtaSetPrintSchema (TEXT("TextFilePPUS"));
+	   if (Orientation == PP_Landscape)
+	     TtaSetPrintSchema (TEXT("HTMLUSLL"));
+	   else
+	     TtaSetPrintSchema (TEXT("HTMLPLPUS"));
+	 }
+       ustrcat (viewsToPrint, TEXT("Links_view "));
+     }
+   else if (PageSize == PP_A4)
+     {
+	   if (Orientation == PP_Landscape)
+	     TtaSetPrintSchema (TEXT("HTMLPL"));
+	   else
+	     TtaSetPrintSchema (TEXT("HTMLPP"));
+     }
+   else
+     {
+	   if (Orientation == PP_Landscape)
+	     TtaSetPrintSchema (TEXT("HTMLUSL"));
 	   else
 	     TtaSetPrintSchema (TEXT("HTMLPPUS"));
-	 }    
-     }
+     }    
+   
    /* post or remove the PrintURL attribute */
    el =  TtaGetMainRoot (doc);
    status = TtaIsDocumentModified (doc);
@@ -535,6 +565,8 @@ STRING              data;
 	     confirmation */
 	  TtaSetPrintParameter (PP_Destination, PaperPrint);
 	  TtaSetPrintParameter (PP_ManualFeed, ManualFeed);
+	  TtaSetPrintParameter (PP_PagesPerSheet, PagePerSheet);
+	  TtaSetPrintParameter (PP_Orientation, Orientation);
 	  TtaSetPrintParameter (PP_PaperSize, PageSize);
 	  TtaSetPrintCommand (PPrinter);
 	  TtaSetPsFile (PSdir);
@@ -590,6 +622,25 @@ STRING              data;
 	  break;
 	case 1:
 	  PageSize = PP_US;
+	  break;
+	}
+      break;
+    case PaperOrientation:
+      /* orientation submenu */
+      Orientation = val;
+      break;
+    case PPagesPerSheet:
+      /* pages per sheet submenu */
+      switch (val)
+	{
+	case 0:
+	  PagePerSheet = 1;
+	  break;
+	case 1:
+	  PagePerSheet = 2;
+	  break;
+	case 2:
+	  PagePerSheet = 4;
 	  break;
 	}
       break;
@@ -691,7 +742,71 @@ View                view;
 #ifndef _WINDOWS
    TtaNewSheet (BasePrint + FormPrint, TtaGetViewFrame (doc, view), 
 		TtaGetMessage (LIB, TMSG_LIB_PRINT),
-	   1, TtaGetMessage (AMAYA, AM_BUTTON_PRINT), FALSE, 2, 'L', D_CANCEL);
+	   1, TtaGetMessage (AMAYA, AM_BUTTON_PRINT), FALSE, 3, 'L', D_CANCEL);
+
+   /* Paper format submenu */
+   i = 0;
+   sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_A4));
+   i += ustrlen (&bufMenu[i]) + 1;
+   sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_US));
+   TtaNewSubmenu (BasePrint + PaperFormat, BasePrint + FormPrint, 0,
+	     TtaGetMessage (LIB, TMSG_PAPER_SIZE), 2, bufMenu, NULL, FALSE);
+   if (PageSize == PP_US)
+      TtaSetMenuForm (BasePrint + PaperFormat, 1);
+   else
+      TtaSetMenuForm (BasePrint + PaperFormat, 0);
+
+   /* Orientation submenu */
+   i = 0;
+   sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (AMAYA, AM_PORTRAIT));
+   i += ustrlen (&bufMenu[i]) + 1;
+   sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (AMAYA, AM_LANDSCAPE));
+   TtaNewSubmenu (BasePrint + PaperOrientation, BasePrint + FormPrint, 0,
+                  TtaGetMessage (AMAYA, AM_ORIENTATION), 2, bufMenu, NULL, TRUE);
+   if (Orientation == PP_Landscape)
+       TtaSetMenuForm (BasePrint + PaperOrientation, 1);
+   else
+      TtaSetMenuForm (BasePrint + PaperOrientation, 0);
+
+
+   /* Pages per sheet submenu */
+   i = 0;
+   sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_1_PAGE_SHEET));
+   i += ustrlen (&bufMenu[i]) + 1;
+   sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_2_PAGE_SHEET));
+   i += ustrlen (&bufMenu[i]) + 1;
+   sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_4_PAGE_SHEET));
+   TtaNewSubmenu (BasePrint + PPagesPerSheet, BasePrint + FormPrint, 0,
+                  TtaGetMessage (LIB, TMSG_REDUCTION), 3, bufMenu, NULL, TRUE);
+   if (PagePerSheet == 1)
+       TtaSetMenuForm (BasePrint + PPagesPerSheet, 0);
+   else if (PagePerSheet == 2)
+      TtaSetMenuForm (BasePrint + PPagesPerSheet, 1);
+   else
+      TtaSetMenuForm (BasePrint + PPagesPerSheet, 2);
+    
+   /* Print to paper/ Print to file submenu */
+   i = 0;
+   sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_PRINTER));
+   i += ustrlen (&bufMenu[i]) + 1;
+   sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_PS_FILE));
+   TtaNewSubmenu (BasePrint + PrintSupport, BasePrint + FormPrint, 0,
+                  TtaGetMessage (LIB, TMSG_OUTPUT), 2, bufMenu, NULL, TRUE);
+
+   /* PaperPrint selector */
+   TtaNewTextForm (BasePrint + PPrinterName, BasePrint + FormPrint, NULL, 30, 1, FALSE);
+   if (PaperPrint == PP_PRINTER)
+     {
+	TtaSetMenuForm (BasePrint + PrintSupport, 0);
+	TtaSetTextForm (BasePrint + PPrinterName, PPrinter);
+     }
+   else
+     {
+	TtaSetMenuForm (BasePrint + PrintSupport, 1);
+	TtaSetTextForm (BasePrint + PPrinterName, PSdir);
+     }
+
+   /* The toggle */
    i = 0;
    sprintf (&bufMenu[i], "%s%s", "T", TtaGetMessage (LIB, TMSG_MANUAL_FEED));
    i += ustrlen (&bufMenu[i]) + 1;
@@ -713,47 +828,14 @@ View                view;
    TtaSetToggleMenu (BasePrint + PrintOptions, 3, PrintURL);
    TtaSetToggleMenu (BasePrint + PrintOptions, 4, IgnoreCSS);
 
-   /* Paper format submenu */
-   i = 0;
-   sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_A4));
-   i += ustrlen (&bufMenu[i]) + 1;
-   sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_US));
-   TtaNewSubmenu (BasePrint + PaperFormat, BasePrint + FormPrint, 0,
-	     TtaGetMessage (LIB, TMSG_PAPER_SIZE), 2, bufMenu, NULL, FALSE);
-   if (PageSize == PP_US)
-      TtaSetMenuForm (BasePrint + PaperFormat, 1);
-   else
-      TtaSetMenuForm (BasePrint + PaperFormat, 0);
-
-   /* Print to paper/ Print to file submenu */
-   i = 0;
-   sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_PRINTER));
-   i += ustrlen (&bufMenu[i]) + 1;
-   sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_PS_FILE));
-   TtaNewSubmenu (BasePrint + PrintSupport, BasePrint + FormPrint, 0,
-                  TtaGetMessage (LIB, TMSG_OUTPUT), 2, bufMenu, NULL, TRUE);
-   /* text capture zone for the printer name */
-   TtaNewTextForm (BasePrint + PPrinterName, BasePrint + FormPrint, NULL, 30, 1, FALSE);
-
-   /* initialization of the PaperPrint selector */
-   if (PaperPrint == PP_PRINTER)
-     {
-	TtaSetMenuForm (BasePrint + PrintSupport, 0);
-	TtaSetTextForm (BasePrint + PPrinterName, PPrinter);
-     }
-   else
-     {
-	TtaSetMenuForm (BasePrint + PrintSupport, 1);
-	TtaSetTextForm (BasePrint + PPrinterName, PSdir);
-     }
-
    /* activates the Print form */
     TtaShowDialogue (BasePrint+FormPrint, FALSE);
-    if (textFile) {
-       /* invalid dialogue entries */
-       TtaRedrawMenuEntry (BasePrint + PrintOptions, 1, NULL, -1, FALSE);
-       TtaRedrawMenuEntry (BasePrint + PrintOptions, 2, NULL, -1, FALSE);	      
-	}
+    if (textFile)
+      {
+	/* invalid dialogue entries */
+	TtaRedrawMenuEntry (BasePrint + PrintOptions, 1, NULL, -1, FALSE);
+	TtaRedrawMenuEntry (BasePrint + PrintOptions, 2, NULL, -1, FALSE);
+      }
 #else  /* _WINDOWS */
     CreatePrintDlgWindow (TtaGetViewFrame (doc, view), PSdir);
 #endif /* _WINDOWS */

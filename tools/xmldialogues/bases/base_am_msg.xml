@@ -144,7 +144,7 @@
 <label define="AM_DOC_MODIFIED">
 	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">Document modified. All changes will be lost. Do you want to continue ?</message>
 	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">Document modifié. Voulez-vous continuer ?</message>
-	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Alle Änderungen gehen verloren - Möchten Sie fortfahren ?</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Alle �nderungen gehen verloren - Möchten Sie fortfahren ?</message>
 	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Il documento è stato modificato. Tutte le modifiche andranno perdute. Vuoi continuare ugualmente?</message>
 	<message xml::lang="tr" last_update="Wed Jun  7 17:14:36 CEST 2000">Tüm deðiþiklikleri kaybedeceksiniz, devam etmek istiyor musunuz?</message>
 </label>
@@ -185,7 +185,7 @@
 </label>
 <label define="AM_PROG_WRITE">
 	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">Writing %s</message>
-	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">Écriture %s</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">�criture %s</message>
 	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Schreibe: %s</message>
 	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Sto scrivendo %s</message>
 	<message xml::lang="tr" last_update="Wed Jun  7 17:14:36 CEST 2000">%s yazýlýyor</message>
@@ -387,7 +387,7 @@
 </label>
 <label define="AM_BUTTON_BrowseEdit">
 	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">Editor/Browser</message>
-	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">Éditeur/Navigateur</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">�diteur/Navigateur</message>
 	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Editor/Browser</message>
 	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Editor/Browser</message>
 </label>
@@ -510,7 +510,7 @@
 	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">Only default type is allowed</message>
 	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">Seul le type par défaut est autorisé</message>
 	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Nur Standardtyp erlaubt</message>
-	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">È consentito il solo tipo di default</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">� consentito il solo tipo di default</message>
 	<message xml::lang="tr" last_update="Wed Jun  7 17:14:52 CEST 2000">Sadece öntanýmlý tip kullanýlabilir</message>
 </label>
 <label define="AM_UPDATED_LINK">
@@ -536,7 +536,7 @@
 </label>
 <label define="AM_SYS_ERROR_TMPL">
 	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">&lt;HTML>&lt;HEAD>&lt;TITLE>ERROR: Cannot access a URL&lt;/TITLE>&lt;/HEAD>&lt;BODY>&lt;H1>The requested URL could not be retrieved&lt;/H1>&lt;HR>&lt;P>While trying to retrieve the URL:&lt;A HREF=\"%s\">%s&lt;/A>&lt;/P>&lt;P>The following error was encountered:&lt;/P>&lt;UL>&lt;LI>&lt;STRONG>Connection Failed&lt;/STRONG>&lt;/UL>&lt;P>The system returned:&lt;/P>&lt;PRE>&lt;I>(%d) %s&lt;/I>&lt;/PRE>&lt;P>This means that:&lt;/P>&lt;PRE>The remote site or server may be down or non-existent.&lt;/PRE>&lt;PRE>Please try again soon.&lt;/PRE>&lt;P>&lt;/P>&lt;HR>\n&lt;/BODY>&lt;/HTML></message>
-	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">&lt;HTML>&lt;HEAD>&lt;TITLE>ERREUR : URL inaccessible&lt;/TITLE>&lt;/HEAD>&lt;BODY>&lt;H1>ERREUR : l'URL recherchée n'est pas accessible&lt;/H1>&lt;HR>&lt;P>Lors de la recherche de l'URL &lt;A HREF=\"%s\">%s&lt;/A>&lt;/P>&lt;P>l'erreur suivante s'est produite :&lt;/P>&lt;UL>&lt;LI>&lt;STRONG>Échec connexion&lt;/STRONG>&lt;/UL>&lt;P>Le système indique:&lt;/P>&lt;PRE>&lt;I>(%d) %s&lt;/I>&lt;/PRE>&lt;P>Ce qui veut dire :&lt;/P>&lt;PRE>Le site ou le serveur distant pourrait être en panne ou n'existe pas.&lt;/PRE>&lt;PRE>Essayer plus tard.&lt;/PRE>&lt;P>&lt;/P>&lt;HR>\n&lt;/BODY>&lt;/HTML></message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">&lt;HTML>&lt;HEAD>&lt;TITLE>ERREUR : URL inaccessible&lt;/TITLE>&lt;/HEAD>&lt;BODY>&lt;H1>ERREUR : l'URL recherchée n'est pas accessible&lt;/H1>&lt;HR>&lt;P>Lors de la recherche de l'URL &lt;A HREF=\"%s\">%s&lt;/A>&lt;/P>&lt;P>l'erreur suivante s'est produite :&lt;/P>&lt;UL>&lt;LI>&lt;STRONG>�chec connexion&lt;/STRONG>&lt;/UL>&lt;P>Le système indique:&lt;/P>&lt;PRE>&lt;I>(%d) %s&lt;/I>&lt;/PRE>&lt;P>Ce qui veut dire :&lt;/P>&lt;PRE>Le site ou le serveur distant pourrait être en panne ou n'existe pas.&lt;/PRE>&lt;PRE>Essayer plus tard.&lt;/PRE>&lt;P>&lt;/P>&lt;HR>\n&lt;/BODY>&lt;/HTML></message>
 	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">&lt;HTML>&lt;HEAD>&lt;TITLE>ERROR: Kann nicht zugreifen auf URL&lt;/TITLE>&lt;/HEAD>&lt;BODY>&lt;H1>Die angeforderte URL konnte nicht geladen werden &lt;/H1>&lt;HR>&lt;P>Beim Laden der URL:&lt;A HREF=\"%s\">%s&lt;/A>&lt;/P>&lt;P> ist folgender Fehler aufgetreten:&lt;/P>&lt;UL>&lt;LI>&lt;STRONG>Verbindung nicht möglich&lt;/STRONG>&lt;/UL>&lt;P>Das System meldete:&lt;/P>&lt;PRE>&lt;I>(%d) %s&lt;/I>&lt;/PRE>&lt;P>Dies bedeutet, daß:&lt;/P>&lt;PRE>Die Gegenseite oder der Server sind nicht erreichbar oder existieren nicht.&lt;/PRE>&lt;PRE>Bitte später noch einmal versuchen.&lt;/PRE>&lt;P>&lt;/P>&lt;HR>\n&lt;/BODY>&lt;/HTML></message>
 	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">&lt;HTML>&lt;HEAD>&lt;TITLE>ERRORE: Impossibile accedere ad un URL&lt;/TITLE>&lt;/HEAD>&lt;BODY>&lt;H1>L'URL richiesto non può essere recuperato&lt;/H1>&lt;HR>&lt;P>Tentando di recuperare l'URL:&lt;A HREF=\"%s\">%s&lt;/A>&lt;/P>&lt;P>si è verificato il seguente errore:&lt;/P>&lt;UL>&lt;LI>&lt;STRONG>Connessione fallita&lt;/STRONG>&lt;/UL>&lt;P>Il sistema ha restituito:&lt;/P>&lt;PRE>&lt;I>(%d) %s&lt;/I>&lt;/PRE>&lt;P>Ciò significa che:&lt;/P>&lt;PRE>Il sito o il server remoti possono essere inattivi o inesistenti.&lt;/PRE>&lt;PRE>Prova ancora piú tardi.&lt;/PRE>&lt;P>&lt;/P>&lt;HR>\n&lt;/BODY>&lt;/HTML></message>
 	<message xml::lang="tr" last_update="Wed Jun  7 17:14:52 CEST 2000">&lt;HTML>&lt;HEAD>&lt;TITLE>HATA: URL eriþilemiyor&lt;/TITLE>&lt;/HEAD>&lt;BODY>&lt;H1>Belirtilen URL alýnamadý&lt;/H1>&lt;HR>&lt;P>Belirtilen URL alýnýrken:&lt;A HREF=\"%s\">%s&lt;/A>&lt;/P>&lt;P>Aþaðýdaki hata ile karþýlaþýldý:&lt;/P>&lt;UL>&lt;LI>&lt;STRONG>Baðlantý baþarýsýz&lt;/STRONG>&lt;/UL>&lt;P>Sistem hata olarak:&lt;/P>&lt;PRE>&lt;I>(%d) %s&lt;/I>&lt;/PRE>mesajýný verdi&lt;P>Bunun anlamý:&lt;/P>&lt;PRE>Karþý sunucunun çalýþmýyor olmasý veya istenen belgenin sunucuda yer almamasý.&lt;/PRE>&lt;PRE>Lütfen bir süre sonra tekrar deneyin.&lt;/PRE>&lt;P>&lt;/P>&lt;HR>\n&lt;/BODY>&lt;/HTML></message>
@@ -910,7 +910,7 @@
 </label>
 <label define="AM_AUTHENTICATION_CONFIRM">
 	<message xml::lang="en" last_update="Wed Jun  7 17:12:49 CEST 2000">Authentication failed. Retry?</message>
-	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">Échec de l'authentification. Voulez-vous réessayer ?</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">�chec de l'authentification. Voulez-vous réessayer ?</message>
 	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Login gescheitert. Wiederholen?</message>
 	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">Autenticazione fallita. Vuoi riprovare?</message>
 </label>
@@ -934,7 +934,7 @@
 </label>
 <label define="AM_BORDER">
 	<message xml::lang="en" last_update="Wed Jun  7 17:12:49 CEST 2000">Border</message>
-	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">Épaisseur des traits</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">�paisseur des traits</message>
 	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Rahmen:</message>
 	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">Bordo</message>
 </label>
@@ -1280,6 +1280,18 @@
 <label define="AM_DOC_INS_COLOR">
 	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Caret color</message>
 	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Couleur du curseur d'insertion</message>
+</label>
+<label define="AM_ORIENTATION">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Orientation</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Orientation</message>
+</label>
+<label define="AM_PORTRAIT">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Portrait</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Portrait</message>
+</label>
+<label define="AM_LANDSCAPE">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Landscape</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Paysage</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 <!--this label must still empty end the latest because itshows the end of labels that are used for Amaya --></label>

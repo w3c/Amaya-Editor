@@ -1,20 +1,20 @@
 	{ I. Vatton 	 Novembre 1994-1995  }
 
-{ Variables used in ifdefs: PAGE, BLACK_WHITE, US_PAPER, LINK_NUMBER }
+{ Variables used in ifdefs: PAGE, BLACK_WHITE, US_PAPER, LINK_NUMBER, LANDSDSCAPE}
 
 PRESENTATION HTML;
 
 VIEWS
    Formatted_view, Structure_view, Links_view, Alternate_view, Table_of_contents;
 
-#ifdef PAGE
-PRINT
-   Formatted_view;
-#endif
-
 #ifdef US_PAPER
 #define PAGE
 #endif { US_PAPER }
+
+#if defined(PAGE) || defined(LANDSCAPE)
+PRINT
+   Formatted_view;
+#endif
 
 #define STRUCT_INDENT 1.5
 #define TAG_FONTSIZE 10 pt
@@ -5609,6 +5609,9 @@ BOXES
 #ifdef PAGE
   TitleHead:
 	BEGIN
+#ifdef LANDSCAPE
+	Visibility: 0;
+#endif { LANDSCAPE }
 	Background : White;
 	Foreground : Black;
 	Fillpattern : nopattern;
@@ -5633,8 +5636,13 @@ BOXES
 	Copy (Document_URL);
 	Justify: No;
 	HorizPos: Left = Previous PAGE_BREAK . Left;
+#ifdef LANDSCAPE
+	Height:   0.8 cm;
+	VertPos: Top = Previous PAGE_BREAK . Bottom + 0.3 cm;
+#else { LANDSCAPE }
 	VertPos: Top = Previous PAGE_BREAK . Bottom + 0.7 cm;
 	Height:   1.2 cm;
+#endif { LANDSCAPE }
 	Size : 8 pt;
 	Font: times;
 	Style: Roman;	
@@ -5643,6 +5651,9 @@ BOXES
 
   Spacehead:
 	BEGIN
+#ifdef LANDSCAPE
+	Visibility: 0;
+#endif { LANDSCAPE }
 	Background : White;
 	Foreground : Black;
 	Fillpattern : nopattern;
@@ -5665,9 +5676,14 @@ BOXES
 	Fillpattern : nopattern;
 	Underline: NoUnderline;
 	Content: (Value (CptPage, Arabic));
-	VertPos: Top = Next PAGE_BREAK . Top - 0.5 cm;
 	HorizPos: VMiddle = Next PAGE_BREAK . VMiddle;
+#ifdef LANDSCAPE
+	VertPos: Top = Next PAGE_BREAK . Top - 0.3 cm;
+	Height:   1 cm;
+#else { LANDSCAPE }
+	VertPos: Top = Next PAGE_BREAK . Top - 0.5 cm;
 	Height:   1.6 cm;
+#endif { LANDSCAPE }
 	Size : 11 pt;
 	Font: times;
 	Style: Roman;
@@ -5681,9 +5697,14 @@ BOXES
 	Fillpattern : nopattern;
 	Underline: NoUnderline;
 	Content: (Value (CptLinksPage, lroman));
-	VertPos: Top = Next PAGE_BREAK . Top - 0.5 cm;
 	HorizPos: VMiddle = Next PAGE_BREAK . VMiddle;
+#ifdef LANDSCAPE
+	VertPos: Top = Next PAGE_BREAK . Top - 0.3 cm;
+	Height:   1 cm;
+#else { LANDSCAPE }
+	VertPos: Top = Next PAGE_BREAK . Top - 0.5 cm;
 	Height:   1.6 cm;
+#endif { LANDSCAPE }
 	Size : 11 pt;
 	Font: times;
 	Style: Roman;
@@ -5697,9 +5718,14 @@ BOXES
 	FillPattern : nopattern;
 	Underline: NoUnderline;
 	Content: (Value (CptToCPage, Uroman));
-	VertPos: Top = Next PAGE_BREAK . Top - 0.5 cm;
 	HorizPos: VMiddle = Next PAGE_BREAK . VMiddle;
+#ifdef LANDSCAPE
+	VertPos: Top = Next PAGE_BREAK . Top - 0.3 cm;
+	Height:   1 cm;
+#else { LANDSCAPE }
+	VertPos: Top = Next PAGE_BREAK . Top - 0.5 cm;
 	Height:   1.6 cm;
+#endif { LANDSCAPE }
 	Size : 11 pt;
 	Font: times;
 	Style: Roman;
@@ -5711,7 +5737,11 @@ BOXES
 	Background : White;
 	Foreground : Black;
 	FillPattern: backgroundcolor;
-	Height: 1.4 cm;
+#ifdef LANDSCAPE
+	Height:   1 cm;
+#else { LANDSCAPE }
+	Height:   1.4 cm;
+#endif { LANDSCAPE }
 	Width: 1 pt;
 	Underline: NoUnderline;
 	VertPos: Bottom = Next PAGE_BREAK . Top;
@@ -5726,38 +5756,66 @@ BOXES
 	FillPattern: backgroundcolor;
 	ShowBox;
 #ifdef US_PAPER
+#ifdef LANDSCAPE
+	Width: 23.8 cm;
+	Height: 18.2 cm;
+	VertPos: Top = Enclosing . Top + 1.7 cm;
+	HorizPos: Left = Enclosing . Left + 2.7 cm;
+#else { LANDSCAPE }
 	Width: 16.2 cm;
 	Height: 23.8 cm;
 	VertPos: Top = Enclosing . Top + 1.7 cm;
 	HorizPos: Left = Enclosing . Left + 2.7 cm;
-#else
+#endif { LANDSCAPE }
+#else { US_PAPER }
+#ifdef LANDSCAPE
+	Width: 25.9 cm;
+	Height: 17.6 cm;
+	VertPos: Top = Enclosing . Top + 1.7 cm;
+	HorizPos: Left = Enclosing . Left + 2.7 cm;
+#else { LANDSCAPE }
 	Width: 15.6 cm;
 	Height: 25.9 cm;
 	VertPos: Top = Enclosing . Top + 1.7 cm;
 	HorizPos: Left = Enclosing . Left + 2.7 cm;
-#endif
-	if NOT One(CptPage)
-	   CreateAfter (TitleHead);
+#endif { LANDSCAPE }
+#endif { US_PAPER }
+	if NOT One(CptPage) CreateAfter (TitleHead);
 	CreateAfter (Spacehead);
-	if PrintURL
-	   CreateAfter (URLhead);
+	if PrintURL CreateAfter (URLhead);
+#ifndef LANDSCAPE
 	if NOT One(CptPage) CreateBefore (PageNum);
-	IF Not One(CptPage) CreateBefore (BottomSpace);
+	if NOT One(CptPage) CreateBefore (BottomSpace);
+#endif { LANDSCAPE }
 	Underline: NoUnderline;
 	END;
 
   LinksPage:
 	BEGIN
 #ifdef US_PAPER
+#ifdef LANDSCAPE
+	Width: 23.8 cm;
+	Height: 18.2 cm;
+	VertPos: Top = Enclosing . Top + 1.7 cm;
+	HorizPos: Left = Enclosing . Left + 2.7 cm;
+#else { LANDSCAPE }
 	Width: 16.2 cm;
 	Height: 23.8 cm;
 	VertPos: Top = Enclosing . Top + 1.7 cm;
 	HorizPos: Left = Enclosing . Left + 2.7 cm;
-#else
+#endif { LANDSCAPE }
+#else { US_PAPER }
+#ifdef LANDSCAPE
+	Width: 25.9 cm;
+	Height: 17.6 cm;
+	VertPos: Top = Enclosing . Top + 1.7 cm;
+	HorizPos: Left = Enclosing . Left + 2.7 cm;
+#else { LANDSCAPE }
 	Width: 15.6 cm;
 	Height: 25.9 cm;
 	VertPos: Top = Enclosing . Top + 1.7 cm;
 	HorizPos: Left = Enclosing . Left + 2.7 cm;
+#endif { LANDSCAPE }
 #endif { US_PAPER }
 	CreateAfter (TitleHead);
 	CreateAfter (Spacehead);
@@ -5774,15 +5832,29 @@ BOXES
 	Foreground : Black;
 	ShowBox;
 #ifdef US_PAPER
+#ifdef LANDSCAPE
+	Width: 25.9 cm;
+	Height: 18.6 cm;
+	VertPos: Top = Enclosing . Top + 1.7 cm;
+	HorizPos: Left = Enclosing . Left + 2.7 cm;
+#else { LANDSCAPE }
 	Width: 16.2 cm;
 	Height: 23.8 cm;
 	VertPos: Top = Enclosing . Top + 1.7 cm;
 	HorizPos: Left = Enclosing . Left + 2.7 cm;
-#else
+#endif { LANDSCAPE }
+#else { US_PAPER }
+#ifdef LANDSCAPE
+	Width: 25.9 cm;
+	Height: 17.6 cm;
+	VertPos: Top = Enclosing . Top + 1.7 cm;
+	HorizPos: Left = Enclosing . Left + 2.7 cm;
+#else { LANDSCAPE }
 	Width: 15.6 cm;
 	Height: 25.9 cm;
 	VertPos: Top = Enclosing . Top + 1.7 cm;
 	HorizPos: Left = Enclosing . Left + 2.7 cm;
+#endif { LANDSCAPE }
 #endif { US_PAPER }
 	CreateAfter (TitleHead);
 	CreateAfter (URLhead);
