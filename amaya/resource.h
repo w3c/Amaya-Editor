@@ -598,6 +598,7 @@
 #define IDC_PROFILENAME                 1463
 #define IDC_PROXYDOMAIN                 1464
 #define IDC_ONLYPROXY                   1465
+#define IDC_FILTERBYSERVER              1466
 #define IDC_ABOUT2                      1469
 #define IDC_EDIT_NAME                   1470
 #define IDC_VERSION                     1471
@@ -653,6 +654,11 @@
 #define ID_ANNOTHIDE                    1522
 #define ID_ANNOTSHOWALL                 1523
 #define ID_ANNOTHIDEALL                 1524
+#define IDC_FILTERBYAUTHOR              1525
+#define IDC_FILTERBYTYPE                1526
+#define IDC_TFILTEROPTIONS              1528
+#define IDC_TFILTERHIDDEN               1529
+#define IDC_FILTERSEL                   1531
 #define ID_BUTTON40017                  40017
 #define ID_BUTTON40018                  40018
 #define ID_BUTTON40019                  40019
@@ -699,7 +705,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        545
 #define _APS_NEXT_COMMAND_VALUE         40052
-#define _APS_NEXT_CONTROL_VALUE         1523
+#define _APS_NEXT_CONTROL_VALUE         1533
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
