@@ -4060,7 +4060,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
       if (deb[0] != EOS)
 	{
 	  names[0] = deb;
-	  if (!strcmp (names, "html"))
+	  if (!strcmp (names[0], "html"))
 	    /* give a greater priority to the backgoud color of html */
 	    specificity += 3;
 	  else
