@@ -2728,7 +2728,7 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
      TtaSetMenuOn (doc,DAV_VIEW,Cooperation_);     
 #else
      TtaSetMenuOff (doc,1,Cooperation_);
-#endif   
+#endif  /* DAV */ 
 
    
    return (doc);
@@ -3648,14 +3648,15 @@ void Reload_callback (int doc, int status, char *urlName,
 
 
 #ifdef DAV
-   /* MKP: if document has been loaded, do a   *
-    * lock discovery, set LockIndicator button */
-   if (W3Loading == 0 && res>0) {
+   /* MKP: if document has been loaded, we are       * 
+    * able to discovery if the document is locked.   *
+    * do a lock discovery, set LockIndicator button  */
+   if (W3Loading == 0 && res>0) 
+    {
       DAVLockDiscovery (newdoc);
       DAVSetLockIndicator(newdoc);
-   }
-
-#endif 
+    }
+#endif  /* DAV */
 
   TtaFreeMemory (pathname);
   TtaFreeMemory (documentname);
@@ -4352,13 +4353,14 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
 
 
 #ifdef DAV
-   /* MKP: if document has been loaded, do a   *
-    * lock discovery, set LockIndicator button */
-   if (W3Loading == 0) {
+   /* MKP: if document has been loaded,  we are     * 
+    * able to discovery if the document is locked.  *
+    * do a lock discovery, set LockIndicator button */
+   if (W3Loading == 0) 
+    {
       DAVLockDiscovery (newdoc);
       DAVSetLockIndicator(newdoc);
-   }
-
+    }
 #endif       
 
    TtaFreeMemory (target);
@@ -6392,8 +6394,6 @@ void InitAmaya (NotifyEvent * event)
  *      initialize davlib module otherwise */
 #ifdef DAV
     InitDAV();
-#else
-    TtaSetMenuOff(0,0,Cooperation_); /*it didn't work... :( */
 #endif /* DAV */
 
    

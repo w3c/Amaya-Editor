@@ -592,7 +592,8 @@ void PrintTerminateStatus (AHTReqContext *me, int status)
       sprintf(AmayaLastHTTPErrorMsg, "409: Conflict with the current state of the resource");
     }
 #ifdef DAV
-  else if (status == -423 || status == 207 || status == -424 ) {
+  else if (status == -423 || status == 207 || status == -424 ) 
+   {
       /* WebDAV status - there are filters that handle this 
        * status codes. We don't need to deal with this here. 
        * change status value to prevent any message to the user.

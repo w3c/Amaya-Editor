@@ -1609,6 +1609,15 @@ void DocumentClosed (NotifyDialog * event)
    if (event == NULL)
       return;
 #ifdef DAV
+      /* NEED : deal with last document when exiting the application.
+       * 
+       * Now, when exiting the application, if the document is locked
+       * by the user (the lock information must be in the local base),
+       * this function will ask whether the user wants to unlock it.
+       * If user agrees, an UNLOCK request will be sent. But, under
+       * Windows machines, this request will be killed when the application
+       * exit, and no unlock will be done.
+       */ 
       DAVFreeLock (event->document);
 #endif
   

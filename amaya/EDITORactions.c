@@ -2745,7 +2745,7 @@ void CustomQuery (Document document, View view)
 }
 
 /*------------ Begin: WebDAV Modifications by Manuele Kirsch -----------*/
-/* Note: There is no #include "davlib_f.h" in this file to prevent
+/* Note: There is no #include "davlib.h" in this file to prevent
  *       circular references between the header files.
  */        
 

@@ -31,6 +31,9 @@ typedef char BOOL;
 #endif
 #endif
 
+/* For windows plataforms, to guarantee that 
+ * HT_DAV option for the libwww WebDAV module
+ * will be defined.  */
 #ifdef DAV
 #ifndef HT_DAV
 #define HT_DAV

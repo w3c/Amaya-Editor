@@ -123,7 +123,7 @@ static  FILE        *trace_fp = NULL;   /* file pointer to the trace logs */
 #include "davlib.h"
 #include "davlib_f.h"
 #include "davlibCommon_f.h"
-#endif
+#endif /* DAV */
 
 /* prototypes */
 
@@ -525,7 +525,7 @@ AHTReqContext *AHTReqContext_new (int docid)
 
 #ifdef DAV                /* clean the DAV request context */
    me->dav_context = NULL; /* it should be create only when doing a DAV request */
-#endif   
+#endif /* DAV */  
 
    Amaya->open_requests++;
 
@@ -998,7 +998,7 @@ static int redirection_handler (HTRequest *request, HTResponse *response,
        /* search lock information for the new url */
        if (me->method == METHOD_POST || me->method == METHOD_PUT) 
            DAVAddIfHeader (me,me->urlName);
-#endif       
+#endif /* DAV */      
        
        if (me->method == METHOD_POST || me->method == METHOD_PUT)
 	 {
@@ -1065,7 +1065,7 @@ static int precondition_handler (HTRequest *request, HTResponse *response,
           noIf = NO;
       else
           noIf = YES;      
-#endif	  /* DAV */
+#endif /* DAV */
       
       
       /* start a new PUT request without preconditions */
@@ -1102,7 +1102,8 @@ static int precondition_handler (HTRequest *request, HTResponse *response,
 
       
 #ifdef DAV
-      /* MKP: add an If header only if there wasn't preconditions */
+      /* MKP: add an If header (lock information) only 
+       * if there wasn't preconditions */
       if (noIf!=YES) DAVAddIfHeader (me,HTAnchor_address(me->dest));
 #endif /* DAV */
       
@@ -1182,9 +1183,11 @@ static int check_handler (HTRequest * request, HTResponse * response,
 	HTRequest_setFlush(me->request, YES);
    
 #ifdef DAV
-      /* MKP: try to add an if header */
+      /* MKP: try to add an "If" header (lock information) 
+       *      Such header will be added only if there is a
+       *      lock information in the local base. */
       DAVAddIfHeader (me,me->urlName);   
-#endif
+#endif /* DAV */
 
 
       /* turn on the special preconditions, to avoid having this
@@ -1220,9 +1223,12 @@ static int check_handler (HTRequest * request, HTResponse * response,
 	  HTRequest_setPreemptive (me->request, NO);
    
 #ifdef DAV
-          /* MKP: try to add an if header */
+         /* MKP: try to add an "If" header (lock information) 
+          *      Such header will be added only if there is a
+          *      lock information in the local base. */ 
           DAVAddIfHeader (me,HTAnchor_address(me->dest));   
-#endif
+#endif /* DAV */
+
 	  
 	  /*
 	  ** Make sure that the first request is flushed immediately and not
@@ -1296,14 +1302,15 @@ static int terminate_handler (HTRequest *request, HTResponse *response,
 #ifdef DAV
    else if (status == HT_LOCKED 
 	    || status ==  HT_FAILED_DEPENDENCY 
-	    || status == HT_MULTI_STATUS) {
+	    || status == HT_MULTI_STATUS) 
+    {
      /* WebDAV return codes - they are handled in
       * specific filters. We don't need to deal
       * with them anymore
       */
      error_flag = FALSE;  	   
-   }
-#endif   
+    }
+#endif   /* DAV */
    else
      error_flag = TRUE;
 
@@ -1457,14 +1464,15 @@ int AHTLoadTerminate_handler (HTRequest *request, HTResponse *response,
 	 HTTrace ("Load End.... OK BUT NO DATA: `%s\'\n", 
 		  me->status_urlName);
 #ifdef DAV      
-       if (me->method==METHOD_UNLOCK) {
-           /* MKP: NEED set a good status message */
+       if (me->method==METHOD_UNLOCK) 
+        {
+           /* MKP: set an appropriate status message */
 	   TtaSetStatus (me->docid, 1, 
 		     TtaGetMessage (AMAYA, AM_UNLOCK_SUCCEED),
 		     NULL);
-       }
+        }
        else
-#endif
+#endif /* DAV */
            TtaSetStatus (me->docid, 1, 
 		     TtaGetMessage (AMAYA, AM_LOADED_NO_DATA),
 		     me->status_urlName);
@@ -3023,11 +3031,12 @@ int GetObjectWWW (int docid, char *urlName, char *formdata,
 
        
 #ifdef DAV 
-   /* try to add an If header for POST requests and for GET forms */
+   /* try to add an "If" header (lock information) also for POST 
+    * requests and for GET forms */
    if (HTRequest_method(me->request) == METHOD_POST ||
           (HTRequest_method(me->request) == METHOD_GET && me->formdata))	   
        DAVAddIfHeader (me,HTAnchor_address((HTAnchor*)me->anchor));
-#endif
+#endif /* DAV */
        
    
    /* do the request */
@@ -3431,11 +3440,11 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
 
    
 #ifdef DAV
-   /* MKP: for a PUT request, try to add an if header 
+   /* MKP: for a PUT request, try to add an "If" header (lock information)
     * for a HEAD request, leave this for check_handler */
    if ( !(lost_update_check && (!UsePreconditions || !etag)) )
        DAVAddIfHeader (me,HTAnchor_address(me->dest));   
-#endif
+#endif /* DAV */
 
    
    /* make the request */
