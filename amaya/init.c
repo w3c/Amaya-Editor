@@ -1501,12 +1501,10 @@ static void         TextURL (Document doc, View view, char *text)
 	  /* restore the previous value @@ */
 #ifdef _SVGLIB
 	  if (DocumentTypes[doc] == docLibrary)
-	    {
-	      TtaSetTextZone (doc, view, 1, GetLibraryTitleFromPath (DocumentURLs[doc]));
-	    }
-#else /* !_SVGLIB */
-	  TtaSetTextZone (doc, view, 1, DocumentURLs[doc]);
+	    TtaSetTextZone (doc, view, 1, GetLibraryTitleFromPath (DocumentURLs[doc]));
+	  else
 #endif /* _SVGLIB */
+	  TtaSetTextZone (doc, view, 1, DocumentURLs[doc]);
 	  /* cannot load the new document */
 	  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), text);
 	  /* abort the command */
@@ -2462,7 +2460,7 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
      
        /* By default no log file */
        TtaSetItemOff (doc, 1, Views, BShowLogFile);
-       if (docType == docLog)
+       if (docType == docLog || docType == docLibrary)
 	 {
 	   TtaSetItemOff (doc, 1, File, BHtmlBasic);
 	   TtaSetItemOff (doc, 1, File, BHtmlStrict);
@@ -2492,7 +2490,24 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 #endif /* ANNOTATIONS */
 	   TtaSetMenuOff (doc, 1, Help_);
 	   TtcSwitchButtonBar (doc, 1); /* no button bar */
-	   TtcSwitchCommands (doc, 1); /* no command open */
+	   /* change the document status */
+	   ReadOnlyDocument[doc] = FALSE;
+	   TtaSetDocumentAccessMode (doc, 1);
+	   if (docType == docLibrary)
+	     {
+#ifdef _SVGLIB
+	       /* Initialize SVG Library Buffer string */
+	       string = InitSVGBufferForComboBox ();
+#else /* _SVGLIB */
+	       string = NULL;
+#endif /* _SVGLIB */
+	       TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
+			       TRUE, TextURL, string);
+	       TtaFreeMemory (string);
+	       string = NULL;
+	     }
+	   else
+	     TtcSwitchCommands (doc, 1); /* no command open */
 	 }
        else if (!isOpen)
 	 /* use a new window */
@@ -2622,22 +2637,7 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	     }
 	   else
 	     {
-#ifdef _COMBOBOX
-#ifdef _SVGLIB
-	       /* Initialize SVG Library Buffer string */
-	       string = (char *) TtaGetMemory (MAX_LENGTH);
-	       if (docType == docLibrary)
-		 {
-		   string = InitSVGBufferForComboBox (string);
-		 }
-	       else
-		 {
-		   string = NULL;
-		 }
-#endif /* _SVGLIB */
-#else /* _COMBOBOX */
 	       string = NULL;
-#endif /* _COMBOBOX */
 	       TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
 			       TRUE, TextURL, string);
 	       /* turn off the assign annotation buttons (should be
@@ -3054,14 +3054,10 @@ static Document LoadDocument (Document doc, char *pathname,
       if (isXML)
 	{
 	  /* it seems to be a XML document */
-#ifndef _SVGLIB
-	  docType = thotType;
-#else /* _SVGLIB */
 	  if (DocumentTypes[doc] == docLibrary)
 	    docType = docLibrary;
 	  else
 	    docType = thotType;
-#endif /* SVGLIB */
 	  unknown = FALSE;
 	}
      else if (IsCSSName (pathname))
@@ -3123,11 +3119,7 @@ static Document LoadDocument (Document doc, char *pathname,
       else if (docType == docText || docType == docCSS ||
 	       docType == docSource || docType == docLog )
 	strcpy (local_content_type , "text/plain");
-      else if (docType == docHTML
-#ifdef _SVGLIB
-	       || docType == docLibrary
-#endif /* _SVGLIB */
-	       )
+      else if (docType == docHTML || docType == docLibrary)
 	{
 	  if (isXML && AM_UseXHTMLMimeType () )
 	    strcpy (local_content_type , AM_XHTML_MIME_TYPE);
@@ -3587,28 +3579,26 @@ static Document LoadDocument (Document doc, char *pathname,
       if (TtaGetViewFrame (newdoc, 1) != 0)
 	/* this document is displayed */
 	{
-	  /* concatenate the URL and its form_data and then
-	     display it on the amaya URL box */
-	  i = strlen (pathname) + 5;
-	  if (form_data && method != CE_FORM_POST)
-	    i += strlen (form_data);
-	  s = TtaGetMemory (i);
-
-	  if (form_data && method != CE_FORM_POST)
-	    sprintf (s, "%s?%s", pathname, form_data);
-	  else
-	    strcpy (s, pathname);
 #ifdef _SVGLIB
 	  if (DocumentTypes[newdoc] == docLibrary)
-	    {
 	      s = GetLibraryTitleFromPath (DocumentURLs[newdoc]);
+	  else
+#endif /* _SVGLIB */
+	    {
+	      /* concatenate the URL and its form_data and then
+		 display it on the amaya URL box */
+	      i = strlen (pathname) + 5;
+	      if (form_data && method != CE_FORM_POST)
+		i += strlen (form_data);
+	      s = TtaGetMemory (i);
+
+	      if (form_data && method != CE_FORM_POST)
+		sprintf (s, "%s?%s", pathname, form_data);
+	      else
+		strcpy (s, pathname);
 	    }
-	  if (s)
-	    TtaSetTextZone (newdoc, 1, 1, s);
-#else /* !_SVGLIB */
 	  TtaSetTextZone (newdoc, 1, 1, s);
 	  TtaFreeMemory (s);
-#endif /* _SVGLIB */
 	}
 
       tempdir = TtaGetMemory (MAX_LENGTH);

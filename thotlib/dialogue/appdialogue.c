@@ -2024,27 +2024,26 @@ gboolean ActivateComboboxCallback (GtkWidget *w, int frame)
 #ifdef _GTK
 GList *InitComboBoxList (char * buffer)
 {
-#ifdef _SVGLIB
   GList       *list_items = NULL;
   char        *ptrStr, *ptrStr1;
   int          fin = 0;
 
    ptrStr = buffer;
   /* 
-   * function with stop condition by  ptrStr1 on '\0' 
+   * function with stop condition by  ptrStr1 on EOS
    */
   if (buffer)
     {
       while (fin == 0)
 	{
 	  ptrStr1 = ptrStr;
-	  while ((*ptrStr1 != '\0' && *ptrStr1 != '\n') /*&& stop_boucle == 0*/)
+	  while ((*ptrStr1 != EOS && *ptrStr1 != NEW_LINE) /*&& stop_boucle == 0*/)
 	    {
 	      ptrStr1++;
 	    }
-	  if (*ptrStr1 == '\n')
+	  if (*ptrStr1 == NEW_LINE)
 	    {
-	      *ptrStr1 = '\0';
+	      *ptrStr1 = EOS;
 	      list_items = g_list_append (list_items, (gpointer) ptrStr);
 	      ptrStr = ++ptrStr1;
 	    }
@@ -2056,57 +2055,8 @@ GList *InitComboBoxList (char * buffer)
 	}
     }
   return list_items;
-#endif /* _SVGLIB */
 }
 #endif /* _GTK */
-
-
-/*-----------------------------------------------------
-  Initialize buffer which is used by combo box
-  by reading a file
-  -----------------------------------------------------*/
-char *InitBufferForComboBox (char *buffer)
-{
-#ifdef _GTK
-#ifdef _COMBOBOX
-  char     *tempbuffer, *app_home, *path;
-  FILE     *libfile;
-  int      bool = 1;
-  int      cpt = 0;
-
-  /* search session file */
-  tempbuffer = (char *) TtaGetMemory (2048);
-  path = (char *) TtaGetMemory (2048);
-  app_home = TtaGetEnvString ("APP_HOME");
-  strcpy (path, app_home);
-  strcat (path, "/session_file.dat"); 
-  libfile = TtaReadOpen (path);
-  TtaFreeMemory (path);
-  if (libfile) /* session file exist */
-    {
-      bool = fscanf (libfile, "%s", tempbuffer);
-      while (bool == 1)
-	{
-	  if (cpt == 0)
-	    {
-	      strcpy (buffer, tempbuffer);
-	      cpt++;
-	    }
-	  else
-	    strcat (buffer, tempbuffer);
-	  if ((bool = fscanf (libfile, "%s", tempbuffer)) != EOF)
-	    strcat(buffer, "\n");
-	}
-      strcat (buffer, "\0");
-      TtaFreeMemory (tempbuffer);
-      TtaReadClose (libfile);
-    }
-  else /*session file doesn't exist */
-    buffer = NULL;
-#endif /* _COMBOBOX */
-#endif /* _GTK */
-  return buffer;
-}
 
 
 /*----------------------------------------------------------------------
@@ -2307,7 +2257,6 @@ int TtaAddTextZone (Document doc, View view, char *label,
 		  gtk_combo_set_use_arrows_always (GTK_COMBO (combo), TRUE);
 		  /* Free memory */
 		  g_list_free (combo1_items);
-		  TtaFreeMemory (string);
 		}
 	      w = GTK_COMBO (combo)->entry;
 /* Make the text zone non editable

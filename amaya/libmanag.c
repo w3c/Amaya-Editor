@@ -93,7 +93,6 @@ static char svgFilter[MAX_LENGTH];
 static char libraryFilter[MAX_LENGTH];
 static char baseDirectory[MAX_LENGTH];
 static char baseDirectory1[MAX_LENGTH];
-static char ComboBoxString[MAX_LENGTH];
 static char SaveCatalogueTitleSelection[MAX_LENGTH];
 static char LastURLSVG[MAX_LENGTH];
 static char LastURLCatalogue[MAX_LENGTH];
@@ -152,8 +151,7 @@ void CopySvgInformationTree (Document doc, View view)
 		   bufButton, TRUE, 2, 'L', D_CANCEL);
 
       /* Catalogue Or URI text zone */
-      buffer_list = (char *) TtaGetMemory (MAX_LENGTH);
-      buffer_list = InitSVGBufferForComboBox (buffer_list);
+      buffer_list = InitSVGBufferForComboBox ();
       nbr = SVGLibraryListItemNumber (buffer_list);
       TtaNewSizedSelector (BaseLibrary + SVGLibCatalogueTitle, BaseLibrary + AddSVGModel,
 			   TtaGetMessage (AMAYA, AM_SVGLIB_CATALOGUE_TITLE),
@@ -957,27 +955,36 @@ char *GetLibraryPathFromTitle (char *title)
   parameters:
   buffer: the initialize string
   -------------------------------------------------------------------*/
-char *InitSVGBufferForComboBox (char *buffer)
+char *InitSVGBufferForComboBox ()
 {
 #ifdef _SVGLIB
-  ListUriTitle     *curList = HeaderListUriTitle;
+  ListUriTitle     *curList;
+  char             *buffer;
+  int               lg = 0;
 
   if (HeaderListUriTitle)
     {
-      strcpy (buffer, curList->Title);
-
-      while ((curList = curList->next))
+      /* length of the string */
+      curList = HeaderListUriTitle;
+      while (curList)
 	{
-	  strcat (buffer, "\n");
-	  strcat (buffer, curList->Title);
+	  lg += strlen (curList->Title) + 1;
+	  curList = curList->next;
 	}
-      strcat (buffer, "\0");
+      buffer = (char *) TtaGetMemory (lg + 10);
+      curList = HeaderListUriTitle;
+      buffer[0] = EOS;
+      while (curList)
+	{
+	  strcat (buffer, curList->Title);
+	  curList = curList->next;
+	  if (curList)
+	    strcat (buffer, "\n");
+	}
+      return buffer;
     }
-  else
-    buffer = NULL;
-  strcpy (ComboBoxString, buffer);
 #endif /* _SVGLIB */
-  return buffer;
+  return NULL;
 }
 
 
