@@ -1992,6 +1992,7 @@ char * ANNOT_PreparePostBody (Document doc)
   char *rdf_tmpfile, *ptr;
   char *html_tmpfile;
   char *content_type;
+  ThotBool new_annotation;
 
   AnnotMeta *annot;
   unsigned long content_length;
@@ -2031,7 +2032,18 @@ char * ANNOT_PreparePostBody (Document doc)
 	   ANNOT_NS);
 
   /* beginning of the annotation's  metadata  */
-  fprintf (fp, "<r:Description>\n");
+  if (IsW3Path (DocumentURLs[doc]))
+    {
+      /* we're saving a modification to an existing annotation */
+      fprintf (fp, "<r:Description about=\"%s\">\n", annot->annot_url);
+      new_annotation = FALSE;
+    }
+  else
+    {
+      /* it's a new annotation */
+      fprintf (fp, "<r:Description>\n");
+      new_annotation = TRUE;
+    }
 
   /* dump the common metadata */
   Annot_dumpCommonMeta (annot, fp);
@@ -2039,9 +2051,20 @@ char * ANNOT_PreparePostBody (Document doc)
   /* the body of the annotation prologue */
   content_type = (DocumentMeta[doc]->content_type) 
     ? DocumentMeta[doc]->content_type : "text/html";
+  fprintf (fp, "<a:body>\n");
+  if (new_annotation)
+    {
+      fprintf (fp,
+	       "<r:Description>\n");
+    }
+  else
+    {
+      fprintf (fp,
+	       "<r:Description about=\"%s\">\n",
+	       DocumentURLs[doc]);
+    }
+
   fprintf (fp,
-	   "<a:body>\n"
-	   "<r:Description>\n"
 	   "<http:ContentType>%s</http:ContentType>\n"
 	   "<http:ContentLength>%ld</http:ContentLength>\n"
 	   "<http:Body r:parseType=\"Literal\">\n",
