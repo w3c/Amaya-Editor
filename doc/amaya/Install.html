@@ -1,12 +1,12 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Draft//EN">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <HTML>
 <HEAD>
 <TITLE>How to install the Amaya Binary Release</TITLE>
+</HEAD>
+<BODY>
 <!-- Created by: Vincent Quint. 8 July 96 -->
 <!-- Changed by: Jose Kahan,  8-Jul-1996 -->
 <!-- Changed by: Daniel Veillard, 14-Nov-1996 -->
-</HEAD>
-<BODY>
 <P>
 <A href="../../"><IMG border="0" alt="W3C" src="../../Icons/WWW/w3c_home"></A>
 <A href="../"><IMG border="0" src="amaya.gif" alt="Amaya"></A> <A
@@ -38,23 +38,24 @@ directory allow you to create a directory and extract the distribution.</P>
 <P>
 On a <STRONG>Linux ELF</STRONG> platform one must invoke:</P>
 <P>
-<CODE>tar xvzf amaya-linux-elf.tar.gz</CODE></P>
+<CODE>tar xvzf amaya-linux-elf-<STRONG>Release</STRONG>.tar.gz</CODE></P>
+<P>
+Where <STRONG>Release</STRONG> has to be replaced by the current verion
+number.</P>
 <P>
 And for an <STRONG>Linux a.out</STRONG> platform:</P>
 <P>
-<CODE>tar xvzf amaya-linux.tar.gz</CODE></P>
+<CODE>tar xvzf amaya-linux-<STRONG>Release</STRONG>.tar.gz</CODE></P>
 <P>
 More generally if the distribution is a tar.gz file:</P>
 <P>
-<CODE>gunzip -c amaya-system.tar.gz | tar xvf -</CODE></P>
-<P>
-If this is a tar.Z file:</P>
-<P>
-<CODE>uncompress -c amaya-system.tar.gz | tar xvf -</CODE></P>
+<CODE>gunzip -c
+amaya-<STRONG>Platform</STRONG>-<STRONG>Release</STRONG>.tar.gz | tar xvf
+-</CODE></P>
 <P>
 Whatever the method used, this should print around 40 lines of output and
-create a new directory called <CODE>Amaya</CODE> populated with a few files
-and directories. If not, your distribution file was probably corrupted during
+create a new directory called <CODE>Thot</CODE> populated with a few files and
+directories. If not, your distribution file was probably corrupted during
 transfer, please get a new one. Read carefully the <CODE>COPYRIGHT</CODE>,
 <CODE>README</CODE> and <CODE>AboutTho</CODE>t  files.</P>
 <H3>Set up the environment and start Amaya</H3>
@@ -114,6 +115,7 @@ release.
 <HR>
 <ADDRESS>
 <A href="mailto:Daniel.Veillard@w3.org">Daniel Veillard</A><BR><A
-href="../../Help/Webmaster">Webmaster</A><BR>$Date$</ADDRESS>
+href="../../Help/Webmaster">Webmaster</A><BR>$Date: 1997/01/09 18:10:15
+$</ADDRESS>
 </BODY>
 </HTML>
