@@ -13,12 +13,12 @@
  *
  */
 
-#include "ustring.h"
 #include "thot_sys.h"
+#include "ustring.h"
 #include "constmedia.h"
 #include "typemedia.h"
-#include "language.h"
 #include "dictionary.h"
+#include "language.h"
 
 #define THOT_EXPORT extern
 #include "boxes_tv.h"
@@ -33,8 +33,9 @@ static CHAR_T sepcar[] =
  TEXT('\202')
 };
 
-#include "memory_f.h"
 #include "font_f.h"
+#include "language_f.h"
+#include "memory_f.h"
 #include "uconvert_f.h"
 #include "ustring_f.h"
 
