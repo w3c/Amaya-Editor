@@ -18,7 +18,7 @@
 #include "application.h"
 #include "thot_sys.h"
 #include "libmsg.h"
-#include "message.h"
+#include "message.h" 
 #include "constmedia.h"
 #include "typemedia.h"
 #include "frame.h"
@@ -1307,8 +1307,12 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 	  if (ptfont == NULL && script == '7')
 	    {
 	      /* look for a font Symbol */
-	      ptfont = LoadNearestFont (script, family, 0,
-					-1, requestedsize, frame, FALSE, FALSE);
+	      ptfont = LoadNearestFont ('G',
+					family,
+					0,
+					-1,
+					requestedsize,
+					frame, FALSE, FALSE);
 	      if (ptfont)
 		/* now we'll work with the font Symbol */
 		GreekFontScript = 'G';
@@ -1556,8 +1560,9 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 	  if (ptfont == NULL && script == '7')
 	    {
 	      /* look for a font Symbol */
-	      ptfont = LoadNearestFont (script, family, 0,
-					-1, requestedsize, frame, FALSE, FALSE);
+	      ptfont = LoadNearestFont ('G', family, 0,
+					-1, requestedsize,
+					frame, FALSE, FALSE);
 	      if (ptfont)
 		/* now we'll work with the font Symbol */
 		GreekFontScript = 'G';
@@ -2060,11 +2065,6 @@ void TtaSetFontZoom (int zoom)
   FontZoom = zoom;
 }
 
-#ifdef _PCL
-char *FontLoadFromConfig (char script, 
-			 int family, 
-			 int highlight);
-#endif
 
 
 /*----------------------------------------------------------------------
@@ -2109,7 +2109,7 @@ void InitDialogueFonts (char *name)
 #endif /* _WINDOWS */
   if (value == NULL)
     {
-	  FontFamily = TtaGetMemory (8);
+      FontFamily = TtaGetMemory (8);
       strcpy (FontFamily, "-*");
     }
   else
