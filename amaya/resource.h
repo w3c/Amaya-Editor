@@ -243,6 +243,7 @@
 #define ATTR7ITEMSDIALOG                539
 #define ATTR8ITEMSDIALOG                540
 #define ATTR9ITEMSDIALOG                541
+#define ANNOTMENU                       542
 #define ID_CONFIRM                      1000
 #define ID_DONE                         1001
 #define IDC_URLEDIT                     1002
@@ -638,6 +639,14 @@
 #define IDC_CURWORD                     1506
 #define IDC_LANG                        1507
 #define IDC_URL_TEXT                    1510
+#define IDC_ANNOTUSER                   1511
+#define IDC_TANNOTUSER                  1512
+#define IDC_ANNOTSERVERS                1513
+#define IDC_TANNOTSERVERS               1514
+#define IDC_TANNOTPOSTSERVER            1515
+#define IDC_ANNOTPOSTSERVER             1516
+#define IDC_TANNOTAUTOLOAD              1518
+#define IDC_ANNOTAUTOLOAD               1519
 #define ID_BUTTON40017                  40017
 #define ID_BUTTON40018                  40018
 #define ID_BUTTON40019                  40019
@@ -682,9 +691,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        538
+#define _APS_NEXT_RESOURCE_VALUE        543
 #define _APS_NEXT_COMMAND_VALUE         40052
-#define _APS_NEXT_CONTROL_VALUE         1511
+#define _APS_NEXT_CONTROL_VALUE         1520
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
