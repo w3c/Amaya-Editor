@@ -2462,7 +2462,31 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
      
        /* By default no log file */
        TtaSetItemOff (doc, 1, Views, BShowLogFile);
-       if (docType == docLog /* comment for debug*/ || docType == docLibrary)
+	   if (docType == docSource)
+	   {
+	   TtaSetItemOff (doc, 1, File, BHtmlBasic);
+	   TtaSetItemOff (doc, 1, File, BHtmlStrict);
+	   TtaSetItemOff (doc, 1, File, BHtml11);
+	   TtaSetItemOff (doc, 1, File, BHtmlTransitional);
+	   TtaSetItemOff (doc, 1, File, BMathml);
+	   TtaSetItemOff (doc, 1, File, BSvg);
+	   TtaSetItemOff (doc, 1, File, BTemplate);
+	   TtaSetItemOff (doc, 1, File, BCss);
+	   TtaSetItemOff (doc, 1, File, BOpenDoc);
+	   TtaSetItemOff (doc, 1, File, BOpenInNewWindow);
+	   TtaSetItemOff (doc, 1, File, BReload);
+	   TtaSetItemOff (doc, 1, File, BBack);
+	   TtaSetItemOff (doc, 1, File, BForward);
+	   TtaSetItemOff (doc, 1, File, BSave);
+	   TtaSetItemOff (doc, 1, File, BSynchro);
+	   TtaSetMenuOff (doc, 1, Types);
+	   TtaSetMenuOff (doc, 1, Links);
+	   TtaSetMenuOff (doc, 1, Views);
+	   TtaSetMenuOff (doc, 1, Style);
+	   TtaSetMenuOff (doc, 1, Special);
+	   TtaSetMenuOff (doc, 1, Attributes_);
+	   }
+       else if (docType == docLog /* comment for debug*/ || docType == docLibrary)
 	 {
 	   TtaSetItemOff (doc, 1, File, BHtmlBasic);
 	   TtaSetItemOff (doc, 1, File, BHtmlStrict);
