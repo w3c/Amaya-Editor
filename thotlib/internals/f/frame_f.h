@@ -26,6 +26,8 @@ extern void DrawFilledBox ( PtrAbstractBox pAb,
                             int xmax,
                             int ymin,
                             int ymax );
+extern void ComputeABoundingBox ( PtrAbstractBox pAbSeeked,
+                                  int frame );
 extern PtrBox DisplayAllBoxes ( int frame,
                                 int xmin,
                                 int xmax,
@@ -63,6 +65,8 @@ extern void DrawFilledBox (/* PtrAbstractBox pAb,
                               int xmax,
                               int ymin,
                               int ymax */);
+extern void ComputeABoundingBox (/* PtrAbstractBox pAbSeeked,
+                                    int frame */);
 extern PtrBox DisplayAllBoxes (/* int frame,
                                   int xmin,
                                   int xmax,

@@ -32,6 +32,9 @@
 #include "frame_f.h"
 #include "hyphen_f.h"
 
+#ifdef _GL
+#include <GL/gl.h>
+#endif /* _GL */
 
 #define SPACE_VALUE_MIN  3
 #define SPACE_VALUE_MAX  6

@@ -2045,12 +2045,12 @@ static void ClipAndBoxUpdate (PtrAbstractBox pAb, PtrBox box,
     DefClip (frame, box->BxXOrg - left, box->BxYOrg - top,
 	     box->BxXOrg + right + w, box->BxYOrg + bottom + h);
 #else/*  _GL */
-      if (pAb->AbLeafType == LtCompound)
-	DefRegion (frame, box->BxClipX, box->BxClipY,
-		 box->BxClipX + w, box->BxClipY + h);
-      else
-	DefRegion (frame, box->BxClipX - left, box->BxClipY - top,
-		 box->BxClipX + right + w, box->BxClipY + bottom + h);
+   if (pAb->AbLeafType == LtCompound)
+     DefRegion (frame, box->BxClipX, box->BxClipY,
+		box->BxClipX + w, box->BxClipY + h);
+   else
+     DefRegion (frame, box->BxClipX - left, box->BxClipY - top,
+		box->BxClipX + right + w, box->BxClipY + bottom + h);
 #endif /*  _GL */
 
   if (pAb->AbLeafType == LtPicture)

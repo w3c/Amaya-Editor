@@ -80,6 +80,8 @@ extern void SetDisplaystyleMathElement ( Element el,
                                          Document doc );
 extern void MathMLElementCreated ( Element el,
                                    Document doc );
+extern void EvaluateChildRendering ( Element el,
+                                     Document doc );
 extern void MathMLElementComplete ( ParserData *context,
                                     Element el,
                                     int *error );
@@ -189,6 +191,8 @@ extern void SetDisplaystyleMathElement (/* Element el,
                                            Document doc */);
 extern void MathMLElementCreated (/* Element el,
                                      Document doc */);
+extern void EvaluateChildRendering (/* Element el,
+                                       Document doc */);
 extern void MathMLElementComplete (/* ParserData *context,
                                       Element el,
                                       int *error */);

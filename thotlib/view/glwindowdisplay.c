@@ -2328,7 +2328,8 @@ void gl_window_resize (int frame, int width, int height)
 
   gdk_gl_wait_gdk (); 
   gdk_gl_wait_gl (); 
-return;
+
+  return;
 #endif /*_GTK*/
 
   if (GL_prepare (frame))
@@ -2381,6 +2382,96 @@ void saveBuffer (char *filename, int width, int height)
 	   (unsigned int) height);
   free (Data);
 }
+
+#ifdef PICK
+void processHits2 (GLint hits, GLuint buffer[], int sw)
+{
+   GLint i, j, numberOfNames;
+   GLuint names, *ptr, minZ,*ptrNames;
+
+   ptr = (GLuint *) buffer;
+   printf ("\n\n");
+   for (i = 0; i < hits; i++) {	/*  for each hit  */
+      names = *ptr;
+      printf (" Nombre d'objet selectionnés :  %d\n", names); 
+      ptr++;// premier z
+      ptr++;// deuxieme z
+      ptr++;// positionné sur l'identifiant (enfin !)
+      for (j = 0; j < names; j++) {
+	switch (*ptr){
+	 case SPLINE:
+	  printf ("SPLINE Est dans la zone ! ");
+	  break;
+	 case CARRE:
+	  printf ("CARRE Est dans la zone ! ");
+	  break; 
+	 case CERCLE:
+	  printf ("CERCLE Est dans la zone ! ");
+	  break;
+	 case POLYGONE:
+	  printf ("POLYGONE Est dans la zone ! ");
+	  break;
+	}
+	ptr++;
+      }
+      printf ("\n");
+   }
+}
+
+/*-----------------------------------------
+  startPicking : Selection Mode Activation 
+and then Object Clicked is return, and "normal" 
+(projection mode) is setted back.
+ -----------------------------------------*/
+void PickObject (int frame, int x, int y) 
+{
+  GLint viewport[4];
+  GLuint selectBuf[8144];
+
+  glSelectBuffer (BUFSIZE, selectBuf);
+  glGetIntegerv (GL_VIEWPORT, viewport);
+  glRenderMode (GL_SELECT);
+
+  /*For name's stack (integers)*/
+  glInitNames ();
+
+  /* glPushName(0); */
+
+  /*create a clip around the mouse cursor
+    and gets objects in it*/
+  glMatrixMode (GL_PROJECTION);  
+  glPushMatrix ();
+  glLoadIdentity (); 
+  gluPickMatrix ((GLdouble) x, 
+		 (GLdouble) (viewport[3] - y), 
+		 5, 5, 
+		 viewport);
+  glOrtho (0, FrameTable[frame].FrWidth, FrameTable[frame].FrHeight, 0, -1, 1); 
+  /* glOrtho (0,  WIN_WIDTH, 0, WIN_HEIGHT, 0,  WIN_WIDTH); */
+  glMatrixMode (GL_MODELVIEW); 
+  glLoadIdentity ();
+
+
+  DrawSelect ();
+
+
+  glMatrixMode (GL_PROJECTION);
+  glPopMatrix ();
+  glFlush ();
+  hits = glRenderMode (GL_RENDER);
+  printf ("%i hits\n", hits);
+  if (hits != 0)
+    {
+      processHits2 (hits, selectBuf, 0);
+    }
+  glMatrixMode (GL_MODELVIEW);
+  mode = RENDER;
+}
+
+}
+#endif/*  _PICK */
+
+
 
 #ifdef _PCLDEBUG
 

@@ -2484,7 +2484,7 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
 		  glDeleteLists (box->DisplayList, 1);
 		}
 	      box->DisplayList = glGenLists (1);
-	      glNewList(box->DisplayList,
+	      glNewList (box->DisplayList,
 			GL_COMPILE_AND_EXECUTE);
 	    }
 	}

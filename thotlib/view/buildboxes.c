@@ -2543,7 +2543,6 @@ void RemoveBoxes (PtrAbstractBox pAb, ThotBool rebuild, int frame)
 	  /* Liberation de la boite */
 	  if (pBox->BxType == BoTable && ThotLocalActions[T_cleartable])
 	    (*ThotLocalActions[T_cleartable]) (pAb);
-	  pAb->AbBox = FreeBox (pAb->AbBox);
 #ifdef _GL
 	  if (glIsList (pAb->AbBox->DisplayList))
 	    {
@@ -2551,6 +2550,7 @@ void RemoveBoxes (PtrAbstractBox pAb, ThotBool rebuild, int frame)
 	      pAb->AbBox->DisplayList = 0;
 	    }
 #endif /* _GL */
+	  pAb->AbBox = FreeBox (pAb->AbBox);
 	  pAb->AbBox = NULL;
 	}
     }
@@ -2808,6 +2808,9 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 			   pCurrentBox->BxXOrg + pCurrentBox->BxWidth + k,
 			   pCurrentBox->BxYOrg + pCurrentBox->BxHeight + k);
 #else /* _GL */  
+
+	      /* Compute Bounding Box*/
+	      ComputeABoundingBox (pCurrentBox->BxAbstractBox, frame);
 
 	      DefRegion (frame, pCurrentBox->BxClipX - k,
 			 pCurrentBox->BxClipY - k,
