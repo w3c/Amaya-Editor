@@ -39,6 +39,17 @@
 #define URL_SEP '/'
 #define URL_STR "/"
 
+/* The structures used for request callbacks */
+
+typedef void   TIcbf (Document doc, int status, char *urlName,
+		      char *outputfile, const char *content_type,
+		      const char *data_block, int data_block_size,
+		      void *context);
+
+typedef void  TTcbf (Document doc, int status, char *urlName,
+                     char *outputfile, const char *content_type,
+                     void *context);
+
 /* How are Network accesses provided ? */
 #ifdef AMAYA_JAVA
 #include "libjava.h"

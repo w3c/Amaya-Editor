@@ -304,8 +304,7 @@ int document;
 {
     Document res;
     
-    res = GetHTMLDocument(URL, NULL, document, document, CE_FALSE, TRUE, NULL, NULL
-);
+    res = GetHTMLDocument (URL, NULL, document, document, CE_FALSE, TRUE, NULL, NULL);
 
     return((int) res);
 }

@@ -36,13 +36,14 @@
 #define THOT_EXPORT extern
 
 /* How are Network accesses provided ? */
+
+#include "amaya.h"
 #ifdef AMAYA_JAVA
 #include "content.h"
 #include "libjava.h"
 #else
 #include "libwww.h"
 #endif
-#include "amaya.h"
 
 #include "picture_tv.h"
 #include "frame_tv.h"
@@ -613,7 +614,7 @@ const char *target;
 #         ifdef PLUGIN_DEBUG
           printf ("AM_geturl: Passing the stream to AMAYA\n");
 #         endif
-          GetHTMLDocument (url, NULL, 0, 0, CE_FALSE, TRUE);
+          GetHTMLDocument (url, NULL, 0, 0, CE_FALSE, TRUE, NULL, NULL);
 	}
       else
 	{
