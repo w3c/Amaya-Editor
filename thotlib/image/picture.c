@@ -153,7 +153,6 @@ typedef struct _PicCache {
   pictures in video card memory
 */
 static Pic_Cache *PicCache = NULL;
-static Pic_Cache *LastPicCache = NULL;
 
 /*--------------------------------------------------
  Free_Pic_Chache : really free a unique structure Cache  
@@ -177,11 +176,11 @@ static void Free_Pic_Chache (Pic_Cache *Cache)
  ---------------------------------------------------*/
 static void FreeAPicCache (int texbind, int frame)
 {
-
-  Pic_Cache *Cache = PicCache;
   Pic_Cache *Before;
-  
+  Pic_Cache *Cache;
+
   Before = NULL;  
+  Cache = PicCache;
   while (Cache)
     {
       if (Cache->texbind == texbind &&
@@ -197,7 +196,6 @@ static void FreeAPicCache (int texbind, int frame)
       else
 	Before->next = Cache->next;
       Free_Pic_Chache (Cache);
-      Cache = NULL;
     }
 }
 
@@ -215,19 +213,21 @@ static void FreePicCache (Pic_Cache *Cache)
  ---------------------------------------------------*/
 static void AddInPicCache (PictInfo *Image, int frame)
 {
-  Pic_Cache *Cache = LastPicCache;
-  
-  if (Cache)
-    {
-      Cache->next = TtaGetMemory (sizeof (Pic_Cache));
-      Cache = Cache->next;  
-    }
-  else 
-    {
-      PicCache = TtaGetMemory (sizeof (Pic_Cache));
-      LastPicCache = PicCache;      
-      Cache = LastPicCache;      
-    }    
+  Pic_Cache *Cache = PicCache;
+
+ if (PicCache)
+   {
+     while (Cache->next)
+       Cache = Cache->next;
+     Cache->next = TtaGetMemory (sizeof (Pic_Cache));
+     Cache = Cache->next;     
+   }
+ else
+   {
+     PicCache = TtaGetMemory (sizeof (Pic_Cache));
+     Cache = PicCache;      
+   }   
+  Cache->next = NULL; 
   Cache->frame = frame;
   Cache->texbind = Image->TextureBind;
   Cache->filename = TtaGetMemory (strlen(Image->PicFileName) + 1);
@@ -236,8 +236,6 @@ static void AddInPicCache (PictInfo *Image, int frame)
   Cache->TexCoordW = Image->TexCoordW;  
   Cache->TexCoordH = Image->TexCoordH;
   strcpy (Cache->filename, Image->PicFileName);
-  Cache->next = NULL;
-  LastPicCache = Cache;  
 }
 
 /*----------------------------------------------------------------------
@@ -627,11 +625,10 @@ void FreeAllPicCache ()
 void FreeAllPicCacheFromFrame (int frame)
 {
 #ifdef _GL
-  Pic_Cache *Cache;
+  Pic_Cache *Cache = PicCache;
   Pic_Cache *Before;
-
- Cache = PicCache;
- Before = PicCache;
+  
+ Before = Cache;  
  while (Cache)
    {
      if (Cache->frame == frame)
@@ -639,29 +636,19 @@ void FreeAllPicCacheFromFrame (int frame)
 	 if (GL_prepare (frame))
 	   {
 	     if (Before == PicCache)
-	       {
-		 if (Before->next)
-		   {
-		     Before = Before->next;
-		     PicCache = Before;
-		   }
-		 else
-		   Before = PicCache = NULL;		 
+	       {		 
+		 PicCache = PicCache->next;
+		 Before = Cache->next; 
+		 Free_Pic_Chache (Cache);
+		 Cache = Before;
 	       }
 	     else
-	       Before->next = Cache->next; 
-	     
-	     Free_Pic_Chache (Cache);
-	     Cache = NULL;
-	     if (Before)
 	       {
-		 if (PicCache != Before)
-		   Cache = Before->next;
-		 else
-		   Cache = Before;
-	       }	     
+		 Before->next = Cache->next; 
+		 Free_Pic_Chache (Cache);
+		 Cache = Before->next;
+	       }	          
 	   }
-	 
        }
      else
        {
@@ -1865,7 +1852,7 @@ void DrawPicture (PtrBox box, PictInfo *imageDesc,
 #else /*_GL*/
   if (imageDesc->PicFileName == NULL || imageDesc->PicFileName[0] == EOS || 
       (box->BxAbstractBox->AbLeafType == LtCompound &&
-       (strcmp (imageDesc->PicFileName, LostPicturePath) == NULL)))
+       (strcmp (imageDesc->PicFileName, LostPicturePath) == 0)))
     return;
 #endif /* _GL */
   drawable = (Drawable)TtaGetThotWindow (frame);
