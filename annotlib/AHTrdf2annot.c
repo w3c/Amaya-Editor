@@ -33,6 +33,9 @@
 
 /* RDF parser */
 #ifdef RAPTOR_RDF_PARSER
+#ifdef AM_REDLAND
+#include "librdf.h"
+#endif /* AM_REDLAND */
 #include "raptor.h"
 #else
 /* libwww  includes */
@@ -49,6 +52,7 @@
 /* 
  * Namespace and Property names used in an Annotation Description 
  */
+#if 0
 static const char * DC_CREATOR = "creator";
 static const char * DC_DATE    = "date";
 static const char * DC_TITLE   = "title";
@@ -70,6 +74,7 @@ static const char * THREAD_INREPLYTO = "inReplyTo";
 #endif /* ANNOT_ON_ANNOT */
 
 static const char * RDFMS_TYPE = "type";
+#endif
 
 static char* find_last_annotURL = NULL;
 static int find_last_length = 0;
@@ -440,9 +445,9 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
 #ifdef RAPTOR_RDF_PARSER
   if (triple) 
     {
-      char * predicate = (char *) triple->predicate;
-      char * subject;
-      char * object = (char *) triple->object;
+      char * predicate = AM_RAPTOR_URI_AS_STRING(triple->predicate);
+      char * subject = NULL;
+      char * object =  NULL;
 #else
   if (rdfp && triple) 
     {
@@ -459,11 +464,21 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
 	{
 	  ParseContext *parseCtx = (ParseContext *) context;
 	  char *base_uri = parseCtx->base_uri;
-	  subject = TtaGetMemory (strlen (base_uri) + strlen ((char *) triple->subject) + 2);
-	  sprintf (subject, "%s#%s", base_uri, (char *) triple->subject);
+	  char *ptr =  (char *) triple->subject;
+	  subject = TtaGetMemory (strlen (base_uri) + strlen (ptr) + 2);
+	  sprintf (subject, "%s#%s", base_uri, ptr);
 	}
       else
-	subject = (char *) triple->subject;
+	subject = AM_RAPTOR_URI_AS_STRING(triple->subject);
+
+#ifdef AM_REDLAND
+      if (triple->object_type ==  RAPTOR_IDENTIFIER_TYPE_LITERAL)
+	object = (char *) triple->object;
+      else
+#endif /* AM_REDLAND */
+	object = AM_RAPTOR_URI_AS_STRING(triple->object);
+
+
 #endif
 
 #ifdef _RDFDEBUG
@@ -521,7 +536,7 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
 	  SCHEMA_AddStatement (subjectP, predicateP, objectP);
 	}
 #ifdef RAPTOR_RDF_PARSER
-      if (subject != (char *) triple->subject)
+      if (triple->subject_type == RAPTOR_IDENTIFIER_TYPE_ANONYMOUS)
 	TtaFreeMemory (subject);
 #endif
     }
@@ -547,7 +562,12 @@ List *RDF_parseFile (char *file_name, List **rdf_model)
 
 #ifdef RAPTOR_RDF_PARSER
   raptor_parser* rdfxml_parser=NULL;
-  char * full_file_name;;
+#ifdef AM_REDLAND
+  raptor_uri *uri = NULL;
+#else
+  char *uri;
+#endif /* AM_REDLAND */
+  char * full_file_name;
 #endif
 
   ctx.annot_list = &annot_list;
@@ -581,8 +601,12 @@ List *RDF_parseFile (char *file_name, List **rdf_model)
 
    /* remember the base name for anoynmous subjects */
   ctx.base_uri = full_file_name;
-
-  if (raptor_parse_file(rdfxml_parser, full_file_name, full_file_name))
+#ifdef AM_REDLAND
+  uri = raptor_new_uri (full_file_name);
+#else
+  uri = full_file_name;
+#endif /* AM_REDLAND */
+  if (raptor_parse_file(rdfxml_parser, uri, uri))
 #else
   if (HTRDF_parseFile(file_name, triple_handler, &ctx) != YES)
 #endif
@@ -591,8 +615,11 @@ List *RDF_parseFile (char *file_name, List **rdf_model)
       /* do not free rdf_model here; it may not have been empty to start */
       annot_list = NULL;
 #ifdef RAPTOR_RDF_PARSER
-      TtaFreeMemory(full_file_name);
-      raptor_free(rdfxml_parser);
+      TtaFreeMemory (full_file_name);
+      raptor_free (rdfxml_parser);
+#ifdef AM_REDLAND
+      raptor_free_uri (uri);
+#endif /* AM_REDLAND */
 #endif
       return NULL;
     }
@@ -610,7 +637,3 @@ List *RDF_parseFile (char *file_name, List **rdf_model)
 
   return (annot_list);
 }
-
-
-
-

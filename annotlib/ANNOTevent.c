@@ -40,6 +40,10 @@
 #include "Annot.h"
 #include "XLink.h"
 
+#ifdef BOOKMARKS
+#include "f/BMevent_f.h"
+#endif /* BOOKMARKS */
+
 #define DEFAULT_ALGAE_QUERY "w3c_algaeQuery=(ask '((?p ?s ?o)) :collect '(?p ?s ?o))"
 
 /* some state variables */
@@ -330,6 +334,11 @@ void ANNOT_Init ()
   /* create the directory where we'll store the annotations if it
      doesn't exist */
   TtaMakeDirectory (annotDir);
+
+#ifdef BOOKMARKS
+  /* initialize the bookmarks environment */
+  BM_Init ();
+#endif /* BOOKMARKS */
 }
 
 /*-----------------------------------------------------------------------
@@ -365,6 +374,10 @@ void ANNOT_Quit ()
   ANNOT_FreeConf ();
   SCHEMA_FreeAnnotSchema ();
   schema_init = FALSE;
+#ifdef BOOKMARKS
+  /* free the bookmark environment */
+  BM_Quit ();
+#endif /* BOOKMARKS */
 }
 
 /*-----------------------------------------------------------------------

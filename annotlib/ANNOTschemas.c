@@ -39,6 +39,9 @@
 #include "ANNOTevent_f.h"
 
 /* RDF parser */
+#ifdef AM_REDLAND
+#include "librdf.h"
+#endif /* AM_REDLAND */
 #ifdef RAPTOR_RDF_PARSER
 #include "raptor.h"
 #else
@@ -193,9 +196,9 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
 #ifdef RAPTOR_RDF_PARSER
   if (triple) 
     {
-      char * predicate = (char *) triple->predicate;
-      char * subject;
-      char * object = (char *) triple->object;
+      char * predicate = AM_RAPTOR_URI_AS_STRING(triple->predicate);
+      char * subject = NULL;
+      char * object;
 #else
   if (rdfp && triple) 
     {
@@ -214,20 +217,28 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
       if (triple->subject_type == RAPTOR_IDENTIFIER_TYPE_ANONYMOUS)
 	{
 	  char *base_uri = parse_ctx->base_uri;
-	  subject = TtaGetMemory (strlen (base_uri) + strlen ((char *) triple->subject) + 2);
-	  sprintf (subject, "%s#%s", base_uri, (char *) triple->subject);
+	  char *ptr = (char *) triple->subject;
+	  subject = TtaGetMemory (strlen (base_uri) + strlen (ptr) + 2);
+	  sprintf (subject, "%s#%s", base_uri, ptr);
 	}
       else
-	subject = (char *) triple->subject;
+	subject = AM_RAPTOR_URI_AS_STRING(triple->subject);
 #endif
       subjectP = ANNOT_FindRDFResource (listP, subject, TRUE);
 
 #ifdef RAPTOR_RDF_PARSER
           /* @@ Do anything different for Raptor RDF Parser ?? */
-	  objectP = ANNOT_FindRDFResource (listP, object, TRUE);
+#ifdef AM_REDLAND
+      if (triple->object_type ==  RAPTOR_IDENTIFIER_TYPE_LITERAL)
+	object = (char *) triple->object;
+      else
+#endif /* AM_REDLAND */
+	object = AM_RAPTOR_URI_AS_STRING(triple->object);
+
+      objectP = ANNOT_FindRDFResource (listP, object, TRUE);
 #else
 	  /* ugly, ugly; libwww discards info -- is the object a Literal? */
-	  objectP = ANNOT_FindRDFResource (listP, object, TRUE);
+      objectP = ANNOT_FindRDFResource (listP, object, TRUE);
 #endif
 
       SCHEMA_AddStatement (subjectP, predicateP, objectP);
@@ -248,7 +259,7 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
 	  subjectP->class->subClasses = NULL;
 	}
 #ifdef RAPTOR_RDF_PARSER
-      if (subject != (char *) triple->subject)
+      if (triple->subject_type == RAPTOR_IDENTIFIER_TYPE_ANONYMOUS)
 	TtaFreeMemory (subject);
 #endif
     }
@@ -266,8 +277,13 @@ static void ReadSchema_callback (Document doc, int status,
 {
 #ifdef RAPTOR_RDF_PARSER
   raptor_parser* rdfxml_parser=NULL;
-  char *full_file_name;
-  ParseContextP parse_ctx;
+#ifdef AM_REDLAND
+  raptor_uri *uri = NULL;
+#else
+  char *uri = NULL;
+#endif /* AM_REDLAND */
+  char *full_file_name = NULL;
+  ParseContextP parse_ctx = NULL;
 #endif
 
   ReadCallbackContext *ctx = (ReadCallbackContext*) context;
@@ -302,7 +318,12 @@ static void ReadSchema_callback (Document doc, int status,
       raptor_set_statement_handler(rdfxml_parser, (void *) parse_ctx, triple_handler);
       
       /* remember the base name for anoynmous subjects */
-      parse = raptor_parse_file(rdfxml_parser, full_file_name, full_file_name);
+#ifdef AM_REDLAND
+      uri = raptor_new_uri ((const char *) full_file_name);
+#else
+      uri = full_file_name;
+#endif /* AM_REDLAND */
+      parse = raptor_parse_file(rdfxml_parser, uri, uri);
 #else
       parse = HTRDF_parseFile (ctx->filename,
 			       triple_handler,
@@ -315,8 +336,11 @@ static void ReadSchema_callback (Document doc, int status,
     }  
 
 #ifdef RAPTOR_RDF_PARSER
-  raptor_free(rdfxml_parser);
-  TtaFreeMemory(full_file_name);
+  raptor_free (rdfxml_parser);
+#ifdef AM_REDLAND
+  raptor_free_uri (uri);
+#endif /* AM_REDLAND */
+  TtaFreeMemory (full_file_name);
   TtaFreeMemory (parse_ctx);
 #endif    
   TtaFreeMemory (ctx);

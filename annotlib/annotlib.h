@@ -2,7 +2,7 @@
 #define ANNOTATIONS_H
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1999.
+ *  (c) COPYRIGHT MIT and INRIA, 1999-2003.
  *  Please first read the full copyright statement in file COPYRIGHT.
  * 
  */
@@ -27,17 +27,46 @@
 
 #define RDFMS_NS "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 #define RDF_TYPE   RDFMS_NS "type"
+#define RDFMS_TYPE "type"
 #define RDFS_LABEL "http://www.w3.org/2000/01/rdf-schema#label"
 #define RDFS_SUBCLASSOF "http://www.w3.org/2000/01/rdf-schema#subClassOf"
 
+/* DC Property names */
 #define DC_NS "http://purl.org/dc/elements/1.0/"
 #define DC1_NS "http://purl.org/dc/elements/1.1/"
-#define HTTP_NS "http://www.w3.org/1999/xx/http#"
+#define DC_CREATOR "creator"
+#define DCNS_CREATOR DC_NS"#"DC_CREATOR
+#define DC_DATE "date"
+#define DCNS_DATE DC_NS"#"DC_DATE
+#define DC_TITLE "title"
+#define DCNS_TITLE DC_NS"#"DC_TITLE
+#define DC_DESCRIPTION "description"
+#define DCNS_DESCRIPTION DC_NS"#"DC_DESCRIPTION
+
+/* Annotea NS property names */
+#define ANNOT_NS1 "http://www.w3.org/2000/10/annotation-ns"
+#define ANNOT_ANNOTATES "annotates"
+#define ANNOT_BODY "body"
+#define ANNOT_CONTEXT "context"
+#define ANNOTNS_CONTEXT ANNOT_NS1"#"ANNOT_CONTEXT
+#define ANNOT_CREATED  "created"
+#define ANNOTNS_CREATED ANNOT_NS1"#"ANNOT_CREATED
+#define ANNOT_ANNOTATION "Annotation"
 
 #ifdef ANNOT_ON_ANNOT
 #define THREAD_NS "http://www.w3.org/2001/03/thread#"
+#define THREAD_REPLY "Reply"
+#define THREAD_ROOT "root"
+#define THREAD_INREPLYTO "inReplyTo"
 #define THREAD_REPLY_LOCAL_NAME "Reply"
 #endif /* ANNOT_ON_ANNOT */
+
+
+/* HTTP_NS property names */
+#define HTTP_NS "http://www.w3.org/1999/xx/http#"
+#define HTTP_BODY "Body"
+#define HTTP_CONTENT_LENGTH "ContentLength"
+#define HTTP_CONTENT_TYPE   "ContentType"
 
 #define ANNOT_LOCAL_NAME "Annotation"
 #define FALLBACK_ANNOTATION_NS "http://www.w3.org/1999/xx/annotation-ns#"
@@ -200,7 +229,7 @@ typedef enum _AnnotMode {
   ANNOT_initBody = 16
 } AnnotMode;
 
-/* Definition de constantes pour les annotations */
+/* Annotation constants */
 
 #define ANNOT_DIR  "annotations"
 #define ANNOT_MAIN_INDEX  "annot.index"
@@ -234,4 +263,15 @@ typedef struct _RDFStatement
   RDFResourceP object;
 } RDFStatement, *RDFStatementP;
 
+
+#ifdef RAPTOR_RDF_PARSER
+#ifdef AM_REDLAND
+#define AM_RAPTOR_URI_AS_STRING(uri) raptor_uri_as_string ((raptor_uri *) uri)
+#else
+#define AM_RAPTOR_URI_AS_STRING(uri) ((char *) uri)
+#endif /* AM_REDLAND */
+#endif /* RAPTOR_RDF_PARSER */
+
 #endif /* ANNOTATIONS_H */
+
+
