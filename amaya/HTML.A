@@ -174,7 +174,7 @@ ATTRIBUTES
    Height_:
    	BEGIN
 	AttrCreate.Pre ->  StoreHeight;
-	AttrCreate.Post -> GraphicsModified;
+	AttrCreate.Post -> AttrHeightModified;
 	AttrModify.Pre ->  StoreHeight;
 	AttrModify.Post -> AttrHeightModified;
 	AttrDelete.Pre ->  AttrHeightDelete;	

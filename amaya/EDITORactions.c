@@ -2364,45 +2364,66 @@ void  CreateNOSCRIPT (Document document, View view)
   ----------------------------------------------------------------------*/
 void  CreateObject (Document document, View view)
 {
-   ElementType         elType;
-   Element             child, el;
-   Attribute           attr;
-   AttributeType       attrType;
-   char               *name1;
-   int                 length;
-   int                 firstchar, lastchar;
+  ElementType         elType;
+  Element             el, image, content, textEl;
+  Attribute           attr;
+  AttributeType       attrType;
+  char               *text;
+  int                 length, firstchar, lastchar, oldStructureChecking;
 
-   if (HTMLelementAllowed (document))
-     {
-       TtaSetDisplayMode (document, SuspendDisplay);
-       elType.ElSSchema = TtaGetSSchema ("HTML", document);
-       elType.ElTypeNum = HTML_EL_Object;
-       TtaCreateElement (elType, document);
+  if (HTMLelementAllowed (document))
+    {
+      elType.ElSSchema = TtaGetSSchema ("HTML", document);
+      elType.ElTypeNum = HTML_EL_Object;
+      TtaCreateElement (elType, document);
 
-       /* get the first selected element */
-       TtaGiveFirstSelectedElement (document, &child, &firstchar, &lastchar);
-
-       /* copy SRC attribute of Object_Image into data attribute of Object */
-       el = TtaGetParent(child);
-       attrType.AttrSSchema = elType.ElSSchema;
-       attrType.AttrTypeNum = HTML_ATTR_SRC;
-       attr = TtaGetAttribute (child, attrType);
-       if (attr != NULL)
-	 {
-	   length = TtaGetTextAttributeLength (attr);
-	   if (length > 0)
-	     {
-	       name1 = TtaGetMemory (length + 1);
-	       TtaGiveTextAttributeValue (attr, name1, &length);
-	       attrType.AttrTypeNum = HTML_ATTR_data;
-	       attr = TtaNewAttribute (attrType);
-	       TtaAttachAttribute (el, attr, document);
-	       TtaSetAttributeText (attr, name1, el, document);
-	       TtaFreeMemory (name1);
-	     }
-	 }
-       TtaSetDisplayMode (document, DisplayImmediately);
-     }
+      /* get the first selected element, i.e. the Object element */
+      TtaGiveFirstSelectedElement (document, &el, &firstchar, &lastchar);
+ 
+      /* copy SRC attribute of Object_Image into data attribute of Object */
+      image = TtaGetFirstChild (el);
+      attrType.AttrSSchema = elType.ElSSchema;
+      attrType.AttrTypeNum = HTML_ATTR_SRC;
+      attr = TtaGetAttribute (image, attrType);
+      if (attr != NULL)
+	{
+	  length = TtaGetTextAttributeLength (attr);
+	  if (length > 0)
+	    {
+	      text = TtaGetMemory (length + 1);
+	      TtaGiveTextAttributeValue (attr, text, &length);
+	      attrType.AttrTypeNum = HTML_ATTR_data;
+	      attr = TtaNewAttribute (attrType);
+	      TtaAttachAttribute (el, attr, document);
+	      TtaSetAttributeText (attr, text, el, document);
+	      TtaFreeMemory (text);
+	    }
+	}
+      /* get the alt attribute of the Image and use its contents to make
+	 the Object_Content element */
+      attrType.AttrTypeNum = HTML_ATTR_ALT;
+      attr = TtaGetAttribute (image, attrType);
+      if (attr != NULL)
+	{
+	  length = TtaGetTextAttributeLength (attr);
+	  if (length > 0)
+	    {
+	      oldStructureChecking = TtaGetStructureChecking (document);
+	      TtaSetStructureChecking (0, document);
+	      text = TtaGetMemory (length + 1);
+	      TtaGiveTextAttributeValue (attr, text, &length);
+	      elType.ElTypeNum = HTML_EL_Object_Content;
+	      content = TtaNewElement (document, elType);
+	      TtaInsertSibling (content, image, FALSE, document);
+	      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+	      textEl = TtaNewElement (document, elType);
+	      TtaInsertFirstChild (&textEl, content, document);
+	      TtaSetTextContent (textEl, text, Latin_Script, document);
+	      TtaFreeMemory (text);
+	      TtaSetStructureChecking (oldStructureChecking, document);
+	    }
+	}
+    }
 }
 
 /*----------------------------------------------------------------------

@@ -2482,21 +2482,38 @@ ThotBool StoreHeight (NotifyAttribute * event)
   ----------------------------------------------------------------------*/
 ThotBool AttrHeightDelete (NotifyAttribute *event)
 {
-   AttributeType       attrType;
-   Attribute           attr;
+  AttributeType       attrType;
+  Attribute           attr;
+  ElementType         elType, childType;
+  Element             el, child;
 
-   StoreHeight (event);
-   attrType = event->attributeType;
-   attrType.AttrTypeNum = HTML_ATTR_IntHeightPxl;
-   attr = TtaGetAttribute (event->element, attrType);
-   if (attr == NULL)
-     {
-	attrType.AttrTypeNum = HTML_ATTR_IntHeightPercent;
-	attr = TtaGetAttribute (event->element, attrType);
-     }
-   if (attr != NULL)
-      TtaRemoveAttribute (event->element, attr, event->document);
-   return FALSE;		/* let Thot perform normal operation */
+  StoreHeight (event);
+  el = event->element;
+  elType = TtaGetElementType (el);
+  if (elType.ElTypeNum == HTML_EL_Object)
+    /* the height attribute is attached to an Object element */
+    {
+      child = TtaGetFirstChild (el);
+      if (child)
+	{
+	  childType = TtaGetElementType (child);
+	  if (childType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+	    /* the Object element is of type image. Apply the height
+	       attribute to the actual image element */
+	    el = child;
+	}
+    }
+  attrType = event->attributeType;
+  attrType.AttrTypeNum = HTML_ATTR_IntHeightPxl;
+  attr = TtaGetAttribute (el, attrType);
+  if (attr == NULL)
+    {
+      attrType.AttrTypeNum = HTML_ATTR_IntHeightPercent;
+      attr = TtaGetAttribute (el, attrType);
+    }
+  if (attr != NULL)
+    TtaRemoveAttribute (el, attr, event->document);
+  return FALSE;		/* let Thot perform normal operation */
 }
 
 /*----------------------------------------------------------------------
@@ -2526,21 +2543,38 @@ void AttrHeightModified (NotifyAttribute *event)
   ----------------------------------------------------------------------*/
 ThotBool AttrWidthDelete (NotifyAttribute *event)
 {
-   AttributeType       attrType;
-   Attribute           attr;
+  AttributeType       attrType;
+  Attribute           attr;
+  ElementType         elType, childType;
+  Element             el, child;
 
-   StoreWidth (event);
-   attrType = event->attributeType;
-   attrType.AttrTypeNum = HTML_ATTR_IntWidthPxl;
-   attr = TtaGetAttribute (event->element, attrType);
-   if (attr == NULL)
-     {
-	attrType.AttrTypeNum = HTML_ATTR_IntWidthPercent;
-	attr = TtaGetAttribute (event->element, attrType);
-     }
-   if (attr != NULL)
-      TtaRemoveAttribute (event->element, attr, event->document);
-   return FALSE;		/* let Thot perform normal operation */
+  StoreWidth (event);
+  el = event->element;
+  elType = TtaGetElementType (el);
+  if (elType.ElTypeNum == HTML_EL_Object)
+    /* the width attribute is attached to an Object element */
+    {
+      child = TtaGetFirstChild (el);
+      if (child)
+	{
+	  childType = TtaGetElementType (child);
+	  if (childType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+	    /* the Object element is of type image. Apply the width
+	       attribute to the actual image element */
+	    el = child;
+	}
+    }
+  attrType = event->attributeType;
+  attrType.AttrTypeNum = HTML_ATTR_IntWidthPxl;
+  attr = TtaGetAttribute (el, attrType);
+  if (attr == NULL)
+    {
+      attrType.AttrTypeNum = HTML_ATTR_IntWidthPercent;
+      attr = TtaGetAttribute (el, attrType);
+    }
+  if (attr != NULL)
+    TtaRemoveAttribute (el, attr, event->document);
+  return FALSE;		/* let Thot perform normal operation */
 }
 
 

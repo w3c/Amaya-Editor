@@ -2989,8 +2989,6 @@ RULES
 	CreateWith(VerticalLine);
 	if within HEAD
 		Visibility: 0;
-	Width: Enclosing . Width;
-	Height: 100;
 	VertPos: Top = Previous not MAP . Bottom;
 	LineBreak: No;
 	IN Structure_view BEGIN
@@ -3918,11 +3916,6 @@ RULES
 		CreateBefore(ElementName);
 	LineBreak: No;
 	PageBreak: No;
-	if Immediately within Object BEGIN
-		Width: Enclosing . Width;
-		Height: Enclosing . Height;
-		VertPos: Top = Enclosing . Top;
-		END;
 	HorizRef: * . Bottom;
 	IN Structure_view BEGIN
 		Height: 0;

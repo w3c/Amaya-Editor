@@ -89,13 +89,14 @@ void CallbackImage (int ref, int typedata, char *data)
   Element            el, parent;
   Element            first, last;
   ElementType	     elType, parentType;
-  LoadedImageDesc   *desc;
-  char             tempfile[MAX_LENGTH];
-  char             tempname[MAX_LENGTH];
+  LoadedImageDesc    *desc;
+  char               tempfile[MAX_LENGTH];
+  char               tempname[MAX_LENGTH];
   int                i, c1, cN;
   int                val;
   ThotBool           change, isHTML;
 
+  isHTML = FALSE;
   val = (int) data;
   switch (ref - BaseImage)
     {

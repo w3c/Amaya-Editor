@@ -376,7 +376,7 @@ STRUCT
 	 { data         type }
 	   codetype = Text; archive; standby = Text;
          { codetype         archive  standby }
-	   !Height_; !Width__;
+	   Height_; Width__;
 	   IntWidthPercent; IntWidthPxl; 
            IntHeightPercent; IntHeightPxl;
 	 {  height    width }
@@ -388,8 +388,7 @@ STRUCT
 	PICTURE;
 	Object_Content = LIST OF (ElemOrParam = CASE OF
 	                            Element; Parameter; END);   { PARAM }
-	END with Height_ ?= '400', Width__ ?= '400',
-		 IntWidthPxl ?= 400, IntHeightPxl ?= 400;
+	END;
 
   INS								{ INS }
      (ATTR cite; datetime = Text; InternalLink; ExternalLink) =

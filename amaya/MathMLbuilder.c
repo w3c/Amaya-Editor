@@ -2964,6 +2964,7 @@ void HandleRowspacingAttribute (Attribute attr, Element el, Document doc,
   /* check all rows within the table */
   firstRow = TRUE;
   bottomVal = 0;
+  bottomValUnit = STYLE_UNIT_PT;
   elType.ElTypeNum = MathML_EL_TableRow;
   row = TtaSearchTypedElement (elType, SearchInTree, el);
   while (row)
@@ -2991,12 +2992,10 @@ void HandleRowspacingAttribute (Attribute attr, Element el, Document doc,
 
       /* prepare the value of the padding to be associated with the cells
 	 of that row */
+      val = 0;
       if (delete)
 	/* remove the presentation rules */
-	{
-	  pval.typed_data.value = 0;
-	  val = 0;
-	}
+	pval.typed_data.value = 0;
       else
 	{
 	  if (!value)
@@ -3004,7 +3003,6 @@ void HandleRowspacingAttribute (Attribute attr, Element el, Document doc,
 	      pval.typed_data.unit = STYLE_UNIT_PT;
 	      pval.typed_data.value = 0;
 	      pval.typed_data.real = FALSE;
-	      val = 0;
 	    }
 	  else
 	    {

@@ -177,7 +177,7 @@ void       XhtmlElementComplete (ParserData *context, Element el, int *error)
    Language       lang;
    char           *text;
    char           lastChar[2];
-   char           *name1;
+   char           *name1, *data;
    int            length;
    SSchema        docSSchema;
    ThotBool       isImage;
@@ -199,6 +199,7 @@ void       XhtmlElementComplete (ParserData *context, Element el, int *error)
    switch (elType.ElTypeNum)
      {
      case HTML_EL_Object:	/* it's an object */
+       data = NULL;
        isImage = FALSE;
        /* is there a type attribute on the object element? */
        attrType.AttrSSchema = elType.ElSSchema;
@@ -226,7 +227,28 @@ void       XhtmlElementComplete (ParserData *context, Element el, int *error)
 	       TtaFreeMemory (name1);
 	     }
 	 }
-       
+
+       attrType.AttrTypeNum = HTML_ATTR_data;
+       attr = TtaGetAttribute (el, attrType);
+       if (attr)
+	 /* the object has a data attribute */
+	 {
+	   length = TtaGetTextAttributeLength (attr);
+	   if (length > 0)
+	     {
+	       data = TtaGetMemory (length + 1);
+	       TtaGiveTextAttributeValue (attr, data, &length);
+	       if (!isImage)
+		 if (!strcmp (&data[length-3], "mml") ||
+		     !strcmp (&data[length-3], "gif") ||
+		     !strcmp (&data[length-3], "jpg") ||
+		     !strcmp (&data[length-4], "jpeg") ||
+		     !strcmp (&data[length-3], "png") ||
+		     !strcmp (&data[length-3], "svg") ||
+		     !strcmp (&data[length-4], "svgz"))
+		   isImage = TRUE;
+	     }
+	 }
        picture = NULL;     /* no PICTURE element yet */
        child = TtaGetFirstChild (el);
        if (isImage)
@@ -240,7 +262,7 @@ void       XhtmlElementComplete (ParserData *context, Element el, int *error)
 		 /* there is already a PICTURE element */
 		 picture = child;
 	     }
-	   /* if the object element has no PICTURE element as first child
+	   /* if the object element has no PICTURE element as its first child
 	      create one */
 	   if (!picture)
 	     {
@@ -254,26 +276,50 @@ void       XhtmlElementComplete (ParserData *context, Element el, int *error)
 	     }
 	   /* copy attribute data of the object into the SRC attribute of
 	      the PICTURE element */
-	   attrType.AttrSSchema = elType.ElSSchema;
-	   attrType.AttrTypeNum = HTML_ATTR_data;
+	   if (data)
+	     /* the object has a data attribute */
+	     {
+	       attrType.AttrTypeNum = HTML_ATTR_SRC;
+	       attr = TtaGetAttribute (picture, attrType);
+	       if (attr == NULL)
+		 {
+		   attr = TtaNewAttribute (attrType);
+		   TtaAttachAttribute (picture, attr, doc);
+		 }
+	       TtaSetAttributeText (attr, data, picture, doc);
+	     }
+	   attrType.AttrTypeNum = HTML_ATTR_Height_;
 	   attr = TtaGetAttribute (el, attrType);
 	   if (attr)
-	     /* the object has a data attribute */
+	     /* the Object has a height attribute. Applies it to the
+		picture element */
 	     {
 	       length = TtaGetTextAttributeLength (attr);
 	       if (length > 0)
 		 {
-		   name1 = TtaGetMemory (length + 1);
-		   TtaGiveTextAttributeValue (attr, name1, &length);
-		   attrType.AttrTypeNum = HTML_ATTR_SRC;
-		   attr = TtaGetAttribute (picture, attrType);
-		   if (attr == NULL)
-		     {
-		       attr = TtaNewAttribute (attrType);
-		       TtaAttachAttribute (picture, attr, doc);
-		     }
-		   TtaSetAttributeText (attr, name1, picture, doc);
-		   TtaFreeMemory (name1);
+		   text = TtaGetMemory (length + 1);
+		   TtaGiveTextAttributeValue (attr, text, &length);
+		   /* create the corresponding attribute IntHeightPercent or */
+		   /* IntHeightPxl */
+		   CreateAttrHeightPercentPxl (text, el, doc, -1);
+		   TtaFreeMemory (text);
+		 }
+	     }
+	   attrType.AttrTypeNum = HTML_ATTR_Width__;
+	   attr = TtaGetAttribute (el, attrType);
+	   if (attr)
+	     /* the Object has a width attribute. Applies it to the
+		picture element */
+	     {
+	       length = TtaGetTextAttributeLength (attr);
+	       if (length > 0)
+		 {
+		   text = TtaGetMemory (length + 1);
+		   TtaGiveTextAttributeValue (attr, text, &length);
+		   /* create the corresponding attribute IntWidthPercent or */
+		   /* IntWidthPxl */
+		   CreateAttrWidthPercentPxl (text, el, doc, -1);
+		   TtaFreeMemory (text);
 		 }
 	     }
 	 }
@@ -325,6 +371,8 @@ void       XhtmlElementComplete (ParserData *context, Element el, int *error)
 	       TtaSetStylePresentation (PRVisibility, content, NULL, ctxt, pval);
 	     }
 	 }
+       if (data)
+	 TtaFreeMemory (data);
        break;
 
      case HTML_EL_Unnumbered_List:
@@ -907,7 +955,8 @@ void              XhtmlTypeAttrValue (char       *val,
 
 /*----------------------------------------------------------------------
    CreateAttrWidthPercentPxl
-   an HTML attribute "width" has been created for a Table of a HR.
+   an HTML attribute "width" has been created for a Table, an image,
+   an Object of a HR.
    Create the corresponding attribute IntWidthPercent or IntWidthPxl.
    oldWidth is -1 or the old image width.
   ----------------------------------------------------------------------*/
@@ -918,15 +967,30 @@ void CreateAttrWidthPercentPxl (char *buffer, Element el,
   Attribute       attrOld, attrNew;
   int             length, val;
   char            msgBuffer[MaxMsgLength];
-  ElementType	  elType;
+  ElementType	  elType, childType;
+  Element         origEl, child;
   int             w, h;
   ThotBool        isImage;
 
+  origEl = el;
   elType = TtaGetElementType (el);
   isImage = (elType.ElTypeNum == HTML_EL_PICTURE_UNIT ||
 	     elType.ElTypeNum == HTML_EL_Data_cell ||
-	     elType.ElTypeNum == HTML_EL_Heading_cell);
-
+	     elType.ElTypeNum == HTML_EL_Heading_cell ||
+	     elType.ElTypeNum == HTML_EL_Object);
+  if (elType.ElTypeNum == HTML_EL_Object)
+    /* the width attribute is attached to an Object element */
+    {
+      child = TtaGetFirstChild (el);
+      if (child)
+	{
+	  childType = TtaGetElementType (child);
+	  if (childType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+	    /* the Object element is of type image. apply the width
+	       attribute to the actual image element */
+	    el = child;
+	}
+    }
   /* remove trailing spaces */
   length = strlen (buffer) - 1;
   while (length > 0 && buffer[length] <= SPACE)
@@ -990,12 +1054,13 @@ void CreateAttrWidthPercentPxl (char *buffer, Element el,
     HTMLParseError (doc, msgBuffer);
     }
   if (isImage)
-    UpdateImageMap (el, doc, oldWidth, -1);
+    UpdateImageMap (origEl, doc, oldWidth, -1);
 }
 
 /*----------------------------------------------------------------------
    CreateAttrHeightPercentPxl
-   an HTML attribute "width" has been created for a Table of a HR.
+   an HTML attribute "width" has been created for a Table, an image,
+   an Object or a HR.
    Create the corresponding attribute IntHeightPercent or IntHeightPxl.
    oldHeight is -1 or the old image width.
   ----------------------------------------------------------------------*/
@@ -1006,15 +1071,30 @@ void CreateAttrHeightPercentPxl (char *buffer, Element el,
   Attribute       attrOld, attrNew;
   int             length, val;
   char            msgBuffer[MaxMsgLength];
-  ElementType	  elType;
+  ElementType	  elType, childType;
+  Element         origEl, child;
   int             w, h;
   ThotBool        isImage;
 
+  origEl = el;
   elType = TtaGetElementType (el);
   isImage = (elType.ElTypeNum == HTML_EL_PICTURE_UNIT ||
 	     elType.ElTypeNum == HTML_EL_Data_cell ||
-	     elType.ElTypeNum == HTML_EL_Heading_cell);
-
+	     elType.ElTypeNum == HTML_EL_Heading_cell ||
+	     elType.ElTypeNum == HTML_EL_Object);
+  if (elType.ElTypeNum == HTML_EL_Object)
+    /* the height attribute is attached to an Object element */
+    {
+      child = TtaGetFirstChild (el);
+      if (child)
+	{
+	  childType = TtaGetElementType (child);
+	  if (childType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+	    /* the Object element is of type image. apply the width
+	       attribute to the actual image element */
+	    el = child;
+	}
+    }
   /* remove trailing spaces */
   length = strlen (buffer) - 1;
   while (length > 0 && buffer[length] <= SPACE)
@@ -1078,7 +1158,7 @@ void CreateAttrHeightPercentPxl (char *buffer, Element el,
     HTMLParseError (doc, msgBuffer);
     }
   if (isImage)
-    UpdateImageMap (el, doc, oldHeight, -1);
+    UpdateImageMap (origEl, doc, oldHeight, -1);
 }
 
 /*----------------------------------------------------------------------
@@ -1153,7 +1233,7 @@ void EndOfHTMLAttributeValue (char *attrValue,
 {
   AttributeType   attrType, attrType1;
   Attribute       attr;
-  ElementType	   elType;
+  ElementType	  elType;
   Element         child, root;
   Language        lang;
   char            translation;
@@ -1360,15 +1440,31 @@ void EndOfHTMLAttributeValue (char *attrValue,
 	}
 
       if (lastMappedAttr->ThotAttribute == HTML_ATTR_Width__)
-	/* HTML attribute "width" for a table or a hr */
-	/* create the corresponding attribute IntWidthPercent or */
-	/* IntWidthPxl */
-	CreateAttrWidthPercentPxl (attrValue, lastAttrElement, context->doc, -1);
+	/* HTML attribute "width" */
+	{
+	  /* if it's an Object element, wait until all attributes are handled,
+	     especially the data attribute that may generate the image to
+	     which the width has to be applied */
+	  elType = TtaGetElementType (lastAttrElement);
+	  if (elType.ElTypeNum != HTML_EL_Object)
+	    /* create the corresponding attribute IntWidthPercent or */
+	    /* IntWidthPxl */
+	    CreateAttrWidthPercentPxl (attrValue, lastAttrElement,
+				       context->doc, -1);
+	}
       else if (lastMappedAttr->ThotAttribute == HTML_ATTR_Height_)
-	/* HTML attribute "width" for a table or a hr */
-	/* create the corresponding attribute IntHeightPercent or */
-	/* IntHeightPxl */
-	CreateAttrHeightPercentPxl (attrValue, lastAttrElement, context->doc, -1);
+	/* HTML attribute "height" */
+	{
+	  /* if it's an Object element, wait until all attributes are handled,
+	     especially the data attribute that may generate the image to
+	     which the height has to be applied */
+	  elType = TtaGetElementType (lastAttrElement);
+	  if (elType.ElTypeNum != HTML_EL_Object)
+	    /* create the corresponding attribute IntHeightPercent or */
+	    /* IntHeightPxl */
+	    CreateAttrHeightPercentPxl (attrValue, lastAttrElement,
+					context->doc, -1);
+	}
       else if (!strcmp (lastMappedAttr->XMLattribute, "size"))
 	{
 	  TtaGiveAttributeType (currentAttribute, &attrType, &attrKind);
