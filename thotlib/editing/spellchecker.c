@@ -85,6 +85,9 @@ boolean             ToCreate;
 {
   char              *dicodoc;
   char               path[MAX_PATH], dictname[MAX_PATH];
+# ifdef _WINDOWS
+  char* home_dir;
+# endif /* _WINDOWS */
 
   /* dictionary name = document name */
   *pDictionary = (int) NULL;
@@ -100,7 +103,12 @@ boolean             ToCreate;
     }
   else
     {
+#     ifdef _WINDOWS
+	  if ((TtaGetEnvString ("HOME")) == NULL)
+		 path [0] = '\0';
+#     else /* !_WINDOWS */
       strcpy (path, TtaGetEnvString ("HOME"));
+	  #     endif /* !_WINDOWS */
       LoadTreatedDict ((PtrDict *) pDictionary, 0, document, ".thot",
 		       path, FALSE, ToCreate);
     }
