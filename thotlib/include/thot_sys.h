@@ -105,9 +105,6 @@ int                 _getpid (void);
 /*------------------------------------------------------GNUC--*/
 
 /* type mappings */
-#else  /* _WINDOWS */
-
-#ifdef _WINDOWS
 typedef BOOL        Boolean;	/* X11/Intrinsic.h */
 typedef BOOL        boolean;
 #define Bool	    int	/* X11/Xlib.h */
@@ -135,7 +132,7 @@ typedef BOOL        boolean;
 #define True 1
 #endif
 
-#endif /* _WINDOWS *//***********************************WINDOWS**/
+#else /* _WINDOWS *//***********************************WINDOWS**/
 
 #ifndef HAVE_BOOLEAN
 typedef unsigned char boolean;
