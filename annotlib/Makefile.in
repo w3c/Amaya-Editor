@@ -16,8 +16,7 @@ INCLUDES= -DHAVE_CONFIG_H -DANNOTATIONS \
 	  -I.. -I../amaya  -I@srcdir@/f -I@top_srcdir@/amaya \
 	  -I@top_srcdir@/amaya/f -I../libwww \
 	  -I@top_srcdir@/../libwww/Library/src \
-	  -I@top_srcdir@/../libwww/modules/expat/xmlparse \
-	  -I@top_srcdir@/../libwww/modules/expat/xmltok \
+	  -I@top_srcdir@/../libwww/modules/expat/lib \
 	   @AMAYA_RAPTOR_INCLUDES@ \
 	   @THOTINCLUDES@ $(X_FLAGS)
 
