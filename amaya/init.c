@@ -1707,6 +1707,7 @@ Document InitDocView (Document doc, char *docname, DocumentType docType,
 	   TtaSetItemOff (doc, 1, File, BForward);
 	   TtaSetItemOff (doc, 1, File, BSave);
 	   TtaSetItemOff (doc, 1, File, BSynchro);
+	   TtaSetItemOff (doc, 1, File, BLatinReading);
 	   TtaSetItemOff (doc, 1, File, BExit);
 	   TtaSetMenuOff (doc, 1, Edit_);
 	   TtaSetMenuOff (doc, 1, Types);
@@ -1840,6 +1841,7 @@ Document InitDocView (Document doc, char *docname, DocumentType docType,
 	   TtaSetItemOff (doc, 1, File, BForward);
 	   TtaSetItemOff (doc, 1, File, BSave);
 	   TtaSetItemOff (doc, 1, File, BSynchro);
+	   TtaSetItemOff (doc, 1, File, BLatinReading);
 	   TtaSetToggleItem (doc, 1, Views, TShowButtonbar, TRUE);
 	   TtaSetToggleItem (doc, 1, Views, TShowTextZone, TRUE);
 	   TtaSetToggleItem (doc, 1, Views, TShowMapAreas, FALSE);
@@ -2137,7 +2139,7 @@ void               LatinReading (Document document, View view)
    FetchAndDisplayImages (document, AMAYA_LOAD_IMAGE);
    DocNetworkStatus[document] = AMAYA_NET_INACTIVE;
    
-   /* disable the Synchronize command for both documents */
+   /* disable the "Read as ISO Latin1" command */
    TtaSetItemOff (document, 1, File, BLatinReading);
    TtaFreeMemory (tempdocument);
 }
