@@ -110,6 +110,7 @@ THOTK_OBJ = \
 	unicode/uaccess.o \
 	unicode/uconvert.o \
 	unicode/ustring.o \
+	unicode/uio.o \
 	xml/writexml.o \
 	xml/savexml.o \
 	xml/translatexml.o \
