@@ -739,7 +739,7 @@ static ThotBool FindBreakLine (PtrBox pBox, int *boxWidth, int *breakWidth,
       else
 	{
 	  /* No break element found, continue */
-	  if (character == SPACE || character == NEW_LINE)
+	  if (character == SPACE)
 	    {
 	      (*nSpaces)++;
 	      *boxWidth += BoxCharacterWidth (SPACE, font);
@@ -1960,10 +1960,10 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
 				   nSpaces, newIndex, pNewBuff, pRootAb);
 		  if (pNextBox->BxNexChild)
 		    {
-		      pBox = pNextBox->BxNexChild;
+		      pBox = pNextBox;
 		      /* Est-ce la boite unique de la ligne ? */
 		      if (pNextBox == pLine->LiFirstBox)
-			pLine->LiFirstPiece = pBox;
+			pLine->LiFirstPiece = pBox->BxNexChild;
 		    }
 		  else
 		    pBox = pNextBox;
