@@ -115,10 +115,6 @@ SOURCE=..\..\thotlib\document\documentapi.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\tree\draw.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\thotlib\tree\exceptions.c
 # End Source File
 # Begin Source File

@@ -27,8 +27,6 @@ NULL=
 NULL=nul
 !ENDIF 
 
-CPP=cl.exe
-
 !IF  "$(CFG)" == "LibThotKernel - Win32 Release"
 
 OUTDIR=.\..
@@ -56,7 +54,6 @@ CLEAN :
 	-@erase "$(INTDIR)\content.obj"
 	-@erase "$(INTDIR)\contentapi.obj"
 	-@erase "$(INTDIR)\documentapi.obj"
-	-@erase "$(INTDIR)\draw.obj"
 	-@erase "$(INTDIR)\exceptions.obj"
 	-@erase "$(INTDIR)\externalref.obj"
 	-@erase "$(INTDIR)\fileaccess.obj"
@@ -95,6 +92,7 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 RSC=rc.exe
+CPP=cl.exe
 CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\thotlib\include" /I\
  "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I\
  "..\..\thotlib\internals\var" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D\
@@ -102,6 +100,37 @@ CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\thotlib\include" /I\
  /Fp"$(INTDIR)\LibThotKernel.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 CPP_OBJS=.\Release/
 CPP_SBRS=.
+
+.c{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\LibThotKernel.bsc" 
 BSC32_SBRS= \
@@ -117,7 +146,6 @@ LIB32_OBJS= \
 	"$(INTDIR)\content.obj" \
 	"$(INTDIR)\contentapi.obj" \
 	"$(INTDIR)\documentapi.obj" \
-	"$(INTDIR)\draw.obj" \
 	"$(INTDIR)\exceptions.obj" \
 	"$(INTDIR)\externalref.obj" \
 	"$(INTDIR)\fileaccess.obj" \
@@ -179,7 +207,6 @@ CLEAN :
 	-@erase "$(INTDIR)\content.obj"
 	-@erase "$(INTDIR)\contentapi.obj"
 	-@erase "$(INTDIR)\documentapi.obj"
-	-@erase "$(INTDIR)\draw.obj"
 	-@erase "$(INTDIR)\exceptions.obj"
 	-@erase "$(INTDIR)\externalref.obj"
 	-@erase "$(INTDIR)\fileaccess.obj"
@@ -218,6 +245,7 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 RSC=rc.exe
+CPP=cl.exe
 CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\thotlib\include" /I\
  "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I\
  "..\..\thotlib\internals\var" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D\
@@ -225,6 +253,37 @@ CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\thotlib\include" /I\
  /Fp"$(INTDIR)\LibThotKernel.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 CPP_OBJS=.\Debug/
 CPP_SBRS=.
+
+.c{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\LibThotKernel.bsc" 
 BSC32_SBRS= \
@@ -240,7 +299,6 @@ LIB32_OBJS= \
 	"$(INTDIR)\content.obj" \
 	"$(INTDIR)\contentapi.obj" \
 	"$(INTDIR)\documentapi.obj" \
-	"$(INTDIR)\draw.obj" \
 	"$(INTDIR)\exceptions.obj" \
 	"$(INTDIR)\externalref.obj" \
 	"$(INTDIR)\fileaccess.obj" \
@@ -276,36 +334,6 @@ LIB32_OBJS= \
 <<
 
 !ENDIF 
-
-.c{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
 
 
 !IF "$(CFG)" == "LibThotKernel - Win32 Release" || "$(CFG)" ==\
@@ -594,7 +622,6 @@ DEP_CPP_ATTRI=\
 	"..\..\thotlib\internals\f\content_f.h"\
 	"..\..\thotlib\internals\f\displayview_f.h"\
 	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\draw_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
 	"..\..\thotlib\internals\f\references_f.h"\
 	"..\..\thotlib\internals\f\structcreation_f.h"\
@@ -798,7 +825,7 @@ DEP_CPP_CHECK=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelallocator.h"\
+	"..\..\thotlib\include\labelAllocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\libmsg.h"\
 	"..\..\thotlib\include\message.h"\
@@ -816,7 +843,6 @@ DEP_CPP_CHECK=\
 	"..\..\thotlib\internals\f\absboxes_f.h"\
 	"..\..\thotlib\internals\f\actions_f.h"\
 	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\draw_f.h"\
 	"..\..\thotlib\internals\f\exceptions_f.h"\
 	"..\..\thotlib\internals\f\externalref_f.h"\
 	"..\..\thotlib\internals\f\fileaccess_f.h"\
@@ -836,7 +862,7 @@ DEP_CPP_CHECK=\
 	"..\..\thotlib\internals\h\frame.h"\
 	"..\..\thotlib\internals\h\res.h"\
 	"..\..\thotlib\internals\h\resdynmsg.h"\
-	"..\..\thotlib\internals\h\selectrestruct.h"\
+	"..\..\thotlib\internals\h\SelectRestruct.h"\
 	"..\..\thotlib\internals\h\thotkey.h"\
 	"..\..\thotlib\internals\h\typecorr.h"\
 	"..\..\thotlib\internals\h\typeint.h"\
@@ -867,7 +893,7 @@ DEP_CPP_CHECK=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelallocator.h"\
+	"..\..\thotlib\include\labelAllocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\libmsg.h"\
 	"..\..\thotlib\include\message.h"\
@@ -904,7 +930,7 @@ DEP_CPP_CHECK=\
 	"..\..\thotlib\internals\h\frame.h"\
 	"..\..\thotlib\internals\h\res.h"\
 	"..\..\thotlib\internals\h\resdynmsg.h"\
-	"..\..\thotlib\internals\h\selectrestruct.h"\
+	"..\..\thotlib\internals\h\SelectRestruct.h"\
 	"..\..\thotlib\internals\h\thotkey.h"\
 	"..\..\thotlib\internals\h\typecorr.h"\
 	"..\..\thotlib\internals\h\typeint.h"\
@@ -1207,7 +1233,6 @@ DEP_CPP_DOCUM=\
 	"..\..\thotlib\internals\f\displayview_f.h"\
 	"..\..\thotlib\internals\f\docs_f.h"\
 	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\draw_f.h"\
 	"..\..\thotlib\internals\f\externalref_f.h"\
 	"..\..\thotlib\internals\f\fileaccess_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
@@ -1329,105 +1354,6 @@ DEP_CPP_DOCUM=\
 	
 
 "$(INTDIR)\documentapi.obj" : $(SOURCE) $(DEP_CPP_DOCUM) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
-
-SOURCE=..\..\thotlib\tree\draw.c
-
-!IF  "$(CFG)" == "LibThotKernel - Win32 Release"
-
-DEP_CPP_DRAW_=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\draw_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	{$(INCLUDE)}"sys\stat.h"\
-	{$(INCLUDE)}"sys\types.h"\
-	
-NODEP_CPP_DRAW_=\
-	"..\..\thotlib\include\HTVMSUtils.h"\
-	
-
-"$(INTDIR)\draw.obj" : $(SOURCE) $(DEP_CPP_DRAW_) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ELSEIF  "$(CFG)" == "LibThotKernel - Win32 Debug"
-
-DEP_CPP_DRAW_=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\draw_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	
-
-"$(INTDIR)\draw.obj" : $(SOURCE) $(DEP_CPP_DRAW_) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -1740,7 +1666,7 @@ DEP_CPP_LABEL=\
 	"..\..\thotlib\include\attribute.h"\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelallocator.h"\
+	"..\..\thotlib\include\labelAllocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\presentation.h"\
 	"..\..\thotlib\include\pschema.h"\
@@ -1779,7 +1705,7 @@ DEP_CPP_LABEL=\
 	"..\..\thotlib\include\attribute.h"\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelallocator.h"\
+	"..\..\thotlib\include\labelAllocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\presentation.h"\
 	"..\..\thotlib\include\pschema.h"\
@@ -2218,7 +2144,7 @@ DEP_CPP_PIVOT=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelallocator.h"\
+	"..\..\thotlib\include\labelAllocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\presentation.h"\
 	"..\..\thotlib\include\pschema.h"\
@@ -2277,7 +2203,7 @@ DEP_CPP_PIVOT=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelallocator.h"\
+	"..\..\thotlib\include\labelAllocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\presentation.h"\
 	"..\..\thotlib\include\pschema.h"\
@@ -2528,7 +2454,7 @@ DEP_CPP_READP=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelallocator.h"\
+	"..\..\thotlib\include\labelAllocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\libmsg.h"\
 	"..\..\thotlib\include\message.h"\
@@ -2606,7 +2532,7 @@ DEP_CPP_READP=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelallocator.h"\
+	"..\..\thotlib\include\labelAllocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\libmsg.h"\
 	"..\..\thotlib\include\message.h"\
@@ -3762,7 +3688,7 @@ DEP_CPP_TREE_=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelallocator.h"\
+	"..\..\thotlib\include\labelAllocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\libmsg.h"\
 	"..\..\thotlib\include\message.h"\
@@ -3782,7 +3708,6 @@ DEP_CPP_TREE_=\
 	"..\..\thotlib\internals\f\abspictures_f.h"\
 	"..\..\thotlib\internals\f\applicationapi_f.h"\
 	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\draw_f.h"\
 	"..\..\thotlib\internals\f\exceptions_f.h"\
 	"..\..\thotlib\internals\f\externalref_f.h"\
 	"..\..\thotlib\internals\f\fileaccess_f.h"\
@@ -3804,7 +3729,7 @@ DEP_CPP_TREE_=\
 	"..\..\thotlib\internals\h\picture.h"\
 	"..\..\thotlib\internals\h\res.h"\
 	"..\..\thotlib\internals\h\resdynmsg.h"\
-	"..\..\thotlib\internals\h\selectrestruct.h"\
+	"..\..\thotlib\internals\h\SelectRestruct.h"\
 	"..\..\thotlib\internals\h\thotkey.h"\
 	"..\..\thotlib\internals\h\typecorr.h"\
 	"..\..\thotlib\internals\h\typeint.h"\
@@ -3836,7 +3761,7 @@ DEP_CPP_TREE_=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelallocator.h"\
+	"..\..\thotlib\include\labelAllocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\libmsg.h"\
 	"..\..\thotlib\include\message.h"\
@@ -3877,7 +3802,7 @@ DEP_CPP_TREE_=\
 	"..\..\thotlib\internals\h\picture.h"\
 	"..\..\thotlib\internals\h\res.h"\
 	"..\..\thotlib\internals\h\resdynmsg.h"\
-	"..\..\thotlib\internals\h\selectrestruct.h"\
+	"..\..\thotlib\internals\h\SelectRestruct.h"\
 	"..\..\thotlib\internals\h\thotkey.h"\
 	"..\..\thotlib\internals\h\typecorr.h"\
 	"..\..\thotlib\internals\h\typeint.h"\
@@ -3908,7 +3833,7 @@ DEP_CPP_TREEA=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelallocator.h"\
+	"..\..\thotlib\include\labelAllocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\presentation.h"\
 	"..\..\thotlib\include\pschema.h"\
@@ -3980,7 +3905,7 @@ DEP_CPP_TREEA=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelallocator.h"\
+	"..\..\thotlib\include\labelAllocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\presentation.h"\
 	"..\..\thotlib\include\pschema.h"\
@@ -4214,7 +4139,7 @@ DEP_CPP_WRITE=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelallocator.h"\
+	"..\..\thotlib\include\labelAllocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\libmsg.h"\
 	"..\..\thotlib\include\message.h"\
@@ -4290,7 +4215,7 @@ DEP_CPP_WRITE=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelallocator.h"\
+	"..\..\thotlib\include\labelAllocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\libmsg.h"\
 	"..\..\thotlib\include\message.h"\
