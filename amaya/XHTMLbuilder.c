@@ -821,7 +821,7 @@ int*                value;
   ---------------------------------------------------------------------------*/
 #ifdef __STDC__
 void	XhtmlMapEntity (STRING entityName,
-			STRING entityValue,
+			int *entityValue,
 			int valueLength,
 			STRING alphabet)
 #else
@@ -829,30 +829,29 @@ void	XhtmlMapEntity (entityName,
 			entityValue,
 			valueLength,
 			alphabet)
-STRING   entityName;
-STRING   entityValue;
-int      valueLength;
-STRING   alphabet;
+STRING    entityName;
+int      *entityValue;
+int       valueLength;
+STRING    alphabet;
 
 #endif
 
 {
    int            i;
-   ThotBool       found = FALSE;
 
-   i = 0;
-   while ((XhtmlEntityTable[i].charName[0] < entityName[0]) &&
-	  (XhtmlEntityTable[i].charCode != 0))
-          i++;
-   
-   while ((XhtmlEntityTable[i].charName[0] == entityName[0]) &&
-	  (XhtmlEntityTable[i].charCode != 0 &&
-	   !found))
+   for (i = 0; XhtmlEntityTable[i].charCode >= 0 &&
+	       ustrcmp (XhtmlEntityTable[i].charName, entityName);
+	       i++);
+
+   if (!ustrcmp (XhtmlEntityTable[i].charName, entityName))
      {
-       if (!ustrcmp (entityName, XhtmlEntityTable[i].charName))
-	   found = TRUE;
-       else
-	   i++;
+       /* entity found */
+       *entityValue = XhtmlEntityTable[i].charCode;
+       *alphabet = 'L';
+     }
+   else
+     {
+       *alphabet = EOS;
      }
 }
 

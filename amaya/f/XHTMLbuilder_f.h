@@ -16,7 +16,7 @@ extern void XhtmlMapAttributeValue ( CHAR_T* AttrVal,
 				     AttributeType attrType,
 				     int* value );
 extern void XhtmlMapEntity ( STRING entityName,
-			     STRING entityValue,
+			     int *entityValue,
 			     int valueLength,
 			     STRING alphabet );
 extern void XhtmlEntityCreated ( USTRING entityValue,
@@ -36,7 +36,7 @@ extern void XhtmlMapAttributeValue (/* CHAR_T* AttrVal,
 				     AttributeType attrType,
 				     int* value */);
 extern void XhtmlMapEntity (/* STRING entityName,
-			       STRING entityValue,
+			       int *entityValue,
 			       int valueLength,
 			       STRING alphabet */);
 extern void XhtmlEntityCreated (/* USTRING entityValue,

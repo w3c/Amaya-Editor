@@ -133,6 +133,7 @@ static ElemMapping    MathMLElemMappingTable[] =
    {TEXT("XMLcomment_line"), SPACE, MathML_EL_XMLcomment_line},
    {TEXT("maligngroup"), 'E', MathML_EL_MALIGNGROUP},
    {TEXT("malignmark"), 'E', MathML_EL_MALIGNMARK},
+   {TEXT("math"), SPACE, MathML_EL_MathML},
    {TEXT("mchar"), 'E', MathML_EL_MCHAR},
    {TEXT("menclose"), SPACE, MathML_EL_MENCLOSE},
    {TEXT("merror"), SPACE, MathML_EL_MERROR},
