@@ -137,7 +137,7 @@ char               *ptr;
 #endif
 {
   while (*ptr == SPACE || *ptr == '\b' || *ptr == '\n' ||
-	  *ptr == '\t' || *ptr == '\212' || *ptr == '\r')
+	  *ptr == '\t' || *ptr == '\r')
     ptr++;
   return (ptr);
 }
@@ -151,8 +151,7 @@ boolean     IsBlank (ptr)
 char               *ptr;
 #endif
 {
-  if (*ptr == SPACE || *ptr == '\b' ||  *ptr == '\n' ||
-      *ptr == '\212' || *ptr == '\r')
+  if (*ptr == SPACE || *ptr == '\b' || *ptr == '\n' || *ptr == '\r')
     return (TRUE);
   else
     return (FALSE);
@@ -2351,7 +2350,7 @@ PresentationValue  *val;
 	  fprintf (stderr, "Invalid color encoding %s\n", cssRule - 1);
 	  failed = TRUE;
 	}
-      else if (cssRule[3] == '\212' || !isxdigit (cssRule[3]))
+      else if (!isxdigit (cssRule[3]))
 	{
 	  /* encoded as on 3 digits #F0F  */
 	  redval = hexa_val (cssRule[0]) * 16 + hexa_val (cssRule[0]);
@@ -3373,7 +3372,7 @@ Document            doc;
    Element             best = NULL;
 
    elType.ElSSchema = TtaGetDocumentSSchema (doc);
-   elType.ElTypeNum = HTML_EL_Styles;
+   elType.ElTypeNum = HTML_EL_STYLE_;
    el = TtaSearchTypedElement (elType, SearchInTree, TtaGetMainRoot (doc));
    /*
     * browse the style definitions, looking for the given class name.
@@ -3828,7 +3827,7 @@ char               *buffer;
   Attribute           attr;
   AttributeType       attrType;
   ElementType         elType;
-  Element             parent,  el;
+  Element             parent, el, styles;
   char                c;
   char               *cssRule, *base;
   char               *schemaName;
@@ -3870,14 +3869,17 @@ char               *buffer;
 	      TtaInsertFirstChild (&el, parent, doc);
 	      parent = el;
 	    }
-	  elType.ElTypeNum = HTML_EL_Styles;
+	  elType.ElTypeNum = HTML_EL_STYLE_;
 	  parent = el;
 	  el = TtaSearchTypedElement (elType, SearchForward, parent);
 	  /* if the Style element doesn't exist we create it now */
 	  if (el == NULL)
 	    {
 	      el = TtaNewTree (doc, elType, "");
-	      TtaInsertFirstChild (&el, parent, doc);
+	      elType.ElTypeNum = HTML_EL_Styles;
+	      styles = TtaNewTree (doc, elType, "");
+	      TtaInsertFirstChild (&styles, parent, doc);
+	      TtaInsertFirstChild (&el, styles, doc);
 	      attrType.AttrSSchema = elType.ElSSchema;
 	      attrType.AttrTypeNum = HTML_ATTR_Notation;
 	      attr = TtaNewAttribute (attrType);
@@ -3935,10 +3937,6 @@ char               *buffer;
 	      noRule = TRUE;
 	    }
 	  break;
-        case '\212':
-          /*  Thot new line */
-          CSSbuffer[CSSindex] = (unsigned char) 10; /* LF = end of input line */
-          break;
 	case '*':
 	  if (CSSindex > 0 && CSSbuffer[CSSindex - 1] == '/')
 	    /* start a comment */

@@ -56,7 +56,7 @@ RULES
 	Create '>\12';
 	END;
 
- Styles:BEGIN
+ STYLE_: BEGIN
 	Create '<style';
 	IF Notation
 	   BEGIN
@@ -66,13 +66,15 @@ RULES
 	Create Attributes;
 	Create '>';
 	NoTranslation;
-	Create '</style>\12' After;
+	Create '\12</style>\12' After;
 	END;
 
  SCRIPT: BEGIN
 	Create '<script';
 	Create Attributes;
-	Create '>\12' After;
+	Create '>\12';
+	NoTranslation;
+	Create '\12</script>\12' After;
 	END;
 
  META: BEGIN

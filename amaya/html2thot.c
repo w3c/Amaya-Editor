@@ -281,7 +281,7 @@ static GIMapping    HTMLGIMappingTable[] =
    {"SPAN", SPACE, HTML_EL_Span, NULL},
    {"STRIKE", SPACE, HTML_EL_Struck_text, NULL},
    {"STRONG", SPACE, HTML_EL_Strong, NULL},
-   {"STYLE", SPACE, HTML_EL_Styles, NULL},
+   {"STYLE", SPACE, HTML_EL_STYLE_, NULL},
    {"SUB", SPACE, HTML_EL_Subscript, NULL},
    {"SUP", SPACE, HTML_EL_Superscript, NULL},
    {"TABLE", SPACE, HTML_EL_Table, NULL},
@@ -598,7 +598,7 @@ static AttributeMapping HTMLAttributeMappingTable[] =
    {"TYPE", "OL", 'A', HTML_ATTR_NumberStyle},
    {"TYPE", "PARAM", 'A', HTML_ATTR_Param_type},
    {"TYPE", "SCRIPT", 'A', HTML_ATTR_content_type},
-   {"TYPE", "STYLE", 'A', HTML_ATTR_Notation},
+   {"TYPE", "STYLE_", 'A', HTML_ATTR_Notation},
    {"TYPE", "UL", 'A', HTML_ATTR_BulletStyle},
    {"TYPE", "", SPACE, DummyAttribute},
 
@@ -1799,7 +1799,7 @@ static void         TextToDocument ()
 		}
 	  }
 	elType = TtaGetElementType (parent);
-	if (elType.ElTypeNum == HTML_EL_Styles && elType.ElSSchema == HTMLSSchema)
+	if (elType.ElTypeNum == HTML_EL_STYLE_ && elType.ElSSchema == HTMLSSchema)
 	  {
 #ifndef STANDALONE
 	     ApplyCSSRules (parent, inputBuffer, theDocument, FALSE);
@@ -1808,7 +1808,9 @@ static void         TextToDocument ()
 	     return;
 	  }
 	if (ignoreLeadingSpaces)
-	   if (!Within (HTML_EL_Preformatted, HTMLSSchema))
+	   if (!Within (HTML_EL_Preformatted, HTMLSSchema) &&
+	       !Within (HTML_EL_STYLE_, HTMLSSchema) &&
+	       !Within (HTML_EL_SCRIPT, HTMLSSchema))
 	      /* suppress leading spaces */
 	      while (inputBuffer[i] <= SPACE && inputBuffer[i] != EOS)
 		 i++;
@@ -2424,7 +2426,9 @@ Element             el;
 		   }
 	       break;
 
-	    case HTML_EL_Preformatted:          /* it's a preformatted */
+	    case HTML_EL_Preformatted:	/* it's a PRE */
+	    case HTML_EL_STYLE_:	/* it's a STYLE element */
+	    case HTML_EL_SCRIPT:	/* it's a SCRIPT element */
 	       /* if the last line of the Preformatted is empty, remove it */
 	       leaf = LastLeafInElement (el);
 	       if (leaf != NULL)
@@ -2437,7 +2441,7 @@ Element             el;
 			if (length > 0)
 			  {
 			     TtaGiveSubString (leaf, lastChar, length, 1);
-			     if (lastChar[0] == (char) 138)
+			     if (lastChar[0] == '\n')
 				/* last character is new line, delete it */
 				{
 			        if (length == 1)
@@ -3098,8 +3102,10 @@ char                c;
 	   }
 	else
 #endif /* GRAPHML */
-	if (!strcmp (HTMLGIMappingTable[lastElemEntry].htmlGI, "PRE"))
-	   /* <PRE> has been read */
+	if (!strcmp (HTMLGIMappingTable[lastElemEntry].htmlGI, "PRE") ||
+	    !strcmp (HTMLGIMappingTable[lastElemEntry].htmlGI, "STYLE") ||
+	    !strcmp (HTMLGIMappingTable[lastElemEntry].htmlGI, "SCRIPT") )
+	   /* a <PRE>, <STYLE> or <SCRIPT> tag has been read */
 	   AfterTagPRE = TRUE;
 	else if (!strcmp (HTMLGIMappingTable[lastElemEntry].htmlGI, "TABLE"))
 	   /* <TABLE> has been read */
@@ -3119,7 +3125,7 @@ char                c;
 	/* if it's a STYLE element in CSS notation, activate the CSS */
 	/* parser for parsing the element content */
 	elType = TtaGetElementType (lastElement);
-	if (elType.ElTypeNum == HTML_EL_Styles)
+	if (elType.ElTypeNum == HTML_EL_STYLE_)
 	  {
 	     /* Search the Notation attribute */
 	     attrType.AttrSSchema = elType.ElSSchema;
@@ -3227,7 +3233,7 @@ int                 entry;
        if (ok)
 	 /* refuse STYLE within STYLE */
 	 if (strcmp (HTMLGIMappingTable[entry].htmlGI, "STYLE") == 0)
-	   if (Within (HTML_EL_Styles, HTMLSSchema))
+	   if (Within (HTML_EL_STYLE_, HTMLSSchema))
 	     ok = FALSE;
        return ok;
      }
@@ -4951,21 +4957,23 @@ char               *HTMLbuf;
 			 if (currentState == 20 &&
 			     Within (HTML_EL_Preformatted, HTMLSSchema) &&
 	                     !Within (HTML_EL_Option_Menu, HTMLSSchema))
-			   charRead = (unsigned char) 138; /* Thot new line */
+			   charRead = '\n'; /* new line character */
 			 else
 		           charRead = SPACE;
 		      }
 		   else
 		      /* new line in a text element */
-		      if (Within (HTML_EL_Preformatted, HTMLSSchema) &&
-			  !Within (HTML_EL_Option_Menu, HTMLSSchema))
+		      if ((Within (HTML_EL_Preformatted, HTMLSSchema) &&
+			      !Within (HTML_EL_Option_Menu, HTMLSSchema)) ||
+			   Within (HTML_EL_SCRIPT, HTMLSSchema) ||
+			   Within (HTML_EL_STYLE_, HTMLSSchema))
 			/* within preformatted text */
 			if (AfterTagPRE)
 			   /* ignore NL after a <PRE> tag */
 			   charRead = '\0';
 			else
-			   /* generate a Thot new line character */
-			   charRead = (unsigned char) 138;
+			   /* generate a new line character */
+			   charRead = '\n';
 		      else
 			/* new line in ordinary text */
 		        {
@@ -4992,7 +5000,9 @@ char               *HTMLbuf;
 		       else
 			  /* in a text element. Replace HT by space except in */
 			  /* preformatted text */
-		          if (!Within (HTML_EL_Preformatted, HTMLSSchema))
+		          if (!Within (HTML_EL_Preformatted, HTMLSSchema) &&
+			      !Within (HTML_EL_STYLE_, HTMLSSchema) &&
+			      !Within (HTML_EL_SCRIPT, HTMLSSchema))
 			     charRead = SPACE;
 		    }
 		  if (charRead == SPACE)
@@ -5000,7 +5010,9 @@ char               *HTMLbuf;
 		    {
 		       if (currentState == 12 ||
 			   (currentState == 0 &&
-				!Within (HTML_EL_Preformatted, HTMLSSchema)))
+				!Within (HTML_EL_Preformatted, HTMLSSchema) &&
+				!Within (HTML_EL_STYLE_, HTMLSSchema) &&
+				!Within (HTML_EL_SCRIPT, HTMLSSchema)))
 			  /* reading text in a comment or in an element
 			     that is not preformatted text */
 			  /* ignore spaces at the beginning of an input line */
@@ -5009,7 +5021,7 @@ char               *HTMLbuf;
 		    }
 		  else if ((charRead < SPACE || (int) charRead >= 254 ||
 			    ((int) charRead >= 127 && (int) charRead <= 159))
-			   && (int) charRead != 9 && (int) charRead != 138)
+			   && (int) charRead != 9)
 		     /* it's not a printable character, ignore it */
 		     charRead = EOS;
 		  else
@@ -5178,13 +5190,13 @@ char		   *textbuf;
 	     if ((int) charRead == 10)
 		/* LF = end of line */
 		/* generate a Thot new line character */
-		charRead = (unsigned char) 138;
+		charRead = '\n';
 	     else
 		/* it's not an end of line */
 	        /* Ignore non printable characters except HT, LF, FF. */
 		if ((charRead < SPACE || (int) charRead >= 254 ||
 		    	((int) charRead >= 127 && (int) charRead <= 159))
-			   && (int) charRead != 9 && (int) charRead != 138)
+			   && (int) charRead != 9)
 		     /* it's not a printable character, ignore it */
 		     charRead = EOS;
 	     if (charRead != EOS)
@@ -5229,6 +5241,7 @@ Document            doc;
 	       elType.ElTypeNum == HTML_EL_ISINDEX ||
 	       elType.ElTypeNum == HTML_EL_BASE ||
 	       elType.ElTypeNum == HTML_EL_Styles ||
+	       elType.ElTypeNum == HTML_EL_STYLE_ ||
 	       elType.ElTypeNum == HTML_EL_Scripts ||
 	       elType.ElTypeNum == HTML_EL_SCRIPT ||
 	       elType.ElTypeNum == HTML_EL_Metas ||
@@ -5574,12 +5587,13 @@ char               *pathURL;
 
 #endif
 {
-   ElementType         elType, newElType, headElType;
-   Element             el, elHead, elBody, nextEl, newEl, prevEl, lastChild,
-	               firstTerm, lastTerm, termList, child, parent, firstEntry,
-	               lastEntry, glossary, list, elText, previous, elLinks,
-	               lastLink, elMetas, lastMeta, elScripts, lastScript;
-   boolean             ok, moved;
+   ElementType	elType, newElType, headElType;
+   Element	el, elHead, elBody, nextEl, newEl, prevEl, lastChild,
+		firstTerm, lastTerm, termList, child, parent, firstEntry,
+		lastEntry, glossary, list, elText, previous,
+		elLinks, lastLink, elMetas, lastMeta, elScripts, lastScript,
+		elStyles, lastStyle;
+   boolean	ok, moved;
 
    /* the root element only accepts elements HEAD, BODY and Comment as */
    /* children */
@@ -5677,14 +5691,13 @@ char               *pathURL;
 	     /* which is Document_URL */
 	     /* move all Link elements as children of a Links element, */
 	     /* all Meta elements as children of a Metas element, */
-	     /* and all Script elements as children of a Scripts element */
+	     /* all Script elements as children of a Scripts element, */
+	     /* and all Style elements as children of a Styles element. */
 	     TtaNextSibling (&el);
-	     elLinks = NULL;
-	     lastLink = NULL;
-	     elMetas = NULL;
-	     lastMeta = NULL;
-	     elScripts = NULL;
-	     lastScript = NULL;
+	     elLinks = NULL; lastLink = NULL;
+	     elMetas = NULL; lastMeta = NULL;
+	     elScripts = NULL; lastScript = NULL;
+	     elStyles = NULL; lastStyle = NULL;
 	     lastChild = NULL;
 	     while (el != NULL)
 	       {
@@ -5744,6 +5757,24 @@ char               *pathURL;
 		       else
 			  TtaInsertSibling (el, lastScript, FALSE, theDocument);
 		       lastScript = el;
+		    }
+		  else if (elType.ElTypeNum == HTML_EL_STYLE_)
+		    {
+		       /* create the Styles element if it does not exist */
+		       if (elStyles == NULL)
+			 {
+			    newElType.ElSSchema = HTMLSSchema;
+			    newElType.ElTypeNum = HTML_EL_Styles;
+			    elStyles = TtaNewElement (theDocument, newElType);
+			    TtaInsertSibling (elStyles, el, TRUE, theDocument);
+			 }
+		       /* move the element as the last child of the Styles element */
+		       TtaRemoveTree (el, theDocument);
+		       if (lastStyle == NULL)
+			  TtaInsertFirstChild (&el, elStyles, theDocument);
+		       else
+			  TtaInsertSibling (el, lastStyle, FALSE, theDocument);
+		       lastStyle = el;
 		    }
 		  else
 		    /* is this element allowed in the HEAD? */

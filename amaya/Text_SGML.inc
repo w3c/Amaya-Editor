@@ -6,7 +6,6 @@ TextTRANSLATE Latin
 	BEGIN
 	'<'    -> '&lt;';
 	'&'    -> '&amp;';
-	'\212' -> '\12'; { '&CTLrc;' }
 	'\230' -> 'oe'; { '&oelig;'}
 	'\231' -> 'OE'; {'&OElig;'}
 	'\240' -> '&nbsp;';

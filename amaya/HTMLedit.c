@@ -1419,7 +1419,7 @@ NotifyAttribute    *event;
       if (elType.ElTypeNum == HTML_EL_HEAD ||
 	  elType.ElTypeNum == HTML_EL_TITLE ||
 	  elType.ElTypeNum == HTML_EL_META ||
-	  elType.ElTypeNum == HTML_EL_Styles ||
+	  elType.ElTypeNum == HTML_EL_STYLE_ ||
 	  elType.ElTypeNum == HTML_EL_HTML)
 	 return TRUE;
       else
@@ -1457,7 +1457,7 @@ NotifyAttribute    *event;
 	 elType.ElTypeNum == HTML_EL_HEAD ||
 	 elType.ElTypeNum == HTML_EL_TITLE ||
 	 elType.ElTypeNum == HTML_EL_META ||
-	 elType.ElTypeNum == HTML_EL_Styles ||
+	 elType.ElTypeNum == HTML_EL_STYLE_ ||
 	 elType.ElTypeNum == HTML_EL_HTML ||
 	 elType.ElTypeNum == HTML_EL_ISINDEX)
 	return TRUE;

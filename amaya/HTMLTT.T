@@ -58,7 +58,7 @@ RULES
 	Create IN TmpFile '\12' After;
 	END;
 
- Styles:BEGIN
+ STYLE_: BEGIN
 	Remove;
 	END;
 
@@ -312,7 +312,7 @@ RULES
 		Remove;
 	IF Within HEAD and not Within TITLE
 		Remove;
-	IF Within STYLE 
+	IF Within STYLE_ 
 		Remove;
 	END;
 

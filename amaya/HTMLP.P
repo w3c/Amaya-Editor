@@ -5403,21 +5403,6 @@ RULES
 		END;
 	END;
 
-{ ---- Style CSS ---- }
-
-  Styles: BEGIN
-	CreateBefore(STYLE_S);
-	Visibility: 0;
-	Line;
-	IN Structure_view BEGIN
-		Width: Enclosing . Width - STRUCT_INDENT;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		Visibility: Enclosing =;
-		END;
-	END;
-
-{ ---- Style CSS end ---- }
-
  BODY:	BEGIN
 	VertPos: Top = Previous AnyElem . Bottom + 0.5 cm;
 #ifdef PAGE
@@ -5445,28 +5430,6 @@ RULES
 	IN Table_of_contents BEGIN
 		Visibility: 0;
 		Height: Enclosed . Height;
-		END;
-	END;
-
- ISINDEX: BEGIN
-	CreateBefore(INDEX_S);
-	CreateBefore(ISINDEX_Graph1);
-#ifndef PAGE
-	CreateBefore(ISINDEX_Graph2);
-#endif
-	if NOT Prompt
-	    CreateFirst(INDEX_TXT);
-	CreateFirst(VAL_ATTR_PROMPT);
-	CreateAfter(ISINDEX_Graph1);
-#ifndef PAGE
-	CreateAfter(ISINDEX_Graph2A);
-#endif
-	IN Structure_view BEGIN
-		VertPos: Top = Previous INDEX_S . Top;
-		Size: TAG_FONTSIZE;
-		Font: TAG_Font;
-		Style: TAG_Style;
-		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
 
@@ -5503,6 +5466,68 @@ RULES
 		Visibility: 0;
 	END;
 
+ ISINDEX: BEGIN
+	CreateBefore(INDEX_S);
+	CreateBefore(ISINDEX_Graph1);
+#ifndef PAGE
+	CreateBefore(ISINDEX_Graph2);
+#endif
+	if NOT Prompt
+	    CreateFirst(INDEX_TXT);
+	CreateFirst(VAL_ATTR_PROMPT);
+	CreateAfter(ISINDEX_Graph1);
+#ifndef PAGE
+	CreateAfter(ISINDEX_Graph2A);
+#endif
+	IN Structure_view BEGIN
+		VertPos: Top = Previous INDEX_S . Top;
+		Size: TAG_FONTSIZE;
+		Font: TAG_Font;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+ BASE:	BEGIN
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	CreateBefore(BASE_S);
+#ifndef BLACK_WHITE
+	Foreground: Blue;
+#endif
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Foreground: ATTR_Color;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;
+		Size: TAG_FONTSIZE;
+		END;
+	IN Links_view
+		Visibility: 0;
+	END;
+
+ Styles: BEGIN
+	Visibility: 0;
+	IN Structure_view
+		BEGIN
+		Visibility: Enclosing =;
+		Width: Enclosing . Width;
+		END;
+	END;
+
+ STYLE_: BEGIN
+	CreateBefore(STYLE_S);
+	Visibility: 0;
+	Line;
+	IN Structure_view BEGIN
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Visibility: Enclosing =;
+		END;
+	END;
+
  Scripts: BEGIN
 	Visibility: 0;
 	IN Structure_view
@@ -5515,8 +5540,9 @@ RULES
  SCRIPT: BEGIN
 	CreateBefore(SCRIPT_S);
 	Visibility: 0;
+	Line;
 	IN Structure_view BEGIN
-	Width: Enclosing . Width - STRUCT_INDENT;
+		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Foreground: Enclosing =;
 		Visibility: Enclosing =;
@@ -5579,26 +5605,6 @@ RULES
 	   if within Radio_Input
 		Height: 1 px;
 	   END;
-	END;
-
- BASE:	BEGIN
-	HorizPos: Left = Previous . Right;
-	VertPos: HRef = Previous . HRef;
-	CreateBefore(BASE_S);
-#ifndef BLACK_WHITE
-	Foreground: Blue;
-#endif
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Width: Enclosing . Width - STRUCT_INDENT;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		Foreground: ATTR_Color;
-		Style: ATTR_Style;
-		Visibility: ATTR_Visibility;
-		Size: TAG_FONTSIZE;
-		END;
-	IN Links_view
-		Visibility: 0;
 	END;
 
  H1:	BEGIN

@@ -972,7 +972,7 @@ void                TtcCreateElement (doc, view)
    else if (AscentReturnCreateNL (firstSel) != NULL)
       /* one of the ancestors of the first selected element says that the
 	 Return key should generate a "new line" character */
-      InsertChar (GetWindowNumber (doc, view), (unsigned char) BREAK_LINE, -1);
+      InsertChar (GetWindowNumber (doc, view), '\n', -1);
    else
      {
 	pListEl = NULL;

@@ -151,7 +151,7 @@ Document            document;
 char               *newpath;
 #endif
 {
-  Element             el, root;
+  Element             el, root, content;
   ElementType         elType;
   Attribute           attr;
   AttributeType       attrType;
@@ -166,24 +166,33 @@ char               *newpath;
 DBG(fprintf(stderr, "SetRelativeURLs\n");)
 
   root = TtaGetMainRoot (document);
-  /* manage style elements */
+  /* handle style elements */
   elType = TtaGetElementType (root);
   attrType.AttrSSchema = elType.ElSSchema;
-  elType.ElTypeNum = HTML_EL_Styles;
+  elType.ElTypeNum = HTML_EL_STYLE_;
   el = TtaSearchTypedElement (elType, SearchInTree, root);
-  if (el != NULL)
-    el = TtaGetFirstChild (el);
-  if (el != NULL)
+  while (el)
     {
+    if (elType.ElTypeNum == HTML_EL_STYLE_)
+       content = TtaGetFirstChild (el);
+    else
+       content = NULL;
+    if (content != NULL)
+      {
       len = MAX_CSS_LENGTH;
-      TtaGiveTextContent (el, CSSbuffer, &len, &lang);
+      TtaGiveTextContent (content, CSSbuffer, &len, &lang);
       CSSbuffer[MAX_CSS_LENGTH] = EOS;
-      new_url = UpdateCSSBackgroundImage (DocumentURLs[document], newpath, NULL, CSSbuffer);
+      new_url = UpdateCSSBackgroundImage (DocumentURLs[document], newpath,
+					  NULL, CSSbuffer);
       if (new_url != NULL)
 	{
-	  TtaSetTextContent (el, new_url, lang, document);
+	  TtaSetTextContent (content, new_url, lang, document);
 	  TtaFreeMemory (new_url);
 	}
+      }
+    TtaNextSibling (&el);
+    if (el != NULL)
+       elType = TtaGetElementType (el);
     }
 
   /* manage URLs and SRCs attributes */
@@ -882,7 +891,7 @@ char                  *newURL;
    AttributeType       attrType;
    ElementType         elType;
    Attribute           attr;
-   Element             el, root;
+   Element             el, root, content;
    LoadedImageDesc    *pImage;
    Language            lang;
    char                tempfile[MAX_LENGTH];
@@ -935,17 +944,21 @@ char                  *newURL;
 	*/
 
        root = TtaGetMainRoot (SavingDocument);
-       /* manage style elements */
+       /* handle style elements */
        elType = TtaGetElementType (root);
        attrType.AttrSSchema = elType.ElSSchema;
-       elType.ElTypeNum = HTML_EL_Styles;
+       elType.ElTypeNum = HTML_EL_STYLE_;
        el = TtaSearchTypedElement (elType, SearchInTree, root);
-       if (el != NULL)
-	 el = TtaGetFirstChild (el);
-       if (el != NULL)
+       while (el)
 	 {
+	 if (elType.ElTypeNum == HTML_EL_STYLE_)
+	    content = TtaGetFirstChild (el);
+	 else
+	    content = NULL;
+         if (content != NULL)
+	   {
 	   buflen = MAX_CSS_LENGTH;
-	   TtaGiveTextContent (el, CSSbuffer, &buflen, &lang);
+	   TtaGiveTextContent (content, CSSbuffer, &buflen, &lang);
 	   CSSbuffer[MAX_CSS_LENGTH] = EOS;
 	   url[0] = EOS;
 	   tempname[0] = EOS;
@@ -953,7 +966,7 @@ char                  *newURL;
 	   if (sStyle != NULL)
 	     {
 	       /* save this new style element string */
-	       TtaSetTextContent (el, sStyle, lang, SavingDocument);
+	       TtaSetTextContent (content, sStyle, lang, SavingDocument);
 
 	       /* current point in sStyle */
 	       stringStyle = sStyle;
@@ -1043,7 +1056,7 @@ char                  *newURL;
 					 pImage->status = IMAGE_MODIFIED;
 				       else
 					 pImage->status = IMAGE_NOT_LOADED;
-				       pImage->elImage = (struct _ElemImage *) el;
+				       pImage->elImage = (struct _ElemImage *) content;
 				     }
 				 }
 			       else
@@ -1055,6 +1068,10 @@ char                  *newURL;
 		 }
 	       TtaFreeMemory (sStyle);
 	     }
+	   }
+	 TtaNextSibling (&el);
+	 if (el)
+	    elType = TtaGetElementType (el);
 	 }
 
        max = sizeof (SRC_attr_tab) / sizeof (int);

@@ -1602,7 +1602,7 @@ char *closingTag;
 		      /* Replace new line by a space, except if an entity is
 			 being read */
 		      if (currentState == 20) 
-			charRead = (unsigned char) 138; /* Thot new line */
+			charRead = '\n'; /* new line */
 		      else
 			charRead = SPACE;
 		  }
@@ -1648,7 +1648,7 @@ char *closingTag;
 		}
 	      else if ((charRead < SPACE || (int) charRead >= 254 ||
 			((int) charRead >= 127 && (int) charRead <= 159))
-		       && (int) charRead != 9 && (int) charRead != 138)
+		       && (int) charRead != 9)
 		/* it's not a printable character, ignore it */
 		charRead = EOS;
 	      else

@@ -272,12 +272,7 @@ NotifyAttribute    *event;
 	      do
 		{
 		  while (*ptr2 != '}' && *ptr2 != EOS)
-		    {
-		      if (*ptr2 != '\212')
-			/* put a new line instead of a thot new-line in CSS string */
-			*ptr2 = '\12';
-		      ptr2++;
-		    }
+		    ptr2++;
 		  if (*ptr2 != EOS)
 		    ptr2++;
 		  /* cut here */

@@ -32,7 +32,7 @@ CONST
    C_Empty = ' ';
    C_Foot = ' ';
    C_Head = ' ';
-   C_BR   = '\212';
+   C_BR   = '\12';
 
 STRUCT
 
@@ -80,13 +80,16 @@ STRUCT
       ? ISINDEX (ATTR Prompt = Text) = CONSTANT C_Empty;	{ ISINDEX }
 		    { prompt }
       ? BASE;							{ BASE }
-      ? Styles							{ STYLE }
-		(ATTR Notation = Text; media = Text) = TEXT;
-		    { type             media }
+      ? Styles = LIST OF (STYLE_);
       ? Scripts = LIST OF (SCRIPT);
       ? Metas = LIST OF (META);
       ? Links = LIST OF (LINK);
 	END;
+
+  STYLE_							{ STYLE }
+     (ATTR Notation = Text; media = Text) =
+	 { type             media }
+	 TEXT;
 
   SCRIPT							{ SCRIPT }
      (ATTR charset = Text; !content_type = Text;
@@ -708,6 +711,7 @@ EXCEPT
 	Document_URL:	Hidden, NoSpellCheck;
 	C_Empty:	Hidden, NoSelect;
 	C_BR:		NoSelect;
+	Styles:		Hidden, NoSelect;
 	Scripts:	Hidden, NoSelect;
 	Metas:		Hidden, NoSelect;
 	Links:		Hidden, NoSelect;
@@ -734,6 +738,8 @@ EXCEPT
 	MAP:		IsDraw;
 	AREA:		MoveResize;
 	Preformatted:	ReturnCreateNL;
+	STYLE_:		ReturnCreateNL;
+	SCRIPT:		ReturnCreateNL;
 #ifdef GRAPHML
 	HTMLfragment:	NoMove, NoResize, Hidden, NoSelect;
 	XMLGraphics:    MoveResize, NoMove;
