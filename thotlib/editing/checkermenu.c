@@ -236,22 +236,26 @@ static LRESULT CALLBACK SpellCheckDlgProc (ThotWindow hwnDlg, UINT msg,
       break;      
       
     case WM_COMMAND:
-      if (LOWORD (wParam) == 1 && HIWORD (wParam) == LBN_SELCHANGE) {
-	itemIndex = SendMessage (hwnListWords, LB_GETCURSEL, 0, 0);
-	itemIndex = SendMessage (hwnListWords, LB_GETTEXT, itemIndex, (LPARAM) currentWord);
-	SetDlgItemText (hwnDlg, IDC_LANGEDIT, currentWord);
-      } else if (LOWORD (wParam) == 1 && HIWORD (wParam) == LBN_DBLCLK) {
-	if (LB_ERR == (itemIndex = SendMessage (hwnListWords, LB_GETCURSEL, 0, 0L)))
-	  break;
-	itemIndex = SendMessage (hwnListWords, LB_GETTEXT, itemIndex, (LPARAM) currentWord);
-	SetDlgItemText (hwnDlg, IDC_LANGEDIT, currentWord);
-	ThotCallback (SpellingBase + ChkrSelectProp, STRING_DATA, currentWord);
-	ThotCallback (SpellingBase + ChkrMenuOR, INTEGER_DATA, (char*) iLocation);
-	ThotCallback (SpellingBase + ChkrFormCorrect, INTEGER_DATA, (char*) 3);
-	if (iLocation == 3) {
-	  CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
-	  iLocation = 2;
-	}
+      if (LOWORD (wParam) == 1 && HIWORD (wParam) == LBN_SELCHANGE)
+	  {
+	  itemIndex = SendMessage (hwnListWords, LB_GETCURSEL, 0, 0);
+	  itemIndex = SendMessage (hwnListWords, LB_GETTEXT, itemIndex, (LPARAM) currentWord);
+	  SetDlgItemText (hwnDlg, IDC_LANGEDIT, currentWord);
+      }
+	  else if (LOWORD (wParam) == 1 && HIWORD (wParam) == LBN_DBLCLK)
+	  {
+	  if (LB_ERR == (itemIndex = SendMessage (hwnListWords, LB_GETCURSEL, 0, 0L)))
+	    break;
+	  itemIndex = SendMessage (hwnListWords, LB_GETTEXT, itemIndex, (LPARAM) currentWord);
+	  SetDlgItemText (hwnDlg, IDC_LANGEDIT, currentWord);
+	  ThotCallback (SpellingBase + ChkrSelectProp, STRING_DATA, currentWord);
+	  ThotCallback (SpellingBase + ChkrMenuOR, INTEGER_DATA, (char*) iLocation);
+	  ThotCallback (SpellingBase + ChkrFormCorrect, INTEGER_DATA, (char*) 3);
+	  if (iLocation == 3)
+	  {
+	    CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
+	    iLocation = 2;
+	  }
 	return 0;
       } 
       if (HIWORD (wParam) == EN_UPDATE)

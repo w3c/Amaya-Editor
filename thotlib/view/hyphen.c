@@ -23,14 +23,18 @@
 #define THOT_EXPORT extern
 #include "boxes_tv.h"
 
-static CHAR_T sepcar[] =
+static int sepchar[] =
 {
- TEXT(' '), TEXT('.'), TEXT(','), TEXT('`'), TEXT('\47'), TEXT('-'),
- TEXT(';'), TEXT(':'), TEXT('['), TEXT(']'), TEXT('('), TEXT(')'),
- TEXT('{'), TEXT('}'), TEXT('<'), TEXT('>'), TEXT('/'), TEXT('!'),
- TEXT('?'), TEXT('\n'), TEXT('\240'), TEXT('\241'), TEXT('\277'),
- TEXT('\253'), TEXT('\273'), TEXT('\212'), TEXT('"'), TEXT('\201'),
- TEXT('\202'), TEXT('\0')
+ /*TEXT(' '), TEXT('.'), TEXT(','), TEXT('`'), TEXT('\47'), TEXT('-')*/
+  32, 46, 44, 96, 39, 45,
+ /*TEXT(';'), TEXT(':'), TEXT('['), TEXT(']'), TEXT('('), TEXT(')')*/
+  59, 58, 91, 93, 40, 41,
+ /*TEXT('{'), TEXT('}'), TEXT('<'), TEXT('>'), TEXT('/'), TEXT('!')*/
+  123, 125, 60, 62, 47, 33,
+ /*TEXT('?'), TEXT('\n'), TEXT('\240'), TEXT('\241'), TEXT('\277'), TEXT('\253')*/
+  63, 10, 160, 161, 191, 171,
+ /*TEXT('\273'), TEXT('\212'), TEXT('"'), TEXT('\201'), TEXT('\202'), TEXT('\0')*/
+  187, 138, 34, 129, 130, 0
 };
 
 #include "font_f.h"
@@ -114,9 +118,9 @@ ThotBool IsSeparatorChar (CHAR_T c)
 {
    int              i;
    
-   for (i = 0; sepcar[i] != TEXT('\0'); i++)
+   for (i = 0; sepchar[i]; i++)
      {
-       if (c == sepcar[i])
+       if (c == sepchar[i])
 	 return (TRUE);
      }
    return (FALSE);
@@ -153,7 +157,7 @@ static int NextWord (SpecFont font, PtrTextBuffer *buffer, int *rank,
    /* La position du debut du mot */
    adbuff = *buffer;
    i = *rank;
-   /* A priori le debut du mot est correctement repere */
+   /* A priori le debuTEXT('\253'),t du mot est correctement repere */
    changedebut = FALSE;
 
    while (still)
