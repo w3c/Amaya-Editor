@@ -7,7 +7,7 @@
 #include "thot_sys.h"
 #include "JavaTypes.h"
 #include "JavaTypes_f.h"
-#include "w3c_amaya_HTTPRequest.h"
+#include "org_w3c_amaya_HTTPRequest.h"
 #include "content.h"
 
 #define AMAYA_JAVA
@@ -26,7 +26,7 @@
 extern char TempFileDirectory[];
 
 /*----------------------------------------------------------------------
-   w3c_amaya_HTTPRequest_Callback
+   org_w3c_amaya_HTTPRequest_Callback
    this function is called when an asynchronous Get is finished.
 
    It's just a gate to the actual C callback.
@@ -40,7 +40,7 @@ typedef void (*GetObjectWWWCCallback) (int doc, int status,
  * Callback for amaya/HTTPRequest
  */
 extern void
-w3c_amaya_HTTPRequest_Callback(struct Hw3c_amaya_HTTPRequest* request,
+org_w3c_amaya_HTTPRequest_Callback(struct Horg_w3c_amaya_HTTPRequest* request,
                            jlong callback_f, jlong callback_arg)
 {
     GetObjectWWWCCallback callback;
@@ -155,7 +155,7 @@ boolean             error_html;
 char               *content_type;
 #endif
 {
-    struct Hw3c_amaya_HTTPRequest* request;
+    struct Horg_w3c_amaya_HTTPRequest* request;
     static int req_nr = 0;
     struct Hjava_lang_String* urlName = NULL;
     struct Hjava_lang_String* postCmd = NULL;
@@ -188,13 +188,13 @@ char               *content_type;
 
     switch (mode) {
         case AMAYA_SYNC:
-	    type = w3c_amaya_HTTPRequest_GET_REQUEST;
+	    type = org_w3c_amaya_HTTPRequest_GET_REQUEST;
 	    break;
         case AMAYA_ASYNC:
-	    type = w3c_amaya_HTTPRequest_AGET_REQUEST;
+	    type = org_w3c_amaya_HTTPRequest_AGET_REQUEST;
 	    break;
 	case AMAYA_FORM_POST | AMAYA_SYNC:
-	    type = w3c_amaya_HTTPRequest_POST_REQUEST;
+	    type = org_w3c_amaya_HTTPRequest_POST_REQUEST;
 	    break;
 	default:
 	    fprintf(stderr,"GetObjectWWW : unsupported mode %d\n", mode);
@@ -207,9 +207,9 @@ char               *content_type;
      */
     JavaThotlibRelease();
 
-    request = (struct Hw3c_amaya_HTTPRequest*)
-              do_execute_java_class_method("w3c.amaya.HTTPRequest",
-                "newHTTPRequest", "(I)Lw3c/amaya/HTTPRequest;", type);
+    request = (struct Horg_w3c_amaya_HTTPRequest*)
+              do_execute_java_class_method("org.w3c.amaya.HTTPRequest",
+                "newHTTPRequest", "(I)Lorg/w3c/amaya/HTTPRequest;", type);
 
     if (mode == AMAYA_ASYNC) {
 	Set_HTTPRequest_Ptr_callback_f(terminate, request);
@@ -323,7 +323,7 @@ void               *context_tcbf;
 
 #endif
 {
-    struct Hw3c_amaya_HTTPRequest* request;
+    struct Horg_w3c_amaya_HTTPRequest* request;
     struct Hjava_lang_String* urlName = NULL;
     struct Hjava_lang_String* filename = NULL;
     struct Hjava_lang_String* mimetype = NULL;
@@ -377,7 +377,7 @@ void               *context_tcbf;
      */
     switch (mode) {
         case AMAYA_SYNC:
-	    type = w3c_amaya_HTTPRequest_PUT_REQUEST;
+	    type = org_w3c_amaya_HTTPRequest_PUT_REQUEST;
 	    break;
 	default:
 	    fprintf(stderr,"PutObjectWWW : unsupported mode %d\n", mode);
@@ -385,9 +385,9 @@ void               *context_tcbf;
     }
     JavaThotlibRelease();
 
-    request = (struct Hw3c_amaya_HTTPRequest*)
-              do_execute_java_class_method("w3c.amaya.HTTPRequest",
-                "newHTTPRequest", "(I)Lw3c/amaya/HTTPRequest;", type);
+    request = (struct Horg_w3c_amaya_HTTPRequest*)
+              do_execute_java_class_method("org.w3c.amaya.HTTPRequest",
+                "newHTTPRequest", "(I)Lorg/w3c/amaya/HTTPRequest;", type);
 
     Set_HTTPRequest_Int_doc(doc, request);
     Set_HTTPRequest_Str_urlName(urlName, request);
@@ -436,7 +436,7 @@ int                 doc;
 #endif
 {
     JavaThotlibRelease();
-    do_execute_java_class_method("w3c/amaya/HTTPRequest", "Stop", "(I)V",
+    do_execute_java_class_method("org/w3c/amaya/HTTPRequest", "Stop", "(I)V",
                                  (jint) doc);
     JavaThotlibLock();
 }
@@ -452,7 +452,7 @@ int                 doc;
 #endif
 {
     JavaThotlibRelease();
-    do_execute_java_class_method("w3c/amaya/HTTPAccess", "handleLinkHeaders",
+    do_execute_java_class_method("org/w3c/amaya/HTTPAccess", "handleLinkHeaders",
                                  "(I)V", (jint) doc);
     JavaThotlibLock();
 }
