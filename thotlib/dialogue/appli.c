@@ -522,6 +522,7 @@ void WIN_ChangeViewSize (int frame, int width, int height, int top_delta,
  		0, width,
  		height);
    RebuildConcreteImage (frame);
+   GL_Swap (frame);
      }
    
 #endif/*_GL*/
@@ -1909,7 +1910,7 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
       if (mMsg == WM_DESTROY)
 	PostQuitMessage (0);
       return 0L;
-        
+
     case WM_SIZE:
       cx = LOWORD (lParam);
       cy = HIWORD (lParam);
@@ -2251,12 +2252,16 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
       /* Mouse move inside client area*/
       return 0;
 
+#ifdef _GL
+	case WM_ERASEBKGND:
+		/*Make sure Win32 doesn't draw in our buffer...*/
+		return TRUE;
+#endif /*_GL*/
+
     default:
       break;
     }
-#ifdef _GL
-  GL_DrawAll ();
-#endif /*GL*/
+
   return (DefWindowProc (hwnd, mMsg, wParam, lParam));
 }
 #else /* _WINDOWS */

@@ -425,6 +425,244 @@ void init_pfd ()
 
 }
 
+int ChoosePixelFormatWithout (HDC hdc, const PIXELFORMATDESCRIPTOR* ppfd,
+DWORD dwRemove)
+{
+ PIXELFORMATDESCRIPTOR pfd;
+ BOOL bSuccess;
+ int nPixelIndex = 0, nBestPixelIndex = -1, nBestNotMatchedFlag =
+0x7FFFFFFF, nNotMatchedFlag;
+ const int
+  nPixelTypeFailed = 0x40000000,   // 1 bit reserved
+  nAccelTypeBad  = 0x10000000,   // 2 bits reserved
+  nColorBitsFailed = 0x00800000,   // 5 bits reserved
+  nStencilBitsFailed = 0x00040000,   // 5 bits reserved
+  nDepthBitsFailed = 0x00002000,   // 5 bits reserved
+  nAlphaBitsFailed = 0x00000400,   // 3 bits reserved
+  nAccumBitsFailed = 0x00000010,   // 6 bits reserved
+  nAuxBuffersFailed = 0x00000002,   // 3 bits reserved
+  nLayerTypeFailed = 0x00000001;   // 1 bit reserved
+ // Check for correct initialization
+ if (ppfd->nSize != sizeof(PIXELFORMATDESCRIPTOR) || ppfd->nVersion != 1)
+ {
+  SetLastError(ERROR_SUCCESS);
+  return 0;
+ }
+ // Iterate over all availible pixel formats
+ while ((bSuccess = DescribePixelFormat(hdc, ++nPixelIndex,
+    sizeof(PIXELFORMATDESCRIPTOR), &pfd)) != FALSE)
+ {
+  // take only pixel formats into account which satisfy the flags requested/not requested
+  
+  if (!(ppfd->dwFlags & PFD_DOUBLEBUFFER_DONTCARE))
+  {
+   if ((ppfd->dwFlags & PFD_DOUBLEBUFFER) && !(pfd.dwFlags &
+PFD_DOUBLEBUFFER))
+    continue;
+   else if ((dwRemove & PFD_DOUBLEBUFFER) && (pfd.dwFlags &
+PFD_DOUBLEBUFFER))
+    continue;
+  }
+  
+  if (!(ppfd->dwFlags & PFD_STEREO_DONTCARE))
+  {
+   if ((ppfd->dwFlags & PFD_STEREO) && !(pfd.dwFlags & PFD_STEREO))
+    continue;
+   else if ((dwRemove & PFD_STEREO) && (pfd.dwFlags & PFD_STEREO))
+    continue;
+  }
+  
+  if ((ppfd->dwFlags & PFD_DRAW_TO_WINDOW) && !(pfd.dwFlags &
+PFD_DRAW_TO_WINDOW))
+   continue;
+  else if ((dwRemove & PFD_DRAW_TO_WINDOW) && (pfd.dwFlags &
+PFD_DRAW_TO_WINDOW))
+   continue;
+  
+  if ((ppfd->dwFlags & PFD_DRAW_TO_BITMAP) && !(pfd.dwFlags &
+PFD_DRAW_TO_BITMAP))
+   continue;
+  else if ((dwRemove & PFD_DRAW_TO_BITMAP) && (pfd.dwFlags &
+PFD_DRAW_TO_BITMAP))
+   continue;
+  
+  if ((ppfd->dwFlags & PFD_SUPPORT_GDI) && !(pfd.dwFlags & PFD_SUPPORT_GDI))
+   continue;
+  else if ((dwRemove & PFD_SUPPORT_GDI) && (pfd.dwFlags & PFD_SUPPORT_GDI))
+   continue;
+  
+  if ((ppfd->dwFlags & PFD_SUPPORT_OPENGL) && !(pfd.dwFlags &
+PFD_SUPPORT_OPENGL))
+   continue;
+  else if ((dwRemove & PFD_SUPPORT_OPENGL) && (pfd.dwFlags &
+PFD_SUPPORT_OPENGL))
+   continue;
+  
+  if ((ppfd->dwFlags & PFD_GENERIC_FORMAT) && !(pfd.dwFlags &
+PFD_GENERIC_FORMAT))
+   continue;
+  else if ((dwRemove & PFD_GENERIC_FORMAT) && (pfd.dwFlags &
+PFD_GENERIC_FORMAT))
+   continue;
+  
+  if ((ppfd->dwFlags & PFD_NEED_PALETTE) && !(pfd.dwFlags &
+PFD_NEED_PALETTE))
+   continue;
+  else if ((dwRemove & PFD_NEED_PALETTE) && (pfd.dwFlags &
+PFD_NEED_PALETTE))
+   continue;
+  
+  if ((ppfd->dwFlags & PFD_NEED_SYSTEM_PALETTE) && !(pfd.dwFlags &
+PFD_NEED_SYSTEM_PALETTE))
+   continue;
+  else if ((dwRemove & PFD_NEED_SYSTEM_PALETTE) && (pfd.dwFlags &
+PFD_NEED_SYSTEM_PALETTE))
+   continue;
+  
+  if ((ppfd->dwFlags & PFD_SWAP_EXCHANGE) && !(pfd.dwFlags &
+PFD_SWAP_EXCHANGE))
+   continue;
+  else if ((dwRemove & PFD_SWAP_EXCHANGE) && (pfd.dwFlags &
+PFD_SWAP_EXCHANGE))
+   continue;
+  
+  if ((ppfd->dwFlags & PFD_SWAP_COPY) && !(pfd.dwFlags & PFD_SWAP_COPY))
+   continue;
+  else if ((dwRemove & PFD_SWAP_COPY) && (pfd.dwFlags & PFD_SWAP_COPY))
+   continue;
+ 
+  if ((ppfd->dwFlags & PFD_SWAP_LAYER_BUFFERS) && !(pfd.dwFlags &
+PFD_SWAP_LAYER_BUFFERS))
+   continue;
+  else if ((dwRemove & PFD_SWAP_LAYER_BUFFERS) && (pfd.dwFlags &
+PFD_SWAP_LAYER_BUFFERS))
+   continue;
+  
+  if ((ppfd->dwFlags & PFD_GENERIC_ACCELERATED) && !(pfd.dwFlags &
+PFD_GENERIC_ACCELERATED))
+   continue;
+  else if ((dwRemove & PFD_GENERIC_ACCELERATED) && (pfd.dwFlags &
+PFD_GENERIC_ACCELERATED))
+   continue;
+  
+  if ((ppfd->dwFlags & PFD_SUPPORT_DIRECTDRAW) && !(pfd.dwFlags &
+PFD_SUPPORT_DIRECTDRAW))
+   continue;
+  else if ((dwRemove & PFD_SUPPORT_DIRECTDRAW) && (pfd.dwFlags &
+PFD_SUPPORT_DIRECTDRAW))
+   continue;
+  // evaluate the other properties
+  nNotMatchedFlag = 0;
+  if (ppfd->iPixelType != pfd.iPixelType)
+   nNotMatchedFlag |= nPixelTypeFailed;
+  // ICD allowed, ...
+  if (!(ppfd->dwFlags & PFD_GENERIC_FORMAT))
+  {
+   // ... but ICD not obtained
+   if (pfd.dwFlags & PFD_GENERIC_FORMAT)
+   {
+    // Software obtained
+    if ((pfd.dwFlags & PFD_GENERIC_FORMAT) && !(pfd.dwFlags &
+PFD_GENERIC_ACCELERATED))
+    {
+     nNotMatchedFlag |= nAccelTypeBad * 2;
+    }
+    // MCD obtained
+    else if ((pfd.dwFlags & PFD_GENERIC_FORMAT) && (pfd.dwFlags &
+PFD_GENERIC_ACCELERATED))
+    {
+     nNotMatchedFlag |= nAccelTypeBad;
+    }
+   }
+  }
+  // ICD not allowed, but MCD allowed, ...
+  else if (!(dwRemove & PFD_GENERIC_ACCELERATED))
+  {
+   // ... but MCD not obtained
+   if (!(pfd.dwFlags & PFD_GENERIC_FORMAT) ||
+    !(pfd.dwFlags & PFD_GENERIC_ACCELERATED))
+   {
+    // ICD obtained
+    if (!(pfd.dwFlags & PFD_GENERIC_FORMAT))
+    {
+     nNotMatchedFlag |= nAccelTypeBad * 2;
+    }
+    // Software obtained
+    else if ((pfd.dwFlags & PFD_GENERIC_FORMAT) && !(pfd.dwFlags &
+PFD_GENERIC_ACCELERATED))
+    {
+     nNotMatchedFlag |= nAccelTypeBad;
+    }
+   }
+  }
+  // ICD not allowed and MCD not allowed, ...
+  else
+  {
+   // ... but Software not obtained
+   if ((!(pfd.dwFlags & PFD_GENERIC_FORMAT) ||
+    (pfd.dwFlags & PFD_GENERIC_ACCELERATED)))
+   {
+    // ICD obtained
+    if (!(pfd.dwFlags & PFD_GENERIC_FORMAT))
+    {
+     nNotMatchedFlag |= nAccelTypeBad * 2;
+    }
+    // MCD obtained
+    else if ((pfd.dwFlags & PFD_GENERIC_FORMAT) && (pfd.dwFlags &
+PFD_GENERIC_ACCELERATED))
+    {
+     nNotMatchedFlag |= nAccelTypeBad;
+    }
+   }
+  }
+  if (ppfd->cColorBits < pfd.cColorBits)
+   nNotMatchedFlag |= nColorBitsFailed * (32-pfd.cColorBits);
+  else if (ppfd->cColorBits > pfd.cColorBits)
+   nNotMatchedFlag |= nColorBitsFailed * (32-pfd.cColorBits-1);
+  if (ppfd->cAlphaBits < pfd.cAlphaBits)
+   nNotMatchedFlag |= nAlphaBitsFailed * (8-pfd.cAlphaBits);
+  else if (ppfd->cAlphaBits > pfd.cAlphaBits)
+   nNotMatchedFlag |= nAlphaBitsFailed * (8-pfd.cAlphaBits-1);
+  if (ppfd->cAccumBits < pfd.cAccumBits)
+   nNotMatchedFlag |= nAccumBitsFailed * (64-pfd.cAccumBits);
+  else if (ppfd->cAccumBits > pfd.cAccumBits)
+   nNotMatchedFlag |= nAccumBitsFailed * (64-pfd.cAccumBits-1);
+  if (ppfd->cDepthBits < pfd.cDepthBits)
+   nNotMatchedFlag |= nDepthBitsFailed * (32-pfd.cDepthBits);
+  else if (ppfd->cDepthBits > pfd.cDepthBits)
+   nNotMatchedFlag |= nDepthBitsFailed * (32-pfd.cDepthBits-1);
+  if (ppfd->cStencilBits < pfd.cStencilBits)
+   nNotMatchedFlag |= nStencilBitsFailed * (32-pfd.cStencilBits);
+  else if (ppfd->cStencilBits > pfd.cStencilBits)
+   nNotMatchedFlag |= nStencilBitsFailed * (32-pfd.cStencilBits-1);
+  if (ppfd->cAuxBuffers < pfd.cAuxBuffers)
+   nNotMatchedFlag |= nAuxBuffersFailed * (8-pfd.cAuxBuffers);
+  else if (ppfd->cAuxBuffers > pfd.cAuxBuffers)
+   nNotMatchedFlag |= nAuxBuffersFailed * (8-pfd.cAuxBuffers-1);
+  if (ppfd->iLayerType != pfd.iLayerType)
+   nNotMatchedFlag |= nLayerTypeFailed;
+  // choose the one with the best evaluation result
+  if (nNotMatchedFlag < nBestNotMatchedFlag)
+  {
+   nBestPixelIndex = nPixelIndex;
+   nBestNotMatchedFlag = nNotMatchedFlag;
+  }
+ }
+ if (nBestPixelIndex == -1)
+ {
+  // no appropriate pixel format found, so let the API retry it
+  return ChoosePixelFormat(hdc, ppfd);
+ }
+ else
+ {
+  // check for correct color depth
+  DescribePixelFormat(hdc, nBestPixelIndex, sizeof(PIXELFORMATDESCRIPTOR), &pfd);
+  if (pfd.cColorBits != GetDeviceCaps(hdc, PLANES) * GetDeviceCaps(hdc, BITSPIXEL))
+   printf ("Warning: The requested pixel format does not satisfy the color depth of the device context.\n");
+  // one based
+  return nBestPixelIndex;
+ }
+}
 /*----------------------------------------------------------------------
   GL_SetupPixelFormat : Sets up opengl buffers pixel format.
   Double Buffer, RGBA (32 bits), 
@@ -438,11 +676,11 @@ static void GL_SetupPixelFormat (HDC hDC)
     {
       sizeof(PIXELFORMATDESCRIPTOR),  /* size */
       1,                              /* version */
-      PFD_DRAW_TO_WINDOW |			/* Format Must Support Window*/
-      PFD_SUPPORT_OPENGL |			/* Format Must Support OpenGL*/
+      PFD_DRAW_TO_WINDOW |			  /* Format Must Support Window*/
+      PFD_SUPPORT_OPENGL |			   /* Format Must Support OpenGL*/
       PFD_DOUBLEBUFFER   |            /* support double-buffering */
-      PFD_DEPTH_DONTCARE |            /* If Depth is obligated by hardware*/
-      PFD_GENERIC_ACCELERATED,        /* We try to get hardware here */       
+      PFD_DEPTH_DONTCARE |               /* If Depth is obligated by hardware*/
+      PFD_GENERIC_ACCELERATED ,      /* We try to get hardware here => PFD_GENERIC_ACCELERATED*/       
       PFD_TYPE_RGBA,                  /* color type */
       24,                             /* prefered color depth */
       0, 0, 0, 0, 0, 0,               /* color bits (ignored) */
@@ -451,29 +689,14 @@ static void GL_SetupPixelFormat (HDC hDC)
       0,                              /* no accumulation buffer */
       0, 0, 0, 0,                     /* accum bits (ignored) */
       0,                              /* depth buffer */
-      0,                              /* no stencil buffer */
+      1,                              /* no stencil buffer */
       0,                              /* no auxiliary buffers */
       PFD_MAIN_PLANE,                 /* main layer */
       0,                              /* reserved */
       0, 0, 0,                        /* no layer, visible, damage masks */
     };
-  int pixelFormat;
+  int pixelFormat;	
 
-  /*
-    ----Switch to software opengl----
-    bool bSupportsgeneric_format = (pfd->dwFlags & PFD_GENERIC_FORMAT) ==
-    PFD_GENERIC_FORMAT;
-    bool bSupportsgeneric_accelerated = (pfd->dwFlags &
-    PFD_GENERIC_ACCELERATED) == PFD_GENERIC_ACCELERATED;
-    
-    bool bAccelerated = false;
-    
-    if(( bSupportsgeneric_format && bSupportsgeneric_accelerated ) ||
-    (!bSupportsgeneric_format && !bSupportsgeneric_accelerated)  )
-    {
-    bAccelerated = true;
-    }
-  */
   pixelFormat = ChoosePixelFormat (hDC, &pfd);
   if (pixelFormat == 0) 
     {
@@ -489,6 +712,12 @@ static void GL_SetupPixelFormat (HDC hDC)
       exit(1);
     }
 
+  if ((pfd.dwFlags & PFD_GENERIC_ACCELERATED) != 0)
+    Software_Mode = FALSE;/*MCD mini client driver*/
+  else if ((pfd.dwFlags & PFD_GENERIC_FORMAT) != 0)
+    Software_Mode = TRUE;/*software opengl*/
+  else
+    Software_Mode = FALSE;/*ICD installable client driver*/
 }
 
 /*----------------------------------------------------------------------
@@ -1785,7 +2014,7 @@ void GL_Swap (int frame)
 	}
 #endif /*_WINDOWS*/
       glEnable (GL_SCISSOR_TEST); 
-    }
+	  }
 }
 
 /*----------------------------------------------------------------------
@@ -1793,7 +2022,6 @@ void GL_Swap (int frame)
   ----------------------------------------------------------------------*/
 ThotBool GL_prepare (int frame)
 {  
-
   if (frame < MAX_FRAME && NotFeedBackMode)
     {
 #ifdef _TESTSWAP
@@ -2007,8 +2235,10 @@ ThotBool GL_DrawAll ()
       FrameUpdating = TRUE;     
       if (!frame_animating)
 	{	
+#ifdef _GTK
 	 while (gtk_events_pending ())
 	   gtk_main_iteration ();
+#endif /*_GTK*/
 	  
 	  frame_animating = TRUE; 
 	  for (frame = 0 ; frame < MAX_FRAME; frame++)

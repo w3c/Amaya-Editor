@@ -649,12 +649,9 @@ void FreeAllPicCache ()
 void FreeAllPicCacheFromFrame (int frame)
 {
 #ifdef _GL
+#ifdef _NOSHARELIST
   Pic_Cache *Cache = PicCache;
   Pic_Cache *Before;
-
-#ifdef _NOSHARELIST
-  return ;
-#else /* _NOSHARELIST */
 
  Before = NULL;  
  while (Cache)
@@ -685,6 +682,8 @@ void FreeAllPicCacheFromFrame (int frame)
 	 Cache = Cache->next;
        }     
    }
+#else /* _NOSHARELIST */
+  return;
 #endif /* _NOSHARELIST */
 #endif /* _GL */
 }
