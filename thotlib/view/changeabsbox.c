@@ -1895,8 +1895,8 @@ void CreateNewAbsBoxes (PtrElement pEl, PtrDocument pDoc, int viewNb)
 void DestroyAbsBoxesView (PtrElement pEl, PtrDocument pDoc, ThotBool verify,
 			  int view)
 {
-  PtrAbstractBox      pAb, pAbbReDisp, pAbbR, pAbb, pElAscent, PcFirst;
-  PtrAbstractBox      pAbbox1, PcLast;
+  PtrAbstractBox      pAb, pAbbReDisp, pAbbR, pAbb, pElAscent;
+  PtrAbstractBox      PcFirst, PcLast, pNext;
   PtrElement          pElChild;
 
   pAb = pEl->ElAbstractBox[view - 1];
@@ -1969,9 +1969,10 @@ void DestroyAbsBoxesView (PtrElement pEl, PtrDocument pDoc, ThotBool verify,
 	    }
 	  if (pAb->AbNew)
 	    {
-	      pAbbox1 = pAb;
+	      /* free this abstract box */
+	      pNext = pAb->AbNext;
 	      FreeAbView (pAb, pDoc->DocViewFrame[view - 1]);
-	      pAb = pAbbox1;
+	      pAb = pNext;
 	    }
 	  else
 	    {
@@ -1986,12 +1987,11 @@ void DestroyAbsBoxesView (PtrElement pEl, PtrDocument pDoc, ThotBool verify,
 	    }
 	  if (pAb != NULL)
 	    {
-	      pAbbox1 = pAb;
-	      if (pAbbox1->AbElement != pEl)
+	      if (pAb->AbElement != pEl)
 		/* il s'agit d'un autre element, on arrete */
 		pAb = NULL;
-	      else if (pAbbox1->AbElement->ElTerminal
-		       && pAbbox1->AbElement->ElLeafType == LtPageColBreak)
+	      else if (pAb->AbElement->ElTerminal
+		       && pAb->AbElement->ElLeafType == LtPageColBreak)
 		/* c'est un pave de haut ou bas de page, on n'en */
 		/* traite qu'un */
 		pAb = NULL;
@@ -2074,7 +2074,6 @@ void RedispRef (PtrReference pRef, PtrAbstractBox pAb, PtrDocument pDocRef)
    PtrPSchema          pSPR;
    PtrAttribute        pAttr;
    PtrPRule            pRe1;
-   PtrAbstractBox      pAbbox1;
    int                 v, frame, j, h;
    ThotBool            complete;
 
@@ -2133,11 +2132,10 @@ void RedispRef (PtrReference pRef, PtrAbstractBox pAb, PtrDocument pDocRef)
 				 found = TRUE;
 			      else
 				{
-				   pAbbox1 = pAb;
 				   if (pRe1->PrNPresBoxes == 0)
-				      found = (strcmp (pRe1->PrPresBoxName, pAbbox1->AbPSchema->PsPresentBox->PresBox[pAbbox1->AbTypeNum - 1]->PbName) == 0);
+				      found = (strcmp (pRe1->PrPresBoxName, pAb->AbPSchema->PsPresentBox->PresBox[pAb->AbTypeNum - 1]->PbName) == 0);
 				   else
-				      found = pRe1->PrPresBox[0] == pAbbox1->AbTypeNum;
+				      found = pRe1->PrPresBox[0] == pAb->AbTypeNum;
 				}
 			     }
 			   if (!found)
@@ -2225,39 +2223,37 @@ void RedispAllReferences (PtrAbstractBox pAb, PtrDocument pDoc)
 }
 
 /*----------------------------------------------------------------------
-   SearchAbsBoxBackward                                                           
+  SearchAbsBoxBackward                
   ----------------------------------------------------------------------*/
-static PtrAbstractBox SearchAbsBoxBackward (PtrAbstractBox pAbb1,
+static PtrAbstractBox SearchAbsBoxBackward (PtrAbstractBox pAb,
 					    ThotBool Test, PtrSSchema pSchStr,
 					    PtrPSchema pSchP, int Typ,
 					    ThotBool Pres)
 {
    PtrAbstractBox      p, s;
-   PtrAbstractBox      pAbbox1;
 
    p = NULL;
    if (Test)
      {
-	pAbbox1 = pAbb1;
 	if (Pres)
 	  {
-	     if (pAbbox1->AbPresentationBox && pAbbox1->AbTypeNum == Typ)
+	     if (pAb->AbPresentationBox && pAb->AbTypeNum == Typ)
 	       {
-		  if (pAbbox1->AbPSchema == pSchP)
-		     p = pAbb1;
+		  if (pAb->AbPSchema == pSchP)
+		     p = pAb;
 		  /* found ! C'est le pave lui-meme */
 	       }
 	  }
-	else if (!pAbbox1->AbPresentationBox
-		 && pAbbox1->AbElement->ElTypeNumber == Typ
+	else if (!pAb->AbPresentationBox
+		 && pAb->AbElement->ElTypeNumber == Typ
 		 && (pSchStr == NULL
-		     || pAbbox1->AbElement->ElStructSchema == pSchStr))
-	   p = pAbb1;
+		     || pAb->AbElement->ElStructSchema == pSchStr))
+	   p = pAb;
      }
    if (p == NULL)
       /* on cherche parmi les fils du pave */
      {
-	s = pAbb1->AbFirstEnclosed;
+	s = pAb->AbFirstEnclosed;
 	while (s != NULL && p == NULL)
 	  {
 	     p = SearchAbsBoxBackward (s, TRUE, pSchStr, pSchP, Typ, Pres);
@@ -2283,7 +2279,6 @@ PtrAbstractBox AbsBoxFromElOrPres (PtrAbstractBox pAb, ThotBool pres,
 {
    PtrAbstractBox      pAbbResult, pAbbForward, pAbbAscent;
    ThotBool            stop;
-   PtrAbstractBox      pAbbox1;
 
    pAbbResult = NULL;
    if (pAb != NULL)
@@ -2319,20 +2314,19 @@ PtrAbstractBox AbsBoxFromElOrPres (PtrAbstractBox pAb, ThotBool pres,
 		       pAbbAscent = pAbbAscent->AbNext;
 		       if (pAbbAscent != NULL)
 			 {
-			    pAbbox1 = pAbbAscent;
 			    if (pres)
 			      {
-				 if (pAbbox1->AbPresentationBox && pAbbox1->AbTypeNum == typeElOrPres)
+				 if (pAbbAscent->AbPresentationBox && pAbbAscent->AbTypeNum == typeElOrPres)
 				   {
-				      if (pAbbox1->AbPSchema == pSchP)
+				      if (pAbbAscent->AbPSchema == pSchP)
 					 pAbbResult = pAbbAscent;
 				      /* trouve */
 				   }
 			      }
-			    else if (!pAbbox1->AbPresentationBox
-				     && pAbbox1->AbElement->ElTypeNumber == typeElOrPres
+			    else if (!pAbbAscent->AbPresentationBox
+				     && pAbbAscent->AbElement->ElTypeNumber == typeElOrPres
 				     && (pSchStr == NULL
-					 || pAbbox1->AbElement->ElStructSchema == pSchStr))
+					 || pAbbAscent->AbElement->ElStructSchema == pSchStr))
 			       pAbbResult = pAbbAscent;
 			    /* trouve */
 			    if (pAbbResult == NULL)
@@ -2430,16 +2424,14 @@ static void ComputeContent (int boxType, int nv, PtrDocument pDoc,
 {
   PtrAbstractBox      pAb;
   int                 frame, h;
-  PtrAbstractBox      pAbbox1;
 
   FindFirstAbsBox (pElBegin, nv);
   pAb = pAbbBegin[nv - 1];
   while (pAb != NULL)
     {
-      pAbbox1 = pAb;
-      if (pAbbox1->AbPresentationBox &&
-	  pAbbox1->AbTypeNum == boxType &&
-	  pAbbox1->AbPSchema == pSchP)
+      if (pAb->AbPresentationBox &&
+	  pAb->AbTypeNum == boxType &&
+	  pAb->AbPSchema == pSchP)
 	/* fait reafficher le pave de presentation si le contenu a */
 	/* change' */
 	if (NewVariable (pSchP->PsPresentBox->PresBox[boxType - 1]->PbContVariable,
@@ -2447,7 +2439,7 @@ static void ComputeContent (int boxType, int nv, PtrDocument pDoc,
 	  /* et si le pave a deja ete traite' par le mediateur */
 	  if (!pAb->AbNew)
 	    {
-	      pAbbox1->AbChange = TRUE;
+	      pAb->AbChange = TRUE;
 	      frame = pDoc->DocViewFrame[nv - 1];
 	      h = PageHeight;
 	      ChangeConcreteImage (frame, &h, pAb);
@@ -2479,7 +2471,6 @@ static void ComputeCrPresBoxes (int boxType, int nv, PtrPSchema pSchP,
    PtrSSchema          pSSR;
    PtrAttribute        pAttr;
    int                 viewSch;
-   PtrAbstractBox      pAbbox1;
    PtrPRule            pRe1;
    int                 presNum;
 
@@ -2489,10 +2480,9 @@ static void ComputeCrPresBoxes (int boxType, int nv, PtrPSchema pSchP,
    viewSch = pDoc->DocView[nv - 1].DvPSchemaView;
    while (pAb != NULL)
      {
-	pAbbox1 = pAb;
-	if (pAbbox1->AbPresentationBox && !pAb->AbDead
-	    && pAbbox1->AbTypeNum == boxType
-	    && pAbbox1->AbPSchema == pSchP)
+	if (pAb->AbPresentationBox && !pAb->AbDead
+	    && pAb->AbTypeNum == boxType
+	    && pAb->AbPSchema == pSchP)
 	   /* cherche la regle de l'element createur, regle qui cree */
 	   /* cette boite */
 	  {
@@ -2501,9 +2491,9 @@ static void ComputeCrPresBoxes (int boxType, int nv, PtrPSchema pSchP,
 	     /* cas ou le createur est lui-meme un pave de presentation */
 	     /* identifie par le fait que le pere est un pave de pres */
 	     /* en effet les paves de pres ne peuvent creer que des fils */
-	     if (pAbbox1->AbEnclosing->AbPresentationBox)
-		presNum = pAbbox1->AbEnclosing->AbTypeNum;
-	     pRCre = GlobalSearchRulepEl (pAbbox1->AbElement, pDoc, &pSPR, &pSSR, presNum, NULL,
+	     if (pAb->AbEnclosing->AbPresentationBox)
+		presNum = pAb->AbEnclosing->AbTypeNum;
+	     pRCre = GlobalSearchRulepEl (pAb->AbElement, pDoc, &pSPR, &pSSR, presNum, NULL,
 				  viewSch, PtFunction, FnAny, TRUE, FALSE, &pAttr);
 	     stop = FALSE;
 	     do
@@ -2582,172 +2572,169 @@ static void ComputeCreation (int boxType, ThotBool presBox, int counter,
 {
    PtrAbstractBox      pAb, pAbb, pAbbNext;
    PtrElement          pEl;
-   int                 frame, h;
    ThotBool            stop, isCreated, depend, boxok, page;
    PtrPRule            pRCre;
    PtrPSchema          pSPR, pSchPOrig;
    PtrSSchema          pSSR;
    PtrAttribute        pAttr;
-   int                 viewSch;
-   PtrAbstractBox      pAbbox1;
    PtrPRule            pRe1;
    PtrCondition        pCond;
+   int                 frame, h;
+   int                 viewSch;
    int                 presNum;
 
    FindFirstAbsBox (pElBegin, nv);
    pAb = pAbbBegin[nv - 1];
    viewSch = pDoc->DocView[nv - 1].DvPSchemaView;
    page = FALSE;
-   if (presBox)
-      if (pSchP->PsPresentBox->PresBox[boxType - 1]->PbPageBox)
-	 /* c'est une boite page */
-	 page = TRUE;
+   if (presBox && pSchP->PsPresentBox->PresBox[boxType - 1]->PbPageBox)
+     /* c'est une boite page */
+     page = TRUE;
    while (pAb != NULL)
      {
-	     boxok = FALSE;
-	     pAbbox1 = pAb;
-	     if (pAbbox1->AbPresentationBox == presBox
-		 && pAbbox1->AbTypeNum == boxType
-		 && pAbbox1->AbPSchema == pSchP)
-		boxok = TRUE;
-	     else if (presBox)
-		if (pSchP->PsPresentBox->PresBox[boxType - 1]->PbPageBox)
-		   if (pAbbox1->AbElement->ElTerminal
-		       && pAbbox1->AbElement->ElLeafType == LtPageColBreak
-		       && pAbbox1->AbLeafType == LtCompound)
-		      /* c'est un element Marque de page */
-		      /* mais pas un pave de colonne */
-		     {
-			/*attention GetPageBoxType est susceptible de modifier pSchP 
-			   il faut donc prendre des precautions */
-			pSchPOrig = pSchP;
-			if (boxType == GetPageBoxType (pAbbox1->AbElement, pDoc, viewSch, &pSchPOrig)
-			    && pSchPOrig == pSchP)
-			   /* c'est bien ce type de boite page */
-			   boxok = TRUE;
-		     }
-
-	     if (boxok)
-		/* cherche toutes les regles de creation de cette boite */
+       boxok = FALSE;
+       if (pAb->AbPresentationBox == presBox
+	   && pAb->AbTypeNum == boxType
+	   && pAb->AbPSchema == pSchP)
+	 boxok = TRUE;
+       else if (presBox)
+	 if (pSchP->PsPresentBox->PresBox[boxType - 1]->PbPageBox)
+	   if (pAb->AbElement->ElTerminal
+	       && pAb->AbElement->ElLeafType == LtPageColBreak
+	       && pAb->AbLeafType == LtCompound)
+	     /* c'est un element Marque de page */
+	     /* mais pas un pave de colonne */
+	     {
+	       /*attention GetPageBoxType est susceptible de modifier pSchP 
+		 il faut donc prendre des precautions */
+	       pSchPOrig = pSchP;
+	       if (boxType == GetPageBoxType (pAb->AbElement, pDoc, viewSch, &pSchPOrig)
+		   && pSchPOrig == pSchP)
+		 /* c'est bien ce type de boite page */
+		 boxok = TRUE;
+	     }
+       
+       if (boxok)
+	 /* cherche toutes les regles de creation de cette boite */
+	 {
+	   presNum = 0;	/* a priori pAb n'est pas une boite de presentation */
+	   if (pAb->AbPresentationBox)
+	     presNum = boxType;
+	   pRCre = GlobalSearchRulepEl (pAb->AbElement, pDoc, &pSPR, &pSSR, presNum, NULL,
+					viewSch, PtFunction, FnAny, TRUE, FALSE, &pAttr);
+	   stop = FALSE;
+	   do
+	     if (pRCre == NULL)
+	       /* il n' y a plus de regles */
+	       stop = TRUE;
+	     else if (pRCre->PrType != PtFunction)
+	       /* il n'y a plus de regle fonction de presentation */
+	       stop = TRUE;
+	     else
+	       /* la regle est une fonction de presentation */
 	       {
-		  presNum = 0;	/* a priori pAb n'est pas une boite de presentation */
-		  if (pAb->AbPresentationBox)
-		     presNum = boxType;
-		  pRCre = GlobalSearchRulepEl (pAb->AbElement, pDoc, &pSPR, &pSSR, presNum, NULL,
-				  viewSch, PtFunction, FnAny, TRUE, FALSE, &pAttr);
-		  stop = FALSE;
-		  do
-		     if (pRCre == NULL)
-			/* il n' y a plus de regles */
-			stop = TRUE;
-		     else if (pRCre->PrType != PtFunction)
-			/* il n'y a plus de regle fonction de presentation */
-			stop = TRUE;
-		     else
-			/* la regle est une fonction de presentation */
+		 pRe1 = pRCre;
+		 if (pRe1->PrViewNum == viewSch
+		     && (pRe1->PrPresFunction == FnCreateBefore
+			 || pRe1->PrPresFunction == FnCreateWith
+			 || pRe1->PrPresFunction == FnCreateAfter
+			 || pRe1->PrPresFunction == FnCreateFirst
+			 || pRe1->PrPresFunction == FnCreateLast))
+		   /* c'est une regle de creation pour cette vue */
+		   /* la creation depend-elle du compteur counter ? */
+		   {
+		     depend = FALSE;
+		     pCond = pRe1->PrCond;
+		     while (pCond != NULL && !depend)
 		       {
-			  pRe1 = pRCre;
-			  if (pRe1->PrViewNum == viewSch
-			      && (pRe1->PrPresFunction == FnCreateBefore
-				  || pRe1->PrPresFunction == FnCreateWith
-				  || pRe1->PrPresFunction == FnCreateAfter
-				  || pRe1->PrPresFunction == FnCreateFirst
-				  || pRe1->PrPresFunction == FnCreateLast))
-			     /* c'est une regle de creation pour cette vue */
-			     /* la creation depend-elle du compteur counter ? */
-			    {
-			       depend = FALSE;
-			       pCond = pRe1->PrCond;
-			       while (pCond != NULL && !depend)
-				 {
-				    if (pCond->CoCondition == PcInterval ||
-					pCond->CoCondition == PcEven ||
-					pCond->CoCondition == PcOdd ||
-					pCond->CoCondition == PcOne)
-				       if (pCond->CoCounter == counter)
-					  depend = TRUE;
-				    pCond = pCond->CoNextCondition;
-				 }
-			       if (depend)
-				  /* reevalue les conditions d'application de la regle */
-				  if (CondPresentation (pRCre->PrCond, pAb->AbElement,
-							NULL, NULL, viewSch, pAb->AbElement->ElStructSchema, pDoc))
-				     /* cherche si le pave est deja cree' */
-				    {
-				       isCreated = FALSE;
-				       if (page || pRe1->PrPresFunction == FnCreateFirst
-					   || pRe1->PrPresFunction == FnCreateLast)
-					 {
-					    pAbb = pAb->AbFirstEnclosed;
-					    while (!isCreated && pAbb != NULL)
-					       if (pAbb->AbPresentationBox
-						   && pAbb->AbTypeNum == pRe1->PrPresBox[0]
-						 && pAbb->AbPSchema == pSPR)
-						  isCreated = TRUE;
-					       else
-						  pAbb = pAbb->AbNext;
-					 }
-				       else
-					 {
-					    pAbb = pAb;
-					    while (!isCreated && pAbb != NULL
-						   && pAbb->AbElement == pAb->AbElement)
-					       if (pAbb->AbPresentationBox
-						   && pAbb->AbTypeNum == pRe1->PrPresBox[0]
-						 && pAbb->AbPSchema == pSPR)
-						  isCreated = TRUE;
-					       else
-						  pAbb = pAbb->AbNext;
-					 }
-				       if (!isCreated)
-					  /* on cree le pave de presentation */
-					 {
-					    pEl = pAb->AbElement;
-					    /* code supprime car les regles de creation des hauts et bas de page */
-					    /* sont definies a partir du corps de page qui est au meme niveau */
-					    /* que pAb */
-					    if (pEl->ElTerminal
-						&& pEl->ElLeafType == LtPageColBreak)
-					      {
-						 pAbbNext = pEl->ElAbstractBox[nv - 1];
-						 pAbb = pAbbNext->AbFirstEnclosed;
-						 if (pAbb != NULL)
-						   {
-						      while (pAbb->AbPresentationBox)
-							 pAbb = pAbb->AbNext;
-						      pEl->ElAbstractBox[nv - 1] = pAbb;
-						   }
-					      }
-					    else
-					       pAbbNext = NULL;
-					    pAbb = CrAbsBoxesPres (pEl, pDoc, pRCre, pSS, pAttr,
-						    nv, pSchP, TRUE);
-					    if (pAbbNext != NULL)
-					       pEl->ElAbstractBox[nv - 1] = pAbbNext;
-					    if (pAbb != NULL)
-					      {
-						frame = pDoc->DocViewFrame[nv - 1];
-						h = PageHeight;
-						ChangeConcreteImage (frame, &h, pAbb);
-						/* on ne reaffiche pas si on est en
-						   train de calculer les pages */
-						if (PageHeight == 0 && redisp)
-						  DisplayFrame (frame);
-						/* on passe a la regle suivante */
-					      }
-					 }
-				    }
-			    }
-			  pRCre = pRe1->PrNextPRule;
+			 if (pCond->CoCondition == PcInterval ||
+			     pCond->CoCondition == PcEven ||
+			     pCond->CoCondition == PcOdd ||
+			     pCond->CoCondition == PcOne)
+			   if (pCond->CoCounter == counter)
+			     depend = TRUE;
+			 pCond = pCond->CoNextCondition;
 		       }
-		  while (!stop);
+		     if (depend)
+		       /* reevalue les conditions d'application de la regle */
+		       if (CondPresentation (pRCre->PrCond, pAb->AbElement,
+					     NULL, NULL, viewSch, pAb->AbElement->ElStructSchema, pDoc))
+			 /* cherche si le pave est deja cree' */
+			 {
+			   isCreated = FALSE;
+			   if (page || pRe1->PrPresFunction == FnCreateFirst
+			       || pRe1->PrPresFunction == FnCreateLast)
+			     {
+			       pAbb = pAb->AbFirstEnclosed;
+			       while (!isCreated && pAbb != NULL)
+				 if (pAbb->AbPresentationBox
+				     && pAbb->AbTypeNum == pRe1->PrPresBox[0]
+				     && pAbb->AbPSchema == pSPR)
+				   isCreated = TRUE;
+				 else
+				   pAbb = pAbb->AbNext;
+			     }
+			   else
+			     {
+			       pAbb = pAb;
+			       while (!isCreated && pAbb != NULL
+				      && pAbb->AbElement == pAb->AbElement)
+				 if (pAbb->AbPresentationBox
+				     && pAbb->AbTypeNum == pRe1->PrPresBox[0]
+				     && pAbb->AbPSchema == pSPR)
+				   isCreated = TRUE;
+				 else
+				   pAbb = pAbb->AbNext;
+			     }
+			   if (!isCreated)
+			     /* on cree le pave de presentation */
+			     {
+			       pEl = pAb->AbElement;
+			       /* code supprime car les regles de creation des hauts et bas de page */
+			       /* sont definies a partir du corps de page qui est au meme niveau */
+			       /* que pAb */
+			       if (pEl->ElTerminal
+				   && pEl->ElLeafType == LtPageColBreak)
+				 {
+				   pAbbNext = pEl->ElAbstractBox[nv - 1];
+				   pAbb = pAbbNext->AbFirstEnclosed;
+				   if (pAbb != NULL)
+				     {
+				       while (pAbb->AbPresentationBox)
+					 pAbb = pAbb->AbNext;
+				       pEl->ElAbstractBox[nv - 1] = pAbb;
+				     }
+				 }
+			       else
+				 pAbbNext = NULL;
+			       pAbb = CrAbsBoxesPres (pEl, pDoc, pRCre, pSS, pAttr,
+						      nv, pSchP, TRUE);
+			       if (pAbbNext != NULL)
+				 pEl->ElAbstractBox[nv - 1] = pAbbNext;
+			       if (pAbb != NULL)
+				 {
+				   frame = pDoc->DocViewFrame[nv - 1];
+				   h = PageHeight;
+				   ChangeConcreteImage (frame, &h, pAbb);
+				   /* on ne reaffiche pas si on est en
+				      train de calculer les pages */
+				   if (PageHeight == 0 && redisp)
+				     DisplayFrame (frame);
+				   /* on passe a la regle suivante */
+				 }
+			     }
+			 }
+		   }
+		 pRCre = pRe1->PrNextPRule;
 	       }
-	/* cherche le pave suivant de ce type */
-	if (page)
-	   /* on cherche une boite page */
-	   pAb = AbsBoxFromElOrPres (pAb, FALSE, PageBreak + 1, NULL, NULL);
-	else
-	   pAb = AbsBoxFromElOrPres (pAb, presBox, boxType, pSchP, NULL);
+	   while (!stop);
+	 }
+       /* cherche le pave suivant de ce type */
+       if (page)
+	 /* on cherche une boite page */
+	 pAb = AbsBoxFromElOrPres (pAb, FALSE, PageBreak + 1, NULL, NULL);
+       else
+	 pAb = AbsBoxFromElOrPres (pAb, presBox, boxType, pSchP, NULL);
      }
 }
 
