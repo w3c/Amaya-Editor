@@ -66,9 +66,9 @@ static int CacheSize;
 static int MaxCacheFile;
 
 /* Proxy menu options */
+static boolean ColorMenuConf = FALSE;
 #ifdef _WINDOWS
 static HWND ProxyHwnd = NULL;
-boolean ColorMenuConf = FALSE;
 #endif _WINDOWS
 static int ProxyBase;
 static CHAR_T HttpProxy [MAX_LENGTH+1];
