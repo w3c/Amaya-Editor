@@ -41,6 +41,8 @@ typedef long		jlong;
 typedef long long	jlong;
 #elif SIZEOF___INT64 == 8
 typedef __int64		jlong;
+#else
+#error "sizeof(long long) or sizeof(__int64) must be 8"
 #endif
 
 typedef	jchar		unicode;

@@ -31,7 +31,7 @@ struct Hamaya_HTTPRequest* CreateHTTPRequest ()
 struct Hamaya_HTTPRequest* CreateHTTPRequest ()
 #endif
 {
-    object *obj;
+    KaffeObject *obj;
     struct Hamaya_HTTPRequest* request;
 
     obj = AllocObject("amaya/HTTPRequest");
@@ -56,7 +56,7 @@ char               *postString;
 char               *outputfile;
 #endif
 {
-    object *obj;
+    KaffeObject *obj;
     static int req_nr = 0;
     struct Hamaya_HTTPRequest* request;
     struct Hjava_lang_String* urlName = NULL;

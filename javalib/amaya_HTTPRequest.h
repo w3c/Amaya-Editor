@@ -28,6 +28,7 @@ typedef struct Classamaya_HTTPRequest {
   jint currentLenght;
   jint status;
   struct Hjava_lang_String* filename;
+  struct Hamaya_HTTPConnection* conn;
 } Classamaya_HTTPRequest;
 HandleTo(amaya_HTTPRequest);
 

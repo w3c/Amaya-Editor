@@ -14,7 +14,7 @@
 
 /* From baseClasses.h */
 struct _stringClass {
-	object base;
+	KaffeObject base;
 	struct {
 		HArrayOfChar*	value;
 		jint		offset;

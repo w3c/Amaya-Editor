@@ -58,16 +58,17 @@ struct _object {
 	iCv			cv;
 };
 #endif
-#ifndef object
-#define object struct _object
+#ifndef KaffeObject
+struct _object;
+#define	KaffeObject struct _object
 #endif
 
 /* Build an object handle */
 #define	HandleTo(class)					\
-	struct H##class {				\
-		object base;				\
+	typedef struct H##class {			\
+		KaffeObject base;				\
 		struct Class##class data[1];		\
-	}
+	} H##class
 
 /* Turn a handle into the real thing */
 #define	unhand(o)	((o)->data)
@@ -76,42 +77,48 @@ struct _object {
 #define	Hjava_lang_Object	_object
 #define	Hjava_lang_Class	_classes
 
+#if 0
+typedef struct Hjava_lang_KaffeObject HObject;
+typedef struct Hjava_lang_Class Class;
+#endif
+
 /* Array types */
-typedef struct { object base; struct { jbyte body[1]; } data[1]; } HArrayOfByte;
-typedef struct { object base; struct { jchar body[1]; } data[1]; } HArrayOfChar;
-typedef struct { object base; struct { jdouble body[1]; } data[1]; } HArrayOfDouble;
-typedef struct { object base; struct { jfloat body[1]; } data[1]; } HArrayOfFloat;
-typedef struct { object base; struct { jint body[1]; } data[1]; } HArrayOfInt;
-typedef struct { object base; struct { jshort body[1]; } data[1]; } HArrayOfShort;
-typedef struct { object base; struct { jlong body[1]; } data[1]; } HArrayOfLong;
-typedef struct { object base; struct { object* body[1]; } data[1]; } HArrayOfArray;
-typedef struct { object base; struct { object* body[1]; } data[1]; } HArrayOfObject;
+typedef struct { KaffeObject base; struct { jbyte body[1]; } data[1]; } HArrayOfByte;
+typedef struct { KaffeObject base; struct { jchar body[1]; } data[1]; } HArrayOfChar;
+typedef struct { KaffeObject base; struct { jdouble body[1]; } data[1]; } HArrayOfDouble;
+typedef struct { KaffeObject base; struct { jfloat body[1]; } data[1]; } HArrayOfFloat;
+typedef struct { KaffeObject base; struct { jint body[1]; } data[1]; } HArrayOfInt;
+typedef struct { KaffeObject base; struct { jshort body[1]; } data[1]; } HArrayOfShort;
+typedef struct { KaffeObject base; struct { jlong body[1]; } data[1]; } HArrayOfLong;
+typedef struct { KaffeObject base; struct { KaffeObject* body[1]; } data[1]; } HArrayOfArray;
+typedef struct { KaffeObject base; struct { KaffeObject* body[1]; } data[1]; } HArrayOfObject;
 
 /* Get length of arrays */
 #define	obj_length(_obj)	((_obj)->base.size)
 
 /* Get the strings */
 #include <java_lang_String.h>
+#if 0
+typedef struct Hjava_lang_String HString;
+#endif
 
 /* Various useful function prototypes */
 extern char* javaString2CString(struct Hjava_lang_String*, char*, int);
 extern char* makeCString(struct Hjava_lang_String*);
 extern struct Hjava_lang_String* makeJavaString(char*, int);
 
-extern jword	do_execute_java_method(void*, object*, char*, char*, struct _methods*, int, ...);
+extern jword	do_execute_java_method(void*, KaffeObject*, char*, char*, struct _methods*, int, ...);
 extern jword	do_execute_java_class_method(char*, char*, char*, ...);
-extern object* execute_java_constructor(void*, char*, struct _classes*, char*, ...);
+extern KaffeObject* execute_java_constructor(void*, char*, struct _classes*, char*, ...);
 
-extern void	SignalError(void*, char*, char*)
-#ifdef __GNUC__
-    __attribute__((noreturn))
-#endif
-    ;
+extern void	SignalError(void*, char*, char*);
 
 extern void	classname2pathname(char*, char*);
 
-extern object* AllocObject(char*);
-extern object* AllocArray(int, int);
-extern object* AllocObjectArray(int, char*);
+extern KaffeObject*	AllocObject(char*);
+extern KaffeObject*	AllocArray(int, int);
+extern KaffeObject*	AllocObjectArray(int, char*);
+
+extern void	addNativeMethod(char*, void*);
 
 #endif

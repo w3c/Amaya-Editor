@@ -1,7 +1,5 @@
 /*
  * Interface for the Kaffe Java interpreter.
- *    NOTE : This must NOT include the W-Windows stuff since
- *           Object and ObjectClass identifiers clashes
  *
  *  Daniel Veillard
  */
@@ -736,7 +734,7 @@ void                InitJava (void)
 void                InitJava ()
 #endif
 {
-    object* args;
+    KaffeObject* args;
     stringClass** str;
     char initClass[MAX_PATH];
 
