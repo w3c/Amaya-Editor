@@ -115,48 +115,6 @@ boolean            *InCutBuffer;
 
 
 
-/* EscapeSpecial traite le cas du shift escape losqu'on est
-   sur une cellule de Table : Dans ce cas on remonte a la Column et non
-   au corps de ligne */
-
-#ifdef __STDC__
-static boolean      EscapeSpecial (PtrDocument SelDoc)
-
-#else  /* __STDC__ */
-static boolean      EscapeSpecial (SelDoc)
-PtrDocument         SelDoc;
-
-#endif /* __STDC__ */
-
-{
-   int                 attr;
-   PtrAttribute        pAttr;
-
-   if (FirstSelectedElement == LastSelectedElement)
-     {
-	if (TypeHasException (EXC_ID_Cell, FirstSelectedElement->ElTypeNumber, FirstSelectedElement->ElStructSchema))
-	  {
-	     /* cherche l'attribut La_Column de la cellule */
-	     attr = GetAttrWithException (EXC_ID_Ref_Column, FirstSelectedElement->ElStructSchema);
-	     pAttr = FirstSelectedElement->ElFirstAttr;
-	     while (pAttr != NULL)
-		if (pAttr->AeAttrSSchema == FirstSelectedElement->ElStructSchema && pAttr->AeAttrNum == attr)
-		   /* C'est l'attribut La_Column */
-		  {
-		     if (pAttr->AeAttrReference != NULL
-			 && pAttr->AeAttrReference->RdReferred != NULL)
-		       {
-			  SelectElement (SelDoc, pAttr->AeAttrReference->RdReferred->ReReferredElem, TRUE, TRUE);
-			  return TRUE;
-		       }
-		  }
-		else
-		   /* passe a l'attribut suivant de la cellule */
-		   pAttr = pAttr->AeNext;
-	  }
-     }
-   return FALSE;
-}
 
 /* DistribAlignHorizVertic      met un attribut Alignement horizontal ou Vertical */
 /* sur toutes les elements portant une exception EXC_TR_Cell_ATTRIBUT */
@@ -258,50 +216,6 @@ PtrDocument         pDoc;
 }
 
 
-/* IsExcludedType retourne vrai si on peut inserer l'element dans un menu de choix */
-
-#ifdef __STDC__
-static boolean      IsExcludedType (PtrElement pEl, int eltype, PtrSSchema pSS)
-
-#else  /* __STDC__ */
-static boolean      IsExcludedType (pEl, eltype, pSS)
-PtrElement          pEl;
-int                 eltype;
-PtrSSchema          pSS;
-
-#endif /* __STDC__ */
-
-{
-   int                 attr;
-   PtrAttribute        pAttrTab;
-   PtrElement          pElAttr;
-
-   if (eltype == GetElemWithException (EXC_ID_Compound_Column, pSS)
-       || eltype == GetElemWithException (EXC_ID_Compound_Raw, pSS))
-     {
-	/* on est dans un tableau sur un element necessitant
-	   un traitement particulier lors de son insertion dans un menu d'insertion */
-	attr = GetAttrWithException (EXC_ID_Type_Table, pEl->ElStructSchema);
-	if ((pAttrTab = GetTypedAttrAncestor (pEl, attr, pEl->ElStructSchema, &pElAttr)))
-	  {
-	     /* le tableau porte bien un attribut Type_Table */
-
-	     /* on inhibe le choix Column composee quand
-	        quand l'attribut Type_Table vaut Lignes ou Tabulations */
-	     if (eltype == GetElemWithException (EXC_ID_Compound_Column, pSS)
-	      && (pAttrTab->AeAttrValue == 2 || pAttrTab->AeAttrValue == 4))
-		return (TRUE);
-
-	     /* on inhibe le choix ligne composee quand
-	        quand l'attribut Type_Table vaut Columns ou Tabulations */
-	     else if (eltype == GetElemWithException (EXC_ID_Compound_Raw, pSS)
-	      && (pAttrTab->AeAttrValue == 3 || pAttrTab->AeAttrValue == 4))
-		return (TRUE);
-	  }
-     }
-
-   return (FALSE);
-}
 
 /* CheckAttrRef        retourne vrai si l'attribut pointe' par pAttr est */
 /* l'attribut Ref_largeur ou l'attribut La_Column. */
@@ -1654,6 +1568,39 @@ PtrDocument         pDoc;
      }
 }
 
+
+/* CutTable       Si l'element pointe' par pFootTable est */
+/* effectivement un Bas_Table, on reapplique les regles de hauteur */
+/* des filets verticaux engendre's par l'En_Tete qui precede */
+
+#ifdef __STDC__
+static void         CutTable (PtrElement pFootTable, PtrDocument pDoc)
+
+#else  /* __STDC__ */
+static void         CutTable (pFootTable, pDoc)
+PtrElement          pFootTable;
+PtrDocument         pDoc;
+
+#endif /* __STDC__ */
+
+{
+   int                 typeSaved;
+
+   if (TypeHasException (EXC_ID_FootTable, pFootTable->ElTypeNumber,
+			 pFootTable->ElStructSchema))
+      /* c'est un element Bas_Table */
+     {
+	/* reapplique les regles de hauteur des filets */
+	/* verticaux engendre's par l'En_Tete qui precede */
+	/* On camoufle d'abord l'element Bas_Table */
+	/* pour qu'il ne soit pas pris en compte */
+	typeSaved = pFootTable->ElTypeNumber;
+	pFootTable->ElTypeNumber = 1;
+	ApplHeightRuleToHairlines (pFootTable, pDoc);
+	pFootTable->ElTypeNumber = typeSaved;
+     }
+}
+
 /* ExcCutPage est appele' par CutCommand qui effectue le traitement */
 /* de la commande Couper. */
 /* pElFirstSel et pElLastSel pointent le premier et le dernier element */
@@ -1740,40 +1687,9 @@ boolean            *deletePage;
 			pElNext = pElNext->ElNext;
 		     }
 		}
+	      if (*deletePage == TRUE)
+		CutTable (*pElFirstSel, pDoc);
 	   }
-}
-
-
-/* CutTable       Si l'element pointe' par pFootTable est */
-/* effectivement un Bas_Table, on reapplique les regles de hauteur */
-/* des filets verticaux engendre's par l'En_Tete qui precede */
-
-#ifdef __STDC__
-static void         CutTable (PtrElement pFootTable, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-static void         CutTable (pFootTable, pDoc)
-PtrElement          pFootTable;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
-{
-   int                 typeSaved;
-
-   if (TypeHasException (EXC_ID_FootTable, pFootTable->ElTypeNumber,
-			 pFootTable->ElStructSchema))
-      /* c'est un element Bas_Table */
-     {
-	/* reapplique les regles de hauteur des filets */
-	/* verticaux engendre's par l'En_Tete qui precede */
-	/* On camoufle d'abord l'element Bas_Table */
-	/* pour qu'il ne soit pas pris en compte */
-	typeSaved = pFootTable->ElTypeNumber;
-	pFootTable->ElTypeNumber = 1;
-	ApplHeightRuleToHairlines (pFootTable, pDoc);
-	pFootTable->ElTypeNumber = typeSaved;
-     }
 }
 
 
