@@ -105,13 +105,6 @@ SOURCE=..\amaya\AHTURLTools.c
 # Begin Source File
 
 SOURCE=..\amaya\amaya.rc
-
-!IF  "$(CFG)" == "amaya - Win32 Release"
-
-!ELSEIF  "$(CFG)" == "amaya - Win32 Debug"
-
-!ENDIF 
-
 # End Source File
 # Begin Source File
 
@@ -119,15 +112,7 @@ SOURCE=..\amaya\answer.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\amaya\appicon.ico
-# End Source File
-# Begin Source File
-
 SOURCE=..\amaya\css.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\amaya\css.h
 # End Source File
 # Begin Source File
 
@@ -187,10 +172,6 @@ SOURCE=..\amaya\HTMLsave.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\amaya\HTMLstyle.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\amaya\HTMLtable.c
 # End Source File
 # Begin Source File
@@ -219,11 +200,15 @@ SOURCE=..\amaya\MathMLbuilder.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\amaya\p2css.c
+SOURCE=..\amaya\MENUconf.c
 # End Source File
 # Begin Source File
 
 SOURCE=..\amaya\query.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\styleparser.c
 # End Source File
 # Begin Source File
 
@@ -232,10 +217,6 @@ SOURCE=..\tablelib\tableH.c
 # Begin Source File
 
 SOURCE=.\amaya\TextFileAPP.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\amaya\toolbar1.bmp
 # End Source File
 # Begin Source File
 
@@ -248,10 +229,6 @@ SOURCE=..\amaya\transparse.c
 # Begin Source File
 
 SOURCE=..\amaya\UIcss.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\amaya\wincurso.cur
 # End Source File
 # Begin Source File
 

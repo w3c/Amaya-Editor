@@ -25,10 +25,6 @@ NULL=
 NULL=nul
 !ENDIF 
 
-CPP=cl.exe
-MTL=midl.exe
-RSC=rc.exe
-
 !IF  "$(CFG)" == "amaya - Win32 Release"
 
 OUTDIR=.\bin
@@ -99,6 +95,7 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
+CPP=cl.exe
 CPP_PROJ=/nologo /ML /W3 /GX /O2 /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I\
  "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\libpng\zlib" /I\
  "..\thotlib\internals\h" /I "..\thotlib\internals\var" /I\
@@ -108,7 +105,40 @@ CPP_PROJ=/nologo /ML /W3 /GX /O2 /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I\
  /FD /c 
 CPP_OBJS=.\Release/
 CPP_SBRS=.
+
+.c{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+MTL=midl.exe
 MTL_PROJ=/nologo /D "NDEBUG" /mktyplib203 /o NUL /win32 
+RSC=rc.exe
 RSC_PROJ=/l 0x409 /fo"$(INTDIR)\amaya.res" /d "NDEBUG" 
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\amaya.bsc" 
@@ -238,6 +268,7 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
+CPP=cl.exe
 CPP_PROJ=/nologo /MLd /W3 /Gm /GX /Zi /Od /I "..\thotlib\internals\h" /I\
  "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I\
  "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\libpng\zlib" /I\
@@ -247,7 +278,40 @@ CPP_PROJ=/nologo /MLd /W3 /Gm /GX /Zi /Od /I "..\thotlib\internals\h" /I\
  /FD /c 
 CPP_OBJS=.\Debug/
 CPP_SBRS=.
+
+.c{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+MTL=midl.exe
 MTL_PROJ=/nologo /D "_DEBUG" /mktyplib203 /o NUL /win32 
+RSC=rc.exe
 RSC_PROJ=/l 0x409 /fo"$(INTDIR)\amaya.res" /d "_DEBUG" 
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\amaya.bsc" 
@@ -306,36 +370,6 @@ LINK32_OBJS= \
 <<
 
 !ENDIF 
-
-.c{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
 
 
 !IF "$(CFG)" == "amaya - Win32 Release" || "$(CFG)" == "amaya - Win32 Debug"
@@ -593,6 +627,8 @@ DEP_CPP_AHTBR=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -770,6 +806,8 @@ DEP_CPP_AHTBR=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -946,6 +984,8 @@ DEP_CPP_AHTFW=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -1119,6 +1159,8 @@ DEP_CPP_AHTFW=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -1296,6 +1338,8 @@ DEP_CPP_AHTME=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -1470,6 +1514,8 @@ DEP_CPP_AHTME=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -1648,6 +1694,8 @@ DEP_CPP_AHTUR=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -1823,6 +1871,8 @@ DEP_CPP_AHTUR=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -2223,6 +2273,8 @@ DEP_CPP_ANSWE=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -2399,6 +2451,8 @@ DEP_CPP_ANSWE=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -2583,6 +2637,8 @@ DEP_CPP_CSS_C=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -2764,6 +2820,8 @@ DEP_CPP_CSS_C=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -2951,6 +3009,8 @@ DEP_CPP_EDITI=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -3136,6 +3196,8 @@ DEP_CPP_EDITI=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -3294,6 +3356,7 @@ DEP_CPP_EDITO=\
 	"..\amaya\f\htmledit_f.h"\
 	"..\amaya\f\htmltable_f.h"\
 	"..\amaya\f\init_f.h"\
+	"..\amaya\f\menuconf_f.h"\
 	"..\amaya\f\query_f.h"\
 	"..\amaya\f\styleparser_f.h"\
 	"..\amaya\libilu.h"\
@@ -3324,6 +3387,8 @@ DEP_CPP_EDITO=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -3481,6 +3546,7 @@ DEP_CPP_EDITO=\
 	"..\amaya\f\htmledit_f.h"\
 	"..\amaya\f\htmltable_f.h"\
 	"..\amaya\f\init_f.h"\
+	"..\amaya\f\menuconf_f.h"\
 	"..\amaya\f\query_f.h"\
 	"..\amaya\f\styleparser_f.h"\
 	"..\amaya\libwww.h"\
@@ -3509,6 +3575,8 @@ DEP_CPP_EDITO=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -3547,8 +3615,11 @@ DEP_CPP_EDITOR=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
+	"..\thotlib\include\wininclude.h"\
 	".\amaya\editor.h"\
 	".\amaya\logo.xbm"\
 	".\amaya\logo.xpm"\
@@ -3584,8 +3655,11 @@ DEP_CPP_EDITOR=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
+	"..\thotlib\include\wininclude.h"\
 	".\amaya\editor.h"\
 	".\amaya\logo.xbm"\
 	".\amaya\logo.xpm"\
@@ -3766,6 +3840,8 @@ DEP_CPP_EDITS=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -3947,6 +4023,8 @@ DEP_CPP_EDITS=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -4137,6 +4215,8 @@ DEP_CPP_HTML2=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -4323,6 +4403,8 @@ DEP_CPP_HTML2=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -4515,6 +4597,8 @@ DEP_CPP_HTMLA=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -4705,6 +4789,8 @@ DEP_CPP_HTMLA=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -4741,6 +4827,8 @@ DEP_CPP_HTMLAP=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	".\amaya\html.h"\
@@ -4774,6 +4862,8 @@ DEP_CPP_HTMLAP=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	".\amaya\html.h"\
@@ -4953,6 +5043,8 @@ DEP_CPP_HTMLB=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -5133,6 +5225,8 @@ DEP_CPP_HTMLB=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -5325,6 +5419,8 @@ DEP_CPP_HTMLE=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -5512,6 +5608,8 @@ DEP_CPP_HTMLE=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -5692,6 +5790,8 @@ DEP_CPP_HTMLF=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -5870,6 +5970,8 @@ DEP_CPP_HTMLF=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -6049,6 +6151,8 @@ DEP_CPP_HTMLH=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -6224,6 +6328,8 @@ DEP_CPP_HTMLH=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -6407,6 +6513,8 @@ DEP_CPP_HTMLI=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -6587,6 +6695,8 @@ DEP_CPP_HTMLI=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -6738,6 +6848,7 @@ DEP_CPP_HTMLP=\
 	"..\amaya\amayamsg.h"\
 	"..\amaya\css.h"\
 	"..\amaya\f\editstyle_f.h"\
+	"..\amaya\f\html2thot_f.h"\
 	"..\amaya\f\htmlimage_f.h"\
 	"..\amaya\f\styleparser_f.h"\
 	"..\amaya\libilu.h"\
@@ -6768,6 +6879,8 @@ DEP_CPP_HTMLP=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -6918,6 +7031,7 @@ DEP_CPP_HTMLP=\
 	"..\amaya\amayamsg.h"\
 	"..\amaya\css.h"\
 	"..\amaya\f\editstyle_f.h"\
+	"..\amaya\f\html2thot_f.h"\
 	"..\amaya\f\htmlimage_f.h"\
 	"..\amaya\f\styleparser_f.h"\
 	"..\amaya\libwww.h"\
@@ -6946,6 +7060,8 @@ DEP_CPP_HTMLP=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -7132,6 +7248,8 @@ DEP_CPP_HTMLS=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -7316,6 +7434,8 @@ DEP_CPP_HTMLS=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -7494,6 +7614,8 @@ DEP_CPP_HTMLT=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -7669,6 +7791,8 @@ DEP_CPP_HTMLT=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -7817,6 +7941,8 @@ DEP_CPP_INIT_=\
 	"..\..\libwww\library\src\wwwutil.h"\
 	"..\..\libwww\library\src\WWWWAIS.h"\
 	"..\..\libwww\library\src\wwwzip.h"\
+	"..\..\libwww\library\src\zconf.h"\
+	"..\..\libwww\library\src\zlib.h"\
 	"..\amaya\amaya.h"\
 	"..\amaya\amayamsg.h"\
 	"..\amaya\css.h"\
@@ -7836,6 +7962,7 @@ DEP_CPP_INIT_=\
 	"..\amaya\f\init_f.h"\
 	"..\amaya\f\javaamaya_f.h"\
 	"..\amaya\f\mathedit_f.h"\
+	"..\amaya\f\menuconf_f.h"\
 	"..\amaya\f\query_f.h"\
 	"..\amaya\f\styleparser_f.h"\
 	"..\amaya\f\trans_f.h"\
@@ -7870,6 +7997,8 @@ DEP_CPP_INIT_=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -7914,6 +8043,7 @@ NODEP_CPP_INIT_=\
 	"..\amaya\Print.xpm"\
 	"..\amaya\Reload.xpm"\
 	"..\amaya\save.xpm"\
+	"..\amaya\saveNo.xpm"\
 	"..\amaya\stopN.xpm"\
 	"..\amaya\stopR.xpm"\
 	"..\amaya\T.xpm"\
@@ -8055,6 +8185,8 @@ DEP_CPP_INIT_=\
 	"..\..\libwww\library\src\wwwtrans.h"\
 	"..\..\libwww\library\src\wwwutil.h"\
 	"..\..\libwww\library\src\wwwzip.h"\
+	"..\..\libwww\library\src\zconf.h"\
+	"..\..\libwww\library\src\zlib.h"\
 	"..\amaya\amaya.h"\
 	"..\amaya\amayamsg.h"\
 	"..\amaya\css.h"\
@@ -8072,6 +8204,7 @@ DEP_CPP_INIT_=\
 	"..\amaya\f\htmlsave_f.h"\
 	"..\amaya\f\init_f.h"\
 	"..\amaya\f\mathedit_f.h"\
+	"..\amaya\f\menuconf_f.h"\
 	"..\amaya\f\query_f.h"\
 	"..\amaya\f\styleparser_f.h"\
 	"..\amaya\f\trans_f.h"\
@@ -8103,6 +8236,8 @@ DEP_CPP_INIT_=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -8288,6 +8423,8 @@ DEP_CPP_MATHE=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -8486,6 +8623,8 @@ DEP_CPP_MATHE=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -8523,6 +8662,8 @@ DEP_CPP_MATHM=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	".\amaya\mathml.h"\
@@ -8556,6 +8697,8 @@ DEP_CPP_MATHM=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	".\amaya\mathml.h"\
@@ -8733,6 +8876,8 @@ DEP_CPP_MATHML=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -8911,6 +9056,8 @@ DEP_CPP_MATHML=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -9061,6 +9208,8 @@ DEP_CPP_MENUC=\
 	"..\..\libwww\library\src\wwwzip.h"\
 	"..\amaya\amaya.h"\
 	"..\amaya\amayamsg.h"\
+	"..\amaya\f\init_f.h"\
+	"..\amaya\f\query_f.h"\
 	"..\amaya\libilu.h"\
 	"..\amaya\libjava.h"\
 	"..\amaya\libwww.h"\
@@ -9079,6 +9228,7 @@ DEP_CPP_MENUC=\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\print.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
@@ -9089,9 +9239,12 @@ DEP_CPP_MENUC=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
+	"..\thotlib\include\wininclude.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\textfile.h"\
@@ -9237,6 +9390,8 @@ DEP_CPP_MENUC=\
 	"..\..\libwww\library\src\wwwzip.h"\
 	"..\amaya\amaya.h"\
 	"..\amaya\amayamsg.h"\
+	"..\amaya\f\init_f.h"\
+	"..\amaya\f\query_f.h"\
 	"..\amaya\libwww.h"\
 	"..\amaya\menuconf.h"\
 	"..\thotlib\include\appaction.h"\
@@ -9253,6 +9408,7 @@ DEP_CPP_MENUC=\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\print.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
@@ -9263,9 +9419,12 @@ DEP_CPP_MENUC=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
+	"..\thotlib\include\wininclude.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\textfile.h"\
@@ -9445,6 +9604,8 @@ DEP_CPP_QUERY=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -9624,6 +9785,8 @@ DEP_CPP_QUERY=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -9810,6 +9973,8 @@ DEP_CPP_STYLE=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -9993,6 +10158,8 @@ DEP_CPP_STYLE=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -10026,6 +10193,8 @@ DEP_CPP_TABLE=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	"..\thotlib\internals\f\attributes_f.h"\
@@ -10084,6 +10253,8 @@ DEP_CPP_TABLE=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	"..\thotlib\internals\f\attributes_f.h"\
@@ -10143,6 +10314,8 @@ DEP_CPP_TEXTF=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	".\amaya\textfile.h"\
@@ -10176,6 +10349,8 @@ DEP_CPP_TEXTF=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	".\amaya\textfile.h"\
@@ -10354,6 +10529,8 @@ DEP_CPP_TRANS=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -10534,6 +10711,8 @@ DEP_CPP_TRANS=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -10716,6 +10895,8 @@ DEP_CPP_TRANSP=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -10893,6 +11074,8 @@ DEP_CPP_TRANSP=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -11046,6 +11229,8 @@ DEP_CPP_UICSS=\
 	"..\amaya\css.h"\
 	"..\amaya\f\ahturltools_f.h"\
 	"..\amaya\f\css_f.h"\
+	"..\amaya\f\editoractions_f.h"\
+	"..\amaya\f\htmledit_f.h"\
 	"..\amaya\f\init_f.h"\
 	"..\amaya\f\uicss_f.h"\
 	"..\amaya\libilu.h"\
@@ -11076,6 +11261,8 @@ DEP_CPP_UICSS=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -11228,6 +11415,8 @@ DEP_CPP_UICSS=\
 	"..\amaya\css.h"\
 	"..\amaya\f\ahturltools_f.h"\
 	"..\amaya\f\css_f.h"\
+	"..\amaya\f\editoractions_f.h"\
+	"..\amaya\f\htmledit_f.h"\
 	"..\amaya\f\init_f.h"\
 	"..\amaya\f\uicss_f.h"\
 	"..\amaya\libwww.h"\
@@ -11256,6 +11445,8 @@ DEP_CPP_UICSS=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -11433,6 +11624,8 @@ DEP_CPP_WINDI=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -11613,6 +11806,8 @@ DEP_CPP_WINDI=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -11802,6 +11997,8 @@ DEP_CPP_XMLPA=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
@@ -11980,6 +12177,8 @@ DEP_CPP_XMLPA=\
 	"..\thotlib\include\thot_sys.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\uio.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\

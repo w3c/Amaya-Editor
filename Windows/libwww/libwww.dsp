@@ -60,7 +60,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "Debug"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /Z7 /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /W3 /GX /Z7 /Od /I "..\..\..\libwww\Library\src" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "WWW_WIN_ASYNC" /YX /FD /c
+# ADD CPP /nologo /W3 /GX /Z7 /Od /I "..\..\..\libwww\Library\src" /I "..\..\libpng\zlib" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "WWW_WIN_ASYNC" /D "HT_ZLIB" /YX /FD /c
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
@@ -253,6 +253,16 @@ SOURCE=..\..\..\libwww\Library\src\HTInet.c
 # Begin Source File
 
 SOURCE=..\..\..\libwww\Library\src\HTInit.c
+
+!IF  "$(CFG)" == "libwww - Win32 Release"
+
+!ELSEIF  "$(CFG)" == "libwww - Win32 Debug"
+
+# ADD CPP /I "..\..\..\..\libwww\Library\src"
+# SUBTRACT CPP /I "..\..\..\libwww\Library\src"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
@@ -496,11 +506,19 @@ SOURCE=..\..\..\libwww\Library\src\HTXParse.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\libwww\Library\src\HTZip.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\libwww\Library\src\md5.c
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\libwww\Library\src\SGML.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\zlib.lib
 # End Source File
 # End Target
 # End Project

@@ -90,10 +90,6 @@ LINK32=link.exe
 # Name "thotprinter - Win32 Debug"
 # Begin Source File
 
-SOURCE=..\..\thotlib\view\initpses.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\thotlib\dialogue\nodialog.c
 # End Source File
 # Begin Source File

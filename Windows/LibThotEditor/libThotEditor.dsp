@@ -281,10 +281,6 @@ SOURCE=..\..\thotlib\view\frame.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\presentation\genericdriver.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\thotlib\dialogue\geom.c
 # End Source File
 # Begin Source File
@@ -401,10 +397,6 @@ SOURCE=..\..\thotlib\presentation\presentationapi.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\presentation\presentdriver.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\thotlib\dialogue\presentmenu.c
 # End Source File
 # Begin Source File
@@ -509,10 +501,6 @@ SOURCE=..\..\thotlib\editing\selectionapi.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\presentation\specificdriver.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\thotlib\editing\spellchecker.c
 # End Source File
 # Begin Source File
@@ -546,6 +534,10 @@ SOURCE=..\..\thotlib\tree\structschema.c
 # Begin Source File
 
 SOURCE=..\..\thotlib\editing\structselect.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\thotlib\presentation\style.c
 # End Source File
 # Begin Source File
 
