@@ -580,7 +580,7 @@ int                 shadow;
       /* Do we need to change the current font ? */
 #     ifdef _WINDOWS
       if (TtPrinterDC)
-         hOldFont = SelectObject (TtPrinterDC, font->FiFont);
+         hOldFont = SelectObject (TtPrinterDC, currentActiveFont);
 #     else  /* _WINDOWS */
       encoding = CurrentFont (fout, font);
       fprintf (fout, "(");

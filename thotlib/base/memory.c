@@ -423,7 +423,7 @@ void                FreeAll ()
     
   while (PtFree_Line != NULL)
     {
-      ptr = (void *)PtFree_Line;
+      ptr = (void*)PtFree_Line;
       PtFree_Line = PtFree_Line->LiNext;
       TtaFreeMemory (ptr);
     }

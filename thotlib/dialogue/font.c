@@ -45,6 +45,18 @@ static STRING       FontFamily;
 static ThotBool     UseLucidaFamily;
 static ThotBool     UseBitStreamFamily;
 
+#ifdef _WINDOWS
+typedef struct FontCharacteristics {
+        int   highlight; 
+        int   size;
+        char  alphabet; 
+        char  family; 
+}FontCharacteristics;
+
+typedef FontCharacteristics* ptrFC;
+
+static ptrFC LastUsedFont = (ptrFC)0;
+#endif /* _WINDOWS */
 
 #include "buildlines_f.h"
 #include "registry_f.h"
@@ -102,9 +114,6 @@ TypeUnit unit;
           case TEXT('T'):
           case TEXT('t'):
                usprintf (&WIN_lpszFace[0], TEXT("Times New Roman"));
-               /* usprintf (&WIN_lpszFace[0], L"Alis Akhbar MT"); */
-               /* usprintf (&WIN_lpszFace[0], TEXT("UT Cairo")); */
-               /* usprintf (&WIN_lpszFace[0], L"Farsi 1.1"); */
                break;
 
           case TEXT('H'):
@@ -171,7 +180,36 @@ HDC     hdc;
 ptrfont font;
 #endif /* __STDC__ */
 {
-  return (SelectObject (hdc, font->FiFont));
+   if (LastUsedFont == (ptrFC)0) {
+      LastUsedFont            = (ptrFC) TtaGetMemory (sizeof (ptrFC));
+      LastUsedFont->highlight = font->highlight; 
+      LastUsedFont->size      = font->size;
+      LastUsedFont->alphabet  = font->alphabet; 
+      LastUsedFont->family    = font->family; 
+
+      if (currentActiveFont != (HFONT)0) {
+         DeleteObject (SelectObject (hdc, currentActiveFont));
+         currentActiveFont = (HFONT)0;
+	  }
+   } else if ((LastUsedFont->highlight != font->highlight) ||
+              (LastUsedFont->size      != font->size)      ||
+              (LastUsedFont->alphabet  != font->alphabet)  ||
+              (LastUsedFont->family    != font->family)) {
+          if (currentActiveFont != (HFONT)0) {
+             DeleteObject (SelectObject (hdc, currentActiveFont));
+             currentActiveFont = (HFONT)0;
+
+             LastUsedFont->highlight = font->highlight; 
+             LastUsedFont->size      = font->size;
+             LastUsedFont->alphabet  = font->alphabet; 
+             LastUsedFont->family    = font->family; 
+		  } 
+   }
+
+   if (currentActiveFont == (HFONT)0) {
+      currentActiveFont = WIN_LoadFont (font->alphabet, font->family, font->highlight, font->size, 0);
+   }
+   return (SelectObject (hdc, currentActiveFont));
 }
 #endif /* _WINDOWS */
 
@@ -928,9 +966,13 @@ ThotBool            increase;
 	    }
 	  /* Allocate the font structure */
 	  ptfont = TtaGetMemory (sizeof (FontInfo));
-	  ptfont->FiFont = WIN_LoadFont (alphabet, family, highlight, size, unit);
+      ptfont->alphabet  = alphabet;
+      ptfont->family    = family;
+      ptfont->highlight = highlight;
+      ptfont->size      = size;
+	  currentActiveFont = WIN_LoadFont (alphabet, family, highlight, size, unit);
       if (TtPrinterDC != 0) {
-         hOldFont = SelectObject (TtPrinterDC, ptfont->FiFont);
+         hOldFont = SelectObject (TtPrinterDC, currentActiveFont);
          if (GetTextMetrics (TtPrinterDC, &textMetric)) {
             ptfont->FiAscent = textMetric.tmAscent;
             ptfont->FiHeight = textMetric.tmAscent + textMetric.tmDescent;
@@ -945,7 +987,7 @@ ThotBool            increase;
 		 }
          SelectObject (TtPrinterDC, hOldFont);
       } else { 
-           hOldFont = SelectObject (TtDisplay, ptfont->FiFont);
+           hOldFont = SelectObject (TtDisplay, currentActiveFont);
 
            if (GetTextMetrics (TtDisplay, &textMetric)) {
               ptfont->FiAscent = textMetric.tmAscent;
@@ -959,7 +1001,10 @@ ThotBool            increase;
                ptfont->FiWidths[c] = wsize.cx;
                ptfont->FiHeights[c] = wsize.cy;
 		   }
-           SelectObject (TtDisplay, hOldFont);
+           /* SelectObject (TtDisplay, hOldFont); */
+           if (!DeleteObject (SelectObject (TtDisplay, currentActiveFont)))
+              WinErrorBox (NULL);
+           currentActiveFont = 0;
 	  }
 #      else  /* _WINDOWS */
 	  if (alphabet == TEXT('G') && size > 8 && (size < 16 || size == 24))
@@ -1294,11 +1339,12 @@ int                 frame;
 		  /* Shall we free this family ? */
 		  if (j == MAX_FONT)
 #                   ifdef _WINDOWS
-            if (TtDisplay)
+            /* if (TtDisplay)
                SelectObject (TtDisplay, (HFONT)0);
 		    if (!DeleteObject (TtFonts[i]->FiFont))
 		      WinErrorBox (WIN_Main_Wd);
-            TtFonts[i]->FiFont = (HFONT)0;
+            TtFonts[i]->FiFont = (HFONT)0; */
+            DeleteObject (SelectObject (TtDisplay, currentActiveFont));
 		    TtaFreeMemory (TtFonts[i]);
 #                   else  /* _WINDOWS */
 #ifdef _GTK
