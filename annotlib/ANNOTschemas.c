@@ -21,6 +21,7 @@
 #include <string.h>
 #include "xmlparse.h"
 #include "annotlib.h"
+#include "AHTURLTools_f.h"
 #include "HTRDF.h"
 
 /********************** static variables ***********************/
@@ -346,19 +347,28 @@ void ANNOT_ReadSchema (doc, namespace_URI)
   /* make some space to store the remote file name */
   ctx = (ReadCallbackContext*)TtaGetMemory (sizeof(ReadCallbackContext));
 
-  /* launch the request */
-  res = GetObjectWWW (doc,
-		      namespace_URI,
-		      NULL,
-		      ctx->filename,
-		      /* AMAYA_ASYNC | AMAYA_NOCACHE | */
-		      AMAYA_SYNC | AMAYA_FLUSH_REQUEST,
-		      NULL,
-		      NULL, 
-		      (void *) ReadSchema_callback,
-		      (void *) ctx,
-		      NO,
-		      TEXT("application/rdf"));
+  if (IsFilePath(namespace_URI))
+    {
+      NormalizeFile (namespace_URI, ctx->filename, AM_CONV_ALL);
+      ReadSchema_callback (doc, HT_OK, namespace_URI, NULL, NULL, (void*)ctx);
+      return;
+    }
+  else
+    {
+      /* launch the request */
+      res = GetObjectWWW (doc,
+			  namespace_URI,
+			  NULL,
+			  ctx->filename,
+			  /* AMAYA_ASYNC | AMAYA_NOCACHE | */
+			  AMAYA_SYNC | AMAYA_FLUSH_REQUEST,
+			  NULL,
+			  NULL, 
+			  (void *) ReadSchema_callback,
+			  (void *) ctx,
+			  NO,
+			  TEXT("application/rdf"));
+    }
 
   if (res != HT_OK)
       TtaSetStatus (doc, 1, "Couldn't read schema", NULL); /* @@ */

@@ -1,0 +1,72 @@
+<rdf:RDF
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+
+<rdf:Description about="http://www.w3.org/1999/xx/annotation-ns#">
+ <rdfs:comment>An experimental namespace for describing annotations</rdfs:comment>
+ <rdfs:comment>$Revision$ $Date$</rdfs:comment>
+</rdf:Description>
+
+<rdfs:Class rdf:about="http://www.w3.org/1999/xx/annotation-ns#Annotation">
+  <rdfs:label xml:lang="en">Annotation</rdfs:label>
+  <rdfs:comment>The target type of a annotation resource.</rdfs:comment>
+</rdfs:Class>
+
+<rdfs:Class rdf:about="http://www.w3.org/1999/xx/annotation-ns#Comment">
+  <rdfs:label xml:lang="en">Comment</rdfs:label>
+  <rdfs:comment>A class of Annotations representing general comments</rdfs:comment>
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/1999/xx/annotation-ns#Annotation"/>
+</rdfs:Class>
+
+<rdfs:Class rdf:about="http://www.w3.org/1999/xx/annotation-ns#Deletion">
+  <rdfs:label xml:lang="en">Deletion</rdfs:label>
+  <rdfs:comment>A class of Annotations representing deletions of content</rdfs:comment>
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/1999/xx/annotation-ns#Annotation"/>
+</rdfs:Class>
+
+<rdfs:Class rdf:about="http://www.w3.org/1999/xx/annotation-ns#Addition">
+  <rdfs:label xml:lang="en">Addition</rdfs:label>
+  <rdfs:comment>A class of Annotations representing addition of content</rdfs:comment>
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/1999/xx/annotation-ns#Annotation"/>
+</rdfs:Class>
+
+<rdfs:Class rdf:about="http://www.w3.org/1999/xx/annotation-ns#Query">
+  <rdfs:label xml:lang="en">Query</rdfs:label>
+  <rdfs:comment>A class of Annotations representing queries about the content</rdfs:comment>
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/1999/xx/annotation-ns#Annotation"/>
+</rdfs:Class>
+
+<rdfs:Class rdf:about="http://www.w3.org/1999/xx/annotation-ns#Warning">
+  <rdfs:label xml:lang="en">Warning</rdfs:label>
+  <rdfs:comment>A class of Annotations representing general warnings</rdfs:comment>
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/1999/xx/annotation-ns#Annotation"/>
+</rdfs:Class>
+
+<rdf:Property rdf:about="http://www.w3.org/1999/xx/annotation-ns#annotates">
+  <rdfs:label xml:lang="en">annotates</rdfs:label>
+  <rdfs:comment>Relates an Annotation to the resource to which the Annotation applies.  The inverse relation is 'hasAnnotation'</rdfs:comment>
+</rdf:Property>
+
+<rdf:Property rdf:about="http://www.w3.org/1999/xx/annotation-ns#body">
+  <rdfs:label xml:lang="en">body</rdfs:label>
+  <rdfs:comment>Relates the resource representing the 'content' of an Annotation to the Annotation resource</rdfs:comment>
+  <rdfs:subPropertyOf resource="http://www.w3.org/1999/xx/annotation-ns#related"/>
+</rdf:Property>
+
+<rdf:Property rdf:about="http://www.w3.org/1999/xx/annotation-ns#context">
+  <rdfs:label xml:lang="en">context</rdfs:label>
+  <rdfs:comment>The context within the resource named in 'annotates' to which the Annotation most directly applies.</rdfs:comment>
+</rdf:Property>
+
+<rdf:Property rdf:about="http://www.w3.org/1999/xx/annotation-ns#created">
+  <rdfs:label xml:lang="en">created</rdfs:label>
+  <rdfs:comment>The date and time on which the Annotation was created.  yyyy-mm-ddThh:mm:ssZ format recommended</rdfs:comment>
+</rdf:Property>
+
+<rdf:Property rdf:about="http://www.w3.org/1999/xx/annotation-ns#related">
+  <rdfs:label xml:lang="en">related</rdfs:label>
+  <rdfs:comment>A relationship between an annotation and additional resources that is less specific than 'body'.  The 'related' property is expected to be
+ subclassed by more specific relationships.</rdfs:comment>
+</rdf:Property>
+
+</rdf:RDF>

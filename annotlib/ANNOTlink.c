@@ -640,21 +640,21 @@ void LINK_LoadAnnotationIndex (doc, annotIndex, mark_visible)
 }
 
 /*-----------------------------------------------------------------------
-   LINK_SelectSource
+   LINK_SelectSourceDoc
    Selects the text that was annotated in a document.
   -----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void LINK_SelectSourceDoc (Document doc, CONST CHAR_T *annot_url)
 #else /* __STDC__*/
-void LINK_SelectSourceDoc (doc, annotIndex)
+void LINK_SelectSourceDoc (doc, annot_url)
      Document doc;
-     CHAR_T *annotIndex;
+     CHAR_T *annot_url;
 #endif /* __STDC__*/
 {
   XPointerContextPtr xptr_ctx;
   AnnotMeta *annot;
-  CONST CHAR_T *url;
+  CHAR_T *url;
 
   if (IsW3Path (annot_url) || IsFilePath (annot_url))
     url = annot_url;

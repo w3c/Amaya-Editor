@@ -494,8 +494,15 @@ View view;
 
   if (!init)
     {
-      /* @@ unfinished; this is temporary while the code is raw @@ */
-      ANNOT_ReadSchema (doc, "http://www.w3.org/1999/xx/annotation-ns#");
+      /* @@ RRS unfinished; this is temporary while the code is raw
+	 todo: read the schema asynchronously and delay the loading
+	 of annotations until after the schema has been processed @@ */
+
+      CHAR_T *schemaName = TtaGetEnvString ("ANNOT_SCHEMA");
+
+      if (schemaName)
+	ANNOT_ReadSchema (doc, schemaName);
+
       init = TRUE;
     }
 
