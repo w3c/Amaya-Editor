@@ -56,7 +56,10 @@ use vars  qw(		$in_labelfile
 	
 	my $current_label = "";	#to notice the current label occured ,in which we are
 	my $current_tag = ""; #to notice in which tag we are
-	my $english_text = "";
+	
+	my $text = ""; # to store the message text
+	my $english_text = "";# and the english version
+	
 	my $found = 0; #boolean used during the parse of a whole label to treat the new adds
 	my $modification_necessary = 0; #boolean used during the parse of a whole label to treat the updating
 	my @list_of_lang_occur = () ; #as is name
@@ -123,7 +126,7 @@ sub import_a_language {
 		}while ( $i <= ($list [0] * 3) );
 	}
 	
-#to load the messages and their references
+#to load the messages and their references into %texts
 	my $total = 0;		
 	if ($encodage) {
 		($_, $total, %texts) = Read_text::init_text ("$in_textfile", $encodage);
@@ -132,7 +135,7 @@ sub import_a_language {
 		($encodage, $total, %texts) = Read_text::init_text ("$in_textfile");
 	}	
 							
-###############then : parsing now	
+############### then : parsing now	
 	open (IN,"<$basefile") || die "can't read $basefile because: $!\n";
 	open (OUT,">$newbasefile") || die "can't create $newbasefile because: $!\n";
 	debug ("\n\tBegin of the parse");
@@ -173,92 +176,94 @@ sub debug { #wrote messages for debuging when necessary ($debug = 1)
 #------------------THE HANDLERS--------------------------------------
 
 sub start_hndl {
-	my $expat = shift; 
- 	my $element = $current_tag = shift; 	# element is the name of the tag
-	my @attributes = ();
-	my $numberparam = 0; #double of parametres, because they're going by pair
-
-#	if (!defined ( $element)): for control, unused because function always called
-#	when $element is defined ! 
+	my $expat; 
+ 	my $element = ""; 	# element is the name of the tag
+	my %attributes = ();
+	
+	($expat,$element,%attributes) = @_ ; #to store the parameters : element and attributes and their values	
+	$element = $current_tag;
 	 
-# 	store the attributes and their values	
-	@attributes = ( shift);
-	while (defined ($attributes[-1]) ) {
-		push ( @attributes, shift ); # idem @attributes = (@attributes, shift);
-		push ( @attributes, shift );
-	}
-	$numberparam = @attributes ;
+#unused
+	my $numberparam = 0; 
+	foreach (keys (%attributes)) {
+		$numberparam++;
+	} 
+	
 
 #	use the result 
 	if ( $element eq "message" ) {
-		if ($attributes[0] eq "xml::lang"  #risque de pb si attributs mal ordonnes 
-			&& $attributes[1] eq $language_code
-			&& defined ($texts{ $labels { $current_label }}) 	) {
-			debug ("message necessitant comparaison");
-			$modification_necessary = $found = 1 ;
-			my $num = 0;
-			while ($attributes[$num] ) {
-				if ($attributes[$num] eq "last_update") {
-					++$num;
-					$date = `date`;
-					chomp $date;
-					$attributes[$num]= $date; #take the date
-					$num++;
-				}
-				else {
-					$num++;
-				}
+		if (defined ($attributes {"last_update"}) ) { ##there was at the begining this attribute no more used yet
+			delete $attributes {"last_update"} ;
+		}
+		
+		if (	defined ($attributes{"xml:lang"} ) ) {
+			if ( 	$attributes{"xml:lang"} eq $language_code
+					&& defined ( $texts{ $labels{$current_label}} ) 
+				) {
+				debug ("Message necessitant comparaison");
+				$modification_necessary = $found = 1 ;
 			}
-
-		}
-		if ($attributes[0] eq "xml::lang"  # to have the english version when updating 
-			&& $attributes[1] eq "en") {
+			elsif ($attributes {"xml:lang"} eq "en" ) { # to have the english version when updating 
 				$english_text = "OK";
+			}
+			print OUT "\t";	
+			addbegintag ( $element, %attributes );
+			$text = ""; ############to reboot it
 		}
-		print OUT "\t";	
-		addbegintag ( $element,$numberparam, @attributes );					
+		else {
+			print "==> The <$element> at line " . $expat->current_line () . 
+					"don't have the attribute xml:lang\n";
+		}
 	}
+#\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\	
 	elsif ( $element eq "label") {
-		$current_label = $attributes[1];#	to remember the last label if there's a text between begin and end tag
-		addbegintag ( $element,$numberparam, @attributes );		
-		print OUT "\n";#	small things necessary for presentation 
+		if (defined ($attributes {"define"}) ) {
+			$current_label = $attributes{"define"};#	to remember the last label if there's a text between begin and end tag
+			addbegintag ( $element, %attributes );		
+			print OUT "\n";#	small things necessary for presentation 
+		} else {
+			print "==> The <$element> at line " . $expat->current_line () . 
+					"don'thave the attribute define\n";
+		}
 	}
+#\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\	
 	elsif ( $element eq "base") {
 		# to do small modification to indicate new version
-		my $num = 0;
-		while ($attributes[$num] ) {
-			if ($attributes[$num] eq "version") {
-				++$attributes[++$num]; #increment the version
-				$num++;
-			}
-			elsif ($attributes[$num] eq "last_update") {
-				++$num;
-				chomp ($date =`date`);
-				$attributes[$num]= $date; #take the date
-				$num++;
-			}
-			else {
-				$num++;
-			}
+		if ( defined ( $attributes{"version"}) ) {
+			$attributes{"version"} += 1; #increment the version
+		} else {
+			print "==> The <$element> at line " . $expat->current_line () . 
+					"don'thave a version attribute\n";
 		}
-		addbegintag ( $element,$numberparam, @attributes );		
+		if (defined ($attributes {"last_update"}) ) {
+				$attributes {"last_update"} = $date; #take the date
+		} else {
+			print "==> The <$element> at line " . $expat->current_line () . 
+					"don'thave a last_update attribute\n";
+		}
+		addbegintag ( $element, %attributes );		
 		print OUT "\n";#	small things necessary for presentation 
 	}
+#\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\	
 	elsif ( $element eq "language" ) {
 		print OUT "\t";	
-		addbegintag ( $element,$numberparam, @attributes );					
+		addbegintag ( $element, undef);					
 	}	
+#\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\	
 	elsif ($element eq "control") {
-		addbegintag ( $element,$numberparam, @attributes );		
+		addbegintag ( $element, %attributes );		
 		print OUT "\n";#	small things necessary for presentation 
 	}
+#\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\		
 	elsif ($element eq "messages") {
-		addbegintag ( $element,$numberparam, @attributes );		
+		addbegintag ( $element, undef );		
 		print OUT "\n";#	small things necessary for presentation 
 	}
+#\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\		
 	elsif ( $element eq "") {
 		print "empty element at line " .  $expat->current_line () . "\n";
 	} 
+#\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\	
 	else {  #treat all the tag mismatched
 		print "tag  $element unknown at line " . $expat->current_line () . "\n";
 	}	
@@ -278,12 +283,12 @@ sub start_hndl {
 #--------------------------------------------------------------------
 
 sub addbegintag { #	automatical copy WITHOUT modification to the attributes	
-	my $i = 2 ;
-	 
-	print OUT "<" . $_[0];
-	while ( ($i < $_[1]) && defined ($_[$i]) ) {
-		print OUT ' ' . $_[$i++] . '="' . $_[$i++] . '"';	
-	}
+	my ($tag , %att) = @_;
+	  
+	print OUT "<" . $tag;
+	foreach (keys (%att)) {
+		print OUT " " . $_ . "=\"" . $att {$_}.  "\"";
+	}	
 	print OUT ">";
 }
 
@@ -312,6 +317,7 @@ sub end_hndl { #	do the modification if necessary
 		}
 		$english_text = "";
 	}
+#\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\	
 	elsif ($end_tag eq "control") { 
 #	if we add a new language, we have to mention it	
 		my $exist = 0;
@@ -325,8 +331,9 @@ sub end_hndl { #	do the modification if necessary
 			print OUT "\t<language encoding=\"$encodage\">$language_code</language>\n" ;
 		}
 	}	
-	### always
+####################### always do :
 	print OUT "</$end_tag>\n";
+
 }  # End endhndl
 
 #--------------------------------------------------------------------
