@@ -166,8 +166,8 @@ boolean             select;
    i = ibuf1;
    while (len < replaceLen)
      {
+	pBufn->BuContent[i - 1] = replaceStr[len++];
 	i++;
-	pBufn->BuContent[i] = replaceStr[len++];
 	if (i > pBufn->BuLength)
 	  {
 	     pBufn->BuContent[i - 1] = '\0';
