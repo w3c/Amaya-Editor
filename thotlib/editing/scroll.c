@@ -361,7 +361,7 @@ void ComputeDisplayedChars (int frame, int *Xpos, int *Ypos, int *width, int *he
    PtrBox              pBoxLast;
    PtrBox              pBox;
    ViewFrame          *pFrame;
-   int                 upDocPos, lowDocPos;
+   int                 upFrameLimit, lowFrameLimit;
    int                 min, max;
    int                 h, l, htotal;
    int                 vtotal;
@@ -394,9 +394,9 @@ void ComputeDisplayedChars (int frame, int *Xpos, int *Ypos, int *width, int *he
 
    /* Limits of the document */
    /* Bottom limit */
-   upDocPos = pFrame->FrYOrg - pBox->BxYOrg;
+   upFrameLimit = pFrame->FrYOrg - pBox->BxYOrg;
    /* Top limit */
-   lowDocPos = upDocPos + h;
+   lowFrameLimit = upFrameLimit + h;
    /* FrameTable[frame].FrScrollOrg is negative or null */
    /* Left limit is the current scroll width */
    min = FrameTable[frame].FrScrollOrg - pFrame->FrXOrg;
@@ -513,20 +513,20 @@ void ComputeDisplayedChars (int frame, int *Xpos, int *Ypos, int *width, int *he
 
    /* Rapport hauteur Picture Concrete sur hauteur portion du scroll */
    ratio = (float) h / (float) pBox->BxHeight;
-   if (upDocPos > 0)
+   if (upFrameLimit > 0)
      {
 	/* Il reste une portion de document en haut de la fenetre */
-	*Ypos = (int) ((float) upDocPos * ratio) + min;
+	*Ypos = (int) ((float) upFrameLimit * ratio) + min;
 	if (*Ypos < 4)
 	   *Ypos = 4;
      }
    else
       *Ypos = min;
 
-   if (lowDocPos < pBox->BxHeight)
+   if (lowFrameLimit < pBox->BxHeight)
      {
 	/* Calcul de la portion de document en bas de la fenetre */
-	*height = (int) ((float) (pBox->BxHeight - lowDocPos) * ratio) + max;
+	*height = (int) ((float) (pBox->BxHeight - lowFrameLimit) * ratio) + max;
 	/* Calcul de la hauteur du slider */
 	if (*height < 4)
 	   *height = htotal - 4 - *Ypos;

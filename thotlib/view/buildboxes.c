@@ -1189,7 +1189,7 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
       pFirstAb = pFirstAb->AbNext;
     else
       still = FALSE;
-  
+
   if (pCurrentBox->BxType == BoGhost || pCurrentBox->BxType == BoFloatGhost)
     {
       /* This box doesn't really exist */
@@ -1212,8 +1212,11 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
     {
       /* It's a block of lines */
       if (pCurrentBox->BxFirstLine)
-	/* we have to reformat the block of lines */
-	RecomputeLines (pAb, NULL, NULL, frame);
+	{
+	  /* we have to reformat the block of lines */
+	  RecomputeLines (pAb, NULL, NULL, frame);
+	  *height = pCurrentBox->BxH;
+	}
       else
 	{
 	  pCurrentBox->BxFirstLine = NULL;

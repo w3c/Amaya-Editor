@@ -3703,7 +3703,7 @@ void UpdateScrollbars (int frame)
    * It's why when clicking up/down on the scrollbar, the increment is 1pixel.
    * I've patched wxWidgets to fix the step increment to 8, better than 1 ...
    */
-  if (width < l)
+  if (width < l || x > 0)
   {
     FrameTable[frame].WdFrame->ShowScrollbar(2);
     FrameTable[frame].WdScrollH->SetScrollbar( x, width, l, width );
@@ -3711,11 +3711,12 @@ void UpdateScrollbars (int frame)
   else
     FrameTable[frame].WdFrame->HideScrollbar(2);    
 
-  if (height < h)
-  {
+  if (height < h || y > 0)
+    {
+    /* slider smaller than the scroll window */
     FrameTable[frame].WdFrame->ShowScrollbar(1);
     FrameTable[frame].WdScrollV->SetScrollbar( y, height, h, height );
-  }
+    }
   else
     FrameTable[frame].WdFrame->HideScrollbar(1);
 #endif /*_WX*/
