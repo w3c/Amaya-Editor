@@ -236,7 +236,7 @@ char              **file;
       curr--;
 
    /* if we found it, separate the host name from the directory */
-   if ((*curr == DIR_SEP) && (*(curr + 1) == used_sep))
+   if ((*curr == used_sep) && (*(curr + 1) == used_sep))
      {
 	*host = temp = curr + 2;
 	while ((*temp != 0) && (*temp != used_sep))
