@@ -3287,7 +3287,11 @@ char               *attrstr;
 
 typedef struct _BackgroundImageCallbackBlock {
     PresentationTarget target;
-    PresentationContext context;
+    union {
+	PresentationContextBlock blk;
+	SpecificContextBlock specific;
+	GenericContextBlock generic;
+    } context;
 } BackgroundImageCallbackBlock, *BackgroundImageCallbackPtr;
 
 #ifdef __STDC__
@@ -3310,8 +3314,7 @@ fprintf(stderr,"ParseCSSBackgroundImageCallback\n");
 
    if (callblock == NULL) return;
    target = callblock->target;
-   context = callblock->context;
-   TtaFreeMemory(callblock);
+   context = &callblock->context.blk;
 
    /*
     * Ok the image was fetched, finish the background-image handling.
@@ -3319,6 +3322,7 @@ fprintf(stderr,"ParseCSSBackgroundImageCallback\n");
    image.pointer = file;
    if (context->drv->SetBgImage)
        context->drv->SetBgImage (target, context, image);
+   TtaFreeMemory(callblock);
 }
 
 /*----------------------------------------------------------------------
@@ -3491,7 +3495,8 @@ char               *attrstr;
 		       TtaGetMemory(sizeof(BackgroundImageCallbackBlock));
 		   if (callblock != NULL) {
 		       callblock->target = target;
-		       callblock->context = context;
+		       memcpy(&callblock->context.generic, gblock,
+		              sizeof(GenericContextBlock));
 
 		       /* fetch and display background image of element */
 		       el = TtaGetMainRoot (gblock->doc);
@@ -3524,7 +3529,8 @@ char               *attrstr;
 		       TtaGetMemory(sizeof(BackgroundImageCallbackBlock));
 		   if (callblock != NULL) {
 		       callblock->target = target;
-		       callblock->context = context;
+		       memcpy(&callblock->context.specific, sblock,
+		              sizeof(SpecificContextBlock));
 
 		       /* fetch and display background image of element */
 		       el = TtaGetMainRoot (sblock->doc);
