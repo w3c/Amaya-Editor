@@ -522,7 +522,7 @@ PtrElement NextRowInTable (PtrElement pRow, PtrElement pTable)
 	{
 	  rowType = GetElemWithException (ExcIsRow, pRow->ElStructSchema);
 	  pAsc = pRow->ElParent;
-	  while (pAsc && pAsc != pTable && !pAsc->ElNext)
+	  while (pAsc && pAsc->ElParent != pTable && !pAsc->ElNext)
 	    pAsc = pAsc->ElParent;
 	  while (!pNextRow && pAsc && pAsc->ElNext)
 	    {
