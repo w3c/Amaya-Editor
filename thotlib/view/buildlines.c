@@ -1722,8 +1722,13 @@ static int FillLine (PtrLine pLine, PtrAbstractBox pRootAb,
 	   while (toCut)
 	     {
 	       if (pNextBox)
-		 pNextBox = GetPreviousBox (pNextBox->BxAbstractBox);
-	       /*pNextBox = pNextBox->BxPrevious;*/
+		 {
+		   if (pNextBox->BxType == BoScript &&
+		       pNextBox != pNextBox->BxAbstractBox->AbBox->BxNexChild)
+		     pNextBox = pNextBox->BxPrevious;
+		   else
+		     pNextBox = GetPreviousBox (pNextBox->BxAbstractBox);
+		 }
 	       
 	       /* if we are working on the first box, we won't try again */
 	       if (pNextBox == pLine->LiFirstPiece)
