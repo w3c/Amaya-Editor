@@ -1767,7 +1767,11 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int indent,
 	  else
 	    {
 	      /* not enough space: move to the first bottom */
-	      if (bottomL < bottomR)
+	      if (floatR == NULL)
+		pLine->LiYOrg = bottomL;
+	      else if (floatL == NULL)
+		pLine->LiYOrg = bottomR;
+	      else if (bottomL < bottomR)
 		pLine->LiYOrg = bottomL;
 	      else
 		pLine->LiYOrg = bottomR;
