@@ -1634,9 +1634,15 @@ ThotBool     logFile;
 				 "SaveDocument",
 				 TtaGetMessage (AMAYA, AM_BUTTON_SAVE),
 				 TBSTYLE_BUTTON, FALSE);
+#ifdef _WINDOWS
+	   iPrint = TtaAddButton (doc, 1, iconPrint, SetupAndPrint,  "SetupAndPrint",
+				  TtaGetMessage (AMAYA, AM_BUTTON_PRINT),
+				  TBSTYLE_BUTTON, TRUE);
+#else /* _WINDOWS */
 	   iPrint = TtaAddButton (doc, 1, iconPrint, PrintAs,  "PrintAs",
 				  TtaGetMessage (AMAYA, AM_BUTTON_PRINT),
 				  TBSTYLE_BUTTON, TRUE);
+#endif /* WINDOWS */
 	   iFind = TtaAddButton (doc, 1, iconFind, TtcSearchText,
 				 "TtcSearchText", 
 				 TtaGetMessage (AMAYA, AM_BUTTON_SEARCH),
