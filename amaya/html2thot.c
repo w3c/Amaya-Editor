@@ -5125,6 +5125,12 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 				}
 			    }
 			}
+		      else
+			{
+			  /* it's not necessary to continue */
+			  found = FALSE;
+			  endOfSniffedFile = TRUE;			  
+			}
 		    }
 		  else
 		    {
