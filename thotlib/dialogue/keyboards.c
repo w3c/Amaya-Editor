@@ -415,7 +415,7 @@ static void KbdEndDisplay (ThotWidget w, int index, caddr_t call_d)
   ----------------------------------------------------------------------*/
 void KbdCallbackHandler (ThotWidget w, int param, caddr_t call_d)
 {
-    CHAR_T             car;
+   CHAR_T              car;
    ThotWidget          wp;
    int                 i;
 
@@ -441,12 +441,9 @@ void KbdCallbackHandler (ThotWidget w, int param, caddr_t call_d)
      }
    /* Insert the selected character */
 #ifdef _I18N_
-   if (KeyboardMode == 3 &&
-      (car >= 65 && car <= 90) || (car >= 97 && car <= 122))
-     {
-       /* give the unicode value instead of the symbol index */
-       car = TtaGetWCFromChar ((unsigned char) car, ISO_SYMBOL);
-     }
+   if (KeyboardMode == 3)
+      /* give the unicode value instead of the symbol index */
+      car = TtaGetWCFromChar ((unsigned char) car, ISO_SYMBOL);
 #endif /* _I18N_ */
    if (ThotLocalActions[T_insertchar] != NULL)
       (*ThotLocalActions[T_insertchar]) (ActiveFrame, car, KeyboardMode);

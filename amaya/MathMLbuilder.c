@@ -6,7 +6,6 @@
  */
  
 /*
- *
  * MathMLbuilder
  *
  * Author: V. Quint
@@ -663,7 +662,7 @@ void SetSingleIntHorizStretchAttr (Element el, Document doc, Element* selEl)
 	   if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
 	      /* the MO child contains a TEXT element */
 	      {
-	      len = TtaGetVolume (textEl);
+	      len = TtaGetElementVolume (textEl);
 	      if (len == 1)
 		 /* the TEXT element contains a single character */
 		 {
@@ -672,28 +671,47 @@ void SetSingleIntHorizStretchAttr (Element el, Document doc, Element* selEl)
 		 len = 2;
 		 TtaGiveBufferContent (textEl, text, len, &lang);
 		 script = TtaGetScript (lang);
-		 if (script == 'L')
-		    {
-		    if (text[0] == '-' || text[0] == '_' ||
-			text[0] == 175)
+		 if (
+#ifndef _I18N_
+		     (script == 'L') &&
+#endif
+		     (text[0] == '-' || text[0] == '_' ||
+		      text[0] == 175))
 		      /* a horizontal line in the middle of the box */
 		      c = 'h'; 
-		    }
-		 else if (script == 'G')
-		    /* a single Symbol character */
-		    {
-		    if (text[0] == 172)
-		      c = 'L';  /* arrow left */
-		    else if (text[0] == 174)
-		      c = 'R';  /* arrow right */
-		    else if (text[0] == 45)    /* - (minus) */
-		      /* a horizontal line in the middle of the box */
-		      c = 'h'; 
-		    else if (text[0] == 132)
-		      c = 'o';  /* Over brace */
-		    else if (text[0] == 133)
-		      c = 'u';  /* Under brace */
-		    }
+		 else 
+#ifdef _I18N_
+		   if (text[0] == 0x2192)
+		     c = 'L';  /* arrow left */
+		   else if (text[0] == 0x2190)
+		     c = 'R';  /* arrow right */
+		   else if (text[0] == 45)    /* - (minus) */
+		     /* a horizontal line in the middle of the box */
+		     c = 'h'; 
+		   else if (text[0] == 0x0332)    /* UnderBar */
+		     /* a horizontal line */
+		     c = 'h'; 
+		   else if (text[0] == 65079)
+		     c = 'o';  /* Over brace */
+		   else if (text[0] == 65080)
+		     c = 'u';  /* Under brace */
+#else
+		   if (script == 'G')
+		     /* a single Symbol character */
+		     {
+		       if (text[0] == 172)
+			 c = 'L';  /* arrow left */
+		       else if (text[0] == 174)
+			 c = 'R';  /* arrow right */
+		       else if (text[0] == 45)    /* - (minus) */
+			 /* a horizontal line in the middle of the box */
+			 c = 'h'; 
+		       else if (text[0] == 132)
+			 c = 'o';  /* Over brace */
+		       else if (text[0] == 133)
+			 c = 'u';  /* Under brace */
+		     }
+#endif
 		 if (c != EOS)
 		    {
 		    /* attach a IntHorizStretch attribute to the mo */
@@ -835,15 +853,22 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
 	  elType = TtaGetElementType (textEl);
 	  if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
 	    {
-	      len = TtaGetVolume (textEl);
+	      len = TtaGetElementVolume (textEl);
 	      if (len >= 1)
 		{
 		  if (len >= buflen)
 		    len = buflen-1;
-		  len++;
-		  TtaGiveBufferContent (textEl, text, len, &lang);
-		  len --;
+		  TtaGiveBufferContent (textEl, text, len+1, &lang);
 		  script = TtaGetScript (lang);
+#ifdef _I18N_
+		  integral = TRUE;
+		  for (i = 0; i < len; i++)
+		    if (text[i] < 0x222B || text[i] > 0x2233)
+		      /* accept only symbols like simple integral, double or
+			 triple integral, contour integral, etc. */
+		      integral = FALSE;
+#else
+		  integral = FALSE;
 		  if (script == 'G')
 		    /* Adobe Symbol character set */
 		    {
@@ -854,30 +879,36 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
 		        /**** accept also other symbols like double or triple
 			      integral, contour integral, etc. ****/
 			integral = FALSE;
-		    if (integral)
-		      /* the operator contains only integral symbols */
-		      {
-			/* attach a IntVertStretch attribute */
-			attrType.AttrSSchema = MathMLSSchema;
-			attrType.AttrTypeNum = MathML_ATTR_IntVertStretch;
-			attr = TtaNewAttribute (attrType);
-			TtaAttachAttribute (el, attr, doc);
-			TtaSetAttributeValue (attr,
+		    }
+#endif
+		  if (integral)
+		    /* the operator contains only integral symbols */
+		    {
+		      /* attach a IntVertStretch attribute */
+		      attrType.AttrSSchema = MathMLSSchema;
+		      attrType.AttrTypeNum = MathML_ATTR_IntVertStretch;
+		      attr = TtaNewAttribute (attrType);
+		      TtaAttachAttribute (el, attr, doc);
+		      TtaSetAttributeValue (attr,
 					   MathML_ATTR_IntVertStretch_VAL_yes_,
 					   el, doc);
-			TtaRegisterAttributeCreate (attr, el, doc);
-
-			/* replace the Integral characters by a Thot SYMBOL
-			   element. If there are several such characters in
-			   the mo (multiple integral), replace them too. */
-			do
-			  {
-			    /* replace the TEXT element by a Thot SYMBOL */
-			    elType.ElTypeNum = MathML_EL_SYMBOL_UNIT;
-			    elType.ElSSchema = MathMLSSchema;
-			    for (i = 0; i < len; i++)
-			      if (text[i] == 242)
-			        {
+		      TtaRegisterAttributeCreate (attr, el, doc);
+		      
+		      /* replace the Integral characters by a Thot SYMBOL
+			 element. If there are several such characters in
+			 the mo (multiple integral), replace them too. */
+		      do
+			{
+			  /* replace the TEXT element by a Thot SYMBOL */
+			  elType.ElTypeNum = MathML_EL_SYMBOL_UNIT;
+			  elType.ElSSchema = MathMLSSchema;
+			  for (i = 0; i < len; i++)
+#ifdef _I18N_
+			    if (text[i] >= 0x222B && text[i] <= 0x2233)
+#else
+			    if (text[i] == 242)
+#endif
+			      {
 				symbolEl = TtaNewElement (doc, elType);
 				TtaInsertSibling (symbolEl, textEl, TRUE,doc);
 				if (selEl != NULL)
@@ -886,85 +917,82 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
 				c = 'i';
 				TtaSetGraphicsShape (symbolEl, c, doc);
 				TtaRegisterElementCreate (symbolEl, doc);
-			        }
-			    TtaRegisterElementDelete (textEl, doc);
-			    TtaDeleteTree (textEl, doc);
-			    /* is there an other text element after the
-			       integral symbol? */
-			    textEl = symbolEl; TtaNextSibling (&textEl);
-			    if (textEl)
-			      {
-				elType = TtaGetElementType (textEl);
-				if (elType.ElTypeNum != MathML_EL_TEXT_UNIT)
-				  textEl = NULL;
-				else
-				  /* there is another text element.
-				     Is it a single integral symbol? */
-				  {
-				    len = TtaGetVolume (textEl);
-				    if (len < 1)
-				      /* not a single character */
-				      textEl = NULL;
-				    else
-				      {
-					if (len >= buflen)
-					  len = buflen-1;
-					len++;
-					TtaGiveBufferContent (textEl, text,
-							      len, &lang); 
-					script = TtaGetScript (lang);
-					if (script != 'G')
-					  /* not the right script for an
-					     integral*/
-					  textEl = NULL;
-					else
-					  if (text[0] != 242)
-					    /* not an integral symbol */
-					    textEl = NULL;
-				      }
-				  }
 			      }
-			  }
-			while (textEl);
-
-			if (inbase)
-			  /* it's within a Base or UnderOverBase element */
-			  {
-			    sibling = parent;
-			    TtaNextSibling (&sibling);
-			    if (sibling)
-			      /* the msubsup of munderover element has a next
-				 sibling */
-			      {
-				elType = TtaGetElementType (sibling);
-				if (elType.ElTypeNum == MathML_EL_Construct &&
-				    elType.ElSSchema == MathMLSSchema)
-				  /* the next sibling is a Construct */
-				  {
-				    next = sibling;
-				    TtaNextSibling (&next);
-				    if (!next)
-				      /* there is no other sibling after the
-					 Construct. Change it into Construct1*/
-				      {
-				       TtaRegisterElementDelete (sibling, doc);
-				       TtaRemoveTree (sibling, doc);
-				       ChangeElementType (sibling,
+			  TtaRegisterElementDelete (textEl, doc);
+			  TtaDeleteTree (textEl, doc);
+			  /* is there an other text element after the
+			     integral symbol? */
+			  textEl = symbolEl; TtaNextSibling (&textEl);
+			  if (textEl)
+			    {
+			      elType = TtaGetElementType (textEl);
+			      if (elType.ElTypeNum != MathML_EL_TEXT_UNIT)
+				textEl = NULL;
+			      else
+				/* there is another text element.
+				   Is it a single integral symbol? */
+				{
+				  len = TtaGetElementVolume (textEl);
+				  if (len < 1)
+				    /* not a single character */
+				    textEl = NULL;
+				  else
+				    {
+				      if (len >= buflen)
+					len = buflen-1;
+				      TtaGiveBufferContent (textEl, text,
+							    len+1, &lang); 
+				      script = TtaGetScript (lang);
+#ifdef _I18N_
+				      if (text[i] < 0x222B || text[i] > 0x2233)
+#else
+				      if (script != 'G' || text[0] != 242)
+#endif
+					/* not an integral*/
+					textEl = NULL;
+				    }
+				}
+			    }
+			}
+		      while (textEl);
+		      
+		      if (inbase)
+			/* it's within a Base or UnderOverBase element */
+			{
+			  sibling = parent;
+			  TtaNextSibling (&sibling);
+			  if (sibling)
+			    /* the msubsup of munderover element has a next
+			       sibling */
+			    {
+			      elType = TtaGetElementType (sibling);
+			      if (elType.ElTypeNum == MathML_EL_Construct &&
+				  elType.ElSSchema == MathMLSSchema)
+				/* the next sibling is a Construct */
+				{
+				  next = sibling;
+				  TtaNextSibling (&next);
+				  if (!next)
+				    /* there is no other sibling after the
+				       Construct. Change it into Construct1*/
+				    {
+				      TtaRegisterElementDelete (sibling, doc);
+				      TtaRemoveTree (sibling, doc);
+				      ChangeElementType (sibling,
 							 MathML_EL_Construct1);
-				       TtaInsertSibling (sibling, parent,
-							 FALSE, doc);
-				       TtaRegisterElementCreate (sibling, doc);
-				       /* force the msubsup element to be
-					  reformatted and to take into account
-					  its new next sibling */
-				       TtaRemoveTree (parent, doc);
-				       TtaInsertSibling (parent, sibling, TRUE,
-							 doc);
-				      }
-				  }
-			      }
-			  } 
-		      }
+				      TtaInsertSibling (sibling, parent,
+							FALSE, doc);
+				      TtaRegisterElementCreate (sibling, doc);
+				      /* force the msubsup element to be
+					 reformatted and to take into account
+					 its new next sibling */
+				      TtaRemoveTree (parent, doc);
+				      TtaInsertSibling (parent, sibling, TRUE,
+							doc);
+				    }
+				}
+			    }
+			} 
 		    }
 		}
 	    }
@@ -1458,8 +1486,7 @@ void SetIntAddSpaceAttr (Element el, Document doc)
   AttributeType	attrType;
   Attribute	attr, formAttr;
   int		len, val, form;
-#define BUFLEN 10
-  unsigned char    	text[BUFLEN];
+  CHAR_T        text[2];
   Language	lang;
   char		script;
 
@@ -1507,28 +1534,27 @@ void SetIntAddSpaceAttr (Element el, Document doc)
      else
        /* no form attribute. Analyze the content */
        {
-       len = TtaGetTextLength (textEl);
-       if (len > 0 && len < BUFLEN)
+       len = TtaGetElementVolume (textEl);
+       if (len == 1)
 	  {
-	    len = BUFLEN;
-	    TtaGiveTextContent (textEl, text, &len, &lang);
+	    TtaGiveBufferContent (textEl, text, len+1, &lang);
 	    script = TtaGetScript (lang);
-	    if (len == 1)
+	    /* the mo element contains a single character */
+#ifndef _I18N_
+	    if (script == 'L')
+	      /* ISO-Latin 1 character */
 	      {
-	       /* the mo element contains a single character */
-	       if (script == 'L')
-	          /* ISO-Latin 1 character */
-	          {
-		  if (text[0] == '-')
-		     /* prefix or infix operator? */
-		     {
-		     previous = el;
-		     TtaPreviousSibling (&previous);
-		     if (previous == NULL)
-		        /* no previous sibling => prefix operator */
-		        val = MathML_ATTR_IntAddSpace_VAL_nospace;
-		     else
-		        {
+#endif
+		if (text[0] == '-')
+		  /* prefix or infix operator? */
+		  {
+		    previous = el;
+		    TtaPreviousSibling (&previous);
+		    if (previous == NULL)
+		      /* no previous sibling => prefix operator */
+		      val = MathML_ATTR_IntAddSpace_VAL_nospace;
+		    else
+		      {
 			elType = TtaGetElementType (previous);
 			if (elType.ElTypeNum == MathML_EL_MO)
 			   /* after an operator => prefix operator */
@@ -1536,63 +1562,90 @@ void SetIntAddSpaceAttr (Element el, Document doc)
 			else
 			   /* infix operator */
 		           val = MathML_ATTR_IntAddSpace_VAL_both;
-			}
-		     }
-		  else if (text[0] == '&' ||
-			   text[0] == '*' ||
-			   text[0] == '+' ||
-			   text[0] == '/' ||
-			   text[0] == '<' ||
-			   text[0] == '=' ||
-			   text[0] == '>' ||
-			   text[0] == '^' ||
-			   (int)text[0] == 177 || /* plus or minus */
-			   (int)text[0] == 215 || /* times */
-			   (int)text[0] == 247)   /* divide */
-		     /* infix operator */
-		     val = MathML_ATTR_IntAddSpace_VAL_both;
-		  else if (text[0] == ',' ||
-			   text[0] == '!' ||
-			   text[0] == '&' ||
-			   text[0] == ':' ||
-			   text[0] == ';')
-		     /* separator */
-	             val = MathML_ATTR_IntAddSpace_VAL_spaceafter;
-		  else if (text[0] == '(' ||
-			   text[0] == ')' ||
-			   text[0] == '[' ||
-			   text[0] == ']' ||
-			   text[0] == '{' ||
-			   text[0] == '}' ||
-			   text[0] == '.' ||
-			   text[0] == '@' ||
-			   (int)text[0] == 129 ||  /* thin space */
-			   (int)text[0] == 130 ||  /* en space */
-			   (int)text[0] == 160)    /* em space */
-		     val = MathML_ATTR_IntAddSpace_VAL_nospace;
+		      }
 		  }
-	       else if (script == 'G')
-		 {
-		   /* Symbol character set */
-		   if ((int)text[0] == 163 || /* less or equal */
-		       (int)text[0] == 177 || /* plus or minus */
-		       (int)text[0] == 179 || /* greater or equal */
-		       (int)text[0] == 180 || /* times */
-		       (int)text[0] == 184 || /* divide */
-		       (int)text[0] == 185 || /* not equal */
-		       (int)text[0] == 186 || /* identical */
-		       (int)text[0] == 187 || /* equivalent */
-		       (int)text[0] == 196 || /* circle times */
-		       (int)text[0] == 197 || /* circle plus */
-		       ((int)text[0] >= 199 && (int)text[0] <= 209) || /*  */
-		       (int)text[0] == 217 || /* and */
-		       (int)text[0] == 218 )  /* or */
-		     /* infix operator */
-		     val = MathML_ATTR_IntAddSpace_VAL_both;
-		   else
-		     val = MathML_ATTR_IntAddSpace_VAL_nospace;
-		 }
+		else if (text[0] == '&' ||
+			 text[0] == '*' ||
+			 text[0] == '+' ||
+			 text[0] == '/' ||
+			 text[0] == '<' ||
+			 text[0] == '=' ||
+			 text[0] == '>' ||
+			 text[0] == '^' ||
+			 (int)text[0] == 177 || /* plus or minus */
+			 (int)text[0] == 215 || /* times */
+			 (int)text[0] == 247)   /* divide */
+		  /* infix operator */
+		  val = MathML_ATTR_IntAddSpace_VAL_both;
+		else if (text[0] == ',' ||
+			 text[0] == '!' ||
+			 text[0] == '&' ||
+			 text[0] == ':' ||
+			 text[0] == ';')
+		  /* separator */
+		  val = MathML_ATTR_IntAddSpace_VAL_spaceafter;
+		else if (text[0] == '(' ||
+			 text[0] == ')' ||
+			 text[0] == '[' ||
+			 text[0] == ']' ||
+			 text[0] == '{' ||
+			 text[0] == '}' ||
+			 text[0] == '.' ||
+			 text[0] == '@' ||
+			 (int)text[0] == 129 ||  /* thin space */
+			 (int)text[0] == 130 ||  /* en space */
+			 (int)text[0] == 160)    /* em space */
+		  val = MathML_ATTR_IntAddSpace_VAL_nospace;
+#ifndef _I18N_
 	      }
+	    else if (script == 'G')
+	      {
+		/* Symbol character set */
+		if ((int)text[0] == 163 || /* less or equal */
+		    (int)text[0] == 177 || /* plus or minus */
+		    (int)text[0] == 179 || /* greater or equal */
+		    (int)text[0] == 180 || /* times */
+		    (int)text[0] == 184 || /* divide */
+		    (int)text[0] == 185 || /* not equal */
+		    (int)text[0] == 186 || /* identical */
+		    (int)text[0] == 187 || /* equivalent */
+		    (int)text[0] == 196 || /* circle times */
+		    (int)text[0] == 197 || /* circle plus */
+		    ((int)text[0] >= 199 && (int)text[0] <= 209) || /*  */
+		    (int)text[0] == 217 || /* and */
+		    (int)text[0] == 218)   /* or */
+#else
+	    else if ((int)text[0] == 0x2264 || /* less or equal */
+		     (int)text[0] == 0x00B1 || /* plus or minus */
+		     (int)text[0] == 0x2265 || /* greater or equal */
+		     (int)text[0] == 0x00D7 || /* times */
+		     (int)text[0] == 0x00F7 || /* divide */
+		     (int)text[0] == 0x2260 || /* not equal */
+		     (int)text[0] == 0x2261 || /* identical */
+		     (int)text[0] == 0x2248 || /* equivalent */
+		     (int)text[0] == 0x2297 || /* circle times */
+		     (int)text[0] == 0x2295 || /* circle plus */
+		     (int)text[0] == 0x2229 ||
+		     (int)text[0] == 0x222A ||
+		     (int)text[0] == 0x2283 ||
+		     (int)text[0] == 0x2287 ||
+		     (int)text[0] == 0x2284 ||
+		     (int)text[0] == 0x2282 ||
+		     (int)text[0] == 0x2286 ||
+		     (int)text[0] == 0x2208 ||
+		     (int)text[0] == 0x2209 ||
+		     (int)text[0] == 0x2220 ||
+		     (int)text[0] == 0x2207 ||
+		     (int)text[0] == 0x2227 || /* and */
+		     (int)text[0] == 0x2228)   /* or */
+#endif
+	      /* infix operator */
+	      val = MathML_ATTR_IntAddSpace_VAL_both;
+		else
+		  val = MathML_ATTR_IntAddSpace_VAL_nospace;
+#ifndef _I18N_
+	      }
+#endif
 	  }
        }
      TtaSetAttributeValue (attr, val, el, doc);
@@ -1662,15 +1715,18 @@ void      CheckFence (Element el, Document doc)
        elType = TtaGetElementType (content);
        if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
 	 {
-	 len = TtaGetVolume (content);
+	 len = TtaGetElementVolume (content);
 	 if (len == 1)
 	   /* the MO element contains a single character */
 	   {
-	   len = 2;
-	   TtaGiveBufferContent (content, text, len, &lang);
+	   TtaGiveBufferContent (content, text, len+1, &lang);
 	   script = TtaGetScript (lang);
+#ifdef _I18N_
+	   if (text[0] == 8721 || text[0] == 8719) /* large Sigma or Pi */
+#else
 	   if ((script == 'G') &&
-	       (text[0] == 229 || text[0] == 213))  /* Sigma,  Pi */
+	       (text[0] == 229 || text[0] == 213))  /* large Sigma or  Pi */
+#endif
 	     /* it's a large operator */
 	     {
 	     ctxt = TtaGetSpecificStyleContext (doc);
@@ -1685,13 +1741,23 @@ void      CheckFence (Element el, Document doc)
 	   else if (ChildOfMRowOrInferred (el))
 	     /* the MO element is a child of a MROW element */
 	      {
-	      if (((script == 'L') &&
+	      if ((
+#ifndef _I18N_
+                   (script == 'L') &&
+#endif
 		   (text[0] == '(' || text[0] == ')' ||
 		    text[0] == '[' || text[0] == ']' ||
 		    text[0] == '{' || text[0] == '}' ||
 		    text[0] == '|'))  ||
-		  ((script == 'G') &&
-		   (text[0] == 225 || text[0] == 241)))
+		  (
+		   /* test left and right angle brackets */
+#ifdef _I18N_
+		   (text[0] == 9001 || text[0] == 9002)
+#else
+                   (script == 'G') &&
+		   (text[0] == 225 || text[0] == 241)
+#endif
+		 ))
 		/* it's a stretchable parenthesis or equivalent */
 		{
 		/* remove the content of the MO element */
@@ -1719,12 +1785,21 @@ void      CheckFence (Element el, Document doc)
 		  }
 		/* create a new content for the MF element */
 		elType.ElTypeNum = MathML_EL_SYMBOL_UNIT;
+#ifdef _I18N_
+                if (text[0] == 9002)
+#else
 		if (script == 'G' && text[0] == 241)
+#endif
 		  c = '>';    /* RightAngleBracket */
-		else if (script == 'G' && text[0] == 225)
-		  c = '<';    /* LeftAngleBracket */
 		else
-		  c = (char) text[0];
+#ifdef _I18N_
+                  if (text[0] == 9001)
+#else
+		  if (script == 'G' && text[0] == 225)
+#endif
+		    c = '<';    /* LeftAngleBracket */
+		  else
+		    c = (char) text[0];
 		content = TtaNewElement (doc, elType);
 		TtaInsertFirstChild (&content, el, doc);
 		TtaSetGraphicsShape (content, c, doc);

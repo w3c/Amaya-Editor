@@ -1105,7 +1105,7 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 		    {
 		      /* use symbol instead of ISO_8859_7 */
 		      GreekFontScript = 'G';
-		    lfont = LoadNearestFont (GreekFontScript, fontset->FontFamily,
+		      lfont = LoadNearestFont (GreekFontScript, fontset->FontFamily,
 					     fontset->FontHighlight,
 					     fontset->FontSize,
 					     frame, TRUE, TRUE);
@@ -1127,6 +1127,31 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 	  else
 	    /* using the font symbol instead of ISO_8859_7 */
 	    car = TtaGetCharFromWC (c, ISO_SYMBOL);
+	}
+      else if (c > 0x2000 && c < 0x2300)
+	{
+	  if (fontset->FontSymbol == NULL)
+	    {
+	      /* load the Adobe Symbol font */
+	      for (frame = 1; frame <= MAX_FRAME; frame++)
+		{
+		  mask = 1 << (frame - 1);
+		  if (fontset->FontMask | mask)
+		    {
+		      lfont = LoadNearestFont ('G', fontset->FontFamily,
+					       fontset->FontHighlight,
+					       fontset->FontSize,
+					       frame, TRUE, TRUE);
+		    }
+		}
+	      if (lfont == NULL)
+		/* font not found: avoid to retry later */
+		lfont = (void *) -1;
+	      fontset->FontSymbol = lfont;
+	    }
+	  else
+	    lfont = fontset->FontSymbol;
+	  car = TtaGetCharFromWC (c, ISO_SYMBOL);
 	}
       else
 	{

@@ -1643,7 +1643,7 @@ TextTRANSLATE Grec
 	'\277' -> '&cr;';
 	'\300' -> '&aleph;';
 	'\301' -> '&ifraktur;';
-	'\302' -> '&rfraktur;';
+	'\302' -> '&Rfr;';
 	'\303' -> '&weierp;';
 	'\304' -> '&CircleTimes;';
 	'\305' -> '&CirclePlus;';

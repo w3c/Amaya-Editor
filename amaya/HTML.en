@@ -227,8 +227,9 @@ rules_: rules
 none_: none
 Position: align
 Row_valign: valign
-colspan_: colspan
 rowspan_: rowspan
+colspan_: colspan
+span_: span
 Cell_align: align
 Cell_left: left
 Cell_center: center

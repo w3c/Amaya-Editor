@@ -1169,7 +1169,7 @@ static void      RemoveTrailingSpaces (Element el)
        if (elType.ElTypeNum == 1)
 	 /* the last leaf is a TEXT element */
 	 {
-	   length = TtaGetVolume (lastLeaf);
+	   length = TtaGetElementVolume (lastLeaf);
 	   if (length > 0)
 	     {
 	       /* Search for an Entity attribute  */

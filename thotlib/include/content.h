@@ -383,18 +383,6 @@ extern PicType TtaGetPictureType (Element element);
   ----------------------------------------------------------------------*/
 extern void TtaSetPictureType (Element element, char *mime_type);
 
-
-/*----------------------------------------------------------------------
-   TtaGetVolume
-
-   Returns the current volume of the current element.
-   Parameter:
-   element: the element of interest.
-   Return value:
-   volume contained in the element.
-  ----------------------------------------------------------------------*/
-extern int TtaGetVolume (Element element);
-
 /*----------------------------------------------------------------------
    TtaGetTextLength
 
@@ -445,6 +433,21 @@ extern void TtaGiveTextContent (Element element, unsigned char *buffer,
    language: language of the text.
   ----------------------------------------------------------------------*/
 extern void TtaGiveBufferContent (Element element, CHAR_T *buffer, int length, Language *language);
+
+/*----------------------------------------------------------------------
+   TtaSetBufferContent
+
+   Changes the content of a Text basic element. The full content (if any) is
+   deleted and replaced by the new one.
+   Parameters:
+   element: the Text element to be modified.
+   content: new content for that element coded as a string of CHAR_T
+   characters.
+   language: language of that Text element.
+   document: the document containing that element.
+  ----------------------------------------------------------------------*/
+extern void TtaSetBufferContent (Element element, CHAR_T *content,
+				 Language language, Document document);
 
 /*----------------------------------------------------------------------
    TtaGiveSubString

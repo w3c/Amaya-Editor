@@ -1687,30 +1687,6 @@ void TtaCopyPage (Element destination, Element source)
     }
 }
 
-
-/*----------------------------------------------------------------------
-   TtaGetVolume
-
-   Returns the current volume of the current element.
-   Parameter:
-   element: the element of interest.
-   Return value:
-   volume contained in the element.
-  ----------------------------------------------------------------------*/
-int TtaGetVolume (Element element)
-{
-   int              volume;
-
-   UserErrorCode = 0;
-   volume = 0;
-   if (element == NULL)
-     TtaError (ERR_invalid_parameter);
-   else
-     volume = ((PtrElement) element)->ElVolume;
-   return (volume);
-}
-
-
 /*----------------------------------------------------------------------
    GetImageDesc
 
@@ -1830,15 +1806,16 @@ void TtaSetPictureType (Element element, char *mime_type)
 /*----------------------------------------------------------------------
    TtaGiveBufferContent
 
-   Returns a sub buffer from a Text basic element limited to the first
-   Buffer length.
+   Returns the content of a Text basic element as a string of CHAR_T
+   characters.
    Parameters:
    element: the element of interest. This element must be a basic
    element of type Text.
    buffer: the buffer that will contain the returned string. This buffer
    must be at least of size length.
    The length corresponds to the buffer length.
-   length: the length of the substring. Must be strictly positive.
+   length: the maximum length of the string to be returned. Must be strictly
+   positive.
    Return parameter:
    buffer: (the buffer contains the substring).
    language: language of the text.
@@ -1848,6 +1825,7 @@ void TtaGiveBufferContent (Element element, CHAR_T *buffer, int length,
 {
   PtrTextBuffer       pBuf;
   PtrElement          pEl;
+  int                 len, l;
 
   UserErrorCode = 0;
   pEl = (PtrElement) element;
@@ -1855,20 +1833,106 @@ void TtaGiveBufferContent (Element element, CHAR_T *buffer, int length,
     TtaError (ERR_invalid_parameter);
   else if (!pEl->ElTerminal)
     TtaError (ERR_invalid_element_type);
-  else if (pEl->ElLeafType != LtText &&
-	   pEl->ElLeafType != LtPicture)
+  else if (pEl->ElLeafType != LtText && pEl->ElLeafType != LtPicture)
     TtaError (ERR_invalid_element_type);
   else
     {
+      len = 0;
       pBuf = pEl->ElText;
+      while (pBuf != NULL && len < length - 1)
+	{
+	  l = 0;
+	  if (length < len + pBuf->BuLength + 1)
+	    l = length - len;
+	  else
+	    l = pBuf->BuLength + 1;
+	  ustrncpy (&buffer[len], pBuf->BuContent, l);
+	  len = len + (l - 1);
+	  pBuf = pBuf->BuNext;
+	}
       *language = pEl->ElLanguage;
-      /* copying into the buffer */
-      if (length > pBuf->BuLength)
-	length = pBuf->BuLength;
-      ustrncpy (buffer, pBuf->BuContent, length);
     }
 }
 
+/*----------------------------------------------------------------------
+   TtaSetBufferContent
+
+   Changes the content of a Text basic element. The full content (if any) is
+   deleted and replaced by the new one.
+   Parameters:
+   element: the Text element to be modified.
+   content: new content for that element coded as a string of CHAR_T
+   characters.
+   language: language of that Text element.
+   document: the document containing that element.
+  ----------------------------------------------------------------------*/
+void TtaSetBufferContent (Element element, CHAR_T *content,
+			  Language language, Document document)
+{
+  PtrElement    pEl;
+  PtrTextBuffer pBuf;
+  int           max, length, delta;
+
+  UserErrorCode = 0;
+  pEl = NULL;
+  if (element == NULL)
+    TtaError (ERR_invalid_parameter);
+  else if (!((PtrElement) element)->ElTerminal)
+    TtaError (ERR_invalid_element_type);
+  else if (((PtrElement) element)->ElLeafType != LtText)
+    TtaError (ERR_invalid_element_type);
+  else if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    {
+      /* parameter document is correct */
+      pEl = (PtrElement) element;
+      pEl->ElLanguage = language;
+      
+      /* store the contents of the element */
+      if (content)
+	{
+	  max = ustrlen (content);
+	  if (max >= THOT_MAX_CHAR)
+	    max = THOT_MAX_CHAR - 1;
+	  pBuf = pEl->ElText;
+	  if (pBuf == NULL)
+	    {
+	      GetTextBuffer (&pEl->ElText);
+	      pBuf = pEl->ElText;
+	    }
+	  if (pBuf && max > 0)
+	    {
+	      ustrncpy (pBuf->BuContent, content, max);
+	      pBuf->BuContent[max] = EOS;
+	      pBuf->BuLength = max;
+	      length = max;
+	    }
+	  else
+	    length = 0;
+	}
+      else
+	  length = 0;
+
+      delta = length - pEl->ElTextLength;
+      pEl->ElTextLength = length;
+      pEl->ElVolume = length;
+
+#ifndef NODISPLAY
+      RedisplayLeaf (pEl, document, delta);
+#endif /* NODISPLAY */
+
+      /* Updates the volume of ancestors */
+      pEl = pEl->ElParent;
+      while (pEl != NULL)
+	{
+	  pEl->ElVolume += delta;
+	  pEl = pEl->ElParent;
+	}
+    }
+}
 
 /*----------------------------------------------------------------------
    TtaGiveSubString

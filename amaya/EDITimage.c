@@ -612,7 +612,7 @@ static void CreateAreaMap (Document doc, View view, char *shape)
 	if (shape[0] == 'p')
 	  {
 	    TtcInsertGraph (doc, 1, 'p');
-	    if (TtaGetVolume (child) < 3)
+	    if (TtaGetElementVolume (child) < 3)
 	      {
 		/* the polyline doesn't have enough points */
 		if (newMap)

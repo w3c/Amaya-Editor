@@ -489,7 +489,7 @@ ThotBool RemoveColumn (Element colhead, Document doc, ThotBool ifEmpty,
 	  while (row && empty)
 	    {
 	      cell = GetCellFromColumnHead (row, colhead, inMath);
-	      if (cell != NULL && TtaGetVolume (cell) != 0)
+	      if (cell != NULL && TtaGetElementVolume (cell) != 0)
 		empty = FALSE;
 	      else
 		{

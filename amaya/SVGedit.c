@@ -1688,7 +1688,7 @@ void         CreateGraphicElement (int entry)
       /* the user has created the points */
       if (shape != 'g')
 	{
-	  if (TtaGetVolume (child) < 3)
+	  if (TtaGetElementVolume (child) < 3)
 	    {
 	      /* the polyline doesn't have enough points */
 	      TtaDeleteTree (newEl, doc);

@@ -3315,13 +3315,18 @@ void GetFallbackCharacter (int code, unsigned char *fallback, Language *lang)
 {  
 #ifdef _I18N_
   unsigned char *ptr;
-  Language       language = *lang;
 #endif /* _I18N_ */
   int	         i;
 
   fallback[0] = EOS;
   fallback[1] = EOS;
   fallback[2] = EOS;
+#ifdef _I18N_
+  /* get the UTF-8 string of the unicode character */
+  ptr = fallback;
+  i = TtaWCToMBstring ((wchar_t) code, &ptr);
+  fallback[i] = EOS;
+#else /* _I18N_ */
   /* look for that code in the fallback table */
   for (i = 0; UnicodeFallbackTable[i].unicodeVal < code &&
 	 UnicodeFallbackTable[i].unicodeVal > 0;  i++);
@@ -3332,17 +3337,6 @@ void GetFallbackCharacter (int code, unsigned char *fallback, Language *lang)
       *lang = Latin_Script;
       fallback[0]= '?';
     }
-#ifdef _I18N_
-  else if (code < 0x3FF ||
-	   code == 0x200E /* lrm */ ||
-	   code == 0x200F /* rlm */)
-    {
-      /* get the UTF-8 string of the unicode character */
-      ptr = fallback;
-      i = TtaWCToMBstring ((wchar_t) code, &ptr);
-      fallback[i] = EOS;
-    }
-#endif /* _I18N_ */
   else
     /* this character is on the fallback table */
     {
@@ -3381,21 +3375,10 @@ void GetFallbackCharacter (int code, unsigned char *fallback, Language *lang)
 	fallback[1] = '\260';
       else if (code == 8741)	/* parallel sign */
 	fallback[1] = '|';
-#ifdef _I18N_
-      else if (fallback[0] > 127)
-	{
-	  /* get the UTF-8 string */
-	  code = fallback[0];
-	  ptr = fallback;
-	  i = TtaWCToMBstring ((wchar_t) code, &ptr);
-	  fallback[i] = EOS;
-	  /* keep the inherited language */
-	  *lang = language;
-	}
-#endif /* _I18N_ */
       else
 	fallback[2] = EOS;
     }
+#endif /* _I18N_ */
 }
 
 #ifndef _I18N_

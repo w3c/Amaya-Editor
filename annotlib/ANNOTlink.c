@@ -290,7 +290,7 @@ void LINK_AddAnnotIcon (Document source_doc, Element anchor, AnnotMeta *annot)
     }
 
   /* only substitute the icon name if it has changed */
-  len = TtaGetVolume (el);
+  len = TtaGetElementVolume (el);
   if (len > 0 && len < (int) (sizeof (previous)))
     {
       TtaGiveBufferContent (el, previous, len, &lang);
