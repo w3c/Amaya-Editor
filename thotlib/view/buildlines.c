@@ -2394,12 +2394,11 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	      /* check lines that cannot overlap */
 	      if (org < *height + top &&
 		  pPreviousLine &&
-		  (pPreviousLine->LiNoOverlap || pLine->LiNoOverlap ||
-		   standard))
+		  (pLine->LiNoOverlap || standard))
 		{
 		  /* don't overlap the lines */
 		  org = *height + top;
-		  if (!pPreviousLine->LiNoOverlap)
+		  if (!standard)
 		    org = org - pPreviousLine->LiHeight + pPreviousLine->LiHorizRef;
 		}
 	      pLine->LiYOrg = org;
