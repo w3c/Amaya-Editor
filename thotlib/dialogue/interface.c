@@ -646,7 +646,7 @@ int TtaXLookupString (ThotKeyEvent *event, char *buffer, int nbytes,
  * default behaviour. The THOTNOMODIFIER environment
  * variable is for debugging purposes only.
  */
-void                TtaInstallMultiKey ()
+void TtaInstallMultiKey ()
 {
   char   *ptr;
 
@@ -845,7 +845,7 @@ int WIN_TtaHandleMultiKeyEvent (UINT msg, WPARAM wParam, LPARAM lParam, int* k)
 
    Modify the ThotEvent given as the argument to reference a given KeySym.
   ----------------------------------------------------------------------*/
-static int          TtaGetIsoKeysym (ThotKeyEvent *ev, KeySym keysym)
+static int TtaGetIsoKeysym (ThotKeyEvent *ev, KeySym keysym)
 {
   KeyCode             keycode;
   int                 codeline;
@@ -1157,7 +1157,11 @@ fprintf (stderr, "      Multikey : <Alt>%c %c\n", previous_keysym, KS);
 void TtaFetchOneEvent (ThotEvent *ev)
 {
 #ifndef _WINDOWS
+#ifndef _GTK
   XtAppNextEvent (app_cont, ev);
+#else /* _GTK */
+
+#endif /* !_GTK */
 #endif /* ! _WINDOWS */
 }
 
@@ -1228,6 +1232,16 @@ ThotBool TtaFetchOneAvailableEvent (ThotEvent *ev)
   ----------------------------------------------------------------------*/
 void TtaHandleOneEvent (ThotEvent *ev)
 {
+
+  /*
+   * A FAIRE
+   *
+   *
+   *
+   *
+   *
+   */
+
 #ifdef _WINDOWS
   if (ev->message != WM_QUIT)
     {
@@ -1235,7 +1249,6 @@ void TtaHandleOneEvent (ThotEvent *ev)
       DispatchMessage (ev);
     }
 #else /* _WINDOWS */
-#ifndef _GTK
   PtrDocument         pDoc;
   ThotWindow          w;
   char               *s;
@@ -1246,26 +1259,42 @@ void TtaHandleOneEvent (ThotEvent *ev)
   /* Keep client messages */
   if (ev->type == ClientMessage)
     {
+#ifndef _GTK
       s = XGetAtomName (ev->xany.display, ((XClientMessageEvent *) ev)->message_type);
+#else /* _GTK */
+
+#endif /* !_GTK */
       if (s == NULL)
 	return;
       if (!strcmp (s, "WM_PROTOCOLS"))
 	{
 	  /* The client message comes from the Window Manager */
 	  w = ev->xany.window;
+#ifndef _GTK
 	  XFree (s);
 	  s = XGetAtomName (ev->xany.display, ((XClientMessageEvent *) ev)->data.l[0]);
+#else /* _GTK */
+
+#endif /* !_GTK */
 	  if (!strcmp (s, "WM_DELETE_WINDOW"))
 	    {
 	      if (FrRef[0] != 0 &&
+#ifndef _GTK
 		  XtWindowOfObject (XtParent (FrameTable[0].WdFrame)) == w)
+#else /* _GTK */
+		1)
+#endif /* !_GTK */
 		TtcQuit (0, 0);
 	      else
 		{
 		  for (frame = 1; frame <= MAX_FRAME; frame++)
 		    {
 		      if (FrRef[frame] != 0 &&
+#ifndef _GTK
 			  XtWindowOfObject (XtParent (XtParent (XtParent (FrameTable[frame].WdFrame)))) == w)
+#else /* _GTK */
+			1)
+#endif /* !_GTK */
 			break;
 		    }
 		  if (frame <= MAX_FRAME)
@@ -1279,17 +1308,25 @@ void TtaHandleOneEvent (ThotEvent *ev)
 		      return;
 		  TtaQuit();
 		}
+#ifndef _GTK
 	      XFree (s);
+#else /* _GTK */
+		      
+#endif /* !_GTK */
 	    }
 	}
       else if (!strcmp (s, "THOT_MESSAGES"))
 	{
+#ifndef _GTK
 	  XFree (s);
 	  /* The client message comes from print */
 	  s = XGetAtomName (ev->xany.display, ((XClientMessageEvent *) ev)->data.l[0]);
 	  i = ((XClientMessageEvent *) ev)->data.l[1];
 	  TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, i), s);
 	  XFree (s);
+#else /* _GTK */
+		      
+#endif /* !_GTK */
 	}
     }
   else if (ev->type == KeyPress)
@@ -1305,8 +1342,11 @@ void TtaHandleOneEvent (ThotEvent *ev)
       /* Manage selection events */
       SelectionEvents ((XSelectionEvent *) ev);
     }
-  
+#ifndef _GTK
   XtDispatchEvent (ev);
+#else /* _GTK */
+		      
+#endif /* !_GTK */
   /* Manage document events */
   frame = GetWindowFrame (ev->xany.window);
   /* the event does not concern a document */
@@ -1320,7 +1360,6 @@ void TtaHandleOneEvent (ThotEvent *ev)
 	    FrameCallback (frame, ev);
 	}
     }
-#endif /* _GTK */
 #endif /* !_WINDOWS */
 }
 
@@ -1512,6 +1551,14 @@ void TtaSetMultikey (ThotBool value)
 #endif /* _WINDOWS */
 }
 /* End Of Module */
+
+
+
+
+
+
+
+
 
 
 

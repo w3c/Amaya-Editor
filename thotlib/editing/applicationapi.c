@@ -82,7 +82,7 @@ ThotBool            PrintErrorMessages = TRUE;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-int                 IdentDocument (PtrDocument pDoc)
+int IdentDocument (PtrDocument pDoc)
 {
    int                 d;
 
@@ -236,7 +236,7 @@ static void ErrorHandler ()
 /*----------------------------------------------------------------------
    QuitHandler est un handler pour Interrupt.                      
   ----------------------------------------------------------------------*/
-static void         QuitHandler ()
+static void QuitHandler ()
 {
    signal (SIGINT, ErrorHandler);
 #  ifndef _WINDOWS 
@@ -256,7 +256,7 @@ static void         QuitHandler ()
 /*----------------------------------------------------------------------
    InitErrorHandler initialise le handler de core dump.             
   ----------------------------------------------------------------------*/
-void                InitErrorHandler ()
+void InitErrorHandler ()
 {
 #  ifndef _WINDOWS
    signal (SIGBUS, ErrorHandler);
@@ -287,7 +287,7 @@ void                InitErrorHandler ()
    defined in file .Xdefaults.
 
   ----------------------------------------------------------------------*/
-void                TtaInitialize (char *applicationName)
+void TtaInitialize (char *applicationName)
 {
    int                 i;
 
@@ -581,7 +581,7 @@ char *TtaGetStrError (int errorCode)
 /*----------------------------------------------------------------------
    ThotExit termine l'application Thot.                             
   ----------------------------------------------------------------------*/
-void                ThotExit (int result)
+void ThotExit (int result)
 {
    fflush (stderr);
    fflush (stdout);

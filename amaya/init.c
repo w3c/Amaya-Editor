@@ -5227,7 +5227,7 @@ void                ShowMapAreas (Document document, View view)
   MakeIDMenu
   A menu for adding or removing ID attributes in a document
   ----------------------------------------------------------------------*/
-void                MakeIDMenu (Document doc, View view)
+void MakeIDMenu (Document doc, View view)
 {
 #ifndef _WINDOWS
   int i;

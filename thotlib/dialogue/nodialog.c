@@ -68,7 +68,7 @@ ThotBool             IsW3Path (const char* path)
    The function returns the new complete and normalized URL 
    or file name path (newName) and the name of the document (docName).        
   ----------------------------------------------------------------------*/
-void                NormalizeURL (char* orgName, Document doc, char* newName, char* docName, char* otherPath)
+void NormalizeURL (char* orgName, Document doc, char* newName, char* docName, char* otherPath)
 {
   TtaExtractName (orgName, newName, docName);
 }
@@ -79,7 +79,7 @@ void                NormalizeURL (char* orgName, Document doc, char* newName, ch
    When returning, the parameter completeURL contains the normalized url
    and the parameter localfile the path of the local copy of the file.
   ----------------------------------------------------------------------*/
-ThotBool        LoadRemoteStyleSheet (char *url, Document doc, Element el, void *css, char *completeURL, char *localfile)
+ThotBool LoadRemoteStyleSheet (char *url, Document doc, Element el, void *css, char *completeURL, char *localfile)
 {
   strcpy (completeURL, url);
   strcpy (localfile, url);
@@ -90,7 +90,7 @@ ThotBool        LoadRemoteStyleSheet (char *url, Document doc, Element el, void 
    FetchImage loads an IMG from local file or from the web. The flags
    may indicate extra transfer parameters, for example bypassing the cache.		
   ----------------------------------------------------------------------*/
-void                FetchImage (Document doc, Element el, char *URL, int flags, Proc callback, void *extra)
+void FetchImage (Document doc, Element el, char *URL, int flags, Proc callback, void *extra)
 {
   if (callback && URL)
     callback (doc, el, URL, extra);
@@ -104,7 +104,7 @@ void Prof_FreeTable ()
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-Pixmap              TtaCreatePixmapLogo (char** data)
+Pixmap TtaCreatePixmapLogo (char** data)
 {
    return None;
 }
@@ -113,7 +113,7 @@ Pixmap              TtaCreatePixmapLogo (char** data)
   TtaHandlePendingEvents
   Processes all pending events in an application.
   ----------------------------------------------------------------------*/
-void                TtaHandlePendingEvents ()
+void TtaHandlePendingEvents ()
 {
 }
 
@@ -121,19 +121,19 @@ void                TtaHandlePendingEvents ()
 /*----------------------------------------------------------------------
    ConfigInit initializes the configuration module
   ----------------------------------------------------------------------*/
-void                ConfigInit ()
+void ConfigInit ()
 {
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                ConfigTranslateSSchema (PtrSSchema pSS)
+void ConfigTranslateSSchema (PtrSSchema pSS)
 {
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-ThotBool            ConfigGetPSchemaNature (PtrSSchema pSS, char* nomNature, char* presNature)
+ThotBool ConfigGetPSchemaNature (PtrSSchema pSS, char* nomNature, char* presNature)
 {
    return FALSE;
 }
@@ -141,7 +141,7 @@ ThotBool            ConfigGetPSchemaNature (PtrSSchema pSS, char* nomNature, cha
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-ThotBool            ConfigDefaultPSchema (char* schema, char* schpres)
+ThotBool ConfigDefaultPSchema (char* schema, char* schpres)
 {
    return FALSE;
 }
@@ -154,22 +154,22 @@ void FreeTranslations ()
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                DrawAddAttr (PtrAttribute * pAttr, PtrElement pEl)
+void DrawAddAttr (PtrAttribute * pAttr, PtrElement pEl)
 {
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                RedisplayCopies ()
+void RedisplayCopies ()
 {
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                DrawSupprAttr (PtrAttribute pAttr, PtrElement pEl)
+void DrawSupprAttr (PtrAttribute pAttr, PtrElement pEl)
 #else  /* __STDC__ */
-void                DrawSupprAttr (pAttr, pEl)
+void DrawSupprAttr (pAttr, pEl)
 PtrAttribute        pAttr;
 PtrElement          pEl;
 
@@ -179,21 +179,21 @@ PtrElement          pEl;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-ThotBool            IsASavedElement (PtrElement pEl)
+ThotBool IsASavedElement (PtrElement pEl)
 {
    return FALSE;
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-ThotBool            CallEventType (int *notifyEvent, ThotBool pre)
+ThotBool CallEventType (int *notifyEvent, ThotBool pre)
 {
    return FALSE;
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-ThotBool            CallEventAttribute (NotifyAttribute * notifyAttr, ThotBool pre)
+ThotBool CallEventAttribute (NotifyAttribute * notifyAttr, ThotBool pre)
 {
    return FALSE;
 }
@@ -202,14 +202,14 @@ ThotBool            CallEventAttribute (NotifyAttribute * notifyAttr, ThotBool p
 /*----------------------------------------------------------------------
    TtaSetStatus affiche le status de la vue du document.                      
   ----------------------------------------------------------------------*/
-void                TtaSetStatus (Document document, View view, CONST char *text, CONST char *name)
+void TtaSetStatus (Document document, View view, CONST char *text, CONST char *name)
 {
 }
 
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void    FreeMenus ()
+void FreeMenus ()
 {
 }
 
@@ -217,106 +217,106 @@ void    FreeMenus ()
   SwitchPaste enables (on=TRUE) or disables (on=FALSE) the Paste
   entry in all frames.
   ----------------------------------------------------------------------*/
-void         SwitchPaste (PtrDocument pDoc, ThotBool on)
+void SwitchPaste (PtrDocument pDoc, ThotBool on)
 {
 }
 
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                UpdateScrollbars (int frame)
+void UpdateScrollbars (int frame)
 {
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                ChangeFrameTitle (int frame, char *texte)
+void ChangeFrameTitle (int frame, char *texte)
 {
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                SetCursorWatch (int thotWindowid)
+void SetCursorWatch (int thotWindowid)
 {
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                ResetCursorWatch (int thotWindowid)
+void ResetCursorWatch (int thotWindowid)
 {
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                InsertOption (PtrElement pEl, PtrElement *p, PtrDocument pDoc)
+void InsertOption (PtrElement pEl, PtrElement *p, PtrDocument pDoc)
 {
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                ShowSelection (PtrAbstractBox PavRac, ThotBool Visible)
+void ShowSelection (PtrAbstractBox PavRac, ThotBool Visible)
 {
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-PtrElement          NextInSelection (PtrElement pEl, PtrElement PcLast)
+PtrElement NextInSelection (PtrElement pEl, PtrElement PcLast)
 {
    return NULL;
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                AddInSelection (PtrElement pEl, ThotBool dernier)
+void AddInSelection (PtrElement pEl, ThotBool dernier)
 {
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                ClearViewSelection (int frame)
+void ClearViewSelection (int frame)
 {
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                TtaClearViewSelections ()
+void TtaClearViewSelections ()
 {
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                SelectElement (PtrDocument pDoc, PtrElement pEl, ThotBool Debut, ThotBool Controle)
+void SelectElement (PtrDocument pDoc, PtrElement pEl, ThotBool Debut, ThotBool Controle)
 {
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                ComputeViewSelMarks (ViewSelection * marque)
+void ComputeViewSelMarks (ViewSelection * marque)
 {
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                HighlightSelection (ThotBool DebVisible, ThotBool clearOldSel)
+void HighlightSelection (ThotBool DebVisible, ThotBool clearOldSel)
 {
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                CancelSelection ()
+void CancelSelection ()
 {
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                SelectRange (PtrDocument SelDoc, PtrElement PremSel, PtrElement DerSel, int premcar, int dercar)
+void SelectRange (PtrDocument SelDoc, PtrElement PremSel, PtrElement DerSel, int premcar, int dercar)
 {
 }
 
 /*----------------------------------------------------------------------
   DisplayPointSelection draw characteristics point of the box.
   ----------------------------------------------------------------------*/
-void         DisplayPointSelection (int frame, PtrBox pBox, int pointselect)
+void DisplayPointSelection (int frame, PtrBox pBox, int pointselect)
 {
 }
 
@@ -324,14 +324,14 @@ void         DisplayPointSelection (int frame, PtrBox pBox, int pointselect)
   DisplayBgBoxSelection paints the box background with the selection
   color.
   ----------------------------------------------------------------------*/
-void         DisplayBgBoxSelection (int frame, PtrBox pBox)
+void DisplayBgBoxSelection (int frame, PtrBox pBox)
 {
 }
 
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                SetNewSelectionStatus (int frame, PtrAbstractBox pAb, ThotBool Etat)
+void SetNewSelectionStatus (int frame, PtrAbstractBox pAb, ThotBool Etat)
 {
 }
 
@@ -340,45 +340,45 @@ void                SetNewSelectionStatus (int frame, PtrAbstractBox pAb, ThotBo
   DisplayStringSelection the selection on a substring of text
   between leftX and rightX.
   ----------------------------------------------------------------------*/
-void         DisplayStringSelection (int frame, int leftX, int rightX, PtrBox pBox)
+void DisplayStringSelection (int frame, int leftX, int rightX, PtrBox pBox)
 {
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                DirectCreation (PtrBox pBox, int frame)
+void DirectCreation (PtrBox pBox, int frame)
 {
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-ThotBool            IsAbstractBoxDisplayed (PtrAbstractBox pav, int frame)
+ThotBool IsAbstractBoxDisplayed (PtrAbstractBox pav, int frame)
 {
    return FALSE;
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void         SetMainWindowBackgroundColor (int frame, int color)
+void SetMainWindowBackgroundColor (int frame, int color)
 {
 }
 
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                Clear (int frame, int larg, int haut, int x, int y)
+void Clear (int frame, int larg, int haut, int x, int y)
 {
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-PtrElement          CreateSibling (PtrDocument pDoc, PtrElement pEl, ThotBool before, ThotBool createAbsBox, int typeNum, PtrSSchema pSS, ThotBool inclusion)
+PtrElement CreateSibling (PtrDocument pDoc, PtrElement pEl, ThotBool before, ThotBool createAbsBox, int typeNum, PtrSSchema pSS, ThotBool inclusion)
 {
   return NULL;
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                CloseAttributeDialogues (PtrDocument pDoc)
+void CloseAttributeDialogues (PtrDocument pDoc)
 {
 }

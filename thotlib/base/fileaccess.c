@@ -336,9 +336,9 @@ ThotBool TtaReadInteger (BinFile file, int *sval)
    TtaReadName reads a Wide Character string value.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            TtaReadName (BinFile file, char* name)
+ThotBool TtaReadName (BinFile file, char* name)
 #else  /* __STDC__ */
-ThotBool            TtaReadName (file, name)
+ThotBool TtaReadName (file, name)
 BinFile             file;
 char*             name;
 
@@ -733,7 +733,7 @@ void GetPictureFileName (char *name, char *fileName)
    IsExtended compare la fin de fileName avec extension. Si la fin 
    est identique, retourne Vrai.                           
   ----------------------------------------------------------------------*/
-static ThotBool     IsExtended (char* fileName, char* extension)
+static ThotBool IsExtended (char* fileName, char* extension)
 {
    int                 i, j;
    int                 nameLength, extLength;
@@ -1177,3 +1177,20 @@ ThotBool TtaCheckDirectory (char* directory)
 #  endif /* !_I18N_ */
 #endif /* !_WINDOWS */
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

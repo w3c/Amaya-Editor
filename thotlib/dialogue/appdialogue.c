@@ -395,7 +395,7 @@ void TteInitMenus (char *name, int number)
 /*----------------------------------------------------------------------
    FreeMenus frees all contextes allocated by the menu manager
   ----------------------------------------------------------------------*/
-void    FreeMenus ()
+void FreeMenus ()
 {
   PtrAction           pAction, aNext;
   Menu_Ctl           *ptrmenu, *mNext;
@@ -540,7 +540,7 @@ void TteAddMenuAction (char *actionName, Proc procedure, ThotBool state)
    FindMenuAction recherche l'action dans la table des actions        
    d'interface.                                                    
   ----------------------------------------------------------------------*/
-static int          FindMenuAction (char *actionName)
+static int FindMenuAction (char *actionName)
 {
    int                 i;
 
@@ -557,7 +557,7 @@ static int          FindMenuAction (char *actionName)
    TteZeroMenu signale qu'il n'y a pas de menu dans ce type de        
    fenentre.                                                       
   ----------------------------------------------------------------------*/
-void      TteZeroMenu (WindowType windowtype, char *schemaName)
+void TteZeroMenu (WindowType windowtype, char *schemaName)
 {
    SchemaMenu_Ctl     *ptrschema;
    ThotBool            ok;
@@ -630,7 +630,7 @@ void TteAddMenu (WindowType windowtype, char *schemaName, int view, int menuID, 
       newmenu->MenuHelp = TRUE;
 
    /* creation et initialisation de la table des items */
-   ptr = (Item_Ctl *) TtaGetMemory (itemsNumber * sizeof (Item_Ctl));
+   ptr = (Item_Ctl *)TtaGetMemory (itemsNumber * sizeof (Item_Ctl));
    for (i = 0; i < itemsNumber; i++)
      {
 	ptr[i].ItemID = -1;
@@ -2791,14 +2791,14 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
                            (GtkSignalFunc) ExposeCB, (gpointer) frame);
 	   gtk_signal_connect (GTK_OBJECT(drawing_area), "configure_event",
                            (GtkSignalFunc)FrameResized, (gpointer) frame);
-	   
+	   /*	   
 	   gtk_widget_set_events (drawing_area, GDK_BUTTON_PRESS_MASK
                                   | GDK_KEY_PRESS_MASK
                                   | GDK_EXPOSURE_MASK
 				  | GDK_KEY_RELEASE_MASK 
                                   | GDK_FOCUS_CHANGE_MASK
                                   ); 
-	   
+	   */
 
 	   gtk_signal_connect (GTK_OBJECT (handlebox1), "destroy",
 			       GTK_SIGNAL_FUNC (gtk_widget_destroy),
@@ -3961,7 +3961,7 @@ int     TtaSetCallback (void (*callbakProcedure) (), int set)
 /*----------------------------------------------------------------------
    ThotCallback ge`re tous les retours du dialogue de Thot.        
   ----------------------------------------------------------------------*/
-void      ThotCallback (int ref, int typedata, char *data)
+void ThotCallback (int ref, int typedata, char *data)
 {
   int                 frame, item;
   int                 menu, base;
