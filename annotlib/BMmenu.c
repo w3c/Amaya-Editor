@@ -49,7 +49,7 @@ static char LastURLTopic[MAX_LENGTH];
 /*----------------------------------------------------------------------
   Bookmark_new_init
   ----------------------------------------------------------------------*/
-BookmarkP Bookmark_new_init (BookmarkP initial)
+BookmarkP Bookmark_new_init (BookmarkP initial, ThotBool isTopic)
 {
   BookmarkP me;
   char *tmp;
@@ -59,16 +59,20 @@ BookmarkP Bookmark_new_init (BookmarkP initial)
 
   /* a q&d way for initializing the data, while waiting for dynamic string
      handling */
-  me->parent_url = TtaGetMemory (MAX_LENGTH + 1);
-  if (initial)
+  if (isTopic)
     {
-      if (initial->parent_url)
-	strcpy (me->parent_url, initial->parent_url);
+      me->parent_url = TtaGetMemory (MAX_LENGTH + 1);
+      if (initial)
+	{
+	  if (initial->parent_url)
+	    strcpy (me->parent_url, initial->parent_url);
+	  else
+	    me->parent_url[0] = EOS;
+	}
       else
-	me->parent_url[0] = EOS;
+	strcpy (me->parent_url, GetHomeTopicURI ());
     }
-  else
-    strcpy (me->parent_url, GetHomeTopicURI ());
+
   me->self_url = TtaGetMemory (MAX_LENGTH + 1);
   if (initial && initial->self_url)
     strcpy (me->self_url, initial->self_url);
@@ -82,7 +86,7 @@ BookmarkP Bookmark_new_init (BookmarkP initial)
   me->title = TtaGetMemory (MAX_LENGTH + 1);
   if (initial && initial->title)
     {
-      tmp = TtaConvertMbsToByte (initial->author, ISO_8859_1);
+      tmp = TtaConvertMbsToByte (initial->title, ISO_8859_1);
       strcpy (me->title, tmp);
       TtaFreeMemory (tmp);
     }
@@ -168,7 +172,7 @@ static void InitBookmarkMenu (Document doc, BookmarkP bookmark)
   char *ptr;
   char *ptr2;
 
-  aBookmark = Bookmark_new_init (bookmark);
+  aBookmark = Bookmark_new_init (bookmark, FALSE);
 
   if (!bookmark)
     {
@@ -429,12 +433,9 @@ void BM_BookmarkMenu (Document doc, View view, BookmarkP bookmark)
 		   TRUE);
 #endif /* !_WINDOWS */
 
-#if 0
-   /* load and display the current values */
-   GetAnnotConf ();
-#endif
-
+   /* create the new bookmark structure */
    InitBookmarkMenu (doc, bookmark);
+
 #ifndef _WINDOWS
    RefreshBookmarkMenu ();
   /* display the menu */
@@ -458,7 +459,7 @@ static void InitTopicMenu (Document doc, BookmarkP bookmark)
   char *annotUser;
   char *tmp;
 
-  aBookmark = Bookmark_new_init (bookmark);
+  aBookmark = Bookmark_new_init (bookmark, TRUE);
   aBookmark->isTopic = TRUE;
 
   if (!bookmark)
@@ -676,12 +677,9 @@ void BM_TopicMenu (Document doc, View view, BookmarkP bookmark)
 		   TRUE);
 #endif /* !_WINDOWS */
 
-#if 0
-   /* load and display the current values */
-   GetAnnotConf ();
-#endif
-
+   /* make the new topic */
    InitTopicMenu (doc, bookmark);
+
 #ifndef _WINDOWS
    RefreshTopicMenu ();
   /* display the menu */

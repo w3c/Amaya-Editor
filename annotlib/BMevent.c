@@ -92,7 +92,7 @@ void BM_Init (void)
       /* the bookmark file is empty, we create it and add the home topic */
       BookmarkP me;
       
-      me = Bookmark_new_init (NULL);
+      me = Bookmark_new_init (NULL, TRUE);
       strcpy (me->title, HOME_TOPIC_TITLE);
       strcpy (me->author, GetAnnotUser ());
       strcpy (me->self_url, HomeTopicURI);

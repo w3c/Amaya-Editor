@@ -812,7 +812,11 @@ void BM_topicsPreSelect (Document TopicTree, BookmarkP bookmark)
   int count;
 
   if (!bookmark)
-    return;
+    {
+     /* select the default topic */
+      BM_topicSelectToggle (TopicTree, GetHomeTopicURI(), TRUE);
+      return;
+    }
 
   if (bookmark->isTopic && bookmark->parent_url)
       BM_topicSelectToggle (TopicTree, bookmark->parent_url, TRUE);

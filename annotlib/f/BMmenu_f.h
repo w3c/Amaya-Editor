@@ -6,7 +6,8 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern BookmarkP Bookmark_new_init ( BookmarkP initial );
+extern BookmarkP Bookmark_new_init ( BookmarkP initial,
+                                     ThotBool isTopic );
 extern void BM_BookmarkMenu ( Document doc,
                               View view,
                               BookmarkP bookmark );
@@ -19,7 +20,8 @@ extern char *GetTopicURL ( Document document,
 
 #else /* __STDC__ */
 
-extern BookmarkP Bookmark_new_init (/* BookmarkP initial */);
+extern BookmarkP Bookmark_new_init (/* BookmarkP initial,
+                                       ThotBool isTopic */);
 extern void BM_BookmarkMenu (/* Document doc,
                                 View view,
                                 BookmarkP bookmark */);
