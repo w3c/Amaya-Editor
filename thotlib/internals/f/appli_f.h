@@ -48,11 +48,7 @@ extern void ThotGrab ( ThotWindow win,
                        ThotCursor cursor,
                        long events,
                        int disp );
-extern void ThotGrabRoot ( ThotCursor cursor,
-                           int disp );
 extern void ThotUngrab ( void );
-extern void ManageCSS ( Document document,
-                        View view );
 extern ThotWindow TtaGetThotWindow ( int frame );
 extern void SetCursorWatch ( int thotThotWindowid );
 extern void ResetCursorWatch ( int thotThotWindowid );
@@ -124,11 +120,7 @@ extern void ThotGrab (/* ThotWindow win,
                          ThotCursor cursor,
                          long events,
                          int disp */);
-extern void ThotGrabRoot (/* ThotCursor cursor,
-                             int disp */);
 extern void ThotUngrab (/* void */);
-extern void ManageCSS (/* Document document,
-                          View view */);
 extern ThotWindow TtaGetThotWindow (/* int frame */);
 extern void SetCursorWatch (/* int thotThotWindowid */);
 extern void ResetCursorWatch (/* int thotThotWindowid */);

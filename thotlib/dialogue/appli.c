@@ -1266,10 +1266,10 @@ void               *event;
    /* ne pas traiter si le document est en mode NoComputedDisplay */
    if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
       return;
-/*_______> S'il n'y a pas d'evenement associe */
+   /*_______> S'il n'y a pas d'evenement associe */
    else if (ev == NULL)
       return;
-/*_______> Si une designation de pave est attendue*/
+   /*_______> Si une designation de pave est attendue*/
    else if (ClickIsDone == 1 && ev->type == ButtonPress)
      {
 	ClickIsDone = 0;
@@ -1277,7 +1277,7 @@ void               *event;
 	ClickX = ev->xbutton.x;
 	ClickY = ev->xbutton.y;
 	return;
-     }				/*else if */
+     }
 
    /* S'il y a un TtaWaitShowDialogue en cours on n'autorise pas de changer */
    /* la selection courante. */
@@ -1286,130 +1286,138 @@ void               *event;
       return;
 
    switch (ev->type)
+     {
+     case ButtonPress:
+       /*_____________________________________________________*/
+       switch (ev->xbutton.button)
 	 {
-	    case ButtonPress:
-/*_____________________________________________________*/
-	       switch (ev->xbutton.button)
-		     {
-			   /* ==========BOUTON GAUCHE========== */
-			case Button1:
-			   /* Termine l'insertion courante s'il y en a une */
-			   CloseInsertion ();
-
-			   /* Est-ce que la touche modifieur de geometrie est active ? */
-			   if ((ev->xbutton.state & THOT_KEY_ControlMask) != 0)
-			     {
-				/* On change la position d'une boite */
-				ApplyDirectTranslate (frame, ev->xbutton.x, ev->xbutton.y);
-			     }
-			   /* Est-ce un double clic */
-			   else if (t1 + (Time) 500 > ev->xbutton.time)
-			     {
-				TtaAbortShowDialogue ();
-				TtaFetchOneEvent (&event);
-				while (event.type != ButtonRelease)
-				  {
-				     TtaHandleOneEvent (&event);
-				     TtaFetchOneEvent (&event);
-				  }	/*while */
-
-				/* memorise la position de la souris */
-				ClickFrame = frame;
-				ClickX = ev->xbutton.x;
-				ClickY = ev->xbutton.y;
-				LocateSelectionInView (frame, ClickX, ClickY, 3);
-			     }
-			   /* Sinon c'est une selection normale */
-			   else
-			     {
-				t1 = ev->xbutton.time;
-				ClickFrame = frame;
-				ClickX = ev->xbutton.x;
-				ClickY = ev->xbutton.y;
-				LocateSelectionInView (frame, ClickX, ClickY, 2);
-
-				/* Regarde s'il s'agit d'un drag ou d'une simple marque d'insertion */
-				comm = 0;	/* il n'y a pas de drag */
-				TtaFetchOneEvent (&event);
-				while (event.type != ButtonRelease)
-				  {
-				    if (event.type == MotionNotify)
-				      {
-					dx = event.xmotion.x - ClickX;
-					dy = event.xmotion.y - ClickY;
-					if (dx > 2 || dx < -2 || dy > 2 || dy < -2)
-					  {
-					    LocateSelectionInView (frame, event.xbutton.x, event.xbutton.y, 1);
-					    comm = 1;	/* il y a un drag */
-					  }
-				      }
-				    TtaHandleOneEvent (&event);
-				    TtaFetchOneEvent (&event);
-				  }	/*while */
-				TtaHandleOneEvent (&event);
-
-				/* S'il y a un drag on termine la selection */
-				if (comm == 1)
-				   LocateSelectionInView (frame, event.xbutton.x, event.xbutton.y, 0);
-			     }	/*else */
-			   break;
-
-			   /* ==========BOUTON MILIEU========== */
-			case Button2:
-			   /* Termine l'insertion courante s'il y en a une */
-			   CloseInsertion ();
-
-			   /* Est-ce que la touche modifieur de geometrie est active ? */
-			   if ((ev->xbutton.state & THOT_KEY_ControlMask) != 0)
-			     {
-				/* On modifie les dimensions d'une boite */
-				ApplyDirectResize (frame, ev->xbutton.x, ev->xbutton.y);
-			     }
-			   else
-			     {
-				TtaAbortShowDialogue ();
-				LocateSelectionInView (frame, ev->xbutton.x, ev->xbutton.y, 0);
-			     }	/*else */
-			   break;
-
-			   /* ==========BOUTON DROIT========== */
-			case Button3:
-			   /* Termine l'insertion courante s'il y en a une */
-			   CloseInsertion ();
-			   TtaSetDialoguePosition ();
-			   if (!GetCurrentSelection (&docsel, &firstSel, &lastSel, &firstCar, &lastCar))
-			      TtaDisplaySimpleMessage (INFO, LIB, TMSG_SEL_EL);
-			   /* non, message 'Selectionnez' */
-			   else if (docsel->DocReadOnly)
-			      /* on ne peut inserer ou coller dans un document en lecture seule */
-			      TtaDisplaySimpleMessage (INFO, LIB, TMSG_RO_DOC_FORBIDDEN);
-			   /* Message 'Document en lecture seule' */
-			   else if (firstCar != 0 && firstSel->ElTerminal && firstSel->ElLeafType == LtPolyLine)
-			     {
-				/* selection a l'interieur d'une polyline */
-				if (ThotLocalActions[T_editfunc] != NULL)
-				   (*ThotLocalActions[T_editfunc]) (TEXT_INSERT);
-			     }
-			   else
-			     {
-				if (ThotLocalActions[T_insertpaste] != NULL)
-				   (*ThotLocalActions[T_insertpaste]) (TRUE, FALSE, 'R', &ok);
-			     }
-
-			default:
-			   break;
-		     }		/*switch */
-	       break;
-
-	    case KeyPress:
+	   /* ==========BOUTON GAUCHE========== */
+	 case Button1:
+	   /* Termine l'insertion courante s'il y en a une */
+	   CloseInsertion ();
+	   
+	   /* Est-ce que la touche modifieur de geometrie est active ? */
+	   if ((ev->xbutton.state & THOT_KEY_ControlMask) != 0)
+	     {
+	       /* On change la position d'une boite */
+	       ApplyDirectTranslate (frame, ev->xbutton.x, ev->xbutton.y);
+	     }
+	   /* Est-ce un double clic */
+	   else if (t1 + (Time) 500 > ev->xbutton.time)
+	     {
 	       TtaAbortShowDialogue ();
-	       XCharTranslation (ev);
-	       break;
+	       TtaFetchOneEvent (&event);
+	       while (event.type != ButtonRelease)
+		 {
+		   TtaHandleOneEvent (&event);
+		   TtaFetchOneEvent (&event);
+		 }
 
-	    default:
-	       break;
-	 }			/*switch */
-}				/*FrameCallback */
+	       /* memorise la position de la souris */
+	       ClickFrame = frame;
+	       ClickX = ev->xbutton.x;
+	       ClickY = ev->xbutton.y;
+	       LocateSelectionInView (frame, ClickX, ClickY, 3);
+	     }
+	   /* Sinon c'est une selection normale */
+	   else
+	     {
+	       t1 = ev->xbutton.time;
+	       ClickFrame = frame;
+	       ClickX = ev->xbutton.x;
+	       ClickY = ev->xbutton.y;
+	       LocateSelectionInView (frame, ClickX, ClickY, 2);
+	       
+	       /* Regarde s'il s'agit d'un drag ou d'une simple marque d'insertion */
+	       comm = 0;	/* il n'y a pas de drag */
+	       TtaFetchOneEvent (&event);
+	       while (event.type != ButtonRelease)
+		 {
+		   if (event.type == MotionNotify)
+		     {
+		       dx = event.xmotion.x - ClickX;
+		       dy = event.xmotion.y - ClickY;
+		       if (dx > 2 || dx < -2 || dy > 2 || dy < -2)
+			 {
+			   LocateSelectionInView (frame, event.xbutton.x, event.xbutton.y, 1);
+			   comm = 1;	/* il y a un drag */
+			 }
+		     }
+		   TtaHandleOneEvent (&event);
+		   TtaFetchOneEvent (&event);
+		 }	/*while */
+	       TtaHandleOneEvent (&event);
+	       
+	       /* S'il y a un drag on termine la selection */
+	       if (comm == 1)
+		 LocateSelectionInView (frame, event.xbutton.x, event.xbutton.y, 0);
+	     }
+	   break;
+	   
+	   /* ==========BOUTON MILIEU========== */
+	 case Button2:
+	   /* Termine l'insertion courante s'il y en a une */
+	   CloseInsertion ();
+	   
+	   /* Est-ce que la touche modifieur de geometrie est active ? */
+	   if ((ev->xbutton.state & THOT_KEY_ControlMask) != 0)
+	     {
+	       /* On modifie les dimensions d'une boite */
+	       ApplyDirectResize (frame, ev->xbutton.x, ev->xbutton.y);
+	     }
+	   else
+	     {
+	       TtaAbortShowDialogue ();
+	       LocateSelectionInView (frame, ev->xbutton.x, ev->xbutton.y, 0);
+	     }
+	   break;
+	   
+	   /* ==========BOUTON DROIT========== */
+	 case Button3:
+	   /* Termine l'insertion courante s'il y en a une */
+	   CloseInsertion ();
+	   if ((ev->xbutton.state & THOT_KEY_ControlMask) != 0)
+	     {
+	       /* On modifie les dimensions d'une boite */
+	       ApplyDirectResize (frame, ev->xbutton.x, ev->xbutton.y);
+	     }
+	   else if (!GetCurrentSelection (&docsel, &firstSel, &lastSel, &firstCar, &lastCar))
+	     /* non, message 'Selectionnez' */
+	     TtaDisplaySimpleMessage (INFO, LIB, TMSG_SEL_EL);
+	   else if (docsel->DocReadOnly)
+	     /* on ne peut inserer ou coller dans un document en lecture seule */
+	     TtaDisplaySimpleMessage (INFO, LIB, TMSG_RO_DOC_FORBIDDEN);
+	   else if (firstCar != 0 && firstSel->ElTerminal && firstSel->ElLeafType == LtPolyLine)
+	     {
+	       /* selection a l'interieur d'une polyline */
+	       if (ThotLocalActions[T_editfunc] != NULL)
+		 (*ThotLocalActions[T_editfunc]) (TEXT_INSERT);
+	     }
+	   else
+	     {
+	       TtaSetDialoguePosition ();
+	       if (ThotLocalActions[T_insertpaste] != NULL)
+		 (*ThotLocalActions[T_insertpaste]) (TRUE, FALSE, 'R', &ok);
+	     }
+	   
+	 default:
+	   break;
+	 }
+       break;
+
+     case KeyPress:
+       TtaAbortShowDialogue ();
+       XCharTranslation (ev);
+       break;
+
+     case EnterNotify:
+     case LeaveNotify:
+       break;
+
+     default:
+       break;
+     }
+}
 #endif /* _WINDOWS */
 
 
@@ -1435,25 +1443,6 @@ int                 disp;
 
 
 /*----------------------------------------------------------------------
-   ThotGrabRoot fait un XGrabPointer dans la root window.          
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ThotGrabRoot (ThotCursor cursor, int disp)
-#else  /* __STDC__ */
-void                ThotGrabRoot (cursor, disp)
-ThotCursor          cursor;
-int                 disp;
-
-#endif /* __STDC__ */
-{
-#ifndef _WINDOWS
-   XGrabPointer (TtDisplay, TtRootWindow, TRUE, ButtonReleaseMask, GrabModeAsync,
-		 GrabModeAsync, TtRootWindow, cursor, CurrentTime);
-#endif /* _WINDOWS */
-}
-
-
-/*----------------------------------------------------------------------
    ThotUngrab est une fonction d'interface pour UnGrab.            
   ----------------------------------------------------------------------*/
 void                ThotUngrab ()
@@ -1463,20 +1452,6 @@ void                ThotUngrab ()
 #endif /* _WINDOWS */
 }
 
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ManageCSS (Document document, View view)
-#else  /* __STDC__ */
-void                ManageCSS (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
-{
-   /* This function has to be written */
-}
 
 /*----------------------------------------------------------------------
    TtaGetThotWindow recupere le numero de la fenetre.           
