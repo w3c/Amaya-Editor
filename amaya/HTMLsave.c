@@ -764,6 +764,7 @@ DBG(fprintf(stderr, "SafeSaveFileThroughNet :  compare %s and %s \n", remotefile
 /*----------------------------------------------------------------------
   SaveDocumentThroughNet
   Save a document and the included images to a remote network location.
+  confirm = TRUE form SAVE_AS and FALSE from SAVE
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      SaveDocumentThroughNet (Document document, View view,
@@ -871,25 +872,30 @@ boolean             with_images;
 	  DocNetworkStatus[document] |= AMAYA_NET_ERROR;
 #endif /* AMAYA_JAVA || AMAYA_ILU */
 	  ResetStop (document);
+	  if (confirm)
+	    {
 #if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
-	  sprintf (msg, "%s %s \n%s",
-		   TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
-		   DocumentURLs[document],
-		   TtaGetMessage (AMAYA, AM_SAVE_DISK));
+	      sprintf (msg, "%s %s \n%s",
+		       TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
+		       DocumentURLs[document],
+		       TtaGetMessage (AMAYA, AM_SAVE_DISK));
 #else /* AMAYA_JAVA || AMAYA_ILU */
-	  sprintf (msg, "%s %s \n%s\n%s",
-		   TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
-		   DocumentURLs[document],
-		   AmayaLastHTTPErrorMsg,
-		   TtaGetMessage (AMAYA, AM_SAVE_DISK));
+	      sprintf (msg, "%s %s \n%s\n%s",
+		       TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
+		       DocumentURLs[document],
+		       AmayaLastHTTPErrorMsg,
+		       TtaGetMessage (AMAYA, AM_SAVE_DISK));
 #endif /* AMAYA_JAVA || AMAYA_ILU */
-	  InitConfirm (document, view, msg);
-	  /* JK: to erase the last status message */
-	  TtaSetStatus (document, view, "", NULL);	       
-	  if (UserAnswer)
-	    res = -1;
+	      InitConfirm (document, view, msg);
+	      /* JK: to erase the last status message */
+	      TtaSetStatus (document, view, "", NULL);	       
+	      if (UserAnswer)
+		res = -1;
+	      else
+		res = 0;
+	    }
 	  else
-	    res = 0;
+	    res = -1;
 	}
       else
 	{
@@ -912,24 +918,24 @@ boolean             with_images;
 #endif /* AMAYA_JAVA  || AMAYA_ILU */
 		  ResetStop (document);
 #if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
-		  sprintf (msg, "%s %s \n%s",
-			   TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
-			   pImage->originalName, 
-			   TtaGetMessage (AMAYA, AM_SAVE_DISK));
+		      sprintf (msg, "%s %s \n%s",
+			       TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
+			       pImage->originalName, 
+			       TtaGetMessage (AMAYA, AM_SAVE_DISK));
 #else /* AMAYA_JAVA || AMAYA_ILU */
-		  sprintf (msg, "%s %s \n%s\n%s",
-			   TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
-			   pImage->originalName, 
-			   AmayaLastHTTPErrorMsg,
-			   TtaGetMessage (AMAYA, AM_SAVE_DISK));
+		      sprintf (msg, "%s %s \n%s\n%s",
+			       TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
+			       pImage->originalName, 
+			       AmayaLastHTTPErrorMsg,
+			       TtaGetMessage (AMAYA, AM_SAVE_DISK));
 #endif /* AMAYA_JAVA || AMAYA_ILU */
-		  InitConfirm (document, view, msg);
-		  /* erase the last status message */
-		  TtaSetStatus (document, view, "", NULL);
-		  if (UserAnswer)
-		    res = -1;
-		  else
-		    res = 0;
+		      InitConfirm (document, view, msg);
+		      /* erase the last status message */
+		      TtaSetStatus (document, view, "", NULL);
+		      if (UserAnswer)
+			res = -1;
+		      else
+			res = 0;
 		  /* do not continue */
 		  pImage = NULL;
 		}

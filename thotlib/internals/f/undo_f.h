@@ -6,6 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void ClearHistory ( PtrDocument pDoc );
 extern void AddEditOpInHistory ( PtrElement pEl,
                                  PtrDocument pDoc,
                                  boolean save,
@@ -22,6 +23,7 @@ extern void TtcUndo ( Document doc,
 
 #else /* __STDC__ */
 
+extern void ClearHistory (/* PtrDocument pDoc */);
 extern void AddEditOpInHistory (/* PtrElement pEl,
                                    PtrDocument pDoc,
                                    boolean save,

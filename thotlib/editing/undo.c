@@ -285,9 +285,9 @@ PtrDocument pDoc;
    Clear the current history
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void ClearHistory (PtrDocument pDoc)
+void ClearHistory (PtrDocument pDoc)
 #else  /* __STDC__ */
-static void ClearHistory (pDoc)
+void ClearHistory (pDoc)
 PtrDocument pDoc;
 
 #endif /* __STDC__ */

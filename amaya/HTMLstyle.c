@@ -2217,12 +2217,7 @@ CSSInfoPtr          css;
    /* first parse the attribute string */
    cssRule = ParseCSSUnit (cssRule, &margin);
    if (margin.typed_data.unit != DRIVERP_UNIT_INVALID && context->drv->SetVPos)
-     {
        context->drv->SetVPos (target, context, margin);
-       margin.typed_data.value = - margin.typed_data.value;
-       if (context->drv->SetHeight)
-	 context->drv->SetHeight (target, context, margin);
-     }
    return (cssRule);
 }
 

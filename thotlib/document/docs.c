@@ -35,15 +35,7 @@
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
-#include "platform_tv.h"
-#include "print_tv.h"
-#include "modif_tv.h"
-#include "page_tv.h"
-#include "select_tv.h"
-#include "edit_tv.h"
-#include "frame_tv.h"
 #include "appdialogue_tv.h"
-
 #include "absboxes_f.h"
 #include "appli_f.h"
 #include "appdialogue_f.h"
@@ -58,15 +50,23 @@
 #include "createpages_f.h"
 #include "docs_f.h"
 #include "draw_f.h"
+#include "edit_tv.h"
 #include "fileaccess_f.h"
+#include "frame_tv.h"
 #include "memory_f.h"
+#include "modif_tv.h"
+#include "page_tv.h"
+#include "platform_tv.h"
+#include "print_tv.h"
 #include "paginate_f.h"
 #include "platform_f.h"
 #include "presvariables_f.h"
 #include "readpivot_f.h"
 #include "references_f.h"
+#include "schemas_f.h"
 #include "search_f.h"
 #include "searchref_f.h"
+#include "select_tv.h"
 #include "structschema_f.h"
 #include "structmodif_f.h"
 #include "structcommands_f.h"
@@ -74,10 +74,10 @@
 #include "structselect_f.h"
 #include "thotmodule_f.h"
 #include "tree_f.h"
+#include "undo_f.h"
 #include "views_f.h"
 #include "viewapi_f.h"
 #include "viewcommands_f.h"
-#include "schemas_f.h"
 #include "writepivot_f.h"
 #include "xmlmodule_f.h"
 
@@ -508,16 +508,18 @@ PtrDocument        *pDoc;
 	   d++;
 	if (LoadedDocument[d] == *pDoc)
 	  {
-	     /* libere les schemas */
-	     FreeDocumentSchemas (*pDoc);
-	     FreeDocument (LoadedDocument[d]);
-	     LoadedDocument[d] = NULL;
-             /* annuler le pointeur sur le doc a imprimer */
-             if(PrintingDoc == d+1)
+	    /* remove the Unod history */
+	    ClearHistory (NULL);
+	    /* libere les schemas */
+	    FreeDocumentSchemas (*pDoc);
+	    FreeDocument (LoadedDocument[d]);
+	    LoadedDocument[d] = NULL;
+	    /* annuler le pointeur sur le doc a imprimer */
+	    if(PrintingDoc == d+1)
                PrintingDoc = 0;
-	     *pDoc = NULL;
-             /* libere les contextes inutilises */
-	     FreeAll ();
+	    *pDoc = NULL;
+	    /* libere les contextes inutilises */
+	    FreeAll ();
 	  }
      }
 }

@@ -3285,6 +3285,8 @@ boolean      on;
   int                 view, assoc, frame;
   int                 ref, item;
 
+  if (pDoc == NULL)
+    return;
   for (view = 0; view < MAX_VIEW_DOC; view++)
     {
       if (pDoc->DocView[view].DvPSchemaView > 0)

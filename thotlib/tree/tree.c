@@ -1321,6 +1321,9 @@ PtrElement          pRoot;
 {
    boolean             within;
 
+   if (pEl->ElStructSchema == NULL)
+     return FALSE;
+
    within = FALSE;
    while (!within && pEl != NULL)
       if (pEl == pRoot)
