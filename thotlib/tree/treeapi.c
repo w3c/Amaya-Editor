@@ -1180,6 +1180,8 @@ Document            document;
       TtaError (ERR_invalid_parameter);
    else if (((PtrElement) (*newElement))->ElParent != NULL)
       TtaError (ERR_element_already_inserted);
+   else if (*newElement == parent)
+      TtaError (ERR_invalid_parameter);
    /* Checks the parameter document */
    else if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
