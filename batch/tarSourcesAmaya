@@ -40,6 +40,7 @@ Amaya/libpng/zlib/Makefile.in \
 Amaya/thotlib/include/Makefile.in \
 Amaya/tools/cextract-1.7/Makefile.in \
 Amaya/tools/mkdep/Makefile.in \
+Amaya/amaya.spec \
 Amaya/amaya/Makefile.in \
 Amaya/amaya/COPYRIGHT* \
 Amaya/amaya/Makefile.libwww \
