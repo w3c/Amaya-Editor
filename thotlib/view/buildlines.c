@@ -856,6 +856,12 @@ PtrAbstractBox      pRootAb;
 		/* plus de boite */
 		return;
 	  }
+	else if (pBox->BxType == BoSplit)
+	  {
+	    /* keep the last created piece of that box */
+	    while (pBox->BxNexChild != NULL)
+	      pBox = pBox->BxNexChild;
+	  }
 	ibox2 = GetBox (pAb);
      }
    else

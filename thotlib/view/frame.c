@@ -279,7 +279,11 @@ int                 delta;
 			   else
 			     DisplayBox (pBox, frame);
 			 }
-		       pBox = pBo1->BxPrevious;
+		       if (pBox->BxPrevious == pBox)
+			 /* detect cycles */
+			 pBox = NULL;
+		       else
+			 pBox = pBo1->BxPrevious;
 		    }
 	       }
 
@@ -330,7 +334,11 @@ int                 delta;
 			      DisplayBox (pBox, frame);
 
 			    /* Skip to next box */
-			    pBox = pBo1->BxPrevious;
+			    if (pBox->BxPrevious == pBox)
+			      /* detect cycles */
+			      pBox = NULL;
+			    else
+			      pBox = pBo1->BxPrevious;
 			 }
 		       else if (pBo1->BxAbstractBox->AbDepth < plane)
 			 {
@@ -339,8 +347,15 @@ int                 delta;
 			       nextplane = pBo1->BxAbstractBox->AbDepth;
 			    else if (pBo1->BxAbstractBox->AbDepth > nextplane)
 			       nextplane = pBo1->BxAbstractBox->AbDepth;
-			    pBox = pBo1->BxPrevious;
+			    if (pBox->BxPrevious == pBox)
+			      /* detect cycles */
+			      pBox = NULL;
+			    else
+			      pBox = pBo1->BxPrevious;
 			 }
+		       else if (pBox->BxPrevious == pBox)
+			 /* detect cycles */
+			 pBox = NULL;
 		       else
 			  pBox = pBo1->BxPrevious;
 		    }
