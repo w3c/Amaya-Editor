@@ -682,7 +682,7 @@ static ThotBool is_animated_now (Animated_Element *animated, AnimTime *current_t
 		*current_time = fmod (*current_time, animated->duration);
 	      return TRUE;
 	    }
-	  if (animated->repeatCount == 11)
+	  if (animated->repeatCount == -1)
 	    {
 	      *current_time = fmod (*current_time, animated->duration);
 	      return TRUE;

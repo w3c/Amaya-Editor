@@ -242,8 +242,8 @@ void register_animated_element (Element animated, Document doc)
       if (repeat)
 	TtaAddAnimRepeatCount (repeat, anim_info);
       else
-	if (strlen (repeatcount) == 9 && 
-	    strcasecmp ("undefined", repeatcount))
+	if (strlen (repeatcount) == 10 && 
+	    strcasecmp ("indefinite", repeatcount))
 	  TtaAddAnimRepeatCount (-1, anim_info);
       TtaFreeMemory (repeatcount);
     }

@@ -428,7 +428,8 @@ static void OriginSystemExit (PtrAbstractBox pAb, ViewFrame  *pFrame,
       plane == pAb->AbDepth)
     {
       DisplayTransformationExit ();
-      if ((OldXOrg != 0 || OldYOrg != 0) &&
+      if (pBox && 
+	  (OldXOrg != 0 || OldYOrg != 0) &&
 	  (ClipXOfFirstCoordSys == pBox->BxClipX &&
 	  ClipYOfFirstCoordSys == pBox->BxClipY))
 	{
@@ -466,6 +467,7 @@ void GetBoxTransformedCoord  (PtrAbstractBox pAbSeeked, int frame,
   double              projection_view[16];
   double              model_view[16];
   int                 base_y;
+  ThotBool            is_transformed = FALSE;
 
   FrameUpdatingStatus = FrameUpdating;
   FrameUpdating = TRUE;  
@@ -507,13 +509,19 @@ void GetBoxTransformedCoord  (PtrAbstractBox pAbSeeked, int frame,
 		      /* If the coord sys origin is translated, 
 			 it must be before any other transfromation*/
 		      if (pAb->AbElement->ElSystemOrigin)
+			{
+			  is_transformed = TRUE;
 			DisplayBoxTransformation (pAb->AbElement->ElTransform, 
 						  pFrame->FrXOrg, pFrame->FrYOrg);
+			}
 		      /* Normal transformation*/
 		      if (pAb->AbElement->ElTransform)
+			{
+			  is_transformed = TRUE;
 			DisplayTransformation (pAb->AbElement->ElTransform, 
 					       pBox->BxWidth, 
 					       pBox->BxHeight);
+			}
 		      if (pAb->AbElement->ElSystemOrigin)
 			{ 
 			  if (pFrame->FrXOrg ||pFrame->FrYOrg)
@@ -527,7 +535,8 @@ void GetBoxTransformedCoord  (PtrAbstractBox pAbSeeked, int frame,
 			    }
 			}
 		    }
-		  if (pAb == pAbSeeked && pAb->AbLeafType != LtCompound) 
+		  if (pAb == pAbSeeked && pAb->AbLeafType != LtCompound &&
+		      is_transformed) 
 		    {  
 		      glGetDoublev (GL_MODELVIEW_MATRIX, model_view);
 		      glGetDoublev (GL_PROJECTION_MATRIX, projection_view);		      
@@ -594,36 +603,46 @@ void GetBoxTransformedCoord  (PtrAbstractBox pAbSeeked, int frame,
 	}
     } 
   FrameUpdating = FrameUpdatingStatus;
-  viewport[0] = 0; viewport[1] = 0; viewport[2] = l; viewport[3] = h;
-  winx = (double) *lowerx;
-  winy = (double) (h - *y);
 
-  if (GL_TRUE == gluUnProject (winx, winy, 0.0,
-			       model_view,
-			       projection_view,
-			       viewport,
-			       &finalx, &finaly, &finalz))
+  if (is_transformed)
     {
-      base_y = FloatToInt ((float) finaly);
-      if (*lowerx != *higherx)
+      viewport[0] = 0; viewport[1] = 0; viewport[2] = l; viewport[3] = h;
+      winx = (double) *lowerx;
+      winy = (double) (h - *y);
+      
+      if (GL_TRUE == gluUnProject (winx, winy, 0.0,
+				   model_view,
+				   projection_view,
+				   viewport,
+				   &finalx, &finaly, &finalz))
 	{
-	  *lowerx = FloatToInt ((float) finalx);
-	  winx = (double) *higherx;
-	  winy = (double) (h - *y);
-	  gluUnProject (winx, winy, 0.0,
-			model_view,
-			projection_view,
-			viewport,
-			&finalx, &finaly, &finalz);
-
-	  *higherx = FloatToInt ((float) finalx);
 	  base_y = FloatToInt ((float) finaly);
+	  if (*lowerx != *higherx)
+	    {
+	      *lowerx = FloatToInt ((float) finalx);
+	      winx = (double) *higherx;
+	      winy = (double) (h - *y);
+	      gluUnProject (winx, winy, 0.0,
+			    model_view,
+			    projection_view,
+			    viewport,
+			    &finalx, &finaly, &finalz);
+
+	      *higherx = FloatToInt ((float) finalx);
+	      base_y = FloatToInt ((float) finaly);
+	    }
+	  else
+	    {
+	      *higherx = *lowerx = FloatToInt ((float) finalx);
+	      *y = base_y;
+	    }
 	}
-      else
-	{
-	  *higherx = *lowerx = FloatToInt ((float) finalx);
-	  *y = base_y;
-	}
+    }
+  else
+    {
+      *lowerx += pFrame->FrXOrg;
+      *higherx += pFrame->FrXOrg;
+      *y += pFrame->FrYOrg;
     }
 #endif /* _GL */
 }

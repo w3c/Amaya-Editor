@@ -2272,13 +2272,17 @@ static ThotBool GetAbsoluteBoundingBox (PtrAbstractBox pAb,
 					int xmin, int xmax, int ymin, int ymax)
 {
   ViewFrame          *pFrame;
+PtrBox              box;
 
   pFrame = &ViewFrameTable[frame - 1];
+  box = pAb->AbBox;
+  if (box == NULL)
+    return FALSE;
 
-  *x = pAb->AbBox->BxClipX;
-  *y = pAb->AbBox->BxClipY;
-  *width = pAb->AbBox->BxClipW;
-  *height = pAb->AbBox->BxClipH;
+  *x = box->BxClipX;
+  *y = box->BxClipY;
+  *width = box->BxClipW;
+  *height = box->BxClipH;
 
   if (LimitBoundingBoxToClip (x, y,
 			      width, height, 
@@ -2338,15 +2342,21 @@ void DisplayOpaqueGroup (PtrAbstractBox pAb, int frame,
   ----------------------------------------------------------------------*/
 void OpaqueGroupTextureFree (PtrAbstractBox     pAb, int frame)
 {
-  if (GL_prepare (frame))
+PtrBox              box;
+
+ box = pAb->AbBox;
+  if (box)
     {
-      FreeGlTexture (pAb->AbBox->Pre_computed_Pic);
-      FreeGlTexture (pAb->AbBox->Post_computed_Pic);
-    }  
-  TtaFreeMemory (pAb->AbBox->Pre_computed_Pic);
-  TtaFreeMemory (pAb->AbBox->Post_computed_Pic);
-  pAb->AbBox->Pre_computed_Pic = NULL; 
-  pAb->AbBox->Post_computed_Pic = NULL; 
+      if (GL_prepare (frame))
+	{
+	  FreeGlTexture (pAb->AbBox->Pre_computed_Pic);
+	  FreeGlTexture (pAb->AbBox->Post_computed_Pic);
+	}  
+      TtaFreeMemory (pAb->AbBox->Pre_computed_Pic);
+      TtaFreeMemory (pAb->AbBox->Post_computed_Pic);
+      pAb->AbBox->Pre_computed_Pic = NULL; 
+      pAb->AbBox->Post_computed_Pic = NULL; 
+    }
 }
 
 /*----------------------------------------------------------------------

@@ -1766,11 +1766,9 @@ void GL_Swap (int frame)
   if (frame < MAX_FRAME)
     {
       gl_synchronize (); 
-      glFinish ();
-      glFlush ();
-
+      /* glFinish (); */
+      /* glFlush (); */      
       glDisable (GL_SCISSOR_TEST);
-
 #ifdef _WINDOWS
       if (GL_Windows[frame])
 	SwapBuffers (GL_Windows[frame]);
@@ -1778,11 +1776,8 @@ void GL_Swap (int frame)
       if (FrameTable[frame].WdFrame)
 	gtk_gl_area_swapbuffers (GTK_GL_AREA(FrameTable[frame].WdFrame));
 #endif /*_WINDOWS*/
-
       glEnable (GL_SCISSOR_TEST);
-
-    }
-  
+    }  
 }
 
 /*----------------------------------------------------------------------
