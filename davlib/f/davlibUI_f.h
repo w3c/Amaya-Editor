@@ -36,6 +36,7 @@ extern void DAVGetPreferences ( void );
 extern void DAVShowPreferencesDlg_callback ( int ref,
                                              int typedata,
                                              char *data );
+extern void InitDAVPreferences ( void );
 extern void DAVShowPreferencesDlg ( Document document );
 
 #else /* __STDC__ */
@@ -70,6 +71,7 @@ extern void DAVGetPreferences ( void );
 extern void DAVShowPreferencesDlg_callback ( int ref,
                                                int typedata,
                                                char *data );
+extern void InitDAVPreferences ( void );
 extern void DAVShowPreferencesDlg ( Document document );
 
 #endif /* __STDC__ */

@@ -38,7 +38,7 @@
 /* Included headerfiles */
 
 #ifdef _WX
-  #include "wx/wx.h"
+#include "wx/wx.h"
 #endif /* _WX */
 
 #define THOT_EXPORT extern
@@ -47,10 +47,15 @@
 #include "MENUconf_f.h"
 #include "print.h"
 #include "fileaccess.h"
-
 #ifdef _WX
-  #include "wxdialogapi_f.h"
+#include "wxdialogapi_f.h"
 #endif /* _WX */
+
+#ifdef DAV
+#define WEBDAV_EXPORT extern
+#include "davlib.h"
+#include "davlibUI_f.h"
+#endif /* DAV */
 
 #ifdef _WINGUI
 #include "resource.h"
@@ -61,33 +66,32 @@
 extern HINSTANCE hInstance;
 /* an optimization to say which common
 menu buttons we want to initialize */
-enum {AM_INIT_APPLY_BUTTON = 1,
-	  AM_INIT_DEFAULT_BUTTON = 2,
-	  AM_INIT_DONE_BUTTON = 4,
-	  AM_INIT_ALL = 0xFFFF};
-
+enum {
+  AM_INIT_APPLY_BUTTON = 1,
+  AM_INIT_DEFAULT_BUTTON = 2,
+  AM_INIT_DONE_BUTTON = 4,
+  AM_INIT_ALL = 0xFFFF
+};
 #endif /* _WINGUI */
 
+
+/* ======> Preference dialog (contains eache sub dialog into tabs) */
 #ifdef _WX
 /* Preference dialog (contains eache sub dialog into tabs) */
 static int PreferenceBase;
 #endif /* _WX */
 
-/* this one should be exported from the thotlib */
-extern char  *ColorName (int num);
 
-static int CacheStatus;
-static int ProxyStatus;
-static int SafePutStatus;
-
-/* Cache menu options */
+/* ============> Cache menu options */
+static int        CacheBase;
+static int        CacheStatus;
+static Prop_Cache GProp_Cache;
 #ifdef _WINGUI
 static HWND CacheHwnd = NULL;
 typedef struct _AM_WIN_MenuText {
    int idc;
    int message;
 } AM_WIN_MenuText;
-
 /* the message table text to IDC convertion table */
 static AM_WIN_MenuText WIN_CacheMenuText[] = 
 {
@@ -104,29 +108,11 @@ static AM_WIN_MenuText WIN_CacheMenuText[] =
 };
 #endif /* _WINGUI */
 
-static int      CacheBase;
 
-#ifndef _WINGUI
-static Prop_Cache GProp_Cache;
-static ThotBool & EnableCache = GProp_Cache.EnableCache;
-static ThotBool & CacheProtectedDocs = GProp_Cache.CacheProtectedDocs;
-static ThotBool & CacheDisconnectMode = GProp_Cache.CacheDisconnectMode;
-static ThotBool & CacheExpireIgnore = GProp_Cache.CacheExpireIgnore;
-static char *     CacheDirectory = GProp_Cache.CacheDirectory;
-static int &      CacheSize = GProp_Cache.CacheSize;
-static int &      MaxCacheFile = GProp_Cache.MaxCacheFile;
-#else /* _WINGUI */
-/* do not use references on Windows C compiler, it doesn't understand it :( */
-static ThotBool EnableCache;
-static ThotBool CacheProtectedDocs;
-static ThotBool CacheDisconnectMode;
-static ThotBool CacheExpireIgnore;
-static char     CacheDirectory[MAX_LENGTH];
-static int      CacheSize;
-static int      MaxCacheFile;
-#endif /* _WINGUI */
-
-/* Proxy menu options */
+/* ============> Proxy menu options */
+static int        ProxyBase;
+static int        ProxyStatus;
+static Prop_Proxy GProp_Proxy;
 #ifdef _WINGUI
 static HWND     ProxyHwnd = NULL;
 /* the message table text to IDC convertion table */
@@ -141,21 +127,13 @@ static AM_WIN_MenuText WIN_ProxyMenuText[] =
 	{0, 0}
 };
 #endif /* _WINGUI */
-static int      ProxyBase;
 
-#ifndef _WINGUI
-static Prop_Proxy GProp_Proxy;
-static char *     HttpProxy              = GProp_Proxy.HttpProxy;
-static char *     ProxyDomain            = GProp_Proxy.ProxyDomain;
-static ThotBool & ProxyDomainIsOnlyProxy = GProp_Proxy.ProxyDomainIsOnlyProxy;
-#else /* _WINGUI */
-/* do not use references on Windows C compiler, it doesn't understand it :( */
-static char     HttpProxy[MAX_LENGTH];
-static char     ProxyDomain[MAX_LENGTH];
-static ThotBool ProxyDomainIsOnlyProxy;
-#endif /* _WINGUI */
 
-/* General menu options */
+/* ============> General menu options */
+static int          GeneralBase;
+static Prop_General GProp_General;
+#define DEF_SAVE_INTVL 10	/* number of typed characters triggering 
+				   automatic saving */
 #ifdef _WINGUI
 static char     AppHome[MAX_LENGTH];
 static char     AppTmpDir[MAX_LENGTH];
@@ -176,44 +154,23 @@ static AM_WIN_MenuText WIN_GeneralMenuText[] =
 	{0, 0}
 };
 #endif /* _WINGUI */
-static int      GeneralBase;
 
-#ifndef _WINGUI
-static Prop_General GProp_General;
-static int &    Zoom              = GProp_General.Zoom;
-static char *   DialogueLang      = GProp_General.DialogueLang;
-static int &    AccesskeyMod      = GProp_General.AccesskeyMod;
-static int &    FontMenuSize      = GProp_General.FontMenuSize;
-static char *   HomePage          = GProp_General.HomePage;
-static ThotBool & PasteLineByLine = GProp_General.PasteLineByLine;
-static ThotBool & S_Buttons       = GProp_General.S_Buttons;
-static ThotBool & S_Address       = GProp_General.S_Address;
-static ThotBool & S_Targets       = GProp_General.S_Targets;
-#define DEF_SAVE_INTVL 10	/* number of typed characters triggering 
-				   automatic saving */
-static ThotBool & S_AutoSave      = GProp_General.S_AutoSave;
-static ThotBool & S_Geometry      = GProp_General.S_Geometry;
-#else /* _WINGUI */
-/* do not use references on Windows C compiler, it doesn't understand it :( */
-static int      Zoom;
-static char     DialogueLang[MAX_LENGTH];
-static int      AccesskeyMod;
-static int      FontMenuSize;
-static char     HomePage[MAX_LENGTH];
-static ThotBool PasteLineByLine;
-static ThotBool S_Buttons;
-static ThotBool S_Address;
-static ThotBool S_Targets;
-#define DEF_SAVE_INTVL 10	/* number of typed characters triggering 
-				   automatic saving */
-static ThotBool S_AutoSave;
-static ThotBool S_Geometry;
-#endif /* _WINGUI */
 
-/* Browse menu options */
+/* ============> Browse menu options */
+static int         BrowseBase;
+static Prop_Browse GProp_Browse;
+static int         CurrentScreen;
+static ThotBool    InitLoadImages;
+static ThotBool    InitLoadObjects;
+static ThotBool    InitLoadCss;
+static ThotBool    InitBgImages;
+static char        NewScreen[MAX_LENGTH];
+static char       *ScreensTxt[]={
+  "handheld", "print", "projection", "screen", "tty", "tv"
+};
 #ifdef _WINGUI
-static HWND     BrowseHwnd =  NULL;
-static HWND     ScreensList;
+static HWND        BrowseHwnd =  NULL;
+static HWND        ScreensList;
 static AM_WIN_MenuText WIN_BrowseMenuText[] = 
 {
 	{AM_INIT_ALL, AM_BROWSE_MENU},
@@ -227,41 +184,17 @@ static AM_WIN_MenuText WIN_BrowseMenuText[] =
 	{0, 0}
 };
 #endif /* _WINGUI */
-static int      BrowseBase;
-static int      CurrentScreen;
-static ThotBool InitLoadImages;
-static ThotBool InitLoadObjects;
-static ThotBool InitLoadCss;
-static ThotBool InitBgImages;
-static char     NewScreen[MAX_LENGTH];
-static char    *ScreensTxt[]={
-  "handheld", "print", "projection", "screen", "tty", "tv"
+
+
+/* ============> Publish menu options */
+static int          PublishBase;
+static Prop_Publish GProp_Publish;
+static int          SafePutStatus;
+static int          CurrentCharset;
+static char         NewCharset[MAX_LENGTH];
+static char        *CharsetTxt[]={
+  "us-ascii", "iso-8859-1", "utf-8"
 };
-
-#ifndef _WINGUI
-static Prop_Browse GProp_Browse;
-static ThotBool & LoadImages = GProp_Browse.LoadImages;
-static ThotBool & LoadObjects = GProp_Browse.LoadObjects;
-static ThotBool & LoadCss = GProp_Browse.LoadCss;
-static ThotBool & DoubleClick = GProp_Browse.DoubleClick;
-static ThotBool & EnableFTP = GProp_Browse.EnableFTP;
-static ThotBool & BgImages = GProp_Browse.BgImages;
-static char    * ScreenType = GProp_Browse.ScreenType;
-static int     & DoubleClickDelay = GProp_Browse.DoubleClickDelay;
-#else /* _WINGUI */
-/* do not use references on Windows C compiler, it doesn't understand it :( */
-static ThotBool LoadImages;
-static ThotBool LoadObjects;
-static ThotBool LoadCss;
-static ThotBool DoubleClick;
-static ThotBool EnableFTP;
-static ThotBool BgImages;
-static char     ScreenType[MAX_LENGTH];;
-static int      DoubleClickDelay;
-#endif /* _WINGUI */
-
-
-/* Publish menu options */
 #ifdef _WINGUI
 static HWND     PublishHwnd =  NULL;
 static HWND     CharsetList;
@@ -278,34 +211,13 @@ static AM_WIN_MenuText WIN_PublishMenuText[] =
 	{0, 0}
 };
 #endif /* _WINGUI */
-static int      PublishBase;
 
-#ifndef _WINGUI
-static Prop_Publish GProp_Publish;
-static char     * DefaultName = GProp_Publish.DefaultName;
-static ThotBool & UseXHTMLMimeType = GProp_Publish.UseXHTMLMimeType;
-static ThotBool & LostUpdateCheck = GProp_Publish.LostUpdateCheck;
-static ThotBool & ExportCRLF = GProp_Publish.ExportCRLF;
-static ThotBool & VerifyPublish = GProp_Publish.VerifyPublish;
-static char     * SafePutRedirect = GProp_Publish.SafePutRedirect;
-static char     * CharsetType = GProp_Publish.CharsetType;
-#else /* _WINGUI */
-/* do not use references on Windows C compiler, it doesn't understand it :( */
-static char     DefaultName[MAX_LENGTH];
-static ThotBool UseXHTMLMimeType;
-static ThotBool LostUpdateCheck;
-static ThotBool ExportCRLF;
-static ThotBool VerifyPublish;
-static char     SafePutRedirect[MAX_LENGTH];
-static char     CharsetType[MAX_LENGTH];
-#endif /* _WINGUI */
 
-static int      CurrentCharset;
-static char     NewCharset[MAX_LENGTH];
-static char    *CharsetTxt[]={
-  "us-ascii", "iso-8859-1", "utf-8"
-};
-/* Color menu options */
+/* ============> Color menu options */
+static int        ColorBase;
+static Prop_Color GProp_Color;
+/* this one should be exported from the thotlib */
+extern char  *ColorName (int num);
 #ifdef _WINGUI
 static HWND     ColorHwnd = NULL;
 static AM_WIN_MenuText WIN_ColorMenuText[] = 
@@ -320,27 +232,13 @@ static AM_WIN_MenuText WIN_ColorMenuText[] =
 	{0, 0}
 };
 #endif /* _WINGUI */
-static int      ColorBase;
 
-#ifndef _WINGUI
-static Prop_Color GProp_Color;
-static char *    FgColor     = GProp_Color.FgColor;
-static char *    BgColor     = GProp_Color.BgColor;
-static char *    BgSelColor  = GProp_Color.BgSelColor;
-static char *    FgSelColor  = GProp_Color.FgSelColor;
-static char *    MenuFgColor = GProp_Color.MenuFgColor;
-static char *    MenuBgColor = GProp_Color.MenuBgColor;
-#else /* !_WINGUI */
-/* do not use references on Windows C compiler, it doesn't understand it :( */
-static char     FgColor[MAX_LENGTH];
-static char     BgColor[MAX_LENGTH];
-static char     BgSelColor[MAX_LENGTH];
-static char     FgSelColor[MAX_LENGTH];
-#endif /* _WINGUI */
 
-/* Geometry menu options */
+/* ============> Geometry menu options */
 static int      GeometryBase;
 static Document GeometryDoc = 0;
+/* common local variables */
+static char    s[MAX_LENGTH]; /* general purpose buffer */
 #ifdef _WINGUI
 HWND            GeometryHwnd = NULL;
 static AM_WIN_MenuText WIN_GeometryMenuText[] = 
@@ -352,31 +250,34 @@ static AM_WIN_MenuText WIN_GeometryMenuText[] =
 	{0, 0}
 };
 #endif /* _WINGUI */
-/* common local variables */
-static char    s[MAX_LENGTH]; /* general purpose buffer */
 
-/* Language negotiation menu options */
+
+/* ============> Language negotiation menu options */
+static int          LanNegBase;
+static Prop_LanNeg  GProp_LanNeg;
 #ifdef _WINGUI
-static HWND     LanNegHwnd = NULL;
+static HWND        LanNegHwnd = NULL;
 static AM_WIN_MenuText WIN_LanNegMenuText[] = 
 {
 	{AM_INIT_ALL, AM_LANNEG_MENU},
 	{IDC_TLANNEG, AM_LANG_NEGOTIATION},
 	{0, 0}
 };
-#endif /* _WINGUI */
-static int      LanNegBase;
-
-#ifndef _WINGUI
-static Prop_LanNeg GProp_LanNeg;
-static char *    LanNeg = GProp_LanNeg.LanNeg;
-#else /* _WINGUI */
-/* do not use references on Windows C compiler, it doesn't understand it :( */
-static char     LanNeg[MAX_LENGTH];
 #endif /* _WINGUI*/
 
+
 #ifdef ANNOTATIONS
-/* Annotation menu option */
+/* ============> Annotation menu option */
+static int      AnnotBase;
+static char     AnnotUser[MAX_LENGTH];
+static char     AnnotPostServer[MAX_LENGTH];
+static char     AnnotServers[MAX_LENGTH];
+static ThotBool AnnotLAutoLoad;
+static ThotBool AnnotRAutoLoad;
+static ThotBool AnnotRAutoLoadRst;
+
+#include "annotlib.h"
+#include "ANNOTevent_f.h"
 #ifdef _WINGUI
 static HWND     AnnotHwnd = NULL;
 static AM_WIN_MenuText WIN_AnnotMenuText[] = 
@@ -391,26 +292,11 @@ static AM_WIN_MenuText WIN_AnnotMenuText[] =
 	{0, 0}
 };
 #endif /* _WINGUI */
-static int      AnnotBase;
-static char     AnnotUser[MAX_LENGTH];
-static char     AnnotPostServer[MAX_LENGTH];
-static char     AnnotServers[MAX_LENGTH];
-static ThotBool AnnotLAutoLoad;
-static ThotBool AnnotRAutoLoad;
-static ThotBool AnnotRAutoLoadRst;
-
-#include "annotlib.h"
-#include "ANNOTevent_f.h"
 #endif /* ANNOTATIONS */
 
 #include "HTMLsave_f.h"
 #include "init_f.h"
 #include "query_f.h"
-
-
-/*
-** Common functions
-*/
 
 /*-----------------------------------------------------------------------
    _GetSysUserName
@@ -498,13 +384,13 @@ void InitAmayaDefEnv (void)
   ptr = TtaGetEnvString ("THOTDIR");
   if (ptr != NULL)
     {
-      strcpy (HomePage, ptr);
-      strcat (HomePage, AMAYA_PAGE);
+      strcpy (GProp_General.HomePage, ptr);
+      strcat (GProp_General.HomePage, AMAYA_PAGE);
     }
   else
-    HomePage[0]  = EOS;
-  TtaSetDefEnvString ("HOME_PAGE", HomePage, FALSE);
-  HomePage[0] = EOS;
+    GProp_General.HomePage[0]  = EOS;
+  TtaSetDefEnvString ("HOME_PAGE", GProp_General.HomePage, FALSE);
+  GProp_General.HomePage[0] = EOS;
   TtaSetDefEnvString ("EXPORT_CRLF", "no", FALSE);
   TtaSetDefEnvString ("PASTE_LINE_BY_LINE", "yes", FALSE);
   TtaSetDefEnvString ("ENABLE_BG_IMAGES", "yes", FALSE);
@@ -517,7 +403,7 @@ void InitAmayaDefEnv (void)
   TtaSetDefEnvString ("FontMenuSize", "12", FALSE);
   TtaSetDefEnvString ("ENABLE_DOUBLECLICK", "yes", FALSE);
   /* @@@ */
-  TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &DoubleClick);
+  TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &GProp_Browse.DoubleClick);
   /* @@@ */
   TtaSetDefEnvString ("ENABLE_FTP", "no", FALSE);
   TtaSetDefEnvString ("SCREEN_TYPE", "screen", FALSE);
@@ -936,13 +822,13 @@ static void WIN_SetMenuText (HWND hwnDlg, AM_WIN_MenuText menu[])
   ----------------------------------------------------------------------*/
 static void GetCacheConf (void)
 {
-  TtaGetEnvBoolean ("ENABLE_CACHE", &EnableCache);
-  TtaGetEnvBoolean ("CACHE_PROTECTED_DOCS", &CacheProtectedDocs);
-  TtaGetEnvBoolean ("CACHE_DISCONNECTED_MODE", &CacheDisconnectMode);
-  TtaGetEnvBoolean ("CACHE_EXPIRE_IGNORE", &CacheExpireIgnore);
-  GetEnvString ("CACHE_DIR", CacheDirectory);
-  TtaGetEnvInt ("CACHE_SIZE", &CacheSize);
-  TtaGetEnvInt ("MAX_CACHE_ENTRY_SIZE", &MaxCacheFile);
+  TtaGetEnvBoolean ("ENABLE_CACHE", &(GProp_Cache.EnableCache));
+  TtaGetEnvBoolean ("CACHE_PROTECTED_DOCS", &(GProp_Cache.CacheProtectedDocs));
+  TtaGetEnvBoolean ("CACHE_DISCONNECTED_MODE", &(GProp_Cache.CacheDisconnectMode));
+  TtaGetEnvBoolean ("CACHE_EXPIRE_IGNORE", &(GProp_Cache.CacheExpireIgnore));
+  GetEnvString ("CACHE_DIR", GProp_Cache.CacheDirectory);
+  TtaGetEnvInt ("CACHE_SIZE", &(GProp_Cache.CacheSize));
+  TtaGetEnvInt ("MAX_CACHE_ENTRY_SIZE", &( GProp_Cache.MaxCacheFile));
 }
 
 /*----------------------------------------------------------------------
@@ -959,54 +845,54 @@ static void ValidateCacheConf (void)
 #ifdef _WINGUI
  /* validate the cache size */
  change = 1;
- if (CacheSize < 1)
-   CacheSize =1;
- else if (CacheSize > 100)
-   CacheSize = 100;
+ if (GProp_Cache.CacheSize < 1)
+   GProp_Cache.CacheSize =1;
+ else if (GProp_Cache.CacheSize > 100)
+   GProp_Cache.CacheSize = 100;
  else
    change = 0;
  if (change)
-   SetDlgItemInt (CacheHwnd, IDC_CACHESIZE, CacheSize, FALSE);
+   SetDlgItemInt (CacheHwnd, IDC_CACHESIZE, GProp_Cache.CacheSize, FALSE);
  
  /* validate the cache entry size */
  change = 1;
- if (MaxCacheFile < 1)
-   MaxCacheFile = 1;
- else if (MaxCacheFile > 5)
-   MaxCacheFile = 5;
+ if ( GProp_Cache.MaxCacheFile < 1)
+    GProp_Cache.MaxCacheFile = 1;
+ else if ( GProp_Cache.MaxCacheFile > 5)
+    GProp_Cache.MaxCacheFile = 5;
  else
    change = 0;
  if (change)
-   SetDlgItemInt (CacheHwnd, IDC_MAXCACHEFILE, MaxCacheFile, FALSE);
+   SetDlgItemInt (CacheHwnd, IDC_MAXCACHEFILE,  GProp_Cache.MaxCacheFile, FALSE);
 #endif /* _WINGUI */
 
  /* validate the cache dir */
  change = 0;
- change += CleanFirstLastSpace (CacheDirectory);
- change += CleanDirSep (CacheDirectory);
+ change += CleanFirstLastSpace (GProp_Cache.CacheDirectory);
+ change += CleanDirSep (GProp_Cache.CacheDirectory);
  /* remove the last DIR_SEP, if we have it */
- change += RemoveLastDirSep (CacheDirectory);
- if (CacheDirectory[0] == EOS)
+ change += RemoveLastDirSep (GProp_Cache.CacheDirectory);
+ if (GProp_Cache.CacheDirectory[0] == EOS)
  {
-   GetDefEnvString ("CACHE_DIR", CacheDirectory);
+   GetDefEnvString ("CACHE_DIR", GProp_Cache.CacheDirectory);
    change = 1;
  }
 
  /* what we do is add a DIR_STRlibwww-cache */
  /* remove the last DIR_SEP, if we have it (twice, to 
     protect against a bad "user" default value */
- change += RemoveLastDirSep (CacheDirectory);
+ change += RemoveLastDirSep (GProp_Cache.CacheDirectory);
  /* n.b., this variable may be empty */
 #ifdef _WINGUI
-  change += NormalizeDirName (CacheDirectory, "\\libwww-cache");
+  change += NormalizeDirName (GProp_Cache.CacheDirectory, "\\libwww-cache");
 #else
-  change += NormalizeDirName (CacheDirectory, "/libwww-cache");
+  change += NormalizeDirName (GProp_Cache.CacheDirectory, "/libwww-cache");
 #endif /* _WINGUI */
   if (change)
 #ifdef _WINGUI
-    SetDlgItemText (CacheHwnd, IDC_CACHEDIRECTORY, CacheDirectory);
+    SetDlgItemText (CacheHwnd, IDC_CACHEDIRECTORY, GProp_Cache.CacheDirectory);
 #else
-    TtaSetTextForm (CacheBase + mCacheDirectory, CacheDirectory);
+    TtaSetTextForm (CacheBase + mCacheDirectory, GProp_Cache.CacheDirectory);
 #endif /* _WINGUI */
 }
 
@@ -1016,13 +902,13 @@ static void ValidateCacheConf (void)
   ----------------------------------------------------------------------*/
 static void SetCacheConf (void)
 {
-  TtaSetEnvBoolean ("ENABLE_CACHE", EnableCache, TRUE);
-  TtaSetEnvBoolean ("CACHE_PROTECTED_DOCS", CacheProtectedDocs, TRUE);
-  TtaSetEnvBoolean ("CACHE_DISCONNECTED_MODE", CacheDisconnectMode, TRUE);
-  TtaSetEnvBoolean ("CACHE_EXPIRE_IGNORE", CacheExpireIgnore, TRUE);
-  TtaSetEnvString ("CACHE_DIR", CacheDirectory, TRUE);
-  TtaSetEnvInt ("CACHE_SIZE", CacheSize, TRUE);
-  TtaSetEnvInt ("MAX_CACHE_ENTRY_SIZE", MaxCacheFile, TRUE);
+  TtaSetEnvBoolean ("ENABLE_CACHE", GProp_Cache.EnableCache, TRUE);
+  TtaSetEnvBoolean ("CACHE_PROTECTED_DOCS", GProp_Cache.CacheProtectedDocs, TRUE);
+  TtaSetEnvBoolean ("CACHE_DISCONNECTED_MODE", GProp_Cache.CacheDisconnectMode, TRUE);
+  TtaSetEnvBoolean ("CACHE_EXPIRE_IGNORE", GProp_Cache.CacheExpireIgnore, TRUE);
+  TtaSetEnvString ("CACHE_DIR", GProp_Cache.CacheDirectory, TRUE);
+  TtaSetEnvInt ("CACHE_SIZE", GProp_Cache.CacheSize, TRUE);
+  TtaSetEnvInt ("MAX_CACHE_ENTRY_SIZE",  GProp_Cache.MaxCacheFile, TRUE);
 
   TtaSaveAppRegistry ();
 }
@@ -1035,13 +921,17 @@ static void SetCacheConf (void)
 static void GetDefaultCacheConf ()
 {
   /* read the default values */
-  GetDefEnvToggle ("ENABLE_CACHE", &EnableCache, CacheBase + mCacheOptions, 0);
-  GetDefEnvToggle ("CACHE_PROTECTED_DOCS", &CacheProtectedDocs, CacheBase + mCacheOptions, 1);
-  GetDefEnvToggle ("CACHE_DISCONNECTED_MODE", &CacheDisconnectMode, CacheBase + mCacheOptions, 2);
-  GetDefEnvToggle ("CACHE_EXPIRE_IGNORE", &CacheExpireIgnore, CacheBase + mCacheOptions, 3);
-  GetDefEnvString ("CACHE_DIR", CacheDirectory);
-  TtaGetDefEnvInt ("CACHE_SIZE", &CacheSize);
-  TtaGetDefEnvInt ("MAX_CACHE_ENTRY_SIZE", &MaxCacheFile);
+  GetDefEnvToggle ("ENABLE_CACHE", &(GProp_Cache.EnableCache),
+		   CacheBase + mCacheOptions, 0);
+  GetDefEnvToggle ("CACHE_PROTECTED_DOCS", &(GProp_Cache.CacheProtectedDocs),
+		   CacheBase + mCacheOptions, 1);
+  GetDefEnvToggle ("CACHE_DISCONNECTED_MODE", &(GProp_Cache.CacheDisconnectMode),
+		   CacheBase + mCacheOptions, 2);
+  GetDefEnvToggle ("CACHE_EXPIRE_IGNORE", &(GProp_Cache.CacheExpireIgnore),
+		   CacheBase + mCacheOptions, 3);
+  GetDefEnvString ("CACHE_DIR", GProp_Cache.CacheDirectory);
+  TtaGetDefEnvInt ("CACHE_SIZE", &(GProp_Cache.CacheSize));
+  TtaGetDefEnvInt ("MAX_CACHE_ENTRY_SIZE", &( GProp_Cache.MaxCacheFile));
 }
 
 #ifdef _WINGUI
@@ -1051,17 +941,17 @@ static void GetDefaultCacheConf ()
   ----------------------------------------------------------------------*/
 static void WIN_RefreshCacheMenu (HWND hwnDlg)
 {
-  CheckDlgButton (hwnDlg, IDC_ENABLECACHE, (EnableCache)
+  CheckDlgButton (hwnDlg, IDC_ENABLECACHE, (GProp_Cache.EnableCache)
 		  ? BST_CHECKED : BST_UNCHECKED);
-  CheckDlgButton (hwnDlg, IDC_CACHEPROTECTEDDOCS, (CacheProtectedDocs)
+  CheckDlgButton (hwnDlg, IDC_CACHEPROTECTEDDOCS, (GProp_Cache.CacheProtectedDocs)
 		  ? BST_CHECKED : BST_UNCHECKED);
-  CheckDlgButton (hwnDlg, IDC_CACHEDISCONNECTEDMODE, (CacheDisconnectMode)
+  CheckDlgButton (hwnDlg, IDC_CACHEDISCONNECTEDMODE, (GProp_Cache.CacheDisconnectMode)
 		  ? BST_CHECKED : BST_UNCHECKED);
-  CheckDlgButton (hwnDlg, IDC_CACHEEXPIREIGNORE, (CacheExpireIgnore)
+  CheckDlgButton (hwnDlg, IDC_CACHEEXPIREIGNORE, (GProp_Cache.CacheExpireIgnore)
 		  ? BST_CHECKED : BST_UNCHECKED);
-  SetDlgItemText (hwnDlg, IDC_CACHEDIRECTORY, CacheDirectory);
-  SetDlgItemInt (hwnDlg, IDC_CACHESIZE, CacheSize, FALSE);
-  SetDlgItemInt (hwnDlg, IDC_MAXCACHEFILE, MaxCacheFile, FALSE);
+  SetDlgItemText (hwnDlg, IDC_CACHEDIRECTORY, GProp_Cache.CacheDirectory);
+  SetDlgItemInt (hwnDlg, IDC_CACHESIZE, GProp_Cache.CacheSize, FALSE);
+  SetDlgItemInt (hwnDlg, IDC_MAXCACHEFILE,  GProp_Cache.MaxCacheFile, FALSE);
 }
 #else /* WINDOWS */
 /*----------------------------------------------------------------------
@@ -1071,14 +961,14 @@ static void WIN_RefreshCacheMenu (HWND hwnDlg)
 static void RefreshCacheMenu ()
 {
   /* set the menu entries to the current values */
-  TtaSetToggleMenu (CacheBase + mCacheOptions, 0, EnableCache);
-  TtaSetToggleMenu (CacheBase + mCacheOptions, 1, CacheProtectedDocs);
-  TtaSetToggleMenu (CacheBase + mCacheOptions, 2, CacheDisconnectMode);
-  TtaSetToggleMenu (CacheBase + mCacheOptions, 3, CacheExpireIgnore);
-  if (CacheDirectory)
-    TtaSetTextForm (CacheBase + mCacheDirectory, CacheDirectory);
-  TtaSetNumberForm (CacheBase + mCacheSize, CacheSize);
-  TtaSetNumberForm (CacheBase + mMaxCacheFile, MaxCacheFile);
+  TtaSetToggleMenu (CacheBase + mCacheOptions, 0, GProp_Cache.EnableCache);
+  TtaSetToggleMenu (CacheBase + mCacheOptions, 1, GProp_Cache.CacheProtectedDocs);
+  TtaSetToggleMenu (CacheBase + mCacheOptions, 2, GProp_Cache.CacheDisconnectMode);
+  TtaSetToggleMenu (CacheBase + mCacheOptions, 3, GProp_Cache.CacheExpireIgnore);
+  if (GProp_Cache.CacheDirectory)
+    TtaSetTextForm (CacheBase + mCacheDirectory, GProp_Cache.CacheDirectory);
+  TtaSetNumberForm (CacheBase + mCacheSize, GProp_Cache.CacheSize);
+  TtaSetNumberForm (CacheBase + mMaxCacheFile,  GProp_Cache.MaxCacheFile);
 }
 #endif /* !_WINGUI */
 
@@ -1113,16 +1003,18 @@ LRESULT CALLBACK WIN_CacheDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
           switch (LOWORD (wParam))
 	    {
 	    case IDC_CACHEDIRECTORY:
-	      GetDlgItemText (hwnDlg, IDC_CACHEDIRECTORY, CacheDirectory,
-			      sizeof (CacheDirectory) - 1);
+	      GetDlgItemText (hwnDlg, IDC_CACHEDIRECTORY, GProp_Cache.CacheDirectory,
+			      sizeof (GProp_Cache.CacheDirectory) - 1);
 	      CacheStatus |= AMAYA_CACHE_RESTART;
 	      break;
 	    case IDC_CACHESIZE:
-	      CacheSize = GetDlgItemInt (hwnDlg, IDC_CACHESIZE, FALSE, FALSE);
+	      GProp_Cache.CacheSize = GetDlgItemInt (hwnDlg, IDC_CACHESIZE,
+						     FALSE, FALSE);
 	      CacheStatus |= AMAYA_CACHE_RESTART;
 	      break;
 	    case IDC_MAXCACHEFILE:
-	      MaxCacheFile = GetDlgItemInt (hwnDlg, IDC_MAXCACHEFILE, FALSE, FALSE);
+	       GProp_Cache.MaxCacheFile = GetDlgItemInt (hwnDlg, IDC_MAXCACHEFILE,
+							 FALSE, FALSE);
 	      CacheStatus |= AMAYA_CACHE_RESTART;
 	      break;	
 	    default:
@@ -1133,19 +1025,19 @@ LRESULT CALLBACK WIN_CacheDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	{
 	case IDC_ENABLECACHE:
 	  CacheStatus |= AMAYA_CACHE_RESTART;
-	  EnableCache = !EnableCache;
+	  GProp_Cache.EnableCache = !GProp_Cache.EnableCache;
 	  break;
 	case IDC_CACHEPROTECTEDDOCS:
 	  CacheStatus |= AMAYA_CACHE_RESTART;
-	  CacheProtectedDocs = !CacheProtectedDocs;
+	  GProp_Cache.CacheProtectedDocs = !GProp_Cache.CacheProtectedDocs;
 	  break;
 	case IDC_CACHEDISCONNECTEDMODE:
 	  CacheStatus |= AMAYA_CACHE_RESTART;
-	  CacheDisconnectMode = !CacheDisconnectMode;
+	  GProp_Cache.CacheDisconnectMode = !GProp_Cache.CacheDisconnectMode;
 	  break;
 	case IDC_CACHEEXPIREIGNORE:
 	  CacheStatus |= AMAYA_CACHE_RESTART;
-	  CacheExpireIgnore = !CacheExpireIgnore;
+	  GProp_Cache.CacheExpireIgnore = !GProp_Cache.CacheExpireIgnore;
 	  break;
 
 	  /* action buttons */
@@ -1238,19 +1130,19 @@ static void CacheCallbackDialog (int ref, int typedata, char *data)
 	    {
 	    case 0:
 	      CacheStatus |= AMAYA_CACHE_RESTART;
-	      EnableCache = !EnableCache;
+	      GProp_Cache.EnableCache = !GProp_Cache.EnableCache;
 	      break;
 	    case 1:
 	      CacheStatus |= AMAYA_CACHE_RESTART;
-	      CacheProtectedDocs = !CacheProtectedDocs;
+	      GProp_Cache.CacheProtectedDocs = !GProp_Cache.CacheProtectedDocs;
 	      break;
 	    case 2:
 	      CacheStatus |= AMAYA_CACHE_RESTART;
-	      CacheDisconnectMode = !CacheDisconnectMode;
+	      GProp_Cache.CacheDisconnectMode = !GProp_Cache.CacheDisconnectMode;
 	      break;
 	    case 3:
 	      CacheStatus |= AMAYA_CACHE_RESTART;
-	      CacheExpireIgnore = !CacheExpireIgnore;
+	      GProp_Cache.CacheExpireIgnore = !GProp_Cache.CacheExpireIgnore;
 	      break;
 	    default:
 	      break;
@@ -1259,17 +1151,17 @@ static void CacheCallbackDialog (int ref, int typedata, char *data)
 	case mCacheDirectory:
 	  CacheStatus |= AMAYA_CACHE_RESTART;
 	  if (data)
-	    strcpy (CacheDirectory, data);
+	    strcpy (GProp_Cache.CacheDirectory, data);
 	  else
-	    CacheDirectory[0] = EOS;
+	    GProp_Cache.CacheDirectory[0] = EOS;
 	  break;
 	case mCacheSize:
 	  CacheStatus |= AMAYA_CACHE_RESTART;
-	  CacheSize = val;
+	  GProp_Cache.CacheSize = val;
 	  break;
 	case mMaxCacheFile:
 	  CacheStatus |= AMAYA_CACHE_RESTART;
-	  MaxCacheFile = val;
+	   GProp_Cache.MaxCacheFile = val;
 	  break;
 	default:
 	  break;
@@ -1359,9 +1251,10 @@ void CacheConfMenu (Document document, View view)
   ----------------------------------------------------------------------*/
 static void GetProxyConf (void)
 {
-  GetEnvString ("HTTP_PROXY", HttpProxy);
-  GetEnvString ("PROXYDOMAIN", ProxyDomain);
-  TtaGetEnvBoolean ("PROXYDOMAIN_IS_ONLYPROXY", &ProxyDomainIsOnlyProxy);
+  GetEnvString ("HTTP_PROXY", GProp_Proxy.HttpProxy);
+  GetEnvString ("PROXYDOMAIN", GProp_Proxy.ProxyDomain);
+  TtaGetEnvBoolean ("PROXYDOMAIN_IS_ONLYPROXY",
+		    &(GProp_Proxy.ProxyDomainIsOnlyProxy));
 }
 
 /*----------------------------------------------------------------------
@@ -1370,9 +1263,10 @@ static void GetProxyConf (void)
   ----------------------------------------------------------------------*/
 static void SetProxyConf (void)
 {
-  TtaSetEnvString ("HTTP_PROXY", HttpProxy, TRUE);
-  TtaSetEnvString ("PROXYDOMAIN", ProxyDomain, TRUE);
-  TtaSetEnvBoolean ("PROXYDOMAIN_IS_ONLYPROXY", ProxyDomainIsOnlyProxy, TRUE);
+  TtaSetEnvString ("HTTP_PROXY", GProp_Proxy.HttpProxy, TRUE);
+  TtaSetEnvString ("PROXYDOMAIN", GProp_Proxy.ProxyDomain, TRUE);
+  TtaSetEnvBoolean ("PROXYDOMAIN_IS_ONLYPROXY",
+		    GProp_Proxy.ProxyDomainIsOnlyProxy, TRUE);
 
   TtaSaveAppRegistry ();
 }
@@ -1385,9 +1279,10 @@ static void SetProxyConf (void)
 static void GetDefaultProxyConf ()
 {
   /* read the default values */
-  GetDefEnvString ("HTTP_PROXY", HttpProxy);
-  GetDefEnvString ("PROXYDOMAIN", ProxyDomain);
-  TtaGetDefEnvBoolean ("PROXYDOMAIN_IS_ONLYPROXY", &ProxyDomainIsOnlyProxy);
+  GetDefEnvString ("HTTP_PROXY", GProp_Proxy.HttpProxy);
+  GetDefEnvString ("PROXYDOMAIN", GProp_Proxy.ProxyDomain);
+  TtaGetDefEnvBoolean ("PROXYDOMAIN_IS_ONLYPROXY",
+		       &(GProp_Proxy.ProxyDomainIsOnlyProxy));
 }
 
 #ifdef _WINGUI
@@ -1397,9 +1292,9 @@ static void GetDefaultProxyConf ()
   ----------------------------------------------------------------------*/
 void WIN_RefreshProxyMenu (HWND hwnDlg)
 {
-  SetDlgItemText (hwnDlg, IDC_HTTPPROXY, HttpProxy);
-  SetDlgItemText (hwnDlg, IDC_PROXYDOMAIN, ProxyDomain);
-  if (ProxyDomainIsOnlyProxy)
+  SetDlgItemText (hwnDlg, IDC_HTTPPROXY, GProp_Proxy.HttpProxy);
+  SetDlgItemText (hwnDlg, IDC_PROXYDOMAIN, GProp_Proxy.ProxyDomain);
+  if (GProp_Proxy.ProxyDomainIsOnlyProxy)
     CheckRadioButton (hwnDlg, IDC_NOPROXY, IDC_ONLYPROXY, IDC_ONLYPROXY);
   else
     CheckRadioButton (hwnDlg, IDC_NOPROXY, IDC_ONLYPROXY, IDC_NOPROXY);
@@ -1412,9 +1307,9 @@ void WIN_RefreshProxyMenu (HWND hwnDlg)
 static void RefreshProxyMenu ()
 {
   /* set the menu entries to the current values */
-  TtaSetTextForm (ProxyBase + mHttpProxy, HttpProxy);
-  TtaSetTextForm (ProxyBase + mProxyDomain, ProxyDomain);
-  TtaSetMenuForm (ProxyBase + mToggleProxy, ProxyDomainIsOnlyProxy);
+  TtaSetTextForm (ProxyBase + mHttpProxy, GProp_Proxy.HttpProxy);
+  TtaSetTextForm (ProxyBase + mProxyDomain, GProp_Proxy.ProxyDomain);
+  TtaSetMenuForm (ProxyBase + mToggleProxy,GProp_Proxy. ProxyDomainIsOnlyProxy);
 }
 #endif /* !_WINGUI */
 
@@ -1447,13 +1342,13 @@ LRESULT CALLBACK WIN_ProxyDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
           switch (LOWORD (wParam))
 	    {
 	    case IDC_HTTPPROXY:
-	      GetDlgItemText (hwnDlg, IDC_HTTPPROXY, HttpProxy,
-			      sizeof (HttpProxy) - 1);
+	      GetDlgItemText (hwnDlg, IDC_HTTPPROXY, GProp_Proxy.HttpProxy,
+			      sizeof (GProp_Proxy.HttpProxy) - 1);
 	      ProxyStatus |= AMAYA_PROXY_RESTART;
 	      break;
 	    case IDC_PROXYDOMAIN:
-	      GetDlgItemText (hwnDlg, IDC_PROXYDOMAIN, ProxyDomain,
-			      sizeof (ProxyDomain) - 1);
+	      GetDlgItemText (hwnDlg, IDC_PROXYDOMAIN, GProp_Proxy.ProxyDomain,
+			      sizeof (GProp_Proxy.ProxyDomain) - 1);
 	      ProxyStatus |= AMAYA_PROXY_RESTART;
 	      break;
 	    }
@@ -1462,11 +1357,11 @@ LRESULT CALLBACK WIN_ProxyDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	{
 	  /* switch buttons */
 	case IDC_NOPROXY:
-	  ProxyDomainIsOnlyProxy = FALSE;
+	  GProp_Proxy.ProxyDomainIsOnlyProxy = FALSE;
 	  ProxyStatus |= AMAYA_PROXY_RESTART;
 	  break;
 	case IDC_ONLYPROXY:
-	  ProxyDomainIsOnlyProxy = TRUE;
+	  GProp_Proxy.ProxyDomainIsOnlyProxy = TRUE;
 	  ProxyStatus |= AMAYA_PROXY_RESTART;
 	  break;
 	  /* action buttons */
@@ -1545,17 +1440,17 @@ static void ProxyCallbackDialog (int ref, int typedata, char *data)
 	case mHttpProxy:
 	  ProxyStatus |= AMAYA_PROXY_RESTART;
 	  if (data)
-	    strcpy (HttpProxy, data);
+	    strcpy (GProp_Proxy.HttpProxy, data);
 	  else
-	    HttpProxy[0] = EOS;
+	    GProp_Proxy.HttpProxy[0] = EOS;
 	  break;
 
 	case mProxyDomain:
 	  ProxyStatus |= AMAYA_PROXY_RESTART;
 	  if (data)
-	    strcpy (ProxyDomain, data);
+	    strcpy (GProp_Proxy.ProxyDomain, data);
 	  else
-	    ProxyDomain[0] = EOS;
+	    GProp_Proxy.ProxyDomain[0] = EOS;
 	  break;
 
 	case mToggleProxy:
@@ -1563,10 +1458,10 @@ static void ProxyCallbackDialog (int ref, int typedata, char *data)
 	  switch (val) 
 	    {
 	    case 0:
-	      ProxyDomainIsOnlyProxy = FALSE;
+	      GProp_Proxy.ProxyDomainIsOnlyProxy = FALSE;
 	      break;
 	    case 1:
-	      ProxyDomainIsOnlyProxy = TRUE;
+	      GProp_Proxy.ProxyDomainIsOnlyProxy = TRUE;
 	      break;
 	    }
 	  break;
@@ -1638,7 +1533,8 @@ void         ProxyConfMenu (Document document, View view)
 #else
   if (!ProxyHwnd)
     /* only activate the menu if it isn't active already */
-     DialogBox (hInstance, MAKEINTRESOURCE (PROXYMENU), NULL, (DLGPROC) WIN_ProxyDlgProc);
+     DialogBox (hInstance, MAKEINTRESOURCE (PROXYMENU), NULL,
+		(DLGPROC) WIN_ProxyDlgProc);
   else
      SetFocus (ProxyHwnd);
 #endif /* !_WINGUI */
@@ -1657,33 +1553,33 @@ void GetGeneralConf (void)
   char       ptr[MAX_LENGTH];
   int        oldzoom;
 
-  TtaGetEnvInt ("FontZoom", &Zoom);
-  if (Zoom == 0)
+  TtaGetEnvInt ("FontZoom", &(GProp_General.Zoom));
+  if (GProp_General.Zoom == 0)
     {
       TtaGetEnvInt ("ZOOM", &oldzoom);
       if (oldzoom == 0)
-	Zoom = 100;
+	GProp_General.Zoom = 100;
       else
 	/* old model */
-	Zoom = 100 + (oldzoom * 10);
+	GProp_General.Zoom = 100 + (oldzoom * 10);
     }
-  TtaGetEnvBoolean ("PASTE_LINE_BY_LINE", &PasteLineByLine);
+  TtaGetEnvBoolean ("PASTE_LINE_BY_LINE", &(GProp_General.PasteLineByLine));
   TtaGetEnvInt ("AUTO_SAVE", &AutoSave_Interval);
-  S_AutoSave = (AutoSave_Interval > 0);
-  TtaGetEnvBoolean ("SHOW_BUTTONS", &S_Buttons);
-  TtaGetEnvBoolean ("SHOW_ADDRESS", &S_Address);
-  TtaGetEnvBoolean ("SHOW_TARGET", &S_Targets);
-  TtaGetEnvBoolean ("SAVE_GEOMETRY", &S_Geometry);
-  GetEnvString ("HOME_PAGE", HomePage);
-  GetEnvString ("LANG", DialogueLang);
+  GProp_General.S_AutoSave = (AutoSave_Interval > 0);
+  TtaGetEnvBoolean ("SHOW_BUTTONS", &(GProp_General.S_Buttons));
+  TtaGetEnvBoolean ("SHOW_ADDRESS", &(GProp_General.S_Address));
+  TtaGetEnvBoolean ("SHOW_TARGET", &(GProp_General.S_Targets));
+  TtaGetEnvBoolean ("SAVE_GEOMETRY", &(GProp_General.S_Geometry));
+  GetEnvString ("HOME_PAGE", GProp_General.HomePage);
+  GetEnvString ("LANG", GProp_General.DialogueLang);
   GetEnvString ("ACCESSKEY_MOD", ptr);
   if (!strcmp (ptr, "Alt"))
-    AccesskeyMod = 0;
+    GProp_General.AccesskeyMod = 0;
   else if (!strcmp (ptr, "Ctrl"))
-    AccesskeyMod = 1;
+    GProp_General.AccesskeyMod = 1;
   else
-    AccesskeyMod = 2;
-  TtaGetEnvInt ("FontMenuSize", &FontMenuSize);
+    GProp_General.AccesskeyMod = 2;
+  TtaGetEnvInt ("FontMenuSize", &(GProp_General.FontMenuSize));
 #ifdef _WINGUI
   GetEnvString ("APP_TMPDIR", AppTmpDir);
   GetEnvString ("APP_HOME", AppHome);
@@ -1779,24 +1675,24 @@ void ValidateGeneralConf (void)
   /* validate the dialogue language */
   change = 0;
   ptr = TtaGetEnvString ("THOTDIR");
-  if (strcmp (DialogueLang, "en-US"))
+  if (strcmp (GProp_General.DialogueLang, "en-US"))
     {
       change++;
-      DialogueLang[2] = EOS;
+      GProp_General.DialogueLang[2] = EOS;
     }
-  strncpy (lang, DialogueLang, 2);
+  strncpy (lang, GProp_General.DialogueLang, 2);
   lang[2] = EOS;
   sprintf (s, "%s%cconfig%c%s-amayamsg", ptr, DIR_SEP, DIR_SEP, lang);
   if (!TtaFileExist (s))
   {
-    GetDefEnvString ("LANG", DialogueLang);
+    GetDefEnvString ("LANG", GProp_General.DialogueLang);
     change++;
   }
   if (change)
 #ifdef _WINGUI
-    SetDlgItemText (GeneralHwnd, IDC_DIALOGUELANG, DialogueLang);
+    SetDlgItemText (GeneralHwnd, IDC_DIALOGUELANG, GProp_General.DialogueLang);
 #else
-    TtaSetTextForm (GeneralBase + mDialogueLang, DialogueLang);
+    TtaSetTextForm (GeneralBase + mDialogueLang, GProp_General.DialogueLang);
 #endif /* WINDOWS */
 }
 
@@ -1842,8 +1738,8 @@ static void UpdateShowTargets ()
       if (DocumentURLs[doc])
 	{
 	  visibility = TtaGetSensibility (doc, 1);
-	  if ((visibility == 5 && S_Targets) ||
-	      (visibility == 4 && !S_Targets))
+	  if ((visibility == 5 && GProp_General.S_Targets) ||
+	      (visibility == 4 && !GProp_General.S_Targets))
 	    /* change the status of the document */
 	    ShowTargets (doc, 1);
 	}
@@ -1861,7 +1757,7 @@ static void UpdateShowButtons ()
   for (doc = 1; doc < DocumentTableLength; doc++)
     {
       if (DocumentURLs[doc] &&
-	  SButtons[doc] != S_Buttons &&
+	  SButtons[doc] != GProp_General.S_Buttons &&
 	  (DocumentTypes[doc] == docHTML ||
 	   DocumentTypes[doc] == docSVG ||
 	   DocumentTypes[doc] == docXml ||
@@ -1870,7 +1766,7 @@ static void UpdateShowButtons ()
 	ShowButtons (doc, 1);
       else
 	/* update only the indicator */
-	SButtons[doc] = S_Buttons;
+	SButtons[doc] = GProp_General.S_Buttons;
     }
 }
 
@@ -1886,7 +1782,7 @@ static void UpdateShowAddress ()
   for (doc = 1; doc < DocumentTableLength; doc++)
     {
       if (DocumentURLs[doc] &&
-	  SAddress[doc] != S_Address &&
+	  SAddress[doc] != GProp_General.S_Address &&
 	  (DocumentTypes[doc] == docHTML ||
 	   DocumentTypes[doc] == docSVG ||
 	   DocumentTypes[doc] == docXml ||
@@ -1895,7 +1791,7 @@ static void UpdateShowAddress ()
 	ShowAddress (doc, 1);
       else
 	/* update only the indicator */
-	SAddress[doc] = S_Address;
+	SAddress[doc] = GProp_General.S_Address;
     }
 }
 
@@ -1911,17 +1807,17 @@ void SetGeneralConf (void)
   ThotBool    old;
 
   TtaGetEnvInt ("FontZoom", &oldVal);
-  if (oldVal != Zoom)
+  if (oldVal != GProp_General.Zoom)
     {
-      TtaSetEnvInt ("FontZoom", Zoom, TRUE);
-      TtaSetFontZoom (Zoom);
+      TtaSetEnvInt ("FontZoom", GProp_General.Zoom, TRUE);
+      TtaSetFontZoom (GProp_General.Zoom);
       /* recalibrate the zoom settings in all the active documents */
       RecalibrateZoom ();
     }
-  TtaSetEnvBoolean ("PASTE_LINE_BY_LINE", PasteLineByLine, TRUE);
+  TtaSetEnvBoolean ("PASTE_LINE_BY_LINE", GProp_General.PasteLineByLine, TRUE);
 #ifdef _WX
   /* wx use its own callbacks and use only the boolean value : S_AutoSave */
-  if (S_AutoSave)
+  if (GProp_General.S_AutoSave)
     AutoSave_Interval = DEF_SAVE_INTVL;
   else
     AutoSave_Interval = 0;
@@ -1931,34 +1827,34 @@ void SetGeneralConf (void)
     {
       TtaSetEnvInt ("AUTO_SAVE", AutoSave_Interval, TRUE);
       TtaSetDocumentBackUpInterval (AutoSave_Interval);
-      S_AutoSave = (AutoSave_Interval > 0);
+      GProp_General.S_AutoSave = (AutoSave_Interval > 0);
     }
   /* handling show buttons, address, targets and section numbering */
   TtaGetEnvBoolean ("SHOW_BUTTONS", &old);
-  TtaSetEnvBoolean ("SHOW_BUTTONS", S_Buttons, TRUE);
-  if (old != S_Buttons)
+  TtaSetEnvBoolean ("SHOW_BUTTONS", GProp_General.S_Buttons, TRUE);
+  if (old != GProp_General.S_Buttons)
     UpdateShowButtons ();
   TtaGetEnvBoolean ("SHOW_ADDRESS", &old);
-  TtaSetEnvBoolean ("SHOW_ADDRESS", S_Address, TRUE);
-  if (old != S_Address)
+  TtaSetEnvBoolean ("SHOW_ADDRESS", GProp_General.S_Address, TRUE);
+  if (old != GProp_General.S_Address)
     UpdateShowAddress ();
   TtaGetEnvBoolean ("SHOW_TARGET", &old);
-  TtaSetEnvBoolean ("SHOW_TARGET", S_Targets, TRUE);
-  if (old != S_Targets)
+  TtaSetEnvBoolean ("SHOW_TARGET", GProp_General.S_Targets, TRUE);
+  if (old != GProp_General.S_Targets)
     UpdateShowTargets ();
 
   /* Save view geometry on exit */
-  TtaSetEnvBoolean ("SAVE_GEOMETRY", S_Geometry, TRUE);
+  TtaSetEnvBoolean ("SAVE_GEOMETRY", GProp_General.S_Geometry, TRUE);
 
-  TtaSetEnvString ("HOME_PAGE", HomePage, TRUE);
-  TtaSetEnvString ("LANG", DialogueLang, TRUE);
-  if (AccesskeyMod == 0)
+  TtaSetEnvString ("HOME_PAGE", GProp_General.HomePage, TRUE);
+  TtaSetEnvString ("LANG", GProp_General.DialogueLang, TRUE);
+  if (GProp_General.AccesskeyMod == 0)
     TtaSetEnvString ("ACCESSKEY_MOD", "Alt", TRUE);
-  else if (AccesskeyMod == 1)
+  else if (GProp_General.AccesskeyMod == 1)
     TtaSetEnvString ("ACCESSKEY_MOD", "Ctrl", TRUE);
   else
     TtaSetEnvString ("ACCESSKEY_MOD", "None", TRUE);
-  TtaSetEnvInt ("FontMenuSize", FontMenuSize, TRUE);
+  TtaSetEnvInt ("FontMenuSize", GProp_General.FontMenuSize, TRUE);
 #ifdef _WINGUI
   TtaSetEnvString ("APP_TMPDIR", AppTmpDir, TRUE);
   strcpy (TempFileDirectory, AppTmpDir);
@@ -1976,33 +1872,33 @@ void GetDefaultGeneralConf ()
 {
   char       ptr[MAX_LENGTH];
 
-  TtaGetDefEnvInt ("FontZoom", &Zoom);
-  if (Zoom == 0)
-    Zoom = 100;
-  GetDefEnvToggle ("PASTE_LINE_BY_LINE", &PasteLineByLine, 
+  TtaGetDefEnvInt ("FontZoom", &(GProp_General.Zoom));
+  if (GProp_General.Zoom == 0)
+    GProp_General.Zoom = 100;
+  GetDefEnvToggle ("PASTE_LINE_BY_LINE", &(GProp_General.PasteLineByLine), 
 		   GeneralBase + mToggleGeneral, 0);
   TtaGetDefEnvInt ("AUTO_SAVE", &AutoSave_Interval);
-  S_AutoSave = (AutoSave_Interval > 0);
-  GetDefEnvToggle ("AUTO_SAVE", &S_AutoSave,
+  GProp_General.S_AutoSave = (AutoSave_Interval > 0);
+  GetDefEnvToggle ("AUTO_SAVE", &(GProp_General.S_AutoSave),
 		   GeneralBase + mToggleGeneral, 1);
-  GetDefEnvToggle ("SAVE_GEOMETRY", &S_Geometry,
+  GetDefEnvToggle ("SAVE_GEOMETRY", &(GProp_General.S_Geometry),
 		   GeneralBase + mToggleGeneral, 2);
-  GetDefEnvToggle ("SHOW_BUTTONS", &S_Buttons,
+  GetDefEnvToggle ("SHOW_BUTTONS", &(GProp_General.S_Buttons),
 		   GeneralBase + mToggleGeneral, 3);
-  GetDefEnvToggle ("SHOW_ADDRESS", &S_Address,
+  GetDefEnvToggle ("SHOW_ADDRESS", &(GProp_General.S_Address),
 		   GeneralBase + mToggleGeneral, 4);
-  GetDefEnvToggle ("SHOW_TARGET", &S_Targets,
+  GetDefEnvToggle ("SHOW_TARGET", &(GProp_General.S_Targets),
 		   GeneralBase + mToggleGeneral, 5);
-  GetDefEnvString ("HOME_PAGE", HomePage);
-  GetDefEnvString ("LANG", DialogueLang);
+  GetDefEnvString ("HOME_PAGE", GProp_General.HomePage);
+  GetDefEnvString ("LANG", GProp_General.DialogueLang);
   GetDefEnvString ("ACCESSKEY_MOD", ptr);
   if (!strcmp (ptr, "Alt"))
-    AccesskeyMod = 0;
+    GProp_General.AccesskeyMod = 0;
   else if (!strcmp (ptr, "Ctrl"))
-    AccesskeyMod = 1;
+    GProp_General.AccesskeyMod = 1;
   else
-    AccesskeyMod = 2;
-  TtaGetDefEnvInt ("FontMenuSize", &FontMenuSize);
+    GProp_General.AccesskeyMod = 2;
+  TtaGetDefEnvInt ("FontMenuSize", &(GProp_General.FontMenuSize));
 #ifdef _WINGUI
   GetDefEnvString ("APP_TMPDIR", AppTmpDir);
   GetDefEnvString ("APP_HOME", AppHome);
@@ -2016,21 +1912,21 @@ void GetDefaultGeneralConf ()
   ----------------------------------------------------------------------*/
 void WIN_RefreshGeneralMenu (HWND hwnDlg)
 {
-  SetDlgItemText (hwnDlg, IDC_HOMEPAGE, HomePage);
-  CheckDlgButton (hwnDlg, IDC_LINES, (PasteLineByLine) 
+  SetDlgItemText (hwnDlg, IDC_HOMEPAGE, GProp_General.HomePage);
+  CheckDlgButton (hwnDlg, IDC_LINES, GProp_General.PasteLineByLine 
 		  ? BST_CHECKED : BST_UNCHECKED);
-  CheckDlgButton (hwnDlg, IDC_AUTOSAVE, (S_AutoSave) 
+  CheckDlgButton (hwnDlg, IDC_AUTOSAVE, GProp_General.S_AutoSave 
 		  ? BST_CHECKED : BST_UNCHECKED);
-  CheckDlgButton (hwnDlg, IDC_SAVE_GEOMETRY_EXIT, (S_Geometry) 
+  CheckDlgButton (hwnDlg, IDC_SAVE_GEOMETRY_EXIT, GProp_General.S_Geometry 
 		  ? BST_CHECKED : BST_UNCHECKED);
-  CheckDlgButton (hwnDlg, IDC_SHOWBUTTONS, (S_Buttons) 
+  CheckDlgButton (hwnDlg, IDC_SHOWBUTTONS, GProp_General.S_Buttons 
 		  ? BST_CHECKED : BST_UNCHECKED);
-  CheckDlgButton (hwnDlg, IDC_SHOWADDRESS, (S_Address) 
+  CheckDlgButton (hwnDlg, IDC_SHOWADDRESS, GProp_General.S_Address 
 		  ? BST_CHECKED : BST_UNCHECKED);
-  CheckDlgButton (hwnDlg, IDC_SHOWTARGET, (S_Targets) 
+  CheckDlgButton (hwnDlg, IDC_SHOWTARGET, GProp_General.S_Targets
 		  ? BST_CHECKED : BST_UNCHECKED);
-  SetDlgItemText (hwnDlg, IDC_DIALOGUELANG, DialogueLang);
-  switch (AccesskeyMod)
+  SetDlgItemText (hwnDlg, IDC_DIALOGUELANG, GProp_General.DialogueLang);
+  switch (GProp_General.AccesskeyMod)
     {
     case 0:
       CheckRadioButton (hwnDlg, IDC_AALT, IDC_ANONE, IDC_AALT);
@@ -2042,7 +1938,7 @@ void WIN_RefreshGeneralMenu (HWND hwnDlg)
       CheckRadioButton (hwnDlg, IDC_AALT, IDC_ANONE, IDC_ANONE);
       break;
   }
-  SetDlgItemInt (hwnDlg, IDC_ZOOM, Zoom, TRUE);
+  SetDlgItemInt (hwnDlg, IDC_ZOOM, GProp_General.Zoom, TRUE);
   SetDlgItemText (hwnDlg, IDC_TMPDIR, AppTmpDir);
   SetDlgItemText (hwnDlg, IDC_APPHOME, AppHome);
 }
@@ -2087,8 +1983,8 @@ LRESULT CALLBACK WIN_GeneralDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
           switch (LOWORD (wParam))
 	    {
 	    case IDC_HOMEPAGE:
-	      GetDlgItemText (hwnDlg, IDC_HOMEPAGE, HomePage, 
-			      sizeof (HomePage) - 1);
+	      GetDlgItemText (hwnDlg, IDC_HOMEPAGE, GProp_General.HomePage, 
+			      sizeof (GProp_General.HomePage) - 1);
 	      break;
 	    case IDC_APPHOME:
 	      GetDlgItemText (hwnDlg, IDC_APPHOME, AppHome,
@@ -2099,46 +1995,46 @@ LRESULT CALLBACK WIN_GeneralDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 			      sizeof (AppTmpDir) - 1);
 	      break;
 	    case IDC_DIALOGUELANG:
-	      GetDlgItemText (hwnDlg, IDC_DIALOGUELANG, DialogueLang,
-			      sizeof (DialogueLang) - 1);
+	      GetDlgItemText (hwnDlg, IDC_DIALOGUELANG, GProp_General.DialogueLang,
+			      sizeof (GProp_General.DialogueLang) - 1);
 		  break;
 	    case IDC_ZOOM:
-	      Zoom = GetDlgItemInt (hwnDlg, IDC_ZOOM, FALSE, TRUE);
+	      GProp_General.Zoom = GetDlgItemInt (hwnDlg, IDC_ZOOM, FALSE, TRUE);
 	      break;	
 	    }
 	}
       switch (LOWORD (wParam))
 	{
 	 case IDC_AALT:
-	   AccesskeyMod = 0;
+	   GProp_General.AccesskeyMod = 0;
 	   break;
   	 case IDC_ACTRL:
-	   AccesskeyMod = 1;
+	   GProp_General.AccesskeyMod = 1;
 	   break;
    	 case IDC_ANONE:
-	   AccesskeyMod = 2;
+	   GProp_General.AccesskeyMod = 2;
 	   break;
 	case IDC_LINES:
-	  PasteLineByLine = !PasteLineByLine;
+	  GProp_General.PasteLineByLine = !GProp_General.PasteLineByLine;
 	  break;
 	case IDC_AUTOSAVE:
-	  S_AutoSave = !S_AutoSave;
-	  if (S_AutoSave)
+	  GProp_General.S_AutoSave = !GProp_General.S_AutoSave;
+	  if (GProp_General.S_AutoSave)
 	    AutoSave_Interval = DEF_SAVE_INTVL;
 	  else
 	    AutoSave_Interval = 0;
 	  break;
 	case IDC_SAVE_GEOMETRY_EXIT:
-	  S_Geometry = !S_Geometry;
+	  GProp_General.S_Geometry = !GProp_General.S_Geometry;
 	  break;
 	case IDC_SHOWBUTTONS:
-	  S_Buttons = !S_Buttons;
+	  GProp_General.S_Buttons = !GProp_General.S_Buttons;
 	  break;
 	case IDC_SHOWADDRESS:
-	  S_Address = !S_Address;
+	  GProp_General.S_Address = !GProp_General.S_Address;
 	  break;
 	case IDC_SHOWTARGET:
-	  S_Targets = !S_Targets;
+	  GProp_General.S_Targets = !GProp_General.S_Targets;
 	  break;
 
 	  /* action buttons */
@@ -2148,7 +2044,7 @@ LRESULT CALLBACK WIN_GeneralDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	case ID_DONE:
-    case IDCANCEL:
+	case IDCANCEL:
 	  GeneralHwnd = NULL;
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
@@ -2170,17 +2066,17 @@ LRESULT CALLBACK WIN_GeneralDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
   ----------------------------------------------------------------------*/
 static void RefreshGeneralMenu ()
 {
-  TtaSetNumberForm (GeneralBase + mZoom, Zoom);
-  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 0, PasteLineByLine);
-  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 1, S_AutoSave);
-  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 2, S_Geometry);
-  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 3, S_Buttons);
-  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 4, S_Address);
-  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 5, S_Targets);
-  TtaSetTextForm (GeneralBase + mHomePage, HomePage);
-  TtaSetTextForm (GeneralBase + mDialogueLang, DialogueLang);
-  TtaSetMenuForm (GeneralBase + mGeneralAccessKey, AccesskeyMod);
-  TtaSetNumberForm (GeneralBase + mFontMenuSize, FontMenuSize);
+  TtaSetNumberForm (GeneralBase + mZoom, GProp_General.Zoom);
+  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 0, GProp_General.PasteLineByLine);
+  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 1, GProp_General.S_AutoSave);
+  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 2, GProp_General.S_Geometry);
+  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 3, GProp_General.S_Buttons);
+  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 4, GProp_General.S_Address);
+  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 5, GProp_General.S_Targets);
+  TtaSetTextForm (GeneralBase + mHomePage, GProp_General.HomePage);
+  TtaSetTextForm (GeneralBase + mDialogueLang, GProp_General.DialogueLang);
+  TtaSetMenuForm (GeneralBase + mGeneralAccessKey, GProp_General.AccesskeyMod);
+  TtaSetNumberForm (GeneralBase + mFontMenuSize, GProp_General.FontMenuSize);
 }
 
 /*----------------------------------------------------------------------
@@ -2224,57 +2120,57 @@ static void GeneralCallbackDialog (int ref, int typedata, char *data)
 	  break;
 
 	case mZoom:
-	  Zoom = val;
+	  GProp_General.Zoom = val;
 	  break;
 
 	case mHomePage:
 	  if (data)
-	    strcpy (HomePage, data);
+	    strcpy (GProp_General.HomePage, data);
 	  else
-	    HomePage[0] = EOS;
+	    GProp_General.HomePage[0] = EOS;
 	  break;
 
 	case mToggleGeneral:
 	  switch (val) 
 	    {
 	    case 0:
-	      PasteLineByLine = !PasteLineByLine;
+	      GProp_General.PasteLineByLine = !GProp_General.PasteLineByLine;
 	      break;
 	    case 1:
-	      S_AutoSave = !S_AutoSave;
-	      if (S_AutoSave)
+	      GProp_General.S_AutoSave = !GProp_General.S_AutoSave;
+	      if (GProp_General.S_AutoSave)
 		AutoSave_Interval = DEF_SAVE_INTVL;
 	      else
 		AutoSave_Interval = 0;	      
 	      break;
 	    case 2:
-	      S_Geometry = !S_Geometry;
+	      GProp_General.S_Geometry = !GProp_General.S_Geometry;
 	      break;
 	    case 3:
-	      S_Buttons = !S_Buttons;
+	      GProp_General.S_Buttons = !GProp_General.S_Buttons;
 	      break;
 	    case 4:
-	      S_Address = !S_Address;
+	      GProp_General.S_Address = !GProp_General.S_Address;
 	      break;
 	    case 5:
-	      S_Targets = !S_Targets;
+	      GProp_General.S_Targets = !GProp_General.S_Targets;
 	      break;
 	    }
 	  break;
 
 	case mFontMenuSize:
-	  FontMenuSize = val;
+	  GProp_General.FontMenuSize = val;
 	  break;
 	  
 	case mDialogueLang:
 	  if (data)
-	    strcpy (DialogueLang, data);
+	    strcpy (GProp_General.DialogueLang, data);
 	  else
-	    DialogueLang[0] = EOS;
+	    GProp_General.DialogueLang[0] = EOS;
 	  break;
 	  
 	case mGeneralAccessKey:
-	  AccesskeyMod = val;
+	  GProp_General.AccesskeyMod = val;
 	  break;
 
 	default:
@@ -2383,7 +2279,8 @@ void GeneralConfMenu (Document document, View view)
 
    if (!GeneralHwnd)
      /* only activate the menu if it isn't active already */
-     DialogBox (hInstance, MAKEINTRESOURCE (GENERALMENU), NULL, (DLGPROC) WIN_GeneralDlgProc);
+     DialogBox (hInstance, MAKEINTRESOURCE (GENERALMENU), NULL,
+		(DLGPROC) WIN_GeneralDlgProc);
    else
      SetFocus (GeneralHwnd);
 #endif /* !_WINGUI */
@@ -2398,13 +2295,13 @@ void GeneralConfMenu (Document document, View view)
   ----------------------------------------------------------------------*/
 static void GetPublishConf (void)
 {
-  TtaGetEnvBoolean ("ENABLE_XHTML_MIMETYPE", &UseXHTMLMimeType);
-  TtaGetEnvBoolean ("ENABLE_LOST_UPDATE_CHECK", &LostUpdateCheck);
-  TtaGetEnvBoolean ("VERIFY_PUBLISH", &VerifyPublish);
-  TtaGetEnvBoolean ("EXPORT_CRLF", &ExportCRLF);
-  GetEnvString ("DEFAULTNAME", DefaultName);
-  GetEnvString ("SAFE_PUT_REDIRECT", SafePutRedirect);
-  GetEnvString ("DOCUMENT_CHARSET", CharsetType);
+  TtaGetEnvBoolean ("ENABLE_XHTML_MIMETYPE", &(GProp_Publish.UseXHTMLMimeType));
+  TtaGetEnvBoolean ("ENABLE_LOST_UPDATE_CHECK", &(GProp_Publish.LostUpdateCheck));
+  TtaGetEnvBoolean ("VERIFY_PUBLISH", &(GProp_Publish.VerifyPublish));
+  TtaGetEnvBoolean ("EXPORT_CRLF", &(GProp_Publish.ExportCRLF));
+  GetEnvString ("DEFAULTNAME", GProp_Publish.DefaultName);
+  GetEnvString ("SAFE_PUT_REDIRECT", GProp_Publish.SafePutRedirect);
+  GetEnvString ("DOCUMENT_CHARSET", GProp_Publish.CharsetType);
 }
 
 /*----------------------------------------------------------------------
@@ -2414,13 +2311,13 @@ static void GetPublishConf (void)
   ----------------------------------------------------------------------*/
 static void SetPublishConf (void)
 {
-  TtaSetEnvBoolean ("ENABLE_XHTML_MIMETYPE", UseXHTMLMimeType, TRUE);
-  TtaSetEnvBoolean ("ENABLE_LOST_UPDATE_CHECK", LostUpdateCheck, TRUE);
-  TtaSetEnvBoolean ("VERIFY_PUBLISH", VerifyPublish, TRUE);
-  TtaSetEnvBoolean ("EXPORT_CRLF", ExportCRLF, TRUE);
-  TtaSetEnvString ("DEFAULTNAME", DefaultName, TRUE);
-  TtaSetEnvString ("SAFE_PUT_REDIRECT", SafePutRedirect, TRUE);
-  TtaSetEnvString ("DOCUMENT_CHARSET", CharsetType, TRUE);
+  TtaSetEnvBoolean ("ENABLE_XHTML_MIMETYPE", GProp_Publish.UseXHTMLMimeType, TRUE);
+  TtaSetEnvBoolean ("ENABLE_LOST_UPDATE_CHECK", GProp_Publish.LostUpdateCheck, TRUE);
+  TtaSetEnvBoolean ("VERIFY_PUBLISH", GProp_Publish.VerifyPublish, TRUE);
+  TtaSetEnvBoolean ("EXPORT_CRLF", GProp_Publish.ExportCRLF, TRUE);
+  TtaSetEnvString ("DEFAULTNAME", GProp_Publish.DefaultName, TRUE);
+  TtaSetEnvString ("SAFE_PUT_REDIRECT", GProp_Publish.SafePutRedirect, TRUE);
+  TtaSetEnvString ("DOCUMENT_CHARSET", GProp_Publish.CharsetType, TRUE);
 
   TtaSaveAppRegistry ();
 }
@@ -2431,17 +2328,17 @@ static void SetPublishConf (void)
   ----------------------------------------------------------------------*/
 static void GetDefaultPublishConf ()
 {
-  GetDefEnvToggle ("ENABLE_XHTML_MIMETYPE", &UseXHTMLMimeType, 
+  GetDefEnvToggle ("ENABLE_XHTML_MIMETYPE", &(GProp_Publish.UseXHTMLMimeType), 
 		   PublishBase + mTogglePublish, 0);
-  GetDefEnvToggle ("ENABLE_LOST_UPDATE_CHECK", &LostUpdateCheck, 
+  GetDefEnvToggle ("ENABLE_LOST_UPDATE_CHECK", &(GProp_Publish.LostUpdateCheck), 
 		    PublishBase + mTogglePublish, 1);
-  GetDefEnvToggle ("VERIFY_PUBLISH", &VerifyPublish,
+  GetDefEnvToggle ("VERIFY_PUBLISH", &(GProp_Publish.VerifyPublish),
 		    PublishBase + mTogglePublish, 2);
-  GetDefEnvToggle ("EXPORT_CRLF", &ExportCRLF,
+  GetDefEnvToggle ("EXPORT_CRLF", &(GProp_Publish.ExportCRLF),
 		    PublishBase + mTogglePublish, 3);
-  GetDefEnvString ("DEFAULTNAME", DefaultName);
-  GetDefEnvString ("SAFE_PUT_REDIRECT", SafePutRedirect);
-  GetDefEnvString ("DOCUMENT_CHARSET", CharsetType);
+  GetDefEnvString ("DEFAULTNAME", GProp_Publish.DefaultName);
+  GetDefEnvString ("SAFE_PUT_REDIRECT", GProp_Publish.SafePutRedirect);
+  GetDefEnvString ("DOCUMENT_CHARSET", GProp_Publish.CharsetType);
 }
 
 #ifdef _WINGUI
@@ -2461,7 +2358,7 @@ static void BuildCharsetList (void)
   while (i < nbcharset && CharsetTxt[i] != EOS)
     {
       /* keep in mind the current selected entry */
-      if (*CharsetType && !strcmp (CharsetType, CharsetTxt[i]))
+      if (*CharsetType && !strcmp (GProp_Publish.CharsetType, CharsetTxt[i]))
 	CurrentCharset = i;
       if (!strcasecmp (CharsetTxt[i], "iso-8859-1"))
 	i_default = i;
@@ -2473,7 +2370,7 @@ static void BuildCharsetList (void)
   SendMessage (CharsetList, LB_SETCURSEL, (WPARAM)CurrentCharset, (LPARAM)0);
 
   if (*CharsetType)
-  strcpy (NewCharset, CharsetType);
+  strcpy (NewCharset, GProp_Publish.CharsetType);
 }
 
 /*----------------------------------------------------------------------
@@ -2482,16 +2379,16 @@ static void BuildCharsetList (void)
   ----------------------------------------------------------------------*/
 void WIN_RefreshPublishMenu (HWND hwnDlg)
 {
-  CheckDlgButton (hwnDlg, IDC_LOSTUPDATECHECK, (LostUpdateCheck)
+  CheckDlgButton (hwnDlg, IDC_LOSTUPDATECHECK, (GProp_Publish.LostUpdateCheck)
 		  ? BST_CHECKED : BST_UNCHECKED);
-  CheckDlgButton (hwnDlg, IDC_VERIFYPUBLISH, (VerifyPublish)
+  CheckDlgButton (hwnDlg, IDC_VERIFYPUBLISH, (GProp_Publish.VerifyPublish)
 		  ? BST_CHECKED : BST_UNCHECKED);
-  CheckDlgButton (hwnDlg, IDC_USEXHTMLMIMETYPE, (UseXHTMLMimeType)
+  CheckDlgButton (hwnDlg, IDC_USEXHTMLMIMETYPE, (GProp_Publish.UseXHTMLMimeType)
 		  ? BST_CHECKED : BST_UNCHECKED);
-  CheckDlgButton (hwnDlg, IDC_CRLF, (ExportCRLF) 
+  CheckDlgButton (hwnDlg, IDC_CRLF, (GProp_Publish.ExportCRLF) 
 		  ? BST_CHECKED : BST_UNCHECKED);
-  SetDlgItemText (hwnDlg, IDC_DEFAULTNAME, DefaultName);
-  SetDlgItemText (hwnDlg, IDC_SAFEPUTREDIRECT, SafePutRedirect);
+  SetDlgItemText (hwnDlg, IDC_DEFAULTNAME, GProp_Publish.DefaultName);
+  SetDlgItemText (hwnDlg, IDC_SAFEPUTREDIRECT, GProp_Publish.SafePutRedirect);
   BuildCharsetList ();
 }
 
@@ -2529,13 +2426,15 @@ LRESULT CALLBACK WIN_PublishDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
           switch (LOWORD (wParam))
 	    {
 	    case IDC_DEFAULTNAME:
-	      GetDlgItemText (hwnDlg, IDC_DEFAULTNAME, DefaultName,
-			      sizeof (DefaultName) - 1);
+	      GetDlgItemText (hwnDlg, IDC_DEFAULTNAME,
+			      GProp_Publish.DefaultName,
+			      sizeof (GProp_Publish.DefaultName) - 1);
 	      break;
 
 	    case IDC_SAFEPUTREDIRECT:
-	      GetDlgItemText (hwnDlg, IDC_SAFEPUTREDIRECT, SafePutRedirect,
-			      sizeof (SafePutRedirect) - 1);
+	      GetDlgItemText (hwnDlg, IDC_SAFEPUTREDIRECT,
+			      GProp_Publish.SafePutRedirect,
+			      sizeof (GProp_Publish.SafePutRedirect) - 1);
 	      SafePutStatus |= AMAYA_SAFEPUT_RESTART;
 	      break;
 	    }
@@ -2543,21 +2442,21 @@ LRESULT CALLBACK WIN_PublishDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
       switch (LOWORD (wParam))
 	{
 	case IDC_USEXHTMLMIMETYPE:
-	  UseXHTMLMimeType = !UseXHTMLMimeType;
+	  GProp_Publish.UseXHTMLMimeType = !GProp_Publish.UseXHTMLMimeType;
 	  break;
 	case IDC_LOSTUPDATECHECK:
-	  LostUpdateCheck = !LostUpdateCheck;
+	  GProp_Publish.LostUpdateCheck = !GProp_Publish.LostUpdateCheck;
 	  break;
 	case IDC_VERIFYPUBLISH:
-	  VerifyPublish = !VerifyPublish;
+	  GProp_Publish.VerifyPublish = !GProp_Publish.VerifyPublish;
 	  break;
 	case IDC_CRLF:
-	  ExportCRLF = !ExportCRLF;
+	  GProp_Publish.ExportCRLF = !GProp_Publish.ExportCRLF;
 	  break;
 	  /* action buttons */
 	case ID_APPLY:
-	  if (strcmp (CharsetType, NewCharset))
-	    strcpy (CharsetType, NewCharset);
+	  if (strcmp (GProp_Publish.CharsetType, NewCharset))
+	    strcpy (GProp_Publish.CharsetType, NewCharset);
 	  SetPublishConf ();	  
 	  libwww_updateNetworkConf (SafePutStatus);
 	  /* reset the status flag */
@@ -2565,7 +2464,7 @@ LRESULT CALLBACK WIN_PublishDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	case ID_DONE:
-    case IDCANCEL:
+	case IDCANCEL:
 	  /* reset the status flag */
 	  SafePutStatus = 0;
 	  PublishHwnd = NULL;
@@ -2588,11 +2487,7 @@ LRESULT CALLBACK WIN_PublishDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	     SetDlgItemText (hwnDlg, IDC_PROFILENAME, NewCharset);
 	  break;
 	 }
-
-      break;
- 
-
-      break;	     
+     break;
     default: return FALSE;
     }
   return TRUE;
@@ -2605,11 +2500,11 @@ LRESULT CALLBACK WIN_PublishDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
   ----------------------------------------------------------------------*/
 static void RefreshPublishMenu ()
 {
-  TtaSetToggleMenu (PublishBase + mTogglePublish, 0, UseXHTMLMimeType);
-  TtaSetToggleMenu (PublishBase + mTogglePublish, 1, LostUpdateCheck);
-  TtaSetToggleMenu (PublishBase + mTogglePublish, 2, VerifyPublish);
-  TtaSetTextForm (PublishBase + mDefaultName, DefaultName);
-  TtaSetTextForm (PublishBase + mSafePutRedirect, SafePutRedirect);
+  TtaSetToggleMenu (PublishBase + mTogglePublish, 0, GProp_Publish.UseXHTMLMimeType);
+  TtaSetToggleMenu (PublishBase + mTogglePublish, 1, GProp_Publish.LostUpdateCheck);
+  TtaSetToggleMenu (PublishBase + mTogglePublish, 2, GProp_Publish.VerifyPublish);
+  TtaSetTextForm (PublishBase + mDefaultName, GProp_Publish.DefaultName);
+  TtaSetTextForm (PublishBase + mSafePutRedirect, GProp_Publish.SafePutRedirect);
 }
 
 /*----------------------------------------------------------------------
@@ -2632,7 +2527,7 @@ static void BuildCharsetSelector (void)
     {
       entry = CharsetTxt[i];
       /* keep in mind the current selected entry */
-      if (*CharsetType && !strcasecmp (CharsetType, entry))
+      if (GProp_Publish.CharsetType && !strcasecmp (GProp_Publish.CharsetType, entry))
 	CurrentCharset = i;
       if (!strcasecmp (entry, "iso-8859-1"))
 	i_default = i;
@@ -2654,7 +2549,7 @@ static void BuildCharsetSelector (void)
 		       ((i < 2) ? (char *)"" : BufMenu), 3, 2, NULL, FALSE, FALSE);
  if (nbcharset)
     TtaSetSelector (PublishBase + mCharsetSelector, CurrentCharset, NULL);
- strcpy (NewCharset, CharsetType);
+ strcpy (NewCharset, GProp_Publish.CharsetType);
 }
 /*----------------------------------------------------------------------
    callback of the Publishing menu
@@ -2683,11 +2578,11 @@ static void PublishCallbackDialog (int ref, int typedata, char *data)
 	    case 1:
 #ifdef _WX
 	      /* update NewScreen with ScreenType value because only ScreenType contains the updated value */
-	      strcpy (NewCharset, CharsetType);
+	      strcpy (NewCharset, GProp_Publish.CharsetType);
 	      /* force SafePut refresh */
 	      SafePutStatus |= AMAYA_SAFEPUT_RESTART;
 #endif /* _WX */
-	      strcpy (CharsetType, NewCharset);
+	      strcpy (GProp_Publish.CharsetType, NewCharset);
 	      SetPublishConf ();
 	      libwww_updateNetworkConf (SafePutStatus);
 	      /* reset the status flag */
@@ -2712,29 +2607,29 @@ static void PublishCallbackDialog (int ref, int typedata, char *data)
 	  switch (val) 
 	    {
 	    case 0:
-	      UseXHTMLMimeType = !UseXHTMLMimeType;
+	      GProp_Publish.UseXHTMLMimeType = !GProp_Publish.UseXHTMLMimeType;
 	      break;
 	    case 1:
-	      LostUpdateCheck = !LostUpdateCheck;
+	      GProp_Publish.LostUpdateCheck = !GProp_Publish.LostUpdateCheck;
 	      break;
 	    case 2:
-	      VerifyPublish = !VerifyPublish;
+	      GProp_Publish.VerifyPublish = !GProp_Publish.VerifyPublish;
 	      break;
 	    }
 	  break;
 
 	case mDefaultName:
 	  if (data)
-	    strcpy (DefaultName, data);
+	    strcpy (GProp_Publish.DefaultName, data);
 	  else
-	    DefaultName[0] = EOS;
+	    GProp_Publish.DefaultName[0] = EOS;
 	  break;
 
 	case mSafePutRedirect:
 	  if (data)
-	    strcpy (SafePutRedirect, data);
+	    strcpy (GProp_Publish.SafePutRedirect, data);
 	  else
-	    SafePutRedirect[0] = EOS;
+	    GProp_Publish.SafePutRedirect[0] = EOS;
 	  SafePutStatus |= AMAYA_SAFEPUT_RESTART;
 	  break;
 
@@ -2828,15 +2723,15 @@ void PublishConfMenu (Document document, View view)
   ----------------------------------------------------------------------*/
 void GetBrowseConf (void)
 {
-  TtaGetEnvBoolean ("LOAD_IMAGES", &LoadImages);
-  TtaGetEnvBoolean ("LOAD_OBJECTS", &LoadObjects);
-  TtaGetEnvBoolean ("ENABLE_BG_IMAGES", &BgImages);
-  TtaGetEnvBoolean ("LOAD_CSS", &LoadCss);
-  TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &DoubleClick);
-  TtaGetEnvBoolean ("ENABLE_FTP", &EnableFTP);
-  AHTFTPURL_flag_set (EnableFTP);
-  GetEnvString ("SCREEN_TYPE", ScreenType);
-  TtaGetEnvInt ("DOUBLECLICKDELAY", &DoubleClickDelay);
+  TtaGetEnvBoolean ("LOAD_IMAGES", &(GProp_Browse.LoadImages));
+  TtaGetEnvBoolean ("LOAD_OBJECTS", &(GProp_Browse.LoadObjects));
+  TtaGetEnvBoolean ("ENABLE_BG_IMAGES", &(GProp_Browse.BgImages));
+  TtaGetEnvBoolean ("LOAD_CSS", &(GProp_Browse.LoadCss));
+  TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &(GProp_Browse.DoubleClick));
+  TtaGetEnvBoolean ("ENABLE_FTP", &(GProp_Browse.EnableFTP));
+  AHTFTPURL_flag_set (GProp_Browse.EnableFTP);
+  GetEnvString ("SCREEN_TYPE", GProp_Browse.ScreenType);
+  TtaGetEnvInt ("DOUBLECLICKDELAY", &(GProp_Browse.DoubleClickDelay));
 }
 
 /*----------------------------------------------------------------------
@@ -2846,17 +2741,17 @@ void GetBrowseConf (void)
   ----------------------------------------------------------------------*/
 void SetBrowseConf (void)
 {
-  TtaSetEnvBoolean ("LOAD_IMAGES", LoadImages, TRUE);
-  TtaSetEnvBoolean ("LOAD_OBJECTS", LoadObjects, TRUE);
-  TtaSetEnvBoolean ("ENABLE_BG_IMAGES", BgImages, TRUE);
-  TtaSetEnvBoolean ("LOAD_CSS", LoadCss, TRUE);
-  TtaSetEnvBoolean ("ENABLE_DOUBLECLICK", DoubleClick, TRUE);
+  TtaSetEnvBoolean ("LOAD_IMAGES", GProp_Browse.LoadImages, TRUE);
+  TtaSetEnvBoolean ("LOAD_OBJECTS", GProp_Browse.LoadObjects, TRUE);
+  TtaSetEnvBoolean ("ENABLE_BG_IMAGES", GProp_Browse.BgImages, TRUE);
+  TtaSetEnvBoolean ("LOAD_CSS", GProp_Browse.LoadCss, TRUE);
+  TtaSetEnvBoolean ("ENABLE_DOUBLECLICK", GProp_Browse.DoubleClick, TRUE);
   /* @@@ */
-  TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &DoubleClick);
+  TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &(GProp_Browse.DoubleClick));
   /* @@@ */
-  TtaSetEnvBoolean ("ENABLE_FTP", EnableFTP, TRUE);
-  AHTFTPURL_flag_set (EnableFTP);
-  TtaSetEnvString ("SCREEN_TYPE", ScreenType, TRUE);
+  TtaSetEnvBoolean ("ENABLE_FTP", GProp_Browse.EnableFTP, TRUE);
+  AHTFTPURL_flag_set (GProp_Browse.EnableFTP);
+  TtaSetEnvString ("SCREEN_TYPE", GProp_Browse.ScreenType, TRUE);
   TtaSaveAppRegistry ();
 }
 
@@ -2866,20 +2761,20 @@ void SetBrowseConf (void)
   ----------------------------------------------------------------------*/
 void GetDefaultBrowseConf ()
 {
-  GetDefEnvToggle ("LOAD_IMAGES", &LoadImages,
+  GetDefEnvToggle ("LOAD_IMAGES", &(GProp_Browse.LoadImages),
 		   BrowseBase + mToggleBrowse, 0);
-  GetDefEnvToggle ("LOAD_OBJECTS", &LoadObjects,
+  GetDefEnvToggle ("LOAD_OBJECTS", &(GProp_Browse.LoadObjects),
 		   BrowseBase + mToggleBrowse, 1);
-  GetDefEnvToggle ("ENABLE_BG_IMAGES", &BgImages,
+  GetDefEnvToggle ("ENABLE_BG_IMAGES", &(GProp_Browse.BgImages),
 		   BrowseBase + mToggleBrowse, 2);
-  GetDefEnvToggle ("LOAD_CSS", &LoadCss,
+  GetDefEnvToggle ("LOAD_CSS", &(GProp_Browse.LoadCss),
 		   BrowseBase + mToggleBrowse, 3);
-  GetDefEnvToggle ("ENABLE_DOUBLECLICK", &DoubleClick,
+  GetDefEnvToggle ("ENABLE_DOUBLECLICK", &(GProp_Browse.DoubleClick),
 		   BrowseBase + mToggleBrowse, 4);
-  GetDefEnvToggle ("ENABLE_FTP", &EnableFTP,
+  GetDefEnvToggle ("ENABLE_FTP", &(GProp_Browse.EnableFTP),
 		   BrowseBase + mToggleBrowse, 5);
-  GetDefEnvString ("SCREEN_TYPE", ScreenType);
-  TtaGetDefEnvInt ("DOUBLECLICKDELAY", &DoubleClickDelay);
+  GetDefEnvString ("SCREEN_TYPE", GProp_Browse.ScreenType);
+  TtaGetDefEnvInt ("DOUBLECLICKDELAY", &(GProp_Browse.DoubleClickDelay));
 }
 
 #ifdef _WINGUI
@@ -2897,7 +2792,7 @@ static void BuildScreensList (void)
   while (i < nbscreens && ScreensTxt[i] != EOS)
     {
       /* keep in mind the current selected entry */
-      if (*ScreenType && !strcmp (ScreenType, ScreensTxt[i]))
+      if (*ScreenType && !strcmp (GProp_Browse.ScreenType, ScreensTxt[i]))
 	CurrentScreen = i;
       SendMessage (ScreensList, LB_INSERTSTRING, i, (LPARAM) ScreensTxt[i]);
       i++;
@@ -2911,24 +2806,24 @@ static void BuildScreensList (void)
   ----------------------------------------------------------------------*/
 void WIN_RefreshBrowseMenu (HWND hwnDlg)
 {
-  CheckDlgButton (hwnDlg, IDC_LOADIMG, (LoadImages) 
+  CheckDlgButton (hwnDlg, IDC_LOADIMG, (GProp_Browse.LoadImages) 
 		  ? BST_CHECKED : BST_UNCHECKED);
-  CheckDlgButton (hwnDlg, IDC_LOADOBJ, (LoadObjects) 
+  CheckDlgButton (hwnDlg, IDC_LOADOBJ, (GProp_Browse.LoadObjects) 
 		  ? BST_CHECKED : BST_UNCHECKED);
-  CheckDlgButton (hwnDlg, IDC_BGIMAGES, (BgImages) 
+  CheckDlgButton (hwnDlg, IDC_BGIMAGES, (GProp_Browse.BgImages) 
 		  ? BST_CHECKED : BST_UNCHECKED);
-  CheckDlgButton (hwnDlg, IDC_LOADCSS, (LoadCss) 
+  CheckDlgButton (hwnDlg, IDC_LOADCSS, (GProp_Browse.LoadCss) 
 		  ? BST_CHECKED : BST_UNCHECKED);
-  CheckDlgButton (hwnDlg, IDC_DOUBLECLICK, (DoubleClick) 
+  CheckDlgButton (hwnDlg, IDC_DOUBLECLICK, (GProp_Browse.DoubleClick) 
 		  ? BST_CHECKED : BST_UNCHECKED);
-  CheckDlgButton (hwnDlg, IDC_ENABLEFTP, (EnableFTP) 
+  CheckDlgButton (hwnDlg, IDC_ENABLEFTP, (GProp_Browse.EnableFTP) 
 		  ? BST_CHECKED : BST_UNCHECKED);
   BuildScreensList ();
 }
 
 /*----------------------------------------------------------------------
   WIN_BrowseDlgProc
-  Windows callback for the publish menu
+  Windows callback for the browse menu
   ----------------------------------------------------------------------*/
 LRESULT CALLBACK WIN_BrowseDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 				    LPARAM lParam)
@@ -2959,22 +2854,22 @@ LRESULT CALLBACK WIN_BrowseDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
       switch (LOWORD (wParam))
 	{
 	case IDC_LOADIMG:
-	  LoadImages = !LoadImages;
+	  GProp_Browse.LoadImages = !GProp_Browse.LoadImages;
 	  break;
 	case IDC_LOADOBJ:
-	  LoadObjects = !LoadObjects;
+	  GProp_Browse.LoadObjects = !GProp_Browse.LoadObjects;
 	  break;
 	case IDC_BGIMAGES:
-	  BgImages = !BgImages;
+	  GProp_Browse.BgImages = !GProp_Browse.BgImages;
 	  break;
 	case IDC_LOADCSS:
-	  LoadCss = !LoadCss;
+	  GProp_Browse.LoadCss = !GProp_Browse.LoadCss;
 	  break;
 	case IDC_DOUBLECLICK:
-	  DoubleClick = !DoubleClick;
+	  GProp_Browse.DoubleClick = !GProp_Browse.DoubleClick;
 	  break;
 	case IDC_ENABLEFTP:
-	  EnableFTP = !EnableFTP;
+	  GProp_Browse.EnableFTP = !GProp_Browse.EnableFTP;
 	  break;
 	case IDC_SCREENLIST:
 	  CurrentScreen = SendMessage (ScreensList, LB_GETCURSEL, 0, 0);
@@ -2984,12 +2879,12 @@ LRESULT CALLBACK WIN_BrowseDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 
 	  /* action buttons */
 	case ID_APPLY:
-	  if (strcmp (ScreenType, NewScreen) ||
-	      InitLoadImages != LoadImages ||
-	      InitLoadObjects != LoadObjects ||	      
-	      InitLoadCss != LoadCss)
+	  if (strcmp (GProp_Browse.ScreenType, NewScreen) ||
+	      InitLoadImages != GProp_Browse.LoadImages ||
+	      InitLoadObjects != GProp_Browse.LoadObjects ||	      
+	      InitLoadCss != GProp_Browse.LoadCss)
 	    {
-	      strcpy (ScreenType, NewScreen);
+	      strcpy (GProp_Browse.ScreenType, NewScreen);
 	      SetBrowseConf ();
 	      for (doc = 1; doc < MAX_DOCUMENTS; doc++)
 		{
@@ -3004,9 +2899,9 @@ LRESULT CALLBACK WIN_BrowseDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 		      TtaSetDisplayMode (doc, dispMode);
 		    }
 		}
-	      InitLoadImages = LoadImages;
-	      InitLoadObjects = LoadObjects;	      
-	      InitLoadCss = LoadCss;
+	      InitLoadImages = GProp_Browse.LoadImages;
+	      InitLoadObjects = GProp_Browse.LoadObjects;	      
+	      InitLoadCss = GProp_Browse.LoadCss;
 	    }
 	  else
 	    SetBrowseConf ();
@@ -3050,7 +2945,8 @@ static void BuildScreenSelector (void)
     {
       entry =  ScreensTxt[i];
       /* keep in mind the current selected entry */
-      if (*ScreenType && !strcmp (ScreenType, ScreensTxt[i]))
+      if (GProp_Browse.ScreenType &&
+	  !strcmp (GProp_Browse.ScreenType, ScreensTxt[i]))
 	CurrentScreen = i;
       length = strlen (entry) + 1;
       if (length + indx < MAX_LENGTH)  
@@ -3066,7 +2962,7 @@ static void BuildScreenSelector (void)
 		       ((i < 2) ? (char *)"" : BufMenu), 3, 2, NULL, FALSE, FALSE);
   /* preselect the screen matching the user preference */
   TtaSetSelector (BrowseBase + mScreenSelector, CurrentScreen, NULL);
-  strcpy (NewScreen, ScreenType);
+  strcpy (NewScreen, GProp_Browse.ScreenType);
 }
 
 /*----------------------------------------------------------------------
@@ -3075,12 +2971,12 @@ static void BuildScreenSelector (void)
   ----------------------------------------------------------------------*/
 static void RefreshBrowseMenu ()
 {
-  TtaSetToggleMenu (BrowseBase + mToggleBrowse, 0, LoadImages);
-  TtaSetToggleMenu (BrowseBase + mToggleBrowse, 1, LoadObjects);
-  TtaSetToggleMenu (BrowseBase + mToggleBrowse, 2, BgImages);
-  TtaSetToggleMenu (BrowseBase + mToggleBrowse, 3, LoadCss);
-  TtaSetToggleMenu (BrowseBase + mToggleBrowse, 4, DoubleClick);
-  TtaSetToggleMenu (BrowseBase + mToggleBrowse, 5, EnableFTP);
+  TtaSetToggleMenu (BrowseBase + mToggleBrowse, 0, GProp_Browse.LoadImages);
+  TtaSetToggleMenu (BrowseBase + mToggleBrowse, 1, GProp_Browse.LoadObjects);
+  TtaSetToggleMenu (BrowseBase + mToggleBrowse, 2, GProp_Browse.BgImages);
+  TtaSetToggleMenu (BrowseBase + mToggleBrowse, 3, GProp_Browse.LoadCss);
+  TtaSetToggleMenu (BrowseBase + mToggleBrowse, 4, GProp_Browse.DoubleClick);
+  TtaSetToggleMenu (BrowseBase + mToggleBrowse, 5, GProp_Browse.EnableFTP);
   /* preselect the screen matching the user preference */
   BuildScreenSelector ();
 }
@@ -3111,15 +3007,15 @@ static void BrowseCallbackDialog (int ref, int typedata, char *data)
 	    case 1:
 #ifdef _WX
 	      /* update NewScreen with ScreenType value because only ScreenType contains the updated value */
-	      strcpy (NewScreen, ScreenType);
+	      strcpy (NewScreen, GProp_Browse.ScreenType);
 #endif /* _WX */
-	      if (strcmp (ScreenType, NewScreen) ||
-		  InitLoadImages != LoadImages ||
-		  InitLoadObjects != LoadObjects ||
-		  InitBgImages != BgImages ||
-		  InitLoadCss != LoadCss)
+	      if (strcmp (GProp_Browse.ScreenType, NewScreen) ||
+		  InitLoadImages != GProp_Browse.LoadImages ||
+		  InitLoadObjects != GProp_Browse.LoadObjects ||
+		  InitBgImages != GProp_Browse.BgImages ||
+		  InitLoadCss != GProp_Browse.LoadCss)
 		{
-		  strcpy (ScreenType, NewScreen);
+		  strcpy (GProp_Browse.ScreenType, NewScreen);
 		  SetBrowseConf ();
 		  for (doc = 1; doc < MAX_DOCUMENTS; doc++)
 		    {
@@ -3134,10 +3030,10 @@ static void BrowseCallbackDialog (int ref, int typedata, char *data)
 			  TtaSetDisplayMode (doc, dispMode);
 			}
 		    }
-		  InitLoadImages = LoadImages;
-		  InitLoadObjects = LoadObjects;
-		  InitBgImages = BgImages;
-		  InitLoadCss = LoadCss;
+		  InitLoadImages = GProp_Browse.LoadImages;
+		  InitLoadObjects = GProp_Browse.LoadObjects;
+		  InitBgImages = GProp_Browse.BgImages;
+		  InitLoadCss = GProp_Browse.LoadCss;
 		}
 	      else
 		SetBrowseConf ();
@@ -3158,22 +3054,22 @@ static void BrowseCallbackDialog (int ref, int typedata, char *data)
 	  switch (val) 
 	    {
 	    case 0:
-	      LoadImages = !LoadImages;
+	      GProp_Browse.LoadImages = !GProp_Browse.LoadImages;
 	      break;
 	    case 1:
-	      LoadObjects = !LoadObjects;
+	      GProp_Browse.LoadObjects = !GProp_Browse.LoadObjects;
 	      break;
 	    case 2:
-	      BgImages = !BgImages;
+	      GProp_Browse.BgImages = !GProp_Browse.BgImages;
 	      break;
 	    case 3:
-	      LoadCss = !LoadCss;
+	      GProp_Browse.LoadCss = !GProp_Browse.LoadCss;
 	      break;
 	    case 4:
-	      DoubleClick = !DoubleClick;
+	      GProp_Browse.DoubleClick = !GProp_Browse.DoubleClick;
 	      break;
 	    case 5:
-	      EnableFTP = !EnableFTP;
+	      GProp_Browse.EnableFTP = !GProp_Browse.EnableFTP;
 	      break;
 	    }
 	  break;
@@ -3205,10 +3101,10 @@ void BrowseConfMenu (Document document, View view)
   /* load the current values */
   GetBrowseConf ();
   /* keep initial values to detect an change */
-  InitLoadImages = LoadImages;
-  InitLoadObjects = LoadObjects;
-  InitBgImages = BgImages;
-  InitLoadCss = LoadCss;
+  InitLoadImages = GProp_Browse.LoadImages;
+  InitLoadObjects = GProp_Browse.LoadObjects;
+  InitBgImages = GProp_Browse.BgImages;
+  InitLoadCss = GProp_Browse.LoadCss;
 #ifdef _GTK
   /* Create the dialogue form */
   i = 0;
@@ -3261,13 +3157,13 @@ void BrowseConfMenu (Document document, View view)
   ----------------------------------------------------------------------*/
 static void GetColorConf (void)
 {
-  GetEnvString ("ForegroundColor", FgColor);
-  GetEnvString ("BackgroundColor", BgColor);
-  GetEnvString ("BgSelectColor", BgSelColor);
-  GetEnvString ("FgSelectColor", FgSelColor);
+  GetEnvString ("ForegroundColor", GProp_Color.FgColor);
+  GetEnvString ("BackgroundColor", GProp_Color.BgColor);
+  GetEnvString ("BgSelectColor", GProp_Color.BgSelColor);
+  GetEnvString ("FgSelectColor", GProp_Color.FgSelColor);
 #ifndef _WINGUI
-  GetEnvString ("MenuFgColor", MenuFgColor);
-  GetEnvString ("MenuBgColor", MenuBgColor);
+  GetEnvString ("MenuFgColor", GProp_Color.MenuFgColor);
+  GetEnvString ("MenuBgColor", GProp_Color.MenuBgColor);
 #endif /* !_WINGUI */
 }
 
@@ -3277,13 +3173,13 @@ static void GetColorConf (void)
   ----------------------------------------------------------------------*/
 static void GetDefaultColorConf (void)
 {
-  GetDefEnvString ("ForegroundColor", FgColor);
-  GetDefEnvString ("BackgroundColor", BgColor);
-  GetDefEnvString ("BgSelectColor", BgSelColor);
-  GetDefEnvString ("FgSelectColor", FgSelColor);
+  GetDefEnvString ("ForegroundColor", GProp_Color.FgColor);
+  GetDefEnvString ("BackgroundColor", GProp_Color.BgColor);
+  GetDefEnvString ("BgSelectColor", GProp_Color.BgSelColor);
+  GetDefEnvString ("FgSelectColor", GProp_Color.FgSelColor);
 #ifndef _WINGUI
-  GetDefEnvString ("MenuFgColor", MenuFgColor);
-  GetDefEnvString ("MenuBgColor", MenuBgColor);
+  GetDefEnvString ("MenuFgColor", GProp_Color.MenuFgColor);
+  GetDefEnvString ("MenuBgColor", GProp_Color.MenuBgColor);
 #endif /* !_WINGUI */
 }
 
@@ -3293,13 +3189,13 @@ static void GetDefaultColorConf (void)
   ----------------------------------------------------------------------*/
 static void SetColorConf (void)
 {
-  TtaSetEnvString ("ForegroundColor", FgColor, TRUE);
-  TtaSetEnvString ("BackgroundColor", BgColor, TRUE);
-  TtaSetEnvString ("BgSelectColor", BgSelColor, TRUE);
-  TtaSetEnvString ("FgSelectColor", FgSelColor, TRUE);
+  TtaSetEnvString ("ForegroundColor", GProp_Color.FgColor, TRUE);
+  TtaSetEnvString ("BackgroundColor", GProp_Color.BgColor, TRUE);
+  TtaSetEnvString ("BgSelectColor", GProp_Color.BgSelColor, TRUE);
+  TtaSetEnvString ("FgSelectColor", GProp_Color.FgSelColor, TRUE);
 #ifndef _WINGUI
-  TtaSetEnvString ("MenuFgColor", MenuFgColor, TRUE);
-  TtaSetEnvString ("MenuBgColor", MenuBgColor, TRUE);
+  TtaSetEnvString ("MenuFgColor", GProp_Color.MenuFgColor, TRUE);
+  TtaSetEnvString ("MenuBgColor", GProp_Color.MenuBgColor, TRUE);
 #endif /* !_WINGUI */
 
   TtaSaveAppRegistry ();
@@ -3314,10 +3210,10 @@ static void SetColorConf (void)
   ----------------------------------------------------------------------*/
 void WIN_RefreshColorMenu (HWND hwnDlg)
 {
-  SetDlgItemText (hwnDlg, IDC_FGCOLOR, FgColor);
-  SetDlgItemText (hwnDlg, IDC_BGCOLOR, BgColor);
-  SetDlgItemText (hwnDlg, IDC_FGSELCOLOR, FgSelColor);
-  SetDlgItemText (hwnDlg, IDC_BGSELCOLOR, BgSelColor);
+  SetDlgItemText (hwnDlg, IDC_FGCOLOR, GProp_Color.FgColor);
+  SetDlgItemText (hwnDlg, IDC_BGCOLOR, GProp_Color.BgColor);
+  SetDlgItemText (hwnDlg, IDC_FGSELCOLOR, GProp_Color.FgSelColor);
+  SetDlgItemText (hwnDlg, IDC_BGSELCOLOR, GProp_Color.BgSelColor);
 }
 #else /* WINDOWS */
 /*----------------------------------------------------------------------
@@ -3326,12 +3222,12 @@ void WIN_RefreshColorMenu (HWND hwnDlg)
   ----------------------------------------------------------------------*/
 static void RefreshColorMenu ()
 {
-  TtaSetTextForm (ColorBase + mFgColor, FgColor);
-  TtaSetTextForm (ColorBase + mBgColor, BgColor);
-  TtaSetTextForm (ColorBase + mBgSelColor, BgSelColor);
-  TtaSetTextForm (ColorBase + mFgSelColor, FgSelColor);
-  TtaSetTextForm (ColorBase + mMenuFgColor, MenuFgColor);
-  TtaSetTextForm (ColorBase + mMenuBgColor, MenuBgColor);
+  TtaSetTextForm (ColorBase + mFgColor, GProp_Color.FgColor);
+  TtaSetTextForm (ColorBase + mBgColor, GProp_Color.BgColor);
+  TtaSetTextForm (ColorBase + mBgSelColor, GProp_Color.BgSelColor);
+  TtaSetTextForm (ColorBase + mFgSelColor, GProp_Color.FgSelColor);
+  TtaSetTextForm (ColorBase + mMenuFgColor, GProp_Color.MenuFgColor);
+  TtaSetTextForm (ColorBase + mMenuBgColor, GProp_Color.MenuBgColor);
 }
 #endif /* !_WINGUI */
 
@@ -3367,20 +3263,20 @@ LRESULT CALLBACK WIN_ColorDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
           switch (LOWORD (wParam))
 	    {
 	    case IDC_FGCOLOR:
-	      GetDlgItemText (hwnDlg, IDC_FGCOLOR, FgColor,
-			      sizeof (FgColor) - 1);
+	      GetDlgItemText (hwnDlg, IDC_FGCOLOR, GProp_Color.FgColor,
+			      sizeof (GProp_Color.FgColor) - 1);
 	      break;
 	    case IDC_BGCOLOR:
-	      GetDlgItemText (hwnDlg, IDC_BGCOLOR, BgColor,
-			      sizeof (BgColor) - 1);
+	      GetDlgItemText (hwnDlg, IDC_BGCOLOR, GProp_Color.BgColor,
+			      sizeof (GProp_Color.BgColor) - 1);
 	      break;
 	    case IDC_BGSELCOLOR:
-	      GetDlgItemText (hwnDlg, IDC_BGSELCOLOR, BgSelColor,
-			      sizeof (BgSelColor) - 1);
+	      GetDlgItemText (hwnDlg, IDC_BGSELCOLOR, GProp_Color.BgSelColor,
+			      sizeof (GProp_Color.BgSelColor) - 1);
 	      break;
 	    case IDC_FGSELCOLOR:
-	      GetDlgItemText (hwnDlg, IDC_FGSELCOLOR, FgSelColor,
-			      sizeof (FgSelColor) - 1);
+	      GetDlgItemText (hwnDlg, IDC_FGSELCOLOR, GProp_Color.FgSelColor,
+			      sizeof (GProp_Color.FgSelColor) - 1);
 	      break;
 	    }
 	}
@@ -3469,39 +3365,39 @@ static void ColorCallbackDialog (int ref, int typedata, char *data)
 	  
 	case mFgColor:
 	  if (data)
-	    strcpy (FgColor, data);
+	    strcpy (GProp_Color.FgColor, data);
 	  else
-	    FgColor[0] = EOS;
+	    GProp_Color.FgColor[0] = EOS;
 	  break;
 	case mBgColor:
 	  if (data)
-	    strcpy (BgColor, data);
+	    strcpy (GProp_Color.BgColor, data);
 	  else
-	    BgColor[0] = EOS;
+	    GProp_Color.BgColor[0] = EOS;
 	  break;
 	case mBgSelColor:
 	  if (data)
-	    strcpy (BgSelColor, data);
+	    strcpy (GProp_Color.BgSelColor, data);
 	  else
-	    BgSelColor[0] = EOS;
+	    GProp_Color.BgSelColor[0] = EOS;
 	  break;
 	case mFgSelColor:
 	  if (data)
-	    strcpy (FgSelColor, data);
+	    strcpy (GProp_Color.FgSelColor, data);
 	  else
-	    FgSelColor[0] = EOS;
+	    GProp_Color.FgSelColor[0] = EOS;
 	  break;
 	case mMenuFgColor:
 	  if (data)
-	    strcpy (MenuFgColor, data);
+	    strcpy (GProp_Color.MenuFgColor, data);
 	  else
-	    MenuFgColor[0] = EOS;
+	    GProp_Color.MenuFgColor[0] = EOS;
 	  break;
 	case mMenuBgColor:
 	  if (data)
-	    strcpy (MenuBgColor, data);
+	    strcpy (GProp_Color.MenuBgColor, data);
 	  else
-	    MenuBgColor[0] = EOS;
+	    GProp_Color.MenuBgColor[0] = EOS;
 	  break;
 
 	default:
@@ -3882,7 +3778,7 @@ void         GeometryConfMenu (Document document, View view)
   ----------------------------------------------------------------------*/
 static void GetLanNegConf (void)
 {
-  GetEnvString ("ACCEPT_LANGUAGES", LanNeg);
+  GetEnvString ("ACCEPT_LANGUAGES", GProp_LanNeg.LanNeg);
 }
 
 /*----------------------------------------------------------------------
@@ -3891,7 +3787,7 @@ static void GetLanNegConf (void)
   ----------------------------------------------------------------------*/
 static void GetDefaultLanNegConf (void)
 {
-  GetDefEnvString ("ACCEPT_LANGUAGES", LanNeg);
+  GetDefEnvString ("ACCEPT_LANGUAGES", GProp_LanNeg.LanNeg);
 }
 
 /*----------------------------------------------------------------------
@@ -3900,7 +3796,7 @@ static void GetDefaultLanNegConf (void)
   ----------------------------------------------------------------------*/
 static void SetLanNegConf (void)
 {
-  TtaSetEnvString ("ACCEPT_LANGUAGES", LanNeg, TRUE);
+  TtaSetEnvString ("ACCEPT_LANGUAGES", GProp_LanNeg.LanNeg, TRUE);
   TtaSaveAppRegistry ();
 
   /* change the current settings */
@@ -3914,7 +3810,7 @@ static void SetLanNegConf (void)
   ----------------------------------------------------------------------*/
 void WIN_RefreshLanNegMenu (HWND hwnDlg)
 {
-  SetDlgItemText (hwnDlg, IDC_LANNEG, LanNeg);
+  SetDlgItemText (hwnDlg, IDC_LANNEG, GProp_LanNeg.LanNeg);
 }
 
 /*----------------------------------------------------------------------
@@ -3945,8 +3841,8 @@ LRESULT CALLBACK WIN_LanNegDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
       switch (LOWORD (wParam))
 	{
 	case IDC_LANNEG:
-	  GetDlgItemText (hwnDlg, IDC_LANNEG, LanNeg,
-			  sizeof (LanNeg) - 1);
+	  GetDlgItemText (hwnDlg, IDC_LANNEG, GProp_LanNeg.LanNeg,
+			  sizeof (GProp_LanNeg.LanNeg) - 1);
 	  break;
 	  /* action buttons */
 	case ID_APPLY:
@@ -3955,7 +3851,7 @@ LRESULT CALLBACK WIN_LanNegDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	case ID_DONE:
-    case IDCANCEL:
+	case IDCANCEL:
 	  /* reset the status flag */
 	  LanNegHwnd = NULL;
 	  EndDialog (hwnDlg, ID_DONE);
@@ -3979,7 +3875,7 @@ LRESULT CALLBACK WIN_LanNegDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
   ----------------------------------------------------------------------*/
 static void RefreshLanNegMenu ()
 {
-  TtaSetTextForm (LanNegBase + mLanNeg, LanNeg);
+  TtaSetTextForm (LanNegBase + mLanNeg, GProp_LanNeg.LanNeg);
 }
 
 /*----------------------------------------------------------------------
@@ -4023,9 +3919,9 @@ static void LanNegCallbackDialog (int ref, int typedata, char *data)
 
 	case mLanNeg:
 	  if (data)
-	    strcpy (LanNeg, data);
+	    strcpy (GProp_LanNeg.LanNeg, data);
 	  else
-	    LanNeg[0] = EOS;
+	    GProp_LanNeg.LanNeg[0] = EOS;
 	  break;
 	  
 	default:
@@ -4092,9 +3988,9 @@ static void GetAnnotConf (void)
   GetEnvString ("ANNOT_USER", AnnotUser);
   GetEnvString ("ANNOT_POST_SERVER", AnnotPostServer);
   GetEnvString ("ANNOT_SERVERS", AnnotServers);
-  TtaGetEnvBoolean ("ANNOT_LAUTOLOAD", &AnnotLAutoLoad);
-  TtaGetEnvBoolean ("ANNOT_RAUTOLOAD", &AnnotRAutoLoad);
-  TtaGetEnvBoolean ("ANNOT_RAUTOLOAD_RST", &AnnotRAutoLoadRst);
+  TtaGetEnvBoolean ("ANNOT_LAUTOLOAD", &(AnnotLAutoLoad));
+  TtaGetEnvBoolean ("ANNOT_RAUTOLOAD", &(AnnotRAutoLoad));
+  TtaGetEnvBoolean ("ANNOT_RAUTOLOAD_RST", &(AnnotRAutoLoadRst));
 
 #ifdef _WINGUI
   /* we substitute spaces into \r for the configuration widget menu */
@@ -4139,9 +4035,9 @@ static void GetDefaultAnnotConf ()
   GetDefEnvString ("ANNOT_USER", AnnotUser);
   GetDefEnvString ("ANNOT_POST_SERVER", AnnotPostServer);
   GetDefEnvString ("ANNOT_SERVERS", AnnotServers);
-  TtaGetDefEnvBoolean ("ANNOT_LAUTOLOAD", &AnnotLAutoLoad);
-  TtaGetDefEnvBoolean ("ANNOT_RAUTOLOAD", &AnnotRAutoLoad);
-  TtaGetDefEnvBoolean ("ANNOT_RAUTOLOAD_RST", &AnnotRAutoLoadRst);
+  TtaGetDefEnvBoolean ("ANNOT_LAUTOLOAD", &(AnnotLAutoLoad));
+  TtaGetDefEnvBoolean ("ANNOT_RAUTOLOAD", &(AnnotRAutoLoad));
+  TtaGetDefEnvBoolean ("ANNOT_RAUTOLOAD_RST", &(AnnotRAutoLoadRst));
 #ifdef _WINGUI
   /* we substitute spaces into \n for the configuration widget menu */
   ConvertSpaceNL (AnnotServers, TRUE);
@@ -4246,7 +4142,7 @@ LRESULT CALLBACK WIN_AnnotDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	case ID_DONE:
-    case IDCANCEL:
+	case IDCANCEL:
 	  /* reset the status flag */
 	  AnnotHwnd = NULL;
 	  EndDialog (hwnDlg, ID_DONE);
@@ -4343,7 +4239,7 @@ static void AnnotCallbackDialog (int ref, int typedata, char *data)
 	}
     }
 }
-#endif /* !_WINGUI */
+#endif /* _WINGUI */
 #endif /* ANNOTATIONS */
 
 /*----------------------------------------------------------------------
@@ -4353,7 +4249,7 @@ static void AnnotCallbackDialog (int ref, int typedata, char *data)
 void         AnnotConfMenu (Document document, View view)
 {
 #ifdef ANNOTATIONS
-#ifndef _WINGUI
+#ifdef _GTK
    int              i;
 
    /* Create the dialogue form */
@@ -4396,23 +4292,25 @@ void         AnnotConfMenu (Document document, View view)
 		     s,
 		     NULL,
 		     FALSE);
-#endif /* !_WINGUI */
+#endif /* _GTK */
 
    /* load and display the current values */
    GetAnnotConf ();
 
-#ifndef _WINGUI
+#ifdef _GTK
    RefreshAnnotMenu ();
   /* display the menu */
    TtaSetDialoguePosition ();
    TtaShowDialogue (AnnotBase + AnnotMenu, TRUE);
-#else
+#endif /* _GTK */
+#ifdef _WINGUI
   if (!AnnotHwnd)
     /* only activate the menu if it isn't active already */
-     DialogBox (hInstance, MAKEINTRESOURCE (ANNOTMENU), NULL, (DLGPROC) WIN_AnnotDlgProc);
+     DialogBox (hInstance, MAKEINTRESOURCE (ANNOTMENU), NULL,
+		(DLGPROC) WIN_AnnotDlgProc);
   else
      SetFocus (AnnotHwnd);
-#endif /* !_WINGUI */
+#endif /* _WINGUI */
 #endif /* ANNOTATIONS */
 }
 
@@ -4423,8 +4321,8 @@ int GetPrefGeneralBase()
 {
   return GeneralBase;
 }
-/*--
---------------------------------------------------------------------
+
+/*----------------------------------------------------------------------
   Returns a tab dialog reference (used into PreferenceDlgWX callbacks)
   ----------------------------------------------------------------------*/
 int GetPrefBrowseBase()
@@ -4439,6 +4337,7 @@ int GetPrefCacheBase()
 {
   return CacheBase;
 }
+
 /*----------------------------------------------------------------------
   Returns a tab dialog reference (used into PreferenceDlgWX callbacks)
   ----------------------------------------------------------------------*/
@@ -4454,6 +4353,7 @@ int GetPrefPublishBase()
 {
   return PublishBase;
 }
+
 /*----------------------------------------------------------------------
   Returns a tab dialog reference (used into PreferenceDlgWX callbacks)
   ----------------------------------------------------------------------*/
@@ -4461,8 +4361,8 @@ int GetPrefColorBase()
 {
   return ColorBase;
 }
-/*-
----------------------------------------------------------------------
+
+/*----------------------------------------------------------------------
   Returns a tab dialog reference (used into PreferenceDlgWX callbacks)
   ----------------------------------------------------------------------*/
 int GetPrefGeometryBase()
@@ -4672,10 +4572,10 @@ void PreferenceMenu (Document document, View view)
   SafePutStatus = 0; /* reset the modified flag */
   GetBrowseConf (); /* load the current values => Browse tab */
   /* keep initial values to detect an change */
-  InitLoadImages = LoadImages;
-  InitLoadObjects = LoadObjects;
-  InitBgImages = BgImages;
-  InitLoadCss = LoadCss;
+  InitLoadImages = GProp_Browse.LoadImages;
+  InitLoadObjects =GProp_Browse. LoadObjects;
+  InitBgImages = GProp_Browse.BgImages;
+  InitLoadCss = GProp_Browse.LoadCss;
   
   /* ---> Publish Tab */
   GetPublishConf ();
@@ -4697,7 +4597,10 @@ void PreferenceMenu (Document document, View view)
 
   /* ---> LanNeg Tab */
   GetLanNegConf ();
-
+#ifdef DAV
+  /* ---> WebDAV Tab */
+  GetLanNegConf ();
+#endif /* DAV */
   ThotBool created = CreatePreferenceDlgWX ( PreferenceBase,
 					     TtaGetViewFrame (document, view),
 					     URL_list );
@@ -4732,14 +4635,11 @@ static void PreferenceCallbackDialog (int ref, int typedata, char *data)
 	      TtaDestroyDialogue (ref);
 	      break;
 	    case 1: /* OK */
-	      break; 
 	    case 2: /* DEFAULT */
-	      break;
 	    default:
 	      break;
 	    }
 	  break;
-	  
 	default:
 	  break;
 	}
@@ -4755,7 +4655,8 @@ void InitConfMenu (void)
   InitAmayaDefEnv ();
 
 #ifdef _WX
-  PreferenceBase = TtaSetCallback( (Proc)PreferenceCallbackDialog, 1 ); /* create a new dialog reference for Preferences */
+  /* create a new dialog reference for Preferences */
+  PreferenceBase = TtaSetCallback( (Proc)PreferenceCallbackDialog, 1 );
 #endif /* _WX */
 
 #ifndef _WINGUI
@@ -4774,5 +4675,8 @@ void InitConfMenu (void)
   AnnotBase = TtaSetCallback ((Proc)AnnotCallbackDialog,
 			      MAX_ANNOTMENU_DLG);
 #endif /* ANNOTATIONS */
-#endif /* !_WINGUI */
+#ifdef DAV
+  InitDAVPreferences ();
+#endif /* DAV */
+#endif /* _WINGUI */
 }

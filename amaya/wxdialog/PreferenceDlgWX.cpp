@@ -72,11 +72,17 @@ PreferenceDlgWX::PreferenceDlgWX( int ref,
   wxLogDebug( _T("PreferenceDlgWX::PreferenceDlgWX") );
 
   m_UrlList = url_list;
+  wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
 
+#ifndef DAV
+  // invalid WebDAV Page
+  int page_id = GetPagePosFromXMLID( _T("wxID_PAGE_DAV") );
+  if (page_id)
+    p_notebook->DeletePage(page_id );
+#endif /* DAV */
 
 #ifdef _WINDOWS
   // change the notebook style for windows
-  wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
   p_notebook->SetWindowStyleFlag( wxNB_MULTILINE );
   p_notebook->Refresh();
   p_notebook->Fit();
@@ -94,9 +100,12 @@ PreferenceDlgWX::PreferenceDlgWX( int ref,
   SetupLabelDialog_Color();
   SetupLabelDialog_Geometry();
   SetupLabelDialog_LanNeg();
+#ifdef DAV
+  SetupLabelDialog_DAV();
+#endif /* DAV */
 
   XRCCTRL(*this, "wxID_OK",      wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage (AMAYA, AM_APPLY_BUTTON)));
-  XRCCTRL(*this, "wxID_CANCEL",  wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CANCEL)) );
+  XRCCTRL(*this, "wxID_CANCEL",  wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_DONE)) );
   XRCCTRL(*this, "wxID_DEFAULT", wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON)));
 
   // load current values and send it to the dialog
@@ -107,6 +116,9 @@ PreferenceDlgWX::PreferenceDlgWX( int ref,
   SetupDialog_Proxy( GetProp_Proxy() );
   SetupDialog_Color( GetProp_Color() );
   SetupDialog_LanNeg( GetProp_LanNeg() );
+#ifdef DAV
+  SetupDialog_DAV( GetProp_DAV() );
+#endif /* DAV */
 
   // give focus to ...
   //  XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE", wxComboBox)->SetFocus();
