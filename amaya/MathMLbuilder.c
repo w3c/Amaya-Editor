@@ -285,16 +285,31 @@ static AttributeMapping MathMLAttributeMappingTable[] =
    {"unknown_attr", "", 'A', MathML_ATTR_Invalid_attribute},
    {"ZZGHOST", "", 'A', MathML_ATTR_Ghost_restruct},
 
+   {"accent", "", 'A', MathML_ATTR_accent},
    {"class", "", 'A', MathML_ATTR_class},
    {"close", "mfenced", 'A', MathML_ATTR_close},
-   {"fence", "mo", 'A', MathML_ATTR_fence},
-   {"fontstyle", "mi", 'A', MathML_ATTR_fontstyle},
+   {"color", "", 'A', MathML_ATTR_color},
+   {"fence", "", 'A', MathML_ATTR_fence},
+   {"fontfamily", "", 'A', MathML_ATTR_fontfamily},
+   {"fontstyle", "", 'A', MathML_ATTR_fontstyle},
+   {"fontsize", "", 'A', MathML_ATTR_fontsize},
+   {"fontweight", "", 'A', MathML_ATTR_fontweight},
+   {"form", "", 'A', MathML_ATTR_form},
    {"id", "", 'A', MathML_ATTR_id},
+   {"largeop", "", 'A', MathML_ATTR_largeop},
    {"link", "", 'A', MathML_ATTR_link},
+   {"lspace", "", 'A', MathML_ATTR_lspace},
+   {"maxsize", "", 'A', MathML_ATTR_maxsize},
+   {"minsize", "", 'A', MathML_ATTR_minsize},
+   {"movablelimits", "", 'A', MathML_ATTR_movablelimits},
    {"open", "mfenced", 'A', MathML_ATTR_open},
    {"other", "", 'A', MathML_ATTR_other},
+   {"rspace", "", 'A', MathML_ATTR_rspace},
+   {"separator", "", 'A', MathML_ATTR_separator},
    {"separators", "mfenced", 'A', MathML_ATTR_separators},
+   {"stretchy", "", 'A', MathML_ATTR_stretchy},
    {"style", "", 'A', MathML_ATTR_style_},
+   {"symmetric", "", 'A', MathML_ATTR_symmetric},
 
    {"", "", EOS, 0}		/* Last entry. Mandatory */
 };
@@ -303,15 +318,42 @@ static AttributeMapping MathMLAttributeMappingTable[] =
 
 static AttrValueMapping MathMLAttrValueMappingTable[] =
 {
+   {MathML_ATTR_accent, "true", MathML_ATTR_accent_VAL_true},
+   {MathML_ATTR_accent, "false", MathML_ATTR_accent_VAL_false},
+
    {MathML_ATTR_fence, "true", MathML_ATTR_fence_VAL_true},
    {MathML_ATTR_fence, "false", MathML_ATTR_fence_VAL_false},
+
    {MathML_ATTR_fontstyle, "italic", MathML_ATTR_fontstyle_VAL_italic},
    {MathML_ATTR_fontstyle, "normal", MathML_ATTR_fontstyle_VAL_normal},
+
+   {MathML_ATTR_fontweight, "bold", MathML_ATTR_fontweight_VAL_bold_},
+   {MathML_ATTR_fontweight, "normal", MathML_ATTR_fontweight_VAL_normal},
+
+   {MathML_ATTR_form, "prefix", MathML_ATTR_form_VAL_prefix},
+   {MathML_ATTR_form, "infix", MathML_ATTR_form_VAL_infix},
+   {MathML_ATTR_form, "postfix", MathML_ATTR_form_VAL_postfix},
+
+   {MathML_ATTR_largeop, "true", MathML_ATTR_largeop_VAL_true},
+   {MathML_ATTR_largeop, "false", MathML_ATTR_largeop_VAL_false},
+
    {MathML_ATTR_link, "document", MathML_ATTR_link_VAL_document},
    {MathML_ATTR_link, "extended", MathML_ATTR_link_VAL_extended},
    {MathML_ATTR_link, "group", MathML_ATTR_link_VAL_group},
    {MathML_ATTR_link, "locator", MathML_ATTR_link_VAL_locator},
    {MathML_ATTR_link, "simple", MathML_ATTR_link_VAL_simple},
+
+   {MathML_ATTR_movablelimits, "true", MathML_ATTR_movablelimits_VAL_true},
+   {MathML_ATTR_movablelimits, "false", MathML_ATTR_movablelimits_VAL_false},
+
+   {MathML_ATTR_separator, "true", MathML_ATTR_separator_VAL_true},
+   {MathML_ATTR_separator, "false", MathML_ATTR_separator_VAL_false},
+
+   {MathML_ATTR_stretchy, "true", MathML_ATTR_stretchy_VAL_true},
+   {MathML_ATTR_stretchy, "false", MathML_ATTR_stretchy_VAL_false},
+
+   {MathML_ATTR_symmetric, "true", MathML_ATTR_symmetric_VAL_true},
+   {MathML_ATTR_symmetric, "false", MathML_ATTR_symmetric_VAL_false},
 
    {0, "", 0}			/* Last entry. Mandatory */
 };

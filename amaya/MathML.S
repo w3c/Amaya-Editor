@@ -10,9 +10,9 @@ DEFPRES MathMLP;
 ATTR
 
    { att-globalatts }
-   id = TEXT;
    class = TEXT;
    style\240 = TEXT;
+   id = TEXT;
    other = TEXT;
 
    { xml:link }
@@ -35,110 +35,175 @@ STRUCT
    { Presentation: all presentation constructs }
    Construct (ATTR placeholder = yes_) = CASE OF
 
-		{ ptoken }
-		  MTEXT = TEXT (ATTR entity = yes_);
-		  MI (ATTR fontstyle = normal, italic;
-			   IntFontstyle = IntNormal, IntItalic) = TEXT;
-		  MN = TEXT;
-		  MO (ATTR fence = true, false;
-			   vertstretch = yes_;
-			   addspace = nospace, spacebefore, spaceafter, both) =
-			TEXT;
-		  MS = TEXT;
+      { ptoken }
+      MTEXT
+	  (ATTR fontsize = TEXT;
+		fontweight = normal, bold_;
+		fontstyle = normal, italic;
+		IntFontstyle = IntNormal, IntItalic;	{ for internal use }
+		fontfamily = TEXT;
+		color = TEXT;
+		entity = yes_)				{ for internal use }
+	  = TEXT;
 
-		{ petoken}
-		  MSPACE = CONSTANT C_Empty;
+      MI
+	  (ATTR fontsize; fontweight; fontstyle; fontfamily; color;
+		IntFontstyle)
+	  = TEXT;
 
-		{ plschema }
-		{ pgenschema }
-		  MROW = LIST OF (Construct);
-		  MFRAC = BEGIN
-			Numerator = Construct;
-			Denominator = Construct;
-			END;
-		  MSQRT = BEGIN
-			RootBase;
-			END;
-		  MROOT = BEGIN
-			RootBase = Construct;
-		  	Index = Construct;
-			END;
-		  MSTYLE = LIST OF (Construct);
-		  MERROR = LIST OF (Construct);
-		  MPADDED = LIST OF (Construct);
-		  MPHANTOM = LIST OF (Construct);
-		  MFENCED (ATTR open = TEXT; close = TEXT; separators = TEXT;
-				vertstretch;) =
-			BEGIN
-			OpeningFence = SYMBOL with vertstretch = yes_;
-			FencedExpression = LIST OF (Construct)
-					         + (FencedSeparator);
-			ClosingFence = SYMBOL with vertstretch = yes_;
-			END;
-		  { MF is for internal use. Exported as MO }
-		  MF (ATTR fence; vertstretch) = TEXT with vertstretch = yes_;
+      MN
+	  (ATTR fontsize; fontweight; fontstyle; fontfamily; color;
+		IntFontstyle)
+	  = TEXT;
 
-		{ pscrschema }
-		  MSUB (ATTR vertstretch) = BEGIN
-			Base;
-		  	Subscript;
-			END;
-		  MSUP (ATTR vertstretch) = BEGIN
-			Base;
-		  	Superscript;
-			END;
-		  MSUBSUP (ATTR vertstretch) = BEGIN
-			Base = Construct;
-		  	Subscript = Construct;
-		  	Superscript = Construct;
-			END;
-		  MUNDER (ATTR vertstretch) = BEGIN
-			UnderOverBase (ATTR horizstretch = yes_) = Construct;
-			Underscript (ATTR horizstretch) = Construct;
-			END;
-		  MOVER (ATTR vertstretch) = BEGIN
-			UnderOverBase;
-			Overscript (ATTR horizstretch) = Construct;
-			END;
-		  MUNDEROVER (ATTR vertstretch) = BEGIN
-			UnderOverBase;
-			Underscript;
-			Overscript;
-			END;
-		  MMULTISCRIPTS = BEGIN
-			MultiscriptBase =  Construct;
-			PostscriptPairs = LIST OF (PostscriptPair =
-						BEGIN
-						MSubscript = Construct;
-						MSuperscript = Construct;
-						END);
-			{ pscreschema: mprescripts, none }
-			PrescriptPairs = LIST OF (PrescriptPair =
-						BEGIN
-						MSubscript;
-						MSuperscript;
-						END);
-			END;
+      MO
+	  (ATTR fontsize; fontweight; fontstyle; fontfamily; color;
+		IntFontstyle;
+		form = prefix, infix, postfix;
+		fence = true, false;
+		separator = true, false;
+		lspace = TEXT;
+		rspace = TEXT;
+		stretchy = true, false;
+		symmetric = true, false;
+		maxsize = TEXT;
+		minsize = TEXT;
+		largeop = true, false;
+		movablelimits = true, false;
+		accent = true, false;
+		vertstretch = yes_;
+		addspace = nospace, spacebefore, spaceafter, both)
+	  = TEXT;
 
-		{ ptabschema }
-		  MTABLE = BEGIN
-			MTable_head = LIST OF
-				(MColumn_head = CONSTANT MC_Head);
-			MTable_body = LIST OF
-				(MTR = LIST OF (MTD));
-			END;
+      MS
+	  (ATTR fontsize; fontweight; fontstyle; fontfamily; color;
+		IntFontstyle)
+	  = TEXT;
 
-		{ pactions }
-		  MACTION = LIST OF (Construct);
+      { petoken}
+      MSPACE = CONSTANT C_Empty;
 
-		{ sep: provision for content tags }
-		  SEP = CONSTANT C_Empty;
+      { plschema }
+      { pgenschema }
+      MROW = LIST OF (Construct);
+      MFRAC = BEGIN
+	      Numerator = Construct;
+	      Denominator = Construct;
+	      END;
+      MSQRT = BEGIN
+	      RootBase;
+	      END;
+      MROOT = BEGIN
+	      RootBase = Construct;
+	      Index = Construct;
+	      END;
+      MSTYLE
+	  (ATTR fontsize; fontweight; fontstyle; fontfamily; color;
+		IntFontstyle;
+		form; fence; separator; lspace; rspace; stretchy; symmetric;
+		maxsize; minsize; largeop; movablelimits; accent)
+	  = LIST OF (Construct);
 
-		  END;
+      MERROR = LIST OF (Construct);
 
-   MTD (ATTR MRef_column = REFERENCE(MColumn_head)) = BEGIN
-	  	CellWrapper = Construct;
-	  	END + (MALIGNGROUP, MALIGNMARK);
+      MPADDED
+	  (ATTR lspace)
+	  = LIST OF (Construct);
+
+      MPHANTOM = LIST OF (Construct);
+
+      MFENCED
+	  (ATTR open = TEXT;
+		close = TEXT;
+		separators = TEXT;
+		vertstretch)
+	  = BEGIN
+	    OpeningFence = SYMBOL with vertstretch = yes_;
+	    FencedExpression = LIST OF (Construct) + (FencedSeparator);
+	    ClosingFence = SYMBOL with vertstretch = yes_;
+	    END;
+
+      { MF is for internal use. Exported as MO }
+      MF
+	  (ATTR fence; vertstretch)
+	  = TEXT with vertstretch = yes_;
+
+      { pscrschema }
+      MSUB
+	  (ATTR vertstretch)
+	  = BEGIN
+	    Base;
+	    Subscript;
+	    END;
+      MSUP
+	  (ATTR vertstretch)
+	  = BEGIN
+	    Base;
+	    Superscript;
+	    END;
+      MSUBSUP
+	  (ATTR vertstretch)
+	  = BEGIN
+	    Base = Construct;
+	    Subscript = Construct;
+	    Superscript = Construct;
+	    END;
+      MUNDER
+	  (ATTR accent; vertstretch)
+	  = BEGIN
+	    UnderOverBase (ATTR horizstretch = yes_) = Construct;
+	    Underscript (ATTR horizstretch) = Construct;
+	    END;
+      MOVER
+	  (ATTR accent; vertstretch)
+	  = BEGIN
+	    UnderOverBase;
+	    Overscript (ATTR horizstretch) = Construct;
+	    END;
+      MUNDEROVER
+	  (ATTR vertstretch)
+	  = BEGIN
+	    UnderOverBase;
+	    Underscript;
+	    Overscript;
+	    END;
+      MMULTISCRIPTS
+	  = BEGIN
+	    MultiscriptBase =  Construct;
+	    PostscriptPairs = LIST OF (PostscriptPair =
+					BEGIN
+					MSubscript = Construct;
+					MSuperscript = Construct;
+					END);
+	    { pscreschema: mprescripts, none }
+	    PrescriptPairs = LIST OF (PrescriptPair =
+					BEGIN
+					MSubscript;
+					MSuperscript;
+					END);
+	    END;
+
+      { ptabschema }
+      MTABLE
+	  = BEGIN
+	    MTable_head = LIST OF (MColumn_head = CONSTANT MC_Head);
+	    MTable_body = LIST OF (MTR = LIST OF (MTD));
+	    END;
+
+      { pactions }
+      MACTION
+	  = LIST OF (Construct);
+
+      { sep: provision for content tags }
+      SEP = CONSTANT C_Empty;
+
+      END;	 { End of Construct definition }
+
+   MTD
+	  (ATTR MRef_column = REFERENCE(MColumn_head))
+	  = BEGIN
+	    CellWrapper = Construct;
+	    END + (MALIGNGROUP, MALIGNMARK);
 
    { peschema }
    MALIGNGROUP =  CONSTANT C_Empty;
@@ -151,14 +216,14 @@ STRUCT
 EXCEPT
 
    MathML:		Hidden, NoMove, NoResize;
+   XMLcomment_line:	Hidden;
    Construct:		Hidden;
-   Index:		Hidden;
-   RootBase:		Hidden, NoCut;
    Numerator:		Hidden;
    Denominator:	 	Hidden;
-   FencedExpression:	Hidden, NoCut, NoCreate;
-   FencedSeparator:	Hidden, NoCut, NoCreate;
+   RootBase:		Hidden, NoCut;
+   Index:		Hidden;
    OpeningFence:	Hidden, NoCut, NoCreate;
+   FencedExpression:	Hidden, NoCut, NoCreate;
    ClosingFence:	Hidden, NoCut, NoCreate;
    Base:	 	Hidden, NoCut;
    Subscript:	 	Hidden;
@@ -181,6 +246,7 @@ EXCEPT
    MTR:			IsRow;
    MTD:			IsCell, NoMove, NoResize;
    CellWrapper:		NoCut, Hidden;
+   FencedSeparator:	Hidden, NoCut, NoCreate;
    C_Empty:		Hidden, NoSelect;
 
    Invalid_attribute:	Invisible;

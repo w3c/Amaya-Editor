@@ -1375,7 +1375,25 @@ static void MathSetAttributes (el, doc, selEl)
 	}
      }
   else
+     /* it's not an operator (mo). Remove all attributes that can be set only
+       on operators, except if it's a mstyle element. */
+     if (elType.ElTypeNum == MathML_EL_MSTYLE)
+     {
      RemoveAttr (el, doc, MathML_ATTR_addspace);
+     RemoveAttr (el, doc, MathML_ATTR_form);
+     RemoveAttr (el, doc, MathML_ATTR_fence);
+     RemoveAttr (el, doc, MathML_ATTR_separator);
+     RemoveAttr (el, doc, MathML_ATTR_lspace);
+     RemoveAttr (el, doc, MathML_ATTR_rspace);
+     RemoveAttr (el, doc, MathML_ATTR_separator);
+     RemoveAttr (el, doc, MathML_ATTR_stretchy);
+     RemoveAttr (el, doc, MathML_ATTR_symmetric);
+     RemoveAttr (el, doc, MathML_ATTR_maxsize);
+     RemoveAttr (el, doc, MathML_ATTR_minsize);
+     RemoveAttr (el, doc, MathML_ATTR_largeop);
+     RemoveAttr (el, doc, MathML_ATTR_movablelimits);
+     RemoveAttr (el, doc, MathML_ATTR_accent);
+     }
   if (elType.ElTypeNum == MathML_EL_MI)
      SetFontstyleAttr (el, doc);
   else

@@ -507,16 +507,187 @@ ATTRIBUTES
 	create '"';
 	end;
   
-  link = simple:
+   link = simple:
 	create ' xml:link="simple"';
-  link = extended:
+   link = extended:
 	create ' xml:link="extended"';
-  link = locator:
+   link = locator:
 	create ' xml:link="locator"';
-  link = group:
+   link = group:
 	create ' xml:link="group"';
-  link = document:
+   link = document:
 	create ' xml:link="document"';
+
+   fontsize:
+	begin
+	create SAN;
+	create 'fontsize="';
+	create fontsize;
+	create '"';	
+	end;
+
+   fontweight = normal:
+	begin
+	create SAN;
+	create 'fontweight="normal"';
+	end;
+   fontweight = bold_:
+	begin
+	create SAN;
+	create 'fontweight="bold"';
+	end;
+
+   fontstyle = normal:
+	begin
+	create SAN;
+	create 'fontstyle="normal"';
+	end;
+   fontstyle = italic:
+	begin
+	create SAN;
+	create 'fontstyle="italic"';
+	end;
+
+   fontfamily:
+	begin
+	create SAN;
+	create 'fontfamily="';
+	create fontfamily;
+	create '"';	
+	end;
+
+   color:
+	begin
+	create SAN;
+	create 'color="';
+	create color;
+	create '"';	
+	end;
+
+   form = prefix:
+	begin
+	create SAN;
+	create 'form="prefix"';
+	end;
+   form = infix:
+	begin
+	create SAN;
+	create 'form="infix"';
+	end;
+   form = postfix:
+	begin
+	create SAN;
+	create 'form="postfix"';
+	end;
+
+   fence = true:
+	begin
+	create SAN;
+	create 'fence="true"';
+	end;
+   fence = false:
+	begin
+	create SAN;
+	create 'fence="false"';
+	end;
+
+   separator = true:
+	begin
+	create SAN;
+	create 'separator="true"';
+	end;
+   separator = false:
+	begin
+	create SAN;
+	create 'separator="false"';
+	end;
+
+   lspace:
+	begin
+	create SAN;
+	create 'lspace="';
+	create lspace;
+	create '"';	
+	end;
+
+   rspace:
+	begin
+	create SAN;
+	create 'rspace="';
+	create rspace;
+	create '"';	
+	end;
+
+   stretchy = true:
+	begin
+	create SAN;
+	create 'stretchy="true"';
+	end;
+   stretchy = false:
+	begin
+	create SAN;
+	create 'stretchy="false"';
+	end;
+
+   symmetric = true:
+	begin
+	create SAN;
+	create 'symmetric="true"';
+	end;
+   symmetric = false:
+	begin
+	create SAN;
+	create 'symmetric="false"';
+	end;
+
+   maxsize:
+	begin
+	create SAN;
+	create 'maxsize="';
+	create maxsize;
+	create '"';	
+	end;
+
+   minsize:
+	begin
+	create SAN;
+	create 'minsize="';
+	create minsize;
+	create '"';	
+	end;
+
+   largeop = true:
+	begin
+	create SAN;
+	create 'largeop="true"';
+	end;
+   largeop = false:
+	begin
+	create SAN;
+	create 'largeop="false"';
+	end;
+
+   movablelimits = true:
+	begin
+	create SAN;
+	create 'movablelimits="true"';
+	end;
+   movablelimits = false:
+	begin
+	create SAN;
+	create 'movablelimits="false"';
+	end;
+
+   accent = true:
+	begin
+	create SAN;
+	create 'accent="true"';
+	end;
+   accent = false:
+	begin
+	create SAN;
+	create 'accent="false"';
+	end;
 
    entity:
 	begin
@@ -545,27 +716,6 @@ ATTRIBUTES
 	create 'separators="';
 	create separators;
 	create '"';
-	end;
-
-   fontstyle = normal:
-	begin
-	create SAN;
-	create 'fontstyle="normal"';
-	end;
-   fontstyle = italic:
-	begin
-	create SAN;
-	create 'fontstyle="italic"';
-	end;
-   fence = true:
-	begin
-	create SAN;
-	create 'fence="true"';
-	end;
-   fence = false:
-	begin
-	create SAN;
-	create 'fence="false"';
 	end;
 
 #include "Text_SGML.inc"

@@ -6985,6 +6985,8 @@ RULES
  Math: BEGIN
 	CreateBefore(Math_S);
 	VertPos: Top = Previous NOT MAP . Bottom + 0.4;
+	IF Immediately within Center
+		HorizPos: VMiddle = Enclosing . VMiddle;
 	LineBreak: No;
         IN Structure_view BEGIN
                 Width: 1 pt;
@@ -9074,6 +9076,20 @@ ATTRIBUTES
 	Justify: Yes;
 	In Structure_view
 	   Justify: Enclosing =;
+	END;
+ TextAlign (Math) = center_:
+	BEGIN
+	CreateBefore(ALIGN_CENTER);
+	HorizPos: VMiddle = Enclosing . VMiddle;
+	In Structure_view
+	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	END;
+ TextAlign (Math) = right_:
+	BEGIN
+	CreateBefore(ALIGN_RIGHT);
+	HorizPos: Right = Enclosing . Right;
+	In Structure_view
+	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 	END;
 
  cellspacing:
