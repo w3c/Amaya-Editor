@@ -68,6 +68,8 @@ PUBLIC LRESULT CALLBACK AmayaAsyncWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam
 
     cbf = (HTEventCallback *) __RetrieveCBF (sock, FD_WRITE, &rqp);
 
+/*** Add here the call for ProcessTerminateRequest ****/
+
     if (event & FD_CLOSE) {
 		/* close the socket and unregister it from the Windows environment */
     	if (HTEventrg_dispatch((int)sock, FD_READ) != HT_OK)

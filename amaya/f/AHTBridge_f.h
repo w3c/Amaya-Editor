@@ -23,7 +23,7 @@ extern int AHTEvent_register ( SOCKET sock,
 extern int AHTEvent_unregister ( SOCKET sock,
                                  SockOps ops );
 extern void RequestKillAllXtevents ( AHTReqContext * me );
-
+extern void ProcessTerminateRequest (AHTReqContext *);
 #else /* __STDC__ */
 
 extern void *AHTCallback_bridge (/* caddr_t cd,
@@ -43,6 +43,6 @@ extern int AHTEvent_register (/* SOCKET sock,
 extern int AHTEvent_unregister (/* SOCKET sock,
                                    SockOps ops */);
 extern void RequestKillAllXtevents (/* AHTReqContext * me */);
-
+extern void ProcessTerminateRequest (/* AHTReqContext *me */);
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

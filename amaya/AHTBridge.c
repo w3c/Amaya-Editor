@@ -216,13 +216,23 @@ XtInputId          *id;
 #ifdef DEBUG_LIBWWW
        fprintf (stderr, "(BF) removing Xtinput %lu !RWE, sock %d (Request has ended)\n", *id, socket);
 #endif
-       if ((me->mode & AMAYA_ASYNC) || (me->mode & AMAYA_IASYNC)) {
-	 AHTPrintPendingRequestStatus (me->docid, YES);
-	 /* free the memory allocated for async requests */
-	 AHTReqContext_delete (me);
-       } else if (me->reqStatus != HT_END && HTError_hasSeverity (HTRequest_error (me->request), ERR_NON_FATAL))
+       ProcessTerminateRequest (me);
+
+       if ((me->mode & AMAYA_ASYNC) || (me->mode & AMAYA_IASYNC))
+	 {
+	   AHTPrintPendingRequestStatus (me->docid, YES);
+	   /* free the memory allocated for async requests */
+	   AHTReqContext_delete (me);
+	 } 
+#if 0
+       /* remove this stuff? */
+       else if (me->reqStatus == HT_END &&
+		HTError_hasSeverity (HTRequest_error (me->request),
+				     ERR_NON_FATAL))
+
 	 /* did the SYNC request end because of an error? If yes, report it back to the caller */
 	 me->reqStatus = HT_ERR;
+#endif
        return (0);
    }
 
@@ -232,6 +242,64 @@ XtInputId          *id;
    return (0);
 }
 #endif /* !_WINDOWS */
+
+/*--------------------------------------------------------------------
+  ProcessTerminateRequest
+  This function is called whenever a request has ended. If the requested
+  ended normally, the function will call any callback associated to the
+  request. Otherwise, it will just mark the request as over.
+  -------------------------------------------------------------------*/
+#ifdef __STDC__
+void  ProcessTerminateRequest (AHTReqContext *me)
+#else
+void ProcessTerminateRequest (me)
+AHTReqContext *me;
+#endif
+{   
+  /* Second Step: choose a correct treatment in function of the request's
+     being associated with an error, with an interruption, or with a
+     succesful completion */
+   
+  if (me->reqStatus == HT_END)
+    {
+      if (me->terminate_cbf)
+	(*me->terminate_cbf) ((AHTReqContext *) me,
+			      HT_LOADED);
+    }
+  else if (me->reqStatus == HT_ABORT || me->reqStatus == HT_ERR)
+    /* either the application ended or the user pressed the stop 
+       button. We erase the incoming file, if it exists */
+    {
+      if (me->outputfile && me->outputfile[0] != EOS)
+	{
+	  TtaFileUnlink (me->outputfile);
+	  me->outputfile[0] = EOS;
+	}
+    }
+  else if (me->reqStatus == HT_ERR)
+    {
+      /* there was an error */
+      if (me->terminate_cbf)
+	(*me->terminate_cbf) ((AHTReqContext *) me,
+			      HT_ERROR);
+      
+      if (me->outputfile && me->outputfile[0] != EOS)
+	{
+	  TtaFileUnlink (me->outputfile);
+	  me->outputfile[0] = EOS;
+	}
+    }
+  
+#ifdef _WINDOWS
+   /* we erase the context if we're dealing with an asynchronous request */
+  if ((me->mode & AMAYA_ASYNC) ||
+      (me->mode & AMAYA_IASYNC)) {
+    me->reqStatus = HT_END;
+    /** AHTReqContext_delete (me); **/
+  }
+#endif /* _WINDOWS */
+
+}   
 
 #ifdef _WINDOWS
 /*----------------------------------------------------------------

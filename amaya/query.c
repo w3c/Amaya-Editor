@@ -208,11 +208,10 @@ int                 docid;
    if ((me = (AHTReqContext *) TtaGetMemory (sizeof (AHTReqContext))) == NULL)
       outofmem (__FILE__, "Context_new");
 
-   /* clean the associated file structure);
+   /* clean the associated file structure) */
    HTRequest_setOutputStream (me->request, NULL);
 
    /* Bind the Context object together with the Request Object */
-
    me->request = HTRequest_new ();
    
    /* Initialize the other members of the structure */
@@ -585,17 +584,14 @@ int                 status;
 {
    AHTReqContext      *me = (AHTReqContext *) HTRequest_context (request);
    boolean             error_flag;
-   char                msg_status[10];
-   HTError             *error;
-   HTErrorElement      errorElement;
-   HTList              *cur;
 
    if (!me)
      return HT_OK;		/* not an Amaya request */
    
-   if (!AmayaIsAlive)           /* if Amaya was killed, treat with this   */
-      me->reqStatus = HT_ABORT; /* request as if it were issued by a Stop */
-                                /*   button event */
+   /* if Amaya was killed, treat with this request as if it were
+      issued by a Stop button event */
+   if (!AmayaIsAlive)           
+      me->reqStatus = HT_ABORT; 
    
    if (status == HT_LOADED || 
        status == HT_CREATED || 
@@ -631,219 +627,45 @@ int                 status;
        /* we are writing to a file */
        if (me->reqStatus != HT_ABORT)
 	 {			/* if the request was not aborted and */
-	   if (error_flag)
-	     {		        /* there were some errors */
-	       if (me->error_html == TRUE)
-		 {		/* and we want to print errors */
-		   if (me->error_stream_size == 0)/* and the stream is empty */
-		     AHTError_MemPrint (request); /* copy errors from 
+	   if (error_flag &&
+	       me->error_html == TRUE)
+	       /* there were some errors and we want to print them */
+	     {		
+	       if (me->error_stream_size == 0)/* and the stream is empty */
+		 AHTError_MemPrint (request); /* copy errors from 
 						  **the error stack 
 						  ** into the error stream */
-		   if (me->error_stream)
-		     {	/* if the stream is non-empty */
-		       fprintf (me->output, me->error_stream);/* output the errors */
-		       error_flag = FALSE;		/* show it in the HTML window */
-		     }
-		   else
-		     me->reqStatus = HT_ERR;	/* we did not get an error msg, 
-						** so just markerror */
+	       if (me->error_stream)
+		 {	/* if the stream is non-empty */
+		   fprintf (me->output, me->error_stream);/* output the errors */
+		   error_flag = 0;
+		   
 		 }
-	       else
-		 me->reqStatus = HT_ERR;	/* we don't want to print the error */
 	     }		        /* if error_stack */
 	 }			/* if != HT_ABORT */
        fclose (me->output);
        me->output = NULL;
      }
-   else
-     {
-       /* We must be doing a PUT. Verify if there was an error */
-       if (error_flag)
-	 me->reqStatus = HT_ERR;
-     }				/* if me-output */
+
    
-   /* Second Step: choose a correct treatment in function of the request's
-      being associated with an error, with an interruption, or with a
-      succesful completion */
-   
-   if (!error_flag  && me->reqStatus != HT_ERR
-       && me->reqStatus != HT_ABORT)
-     {
-       me->reqStatus = HT_END;	/* no errors */
-       if (me->terminate_cbf)
-	 (*me->terminate_cbf) ((AHTReqContext *) me,
-			       HT_LOADED);
-     }
-   else if (me->reqStatus == HT_ABORT)
-     /* either the application ended or the user pressed the stop 
-	button. We erase the incoming file, if it exists */
-     {
-       if (me->outputfile && me->outputfile[0] != EOS)
-	 {
-	   TtaFileUnlink (me->outputfile);
-	   me->outputfile[0] = EOS;
-	 }
-     }
-   else if (me->reqStatus == HT_ERR)
-     {
-       /* there was an error */
-       if (me->terminate_cbf)
-	 (*me->terminate_cbf) ((AHTReqContext *) me,
-			       HT_ERROR);
-       
-       if (me->outputfile && me->outputfile[0] != EOS)
-	 {
-	   TtaFileUnlink (me->outputfile);
-	   me->outputfile[0] = EOS;
-	 }
-     }
-   else if (error_flag && 
-	    (me->reqStatus == HT_BUSY || me->reqStatus == HT_WAITING))
-     {
-       /* there was an error */
-       if (me->terminate_cbf)
-	 (*me->terminate_cbf) ((AHTReqContext *) me,
-			       HT_ERROR);
-       
-       if (me->outputfile && me->outputfile[0] != EOS)
-	 {
-	   TtaFileUnlink (me->outputfile);
-	   me->outputfile[0] = EOS;
-	   me->reqStatus = HT_ERR;
-	 }
-     }				/* if-else HT_END, HT_ABORT, HT_ERROR */
-   
-   /* don't remove or Xt will hang up during the PUT */
-   
+   if (error_flag)
+     me->reqStatus = HT_ERR;
+   else if (me->reqStatus != HT_ABORT)
+     me->reqStatus = HT_END;
+
+  /* don't remove or Xt will hang up during the PUT */
+
    if (AmayaIsAlive  && ((me->method == METHOD_POST) ||
 			 (me->method == METHOD_PUT)))
      {
-       /* output the status of the request */
-       if (status == 200)
-	 TtaSetStatus (me->docid, 1,  
-		       TtaGetMessage (AMAYA, AM_REQUEST_SUCCEEDED),
-		       me->status_urlName);
-       else if (status == 201)
-	 TtaSetStatus (me->docid, 1, 
-		       TtaGetMessage (AMAYA, AM_CREATED_NEW_REMOTE_RESSOURCE),
-		       me->status_urlName);
-       else if (status == 204 && me->method == METHOD_PUT)
-	 TtaSetStatus (me->docid, 1,
-		       TtaGetMessage (AMAYA, AM_UPDATED_REMOTE_RESSOURCE),
-		       me->status_urlName);
-       else if (status == 204 && me->method == METHOD_PUT)
-	 TtaSetStatus (me->docid, 1, 
-		       TtaGetMessage (AMAYA, AM_NO_DATA), 
-		       (char *) NULL);
-       else if (status == -400 || status == 505)
-	 {
-	 TtaSetStatus (me->docid, 1, 
-		       TtaGetMessage (AMAYA, 
-				      AM_SERVER_DID_NOT_UNDERSTAND_REQ_SYNTAX),
-		       (char *) NULL);
-	 sprintf (AmayaLastHTTPErrorMsg, 
-		  TtaGetMessage (AMAYA,
-				 AM_SERVER_DID_NOT_UNDERSTAND_REQ_SYNTAX));
-	 }
-       else if (status == -401) 
-	 {
-	   TtaSetStatus (me->docid, 1,
-			 TtaGetMessage (AMAYA, 
-					AM_AUTHENTICATION_FAILURE), 
-			 me->status_urlName);
-	   sprintf (AmayaLastHTTPErrorMsg, 
-		    TtaGetMessage (AMAYA, AM_AUTHENTICATION_FAILURE),
-		    me->status_urlName);
-	 }
-       else if (status == -403)
-	 {
-	   TtaSetStatus (me->docid, 1,
-			 TtaGetMessage (AMAYA, AM_FORBIDDEN_ACCESS),
-			 me->status_urlName);
-	   sprintf (AmayaLastHTTPErrorMsg, 
-		    TtaGetMessage (AMAYA, AM_FORBIDDEN_ACCESS), 
-		    me->urlName);
-	 }
-       else if (status == -405)
-	 {
-	 TtaSetStatus (me->docid, 1, 
-		       TtaGetMessage (AMAYA, AM_METHOD_NOT_ALLOWED),
-		       (char *) NULL);
-	 sprintf(AmayaLastHTTPErrorMsg, 
-		 TtaGetMessage (AMAYA, AM_METHOD_NOT_ALLOWED));
-	 }
-       else if (status == -1)
-	 {
-	   /*
-	   ** Here we deal with errors for which libwww does not
-	   ** return a correct status code 
-	   */
-	   cur = HTRequest_error (request);
-	   error = (HTError *) HTList_nextObject (cur);
-	   if (error == (HTError *) NULL)
-	     /* there's no error context */
-	     {
-	       sprintf (msg_status, "%d", status); 
-	       TtaSetStatus (me->docid, 1, 
-			     TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS), 
-			     msg_status);
-	       sprintf (AmayaLastHTTPErrorMsg, 
-			TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS),
-			msg_status);
-	       return (HT_OK);
-	     }
-	   
-	   /* there's an error context */
-	   errorElement = error->element;
-	   
-	   if (errorElement == HTERR_NOT_IMPLEMENTED)
-	     {
-	       TtaSetStatus (me->docid, 1,
-			     TtaGetMessage (AMAYA, AM_SERVER_NOT_IMPLEMENTED_501_ERROR), 
-			     (char *) NULL);
-	       sprintf (AmayaLastHTTPErrorMsg, 
-			TtaGetMessage (AMAYA, AM_SERVER_NOT_IMPLEMENTED_501_ERROR));
-	       status = -501;
-	     }
-	   else if (errorElement == HTERR_INTERNAL)
-	     {
-	       if ((error->length > 0) && (error->length <= 25) &&
-		   (error->par) && (((char *) error->par)[0] != EOS)) 
-		 {
-		   TtaSetStatus (me->docid, 1, 
-				 TtaGetMessage (AMAYA, AM_SERVER_INTERNAL_ERROR_500_CAUSE), 
-				 (char *) (error->par));
-		 sprintf (AmayaLastHTTPErrorMsg, 
-			  TtaGetMessage (AMAYA, AM_SERVER_INTERNAL_ERROR_500_CAUSE), 
-			  (char *) (error->par));
-		 }
-	       else
-		 {
-		   TtaSetStatus (me->docid, 1, 
-				 TtaGetMessage (AMAYA, AM_SERVER_INTERNAL_ERROR_500_NO_CAUSE), 
-				 (char *) NULL);
-		 sprintf (AmayaLastHTTPErrorMsg, 
-			  TtaGetMessage (AMAYA, AM_SERVER_INTERNAL_ERROR_500_NO_CAUSE));
-		 }
-	       status = -500; 
-	     }
-	   else
-	     {
-	       sprintf (msg_status, "%d", status); 
-	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS), msg_status);
-	       sprintf (AmayaLastHTTPErrorMsg, TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS), msg_status);
-	     }
-	 }
-     }
-   
+       PrintTerminateStatus (me, status);
+
+     } 
+
 #ifdef _WINDOWS
-   /* we erase the context if we're dealing with an asynchronous request */
-   if ((me->mode & AMAYA_ASYNC) ||
-       (me->mode & AMAYA_IASYNC)) {
-	   me->reqStatus = HT_END;
-       /** AHTReqContext_delete (me); **/
-   }
-#endif /* _WINDOWS */
+   /* Try to add this to AHTEventrg.c */
+   ProcessTerminateRequest (me);
+#endif /* WINDOWS */
 
   return HT_OK;
 }
