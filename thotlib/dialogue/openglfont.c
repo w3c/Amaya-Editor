@@ -138,7 +138,6 @@ static void FreeFontCache ()
     {
       if (FontTab[i].ref)
 	{
-	  
 	  FontClose (FontTab[i].font);
 	  TtaFreeMemory (FontTab[i].name);
 	  FontTab[i].ref = 0;
@@ -321,6 +320,8 @@ void FTLibraryFree ()
   ----------------------------------------------------------------------*/
 static void FontClose (GL_font *font)
 {
+  if (!font)
+    return;
   if (font->Cache)
     FreeACharCache (font->Cache);
   if (font->face)

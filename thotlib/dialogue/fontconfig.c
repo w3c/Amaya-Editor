@@ -551,14 +551,19 @@ void FreeFontConfig ()
 		  while (style < MAX_FONT_STYLE)
 		    {
 		      if (Fonttab[script]->family[face]->highlight[style])
-			TtaFreeMemory (Fonttab[script]->family[face]->highlight[style]);
+			{
+			  TtaFreeMemory (Fonttab[script]->family[face]->highlight[style]);
+			  Fonttab[script]->family[face]->highlight[style] = NULL;
+			}
 		      style++;
 		    }
 		  TtaFreeMemory (Fonttab[script]->family[face]);
+		  Fonttab[script]->family[face] = NULL;
 		}
 	      face++;
 	    }
 	  TtaFreeMemory (Fonttab[script]);
+	  Fonttab[script] = NULL;
 	}
       script++;
     }

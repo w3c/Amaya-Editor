@@ -161,16 +161,18 @@ static void Free_Pic_Chache (Pic_Cache *Cache)
 #ifdef _TRACE_GL_BUGS_GLISTEXTURE
   if (Cache->texbind) printf ( "GLBUG - Free_Pic_Chache : glIsTexture=%s (pose prb sur certaines machines)\n", glIsTexture (Cache->texbind) ? "yes" : "no" );
 #endif /* _TRACE_GL_BUGS_GLISTEXTURE */
-  if (glIsTexture (Cache->texbind))
+  if ( glIsTexture(Cache->texbind) )
     glDeleteTextures (1, 
 		      (const GLuint*)&(Cache->texbind));
   
 #ifdef _PCLDEBUG
   printf ("\n Free Image %s from cache", 
-	   Cache->filename);      
+	   Cache->filename);
 #endif /*_PCLDEBUG*/ 
   TtaFreeMemory (Cache->filename);
+  Cache->filename = NULL;
   TtaFreeMemory (Cache);
+  Cache = NULL;
 }
 
 /*----------------------------------------------------------------------
@@ -217,8 +219,12 @@ static int FreeAPicCache (int texbind, int frame)
 static void FreePicCache (Pic_Cache *Cache)
 {
   if (Cache->next)
-    FreePicCache (Cache->next);
+    {
+      FreePicCache (Cache->next);
+      Cache->next = NULL;
+    }
   Free_Pic_Chache (Cache);
+  Cache = NULL;
 }
 
 /*----------------------------------------------------------------------
@@ -1130,7 +1136,10 @@ void FreeAllPicCache ()
 {
 #ifdef _GL
   if (PicCache)
-    FreePicCache (PicCache);  
+    {
+      FreePicCache (PicCache);
+      PicCache = NULL;
+    }
 #endif /* _GL */
 }
 

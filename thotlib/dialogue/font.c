@@ -2696,14 +2696,21 @@ void ThotFreeAllFonts (void)
   for (i = 0; i < MAX_FONT && TtFonts[i]; i++)
     FreeAFont (i);
   TtaFreeMemory (FontFamily);
-  
+  FontFamily = NULL;
+
 #ifdef _GTK
   if (DefaultFont)
-	  gdk_font_unref (DefaultFont);
+    {
+      gdk_font_unref (DefaultFont);
+      DefaultFont = NULL;
+    }
 #endif /* _GTK */
 #ifdef _GL
   if (DefaultGLFont)
-	  gl_font_delete (DefaultGLFont);
+    {
+      gl_font_delete (DefaultGLFont);
+      DefaultGLFont = NULL;
+    }
   FTLibraryFree ();
 #endif /*_GL*/
   /*Free the font config structure
