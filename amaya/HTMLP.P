@@ -5607,11 +5607,10 @@ BOXES
 { ---- Pages ---- }
 
 #ifdef PAGE
+#ifndef LANDSCAPE
   TitleHead:
 	BEGIN
-#ifdef LANDSCAPE
 	Visibility: 0;
-#endif { LANDSCAPE }
 	Background : White;
 	Foreground : Black;
 	Fillpattern : nopattern;
@@ -5626,6 +5625,7 @@ BOXES
 	Style: Italics;	
 	Weight: Normal;
 	END;
+#endif { LANDSCAPE }
 
   URLhead:
 	BEGIN
@@ -5669,6 +5669,7 @@ BOXES
 	Weight: Normal;
 	END;
 
+#ifndef LANDSCAPE
   PageNum:
 	BEGIN
 	Background : White;
@@ -5689,6 +5690,7 @@ BOXES
 	Style: Roman;
 	Weight: Normal;
 	END;
+#endif { LANDSCAPE }
 
   LinksPageNum:
 	BEGIN
@@ -5780,7 +5782,9 @@ BOXES
 	HorizPos: Left = Enclosing . Left + 2.7 cm;
 #endif { LANDSCAPE }
 #endif { US_PAPER }
+#ifndef LANDSCAPE
 	if NOT One(CptPage) CreateAfter (TitleHead);
+#endif { LANDSCAPE }
 	CreateAfter (Spacehead);
 	if PrintURL CreateAfter (URLhead);
 #ifndef LANDSCAPE
@@ -5817,7 +5821,9 @@ BOXES
 	HorizPos: Left = Enclosing . Left + 2.7 cm;
 #endif { LANDSCAPE }
 #endif { US_PAPER }
+#ifndef LANDSCAPE
 	CreateAfter (TitleHead);
+#endif { LANDSCAPE }
 	CreateAfter (Spacehead);
 	if PrintURL
 	   CreateAfter (URLhead);
@@ -5856,7 +5862,9 @@ BOXES
 	HorizPos: Left = Enclosing . Left + 2.7 cm;
 #endif { LANDSCAPE }
 #endif { US_PAPER }
+#ifndef LANDSCAPE
 	CreateAfter (TitleHead);
+#endif { LANDSCAPE }
 	CreateAfter (URLhead);
 	if NOT One(CptToCPage) CreateBefore (ToCPageNum);
 	IF Not One(CptToCPage) CreateBefore (BottomSpace);
