@@ -224,7 +224,12 @@ void *context;
 	/* rename the local file of the image */
 	strcpy (tempfile, desc->localName);
 	TtaFileUnlink (tempfile);
+#   ifndef _WINDOWS
 	rename (outputfile, tempfile);
+#   else /* _WINDOWS */
+	if (rename (outputfile, tempfile) != 0)
+		sprintf (tempfile, "%s", outputfile); 
+#   endif /* _WINDOWS */
 
 	/* save pathname */
 	TtaFreeMemory (desc->originalName);
