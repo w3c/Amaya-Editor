@@ -392,7 +392,7 @@ nature             *wn;
 	if (inputLine[j] >= '0' && inputLine[j] <= '9')
 	   *wn = number;
 	else if ((inputLine[j] >= 'A' && inputLine[j] <= 'Z')
-		 || inputLine[j] == '\240'	/*nobreakspace */
+		 || inputLine[j] == (unsigned char) '\240' /*nobreakspace */
 		 || (inputLine[j] >= 'a' && inputLine[j] <= 'z')
 
 		 || (inputLine[j] >= 192 && inputLine[j] <= 255))
@@ -431,7 +431,7 @@ nature             *wn;
 				 break;
 			      case name:
 				 if (!((inputLine[j] >= 'A' && inputLine[j] <= 'Z')
-				       || (inputLine[j] == '\240' /*nobreakspace */ )
+				       || (inputLine[j] == (unsigned char) '\240' /*nobreakspace */ )
 
 				       || (inputLine[j] >= 'a' && inputLine[j] <= 'z')
 				       || (inputLine[j] >= '0' && inputLine[j] <= '9')
