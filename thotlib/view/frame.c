@@ -208,20 +208,20 @@ int                 ymax;
    pBox = pAb->AbBox;
    if (pBox == NULL)
       return;
+
+   if (pAb->AbFillBox)
+     /* todo: clip when backgroud will be printed */
+     DrawRectangle (frame, pBox->BxThickness, pAb->AbLineStyle,
+		    pBox->BxXOrg - x, pBox->BxYOrg - y,
+		    pBox->BxWidth, pBox->BxHeight, 0, 0, pAb->AbForeground,
+		    pAb->AbBackground, pAb->AbFillPattern);
+
    imageDesc = (PictInfo *) pAb->AbPictBackground;
    if (pAb->AbPictBackground &&
        (!pAb->AbTruncatedHead ||
 	(imageDesc->PicPresent != XRepeat &&
 	 imageDesc->PicPresent != RealSize)))
      DrawPicture (pBox, imageDesc, frame);
-#  ifndef _WINDOWS
-   else if (pAb->AbFillBox)
-     /* todo: clip when backgroud will be printed */
-     DrawRectangle (frame, pBox->BxThickness, pAb->AbLineStyle,
-		    pBox->BxXOrg - x, pBox->BxYOrg - y,
-		    pBox->BxWidth, pBox->BxHeight, 0, 0, pAb->AbForeground,
-		    pAb->AbBackground, pAb->AbFillPattern);
-#  endif /* _WINDOWS */
 
    while (pBox->BxNextBackground != NULL)
      {

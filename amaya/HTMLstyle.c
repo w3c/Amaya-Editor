@@ -2978,15 +2978,12 @@ boolean             isHTML;
 	target = (PresentationTarget) TtaGetMainRoot (context->doc);
     }
 
-  repeat.typed_data.value = 0;
+  repeat.typed_data.value = DRIVERP_REALSIZE;
   repeat.typed_data.unit = DRIVERP_UNIT_REL;
   repeat.typed_data.real = FALSE;
   cssRule = TtaSkipBlanks (cssRule);
   if (!ustrncasecmp (cssRule, "no-repeat", 9))
-    {
-      if (context->drv->GetPictureMode(target, context, &repeat) < 0)
-	repeat.typed_data.value = DRIVERP_REALSIZE;
-    }
+    repeat.typed_data.value = DRIVERP_REALSIZE;
   else if (!ustrncasecmp (cssRule, "repeat-y", 8))
     repeat.typed_data.value = DRIVERP_VREPEAT;
   else if (!ustrncasecmp (cssRule, "repeat-x", 8))
@@ -3280,8 +3277,7 @@ boolean             isHTML;
       for (i = 0; i < NB_CSSSTYLEATTRIBUTE && !found; i++)
 	{
 	  lg = ustrlen (HTMLStyleAttributes[i].name);
-	  if ((isHTML && !ustrncasecmp (cssRule, HTMLStyleAttributes[i].name, lg)) ||
-	     (!isHTML && !ustrncmp (cssRule, HTMLStyleAttributes[i].name, lg)))
+	  if (!ustrncasecmp (cssRule, HTMLStyleAttributes[i].name, lg))
 	    {
 	      cssRule += lg;
 	      found = TRUE;

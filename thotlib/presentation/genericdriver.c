@@ -974,18 +974,14 @@ PtrPRule          **chain;
 	  *chain = &(cur->PrNextPRule);
 	  cur = cur->PrNextPRule;
 	}
-
-      if (cur)
+      else if (TstRuleContext (cur, ctxt, pres))
+	/* this rule already exists */
+	found = TRUE;
+      else
 	{
-	  /* check this rule */
-	  if (TstRuleContext (cur, ctxt, pres))
-	    found = TRUE;
-	  else
-	    {
-	      /* jump to next and keep track of previous */
-	      *chain = &(cur->PrNextPRule);
-	      cur = cur->PrNextPRule;
-	    }
+	  /* jump to next and keep track of previous */
+	  *chain = &(cur->PrNextPRule);
+	  cur = cur->PrNextPRule;
 	}
     }
    return (cur);
