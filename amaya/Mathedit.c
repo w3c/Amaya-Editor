@@ -3945,16 +3945,22 @@ void CreateMathEntity (Document document, View view)
     return;
 
   MathMLEntityName[0] = EOS;
+
 #ifdef _WINGUI
   CreateMCHARDlgWindow (TtaGetViewFrame (document, view), MathMLEntityName);
 #endif /* _WINGUI */
+
 #ifdef _WX
   CreateTextDlgWX (BaseDialog + MathEntityForm, BaseDialog + MathEntityText,
 		   TtaGetViewFrame (document, view),
 		   TtaGetMessage (AMAYA, AM_MEntity),
 		   TtaGetMessage (AMAYA, AM_MATH_ENTITY_NAME),
 		   "");
+  TtaSetDialoguePosition ();
+  TtaShowDialogue (BaseDialog + MathEntityForm, FALSE);
+  TtaWaitShowDialogue ();
 #endif /* _WX */
+
 #if defined(_GTK)
   TtaNewForm (BaseDialog + MathEntityForm, TtaGetViewFrame (document, view), 
 	      TtaGetMessage (AMAYA, AM_MEntity), TRUE, 1, 'L', D_CANCEL);

@@ -246,10 +246,6 @@ ThotBool CreateImageDlgWX ( int ref, ThotWindow parent,
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
     {
       /* the dialog has been sucesfully registred */
-      TtaSetDialoguePosition ();
-      TtaShowDialogue (ref, FALSE);
-      /* wait for an answer */
-      TtaWaitShowDialogue ();
       return TRUE;
     }
   else
@@ -296,10 +292,6 @@ ThotBool CreateObjectDlgWX ( int ref, ThotWindow parent,
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
     {
       /* the dialog has been sucesfully registred */
-      TtaSetDialoguePosition ();
-      TtaShowDialogue (ref, FALSE);
-      /* wait for an answer */
-      TtaWaitShowDialogue ();
       return TRUE;
     }
   else
@@ -819,10 +811,6 @@ ThotBool CreateTextDlgWX ( int ref, int subref, ThotWindow parent,
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
     {
       /* the dialog has been sucesfully registred */
-      TtaSetDialoguePosition ();
-      TtaShowDialogue (ref, FALSE);
-      /* wait for an answer */
-      TtaWaitShowDialogue ();
       return TRUE;
     }
   else
@@ -956,10 +944,6 @@ ThotBool CreateBgImageDlgWX ( int ref, ThotWindow parent, const char * urlToOpen
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
     {
       /* the dialog has been sucesfully registred */
-      TtaSetDialoguePosition ();
-      TtaShowDialogue (ref, FALSE);
-      /* wait for an answer */
-      TtaWaitShowDialogue ();
       return TRUE;
     }
   else

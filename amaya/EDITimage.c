@@ -396,6 +396,9 @@ static void GetAlt (Document document, View view)
 		     TtaGetMessage (AMAYA, AM_ALT),
 		     TtaGetMessage (AMAYA, AM_ALT_MISSING),
 		     "");
+   TtaShowDialogue (BaseImage + FormAlt, FALSE);
+   TtaWaitShowDialogue ();
+   TtaDestroyDialogue (BaseImage + FormAlt);   
 #endif  /* _WX */
 #ifdef _WINGUI
    CreateAltDlgWindow ();
@@ -706,12 +709,12 @@ void CreateAreaPoly (Document doc, View view)
   ----------------------------------------------------------------------*/
 static char *GetImageURL (Document document, View view, ThotBool isObject)
 {
-#ifdef _GTK
+#if defined(_GTK) || defined(_WX)
    LoadedImageDesc   *desc;
    char               tempfile[MAX_LENGTH];
    char               s[MAX_LENGTH];
    int                i;
-#endif /* _GTK */
+#endif /* _GTK || _WX */
 
    if (LastURLImage[0] == EOS)
      {
@@ -758,6 +761,20 @@ static char *GetImageURL (Document document, View view, ThotBool isObject)
    TtaSetTextForm (BaseImage + ImageFilter, ImgFilter);
    TtaNewLabel (BaseImage + ImageLabel3, RefFormImage, " ");
    TtaNewLabel (BaseImage + ImageLabel4, RefFormImage, " ");
+#endif /* _GTK */
+
+#ifdef _WX
+   if (isObject)
+     CreateObjectDlgWX (RefFormImage, TtaGetViewFrame (document, view),
+			TtaGetMessage (AMAYA, AM_NEWOBJECT),
+			LastURLImage, UserMimeType);
+   else
+     CreateImageDlgWX (RefFormImage, TtaGetViewFrame (document, view),
+		       TtaGetMessage (AMAYA, AM_BUTTON_IMG),
+		       LastURLImage, ImgAlt);
+#endif /* _WX */
+
+#if defined(_GTK) || defined(_WX)
    TtaSetDialoguePosition ();
    TtaShowDialogue (RefFormImage, FALSE);
    TtaWaitShowDialogue ();
@@ -779,21 +796,13 @@ static char *GetImageURL (Document document, View view, ThotBool isObject)
 	   return (ImageName);
 	 }
      }
-#endif /* _GTK */
-#ifdef _WX
-   if (isObject)
-     CreateObjectDlgWX (RefFormImage, TtaGetViewFrame (document, view),
-			TtaGetMessage (AMAYA, AM_NEWOBJECT),
-			LastURLImage, UserMimeType);
-   else
-     CreateImageDlgWX (RefFormImage, TtaGetViewFrame (document, view),
-		       TtaGetMessage (AMAYA, AM_BUTTON_IMG),
-		       LastURLImage, ImgAlt);
-#endif /* _WX */
+#endif /* _GTK || _WX */
+
 #ifdef _WINGUI
    CreateOpenImgDlgWindow (TtaGetViewFrame (document, view), LastURLImage, -1,
 			   -1, docImage, !isObject);
 #endif /* _WINGUI */
+
    return (LastURLImage);
 }
 
@@ -856,6 +865,7 @@ void ChangeBackgroundImage (Document document, View view)
    TtaSetDialoguePosition ();
    TtaShowDialogue (RefFormImage, TRUE);
 #endif /* _GTK */
+
 #ifdef _WX
    if (LastURLImage[0] != EOS)
       strcpy (s, LastURLImage);
@@ -866,7 +876,10 @@ void ChangeBackgroundImage (Document document, View view)
    }
    ImgDocument = document;
    CreateBgImageDlgWX( BaseImage+FormBackground, TtaGetViewFrame(document, view), s, RepeatValue );
+   TtaSetDialoguePosition ();
+   TtaShowDialogue ( BaseImage+FormBackground, TRUE);
 #endif /* _WX */
+
 #ifdef _WINGUI
    if (LastURLImage[0] != EOS)
       strcpy (s, LastURLImage);
