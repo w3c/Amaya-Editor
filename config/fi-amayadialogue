@@ -283,41 +283,42 @@
 281 **Configure...
 282 **New Bookmark
 283 **New Topic
-284 **View Bookmarks
-285 **Import a topic hierarchy
-286 Lukitse objekti...
-287 Vapauta objekti...
-288 Näytä objektin ominaisuudet...
-289 Kopioi lukitustiedot...
-290 Lukittu?
-291 Asetukset...
-292 Tietoja Amayasta
-293 Lisätietoa Amayasta W3C:ssä
-294 Hakemisto
-295 Selaaminen
-296 Näkymät
-297 Valinta
-298 Dokumentti
-299 Elementtien luominen
-300 Asetukset
-301 Fontit
-302 Rakenteen muunto
-303 Linkit
-304 Taulukot
-305 Kuvakartat
-306 Matematiikka
-307 Grafiikka
-308 XML-tuki
-309 Tyylitiedostot (CSS)
-310 Etsiminen
-311 Oikeinkirjoituksen tarkastus
-312 Julkaisu
-313 WebDAV
-314 Tulostus
-315 Numerointi
-316 Koosteen valmistus
-317 Merkinnät
-318 **&Bookmarks
-319 Asetuksien määritys
-320 Näppäinkomennot
-321 Amayan helppokäyttötoiminnot
+284 **New separator
+285 **View Bookmarks
+286 **Import a topic hierarchy
+287 Lukitse objekti...
+288 Vapauta objekti...
+289 Näytä objektin ominaisuudet...
+290 Kopioi lukitustiedot...
+291 Lukittu?
+292 Asetukset...
+293 Tietoja Amayasta
+294 Lisätietoa Amayasta W3C:ssä
+295 Hakemisto
+296 Selaaminen
+297 Näkymät
+298 Valinta
+299 Dokumentti
+300 Elementtien luominen
+301 Asetukset
+302 Fontit
+303 Rakenteen muunto
+304 Linkit
+305 Taulukot
+306 Kuvakartat
+307 Matematiikka
+308 Grafiikka
+309 XML-tuki
+310 Tyylitiedostot (CSS)
+311 Etsiminen
+312 Oikeinkirjoituksen tarkastus
+313 Julkaisu
+314 WebDAV
+315 Tulostus
+316 Numerointi
+317 Koosteen valmistus
+318 Merkinnät
+319 **&Bookmarks
+320 Asetuksien määritys
+321 Näppäinkomennot
+322 Amayan helppokäyttötoiminnot

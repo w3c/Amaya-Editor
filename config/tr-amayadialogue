@@ -283,41 +283,42 @@
 281 **Configure...
 282 **New Bookmark
 283 **New Topic
-284 kilitli bilgileri kopyala
-285 **Import a topic hierarchy
-286 Tekrar okumayı kitle...
-287 Tekrar okumayı kilidi aç...
-288 Tekrar okuma ayarlarını göster...
-289 kilitli bilgileri kopyala...
-290 kitli mi?
-291 Ayarlar...
-292 Amaya hakkında
-293 W3C deki Amaya hakkında
-294 Içerik
-295 Tarama
-296 Görünümler
-297 Seç
-298 Döküman
-299 Yarat
-300 Tarz tanımları
-301 karakterler
-302 Yeniden yapılandırma
-303 Bağlantılar
-304 Tablolar
-305 Aktif alan
-306 Matematik
-307 Grafik
-308 XML desteği
-309 Görüntü haritaları
-310 Yazı hataları arama
-311 Yazı hataları düzeltmek
-312 Bastırma
-313 WebDAV
-314 Sayfa yerleştirme
-315 Numaralandır
-316 Kitap oluşturma
-317 Not ekleme
-318 &Birlikte çalışmak
-319 Amaya yapılandırması
-320 Kısalmalar
-321 Amaya\'ya ulaşmak
+284 **New separator
+285 kilitli bilgileri kopyala
+286 **Import a topic hierarchy
+287 Tekrar okumayı kitle...
+288 Tekrar okumayı kilidi aç...
+289 Tekrar okuma ayarlarını göster...
+290 kilitli bilgileri kopyala...
+291 kitli mi?
+292 Ayarlar...
+293 Amaya hakkında
+294 W3C deki Amaya hakkında
+295 Içerik
+296 Tarama
+297 Görünümler
+298 Seç
+299 Döküman
+300 Yarat
+301 Tarz tanımları
+302 karakterler
+303 Yeniden yapılandırma
+304 Bağlantılar
+305 Tablolar
+306 Aktif alan
+307 Matematik
+308 Grafik
+309 XML desteği
+310 Görüntü haritaları
+311 Yazı hataları arama
+312 Yazı hataları düzeltmek
+313 Bastırma
+314 WebDAV
+315 Sayfa yerleştirme
+316 Numaralandır
+317 Kitap oluşturma
+318 Not ekleme
+319 &Birlikte çalışmak
+320 Amaya yapılandırması
+321 Kısalmalar
+322 Amaya\'ya ulaşmak

@@ -3883,6 +3883,17 @@ void EditTopics (Document document, View view)
 }
 
 /*----------------------------------------------------------------------
+   AddSeparator
+   Edit Bookmark Topics
+  ----------------------------------------------------------------------*/
+void AddSeparator (Document document, View view)
+{
+#ifdef BOOKMARKS
+  BM_CreateSeparator (document, view);
+#endif /* BOOKMARKS */
+}
+
+/*----------------------------------------------------------------------
    ViewBookmarks
    Opens the Amaya bookmarks window
   ----------------------------------------------------------------------*/

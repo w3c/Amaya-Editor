@@ -283,41 +283,42 @@
 281 Configurar...
 282 **New Bookmark
 283 **New Topic
-284 **View Bookmarks
-285 **Import a topic hierarchy
-286 Travar o recurso
-287 Destravar o recurso
-288 Exibir as propriedades do recurso
-289 Copiar a informação da trava...
-290 Travado?
-291 Preferências...
-292 Sobre Amaya
-293 Sobre Amaya no W3C
-294 Índice
-295 Navegar
-296 Vistas
-297 Selecionar
-298 Documento
-299 Criar elementos
-300 Atributos
-301 Caracteres
-302 Reestruturar
-303 Enlaces (links)
-304 Tabelas
-305 Mapas de Imagem
-306 Matemática
-307 Gráficos
-308 Suporte à XML
-309 Folhas de estilo
-310 Achar...
-311 Verificar ortografia
-312 Publicar
-313 WebDAV
-314 Imprimir
-315 Numberar
-316 Criar livros
-317 Anotações
-318 **&Bookmarks
-319 Configurar Amaya
-320 Atalhos
-321 Accessibilidade em Amaya
+284 **New separator
+285 **View Bookmarks
+286 **Import a topic hierarchy
+287 Travar o recurso
+288 Destravar o recurso
+289 Exibir as propriedades do recurso
+290 Copiar a informação da trava...
+291 Travado?
+292 Preferências...
+293 Sobre Amaya
+294 Sobre Amaya no W3C
+295 Índice
+296 Navegar
+297 Vistas
+298 Selecionar
+299 Documento
+300 Criar elementos
+301 Atributos
+302 Caracteres
+303 Reestruturar
+304 Enlaces (links)
+305 Tabelas
+306 Mapas de Imagem
+307 Matemática
+308 Gráficos
+309 Suporte à XML
+310 Folhas de estilo
+311 Achar...
+312 Verificar ortografia
+313 Publicar
+314 WebDAV
+315 Imprimir
+316 Numberar
+317 Criar livros
+318 Anotações
+319 **&Bookmarks
+320 Configurar Amaya
+321 Atalhos
+322 Accessibilidade em Amaya

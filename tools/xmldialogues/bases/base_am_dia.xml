@@ -2719,6 +2719,9 @@
 	<message xml:lang="es">Nuevo tema</message>
 	<message xml:lang="de">Neue Überschrift</message>
 </label>
+<label define="BAddSeparator">
+	<message xml:lang="en">New separator</message>
+</label>
 <label define="BViewBookmarks">
 	<message xml:lang="en">View Bookmarks</message>
 	<message xml:lang="fr">Visualiser les signets</message>
