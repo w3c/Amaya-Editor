@@ -56,7 +56,7 @@ images présentes dans le document.</p>
 <p>La commande sauver peut être invoquée soit en choisissant
 <strong>Sauver</strong> depuis le menu <strong>Fichier</strong> (Ctrl-s pour
 Windows, Ctrl-x, Ctrl-s pour Unix) ou bien en cliquant sur le bouton <img
-alt="floppy" src="../images/floppy.gif" />. Cette commande sauve le document
+alt="floppy" src="../../resources/icons/22x22/save.png" />. Cette commande sauve le document
 courant à son adresse d'origine. Si la réponse du serveur inclut l'en-tête
 HTTP <code>Content-Location</code>, la cible de la sauvegarde sera l'URL
 précisée par cet en-tête. Ceci est utile pour enlever les ambiguïtés induites

@@ -35,7 +35,7 @@
 boîte de dialogue <strong>Rechercher</strong>. On appelle cette boîte soit en
 choisissant <strong>Rechercher</strong> dans le menu
 <strong>Édition</strong>, soit en cliquant sur le bouton correspondant <img
-src="../images/find.gif" alt="find " />, ou encore en utilisant le raccourci
+src="../../resources/icons/22x22/find.png" alt="find " />, ou encore en utilisant le raccourci
 clavier (Ctrl-f)</p>
 
 <p>Cette procédure vous permet de rechercher ou de remplacer du texte selon
