@@ -54,7 +54,6 @@ ELEMENTS
 	BEGIN
 	ElemTextModify.Pre -> SaveDocumentStatus;
 	ElemTextModify.Post -> RestoreDocumentStatus;
-	ElemReturn.Pre -> HandleReturn;
 	END;
 
    File_Input:
