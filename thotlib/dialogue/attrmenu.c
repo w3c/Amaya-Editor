@@ -1462,8 +1462,10 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
 			       &lastChar))
 	/* il y a bien une selection */
 	{
-	  GetAttribute (&pAttrNew);
-	  if (SchCurrentAttr != NULL)
+	  /* on ne fait rien si le document ou` se trouve la selection
+	     n'utilise pas le schema de structure qui definit l'attribut */
+	  if (SchCurrentAttr &&
+	      GetSSchemaForDoc (SchCurrentAttr->SsName, SelDoc))
 	    {
 	      /* lock tables formatting */
 	      if (ThotLocalActions[T_islock])
@@ -1479,6 +1481,7 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
 		      (*ThotLocalActions[T_lock]) ();
 		    }
 		}
+	      GetAttribute (&pAttrNew);
 	      pAttrNew->AeAttrSSchema = SchCurrentAttr;
 	      pAttrNew->AeAttrNum = NumCurrentAttr;
 	      pAttrNew->AeDefAttr = FALSE;
@@ -1542,9 +1545,9 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
 		    TtaSetDisplayMode (doc, DisplayImmediately);
 		}
 	      UpdateAttrMenu (SelDoc);
+	      DeleteAttribute (NULL, pAttrNew);
 	    }
 	  DocCurrentAttr = NULL;
-	  DeleteAttribute (NULL, pAttrNew);
 	}
     }
 }

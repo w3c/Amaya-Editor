@@ -1052,8 +1052,12 @@ void UndisplayInheritedAttributes (PtrElement pEl, PtrAttribute pAttr,
    else
       /* l'element porte-t-il deja un attribut du meme type ? */
       pOldAttr = AttributeValue (pEl, pAttr);
+   pPS = PresentationSchema (pAttr->AeAttrSSchema, pDoc); 
+   /* si l'attribut n'a pas de schema de presentation pour ce document,
+      on ne fait rien */
+   if (pPS == NULL)
+     return;
    /* doit-on se preoccuper des heritages et comparaisons d'attributs? */
-   pPS = PresentationSchema (pAttr->AeAttrSSchema, pDoc);
    inheritance = (pPS->PsNHeirElems[pAttr->AeAttrNum - 1] > 0);
    comparaison = (pPS->PsNComparAttrs[pAttr->AeAttrNum - 1] > 0);
    if (inheritance || comparaison)

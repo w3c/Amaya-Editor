@@ -790,9 +790,13 @@ void UndisplayAttribute (PtrElement pEl, PtrAttribute pAttr, Document document)
    /* si le document est en mode de non calcul de l'image, on ne fait rien */
    if (documentDisplayMode[document - 1] == NoComputedDisplay)
       return;
-   /* doit-on se preoccuper des heritages et comparaisons d'attributs? */
    pPS = PresentationSchema (pAttr->AeAttrSSchema,
 			     LoadedDocument[document - 1]);
+   /* si l'attribut n'a pas de schema de presentation pour ce document, on
+      ne fait rien */
+   if (pPS == NULL)
+      return;
+   /* doit-on se preoccuper des heritages et comparaisons d'attributs? */
    inheritance = (pPS->PsNHeirElems[pAttr->AeAttrNum - 1] > 0);
    comparaison = (pPS->PsNComparAttrs[pAttr->AeAttrNum - 1] > 0);
    if (inheritance || comparaison)
@@ -843,9 +847,13 @@ void DisplayAttribute (PtrElement pEl, PtrAttribute pAttr, Document document)
    /* si le document est en mode de non calcul de l'image, on ne fait rien */
    if (documentDisplayMode[document - 1] == NoComputedDisplay)
      return;
-   /* doit-on se preoccuper des heritages et comparaisons d'attributs? */
    pPS = PresentationSchema (pAttr->AeAttrSSchema,
 			     LoadedDocument[document - 1]);
+   /* si l'attribut n'a pas de schema de presentation pour ce document, on
+      ne fait rien */
+   if (pPS == NULL)
+     return;
+   /* doit-on se preoccuper des heritages et comparaisons d'attributs? */
    inheritance = (pPS->PsNHeirElems[pAttr->AeAttrNum - 1] > 0);
    comparaison = (pPS->PsNComparAttrs[pAttr->AeAttrNum - 1] > 0);
    reDisp = (documentDisplayMode[document - 1] == DisplayImmediately);
