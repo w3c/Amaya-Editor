@@ -183,6 +183,48 @@ const char* pluginMimeType;
 }
 
 /*----------------------------------------------------------------------
+  Ap_MemAlloc
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void* Ap_MemAlloc (uint32 size)
+#else  /* __STDC__ */
+void* Ap_MemAlloc (size)
+uint32 size ;
+#endif /* __STDC__ */
+{
+    printf ("***** Ap_MemAlloc *****\n") ;
+    return malloc (size);
+}
+
+/*----------------------------------------------------------------------
+  Ap_MemFlush
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+uint32  Ap_MemFlush (uint32 size)
+#else  /* __STDC__ */
+uint32  Ap_MemFlush (size)
+uint32 size ;
+#endif /* __STDC__ */
+{
+    printf ("***** Ap_MemFlush *****\n") ; 
+    return (0);
+}
+
+/*----------------------------------------------------------------------
+  Ap_MemFree
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void  Ap_MemFree (void* ptr)
+#else  /* __STDC__ */
+void  Ap_MemFree (ptr)
+void* ptr ;
+#endif /* __STDC__ */
+{
+    printf ("***** Ap_MemFree *****\n") ;
+    free (ptr);
+}
+
+/*----------------------------------------------------------------------
    Ap_Normal                                                             
   ----------------------------------------------------------------------*/
 
@@ -341,48 +383,6 @@ const char* window ;
 	  /* NPP_DestroyStream(); */
    }
    return NPERR_NO_ERROR;
-}
-
-/*----------------------------------------------------------------------
-  Ap_MemAlloc
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void* Ap_MemAlloc (uint32 size)
-#else  /* __STDC__ */
-void* Ap_MemAlloc (size)
-uint32 size ;
-#endif /* __STDC__ */
-{
-    printf ("***** Ap_MemAlloc *****\n") ;
-    return malloc (size);
-}
-
-/*----------------------------------------------------------------------
-  Ap_MemFlush
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-uint32  Ap_MemFlush (uint32 size)
-#else  /* __STDC__ */
-uint32  Ap_MemFlush (size)
-uint32 size ;
-#endif /* __STDC__ */
-{
-    printf ("***** Ap_MemFlush *****\n") ; 
-    return (0);
-}
-
-/*----------------------------------------------------------------------
-  Ap_MemFree
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void  Ap_MemFree (void* ptr)
-#else  /* __STDC__ */
-void  Ap_MemFree (ptr)
-void* ptr ;
-#endif /* __STDC__ */
-{
-    printf ("***** Ap_MemFree *****\n") ;
-    free (ptr);
 }
 
 /*----------------------------------------------------------------------
@@ -652,9 +652,9 @@ int   indexHandler;
     /* Open the library and get the symbols addresses */
     char* message = (char*) NULL;
     char GUI_Name [20];
-    int index1 = 0 ;
-    int index2 = 0;
-
+    int  index1 = 0 ;
+    int  index2 = 0;
+    int  ret ;
     printf ("***** Ap_InitializePlugin *****\n") ;
 
 #ifdef _WINDOWS
@@ -675,10 +675,23 @@ int   indexHandler;
 
     /* get the symbols from the dynamic library */
 #ifdef _WINDOWS
+    ptr_NPP_Initialize = GetProcAdress (pluginTable [indexHandler]->pluginHandle, "NPP_Initialize");
+    if (ptr_NPP_Initialize == NULL) {
+       message (char*) malloc (65 + strlen (pluginTable [indexHandler]->pluginDL));
+       sprintf (message, "relocation error: symbol not found: NPP_Initialize referenced in %s", pluginTable [indexPlug]->pluginDL);
+    } else
+          ret = (*ptr_NPP_Initialize) ();
     ptr_NPP_GetMIMEDescription = GetProcAdress (pluginTable [indexHandler]->pluginHandle, "NPP_GetMIMEDescription");
 #else  /* _WINDOWS */
+    ptr_NPP_Initialize = (int (*) ()) dlsym (pluginTable [indexHandler]->pluginHandle, "NPP_Initialize");
+    message = (char*) dlerror ();    
+    if (message) 
+       printf ("ERROR at Initialization: %s\n", message);
+
+    ret = (*ptr_NPP_Initialize) ();
     ptr_NPP_GetMIMEDescription = (int(*) ()) dlsym (pluginTable [indexHandler]->pluginHandle, "NPP_GetMIMEDescription");
 #endif /* _WINDOWS */
+
     pluginMimeType = (NPMIMEType) (*ptr_NPP_GetMIMEDescription) ();
     pluginTable [indexHandler]->pluginMimeType = (char*) malloc (strlen (pluginMimeType) + 1) ;
     strcpy (pluginTable [indexHandler]->pluginMimeType, pluginMimeType);
@@ -773,24 +786,6 @@ Display* display;
     url = (char*) malloc (strlen (imageDesc->PicFileName) + 1);
     strcpy (url, imageDesc->PicFileName);
     
-    if (pluginTable [indexPlug]->nbInstances == 0) {
-#ifdef _WINDOWS
-       ptr_NPP_Initialize = GetProcAdress (pluginTable [indexPlug]->pluginHandle, "NPP_Initialize");
-       if (ptr_NPP_Initialize == NULL) {
-          message (char*) malloc (65 + strlen (pluginTable [indexPlug]->pluginDL));
-          sprintf (message, "relocation error: symbol not found: NPP_Initialize referenced in %s", pluginTable [indexPlug]->pluginDL);
-       } else
-             ret = (*ptr_NPP_Initialize) ();
-#else  /* _WINDOWS */
-       ptr_NPP_Initialize = (int (*) ()) dlsym (pluginTable [indexPlug]->pluginHandle, "NPP_Initialize");
-       message = (char*) dlerror ();    
-       if (message) 
-   	  printf ("ERROR at Initialization: %s\n", message);
-
-       ret = (*ptr_NPP_Initialize) ();
-#endif /* _WINDOWS */
-    }
-
     (NPP) (imageDesc->pluginInstance) = (NPP) malloc (sizeof (NPP_t)); 
     (*(pluginTable [indexPlug]->pluginFunctionsTable->newp)) (pluginTable [indexPlug]->pluginMimeType, 
                                                              (NPP)(imageDesc->pluginInstance), 
@@ -799,8 +794,6 @@ Display* display;
                                                              argn, 
                                                              argv,  
                                                              NULL);
-
-    pluginTable [indexPlug]->nbInstances++;
 
     stat (url, &sbuf);
 

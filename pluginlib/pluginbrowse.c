@@ -70,7 +70,6 @@ void TtaBrowsePluginDirectory ()
       if (ThotDirBrowse_first (&thotDir, amayaPluginDir, "*", PSuffix) == 1) {
          do {
             pluginTable [pluginCounter] = (PluginInfo*) malloc (sizeof (PluginInfo)) ;
-            pluginTable [pluginCounter]->nbInstances = 0;
             pluginTable [pluginCounter]->pluginDL = (char*) malloc (strlen (thotDir.buf) + 1);
             pluginTable [pluginCounter]->pluginHandle = (void*) NULL;
             pluginTable [pluginCounter]->pluginFunctionsTable = (NPPluginFuncs*) NULL;

@@ -40,7 +40,6 @@ typedef struct _PluginInfo {
         void*            pluginHandle ;
 #endif /* _WINDOWS */
         NPPluginFuncs*   pluginFunctionsTable;
-        int              nbInstances;
 } PluginInfo ;
 
 #endif /* PLUGIN_BROWSE_H */
