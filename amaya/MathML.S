@@ -44,7 +44,8 @@ STRUCT
 		fontstyle = normal_, italic;
 		IntFontstyle = IntNormal, IntItalic;	{ for internal use }
 		fontfamily = TEXT;
-		color = TEXT)
+		color = TEXT; 
+		IntParseMe = yes_)                      { for internal use }
 	  = TEXT;
 
       MI
@@ -365,6 +366,7 @@ EXCEPT
    Ghost_restruct:	Invisible;
    IntPlaceholder:   	Invisible;
    IntFontstyle:	Invisible;
+   IntParseMe:	        Invisible;
    IntAddSpace:	  	Invisible;
    IntHorizStretch:  	Invisible;
    IntVertStretch:  	Invisible;

@@ -159,7 +159,8 @@ Rule5 =           'MarginTop' ':' MarginWidth /
 MarginWidth =     InheritParent / 'Auto' / Distance .
 PaddingWidth =    InheritParent / Distance .
 BorderWidth =     InheritParent / 'Thin' / 'Medium' / 'Thick' / Distance .
-BorderColor =     InheritParent / 'Transparent' / FontColorName .
+BorderColor =     InheritParent / 'Transparent' / 'Foreground' /
+                  FontColorName .
 BorderStyle =     InheritParent /
                   'None' / 'Hidden' / 'Dotted' / 'Dashed' / 'Solid' /
                   'Double' / 'Groove' / 'Ridge' / 'Inset' / 'Outset' .

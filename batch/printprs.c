@@ -1242,7 +1242,10 @@ PtrPRule            RP;
 		    printf ("BorderTopColor: ");
 	            if (RP->PrPresMode == PresImmediate &&
 			!RP->PrAttrValue && RP->PrIntValue == -2)
-		       printf ("transparent");
+		       printf ("transparent;");
+		    else if (RP->PrPresMode == PresImmediate &&
+			     !RP->PrAttrValue && RP->PrIntValue == -1)
+		       printf ("foreground;");
 		    else
 		       wrnbherit (RP);
 		    break;
@@ -1250,7 +1253,10 @@ PtrPRule            RP;
 		    printf ("BorderRightColor: ");
 	            if (RP->PrPresMode == PresImmediate &&
 			!RP->PrAttrValue && RP->PrIntValue == -2)
-		       printf ("transparent");
+		       printf ("transparent;");
+		    else if (RP->PrPresMode == PresImmediate &&
+			     !RP->PrAttrValue && RP->PrIntValue == -1)
+		       printf ("foreground;");
 		    else
 		       wrnbherit (RP);
 		    break;
@@ -1258,7 +1264,10 @@ PtrPRule            RP;
 		    printf ("BorderBottomColor: ");
 	            if (RP->PrPresMode == PresImmediate &&
 			!RP->PrAttrValue && RP->PrIntValue == -2)
-		       printf ("transparent");
+		       printf ("transparent;");
+		    else if (RP->PrPresMode == PresImmediate &&
+			     !RP->PrAttrValue && RP->PrIntValue == -1)
+		       printf ("foreground;");
 		    else
 		       wrnbherit (RP);
 		    break;
@@ -1266,7 +1275,10 @@ PtrPRule            RP;
 		    printf ("BorderLeftColor: ");
 	            if (RP->PrPresMode == PresImmediate &&
 			!RP->PrAttrValue && RP->PrIntValue == -2)
-		       printf ("transparent");
+		       printf ("transparent;");
+		    else if (RP->PrPresMode == PresImmediate &&
+			     !RP->PrAttrValue && RP->PrIntValue == -1)
+		       printf ("foreground;");
 		    else
 		       wrnbherit (RP);
 		    break;

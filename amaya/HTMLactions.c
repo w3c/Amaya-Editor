@@ -19,9 +19,7 @@
 #include "amaya.h"
 #include "css.h"
 #include "trans.h"
-#ifdef MATHML
 #include "MathML.h"
-#endif
 #ifdef GRAPHML
 #include "GraphML.h"
 #endif
@@ -444,7 +442,6 @@ Attribute           ignore;
        attrType.AttrTypeNum = HTML_ATTR_ID;
        elFound = GetElemWithAttr (doc, attrType, nameVal, ignore);
      }
-#ifdef MATHML
    if (!elFound)
      {
        /* search all elements having an attribute ID (defined in the
@@ -457,7 +454,6 @@ Attribute           ignore;
           elFound = GetElemWithAttr (doc, attrType, nameVal, ignore);
 	  }
      }
-#endif
 #ifdef GRAPHML
    if (!elFound)
      {

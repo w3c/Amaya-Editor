@@ -225,6 +225,10 @@ HelpTables
 [maths]
 &CreateMath
 &CreateMathMenu
+&CreateMTEXT
+&CreateMI
+&CreateMN
+&CreateMO
 &CreateMROOT
 &CreateMSQRT
 &CreateMFRAC

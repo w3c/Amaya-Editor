@@ -16,7 +16,10 @@ ELEMENTS
    FencedSeparator:
 	ElemTextModify.Post -> FencedSeparatorModified;
    MTEXT:
+	BEGIN
+	ElemNew.Post -> MtextCreated;
 	ElemTextModify.Post -> MathStringModified;
+	END;
    MI:
 	ElemTextModify.Post -> MathStringModified;
    MO:

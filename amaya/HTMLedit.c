@@ -17,9 +17,7 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "css.h"
-#ifdef MATHML
 #include "MathML.h"
-#endif
 #ifdef GRAPHML
 #include "GraphML.h"
 #endif
@@ -40,9 +38,7 @@ static int          OldHeight;
 #include "HTMLimage_f.h"
 #include "HTMLpresentation_f.h"
 #include "HTMLimage_f.h"
-#ifdef MATHML
 #include "MathMLbuilder_f.h"
-#endif
 #ifdef GRAPHML
 #include "GraphMLbuilder_f.h"
 #endif
@@ -229,14 +225,12 @@ ThotBool		    withUndo;
 
   attrType.AttrTypeNum = 0;
   elType = TtaGetElementType (el);
-#ifdef MATHML
   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")) == 0)
      {
      MapMathMLAttribute (TEXT("link"), &attrType, _EMPTYSTR_, doc);
      MapMathMLAttributeValue (TEXT("simple"), attrType, &val);
      }
   else
-#endif
 #ifdef GRAPHML
   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "GraphML") == 0)
      {
@@ -570,7 +564,6 @@ Element             selectedElement;
 	    /* get the ID attribute of the selected element */
 	    attrType.AttrTypeNum = HTML_ATTR_ID;
 	    attr = TtaGetAttribute (selectedElement, attrType);
-#ifdef MATHML
 	    if (!attr)
 	       {
 	       attrType.AttrSSchema = TtaGetSSchema (TEXT("MathML"), doc);
@@ -580,7 +573,6 @@ Element             selectedElement;
 		 attr = TtaGetAttribute (selectedElement, attrType);
 		 }
 	       }
-#endif
 #ifdef GRAPHML
 	    if (!attr)
 	       {
@@ -636,14 +628,12 @@ Boolean		    withUndo;
      attrType.AttrTypeNum = HTML_ATTR_NAME;
    else
      {
-#ifdef MATHML
      if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")) == 0)
        {
 	 attrType.AttrSSchema = elType.ElSSchema;
 	 attrType.AttrTypeNum = MathML_ATTR_id;
        }
      else
-#endif
 #ifdef GRAPHML
      if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "GraphML") == 0)
        {
@@ -1048,14 +1038,12 @@ Document     doc;
      attrType.AttrTypeNum = HTML_ATTR_NAME;
    else
      {
-#ifdef MATHML
      if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")) == 0)
        {
        attrType.AttrSSchema = elType.ElSSchema;
        attrType.AttrTypeNum = MathML_ATTR_id;
        }
      else
-#endif
 #ifdef GRAPHML
      if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "GraphML") == 0)
        {

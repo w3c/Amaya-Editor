@@ -276,12 +276,11 @@ RULES
  BDO:	BEGIN
 	END;
 
-#ifdef MATHML
  Math:  BEGIN
         Create '[math]';
 	Remove;
 	END;
-#endif
+
  Paragraph:
 	BEGIN
 	Create '\12' After;
@@ -1061,7 +1060,6 @@ ATTRIBUTES
  coords: BEGIN
 	END;
 
-#ifdef MATHML
  mode = inline_math:
 	BEGIN
 	END;
@@ -1070,7 +1068,6 @@ ATTRIBUTES
 	create '\12';
 	create '\12' after;
 	END;
-#endif
 
  summary: BEGIN
 	END;

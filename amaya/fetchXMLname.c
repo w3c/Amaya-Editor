@@ -17,7 +17,6 @@
 #include "amaya.h"
 #include "parser.h"
 
-#ifdef MATHML
 /* mapping table of MathML elements */
 #include "MathML.h"
 static ElemMapping    MathMLElemMappingTable[] =
@@ -59,11 +58,6 @@ static ElemMapping    MathMLElemMappingTable[] =
    {TEXT ("sep"), 'E', MathML_EL_SEP},
    {TEXT (""), SPACE, 0}	/* Last entry. Mandatory */
 };
-#else /* MATHML */
-/* there is no mapping table of MathML elements */
-
-static ElemMapping *MathMLElemMappingTable = NULL;
-#endif /* MATHML */
 
 #ifdef GRAPHML
 /* mapping table of GraphML elements */

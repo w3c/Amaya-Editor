@@ -127,9 +127,7 @@ static int          entityNameLength = 0; /* length of entity name read so
 static Element	    commentText = NULL;	  /* Text element representing the
 					     contents of the current comment */
 
-#ifdef MATHML
 #include "MathMLbuilder_f.h"
-#endif
 #ifdef GRAPHML
 #include "GraphMLbuilder_f.h"
 #endif
@@ -154,7 +152,6 @@ static void            InitParserContexts ()
    prevCtxt = NULL;
    ctxt = NULL;
 
-#ifdef MATHML
    ctxt = TtaGetMemory (sizeof (XMLparserContext));
    if (prevCtxt == NULL)
       firstParserCtxt = ctxt;
@@ -175,7 +172,6 @@ static void            InitParserContexts ()
    ctxt->AttributeComplete = (Proc) MathMLAttributeComplete;
    ctxt->GetDTDName = (Proc) MathMLGetDTDName;
    prevCtxt = ctxt;
-#endif /* MATHML */
 #ifdef GRAPHML
    ctxt = TtaGetMemory (sizeof (XMLparserContext));
    if (prevCtxt == NULL)

@@ -218,9 +218,7 @@ static ThotBool  itemChecked = FALSE;
 #include "EDITORactions_f.h"
 #include "EDITimage_f.h"
 #include "EDITstyle_f.h"
-#ifdef MATHML
 #include "Mathedit_f.h"
-#endif /* MATHML */
 #ifdef GRAPHML
 #include "Graphedit_f.h"
 #endif /* GRAPHML */
@@ -239,9 +237,7 @@ static ThotBool  itemChecked = FALSE;
 #include "wininclude.h"
 #endif /* _WINDOWS */
 
-#ifdef MATHML
 extern void InitMathML ();
-#endif /* MATHML */
 
 #ifdef AMAYA_PLUGIN
 extern void CreateFormPlugin (Document, View);
@@ -721,9 +717,7 @@ Document            doc;
 	   TtaChangeButton (document, 1,iDL, iconDLNo, FALSE);
 	   TtaChangeButton (document, 1, iLink, iconLinkNo, FALSE);
 	   TtaChangeButton (document, 1, iTable, iconTableNo, FALSE);
-#ifdef MATHML
 	   SwitchIconMath (document, 1, FALSE);
-#endif /* MATHML */
 #ifdef GRAPHML
 	   SwitchIconGraph (document, 1, FALSE);
 #endif /* GRAPHML */
@@ -748,7 +742,6 @@ Document            doc;
 	       TtaSetMenuOff (document, view, StructTypes);
 	       TtaSetMenuOff (document, view, Types);
 	     }
-#ifdef MATHML
 	   view = TtaGetViewFromName (document, TEXT("Math_Structure_view"));
 	   if (view != 0 && TtaIsViewOpened (document, view))
 	     {
@@ -759,7 +752,6 @@ Document            doc;
 	       TtaSetItemOff (document, view, Edit_, BTransform);
 	       TtaSetMenuOff (document, view, Types);
 	     }
-#endif /* MATHML */
 #ifdef GRAPHML
 	   view = TtaGetViewFromName (document, "Graph_Structure_view");
 	   if (view != 0 && TtaIsViewOpened (document, view))
@@ -850,9 +842,7 @@ Document            doc;
 	   TtaChangeButton (document, 1,iDL, iconDL, TRUE);
 	   TtaChangeButton (document, 1, iLink, iconLink, TRUE);
 	   TtaChangeButton (document, 1, iTable, iconTable, TRUE);
-#ifdef MATHML
 	   SwitchIconMath (document, 1, TRUE);
-#endif /* MATHML */
 #ifdef GRAPHML
 	   SwitchIconGraph (document, 1, TRUE);
 #endif /* GRAPHML */
@@ -876,7 +866,6 @@ Document            doc;
 	       TtaSetMenuOn (document, view, StructTypes);
 	       TtaSetMenuOn (document, view, Types);
 	     }
-#ifdef MATHML
 	   view = TtaGetViewFromName (document, TEXT("Math_Structure_view"));
 	   if (view != 0 && TtaIsViewOpened (document, view))
 	     {
@@ -887,7 +876,6 @@ Document            doc;
 	       TtaSetItemOn (document, view, Edit_, BTransform);
 	       TtaSetMenuOn (document, view, Types);
 	     }
-#endif /* MATHML */
 #ifdef GRAPHML
 	   view = TtaGetViewFromName (document, "Graph_Structure_view");
 	   if (view != 0 && TtaIsViewOpened (document, view))
@@ -1530,12 +1518,10 @@ ThotBool     logFile;
 	  structView = TtaGetViewFromName (doc, TEXT("Structure_view"));
 	  if (structView != 0 && TtaIsViewOpened (doc, structView))
 	    TtaCloseView (doc, structView);
-#ifdef MATHML
 	  /* close the Math_structure view if it is open */
 	  structView = TtaGetViewFromName (doc, TEXT("Math_Structure_view"));
 	  if (structView != 0 && TtaIsViewOpened (doc, structView))
 	    TtaCloseView (doc, structView);
-#endif /* MATHML */
 #ifdef GRAPHML
 	  /* close the Graph_structure view if it is open */
 	  structView = TtaGetViewFromName (doc, "Graph_Structure_view");
@@ -1709,9 +1695,7 @@ ThotBool     logFile;
 			 TtaGetMessage (AMAYA, AM_BUTTON_JAVA),
 			 TBSTYLE_BUTTON, TRUE);
 #endif /* AMAYA_JAVA */
-#ifdef MATHML
 	   AddMathButton (doc, 1);
-#endif /* MATHML */
 #ifdef GRAPHML
 	   AddGraphicsButton (doc, 1);
 #endif /* GRAPHML */
@@ -1904,9 +1888,7 @@ ThotBool     logFile;
 	 TtaChangeButton (doc, 1, iDL, iconDLNo, FALSE);
 	 TtaChangeButton (doc, 1, iLink, iconLinkNo, FALSE);
 	 TtaChangeButton (doc, 1, iTable, iconTableNo, FALSE);
-#ifdef MATHML
 	 SwitchIconMath (doc, 1, FALSE);
-#endif /* MATHML */
 #ifdef GRAPHML
 	 SwitchIconGraph (doc, 1, FALSE);
 #endif /* GRAPHML */
@@ -1982,9 +1964,7 @@ ThotBool     logFile;
 	     TtaChangeButton (doc, 1, iDL, iconDL, TRUE);
 	     TtaChangeButton (doc, 1, iLink, iconLink, TRUE);
 	     TtaChangeButton (doc, 1, iTable, iconTable, TRUE);
-#ifdef MATHML
 	     SwitchIconMath (doc, 1, TRUE);
-#endif /* MATHML */
 #ifdef GRAPHML
 	     SwitchIconGraph (doc, 1, TRUE);
 #endif /* GRAPHML */
@@ -2922,9 +2902,7 @@ View                view;
 #endif
 {
    View                structView;
-#ifdef MATHML
    View                mathView;
-#endif /* MATHML */
 #ifdef GRAPHML
    View                graphView;
 #endif /* GRAPHML */
@@ -2955,7 +2933,6 @@ View                view;
 	     }
 	 }
      }
-#ifdef MATHML
    mathView = TtaGetViewFromName (document, TEXT("Math_Structure_view"));
    if (mathView != 0 && TtaIsViewOpened (document, mathView))
      TtaRaiseView (document, mathView);
@@ -2982,7 +2959,6 @@ View                view;
 	   TtaSetMenuOff (document, mathView, StructTypes);
 	 }
      }
-#endif /* MATHML */
 #ifdef GRAPHML
    graphView = TtaGetViewFromName (document, "Graph_Structure_view");
    if (graphView != 0 && TtaIsViewOpened (document, graphView))
@@ -3160,10 +3136,7 @@ NotifyDialog       *event;
 #endif
 {
    Document      document;
-   View          view, structView, altView, linksView, tocView;
-#ifdef MATHML
-   View          mathView;
-#endif /* MATHML */
+   View          view, structView, altView, linksView, tocView, mathView;
 #ifdef GRAPHML
    View          graphView;
 #endif /* GRAPHML */
@@ -3174,9 +3147,7 @@ NotifyDialog       *event;
    altView = TtaGetViewFromName (document, TEXT("Alternate_view"));
    linksView = TtaGetViewFromName (document, TEXT("Links_view"));
    tocView = TtaGetViewFromName (document, TEXT("Table_of_contents"));
-#ifdef MATHML
    mathView = TtaGetViewFromName (document, TEXT("Math_Structure_view"));
-#endif /* MATHML */
 #ifdef GRAPHML
    graphView = TtaGetViewFromName (document, "Graph_Structure_view");
 #endif /* GRAPHML */
@@ -3197,10 +3168,8 @@ NotifyDialog       *event;
      TtaCloseView (document, linksView);
    if (tocView != 0 && TtaIsViewOpened (document, tocView))
      TtaCloseView (document, tocView);
-#ifdef MATHML
    if (mathView != 0 && TtaIsViewOpened (document, mathView))
      TtaCloseView (document, mathView);
-#endif /* MATHML */
 #ifdef GRAPHML
    if (graphView != 0 && TtaIsViewOpened (document, graphView))
      TtaCloseView (document, graphView);
@@ -4627,9 +4596,7 @@ NotifyEvent        *event;
 #  endif /* AMAYA_PLUGIN */
 #  endif /* AMAYA_JAVA */
 #  endif /* !_WINDOWS */
-#ifdef MATHML
    InitMathML ();
-# endif /* MATHML */
 #ifdef GRAPHML
    InitGraphML ();
 #endif /* GRAPHML */

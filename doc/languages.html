@@ -14,7 +14,7 @@
 
 <h4>Translated from French by Ethan Munson</h4>
 
-<h4>Version of August 23, 1999</h4>
+<h4>Version of January 14, 2000</h4>
 <p>
 &copy; 1996 INRIA</p>
 <hr>
@@ -3719,35 +3719,55 @@ parameter, but not the <a href="#presfunct">presentation functions</a> or the
 In a presentation schema, the default presentation rules section is optional;
 in this case, the <tt>DEFAULT</tt> keyword is also absent and the following
 rules are considered to be the default rules:</p>
-<pre>   Visibility:    Enclosing =;
-   VertRef:       * . Left;
-   HorizRef:      Enclosed . HRef;
-   Height:        Enclosed . Height;
-   Width:         Enclosed . Width;
-   VertPos:       Top = Previous . Bottom;
-   HorizPos:      Left = Enclosing . Left;
-   VertOverflow:  No;
-   HorizOverflow: No;
-   Size:          Enclosing =;
-   Style:         Enclosing =;
-   Weight:        Enclosing =;
-   Font:          Enclosing =;
-   Underline:     Enclosing =;
-   Thickness:     Enclosing =;
-   Indent:        Enclosing =;
-   LineSpacing:   Enclosing =;
-   Adjust:        Enclosing =;
-   Justify:       Enclosing =;
-   Hyphenate:     Enclosing =;
-   PageBreak:     Yes;
-   LineBreak:     Yes;
-   InLine:        Yes;
-   Depth:         0;
-   LineStyle:     Enclosing =;
-   LineWeight:    Enclosing =;
-   FillPattern:   Enclosing =;
-   Background:    Enclosing =;
-   Foreground:    Enclosing =;</pre>
+<pre>   Visibility:        Enclosing =;
+   VertRef:           * . Left;
+   HorizRef:          Enclosed . HRef;
+   Height:            Enclosed . Height;
+   Width:             Enclosed . Width;
+   VertPos:           Top = Previous . Bottom;
+   HorizPos:          Left = Enclosing . Left;
+   MarginTop:         0;
+   MarginRight:       0;
+   MarginBottom:      0;
+   MarginLeft:        0;
+   PaddingTop:        0;
+   PaddingRight:      0;
+   PaddingBottom:     0;
+   PaddingLeft:       0;
+   BorderTopWidth:    0;
+   BorderRightWidth:  0;
+   BorderBottomWidth: 0;
+   BorderLeftWidth:   0;
+   BorderTopColor:    Foreground;
+   BorderRightColor:  Foreground;
+   BorderBottomColor: Foreground;
+   BorderLeftColor:   Foreground;
+   BorderTopStyle:    None;
+   BorderRightStyle:  None;
+   BorderBottomStyle: None;
+   BorderLeftStyle:   None;
+   VertOverflow:      No;
+   HorizOverflow:     No;
+   Size:              Enclosing =;
+   Style:             Enclosing =;
+   Weight:            Enclosing =;
+   Font:              Enclosing =;
+   Underline:         Enclosing =;
+   Thickness:         Enclosing =;
+   Indent:            Enclosing =;
+   LineSpacing:       Enclosing =;
+   Adjust:            Enclosing =;
+   Justify:           Enclosing =;
+   Hyphenate:         Enclosing =;
+   PageBreak:         Yes;
+   LineBreak:         Yes;
+   InLine:            Yes;
+   Depth:             0;
+   LineStyle:         Enclosing =;
+   LineWeight:        Enclosing =;
+   FillPattern:       Enclosing =;
+   Background:        Enclosing =;
+   Foreground:        Enclosing =;</pre>
 <p>
 If other values are desired for the default rules, they must be defined
 explicitly in the default rules section.  In fact, it is only necessary to
@@ -4495,6 +4515,9 @@ the position of the box in relation to other boxes,
 the height or width of the box, with overflow exceptions,
 </li>
 <li>
+the margins, padding and borders of the box,
+</li>
+<li>
 the characteristics of the lines contained in the box: linespacing,
 indentation of the first line, justification, hyphenation,
 </li>
@@ -4560,6 +4583,26 @@ rules are terminated by a semicolon.</p>
                 'Width' ':'         Dimension /
                 'VertOverflow' ':'  Boolean /
                 'HorizOverflow' ':' Boolean /
+                'MarginTop' ':'     MarginWidth /
+                'MarginRight' ':'   MarginWidth /
+                'MarginBottom' ':'  MarginWidth /
+                'MarginLeft' ':'    MarginWidth /
+                'PaddingTop' ':'    PaddingWidth /
+                'PaddingRight' ':'  PaddingWidth /
+                'PaddingBottom' ':' PaddingWidth /
+                'PaddingLeft' ':'   PaddingWidth /
+                'BorderTopWidth' ':' BorderWidth /
+                'BorderRightWidth' ':' BorderWidth /
+                'BorderBottomWidth' ':' BorderWidth /
+                'BorderLeftWidth' ':' BorderWidth /
+                'BorderTopColor' ':' BorderColor /
+                'BorderRightColor' ':' BorderColor /
+                'BorderBottomColor' ':' BorderColor /
+                'BorderLeftColor' ':' BorderColor /
+                'BorderTopStyle' ':' BorderStyle /
+                'BorderRightStyle' ':' BorderStyle /
+                'BorderBottomStyle' ':' BorderStyle /
+                'BorderLeftStyle' ':' BorderStyle .
                 'LineSpacing' ':'   DistanceInherit /
                 'Indent' ':'        DistanceInherit /
                 'Adjust' ':'        AdjustInherit /
@@ -5189,6 +5232,41 @@ keyword <tt>Yes</tt> or <tt>No</tt>.</p>
                'HorizOverflow' ':' Boolean .
      Boolean = 'Yes' / 'No' .</pre>
 </div>
+
+<p>@@@@@ ****** </p>
+<p>Explain Margin, Padding and Border. Refer to CSS2.</p>
+<pre>                'MarginTop' ':' MarginWidth /
+                'MarginRight' ':' MarginWidth /
+                'MarginBottom' ':' MarginWidth /
+                'MarginLeft' ':' MarginWidth /
+                'PaddingTop' ':' PaddingWidth /
+                'PaddingRight' ':' PaddingWidth /
+                'PaddingBottom' ':' PaddingWidth /
+                'PaddingLeft' ':' PaddingWidth /
+                'BorderTopWidth' ':' BorderWidth /
+                'BorderRightWidth' ':' BorderWidth /
+                'BorderBottomWidth' ':' BorderWidth /
+                'BorderLeftWidth' ':' BorderWidth /
+                'BorderTopColor' ':' BorderColor /
+                'BorderRightColor' ':' BorderColor /
+                'BorderBottomColor' ':' BorderColor /
+                'BorderLeftColor' ':' BorderColor /
+                'BorderTopStyle' ':' BorderStyle /
+                'BorderRightStyle' ':' BorderStyle /
+                'BorderBottomStyle' ':' BorderStyle /
+                'BorderLeftStyle' ':' BorderStyle .
+
+MarginWidth   = InheritParent / 'Auto' / Distance .
+PaddingWidth  = InheritParent / Distance .
+BorderWidth   = InheritParent / 'Thin' / 'Medium' / 'Thick' / Distance .
+BorderColor   = InheritParent / 'Transparent' / 'Foreground' /
+                ColorName .
+BorderStyle   = InheritParent /
+                'None' / 'Hidden' / 'Dotted' / 'Dashed' / 'Solid' /
+                'Double' / 'Groove' / 'Ridge' / 'Inset' / 'Outset' .
+InheritParent = 'Enclosing' '=' .
+ColorName     =  NAME .</pre>
+<p>@@@@@ ****** </p>
 
 <div class="subsection">
 
@@ -8821,6 +8899,26 @@ PresParam       = 'VertRef' ':' HorizPosition /
                   'Width' ':' Extent /
                   'VertOverflow' ':' Boolean /
                   'HorizOverflow' ':' Boolean /
+                  'MarginTop' ':' MarginWidth /
+                  'MarginRight' ':' MarginWidth /
+                  'MarginBottom' ':' MarginWidth /
+                  'MarginLeft' ':' MarginWidth /
+                  'PaddingTop' ':' PaddingWidth /
+                  'PaddingRight' ':' PaddingWidth /
+                  'PaddingBottom' ':' PaddingWidth /
+                  'PaddingLeft' ':' PaddingWidth /
+                  'BorderTopWidth' ':' BorderWidth /
+                  'BorderRightWidth' ':' BorderWidth /
+                  'BorderBottomWidth' ':' BorderWidth /
+                  'BorderLeftWidth' ':' BorderWidth /
+                  'BorderTopColor' ':' BorderColor /
+                  'BorderRightColor' ':' BorderColor /
+                  'BorderBottomColor' ':' BorderColor /
+                  'BorderLeftColor' ':' BorderColor /
+                  'BorderTopStyle' ':' BorderStyle /
+                  'BorderRightStyle' ':' BorderStyle /
+                  'BorderBottomStyle' ':' BorderStyle /
+                  'BorderLeftStyle' ':' BorderStyle .
                   'LineSpacing' ':' DistOrInherit /
                   'Indent' ':' DistOrInherit /
                   'Adjust' ':' AlignOrInherit /
@@ -8901,6 +8999,17 @@ HeightWidth     = 'Height' / 'Width' .
 Relation        = '*' ExtentAttr '%' / Distance .
 ExtentAttr      = ExtentVal / AttrID .
 ExtentVal       = NUMBER .
+
+MarginWidth     = InheritParent / 'Auto' / Distance .
+PaddingWidth    = InheritParent / Distance .
+BorderWidth     = InheritParent / 'Thin' / 'Medium' / 'Thick' / Distance .
+BorderColor     = InheritParent / 'Transparent' / 'Foreground' /
+                  ColorName .
+BorderStyle     = InheritParent /
+                  'None' / 'Hidden' / 'Dotted' / 'Dashed' / 'Solid' /
+                  'Double' / 'Groove' / 'Ridge' / 'Inset' / 'Outset' .
+InheritParent   = 'Enclosing' '=' .
+ColorName       = NAME .
 
 Inheritance     = Kinship  InheritedValue .
 Kinship         = 'Enclosing' / 'GrandFather'/ 'Enclosed' /

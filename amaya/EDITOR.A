@@ -14,9 +14,7 @@ USES
 #ifdef AMAYA_ILU
        , Ilu
 #endif
-#ifdef MATHML
        , MathML
-#endif
 #ifdef GRAPHML
        , GraphML
 #endif
@@ -122,6 +120,11 @@ MENUS
 	Types.Lists button:BDefinition -> CreateDefinitionDef;
 
 	Types.Math button:BDisplayMath -> CreateMath;
+	Types.Math Separator;
+	Types.Math button:BMText -> CreateMTEXT;
+	Types.Math button:BMIdentifier -> CreateMI;
+	Types.Math button:BMNumber -> CreateMN;
+	Types.Math button:BMOperator -> CreateMO;
 	Types.Math Separator;
         Types.Math button:BNthRoot -> CreateMROOT;
         Types.Math button:BSquareRoot -> CreateMSQRT;

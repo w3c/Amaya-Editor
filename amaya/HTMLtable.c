@@ -15,10 +15,8 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "undo.h"
-#ifdef MATHML
 #include "MathML.h"
 #include "MathMLbuilder_f.h"
-#endif /* MATHML */
 
 static Element      CurrentRow = NULL;
 static Element      CurrentPastedRow = NULL;
@@ -58,11 +56,7 @@ ThotBool            inMath;
    elType = TtaGetElementType (row);
    attrType.AttrSSchema = elType.ElSSchema;
    if (inMath)
-#ifdef MATHML
      attrType.AttrTypeNum = MathML_ATTR_MRef_column;
-#else /* MATHML */
-     return NULL;
-#endif /* MATHML */
    else
      attrType.AttrTypeNum = HTML_ATTR_Ref_column;
 
@@ -70,17 +64,15 @@ ThotBool            inMath;
    while (cell != NULL && !found)
      {
 	elType = TtaGetElementType (cell);
-	if (
-#ifdef MATHML
-	    (inMath && elType.ElTypeNum == MathML_EL_MTD) ||
-#endif /* MATHML */
+	if ((inMath && elType.ElTypeNum == MathML_EL_MTD) ||
 	    (!inMath && (elType.ElTypeNum == HTML_EL_Data_cell ||
 			 elType.ElTypeNum == HTML_EL_Heading_cell)))
 	  {
 	     attr = TtaGetAttribute (cell, attrType);
 	     if (attr != NULL)
 	       {
-		  TtaGiveReferenceAttributeValue (attr, &currentcolhead, name, &refdoc);
+		  TtaGiveReferenceAttributeValue (attr, &currentcolhead, name,
+						  &refdoc);
 		  if (currentcolhead == colhead)
 		     found = TRUE;
 	       }
@@ -147,11 +139,7 @@ ThotBool            inMath;
   elType = TtaGetElementType (cell);
   attrType.AttrSSchema = elType.ElSSchema;
   if (inMath)
-#ifdef MATHML
     attrType.AttrTypeNum = MathML_ATTR_MRef_column;
-#else /* MATHML */
-    return;
-#endif /* MATHML */
   else
     attrType.AttrTypeNum = HTML_ATTR_Ref_column;
   attr = TtaGetAttribute (cell, attrType);
@@ -195,11 +183,7 @@ ThotBool            inMath;
   if (sibling != NULL)
     {
       if (inMath)
-#ifdef MATHML
 	elType.ElTypeNum = MathML_EL_MTD;
-#else /* MATHML */
-        return NULL;
-#endif /* MATHML */
       else
 	elType.ElTypeNum = HTML_EL_Data_cell;
       lastcell = TtaNewTree (doc, elType, _EMPTYSTR_);
@@ -493,12 +477,8 @@ Document            doc;
   inMath = !TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema (TEXT("HTML"), doc));
   if (inMath)
     {
-#ifdef MATHML
       elType.ElTypeNum = MathML_EL_MColumn_head;
       rowType = MathML_EL_MTR;
-#else /* MATHML */
-      return;
-#endif /* MATHML */
     }
   else
     {
@@ -555,10 +535,7 @@ Document            doc;
 		}
 
 	      /* process only cell elements */
-	      if (
-#ifdef MATHML
-		  (inMath && elType.ElTypeNum == MathML_EL_MTD) ||
-#endif /* MATHML */
+	      if ((inMath && elType.ElTypeNum == MathML_EL_MTD) ||
 		  (!inMath && (elType.ElTypeNum == HTML_EL_Data_cell ||
 			       elType.ElTypeNum == HTML_EL_Heading_cell)))
 		{
@@ -640,13 +617,11 @@ Document            doc;
 		       elType.ElTypeNum != HTML_EL_Comment_)
 		/* Delete any other type of element */
 		TtaDeleteTree (cell, doc);
-#ifdef MATHML
 	      /* accept XML comments */
 	      else if (inMath &&
 		       elType.ElTypeNum != MathML_EL_XMLcomment)
 		/* Delete any other type of element */
 		TtaDeleteTree (cell, doc);
-#endif /* MATHML */
 	    }
 
 	  /* check missing cells */
@@ -665,13 +640,11 @@ Document            doc;
 		 elType.ElTypeNum != HTML_EL_Comment_)
 	  /* Delete any other type of element */
 	  TtaDeleteTree (row, doc);
-#ifdef MATHML
 	/* accept XML comments */
 	else if (inMath && cell &&
 		 elType.ElTypeNum != MathML_EL_XMLcomment)
 	  /* Delete any other type of element */
 	  TtaDeleteTree (cell, doc);
-#endif /* MATHML */
 	row = nextRow;
 
 	/* do we have to get a new group of rows */
@@ -964,13 +937,9 @@ ThotBool            genrateColumn;
       /* insert a new column here */
       if (inMath)
 	{
-#ifdef MATHML
 	  elType.ElTypeNum = MathML_EL_MTR;
 	  attrType.AttrSSchema = elType.ElSSchema;
 	  attrType.AttrTypeNum = MathML_ATTR_MRef_column;
-#else /* MATHML */
-	  return;
-#endif /* MATHML */
 	}
       else
 	{
@@ -1197,13 +1166,7 @@ NotifyElement      *event;
    elType = TtaGetElementType (rowgroup);
    inMath = !TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema (TEXT("HTML"), event->document));
       if (inMath)
-	{
-#ifdef MATHML
-	  elType.ElTypeNum = MathML_EL_MTABLE;
-#else /* MATHML */
-	  return;
-#endif /* MATHML */
-	}
+	elType.ElTypeNum = MathML_EL_MTABLE;
       else
 	elType.ElTypeNum = HTML_EL_Table;
    table = TtaGetTypedAncestor (rowgroup, elType);
@@ -1241,11 +1204,7 @@ NotifyElement      *event;
   /* get current column */
   attrType.AttrSSchema = elType.ElSSchema;
   if (inMath)
-#ifdef MATHML
     attrType.AttrTypeNum = MathML_ATTR_MRef_column;
-#else /* MATHML */
-    return FALSE;
-#endif /* MATHML */
   else
     attrType.AttrTypeNum = HTML_ATTR_Ref_column;
 
@@ -1304,12 +1263,8 @@ ThotBool     inMath;
   elType = TtaGetElementType (colhead);
   if (inMath)
     {
-#ifdef MATHML
       elType.ElTypeNum = MathML_EL_MTABLE;
       rowType = MathML_EL_MTR;
-#else /* MATHML */
-      return FALSE;
-#endif /* MATHML */
     }
   else
     {
@@ -1579,11 +1534,7 @@ NotifyElement      *event;
   elType = TtaGetElementType (row);
   inMath = !TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema (TEXT("HTML"), event->document));
   if (inMath)
-#ifdef MATHML
     elType.ElTypeNum = MathML_EL_MTABLE;
-#else /* MATHML */
-    return FALSE;
-#endif /* MATHML */
   else
     elType.ElTypeNum = HTML_EL_Table;
   table = TtaGetTypedAncestor (row, elType);
@@ -1592,11 +1543,7 @@ NotifyElement      *event;
       /* the table element is just created now
        We need to create the table_head element */
       if (inMath)
-	{
-#ifdef MATHML
-	  CheckMTable (table, doc);
-#endif /* MATHML */
-	}
+	CheckMTable (table, doc);
       else
 	CheckTable (table, doc);
       NewTable = FALSE;
@@ -1633,11 +1580,7 @@ NotifyElement      *event;
   elType = TtaGetElementType (row);
   inMath = !TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema (TEXT("HTML"), event->document));
   if (inMath)
-#ifdef MATHML
     elType.ElTypeNum = MathML_EL_MTABLE;
-#else /* MATHML */
-    return FALSE;
-#endif /* MATHML */
   else
     elType.ElTypeNum = HTML_EL_Table;
   table = TtaGetTypedAncestor (row, elType);
@@ -1646,11 +1589,7 @@ NotifyElement      *event;
       /* the table element is just created now
        We need to create the table_head element */
       if (inMath)
-	{
-#ifdef MATHML
-	  CheckMTable (table, doc);
-#endif /* MATHML */
-	}
+	CheckMTable (table, doc);
       else
 	CheckTable (table, doc);
       NewTable = FALSE;

@@ -21,9 +21,7 @@
 
 #include "HTMLimage_f.h"
 #include "XMLparser_f.h"
-#ifdef MATHML
 #include "MathML.h"
-#endif
 #include "fetchHTMLname_f.h"
 #include "html2thot_f.h"
 #include "transparse_f.h"
@@ -1429,13 +1427,11 @@ strNode            *TN;
   ustrcpy (NS->Tag, ND->Tag);
   GIType (NS->Tag, &elType, TransDoc);
  
-#ifdef MATHML
   if (elType.ElSSchema == NULL)
     {
       /*specifique a MathML */
       elType.ElSSchema = TtaGetSSchema (TEXT("MathML"), TransDoc);
     }
-#endif
 
   NS->Idf = idfCounter++;
   NS->Nbc = 0;
@@ -2136,12 +2132,10 @@ STRING              prevtag;
 	       !ustrcmp (GITagNameByType (subTypes[0]), TEXT("none")))
 	/* search if tag can be inserted as a child of the identity */
 	result = IsValidHtmlChild (subTypes[0], tag, _EMPTYSTR_);
-#ifdef MATHML
       /* any math element can be inserted under <MATH> (only row in MathML.S)*/
       if (!result && !ustrcmp (TtaGetElementTypeName (elemType), TEXT("MathML")) && 
 	  ustrcmp (TtaGetSSchemaName (elemType.ElSSchema), TEXT("MathML")) == 0)
 	result = IsValidHtmlChild (subTypes[0], tag, _EMPTYSTR_);
-#endif
       break;
 
     case ConstructList:
@@ -2449,10 +2443,8 @@ STRING              data;
 	  attrType.AttrSSchema = TtaGetElementType (myFirstSelect).ElSSchema;
 	  if (!ustrcmp (TtaGetSSchemaName (attrType.AttrSSchema), TEXT("HTML")))
 	    attrType.AttrTypeNum = HTML_ATTR_Ghost_restruct;
-#ifdef MATHML
 	  else if (!ustrcmp (TtaGetSSchemaName (attrType.AttrSSchema), TEXT("MathML")))
 	    attrType.AttrTypeNum = MathML_ATTR_Ghost_restruct;
-#endif
 	  found = FALSE;
 	  elFound = NULL;
 	  attr = NULL;

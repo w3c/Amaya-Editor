@@ -3148,7 +3148,14 @@ indLine             wi;
 	       CreatePRule (PtBackground, wi);
 	       break;
 	    case KWD_Foreground:
-	       CreatePRule (PtForeground, wi);
+	       if (gCode == RULE_Rule4)
+	          CreatePRule (PtForeground, wi);
+	       else if (gCode == RULE_BorderColor)
+		  {
+	          CurRule->PrPresMode = PresImmediate;
+		  CurRule->PrAttrValue = False;
+		  CurRule->PrIntValue = -1;   /* -1 means Foreground color */
+		  }
 	       break;
 	    case KWD_ShowBox:
 	       LayoutRule (FnShowBox, wi);

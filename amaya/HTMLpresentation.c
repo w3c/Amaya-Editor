@@ -17,9 +17,7 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "css.h"
-#ifdef MATHML
 #include "MathML.h"
-#endif
 #ifdef GRAPHML
 #include "GraphML.h"
 #endif
@@ -335,16 +333,13 @@ Element             elem;
 {
    AttributeType       attrType;
    Attribute           styleAttr;
-#ifdef MATHML
    ElementType         elType;
-#endif
    Element	       firstChild, lastChild;
 #define STYLELEN 1000
    STRING              style;
    int                 len;
 
    /* does the element have a Style_ attribute ? */
-#ifdef MATHML
    elType = TtaGetElementType (elem);
    if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")) == 0)
       {
@@ -352,7 +347,6 @@ Element             elem;
 	attrType.AttrTypeNum = MathML_ATTR_style_;
       }
    else
-#endif
 #ifdef GRAPHML
    elType = TtaGetElementType (elem);
    if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML") == 0)

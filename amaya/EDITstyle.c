@@ -17,9 +17,7 @@
 #include "amaya.h"
 #include "css.h"
 #include "undo.h"
-#ifdef MATHML
 #include "MathML.h"
-#endif
 #ifdef GRAPHML
 #include "GraphML.h"
 #endif
@@ -60,9 +58,7 @@ Document          doc;
 ThotBool          removeSpan;
 #endif
 {
-#ifdef MATHML
    ElementType		elType;
-#endif
    Attribute            attr;
    AttributeType        attrType;
    Element		firstChild, lastChild;
@@ -70,7 +66,6 @@ ThotBool          removeSpan;
    if (el == NULL)
       return;
    elType = TtaGetElementType (el);
-#ifdef MATHML
    /* if it's a MathML element, remove the style attribute defined in the
       MathML DTD, otherwise, remove the style attribute defined in the
       HTML DTD */
@@ -80,7 +75,6 @@ ThotBool          removeSpan;
       attrType.AttrTypeNum = MathML_ATTR_style_;
       }
    else
-#endif
 #ifdef GRAPHML
    /* if it's a GraphML element, remove the style attribute defined in the
       GraphML DTD, otherwise, remove the style attribute defined in the
@@ -406,9 +400,7 @@ NotifyAttribute    *event;
 #endif
 {
    Element             el, firstChild, lastChild, oldParent, newParent;
-#ifdef MATHML
    ElementType	       elType;
-#endif
    Document            doc;
    Attribute           at;
    AttributeType       atType;
@@ -428,7 +420,6 @@ NotifyAttribute    *event;
      {
 	/* empty Style attribute. Delete it */
 	elType = TtaGetElementType (el);
-#ifdef MATHML
         /* if it's a MathML element, delete the style attribute defined in the
            MathML DTD, otherwise, delete the style attribute defined in the
            HTML DTD */
@@ -438,7 +429,6 @@ NotifyAttribute    *event;
 	   atType.AttrTypeNum = MathML_ATTR_style_;
 	   }
 	else
-#endif
 #ifdef GRAPHML
         /* if it's a GraphML element, delete the style attribute defined in the
            GraphML DTD, otherwise, delete the style attribute defined in the
@@ -661,14 +651,12 @@ Document            doc;
 		   curEl = span;
 		   }
 	        }
-#ifdef MATHML
 	  if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")))
 	     {
 	     attrType.AttrSSchema = elType.ElSSchema;
 	     attrType.AttrTypeNum = MathML_ATTR_class;
 	     }
 	  else
-#endif
 #ifdef GRAPHML
 	  if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
 	     {
@@ -868,14 +856,12 @@ Document            doc;
       a_class = &CurrentClass[0];
       if (*a_class == '.')
 	 a_class++;
-#ifdef MATHML
       if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")))
 	 {
 	   attrType.AttrSSchema = elType.ElSSchema;
 	   attrType.AttrTypeNum = MathML_ATTR_class;
 	 }
       else
-#endif
 #ifdef GRAPHML
       if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
 	 {
@@ -1159,7 +1145,6 @@ STRING              first;
      if (attr != NULL)
 	PutClassName (attr, buf, &index, &free, &nb);
      }
-#ifdef MATHML
   /* looks for the class attribute defined in the MathML DTD */
   attrType.AttrSSchema = TtaGetSSchema (TEXT("MathML"), doc);
   if (attrType.AttrSSchema)
@@ -1174,7 +1159,6 @@ STRING              first;
 	   PutClassName (attr, buf, &index, &free, &nb);
         }
      }
-#endif
 #ifdef GRAPHML
   /* looks for the class attribute defined in the GraphML DTD */
   attrType.AttrSSchema = TtaGetSSchema ("GraphML", doc);
@@ -1252,14 +1236,12 @@ View                view;
 #endif /* !_WINDOWS */
       
       /* preselect the entry corresponding to the class of the element. */
-#ifdef MATHML
       if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")))
 	{
 	  attrType.AttrSSchema = elType.ElSSchema;
 	  attrType.AttrTypeNum = MathML_ATTR_class;
 	}
       else
-#endif
 #ifdef GRAPHML
 	if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
 	  {
@@ -1315,9 +1297,7 @@ View                view;
   Attribute           attr;
   AttributeType       attrType;
   Element             firstSelectedEl;
-#ifdef MATHML
   ElementType	      elType;
-#endif
   CHAR_T              a_class[50];
   int                 len;
   int                 firstSelectedChar, lastSelectedChar;
@@ -1343,7 +1323,6 @@ View                view;
 
   /* preselect the entry corresponding to the class of the first selected
      element. */
-#ifdef MATHML
   elType = TtaGetElementType (firstSelectedEl);
   if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")))
      {
@@ -1351,7 +1330,6 @@ View                view;
      attrType.AttrTypeNum = MathML_ATTR_class;
      }
   else
-#endif
 #ifdef GRAPHML
   elType = TtaGetElementType (firstSelectedEl);
   if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML"))

@@ -165,7 +165,8 @@ number
    79	MarginWidth =     InheritParent / 'Auto' / Distance .
    80	PaddingWidth =    InheritParent / Distance .
    81	BorderWidth =     InheritParent / 'Thin' / 'Medium' / 'Thick' / Distance .
-   82	BorderColor =     InheritParent / 'Transparent' / FontColorName .
+   82	BorderColor =     InheritParent / 'Transparent' / 'Foreground' /
+	                  FontColorName .
    83	BorderStyle =     InheritParent /
 	                  'None' / 'Hidden' / 'Dotted' / 'Dashed' / 'Solid' /
 	                  'Double' / 'Groove' / 'Ridge' / 'Inset' / 'Outset' .
@@ -456,7 +457,7 @@ code  key-word      numbers of rules using the key-word
 1182  LineWeight         53
 1183  FillPattern        53
 1184  Background         53
-1185  Foreground         53
+1185  Foreground         53  82
 1186  ShowBox            53
 1187  BackgroundPicture  53
 1188  PictureMode        53

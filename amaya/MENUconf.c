@@ -2718,9 +2718,7 @@ static void SetEnvCurrentGeometry ()
     {
       SetEnvGeom (TEXT("Formatted_view"));
       SetEnvGeom (TEXT("Structure_view"));
-#ifdef MATHML
       SetEnvGeom (TEXT("Math_Structure_view"));
-#endif /* MATHML */
 #ifdef GRAPHML
       SetEnvGeom ("Graph_Structure_view");
 #endif /* GRAPHML */
