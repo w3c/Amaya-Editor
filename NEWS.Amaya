@@ -22,6 +22,9 @@ Extensions 2.1:
       document when you have a template server.
     + "New CSS" displays a form to choose the style sheet location first.
   - Menu Special/Preferences contains a new item for language negotiation.
+  - In addition to the color palette in the Special/Preferences/Colors
+    menu, the user may now type in directly the color code (the color
+    palette is only available under Windows).
 
 * Thot API: Due to a conflict with the libjpeg definition the Thot type
   boolean has been renamed ThotBool.
@@ -30,9 +33,28 @@ Extensions 2.1:
   all attributes are yet taken into account when formatting mathematical
   expressions.
 
-* LibWWW: 
+* LibWWW:
+  - Updated to version 5.2.9.
+  - libwww is now compiled as a number of mini libraries instead of big, 
+    monolithic one.  We only compile those that are needed for Amaya, thus
+    reducing the compilation time and size of the Amaya executable.
+  - The libwww cache entry wasn't being updated when saving a previously 
+    cached document.
+  - Tagged the libwww CVS base with an "Amaya" tag, showing the reference
+    version used in the latest Amaya release.
 
 * New list of Amaya shortcuts for both Windows and Unix platforms.
+
+* User preferences: 
+  - Changed the behavior of the user and temporary directories under Windows.
+  - Stopped using the Windows registry to store state information.
+  - The directory where the user preferences are stored is now a fixed one.
+    The user may change the location of the temporary directory as well as 
+    that of the cache. Users are advised to reselect their preferences, rather
+    copying their precedent thot.rc file. You may copy your amaya.css,
+    HTML.conf, and dictionary.DCT files from your old Amaya home directory
+    to its new location. For more information, consult the 
+    Help/Configuring Amaya document.
 
 Fixed bugs 2.1:
 ---------------
@@ -58,6 +80,10 @@ Fixed bugs 2.1:
 * Amaya didn't take care to the Shift in the keyboard configuration file.
 
 * Improvement of Windows dialogues.
+
+* The libwww cache entry wasn't being updated when saving a previously 
+  cached document.
+
   
 =============================================================
 2.0
