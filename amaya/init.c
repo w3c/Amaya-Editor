@@ -1290,7 +1290,11 @@ void CheckParsingErrors (Document doc)
   int        prof;
 #endif /*_PARSING*/
 
-  
+#ifndef _WINGUI
+  CloseLogs (doc);
+  closeLog = TRUE;
+#endif /* _WINGUI */
+
   if (BADMimeType)
     {
       /* the mime type doesn't match the doctype */
@@ -1337,8 +1341,7 @@ void CheckParsingErrors (Document doc)
 	    {
 	      if (ExtraChoice || UserAnswer)
 		{
-         /* Close the Log file */
-          CloseLogs (doc);
+		  CloseLogs (doc);
 		  closeLog = TRUE;
 		  ShowLogFile (doc, 1);
 		  ShowSource (doc, 1);
@@ -1378,10 +1381,10 @@ void CheckParsingErrors (Document doc)
 	  CleanUpParsingErrors ();
 	  if (UserAnswer)
 	    {
-          CloseLogs (doc);
-		  closeLog = TRUE;
-		  ShowLogFile (doc, 1);
-		  ShowSource (doc, 1);
+	      CloseLogs (doc);
+	      closeLog = TRUE;
+	      ShowLogFile (doc, 1);
+	      ShowSource (doc, 1);
 	    }
 	}
       else if (XMLErrorsFound)
@@ -1392,10 +1395,10 @@ void CheckParsingErrors (Document doc)
 	  CleanUpParsingErrors ();
 	  if (UserAnswer)
 	    {
-          CloseLogs (doc);
-		  closeLog = TRUE;
-		  ShowLogFile (doc, 1);
-		  ShowSource (doc, 1);
+	      CloseLogs (doc);
+	      closeLog = TRUE;
+	      ShowLogFile (doc, 1);
+	      ShowSource (doc, 1);
 	    }
 	}
 #endif /*_PARSING*/
