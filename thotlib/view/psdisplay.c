@@ -1699,7 +1699,7 @@ void DrawEllips (int frame, int thick, int style, int x, int y, int width,
        /* Draw a circle */
        fprintf (fout, "%d %d %d %d %d cer\n", style, thick, xm, -ym, width);
      }
-   else
+   else if (height != 0)
      {
        /* Draw an ellips */
        fprintf (fout, "%d %d %d %d %d %d ellipse\n", style, thick,
