@@ -1397,8 +1397,6 @@ static int CopyXClipboard (unsigned char **buffer, View view)
 void TtcCopyToClipboard (Document doc, View view)
 {
 #ifdef _WX
-  wxTheClipboard->UsePrimarySelection();
-
   // Write some text to the clipboard
   if (wxTheClipboard->Open())
     {
@@ -1416,7 +1414,7 @@ void TtcCopyToClipboard (Document doc, View view)
 	  
 	  // This data objects are held by the clipboard, 
 	  // so do not delete them in the app.
-	  wxTheClipboard->SetData( new wxTextDataObject( TtaConvMessageToWX((char *)buffer) ) );
+	  wxTheClipboard->AddData( new wxTextDataObject( TtaConvMessageToWX((char *)buffer) ) );
 	  // do not log clipboard because some caracteres causes amaya to crash ... I don't know why.
 	  //	  wxLogDebug( _T("TtcCopyToClipboard: ") + TtaConvMessageToWX((char *)buffer) );
 	}

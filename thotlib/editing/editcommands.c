@@ -3893,12 +3893,7 @@ void TtcInclude (Document doc, View view)
   ----------------------------------------------------------------------*/
 void TtcPasteFromClipboard (Document doc, View view)
 {
-#ifdef _WX
-  // On X11, we want to get the data from the primary selection instead
-  // of the normal clipboard (which isn't normal under X11 at all). This
-  // call has no effect under MSW.
-  wxTheClipboard->UsePrimarySelection();
-  
+#ifdef _WX 
   if (!wxTheClipboard->Open())
     {
       wxLogDebug(_T("Can't open clipboard."));
