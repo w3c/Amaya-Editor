@@ -1,4 +1,3 @@
-
 /*
  *
  *  (c) COPYRIGHT MIT and INRIA, 1999.
@@ -29,7 +28,7 @@ static CHAR_T *annotMainIndex; /* index file where we give the correspondance
 static ThotBool annotAutoLoad; /* should annotations be downloaded
 				  automatically? */
 static ThotBool annotCustomQuery; /* use an algae custom query if TRUE */
-static CHAR_T annotAlgaeText[MAX_LENGTH];    /* the custom algae query text */
+static CHAR_T *annotAlgaeText;    /* the custom algae query text */
 
 /* the structure used for storing the context of the 
    RemoteLoad_callback function */
@@ -92,10 +91,10 @@ void SetAnnotAlgaeText (CHAR_T *value)
 ThotBool value
 #endif /* __STDC__*/
 {
-  if (!value)
-    annotAlgaeText[0] = WC_EOS;
+  if (!value && *value == WC_EOS)
+    annotAlgaeText = NULL;
   else
-    ustrcpy (annotAlgaeText, value);
+    annotAlgaeText = TtaStrdup (value);
 }
 
 /*-----------------------------------------------------------------------
@@ -216,24 +215,44 @@ List *CopyAnnotServers (CHAR_T *server_list)
   -----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void CopyAlgaeTemplateURL (CHAR_T *dest, CHAR_T *proto, CHAR_T *url)
+static void CopyAlgaeTemplateURL (CHAR_T **dest, CHAR_T *proto, CHAR_T *url)
 #else /* __STDC__*/
 static void CopyAlgaeTemplateURL (dest, proto, url)
-CHAR_T *dest;
+CHAR_T **dest;
 CHAR_T *proto;
 CHAR_T *url;
 #endif /* __STDC__*/
 {
   CHAR_T *in;
   CHAR_T *out;
+  CHAR_T *tmp;
   int proto_len;
   int url_len;
-  
+  int i;
   proto_len = ustrlen (proto);
   url_len = ustrlen (url);
 
+  /* allocate enough memory in the string */
+  /* @@ I'm lazy today, so I'll just count how many times we have
+     cookies, rather than reallocating the memory if it's not enough */
+  i = 0;
   in = annotAlgaeText;
-  out = dest;
+  while (in)
+    {
+      tmp = ustrstr (in, TEXT("%u"));
+      if (tmp)
+	{
+	  i++;
+	  in = tmp + 2;
+	}
+      else
+	break;
+    }
+  *dest = TtaGetMemory (i * (ustrlen (proto) + ustrlen (url))
+			+ ustrlen (annotAlgaeText)
+			+ 30);
+  in = annotAlgaeText;
+  out = *dest;
   while (*in != WC_EOS)
     {
       if (*in == TEXT('%') && *(in + 1) == TEXT('u'))
@@ -247,8 +266,8 @@ CHAR_T *url;
       else
 	{
 	  *out = *in;
-	  *in++;
-	  *out++;
+	  in++;
+	  out++;
 	}
     }
   *out = WC_EOS;
@@ -295,7 +314,7 @@ void ANNOT_Init ()
 
   /* @@@ temporary custom query, as we could use the configuration menu  ***/
   annotCustomQuery = FALSE;
-  annotAlgaeText[0] = WC_EOS;
+  annotAlgaeText = NULL;
 
   /* create the directory where we'll store the annotations if it
      doesn't exist ** how to check that with the thotlib? */
@@ -325,6 +344,8 @@ void ANNOT_Quit ()
       List_delAll (&annotServers);
   if (annotPostServer)  
     TtaFreeMemory (annotPostServer);
+  if (annotAlgaeText)
+    TtaFreeMemory (annotAlgaeText);
 }
 
 /*-----------------------------------------------------------------------
@@ -444,19 +465,26 @@ View view;
 	  /* make some space to store the remote file name */
 	  ctx->remoteAnnotIndex = TtaGetMemory (MAX_LENGTH);
 	  /* "compute" the url we're looking up in the annotation server */
-	  annotURL = TtaGetMemory (MAX_LENGTH);
 	  if (!IsW3Path (DocumentURLs[doc]) &&
 	      !IsFilePath (DocumentURLs[doc]))
 	    proto = "file://";
 	  else
 	    proto = "";
-	  if (!annotCustomQuery || annotAlgaeText[0] == WC_EOS)
-	    sprintf (annotURL, "w3c_annotates=%s%s", proto, DocumentURLs[doc]);
+	  if (!annotCustomQuery || !annotAlgaeText || 
+	      annotAlgaeText[0] == WC_EOS)
+	    {
+	      annotURL = TtaGetMemory (ustrlen (DocumentURLs[doc])
+				       + ustrlen (proto)
+				       + sizeof (TEXT("w3c_annotate="))
+				       + 50);
+	      sprintf (annotURL, "w3c_annotates=%s%s", proto, 
+		       DocumentURLs[doc]);
+	    }
 	  else
 	    /* substitute the %u for DocumentURLs[doc] and go for it! */
 	    /* @@ we have a potential mem bug here as I'm not computing
 	       the exact size */
-	    CopyAlgaeTemplateURL (annotURL, proto, DocumentURLs[doc]);
+	    CopyAlgaeTemplateURL (&annotURL, proto, DocumentURLs[doc]);
 
 	  /* launch the request */
 	  res = GetObjectWWW (doc,

@@ -39,7 +39,7 @@ static CHAR_T  s[MAX_LENGTH]; /* general purpose buffer */
 
 static int     CustomQueryBase;
 static ThotBool CustomQueryFlag;
-static CHAR_T  AlgaeText[MAX_LENGTH];
+static CHAR_T  *AlgaeText;
 
 /************************************************************
  ** Local annotation filter variables
@@ -91,13 +91,15 @@ CHAR_T              *data;
 	      /* apply */
 	      SetAnnotCustomQuery (CustomQueryFlag);
 	      SetAnnotAlgaeText (AlgaeText);
+	      TtaFreeMemory (AlgaeText);
 	      TtaDestroyDialogue (ref);
 	      break;
 	    case 2:
 	      /* get default */
 	      CustomQueryFlag = FALSE;
-	      AlgaeText[0] = WC_EOS;
-	      TtaSetTextForm (CustomQueryBase + mFreeText, AlgaeText);
+	      TtaFreeMemory (AlgaeText);
+	      AlgaeText = NULL;
+	      TtaSetTextForm (CustomQueryBase + mFreeText, TEXT(""));
 	      TtaSetMenuForm (CustomQueryBase + mExpertMode, 0);
 	      break;
 
@@ -127,11 +129,14 @@ CHAR_T              *data;
 
 	case mFreeText :
 	  if (data)
-	    ustrcpy (AlgaeText, data);
+	    AlgaeText = TtaStrdup (data);
 	  else
-	    AlgaeText[0] = WC_EOS;
+	    {
+	      TtaFreeMemory (AlgaeText);
+	      AlgaeText = NULL;
+	    }
 	  break;
-
+	  
 	default:
 	  break;
 	}
@@ -233,17 +238,20 @@ View         view;
    TtaNewTextForm (CustomQueryBase + mFreeText,
 		   CustomQueryBase + CustomQueryMenu,
 		   TEXT("(%u stands for the URL of the document that's being browsed)"),
-		   90,
+		   70,
 		   5,
 		   TRUE);
 
    /* initialize the menu */
    ptr = GetAnnotAlgaeText ();
    if (ptr)
-     ustrcpy (AlgaeText, ptr);
+     {
+       AlgaeText = TtaStrdup (ptr);
+       TtaSetTextForm (CustomQueryBase + mFreeText, AlgaeText);
+     }
    else
-     AlgaeText[0] = WC_EOS;
-   TtaSetTextForm (CustomQueryBase + mFreeText, AlgaeText);
+     AlgaeText = NULL;
+   
    CustomQueryFlag = GetAnnotCustomQuery ();
    TtaSetMenuForm (CustomQueryBase + mExpertMode, (CustomQueryFlag) ? 1 : 0);
 
