@@ -24,7 +24,7 @@
    Returns the number of elements if operation succeded or a 0 if 
    the operation failed.
   ----------------------------------------------------------------------*/
-extern int      TtaRebuildProTable (char *prof_file);
+extern void     TtaRebuildProTable (char *prof_file);
 
 /*----------------------------------------------------------------------
    TtaGetProfileFineName:  Get the text for the profile file name.
@@ -46,7 +46,7 @@ extern void     TtaGetDefProfileFileName (STRING name, int length);
 extern int      TtaGetProfilesItems (STRING *listEntries, int length);
 
 #else  /* !__STDC__ */
-extern int      TtaRebuildProTable (/*char *prof_file*/);
+extern void     TtaRebuildProTable (/*char *prof_file*/);
 extern void     TtaGetProfileFileName (/*STRING name, int length*/);
 extern void     TtaGetDefProfileFileName (/*STRING name, int length*/);
 extern int      TtaGetProfilesItems (/*STRING *listEntries, int length*/);

@@ -69,6 +69,7 @@ static char                 ProfileBuff[MAX_PRO_LENGTH];
 /* This boolean goes FALSE if the profile only contains browsing functions */
 static ThotBool             ProfileReadOnly = TRUE;
 
+#include "registry_f.h"
 
 /*********************************************************
   String functions : set of useful functions for strings
@@ -324,7 +325,6 @@ char          *element;
   ProElement      *pEntry;
   PtrProCtl        ctxt;
   int              i;
-  ThotBool         endOfItem = FALSE;
   
   if (*element == PROFILE_START)
     {
@@ -496,7 +496,6 @@ ThotBool    Prof_BelongTable (name)
 char              *name;
 #endif /* !__STDC__ */
 {
-  char            *ptr;
   int              left, right, middle, i;
   ThotBool         found = FALSE;
 
@@ -531,7 +530,6 @@ void Prof_InitTable ()
   FILE               *profFile;
   char               *ptr;
   char                buffer[200];
-  int                 i = 0;
 
   /* TODO: use a ISO functions for TtaGetEnvString and TtaStrdup */
   /* Retreive thot.rc variables and open the profile file */
@@ -609,9 +607,9 @@ void Prof_FreeTable ()
    the operation failed.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int      TtaRebuildProTable (char *prof_file)
+void     TtaRebuildProTable (char *prof_file)
 #else  /* !__STDC__ */
-int      TtaRebuildProTable (prof_file)
+void     TtaRebuildProTable (prof_file)
 char    *prof_file;
 #endif /* !__STDC__ */
 {

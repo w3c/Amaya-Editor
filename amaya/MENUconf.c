@@ -153,7 +153,7 @@ static HWND TemplatesHwnd = NULL;
 #endif /* _WINDOWS */
 static int TemplatesBase;
 static CHAR_T TemplatesUrl [MAX_LENGTH];
-static int CurrentProfile;
+static int CurrentProfile = -1;
 
 #ifndef AMAYA_JAVA
 #include "query_f.h"

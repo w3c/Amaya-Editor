@@ -9,7 +9,7 @@
 extern ThotBool Prof_BelongTable ( char *name );
 extern void Prof_InitTable ( void );
 extern void Prof_FreeTable ( void );
-extern int TtaRebuildProTable ( char *prof_file );
+extern void TtaRebuildProTable ( char *prof_file );
 extern void TtaGetProfileFileName ( STRING name,
                                     int length );
 extern int TtaGetProfilesItems ( STRING *listEntries,
@@ -26,7 +26,7 @@ extern ThotBool Prof_ShowMenu ( Menu_Ctl *ptrmenu );
 extern ThotBool Prof_BelongTable (/* char *name */);
 extern void Prof_InitTable (/* void */);
 extern void Prof_FreeTable (/* void */);
-extern int TtaRebuildProTable (/* char *prof_file */);
+extern void TtaRebuildProTable (/* char *prof_file */);
 extern void TtaGetProfileFileName (/* STRING name,
                                       int length */);
 extern int TtaGetProfilesItems (/* STRING *listEntries,
