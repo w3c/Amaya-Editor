@@ -986,14 +986,35 @@ LRESULT CALLBACK WIN_ScrPopupProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM 
         HWND   listBox;
         DWORD  dwStyle;
         RECT   rect;
+	HDC    display;
+	TEXTMETRIC  textMetric;
+	int    width;
+	int    height;
+
 	/* create a list box inside the container window */
 	scrPopupWin = hwnDlg;
 	dwStyle = WS_BORDER | WS_CHILD | WS_VISIBLE | WS_VSCROLL | WS_HSCROLL 
 	  | LBS_HASSTRINGS | LBS_NOTIFY | LBS_WANTKEYBOARDINPUT;
 	/* give it the same size as that of the container */
 	GetWindowRect (hwnDlg, &rect);
+	width = rect.right - rect.left;
+	height = rect.bottom - rect.top;
+	display = GetDC(hwnDlg);
+	if (GetTextMetrics (display, &textMetric))
+	  {
+	    int fh, wh;
+	    
+	    height = height * textMetric.tmHeigh;
+	    width = width * textMetric.tmMaxCharWidth + textMetric.tmOverhang;
+	  }
+	else 
+	  {
+	    /* try to give it some value */
+	    height = height * 10;
+	    width = width * 10;
+	  }
 	listBox = CreateWindowEx (WS_EX_CLIENTEDGE, "LISTBOX", NULL, dwStyle, 0, 0,
-				  rect.right - rect.left, rect.bottom - rect.top,
+				  width, height,
 				  hwnDlg, (HMENU) 1, hInstance, NULL);
 	/* set the font of the window */
 	newFont = GetStockObject (DEFAULT_GUI_FONT); 
@@ -1078,6 +1099,7 @@ static HWND WIN_InitScrPopup (ThotWindow parent, int ref,
   static ATOM   wndScrPopupRegistered;
   HWND          menu;
   POINT         curPoint;
+  HFONT         newFont;
 
   szAppName = (LPCSTR) "MYSCRPOPUP";
   /* register the popup scroll widget class if it doesn't exists */
@@ -1100,6 +1122,9 @@ static HWND WIN_InitScrPopup (ThotWindow parent, int ref,
   /* we don't use the multipleOptions variable anymore */
   /* we use a global variable, as I was unable to pass a parameter with CreateWindow */
   /* multipleSel = multipleOptions; */
+
+  /* compute the height and width in pixels, using the system font */
+  
   /* create a widget instance at the current cursor position */
   GetCursorPos (&curPoint);
   menu = CreateWindow (szAppName,  NULL,
@@ -1108,6 +1133,11 @@ static HWND WIN_InitScrPopup (ThotWindow parent, int ref,
 		       parent, NULL, hInstance, NULL);
   if (!menu)
     return NULL;
+  /* we try to add a font to this window so that we can size the listbox correctly */
+  newFont = GetStockObject (DEFAULT_GUI_FONT); 
+  if (newFont)
+    SendMessage (menu, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
+  
   /* store the catalogue reference inside the window */
   SetProp (menu, "ref", (HANDLE) ref);
   return menu;
@@ -3469,7 +3499,7 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
       /* Create a new dialog window for the scrolled window to be
 	 packed into. */
 
-      /* compute the widget size */
+      /* compute the widget size in number of chars and lines */
       i = 0;
       max_entry_len = 0;
       index = 0;
@@ -3492,11 +3522,12 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
 	  index = index + cur_len + 1;
 	  i++;
 	}
-      width = (max_entry_len + 2) * CharacterWidth ((int) 'M',  FontDialogue);
+      width = (max_entry_len + 2);
       if (number < 10)
-	height = (number) * CharacterHeight ((int) 'M', FontDialogue);
+	height = number;
       else
-	height = 10 * CharacterHeight ((int) 'M', FontDialogue);
+	height = 10;
+
 #ifdef _WINDOWS
       menu = WIN_InitScrPopup (parent, ref, multipleOptions, number, width, height);
       if (menu)
@@ -3537,8 +3568,10 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
       gtk_widget_show (scr_window);
       /* set the widget size */
       /* (experience shows that GTK doesn't report a good font height ! Multiplying
-       it by two fixes a bit the problem)  */
-      gtk_widget_set_usize (scr_window, width, height * 2);
+	 it by two fixes a bit the problem)  */
+      width = (width) * (CharacterWidth ((int) 'm',  FontDialogue));
+      height = height * 2 * (CharacterHeight ((int) 'M', FontDialogue));
+      gtk_widget_set_usize (scr_window, width, height);
       GTK_WIDGET_UNSET_FLAGS (GTK_SCROLLED_WINDOW (scr_window)->hscrollbar, GTK_CAN_FOCUS);
       GTK_WIDGET_UNSET_FLAGS (GTK_SCROLLED_WINDOW (scr_window)->vscrollbar, GTK_CAN_FOCUS);
       gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scr_window), GTK_POLICY_AUTOMATIC,
