@@ -1629,14 +1629,14 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int indent,
     {
       width = pBox->BxMinWidth;
       if (width == 0)
-	width = 20 + l + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding + r + pBox->BxRMargin + pBox->BxRBorder + pBox->BxRPadding;
+	width = 20 + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding + pBox->BxRMargin + pBox->BxRBorder + pBox->BxRPadding;
     }
   else if (!variable && pBox)
     width = pBox->BxWidth;
   else if (pBox)
-    width = 20 + l + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding + r + pBox->BxRMargin + pBox->BxRBorder + pBox->BxRPadding;
+    width = 20 + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding + pBox->BxRMargin + pBox->BxRBorder + pBox->BxRPadding;
   else
-    width = 20 + l + r;
+    width = 20;
 
   if (floatL)
     {
@@ -1691,11 +1691,20 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int indent,
 	  else
 	    floatL = NULL;
 	}
+
       if (floatL == NULL)
 	{
 	  /* line at left of the block */
 	  pLine->LiXOrg = left + indent;
 	  bottomL = pLine->LiYOrg;
+	}
+      else if (pBlock->BxType == BoFloatBlock)
+	{
+	  /* keep the minimun of extra margins and the current shift */
+	  if (pLine->LiXOrg > left + l)
+	    pLine->LiXOrg -= l;
+	  else
+	    pLine->LiXOrg = left;
 	}
 
       if (floatR &&
@@ -1726,6 +1735,7 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int indent,
 	      if (pfloatR)
 		floatR = pfloatR->FlBox;
 	    }
+
 	  if (pfloatR)
 	    {
 	      /* line extended to the left edge of a previous right float */
@@ -1735,11 +1745,18 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int indent,
 	  else
 	    floatR = NULL;
 	}
+
       if (floatR == NULL)
 	{
 	  /* line extended to the right edge of the block */
 	  pLine->LiXMax = left + pBlock->BxW - pLine->LiXOrg;
 	  bottomR = pLine->LiYOrg;
+	}
+      else if (pBlock->BxType == BoFloatBlock)
+	{
+	  /* keep the minimun of extra margins and the current shift */
+	  if (pLine->LiXMax > left + pBlock->BxW - pLine->LiXOrg)
+	    pLine->LiXMax = left + pBlock->BxW - pLine->LiXOrg;
 	}
   
       /* check if there is enough space between left and right floating boxes */
@@ -2535,7 +2552,7 @@ static void UpdateBlockWithFloat (PtrBox pBlock, ThotBool xAbs, ThotBool yAbs,
 {
   PtrFloat            pfloat;
   int                 y, x, x1, x2;
-  int                 t, b, l, r;
+  int                 t = 0, b = 0, l = 0, r = 0;
 
   if (xAbs)
     x = pBlock->BxXOrg;
@@ -4294,7 +4311,7 @@ void EncloseInLine (PtrBox pBox, int frame, PtrAbstractBox pAb)
 		  pLine->LiHeight = descent + ascent;
 		  /* delta of the block height if it's the last line */
 		  h = pLine->LiYOrg + pLine->LiHeight - pBlock->BxH;
-		  shift = pLine->LiYOrg + pLine->LiHeight - y;
+		  shift = pBlock->BxYOrg + pLine->LiYOrg + pLine->LiHeight - y;
 		}
 
 	      /* Move next floated boxes */

@@ -438,7 +438,6 @@ void SetPositionConstraint (BoxEdge localEdge, PtrBox pBox, int *val)
 {
   AbPosition         *pPosAb;
 
-   /* Calcule l'origine de la boite et les points fixes */
    switch (localEdge)
      {
      case Left:
@@ -456,12 +455,14 @@ void SetPositionConstraint (BoxEdge localEdge, PtrBox pBox, int *val)
        *val -= pBox->BxVertRef;
        pPosAb = &pBox->BxAbstractBox->AbVertRef;
        if (pPosAb->PosAbRef == pBox->BxAbstractBox)
-	 if (pPosAb->PosRefEdge == VertMiddle)
-	   pBox->BxHorizEdge = VertMiddle;
-	 else if (pPosAb->PosRefEdge == Right)
-	   pBox->BxHorizEdge = Right;
-	 else
-	   pBox->BxHorizEdge = Left;
+	 {
+	   if (pPosAb->PosRefEdge == VertMiddle)
+	     pBox->BxHorizEdge = VertMiddle;
+	   else if (pPosAb->PosRefEdge == Right)
+	     pBox->BxHorizEdge = Right;
+	   else
+	     pBox->BxHorizEdge = Left;
+	 }
        else
 	 pBox->BxHorizEdge = VertRef;
        break;
@@ -480,12 +481,14 @@ void SetPositionConstraint (BoxEdge localEdge, PtrBox pBox, int *val)
        *val -= pBox->BxHorizRef;
        pPosAb = &pBox->BxAbstractBox->AbHorizRef;
        if (pPosAb->PosAbRef == pBox->BxAbstractBox)
-	 if (pPosAb->PosRefEdge == HorizMiddle)
-	   pBox->BxVertEdge = HorizMiddle;
-	 else if (pPosAb->PosRefEdge == Bottom)
-	   pBox->BxVertEdge = Bottom;
-	 else
-	   pBox->BxVertEdge = Top;
+	 {
+	   if (pPosAb->PosRefEdge == HorizMiddle)
+	     pBox->BxVertEdge = HorizMiddle;
+	   else if (pPosAb->PosRefEdge == Bottom)
+	     pBox->BxVertEdge = Bottom;
+	   else
+	     pBox->BxVertEdge = Top;
+	 }
        else
 	 pBox->BxVertEdge = HorizRef;
        break;
@@ -527,50 +530,23 @@ void     ComputeRadius (PtrAbstractBox pAb, int frame, ThotBool horizRef)
   ----------------------------------------------------------------------*/
 int GetGhostSize (PtrBox pBox, ThotBool horizontal)
 {
-  PtrAbstractBox  pAb, pChild, pNext, pParent;
+  PtrAbstractBox  pParent;
   int             dim;
 
   if (pBox == NULL)
     return 0;
   else if (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost)
     {
-      pAb = pBox->BxAbstractBox;
-      /* check the block type */
-      pParent = pAb;
-      while (pParent && pParent->AbBox &&
-	     (pParent->AbBox->BxType == BoGhost ||
-	      pParent->AbBox->BxType == BoFloatGhost))
-	pParent = pParent->AbEnclosing;
-
-      /* when it's a dummy box report changes to the children */
-      pChild = pAb->AbFirstEnclosed;
-      dim = 0;
-      while (pChild)
-	{
-	  /* skip presentation boxes */
-	  pNext = pChild->AbNext;
-	  while (pNext && pNext->AbPresentationBox)
-	    pNext = pNext->AbNext;
-	  if (pChild->AbBox && !pChild->AbPresentationBox)
-	    {
-	      if (pChild->AbBox->BxType == BoGhost ||
-		  pChild->AbBox->BxType == BoFloatGhost)
-		dim += GetGhostSize (pChild->AbBox, horizontal);
-	      else if (!pChild->AbPresentationBox)
-		{
-		  if (horizontal)
-		    dim += pChild->AbBox->BxWidth;
-		  else
-		    dim += pChild->AbBox->BxHeight;
-		}
-	      if (!pChild->AbPresentationBox &&
-		  ((horizontal && pParent->AbBox->BxType == BoFloatBlock) ||
-		   (!horizontal && pParent->AbBox->BxType == BoBlock)))
-		/* the first child gives the size */
-		return dim;
-	    }
-	  pChild = pNext;
-	}
+      pParent = pBox->BxAbstractBox->AbEnclosing;
+      pBox = pParent->AbBox;
+      if (pBox && (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost))
+	dim = GetGhostSize (pParent->AbBox, horizontal);
+      else if (horizontal)
+	dim = pBox->BxW;
+      else
+	dim = pBox->BxH;
+      if (horizontal && pBox->BxAbstractBox->AbWidth.DimUnit == UnPercent)
+	dim = dim * pBox->BxAbstractBox->AbWidth.DimValue / 100;
       return dim;
     }
   else if (horizontal)
@@ -1172,6 +1148,7 @@ void ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horiz
 	  y = pRefBox->BxYOrg;
 #endif /* _GL */
 	}
+
       if (pRefAb == pAb->AbEnclosing)
 	{
 	  GetExtraMargins (pRefBox, NULL, &t, &b, &l, &r);
