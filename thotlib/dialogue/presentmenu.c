@@ -338,7 +338,8 @@ int                 applyDomain;
 	       (*ThotLocalActions[T_selectsiblings]) (&pFirstSel, &pLastSel, &firstChar, &lastChar);
 	     if (firstChar == 0 && lastChar == 0)
 	       if (pFirstSel->ElPrevious == NULL && pLastSel->ElNext == NULL)
-		 if (pFirstSel->ElParent == pLastSel->ElParent)
+		 if (pFirstSel->ElParent != NULL &&
+		     pFirstSel->ElParent == pLastSel->ElParent)
 		   {
 		   pFirstSel = pFirstSel->ElParent;
 		   while (pFirstSel->ElPrevious == NULL &&
