@@ -2722,6 +2722,8 @@ int                 docid;
 		       if ((me->mode & AMAYA_ASYNC)
 			   || (me->mode & AMAYA_IASYNC))
 			 async_flag = TRUE;
+		       else
+			 async_flag = FALSE;
 #ifdef DEBUG_LIBWWW
                        fprintf (stderr,"StopRequest: killing req %p, url %s, status %d\n", me, me->urlName, me->reqStatus);
 #endif /* DEBUG_LIBWWW */
