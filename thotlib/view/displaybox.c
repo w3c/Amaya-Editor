@@ -249,6 +249,9 @@ ThotBool            selected;
 	    case 'D':
 	      DrawDoubleVerticalLine (frame, i, 5, xd, yd, width, height, 1, RO, op, fg);
 	      break;
+	    case '?':
+	      DrawChar ('?', frame, xd, yd, font, RO, op, fg);
+	      break;
 	    default:
 	      break;
 	    }
@@ -1361,7 +1364,7 @@ int                 h;
 
 
 /*----------------------------------------------------------------------
-  DisplayBox display a box depending on it's content.
+  DisplayBox display a box depending on its content.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)

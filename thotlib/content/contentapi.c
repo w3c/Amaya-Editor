@@ -889,82 +889,121 @@ Document            document;
      TtaError (ERR_invalid_element_type);
    else
      {
-	/* verifies the parameter document */
-	if (document < 1 || document > MAX_DOCUMENTS)
-	  TtaError (ERR_invalid_document_parameter);
-	else if (LoadedDocument[document - 1] == NULL)
-	  TtaError (ERR_invalid_document_parameter);
-	else
-	   /* parameter document is correct */
-	  {
-	     delta = 0;
-	     if (((PtrElement) element)->ElLeafType == LtSymbol)
-	       {
-		  if (((PtrElement) element)->ElGraph == EOS &&
-		      shape != EOS)
-		    delta = 1;
-		  else if (((PtrElement) element)->ElGraph != EOS &&
-			   shape == EOS)
-		    delta = -1;
-	       }
-	     else
-	       {
-		  polyline = (shape == 'S' || shape == 'U' || shape == 'N' ||
-			      shape == 'M' || shape == 'B' || shape == 'A' ||
-			      shape == 'F' || shape == 'D' || shape == 'p' ||
-			      shape == 's' || shape == 'w' || shape == 'x' ||
-			      shape == 'y' || shape == 'z');
-		  if (polyline &&
-		      ((PtrElement) element)->ElLeafType == LtGraphics)
-		     /* changing simple graphic --> polyline */
-		    {
-		       ((PtrElement) element)->ElLeafType = LtPolyLine;
-		       GetTextBuffer (&((PtrElement) element)->ElPolyLineBuffer);
-		       ((PtrElement) element)->ElNPoints = 1;
-		       ((PtrElement) element)->ElText->BuLength = 1;
-		       ((PtrElement) element)->ElText->BuPoints[0].XCoord = 0;
-		       ((PtrElement) element)->ElText->BuPoints[0].YCoord = 0;
-		    }
-		  else if (!polyline &&
-			   ((PtrElement) element)->ElLeafType == LtPolyLine)
-		     /* changing polyline --> simple graphic */
-		    {
-		       delta = -((PtrElement) element)->ElNPoints;
-		       if (shape != EOS)
-			  delta++;
-		       ClearText (((PtrElement) element)->ElPolyLineBuffer);
-		       FreeTextBuffer (((PtrElement) element)->ElPolyLineBuffer);
-		       ((PtrElement) element)->ElLeafType = LtGraphics;
-		    }
-		  else if (((PtrElement) element)->ElLeafType == LtGraphics)
-		     if (((PtrElement) element)->ElGraph == EOS &&
-			 shape != EOS)
-			delta = 1;
-		     else if (((PtrElement) element)->ElGraph != EOS &&
-			      shape == EOS)
-			delta = -1;
-	       }
-	     if (((PtrElement) element)->ElLeafType == LtPolyLine)
-		((PtrElement) element)->ElPolyLineType = shape;
-	     else
-		((PtrElement) element)->ElGraph = shape;
-	     /* Updates the volumes of ancestors */
-	     if (delta > 0)
-	       {
-		  pElAsc = (PtrElement) element;
-		  while (pElAsc != NULL)
-		    {
-		       pElAsc->ElVolume += delta;
-		       pElAsc = pElAsc->ElParent;
-		    }
-	       }
+       /* verifies the parameter document */
+       if (document < 1 || document > MAX_DOCUMENTS)
+	 TtaError (ERR_invalid_document_parameter);
+       else if (LoadedDocument[document - 1] == NULL)
+	 TtaError (ERR_invalid_document_parameter);
+       else
+	 /* parameter document is correct */
+	 {
+	   delta = 0;
+	   if (((PtrElement) element)->ElLeafType == LtSymbol)
+	     {
+	       if (((PtrElement) element)->ElGraph == EOS &&
+		   shape != EOS)
+		 delta = 1;
+	       else if (((PtrElement) element)->ElGraph != EOS &&
+			shape == EOS)
+		 delta = -1;
+	       ((PtrElement) element)->ElWideChar = 0;
+	     }
+	   else
+	     {
+	       polyline = (shape == 'S' || shape == 'U' || shape == 'N' ||
+			   shape == 'M' || shape == 'B' || shape == 'A' ||
+			   shape == 'F' || shape == 'D' || shape == 'p' ||
+			   shape == 's' || shape == 'w' || shape == 'x' ||
+			   shape == 'y' || shape == 'z');
+	       if (polyline &&
+		   ((PtrElement) element)->ElLeafType == LtGraphics)
+		 /* changing simple graphic --> polyline */
+		 {
+		   ((PtrElement) element)->ElLeafType = LtPolyLine;
+		   GetTextBuffer (&((PtrElement) element)->ElPolyLineBuffer);
+		   ((PtrElement) element)->ElNPoints = 1;
+		   ((PtrElement) element)->ElText->BuLength = 1;
+		   ((PtrElement) element)->ElText->BuPoints[0].XCoord = 0;
+		   ((PtrElement) element)->ElText->BuPoints[0].YCoord = 0;
+		 }
+	       else if (!polyline &&
+			((PtrElement) element)->ElLeafType == LtPolyLine)
+		 /* changing polyline --> simple graphic */
+		 {
+		   delta = -((PtrElement) element)->ElNPoints;
+		   if (shape != EOS)
+		     delta++;
+		   ClearText (((PtrElement) element)->ElPolyLineBuffer);
+		   FreeTextBuffer (((PtrElement) element)->ElPolyLineBuffer);
+		   ((PtrElement) element)->ElLeafType = LtGraphics;
+		 }
+	       else if (((PtrElement) element)->ElLeafType == LtGraphics)
+		 if (((PtrElement) element)->ElGraph == EOS &&
+		     shape != EOS)
+		   delta = 1;
+		 else if (((PtrElement) element)->ElGraph != EOS &&
+			  shape == EOS)
+		   delta = -1;
+	     }
+	   if (((PtrElement) element)->ElLeafType == LtPolyLine)
+	     ((PtrElement) element)->ElPolyLineType = shape;
+	   else
+	     ((PtrElement) element)->ElGraph = shape;
+	   /* Updates the volumes of ancestors */
+	   if (delta > 0)
+	     {
+	       pElAsc = (PtrElement) element;
+	       while (pElAsc != NULL)
+		 {
+		   pElAsc->ElVolume += delta;
+		   pElAsc = pElAsc->ElParent;
+		 }
+	     }
 #ifndef NODISPLAY
-	     RedisplayLeaf ((PtrElement) element, document, delta);
+	   RedisplayLeaf ((PtrElement) element, document, delta);
 #endif
-	  }
+	 }
      }
 }
 
+/*----------------------------------------------------------------------
+   TtaSetSymbolCode
+
+   Changes the wide char code associated with a Symbol basic element.
+   Parameters:
+   element: the element to be changed. This element must
+   be a basic element of type Symbol whose shape is '?'
+   code: wide char code
+   document: the document containing that element.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtaSetSymbolCode (Element element, wchar_t code, Document document)
+#else  /* __STDC__ */
+void                TtaSetSymbolCode (element, code, document)
+Element             element;
+wchar_t             code;
+Document            document;
+#endif /* __STDC__ */
+{
+   UserErrorCode = 0;
+   if (element == NULL)
+     TtaError (ERR_invalid_parameter);
+   else if (!((PtrElement) element)->ElTerminal)
+     TtaError (ERR_invalid_element_type);
+   else if (((PtrElement) element)->ElLeafType != LtSymbol)
+     TtaError (ERR_invalid_element_type);
+   else if (((PtrElement) element)->ElGraph != '?')
+     TtaError (ERR_invalid_element_type);
+   else
+       /* verifies the parameter document */
+       if (document < 1 || document > MAX_DOCUMENTS)
+	 TtaError (ERR_invalid_document_parameter);
+       else if (LoadedDocument[document - 1] == NULL)
+	 TtaError (ERR_invalid_document_parameter);
+       else
+	 /* parameter document is correct */
+	 ((PtrElement) element)->ElWideChar = code;
+}
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/

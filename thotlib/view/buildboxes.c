@@ -506,7 +506,7 @@ int                *height;
 	  *width = CharacterWidth (231, font) + CharacterWidth (231, font) / 2;
 	  *height += hfont;
 	  break;
-	case 'r':	/*racine */
+	case 'r':	/* root */
 	  *width = hfont;
 	  break;
 	case 'S':	/*sigma */
@@ -553,6 +553,10 @@ int                *height;
 	case 'v':
 	case 'V':
 	  *width = CharacterWidth (109, font);	/* 'm' */
+	  break;
+	case '?':
+	  *width = CharacterWidth (63, font);   /* ? */
+	  *height = hfont;
 	  break;
 	default:
 	  *width = CharacterWidth (SPACE, font);

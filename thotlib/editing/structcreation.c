@@ -1104,9 +1104,13 @@ PtrAbstractBox      pAb;
 			 if (pEl->ElGraph != EOS && pAb->AbShape == EOS)
 			    dVol = -1;
 		      }
-		    pEl->ElVolume += dVol;
-		    pEl->ElGraph = pAb->AbShape;
-		    pDoc->DocNTypedChars += 5;
+		    /* don't change a symbol representing a wide char */
+		    if (pEl->ElLeafType != LtSymbol || pEl->ElGraph != '?')
+		      {
+			pEl->ElGraph = pAb->AbShape;
+			pDoc->DocNTypedChars += 5;
+			pEl->ElVolume += dVol;
+		      }
 		    break;
 		 default:
 		    break;

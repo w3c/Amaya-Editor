@@ -572,6 +572,7 @@ PtrDocument         pDoc;
 			 case LtSymbol:
 			 case LtGraphics:
 			    pEl->ElGraph = EOS;
+			    pEl->ElWideChar = 0;
 			    break;
 			 default:
 			    break;

@@ -133,6 +133,18 @@ extern ThotBool     TtaMergeText (Element element, Document document);
 extern void         TtaSetGraphicsShape (Element element, char shape, Document document);
 
 /*----------------------------------------------------------------------
+   TtaSetSymbolCode
+
+   Changes the wide char code associated with a Symbol basic element.
+   Parameters:
+   element: the element to be changed. This element must
+   be a basic element of type Symbol whose shape is '?'
+   code: wide char code
+   document: the document containing that element.
+  ----------------------------------------------------------------------*/
+extern void         TtaSetSymbolCode (Element element, wchar_t code, Document document);
+
+/*----------------------------------------------------------------------
    TtaAddPointInPolyline
 
    Adds a new point in a Polyline basic element.
@@ -387,6 +399,7 @@ extern void         TtaDeleteTextContent ( /* Element element, int position, int
 extern void         TtaSplitText ( /* Element element, int position, Document document */ );
 extern ThotBool     TtaMergeText ( /* Element element, Document document */ );
 extern void         TtaSetGraphicsShape ( /* Element element, char shape, Document document */ );
+extern void         TtaSetSymbolCode ( /* Element element, wchar_t code, Document document */ );
 extern void         TtaAddPointInPolyline ( /* Element element, int rank, TypeUnit unit, int x, int y, Document document */ );
 extern void         TtaDeletePointInPolyline ( /* Element element, int rank, Document document */ );
 extern void         TtaModifyPointInPolyline ( /* Element element, int rank, TypeUnit unit, int x, int y, Document document */ );

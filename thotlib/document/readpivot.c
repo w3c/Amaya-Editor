@@ -2891,6 +2891,7 @@ static  LabelString         label;
 			      if (create)
 				{
 				  pEl->ElGraph = ch;
+				  pEl->ElWideChar = 0;
 				  /* remplace les anciens rectangles trame's par */
 				  /* de simple rectangles */
 				  if (pEl->ElGraph >= '0' && pEl->ElGraph <= '9')

@@ -653,7 +653,8 @@ ThotBool            premierfils;
 		       fprintf (fileDescriptor, "\'\n");
 		       break;
 		    case LtText:
-		       fprintf (fileDescriptor, " Lg=%d Language=%s\n", pNode->ElTextLength,
+		       fprintf (fileDescriptor, " Lg=%d Language=%s\n",
+				pNode->ElTextLength,
 				TtaGetLanguageName (pNode->ElLanguage));
 		       for (i = 1; i <= Indent; i++)
 			  fprintf (fileDescriptor, " ");
@@ -662,26 +663,34 @@ ThotBool            premierfils;
 		       fprintf (fileDescriptor, "\'\n");
 		       break;
 		    case LtPolyLine:
-		       fprintf (fileDescriptor, " Type=%c %d points\n", pNode->ElPolyLineType,
+		       fprintf (fileDescriptor, " Type=%c %d points\n",
+				pNode->ElPolyLineType,
 				pNode->ElNPoints);
 		       for (i = 1; i <= Indent; i++)
 			  fprintf (fileDescriptor, " ");
 		       for (i = 0; i < pNode->ElNPoints && i < 8; i++)
 			 {
-			    fprintf (fileDescriptor, "%d,%d ", pNode->ElPolyLineBuffer->BuPoints[i].XCoord,
-			       pNode->ElPolyLineBuffer->BuPoints[i].YCoord);
+			 fprintf (fileDescriptor, "%d,%d ",
+				  pNode->ElPolyLineBuffer->BuPoints[i].XCoord,
+			          pNode->ElPolyLineBuffer->BuPoints[i].YCoord);
 			 }
 		       if (i < pNode->ElNPoints)
 			  fprintf (fileDescriptor, "...");
 		       fprintf (fileDescriptor, "\n");
 		       break;
 		    case LtSymbol:
+		       fprintf (fileDescriptor, " \'%c\'", pNode->ElGraph);
+		       if (pNode->ElGraph == '?')
+			 fprintf (fileDescriptor, " wc=%d",pNode->ElWideChar);
+		       fprintf (fileDescriptor, "\n");
+                       break;
 		    case LtGraphics:
 		    case LtCompound:
 		       fprintf (fileDescriptor, " \'%c\'\n", pNode->ElGraph);
 		       break;
 		    case LtPageColBreak:
-		       fprintf (fileDescriptor, " Number=%d View=%d", pNode->ElPageNumber,
+		       fprintf (fileDescriptor, " Number=%d View=%d",
+				pNode->ElPageNumber,
 				pNode->ElViewPSchema);
 		       switch (pNode->ElPageType)
 			     {

@@ -778,7 +778,15 @@ PtrDocument         pDoc;
      case LtSymbol:
      case LtGraphics:
      case LtPolyLine:
-       if (pTSch != NULL)
+       /* if it's an Unicode character, output its code */
+       if (pEl->ElLeafType == LtSymbol && pEl->ElGraph == '?')
+	 {
+	   PutChar ('&', fileNum, NULL, pDoc, lineBreak);
+	   PutChar ('#', fileNum, NULL, pDoc, lineBreak);
+	   PutInt (pEl->ElWideChar, fileNum, NULL, pDoc, lineBreak);
+	   PutChar (';', fileNum, NULL, pDoc, lineBreak);
+	 }
+       else if (pTSch != NULL)
 	 {
 	 if (!transChar)
 	   ft = 0;
@@ -841,9 +849,11 @@ PtrDocument         pDoc;
 	       for (i = 0; i < pBufT->BuLength; i++)
 		 {
 		 PutChar (TEXT(' '), fileNum, NULL, pDoc, lineBreak);
-		 PutInt (pBufT->BuPoints[i].XCoord, fileNum, NULL, pDoc, lineBreak);
+		 PutInt (pBufT->BuPoints[i].XCoord, fileNum, NULL, pDoc,
+			 lineBreak);
 		 PutChar (TEXT(','), fileNum, NULL, pDoc, lineBreak);
-		 PutInt (pBufT->BuPoints[i].YCoord, fileNum, NULL, pDoc, lineBreak);
+		 PutInt (pBufT->BuPoints[i].YCoord, fileNum, NULL, pDoc,
+			 lineBreak);
 		 }
 	       pBufT = pBufT->BuNext;
 	       }

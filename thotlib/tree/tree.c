@@ -2596,6 +2596,7 @@ ThotBool            del;
 		      case LtGraphics:
 		      case LtCompound:
 			 pEl->ElGraph = (*pNew)->ElGraph;
+			 pEl->ElWideChar = (*pNew)->ElWideChar;
 			 break;
 		      case LtPageColBreak:
 			 pEl->ElPageModified = (*pNew)->ElPageModified;
@@ -2876,11 +2877,13 @@ ThotBool            withLabel;
 				  case GraphicElem:
 				     pEl->ElLeafType = LtGraphics;
 				     pEl->ElGraph = EOS;
+				     pEl->ElWideChar = 0;
 				     pEl->ElVolume = 0;
 				     break;
 				  case Symbol:
 				     pEl->ElLeafType = LtSymbol;
 				     pEl->ElGraph = EOS;
+				     pEl->ElWideChar = 0;
 				     pEl->ElVolume = 0;
 				     break;
 				  case PageBreak:
@@ -3749,6 +3752,7 @@ ThotBool            shareRef;
 		  case LtSymbol:
 		  case LtGraphics:
 		     pEl->ElGraph = pSource->ElGraph;
+		     pEl->ElWideChar = pSource->ElWideChar;
 		     break;
 		  case LtPageColBreak:
 		     break;
@@ -3997,6 +4001,7 @@ PtrDocument         pDoc;
 			      case LtSymbol:
 			      case LtGraphics:
 				 pEl->ElGraph = pSource->ElGraph;
+				 pEl->ElWideChar = pSource->ElWideChar;
 				 break;
 			      case LtPageColBreak:
 				 break;

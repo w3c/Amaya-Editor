@@ -329,6 +329,8 @@ typedef struct _ElementDescr
 		} s0;
 		struct			/*ElLeafType = LtGraphics or LtSymbol*/
 		{
+		    wchar_t       _ElWideChar_; /* Wide char code if
+						   ElGraph = '?' */
 		    char          _ElGraph_;	/* code of element */
 		} s1;
 		struct			/* ElLeafType = LtPageColBreak */
@@ -377,6 +379,7 @@ typedef struct _ElementDescr
 #define ElText u.s1.u.s0._ElText_
 #define ElTextLength u.s1.u.s0._ElTextLength_
 #define ElLanguage u.s1.u.s0._ElLanguage_
+#define ElWideChar u.s1.u.s1._ElWideChar_
 #define ElGraph u.s1.u.s1._ElGraph_
 #define ElAssocHeader u.s1.u.s2._ElAssocHeader_
 #define ElPageModified u.s1.u.s2._ElPageModified_
