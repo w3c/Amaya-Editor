@@ -3508,10 +3508,10 @@ static ThotBool RuleHasCondAttr (PtrPRule pR, PtrAttribute pAttr)
   This change is also performed on enclosed elements if prsentations
   parameters are inherited.
   ----------------------------------------------------------------------*/
-void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
-				    PtrElement pElAttr, PtrDocument pDoc,
-				    ThotBool remove, ThotBool inherit,
-				    PtrAttribute pAttrComp)
+void UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
+		     PtrElement pElAttr, PtrDocument pDoc,
+		     ThotBool remove, ThotBool inherit,
+		     PtrAttribute pAttrComp)
 {
   PtrPRule            pR, pRuleView1, pRNA, firstOfType;
   PtrDelayedPRule     pDelR;

@@ -1188,6 +1188,7 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
   int                 l, h;
   ThotBool            userSpec = FALSE, selected;
 #ifdef _GL
+  PtrBox              systemOriginRoot = NULL;
   int                 x_min, x_max, y_min, y_max;
   int                 xOrg, yOrg, 
                       clipXOfFirstCoordSys, clipYOfFirstCoordSys;
@@ -1266,8 +1267,12 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 			DisplayTransformation (frame,
 					       pAb->AbElement->ElTransform, 
 					       pBox->BxWidth, pBox->BxHeight);
-		      if (pAb->AbElement->ElSystemOrigin)
+
+		      if (pAb->AbElement->ElSystemOrigin &&
+			  /* skip boxes already managed */
+			  !IsParentBox (systemOriginRoot, pAb->AbBox))
 			{
+			  systemOriginRoot = pAb->AbBox;
 			  /*Need to Get REAL computed COORD ORIG
 			    instead of Computing Bounding Boxes forever...
 			    As it's am "optimisation it'll come later :
@@ -1310,6 +1315,7 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 			  /* GL_PushClip (pBox->BxClipX, pBox->BxClipY,  */
 			  /* 		  pBox->BxClipW, pBox->BxClipH);   */
 			}
+
 		      if (pAb->AbOpacity != 1000 &&  not_in_feedback)
 			{
 			  if (TypeHasException (ExcIsGroup, pAb->AbElement->ElTypeNumber,
