@@ -72,6 +72,10 @@ private:
   void SetupDialog_LanNeg( const Prop_LanNeg & prop );
   Prop_LanNeg GetValueDialog_LanNeg();
 
+  // "DAV" tab
+  void SetupLabelDialog_DAV();
+  void SetupDialog_DAV( const Prop_DAV & prop );
+
   int GetPagePosFromXMLID( const wxString & xml_id );
 
   void OnOk( wxCommandEvent& event );

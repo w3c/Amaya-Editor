@@ -154,4 +154,16 @@ typedef struct Prop_LanNeg_t
   char     LanNeg[MAX_LENGTH];
 } Prop_LanNeg;
 
+typedef struct Prop_DAV_t
+{
+  char textUserReference[MAX_LENGTH];
+  char textUserResources[MAX_LENGTH];
+  char radioDepth[MAX_LENGTH];
+  char radioTimeout[MAX_LENGTH];
+  int  numberTimeout;
+  char radioLockScope[MAX_LENGTH];
+  ThotBool toggleAwareness1;
+  ThotBool toggleAwareness2;
+} Prop_DAV;
+
 #endif /* _MENUCONF.h */

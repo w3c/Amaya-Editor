@@ -15,7 +15,11 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.15  2004-09-21 16:34:32  cvs
+ ** Revision 1.16  2004-09-22 09:25:20  cvs
+ ** Work on WebDAV preferences.
+ ** Irene
+ **
+ ** Revision 1.15  2004/09/21 16:34:32  cvs
  ** Fixing compiling troubles.
  ** Irene
  **
@@ -110,47 +114,12 @@
  *                         PRIVATE VARIABLES                             *
  * ********************************************************************* */
 
-typedef struct Prop_DAV_t
-{
-  char textUserReference[DAV_LINE_MAX];
-  char textUserResources[DAV_LINE_MAX];
-  char radioDepth[DAV_LINE_MAX];
-  char radioTimeout[DAV_LINE_MAX];
-  int  numberTimeout;
-  char radioLockScope[DAV_LINE_MAX];
-  ThotBool toggleAwareness1;
-  ThotBool toggleAwareness2;
-} Prop_DAV;
 static int      DAVPreferencesBase;
-static Prop_DAV GProp_DAV;
+extern Prop_DAV GProp_DAV;
 #ifdef _WINGUI
 static HWND     DAVHwnd;
 #endif /* _WINGUI */
 
-
-/*----------------------------------------------------------------------
-  Use to set the Amaya global variables (WebDAV preferences)
-  ----------------------------------------------------------------------*/
-void SetProp_DAV( const Prop_DAV * prop )
-{
-#ifdef _WX
-  GProp_LanNeg = *prop;
-#endif /* _WX */
-}
-
-/*----------------------------------------------------------------------
-  Use to get the Amaya global variables (WebDAV preferences)
-  ----------------------------------------------------------------------*/
-Prop_DAV GetProp_DAV()
-{
-#ifdef _WX
-  return GProp_DAV;
-#else /* _WX */
-  Prop_DAV prop;
-  memset(&prop, 0, sizeof(Prop_DAV) );
-  return prop;
-#endif /* _WX */
-}
 
 /*----------------------------------------------------------------------
   DAVSetLockIndicator: set the Lock indicator button.
@@ -172,7 +141,7 @@ void DAVDisplayMessage (char *msg, char *arg)
     {
       if (arg && *arg) 
 	{
-	  char label[DAV_LINE_MAX];
+	  char label[MAX_LENGTH];
 	  sprintf (label, msg, arg);
 	  InitInfo (" ", label);
 	}
@@ -223,7 +192,7 @@ void DAVPropertiesVerticalDialog (Document docid, char *title,
 {
 #ifdef _GTK
   char   *name, *value;
-  char    label[DAV_LINE_MAX];
+  char    label[MAX_LENGTH];
   char   *ns = NULL;
 #endif /* _GTK */
   int     i = MAX_REF+1, form = MAX_REF, lines = 0;
@@ -320,7 +289,7 @@ void DAVHorizontalDialog (Document docid, char *title, char *rheader,
   int     i = MAX_REF+1, form = MAX_REF;
 #ifdef _GTK
   char   *name, *value;    
-  char    label[DAV_LINE_MAX];
+  char    label[MAX_LENGTH];
 #endif /* _GTK */
 
   if (docid > 0 && list) 
@@ -708,7 +677,7 @@ void DAVShowMultiStatusInfo (AHTReqContext *context)
   AwNode *root = NULL;            
   AwString pattern = NULL;
   char *name, *value, *ptr;
-  char tmp[DAV_LINE_MAX];
+  char tmp[MAX_LENGTH];
         
   if (context) 
     {
@@ -805,7 +774,7 @@ void DAVShowMultiStatusInfo (AHTReqContext *context)
 	  
 	  if (ok) 
 	    {
-	      char tmp[DAV_LINE_MAX];
+	      char tmp[MAX_LENGTH];
 	      sprintf (tmp,TtaGetMessage (AMAYA, AM_MULTI_STATUS_FAIL)," ");
 	      DAVPropertiesVerticalDialog (context->docid, " ", "  ", tmp, list);
 	    }
@@ -970,7 +939,7 @@ void DAVGetPreferences (void)
 LRESULT CALLBACK WIN_DAVPreferencesDlg (HWND hwnDlg, UINT msg, WPARAM wParam,
 					LPARAM lParam)
 {
-  char       data[DAV_LINE_MAX];
+  char       data[MAX_LENGTH];
 
   switch (msg)
     {
@@ -1035,15 +1004,15 @@ LRESULT CALLBACK WIN_DAVPreferencesDlg (HWND hwnDlg, UINT msg, WPARAM wParam,
 	    {
 	    case IDC_DAVUSER:
 	      GetDlgItemText (hwnDlg, IDC_DAVUSER, GProp_DAV.textUserReference,
-			      DAV_LINE_MAX - 1);
+			      MAX_LENGTH - 1);
 	      break;
 	    case IDC_DAVRESOURCES:
 	      GetDlgItemText (hwnDlg, IDC_DAVRESOURCES, GProp_DAV.textUserResources,
-			      DAV_LINE_MAX - 1);
+			      MAX_LENGTH - 1);
 	      break;
 	    case IDC_TIMEOUT:
 	      GetDlgItemText (hwnDlg, IDC_TIMEOUT, data,
-			      DAV_LINE_MAX - 1);
+			      MAX_LENGTH - 1);
 	      sprintf (GProp_DAV.numberTimeout,"%d", data);
 	      break;
 	    }
@@ -1209,7 +1178,7 @@ void InitDAVPreferences ()
 void DAVShowPreferencesDlg (Document document)
 {
 #ifdef _GTK
-  char buf[DAV_LINE_MAX];
+  char buf[MAX_LENGTH];
     
   sprintf (buf,"%s%c%s%c",TtaGetMessage (AMAYA, AM_APPLY_BUTTON),EOS,
 	   TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON),EOS);

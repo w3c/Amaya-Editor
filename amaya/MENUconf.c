@@ -266,8 +266,8 @@ static AM_WIN_MenuText WIN_LanNegMenuText[] =
 #endif /* _WINGUI*/
 
 
-#ifdef ANNOTATIONS
 /* ============> Annotation menu option */
+#ifdef ANNOTATIONS
 static int      AnnotBase;
 static char     AnnotUser[MAX_LENGTH];
 static char     AnnotPostServer[MAX_LENGTH];
@@ -293,6 +293,11 @@ static AM_WIN_MenuText WIN_AnnotMenuText[] =
 };
 #endif /* _WINGUI */
 #endif /* ANNOTATIONS */
+
+/* ============> WebDAV menu option */
+#ifdef DAV
+Prop_DAV  GProp_DAV;
+#endif /* DAV */
 
 #include "HTMLsave_f.h"
 #include "init_f.h"
@@ -4557,6 +4562,36 @@ Prop_LanNeg GetProp_LanNeg()
   memset(&prop, 0, sizeof(Prop_LanNeg) );
   return prop;
 #endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  Use to set the Amaya global variables (WebDAV preferences)
+  ----------------------------------------------------------------------*/
+void SetProp_DAV( const Prop_DAV * prop )
+{
+#ifdef DAV
+#ifdef _WX
+  GProp_DAV = *prop;
+#endif /* _WX */
+#endif /* DAV */
+}
+
+/*----------------------------------------------------------------------
+  Use to get the Amaya global variables (WebDAV preferences)
+  ----------------------------------------------------------------------*/
+Prop_DAV GetProp_DAV()
+{
+#ifdef DAV
+#ifdef _WX
+  return GProp_DAV;
+#else /* _WX */
+  Prop_DAV prop;
+  memset(&prop, 0, sizeof(Prop_DAV) );
+  return prop;
+#endif /* _WX */
+#else /* DAV */
+  return NULL;
+#endif /* DAV */
 }
 
 /*----------------------------------------------------------------------

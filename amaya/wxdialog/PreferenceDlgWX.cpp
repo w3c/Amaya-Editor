@@ -955,6 +955,50 @@ Prop_LanNeg PreferenceDlgWX::GetValueDialog_LanNeg()
   return prop;
 }
 
+
+/************************************************************************/
+/* WebDAV tab                                                           */
+/************************************************************************/
+#ifdef DAV
+/*----------------------------------------------------------------------
+  SetupLabelDialog_DAV init labels
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::SetupLabelDialog_DAV()
+{
+  wxLogDebug( _T("PreferenceDlgWX::SetupLabelDialog_DAV") );
+
+  // Setup notebook tab names :
+  int page_id;
+  wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
+  page_id = GetPagePosFromXMLID( _T("wxID_PAGE_DAV") );
+  //if (page_id >= 0)
+   // p_notebook->SetPageText( page_id, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_GENERAL_MENU)) );
+
+  // update dialog General tab labels with given ones
+  //XRCCTRL(*this, "wxID_LABEL_HOMEPAGE", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_HOME_PAGE)) );
+}
+
+/*----------------------------------------------------------------------
+  SetupLabelDialog_DAV init labels
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::SetupDialog_DAV( const Prop_DAV & prop)
+{
+  wxLogDebug( _T("PreferenceDlgWX::SetupLabelDialog_DAV") );
+
+  // Setup notebook tab names :
+  int page_id;
+  wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
+  page_id = GetPagePosFromXMLID( _T("wxID_PAGE_GENERAL") );
+  if (page_id >= 0)
+    p_notebook->SetPageText( page_id, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_GENERAL_MENU)) );
+}
+#endif /* DAV */
+
+
 /*----------------------------------------------------------------------
   OnOk called when the user validates his selection
   params:
