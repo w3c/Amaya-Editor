@@ -1473,20 +1473,67 @@ Document            doc
 	TtaSetToggleItem (doc, 1, Style, TSmall, NewSelInElem);
      }
 
+   if (firstSel == NULL)
+      NewSelInElem = FALSE;
+   else
+     {
+	elType.ElTypeNum = HTML_EL_Subscript;
+	if (elTypeSel.ElTypeNum == elType.ElTypeNum &&
+	    elTypeSel.ElSSchema == elType.ElSSchema)
+	   NewSelInElem = TRUE;
+	else
+	   NewSelInElem = (TtaGetTypedAncestor (firstSel, elType) != NULL);
+     }
    if (SelectionInSub != NewSelInElem)
      {
 	SelectionInSub = NewSelInElem;
 	TtaSetToggleItem (doc, 1, Style, TSub, NewSelInElem);
      }
-   if (SelectionInSMALL != NewSelInElem)
+
+   if (firstSel == NULL)
+      NewSelInElem = FALSE;
+   else
+     {
+	elType.ElTypeNum = HTML_EL_Superscript;
+	if (elTypeSel.ElTypeNum == elType.ElTypeNum &&
+	    elTypeSel.ElSSchema == elType.ElSSchema)
+	   NewSelInElem = TRUE;
+	else
+	   NewSelInElem = (TtaGetTypedAncestor (firstSel, elType) != NULL);
+     }
+   if (SelectionInSup != NewSelInElem)
      {
 	SelectionInSup = NewSelInElem;
 	TtaSetToggleItem (doc, 1, Style, TSup, NewSelInElem);
+     }
+
+   if (firstSel == NULL)
+      NewSelInElem = FALSE;
+   else
+     {
+	elType.ElTypeNum = HTML_EL_Quotation;
+	if (elTypeSel.ElTypeNum == elType.ElTypeNum &&
+	    elTypeSel.ElSSchema == elType.ElSSchema)
+	   NewSelInElem = TRUE;
+	else
+	   NewSelInElem = (TtaGetTypedAncestor (firstSel, elType) != NULL);
      }
    if (SelectionInQuote != NewSelInElem)
      {
 	SelectionInQuote = NewSelInElem;
 	TtaSetToggleItem (doc, 1, Style, TQuotation, NewSelInElem);
+     }
+
+   if (firstSel == NULL)
+      NewSelInElem = FALSE;
+   else
+     {
+	elType.ElTypeNum = HTML_EL_BDO;
+	if (elTypeSel.ElTypeNum == elType.ElTypeNum &&
+	    elTypeSel.ElSSchema == elType.ElSSchema)
+	   NewSelInElem = TRUE;
+	else
+	   NewSelInElem = (TtaGetTypedAncestor (firstSel, elType) != NULL);
      }
    if (SelectionInBDO != NewSelInElem)
      {
