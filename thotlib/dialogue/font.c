@@ -272,8 +272,7 @@ static void Win_Get_Highlight (int highlight, int *fdwItalic, int *fnWeight)
 /*----------------------------------------------------------------------
   GetWinFontConfig Get font description from configuration file (config/fonts.win)
   ----------------------------------------------------------------------*/
-static HFONT GetWinFontConfig (char script, int family, int highlight, int size)
-{
+static HFONT GetWinFontConfig (char script, int family, int highlight, int size){
   char Result_string[MAX_LENGTH];
   char *parsed, *result;
   char font_family[32];
@@ -509,6 +508,13 @@ int CharacterWidth (int c, PtrFont font)
   XCharStruct        *xc;
 #endif /* !defined(_WINDOWS) && !defined(_GTK) */
   int                 i = 0, l = 0;
+#ifdef _WINARAB
+  SIZE                wsize;
+  TEXTMETRIC          textMetric;
+  int                 val, space = 32;
+  HFONT               hOldFont, ActiveFont;
+  HDC                 display;
+#endif /*_WINARAB*/
 
   if (font == NULL)
     return 0;
@@ -529,8 +535,34 @@ int CharacterWidth (int c, PtrFont font)
   else
     {
 #ifdef _WINDOWS
-      if ( c >= 0xFE70 && c <= 0xFEFC )
-	l = 8;
+      if ( font->FiScript == '6' )
+	  {
+#ifdef _WINARAB	  
+		  val = LogicalPointsSizes[4];
+		  
+		  ActiveFont = GetWinFontConfig (font->FiScript,font->FiFamily, font->FiHighlight, val);
+		  if (TtPrinterDC != NULL)
+		{
+		  display = TtPrinterDC;
+		  hOldFont = SelectObject (TtPrinterDC, ActiveFont);
+		}
+	      else
+		{
+		  display = GetDC(FrRef[1]);
+		  hOldFont = SelectObject (display, ActiveFont);
+		}
+		  
+		  
+		  GetTextMetrics (display, &textMetric);
+		  GetTextExtentPoint32 (display, (LPCTSTR) (&c),
+				      1, (LPSIZE) (&wsize));
+		  
+		  return wsize.cx;
+#endif /*_WINARAB*/
+		 return 7;
+	
+	  } 
+		 
       if (c == EM_QUAD || c == EM_SPACE || c == THICK_SPACE ||
 	  c == FOUR_PER_EM || c == SIX_PER_EM || c == PUNC_SPACE ||
 	  c == THIN_SPACE || c == HAIR_SPACE || c == MEDIUM_SPACE)
@@ -2480,6 +2512,44 @@ void LoadingArabicFont (SpecFont fontset ,PtrFont *font)
 }
 
 
+
+#define MAX_TABLE 250
+
+int Width[MAX_TABLE][2];
+
+	/**********************************************
+	 Char_Width returns the width of the index 
+	 giving x .the values are stored in a table
+	 **********************************************/
+int Char_Width (int x )
+{
+	int i;
+	for (i = 0 ; i < MAX_TABLE ; i++ )
+		if ( Width[i][0] == x )
+			return Width[i][1];
+	return -1;
+}
+
+	/**********************************************
+	  put the char index and his width in a table
+	  'Width'
+     **********************************************/
+void Put_Char_Width (int car, int l )
+{
+	int i;
+	for (i=0 ; i < MAX_TABLE ; i++ )
+	{
+		if ( Width[i][0] == 0 )
+			break;
+	}
+	if ( i < MAX_TABLE ) 
+	{
+		Width[i][0] = car;
+		Width[i][1] = l;
+	}
+}
+
+
 /*---------------------------------------------------------------------------
   BoxArabicCharacterWidth returns the width of an arabic char in a given font
   ----------------------------------------------------------------------------*/
@@ -2487,7 +2557,7 @@ int BoxArabicCharacterWidth (CHAR_T c, PtrTextBuffer *adbuff, int *ind,
 			     SpecFont specfont)
 {
   PtrFont      font; 
-  int          car;
+  int          car, l;
   CHAR_T       prevChar, nextChar; 
 
   if (c != (*adbuff)->BuContent[*ind]) 
@@ -2515,19 +2585,21 @@ int BoxArabicCharacterWidth (CHAR_T c, PtrTextBuffer *adbuff, int *ind,
 	prevChar = 0x0020;
       }
   car = GetArabFontAndIndex(c, prevChar, nextChar, specfont, &font);
-  if (font == NULL)
+   if ( Char_Width(car) != -1 ) 
+	return Char_Width(car);
+   if (font == NULL)
     return 6;
   else
 #ifdef _I18N_
-   return CharacterWidth (car, font);
-#else /* _I18N_ */
+  {
+	l = CharacterWidth (car, font);
+	Put_Char_Width ( car , l );
+    return l;
+  }
+ #else /* _I18N_ */
   return CharacterWidth (c, specfont);
 #endif /* _I18N_ */ 
 }
-
-
-
-
 
 
 

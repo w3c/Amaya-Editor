@@ -3353,7 +3353,12 @@ void LocateClickedChar (PtrBox pBox, ThotBool extend,
 	  else if (c == SPACE)
 	    charWidth = spaceWidth;
 	  else
-	    charWidth = BoxCharacterWidth (c, font);
+	  {
+		if ( c >= 0x060C && c <= 0x06B0 ) /*arabic char*/
+			charWidth = BoxArabicCharacterWidth (c, pBuffer, &ind, font);
+		else
+			charWidth = BoxCharacterWidth (c, font);
+	  }
 	  if (extend)
 	    notfound = (dx + charWidth < *x);
 	  else

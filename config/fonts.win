@@ -29,9 +29,9 @@
 
 
 6;#arabic
-1;1=*-Times New Roman-*;2=*-Times New Roman-b;3=*-Times New Roman-i;4=*-Times New Roman-bi;
+1;1=*-Arial-*;2=*-Arial-b;3=*-Arial-i;4=*--Arial-bi;
 2;1=*-Arial-*;2=*-Arial-b;3=*-Arial-i;4=*-Arial-bi;
-3;1=*-Lucida Console-*;2=*-Lucida Console-b;3=*-Lucida Console-i;4=*-Lucida Console-bi;
+3;1=*-Arial-*;2=*-Arial-b;3=*-Arial-i;4=*-Arial-bi;
 
 
 7;#greek
