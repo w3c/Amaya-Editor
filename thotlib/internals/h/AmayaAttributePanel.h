@@ -44,8 +44,7 @@ public:
   void OnAutoRefresh( wxCommandEvent& event );
 
  protected:
-  virtual void SendDataToPanel( void * param1 = NULL, void * param2 = NULL, void * param3 = NULL,
-				void * param4 = NULL, void * param5 = NULL, void * param6 = NULL );
+  virtual void SendDataToPanel( AmayaPanelParams& params );
   virtual void DoUpdate();
 
  public:
@@ -58,7 +57,20 @@ public:
       wxATTR_TYPE_NUM
     } wxATTR_TYPE;
 
+  typedef enum
+    {
+      wxATTR_ACTION_UNKNOWN,
+      wxATTR_ACTION_LISTUPDATE,
+      wxATTR_ACTION_SETUPLANG,
+      wxATTR_ACTION_SETUPTEXT,
+      wxATTR_ACTION_SETUPENUM,
+      wxATTR_ACTION_SETUPNUM
+    } wxATTR_ACTION;
+
+ protected:
   void ShowAttributValue( wxATTR_TYPE type );
+  void SetupListValue( const char * p_attr_list, int nb_attr, const int * p_active_attr,
+		       const char * p_attr_evt_list, int nb_attr_evt, const int * p_active_attr_evt );
   void SetupLangValue( const char * selected_lang, 
 		       const char * inherited_lang,
 		       const char * lang_list,
@@ -74,12 +86,15 @@ public:
   wxSizer *           m_pVPanelSizer;
   wxCheckListBox *    m_pAttrList;
   wxCheckBox *        m_pAutoRefresh;
+  wxButton *          m_pModifyButton;
+  wxStaticText *      m_pTitleText;
   wxPanel *           m_pPanel_Lang;
   wxPanel *           m_pPanel_Num;
   wxPanel *           m_pPanel_Text;
   wxPanel *           m_pPanel_Enum;
   wxRadioBox *        m_pRBEnum;
-
+ 
+ 
   int m_NbAttr;
   int m_NbAttr_evt;
 

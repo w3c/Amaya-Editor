@@ -29,8 +29,7 @@ public:
   void RefreshToolTips();
 
  protected:
-  virtual void SendDataToPanel( void * param1 = NULL, void * param2 = NULL, void * param3 = NULL,
-				void * param4 = NULL, void * param5 = NULL, void * param6 = NULL );
+  virtual void SendDataToPanel( AmayaPanelParams& params );
   virtual void DoUpdate();
 
  protected:

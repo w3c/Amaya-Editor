@@ -1169,7 +1169,9 @@ void TtaRefreshPanelButton( Document doc, View view, int panel_type )
 	    return;
 
 	  /* refresh the subpanel with button stats */
-	  AmayaSubPanelManager::GetInstance()->SendDataToPanel( p_subpanel->GetPanelType(), (void*)p_checked_array );
+	  AmayaPanelParams p;
+	  p.param1 = (void*)p_checked_array;
+	  AmayaSubPanelManager::GetInstance()->SendDataToPanel( p_subpanel->GetPanelType(), p );
 	}
     }
 #endif /* _WX */

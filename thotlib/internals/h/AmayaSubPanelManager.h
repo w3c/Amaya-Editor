@@ -4,10 +4,24 @@
 #define __AMAYASUBPANELMANAGER_H__
 
 #include "wx/wx.h"
-#include "AmayaSubPanel.h"
+
+class AmayaPanelParams
+{
+ public:
+  void * param1;
+  void * param2;
+  void * param3;
+  void * param4;
+  void * param5;
+  void * param6;
+  void * param7;
+  void * param8;
+  void * param9;
+};
 
 // declare our list class: this macro declares and partly implements MyList
 // class (which derives from wxListBase)
+#include "AmayaSubPanel.h"
 WX_DECLARE_LIST(AmayaSubPanel, SubPanelList);
 
 /*
@@ -16,7 +30,6 @@ WX_DECLARE_LIST(AmayaSubPanel, SubPanelList);
  *      Created:  13/09/2004 04:45:34 PM CET
  *     Revision:  none
  */
-
 class AmayaSubPanelManager
 {
  public:
@@ -27,9 +40,7 @@ class AmayaSubPanelManager
 
   bool RegisterSubPanel( AmayaSubPanel * p_panel );
   bool UnregisterSubPanel( AmayaSubPanel * p_panel );
-  void SendDataToPanel( int panel_type,
-			void * param1 = NULL, void * param2 = NULL, void * param3 = NULL,
-			void * param4 = NULL, void * param5 = NULL, void * param6 = NULL );
+  void SendDataToPanel( int panel_type, AmayaPanelParams& params );
   void UnExpand( AmayaSubPanel * p_panel );
   void Expand( AmayaSubPanel * p_panel );
   void DoFloat( AmayaSubPanel * p_panel );

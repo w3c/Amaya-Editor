@@ -35,11 +35,11 @@
 #endif /* _WINGUI */
 
 #ifdef _WX
-#include "AmayaWindow.h"
-#include "AmayaPanel.h"
-#include "AmayaAttributePanel.h"
-#include "AmayaSubPanelManager.h"
-#include "appdialogue_wx.h"
+  #include "AmayaAttributePanel.h"
+  #include "AmayaWindow.h"
+  #include "AmayaPanel.h"
+  #include "appdialogue_wx.h"
+  #include "AmayaSubPanelManager.h"
 #endif /* _WX */
 
 #undef THOT_EXPORT
@@ -221,9 +221,14 @@ static void InitFormLanguage (Document doc, View view,
 
 #ifdef _WX
    ptr = GetListOfLanguages (bufMenu, MAX_TXT_LEN, languageCode, &nbItem, &defItem);
-   AmayaAttributePanel * p_dlg = TtaGetAttributePanel();
-   p_dlg->SetupLangValue( ptr, label, bufMenu, nbItem, defItem );
-   p_dlg->ShowAttributValue( AmayaAttributePanel::wxATTR_TYPE_LANG );
+   AmayaPanelParams p;
+   p.param1 = (void*)AmayaAttributePanel::wxATTR_ACTION_SETUPLANG;
+   p.param2 = (void*)ptr;
+   p.param3 = (void*)label;
+   p.param4 = (void*)bufMenu;
+   p.param5 = (void*)nbItem;
+   p.param6 = (void*)defItem;
+   AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_ATTRIBUTE, p );
 #endif /* _WX */
 
 #ifdef _GTK
@@ -611,9 +616,11 @@ static void MenuValues (TtAttribute * pAttr, ThotBool required,
 		    (DLGPROC) InitNumAttrDialogWndProc);
 #endif /* _WINGUI */
 #ifdef _WX
-	 AmayaAttributePanel * p_dlg = TtaGetAttributePanel();
-	 p_dlg->SetupNumValue( i );
-	 p_dlg->ShowAttributValue( AmayaAttributePanel::wxATTR_TYPE_NUM );
+	 
+	 AmayaPanelParams p;
+	 p.param1 = (void*)AmayaAttributePanel::wxATTR_ACTION_SETUPNUM;
+	 p.param2 = (void*)i;
+	 AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_ATTRIBUTE, p );
 #endif /* _WX */
        }
        break;
@@ -638,9 +645,10 @@ static void MenuValues (TtAttribute * pAttr, ThotBool required,
 	 else
 	   TextAttrValue[0] = EOS;
 #ifdef _WX
-	 AmayaAttributePanel * p_dlg = TtaGetAttributePanel();
-	 p_dlg->SetupTextValue( TextAttrValue );
-	 p_dlg->ShowAttributValue( AmayaAttributePanel::wxATTR_TYPE_TEXT );
+	 AmayaPanelParams p;
+	 p.param1 = (void*)AmayaAttributePanel::wxATTR_ACTION_SETUPTEXT;
+	 p.param2 = (void*)TextAttrValue;
+	 AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_ATTRIBUTE, p );
 #endif /* _WX */
 #ifdef _GTK
 	 TtaNewTextForm (subform, form, title, 40, 1, FALSE);
@@ -704,9 +712,12 @@ static void MenuValues (TtAttribute * pAttr, ThotBool required,
 	 if (PtrReqAttr)
 	   PtrReqAttr->AeAttrValue = i + 1;
 #ifdef _WX
-	 AmayaAttributePanel * p_dlg = TtaGetAttributePanel();
-	 p_dlg->SetupEnumValue( bufMenu, val, i );
-	 p_dlg->ShowAttributValue( AmayaAttributePanel::wxATTR_TYPE_ENUM );
+	 AmayaPanelParams p;
+	 p.param1 = (void*)AmayaAttributePanel::wxATTR_ACTION_SETUPENUM;
+	 p.param2 = (void*)bufMenu;
+	 p.param3 = (void*)val;
+	 p.param4 = (void*)i;
+	 AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_ATTRIBUTE, p );
 #endif /* _WX */
 #ifdef _GTK
 	 /* cree le menu des valeurs de l'attribut */
@@ -1120,9 +1131,15 @@ void UpdateAttrMenu (PtrDocument pDoc)
 
 #ifdef _WX
   /* update the attribute dialog */
-  AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_ATTRIBUTE,
-							(void*)bufMenuAttr, (void*)nbItemAttr, (void*)ActiveAttr,
-							(void*)bufEventAttr, (void*)nbEvent, (void*)ActiveEventAttr );
+  AmayaPanelParams p;
+  p.param1 = (void*)AmayaAttributePanel::wxATTR_ACTION_LISTUPDATE;
+  p.param2 = (void*)bufMenuAttr;
+  p.param3 = (void*)nbItemAttr;
+  p.param4 = (void*)ActiveAttr;
+  p.param5 = (void*)bufEventAttr;
+  p.param6 = (void*)nbEvent;
+  p.param7 = (void*)ActiveEventAttr;
+  AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_ATTRIBUTE, p );
 #endif /* _WX */
 
 #ifndef _WX

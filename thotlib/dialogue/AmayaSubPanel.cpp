@@ -82,7 +82,6 @@ AmayaSubPanel::AmayaSubPanel( wxWindow *      p_parent_window
   m_Bitmap_ExpandOn  = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON, "expand_on.gif" ) );
   m_Bitmap_ExpandOff = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON, "expand_off.gif" ) );
 
-  // create a presistant floating panel, it will be shown or hidden depanding on user choice
   m_pFloatingPanel = NULL;
   //  m_pFloatingPanel = new AmayaFloatingPanel( this, -1 );
   //  m_pFloatingPanel->Hide(); // not floating by default
@@ -441,7 +440,7 @@ wxPanel * AmayaSubPanel::GetPanelContentDetach()
  * Description:  refresh the button widgets of the frame's panel, should be override in inherited class
  *--------------------------------------------------------------------------------------
  */
-void AmayaSubPanel::SendDataToPanel( void * param1, void * param2, void * param3, void * param4, void * param5, void * param6 )
+void AmayaSubPanel::SendDataToPanel( AmayaPanelParams& p )
 {
   wxLogDebug( _T("AmayaSubPanel::SendDataToPanel") );
 }

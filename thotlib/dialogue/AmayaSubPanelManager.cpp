@@ -274,9 +274,6 @@ void AmayaSubPanelManager::DoFloat( AmayaSubPanel * p_panel )
 	}
     }
 
-  // force the panel to refresh its floating panel
-  //  p_panel->AssignDataPanelReferences();
-
   // the panel should be updated because floating state change
   p_panel->ShouldBeUpdated();
 
@@ -302,8 +299,6 @@ void AmayaSubPanelManager::DoUnfloat( AmayaSubPanel * p_panel )
 
   // besure that the panel has right unfloating state before switching references
   p_panel->ChangeState( p_panel->GetState()&~AmayaSubPanel::wxAMAYA_SPANEL_FLOATING );
-  // force the panel to refresh its side-panel
-  //  p_panel->AssignDataPanelReferences();
   // the panel should be updated because floating state change
   p_panel->ShouldBeUpdated();
 
@@ -332,16 +327,14 @@ void AmayaSubPanelManager::DoUnfloat( AmayaSubPanel * p_panel )
  * Description:  distribute new values to the given panel and all its brothers
  *--------------------------------------------------------------------------------------
  */
-void AmayaSubPanelManager::SendDataToPanel( int panel_type,
-					    void * param1, void * param2, void * param3,
-					    void * param4, void * param5, void * param6 )
+void AmayaSubPanelManager::SendDataToPanel( int panel_type, AmayaPanelParams& params )
 {
   // send data to each registred panel which have same type
   for ( SubPanelList::Node *node = m_RegistredPanel.GetFirst(); node ; node = node->GetNext() )
     {
       AmayaSubPanel * current = node->GetData();
       if ( current->GetPanelType() == panel_type )
-	current->SendDataToPanel( param1, param2, param3, param4, param5, param6 );
+	current->SendDataToPanel( params );
     }
 }
 

@@ -64,7 +64,6 @@
                                   <option>1</option>
                                   <flag>wxALL|wxEXPAND</flag>
                                   <border>2</border>
-                                  <minsize>40,200</minsize>
                                 </object>
                                 <object class="sizeritem">
                                   <object class="wxPanel" name="wxID_PANEL_ATTRVALUE">
@@ -147,7 +146,7 @@
                                 </object>
                                 <object class="sizeritem">
                                   <object class="wxCheckBox" name="wxID_CHECK_AUTOREF">
-                                    <label>Auto refresh</label>
+                                    <label>_Auto refresh_</label>
                                     <checked>1</checked>
                                   </object>
                                   <option>0</option>
@@ -156,7 +155,7 @@
                                 </object>
                                 <object class="sizeritem">
                                   <object class="wxButton" name="wxID_OK">
-                                    <label>Apply</label>
+                                    <label>_Apply_</label>
                                     <default>1</default>
                                   </object>
                                   <flag>wxALL|wxEXPAND</flag>
