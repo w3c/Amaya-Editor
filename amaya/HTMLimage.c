@@ -660,6 +660,7 @@ int                 flags;
    Attribute           attr;
    Element             el, elFound;
    ElementType         elType;
+   char               *currentURL;
 
 #if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
    if (FilesLoading[doc] == 0)
@@ -675,6 +676,8 @@ int                 flags;
        return;
      }
 
+   /* register the current URL */
+   currentURL = TtaStrdup (DocumentURLs[doc]);
    /* get the root element */
    el = TtaGetMainRoot (doc);
    /* prepare the type of element to be searched */
@@ -693,8 +696,11 @@ int                 flags;
 	/* verify if StopTransfer is called */
 #if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
 	if (DocNetworkStatus[doc] & AMAYA_NET_INACTIVE)
-	   return;
+	  return;
 #endif
+	else if (DocumentURLs[doc] == NULL || strcmp (currentURL, DocumentURLs[doc]))
+	  /* the document has been removed */
+	  return;
 	/* search the next element having an attribute SRC */
 	TtaSearchAttribute (attrType, SearchForward, el, &elFound, &attr);
 	el = elFound;

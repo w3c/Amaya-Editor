@@ -255,11 +255,9 @@ View                view;
 
    GotoHistory_context *ctx;
 
-   if (DocHistoryIndex[doc] < 0)
-      return;
-   if (DocHistoryIndex[doc] >= DOC_HISTORY_SIZE)
-      return;
    if ((doc < 0) || (doc >= DocumentTableLength))
+      return;
+   if (DocHistoryIndex[doc] < 0 || DocHistoryIndex[doc] >= DOC_HISTORY_SIZE)
       return;
 
    /* previous document in history */
@@ -319,12 +317,10 @@ View                view;
    else
       i--;
    if (DocHistory[doc][i].HistUrl == NULL)
-      /* there is no previous document */
-      /* set the Back button OFF */
+      /* there is no previous document, set the Back button OFF */
       SetArrowButton (doc, TRUE, FALSE);
 
    /* load the previous document */
-
    /* save the context */
    ctx = TtaGetMemory (sizeof (GotoHistory_context));
    ctx->prevnext = prev;
