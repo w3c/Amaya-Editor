@@ -640,7 +640,7 @@ bool AmayaWindow::CheckSpecialKey( wxKeyEvent& event )
        thot_keysym == WXK_RIGHT  ||
        thot_keysym == WXK_UP     ||
        thot_keysym == WXK_DOWN   ||
-       /*thot_keysym == WXK_ESCAPE ||*/
+       thot_keysym == WXK_ESCAPE ||
        thot_keysym == WXK_BACK   ||
        thot_keysym == WXK_RETURN ||
        thot_keysym == WXK_TAB );
