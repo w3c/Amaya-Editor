@@ -119,6 +119,7 @@ void   ParseCSSequivAttribute (int attrType, Attribute attr, Element el,
     }
 
   /* builds the equivalent CSS rule */
+  css_command[0] = EOS;
   switch (attrType)
     {
     case SVG_ATTR_fill:
@@ -210,7 +211,8 @@ void   ParseCSSequivAttribute (int attrType, Attribute attr, Element el,
     }
 
   /* parse the equivalent CSS rule */
-  ParseHTMLSpecificStyle (el, css_command, doc, 0, delete);
+  if (css_command[0] != EOS)
+    ParseHTMLSpecificStyle (el, css_command, doc, 0, delete);
   if (text)
     TtaFreeMemory (text);
 }

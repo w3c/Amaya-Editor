@@ -931,6 +931,7 @@ static void MoveApoint (int frame, int x, int y, int x1, int y1, int x3,
 
   /* need the window to change the cursor */
   w = FrRef[frame];
+  newx = newy = 0;
   /* trasformation factor between the box and the abstract box */
   ratioX = (float) Pbuffer->BuPoints[0].XCoord / (float) Bbuffer->BuPoints[0].XCoord;
   /* trasformation factor between the box and the abstract box */

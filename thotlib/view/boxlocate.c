@@ -2942,6 +2942,7 @@ void LocateClickedChar (PtrBox pBox, ThotBool extend,
   /* Nombre de caracteres qui precedent */
   *index = 0;
   c = EOS;
+  dx = 0;
   charWidth = 0;
   if (pBox->BxAbstractBox->AbUnicodeBidi == 'O')
     rtl = (pBox->BxAbstractBox->AbDirection == 'R');

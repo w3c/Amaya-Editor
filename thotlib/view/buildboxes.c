@@ -367,7 +367,10 @@ char GiveTextParams (PtrTextBuffer *pBuffer, int *ind, int *nChars,
   char                script, embed;
 #ifdef _I18N_
   char                newscript, prevscript = '*';
-  int                 oldind, oldpos, oldspaces, oldwidth;
+  int                 oldind = 0;
+  int                 oldpos = 0;
+  int                 oldspaces = 0;
+  int                 oldwidth = 0;
   PtrTextBuffer       oldbuff = NULL;
 #endif /* _I18N_ */
   CHAR_T              car;
