@@ -272,8 +272,13 @@ PtrTextBuffer       Bbuffer;
 #  endif /* _WINDOWS */
 
    /* The grid stepping begins at the origin */
-   lastx = x + rect.left; /* FrameTable[frame].FrLeftMargin; */
-   lasty = y + rect.top; /* FrameTable[frame].FrTopMargin; */
+#  ifdef _WINDOWS
+   lastx = x + rect.left; 
+   lasty = y + rect.top;
+#  else /* !_WINDOWS */
+   lastx = x + FrameTable[frame].FrLeftMargin; 
+   lasty = y + FrameTable[frame].FrTopMargin;
+#  endif /* !_WINDOWS */
    x1 = -1;
    y1 = -1;
    nbpoints = 1;
@@ -1211,10 +1216,13 @@ int                 DimY;
 
    /* new values for the box geometry */
    BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);	/*Ancienne */
-   /* *x = xm;
-   *y = ym; */
+#  ifndef _WINDOWS 
+   *x = xm;
+   *y = ym; 
+#  else  /* _WINDOWS */
    *x = xm - rect.left;
    *y = ym - rect.top;
+#  endif /* _WINDOWS */
    xr = 2;
    yr = 2;
    xm += FrameTable[frame].FrLeftMargin;
