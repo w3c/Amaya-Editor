@@ -1,0 +1,261 @@
+<!doctype html public "-//w3c//dtd html 3.2 final//en">
+<html>
+<head>
+<style>
+BODY { background-image:
+url(file://tahiti/vatton/opera/doc/amaya/background.gif); background-repeat:
+repeat }
+A { background-color : #FFEDED; color : #FF6969 }
+</style>
+<title>
+Amaya Overview</title>
+</head>
+<body>
+<!-- Changed by: Jose Kahan, 21-Jan-97 -->
+<p>
+<a href="../"><img border="0" src="../Icons/WWW/w3c_home" alt="W3C" width="72"
+align=top></a> <img src="amaya.gif" alt="Amaya" border="0" align=top></p>
+<h1>Amaya - the W3C testbed client</h1>
+
+<hr>
+<ul>
+<li>
+<a href="#L347" name="L345">News and Updates</a> . <a href="#L349">W3C
+Position Statement on Amaya</a> .<a href="#L353"> Overview</a> . <a
+href="#L358">Downloading Amaya</a> . <a href="#L360">Documentation</a> . <a
+href="#L362">Mailing lists</a> . <a href="#L363">Authors and Contributors</a>
+</ul>
+<hr>
+<p>
+<strong>Amaya</strong> is a Web client that acts both as a browser and as an
+authoring tool. It has been designed with the primary purpose of being a
+testbed for experimenting and demonstrating new specifications and extensions
+of Web protocols and standards.</p>
+<p>
+Its main features include WYSIWYG editing, support for <a href="../Style/"
+name="L223">Cascading Style Sheets</a>, full implementation of <a
+href="../MarkUp/Wilbur/">HTML 3.2</a>, access to remote documents through <a
+href="../Library/" name="L250">libwww</a>, and publishing on HTTP servers
+using the standard  PUT method. You can find a more detailed description of
+Amaya and of its features in the W3C Note "<a
+href="../TR/NOTE-amaya-970220.html">An Introduction to Amaya</a>."</p>
+<h2><img border="0" src="../Icons/WWW/relnotes48x" alt="NEWS">
+ &nbsp;<a name="L347">News and Updates</a></h2>
+
+<ul>
+<li>
+3 April 1997: <a
+href="http://www.w3.org/member/WWW/Amaya/User/SourceDist.html">Source code</a>
+and <a href="http://www.w3.org/member/WWW/Amaya/User/BinDist.html">precompiled
+binary</a> releases of version 1.0 Alpha for W3C Members <img border="0"
+src="../Icons/WWW/new_red" alt="NEW!" align=top>
+
+<li><p>
+27 February 1997: Publication of the W3C Note "<a
+href="../TR/NOTE-amaya-970220.html">An Introduction to Amaya</a>." <img
+border="0" src="../Icons/WWW/new_red" alt="NEW!" align=top></p>
+<li>
+10 February 1997: Amaya 0.95b <a href="User/SourceDist.html">source code</a>
+is available to the public for the first time. <a
+href="User/BinDist.html"><br>
+Precompiled binary</a> distributions are also available.
+<li>
+9 January 1997: Amaya 0.95 <a
+href="http://www.w3.org/member/WWW/Amaya/User/SourceDist.html">source code</a>
+and <a href="http://www.w3.org/member/WWW/Amaya/User/BinDist.html">precompiled
+binary</a> distributions are available. This release is reserved to W3C
+members for one month.
+</ul>
+<h2><img border="0" src="../Icons/WWW/activity_48x48" width="48" height="48"
+alt="Activity">
+ &nbsp;<a name="L349">W3C Position Statement on Amaya</a></h2>
+
+<p>
+Why propose a direct manipulation HTML editor/browser?  What new features
+should I expect to see in Amaya? See the <a href="Activity.html">W3C position
+statement</a> on these and other related issues.</p>
+<h2><img src="Icons/eyec.gif" alt="Overview">
+ &nbsp;<a name="L353">Overview</a></h2>
+
+<h4>Background</h4>
+
+<p>
+Amaya is built on top of the <a
+href="http://opera.inrialpes.fr/thot/AboutThot.html">Thot</a> library
+developed at <a href="http://www.inria.fr/">Inria</a> by project <a
+href="http://opera.inrialpes.fr/">Opera</a>. Thot offers a comprehensive
+toolset for structured document manipulations.</p>
+<p>
+Ir&egrave;ne Vatton and Vincent Quint started developing a HTML editor at
+Inria in October 1994 in order to evaluate the advantages of structured
+editing for authoring Web documents. This first prototype was then known as
+Tamaya. In October 1995, Daniel Veillard joined the team for implementing the
+new CSS proposal. The first demo of Tamaya was presented at the WWW4
+Conference, in Boston. In February 1996, the team joined the W3C for
+developing <strong> Amaya</strong>, the W3C's testbed client software, based
+on this background.</p>
+<h4>Status</h4>
+
+<p>
+Still under development. The first public demo of <strong>Amaya</strong> took
+place during the <a href="http://www5conf.inria.fr">Fifth International WWW
+Conference</a>, in Paris (May 6-10, 1996). Source code for the current alpha
+version is available for downloading.</p>
+<h4>Platforms</h4>
+
+<p>
+We have succesfully compiled the source code of <b>Amaya</b> on various <a
+href="User/Platforms.html">Unix platforms</a> A port to PC/Windows will follow
+later (Summer 1997).</p>
+<h4>Main Features</h4>
+
+<p>
+The main features of <b>Amaya</b> are as follows:</p>
+<dl>
+<dt>WYSIWYG editing</dt>
+<dd>
+A document being edited is displayed with the same appearance as in a browser.
+The user interacts with <b>Amaya</b> in the same way as with a word processor.
+</dd>
+<dt>Structure editing</dt>
+<dd>
+The structure of a document may be displayed in a separate window. The user
+can clearly see the type of elements, their attributes and their hierarchy and
+can manipulate that structure with powerful commands.
+</dd>
+<dt>Browsing</dt>
+<dd>
+behaves also like a browser, with the usual user interface. Browsing and
+editing are integrated seamlessly.
+</dd>
+
+<strong>Amaya</strong> <dl>
+<dt>HTML</dt>
+<dd>
+supports the whole <a href="../MarkUp/Wilbur/">HTML 3.2</a> specification,
+including tables, forms, divisions, client side image maps, etc.
+<p>
+In the latest version, some extensions under discussion for <a
+href="../MarkUp/Cougar/">HTML-Cougar</a> are implemented.</p>
+</dd>
+</dl>
+<strong>Amaya</strong> <dl>
+<dt><a href="../Style/" name="L558">Cascading Style Sheets</a></dt>
+<dd>
+Document are displayed according to the style specification they contain
+(<code>STYLE</code> elements in the <code>HEAD</code>) and to the style sheets
+they refer to (<code>LINK REL=STYLESHEET</code>). Style elements and style
+sheets can be edited with <strong>Amaya</strong>.
+</dd>
+<dt>HTTP</dt>
+<dd>
+Access to remote servers is handled either by the latest version of the <a
+href="../Library/" name="L552">W3C sample HTTP library</a> (libwww 5.0a),
+using either HTTP/1.0 or HTTP/1.1 or by the Java implementation of HTTP from
+<a href="../Jigsaw">Jigsaw</a>. The later version is still experimental but
+it's already distributed in binary version.
+</dd>
+<dt>Publishing</dt>
+<dd>
+The PUT method of HTTP is used to write documents on remote servers. Links are
+updated according to the location of the document in the server.
+</dd>
+<dt>Graphic formats</dt>
+<dd>
+Support for pixmaps, Gif, Jpeg, <a href="../Graphics/PNG/">PNG</a>, ...
+</dd>
+<dt>Printing</dt>
+<dd>
+Generation of PostScript files.
+</dd>
+<dt>Extensibility</dt>
+<dd>
+The document structure (HTML) and the graphical aspect of documents are
+specified outside with specific languages allowing easy testing of new
+features.
+</dd>
+<dt>API</dt>
+<dd>
+The editor offers an API for adding new functions or for modifying existing
+functions.
+<p>
+This API is available in two flavors: C and Java.</p>
+</dd>
+</dl>
+
+</dl>
+<h2 align=left><img src="../Icons/WWW/disk_48x48" border="0" alt="Software">
+ &nbsp;<a name="L358">Downloading Amaya</a></h2>
+
+<p>
+<strong>Amaya</strong> is covered by the <a href="User/COPYRIGHT.html"> MIT
+and INRIA Copyright Statement</a>. Please read it carefully before downloading
+the software.</p>
+<p>
+<strong>Amaya</strong> is available as either a <a
+href="User/SourceDist.html">source code</a> or as a <a
+href="User/BinDist.html">precompiled binary</a> distribution. The latter only
+covers some <a href="User/Platforms.html">platforms</a>.</p>
+<h2 align=left><a href="User/"><img src="../Icons/WWW/doc48x"
+alt="Documentation" border="0">
+ </a>&nbsp;<a name="L360">User Documentation and Design Overview</a></h2>
+
+<p>
+The <a href="User/">documentation</a> provided with this release is not
+complete yet, but it should be enough to understand how to <a
+href="User/Overview.html#L110">compile</a>, <a
+href="User/Overview.html#L111">configure</a>, and <a
+href="User/Overview.html#L112">use</a> Amaya. Some documentation is also
+available for <a href="User/Overview.html#L113">developers</a>.</p>
+<h2 align=left><a
+href="http://www.w3.org/pub/WWW/Mail/Lists.html#subscribe"><img
+src="../Icons/WWW/mail48x" alt="Mail" border="0">
+ </a>&nbsp;<a name="L362">Mailing lists</a></h2>
+
+<p>
+<strong>Amaya</strong> has the following set of mailing lists that you are
+more than welcome to use! Before you send mail to the lists, please check out
+the archives - they often contain good information about how to solve
+problems. Please do not send mail directly to the authors - the mail load is
+already rather high and you will most probably get a better response time by
+using one of the following mailing lists. See the <a
+href="../Mail/Lists.html#subscribe">information on mailing lists</a> for
+details on how to subscribe.</p>
+<dl>
+<dt><b>www-amaya@w3.org</b></dt>
+<dd>
+A public mailing list for an open discussion of ideas, diffs, new features,
+bugs, etc. An <a href="http://opera.inrialpes.fr/amaya/messages/"> archive</a>
+is available at the following URL:
+<p>
+<code>http://opera.inrialpes.fr/amaya/messages/</code></p>
+<p>
+</p>
+</dd>
+<dt><b>www-amaya-developers@w3.org</b></dt>
+<dd>
+A public mailing list for ideas and  remarks concerning the Amaya source code.
+An <a href="http://opera.inrialpes.fr/amaya/messages/developers/"> archive</a>
+is available at the following URL:
+<p>
+<code>http://opera.inrialpes.fr/amaya/messages/developers/</code></p>
+</dd>
+</dl>
+<h2><img src="../Icons/WWW/people_48x48" alt="People">
+ &nbsp;<a name="L363">Authors and Contributors</a></h2>
+
+<ul>
+<li>
+Ir&egrave;ne Vatton, Vincent Quint, Daniel Veillard, Jos&eacute; Kahan, and
+Ramzi Gu&eacute;tari with additional contributions from Nabil Laya&iuml;da,
+St&eacute;phane Bonhomme and C&eacute;cile Roisin.
+</ul>
+<p>
+</p>
+<hr>
+<address>
+<a href="mailto:irene.vatton@w3.org">Ir&egrave;ne Vatton</a><br>
+<a href="../Help/Webmaster">Webmaster</a><br>
+$Date$</address>
+</body>
+</html>
