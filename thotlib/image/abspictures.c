@@ -133,8 +133,7 @@ int                 typeimage;
 	pRegle->PrPictInfo.PicPresent = presimage;
 	pRegle->PrPictInfo.PicType = typeimage;
      }
-
-}				/*SetImageRule */
+}
 
 
 /*----------------------------------------------------------------------
@@ -145,86 +144,70 @@ int                 typeimage;
    Si le pointeur sur le descripteur n'existe pas, la      
    procedure commence par creer le descripteur.            
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                NewPictInfo (PtrAbstractBox ppav, char *filename, int imagetype)
-
 #else  /* __STDC__ */
 void                NewPictInfo (ppav, filename, imagetype)
 PtrAbstractBox      ppav;
 char               *filename;
 int                 imagetype;
-
 #endif /* __STDC__ */
-
 {
-   PtrTextBuffer       pBuffer;
-   PictInfo           *image;
+  PtrTextBuffer       pBuffer;
+  PictInfo           *image;
 
-   if (ppav->AbElement->ElTerminal && ppav->AbElement->ElLeafType == LtPicture)
-     {
-	/* C'est un element image -. accroche le descripteur a l'element */
-	if (ppav->AbElement->ElPictInfo == NULL)
+  image = NULL;
+  if (ppav->AbElement->ElTerminal && ppav->AbElement->ElLeafType == LtPicture)
+    {
+      /* C'est un element image -. accroche le descripteur a l'element */
+      if (ppav->AbElement->ElPictInfo == NULL)
 	  {
-	     /* Creation du descripteur */
-	     image = (PictInfo *) TtaGetMemory (sizeof (PictInfo));
-	     if (filename == NULL)
-	       {
-		  GetTextBuffer (&pBuffer);
-		  ppav->AbElement->ElText = pBuffer;
-		  filename = &pBuffer->BuContent[0];
-	       }
-	     image->PicFileName = filename;
-	     image->PicPixmap = 0;
-	     image->PicMask = 0;
-	     image->PicPresent = RealSize;
-	     image->PicType = imagetype;
-	     image->PicXArea = 0;
-	     image->PicYArea = 0;
-	     image->PicWArea = 0;
-	     image->PicHArea = 0;
-	     ppav->AbElement->ElPictInfo = (int *) image;
+	    /* Creation du descripteur */
+	    image = (PictInfo *) TtaGetMemory (sizeof (PictInfo));
+	    ppav->AbElement->ElPictInfo = (int *) image;
 	  }
-	ppav->AbPictInfo = ppav->AbElement->ElPictInfo;
+      ppav->AbPictInfo = ppav->AbElement->ElPictInfo;
      }
    else
      {
-	/*  Ce n'est pas un element image -> Creation du descripteur */
-	image = (PictInfo *) TtaGetMemory (sizeof (PictInfo));
-	if (filename == NULL)
-	  {
-	     GetTextBuffer (&pBuffer);
-	     ppav->AbElement->ElText = pBuffer;
-	     filename = &pBuffer->BuContent[0];
-	  }
-	image->PicFileName = filename;
-	image->PicPixmap = 0;
-	image->PicMask = 0;
-	image->PicPresent = RealSize;
-	image->PicType = imagetype;
-	image->PicXArea = 0;
-	image->PicYArea = 0;
-	image->PicWArea = 0;
-	image->PicHArea = 0;
-	ppav->AbPictInfo = (int *) image;
+       /*  Ce n'est pas un element image -> Creation du descripteur */
+       image = (PictInfo *) TtaGetMemory (sizeof (PictInfo));
+       ppav->AbPictInfo = (int *) image;
      }
-
-}				/*NewPictInfo */
+  
+  if (image)
+    {
+      /* Initialize image descriptor */
+      if (filename == NULL)
+	{
+	  GetTextBuffer (&pBuffer);
+	  ppav->AbElement->ElText = pBuffer;
+	  filename = &pBuffer->BuContent[0];
+	}
+      image->PicFileName = filename;
+      image->PicPixmap = 0;
+      image->PicMask = 0;
+      image->PicPresent = RealSize;
+      image->PicType = imagetype;
+      image->PicXArea = 0;
+      image->PicYArea = 0;
+      image->PicWArea = 0;
+      image->PicHArea = 0;
+      image->mapped = FALSE;
+      image->created = FALSE;
+    }
+}
 
 
 /*----------------------------------------------------------------------
    FreePictInfo libere le descriteur d'image.               
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                FreePictInfo (int *desc)
-
 #else  /* __STDC__ */
 void                FreePictInfo (desc)
 int                *desc;
-
 #endif /* __STDC__ */
-
 {
    PictInfo           *image;
 
@@ -235,7 +218,7 @@ int                *desc;
 	TtaFreeMemory ((char *) image);
      }
 
-}				/*FreePictInfo */
+}
 
 
 
@@ -244,14 +227,11 @@ int                *desc;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CopyPictInfo (int *Imdcopie, int *Imdsource)
-
 #else  /* __STDC__ */
 void                CopyPictInfo (Imdcopie, Imdsource)
 int                *Imdcopie;
 int                *Imdsource;
-
 #endif /* __STDC__ */
-
 {
    PictInfo           *imagec;
    PictInfo           *images;

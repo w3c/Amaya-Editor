@@ -717,23 +717,20 @@ int                 delta;
 		       if (pAbbox1 != NULL)
 			  /* store the box to create */
 			  AddBoxToCreate (&ToCreate, pAbbox1->AbBox, frame);
-		       else
-			 { 
-			   if (pBox->BxType == BoPicture)
-			     {
-			       if (!((y >= pFrame->FrYOrg) &&
-				     (pBox->BxYOrg <= (pFrame->FrYOrg + h)) &&
-				     (x >= pFrame->FrXOrg) &&
-				     (pBox->BxXOrg <= (pFrame->FrXOrg + l))))
-				 UnmapImage (pBox->BxPictInfo);
-			       else
-				 DisplayBox (pBox, frame);
-                             }
-			   else  if (y >= frameymin            && 
-				     pBox->BxYOrg <= frameymax && 
-				     x >= framexmin            && 
-				     pBox->BxXOrg <= framexmax)
-			     DisplayBox (pBox, frame);
+		       else  if (y >= frameymin            && 
+				 pBox->BxYOrg <= frameymax && 
+				 x >= framexmin            && 
+				 pBox->BxXOrg <= framexmax)
+			 DisplayBox (pBox, frame);
+		       else if (pBox->BxType == BoPicture)
+			 {
+			   if (!((y >= pFrame->FrYOrg) &&
+				 (pBox->BxYOrg <= (pFrame->FrYOrg + h)) &&
+				 (x >= pFrame->FrXOrg) &&
+				 (pBox->BxXOrg <= (pFrame->FrXOrg + l))))
+			     UnmapImage (pBox->BxPictInfo);
+			   /****else
+			     DisplayBox (pBox, frame);****/
 			 }
 		       /* Skip to next box */
 		       pBox = pBox->BxNext;

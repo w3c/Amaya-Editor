@@ -1244,8 +1244,6 @@ char               *imageFile;
    int             xif,yif,wif,hif;
    PictureScaling  pres;
    unsigned long   Bgcolor;
-   ThotWindow      frame;
-   int             vue;
 
    GetPictureFileName (imageFile, fileName);
    typeImage = GetPictureFormat(fileName);
