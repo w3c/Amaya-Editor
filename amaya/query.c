@@ -2205,6 +2205,8 @@ char 	     *content_type;
 
    if (mode & AMAYA_NOCACHE) 
       HTRequest_setReloadMode (me->request, HT_CACHE_FLUSH);
+   else
+     HTRequest_setReloadMode (me->request, HT_CACHE_FLUSH_MEM);
 
    /* prepare the query string and format for POST */
    if (mode & AMAYA_FORM_POST)
