@@ -7,8 +7,6 @@
   />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Style Sheets</title>
-  <style type="text/css">
-  </style>
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -31,7 +29,7 @@
 </table>
 
 <div id="page_body">
-<h1>Style Sheets</h1>
+<h2>Style Sheets</h2>
 
 <p>The <strong>Style</strong> menu enables you to change the appearance of
 your documents using Cascading Style Sheets (CSS)</p>
@@ -48,8 +46,9 @@ instance of the style sheet.</p>
 <p>Any user can define a specific style sheet that applies to all documents
 loaded on their system. This style sheet is called the <b>user's</b> style
 sheet. It is stored in the user's local environment, in the <span
-class="Link0"><code>AmayaHome</code> directory</span> as the local file
-<code>amaya.css</code>.</p>
+class="Link0"><code><a href="Configure.html#AmayaHome">AmayaHome</a></code>
+directory</span> as the local file
+<code><strong>amaya.css</strong></code>.</p>
 
 <p>For example, if you prefer to display documents in Helvetica on your
 screen and print them in small size, you can create a user's style sheet with
@@ -64,16 +63,26 @@ body {font-family: Helvetica}<br />
 
 <h4>Handling External CSS Style Sheets</h4>
 
-<p>The Style Sheets option on the Style menu provides a set of commands which
-enable you to control external and user's CSS style sheets.</p>
+<p>The <strong>Style</strong> menu provides a set of commands which enable
+you to control external and user's CSS style sheets.</p>
 <ul>
   <li>Select <strong>Link</strong> to link a new CSS style sheet to the
-    current document. Amaya displays a pointing hand cursor. If the target
-    style sheet is already displayed in an Amaya window, click the style
-    sheet. If the style sheet is not displayed, click the current document to
-    display a dialog and type the target style sheet's URI. The
-    <strong>Link</strong> command adds an element link with its attributes
-    into the head of the document.
+    current document. Amaya displays a pointing hand cursor.
+    <p>This command shows a dialog box.</p>
+    <ul>
+      <li>If the target CSS style sheet is displayed in another Amaya window
+        and you want to select it by click, click the <strong>Click</strong>
+        button then click anywhere within that window to create the link.</li>
+      <li>If the target CSS style sheet is displayed in another tab and you
+        want to select it by click, click the <strong>Click</strong> button
+        then change the current tab and click anywhere within the target CSS
+        style sheet to create the link.</li>
+      <li>If the target CSS style sheet is a local file you can use the
+        <strong>Browse</strong> button to select it.</li>
+      <li>Else type the URI (like http://www.w3.org/file.css) of the target
+        CSS style sheet and then <strong>Confirm</strong> to create the
+      link.</li>
+    </ul>
     <p></p>
   </li>
   <li>Select <strong>Open</strong> to open a CSS style sheet applied to the
@@ -97,12 +106,8 @@ enable you to control external and user's CSS style sheets.</p>
 
 <p>The <strong>Open</strong>, <strong>Disable</strong> and
 <strong>Enable</strong> commands can be applied to the user's preference
-style sheet, but the Link and Remove commands apply to only linked CSS style
-sheets.</p>
-
-<p>A dialog shows the list of CSS style sheets proposed for the
-<strong>Open</strong> command. If no CSS style sheet is currently applied to
-a document, the dialog indicates that there is no CSS file available.</p>
+style sheet, but the <strong>Link</strong> and <strong>Remove</strong>
+commands apply to only external CSS style sheets.</p>
 
 <h3>Showing applied style</h3>
 
@@ -113,33 +118,91 @@ command that displays into an external window CSS style properties applied to
 the first current selected element. The user can then display the CSS source
 that generates each property by double (or simple) click on the property. As
 long as the window is open, Amaya updates the window content when the
-selection changes. Hitting <code>F2</code>, the user can see CSS properties
-applied to enclosing elements.</p>
+selection changes. Hitting <code>F2</code>, the user can so see CSS
+properties applied to enclosing elements.</p>
 
 <h3>Creating and Updating a Style Attribute</h3>
 
-<p>Select the element you wish to decorate. By default the selection is set
-to the character string, and you have to press the <code>F2</code> key to
-select the enclosing element..</p>
+<p>Amaya provides tools that let you associate a style attribute with the
+currently selected elements:</p>
 
-<p>The first four entries of the<strong>Style</strong> menu open a dialog
-that lets you associate a style attribute with the currently selected
-elements:</p>
+<h4>Colors</h4>
+
+<p>The <strong>Colors</strong> tool lets you choose the foreground and
+background colors from a palette. When the <strong>Colors</strong> tool is
+open:</p>
+
+<p><ul>
+  <li>A button <img alt="default"
+    src="../../resources/icons/16x16/default.png" /> (inherited value) or a
+    colored rectangle shows the foreground color.</li>
+  <li>A button <img alt="default"
+    src="../../resources/icons/16x16/default.png" /> (inherited value) or a
+    colored rectangle shows the background color.</li>
+  <li>A button <img alt="switch"
+    src="../../resources/icons/misc/switch_colors.png" /> allows one to
+    switch foreground and background colors.</li>
+  <li>A button <img alt="Default_color"
+    src="../../resources/icons/misc/black_white.png" /> allows one to restore
+    default colors (inherited values).</li>
+  <li>A button <img alt="Refresh"
+    src="../../resources/icons/16x16/refresh.png" /> allows one to initalize
+    the foreground and background colors form the current selection.</li>
+  <li>Un bouton <img alt="ok" src="../../resources/icons/16x16/ok.png" />
+    allows one to apply the foreground and background colors to the current
+    selection.</li>
+</ul>
+</p>
+
+<p>To select a new foreground or background color, one must click the
+associated button. A palette allows then to freely select a color. Selected
+colors are not immediately applied to the current selection. The apply button
+must be clicked.</p>
+
+<p class="Note"><strong>Note</strong>: It's important to selected enough
+contrasted foreground and background colors.</p>
+
+<h4>Characters</h4>
+
+<p>The <strong>Characters</strong> tool lets you choose the font family, the
+character style, the body size, and the underline style.</p>
 <ul>
-  <li><strong>Character style</strong> lets you choose the font family, the
-    character style, the body size, and the underline style.
-    <p></p>
-  </li>
-  <li><strong>Colors</strong> let you choose the foreground and background
-    colors from a palette. Click a palette cell with the left button to set
-    the foreground color, and click with the middle button to set the
-    background color.
-    <p></p>
-  </li>
-  <li><strong>Format</strong> enables you to set alignment, indentation,
-    justification, and line spacing.
-    <p></p>
-  </li>
+  <li>A <strong>Font family</strong> selector provides limited list of
+  fonts.</li>
+  <li>An Underline selector provides the list of possible underline
+  values.</li>
+  <li>A <strong>Body size</strong> selector provides limited list of font
+    sizes expressed in points.</li>
+  <li>A <strong>Character style</strong> selector provides limited list of
+    character styles.</li>
+  <li>A <strong>Boldness</strong> selector provides a limited list of
+    possible boldness values.</li>
+  <li>A button <img alt="Refresh"
+    src="../../resources/icons/16x16/refresh.png" /> allows one to initalize
+    values form the current selection.</li>
+  <li>Un bouton <img alt="ok" src="../../resources/icons/16x16/ok.png" />
+    allows one to apply values to the current selection.</li>
+</ul>
+
+<p>Selected values are not immediately applied to the current selection. The
+apply button must be clicked.</p>
+
+<h4>Format</h4>
+
+<p>The <strong>Format</strong> tool enables you to set alignment,
+indentation, justification, and line spacing.</p>
+<ul>
+  <li>A button <img alt="Refresh"
+    src="../../resources/icons/16x16/refresh.png" /> allows one to initalize
+    values form the current selection.</li>
+  <li>Un bouton <img alt="ok" src="../../resources/icons/16x16/ok.png" />
+    allows one to apply values to the current selection.</li>
+</ul>
+
+<h4>Background image</h4>
+
+<p>There is also an entry in the <strong>Style</strong> menu:</p>
+<ul>
   <li><strong>Background image</strong> enables you to choose a background
     image and its repeat mode.</li>
 </ul>
@@ -222,9 +285,10 @@ elements to your CSS style sheet: <strong>Information Type</strong> and
 
 <p>The <strong>Information Type</strong> submenu lists HTML elements that
 define abstract styles. Three of these styles are also available through
-buttons: <em>emphasis</em> <img src="../../resources/icons/22x22/XHTML_I.png" alt="Emphasis button"
-/>, <strong>strong</strong> <img src="../../resources/icons/22x22/XHTML_B.png"
-alt="Strong button" /> and <code>code</code> <img src="../../resources/icons/22x22/XHTML_T.png"
+buttons: <em>emphasis</em> <img src="../../resources/icons/22x22/XHTML_I.png"
+alt="Emphasis button" />, <strong>strong</strong> <img
+src="../../resources/icons/22x22/XHTML_B.png" alt="Strong button" /> and
+<code>code</code> <img src="../../resources/icons/22x22/XHTML_T.png"
 alt="Code button" />.</p>
 
 <p class="ProcedureCaption">To apply an information type:</p>
@@ -292,16 +356,16 @@ Commands</strong></p>
       </td>
       <td valign="top"><p class="TableText"><code>Ctrl i Ctrl e</code></p>
       </td>
-      <td valign="top"><img src="../../resources/icons/22x22/XHTML_I.png" alt="Emphasis button"
-      /></td>
+      <td valign="top"><img src="../../resources/icons/22x22/XHTML_I.png"
+        alt="Emphasis button" /></td>
     </tr>
     <tr>
       <td width="147" valign="top"><p class="TableText">Strong</p>
       </td>
       <td valign="top"><p class="TableText"><code>Ctrl i Ctrl s</code></p>
       </td>
-      <td valign="top"><img src="../../resources/icons/22x22/XHTML_B.png" alt="Strong button"
-      /></td>
+      <td valign="top"><img src="../../resources/icons/22x22/XHTML_B.png"
+        alt="Strong button" /></td>
     </tr>
     <tr>
       <td width="147" valign="top"><p class="TableText">Cite</p>
@@ -322,7 +386,8 @@ Commands</strong></p>
       </td>
       <td valign="top"><p class="TableText"><code>Ctrl i Ctrl t</code></p>
       </td>
-      <td valign="top"><img src="../../resources/icons/22x22/XHTML_T.png" alt="Code button" /></td>
+      <td valign="top"><img src="../../resources/icons/22x22/XHTML_T.png"
+        alt="Code button" /></td>
     </tr>
     <tr>
       <td width="147" valign="top"><p class="TableText">Variable (var)</p>

@@ -149,6 +149,8 @@ autre document :</p>
       <li>Si le document cible est visualisé dans un autre onglet , cliquez
         sur le bouton <strong>Clic</strong> puis changez d'onglet et cliquez
         n'importe où dans le document cible. Le lien est créé.</li>
+      <li>Si le document cible est local vous pouvez utiliser le bouton
+        <strong>Butiner</strong> pour le sélectionner.</li>
       <li>Sinon entrez l'URI (comme http://www.w3.org) du document cible et
         taper sur la touche <strong>Enter ou Return</strong> pour confirmer.
         Le lien est créé.</li>

@@ -178,7 +178,7 @@ void ClearViewSelection (int frame)
 	      {
 		/* undisplay the beginning of the selection */
 		if (pBox1->BxType == BoGhost ||
-		    (pAb1 != NULL &&
+		    (pAb1 != NULL && pAb1->AbElement &&
 		     FrameTable[frame].FrView == 1 &&
 		     TypeHasException (ExcHighlightChildren,
 				       pAb1->AbElement->ElTypeNumber,
@@ -213,7 +213,7 @@ void ClearViewSelection (int frame)
 		
 		/* undisplay the end of the selection */
 		if (pBox2->BxType == BoGhost ||
-		    (pAb2 != NULL &&
+		    (pAb2 != NULL && pAb2->AbElement &&
 		     FrameTable[frame].FrView == 1 &&
 		     TypeHasException (ExcHighlightChildren,
 				       pAb2->AbElement->ElTypeNumber,

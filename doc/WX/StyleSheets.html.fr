@@ -5,8 +5,10 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Les feuilles de style</title>
-  <meta name="GENERATOR" content="amaya 8.4, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.0.1, see http://www.w3.org/Amaya/"
+  />
   <link href="style.css" rel="stylesheet" type="text/css" />
+  <link />
 </head>
 
 <body xml:lang="fr" lang="fr">
@@ -31,33 +33,181 @@
 <h2><a name="L1023">Les feuilles de style</a></h2>
 
 <p>Le menu <strong>Style</strong> vous permet de changer l'apparence de vos
-documents de deux façons différentes :</p>
+documents en utilisant les cascades des feuilles de style (CSS).</p>
+
+<h3><a name="feuilles">Les feuilles de style CSS externes et
+utilisateur</a></h3>
+
+<p>Un document peut associer plusieurs feuilles de style externes qui sont
+chargées avec le document et lui sont appliquées.</p>
+
+<p>Une feuille de style externe peut s'appliquer à plusieurs documents. Quand
+la même feuille de style s'applique à plusieurs documents affichés, Amaya ne
+charge qu'une seule instance de la feuille de style.</p>
+
+<p>L'utilisateur peut définir une feuille de style spécifique qui s'applique
+à tous les documents chargés. Cette feuille de style est appelée
+<strong>Feuille de Style Utilisateur</strong>. c'est le fichier local
+<strong>amaya.css</strong> conservé dans l'environnement de l'utilisateur (le
+<a href="Configure.html.fr#AmayaHome">répertoire d'AmayaHome</a>).</p>
+
+<p>Par exemple si vous préférez afficher les document en Helvetica et
+imprimer avec une police de caractères de petite taille, vous pouvez créer
+votre feuille de style utilisateur avec les règles CSS suivantes :</p>
+<pre>@media print {
+ body {font-size: 10pt}
+}
+@media screen {
+ body {font-family: Helvetica}
+}</pre>
+
+<h4><a name="Managing">Gérer des feuilles de style CSS externes</a></h4>
+
+<p>Le menu <strong>Style</strong> donne accès à une série de commandes qui
+permettent de contrôler les feuilles de style CSS externes et de
+l'utilisateur :</p>
 <ul>
-  <li>en utilisant les cascades des feuilles de style (CSS).</li>
-  <li>en utilisant les éléments et les attributs HTML.</li>
+  <li>La commande <strong>Ajouter</strong> permet de lier une nouvelle
+    feuille de style CSS à un document courant.
+    <p>Cette commande fait apparaître une boîte de dialogue :</p>
+    <ul>
+      <li>Si la feuille CSS cible est visualisée dans une autre fenêtre
+        d'Amaya , cliquez sur le bouton <strong>Clic</strong> puis n'importe
+        où dans la feuille CSS cible. Le lien est créé.</li>
+      <li>Si la feuille CSS cible est visualisée dans un autre onglet ,
+        cliquez sur le bouton <strong>Clic</strong> puis changez d'onglet et
+        cliquez n'importe où dans la feuille CSS cible. Le lien est créé.</li>
+      <li>Si la feuille CSS cible est locale vous pouvez utiliser le bouton
+        <strong>Butiner</strong> pour la sélectionner.</li>
+      <li>Sinon entrez l'URI (comme http://www.w3.org/file.css) la feuille
+        CSS cible et taper sur la touche <strong>Enter ou Return</strong>
+        pour confirmer. Le lien est créé.</li>
+    </ul>
+    <p></p>
+  </li>
+  <li>La commande <strong>Ouvrir</strong> permet d'ouvrir une des feuilles de
+    style CSS appliquées au document courant.
+    <p></p>
+  </li>
+  <li>La commande <strong>Désactiver</strong> permet de supprimer les effets
+    d'une des feuilles de style actives du document courant. Cette commande
+    n'affecte en rien le lien CSS dans le document.
+    <p></p>
+  </li>
+  <li>La commande <strong>Réactiver</strong> permet de rétablir les effets
+    d'une des feuilles de style CSS désactivées du document courant. Cette
+    commande n'affecte en rien le lien CSS dans le document.
+    <p></p>
+  </li>
+  <li>La commande <strong>Retirer</strong> permet de retirer une des feuilles
+    de style CSS externes. Cette commande agit comme la commande Désactiver.
+    En plus de cela, l'élément lien qui attache les feuilles de style CSS est
+    supprimé.</li>
 </ul>
 
-<p>Les entrées du menu <strong>Style</strong> sont consacrées à la création
-et la gestion des propriétés et des feuilles de style CSS.</p>
+<p>Les commandes <strong>Ouvrir</strong>, <strong>Désactiver</strong> et
+<strong>Réactiver</strong> peuvent être appliquées à la feuille de style de
+l'utilisateur, mais les commandes <strong>Ajouter</strong> et
+<strong>Retirer</strong> concernent uniquement les feuilles de style
+externes.</p>
 
-<h3><a name="Creating">Créer et mettre à jour un attribut de style</a></h3>
+<h3>Visualiser le style appliqué</h3>
 
-<p>Chacune des quatre entrées du menu <strong>Style</strong> appelle une
-boîte de dialogue qui permet l'association d'un attribut de
-<code>style</code> aux éléments courants sélectionnés
-:<strong></strong><strong></strong></p>
+<p>S'il y a beaucoup de feuilles de style attachées à un document, il est
+difficile de comprendre pourquoi un élément est visualisé avec cette couleur
+ou ces marges, etc. Pour aider l'utilisateur, Amaya fournit une commande
+<strong>Montrer le style appliqué</strong> qui visualise dans une fenêtre
+externe les propriétés CSS appliquées au premier élément de la sélection
+courante. L'utilisateur peut afficher le source CSS qui engendre chaque
+propriété en double (ou simple) cliquant sur la propriété. Aussi longtemps
+que la fenêtre est ouverte, Amaya met à jour le contenu de la fenêtre quand
+la sélection change. En appuyant sur la touche <code>F2</code>, l'utilisateur
+peut ainsi voir les propriétés CSS appliquées aux éléments englobants.</p>
+
+<h3><a name="Creating" id="Creating">Créer et mettre à jour un attribut de
+style</a></h3>
+
+<p>Amaya fournit des outils qui vous permettent d'associer un attribut style
+aux éléments sélectionnés :</p>
+
+<h4>Couleurs</h4>
+
+<p>L'outil <strong>Couleurs</strong> permet de choisir les couleurs de
+premier plan et d'arrière plan dans une palette. Quand l'outil
+<strong>Couleurs</strong> est ouvert :</p>
+
+<p><ul>
+  <li>Un bouton <img alt="default"
+    src="../../resources/icons/16x16/default.png" /> (valeur héritée) ou un
+    rectangle de couleur visualise la couleur du premier plan.</li>
+  <li>Un autre bouton <img alt="default"
+    src="../../resources/icons/16x16/default.png" /> (valeur héritée) ou un
+    rectangle de couleur visualise la couleur d'arrière plan.</li>
+  <li>Un bouton <img alt="switch"
+    src="../../resources/icons/misc/switch_colors.png" /> permet d'inverser
+    les couleurs du premier plan et d'arrière plan.</li>
+  <li>Un bouton <img alt="Default_color"
+    src="../../resources/icons/misc/black_white.png" /> permet de restaurer
+    les couleurs par défaut (valeur héritée).</li>
+  <li>Un bouton <img alt="Refresh"
+    src="../../resources/icons/16x16/refresh.png" /> permet d'initialiser les
+    couleurs du premier plan et d'arrière plan à partir de la sélection
+    courante.</li>
+  <li>Un bouton <img alt="ok" src="../../resources/icons/16x16/ok.png" />
+    permet d'appliquer les couleurs du premier plan et d'arrière plan à la
+    sélection courante.</li>
+</ul>
+</p>
+
+<p>Pour choisir une nouvelle couleur de premier plan ou d'arrière plan, il
+faut cliquer sur le bouton correspondant. Une palette permet alors de choisir
+librement une couleur. Les couleurs choisies ne sont pas immédiatement
+appliquées à la sélection. Le bouton appliquer doit être cliqué.</p>
+
+<p class="Note"><strong>Note</strong> : Il est important de choisir des
+couleurs de premier plan ou d'arrière plan suffisament contrastées.</p>
+
+<h4>Caractères</h4>
+
+<p>L'outil <strong>Caractères</strong> permet de choisir la police de
+caractère, le style du caractère, la taille du corps et le style souligné.</p>
 <ul>
-  <li>L'option <strong>Style de caractères</strong> permet de choisir la
-    police de caractère, le style du caractère, la taille du corps et le
-    style souligné.</li>
-  <li><strong><span style="font-weight: normal">L'option</span>
-    Couleurs</strong> permet de choisir les couleurs du premier plan et de
-    l'arrière plan dans la palette. Cliquez sur une cellule de la palette
-    avec le bouton gauche de la souris pour attribuer la couleur du premier
-    plan, cliquez sur le bouton du milieu pour attribuer la couleur de
-    l'arrière plan.</li>
-  <li>L'option <strong>Format</strong> permet de choisir l'alignement, le
-    renfoncement, la justification et l'interligne.</li>
+  <li>Un selecteur <strong>Police</strong> fournit une liste limitée de
+    polices de caractères.</li>
+  <li>Un selecteur <strong>Souligné</strong> fournit la liste des valeurs
+    possibles.</li>
+  <li>Un selecteur <strong>Corps</strong> fournit une liste limitée de corps
+    exprimés en points.</li>
+  <li>Un selecteur <strong>Style des caractères</strong> fournit une liste
+    limitée de styles possibles.</li>
+  <li>Un selecteur Graisse fournit une liste limitée de graisses
+  possibles.</li>
+  <li>Un bouton <img alt="Refresh"
+    src="../../resources/icons/16x16/refresh.png" /> permet d'initialiser les
+    valeurs à partir de la sélection courante.</li>
+  <li>Un bouton <img alt="ok" src="../../resources/icons/16x16/ok.png" />
+    permet d'appliquer les valeurs à la sélection courante.</li>
+</ul>
+
+<p>Les valeurs choisies ne sont pas immédiatement appliquées à la sélection.
+Le bouton appliquer doit être cliqué.</p>
+
+<h4>Format</h4>
+
+<p>L'outil <strong>Format</strong> permet de choisir l'alignement, le
+renfoncement, la justification et l'interligne.</p>
+<ul>
+  <li>Un bouton <img alt="Refresh"
+    src="../../resources/icons/16x16/refresh.png" /> permet d'initialiser les
+    valeurs à partir de la sélection courante.</li>
+  <li>Un bouton <img alt="ok" src="../../resources/icons/16x16/ok.png" />
+    permet d'appliquer les valeurs à la sélection courante.</li>
+</ul>
+
+<h4>Image de fond</h4>
+
+<p>Il y a aussi une entrée du menu <strong>Style</strong> :</p>
+<ul>
   <li>L'option <strong>Image de fond</strong> permet de choisir une image de
     fond et son mode de répétition.</li>
 </ul>
@@ -70,12 +220,12 @@ permettent de supprimer l'information de style correspondant pour les
 vues immédiatement dans la vue formatée et également dans la vue
 structure.</p>
 
-<h3><a name="Creating,">Créer un style générique pour un élément ou une
-classe</a></h3>
+<h3><a name="Creating," id="Creating,">Créer un style générique pour un
+élément ou une classe</a></h3>
 
 <p>Quand un attribut <code>style</code> a été associé à un élément, vous
 pouvez utiliser cet élément comme un modèle pour créer ou modifier une règle
-de style&nbsp;:</p>
+de style :</p>
 <ul>
   <li>Sélectionnez cet élément (vous devez sélectionner un seul élément et
     cet élément doit avoir un attribut <code>style</code>)</li>
@@ -96,7 +246,7 @@ de style&nbsp;:</p>
 
 <p>Quand vous avez créé de nouvelles classes avec la commande <strong>Créer
 une règle</strong>, vous pouvez associer ces classes à certains éléments dans
-le document&nbsp;:</p>
+le document :</p>
 <ul>
   <li>Choisissez <strong>Appliquer une classe</strong> depuis le menu
     <strong>Style</strong>. Une boîte de dialogue surgit, affichant toutes
@@ -110,83 +260,8 @@ le document&nbsp;:</p>
 menu permet aussi d'effacer un attribut de classe pour un élément ou de le
 changer : l'attribut de classe se manipule comme un autre attribut.</p>
 
-<h3><a name="feuilles">Les feuilles de style CSS externes et les feuilles de
-style CSS utilisateur</a></h3>
-
-<p>Un document peut associer plusieurs feuilles de style externes qui sont
-chargées avec le document et lui sont appliquées. Une feuille de style
-externe peut s'appliquer à plusieurs documents. Quand la même feuille de
-style s'applique à plusieurs documents affichés, Amaya ne charge qu'une seule
-instance de la feuille de style.</p>
-
-<p>L'utilisateur peut définir une feuille de style spécifique qui s'applique
-à tous les documents chargés. Cette feuille de style est appelée
-<strong>Feuille de Style Utilisateur</strong> et est le fichier local
-<strong>amaya.css</strong> conservé dans l'environnement de l'utilisateur (le
-<a href="Configure.html.fr#AmayaHome">répertoire d'AmayaHome</a>). Par
-exemple si vous préférez afficher les document en Helvetica et imprimer avec
-une police de caractères de petite taille, vous pouvez créer votre feuille de
-style utilisateur avec les règles CSS suivantes&nbsp;:</p>
-<pre>@media print {
- BODY {font-size: 10pt}
-}
-@media screen {
- BODY {font-family: Helvetica}
-}</pre>
-
-<h3><a name="Managing">Gérer des feuilles de style CSS externes</a></h3>
-
-<p>L'entrée de feuilles de style donne accès à une série de commandes qui
-permettent de contrôler les feuilles de style CSS externes et celles qui
-donnent les préférences de l'utilisateur :</p>
-<ul>
-  <li>La commande <strong>Ajouter</strong> permet de lier une nouvelle
-    feuille de style CSS à un document courant. On peut cliquer directement
-    sur la cible de la feuille de style si elle est déjà visualisée dans la
-    fenêtre Amaya. Si ce n'est pas le cas, l'utilisateur devra cliquer dans
-    le document courant pour avoir accès à une boîte de dialogue et taper
-    l'URL de la cible de la feuille de style. Cette commande ajoute un
-    élément lien avec ses attributs à la tête du document.</li>
-  <li>La commande <strong>Ouvrir</strong> permet d'ouvrir une des feuilles de
-    style CSS appliquées au document courant.</li>
-  <li>La commande <strong>Désactiver</strong> permet de supprimer les effets
-    d'une des feuilles de style actives du document courant. Cette commande
-    n'affecte en rien le lien CSS dans le document.</li>
-  <li>La commande <strong>Réactiver</strong> permet de rétablir les effets
-    d'une des feuilles de style CSS désactivées du document courant. Cette
-    commande n'affecte en rien le lien CSS dans le document.</li>
-  <li>La commande <strong>Retirer</strong> permet de retirer une des feuilles
-    de style CSS externes. Cette commande agit comme la commande Désactiver.
-    En plus de cela, l'élément lien qui attache les feuilles de style CSS est
-    supprimé.</li>
-</ul>
-
-<p>Les commandes Ouvrir, Désactiver et Réactiver peuvent être appliquées aux
-feuilles de style qui donnent les préférences de l'utilisateur, mais les
-commandes Ajouter et Retirer concernent uniquement les feuilles de style
-reliées. La figure suivante montre la liste des feuilles de style CSS
-proposées pour la commande Ouvrir. Si aucune feuille de style CSS n'est
-actuellement appliquée à un document, une boîte de dialogue expliquera
-"qu'aucun fichier CSS n'est disponible".</p>
-
-<p><img alt="css.gif" src="../images/css.gif" /></p>
-
-<p></p>
-
-<h3>Visualiser le style appliqué</h3>
-
-<p>S'il y a beaucoup de feuilles de style attachées à un document, il est
-difficile de comprendre pourquoi un élément est visualisé avec cette couleur
-ou ces marges, etc. Pour aider l'utilisateur, Amaya fournit une commande
-<strong>Montrer le style appliqué</strong> qui visualise dans une fenêtre
-externe les propriétés CSS appliquées au premier élément de la sélection
-courante. L'utilisateur peut afficher le source CSS qui engendre chaque
-propriété en double (ou simple) cliquant sur la propriété. Aussi longtemps
-que la fenêtre est ouverte, Amaya met à jour le contenu de la fenêtre quand
-la sélection change. En appuyant sur la touche <code>F2</code>, l'utilisateur
-peut voir les propriétés CSS appliquées aux éléments englobants.</p>
-
-<h3><a name="L1371">Mettre du style en utilisant des éléments HTML</a></h3>
+<h3><a name="L1371" id="L1371">Mettre du style en utilisant des éléments
+HTML</a></h3>
 
 <p>HTML fournit certains éléments de niveau de caractère qui permettent
 d'associer du style aux chaînes de caractères. Deux entrées depuis le menu
@@ -200,10 +275,11 @@ qui définissent des styles abstraits. Sélectionnez tout d'abord une chaîne de
 caractères dans votre page et ensuite choisissez une commande dans ce menu.
 La chaîne de caractères sélectionnée reçoit le style correspondant. Trois de
 ces styles sont également disponibles par l'intermédiaire des boutons :
-<em>emphasis</em> (<img src="../../resources/icons/22x22/XHTML_I.png" alt="Emphasis button" />),
-<strong>strong</strong> (<img src="../../resources/icons/22x22/XHTML_B.png" alt="Strong button"
-/>) and <code>code</code> (<img src="../../resources/icons/22x22/XHTML_T.png" alt="Code button"
-/>).</p>
+<em>emphasis</em> (<img src="../../resources/icons/22x22/XHTML_I.png"
+alt="Emphasis button" />), <strong>strong</strong> (<img
+src="../../resources/icons/22x22/XHTML_B.png" alt="Strong button" />) and
+<code>code</code> (<img src="../../resources/icons/22x22/XHTML_T.png"
+alt="Code button" />).</p>
 
 <p>La commande <strong>Éléments caractères</strong> du menu
 <strong>Xhtml</strong> offre un autre menu changeant le style du texte. Les
@@ -220,11 +296,5 @@ sous-menus <strong>Types</strong> <strong>information</strong> et
 <cite></cite><strong>Éléments caractères</strong> s'annulent si elles sont
 appliquées de nouveau.</p>
 </div>
-
-<p><a href="Xml.html.fr#page_body"><img alt="previous"
-src="../images/left.gif" /></a> <a href="Manual.html.fr"><img alt="top"
-src="../images/up.gif" /></a> <a href="Searching.html.fr#Searching"><img
-alt="next" src="../images/right.gif" /></a></p>
-<hr />
 </body>
 </html>
