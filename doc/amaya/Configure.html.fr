@@ -3,7 +3,7 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>Configuring Amaya</title>
+  <title>Configurer Amaya</title>
   <style type="text/css">
 .menuItems { color: #E55500}</style>
   <meta name="GENERATOR" content="amaya V3.2.1" />
@@ -29,37 +29,39 @@
 </table>
 
 <div id="Configuring">
-<h2>Configuring Amaya</h2>
+<h2>Configurer Amaya</h2>
 
-<p><strong>Amaya</strong> uses different configuration files to get initial
-values for global parameters, dialogues, shortcuts, window size and position,
-user's style sheet, etc. You can change most of the configuration parameters
-by means of specific preferences menus. This document outlines the
-configuration directory and file <a href="#Conventions">conventions</a>, gives
-a walk-through of the different <a href="#preferences">preference menus</a>,
-and gives specific information on how to configure the <a
-href="#shortcuts">keyboard shortcuts</a>.</p>
+<p><strong>Amaya</strong> utilise différente fichiers de configuration pour
+obtenir des valeurs initiales pour les paramètres globaux, dialogues,
+raccourcis, taille et position de la fenêtre, feuille de style de
+l'utilisateur, etc. Vous pouvez changer la majorité des paramètres de
+configuration par le biais des menus de préférences spécifiques. Ce document
+expose sommairement le répertoire de configuration et les <a
+href="#Conventions">conventions</a> du fichier, donne un apperçu des
+différents <a href="#preferences">menus de preference</a>, et donne une
+information spécifique sur comment configurer les <a
+href="#shortcuts">raccourcis clavier</a>.</p>
 
 <h3><a name="Conventions">Conventions</a></h3>
 
-<h4><a name="L979">The <strong>Amaya/Config</strong> directory</a></h4>
+<h4><a name="L979">Le répertoire d'<strong>Amaya/Config</strong></a></h4>
 
-<p>This is the directory where most of the default values and all the dialogue
-messages are stored. The directory's parent is the one where Amaya was
-installed.</p>
+<p>C'est le répertoire dans lequel la plupart des valeurs par défaut et tous
+les messages de dialogue sont stockés. Le parent du répertoire est celui où
+Amaya a été installé.</p>
 
-<h4><a name="AmayaHome">The AmayaHome Directory</a></h4>
+<h4><a name="AmayaHome">Le répertoire d'AmayaHome</a></h4>
 
-<p>Amaya stores the user preferences as well as other user configuration files
-in a directory which we call the <strong>AmayaHome</strong> directory. The
-following table shows where this directory is stored within different
-architectures:</p>
+<p>Amaya stocke les préférences de l'utilisateur ainsi que les autres fichiers
+de configuration de l'utilisateur que nous appelerons le répertoire
+<strong>AmayaHome</strong>. La table suivante montre où ce répertoire est
+stocké dans les différentes architectures:</p>
 
 <table border="1" summary="directory structure" align="center">
   <thead>
     <tr>
       <td><strong>architecture</strong></td>
-      <td><strong>AmayaHome directory</strong></td>
+      <td><strong>le répertoire AmayaHome</strong></td>
     </tr>
   </thead>
   <tbody>
@@ -74,7 +76,7 @@ architectures:</p>
       </td>
       <td>AMAYA-INSTALL-DIR\users\username
 
-        <p>or, if the user didn't login to Windows,</p>
+        <p>ou, si l'utilisateur ne se loge pas sur Windows,</p>
 
         <p>AMAYA-INSTALL-DIR\users\default</p>
       </td>
@@ -86,40 +88,45 @@ architectures:</p>
   </tbody>
 </table>
 
-<p>The <strong>AmayaHome</strong> directory is preserved even when installing
-new versions of Amaya and may contain the following files:</p>
+<p>Le répertoire <strong>AmayaHome</strong> est conservé seulement quand on
+installe les nouvelles versions d'Amaya et peut contenir les fichiers
+suivants:</p>
 <ul>
-  <li><strong>thot.rc</strong> : the user preferences, changed through the
-    preferences menu.</li>
-  <li><a name="keyboard"><strong>amaya.keyboard</strong></a> (Unix) or
-    <strong>amaya.kb</strong> (Windows) : this file defines <a
-    href="#shortcuts">Amaya keyboard shortcuts</a>.</li>
-  <li><strong>amaya.css</strong> : contains the user's style sheet.</li>
-  <li><strong>dictionary.DCT</strong> : Amaya provides a <a
-    href="SpellChecking.html#Spell">multilingual spell checker</a>. By default
-    the spell checker works with  two dictionaries: the English dictionary and
-    the French dictionary (these two dictionaries can be downloaded from <a
-    href="http://www.w3.org/Amaya/User/BinDist.html">W3C servers</a>). When
-    the user wants to register a new word, the spell checker creates or
-    updates the "user's personal dictionary".</li>
+  <li><strong>thot.rc</strong> : les préférences de l'utilisateur, changées
+    grâve au menu préférences.</li>
+  <li><a name="keyboard"><strong>amaya.keyboard</strong></a> (Unix) ou
+    <strong>amaya.kb</strong> (Windows) : ce fichier définie <a
+    href="#shortcuts">les raccourcis clavier d'Amaya</a>.</li>
+  <li><strong>amaya.css</strong> : contient la feuille de style de
+    l'utilisateur.</li>
+  <li><strong>dictionary.DCT</strong> : Amaya fournit un <a
+    href="#keyboard">vérificateur d'orthographe multi-langues </a>. Par défaut
+    le vérificateur d'orthographe travaille avec deux dictionnaires: Le
+    dictionnaire Anglais et le dictionnaire Français (ces deux dictionnaires
+    peuvent être téléchargés depuis les <a
+    href="http://www.w3.org/Amaya/User/BinDist.html">serveurs W3C</a>). Quand
+    l'utilisateur veut enregistrer un noveau mot, le vérificateur
+    d'orthographe crée ou met à jour le "dictionnaire personnel de
+    l'utilisateur".</li>
 </ul>
 
-<p><strong>Note:</strong> the <strong>amaya.keyboard/amaya.kb</strong> and
-<strong>amaya.css</strong> files are loaded at launch time. If you change
-them, you will need to quit and restart Amaya to take them into account.</p>
+<p><strong>Note:</strong> les fichiers
+<strong>amaya.keyboard/amaya.kb</strong> et <strong>amaya.css</strong> sont
+chargés au moment du lancement. Si vous les changer, vous devrez quitter et
+redémarrer Amaya pour les prendre en compte.</p>
 
-<h4><a name="AmayaTemp">The AmayaTemp Directory</a></h4>
+<h4><a name="AmayaTemp">Le répertoire AmayaTemp </a></h4>
 
-<p>Amaya stores all the temporary files it creates during its execution in a
-directory which we call the <strong>AmayaTemp</strong> directory. The
-following table shows where this directory is stored within different
-architectures:</p>
+<p>Amaya stocke tous les fichiers temporaires qu'il crée durant l'éxécution
+dans un répertoire que nous appelons le répertoire e
+<strong>AmayaTemp</strong>. La table suivante montre où ce répertoire est
+stocké dans les différents architectures:</p>
 
 <table border="1" summary="directory structure" align="center">
   <thead>
     <tr>
       <td><strong>architecture</strong></td>
-      <td><strong>AmayaTemp directory</strong></td>
+      <td><strong>le répertoire AmayaTemp</strong></td>
     </tr>
   </thead>
   <tbody>
@@ -135,67 +142,71 @@ architectures:</p>
   </tbody>
 </table>
 
-<p>Amaya creates files in this directory while browsing remote documents or
-printing a document. The cache is stored in this directory. The user may
-change both the AmayaTemp and cache directories by means of the
-<strong>General Preferences</strong> and <strong>Cache</strong> menus.</p>
+<p>Amaya crée des fichiers dans ce répertoire pendant que vous naviguez des
+documents lointains ou que vous imprimez un document. Le cache est stocké dans
+ce répertoire. L'utilisateur peut changer les répertoires AmayaTemp et cache
+par le biais des menus <strong>Préférences Générales</strong> et
+<strong>Cache</strong>.</p>
 
-<p>Amaya always tries to delete all the temporary files it creates. However,
-if Amaya crashes, the temporary files will not be deleted. This will not
-impact subsequent executions of Amaya.</p>
+<p>Amaya essaye toujours d'effacer tous les fichiers temporaires qu'il crée.
+Cependant, si Amaya plante, les fichiers temporaires ne seront pas effacés.
+Ceci n'aura pas d'impact sur les éxécutions d'Amaya ultérieurement.</p>
 
-<h3><a name="preferences">Preferences Menus</a></h3>
+<h3><a name="preferences">Menus des Préférences</a></h3>
 
-<p>These menus are found under the <strong>Special/Preference</strong> menu.
-There are nine different preference menus available: <a
-href="#General">general</a>, <a href="#Publishing">publishing</a>, <a
-href="#Cache">cache</a>, <a href="#Specifying1">proxy</a>, <a
-href="#color">colors</a>, <a href="#HTML">Window geometry</a>, <a
-href="#lang">language negotiation</a>, <a href="#Profiles">profiles</a>, and
-<a href="#Templates">templates</a>. In each of these menus, there are three
-common action buttons:</p>
+<p>Ces menus se trouvent sous le menu <strong>Spécial/Préférences</strong>. Il
+y a neuf différents menus de préférences disponibles: <a
+href="#General">Générales</a>, <a href="#Publishing">Publication</a>, <a
+href="#Cache">Cache</a>, <a href="#Specifying1">Proxy</a>, <a
+href="#color">Couleurs</a>, <a href="#HTML">Géométrie</a>,<a href="#lang">
+Négociation des langues</a>, <a href="#Profiles">Profiles</a>, et <a
+href="#Templates">Modèles de page</a>. Dans chacun de ces menus, il y a trois
+boutons d'action en commun:</p>
 
 <table border="0" cellspacing="10" cellpadding="5"
 summary="action button chart">
   <tbody>
     <tr>
-      <th bgcolor="C0C0C0">Apply</th>
-      <td>This button validates and store the options shown in the menu.</td>
+      <th bgcolor="C0C0C0">Appliquer</th>
+      <td>Ce bouton valide et stocke les options affichées dans le menu.</td>
     </tr>
     <tr>
-      <th bgcolor="C0C0C0">Defaults</th>
-      <td>This button restores, but not save, the default values. Use the
-        Apply button to validate the options.</td>
+      <th bgcolor="C0C0C0">Défauts</th>
+      <td>Ce bouton rétablit, mais ne sauve pas, les valeurs par défaut.
+        Utilisez le bouton Appliquer pour valider les options.</td>
     </tr>
     <tr>
-      <th bgcolor="C0C0C0">Done</th>
-      <td>This button dismisses the menu.</td>
+      <th bgcolor="C0C0C0">Terminer</th>
+      <td>Ce bouton renvoie le menu.</td>
     </tr>
   </tbody>
 </table>
 
-<h4><a name="General">General preferences</a></h4>
+<h4><a name="General">Les préférences générales</a></h4>
 
 <p style="text-align: center"><img src="../Icons/GeneralMenu.gif"
 alt="General Preferences Menu" /></p>
 <dl>
   <dt></dt>
-  <dt><strong>Amaya user directory</strong> (Windows platforms only, not shown
-  in the included figure)</dt>
-    <dd>Specifies the directory where the user preferences are stored.<br />
-      <strong>Note:</strong> the user can't change the location of this
-      directory.<br />
+  <dt><strong>Le répertoire Amaya user </strong> (sur stations Windows
+  uniquement, non montré dans la figure inclue)</dt>
+    <dd>Spécifie le répertoire où les préférences de l'utilisateur sont
+      stockées.<br />
+      <strong>Note:</strong> l'utilisateur ne peut changer l'adresse de ce
+      répertoire.<br />
       <br />
     </dd>
-  <dt><strong>Amaya temporary directory</strong> (Windows platforms only, not
-  shown in the figure)</dt>
-    <dd>Specifies the directory where Amaya will store its temporary files,
-      for example, while printing a document. If not specified, the default
-      temporary directory will be <code>c:\temp</code>.<br />
-      <strong>Note:</strong> changing this directory will not erase the
-      previous one. You will have to remove the old directory manually. If the
-      <a href="#Cache">cache</a> was located under the previous temporary
-      directory, a new cache will be created under the new directory.<br />
+  <dt><strong>Le répertoire Amaya temporary </strong> (sur stations Windows
+  uniquement, non montré dans la figure)</dt>
+    <dd>Spécifie le répertoire où Amaya stockera les fichiers temporaires, par
+      exemple, pendant que vous imprimez un document. Si ce n'est pas
+      spécifié, le répertoire temporaire par défaut sera
+      <code>c:\temp</code>.<br />
+      <strong>Note:</strong> le fait de changer ce répertoire n'effacera pas
+      le précédent. Vous devrez supprimer l'ancien répertoire manuellement. Si
+      le <a href="#Cache">cache</a> était localisé sous le répertoire
+      temporaire précédent, un nouveau cache sera créé sous le nouveau
+      répertoire.<br />
       <br />
     </dd>
   <dt><strong>Home Page</strong></dt>

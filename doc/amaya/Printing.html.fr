@@ -8,7 +8,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="fr" lang="fr">
 
 <table border="0" width="100%" summary="toc">
   <tbody>
@@ -32,8 +32,8 @@
 <p>Amaya est capable d'imprimer des document avec ou sans feuilles de style
 CSS pour les stations Unix et Windows. Sur les stations Unix il est uniquement
 possible de générer une description Postscript, donc vous avez besoin d'une
-imprimante PostScript printer ou d'utiliser une aplication capable de traduire
-le PostScript en votre langage d'imprimante spécifique.</p>
+imprimante PostScript ou d'utiliser une application capable de traduire le
+PostScript en votre langage d'imprimante spécifique.</p>
 
 <p>Il y a trois manières d'imprimer un document avec Amaya:</p>
 <ul>
@@ -81,7 +81,7 @@ station.</p>
 
 <h4>Stations Windows </h4>
 
-<p>Sur les stations Windows, une boîte de dialogue vous proposera en premeir
+<p>Sur les stations Windows, une boîte de dialogue vous proposera en premier
 lieu les options suivantes:</p>
 <ul>
   <li>Table des matières</li>
@@ -90,7 +90,7 @@ lieu les options suivantes:</p>
   <li>Sans feuilles de style</li>
 </ul>
 
-<p>Puis le dialogie standard de Windows vous laissera choisir les autres
+<p>Puis le dialogue standard de Windows vous laissera choisir les autres
 paramètres d'impression.</p>
 
 <h3>La commande imprimer</h3>
@@ -100,18 +100,18 @@ défaut ou avec les valeurs précédemment fixées grâce à la commande
 
 <p>Sur les stations Windows, la première fois que vous lancer la commande 
 <strong>Imprimer</strong>, le dialogue standard de Windows sera visualiser et
-vous laissera vérifier que límprimante par défaut est correcte. Les commandes 
-<strong>Imprimer</strong> suivantes seront lancées sans aucun dialogue.</p>
+vous laissera vérifier que l'imprimante par défaut est correcte. Les commandes
+ <strong>Imprimer</strong> suivantes seront lancées sans aucun dialogue.</p>
 
-<h3>Contrôler les arrêts de page avec CSS</h3>
+<h3>Contrôler les ruptures de page avec CSS</h3>
 
-<p>Amaya soutient les propriétésupports the CSS page break properties:
-"<strong>page-break-before: always</strong>". When that property is attached
-to a specific element by an attribute <strong>style</strong>, it generates a
-page break before that specific element. When that property is attached to an
-element type within the style element of the document or within an external
-CSS style sheet, it generate a page break before each instance of that
-element.</p>
+<p>Amaya soutient les propriétés de rupture de page CSS: "<strong>rupture de
+page-avant: toujours</strong>". Quand cette propriété est attachée à un
+élément spécifique par un attribut <strong>style</strong>, elle génère une
+rupture de page avant l'élément spécifique. Quand cette propriété est attachée
+à un type d'élément à l'intérieur de l'élément style du document ou à
+l'intérieur de la feuille de style CSS externe, elle génère une rupture de
+page avant chaque cas de cet élément.</p>
 </div>
 
 <p align="right"><a href="Publishing.html"><img alt="previous" border="0"
