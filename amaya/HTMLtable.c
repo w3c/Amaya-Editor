@@ -97,7 +97,7 @@ static Element CloseCellForNewColumn (Element row, Element colhead,
 				      ThotBool inMath, ThotBool *spanned,
 				      int *rowspan)
 {
-  Element             col, child;
+  Element             col, cell;
   ElementType         elType;
   Attribute           attr;
   AttributeType       attrType;
@@ -107,19 +107,20 @@ static Element CloseCellForNewColumn (Element row, Element colhead,
   *rowspan = 1;
   col = colhead;
   elType = TtaGetElementType (col);
-  child = GetCellFromColumnHead (row, colhead, inMath);
+  cell = GetCellFromColumnHead (row, colhead, inMath);
   pos = 0;
-  while (!child && col)
+  while (!cell && col)
     {
       /* no cell related to this column in this row */
       if (before)
-	col = TtaSearchTypedElement (elType, SearchBackward, col);
+	TtaPreviousSibling (&col);
       else
-	col = TtaSearchTypedElement (elType, SearchForward, col);
-      child = GetCellFromColumnHead (row, col, inMath);
+	TtaNextSibling (&col);
+      cell = GetCellFromColumnHead (row, col, inMath);
       pos++;
     }
-  if (child && before)
+
+  if (cell && before)
     {
       /* get the colspan value of the element */
       attrType.AttrSSchema = elType.ElSSchema;
@@ -127,22 +128,22 @@ static Element CloseCellForNewColumn (Element row, Element colhead,
 	attrType.AttrTypeNum = MathML_ATTR_columnspan;
       else
 	attrType.AttrTypeNum = HTML_ATTR_colspan_;
-      attr = TtaGetAttribute (child, attrType);
+      attr = TtaGetAttribute (cell, attrType);
       if (attr)
 	{
 	  colspan = TtaGetAttributeValue (attr);
 	  if (colspan - pos > 1)
 	    {
 	      colspan++;
-	      TtaRegisterAttributeReplace (attr, child, doc);
-	      TtaSetAttributeValue (attr, colspan, child, doc);
+	      TtaRegisterAttributeReplace (attr, cell, doc);
+	      TtaSetAttributeValue (attr, colspan, cell, doc);
 	      *spanned = TRUE;
 	      /* check its rowspan attribute */
 	      if (inMath)
 		attrType.AttrTypeNum = MathML_ATTR_rowspan_;
 	      else
 		attrType.AttrTypeNum = HTML_ATTR_rowspan_;
-	      attr = TtaGetAttribute (child, attrType);
+	      attr = TtaGetAttribute (cell, attrType);
 	      if (attr)
 		/* this cell has an attribute rowspan */
 		*rowspan = TtaGetAttributeValue (attr);
@@ -151,7 +152,79 @@ static Element CloseCellForNewColumn (Element row, Element colhead,
 	    }
 	}
     }
-  return (child);
+  return (cell);
+}
+
+
+/*----------------------------------------------------------------------
+   SpannedCellForNewRow
+
+   returns the cell that spans to the row element in the given colhead or
+   NULL. If found the cell was spanned and the parameter colspan returns
+   its colspan value.
+  ----------------------------------------------------------------------*/
+static Element SpannedCellForNewRow (Element row, Element colhead, Document doc,
+				     ThotBool inMath, int *colspan)
+{
+  Element             cell;
+  ElementType         elType;
+  Attribute           attr;
+  AttributeType       attrType;
+  int                 rowspan, pos;
+
+  *colspan = 1;
+  if (row == NULL)
+    return NULL;
+  elType = TtaGetElementType (row);
+  cell = GetCellFromColumnHead (row, colhead, inMath);
+  pos = 0;
+  while (!cell && row)
+    {
+      /* no cell related to this column in this row */
+       TtaPreviousSibling (&row);
+       if (row)
+	 {
+	   cell = GetCellFromColumnHead (row, colhead, inMath);
+	   pos++;
+	 }
+    }
+
+  if (cell)
+    {
+      /* check its rowspan attribute */
+      attrType.AttrSSchema = elType.ElSSchema;
+      if (inMath)
+	attrType.AttrTypeNum = MathML_ATTR_rowspan_;
+      else
+	attrType.AttrTypeNum = HTML_ATTR_rowspan_;
+      attr = TtaGetAttribute (cell, attrType);
+      if (attr)
+	{
+	  rowspan = TtaGetAttributeValue (attr);
+	  if (rowspan - pos > 1)
+	    {
+	      rowspan++;
+	      TtaRegisterAttributeReplace (attr, cell, doc);
+	      TtaSetAttributeValue (attr, rowspan, cell, doc);
+	      /* get the colspan value of the element */
+	      if (inMath)
+		attrType.AttrTypeNum = MathML_ATTR_columnspan;
+	      else
+		attrType.AttrTypeNum = HTML_ATTR_colspan_;
+	      attr = TtaGetAttribute (cell, attrType);
+	      if (attr)
+		/* this cell has an attribute rowspan */
+		*colspan = TtaGetAttributeValue (attr);
+	      if (*colspan == 0)
+		*colspan = 1;
+	    }
+	  else
+	    cell = NULL;
+	}
+      else
+	cell = NULL;
+    }
+  return (cell);
 }
 
 
@@ -890,7 +963,7 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
   int                *colVSpan;
   int                 span, cRef, cNumber, extracol;
   int                 i, rowType;
-  ThotBool            inMath, newAttr;
+  ThotBool            inMath;
 
   if (table == NULL)
     return;
@@ -1856,11 +1929,13 @@ void TablebodyDeleted (NotifyElement * event)
 /*----------------------------------------------------------------------
    RowCreated                                              
   ----------------------------------------------------------------------*/
-void RowCreated (NotifyElement * event)
+void RowCreated (NotifyElement *event)
 {
   Element             row, table;
+  Element             colhead, cell, prev;
   ElementType         elType;
   Document            doc;
+  int                 colspan;
   ThotBool            inMath;
 
   row = event->element;
@@ -1885,10 +1960,30 @@ void RowCreated (NotifyElement * event)
     }
   else
     {
-      CheckAllRows (table, doc, FALSE, FALSE);
-      CheckTableAfterCellUpdate = FALSE;
-      /* avoid processing the cells of the created row */
+      /* avoid processing the pasted cells in the created row */
       CurrentRow = row;
+      /* get the first column */
+      if (inMath)
+	elType.ElTypeNum = MathML_EL_MColumn_head;
+      else
+	elType.ElTypeNum = HTML_EL_Column_head;
+      colhead = TtaSearchTypedElement (elType, SearchForward, table);
+      TtaPreviousSibling (&row);
+      cell = NULL;
+      while (colhead)
+	{
+	  prev = SpannedCellForNewRow (row, colhead, doc, inMath, &colspan);
+	  if (prev == NULL)
+	    cell = AddEmptyCellInRow (CurrentRow, colhead, cell, FALSE, doc,
+				      inMath, FALSE);
+	  while (colspan >= 1 && colhead)
+	    {
+	      TtaNextSibling (&colhead);
+	      colspan--;
+	    }
+	}
+      /*CheckAllRows (table, doc, FALSE, FALSE);*/
+      CheckTableAfterCellUpdate = FALSE;
     }
   HandleColAndRowAlignAttributes (row, doc);
   CurrentCell = TtaGetLastChild (row);

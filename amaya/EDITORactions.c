@@ -2255,10 +2255,14 @@ static void CreateRow (Document doc, View view, ThotBool before)
   Element             el, elNew;
   ElementType         elType;
   NotifyElement       event;
+  DisplayMode         dispMode;
 
   el = GetEnclosingRow (doc);
   if (el)
     {
+      dispMode = TtaGetDisplayMode (doc);
+      if (dispMode == DisplayImmediately)
+	TtaSetDisplayMode (doc, DeferredDisplay);
       elType = TtaGetElementType (el);
       TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
       elNew = TtaNewTree (doc, elType, "");
@@ -2269,6 +2273,7 @@ static void CreateRow (Document doc, View view, ThotBool before)
       RowCreated (&event);
       TtaCloseUndoSequence (doc);
       TtaSelectElement (doc, TtaGetFirstLeaf (elNew));
+      TtaSetDisplayMode (doc, dispMode);
       TtaSetDocumentModified (doc);
     }
 }
