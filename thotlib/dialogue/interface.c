@@ -1160,8 +1160,6 @@ void TtaFetchOneEvent (ThotEvent *ev)
 #ifndef _GTK
   XtAppNextEvent (app_cont, ev);
 #else /* _GTK */
-  printf ("-------------------TtaFetchOneEvent\n");
-
   while (!gtk_events_pending());
   ev = gtk_get_current_event ();
 
@@ -1236,7 +1234,13 @@ ThotBool TtaFetchOneAvailableEvent (ThotEvent *ev)
      XtAppProcessEvent (app_cont, XtIMAll);
 #endif /* ! _WINDOWS */
 #else /* _GTK */
-   return gtk_events_pending ();
+   if (gtk_events_pending())
+     {
+       ev = gtk_get_current_event ();
+       return TRUE;
+     }
+   else
+     return FALSE;
 #endif /* !_GTK */
    return (FALSE);
 }

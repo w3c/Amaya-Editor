@@ -1102,8 +1102,8 @@ void TtcCopyToClipboard (Document doc, View view)
    /* Annule le cutbuffer courant */
    XStoreBuffer (TtDisplay, Xbuffer, ClipboardLength, 0);
 #else /* _GTK */
-   printf("le clipboard vaut: %s\n",Xbuffer);
-
+   /*   printf("le clipboard vaut: %s\n",Xbuffer);*/
+   /* Il faut placer ici la commande de copie du cliboard ans le cliboard XWindows */
 
 #endif /* !_GTK */
 #endif /* _WINDOWS */

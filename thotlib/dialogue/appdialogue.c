@@ -1133,7 +1133,7 @@ void TteOpenMainWindow (char *name, Pixmap logo, Pixmap icon)
    char               *ptr;
 
 #ifdef _GTK
-   printf("appel de TteOpenMainWindow\n");
+   /*   printf("appel de TteOpenMainWindow\n");*/
 #endif
 
    /* Creation de la fenetre principale */
@@ -1580,7 +1580,7 @@ void TtaSwitchButton (Document document, View view, int index)
 	      n++;
 	      XtSetValues (FrameTable[frame].Button[index], args, n);
 #else /* _GTK */
-
+	      /*	      printf("-------------changement d etat d'un boutton\n");*/
 
 
 
@@ -1761,7 +1761,19 @@ void TtcSwitchButtonBar (Document document, View view)
 	XtManageChild (XtParent (row));
 	XtManageChild (XtParent (XtParent (row)));
      }
-#endif /* _GTK */
+#else /* _GTK */
+   if (row != 0)
+     {
+       if(GTK_WIDGET_VISIBLE(row))
+	 {
+	   gtk_widget_hide (GTK_WIDGET(row));
+	 }
+       else
+	 {
+	   gtk_widget_show_all (GTK_WIDGET(row));
+	 }
+     }
+#endif /* !_GTK */
 #else  /* _WINDOWS */
    if (WinToolBar[frame] && IsWindowVisible (WinToolBar[frame])) {
       hmenu = WIN_GetMenu (frame); 
@@ -1813,7 +1825,7 @@ void APP_TextCallbackGTK (GtkWidget *w, int frame)
 	text = XmTextGetString (w);
 #else /* _GTK */
 	text = gtk_editable_get_chars(GTK_EDITABLE(w), 0, -1);
-	printf("textcallback=%s", text);
+	/*	printf("textcallback=%s", text);*/
 #endif /* !_GTK */
 #endif /* _WINDOWS */
 	(*FrameTable[frame].Call_Text[i]) (document, view, text);
@@ -2159,7 +2171,24 @@ void TtcSwitchCommands (Document document, View view)
 		  FrameResized ((int *) w, frame, NULL);
 		  XtManageChild (XtParent (XtParent (row)));
 	       }
-#endif /* _GTK */
+#else /* _GTK */
+	     row = GTK_WIDGET(FrameTable[frame].Text_Zone[0])->parent;
+	     if (row != 0)
+	       {
+		 if (GTK_WIDGET_VISIBLE(row))
+		    {
+		      gtk_widget_hide (row);
+		    }
+		  else
+		    {
+		      gtk_widget_show_all (row);
+		    }
+		  /* Il faut forcer la reevaluation de la fenetre */
+		 /*		  w = FrameTable[frame].WdFrame;
+		  FrameResized ((int *) w, frame, NULL);
+		  gtk_widget_show_all (row->parent->parent);*/
+	       }
+#endif /* !_GTK */
 #else  /* _WINDOWS */
 	     for (index = 0; index <  MAX_TEXTZONE; index++)
 	       {
@@ -2363,7 +2392,7 @@ gboolean ExposeEvent2 (GtkWidget *widget, GdkEventButton *event, gpointer data)
        break;
 
      case  GDK_2BUTTON_PRESS:
-       printf("double click detected\n");
+       /*       printf("double click detected\n");*/
        break;
        /*    case KeyPress:
        t1 = 0;
@@ -3273,7 +3302,7 @@ void DestroyFrame (int frame)
 	*/
 #endif /* !_GTK */
 #ifdef _GTK
-	printf("Boom on detruit la frame\n");
+	/*	printf("Boom on detruit la frame\n");*/
 	gtk_widget_destroy (GTK_WIDGET(gtk_widget_get_toplevel(GTK_WIDGET(FrameTable[frame].WdFrame))));
 #endif /* _GTK */
 

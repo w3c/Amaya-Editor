@@ -484,7 +484,7 @@ void FrameResized (GtkWidget *w, GdkEventConfigure *event, gpointer data)
   int frame;
   Dimension           width, height;
  
-  printf("Evenement: Resized recu\n");
+  /*  printf("Evenement: Resized recu\n");*/
   frame = (int )data;
   width = event->width;
   height = event->height;
@@ -672,7 +672,8 @@ void FrameHScrolled (GtkAdjustment *w, int frame)
    else
       delta = MAX_SIZE;		/* indeterminee */
 #else /* _GTK */
-	  printf("hscrolllllllllll\n");
+
+   /*	  printf("hscrolllllllllll\n");*/
 
    /* delta is the position into the page */
    delta = w->value;
@@ -782,7 +783,7 @@ void FrameVScrolled (GtkAdjustment *w, int frame)
 #else /* _GTK */
   /* delta is the actual position into the page */
   delta=w->value;
-  printf ("value=%d\n", delta);
+  /*  printf ("value=%d\n", delta);*/
 
 #endif /* !_GTK */
 
@@ -805,12 +806,12 @@ void FrameVScrolled (GtkAdjustment *w, int frame)
 	  n++;
 	  XtGetValues (FrameTable[frame].WdScrollV, args, n);
 #else /* _GTK */
-	  printf("framevscrolllllllllll\n");
+	  /*	  printf("framevscrolllllllllll\n");*/
 	  /* h is the height of the page */
        	  h = w->page_size;
 	  /*	  h = FrameTable[frame].FrHeight;*/
 	  /*	  h = FrameTable[frame].FrHeight;*/
-	  printf ("pagesize=%d\n", h);
+	  /*	  printf ("pagesize=%d\n", h);*/
 #endif /* !_GTK */
       
 	  /* Regarde ou se situe l'image abstraite dans le document */
@@ -1962,7 +1963,7 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
   int                 comm, dx, dy, sel, h;
 
 #ifdef _GTK
-  printf("FrameCallbackGTK\n");
+  /*  printf("FrameCallbackGTK\n");*/
   frame = (int )data;
   gtk_widget_grab_focus (widget);
 #endif /* _GTK */
@@ -2011,13 +2012,12 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
       && (ev->type != ButtonPress || (ev->xbutton.state & THOT_KEY_ControlMask) == 0))
     return;
 #else /* _GTK */
-  /*  if (TtaTestWaitShowDialogue ()
+  if (TtaTestWaitShowDialogue ()
       && (event->type != GDK_BUTTON_PRESS || 
 	  event->type != GDK_2BUTTON_PRESS ||
 	  event->type != GDK_MOTION_NOTIFY || 
 	  (event->state & GDK_CONTROL_MASK ) == 0))
-	  return FALSE;
-*/
+    return FALSE;
 #endif /* !_GTK */
 
 #ifndef _GTK
@@ -2145,9 +2145,9 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	  /* Est-ce que la touche modifieur de geometrie est active ? */	  
 	  if ((event->state & GDK_CONTROL_MASK ) == GDK_CONTROL_MASK)
 	    {
-	      printf("boutton + GDK_CONTROL\n");
+	      /*	      printf("boutton + GDK_CONTROL\n");*/
 	      /* moving a box */     
-	      ApplyDirectTranslate (frame, event->x, event->y);
+	      /*	      ApplyDirectTranslate (frame, event->x, event->y);*/
 	      T1 = T2 = T3 = 0;
 	    }
 	  else if ((event->state & GDK_SHIFT_MASK ) == GDK_SHIFT_MASK)
@@ -2169,51 +2169,6 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	      ClickX = event->x;
 	      ClickY = event->y;
 	      LocateSelectionInView (frame, ClickX, ClickY, 2);
-#if 0
-	      /* is it a drag or a simple selection? */
-	      comm = 0;	/* il n'y a pas de drag */
-	      /*	      TtaFetchOneEvent (&event);*/
-	      FrameToView (frame, &document, &view);
-	      h = FrameTable[frame].FrHeight;
-
-	      while (event.type != ButtonRelease &&
-		     event.type != ButtonPress)
-		{
-		  if (event.type == MotionNotify ||
-		      (event.type != ConfigureNotify &&
-		       event.type != MapNotify &&
-		       event.type != UnmapNotify &&
-		       event.type != DestroyNotify &&
-		       /*event.type != NoExpose && */
-		       (event.xmotion.y > h || event.xmotion.y < 0)))
-		    {
-		      dx = event.xmotion.x - ClickX;
-		      dy = event.xmotion.y - ClickY;
-		      if (dx > 1 || dx < -1 || dy > 1 || dy < -1 ||
-			  event.xmotion.y > h || event.xmotion.y < 0)
-			{
-			  LocateSelectionInView (frame, event.xbutton.x, event.xbutton.y, 1);
-			  comm = 1;	/* il y a un drag */
-			  if (event.xmotion.y > h)
-			    TtcLineDown (document, view);
-			  else if (event.xmotion.y < 0)
-			    TtcLineUp (document, view);
-			}
-		    }
-		  TtaHandleOneEvent (&event);
-		  TtaFetchOrWaitEvent (&event);
-		}
-	      TtaHandleOneEvent (&event);
-	      /* S'il y a un drag on termine la selection */
-	      FrameToView (frame, &document, &view);
-	      if (comm == 1)
-		LocateSelectionInView (frame, event.xbutton.x, event.xbutton.y, 0);
-	      else if (comm == 0)
-		/* click event */
-		LocateSelectionInView (frame, event.xbutton.x, event.xbutton.y, 4);
-	      if (comm != 0)
-		TtcCopyToClipboard (document, view);
-#endif
 	    }
 	  break;
 #endif /* !_GTK */
@@ -2261,7 +2216,7 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	  if ((event->state & GDK_CONTROL_MASK) != 0)
 	    {
 	      /* resizing a box */
-	      ApplyDirectResize (frame, event->x, event->y);
+	      /*    ApplyDirectResize (frame, event->x, event->y);*/
 	      T1 = T2 = T3 = 0;
 	    }
 	  else
@@ -2317,7 +2272,7 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	  if ((event->state & GDK_CONTROL_MASK) != 0)
 	    {
 	      /* resize a box */
-	      ApplyDirectResize (frame, event->x, event->y);
+	      /*	      ApplyDirectResize (frame, event->x, event->y);*/
 	      T1 = T2 = T3 = 0;
 	    }
 	  else
@@ -2368,18 +2323,18 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	    }
 	  break;
       	case GDK_MOTION_NOTIFY:
-	  printf("GDK_MOTION_NOTIFY\n");
+	  /*	  printf("GDK_MOTION_NOTIFY\n");*/
 	  /* if a selection is doing, extend the current selection */
 	  LocateSelectionInView (frame, event->x, event->y, 0);
 	  break;
       	case GDK_BUTTON_RELEASE:
-	  printf("GDK_BUTTON_RELEASE\n");
+	  /*	  printf("GDK_BUTTON_RELEASE\n");*/
 	  /* if a button release, we save the selection in the clipboard */
 	  FrameToView (frame, &document, &view);
 	  TtcCopyToClipboard (document, view);
 	  break;
 	case GDK_KEY_PRESS:
-	  printf("GDK_KEY_PRESS\n");
+	  /*	  printf("GDK_KEY_PRESS\n");*/
 	  break;
 	case GDK_ENTER_NOTIFY:
 	case GDK_LEAVE_NOTIFY:
@@ -2429,7 +2384,7 @@ gboolean DrawingAreaFocusInCallbackGTK (GtkWidget *widget,
   {
     int frame = (int)user_data;
     /*    GtkWidget *drawing_area = FrameTable[frame].WdFrame;*/
-    printf("focus in\n");
+    /*    printf("focus in\n");*/
     /* Set the drawing area active for the keyboard */
     gtk_object_set_data (GTK_OBJECT(widget), "Active", (gpointer)TRUE);
     /*    gtk_widget_grab_focus (GTK_WIDGET(drawing_area));*/
@@ -2440,7 +2395,7 @@ gboolean DrawingAreaFocusOutCallbackGTK (GtkWidget *widget,
 					gpointer user_data)
   {
     int frame = (int)user_data;
-    printf("focus out\n");
+    /*    printf("focus out\n");*/
     /*    GtkWidget *drawing_area = FrameTable[frame].WdFrame;*/
     /* Set the drawing area inactive for the keyboard */	  
     gtk_object_set_data (GTK_OBJECT(widget), "Active", (gpointer)FALSE);
@@ -2952,7 +2907,7 @@ void UpdateScrollbars (int frame)
        n++;
        XtSetValues (hscroll, args, n);
 #else /* _GTK */
-       printf("updatescrollbar hscroll\n");
+       /*       printf("updatescrollbar hscroll\n");*/
        tmpw = (GtkAdjustment *)gtk_object_get_data (GTK_OBJECT(hscroll), "Adjustment");
        tmpw->lower = 0;
        tmpw->upper = l;
@@ -2960,9 +2915,11 @@ void UpdateScrollbars (int frame)
        tmpw->page_increment = Xpos-13;
        tmpw->step_increment = 13;
        tmpw->value = Xpos;
-       printf ("  Xpos=%d\n  pagesize=%d\n", Xpos, width);
+       /*       printf ("  Xpos=%d\n  pagesize=%d\n", Xpos, width);*/
        /*gtk_adjustment_set_value (tmpw, Xpos);       */
        gtk_widget_show_all (GTK_WIDGET(hscroll)->parent);
+       gtk_widget_show_all (GTK_WIDGET(hscroll));
+       /*       gtk_widget_show_all (GTK_WIDGET(tmpw));*/
 #endif /* !_GTK */
      }
 
@@ -2980,7 +2937,7 @@ void UpdateScrollbars (int frame)
        n++;
        XtSetValues (vscroll, args, n);
 #else /* _GTK */
-       printf("updatescrollbar vcroll\n");
+       /*       printf("updatescrollbar vcroll\n");*/
        tmpw = (GtkAdjustment *)gtk_object_get_data (GTK_OBJECT(vscroll), "Adjustment");
        tmpw->lower = 0;
        tmpw->upper = h;
@@ -2988,9 +2945,11 @@ void UpdateScrollbars (int frame)
        tmpw->page_increment = Ypos-13;
        tmpw->step_increment = 13;
        tmpw->value = Ypos;
-       printf ("  Ypos=%d\n  pagesize=%d\n", Ypos, height);
+       /*       printf ("  Ypos=%d\n  pagesize=%d\n", Ypos, height);*/
        /*       gtk_adjustment_set_value (tmpw, Ypos);       */
        gtk_widget_show_all (GTK_WIDGET(vscroll)->parent);
+       gtk_widget_show_all (GTK_WIDGET(vscroll));
+       /*       gtk_widget_show_all (GTK_WIDGET(tmpw));*/
 #endif /* !_GTK */
      }
 #else  /* _WINDOWS */

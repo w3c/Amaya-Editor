@@ -557,9 +557,14 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 		w = imageDesc->PicWArea;
 	      if (picPresent == XRepeat && h > imageDesc->PicHArea)
 		h = imageDesc->PicHArea;
-	      gdk_draw_pixmap (drawable, tiledGC, pixmap, picXOrg, picYOrg, xFrame, yFrame, w ,h);
 	    }
-	   gdk_draw_pixmap (drawable, tiledGC, pixmap, picXOrg, picYOrg, xFrame, yFrame, w ,h);
+	  gdk_draw_rectangle (drawable, /* the window */ 
+			      tiledGC,  /* the GC */
+			      TRUE,     /* filled=true */
+			      xFrame,   /* x position drawing */
+			      yFrame,   /* y position drawing */
+			      w,        /* width drawing */
+			      h);       /* height drawing */
 	  /* remove clipping */
           rect.x = 0;
           rect.y = 0;
@@ -678,62 +683,6 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	default: break;
 	}
     }
-
-#if 0
-          rect.x = pFrame->FrClipXBegin;
-          rect.y = pFrame->FrClipYBegin;
-          rect.width = pFrame->FrClipXEnd - rect.x;
-          rect.height = pFrame->FrClipYEnd - rect.y;
-          rect.x -= pFrame->FrXOrg;
-          rect.y -= pFrame->FrYOrg;
-	  /* clipping height is done by the box height */
-	  if (rect.y < yFrame)
-	    {
-	      /* reduce the height in delta value */
-	      rect.height = rect.height + rect.y - yFrame;
-	      rect.y = yFrame;
-	    }
-	  if (rect.height > h)
-	    rect.height = h;
-	  /* clipping width is done by the box width */
-	  if (rect.x < xFrame)
-	    {
-	      /* reduce the width in delta value */
-	      rect.width = rect.width +rect.x - xFrame;
-	      rect.x = xFrame;
-	    }
-	  if (rect.width > w)
-	    rect.width = w;
-
-	  /*	  GdkImlibImage *gdk_imlib_crop_and_clone_image(GdkImlibImage *im, gint x, gint y, gint w, gint h);*/
-	  /*	  gdk_imlib_crop_image(imageDesc->PicImageGDK, rect.x , rect.y, rect.width, rect.height);*/
-	   /* Copy the picture into the main area, using the mask...*/
-	   /*	   gdk_draw_pixmap (drawable, GCimage, pixmap, picXOrg, picYOrg, xFrame, yFrame, w ,h);
-	    */
-	   /* destroy the GC */
-	   /* 	   gdk_gc_destroy (gdkGC);*/
-	  printf("rect.x=%d\trect.y=%d\nrect.w=%d\trect.h=%d\n",rect.x,rect.y,rect.width,rect.height);
-	  printf("rect.x=%d\trect.y=%d\nrect.w=%d\trect.h=%d\n",pFrame->FrClipXBegin
-		 ,pFrame->FrClipYBegin,
-		 pFrame->FrClipXEnd,
-		 pFrame->FrClipXEnd);
-	  /*	  rect.left = 100;
-	  rect.right = 100;
-	  rect.top = 100;
-	  rect.bottom = 100;
-	  */
-
-	  /*	  gdk_imlib_crop_image(imageDesc->PicImageGDK, 0 , 0, 10, 10);*/
-	  gdk_imlib_set_image_border(imageDesc->PicImageGDK, &rect);
-	  gdk_imlib_paste_image(imageDesc->PicImageGDK,
-				drawable,
-				0,
-				0,
-				w,
-				h);
-	     /*	   gdk_window_set_back_pixmap(drawable, pixmap, 0);*/
-	   /*	   gdk_imlib_paste_image(GdkImlibImage *im, GdkWindow *p, gint x, gint y, gint w, gint h);*/   
-#endif
 }
 
 
@@ -1508,7 +1457,6 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 
   if (status != Supported_Format)
     {
-#ifndef _GTK
 #ifdef _WINDOWS
 #ifdef _WIN_PRINT
 	  if (TtDisplay == NULL)
@@ -1528,7 +1476,6 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 #else  /* !_WINDOWS */
       drw = PictureLogo;
 #endif /* _WINDOWS */
-#endif
       imageDesc->PicType = -1;
       wFrame = w = 40;
       hFrame = h = 40;
@@ -1612,12 +1559,9 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	      imageDesc->PicWArea = wFrame = w;
 	      imageDesc->PicHArea = hFrame = h;
 	      im = gdk_imlib_load_image (fileName);
-	      /*	      printf("rgb_width=%d, height=%d\nd",drw->rgb_width, drw->rgb_height);*/
 	      gdk_imlib_render(im, w, h);
 	      drw = gdk_imlib_move_image (im);
 	      imageDesc->PicMask = gdk_imlib_move_mask (im);
-	      /*	      width=drw->rgb_width;
-			      height=drw->rgb_height;*/
 #endif /* !_GTK */
 	      xFrame = imageDesc->PicXArea;
 	      yFrame = imageDesc->PicYArea;
@@ -1644,14 +1588,25 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 		 Bgcolor, &width, &height,
 		 ViewFrameTable[frame - 1].FrMagnification);
 #else /* _GTK */
+	      /* load the picture using ImLib */
 	      im = gdk_imlib_load_image (fileName);
-	      /*	      printf("rgb_width=%d, height=%d\nd",drw->rgb_width, drw->rgb_height);*/
+	      
+	      if (pres == FillFrame)
+		{
+		  /* if it's a background, dont rescale the picture */
+		  w = im->rgb_width;
+		  h = im->rgb_height;
+		}
 	      gdk_imlib_render(im, w, h);
 	      drw = gdk_imlib_move_image (im);
-	      /*	      imageDesc->PicPixmap = */
 	      imageDesc->PicMask = gdk_imlib_move_mask (im);
-	      width =im->rgb_width;
-	      height=im->rgb_height;
+	      width = im->rgb_width;
+	      height = im->rgb_height;
+	      if (pres == FillFrame)
+		{
+		  wFrame = im->rgb_width;
+		  hFrame = im->rgb_height;
+		}
 #endif /* !_GTK */
 	      /* intrinsic width and height */
 	      imageDesc->PicWidth  = width;
@@ -1663,9 +1618,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
        
       if (drw == None)
 	{
-#ifndef _GTK
 	  drw = PictureLogo;
-#endif /* !_GTK */
 	  imageDesc->PicType = -1;
 	  wFrame = w = 40;
 	  hFrame = h = 40;
@@ -1738,17 +1691,6 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	  /* release the device context into TtDisplay */
 	  WIN_ReleaseDeviceContext ();
 #endif /* _WIN_PRINT */
-#if 0
-  im = gdk_imlib_load_image (fileName);
-  imageDesc->PicImageGDK = im;
-  /*  gdk_imlib_render(im, w, h);
-  imageDesc->PicPixmap = gdk_imlib_move_image(im);
-  imageDesc->PicMask = gdk_imlib_move_mask (im);*/
-  imageDesc->PicWidth  = w;
-  imageDesc->PicHeight = h;
-  /*  imageDesc->PicXArea = xFrame;
-      imageDesc->PicYArea = yFrame;*/
-#endif
 }
 
 

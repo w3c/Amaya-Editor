@@ -557,7 +557,7 @@ gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
    KeySym              KS;
    GtkWidget *drawing_area;
 
-   printf("GDK_KEY_PRESS\n");
+   /*   printf("GDK_KEY_PRESS\n");*/
 
   frame = (int) data;
    if (frame > MAX_FRAME)
@@ -566,11 +566,11 @@ gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
 
    if(gtk_object_get_data (GTK_OBJECT(drawing_area), "Active"))
      {
-       printf("ok on traite\n");
+       /*       printf("ok on traite\n");*/
      }
    else
      {
-       printf("on ne traite pas\n");
+       /*       printf("on ne traite pas\n");*/
        return FALSE;
      }
    
@@ -578,7 +578,7 @@ gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
    /* here the tab key dont change the focus */
    if (event->keyval == GDK_Tab)
      {
-       printf("TABBBBBBBBBbb\n");
+       /*       printf("TABBBBBBBBBbb\n");*/
        gtk_widget_grab_focus (drawing_area);
        gtk_widget_grab_focus (drawing_area);
      }
