@@ -865,7 +865,7 @@ static void LayoutPicture (Pixmap pixmap,
   ViewFrame*        pFrame;
   PictureScaling    picPresent;
   int               x, y, clipWidth, clipHeight;
-  int               delta, i, j;
+  int               /* delta, */ i, j;
   
   if (picXOrg < 0)
     {
