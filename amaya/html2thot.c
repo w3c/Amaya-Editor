@@ -5453,9 +5453,9 @@ char*              HTMLbuf;
    buffer textbuf. One parameter should be NULL.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void        ReadTextFile (FILE *infile, char* textbuf, Document doc, STRING pathURL)
+void        ReadTextFile (FILE *infile, char* textbuf, Document doc, STRING pathURL)
 #else
-static void        ReadTextFile (infile, textbuf, doc, pathURL)
+void        ReadTextFile (infile, textbuf, doc, pathURL)
 FILE              *infile;
 char*	           textbuf;
 Document           doc;

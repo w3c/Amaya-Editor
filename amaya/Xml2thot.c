@@ -15,7 +15,6 @@
  *         L. Carcone 
  *         R. Guetari: Unicode version 
  */
-#ifdef EXPAT_PARSER
 
 #define THOT_EXPORT extern
 #include "amaya.h"
@@ -3256,7 +3255,7 @@ char        *HTMLbuf;
    XMLabort = FALSE;
 
    /* read the XML file */
-   
+
    while (!endOfFile && !XMLrootClosed && !XMLabort)
      {
        res = gzread (infile, bufferRead, COPY_BUFFER_SIZE);
@@ -3522,6 +3521,7 @@ Document            doc;
    XMLcontext.parsingCSS = FALSE;
 }
 
+#ifdef LC
 /*----------------------------------------------------------------------
    StartSubXmlParser
    Parse the current file (or buffer) starting at the current position
@@ -3538,6 +3538,7 @@ Document            doc;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 ThotBool    StartSubXmlParser (FILE *infile,
+			       char *bufferhtml,
 			       int *index,
 			       STRING DTDname,
 			       Document doc,
@@ -3545,9 +3546,10 @@ ThotBool    StartSubXmlParser (FILE *infile,
 			       ThotBool isclosed,
 			       Language lang,
 			       CHAR_T* closingTag,
-			       int *buflen)
+			       int buflen)
 #else
 ThotBool    StartSubXmlParser (infile,
+			       bufferhtml,
 			       index,
 			       DTDname,
 			       doc,
@@ -3557,6 +3559,7 @@ ThotBool    StartSubXmlParser (infile,
 			       closingTag,
 			       buflen)
 FILE      *infile;
+char      *bufferhtml;
 int       *index;
 STRING     DTDname;
 Document   doc;
@@ -3564,14 +3567,19 @@ Element    el;
 ThotBool   isclosed;
 Language   lang;
 CHAR_T*    closingTag;
-int       *buflen;
+int        buflen;
 #endif
 {
   int        error;
   ThotBool   endOfFile = FALSE;
-#define	 COPY_BUFFER_SIZE	1024
-  char       bufferRead[COPY_BUFFER_SIZE];
+  CHAR_T    *bufferRead;
   int        res;
+  int        tmpindex;
+  int        tmplen = 0;
+  int        offset = 0;
+  CHAR_T    *tmpbuffer;
+
+  printf ("\n StartSubXmlParser\n");
 
   /* Initialize global variables */
   XMLcontext.doc = doc;
@@ -3595,7 +3603,7 @@ int       *buflen;
   XMLrootClosed = FALSE;
   XMLrootClosingTag = closingTag;
 
-    /* initialize all parser contexts if not done yet */
+  /* Initialize all parser contexts if not done yet */
   if (firstParserCtxt == NULL)
       InitXmlParserContexts ();
   ChangeXmlParserContext (DTDname);
@@ -3605,25 +3613,68 @@ int       *buflen;
 	
   XMLabort = FALSE;
 
-  /* parse the input file and build the Thot document */
+  /* Read input infile */
+  bufferRead = TtaGetMemory (buflen);
+  tmpindex = *index;
+
+  /* Parse DOCTYPE */
+  /*
+#define toto "<!DOCTYPE html PUBLIC \"\" \"\">"
+   if (!XML_Parse (parser, toto, 28, 0))
+     {
+       printf("\nError at line %d and column %d offset %d: %s\n",
+	      XML_GetCurrentLineNumber (parser),
+	      XML_GetCurrentColumnNumber (parser),
+	      XML_GetCurrentByteIndex (parser),
+	      XML_ErrorString (XML_GetErrorCode (parser)));
+     }
+  */
+
+  /* Parse the input file and build the Thot document */
   while (!endOfFile && !XMLrootClosed)
     {
-      res = gzread (infile, bufferRead, COPY_BUFFER_SIZE);
-
-      if (res < COPY_BUFFER_SIZE)
-	  endOfFile = TRUE;
-      
-      if (!XML_Parse (parser, bufferRead,
-		      res, endOfFile))
+      if (bufferhtml == NULL)
 	{
-	  printf("\nError at line %d and column %d : %s\n",
-		 XML_GetCurrentLineNumber (parser),
-		 XML_GetCurrentColumnNumber (parser),
-		 XML_ErrorString (XML_GetErrorCode (parser)));
-	  endOfFile = TRUE;
-	  XMLabort = TRUE;
+	  res = gzread (infile, bufferRead, buflen);
+	  if (res < buflen)
+	    endOfFile = TRUE;
+
+	  if (!XML_Parse (parser, bufferRead, res, endOfFile))
+	    {
+	      printf("\nError at line %d and column %d : %s\n",
+		     XML_GetCurrentLineNumber (parser),
+		     XML_GetCurrentColumnNumber (parser),
+		     XML_ErrorString (XML_GetErrorCode (parser)));
+	      endOfFile = TRUE;
+	      XMLabort = TRUE;
+	    }
+	}
+      else
+	{    
+	  tmplen = strlen (bufferhtml) - tmpindex;
+	  tmpbuffer = TtaGetMemory (tmplen);
+	  ustrcpy (tmpbuffer, (&bufferhtml[*index]));
+	  
+	  if (!XML_Parse (parser, tmpbuffer, tmplen, endOfFile))
+	    {
+	      offset = XML_GetCurrentByteIndex (parser);
+	      printf("\nError at line %d and column %d offset %d: %s\n",
+		     XML_GetCurrentLineNumber (parser),
+		     XML_GetCurrentColumnNumber (parser),
+		     XML_GetCurrentByteIndex (parser),
+		     XML_ErrorString (XML_GetErrorCode (parser)));
+	      printf("\n bufferhtml: %s\n", &tmpbuffer[offset]);
+	      *index=*index+offset;
+	      *index=*index+6;
+	      endOfFile = TRUE;
+	    }
+	  TtaFreeMemory (tmpbuffer);   
+	  bufferhtml = NULL;
+	  tmpindex = 0;
 	}
     }
+
+  TtaFreeMemory (bufferRead);   
 
   /* end of the XML root element */
   if (!isclosed)
@@ -3637,6 +3688,7 @@ int       *buflen;
 
   return (!XMLabort);
 }
+#endif /* LC */
 
 /*----------------------------------------------------------------------
    StartXmlParser loads the file Directory/xmlFileName for
@@ -3743,34 +3795,73 @@ ThotBool    plainText;
 	/* is the current document a HTML document */
 	isHTML = (ustrcmp (TtaGetSSchemaName (DocumentSSchema),
 			   TEXT("HTML")) == 0);	
-	if (!isHTML &&
-	    !(isANNOT = (ustrcmp (TtaGetSSchemaName (DocumentSSchema),
-				  TEXT("Annot")) == 0)))
+	if (plainText)
 	  {
-	    /* change the document type */
-	    TtaFreeView (doc, 1);
-	    doc = TtaNewDocument (TEXT("HTML"), documentName);
-	    if (TtaGetScreenDepth () > 1)
-	        TtaSetPSchema (doc, TEXT("HTMLP"));
-	    else
-	        TtaSetPSchema (doc, TEXT("HTMLPBW"));
-	    DocumentSSchema = TtaGetDocumentSSchema (doc);
-	    isHTML = TRUE;
+	    if (isHTML)
+	      {
+		/* change the document type */
+		TtaFreeView (doc, 1);
+		doc = TtaNewDocument (TEXT("TextFile"), documentName);
+		TtaSetPSchema (doc, TEXT("TextFileP"));
+		DocumentSSchema = TtaGetDocumentSSchema (doc);
+		isHTML = FALSE;
+	      }
+	    rootElement = TtaGetMainRoot (doc);
+	    if (DocumentTypes[doc] == docSource ||
+		DocumentTypes[doc] == docSourceRO)
+	      {
+		/* add the attribute Source */
+		attrType.AttrSSchema = DocumentSSchema;
+		attrType.AttrTypeNum = TextFile_ATTR_Source;
+		attr = TtaGetAttribute (rootElement, attrType);
+		if (attr == 0)
+		  {
+		    attr = TtaNewAttribute (attrType);
+		    TtaAttachAttribute (rootElement, attr, doc);
+		  }
+	      }
+	    
+	    /* add the default attribute PrintURL */
+	    attrType.AttrSSchema = DocumentSSchema;
+	    attrType.AttrTypeNum = TextFile_ATTR_PrintURL;
+	    attr = TtaGetAttribute (rootElement, attrType);
+	    if (attr == 0)
+	      {
+		attr = TtaNewAttribute (attrType);
+		TtaAttachAttribute (rootElement, attr, doc);
+	      }
 	  }
-	
-	LoadUserStyleSheet (doc);
-	rootElement = TtaGetMainRoot (doc);
+	else
+	  {
+	    if (!isHTML &&
+		!(isANNOT = (ustrcmp (TtaGetSSchemaName (DocumentSSchema),
+				      TEXT("Annot")) == 0)))
+	      {
+		/* change the document type */
+		TtaFreeView (doc, 1);
+		doc = TtaNewDocument (TEXT("HTML"), documentName);
+		if (TtaGetScreenDepth () > 1)
+		  TtaSetPSchema (doc, TEXT("HTMLP"));
+		else
+		  TtaSetPSchema (doc, TEXT("HTMLPBW"));
+		DocumentSSchema = TtaGetDocumentSSchema (doc);
+		isHTML = TRUE;
+	      }
+	    
+	    LoadUserStyleSheet (doc);
+	    rootElement = TtaGetMainRoot (doc);
+	    
+	    /* add the default attribute PrintURL */
+	    attrType.AttrSSchema = DocumentSSchema;
+	    attrType.AttrTypeNum = HTML_ATTR_PrintURL;
+	    attr = TtaGetAttribute (rootElement, attrType);
+	    if (!attr)
+	      {
+		attr = TtaNewAttribute (attrType);
+		TtaAttachAttribute (rootElement, attr, doc);
+	      }
+	  }	
 
-	/* add the default attribute PrintURL */
-	attrType.AttrSSchema = DocumentSSchema;
-	attrType.AttrTypeNum = HTML_ATTR_PrintURL;
-	attr = TtaGetAttribute (rootElement, attrType);
-	if (!attr)
-	  {
-	    attr = TtaNewAttribute (attrType);
-	    TtaAttachAttribute (rootElement, attr, doc);
-	  }
-	
 	TtaSetDisplayMode (doc, NoComputedDisplay);
 
 	/* delete all element except the root element */
@@ -3789,40 +3880,46 @@ ThotBool    plainText;
 	/* disable auto save */
 	TtaSetDocumentBackUpInterval (doc, 0);
 
-	/* initialize all parser contexts if not done yet */
-	if (firstParserCtxt == NULL)
-	    InitXmlParserContexts ();
-	ChangeXmlParserContext (TEXT("HTML"));
-
-	/* initialize parsing environment */
-	InitializeXmlParser (NULL, FALSE, 0);
-
-	/* Specific initialization for expat */
-	InitializeExpatParser ();
-	
-	/* parse the input file and build the Thot document */
-	XmlParse (stream, NULL);
-
-	/* completes all unclosed elements */
-	el = XMLcontext.lastElement;
-	while (el != NULL)
+	if (plainText)
+	    ReadTextFile (stream, NULL, doc, pathURL);
+	else
 	  {
-	    (*(currentParserCtxt->ElementComplete)) (el,
-						     XMLcontext.doc,
-						     &error);
-	    el = TtaGetParent (el);
-	  }
+	    /* initialize all parser contexts if not done yet */
+	    if (firstParserCtxt == NULL)
+	      InitXmlParserContexts ();
+	    ChangeXmlParserContext (TEXT("HTML"));
+	    
+	    /* initialize parsing environment */
+	    InitializeXmlParser (NULL, FALSE, 0);
+	    
+	    /* Specific initialization for expat */
+	    InitializeExpatParser ();
+	    
+	    /* parse the input file and build the Thot document */
+	    XmlParse (stream, NULL);
+	    
+	    /* completes all unclosed elements */
+	    el = XMLcontext.lastElement;
+	    while (el != NULL)
+	      {
+		(*(currentParserCtxt->ElementComplete)) (el,
+							 XMLcontext.doc,
+							 &error);
+		el = TtaGetParent (el);
+	      }
+	    
+	    /* check the Thot abstract tree */
+	    CheckAbstractTree (pathURL, XMLcontext.doc);
 
-	/* check the Thot abstract tree */
-	CheckAbstractTree (pathURL, XMLcontext.doc);
+	    FreeExpatParser ();
+	    FreeXmlParserContexts ();
+	  }
 
 	gzclose (stream);
 	TtaFreeMemory (docURL);
 
 	TtaSetDisplayMode (doc, DisplayImmediately);
 
-	FreeExpatParser ();
-	FreeXmlParserContexts ();
 	/* check the Thot abstract tree against the structure schema. */
 	TtaSetStructureChecking (1, doc);
 	DocumentSSchema = NULL;
@@ -3833,5 +3930,3 @@ ThotBool    plainText;
 }
 
 /* end of module */
-
-#endif /* EXPAT_PARSER */

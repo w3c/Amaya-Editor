@@ -64,6 +64,9 @@ static STRING       QuotedText;
 #include "init_f.h"
 #include "query_f.h"
 #include "styleparser_f.h"
+#ifdef EXPAT_PARSER
+#include "Xml2thot_f.h"
+#endif /* EXPAT_PARSER */
 
 #ifdef _WINDOWS
 #include "wininclude.h"
@@ -948,8 +951,18 @@ Document          doc;
           localFile = GetLocalPath (doc, DocumentURLs[doc]);
 	  TtaExtractName (localFile, tempdir, documentname);
 	  /* parse and display the new version */
+
+#ifdef EXPAT_PARSER
+	  if (DocumentMeta[doc]->xmlformat)       
+	    StartXmlParser (DocumentSource[doc], localFile, documentname,
+			    tempdir, localFile, TRUE);
+	  else
+	    StartParser (DocumentSource[doc], localFile, documentname,
+			 tempdir, localFile, TRUE);
+#else /* EXPAT_PARSER */
 	  StartParser (DocumentSource[doc], localFile, documentname, tempdir,
 		       localFile, TRUE);
+#endif /* EXPAT_PARSER */
 	  TtaSetDocumentUnmodified (DocumentSource[doc]);
 	  event.document = doc;
 	  SynchronizeSourceView (&event);
@@ -1532,8 +1545,19 @@ View                view;
        TtaExportDocumentWithNewLineNumbers (document, tempdocument,
 					    TEXT("TextFileT"));
        TtaExtractName (tempdocument, tempdir, documentname);
+#ifdef EXPAT_PARSER
+       if (DocumentMeta[htmlDoc]->xmlformat)       
+	 StartXmlParser (htmlDoc, tempdocument, documentname,
+			 tempdir, tempdocument, FALSE);
+       else
+	 StartParser (htmlDoc, tempdocument, documentname,
+		      tempdir, tempdocument, FALSE);
+       
+#else /* EXPAT_PARSER */
        StartParser (htmlDoc, tempdocument, documentname, tempdir, tempdocument,
 		    FALSE);
+#endif /* EXPAT_PARSER */
+
        /* fetch and display all images referred by the document */
        DocNetworkStatus[htmlDoc] = AMAYA_NET_ACTIVE;
        FetchAndDisplayImages (htmlDoc, AMAYA_LOAD_IMAGE);
@@ -1774,7 +1798,18 @@ View                view;
 	if (htmlDoc)
 	   {
 	   TtaExtractName (localFile, tempdir, documentname);
-	   StartParser (htmlDoc, localFile, documentname, tempdir, localFile, FALSE);
+#ifdef EXPAT_PARSER
+       if (DocumentMeta[htmlDoc]->xmlformat)       
+	   StartXmlParser (htmlDoc, localFile, documentname,
+			   tempdir, localFile, FALSE);
+       else
+	   StartParser (htmlDoc, localFile, documentname,
+			tempdir, localFile, FALSE);       
+#else /* EXPAT_PARSER */
+       StartParser (htmlDoc, localFile, documentname,
+		    tempdir, localFile, FALSE);
+#endif /* EXPAT_PARSER */
+
 	   /* fetch and display all images referred by the document */
 	   DocNetworkStatus[htmlDoc] = AMAYA_NET_ACTIVE;
 	   FetchAndDisplayImages (htmlDoc, AMAYA_LOAD_IMAGE);

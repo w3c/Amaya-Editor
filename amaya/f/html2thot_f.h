@@ -46,6 +46,10 @@ extern void SetElemLineNumber ( Element el );
 extern CHAR_T GetNextInputChar ( FILE *infile,
                                  int *index,
                                  ThotBool *endOfFile );
+extern void ReadTextFile ( FILE *infile,
+                           char* textbuf,
+                           Document doc,
+                           STRING pathURL );
 extern ThotBool IsXHTMLDocType ( STRING fileName );
 extern ThotBool HasXMLDeclaration ( CHAR_T *fileName,
                                     CHARSET *charset );
@@ -106,6 +110,10 @@ extern void SetElemLineNumber (/* Element el */);
 extern CHAR_T GetNextInputChar (/* FILE *infile,
                                    int *index,
                                    ThotBool *endOfFile */);
+extern void ReadTextFile (/* FILE *infile,
+                             char* textbuf,
+                             Document doc,
+                             STRING pathURL */);
 extern ThotBool IsXHTMLDocType (/* STRING fileName */);
 extern ThotBool HasXMLDeclaration (/* CHAR_T *fileName,
                                       CHARSET *charset */);

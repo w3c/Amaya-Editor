@@ -6,7 +6,55 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void XmlSetElemLineNumber ( Element el );
+extern void XmlParseError ( Document doc,
+                            CHAR_T* msg,
+                            int line );
+extern ThotBool IsParsingCSS ( void );
+extern void SetParsingCSS ( ThotBool value );
+extern void SetParsingTextArea ( ThotBool value );
+extern int IsWithinTable ( void );
+extern void SubWithinTable ( void );
+extern void XhtmlInsertElement ( Element *el );
+extern Element XmlLastLeafInElement ( Element el );
+extern void PutInXmlElement ( STRING data );
+extern void PutMathMLEntity ( USTRING entityValue,
+                              Language lang,
+                              STRING entityName,
+                              Document doc );
+extern void FreeXmlParserContexts ( void );
+extern void StartXmlParser ( Document doc,
+                             CHAR_T* htmlFileName,
+                             CHAR_T* documentName,
+                             CHAR_T* documentDirectory,
+                             CHAR_T* pathURL,
+                             ThotBool plainText );
+
 #else /* __STDC__ */
+
+extern void XmlSetElemLineNumber (/* Element el */);
+extern void XmlParseError (/* Document doc,
+                              CHAR_T* msg,
+                              int line */);
+extern ThotBool IsParsingCSS (/* void */);
+extern void SetParsingCSS (/* ThotBool value */);
+extern void SetParsingTextArea (/* ThotBool value */);
+extern int IsWithinTable (/* void */);
+extern void SubWithinTable (/* void */);
+extern void XhtmlInsertElement (/* Element *el */);
+extern Element XmlLastLeafInElement (/* Element el */);
+extern void PutInXmlElement (/* STRING data */);
+extern void PutMathMLEntity (/* USTRING entityValue,
+                                Language lang,
+                                STRING entityName,
+                                Document doc */);
+extern void FreeXmlParserContexts (/* void */);
+extern void StartXmlParser (/* Document doc,
+                               CHAR_T* htmlFileName,
+                               CHAR_T* documentName,
+                               CHAR_T* documentDirectory,
+                               CHAR_T* pathURL,
+                               ThotBool plainText */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
