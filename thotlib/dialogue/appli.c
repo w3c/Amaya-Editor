@@ -73,6 +73,10 @@ static PtrDocument  OldDocMsgSelect;
 #define WM_ENTER (WM_USER)
 
 #define MAX_MENUS 5
+
+#define HDEBORDEMENT 0
+#define hDEBORDEMENT HDEBORDEMENT / 10
+
 #define ToolBar_AutoSize(hwnd) \
     (void)SendMessage((hwnd), TB_AUTOSIZE, 0, 0L)
 
@@ -576,20 +580,47 @@ int                 reason;
 int                 value;
 #endif /* __STDC__ */
 {
-   int      delta;
+   int        delta = 0, Xpos, Ypos, width = 1076, height;
+   int        sPos, nbPages, remaining;
 
    /* do not redraw it if in NoComputedDisplay mode */
    if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
       return;
 
    switch (reason) {
-   case SB_LINERIGHT:
-        delta = 15;
-        break;
+          case SB_LINERIGHT:
+               delta = 13;
+               break;
 
-   case SB_LINELEFT:
-        delta = -15;
-        break;
+          case SB_LINELEFT:
+               delta = -13;
+               break;
+
+          case SB_PAGERIGHT:
+               delta = FrameTable[frame].FrWidth;
+               break;
+
+          case SB_PAGELEFT:
+               delta = -FrameTable[frame].FrWidth;
+               break;
+
+          case SB_THUMBPOSITION:
+          case SB_THUMBTRACK:
+               ComputeDisplayedChars (frame, &Xpos, &Ypos, &width, &height);
+               sPos = GetScrollPos (FrameTable[frame].WdScrollH, SB_CTL);
+               delta = value - sPos;
+               nbPages = abs (delta) / width;
+               remaining = abs (delta) - (width * nbPages);
+			   if (nbPages <= 3) {
+                  if (delta > 0)
+                      delta = nbPages * FrameTable[frame].FrWidth + (int) ((remaining * FrameTable[frame].FrWidth) / width);
+                  else 
+                      delta = -(nbPages * FrameTable[frame].FrWidth + (int) ((remaining * FrameTable[frame].FrWidth) / width));
+			   } else {
+                     delta = (int) (((float)value / (float)FrameTable[frame].FrWidth) * 100) ;
+               }
+               break;
+               break;
    }
 
    HorizontalScroll (frame, delta, TRUE) ;
