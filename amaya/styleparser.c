@@ -1892,9 +1892,9 @@ ThotBool            isHTML;
   else
     /* unknown font name.  Skip it */
     {
-      if (quoteChar)
-	 cssRule = SkipQuotedString (cssRule, quoteChar);
-      else
+      if (quoteChar) {
+         cssRule = SkipQuotedString (cssRule, quoteChar);
+      } else
          cssRule = SkipWord (cssRule);
       cssRule = SkipWCBlanksAndComments (cssRule);
       if (*cssRule == TEXT(','))

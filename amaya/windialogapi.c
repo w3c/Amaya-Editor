@@ -1034,17 +1034,7 @@ void CreateGreekKeyboardDlgWindow (parent)
 HWND  parent;
 #endif /* __STDC__ */
 {  
-	switch (app_lang) {
-           case FR_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (FR_GALPHABETDIALOG), NULL, (DLGPROC) GreekKeyboardDlgProc);
-				break;
-           case DE_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (DE_GALPHABETDIALOG), NULL, (DLGPROC) GreekKeyboardDlgProc);
-				break;
-           default:
-                DialogBox (hInstance, MAKEINTRESOURCE (EN_GALPHABETDIALOG), NULL, (DLGPROC) GreekKeyboardDlgProc);
-				break;
-	}
+    DialogBox (hInstance, MAKEINTRESOURCE (GALPHABETDIALOG), NULL, (DLGPROC) GreekKeyboardDlgProc);
 }
 
 /*-----------------------------------------------------------------------
@@ -1103,17 +1093,7 @@ STRING image_location;
   currentParentRef = baseDlg + bgImageForm;
   ustrcpy (currentPathName, image_location);
 
-	switch (app_lang) {
-           case FR_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (FR_BGIMAGEDIALOG), parent, (DLGPROC) BackgroundImageDlgProc);
-				break;
-           case DE_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (DE_BGIMAGEDIALOG), parent, (DLGPROC) BackgroundImageDlgProc);
-				break;
-           default:
-                DialogBox (hInstance, MAKEINTRESOURCE (EN_BGIMAGEDIALOG), parent, (DLGPROC) BackgroundImageDlgProc);
-				break;
-	} 
+  DialogBox (hInstance, MAKEINTRESOURCE (BGIMAGEDIALOG), parent, (DLGPROC) BackgroundImageDlgProc);
 }
 
 
@@ -3591,7 +3571,7 @@ LPARAM lParam;
       CheckRadioButton (hwnDlg, IDC_SSMALL, IDC_SPACINGDEFAULT, IDC_SSMALL);
     else if (Line_spacingNum == 1)
       CheckRadioButton (hwnDlg, IDC_SSMALL, IDC_SPACINGDEFAULT, IDC_SMEDIUM);
-    else if (Line_spacingNum == 1)
+    else if (Line_spacingNum == 2)
       CheckRadioButton (hwnDlg, IDC_SSMALL, IDC_SPACINGDEFAULT, IDC_SLARGE);
     
     SetDlgItemInt (hwnDlg, IDC_INDENTPTEDIT, Indent_value, FALSE);
@@ -3760,6 +3740,10 @@ LPARAM lParam;
   int    car;
 
   switch (msg) {
+  case WM_INITDIALOG: 
+	  SetWindowText (hwnDlg, TtaGetMessage (LIB, TMSG_GREEK_ALPHABET));
+	  SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
+	  break;
   case WM_COMMAND:
     switch (LOWORD (wParam)) {
     case IDCANCEL:
@@ -4506,6 +4490,17 @@ LPARAM lParam;
 	       case WM_INITDIALOG:
 			    SetDlgItemText (hwnDlg, IDC_BGLOCATION, currentPathName);
                 CheckRadioButton (hwnDlg, IDC_REPEAT, IDC_NOREPEAT, IDC_REPEAT);
+                SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_BACKGROUND_IMAGE));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_OPENLOCATION), TtaGetMessage (AMAYA, AM_IMAGES_LOCATION));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_REPEATMODE), TtaGetMessage (AMAYA, AM_REPEAT_MODE));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_REPEAT), TtaGetMessage (AMAYA, AM_REPEAT));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_REPEATX), TtaGetMessage (AMAYA, AM_REPEAT_X));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_REPEATY), TtaGetMessage (AMAYA, AM_REPEAT_Y));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_NOREPEAT), TtaGetMessage (AMAYA, AM_NO_REPEAT));
+				SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+				SetWindowText (GetDlgItem (hwnDlg, ID_CLEAR), TtaGetMessage (AMAYA, AM_CLEAR));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_BROWSE), TEXT("Browse"));
+				SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
 				break;
 
 		   case WM_COMMAND:

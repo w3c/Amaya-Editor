@@ -85,6 +85,10 @@ LPARAM lParam;
   switch (msg)
     {
     case WM_INITDIALOG:
+	  SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_SAVE_AS));
+	  SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+	  SetWindowText (GetDlgItem (hwnDlg, IDC_BROWSE), TEXT("Browse"));
+	  SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
       SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, currentPathName);
       break;
       
