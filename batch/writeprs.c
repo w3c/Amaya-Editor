@@ -1032,7 +1032,7 @@ PtrPRule        pR;
 			     case PtHyphenate:
 				wrbool (pRe1->PrJustify);
 				break;
-			     case PtImDescr:
+			     case PtPictInfo:
 				break;
 			  }
 
