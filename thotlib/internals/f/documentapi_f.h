@@ -5,7 +5,6 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
-
 extern int TtaGetDocumentProfile ( Document document );
 extern void TtaSetDocumentProfile ( Document document,
                                     int profile );
@@ -113,7 +112,6 @@ extern void TtaChangeGenericSchemaNames ( char *sSchemaUri,
 extern ThotBool TtaIsXmlSSchema ( SSchema schema );
 
 #else /* __STDC__ */
-
 extern int TtaGetDocumentProfile ( Document document );
 extern void TtaSetDocumentProfile ( Document document,
                                       int profile );

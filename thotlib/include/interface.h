@@ -355,6 +355,12 @@ extern void TtaListShortcuts (Document doc, FILE *fileDescriptor);
   ----------------------------------------------------------------------*/
 extern void TtaShowElementMenu (Document doc, View view);
 
+/*----------------------------------------------------------------------
+  TtaRefreshElementMenu
+  Just refresh the XML element list.
+  ----------------------------------------------------------------------*/
+extern void TtaRefreshElementMenu (Document doc, View view);
+
 #endif /* __CEXTRACT__  */
 
 #endif

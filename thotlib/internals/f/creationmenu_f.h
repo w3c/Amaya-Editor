@@ -8,6 +8,8 @@
 
 extern void TtaShowElementMenu ( Document doc,
                                  View view );
+extern void TtaRefreshElementMenu ( Document doc,
+                                    View view );
 extern void CallbackElemToBeCreated ( int ref,
                                       int val,
                                       char *txt );
@@ -29,6 +31,8 @@ extern void BuildPasteMenu ( int RefMenu,
 
 extern void TtaShowElementMenu ( Document doc,
                                    View view );
+extern void TtaRefreshElementMenu ( Document doc,
+                                      View view );
 extern void CallbackElemToBeCreated ( int ref,
                                         int val,
                                         char *txt );

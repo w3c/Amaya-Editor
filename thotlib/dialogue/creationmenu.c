@@ -190,6 +190,69 @@ void TtaShowElementMenu (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
+  TtaRefreshElementMenu
+  Just refresh the XML element list.
+  ----------------------------------------------------------------------*/
+void TtaRefreshElementMenu (Document doc, View view)
+{
+  PtrDocument    pSelDoc, pDoc;
+  PtrElement     firstSel, lastSel;
+  PtrSSchema     pSS;
+  char           menuBuf[MAX_MENU_LENGTH];
+  int            nbItem, height, firstChar, lastChar;
+  ThotBool       withTextInput = FALSE;
+
+  UserErrorCode = 0;
+  height = 4;
+  if (doc < 1 || doc > MAX_DOCUMENTS)
+    /* Checks the parameter document */
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[doc - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else if (!LoadedDocument[doc - 1]->DocReadOnly)
+    {
+      nbItem = 0;
+      pDoc = LoadedDocument[doc - 1];
+      if (GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar, &lastChar) &&
+	  pSelDoc == pDoc)
+	  pSS = firstSel->ElStructSchema;
+      else
+	pSS = pDoc->DocSSchema;
+
+      menuBuf[0] = EOS;
+      withTextInput =  (strcmp (pSS->SsName, "HTML") &&
+			strcmp (pSS->SsName, "SVG") &&
+			strcmp (pSS->SsName, "MathML"));
+      if (strcmp (pSS->SsName, "TextFile") && withTextInput)
+	/* build the menu only for generic XML schemas */
+	nbItem = BuildElementSelector (pDoc, pSS, menuBuf);
+
+      /* generate the form with two buttons Isert and Done */
+#ifdef _WX 
+      if (nbItem != 0)
+	{
+	  AmayaParams p;
+	  int         typeNum;
+	  p.param1 = (void*)nbItem;
+	  p.param2 = (void*)menuBuf;
+	  if (firstSel)
+	    {
+	      if (firstSel->ElTerminal && firstSel->ElParent)
+		firstSel = firstSel->ElParent;
+	      typeNum = firstSel->ElTypeNumber;
+	      p.param3 = (void*)(pSS->SsRule->SrElem[typeNum - 1]->SrName);
+	    }
+	  else
+	    p.param3 = (void*)"";
+	  /* the dialog reference used to call the right callback in thotlib */
+	  p.param4 = (void*)(NumFormElemToBeCreated);
+	  TtaSendDataToPanel( WXAMAYA_PANEL_XML, p );
+	}
+#endif /* _WX */
+    }
+}
+
+/*----------------------------------------------------------------------
    CallbackElemToBeCreated
    handles the callbacks of the Element Type form.
   ----------------------------------------------------------------------*/

@@ -5,7 +5,6 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
-
 extern void DisplayOpaqueGroup ( PtrAbstractBox pAb,
                                  int frame,
                                  int xmin,
@@ -91,7 +90,6 @@ extern unsigned char *GetScreenshot ( int frame,
                                       char *pngurl );
 
 #else /* __STDC__ */
-
 extern void DisplayOpaqueGroup ( PtrAbstractBox pAb,
                                    int frame,
                                    int xmin,
