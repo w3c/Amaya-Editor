@@ -3759,7 +3759,7 @@ RULES
 	if within Inserted_Text
 		Depth: Enclosing - 1;
 	IN Structure_view BEGIN
-		if NOT within Comment_line AND NOT within PI_line AND NOT within DOCTYPE
+		if NOT within Comment_line AND NOT within PI_line AND NOT within DOCTYPE_line
 		   BEGIN
 		   HorizPos: Left = Enclosing . Left;
 		   VertPos: Top = Previous . Bottom;
@@ -3772,7 +3772,7 @@ RULES
 		   HorizPos: Left = Previous . Right;
 		if within PI_line
 		   HorizPos: Left = Previous . Right;
-		if within DOCTYPE
+		if within DOCTYPE_line
                    BEGIN
 		   HorizPos: Left = Previous . Right;
                    END;
