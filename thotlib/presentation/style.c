@@ -980,9 +980,6 @@ unsigned int    att;
 	    (att == 0 && firstCond->CoTypeElAttr != (int) ctxt->type)))
 	 /* it's not the right rule */
 	 return (1);
-       else if (nbcond != 0)
-	 /* it's not the right rule: there are too many conditions in the rule */
-	 return (-1);
      }
    /* check if all ancestors are within the rule conditions */
    i = 0;
@@ -1002,7 +999,11 @@ unsigned int    att;
 	 }
        i++;
      }
-   if (i != nbcond + 1)
+
+   if (nbcond == 0 && i == 1 && att == MAX_ANCESTORS)
+     /* no condition: it's the right rule */
+     return (0);
+   if (i != nbcond)
      /* it's not the right rule: there are too many conditions in the rule */
      return (-1);
    return (0);
