@@ -2860,8 +2860,12 @@ boolean            *removeEl;
 			    FALSE, currentFileName, 0, pDoc, lineBreak);
 	       if (currentFileName[0] != '\0')
 		 {
+#           ifdef _WINDOWS
+            _unlink (currentFileName);
+#           else  /* !_WINDOWS */
 		    sprintf (cmd, "/bin/rm %s\n", currentFileName);
 		    system (cmd);
+#           endif /* _WINDOWS */
 		 }
 	       break;
 
