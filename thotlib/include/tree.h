@@ -1112,6 +1112,11 @@ extern void TtaAppendXmlAttribute (char *XMLName, AttributeType *attrType,
 extern void TtaGetXmlAttributeType (char *XMLName, AttributeType *attrType);
 
 /*----------------------------------------------------------------------
+   TtaAddEmptyBox
+  ----------------------------------------------------------------------*/
+extern void TtaAddEmptyBox (Element el, Document document);
+
+/*----------------------------------------------------------------------
    TtaIsXmlTypeInLine
    Retuns TRUE if the element type has a 'Line' presentation rule
   ----------------------------------------------------------------------*/
@@ -1133,7 +1138,7 @@ extern void TtaAppendXmlElement (char *XMLName, ElementType *elType,
   TtaGetXMLElementType
   ----------------------------------------------------------------------*/
 extern void TtaGetXmlElementType (char *XMLElementName, ElementType *elType,
-				  char **mappedName);
+				  char **mappedName, Document doc);
 
 /*----------------------------------------------------------------------
   TtaChangeGenericSSchemaName

@@ -46,20 +46,10 @@ AttrValueMapping XmlAttrValueMappingTable[] =
 #define MaxMsgLength 200
 
 /*----------------------------------------------------------------------
-  XmlElementComplete
-  Complete XML elements. Check its attributes and its contents.
-  ----------------------------------------------------------------------*/
-void        XmlElementComplete (Element el, Document doc, int *error)
-
-{
-  return;
-}
-
-/*----------------------------------------------------------------------
   XmlAttributeComplete
   Complete XML elements. Check its attributes and its contents.
   ----------------------------------------------------------------------*/
-void        XmlAttributeComplete (Attribute attr, Element el, Document doc)
+void XmlAttributeComplete (Attribute attr, Element el, Document doc)
 
 {
   return;
@@ -69,13 +59,13 @@ void        XmlAttributeComplete (Attribute attr, Element el, Document doc)
    CreateXmlAttribute
    create an attribute of type attrType for the element el.
   ----------------------------------------------------------------------*/
-void  CreateXmlAttribute (Element       el,
-				AttributeType attrType,
-				char*         text,
-				ThotBool      isInvalid,
-				Document      doc,
-				Attribute    *lastAttribute,
-				Element      *lastAttrElement)
+void CreateXmlAttribute (Element       el,
+			 AttributeType attrType,
+			 char*         text,
+			 ThotBool      isInvalid,
+			 Document      doc,
+			 Attribute    *lastAttribute,
+			 Element      *lastAttrElement)
      
 {
 }
@@ -85,9 +75,8 @@ void  CreateXmlAttribute (Element       el,
    Search in the Attribute Value Mapping Table the entry for the attribute
    ThotAtt and its value AttrVal. Returns the corresponding Thot value.
   ----------------------------------------------------------------------*/
-void        MapXmlAttributeValue (char *AttrVal,
-				  AttributeType  attrType,
-				  int *value)
+void MapXmlAttributeValue (char *AttrVal, AttributeType  attrType,
+			   int *value)
 
 {
 
@@ -96,9 +85,8 @@ void        MapXmlAttributeValue (char *AttrVal,
 /*----------------------------------------------------------------------
    MapGenericXmlAttribute
   ----------------------------------------------------------------------*/
-void        MapGenericXmlAttribute (char *attrName,
-				    AttributeType *attrType,
-				    Document doc)
+void MapGenericXmlAttribute (char *attrName, AttributeType *attrType,
+			     Document doc)
 {
 
   if (attrType->AttrSSchema == NULL)
@@ -114,6 +102,26 @@ void        MapGenericXmlAttribute (char *attrName,
       /* Create a new global attribute */
       TtaAppendXmlAttribute (attrName, attrType, doc);
     }
+}
+
+/*----------------------------------------------------------------------
+  XmlElementComplete
+  Complete XML elements. Check its attributes and its contents.
+  ----------------------------------------------------------------------*/
+void XmlElementComplete (Element el, Document doc, int *error)
+
+{
+  Element lastChild;
+
+  /* get the last child of the closed element */
+  lastChild = TtaGetLastChild (el);
+
+  if (lastChild == NULL)
+    /* This is an empty element */
+    /* Add a specific presentation rule */
+    TtaAddEmptyBox (el, doc);
+
+  return;
 }
 
 /*----------------------------------------------------------------------
@@ -138,17 +146,15 @@ void  CreateXmlLinePRule (Element elText, Document doc)
 /*----------------------------------------------------------------------
   MapGenericXmlType
   ----------------------------------------------------------------------*/
-void        MapGenericXmlElement (char *XMLName,
-				  ElementType *elType,
-				  char **mappedName,
-				  Document doc)
+void  MapGenericXmlElement (char *XMLName, ElementType *elType,
+			    char **mappedName, Document doc)
 {
   if (elType->ElSSchema == NULL)
     return;
 
   elType->ElTypeNum = 0;
-  /* Search for the element XMLName in the structure schema */
-  TtaGetXmlElementType (XMLName, elType, mappedName);
+  /* Search  the element XMLName in the structure schema */
+  TtaGetXmlElementType (XMLName, elType, mappedName, doc);
 
   if (elType->ElTypeNum <= 0)
     {

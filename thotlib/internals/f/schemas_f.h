@@ -69,6 +69,8 @@ extern void TtaAppendXmlAttribute ( char *XMLName,
                                     Document document );
 extern void TtaGetXmlAttributeType ( char *XMLName,
                                      AttributeType *attrType );
+extern void TtaAddEmptyBox ( Element el,
+                             Document document );
 extern PtrPRule TtaGetXmlPRule ( PtrPSchema pPSch,
                                  int nSRule,
                                  PRuleType PrType,
@@ -84,7 +86,8 @@ extern void TtaAppendXmlElement ( char *XMLName,
                                   Document document );
 extern void TtaGetXmlElementType ( char* XMLName,
                                    ElementType *elType,
-                                   char** mappedName );
+                                   char** mappedName,
+                                   Document doc );
 extern void TtaChangeGenericSchemaNames ( char *sSchemaUri,
                                           char *sSchemaName,
                                           Document document );
@@ -154,6 +157,8 @@ extern void TtaAppendXmlAttribute (/* char *XMLName,
                                       Document document */);
 extern void TtaGetXmlAttributeType (/* char *XMLName,
                                        AttributeType *attrType */);
+extern void TtaAddEmptyBox (/* Element el,
+                               Document document */);
 extern PtrPRule TtaGetXmlPRule (/* PtrPSchema pPSch,
                                    int nSRule,
                                    PRuleType PrType,
@@ -169,7 +174,8 @@ extern void TtaAppendXmlElement (/* char *XMLName,
                                     Document document */);
 extern void TtaGetXmlElementType (/* char* XMLName,
                                      ElementType *elType,
-                                     char** mappedName */);
+                                     char** mappedName,
+                                     Document doc */);
 extern void TtaChangeGenericSchemaNames (/* char *sSchemaUri,
                                             char *sSchemaName,
                                             Document document */);

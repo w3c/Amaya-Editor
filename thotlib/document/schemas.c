@@ -842,21 +842,28 @@ static void         AppendSRule (int *ret, PtrSSchema pSS, PtrPSchema pPSch,
 {
   int                  size, i;
   PtrDocSchemasDescr   pPfS;
+  PtrPSchema           pPSchExt;
+  PtrHandlePSchema     pHSP, pHSPNext;
 
   *ret = 0;
 #ifndef NODISPLAY
-  if (!pPSch)
+  pHSP = NULL;
+  /* Search the associated presentation schema (including extension schemas) */
+  pPfS = pDoc->DocFirstSchDescr;
+  while (pPfS && !pHSP)
     {
-      /* Search the associated presentation schema */
-      pPfS = pDoc->DocFirstSchDescr;
-      while (pPfS && !pPSch)
+      if (pPfS->PfSSchema && (pPfS->PfSSchema == pSS))
 	{
-	  if (pPfS->PfSSchema && (pPfS->PfSSchema == pSS))
+	  if (!pPSch)
 	    pPSch = pPfS->PfPSchema;
-	  pPfS = pPfS->PfNext;
+	  pHSP = pPfS->PfFirstPSchemaExtens;
+	  pPfS = NULL;
 	}
+      else
+	pPfS = pPfS->PfNext;
     }
 #endif
+  
   /* reserve 2 additional entries for counter aliases (see function
      MakeAliasTypeCount in presvariables.c) */
   if (pSS->SsNRules >= pSS->SsRuleTableSize - 2)
@@ -878,6 +885,7 @@ static void         AppendSRule (int *ret, PtrSSchema pSS, PtrPSchema pPSch,
           pPSch->PsElemTransmit = (NumberTable*) realloc (pPSch->PsElemTransmit, i);
 	}
 #endif
+
       if (!pSS->SsRule
 #ifndef NODISPLAY
 	  || !pPSch->PsElemPRule
@@ -901,10 +909,52 @@ static void         AppendSRule (int *ret, PtrSSchema pSS, PtrPSchema pPSch,
 		  pPSch->PsNInheritedAttrs->Num[i] = 0;
                   pPSch->PsInheritedAttr->ElInherit[i] = NULL;
 		  pPSch->PsElemTransmit->Num[i] = 0;
-		}
+	}
 	    }
 #endif
 	}
+
+#ifndef NODISPLAY      
+      /* associated extension schemas */
+      pHSPNext = pHSP;
+      while (pHSPNext)
+	{
+	  pPSchExt = pHSPNext->HdPSchema;
+	  if (pPSchExt)
+	    {
+	      i = size * sizeof (PtrPRule);
+	      pPSchExt->PsElemPRule =
+		(PtrPRuleTable*) realloc (pPSchExt->PsElemPRule,i);
+	      i = size * sizeof (int);
+	      pPSchExt->PsNInheritedAttrs =
+		(NumberTable*) realloc (pPSchExt->PsNInheritedAttrs, i);
+	      i = size * sizeof (InheritAttrTable*);
+	      pPSchExt->PsInheritedAttr =
+		(InheritAttrTbTb*) realloc (pPSchExt->PsInheritedAttr, i);
+	      i = size * sizeof (int);
+	      pPSchExt->PsElemTransmit =
+		(NumberTable*) realloc (pPSchExt->PsElemTransmit, i);
+	      
+	      if (!pPSchExt->PsElemPRule)
+		{
+		  TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NO_MEMORY);
+		  return;
+		}
+	      else
+		{
+		  for (i = pSS->SsNRules; i < size; i++)
+		    {
+		      pPSchExt->PsElemPRule->ElemPres[i] = NULL;
+		      pPSchExt->PsNInheritedAttrs->Num[i] = 0;
+		      pPSchExt->PsInheritedAttr->ElInherit[i] = NULL;
+		      pPSchExt->PsElemTransmit->Num[i] = 0;
+		    }
+		}
+	    }
+	  /* next extension schema */
+	  pHSPNext = pHSPNext->HdNextPSchema;
+	}
+#endif
     }
 
   /* initializes new entry */
@@ -923,6 +973,22 @@ static void         AppendSRule (int *ret, PtrSSchema pSS, PtrPSchema pPSch,
       pPSch->PsNInheritedAttrs->Num[i] = 0;
       pPSch->PsInheritedAttr->ElInherit[i] = NULL;
       pPSch->PsElemTransmit->Num[i] = 0;
+    }
+
+  /* associated extension schemas */
+  pHSPNext = pHSP;
+  while (pHSPNext)
+    {
+      pPSchExt = pHSPNext->HdPSchema;
+      if (pPSchExt)
+	{
+	  pPSchExt->PsElemPRule->ElemPres[i] = NULL;
+	  pPSchExt->PsNInheritedAttrs->Num[i] = 0;
+	  pPSchExt->PsInheritedAttr->ElInherit[i] = NULL;
+	  pPSchExt->PsElemTransmit->Num[i] = 0;
+	}
+      /* next extension schema */
+      pHSPNext = pHSPNext->HdNextPSchema;
     }
 #endif
 
@@ -1459,6 +1525,7 @@ void SearchNatures (PtrDocument pDoc, PtrSSchema natureTable[MAX_NAT_TABLE],
 #define VERT_LINE_PBOX 2
 #define ATTR_NAME_PBOX 3
 #define ATTR_VALUE_PBOX 4
+#define EMPTY_PBOX 12
 #define STRUCT_INDENT 15
 #define DIST_BOTTOM 2
 
@@ -1548,8 +1615,8 @@ void    TtaAppendXmlAttribute (char *XMLName, AttributeType *attrType,
   PtrPSchema           pPSch, pPSchExt;
   int                  i, size;
   PtrDocument          pDoc;
-  PtrDocSchemasDescr   pPfS, pPfSsav;
-  PtrHandlePSchema     pHSP, pNextHSP;
+  PtrDocSchemasDescr   pPfS;
+  PtrHandlePSchema     pHSP, pHSPNext;
 
   attrType->AttrTypeNum = -1;           /* -1 means failure */
   pSS = (PtrSSchema) attrType->AttrSSchema;
@@ -1566,10 +1633,11 @@ void    TtaAppendXmlAttribute (char *XMLName, AttributeType *attrType,
       if (pPfS->PfSSchema && (pPfS->PfSSchema == pSS))
 	{
 	  pPSch = pPfS->PfPSchema;
-	  pPfSsav = pPfS;
+	  pHSP = pPfS->PfFirstPSchemaExtens;
 	}
       pPfS = pPfS->PfNext;
     }
+  
   if (pPSch == NULL)
     /* no presentation schema, failure */
     return;
@@ -1632,34 +1700,36 @@ void    TtaAppendXmlAttribute (char *XMLName, AttributeType *attrType,
 
 #ifndef NODISPLAY      
       /* extend the associated extension schemas */
-      pHSP = pPfSsav->PfFirstPSchemaExtens;
-      while (pHSP)
+      pHSPNext = pHSP;
+      while (pHSPNext)
 	{
-	  pNextHSP = pHSP->HdNextPSchema;
-	  pPSchExt = pHSP->HdPSchema;
-	  i = size * sizeof (PtrAttributePres);
-	  pPSchExt->PsAttrPRule =
-	    (AttrPresTable*) realloc (pPSchExt->PsAttrPRule, i);
-	  i = size * sizeof (int);
-	  pPSchExt->PsNAttrPRule =
-	    (NumberTable*) realloc (pPSchExt->PsNAttrPRule, i);
-	  i = size * sizeof (int);
-	  pPSchExt->PsNHeirElems =
-	    (NumberTable*) realloc (pPSchExt->PsNHeirElems, i);
-	  i = size * sizeof (int);
-	  pPSchExt->PsNComparAttrs =
-	    (NumberTable*) realloc (pPSchExt->PsNComparAttrs,i);
-	  i = size * sizeof (ComparAttrTable*);
-	  pPSchExt->PsComparAttr =
-	    (CompAttrTbTb*) realloc (pPSchExt->PsComparAttr, i);
-	  if (!pPSchExt->PsAttrPRule || !pPSchExt->PsNAttrPRule ||
-	      !pPSchExt->PsNHeirElems)
+	  pPSchExt = pHSPNext->HdPSchema;
+	  if (pPSchExt)
 	    {
-	      TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NO_MEMORY);
-	      return;
+	      i = size * sizeof (PtrAttributePres);
+	      pPSchExt->PsAttrPRule =
+		(AttrPresTable*) realloc (pPSchExt->PsAttrPRule, i);
+	      i = size * sizeof (int);
+	      pPSchExt->PsNAttrPRule =
+		(NumberTable*) realloc (pPSchExt->PsNAttrPRule, i);
+	      i = size * sizeof (int);
+	      pPSchExt->PsNHeirElems =
+		(NumberTable*) realloc (pPSchExt->PsNHeirElems, i);
+	      i = size * sizeof (int);
+	      pPSchExt->PsNComparAttrs =
+		(NumberTable*) realloc (pPSchExt->PsNComparAttrs,i);
+	      i = size * sizeof (ComparAttrTable*);
+	      pPSchExt->PsComparAttr =
+		(CompAttrTbTb*) realloc (pPSchExt->PsComparAttr, i);
+	      if (!pPSchExt->PsAttrPRule || !pPSchExt->PsNAttrPRule ||
+		  !pPSchExt->PsNHeirElems)
+		{
+		  TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NO_MEMORY);
+		  return;
+		}
 	    }
 	  /* next extension schema */
-	  pHSP = pNextHSP;
+	  pHSPNext = pHSPNext->HdNextPSchema;
 	}
 #endif
     }
@@ -1688,18 +1758,20 @@ void    TtaAppendXmlAttribute (char *XMLName, AttributeType *attrType,
   pPSch->PsComparAttr->CATable[i] = NULL;
 
   /* no presentation rule nor inherit tables in the extension schemas */
-  pHSP = pPfSsav->PfFirstPSchemaExtens;
-  while (pHSP)
+  pHSPNext = pHSP;
+  while (pHSPNext)
     {
-      pNextHSP = pHSP->HdNextPSchema;
-      pPSchExt = pHSP->HdPSchema;
-      pPSchExt->PsAttrPRule->AttrPres[i] = NULL;
-      pPSchExt->PsNAttrPRule->Num[i] = 0;
-      pPSchExt->PsNHeirElems->Num[i] = 0;
-      pPSchExt->PsNComparAttrs->Num[i] = 0;
-      pPSchExt->PsComparAttr->CATable[i] = NULL;
+      pPSchExt = pHSPNext->HdPSchema;
+      if (pPSchExt)
+	{
+	  pPSchExt->PsAttrPRule->AttrPres[i] = NULL;
+	  pPSchExt->PsNAttrPRule->Num[i] = 0;
+	  pPSchExt->PsNHeirElems->Num[i] = 0;
+	  pPSchExt->PsNComparAttrs->Num[i] = 0;
+	  pPSchExt->PsComparAttr->CATable[i] = NULL;
+	}
       /* next extension schema */
-      pHSP = pNextHSP;
+      pHSPNext = pHSPNext->HdNextPSchema;
     }
 
   /* Initialize and insert the presentation rules */
@@ -1883,6 +1955,48 @@ static void    InsertXmlPRules (PtrPSchema pPSch, int nSRules)
 }
 
 /*----------------------------------------------------------------------
+   TtaAddEmptyBox
+   Add a generic rule to an element type
+  ----------------------------------------------------------------------*/
+void    TtaAddEmptyBox (Element el, Document document)
+
+{
+  PtrPRule            prevpRule, pRule;
+  PtrElement          pEl;
+
+
+  pEl = (PtrElement) el;
+  prevpRule = pEl->ElFirstPRule;
+  pRule = NULL;
+  GetPresentRule (&pRule);
+
+  /* Rule 'Createfirst(EmptyBox)' */
+  if (pRule != NULL)
+    {
+      pRule->PrType = PtFunction;
+      pRule->PrNextPRule = NULL;
+      pRule->PrCond = NULL;
+      pRule->PrViewNum = FORMATTED_VIEW;
+      pRule->PrSpecifAttr = 0;
+      pRule->PrLevel = 0;
+      pRule->PrSpecifAttrSSchema = NULL;
+      pRule->PrPresMode = PresFunction;
+      pRule->PrPresFunction = FnCreateLast;
+      pRule->PrPresBoxRepeat = 0;
+      pRule->PrExternal = 0;
+      pRule->PrElement = 0;
+      pRule->PrNPresBoxes = 1;
+      pRule->PrPresBox[0] = EMPTY_PBOX;
+      pRule->PrPresBoxName[0] = EOS;
+    }
+  
+  if (prevpRule != NULL)
+    pRule->PrNextPRule = prevpRule;
+  else
+    pEl->ElFirstPRule =  pRule;
+}
+
+/*----------------------------------------------------------------------
    TtaGetXmlPRule
    Returns a presentation rule of a given type associated
    with a given element type.
@@ -1946,7 +2060,7 @@ ThotBool    TtaIsXmlTypeInLine (ElementType elType, Document document)
     return FALSE;
 
   nSRule = elType.ElTypeNum - 1;
-  /* Does this rule exists ? */
+  /* Does this rule exist ? */
   pRule = TtaGetXmlPRule (pPSch, nSRule, PtFunction, FnLine, FORMATTED_VIEW);
   if (pRule != NULL)
     return TRUE;
@@ -1956,7 +2070,7 @@ ThotBool    TtaIsXmlTypeInLine (ElementType elType, Document document)
 }
 
 /*----------------------------------------------------------------------
-   TtaModifySpecificXmlPRule
+   TtaSetXmlTypeInLine
    Add a generic rule to an element type
   ----------------------------------------------------------------------*/
 void    TtaSetXmlTypeInLine (ElementType elType, Document document)
@@ -1988,8 +2102,7 @@ void    TtaSetXmlTypeInLine (ElementType elType, Document document)
     return;
 
   nSRule = elType.ElTypeNum - 1;
-        
-  /* This rule already exists */
+  /* Does this rule already exist ? */
   pRule = TtaGetXmlPRule (pPSch, nSRule, PtFunction, FnLine, FORMATTED_VIEW);
   if (pRule != NULL)
     return;
@@ -2097,23 +2210,61 @@ void    TtaAppendXmlElement (char *XMLName, ElementType *elType,
 
 /*----------------------------------------------------------------------
   TtaGetXMLElementType
+  If elType->ElSSchema is not NULL, search in that specific schema,
+  otherwise search in the different generic schemas loaded for the document
   ----------------------------------------------------------------------*/
 void    TtaGetXmlElementType (char* XMLName, ElementType *elType,
-			      char** mappedName)
+			      char** mappedName, Document doc)
 {
-   PtrSSchema    pSS;
-   int           rule;
-   ThotBool      found;
+  PtrSSchema          pSS;
+  int                 rule;
+  ThotBool            found;
+  PtrDocument         pDoc;
+  PtrDocSchemasDescr  pPfS;
 
    found = FALSE;
-   pSS = (PtrSSchema) elType->ElSSchema;
-   for (rule = 0;  !found && rule < pSS->SsNRules; rule++)
+
+   if (elType->ElSSchema)
      {
-       if (strcmp (pSS->SsRule->SrElem[rule]->SrName, XMLName) == 0)
+       pSS = (PtrSSchema) elType->ElSSchema;
+       for (rule = 0; !found && rule < pSS->SsNRules; rule++)
 	 {
-	   elType->ElTypeNum = rule + 1;
-	   *mappedName = pSS->SsRule->SrElem[rule]->SrName;
-	   found = TRUE;
+ 	   if (strcmp (pSS->SsRule->SrElem[rule]->SrName, XMLName) == 0)
+	     {     
+	       elType->ElTypeNum = rule + 1;
+	       *mappedName = pSS->SsRule->SrElem[rule]->SrName;
+	       found = TRUE;
+	     }
+	 }
+     }
+   else
+     {
+       pSS = NULL;
+       pDoc = LoadedDocument[doc - 1];
+       pPfS = pDoc->DocFirstSchDescr;
+       while (pPfS && !found)
+	 {
+	   if (pPfS->PfSSchema)
+	     {
+	       pSS = (PtrSSchema) pPfS->PfSSchema;
+	       if (strcmp (pSS->SsName, "HTML") &&
+		   strcmp (pSS->SsName, "MathML") &&
+		   strcmp (pSS->SsName, "SVG") &&
+		   strcmp (pSS->SsName, "XLink") &&
+		   strcmp (pSS->SsName, "Annot"))
+		 {
+		   for (rule = 0; !found && rule < pSS->SsNRules; rule++)
+		     {
+		       if (strcmp (pSS->SsRule->SrElem[rule]->SrName, XMLName) == 0)
+			 {
+			   elType->ElTypeNum = rule + 1;
+			   elType->ElSSchema = (SSchema) pSS;
+			   found = TRUE;
+			 }
+		     }
+		 }
+	     }
+	   pPfS = pPfS->PfNext;
 	 }
      }
 }
@@ -2152,7 +2303,7 @@ void TtaChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName,
   if (pSS != NULL)
     {
       /* Modify the structure schema name */
-      /*
+      /* ***
       if (sSchemaUri != NULL && pSS->SsUriName == NULL)
 	{
 	  pSS->SsUriName = TtaGetMemory (strlen (sSchemaUri) + 1);
@@ -2173,11 +2324,11 @@ void TtaChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName,
 	    if (strcmp (pSS->SsRule->SrElem[i]->SrName, "XML") == 0)
 	      {
 		strncpy (pSS->SsRule->SrElem[i]->SrName, sSchemaName, MAX_NAME_LENGTH);
-		strncpy (pSS->SsRule->SrElem[i]->SrOrigName, sSchemaName, MAX_NAME_LENGTH);
 		i = pSS->SsNRules;
 	      }
 	}
-      */
+	*** */
+
 
       /* Update the LoadedSSchema table */
       for (i = 0; i < MAX_SSCHEMAS &&
@@ -2185,13 +2336,13 @@ void TtaChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName,
       if (i < MAX_SSCHEMAS)
 	{
 	  /* The generic schema is found in the table, modify its name */
-	  /*   ***
-	  if (sSchemaName != NULL)
+	  /* **
+	     if (sSchemaName != NULL)
 	    strncpy (LoadedSSchema[i].StructSchemaName, sSchemaName,
 		     MAX_NAME_LENGTH);
 	  else
 	    LoadedSSchema[i].StructSchemaName[0] = EOS;
-	    *** */
+	  *** */
 	}
 
       /* Update the LoadedPSchema table */
@@ -2201,7 +2352,7 @@ void TtaChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName,
       if (i < MAX_SSCHEMAS)
 	{
 	  /* The generic schema is found in the table, modify its name */
-	  /*   ***
+	  /* ***
 	  if (sSchemaName != NULL)
 	    strncpy (LoadedPSchema[i].PresSchemaName, sSchemaName,
 		     MAX_NAME_LENGTH);

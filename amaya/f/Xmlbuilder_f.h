@@ -6,9 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void XmlElementComplete ( Element el,
-                                 Document doc,
-                                 int *error );
 extern void XmlAttributeComplete ( Attribute attr,
                                    Element el,
                                    Document doc );
@@ -25,6 +22,9 @@ extern void MapXmlAttributeValue ( char *AttrVal,
 extern void MapGenericXmlAttribute ( char *attrName,
                                      AttributeType *attrType,
                                      Document doc );
+extern void XmlElementComplete ( Element el,
+                                 Document doc,
+                                 int *error );
 extern void CreateXmlLinePRule ( Element elText,
                                  Document doc );
 extern void MapGenericXmlElement ( char *XMLName,
@@ -34,9 +34,6 @@ extern void MapGenericXmlElement ( char *XMLName,
 
 #else /* __STDC__ */
 
-extern void XmlElementComplete (/* Element el,
-                                   Document doc,
-                                   int *error */);
 extern void XmlAttributeComplete (/* Attribute attr,
                                      Element el,
                                      Document doc */);
@@ -53,6 +50,9 @@ extern void MapXmlAttributeValue (/* char *AttrVal,
 extern void MapGenericXmlAttribute (/* char *attrName,
                                        AttributeType *attrType,
                                        Document doc */);
+extern void XmlElementComplete (/* Element el,
+                                   Document doc,
+                                   int *error */);
 extern void CreateXmlLinePRule (/* Element elText,
                                    Document doc */);
 extern void MapGenericXmlElement (/* char *XMLName,

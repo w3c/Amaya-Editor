@@ -211,6 +211,14 @@ BOXES
 		Visibility: 0;
 	END;
 
+ EmptyBox: BEGIN
+	Content: Text '[]';
+	Width : Enclosed . Width;
+	Visibility: Creator =;
+	IN Structure_view
+		Visibility: 0;
+	END;
+
 RULES
 
    Document:

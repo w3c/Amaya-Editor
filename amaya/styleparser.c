@@ -3614,6 +3614,27 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	  if (i == 0)
 	    {
 	      /* Store the element type */
+#ifdef XML_GENERIC
+	      if (elType.ElSSchema == NULL)
+		{
+		  /* Search in the list of loaded genereric schemas */
+		  TtaGetXmlElementType (names[i], &elType, NULL, doc);
+		  if (elType.ElSSchema == NULL)
+		    {
+		      char *mappedName, *schemaName;
+		      /* Creation of a new element type in the main schema */
+		      elType.ElSSchema = TtaGetDocumentSSchema (doc);
+		      schemaName = TtaGetSSchemaName(elType.ElSSchema);
+		      if (strcmp (schemaName, "HTML") &&
+			  strcmp (schemaName, "MathML") &&
+			  strcmp (schemaName, "SVG") &&
+			  strcmp (schemaName, "XLink") &&
+			  strcmp (schemaName, "Annot"))
+			TtaAppendXmlElement (names[i], &elType,
+					     &mappedName, doc);
+		    }
+		}
+#endif /* XML_GENERIC */
 	      ctxt->type = elType.ElTypeNum;
 	      ctxt->name[0] = elType.ElTypeNum;
 	      ctxt->names_nb[0] = 0;
