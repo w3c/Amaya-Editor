@@ -39,6 +39,7 @@ static int          OldHeight;
 #include "HTMLpresentation_f.h"
 #include "HTMLimage_f.h"
 #include "MathMLbuilder_f.h"
+#include "Mathedit_f.h"
 #ifdef GRAPHML
 #include "GraphMLbuilder_f.h"
 #endif
@@ -2155,6 +2156,7 @@ NotifyAttribute    *event;
 }
 
 /*----------------------------------------------------------------------
+  The Emphasis button or menu item has been clicked
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SetOnOffEmphasis (Document document, View view)
@@ -2165,10 +2167,26 @@ View                view;
 
 #endif /* __STDC__ */
 {
-  SetCharFontOrPhrase (document, HTML_EL_Emphasis);
+  Element             selectedEl;
+  ElementType         elType;
+  int                 firstSelectedChar, lastSelectedChar;
+
+  TtaGiveFirstSelectedElement (document, &selectedEl, &firstSelectedChar,
+			       &lastSelectedChar);
+  if (selectedEl)
+    {
+    elType = TtaGetElementType (selectedEl);
+    if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
+       /* it's a HTML element */
+       SetCharFontOrPhrase (document, HTML_EL_Emphasis);
+    else if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")))
+       /* it's a MathML element */
+       SetMathCharFont (document, MathML_ATTR_fontstyle);
+    }
 }
 
 /*----------------------------------------------------------------------
+  The Strong button or menu item has been clicked
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SetOnOffStrong (Document document, View view)
@@ -2179,7 +2197,22 @@ View                view;
 
 #endif /* __STDC__ */
 {
-  SetCharFontOrPhrase (document, HTML_EL_Strong);
+  Element             selectedEl;
+  ElementType         elType;
+  int                 firstSelectedChar, lastSelectedChar;
+
+  TtaGiveFirstSelectedElement (document, &selectedEl, &firstSelectedChar,
+			       &lastSelectedChar);
+  if (selectedEl)
+    {
+    elType = TtaGetElementType (selectedEl);
+    if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
+       /* it's a HTML element */
+       SetCharFontOrPhrase (document, HTML_EL_Strong);
+    else if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")))
+       /* it's a MathML element */
+       SetMathCharFont (document, MathML_ATTR_fontweight);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -2213,6 +2246,7 @@ View                view;
 
 
 /*----------------------------------------------------------------------
+  The Code button or menu item has been clicked
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SetOnOffCode (Document document, View view)
@@ -2223,7 +2257,22 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   SetCharFontOrPhrase (document, HTML_EL_Code);
+  Element             selectedEl;
+  ElementType         elType;
+  int                 firstSelectedChar, lastSelectedChar;
+
+  TtaGiveFirstSelectedElement (document, &selectedEl, &firstSelectedChar,
+			       &lastSelectedChar);
+  if (selectedEl)
+    {
+    elType = TtaGetElementType (selectedEl);
+    if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
+       /* it's a HTML element */
+       SetCharFontOrPhrase (document, HTML_EL_Code);
+    else if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")))
+       /* it's a MathML element */
+       SetMathCharFont (document, MathML_ATTR_fontfamily);
+    }
 }
 
 

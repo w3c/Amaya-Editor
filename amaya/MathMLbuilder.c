@@ -588,7 +588,8 @@ Element el;
  
   ret = FALSE;
   elType = TtaGetElementType (el);
-  if (elType.ElTypeNum == MathML_EL_MSPACE ||
+  if (elType.ElTypeNum == MathML_EL_MS ||
+      elType.ElTypeNum == MathML_EL_MSPACE ||
       elType.ElTypeNum == MathML_EL_MROW ||
       elType.ElTypeNum == MathML_EL_MFRAC ||
       elType.ElTypeNum == MathML_EL_MSQRT ||

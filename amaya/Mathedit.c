@@ -1448,6 +1448,71 @@ static void CheckMROW (el, doc)
 }
 
 /*----------------------------------------------------------------------
+ RoundSelection
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void RoundSelection (Element *firstSel, Element *lastSel, int *firstChar, int *lastChar)
+#else /* __STDC__*/
+static void RoundSelection (firstSel, lastSel, firstChar, lastChar)
+     Element *firstSel;
+     Element *lastSel;
+     int *firstChar;
+     int *lastChar;
+#endif /* __STDC__*/
+{
+   ElementType  elType;
+   Element      sibling;
+
+   /* if the selection starts on the first character of a text string and
+      the whole text string is selected, then the selection starts on the
+      parent element of that text string */
+   elType = TtaGetElementType (*firstSel);
+   if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
+      if (*firstChar <= 1)
+	 if (*lastSel != *firstSel || (*firstChar == 0 && *lastChar == 0) ||
+	     *lastChar >= TtaGetElementVolume (*lastSel))
+	    {
+	    sibling = *firstSel;  TtaPreviousSibling (&sibling);
+	    if (!sibling)
+	       /* no sibling before the first selected element */
+	       if (TtaGetParent (*firstSel) != TtaGetParent (*lastSel))
+		  {
+	          *firstSel = TtaGetParent (*firstSel);
+	          *firstChar = 0;
+		  }
+	       else
+		  {
+		  sibling = *lastSel;  TtaNextSibling (&sibling);
+		  if (!sibling)
+		     {
+		     *firstSel = TtaGetParent (*firstSel);
+		     *lastSel = *firstSel;
+		     *firstChar = 0;
+		     *lastChar = 0;
+		     }
+		  }
+	    }
+   
+   /* if the selection ends on the last character of a text string and
+      the whole text string is selected, then the selection ends on the
+      parent element of that text string */
+   elType = TtaGetElementType (*lastSel);
+   if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
+      if (*lastChar == 0 || *lastChar >=  TtaGetElementVolume (*lastSel))
+	 if (*lastSel != *firstSel || *firstChar <= 1)
+	    {
+	    sibling = *lastSel;  TtaNextSibling (&sibling);
+	    if (!sibling)
+	       /* no sibling after the last selected element */
+	       if (TtaGetParent (*firstSel) != TtaGetParent (*lastSel))
+	          {
+	          *lastSel = TtaGetParent (*lastSel);
+		  *lastChar = 0;
+		  }
+	    }
+}
+
+/*----------------------------------------------------------------------
  CreateCharStringElement
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1506,54 +1571,8 @@ void CreateCharStringElement (typeNum, doc)
    TtaSetStructureChecking (0, doc);
    selEl = NULL;
 
-   /* if the selection starts on the first character of a text string and
-      the whole text string is selected, then the selection starts on the
-      parent element of that text string */
-   elType = TtaGetElementType (firstSel);
-   if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
-      if (firstChar <= 1)
-	 if (lastSel != firstSel || (firstChar == 0 && lastChar == 0) ||
-	     lastChar >= TtaGetElementVolume (lastSel))
-	    {
-	    sibling = firstSel;  TtaPreviousSibling (&sibling);
-	    if (!sibling)
-	       /* no sibling before the first selected element */
-	       if (TtaGetParent (firstSel) != TtaGetParent (lastSel))
-		  {
-	          firstSel = TtaGetParent (firstSel);
-	          firstChar = 0;
-		  }
-	       else
-		  {
-		  sibling = lastSel;  TtaNextSibling (&sibling);
-		  if (!sibling)
-		     {
-		     firstSel = TtaGetParent (firstSel);
-		     lastSel = firstSel;
-		     firstChar = 0;
-		     lastChar = 0;
-		     }
-		  }
-	    }
-   
-   /* if the selection ends on the last character of a text string and
-      the whole text string is selected, then the selection ends on the
-      parent element of that text string */
-   elType = TtaGetElementType (lastSel);
-   if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
-      if (lastChar == 0 || lastChar >=  TtaGetElementVolume (lastSel))
-	 if (lastSel != firstSel || firstChar <= 1)
-	    {
-	    sibling = lastSel;  TtaNextSibling (&sibling);
-	    if (!sibling)
-	       /* no sibling after the last selected element */
-	       if (TtaGetParent (firstSel) != TtaGetParent (lastSel))
-	          {
-	          lastSel = TtaGetParent (lastSel);
-		  lastChar = 0;
-		  }
-	    }
-   
+   RoundSelection (&firstSel, &lastSel, &firstChar, &lastChar);
+
    if (firstSel == lastSel && firstChar == 0 && lastChar == 0)
      /* a single element is selected and this element is entirely selected */
      {
@@ -2741,6 +2760,202 @@ void CreateMathEntity (document, view)
      ParseMathString (el, TtaGetParent (el), document);     
      TtaCloseUndoSequence (document);
      }
+}
+
+/*----------------------------------------------------------------------
+   SetElementCharFont
+   associate attribute attrType with value val to element el if it is
+   of type MI, MTEXT, MO,..., or to its descendant of that type.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void SetElementCharFont (Element el, AttributeType attrType, int val, Document doc)
+#else /* __STDC__*/
+static void SetElementCharFont (el, attrType, val, doc)
+     Element el;
+     AttributeType attrType;
+     int val;
+     Document doc;
+#endif /* __STDC__*/
+{
+  ElementType         elType;
+  Attribute           attr, intAttr;
+  AttributeType       intAttrType;
+  Element             child;
+  ThotBool            newAttr;
+
+  elType = TtaGetElementType (el);
+  if (elType.ElTypeNum == MathML_EL_MTEXT ||
+      elType.ElTypeNum == MathML_EL_MI ||
+      elType.ElTypeNum == MathML_EL_MO ||
+      elType.ElTypeNum == MathML_EL_MN ||
+      elType.ElTypeNum == MathML_EL_MS ||
+      elType.ElTypeNum == MathML_EL_MSTYLE)
+     /* the required attribute can be associated with that element */
+     {
+     attr = TtaGetAttribute (el, attrType);
+     if (attr)
+       {
+	 newAttr = FALSE;
+	 TtaRegisterAttributeReplace (attr, el, doc);
+       }
+     else
+       {
+	 attr = TtaNewAttribute (attrType);
+	 TtaAttachAttribute (el, attr, doc);
+	 newAttr = TRUE;
+       }
+     TtaSetAttributeValue (attr, val, el, doc);
+     if (newAttr)
+       {
+	 TtaRegisterAttributeCreate (attr, el, doc);
+	 if (attrType.AttrTypeNum = MathML_ATTR_fontstyle)
+	   /* remove attribute IntFontstyle if any */
+	   {
+	   intAttrType.AttrSSchema = elType.ElSSchema;
+	   intAttrType.AttrTypeNum = MathML_ATTR_IntFontstyle;
+	   intAttr = TtaGetAttribute (el, intAttrType);
+	   if (intAttr)
+	     {
+	     TtaRegisterAttributeDelete (intAttr, el, doc);
+	     TtaRemoveAttribute (el, intAttr, doc);
+	     }
+	   }
+       }
+     }
+  else
+    /* put the required attribute on the descendant elements */
+    {
+      child = TtaGetFirstChild (el);
+      while (child)
+	{
+	  SetElementCharFont (child, attrType, val, doc);
+	  TtaNextSibling (&child);
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
+   SetMathCharFont
+   The user has clicked one of the buttons: Emphasis, Strong, Code
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void SetMathCharFont (Document doc, int attribute)
+#else /* __STDC__*/
+void SetMathCharFont (doc, attribute)
+     Document doc;
+     int attribute;
+#endif /* __STDC__*/
+{
+  Element             firstSel, lastSel, el, next, leaf;
+  ElementType         elType;
+  Attribute           attr;
+  AttributeType       attrType;
+  DisplayMode         dispMode;
+  int                 firstChar, lastChar, i, j, val, oldStructureChecking;
+  ThotBool            emptySel, same, mrowCreated;
+
+  if (!TtaGetDocumentAccessMode (doc))
+     return;
+  TtaGiveFirstSelectedElement (doc, &firstSel, &firstChar, &i);
+  if (firstSel == NULL)
+     /* no selection available */
+     return;
+  if (attribute == MathML_ATTR_fontfamily)
+     /* attribute fontfamily not handled yet */
+     return;
+
+  TtaGiveLastSelectedElement (doc, &lastSel, &j, &lastChar);
+
+  /* check whether the selection is empty (just a caret) or contains some
+     characters/elements */
+  emptySel = TtaIsSelectionEmpty ();
+
+  TtaClearViewSelections ();
+  dispMode = TtaGetDisplayMode (doc);
+  if (dispMode == DisplayImmediately)
+     TtaSetDisplayMode (doc, DeferredDisplay);
+  TtaOpenUndoSequence (doc, firstSel, lastSel, firstChar, lastChar);
+  oldStructureChecking = TtaGetStructureChecking (doc);
+  TtaSetStructureChecking (0, doc);
+  TtaUnselect (doc);
+
+  /* move selection at the level of elements MTEXT, MI, etc. if it starts or
+     ends on character strings */
+  RoundSelection (&firstSel, &lastSel, &firstChar, &lastChar);
+
+  /* if selection starts or ends in the middle of a character string,
+     split the parent MI, MN, MO, MTEXT... */
+  elType = TtaGetElementType (lastSel);
+  if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
+     /* the last selected element is a character string. Split it */
+     {
+     leaf = SplitTextInMathML (doc, lastSel, lastChar+1, &mrowCreated);
+     if (firstSel != lastSel)
+	lastSel = TtaGetParent (lastSel);
+     }
+  elType = TtaGetElementType (firstSel);
+  if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
+     /* the first selected element is a character string. Split it */
+     {
+     same = (firstSel == lastSel);
+     leaf = SplitTextInMathML (doc, firstSel, firstChar, &mrowCreated);
+     if (leaf)
+	{
+	firstSel = TtaGetParent (leaf);
+	if (same)
+	   lastSel = firstSel;
+	}
+     }
+
+  attrType.AttrSSchema = TtaGetSSchema ("MathML", doc);
+  attrType.AttrTypeNum = attribute;
+  attr = TtaGetAttribute (firstSel, attrType);
+  if (attr)
+    val = TtaGetAttributeValue (attr);
+  if (attribute == MathML_ATTR_fontweight)
+    {
+     if (!attr)
+        val = MathML_ATTR_fontweight_VAL_bold_;
+     else
+        if (val == MathML_ATTR_fontweight_VAL_bold_)
+	  val = MathML_ATTR_fontweight_VAL_normal_;
+	else
+	  val = MathML_ATTR_fontweight_VAL_bold_;
+    }
+  else if (attribute == MathML_ATTR_fontstyle)
+    {
+     if (!attr)
+        val = MathML_ATTR_fontstyle_VAL_italic;
+     else
+        if (val == MathML_ATTR_fontstyle_VAL_italic)
+	  val = MathML_ATTR_fontstyle_VAL_normal_;
+        else
+	  val = MathML_ATTR_fontstyle_VAL_italic;
+    }
+
+  /* process all selected element */
+  el = firstSel;
+  while (el)
+    {
+      /* get the element to be processed after the current element: the */
+      /* current element may change during processing */
+      if (el == lastSel)
+	 next = NULL;
+      else
+	 {
+	 next = el;
+	 TtaGiveNextElement (doc, &next, lastSel);
+	 }
+      SetElementCharFont (el, attrType, val, doc);
+      /* process the next element in the selection */
+      el = next;
+    }
+
+  TtaSetStructureChecking ((ThotBool)oldStructureChecking, doc);
+  TtaCloseUndoSequence (doc);
+  TtaSetDisplayMode (doc, dispMode);
+  TtaSelectElement (doc, firstSel);
+  TtaExtendSelection (doc, lastSel, 0);
 }
 
 /*----------------------------------------------------------------------
