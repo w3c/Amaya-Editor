@@ -438,7 +438,7 @@ if test "$with_wx" = "yes" ; then
   fi
 
   # xrc ressources are used
-  WX_LIBRARIES="${WX_LIBRARIES} -l`$WXCONFIG $WXCONFIG_ARGS --basename`_xrc-`wx-config --release`"
+  WX_LIBRARIES="${WX_LIBRARIES} -l`$WXCONFIG $WXCONFIG_ARGS --basename`_xrc-`$WXCONFIG $WXCONFIG_ARGS --release`"
 
   AC_SUBST(WX_LIBRARIES)
   WX_OPTIONS="-D_WX"

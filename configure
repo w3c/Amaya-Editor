@@ -15055,7 +15055,7 @@ echo "$as_me: error: Cannot find wx-config. Please install wxWidgets (http://www
   fi
 
   # xrc ressources are used
-  WX_LIBRARIES="${WX_LIBRARIES} -l`$WXCONFIG $WXCONFIG_ARGS --basename`_xrc-`wx-config --release`"
+  WX_LIBRARIES="${WX_LIBRARIES} -l`$WXCONFIG $WXCONFIG_ARGS --basename`_xrc-`$WXCONFIG $WXCONFIG_ARGS --release`"
 
 
   WX_OPTIONS="-D_WX"
