@@ -1984,79 +1984,79 @@ void CellCreated (NotifyElement * event)
   ----------------------------------------------------------------------*/
 void CellPasted (NotifyElement * event)
 {
-   Element             cell, row;
-   ElementType         elType;
-   Document            doc;
-   AttributeType       rowspanType;
-   Attribute           attr;
-   int                 span, overflow;
-   ThotBool            inMath;
+  Element             cell, row;
+  ElementType         elType;
+  Document            doc;
+  AttributeType       rowspanType;
+  Attribute           attr;
+  int                 span, overflow;
+  ThotBool            inMath;
 
-   cell = event->element;
-   doc = event->document;
-   elType = TtaGetElementType (cell);
-   inMath = TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema ("MathML", doc));
-   row = TtaGetParent (cell);
-   /* regenerate the corresponding ColumnHead except if it's called by
-      undo for reinserting the cells deleted by a "Delete Column"
-      command (only the first reinserted cell has to create a ColumnHead)
-      See function RemoveColumn above */
-   if (event->info == 4)
-     /* undoing the deletion of the last cell in a "delete column"
-	command. Regenerate the corresponding ColumnHead and link the
-	restored cell with that ColumnHead, but do not generate empty
-	cells in other rows */
-     NewCell (cell, doc, TRUE, FALSE, FALSE);
-   else if (event->info == 3)
-     {
-     /* undoing the deletion of any other cell in a "delete column"
-	command. Link the restored cell with the corresponding ColumnHead*/
-       elType = TtaGetElementType (cell);
-       inMath = TtaSameSSchemas (elType.ElSSchema,
-				 TtaGetSSchema ("MathML", doc));
-       LinkCellToColumnHead (cell, CurrentColumn, doc, inMath);
-     }
-   else
-     /* undoing/redoing. Link the cell with ColumnHead elements, but do not
-	generate empty cells in other rows */
-     NewCell (cell, doc, FALSE, FALSE, TRUE);
+  cell = event->element;
+  doc = event->document;
+  elType = TtaGetElementType (cell);
+  inMath = TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema ("MathML", doc));
+  row = TtaGetParent (cell);
+  /* regenerate the corresponding ColumnHead except if it's called by
+     undo for reinserting the cells deleted by a "Delete Column"
+     command (only the first reinserted cell has to create a ColumnHead)
+     See function RemoveColumn above */
+  if (event->info == 4)
+    /* undoing the deletion of the last cell in a "delete column"
+       command. Regenerate the corresponding ColumnHead and link the
+       restored cell with that ColumnHead, but do not generate empty
+       cells in other rows */
+    NewCell (cell, doc, TRUE, FALSE, FALSE);
+  else if (event->info == 3)
+    {
+      /* undoing the deletion of any other cell in a "delete column"
+	 command. Link the restored cell with the corresponding ColumnHead*/
+      elType = TtaGetElementType (cell);
+      inMath = TtaSameSSchemas (elType.ElSSchema,
+				TtaGetSSchema ("MathML", doc));
+      LinkCellToColumnHead (cell, CurrentColumn, doc, inMath);
+    }
+  else
+    /* undoing/redoing. Link the cell with ColumnHead elements, but do not
+       generate empty cells in other rows */
+    NewCell (cell, doc, FALSE, FALSE, TRUE);
 
-   /* update row extensions */
-   rowspanType.AttrSSchema = elType.ElSSchema;
-   if (inMath)
-     rowspanType.AttrTypeNum = MathML_ATTR_rowspan_;
-   else
-     rowspanType.AttrTypeNum = HTML_ATTR_rowspan_;
-   attr = TtaGetAttribute (cell, rowspanType);
-   if (!attr)
-     span = 1;
-   else
-     {
-       span = TtaGetAttributeValue (attr);
-       if (span < 0)
-	 span = 1;
-     }
-   if (span > 1 || span == 0)
-     {
-       overflow = SetRowExt (cell, span, doc, inMath);
-       if (overflow > 0)
-	 /* spanning value is too high. Update it */
-	 {
-	   span -= overflow;
-	   if (span == 1 || span < 0)
-	     {
-	       if (attr)
-		 TtaRemoveAttribute (cell, attr, doc);
-	     }
-	   else if (attr)
-	     TtaSetAttributeValue (attr, span, cell, doc);
-	 }
-     }
-   
-   HandleColAndRowAlignAttributes (row, doc);
-   /* Check attribute NAME or ID in order to make sure that its value */
-   /* is unique in the document */
-   MakeUniqueName (cell, doc);
+  /* update row extensions */
+  rowspanType.AttrSSchema = elType.ElSSchema;
+  if (inMath)
+    rowspanType.AttrTypeNum = MathML_ATTR_rowspan_;
+  else
+    rowspanType.AttrTypeNum = HTML_ATTR_rowspan_;
+  attr = TtaGetAttribute (cell, rowspanType);
+  if (!attr)
+    span = 1;
+  else
+    {
+      span = TtaGetAttributeValue (attr);
+      if (span < 0)
+	span = 1;
+    }
+  if (span > 1 || span == 0)
+    {
+      overflow = SetRowExt (cell, span, doc, inMath);
+      if (overflow > 0)
+	/* spanning value is too high. Update it */
+	{
+	  span -= overflow;
+	  if (span == 1 || span < 0)
+	    {
+	      if (attr)
+		TtaRemoveAttribute (cell, attr, doc);
+	    }
+	  else if (attr)
+	    TtaSetAttributeValue (attr, span, cell, doc);
+	}
+    }
+
+  HandleColAndRowAlignAttributes (row, doc);
+  /* Check attribute NAME or ID in order to make sure that its value */
+  /* is unique in the document */
+  MakeUniqueName (cell, doc);
 }
 
 /*----------------------------------------------------------------------
@@ -3061,11 +3061,22 @@ void ChangeColspan (Element cell, int oldspan, int* newspan, Document doc)
 			  /* update the rowspan attribute to allow undo to
 			     work properly */
 			  if (newRowspan > 1)
-			    TtaSetAttributeValue (attrRowspan, newRowspan,
-						  nextCell, doc);
+			    {
+			      if (attrRowspan)
+				{
+				  TtaRegisterAttributeReplace (attrRowspan,
+							       nextCell, doc);
+				  TtaSetAttributeValue (attrRowspan,newRowspan,
+							nextCell, doc);
+				}
+			    }
 			  else if (newRowspan == 1)
 			    if (attrRowspan)
-			       TtaRemoveAttribute (nextCell, attrRowspan, doc);
+			      {
+				TtaRegisterAttributeDelete (attrRowspan,
+							    nextCell, doc);
+			        TtaRemoveAttribute (nextCell, attrRowspan,doc);
+			      }
 			}
 		      /* merge a cell from that column */
 		      MoveCellContents (nextCell, cell, &previous, doc,inMath);
@@ -3130,7 +3141,8 @@ void ChangeColspan (Element cell, int oldspan, int* newspan, Document doc)
 }
 
 /*----------------------------------------------------------------------
-   ColspanCreated                                          
+   ColspanCreated
+   An attribute colspan has just been created by the user.
   ----------------------------------------------------------------------*/
 void ColspanCreated (NotifyAttribute * event)
 {
@@ -3163,7 +3175,17 @@ void ColspanCreated (NotifyAttribute * event)
     }
   /* for undo operations just restore the col extension */
   if (event->info != 1)
-    ChangeColspan (cell, 1, &span, doc);
+    {
+      /* the creation of the attribute with its value has already been
+	 registered in the history by the Thot editor. We need to cancel that
+	 record and do as if the attribute was created after the registration
+	 of the deletion of cells done by ChangeColspan.
+         That way, when undoing the attribute creation, the deleted cells can
+	 be restored correctly */
+      TtaCancelLastRegisteredOperation (doc);
+      ChangeColspan (cell, 1, &span, doc);
+      TtaRegisterAttributeCreate (attr, cell, doc);
+    }
   overflow = SetColExt (cell, span, doc, inMath, FALSE);
 }
 
@@ -3217,7 +3239,20 @@ void ColspanModified (NotifyAttribute * event)
     {
       /* for undo operations just restore the col extension */
       if (event->info != 1)
-	ChangeColspan (cell, PreviousColspan, &span, doc);
+	{
+	  /* the previous value of the attribute has already been registered
+	     in the history by the Thot editor. We need to cancel that record
+	     and to register the old value of the attribute after the
+	     registration of the creation or deletion of cells done by
+             ChangeColspan. That way, when undoing the attribute modification,
+	     the deletion or creation of cells can be undone correctly */
+          TtaCancelLastRegisteredOperation (doc);
+	  ChangeColspan (cell, PreviousColspan, &span, doc);
+	  TtaSetAttributeValue (attr, PreviousColspan, cell, doc);
+	  TtaRegisterAttributeReplace (attr, cell, doc);
+	  /* now, we can restore the new value */
+	  TtaSetAttributeValue (attr, span, cell, doc);
+	}
       overflow = SetColExt (cell, span, doc, inMath, FALSE);
     }
   if (span < 0 || span == 1)
@@ -3431,11 +3466,22 @@ void ChangeRowspan (Element cell, int oldspan, int* newspan, Document doc)
 			  /* update the colspan attribute to allow undo to
 			     work properly */
 			  if (newColspan > 1)
-			    TtaSetAttributeValue (attrColspan, newColspan,
-						  nextCell, doc);
+			    {
+			      if (attrColspan)
+				{
+				  TtaRegisterAttributeReplace (attrColspan,
+							       nextCell, doc);
+				  TtaSetAttributeValue (attrColspan,newColspan,
+							nextCell, doc);
+				}
+			    }
 			  else if (newColspan == 1)
 			    if (attrColspan)
-			       TtaRemoveAttribute (nextCell, attrColspan, doc);
+			      {
+				TtaRegisterAttributeDelete (attrColspan,
+							    nextCell, doc);
+				TtaRemoveAttribute (nextCell, attrColspan,doc);
+			      }
 			}
 		      /* if this cell extends beyound the limit of the
 			 extension of the cell of interest, fill the holes
@@ -3548,9 +3594,15 @@ void RowspanCreated (NotifyAttribute * event)
   /* for undo operations just restore the row extension */
   if (event->info != 1)
     {
-      /* the creation of the attribute must be registered after the creation
-	 of the empty cells generated by ChangeRowspan.*************/
+      /* the creation of the attribute has already been registered
+	 in the history by the Thot editor. We need to cancel that record
+	 and do as if the attribute was created after the registration of
+         the deletion of cells done by ChangeRowspan.
+         That way, when undoing the attribute creation, the deleted cells can
+	 be restored correctly */
+      TtaCancelLastRegisteredOperation (doc);
       ChangeRowspan (cell, 1, &span, doc);
+      TtaRegisterAttributeCreate (attr, cell, doc);
     }
   SetRowExt (cell, span, doc, inMath);
 }
@@ -3605,9 +3657,20 @@ void RowspanModified (NotifyAttribute * event)
     {
       /* for undo operations just restore the row extension */
       if (event->info != 1)
-	  /* ********************* the old value of the attribute should be registered after the
-	     creation of the empty cells generated by ChangeRowspan. */
-	ChangeRowspan (cell, PreviousRowspan, &span, doc);
+	{
+	  /* the previous value of the attribute has already been registered
+	     in the history by the Thot editor. We need to cancel that record
+	     and to register itthe old value of the attribute after the
+	     registration of the creation or deletion of cells done by
+	     ChangeRowspan. That way, when undoing the attribute modification,
+	     the deletion or creation of cells can be undone correctly */
+          TtaCancelLastRegisteredOperation (doc);
+	  ChangeRowspan (cell, PreviousRowspan, &span, doc);
+	  TtaSetAttributeValue (attr, PreviousRowspan, cell, doc);
+	  TtaRegisterAttributeReplace (attr, cell, doc);
+	  /* now, we can restore the new value */
+	  TtaSetAttributeValue (attr, span, cell, doc);
+	}
       SetRowExt (cell, span, doc, inMath);
     }
   if (span < 0 || span == 1)
