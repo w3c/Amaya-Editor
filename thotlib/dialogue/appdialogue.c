@@ -3700,17 +3700,29 @@ static void FindItemMenu (int frame, int menuID, int itemID, int *menu,
 void SwitchUndo (PtrDocument pDoc, ThotBool on)
 {  
 #ifdef _WX
-  Document document  = IdentDocument(pDoc);
-  int      window_id = TtaGetDocumentWindowId( document, -1 );
-  int      item_id   = WindowTable[window_id].MenuItemUndo;
-  int      action    = FindMenuActionFromMenuItemID(NULL, item_id);
-  
-  if ( action > 0 &&
-       action < MaxMenuAction &&
-       MenuActionList[action].ActionActive[document] != on)
+  if (pDoc == NULL)
     {
-      MenuActionList[action].ActionActive[document] = on;
-      TtaRefreshMenuItemStats( document, NULL, item_id );
+      for (int doc_id = 1; doc_id < MAX_DOCUMENTS; doc_id++)
+	{
+	  pDoc = LoadedDocument[doc_id-1];
+	  if (pDoc)
+	    SwitchUndo(pDoc, on);
+	}
+    }
+  else
+    { 
+      Document document  = IdentDocument(pDoc);
+      int      window_id = TtaGetDocumentWindowId( document, -1 );
+      int      item_id   = WindowTable[window_id].MenuItemUndo;
+      int      action    = FindMenuActionFromMenuItemID(NULL, item_id);
+      
+      if ( action > 0 &&
+	   action < MaxMenuAction &&
+	   MenuActionList[action].ActionActive[document] != on)
+	{
+	  MenuActionList[action].ActionActive[document] = on;
+	  TtaRefreshMenuItemStats( document, NULL, item_id );
+	}
     }
 #endif /* _WX */
 
@@ -3746,17 +3758,29 @@ void SwitchUndo (PtrDocument pDoc, ThotBool on)
 void SwitchRedo (PtrDocument pDoc, ThotBool on)
 {
 #ifdef _WX
-  Document document  = IdentDocument(pDoc);
-  int      window_id = TtaGetDocumentWindowId( document, -1 );
-  int      item_id   = WindowTable[window_id].MenuItemRedo;
-  int      action    = FindMenuActionFromMenuItemID(NULL, item_id);
-  
-  if ( action > 0 &&
-       action < MaxMenuAction &&
-       MenuActionList[action].ActionActive[document] != on)
+  if (pDoc == NULL)
     {
-      MenuActionList[action].ActionActive[document] = on;
-      TtaRefreshMenuItemStats( document, NULL, item_id );
+      for (int doc_id = 1; doc_id < MAX_DOCUMENTS; doc_id++)
+	{
+	  pDoc = LoadedDocument[doc_id-1];
+	  if (pDoc)
+	    SwitchRedo(pDoc, on);
+	}
+    }
+  else
+    {
+      Document document  = IdentDocument(pDoc);
+      int      window_id = TtaGetDocumentWindowId( document, -1 );
+      int      item_id   = WindowTable[window_id].MenuItemRedo;
+      int      action    = FindMenuActionFromMenuItemID(NULL, item_id);
+      
+      if ( action > 0 &&
+	   action < MaxMenuAction &&
+	   MenuActionList[action].ActionActive[document] != on)
+	{
+	  MenuActionList[action].ActionActive[document] = on;
+	  TtaRefreshMenuItemStats( document, NULL, item_id );
+	}
     }
 #endif /* _WX */
 
@@ -3792,17 +3816,29 @@ void SwitchRedo (PtrDocument pDoc, ThotBool on)
 void SwitchPaste (PtrDocument pDoc, ThotBool on)
 {
 #ifdef _WX
-  Document document  = IdentDocument(pDoc);
-  int      window_id = TtaGetDocumentWindowId( document, -1 );
-  int      item_id   = WindowTable[window_id].MenuItemPaste;
-  int      action    = FindMenuActionFromMenuItemID(NULL, item_id);
-  
-  if ( action > 0 &&
-       action < MaxMenuAction &&
-       MenuActionList[action].ActionActive[document] != on)
+  if (pDoc == NULL)
     {
-      MenuActionList[action].ActionActive[document] = on;
-      TtaRefreshMenuItemStats( document, NULL, item_id );
+      for (int doc_id = 1; doc_id < MAX_DOCUMENTS; doc_id++)
+	{
+	  pDoc = LoadedDocument[doc_id-1];
+	  if (pDoc)
+	    SwitchPaste(pDoc, on);
+	}
+    }
+  else
+    {
+      Document document  = IdentDocument(pDoc);
+      int      window_id = TtaGetDocumentWindowId( document, -1 );
+      int      item_id   = WindowTable[window_id].MenuItemPaste;
+      int      action    = FindMenuActionFromMenuItemID(NULL, item_id);
+      
+      if ( action > 0 &&
+	   action < MaxMenuAction &&
+	   MenuActionList[action].ActionActive[document] != on)
+	{
+	  MenuActionList[action].ActionActive[document] = on;
+	  TtaRefreshMenuItemStats( document, NULL, item_id );
+	}
     }
 #endif /* _WX */
 
