@@ -96,7 +96,9 @@ char                c;
 
    reqcont = (AHTReqContext *) HTRequest_context (me->request);
    if (reqcont && reqcont->incremental_cbf)
-      (*reqcont->incremental_cbf) (reqcont, &c, 1, status);
+     (*reqcont->incremental_cbf)
+       (reqcont->docid, 1, reqcont->urlName, reqcont->outputfile,  
+	reqcont->content_type, &c, 1, reqcont->context_icbf);
 
    return status;
 }
@@ -137,7 +139,10 @@ const char         *s;
 	reqcont = (AHTReqContext *) HTRequest_context (me->request);
  
 	if (reqcont && reqcont->incremental_cbf)
-	  (*reqcont->incremental_cbf) (reqcont, s, strlen (s), status);
+	  (*reqcont->incremental_cbf)  
+	    (reqcont->docid, 1, reqcont->urlName, reqcont->outputfile,  
+	     reqcont->content_type, s,
+	   strlen (s), reqcont->context_icbf);
      }
    else 
      status = HT_ERROR;
@@ -181,7 +186,9 @@ int                 l;
    reqcont = (AHTReqContext *) HTRequest_context (me->request);
 
    if (reqcont && reqcont->incremental_cbf)
-      (*reqcont->incremental_cbf) (reqcont, s, l, status);
+     (*reqcont->incremental_cbf)
+     (reqcont->docid, 1, reqcont->urlName, reqcont->outputfile,  
+      reqcont->content_type, s, l, reqcont->context_icbf);
 
    return status;
 }
@@ -317,6 +324,7 @@ BOOL                leave_open;
    me->fp = fp;
    me->leave_open = leave_open;
    me->request = request;
+   me->callback = (void *) NULL;
    return me;
 }
 

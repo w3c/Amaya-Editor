@@ -519,8 +519,6 @@ char      *url;
 
   if (url != NULL)
     {
-      ptr = TtaGetMemory (MAX_LENGTH);
-      documentname = TtaGetMemory (MAX_LENGTH);
       /* check whether the file name exists */
       len = strlen (url) - 1;
       if (IsW3Path)
@@ -530,11 +528,18 @@ char      *url;
       noFile = (url[len] == url_sep);
       if (noFile)
 	url[len] = EOS;
+      ptr = TtaGetMemory (MAX_LENGTH);
+      documentname = TtaGetMemory (MAX_LENGTH);
       TtaExtractName (url, ptr, documentname);
       sprintf (ptr, "%s%s%d%s", TempFileDirectory, DIR_STR, doc, DIR_STR);
       if (!TtaCheckDirectory (ptr))
 	/* directory did not exist */
 	mkdir (ptr, S_IRWXU);
+
+      /* don't include the query string within document name */
+      n = strrchr(documentname, '?');
+      if (n != NULL)
+	*n = EOS;
       /* don't include ':' within document name */
       n = strchr (documentname, ':');
       if (n != NULL)
@@ -817,7 +822,7 @@ const char *inputURL;
 
 /*----------------------------------------------------------------------
    scan
-  	Scan a filename for its consituents
+  	Scan a filename for its constituents
   	-----------------------------------
   
    On entry,

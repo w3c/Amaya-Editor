@@ -261,32 +261,35 @@ void *context;
                 is loaded from the web.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                libWWWImageLoaded (void *ctxt, int status)
+void                libWWWImageLoaded (int doc, int status, char *urlName,
+                                     char *outputfile, char *content_type,
+				       void * context)
 #else  /* __STDC__ */
-void                libWWWImageLoaded (ctxt, status)
-void               *ctxt;
-int                 status;
+void                libWWWImageLoaded (doc, status, urlName, outputfile, 
+				       content_type, context)
+int doc;
+int status;
+char *urlName;
+char *outputfile;
+char *content_type;
+void *context;
 
 #endif /* __STDC__ */
 {
-   Document            doc;
-   AHTReqContext      *context = (AHTReqContext *) ctxt;
+  if (DocumentURLs[doc] != NULL)
+    {
+      /* an image of the document is now loaded */
 
-   doc = context->docid;
-   if (DocumentURLs[doc] != NULL)
-     {
-	/* an image of the document is now loaded */
+      /* update the stop button status */
+      ResetStop (doc);
 
-	/* update the stop button status */
-        ResetStop (doc);
+      /* the image could not be loaded */
+      if (status != 0)
+	return;
 
-	/* the image could not be loaded */
-	if (status != HT_LOADED)
-	   return;
-
-	/* rename the local file of the image */
-        HandleImageLoaded (doc, status, context->urlName,
-	                   context->outputfile, context->context_tcbf);
+      /* rename the local file of the image */
+      HandleImageLoaded (doc, status, urlName,
+			 outputfile, context);
      }
 }
 #endif /* AMAYA_JAVA */

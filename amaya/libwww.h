@@ -64,9 +64,15 @@ typedef int XtInputId;
 
 /* The structure used for requests */
 
-typedef void        TIcbf (void *request_context, const char *data_block, int data_block_size, int request_status);
+typedef void        TIcbf (Document doc, int status, char *urlName, 
+			   char *outputfile, const char *content_type,
+			   const char *data_block, int data_block_size, 
+			   void *context);
 
-typedef void        TTcbf (void *request_context, int request_status);
+typedef void  TTcbf (Document doc, int status, char *urlName, 
+		     char *outputfile, const char *content_type,
+		     void *context);
+
 
 typedef struct _AHTReqContext
   {

@@ -184,6 +184,7 @@ XtInputId          *id;
    if (me->reqStatus == HT_ABORT) {
    /* Has the user stopped the request? */
      me->reqStatus = HT_WAITING;
+     me->mode &= ~AMAYA_ASYNC_SAFE_STOP;
      StopRequest (me->docid);
      return (0);
    }
@@ -216,7 +217,6 @@ XtInputId          *id;
 #ifdef DEBUG_LIBWWW
        fprintf (stderr, "(BF) removing Xtinput %lu !RWE, sock %d (Request has ended)\n", *id, socket);
 #endif
-       ProcessTerminateRequest (me);
 
        if ((me->mode & AMAYA_ASYNC) || (me->mode & AMAYA_IASYNC))
 	 {
@@ -261,8 +261,8 @@ AHTReqContext *me;
   if (me->reqStatus == HT_END)
     {
       if (me->terminate_cbf)
-	(*me->terminate_cbf) ((AHTReqContext *) me,
-			      HT_LOADED);
+	(*me->terminate_cbf) (me->docid, 0, me->urlName, me->outputfile,
+			      me->content_type, me->context_tcbf);
     }
   else if (me->reqStatus == HT_ABORT)
     /* either the application ended or the user pressed the stop 
@@ -278,8 +278,8 @@ AHTReqContext *me;
     {
       /* there was an error */
       if (me->terminate_cbf)
-	(*me->terminate_cbf) ((AHTReqContext *) me,
-			      HT_ERROR);
+	(*me->terminate_cbf) (me->docid, -1, me->urlName, me->outputfile,
+			      me->content_type, me->context_tcbf);
       
       if (me->outputfile && me->outputfile[0] != EOS)
 	{
@@ -287,7 +287,15 @@ AHTReqContext *me;
 	  me->outputfile[0] = EOS;
 	}
     }
-  
+    else if (me->reqStatus == HT_ABORT)
+      {
+      if (me->outputfile && me->outputfile[0] != EOS)
+	{
+	  TtaFileUnlink (me->outputfile);
+	  me->outputfile[0] = EOS;
+	}
+      }
+
 #ifdef _WINDOWS
    /* we erase the context if we're dealing with an asynchronous request */
   if ((me->mode & AMAYA_ASYNC) ||

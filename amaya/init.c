@@ -189,6 +189,17 @@ extern void CreateFormPlugin (Document, View);
 extern void CreateFormJava (Document, View);
 #endif
 
+/* the structure used for the GETHTMLDocument_callback function */
+typedef struct _GETHTMLDocument_context {
+  Document doc;
+  Document baseDoc;
+  boolean ok;
+  boolean history;
+  char *target;
+  char *documentname;
+  char *tempdocument;
+} GETHTMLDocument_context;
+
 
 /*----------------------------------------------------------------------
    IsDocumentLoaded returns the document identification if the        
@@ -575,6 +586,8 @@ View                view;
 
 #endif
 {
+ Document tempdoc;
+
   if (document == 0)
     return;
   else if (document == DocBook)
@@ -1291,6 +1304,62 @@ boolean		    history;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
+void                Reload_callback (int doc, int status, char *urlName,
+                                     char *outputfile, char *content_type,
+				       void * context)
+#else  /* __STDC__ */
+void                Reload_callback (doc, status, urlName, outputfile, 
+				       content_type, context)
+int doc;
+int status;
+char *urlName;
+char *outputfile;
+char *content_type;
+void *context;
+
+#endif
+{
+  Document newdoc;
+  char *pathname;
+  char *tempfile;
+  char               *documentname;
+  char               *my_content_type;
+  Document            res;
+
+
+  documentname = (char *) context;
+
+  newdoc = doc;
+  tempfile = outputfile;
+
+  pathname = TtaGetMemory (MAX_LENGTH);
+  strcpy (pathname, urlName);
+
+  my_content_type = TtaGetMemory (MAX_LENGTH);
+  strcpy (my_content_type, content_type);
+
+  if (status == 0)
+     {
+       TtaSetCursorWatch (0, 0);
+       /* do we need to control the last slash here? */
+       res = LoadHTMLDocument (newdoc, pathname, tempfile, documentname,
+			       content_type, FALSE);
+	W3Loading = 0;		/* loading is complete now */
+	TtaHandlePendingEvents ();
+	/* fetch and display all images referred by the document */
+	if (res != 0)
+	  FetchAndDisplayImages (res, AMAYA_NOCACHE);
+	TtaResetCursor (0, 0);
+     }
+  ResetStop(newdoc);
+  TtaFreeMemory (pathname);
+  TtaFreeMemory (documentname);
+}
+
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
 void                Reload (Document document, View view)
 #else
 void                Reload (document, view)
@@ -1300,7 +1369,6 @@ View                view;
 #endif
 {
    Document            newdoc;
-   Document            res;
    char               *tempfile;
    char               *pathname;
    char               *documentname;
@@ -1345,34 +1413,21 @@ View                view;
      {
        /* load the document from the Web */
 #ifdef AMAYA_JAVA
-       toparse = GetObjectWWW (newdoc, pathname, NULL, tempfile, AMAYA_SYNC | AMAYA_NOCACHE,
+       toparse = GetObjectWWW (newdoc, pathname, NULL, tempfile, 
+			       AMAYA_SYNC | AMAYA_NOCACHE,
 			       NULL, NULL, NULL, NULL, YES, &content_type[0]);
 #else /* AMAYA_JAVA */
-       toparse = GetObjectWWW (newdoc, pathname, NULL, tempfile, AMAYA_SYNC,
-			       NULL, NULL, NULL, NULL, YES, content_type);
+       toparse = GetObjectWWW (newdoc, pathname, NULL, tempfile, 
+			       AMAYA_ASYNC | AMAYA_ASYNC_SAFE_STOP,
+			       NULL, NULL, (void *) Reload_callback, 
+			       (void *) documentname, YES, (char *) content_type);
 #endif /* AMAYA_JAVA */
-	TtaHandlePendingEvents ();
      }
-
-   if (toparse != -1)
-     {
-        TtaSetCursorWatch (0, 0);
-	/* do we need to control the last slash here? */
-	res = LoadHTMLDocument (newdoc, pathname, tempfile, documentname,
-				content_type, FALSE);
-	W3Loading = 0;		/* loading is complete now */
-	TtaHandlePendingEvents ();
-	/* fetch and display all images referred by the document */
-	if (res != 0)
-	  FetchAndDisplayImages (res, AMAYA_NOCACHE);
-	TtaResetCursor (0, 0);
-     }
-   ResetStop(newdoc);
    TtaFreeMemory (tempfile);
    TtaFreeMemory (pathname);
-   TtaFreeMemory (documentname);
+   
+   TtaHandlePendingEvents ();
 }
-
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -1623,16 +1678,143 @@ NotifyDialog       *event;
    return FALSE;
 }
 
+#ifdef __STDC__
+void               GetHTMLDocument_callback (int newdoc, int status, 
+					     char *urlName,
+					     char *outputfile, 
+					     char *content_type,
+					     void * context)
+#else  /* __STDC__ */
+void               GetHTMLDocument_callback (newdoc, status, urlName,
+                                             outputfile, content_type, 
+                                             context)
+int newdoc;
+int status;
+char *urlName;
+char *outputfile;
+char *content_type;
+void *context;
+
+#endif
+{
+   Element             elFound;
+   Document            doc;
+   Document            baseDoc;
+   Document            res;
+   char               *tempfile;
+   char               *target;
+   char               *pathname;
+   char               *documentname;
+   char               *tempdocument;
+   char               *s;
+   int                 i;
+   boolean	       history;
+   boolean             ok;
+   GETHTMLDocument_context *ctx;
+
+   /* restore GETHTMLDocument's context */  
+   ctx = (GETHTMLDocument_context *) context;
+   baseDoc = ctx->baseDoc;
+   doc = ctx->doc;
+   ok = ctx->ok;
+   history = ctx->history;
+   target = ctx->target;
+   documentname = ctx->documentname;
+   tempdocument = ctx->tempdocument;
+   pathname = TtaGetMemory (MAX_LENGTH + 1);
+   strncpy (pathname, urlName, MAX_LENGTH);
+   pathname[MAX_LENGTH] = EOS;
+   tempfile = TtaGetMemory (MAX_LENGTH + 1);
+   strncpy (tempfile, outputfile, MAX_LENGTH);
+   tempfile[MAX_LENGTH] = EOS;
+   
+   if (ok && (IsW3Path (pathname) || TtaFileExist (pathname)))
+     {
+       /* memorize the initial newdoc value in doc because LoadHTMLDocument */
+       /* will opem a new document if newdoc is a modified document */
+       if (status == 0)
+	 {
+	   if (!strcmp (documentname, "noname.html"))
+	     /* keep the real name */
+	     NormalizeURL (pathname, 0, tempdocument, documentname);
+
+	   /* do we need to control the last slash here? */
+	   res = LoadHTMLDocument (newdoc, pathname, tempfile, 
+				   documentname, content_type, history);
+	   W3Loading = 0;		/* loading is complete now */
+	   if (res == 0)
+	     {
+	       /* cannot load the document */
+	       ResetStop(newdoc);
+	       newdoc = 0;
+	       ok = FALSE;
+	     }
+	   else if (newdoc != res)
+	     newdoc = res;
+	   
+	   if (ok)
+	     {
+	       /* fetch and display all images referred by the document */
+	       if (doc == baseDoc)
+		 /* it's not a temporary document */
+		 FetchAndDisplayImages (newdoc, 0);
+	     }
+	 }
+       else
+	 {
+	   if (DocumentURLs[newdoc] == NULL)
+	     {
+	       /* save the document name into the document table */
+	       i = strlen (pathname) + 1;
+	       s = TtaGetMemory (i);
+	       strcpy (s, pathname);
+	       DocumentURLs[newdoc] = s;
+	       TtaSetTextZone (newdoc, 1, 1, s);
+	     }
+	   W3Loading = 0;	/* loading is complete now */
+	 }
+       
+       if (ok)
+	 ResetStop(newdoc);
+     }
+
+   /* select the target if present */
+   if (ok && target[0] != EOS && newdoc != 0)
+     {
+       /* attribute HREF contains the NAME of a target anchor */
+       elFound = SearchNAMEattribute (newdoc, target, NULL);
+       if (elFound != NULL)
+	 {
+	   /* show the target element in all views */
+	   for (i = 1; i < 4; i++)
+	     if (TtaIsViewOpened (newdoc, i))
+	       TtaShowElement (newdoc, i, elFound, 0);
+	 }
+     }
+
+   TtaFreeMemory (target);
+   TtaFreeMemory (documentname);
+   TtaFreeMemory (pathname);
+   TtaFreeMemory (tempfile);
+   TtaFreeMemory (tempdocument);
+   if (ctx)
+     TtaFreeMemory (ctx);
+   if (HelpDocuments[newdoc])
+     TtaSetDocumentAccessMode (newdoc, 0);
+}
 
 /*----------------------------------------------------------------------
   GetHTMLDocument loads the document if it is not loaded yet and    
   calls the parser if the document can be parsed.
-    - documentPath: can be relative or absolute adress.
+    - documentPath: can be relative or absolute address.
     - form_data: the text to be posted.
     - doc: the document which can be removed if not updated.
     - baseDoc: the document which documentPath is relative to.
     - CE_event: CE_FORM_POST for a post request, CE_TRUE for a double click.
     - history: record the URL in the browsing history
+ [ ]  fix the calls to the callback whenever they are no documents or errors
+ [ ]  clean all calls to this function, so that they are also rentrable
+ [ ]  make this function call the callbacks!
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 Document            GetHTMLDocument (const char *documentPath, char *form_data, Document doc, Document baseDoc, ClickEvent CE_event, boolean history)
@@ -1647,8 +1829,7 @@ boolean		    history;
 
 #endif
 {
-   Element             elFound;
-   Document            newdoc, res;
+   Document            newdoc;
    char               *tempfile;
    char               *tempdocument;
    char               *parameters;
@@ -1656,11 +1837,11 @@ boolean		    history;
    char               *pathname;
    char               *documentname;
    char                content_type [NAME_LENGTH];
-   char               *s;
    int                 toparse;
-   int                 i;
    int                 slash;
+   int                 mode;
    boolean             ok;
+   GETHTMLDocument_context *ctx = NULL;
 
    /* Extract parameters if necessary */
 
@@ -1678,6 +1859,7 @@ boolean		    history;
    parameters = TtaGetMemory (MAX_LENGTH);
    tempfile = TtaGetMemory (MAX_LENGTH);
    pathname = TtaGetMemory (MAX_LENGTH);
+
    strcpy (tempdocument, documentPath);
    ExtractParameters (tempdocument, parameters);
    /* Extract the target if necessary */
@@ -1685,20 +1867,20 @@ boolean		    history;
    /* Add the  base content if necessary */
    if (CE_event == CE_TRUE || CE_event == CE_FORM_GET
        || CE_event == CE_FORM_POST || CE_event == CE_MAKEBOOK)
-      NormalizeURL (tempdocument, baseDoc, pathname, documentname);
+     NormalizeURL (tempdocument, baseDoc, pathname, documentname);
    else
-      NormalizeURL (tempdocument, 0, pathname, documentname);
+     NormalizeURL (tempdocument, 0, pathname, documentname);
 
    if (parameters[0] == EOS)
      newdoc = IsDocumentLoaded (pathname);
    else
      {
-	/* we need to ask the server */
-	newdoc = 0;
-	strcat (pathname, "?");
-	strcat (pathname, parameters);
+       /* we need to ask the server */
+       newdoc = 0;
+       strcat (pathname, "?");
+       strcat (pathname, parameters);
      }
-
+   
    if ((CE_event == CE_FORM_POST) || (CE_event == CE_FORM_GET))
      /* special checks for forms */
      {
@@ -1707,16 +1889,17 @@ boolean		    history;
        if (!IsW3Path (pathname))
 	 {
 	   /* the target document doesn't exist */
-	   TtaSetStatus (baseDoc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), pathname);
+	   TtaSetStatus (baseDoc, 1, 
+			 TtaGetMessage (AMAYA, AM_CANNOT_LOAD), pathname);
 	   ok = FALSE; /* do not continue */
 	 }
      }
-
+   
    if (ok && newdoc != 0 && history)
      /* it's just a move in the same document */
      /* record the current position in the history */
      AddDocHistory (newdoc, DocumentURLs[newdoc]);
-
+   
    if (ok && newdoc == 0)
      {
        /* document not loaded yet */
@@ -1724,9 +1907,13 @@ boolean		    history;
 	    || CE_event == CE_FORM_POST || CE_event == CE_MAKEBOOK)
 	   && !IsW3Path (pathname) 
 	   && !TtaFileExist (pathname))
-	 /* the target document doesn't exist */
-	 TtaSetStatus (baseDoc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), pathname);
-       else
+	 {
+	   /* the target document doesn't exist */
+	   TtaSetStatus (baseDoc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
+			 pathname);
+	   ok = FALSE; /* do not continue */
+	 }
+       else    
 	 {
 	   tempfile[0] = EOS;
 	   toparse = 0;
@@ -1782,101 +1969,110 @@ boolean		    history;
 	       /* this document is currently in load */
 	       W3Loading = newdoc;
 	       ActiveTransfer (newdoc);
+	       /* set up the transfer mode */
+	       if (CE_event == CE_FORM_POST)
+		 mode = AMAYA_SYNC | AMAYA_FORM_POST;
+	       else if (CE_event == CE_MAKEBOOK)
+		 mode = AMAYA_SYNC;
+	       else
+#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
+		 mode = AMAYA_ASYNC;
+#else
+	       mode = AMAYA_ASYNC | AMAYA_ASYNC_SAFE_STOP;
+#endif /* AMAYA_JAVA */
+	       /* Create the context for the callback */
+	       ctx = TtaGetMemory (sizeof (GETHTMLDocument_context));
+	       ctx->doc = doc;
+	       ctx->baseDoc = baseDoc;
+	       ctx->ok = ok;
+	       ctx->history = history;
+	       ctx->target = target;
+	       ctx->documentname = documentname;
+	       ctx->tempdocument = tempdocument;
 	       if (IsW3Path (pathname))
 		 {
 		   if (CE_event == CE_FORM_POST)
-		     toparse = GetObjectWWW (newdoc, pathname, form_data, tempfile,
-					     AMAYA_FORM_POST | AMAYA_SYNC,
-					     NULL, NULL, NULL, NULL, YES, content_type);
+		     toparse =  GetObjectWWW (newdoc,
+					     pathname,
+					      form_data, 
+					     tempfile,
+					      mode,
+					      NULL,
+					      NULL, 
+					      (void *) GetHTMLDocument_callback,
+					      (void *) ctx,
+					      YES,
+					      (char *) content_type);
 		   else
 		     {
- 		       if (!strcmp (documentname, "noname.html"))
+		       if (!strcmp (documentname, "noname.html"))
 			 {
 			   slash = strlen (pathname);
 			   if (slash && pathname[slash - 1] != '/')
 			     strcat (pathname, "/");
 			   
-			   toparse = GetObjectWWW (newdoc, pathname, NULL, tempfile, AMAYA_SYNC, NULL, NULL, NULL, NULL, YES, content_type);
+			   toparse = GetObjectWWW (newdoc,
+						   pathname,
+						   NULL, 
+						   tempfile,
+						   mode,
+						   NULL,
+						   NULL,
+						   (void *) GetHTMLDocument_callback, 
+						   (void *) ctx,
+						   YES,
+						   (char *) content_type);
 			   
-			   /* keep the real name */
-			   NormalizeURL (pathname, 0, tempdocument, documentname);
 			 }
 		       else 
-			 toparse = GetObjectWWW (newdoc, pathname, NULL, tempfile, AMAYA_SYNC, NULL, NULL, NULL, NULL, YES, content_type);
+			 toparse = GetObjectWWW (newdoc, 
+						 pathname,
+						 NULL, 
+						 tempfile, 
+						 mode,
+						 NULL, 
+						 NULL,
+						 (void *) GetHTMLDocument_callback, 
+						 (void *) ctx,
+						 YES,
+						 (char *) content_type);
 		     }
 		 }
-	       else
+	       else {
+		 /* wasn't a document off the web, we need to open it */
 		 TtaSetStatus (newdoc, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
-	       TtaHandlePendingEvents ();
-
-	       /* memorize the initial newdoc value in doc because LoadHTMLDocument */
-	       /* will opem a new document if newdoc is a modified document */
-	       if (toparse != -1)
-		 {
-		   /* do we need to control the last slash here? */
-		   res = LoadHTMLDocument (newdoc, pathname, tempfile, documentname, content_type, history);
-		   W3Loading = 0;		/* loading is complete now */
-		   if (res == 0)
-		     {
-		       /* cannot load the document */
-		       ResetStop(newdoc);
-		       newdoc = 0;
-		       ok = FALSE;
-		     }
-		   else if (newdoc != res)
-		     newdoc = res;
-		   
-		   TtaHandlePendingEvents ();
-		   if (ok)
-		     {
-		       /* fetch and display all images referred by the document */
-		       if (doc == baseDoc)
-			 /* it's not a temporary document */
-			 FetchAndDisplayImages (newdoc, 0);
-		     }
-		 }
-	       else
-		 {
-		   if (DocumentURLs[newdoc] == NULL)
-		     {
-		       /* save the document name into the document table */
-		       i = strlen (pathname) + 1;
-		       s = TtaGetMemory (i);
-		       strcpy (s, pathname);
-		       DocumentURLs[newdoc] = s;
-		       TtaSetTextZone (newdoc, 1, 1, s);
-		     }
-		   W3Loading = 0;	/* loading is complete now */
-		 }
-
-	       if (ok)
-		 ResetStop(newdoc);
+		 GetHTMLDocument_callback (newdoc, 1,
+					   pathname,
+					   tempfile, 
+					   NULL,
+					   (void *) ctx);
+		 TtaHandlePendingEvents ();
+	       }
 	     }
 	 }
      }
 
-   /* select the target if present */
-   if (ok && target[0] != EOS && newdoc != 0)
+   /* if the document couldn't be opened because of an error, we invoke
+      the callback anyway, to free the allocated memory */
+   if (ok == FALSE)
      {
-       /* attribute HREF contains the NAME of a target anchor */
-       elFound = SearchNAMEattribute (newdoc, target, NULL);
-       if (elFound != NULL)
-	 {
-	   /* show the target element in all views */
-	   for (i = 1; i < 4; i++)
-	     if (TtaIsViewOpened (newdoc, i))
-	       TtaShowElement (newdoc, i, elFound, 0);
-	 }
+       GetHTMLDocument_callback (newdoc, -1,
+				 pathname,
+				 tempfile, 
+				 NULL,
+				 (void *) ctx);
      }
-   TtaFreeMemory (tempdocument);
-   TtaFreeMemory (target);
-   TtaFreeMemory (documentname);
+
+   /* so if we got here, we need to free the memory */
+
    TtaFreeMemory (parameters);
    TtaFreeMemory (tempfile);
    TtaFreeMemory (pathname);
    if (HelpDocuments[newdoc])
      TtaSetDocumentAccessMode (newdoc, 0);
    return (newdoc);
+
+   TtaHandlePendingEvents ();
 }
 
 
@@ -3075,3 +3271,4 @@ View                view;
    exit(0);
 #  endif /* !_WINDOWS */
 }
+

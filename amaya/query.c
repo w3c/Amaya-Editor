@@ -302,10 +302,9 @@ AHTReqContext      *me;
 		  TtaFreeMemory ((void *) docid_status);
 	       }
 	  }
-
+	/* is this necessary??? */
 	if (HTRequest_outputStream (me->request))
 	  AHTFWriter_FREE (me->request->output_stream);
-
 	HTRequest_delete (me->request);
 
 	if (me->output && me->output != stdout)
@@ -328,6 +327,15 @@ AHTReqContext      *me;
 #     endif /* WWW_XWINDOWS */
 #     endif /* !_WINDOWS */
 
+    if (me->reqStatus == HT_ABORT)
+      {
+      if (me->outputfile && me->outputfile[0] != EOS)
+	{
+	  TtaFileUnlink (me->outputfile);
+	  me->outputfile[0] = EOS;
+	}
+      }
+
 	if ((me->mode & AMAYA_ASYNC) || (me->mode & AMAYA_IASYNC))
 	  /* for the ASYNC mode, free the memory we allocated in GetObjectWWW
 	     or in PutObjectWWW */
@@ -336,8 +344,13 @@ AHTReqContext      *me;
 	       TtaFreeMemory (me->urlName);
             if (me->outputfile)
 	       TtaFreeMemory (me->outputfile);
+	    if (me->content_type)
+	      TtaFreeMemory (me->content_type);
 	  }
    
+	if (me->mode & AMAYA_FORM_POST)
+	  TtaFreeMemory (me->mem_ptr);
+
 	TtaFreeMemory ((void *) me);
 
 	Amaya->open_requests--;
@@ -785,7 +798,6 @@ int                 status;
    }
  
   /* don't remove or Xt will hang up during the PUT */
-
    if (AmayaIsAlive  && ((me->method == METHOD_POST) ||
 			 (me->method == METHOD_PUT)))
      {
@@ -793,11 +805,7 @@ int                 status;
 
      } 
 
-#ifdef _WINDOWS
-   /* Try to add this to AHTEventrg.c */
   ProcessTerminateRequest (me);
-  /* kill the windows request here, of course */
-#endif /* WINDOWS */
 
   return HT_OK;
 }
@@ -1394,6 +1402,33 @@ void                QueryClose ()
    AHTProfile_delete ();
 }
 
+
+/*----------------------------------------------------------------------
+  InvokeGetObjectWWW_callback
+  A simple function to invoke a callback function whenever there's an error
+  in GetObjectWWW
+  ---------------------------------------------------------------------*/
+
+#ifdef _STDC
+void      InvokeGetObjectWWW_callback (int docid, char *urlName, char *outputfile, TTcbf *terminate_cbf, void *context_cbf)
+#else
+void      InvokeGetObjectWWW_callback (docid, urlName, outputfile, terminate_cbf, context_tcbf)
+int docid;
+char *urlName;
+char *outputfile;
+TTcbf *terminate_cbf;
+void *context_tcbf;
+#endif /* _STDC */
+{
+  if (!terminate_cbf)
+    return;
+  
+  (*terminate_cbf) (docid, -1, urlName, outputfile,
+		    NULL, context_tcbf);  
+}
+
+
+
 /*----------------------------------------------------------------------
    GetObjectWWW
    this function requests a resource designated by a URLname into a
@@ -1486,8 +1521,9 @@ char 	     *content_type;
       if (error_html)
 	 /* so we can show the error message */
 	 DocNetworkStatus[docid] |= AMAYA_NET_ERROR;
+      InvokeGetObjectWWW_callback (docid, urlName, outputfile, terminate_cbf,
+				   context_tcbf);
       return HT_ERROR;
-      
    }
 
    /* do we support this protocol? */
@@ -1499,6 +1535,8 @@ char 	     *content_type;
       if (error_html)
 	 /* so we can show the error message */
 	 DocNetworkStatus[docid] |= AMAYA_NET_ERROR;
+      InvokeGetObjectWWW_callback (docid, urlName, outputfile, terminate_cbf,
+				   context_tcbf);
       return HT_ERROR;
    }
 
@@ -1518,7 +1556,8 @@ char 	     *content_type;
       if (error_html)
 	 /* so we can show the error message */
 	 DocNetworkStatus[docid] |= AMAYA_NET_ERROR;
-
+      InvokeGetObjectWWW_callback (docid, urlName, outputfile, terminate_cbf,
+				   context_tcbf);
       return HT_ERROR;
    }
    /* verify if that file name existed */
@@ -1531,15 +1570,17 @@ char 	     *content_type;
      outputfile[0] = EOS;
      /* need an error message here */
      TtaFreeMemory (ref);
-     return (HT_ERROR);
+     InvokeGetObjectWWW_callback (docid, urlName, outputfile, terminate_cbf,
+				   context_tcbf);
+     return HT_ERROR;
    }
    
    /* Specific initializations for POST and GET */
    if (mode & AMAYA_FORM_POST) {
      me->method = METHOD_POST;
      if (postString) {
-       me->mem_ptr = postString;
        me->block_size = strlen (postString);
+       me->mem_ptr = TtaStrdup (postString);
      } else {
        me->mem_ptr = "";
        me->block_size = 0;
@@ -1566,7 +1607,6 @@ char 	     *content_type;
    me->context_icbf = context_icbf;
    me->terminate_cbf = terminate_cbf;
    me->context_tcbf = context_tcbf;
-   me->content_type = content_type;
 
    /* for the async. request modes, we need to have our
       own copy of outputfile and urlname
@@ -1583,6 +1623,8 @@ char 	     *content_type;
       strncpy (tmp, urlName, MAX_LENGTH);
       tmp[MAX_LENGTH] = EOS;
       me->urlName = tmp;
+      me->content_type = TtaGetMemory (MAX_LENGTH + 1);
+      me->content_type[MAX_LENGTH] = EOS;
 #  ifdef _WINDOWS
       HTRequest_setPreemptive (me->request, NO);
    } else {
@@ -1590,10 +1632,11 @@ char 	     *content_type;
      me->urlName = urlName;
      HTRequest_setPreemptive (me->request, YES);
    }
-#  else /* _WINDOWS */
+#  else /* !_WINDOWS */
    } else {
      me->outputfile = outputfile;
      me->urlName = urlName;
+     me->content_type = content_type;
    }
      /***
      Change for taking into account the stop button:
@@ -1622,6 +1665,12 @@ char 	     *content_type;
       status = HTLoadAbsolute (urlName, me->request);
    } else
      status = HTLoadAnchor ((HTAnchor *) me->anchor, me->request);
+   
+   if (status == HT_ERROR && me->reqStatus == HT_NEW)
+{
+  InvokeGetObjectWWW_callback (docid, urlName, outputfile, terminate_cbf,
+			       context_tcbf);
+}
 
 #ifndef _WINDOWS
    if (status == HT_ERROR ||
@@ -1638,7 +1687,7 @@ char 	     *content_type;
        me->output = NULL;
      }
      
-      if (me->reqStatus == HT_ERR) {
+     if (me->reqStatus == HT_ERR) {
 	status = HT_ERROR;
 	/* show an error message on the status bar */
 	DocNetworkStatus[me->docid] |= AMAYA_NET_ERROR;
@@ -1655,7 +1704,6 @@ char 	     *content_type;
 	    AHTReqContext_delete (me);
          }
    }
-
 #else  /* !_WINDOWS */
 
    if (status == HT_ERROR ||
@@ -2015,7 +2063,9 @@ int                 docid;
 		   HTRequest_kill (me->request);
 
 #ifndef _WINDOWS
-		 if ((me->mode & AMAYA_IASYNC) || (me->mode & AMAYA_ASYNC))
+		 if (!(me->mode & AMAYA_ASYNC_SAFE_STOP) 
+		     && ((me->mode & AMAYA_IASYNC) ||
+			 (me->mode & AMAYA_ASYNC)))
 		   {
 		     /* delete the Amaya request context */
 		     AHTReqContext_delete (me);
@@ -2083,7 +2133,9 @@ int                 docid;
 		       HTRequest_kill (me->request);
 
 #ifndef _WINDOWS
-		     if ((me->mode & AMAYA_IASYNC) || (me->mode & AMAYA_ASYNC))
+		     if (!(me->mode & AMAYA_ASYNC_SAFE_STOP) 
+			 && ((me->mode & AMAYA_IASYNC) 
+			     || (me->mode & AMAYA_ASYNC)))
 		       {
 			 AHTReqContext_delete (me);		       
 			 cur = Amaya->reqlist;

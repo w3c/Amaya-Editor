@@ -118,7 +118,10 @@ typedef char        AmayaReadChar ();
 #define AMAYA_NOCACHE	64
 /* don't follow redirections */
 #define AMAYA_NOREDIR	128
-
+#ifndef AMAYA_JAVA
+/* Prevents a stop race condition in ASYNC transfers */
+#define AMAYA_ASYNC_SAFE_STOP  256
+#endif /* ! AMAYA_JAVA */
 /*
  * Flags to indicate the status of the network requests associated
  * to a document.
@@ -247,4 +250,14 @@ THOT_EXPORT LoadedImageDesc *ImageLocal;
 #define SPACE    ' '
 
 #endif /* AMAYA_H */
+
+
+
+
+
+
+
+
+
+
 
