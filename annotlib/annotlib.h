@@ -120,4 +120,32 @@ AnnotMetaDataList AnnotMetaData[DocumentTableLength];
 #define LINK_IMAGE "target.gif"
 #define ANNOT_ANAME "Annotation"
 
+/* RDF Schema entry */
+
+extern List *annot_schema_list;  /* a list of schemas */
+
+typedef struct _RDFResource
+{
+  char *name;
+  List *statements;		/* each item is an RDFStatementP */
+  List *types;			/* each item is an RDFResourceP */
+  List *instances;		/* for Classes, each item is an RDFResourceP */
+#if 0
+  ThotBool isLiteral;		/* mostly a guess */
+#endif
+} RDFResource, *RDFResourceP,
+  RDFClass, RDFClassP,
+  RDFProperty, *RDFPropertyP;
+
+typedef struct _RDFStatement
+{
+  RDFPropertyP predicate;
+#if 0
+  RDFResourceP subject;		/* subject is given by the relations list */
+#endif
+  RDFResourceP object;
+} RDFStatement, *RDFStatementP;
+
+#include "ANNOTschemas_f.h"
+
 #endif /* ANNOTATIONS_H */

@@ -489,6 +489,14 @@ View view;
   int res;
   List *ptr;
   CHAR_T *server;
+  static ThotBool init = FALSE;
+
+  if (!init)
+    {
+      /* @@ unfinished; this is temporary while the code is raw @@ */
+      ANNOT_ReadSchema (doc, "http://www.w3.org/1999/xx/annotation-ns#");
+      init = TRUE;
+    }
 
   /* only HTML documents can be annotated */
   elType.ElSSchema = TtaGetDocumentSSchema (doc);
