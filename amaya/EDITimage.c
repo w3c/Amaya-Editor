@@ -1072,7 +1072,7 @@ View                view;
 {
    ElementType         elType;
 
-   elType.ElSSchema = TtaGetSSchema ("HTML", document);
+   elType.ElSSchema = TtaGetSSchema (TEXT("HTML"), document);
    elType.ElTypeNum = HTML_EL_PICTURE_UNIT;
    TtaCreateElement (elType, document);
 }

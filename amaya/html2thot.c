@@ -7304,7 +7304,7 @@ ThotBool            plainText;
 	  {
 	    /* @@@ we know this is true, but we should try to protect */
 	    isHTML = 1;
-	    DocumentSSchema = TtaGetSSchema ("HTML", doc);
+	    DocumentSSchema = TtaGetSSchema (TEXT("HTML"), doc);
 	    attrType.AttrSSchema = DocumentSSchema;
 	  }
 	else
@@ -7317,7 +7317,7 @@ ThotBool            plainText;
 		/* change the document type */
 		TtaFreeView (doc, 1);
 		doc = TtaNewDocument ("TextFile", documentName);
-		TtaSetPSchema (doc, "TextFileP");
+		TtaSetPSchema (doc, TEXT("TextFileP"));
 		DocumentSSchema = TtaGetDocumentSSchema (doc);
 		isHTML = FALSE;
 	      }
@@ -7334,9 +7334,9 @@ ThotBool            plainText;
 		TtaFreeView (doc, 1);
 		doc = TtaNewDocument ("HTML", documentName);
 		if (TtaGetScreenDepth () > 1)
-		  TtaSetPSchema (doc, "HTMLP");
+		  TtaSetPSchema (doc, TEXT("HTMLP"));
 		else
-		  TtaSetPSchema (doc, "HTMLPBW");
+		  TtaSetPSchema (doc, TEXT("HTMLPBW"));
 		DocumentSSchema = TtaGetDocumentSSchema (doc);
 		isHTML = TRUE;
 	      }

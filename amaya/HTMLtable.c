@@ -474,7 +474,7 @@ Document            doc;
 
   /* store list of colheads */
   elType = TtaGetElementType (table);
-  inMath = !TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema ("HTML", doc));
+  inMath = !TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema (TEXT("HTML"), doc));
   if (inMath)
     {
       elType.ElTypeNum = MathML_EL_MColumn_head;
@@ -919,7 +919,7 @@ ThotBool            genrateColumn;
 #endif
 
   elType = TtaGetElementType (cell);
-  inMath = !TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema ("HTML", doc));
+  inMath = !TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema (TEXT("HTML"), doc));
 
   if (!inMath && elType.ElTypeNum == HTML_EL_Table_cell)
     /* change the cell into a Data_cell */
@@ -1103,7 +1103,7 @@ Document            doc;
       return;
    /* seach the maximum value of attribute rowspan for the deleted row */
    elType = TtaGetElementType (row);
-   inMath = !TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema ("HTML", doc));
+   inMath = !TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema (TEXT("HTML"), doc));
    if (!inMath)
      {
        attrType.AttrSSchema = elType.ElSSchema;
@@ -1164,7 +1164,7 @@ NotifyElement      *event;
    if (rowgroup == NULL)
      return;
    elType = TtaGetElementType (rowgroup);
-   inMath = !TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema ("HTML", event->document));
+   inMath = !TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema (TEXT("HTML"), event->document));
       if (inMath)
 	elType.ElTypeNum = MathML_EL_MTABLE;
       else
@@ -1198,7 +1198,7 @@ NotifyElement      *event;
   /* seach the maximum value of attribute rowspan for the deleted cell and */
   /* all its following cells */
   elType = TtaGetElementType (cell);
-  inMath = !TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema ("HTML", event->document));
+  inMath = !TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema (TEXT("HTML"), event->document));
 
   /* get previous or next cell */
   /* get current column */
@@ -1412,7 +1412,7 @@ NotifyElement      *event;
   span = CurrentSpan;
   CurrentSpan = 0;
   elType = TtaGetElementType (event->element);
-  inMath = !TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema ("HTML", event->document));
+  inMath = !TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema (TEXT("HTML"), event->document));
   removed = RemoveColumn (CurrentColumn, doc, TRUE, inMath);
   if (removed)
     span--;
@@ -1532,7 +1532,7 @@ NotifyElement      *event;
   row = event->element;
   doc = event->document;
   elType = TtaGetElementType (row);
-  inMath = !TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema ("HTML", event->document));
+  inMath = !TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema (TEXT("HTML"), event->document));
   if (inMath)
     elType.ElTypeNum = MathML_EL_MTABLE;
   else
@@ -1578,7 +1578,7 @@ NotifyElement      *event;
   row = event->element;
   doc = event->document;
   elType = TtaGetElementType (row);
-  inMath = !TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema ("HTML", event->document));
+  inMath = !TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema (TEXT("HTML"), event->document));
   if (inMath)
     elType.ElTypeNum = MathML_EL_MTABLE;
   else

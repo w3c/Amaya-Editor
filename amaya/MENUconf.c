@@ -2656,10 +2656,10 @@ char* env_var;
   using the format "x y w h"
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void SetEnvGeom (char* view_name)
+static void SetEnvGeom (CHAR_T* view_name)
 #else
 static void SetEnvGeom (view_name)
-char* view_name
+CHAR_T* view_name
 #endif /* _STDC_ */
 {
   int view;

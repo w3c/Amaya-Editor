@@ -1430,7 +1430,7 @@ strNode            *TN;
   if (elType.ElSSchema == NULL)
     {
       /*specifique a MathML */
-      elType.ElSSchema = TtaGetSSchema ("MathML", TransDoc);
+      elType.ElSSchema = TtaGetSSchema (TEXT("MathML"), TransDoc);
     }
 
   NS->Idf = idfCounter++;

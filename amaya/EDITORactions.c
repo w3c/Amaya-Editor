@@ -693,7 +693,7 @@ Document            document;
    if (HTMLelementAllowed (document))
      {
      TtaSetDisplayMode (document, SuspendDisplay);
-     elType.ElSSchema = TtaGetSSchema ("HTML", document);
+     elType.ElSSchema = TtaGetSSchema (TEXT("HTML"), document);
      elType.ElTypeNum = typeNum;
      TtaCreateElement (elType, document);
      TtaSetDisplayMode (document, DisplayImmediately);
@@ -963,7 +963,7 @@ View                view;
    if (!HTMLelementAllowed (document))
       return;
 
-   elType.ElSSchema = TtaGetSSchema ("HTML", document);
+   elType.ElSSchema = TtaGetSSchema (TEXT("HTML"), document);
    if (elType.ElSSchema)
      {
        /* check the selection */
@@ -1377,7 +1377,7 @@ View                view;
   if (el != NULL)
     {
       elType = TtaGetElementType (el);
-      HTMLSSchema = TtaGetSSchema ("HTML", document);
+      HTMLSSchema = TtaGetSSchema (TEXT("HTML"), document);
       if (elType.ElSSchema == HTMLSSchema &&
 	  elType.ElTypeNum == HTML_EL_Data_cell)
 	  cell = el;
@@ -2091,7 +2091,7 @@ View                view;
    if (HTMLelementAllowed (document))
      {
        TtaSetDisplayMode (document, SuspendDisplay);
-       elType.ElSSchema = TtaGetSSchema ("HTML", document);
+       elType.ElSSchema = TtaGetSSchema (TEXT("HTML"), document);
        elType.ElTypeNum = HTML_EL_Object;
        TtaCreateElement (elType, document);
 

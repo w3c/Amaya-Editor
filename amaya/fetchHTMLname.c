@@ -383,7 +383,7 @@ Document            doc;
 #endif
 {
   ElementType     elType;
-  char*           ptr; 
+  CHAR_T*         ptr; 
   char            c;
   int             i;
   int             entry;
@@ -399,7 +399,7 @@ Document            doc;
   else
     {
       ptr = TtaGetSSchemaName (*schema);
-      isHTML = !strcmp (ptr, "HTML");
+      isHTML = !ustrcmp (ptr, TEXT("HTML"));
     }
 
   i = 0;
@@ -439,9 +439,9 @@ Document            doc;
 	elType.ElSSchema = *schema;
 
 #ifndef STANDALONE
-	if (!ptr || !strcmp (ptr, "MathML"))
+	if (!ptr || !ustrcmp (ptr, TEXT("MathML")))
 	  MapXMLElementType (MATH_TYPE, gi, &elType, &ptr, &c, doc);
-	if (elType.ElTypeNum == 0 && (!ptr || !strcmp (ptr, "GraphML")))
+	if (elType.ElTypeNum == 0 && (!ptr || !ustrcmp (ptr, TEXT("GraphML"))))
 	  MapXMLElementType (GRAPH_TYPE, gi, &elType, &ptr, &c, doc);
 #endif
 	if (elType.ElTypeNum == 0)
@@ -500,7 +500,7 @@ Document            doc;
       if (!strcasecmp (HTMLGIMappingTable[i].htmlGI, gi))
       {
 	if (doc != 0)
-        elType->ElSSchema = TtaGetSSchema ("HTML", doc);
+        elType->ElSSchema = TtaGetSSchema (TEXT("HTML"), doc);
 	elType->ElTypeNum = HTMLGIMappingTable[i].ThotType;
 	return;
       }
@@ -590,7 +590,7 @@ Document       doc;
 	{
 	  attrType->AttrTypeNum = tableEntry->ThotAttribute;
 	  if (schema == NULL && doc != 0)
-	    attrType->AttrSSchema = TtaGetSSchema ("HTML", doc);
+	    attrType->AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
 	  else	    
 	    attrType->AttrSSchema = schema;
 	}

@@ -343,8 +343,8 @@ STRING          localName;
   if (css != NULL)
     {
       css->doc = doc;
-      css->localName = TtaStrdup (localName);
-      css->url = TtaStrdup (url);
+      css->localName = TtaWCSdup (localName);
+      css->url = TtaWCSdup (url);
       css->category = category;
 
       /* that CSS is only used by the document docRef */
@@ -700,7 +700,7 @@ CSSmedia    media;
       if ( pInfo->PiSchemas == NULL || import)
 	{
 	  /* load the resulting file in memory */
-	  res = fopen (tempfile, "r");
+	  res = ufopen (tempfile, TEXT("r"));
 	  if (res == NULL)
 	    {
 	      TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);

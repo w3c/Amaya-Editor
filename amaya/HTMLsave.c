@@ -687,13 +687,13 @@ Document     doc;
 
    useMathML = FALSE;
    useGraphML = FALSE;
-   if (TtaGetSSchema ("MathML", doc) != NULL)
+   if (TtaGetSSchema (TEXT("MathML"), doc) != NULL)
       useMathML = TRUE;
-   if (TtaGetSSchema ("GraphML", doc) != NULL)
+   if (TtaGetSSchema (TEXT("GraphML"), doc) != NULL)
       useGraphML = TRUE;
 
    root = TtaGetMainRoot (doc);
-   attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
+   attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
    attrType.AttrTypeNum = HTML_ATTR_Namespaces;
    attr = TtaGetAttribute (root, attrType);
    if (!useMathML && !useGraphML && attr)

@@ -103,9 +103,9 @@ Document	   doc;
 {
   SSchema	MathMLSSchema;
 
-   MathMLSSchema = TtaGetSSchema ("MathML", doc);
+   MathMLSSchema = TtaGetSSchema (TEXT("MathML"), doc);
    if (MathMLSSchema == NULL)
-      MathMLSSchema = TtaNewNature(TtaGetDocumentSSchema(doc), "MathML", "MathMLP");
+      MathMLSSchema = TtaNewNature(TtaGetDocumentSSchema(doc), TEXT("MathML"), TEXT("MathMLP"));
    return (MathMLSSchema);
 }
 
@@ -122,9 +122,9 @@ Document	   doc;
 {
   SSchema	GraphMLSSchema;
 
-  GraphMLSSchema = TtaGetSSchema ("GraphML", doc);
+  GraphMLSSchema = TtaGetSSchema (TEXT("GraphML"), doc);
   if (GraphMLSSchema == NULL)
-    GraphMLSSchema = TtaNewNature(TtaGetDocumentSSchema(doc), "GraphML", "GraphMLP");
+    GraphMLSSchema = TtaNewNature(TtaGetDocumentSSchema(doc), TEXT("GraphML"), TEXT("GraphMLP"));
   return (GraphMLSSchema);
 }
 

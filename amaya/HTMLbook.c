@@ -403,7 +403,7 @@ Document            document;
        WithToC = FALSE;
        IgnoreCSS = FALSE;
        PrintURL = TRUE;
-       TtaSetPrintSchema ("");
+       TtaSetPrintSchema (TEXT(""));
        /* no manual feed */
        ManualFeed = PP_OFF;
        TtaSetPrintParameter (PP_ManualFeed, ManualFeed);
@@ -445,9 +445,9 @@ Document            doc;
 	  properly */
        SetInternalLinks (DocPrint);
        if (PageSize == PP_A4)
-	 TtaSetPrintSchema ("HTMLPLP");
+	 TtaSetPrintSchema (TEXT("HTMLPLP"));
        else
-	 TtaSetPrintSchema ("HTMLPLPUS");
+	 TtaSetPrintSchema (TEXT("HTMLPLPUS"));
        ustrcat (viewsToPrint, TEXT("Links_view "));
      }
    else
@@ -455,16 +455,16 @@ Document            doc;
        if (PageSize == PP_A4)
 	 {
 	   if (textFile)
-	     TtaSetPrintSchema ("TextFilePP");
+	     TtaSetPrintSchema (TEXT("TextFilePP"));
 	   else
-	     TtaSetPrintSchema ("HTMLPP");
+	     TtaSetPrintSchema (TEXT("HTMLPP"));
 	 }
        else
 	 {
 	   if (textFile)
-	     TtaSetPrintSchema ("TextFilePPUS");
+	     TtaSetPrintSchema (TEXT("TextFilePPUS"));
 	   else
-	     TtaSetPrintSchema ("HTMLPPUS");
+	     TtaSetPrintSchema (TEXT("HTMLPPUS"));
 	 }    
      }
    /* post or remove the PrintURL attribute */
@@ -1077,7 +1077,7 @@ IncludeCtxt *prev;
 
   /* look for anchors with the attribute rel within the element  el */
   attr = NULL;
-  attrType.AttrSSchema = TtaGetSSchema ("HTML", document);
+  attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), document);
   elType.ElSSchema = attrType.AttrSSchema;
   elType.ElTypeNum = HTML_EL_Anchor;
 

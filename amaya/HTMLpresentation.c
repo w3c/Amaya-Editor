@@ -357,7 +357,7 @@ Element             elem;
    else
 #endif
       {
-	attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
+	attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
 	attrType.AttrTypeNum = HTML_ATTR_Style_;
       }
    styleAttr = TtaGetAttribute (elem, attrType);
@@ -429,7 +429,7 @@ NotifyPresentation *event;
   presRule = event->pRule;
   elType = TtaGetElementType (el);
   ret = FALSE;
-  HTMLschema = TtaGetSSchema ("HTML", doc);
+  HTMLschema = TtaGetSSchema (TEXT("HTML"), doc);
 
   /* if it's a background rule on element BODY, move it to element HTML */
   /* if it's a rule on element HTML and it's not a background rule, move

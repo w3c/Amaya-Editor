@@ -274,7 +274,7 @@ Document	    doc;
   Language            lang;
 
   /* check if element is selected */
-  attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
+  attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
   attrType.AttrTypeNum = HTML_ATTR_Selected;
   attr = TtaGetAttribute (option, attrType);
   if (attr && TtaGetAttributeValue (attr) == HTML_ATTR_Selected_VAL_Yes_)
@@ -368,7 +368,7 @@ Document	   doc;
    Attribute           attr, def;
    AttributeType       attrType;
 
-   attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
+   attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
    attrType.AttrTypeNum = HTML_ATTR_DefaultSelected;
    def = TtaGetAttribute (option, attrType);
    attrType.AttrTypeNum = HTML_ATTR_Selected;
@@ -419,7 +419,7 @@ Document	   doc;
    ThotBool            multipleSelects, defaultSelected;
 
   /* reset according to the default attribute */
-  attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
+  attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
   attrType.AttrTypeNum = HTML_ATTR_Multiple;
   attr = TtaGetAttribute (menu, attrType);
   if (attr && TtaGetAttributeValue (attr) == HTML_ATTR_Multiple_VAL_Yes_)
@@ -1270,7 +1270,7 @@ Element             el;
 #ifdef _WINDOWS  
    opDoc = doc;
 #endif /* _WINDOWS */
-   htmlSch = TtaGetSSchema ("HTML", doc);
+   htmlSch = TtaGetSSchema (TEXT("HTML"), doc);
    /* search the enclosing option element */
    do
      {

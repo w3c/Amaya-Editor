@@ -628,7 +628,7 @@ int                 construct;
 	{
 	  /* get the MathML schema for this document or associate it to the
 	     document if it is not associated yet */
-	  mathSchema = TtaNewNature (docSchema, "MathML", "MathMLP");
+	  mathSchema = TtaNewNature (docSchema, TEXT("MathML"), TEXT("MathMLP"));
 	  if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0 &&
 	      elType.ElTypeNum != HTML_EL_Math)
 	    /* the current selection is in an HTML element, but it's not
@@ -718,7 +718,7 @@ int                 construct;
 	      insertSibling = TRUE;
 	      ok = TRUE;
 	      /* try to create a Math element at the current position */
-	      elType.ElSSchema = TtaGetSSchema ("HTML", doc);
+	      elType.ElSSchema = TtaGetSSchema (TEXT("HTML"), doc);
 	      elType.ElTypeNum = HTML_EL_Math;
               if (emptySel)
 		/* selection is empty */

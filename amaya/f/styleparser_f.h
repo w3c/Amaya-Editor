@@ -7,6 +7,7 @@
 #ifdef __STDC__
 
 extern char* SkipBlanksAndComments ( char* ptr );
+extern CHAR_T* SkipWCBlanksAndComments (CHAR_T* ptr);
 extern char* SkipProperty ( char* ptr );
 extern void ParseCSSBackgroundImageCallback ( Document doc,
                                               Element element,
@@ -59,6 +60,7 @@ extern char ReadCSSRules ( Document docRef,
 #else /* __STDC__ */
 
 extern char* SkipBlanksAndComments (/* char* ptr */);
+extern CHAR_T* SkipWCBlanksAndComments (/* CHAR_T* ptr */);
 extern char* SkipProperty (/* char* ptr */);
 extern void ParseCSSBackgroundImageCallback (/* Document doc,
                                                 Element element,

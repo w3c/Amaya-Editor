@@ -148,6 +148,30 @@ char*        ptr;
 }
 
 /*----------------------------------------------------------------------
+   SkipWCBlanksAndComments:                                                  
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+CHAR_T*        SkipWCBlanksAndComments (CHAR_T* ptr)
+#else
+CHAR_T*        SkipWCBlanksAndComments (ptr)
+CHAR_T*        ptr;
+#endif
+{
+  ptr = TtaSkipWCBlanks (ptr);
+  while (ptr[0] == TEXT('/') && ptr[1] == TEXT('*'))
+    {
+      /* look for the end of the comment */
+      ptr = &ptr[2];
+      while (ptr[0] != WC_EOS && (ptr[0] != TEXT('*') || ptr[1] != TEXT('/')))
+	ptr++;
+      if (ptr[0] != WC_EOS)
+	ptr = &ptr[2];
+      ptr = TtaSkipWCBlanks (ptr);
+    }
+  return (ptr);
+}
+
+/*----------------------------------------------------------------------
    SkipQuotedString:                                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -2864,31 +2888,31 @@ char*               styleString;
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char*        ParseCSSBackgroundImage (Element element, PSchema tsch,
-				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
+static CHAR_T*      ParseCSSBackgroundImage (Element element, PSchema tsch,
+                    PresentationContext context, CHAR_T* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static char*        ParseCSSBackgroundImage (element, tsch, context, cssRule, css, isHTML)
+static CHAR_T*      ParseCSSBackgroundImage (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
-STRING              cssRule;
+CHAR_T*             cssRule;
 CSSInfoPtr          css;
 ThotBool            isHTML;
 #endif
 {
-  Element               el;
-  GenericContext        gblock;
-  PresentationContextBlock  *sblock;
+  Element                    el;
+  GenericContext             gblock;
+  PresentationContextBlock*  sblock;
   BackgroundImageCallbackPtr callblock;
-  PresentationValue     image, value;
-  char*                 url;
-  STRING                bg_image;
-  char                  saved;
-  char*                 base;
-  CHAR_T                tempname[MAX_LENGTH];
-  CHAR_T                imgname[MAX_LENGTH];
-  unsigned int          savedtype = 0;
-  ThotBool              moved;
+  PresentationValue          image, value;
+  CHAR_T*                    url;
+  STRING                     bg_image;
+  CHAR_T                     saved;
+  CHAR_T*                    base;
+  CHAR_T                     tempname[MAX_LENGTH];
+  CHAR_T                     imgname[MAX_LENGTH];
+  unsigned int               savedtype = 0;
+  ThotBool                   moved;
 
   /* default element for FetchImage */
   el = TtaGetMainRoot (context->doc);
@@ -2908,15 +2932,15 @@ ThotBool            isHTML;
     el = element;
 
   url = NULL;
-  cssRule = SkipBlanksAndComments (cssRule);
-  if (!strncasecmp (cssRule, "url", 3))
+  cssRule = SkipWCBlanksAndComments (cssRule);
+  if (!ustrncasecmp (cssRule, TEXT("url"), 3))
     {  
       cssRule += 3;
-      cssRule = SkipBlanksAndComments (cssRule);
+      cssRule = SkipWCBlanksAndComments (cssRule);
       if (*cssRule == '(')
 	{
 	  cssRule++;
-	  cssRule = SkipBlanksAndComments (cssRule);
+	  cssRule = SkipWCBlanksAndComments (cssRule);
 	  /*** Caution: Strings can either be written with double quotes or
 	    with single quotes. Only double quotes are handled here.
 	    Escaped quotes are not handled. See function SkipQuotedString */
@@ -2924,7 +2948,7 @@ ThotBool            isHTML;
 	    {
 	      cssRule++;
 	      base = cssRule;
-	      while (*cssRule != EOS && *cssRule != '"')
+	      while (*cssRule != WC_EOS && *cssRule != TEXT('"'))
 		cssRule++;
 	    }
 	  else
@@ -2934,8 +2958,8 @@ ThotBool            isHTML;
 		cssRule++;
 	    }
 	  saved = *cssRule;
-	  *cssRule = EOS;
-	  url = TtaStrdup (base);
+	  *cssRule = WC_EOS;
+	  url = TtaWCSdup (base);
 	  *cssRule = saved;
 	  if (saved == '"')
 	    /* we need to skip two characters */
@@ -2985,12 +3009,10 @@ ThotBool            isHTML;
 		    {
 		      NormalizeURL (url, 0, tempname, imgname, css->url);
 		      /* fetch and display background image of element */
-		      FetchImage (context->doc, el, tempname, AMAYA_LOAD_IMAGE,
-				  ParseCSSBackgroundImageCallback, callblock);
+		      FetchImage (context->doc, el, tempname, AMAYA_LOAD_IMAGE, ParseCSSBackgroundImageCallback, callblock);
 		    }
 		  else
-		    FetchImage (context->doc, el, url, AMAYA_LOAD_IMAGE,
-				ParseCSSBackgroundImageCallback, callblock);
+		    FetchImage (context->doc, el, url, AMAYA_LOAD_IMAGE, ParseCSSBackgroundImageCallback, callblock);
 		}
 	    }
 
@@ -3682,7 +3704,7 @@ ThotBool            destroy;
 
    /*  A rule applying to BODY is really meant to address HTML */
    elType = TtaGetElementType (el);
-   isHTML = (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0);
+   isHTML = (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0);
    /* create the context of the Specific presentation driver */
    context = TtaGetSpecificStyleContext (doc);
    if (context == NULL)
@@ -3716,15 +3738,15 @@ CSSInfoPtr      css;
   ElementType         elType;
   PSchema             tsch;
   AttributeType       attrType;
-  char                sel[MAX_ANCESTORS * 50];
-  char                *deb, *cur;
-  char*               structName;
-  char*               names[MAX_ANCESTORS];
-  char*               ids[MAX_ANCESTORS];
-  char*               classes[MAX_ANCESTORS];
-  char*               pseudoclasses[MAX_ANCESTORS];
-  char*               attrs[MAX_ANCESTORS];
-  char*               attrvals[MAX_ANCESTORS];
+  CHAR_T              sel[MAX_ANCESTORS * 50];
+  CHAR_T              *deb, *cur;
+  CHAR_T*             structName;
+  CHAR_T*             names[MAX_ANCESTORS];
+  CHAR_T*             ids[MAX_ANCESTORS];
+  CHAR_T*             classes[MAX_ANCESTORS];
+  CHAR_T*             pseudoclasses[MAX_ANCESTORS];
+  CHAR_T*             attrs[MAX_ANCESTORS];
+  CHAR_T*             attrvals[MAX_ANCESTORS];
   int                 i, j, k, max, maxAttr;
   ThotBool            isHTML;
 
@@ -3979,7 +4001,7 @@ CSSInfoPtr      css;
   /* Get the schema name of the main element */
   if (ctxt->schema == NULL)
     ctxt->schema = TtaGetDocumentSSchema (doc);
-  isHTML = (strcmp(TtaGetSSchemaName (ctxt->schema), "HTML") == 0);
+  isHTML = (ustrcmp (TtaGetSSchemaName (ctxt->schema), TEXT("HTML")) == 0);
   tsch = GetPExtension (doc, ctxt->schema, css);
   structName = TtaGetSSchemaName (ctxt->schema);
   if (cssRule)

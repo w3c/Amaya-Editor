@@ -153,7 +153,7 @@ ThotBool ExtendSelectGraphMLElement(event)
    ancestor = TtaGetCommonAncestor (firstSel, event->element);
    if (ancestor == NULL)
       return TRUE;	/* Don't let Thot perform normal operation */
-   graphSSchema = TtaGetSSchema ("GraphML", event->document);
+   graphSSchema = TtaGetSSchema (TEXT("GraphML"), event->document);
    ancestType = TtaGetElementType (ancestor);
    if (ancestType.ElSSchema != graphSSchema)
       /* common ancestor is not a GraphML element */
@@ -289,7 +289,7 @@ static void UpdatePointsAttribute (el, doc, minX, minY, maxX, maxY)
   int			nbPoints, point, x, y, posX, posY;
   int                   mainView;
 
-  mainView = TtaGetViewFromName (doc, "Formatted_view");
+  mainView = TtaGetViewFromName (doc, TEXT("Formatted_view"));
   child = TtaGetFirstChild (el);
   if (child != NULL)
     do
@@ -653,7 +653,7 @@ ThotBool   GraphicsPRuleChange (event)
   doc = event->document;
   presRule = event->pRule;
  
-  mainView = TtaGetViewFromName (doc, "Formatted_view");
+  mainView = TtaGetViewFromName (doc, TEXT("Formatted_view"));
   elType = TtaGetElementType (el);
   if (elType.ElSSchema != GetGraphMLSSchema (doc))
     return (ret); /* let Thot perform normal operation */
