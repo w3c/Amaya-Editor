@@ -2317,14 +2317,24 @@ void InitFloats (PtrBox pBlock, PtrLine pLine, PtrBox *floatL, PtrBox *floatR)
 }
 
 /*----------------------------------------------------------------------
-  ChechBlockHeight updates the block of lines pBlock to take into
+  UpdateBlockWithFloat updates the block of lines pBlock to take into
   account floating boxes.
+  Updates the minimum and maximum widths of the block when the parameter
+  updateWidth is TRUE.
+  Returns the updated height.
   ----------------------------------------------------------------------*/
-void ChechBlockHeight (PtrBox pBlock, ThotBool yAbs, int *height)
+static void UpdateBlockWithFloat (PtrBox pBlock, ThotBool xAbs, ThotBool yAbs,
+				  ThotBool updateWidth, int *height)
 {
   PtrFloat            pfloat;
-  int                 y;
-  
+  int                 y, x, x1, x2;
+
+  if (xAbs)
+    x = pBlock->BxXOrg;
+  else
+    x = 0;
+  x += pBlock->BxLMargin + pBlock->BxLBorder + pBlock->BxLPadding;
+  x1 = x2 = 0;
   if (yAbs)
     y = pBlock->BxYOrg;
   else
@@ -2333,16 +2343,31 @@ void ChechBlockHeight (PtrBox pBlock, ThotBool yAbs, int *height)
   pfloat = pBlock->BxLeftFloat;
   while (pfloat && pfloat->FlBox)
     {
+      if (pfloat->FlBox->BxXOrg + pfloat->FlBox->BxWidth - x > x1)
+	/* float change the minimum width of the block */
+	x1 = pfloat->FlBox->BxXOrg + pfloat->FlBox->BxWidth - x;
       if (pfloat->FlBox->BxYOrg + pfloat->FlBox->BxHeight - y > *height)
+	/* float change the height of the block */
 	*height = pfloat->FlBox->BxYOrg + pfloat->FlBox->BxHeight - y;
       pfloat = pfloat->FlNext;
     }
   pfloat = pBlock->BxRightFloat;
   while (pfloat && pfloat->FlBox)
     {
+      if (pBlock->BxW - pfloat->FlBox->BxXOrg - x > x2)
+	/* float change the minimum width of the block */
+	x2 = pBlock->BxW - pfloat->FlBox->BxXOrg - x;
       if (pfloat->FlBox->BxYOrg + pfloat->FlBox->BxHeight - y > *height)
+	/* float change the height of the block */
 	*height = pfloat->FlBox->BxYOrg + pfloat->FlBox->BxHeight - y;
       pfloat = pfloat->FlNext;
+    }
+  if (updateWidth)
+    {
+      /* update min and max widths */
+      x1 += x2;
+      pBlock->BxMinWidth += x1;
+      pBlock->BxMaxWidth += x1;
     }
 }
 
@@ -3070,7 +3095,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   /* now add margins, borders and paddings to min and max widths */
   pBox->BxMinWidth += left + right;
   pBox->BxMaxWidth += left + right;
-  ChechBlockHeight (pBox, yAbs, height);
+  UpdateBlockWithFloat (pBox, xAbs, yAbs, TRUE, height);
   *height = *height + spacing;
 }
 
@@ -3952,7 +3977,7 @@ void EncloseInLine (PtrBox pBox, int frame, PtrAbstractBox pAb)
 	}
       else
 	h = pParentBox->BxH;
-      ChechBlockHeight (pParentBox, TRUE, &h);
+      UpdateBlockWithFloat (pParentBox, TRUE, TRUE, FALSE, &h);
       /* update the block height */
       if (pParentBox->BxContentHeight)
 	ChangeDefaultHeight (pParentBox, pParentBox, h, frame);
