@@ -178,10 +178,10 @@ char              **file;
   returns TRUE if path points to an HTML resource.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             IsHTMLName (char *path)
+boolean             IsHTMLName (const char *path)
 #else  /* __STDC__ */
 boolean             IsHTMLName (path)
-char               *path;
+const char         *path;
 #endif /* __STDC__ */
 {
    char                temppath[MAX_LENGTH];
@@ -235,10 +235,10 @@ char               *path;
   returns TRUE if path points to an image resource.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             IsImageName (char *path)
+boolean             IsImageName (const char *path)
 #else  /* __STDC__ */
 boolean             IsImageName (path)
-char               *path;
+const char         *path;
 #endif /* __STDC__ */
 {
    char                temppath[MAX_LENGTH];
@@ -271,10 +271,10 @@ char               *path;
   IsTextName                                                         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             IsTextName (char *path)
+boolean             IsTextName (const char *path)
 #else  /* __STDC__ */
 boolean             IsTextName (path)
-char               *path;
+const char         *path;
 
 #endif /* __STDC__ */
 {
@@ -333,10 +333,10 @@ char               *path;
   returns TRUE if path is in fact an http URL.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             IsHTTPPath (char *path)
+boolean             IsHTTPPath (const char *path)
 #else  /* __STDC__ */
 boolean             IsHTTPPath (path)
-char               *path;
+const char         *path;
 #endif /* __STDC__ */
 {
    if (!path)
@@ -352,10 +352,10 @@ char               *path;
   returns TRUE if url has a concatenated query string.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             IsWithParameters (char *url)
+boolean             IsWithParameters (const char *url)
 #else  /* __STDC__ */
 boolean             IsWithParameters (url)
-char               *url;
+const char         *url;
 #endif /* __STDC__ */
 {
    int                 i;
@@ -377,10 +377,10 @@ char               *url;
   returns TRUE if path is in fact a URL.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             IsW3Path (char *path)
+boolean             IsW3Path (const char *path)
 #else  /* __STDC__ */
 boolean             IsW3Path (path)
-char               *path;
+const char               *path;
 #endif /* __STDC__ */
 {
    if ((strncmp (path, "http:", 5)) && (strncmp (path, "ftp:", 4)) &&
@@ -396,10 +396,10 @@ char               *path;
   returns true if the url protocol is supported by Amaya.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             IsValidProtocol (char *url)
+boolean             IsValidProtocol (const char *url)
 #else  /* __STDC__ */
 boolean             IsValidProtocol (url)
-char               *url;
+const char         *url;
 #endif /* __STDC__ */
 {
    if (!strncmp (url, "http:", 5))
@@ -431,7 +431,7 @@ Document            doc;
   ElementType         elType;
   AttributeType       attrType;
   Attribute           attr;
-  char                used_sep;
+  char                used_sep = URL_SEP;
   char               *used_str;
   char               *ptr, *basename;
   int                 length;
@@ -673,14 +673,15 @@ char               *docName;
   IsSameHost                                                         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             IsSameHost (char *url1, char *url2)
+boolean             IsSameHost (const char *url1, const char *url2)
 #else  /* __STDC__ */
 boolean             IsSameHost (url1, url2)
-char               *path;
+const char         *url1;
+const char         *url2;
 #endif /* __STDC__ */
 {
-   char               *basename_ptr1, *basename_ptr2;
-   boolean             result;
+   char            *basename_ptr1, *basename_ptr2;
+   boolean          result;
 
    basename_ptr1 = AmayaParseUrl (url1, "", AMAYA_PARSE_ACCESS | AMAYA_PARSE_HOST | AMAYA_PARSE_PUNCTUATION);
    basename_ptr2 = AmayaParseUrl (url2, "", AMAYA_PARSE_ACCESS | AMAYA_PARSE_HOST | AMAYA_PARSE_PUNCTUATION);
@@ -701,10 +702,10 @@ char               *path;
   returns TRUE if path points to a file ending with a suffix.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             HasKnownFileSuffix (char *path)
+boolean             HasKnownFileSuffix (const char *path)
 #else  /* __STDC__ */
 boolean             HasKnownFileSuffix (path)
-char               *path;
+const char         *path;
 #endif /* __STDC__ */
 {
    char            *root;
@@ -771,11 +772,11 @@ char               *path;
   chars.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void ChopURL (char *outputURL, char *inputURL)
+void ChopURL (char *outputURL, const char *inputURL)
 #else
 void ChopURL (outputURL, inputURL)
-char *outputURL;
-char *inputURL;
+char       *outputURL;
+const char *inputURL;
 #endif
 
 {
@@ -907,10 +908,10 @@ HTURI               *parts;
   	returns		A pointer to a malloc'd string which MUST BE FREED
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char          *AmayaParseUrl (char *aName, char *relatedName, int wanted)
+char          *AmayaParseUrl (const char *aName, char *relatedName, int wanted)
 #else  /* __STDC__ */
 char          *AmayaParseUrl (aName, relatedName, wanted)
-char          *aName;
+const char    *aName;
 char          *relatedName;
 int            wanted;
 
@@ -1382,7 +1383,7 @@ char            *relatedName;
   char      *return_value;
   char       result[MAX_LENGTH];
   char          *p;
-  char          *q = relatedName;
+  char          *q;
   char          *after_access;
   char          *last_slash = NULL;
   int            slashes, levels, len;

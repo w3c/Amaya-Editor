@@ -92,6 +92,7 @@ Document            doc;
    char		       *attrVal;
 
    cellWidth = 0;
+   leaf = NULL;
    elType = TtaGetElementType (cell);
    attrType.AttrSSchema = elType.ElSSchema;
    attrType.AttrTypeNum = HTML_ATTR_colspan;
@@ -270,10 +271,11 @@ Document            doc;
 		       totalfixedwidth;
    char                name[50];
    Document            refdoc;
-
 #ifndef STANDALONE
    DisplayMode         dispMode;
 
+   volnew = 0;
+   volemptycol = 0;
    dispMode = TtaGetDisplayMode (doc);
    if (dispMode == DisplayImmediately)
      TtaSetDisplayMode (doc, DeferredDisplay);
@@ -1626,6 +1628,8 @@ Document            doc;
    char                name[20];
    int                 PreviousStuctureChecking;
 
+   firstcolhead = NULL;
+   PreviousStuctureChecking = 0;
    if (table != NULL)
      {
 	/* what are the children of element table? */

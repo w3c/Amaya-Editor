@@ -540,10 +540,8 @@ boolean             Maximum;
    view indique la view concernee (uniquement pour les       
    compteurs de page).                                     
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 int                 CounterVal (int counterNum, PtrSSchema pSS, PtrPSchema pSchP, PtrElement pElNum, int view)
-
 #else  /* __STDC__ */
 int                 CounterVal (counterNum, pSS, pSchP, pElNum, view)
 int                 counterNum;
@@ -551,7 +549,6 @@ PtrSSchema          pSS;
 PtrPSchema          pSchP;
 PtrElement          pElNum;
 int                 view;
-
 #endif /* __STDC__ */
 
 {
@@ -574,6 +571,7 @@ int                 view;
 				   depend pas d'un attribut. */
    value = 0;
    pstop = TRUE;
+   Nincr = 0;
    /* Traitement de la partie initialisation du compteur */
    initattr = InitCounterByAttribute (&valueinitattr, pCo1, pElNum, pSS);
 

@@ -32,7 +32,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern int          TtaGetMessageTable (char *, int);
+extern int          TtaGetMessageTable (const char *, int);
 extern char        *TtaGetMessage (int, int);
 extern void         TtaDisplaySimpleMessage (int, int, int);
 extern void         TtaDisplaySimpleMessageString (int, int, int, char *);

@@ -30,11 +30,11 @@
 #define PSuffix ".so"
 #endif /* _WINDOWS */
 
-static char  ls_unixFiles[MAX_NAME * NAME_LENGTH];
+#define NAME_LENGTH_	100
+static char  ls_unixFiles[MAX_NAME * NAME_LENGTH_];
 static int   ls_fileNbr;
 
 PluginInfo* pluginTable [100];
-
 int   pluginCounter = 0;
 
 extern int              currentExtraHandler;
@@ -55,7 +55,7 @@ void TtaBrowsePluginDirectory ()
 #endif /* __STDC__ */
 {
    struct        stat;
-   char          word[4 * NAME_LENGTH];
+   char          word[4 * NAME_LENGTH_];
    int           ls_currentfile;
    int           res ;
    boolean       stop;

@@ -104,7 +104,7 @@ HTStream           *me;
 const char         *s;
 #endif /* __STDC__ */
 {
-   int                 status;
+   int                 status = 0;
    AHTReqContext      *reqcont;
 
 #ifdef JOSE
@@ -122,7 +122,7 @@ const char         *s;
 
    if (reqcont && reqcont->incremental_cbf)
       (*reqcont->incremental_cbf) (reqcont, s, strlen (s), status);
-   return status;
+   return (status);
 }
 
 

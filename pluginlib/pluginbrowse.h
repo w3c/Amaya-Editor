@@ -24,7 +24,6 @@
 #include "npapi.h"
 #include "npupp.h"
 
-#define NAME_LENGTH	100
 #define MAX_NAME	 80
 #define SELECTOR_NB_ITEMS 5
 

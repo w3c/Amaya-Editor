@@ -49,8 +49,8 @@ int                 imagetype;
 #endif /* __STDC__ */
 {
   PtrTextBuffer       pBuffer;
-  PictInfo           *image;
-  char               *ptr;
+  PictInfo           *image = NULL;
+  char               *ptr = NULL;
   int                 picPresent;
 
   if (imagetype == XBM_FORMAT || imagetype == XPM_FORMAT)

@@ -32,8 +32,6 @@ extern void GetPictureHandlersList ( int *count,
                                      char *buffer );
 extern void LittleXBigEndian ( unsigned char *b,
                                long n );
-extern int TtaSetMainThotWindowBackgroundImage ( ThotWindow w,
-                                                 char *imageFile );
 
 #else /* __STDC__ */
 
@@ -63,8 +61,6 @@ extern void GetPictureHandlersList (/* int *count,
                                        char *buffer */);
 extern void LittleXBigEndian (/* unsigned char *b,
                                  long n */);
-extern int TtaSetMainThotWindowBackgroundImage (/* ThotWindow w,
-                                                   char *imageFile */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

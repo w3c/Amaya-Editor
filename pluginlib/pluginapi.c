@@ -20,7 +20,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <dlfcn.h>
-
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"
@@ -29,17 +28,14 @@
 #include "frame.h"
 #include "interface.h"
 #include "view.h"
-
 #include "npapi.h"
 #include "npupp.h"
 #include "pluginbrowse.h"
 
 #define MAX_LENGTH 512
-
 #define THOT_EXPORT extern
 
 /* How are Network accesses provided ? */
-
 #ifdef AMAYA_JAVA
 #include "content.h"
 #include "libjava.h"
@@ -60,7 +56,7 @@ extern PictureHandler   PictureHandlerTable[MAX_PICT_FORMATS];
 
 static NPMIMEType       pluginMimeType;
 static NPStream*        progressStream;
-static boolean          streamOpened = FALSE ;
+static boolean          streamOpened = FALSE;
 
 #ifdef _WINDOWS
 FARPROC ptr_NPP_GetMIMEDescription;
@@ -90,7 +86,9 @@ NPNetscapeFuncs* amayaFunctionsTable;
 /*----------------------------------------------------------------------
    Functions Supplied by the Amaya side                                  
   ----------------------------------------------------------------------*/
-
+#include "AHTURLTools_f.h"
+#include "init_f.h"
+#include "query_f.h"
 /*----------------------------------------------------------------------
   ParseMIMEType: parses the Mime type of the plugin in order to identify
                  the files which may be needed by it.
@@ -109,7 +107,7 @@ const char* pluginMimeType;
 {
    int  index     = 0;
    int  suffixNdx = 0;
-   int  ndx     ;
+   int  ndx;
    int  endOfSuffixes;
    char token [800];
    char suffixes [800];
@@ -327,15 +325,13 @@ int   status;
     AHTReqContext* context = (AHTReqContext*) ctxt;
     struct stat    sbuf;
     static FILE*   fptr = NULL;
-    static char*   streamBuf = NULL;
     static char*   file;
     static long    offset = 0;
     char*          buffer;
-    char*          buf1;
     NPP            instance;
     int            count;
     int            ready_to_read;
-    int            stype;
+    uint16         stype;
     int            ret;
 
     /* manage status: checking errors */
@@ -345,19 +341,20 @@ int   status;
 
     if (!streamOpened) {    
        file                       = strdup (context->outputfile);
-       fptr                       = fopen (file, "rb") ;
+       fptr                       = fopen (file, "rb");
        progressStream             = (NPStream*) malloc (sizeof (NPStream));
        progressStream->url        = strdup (file);
        progressStream->pdata      = instance->pdata;
        progressStream->ndata      = NULL;
        progressStream->notifyData = NULL;
-       ret = (*(pluginTable [currentExtraHandler]->pluginFunctionsTable->newstream)) (instance,
-										      pluginTable [currentExtraHandler]->pluginMimeType,
-										      progressStream, FALSE, &stype); 
+       ret = (*(pluginTable [currentExtraHandler]->pluginFunctionsTable->newstream))
+	 (instance,
+	  pluginTable [currentExtraHandler]->pluginMimeType,
+	  progressStream, FALSE, &stype); 
        streamOpened = TRUE;    
     }
 
-    stat (file, &sbuf) ;
+    stat (file, &sbuf);
     progressStream->end          = sbuf.st_size;
     progressStream->lastmodified = sbuf.st_mtime;
     
@@ -398,12 +395,12 @@ int          status;
 {
 #   ifndef AMAYA_JAVA
     AHTReqContext      *context = (AHTReqContext *) ctxt;
-    char* file;
-    struct stat sbuf;
-    NPStream*   stream;
-    NPP  instance;
-    int stype;
-    int ret;
+    char*               file;
+    struct stat         sbuf;
+    NPStream*           stream;
+    NPP                 instance;
+    uint16              stype;
+    int                 ret;
 
     if (status == HT_LOADED) {
        file = strdup (context->outputfile);
@@ -420,11 +417,12 @@ int          status;
        stream->end          = sbuf.st_size;
        stream->lastmodified = sbuf.st_mtime; 
        
-       ret = (*(pluginTable [currentExtraHandler]->pluginFunctionsTable->newstream)) (instance,
-										      pluginTable [currentExtraHandler]->pluginMimeType,
-										      stream, 
-										      FALSE, 
-										      &stype); 
+       ret = (*(pluginTable [currentExtraHandler]->pluginFunctionsTable->newstream))
+	 (instance,
+	  pluginTable [currentExtraHandler]->pluginMimeType,
+	  stream, 
+	  FALSE, 
+	  &stype); 
        Ap_Normal ((NPP) (instance), stream, file); 
     }
 #   endif /* AMAYA_JAVA */
@@ -459,7 +457,7 @@ uint32 size;
 #   ifdef PLUGIN_DEBUG
     printf ("***** Ap_MemFlush *****\n"); 
 #   endif
-    return malloc (size);
+    return ((uint32)malloc (size));
 }
 
 /*----------------------------------------------------------------------
@@ -513,7 +511,7 @@ NPError   reason;
        return NPERR_INVALID_INSTANCE_ERROR;
 
     if (stream->url)
-       free (stream->url);
+       free ((char *)stream->url);
 
     if (stream->pdata)
        free (stream->pdata);
@@ -568,13 +566,13 @@ void Ap_URLNotify (NPP instance, const char* url, NPReason reason, void* notifyD
 #else  /* __STDC__ */
 void Ap_URLNotify (instance, url, reason, notifyData)
 NPP         instance; 
-const char* url; 
+const char *url; 
 NPReason    reason; 
 void*       notifyData;
 #endif /* __STDC__ */
 {
 #   ifdef PLUGIN_DEBUG
-    printf ("*** Ap_URLNotify ***\n") ;
+    printf ("*** Ap_URLNotify ***\n");
 #   endif
 }
 
@@ -586,58 +584,64 @@ NPError Ap_GetURL (NPP instance, const char* url, const char* target)
 #else  /* __STDC__ */
 NPError Ap_GetURL (instance, url, target)
 NPP         instance;
-const char* url;
-const char* target;
+const char *url;
+const char *target;
 #endif /* __STDC__ */
 {
-    int         result;
-    int         ret;
-    char        tempfile [200]; /* MAX_LENGTH */
-    uint16      stype;
-    NPStream*   stream;
-    struct stat sbuf;
+  int         result;
+  char        tempfile [500];
+  char        tempurl [500];
 
 #   ifdef PLUGIN_DEBUG
-    printf ("***** Ap_GetURL *****\n"); 
+  printf ("***** Ap_GetURL *****\n"); 
 #   endif
-    if (IsValidProtocol (url)) {
-
-       if (target) { /* pass the stream to AMAYA */
+  if (IsValidProtocol (url))
+    {
+      if (target)
+	{
+	  /* pass the stream to AMAYA */
 #         ifdef PLUGIN_DEBUG
           printf ("AM_geturl: Passing the stream to AMAYA\n");
 #         endif
           GetHTMLDocument (url, NULL, 0, 0, DC_FALSE);
-       } else { /* pass the stream to the plug-in */
-#             ifdef PLUGIN_DEBUG
-	      printf ("AM_geturl: Passing stream to the plug-in\n");
-#             endif
-              result = GetObjectWWW (1, url, NULL, tempfile, AMAYA_IASYNC, 
-                                     (void*) Ap_GetURLNotifyProgressCallback, (void*) instance, 
-                                     (void*) Ap_GetURLNotifyProgressCallback, (void*) instance, FALSE) ;
-       }
+	}
+      else
+	{
+	  /* pass the stream to the plug-in */
+#         ifdef PLUGIN_DEBUG
+	  printf ("AM_geturl: Passing stream to the plug-in\n");
+#         endif
+	  strcpy (tempurl, url);
+	  result = GetObjectWWW (1, tempurl, NULL, tempfile, AMAYA_IASYNC, 
+				 (void*) Ap_GetURLNotifyProgressCallback,
+				 (void*) instance, 
+				 (void*) Ap_GetURLNotifyProgressCallback,
+				 (void*) instance, FALSE);
+	}
     }
-#   ifdef PLUGIN_DEBUG
-    else /* java? */
-         printf ("AM_geturl: Passing the stream to Java Virtual Machine\n");
-#   endif
-    return NPERR_NO_ERROR;
+# ifdef PLUGIN_DEBUG
+  else
+    /* java? */
+    printf ("AM_geturl: Passing the stream to Java Virtual Machine\n");
+# endif
+  return NPERR_NO_ERROR;
 }
 
 /*----------------------------------------------------------------------
   Ap_GetURLNotify
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-NPError Ap_GetURLNotify (NPP instance, const char* url, const char* target, void* notifyData)
+NPError Ap_GetURLNotify (NPP instance, const char* url, const char *target, void* notifyData)
 #else  /* !__STDC__ */
 NPError Ap_GetURLNotify (instance, url, target, notifyData)
 NPP         instance; 
-const char* url; 
-const char* target; 
-void*       notifyData;
+const char *url; 
+const char *target; 
+void       *notifyData;
 #endif /* __STDC__ */
 {
 #   ifdef PLUGIN_DEBUG
-    printf ("*** Ap_GetURLNotify ***\n") ;
+    printf ("*** Ap_GetURLNotify ***\n");
 #   endif
     Ap_GetURL (instance, url, target);
     Ap_URLNotify (instance, url, NPRES_DONE, notifyData);
@@ -648,9 +652,13 @@ void*       notifyData;
   Ap_NewStream
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-NPError Ap_NewStream (NPP instance, NPMIMEType type, const char* window, NPStream** stream_ptr)
+NPError    Ap_NewStream (NPP instance, NPMIMEType type, const char *window, NPStream **stream_ptr)
 #else  /* __STDC__ */
-NPError Ap_NewStream (NPP instance, NPMIMEType type, const char* window, NPStream** stream_ptr)
+NPError    Ap_NewStream (instance, type, window, stream_ptr)
+NPP        instance;
+NPMIMEType type;
+const char *window;
+NPStream  **stream_ptr;
 #endif /* __STDC__ */
 {
 #ifdef PLUGIN_DEBUG
@@ -684,38 +692,49 @@ const char* buf;
 NPBool      file;
 #endif /* __STDC__ */
 {
+  int         count;
+  char*       bufToPost = NULL;
+  char*       fileToPost;
+  char        tempurl[500];
+  char        tempbuf[500];
+  FILE*       fPtr;
+  struct stat sBuff;
+
 #   ifdef PLUGIN_DEBUG
-    printf ("***** Ap_PostURL *****\n");
+  printf ("***** Ap_PostURL *****\n");
 #   endif
-    if (file) { /* Posting data from a file */
-       int         count;
-       char*       bufToPost ;
-       char*       fileToPost;
-       FILE*       fPtr;
-       struct stat sBuff ;
-       
-       if (!strncasecmp (buf, "file://", 7))
-	  fileToPost = &buf[7];
-       else
-	   fileToPost = buf;
-       
-       stat (fileToPost, &sBuff) ;
-       
-       if ((fPtr = fopen (fileToPost, "rb")) == NULL) {
+  strcpy (tempurl, url);
+  strcpy (tempbuf, buf);
+  if (file)
+    {
+      /* Posting data from a file */
+      if (!strncasecmp (tempbuf, "file://", 7))
+	fileToPost = &tempbuf[7];
+      else
+	fileToPost = tempbuf;
+      
+      stat (fileToPost, &sBuff);      
+      if ((fPtr = fopen (fileToPost, "rb")) == NULL)
+	{
 	  printf ("error: file %s does not exist\n", fileToPost);
-	  return NPERR_FILE_NOT_FOUND;
-       } else {
-	     count = fread (bufToPost, sizeof (char), sBuff.st_size, fPtr);
-	     if (count != sBuff.st_size) {
-		printf ("error occured while reading file: %s\n", fileToPost);
-		return NPERR_GENERIC_ERROR;
-	     }
-	     GetObjectWWW (1, url, bufToPost, NULL, AMAYA_ASYNC, NULL, NULL, NULL, NULL, 0) ;
-       }
-    } else      /* Posting data from memory */
-	 GetObjectWWW (1, url, buf, NULL, AMAYA_ASYNC, NULL, NULL, NULL, NULL, 0) ;
-    
-   return NPERR_NO_ERROR;
+	  return (NPERR_FILE_NOT_FOUND);
+	}
+      else
+	{
+	  count = fread (bufToPost, sizeof (char), sBuff.st_size, fPtr);
+	  if (count != sBuff.st_size)
+	    {
+	      printf ("error occured while reading file: %s\n", fileToPost);
+	      return (NPERR_GENERIC_ERROR);
+	    }
+	  GetObjectWWW (1, tempurl, bufToPost, NULL, AMAYA_ASYNC, NULL, NULL, NULL, NULL, 0);
+	}
+    }
+  else
+    /* Posting data from memory */
+    GetObjectWWW (1, tempurl, tempbuf, NULL, AMAYA_ASYNC, NULL, NULL, NULL, NULL, 0);
+  
+   return (NPERR_NO_ERROR);
 }
 
 /*----------------------------------------------------------------------
@@ -734,12 +753,11 @@ NPBool      file;
 void*       notifyData;
 #endif /* __STDC__ */
 {
-    printf ("*** Ap_PostURLNotify ***\n") ;
+    printf ("*** Ap_PostURLNotify ***\n");
 
     Ap_PostURL (instance, url, target, len, buf, file); 
     Ap_URLNotify (instance, url, NPRES_DONE, notifyData);
-
-    return NPERR_NO_ERROR;
+    return (NPERR_NO_ERROR);
 }
 
 /*----------------------------------------------------------------------
@@ -753,10 +771,8 @@ NPStream*    stream;
 NPByteRange* rangeList;
 #endif /* __STDC__ */
 {
-    /*FILE        *fptr;*/
-
     FILE*        fptr;
-    char*        buffer;
+    char*        buffer = NULL;
     int          count;
     long         offset;
     NPByteRange* currentRangeList = rangeList;
@@ -766,19 +782,21 @@ NPByteRange* rangeList;
 #   endif
     fptr = fopen (stream->url, "rb");
    
-    while (currentRangeList) {
-          if (currentRangeList->offset < 0)
-             offset = stream->end - currentRangeList->length ;
-          else
-              offset = currentRangeList->offset;
-
-          fseek (fptr, offset, SEEK_SET);
-	  buffer = (char*) malloc (currentRangeList->length);
-	  count = fread (buffer, sizeof (char), currentRangeList->length, fptr);                
-    }
-    free (buffer);
+    while (currentRangeList)
+      {
+	if (currentRangeList->offset < 0)
+	  offset = stream->end - currentRangeList->length;
+	else
+	  offset = currentRangeList->offset;
+	
+	fseek (fptr, offset, SEEK_SET);
+	buffer = (char*) malloc (currentRangeList->length);
+	count = fread (buffer, sizeof (char), currentRangeList->length, fptr);                
+      }
+    if (buffer)
+      free (buffer);
     fclose (fptr);
-    return NPERR_NO_ERROR;
+    return (NPERR_NO_ERROR);
 }
 
 /*----------------------------------------------------------------------
@@ -1080,7 +1098,6 @@ int       type;
     Element       param;
     AttributeType attrTypeN, attrTypeV;
     Attribute     attrN, attrV;
-    char*         attrValue;
     int           length;
     NPStream*     stream;
     NPWindow*     pwindow;
@@ -1113,7 +1130,7 @@ int       type;
     elType  = TtaGetElementType (object);
 
     if (elType.ElTypeNum == HTML_EL_Object) {
-       elType.ElTypeNum = HTML_EL_Parameter ;
+       elType.ElTypeNum = HTML_EL_Parameter;
        param = TtaSearchTypedElement (elType, SearchInTree, object);
        if (param) {
 	  attrTypeN.AttrSSchema = elType.ElSSchema;
@@ -1122,14 +1139,14 @@ int       type;
 	  attrTypeV.AttrTypeNum = HTML_ATTR_Param_value;
 	  while (param && TtaIsAncestor (param, object)) {	        
 	        attrN = TtaGetAttribute (param, attrTypeN);
-		length = TtaGetTextAttributeLength (attrN) ;
-		argn[argc] = (char*) TtaGetMemory (length + 1) ;
-		TtaGiveTextAttributeValue (attrN, argn[argc], &length) ;
+		length = TtaGetTextAttributeLength (attrN);
+		argn[argc] = (char*) TtaGetMemory (length + 1);
+		TtaGiveTextAttributeValue (attrN, argn[argc], &length);
 		
 		attrV = TtaGetAttribute (param, attrTypeV);
-		length = TtaGetTextAttributeLength (attrV) ;
-		argv[argc] = (char*) TtaGetMemory (length + 1) ;
-		TtaGiveTextAttributeValue (attrV, argv[argc], &length) ;
+		length = TtaGetTextAttributeLength (attrV);
+		argv[argc] = (char*) TtaGetMemory (length + 1);
+		TtaGiveTextAttributeValue (attrV, argv[argc], &length);
 		argc++;
 	        param = TtaSearchTypedElement (elType, SearchForward, param);
 	  }

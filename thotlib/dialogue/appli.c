@@ -873,13 +873,10 @@ View                view;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DisplaySelMessage (char *text)
-
 #else  /* __STDC__ */
 void                DisplaySelMessage (text)
 char               *text;
-
 #endif /* __STDC__ */
-
 {
    int                 doc;
    int                 view;
@@ -896,21 +893,20 @@ char               *text;
                TtaSetStatus ((Document) doc, view + 100, text, NULL);
 	  }
      }
-}				/*DisplaySelMessage */
+}
 
 
 /*----------------------------------------------------------------------
    TtaSetStatus affiche le status de la vue du document.                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaSetStatus (Document document, View view, char *text, char *name)
+void                TtaSetStatus (Document document, View view, const char *text, const char *name)
 #else  /* __STDC__ */
 void                TtaSetStatus (document, view, text, name)
 Document            document;
 View                view;
-char               *text;
-char               *name;
-
+const char         *text;
+const char         *name;
 #endif /* __STDC__ */
 {
    int                 frame;
@@ -1316,7 +1312,6 @@ void               *event;
    ThotEvent          *ev = (ThotEvent *) evnt;
    int                 firstCar, lastCar;
    int                 comm, dx, dy;
-   int                 e;
    boolean             ok;
 
    /* ne pas traiter si le document est en mode NoComputedDisplay */

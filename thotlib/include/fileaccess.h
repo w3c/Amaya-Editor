@@ -65,8 +65,8 @@ typedef long ThotFileOffset;
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern int TtaFileExist ( char *filename );
-extern int TtaFileUnlink ( char *filename );
+extern int TtaFileExist ( const char *filename );
+extern int TtaFileUnlink ( const char *filename );
 extern int TtaFileClose ( ThotFileHandle handle );
 extern int TtaFileClose ( ThotFileHandle handle );
 extern int TtaFileRead ( ThotFileHandle handle,
@@ -80,8 +80,8 @@ extern ThotFileOffset TtaFileSeek ( ThotFileHandle handle,
                                     ThotFileOrigin origin );
 extern int TtaFileStat ( ThotFileHandle handle,
                          ThotFileInfo * pInfo );
-extern void TtaFileCopy ( char *sourceFileName,
-                          char *targetFileName );
+extern void TtaFileCopy ( const char *sourceFileName,
+                          const char *targetFileName );
 
 extern boolean TtaReadByte ( BinFile file,
                              char *bval );
@@ -95,9 +95,9 @@ extern boolean TtaReadInteger ( BinFile file,
                                 int *sval );
 extern boolean TtaReadName ( BinFile file,
                              char *name );
-extern BinFile TtaReadOpen ( char *filename );
+extern BinFile TtaReadOpen ( const char *filename );
 extern void TtaReadClose ( BinFile file );
-extern BinFile TtaWriteOpen ( char *filename );
+extern BinFile TtaWriteOpen ( const char *filename );
 extern void TtaWriteClose ( BinFile file );
 extern boolean TtaWriteByte ( BinFile file,
                               char bval );
@@ -105,14 +105,14 @@ extern boolean TtaWriteShort ( BinFile file,
                                int sval );
 extern boolean TtaWriteInteger ( BinFile file,
                                  int lval );
-extern boolean TtaCompareFiles ( char *file1,
-                                 char *file2 );
+extern boolean TtaCompareFiles ( const char *file1,
+                                 const char *file2 );
 
 #else /* __STDC__ */
 
-extern int TtaFileExist (/* char *filename */);
-extern int TtaFileUnlink (/* char *filename */);
-extern ThotFileHandle TtaFileOpen (/* char *name,
+extern int TtaFileExist (/* const char *filename */);
+extern int TtaFileUnlink (/* const char *filename */);
+extern ThotFileHandle TtaFileOpen (/* const char *name,
                                       ThotFileMode mode */);
 extern int TtaFileClose (/* ThotFileHandle handle */);
 extern int TtaFileRead (/* ThotFileHandle handle,
@@ -126,8 +126,8 @@ extern ThotFileOffset TtaFileSeek (/* ThotFileHandle handle,
                                       ThotFileOrigin origin */);
 extern int TtaFileStat (/* ThotFileHandle handle,
                            ThotFileInfo * pInfo */);
-extern void TtaFileCopy (/* char *sourceFileName,
-                            char *targetFileName */);
+extern void TtaFileCopy (/* const char *sourceFileName,
+                            const char *targetFileName */);
 
 extern boolean TtaReadByte (/* BinFile file,
                                char *bval */);
@@ -141,9 +141,9 @@ extern boolean TtaReadInteger (/* BinFile file,
                                   int *sval */);
 extern boolean TtaReadName (/* BinFile file,
                                char *name */);
-extern BinFile TtaReadOpen (/* char *filename */);
+extern BinFile TtaReadOpen (/* const char *filename */);
 extern void TtaReadClose (/* BinFile file */);
-extern BinFile TtaWriteOpen (/* char *filename */);
+extern BinFile TtaWriteOpen (/* const char *filename */);
 extern void TtaWriteClose (/* BinFile file */);
 extern boolean TtaWriteByte (/* BinFile file,
                                 char bval */);
@@ -151,8 +151,8 @@ extern boolean TtaWriteShort (/* BinFile file,
                                  int sval */);
 extern boolean TtaWriteInteger (/* BinFile file,
                                    int lval */);
-extern boolean TtaCompareFiles (/* char *file1,
-                                   char *file2 */);
+extern boolean TtaCompareFiles (/* const char *file1,
+                                   const char *file2 */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -6,6 +6,9 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void AddMathButton (Document doc,
+			   View view);
+extern void InitMathML ();
 extern void SetFontslantAttr ( Element el, 
 			       Document doc );
 extern void SetAddspaceAttr ( Element el, 
@@ -13,6 +16,9 @@ extern void SetAddspaceAttr ( Element el,
 
 #else /* __STDC__ */
 
+extern void AddMathButton (/* Document doc,
+			   View view */);
+extern void InitMathML ();
 extern void SetFontslantAttr (/* Element el,
                                  Document doc */);
 extern void SetAddspaceAttr (/* Element el,

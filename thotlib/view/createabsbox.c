@@ -941,7 +941,7 @@ PtrSSchema          pSS;
 {
    boolean             ok, currentCond, stop, equal;
    int                 valcompt, valmaxi, valmini, i;
-   PtrPSchema          pSchP;
+   PtrPSchema          pSchP = NULL;
    PtrElement          pElSibling, pAsc, pElem;
    PtrReference        pRef;
    DocumentIdentifier  IDocExt;
@@ -4327,12 +4327,11 @@ PtrAbstractBox      pNewAbbox;
    boolean             stop;
    PtrHandlePSchema    pHd;
    PtrPSchema          pSchPadd;
-
 #ifdef __COLPAGE__
    boolean             bool;
-
 #endif /* __COLPAGE__ */
 
+   pRuleView = NULL;
    do
      {
 	pRule = GetRule (pRSpec, pRDef, pEl, NULL, pSchS);

@@ -1796,10 +1796,11 @@ char               *schemaName;
    char                lastStyle[MAX_TXT_LEN];
    char		       bestStyle[MAX_TXT_LEN];
    int		       lastPrefixLen, bestPrefixLen;
-   int		       score,i;
+   int		       score, i;
    boolean             stop;
 
    schemaName[0] = '\0';
+   score = 0;
    /* ouvre le fichier .conf correspondant au type du document */
    file = NULL;
    if (pSS != NULL)

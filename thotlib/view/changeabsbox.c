@@ -5449,13 +5449,12 @@ PtrAttribute        pAttrComp;
    boolean             appl, stop, sameType, found;
    boolean             existingView;
    boolean             createBox, complete;
-
 #ifdef __COLPAGE__
    boolean             TRep;
    PtrAbstractBox      pPE;
-
 #endif /* __COLPAGE__ */
 
+   viewSch = 0;
    typeRule = (PRuleType) 0;
    TFonct = (FunctionType) 0;
    /* on cherche d'abord dans les schemas de presentation additionnels les */

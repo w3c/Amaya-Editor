@@ -80,15 +80,7 @@ Document            doc;
    Return value:
    the new presentation schema.
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 PSchema             TtaNewPSchema ()
-
-#else  /* __STDC__ */
-PSchema             TtaNewPSchema ()
-
-#endif				/* __STDC__ */
-
 {
    PtrPSchema          pSchPres;
 
@@ -109,15 +101,12 @@ PSchema             TtaNewPSchema ()
    document: the document to which that presentation schema is related.
 
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                TtaRemovePSchema (PSchema schema, Document document)
-
 #else  /* __STDC__ */
 void                TtaRemovePSchema (schema, document)
 PSchema             schema;
 Document            document;
-
 #endif /* __STDC__ */
 
 {
@@ -163,17 +152,14 @@ Document            document;
    document: the document to which the presentation schema is added.
 
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                TtaAddPSchema (PSchema schema, PSchema oldSchema, boolean before, Document document)
-
 #else  /* __STDC__ */
 void                TtaAddPSchema (schema, oldSchema, before, document)
 PSchema             schema;
 PSchema             oldSchema;
 boolean             before;
 Document            document;
-
 #endif /* __STDC__ */
 
 {
@@ -181,6 +167,7 @@ Document            document;
    boolean             ok;
 
    ok = FALSE;
+   oldHd = NULL;
    if (oldSchema != NULL)
      {
 	oldHd = HandleOfPSchema (oldSchema, document);

@@ -32,10 +32,10 @@
    Si filename est un repertoire, on retourne 0.           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 TtaFileExist (char *filename)
+int                 TtaFileExist (const char *filename)
 #else  /* __STDC__ */
 int                 TtaFileExist (filename)
-char               *filename;
+const char         *filename;
 
 #endif /* __STDC__ */
 {
@@ -82,10 +82,10 @@ char               *filename;
    TtaFileUnlink : remove a file.                                     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 TtaFileUnlink (char *filename)
+int                 TtaFileUnlink (const char *filename)
 #else  /* __STDC__ */
 int                 TtaFileUnlink (filename)
-char               *filename;
+const char         *filename;
 
 #endif /* __STDC__ */
 {
@@ -452,10 +452,10 @@ void                InitErrorHandler ()
    TtaFileOpen returns: ThotFile_BADHANDLE: error handle:		
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotFileHandle      TtaFileOpen (char *name, ThotFileMode mode)
+ThotFileHandle      TtaFileOpen (const char *name, ThotFileMode mode)
 #else  /* __STDC__ */
 ThotFileHandle      TtaFileOpen (name, mode)
-char               *name;
+const char         *name;
 ThotFileMode        mode;
 
 #endif /* __STDC__ */
@@ -639,11 +639,11 @@ ThotFileInfo       *pInfo;
    TtaFileCopy copies a source file into a target file.              
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaFileCopy (char *sourceFileName, char *targetFileName)
+void                TtaFileCopy (const char *sourceFileName, const char *targetFileName)
 #else
 void                TtaFileCopy (sourceFileName, targetFileName)
-char               *sourceFileName;
-char               *targetFileName;
+const char         *sourceFileName;
+const char         *targetFileName;
 
 #endif
 {
@@ -694,11 +694,11 @@ char               *targetFileName;
   if their content differs, TRUE if they are identical.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             TtaCompareFiles(char *file1, char *file2)
+boolean             TtaCompareFiles(const char *file1, const char *file2)
 #else
 boolean             TtaCompareFiles(file1, file2)
-char               *file1;
-char               *file2;
+const char         *file1;
+const char         *file2;
 
 #endif
 {

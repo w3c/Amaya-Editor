@@ -84,8 +84,8 @@ static Menu_Ctl    *DocumentMenuList;
 static SchemaMenu_Ctl *SchemasMenuList;
 
 #ifdef _WINDOWS
-HWND hwndClient ;
-HWND ToolBar ;
+HWND hwndClient;
+HWND ToolBar;
 HWND StatusBar;
 
 static HWND hwndTB;
@@ -156,7 +156,7 @@ int                 number;
    /* Initialisation du  contexte serveur */
    FrRef[0] = 0;
 #  ifdef _WINDOWS
-   FrMainRef [0] = 0 ;
+   FrMainRef [0] = 0;
 #  endif /* _WINDOWS */
    InitDocContexts ();
 
@@ -516,7 +516,7 @@ char               *menuName;
 
 #endif /* __STDC__ */
 {
-   Menu_Ctl           *ptrmenu;
+   Menu_Ctl           *ptrmenu = NULL;
    Menu_Ctl           *newmenu;
    SchemaMenu_Ctl     *ptrschema;
    Item_Ctl           *ptr;
@@ -1241,7 +1241,7 @@ char               *info;
    Arg                 args[MAX_ARGS];
    ThotWidget          w, row;
 #  else  /* _WINDOWS */
-   TBBUTTON* w ;
+   TBBUTTON* w;
 #  endif
 
    UserErrorCode = 0;
@@ -1314,26 +1314,26 @@ char               *info;
 		  XtManageChild (row);
 #                 else  /* _WINDOWS */
                   if (procedure) {
-                     w = (TBBUTTON*) malloc (sizeof (TBBUTTON)) ;
-                     w->iBitmap   = picture ;
-                     w->idCommand = TBBUTTONS_BASE + i ; 
-                     w->fsState   = TBSTATE_ENABLED ;
-                     w->fsStyle   = TBSTYLE_BUTTON ;
-                     w->dwData    = 0 ;
-                     w->iString   = 0 ;
+                     w = (TBBUTTON*) malloc (sizeof (TBBUTTON));
+                     w->iBitmap   = picture;
+                     w->idCommand = TBBUTTONS_BASE + i; 
+                     w->fsState   = TBSTATE_ENABLED;
+                     w->fsStyle   = TBSTYLE_BUTTON;
+                     w->dwData    = 0;
+                     w->iString   = 0;
                      FrameTable[frame].Button[i] = w;
                      FrameTable[frame].Call_Button[i] = (Proc) procedure;
                      ToolBar_ButtonStructSize (WinToolBar[frame]);
                      ToolBar_AddBitmap (WinToolBar[frame], 1, tbStdLarge);
                      ToolBar_InsertButton (WinToolBar[frame], i, w);
                   } else {
-                        w = (TBBUTTON*) malloc (sizeof (TBBUTTON)) ;
-                        w->iBitmap   = 0 ;
-                        w->idCommand = 0 ; 
-                        w->fsState   = TBSTATE_ENABLED ;
-                        w->fsStyle   = TBSTYLE_SEP ;
-                        w->dwData    = 0 ;
-                        w->iString   = 0 ;
+                        w = (TBBUTTON*) malloc (sizeof (TBBUTTON));
+                        w->iBitmap   = 0;
+                        w->idCommand = 0; 
+                        w->fsState   = TBSTATE_ENABLED;
+                        w->fsStyle   = TBSTYLE_SEP;
+                        w->dwData    = 0;
+                        w->iString   = 0;
                         FrameTable[frame].Button[i] = w;
                         FrameTable[frame].Call_Button[i] = (Proc) procedure;
                         ToolBar_ButtonStructSize (WinToolBar[frame]);
@@ -1505,7 +1505,6 @@ View                view;
 #endif /* __STDC__ */
 {
    int                 frame;
-
 #  ifndef _WINDOWS
    Dimension           dy;
    Arg                 args[MAX_ARGS];
@@ -1516,6 +1515,7 @@ View                view;
 #  endif /* _WINDOWS */
 
    UserErrorCode = 0;
+   frame = 0;
    /* verifie le parametre document */
    if (document == 0 && view == 0)
       TtaError (ERR_invalid_parameter);
@@ -1627,19 +1627,19 @@ void                (*procedure) ();
 {
    int                 frame, i, n;
    ThotWidget          w, row, rowh;
-
 #  ifndef _WINDOWS
    XmString            title_string;
    Arg                 args[MAX_ARGS];
 #  endif /* _WINDOWS */
    ThotWidget         *brother;
 #  ifdef _WINDOWS
-   RECT       rect ;
+   RECT       rect;
    ThotWidget wLabel;
 #  endif /* _WINDOWS */
 
    UserErrorCode = 0;
    i = 0;
+   w = 0;
    /* verifie le parametre document */
    if (document == 0 && view == 0)
       TtaError (ERR_invalid_parameter);
@@ -1768,7 +1768,7 @@ void                (*procedure) ();
 #                 else  /* _WINDOWS */
                   GetClientRect (FrMainRef [frame], &rect);
                   w = CreateWindow ("EDIT", "", WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER,
-                                    0, 0, 0, 0, FrMainRef[frame], (HMENU) i, hInstance, NULL) ;
+                                    0, 0, 0, 0, FrMainRef[frame], (HMENU) i, hInstance, NULL);
                   FrameTable[frame].Text_Zone[i] = w;
 
                   wLabel = CreateWindow ("STATIC", label, WS_CHILD | WS_VISIBLE | SS_LEFT, 
@@ -1833,7 +1833,7 @@ char               *text;
 #            else  /* _WINDOWS */
 	     w = FrameTable[frame].Text_Zone[index - 1];
 	     if (w != 0)
-                SetWindowText (w, text) ;
+                SetWindowText (w, text);
 #            endif /* _WINDOWS */
 	     /*XtAddCallback(w, XmNmodifyVerifyCallback, (XtCallbackProc)APP_TextCallback, (XtPointer)frame); */
 	  }
@@ -1872,7 +1872,7 @@ View                view;
 #  endif
 
 #  ifdef _WINDOWS
-   int  index ;
+   int  index;
    RECT r;
 #  endif /* _WINDOWS */
    ThotWidget          row, w;
@@ -1916,13 +1916,13 @@ View                view;
 		  XtManageChild (XtParent (XtParent (row)));
 	       }
 #         else  /* _WINDOWS */
-	     for (index = 0 ; index <  MAX_TEXTZONE; index++) {
+	     for (index = 0; index <  MAX_TEXTZONE; index++) {
 		 if (FrameTable[frame].Text_Zone[index] && IsWindowVisible (FrameTable[frame].Text_Zone[index])) {
-		    ShowWindow (FrameTable[frame].Label [index], SW_HIDE) ;
-		    ShowWindow (FrameTable[frame].Text_Zone [index], SW_HIDE) ;
+		    ShowWindow (FrameTable[frame].Label [index], SW_HIDE);
+		    ShowWindow (FrameTable[frame].Text_Zone [index], SW_HIDE);
 		 } else {
-		      ShowWindow (FrameTable[frame].Label [index], SW_SHOW) ;
-		      ShowWindow (FrameTable[frame].Text_Zone [index], SW_SHOW) ;
+		      ShowWindow (FrameTable[frame].Label [index], SW_SHOW);
+		      ShowWindow (FrameTable[frame].Text_Zone [index], SW_SHOW);
 		 }
 	     }
 
@@ -1981,18 +1981,16 @@ int                 doc;
 #endif /* __STDC__ */
 {
    int                 frame;
-
 #  ifndef _WINDOWS
    Arg                 args[MAX_ARGS], argument[5];
    XmString            title_string;
    Dimension           dx, dy;
 #  endif /* _WINDOWS */
-   ThotWidget          Main_Wd = (ThotWidget) 0 ;
+   ThotWidget          Main_Wd = (ThotWidget) 0;
    ThotWidget          Wframe;
    ThotWidget          shell;
-
 #  ifdef _WINDOWS
-   int                 indexTxtZone ;
+   int                 indexTxtZone;
    HMENU               menu_bar, w;
    MSG                 msg;
    RECT                rect;
@@ -2004,7 +2002,6 @@ int                 doc;
 #  endif /* _WINDOWS */
    ThotWidget          hscrl;
    ThotWidget          vscrl;
-
    int                 i, n;
    int                 ref;
    char                string[700];
@@ -2016,11 +2013,11 @@ int                 doc;
 
 #define MIN_HAUT 100
 #define MIN_LARG 200
-
+   w = 0;
 #  ifdef _WINDOWS
-   hwndClient = 0 ;
-   ToolBar    = 0 ;
-   StatusBar  = 0 ;
+   hwndClient = 0;
+   ToolBar    = 0;
+   StatusBar  = 0;
 #  endif /* _WINDOWS */
 
    frame = 0;
@@ -2101,9 +2098,9 @@ int                 doc;
 		  fprintf (stderr, "Created Main_Wd %X for %d\n", Main_Wd, frame);
 		  /* store everything. */
                   FrMainRef[frame]           = Main_Wd;
-                  FrRef[frame]               = hwndClient ;
-                  WinToolBar[frame]          = ToolBar ;
-                  FrameTable[frame].WdStatus = StatusBar ;
+                  FrRef[frame]               = hwndClient;
+                  WinToolBar[frame]          = ToolBar;
+                  FrameTable[frame].WdStatus = StatusBar;
 		  /* and show it up. */
                   
                   menu_bar = CreateMenu ();
@@ -2279,10 +2276,10 @@ int                 doc;
 	     XtAddCallback (hscrl, XmNtoBottomCallback, (XtCallbackProc) FrameHScrolled, (XtPointer) frame);
 #            else  /* _WINDOWS */
              hscrl = CreateWindow ("scrollbar", NULL, WS_CHILD | WS_VISIBLE | SBS_HORZ,
-                                   0, 0, 0, 0, Main_Wd, (HMENU) frame, hInstance, NULL) ;
+                                   0, 0, 0, 0, Main_Wd, (HMENU) frame, hInstance, NULL);
 
              SetScrollRange (hscrl, SB_CTL, 0, 100, FALSE);
-             SetScrollPos (hscrl, SB_CTL, 0, FALSE) ;
+             SetScrollPos (hscrl, SB_CTL, 0, FALSE);
 #            endif /* _WINDOWS */
 	     /*** La barre de scroll verticale ***/
 #            ifndef _WINDOWS
@@ -2306,10 +2303,10 @@ int                 doc;
 	     XtAddCallback (vscrl, XmNtoBottomCallback, (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
 #            else  /* _WINDOWS */
              vscrl = CreateWindow ("scrollbar", NULL, WS_CHILD | WS_VISIBLE | SBS_VERT,
-                                   0, 0, 0, 0, Main_Wd, (HMENU) (frame + 1), hInstance, NULL) ;
+                                   0, 0, 0, 0, Main_Wd, (HMENU) (frame + 1), hInstance, NULL);
 
              SetScrollRange (vscrl, SB_CTL, 0, 100, FALSE);
-             SetScrollPos (vscrl, SB_CTL, 0, FALSE) ;
+             SetScrollPos (vscrl, SB_CTL, 0, FALSE);
 #            endif /* _WINDOWS */
 
 	     /* Row vertical pour mettre le logo au dessous des boutons */
@@ -2636,13 +2633,13 @@ int                 frame;
 	XtRemoveCallback (XtParent (XtParent (w)), XmNdestroyCallback, (XtCallbackProc) FrameKilled, (XtPointer) frame);
 
 	XDestroyWindow (TtDisplay, XtWindowOfObject (XtParent (XtParent (XtParent (w)))));
-        /* SendMessage (FrMainRef[frame], "WM_DESTROY", (WPARAM) 0, (LPARAM) 0) ; */
+        /* SendMessage (FrMainRef[frame], "WM_DESTROY", (WPARAM) 0, (LPARAM) 0); */
 #       else  /* _WINDOWS */
         DestroyWindow (FrMainRef[frame]); 
 #       endif /* _WINDOWS */
 	FrRef[frame] = 0;
 #       ifdef _WINDOWS
-        FrMainRef [0] = 0 ;
+        FrMainRef [0] = 0;
 #       endif /* _WINDOWS */
 	FrameTable[frame].WdFrame = 0;
 	FrameTable[frame].FrDoc = 0;
@@ -2730,7 +2727,6 @@ int                *menu;
 int                *submenu;
 int                *item;
 int                *action;
-
 #endif /* __STDC__ */
 {
    Menu_Ctl           *ptrmenu, *ptrsmenu;
@@ -2739,13 +2735,14 @@ int                *action;
    int                 m, sm;
    boolean             found;
 
+   j = 0;
+   i = 0;
+   sm = 0;
    m = FindMenu (frame, menuID, &ptrmenu);
    found = (m != -1);
    if (found)
      {
 	/* Recherche l'item dans le menu ou un sous-menu */
-	i = 0;
-	sm = 0;
 	ptr = ptrmenu->ItemsList;
 	found = FALSE;
 	max = ptrmenu->ItemsNb;

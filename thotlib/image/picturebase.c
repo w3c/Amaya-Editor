@@ -211,32 +211,35 @@ char               *path;
     Drawable            PicMask = None;
     Drawable            myDrawable = None;
     Picture_Report      status;
-    unsigned long       Bgcolor;
+    unsigned long       Bgcolor = 0;
 
-    if (name == NULL) return(0);
-    if (path == NULL) return(0);
+    if (name == NULL)
+      return(0);
+    if (path == NULL)
+      return(0);
 
-    if (name[0] == '\0') return(0);
-    if (path[0] == '\0') return(0);
+    if (name[0] == '\0')
+      return(0);
+    if (path[0] == '\0')
+      return(0);
 
     GetPictureFileName (path, fileName);
     typeImage = UNKNOWN_FORMAT;
 
     status = PictureFileOk (fileName, &typeImage);
-    switch ((int)status) {
-	   case Supported_Format:
-	        if ((PictureHandlerTable[typeImage].Produce_Picture != NULL) &&
-	            (typeImage < InlineHandlers)) {
-		    myDrawable = (*(PictureHandlerTable[typeImage].Produce_Picture)) (fileName, pres, &xif, &yif, &wif, &hif, Bgcolor, &PicMask);
-		}
-		break;
-	   case Corrupted_File:
-	   case Unsupported_Format:
-	        return(0);
-		break;
-    }
+    switch ((int)status)
+      {
+      case Supported_Format:
+	if ((PictureHandlerTable[typeImage].Produce_Picture != NULL) && (typeImage < InlineHandlers))
+	  myDrawable = (*(PictureHandlerTable[typeImage].Produce_Picture)) (fileName, pres, &xif, &yif, &wif, &hif, Bgcolor, &PicMask);
+	break;
+      case Corrupted_File:
+      case Unsupported_Format:
+	return(0);
+	break;
+      }
     TtaRegisterPixmap (name, (Pixmap) myDrawable);
-    return((Pixmap) myDrawable);
+    return ((Pixmap) myDrawable);
 }
 
 /*----------------------------------------------------------------------

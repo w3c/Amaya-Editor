@@ -866,6 +866,8 @@ int                 eltype;
    boolean             remove, done;
    DisplayMode         dispMode;
 
+   lastSelectedElem = NULL;
+   lastSelectedChar = 0;
    dispMode = TtaGetDisplayMode (document);
    if (dispMode == DisplayImmediately)
      TtaSetDisplayMode (document, DeferredDisplay);

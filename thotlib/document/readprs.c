@@ -544,16 +544,17 @@ BinFile             file;
 	error = True;
      }
    switch (c)
-	 {
-	    case C_WITHIN_GT:
-	       rel = CondGreater;
-	       break;
-	    case C_WITHIN_LT:
-	       rel = CondLess;
-	    case C_WITHIN_EQ:
-	       rel = CondEquals;
-	 }
-   return rel;
+     {
+     case C_WITHIN_GT:
+       rel = CondGreater;
+       break;
+     case C_WITHIN_LT:
+       rel = CondLess;
+     case C_WITHIN_EQ:
+       rel = CondEquals;
+     default: rel = CondEquals;
+     }
+   return (rel);
 }
 
 

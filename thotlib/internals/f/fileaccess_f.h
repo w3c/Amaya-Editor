@@ -18,9 +18,9 @@ extern boolean TtaReadInteger ( BinFile file,
                                 int *sval );
 extern boolean TtaReadName ( BinFile file,
                              char *name );
-extern BinFile TtaReadOpen ( char *filename );
+extern BinFile TtaReadOpen ( const char *filename );
 extern void TtaReadClose ( BinFile file );
-extern BinFile TtaWriteOpen ( char *filename );
+extern BinFile TtaWriteOpen ( const char *filename );
 extern void TtaWriteClose ( BinFile file );
 extern boolean TtaWriteByte ( BinFile file,
                               char bval );
@@ -74,9 +74,9 @@ extern boolean TtaReadInteger (/* BinFile file,
                                   int *sval */);
 extern boolean TtaReadName (/* BinFile file,
                                char *name */);
-extern BinFile TtaReadOpen (/* char *filename */);
+extern BinFile TtaReadOpen (/* const char *filename */);
 extern void TtaReadClose (/* BinFile file */);
-extern BinFile TtaWriteOpen (/* char *filename */);
+extern BinFile TtaWriteOpen (/* const char *filename */);
 extern void TtaWriteClose (/* BinFile file */);
 extern boolean TtaWriteByte (/* BinFile file,
                                 char bval */);

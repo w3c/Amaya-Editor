@@ -142,10 +142,10 @@ char               *pBuffer;
    La fonction rend la valeur -1 si la table n'est pas alloue'e.   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 TtaGetMessageTable (char *msgName, int msgNumber)
+int                 TtaGetMessageTable (const char *msgName, int msgNumber)
 #else  /* __STDC__ */
 int                 TtaGetMessageTable (msgName, msgNumber)
-char               *msgName;
+const char         *msgName;
 int                 msgNumber;
 
 #endif /* __STDC__ */
@@ -259,8 +259,8 @@ int                 num;
 void                TtaDisplayMessage (int msgType, char *fmt,...)
 #else  /* __STDC__ */
 void                TtaDisplayMessage (msgType, fmt,...)
-char               *fmt;
 int                 msgType;
+char               *fmt;
 
 #endif /* __STDC__ */
 {

@@ -48,7 +48,7 @@ boolean             TtaReadByte (BinFile file, char *bval)
 #else  /* __STDC__ */
 boolean             TtaReadByte (file, bval)
 BinFile             file;
-char               *bval;
+char         *bval;
 
 #endif /* __STDC__ */
 {
@@ -232,10 +232,10 @@ char               *name;
    TtaReadOpen opens a file for reading.                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-BinFile             TtaReadOpen (char *filename)
+BinFile             TtaReadOpen (const char *filename)
 #else  /* __STDC__ */
 BinFile             TtaReadOpen (filename)
-char               *filename;
+const char         *filename;
 
 #endif /* __STDC__ */
 {
@@ -270,10 +270,10 @@ BinFile             file;
    TtaWriteOpen opens a file for writing.                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-BinFile             TtaWriteOpen (char *filename)
+BinFile             TtaWriteOpen (const char *filename)
 #else  /* __STDC__ */
 BinFile             TtaWriteOpen (filename)
-char               *filename;
+const char         *filename;
 
 #endif /* __STDC__ */
 {

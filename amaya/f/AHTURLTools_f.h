@@ -11,24 +11,24 @@ extern void ExplodeURL ( char *url,
                          char **host,
                          char **dir,
                          char **file );
-extern boolean IsHTMLName ( char *path );
-extern boolean IsImageName ( char *path );
-extern boolean IsTextName ( char *path );
-extern boolean IsHTTPPath ( char *path );
-extern boolean IsWithParameters ( char *url );
-extern boolean IsW3Path ( char *path );
-extern boolean IsValidProtocol ( char *url );
+extern boolean IsHTMLName ( const char *path );
+extern boolean IsImageName ( const char *path );
+extern boolean IsTextName ( const char *path );
+extern boolean IsHTTPPath ( const char *path );
+extern boolean IsWithParameters ( const char *url );
+extern boolean IsW3Path ( const char *path );
+extern boolean IsValidProtocol ( const char *url );
 extern char *GetBaseURL ( Document doc );
 extern void NormalizeURL ( char *orgName,
                            Document doc,
                            char *newName,
                            char *docName );
-extern boolean IsSameHost ( char *url1,
-                            char *url2 );
-extern boolean HasKnownFileSuffix ( char *path );
+extern boolean IsSameHost ( const char *url1,
+                            const char *url2 );
+extern boolean HasKnownFileSuffix ( const char *path );
 extern void ChopURL ( char *outputURL,
-                      char *inputURL );
-extern char *AmayaParseUrl ( char *aName,
+                      const char *inputURL );
+extern char *AmayaParseUrl ( const char *aName,
                              char *relatedName,
                              int wanted );
 extern void SimplifyUrl ( char ** url );
@@ -44,24 +44,24 @@ extern void ExplodeURL (/* char *url,
                            char **host,
                            char **dir,
                            char **file */);
-extern boolean IsHTMLName (/* char *path */);
-extern boolean IsImageName (/* char *path */);
-extern boolean IsTextName (/* char *path */);
-extern boolean IsHTTPPath (/* char *path */);
-extern boolean IsWithParameters (/* char *url */);
-extern boolean IsW3Path (/* char *path */);
-extern boolean IsValidProtocol (/* char *url */);
+extern boolean IsHTMLName (/* const char *path */);
+extern boolean IsImageName (/* const char *path */);
+extern boolean IsTextName (/* const char *path */);
+extern boolean IsHTTPPath (/* const char *path */);
+extern boolean IsWithParameters (/* const char *url */);
+extern boolean IsW3Path (/* const char *path */);
+extern boolean IsValidProtocol (/* const char *url */);
 extern char *GetBaseURL (/* Document doc */);
 extern void NormalizeURL (/* char *orgName,
                              Document doc,
                              char *newName,
                              char *docName */);
-extern boolean IsSameHost (/* char *url1,
-                              char *url2 */);
-extern boolean HasKnownFileSuffix (/* char *path */);
+extern boolean IsSameHost (/* const char *url1,
+                              const char *url2 */);
+extern boolean HasKnownFileSuffix (/* const char *path */);
 extern void ChopURL (/* char *outputURL,
-                        char *inputURL */);
-extern char *AmayaParseUrl (/* char *aName,
+                        const char *inputURL */);
+extern char *AmayaParseUrl (/* const char *aName,
                                char *relatedName,
                                int wanted */);
 extern void SimplifyUrl (/* char ** url */);

@@ -1366,22 +1366,21 @@ int GetObjectWWW (int docid, char* urlName, char* postString, char* outputfile, 
 #else
 int GetObjectWWW (docid, urlName, postString, outputfile, mode, incremental_cbf, context_icbf, 
 		  terminate_cbf, context_tcbf, error_html)
-int     docid;
-char*   urlName;
-char*   postString;
-char*   outputfile;
-int     mode;
-TIcbf*  incremental_cbf;
-void*   context_icbf;
-TTcbf*  terminate_cbf;
-void*   context_tcbf;
-boolean error_html;
+int           docid;
+char         *urlName;
+char         *postString;
+char         *outputfile;
+int           mode;
+TIcbf        *incremental_cbf;
+void         *context_icbf;
+TTcbf        *terminate_cbf;
+void         *context_tcbf;
+boolean       error_html;
 #endif
 {
    AHTReqContext      *me;
    char               *ref;
    int                 status;
-   HTList             *cur, *pending;
 
    if (urlName == NULL || docid == 0 || outputfile == NULL) {
       /* no file to be loaded */

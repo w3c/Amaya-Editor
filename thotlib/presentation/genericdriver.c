@@ -1705,9 +1705,8 @@ void               *param;
    int                 GetAttributeOfElement;
    int                 Val;
 
-   /*
-    * set up and check the environment.
-    */
+   /* set up and check the environment */
+   prevcond = 0;
    pSchemaStr = (PtrSSchema) TtaGetDocumentSSchema (doc);
    pSc1 = (PtrPSchema) target;
    if (pSchemaStr == NULL)
@@ -1899,9 +1898,8 @@ void               *param;
    PtrCondition        prevcond, cond;
    PresentationSettingBlock setting;
 
-   /*
-    * set up and check the environment.
-    */
+   /* set up and check the environment */
+   prevcond = 0;
    pSc1 = (PtrPSchema) target;
    if (pSc1 == NULL)
       return;

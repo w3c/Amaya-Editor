@@ -40,15 +40,14 @@ static int          GridSize = 1;
 BOOL WIN_UserGeometry = FALSE ; 
 #endif /* _WINDOWS */
 
-/**
+/*----------------------------------------------------------------------
  *      BoxGeometry set the geometry of the fake box used to interract
  *		with the user.
  *		Last parameter withborder indicate whether the border should
  *		be drawn or not.
- **/
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         BoxGeometry (int frame, int x, int y, int width, int height, int xr, int yr, boolean withborder)
-
 #else  /* __STDC__ */
 static void         BoxGeometry (frame, x, y, width, height, xr, yr, withborder)
 int                 frame;
@@ -59,7 +58,6 @@ int                 height;
 int                 xr;
 int                 yr;
 boolean             withborder;
-
 #endif /* __STDC__ */
 
 {
@@ -88,18 +86,16 @@ boolean             withborder;
 #endif
 }
 
-/**
+/*----------------------------------------------------------------------
  *      RedrawPolyLine shows the current state of the polyline (closed or
  *		not) in a given frame.
  *	This function returns the coordinates of the following control points :
  *	- x1, y1 predecessor of point
  *      - x2, y2 point
  *      - x3, y3 successor of point
- **/
-
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         RedrawPolyLine (int frame, int x, int y, PtrTextBuffer buffer, int nb, int point, boolean close, int *x1, int *y1, int *x2, int *y2, int *x3, int *y3)
-
 #else  /* __STDC__ */
 static void         RedrawPolyLine (frame, x, y, buffer, nb, point, close, x1, y1, x2, y2, x3, y3)
 int                 frame;
@@ -115,7 +111,6 @@ int                *x2;
 int                *y2;
 int                *x3;
 int                *y3;
-
 #endif /* __STDC__ */
 
 {
@@ -187,7 +182,7 @@ int                *y3;
 #endif	/* _WINDOWS */
 }
 
-/**
+/*----------------------------------------------------------------------
  *      PolyLineCreation interract with the user to read the point forming
  * 		a polyline in a given frame.
  *		x and y values gives the position of the box in the frame.
@@ -196,11 +191,9 @@ int                *y3;
  *		list gives the maximum width and height of the polyline.
  *		This fonction update both  list of control points and
  *		returns the number of point in the polyline.
- **/
-
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 PolyLineCreation (int frame, int x, int y, PtrTextBuffer Pbuffer, PtrTextBuffer Bbuffer)
-
 #else  /* __STDC__ */
 int                 PolyLineCreation (frame, x, y, Pbuffer, Bbuffer)
 int                 frame;
@@ -208,7 +201,6 @@ int                 x;
 int                 y;
 PtrTextBuffer       Pbuffer;
 PtrTextBuffer       Bbuffer;
-
 #endif /* __STDC__ */
 
 {
@@ -380,10 +372,10 @@ PtrTextBuffer       Bbuffer;
    else
       return nbpoints;
 #endif /* _WINDOWS */
-}				/*PolyLineCreation */
+}
 
 
-/**
+/*----------------------------------------------------------------------
  *      PolyLineModification interract with the user to move a point part
  * 		a polyline in a given frame.
  *		x and y values gives the position of the box in the frame.
@@ -395,11 +387,9 @@ PtrTextBuffer       Bbuffer;
  *		nbpoints gives the number of points in the polyline.
  *		point expricitely indicate the point to be moved.
  *		This fonction update both  list of control points.
- **/
-
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                PolyLineModification (int frame, int x, int y, PtrTextBuffer Pbuffer, PtrTextBuffer Bbuffer, int nbpoints, int point, boolean close)
-
 #else  /* __STDC__ */
 void                PolyLineModification (frame, x, y, Pbuffer, Bbuffer, nbpoints, point, close)
 int                 frame;
@@ -410,9 +400,7 @@ PtrTextBuffer       Bbuffer;
 int                 nbpoints;
 int                 point;
 boolean             close;
-
 #endif /* __STDC__ */
-
 {
 #ifndef _WINDOWS
    float               ratioX, ratioY;
@@ -552,7 +540,7 @@ boolean             close;
 }				/*PolyModification */
 
 
-/**
+/*----------------------------------------------------------------------
  *      PolyLineExtension interract with the user to add points to
  * 		an existing polyline in a given frame.
  *		x and y values gives the position of the box in the frame.
@@ -566,11 +554,9 @@ boolean             close;
  *		close indicate whether the polyline is closed.
  *		This fonction update both  list of control points and
  *		returns the new number of points in the polyline.
- **/
-
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 PolyLineExtension (int frame, int x, int y, PtrTextBuffer Pbuffer, PtrTextBuffer Bbuffer, int nbpoints, int point, boolean close)
-
 #else  /* __STDC__ */
 int                 PolyLineExtension (frame, x, y, Pbuffer, Bbuffer, nbpoints, point, close)
 int                 frame;
@@ -581,7 +567,6 @@ PtrTextBuffer       Bbuffer;
 int                 nbpoints;
 int                 point;
 boolean             close;
-
 #endif /* __STDC__ */
 
 {
@@ -778,20 +763,17 @@ boolean             close;
    else
       return nbpoints;
 #endif /* _WINDOWS */
-}				/*PolyLineExtension */
-/*fin */
+}
 
-/**
+/*----------------------------------------------------------------------
  *      UserGeometryCreate draw a box at a specific (x,y) location in
  *		frame and of size width x height when interracting with
  *		the user to mofify a box size (button press).
  *		xmin, xmax, ymin, ymax are the maximum values allowed.
  *		this function returns the new values upon button release.
- **/
-
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                UserGeometryCreate (int frame, int *x, int *y, int xr, int yr, int *width, int *height, int xmin, int xmax, int ymin, int ymax, int PosX, int PosY, int DimX, int DimY)
-
 #else  /* __STDC__ */
 void                UserGeometryCreate (frame, x, y, xr, yr, width, height, xmin, xmax, ymin, ymax, PosX, PosY, DimX, DimY)
 int                 frame;
@@ -809,7 +791,6 @@ int                 PosX;
 int                 PosY;
 int                 DimX;
 int                 DimY;
-
 #endif /* __STDC__ */
 
 {
@@ -825,6 +806,7 @@ int                 DimY;
    /* use relative coordinates */
    xr -= *x;
    yr -= *y;
+   xm = ym = 0;
 
    /* change the cursor, modify library state */
    e = ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
@@ -1162,20 +1144,18 @@ int                 DimY;
    SetCursor (LoadCursor (NULL, IDC_CROSS));
    */
 #  endif /* _WINDOWS */
-}				/*UserGeometryCreate */
+}
 
-/**
+/*----------------------------------------------------------------------
  *      UserGeometryMove draw a box at a specific (x,y) location in
  *		frame and of size width x height when interracting with
  *		the user to mofify the box position (button press).
  *		xmin, xmax, ymin, ymax are the maximum values allowed.
  *		xm and ym gives the initial mouse coordinates in the frame.
  *		this function returns the new position upon button release.
- **/
-
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                UserGeometryMove (int frame, int *x, int *y, int width, int height, int xr, int yr, int xmin, int xmax, int ymin, int ymax, int xm, int ym)
-
 #else  /* __STDC__ */
 void                UserGeometryMove (frame, x, y, width, height, xr, yr, xmin, xmax, ymin, ymax, xm, ym)
 int                 frame;
@@ -1191,9 +1171,7 @@ int                 ymin;
 int                 ymax;
 int                 xm;
 int                 ym;
-
 #endif /* __STDC__ */
-
 {
 #ifndef _WINDOWS
    int                 ret, e, dx, dy, nx, ny;
@@ -1353,9 +1331,9 @@ int                 ym;
    XFlush (TtDisplay);
 
 #endif /* _WINDOWS */
-}				/*UserGeometryMove */
+}
 
-/**
+/*----------------------------------------------------------------------
  *      UserGeometryResize draw a box at a specific (x,y) location in
  *		frame and of size width x height when interracting with
  *		the user to mofify the box geometry (button press).
@@ -1363,11 +1341,9 @@ int                 ym;
  *		xmin, xmax, ymin, ymax are the maximum values allowed.
  *		xm and ym gives the initial mouse coordinates in the frame.
  *		this function returns the new geometry upon button release.
- **/
-
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                UserGeometryResize (int frame, int x, int y, int *width, int *height, int xr, int yr, int xmin, int xmax, int ymin, int ymax, int xm, int ym)
-
 #else  /* __STDC__ */
 void                UserGeometryResize (frame, x, y, width, height, xr, yr, xmin, xmax, ymin, ymax, xm, ym)
 int                 frame;
@@ -1383,7 +1359,6 @@ int                 ymin;
 int                 ymax;
 int                 xm;
 int                 ym;
-
 #endif /* __STDC__ */
 
 {
@@ -1650,5 +1625,4 @@ int                 ym;
    ThotUngrab ();
    XFlush (TtDisplay);
 #endif /* _WINDOWS */
-
-}				/*UserGeometryResize */
+}

@@ -255,8 +255,7 @@ Document            document;
    PtrDocument         selDoc;
    PtrElement          firstSelection, lastSelection;
    int                 firstChar, lastChar;
-   boolean             selOk, changeSelection;
-
+   boolean             selOk, changeSelection = FALSE;
 #endif
 
    stringLength = strlen (content);

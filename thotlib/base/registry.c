@@ -27,9 +27,13 @@
 #include "typemedia.h"
 #include "registry.h"
 #include "application.h"
+#include "thotdir.h"
 
 #define THOT_EXPORT
 #include "platform_tv.h"
+
+#include "fileaccess_f.h"
+#include "platform_f.h"
 
 /* #define DEBUG_REGISTRY enable the Registry debug messages */
 
@@ -77,18 +81,8 @@ static int          AppRegistryModified = 0;
 static RegistryEntry AppRegistryEntry = NULL;
 static char        *AppRegistryEntryAppli = NULL;
 static char         CurrentDir[MAX_PATH];
-
 static char        *Thot_Dir;
 
-#ifdef __STDC__
-extern int          TtaFileExist (char *);
-extern void         MakeCompleteName (Name, char *, PathBuffer, PathBuffer, int *);
-
-#else  /* __STDC__ */
-extern int          TtaFileExist ();
-extern void         MakeCompleteName ();
-
-#endif
 
 /*
  * A few macro needed to help building the parser
@@ -608,27 +602,20 @@ int                 overwrite;
 }
 
 /*----------------------------------------------------------------------
-   									
     Second part : reading / writing values from / to filesystem or	
    		 registry.						
-   									
   ----------------------------------------------------------------------*/
 
 /*----------------------------------------------------------------------
-                                                                         
      IsThotDir : Check whether the given string is the THOTDIR value.    
          The heuristic is to find a subdir named "config" and containing 
          the registry file.                                              
-                                                                         
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static int          IsThotDir (const char *path)
-
 #else  /* __STDC__ */
 static int          IsThotDir (const char *path)
 #endif				/* __STDC__ */
-
 {
    char                filename[MAX_PATH];
 
@@ -700,7 +687,6 @@ static char        *WINReg_get (const char *env)
 
 /*----------------------------------------------------------------------
    WINIni_get - simulates getenv in the Windows/Amaya.ini file     
-   
   ----------------------------------------------------------------------*/
 static char        *WINIni_get (const char *env)
 {
@@ -714,16 +700,11 @@ static char        *WINIni_get (const char *env)
 #endif /* WWW_MSWINDOWS */
 
 
-/*
- * TtaSaveAppRegistry : Save the Registry in the THOT_RC_FILENAME located
- *       in the user's directory.
- */
-
-#ifdef __STDC__
-void                TtaSaveAppRegistry (void)
-#else  /* __STDC__ */
+/*----------------------------------------------------------------------
+  TtaSaveAppRegistry : Save the Registry in the THOT_RC_FILENAME located
+  in the user's directory.
+  ----------------------------------------------------------------------*/
 void                TtaSaveAppRegistry ()
-#endif
 {
 #ifndef WWW_MSWINDOWS
    char               *home_dir;
@@ -762,12 +743,12 @@ void                TtaSaveAppRegistry ()
    PrintEnv (output);
    AppRegistryModified = 0;
 #endif /* !WWW_MSWINDOWS */
-}				/* TtaSaveAppRegistry */
+}
 
-/*
- * ImportRegistryFile : import a registry file.
- */
 
+/*----------------------------------------------------------------------
+  ImportRegistryFile : import a registry file.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ImportRegistryFile (char *filename, RegistryLevel level)
 #else  /* __STDC__ */
@@ -862,12 +843,9 @@ char               *ThotDir ()
 }
 
 /*----------------------------------------------------------------------
-   									
-     InitEnviron : initialize the standard environment (i.e global	
-   	variables) with values stored in the registry.			
-   									
+  InitEnviron : initialize the standard environment (i.e global	
+  variables) with values stored in the registry.			
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void         InitEnviron ()
 
@@ -921,17 +899,16 @@ static void         InitEnviron ()
 
 }
 
-/*
- * TtaInitializeAppRegistry : initialize the Registry, the only argument
- *       given is a copy of the argv[0] received from the main().
- *       From this, we can deduce the installation directory of the programm,
- *       (using the PATH environment value if necessary) and the application
- *       name.
- *       We load the ressources file from the installation directory and
- *       the specific user values from the user HOME dir.
- */
-
-#ifdef __STDC__
+/*----------------------------------------------------------------------
+  TtaInitializeAppRegistry : initialize the Registry, the only argument
+  given is a copy of the argv[0] received from the main().
+  From this, we can deduce the installation directory of the programm,
+  (using the PATH environment value if necessary) and the application
+  name.
+  We load the ressources file from the installation directory and
+  the specific user values from the user HOME dir.
+  ----------------------------------------------------------------------*/
+ #ifdef __STDC__
 void                TtaInitializeAppRegistry (char *appArgv0)
 #else  /* __STDC__ */
 void                TtaInitializeAppRegistry (appArgv0)
@@ -946,7 +923,7 @@ char               *appArgv0;
    PathBuffer          execname;
    PathBuffer          path;
    char               *my_path;
-   char               *dir_end;
+   char               *dir_end = NULL;
    char               *appName;
 
 #ifdef _WINDOWS
@@ -1106,7 +1083,6 @@ char               *appArgv0;
       goto thot_dir_not_found;
 
    *dir_end = '\0';
-
    /* save the binary directory in BinariesDirectory */
    strncpy (BinariesDirectory, &execname[0], sizeof (BinariesDirectory));
 
@@ -1115,16 +1091,12 @@ char               *appArgv0;
    thot_dir_env=getenv("THOTDIR");
    if ((thot_dir_env != NULL) && (IsThotDir (thot_dir_env)))
      {
-        strcpy(execname, thot_dir_env);
-	AddRegisterEntry ("System", "THOTDIR", thot_dir_env,
-			  REGISTRY_INSTALL, TRUE);
-	goto load_system_settings;
+       strcpy(execname, thot_dir_env);
+       AddRegisterEntry ("System", "THOTDIR", thot_dir_env, REGISTRY_INSTALL, TRUE);
+       goto load_system_settings;
      }
    else if (thot_dir_env != NULL) 
-     {
-        fprintf(stderr,"Invalid THOTDIR environment variable : %s\n",
-	        thot_dir_env);
-     }
+     fprintf (stderr,"Invalid THOTDIR environment variable : %s\n", thot_dir_env);
 #endif
 #ifdef COMPILED_IN_THOTDIR
    /* Check a compiled-in value */
@@ -1159,6 +1131,7 @@ char               *appArgv0;
    do
       dir_end--;
    while ((dir_end > &execname[0]) && (*dir_end != DIR_SEP));
+
    if (*dir_end != DIR_SEP)
       goto thot_dir_not_found;
 
@@ -1289,15 +1262,12 @@ char               *appArgv0;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 SearchFile (char *fileName, int dir, char *fullName)
-
 #else  /* __STDC__ */
 int                 SearchFile (fileName, dir, fullName)
 char               *fileName;
 int                 dir;
 char               *fullName;
-
 #endif /* __STDC__ */
-
 {
    char                tmpbuf[200];
    char               *imagepath;

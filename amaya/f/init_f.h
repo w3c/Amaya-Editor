@@ -43,7 +43,7 @@ extern void ShowToC ( Document document,
                       View view );
 extern boolean ViewToOpen ( NotifyDialog * event );
 extern boolean ViewToClose ( NotifyDialog * event );
-extern Document GetHTMLDocument ( char *documentPath,
+extern Document GetHTMLDocument ( const char *documentPath,
                                   char *form_data,
                                   Document doc,
                                   Document baseDoc,
@@ -128,7 +128,7 @@ extern void ShowToC (/* Document document,
                         View view */);
 extern boolean ViewToOpen (/* NotifyDialog * event */);
 extern boolean ViewToClose (/* NotifyDialog * event */);
-extern Document GetHTMLDocument (/* char *documentPath,
+extern Document GetHTMLDocument (/* const char *documentPath,
                                     char *form_data,
                                     Document doc,
                                     Document baseDoc,

@@ -20,6 +20,7 @@
 #include "select_tv.h"
 extern int          UserErrorCode;
 
+#include "applicationapi_f.h"
 #include "structselect_f.h"
 #include "thotmsg_f.h"
 #include "viewapi_f.h"

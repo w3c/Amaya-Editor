@@ -1379,10 +1379,10 @@ NotifyDialog       *event;
     - DC_event: DC_FORM_POST for a post request, DC_TRUE for a double click.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Document            GetHTMLDocument (char *documentPath, char *form_data, Document doc, Document baseDoc, DoubleClickEvent DC_event)
+Document            GetHTMLDocument (const char *documentPath, char *form_data, Document doc, Document baseDoc, DoubleClickEvent DC_event)
 #else
 Document            GetHTMLDocument (documentPath, form_data, doc, baseDoc, DC_event)
-char               *documentPath;
+const char         *documentPath;
 char               *form_data;
 Document            doc;
 Document            baseDoc;

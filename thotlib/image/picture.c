@@ -1478,37 +1478,3 @@ register long       n;
      }
    while (--n > 0);
 }
-
-
-/*----------------------------------------------------------------------
-   TtaSetMainThotWindowBackgroundImage :                           
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 TtaSetMainThotWindowBackgroundImage (ThotWindow w, char *imageFile)
-#else  /* __STDC__ */
-int                 TtaSetMainThotWindowBackgroundImage (w, imageFile)
-ThotWindow          w;
-char               *imageFile;
-
-#endif /* __STDC__ */
-
-{
-#ifndef _WINDOWS
-   char            fileName[MAX_PATH];
-   int             typeImage;
-   Drawable        myDrawable = None;
-   Drawable        picMask;
-   int             xFrame, yFrame, wFrame, hFrame;
-   PictureScaling  pres;
-   unsigned long   Bgcolor;
-
-   GetPictureFileName (imageFile, fileName);
-   typeImage = GetPictureFormat(fileName);
-   myDrawable = (*(PictureHandlerTable[typeImage].Produce_Picture))
-                  (fileName, pres, &xFrame, &yFrame, &wFrame, &hFrame, Bgcolor, &picMask );
-   XSetWindowBackgroundPixmap (TtDisplay, w, myDrawable);
-   FreePixmap(myDrawable);
-   FreePixmap(picMask);
-#endif /* _WINDOWS */
-   return (0);
-}

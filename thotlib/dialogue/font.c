@@ -289,33 +289,34 @@ TypeUnit            unit;
 PtrAbstractBox      pAb;
 #endif /* __STDC__ */
 {
-   int                 dist, i;
+   int              dist, i;
 
+   dist = 0;
    switch (unit)
-	 {
-	    case UnRelative:
-	       if (pAb == NULL || pAb->AbBox == NULL || pAb->AbBox->BxFont == NULL)
-		  dist = 0;
-	       else
-		  dist = (val * FontHeight (pAb->AbBox->BxFont) + 5) / 10;
-	       break;
-	    case UnXHeight:
-	       if (pAb == NULL || pAb->AbBox == NULL || pAb->AbBox->BxFont == NULL)
-		  dist = 0;
-	       else
-		  dist = (val * CharacterHeight ('X', pAb->AbBox->BxFont)) / 10;
-	       break;
-	    case UnPoint:
-	       dist = PointToPixel (val);
-	       break;
-	    case UnPixel:
-	       dist = val;
-	       break;
-	    case UnPercent:
-	       i = val * (int) pAb;
-	       dist = i / 100;
-	       break;
-	 }
+     {
+     case UnRelative:
+       if (pAb == NULL || pAb->AbBox == NULL || pAb->AbBox->BxFont == NULL)
+	 dist = 0;
+       else
+	 dist = (val * FontHeight (pAb->AbBox->BxFont) + 5) / 10;
+       break;
+     case UnXHeight:
+       if (pAb == NULL || pAb->AbBox == NULL || pAb->AbBox->BxFont == NULL)
+	 dist = 0;
+       else
+	 dist = (val * CharacterHeight ('X', pAb->AbBox->BxFont)) / 10;
+       break;
+     case UnPoint:
+       dist = PointToPixel (val);
+       break;
+     case UnPixel:
+       dist = val;
+       break;
+     case UnPercent:
+       i = val * (int) pAb;
+       dist = i / 100;
+       break;
+     }
    return (dist);
 }
 
@@ -333,38 +334,39 @@ TypeUnit            unit;
 PtrAbstractBox      pAb;
 #endif /* __STDC__ */
 {
-   int                 dist, i;
+   int              dist, i;
 
+   dist = 0;
    switch (unit)
+     {
+     case UnRelative:
+       if (pAb == NULL || pAb->AbBox == NULL || pAb->AbBox->BxFont == NULL)
+	 dist = 0;
+       else
+	 dist = val * 10 / FontHeight (pAb->AbBox->BxFont);
+       break;
+     case UnXHeight:
+       if (pAb == NULL || pAb->AbBox == NULL || pAb->AbBox->BxFont == NULL)
+	 dist = 0;
+       else
+	 dist = val * 10 / CharacterHeight ('x', pAb->AbBox->BxFont);
+       break;
+     case UnPoint:
+       dist = PixelToPoint (val);
+       break;
+     case UnPixel:
+       dist = val;
+       break;
+     case UnPercent:
+       if (pAb == NULL)
+	 dist = 0;
+       else
 	 {
-	    case UnRelative:
-	       if (pAb == NULL || pAb->AbBox == NULL || pAb->AbBox->BxFont == NULL)
-		  dist = 0;
-	       else
-		  dist = val * 10 / FontHeight (pAb->AbBox->BxFont);
-	       break;
-	    case UnXHeight:
-	       if (pAb == NULL || pAb->AbBox == NULL || pAb->AbBox->BxFont == NULL)
-		  dist = 0;
-	       else
-		  dist = val * 10 / CharacterHeight ('x', pAb->AbBox->BxFont);
-	       break;
-	    case UnPoint:
-	       dist = PixelToPoint (val);
-	       break;
-	    case UnPixel:
-	       dist = val;
-	       break;
-	    case UnPercent:
-	       if (pAb == NULL)
-		  dist = 0;
-	       else
-		 {
-		    i = val * 100;
-		    dist = i / (int) pAb;
-		 }
-	       break;
+	   i = val * 100;
+	   dist = i / (int) pAb;
 	 }
+       break;
+     }
    return (dist);
 }
 
@@ -744,7 +746,6 @@ int                 size;
 TypeUnit            unit;
 int                 frame;
 boolean             increase;
-
 #endif /* __STDC__ */
 {
    int                 i, j, deb, index;
@@ -753,40 +754,41 @@ boolean             increase;
    ptrfont             ptfont;
 
    /* use only standard sizes */
+   index = 0;
    if (unit == UnRelative)
-      index = size;
+     index = size;
    else
-      {
-      if (unit == UnPixel)
+     {
+       if (unit == UnPixel)
 	 {
-	 size = PixelToPoint (size);
-	 unit = UnPoint;
+	   size = PixelToPoint (size);
+	   unit = UnPoint;
 	 }
-      else
+       else
 	 if (unit == UnXHeight || unit == UnPercent)
-	    /* what does this mean??? set default size: 12 pt */
-	    {
-	    size = 12;
-	    unit = UnPoint;
-	    }
-      if (unit == UnPoint)
+	   /* what does this mean??? set default size: 12 pt */
+	   {
+	     size = 12;
+	     unit = UnPoint;
+	   }
+       if (unit == UnPoint)
          {
-	 /* nearest standard size lookup */
-	 index = 0;
-	 while (LogicalPointsSizes[index] < size && index <= MaxNumberOfSizes)
-	    index++;
+	   /* nearest standard size lookup */
+	   index = 0;
+	   while (LogicalPointsSizes[index] < size && index <= MaxNumberOfSizes)
+	     index++;
          }
-      }
-
+     }
+   
    if (UseBitStreamFamily && size == 11 && unit == UnPoint)
-      /* in the case of Bitstream, accept 11 points font size */
-      FontIdentifier (alphabet, family, highlight, size, TRUE, text, textX);
+     /* in the case of Bitstream, accept 11 points font size */
+     FontIdentifier (alphabet, family, highlight, size, TRUE, text, textX);
    else
-      FontIdentifier (alphabet, family, highlight, index, FALSE, text, textX);
-
+     FontIdentifier (alphabet, family, highlight, index, FALSE, text, textX);
+   
    /* initialize the Proscript font name */
    strcpy (PsName, text);
-
+   
    /* Font cache lookup */
    j = 0;
    i = 0;
@@ -794,55 +796,55 @@ boolean             increase;
    ptfont = NULL;
    while ((ptfont == NULL) && (i < MAX_FONT) && (TtFonts[i] != NULL))
      {
-	j = strcmp (&TtFontName[deb], text);
-	if (j == 0)
-	  {
-	     /* Font cache lookup succeeded */
-	     ptfont = TtFonts[i];
-	  }
-	else
-	   i++;
-	deb += MAX_FONTNAME;
+       j = strcmp (&TtFontName[deb], text);
+       if (j == 0)
+	 {
+	   /* Font cache lookup succeeded */
+	   ptfont = TtFonts[i];
+	 }
+       else
+	 i++;
+       deb += MAX_FONTNAME;
      }
-
+   
    /* Load a new font */
    if (ptfont == NULL)
      {
-	/* Check for table font overflow */
-	if (i >= MAX_FONT)
-	   TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_NO_PLACE_FOR_FONT), textX);
-	else
-	  {
-	     strcpy (&TtFontName[i * MAX_FONTNAME], text);
-	     strcpy (&TtPsFontName[i * 8], PsName);
-
-#            ifdef _WINDOWS
-	     ptfont = WIN_LoadFont (alphabet, family, highlight, size, unit, frame);
-#            else  /* _WINDOWS */
-	     ptfont = LoadFont (textX);
-#            endif /* !_WINDOWS */
-	     /* Loading failed try to find a neighbour */
-	     if (ptfont == NULL)
-	       {
-		  /* Change size */
-		  if (index == MaxNumberOfSizes)
-		    {
-		       /* size cannot increase */
-		       increase = FALSE;
-		       index--;
-		    }
-		  else if (increase)
-		     index++;
-		  else
-		     index--;
-
-		  if (index < MaxNumberOfSizes && index >= 0)
-		     ptfont = LoadNearestFont (alphabet, family, highlight, index, FALSE, frame, increase);
-		  else if (index >= MaxNumberOfSizes)
-		     ptfont = LoadNearestFont (alphabet, family, highlight, MaxNumberOfSizes, FALSE, frame, FALSE);
-		  if (ptfont == NULL)
-		     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE), textX);
-	       }
+       /* Check for table font overflow */
+       if (i >= MAX_FONT)
+	 TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_NO_PLACE_FOR_FONT), textX);
+       else
+	 {
+	   strcpy (&TtFontName[i * MAX_FONTNAME], text);
+	   strcpy (&TtPsFontName[i * 8], PsName);
+	   
+#          ifdef _WINDOWS
+	   ptfont = WIN_LoadFont (alphabet, family, highlight, size, unit, frame);
+#          else  /* _WINDOWS */
+	   ptfont = LoadFont (textX);
+#          endif /* !_WINDOWS */
+	   /* Loading failed try to find a neighbour */
+	   if (ptfont == NULL)
+	     {
+	       /* Change size */
+	       if (index == MaxNumberOfSizes)
+		 {
+		   /* size cannot increase */
+		   increase = FALSE;
+		   index--;
+		 }
+	       else if (increase)
+		 index++;
+	       else
+		 index--;
+	       
+	       if (index < MaxNumberOfSizes && index >= 0)
+		 ptfont = LoadNearestFont (alphabet, family, highlight, index, FALSE, frame, increase);
+	       else if (index >= MaxNumberOfSizes)
+		 ptfont = LoadNearestFont (alphabet, family, highlight, MaxNumberOfSizes, FALSE, frame, FALSE);
+	       if (ptfont == NULL)
+		 TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE), textX);
+	     }
 
 	  }
 
