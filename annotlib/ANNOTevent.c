@@ -1109,6 +1109,8 @@ void ANNOT_SelectSourceDoc (int doc, Element sel)
       el = TtaGetParent (sel);
       elType = TtaGetElementType (el);
     }
+  else
+    el = sel;
 
   if (elType.ElTypeNum != XLink_EL_XLink)
     return;
@@ -1356,6 +1358,8 @@ void ANNOT_Delete_callback (int doc, int status,
   annot = ctx->annot;
 #ifdef ANNOT_ON_ANNOT
   isReplyTo = annot->inReplyTo != NULL;
+#else
+  isReplyTo = FALSE;
 #endif /* ANNOT_ON_ANNOT */
 
   if (status == HT_OK)

@@ -1486,8 +1486,10 @@ char * ANNOT_GetHTMLTitle (Document doc)
   int              length;
   Language         lang;
   char            *title;
+  char            *tmp;
   ElementType      elType;
-  
+  CHARSET          charset;
+
   title = NULL;
   if (DocumentTypes[doc] == docHTML || DocumentTypes[doc] == docXml)
     {
@@ -1553,8 +1555,17 @@ char * ANNOT_GetHTMLTitle (Document doc)
     }
   /* if we didn't get a title, use the document's URL instead */
   if (title == NULL)
-    title = TtaStrdup (DocumentURLs[doc]);
-
+      title = TtaStrdup (DocumentURLs[doc]);
+  else
+    {
+      charset = TtaGetDocumentCharset (doc);
+      if (charset != UTF_8)
+	{
+	  tmp = TtaConvertIsoToMbs (title, charset);
+	  TtaFreeMemory (title);
+	  title = tmp;
+	}
+    }
   return (title);
 }
 

@@ -590,10 +590,13 @@ void LINK_DeleteLink (Document source_doc, ThotBool isReplyTo)
   if (!(fp_new = fopen (main_index_file_new, "w")))
     error++;
 
-  if (!error && !(fp_old = fopen (main_index_file_old, "r")))
+  if (!error)
     {
-      fclose (fp_new);
-      error++;
+      if (!(fp_old = fopen (main_index_file_old, "r")))
+	{
+	  fclose (fp_new);
+	  error++;
+	}
     }
 
   if (!error)
