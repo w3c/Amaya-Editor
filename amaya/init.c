@@ -1646,19 +1646,15 @@ static void	UpdateSaveAsButtons ()
 
 #endif
 {
-  if (!SaveAsHTML)
-     {
-     if (CopyImages)
-	{
-        CopyImages = FALSE;
-        TtaSetToggleMenu (BaseDialog + ToggleSave, 3, CopyImages);
-	}
-     if (UpdateURLs)
-	{
-        UpdateURLs = FALSE;
-        TtaSetToggleMenu (BaseDialog + ToggleSave, 4, UpdateURLs);
-	}
-     }
+  int	active;
+
+  if (SaveAsHTML)
+     active = 1;
+  else
+     active = 0;
+  TtaRedrawMenuEntry (BaseDialog + ToggleSave, 3, NULL, -1, active);
+  TtaRedrawMenuEntry (BaseDialog + ToggleSave, 4, NULL, -1, active);
+
 }
 
 /*----------------------------------------------------------------------
@@ -1955,11 +1951,9 @@ char               *data;
 	   break;
 	 case 3:	/* "Copy Images" button */
 	   CopyImages = !CopyImages;
-	   UpdateSaveAsButtons ();
 	   break;
 	 case 4:	/* "Transform URLs" button */
 	   UpdateURLs = !UpdateURLs;
-	   UpdateSaveAsButtons ();
 	   break;
 	 }
        break;
