@@ -319,9 +319,14 @@ static void BuildPopdownWX ( int window_id, Menu_Ctl *ptrmenu, ThotMenu p_menu )
 	case 'M': /* a submenu */
 	  item_action  = -1;
 	  item_submenu = ptritem[item_nb].SubMenu;
-	  p_submenu = new wxMenu();
-	  BuildPopdownWX( window_id, item_submenu, p_submenu );
-	  p_menu_item = new wxMenuItem(p_menu, item_id, label, _T(""), wxITEM_NORMAL, p_submenu);
+	  if (item_submenu->ItemsNb>0)
+	    {
+	      p_submenu = new wxMenu();
+	      BuildPopdownWX( window_id, item_submenu, p_submenu );
+	      p_menu_item = new wxMenuItem(p_menu, item_id, label, _T(""), wxITEM_NORMAL, p_submenu);
+	    }
+	  else
+	    p_menu_item = NULL;
 	  break;
 
 	default: /* a unknown type */
