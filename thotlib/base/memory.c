@@ -1721,87 +1721,87 @@ PtrAbstractBox             pAb;
 #endif /* __STDC__ */
 
 {
-   PtrBox            adboite;
+   PtrBox            adbox;
 
    /* Si pas de contexte dans la liste des libres -> acquiert un nouveau */
    if (PtFreBox == NULL)
-      adboite = (PtrBox) malloc (sizeof (Box));
+      adbox = (PtrBox) malloc (sizeof (Box));
    /* Sinon recupere le contexte en tete de la chaine des libres */
    else
      {
-	adboite = PtFreBox;
-	PtFreBox = adboite->BxNexChild;
+	adbox = PtFreBox;
+	PtFreBox = adbox->BxNexChild;
 	NbFree_Box--;
      }
    NbUsed_Box++;
 
-   /* Initialisation de la boite */
-   if (adboite != NULL)
+   /* Initialisation de la box */
+   if (adbox != NULL)
      {
-	memset (adboite, 0, sizeof (Box));
-	adboite->BxAbstractBox = pAb;
-	adboite->BxPrevious = NULL;
-	adboite->BxNext = NULL;
-	adboite->BxType = BoComplete;
-	adboite->BxNexChild = NULL;
-	adboite->BxXOrg = 0;
-	adboite->BxYOrg = 0;
-	adboite->BxWidth = 0;
-	adboite->BxHeight = 0;
-	adboite->BxHorizRef = 0;
-	adboite->BxVertRef = 0;
-	adboite->BxFont = NULL;
-	adboite->BxUnderline = 0;
-	adboite->BxThickness = 0;
-	adboite->BxMoved = NULL;
-	adboite->BxHorizInc = NULL;
-	adboite->BxVertInc = NULL;
-	adboite->BxNChars = 0;
-	adboite->BxHorizEdge = Left;
-	adboite->BxVertEdge = Top;
-	adboite->BxNSpaces = 0;
-	adboite->BxSpaceWidth = 0;
-	adboite->BxPosRelations = NULL;
-	adboite->BxWidthRelations = NULL;
-	adboite->BxHeightRelations = NULL;
-	adboite->BxEndOfBloc = 0;
+	memset (adbox, 0, sizeof (Box));
+	adbox->BxAbstractBox = pAb;
+	adbox->BxPrevious = NULL;
+	adbox->BxNext = NULL;
+	adbox->BxType = BoComplete;
+	adbox->BxNexChild = NULL;
+	adbox->BxXOrg = 0;
+	adbox->BxYOrg = 0;
+	adbox->BxWidth = 0;
+	adbox->BxHeight = 0;
+	adbox->BxHorizRef = 0;
+	adbox->BxVertRef = 0;
+	adbox->BxFont = NULL;
+	adbox->BxUnderline = 0;
+	adbox->BxThickness = 0;
+	adbox->BxMoved = NULL;
+	adbox->BxHorizInc = NULL;
+	adbox->BxVertInc = NULL;
+	adbox->BxNChars = 0;
+	adbox->BxHorizEdge = Left;
+	adbox->BxVertEdge = Top;
+	adbox->BxNSpaces = 0;
+	adbox->BxSpaceWidth = 0;
+	adbox->BxPosRelations = NULL;
+	adbox->BxWidthRelations = NULL;
+	adbox->BxHeightRelations = NULL;
+	adbox->BxEndOfBloc = 0;
 	/* Il n'y a pas de relations hors-structure */
-	adboite->BxXOutOfStruct = FALSE;
-	adboite->BxYOutOfStruct = FALSE;
-	adboite->BxWOutOfStruct = FALSE;
-	adboite->BxHOutOfStruct = FALSE;
-	/* La boite n'est pas elastique */
-	adboite->BxHorizFlex = FALSE;
-	adboite->BxVertFlex = FALSE;
-	adboite->BxHorizInverted = FALSE;
-	adboite->BxVertInverted = FALSE;
-	adboite->BxNew = FALSE;
+	adbox->BxXOutOfStruct = FALSE;
+	adbox->BxYOutOfStruct = FALSE;
+	adbox->BxWOutOfStruct = FALSE;
+	adbox->BxHOutOfStruct = FALSE;
+	/* La box n'est pas elastique */
+	adbox->BxHorizFlex = FALSE;
+	adbox->BxVertFlex = FALSE;
+	adbox->BxHorizInverted = FALSE;
+	adbox->BxVertInverted = FALSE;
+	adbox->BxNew = FALSE;
 	/* Initialisation du traitement des dimensions minimales */
-	adboite->BxContentHeight = FALSE;
-	adboite->BxContentWidth = FALSE;
-	adboite->BxRuleHeigth = 0;
-	adboite->BxRuleWidth = 0;
-	adboite->BxBuffer = NULL;
-	adboite->BxEndOfBloc = 0;
-	adboite->BxNPixels = 0;
-	adboite->BxFirstChar = 0;
-	adboite->BxXToCompute = FALSE;
-	adboite->BxYToCompute = FALSE;
+	adbox->BxContentHeight = FALSE;
+	adbox->BxContentWidth = FALSE;
+	adbox->BxRuleHeigth = 0;
+	adbox->BxRuleWidth = 0;
+	adbox->BxBuffer = NULL;
+	adbox->BxEndOfBloc = 0;
+	adbox->BxNPixels = 0;
+	adbox->BxFirstChar = 0;
+	adbox->BxXToCompute = FALSE;
+	adbox->BxYToCompute = FALSE;
      }
-   return adboite;
+   return adbox;
 }
 
 /*----------------------------------------------------------------------
-   FreeBox libere le contexte de boite adboite et retourne la boite 
+   FreeBox libere le contexte de boite adBox et retourne la boite 
    suivante.                                               
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-PtrBox            FreeBox (PtrBox adboite)
+PtrBox            FreeBox (PtrBox adBox)
 
 #else  /* __STDC__ */
-PtrBox            FreeBox (adboite)
-PtrBox            adboite;
+PtrBox            FreeBox (adBox)
+PtrBox            adBox;
 
 #endif /* __STDC__ */
 
@@ -1814,7 +1814,7 @@ PtrBox            adboite;
    PtrBox            NextBox;
 
    /* Insere le contexte de boite en tete de la chaine des libres */
-   pBo1 = adboite;
+   pBo1 = adBox;
    pBo1->BxAbstractBox = NULL;
    pBo1->BxPrevious = NULL;
    pBo1->BxNext = NULL;
@@ -1823,7 +1823,7 @@ PtrBox            adboite;
    pBo1->BxType = BoComplete;
    NextBox = pBo1->BxNexChild;
    pBo1->BxNexChild = PtFreBox;
-   PtFreBox = adboite;
+   PtFreBox = adBox;
    NbFree_Box++;
    NbUsed_Box--;
    /* On libere les differents blocs attaches a la boite */
