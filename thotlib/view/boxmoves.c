@@ -2078,11 +2078,11 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	  /* Keep in mind if the box positionning is absolute or not */
 	  absoluteMove = IsXPosComplete (pBox);
 	  /* internal boxes take into account margins borders and paddings */
-	  if (!absoluteMove && (l || r))
+	  if (/*!absoluteMove &&*/ (l || r))
 	    {
-	      orgTrans = l;
-	      middleTrans = (l - r)/2;
-	      endTrans = - r;
+	      orgTrans += l;
+	      middleTrans += (l - r)/2;
+	      endTrans += - r;
 	      if (l)
 		  /* internal boxes must be translated */
 		  absoluteMove = TRUE;
@@ -2316,7 +2316,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 		}
 	    }
 
-	  if (pBox->BxType == BoTable && pBox->BxCycles == 0 &&
+	  if (delta && pBox->BxType == BoTable && pBox->BxCycles == 0 &&
 	      ThotLocalActions[T_resizetable])
 	    (*ThotLocalActions[T_resizetable]) (pCurrentAb, frame);
 	}

@@ -642,9 +642,12 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
     }
   if (cNumber == 0)
     return;
-  CleanAutoMargins (table);
+
   mbp = pBox->BxLPadding + pBox->BxRPadding + pBox->BxLBorder + pBox->BxRBorder;
-  mbp += pBox->BxLMargin + pBox->BxRMargin;
+  if (table->AbLeftMarginUnit != UnAuto)
+    mbp += pBox->BxLMargin;
+  if (table->AbRightMarginUnit != UnAuto)
+    mbp += pBox->BxRMargin;
   pCell = GetParentCell (pBox);
 
   /* get the inside table width */
@@ -682,7 +685,6 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
   minOfWidth = 0;
   min = 0;
   max = 0;
-  mbp = 0;
   /* number of unconstrained columns */
   n = 0;
   nPercent = 0;
@@ -725,9 +727,7 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
     }
 
   /* get the extra width of the table */
-  mbp =  pBox->BxMinWidth - min - minOfWidth - minOfPercent;
-  /*if (mbp < 0)
-    mbp = 0;*/
+  /*mbp =  pBox->BxMinWidth - min - minOfWidth - minOfPercent;*/
   min = min + mbp;
   max = max + mbp;
   if (sumPercent > 0)
@@ -767,6 +767,8 @@ printf ("Maximum Widths ...\n");
 #endif
       /* assign the maximum width, or the percent, or the width */
       width = max + sum + sumPercent;
+      /* the table width is not constrained by the enclosing box */
+      table->AbWidth.DimAbRef = NULL;
       if (width - pBox->BxW)
 	/* we will have to recheck scrollbars */
 	AnyWidthUpdate = TRUE;
@@ -797,6 +799,8 @@ printf ("Minimum Widths ...\n");
 #endif
       /* assign the minimum width, or the percent, or the width */
       width = min + sum + sumPercent;
+      /* the table width is constrained by the enclosing box */
+      table->AbWidth.DimAbRef = table->AbEnclosing;
       if (width - pBox->BxW)
 	/* we will have to recheck scrollbars */
 	AnyWidthUpdate = TRUE;
@@ -829,6 +833,8 @@ printf ("Specific Widths ...\n");
       if (width - pBox->BxW)
 	/* we will have to recheck scrollbars */
 	AnyWidthUpdate = TRUE;
+      /* the table width is constrained by the enclosing box */
+      table->AbWidth.DimAbRef = table->AbEnclosing;
       ResizeWidth (pBox, pBox, NULL, width - pBox->BxW, 0, 0, 0, frame);
       /* get the space available for stretchable columns */      
       delta = width - sum - sumPercent;
@@ -909,6 +915,8 @@ printf ("Specific Widths ...\n");
 	    }
     }
 
+  /* recheck auto and % margins */
+  CheckMBP (table, table->AbBox, frame, TRUE);
   table->AbBox->BxCycles = 0;
 #ifdef TAB_DEBUG
 printf("End CheckTableWidths (%s) = %d\n", table->AbElement->ElLabel, table->AbBox->BxWidth);
@@ -1402,9 +1410,11 @@ static ThotBool SetTableWidths (PtrAbstractBox table, int frame)
     }
 
   /* get constraints on the table itself */
-  CleanAutoMargins (table);
   mbp = pBox->BxLPadding + pBox->BxRPadding + pBox->BxLBorder + pBox->BxRBorder;
-  mbp += pBox->BxLMargin + pBox->BxRMargin;
+  if (table->AbLeftMarginUnit != UnAuto)
+    mbp += pBox->BxLMargin;
+  if (table->AbRightMarginUnit != UnAuto)
+    mbp += pBox->BxRMargin;
   min = min + mbp + delta;
   max = max + mbp + delta;
   if (width)

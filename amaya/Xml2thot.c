@@ -4452,8 +4452,7 @@ static void     FreeExpatParser ()
    InitializeExpatParser
    Specific initialization for expat
   ----------------------------------------------------------------------*/
-static void  InitializeExpatParser (CHARSET charset)
-
+static void InitializeExpatParser (CHARSET charset)
 {  
   int        paramEntityParsing;
   char       msgBuffer[MaxMsgLength];
@@ -4468,10 +4467,12 @@ static void  InitializeExpatParser (CHARSET charset)
     {
       /* Default encoding for XML documents */
       Parser = XML_ParserCreateNS ("UTF-8", NS_SEP);
+#ifdef IV
       /* Display a warning message */
       sprintf (msgBuffer,
 	       "Warning: no encoding specified, assuming UTF-8");
       XmlParseError (undefinedEncoding, msgBuffer, 0);
+#endif
       TtaSetDocumentCharset (XMLcontext.doc, UTF_8, TRUE);
     }
   else if (charset == UTF_8 || charset == UTF_16)

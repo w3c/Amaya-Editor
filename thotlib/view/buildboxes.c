@@ -1693,8 +1693,7 @@ ThotBool CheckMBP (PtrAbstractBox pAb, PtrBox pBox, int frame,
   else if (lt != 0 || rb != 0)
     {
       if (pAb->AbHeight.DimIsPosition ||
-	  pAb->AbHeight.DimAbRef/* ||
-	  pAb->AbHeight.DimAbRef == pAb->AbEnclosing*/)
+	   pAb->AbHeight.DimAbRef)
 	/* the outside height is constrained */
 	ResizeHeight (pBox, pBox, NULL, - lt - rb, lt, rb, frame);
       else
@@ -1715,9 +1714,7 @@ ThotBool CheckMBP (PtrAbstractBox pAb, PtrBox pBox, int frame,
     {
       pAb->AbBox->BxVertRef += lt;
       if (pAb->AbWidth.DimIsPosition ||
-	  pAb->AbWidth.DimAbRef
-	  /* ||
-	     pAb->AbWidth.DimAbRef == pAb->AbEnclosing*/)
+	   pAb->AbWidth.DimAbRef)
 	/* the outside width is constrained */
 	ResizeWidth (pBox, pBox, NULL, - lt - rb, lt, rb, 0, frame);
       else
@@ -3026,7 +3023,7 @@ static void UpdateFloat (PtrAbstractBox pAb, PtrAbstractBox pParent,
 ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 {
   PtrLine             pLine;
-  PtrAbstractBox      pCurrentAb, pCell, pBlock, pParent;
+  PtrAbstractBox      pCurrentAb, pCell, pBlock, pParent, curr;
   PtrBox              pNextBox;
   PtrBox              pCurrentBox = NULL;
   PtrBox              pMainBox;
@@ -3104,12 +3101,25 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
       if (pAb->AbNew || pAb->AbDead ||
 	  pAb->AbHorizPosChange || pAb->AbVertPosChange)
 	{
-	  pCurrentAb = pParent;	   
-	  while (pCurrentAb && pCurrentAb->AbPictBackground == NULL &&
-		 !pCurrentAb->AbFillBox)
-	    pCurrentAb = pCurrentAb->AbEnclosing;
-	  if (pCurrentAb == NULL || pCurrentAb->AbEnclosing == NULL)
-	    /* no background found: clip the current box */
+	  pCurrentAb = pParent;
+	  curr = pCurrentAb;
+	  while (curr)
+	    {
+	      if (curr->AbPictBackground ||
+		  curr->AbFillBox ||
+		  (curr->AbTopStyle > 2 && curr->AbTopBColor != -2 &&
+		   curr->AbTopBorder > 0) ||
+		  (curr->AbLeftStyle > 2 && curr->AbLeftBColor != -2 &&
+		   curr->AbLeftBorder > 0) ||
+		  (curr->AbBottomStyle > 2 && curr->AbBottomBColor != -2 &&
+		   curr->AbBottomBorder > 0) ||
+		  (curr->AbRightStyle > 2 && curr->AbRightBColor != -2 &&
+		   curr->AbRightBorder > 0))
+		pCurrentAb = curr;
+	      curr = curr->AbEnclosing;
+	    }
+	  if (pCurrentAb == NULL)
+	    /* no background and not parent: clip the current box */
 	    pCurrentAb = pAb;
 	}
       else
