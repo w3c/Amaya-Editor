@@ -137,95 +137,98 @@
 135 Crear o cambiar enlace...
 136 Crear destino
 137 Borrar ancla
-138 Mostar barra de botones
-139 Mostrar dirección
-140 Mostrar áreas de mapas
-141 Mostrar destinos
-142 Zoom mas
-143 Zoom menos
-144 Mostrar fichero log
-145 Mostrar estructura
-146 Mostrar alternativo
-147 Mostrar enlaces
-148 Mostrar tabla de contenidos
-149 Mostrar fuente
-150 Estilo de carácter...
-151 Colores...
-152 Formato...
-153 Imagen de fondo...
-154 Crear regla...
-155 Aplicar clase...
-156 Hojas de estilos
-157 Enlace...
-158 Abrir...
-159 Desactivar...
-160 Activar...
-161 Eliminar...
-162 Tipo de Información
-163 Enfasis (em)
-164 strong
-165 cite
-166 Definición (dfn)
-167 código
-168 Variable (var)
-169 Ejemplo (samp)
-170 Teclado (kbd)
-171 Abreviatura (abbr)
-172 acrónimo
-173 Inserción (ins)
-174 Borrado (del)
-175 Elemento carácter
-176 Itálica (i)
-177 Negrita (b)
-178 Teletipo (tt)
-179 grande
-180 pequeña
-181 Subíndice (sub)
-182 Superíndice (sup)
-183 Remarcado (Quotation q)
-184 BiDi override (bdo)
-185 Numeracón de sección
-186 Hacer libro
-187 Crear/Suprimir attributos ID...
-188 Preferencias
-189 General...
-190 Publicar...
-191 Cache...
-192 Proxy...
-193 Colores...
-194 Geometría de la ventana...
-195 Negociación de idioma...
-196 Perfiles...
-197 Plantillas...
-198 Anotar selección
-199 Anotar documento
-200 Post anotacion
-201 Borrar anotación
-202 Cargar anotaciones
-203 Personalizar consulta...
-204 Filtro local...
-205 Configurar...
-206 Sobre Amaya
-207 Sobre Amaya en W3C
-208 Hojear
-209 Seleccionar
-210 Buscar
-211 Vistas
-212 Creación de elementos
-213 Enlaces
-214 Restructuración
-215 Tablas
-216 Matemáticas
-217 Graphics
-218 Mapas de imagen
-219 Hojas de estilo
-220 Atributos
-221 Comprobar ortografía
-222 Publicar
-223 Imprimir
-224 Numerar
-225 Crear libros
-226 Anotaciones
-227 Configurar Amaya
-228 Atajos
-229 Accesibilidad en Amaya
+138 **Memorize XPointer
+139 Mostar barra de botones
+140 Mostrar dirección
+141 Mostrar áreas de mapas
+142 Mostrar destinos
+143 Zoom mas
+144 Zoom menos
+145 Mostrar fichero log
+146 Mostrar estructura
+147 Mostrar alternativo
+148 Mostrar enlaces
+149 Mostrar tabla de contenidos
+150 Mostrar fuente
+151 Estilo de carácter...
+152 Colores...
+153 Formato...
+154 Imagen de fondo...
+155 Crear regla...
+156 Aplicar clase...
+157 Hojas de estilos
+158 Enlace...
+159 Abrir...
+160 Desactivar...
+161 Activar...
+162 Eliminar...
+163 Tipo de Información
+164 Enfasis (em)
+165 strong
+166 cite
+167 Definición (dfn)
+168 código
+169 Variable (var)
+170 Ejemplo (samp)
+171 Teclado (kbd)
+172 Abreviatura (abbr)
+173 acrónimo
+174 Inserción (ins)
+175 Borrado (del)
+176 Elemento carácter
+177 Itálica (i)
+178 Negrita (b)
+179 Teletipo (tt)
+180 grande
+181 pequeña
+182 Subíndice (sub)
+183 Superíndice (sup)
+184 Remarcado (Quotation q)
+185 BiDi override (bdo)
+186 Numeracón de sección
+187 Hacer libro
+188 Crear/Suprimir attributos ID...
+189 Preferencias
+190 General...
+191 Publicar...
+192 Cache...
+193 Proxy...
+194 Colores...
+195 Geometría de la ventana...
+196 Negociación de idioma...
+197 Perfiles...
+198 Plantillas...
+199 Anotar selección
+200 Anotar documento
+201 **Reassign annotation (current selection)
+202 **Reassign annotation (memorized XPointer)
+203 Post anotacion
+204 Borrar anotación
+205 Cargar anotaciones
+206 Personalizar consulta...
+207 Filtro local...
+208 Configurar...
+209 Sobre Amaya
+210 Sobre Amaya en W3C
+211 Hojear
+212 Seleccionar
+213 Buscar
+214 Vistas
+215 Creación de elementos
+216 Enlaces
+217 Restructuración
+218 Tablas
+219 Matemáticas
+220 Graphics
+221 Mapas de imagen
+222 Hojas de estilo
+223 Atributos
+224 Comprobar ortografía
+225 Publicar
+226 Imprimir
+227 Numerar
+228 Crear libros
+229 Anotaciones
+230 Configurar Amaya
+231 Atajos
+232 Accesibilidad en Amaya

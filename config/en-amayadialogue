@@ -137,95 +137,98 @@
 135 Create or change link...
 136 Create target
 137 Delete anchor
-138 Show buttonbar
-139 Show address
-140 Show map areas
-141 Show targets
-142 Zoom in
-143 Zoom out
-144 Show parsing errors
-145 Show structure
-146 Show alternate
-147 Show links
-148 Show table of contents
-149 Show source
-150 Character style...
-151 Colors...
-152 Format...
-153 Background image...
-154 Create rule...
-155 Apply class...
-156 Style sheets
-157 Link...
-158 Open...
-159 Disable...
-160 Enable...
-161 Remove...
-162 Information type
-163 Emphasis (em)
-164 strong
-165 cite
-166 Definition (dfn)
-167 code
-168 Variable (var)
-169 Sample (samp)
-170 Keyboard (kbd)
-171 Abbreviation (abbr)
-172 acronym
-173 Insertion (ins)
-174 Deletion (del)
-175 Character element
-176 Italic (i)
-177 Bold (b)
-178 Teletype (tt)
-179 big
-180 small
-181 Subscript (sub)
-182 Superscript (sup)
-183 Quotation (q)
-184 BiDi override (bdo)
-185 Section numbering
-186 Make book
-187 Add/Remove IDs...
-188 Preferences
-189 General...
-190 Publishing...
-191 Cache...
-192 Proxy...
-193 Colors...
-194 Window Geometry...
-195 Language Negotiation...
-196 Profiles...
-197 Templates...
-198 Annotate selection
-199 Annotate document
-200 Post annotation
-201 Delete annotation
-202 Load annotations
-203 Customize query...
-204 Local filter...
-205 Configure...
-206 About Amaya
-207 About Amaya at W3C
-208 Browsing
-209 Selecting
-210 Searching
-211 Views
-212 Creating elements
-213 Links
-214 Restructuring
-215 Tables
-216 Math
-217 Graphics
-218 Image maps
-219 Style sheets
-220 Attributes
-221 Spell Checking
-222 Publishing
-223 Printing
-224 Numbering
-225 Making books
-226 Annotations
-227 Configuring Amaya
-228 ShortCuts
-229 Accessibility in Amaya
+138 Memorize XPointer
+139 Show buttonbar
+140 Show address
+141 Show map areas
+142 Show targets
+143 Zoom in
+144 Zoom out
+145 Show parsing errors
+146 Show structure
+147 Show alternate
+148 Show links
+149 Show table of contents
+150 Show source
+151 Character style...
+152 Colors...
+153 Format...
+154 Background image...
+155 Create rule...
+156 Apply class...
+157 Style sheets
+158 Link...
+159 Open...
+160 Disable...
+161 Enable...
+162 Remove...
+163 Information type
+164 Emphasis (em)
+165 strong
+166 cite
+167 Definition (dfn)
+168 code
+169 Variable (var)
+170 Sample (samp)
+171 Keyboard (kbd)
+172 Abbreviation (abbr)
+173 acronym
+174 Insertion (ins)
+175 Deletion (del)
+176 Character element
+177 Italic (i)
+178 Bold (b)
+179 Teletype (tt)
+180 big
+181 small
+182 Subscript (sub)
+183 Superscript (sup)
+184 Quotation (q)
+185 BiDi override (bdo)
+186 Section numbering
+187 Make book
+188 Add/Remove IDs...
+189 Preferences
+190 General...
+191 Publishing...
+192 Cache...
+193 Proxy...
+194 Colors...
+195 Window Geometry...
+196 Language Negotiation...
+197 Profiles...
+198 Templates...
+199 Annotate selection
+200 Annotate document
+201 Reassign annotation (current selection)
+202 Reassign annotation (memorized XPointer)
+203 Post annotation
+204 Delete annotation
+205 Load annotations
+206 Customize query...
+207 Local filter...
+208 Configure...
+209 About Amaya
+210 About Amaya at W3C
+211 Browsing
+212 Selecting
+213 Searching
+214 Views
+215 Creating elements
+216 Links
+217 Restructuring
+218 Tables
+219 Math
+220 Graphics
+221 Image maps
+222 Style sheets
+223 Attributes
+224 Spell Checking
+225 Publishing
+226 Printing
+227 Numbering
+228 Making books
+229 Annotations
+230 Configuring Amaya
+231 ShortCuts
+232 Accessibility in Amaya

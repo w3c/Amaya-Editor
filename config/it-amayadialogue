@@ -137,95 +137,98 @@
 135 Crea o cambia collegamento...
 136 Crea obiettivo
 137 Cancella ancora
-138 Mostra barra dei pulsanti
-139 Mostra indirizzo
-140 Mostra le zone attive
-141 Mostra obiettivi
-142 Ingrandisci
-143 Rimpicciolisci
-144 Mostra le errore
-145 Mostra struttura
-146 Mostra la vista alternativa
-147 Mostra collegamenti
-148 Mostra sommario
-149 Mostra sorgente
-150 Stile dei caratteri...
-151 Colori...
-152 Formattazione...
-153 Immagine di sfondo...
-154 Crea una regola...
-155 Applica una classe...
-156 Fogli di stile
-157 Collegamento...
-158 Apri...
-159 Disabilita...
-160 Abilita...
-161 Rimuovi...
-162 Tipo di informazione
-163 Enfasi (em)
-164 Forte (strong)
-165 Cita (cite)
-166 Definizione (dfn)
-167 Codice (code)
-168 Variabile (var)
-169 Sample (samp)
-170 Tastiera (kbd)
-171 Abbreviazione (abbr)
-172 Acronimo (acronym)
-173 Inserzione (ins)
-174 Cancellazione (del)
-175 Elementi carattere
-176 Italico (i)
-177 Grassetto (b)
-178 Macchina da scrivere (tt)
-179 Grande (big)
-180 Piccolo (small)
-181 Pedice (sub)
-182 Indice (sup)
-183 Citazione (q)
-184 BiDi (bdo)
-185 Numerazione delle sezioni
-186 Crea libro
-187 Aggiungi/Togli ID...
-188 Preferenze
-189 Generali...
-190 Pubblicazione...
-191 Cache...
-192 Proxy...
-193 Colori...
-194 Dimensioni della finestra...
-195 Negoziazione della lingua...
-196 Profili...
-197 Modelli...
-198 Annota la selezione
-199 Annota il documento
-200 Registra annotazione
-201 Elimina l'annotazione
-202 Carica annotazioni
-203 Personalizza la richiesta
-204 Filtro locale...
-205 Configurazione...
-206 Informazioni su Amaya
-207 Informazioni su Amaya al W3C
-208 Navigazione
-209 Selezione
-210 Ricerca
-211 Viste
-212 Creazione elementi
-213 Collegamenti
-214 Ristrutturazione
-215 Tabelle
-216 Matematica
-217 Graphics
-218 Zone attive
-219 Fogli di stile
-220 Attributi
-221 Controllo ortografico
-222 Pubblicazione
-223 Stampa
-224 Numerazione
-225 Creare un libro
-226 Annotazioni
-227 Configurazione di Amaya
-228 Scelte rapide
-229 Accessibility in Amaya
+138 **Memorize XPointer
+139 Mostra barra dei pulsanti
+140 Mostra indirizzo
+141 Mostra le zone attive
+142 Mostra obiettivi
+143 Ingrandisci
+144 Rimpicciolisci
+145 Mostra le errore
+146 Mostra struttura
+147 Mostra la vista alternativa
+148 Mostra collegamenti
+149 Mostra sommario
+150 Mostra sorgente
+151 Stile dei caratteri...
+152 Colori...
+153 Formattazione...
+154 Immagine di sfondo...
+155 Crea una regola...
+156 Applica una classe...
+157 Fogli di stile
+158 Collegamento...
+159 Apri...
+160 Disabilita...
+161 Abilita...
+162 Rimuovi...
+163 Tipo di informazione
+164 Enfasi (em)
+165 Forte (strong)
+166 Cita (cite)
+167 Definizione (dfn)
+168 Codice (code)
+169 Variabile (var)
+170 Sample (samp)
+171 Tastiera (kbd)
+172 Abbreviazione (abbr)
+173 Acronimo (acronym)
+174 Inserzione (ins)
+175 Cancellazione (del)
+176 Elementi carattere
+177 Italico (i)
+178 Grassetto (b)
+179 Macchina da scrivere (tt)
+180 Grande (big)
+181 Piccolo (small)
+182 Pedice (sub)
+183 Indice (sup)
+184 Citazione (q)
+185 BiDi (bdo)
+186 Numerazione delle sezioni
+187 Crea libro
+188 Aggiungi/Togli ID...
+189 Preferenze
+190 Generali...
+191 Pubblicazione...
+192 Cache...
+193 Proxy...
+194 Colori...
+195 Dimensioni della finestra...
+196 Negoziazione della lingua...
+197 Profili...
+198 Modelli...
+199 Annota la selezione
+200 Annota il documento
+201 **Reassign annotation (current selection)
+202 **Reassign annotation (memorized XPointer)
+203 Registra annotazione
+204 Elimina l'annotazione
+205 Carica annotazioni
+206 Personalizza la richiesta
+207 Filtro locale...
+208 Configurazione...
+209 Informazioni su Amaya
+210 Informazioni su Amaya al W3C
+211 Navigazione
+212 Selezione
+213 Ricerca
+214 Viste
+215 Creazione elementi
+216 Collegamenti
+217 Ristrutturazione
+218 Tabelle
+219 Matematica
+220 Graphics
+221 Zone attive
+222 Fogli di stile
+223 Attributi
+224 Controllo ortografico
+225 Pubblicazione
+226 Stampa
+227 Numerazione
+228 Creare un libro
+229 Annotazioni
+230 Configurazione di Amaya
+231 Scelte rapide
+232 Accessibility in Amaya

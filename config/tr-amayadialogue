@@ -137,95 +137,98 @@
 135 Baðlantý yarat...
 136 Hedef yarat
 137 <A> tanýmý sil
-138 Tuþlarý göster
-139 Adres göster
-140 Yakýnlaþtýr
-141 **Show targets
-142 Uzaklaþtýr
-143 Harita alanlarýný göster
-144 **Show parsing errors
-145 Yapýyý göster
-146 Alternatif gösterim
-147 Baðlantýlarý göster
-148 Ýçindekileri göster
-149 **Show source
-150 Karakter tarzý...
-151 Renkler...
-152 Biçim...
-153 Arkaplan görüntüsü...
-154 Kural yarat...
-155 \'class\' uygula...
-156 Tarzý tanýmlarý
-157 **Link...
-158 **Open...
-159 **Disable...
-160 **Enable...
-161 **Remove...
-162 Bilgi türü
-163 Vurgu (em)
-164 Kuvvetli (strong)
-165 Cite (cite)
-166 Taným (dfn)
-167 Kod (code)
-168 Deðiþken (var)
-169 Örnek (samp)
-170 Tuþtakýmý (kbd)
-171 **Abbreviation (abbr)
-172 **acronym
-173 **Insertion (ins)
-174 **Deletion (del)
-175 Karakter birimi
-176 Ýtalik (i)
-177 Kalýn (b)
-178 Teletype (tt)
-179 Büyük (big)
-180 Küçük (small)
-181 Alt (sub)
-182 Üst (sup)
-183 **Quotation (q)
-184 **BiDi override (bdo)
-185 Bölüm numaralandýrmasý
-186 Kitap yap
-187 **Add/Remove IDs...
-188 **Preferences
-189 **General...
-190 **Publishing...
-191 **Cache...
-192 **Proxy...
-193 **Colors...
-194 **Window Geometry...
-195 **Language Negotiation...
-196 **Profiles...
-197 **Templates...
-198 **Annotate selection
-199 **Annotate document
-200 **Post annotation
-201 **Delete annotation
-202 **Load annotations
-203 **Customize query...
-204 **Local filter...
-205 **Configure...
-206 **About Amaya
-207 Amaya hakkýnda
-208 **Browsing
-209 Tarama
-210 Seçme
-211 Arama
-212 Görünümler
-213 Birim yaratma
-214 Baðlantýlar
-215 Yeniden yapýlandýrma
-216 Tablolar
-217 **Graphics
-218 Matematik
-219 Görüntü haritalarý
-220 Tarz tanýmlarý
-221 Özellikler
-222 Yazým hatalarý aranýyor
-223 Sayfa yerleþtirme
-224 Bastýrma
-225 Numaralandýrmasý
-226 **Annotations
-227 Kitap oluþturma
-228 **ShortCuts
-229 Amaya yapýlandýrmasý
+138 **Memorize XPointer
+139 Tuþlarý göster
+140 Adres göster
+141 Yakýnlaþtýr
+142 **Show targets
+143 Uzaklaþtýr
+144 Harita alanlarýný göster
+145 **Show parsing errors
+146 Yapýyý göster
+147 Alternatif gösterim
+148 Baðlantýlarý göster
+149 Ýçindekileri göster
+150 **Show source
+151 Karakter tarzý...
+152 Renkler...
+153 Biçim...
+154 Arkaplan görüntüsü...
+155 Kural yarat...
+156 \'class\' uygula...
+157 Tarzý tanýmlarý
+158 **Link...
+159 **Open...
+160 **Disable...
+161 **Enable...
+162 **Remove...
+163 Bilgi türü
+164 Vurgu (em)
+165 Kuvvetli (strong)
+166 Cite (cite)
+167 Taným (dfn)
+168 Kod (code)
+169 Deðiþken (var)
+170 Örnek (samp)
+171 Tuþtakýmý (kbd)
+172 **Abbreviation (abbr)
+173 **acronym
+174 **Insertion (ins)
+175 **Deletion (del)
+176 Karakter birimi
+177 Ýtalik (i)
+178 Kalýn (b)
+179 Teletype (tt)
+180 Büyük (big)
+181 Küçük (small)
+182 Alt (sub)
+183 Üst (sup)
+184 **Quotation (q)
+185 **BiDi override (bdo)
+186 Bölüm numaralandýrmasý
+187 Kitap yap
+188 **Add/Remove IDs...
+189 **Preferences
+190 **General...
+191 **Publishing...
+192 **Cache...
+193 **Proxy...
+194 **Colors...
+195 **Window Geometry...
+196 **Language Negotiation...
+197 **Profiles...
+198 **Templates...
+199 **Annotate selection
+200 **Annotate document
+201 **Reassign annotation (current selection)
+202 **Reassign annotation (memorized XPointer)
+203 **Post annotation
+204 **Delete annotation
+205 **Load annotations
+206 **Customize query...
+207 **Local filter...
+208 **Configure...
+209 **About Amaya
+210 Amaya hakkýnda
+211 **Browsing
+212 Tarama
+213 Seçme
+214 Arama
+215 Görünümler
+216 Birim yaratma
+217 Baðlantýlar
+218 Yeniden yapýlandýrma
+219 Tablolar
+220 **Graphics
+221 Matematik
+222 Görüntü haritalarý
+223 Tarz tanýmlarý
+224 Özellikler
+225 Yazým hatalarý aranýyor
+226 Sayfa yerleþtirme
+227 Bastýrma
+228 Numaralandýrmasý
+229 **Annotations
+230 Kitap oluþturma
+231 **ShortCuts
+232 Amaya yapýlandýrmasý

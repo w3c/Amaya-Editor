@@ -137,95 +137,98 @@
 135 Markierung als Verknüfung definieren...
 136 Markierung als Verknüpfungsziel definieren
 137 Verknüpfungsziel löschen
-138 Symbolleiste
-139 Dokumentadresse
-140 Aktive Grafikbereiche markieren
-141 Verknüpfungsziele anzeigen
-142 Schrift vergrößern
-143 Schrift verkleinern
-144 Parsefehler anzeigen
-145 Strukturfenster
-146 Textbrowserfenster
-147 Verknüpfungsfenster
-148 Inhaltsverzeichnisfenster
-149 Quelltext-Fenster
-150 Zeichen...
-151 Farben...
-152 Ausrichtung...
-153 Hintergrundbild...
-154 Format in Stylesheet übernehmen...
-155 Klasse anwenden...
-156 Stylesheets bearbeiten
-157 Mit Neuem verknüpfen...
-158 Öffnen...
-159 Deaktivieren...
-160 Aktivieren...
-161 Entfernen...
-162 Logische Formate
-163 Betont (em)
-164 Hervorgehoben (strong)
-165 Zitat (cite)
-166 Definition (dfn)
-167 Programmtext (code)
-168 Variablenwert (var)
-169 Beispiel (samp)
-170 Tastatureingabe (kbd)
-171 Abkürzung (abbr)
-172 Akronym (acronym)
-173 Eingefügte Version (ins)
-174 Veraltete Version (del)
-175 Direkte Formate
-176 Kursiv (i)
-177 Fett (b)
-178 Schreibmaschinenschrift (tt)
-179 Größer (big)
-180 Kleiner (small)
-181 Tiefgestellt (sub)
-182 Hochgestellt (sup)
-183 Zitat im Fließtext (q)
-184 Textrichtung LTR/RTL (bdo)
-185 Abschnittsnummern
-186 Buch zusammenfügen
-187 IDs hinzufügen/entfernen...
-188 Einstellungen
-189 Allgemein...
-190 Veröffentlichen...
-191 Cache...
-192 Proxy...
-193 Farben...
-194 Fenstergeometrie...
-195 Akzeptierte Sprachen...
-196 Profile...
-197 Seitenvorlagen...
-198 Auswahl kommentieren
-199 Dokument kommentieren
-200 Anmerkung veröffentlichen
-201 Kommentierung entfernen
-202 Anmerkungen laden
-203 Abfrage anpassen...
-204 Lokaler Filter...
-205 Konfigurieren...
-206 Info
-207 Über Amaya beim W3C
-208 Verknüpfungen folgen/Dokumente öffnen
-209 Auswählen
-210 Suchen
-211 Ansichten
-212 Einfügen von Elementen
-213 Verknüpfungen bearbeiten
-214 Umformatieren
-215 Tabellen
-216 Formeln
-217 Graphics
-218 Aktive Grafikbereiche
-219 Formate/Stylesheets
-220 Attribute
-221 Rechtschreibung
-222 Speichern/Publizieren
-223 Drucken
-224 Abschnittsnummern
-225 Buch zusammenfügen
-226 Kommentierungen
-227 Konfiguration
-228 Tastenkürzel
-229 Benutzerfreundlichkeit
+138 **Memorize XPointer
+139 Symbolleiste
+140 Dokumentadresse
+141 Aktive Grafikbereiche markieren
+142 Verknüpfungsziele anzeigen
+143 Schrift vergrößern
+144 Schrift verkleinern
+145 Parsefehler anzeigen
+146 Strukturfenster
+147 Textbrowserfenster
+148 Verknüpfungsfenster
+149 Inhaltsverzeichnisfenster
+150 Quelltext-Fenster
+151 Zeichen...
+152 Farben...
+153 Ausrichtung...
+154 Hintergrundbild...
+155 Format in Stylesheet übernehmen...
+156 Klasse anwenden...
+157 Stylesheets bearbeiten
+158 Mit Neuem verknüpfen...
+159 Öffnen...
+160 Deaktivieren...
+161 Aktivieren...
+162 Entfernen...
+163 Logische Formate
+164 Betont (em)
+165 Hervorgehoben (strong)
+166 Zitat (cite)
+167 Definition (dfn)
+168 Programmtext (code)
+169 Variablenwert (var)
+170 Beispiel (samp)
+171 Tastatureingabe (kbd)
+172 Abkürzung (abbr)
+173 Akronym (acronym)
+174 Eingefügte Version (ins)
+175 Veraltete Version (del)
+176 Direkte Formate
+177 Kursiv (i)
+178 Fett (b)
+179 Schreibmaschinenschrift (tt)
+180 Größer (big)
+181 Kleiner (small)
+182 Tiefgestellt (sub)
+183 Hochgestellt (sup)
+184 Zitat im Fließtext (q)
+185 Textrichtung LTR/RTL (bdo)
+186 Abschnittsnummern
+187 Buch zusammenfügen
+188 IDs hinzufügen/entfernen...
+189 Einstellungen
+190 Allgemein...
+191 Veröffentlichen...
+192 Cache...
+193 Proxy...
+194 Farben...
+195 Fenstergeometrie...
+196 Akzeptierte Sprachen...
+197 Profile...
+198 Seitenvorlagen...
+199 Auswahl kommentieren
+200 Dokument kommentieren
+201 **Reassign annotation (current selection)
+202 **Reassign annotation (memorized XPointer)
+203 Anmerkung veröffentlichen
+204 Kommentierung entfernen
+205 Anmerkungen laden
+206 Abfrage anpassen...
+207 Lokaler Filter...
+208 Konfigurieren...
+209 Info
+210 Über Amaya beim W3C
+211 Verknüpfungen folgen/Dokumente öffnen
+212 Auswählen
+213 Suchen
+214 Ansichten
+215 Einfügen von Elementen
+216 Verknüpfungen bearbeiten
+217 Umformatieren
+218 Tabellen
+219 Formeln
+220 Graphics
+221 Aktive Grafikbereiche
+222 Formate/Stylesheets
+223 Attribute
+224 Rechtschreibung
+225 Speichern/Publizieren
+226 Drucken
+227 Abschnittsnummern
+228 Buch zusammenfügen
+229 Kommentierungen
+230 Konfiguration
+231 Tastenkürzel
+232 Benutzerfreundlichkeit
