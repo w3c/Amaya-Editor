@@ -69,7 +69,7 @@ Fixed bugs 2.2:
   - When the color was invalid Amaya used the black. Now the CSS rule is
     ignored.
   - CSS comments within style elements were lost.
-  - TAB in CSS style sheets was not supported.
+  - TABs in CSS style sheets were not supported.
   - Amaya misinterpreded complex selectors.
 
 * SGML entites and spaces weren't being handled correctly when
@@ -86,8 +86,8 @@ Fixed bugs 2.2:
   well. If the user opened the document, the File menu was broken. If the
   user cancelled the form the application wasn't closed.
 
-* When printing parentheses were that are part of mathematical expressions
-  are misplaced on the page.
+* When printing, parentheses that are part of mathematical expressions
+  were misplaced on the page.
 
 * Amaya could get stuck when creating an anchor.
 
