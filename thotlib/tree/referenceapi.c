@@ -613,7 +613,8 @@ Document            document;
                                                   FALSE,
                                                   FALSE,
                                                   NULL,
-                                                  FALSE);
+                                                  FALSE,
+						  FALSE);
                                          if (!ok)
                                            {
                                               /* echec a l'ouverture du */
