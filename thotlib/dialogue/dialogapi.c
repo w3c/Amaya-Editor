@@ -929,7 +929,7 @@ HINSTANCE hPrevInst;
 LPSTR     lpCommand; 
 int       nShow;
 #endif /* __STDC__ */
-{
+{ 
    int    argc ;
    char** argv;
 

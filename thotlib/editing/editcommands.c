@@ -3437,6 +3437,34 @@ View                view;
 
 #endif /* __STDC__ */
 {
+#  ifdef _WINDOWS
+   HANDLE hMem   = 0;
+   LPSTR lpData = 0;
+   LPSTR pBuff;
+   int    ndx;
+   int    frame;
+
+   frame = GetWindowNumber (document, view);
+
+   TtcCopyToClipboard (document, view);
+
+   if (!OpenClipboard (FrRef[frame]))
+      WinErrorBox (FrRef [frame]);
+   else {
+      EmptyClipboard ();
+
+      hMem   = GlobalAlloc (GHND, ClipboardLength + 1);
+      lpData = (LPSTR) GlobalLock (hMem);
+	  pBuff  = (LPSTR) Xbuffer;
+      for (ndx = 0; ndx < ClipboardLength; ndx++)
+          *lpData++ = *pBuff++;
+
+      GlobalUnlock (hMem);
+
+      SetClipboardData (CF_TEXT, hMem);
+      CloseClipboard ();
+   }
+#  endif /* _WINDOWS */
    ContentEditing (TEXT_CUT);
 }
 
@@ -3565,8 +3593,6 @@ View                view;
 	  pBuff  = (LPSTR) Xbuffer;
       for (ndx = 0; ndx < ClipboardLength; ndx++)
           *lpData++ = *pBuff++;
-   /* 
-      lstrcpy (lpData, Xbuffer); */
 
       GlobalUnlock (hMem);
 

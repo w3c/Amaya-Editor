@@ -13,7 +13,7 @@
  * will be available in English in the next release.
  * 
  */ 
- 
+  
 /*
  * Handle application frames
  *
@@ -93,6 +93,9 @@ static PtrDocument  OldDocMsgSelect;
 #define ToolBar_AddString(hwnd, hinst, idString) \
     (int)SendMessage((hwnd), TB_ADDSTRING, (WPARAM)(HINSTANCE)hinst, (LPARAM)idString)
 
+#define ToolTip_AddTool(hwnd, lpti) \
+    (BOOL)SendMessage((hwnd), TTM_ADDTOOL, 0, (LPARAM) (LPTOOLINFO) lpti)
+
 extern HWND      hwndClient;
 extern HWND      ToolBar;
 extern HWND      logoFrame;
@@ -125,7 +128,7 @@ static int       latestFrame = -1;
 int         X_Pos;
 int         Y_Pos;
 int         cyToolBar;
-int         CommandToString [MAX_BUTTON];
+int         CommandToString [MAX_FRAME][MAX_BUTTON];
 char        szTbStrings [4096];
 
 boolean viewClosed = FALSE;
@@ -154,14 +157,24 @@ HWND hwndToolBar;
    if (hwndTT == NULL) 
       return FALSE ;
 
+   ZeroMemory (&ti, sizeof (TOOLINFO));
+   ti.cbSize   = sizeof (TOOLINFO);
+   ti.uFlags   = TTF_IDISHWND | TTF_CENTERTIP | TTF_SUBCLASS;
+   ti.hwnd     = hwndToolBar;
+   ti.uId      = 0;
+   ti.lpszText = LPSTR_TEXTCALLBACK;
+   bSuccess = ToolTip_AddTool (hwndTT, &ti);
+   if (!bSuccess)
+      return FALSE;
 
    return bSuccess ;
 }
 
 #ifdef __STDC__
-static void CopyToolTipText (LPTOOLTIPTEXT lpttt)
+static void CopyToolTipText (int frame, LPTOOLTIPTEXT lpttt)
 #else  /* __STDC__ */
-static void CopyToolTipText (lpttt)
+static void CopyToolTipText (frame, lpttt)
+int           frame;
 LPTOOLTIPTEXT lpttt;
 #endif /* __STDC__ */
 {
@@ -173,8 +186,8 @@ LPTOOLTIPTEXT lpttt;
    LPSTR pDest = lpttt->lpszText ;
 
    /* Map command ID to string index */
-   for (i = 0 ; CommandToString[i] != -1 ; i++) {
-       if (CommandToString[i] == iButton) {
+   for (i = 0 ; CommandToString[frame][i] != -1 ; i++) {
+       if (CommandToString[frame][i] == iButton) {
           iButton = i ;
           break ;
        }
@@ -1215,6 +1228,7 @@ LPARAM      lParam;
                 /* Create toolbar  */
                 ThotTBBitmap.hInst = hInstance;
                 ThotTBBitmap.nID   = IDR_TOOLBAR;
+
                 ToolBar = CreateWindow (TOOLBARCLASSNAME, NULL, dwToolBarStyles,
                                         0, 0, 0, 0, hwnd, (HMENU) 1, hInstance, 0) ;
 
@@ -1224,7 +1238,7 @@ LPARAM      lParam;
                    WinErrorBox (NULL);
 
 #               ifdef THOT_TOOLTIPS
-                ToolBar_AddString (ToolBar, 0, &szTbStrings [0]);
+                /* ToolBar_AddString (ToolBar, 0, &szTbStrings [0]); */
                 hwndToolTip = ToolBar_GetToolTips (ToolBar);
 				 
                 if (dwToolBarStyles & TBSTYLE_TOOLTIPS)
@@ -1289,7 +1303,7 @@ LPARAM      lParam;
                 /* Fetch tooltip text */
                 if (pnmh->code == TTN_NEEDTEXT) {
                    LPTOOLTIPTEXT lpttt = (LPTOOLTIPTEXT) lParam ;
-                   CopyToolTipText (lpttt) ;
+                   CopyToolTipText (frame, lpttt) ;
                 }
                 return 0;
            }
@@ -1442,6 +1456,7 @@ LPARAM lParam;
 
 	 static POINT ptBegin;
 	 static POINT ptEnd;
+	 static POINT ptCursor;
 	 static BOOL  fBlocking;
 
      frame = GetFrameNumber (hwnd);
@@ -1549,7 +1564,8 @@ LPARAM lParam;
                  status = GetKeyState (VK_CONTROL);
                  if (HIBYTE (status)) {
                     /* changes the box size */
-                    ApplyDirectResize (frame, LOWORD (lParam), HIWORD (lParam));
+                    /* ApplyDirectResize (frame, LOWORD (lParam), HIWORD (lParam)); */
+                    ApplyDirectResize (frame, ClickX, ClickY);
                     /* memorize the click position */
                  } else {
                       TtaAbortShowDialogue ();

@@ -456,7 +456,7 @@ boolean             IsJpegFormat (fn)
 char               *fn;
 
 #endif /* __STDC__ */
-{
+{ 
    /*JSAMPROW buffer[1]; *//* row pointer array for read_scanlines */
    FILE               *fd;
 

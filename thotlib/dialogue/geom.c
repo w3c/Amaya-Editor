@@ -2280,7 +2280,6 @@ int                 percentW;
 int                 percentH;
 #endif /* __STDC__ */
 {
-#ifndef _WINDOWS
 #define C_TOP 0
 #define C_HCENTER 1
 #define C_BOTTOM 2
@@ -2290,9 +2289,13 @@ int                 percentH;
 
   int                 ret, e, dx, dy, dl, dh;
   int                 ref_h, ref_v, HorizontalDirection, VerticalDirection;
-  ThotEvent              event;
+  ThotEvent           event;
   ThotWindow          w;
   int                 warpx, warpy;
+# ifdef _WINDOWS
+  RECT                rect;
+  POINT               cursorPos;
+# endif /* _WINDOWS */
 
   /* Use the reference point to move the box */
   if (xr == x)
@@ -2349,10 +2352,163 @@ int                 percentH;
 
   /* Shows the initial box size */
   BoxGeometry (frame, x, y, *width, *height, xr, yr, FALSE);
-  e = ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
 
   /* select the correct cursor */
   w = FrRef[frame];
+
+# ifdef _WINDOWS
+  if (!GetWindowRect (w, &rect))
+     WinErrorBox (w);
+
+  ret = 0;
+  while (ret == 0) {
+        GetMessage (&event, NULL, 0, 0);
+
+        switch (event.message) {
+               case WM_MBUTTONUP:
+                    ret = 1;
+                    break;
+
+               case WM_MOUSEMOVE:
+                    SetCursor (LoadCursor (NULL, IDC_CROSS));
+                    ShowCursor (TRUE);
+                    GetCursorPos (&cursorPos);
+                    ScreenToClient (w, &cursorPos);
+                    dl = cursorPos.x - xm;
+                    dh = cursorPos.y - ym;
+                    /* Check that size can be modified, and stay >= 0    */
+                    /* depending on base point and cursor position,      */
+                    /* increase or decreas width or height accordingly   */
+                    warpx = -1;
+                    warpy = -1;
+                    if (dl != 0)
+                       if (xmin == xmax) /* X moves frozen */
+                          dl = 0;
+                      else if (ref_v == C_VCENTER && *width + (2 * dl * HorizontalDirection) < 0) {
+                           dl = -DO_ALIGN (*width / 2) * HorizontalDirection;
+                           warpx = xm + (dl * HorizontalDirection);
+					  } else if (*width + (dl * HorizontalDirection) < 0) {
+                             dl = -DO_ALIGN (*width) * HorizontalDirection;
+                             warpx = xm + (dl * HorizontalDirection);
+					  }
+
+                    if (dh != 0)
+                       if (ymin == ymax) /* Y moves frozen */
+                          dh = 0;
+                       else if (ref_h == C_HCENTER && *height + (2 * dh * VerticalDirection) < 0) {
+                            dh = -(*height * VerticalDirection * GridSize) / (2 * GridSize);
+                            warpy = ym + (dh * VerticalDirection);
+					   } else if (*height + dh < 0) {
+                              dh = -(*height * VerticalDirection * GridSize) / GridSize;
+                              warpy = ym + (dh * VerticalDirection);
+					   }
+
+                         /* Compute the horizontal move of the origin */
+                    if (dl != 0) {
+                       dl = dl * HorizontalDirection; /* Take care for direction */
+                       if (ref_v == C_VCENTER) {
+                          dx = xmin + DO_ALIGN (x - (dl / 2) - xmin) - x;
+                          /* Check the move is within limits */
+                          if (x + dx < xmin)
+                             dx = xmin - x; /*left side */
+                          if (x + *width - dx > xmax)
+                             dx = x + *width - xmin - DO_ALIGN (xmax - xmin); /*right side */
+		  
+                          /* modify width for real */
+                          dl = -(dx * 2);
+                          if (dx != 0)
+                              warpx = xm - (dx * HorizontalDirection);
+					   } else if (ref_v == C_RIGHT) {
+                              dx = xmin + DO_ALIGN (x - dl - xmin) - x;
+                              /* Check the move is within limits */
+                              if (x + dx < xmin)
+                                 dx = xmin - x; /*left side */
+
+                              /* modify width for real */
+                              dl = -dx;
+                              if (dx != 0)
+                                 warpx = xm + dx;
+					   } else {
+                              dx = 0;
+                              dl = xmin + DO_ALIGN (x + *width + dl - xmin) - x - *width;
+                              if (x + *width + dl > xmax)
+                                 dl = xmin + DO_ALIGN (xmax - xmin) - x - *width; /*right side */
+                              if (dl != 0)
+                                 warpx = xm + dl;
+					   }
+					} else
+                         dx = 0;
+
+                    /* Compute vertical move */
+                    if (dh != 0) {
+                       dh = dh * VerticalDirection;	/* Take care for direction */
+                       if (ref_h == C_HCENTER) {
+                          dy = ymin + DO_ALIGN (y - (dh / 2) - ymin) - y;
+                          /* Check the move is within limits */
+                          if (y + dy < ymin)
+                             dy = ymin - y; /*upper border */
+                          if (y + *height - dy > ymax)
+                             dy = y + *height - ymin - DO_ALIGN (ymax - ymin);	/*bottom */
+                          /* change the height for real */
+                          dh = -(dy * 2);
+                          if (dy != 0)
+                             warpy = ym - (dy * VerticalDirection);
+					   } else if (ref_h == C_BOTTOM) {
+                              dy = ymin + DO_ALIGN (y - dh - ymin) - y;
+                              /* Check the move is within limits */
+                              if (y + dy < ymin)
+                                 dy = ymin - y; /*upper border */
+                              /* change the height for real */
+                              dh = -dy;
+                              if (dy != 0)
+                                 warpy = ym + dy;
+					   } else {
+                              dy = 0;
+                              dh = ymin + DO_ALIGN (y + *height + dh - ymin) - y - *height;
+                              if (y + *height + dh > ymax)
+                                 dh = ymin + DO_ALIGN (ymax - ymin) - y - *height; /*bottom */
+                              if (dh != 0)
+                                 warpy = ym + dh;
+					   }
+					} else
+                         dy = 0;
+                    /* Should we move the box */
+                    if ((dl != 0) || (dh != 0)) {
+                       /* switch off the old box */
+                       BoxGeometry (frame, x, y, *width, *height, xr, yr, FALSE);
+                       /* is there any dependence between height and width */
+                       *width += dl;
+                       *height += dh;
+                       if (percentW != 0)
+                          *width = *height * percentW / 100;
+                       else if (percentH != 0)
+                            *height = *width * percentH / 100;
+                       x += dx;
+                       y += dy;
+                       /* switch on the new one */
+                       BoxGeometry (frame, x, y, *width, *height, xr, yr, FALSE);
+					}
+
+                    /* Should we move the cursor */
+                    if (warpx >= 0 || warpy >= 0) {
+                       if (warpx >= 0)
+                          xm = warpx;
+                       if (warpy >= 0)
+                          ym = warpy;
+
+                       /* if (!SetCursorPos (xm, ym))
+                          WinErrorBox (FrRef [frame]); */
+					}
+                    break;
+            default:  break;
+        } 
+  }
+
+  /* Erase the box drawing */
+  SetCursor (LoadCursor (NULL, IDC_ARROW));
+  BoxGeometry (frame, x, y, *width, *height, xr, yr, FALSE);
+# else  /* _WINDOWS */
+  e = ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
   if (xmin == xmax)
     ThotGrab (w, VCurs, e, 0);
   else if (ymin == ymax)

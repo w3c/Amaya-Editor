@@ -53,7 +53,8 @@ extern boolean      WithMessages;	/* partage avec le module dialog.c */
 extern Pixmap       image;
 #ifndef _WIN_PRINT
 extern int          appArgc;
-extern char       **appArgv;
+extern char**       appArgv;
+extern int          iString;
 #endif /* !_WIN_PRINT */
 extern ThotWidget   WIN_curWin;
 typedef void        (*Thot_ActionProc) ();
@@ -89,6 +90,7 @@ static SchemaMenu_Ctl *SchemasMenuList;
 
 extern TBADDBITMAP ThotTBBitmap;
 extern HWND        currentWindow;
+extern BOOL        tbStringsInitialized;
 
 static WNDPROC lpfnTextZoneWndProc = (WNDPROC) 0;
 static BOOL    doSwitchButton = TRUE;
@@ -106,10 +108,10 @@ HMENU currentMenu;
 int    nCust[MAX_FRAME][30];
 static HWND hwndTB;
 
-static int   tipIndex = 0;
 static int   strIndex ;
 
-extern int     CommandToString [MAX_BUTTON];
+extern int     tipIndex;
+extern int     CommandToString [MAX_FRAME][MAX_BUTTON];
 extern char    szTbStrings [4096];
 #endif /* THOT_TOOLTIPS */
 
@@ -124,11 +126,11 @@ HMENU hmenu;
 int   menu_item ;
 #ifdef THOT_TOOLTIPS
 #ifdef __STDC__
-LPSTR GetString (int frame, int iString)
+LPSTR GetString (int frame, int i_String)
 #else  /* __STDC__ */
-LPSTR GetString (frame, iString)
-int frame;
-int iString;
+LPSTR GetString (frame, i_String)
+int frane;
+int i_String;
 #endif /* __STDC__ */
 {
    int i, cb ;
@@ -136,7 +138,7 @@ int iString;
 
    /* Cycle through to requested string */
    pString = &szTbStrings [0] ;
-   for (i = 0 ; i < iString ; i++) {
+   for (i = 0 ; i < i_String ; i++) {
        cb = lstrlen (pString) ;
        pString += (cb + 1) ;
    }
@@ -1350,6 +1352,7 @@ ThotWidget   toplevel;
    info: text to display when the cursor stays on the button.
    Returns index
   ----------------------------------------------------------------------*/
+#ifndef _WIN_PRINT
 #ifdef _WINDOWS
 #ifdef __STDC__
 int WIN_TtaAddButton (Document document, View view, int picture, void (*procedure) (), char *info, BYTE type, BOOL state)
@@ -1462,17 +1465,17 @@ char               *info;
 					 if (!w)
                         WinErrorBox (NULL);
 					 else {
-                         w->iBitmap   = picture;
-                         w->idCommand = TBBUTTONS_BASE + i; 
-                         w->fsState   = TBSTATE_ENABLED;
-                         w->fsStyle   = type;
+                         w->iBitmap      = picture;
+                         w->idCommand    = TBBUTTONS_BASE + i; 
+                         w->fsState      = TBSTATE_ENABLED;
+                         w->fsStyle      = type;
 						 w->bReserved[0] = 0;
 						 w->bReserved[1] = 0;
-                         w->dwData    = 0;
-                         w->iString   = 0;
+                         w->dwData       = 0;
+                         w->iString      = -1;
 #                        ifdef THOT_TOOLTIPS
-                         CommandToString[tipIndex++] = TBBUTTONS_BASE + i;
-                         CommandToString[tipIndex]   = -1;
+                         CommandToString[frame][tipIndex++] = TBBUTTONS_BASE + i;
+                         CommandToString[frame][tipIndex]   = -1;
 			             nCust [frame][i] = i;
 #                        endif /* THOT_TOOLTIPS */
                          FrameTable[frame].Button[i] = w;
@@ -1496,10 +1499,12 @@ char               *info;
 #                 endif /* _WINDOWS */
                   if (info != NULL) {
 #                    ifdef _WINDOWS
-#            ifdef THOT_TOOLTIPS
-		     strcat (&szTbStrings [strIndex], info);
-		     strIndex += (strlen (info) + 1);
-#            endif /* THOT_TOOLTIPS */
+#                    ifdef THOT_TOOLTIPS
+                     if (!tbStringsInitialized) {                   
+		                strcat (&szTbStrings [strIndex], info);
+	                    strIndex += (strlen (info) + 1);
+					 }
+#                    endif /* THOT_TOOLTIPS */
 #                    else  /* !_WINDOWS */
 		     XcgLiteClueAddWidget(liteClue, w,  info, strlen(info), 0);
 #                    endif /* _WINDOWS */
@@ -1511,7 +1516,7 @@ char               *info;
    TtaHandlePendingEvents ();
    return (index);
 }				/*TtaAddButton */
-
+#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    TtaGetButtonCallback
