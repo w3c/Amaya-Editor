@@ -209,12 +209,13 @@ static LRESULT CALLBACK SpellCheckDlgProc (ThotWindow hwnDlg, UINT msg,
       hwnListWords = CreateWindow ("listbox", NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD,
 				   13, 72, 150, 70, hwnDlg, (HMENU) 1, 
 				   (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+	  WIN_SetDialogfont(hwnListWords);
       
       hwndCurrentWord = CreateWindow ("EDIT", NULL, WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER,
 				      13, 146, 150, 20, hwnDlg, (HMENU) IDC_LANGEDIT, 
 				      (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
-      
-      
+      WIN_SetDialogfont(hwndCurrentWord);
+       
       CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
       CheckDlgButton (hwnDlg, IDC_IGNORE1, BST_CHECKED);
       CheckDlgButton (hwnDlg, IDC_IGNORE2, BST_CHECKED);
