@@ -58,6 +58,8 @@
 #define SINGLE_LINESPACING 11
 
 static PtrDocument  DocModPresent;
+static boolean             ChngStandardColor;	/* standard presentation colors  */
+static boolean             ChngStandardGeom;	/* standard geometry */
 /* user presentation choices and their values */
 static boolean      ChngFontFamily; /* user asks to modify the font family */
 static boolean      ChngStyle;	/* user asks to modify the style */
@@ -78,15 +80,33 @@ static boolean      ChngTrame;	/* user asks to change the pattern */
 #define Apply_Underline		3
 #define Apply_Weigh		4
 #define Apply_BodySize		5
-#define Apply_Cadr		6
-#define Apply_Justif		7
-#define Apply_Hyphen		8
-#define Apply_Indent		9
-#define Apply_LineSp		10
-#define Apply_LineStyle		11
-#define Apply_LineWeight	12
-#define Apply_Trame		13
+#define Apply_AllChars		6
 
+#define Apply_Cadr		7
+#define Apply_Justif		8
+#define Apply_Hyphen		9
+#define Apply_Indent		10
+#define Apply_LineSp		11
+#define Apply_AllFormat		12
+
+#define Apply_LineStyle		13
+#define Apply_LineWeight	14
+#define Apply_Trame		15
+#define Apply_AllGraphics	16
+
+static boolean      StdFontFamily; /* user asks to reset the font family */
+static boolean      StdStyle;	/* user asks to reset the style */
+static boolean      StdUnderline;  /* user asks to reset the underline */
+static boolean      StdWeight;	/* user asks to reset the underline weight */
+static boolean      StdBodySize;   /* user asks to reset the body size */
+static boolean      StdCadr;	/* user asks to reset the alignment mode */
+static boolean      StdJustif;	/* user asks to reset the justification */
+static boolean      StdHyphen;	/* user asks to reset the hyphenation */
+static boolean      StdIndent;	/* user asks to reset the indentation */
+static boolean      StdLineSp;	/* user asks to reset the line spacing */
+static boolean      StdLineStyle;  /* user asks to reset the line style */
+static boolean      StdLineWeight; /* user asks to reset the line weight */
+static boolean      StdTrame;	/* user asks to reset the pattern */
 static char         FontFamily;	/* font family requested by the user */
 static int          Style;	/* character style requested by the user */
 static int          UnderlineStyle; /* underline style requested by the user */
@@ -100,12 +120,6 @@ static int          IndentSign;	/* the indentation sign */
 static char         LineStyle;	/* requested line style */
 static int          LineWeight;	/* requested line weight in points */
 static int          PaintWithPattern;	/* number of the requested trame */
-
-static boolean      ChgnStandardChar;	/* standard presentation characters */
-static boolean      ChngStandardColor;	/* standard presentation colors  */
-static boolean      ChngStandardGraph;	/* standard presentation graphics  */
-static boolean      ChngStandardForm;	/* standard presentation format  */
-static boolean      ChngStandardGeom;	/* standard geometry */
 
 static RuleSet      TheRules;
 static RuleSet      GeomRules;
@@ -176,54 +190,76 @@ int                 applyDomain;
 	    lastChar = 0;
 
 	/* Set chngChars indicator */
-	locChngBodySize = (ChngBodySize && (applyDomain == Apply_BodySize
-						|| applyDomain == Apply_All));
-	locChngWeight = (ChngWeight && (applyDomain == Apply_Weigh
-						|| applyDomain == Apply_All));
-	locChngUnderline = (ChngUnderline && (applyDomain == Apply_Underline
-						|| applyDomain == Apply_All));
-	locChngStyle = (ChngStyle && (applyDomain == Apply_Style
-						|| applyDomain == Apply_All));
-	locChngFontFamily = (ChngFontFamily && (applyDomain == Apply_FontFamily
-						|| applyDomain == Apply_All));
-	chngChars = (!ChgnStandardChar &&
-		     (locChngBodySize || locChngWeight || locChngUnderline || locChngStyle || locChngFontFamily));
+	locChngBodySize = ((StdBodySize || ChngBodySize)
+			   && (applyDomain == Apply_BodySize
+			        || applyDomain == Apply_AllChars
+			       || applyDomain == Apply_All));
+	locChngWeight = ((StdWeight || ChngWeight)
+			 && (applyDomain == Apply_Weigh
+			     || applyDomain == Apply_AllChars
+			     || applyDomain == Apply_All));
+	locChngUnderline = ((StdUnderline || ChngUnderline)
+			    && (applyDomain == Apply_Underline
+			        || applyDomain == Apply_AllChars
+				|| applyDomain == Apply_All));
+	locChngStyle = ((StdStyle || ChngStyle)
+			&& (applyDomain == Apply_Style
+			    || applyDomain == Apply_AllChars
+			    || applyDomain == Apply_All));
+	locChngFontFamily = ((StdFontFamily || ChngFontFamily)
+			     && (applyDomain == Apply_FontFamily
+				 || applyDomain == Apply_AllChars
+				 || applyDomain == Apply_All));
+	chngChars = (locChngBodySize || locChngWeight || locChngUnderline || locChngStyle || locChngFontFamily);
 
 	/* Set chngFormat indicator */
-	locChngCadr = (ChngCadr && (applyDomain == Apply_Cadr
-						|| applyDomain == Apply_All));
-	locChngJustif = (ChngJustif && (applyDomain == Apply_Justif
-						|| applyDomain == Apply_All));
-	locChngHyphen = (ChngHyphen && (applyDomain == Apply_Hyphen
-						|| applyDomain == Apply_All));
-	locChngIndent = (ChngIndent && (applyDomain == Apply_Indent
-						|| applyDomain == Apply_All));
-	locChngLineSp = (ChngLineSp && (applyDomain == Apply_LineSp
-						|| applyDomain == Apply_All));
-	chngFormat = (!ChngStandardForm &&
-		      (locChngCadr || locChngJustif || locChngHyphen || locChngIndent || locChngLineSp));
+	locChngCadr = ((StdCadr || ChngCadr)
+		       && (applyDomain == Apply_Cadr
+			   || applyDomain == Apply_AllFormat
+			   || applyDomain == Apply_All));
+	locChngJustif = ((StdJustif || ChngJustif)
+			 && (applyDomain == Apply_Justif
+			     || applyDomain == Apply_AllFormat
+			     || applyDomain == Apply_All));
+	locChngHyphen = ((StdHyphen || ChngHyphen)
+			 && (applyDomain == Apply_Hyphen
+			     || applyDomain == Apply_AllFormat
+			     || applyDomain == Apply_All));
+	locChngIndent = ((StdIndent || ChngIndent)
+			 && (applyDomain == Apply_Indent
+			     || applyDomain == Apply_AllFormat
+			     || applyDomain == Apply_All));
+	locChngLineSp = ((StdLineSp || ChngLineSp)
+			 && (applyDomain == Apply_LineSp
+			     || applyDomain == Apply_AllFormat
+			     || applyDomain == Apply_All));
+	chngFormat = (locChngCadr || locChngJustif || locChngHyphen || locChngIndent || locChngLineSp);
 
 	/* Set chngGraphics indicator */
-	locChngLineStyle = (ChngLineStyle && (applyDomain == Apply_LineStyle
-						|| applyDomain == Apply_All));
-	locChngLineWeight = (ChngLineWeight && (applyDomain == Apply_LineWeight
-						|| applyDomain == Apply_All));
-	locChngTrame = (ChngTrame && (applyDomain == Apply_Trame
-						|| applyDomain == Apply_All));
-	chngGraphics = (!ChngStandardGraph &&
-			(locChngLineStyle || locChngLineWeight || locChngTrame));
+	locChngLineStyle = ((StdLineStyle || ChngLineStyle)
+			    && (applyDomain == Apply_LineStyle
+				|| applyDomain == Apply_AllGraphics
+				|| applyDomain == Apply_All));
+	locChngLineWeight = ((StdLineWeight || ChngLineWeight)
+			     && (applyDomain == Apply_LineWeight
+				 || applyDomain == Apply_AllGraphics
+				 || applyDomain == Apply_All));
+	locChngTrame = ((StdTrame || ChngTrame)
+			&& (applyDomain == Apply_Trame
+			    || applyDomain == Apply_AllGraphics
+			    || applyDomain == Apply_All));
+	chngGraphics = (locChngLineStyle || locChngLineWeight || locChngTrame);
 	
-	if (ChgnStandardChar || ChngStandardColor || ChngStandardForm ||
-	    chngChars || chngGraphics || (chngFormat && ChngHyphen))
+	if (ChngStandardColor
+	    || chngChars || chngGraphics || locChngHyphen)
 	  /* changement des caracteres */
 	  /* coupe les elements du debut et de la fin de la selection */
 	  /* s'ils sont partiellement selectionnes */
 	  if (firstChar > 1 || lastChar > 0)
 	    CutSelection (pSelDoc, &pFirstSel, &pLastSel, &firstChar, &lastChar);
 	
-	if (chngChars || chngFormat || chngGraphics ||
-	    ChgnStandardChar || ChngStandardColor ||
-	    ChngStandardForm || ChngStandardGeom || ChngStandardGraph)
+	if (chngChars || chngFormat || chngGraphics
+	    || ChngStandardColor || ChngStandardGeom)
 	  /* il y a quelque chose a changer, on parcourt la selection */
 	  /* courante et on change ce qu'a demande' l'utilisateur */
 	  {
@@ -246,147 +282,235 @@ int                 applyDomain;
 		    
 		    /* famille de polices de caracteres */
 		    if (locChngFontFamily)
-		      locChngFontFamily = (FontFamily != pAb->AbFont);
-		    else
-		      locChngFontFamily = FALSE;
+		      {
+			if (StdFontFamily)
+			  {
+			    RuleSetPut (TheRules, PtFont);
+			    locChngFontFamily = FALSE;
+			  }
+			else
+			  locChngFontFamily = (FontFamily != pAb->AbFont);
+		      }
 		    /* style des caracteres */
 		    if (locChngStyle)
-		      locChngStyle = (Style != pAb->AbHighlight);
-		    else
-		      locChngStyle = FALSE;
+		      {
+			if (StdStyle)
+			  {
+			    RuleSetPut (TheRules, PtStyle);
+			    locChngStyle = FALSE;
+			  }
+			else
+			  locChngStyle = (Style != pAb->AbHighlight);
+		      }
+
 		    /* style du souligne */
 		    if (locChngUnderline)
-		      locChngUnderline = (UnderlineStyle != pAb->AbUnderline);
-		    else
-		      locChngUnderline = FALSE;
+		      {
+			if (StdUnderline)
+			  {
+			    RuleSetPut (TheRules, PtUnderline);
+			    locChngUnderline = FALSE;
+			  }
+			else
+			  locChngUnderline = (UnderlineStyle != pAb->AbUnderline);
+		      }
+
 		    /* epaisseur du souligne */
 		    if (locChngWeight)
-		      locChngWeight = (UnderlineWeight != pAb->AbThickness);
-		    else
-		      locChngWeight = FALSE;
+		      {
+			if (StdWeight)
+			  {
+			    RuleSetPut (TheRules, PtThickness);
+			    StdWeight = FALSE;
+			  }
+			else
+			  locChngWeight = (UnderlineWeight != pAb->AbThickness);
+		      }
+
 		    /* corps en points typo */
 		    if (locChngBodySize)
-		      locChngBodySize = (BodySize != currentBodySize);
-		    else
-		      locChngBodySize = FALSE;
+		      {
+			if (StdBodySize)
+			  {
+			    RuleSetPut (TheRules, PtSize);
+			    locChngBodySize = FALSE;
+			  }
+			else
+			  locChngBodySize = (BodySize != currentBodySize);
+		      }
+
 		    /* alignement des lignes */
 		    if (locChngCadr)
 		      {
-			switch (pAb->AbAdjust)
+			if (StdCadr)
 			  {
-			  case AlignLeft:
-			    i = 1;
-			    break;
-			  case AlignRight:
-			    i = 2;
-			    break;
-			  case AlignCenter:
-			    i = 3;
-			    break;
-			  case AlignLeftDots:
-			    i = 4;
-			    break;
-			  default:
-			    i = 1;
-			    break;
+			    RuleSetPut (TheRules, PtAdjust);
+			    locChngCadr = FALSE;
 			  }
-			locChngCadr = (i != Cadr);
+			else
+			  {
+			    switch (pAb->AbAdjust)
+			      {
+			      case AlignLeft:
+				i = 1;
+				break;
+			      case AlignRight:
+				i = 2;
+				break;
+			      case AlignCenter:
+				i = 3;
+				break;
+			      case AlignLeftDots:
+				i = 4;
+				break;
+			      default:
+				i = 1;
+				break;
+			      }
+			    locChngCadr = (i != Cadr);
+			  }
 		      }
-		    else
-		      locChngCadr = FALSE;
+
 		    /* justification */
 		    if (locChngJustif)
-		      locChngJustif = (Justif != pAb->AbJustify);
-		    else
-		      locChngJustif = FALSE;
+		      {
+			if (StdJustif)
+			  {
+			    RuleSetPut (TheRules, PtJustify);
+			    locChngJustif = FALSE;
+			  }
+			else
+			  locChngJustif = (Justif != pAb->AbJustify);
+		      }
+
 		    /* coupure des mots */
 		    if (locChngHyphen)
-		      locChngHyphen = (Hyphenate != pAb->AbHyphenate);
-		    else
-		      locChngHyphen = FALSE;
-		    
+		      {
+			if (StdHyphen)
+			  {
+			    RuleSetPut (TheRules, PtHyphenate);
+			    locChngHyphen = FALSE;
+			  }
+			else
+			  locChngHyphen = (Hyphenate != pAb->AbHyphenate);
+		      }
+
 		    /* renfoncement de la premiere ligne */
 		    if (locChngIndent)
 		      {
-			locChngIndent = TRUE;
-			if (pAb->AbIndent > 0)
-			  sign = 1;
-			else if (pAb->AbIndent == 0)
-			  sign = 0;
-			else
-			  sign = -1;
-			i = abs (pAb->AbIndent);
-			if (pAb->AbIndentUnit == UnRelative)
-			  /* convertit AbIndent en points typographiques */
+			if (StdIndent)
 			  {
-			    i = (currentBodySize * i) / 10;
-			    if ((currentBodySize * i) % 10 >= 5)
-			      i++;
+			    RuleSetPut (TheRules, PtIndent);
+			    locChngIndent = FALSE;
 			  }
-			if (sign == IndentSign && i == IndentValue)
-			  /* pas de changement */
-			  locChngIndent = FALSE;
 			else
 			  {
-			    if (IndentSign != 0 && IndentValue == 0)
-			      IndentValue = 15;
-			    TtaSetNumberForm (NumZoneRecess, IndentValue);
+			    if (pAb->AbIndent > 0)
+			      sign = 1;
+			    else if (pAb->AbIndent == 0)
+			      sign = 0;
+			    else
+			      sign = -1;
+			    i = abs (pAb->AbIndent);
+			    if (pAb->AbIndentUnit == UnRelative)
+			      /* convertit AbIndent en points typographiques */
+			      {
+				i = (currentBodySize * i) / 10;
+				if ((currentBodySize * i) % 10 >= 5)
+				  i++;
+			      }
+			    if (sign == IndentSign && i == IndentValue)
+			      /* pas de changement */
+			      locChngIndent = FALSE;
+			    else
+			      {
+				if (IndentSign != 0 && IndentValue == 0)
+				  IndentValue = 15;
+				TtaSetNumberForm (NumZoneRecess, IndentValue);
+			      }
 			  }
 		      }
-		    else
-		      locChngIndent = FALSE;
 		    
 		    /* interligne */
 		    if (locChngLineSp)
 		      {
-			locChngLineSp = TRUE;
-			i = pAb->AbLineSpacing;
-			if (pAb->AbLineSpacingUnit == UnRelative)
-			  /* convertit 'interligne en points typographiques */
+			if (StdLineSp)
 			  {
-			    i = (currentBodySize * i) / 10;
-			    if ((currentBodySize * i) % 10 >= 5)
-			      i++;
+			    RuleSetPut (TheRules, PtLineSpacing);
+			    locChngLineSp = FALSE;
 			  }
-			if (OldLineSp == i)
-			  locChngLineSp = FALSE;
+			else
+			  {
+			    i = pAb->AbLineSpacing;
+			    if (pAb->AbLineSpacingUnit == UnRelative)
+			      /* convertit 'interligne en points typographiques */
+			      {
+				i = (currentBodySize * i) / 10;
+				if ((currentBodySize * i) % 10 >= 5)
+				  i++;
+			      }
+			    if (OldLineSp == i)
+			      locChngLineSp = FALSE;
+			  }
 		      }
-		    else
-		      locChngLineSp = FALSE;
 
 		    /* style des traits graphiques */
 		    if (locChngLineStyle)
-		      locChngLineStyle = (LineStyle != pAb->AbLineStyle);
-		    else
-		      locChngLineStyle = FALSE;
+		      {
+			if (StdLineStyle)
+			  {
+			    RuleSetPut (TheRules, PtLineStyle);
+			    locChngLineStyle = FALSE;
+			  }
+			else
+			  locChngLineStyle = (LineStyle != pAb->AbLineStyle);
+		      }
+
 		    /* epaisseur des traits graphiques */
 		    LocLineWeightUnit = pAb->AbLineWeightUnit;
-
 		    if (locChngLineWeight)
 		      {
-			if (pAb->AbLineWeightUnit == UnPoint)
-			  i = pAb->AbLineWeight;
+			if (StdLineWeight)
+			  {
+			    RuleSetPut (TheRules, PtLineWeight);
+			    locChngLineWeight = FALSE;
+			  }
 			else
 			  {
-			    i = (currentBodySize * pAb->AbLineWeight) / 10;
-			    if ((currentBodySize * i) % 10 >= 5)
-			      i++;
+			    if (pAb->AbLineWeightUnit == UnPoint)
+			      i = pAb->AbLineWeight;
+			    else
+			      {
+				i = (currentBodySize * pAb->AbLineWeight) / 10;
+				if ((currentBodySize * i) % 10 >= 5)
+				  i++;
+			      }
+			    if (LineWeight != i)
+			      LocLineWeightUnit = UnPoint;
 			  }
-			if (LineWeight != i)
-			  LocLineWeightUnit = UnPoint;
 		      }
 		    
 		    /* trame de remplissage */
 		    if (locChngTrame)
-		      locChngTrame = (PaintWithPattern != pAb->AbFillPattern);
-		    else
-		      ChngTrame = FALSE;
+		      {
+			if (StdTrame)
+			  {
+			    RuleSetPut (TheRules, PtFillPattern);
+			    locChngTrame = FALSE;
+			  }
+			else
+			  locChngTrame = (PaintWithPattern != pAb->AbFillPattern);
+		      }
 		  }
 
 		/* Standard properties */
-		if (ChgnStandardChar || ChngStandardForm
-		    || ChngStandardGraph || ChngStandardColor)
-		  RemoveSpecPresTree (pEl, pSelDoc, TheRules, SelectedView);
+		if (ChngStandardColor)
+		  {
+		    RuleSetPut (TheRules, PtBackground);
+		    RuleSetPut (TheRules, PtForeground);
+		  }
+		RemoveSpecPresTree (pEl, pSelDoc, TheRules, SelectedView);
+		RuleSetClr (TheRules);
 
 		/* Character properties */
 		if (chngChars)
@@ -408,7 +532,14 @@ int                 applyDomain;
 				locChngLineSp, OldLineSp, locChngHyphen, Hyphenate);
 		/* Standard geometry */
 		if (ChngStandardGeom)
-		  RemoveSpecPresTree (pEl, pSelDoc, GeomRules, SelectedView);
+		  {
+		    RuleSetPut (GeomRules, PtVertPos);
+		    RuleSetPut (GeomRules, PtHorizPos);
+		    RuleSetPut (GeomRules, PtHeight);
+		    RuleSetPut (GeomRules, PtWidth);
+		    RemoveSpecPresTree (pEl, pSelDoc, GeomRules, SelectedView);
+		    RuleSetClr (GeomRules);
+		  }
 		/* si on est dans un element copie' par inclusion,   */
 		/* on met a jour les copies de cet element.          */
 		RedisplayCopies (pEl, pSelDoc, TRUE);
@@ -443,13 +574,6 @@ View                view;
    PtrDocument         pDoc;
 
    pDoc = LoadedDocument[document - 1];
-   ChgnStandardChar = FALSE;
-   ChngStandardGraph = FALSE;
-   ChngStandardForm = FALSE;
-   ChngStandardColor = FALSE;
-   ChngStandardGeom = FALSE;
-   RuleSetClr (TheRules);
-   RuleSetClr (GeomRules);
    ResetMenus ();
 
    /* formulaire presentation standard */
@@ -498,50 +622,55 @@ int                 val;
 	{
 	case 0:
 	  /* caracteres standard */
-	  ChgnStandardChar = TRUE;
-	  RuleSetPut (TheRules, PtSize);
-	  RuleSetPut (TheRules, PtStyle);
-	  RuleSetPut (TheRules, PtFont);
-	  RuleSetPut (TheRules, PtUnderline);
-	  RuleSetPut (TheRules, PtThickness);
+	  StdFontFamily = TRUE;
+	  StdStyle = TRUE;
+	  StdUnderline = TRUE;
+	  StdWeight = TRUE;
+	  StdBodySize = TRUE;
 	  break;
 	case 1:
 	  /* graphiques standard */
-	  ChngStandardGraph = TRUE;
-	  RuleSetPut (TheRules, PtLineStyle);
-	  RuleSetPut (TheRules, PtLineWeight);
-	  RuleSetPut (TheRules, PtFillPattern);
+	  StdCadr = TRUE;
+	  StdJustif = TRUE;
+	  StdHyphen = TRUE;
+	  StdIndent = TRUE;
+	  StdLineSp = TRUE;
 	  break;
 	case 2:
 	  /* couleurs standard */
 	  ChngStandardColor = TRUE;
-	  RuleSetPut (TheRules, PtBackground);
-	  RuleSetPut (TheRules, PtForeground);
 	  break;
 	case 3:
 	  /* format standard */
-	  ChngStandardForm = TRUE;
-	  RuleSetPut (TheRules, PtIndent);
-	  RuleSetPut (TheRules, PtAdjust);
-	  RuleSetPut (TheRules, PtLineSpacing);
-	  RuleSetPut (TheRules, PtJustify);
-	  RuleSetPut (TheRules, PtHyphenate);
-	  RuleSetPut (TheRules, PtFunction);
+	  StdLineStyle = TRUE;
+	  StdLineWeight = TRUE;
+	  StdTrame = TRUE;
 	  break;
 	case 4:
 	  /* standard geometry */
 	  ChngStandardGeom = TRUE;
-	  RuleSetPut (GeomRules, PtVertPos);
-	  RuleSetPut (GeomRules, PtHorizPos);
-	  RuleSetPut (GeomRules, PtHeight);
-	  RuleSetPut (GeomRules, PtWidth);
 	  break;
 	}
       break;
     case NumFormPresentStandard:
       if (val == 1)
-	/* retour "Appliquer" du formulaire Presentation standard */
-	ApplyPresentMod (Apply_All);
+	{
+	  /* retour "Appliquer" du formulaire Presentation standard */
+	  ApplyPresentMod (Apply_All);
+	  StdFontFamily = FALSE;
+	  StdStyle = FALSE;
+	  StdUnderline = FALSE;
+	  StdWeight = FALSE;
+	  StdBodySize = FALSE;
+	  StdCadr = FALSE;
+	  StdJustif = FALSE;
+	  StdHyphen = FALSE;
+	  StdIndent = FALSE;
+	  StdLineSp = FALSE;
+	  StdLineStyle = FALSE;
+	  StdLineWeight = FALSE;
+	  StdTrame = FALSE;
+	}
       else
 	/* retour "Terminer" */
 	TtaDestroyDialogue(NumFormPresentStandard);
@@ -580,54 +709,71 @@ char               *txt;
 	  c = 'C';	/* Courier */
 	  break;
 	case 3:
-	  c = '\0';	/* inchange' */
+	  c = '\0';	/* standard */
 	  break;
 	default:
 	  c = 'T';
 	  break;
 	}
-      if (c == '\0')	/* inchange' */
-	ChngFontFamily = FALSE;
+      if (c == '\0')	/* standard */
+	{
+	  ChngFontFamily = FALSE;
+	  StdFontFamily = TRUE;
+	}
       else
 	{
 	  /* changement de famille de caracteres */
 	  ChngFontFamily = TRUE;
+	  StdFontFamily = FALSE;
 	  FontFamily = c;
 	}
       ApplyPresentMod (Apply_FontFamily);
       break;
     case NumMenuStyleChar:	/* style des caracteres */
-      if (val == 6)	/* entree 6: Inchange' */
-	ChngStyle = FALSE;
+      if (val == 6)	/* entree 6: Standard */
+	{
+	  ChngStyle = FALSE;
+	  StdStyle = TRUE;
+	}
       else
 	{
 	  ChngStyle = TRUE;
+	  StdStyle = FALSE;
 	  Style = val;
 	}
       ApplyPresentMod (Apply_Style);
       break;
     case NumMenuUnderlineType:		/* style du souligne */
       /* l'entree 2 est supprimee dans cette version */
-      if (val == 3)	/* entree 3: Inchange' */
-	ChngUnderline = FALSE;
+      if (val == 3)	/* entree 3: Standard */
+	{
+	  ChngUnderline = FALSE;
+	  StdUnderline = TRUE;
+	}
       else if (val == 2)	/* entree 2->3 */
 	{
 	  ChngUnderline = TRUE;
+	  StdUnderline = FALSE;
 	  UnderlineStyle = val + 1;
 	}
       else
 	{
 	  ChngUnderline = TRUE;
+	  StdUnderline = FALSE;
 	  UnderlineStyle = val;
 	}
       ApplyPresentMod (Apply_Underline);
       break;
     case NumMenuUnderlineWeight:	/* epaisseur du souligne */
-      if (val == 2)	/* entree 2: Inchange' */
-	ChngLineWeight = FALSE;
+      if (val == 2)	/* entree 2: Standard */
+	{
+	  ChngLineWeight = FALSE;
+	  StdLineWeight = TRUE;
+	}
       else
 	{
-	  ChngWeight = TRUE;
+	  ChngLineWeight = TRUE;
+	  StdLineWeight = FALSE;
 	  UnderlineWeight = val;
 	}
       ApplyPresentMod (Apply_Weigh);
@@ -636,38 +782,54 @@ char               *txt;
       if (val >= 0 && val < NumberOfFonts ())
 	{
 	  ChngBodySize = TRUE;
+	  StdBodySize = FALSE;
 	  BodySize = FontPointSize (val);
 	}
       else
-	ChngBodySize = FALSE;
+	{
+	  ChngBodySize = FALSE;
+	  StdBodySize = TRUE;
+	}
       ApplyPresentMod (Apply_BodySize);
       break;
     case NumMenuAlignment:	/* alignement des lignes */
-      if (val == 3)	/* entree 3: Inchange' */
-	ChngCadr = FALSE;
+      if (val == 3)	/* entree 3: Standard */
+	{
+	  ChngCadr = FALSE;
+	  StdCadr = TRUE;
+	}
       else
 	{
 	  ChngCadr = TRUE;
+	  StdCadr = FALSE;
 	  Cadr = val + 1;
 	}
       ApplyPresentMod (Apply_Cadr);
       break;
     case NumMenuJustification:		/* justification */
-      if (val == 2)	/* entree 2: Inchange' */
-	ChngJustif = FALSE;
+      if (val == 2)	/* entree 2: Standard */
+	{
+	  ChngJustif = FALSE;
+	  StdJustif = TRUE;
+	}
       else
 	{
 	  ChngJustif = TRUE;
+	  StdJustif = FALSE;
 	  Justif = (val == 0);
 	}
       ApplyPresentMod (Apply_Justif);
       break;
     case NumMenuWordBreak:	/* coupure des mots */
-      if (val == 2)	/* entree 2: Inchange' */
-	ChngHyphen = FALSE;
+      if (val == 2)	/* entree 2: Standard */
+	{
+	  ChngHyphen = FALSE;
+	  StdHyphen = TRUE;
+	}
       else
 	{
 	  ChngHyphen = TRUE;
+	  StdHyphen = FALSE;
 	  Hyphenate = (val == 0);
 	}
       ApplyPresentMod (Apply_Hyphen);
@@ -688,8 +850,11 @@ char               *txt;
       ApplyPresentMod (Apply_Indent);
       break;
     case NumMenuRecessSense:	/* sens du renfoncement de la premiere ligne */
-      if (val == 2)	/* entree 2: Inchange' */
-	ChngIndent = FALSE;
+      if (val == 2)	/* entree 2: Standard */
+	{
+	  ChngIndent = FALSE;
+	  StdIndent = TRUE;
+	}
       else
 	{
 	  if (val == 0)
@@ -697,6 +862,7 @@ char               *txt;
 	  else
 	    IndentSign = 0;
 	  ChngIndent = TRUE;
+	  StdIndent = FALSE;
 	  if (IndentSign != 0 && IndentValue == 0)
 	    {
 	      IndentValue = 15;
@@ -726,11 +892,15 @@ char               *txt;
       ApplyPresentMod (Apply_LineSp);
       break;
     case NumMenuLineSpacing:	/* saisie de l'interligne par un menu */
-      if (val == 3)	/* entree 3: Inchange' */
-	ChngLineSp = FALSE;
+      if (val == 3)	/* entree 3: Standard */
+	{
+	  ChngLineSp = FALSE;
+	  StdLineSp = TRUE;
+	}
       else
 	{
 	  ChngLineSp = TRUE;
+	  StdLineSp = FALSE;
 	  /* l'utilisateur demande a changer l'interligne */
 	  OldLineSp = ((val + 2) * SINGLE_LINESPACING) / 2;
 	  TtaSetNumberForm (NumZoneLineSpacing, OldLineSp);
@@ -750,129 +920,70 @@ char               *txt;
 	  c = '.';	/* tirets courts */
 	  break;
 	case 3:
-	  c = '\0';	/* inchange' */
+	  c = '\0';	/* standard */
 	default:
 	  c = 'S';	/* trait continu */
 	  break;
 	}
-      if (c == '\0')	/* inchange' */
-	ChngLineStyle = FALSE;
+      if (c == '\0')	/* standard */
+	{
+	  ChngLineStyle = FALSE;
+	  StdLineStyle = TRUE;
+	}
       else
 	{
 	  /* changement effectif de style de trait */
 	  ChngLineStyle = TRUE;
+	  StdLineStyle = FALSE;
 	  LineStyle = c;
 	}
       ApplyPresentMod (Apply_LineStyle);
       break;
     case NumZoneStrokeWeight:
       ChngLineWeight = TRUE;
+      StdLineWeight = FALSE;
       LineWeight = val;
       ApplyPresentMod (Apply_LineWeight);
       break;
     case NumToggleWidthUnchanged:
       ChngLineWeight = FALSE;
+      StdLineWeight = TRUE;
       break;
     case NumSelectPattern:
       i = PatternNumber (txt);
       if (i >= 0)
 	{
 	  ChngTrame = TRUE;
+	  StdTrame = FALSE;
 	  PaintWithPattern = i;
 	}
       ApplyPresentMod (Apply_Trame);
       break;
     case NumTogglePatternUnchanged:
       ChngTrame = FALSE;
+      StdTrame = TRUE;
       break;
     case NumFormPresGraphics:
       /* le formulaire Format lui-meme */
       if (val > 0)
-	{
-	  /* no characters */
-	  ChngBodySize = FALSE;
-	  ChngWeight = FALSE;
-	  ChngUnderline = FALSE;
-	  ChngStyle = FALSE;
-	  ChngFontFamily = FALSE;
-	  /* no format */	  
-	  ChngCadr = FALSE;
-	  ChngJustif = FALSE;
-	  ChngHyphen = FALSE;
-	  ChngIndent = FALSE;
-	  ChngLineSp = FALSE;
-	  /* modify graphics */
-	  ChngLineStyle = TRUE;
-	  ChngLineWeight = TRUE;
-	  ChngTrame = TRUE;
-	  ApplyPresentMod (Apply_All);
-	  /* reset indicators */
-	  ChngLineStyle = FALSE;
-	  ChngLineWeight = FALSE;
-	  ChngTrame = FALSE;
-	}
+	/* modify graphics */
+	ApplyPresentMod (Apply_AllGraphics);
       else
 	TtaDestroyDialogue (ref);
       break;
     case NumFormPresChar:
       /* active the form */
       if (val > 0)
-	{
-	  /* modify characters */
-	  ChngBodySize = TRUE;
-	  ChngWeight = TRUE;
-	  ChngUnderline = TRUE;
-	  ChngStyle = TRUE;
-	  ChngFontFamily = TRUE;
-	  /* no format */
-	  ChngCadr = FALSE;
-	  ChngJustif = FALSE;
-	  ChngHyphen = FALSE;
-	  ChngIndent = FALSE;
-	  ChngLineSp = FALSE;
-	  /* no graphics */
-	  ChngLineStyle = FALSE;
-	  ChngLineWeight = FALSE;
-	  ChngTrame = FALSE;
-	  ApplyPresentMod (Apply_All);
-	  /* reset indicators */
-	  ChngBodySize = FALSE;
-	  ChngWeight = FALSE;
-	  ChngUnderline = FALSE;
-	  ChngStyle = FALSE;
-	  ChngFontFamily = FALSE;
-	}
+	/* modify characters */
+	ApplyPresentMod (Apply_AllChars);
       else
 	TtaDestroyDialogue (ref);
       break;
     case NumFormPresFormat:
       /* le formulaire Format lui-meme */
       if (val > 0)
-	{
-	  /* no characters */
-	  ChngBodySize = FALSE;
-	  ChngWeight = FALSE;
-	  ChngUnderline = FALSE;
-	  ChngStyle = FALSE;
-	  ChngFontFamily = FALSE;
-	  /* no format */
-	  ChngCadr = TRUE;
-	  ChngJustif = TRUE;
-	  ChngHyphen = TRUE;
-	  ChngIndent = TRUE;
-	  ChngLineSp = TRUE;
-	  /* no graphics */
-	  ChngLineStyle = FALSE;
-	  ChngLineWeight = FALSE;
-	  ChngTrame = FALSE;
-	  ApplyPresentMod (Apply_All);
-	  /* reset indicators */
-	  ChngCadr = FALSE;
-	  ChngJustif = FALSE;
-	  ChngHyphen = FALSE;
-	  ChngIndent = FALSE;
-	  ChngLineSp = FALSE;
-	}
+	/* modify format */
+	ApplyPresentMod (Apply_AllFormat);
       else
 	TtaDestroyDialogue (ref);
       break;
@@ -1015,34 +1126,53 @@ View                view;
 	     TtaNewSubmenu (NumMenuCharFontSize, NumFormPresChar, 0,
 			    TtaGetMessage (LIB, TMSG_BODY_SIZE_PTS), nbItems, string, NULL, TRUE);
 	     /* initialise la zone 'Famille de caracteres' */
-	     switch (pAb->AbFont)
-		   {
-		      case 't':
-		      case 'T':
-			 i = 1;	/* Times */
-			 break;
-		      case 'h':
-		      case 'H':
-			 i = 2;	/* Helvetica */
-			 break;
-		      case 'c':
-		      case 'C':
-			 i = 3;	/* Courier */
-			 break;
-		      default:
-			 i = 0;
-			 break;
-		   }
+	     ChngFontFamily = TRUE;
+	     StdFontFamily = FALSE;
+	     FontFamily = pAb->AbFont;
+	     switch (FontFamily)
+	       {
+	       case 't':
+	       case 'T':
+		 i = 1;	/* Times */
+		 break;
+	       case 'h':
+	       case 'H':
+		 i = 2;	/* Helvetica */
+		 break;
+	       case 'c':
+	       case 'C':
+		 i = 3;	/* Courier */
+		 break;
+	       default:
+		 FontFamily = 'T';
+		 i = 0;
+		 break;
+	       }
 	     TtaSetMenuForm (NumMenuCharFamily, i - 1);
+
 	     /* initialise le catalogue 'Style des caracteres' */
-	     TtaSetMenuForm (NumMenuStyleChar, pAb->AbHighlight);
-	     TtaSetMenuForm (NumMenuUnderlineType, pAb->AbUnderline);
+	     ChngStyle = TRUE;
+	     StdStyle = FALSE;
+	     Style = pAb->AbHighlight;
+	     TtaSetMenuForm (NumMenuStyleChar, Style);
+
 	     /* initialise le catalogue 'Epaisseur du souligne' */
-	     /*TtaSetMenuForm (NumMenuUnderlineWeight, pAb->AbThickness);*/
+	     ChngUnderline = TRUE;
+	     StdUnderline = FALSE;
+	     UnderlineStyle = pAb->AbUnderline;
+	     TtaSetMenuForm (NumMenuUnderlineType, UnderlineStyle);
+	     ChngLineWeight = TRUE;
+	     StdLineWeight = FALSE;
+	     UnderlineWeight = pAb->AbThickness;
+	     /*TtaSetMenuForm (NumMenuUnderlineWeight, UnderlineWeight);*/
+
 	     /* initialise le sous-menu 'Corps des caracteres' */
+	     ChngBodySize = TRUE;
+	     StdBodySize = FALSE;
+	     BodySize = pAb->AbSize;
 	     if (pAb->AbSizeUnit == UnPoint)
 		/* convertit la taille */
-		i = FontRelSize (pAb->AbSize);
+		i = FontRelSize (BodySize);
 	     else
 		i = pAb->AbSize;
 	     TtaSetMenuForm (NumMenuCharFontSize, i);
@@ -1124,41 +1254,46 @@ View                view;
 	     for (i = 0; i < 3; i++)
 		TtaRedrawMenuEntry (NumMenuStrokeStyle, i, "icones", ThotColorNone, -1);
 	     /* initialise le sous-menu style des traits */
-	     switch (pAb->AbLineStyle)
-		   {
-		      case 'S':
-			 i = 1;	/* trait continu (Solid) */
-			 break;
-		      case '-':
-			 i = 2;	/* tirete' */
-			 break;
-		      case '.':
-			 i = 3;	/* pointille' */
-			 break;
-		      default:
-			 i = 0;
-			 break;
-		   }
+	     ChngLineStyle = TRUE;
+	     StdLineStyle = FALSE;
+	     LineStyle = pAb->AbLineStyle;
+	     switch (LineStyle)
+	       {
+	       case 'S':
+		 i = 1;	/* trait continu (Solid) */
+		 break;
+	       case '-':
+		 i = 2;	/* tirete' */
+		 break;
+	       case '.':
+		 i = 3;	/* pointille' */
+		 break;
+	       default:
+		 i = 0;
+		 break;
+	       }
 	     TtaSetMenuForm (NumMenuStrokeStyle, i - 1);
 
 	     /* zone de saisie epaisseur des traits */
 	     TtaNewNumberForm (NumZoneStrokeWeight, NumFormPresGraphics,
 		       TtaGetMessage (LIB, TMSG_LINE_WEIGHT), 0, 72, TRUE);
-	     TtaSetNumberForm (NumZoneStrokeWeight, 1);
-	     /* Toggle button Epaisseur des traits inchange'e */
+	     ChngLineWeight = TRUE;
+	     StdLineWeight = FALSE;
+	     LineWeight = pAb->AbLineWeight;
+	     /* Toggle button Epaisseur des traits standard */
 	     sprintf (string, "%s%s", "B", TtaGetMessage (LIB, TMSG_UNCHANGED));
 	     TtaNewToggleMenu (NumToggleWidthUnchanged, NumFormPresGraphics,
 			       NULL, 1, string, NULL, TRUE);
 	     /* initialise la zone de saisie epaisseur des traits */
 	     if (pAb->AbLineWeightUnit == UnPoint)
-		i = pAb->AbLineWeight;
+		i = LineWeight;
 	     else
 	       {
 		  if (pAb->AbSizeUnit == UnPoint)
 		     currentBodySize = pAb->AbSize;
 		  else
 		     currentBodySize = FontPointSize (pAb->AbSize);
-		  i = (currentBodySize * pAb->AbLineWeight) / 10;
+		  i = (currentBodySize * LineWeight) / 10;
 		  if ((currentBodySize * i) % 10 >= 5)
 		     i++;
 	       }
@@ -1180,7 +1315,7 @@ View                view;
 		  /* initialise le selecteur sur sa premiere entree */
 		  TtaSetSelector (NumSelectPattern, pAb->AbFillPattern, "");
 	       }
-	     /* Toggle button Motif de remplissage inchange' */
+	     /* Toggle button Motif de remplissage standard */
 	     i = 0;
 	     sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_UNCHANGED));
 	     TtaNewToggleMenu (NumTogglePatternUnchanged, NumFormPresGraphics,
@@ -1393,24 +1528,36 @@ static void         ResetMenus ()
 	/* Connecte les actions liees au traitement de la TtcSplit */
 	TteConnectAction (T_presentstd, (Proc) CallbackStdPresMenu);
 	TteConnectAction (T_present, (Proc) CallbackPresMenu);
+	ChngFontFamily = FALSE;
+	StdFontFamily = FALSE;
+	ChngStyle = FALSE;
+	StdStyle = FALSE;
+	ChngUnderline = FALSE;
+	StdUnderline = FALSE;
+	ChngWeight = FALSE;
+	StdWeight = FALSE;
+	ChngBodySize = FALSE;
+	StdBodySize = FALSE;
+	ChngCadr = FALSE;
+	StdCadr = FALSE;
+	ChngJustif = FALSE;
+	StdJustif = FALSE;
+	ChngHyphen = FALSE;
+	StdHyphen = FALSE;
+	ChngIndent = FALSE;
+	StdIndent = FALSE;
+	ChngLineSp = FALSE;
+	StdLineSp = FALSE;
+	ChngLineStyle = FALSE;
+	StdLineStyle = FALSE;
+	ChngLineWeight = FALSE;
+	StdLineWeight = FALSE;
+	ChngTrame = FALSE;
+	StdTrame = FALSE;
+	ChngStandardColor = FALSE;
+	ChngStandardGeom = FALSE;
      }
-   ChgnStandardChar = FALSE;
-   ChngStandardColor = FALSE;
-   ChngStandardGraph = FALSE;
-   ChngStandardGeom = FALSE;
-   ChngStandardForm = FALSE;
-   ChngLineStyle = FALSE;
-   ChngLineWeight = FALSE;
-   ChngTrame = FALSE;
-   ChngFontFamily = FALSE;
-   ChngUnderline = FALSE;
-   ChngWeight = FALSE;
-   ChngStyle = FALSE;
-   ChngBodySize = FALSE;
-   ChngCadr = FALSE;
-   ChngJustif = FALSE;
-   ChngHyphen = FALSE;
-   ChngIndent = FALSE;
-   ChngLineSp = FALSE;
+   RuleSetClr (TheRules);
+   RuleSetClr (GeomRules);
 }
 /* End Of Module modpres */

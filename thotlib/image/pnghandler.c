@@ -623,8 +623,12 @@ Drawable PngCreate(fn, pres, xif, yif, wif, hif, BackGroundPixel, mask1)
   int ncolors, cpp, bg = -1;
 
 
-  buffer = ReadPngToData(fn, &w, &h, &ncolors, &cpp, colrs, &bg );
-  if (((*xif != 0) && (*yif != 0)) && ((w != *xif) || (h != *yif)))
+  buffer = ReadPngToData(fn, &w, &h, &ncolors, &cpp, colrs, &bg);
+  if (*xif == 0 && *yif != 0)
+    *xif = w;
+  if (*xif != 0 && *yif == 0)
+    *yif = h;
+  if ((*xif != 0 && *yif != 0) && (w != *xif || h != *yif))
     {
       /* xif and yif contain width and height of the box */
       buffer2 = ZoomPicture (buffer, w , h, *xif, *yif, 1);

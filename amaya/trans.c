@@ -1740,7 +1740,7 @@ Document            doc;
 	       }
 	  }
      }
-   else
+   else if (myFirstSelect != NULL)
      {
 	prevFirst = TtaGetFirstChild (myFirstSelect);
 	nextLast = TtaGetLastChild (myFirstSelect);
@@ -1762,7 +1762,7 @@ Document            doc;
 	parentFirst = parentLast = TtaGetParent (myFirstSelect);
      }
    mySelect = NULL;
-   result = myFirstSelect != NULL && (parentFirst == parentLast);
+   result = (myFirstSelect != NULL && parentFirst == parentLast);
    if (result && parentFirst != NULL)
      {		
        /* if all selected elements are at the same level, */

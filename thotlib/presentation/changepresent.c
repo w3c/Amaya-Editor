@@ -1889,6 +1889,10 @@ boolean             Background;
 			       {
 				  RuleSetPut (rulesS, PtFillPattern);
 				  RuleSetPut (rulesS, PtBackground);
+				  /*RuleSetPut (rulesS, PtShowBox);*/
+				  /* force background display */
+				  if (pAb->AbLeafType == LtCompound)
+				    pAb->AbFillBox = FALSE;
 			       }
 			     else
 				RuleSetPut (rulesS, PtForeground);

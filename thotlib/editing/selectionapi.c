@@ -89,6 +89,28 @@ Element             selectedElement;
 }
 
 /*----------------------------------------------------------------------
+   TtaSelectView posts the selected view in the document
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtaSelectView (Document document, View view)
+#else  /* __STDC__ */
+void                TtaSelectView (document, view)
+Document            document;
+View                view;
+
+#endif /* __STDC__ */
+{
+  PtrDocument       pDoc;
+  int               oldView;
+  boolean           assoc;
+
+   UserErrorCode = 0;
+   GetActiveView (&pDoc, &oldView, &assoc);
+   if (LoadedDocument[document - 1] == pDoc && !assoc && oldView != view)
+     SelectedView = view;
+}
+
+/*----------------------------------------------------------------------
    TtaSelectString
 
    Selects a substring within a Text basic element. This substring is

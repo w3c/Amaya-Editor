@@ -1200,12 +1200,11 @@ PictInfo           *imageDesc;
 	 {
 	   if (box != NULL)
 	     {
-	       if (w == 0 && h == 0)
-		 {
+	       if (w == 0)
 		 /* the box size is unknown, keep the image size */
-		   w = wFrame;
-		   h = hFrame;
-		 }
+		 w = wFrame;
+	       if (h == 0)
+		 h = hFrame;
 	     }
 	 }
      }

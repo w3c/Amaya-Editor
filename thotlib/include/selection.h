@@ -38,6 +38,8 @@ extern void         TtaGiveLastSelectedElement (Document document, Element * sel
 
 extern boolean      TtaIsDocumentSelected ( /*Document document */ );
 extern void         TtaSelectElement ( /* Document document, Element selectedElement */ );
+extern void         TtaSelectView (/*Document document, View view*/);
+extern void         TtaSelectView (Document document, View view);
 extern void         TtaSelectString ( /* Document document, Element textElement, int firstCharacter, int lastCharacter */ );
 extern void         TtaExtendSelection ( /* Document document, Element element, int lastCharacter */ );
 extern void         TtaSelectInterval ();

@@ -1319,7 +1319,11 @@ ThotBitmap         *mask1;
   Gif89.disposal = 0;
 
   buffer = ReadGifToData (fn, &w, &h, &ncolors, &cpp, colrs);
-  if (((*xif != 0) && (*yif != 0)) && ((w != *xif) || (h != *yif)))
+  if (*xif == 0 && *yif != 0)
+    *xif = w;
+  if (*xif != 0 && *yif == 0)
+    *yif = h;
+  if ((*xif != 0 && *yif != 0) && (w != *xif || h != *yif))
     {   
       /* xif and yif contain width and height of the box */
       buffer2 = ZoomPicture (buffer, w , h, *xif, *yif, 1);

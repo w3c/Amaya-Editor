@@ -745,6 +745,7 @@ NotifyElement      *event;
 	SelectionDoc = event->document;
      }
    UpdateContextSensitiveMenus (event->document);
+   TtaSelectView (SelectionDoc, 1);
 }
 
 /*----------------------------------------------------------------------

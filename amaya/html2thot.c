@@ -2023,7 +2023,6 @@ Element             el;
 	       if (desc == NULL || elType.ElTypeNum != HTML_EL_Object_Content)
 		 {
 		   /* create Object_Content */
-		   elType = TtaGetElementType (desc);
 		   elType.ElTypeNum = HTML_EL_Object_Content;
 		   desc = TtaNewTree (theDocument, elType, "");
 		   TtaInsertSibling (desc, child, FALSE, theDocument);

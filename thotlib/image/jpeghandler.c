@@ -243,7 +243,11 @@ ThotBitmap         *mask1;
 
   /* effective load of the Picture from Jpeg Library */
   buffer = ReadJpegToData (fn, &w, &h, colrs);
-  if (((*xif != 0) && (*yif != 0)) && ((w != *xif) || (h != *yif)))
+  if (*xif == 0 && *yif != 0)
+    *xif = w;
+  if (*xif != 0 && *yif == 0)
+    *yif = h;
+  if ((*xif != 0 && *yif != 0) && (w != *xif || h != *yif))
     {   
       /* xif and yif contain width and height of the box */
       buffer2 = ZoomPicture (buffer, w , h, *xif, *yif, 1);
