@@ -97,6 +97,8 @@ PrintDlgWX::PrintDlgWX( int ref,
   XRCCTRL(*this, "wxID_DISPOSITION_BOX", wxRadioBox)->SetString(1, TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_2_PAGE_SHEET) ));
   XRCCTRL(*this, "wxID_DISPOSITION_BOX", wxRadioBox)->SetString(2, TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_4_PAGE_SHEET) ));
   XRCCTRL(*this, "wxID_DISPOSITION_BOX", wxRadioBox)->SetSelection(disposition);
+  XRCCTRL(*this, "wxID_MANUAL_CHK", wxCheckBox)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_MANUAL_FEED) ));
+  XRCCTRL(*this, "wxID_MANUAL_CHK", wxCheckBox)->SetValue(manual_feed);
 #endif /* _WINDOWS */
 
   // options check list
@@ -105,8 +107,6 @@ PrintDlgWX::PrintDlgWX( int ref,
   XRCCTRL(*this, "wxID_LINKS_CHK", wxCheckBox)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_NUMBERED_LINKS) ));
   XRCCTRL(*this, "wxID_PRINT_URL_CHK", wxCheckBox)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_PRINT_URL) ));
   XRCCTRL(*this, "wxID_IGNORE_CSS_CHK", wxCheckBox)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_WITH_CSS) ));
-  XRCCTRL(*this, "wxID_MANUAL_CHK", wxCheckBox)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_MANUAL_FEED) ));
-  XRCCTRL(*this, "wxID_MANUAL_CHK", wxCheckBox)->SetValue(manual_feed);
   XRCCTRL(*this, "wxID_TOC_CHK", wxCheckBox)->SetValue(with_toc);
   XRCCTRL(*this, "wxID_LINKS_CHK", wxCheckBox)->SetValue(with_links);
   XRCCTRL(*this, "wxID_PRINT_URL_CHK", wxCheckBox)->SetValue(with_url);
