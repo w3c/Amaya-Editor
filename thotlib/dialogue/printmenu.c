@@ -252,7 +252,8 @@ static void         ConnectPrint ()
 	   strcpy (pPrinter, "");
 	else
 	   strcpy (pPrinter, ptr);
-	PSdir[0] = '\0';
+        sprintf (PSdir, "/tmp/out.ps") ;
+	/*PSdir[0] = '\0';*/
 	PaperPrint = TRUE;
 	ManualFeed = FALSE;
 	strcpy (PageSize, "A4");
