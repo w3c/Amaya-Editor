@@ -1130,7 +1130,7 @@ PtrSSchema        SS;
      {
 	strncpy (texte, fname, MAX_PATH);
 	strcat (texte, ".TRA");
-	TtaDisplaySimpleMessageString (LIB, INFO, LIB_MISSING_FILE, texte);
+	TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_MISSING_FILE), texte);
      }
    else
      {
@@ -1328,7 +1328,7 @@ PtrSSchema        SS;
      }
    if (erreurTra)
      {
-	TtaDisplaySimpleMessageString (LIB, INFO, LIB_INCOR_TRA_FILE, fname);
+	TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_INCOR_TRA_FILE), fname);
 	schematrad = NULL;
      }
    else

@@ -351,7 +351,7 @@ Drawable           *mask;
 	*wif = 590;
 	*hif = 840;
 
-	TtaDisplaySimpleMessageString (LIB, INFO, EPSF_NO_BOUNDING_BOX_IN_PS_FILE, fn);
+	TtaDisplayMessage (INFO, TtaGetMessage(LIB, EPSF_NO_BOUNDING_BOX_IN_PS_FILE), fn);
      }
 
    *xif = PtEnPixel (*xif, 1);

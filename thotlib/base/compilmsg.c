@@ -79,7 +79,7 @@ int                 numline;
    char                linecurseur[linelen];
    int                 i;
 
-   TtaDisplaySimpleMessageNum (COMPIL, INFO, COMPIL_ERR_LINE, numline);
+   TtaDisplayMessage (INFO, TtaGetMessage(COMPIL, COMPIL_ERR_LINE), numline);
 
    if (index != 0)
      {
@@ -112,7 +112,7 @@ char               *string;
    char                linecurseur[linelen];
    int                 i;
 
-   TtaDisplaySimpleMessageNum (COMPIL, INFO, COMPIL_ERR_LINE, numline);
+   TtaDisplayMessage (INFO, TtaGetMessage(COMPIL, COMPIL_ERR_LINE), numline);
 
    if (index != 0)
      {

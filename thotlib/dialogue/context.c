@@ -262,9 +262,9 @@ Display            *dpy;
 
    perror ("*** Fatal Error");
    if (errno != EPIPE)
-      TtaDisplaySimpleMessageString (LIB, FATAL, LIB_X11_ERR, DisplayString (dpy));
+      TtaDisplayMessage (FATAL, TtaGetMessage(LIB, LIB_X11_ERR), DisplayString (dpy));
    else
-      TtaDisplaySimpleMessageString (LIB, FATAL, LIB_X11_ERR, DisplayString (dpy));
+      TtaDisplayMessage (FATAL, TtaGetMessage(LIB, LIB_X11_ERR), DisplayString (dpy));
 }
 #endif /* WWW_XWINDOWS */
 

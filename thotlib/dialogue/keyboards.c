@@ -814,7 +814,7 @@ void                KeyboardsLoadResources ()
 	if (FontIS == NULL)
 	  {
 	     /*Fonte 'ivsymb' inaccessible */
-	     TtaDisplaySimpleMessageString (LIB, INFO, LIB_MISSING_FILE, "ivsymb");
+	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_MISSING_FILE), "ivsymb");
 	     FontIS = FontMenu;
 	  }
 
@@ -822,7 +822,7 @@ void                KeyboardsLoadResources ()
 	if (FontIGr == NULL)
 	  {
 	     /*Fonte 'ivgraf' inaccessible */
-	     TtaDisplaySimpleMessageString (LIB, INFO, LIB_MISSING_FILE, "ivgraf");
+	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_MISSING_FILE), "ivgraf");
 	     FontIGr = FontMenu;
 	  }
 

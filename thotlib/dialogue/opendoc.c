@@ -137,13 +137,13 @@ Name                 name;
    /* presentation par defaut */
    if (pSchStr->SsExtension)
       /* c'est une extension de schema, il n'y a pas de regle racine */
-      TtaDisplaySimpleMessageString (LIB, INFO, LIB_ENTER_THE_PRES_FOR,
+      TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_ENTER_THE_PRES_FOR),
 				     pSchStr->SsName);
    else
       /* on prend le nom de la regle racine, qui est traduit dans la */
       /* langue de l'utilisateur, plutot que le nom du schema, qui n'est */
       /* pas traduit */
-      TtaDisplaySimpleMessageString (LIB, INFO, LIB_ENTER_THE_PRES_FOR,
+      TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_ENTER_THE_PRES_FOR),
 		     pSchStr->SsRule[pSchStr->SsRootElem - 1].SrName);
    /* demande un autre nom de fichier a l'utilisateur */
    TtaSetTextForm (NumZoneSchemaPresentation, name);
@@ -367,7 +367,7 @@ char               *data;
 		    BuildFileName (NomDocument, "", NomDirectory, nomdoc, &i);
 		    if (FileExist (nomdoc) == 0)
 		       /* le fichier n'existe pas */
-		       TtaDisplaySimpleMessageString (LIB, INFO, LIB_MISSING_FILE, NomDocument);
+		       TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_MISSING_FILE), NomDocument);
 		    else
 		       /* le fichier existe ; c'est sans doute une importation */
 		       /* demande le schema de structure d'importation */

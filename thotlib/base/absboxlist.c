@@ -510,7 +510,7 @@ int                 frame;
 	i = OuvrEcr (fname);
 	if (i != 0)
 	  {
-	     TtaDisplaySimpleMessageString (LIB, INFO, LIB_CANNOT_WRITE, fname);
+	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_CANNOT_WRITE), fname);
 	  }
 	else if (pFrame->FrAbstractBox != NULL)
 	   /* On ouvre le fichier */

@@ -124,7 +124,7 @@ char               *data;
 		    strcat (nomdoc, ".PIV");
 
 		    if (!TtaCheckDirectory (DirectoryDocACreer))
-		       TtaDisplaySimpleMessageString (LIB, INFO, LIB_DIRECTORY_NOT_FOUND, DirectoryDocACreer);
+		       TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_DIRECTORY_NOT_FOUND), DirectoryDocACreer);
 		    else
 		      {
 			 if (FileExist (nomdoc))

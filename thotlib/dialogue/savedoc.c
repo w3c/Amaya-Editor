@@ -118,10 +118,10 @@ void                TraiteSauverDoc ()
 	if (!ThotSendMessage ((NotifyEvent *) & notifyDoc, True))
 	   /* l'application accepte que Thot exporte le document */
 	  {
-	     TtaDisplaySimpleMessageString (LIB, INFO, LIB_EXPORTING, DocumentASauver->DocDName);
+	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_EXPORTING), DocumentASauver->DocDName);
 	     DoFileName (NomFichierSauver, "", NomDirectorySauver, NomFichierSortie, &i);
 	     ExportDocument (DocumentASauver, NomFichierSortie, NomSchemaTraduction);
-	     TtaDisplaySimpleMessageString (LIB, INFO, LIB_DOC_WRITTEN, NomFichierSortie);
+	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_DOC_WRITTEN), NomFichierSortie);
 	     /* envoie le message DocExport.Post a l'application */
 	     notifyDoc.event = TteDocExport;
 	     notifyDoc.document = (Document) IdentDocument (DocumentASauver);
@@ -268,7 +268,7 @@ char               *txt;
 			  /* le document a sauver n'a pas ete ferme' entre temps */
 			  if (!TtaCheckDirectory (NomDirectorySauver))
 			    {	/* le repertoire est invalide : affiche un message et detruit les dialogues */
-			       TtaDisplaySimpleMessageString (LIB, CONFIRM, LIB_DIRECTORY_NOT_FOUND, NomDirectorySauver);
+			       TtaDisplayMessage (CONFIRM, TtaGetMessage(LIB, LIB_DIRECTORY_NOT_FOUND), NomDirectorySauver);
 			       if (ThotLocalActions[T_confirmcreate] != NULL)
 				  (*ThotLocalActions[T_confirmcreate])
 				     (0, 1, (char *) 1);

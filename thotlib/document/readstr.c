@@ -414,7 +414,7 @@ PtrSSchema        scheme;
 	strncpy (filename, fname, MAX_PATH);
 	strcat (filename, ".STR");
 	/* message 'Fichier inaccessible' */
-	TtaDisplaySimpleMessageString (LIB, INFO, LIB_MISSING_FILE, filename);
+	TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_MISSING_FILE), filename);
 	return False;
      }
    else
@@ -441,7 +441,7 @@ PtrSSchema        scheme;
 	if (!rdConstantText (strfile, scheme))
 	  {
 	     /* message 'Fichier .STR incorrect ' */
-	     TtaDisplaySimpleMessageString (LIB, INFO, LIB_INCOR_STR_FILE, fname);
+	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_INCOR_STR_FILE), fname);
 	     return False;
 	  }
 
@@ -453,7 +453,7 @@ PtrSSchema        scheme;
 	   if (!rdAttributeDef (strfile, &scheme->SsAttribute[i]))
 	     {
 		/* message 'Fichier .STR incorrect ' */
-		TtaDisplaySimpleMessageString (LIB, INFO, LIB_INCOR_STR_FILE, fname);
+		TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_INCOR_STR_FILE), fname);
 		return False;
 	     }
 
@@ -462,7 +462,7 @@ PtrSSchema        scheme;
 	   if (!rdElementDef (strfile, &scheme->SsRule[i]))
 	     {
 		/* message 'Fichier .STR incorrect ' */
-		TtaDisplaySimpleMessageString (LIB, INFO, LIB_INCOR_STR_FILE, fname);
+		TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_INCOR_STR_FILE), fname);
 		return False;
 	     }
 	if (scheme->SsExtension)
@@ -478,7 +478,7 @@ PtrSSchema        scheme;
 			   if (!rdElementDef (strfile, &scheme->SsExtensBlock->EbExtensRule[i]))
 			     {
 				/* message 'Fichier .STR incorrect ' */
-				TtaDisplaySimpleMessageString (LIB, INFO, LIB_INCOR_STR_FILE, fname);
+				TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_INCOR_STR_FILE), fname);
 				return False;
 			     }
 		  }

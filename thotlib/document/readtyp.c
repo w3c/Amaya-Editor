@@ -484,7 +484,7 @@ PtrSSchema        SS;
      {
 	strncpy (texte, fname, MAX_PATH);
 	strcat (texte, ".TYP");
-	TtaDisplaySimpleMessageString (LIB, INFO, LIB_MISSING_FILE, texte);
+	TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_MISSING_FILE), texte);
      }
    else
      {
@@ -509,7 +509,7 @@ PtrSSchema        SS;
 	  {
 	     TtaFreeMemory (pSchT);
 	     /* Schemas incompatibles */
-	     TtaDisplaySimpleMessageString (LIB, INFO, LIB_INCOMPAT_SCHEMS_RECOMPILE, texte);
+	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_INCOMPAT_SCHEMS_RECOMPILE), texte);
 	     erreurTypo (1);
 	  }
 	else
@@ -554,7 +554,7 @@ PtrSSchema        SS;
      }
    if (erreurSchema)
      {
-	TtaDisplaySimpleMessageString (LIB, INFO, LIB_CANNOT_FIND_SCHEM, fname);
+	TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_CANNOT_FIND_SCHEM), fname);
 	return NULL;
      }
    else

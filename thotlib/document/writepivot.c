@@ -1654,7 +1654,7 @@ PtrDocument         pDoc;
 			    else
 			       /* ouverture fichier impossible */
 			      {
-				 TtaDisplaySimpleMessageString (LIB, INFO, LIB_CANNOT_WRITE, NomFich);
+				 TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_CANNOT_WRITE), NomFich);
 				 pDR = NULL;	/* abandon */
 				 pRef = NULL;
 			      }
@@ -1772,7 +1772,7 @@ PathBuffer          NomFich;
 		  else
 		     /* ouverture fichier impossible */
 		    {
-		       TtaDisplaySimpleMessageString (LIB, INFO, LIB_CANNOT_WRITE,
+		       TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_CANNOT_WRITE),
 						      NomFich);
 		       pDR = NULL;	/* abandon */
 		    }

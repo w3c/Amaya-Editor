@@ -213,50 +213,47 @@ PtrDocument         document;
 
 #endif /* __STDC__ */
 {
-   int                 d;
+  int                 d;
 
-   /* cherche un pointeur de descripteur de dictionnaire libre */
-   d = 0;
-   while (d < MaxDicos && TabDicos[d] != NULL)
-      d++;
+  /* cherche un pointeur de descripteur de dictionnaire libre */
+  d = 0;
+  while (d < MaxDicos && TabDicos[d] != NULL)
+    d++;
 
-/*HR */ if (d < MaxDicos && TabDicos[d] != NULL)
-     {
-	/* il faut faire de la place  */
-	/* en vidant un dictionnnaire FICHIER inutilise */
-	d = 0;
+  if (d < MaxDicos && TabDicos[d] != NULL)
+    {
+      /* il faut faire de la place  */
+      /* en vidant un dictionnnaire FICHIER inutilise */
+      d = 0;
 	/* de preference utilise par un autre document */
-	while (d < MaxDicos && TabDicos[d]->DicoDoc == document)
-	   d++;
-
-	if (d == MaxDicos || TabDicos[d]->DicoReadOnly == True)
-	  {
-	     /* rechercher un dico FICHIER */
-	     d = 0;
-	     while (d < MaxDicos && TabDicos[d]->DicoReadOnly == True)
-		d++;
-	  }
+      while (d < MaxDicos && TabDicos[d]->DicoDoc == document)
+	d++;
+      
+      if (d == MaxDicos || TabDicos[d]->DicoReadOnly == True)
+	{
+	  /* rechercher un dico FICHIER */
+	  d = 0;
+	  while (d < MaxDicos && TabDicos[d]->DicoReadOnly == True)
+	    d++;
+	}
 	/* vider ce dictionnaire FICHIER  */
-/*HR */ if (d < MaxDicos)
-/*HR */ 
-	  {
-/*HR */ TtaDisplaySimpleMessageString (LIB, INFO,
-/*HR */ LIB_LOAD_DICO_ERROR,
-/*HR */ TabDicos[d]->DicoNom);
-	     LibDictionnaire (&TabDicos[d]);
-/*HR */ 
-	  }
+      if (d < MaxDicos)	
+	{
+	  TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_LOAD_DICO_ERROR),
+			     TabDicos[d]->DicoNom);
+	  LibDictionnaire (&TabDicos[d]);
+	  
+	}
      }				/* end of if (TabDicos[d] != NULL) */
-
-/*HR */ if (d < MaxDicos)
-/*HR */ 
-     {
-	/* acquiert un descripteur de dictionnaire */
-	GetDico (&TabDicos[d]);
-	*pDico = TabDicos[d];
-	(*pDico)->DicoDoc = document;
-/*HR */ 
-     }
+  
+  if (d < MaxDicos)
+    
+    {
+      /* acquiert un descripteur de dictionnaire */
+      GetDico (&TabDicos[d]);
+      *pDico = TabDicos[d];
+      (*pDico)->DicoDoc = document;
+    }
 }				/*CreeDictionnaire */
 
 
@@ -425,21 +422,17 @@ PtrDico             dict;
 
 	     /* passer au mot suivant: lire ligne suivante */
 	     plignelue = &lignelue[0];	/* pointeur sur le premier caractere lu */
-	  }			/* end of if */
-	else
-	  {
-	     if (nblu != -1)	/* ce n'est pas la fin du dico */
-	       {
-		  /* impossible de charger ce dictionnaire */
-		  TtaDisplaySimpleMessageString (LIB, INFO,
-						 LIB_LOAD_DICO_ERROR,
-						 dict->DicoNom);
-		  /* liberer le dico */
-		  LibDictionnaire (&dict);	/* => dict = nil */
-		  return (0);
-	       }		/* end of if */
-	  }			/* end of else */
-     }				/* end of while */
+	  }
+	else if (nblu != -1)	/* ce n'est pas la fin du dico */
+	      {
+		/* impossible de charger ce dictionnaire */
+		TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_LOAD_DICO_ERROR),
+				   dict->DicoNom);
+		/* liberer le dico */
+		LibDictionnaire (&dict);	/* => dict = nil */
+		return (0);
+	      }
+     }
 
    /* creation d'un mot vide a la fin du dictionnaire */
    dermot = dict->nbmots + 1;
@@ -498,13 +491,13 @@ boolean             atraiter;
 	if (FileExist (tempbuffer) != 0)
 	  {
 	     fichdico = fopen (tempbuffer, "rw");	/* maj de dictionnaire */
-	     TtaDisplaySimpleMessageString (LIB, INFO, LIB_DICO, diconame);
+	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_DICO), diconame);
 	  }
 	else
 	  {
 	     nouveau = True;
 	     fichdico = fopen (tempbuffer, "w+");	/* nouveau dictionnaire */
-	     TtaDisplaySimpleMessageString (LIB, INFO, LIB_NOUV_DIC, diconame);
+	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_NOUV_DIC), diconame);
 	  }
      }
    else
@@ -514,7 +507,7 @@ boolean             atraiter;
 	   fichdico = BIOreadOpen (tempbuffer);
 	else
 	   fichdico = fopen (tempbuffer, "r");
-	TtaDisplaySimpleMessageString (LIB, INFO, LIB_DICO, diconame);
+	TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_DICO), diconame);
      }
 
    if (fichdico == NULL)
@@ -572,8 +565,7 @@ boolean             atraiter;
 		       /* -> on se replace au debut du fichier */
 		       /* fseek(fichdico, 0L, 0); */
 		       /* impossible de charger ce dictionnaire */
-		       TtaDisplaySimpleMessageString (LIB, INFO,
-					     LIB_LOAD_DICO_ERROR, diconame);
+		       TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_LOAD_DICO_ERROR), diconame);
 		       /* liberer le dictionnaire alloue */
 		       LibDictionnaire (pDico);
 		       *pDico = NULL;
@@ -598,7 +590,7 @@ boolean             atraiter;
    if (GetChaine (pDico, readonly) == -1)
      {
 	/* pas assez de memoire pour ouvrir ce dictionnaire */
-	TtaDisplaySimpleMessageString (LIB, INFO, LIB_NO_LOAD, diconame);
+	TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_NO_LOAD), diconame);
 	/* liberer aussi le dictionnaire alloue */
 	LibDictionnaire (pDico);
 	*pDico = NULL;
@@ -780,7 +772,7 @@ void                Dico_Init ()
    if (dicopath == NULL)
      {
 	/* la variable d'environnement DICOPAR n'existe pas */
-	TtaDisplaySimpleMessageString (LIB, INFO, LIB_NO_DICOPAR, "DICOPAR");
+	TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_NO_DICOPAR), "DICOPAR");
      }
    Alphabet_charge = Corr_alphabet ();
    if (Alphabet_charge == False)
@@ -810,12 +802,12 @@ boolean             ToCreate;
    *pDico = (int) NULL;
 
    dicodoc = (char *) ThotPath ("DICODOC");
-/*HR */ if (dicodoc != NULL)
-/*HR */ (void) LoadDico ((PtrDico *) pDico, 0, document, dicodoc,
-/*HR */ document->DocDirectory, False, ToCreate);
-/*HR */ 
+ if (dicodoc != NULL)
+ (void) LoadDico ((PtrDico *) pDico, 0, document, dicodoc,
+ document->DocDirectory, False, ToCreate);
+ 
    else
-/*HR */
+
       (void) LoadDico ((PtrDico *) pDico, 0, document, document->DocDName, document->DocDirectory, False, ToCreate);
    return (*pDico != '\0');
 }				/*TtaLoadDocumentDictionary */

@@ -853,7 +853,7 @@ boolean             Croissant;
      {
 	/* Est-ce que la table des fontes est pleine */
 	if (i >= MAX_FONT)
-	   TtaDisplaySimpleMessageString (LIB, INFO, LIB_NO_MORE_PLACE_FOR_THE_FONT, texteX);
+	   TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_NO_MORE_PLACE_FOR_THE_FONT), texteX);
 	else
 	  {
 	     strcpy (&NomPolice (0, i * MAX_NFONT), texte);
@@ -884,7 +884,7 @@ boolean             Croissant;
 		  else if (index >= NbMaxTaille)
 		     ptfont = ChargePoliceVoisine (alphabet, police, evidence, NbMaxTaille, False, frame, False);
 		  if (ptfont == NULL)
-		     TtaDisplaySimpleMessageString (LIB, INFO, LIB_MISSING_FILE, texteX);
+		     TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_MISSING_FILE), texteX);
 	       }
 
 	  }

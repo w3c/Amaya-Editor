@@ -1095,7 +1095,7 @@ XEvent             *ev;
 	  {
 	     s = XGetAtomName (ev->xany.display, ((XClientMessageEvent *) ev)->data.l[0]);
 	     i = ((XClientMessageEvent *) ev)->data.l[1];
-	     TtaDisplaySimpleMessageString (LIB, CONFIRM, i, s);
+	     TtaDisplayMessage (CONFIRM, TtaGetMessage(LIB, i), s);
 	  }
      }
    else if (ev->type == KeyPress)

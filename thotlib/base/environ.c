@@ -142,7 +142,7 @@ PathBuffer          path;
 	OK = TtaCheckDirectory (single_directory);
 	if (!OK)
 	   /* affiche un message d'erreur avec le nom du directory */
-	   TtaDisplaySimpleMessageString (LIB, INFO, LIB_DIRECTORY_NOT_FOUND, single_directory);
+	   TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_DIRECTORY_NOT_FOUND), single_directory);
 	/* on essaie avec un autre directory en sautant le PATH_SEP */
 	if (path[i] == PATH_SEP)
 	   i++;

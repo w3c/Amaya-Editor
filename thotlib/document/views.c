@@ -1110,7 +1110,7 @@ char               *extension;
      }
    else
      {
-	TtaDisplaySimpleMessageString (LIB, CONFIRM, LIB_CANNOT_WRITE, texte);
+	TtaDisplayMessage (CONFIRM, TtaGetMessage(LIB, LIB_CANNOT_WRITE), texte);
 	return False;
      }
 }
@@ -1183,7 +1183,7 @@ boolean             SauveDocAvecMove;
 	  {
 	     /* on indique un nom connu de l'utilisateur... */
 	     DoFileName (NomDuDocument, "PIV", NomDirectory, texte, &i);
-	     TtaDisplaySimpleMessageString (LIB, CONFIRM, LIB_CANNOT_WRITE,
+	     TtaDisplayMessage (CONFIRM, TtaGetMessage(LIB, LIB_CANNOT_WRITE),
 					    texte);
 	     status = False;
 	  }
@@ -1207,7 +1207,7 @@ boolean             SauveDocAvecMove;
 		/* detruit l'ancienne sauvegarde */
 	       {
 		  RemoveFile (NomAuto);
-		  TtaDisplaySimpleMessageString (LIB, INFO, LIB_DOC_WRITTEN,
+		  TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_DOC_WRITTEN),
 						 NomFichier);
 		  /* c'est trop tot pour perdre l'ancien nom du fichier et son */
 		  /* directory d'origine. */
@@ -1365,7 +1365,7 @@ int                 Mode;
 		  case 1:
 		     ok = saveWithExtension (pDoc, "BAK");
 		     if (ok)
-			TtaDisplaySimpleMessageString (LIB, INFO, LIB_DOC_WRITTEN, pDoc->DocDName);
+			TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_DOC_WRITTEN), pDoc->DocDName);
 		     break;
 		  case 2:
 		     ok = saveWithExtension (pDoc, "BAK");
@@ -1689,7 +1689,7 @@ char               *nomfichier;
 	   strncpy (DirectoryDoc, SaveDirDoc, MAX_PATH);
 	if (!ok)
 	  {
-	     TtaDisplaySimpleMessageString (LIB, INFO, LIB_CANNOT_OPEN_DOC, NomDocument);
+	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_CANNOT_OPEN_DOC), NomDocument);
 	     LibDocument (pDoc);
 	     *pDoc = NULL;
 	  }
@@ -1779,7 +1779,7 @@ PathBuffer          nomdir;
 	     {
 		strncpy (BufNomFichier, NomClasse, MAX_NAME_LENGTH);
 		strcat (BufNomFichier, ".STR");
-		TtaDisplaySimpleMessageString (LIB, INFO, LIB_CANNOT_FIND_SCHEM, BufNomFichier);
+		TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_CANNOT_FIND_SCHEM), BufNomFichier);
 	     }
 	   else
 	     {

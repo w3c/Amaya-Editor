@@ -1269,7 +1269,7 @@ PtrSSchema        SS;
 	/* message 'Fichier inaccessible' */
 	strncpy (texte, fname, MAX_NAME_LENGTH);
 	strcat (texte, ".PRS");
-	TtaDisplaySimpleMessageString (LIB, INFO, LIB_MISSING_FILE, texte);
+	TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_MISSING_FILE), texte);
      }
    else
      {
@@ -1322,7 +1322,7 @@ PtrSSchema        SS;
 	     nextr = NULL;
 	     pSchP = NULL;
 	     /* Schemas incompatibles */
-	     TtaDisplaySimpleMessageString (LIB, INFO, LIB_INCOMPAT_SCHEMS_RECOMPILE, texte);
+	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_INCOMPAT_SCHEMS_RECOMPILE), texte);
 	  }
 
 	else
@@ -1657,7 +1657,7 @@ PtrSSchema        SS;
    if (erreur)
      {
 	/* message 'Schema incorrect' */
-	TtaDisplaySimpleMessageString (LIB, INFO, LIB_INCOR_PRS_FILE, fname);
+	TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_INCOR_PRS_FILE), fname);
 	return NULL;
      }
 

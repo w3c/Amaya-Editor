@@ -2979,7 +2979,7 @@ PtrSSchema        pSCharge;
 	   if (pDoc->DocSSchema->SsCode != versionSchema)
 	     {
 		pDoc->DocToBeChecked = True;
-		TtaDisplaySimpleMessageString (LIB, INFO, LIB_STRUCTURE_SCHEMA_X_CHANGED, pDoc->DocSSchema->SsName);
+		TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_STRUCTURE_SCHEMA_X_CHANGED), pDoc->DocSSchema->SsName);
 	     }
      }
    if (pDoc->DocNatureSSchema[rangNature - 1] == NULL)
@@ -3057,7 +3057,7 @@ PtrSSchema        pSCharge;
 		if (pSS->SsCode != versionSchema)
 		  {
 		     pDoc->DocToBeChecked = True;
-		     TtaDisplaySimpleMessageString (LIB, INFO, LIB_STRUCTURE_SCHEMA_X_CHANGED, pSS->SsName);
+		     TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_STRUCTURE_SCHEMA_X_CHANGED), pSS->SsName);
 		  }
 	     pDoc->DocNatureSSchema[rangNature - 1] = pSS;
 	     strncpy (pDoc->DocNaturePresName[rangNature - 1], NomSchPrs, MAX_NAME_LENGTH);
@@ -3574,12 +3574,12 @@ boolean             WithAPPEvent;
 	   /* Le document n'est pas correct */
 	  {
 	     /* on previent l'utilisateur */
-	     TtaDisplaySimpleMessageString (LIB, INFO, LIB_STRUCTURE_OF_DOCUMENT_X_INVALID, pDoc->DocDName);
+	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_STRUCTURE_OF_DOCUMENT_X_INVALID), pDoc->DocDName);
 	     if (!FuncIsHere (Func_Debug))
 	       {
 		  /* on met le document en Read-Only */
 		  pDoc->DocReadOnly = True;
-		  TtaDisplaySimpleMessageString (LIB, INFO, LIB_DOCUMENT_X_LOCKED, pDoc->DocDName);
+		  TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_DOCUMENT_X_LOCKED), pDoc->DocDName);
 	       }
 	  }
 	/* libere les labels des elements reference's par d'autres */
@@ -3689,7 +3689,7 @@ boolean             WithAPPEvent;
 							 if (!ok)
 							   {
 							      /* echec a l'ouverture du document */
-							      TtaDisplaySimpleMessageString (LIB, INFO, LIB_MISSING_FILE, IdentDocSource);
+							      TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_MISSING_FILE), IdentDocSource);
 							      FreeDocument (TabDocExt[NumDocExt - 1]);
 							      TabDocExt[NumDocExt - 1] = NULL;
 							   }

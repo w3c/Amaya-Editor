@@ -120,7 +120,7 @@ PtrDocument         pDoc;
 	FichierSortie[NbFichierSortie].SecFileDesc = fopen (fileName, "w");
 	if (FichierSortie[NbFichierSortie].SecFileDesc == NULL)
 	  {
-	     TtaDisplaySimpleMessageString (LIB, CONFIRM, LIB_CANNOT_CREATE_FILE,
+	     TtaDisplayMessage (CONFIRM, TtaGetMessage(LIB, LIB_CANNOT_CREATE_FILE),
 					    fileName);
 	     return 0;
 	  }
@@ -2873,7 +2873,7 @@ PtrDocument         pDoc;
 		 {
 		    newfile = fopen (currentFileName, "w");
 		    if (newfile == NULL)
-		       TtaDisplaySimpleMessageString (LIB, CONFIRM, LIB_CANNOT_CREATE_FILE, currentFileName);
+		       TtaDisplayMessage (CONFIRM, TtaGetMessage(LIB, LIB_CANNOT_CREATE_FILE), currentFileName);
 		    else
 		       /* on a reussi a ouvrir le nouveau fichier */
 		      {
@@ -3063,7 +3063,7 @@ PtrDocument         pDoc;
 	       /* ouvre le fichier a inclure */
 	       tra_inclus = BIOreadOpen (full_name);
 	       if (tra_inclus == 0)
-		  TtaDisplaySimpleMessageString (LIB, INFO, LIB_CANNOT_INCLUDE_FILE, fname);
+		  TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_CANNOT_INCLUDE_FILE), fname);
 	       else
 		  /* le fichier a inclure est ouvert */
 		 {
@@ -3429,7 +3429,7 @@ char               *nomSchTrad;
    /* cree le fichier de sortie principal */
    tra_sortie = fopen (fileName, "w");
    if (tra_sortie == NULL)
-      TtaDisplaySimpleMessageString (LIB, CONFIRM, LIB_CANNOT_CREATE_FILE,
+      TtaDisplayMessage (CONFIRM, TtaGetMessage(LIB, LIB_CANNOT_CREATE_FILE),
 				     tra_filename);
    else
       /* le fichier de sortie principal a ete cree' */
