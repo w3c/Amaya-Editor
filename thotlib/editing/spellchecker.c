@@ -930,7 +930,7 @@ void WordReplace (unsigned char *orgWord,  unsigned char *newWord)
      {
 	idx = ChkrIndChar - stringLength;
 	OpenHistorySequence (ChkrRange->SDocument, ChkrElement, ChkrElement,
-			     idx, idx+stringLength-1);
+			     idx, idx + stringLength);
 	AddEditOpInHistory (ChkrElement, ChkrRange->SDocument, TRUE, TRUE);
 	CloseHistorySequence (ChkrRange->SDocument);
 	ReplaceString (ChkrRange->SDocument, ChkrElement, idx,

@@ -55,7 +55,6 @@
 #define NumMenuSearchNature	43
 #define NumSelTypeToSearch	44
 #define NumSelAttributeToSearch	45
-#define NumLabelAttributeValue	46
 #define NumToggleUpperEqualLower       47
 #define NumZoneScrollUp      	48
 #define NumZoneScrollLeft  	49

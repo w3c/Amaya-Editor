@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -322,7 +322,7 @@ void CreateSearchDlgWindow (ThotWindow parent)
   InitMenuWhereToSearch 
   inits the "Where to search" submenu.
   ----------------------------------------------------------------------*/
-static void         InitMenuWhereToSearch (int ref)
+static void InitMenuWhereToSearch (int ref)
 {
   int                 i;
   char                string[200];
@@ -341,7 +341,7 @@ static void         InitMenuWhereToSearch (int ref)
 		 NULL, FALSE);
   TtaSetMenuForm (NumMenuOrSearchText, 2);
 }
-#endif /* !_WINDOWS */
+#endif /* _WINDOWS */
 
 
 /*----------------------------------------------------------------------
@@ -366,7 +366,7 @@ void         ResetSearchInDocument (PtrDocument pDoc)
   CallbackWhereToSearch
   callback handler for the "Where to search" submenu.
   ----------------------------------------------------------------------*/
-void                CallbackWhereToSearch (int ref, int val)
+void CallbackWhereToSearch (int ref, int val)
 {
    /* determine le point de depart de la recherche et le point */
    /* de terminaison */
@@ -399,7 +399,7 @@ void                CallbackWhereToSearch (int ref, int val)
   launches the command for searching and/or replacing a text,
   an element type and an attribute for the pDoc document.
   ----------------------------------------------------------------------*/
-void                TtcSearchText (Document document, View view)
+void TtcSearchText (Document document, View view)
 {
   PtrDocument         pDocSel;
   PtrElement          pFirstSel;
@@ -472,12 +472,14 @@ void                TtcSearchText (Document document, View view)
       TtaNewSubmenu (NumMenuReplaceMode, NumFormSearchText, 0,
 		     TtaGetMessage (LIB, TMSG_REPLACE), 3, string,
 		     NULL, FALSE);
-      if (WithReplace) {
-	if (AutoReplace)
-          TtaSetMenuForm (NumMenuReplaceMode, 2);
-	else
-	  TtaSetMenuForm (NumMenuReplaceMode, 1);
-      } else
+      if (WithReplace)
+	{
+	  if (AutoReplace)
+	    TtaSetMenuForm (NumMenuReplaceMode, 2);
+	  else
+	    TtaSetMenuForm (NumMenuReplaceMode, 1);
+	}
+      else
 	TtaSetMenuForm (NumMenuReplaceMode, 0);
     }
   else
@@ -494,15 +496,12 @@ void                TtcSearchText (Document document, View view)
   
 #ifdef _WINDOWS
   SearchAfter = ok;
-#else /* _WINDOWS */
-  /* efface le label "References dans le document X" */
-  TtaNewLabel (NumLabelAttributeValue, NumFormSearchText, " ");
 #endif /* _WINDOWS */
   SearchLoadResources ();
   /* complete la feuille de dialogue avec les menus de recherche de types */
   /* d'element et d'attributs si la ressource de recherche avec structure */
   /* est chargee */
-  if (ThotLocalActions[T_strsearchconstmenu] != NULL)
+  if (ThotLocalActions[T_strsearchconstmenu])
     (*ThotLocalActions[T_strsearchconstmenu]) (pDoc);
   
   /* active le formulaire */
@@ -565,7 +564,7 @@ void CallbackTextReplace (int ref, int val, char *txt)
 	  DoReplace = TRUE;
 #ifndef _WINDOWS
 	  TtaSetMenuForm (NumMenuReplaceMode, 1);
-#endif /* !_WINDOWS */
+#endif /* _WINDOWS */
 	}
       break;
     case NumToggleUpperEqualLower:
@@ -602,9 +601,6 @@ void CallbackTextReplace (int ref, int val, char *txt)
       break;
     case NumFormSearchText:
       /* Boutons de la feuille de dialogue */
-#ifndef _WINDOWS
-      TtaNewLabel (NumLabelAttributeValue, NumFormSearchText, " ");
-#endif /* !_WINDOWS */
       if (SearchingD->SDocument == NULL)
 	{
 	  TtaDestroyDialogue (NumFormSearchText);
@@ -674,11 +670,7 @@ void CallbackTextReplace (int ref, int val, char *txt)
 		    /* on ne remplace pas dans un sous-arbre en */
 		    /* lecture seule */
 		    if (ElementIsReadOnly (pFirstSel))
-#ifndef _WINDOWS
-		      TtaNewLabel (NumLabelAttributeValue, NumFormSearchText,
-				   TtaGetMessage (LIB, TMSG_EL_RO))
-#endif /* !_WINDOWS */
-			;
+		      ;
 		    else if (!pFirstSel->ElIsCopy && pFirstSel->ElText != NULL
 			     && pFirstSel->ElTerminal
 			     && pFirstSel->ElLeafType == LtText)
@@ -695,7 +687,7 @@ void CallbackTextReplace (int ref, int val, char *txt)
 			    if (!AutoReplace)
 			      OpenHistorySequence (SearchingD->SDocument,
 					       pFirstSel, pFirstSel, firstChar,
-					       firstChar+SearchedStringLen-1);
+					       firstChar + SearchedStringLen);
 			    AddEditOpInHistory (pFirstSel,
 						SearchingD->SDocument,
 						TRUE, TRUE);
@@ -826,46 +818,42 @@ void CallbackTextReplace (int ref, int val, char *txt)
 		 else /* Before selection */
 		   TtaSetMenuForm (NumMenuOrSearchText, 0);
 	       }
-#endif /* !_WINDOWS */
+#endif /* _WINDOWS */
 	     StartSearch = FALSE;
 	     if (ThotLocalActions[T_strsearchshowvalattr] != NULL)
 	       (*ThotLocalActions[T_strsearchshowvalattr]) ();
 	    }
 	  else
-	    /* on n'a pas trouve' */
 	    {
+	      /* not found */
+#ifdef _WINDOWS
+	      if (!searchEnd)
+		{
+		  searchEnd = TRUE;
+		  if (WithReplace && ReplaceDone)
+		    {
+		    if (!AutoReplace)
+		      MessageBox (NULL,
+				  TtaGetMessage (LIB, TMSG_NOTHING_TO_REPLACE),
+				  msgCaption, MB_OK | MB_ICONEXCLAMATION);
+		    }
+		  else
+		    MessageBox (NULL, TtaGetMessage (LIB, TMSG_NOT_FOUND),
+				msgCaption, MB_OK | MB_ICONEXCLAMATION);
+		}
+#else /* _WINDOWS */
 	      if (WithReplace && ReplaceDone)
 		{
 		  if (!AutoReplace)
-		    {
-#ifdef _WINDOWS
-		      if (!searchEnd)
-			{
-			  searchEnd = TRUE;
-			  MessageBox (NULL,
-				 TtaGetMessage (LIB, TMSG_NOTHING_TO_REPLACE),
-                                 msgCaption, MB_OK | MB_ICONEXCLAMATION);
-			}
-#else /* !_WINDOWS */
-		      /* message "Plus de remplacement" */
-		      TtaNewLabel (NumLabelAttributeValue, NumFormSearchText,
-				   TtaGetMessage (LIB, TMSG_NOTHING_TO_REPLACE));
-#endif /* !_WINDOWS */
-		    }
+		    TtaDisplayMessage (CONFIRM,
+				       TtaGetMessage (LIB, TMSG_NOTHING_TO_REPLACE),
+				       NULL);
 		}
 	      else
-		/* message "Pas trouve'" */
-#ifdef _WINDOWS
-		if (!searchEnd)
-		  {
-		    searchEnd = TRUE;
-		    MessageBox (NULL, TtaGetMessage (LIB, TMSG_NOT_FOUND),
-				msgCaption, MB_OK | MB_ICONEXCLAMATION);
-		  }
-#else  /* !_WINDOWS */
-	      TtaNewLabel (NumLabelAttributeValue, NumFormSearchText,
-			   TtaGetMessage (LIB, TMSG_NOT_FOUND));
-#endif /* !_WINDOWS */
+		TtaDisplayMessage (CONFIRM,
+				   TtaGetMessage (LIB, TMSG_NOT_FOUND),
+				   NULL);
+#endif /* _WINDOWS */
 	      StartSearch = TRUE;
 	    }
 	}
@@ -912,7 +900,7 @@ void BuildGoToPageMenu (PtrDocument pDoc, int docView, int schView)
    TtaNewNumberForm (NumZoneSearchPage, NumFormSearchPage, TtaGetMessage (LIB, TMSG_GOTO_PAGE), 0, 9999, FALSE);
    /* affiche le formulaire */
    TtaShowDialogue (NumFormSearchPage, FALSE);
-#endif /* !_WINDOWS */
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -923,34 +911,33 @@ void CallbackGoToPageMenu (int ref, int val)
 {
    PtrElement          pPage;
 
-   if (SearchedPageDoc != NULL)
-      if (SearchedPageDoc->DocSSchema != NULL)
-	 /* le document concerne' est toujours la */
-	 switch (ref)
-	       {
-		  case NumZoneSearchPage:
-		     /* zone de saisie du numero de la page cherchee */
-		     SearchedPageNumber = val;
-		     break;
-		  case NumFormSearchPage:
-		     /* formulaire de saisie du numero de la page cherchee */
-		     /* cherche la page */
-		     pPage = SearchPageBreak (SearchedPageRoot,
-					      SearchedPageSchView,
-					      SearchedPageNumber, FALSE);
-		     /* fait afficher la page trouvee en haut de sa frame */
-		     ScrollPageToTop (pPage, ViewSearchedPageDoc,
-				      SearchedPageDoc);
-		     TtaDestroyDialogue (NumFormSearchPage);
-		     break;
-	       }
+   if (SearchedPageDoc && SearchedPageDoc->DocSSchema)
+     /* le document concerne' est toujours la */
+     switch (ref)
+       {
+       case NumZoneSearchPage:
+	 /* zone de saisie du numero de la page cherchee */
+	 SearchedPageNumber = val;
+	 break;
+       case NumFormSearchPage:
+	 /* formulaire de saisie du numero de la page cherchee */
+	 /* cherche la page */
+	 pPage = SearchPageBreak (SearchedPageRoot,
+				  SearchedPageSchView,
+				  SearchedPageNumber, FALSE);
+	 /* fait afficher la page trouvee en haut de sa frame */
+	 ScrollPageToTop (pPage, ViewSearchedPageDoc,
+			  SearchedPageDoc);
+	 TtaDestroyDialogue (NumFormSearchPage);
+	 break;
+       }
 }
 
 /*----------------------------------------------------------------------
   SearchLoadResources
   inits the variables of the search commands.
   ----------------------------------------------------------------------*/
-void                SearchLoadResources (void)
+void SearchLoadResources (void)
 {
    if (ThotLocalActions[T_searchtext] == NULL)
      {

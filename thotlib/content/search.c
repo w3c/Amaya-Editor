@@ -246,7 +246,7 @@ void ReplaceString (PtrDocument pDoc, PtrElement pEl, int firstChar,
       if (replaceLen < 2)
 	i = firstChar;
       else
-	i = firstChar + replaceLen - 1;
+	i = firstChar + replaceLen;
       SelectStringWithEvent (pDoc, pEl, firstChar, i);
     }
   /* le document a ete modifie' */

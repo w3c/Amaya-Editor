@@ -852,7 +852,7 @@ static void StartTextInsertion (PtrAbstractBox pAb, int frame, PtrBox pSelBox,
 		  pSelBox->BxBuffer = pPreviousBuffer;
 	       }
 	  }
-	else if (ind > 0 && ind < pBuffer->BuLength - 1)
+	else if (ind > 0 && ind < pBuffer->BuLength)
 	  {
 	    /* split the current buffer to prepare the insertion */
 	    pNewBuffer = pBuffer;

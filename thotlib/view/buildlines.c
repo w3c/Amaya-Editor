@@ -1672,6 +1672,7 @@ static int FillLine (PtrLine pLine, PtrAbstractBox pRootAb,
 	   {
 	     /* Break the box anywhere */
 	     BreakMainBox (pLine, pNextBox, maxLength, pRootAb, TRUE);
+	     pBox = pNextBox;
 	     if (pNextBox->BxNexChild)
 	       {
 		 /* we have a new box */
@@ -1680,8 +1681,6 @@ static int FillLine (PtrLine pLine, PtrAbstractBox pRootAb,
 		   pBox = pNextBox->BxNexChild;
 		 pLine->LiFirstPiece = pBox;
 	       }
-	     else
-	       pBox = pNextBox;
 	   }
        else
 	 {

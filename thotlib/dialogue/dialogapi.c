@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001.
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -2114,10 +2114,8 @@ void DisplayConfirmMessage (char *text)
    ThotWidget          row, w;
    ThotWidget          msgbox;
 
-
    /* get current position */
    TtaSetDialoguePosition ();
-
 #ifdef _GTK
    /* Create the window message */
    msgbox = gtk_window_new (GTK_WINDOW_TOPLEVEL);
@@ -2126,7 +2124,7 @@ void DisplayConfirmMessage (char *text)
    gtk_window_set_title (GTK_WINDOW (msgbox), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
    gtk_window_set_policy (GTK_WINDOW (msgbox), TRUE, TRUE, FALSE);
    gtk_widget_set_uposition(GTK_WIDGET(msgbox), ShowX, ShowY);
-   gtk_container_set_border_width (GTK_CONTAINER(msgbox), 5);
+   gtk_container_set_border_width (GTK_CONTAINER(msgbox), 2);
 
     /*** Create a Row-Column to add the label and OK button ***/
    row = gtk_vbox_new (FALSE,0);
@@ -2135,9 +2133,10 @@ void DisplayConfirmMessage (char *text)
 
    /* the label */
    w = gtk_label_new (text);
-   gtk_misc_set_alignment (GTK_MISC (w), 0.0, 0.5);
+   gtk_misc_set_alignment (GTK_MISC (w), 0., 0.5);
+   gtk_misc_set_padding (GTK_MISC (w), 10., 0.);
    gtk_widget_show (GTK_WIDGET(w));
-   gtk_label_set_justify (GTK_LABEL (w), GTK_JUSTIFY_LEFT);
+   gtk_label_set_justify (GTK_LABEL (w), GTK_JUSTIFY_CENTER);
    gtk_box_pack_start (GTK_BOX (row), w, FALSE, FALSE, 0);
 
    /*** Create the Row-Column that includes OK button ***/
@@ -2149,7 +2148,7 @@ void DisplayConfirmMessage (char *text)
    /*** Create the OK button ***/
    w = gtk_button_new_with_label (TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
    gtk_widget_show (GTK_WIDGET(w));
-   gtk_box_pack_start (GTK_BOX (row), w, FALSE, FALSE, 0);
+   gtk_box_pack_start (GTK_BOX (row), w, FALSE, FALSE, 100);
    ConnectSignalGTK (GTK_OBJECT(w), "clicked", GTK_SIGNAL_FUNC(ConfirmMessage), (gpointer)msgbox);
 
 
@@ -2179,7 +2178,7 @@ void DisplayConfirmMessage (char *text)
    n++;
    XtSetArg (args[n], XmNautoUnmanage, FALSE);
    n++;
-   XtSetArg (args[n], XmNmarginWidth, 0);
+   XtSetArg (args[n], XmNmarginWidth, 10);
    n++;
    XtSetArg (args[n], XmNmarginHeight, 0);
    n++;
@@ -2192,16 +2191,16 @@ void DisplayConfirmMessage (char *text)
    n = 0;
    XtSetArg (args[n], XmNbackground, BgMenu_Color);
    n++;
-   XtSetArg (args[n], XmNadjustLast, FALSE);
-   n++;
+   /*XtSetArg (args[n], XmNadjustLast, FALSE);
+     n++;*/
    XtSetArg (args[n], XmNmarginWidth, 0);
    n++;
    XtSetArg (args[n], XmNmarginHeight, 0);
    n++;
    XtSetArg (args[n], XmNspacing, 0);
    n++;
-   XtSetArg (args[n], XmNpacking, XmPACK_TIGHT);
-   n++;
+   /*XtSetArg (args[n], XmNpacking, XmPACK_TIGHT);
+     n++;*/
    XtSetArg (args[n], XmNorientation, XmVERTICAL);
    n++;
    XtSetArg (args[n], XmNresizeHeight, TRUE);
@@ -2211,6 +2210,8 @@ void DisplayConfirmMessage (char *text)
 
    /* the label */
    n = 0;
+   XtSetArg (args[n], XmNalignment, XmALIGNMENT_CENTER);
+   n++;
    XtSetArg (args[n], XmNfontList, DefaultFont);
    n++;
    XtSetArg (args[n], XmNbackground, BgMenu_Color);
