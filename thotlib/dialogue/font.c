@@ -42,7 +42,7 @@ static int          LogicalPointsSizes[MAX_LOG_SIZE] =
 {6, 8, 10, 12, 14, 16, 20, 24, 30, 40, 60};
 static char*        FontFamily;
 static ThotBool     UseLucidaFamily;
-static ThotBool     UseBitStreamFamily;
+static ThotBool     UseAdobeFamily;
 
 #ifdef _WINDOWS
 typedef struct FontCharacteristics {
@@ -642,164 +642,160 @@ ptrfont LoadFont (char *name)
 void FontIdentifier (char alphabet, char family, int highlight, int size,
 		     TypeUnit unit, char r_name[10], char r_nameX[100])
 {
-
-   if (highlight > MAX_HIGHLIGHT)
-      highlight = MAX_HIGHLIGHT;
-   if (alphabet == 'g' || alphabet == 'G')
-     {
-	highlight = 0;		/* roman only for symbols */
-	family = 's';		/* times only for symbols */
-	strcpy (r_nameX, "-");
-	strcat (r_nameX, "*");
-     }
-   else
-      strcpy (r_nameX, FontFamily);
-
-   /* apply the current font zoom */
-   if (unit == UnRelative)
-     {
-	/* La size est relative */
-	if (size < 0)
-	   size = LogicalPointsSizes[0];
-	else if (size > MaxNumberOfSizes)
-	   size = LogicalPointsSizes[MaxNumberOfSizes];
-	else
-	   size = LogicalPointsSizes[size];
-     }
-   else if (unit == UnPixel)
-      size = PixelToPoint (size);
-
-   if (UseLucidaFamily)
-     {
-	switch (TOLOWER (family))
-	      {
-		 case 't':
-		    strcat (r_nameX, "bright");
-		    break;
-		 case 'c':
-		    strcat (r_nameX, "typewriter");
-		    break;
-		 default:
-		    break;
-	      }
-     }
-   else
-     {
-        strcat (r_nameX, "-");
-	switch (TOLOWER (family))
-	      {
-		 case 't':
-		    strcat (r_nameX, "times");
-		    break;
-		 case 'h':
-		    strcat (r_nameX, "helvetica");
-		    break;
-		 case 'c':
-		    strcat (r_nameX, "courier");
-		    break;
-		 case 's':
-		    strcat (r_nameX, "Symbol");
-		    break;
-		 default:
-		    strcat (r_nameX, "*");
-	      }
-     }
-
-   strcat (r_nameX, "-");
-   switch (TOLOWER (StylesTable[highlight]))
-	 {
-	    case 'r':
-	       strcat (r_nameX, "medium");
-	       strcat (r_nameX, "-");
-	       strcat (r_nameX, "r");
-	       break;
-	    case 'i':
-	    case 'o':
-	       strcat (r_nameX, "medium");
-	       strcat (r_nameX, "-");
-	       if (TOLOWER (family) == 'h' || TOLOWER (family) == 'c')
-              strcat (r_nameX, "o");
-	       else
-               strcat (r_nameX, "i");
-	       break;
-	    case 'b':
-	       if (UseLucidaFamily && TOLOWER (family) == 't')
-              strcat (r_nameX, "demibold");
-	       else
-                strcat (r_nameX, "bold");
-	       strcat (r_nameX, "-");
-	       strcat (r_nameX, "r");
-	       break;
-	    case 'g':
-	    case 'q':
-	       if (UseLucidaFamily && TOLOWER (family) == 't')
-              strcat (r_nameX, "demibold");
-	       else
-              strcat (r_nameX, "bold");
-              strcat (r_nameX, "-");
-	       if (TOLOWER (family) == 'h' || TOLOWER (family) == 'c')
-              strcat (r_nameX, "o");
-	       else
-               strcat (r_nameX, "i");
-	       break;
-	 }
-
-   strcat (r_nameX, "-");
-   if (TOLOWER (family) == 'h')
-      strcat (r_nameX, "normal");  /* narrow helvetica does not exist */
-   else
+  if (highlight > MAX_HIGHLIGHT)
+    highlight = MAX_HIGHLIGHT;
+  if (alphabet == 'g' || alphabet == 'G')
+    {
+      highlight = 0;		/* roman only for symbols */
+      family = 's';		/* times only for symbols */
+      strcpy (r_nameX, "-");
       strcat (r_nameX, "*");
-   if (TOLOWER (family) == 's')
-     {
-	if (UseBitStreamFamily)
-	   sprintf (r_nameX, "%s-*-*-%d-83-83-p-*-*-fontspecific", r_nameX, size * 10);
-	else
-	   sprintf (r_nameX, "%s-*-%d-*-75-75-p-*-*-fontspecific", r_nameX, size);
-     }
-   else
-     {
-	if (UseBitStreamFamily)
-	   sprintf (r_nameX, "%s-*-*-%d-83-83", r_nameX, size * 10);
-	else
-	   sprintf (r_nameX, "%s-*-%d-*-75-75", r_nameX, size);
-	strcat (r_nameX, "-");
-	if (TOLOWER (family) == 'c')
-	    strcat (r_nameX, "m");
-	else
-	    strcat (r_nameX, "p");
-	strcat (r_nameX, "-");
-	strcat (r_nameX, "*");
-	strcat (r_nameX, "-");
-	if (TOLOWER (alphabet) == 'l')
-	{
-	    strcat (r_nameX, "iso8859");
-	    strcat (r_nameX, "-");
-	    strcat (r_nameX, "1");
-	}
-	else if (TOLOWER (alphabet) == 'e' || alphabet == '2')
-	{
-	    strcat (r_nameX, "iso8859");
-	    strcat (r_nameX, "-");
-	    strcat (r_nameX, "2");
-	}	
-	else if (TOLOWER (alphabet) == 'g')
-	{
-	    strcat (r_nameX, "*");		/*adobe */
-	    strcat (r_nameX, "-");		/*adobe */
-	    strcat (r_nameX, "fontspecific");	/*adobe */
-	}
-	else
-	{
-	    strcat (r_nameX, "iso8859");
-	    strcat (r_nameX, "-");
-	    strcat (r_nameX, "1");
-		/* replace '1' by current alphabet */
-	    r_nameX[strlen (r_nameX) -1] = alphabet;
-	}
-     }
+    }
+  else
+    strcpy (r_nameX, FontFamily);
 
-   sprintf (r_name, "%c%c%c%d", TOLOWER (alphabet), TOLOWER (family),
-	    StylesTable[highlight], size);
+  /* apply the current font zoom */
+  if (unit == UnRelative)
+    {
+      /* La size est relative */
+      if (size < 0)
+	size = LogicalPointsSizes[0];
+      else if (size > MaxNumberOfSizes)
+	size = LogicalPointsSizes[MaxNumberOfSizes];
+      else
+	size = LogicalPointsSizes[size];
+    }
+  else if (unit == UnPixel)
+    size = PixelToPoint (size);
+
+  if (UseLucidaFamily)
+    {
+      switch (TOLOWER (family))
+	{
+	case 't':
+	  strcat (r_nameX, "bright");
+	  break;
+	case 'c':
+	  strcat (r_nameX, "typewriter");
+	  break;
+	default:
+	  break;
+	}
+    }
+  else if (UseAdobeFamily)
+    {
+      switch (TOLOWER (family))
+	{
+	case 't':
+	  strcat (r_nameX, "new century schoolbook");
+	  break;
+	case 'h':
+	  strcat (r_nameX, "helvetica");
+	  break;
+	case 'c':
+	  strcat (r_nameX, "courier");
+	  break;
+	case 's':
+	  strcat (r_nameX, "Symbol");
+	  break;
+	default:
+	  strcat (r_nameX, "*");
+	  break;
+	}
+    }
+  else
+    {
+      strcat (r_nameX, "-");
+      switch (TOLOWER (family))
+	{
+	case 't':
+	  strcat (r_nameX, "times");
+	  break;
+	case 'h':
+	  strcat (r_nameX, "helvetica");
+	  break;
+	case 'c':
+	  strcat (r_nameX, "courier");
+	  break;
+	case 's':
+	  strcat (r_nameX, "Symbol");
+	  break;
+	default:
+	  strcat (r_nameX, "*");
+	}
+    }
+  
+  strcat (r_nameX, "-");
+  switch (TOLOWER (StylesTable[highlight]))
+    {
+    case 'r':
+      strcat (r_nameX, "medium-r");
+      break;
+    case 'i':
+    case 'o':
+      strcat (r_nameX, "medium-");
+      if (UseAdobeFamily)
+	strcat (r_nameX, "i");
+      else if (TOLOWER (family) == 'h' || TOLOWER (family) == 'c')
+	strcat (r_nameX, "o");
+      else
+	strcat (r_nameX, "i");
+      break;
+    case 'b':
+      if (UseLucidaFamily && TOLOWER (family) == 't')
+	strcat (r_nameX, "demibold");
+      else
+	strcat (r_nameX, "bold");
+      strcat (r_nameX, "-r");
+      break;
+    case 'g':
+    case 'q':
+      if (UseLucidaFamily && TOLOWER (family) == 't')
+	strcat (r_nameX, "demibold");
+      else
+	strcat (r_nameX, "bold");
+      strcat (r_nameX, "-");
+      if (UseAdobeFamily)
+	strcat (r_nameX, "i");
+      else if (TOLOWER (family) == 'h' || TOLOWER (family) == 'c')
+	strcat (r_nameX, "o");
+      else
+	strcat (r_nameX, "i");
+      break;
+    }
+
+  strcat (r_nameX, "-");
+  if (TOLOWER (family) == 'h')
+    strcat (r_nameX, "normal");  /* narrow helvetica does not exist */
+  else
+    strcat (r_nameX, "*");
+  if (TOLOWER (family) == 's')
+    sprintf (r_nameX, "%s-*-%d-*-75-75-p-*-*-fontspecific", r_nameX, size);
+  else
+    {
+      sprintf (r_nameX, "%s-*-%d-*-75-75", r_nameX, size);
+      strcat (r_nameX, "-");
+      if (TOLOWER (family) == 'c')
+	strcat (r_nameX, "m");
+      else
+	strcat (r_nameX, "p");
+      strcat (r_nameX, "-*-");
+      if (TOLOWER (alphabet) == 'l')
+	strcat (r_nameX, "iso8859-1");
+      else if (TOLOWER (alphabet) == 'e' || alphabet == '2')
+	strcat (r_nameX, "iso8859-2");
+      else if (TOLOWER (alphabet) == 'g')
+	strcat (r_nameX, "*-fontspecific");	/*adobe */
+      else
+	{
+	  strcat (r_nameX, "iso8859-1");
+	  /* replace '1' by current alphabet */
+	  r_nameX[strlen (r_nameX) -1] = alphabet;
+	}
+    }
+
+  sprintf (r_name, "%c%c%c%d", TOLOWER (alphabet), TOLOWER (family),
+	   StylesTable[highlight], size);
 }
 
 /*----------------------------------------------------------------------
@@ -853,7 +849,7 @@ static ptrfont LoadNearestFont (char alphabet, char family, int highlight,
 	index++;
     }
    
-  if (UseBitStreamFamily && size == 11 && unit == UnPoint)
+  if (UseAdobeFamily && size == 11 && unit == UnPoint)
     /* in the case of Bitstream, accept 11 points font size */
     FontIdentifier (alphabet, family, highlight, size, TRUE, text, textX);
   else
@@ -1113,29 +1109,22 @@ void InitDialogueFonts (char* name)
   if (value == NULL)
     {
       FontFamily = TtaGetMemory (8);
-      strcpy (FontFamily, "-");
-      strcat (FontFamily, "*");
+      strcpy (FontFamily, "-*");
     }
   else
     {
       FontFamily = TtaGetMemory (strlen (value) + 1);
-      strcpy (FontFamily, value);
-      if (!strcmp (FontFamily, "-b&h-lucida"))
+      strcpy (FontFamily, "-");
+      strcat (FontFamily, value);
+      if (!strcmp (FontFamily, "b&h-lucida"))
 	UseLucidaFamily = TRUE;
       else
 	{
 	  UseLucidaFamily = FALSE;
-	  if (!strcmp (FontFamily, "gipsi-bitstream"))
-	    {
-	      UseBitStreamFamily = TRUE;
-	      /* Changes size 30, 40 and 60 to resp. 36, 48 et 72 */
-	      LogicalPointsSizes[MaxNumberOfSizes] = 72;
-	      LogicalPointsSizes[MaxNumberOfSizes - 1] = 48;
-	      LogicalPointsSizes[MaxNumberOfSizes - 2] = 36;
-	      MenuSize = 11;
-	    }
+	  if (!strcmp (FontFamily, "adobe"))
+	    UseAdobeFamily = TRUE;
 	  else
-	    UseBitStreamFamily = FALSE;
+	    UseAdobeFamily = FALSE;
 	}
     }
 
