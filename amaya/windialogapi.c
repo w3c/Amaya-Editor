@@ -3336,28 +3336,46 @@ LPARAM lParam;
   static ThotWindow hwnPasswdEdit;
   /* the following var is used to set the focus on the name edit box */
   static ThotBool setFirstFocus;
+  CHAR_T *ptr, *label;
 
     switch (msg) {
     case WM_INITDIALOG:
 	  /* initialize the dialog messages */
       SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_GET_AUTHENTICATION));
-/*
-	  SetWindowText (GetDlgItem (hwnDlg, IDC_TAUTHREALM), TtaGetMessage (AMAYA, AM_AUTHENTICATION_REALM));
-	  SetWindowText (GetDlgItem (hwnDlg, IDC_TAUTHSERVER), TtaGetMessage (AMAYA, AM_AUTHENTICATION_SERVER));
-*/
-	  SetWindowText (GetDlgItem (hwnDlg, IDC_TNAMEEDIT), TtaGetMessage (AMAYA, AM_NAME));
-	  SetWindowText (GetDlgItem (hwnDlg, IDC_TPASSWDEDIT), TtaGetMessage (AMAYA, AM_PASSWORD));
+
+      ptr = TtaGetMessage (AMAYA, TtaGetMessage (AMAYA, 
+						 AM_AUTHENTICATION_REALM));
+      label = TtaAllocString (((string_par1) ? ustrlen (string_par1) : 0)
+			      + ((string_par2) ? ustrlen (string_par2) : 0)
+			      + ustrlen (ptr)
+			      + 20); /*a bit more than enough memory */
+      if (label)
+	{
+	  usprintf (label, ptr,
+		    ((string_par1) ? string_par1 : TEXT("")));
+	  SetWindowText (GetDlgItem (hwnDlg, IDC_TAUTHREALM), label);
+	  ptr = TtaGetMessage (AMAYA, TtaGetMessage (AMAYA, 
+						     AM_AUTHENTICATION_SERVER));
+	  usprintf (label, ptr,
+		    ((string_par2) ? string_par2 : TEXT("")));
+	  SetWindowText (GetDlgItem (hwnDlg, IDC_TAUTHSERVER), label);
+	  TtaFreeMemory (label);
+	}
+      SetWindowText (GetDlgItem (hwnDlg, IDC_TNAMEEDIT), TtaGetMessage (AMAYA, AM_NAME));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_TPASSWDEDIT), TtaGetMessage (AMAYA, AM_PASSWORD));
       SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
       SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
-
+      SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
       hwnNameEdit = GetDlgItem (hwnDlg, IDC_NAMEEDIT);
       hwnPasswdEdit = GetDlgItem (hwnDlg, IDC_PASSWDEDIT);
-	  SetDlgItemText (hwnDlg, IDC_AUTHREALM, string_par1);
-	  SetDlgItemText (hwnDlg, IDC_AUTHSERVER, string_par2);
-	  SetDlgItemText (hwnDlg, IDC_PASSWDEDIT, TEXT(""));
+      /*
+	SetDlgItemText (hwnDlg, IDC_AUTHREALM, string_par1);
+	SetDlgItemText (hwnDlg, IDC_AUTHSERVER, string_par2);
+      */
+      SetDlgItemText (hwnDlg, IDC_PASSWDEDIT, TEXT(""));
       SetDlgItemText (hwnDlg, IDC_NAMEEDIT, TEXT(""));
-
-	  setFirstFocus = FALSE;
+      
+      setFirstFocus = FALSE;
       break;
 
     case WM_COMMAND:

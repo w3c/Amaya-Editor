@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Tue Oct 31 11:01:28 CET 2000" version="16">
+<base last_update="Thu Nov  2 11:58:48 CET 2000" version="17">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -433,16 +433,30 @@
 	<message xml:lang="tr">Ýsimle kaydet</message>
 	<message xml:lang="es">Guardar como</message>
 </label>
-<label define="AM_AUTHENTICATION_REALM">
+<label define="AM_AUTHENTICATION_REALM_SERVER">
 	<message xml:lang="en">Please authenticate for realm \'%s\' at server \'%s\'</message>
 	<message xml:lang="fr">Authentification requise pour le domaine \'%s\' du serveur \'%s\'</message>
 	<message xml:lang="de">Bitte für die Domain \'%s\' auf dem Server \'%s\' einloggen:</message>
 	<message xml:lang="it">Autenticazione per il dominio \'%s\' sul server \'%s\'</message>
 	<message xml:lang="es">Por favor valide para \'%s\' en el servidor \'%s\'</message>
 </label>
+<label define="AM_AUTHENTICATION_REALM">
+	<message xml:lang="en">Realm: %s</message>
+	<message xml:lang="fr">Domaine: %s</message>
+	<message xml:lang="de">Domain: %s</message>
+	<message xml:lang="it">Dominio: %s</message>
+	<message xml:lang="es">Dominio: %s</message>
+</label>
+<label define="AM_AUTHENTICATION_SERVER">
+	<message xml:lang="en">Server: %s</message>
+	<message xml:lang="fr">Serveur: %s</message>
+	<message xml:lang="de">Server: %s</message>
+	<message xml:lang="it">Server: %s</message>
+	<message xml:lang="es">Servidor: %s</message>
+</label>
 <label define="AM_BUTTON_BrowseEdit">
 	<message xml:lang="en">Editor/Browser</message>
-	<message xml:lang="fr">diteur/Navigateur</message>
+	<message xml:lang="fr">Éditeur/Navigateur</message>
 	<message xml:lang="de">Editor/Browser</message>
 	<message xml:lang="it">Editor/Browser</message>
 	<message xml:lang="es">Editor/Navegador</message>

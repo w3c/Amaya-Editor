@@ -1096,10 +1096,10 @@ CHAR_T             *server;
 
    label = TtaAllocString (((server) ? ustrlen (server) : 0)
 			   + ustrlen (TtaGetMessage (AMAYA, 
-						     AM_AUTHENTICATION_REALM))
+						     AM_AUTHENTICATION_REALM_SERVER))
 			   + ((auth_realm) ? ustrlen (auth_realm) : 0)
 			   + 20); /*a bit more than enough memory */
-   usprintf (label, TtaGetMessage (AMAYA, AM_AUTHENTICATION_REALM),
+   usprintf (label, TtaGetMessage (AMAYA, AM_AUTHENTICATION_REALM_SERVER),
 	     ((auth_realm) ? auth_realm : TEXT("")), 
 	     ((server) ? server : TEXT("")));
    TtaNewLabel (BaseDialog + RealmText, BaseDialog + FormAnswer,

@@ -53,162 +53,164 @@
 51 Grafik
 52 Ýsimle kaydet
 53 **Please authenticate for realm \'%s\' at server \'%s\'
-54 **Editor/Browser
-55 **Request timeout - server did not respond
-56 **%s already exists. Overwrite it?
-57 **%s has changed. Overwrite it?
-58 **Background image
-59 **Background image not allowed here
-60 CSS
-61 Kaydetmek þu URL\'lerin üzerine yazacaktýr:
-62 URL kaydedilemedi
-63 Diske kayýt?
-64 Görüntüleri kopyala
-65 URL\'leri dönüþtür
-66 Belgenin adresi
-67 Görüntü dizini
-68 Nesne konumu
-69 CSS dosyasý 1
-70 WWW için tarayýcý ve belge düzenleyici
-71 **(mail issues to www-amaya@w3.org)
-72 %s karakterden uzun URL\'ler þimdilik iþlenemiyor
-73 Sadece öntanýmlý tip kullanýlabilir
-74 Baðlantý güncellemesi: %s%% tamamlandý
-75 Kaydedilecek bir þey yok
-76 y\'de tekrar
-77 <HTML><HEAD><TITLE>HATA: URL eriþilemiyor</TITLE></HEAD><BODY><H1>Belirtilen URL alýnamadý</H1><HR><P>Belirtilen URL alýnýrken:<A HREF=\"%s\">%s</A></P><P>Aþaðýdaki hata ile karþýlaþýldý:</P><UL><LI><STRONG>Baðlantý baþarýsýz</STRONG></UL><P>Sistem hata olarak:</P><PRE><I>(%d) %s</I></PRE>mesajýný verdi<P>Bunun anlamý:</P><PRE>Karþý sunucunun çalýþmýyor olmasý veya istenen belgenin sunucuda yer almamasý.</PRE><PRE>Lütfen bir süre sonra tekrar deneyin.</PRE><P></P><HR>\n</BODY></HTML>
-78 Kullanýcý ismini girin:
-79 %d istek sýrada
-80 **No CSS file available
-81 Aktarýmý kes
-82 Önceki belge
-83 Sonraki belge
-84 Yeniden yükle
-85 Kaydet
-86 Yazdýr
-87 Ara
-88 Vurgu
-89 Kuvvetli
-90 Sabit geniþlikli yazýtipi
-91 tekrar yok
-92 Görüntü ekle
-93 Baþlýk 1
-94 Baþlýk 2
-95 Baþlýk 3
-96 Noktalý liste
-97 Numaralý liste
-98 Taným listesi
-99 Baðlantý
-100 Tablo
-101 Belgenin bir ismi yok. Þu isimle kaydediyorum:
-102 Plugin\'ler
-103 %s URL\'ini kaydederken, belirsiz hata
-104 Sunucuya baðlantý yapýlamýyor
-105 %s eriþimi kural gereði engellenmiþ
-106 %s için iþlem baþarýlý
-107 %s yaratýldý
-108 %s güncellendi
-109 Ýþlem %s durum kodu ile tamamlandý
-110 Sunucu istem yazýmýný anlamadý
-111 Sunucunun gönderecek yeni bilgisi
-112 Bu yöntem %s için kullanýlamaz
-113 %s eriþimi için lütfen kendinizi tanýtýn
-114 Doðrulanýyor...
-115 %s\'e kaydedilemedi, Diske kaydedeyim mi?
-116 %s bozuk görünüyor, devam edeyim mi?
-117 URL %s %s e yönlendirilmiþ, devam edeyim mi?
-118 %s yeniden yüklenemedi, devam edeyim mi?
-119 Sunucu 501 hatasý veriyor: %s
-120 Sunucu 501 hatasý veriyor
-121 Sunucu bu istem yöntemini kabul etmiyor
-122 Süzgeç
-123 etkin aktarýmlar
-124 kuyruktaki aktarýmlar
-125 Ýçindekiler
-126 **Table of links
-127 Tekrar Kipi
-128 tekrar
-129 x\'te tekrar
-130 **Your previous Amaya session failed. Do you want to reload backup documents?
-131 **Authentication failed. Retry?
-132 **Operation will be redirected. Continue?
-133 **Number of Rows
-134 **Number of Columns
-135 **Border
-136 **Alternate text
-137 **The Alternate text is mandatory
-138 **Print URL
-139 **Apply
-140 **Defaults
-141 **Flush cache
-142 **Cache Preferences
-143 **Enable cache
-144 **Cache protected documents
-145 **Disconnected mode
-146 **Ignore Expires: header
-147 **Cache directory
-148 **Cache size (Mb)
-149 **Cache entry size limit (Mb)
-150 **Proxy Preferences
-151 **HTTP proxy (e.g., www.w3.org:1234)
-152 **Proxy domain list (e.g., lists.w3.org)
-153 **General Preferences
-154 **Home Page
-155 **ToolTip delay (ms)
-156 **Double click delay (ms)
-157 **Menu font size
-158 **Font zoom
-159 **Dialogue language
-160 **Enable multi-key (`+a=à)
-161 **Show background images
-162 **Double click activates link
-163 **Publishing Preferences
-164 **Use ETAGS and preconditions
-165 **Verify each PUT with a GET
-166 **Default name for URLs finishing in '/'
-167 **Geometry Preferences
-168 **Save current geometry
-169 **Restore default geometry
-170 **The change will be effective when you open a new window.
-171 **Color Preferences
-172 **Document foreground color
-173 **Document background color
-174 **Menu foreground color
-175 **Menu background color
-176 **Couldn't start the cache. You may have specified an invalid cache directory or another Amaya is using the cache.
-177 **Home
-178 **List of preferred languages like "en, fr":
-179 **Location of profiles definition file
-180 **Profile Selection
-181 **These changes won't be effective until Amaya is restarted
-182 **Profiles Preferences
-183 **Enter the URL of the templates server
-184 **Templates Preferences
-185 **Allow automatic PUT redirections on these domains
-186 **Ignore style sheets
-187 Dönüþüm türü
-188 **(separate each entry with a space)
-189 **No proxy on these domains
-190 **Only proxy these domains
-191 **Character name
-192 **Amaya user directory
-193 **Temporary directory
-194 **Use palette
-195 **Language Negotiation
-196 **This document is not valid - fix your document or change your profile
-197 **Configuration for annotations
-198 **Annotation user
-199 **Annotation post server
-200 **Annotation servers
-201 **Autoload annotations
-202 **Selection color
-203 **Caret color
-204 **Orientation
-205 **Portrait
-206 **Landscape
-207 **Enable FTP (experimental)
-208 **In the current Amaya profile:
-209 **Tags/attributes are ignored - see the log file
-210 **Not available
-211 **The encoding of this document is not supported by Amaya. If you edit it, you may loose some information
-212 **Browse
+54 **Realm: %s
+55 **Server: %s
+56 **Editor/Browser
+57 **Request timeout - server did not respond
+58 **%s already exists. Overwrite it?
+59 **%s has changed. Overwrite it?
+60 **Background image
+61 **Background image not allowed here
+62 CSS
+63 Kaydetmek þu URL\'lerin üzerine yazacaktýr:
+64 URL kaydedilemedi
+65 Diske kayýt?
+66 Görüntüleri kopyala
+67 URL\'leri dönüþtür
+68 Belgenin adresi
+69 Görüntü dizini
+70 Nesne konumu
+71 CSS dosyasý 1
+72 WWW için tarayýcý ve belge düzenleyici
+73 **(mail issues to www-amaya@w3.org)
+74 %s karakterden uzun URL\'ler þimdilik iþlenemiyor
+75 Sadece öntanýmlý tip kullanýlabilir
+76 Baðlantý güncellemesi: %s%% tamamlandý
+77 Kaydedilecek bir þey yok
+78 y\'de tekrar
+79 <HTML><HEAD><TITLE>HATA: URL eriþilemiyor</TITLE></HEAD><BODY><H1>Belirtilen URL alýnamadý</H1><HR><P>Belirtilen URL alýnýrken:<A HREF=\"%s\">%s</A></P><P>Aþaðýdaki hata ile karþýlaþýldý:</P><UL><LI><STRONG>Baðlantý baþarýsýz</STRONG></UL><P>Sistem hata olarak:</P><PRE><I>(%d) %s</I></PRE>mesajýný verdi<P>Bunun anlamý:</P><PRE>Karþý sunucunun çalýþmýyor olmasý veya istenen belgenin sunucuda yer almamasý.</PRE><PRE>Lütfen bir süre sonra tekrar deneyin.</PRE><P></P><HR>\n</BODY></HTML>
+80 Kullanýcý ismini girin:
+81 %d istek sýrada
+82 **No CSS file available
+83 Aktarýmý kes
+84 Önceki belge
+85 Sonraki belge
+86 Yeniden yükle
+87 Kaydet
+88 Yazdýr
+89 Ara
+90 Vurgu
+91 Kuvvetli
+92 Sabit geniþlikli yazýtipi
+93 tekrar yok
+94 Görüntü ekle
+95 Baþlýk 1
+96 Baþlýk 2
+97 Baþlýk 3
+98 Noktalý liste
+99 Numaralý liste
+100 Taným listesi
+101 Baðlantý
+102 Tablo
+103 Belgenin bir ismi yok. Þu isimle kaydediyorum:
+104 Plugin\'ler
+105 %s URL\'ini kaydederken, belirsiz hata
+106 Sunucuya baðlantý yapýlamýyor
+107 %s eriþimi kural gereði engellenmiþ
+108 %s için iþlem baþarýlý
+109 %s yaratýldý
+110 %s güncellendi
+111 Ýþlem %s durum kodu ile tamamlandý
+112 Sunucu istem yazýmýný anlamadý
+113 Sunucunun gönderecek yeni bilgisi
+114 Bu yöntem %s için kullanýlamaz
+115 %s eriþimi için lütfen kendinizi tanýtýn
+116 Doðrulanýyor...
+117 %s\'e kaydedilemedi, Diske kaydedeyim mi?
+118 %s bozuk görünüyor, devam edeyim mi?
+119 URL %s %s e yönlendirilmiþ, devam edeyim mi?
+120 %s yeniden yüklenemedi, devam edeyim mi?
+121 Sunucu 501 hatasý veriyor: %s
+122 Sunucu 501 hatasý veriyor
+123 Sunucu bu istem yöntemini kabul etmiyor
+124 Süzgeç
+125 etkin aktarýmlar
+126 kuyruktaki aktarýmlar
+127 Ýçindekiler
+128 **Table of links
+129 Tekrar Kipi
+130 tekrar
+131 x\'te tekrar
+132 **Your previous Amaya session failed. Do you want to reload backup documents?
+133 **Authentication failed. Retry?
+134 **Operation will be redirected. Continue?
+135 **Number of Rows
+136 **Number of Columns
+137 **Border
+138 **Alternate text
+139 **The Alternate text is mandatory
+140 **Print URL
+141 **Apply
+142 **Defaults
+143 **Flush cache
+144 **Cache Preferences
+145 **Enable cache
+146 **Cache protected documents
+147 **Disconnected mode
+148 **Ignore Expires: header
+149 **Cache directory
+150 **Cache size (Mb)
+151 **Cache entry size limit (Mb)
+152 **Proxy Preferences
+153 **HTTP proxy (e.g., www.w3.org:1234)
+154 **Proxy domain list (e.g., lists.w3.org)
+155 **General Preferences
+156 **Home Page
+157 **ToolTip delay (ms)
+158 **Double click delay (ms)
+159 **Menu font size
+160 **Font zoom
+161 **Dialogue language
+162 **Enable multi-key (`+a=à)
+163 **Show background images
+164 **Double click activates link
+165 **Publishing Preferences
+166 **Use ETAGS and preconditions
+167 **Verify each PUT with a GET
+168 **Default name for URLs finishing in '/'
+169 **Geometry Preferences
+170 **Save current geometry
+171 **Restore default geometry
+172 **The change will be effective when you open a new window.
+173 **Color Preferences
+174 **Document foreground color
+175 **Document background color
+176 **Menu foreground color
+177 **Menu background color
+178 **Couldn't start the cache. You may have specified an invalid cache directory or another Amaya is using the cache.
+179 **Home
+180 **List of preferred languages like "en, fr":
+181 **Location of profiles definition file
+182 **Profile Selection
+183 **These changes won't be effective until Amaya is restarted
+184 **Profiles Preferences
+185 **Enter the URL of the templates server
+186 **Templates Preferences
+187 **Allow automatic PUT redirections on these domains
+188 **Ignore style sheets
+189 Dönüþüm türü
+190 **(separate each entry with a space)
+191 **No proxy on these domains
+192 **Only proxy these domains
+193 **Character name
+194 **Amaya user directory
+195 **Temporary directory
+196 **Use palette
+197 **Language Negotiation
+198 **This document is not valid - fix your document or change your profile
+199 **Configuration for annotations
+200 **Annotation user
+201 **Annotation post server
+202 **Annotation servers
+203 **Autoload annotations
+204 **Selection color
+205 **Caret color
+206 **Orientation
+207 **Portrait
+208 **Landscape
+209 **Enable FTP (experimental)
+210 **In the current Amaya profile:
+211 **Tags/attributes are ignored - see the log file
+212 **Not available
+213 **The encoding of this document is not supported by Amaya. If you edit it, you may loose some information
+214 **Browse

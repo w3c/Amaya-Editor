@@ -53,162 +53,164 @@
 51 Grafiken
 52 Speichern unter
 53 Bitte für die Domain \'%s\' auf dem Server \'%s\' einloggen:
-54 Editor/Browser
-55 Timeout - server antwortet nicht
-56 %s besteht bereits. Überschreiben?
-57 %s wurde geändert. Überschreiben?
-58 Hintergrundbild
-59 Hintergrundbild hier nicht zulässig
-60 CSS
-61 Speichern überschreibt die folgenden URL:
-62 Speichern der URL fehlerhaft
-63 Speichern auf Festplatte?
-64 Grafiken speichern
-65 Absolute Verknüpfungszieladressen
-66 Dokumentenadresse
-67 Grafik(unter)verzeichnis
-68 Objektadresse
-69 Stylesheetdatei wählen
-70 der W3C Web-Browser und -Editor
-71 (Probleme senden an www-amaya@w3.org)
-72 URL länger als %s Zeichen werden zur Zeit nicht unterstützt
-73 Nur Standardtyp erlaubt
-74 Aktualisierung der Verknüpfung : %s%% erfolgreich
-75 Nichts zu speichern
-76 Wiederholung y
-77 <HTML><HEAD><TITLE>ERROR: Kann nicht zugreifen auf URL</TITLE></HEAD><BODY><H1>Die angeforderte URL konnte nicht geladen werden </H1><HR><P>Beim Laden der URL:<A HREF=\"%s\">%s</A></P><P> ist folgender Fehler aufgetreten:</P><UL><LI><STRONG>Verbindung nicht möglich</STRONG></UL><P>Das System meldete:</P><PRE><I>(%d) %s</I></PRE><P>Dies bedeutet, daß:</P><PRE>Die Gegenseite oder der Server sind nicht erreichbar oder existieren nicht.</PRE><PRE>Bitte später noch einmal versuchen.</PRE><P></P><HR>\n</BODY></HTML>
-78 Bitte Usernamen eingeben:
-79 %d offene Anfrage(n)
-80 Keine CSS-Datei vorhanden
-81 Übertragung unterbrechen
-82 Vorheriges Dokument
-83 Nachfolgendes Dokument
-84 Neu laden
-85 Speichern
-86 Drucken
-87 Suchen
-88 Betont
-89 Fett
-90 Feste Schriftbreite
-91 keine Wiederholung
-92 Grafik einfügen
-93 Überschrift Ebene 1
-94 Überschrift Ebene 2
-95 Überschrift Ebene 3
-96 Liste mit Punkten
-97 Numerierte Liste
-98 Definitionsliste
-99 Verknüpfung
-100 Tabelle
-101 Das Dokument ist unbenannt. Speichere unter:
-102 Plugins
-103 Unbekannter Fehler beim Speichern URL %s
-104 Keine Verbindung zum Server
-105 Zugriff auf %s verboten
-106 Operation erfolgreich für: %s
-107 %s wurde erzeugt
-108 %s wurde aktualisiert
-109 Operation wurde beendet mit Code %s .
-110 Der Server konnte die Anfragesyntax nicht verstehen
-111 Der Server hat keine neue Informationen zurückzusenden
-112 Diese Methode ist nicht erlaubt
-113 Bitte einloggen für den Zugriff auf: %s
-114 Überprüfe ...
-115 Speichern unter %s fehlerhaft, Speichern auf Festplatte?
-116 Speichern unter %s scheint fehlerhaft zu sein, Ignorieren?
-117 URL %s weitergeleitet nach %s, Ignorieren?
-118 Neuladen von %s fehlerhaft, Ignorieren?
-119 Der Server meldet einen 501-Fehler: %s
-120 Der Server meldet einen 501-Fehler
-121 Der Server unterstützt diese Anforderungsmethode nicht
-122 Filter
-123 Aktive Übertragungen
-124 Wartende Übertragungen
-125 mit Inhaltsverzeichnis
-126 mit Verknüpfungen
-127 Wiederholungsmodus
-128 Wiederholung
-129 Wiederholung x
-130 Ihr letzter Amaya-Prozeß wurde abgebrochen. Möchten Sie Sicherungskopien laden?
-131 Login gescheitert. Wiederholen?
-132 Umleitung folgen?
-133 Zeilen:
-134 Spalten:
-135 Rahmen:
-136 Alternativer Text
-137 Alternativer Text ist erforderlich!
-138 mit URLpply
-139 Übernehmen
-140 Zurücksetzen
-141 Cache leeren
-142 Cache Einstellungen
-143 Cache aktivieren
-144 Cache geschützte Dokumente
-145 Offline-Modus
-146 Ignoriere Expires(Gültig bis): header
-147 Cache Verzeichnis
-148 Cachegröße (Mb)
-149 Max. Größe von Cacheeinträgen (Mb)
-150 Proxy Einstellungen
-151 HTTP proxy (e.g., www.w3.org:1234)
-152 Proxy domain list (e.g., lists.w3.org)
-153 Allgemeine Einstellungen
-154 Startseite
-155 Quickinfo Verzögerung (ms)
-156 Doppelklickintervall (ms)
-157 Größe Menüschriftart
-158 Schriftzoom
-159 Dialogsprache
-160 Mehrfachtasten aktivieren (`+a=à)
-161 Hintergrundbilder anzeigen
-162 Doppelklick aktiviert Link
-163 Einstellungen veröffentlichen
-164 ETAGS und preconditions verwenden
-165 PUT durch GET verifizieren
-166 Dateiname, falls URL mit '/' endet
-167 Einstellungen Fenstergeometrie
-168 Aktuelle Geometrie speichern
-169 Standardgeometrie einstellen
-170 Die Änderungen werden beim öffnen eines neuen Fensters wirksam.
-171 Farbeinstellungen
-172 Schriftfarbe (Dokument)
-173 Hintergrundfarbe (Dokument)
-174 Schriftfarbe (Menüs)
-175 Hintergrundfarbe (Menüs)
-176 Kann den Cache nicht starten. Möglicherweise ist das Cacheverzeichnis ungültig, oder ein anderer Prozeß verwendet den Cache.
-177 Anfang
-178 Liste der bevorzugten Sprachen wie "en, fr":
-179 Verzeichnis der Profildefinitionen
-180 Profilauswahl
-181 Diese Änderungen werden erst bei einem Neustart von Amaya wirksam
-182 Profileinstellungen
-183 URL des Vorlagen-Servers angeben
-184 Vorlagen-Einstellungen
-185 Automatische PUT-Umleitung bei diesen Domänen erlauben
-186 Stilvorlagen ignorieren
-187 Umformatieren
-188 (Einträge durch Leerzeichen trennen)
-189 Keinen Proxy für folgende Domänen verwenden
-190 Proxy nur für folgende Domänen verwenden
-191 Zeichenname
-192 Amaya Benutzerverzeichnis
-193 Lokaler filter...
-194 Palette benutzen
-195 Sprachauswahl
-196 Fehler beim XML parsen - bitte Dokument überprüfen
-197 Konfiguration für Anmerkungen
-198 Anmerkungsbenutzer
-199 Anmerkungs-Veröffentlichungs-Server
-200 Anmerkungsserver
-201 Anmerkungen automatisch laden
-202 Farbe Auswahl
-203 Farbe Cursor
-204 Ausrichtung
-205 Hochformat
-206 Querformat
-207 FTP zulassen (noch in der Erprobung)
-208 **In the current Amaya profile:
-209 **Tags/attributes are ignored - see the log file
-210 **Not available
-211 **The encoding of this document is not supported by Amaya. If you edit it, you may loose some information
-212 **Browse
+54 Domain: %s
+55 Server: %s
+56 Editor/Browser
+57 Timeout - server antwortet nicht
+58 %s besteht bereits. Überschreiben?
+59 %s wurde geändert. Überschreiben?
+60 Hintergrundbild
+61 Hintergrundbild hier nicht zulässig
+62 CSS
+63 Speichern überschreibt die folgenden URL:
+64 Speichern der URL fehlerhaft
+65 Speichern auf Festplatte?
+66 Grafiken speichern
+67 Absolute Verknüpfungszieladressen
+68 Dokumentenadresse
+69 Grafik(unter)verzeichnis
+70 Objektadresse
+71 Stylesheetdatei wählen
+72 der W3C Web-Browser und -Editor
+73 (Probleme senden an www-amaya@w3.org)
+74 URL länger als %s Zeichen werden zur Zeit nicht unterstützt
+75 Nur Standardtyp erlaubt
+76 Aktualisierung der Verknüpfung : %s%% erfolgreich
+77 Nichts zu speichern
+78 Wiederholung y
+79 <HTML><HEAD><TITLE>ERROR: Kann nicht zugreifen auf URL</TITLE></HEAD><BODY><H1>Die angeforderte URL konnte nicht geladen werden </H1><HR><P>Beim Laden der URL:<A HREF=\"%s\">%s</A></P><P> ist folgender Fehler aufgetreten:</P><UL><LI><STRONG>Verbindung nicht möglich</STRONG></UL><P>Das System meldete:</P><PRE><I>(%d) %s</I></PRE><P>Dies bedeutet, daß:</P><PRE>Die Gegenseite oder der Server sind nicht erreichbar oder existieren nicht.</PRE><PRE>Bitte später noch einmal versuchen.</PRE><P></P><HR>\n</BODY></HTML>
+80 Bitte Usernamen eingeben:
+81 %d offene Anfrage(n)
+82 Keine CSS-Datei vorhanden
+83 Übertragung unterbrechen
+84 Vorheriges Dokument
+85 Nachfolgendes Dokument
+86 Neu laden
+87 Speichern
+88 Drucken
+89 Suchen
+90 Betont
+91 Fett
+92 Feste Schriftbreite
+93 keine Wiederholung
+94 Grafik einfügen
+95 Überschrift Ebene 1
+96 Überschrift Ebene 2
+97 Überschrift Ebene 3
+98 Liste mit Punkten
+99 Numerierte Liste
+100 Definitionsliste
+101 Verknüpfung
+102 Tabelle
+103 Das Dokument ist unbenannt. Speichere unter:
+104 Plugins
+105 Unbekannter Fehler beim Speichern URL %s
+106 Keine Verbindung zum Server
+107 Zugriff auf %s verboten
+108 Operation erfolgreich für: %s
+109 %s wurde erzeugt
+110 %s wurde aktualisiert
+111 Operation wurde beendet mit Code %s .
+112 Der Server konnte die Anfragesyntax nicht verstehen
+113 Der Server hat keine neue Informationen zurückzusenden
+114 Diese Methode ist nicht erlaubt
+115 Bitte einloggen für den Zugriff auf: %s
+116 Überprüfe ...
+117 Speichern unter %s fehlerhaft, Speichern auf Festplatte?
+118 Speichern unter %s scheint fehlerhaft zu sein, Ignorieren?
+119 URL %s weitergeleitet nach %s, Ignorieren?
+120 Neuladen von %s fehlerhaft, Ignorieren?
+121 Der Server meldet einen 501-Fehler: %s
+122 Der Server meldet einen 501-Fehler
+123 Der Server unterstützt diese Anforderungsmethode nicht
+124 Filter
+125 Aktive Übertragungen
+126 Wartende Übertragungen
+127 mit Inhaltsverzeichnis
+128 mit Verknüpfungen
+129 Wiederholungsmodus
+130 Wiederholung
+131 Wiederholung x
+132 Ihr letzter Amaya-Prozeß wurde abgebrochen. Möchten Sie Sicherungskopien laden?
+133 Login gescheitert. Wiederholen?
+134 Umleitung folgen?
+135 Zeilen:
+136 Spalten:
+137 Rahmen:
+138 Alternativer Text
+139 Alternativer Text ist erforderlich!
+140 mit URLpply
+141 Übernehmen
+142 Zurücksetzen
+143 Cache leeren
+144 Cache Einstellungen
+145 Cache aktivieren
+146 Cache geschützte Dokumente
+147 Offline-Modus
+148 Ignoriere Expires(Gültig bis): header
+149 Cache Verzeichnis
+150 Cachegröße (Mb)
+151 Max. Größe von Cacheeinträgen (Mb)
+152 Proxy Einstellungen
+153 HTTP proxy (e.g., www.w3.org:1234)
+154 Proxy domain list (e.g., lists.w3.org)
+155 Allgemeine Einstellungen
+156 Startseite
+157 Quickinfo Verzögerung (ms)
+158 Doppelklickintervall (ms)
+159 Größe Menüschriftart
+160 Schriftzoom
+161 Dialogsprache
+162 Mehrfachtasten aktivieren (`+a=à)
+163 Hintergrundbilder anzeigen
+164 Doppelklick aktiviert Link
+165 Einstellungen veröffentlichen
+166 ETAGS und preconditions verwenden
+167 PUT durch GET verifizieren
+168 Dateiname, falls URL mit '/' endet
+169 Einstellungen Fenstergeometrie
+170 Aktuelle Geometrie speichern
+171 Standardgeometrie einstellen
+172 Die Änderungen werden beim öffnen eines neuen Fensters wirksam.
+173 Farbeinstellungen
+174 Schriftfarbe (Dokument)
+175 Hintergrundfarbe (Dokument)
+176 Schriftfarbe (Menüs)
+177 Hintergrundfarbe (Menüs)
+178 Kann den Cache nicht starten. Möglicherweise ist das Cacheverzeichnis ungültig, oder ein anderer Prozeß verwendet den Cache.
+179 Anfang
+180 Liste der bevorzugten Sprachen wie "en, fr":
+181 Verzeichnis der Profildefinitionen
+182 Profilauswahl
+183 Diese Änderungen werden erst bei einem Neustart von Amaya wirksam
+184 Profileinstellungen
+185 URL des Vorlagen-Servers angeben
+186 Vorlagen-Einstellungen
+187 Automatische PUT-Umleitung bei diesen Domänen erlauben
+188 Stilvorlagen ignorieren
+189 Umformatieren
+190 (Einträge durch Leerzeichen trennen)
+191 Keinen Proxy für folgende Domänen verwenden
+192 Proxy nur für folgende Domänen verwenden
+193 Zeichenname
+194 Amaya Benutzerverzeichnis
+195 Lokaler filter...
+196 Palette benutzen
+197 Sprachauswahl
+198 Fehler beim XML parsen - bitte Dokument überprüfen
+199 Konfiguration für Anmerkungen
+200 Anmerkungsbenutzer
+201 Anmerkungs-Veröffentlichungs-Server
+202 Anmerkungsserver
+203 Anmerkungen automatisch laden
+204 Farbe Auswahl
+205 Farbe Cursor
+206 Ausrichtung
+207 Hochformat
+208 Querformat
+209 FTP zulassen (noch in der Erprobung)
+210 **In the current Amaya profile:
+211 **Tags/attributes are ignored - see the log file
+212 **Not available
+213 **The encoding of this document is not supported by Amaya. If you edit it, you may loose some information
+214 **Browse

@@ -53,162 +53,164 @@
 51 Grafica
 52 Salva con nome
 53 Autenticazione per il dominio \'%s\' sul server \'%s\'
-54 Editor/Browser
-55 Richiesta scaduta - il server non ha risposto
-56 %s esiste già. Vuoi sovrascriverlo?
-57 %s è cambiato. Vuoi sovrascriverlo?
-58 Immagine di sfondo
-59 L'immagine di background non è consentita qui
-60 CSS
-61 Il salvataggio sovrascriverà i seguenti URL:
-62 Il salvataggio sull'URL è fallito
-63 Salvo su disco ?
-64 Copia immagini
-65 Trasforma URL
-66 Collocazione del documento
-67 Directory delle immagini
-68 Collocazione dell'oggetto
-69 CSS file
-70 il editor/browser del W3C
-71 (scrivere a www-amaya@w3.org per informazioni)
-72 Impossibile gestire URL composti da piú di %s caratteri
-73 consentito il solo tipo di default
-74 Aggiornamento dei collegamenti: %s%% è stato fatto
-75 Niente di nuovo da salvare
-76 repeat-y
-77 <HTML><HEAD><TITLE>ERRORE: Impossibile accedere ad un URL</TITLE></HEAD><BODY><H1>L'URL richiesto non può essere recuperato</H1><HR><P>Tentando di recuperare l'URL:<A HREF=\"%s\">%s</A></P><P>si è verificato il seguente errore:</P><UL><LI><STRONG>Connessione fallita</STRONG></UL><P>Il sistema ha restituito:</P><PRE><I>(%d) %s</I></PRE><P>Ciò significa che:</P><PRE>Il sito o il server remoti possono essere inattivi o inesistenti.</PRE><PRE>Prova ancora piú tardi.</PRE><P></P><HR>\n</BODY></HTML>
-78 Digita lo username:
-79 %d richieste inevase
-80 Non è disponibile nessun file CSS
-81 Interrompi trasferimento
-82 Documento precedente
-83 Documento successivo
-84 Ricarica
-85 Salva
-86 Stampa
-87 Cerca
-88 Enfasi
-89 Forte
-90 Fixed font
-91 no-repeat
-92 Inserisci immagine
-93 Intestazione di livello 1
-94 Intestazione di livello 2
-95 Intestazione di livello 3
-96 Lista puntata
-97 Lista numerata
-98 Lista di definizioni
-99 Collegamento
-100 Tabella
-101 Il documento non ha un nome. Salva in:
-102 Plugins
-103 Errore sconosciuto durante il salvataggio dell'URL %s
-104 Impossibile connettersi al server
-105 L'accesso a %s è proibito dal server
-106 L'operazione ha avuto successo per %s
-107 %s è stato creato
-108 %s è stato aggiornato
-109 Operazione completata con codice %s
-110 Il server non ha compreso la sintassi della richiesta
-111 Il server non ha nuove informazioni da inviare
-112 Questo metodo non è consentito
-113 Identificazione richiesta per accedere a %s
-114 Verifica in corso ...
-115 Il salvataggio su %s è fallito, salvo su disco ?
-116 Il salvataggio su %s sembra non funzionare, ignora ?
-117 L'URL %s è rediretto su %s, ignora ?
-118 Ricaricamento di %s fallito, ignora ?
-119 Il server riporta un errore 501: %s
-120 Il server riporta un errore 501
-121 Il server non supporta questo metodo di richiesta
-122 Filtro
-123 trasferimenti attivi
-124 trasferimenti in coda
-125 Sommario
-126 Sommario dei collegamenti
-127 Repeat Mode
-128 repeat
-129 repeat-x
-130 La precedente sessione con Amaya è fallita. Vuoi ricaricare i documenti di backup?
-131 Autenticazione fallita. Vuoi riprovare?
-132 L'operazione sarà rediretta. Vuoi continuare?
-133 Numero di righe
-134 Numero di colonne
-135 Bordo
-136 Testo alternativo
-137 Il testo alternativo è obbligatorio
-138 Stampa URL
-139 Applica
-140 Predefinite
-141 Svuota la cache
-142 Preferenze sulla cache
-143 Abilita la cache
-144 Proteggi i documenti nella cache
-145 Modo non in linea
-146 Ignora le scadenze: header
-147 Directory della cache
-148 Dimensione della cache (Mb)
-149 Dimensione dell'indice della cache (Mb)
-150 Preferenze sull'uso dei proxy
-151 HTTP proxy (es., http://groucho.marx.edu)
-152 Non usare il proxy su questi domini (es., www.w3.org)
-153 Preferenze generali
-154 Home Page
-155 Ritardo del ToolTip (ms)
-156 Ritardo del doppio click (ms)
-157 Dimensione dei caratteri dei menu
-158 Ingrandimento della fonte
-159 Lingua delle finestre di dialogo
-160 Abilita le sequenze multitasto
-161 Mostra le immagini di sfondo
-162 Il doppio click attiva il collegamento
-163 Preferenze per la pubblicazione
-164 Usa gli ETAGS e le precondizioni
-165 Verifica ogni PUT con un GET
-166 Nome di default per gli URL che terminano con '/'
-167 Preferenze della geometria
-168 Salva la geometria corrente
-169 Ripristina la geometria di default
-170 La modifica sarà effettiva quando aprirai una nuova finestra.
-171 Preferenze dei colori
-172 Colore in primo piano nei documenti
-173 Colore dello sfondo nei documenti
-174 Colore in primo piano nei menu
-175 Colore dello sfondo nei menu
-176 Impossibile attivare la cache. Puoi avere specificato una directory di cache non valida, oppure un'altra istanza di Amaya sta usando la cache.
-177 Home
-178 Lista delle lingue preferite, come "it, en, fr":
-179 File di definizione dei profili
-180 Selezione dei profili
-181 Queste modifiche saranno effettive alla prossima esecuzione
-182 Preferenze dei profili
-183 Digita l'URL del server dei modelli
-184 Preferenze sui modelli
-185 Consenti la redirezione automatica dei PUT su questi domini
-186 Ignora gli stili CSS
-187 Trasforma tipo
-188 (separa ogni campo con uno spazio)
-189 Escludi l'utilizzo del proxy su questi domini
-190 Utilizza il proxy solo su questi domini
-191 Nome del carattere
-192 Directory dell'utente
-193 Directory temporanea
-194 Usa la palette
-195 Negoziazione della lingua
-196 Errore XML - si consiglia di verificare il documento
-197 Configurazione delle annotazioni
-198 Nome utente
-199 Server per la pubblicazione
-200 Server per le annotazioni
-201 Caricamento automatico delle annotazioni
-202 Colore della selezione
-203 Colore del cursore
-204 Orientamento
-205 Ritratto
-206 Paesaggio
-207 Abilita FTP (sperimentale)
-208 **In the current Amaya profile:
-209 **Tags/attributes are ignored - see the log file
-210 **Not available
-211 **The encoding of this document is not supported by Amaya. If you edit it, you may loose some information
-212 **Browse
+54 Dominio: %s
+55 Server: %s
+56 Editor/Browser
+57 Richiesta scaduta - il server non ha risposto
+58 %s esiste già. Vuoi sovrascriverlo?
+59 %s è cambiato. Vuoi sovrascriverlo?
+60 Immagine di sfondo
+61 L'immagine di background non è consentita qui
+62 CSS
+63 Il salvataggio sovrascriverà i seguenti URL:
+64 Il salvataggio sull'URL è fallito
+65 Salvo su disco ?
+66 Copia immagini
+67 Trasforma URL
+68 Collocazione del documento
+69 Directory delle immagini
+70 Collocazione dell'oggetto
+71 CSS file
+72 il editor/browser del W3C
+73 (scrivere a www-amaya@w3.org per informazioni)
+74 Impossibile gestire URL composti da piú di %s caratteri
+75 consentito il solo tipo di default
+76 Aggiornamento dei collegamenti: %s%% è stato fatto
+77 Niente di nuovo da salvare
+78 repeat-y
+79 <HTML><HEAD><TITLE>ERRORE: Impossibile accedere ad un URL</TITLE></HEAD><BODY><H1>L'URL richiesto non può essere recuperato</H1><HR><P>Tentando di recuperare l'URL:<A HREF=\"%s\">%s</A></P><P>si è verificato il seguente errore:</P><UL><LI><STRONG>Connessione fallita</STRONG></UL><P>Il sistema ha restituito:</P><PRE><I>(%d) %s</I></PRE><P>Ciò significa che:</P><PRE>Il sito o il server remoti possono essere inattivi o inesistenti.</PRE><PRE>Prova ancora piú tardi.</PRE><P></P><HR>\n</BODY></HTML>
+80 Digita lo username:
+81 %d richieste inevase
+82 Non è disponibile nessun file CSS
+83 Interrompi trasferimento
+84 Documento precedente
+85 Documento successivo
+86 Ricarica
+87 Salva
+88 Stampa
+89 Cerca
+90 Enfasi
+91 Forte
+92 Fixed font
+93 no-repeat
+94 Inserisci immagine
+95 Intestazione di livello 1
+96 Intestazione di livello 2
+97 Intestazione di livello 3
+98 Lista puntata
+99 Lista numerata
+100 Lista di definizioni
+101 Collegamento
+102 Tabella
+103 Il documento non ha un nome. Salva in:
+104 Plugins
+105 Errore sconosciuto durante il salvataggio dell'URL %s
+106 Impossibile connettersi al server
+107 L'accesso a %s è proibito dal server
+108 L'operazione ha avuto successo per %s
+109 %s è stato creato
+110 %s è stato aggiornato
+111 Operazione completata con codice %s
+112 Il server non ha compreso la sintassi della richiesta
+113 Il server non ha nuove informazioni da inviare
+114 Questo metodo non è consentito
+115 Identificazione richiesta per accedere a %s
+116 Verifica in corso ...
+117 Il salvataggio su %s è fallito, salvo su disco ?
+118 Il salvataggio su %s sembra non funzionare, ignora ?
+119 L'URL %s è rediretto su %s, ignora ?
+120 Ricaricamento di %s fallito, ignora ?
+121 Il server riporta un errore 501: %s
+122 Il server riporta un errore 501
+123 Il server non supporta questo metodo di richiesta
+124 Filtro
+125 trasferimenti attivi
+126 trasferimenti in coda
+127 Sommario
+128 Sommario dei collegamenti
+129 Repeat Mode
+130 repeat
+131 repeat-x
+132 La precedente sessione con Amaya è fallita. Vuoi ricaricare i documenti di backup?
+133 Autenticazione fallita. Vuoi riprovare?
+134 L'operazione sarà rediretta. Vuoi continuare?
+135 Numero di righe
+136 Numero di colonne
+137 Bordo
+138 Testo alternativo
+139 Il testo alternativo è obbligatorio
+140 Stampa URL
+141 Applica
+142 Predefinite
+143 Svuota la cache
+144 Preferenze sulla cache
+145 Abilita la cache
+146 Proteggi i documenti nella cache
+147 Modo non in linea
+148 Ignora le scadenze: header
+149 Directory della cache
+150 Dimensione della cache (Mb)
+151 Dimensione dell'indice della cache (Mb)
+152 Preferenze sull'uso dei proxy
+153 HTTP proxy (es., http://groucho.marx.edu)
+154 Non usare il proxy su questi domini (es., www.w3.org)
+155 Preferenze generali
+156 Home Page
+157 Ritardo del ToolTip (ms)
+158 Ritardo del doppio click (ms)
+159 Dimensione dei caratteri dei menu
+160 Ingrandimento della fonte
+161 Lingua delle finestre di dialogo
+162 Abilita le sequenze multitasto
+163 Mostra le immagini di sfondo
+164 Il doppio click attiva il collegamento
+165 Preferenze per la pubblicazione
+166 Usa gli ETAGS e le precondizioni
+167 Verifica ogni PUT con un GET
+168 Nome di default per gli URL che terminano con '/'
+169 Preferenze della geometria
+170 Salva la geometria corrente
+171 Ripristina la geometria di default
+172 La modifica sarà effettiva quando aprirai una nuova finestra.
+173 Preferenze dei colori
+174 Colore in primo piano nei documenti
+175 Colore dello sfondo nei documenti
+176 Colore in primo piano nei menu
+177 Colore dello sfondo nei menu
+178 Impossibile attivare la cache. Puoi avere specificato una directory di cache non valida, oppure un'altra istanza di Amaya sta usando la cache.
+179 Home
+180 Lista delle lingue preferite, come "it, en, fr":
+181 File di definizione dei profili
+182 Selezione dei profili
+183 Queste modifiche saranno effettive alla prossima esecuzione
+184 Preferenze dei profili
+185 Digita l'URL del server dei modelli
+186 Preferenze sui modelli
+187 Consenti la redirezione automatica dei PUT su questi domini
+188 Ignora gli stili CSS
+189 Trasforma tipo
+190 (separa ogni campo con uno spazio)
+191 Escludi l'utilizzo del proxy su questi domini
+192 Utilizza il proxy solo su questi domini
+193 Nome del carattere
+194 Directory dell'utente
+195 Directory temporanea
+196 Usa la palette
+197 Negoziazione della lingua
+198 Errore XML - si consiglia di verificare il documento
+199 Configurazione delle annotazioni
+200 Nome utente
+201 Server per la pubblicazione
+202 Server per le annotazioni
+203 Caricamento automatico delle annotazioni
+204 Colore della selezione
+205 Colore del cursore
+206 Orientamento
+207 Ritratto
+208 Paesaggio
+209 Abilita FTP (sperimentale)
+210 **In the current Amaya profile:
+211 **Tags/attributes are ignored - see the log file
+212 **Not available
+213 **The encoding of this document is not supported by Amaya. If you edit it, you may loose some information
+214 **Browse
