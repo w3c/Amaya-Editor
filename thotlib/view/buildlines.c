@@ -172,10 +172,13 @@ static void Adjust (PtrBox pParentBox, PtrLine pLine, int frame,
   PtrBox              boxes[200];
   int                 width, baseline;
   int                 nSpaces, delta;
-  int                 x;
+  int                 x, d;
   int                 i, j, k, max;
   ThotBool            rtl;
 
+  x = pLine->LiXOrg;
+  if (orgXComplete)
+    x += pParentBox->BxXOrg;
   nSpaces = 0;	/* number of spaces */
   width = 0;	/* text width without spaces */
   baseline = pLine->LiYOrg + pLine->LiHorizRef;
@@ -197,7 +200,17 @@ static void Adjust (PtrBox pParentBox, PtrLine pLine, int frame,
       if (!pBox->BxAbstractBox->AbHorizEnclosing ||
 	  (pBox->BxAbstractBox->AbNotInLine &&
 	   pBox->BxAbstractBox->AbDisplay != 'U'))
-	pBox->BxYOrg = baseline - pBox->BxHorizRef;
+	{
+#ifdef IV
+	  if (pBox->BxAbstractBox->AbHorizPos.PosEdge == VertMiddle &&
+	      pBox->BxAbstractBox->AbHorizPos.PosRefEdge == VertMiddle)
+	    d = (pLine->LiXMax - pBox->BxWidth) / 2;
+	  else
+	    d = 0;
+	  XMove (pBox, NULL, x + d - pBox->BxXOrg, frame);
+#endif
+	  YMove (pBox, NULL, baseline - pBox->BxHorizRef - pBox->BxYOrg, frame);
+	}
       else if (!pBox->BxAbstractBox->AbNotInLine)
 	{
 	  boxes[max++] = pBox;
@@ -244,9 +257,6 @@ static void Adjust (PtrBox pParentBox, PtrLine pLine, int frame,
     }
 
   /* Update the position and the width of each included box */
-  x = pLine->LiXOrg;
-  if (orgXComplete)
-    x += pParentBox->BxXOrg;
   nSpaces = pLine->LiNPixels;
 
   for (i = 0; i < max; i++)
@@ -349,7 +359,7 @@ void Align (PtrBox pParentBox, PtrLine pLine, int delta, int frame,
 {
   PtrBox              pBox, pBoxInLine;
   PtrBox              boxes[200];
-  int                 baseline, x;
+  int                 baseline, x, d;
   int                 i, j, k, max;
   ThotBool            rtl;
 
@@ -376,7 +386,17 @@ void Align (PtrBox pParentBox, PtrLine pLine, int delta, int frame,
       if (!pBox->BxAbstractBox->AbHorizEnclosing ||
 	  (pBox->BxAbstractBox->AbNotInLine &&
 	   pBox->BxAbstractBox->AbDisplay != 'U'))
-	pBox->BxYOrg = baseline - pBox->BxHorizRef;
+	{
+#ifdef IV
+	  if (pBox->BxAbstractBox->AbHorizPos.PosEdge == VertMiddle &&
+	      pBox->BxAbstractBox->AbHorizPos.PosRefEdge == VertMiddle)
+	    d = (pLine->LiXMax - pBox->BxWidth) / 2;
+	  else
+	    d = 0;
+	  XMove (pBox, NULL, x + d - pBox->BxXOrg, frame);
+#endif
+	  YMove (pBox, NULL, baseline - pBox->BxHorizRef - pBox->BxYOrg, frame);
+	}
       else if (!pBox->BxAbstractBox->AbNotInLine)
 	{
 	  boxes[max++] = pBox;
@@ -427,7 +447,7 @@ void Align (PtrBox pParentBox, PtrLine pLine, int delta, int frame,
 	  i--;
 	  for (k = i; k >= j; k--)
 	    {
-	      /* left-to-right wirting */
+	      /* left-to-right writing */
 	      XMove (boxes[k], NULL, x - boxes[k]->BxXOrg, frame);
 	      YMove (boxes[k], NULL, baseline - boxes[k]->BxHorizRef - boxes[k]->BxYOrg, frame);
 	      x += boxes[k]->BxWidth;
@@ -1494,7 +1514,6 @@ static int FillLine (PtrLine pLine, PtrAbstractBox pRootAb,
      {
 	/* the first piece must be inserted in the line */
 	pBox = pLine->LiFirstPiece;
-
 	/* look for a break element */
 	found = FindBreakLine (pBox, &width, &breakWidth, &boxLength,
 			       &nSpaces, &newIndex, &pNewBuff, &wordWidth);
@@ -1538,7 +1557,6 @@ static int FillLine (PtrLine pLine, PtrAbstractBox pRootAb,
    else
       /* the line is empty */
       pBox = NULL;
-
    /* look for a box to split */
    while (still)
      {
@@ -1561,6 +1579,7 @@ static int FillLine (PtrLine pLine, PtrAbstractBox pRootAb,
 			pBox->BxType == BoDotted)
 		 /* break the last word of the previous box */
 		 pLine->LiLastPiece = pLine->LiFirstPiece;
+	       pBox = pNextBox;
 	     }
 	   else
 	     {
@@ -1607,7 +1626,7 @@ static int FillLine (PtrLine pLine, PtrAbstractBox pRootAb,
 			 pLine->LiFirstPiece = pBox;
 		     }
 		   else
-			 pBox = pNextBox;
+		     pBox = pNextBox;
 		 }
 	     }
 	   else if (pNextBox->BxWidth + xi <= maxX)
@@ -1687,7 +1706,7 @@ static int FillLine (PtrLine pLine, PtrAbstractBox pRootAb,
 	     if (pBox->BxAbstractBox->AbLeafType == LtText && pBox->BxNexChild)
 	       {
 		 /* we have a new box */
-		 if (pBox->BxType != BoScript)
+		 if (pBox->BxType != BoScript && pBox->BxNexChild)
 		   /* take the first child of a main box */
 		   pBox = pBox->BxNexChild;
 		 pLine->LiFirstPiece = pBox;
@@ -1702,11 +1721,12 @@ static int FillLine (PtrLine pLine, PtrAbstractBox pRootAb,
 	     {
 	       /* Break that box */
 	       BreakMainBox (pLine, pNextBox, maxLength, pRootAb, FALSE);
+	       pBox = pNextBox;
 	       if (pNextBox->BxAbstractBox->AbLeafType == LtText &&
 		   pNextBox->BxNexChild)
 		 {
 		   /* we have a new box */
-		   if (pNextBox->BxType != BoScript)
+		   if (pNextBox->BxType != BoScript && pNextBox->BxNexChild)
 		     /* take the first child of a main box */
 		     pBox = pNextBox->BxNexChild;
 		   else
@@ -2301,7 +2321,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	      (pNextBox->BxAbstractBox->AbNotInLine &&
 	       pNextBox->BxAbstractBox->AbDisplay != 'U'))
 	    {
-	      pLine->LiXOrg = pNextBox->BxXOrg + left;
+	      pLine->LiXOrg = left;
 	      /* Colle la boite en dessous de la precedente */
 	      pLine->LiYOrg = *height + top;
 	      if (extensibleBox)
@@ -2315,10 +2335,20 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	      pLine->LiFirstPiece = NULL;
 	      pLine->LiLastPiece = NULL;
 	      if (Propagate != ToSiblings || pBox->BxVertFlex)
-		org = pBox->BxYOrg + *height + top;
+		{
+		  org = pBox->BxYOrg + *height + top;
+		  x = pBox->BxXOrg + pLine->LiXOrg;
+		}
 	      else
-		org = *height + top;
-	      YMove (pNextBox, NULL, org - pNextBox->BxYOrg, frame);
+		{
+		  org = *height + top;
+		  x = pLine->LiXOrg;
+		}
+	      if (pNextBox->BxAbstractBox->AbHorizPos.PosEdge == VertMiddle &&
+		  pNextBox->BxAbstractBox->AbHorizPos.PosRefEdge == VertMiddle)
+		x += (pLine->LiXMax - pNextBox->BxWidth) / 2;
+	      XMove (pNextBox, pBox, x - pNextBox->BxXOrg, frame);
+	      YMove (pNextBox, pBox, org - pNextBox->BxYOrg, frame);
 	      *height += pLine->LiHeight;
 	      org = *height;
 	      toLineSpace = FALSE;

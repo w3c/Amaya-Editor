@@ -2753,7 +2753,8 @@ void XMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 	  else
 	    {
 	    pBox->BxXOrg += delta;
-	    if (pBox->BxType == BoMulScript)
+	    if (pBox->BxType == BoScript &&
+		(pCurrentAb->AbNotInLine || !SearchLine (pBox)))
 	      {
 		/* move script boxes too */
 		box = pBox->BxNexChild;
@@ -2969,7 +2970,8 @@ void YMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 	  else
 	    {
 	      pBox->BxYOrg += delta;
-	      if (pBox->BxType == BoMulScript)
+	      if (pBox->BxType == BoScript &&
+		  (pCurrentAb->AbNotInLine || !SearchLine (pBox)))
 		{
 		  /* move script boxes too */
 		  box = pBox->BxNexChild;

@@ -413,7 +413,7 @@ char GiveTextParams (PtrTextBuffer *pBuffer, int *ind, int *nChars,
 		/* several digits are considered as Latin string */
 		newscript = 'L';
 	      prevscript = newscript;
-	      if (oldbuff == NULL)
+	      if (oldbuff == NULL && pos)
 		{
 		  /* keep in memory a possible splitting position */
 		  oldpos = pos;
