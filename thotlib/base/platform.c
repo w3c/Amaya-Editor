@@ -151,6 +151,60 @@ int TtaFileUnlink (CONST char *filename)
 }
 
 /*----------------------------------------------------------------------
+   TtaFileOpen returns: ThotFile_BADHANDLE: error handle:		
+  ----------------------------------------------------------------------*/
+static ThotFileHandle TtaFileOpen (CONST char *name, ThotFileMode mode)
+{
+   ThotFileHandle      ret;
+#ifdef _WINGUI
+   DWORD               access = 0;	/* access (read-write) mode  */
+   SECURITY_ATTRIBUTES secAttribs;
+   DWORD               creation;	/* how to create  */
+
+      secAttribs.nLength = sizeof (secAttribs);
+   secAttribs.lpSecurityDescriptor = NULL;
+   secAttribs.bInheritHandle = TRUE;
+   if (mode & ThotFile_READ)
+      access |= GENERIC_READ;
+   if (mode & ThotFile_WRITE)
+      access |= GENERIC_WRITE;
+   if (mode & ThotFile_CREATE && mode & ThotFile_TRUNCATE)
+      creation = CREATE_ALWAYS;
+   else if (mode & ThotFile_CREATE && mode & ThotFile_EXCLUSIVE)
+      creation = CREATE_NEW;
+   else if (mode & ThotFile_TRUNCATE && !(mode & ThotFile_CREATE))
+      creation = TRUNCATE_EXISTING;
+   else if (mode & ThotFile_CREATE)
+      creation = OPEN_ALWAYS;
+   else
+      creation = OPEN_EXISTING;
+   ret = CreateFile (name, access, FILE_SHARE_READ, &secAttribs, creation, FILE_ATTRIBUTE_NORMAL, NULL);
+#else  /* _WINGUI */
+#ifdef _WINDOWS
+   ret = open (name, mode | _O_BINARY, 0777);
+#else /* _WINDOWS */
+   ret = open (name, mode, 0777);
+#endif /* _WINDOWS */
+#endif /* _WINGUI */
+   return ret;
+}
+
+/*----------------------------------------------------------------------
+   TtaFileClose returns, 0: error, 1: OK.				
+  ----------------------------------------------------------------------*/
+static int TtaFileClose (ThotFileHandle handle)
+{
+  int                 ret;
+
+#ifdef _WINGUI
+  ret = CloseHandle (handle);
+#else  /* _WINGUI */
+  ret = close (handle) == 0;
+#endif /* _WINGUI */
+  return ret;
+}
+
+/*----------------------------------------------------------------------
    TtaGetFileSize
   ----------------------------------------------------------------------*/
 unsigned long TtaGetFileSize (char *filename)
@@ -161,7 +215,7 @@ unsigned long TtaGetFileSize (char *filename)
   ThotFileHandle      handle;
 
   name = GetRealFileName (filename);
-  handle = open (name, O_RDONLY);
+  handle = TtaFileOpen (name, ThotFile_READWRITE);
   if (handle)
     {
 #ifdef _WINGUI
@@ -177,7 +231,7 @@ unsigned long TtaGetFileSize (char *filename)
       if (ret)
 	file_size = buf.st_size;
 #endif /* _WINGUI */
-      close (handle);
+      TtaFileClose (handle);
     }
    TtaFreeMemory (name);
    return file_size;
