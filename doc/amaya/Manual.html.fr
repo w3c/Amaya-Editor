@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    "DTD/xhtml1-1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Manuel d'utilisation d'Amaya</title>
   <style type="text/css">
-BODY { background-color :  #FFFFFF }
+body { background-color :  #FFFFFF }
 .name { background-color : #FFF6C1}</style>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="fr" lang="fr">
 <p><a href="../../"><img border="0" src="../../Icons/WWW/w3c_home" alt="W3C"
 /></a> <a href="../"><img src="../Icons/amaya.gif" alt="Amaya" border="0"
 /></a> <a href="Manual.html.fr"><img border="0" src="../Icons/doc48x.gif"
@@ -19,17 +19,18 @@ alt="Doc" /></a></p>
 <h1 style="text-align : center">Manuel d'utilisation d'Amaya</h1>
 <hr />
 
-<p><strong>Version :</strong> 3.2 - Juillet 2000</p>
+<p><strong>Version :</strong> 4 - octobre 2000</p>
 <dl>
   <dt><strong>Auteurs :</strong></dt>
     <dd>Irène Vatton, Vincent Quint, José Kahan</dd>
   <dt><strong>Collaborateurs :</strong></dt>
-    <dd>Charles McCathieNevile, John Russell, Valentine Giordani, Magali
-      Vatton</dd>
+    <dd>Charles McCathieNevile, John Russell</dd>
+  <dt><strong>Traductrices :</strong></dt>
+    <dd>Valentine Giordani, Magali Vatton</dd>
 </dl>
 
 <p>Ce manuel présente l'interface utilisateur d'Amaya pour les stations Unix.
-L'interface utilisateur de Windows est  légèrement différente dans certains
+L'interface utilisateur de Windows est légèrement différente dans certains
 cas. Ce manuel d'utilisation n'est pas complet. Son but est simplement d'aider
 les utilisateurs à découvrir les principales caractéristiques du logiciel. Ce
 document est organisé comme un livre. Vous pouvez utiliser la commande "<a
@@ -45,9 +46,9 @@ décrits.</p>
 <h1>Table des matières</h1>
 <ul>
   <li><a href="#L920">Démarrer Amaya</a></li>
-  <li><a href="#L932">Editer des pages Web avec Amaya</a>
+  <li><a href="#L932">Editer des pages Web avec Amaya</a> 
     <ul>
-      <li><a href="Browsing.html.fr#Browsing">Naviguer avec Amaya</a>
+      <li><a href="Browsing.html.fr#Browsing">Naviguer avec Amaya</a> 
         <ul>
           <li><a href="Browsing.html.fr#Activating">Activer un lien</a></li>
           <li><a href="Browsing.html.fr#Opening">Ancres cibles</a></li>
@@ -57,7 +58,7 @@ décrits.</p>
           <li><a href="Browsing.html.fr#Keyboard">Contrôle clavier</a></li>
         </ul>
       </li>
-      <li><a href="Selecting.html.fr#Selecting">Sélectionner</a>
+      <li><a href="Selecting.html.fr#Selecting">Sélectionner</a> 
         <ul>
           <li><a href="Selecting.html.fr#Selecting1">Sélectionner par la
             Structure</a></li>
@@ -67,14 +68,14 @@ décrits.</p>
       </li>
       <li><a href="Searching.html.fr#Searching">Rechercher et remplacer du
         texte</a></li>
-      <li><a href="Views.html.fr#Views">Afficher des vues</a>
+      <li><a href="Views.html.fr#Views">Afficher des vues</a> 
         <ul>
           <li><a href="Views.html.fr#Opening">Ouvrir une vue</a></li>
           <li><a href="Views.html.fr#Closing">Fermer une vue</a></li>
           <li><a href="Views.html.fr#Using">Utiliser les vues</a></li>
         </ul>
       </li>
-      <li><a href="Creating.html.fr#Creating">Créer de nouveaux éléments</a>
+      <li><a href="Creating.html.fr#Creating">Créer de nouveaux éléments</a> 
         <ul>
           <li><a href="Keyboard.html.fr#Keyboard">Entrer des caractères
             ISO-Latin-1</a></li>
@@ -92,7 +93,7 @@ décrits.</p>
         </ul>
       </li>
       <li><a href="Links.html.fr#Creating">Créer et modifier des liens et des
-        ancres</a>
+        ancres</a> 
         <ul>
           <li><a href="Links.html.fr#L557">Créer une ancre cible</a></li>
           <li><a href="Links.html.fr#target1">Créer un élément cible</a></li>
@@ -103,7 +104,7 @@ décrits.</p>
         </ul>
       </li>
       <li><a href="Changing.html.fr#Changing">Editer la structure du
-        document</a>
+        document</a> 
         <ul>
           <li><a href="Changing.html.fr#L653">Changer le type de
           l'élément</a></li>
@@ -118,7 +119,7 @@ décrits.</p>
       </li>
       <li><a
         href="/local_home/diffusion/Amaya/doc/amaya/Tables.html#Editing">Editer
-        des tables</a>
+        des tables</a> 
         <ul>
           <li><a href="Tables.html.fr#Creating">Créer une nouvelle
           table</a></li>
@@ -126,12 +127,12 @@ décrits.</p>
           colonne</a></li>
           <li><a href="Tables.html.fr#Adding1">Ajouter un nouvelle ligne, un
             nouveau tbody</a></li>
-          <li><a href="Tables.html.fr#Removing">Détruire  une colonne</a></li>
+          <li><a href="Tables.html.fr#Removing">Détruire une colonne</a></li>
           <li><a href="Tables.html.fr#Adding2">Ajouter quelquechose aprés une
             table</a></li>
         </ul>
       </li>
-      <li><a href="Math.html.fr#Math">Editer des mathématiques</a>
+      <li><a href="Math.html.fr#Math">Editer des mathématiques</a> 
         <ul>
           <li><a href="Math.html.fr#Creating">Créer une expression
             mathématique</a></li>
@@ -143,7 +144,7 @@ décrits.</p>
         </ul>
       </li>
       <li><a href="ImageMaps.html.fr#Client-sid">Créer et utiliser des zones
-        actives</a>
+        actives</a> 
         <ul>
           <li><a href="ImageMaps.html.fr#Adding">Ajouter une image</a></li>
           <li><a href="ImageMaps.html.fr#Using">Texte de remplacement et
@@ -158,7 +159,7 @@ décrits.</p>
             actives</a></li>
         </ul>
       </li>
-      <li><a href="StyleSheets.html.fr#Style">Les feuilles de style</a>
+      <li><a href="StyleSheets.html.fr#Style">Les feuilles de style</a> 
         <ul>
           <li><a href="StyleSheets.html.fr#Creating">Créer et mettre à jour un
             attribut de style</a></li>
@@ -170,10 +171,10 @@ décrits.</p>
             des éléments HTML</a></li>
         </ul>
       </li>
-      <li><a href="Attributes.html.fr#Attributes">Editer des attributs</a>
+      <li><a href="Attributes.html.fr#Attributes">Editer des attributs</a> 
         <ul>
           <li><a href="Attributes.html.fr#L1073">Editer des attributs par le
-            biais du  menu Attributs</a></li>
+            biais du menu Attributs</a></li>
           <li><a href="Attributes.html.fr#Copying">Copier des
           attributs</a></li>
           <li><a href="Attributes.html.fr#Editing">Editer des attributs dans
@@ -183,7 +184,7 @@ décrits.</p>
       <li><a href="SpellChecking.html.fr#Spell">Vérifier
       l'orthographe</a></li>
       <li><a href="Publishing.html.fr#Saving">Sauver et publier des
-        documents</a>
+        documents</a> 
         <ul>
           <li><a href="Publishing.html.fr#L1104">Sauver des documents en
             HTML</a></li>
@@ -197,9 +198,9 @@ décrits.</p>
         document</a></li>
     </ul>
   </li>
-  <li><a href="Configure.html.fr#Configuring">Configurer Amaya</a>
+  <li><a href="Configure.html.fr#Configuring">Configurer Amaya</a> 
     <ul>
-      <li><a href="Configure.html.fr#Conventions">Conventions</a>
+      <li><a href="Configure.html.fr#Conventions">Conventions</a> 
         <ul>
           <li><a href="Configure.html.fr#L979">Le répertoire
             d'Amaya/Config</a></li>
@@ -211,9 +212,9 @@ décrits.</p>
       </li>
       <li><a href="Configure.html.fr#preferences">Menus des
       préférences</a></li>
-      <li><a href="Configure.html.fr#shortcuts">Raccourcis clavier</a></li>
     </ul>
   </li>
+  <li><a href="ShortCuts.html.fr#shortcuts">Raccourcis clavier</a></li>
 </ul>
 <hr />
 
@@ -258,7 +259,7 @@ spécifique d'Amaya :</p>
   <li><a rel="Chapter" href="Views.html.fr#Views">Afficher des vues</a></li>
   <li><a rel="Chapter" href="Creating.html.fr#Creating">Créer de nouveaux
     éléments</a></li>
-  <li><a rel="Chapter" href="Links.html.fr#Creating">Créer et modifier  des
+  <li><a rel="Chapter" href="Links.html.fr#Creating">Créer et modifier des
     liens et des ancres</a></li>
   <li><a rel="Chapter" href="Changing.html.fr#Changing">Editer la structure du
     document</a></li>
@@ -318,7 +319,7 @@ utiliser.</a></p>
 </ul>
 <hr />
 <address>
-  <a href="mailto:vatton@w3.org">I. Vatton</a> 
+  <a href="mailto:vatton@w3.org">I. Vatton</a>
 </address>
 
 <p><small><a
@@ -331,9 +332,9 @@ href="http://www.w3.org/Consortium/Legal/ipr-notice.html#Legal Disclaimer">liabi
 <a
 href="http://www.w3.org/Consortium/Legal/ipr-notice.html#W3C Trademarks">trademark</a>,
 <a href="http://www.w3.org/Consortium/Legal/copyright-documents.html">document
-use </a>and <a
+use</a>and <a
 href="http://www.w3.org/Consortium/Legal/copyright-software.html">software
-licensing </a>rules apply. Your interactions with this site are in accordance
+licensing</a>rules apply. Your interactions with this site are in accordance
 with our <a
 href="http://www.w3.org/Consortium/Legal/privacy-statement.html#Public">public</a>
 and <a

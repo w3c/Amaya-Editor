@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Editer des mathématiques</title>
-  <meta name="GENERATOR" content="amaya V3.2.1" />
+  <meta name="GENERATOR" content="amaya V3.9" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -17,7 +17,7 @@
       <td><p align="right"><a href="Tables.html.fr"><img alt="previous"
         border="0" src="../Icons/left.gif" /></a> <a
         href="Manual.html.fr"><img alt="top" border="0" src="../Icons/up.gif"
-        /></a> <a href="ImageMaps.html.fr"><img alt="next" border="0"
+        /></a> <a href="SVG.html.fr"><img alt="next" border="0"
         src="../Icons/right.gif" /></a></p>
       </td>
     </tr>
@@ -68,8 +68,8 @@ séquence d'éléments.</p>
 <p>Ces items du menu <strong>Math</strong> sont suivis par l'item Caractère
 (<code>mchar</code>). Cette commande vous permet d'entrer un caractère qui
 n'est pas disponible sur le clavier. Elle affiche une boîte de dialogue dans
-laquelle vous devez entrer le nom du caractère (par exemple <em>alpha </em>
-pour le caractère grec &alpha;).</p>
+laquelle vous devez entrer le nom du caractère (par exemple <em>alpha</em>
+pour le caractère grec alpha).</p>
 
 <p>Les élements suivants du menu <strong>Math</strong> (ou de la palette) vous
 permettent de créer de nouvelles constructions à l'intérieur d'une formule. Si
@@ -77,8 +77,8 @@ le point d'insertion n'est pas dans une formule, un élément Math est d'abord
 créé pour accepter la nouvelle construction. Les constructions disponibles
 sont :</p>
 <ul>
-  <li>Racine ( <code>mroot dans</code> MathML) : <math
-    xmlns="http://www.w3.org/1998/Math/MathML">
+  <li>Racine ( <code>mroot dans</code> MathML) : 
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
       <mroot>
         <mrow>
           <mi>x</mi>
@@ -89,8 +89,8 @@ sont :</p>
       </mroot>
     </math>
   </li>
-  <li>Racine carrée ( <code>msqrt)</code>: <math
-    xmlns="http://www.w3.org/1998/Math/MathML">
+  <li>Racine carrée ( <code>msqrt)</code>: 
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
       <msqrt>
         <mrow>
           <mi>x</mi>
@@ -100,15 +100,15 @@ sont :</p>
       </msqrt>
     </math>
   </li>
-  <li>Englobe ( <code>menclose)</code>: <math
-    xmlns="http://www.w3.org/1998/Math/MathML">
+  <li>Englobe ( <code>menclose)</code>: 
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
       <menclose>
         <mn>1234</mn>
       </menclose>
     </math>
   </li>
-  <li>Fraction ( <code>mfrac)</code>: <math
-    xmlns="http://www.w3.org/1998/Math/MathML">
+  <li>Fraction ( <code>mfrac)</code>: 
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
       <mfrac>
         <mn>1</mn>
         <mrow>
@@ -119,8 +119,8 @@ sont :</p>
       </mfrac>
     </math>
   </li>
-  <li>Indice et exposant Expression ( <code>msubsup)</code>: <math
-    xmlns="http://www.w3.org/1998/Math/MathML">
+  <li>Indice et exposant Expression ( <code>msubsup)</code>: 
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
       <msubsup>
         <mi>x</mi>
         <mrow>
@@ -131,7 +131,8 @@ sont :</p>
         <mi>n</mi>
       </msubsup>
     </math>
-     or <math xmlns="http://www.w3.org/1998/Math/MathML">
+    or 
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
       <mrow>
         <msubsup>
           <mo>&Integral;</mo>
@@ -142,24 +143,24 @@ sont :</p>
       </mrow>
     </math>
   </li>
-  <li>Indice ( <code>msub)</code>: <math
-    xmlns="http://www.w3.org/1998/Math/MathML">
+  <li>Indice ( <code>msub)</code>: 
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
       <msub>
         <mi>x</mi>
         <mi>i</mi>
       </msub>
     </math>
   </li>
-  <li>Exposant ( <code>msup)</code>: <math
-    xmlns="http://www.w3.org/1998/Math/MathML">
+  <li>Exposant ( <code>msup)</code>: 
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
       <msup>
         <mi>x</mi>
         <mi>n</mi>
       </msup>
     </math>
   </li>
-  <li>Dessous et dessus ( <code>munderover)</code>: <math
-    xmlns="http://www.w3.org/1998/Math/MathML">
+  <li>Dessous et dessus ( <code>munderover)</code>: 
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
       <munderover>
         <mo>&Sum;</mo>
         <mrow>
@@ -171,8 +172,8 @@ sont :</p>
       </munderover>
     </math>
   </li>
-  <li>Dessous ( <code>munder)</code>: <math
-    xmlns="http://www.w3.org/1998/Math/MathML">
+  <li>Dessous ( <code>munder)</code>: 
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
       <munder>
         <mi>x</mi>
         <none/>
@@ -180,8 +181,8 @@ sont :</p>
       </munder>
     </math>
   </li>
-  <li>Dessus ( <code>mover)</code>: <math
-    xmlns="http://www.w3.org/1998/Math/MathML">
+  <li>Dessus ( <code>mover)</code>: 
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
       <mrow>
         <mi>x</mi>
         <mover>
@@ -192,8 +193,8 @@ sont :</p>
       </mrow>
     </math>
   </li>
-  <li>Parenthèses ( <code>mrow)</code>: <math
-    xmlns="http://www.w3.org/1998/Math/MathML">
+  <li>Parenthèses ( <code>mrow)</code>: 
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
       <mrow>
         <mo fence="true">(</mo>
         <mrow>
@@ -205,8 +206,8 @@ sont :</p>
       </mrow>
     </math>
   </li>
-  <li>Multiscripts ( <code>mmultiscripts)</code>: <math
-    xmlns="http://www.w3.org/1998/Math/MathML">
+  <li>Multiscripts ( <code>mmultiscripts)</code>: 
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
       <mmultiscripts>
         <mi>X</mi>
         <mi>i</mi>
@@ -217,8 +218,8 @@ sont :</p>
       </mmultiscripts>
     </math>
   </li>
-  <li>Matrice ou table ( <code>mtable)</code>: <math
-    xmlns="http://www.w3.org/1998/Math/MathML">
+  <li>Matrice ou table ( <code>mtable)</code>: 
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
       <mtable>
         <mtr>
           <mtd>
@@ -241,11 +242,11 @@ sont :</p>
   </li>
 </ul>
 
-<p>Le dernier item de la palette <strong>Math</strong> (<math
-xmlns="http://www.w3.org/1998/Math/MathML">
+<p>Le dernier item de la palette <strong>Math</strong> (
+<math xmlns="http://www.w3.org/1998/Math/MathML">
   <mi>&alpha;&beta;&gamma;</mi>
 </math>
- ) affiche une autre palette à partir de laquelle vous pouvez insérer des
+) affiche une autre palette à partir de laquelle vous pouvez insérer des
 symboles mathématiques et des caractères grecs.</p>
 
 <h4><a name="Entering">Entrer des constructions à partir du clavier.</a></h4>
@@ -266,7 +267,8 @@ analyse cette chaîne et engendre automatiquement des éléments <code>mo</code>
 (opérateur), <code>mn</code> (nombre), <code>mi</code> (identificateur), et
 <code>mtext.</code>Par exemple, pour entrer</p>
 
-<p><math xmlns="http://www.w3.org/1998/Math/MathML">
+<p>
+<math xmlns="http://www.w3.org/1998/Math/MathML">
   <mrow>
     <mi>x</mi>
     <mo>=</mo>
@@ -282,7 +284,7 @@ analyse cette chaîne et engendre automatiquement des éléments <code>mo</code>
 (n'oubliez pas de cliquer d'abord sur l'entrée Math du menu
 <strong>Math</strong> si vous n'êtes pas dans une expression mathématique), et
 vous obtiendrez la structure suivante (vous pouvez vérifier dans le <a
-href="#Math_Struc">vue Math_Structure </a>) :</p>
+href="#Math_Struc">vue Structure</a>) :</p>
 <pre>&lt;mi&gt;x&lt;/mi&gt;&lt;mo&gt;=&lt;/mo&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;mi&gt;a&lt;/mi&gt;&lt;mo&gt;+&lt;/mo&gt;&lt;mi&gt;b&lt;/mi&gt;</pre>
 
 <p>Si le résultat ne correspond pas exactement à ce que vous vouliez, il
@@ -304,30 +306,24 @@ ajouter par exemple un exposant ou mettre des parenthèses autour d'une
 expression, il suffit de sélectionner l'expression et d'entrer la nouvelle
 expression avec la palette, le menu <strong>Math</strong> ou le <a
 href="#Entering">clavier</a>. Vous pouvez également utiliser la commande
-<strong>Transformer </strong>du menu <strong>Edition</strong>. Sélectionnez
-l'expression que vous voulez transformer et la commande<strong>
-Transformer</strong> affichera un menu avec tous les changements
-possibles.</p>
+<strong>Transformer</strong>du menu <strong>Edition</strong>. Sélectionnez
+l'expression que vous voulez transformer et la
+commande<strong>Transformer</strong> affichera un menu avec tous les
+changements possibles.</p>
 
-<h3><a name="Math_Struc">Vue Math_Structure</a></h3>
+<h3><a name="Math_Struc">Vue Structure</a></h3>
 
 <p>Toutes les fois qu'un document contient des éléments MathML, la sélection
-de l'article <a href="Views.html.fr#Structure">Montrer la structure </a>du
-menu <strong>Vues </strong> ouvre en fait <em>deux vues</em> :</p>
-<ul>
-  <li>La Structure vue montre la structure principale du document HTML. Dans
-    cette vue, les éléments MathML sont seulement représentés par une
-    étiquette mathématique. Leurs contenus effectifs ne sont pas
-  indiqués.</li>
-  <li>La Math_Structure vue montre seulement les éléments MathML, mais là,
-    tous leurs composants sont visibles.</li>
-</ul>
+de l'article <a href="Views.html.fr#Structure">Montrer la structure</a> du
+menu <strong>Vues</strong> ouvre la vue Structure qui montre la structure
+principale du document HTML. Dans cette vue, les éléments MathML et leurs
+contenus effectifs sont affichés.</p>
 
 <p>Vous pouvez éditer des expressions mathématiques aussi bien dans la vue
-pricipale que dans la vue Math_Structure. La vue Math_Structure est
-particulièrement utile pour éviter l'ambiguïté. Observez l'exemple suivant
-:</p>
-<math xmlns="http://www.w3.org/1998/Math/MathML" mode="display">
+pricipale que dans la vue Structure. La vue Structure est particulièrement
+utile pour éviter l'ambiguïté. Observez l'exemple suivant :</p>
+
+<math xmlns="http://www.w3.org/1998/Math/MathML">
   <mrow>
     <mi>x</mi>
     <mo>=</mo>
@@ -343,12 +339,11 @@ particulièrement utile pour éviter l'ambiguïté. Observez l'exemple suivant
   </mrow>
 </math>
 
-<p>Lorsque vous déplacez le point d'insertion aprés le caractère<em> b</em>,
-il n'est pas évident de distinguer si vous voulez ajouter quelquechose <em>à
-l'intérieur </em>de la racine carrée ou <em>aprés</em> elle. Sélectionner (ou
-vérifier ) dans la vue Math_Structure évite toute ambiguïté. Vous pouvez
-également vérifier la position de la ligne, en bas de la fenêtre
-pricipale.</p>
+<p>Lorsque vous déplacez le point d'insertion aprés le caractère<em>b</em>, il
+n'est pas évident de distinguer si vous voulez ajouter quelquechose <em>à
+l'intérieur</em>de la racine carrée ou <em>aprés</em> elle. Sélectionner (ou
+vérifier ) dans la vue Structure évite toute ambiguïté. Vous pouvez également
+vérifier la position de la ligne, en bas de la fenêtre pricipale.</p>
 
 <h3><a name="Links">Les liens dans MathML</a></h3>
 
@@ -358,6 +353,7 @@ href="http://www.w3.org/TR/WD-xlink">XML Linking Language (XLink)</a>. Seuls
 les liens simples unidirectionnels sont utilisables, mais vous pouvez associer
 un lien à n'importe quelle partie d'une formule. Par exemple, la fraction dans
 la formule ci-dessous est un lien vers la page d'accueil W3C :</p>
+
 <math xmlns="http://www.w3.org/1998/Math/MathML">
   <mrow>
     <mi>y</mi>
@@ -378,7 +374,6 @@ la formule ci-dessous est un lien vers la page d'accueil W3C :</p>
     </mfrac>
   </mrow>
 </math>
-
 
 <p>Cliquer deux fois sur un des caractères à l'intérieur de la fraction fait
 apparaître la page d'accueil W3C. Dans le fichier XML, la fraction est
@@ -411,9 +406,9 @@ attributs sont restitués à l'écran (<code>alttext</code>,
 
 <p>Les attributs <code>class</code>, <code>id</code> et <code>style</code>
 sont utilisables, avec la même sémantique que dans HTML : vous pouvez <a
-href="StyleSheets.html.fr">associer le style CSS </a> aux éléments MathML
-(attribut<code> class</code> et <code>style</code>) et un élément MathML peut
-être la cible d'un lien (attribut<code> id</code>).</p>
+href="StyleSheets.html.fr">associer le style CSS</a> aux éléments MathML
+(attribut<code>class</code> et <code>style</code>) et un élément MathML peut
+être la cible d'un lien (attribut<code>id</code>).</p>
 
 <p>A cause du manque de polices de caractères mathématiques, seule une série
 limitée d'entités représentant des symboles mathématiques est reconnue, la
@@ -431,8 +426,8 @@ ThickSpace, Hat, OverBar, UnderBar, prime, Prime.</p>
 
 <p align="right"><a href="Tables.html.fr"><img alt="previous" border="0"
 src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img alt="top"
-border="0" src="../Icons/up.gif" /></a> <a href="ImageMaps.html.fr"><img
-alt="next" border="0" src="../Icons/right.gif" /></a></p>
+border="0" src="../Icons/up.gif" /></a> <a href="SVG.html.fr"><img alt="next"
+border="0" src="../Icons/right.gif" /></a></p>
 <hr />
 </body>
 </html>

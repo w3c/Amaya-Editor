@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    "DTD/xhtml1-1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 <head>
   <title>Images et Zones actives</title>
-  <meta name="GENERATOR" content="amaya V3.2.1" />
+  <meta name="GENERATOR" content="amaya V3.9" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -14,10 +14,10 @@
   <tbody>
     <tr>
       <td><p><img border="0" alt="W3C"
-        src="http://www.w3.org/Icons/WWW/w3c_home" />    <img border="0"
+        src="http://www.w3.org/Icons/WWW/w3c_home" /> <img border="0"
         alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
-      <td><p align="right"><a href="Math.html.fr"><img alt="previous"
+      <td><p align="right"><a href="SVG.html.fr"><img alt="previous"
         border="0" src="../Icons/left.gif" /></a> <a
         href="Manual.html.fr"><img alt="top" border="0" src="../Icons/up.gif"
         /></a> <a href="StyleSheets.html.fr"><img alt="next" border="0"
@@ -78,7 +78,7 @@ image.</p>
 <p>Afin de donner une idée de comment une page sans les images doit être
 présentée, Amaya fournit une option <strong>Montrer la vue alternée</strong>
 dans le menu <strong>Vues</strong>. Dans le cas d'un navigateur oral, la <a
-href="Views.html.fr#Alternate">vue alternée </a>pourrait être simplement lue à
+href="Views.html.fr#Alternate">vue alternée</a>pourrait être simplement lue à
 voix haute. Sans des textes de remplacement pour les images, de nombreuses
 pages deviendraient difficiles voire impossibles à naviguer, et les
 utilisateurs seraient condamnés à trouver "leur chemin dans le noir".</p>
@@ -144,13 +144,13 @@ href="Links.html.fr#L245">créer des liens</a>.</p>
     Control</strong> et le <strong>bouton du milieu</strong> ou le
     <strong>bouton droit</strong> de la souris à l'intérieur de la zone
     active, vous pourrez redimensionner cette zone.</li>
-  <li>En éditant l'attribut <strong>coords</strong> de la zone dans la vue.
+  <li>En éditant l'attribut <strong>coords</strong> de la zone dans la vue. 
     <p></p>
   </li>
 </ul>
 </div>
 
-<p align="right"><a href="Math.html.fr"><img alt="previous" border="0"
+<p align="right"><a href="SVG.html.fr"><img alt="previous" border="0"
 src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img alt="top"
 border="0" src="../Icons/up.gif" /></a> <a href="StyleSheets.html.fr"><img
 alt="next" border="0" src="../Icons/right.gif" /></a></p>

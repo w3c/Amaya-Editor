@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Editing Mathematics</title>
-  <meta name="GENERATOR" content="amaya V3.2.1" />
+  <meta name="GENERATOR" content="amaya V3.9" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -17,8 +17,8 @@
       <td><p align="right"><a href="Tables.html"><img alt="previous"
         border="0" src="../Icons/left.gif" /></a><a href="Manual.html"><img
         alt="top" border="0" src="../Icons/up.gif" /></a><a
-        href="ImageMaps.html"><img alt="next" border="0"
-        src="../Icons/right.gif" /></a></p>
+        href="SVG.html"><img alt="next" border="0" src="../Icons/right.gif"
+        /></a></p>
       </td>
     </tr>
   </tbody>
@@ -28,7 +28,7 @@
 <h2>Editing mathematics</h2>
 
 <p>Amaya allows you to include mathematical expressions in web pages,
-following the <a href="http://www.w3.org/TR/REC-MathML/"> Mathematical Markup
+following the <a href="http://www.w3.org/TR/REC-MathML/">Mathematical Markup
 Language</a> (MathML) specification. Mathematical expressions are handled as
 structured components, in the same way as HTML elements. Therefore, you can
 manipulate math expressions in the same way you manipulate other parts of HTML
@@ -64,15 +64,15 @@ of a single element or a sequence of elements.</p>
 <p>These items in the <strong>Math</strong> menu are followed by the Character
 (<code>mchar</code>) item. This command allows you to enter a character that
 is not available on the keyboard. It displays a dialogue box where you have to
-enter the character name (for instance <em>alpha </em>for the greek
-character&alpha;).</p>
+enter the character name (for instance <em>alpha</em>for the greek
+characteralpha).</p>
 
 <p>The next items of the <strong>Math</strong> menu (or palette) allow you to
 create new constructs within a formula. If the caret is not in a formula,
 a<code>Math</code> element is created first to accept the new construct. The
 available constructs are:</p>
 <ul>
-  <li>Root with index, <code>mroot</code> in MathML:  
+  <li>Root with index, <code>mroot</code> in MathML: 
     <math xmlns="http://www.w3.org/1998/Math/MathML">
       <mroot>
         <mrow>
@@ -237,7 +237,7 @@ available constructs are:</p>
   </li>
 </ul>
 
-<p>The last item of the <strong>Math</strong> palette (
+<p>The last item of the <strong>Math</strong> palette ( 
 <math xmlns="http://www.w3.org/1998/Math/MathML">
   <mi>&alpha;&beta;&gamma;</mi>
 </math>
@@ -276,7 +276,7 @@ automatically. For instance, to enter</p>
 <p>just type this sequence of 6 characters: <code>x=2a+b</code> (don't forget
 to first click on the Math item of the <strong>Math</strong> menu, if you are
 not in a mathematical expression), and you will get the following structure
-(you can check in the <a href="#Math_Struc">Math_Structure view</a>):</p>
+(you can check in the <a href="#Math_Struc">Structure view</a>):</p>
 <pre>&lt;mi&gt;x&lt;/mi&gt;&lt;mo&gt;=&lt;/mo&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;mi&gt;a&lt;/mi&gt;&lt;mo&gt;+&lt;/mo&gt;&lt;mi&gt;b&lt;/mi&gt;</pre>
 
 <p>If the result is not exactly what you want, just select the characters that
@@ -301,22 +301,17 @@ the<strong>Edit</strong> menu. Select the expression you want to transform and
 the <strong>Transform</strong> command will display a menu with all possible
 changes.</p>
 
-<h3><a name="Math_Struc">Math_Structure view</a></h3>
+<h3><a name="Math_Struc">Structure view</a></h3>
 
 <p>Whenever a document contains some MathML elements, choosing the <a
 href="Views.html#Structure">Show Structure</a> item from
-the<strong>Views</strong> menu actually opens <em>two</em> views:</p>
-<ul>
-  <li>the Structure view shows the main structure of the HTML document. In
-    this view, MathML elements are only represented by a <code>math</code> tag
-    and their actual contents is not shown.</li>
-  <li>the Math_Structure view shows only MathML elements, but here, all their
-    components are visible.</li>
-</ul>
+the<strong>Views</strong> menu actually opens the Structure view which shows
+the main structure of the HTML document. In this view, the <code>math</code>
+tag and their actual contents is shown.</p>
 
-<p>You can edit math expressions either in the main view or in the
-Math_Structure view. The Math_Structure view is especially helpful to avoid
-ambiguity. Consider the following example:</p>
+<p>You can edit math expressions either in the main view or in the Structure
+view. The Structure view is especially helpful to avoid ambiguity. Consider
+the following example:</p>
 
 <math xmlns="http://www.w3.org/1998/Math/MathML">
   <mrow>
@@ -336,12 +331,12 @@ ambiguity. Consider the following example:</p>
 
 <p>When moving the caret after character <em>b</em>, it is not clear whether
 you want to add something <em>within</em> the square root or <em>after</em>it.
-Selecting (or checking) in the Math_Structure view avoids any ambiguity. You
-can also check the status line, at the bottom of the main window.</p>
+Selecting (or checking) in the Structure view avoids any ambiguity. You can
+also check the status line, at the bottom of the main window.</p>
 
 <h3><a name="Links">Links in MathML</a></h3>
 
-<p>You can create and use links in mathematical expressions.  These links are
+<p>You can create and use links in mathematical expressions. These links are
 represented using a draft version of the <a
 href="http://www.w3.org/TR/WD-xlink">XML Linking Language (XLink)</a>. Only
 the simple unidirectional hyperlinks are available, but you can associate a
@@ -376,7 +371,7 @@ page. In the XML file, the fraction is represented by:</p>
 <p>(You can only find this in the structure view - it is not currently shown
 in the links view) To create such a link, just select an expression (the
 fraction in the above example), click on the Link button (or select
-"createLink" from the Links menu) and click on the desired target.  If the
+"createLink" from the Links menu) and click on the desired target. If the
 target is an expression in a formula, you first have to turn that expression
 into a target. Just select the expression and select "create Target" from the
 Links menu. This creates an <code>id</code> attribute for the target
@@ -418,8 +413,8 @@ UnderBar, prime, Prime.</p>
 
 <p align="right"><a href="Tables.html"><img alt="previous" border="0"
 src="../Icons/left.gif" /></a><a href="Manual.html"><img alt="top" border="0"
-src="../Icons/up.gif" /></a><a href="ImageMaps.html"><img alt="next"
-border="0" src="../Icons/right.gif" /></a></p>
+src="../Icons/up.gif" /></a><a href="SVG.html"><img alt="next" border="0"
+src="../Icons/right.gif" /></a></p>
 <hr />
 </body>
 </html>
