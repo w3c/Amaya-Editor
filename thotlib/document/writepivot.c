@@ -438,6 +438,7 @@ static void   PutPresRule (BinFile pivFile, PtrPRule pPRule)
 	rType == PtBorderBottomStyle ||
 	rType == PtBorderLeftStyle ||
 	rType == PtDisplay ||
+	rType == PtVisibility ||
 	rType == PtSize || rType == PtStyle ||
 	rType == PtWeight || rType == PtFont ||
 	rType == PtUnderline || rType == PtThickness ||
@@ -528,6 +529,9 @@ static void   PutPresRule (BinFile pivFile, PtrPRule pPRule)
 	  break;
 	case PtDisplay:
 	  TtaWriteByte (pivFile, C_PR_DISPLAY);
+	  break;
+	case PtVisibility:
+	  TtaWriteByte (pivFile, C_PR_VISIBILITY);
 	  break;
         case PtBorderTopStyle:
 	  TtaWriteByte (pivFile, C_PR_BORDERTOPSTYLE);
@@ -739,6 +743,7 @@ static void   PutPresRule (BinFile pivFile, PtrPRule pPRule)
 	case PtThickness:
 	case PtDirection:
 	case PtUnicodeBidi:
+	case PtVisibility:
 	case PtLineStyle:
 	case PtDisplay:
         case PtBorderTopStyle:

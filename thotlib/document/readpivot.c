@@ -1443,6 +1443,9 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
     case C_PR_DISPLAY:
       TypeRP = PtDisplay;
       break;
+    case C_PR_VISIBILITY:
+      TypeRP = PtVisibility;
+      break;
     default:
       PivotError (pivFile, "PresRule1");
       break;
@@ -1553,6 +1556,7 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
       case PtUnicodeBidi:
       case PtLineStyle:
       case PtDisplay:
+      case PtVisibility:
       case PtBorderTopStyle:
       case PtBorderRightStyle:
       case PtBorderBottomStyle:
@@ -1771,7 +1775,8 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
 	  case PtUnicodeBidi:
 	  case PtLineStyle:
 	  case PtDisplay:
-          case PtBorderTopStyle:
+ 	  case PtVisibility:
+	  case PtBorderTopStyle:
           case PtBorderRightStyle:
           case PtBorderBottomStyle:
           case PtBorderLeftStyle:
