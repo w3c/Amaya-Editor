@@ -756,9 +756,7 @@ static AttributeMapping AttributeMappingTable[] =
    {"VSPACE", "", 'A', HTML_ATTR_vspace},
    {"WIDTH", "APPLET", 'A', HTML_ATTR_Width_},
    {"WIDTH", "HR", 'A', HTML_ATTR_Width__},
-   {"WIDTH", "IMG", 'A', HTML_ATTR_Width__},	/* should be HTML_ATTR_Width_
-						but accept percentage for
-						compatibility with Netscape */
+   {"WIDTH", "IMG", 'A', HTML_ATTR_Width_},
 #ifdef COUGAR
    {"WIDTH", "OBJECT", 'A', HTML_ATTR_Width_},
 #endif
@@ -4747,6 +4745,7 @@ char                c;
 }
 
 /*----------------------------------------------------------------------
+   CreateAttrWidthPercentPxl
    an HTML attribute "width" has been created for a Table of a HR.
    Create the corresponding attribute IntWidthPercent or
    IntWidthPxl.
@@ -5005,7 +5004,29 @@ char                c;
 		    break;
 	      }
 
-	if (AttributeMappingTable[lastAttrEntry].ThotAttribute == HTML_ATTR_Width__)
+	if (AttributeMappingTable[lastAttrEntry].ThotAttribute == HTML_ATTR_Width_)
+	     /* we expected a Width_ attribute (width in pixels) */
+	  {
+	     /* is the last character of the value a '%' ? */
+	     length = strlen (inputBuffer) - 1;
+	     while (length > 0 && inputBuffer[length] <= SPACE)
+	        length--;
+	     if (inputBuffer[length] == '%')
+		/* it's a percentage.  Let's accept it, for compatibility
+		   with Netscape */
+		{
+		/* delete the Width_ attribute */
+		TtaRemoveAttribute (lastAttrElement, lastAttribute, theDocument);
+		/* create a IntWidthPercent attribute instead */
+	        attrType.AttrTypeNum = HTML_ATTR_IntWidthPercent;
+		lastAttribute = TtaNewAttribute (attrType);
+		TtaAttachAttribute (lastAttrElement, lastAttribute, theDocument);
+		sscanf (inputBuffer, "%d", &val);
+		TtaSetAttributeValue (lastAttribute, val, lastAttrElement,
+				      theDocument);
+		}
+	  }
+	else if (AttributeMappingTable[lastAttrEntry].ThotAttribute == HTML_ATTR_Width__)
 	   /* HTML attribute "width" for a Table or a HR */
 	   /* create the corresponding attribute IntWidthPercent or */
 	   /* IntWidthPxl */
