@@ -487,7 +487,9 @@ wchar_t MACROMANCP [] = {
   ----------------------------------------------------------------------*/
 unsigned char TtaGetCharFromWC (wchar_t wc, CHARSET encoding)
 {
-#ifndef _GL
+#ifdef _GL
+	return (unsigned char) wc;
+#else /*_GL*/
   unsigned int  c, max, base;
   wchar_t      *table;
 
@@ -497,105 +499,108 @@ unsigned char TtaGetCharFromWC (wchar_t wc, CHARSET encoding)
   else
     {
       base = 128;
-      /* look for the right table */
-      switch (encoding)
+      if (encoding == ISO_SYMBOL)
 	{
-	case ISO_SYMBOL:
 	  base = 0;
 	  table = ISO_SYMBOL_Map;
 	  max = ISO_SYMBOL_length;
-	  break;
-	case ISO_8859_1:
-	  if (wc <= 255)
-	    return (unsigned char) wc;
-	  else
-	    return EOS;
-	  break;
-	case ISO_8859_2:
-	  table = ISO_8859_2_Map;
-	  max = ISO_8859_2_length;
-	  break;
-	case ISO_8859_3:
-	  table = ISO_8859_3_Map;
-	  max = ISO_8859_3_length;
-	  break;
-	case ISO_8859_4:
-	  table = ISO_8859_4_Map;
-	  max = ISO_8859_4_length;
-	  break;
-	case ISO_8859_5:
-	  table = ISO_8859_5_Map;
-	  max = ISO_8859_5_length;
-	  break;
-	case ISO_8859_6:
-	  table = ISO_8859_6_Map;
-	  max = ISO_8859_6_length;
-	  break;
-	case ISO_8859_7:
-	  table = ISO_8859_7_Map;
-	  max = ISO_8859_7_length;
-	  break;
-	case ISO_8859_8:
-	  table = ISO_8859_8_Map;
-	  max = ISO_8859_8_length;
-	  break;
-	case ISO_8859_9:
-	  table = ISO_8859_9_Map;
-	  max = ISO_8859_9_length;
-	  break;
-	case ISO_8859_13:
-	  table = ISO_8859_13_Map;
-	  max = ISO_8859_13_length;
-	  break;
-	case ISO_8859_15:
-	  table = ISO_8859_15_Map;
-	  max = ISO_8859_15_length;
-	  break;
-	case WINDOWS_1250:
-	  table = WIN1250CP;
-	  max = WIN1250CP_length;
-	  break;
-	case WINDOWS_1251:
-	  table = WIN1251CP;
-	  max = WIN1251CP_length;
-	  break;
-	case WINDOWS_1252:
-	  table = WIN1252CP;
-	  max = WIN1252CP_length;
-	  break;
-	case WINDOWS_1253:
-	  table = WIN1253CP;
-	  max = WIN1253CP_length;
-	  break;
-	case WINDOWS_1254:
-	  table = WIN1254CP;
-	  max = WIN1254CP_length;
-	  break;
-	case WINDOWS_1255:
-	  table = WIN1255CP;
-	  max = WIN1255CP_length;
-	  break;
-	case WINDOWS_1256:
-	  table = WIN1256CP;
-	  max = WIN1256CP_length;
-	  break;
-	case WINDOWS_1257:
-	  table = WIN1257CP;
-	  max = WIN1257CP_length;
-	  break;
-	case KOI8_R:
-	  table = KOI8;
-	  max = KOI8_length;
-	  break;
-        case MAC_OS_ROMAN:
-	  table = MACROMANCP;
-	  max = MACROMANCP_length;
-	  break;
-	default:
-	  return EOS;
-	  break;
 	}
-
+      else
+	{
+	/* look for the right table */
+	switch (encoding)
+	  {
+	  case ISO_8859_1:
+	    if (wc <= 255)
+	      return (unsigned char) wc;
+	    else
+	      return EOS;
+	    break;
+	  case ISO_8859_2:
+	    table = ISO_8859_2_Map;
+	    max = ISO_8859_2_length;
+	    break;
+	  case ISO_8859_3:
+	    table = ISO_8859_3_Map;
+	    max = ISO_8859_3_length;
+	    break;
+	  case ISO_8859_4:
+	    table = ISO_8859_4_Map;
+	    max = ISO_8859_4_length;
+	    break;
+	  case ISO_8859_5:
+	    table = ISO_8859_5_Map;
+	    max = ISO_8859_5_length;
+	    break;
+	  case ISO_8859_6:
+	    table = ISO_8859_6_Map;
+	    max = ISO_8859_6_length;
+	    break;
+	  case ISO_8859_7:
+	    table = ISO_8859_7_Map;
+	    max = ISO_8859_7_length;
+	    break;
+	  case ISO_8859_8:
+	    table = ISO_8859_8_Map;
+	    max = ISO_8859_8_length;
+	    break;
+	  case ISO_8859_9:
+	    table = ISO_8859_9_Map;
+	    max = ISO_8859_9_length;
+	    break;
+	  case ISO_8859_13:
+	    table = ISO_8859_13_Map;
+	    max = ISO_8859_13_length;
+	    break;
+	  case ISO_8859_15:
+	    table = ISO_8859_15_Map;
+	    max = ISO_8859_15_length;
+	    break;
+	  case WINDOWS_1250:
+	    table = WIN1250CP;
+	    max = WIN1250CP_length;
+	    break;
+	  case WINDOWS_1251:
+	    table = WIN1251CP;
+	    max = WIN1251CP_length;
+	    break;
+	  case WINDOWS_1252:
+	    table = WIN1252CP;
+	    max = WIN1252CP_length;
+	    break;
+	  case WINDOWS_1253:
+	    table = WIN1253CP;
+	    max = WIN1253CP_length;
+	    break;
+	  case WINDOWS_1254:
+	    table = WIN1254CP;
+	    max = WIN1254CP_length;
+	    break;
+	  case WINDOWS_1255:
+	    table = WIN1255CP;
+	    max = WIN1255CP_length;
+	    break;
+	  case WINDOWS_1256:
+	    table = WIN1256CP;
+	    max = WIN1256CP_length;
+	    break;
+	  case WINDOWS_1257:
+	    table = WIN1257CP;
+	    max = WIN1257CP_length;
+	    break;
+	  case KOI8_R:
+	    table = KOI8;
+	    max = KOI8_length;
+	    break;
+	  case MAC_OS_ROMAN:
+	    table = MACROMANCP;
+	    max = MACROMANCP_length;
+	    break;
+	  default:
+	    return EOS;
+	    break;
+	  }
+	}
       c = 0;
       while (table[c] != wc && c < max)
 	c++;
@@ -608,9 +613,7 @@ unsigned char TtaGetCharFromWC (wchar_t wc, CHARSET encoding)
         else
 	  return EOS;
     }
-#else /*_GL*/
-  return (unsigned char) wc;
-#endif /*_GL*/
+#endif /* _GL */
 }
 
 

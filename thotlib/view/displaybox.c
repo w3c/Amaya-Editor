@@ -22,6 +22,7 @@
 #define THOT_EXPORT extern
 #include "boxes_tv.h"
 #include "edit_tv.h"
+#include "font_tv.h"
 #include "frame_tv.h"
 #include "appdialogue_tv.h"
 #include "picture_tv.h" 
@@ -282,7 +283,7 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
   int                 xd, yd, i, w;
   int                 fg, bg;
   int                 width, height;
-  ThotBool            StixExist;
+  ThotBool            useStix;
 
   if (selected)
     {
@@ -298,23 +299,26 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
   if (pBox->BxAbstractBox->AbVisibility >= pFrame->FrVisibility)
     {
       font = NULL;
+#ifdef IV
 #ifdef _WINDOWS
-	if (WinFontExist ("esstix6_.ttf"))
+      if (WinFontExist ("esstix6_.ttf"))
 #endif /*_WINDOWS*/
+#endif
+      if (StixExist)
 	  if (pBox->BxH > 0) 
 	    {
 	      GetMathFontFromChar (pBox->BxAbstractBox->AbShape,
 				   pBox->BxFont,
 				   (void **) &font,
-				   SizetoLogical(pBox->BxH-5));
+				   FontRelSize (pBox->BxH-5));
 	    }
       if (font == NULL)
 	{
 	  GetFontAndIndexFromSpec (32, pBox->BxFont, &font);
-	  StixExist = FALSE;
+	  useStix = FALSE;
 	}
       else
-	StixExist = TRUE;
+	useStix = TRUE;
 
       if (font != NULL)
 	{
@@ -342,7 +346,7 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
 	  i = GetLineWeight (pBox->BxAbstractBox, frame);
 	  
 #ifdef _GL
-  SetTextureScale (IsBoxDeformed(pBox));
+	  SetTextureScale (IsBoxDeformed(pBox));
 #endif /* _GL */
 
 	  switch (pBox->BxAbstractBox->AbShape)
@@ -351,25 +355,25 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
 	      DrawRadical (frame, i, xd, yd, width, height, font, fg);
 	      break;
 	    case 'i':
-	      if (StixExist)
+	      if (useStix)
 		DrawStixIntegral (frame, i, xd, yd, width, height, 0, font, fg);
 	      else
 		DrawIntegral (frame, i, xd, yd, width, height, 0, font, fg);
 	      break;
 	    case 'c':
-	      if (StixExist)
+	      if (useStix)
 		DrawStixIntegral (frame, i, xd, yd, width, height, 1, font, fg);
 	      else
 		DrawIntegral (frame, i, xd, yd, width, height, 1, font, fg);
 	      break;
 	    case 'd':
-	      if (StixExist)
+	      if (useStix)
 		DrawStixIntegral (frame, i, xd, yd, width, height, 2, font, fg);
 	      else
 		DrawIntegral (frame, i, xd, yd, width, height, 2, font, fg);
 	      break;
 	    case 'S':
-	      if (StixExist)
+	      if (useStix)
 		DrawStixSigma (frame, xd, yd, width, height, font, fg);
 	      else
 		DrawSigma (frame, xd, yd, width, height, font, fg);
@@ -409,49 +413,49 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
 	      DrawArrow (frame, i, 5, xd, yd, width, height, 270, fg);
 	      break;
 	    case '(':
-	      if (StixExist)
+	      if (useStix)
 		DrawStixParenthesis (frame, i, xd, yd, width, height, 0, font, fg);
 	      else
 		DrawParenthesis (frame, i, xd, yd, width, height, 0, font, fg);
 	      break;
 	    case ')':
-	      if (StixExist)
+	      if (useStix)
 		DrawStixParenthesis (frame, i, xd, yd, width, height, 1, font, fg);
 	      else
 		DrawParenthesis (frame, i, xd, yd, width, height, 1, font, fg);
 	      break;
 	    case '{':
-	      if (StixExist)
+	      if (useStix)
 		DrawStixBrace (frame, i, xd, yd, width, height, 0, font, fg);
 	      else
 		DrawBrace (frame, i, xd, yd, width, height, 0, font, fg);
 	      break;
 	    case '}':
-	      if (StixExist)
+	      if (useStix)
 		DrawStixBrace (frame, i, xd, yd, width, height, 1, font, fg);
 	      else
 		DrawBrace (frame, i, xd, yd, width, height, 1, font, fg);
 	      break;
 	    case '[':
-	      if (StixExist)
+	      if (useStix)
 		DrawStixBracket (frame, i, xd, yd, width, height, 0, font, fg);
 	      else
 		DrawBracket (frame, i, xd, yd, width, height, 0, font, fg);
 	      break;
 	    case ']':
-	      if (StixExist)
+	      if (useStix)
 		DrawStixBracket (frame, i, xd, yd, width, height, 1, font, fg);
 	      else
 		DrawBracket (frame, i, xd, yd, width, height, 1, font, fg);
 	      break;
 	    case '<':
-	      if (StixExist)
+	      if (useStix)
 		DrawStixPointyBracket (frame, i, xd, yd, width, height, 0, font, fg);
 	      else
 		DrawPointyBracket (frame, i, xd, yd, width, height, 0, font, fg);
 	      break;
 	    case '>':
-	      if (StixExist)
+	      if (useStix)
 		DrawStixPointyBracket (frame, i, xd, yd, width, height, 1, font, fg);
 	      else
 		DrawPointyBracket (frame, i, xd, yd, width, height, 1, font, fg);

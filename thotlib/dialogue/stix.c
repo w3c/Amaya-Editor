@@ -36,12 +36,8 @@
 #if defined(_GTK) || defined(_MOTIF)
   #include "xwindowdisplay_f.h"
 #endif /*#if defined(_GTK) || defined(_MOTIF)*/
-
 #include "font_f.h"
-
 #include "stix.h"
-
-
 
 #define LOW_HEIGHT 2
 #define MID_HEIGHT 3
@@ -62,9 +58,7 @@
 /*----------------------------------------------------------------------
   DrawStixSigma
   ----------------------------------------------------------------------*/
-void DrawStixSigma (int frame, int x, int y, 
-		    int l, int h, 
-		    PtrFont font, int fg)
+void DrawStixSigma (int frame, int x, int y,  int l, int h, PtrFont font, int fg)
 {
    if (fg < 0)
      return;
@@ -97,9 +91,7 @@ void DrawStixSigma (int frame, int x, int y,
   - double if type = 2.
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void DrawStixIntegral (int frame, int thick,
-		       int x, int y,
-		       int l, int h,
+void DrawStixIntegral (int frame, int thick, int x, int y, int l, int h,
 		       int type, PtrFont font, int fg)
 {
   /* Integrals using esstix6 charmap
@@ -109,19 +101,19 @@ void DrawStixIntegral (int frame, int thick,
   if (h < LOW_CHAR)
      /* display a single glyph */
      {
-       font =  LoadStixFont (6, SizetoLogical (h-15));
+       font =  LoadStixFont (6, FontRelSize (h-15));
        DrawStixChar (font, 69, x, y, l, h, fg, frame);
      }
   else if (h < MID_CHAR)
     /* display a single glyph */
     {
-      font =  LoadStixFont (6, SizetoLogical (h-5));
+      font =  LoadStixFont (6, FontRelSize (h-5));
       DrawStixChar (font, 33, x, y, l, h, fg, frame);
     }
   else 
     /* display a single glyph */
     {
-      font =  LoadStixFont (6, SizetoLogical (h-5));
+      font =  LoadStixFont (6, FontRelSize (h-5));
       DrawStixChar (font, 52, x, y, l, h, fg, frame);
      }
    if (type == 2)		
@@ -141,7 +133,6 @@ void DrawStixIntegral (int frame, int thick,
   ----------------------------------------------------------------------*/
 static int StixIntegralWidth (int h, PtrFont font)
 {
-
   int i;
   
   if (h < LOW_HEIGHT)
@@ -195,7 +186,6 @@ void DrawStixBracket (int frame, int thick, int x, int y, int l, int h,
   ----------------------------------------------------------------------*/
 static int StixBracketWidth (int h, PtrFont font)
 {
-
   int i;
   
   if (h < LOW_HEIGHT)
@@ -295,7 +285,6 @@ void DrawStixParenthesis (int frame, int thick, int x, int y, int l, int h,
   ----------------------------------------------------------------------*/
 static int StixParenthesisWidth (int h, PtrFont font)
 {
-
   int i;
   
   if (h < LOW_HEIGHT)
@@ -312,7 +301,7 @@ static int StixParenthesisWidth (int h, PtrFont font)
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 void DrawStixBrace (int frame, int thick, int x, int y, int l, int h,
-		int direction, PtrFont font, int fg)
+		    int direction, PtrFont font, int fg)
 {
 /*
   Esstix 7 : 
@@ -352,7 +341,6 @@ void DrawStixBrace (int frame, int thick, int x, int y, int l, int h,
   ----------------------------------------------------------------------*/
 static int StixBraceWidth (int h, PtrFont font)
 {
-
   int i;
   
   if (h < LOW_HEIGHT)
@@ -365,68 +353,55 @@ static int StixBraceWidth (int h, PtrFont font)
 }
 
 
-
 /*----------------------------------------------------------------------
   DrawStixChar draw a one glyph symbol.
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void DrawStixChar (PtrFont font, unsigned char symb, 
-		   int x, int y, 
-		   int l, int h, 
-		   int fg, int frame)
+void DrawStixChar (PtrFont font, unsigned char symb, int x, int y, 
+		   int l, int h, int fg, int frame)
 {
-   x = x + ((l - CharacterWidth ((char) symb, font)) / 2);
-   y = y + ((h - CharacterHeight ((char)symb, font)) / 2) 
-     + CharacterAscent ((char) symb, font);
-
-   DrawChar ((char) symb, frame, x, y, font, fg);
-   
+  x = x + ((l - CharacterWidth ((char) symb, font)) / 2);
+  y = y + ((h - CharacterHeight ((char)symb, font)) / 2) 
+    + CharacterAscent ((char) symb, font);
+  DrawChar ((char) symb, frame, x, y, font, fg);
 }
 
 /*----------------------------------------------------------------------
   GetMathFontWidth : Calculates the width of the stix char
 ----------------------------------------------------------------------*/
-int GetMathFontWidth (SpecFont fontset,
-		      char shape,
-		      int size,
-		      int height)
+int GetMathFontWidth (SpecFont fontset, char shape, int size, int height)
 {
-  PtrFont       Ptrfont = NULL;
+  PtrFont       pfont = NULL;
   int           i;
 
   i = 0;
-
   if (height > 0) 
-    {
-      GetMathFontFromChar (shape,
-			   fontset,
-			   (void **) &Ptrfont,
-			   SizetoLogical(height-5));
-    }
+      GetMathFontFromChar (shape, fontset, (void **) &pfont,
+			   FontRelSize (height-5));
   else
     return 0;
   
-  if (Ptrfont != NULL)
+  if (pfont != NULL)
     {
       switch (shape)
 	{
 	case 'd':	/* double integral */
-	  i = StixIntegralWidth (size, Ptrfont)/2;
+	  i = StixIntegralWidth (size, pfont)/2;
 	case 'i':	/* integral */
 	case 'c':	/* circle integral */
-	  i += StixIntegralWidth (size, Ptrfont);
+	  i += StixIntegralWidth (size, pfont);
 	  break;
 	case '(':
 	case ')':
-	  i = StixParenthesisWidth (size, Ptrfont); 
+	  i = StixParenthesisWidth (size, pfont); 
 	  break;
 	case '{':
 	case '}':
-	  i = StixBraceWidth (size, Ptrfont);
+	  i = StixBraceWidth (size, pfont);
 	  break;
 	case '[':
 	case ']':
-	  i = StixBracketWidth (size, Ptrfont);	
+	  i = StixBracketWidth (size, pfont);	
 	  break;
 	default:
 	  break;
@@ -434,45 +409,46 @@ int GetMathFontWidth (SpecFont fontset,
     }
   return i;
 }
+
 /*----------------------------------------------------------------------
    GiveStixSize gives the internal size of a symbol box.
   ----------------------------------------------------------------------*/
-void GiveStixSize (PtrFont Ptrfont, PtrAbstractBox pAb, 
-		   int *width, int *height, int size)
+void GiveStixSize (PtrFont pfont, PtrAbstractBox pAb, int *width,
+		   int *height, int size)
 {
   int                 hfont;
 
-  hfont = FontHeight (Ptrfont);
+  hfont = FontHeight (pfont);
   *height = hfont * 2;
   switch (pAb->AbShape)
     {
       
     case 'd':	/* double integral */
-      *width = StixIntegralWidth (size, Ptrfont) + 
-	StixIntegralWidth (size, Ptrfont)/2;
+      *width = StixIntegralWidth (size, pfont) + 
+	StixIntegralWidth (size, pfont)/2;
       *height *= 4;
       break;      
     case 'i':	/* integral */
     case 'c':	/* circle integral */
-      *width = StixIntegralWidth (size, Ptrfont);
+      *width = StixIntegralWidth (size, pfont);
       *height *= 2;
       break;
     case '(':
     case ')':
-      *width = StixParenthesisWidth (size, Ptrfont); 
+      *width = StixParenthesisWidth (size, pfont); 
       break;
     case '{':
     case '}':
-      *width = StixBraceWidth (size, Ptrfont);
+      *width = StixBraceWidth (size, pfont);
       break;
     case '[':
     case ']':
-      *width = StixBracketWidth (size, Ptrfont);	
+      *width = StixBracketWidth (size, pfont);	
       break;
 #ifdef o
     case '<':
     case '>':
-      *width = BoxCharacterWidth (241, font);
+      *width = BoxCharacterWidth (241, pfont);
       *height = hfont;
       break;
     case 'o':       /* overbrace */
@@ -482,7 +458,7 @@ void GiveStixSize (PtrFont Ptrfont, PtrAbstractBox pAb,
       break;
     case 'I':	/*intersection */
     case 'U':	/*union */
-      *width = BoxCharacterWidth (229, font);
+      *width = BoxCharacterWidth (229, pfont);
       *height = hfont;
       break;
 #endif /**/
@@ -490,30 +466,9 @@ void GiveStixSize (PtrFont Ptrfont, PtrAbstractBox pAb,
 }
 
 
-
-
-int GetFontandIndexFromGreekChar (char  *c,
-				  void  **font,
-				  char  *code,
-				  int  *encoding,
-				  int size)
-{
-  *encoding = ISO_8859_7;	      
-  *c = ((int) TtaGetCharFromWC (*c, *encoding));
-  *c = *c - 79;
-  if (*c != 'r')
-   *c = *c - 1;
-  
-  *code = '7';
-  
-  *font = LoadStixFont (10, size);
-  return 1;
-}
-
-
-void GetMathFontFromChar (char typesymb,
-			  SpecFont fontset,
-			  void **font,
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void GetMathFontFromChar (char typesymb, SpecFont fontset, void **font,
 			  int height)
 {
       switch (typesymb)
@@ -545,3 +500,4 @@ void GetMathFontFromChar (char typesymb,
 	break;
       }
 }
+

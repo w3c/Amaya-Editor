@@ -480,19 +480,6 @@ static XCharStruct *CharacterStructure(CHAR_T c, XFontStruct *xf)
 
 
 /*----------------------------------------------------------------------
-  SizetoLogical : get logical size from the real world size
-  ----------------------------------------------------------------------*/
-int SizetoLogical (int real_world_size)
-{
-  int i=0;
-
-  while (real_world_size > LogicalPointsSizes[i] && i < 11)
-    i++;
-  return i;
-}
-
-
-/*----------------------------------------------------------------------
   CharacterWidth returns the width of a char in a given font.
   ----------------------------------------------------------------------*/
 int CharacterWidth (int c, PtrFont font)
@@ -1224,6 +1211,7 @@ void GeneratePostcriptFont (char r_name[10], char script, int family,
 	       StylesTable[highlight], size);
   }  
 }
+
 /*----------------------------------------------------------------------
   FontIdentifier computes the name of a Thot font.
   ----------------------------------------------------------------------*/
@@ -1622,7 +1610,7 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 	  val = LogicalPointsSizes[size];
 
 	ActiveFont = WIN_LoadFont (script, family, highlight, val);
- if (ActiveFont)
+	if (ActiveFont)
 	    {
 	      if (TtPrinterDC != NULL)
 		{
@@ -1783,12 +1771,14 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 	      ptfont = LoadNearestFont ('G', family, 0, -1, requestedsize,
 					frame, FALSE, FALSE);
 	      if (ptfont)
-		/* now we'll work 
-		   with the font Symbol */
+		/* now we'll work with the Greek font */
 		GreekFontScript = 'G';
- 	      else 
+ 	      else
 		{
 		  ptfont = LoadStixFont ('E', 10);
+		  if (ptfont)
+		    /* now we'll work with the Stix font */
+		    GreekFontScript = 'E';
 		}
 	    }
 	  /* last case the default font */
@@ -1836,8 +1826,7 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
   ----------------------------------------------------------------------*/
 void *LoadStixFont (int family, int size)
 {
-  return ((void *) LoadNearestFont ('E', family, 0, size, 
-				    size, ActiveFrame,
+  return ((void *) LoadNearestFont ('E', family, 0, size, size, ActiveFrame,
 				    FALSE, FALSE));
 }
 
@@ -1873,6 +1862,7 @@ void ChangeFontsetSize (int size, PtrBox box, int frame)
     }
 #endif /* _I18N_ */
 }
+
 /*----------------------------------------------------------------------
   GetFontAndIndexFromSpec return the glyph index and the font
   used to display the wide character c;
@@ -1925,27 +1915,29 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, PtrFont *font)
 	    {
 	      /* Greek characters */
 	      code = GreekFontScript;
+#ifndef _GL
+	      /* should use STIX fonts here */
 	      if (c == 0x3C2 || c == 0x3D1 ||
-		  c == 0x3D2 || c == 0x3D5 ||
-		  c == 0x3D6)
+		       c == 0x3D2 || c == 0x3D5 ||
+		       c == 0x3D6)
 		/* final sigma, thetasym, upsih, phi, piv */
 		/* use the Symbol font */
 		{
 		  code = 'G';
 		  pfont = &(fontset->FontSymbol);
-		  encoding = ISO_SYMBOL;		  
+		  encoding = ISO_SYMBOL;
 		}
-	      else if (GreekFontScript == '7')
+	      else
+#endif /* _GL */
+	       if (code == '7')
 		{
 		  pfont = &(fontset->FontIso_7);
 #ifdef _WINDOWS
 		  encoding = WINDOWS_1253;
 #endif /* _WINDOWS */
-
 #if defined(_GTK) || defined(_MOTIF)      
 		  encoding = ISO_8859_7;
 #endif /* #if defined(_GTK) || defined(_MOTIF) */
-      
 		}
 	      else
 		{
@@ -2089,9 +2081,21 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, PtrFont *font)
 		   c == 0x192)     /* latin small letter f with hook */
 	    {
 	      /* Symbols */
+#ifndef _GL
 	      code = 'G';
 	      pfont = &(fontset->FontSymbol);
 	      encoding = ISO_SYMBOL;
+#else /* _GL */
+	      /* should use STIX fonts here */
+	      code = '7';
+		  pfont = &(fontset->FontIso_7);
+#ifdef _WINDOWS
+		  encoding = WINDOWS_1253;
+#endif /* _WINDOWS */
+#if defined(_GTK) || defined(_MOTIF)      
+		  encoding = ISO_8859_7;
+#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* _GL */
 	    }
 	  else if (c < 0x24F)
 	    {
@@ -2177,7 +2181,6 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, PtrFont *font)
 	      encoding = UNICODE_1_1;
 	    }
       
-  
 	  if (pfont)
 	    {
 	      /* attach that font to the current frame */
@@ -2694,7 +2697,6 @@ void ThotFreeAllFonts (void)
   SpecFont            fontset, nextset;
 #endif /* _I18N_ */
   int                 i;
-
 
 #ifdef _I18N_
   /* free all attached fontsets */

@@ -107,7 +107,7 @@ wchar_t Ttowlower(wchar_t wc)
 }
 #endif /* _I18N_ */
 
-#if defined(_I18N_) && !defined(_WINDOWS)
+#if defined(_I18N_) && !defined(_WINDOWS) && !defined(_AIX)
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 wchar_t *wcstok(wchar_t *s, const wchar_t *delim, wchar_t **last)
@@ -388,11 +388,11 @@ CHAR_T *ustrtok (CHAR_T *str, const CHAR_T *delemiter)
 {
 #ifdef _I18N_ 
   /* Compatibility of wcstok: ANSI, WIN NT and WIN 9x */
-#if defined(_WINDOWS) || defined(_AIX)
+#ifdef _WINDOWS
   return (CHAR_T*) wcstok ((wchar_t*)str, (wchar_t*)delemiter);
-#else  /* defined(_WINDOWS) || defined(_AIX) */
+#else  /* _WINDOWS */
   return (CHAR_T*) wcstok ((wchar_t*)str, (wchar_t*)delemiter, NULL);
-#endif /* defined(_WINDOWS) || defined(_AIX) */
+#endif /* _WINDOWS */
 #else  /* _I18N_ */
   return (CHAR_T*) strtok ((char*)str, (char*)delemiter);
 #endif /* _I18N_ */

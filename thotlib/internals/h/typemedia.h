@@ -23,7 +23,7 @@
 typedef struct _FontSet      *SpecFont;
 typedef struct _FontSet {
   SpecFont      NextFontSet;
-  ThotBool      specificFont; /* TRYE when the specific font is used */
+  ThotBool      specificFont; /* TRUE when the specific font is used */
   int           FontFamily;
   int           FontHighlight;
   int           FontSize;
@@ -39,7 +39,7 @@ typedef struct _FontSet {
   PtrFont       FontIso_9;
   PtrFont       FontIso_13;
   PtrFont       FontIso_15;
-  PtrFont       FontSymbol;
+  PtrFont       FontSymbol; /* Symbol of Stix fonts ?? */
   PtrFont       FontUnicode;
 } FontSet;
 #else /* _I18N_ */

@@ -27,6 +27,7 @@
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
 #include "frame_tv.h"
+#include "font_tv.h"
 
 #ifdef _GTK
   #include <gdk/gdkx.h>
@@ -333,7 +334,12 @@ static ThotBool FontLoadFile ( FILE *file, FontScript **fontsscript_tab)
 				  /*printf ("Font file %s not found\n", fontface)*/;
 				}
 			      else
-				fontsscript_tab[script]->family[face]->highlight[style] = fontface;
+				{
+				  fontsscript_tab[script]->family[face]->highlight[style] = fontface;
+				  /* note if STIX fonts are available */
+				  if (script == 21 && !StixExist)
+				    StixExist = TRUE;
+				}
 			    }
 			}
 		    }

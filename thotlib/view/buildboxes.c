@@ -691,10 +691,8 @@ void GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
 		       font->FontSize);
   if (pfont)
     {
-      GiveStixSize (pfont, pAb, 
-		    width, height, font->FontSize);
-      
-	return;      
+      GiveStixSize (pfont, pAb, width, height, font->FontSize);
+      return;      
     }
 #endif /* _I18N_ */
   if (pAb->AbVolume == 0)

@@ -8,7 +8,6 @@
 
 extern int NumberOfFonts ( void );
 extern int GetCharsCapacity ( int volpixel );
-extern int SizetoLogical ( int real_world_size );
 extern int CharacterWidth ( int c,
                             PtrFont font );
 extern int SpecialCharBoxWidth ( CHAR_T c );
@@ -85,7 +84,6 @@ extern int BoxArabicCharacterWidth ( CHAR_T c,
 
 extern int NumberOfFonts (/* void */);
 extern int GetCharsCapacity (/* int volpixel */);
-extern int SizetoLogical (/* int real_world_size */);
 extern int CharacterWidth (/* int c,
                               PtrFont font */);
 extern int SpecialCharBoxWidth (/* CHAR_T c */);
