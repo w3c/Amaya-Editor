@@ -534,6 +534,7 @@ install : all @NOPRINT@../bin/print
 @NOPRINT@	$(INSTALL_BIN) ../bin/print $(prefix)/Amaya/$(AMAYAGUI)/bin
 	$(RM) $(bindir)/amaya-$(AMAYAGUI)
 	$(LN_S) $(prefix)/Amaya/$(AMAYAGUI)/bin/amaya $(bindir)/amaya-$(AMAYAGUI)
+	$(LN_S) $(bindir)/amaya-$(AMAYAGUI) $(bindir)/amaya
 	(for i in $(AMAYAFILES) ; do \
 	  for file in `$(ECHO) $(THOTDIR)/amaya/$$i` ; do \
 	    $(INSTALL_DATA) $$file $(prefix)/Amaya/amaya ; \
@@ -572,7 +573,7 @@ install : all @NOPRINT@../bin/print
 
 uninstall :
 	$(RM) -r $(prefix)/Amaya
-	$(RM) $(bindir)/amaya-$(AMAYAGUI)
+	$(RM) $(bindir)/amaya*
 
 CEXTRACT= ../bin/cextract
 
