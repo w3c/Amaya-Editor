@@ -997,8 +997,10 @@ HTList             *c;
       ** Register a persistent cache stream which can save an object to local
       ** file
     */
+#if 0
    HTConversion_add (c, "www/cache", "*/*", HTCacheWriter,
 		     1.0, 0.0, 0.0);
+#endif
 
    /*
       ** This dumps all other formats to local disk without any further
@@ -1025,7 +1027,7 @@ static void         AHTProtocolInit (void)
    HTProtocol_add ("http", "buffered_tcp", NO, HTLoadHTTP, NULL);
    /*   HTProtocol_add ("http", "tcp", NO, HTLoadHTTP, NULL); */
    HTProtocol_add ("file", "local", NO, HTLoadFile, NULL);
-   HTProtocol_add ("cache", "local", NO, HTLoadCache, NULL);
+   /*HTProtocol_add ("cache", "local", NO, HTLoadCache, NULL); */
    HTProtocol_add ("ftp", "tcp", NO, HTLoadFTP, NULL);
 #if 0 /* experimental code */
    HTProtocol_add ("telnet", "", YES, HTLoadTelnet, NULL);
@@ -1227,7 +1229,7 @@ static void         AHTProfile_delete ()
 #  endif _WINDOWS;		
     
     /* Clean up the persistent cache (if any) */
-    HTCacheTerminate ();
+  /*  HTCacheTerminate (); */
     
     /* Clean up all the global preferences */
     HTFormat_deleteAll ();

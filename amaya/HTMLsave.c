@@ -842,12 +842,25 @@ char                  *newURL;
    char                imgname[MAX_LENGTH];
    char                url[MAX_LENGTH];
    char               *buf;
+   char                path_sep [2];
+   char                url_str [2];
    int                 buflen, max, index;
+
+   if (imgbase && strchr (newURL, '/'))
+      sprintf (url_str, "/");
+   else 
+       sprintf (url_str, "%s", DIR_STR);
 
    /* save the old document path to locate images */
    strcpy (tempfile, DocumentURLs[SavingDocument]);
    TtaExtractName (tempfile, oldpath, tempname);
-   strcat (oldpath, DIR_STR);
+
+   if (oldpath && strchr (oldpath, '/'))
+      sprintf (path_sep, "/");
+   else 
+       sprintf (path_sep, "%s", DIR_STR);
+
+   strcat (oldpath, path_sep);
    /* path to search image descriptors */
    sprintf (localpath, "%s%s%d%s", TempFileDirectory, DIR_STR, SavingDocument, DIR_STR);
 
@@ -907,7 +920,7 @@ char                  *newURL;
 			 {
 			   /* compose the relative or absolute name */
 			   strcpy (url, imgbase);
-			   strcat (url, DIR_STR);
+			   strcat (url, url_str);
 			   strcat (url, imgname);
 			 }
 		       else

@@ -335,6 +335,7 @@ void ChangeBackgroundImage (document, view)
 
    /* there is a selection */
    /* Dialogue form for open URL or local */
+#  ifndef _WINDOWS
    i = 0;
    strcpy (&s[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
    i += strlen (&s[i]) + 1;
@@ -381,6 +382,17 @@ void ChangeBackgroundImage (document, view)
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseImage + FormBackground, TRUE);
    TtaFreeMemory (s);
+#  else /* _WINDOWS */
+   if (LastURLImage[0] != EOS)
+      strcpy (s, LastURLImage);
+   else {
+      strcpy (s, DirectoryImage);
+      strcat (s, DIR_STR);
+      strcat (s, ImageName);
+   }
+   BgDocument = document;
+   CreateBackgroundImageDlgWindow (TtaGetViewFrame (document, view), BaseImage, FormBackground, ImageURL, ImageLabel, ImageDir, ImageSel, RepeatImage, s);
+#  endif /* _WINDOWS */
 }
 
 

@@ -3326,8 +3326,13 @@ char               *cssRule;
 	  cssRule++;
 	  cssRule = SkipBlanks (cssRule);
 	  base = cssRule;
+#     ifdef _WINDOWS
+	  while (*cssRule != EOS && *cssRule != ')')
+#     else /* !_WINDOWS */
 	  while (*cssRule != EOS && !IsBlank (cssRule) && *cssRule != ')')
+#     endif /* _WINDOWS */
 	    cssRule++;
+
 	  sauve = *cssRule;
 	  *cssRule = EOS;
 	  url = TtaStrdup (base);
@@ -4071,10 +4076,18 @@ char               *image;
 {
    char                css_command[100];
 
+#  ifdef _WINDOWS
+   if (image[0] != DIR_SEP && image[1] != ':' && image[2] != DIR_SEP)
+#  else  /* !_WINDOWS */
    if (image[0] != DIR_SEP)
+#  endif /* !_WINDOWS */
      sprintf (css_command, "background-image: url(%s); background-repeat: ", image);
    else
+#    ifdef _WINDOWS 
+     sprintf (css_command, "background-image: url(%s); background-repeat: ", image);
+#    else /* !_WINDOWS */
      sprintf (css_command, "background-image: url(file:/%s); background-repeat: ", image);
+#    endif /* !_WINDOWS */
    if (repeat == DRIVERP_REPEAT)
      strcat (css_command, "repeat");
    else if (repeat == DRIVERP_HREPEAT)

@@ -1153,6 +1153,28 @@ BEGIN
                     127,12
 END
 
+BGIMAGEDIALOG DIALOG DISCARDABLE  0, 0, 184, 122
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Confirm",ID_CONFIRM,23,101,29,14
+    PUSHBUTTON      "Cancel",IDCANCEL,130,101,31,14
+    PUSHBUTTON      "Clear",ID_CLEAR,59,100,23,15
+    LTEXT           "Open location",IDC_OPENLOCATION,7,7,49,8
+    EDITTEXT        IDC_BGLOCATION,7,18,168,15,ES_AUTOHSCROLL
+    GROUPBOX        "Repeat Mode",IDC_REPEATMODE,62,40,59,51,WS_GROUP
+    CONTROL         "Repeat",IDC_REPEAT,"Button",BS_AUTORADIOBUTTON,68,49,42,
+                    8
+    CONTROL         "Repeat-X",IDC_REPEATX,"Button",BS_AUTORADIOBUTTON,68,58,
+                    47,11
+    CONTROL         "Repeat-Y",IDC_REPEATY,"Button",BS_AUTORADIOBUTTON,68,69,
+                    48,9
+    CONTROL         "No-repeat",IDC_NOREPEAT,"Button",BS_AUTORADIOBUTTON,68,
+                    80,46,10
+    PUSHBUTTON      "Browse",IDC_BROWSE,90,101,34,14
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //

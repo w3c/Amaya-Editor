@@ -603,9 +603,11 @@ char               *docName;
    strncpy (tempOrgName, ptr, MAX_LENGTH -1);
    tempOrgName[MAX_LENGTH -1] = EOS;
    /* clean trailing white space */
+#  ifndef _WINDOWS
    ptr = strchr (tempOrgName, ' ');
    if (ptr)
       *ptr = EOS;
+#  endif /* !_WINDOWS */
    /* clean trailing new lines */
    ptr = strchr (tempOrgName, EOL);
    if (ptr)
@@ -1328,6 +1330,12 @@ char               *target;
    boolean             change;
 
    change = FALSE;
+#  ifdef _WINDOWS
+   if (src[1] == ':' && src[2] == '\\') {
+      strcpy (target, src);
+      change = TRUE;
+   }
+#  else  /* !_WINDOWS */
    if (src[0] == '~')
      {
 	/* replace ~ */
@@ -1336,6 +1344,7 @@ char               *target;
 	strcat (target, &src[1]);
 	change = TRUE;
      }
+#   endif /* _WINDOWS */
    else if (strncmp (src, "file:", 5) == 0)
      {
 	/* remove the prefix file: */

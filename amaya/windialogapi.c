@@ -42,7 +42,12 @@
 #define IDC_LANGEDIT      20002
 #define ICD_SPELLWORDEDIT 20003
 
-#define MenuMaths          1
+#define REPEAT                0
+#define REPEAT_X              1
+#define REPEAT_Y              2
+#define NO_REPEAT             3
+
+#define MenuMaths             1
 
 extern HINSTANCE hInstance;
 extern char*     AttrHREFvalue;
@@ -85,6 +90,10 @@ static int          numMenuOptions;
 static int          numMenuPaperFormat; 
 static int          numZonePrinterName; 
 static int          numFormPrint;
+static int          bgImageForm;
+static int          imageURL;
+static int          repeatImage;
+static int          imageSel;
 static BOOL         manualFeed      = FALSE;
 static BOOL         tableOfContents = FALSE;
 static BOOL         numberedLinks   = FALSE;
@@ -135,6 +144,7 @@ LRESULT CALLBACK InitConfirmDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK ChangeFormatDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK GreekKeyboardDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK AuthenticationDlgProc (HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK BackgroundImageDlgProc (HWND, UINT, WPARAM, LPARAM);
 #else  /* !__STDC__ */
 LRESULT CALLBACK LinkDlgProc ();
 LRESULT CALLBACK HelpDlgProc ();
@@ -156,6 +166,7 @@ LRESULT CALLBACK InitConfirmDlgProc ();
 LRESULT CALLBACK ChangeFormatDlgProc ();
 LRESULT CALLBACK GreekKeyboardDlgProc ();
 LRESULT CALLBACK AuthenticationDlgProc ();
+LRESULT CALLBACK BackgroundImageDlgProc ();
 #endif /* __STDC__ */
 
 /*-----------------------------------------------------------------------
@@ -543,6 +554,36 @@ HWND  parent;
 	DialogBox (hInstance, MAKEINTRESOURCE (AUTHENTIFICATIONDIALOG), parent, (DLGPROC) AuthenticationDlgProc);
 }
 
+/*-----------------------------------------------------------------------
+ CreateBackgroundImageDlgWindow
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+void CreateBackgroundImageDlgWindow (HWND parent, int base_image, int form_background, int image_URL, int image_label, int image_dir, int image_sel, int repeat_image, char* image_location)
+#else /* !__STDC__ */
+void CreateBackgroundImageDlgWindow (parent, base_image, form_background, image_URL, image_label, image_dir, image_sel, repeat_image, image_location)
+HWND  parent; 
+int   base_image; 
+int   form_background; 
+int   image_URL; 
+int   image_label; 
+int   image_dir; 
+int   image_sel; 
+int   repeat_image; 
+char* image_location;
+#endif /* __STDC__ */
+{
+	baseDlg          = base_image;
+	bgImageForm      = form_background;
+	imageURL         = image_URL;
+	imageSel         = image_sel;
+	repeatImage      = repeat_image;
+	currentParentRef = baseDlg + bgImageForm;
+    sprintf (currentPathName, "%s", image_location);
+
+	DialogBox (hInstance, MAKEINTRESOURCE (BGIMAGEDIALOG), parent, (DLGPROC) BackgroundImageDlgProc);
+}
+
+
 
         /*********************************************************
          *                                                       *
@@ -752,13 +793,16 @@ LPARAM lParam;
                    CheckRadioButton (hwnDlg, IDC_A4, IDC_US, IDC_A4);
                 else if (USFormat)
                      CheckRadioButton (hwnDlg, IDC_A4, IDC_US, IDC_US);
-
+                /*
                 if (toPrinter)
                     CheckRadioButton (hwnDlg, IDC_PRINTER, IDC_POSTSCRIPT, IDC_PRINTER);
                 else if (toPostscript)
                      CheckRadioButton (hwnDlg, IDC_PRINTER, IDC_POSTSCRIPT, IDC_POSTSCRIPT);
+                */
+                CheckRadioButton (hwnDlg, IDC_PRINTER, IDC_POSTSCRIPT, IDC_POSTSCRIPT);
 
-			    SetDlgItemText (hwnDlg, IDC_PRINTEREDIT, "lpr");
+                SetDlgItemText (hwnDlg, IDC_PRINTEREDIT, currentFileToPrint);
+			    /* SetDlgItemText (hwnDlg, IDC_PRINTEREDIT, "lpr"); */
 				break;
 		   case WM_COMMAND:
 			    switch (LOWORD (wParam)) {
@@ -790,10 +834,17 @@ LPARAM lParam;
                             break;
 
                        case IDC_PRINTER:
+                            /*
 						    toPrinter = TRUE;
 							toPostscript = FALSE;
                             CheckRadioButton (hwnDlg, IDC_PRINTER, IDC_POSTSCRIPT, IDC_PRINTER);
 						    ThotCallback (numMenuSupport + baseDlg, INTEGER_DATA, (char*)0);
+						    */
+						    toPrinter = FALSE;
+							toPostscript = TRUE;
+                            CheckRadioButton (hwnDlg, IDC_PRINTER, IDC_POSTSCRIPT, IDC_POSTSCRIPT);
+                            SetDlgItemText (hwnDlg, IDC_PRINTEREDIT, currentFileToPrint);
+						    ThotCallback (numMenuSupport + baseDlg, INTEGER_DATA, (char*)1);
                             break;
 
                        case IDC_POSTSCRIPT:
@@ -2649,6 +2700,99 @@ LPARAM lParam;
 			                break;
 
 		               case IDCANCEL:
+			                EndDialog (hwnDlg, IDCANCEL);
+				            break;
+				}
+				break;
+
+				default: return FALSE;
+	}
+	return TRUE;
+}
+
+/*-----------------------------------------------------------------------
+ BackgroundImageDlgProc
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+LRESULT CALLBACK BackgroundImageDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+#else  /* !__STDC__ */
+LRESULT CALLBACK BackgroundImageDlgProc (hwnDlg, msg, wParam, lParam)
+HWND   hwndParent; 
+UINT   msg; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
+{
+    static int repeatMode;
+    switch (msg) {
+	       case WM_INITDIALOG:
+			    SetDlgItemText (hwnDlg, IDC_BGLOCATION, currentPathName);
+                CheckRadioButton (hwnDlg, IDC_REPEAT, IDC_NOREPEAT, IDC_REPEAT);
+				break;
+
+		   case WM_COMMAND:
+			    if (HIWORD (wParam) == EN_UPDATE) {
+                   GetDlgItemText (hwnDlg, IDC_BGLOCATION, urlToOpen, sizeof (urlToOpen) - 1);
+                   ThotCallback (baseDlg + imageURL, STRING_DATA, urlToOpen);
+				}
+
+			    switch (LOWORD (wParam)) {
+                       case IDC_REPEAT:
+                            repeatMode  = REPEAT;
+                            break;
+
+                       case IDC_REPEATX:
+                            repeatMode  = REPEAT_X;
+                            break;
+
+                       case IDC_REPEATY:
+                            repeatMode  = REPEAT_Y;
+                            break;
+
+                       case IDC_NOREPEAT:
+                            repeatMode  = NO_REPEAT;
+                            break;
+
+		               case ID_CONFIRM:
+                            ThotCallback (baseDlg + repeatImage, INTEGER_DATA, (char*)repeatMode);
+                            ThotCallback (baseDlg + bgImageForm, INTEGER_DATA, (char*)1);
+			                EndDialog (hwnDlg, ID_CONFIRM);
+			                break;
+
+                       case ID_CLEAR:
+							SetDlgItemText (hwnDlg, IDC_BGLOCATION, "");
+                            ThotCallback (baseDlg + repeatImage, INTEGER_DATA, (char*)repeatMode);
+                            ThotCallback (baseDlg + bgImageForm, INTEGER_DATA, (char*)2);
+							break;
+
+					   case IDC_BROWSE:
+                            OpenFileName.lStructSize       = sizeof (OPENFILENAME); 
+                            OpenFileName.hwndOwner         = hwnDlg; 
+                            OpenFileName.hInstance         = hInstance ; 
+                            OpenFileName.lpstrFilter       = (LPSTR) szFilter; 
+                            OpenFileName.lpstrCustomFilter = (LPTSTR) NULL; 
+                            OpenFileName.nMaxCustFilter    = 0L; 
+                            OpenFileName.nFilterIndex      = 1L; 
+                            OpenFileName.lpstrFile         = (LPSTR) szFileName; 
+                            OpenFileName.nMaxFile          = 256; 
+                            OpenFileName.lpstrInitialDir   = NULL; 
+                            OpenFileName.lpstrTitle        = TEXT ("Open a File"); 
+                            OpenFileName.nFileOffset       = 0; 
+                            OpenFileName.nFileExtension    = 0; 
+                            OpenFileName.lpstrDefExt       = TEXT ("*.gif"); 
+                            OpenFileName.lCustData         = 0; 
+                            OpenFileName.Flags             = OFN_SHOWHELP | OFN_HIDEREADONLY; 
+ 
+                            if (GetOpenFileName (&OpenFileName)) {
+	                           strcpy (urlToOpen, OpenFileName.lpstrFile);
+	                        }
+
+							SetDlgItemText (hwnDlg, IDC_BGLOCATION, urlToOpen);
+                            /* ThotCallback (baseDlg + imageSel, STRING_DATA, urlToOpen); */
+							break;
+
+		               case IDCANCEL:
+                            ThotCallback (baseDlg + bgImageForm, INTEGER_DATA, (char*)0);
 			                EndDialog (hwnDlg, IDCANCEL);
 				            break;
 				}

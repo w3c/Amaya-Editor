@@ -206,6 +206,7 @@
 #define GETSAVEDIALOG                   364
 #define SAVELISTDIALOG                  365
 #define IDC_WINCURSOR                   376
+#define BGIMAGEDIALOG                   380
 #define ID_CONFIRM                      1000
 #define ID_DONE                         1001
 #define IDC_URLEDIT                     1002
@@ -516,6 +517,13 @@
 #define IDC_GKEY159                     1367
 #define IDC_GKEY160                     1368
 #define IDC_MSG                         1372
+#define IDC_OPENLOCATION                1377
+#define IDC_BGLOCATION                  1378
+#define IDC_REPEATMODE                  1380
+#define IDC_REPEAT                      1381
+#define IDC_REPEATX                     1382
+#define IDC_REPEATY                     1383
+#define IDC_NOREPEAT                    1384
 #define ID_BUTTON40017                  40017
 #define ID_BUTTON40018                  40018
 #define ID_BUTTON40019                  40019
@@ -548,9 +556,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        380
+#define _APS_NEXT_RESOURCE_VALUE        381
 #define _APS_NEXT_COMMAND_VALUE         40046
-#define _APS_NEXT_CONTROL_VALUE         1375
+#define _APS_NEXT_CONTROL_VALUE         1386
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
