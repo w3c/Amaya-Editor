@@ -3326,10 +3326,11 @@ static void       Hndl_ElementStart (void *userData,
 		 TtaFreeMemory (attrName);
 	       if (attrValue != NULL)
 		 TtaFreeMemory (attrValue);
+
+	       /* Restore the context (it may have been changed */
+	       /* by the treatment of the attribute) */
+	       currentParserCtxt = elementParserCtxt;
 	     }
-	   /* Restore the context (it may have been changed */
-	   /* by the treatment of the attributes) */
-	   currentParserCtxt = elementParserCtxt;
 	   
 	   /*----- Treatment called at the end of start tag -----*/
 	   EndOfXmlStartElement (elementName);
