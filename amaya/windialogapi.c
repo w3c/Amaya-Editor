@@ -172,6 +172,7 @@ static ThotWindow         WndSearchEdit;
 static ThotWindow         GraphPal = NULL;
 static ThotWindow         MathPal = NULL;
 static ThotWindow         GreekPal = NULL;
+static ThotWindow         SpellChecker = NULL;
 
 static UINT         itemIndex;
 static UINT         nbClass;
@@ -185,7 +186,6 @@ static ThotBool     ReleaseFocus;
 static ThotBool     initialized = 0;
 static PRINTDLG     Pdlg;
 static char         text[1024];
-
 
 ThotWindow          wordButton;
 ThotWindow          hwnListWords;
@@ -2156,6 +2156,7 @@ LPARAM lParam;
   switch (msg)
     {
     case WM_INITDIALOG:
+	  SpellChecker = hwnDlg;
       hwndLanguage = GetDlgItem (hwnDlg, IDC_LANG);
       wordButton = GetDlgItem (hwnDlg, IDC_CURWORD);
       SetWindowText (GetDlgItem (hwnDlg, IDC_LABEL), currentLabel);
@@ -2197,7 +2198,14 @@ LPARAM lParam;
       SetWindowText (hwndCurrentWord, TEXT(""));
       WIN_DisplayWords ();
       break;
-      
+
+	case WM_CLOSE:
+	case WM_DESTROY:
+	  SpellChecker = NULL;
+	  hwndLanguage = NULL;
+	  EndDialog (hwnDlg, ID_DONE);
+	  break;      
+
     case WM_COMMAND:
       if (LOWORD (wParam) == 1 && HIWORD (wParam) == LBN_SELCHANGE) {
 	itemIndex = SendMessage (hwnListWords, LB_GETCURSEL, 0, 0);
@@ -2317,13 +2325,10 @@ LPARAM lParam;
 	  break;
 	  
 	case ID_DONE:
+	  SpellChecker = NULL;
+      hwndLanguage = NULL;
 	  EndDialog (hwnDlg, ID_DONE);
-	  break;
-	  
-	case WM_CLOSE:
-	case WM_DESTROY:
-	  EndDialog (hwnDlg, ID_DONE);
-	  break;
+	  break;	  
 	}
       break;
     default: return FALSE;
@@ -3952,7 +3957,10 @@ int   chkrSpecial;
   
   ustrcpy (currentLabel, label);
   ustrcpy (currentRejectedchars, rejectedChars); 
-  DialogBox (hInstance, MAKEINTRESOURCE (SPELLCHECKDIALOG), NULL, (DLGPROC) SpellCheckDlgProc);
+  if (SpellChecker)
+ 	SetFocus (SpellChecker);
+  else 
+    DialogBox (hInstance, MAKEINTRESOURCE (SPELLCHECKDIALOG), NULL, (DLGPROC) SpellCheckDlgProc);
 }
 
 /*-----------------------------------------------------------------------
