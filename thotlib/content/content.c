@@ -181,7 +181,7 @@ PtrElement	    *pSecondPart;
 	     if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
 		/* l'application refuse */
 		dontCut = TRUE;
-	     else if (rank <= pEl->ElTextLength && rank > 1)
+	     else if (rank <= pEl->ElTextLength)
 		/* on va couper le texte */
 	       {
 		  /* envoie l'evenement ElemTextModify.Pre a qui le demande */
@@ -201,19 +201,13 @@ PtrElement	    *pSecondPart;
 	/* copie l'element de texte avec attributs et presentation specifique */
 	pEl2 = ReplicateElement (pEl, pDoc);
 	pEl2->ElVolume = 0;
+	pEl2->ElTextLength = 0;
 	*pSecondPart = pEl2;
 	/* acquiert un buffer de texte pour la 2eme partie */
 	CreateTextBuffer (pEl2);
 	/* chaine le nouvel element */
-	if (rank == 1)
-	  {
-	   InsertElementBefore (pEl, pEl2);
-	   pEl2->ElTextLength = 0;
-	   pEl2->ElVolume = 0;
-	  }
-	else
-	   InsertElementAfter (pEl, pEl2);
-	if (rank <= pEl->ElTextLength && rank > 1)
+	InsertElementAfter (pEl, pEl2);
+	if (rank <= pEl->ElTextLength)
 	   /* le nouvel element n'a pas une longueur nulle */
 	  {
 	     /* longueur du nouvel element */
