@@ -59,7 +59,8 @@ extern void InitCharset ( Document document,
                           char *url );
 extern void InitMimeType ( Document document,
                            View view,
-                           char *url );
+                           char *url,
+                           char *status );
 extern void OpenDoc ( Document doc,
                       View view );
 extern void OpenDocInNewWindow ( Document document,
@@ -239,7 +240,8 @@ extern void InitCharset (/* Document document,
                             char *url */);
 extern void InitMimeType (/* Document document,
                              View view,
-                             char *url */);
+                             char *url,
+                             char *status */);
 extern void OpenDoc (/* Document doc,
                         View view */);
 extern void OpenDocInNewWindow (/* Document document,

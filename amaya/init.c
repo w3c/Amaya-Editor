@@ -1487,7 +1487,7 @@ void InitCharset (Document document, View view, char *url)
   Asks the user for the MIME type of a given URL. Used when saving a
   document with an unknown MIME type.
   ----------------------------------------------------------------------*/
-void InitMimeType (Document document, View view, char *url)
+void InitMimeType (Document document, View view, char *url, char *status)
 {
   char *mimetypes_list;
   int nbmimetypes;
@@ -1523,8 +1523,11 @@ void InitMimeType (Document document, View view, char *url)
    TtaNewSelector (BaseDialog + MimeTypeSel, BaseDialog + MimeTypeForm, NULL,
 		   nbmimetypes, mimetypes_list, 4, NULL, TRUE, FALSE);
    /* status */
-   TtaNewLabel (BaseDialog + MimeFormStatus, BaseDialog + MimeTypeForm,
-		"     ");
+   if (status && *status)
+     TtaNewLabel (BaseDialog + MimeFormStatus, BaseDialog + MimeTypeForm, status);
+   else
+     TtaNewLabel (BaseDialog + MimeFormStatus, BaseDialog + MimeTypeForm,
+       "     ");
    TtaSetSelector (BaseDialog + MimeTypeSel, -1,  UserMimeType);
 
    TtaSetDialoguePosition ();
@@ -4414,9 +4417,9 @@ void CallbackDialogue (int ref, int typedata, char *data)
 #ifndef _WINDOWS
 		   TtaNewLabel (BaseDialog + SaveFormStatus,
 				BaseDialog + SaveForm,
-				"Error: invalid MIME type");
+				TtaGetMessage (AMAYA, AM_INVALID_MIMETYPE));
 #else
- 		   SaveAsDlgStatus ("Error: invalid MIME type");
+ 		   SaveAsDlgStatus (TtaGetMessage (AMAYA, AM_INVALID_MIMETYPE));
 #endif /* _WINDOWS */
 		   break;
 		 }
@@ -4519,7 +4522,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
 #else
 		   SaveAsDlgStatus ("");
 #endif /* _WINDOWS */
-		   InitMimeType (SavingDocument, 1, SavePath);
+		   InitMimeType (SavingDocument, 1, SavePath, NULL);
 		   if (SaveFormTmp[0] != EOS)
 		     {
 		       strcpy (UserMimeType, SaveFormTmp);
@@ -5001,11 +5004,8 @@ void CallbackDialogue (int ref, int typedata, char *data)
 		 {
 		   SaveFormTmp[0] = EOS;
 #ifndef _WINDOWS
-		   InitMimeType (SavingDocument, 1, 
-				 SavePath);
-		   TtaNewLabel (BaseDialog + SaveFormStatus,
-				BaseDialog + MimeTypeForm,
-				TtaGetMessage (AMAYA, AM_INVALID_MIMETYPE));
+		   InitMimeType (SavingDocument, 1, SavePath,
+				 TtaGetMessage (AMAYA, AM_INVALID_MIMETYPE));
 #else
 		   /* the Window dialog won't be closed */
  		   MimeTypeDlgStatus (TtaGetMessage (AMAYA, AM_INVALID_MIMETYPE));
