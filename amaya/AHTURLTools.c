@@ -14,7 +14,6 @@
  *          R. Guetari: Windows.
  *
  */
- 
 #define THOT_EXPORT extern
 #include "amaya.h"
 
@@ -34,6 +33,7 @@ typedef struct _HTURI
 
 #ifdef _WINDOWS
 #define TMPDIR "TMP"
+#define PATH_MAX MAX_PATH
 #define stat _stat
 #define uint64_t unsigned __int64
 #define getpid _getpid
