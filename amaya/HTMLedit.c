@@ -281,7 +281,8 @@ ThotBool DeleteLink (NotifyElement *event)
 }
 
 /*----------------------------------------------------------------------
-  CheckMandatory checks the attribute could be removed.
+  CheckMandatory
+  Check whether the attribute could be removed.
   ----------------------------------------------------------------------*/
 ThotBool CheckMandatory (NotifyAttribute *event)
 {
@@ -293,14 +294,36 @@ ThotBool CheckMandatory (NotifyAttribute *event)
   elType = TtaGetElementType (event->element);
   if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") &&
       elType.ElTypeNum == HTML_EL_Anchor)
+    /* it's an anchor. It should have at least a name or href attribute */
     {
       if (attrType.AttrTypeNum == HTML_ATTR_HREF_)
-	/* check if there is a name */
-	attrType.AttrTypeNum = HTML_ATTR_NAME;
+	/* the user wants to remove the href attribute.
+	   check if there is a name or an id attribute */
+	{
+	  attrType.AttrTypeNum = HTML_ATTR_NAME;
+	  if (!TtaGetAttribute (event->element, attrType))
+	    /* there is no name attribute. Check id */
+	    {
+	      attrType.AttrTypeNum = HTML_ATTR_ID;
+	      if (!TtaGetAttribute (event->element, attrType))
+		/* no id attribute. Refuse. */
+		return TRUE;
+	    }
+	}
       else
-	attrType.AttrTypeNum = HTML_ATTR_HREF_;
-      if (!TtaGetAttribute (event->element, attrType))
-	return TRUE;
+	/* the user wants to remove the name attribute.
+	   check if there is a href or id attribute */
+	{
+	  attrType.AttrTypeNum = HTML_ATTR_HREF_;
+	  if (!TtaGetAttribute (event->element, attrType))
+	    /* there is no href attribute. Check id */
+	    {
+	      attrType.AttrTypeNum = HTML_ATTR_ID;
+	      if (!TtaGetAttribute (event->element, attrType))
+		/* no id attribute. Refuse. */
+		return TRUE;
+	    }
+	}
     }
   return FALSE;		/* let Thot perform normal operation */
 }
@@ -882,7 +905,6 @@ Attribute GetNameAttr (Document doc, Element selectedElement)
    return (attr);
 }
 
-
 /*----------------------------------------------------------------------
    CreateTargetAnchor
    Create a NAME or ID attribute with a default value for element el.
@@ -914,7 +936,7 @@ void CreateTargetAnchor (Document doc, Element el, ThotBool forceID,
 		      elType.ElTypeNum == HTML_EL_MAP ||
 		      elType.ElTypeNum == HTML_EL_map))
      {
-       if (forceID)
+       if (forceID || TtaGetDocumentProfile (doc) ==  L_Xhtml11)
 	 attrType.AttrTypeNum = HTML_ATTR_ID;
        else
 	 attrType.AttrTypeNum = HTML_ATTR_NAME;
@@ -1069,6 +1091,7 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
     return;
   TtaGiveLastSelectedElement (doc, &last, &i, &lastChar);
 
+  noAnchor = FALSE;
   /* Check whether the selected elements are a valid content for an anchor */
   elType = TtaGetElementType (first);
   s = TtaGetSSchemaName (elType.ElSSchema);
@@ -1098,7 +1121,6 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
       else
 	{
 	  el = first;
-	  noAnchor = FALSE;
 
 	  while (!noAnchor && el != NULL)
 	    {
@@ -1464,7 +1486,7 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
 	    }
 	  else
 	      TtaInsertSibling (anchor, last, FALSE, doc);
-	  
+	  noAnchor = TRUE;
 	  /* move the selected elements within the new Anchor element */
 	  child = first;
 	  prev = NULL;
@@ -1534,15 +1556,22 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
     }
   else
     {
-      TtaOpenUndoSequence (doc, first, last, firstChar, lastChar);
-      CreateTargetAnchor (doc, anchor, FALSE, TRUE);
-      TtaCloseUndoSequence (doc);
+      if (noAnchor)
+	CreateTargetAnchor (doc, anchor, FALSE, FALSE);
+      else
+	{
+	  TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+	  CreateTargetAnchor (doc, anchor, FALSE, TRUE);
+	}
     }
 
-  if (parag)
-    TtaRegisterElementCreate (parag, doc);
-  else
-    TtaRegisterElementCreate (anchor, doc);
+  if (noAnchor)
+    {
+      if (parag)
+	TtaRegisterElementCreate (parag, doc);
+      else
+	TtaRegisterElementCreate (anchor, doc);
+    }
   TtaCloseUndoSequence (doc);
 }
 
@@ -1584,7 +1613,8 @@ void MakeUniqueName (Element el, Document doc)
 	    {
 	      /* no NAME. Look for an ID */
 	      attrType.AttrTypeNum = HTML_ATTR_ID;
-	      checkNAME = TRUE;
+	      if (TtaGetDocumentProfile (doc) != L_Xhtml11)
+		checkNAME = TRUE;
 	    }
 	}
       else
