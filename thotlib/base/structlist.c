@@ -518,9 +518,7 @@ ThotBool            premierfils;
    PtrAttribute        pAttr;
    PtrPRule            pRule;
    SRule              *pRe1;
-   PtrAttribute        pAt1;
    TtAttribute        *pAttr1;
-   PtrPRule            pRegl1;
 
    if (pNode != NULL)
      {
@@ -580,41 +578,40 @@ ThotBool            premierfils;
 	     pAttr = pNode->ElFirstAttr;
 	     while (pAttr != NULL)
 	       {
-		  pAt1 = pAttr;
-		  pAttr1 = &pAt1->AeAttrSSchema->SsAttribute[pAt1->AeAttrNum - 1];
+		  pAttr1 = &pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1];
 		  fprintf (fileDescriptor, "%s=", pAttr1->AttrOrigName);
 		  switch (pAttr1->AttrType)
 			{
 			   case AtNumAttr:
-			      fprintf (fileDescriptor, "%d", pAt1->AeAttrValue);
+			      fprintf (fileDescriptor, "%d", pAttr->AeAttrValue);
 			      break;
 			   case AtTextAttr:
-			      if (pAt1->AeAttrText != NULL)
+			      if (pAttr->AeAttrText != NULL)
 				{
-				   fprintf (fileDescriptor, "%s", pAt1->AeAttrText->BuContent);
-				   if (pAt1->AeAttrText->BuNext != NULL)
+				   fprintf (fileDescriptor, "%s", pAttr->AeAttrText->BuContent);
+				   if (pAttr->AeAttrText->BuNext != NULL)
 				      fprintf (fileDescriptor, "...");
 				}
 			      break;
 			   case AtReferenceAttr:
-			      if (pAt1->AeAttrReference == NULL)
+			      if (pAttr->AeAttrReference == NULL)
 				 fprintf (fileDescriptor, "*AeAttrReference=NULL*");
-			      else if (pAt1->AeAttrReference->RdReferred == NULL)
+			      else if (pAttr->AeAttrReference->RdReferred == NULL)
 				 fprintf (fileDescriptor, "*RdReferred=NULL*");
 			      else
-				 wrRef (pAt1->AeAttrReference, fileDescriptor);
+				 wrRef (pAttr->AeAttrReference, fileDescriptor);
 			      break;
 			   case AtEnumAttr:
-			      fprintf (fileDescriptor, "%s", pAttr1->AttrEnumValue[pAt1->AeAttrValue - 1]);
+			      fprintf (fileDescriptor, "%s", pAttr1->AttrEnumValue[pAttr->AeAttrValue - 1]);
 			      break;
 			   default:
 			      fprintf (fileDescriptor, "AttrType ????");
 			      break;
 			}
 
-		  if (pAt1->AeNext != NULL)
+		  if (pAttr->AeNext != NULL)
 		     fprintf (fileDescriptor, ", ");
-		  pAttr = pAt1->AeNext;
+		  pAttr = pAttr->AeNext;
 	       }
 	     fprintf (fileDescriptor, ")");
 	  }
@@ -625,15 +622,14 @@ ThotBool            premierfils;
 	     pRule = pNode->ElFirstPRule;
 	     while (pRule != NULL)
 	       {
-		  pRegl1 = pRule;
 		  if (pRule != pNode->ElFirstPRule)
 		     fprintf (fileDescriptor, ", ");
 		  WrPRuleType (pRule, fileDescriptor);
-		  if (pRegl1->PrSpecifAttr > 0)
-		     fprintf (fileDescriptor, "[%s]", pRegl1->PrSpecifAttrSSchema->
-			    SsAttribute[pRegl1->PrSpecifAttr - 1].AttrOrigName);
-		  fprintf (fileDescriptor, " vue%d", pRegl1->PrViewNum);
-		  pRule = pRegl1->PrNextPRule;
+		  if (pRule->PrSpecifAttr > 0)
+		     fprintf (fileDescriptor, "[%s]", pRule->PrSpecifAttrSSchema->
+			    SsAttribute[pRule->PrSpecifAttr - 1].AttrOrigName);
+		  fprintf (fileDescriptor, " vue%d", pRule->PrViewNum);
+		  pRule = pRule->PrNextPRule;
 	       }
 	     fprintf (fileDescriptor, ")");
 	     /* ecrit le contenu de l'element */
@@ -976,6 +972,9 @@ FILE               *fileDescriptor;
 	    case UnPercent:
 	       fprintf (fileDescriptor, "%%");
 	       break;
+	    case UnAuto:
+	       fprintf (fileDescriptor, "auto");
+	       break;
 	    default:
 	       fprintf (fileDescriptor, "???");
 	       break;
@@ -1090,7 +1089,6 @@ FILE               *fileDescriptor;
    PtrAbstractBox      f;
    ThotBool            root;
    PtrDelayedPRule     pDelPR;
-   PtrAbstractBox      pPa1;
    SRule              *pRe1;
    AbDimension        *pPavDim;
    PtrAttribute        pAt1;
@@ -1098,169 +1096,168 @@ FILE               *fileDescriptor;
 
    if (pAb != NULL)
      {
-	pPa1 = pAb;
-	fprintf (fileDescriptor, "\n%d ", pPa1->AbNum);	/* numero du pave */
+	fprintf (fileDescriptor, "\n%d ", pAb->AbNum);	/* numero du pave */
 
 	for (i = 1; i <= Indent; i++)
 	   fprintf (fileDescriptor, " ");
-	pRe1 = &pPa1->AbElement->
-	   ElStructSchema->SsRule[pPa1->AbElement->ElTypeNumber - 1];
+	pRe1 = &pAb->AbElement->
+	   ElStructSchema->SsRule[pAb->AbElement->ElTypeNumber - 1];
 	fprintf (fileDescriptor, "%s", pRe1->SrOrigName);
 	fprintf (fileDescriptor, " ");
-	if (pPa1->AbElement->ElTypeNumber == PageBreak + 1)
+	if (pAb->AbElement->ElTypeNumber == PageBreak + 1)
 	  {
-	     fprintf (fileDescriptor, "%d", pPa1->AbElement->ElPageType);
+	     fprintf (fileDescriptor, "%d", pAb->AbElement->ElPageType);
 	     fprintf (fileDescriptor, " ");
 	  }
-	if (pPa1->AbPresentationBox)
-	   fprintf (fileDescriptor, ".%s", pPa1->AbPSchema->
-		    PsPresentBox[pPa1->AbTypeNum - 1].PbName);
-	fprintf (fileDescriptor, " TypeNum:%d", pPa1->AbTypeNum);
-	fprintf (fileDescriptor, " El:%s", pPa1->AbElement->ElLabel);
-	fprintf (fileDescriptor, " Vol:%d", pPa1->AbVolume);
+	if (pAb->AbPresentationBox)
+	   fprintf (fileDescriptor, ".%s", pAb->AbPSchema->
+		    PsPresentBox[pAb->AbTypeNum - 1].PbName);
+	fprintf (fileDescriptor, " TypeNum:%d", pAb->AbTypeNum);
+	fprintf (fileDescriptor, " El:%s", pAb->AbElement->ElLabel);
+	fprintf (fileDescriptor, " Vol:%d", pAb->AbVolume);
 
 	fprintf (fileDescriptor, "\n");
 	for (j = 1; j <= Indent + 6; j++)
 	   fprintf (fileDescriptor, " ");
-	fprintf (fileDescriptor, "View:%d", pPa1->AbDocView);
-	fprintf (fileDescriptor, " Visib:%d", pPa1->AbVisibility);
+	fprintf (fileDescriptor, "View:%d", pAb->AbDocView);
+	fprintf (fileDescriptor, " Visib:%d", pAb->AbVisibility);
 	fprintf (fileDescriptor, " Active:");
-	wrThotBool (pPa1->AbSensitive, fileDescriptor);
+	wrThotBool (pAb->AbSensitive, fileDescriptor);
 	fprintf (fileDescriptor, " R/O:");
-	wrThotBool (pPa1->AbReadOnly, fileDescriptor);
+	wrThotBool (pAb->AbReadOnly, fileDescriptor);
 	fprintf (fileDescriptor, " Modif:");
-	wrThotBool (pPa1->AbCanBeModified, fileDescriptor);
+	wrThotBool (pAb->AbCanBeModified, fileDescriptor);
 	fprintf (fileDescriptor, " PresBox:");
-	wrThotBool (pPa1->AbPresentationBox, fileDescriptor);
+	wrThotBool (pAb->AbPresentationBox, fileDescriptor);
 
 	fprintf (fileDescriptor, "\n");
 	for (j = 1; j <= Indent + 6; j++)
 	   fprintf (fileDescriptor, " ");
 	fprintf (fileDescriptor, "Margin Top:");
-	if (pPa1->AbTopMarginUnit == UnAuto)
+	if (pAb->AbTopMarginUnit == UnAuto)
 	   fprintf (fileDescriptor, "auto");
 	else
 	   {
-	   fprintf (fileDescriptor, "%d", pPa1->AbTopMargin);
-	   wrTypeUnit (pPa1->AbTopMarginUnit, fileDescriptor);
+	   fprintf (fileDescriptor, "%d", pAb->AbTopMargin);
+	   wrTypeUnit (pAb->AbTopMarginUnit, fileDescriptor);
 	   }
 	fprintf (fileDescriptor, ", Right:");
-	if (pPa1->AbRightMarginUnit == UnAuto)
+	if (pAb->AbRightMarginUnit == UnAuto)
 	   fprintf (fileDescriptor, "auto");
 	else
 	   {
-	   fprintf (fileDescriptor, "%d", pPa1->AbRightMargin);
-	   wrTypeUnit (pPa1->AbRightMarginUnit, fileDescriptor);
+	   fprintf (fileDescriptor, "%d", pAb->AbRightMargin);
+	   wrTypeUnit (pAb->AbRightMarginUnit, fileDescriptor);
 	   }
 	fprintf (fileDescriptor, ", Bottom:");
-	if (pPa1->AbBottomMarginUnit == UnAuto)
+	if (pAb->AbBottomMarginUnit == UnAuto)
 	   fprintf (fileDescriptor, "auto");
 	else
 	   {
-	   fprintf (fileDescriptor, "%d", pPa1->AbBottomMargin);
-	   wrTypeUnit (pPa1->AbBottomMarginUnit, fileDescriptor);
+	   fprintf (fileDescriptor, "%d", pAb->AbBottomMargin);
+	   wrTypeUnit (pAb->AbBottomMarginUnit, fileDescriptor);
 	   }
 	fprintf (fileDescriptor, ", Left:");
-	if (pPa1->AbLeftMarginUnit == UnAuto)
+	if (pAb->AbLeftMarginUnit == UnAuto)
 	   fprintf (fileDescriptor, "auto");
 	else
 	   {
-	   fprintf (fileDescriptor, "%d", pPa1->AbLeftMargin);
-	   wrTypeUnit (pPa1->AbLeftMarginUnit, fileDescriptor);
+	   fprintf (fileDescriptor, "%d", pAb->AbLeftMargin);
+	   wrTypeUnit (pAb->AbLeftMarginUnit, fileDescriptor);
 	   }
 
 	fprintf (fileDescriptor, "\n");
 	for (j = 1; j <= Indent + 6; j++)
 	   fprintf (fileDescriptor, " ");
-	fprintf (fileDescriptor, "Padding Top:%d", pPa1->AbTopPadding);
-	wrTypeUnit (pPa1->AbTopPaddingUnit, fileDescriptor);
-	fprintf (fileDescriptor, ", Right:%d", pPa1->AbRightPadding);
-	wrTypeUnit (pPa1->AbRightPaddingUnit, fileDescriptor);
-	fprintf (fileDescriptor, ", Bottom:%d", pPa1->AbBottomPadding);
-	wrTypeUnit (pPa1->AbBottomPaddingUnit, fileDescriptor);
-	fprintf (fileDescriptor, ", Left:%d", pPa1->AbLeftPadding);
-	wrTypeUnit (pPa1->AbLeftPaddingUnit, fileDescriptor);
+	fprintf (fileDescriptor, "Padding Top:%d", pAb->AbTopPadding);
+	wrTypeUnit (pAb->AbTopPaddingUnit, fileDescriptor);
+	fprintf (fileDescriptor, ", Right:%d", pAb->AbRightPadding);
+	wrTypeUnit (pAb->AbRightPaddingUnit, fileDescriptor);
+	fprintf (fileDescriptor, ", Bottom:%d", pAb->AbBottomPadding);
+	wrTypeUnit (pAb->AbBottomPaddingUnit, fileDescriptor);
+	fprintf (fileDescriptor, ", Left:%d", pAb->AbLeftPadding);
+	wrTypeUnit (pAb->AbLeftPaddingUnit, fileDescriptor);
 
 	fprintf (fileDescriptor, "\n");
 	for (j = 1; j <= Indent + 6; j++)
 	   fprintf (fileDescriptor, " ");
-	fprintf (fileDescriptor, "Border Top:%d", pPa1->AbTopBorder);
-	wrTypeUnit (pPa1->AbTopBorderUnit, fileDescriptor);
-	fprintf (fileDescriptor, ", Right:%d", pPa1->AbRightBorder);
-	wrTypeUnit (pPa1->AbRightBorderUnit, fileDescriptor);
-	fprintf (fileDescriptor, ", Bottom:%d", pPa1->AbBottomBorder);
-	wrTypeUnit (pPa1->AbBottomBorderUnit, fileDescriptor);
-	fprintf (fileDescriptor, ", Left:%d", pPa1->AbLeftBorder);
-	wrTypeUnit (pPa1->AbLeftBorderUnit, fileDescriptor);
+	fprintf (fileDescriptor, "Border Top:%d", pAb->AbTopBorder);
+	wrTypeUnit (pAb->AbTopBorderUnit, fileDescriptor);
+	fprintf (fileDescriptor, ", Right:%d", pAb->AbRightBorder);
+	wrTypeUnit (pAb->AbRightBorderUnit, fileDescriptor);
+	fprintf (fileDescriptor, ", Bottom:%d", pAb->AbBottomBorder);
+	wrTypeUnit (pAb->AbBottomBorderUnit, fileDescriptor);
+	fprintf (fileDescriptor, ", Left:%d", pAb->AbLeftBorder);
+	wrTypeUnit (pAb->AbLeftBorderUnit, fileDescriptor);
 
 	fprintf (fileDescriptor, "\n");
 	for (j = 1; j <= Indent + 6; j++)
 	   fprintf (fileDescriptor, " ");
-	fprintf (fileDescriptor, "BorderColor Top:%d", pPa1->AbTopBColor);
-	if (pPa1->AbTopBColor == -2)
+	fprintf (fileDescriptor, "BorderColor Top:%d", pAb->AbTopBColor);
+	if (pAb->AbTopBColor == -2)
 	   fprintf (fileDescriptor, "(transp.)");
-	fprintf (fileDescriptor, ", Right:%d", pPa1->AbRightBColor);
-	if (pPa1->AbRightBColor == -2)
+	fprintf (fileDescriptor, ", Right:%d", pAb->AbRightBColor);
+	if (pAb->AbRightBColor == -2)
 	   fprintf (fileDescriptor, "(transp.)");
-	fprintf (fileDescriptor, ", Bottom:%d", pPa1->AbBottomBColor);
-	if (pPa1->AbBottomBColor == -2)
+	fprintf (fileDescriptor, ", Bottom:%d", pAb->AbBottomBColor);
+	if (pAb->AbBottomBColor == -2)
 	   fprintf (fileDescriptor, "(transp.)");
-	fprintf (fileDescriptor, ", Left:%d", pPa1->AbLeftBColor);
-	if (pPa1->AbLeftBColor == -2)
+	fprintf (fileDescriptor, ", Left:%d", pAb->AbLeftBColor);
+	if (pAb->AbLeftBColor == -2)
 	   fprintf (fileDescriptor, "(transp.)");
 
 	fprintf (fileDescriptor, "\n");
 	for (j = 1; j <= Indent + 6; j++)
 	   fprintf (fileDescriptor, " ");
-	fprintf (fileDescriptor, "BorderStyle Top:%d", pPa1->AbTopStyle);
-	fprintf (fileDescriptor, ", Right:%d", pPa1->AbRightStyle);
-	fprintf (fileDescriptor, ", Bottom:%d", pPa1->AbBottomStyle);
-	fprintf (fileDescriptor, ", Left:%d", pPa1->AbLeftStyle);
+	fprintf (fileDescriptor, "BorderStyle Top:%d", pAb->AbTopStyle);
+	fprintf (fileDescriptor, ", Right:%d", pAb->AbRightStyle);
+	fprintf (fileDescriptor, ", Bottom:%d", pAb->AbBottomStyle);
+	fprintf (fileDescriptor, ", Left:%d", pAb->AbLeftStyle);
 
 	fprintf (fileDescriptor, "\n");
 	for (j = 1; j <= Indent + 6; j++)
 	   fprintf (fileDescriptor, " ");
-	fprintf (fileDescriptor, "Pattern:%d", pPa1->AbFillPattern);
-	fprintf (fileDescriptor, " Background:%d", pPa1->AbBackground);
-	fprintf (fileDescriptor, " Foreground:%d", pPa1->AbForeground);
+	fprintf (fileDescriptor, "Pattern:%d", pAb->AbFillPattern);
+	fprintf (fileDescriptor, " Background:%d", pAb->AbBackground);
+	fprintf (fileDescriptor, " Foreground:%d", pAb->AbForeground);
 
 	fprintf (fileDescriptor, "\n");
 	for (j = 1; j <= Indent + 6; j++)
 	   fprintf (fileDescriptor, " ");
-	fprintf (fileDescriptor, "LineStyle:%c", pPa1->AbLineStyle);
-	fprintf (fileDescriptor, " LineWeight:%d", pPa1->AbLineWeight);
-	wrTypeUnit (pPa1->AbLineWeightUnit, fileDescriptor);
-	fprintf (fileDescriptor, " Depth:%d", pPa1->AbDepth);
+	fprintf (fileDescriptor, "LineStyle:%c", pAb->AbLineStyle);
+	fprintf (fileDescriptor, " LineWeight:%d", pAb->AbLineWeight);
+	wrTypeUnit (pAb->AbLineWeightUnit, fileDescriptor);
+	fprintf (fileDescriptor, " Depth:%d", pAb->AbDepth);
 
 	fprintf (fileDescriptor, "\n");
 	for (j = 1; j <= Indent + 6; j++)
 	   fprintf (fileDescriptor, " ");
-	fprintf (fileDescriptor, "Font:%c", pPa1->AbFont);
-	fprintf (fileDescriptor, " Style:%d", pPa1->AbFontStyle);
-	fprintf (fileDescriptor, " Weight:%d", pPa1->AbFontWeight);
-	fprintf (fileDescriptor, " Size:%d", pPa1->AbSize);
-	wrTypeUnit (pPa1->AbSizeUnit, fileDescriptor);
+	fprintf (fileDescriptor, "Font:%c", pAb->AbFont);
+	fprintf (fileDescriptor, " Style:%d", pAb->AbFontStyle);
+	fprintf (fileDescriptor, " Weight:%d", pAb->AbFontWeight);
+	fprintf (fileDescriptor, " Size:%d", pAb->AbSize);
+	wrTypeUnit (pAb->AbSizeUnit, fileDescriptor);
 	fprintf (fileDescriptor, "\n");
 	for (j = 1; j <= Indent + 6; j++)
 	   fprintf (fileDescriptor, " ");
-	if (!pPa1->AbHorizEnclosing)
+	if (!pAb->AbHorizEnclosing)
 	   fprintf (fileDescriptor, "HorizEncl:N ");
-	if (!pPa1->AbVertEnclosing)
+	if (!pAb->AbVertEnclosing)
 	   fprintf (fileDescriptor, "VertEncl:N ");
-	if (pPa1->AbNotInLine)
+	if (pAb->AbNotInLine)
 	   fprintf (fileDescriptor, "NotInLine ");
 	fprintf (fileDescriptor, "PageBreak:");
-	wrThotBool (pPa1->AbAcceptPageBreak, fileDescriptor);
+	wrThotBool (pAb->AbAcceptPageBreak, fileDescriptor);
 	fprintf (fileDescriptor, " LineBreak:");
-	wrThotBool (pPa1->AbAcceptLineBreak, fileDescriptor);
+	wrThotBool (pAb->AbAcceptLineBreak, fileDescriptor);
 
 	fprintf (fileDescriptor, "\n");
 	for (j = 1; j <= Indent + 6; j++)
 	   fprintf (fileDescriptor, " ");
-	fprintf (fileDescriptor, "Indent:%d", pPa1->AbIndent);
-	wrTypeUnit (pPa1->AbIndentUnit, fileDescriptor);
+	fprintf (fileDescriptor, "Indent:%d", pAb->AbIndent);
+	wrTypeUnit (pAb->AbIndentUnit, fileDescriptor);
 	fprintf (fileDescriptor, " Align:");
-	switch (pPa1->AbAdjust)
+	switch (pAb->AbAdjust)
 	      {
 		 case AlignLeft:
 		    fprintf (fileDescriptor, "left");
@@ -1279,42 +1276,42 @@ FILE               *fileDescriptor;
 		    break;
 	      }
 	fprintf (fileDescriptor, " Justif:");
-	wrThotBool (pPa1->AbJustify, fileDescriptor);
+	wrThotBool (pAb->AbJustify, fileDescriptor);
 	fprintf (fileDescriptor, " Hyphen:");
-	wrThotBool (pPa1->AbHyphenate, fileDescriptor);
+	wrThotBool (pAb->AbHyphenate, fileDescriptor);
 
-	fprintf (fileDescriptor, " LineSpace:%d", pPa1->AbLineSpacing);
-	wrTypeUnit (pPa1->AbLineSpacingUnit, fileDescriptor);
+	fprintf (fileDescriptor, " LineSpace:%d", pAb->AbLineSpacing);
+	wrTypeUnit (pAb->AbLineSpacingUnit, fileDescriptor);
 
 	fprintf (fileDescriptor, "\n");
 	for (j = 1; j <= Indent + 6; j++)
 	   fprintf (fileDescriptor, " ");
 	fprintf (fileDescriptor, "VertRef:");
-	wrpos (&pPa1->AbVertRef, FALSE, fileDescriptor);
+	wrpos (&pAb->AbVertRef, FALSE, fileDescriptor);
 	fprintf (fileDescriptor, "\n");
 	for (j = 1; j <= Indent + 6; j++)
 	   fprintf (fileDescriptor, " ");
 	fprintf (fileDescriptor, "HorizRef:");
-	wrpos (&pPa1->AbHorizRef, FALSE, fileDescriptor);
+	wrpos (&pAb->AbHorizRef, FALSE, fileDescriptor);
 	fprintf (fileDescriptor, "\n");
 	for (j = 1; j <= Indent + 6; j++)
 	   fprintf (fileDescriptor, " ");
-	if (pPa1->AbEnclosing == NULL)
+	if (pAb->AbEnclosing == NULL)
 	   root = TRUE;
 	else
 	   root = FALSE;
 	fprintf (fileDescriptor, "VertPos:");
-	wrpos (&pPa1->AbVertPos, root, fileDescriptor);
+	wrpos (&pAb->AbVertPos, root, fileDescriptor);
 	fprintf (fileDescriptor, "\n");
 	for (j = 1; j <= Indent + 6; j++)
 	   fprintf (fileDescriptor, " ");
 	fprintf (fileDescriptor, "HorizPos:");
-	wrpos (&pPa1->AbHorizPos, root, fileDescriptor);
+	wrpos (&pAb->AbHorizPos, root, fileDescriptor);
 	fprintf (fileDescriptor, "\n");
 	for (j = 1; j <= Indent + 6; j++)
 	   fprintf (fileDescriptor, " ");
 	fprintf (fileDescriptor, "Width:");
-	pPavDim = &pPa1->AbWidth;
+	pPavDim = &pAb->AbWidth;
 	if (pPavDim->DimIsPosition)
 	   wrpos (&pPavDim->DimPosition, root, fileDescriptor);
 	else
@@ -1323,7 +1320,7 @@ FILE               *fileDescriptor;
 	for (j = 1; j <= Indent + 6; j++)
 	   fprintf (fileDescriptor, " ");
 	fprintf (fileDescriptor, "Height:");
-	pPavDim = &pPa1->AbHeight;
+	pPavDim = &pAb->AbHeight;
 	if (pPavDim->DimIsPosition)
 	   wrpos (&pPavDim->DimPosition, root, fileDescriptor);
 	else
@@ -1333,7 +1330,7 @@ FILE               *fileDescriptor;
 	for (j = 1; j <= Indent + 6; j++)
 	   fprintf (fileDescriptor, " ");
 	fprintf (fileDescriptor, "Nature:");
-	switch (pPa1->AbLeafType)
+	switch (pAb->AbLeafType)
 	      {
 		 case LtCompound:
 		    fprintf (fileDescriptor, "COMP");
@@ -1369,10 +1366,10 @@ FILE               *fileDescriptor;
 	fprintf (fileDescriptor, "\n");
 	for (j = 1; j <= Indent + 6; j++)
 	   fprintf (fileDescriptor, " ");
-	switch (pPa1->AbLeafType)
+	switch (pAb->AbLeafType)
 	   {
 	   case LtCompound:
-	      image = (PictInfo *) pPa1->AbPictBackground;
+	      image = (PictInfo *) pAb->AbPictBackground;
 	      if (image != NULL)
 		 {
 		 fprintf (fileDescriptor, "Picture: x = %d, y = %d, w = %d, h = %d, name = \"",
@@ -1398,13 +1395,13 @@ FILE               *fileDescriptor;
 		    fprintf (fileDescriptor, " ");
 		 }
 	      fprintf (fileDescriptor, "ShowBox:");
-	      if (pPa1->AbFillBox)
+	      if (pAb->AbFillBox)
 		 fprintf (fileDescriptor, "Y");
 	      else
 		 fprintf (fileDescriptor, "N");
 	      break;
 	   case LtPicture:
-	      image = (PictInfo *) pPa1->AbPictInfo;
+	      image = (PictInfo *) pAb->AbPictInfo;
 	      if (image == NULL)
 		 fprintf (fileDescriptor, "AbPictInfo = NULL");
 	      else
@@ -1426,70 +1423,70 @@ FILE               *fileDescriptor;
 	   case LtText:
 	   case LtReference:
 	      fprintf (fileDescriptor, "language = %s",
-		       TtaGetLanguageName (pPa1->AbLanguage));
+		       TtaGetLanguageName (pAb->AbLanguage));
 	      fprintf (fileDescriptor, "\n");
 	      for (i = 1; i <= Indent + 6; i++)
 		 fprintf (fileDescriptor, " ");
 	      fprintf (fileDescriptor, " \'");
-	      WrText (pPa1->AbText, 60, fileDescriptor);
+	      WrText (pAb->AbText, 60, fileDescriptor);
 	      fprintf (fileDescriptor, "\'");
 	      break;
 	   case LtPolyLine:
-	      fprintf (fileDescriptor, "type=%c", pPa1->AbPolyLineShape);
+	      fprintf (fileDescriptor, "type=%c", pAb->AbPolyLineShape);
 	      fprintf (fileDescriptor, "\n");
 	      for (i = 1; i <= Indent + 6; i++)
 		 fprintf (fileDescriptor, " ");
-	      for (i = 0; i < pPa1->AbVolume && i < 8; i++)
+	      for (i = 0; i < pAb->AbVolume && i < 8; i++)
 		 fprintf (fileDescriptor, "%d,%d ",
-			  pPa1->AbPolyLineBuffer->BuPoints[i].XCoord,
-			  pPa1->AbPolyLineBuffer->BuPoints[i].YCoord);
-	      if (i < pPa1->AbVolume)
+			  pAb->AbPolyLineBuffer->BuPoints[i].XCoord,
+			  pAb->AbPolyLineBuffer->BuPoints[i].YCoord);
+	      if (i < pAb->AbVolume)
 		 fprintf (fileDescriptor, "...");
 	      break;
 /*CP */    case LtSymbol:
 	   case LtGraphics:
-	      fprintf (fileDescriptor, " alphabet=%c", pPa1->AbGraphAlphabet);
-	      fprintf (fileDescriptor, "\'%c\'", pPa1->AbShape);
+	      fprintf (fileDescriptor, " alphabet=%c", pAb->AbGraphAlphabet);
+	      fprintf (fileDescriptor, "\'%c\'", pAb->AbShape);
 	      break;
 	   default:
 	      break;
 	   }
-	if (pPa1->AbSelected)
+	if (pAb->AbSelected)
 	   fprintf (fileDescriptor, " SELECTED");
-	if (pPa1->AbNew)
+	if (pAb->AbNew)
 	   fprintf (fileDescriptor, " NEW");
-	if (pPa1->AbDead)
+	if (pAb->AbDead)
 	   fprintf (fileDescriptor, " DEAD");
-	if (pPa1->AbWidthChange)
+	if (pAb->AbWidthChange)
 	   fprintf (fileDescriptor, " ChngWidth");
-	if (pPa1->AbHeightChange)
+	if (pAb->AbHeightChange)
 	   fprintf (fileDescriptor, " ChngHeight");
-	if (pPa1->AbHorizPosChange)
+	if (pAb->AbHorizPosChange)
 	   fprintf (fileDescriptor, " ChngPosH");
-	if (pPa1->AbVertPosChange)
+	if (pAb->AbVertPosChange)
 	   fprintf (fileDescriptor, " ChngPosV");
-	if (pPa1->AbHorizRefChange)
+	if (pAb->AbHorizRefChange)
 	   fprintf (fileDescriptor, " ChngAxisH");
-	if (pPa1->AbVertRefChange)
+	if (pAb->AbVertRefChange)
 	   fprintf (fileDescriptor, " ChngAxisV");
-	if (pPa1->AbSizeChange)
+	if (pAb->AbSizeChange)
 	   fprintf (fileDescriptor, " ChngSize");
-	if (pPa1->AbAspectChange)
+	if (pAb->AbAspectChange)
 	   fprintf (fileDescriptor, " ChngGraphic");
-	if (pPa1->AbChange)
+	if (pAb->AbChange)
 	   fprintf (fileDescriptor, " MODIFIED");
-	if (pPa1->AbOnPageBreak)
+	if (pAb->AbOnPageBreak)
 	   fprintf (fileDescriptor, " ON PAGE BOUNDARY");
-	if (pPa1->AbAfterPageBreak)
+	if (pAb->AbAfterPageBreak)
 	   fprintf (fileDescriptor, " OUT OF PAGE");
 
 	fprintf (fileDescriptor, "\n");
 	for (j = 1; j <= Indent + 6; j++)
 	   fprintf (fileDescriptor, " ");
 	/* liste les regles de presentation retardees */
-	if (pPa1->AbDelayedPRule != NULL)
+	if (pAb->AbDelayedPRule != NULL)
 	   {
-	   pDelPR = pPa1->AbDelayedPRule;
+	   pDelPR = pAb->AbDelayedPRule;
 	   do
 	     {
 	     fprintf (fileDescriptor, "Deferred rule: ");
@@ -1509,35 +1506,35 @@ FILE               *fileDescriptor;
 	   while (pDelPR != NULL);
 	   }
 	/* affichage du chainage des paves dupliques */
-	if (pPa1->AbPreviousRepeated != NULL)
+	if (pAb->AbPreviousRepeated != NULL)
 	  {
 	     fprintf (fileDescriptor, "AbstractBox repeats previous: ");
-	     fprintf (fileDescriptor, "%d ", pPa1->AbPreviousRepeated->AbNum);
+	     fprintf (fileDescriptor, "%d ", pAb->AbPreviousRepeated->AbNum);
 	     fprintf (fileDescriptor, "\n");
 	     for (j = 1; j <= Indent + 6; j++)
 		fprintf (fileDescriptor, " ");
 	  }
-	if (pPa1->AbNextRepeated != NULL)
+	if (pAb->AbNextRepeated != NULL)
 	  {
 	     fprintf (fileDescriptor, " AbstractBox repeats next: ");
-	     fprintf (fileDescriptor, "%d ", pPa1->AbNextRepeated->AbNum);
+	     fprintf (fileDescriptor, "%d ", pAb->AbNextRepeated->AbNum);
 	     fprintf (fileDescriptor, "\n");
 	     for (j = 1; j <= Indent + 6; j++)
 		fprintf (fileDescriptor, " ");
 	  }
-	if (pPa1->AbLeafType == LtCompound)
+	if (pAb->AbLeafType == LtCompound)
 	  {
 	     fprintf (fileDescriptor, "Line:");
-	     wrThotBool (pPa1->AbInLine, fileDescriptor);
+	     wrThotBool (pAb->AbInLine, fileDescriptor);
 	     /* display TruncatedHead and TruncatedTail */
 	     /* even if it's a lines block */
 	     fprintf (fileDescriptor, " TruncatedHead:");
-	     wrThotBool (pPa1->AbTruncatedHead, fileDescriptor);
+	     wrThotBool (pAb->AbTruncatedHead, fileDescriptor);
 	     fprintf (fileDescriptor, " TruncatedTail:");
-	     wrThotBool (pPa1->AbTruncatedTail, fileDescriptor);
+	     wrThotBool (pAb->AbTruncatedTail, fileDescriptor);
 
 	     fprintf (fileDescriptor, "\n");
-	     f = pPa1->AbFirstEnclosed;
+	     f = pAb->AbFirstEnclosed;
 	     while (f != NULL)
 	       {
 		  if (f->AbEnclosing != pAb)
@@ -1609,9 +1606,7 @@ FILE               *fileDescriptor;
    PtrBox              pBox;
    PtrBox              box1;
    ThotBool            loop;
-   PtrPosRelations     pTa1;
    BoxRelation        *pRe1;
-   PtrDimRelations     pTabD1;
    PictInfo           *image;
 
    if (pAb->AbBox != NULL)
@@ -1864,12 +1859,11 @@ FILE               *fileDescriptor;
 	     pPosRel = pBox->BxPosRelations;
 	     while (pPosRel != NULL)
 	       {
-		  pTa1 = pPosRel;
 		  loop = TRUE;
 		  i = 1;
 		  while (loop)
 		    {
-		       pRe1 = &pTa1->PosRTable[i - 1];
+		       pRe1 = &pPosRel->PosRTable[i - 1];
 		       if (pRe1->ReBox == NULL)
 			  loop = FALSE;
 		       else
@@ -1912,7 +1906,7 @@ FILE               *fileDescriptor;
 			       i++;
 			 }
 		    }
-		  pPosRel = pTa1->PosRNext;
+		  pPosRel = pPosRel->PosRNext;
 		  /* Bloc suivant */
 	       }
 	     fprintf (fileDescriptor, "\n");
@@ -1920,11 +1914,10 @@ FILE               *fileDescriptor;
 	     pDimRel = pBox->BxWidthRelations;
 	     while (pDimRel != NULL)
 	       {
-		  pTabD1 = pDimRel;
 		  loop = TRUE;
 		  i = 1;
 		  while (loop)
-		     if (pTabD1->DimRTable[i - 1] == NULL)
+		     if (pDimRel->DimRTable[i - 1] == NULL)
 			loop = FALSE;
 		     else
 		       {
@@ -1932,12 +1925,12 @@ FILE               *fileDescriptor;
 			  for (j = 1; j <= Indent + 6; j++)
 			     fprintf (fileDescriptor, " ");
 			  fprintf (fileDescriptor, "Width changes ");
-			  if (pTabD1->DimRSame[i - 1])
+			  if (pDimRel->DimRSame[i - 1])
 			     fprintf (fileDescriptor, "Width of ");
 			  else
 			     fprintf (fileDescriptor, "Height of ");
-			  if (pTabD1->DimRTable[i - 1]->BxAbstractBox != NULL)
-			     wrnumber (pTabD1->DimRTable[i - 1]->BxAbstractBox->AbNum, fileDescriptor);
+			  if (pDimRel->DimRTable[i - 1]->BxAbstractBox != NULL)
+			     wrnumber (pDimRel->DimRTable[i - 1]->BxAbstractBox->AbNum, fileDescriptor);
 			  else
 			     fprintf (fileDescriptor, "?");
 			  if (i == MAX_RELAT_DIM)
@@ -1945,17 +1938,16 @@ FILE               *fileDescriptor;
 			  else
 			     i++;
 		       }
-		  pDimRel = pTabD1->DimRNext;
+		  pDimRel = pDimRel->DimRNext;
 	       }
 	     /* liste des dependances de hauteur */
 	     pDimRel = pBox->BxHeightRelations;
 	     while (pDimRel != NULL)
 	       {
-		  pTabD1 = pDimRel;
 		  loop = TRUE;
 		  i = 1;
 		  while (loop)
-		     if (pTabD1->DimRTable[i - 1] == NULL)
+		     if (pDimRel->DimRTable[i - 1] == NULL)
 			loop = FALSE;
 		     else
 		       {
@@ -1963,18 +1955,18 @@ FILE               *fileDescriptor;
 			  for (j = 1; j <= Indent + 6; j++)
 			     fprintf (fileDescriptor, " ");
 			  fprintf (fileDescriptor, "Height changes ");
-			  if (pTabD1->DimRSame[i - 1])
+			  if (pDimRel->DimRSame[i - 1])
 			     fprintf (fileDescriptor, "Height of ");
 			  else
 			     fprintf (fileDescriptor, "Width of ");
-			  if (pTabD1->DimRTable[i - 1]->BxAbstractBox != NULL)
-			     wrnumber (pTabD1->DimRTable[i - 1]->BxAbstractBox->AbNum, fileDescriptor);
+			  if (pDimRel->DimRTable[i - 1]->BxAbstractBox != NULL)
+			     wrnumber (pDimRel->DimRTable[i - 1]->BxAbstractBox->AbNum, fileDescriptor);
 			  if (i == MAX_RELAT_DIM)
 			     loop = FALSE;
 			  else
 			     i++;
 		       }
-		  pDimRel = pTabD1->DimRNext;
+		  pDimRel = pDimRel->DimRNext;
 		  /* Bloc suivant */
 	       }
 	     fprintf (fileDescriptor, "\n");
@@ -2145,9 +2137,12 @@ TypeUnit            u;
 	       break;
 	    case UnPixel:
 	       fprintf (fileDescriptor, " px");
-	       break;
+	       break;	
 	    case UnPercent:
 	       fprintf (fileDescriptor, " %%");
+	       break;
+	    case UnAuto:
+	       fprintf (fileDescriptor, " auto");
 	       break;
 	 }
 }
@@ -2245,53 +2240,50 @@ PtrPRule            pR;
 FILE               *fileDescriptor;
 #endif /* __STDC__ */
 {
-   PtrPRule            pRe1;
-
-   pRe1 = pR;
-   if (pRe1->PrPresMode == PresInherit)
+   if (pR->PrPresMode == PresInherit)
      {
-	wrModeHerit (pRe1->PrInheritMode, fileDescriptor);
-	if (pRe1->PrInhPercent)
+	wrModeHerit (pR->PrInheritMode, fileDescriptor);
+	if (pR->PrInhPercent)
 	  {
 	  fprintf (fileDescriptor, " * ");
-	  if (pRe1->PrInhAttr)
-	     wrnomattr (pRe1->PrInhDelta, fileDescriptor);
+	  if (pR->PrInhAttr)
+	     wrnomattr (pR->PrInhDelta, fileDescriptor);
 	  else
-	     wrnumber (pRe1->PrInhDelta, fileDescriptor);
+	     wrnumber (pR->PrInhDelta, fileDescriptor);
 	  fprintf (fileDescriptor, " %%");
 	  }
 	else
-	   if (pRe1->PrInhDelta == 0)
+	   if (pR->PrInhDelta == 0)
 	      fprintf (fileDescriptor, " =");
 	   else
 	      {
-	      if (pRe1->PrInhDelta > 0)
+	      if (pR->PrInhDelta > 0)
 		 fprintf (fileDescriptor, "+");
-	      if (pRe1->PrInhAttr)
-		 wrnomattr (pRe1->PrInhDelta, fileDescriptor);
+	      if (pR->PrInhAttr)
+		 wrnomattr (pR->PrInhDelta, fileDescriptor);
 	      else
-		 wrnumber (pRe1->PrInhDelta, fileDescriptor);
-	      wrdistunit (pRe1->PrInhUnit, fileDescriptor);
+		 wrnumber (pR->PrInhDelta, fileDescriptor);
+	      wrdistunit (pR->PrInhUnit, fileDescriptor);
 	      }
-	if (pRe1->PrInhMinOrMax > 0)
+	if (pR->PrInhMinOrMax > 0)
 	  {
-	     if (pRe1->PrInhDelta >= 0)
+	     if (pR->PrInhDelta >= 0)
 		fprintf (fileDescriptor, " max ");
 	     else
 		fprintf (fileDescriptor, " min ");
-	     if (pRe1->PrMinMaxAttr)
-		wrnomattr (pRe1->PrInhMinOrMax, fileDescriptor);
+	     if (pR->PrMinMaxAttr)
+		wrnomattr (pR->PrInhMinOrMax, fileDescriptor);
 	     else
-		wrnumber (pRe1->PrInhMinOrMax, fileDescriptor);
+		wrnumber (pR->PrInhMinOrMax, fileDescriptor);
 	  }
      }
-   else if (pRe1->PrPresMode == PresImmediate)
+   else if (pR->PrPresMode == PresImmediate)
      {
-	if (pRe1->PrMinAttr)
-	   wrnomattr (pRe1->PrMinValue, fileDescriptor);
+	if (pR->PrMinAttr)
+	   wrnomattr (pR->PrMinValue, fileDescriptor);
 	else
-	   wrnumber (pRe1->PrMinValue, fileDescriptor);
-	wrdistunit (pRe1->PrMinUnit, fileDescriptor);
+	   wrnumber (pR->PrMinValue, fileDescriptor);
+	wrdistunit (pR->PrMinUnit, fileDescriptor);
      }
    else
       fprintf (fileDescriptor, "??????");
@@ -2311,21 +2303,18 @@ PtrPRule            pR;
 FILE               *fileDescriptor;
 #endif /* __STDC__ */
 {
-   PtrPRule            pRe1;
-
-   pRe1 = pR;
-   if (pRe1->PrPresMode == PresInherit)
+   if (pR->PrPresMode == PresInherit)
      {
-	wrModeHerit (pRe1->PrInheritMode, fileDescriptor);
-	if (pRe1->PrInhDelta == 0 && !pRe1->PrInhPercent)
+	wrModeHerit (pR->PrInheritMode, fileDescriptor);
+	if (pR->PrInhDelta == 0 && !pR->PrInhPercent)
 	   fprintf (fileDescriptor, " =");
 	else
 	   fprintf (fileDescriptor, "??????");
      }
-   else if (pRe1->PrPresMode == PresImmediate)
+   else if (pR->PrPresMode == PresImmediate)
      {
-      if (pRe1->PrType == PtFont)
-	 switch (pRe1->PrChrValue)
+      if (pR->PrType == PtFont)
+	 switch (pR->PrChrValue)
 	       {
 		  case 'C':
 		     fprintf (fileDescriptor, "Courrier");
@@ -2346,11 +2335,11 @@ FILE               *fileDescriptor;
 		     fprintf (fileDescriptor, "times");
 		     break;
 		  default:
-		     fprintf (fileDescriptor, "%c", pRe1->PrChrValue);
+		     fprintf (fileDescriptor, "%c", pR->PrChrValue);
 		     break;
 	       }
-      else if (pRe1->PrType == PtStyle)
-	 switch (pRe1->PrChrValue)
+      else if (pR->PrType == PtStyle)
+	 switch (pR->PrChrValue)
 	       {
 		  case 'I':
 		     fprintf (fileDescriptor, "Italics");
@@ -2362,11 +2351,11 @@ FILE               *fileDescriptor;
 		     fprintf (fileDescriptor, "Oblique");
 		     break;
 		  default:
-		     fprintf (fileDescriptor, "%c", pRe1->PrChrValue);
+		     fprintf (fileDescriptor, "%c", pR->PrChrValue);
 		     break;
 	       }
-      else if (pRe1->PrType == PtWeight)
-	 switch (pRe1->PrChrValue)
+      else if (pR->PrType == PtWeight)
+	 switch (pR->PrChrValue)
 	       {
 		  case 'B':
 		     fprintf (fileDescriptor, "Bold");
@@ -2375,11 +2364,11 @@ FILE               *fileDescriptor;
 		     fprintf (fileDescriptor, "Normal");
 		     break;
 		  default:
-		     fprintf (fileDescriptor, "%c", pRe1->PrChrValue);
+		     fprintf (fileDescriptor, "%c", pR->PrChrValue);
 		     break;
 	       }
-      else if (pRe1->PrType == PtUnderline)
-	 switch (pRe1->PrChrValue)
+      else if (pR->PrType == PtUnderline)
+	 switch (pR->PrChrValue)
 	       {
 		  case 'N':
 		     fprintf (fileDescriptor, "NoUnderline");
@@ -2394,11 +2383,11 @@ FILE               *fileDescriptor;
 		     fprintf (fileDescriptor, "CrossedOut");
 		     break;
 		  default:
-		     fprintf (fileDescriptor, "%c", pRe1->PrChrValue);
+		     fprintf (fileDescriptor, "%c", pR->PrChrValue);
 		     break;
 	       }
-      else if (pRe1->PrType == PtThickness)
-	 switch (pRe1->PrChrValue)
+      else if (pR->PrType == PtThickness)
+	 switch (pR->PrChrValue)
 	       {
 		  case 'T':
 		     fprintf (fileDescriptor, "Thick");
@@ -2407,15 +2396,15 @@ FILE               *fileDescriptor;
 		     fprintf (fileDescriptor, "Thin");
 		     break;
 		  default:
-		     fprintf (fileDescriptor, "%c", pRe1->PrChrValue);
+		     fprintf (fileDescriptor, "%c", pR->PrChrValue);
 		     break;
 	       }
-      else if (pRe1->PrType == PtLineStyle ||
-	       pRe1->PrType == PtBorderTopStyle ||
-	       pRe1->PrType == PtBorderRightStyle ||
-	       pRe1->PrType == PtBorderBottomStyle ||
-	       pRe1->PrType == PtBorderLeftStyle)
-	 switch (pRe1->PrChrValue)
+      else if (pR->PrType == PtLineStyle ||
+	       pR->PrType == PtBorderTopStyle ||
+	       pR->PrType == PtBorderRightStyle ||
+	       pR->PrType == PtBorderBottomStyle ||
+	       pR->PrType == PtBorderLeftStyle)
+	 switch (pR->PrChrValue)
 	       {
 		  case '0':
 		     fprintf (fileDescriptor, "None");
@@ -2449,7 +2438,7 @@ FILE               *fileDescriptor;
 		     break;
 	       }
       else
-	 fprintf (fileDescriptor, "%c", pRe1->PrChrValue);
+	 fprintf (fileDescriptor, "%c", pR->PrChrValue);
     }
    else
       fprintf (fileDescriptor, "??????");
@@ -2469,44 +2458,40 @@ PtrPRule            pR;
 FILE               *fileDescriptor;
 #endif /* __STDC__ */
 {
-   PtrPRule            pRe1;
-
-
-   pRe1 = pR;
-   if (pRe1->PrPresMode == PresInherit)
-     if (pRe1->PrInhPercent)
+   if (pR->PrPresMode == PresInherit)
+     if (pR->PrInhPercent)
 	fprintf (fileDescriptor, "??????");
      else
         {
-	wrModeHerit (pRe1->PrInheritMode, fileDescriptor);
-	if (pRe1->PrInhDelta == 0)
+	wrModeHerit (pR->PrInheritMode, fileDescriptor);
+	if (pR->PrInhDelta == 0)
 	   fprintf (fileDescriptor, " =");
 	else
 	  {
-	     if (pRe1->PrInhDelta > 0)
+	     if (pR->PrInhDelta > 0)
 		fprintf (fileDescriptor, "+");
-	     if (pRe1->PrInhAttr)
-		wrnomattr (pRe1->PrInhDelta, fileDescriptor);
+	     if (pR->PrInhAttr)
+		wrnomattr (pR->PrInhDelta, fileDescriptor);
 	     else
-		wrnumber (pRe1->PrInhDelta, fileDescriptor);
+		wrnumber (pR->PrInhDelta, fileDescriptor);
 	  }
-	if (pRe1->PrInhMinOrMax > 0)
+	if (pR->PrInhMinOrMax > 0)
 	  {
-	     if (pRe1->PrInhDelta >= 0)
+	     if (pR->PrInhDelta >= 0)
 		fprintf (fileDescriptor, " max ");
 	     else
 		fprintf (fileDescriptor, " min ");
-	     if (pRe1->PrMinMaxAttr)
-		wrnomattr (pRe1->PrInhMinOrMax, fileDescriptor);
+	     if (pR->PrMinMaxAttr)
+		wrnomattr (pR->PrInhMinOrMax, fileDescriptor);
 	     else
-		wrnumber (pRe1->PrInhMinOrMax, fileDescriptor);
+		wrnumber (pR->PrInhMinOrMax, fileDescriptor);
 	  }
         }
-   else if (pRe1->PrPresMode == PresImmediate)
-      if (pRe1->PrAttrValue)
-	 wrnomattr (pRe1->PrIntValue, fileDescriptor);
+   else if (pR->PrPresMode == PresImmediate)
+      if (pR->PrAttrValue)
+	 wrnomattr (pR->PrIntValue, fileDescriptor);
       else
-	 wrnumber (pRe1->PrIntValue, fileDescriptor);
+	 wrnumber (pR->PrIntValue, fileDescriptor);
    else
       fprintf (fileDescriptor, "??????");
    fprintf (fileDescriptor, ";");
@@ -2526,20 +2511,22 @@ FILE               *fileDescriptor;
 #endif /* __STDC__ */
 
 {
-   PtrPRule            pRe1;
-
-   pRe1 = pR;
-   if (pRe1->PrPresMode == PresInherit)
+   if (pR->PrPresMode == PresInherit)
       wrnbherit (pR, fileDescriptor);
    else
      {
-	if (pRe1->PrPresMode == PresImmediate)
+	if (pR->PrPresMode == PresImmediate)
 	  {
-	     if (pRe1->PrMinAttr)
-		wrnomattr (pRe1->PrMinValue, fileDescriptor);
+	     if (pR->PrMinUnit == UnAuto)
+	        printf ("auto");
 	     else
-		wrnumber (pRe1->PrMinValue, fileDescriptor);
-	     wrdistunit (pRe1->PrMinUnit, fileDescriptor);
+	       {
+	       if (pR->PrMinAttr)
+		  wrnomattr (pR->PrMinValue, fileDescriptor);
+	       else
+		  wrnumber (pR->PrMinValue, fileDescriptor);
+	       wrdistunit (pR->PrMinUnit, fileDescriptor);
+	       }
 	  }
 	else
 	   fprintf (fileDescriptor, "??????");
@@ -2560,44 +2547,41 @@ ThotBool             Def;
 FILE               *fileDescriptor;
 #endif /* __STDC__ */
 {
-   PosRule            *pRe1;
-
-   pRe1 = &pos;
    if (Def)
-      if (pRe1->PoPosDef == NoEdge)
+      if (pos.PoPosDef == NoEdge)
 	 fprintf (fileDescriptor, " NULL");
       else
 	{
-	   wrrepere (pRe1->PoPosDef, fileDescriptor);
+	   wrrepere (pos.PoPosDef, fileDescriptor);
 	   fprintf (fileDescriptor, " = ");
 	}
-   if (!Def || pRe1->PoPosDef != NoEdge)
+   if (!Def || pos.PoPosDef != NoEdge)
      {
-	wrlevel (pRe1->PoRelation, fileDescriptor);
-	if (pRe1->PoNotRel)
+	wrlevel (pos.PoRelation, fileDescriptor);
+	if (pos.PoNotRel)
 	   fprintf (fileDescriptor, " NOT");
 	fprintf (fileDescriptor, " ");
-	if (pRe1->PoRefKind == RkElType)
-	   wrnomregle (pRe1->PoRefIdent, fileDescriptor);
-	else if (pRe1->PoRefKind == RkPresBox)
-	   wrnomboite (pRe1->PoRefIdent, fileDescriptor);
-	else if (pRe1->PoRefKind == RkAttr)
-	   wrnomattr (pRe1->PoRefIdent, fileDescriptor);
+	if (pos.PoRefKind == RkElType)
+	   wrnomregle (pos.PoRefIdent, fileDescriptor);
+	else if (pos.PoRefKind == RkPresBox)
+	   wrnomboite (pos.PoRefIdent, fileDescriptor);
+	else if (pos.PoRefKind == RkAttr)
+	   wrnomattr (pos.PoRefIdent, fileDescriptor);
 	fprintf (fileDescriptor, ". ");
-	wrrepere (pRe1->PoPosRef, fileDescriptor);
-	if (pRe1->PoDistance != 0)
+	wrrepere (pos.PoPosRef, fileDescriptor);
+	if (pos.PoDistance != 0)
 	  {
-	     if (pRe1->PoDistance > 0)
+	     if (pos.PoDistance > 0)
 		fprintf (fileDescriptor, "+");
 	     else
 		fprintf (fileDescriptor, "-");
-	     if (pRe1->PoDistAttr)
-		wrnomattr (abs (pRe1->PoDistance), fileDescriptor);
+	     if (pos.PoDistAttr)
+		wrnomattr (abs (pos.PoDistance), fileDescriptor);
 	     else
-		wrnumber (abs (pRe1->PoDistance), fileDescriptor);
-	     wrdistunit (pRe1->PoDistUnit, fileDescriptor);
+		wrnumber (abs (pos.PoDistance), fileDescriptor);
+	     wrdistunit (pos.PoDistUnit, fileDescriptor);
 	  }
-	if (pRe1->PoUserSpecified)
+	if (pos.PoUserSpecified)
 	   fprintf (fileDescriptor, " UserSpecified");
      }
    fprintf (fileDescriptor, ";");
@@ -2616,70 +2600,67 @@ ThotBool             Hauteur;
 FILE               *fileDescriptor;
 #endif /* __STDC__ */
 {
-   DimensionRule      *pRe1;
-
-   pRe1 = &Dim;
-   if (pRe1->DrPosition)
-      WrPos (pRe1->DrPosRule, True, fileDescriptor);
+   if (Dim.DrPosition)
+      WrPos (Dim.DrPosRule, True, fileDescriptor);
    else
      {
-	if (pRe1->DrAbsolute)
+	if (Dim.DrAbsolute)
 	  {
-	     if (pRe1->DrAttr)
-		wrnomattr (pRe1->DrValue, fileDescriptor);
+	     if (Dim.DrAttr)
+		wrnomattr (Dim.DrValue, fileDescriptor);
 	     else
-		wrnumber (pRe1->DrValue, fileDescriptor);
-	     if (pRe1->DrValue != 0)
-		wrdistunit (pRe1->DrUnit, fileDescriptor);
-	     if (pRe1->DrUserSpecified)
+		wrnumber (Dim.DrValue, fileDescriptor);
+	     if (Dim.DrValue != 0)
+		wrdistunit (Dim.DrUnit, fileDescriptor);
+	     if (Dim.DrUserSpecified)
 		fprintf (fileDescriptor, " UserSpecified");
-	     if (pRe1->DrMin)
+	     if (Dim.DrMin)
 		fprintf (fileDescriptor, " Min");
 	  }
 	else
 	  {
-	     wrlevel (pRe1->DrRelation, fileDescriptor);
+	     wrlevel (Dim.DrRelation, fileDescriptor);
 	     fprintf (fileDescriptor, " ");
-	     if (pRe1->DrNotRelat)
+	     if (Dim.DrNotRelat)
 		fprintf (fileDescriptor, "not ");
-	     if (pRe1->DrRefKind == RkElType)
-		wrnomregle (pRe1->DrRefIdent, fileDescriptor);
-	     else if (pRe1->DrRefKind == RkPresBox)
-		wrnomboite (pRe1->DrRefIdent, fileDescriptor);
-	     else if (pRe1->DrRefKind == RkAttr)
-		wrnomattr (pRe1->DrRefIdent, fileDescriptor);
+	     if (Dim.DrRefKind == RkElType)
+		wrnomregle (Dim.DrRefIdent, fileDescriptor);
+	     else if (Dim.DrRefKind == RkPresBox)
+		wrnomboite (Dim.DrRefIdent, fileDescriptor);
+	     else if (Dim.DrRefKind == RkAttr)
+		wrnomattr (Dim.DrRefIdent, fileDescriptor);
 	     fprintf (fileDescriptor, ". ");
-	     if ((pRe1->DrSameDimens && Hauteur) || (!pRe1->DrSameDimens && !Hauteur))
+	     if ((Dim.DrSameDimens && Hauteur) || (!Dim.DrSameDimens && !Hauteur))
 		fprintf (fileDescriptor, "Height");
 	     else
 		fprintf (fileDescriptor, "Width");
-	     if (pRe1->DrUnit == UnPercent)
+	     if (Dim.DrUnit == UnPercent)
 	       {
 		  fprintf (fileDescriptor, "*");
-		  if (pRe1->DrValue < 0)
+		  if (Dim.DrValue < 0)
 		     fprintf (fileDescriptor, "-");
-		  if (pRe1->DrAttr)
-		     wrnomattr (abs (pRe1->DrValue), fileDescriptor);
+		  if (Dim.DrAttr)
+		     wrnomattr (abs (Dim.DrValue), fileDescriptor);
 		  else
-		     wrnumber (abs (pRe1->DrValue), fileDescriptor);
+		     wrnumber (abs (Dim.DrValue), fileDescriptor);
 		  fprintf (fileDescriptor, "%%");
 	       }
 	     else
 	       {
-		  if (pRe1->DrValue < 0)
+		  if (Dim.DrValue < 0)
 		     fprintf (fileDescriptor, "-");
-		  if (pRe1->DrValue > 0)
+		  if (Dim.DrValue > 0)
 		     fprintf (fileDescriptor, "+");
-		  if (pRe1->DrValue != 0)
+		  if (Dim.DrValue != 0)
 		    {
-		       if (pRe1->DrAttr)
-			  wrnomattr (abs (pRe1->DrValue), fileDescriptor);
+		       if (Dim.DrAttr)
+			  wrnomattr (abs (Dim.DrValue), fileDescriptor);
 		       else
-			  wrnumber (abs (pRe1->DrValue), fileDescriptor);
-		       wrdistunit (pRe1->DrUnit, fileDescriptor);
+			  wrnumber (abs (Dim.DrValue), fileDescriptor);
+		       wrdistunit (Dim.DrUnit, fileDescriptor);
 		    }
 	       }
-	     if (pRe1->DrMin)
+	     if (Dim.DrMin)
 		fprintf (fileDescriptor, " Min");
 	  }
 	fprintf (fileDescriptor, ";");
@@ -2829,10 +2810,8 @@ FILE               *fileDescriptor;
 #endif /* __STDC__ */
 {
    int                 i;
-   PtrPRule            pRe1;
 
-   pRe1 = pR;
-   switch (pRe1->PrPresFunction)
+   switch (pR->PrPresFunction)
 	 {
 	    case FnLine:
 	       fprintf (fileDescriptor, "Line");
@@ -2872,18 +2851,18 @@ FILE               *fileDescriptor;
 	       break;
 	    case FnContentRef:
 	       fprintf (fileDescriptor, "Content: Cste");
-	       wrnumber (pRe1->PrPresBox[0], fileDescriptor);
+	       wrnumber (pR->PrPresBox[0], fileDescriptor);
 	       break;
 	    case FnShowBox:
 	       fprintf (fileDescriptor, "ShowBox");
 	       break;
 	    case FnBackgroundPicture:
 	       fprintf (fileDescriptor, "BackgroundPicture: Cste");
-	       wrnumber (pRe1->PrPresBox[0], fileDescriptor);
+	       wrnumber (pR->PrPresBox[0], fileDescriptor);
 	       break;
 	    case FnPictureMode:
 	       fprintf (fileDescriptor, "PictureMode: ");
-	       switch (pRe1->PrPresBox[0])
+	       switch (pR->PrPresBox[0])
 		 {
 		 case RealSize:
 		    fprintf (fileDescriptor, "NormalSize");
@@ -2912,29 +2891,29 @@ FILE               *fileDescriptor;
 	       fprintf (fileDescriptor, "??????");
 	       break;		    
 	 }
-   if (pRe1->PrPresFunction != FnLine &&
-            pRe1->PrPresFunction != FnContentRef &&
-            pRe1->PrPresFunction != FnShowBox &&
-            pRe1->PrPresFunction != FnBackgroundPicture &&
-            pRe1->PrPresFunction != FnPictureMode &&
-	    pRe1->PrPresFunction != FnNoLine)
+   if (pR->PrPresFunction != FnLine &&
+            pR->PrPresFunction != FnContentRef &&
+            pR->PrPresFunction != FnShowBox &&
+            pR->PrPresFunction != FnBackgroundPicture &&
+            pR->PrPresFunction != FnPictureMode &&
+	    pR->PrPresFunction != FnNoLine)
      {
 	fprintf (fileDescriptor, "(");
-	if (pRe1->PrNPresBoxes == 0)
+	if (pR->PrNPresBoxes == 0)
 	  {
-	     fprintf (fileDescriptor, pRe1->PrPresBoxName);
-	     if (pRe1->PrExternal || !pRe1->PrElement)
+	     fprintf (fileDescriptor, pR->PrPresBoxName);
+	     if (pR->PrExternal || !pR->PrElement)
 		fprintf (fileDescriptor, "(****)");
 	  }
 	else
-	   for (i = 1; i <= pRe1->PrNPresBoxes; i++)
+	   for (i = 1; i <= pR->PrNPresBoxes; i++)
 	     {
 		if (i > 1)
 		   fprintf (fileDescriptor, ", ");
-		if (pRe1->PrElement)
-		   wrnomregle (pRe1->PrPresBox[i - 1], fileDescriptor);
+		if (pR->PrElement)
+		   wrnomregle (pR->PrPresBox[i - 1], fileDescriptor);
 		else
-		   wrnomboite (pRe1->PrPresBox[i - 1], fileDescriptor);
+		   wrnomboite (pR->PrPresBox[i - 1], fileDescriptor);
 	     }
 	fprintf (fileDescriptor, ")");
      }
@@ -2953,13 +2932,10 @@ PtrPRule            pR;
 FILE               *fileDescriptor;
 #endif /* __STDC__ */
 {
-   PtrPRule            pRe1;
-
-   pRe1 = pR;
-   if (pRe1->PrPresMode == PresInherit)
+   if (pR->PrPresMode == PresInherit)
       wrnbherit (pR, fileDescriptor);
-   if (pRe1->PrPresMode == PresImmediate)
-      switch (pRe1->PrAdjust)
+   if (pR->PrPresMode == PresImmediate)
+      switch (pR->PrAdjust)
 	    {
 	       case AlignLeft:
 		  fprintf (fileDescriptor, "Left;");
@@ -2989,48 +2965,13 @@ PtrPRule            pR;
 FILE               *fileDescriptor;
 #endif /* __STDC__ */
 {
-   PtrPRule            pRe1;
-
-   pRe1 = pR;
-   if (pRe1->PrPresMode == PresInherit)
+   if (pR->PrPresMode == PresInherit)
       wrnbherit (pR, fileDescriptor);
-   if (pRe1->PrPresMode == PresImmediate)
-      if (pRe1->PrJustify)
+   if (pR->PrPresMode == PresImmediate)
+      if (pR->PrJustify)
 	 fprintf (fileDescriptor, "Yes;");
       else
 	 fprintf (fileDescriptor, "No;");
-}
-
-
-/*----------------------------------------------------------------------
-   WriteCounterStyle ecrit au terminal un style de compteur.            
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         WriteCounterStyle (CounterStyle St, FILE * fileDescriptor)
-#else  /* __STDC__ */
-static void         WriteCounterStyle (St, fileDescriptor)
-CounterStyle        St;
-FILE               *fileDescriptor;
-#endif /* __STDC__ */
-{
-   switch (St)
-	 {
-	    case CntArabic:
-	       fprintf (fileDescriptor, ",Arabic)");
-	       break;
-	    case CntURoman:
-	       fprintf (fileDescriptor, ",URoman)");
-	       break;
-	    case CntLRoman:
-	       fprintf (fileDescriptor, ",LRoman)");
-	       break;
-	    case CntUppercase:
-	       fprintf (fileDescriptor, ",Uppercase)");
-	       break;
-	    case CntLowercase:
-	       fprintf (fileDescriptor, ",Lowercase)");
-	       break;
-	 }
 }
 
 
@@ -3046,23 +2987,21 @@ PtrPRule            RP;
 FILE               *fileDescriptor;
 #endif /* __STDC__ */
 {
-   PtrPRule            pRe1;
    PtrCondition        pCond;
 
    while (RP != NULL)
       /* ecrit une regle de presentation */
      {
-	pRe1 = RP;
 	fprintf (fileDescriptor, "   ");
-	if (pRe1->PrViewNum > 1)
+	if (RP->PrViewNum > 1)
 	  {
 	     fprintf (fileDescriptor, "IN ");
-	     fprintf (fileDescriptor, pSc1->PsView[pRe1->PrViewNum - 1]);
+	     fprintf (fileDescriptor, pSc1->PsView[RP->PrViewNum - 1]);
 	     fprintf (fileDescriptor, " ");
 	  }
-	if (pRe1->PrCond != NULL)
+	if (RP->PrCond != NULL)
 	  {
-	     pCond = pRe1->PrCond;
+	     pCond = RP->PrCond;
 	     if (pCond->CoCondition == PcDefaultCond)
 		fprintf (fileDescriptor, "OTHERWISE ");
 	     else
@@ -3078,7 +3017,7 @@ FILE               *fileDescriptor;
 		  pCond = pCond->CoNextCondition;
 	       }
 	  }
-	switch (pRe1->PrType)
+	switch (RP->PrType)
 	      {
 		 case PtVisibility:
 		    fprintf (fileDescriptor, "Visibility: ");
@@ -3089,106 +3028,122 @@ FILE               *fileDescriptor;
 		    break;
 		 case PtVertRef:
 		    fprintf (fileDescriptor, "VertRef: ");
-		    WrPos (pRe1->PrPosRule, False, fileDescriptor);
+		    WrPos (RP->PrPosRule, False, fileDescriptor);
 		    break;
 		 case PtHorizRef:
 		    fprintf (fileDescriptor, "HorizRef: ");
-		    WrPos (pRe1->PrPosRule, False, fileDescriptor);
+		    WrPos (RP->PrPosRule, False, fileDescriptor);
 		    break;
 		 case PtHeight:
 		    fprintf (fileDescriptor, "Height: ");
-		    wrdimens (pRe1->PrDimRule, True, fileDescriptor);
+		    wrdimens (RP->PrDimRule, True, fileDescriptor);
 		    break;
 		 case PtWidth:
 		    fprintf (fileDescriptor, "Width: ");
-		    wrdimens (pRe1->PrDimRule, False, fileDescriptor);
+		    wrdimens (RP->PrDimRule, False, fileDescriptor);
 		    break;
 		 case PtVertPos:
 		    fprintf (fileDescriptor, "VertPos: ");
-		    WrPos (pRe1->PrPosRule, True, fileDescriptor);
+		    WrPos (RP->PrPosRule, True, fileDescriptor);
 		    break;
 		 case PtHorizPos:
 		    fprintf (fileDescriptor, "HorizPos: ");
-		    WrPos (pRe1->PrPosRule, True, fileDescriptor);
+		    WrPos (RP->PrPosRule, True, fileDescriptor);
 		    break;
                  case PtMarginTop:
-                    fprintf (fileDescriptor, "MarginTop");
+                    fprintf (fileDescriptor, "MarginTop: ");
                     wrminind (RP, fileDescriptor);
                     break;
                  case PtMarginRight:
-                    fprintf (fileDescriptor, "MarginRight");
+                    fprintf (fileDescriptor, "MarginRight: ");
                     wrminind (RP, fileDescriptor);
                     break;
                  case PtMarginBottom:
-                    fprintf (fileDescriptor, "MarginBottom");
+                    fprintf (fileDescriptor, "MarginBottom: ");
                     wrminind (RP, fileDescriptor);
                     break;
                  case PtMarginLeft:
-                    fprintf (fileDescriptor, "MarginLeft");
+                    fprintf (fileDescriptor, "MarginLeft: ");
                     wrminind (RP, fileDescriptor);
                     break;
                  case PtPaddingTop:
-                    fprintf (fileDescriptor, "PaddingTop");
+                    fprintf (fileDescriptor, "PaddingTop: ");
                     wrminind (RP, fileDescriptor);
                     break;
                  case PtPaddingRight:
-                    fprintf (fileDescriptor, "PaddingRight");
+                    fprintf (fileDescriptor, "PaddingRight: ");
                     wrminind (RP, fileDescriptor);
                     break;
                  case PtPaddingBottom:
-                    fprintf (fileDescriptor, "PaddingBottom");
+                    fprintf (fileDescriptor, "PaddingBottom: ");
                     wrminind (RP, fileDescriptor);
                     break;
                  case PtPaddingLeft:
-                    fprintf (fileDescriptor, "PaddingLeft");
+                    fprintf (fileDescriptor, "PaddingLeft: ");
                     wrminind (RP, fileDescriptor);
                     break;
                  case PtBorderTopWidth:
-                    fprintf (fileDescriptor, "BorderTopWidth");
+                    fprintf (fileDescriptor, "BorderTopWidth: ");
                     wrminind (RP, fileDescriptor);
                     break;
                  case PtBorderRightWidth:
-                    fprintf (fileDescriptor, "BorderRightWidth");
+                    fprintf (fileDescriptor, "BorderRightWidth: ");
                     wrminind (RP, fileDescriptor);
                     break;
                  case PtBorderBottomWidth:
-                    fprintf (fileDescriptor, "BorderBottomWidth");
+                    fprintf (fileDescriptor, "BorderBottomWidth: ");
                     wrminind (RP, fileDescriptor);
                     break;
                  case PtBorderLeftWidth:
-                    fprintf (fileDescriptor, "BorderLeftWidth");
+                    fprintf (fileDescriptor, "BorderLeftWidth: ");
                     wrminind (RP, fileDescriptor);
                     break;
                  case PtBorderTopColor:
-                    fprintf (fileDescriptor, "BorderTopColor");
-		    wrnbherit (RP, fileDescriptor);
+                    fprintf (fileDescriptor, "BorderTopColor: ");
+	            if (RP->PrPresMode == PresImmediate &&
+			!RP->PrAttrValue && RP->PrIntValue == -2)
+		       fprintf (fileDescriptor, "transparent");
+		    else
+		       wrnbherit (RP, fileDescriptor);
                     break;
                  case PtBorderRightColor:
-                    fprintf (fileDescriptor, "BorderRightColor");
-		    wrnbherit (RP, fileDescriptor);
+                    fprintf (fileDescriptor, "BorderRightColor: ");
+	            if (RP->PrPresMode == PresImmediate &&
+			!RP->PrAttrValue && RP->PrIntValue == -2)
+		       fprintf (fileDescriptor, "transparent");
+		    else
+		       wrnbherit (RP, fileDescriptor);
                     break;
                  case PtBorderBottomColor:
-                    fprintf (fileDescriptor, "BorderBottomColor");
-		    wrnbherit (RP, fileDescriptor);
+                    fprintf (fileDescriptor, "BorderBottomColor: ");
+	            if (RP->PrPresMode == PresImmediate &&
+			!RP->PrAttrValue && RP->PrIntValue == -2)
+		       fprintf (fileDescriptor, "transparent");
+		    else
+		       wrnbherit (RP, fileDescriptor);
                     break;
                  case PtBorderLeftColor:
-                    fprintf (fileDescriptor, "BorderLeftColor");
-		    wrnbherit (RP, fileDescriptor);
+                    fprintf (fileDescriptor, "BorderLeftColor: ");
+	            if (RP->PrPresMode == PresImmediate &&
+			!RP->PrAttrValue && RP->PrIntValue == -2)
+		       fprintf (fileDescriptor, "transparent");
+		    else
+		       wrnbherit (RP, fileDescriptor);
                     break;
                  case PtBorderTopStyle:
-                    fprintf (fileDescriptor, "BorderTopStyle");
+                    fprintf (fileDescriptor, "BorderTopStyle: ");
 		    wrfontstyle (RP, fileDescriptor);
                     break;
                  case PtBorderRightStyle:
-                    fprintf (fileDescriptor, "BorderRightStyle");
+                    fprintf (fileDescriptor, "BorderRightStyle: ");
 		    wrfontstyle (RP, fileDescriptor);
                     break;
                  case PtBorderBottomStyle:
-                    fprintf (fileDescriptor, "BorderBottomStyle");
+                    fprintf (fileDescriptor, "BorderBottomStyle: ");
 		    wrfontstyle (RP, fileDescriptor);
                     break;
                  case PtBorderLeftStyle:
-                    fprintf (fileDescriptor, "BorderLeftStyle");
+                    fprintf (fileDescriptor, "BorderLeftStyle: ");
 		    wrfontstyle (RP, fileDescriptor);
                     break;
          	 case PtFont:
@@ -3279,7 +3234,7 @@ FILE               *fileDescriptor;
 		    break;
 	      }
 	fprintf (fileDescriptor, "\n");		/* passe a la regle suivante */
-	RP = pRe1->PrNextPRule;
+	RP = RP->PrNextPRule;
      }
 }
 
