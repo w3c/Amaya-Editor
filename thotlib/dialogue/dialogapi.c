@@ -7942,23 +7942,23 @@ void TtaNewNumberForm (int ref, int ref_parent, char *title, int min,
 	     /* Cree une feuille de saisie d'un nombre */
 	     if (min < max)
 	       {
-		  /* Note les bornes de l'echelle */
-		  sprintf (bounds, "(%d", min);
-		  strcat (&bounds[strlen (bounds)], "..");
-		  sprintf (&bounds[strlen (bounds)], "%d)", max);
-		  catalogue->Cat_Entries->E_ThotWidget[2] = (ThotWidget) min;
-		  catalogue->Cat_Entries->E_ThotWidget[3] = (ThotWidget) max;
-		  ent = max;
+		 /* Note les bornes de l'echelle */
+		 sprintf (bounds, "(%d", min);
+		 strcat (&bounds[strlen (bounds)], "..");
+		 sprintf (&bounds[strlen (bounds)], "%d)", max);
+		 catalogue->Cat_Entries->E_ThotWidget[2] = (ThotWidget) min;
+		 catalogue->Cat_Entries->E_ThotWidget[3] = (ThotWidget) max;
+		 ent = max;
 	       }
 	     else
 	       {
-		  /* Note les bornes de l'echelle */
-		  sprintf (bounds, "%d", max);
-		  strcat (&bounds[strlen (bounds)], "..");
-		  sprintf (&bounds[strlen (bounds)], "%d", min);
-		  catalogue->Cat_Entries->E_ThotWidget[2] = (ThotWidget) max;
-		  catalogue->Cat_Entries->E_ThotWidget[3] = (ThotWidget) min;
-		  ent = min;
+		 /* Note les bornes de l'echelle */
+		 sprintf (bounds, "%d", max);
+		 strcat (&bounds[strlen (bounds)], "..");
+		 sprintf (&bounds[strlen (bounds)], "%d", min);
+		 catalogue->Cat_Entries->E_ThotWidget[2] = (ThotWidget) max;
+		 catalogue->Cat_Entries->E_ThotWidget[3] = (ThotWidget) min;
+		 ent = min;
 	       }
 #ifndef _GTK
 	     title_string = XmStringCreateSimple (bounds);

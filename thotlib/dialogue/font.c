@@ -1446,8 +1446,15 @@ void InitDialogueFonts (char *name)
   MenuSize = 12;
   alphabet = TtaGetAlphabet (TtaGetDefaultLanguage ());
   /* initialize the font zoom */
-  TtaGetEnvInt ("ZOOM", &FontZoom);
-  value = TtaGetEnvString ("FontFamily");
+  TtaGetEnvInt ("FontZoom", &FontZoom);
+ if (FontZoom == 0)
+    {
+      TtaGetEnvInt ("ZOOM", &FontZoom);
+      if (FontZoom != 0)
+	/* old model */
+	FontZoom = (FontZoom * 10) + 100;
+    }
+   value = TtaGetEnvString ("FontFamily");
   MaxNumberOfSizes = 10;
   GreekFontAlphabet = '7';
   if (value == NULL)

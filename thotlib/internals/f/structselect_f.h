@@ -32,9 +32,9 @@ extern void ShowSelection ( PtrAbstractBox pRootAb,
 extern void HighlightVisibleAncestor ( PtrElement pEl );
 extern void SelectStringInAttr ( PtrDocument pDoc,
                                  PtrAbstractBox pAb,
-				 int firstChar,
-				 int lastChar,
-				 ThotBool string );
+                                 int firstChar,
+                                 int lastChar,
+                                 ThotBool string );
 extern void MoveCaret ( PtrDocument pDoc,
                         PtrElement pEl,
                         int firstChar );
@@ -114,9 +114,9 @@ extern void ShowSelection (/* PtrAbstractBox pRootAb,
 extern void HighlightVisibleAncestor (/* PtrElement pEl */);
 extern void SelectStringInAttr (/* PtrDocument pDoc,
                                    PtrAbstractBox pAb,
-				   int firstChar,
-				   int lastChar,
-				   ThotBool string */);
+                                   int firstChar,
+                                   int lastChar,
+                                   ThotBool string */);
 extern void MoveCaret (/* PtrDocument pDoc,
                           PtrElement pEl,
                           int firstChar */);

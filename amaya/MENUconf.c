@@ -1535,13 +1535,11 @@ static void GetGeneralConf (void)
 
   TtaGetEnvInt ("DOUBLECLICKDELAY", &DoubleClickDelay);
   TtaGetEnvInt ("FontZoom", &Zoom);
-  TtaGetEnvInt ("ZOOM", &oldzoom);
   if (Zoom == 0)
     {
-      if (oldzoom == 0)
-	/* standard size */
-	Zoom = 100;
-      else
+      TtaGetEnvInt ("ZOOM", &oldzoom);
+      if (oldzoom != 0)
+	/* old model */
 	Zoom = 100 + (oldzoom * 10);
     }
   TtaGetEnvBoolean ("ENABLE_MULTIKEY", &Multikey);
@@ -1819,6 +1817,8 @@ static void GetDefaultGeneralConf ()
 
   TtaGetDefEnvInt ("DOUBLECLICKDELAY", &DoubleClickDelay);
   TtaGetDefEnvInt ("FontZoom", &Zoom);
+  if (Zoom == 0)
+    Zoom = 100;
   GetDefEnvToggle ("ENABLE_MULTIKEY", &Multikey, 
 		       GeneralBase + mToggleGeneral, 0);
   GetDefEnvToggle ("ENABLE_BG_IMAGES", &BgImages,

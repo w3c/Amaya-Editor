@@ -2467,7 +2467,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
    char               *zoomStr;
    int                 i;
    int                 ref;
-   int                 visiVal, zoomVal;
+   int                 visiVal;
    int                 frame;
    ThotBool            found;
 
@@ -3247,16 +3247,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 #endif /* _WINDOWS */
 	   FrameTable[frame].FrScrollOrg = 0;
 
-	   /* get registry default values for zoom and visibility */
-	   zoomStr = TtaGetEnvString ("ZOOM");
-	   if (zoomStr == NULL)
-	     zoomVal = 0;
-	   else
-	     {
-	       zoomVal = atoi (zoomStr);
-	       if (zoomVal > 10 || zoomVal < -10)
-		 zoomVal = 0;
-	     }
+	   /* get registry default values for visibility */
 	   visiStr = TtaGetEnvString ("VISIBILITY");
 	   if (visiStr == NULL)
 	     visiVal = 5;
@@ -3267,7 +3258,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 		 visiVal = 5;
 	     }
 	   /* Initialise la visibilite et le zoom de la fenetre */
-	   InitializeFrameParams (frame, visiVal, zoomVal);
+	   InitializeFrameParams (frame, visiVal, 0);
 	   /* Initialise la couleur de fond */
 	   BackgroundColor[frame] = DefaultBColor;
 	 }
