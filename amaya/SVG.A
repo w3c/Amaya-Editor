@@ -53,6 +53,12 @@ ELEMENTS
    PICTURE_UNIT:
 	ElemPaste.Pre ->        PastePicture;
 
+ {Timeline & edition of animations, 
+ when the bug of Amaya pre value = post value will be fixed,
+ merge this call with the DEFAULT call}
+ Timeline_cross:
+   PRuleModify.Post -> Timeline_cross_prule_modified;
+
 ATTRIBUTES
 
    Language:

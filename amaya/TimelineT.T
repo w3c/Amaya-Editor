@@ -83,6 +83,25 @@ RULES
 		END;
 	END;
   
+
+ image_help:
+	BEGIN
+	create SOT;
+	create 'image';
+	indent +7;
+	create attributes;
+	if IntEmptyShape
+		create CloseEmptyTagNL;
+	indent -7;	
+	if not IntEmptyShape
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'image>\12' after;
+		END;
+	END;
  
    col_period:
 	BEGIN

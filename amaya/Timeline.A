@@ -22,8 +22,10 @@ ELEMENTS
 
 
    image_slider:
+   BEGIN
+    PRuleModify.Pre -> Timeline_slider_pre_modify;
     PRuleModify.Post -> Timeline_finished_moving_slider;
-
+   END;
 
 
 ATTRIBUTES

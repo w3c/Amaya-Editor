@@ -655,6 +655,12 @@ RULES
 	Remove;
 	END;
 
+   Timeline_cross:
+	BEGIN
+	Remove;
+	END;
+
+
 ATTRIBUTES
 
  Language:
@@ -1521,4 +1527,5 @@ TextTRANSLATE
 	'\74' -> '&lt;';	{ less-than sign, U+003C ISOnum }
 	'\76' -> '&gt;'; 	{ greater-than sign, U+003E ISOnum }
 	END;
+
 END

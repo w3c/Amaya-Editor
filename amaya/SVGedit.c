@@ -287,6 +287,11 @@ void GraphicsSelectionChanged (NotifyElement * event)
       event->elementType.ElTypeNum = elemType;
     }
   SynchronizeSourceView (event);
+
+#ifdef _SVGANIM
+	Selection_changed_in_basedoc (event);
+#endif /* _SVGANIM */
+
 }
 
 /*----------------------------------------------------------------------
@@ -1222,7 +1227,7 @@ ThotBool GraphicsPRuleChange (NotifyPresentation *event)
       if (presType == PRVertPos)
 	{
 	  /* the new value is the old one plus the difference */
-	  y = event->value;
+	  y = TtaGetPRuleValue (presRule);
 	  if (elType.ElTypeNum == SVG_EL_polyline ||
 	      elType.ElTypeNum == SVG_EL_polygon)
 	    TranslateElement (el, doc, y, unit, FALSE, FALSE);
@@ -1232,7 +1237,7 @@ ThotBool GraphicsPRuleChange (NotifyPresentation *event)
       else if (presType == PRHorizPos)
 	{
 	  /* the new value is the old one plus the difference */
-	  x = event->value;
+	  x = TtaGetPRuleValue (presRule);
 	  if (elType.ElTypeNum == SVG_EL_polyline ||
 	      elType.ElTypeNum == SVG_EL_polygon)
 	    TranslateElement (el, doc, x, unit, TRUE, FALSE);
@@ -1249,7 +1254,7 @@ ThotBool GraphicsPRuleChange (NotifyPresentation *event)
 		elType.ElTypeNum == SVG_EL_foreignObject))
 	{
 	  /* the new value is the old one plus the delta */
-	  height = event->value;
+	  height = TtaGetPRuleValue (presRule);
 	  UpdateWidthHeightAttribute (el, doc, height, FALSE);
 	}
       else if (presType == PRWidth &&
@@ -1263,7 +1268,7 @@ ThotBool GraphicsPRuleChange (NotifyPresentation *event)
 		elType.ElTypeNum == SVG_EL_foreignObject))
 	{
 	  /* the new value is the old one plus the delta */
-	  width = event->value;
+	  width = TtaGetPRuleValue (presRule);
 	  UpdateWidthHeightAttribute (el, doc, width, TRUE);
 	}
     }
@@ -2252,6 +2257,25 @@ void AttrAnimTimeChanged (NotifyAttribute *event)
 }
 
 
+/*----------------------------------------------------------------------
+ Timeline_cross_prule_modified
+   Callback used to define animation motion
+ -----------------------------------------------------------------------*/
+void Timeline_cross_prule_modified (NotifyPresentation *event)
+{
+#ifdef _SVGANIM
+	Key_position_defined (event->document, event->element);
+#endif /* _SVGANIM */
+}
+
+
+
+
+
+
+
+
+
 #if 0
 /*** This is an experiment to test how SVG could be animated ***/
 /*** Works for document ~quint/Talks/AC-Nov00/all.htm only   ***/
@@ -2407,22 +2431,22 @@ void TextChangedInGroup (NotifyOnTarget *event)
   /* get the original coordinates of both cubes */
   presRuleX1 = TtaGetPRule (group1, PRHorizPos);
   if (presRuleX1)
-     x1 = event->value;
+     x1 = TtaGetPRuleValue (presRuleX1);
   else
      x1 = 0;
   presRuleX2 = TtaGetPRule (group2, PRHorizPos);
   if (presRuleX2)
-     x2 = event->value;
+     x2 = TtaGetPRuleValue (presRuleX2);
   else
      x2 = 0;
   presRuleY1 = TtaGetPRule (group1, PRVertPos);
   if (presRuleY1)
-     y1 = event->value;
+     y1 = TtaGetPRuleValue (presRuleY1);
   else
      y1 = 0;
   presRuleY2 = TtaGetPRule (group2, PRVertPos);
   if (presRuleY2)
-     y2 = event->value;
+     y2 = TtaGetPRuleValue (presRuleY2);
   else
      y2 = 0;
 

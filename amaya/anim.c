@@ -55,49 +55,101 @@ static int      AnimButton;
 #define max(A,B) ((B>A)?B:A)
 #endif /* _WINDOWS */
 
+
+/* this one should be exported from the thotlib */
+extern char  *ColorName (int num);
+
+#define ct_empty_string ""
+
+/* path to help */
+#define ct_timeline_help_file "timeline_help.html"
+
 /* path to images used in the interface */
-#define cte_image_c1_filename "collapse1.png"
-#define cte_image_c2_filename "collapse2.png"
-#define cte_image_slider_filename "slider.gif"
-#define cte_image_keypos "keypos.png"
+#define ct_image_c1_filename "collapse1.png"
+#define ct_image_c2_filename "collapse2.png"
+#define ct_image_slider_filename "slider.gif"
+#define ct_image_toolbar "timelinetoolbar_sh4.png"
+#define ct_image_anim_color "anim_color_sh.png"
+#define ct_image_anim_motion "anim_motion_sh.png"
+#define ct_image_anim_help "anim_help_sh.png"
+#define ct_image_anim_color_disabled "anim_color_sh_db.png"
+#define ct_image_anim_motion_disabled "anim_motion_sh_db.png"
+#define ct_image_cross "timeline_cross.gif"
+#define ct_image_arrow "timeline_arrow.gif"
 
 /* width & height of these images */
-#define cte_w_image_collapse 9
-#define cte_h_image_collapse 9
-#define cte_w_image_slider 11
-#define cte_h_image_slider 1200
-#define cte_w_image_keypos 25
-#define cte_h_image_keypos 20
+#define ct_w_image_collapse 9
+#define ct_h_image_collapse 9
+#define ct_w_image_slider 11
+#define ct_h_image_slider 1200
+#define ct_w_image_toolbar 98
+#define ct_h_image_toolbar 31
+
+#define ct_w_image_color 26
+#define ct_h_image_color 26
+#define ct_w_image_motion 26
+#define ct_h_image_motion 26
+#define ct_w_image_help 26
+#define ct_h_image_help 26
+
+#define ct_w_image_cross 21
+#define ct_h_image_cross 21
+#define ct_w_image_arrow 16
+#define ct_h_image_arrow 16
+
+
 
 /* timeline settings */
-#define cte_vscrollbar_w 32
-#define cte_top_bar 45
-#define cte_left_bar 180
-#define cte_height_bar 10
-#define cte_sep_bar 5
+#define ct_left_buttons 2
+#define ct_sep_buttons -2
+#define ct_top_buttons 8
+#define ct_top_toolbar 4
+#define ct_vscrollbar_w 32
+#define ct_top 14
+#define ct_top_bar 48
+#define ct_left_bar 190
+#define ct_sep_bar 5
 
 /* line settings */
-#define cte_graduation_height 5
-#define cte_graduation_font_family "Verdana"
-#define cte_graduation_font_size 9
+#define ct_graduation_height 5
+#define ct_graduation_font_family "Verdana"
+#define ct_graduation_font_size 9
 
 /* animated elements settings */
-#define cte_elem_font_family "Verdana"
-#define cte_elem_font_size 12
+#define ct_elem_font_family "Verdana"
+#define ct_elem_font_size 12
 
 
 /* title groups settings */
-#define cte_default_title_group_height 32
-#define cte_default_text_for_no_id "Element without id"
+#define ct_default_title_group_height 28
+#define ct_default_title_group_width 180
+
 
 /* expanded groups settings */
-#define cte_static_bar_height 10
-#define cte_static_bar_color "white"
-#define cte_expanded_group_fill_color "silver"
+#define ct_static_bar_height 9
+#define ct_static_bar_color "white"
+#define ct_expanded_group_fill_color "silver"
 
 /* collapsed groups settings */
-#define cte_collapsed_group_height 32
-#define cte_collapsed_anim_color "yellow"
+#define ct_collapsed_group_height 28
+#define ct_collapsed_anim_color "#8F8D8F" /* gray */
+
+/* period settings */
+#define ct_offset_y_period 1
+#define ct_period_height 8
+
+
+/* Colors of each type of animation */
+#define ct_animate_color "#FFF120" /* yellow */
+#define ct_set_color "#FF585F" /* red */
+#define ct_animatemotion_color "#4FF54F" /* green */
+#define ct_animatecolor_color "#5078EF" /* blue */
+#define ct_animatetransform_color "#37D1C0" 
+
+
+/* by default, a document that contains no animation
+ is shown with a timeline of 10s */
+#define ct_default_anim_period_of_doc 10
 
 /* maximum number of animated elements handled */
 #define MAX_ANIMATED_ELTS 999
@@ -141,6 +193,8 @@ typedef tmapping_animated* pmapping_animated;
 typedef struct {
 	Document timelinedoc; /* timeline document of document */
 	View timelineView;    /* view of timeline */
+	Document helpdoc; /* help */
+	View helpview;
 
 	/* mapping */
 	tmapping_animated mapping_animated[MAX_ANIMATED_ELTS];
@@ -159,6 +213,27 @@ typedef struct {
 	Element line4;
 	Element line5;
 
+	Element image_color;
+	Element image_motion;
+	Element image_interp;
+
+	ThotBool motion_animation_creation_enabled;
+	ThotBool color_animation_creation_enabled;
+
+	ThotBool definition_of_motion_period;
+	ThotBool definition_of_color_period;
+
+	Element cross; /* cross in basedoc used to define motion */
+	Element arrow; /* arrow in timelinedoc */
+
+	pmapping_animated current_edited_mapping;
+	ThotBool can_delete_status_text;
+
+	int bgcolor_start;
+	int fgcolor_start;
+
+	double anim_start;
+
 } TTimeline;
 
 
@@ -172,6 +247,7 @@ static int current_timeline_width; /* pixels */
 static double current_timeline_end; /* end timing (s) */
 
 static int tmp_previous_x;
+static int previous_slider_position;
 
 #endif /* _SVGANIM */
 
@@ -222,7 +298,8 @@ static void Init_tmapping_animated_struct(tmapping_animated m) {
 static void Init_timeline_struct(int k) {
 	int i,j;
 	dt[k].timelinedoc = 0;
-
+	dt[k].helpdoc = 0;
+   
 	for (j=0; j<MAX_ANIMATED_ELTS; j++) {
 		Init_tmapping_animated_struct (dt[k].mapping_animated[j]);
 		for (i=0; i<MAX_ANIMATIONS; i++)
@@ -232,7 +309,7 @@ static void Init_timeline_struct(int k) {
 	
 	dt[k].current_el = NULL;
 	dt[k].timing_text = NULL;
-	dt[k].vertical_pos = cte_top_bar;
+	dt[k].vertical_pos = ct_top_bar;
 	
 	dt[k].slider = NULL;
 
@@ -241,9 +318,27 @@ static void Init_timeline_struct(int k) {
 	dt[k].line3 = NULL;
 	dt[k].line4 = NULL;
 	dt[k].line5 = NULL;
+
+	dt[k].image_color = NULL;
+	dt[k].image_interp = NULL;
+	dt[k].image_motion = NULL;
+
+	dt[k].motion_animation_creation_enabled = FALSE;
+	dt[k].color_animation_creation_enabled = FALSE;
+
+	dt[k].definition_of_motion_period = FALSE;
+	dt[k].definition_of_color_period = FALSE;
+
+	dt[k].current_edited_mapping = NULL;
+	dt[k].cross = NULL;
+	dt[k].arrow = NULL;
+	dt[k].can_delete_status_text = FALSE;
+
+	dt[k].bgcolor_start = 0;
+	dt[k].fgcolor_start = 0;
+	dt[k].anim_start = 0;
 }
 #endif /* _SVGANIM */
-
 
 
 
@@ -253,7 +348,7 @@ static void Init_timeline_struct(int k) {
   ----------------------------------------------------------------------*/
 #ifdef _SVGANIM
 static int Time_to_xposition(double t) {
-	return cte_left_bar + 1 + (int)(t * time_sep);
+	return ct_left_bar + 1 + (int)(t * time_sep);
 }
 #endif /* _SVGANIM */
 
@@ -265,7 +360,7 @@ static int Time_to_xposition(double t) {
 /*
 #ifdef _SVGANIM
 static double Xposition_to_time(int x) {
-	return (x - cte_left_bar - 1) / time_sep;
+	return (x - ct_left_bar - 1) / time_sep;
 }
 #endif  _SVGANIM */
 
@@ -351,6 +446,28 @@ static pmapping_animated Get_mapping_from_title_group (Document basedoc, Element
 
 	while ((!trouve) && (k<dt[basedoc].nb_relations_animated))
 		if (dt[basedoc].mapping_animated[k].title_group==tg) {
+			trouve = 1;
+			res = &(dt[basedoc].mapping_animated[k]);
+		} else 
+			k++;
+
+	return res;
+}
+#endif /* _SVGANIM */
+
+
+
+/*----------------------------------------------------------------------
+   Get_mapping_from_exp_group
+  ----------------------------------------------------------------------*/
+#ifdef _SVGANIM
+static pmapping_animated Get_mapping_from_exp_group (Document basedoc, Element eg) {
+	pmapping_animated res = NULL;
+
+	int k = 0, trouve = 0;
+
+	while ((!trouve) && (k<dt[basedoc].nb_relations_animated))
+		if (dt[basedoc].mapping_animated[k].exp_group==eg) {
 			trouve = 1;
 			res = &(dt[basedoc].mapping_animated[k]);
 		} else 
@@ -1062,6 +1179,99 @@ static Element Insert_image(Document timelinedoc, Element root, char* text, int 
 #endif /* _SVGANIM */
 
 
+
+/*----------------------------------------------------------------------
+   Display_cross
+      primitive to insert a cross in edited document
+  ----------------------------------------------------------------------*/
+#ifdef _SVGANIM
+static void Display_cross(Document basedoc, int x, int y) 
+{
+	Element el = NULL, root, svg;
+	AttributeType        attrType;
+	Attribute            attr;
+	Element child, lastc;
+	ElementType   elType, childType;
+	char buffer[512];
+	ThotBool basedoc_state = TtaIsDocumentModified (basedoc);
+	
+	root = TtaGetMainRoot (basedoc);
+	elType = TtaGetElementType (root);
+	elType.ElTypeNum = SVG_EL_Timeline_cross;
+	el = TtaNewElement (basedoc,elType);
+	attrType.AttrSSchema = elType.ElSSchema;
+
+	/* Position */
+	attrType.AttrTypeNum = SVG_ATTR_x;
+    attr = TtaNewAttribute (attrType);
+    TtaAttachAttribute (el, attr, basedoc);
+    sprintf (buffer, "%dpx", x);
+	TtaSetAttributeText (attr, buffer, el, basedoc);
+	ParseCoordAttribute (attr, el, basedoc);
+
+	attrType.AttrTypeNum = SVG_ATTR_y;
+    attr = TtaNewAttribute (attrType);
+    TtaAttachAttribute (el, attr, basedoc);
+    sprintf (buffer, "%dpx", y);
+	TtaSetAttributeText (attr, buffer, el, basedoc);
+	ParseCoordAttribute (attr, el, basedoc);
+	
+
+	/* width and height */
+	attrType.AttrTypeNum = SVG_ATTR_width_;
+    attr = TtaNewAttribute (attrType);
+    TtaAttachAttribute (el, attr, basedoc);
+    sprintf (buffer, "%dpx", ct_w_image_cross);
+	TtaSetAttributeText (attr, buffer, el, basedoc);
+	ParseWidthHeightAttribute(attr, el, basedoc, FALSE);
+
+	attrType.AttrTypeNum = SVG_ATTR_height_;
+    attr = TtaNewAttribute (attrType);
+    TtaAttachAttribute (el, attr, basedoc);
+    sprintf (buffer, "%dpx", ct_h_image_cross);
+	TtaSetAttributeText (attr, buffer, el, basedoc);
+	ParseWidthHeightAttribute (attr, el, basedoc, FALSE);
+
+
+	/* insert */
+	elType.ElTypeNum = SVG_EL_SVG;
+	svg = TtaSearchTypedElement (elType, SearchInTree, root);
+	lastc = TtaGetLastChild (svg);
+	TtaInsertSibling (el, lastc, FALSE, basedoc);
+	
+	/* Thot api structure compatibility */
+	childType.ElSSchema = elType.ElSSchema;
+	childType.ElTypeNum = SVG_EL_PICTURE_UNIT;
+	child = TtaNewElement (basedoc, childType);
+	TtaInsertFirstChild (&child, el, basedoc);
+	
+	/* src */
+	Build_path_to_image_dir (buffer);
+	strcat (buffer, ct_image_cross);
+	TtaSetTextContent (child, buffer, SPACE, basedoc);
+
+	dt[basedoc].cross = el;
+
+	if (!basedoc_state)
+		TtaSetDocumentUnmodified (basedoc);
+}
+#endif /* _SVGANIM */
+
+
+
+
+/*----------------------------------------------------------------------
+   Delete_cross
+  ----------------------------------------------------------------------*/
+#ifdef _SVGANIM
+static void Delete_cross (Document basedoc) 
+{
+	TtaDeleteTree (dt[basedoc].cross, basedoc);
+}
+#endif /* _SVGANIM */
+
+
+
 /*----------------------------------------------------------------------
    Insert_group
       primitive to generate Timeline Element group via thot api
@@ -1165,7 +1375,7 @@ static int Get_y_of (Element el)
 {
 	int res = 0;
 	int                  length, r = 0;
-    char                *text, *ptr;
+    char                *text = NULL, *ptr;
     PresentationValue    pval;
     AttributeType attrType;
     Attribute attr = NULL;
@@ -1187,8 +1397,9 @@ static int Get_y_of (Element el)
       ptr = text;
 	  ptr = ParseNumber (ptr, &pval);
 	  r = pval.typed_data.value;
+	  TtaFreeMemory (text);
    }
-   TtaFreeMemory (text);
+
 
 
    res = r;
@@ -1199,6 +1410,7 @@ static int Get_y_of (Element el)
 	attrType.AttrTypeNum = Timeline_ATTR_transform;
 
 	attr = TtaGetAttribute (parent, attrType);
+	text = NULL;
 						
 	if (attr) {
 		length = TtaGetTextAttributeLength (attr) + 2;
@@ -1212,8 +1424,9 @@ static int Get_y_of (Element el)
 			ptr += strlen("translate(0,");
 			ptr = ParseNumber (ptr, &pval);
 			r = pval.typed_data.value;
+			TtaFreeMemory (text);
 		}
-		TtaFreeMemory (text);
+		
 	}
 
 	res += r;
@@ -1233,7 +1446,7 @@ static int Get_height_of (Element el)
 	int r = 0;
 	
 	int length;
-    char *text, *ptr;
+    char *text = NULL, *ptr;
     PresentationValue    pval;
     AttributeType attrType;
     Attribute attr = NULL;
@@ -1254,12 +1467,52 @@ static int Get_height_of (Element el)
       ptr = text;
 	  ptr = ParseNumber (ptr, &pval);
 	  r = pval.typed_data.value;
+	  TtaFreeMemory (text);
    }
-   TtaFreeMemory (text);
+
 
    return r;
 }
 #endif /* _SVGANIM */
+
+
+
+
+/*----------------------------------------------------------------------
+  Inc_height
+  Increments the height of timeline element el by inc_h
+  ----------------------------------------------------------------------*/
+#ifdef _SVGANIM
+static void Inc_height(Document timelinedoc, Element el, int inc_h)
+{
+	AttributeType attrType;
+	Attribute attr = NULL;
+	char buffer[512], *text = NULL, *ptr;
+	ElementType elType = TtaGetElementType (el);
+	int existing_value = 0, length;
+	PresentationValue pval;
+
+	attrType.AttrSSchema = elType.ElSSchema;
+	attrType.AttrTypeNum = Timeline_ATTR_height_;
+			
+	attr = TtaGetAttribute (el, attrType);
+	/* attr exists */
+	length = TtaGetTextAttributeLength (attr) + 2;
+    text = TtaGetMemory (length);
+	if (text) {
+      TtaGiveTextAttributeValue (attr, text, &length);
+      ptr = text;
+	  ptr = ParseNumber (ptr, &pval);
+	  existing_value = pval.typed_data.value;
+	  TtaFreeMemory (text);
+	}
+
+	sprintf (buffer, "%dpx", existing_value+inc_h);
+	TtaSetAttributeText (attr, buffer, el, timelinedoc);
+	TimelineParseWidthHeightAttribute (attr, el, timelinedoc, FALSE);
+}
+#endif /* _SVGANIM */
+
 
 
 
@@ -1274,7 +1527,7 @@ static int Get_width_of (Element el)
 
 	
 	int length;
-    char *text, *ptr;
+    char *text = NULL, *ptr;
     PresentationValue    pval;
     AttributeType attrType;
     Attribute attr = NULL;
@@ -1288,15 +1541,15 @@ static int Get_width_of (Element el)
     length = TtaGetTextAttributeLength (attr) + 2;
     text = TtaGetMemory (length);
    
-   if (text) {
+    if (text) {
       /* get the value of the x attribute */
       TtaGiveTextAttributeValue (attr, text, &length);
       /* parse the attribute value (a number followed by a unit) */
       ptr = text;
 	  ptr = ParseNumber (ptr, &pval);
 	  r = pval.typed_data.value;
-   }
-   TtaFreeMemory (text);
+	  TtaFreeMemory (text);
+    }
 
    return r;
 }
@@ -1314,7 +1567,7 @@ static void Set_y_translation (Document timelinedoc, Element found, int hg)
 	int existing_value = 0, length;
 	char		        buffer[512];
 	PresentationValue pval;
-	char *text, *ptr;
+	char *text = NULL, *ptr;
 	ElementType   elType;
 	Element root;
 
@@ -1336,8 +1589,9 @@ static void Set_y_translation (Document timelinedoc, Element found, int hg)
 			ptr = text+strlen("translate(0,");
 			ptr = ParseNumber (ptr, &pval);
 			existing_value = pval.typed_data.value;
+			TtaFreeMemory (text);
 		}
-		TtaFreeMemory (text);
+		
 	}
 	else {
 		attr = TtaNewAttribute (attrType);
@@ -1375,6 +1629,33 @@ static void Set_y (Document timelinedoc, Element found, int ny)
 	TimelineParseCoordAttribute (attr, found, timelinedoc);	
 }
 #endif /* _SVGANIM */
+
+
+/*----------------------------------------------------------------------
+   Set_src
+      write the attribute src=""
+  ----------------------------------------------------------------------*/
+#ifdef _SVGANIM
+static void Set_src (Document timelinedoc, Element found, char* buffer) 
+{ 
+	AttributeType        attrType;
+	Attribute            attr;
+	ElementType   elType;
+	Element child;
+
+
+	elType = TtaGetElementType (found);
+	attrType.AttrSSchema = elType.ElSSchema;
+	attrType.AttrTypeNum = Timeline_ATTR_xlink_href;
+	attr = TtaGetAttribute (found, attrType);			
+	TtaSetAttributeText (attr, buffer, found, timelinedoc);
+
+	/* Thot api structure compatibility */
+	child = TtaGetFirstChild (found);
+	TtaSetTextContent (child, buffer, SPACE, timelinedoc);
+}
+#endif /* _SVGANIM */
+
 
 
 /*----------------------------------------------------------------------
@@ -1479,7 +1760,7 @@ static double TimelineParseTimeAttribute (Attribute attr)
 	double r = 0;
 
 	int                  length;
-    char                *text, *ptr;
+    char                *text = NULL, *ptr;
     PresentationValue    pval;
 
     length = TtaGetTextAttributeLength (attr) + 2;
@@ -1497,9 +1778,9 @@ static double TimelineParseTimeAttribute (Attribute attr)
 		   r /= 1000.0;
 
 	   /* look for following unit: ms? ... enhance the parser! */
-
+	   TtaFreeMemory (text);
     }
-    TtaFreeMemory (text);
+
 
 
 	return r;
@@ -1650,6 +1931,8 @@ static void Write_time_info(Document basedoc, Element edited_anim, double start,
 
 
 
+
+
 /*----------------------------------------------------------------------
   Search_first_anim_in_tree
    search in tree for the first animation tag
@@ -1720,6 +2003,26 @@ static Element Search_next_anim_in_tree(Document basedoc, Element element) {
 #endif /* _SVGANIM */
 
 
+
+/*----------------------------------------------------------------------
+  Get_last_anim
+  ----------------------------------------------------------------------
+#ifdef _SVGANIM
+static Element Get_last_anim (Document basedoc, Element animated_el) 
+{	
+	Element lfound = NULL, found =  Search_first_anim_in_tree (basedoc, animated_el);
+
+	while ((found) && (TtaGetParent (found) == animated_el)) {
+		lfound = found;
+		found = Search_next_anim_in_tree (basedoc, found);
+	}
+
+return lfound;
+}
+#endif /* _SVGANIM */
+
+
+
 /*----------------------------------------------------------------------
   Compute_global_anim_period_of_doc
    computes global anim period of document basedoc
@@ -1732,8 +2035,8 @@ static void Compute_global_anim_period_of_doc (Document basedoc, double* tmin, d
 	double start, duration;
 	Element found;
 
-	*tmin=0;
-	*tmax=0;
+	*tmin = 0;
+	*tmax = ct_default_anim_period_of_doc;
 
 	found = Search_first_anim_in_tree (basedoc, TtaGetMainRoot (basedoc));
 
@@ -1773,20 +2076,18 @@ static void Create_title_group(Document basedoc, Document timelinedoc, int ty, E
 	dt[basedoc].current_el = Insert_group (timelinedoc, dt[basedoc].current_el, 0, Timeline_EL_abstract_group);
 	Set_y_translation (timelinedoc, dt[basedoc].current_el, ty);
 
-	temp_el = Insert_rectangle (timelinedoc, dt[basedoc].current_el, "white", "black", 2, vertical_pos, cte_left_bar-8, cte_default_title_group_height, 1, Timeline_EL_rect_id);	
+	temp_el = Insert_rectangle (timelinedoc, dt[basedoc].current_el, "white", "black", 2, vertical_pos, ct_default_title_group_width, ct_default_title_group_height, 1, Timeline_EL_rect_id);	
 	
 	Build_path_to_image_dir (buffer);
 	if (collapsed)
-		strcat (buffer, cte_image_c2_filename);
+		strcat (buffer, ct_image_c2_filename);
 	else
-		strcat (buffer, cte_image_c1_filename);
+		strcat (buffer, ct_image_c1_filename);
 		
-	temp_el = Insert_image (timelinedoc, temp_el, buffer, 4, vertical_pos+12, cte_w_image_collapse, cte_h_image_collapse, 0, Timeline_EL_image_collapse);
+	temp_el = Insert_image (timelinedoc, temp_el, buffer, 4, vertical_pos+10, ct_w_image_collapse, ct_h_image_collapse, 0, Timeline_EL_image_collapse);
 	if (!Get_nom_element_anime (parent, buffer))
-		strcpy (buffer, cte_default_text_for_no_id);
-	temp_el = Insert_text (timelinedoc, temp_el, "black", buffer, cte_elem_font_family, cte_elem_font_size, 18, vertical_pos+8, 0, Timeline_EL_text_id); 
-	/* Allow id modification in basedoc: */
-	/* TtaSetAccessRight (temp_el, ReadOnly, timelinedoc); */
+		strcpy (buffer, TtaGetMessage (AMAYA, AM_SVGANIM_NO_ID));
+	temp_el = Insert_text (timelinedoc, temp_el, "black", buffer, ct_elem_font_family, ct_elem_font_size, 18, vertical_pos+6, 0, Timeline_EL_text_id); 
 }
 #endif /* _SVGANIM */
 
@@ -1815,9 +2116,6 @@ static Element Create_expanded_group(Document basedoc, Document timelinedoc, int
 		dt[basedoc].current_el = Insert_group (timelinedoc, dt[basedoc].current_el, 0, Timeline_EL_abstract_group);	
 		Set_y_translation(timelinedoc, dt[basedoc].current_el, ty);
 
-		/* temp: dummy node */
-		temp_el = Insert_rectangle (timelinedoc, dt[basedoc].current_el, "none", "none",  cte_left_bar, vertical_pos, 100, 20, 1, Timeline_EL_rect_interface);
-	
 		k=0;
 		mapping->nb_periods = k;
 		while ((found) && (TtaGetParent(found)==parent)) {
@@ -1825,27 +2123,30 @@ static Element Create_expanded_group(Document basedoc, Document timelinedoc, int
 			Read_time_info (found, &start, &duration);
 			
 			/* periods */
-			temp_el = Insert_rectangle (timelinedoc, temp_el, cte_static_bar_color, cte_static_bar_color,  cte_left_bar, vertical_pos+6+k*(6+cte_height_bar), current_timeline_width, cte_static_bar_height, 0, Timeline_EL_rect_interface);
+			if (k==0)
+				temp_el = Insert_rectangle (timelinedoc, dt[basedoc].current_el, ct_static_bar_color, ct_static_bar_color,  ct_left_bar, vertical_pos+6+k*(6+ct_static_bar_height), current_timeline_width, ct_static_bar_height, 1, Timeline_EL_rect_interface);
+			else
+				temp_el = Insert_rectangle (timelinedoc, temp_el, ct_static_bar_color, ct_static_bar_color,  ct_left_bar, vertical_pos+6+k*(6+ct_static_bar_height), current_timeline_width, ct_static_bar_height, 0, Timeline_EL_rect_interface);
 		
 			/* A color for each animation type */
 			elType = TtaGetElementType (found);
 			
 			switch(elType.ElTypeNum) {
 			case SVG_EL_animate : 
-				strcpy(color,"yellow"); break;
+				strcpy(color, ct_animate_color); break;
 			case SVG_EL_set_ : 
-				strcpy(color,"red"); break;
+				strcpy(color,ct_set_color); break;
 			case SVG_EL_animateMotion : 
-				strcpy(color,"green"); break;
+				strcpy(color,ct_animatemotion_color); break;
 			case SVG_EL_animateColor : 
-				strcpy(color,"blue"); break;
+				strcpy(color,ct_animatecolor_color); break;
 			case SVG_EL_animateTransform : 
-				strcpy(color,"purple"); break;
+				strcpy(color,ct_animatetransform_color); break;
 			default : 
 				strcpy(color,"black"); break;
 			}
 
-			temp_el = Insert_rectangle (timelinedoc, temp_el, color, "none",  Time_to_xposition (start), vertical_pos+6+k*(6+cte_height_bar)+1, (int) (duration * time_sep), cte_static_bar_height-2, 0, Timeline_EL_exp_period);
+			temp_el = Insert_rectangle (timelinedoc, temp_el, color, "none",  Time_to_xposition (start), vertical_pos+6+k*(6+ct_static_bar_height)+ct_offset_y_period, (int) (duration * time_sep), ct_period_height, 0, Timeline_EL_exp_period);
 			
 			/* update mapping of <animate> tags */
 			mapping->mapping_animations[mapping->nb_periods].animation_tag = found;
@@ -1857,26 +2158,105 @@ static Element Create_expanded_group(Document basedoc, Document timelinedoc, int
 		}
 	
 
-	*hauteur = 6 +(k)*(cte_static_bar_height+6);
+	*hauteur = max( 6 +(k)*(ct_static_bar_height+6), ct_default_title_group_height - ct_static_bar_height - 6);
 	if (k==1) { 
 		/* there is only one animated element :*/
-		temp_el = Insert_rectangle (timelinedoc, dt[basedoc].current_el, cte_expanded_group_fill_color, "black", cte_left_bar-2, vertical_pos, current_timeline_width+4, cte_collapsed_group_height,1, Timeline_EL_rect_interface);
+		temp_el = Insert_rectangle (timelinedoc, dt[basedoc].current_el, ct_expanded_group_fill_color, "black", ct_left_bar-2, vertical_pos, current_timeline_width+4, ct_collapsed_group_height,1, Timeline_EL_rect_interface);
 		
 		/* increase vertical position of the only one animation element
 		   to center it vertically inside expanded group */
 		TtaNextSibling (&temp_el);
+		Set_y (timelinedoc, temp_el, (ct_collapsed_group_height-ct_static_bar_height)/2);
 		TtaNextSibling (&temp_el);
-		Set_y (timelinedoc, temp_el, (cte_collapsed_group_height-cte_static_bar_height)/2);
-		TtaNextSibling (&temp_el);
-		Set_y (timelinedoc, temp_el, (cte_collapsed_group_height-cte_static_bar_height)/2+1);
+		Set_y (timelinedoc, temp_el, (ct_collapsed_group_height-ct_static_bar_height)/2+1);
 
 	}
 	else
-        temp_el = Insert_rectangle (timelinedoc, dt[basedoc].current_el, cte_expanded_group_fill_color, "black", cte_left_bar-2, vertical_pos, current_timeline_width+4, *hauteur,1, Timeline_EL_rect_interface);
+        temp_el = Insert_rectangle (timelinedoc, dt[basedoc].current_el, ct_expanded_group_fill_color, "black", ct_left_bar-2, vertical_pos, current_timeline_width+4, *hauteur,1, Timeline_EL_rect_interface);
 
 	return found;
 }
 #endif /* _SVGANIM */		
+
+
+
+/*----------------------------------------------------------------------
+  Remove_image_collapse_from_title_group
+  ----------------------------------------------------------------------*/
+#ifdef _SVGANIM
+static void Remove_image_collapse_from_title_group (Document basedoc, Element animated_el)
+{
+	Element im;
+	Document timelinedoc = dt[basedoc].timelinedoc;
+
+	/* get title group:*/
+	im = Get_title_group_of_animated_element (basedoc, animated_el);
+	/* image_collapse is the second child of title_group*/
+	im = TtaGetFirstChild (im);
+	TtaNextSibling (&im);
+	TtaDeleteTree (im, timelinedoc); 
+}
+#endif /* _SVGANIM */	
+
+
+
+
+
+/*----------------------------------------------------------------------
+  Image_collapse_for_title_group ()
+  Check for presence of image collapse
+  ----------------------------------------------------------------------*/
+#ifdef _SVGANIM
+static ThotBool Image_collapse_for_title_group (Document basedoc, Element animated_el)
+{
+	Element tg, found;
+	ElementType elType;
+	/* get title group:*/
+	tg = Get_title_group_of_animated_element (basedoc, animated_el);
+	elType = TtaGetElementType (tg);
+	elType.ElTypeNum = Timeline_EL_image_collapse;
+
+	found = TtaSearchTypedElement (elType, SearchInTree, tg);
+	return (found != NULL);
+}
+#endif /* _SVGANIM */	
+
+
+
+
+
+
+
+
+/*----------------------------------------------------------------------
+  Add_image_collapse_on_title_group
+  ----------------------------------------------------------------------*/
+#ifdef _SVGANIM
+static void Add_image_collapse_on_title_group (Document basedoc, Element animated_el, int collapsed)
+{
+	char buffer[512];
+	Element temp_el;
+	Document timelinedoc = dt[basedoc].timelinedoc;
+
+	/* get title group:*/
+	temp_el = Get_title_group_of_animated_element (basedoc, animated_el);
+	/* image_collapse should be the second child of title_group*/
+	temp_el = TtaGetFirstChild (temp_el);
+
+	Build_path_to_image_dir (buffer);
+	if (collapsed)
+		strcat (buffer, ct_image_c2_filename);
+	else
+		strcat (buffer, ct_image_c1_filename);
+
+	Insert_image (timelinedoc, temp_el, buffer, 4, 10,
+		ct_w_image_collapse, ct_h_image_collapse, 0, Timeline_EL_image_collapse);
+
+}
+#endif /* _SVGANIM */	
+
+
+
 
 
 
@@ -1889,7 +2269,7 @@ static Element Create_expanded_group(Document basedoc, Document timelinedoc, int
 #ifdef _SVGANIM
 static Element Create_collapsed_group(Document basedoc, Document timelinedoc, int ty, Element parent, pmapping_animated mapping, Element first_anim) {
 	Element found = first_anim;
-	Element temp_el, im;
+	Element temp_el;
 	int k, vertical_pos = 0, h;
 	double start, duration, tmin = 0.0, tmax = 0.0;
 	
@@ -1916,22 +2296,17 @@ static Element Create_collapsed_group(Document basedoc, Document timelinedoc, in
 			/* there is only one animation, expand group: */
 			Create_expanded_group (basedoc, timelinedoc, ty, parent, first_anim, mapping, &h);
 			/* remove image_collapse from title group:*/
-			/* get title group:*/
-			im = Get_title_group_of_animated_element (basedoc, parent);
-			/* image_collapse is the second child of title_group*/
-			im = TtaGetFirstChild (im);
-			TtaNextSibling (&im);
-			TtaDeleteTree (im, timelinedoc); 
+			Remove_image_collapse_from_title_group (basedoc, parent);
 			}
 		else {
 			/* collapsed group */	 	
 			dt[basedoc].current_el = Insert_group (timelinedoc, dt[basedoc].current_el, 0, Timeline_EL_abstract_group);	
 			Set_y_translation (timelinedoc, dt[basedoc].current_el, ty);
 
-			temp_el = Insert_rectangle (timelinedoc, dt[basedoc].current_el, cte_expanded_group_fill_color, "black", cte_left_bar-2, vertical_pos, current_timeline_width+4, cte_collapsed_group_height,1, Timeline_EL_rect_interface);
+			temp_el = Insert_rectangle (timelinedoc, dt[basedoc].current_el, ct_expanded_group_fill_color, "black", ct_left_bar-2, vertical_pos, current_timeline_width+4, ct_collapsed_group_height,1, Timeline_EL_rect_interface);
 
-			temp_el = Insert_rectangle (timelinedoc, temp_el, cte_static_bar_color, cte_static_bar_color,  cte_left_bar, vertical_pos+10, current_timeline_width, cte_static_bar_height, 0, Timeline_EL_rect_interface);
-			temp_el = Insert_rectangle (timelinedoc, temp_el, cte_collapsed_anim_color, "none",  Time_to_xposition (tmin), vertical_pos+10+1, (int) ((tmax-tmin) * time_sep), cte_static_bar_height-2, 0, Timeline_EL_col_period);
+			temp_el = Insert_rectangle (timelinedoc, temp_el, ct_static_bar_color, ct_static_bar_color,  ct_left_bar, vertical_pos+10, current_timeline_width, ct_static_bar_height, 0, Timeline_EL_rect_interface);
+			temp_el = Insert_rectangle (timelinedoc, temp_el, ct_collapsed_anim_color, "none",  Time_to_xposition (tmin), vertical_pos+10+ct_offset_y_period, (int) ((tmax-tmin) * time_sep), ct_period_height, 0, Timeline_EL_col_period);
 		}
 
 	return found;
@@ -1958,16 +2333,16 @@ static Element Draw_graduation (Document timelinedoc, Element position, double t
 		for (i = (int)ti; i<= (int)tf; i++) {
 			
 			if (i) 
-				top = 14;
+				top = ct_top+4;
 			else 
-				top = 9;
+				top = ct_top-1;
 			
-			temp_el = Insert_tline (timelinedoc, temp_el, "black", cte_left_bar+(int)(i*time_sep), top, cte_left_bar+(int)(i*time_sep), 14+cte_graduation_height, 0);
-			temp_el = Insert_tline (timelinedoc, temp_el, "silver", cte_left_bar+(int)(i*time_sep)+1, top, cte_left_bar+(int)(i*time_sep)+1, 14+cte_graduation_height, 0);
+			temp_el = Insert_tline (timelinedoc, temp_el, "black", ct_left_bar+(int)(i*time_sep), top, ct_left_bar+(int)(i*time_sep), ct_top+4+ct_graduation_height, 0);
+			temp_el = Insert_tline (timelinedoc, temp_el, "silver", ct_left_bar+(int)(i*time_sep)+1, top, ct_left_bar+(int)(i*time_sep)+1, ct_top+4+ct_graduation_height, 0);
 			
 			sprintf (buffer, "%ds", i);
-			temp_el = Insert_text (timelinedoc, temp_el, "black", buffer, cte_graduation_font_family, cte_graduation_font_size,
-				cte_left_bar+(int)(i*time_sep)-6, 14+cte_graduation_height+cte_graduation_font_size+2, 0, Timeline_EL_text_);
+			temp_el = Insert_text (timelinedoc, temp_el, "black", buffer, ct_graduation_font_family, ct_graduation_font_size,
+				ct_left_bar+(int)(i*time_sep)-6, ct_top+4+ct_graduation_height+ct_graduation_font_size+2, 0, Timeline_EL_text_);
 			TtaSetAccessRight (temp_el, ReadOnly, timelinedoc);
 		}
 	return temp_el;
@@ -1988,7 +2363,7 @@ static void Build_timeline(Document basedoc, char* timelineName)
 {
 	Element       el, found, root, temp_el, parent, baseroot;
 	int oldStructureChecking;  
-	int h_current,
+	int h_current, left,
 		x_timeline, y_timeline, w_timeline, h_timeline,
 		period_w_size;
 	double t_debut_toutes_anim, t_fin_toutes_anim;
@@ -2007,7 +2382,7 @@ static void Build_timeline(Document basedoc, char* timelineName)
 
 	Compute_global_anim_period_of_doc (basedoc, &t_debut_toutes_anim, &t_fin_toutes_anim);
 	
-	period_w_size = max( w_timeline-cte_left_bar - cte_vscrollbar_w, (int) (3/2.0 * cte_left_bar));
+	period_w_size = max( w_timeline-ct_left_bar - ct_vscrollbar_w, (int) (3/2.0 * ct_left_bar));
 	time_sep = period_w_size / t_fin_toutes_anim;
 
 	current_timeline_width = period_w_size;
@@ -2025,17 +2400,17 @@ static void Build_timeline(Document basedoc, char* timelineName)
 	/* document independant code */
 
 	/* line */
-	dt[basedoc].line1 = Insert_tline (dt[basedoc].timelinedoc, root, "black", cte_left_bar, 10, cte_left_bar+period_w_size, 10, 1);
-	dt[basedoc].line2 = Insert_tline (dt[basedoc].timelinedoc, dt[basedoc].line1, "white", cte_left_bar, 11, cte_left_bar+period_w_size, 11, 0);
-	dt[basedoc].line3 = Insert_tline (dt[basedoc].timelinedoc, dt[basedoc].line2, "gray", cte_left_bar, 12, cte_left_bar+period_w_size, 12, 0);
-	dt[basedoc].line4 = Insert_tline (dt[basedoc].timelinedoc, dt[basedoc].line3, "black", cte_left_bar, 13, cte_left_bar+period_w_size, 13, 0);
-	dt[basedoc].line5 = Insert_tline (dt[basedoc].timelinedoc, dt[basedoc].line4, "silver", cte_left_bar, 14, cte_left_bar+period_w_size, 14, 0);
+	dt[basedoc].line1 = Insert_tline (dt[basedoc].timelinedoc, root, "black", ct_left_bar, ct_top, ct_left_bar+period_w_size, ct_top, 1);
+	dt[basedoc].line2 = Insert_tline (dt[basedoc].timelinedoc, dt[basedoc].line1, "white", ct_left_bar, ct_top+1, ct_left_bar+period_w_size, ct_top+1, 0);
+	dt[basedoc].line3 = Insert_tline (dt[basedoc].timelinedoc, dt[basedoc].line2, "gray", ct_left_bar, ct_top+2, ct_left_bar+period_w_size, ct_top+2, 0);
+	dt[basedoc].line4 = Insert_tline (dt[basedoc].timelinedoc, dt[basedoc].line3, "black", ct_left_bar, ct_top+3, ct_left_bar+period_w_size, ct_top+3, 0);
+	dt[basedoc].line5 = Insert_tline (dt[basedoc].timelinedoc, dt[basedoc].line4, "silver", ct_left_bar, ct_top+4, ct_left_bar+period_w_size, ct_top+4, 0);
 	dt[basedoc].current_el = dt[basedoc].line5;
 
 
 	/* document dependant code */
 
-	h_current = cte_top_bar;
+	h_current = ct_top_bar;
 
 	found = Search_first_anim_in_tree (basedoc, baseroot);
 
@@ -2066,19 +2441,54 @@ static void Build_timeline(Document basedoc, char* timelineName)
 		else
 			mapping->col_group = dt[basedoc].current_el;
 	
-		h_current += cte_collapsed_group_height+2;
+		h_current += ct_collapsed_group_height+2;
 	}
 
 
 	dt[basedoc].vertical_pos = h_current;
 
 	/* document independant code */
+
+	/* toolbar */
+	Build_path_to_image_dir (buffer);
+	strcat(buffer, ct_image_toolbar);
+	temp_el = Insert_image (dt[basedoc].timelinedoc, dt[basedoc].current_el, buffer, ct_left_bar - ct_w_image_toolbar,  ct_top_toolbar , ct_w_image_toolbar, ct_h_image_toolbar, 0, Timeline_EL_image_toolbar);
+
 	
+	/* buttons */	
+	left = ct_left_buttons;
+
+	Build_path_to_image_dir (buffer);
+	strcat(buffer, ct_image_anim_help);
+	Insert_image (dt[basedoc].timelinedoc, temp_el, buffer, left, ct_top_buttons , ct_w_image_help, ct_h_image_help, 0,Timeline_EL_image_help);
+
+	left += ct_w_image_help + ct_sep_buttons;
+
+	Build_path_to_image_dir (buffer);
+	strcat(buffer, ct_image_anim_motion_disabled);
+	dt[basedoc].image_motion = Insert_image (dt[basedoc].timelinedoc, temp_el, buffer, left, ct_top_buttons , ct_w_image_motion, ct_h_image_motion, 0, Timeline_EL_image_motion);
+
+	left += ct_w_image_motion + ct_sep_buttons;
+
+
+	Build_path_to_image_dir (buffer);
+	strcat(buffer, ct_image_anim_color_disabled);
+	dt[basedoc].image_color = Insert_image (dt[basedoc].timelinedoc, temp_el, buffer, left, ct_top_buttons , ct_w_image_color, ct_h_image_color, 0, Timeline_EL_image_color);
+
+	left += ct_w_image_color + ct_sep_buttons;
+
+
+/*	Build_path_to_image_dir (buffer);
+	strcat(buffer, ct_image_anim_help);
+	dt[basedoc].image_interp = Insert_image (dt[basedoc].timelinedoc, temp_el, buffer, left, ct_top_buttons , ct_w_image_help, ct_h_image_help, 0, Timeline_EL_image_help);
+*/
+
 	/* timing info */
-	temp_el = Insert_rectangle(dt[basedoc].timelinedoc, dt[basedoc].current_el, "white", "gray", 80, 10, cte_left_bar-100, 4+cte_elem_font_size, 0, Timeline_EL_rect_interface);
+	/*	temp_el = Insert_rectangle(dt[basedoc].timelinedoc, temp_el, "white", "gray", 
+	80, 10, ct_left_bar-100, 4+ct_elem_font_size, 0, Timeline_EL_rect_interface); */
 	sprintf (buffer, "%.2fs", (float) 0.0);	
-	dt[basedoc].timing_text = Insert_text ( dt[basedoc].timelinedoc, temp_el, "black", buffer, cte_elem_font_family, 
-										     cte_elem_font_size, 100, 10, 0, Timeline_EL_timing_text);
+	dt[basedoc].timing_text = Insert_text ( dt[basedoc].timelinedoc, temp_el, "black", buffer, ct_elem_font_family, 
+										     ct_elem_font_size, ct_left_bar - ct_w_image_toolbar + 32, 10, 0, Timeline_EL_timing_text);
 
 	/* graduation */
 	temp_el = Draw_graduation (dt[basedoc].timelinedoc, temp_el, 0.0, t_fin_toutes_anim);
@@ -2086,15 +2496,8 @@ static void Build_timeline(Document basedoc, char* timelineName)
 
 	/* slider */
 	Build_path_to_image_dir (buffer);
-	strcat(buffer, cte_image_slider_filename);
-	dt[basedoc].slider = Insert_image (dt[basedoc].timelinedoc, temp_el, buffer, cte_left_bar-6, 7, cte_w_image_slider, cte_h_image_slider, 0, Timeline_EL_image_slider);
-
-	
-	/* toolbar */
-/*	Build_path_to_image_dir (buffer);
-	strcat(buffer, cte_image_keypos);
-	temp_el = Insert_image (timelinedoc, temp_el, buffer, 40, 15 , 0, Timeline_EL_image_keypos);
-*/
+	strcat(buffer, ct_image_slider_filename);
+	dt[basedoc].slider = Insert_image (dt[basedoc].timelinedoc, temp_el, buffer, ct_left_bar-6, ct_top-3, ct_w_image_slider, ct_h_image_slider, 0, Timeline_EL_image_slider);
 
 	/* Amaya should not ask the user to save Timeline document because of modifications*/
 	TtaSetDocumentUnmodified (dt[basedoc].timelinedoc);
@@ -2132,6 +2535,7 @@ static void Build_timeline(Document basedoc, char* timelineName)
 			   Init_timeline_struct (basedoc);
 		   }
 
+
 }
 #endif /* _SVGANIM */
 
@@ -2163,11 +2567,14 @@ static void Enlarge_group_items (Document timelinedoc, Element group, int inc_w)
 	while ((found) && (TtaGetParent (found) == group)) {
 		attr = TtaGetAttribute (found, attrType);
 		l = TtaGetTextAttributeLength (attr);
-        text = TtaGetMemory (l + 1);
-		TtaGiveTextAttributeValue (attr, text, &l);
-		ptr = text;
-		ParseNumber (ptr, &pval);
-		TtaFreeMemory (text);
+        text = NULL;
+		text = TtaGetMemory (l + 1);
+		if (text) {
+			TtaGiveTextAttributeValue (attr, text, &l);
+			ptr = text;
+			ParseNumber (ptr, &pval);
+			TtaFreeMemory (text);
+		}
 		sprintf (buffer, "%dpx", pval.typed_data.value+inc_w);
 		TtaSetAttributeText (attr, buffer, found, timelinedoc);
 		TimelineParseWidthHeightAttribute (attr, found, timelinedoc, FALSE);
@@ -2188,7 +2595,7 @@ static void Enlarge_line (Document timelinedoc, Element line, int inc_w)
 {
 	Attribute attr;
 	AttributeType attrType;
-	char *text, buffer[512];
+	char *text = NULL, buffer[512];
 	int l;
 	PresentationValue pval;
 	char* ptr;
@@ -2198,10 +2605,12 @@ static void Enlarge_line (Document timelinedoc, Element line, int inc_w)
 	attr = TtaGetAttribute (line, attrType);
 	l = TtaGetTextAttributeLength (attr);
 	text = TtaGetMemory (l + 1);
-	TtaGiveTextAttributeValue (attr, text, &l);
-	ptr = text;
-	ParseNumber (ptr, &pval);
-	TtaFreeMemory (text);
+	if (text) {
+		TtaGiveTextAttributeValue (attr, text, &l);
+		ptr = text;
+		ParseNumber (ptr, &pval);
+		TtaFreeMemory (text);
+	}
 	sprintf (buffer, "%dpx", pval.typed_data.value+inc_w);
 	TtaSetAttributeText (attr, buffer, line, timelinedoc);
 	TimelineParseCoordAttribute (attr, line, timelinedoc);
@@ -2220,12 +2629,12 @@ static void Enlarge_timeline (Document basedoc, Document timelinedoc, int x)
 
 
 	/* enlarge line */
-	delta_t = 1 + (int)((x-cte_left_bar-current_timeline_end*time_sep)/time_sep);
+	delta_t = 1 + (int)((x-ct_left_bar-current_timeline_end*time_sep)/time_sep);
 	Draw_graduation (timelinedoc, dt[basedoc].current_el, current_timeline_end, current_timeline_end+delta_t);
 
 	inc_lines = (int)(time_sep*delta_t);
 
-	inc_w = 6+x-(current_timeline_width+cte_left_bar);
+	inc_w = 6+x-(current_timeline_width+ct_left_bar);
 	
 	Enlarge_line (timelinedoc, dt[basedoc].line1, inc_lines);
 	Enlarge_line (timelinedoc, dt[basedoc].line2, inc_lines);
@@ -2476,9 +2885,9 @@ static void Image_collapse_on_click(NotifyElement *event)
 	mapping = Get_mapping_from_title_group (basedoc, title_group);
 
 	Build_path_to_image_dir (im1);
-	strcat (im1, cte_image_c1_filename);
+	strcat (im1, ct_image_c1_filename);
 	Build_path_to_image_dir (im2);
-	strcat (im2, cte_image_c2_filename);
+	strcat (im2, ct_image_c2_filename);
 
 	if (!strcmp (buffer, im1)) { /* - -> + collapse*/
 		/* update image */
@@ -2500,8 +2909,8 @@ static void Image_collapse_on_click(NotifyElement *event)
 		Set_expanded_group_of (basedoc, mapping->animated_elem, NULL);
 	
 		/* translate visible groups on the interface */
-		Translate_following_elements (basedoc, event->document, vpos, -(hep-cte_collapsed_group_height));
-		dt[basedoc].vertical_pos -= (hep-cte_collapsed_group_height);
+		Translate_following_elements (basedoc, event->document, vpos, -(hep-ct_collapsed_group_height));
+		dt[basedoc].vertical_pos -= (hep-ct_collapsed_group_height);
 	}
 	else { /* + -> -  expand */
 		/* update image */
@@ -2521,40 +2930,14 @@ static void Image_collapse_on_click(NotifyElement *event)
 		Set_collapsed_group_of (basedoc, mapping->animated_elem, NULL);
 		
 		/* translate visible groups on the interface */
-		Translate_following_elements (basedoc, event->document, vpos, hg-cte_collapsed_group_height);
-		dt[basedoc].vertical_pos += hg-cte_collapsed_group_height;
+		Translate_following_elements (basedoc, event->document, vpos, hg-ct_collapsed_group_height);
+		dt[basedoc].vertical_pos += hg-ct_collapsed_group_height;
 		
 	}
+
 	TtaSetDisplayMode (event->document, dp);
 }
 #endif /* _SVGANIM */
-
-
-
-/*----------------------------------------------------------------------
-  Define_keytime
-  ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
-static void Define_keytime (NotifyElement *event)
-{
-	Element el;
-	int fc, lc;
-	Document basedoc = Get_basedoc_of (event->document);
-
-	TtaGiveFirstSelectedElement (basedoc, &el, &fc, &lc); 	/* handle multiple selections with TtaGiveNextSelectedElement  ? */
-
-	/* check if the node already has animations */
-	if (Is_animated (basedoc, el)) { /* if so, show expanded group, enlarge it and build a new period */
-
-
-	} else { /* else if the node has no animation yet, create a title group, ... */ 
-	/*	Create_title_group (basedoc, event->document, dt[basedoc].vertical_pos, ,0); */
-	}
-
-	
-}
-#endif /* _SVGANIM */
-
 
 
 
@@ -2574,12 +2957,12 @@ void Set_slider_position (Document basedoc, Document timelinedoc, double f)
 	attrType.AttrTypeNum = Timeline_ATTR_x;
 
 	attr = TtaGetAttribute (dt[basedoc].slider, attrType);
-	x = (int) (f*time_sep+cte_left_bar-6);
+	x = (int) (f*time_sep+ct_left_bar-6);
 	sprintf (buffer, "%dpx", x);
 	TtaSetAttributeText (attr, buffer, dt[basedoc].slider,timelinedoc);
 	TimelineParseCoordAttribute (attr, dt[basedoc].slider, timelinedoc);
 
-	if (x>cte_left_bar+current_timeline_width)
+	if (x>ct_left_bar+current_timeline_width)
 		Enlarge_timeline (basedoc, timelinedoc, x);
 	
 #endif /* _SVGANIM */
@@ -2602,7 +2985,7 @@ void TimelineTextPostModify (NotifyOnTarget *event)
 	Element parent, tg, el;
 	ElementType elType;
 	PresentationValue pval;
-	char *value, *s, buffer[512];
+	char *value = NULL, *s, buffer[512];
 	int length, firstchar, lastchar;
 	double d;
 	pmapping_animated pmapping;
@@ -2616,10 +2999,12 @@ void TimelineTextPostModify (NotifyOnTarget *event)
 	if (elType.ElTypeNum == Timeline_EL_timing_text) {
 		length = TtaGetTextLength (event->element);
         value = TtaGetMemory (length + 1);
-        TtaGiveTextContent (event->element, value, &length, &lang);
-		s = value;
-		ParseNumber (s, &pval);
-		TtaFreeMemory (value);	
+        if (value) {
+			TtaGiveTextContent (event->element, value, &length, &lang);
+			s = value;
+			ParseNumber (s, &pval);
+			TtaFreeMemory (value);
+		}
 
 		d = pval.typed_data.value;
 		if (pval.typed_data.real)
@@ -2645,13 +3030,13 @@ void TimelineTextPostModify (NotifyOnTarget *event)
 		TtaOpenUndoSequence (basedoc, el, el, firstchar, lastchar);
 		TtaRegisterAttributeReplace (attr, pmapping->animated_elem, basedoc);
 		length = TtaGetTextLength (event->element);
-        value = TtaGetMemory (length + 2);
-        TtaGiveTextContent (event->element, value, &length, &lang);
-		
-		TtaSetAttributeText (attr, value, pmapping->animated_elem, basedoc);  
-			
-		TtaFreeMemory (value);
-	    /* Check attribute ID in order to make sure that its value */
+		value = TtaGetMemory (length + 2);
+        if (value) {
+			TtaGiveTextContent (event->element, value, &length, &lang);
+			TtaSetAttributeText (attr, value, pmapping->animated_elem, basedoc);  
+			TtaFreeMemory (value);
+		}
+		/* Check attribute ID in order to make sure that its value */
 	    /* is unique in the document */
 		MakeUniqueName (pmapping->animated_elem, basedoc);
 		Get_id_of (pmapping->animated_elem, buffer);
@@ -2687,6 +3072,131 @@ static void Show_selected_element (NotifyElement *event)
 
 
 
+
+/*----------------------------------------------------------------------
+  Show_selected_anim
+   draw selection in WYSIWYG view
+  ----------------------------------------------------------------------*/
+#ifdef _SVGANIM
+static void Show_selected_anim (NotifyElement *event) 
+{
+	Attribute attr;
+	AttributeType attrType;
+	ElementType elType;
+	char* text;
+	int length;
+	char buffer[512];
+	pmapping_animated mapping;
+	Element anim;
+	Document basedoc = Get_basedoc_of (event->document);
+	Element exp_group = TtaGetParent (event->element);
+	mapping = Get_mapping_from_exp_group (basedoc, exp_group);
+
+
+	anim = Get_animation_tag_from_period (basedoc, exp_group, event->element);
+	TtaSelectElement (basedoc, anim);
+
+
+	/* display animated attribute in status bar : */
+
+	elType = TtaGetElementType (anim);	
+	attrType.AttrSSchema = elType.ElSSchema;
+	attrType.AttrTypeNum = SVG_ATTR_attributeName_;
+	attr = TtaGetAttribute (anim, attrType);
+	if (attr) {
+		text = NULL;
+		/* the attribute value is a character string */
+		length = TtaGetTextAttributeLength (attr) + 2;
+		text = TtaGetMemory (length);
+		if (text) {
+			TtaGiveTextAttributeValue (attr, text, &length);
+			strcpy (buffer, TtaGetMessage (AMAYA, AM_SVGANIM_ANIMATED_ATTR));
+			strcat (buffer, " : ");
+			strcat (buffer, text); 
+			TtaSetStatus (event->document, dt[basedoc].timelineView, buffer, NULL);
+			dt[basedoc].can_delete_status_text = TRUE;
+			TtaFreeMemory (text);
+		}
+	}
+}
+#endif /* _SVGANIM */
+
+
+
+
+/*----------------------------------------------------------------------
+   Enable_color_anim_creation
+  ----------------------------------------------------------------------*/
+#ifdef _SVGANIM
+static void Enable_color_anim_creation (Document basedoc) {
+	char buffer[512];
+	Document timelinedoc = dt[basedoc].timelinedoc;
+
+	Build_path_to_image_dir (buffer);
+	strcat (buffer, ct_image_anim_color);
+	Set_src (timelinedoc, dt[basedoc].image_color, buffer);
+
+	dt[basedoc].color_animation_creation_enabled = TRUE;
+}
+#endif /* _SVGANIM */
+
+
+
+/*----------------------------------------------------------------------
+   Enable_motion_anim_creation
+  ----------------------------------------------------------------------*/
+#ifdef _SVGANIM
+static void Enable_motion_anim_creation (Document basedoc) {
+	char buffer[512];
+	Document timelinedoc = dt[basedoc].timelinedoc;
+
+	Build_path_to_image_dir (buffer);
+	strcat (buffer, ct_image_anim_motion);
+	Set_src (timelinedoc, dt[basedoc].image_motion, buffer);
+
+	dt[basedoc].motion_animation_creation_enabled = TRUE;
+}
+#endif /* _SVGANIM */
+
+
+
+/*----------------------------------------------------------------------
+   Disable_color_anim_creation
+  ----------------------------------------------------------------------*/
+#ifdef _SVGANIM
+static void Disable_color_anim_creation (Document basedoc) {
+	char buffer[512];
+	Document timelinedoc = dt[basedoc].timelinedoc;
+	
+	Build_path_to_image_dir (buffer);
+	strcat (buffer, ct_image_anim_color_disabled);
+	Set_src (timelinedoc, dt[basedoc].image_color, buffer);
+	dt[basedoc].color_animation_creation_enabled = FALSE;
+}
+#endif /* _SVGANIM */
+
+
+
+
+/*----------------------------------------------------------------------
+   Disable_motion_anim_creation
+  ----------------------------------------------------------------------*/
+#ifdef _SVGANIM
+static void Disable_motion_anim_creation (Document basedoc) {
+	char buffer[512];
+	Document timelinedoc = dt[basedoc].timelinedoc;
+	
+	Build_path_to_image_dir (buffer);
+	strcat (buffer, ct_image_anim_motion_disabled);
+	Set_src (timelinedoc, dt[basedoc].image_motion, buffer);
+	dt[basedoc].motion_animation_creation_enabled = FALSE;
+}
+#endif /* _SVGANIM */
+
+	
+
+
+
 /*----------------------------------------------------------------------
   TimelineElSelection
   ----------------------------------------------------------------------*/
@@ -2696,45 +3206,52 @@ ThotBool TimelineElSelection (NotifyElement *event)
 #ifdef _SVGANIM
 	Element parent;
 	ElementType elType;
+	Document basedoc = Get_basedoc_of(event->document);
 	
 	parent = event->element;
 	elType = TtaGetElementType (parent);
 
+	/* Remove status bar text on next click after an animation has been defined */
+	if (dt[basedoc].can_delete_status_text) {
+		TtaSetStatus (event->document, dt[basedoc].timelineView, ct_empty_string, NULL);
+		dt[basedoc].can_delete_status_text = FALSE;
+
+		/* Remove the arrow */
+		TtaDeleteTree (dt[basedoc].arrow, dt[basedoc].timelinedoc);
+		dt[basedoc].arrow = NULL;
+	}
+
+	/* an animated element is being selected, enable animation creation */
 	if (elType.ElTypeNum == Timeline_EL_rect_id) { 
 		res = TRUE;
 		Show_selected_element (event);	
-}
-
-	TtaSetDocumentUnmodified (event->document);
-#endif /* _SVGANIM */
-	return res;
-}
-
-
-
-/*----------------------------------------------------------------------
-  TimelineElClicked
-   General callback on left click
-  ----------------------------------------------------------------------*/
-ThotBool TimelineElClicked (NotifyElement *event)
-{
-	ThotBool res = FALSE;
-#ifdef _SVGANIM
-	Element parent;
-	ElementType elType;
+		Enable_color_anim_creation (basedoc);
+		Enable_motion_anim_creation (basedoc);
+	} else if (elType.ElTypeNum == Timeline_EL_exp_period) { 
+		res = TRUE;
+		Show_selected_anim (event);	
+	} else {
+		/* an other timeline element is being selected, disable animation creation */
+		Disable_color_anim_creation (basedoc);
+		Disable_motion_anim_creation (basedoc);
 	
-	parent = TtaGetParent (event->element);
-	elType = TtaGetElementType (parent);
+		/* forbid "Document" selection :*/
+		res = TRUE;
 
-	if (elType.ElTypeNum == Timeline_EL_image_collapse) 
-		Image_collapse_on_click(event);
-	else if (elType.ElTypeNum == Timeline_EL_image_keypos) 
-		Define_keytime (event);
+		elType = TtaGetElementType (TtaGetParent (parent));
+
+		if ((elType.ElTypeNum == Timeline_EL_timing_text) || (elType.ElTypeNum == Timeline_EL_text_id))
+			res = FALSE;
+	}
 
 	TtaSetDocumentUnmodified (event->document);
+
 #endif /* _SVGANIM */
 	return res;
 }
+
+
+
 
 
 
@@ -2809,6 +3326,148 @@ static int Apply_new_width (Document doc, Element el)
 
 
 
+
+
+
+
+/*----------------------------------------------------------------------
+  Generate_animate_color
+  ----------------------------------------------------------------------*/
+#ifdef _SVGANIM
+static void Generate_animate_color (Document basedoc, int from_c, int to_c,
+									double start, double duration,
+									pmapping_animated pm, Element period) 
+{
+	ElementType elType, anType;
+	Element animtag, lastchild;
+	AttributeType attrType;
+	Attribute attr;
+	char buffer[512];
+	unsigned short r,g,b;
+
+	elType.ElSSchema = TtaGetSSchema ("SVG", basedoc);
+	elType.ElTypeNum = SVG_EL_animateColor;
+	animtag = TtaNewElement (basedoc, elType);
+
+	/* set attributes */
+	attrType.AttrSSchema = elType.ElSSchema;
+
+	/* begin */
+	attrType.AttrTypeNum = SVG_ATTR_begin_;
+    attr = TtaNewAttribute (attrType);
+    TtaAttachAttribute (animtag, attr, basedoc);
+	sprintf (buffer, "%.2fs", (float) (max (0.0, start)));	
+	TtaSetAttributeText (attr, buffer, animtag, basedoc);
+
+	/* dur */
+	attrType.AttrTypeNum = SVG_ATTR_dur;
+    attr = TtaNewAttribute (attrType);
+    TtaAttachAttribute (animtag, attr, basedoc);
+	sprintf (buffer, "%.2fs", (float) duration);	
+	TtaSetAttributeText (attr, buffer, animtag, basedoc);
+
+	
+	/* from */
+	attrType.AttrTypeNum = SVG_ATTR_from;
+    attr = TtaNewAttribute (attrType);
+    TtaAttachAttribute (animtag, attr, basedoc);
+	TtaGiveThotRGB (from_c, &r, &g, &b);
+    /* sprintf (buffer, "#%02X%02X%02X", r, g, b);*/
+	sprintf (buffer, "rgb(%d,%d,%d)", r, g, b);
+  	TtaSetAttributeText (attr, buffer, animtag, basedoc);
+
+	/* to */
+	attrType.AttrTypeNum = SVG_ATTR_to_;
+    attr = TtaNewAttribute (attrType);
+    TtaAttachAttribute (animtag, attr, basedoc);
+	TtaGiveThotRGB (to_c, &r, &g, &b);
+    sprintf (buffer, "rgb(%d,%d,%d)", r, g, b);
+  	TtaSetAttributeText (attr, buffer, animtag, basedoc);
+
+
+	/* fill */
+	attrType.AttrTypeNum = SVG_ATTR_fill_;
+    attr = TtaNewAttribute (attrType);
+    TtaAttachAttribute (animtag, attr, basedoc);
+	TtaSetAttributeValue (attr, SVG_ATTR_fill__VAL_freeze, animtag, basedoc);
+
+
+	/* AttributeType */
+	attrType.AttrTypeNum = SVG_ATTR_attributeType;
+    attr = TtaNewAttribute (attrType);
+    TtaAttachAttribute (animtag, attr, basedoc);
+	strcpy(buffer,"CSS");	
+	TtaSetAttributeText (attr, buffer, animtag, basedoc);
+
+
+	/* AttributeName */
+	attrType.AttrTypeNum = SVG_ATTR_attributeName_;
+    attr = TtaNewAttribute (attrType);
+    TtaAttachAttribute (animtag, attr, basedoc);
+
+	anType = TtaGetElementType (pm->animated_elem);
+/*	switch (anType.ElTypeNum) {
+		case SVG_EL_text_ : 
+			strcpy(buffer,"font-color");	
+			break;
+		default : 
+			strcpy(buffer,"fill");
+			break;
+	} */
+	strcpy(buffer,"fill");
+	TtaSetAttributeText (attr, buffer, animtag, basedoc);
+
+	/* insert */ 
+	lastchild = TtaGetLastChild (pm->animated_elem);
+
+	/* problem in the SVG S schema ??? */
+	if (TtaCanInsertSibling (elType, lastchild, FALSE, basedoc))
+		TtaInsertSibling (animtag, lastchild, FALSE, basedoc);
+
+	/* update mapping of <animate> tags */
+	pm->mapping_animations[pm->nb_periods].animation_tag = animtag;
+	pm->mapping_animations[pm->nb_periods].period = period;
+	pm->nb_periods = pm->nb_periods + 1;
+
+	if ((pm->nb_periods >= 2) && (!Image_collapse_for_title_group (basedoc, pm->animated_elem)))
+		Add_image_collapse_on_title_group (basedoc, pm->animated_elem, 0);
+
+	TtaSetDocumentModified (basedoc);
+}
+#endif /* _SVGANIM */
+
+
+
+/*----------------------------------------------------------------------
+  Generate_animate_motion
+  ----------------------------------------------------------------------*/
+#ifdef _SVGANIM
+static void Generate_animate_motion (Document basedoc, int previous_x, int previous_y,
+									 int x, int y, double start, double duration,
+									pmapping_animated pm) 
+{
+	ElementType elType;
+	Element animtag, lastchild;
+//	AttributeType attrType;
+//	Attribute attr;
+	
+	elType = TtaGetElementType (pm->animated_elem);
+	elType.ElTypeNum = SVG_EL_animateMotion;
+	animtag = TtaNewElement (basedoc, elType);
+
+	/* set attributes */
+
+	
+	/* insert */
+	lastchild = TtaGetLastChild (pm->animated_elem);
+	TtaInsertSibling (animtag, lastchild, FALSE, basedoc);
+
+	TtaSetDocumentModified (basedoc);
+}
+#endif /* _SVGANIM */
+
+
+
 /*----------------------------------------------------------------------
   Timeline_finished_moving_slider
    A Callback : the slider has been moved 
@@ -2818,25 +3477,97 @@ void Timeline_finished_moving_slider(NotifyPresentation *event)
 #ifdef _SVGANIM
 	char buffer[512];
 	Document basedoc = Get_basedoc_of (event->document);
-	Element tm = dt[basedoc].timing_text;
+	Element tm = dt[basedoc].timing_text, egroup = NULL, brect, insertel;
+	int vpos, fgcolor, bgcolor, x;
+	DisplayMode dp;
+	double end;
+	Element new_period;
 
+	/* move the slider and enlarge timeline if necessary */
+	x = Apply_hpos_mini (basedoc, event->element, ct_left_bar-6);
+	if (x>ct_left_bar+current_timeline_width)
+		Enlarge_timeline (basedoc, event->document, x);
+
+	end = (x+6-(ct_left_bar+1))/time_sep;
+
+	/* update timing_text */
 	if (tm) {
 		Element child = TtaGetFirstChild (tm);
 		Language lang = TtaGetDefaultLanguage();
-		int x;
 		double d;
-	
-		x = Apply_hpos_mini (basedoc, event->element, cte_left_bar-6);
 
-		d = (x+6-cte_left_bar)/time_sep;
+		d = (x+6-ct_left_bar)/time_sep;
 		sprintf (buffer, "%.2fs", (float) d);
 		TtaSetTextContent (child, buffer, lang, event->document);
-
-		if (x>cte_left_bar+current_timeline_width)
-			Enlarge_timeline (basedoc, event->document, x);
-
-		TtaSetDocumentUnmodified (event->document);
 	}
+
+	/* editing modes */
+	
+	if ((dt[basedoc].definition_of_motion_period) || 
+		(dt[basedoc].definition_of_color_period)) {
+		egroup = dt[basedoc].current_edited_mapping->exp_group;
+		brect = TtaGetFirstChild (egroup);
+		insertel = TtaGetLastChild (egroup);
+
+		/* define animation period: */	
+		vpos = Get_height_of (brect) - ct_static_bar_height - 6 + ct_offset_y_period;
+				
+		if (dt[basedoc].definition_of_motion_period) {
+			Insert_rectangle (event->document, insertel, ct_animatemotion_color,
+					  "none", previous_slider_position+6, vpos, x - previous_slider_position, 
+					  ct_period_height, 0, Timeline_EL_exp_period);
+
+		
+			/* generate animation in basedoc */
+			//Generate_animate_motion ();
+
+			dt[basedoc].definition_of_motion_period = FALSE;
+			TtaSetStatus (event->document, dt[basedoc].timelineView, TtaGetMessage (AMAYA, AM_SVGANIM_ANIM_DEFINED), NULL);
+			dt[basedoc].can_delete_status_text = TRUE;
+
+			dt[basedoc].current_edited_mapping = NULL;
+
+			/* Remove the cross */
+			if (dt[basedoc].cross)
+				Delete_cross (basedoc);
+
+				
+		} else if (dt[basedoc].definition_of_color_period) {
+			new_period = Insert_rectangle (event->document, insertel, ct_animatecolor_color,
+							"none", previous_slider_position+6, vpos, x - previous_slider_position, 
+							ct_period_height, 0, Timeline_EL_exp_period);
+			
+			TtaSetStatus ( dt[basedoc].timelinedoc, dt[basedoc].timelineView, TtaGetMessage (AMAYA, AM_SVGANIM_COLOR_HINT3), NULL);
+			
+			/* force a redisplay before letting the user choose ending color */
+			dp = TtaGetDisplayMode (event->document);
+			TtaSetDisplayMode (event->document, NoComputedDisplay);
+			TtaSetDisplayMode (event->document, DisplayImmediately);
+			TtaSetDisplayMode (event->document, dp);
+
+			TtcGetPaletteColors (&fgcolor, &bgcolor, TRUE);
+
+			/* force a redisplay after letting the user choose ending color */
+			dp = TtaGetDisplayMode (event->document);
+			TtaSetDisplayMode (event->document, NoComputedDisplay);
+			TtaSetDisplayMode (event->document, DisplayImmediately);
+			TtaSetDisplayMode (event->document, dp);
+
+
+			/* generate animation in basedoc */
+			Generate_animate_color (basedoc, dt[basedoc].bgcolor_start, bgcolor, dt[basedoc].anim_start, 
+				end-dt[basedoc].anim_start, dt[basedoc].current_edited_mapping,new_period);
+
+			dt[basedoc].definition_of_color_period = FALSE;			
+			dt[basedoc].current_edited_mapping = NULL;
+				
+			TtaSetStatus ( dt[basedoc].timelinedoc, dt[basedoc].timelineView, TtaGetMessage (AMAYA, AM_SVGANIM_ANIM_DEFINED), NULL);
+			dt[basedoc].can_delete_status_text = TRUE;
+	
+		}
+	}
+
+	TtaSetDocumentUnmodified (event->document);
 #endif /* _SVGANIM */
 }
 
@@ -2855,12 +3586,12 @@ void Timeline_exp_period_modified (NotifyPresentation *event)
 	int nw, x, firstchar, lastchar;
 
 	/* visual retroaction*/
-	x = Apply_hpos_mini (basedoc, event->element, cte_left_bar);
-	start = (x+6-(cte_left_bar+1))/time_sep;
+	x = Apply_hpos_mini (basedoc, event->element, ct_left_bar);
+	start = (x+6-(ct_left_bar+1))/time_sep;
 	nw = Apply_new_width (event->document, event->element);
 	x += nw;
 	duration = nw/time_sep;
-	if (x>cte_left_bar+current_timeline_width)
+	if (x>ct_left_bar+current_timeline_width)
 		Enlarge_timeline (basedoc, event->document, x);
 	
 	exp_group = TtaGetParent (event->element);
@@ -2891,17 +3622,34 @@ ThotBool Timeline_col_period_pre_modify (NotifyPresentation *event)
 {
 	ThotBool res = FALSE;
 #ifdef _SVGANIM
-	PRule         presRuleX;
-	presRuleX = TtaGetPRule (event->element, PRHorizPos);
-	if (presRuleX)
-		tmp_previous_x = event->value;
-	else 
-		tmp_previous_x = 0;
-
+	tmp_previous_x = event->value;
 #endif /* _SVGANIM */
 	return res;
 }
 
+
+
+
+
+
+/*----------------------------------------------------------------------
+  Timeline_slider_pre_modify
+   Callback: the slider element is about to be moved
+  ----------------------------------------------------------------------*/
+ThotBool Timeline_slider_pre_modify (NotifyPresentation *event)
+{
+	ThotBool res = FALSE;
+#ifdef _SVGANIM
+	PRule         presRuleX;
+	presRuleX = TtaGetPRule (event->element, PRHorizPos);
+	if (presRuleX)
+		previous_slider_position = TtaGetPRuleValue (presRuleX);
+	else 
+		previous_slider_position = 0;
+
+#endif /* _SVGANIM */
+	return res;
+}
 
 
 
@@ -2920,11 +3668,11 @@ void Timeline_col_period_modified (NotifyPresentation *event)
 	double inc_time;
 
 	/* visual retroaction*/
-	x = Apply_hpos_mini (basedoc, event->element, cte_left_bar);
-	start = (x+6-(cte_left_bar+1))/time_sep;
+	x = Apply_hpos_mini (basedoc, event->element, ct_left_bar);
+	start = (x+6-(ct_left_bar+1))/time_sep;
 	nw = Get_width_of (event->element);
 	duration = nw/time_sep;
-	if (x + nw > cte_left_bar+current_timeline_width)
+	if (x + nw > ct_left_bar+current_timeline_width)
 		Enlarge_timeline (basedoc, event->document, x + nw);
 	
 	col_group = TtaGetParent (event->element);
@@ -3014,11 +3762,12 @@ void Update_period_position_and_size (Document basedoc, Element animtag)
 			Set_collapsed_group_of (basedoc, pm->animated_elem, new_fresh_group);
 		}
 	}
-	if (x>cte_left_bar+current_timeline_width)
+	if (x>ct_left_bar+current_timeline_width)
 		Enlarge_timeline (basedoc, dt[basedoc].timelinedoc, x);
 
 #endif /* _SVGANIM */
 }
+
 
 /*----------------------------------------------------------------------
    Update_element_id_on_timeline
@@ -3044,7 +3793,7 @@ void Update_element_id_on_timeline (NotifyAttribute* event) {
 	
 		if (text_id) {
 			if (event->event == TteAttrDelete) {
-				TtaSetTextContent (text_id, cte_default_text_for_no_id, SPACE, timelinedoc);
+				TtaSetTextContent (text_id, TtaGetMessage (AMAYA, AM_SVGANIM_NO_ID), SPACE, timelinedoc);
 			}
 			else if (event->event == TteAttrCreate) {
 				if (Get_id_of (event->element, buffer))
@@ -3058,9 +3807,370 @@ void Update_element_id_on_timeline (NotifyAttribute* event) {
 					TtaSetTextContent (text_id, buffer, SPACE, timelinedoc);
 				else
 					TtaSetTextContent (text_id, "", SPACE, timelinedoc);
-			}
+			} 
 		}
 	}
 
 #endif /* _SVGANIM */
+}
+
+
+/*----------------------------------------------------------------------
+  Prepare_and_add_a_period
+  ----------------------------------------------------------------------*/
+#ifdef _SVGANIM
+static void Prepare_and_add_a_period (Document basedoc, Document timelinedoc, pmapping_animated pm)
+{
+	Element exp_rect, im,first_found, new_fresh_group;
+	int nh, vpos, hg;
+	char buffer[512];
+
+
+	if (!(pm->exp_group)) { /* if group is collapsed then expand group :*/
+		first_found = Search_first_anim_in_tree (basedoc, pm->animated_elem);
+		vpos = Get_y_of (TtaGetFirstChild (pm->title_group));
+		Create_expanded_group (basedoc, dt[basedoc].timelinedoc, vpos, pm->animated_elem, first_found, pm, &hg);
+		new_fresh_group = dt[basedoc].current_el;
+
+		/* delete old collapsed group */
+		TtaDeleteTree (pm->col_group, dt[basedoc].timelinedoc); 
+				
+		/* update mapping*/
+		Set_expanded_group_of (basedoc, pm->animated_elem, new_fresh_group);
+		Set_collapsed_group_of (basedoc, pm->animated_elem, NULL);
+
+		/* translate visible groups on the interface */
+		Translate_following_elements (basedoc, timelinedoc, vpos, hg-ct_collapsed_group_height);
+		dt[basedoc].vertical_pos += hg-ct_collapsed_group_height;
+
+		/* set image collapsed to expanded */
+		im = pm->title_group;
+		/* image_collapse is the second child of title_group*/
+		im = TtaGetFirstChild (im);
+		TtaNextSibling (&im);
+
+		Build_path_to_image_dir (buffer);
+		strcat (buffer, ct_image_c1_filename);
+		Set_src (timelinedoc, im, buffer);
+	}
+
+
+	exp_rect = TtaGetFirstChild (pm->exp_group);
+
+	Inc_height (timelinedoc, exp_rect, ct_static_bar_height+6);
+
+	dt[basedoc].vertical_pos += ct_static_bar_height+6;
+	nh = Get_height_of (exp_rect);
+
+	Insert_rectangle (timelinedoc, exp_rect, ct_static_bar_color, ct_static_bar_color,
+		ct_left_bar,  nh - (6+ct_static_bar_height), 
+		current_timeline_width, ct_static_bar_height, 0, Timeline_EL_rect_interface);
+
+	Translate_following_elements (basedoc, timelinedoc, Get_y_of (exp_rect), ct_static_bar_height+6);
+
+	/* put an arrow */
+	Build_path_to_image_dir (buffer);
+	strcat(buffer, ct_image_arrow);
+
+	dt[basedoc].arrow = Insert_image (timelinedoc, exp_rect, buffer, 
+		ct_left_bar-ct_w_image_arrow-3, nh - (6+ct_static_bar_height)-4,
+		ct_w_image_arrow, ct_h_image_arrow, 0, Timeline_EL_image_toolbar);
+}
+#endif /* _SVGANIM */
+
+
+
+
+/*----------------------------------------------------------------------
+   Key_position_defined
+  ----------------------------------------------------------------------*/
+void Key_position_defined (Document basedoc, Element cross) 
+{
+#ifdef _SVGANIM
+
+	int x = 0, y =0;
+	PRule         presRule;
+	presRule = TtaGetPRule (cross, PRHorizPos);
+	if (presRule)
+		x = TtaGetPRuleValue (presRule);
+	presRule = TtaGetPRule (cross, PRVertPos);
+	if (presRule)
+		y = TtaGetPRuleValue (presRule);
+
+	dt[basedoc].definition_of_motion_period = TRUE;
+	TtaSetStatus ( dt[basedoc].timelinedoc, dt[basedoc].timelineView, TtaGetMessage (AMAYA, AM_SVGANIM_MOTION_HINT2), NULL);
+
+#endif /* _SVGANIM */
+}
+
+
+
+/*----------------------------------------------------------------------
+  Define_motion_anim
+  ----------------------------------------------------------------------*/
+#ifdef _SVGANIM
+static void Define_motion_anim (NotifyElement *event)
+{
+	Element el;
+	ElementType elType;
+	int fc, lc, x ,y, h;
+	pmapping_animated pm;
+	Document basedoc = Get_basedoc_of (event->document);
+	Document timelinedoc = event->document;
+
+	DisplayMode dp = TtaGetDisplayMode (event->document);
+	TtaSetDisplayMode (event->document, DeferredDisplay);
+
+	TtaGiveFirstSelectedElement (basedoc, &el, &fc, &lc); /* handle multiple selections with TtaGiveNextSelectedElement  ? */
+
+	elType = TtaGetElementType (el);
+	if ((elType.ElTypeNum == SVG_EL_TEXT_UNIT)
+		|| (elType.ElTypeNum == SVG_EL_GRAPHICS_UNIT)
+		|| (elType.ElTypeNum == SVG_EL_SYMBOL_UNIT)
+		|| (elType.ElTypeNum == SVG_EL_PICTURE_UNIT))
+		el = TtaGetParent (el);
+
+	/* check if the node already has animations */
+	if (!Is_animated (basedoc, el)) {  
+		/* if the node has no animation yet, create a title group, ... */ 
+		
+		dt[basedoc].nb_relations_animated++;
+		pm = &(dt[basedoc].mapping_animated[dt[basedoc].nb_relations_animated-1]);
+
+		/* update pm of animated element as soon as created */
+		pm->animated_elem = el;
+
+		Create_title_group (basedoc, event->document, dt[basedoc].vertical_pos, el,0);
+
+		/* maps title group */
+		pm->title_group = dt[basedoc].current_el;
+
+		Create_expanded_group (basedoc, dt[basedoc].timelinedoc, dt[basedoc].vertical_pos, 
+			el, NULL, pm, &h);
+		dt[basedoc].vertical_pos += h+2;
+		pm->exp_group = dt[basedoc].current_el;
+
+		Remove_image_collapse_from_title_group (basedoc, pm->animated_elem);
+	}
+
+
+	/* show expanded group, enlarge it and build a new period */
+
+	pm = Get_mapping_from_animated_elem (basedoc, el);
+
+	Prepare_and_add_a_period (basedoc, timelinedoc, pm);
+
+	/* make a special copy of the animated element in edited document
+	parent = TtaGetParent (pm->animated_elem);
+	cop = TtaCopyTree (pm->animated_elem, basedoc, basedoc, parent);
+	TtaInsertFirstChild (&cop, parent, basedoc); */
+	x = 450;
+	y = 150;
+	Display_cross (basedoc, x, y);
+
+	dt[basedoc].current_edited_mapping = pm;
+
+	TtaSetStatus (event->document, dt[basedoc].timelineView, TtaGetMessage (AMAYA, AM_SVGANIM_MOTION_HINT1), NULL);
+	TtaSetDisplayMode (event->document, dp);
+
+}
+#endif /* _SVGANIM */
+
+
+
+
+
+/*----------------------------------------------------------------------
+  Show_timeline_help 
+  ----------------------------------------------------------------------*/
+#ifdef _SVGANIM
+static void Show_timeline_help (NotifyElement *event)
+{
+	#define x_help 100
+	#define y_help 200
+	#define w_help 400
+	#define h_help 300
+	Document basedoc;
+	char buffer[512];
+/*	Build_path_to_image_dir (buffer); */
+	strcpy (buffer, "../");
+	strcat (buffer, ct_timeline_help_file);
+	
+	basedoc = Get_basedoc_of (event->document);
+
+	if (dt[basedoc].helpdoc) {
+		/* help window already shown so close help window */
+	    TtaCloseView (dt[basedoc].helpdoc, 1);
+		FreeDocumentResource (dt[basedoc].helpdoc);
+		dt[basedoc].helpdoc = 0;
+		dt[basedoc].helpview = 0;
+	} else {
+		/* open a new window to display the new document */
+	
+/*		dt[basedoc].helpdoc = TtaOpenDocument ("HTML", buffer,0);
+		dt[basedoc].helpview = TtaOpenMainView (dt[basedoc].helpdoc, x_help, y_help, w_help, h_help);
+*/
+/*
+		dt[basedoc].helpdoc = InitDocAndView (0, buffer, docHTML, 0, FALSE, L_Other);
+		 res = LoadDocument (newdoc, pathname, form_data, NULL, method,
+			   tempfile, documentname, http_headers, FALSE, &InNewWindow); */
+
+	}
+}
+#endif /* _SVGANIM */
+
+
+
+/*----------------------------------------------------------------------
+  Selection_changed_in_basedoc 
+  ----------------------------------------------------------------------*/
+void Selection_changed_in_basedoc (NotifyElement * event)
+{
+#ifdef _SVGANIM
+	ElementType elType;
+	Element el = TtaGetParent (event->element);
+
+	elType = TtaGetElementType (el);
+	
+	elType.ElTypeNum = SVG_EL_animateMotion;
+	if (TtaCanInsertFirstChild (elType, el, event->document))
+		Enable_motion_anim_creation (event->document);
+	else
+		Disable_motion_anim_creation (event->document);
+
+
+	elType.ElTypeNum = SVG_EL_animateColor;
+	if (TtaCanInsertFirstChild (elType, el, event->document))
+		Enable_color_anim_creation (event->document);
+	else
+		Disable_color_anim_creation (event->document);
+
+
+#endif /* _SVGANIM */
+}
+
+
+
+/*----------------------------------------------------------------------
+  Define_color_anim 
+  ----------------------------------------------------------------------*/
+#ifdef _SVGANIM
+static void Define_color_anim (NotifyElement *event)
+{
+	Element el;
+	ElementType elType;
+	int fc, lc, x, h;
+	pmapping_animated pm;
+	DisplayMode dp;
+	PRule presRuleX;
+	Document basedoc = Get_basedoc_of (event->document);
+	Document timelinedoc = event->document;
+
+	TtaGiveFirstSelectedElement (basedoc, &el, &fc, &lc); /* handle multiple selections with TtaGiveNextSelectedElement  ? */
+
+	elType = TtaGetElementType (el);
+	if ((elType.ElTypeNum == SVG_EL_TEXT_UNIT)
+		|| (elType.ElTypeNum == SVG_EL_GRAPHICS_UNIT)
+		|| (elType.ElTypeNum == SVG_EL_SYMBOL_UNIT)
+		|| (elType.ElTypeNum == SVG_EL_PICTURE_UNIT))
+		el = TtaGetParent (el);
+
+	/* check if the node already has animations */
+	if (!Is_animated (basedoc, el)) {  
+		/* if the node has no animation yet, create a title group, ... */ 
+		
+		dt[basedoc].nb_relations_animated++;
+		pm = &(dt[basedoc].mapping_animated[dt[basedoc].nb_relations_animated-1]);
+
+		/* update pm of animated element as soon as created */
+		pm->animated_elem = el;
+
+		Create_title_group (basedoc, event->document, dt[basedoc].vertical_pos, el,0);
+		/* maps title group */
+		pm->title_group = dt[basedoc].current_el;
+
+
+		Create_expanded_group (basedoc, dt[basedoc].timelinedoc, dt[basedoc].vertical_pos, 
+			el, NULL, pm, &h);
+		dt[basedoc].vertical_pos += h+2;
+		pm->exp_group = dt[basedoc].current_el;
+
+		Remove_image_collapse_from_title_group (basedoc, pm->animated_elem);
+	}
+
+
+	pm = Get_mapping_from_animated_elem (basedoc, el);
+
+	dp = TtaGetDisplayMode (event->document);
+	TtaSetDisplayMode (event->document, DeferredDisplay);
+	Prepare_and_add_a_period (basedoc, timelinedoc, pm);
+	TtaSetDisplayMode (event->document, dp);
+	
+	dt[basedoc].current_edited_mapping = pm;
+	TtaSetStatus (event->document, dt[basedoc].timelineView, TtaGetMessage (AMAYA, AM_SVGANIM_COLOR_HINT1), NULL);
+
+	/* get starting color values */
+	TtcGetPaletteColors (&(dt[basedoc].fgcolor_start), &(dt[basedoc].bgcolor_start), TRUE);
+
+	/* get "from" value */
+	presRuleX = TtaGetPRule (dt[basedoc].slider, PRHorizPos);
+	if (presRuleX)
+		x = TtaGetPRuleValue (presRuleX);
+	dt[basedoc].anim_start = (x+6-(ct_left_bar+1))/time_sep;
+
+	/* switch to edit mode*/
+	dt[basedoc].definition_of_color_period = TRUE;
+	TtaSetStatus ( dt[basedoc].timelinedoc, dt[basedoc].timelineView, TtaGetMessage (AMAYA, AM_SVGANIM_COLOR_HINT2), NULL);
+
+}
+#endif /* _SVGANIM */
+
+
+
+
+
+
+
+
+
+
+/*----------------------------------------------------------------------
+  TimelineElClicked
+   General callback on left click
+  ----------------------------------------------------------------------*/
+ThotBool TimelineElClicked (NotifyElement *event)
+{
+	ThotBool res = FALSE;
+#ifdef _SVGANIM
+	Element parent;
+	ElementType elType;
+	Document basedoc = Get_basedoc_of (event->document);
+	
+	parent = TtaGetParent (event->element);
+	elType = TtaGetElementType (parent);
+
+	if (elType.ElTypeNum == Timeline_EL_image_collapse) 
+		Image_collapse_on_click(event);
+	else if (elType.ElTypeNum == Timeline_EL_image_color) {
+		if (dt[basedoc].color_animation_creation_enabled) {
+			Disable_motion_anim_creation (basedoc);
+			Disable_color_anim_creation (basedoc);
+			Define_color_anim (event);
+		}
+	}
+	else if (elType.ElTypeNum == Timeline_EL_image_motion) {
+		if (dt[basedoc].motion_animation_creation_enabled) {
+			Disable_color_anim_creation (basedoc);
+			Disable_motion_anim_creation (basedoc);
+			Define_motion_anim (event);
+		}
+	}
+	else if (elType.ElTypeNum == Timeline_EL_image_help)
+		Show_timeline_help (event); 
+
+
+
+	TtaSetDocumentUnmodified (event->document);
+#endif /* _SVGANIM */
+	return res;
 }

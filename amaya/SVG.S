@@ -552,12 +552,24 @@ STRUCT
 
 { The following elements are not defined in the SVG DTD }
 
+
+  Timeline_cross
+	(ATTR x; 
+	      y;
+          width_;
+          height_)
+        = AGGREGATE
+              PICTURE;
+              SVG_Image;
+	      END;
+
+
    GraphicsElement
 	= CASE OF
 	      desc; title; metadata; defs;
 	      path; text_; rect; circle; ellipse; line_; polyline; polygon;
-	      use_; image; SVG; g; switch; a;
-	      script_; style__; symbol_; clipPath;
+	      use_; image; Timeline_cross; SVG; g; switch; a;
+	      script_; style__; symbol_; clipPath; Anim;
 	      animate; set_; animateMotion; animateColor; animateTransform; 
 	      XLink;
 	      END;
@@ -620,5 +632,6 @@ EXCEPT
    IntEmptyShape:       Invisible;
    RealLang:	        Invisible;
    Charset:	        Invisible;
+   Timeline_cross:      MoveResize, NoResize, HighlightChildren, NoShowBox, NoCut;
 
 END

@@ -62,7 +62,44 @@ STRUCT
 	      END;
 
 
-   image_keypos
+   image_toolbar
+	(ATTR xlink_href;
+	      x; 
+	      y;)
+        = AGGREGATE
+              PICTURE;
+              Timeline_Image;
+	      END;
+
+	 image_color
+	(ATTR xlink_href;
+	      x; 
+	      y;)
+        = AGGREGATE
+              PICTURE;
+              Timeline_Image;
+	      END;
+
+	 image_motion
+	(ATTR xlink_href;
+	      x; 
+	      y;)
+        = AGGREGATE
+              PICTURE;
+              Timeline_Image;
+	      END;
+
+	image_interp
+	(ATTR xlink_href;
+	      x; 
+	      y;)
+        = AGGREGATE
+              PICTURE;
+              Timeline_Image;
+	      END;
+
+
+	image_help
 	(ATTR xlink_href;
 	      x; 
 	      y;)
@@ -154,7 +191,7 @@ STRUCT
    GraphicsElement
 	= CASE OF
          exp_period; col_period; rect_interface; rect_id; text_; text_id; timing_text; tline; image_slider; 
-   	     image_collapse; image_keypos; Timeline; abstract_group;
+   	     image_collapse; image_help; image_keypos; Timeline; abstract_group;
 		  END;
 	     
 
@@ -173,7 +210,11 @@ EXCEPT
    text_id:             NoMove, NoResize, ReturnCreateWithin, NoCreate, NoCut;
    image_slider:  	    MoveResize,  NoResize, NoShowBox, NoVMove, NoCut, NoSelect;
    image_collapse:      NoMove, NoResize, NoShowBox, NoCut;
-   image_keypos:        NoMove, NoResize, NoShowBox, NoCut; 
+   image_color:         NoMove, NoResize, NoShowBox, NoCut;
+   image_motion:        NoMove, NoResize, NoShowBox, NoCut; 
+   image_toolbar:       NoMove, NoResize, NoShowBox, NoCut; 
+   image_help:        NoMove, NoResize, NoShowBox, NoCut; 
+   image_interp:        NoMove, NoResize, NoShowBox, NoCut; 
    Timeline_Image:      Hidden, SelectParent, NoCut;
    GRAPHICS:	        SelectParent, NoCut;
    PICTURE:             NoMove, NoResize, SelectParent, NoCut;
