@@ -86,8 +86,8 @@
 85 Sauver
 86 Imprimer
 87 Chercher
-88 Italique
-89 Gras
+88 Mise en evidence
+89 Important
 90 Fonte fixe
 91 no-repeat
 92 Ajout d'une image
@@ -176,7 +176,4 @@
 175 Couleur avant plan des menus
 176 Couleur arrière plan des menus
 177 Impossible d'initialiser le cache. Vous avez peut-être specifié un répertoire invalide ou vous exécutez un autre Amaya en méme-temps.
-
-
-
-
+178 Page personelle

@@ -19,6 +19,29 @@
 #include "trans.h"
 #include "zlib.h"
 
+/* button indexes */
+#define iStop 1
+#define iBack 2
+#define iForward 3
+#define iReload 4
+#define iHome 5
+#define iEditor 6
+#define iSave 8
+#define iPrint 9
+#define iFind 10
+#define iI 12
+#define iB 13
+#define iT 14
+#define iImage 16
+#define iH1 17
+#define iH2 18
+#define iH3 19
+#define iBullet 20
+#define iNum 21
+#define iDL 22
+#define iLink 23
+#define iTable 24
+
 #ifdef _WINDOWS
 #include "resource.h"
 #else /* _WINDOWS */
@@ -59,6 +82,7 @@
 #include "LinkNo.xpm"
 #include "Table.xpm"
 #include "TableNo.xpm"
+#include "home.xpm"
 #endif /* !_WINDOWS */
 
 #ifdef AMAYA_PLUGIN
@@ -143,6 +167,7 @@ static ThotIcon       iconTable;
 static ThotIcon       iconTableNo;
 static ThotIcon       iconBrowser;
 static ThotIcon       iconEditor;
+static ThotIcon       iconHome;
 #ifdef AMAYA_PLUGIN
 static ThotIcon       iconPlugin;
 #endif /* AMAYA_PLUGIN */
@@ -192,7 +217,7 @@ static ThotIcon       iconJava;
 #endif AMAYA_PLUGIN
 #define iconBrowser   23
 #define iconEditor    23
-
+#define iconHome      10
 static ThotBool itemChecked = FALSE;
 extern int     currentFrame;
 extern int     menu_item;
@@ -525,7 +550,7 @@ Document            document;
 	     (DocNetworkStatus[document] & AMAYA_NET_ACTIVE))
 	    /* if there was no error message, display the LOADED message */
 	    TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
-	  TtaChangeButton (document, 1, 1, stopN, FALSE);
+	  TtaChangeButton (document, 1, iStop, stopN, FALSE);
 	}
       DocNetworkStatus[document] = AMAYA_NET_INACTIVE;
     }
@@ -549,7 +574,7 @@ Document            doc;
 #if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
   if (TtaGetViewFrame (document, 1) != 0)
     /* this document is displayed */
-    TtaChangeButton (document, 1, 1 , stopR, TRUE);
+    TtaChangeButton (document, 1, iStop, stopR, TRUE);
 #endif
 }
 
@@ -572,7 +597,7 @@ Document            doc;
 #if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
   if (TtaGetViewFrame (document, 1) != 0)
     /* this document is displayed */
-    TtaChangeButton (document, 1, 1 , stopR, TRUE);
+    TtaChangeButton (document, 1, iStop, stopR, TRUE);
 #endif
 }
 
@@ -664,12 +689,12 @@ ThotBool            modified;
   if (modified && TtaGetDocumentAccessMode (document))
     {
        TtaSetItemOn (document, 1, File, BSave);
-       TtaChangeButton (document, 1, 7, iconSave, TRUE);
+       TtaChangeButton (document, 1, iSave, iconSave, TRUE);
     }
   else
     {
        TtaSetItemOff (document, 1, File, BSave);
-       TtaChangeButton (document, 1, 7, iconSaveNo, FALSE);
+       TtaChangeButton (document, 1, iSave, iconSaveNo, FALSE);
     }
 }
 
@@ -694,23 +719,23 @@ Document            doc;
        /* the document is in ReadOnly mode */
        TtaSetToggleItem (document, 1, Edit_, TEditMode, FALSE);
 #ifdef _WINDOWS 
-       WIN_TtaSwitchButton (document, 1, 5, iconEditor, TB_INDETERMINATE, TRUE);
+       WIN_TtaSwitchButton (document, 1, iEditor, iconEditor, TB_INDETERMINATE, TRUE);
 #else  /* _WINDOWS */
-       TtaChangeButton (document, 1, 5, iconBrowser, TRUE);
+       TtaChangeButton (document, 1, iEditor, iconBrowser, TRUE);
 #endif /* _WINDOWS */
-       TtaChangeButton (document, 1, 7, iconSaveNo, FALSE);
-       TtaChangeButton (document, 1, 11, iconINo, FALSE);
-       TtaChangeButton (document, 1, 12, iconBNo, FALSE);
-       TtaChangeButton (document, 1, 13, iconTNo, FALSE);
-       TtaChangeButton (document, 1, 15, iconImageNo, FALSE);
-       TtaChangeButton (document, 1, 16, iconH1No, FALSE);
-       TtaChangeButton (document, 1, 17, iconH2No, FALSE);
-       TtaChangeButton (document, 1, 18, iconH3No, FALSE);
-       TtaChangeButton (document, 1, 19, iconBulletNo, FALSE);
-       TtaChangeButton (document, 1, 20, iconNumNo, FALSE);
-       TtaChangeButton (document, 1, 21, iconDLNo, FALSE);
-       TtaChangeButton (document, 1, 22, iconLinkNo, FALSE);
-       TtaChangeButton (document, 1, 23, iconTableNo, FALSE);
+       TtaChangeButton (document, 1, iSave, iconSaveNo, FALSE);
+       TtaChangeButton (document, 1, iI, iconINo, FALSE);
+       TtaChangeButton (document, 1, iB, iconBNo, FALSE);
+       TtaChangeButton (document, 1, iT, iconTNo, FALSE);
+       TtaChangeButton (document, 1, iImage, iconImageNo, FALSE);
+       TtaChangeButton (document, 1, iH1, iconH1No, FALSE);
+       TtaChangeButton (document, 1, iH2, iconH2No, FALSE);
+       TtaChangeButton (document, 1, iH3, iconH3No, FALSE);
+       TtaChangeButton (document, 1,iBullet, iconBulletNo, FALSE);
+       TtaChangeButton (document, 1,iNum, iconNumNo, FALSE);
+       TtaChangeButton (document, 1,iDL, iconDLNo, FALSE);
+       TtaChangeButton (document, 1, iLink, iconLinkNo, FALSE);
+       TtaChangeButton (document, 1, iTable, iconTableNo, FALSE);
 #ifdef MATHML
        SwitchIconMath (document, 1, FALSE);
 #endif /* MATHML */
@@ -812,25 +837,25 @@ Document            doc;
        if (TtaIsDocumentModified (document))
 	 {
 	   TtaSetItemOn (document, 1, File, BSave);
-	   TtaChangeButton (document, 1, 7, iconSave, TRUE);
+	   TtaChangeButton (document, 1, iSave, iconSave, TRUE);
 	 }
 #ifdef _WINDOWS 
-       WIN_TtaSwitchButton (document, 1, 5, iconEditor, TB_INDETERMINATE, FALSE);
+       WIN_TtaSwitchButton (document, 1, iEditor, iconEditor, TB_INDETERMINATE, FALSE);
 #else  /* _WINDOWS */
-       TtaChangeButton (document, 1, 5, iconEditor, TRUE);
+       TtaChangeButton (document, 1, iEditor, iconEditor, TRUE);
 #endif /* _WINDOWS */
-       TtaChangeButton (document, 1, 11, iconI, TRUE);
-       TtaChangeButton (document, 1, 12, iconB, TRUE);
-       TtaChangeButton (document, 1, 13, iconT, TRUE);
-       TtaChangeButton (document, 1, 15, iconImage, TRUE);
-       TtaChangeButton (document, 1, 16, iconH1, TRUE);
-       TtaChangeButton (document, 1, 17, iconH2, TRUE);
-       TtaChangeButton (document, 1, 18, iconH3, TRUE);
-       TtaChangeButton (document, 1, 19, iconBullet, TRUE);
-       TtaChangeButton (document, 1, 20, iconNum, TRUE);
-       TtaChangeButton (document, 1, 21, iconDL, TRUE);
-       TtaChangeButton (document, 1, 22, iconLink, TRUE);
-       TtaChangeButton (document, 1, 23, iconTable, TRUE);
+       TtaChangeButton (document, 1, iI, iconI, TRUE);
+       TtaChangeButton (document, 1, iB, iconB, TRUE);
+       TtaChangeButton (document, 1, iT, iconT, TRUE);
+       TtaChangeButton (document, 1, iImage, iconImage, TRUE);
+       TtaChangeButton (document, 1, iH1, iconH1, TRUE);
+       TtaChangeButton (document, 1, iH2, iconH2, TRUE);
+       TtaChangeButton (document, 1, iH3, iconH3, TRUE);
+       TtaChangeButton (document, 1,iBullet, iconBullet, TRUE);
+       TtaChangeButton (document, 1,iNum, iconNum, TRUE);
+       TtaChangeButton (document, 1,iDL, iconDL, TRUE);
+       TtaChangeButton (document, 1, iLink, iconLink, TRUE);
+       TtaChangeButton (document, 1, iTable, iconTable, TRUE);
 #ifdef MATHML
        SwitchIconMath (document, 1, TRUE);
 #endif /* MATHML */
@@ -1322,6 +1347,35 @@ View                view;
        InitOpenDocForm (document, view);
      }
 }
+/*----------------------------------------------------------------------
+  Load the Home page
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void     GoToHome (Document doc, View view)
+#else
+static void     GoToHome (doc, view)
+Document        doc;
+View            view;
+#endif
+{
+  STRING        s;
+
+  s = TtaGetEnvString ("HOME_PAGE");
+   if (!s)
+     {
+       s = TtaGetEnvString ("THOTDIR");
+       if (s != NULL)
+	 ustrcpy (LastURLName, s);
+       else
+	 LastURLName[0] = EOS;
+       ustrcat (LastURLName, AMAYA_PAGE);
+     }
+   else
+     ustrcpy (LastURLName, s);
+   InNewWindow = FALSE;
+   CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (STRING) 1);
+}
+
 
 /*----------------------------------------------------------------------
    InitDocView prepares the main view of a new document.
@@ -1452,6 +1506,9 @@ ThotBool            logFile;
 			 TBSTYLE_BUTTON, FALSE);
 	   TtaAddButton (doc, 1, iconReload, Reload,
 			 TtaGetMessage (AMAYA, AM_BUTTON_RELOAD),
+			 TBSTYLE_BUTTON, TRUE);
+	   TtaAddButton (doc, 1, iconHome, GoToHome,
+			 TtaGetMessage (AMAYA, AM_BUTTON_HOME),
 			 TBSTYLE_BUTTON, TRUE);
 	   TtaAddButton (doc, 1, iconEditor, SetBrowserEditor,
 			 TtaGetMessage (AMAYA, AM_BUTTON_BrowseEdit),
@@ -1694,9 +1751,9 @@ ThotBool            logFile;
 	     TtaSetItemOff (doc, 1, Edit_, BTransform);
 	     TtaSetToggleItem (doc, 1, Edit_, TEditMode, FALSE);
 #ifdef _WINDOWS 
-	     WIN_TtaSwitchButton (doc, 1, 5, iconEditor, TB_INDETERMINATE, TRUE);
+	     WIN_TtaSwitchButton (doc, 1, iEditor, iconEditor, TB_INDETERMINATE, TRUE);
 #else  /* _WINDOWS */
-	     TtaChangeButton (doc, 1, 5, iconBrowser, TRUE);
+	     TtaChangeButton (doc, 1, iEditor, iconBrowser, TRUE);
 #endif /* _WINDOWS */
 	   }
 	 else
@@ -1714,18 +1771,18 @@ ThotBool            logFile;
 	     TtaSetItemOff (doc, 1, Views, BShowLinks);
 	     TtaSetItemOff (doc, 1, Views, BShowToC);
 	   }
-	 TtaChangeButton (doc, 1, 11, iconINo, FALSE);
-	 TtaChangeButton (doc, 1, 12, iconBNo, FALSE);
-	 TtaChangeButton (doc, 1, 13, iconTNo, FALSE);
-	 TtaChangeButton (doc, 1, 15, iconImageNo, FALSE);
-	 TtaChangeButton (doc, 1, 16, iconH1No, FALSE);
-	 TtaChangeButton (doc, 1, 17, iconH2No, FALSE);
-	 TtaChangeButton (doc, 1, 18, iconH3No, FALSE);
-	 TtaChangeButton (doc, 1, 19, iconBulletNo, FALSE);
-	 TtaChangeButton (doc, 1, 20, iconNumNo, FALSE);
-	 TtaChangeButton (doc, 1, 21, iconDLNo, FALSE);
-	 TtaChangeButton (doc, 1, 22, iconLinkNo, FALSE);
-	 TtaChangeButton (doc, 1, 23, iconTableNo, FALSE);
+	 TtaChangeButton (doc, 1, iI, iconINo, FALSE);
+	 TtaChangeButton (doc, 1, iB, iconBNo, FALSE);
+	 TtaChangeButton (doc, 1, iT, iconTNo, FALSE);
+	 TtaChangeButton (doc, 1, iImage, iconImageNo, FALSE);
+	 TtaChangeButton (doc, 1, iH1, iconH1No, FALSE);
+	 TtaChangeButton (doc, 1, iH2, iconH2No, FALSE);
+	 TtaChangeButton (doc, 1, iH3, iconH3No, FALSE);
+	 TtaChangeButton (doc, 1, iBullet, iconBulletNo, FALSE);
+	 TtaChangeButton (doc, 1, iNum, iconNumNo, FALSE);
+	 TtaChangeButton (doc, 1, iDL, iconDLNo, FALSE);
+	 TtaChangeButton (doc, 1, iLink, iconLinkNo, FALSE);
+	 TtaChangeButton (doc, 1, iTable, iconTableNo, FALSE);
 #ifdef MATHML
 	 SwitchIconMath (doc, 1, FALSE);
 #endif /* MATHML */
@@ -1746,23 +1803,23 @@ ThotBool            logFile;
 	   {
 	     /* the document is in ReadWrite mode */
 #ifdef _WINDOWS 
-	     WIN_TtaSwitchButton (doc, 1, 5, iconEditor, TB_INDETERMINATE, FALSE);
+	     WIN_TtaSwitchButton (doc, 1, iEditor, iconEditor, TB_INDETERMINATE, FALSE);
 #else  /* _WINDOWS */
-	     TtaChangeButton (doc, 1, 5, iconEditor, TRUE);
+	     TtaChangeButton (doc, 1, iEditor, iconEditor, TRUE);
 #endif /* _WINDOWS */
-	     TtaChangeButton (doc, 1, 7, iconSaveNo, FALSE);
-	     TtaChangeButton (doc, 1, 11, iconI, TRUE);
-	     TtaChangeButton (doc, 1, 12, iconB, TRUE);
-	     TtaChangeButton (doc, 1, 13, iconT, TRUE);
-	     TtaChangeButton (doc, 1, 15, iconImage, TRUE);
-	     TtaChangeButton (doc, 1, 16, iconH1, TRUE);
-	     TtaChangeButton (doc, 1, 17, iconH2, TRUE);
-	     TtaChangeButton (doc, 1, 18, iconH3, TRUE);
-	     TtaChangeButton (doc, 1, 19, iconBullet, TRUE);
-	     TtaChangeButton (doc, 1, 20, iconNum, TRUE);
-	     TtaChangeButton (doc, 1, 21, iconDL, TRUE);
-	     TtaChangeButton (doc, 1, 22, iconLink, TRUE);
-	     TtaChangeButton (doc, 1, 23, iconTable, TRUE);
+	     TtaChangeButton (doc, 1, iSave, iconSaveNo, FALSE);
+	     TtaChangeButton (doc, 1, iI, iconI, TRUE);
+	     TtaChangeButton (doc, 1, iB, iconB, TRUE);
+	     TtaChangeButton (doc, 1, iT, iconT, TRUE);
+	     TtaChangeButton (doc, 1, iImage, iconImage, TRUE);
+	     TtaChangeButton (doc, 1, iH1, iconH1, TRUE);
+	     TtaChangeButton (doc, 1, iH2, iconH2, TRUE);
+	     TtaChangeButton (doc, 1, iH3, iconH3, TRUE);
+	     TtaChangeButton (doc, 1, iBullet, iconBullet, TRUE);
+	     TtaChangeButton (doc, 1, iNum, iconNum, TRUE);
+	     TtaChangeButton (doc, 1, iDL, iconDL, TRUE);
+	     TtaChangeButton (doc, 1, iLink, iconLink, TRUE);
+	     TtaChangeButton (doc, 1, iTable, iconTable, TRUE);
 #ifdef MATHML
 	     SwitchIconMath (doc, 1, TRUE);
 #endif /* MATHML */
@@ -3088,7 +3145,7 @@ STRING              form_data;
 Document            doc;
 Document            baseDoc;
 ClickEvent          CE_event;
-ThotBool		    history;
+ThotBool	    history;
 TTcbf              *cbf;
 void               *ctx_cbf;
 
@@ -4067,6 +4124,7 @@ NotifyEvent        *event;
    iconSaveNo = TtaCreatePixmapLogo (saveNo_xpm);
    iconFind = TtaCreatePixmapLogo (find_xpm);
    iconReload = TtaCreatePixmapLogo (Reload_xpm);
+   iconHome = TtaCreatePixmapLogo (home_xpm);
    iconI = TtaCreatePixmapLogo (I_xpm);
    iconINo = TtaCreatePixmapLogo (INo_xpm);
    iconB = TtaCreatePixmapLogo (B_xpm);
@@ -4302,9 +4360,7 @@ NotifyEvent        *event;
      {
        s = TtaGetEnvString ("THOTDIR");
        if (s != NULL)
-	 {
-	   ustrcpy (LastURLName, s);
-	 }
+	 ustrcpy (LastURLName, s);
        else
 	 LastURLName[0] = EOS;
        ustrcat (LastURLName, AMAYA_PAGE);
