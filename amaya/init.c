@@ -1557,7 +1557,9 @@ ThotBool     readOnly;
       /* keep in memory if the closed document is in read-only mode */
       if (ReadOnlyDocument[doc])
 	readOnly = TRUE;
-      if (DocumentTypes[doc] == docHTML)
+      if (DocumentTypes[doc] == docHTML ||
+	  DocumentTypes[doc] == docSVG ||
+	  DocumentTypes[doc] == docMath)
 	{
 	  TtaSetToggleItem (doc, 1, Views, TShowMapAreas, FALSE);
 	  TtaSetToggleItem (doc, 1, Special, TSectionNumber, FALSE);
@@ -2981,14 +2983,7 @@ View                view;
    int                 x, y, w, h;
    CHAR_T              structureName[30];
 
-   if (DocumentTypes[document] == docSVG)
-     ustrcpy (structureName, TEXT("Graph_Structure_view"));
-   else
-     if (DocumentTypes[document] == docMath)
-       ustrcpy (structureName, TEXT("Math_Structure_view"));
-     else
-       ustrcpy (structureName, TEXT("Structure_view"));
-     
+   ustrcpy (structureName, TEXT("Structure_view"));  
    structView = TtaGetViewFromName (document, structureName);
    if (structView != 0 && TtaIsViewOpened (document, structView))
      TtaRaiseView (document, structView);

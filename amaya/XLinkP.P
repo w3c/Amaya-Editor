@@ -7,9 +7,7 @@ PRESENTATION XLink;
 
 VIEWS
    Formatted_view,
-   Structure_view merge with Math_Structure_view
-                             Graph_Structure_view
-                             Structure_view,
+   Structure_view merge with Structure_view,
    Links_view merge with Links_view;
 
 #define TAG_FONTSIZE 12 pt
