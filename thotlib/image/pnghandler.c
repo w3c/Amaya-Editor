@@ -631,17 +631,22 @@ int *bg;
     else if (color_type == PNG_COLOR_TYPE_RGB )
       {
 	*ncolors = 128; 
-	for (i=0; i < *ncolors ; i++) {
-	  colrs[i].red   = Std_color_cube[i].red;
-	  colrs[i].green = Std_color_cube[i].green;
-	  colrs[i].blue  = Std_color_cube[i].blue;
-#ifndef _WINDOWS
-	  colrs[i].pixel = i;
+	for (i = 0; i < *ncolors ; i++)
+	  {
+#ifdef _WINDOWS
+	    colrs[i].red   = Std_color_cube[i].red;
+	    colrs[i].green = Std_color_cube[i].green;
+	    colrs[i].blue  = Std_color_cube[i].blue;
+#else /* _WINDOWS */
+	    colrs[i].red   = Std_color_cube[i].red << 8;
+	    colrs[i].green = Std_color_cube[i].green << 8;
+	    colrs[i].blue  = Std_color_cube[i].blue << 8;
+	    colrs[i].pixel = i;
 #ifndef _GTK
-	  colrs[i].flags = DoRed|DoGreen|DoBlue;
+	    colrs[i].flags = DoRed|DoGreen|DoBlue;
 #endif /* ! _GTK */
 #endif /* _WINDOWS */
-	}       
+	  }  
       }
     else if (color_type == PNG_COLOR_TYPE_GRAY)
       {
@@ -830,27 +835,15 @@ void InitPngColors ()
   int       i;
 
   /* fills standard color cube */ 
-#ifdef _WINDOWS
-  for (i=0; i<127; i++)
+  for (i = 0; i < 127; i++)
     {
       Std_color_cube[i].red   = ((i & 0x3) * 65535/3) >> 8;
       Std_color_cube[i].green = (((i >> 2) & 0x7) * 65535/7) >> 8;
       Std_color_cube[i].blue  = (((i >> 5) & 0x3) * 65535/3) >> 8;
     }
-  Std_color_cube[127].red   = 255 >> 8;
-  Std_color_cube[127].green = 255 >> 8;
-  Std_color_cube[127].blue  = 255 >> 8;
-#else  /* !_WINDOWS */
-  for (i=0; i<127; i++)
-    {
-      Std_color_cube[i].red   = ((i & 0x3) * 65535/3);
-      Std_color_cube[i].green = (((i >> 2) & 0x7) * 65535/7);
-      Std_color_cube[i].blue  = (((i >> 5) & 0x3) * 65535/3);
-    }
   Std_color_cube[127].red   = 255;
   Std_color_cube[127].green = 255;
   Std_color_cube[127].blue  = 255;
-#endif  /* !_WINDOWS */
 }
 
 /*----------------------------------------------------------------------
