@@ -196,8 +196,6 @@ LPARAM     lParam;
 	if (documentDisplayMode[FrameTable[frame].FrDoc - 1] != NoComputedDisplay)
 	  {
 	     TtDisplay = BeginPaint (w, &ps);
-             SelectPalette (ps.hdc, TtCmap, TRUE);
-             RealizePalette (ps.hdc);
              GetClientRect (w, &rect);
 	     DefRegion (frame, ps.rcPaint.left, ps.rcPaint.top, ps.rcPaint.right, ps.rcPaint.bottom);
 	     SwitchSelection (frame, FALSE);
@@ -1269,15 +1267,6 @@ LPARAM lParam;
      }
 
      switch (mMsg) {
-	 /*
-          case WM_CREATE: {
-               HDC hdc = GetDC (hwnd);
-               SelectPalette (hdc, TtCmap, TRUE);
-               RealizePalette (hdc);
-               break;
-	  }
-	  */
-	  
           case WM_PAINT: /* Some part of the Client Area has to be repaint. */
 	       saveHdc = TtDisplay;
 	       WIN_HandleExpose (hwnd, frame, wParam, lParam);

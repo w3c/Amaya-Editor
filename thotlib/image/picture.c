@@ -332,16 +332,17 @@ PictInfo           *imageDesc;
 #            ifndef _WINDOWS
 	     XCopyArea (TtDisplay, pixmap, drawable, TtGraphicGC, picXOrg, picYOrg, w, h, xFrame, yFrame);
 #            else /* _WINDOWS */
-             result = SelectPalette (TtDisplay, TtCmap, FALSE);
-             printf ("SelectPalette (TtDisplay, TtCmap, FALSE) result: %d\n", result);
-             result = RealizePalette (TtDisplay);
-	     printf ("RealizePalette (TtDisplay) result: %d\n", result);
+             if (!TtIsTrueColor) {
+		if ((result = SelectPalette (TtDisplay, TtCmap, TRUE))) {
+                   printf ("SelectPalette (TtDisplay, TtCmap, FALSE) result: %d\n", result);
+		   if (!RealizePalette (TtDisplay))
+		      printf ("RealizePalette (TtDisplay) result: %d\n", result);
+		}
+	     }
+
 	     hMemDC = CreateCompatibleDC (TtDisplay);
 	     SelectObject (hMemDC, pixmap);
 	     
-	     /*
-	     BitBlt (TtDisplay, xFrame, yFrame, w, h, hMemDC, 0, 0, SRCCOPY);
-	     */
 	     BitBlt (TtDisplay, xFrame, yFrame, w, h, hMemDC, 0, 0, SRCCOPY);
 	     DeleteDC (hMemDC);
 #            endif /* _WINDOWS */

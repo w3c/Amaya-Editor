@@ -115,6 +115,7 @@ void WinInitColors ()
 #endif /* __STDC__ */
 {
    int        i;
+   int        palSize ;
    static int initialized = 0;
    char       msg[200];
 
@@ -125,32 +126,37 @@ void WinInitColors ()
 
    WIN_GetDeviceContext (-1);
 
+   palSize = GetDeviceCaps (TtDisplay, SIZEPALETTE);
+   if (palSize == 0)
+      TtIsTrueColor = TRUE ;
+   else
+      TtIsTrueColor = FALSE ;
+
    /*
     * Create initialize and install a color palette for
     * the Thot set of colors.
     */
 
-   /* ptrLogPal = (LOGPALETTE*) TtaGetMemory (sizeof (LOGPALETTE) + MAX_COLOR * sizeof (PALETTEENTRY)); */
+   if (!TtIsTrueColor) {
+      ptrLogPal = HeapAlloc (GetProcessHeap (), HEAP_ZERO_MEMORY, sizeof (LOGPALETTE) + (MAX_COLOR * sizeof (PALETTEENTRY)));
 
-   ptrLogPal = HeapAlloc (GetProcessHeap (), HEAP_ZERO_MEMORY, sizeof (LOGPALETTE) + (MAX_COLOR * sizeof (PALETTEENTRY)));
+      ptrLogPal->palVersion             = 0x300;
+      ptrLogPal->palNumEntries          = MAX_COLOR;
+      
+      for (i = 0; i < MAX_COLOR; i++) {
+	  ptrLogPal->palPalEntry[i].peRed   = RGB_Table[i].red;
+	  ptrLogPal->palPalEntry[i].peGreen = RGB_Table[i].green;
+	  ptrLogPal->palPalEntry[i].peBlue  = RGB_Table[i].blue;
+	  ptrLogPal->palPalEntry[i].peFlags = PC_RESERVED;
+      }
 
-   ptrLogPal->palVersion             = 0x300;
-   ptrLogPal->palNumEntries          = MAX_COLOR;
-
-   for (i = 0; i < MAX_COLOR; i++) {
-       ptrLogPal->palPalEntry[i].peRed   = RGB_Table[i].red;
-       ptrLogPal->palPalEntry[i].peGreen = RGB_Table[i].green;
-       ptrLogPal->palPalEntry[i].peBlue  = RGB_Table[i].blue;
-       ptrLogPal->palPalEntry[i].peFlags = PC_RESERVED;
+      TtCmap    = CreatePalette (ptrLogPal);
+      
+      if (TtCmap == NULL) {
+	  fprintf (stderr, "couldn't CreatePalette\n");
+	  WinErrorBox (WIN_Main_Wd);
+      } 
    }
-
-   TtCmap    = CreatePalette (ptrLogPal);
-
-   if (TtCmap == NULL) {
-      fprintf (stderr, "couldn't CreatePalette\n");
-      WinErrorBox (WIN_Main_Wd);
-   } 
-
    /* TtaFreeMemory (ptrLogPal); */
 
    /* fill-in the Pix_Color table */

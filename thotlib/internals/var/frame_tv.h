@@ -54,6 +54,7 @@ THOT_EXPORT WIN_GC_BLK   TtGreyGC;
 THOT_EXPORT WIN_GC_BLK   TtLineGC;
 THOT_EXPORT WIN_GC_BLK   TtDialogueGC;
 THOT_EXPORT WIN_GC_BLK   TtGraphicGC;	/* Graphic context pour les images      */
+THOT_EXPORT boolean      TtIsTrueColor; 
 #else /* _WINDOWS */
 THOT_EXPORT ThotWidget   RootShell;
 THOT_EXPORT XmFontList   DefaultFont;  /* default Font                */

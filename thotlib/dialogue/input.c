@@ -456,9 +456,10 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
-   int                 keyboard_mask = 0;
-   char                string[2];
-   int                 len = 0;
+   int  keyboard_mask = 0;
+   int  status;
+   char string[2];
+   int  len = 0;
 
    if ((msg != WM_KEYDOWN) && (msg != WM_CHAR))
       return;
@@ -467,13 +468,18 @@ LPARAM lParam;
 	fprintf (stderr, "unable to get frame of window %X\n", hWnd);
 	return;
    }
-   if (GetKeyState (VK_SHIFT))
+   status = GetKeyState (VK_SHIFT);
+   if (HIBYTE (status))
       keyboard_mask |= THOT_MOD_SHIFT;
 
-   if (GetKeyState (VK_CONTROL))
+   status = GetKeyState (VK_CONTROL);
+   if (HIBYTE (status))
+      /* if (GetKeyState (VK_CONTROL) & 0x0001) */
       keyboard_mask |= THOT_MOD_CTRL;
 
-   if (GetKeyState (VK_MENU))
+   status = GetKeyState (VK_MENU);
+   if (HIBYTE (status))
+       /* if (GetKeyState (VK_MENU) & 0x0001) */
       keyboard_mask |= THOT_MOD_ALT;
 
    if (msg == WM_CHAR){

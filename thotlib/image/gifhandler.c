@@ -877,22 +877,11 @@ ThotColorStruct* colrs;
    gshift = 5;
    bshift = 11;
    for (w = (width * height); w > 0; w--) {
-       int index = TtaGetThotColor (colrs [(int) *datap].red, colrs [(int) *datap].green, colrs [(int) *datap].blue);
-       temp = ((RGB_colors [index].red & 31) | 
-               ((RGB_colors [index].green >> gshift) & 2016) | 
-               ((RGB_colors [index].blue >> bshift) & 63488));
-       /*
-       temp = ((colrs[(int) *datap].red & 31) |
-               ((colrs[(int) *datap].green >> gshift) & 2016) |
-               (((colrs[(int) *datap].blue >> bshift) & 63488)));
-	       */
-       /*if (BitmapBitOrder (dsp) == MSBFirst) {*/
-	  *bitp++ = (temp >> 8) & 0xff;
-	  *bitp++ = temp & 0xff;
-	  /* } else {
-            *bitp++ = temp & 0xff;
-            *bitp++ = (temp >> 8) & 0xff;
-	    }*/
+       temp = (((colrs[(int) *datap].red * 255) & 63488) |
+               (((colrs[(int) *datap].green * 255) >> gshift) & 2016) |
+               ((((colrs[(int) *datap].blue * 255)>> bshift) & 31)));
+          *bitp++ = temp & 0xff;
+          *bitp++ = (temp >> 8) & 0xff;
        
        datap++;
    }
@@ -1008,10 +997,9 @@ ThotColorStruct    *colrs;
 	       bshift = gshift + nbbits (theVisual->green_mask);
 	       for (w = (width * height); w > 0; w--)
 		 {
-		    temp =
-		       ((colrs[(int) *datap].red & theVisual->red_mask) |
-			((colrs[(int) *datap].green >> gshift) & theVisual->green_mask) |
-			(((colrs[(int) *datap].blue >> bshift) & theVisual->blue_mask)));
+		    temp = ((colrs[(int) *datap].red & theVisual->red_mask) | 
+                            ((colrs[(int) *datap].green >> gshift) & theVisual->green_mask) |
+			    (((colrs[(int) *datap].blue >> bshift) & theVisual->blue_mask)));
 
 		    if (BitmapBitOrder (dsp) == MSBFirst)
 		      {
@@ -1247,58 +1235,62 @@ ThotColorStruct     colrs[256];
    cbPlanes = GetDeviceCaps (hdcMem, PLANES);
    DeleteDC (hdcMem);
    */
-   if (TtWDepth == 16) 
+   if (TtIsTrueColor) 
       return WIN_MakeImage (TtDisplay, image_data, width, height, TtWDepth, colrs);
    else {
-   bmBits = (BYTE*) malloc (width * sizeof (BYTE));
-   if (bmBits == NULL)
-      return NULL;
+         bmBits = (BYTE*) malloc (width * sizeof (BYTE));
+	 if (bmBits == NULL)
+	    return NULL;
     
-   for (i = 0; i < MAX_COLOR; i++)
-       Mapping [i] = -1;
+	 for (i = 0; i < MAX_COLOR; i++)
+	     Mapping [i] = -1;
 
-   /*
-   bmp     = CreateBitmap (width, height, cbPlanes, cbBits, NULL);
-   bmpLine = CreateBitmap (width, 1, cbPlanes, cbBits, NULL);
-   */
-   bmp     = CreateCompatibleBitmap (TtDisplay, width, height);
-   bmpLine = CreateCompatibleBitmap (TtDisplay, width, 1);
+	 if (SelectPalette (TtDisplay, TtCmap, TRUE))
+	    if (!RealizePalette (TtDisplay))
+	       printf ("Cannot realize palette\n");
+	 
+	 /*
+	   bmp     = CreateBitmap (width, height, cbPlanes, cbBits, NULL);
+	   bmpLine = CreateBitmap (width, 1, cbPlanes, cbBits, NULL);
+	   */
+	 bmp     = CreateCompatibleBitmap (TtDisplay, width, height);
+	 bmpLine = CreateCompatibleBitmap (TtDisplay, width, 1);
+	 
+	 
+	 if ((bmp == NULL) || (bmpLine == NULL)) {
+	    free (bmBits);
+	    return (Pixmap) bmp;
+	 }
+    
+	 origMemDC = CreateCompatibleDC (NULL);
+	 destMemDC = CreateCompatibleDC (NULL);
    
+	 SelectObject (destMemDC, bmp);
+	 SelectObject (origMemDC, bmpLine);
+	 
+	 for (j = 0; j < height; j++) {
+	     for (i = 0; i < width; i++) {
+		 imageIndex = image_data [i + j * width];
+		 if (Mapping [imageIndex] != -1)
+		    mapIndex = Mapping [imageIndex];
+		 else {
+		      mapIndex = TtaGetThotColor (colrs [imageIndex].red, colrs [imageIndex].green, colrs [imageIndex].blue);
+		      Mapping [imageIndex] = mapIndex;  
+		 }    
+		 bmBits[i] = mapIndex;
+	     }    
+	     ret = SetBitmapBits (bmpLine, width, bmBits);
+	     BitBlt (destMemDC, 0, j, width, 1, origMemDC, 0, 0, SRCCOPY);
+	 }
 
-   if ((bmp == NULL) || (bmpLine == NULL)) {
-      free (bmBits);
-      return (Pixmap) bmp;
-   }
-    
-   origMemDC = CreateCompatibleDC (NULL);
-   destMemDC = CreateCompatibleDC (NULL);
-   
-   SelectObject (destMemDC, bmp);
-   SelectObject (origMemDC, bmpLine);
-
-   for (j = 0; j < height; j++) {
-       for (i = 0; i < width; i++) {
-	   imageIndex = image_data [i + j * width];
-	   if (Mapping [imageIndex] != -1)
-	      mapIndex = Mapping [imageIndex];
-	   else {
-	        mapIndex = TtaGetThotColor (colrs [imageIndex].red, colrs [imageIndex].green, colrs [imageIndex].blue);
-	        Mapping [imageIndex] = mapIndex;  
-	   }    
-	   bmBits[i] = mapIndex;
-       }    
-       ret = SetBitmapBits (bmpLine, width, bmBits);
-       BitBlt (destMemDC, 0, j, width, 1, origMemDC, 0, 0, SRCCOPY);
-   }
-
-   /* Cleanup */
-   /*.........*/
-   DeleteObject (bmpLine);
-   DeleteDC(origMemDC); 
-   DeleteDC(destMemDC);
-   free (bmBits);
-    
-   return (Pixmap) bmp;
+	 /* Cleanup */
+	 /*.........*/
+	 DeleteObject (bmpLine);
+	 DeleteDC(origMemDC); 
+	 DeleteDC(destMemDC);
+	 free (bmBits);
+	 
+	 return (Pixmap) bmp;
    }
 #  endif /* _WINDOWS */
 }
