@@ -26,9 +26,14 @@ main(argc, argv)
   else
     {
       strcpy(name, argv[1]);
-      strcat(name, ".new");
-      file1 = fopen(argv[1], "r"); /* Open the new file */
-      file2 = fopen(name, "w"); /* Open the old file */
+      strcat(name, ".old");
+      if (rename (argv[1], name))
+	{
+	  printf("cannot rename %s into %s.old\n", argv[1], argv[1]);
+	  exit (-1);
+	}
+      file1 = fopen(name, "r"); /* Open the new file */
+      file2 = fopen(argv[1], "w"); /* Open the old file */
       if (!file1 || !file2)
 	printf("cannot open %s or %s.new\n", argv[1], argv[1]);
       else
