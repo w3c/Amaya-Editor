@@ -53,10 +53,7 @@
                           <object class="wxBoxSizer">
                             <orient>wxHORIZONTAL</orient>
                             <object class="sizeritem">
-                              <object class="wxSpinCtrl" name="wxID_CHARMENUSIZE_VALUE">
-                                <min>8</min>
-                                <max>20</max>
-                              </object>
+                              <object class="wxSpinCtrl" name="wxID_CHARMENUSIZE_VALUE"/>
                               <option>1</option>
                               <flag>wxALL|wxEXPAND</flag>
                             </object>
@@ -92,9 +89,7 @@
                           <object class="wxBoxSizer">
                             <orient>wxHORIZONTAL</orient>
                             <object class="sizeritem">
-                              <object class="wxTextCtrl" name="wxID_CHARZOOM_VALUE">
-                                <style></style>
-                              </object>
+                              <object class="wxSpinCtrl" name="wxID_CHARZOOM_VALUE"/>
                               <option>1</option>
                               <flag>wxALL|wxEXPAND</flag>
                             </object>
@@ -231,6 +226,11 @@
             <object class="wxButton" name="wxID_OK">
               <label>OK</label>
               <default>1</default>
+            </object>
+          </object>
+          <object class="sizeritem">
+            <object class="wxButton" name="wxID_DEFAULT">
+              <label>DEFAULT</label>
             </object>
           </object>
           <object class="sizeritem">
