@@ -7283,18 +7283,18 @@ void InitAmaya (NotifyEvent * event)
 
    /* initialize icons */
 #ifdef _WX
-   stopR         = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, (const char *)"stop.png"), wxBITMAP_TYPE_PNG );
+   stopR         = (ThotIcon) 0;
    stopN         = (ThotIcon) 0;
-   iconSave      = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, (const char *)"save.png"), wxBITMAP_TYPE_PNG );
+   iconSave      = (ThotIcon) 0;
    iconSaveNo    = (ThotIcon) 0;
-   iconFind      = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, (const char *)"find.png"), wxBITMAP_TYPE_PNG );
-   iconReload    = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, (const char *)"reload.png"), wxBITMAP_TYPE_PNG );
-   iconHome      = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, (const char *)"home.png"), wxBITMAP_TYPE_PNG );
-   iconBack      = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, (const char *)"back.png"), wxBITMAP_TYPE_PNG );
+   iconFind      = (ThotIcon) 0;
+   iconReload    = (ThotIcon) 0;
+   iconHome      = (ThotIcon) 0;
+   iconBack      = (ThotIcon) 0;
    iconBackNo    = (ThotIcon) 0;
-   iconForward   = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, (const char *)"forward.png"), wxBITMAP_TYPE_PNG );
+   iconForward   = (ThotIcon) 0;
    iconForwardNo = (ThotIcon) 0;
-   iconPrint     = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, (const char *)"print.png"), wxBITMAP_TYPE_PNG );
+   iconPrint     = (ThotIcon) 0;
    iconI = (ThotIcon) 0;
    iconINo = (ThotIcon) 0;
    iconB = (ThotIcon) 0;
@@ -7319,7 +7319,7 @@ void InitAmaya (NotifyEvent * event)
    iconLinkNo = (ThotIcon) 0;
    iconTable = (ThotIcon) 0;
    iconTableNo = (ThotIcon) 0;
-   iconLogo = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, "logo.png"), wxBITMAP_TYPE_PNG);
+   iconLogo = (ThotIcon) 0;
 #endif /* _WX */
 #ifdef _GTK
    stopR = (ThotIcon) TtaCreatePixmapLogo (stopR_xpm);

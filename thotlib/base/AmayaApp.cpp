@@ -207,18 +207,18 @@ bool AmayaApp::OnInit()
   /* add the default document icon */
 
 #ifdef _WINDOWS
-  wxBitmap default_icon( TtaGetResourcePathWX( WX_RESOURCES_ICON, (const char *)"default_document.gif"), wxBITMAP_TYPE_GIF );
+  wxBitmap default_icon( TtaGetResourcePathWX( WX_RESOURCES_ICON_16X16, "default_document.gif"), wxBITMAP_TYPE_GIF );
 #else /* _WINDOWS */
-  wxBitmap default_icon( TtaGetResourcePathWX( WX_RESOURCES_ICON, (const char *)"default_document.png"), wxBITMAP_TYPE_PNG );
+  wxBitmap default_icon( TtaGetResourcePathWX( WX_RESOURCES_ICON_16X16, "default_document.png"), wxBITMAP_TYPE_PNG );
 #endif /* _WINDOWS */
   m_pDocImageList->Add( default_icon );
 
 
   /* setup the app icon */
 #ifdef _WINDOWS
-  m_AppIcon = wxIcon( TtaGetResourcePathWX( WX_RESOURCES_ICON, (const char *)"logo.ico"), wxBITMAP_TYPE_ICO );
+  m_AppIcon = wxIcon( TtaGetResourcePathWX( WX_RESOURCES_ICON_22X22, "logo.ico"), wxBITMAP_TYPE_ICO );
 #else /* _WINDOWS */
-  m_AppIcon = wxIcon( TtaGetResourcePathWX( WX_RESOURCES_ICON, (const char *)"logo.png"), wxBITMAP_TYPE_PNG );
+  m_AppIcon = wxIcon( TtaGetResourcePathWX( WX_RESOURCES_ICON_22X22, "logo.png"), wxBITMAP_TYPE_PNG );
 #endif /* _WINDOWS */
 
 #endif /* _GLPRINT */

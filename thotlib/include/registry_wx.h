@@ -5,7 +5,9 @@
 /* constants used to identify different type of ressources */
 typedef enum
   {
-    WX_RESOURCES_ICON,
+    WX_RESOURCES_ICON_16X16,
+    WX_RESOURCES_ICON_22X22,
+    WX_RESOURCES_ICON_MISC,
     WX_RESOURCES_XRC
   } wxResourceType;
 

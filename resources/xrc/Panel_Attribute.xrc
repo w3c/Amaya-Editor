@@ -16,7 +16,7 @@
                       <orient>wxHORIZONTAL</orient>
                       <object class="sizeritem">
                         <object class="wxBitmapButton" name="wxID_BUTTON_EXPAND">
-                          <bitmap>../icons/expand_on.png</bitmap>
+                          <bitmap>../icons/misc/expand_on.png</bitmap>
                           <style>wxNO_BORDER</style>
                         </object>
                         <flag>wxALIGN_CENTRE</flag>
@@ -31,7 +31,7 @@
                       </object>
                       <object class="sizeritem">
                         <object class="wxBitmapButton" name="wxID_BUTTON_DETACH">
-                          <bitmap>../icons/detach.png</bitmap>
+                          <bitmap>../icons/misc/detach.png</bitmap>
                           <style>wxNO_BORDER</style>
                         </object>
                         <flag>wxALIGN_CENTRE</flag>
@@ -146,7 +146,7 @@
                                                 <orient>wxHORIZONTAL</orient>
                                                 <object class="sizeritem">
                                                   <object class="wxBitmapButton" name="wxID_BUTTON_DEL_ATTR">
-                                                    <bitmap>../icons/trash.png</bitmap>
+                                                    <bitmap>../icons/16x16/trash.png</bitmap>
                                                     <style>wxBU_AUTODRAW</style>
                                                     <tooltip>*Supprimer*</tooltip>
                                                   </object>

@@ -58,22 +58,22 @@
                       <orient>wxHORIZONTAL</orient>
                       <object class="sizeritem">
                         <object class="wxBitmapButton" name="wxID_BBT_REPEAT">
-                          <bitmap>../icons/BG_repeat.png</bitmap>
+                          <bitmap>../icons/22x22/BG_repeat.png</bitmap>
                         </object>
                       </object>
                       <object class="sizeritem">
                         <object class="wxBitmapButton" name="wxID_BBT_REPEAT_X">
-                          <bitmap>../icons/BG_repeat_x.png</bitmap>
+                          <bitmap>../icons/22x22/BG_repeat_x.png</bitmap>
                         </object>
                       </object>
                       <object class="sizeritem">
                         <object class="wxBitmapButton" name="wxID_BBT_REPEAT_Y">
-                          <bitmap>../icons/BG_repeat_y.png</bitmap>
+                          <bitmap>../icons/22x22/BG_repeat_y.png</bitmap>
                         </object>
                       </object>
                       <object class="sizeritem">
                         <object class="wxBitmapButton" name="wxID_BBT_NOREPEAT">
-                          <bitmap>../icons/BG_norepeat.png</bitmap>
+                          <bitmap>../icons/22x22/BG_norepeat.png</bitmap>
                         </object>
                       </object>
                     </object>

@@ -16,7 +16,7 @@
                       <orient>wxHORIZONTAL</orient>
                       <object class="sizeritem">
                         <object class="wxBitmapButton" name="wxID_BUTTON_EXPAND">
-                          <bitmap>../icons/expand_on.png</bitmap>
+                          <bitmap>../icons/misc/expand_on.png</bitmap>
                           <style>wxNO_BORDER</style>
                         </object>
                         <flag>wxALIGN_CENTRE</flag>
@@ -31,7 +31,7 @@
                       </object>
                       <object class="sizeritem">
                         <object class="wxBitmapButton" name="wxID_BUTTON_DETACH">
-                          <bitmap>../icons/detach.png</bitmap>
+                          <bitmap>../icons/misc/detach.png</bitmap>
                           <style>wxNO_BORDER</style>
                         </object>
                         <flag>wxALIGN_CENTRE</flag>
@@ -63,10 +63,10 @@
                                       <size>24,24</size>
                                       <style>wxNO_BORDER</style>
                                       <tooltip>*Deault colors*</tooltip>
-                                      <bitmap>../icons/black_white.png</bitmap>
+                                      <bitmap>../icons/misc/black_white.png</bitmap>
                                     </object>
                                     <object class="wxStaticBitmap" name="wxID_BUTTON_DEFAULTCOLORS">
-                                      <bitmap>../icons/black_white.png</bitmap>
+                                      <bitmap>../icons/misc/black_white.png</bitmap>
                                       <pos>4,34</pos>
                                       <style></style>
                                       <hidden>1</hidden>
@@ -76,10 +76,10 @@
                                       <size>24,24</size>
                                       <style>wxNO_BORDER</style>
                                       <tooltip>*Switch colors*</tooltip>
-                                      <bitmap>../icons/switch_colors.png</bitmap>
+                                      <bitmap>../icons/misc/switch_colors.png</bitmap>
                                     </object>
                                     <object class="wxStaticBitmap" name="wxID_BMP_SWITCHCOLORS">
-                                      <bitmap>../icons/switch_colors.png</bitmap>
+                                      <bitmap>../icons/misc/switch_colors.png</bitmap>
                                       <pos>44,4</pos>
                                       <style></style>
                                       <hidden>1</hidden>
@@ -88,14 +88,14 @@
                                       <pos>24,20</pos>
                                       <size>40,30</size>
                                       <tooltip>*Background*</tooltip>
-                                      <bitmap>..\icons\empty.png</bitmap>
+                                      <bitmap>../icons/misc/empty.png</bitmap>
                                     </object>
                                     <object class="wxBitmapButton" name="wxID_BUTTON_FGCOLOR">
                                       <pos>0,0</pos>
                                       <size>40,30</size>
                                       <focused>1</focused>
                                       <tooltip>*Foreground*</tooltip>
-                                      <bitmap>..\icons\empty.png</bitmap>
+                                      <bitmap>../icons/mics/empty.png</bitmap>
                                     </object>
                                   </object>
                                   <flag>wxTOP|wxBOTTOM|wxLEFT|wxEXPAND</flag>
@@ -107,14 +107,14 @@
                                     <object class="sizeritem">
                                       <object class="wxBitmapButton" name="wxID_APPLY">
                                         <tooltip>*Apply*</tooltip>
-                                        <bitmap>../icons/ok.png</bitmap>
+                                        <bitmap>../icons/16x16/ok.png</bitmap>
                                       </object>
                                       <flag>wxEXPAND</flag>
                                     </object>
                                     <object class="sizeritem">
                                       <object class="wxBitmapButton" name="wxID_REFRESH">
                                         <tooltip>*ReFresh*</tooltip>
-                                        <bitmap>../icons/refresh.png</bitmap>
+                                        <bitmap>../icons/16x16/refresh.png</bitmap>
                                       </object>
                                       <flag>wxEXPAND</flag>
                                     </object>

@@ -5,35 +5,35 @@
       <orient>wxHORIZONTAL</orient>
       <object class="sizeritem">
         <object class="wxBitmapButton" name="wxID_TOOL_BACK">
-          <bitmap>../icons/back.png</bitmap>
+          <bitmap>../icons/22x22/back.png</bitmap>
           <style>wxBU_AUTODRAW|wxNO_BORDER</style>
         </object>
         <flag>wxALIGN_CENTRE</flag>
       </object>
       <object class="sizeritem">
         <object class="wxBitmapButton" name="wxID_TOOL_FORWARD">
-          <bitmap>../icons/forward.png</bitmap>
+          <bitmap>../icons/22x22/forward.png</bitmap>
           <style>wxBU_AUTODRAW|wxNO_BORDER</style>
         </object>
         <flag>wxALIGN_CENTRE</flag>
       </object>
       <object class="sizeritem">
         <object class="wxBitmapButton" name="wxID_TOOL_RELOAD">
-          <bitmap>../icons/reload.png</bitmap>
+          <bitmap>../icons/22x22/reload.png</bitmap>
           <style>wxBU_AUTODRAW|wxNO_BORDER</style>
         </object>
         <flag>wxALIGN_CENTRE</flag>
       </object>
       <object class="sizeritem">
         <object class="wxBitmapButton" name="wxID_TOOL_STOP">
-          <bitmap>../icons/stop.png</bitmap>
+          <bitmap>../icons/22x22/stop.png</bitmap>
           <style>wxBU_AUTODRAW|wxNO_BORDER</style>
         </object>
         <flag>wxALIGN_CENTRE</flag>
       </object>
       <object class="sizeritem">
         <object class="wxBitmapButton" name="wxID_TOOL_HOME">
-          <bitmap>../icons/home.png</bitmap>
+          <bitmap>../icons/22x22/home.png</bitmap>
           <style>wxBU_AUTODRAW|wxNO_BORDER</style>
         </object>
         <flag>wxALIGN_CENTRE</flag>
@@ -46,21 +46,21 @@
       </object>
       <object class="sizeritem">
         <object class="wxBitmapButton" name="wxID_TOOL_SAVE">
-          <bitmap>../icons/save.png</bitmap>
+          <bitmap>../icons/22x22/save.png</bitmap>
           <style>wxBU_AUTODRAW|wxNO_BORDER</style>
         </object>
         <flag>wxALIGN_CENTRE</flag>
       </object>
       <object class="sizeritem">
         <object class="wxBitmapButton" name="wxID_TOOL_PRINT">
-          <bitmap>../icons/print.png</bitmap>
+          <bitmap>../icons/22x22/print.png</bitmap>
           <style>wxBU_AUTODRAW|wxNO_BORDER</style>
         </object>
         <flag>wxALIGN_CENTRE</flag>
       </object>
       <object class="sizeritem">
         <object class="wxBitmapButton" name="wxID_TOOL_FIND">
-          <bitmap>../icons/find.png</bitmap>
+          <bitmap>../icons/22x22/find.png</bitmap>
           <style>wxBU_AUTODRAW|wxNO_BORDER</style>
         </object>
         <flag>wxALIGN_CENTRE</flag>
@@ -74,7 +74,7 @@
       </object>
       <object class="sizeritem">
         <object class="wxBitmapButton" name="wxID_TOOL_LOGO">
-          <bitmap>../icons/logo.png</bitmap>
+          <bitmap>../icons/22x22/logo.png</bitmap>
           <style>wxBU_AUTODRAW|wxNO_BORDER</style>
         </object>
         <flag>wxALIGN_CENTRE</flag>

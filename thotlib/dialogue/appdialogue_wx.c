@@ -360,7 +360,7 @@ static void BuildPopdownWX ( int window_id, Menu_Ctl *ptrmenu, ThotMenu p_menu )
 
       if (p_menu_item && item_icon[0] != '\0' && item_action != -1 && item_type != 'T')
 	{
-	  p_menu_item->SetBitmap( wxBitmap(TtaGetResourcePathWX(WX_RESOURCES_ICON,item_icon), wxBITMAP_TYPE_PNG) );
+	  p_menu_item->SetBitmap( wxBitmap(TtaGetResourcePathWX(WX_RESOURCES_ICON_16X16,item_icon), wxBITMAP_TYPE_PNG) );
 	}
 
       if (p_menu_item)

@@ -16,7 +16,7 @@
                       <orient>wxHORIZONTAL</orient>
                       <object class="sizeritem">
                         <object class="wxBitmapButton" name="wxID_BUTTON_EXPAND">
-                          <bitmap>../icons/expand_on.png</bitmap>
+                          <bitmap>../icons/misc/expand_on.png</bitmap>
                           <style>wxNO_BORDER</style>
                         </object>
                         <flag>wxALIGN_CENTRE</flag>
@@ -31,7 +31,7 @@
                       </object>
                       <object class="sizeritem">
                         <object class="wxBitmapButton" name="wxID_BUTTON_DETACH">
-                          <bitmap>../icons/detach.png</bitmap>
+                          <bitmap>../icons/misc/detach.png</bitmap>
                           <style>wxNO_BORDER</style>
                         </object>
                         <flag>wxALIGN_CENTRE</flag>
@@ -72,7 +72,7 @@
                                         <orient>wxHORIZONTAL</orient>
                                         <object class="sizeritem">
                                           <object class="wxBitmapButton" name="wxID_APPLY">
-                                            <bitmap>../icons/ok.png</bitmap>
+                                            <bitmap>../icons/16x16/ok.png</bitmap>
                                             <focused>1</focused>
                                             <tooltip>*Apply*</tooltip>
                                           </object>
@@ -82,7 +82,7 @@
                                         </object>
                                         <object class="sizeritem">
                                           <object class="wxBitmapButton" name="wxID_REFRESH">
-                                            <bitmap>../icons/refresh.png</bitmap>
+                                            <bitmap>../icons/16x16/refresh.png</bitmap>
                                             <tooltip>*ReFresh*</tooltip>
                                           </object>
                                           <option>1</option>

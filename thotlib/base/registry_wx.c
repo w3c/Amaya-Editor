@@ -37,14 +37,36 @@ wxString TtaGetResourcePathWX( wxResourceType type, const char * filename )
   wxString path;
   switch ( type )
     {
-      case WX_RESOURCES_ICON:
+      case WX_RESOURCES_ICON_16X16:
 	{
 	  wxString amaya_directory( TtaGetEnvString ("THOTDIR"), *wxConvCurrent );
 #ifdef _WINDOWS
-	  path = amaya_directory + _T("\\resources\\icons\\") + wxString( filename, *wxConvCurrent );
+	  path = amaya_directory + _T("\\resources\\icons\\16x16\\") + wxString( filename, *wxConvCurrent );
 #endif /* _WINDOWS */
 #ifdef _UNIX
-	  path = amaya_directory + _T("/resources/icons/") + wxString( filename, *wxConvCurrent );
+	  path = amaya_directory + _T("/resources/icons/16x16/") + wxString( filename, *wxConvCurrent );
+#endif /* _UNIX */
+	}
+	break;
+      case WX_RESOURCES_ICON_22X22:
+	{
+	  wxString amaya_directory( TtaGetEnvString ("THOTDIR"), *wxConvCurrent );
+#ifdef _WINDOWS
+	  path = amaya_directory + _T("\\resources\\icons\\22x22\\") + wxString( filename, *wxConvCurrent );
+#endif /* _WINDOWS */
+#ifdef _UNIX
+	  path = amaya_directory + _T("/resources/icons/22x22/") + wxString( filename, *wxConvCurrent );
+#endif /* _UNIX */
+	}
+	break;
+      case WX_RESOURCES_ICON_MISC:
+	{
+	  wxString amaya_directory( TtaGetEnvString ("THOTDIR"), *wxConvCurrent );
+#ifdef _WINDOWS
+	  path = amaya_directory + _T("\\resources\\icons\\misc\\") + wxString( filename, *wxConvCurrent );
+#endif /* _WINDOWS */
+#ifdef _UNIX
+	  path = amaya_directory + _T("/resources/icons/misc/") + wxString( filename, *wxConvCurrent );
 #endif /* _UNIX */
 	}
 	break;
