@@ -494,7 +494,7 @@ void       XhtmlElementComplete (ParserData *context, Element el, int *error)
 		 }
 	     }
 	 }
-       if (DocumentMeta[doc]->xmlformat)
+       if (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat)
 	 {
 	   if (IsXmlParsingCSS ())
 	     {
