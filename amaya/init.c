@@ -69,6 +69,7 @@
 #ifndef __GNUC__
 #include <direct.h>
 #endif /* __GNUC__ */
+char docToOpen [256];
 #endif /* _WINDOWS */
 
 
@@ -928,6 +929,7 @@ View                view;
 
 #endif
 {
+#  ifndef _WINDOWS
    /* For Windoz have a look to OPENFILENAME structure and
       GetOpenFileName function */
    int               i;
@@ -967,6 +969,16 @@ View                view;
    TtaSetTextForm (BaseDialog + FilterText, ScanFilter);
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseDialog + OpenForm, FALSE);
+#  else /* _WINDOWS */
+   /*
+   TtaListDirectory (DirectoryName, BaseDialog + OpenForm,
+		     TtaGetMessage (LIB, TMSG_DOC_DIR),
+		     BaseDialog + DirSelect, ScanFilter,
+		     TtaGetMessage (AMAYA, AM_FILES), BaseDialog + DocSelect);
+			 */
+   WIN_ListOpenDirectory (BaseDialog + DirSelect, BaseDialog + OpenForm, DirectoryName, ScanFilter);
+   GetHTMLDocument (docToOpen, NULL, 0, 0, DC_FALSE);
+#  endif /* _WINDOWS */
 }
 
 
@@ -1259,6 +1271,7 @@ char               *documentname;
 	     sprintf (tempdir, "%s%s%d%s", TempFileDirectory, DIR_STR, newdoc, DIR_STR);
 	     strcpy (tempdocument, tempdir);
 	     strcat (tempdocument, documentname);
+		 printf ("tempdir: %s\ntempdocument: %s\n", tempdir, tempdocument);
 	     if (doc != newdoc)
 	       {
 #                 ifndef _WINDOWS
@@ -2341,6 +2354,8 @@ NotifyEvent        *event;
 
    strcat (TempFileDirectory, "/.amaya");
 #  endif /* _WINDOWS */
+
+   printf ("TempFileDirectory: %s\n", TempFileDirectory);
 
    i = mkdir (TempFileDirectory, S_IRWXU);
    if (i != 0 && errno != EEXIST)
