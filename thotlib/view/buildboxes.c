@@ -2899,7 +2899,7 @@ void RecordEnclosing (PtrBox pBox, ThotBool horizRef)
     }
 
   pDimRel->DimRTable[i] = pBox;
-  /* packing the width */
+  /* packing the width or the height */
   pDimRel->DimRSame[i] = horizRef;
 }
 

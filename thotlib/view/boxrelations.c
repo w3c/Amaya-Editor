@@ -60,7 +60,8 @@ static void ClearBoxMoved (PtrBox pBox)
    Si la valeur rendue est NULL, le pave se positionne par 
    rapport au pave englobant.                              
   ----------------------------------------------------------------------*/
-static PtrAbstractBox GetPosRelativeAb (PtrAbstractBox pCurrentAb, ThotBool horizRef)
+static PtrAbstractBox GetPosRelativeAb (PtrAbstractBox pCurrentAb,
+					ThotBool horizRef)
 {
    ThotBool            still;
    PtrAbstractBox      pAb;
@@ -101,7 +102,8 @@ static PtrAbstractBox GetPosRelativeAb (PtrAbstractBox pCurrentAb, ThotBool hori
    dimension de pOrginBox).                                
   ----------------------------------------------------------------------*/
 static void InsertPosRelation (PtrBox pOrginBox, PtrBox pTargetBox,
-			       OpRelation op, BoxEdge originEdge, BoxEdge targetEdge)
+			       OpRelation op, BoxEdge originEdge,
+			       BoxEdge targetEdge)
 {
   int                 i;
   ThotBool            loop;
@@ -3096,11 +3098,8 @@ void ClearAllRelations (PtrBox pBox, int frame)
 	
 	if (pPosRel->PosRNext == NULL)
 	  loop = FALSE;
-	else
-	  {
-	    FreePosBlock (&pPosRel);
-	    /* Next block */
-	  }
+	/* Next block */
+	FreePosBlock (&pPosRel);
       }
 
   /* Remove remaining relations in the enclosing box */

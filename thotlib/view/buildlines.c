@@ -3764,7 +3764,6 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
 	     }
 	 }
 
-
 	/* Zone affichee avant modification */
 	if (pLine == NULL)
 	  {

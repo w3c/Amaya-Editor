@@ -2018,19 +2018,6 @@ PtrBox FreeBox (PtrBox pBox)
    TtaFreeMemory (pBox);
 #else
    box = PtFree_Box;
-   while (box)
-     {
-       if (box == pBox)
-	 {
-	   printf ("Box chaining ERROR\n");
-	   pBox = NULL;
-	   nextBox = NULL;
-	   box = NULL;
-	   NbUsed_Box++;
-	 }
-       else
-	 box = box->BxNexChild;
-     }
    if (pBox)
      {
        /* Don't use BxNext field because it's used when removing break lines */

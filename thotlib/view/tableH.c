@@ -40,9 +40,11 @@ typedef struct _LockRelations
 } LockRelations;
 
 static PtrLockRelations  DifferedChecks = NULL;
+static PtrLockRelations  ActiveChecks = NULL;
 static PtrAbstractBox    CheckedTable = NULL;
-static ThotBool          CheckOneTable = FALSE;
 static ThotBool          Lock = FALSE;
+static ThotBool          DoUnlock1 = FALSE;
+static ThotBool          DoUnlock2 = FALSE;
 
 #include "attributes_f.h"
 #include "boxmoves_f.h"
@@ -57,14 +59,15 @@ static ThotBool          Lock = FALSE;
 #include "tree_f.h"
 #define MAX_COLROW 50
 
-static ThotBool SetCellWidths (PtrAbstractBox cell, PtrAbstractBox table, int frame);
+static ThotBool SetCellWidths (PtrAbstractBox cell, PtrAbstractBox table,
+			       int frame);
 
 /*----------------------------------------------------------------------
-  DifferFormatting registers differed table formatting in the right
-  order:
-  The ancestor before its child.
+  DifferFormatting registers a differed table formatting in the right
+  order: the ancestor before its child.
   ----------------------------------------------------------------------*/
-static void DifferFormatting (PtrAbstractBox table, PtrAbstractBox cell, int frame)
+static void DifferFormatting (PtrAbstractBox table, PtrAbstractBox cell,
+			      int frame)
 {
   PtrLockRelations    pLockRel;
   PtrLockRelations    pPreviousLockRel;
@@ -77,7 +80,10 @@ static void DifferFormatting (PtrAbstractBox table, PtrAbstractBox cell, int fra
 
   /* Look for an empty entry */
   pPreviousLockRel = NULL;
-  pLockRel = DifferedChecks;
+  if (DoUnlock1)
+    pLockRel = ActiveChecks;
+  else
+    pLockRel = DifferedChecks;
   toCreate = TRUE;
   i = 0;
   while (toCreate && pLockRel != NULL)
@@ -142,7 +148,8 @@ static void DifferFormatting (PtrAbstractBox table, PtrAbstractBox cell, int fra
    IsDifferredTable
    Return TRUE if this table is already registered.        
   ----------------------------------------------------------------------*/
-static ThotBool IsDifferredTable(PtrAbstractBox table, PtrAbstractBox cell)
+static ThotBool IsDifferredTable (PtrAbstractBox table, PtrAbstractBox cell,
+				 int frame)
 {
   PtrLockRelations    pLockRel;
   int                 i;
@@ -150,18 +157,32 @@ static ThotBool IsDifferredTable(PtrAbstractBox table, PtrAbstractBox cell)
   if (table == NULL)
     return FALSE;
 
-  /* Look for an empty entry */
-  pLockRel = DifferedChecks;
+  /* Check if the table is already registered */
+  if (DoUnlock1 || DoUnlock2)
+    pLockRel = ActiveChecks;
+  else
+    pLockRel = DifferedChecks;
   i = 0;
   while (pLockRel != NULL)
     {
       i = 0;
       while (i < MAX_RELAT_DIM)
 	{
-	  if (pLockRel->LockRTable[i] == table &&
-	      (pLockRel->LockRCell[i] == NULL || pLockRel->LockRCell[i] == cell))
-	    /* The table is already registered */
+	  if (CheckedTable && pLockRel->LockRTable[i] == CheckedTable)
+	    /* position of the current checked table in the list */
+	    i++;
+	  else if (pLockRel->LockRTable[i] == table &&
+		   (pLockRel->LockRCell[i] == NULL || pLockRel->LockRCell[i] == cell))
+	    /* the table is already registered */
 	    return TRUE;
+	  else if (DoUnlock1 &&
+		   !IsParentBox (table->AbBox, pLockRel->LockRTable[i]->AbBox))
+	    /* another differed table is enclosed by the same table */
+	    {
+	      /* register that table before the current position */
+	      DifferFormatting (table, NULL, frame);
+	      return TRUE;
+	    }
 	  else
 	    i++;
 	}
@@ -627,7 +648,8 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
   if (table->AbBox->BxCycles != 0)
     /* the table formatting is currently in process */
     return;
-  if (CheckOneTable && CheckedTable && table != CheckedTable &&
+  if ((DoUnlock1 || DoUnlock2) &&
+      CheckedTable && table != CheckedTable &&
       /* accept to reformat enclosed tables */
       !IsParentBox (CheckedTable->AbBox, table->AbBox))
     return;
@@ -1044,7 +1066,7 @@ static void ChangeTableWidth (PtrAbstractBox table, int frame)
   if (Lock)
     /* the table formatting is locked */
     DifferFormatting (table, NULL, frame);
-  else if (IsDifferredTable (table, NULL))
+  else if (IsDifferredTable (table, NULL, frame))
     /* the table will be managed later */
     return;
   else
@@ -1275,6 +1297,9 @@ static ThotBool SetTableWidths (PtrAbstractBox table, int frame)
   if (cNumber == 0)
     return (change);
 
+#ifdef TAB_DEBUG
+  printf ("\nSetTableWidths (%s) %d cols\n", table->AbElement->ElLabel, cNumber);
+#endif
   /* remove the list of vertical spanned cells */
   pTabSpan = pBox->BxSpans;
   while (pTabSpan)
@@ -1631,11 +1656,14 @@ static ThotBool SetTableWidths (PtrAbstractBox table, int frame)
 	  if (cell)
 	    {
 	      /* propagate changes to the enclosing table */
-	      CheckTableWidths (table, frame, TRUE);
+	      if (!DoUnlock1)
+		/* reformat the table */
+		CheckTableWidths (table, frame, TRUE);
 	      row = SearchEnclosingType (cell, BoRow, BoRow);
 	      if (row  && row->AbBox)
 		table = (PtrAbstractBox) row->AbBox->BxTable;
-	      if (table && table->AbBox && !IsDifferredTable (table, cell))
+	      if (table && table->AbBox &&
+		  !IsDifferredTable (table, cell, frame))
 		SetCellWidths (cell, table, frame);
 	    }
 	}
@@ -1648,7 +1676,8 @@ static ThotBool SetTableWidths (PtrAbstractBox table, int frame)
   If TRUE updates table widths.
   Return TRUE if any table width is modified
   ----------------------------------------------------------------------*/
-static ThotBool SetCellWidths (PtrAbstractBox cell, PtrAbstractBox table, int frame)
+static ThotBool SetCellWidths (PtrAbstractBox cell, PtrAbstractBox table,
+			       int frame)
 {
   PtrBox              box;
   int                 min, max;
@@ -1675,8 +1704,11 @@ static ThotBool SetCellWidths (PtrAbstractBox cell, PtrAbstractBox table, int fr
   box->BxRuleWidth = width;
 
   if (reformat && table)
-    /* something changed in the cell, check any table change */
-    SetTableWidths (table, frame);
+    {
+      if (!IsDifferredTable (table, cell, frame))
+	/* something changed in the cell, check any table change */
+	SetTableWidths (table, frame);
+    }
   return (reformat);
 }
 
@@ -1706,7 +1738,7 @@ static void UpdateCellHeight (PtrAbstractBox cell, int frame)
 	  if (Lock)
 	    /* the table formatting is locked */
 	    DifferFormatting (table, cell, frame);
-	  else if (IsDifferredTable (table, NULL))
+	  else if (IsDifferredTable (table, NULL, frame))
 	    /* the table will be managed later */
 	    return;
 	  else
@@ -1797,7 +1829,7 @@ static void UpdateColumnWidth (PtrAbstractBox cell, PtrAbstractBox col, int fram
       if (Lock)
 	/* the table formatting is locked */
 	DifferFormatting (table, cell, frame);
-      else if (IsDifferredTable (table, NULL))
+      else if (IsDifferredTable (table, NULL, frame))
 	/* the table will be managed later */
 	return;
       else if (cell && cell->AbBox)
@@ -1874,7 +1906,7 @@ static void UpdateTable (PtrAbstractBox table, PtrAbstractBox col,
       if (Lock)
 	/* the table formatting is locked */
 	  DifferFormatting (pAb, NULL, frame);
-      else if (IsDifferredTable (pAb, NULL))
+      else if (IsDifferredTable (pAb, NULL, frame))
 	/* the table will be managed later */
 	return;
       else if (table)
@@ -1989,6 +2021,7 @@ static void    UnlockTableFormatting ()
 	/* nothing to do */
 	return;
 
+      DoUnlock1 = TRUE;
       savpropage = Propagate;
       Propagate = ToAll;
       /*
@@ -1997,8 +2030,8 @@ static void    UnlockTableFormatting ()
 	form the most embedded to the enclosing table
       */
       first = DifferedChecks;
+      ActiveChecks = DifferedChecks;
       DifferedChecks = NULL;
-      CheckOneTable = TRUE;
       pLockRel = first;
       while (pLockRel->LockRNext != NULL)
 	pLockRel = pLockRel->LockRNext;
@@ -2016,18 +2049,15 @@ static void    UnlockTableFormatting ()
 		    /* nothing to do more on this table */
 		    pLockRel->LockRTable[i] = NULL;
 		  if (cell && cell->AbBox)
+		    /* there is a change within a specific cell */
+		    SetCellWidths (cell, table, pLockRel->LockRFrame[i]);
+		  else
 		    {
 		      /* there is a change within a specific cell */
-		      if (!SetCellWidths (cell, table, pLockRel->LockRFrame[i]))
-			{
-			   CheckRowHeights (table, pLockRel->LockRFrame[i]);
-			   /* nothing to do more on this table */
-			   pLockRel->LockRTable[i] = NULL;
-			}
+		      CheckedTable = table;
+		      SetTableWidths (table, pLockRel->LockRFrame[i]);
+		      CheckedTable = NULL;
 		    }
-		  else
-		    /* there is a change within a specific cell */
-		    SetTableWidths (table, pLockRel->LockRFrame[i]);
 		}
 	      /* next entry */
 	      i--;
@@ -2035,11 +2065,13 @@ static void    UnlockTableFormatting ()
 	  /* next block */
 	  pLockRel = pLockRel->LockRPrev;
 	}
+      DoUnlock1 = FALSE;
 
       /*
 	Second, reformat all tables starting
 	form the enclosing table to the most embedded
       */
+      DoUnlock2 = TRUE;
       pLockRel = first;
       while (pLockRel != NULL)
 	{
@@ -2050,7 +2082,6 @@ static void    UnlockTableFormatting ()
 	      table = pLockRel->LockRTable[i];
 	      if (table && table->AbElement)
 		{
-		  /*pLockRel->LockRTable[i] = NULL;*/
 		  CheckedTable = table;
 		  CheckTableWidths (table, pLockRel->LockRFrame[i], FALSE);
 		  /* need to propagate to enclosing boxes */
@@ -2062,11 +2093,13 @@ static void    UnlockTableFormatting ()
 	  /* next block */
 	  pLockRel = pLockRel->LockRNext;
 	}
-      CheckOneTable = FALSE;
       CheckedTable = NULL;
+      ActiveChecks = NULL;
+      DoUnlock2 = FALSE;
 
       /*
-	Then, check all table heighs form the most embedded to the enclosing table
+	Then, check all table heighs form the most embedded to
+	the enclosing table
       */
       pLockRel = first;
       while (pLockRel->LockRNext != NULL)
@@ -2080,6 +2113,10 @@ static void    UnlockTableFormatting ()
 	      table = pLockRel->LockRTable[i];
 	      if (table && table->AbElement)
 		{
+		  cell = pLockRel->LockRCell[i];
+		  if (cell)
+		    HeightPack (cell, cell->AbBox,
+				pLockRel->LockRFrame[i]);
 		  CheckRowHeights (table, pLockRel->LockRFrame[i]);
 		  /* need to propagate to enclosing boxes */
 		  ComputeEnclosing (pLockRel->LockRFrame[i]);
