@@ -30,16 +30,16 @@
 -----------------------*/
 
 
-static void ProcessElements(char element[]);
+static void ProcessElements(char * element);
 static void InsertTable(STRING string, STRING Table[], int * nbelem);
 static void FileToTable(FILE * File, STRING Table[],int * nbelem, int maxelem);
 static void SortTable (STRING Table[], int nbelem);
 static void DeleteTable(STRING Table[], int  *nbelem);
 static int  SearchInTable(char * StringToFind, STRING Table[], int nbelem, ThotBool sort);
 static void SkipNewLineSymbol(char  Astring[]);
-static void SkipAllBlanks (char Astring[]);
+static void SkipAllBlanks (char * Astring);
 static char * AddHooks (char * Astring);
-static void RemoveHooks (char  Astring[]);
+static void RemoveHooks (char  * Astring);
 
 
 /*--------------------------
@@ -99,7 +99,9 @@ void Prof_InitTable(void)
 
   ptr = TtaGetEnvString (TEXT("Profile"));
   if (ptr && *ptr)
-    strcpy (UserProfile, AddHooks (ptr));
+  {
+	strcpy (UserProfile, AddHooks (ptr));	
+  }
   else
 	 UserProfile[0] = EOS;
   
@@ -122,7 +124,8 @@ void Prof_InitTable(void)
 
        /* Generate a functions table*/
        while (fgets(TempString, sizeof(TempString), Prof_FILE))
-         {		
+         {
+			
 	   SkipAllBlanks(TempString);
   	   ProcessElements(TempString);
 	 } 
@@ -201,10 +204,10 @@ int  Prof_RebuildProTable(STRING prof_file)
   building the profile table
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static   void ProcessElements(char element[])
+static   void ProcessElements(char * element)
 #else  /* !__STDC__ */
-static   void ProcessElements(element[])
-char     element[];
+static   void ProcessElements(element)
+char   *  element;
 #endif /* !__STDC__ */ 
 {
   ThotBool            EOM = FALSE;
@@ -664,10 +667,10 @@ char  Astring[];
 
 
 #ifdef __STDC__
-static void SkipAllBlanks (char  Astring[])
+static void SkipAllBlanks (char  * Astring)
 #else  /* !__STDC__ */
 static void SkipAllBlanks (Astring)
-char  string[];
+char  * string;
 #endif /* !__STDC__ */
 {
   int c = 0;
@@ -675,7 +678,7 @@ char  string[];
   
   do
     { 
-      while (Astring[c+nbsp] == SPACE || Astring[c+nbsp] == TAB)
+      while (Astring[c+nbsp] == SPACE || Astring[c+nbsp] == TAB || Astring[c+nbsp] == __CR__)
 	nbsp++;
       
       Astring [c] = Astring[c+nbsp];
@@ -715,10 +718,10 @@ char * Astring;
 
 
 #ifdef __STDC__
-static void RemoveHooks (char string[])
+static void RemoveHooks (char * string)
 #else  /* !__STDC__ */
 static void RemoveHooks (string)
-char string[];
+char * string;
 #endif /* !__STDC__ */
 {
   char         new[MAX_PRO_LENGTH];
