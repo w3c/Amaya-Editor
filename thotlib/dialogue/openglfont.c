@@ -20,6 +20,8 @@
 
 #include "openglfonts.h"
 
+
+
 /* Memory state Var needed often*/
 static FT_Library FTlib = NULL;
 static int init_done = 0;
@@ -561,24 +563,72 @@ static void FontBBox (GL_font *font,
   *urx += bbox.xMax >> 6;
 }
 
-static void FontFaceSize (GL_font *font, const unsigned int size, const unsigned int res )
+static int FontFaceSize (GL_font *font, const unsigned int size, const unsigned int res )
 {
   unsigned int err;
   
   err = FT_Set_Char_Size (*(font->face), 0L, size * 64, res, res);
   /*res x_resolution, res, y_resolution*/
   if (err)
-    return;
+    return err;
   if (font->glyphList)
     free (font->glyphList);
   MakeGlyphList (font);
+  return err;
 }
 
-static int FontCharMap (GL_font *font, FT_Encoding encoding)
-{
-  int err;
+
+/*------------------------------------------------------------------------
+   FontCharMap : select Charpmap that can handle charactere code 
+   to glyph index conversion 
+   The Aim is mainly to get Unicode Charmaps
+-------------------------------------------------------------------------*/
+static int FontCharMap (GL_font *font, FT_Encoding encoding, char alphabet)
+{  
+  FT_CharMap  found = 0;
+  FT_CharMap  charmap;
+  int         n, err;
+  int         my_platform_id, my_encoding_id;
 
   err = FT_Select_Charmap (*(font->face), encoding);
+  if (!err)
+    {
+      /* Get a Unicode mapping for this font */      
+      if (encoding == ft_encoding_unicode)
+	{
+	  /* Microsoft unicode*/
+	  for ( n = 0; n < (*(font->face))->num_charmaps; n++ )
+	    {
+	      charmap = (*(font->face))->charmaps[n];
+	      my_platform_id = charmap->platform_id;
+	      my_encoding_id = charmap->encoding_id;
+	      if ((my_platform_id == TT_PLATFORM_MICROSOFT) 
+		  && (my_encoding_id == TT_MS_ID_UNICODE_CS)) 
+		{
+		  found = charmap;
+		  break;
+		}
+	    }
+	  if ( !found )
+	    /* Apple unicode */
+	    for ( n = 0; n < (*(font->face))->num_charmaps; n++ )
+	      {
+		charmap = (*(font->face))->charmaps[n];
+		my_platform_id = charmap->platform_id;
+		my_encoding_id = charmap->encoding_id;
+	      if ( (my_platform_id == TT_PLATFORM_APPLE_UNICODE) 
+		    && (my_encoding_id != TT_APPLE_ID_ISO_10646)) 
+		{
+		  found = charmap;
+		  break;
+		}
+	      }     
+	  if ( !found )
+	    err = 1;
+	  else
+	    (*(font->face))->charmap = found;
+	}
+    }
   return err;
 }
 
@@ -716,7 +766,6 @@ void *gl_font_init (const char *font_filename, char alphabet, int size)
   gl_font = FontOpen (font_filename);
   if (gl_font != NULL)
     {        
-      /* switch alphabet <= DEFAULT_CHARSET; */
       /* From the freetype docs... http://www.freetype.org/
 	 "By default, when a new face object is created, 
 	 (freetype) lists all the charmaps contained in the font face 
@@ -732,13 +781,14 @@ void *gl_font_init (const char *font_filename, char alphabet, int size)
 	 ft_encoding_adobe_expert ft_encoding_adobe_custom
 	 ft_encoding_apple_roman 
       */	
-      if (alphabet == 'G' && 0)
+      if (alphabet == 'G')
 	{
-	  err = FontCharMap (gl_font, ft_encoding_symbol);
+	  err = FontCharMap (gl_font, ft_encoding_symbol, alphabet);
 	}
       else 
 	{
-	  err = FontCharMap (gl_font, ft_encoding_unicode);
+	  if (alphabet != 'L')
+	    err = FontCharMap (gl_font, ft_encoding_unicode, alphabet);
 	}
       if (err)
 	{
@@ -746,7 +796,13 @@ void *gl_font_init (const char *font_filename, char alphabet, int size)
 	  free (gl_font);
 	  return NULL;
 	}
-      FontFaceSize (gl_font, size, 72);	 	  
+      err = FontFaceSize (gl_font, size, 72);	
+      if (err)
+	{
+	  FT_Done_Face (*(gl_font->face));
+	  free (gl_font);
+	  return NULL;
+	}
       return (void *) gl_font; 
     }
   return NULL;

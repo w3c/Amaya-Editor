@@ -16,6 +16,8 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_GLYPH_H
+#include FT_TRUETYPE_IDS_H
+
 
 /* In case of old opengl version where
  Texture Objects were an extension */
@@ -63,8 +65,8 @@ static void          FontClose (GL_font *font);
 static int           FontAscender (GL_font *font);
 static int           FontDescender (GL_font *font);
 static int           FontRender (GL_font *font, const char* string );
-static void          FontFaceSize (GL_font *font, const unsigned int size, const unsigned int res );
-static int           FontCharMap (GL_font *font, FT_Encoding encoding);
+static int          FontFaceSize (GL_font *font, const unsigned int size, const unsigned int res );
+static int           FontCharMap (GL_font *font, FT_Encoding encoding, char alphabet);
 
 static void          FontBBox (GL_font *font,
 			       char* string,
