@@ -2026,26 +2026,26 @@ BOXES
 	Width: Enclosed . Width;
 	Height: Enclosed . Height;
 	LineBreak: No;
-	IN Structure_view
-		Visibility: 0;
-	IN Alternate_view
-		Visibility: 0;
-	IN Links_view
-		Visibility: 0;
-	END;
-
- Option_Frame: BEGIN
-	Content: Graphics 'R';
-	VertPos: Top = Enclosing . Top;
-	HorizPos: Left = Enclosing . Left;
-	Width: Enclosing . Width;
-	Height: Enclosing . Height;
+	BorderTopWidth: Creator =;
+	BorderRightWidth: Creator =;
+	BorderBottomWidth: Creator =;
+	BorderLeftWidth: Creator =;
+	BorderTopColor: Creator =;
+	BorderRightColor: Creator =;
+	BorderBottomColor: Creator =;
+	BorderLeftColor: Creator =;
+	BorderTopStyle: Solid;
+	BorderRightStyle: Solid;
+	BorderBottomStyle: Solid;
+	BorderLeftStyle: Solid;
+	Foreground: Creator =;
+	FillPattern: Creator =;
+	Depth: Creator =;
 #ifndef BLACK_WHITE
+	Background: Creator =;
+#else
 	Background : Grey;
 #endif
-	LineWeight: 1 px;
-	Depth: Creator + 2;
-	InLine: No;
 	IN Structure_view
 		Visibility: 0;
 	IN Alternate_view
@@ -5840,7 +5840,7 @@ BOXES
 RULES
 
  HTML:	BEGIN
-	Depth: 200;
+	Depth: 5000;
 	Adjust: Left;
 	Justify: No;
 	Indent: 0;
@@ -7207,9 +7207,11 @@ RULES
 	CreateEnclosing(Option_Box);
 	CreateBefore(SELECT_S);
 	CreateWith(VerticalLine);
-	CreateAfter(Option_Frame);
 	CreateFirst(Option_gif);
 	CreateLast(Option_space);
+	Background : White;
+	Foreground : Black;
+	FillPattern: backgroundcolor;
 	HorizPos: Left = Enclosing . Left + 2 px;	
 	VertPos: Top = Enclosing . Top + 2 px;
 	LineBreak: No;
@@ -7262,7 +7264,7 @@ RULES
 	Height: 2 Min;
 	LineBreak: No;
 	Font: INPUT_Font;
-	Depth: Enclosing + 5;
+	Depth: Enclosing + 4;
 #ifndef BLACK_WHITE
 	Background : LightRed4;
 #endif
@@ -7322,7 +7324,7 @@ RULES
 	CreateBefore(Text_Mark);
 	CreateBefore(Text_Frame);
 	Width: 1 px;  Height: 1 px;
-	Depth: Enclosing + 5;
+	Depth: Enclosing + 4;
 	IN Structure_view
 		Visibility: 0;
 	END;
@@ -7375,7 +7377,7 @@ RULES
 	Width: 20 ex Min;
 	Height: 2 Min;
 	Font: INPUT_Font;
-	Depth: Enclosing + 5;
+	Depth: Enclosing + 4;
 	LineBreak: No;
 	Adjust: Left;
 #ifndef BLACK_WHITE
@@ -7399,7 +7401,7 @@ RULES
 	Width: 20 ex Min;
 	Height: 2 Min;
 	Font: INPUT_Font;
-	Depth: Enclosing + 5;
+	Depth: Enclosing + 4;
 	LineBreak: No;
 	Adjust: Left;
 #ifndef BLACK_WHITE
@@ -7432,7 +7434,7 @@ RULES
 	Width: 20 ex Min;
 	Height: 2 Min;
 	Font: INPUT_Font;
-	Depth: Enclosing + 5;
+	Depth: Enclosing + 4;
 	LineBreak: No;
 	Adjust: Left;
 #ifndef BLACK_WHITE
@@ -7453,7 +7455,7 @@ RULES
 	CreateBefore(INPUT_S);
 	CreateBefore(ATTR_Reset);
 	CreateFirst(Value_Box);
-	Depth: Enclosing + 10;
+	Depth: Enclosing + 5;
 #ifndef BLACK_WHITE
 	Background : Grey;
 #endif
@@ -7469,7 +7471,7 @@ RULES
 	CreateBefore(INPUT_S);
 	CreateBefore(ATTR_Submit);
 	CreateFirst(Value_Box);
-	Depth: Enclosing + 10;
+	Depth: Enclosing + 5;
 #ifndef BLACK_WHITE
 	Background : Grey;
 #endif
@@ -7485,7 +7487,7 @@ RULES
 	CreateBefore(INPUT_S);
 	CreateBefore(ATTR_Button);
 	CreateFirst(Value_Box);
-	Depth: Enclosing + 10;
+	Depth: Enclosing + 5;
 #ifndef BLACK_WHITE
 	Background : Grey;
 #endif
@@ -7748,7 +7750,7 @@ RULES
 	BEGIN
 	Gather: Yes;
 	LineBreak: No;
-	Depth: Enclosing - 1;
+	Depth: Enclosing - 5;
 #ifdef PAGE
 	PageBreak: Yes;
 	NoBreak1 : 3;
@@ -7993,7 +7995,7 @@ RULES
 	VertPos : Top = Enclosing . Top;
 	HorizPos: Left = Previous Table_cell . Right;
 	Width: 20 px;
-	Depth: Enclosing - 1;
+	Depth: Enclosing - 5;
 	Adjust: Enclosing =;
 	if NOT RowExt
 	  CreateAfter(CellFrame);
@@ -8033,7 +8035,7 @@ RULES
 	VertPos : Top = Enclosing . Top;
 	HorizPos: Left = Previous Table_cell . Right;
 	Width: 20 px;
-	Depth: Enclosing - 1;
+	Depth: Enclosing - 5;
 	Weight: Bold;
 	Adjust: VMiddle;
 	if NOT RowExt
