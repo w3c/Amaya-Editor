@@ -351,7 +351,6 @@ char *DocImageMimeType (Document doc)
   char *mime_type;
   LoadedImageDesc *pImage;
   PicType type;
-  char *url;
   Element image;
 
   if (DocumentTypes[doc] != docImage)
