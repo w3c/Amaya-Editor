@@ -519,16 +519,16 @@ dnl
 dnl Check for additionnal packages
 dnl use AC_CONFIG_SUBDIRS to launch configure in the subdir
 dnl
-AC_ARG_WITH(i18n,            [  --with-i18n             enable I18N support (experimental) ])
+AC_ARG_WITH(i18n,            [  --without-i18n          disable internationalization support ])
 dnl
 dnl I18N support disabled by default
 dnl
 
 if test "$with_i18n" = "" ; then
-  if test "$enable_i18n" = "yes" ; then
-    with_i18n="yes"
-  else
+  if test "$enable_i18n" = "no" ; then
     with_i18n="no"
+  else
+    with_i18n="yes"
   fi
 
 fi  
@@ -968,7 +968,7 @@ if test "$build_amaya" = "yes" ; then
 	echo Amaya configured with generic XML suppport
     fi
     if test "$with_i18n" = "yes" ; then
-	echo Amaya configured with I18N suppport \(experimental\)
+	echo Amaya configured with internationalization suppport
     fi 
     if test "$with_gl" = "yes" ; then
 	echo Amaya configured with Opengl Canvas Rendering \(experimental\)
