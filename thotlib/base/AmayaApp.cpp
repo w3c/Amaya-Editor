@@ -418,10 +418,14 @@ void AmayaApp::OnChar(wxKeyEvent& event)
   wxLogDebug( _T("AmayaApp::OnChar key=")+wxString(event.GetUnicodeKey()) );
 
 #if defined(_WINDOWS) && !defined(_WIN_PRINT)
-  // forward the key event to active window
+  // forward the key event to active window.
+  // this code is only usfull on windows because on gtk,
+  // the events are directly proceed in AmayaWindow class
   AmayaWindow * p_window = AmayaWindow::GetActiveWindow();
-  if (p_window)
+  if (p_window && p_window->IsActive())
     p_window->OnChar(event);
+  else
+    event.Skip();
 #endif /* #if defined(_WINDOWS) && !defined(_WIN_PRINT) */
 }
 
