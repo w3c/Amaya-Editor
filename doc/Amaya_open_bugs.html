@@ -166,17 +166,6 @@
       <td></td>
     </tr>
     <tr>
-      <td>p {margin-left:30px; text-indent:-30px} should start first line at
-        oringinal body indent and then rest of lines should be indented 30px.
-        In Amaya first line is in 30px and rest of lines in 60px. A hanging
-        indent yes but shifted by 30px from where it should be. This looks
-        like a negative measure problem.</td>
-      <td>2001-12-03</td>
-      <td>J. Russel</td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
       <td>. Both right and left margins are set to the left value 
 
         <p>. + "bizarrerie" : text brought up horizontal scroll rather than
@@ -203,14 +192,6 @@
     <tr class="fixed">
       <td>When classes are applied, the associated style is not immediately
         rendered</td>
-      <td>2002-07-20</td>
-      <td>B.L. Gurganus</td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>When style sheets are linked to XML-based files, the appropriate
-        processing instruction should also be generated</td>
       <td>2002-07-20</td>
       <td>B.L. Gurganus</td>
       <td></td>
@@ -345,18 +326,28 @@
       <td></td>
       <td></td>
     </tr>
+    <tr class="fixed">
+      <td>'m trying to build a button that contains '&lt;' and '&gt;'
+        characters, using something like the following: &lt;button
+        type="submit" value="&amp;lt;&amp;lt;" name="Prev"
+        onclick="setAction('prev')" /&gt; (or) &lt;input type="submit"
+        value="&amp;lt;&amp;lt;" name="Prev" onclick="setAction('prev')"
+        /&gt; When I manually edit the 'value=' attribute to change '&lt;' to
+        '&amp;lt;' and sync to the browser (&lt;alt&gt;v &lt;alt&gt;w), the
+        '&lt;' displays properly. But when I sync from the browser to the
+        source view, the 'value="&amp;lt;&amp;lt;"' and
+        'value="&amp;gt;&amp;gt;"' attributes are changed to
+        'value="&lt;&lt;"' and 'value="&gt;&gt;"'. Consequently, the next
+        time I sync from the source view, I get "Not well formed" errors.</td>
+      <td>2002-09-23</td>
+      <td>Arnot, Paul B</td>
+      <td>Irène</td>
+      <td>2002-09-25</td>
+    </tr>
     <tr>
-      <td>Crash when clearing colors on WinNT: 
-
-        <p>1- select a word 2- menu: Style ==&gt; colors, set a background
-        color by clicking the other mouse button 3- do sometjing 4- reselect
-        the same word and reset bg color by clicking "default colors"</p>
-      </td>
-      <td>2002-09-18 
-
-        <p>Release 6.4</p>
-      </td>
-      <td>Juan Lanus</td>
+      <td></td>
+      <td></td>
+      <td></td>
       <td></td>
       <td></td>
     </tr>
@@ -451,41 +442,10 @@
       <td></td>
     </tr>
     <tr>
-      <td>'m trying to build a button that contains '&lt;' and '&gt;'
-        characters, using something like the following:  &lt;button
-        type="submit" value="&amp;lt;&amp;lt;" name="Prev"
-        onclick="setAction('prev')" /&gt;    (or) &lt;input type="submit"
-        value="&amp;lt;&amp;lt;" name="Prev" onclick="setAction('prev')"
-        /&gt;  When I manually edit the 'value=' attribute to change '&lt;'
-        to '&amp;lt;' and sync to the browser (&lt;alt&gt;v &lt;alt&gt;w),
-        the '&lt;' displays properly.  But when I sync from the browser to
-        the source view, the 'value="&amp;lt;&amp;lt;"' and
-        'value="&amp;gt;&amp;gt;"' attributes are changed to
-        'value="&lt;&lt;"' and 'value="&gt;&gt;"'. Consequently, the next
-        time I sync from the source view, I get "Not well formed" errors.  
-      </td>
-      <td>2002-09-23</td>
-      <td>Arnot, Paul B</td>
-      <td>Irène</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>The arrow keys in combination with Shift often do not work (in
-        order to select text with the arrow keys): the focus gets stuck at
-        the end of the element.  For example:  1. Create a new xhtml 1.0
-        strict document. 2. Type two lines of text (i.e. two paragraphs). 3.
-        Go to the start of the first. 4. Hold [shift]. 5. Press [down arrow]
-        repeatedly.  It only selects the first paragraph. </td>
-      <td>2002-09-23</td>
-      <td>Steven Pemberton</td>
-      <td>Irène</td>
-      <td></td>
-    </tr>
-    <tr>
       <td>Create a new XHTML 1 strict document. Type a single line of text,
         followed by [return] Position at the beginning of the line of text.
         Type SHIFT-[down arrow] ctrl-C (i.e. [copy]) to copy the paragraph
-        [Arrow down] (to take you to the start of the next para) [Paste].  It
+        [Arrow down] (to take you to the start of the next para) [Paste]. It
         pastes all but the last character.</td>
       <td>2002-09-23</td>
       <td>Steven Pemberton</td>
@@ -803,17 +763,10 @@
       <th>Fixed</th>
     </tr>
     <tr>
-      <td>Some CSS rules page-break are not applied when printing</td>
-      <td>2002-07</td>
       <td></td>
-      <td>Irène</td>
       <td></td>
-    </tr>
-    <tr>
-      <td>U.S. top margin too large:: 2.25" (5.75cent).</td>
-      <td>2002-08-27</td>
-      <td>George Herson</td>
-      <td>Irène</td>
+      <td></td>
+      <td></td>
       <td></td>
     </tr>
   </tbody>
@@ -1199,6 +1152,18 @@
       <td>Laurent</td>
       <td>2002-09-23</td>
     </tr>
+    <tr>
+      <td>The arrow keys in combination with Shift often do not work (in
+        order to select text with the arrow keys): the focus gets stuck at
+        the end of the element. For example: 1. Create a new xhtml 1.0 strict
+        document. 2. Type two lines of text (i.e. two paragraphs). 3. Go to
+        the start of the first. 4. Hold [shift]. 5. Press [down arrow]
+        repeatedly. It only selects the first paragraph.</td>
+      <td>2002-09-23</td>
+      <td>Steven Pemberton</td>
+      <td>Irène</td>
+      <td></td>
+    </tr>
   </tbody>
 </table>
 
@@ -1219,16 +1184,6 @@
         line.</td>
       <td></td>
       <td>Laurent</td>
-      <td>Laurent</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>I've noted that amaya converts my &amp;deg; character entity into
-        the &lt;B0&gt; character. This character is rendered incorrectly by
-        some browsers, including Opera 6.03, and I'd rather it keep my
-        character entity anyway. Is this possible?</td>
-      <td>2002-08-28</td>
-      <td>J. Reagle</td>
       <td>Laurent</td>
       <td></td>
     </tr>
