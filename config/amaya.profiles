@@ -258,7 +258,7 @@ Reload
 SaveDocumentAs
 ShowLogFile
 StopTransfer
-CloseWindow
+AmayaCloseWindow
 ReadAsUTF_8
 ReadAsISO_8859_1
 ReadAsISO_8859_15
@@ -311,8 +311,8 @@ Reload
 SaveDocumentAs
 ShowLogFile
 StopTransfer
-CloseTab
-CloseWindow
+AmayaCloseTab
+AmayaCloseWindow
 ReadAsUTF_8
 ReadAsISO_8859_1
 ReadAsISO_8859_15

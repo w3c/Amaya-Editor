@@ -7518,7 +7518,7 @@ void CheckAmayaClosed ()
    CloseTab close the current active page
    Shortcut : CTRL x + CTRL p
   ----------------------------------------------------------------------*/
-void CloseTab (Document doc, View view)
+void AmayaCloseTab (Document doc, View view)
 {
 #ifdef _WX
   int page_id       = -1;
@@ -7537,7 +7537,7 @@ void CloseTab (Document doc, View view)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void CloseWindow (Document doc, View view)
+void AmayaCloseWindow (Document doc, View view)
 {
   /* Save the current windows geometry */
   SaveGeometryOnExit( doc, NULL);
