@@ -36,6 +36,7 @@
 #define THOT_EXPORT extern
 #include "boxes_tv.h"
 #include "edit_tv.h"
+#include "exceptions_f.h"
 #include "frame_tv.h"
 #include "font_tv.h"
 #include "platform_tv.h"
@@ -1094,7 +1095,7 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
   HDC               hOrigDC;
   POINT             ptOrg, ptSize;
   int               clipWidth, clipHeight;
-  int               nbPalColors, x, y,;
+  int               nbPalColors, x, y;
   int               i, j, iw, jh, ix, jy;
   HRGN              hrgn;
 #else /* _WINDOWS */
@@ -1807,7 +1808,7 @@ static void  DrawEpsBox (PtrBox box, PictInfo *imageDesc, int frame,
 			 int wlogo, int hlogo)
 {
 #ifndef _GTK
-   ThotWindow         *drawable;
+   ThotWindow          drawable;
    Pixmap              pixmap;
    float               scaleX, scaleY;
    int                 x, y, w, h, xFrame, yFrame, wFrame, hFrame;
