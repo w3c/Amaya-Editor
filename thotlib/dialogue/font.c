@@ -101,12 +101,9 @@ static HFONT WIN_LoadFont (char alphabet, int family, int highlight,
    switch (alphabet)
      {
      case 'G':
-       /*charset = SYMBOL_CHARSET;*/
+       charset = DEFAULT_CHARSET;/*SYMBOL_CHARSET;*/
        family = 0;
 	 break;
-     case 'L':
-       charset = DEFAULT_CHARSET;
-       break;
      case '2':
        charset = DEFAULT_CHARSET;
        break;
@@ -127,6 +124,9 @@ static HFONT WIN_LoadFont (char alphabet, int family, int highlight,
        break;
      case '8':
        charset = HEBREW_CHARSET;
+       break;
+ 	 default:
+       charset = DEFAULT_CHARSET;
        break;
      }
 
