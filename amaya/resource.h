@@ -637,6 +637,7 @@
 #define IDC_LABEL                       1505
 #define IDC_CURWORD                     1506
 #define IDC_LANG                        1507
+#define IDC_URL_TEXT                    1510
 #define ID_BUTTON40017                  40017
 #define ID_BUTTON40018                  40018
 #define ID_BUTTON40019                  40019
@@ -674,7 +675,6 @@
 #define IDC_LINESPACEGROUP              65533
 #define IDC_TLANNEG                     65535
 #define IDC_TTEMPLATESURL               65535
-#define IDC_URL_TEXT                    -1
 #define IDC_WHEREGROUP                  65535
 #define IDC_OUTPUTGROUP                 65535
 
@@ -684,7 +684,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        538
 #define _APS_NEXT_COMMAND_VALUE         40052
-#define _APS_NEXT_CONTROL_VALUE         1510
+#define _APS_NEXT_CONTROL_VALUE         1511
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

@@ -469,12 +469,12 @@ LPARAM lParam;
       if (isHref)
 	{
 	  SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_ATTRIBUTE));
-	  SetDlgItemText (hwnDlg, IDC_URLEDIT, TtaGetMessage (AMAYA, AM_HREF_VALUE));
+	  SetWindowText (GetDlgItem (hwnDlg, IDC_URL_TEXT), TtaGetMessage (AMAYA, AM_HREF_VALUE));
 	}
       else
 	{
 	  SetWindowText (hwnDlg, TtaGetMessage (1, BTitle));
-	  SetDlgItemText (hwnDlg, IDC_URLEDIT, TtaGetMessage (AMAYA, AM_TITLE));
+	  SetWindowText (GetDlgItem (hwnDlg, IDC_URL_TEXT), TtaGetMessage (AMAYA, AM_TITLE));
 	}
       SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
       SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_CANCEL));
@@ -2390,7 +2390,7 @@ LPARAM lParam;
 				SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
 
 				messageWnd = CreateWindow (TEXT("STATIC"), message, WS_CHILD | WS_VISIBLE | SS_LEFT,
-					                       15, 15, 303, 60, hwnDlg, (HMENU) 99, 
+					                       15, 10, 303, 60, hwnDlg, (HMENU) 99, 
 										   (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 				break; 
 
