@@ -226,7 +226,7 @@ unsigned long       BackGroundPixel;
 	    default:
 	       break;
 	 }
-   fin = fopen (fn, "r");
+   fin = ufopen (fn, TEXT("r"));
    if (fin)
      {
 	c = getc (fin);

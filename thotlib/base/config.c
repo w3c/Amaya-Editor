@@ -108,7 +108,7 @@ CHAR_T*             word;
 #  ifdef _I18N_
    int             nbBytes;
    CHAR_T          wChar;
-   char*           mbcsStart;
+   unsigned char*  mbcsStart;
 #  endif /* _I18N_ */
 
    indline = 0;
@@ -118,7 +118,7 @@ CHAR_T*             word;
 #  ifdef _I18N_
    /* get the first wide character */
    mbcsStart = &line[indline];
-   nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart,ISOLatin1);
+   nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISOLatin1);
    indline += nbBytes; 
 
    while (wChar <= WC_SPACE && wChar != WC_EOS) {
@@ -174,7 +174,7 @@ CHAR_T*             word;
 #  ifdef _I18N_
    int              nbBytes;
    CHAR_T           wChar;
-   char*            mbcsStart;
+   unsigned char*   mbcsStart;
 #  endif /* _I18N_ */
 
    indline = 0;
@@ -264,7 +264,7 @@ unsigned char*      line;
 #  ifdef _I18N_
    int              nbBytes;
    CHAR_T           wChar;
-   char*            mbcsStart;
+   unsigned char*   mbcsStart;
 #  endif /* _I18N_ */
 
    ind = 0;
@@ -343,7 +343,7 @@ CHAR_T*             text;
 #  ifdef _I18N_
    int              nbBytes;
    CHAR_T           wChar;
-   char*            mbcsStart;
+   unsigned char*   mbcsStart;
 #  endif /* _I18N_ */
 
    indline = 0;

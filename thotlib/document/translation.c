@@ -2469,7 +2469,8 @@ ThotBool            recordLineNb;
    ThotBool            found, possibleRef;
    CHAR_T                c;
 #  ifndef _WINDOWS 
-   CHAR_T		       cmd[MAX_PATH];
+   char		       cmd[MAX_PATH];
+   char                        fileNameStr[MAX_PATH];
 #  endif /* _WINDOWS */
 #  ifdef _I18N_
    int                 nb_bytes2write, index;
@@ -2935,7 +2936,7 @@ ThotBool            recordLineNb;
 
 	    case TChangeMainFile:
 	       PutVariable (pEl, pAttr, pTSch, pSSch, pTRule->TrNewFileVar, FALSE, currentFileName, 0, pDoc, *lineBreak);
-	       if (currentFileName[0] != EOS)
+	       if (currentFileName[0] != WC_EOS)
 		 {
 		    newFile = ufopen (currentFileName, TEXT("w"));
 		    if (newFile == NULL)
@@ -2970,13 +2971,14 @@ ThotBool            recordLineNb;
 	    case TRemoveFile:
 	       PutVariable (pEl, pAttr, pTSch, pSSch, pTRule->TrNewFileVar,
 			    FALSE, currentFileName, 0, pDoc, *lineBreak);
-	       if (currentFileName[0] != EOS)
+	       if (currentFileName[0] != WC_EOS)
 		 {
 #           ifdef _WINDOWS
             uunlink (currentFileName);
 #           else  /* !_WINDOWS */
-		    sprintf (cmd, "/bin/rm %s\n", currentFileName);
-		    system (cmd);
+            wc2iso_strcpy (fileNameStr, currentFileName);
+	    sprintf (cmd, "/bin/rm %s\n", fileNameStr);
+	    system (cmd);
 #           endif /* _WINDOWS */
 		 }
 	       break;

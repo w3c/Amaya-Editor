@@ -1465,6 +1465,8 @@ CHAR_T*             appArgv0;
   int         execname_len;
   int         len, round;
   ThotBool    found, ok;
+  char  fileNameStr1[MAX_LENGTH];
+  char  fileNameStr2[MAX_LENGTH];
   
 #ifdef _WINDOWS
 #ifndef __CYGWIN32__
@@ -1586,11 +1588,13 @@ CHAR_T*             appArgv0;
     * to the real app in the real dir.
     */
   len = 1;
-   while (lstat (execname, &stat_buf) == 0 &&
+  wc2iso_strcpy (fileNameStr1, execname);
+   while (lstat (fileNameStr1, &stat_buf) == 0 &&
 	  S_ISLNK (stat_buf.st_mode) &&
 	  len > 0)
      {
-       len = readlink (execname, filename, sizeof (filename) / sizeof (CHAR_T));
+       wc2iso_strcpy (fileNameStr2, filename);
+       len = readlink (fileNameStr1, fileNameStr2, sizeof (filename) / sizeof (CHAR_T));
        if (len > 0)
 	 {
 	   filename[len] = 0;

@@ -68,6 +68,9 @@ int                 zoom;
   Pixmap              pixmap;
   XpmAttributes       att;
   unsigned long       valuemask = 0;
+# ifndef _WINDOWS
+  char                fileNameStr[MAX_PATH];
+# endif /* !_WINDOWS */
 
   /* pixmap loading parameters passed to the library */
   att.valuemask = valuemask;
@@ -80,7 +83,8 @@ int                 zoom;
   att.mask_pixel = BackGroundPixel;
 
 # ifndef _WINDOWS
-  status = XpmReadFileToPixmap (TtDisplay, TtRootWindow, fn, &pixmap, mask1, &att);
+  wc2iso_strcpy (fileNameStr, fn);
+  status = XpmReadFileToPixmap (TtDisplay, TtRootWindow, fileNameStr, &pixmap, mask1, &att);
 # endif  /* _WINDOWS */
   /* return image dimensions */
   *width = att.width;

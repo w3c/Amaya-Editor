@@ -280,9 +280,9 @@ unsigned int  count;
 #endif /* __STDC__ */
 {
 #   ifdef _I18N_
+#   ifdef _WINDOWS
     /* Compatibility of _wcsnicmp: WIN NT and WIN 9x */
     return _wcsnicmp ((wchar_t*)str1, (wchar_t*)str2, (size_t)count);
-#   ifdef _WINDOWS
 #   else  /* !_WINDOWS */
     int len1 = ustrlen (str1);
     int len2 = ustrlen (str2);
@@ -412,7 +412,11 @@ const CHAR_T* delemiter;
 {
 #   ifdef _I18N_ 
     /* Compatibility of wcstok: ANSI, WIN NT and WIN 9x */
+#   ifdef _WINDOWS
     return (CHAR_T*) wcstok ((wchar_t*)str, (wchar_t*)delemiter);
+#   else  /* !_WINDOWS */
+    return (CHAR_T*) wcstok ((wchar_t*)str, (wchar_t*)delemiter, NULL);
+#   endif /* !_WINDOWS */
 #   else  /* !_I18N_ */
     return (CHAR_T*) strtok ((char*)str, (char*)delemiter);
 #   endif /* !_I18N_ */

@@ -1186,11 +1186,11 @@ CHAR_T*             name;
 {
 #  ifndef _WINDOWS
    int              ndir, ncurrent;
-   CHAR_T           FONT_PATH[128];
+   char             FONT_PATH[128];
    STRING           fontpath;
 #  endif /* _WINDOWS */
-   STRING*          dirlist = NULL;
-   STRING*          currentlist = NULL;
+   char**           dirlist = NULL;
+   char**           currentlist = NULL;
    CHAR_T*          value;
    char             alphabet;
    int              f3;
@@ -1248,8 +1248,8 @@ CHAR_T*             name;
    fontpath = TtaGetEnvString ("THOTFONT");
    if (fontpath)
      {
-	ustrcpy (FONT_PATH, fontpath);
-	ustrcat (FONT_PATH, "/");
+	wc2iso_strcpy (FONT_PATH, fontpath);
+	strcat (FONT_PATH, "/");
 
 	/* Add the directory to the X server font path */
 	currentlist = XGetFontPath (TtDisplay, &ncurrent);
@@ -1258,7 +1258,7 @@ CHAR_T*             name;
 	i = 0;
 	while ((ndir == 1) && (i < ncurrent))
 	  {
-	     if (ustrncmp (currentlist[i], FONT_PATH, ustrlen (currentlist[i]) - 1) == 0)
+	     if (strncmp (currentlist[i], FONT_PATH, strlen (currentlist[i]) - 1) == 0)
 		ndir = 0;
 	     else
 		i++;
@@ -1268,14 +1268,14 @@ CHAR_T*             name;
 	if (ndir > 0)
 	  {
 	     ndir += ncurrent;
-	     dirlist = (STRING*) TtaGetMemory (ndir * sizeof(STRING));
+	     dirlist = (char**) TtaGetMemory (ndir * sizeof(char*));
 
 	     if (currentlist != NULL)
 #ifdef SYSV
-		memcpy (dirlist, currentlist, ncurrent * sizeof (STRING));
+		memcpy (dirlist, currentlist, ncurrent * sizeof (char*));
 
 #else
-		bcopy (currentlist, dirlist, ncurrent * sizeof (STRING));
+		bcopy (currentlist, dirlist, ncurrent * sizeof (char*));
 
 #endif
 	     dirlist[ncurrent] = FONT_PATH;

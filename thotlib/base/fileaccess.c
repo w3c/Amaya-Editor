@@ -434,7 +434,7 @@ CONST STRING        filename;
 #ifdef _WINDOWS
    return ufopen (filename, TEXT("wb+"));
 #else
-   return ufopen (filename, "w+");
+   return ufopen (filename, TEXT("w+"));
 #endif
 }
 

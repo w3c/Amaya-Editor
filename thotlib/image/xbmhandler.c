@@ -60,9 +60,11 @@ int                 zoom;
   int                 w, h;
   Pixmap              bitmap;
   int                 xHot, yHot;
+  char               fileNameStr[MAX_PATH];
 
   *mask1 = None;
-  status = XReadBitmapFile (TtDisplay, TtRootWindow, fn, &w, &h, &bitmap, &xHot, &yHot);
+  wc2iso_strcpy (fileNameStr, fn);
+  status = XReadBitmapFile (TtDisplay, TtRootWindow, fileNameStr, &w, &h, &bitmap, &xHot, &yHot);
   if (status != BitmapSuccess)
     return ((Drawable) None);
   else
@@ -190,8 +192,10 @@ unsigned int        BackGroundPixel;
    register char      *pt, *pt1;
    int                 wim, him;
    Pixmap              pix;
+   char                fileNameStr[MAX_PATH];
 
-   i = XReadBitmapFile (TtDisplay, TtRootWindow, fn, &PicWArea, &PicHArea, &pix, &xtmp, &ytmp);
+  wc2iso_strcpy (fileNameStr, fn);
+   i = XReadBitmapFile (TtDisplay, TtRootWindow, fileNameStr, &PicWArea, &PicHArea, &pix, &xtmp, &ytmp);
    if (i != BitmapSuccess)
       return;
    xtmp = 0;
@@ -291,8 +295,10 @@ STRING              fn;
    int                 w, h;
    Pixmap              bitmap = None;
    int                 xHot, yHot;
+   char                fileNameStr[MAX_PATH];
 
-   status = XReadBitmapFile (TtDisplay, TtRootWindow, fn, &w, &h, &bitmap, &xHot, &yHot);
+   wc2iso_strcpy (fileNameStr, fn);
+   status = XReadBitmapFile (TtDisplay, TtRootWindow, fileNameStr, &w, &h, &bitmap, &xHot, &yHot);
    if (bitmap != None)
       XFreePixmap (TtDisplay, bitmap);
    return (status == BitmapSuccess);
