@@ -45,17 +45,10 @@ typedef struct _Frame_Ctl {
   ThotMenu   WdMenus[MAX_MENU];         /* List of menu Widgets              */
   ThotBool   EnabledMenus[MAX_MENU];    /* Enabled menus                     */
 
-#ifndef _WX
   Proc       Call_Button[MAX_BUTTON];   /* List of button Callbacks          */
   ThotButton Button[MAX_BUTTON];        /* List of button Widgets            */
   ThotBool   EnabledButton[MAX_BUTTON]; /* Enabled buttons                   */
   ThotBool   CheckedButton[MAX_BUTTON]; /* Checked buttons                   */
-#else /* #ifndef _WX */
-  Proc       		Call_Button[MAX_BUTTON];   /* List of toolbar button Callbacks  */
-  ThotControl 		Button[MAX_BUTTON];        /* List of toolbar button Widgets    */
-  ThotBool   		EnabledButton[MAX_BUTTON]; /* Enabled toolbar buttons           */
-  ThotBool   		CheckedButton[MAX_BUTTON]; /* Checked toolbar buttons           */  
-#endif /* #ifndef _WX */
   
 #ifdef _WINGUI
   int        ButtonId[MAX_BUTTON];
@@ -67,10 +60,6 @@ typedef struct _Frame_Ctl {
 #endif /* _WINGUI */
   ThotWidget Text_Zone;                 /* List of text-zone Widgets         */
   Proc       Call_Text;                 /* List of text-zone Callbacks       */
-
-#ifdef _WX
-  ThotToolBar	ToolBar;		/* The toolbar : on GTK toolbar is Button[0] */
-#endif /* _WX */
   
 #ifdef _GL
   ThotBool   DblBuffNeedSwap;
@@ -105,20 +94,21 @@ typedef struct _Frame_Ctl {
   ThotScrollBar WdScrollH;              /* Widget of Horizontal Scroll       */
   ThotFrame  	WdFrame;                /* Widget of the Document Frame      */
   ThotStatusBar WdStatus;               /* Widget of the Document status bar */
-//  struct     _Menu_Ctl *FrMenus;        /* First menu context                */
-//  int        MenuAttr;                  /* Attributes menu ID or -1          */
-//  int        MenuSelect;                /* Selection menu ID or -1           */
-//  int        MenuPaste;                 /* Menu including the Paste command
-//					   or -1 */
-//  int        EntryPaste;                /* Entry number of the Paste command */
-//  int        MenuUndo;                  /* Menu including the Undo command
-//					   or -1  */
-//  int        EntryUndo;                 /* Entry number of the Undo command  */
-//  int        MenuRedo;                  /* Menu including the Redo command
-//					   or -1  */
-//  int        EntryRedo;                 /* Entry number of the Redo command  */
-//  ThotMenu   WdMenus[MAX_MENU];         /* List of menu Widgets              */
-//  ThotBool   EnabledMenus[MAX_MENU];    /* Enabled menus                     */
+
+  struct     _Menu_Ctl *FrMenus;        /* First menu context                */
+  int        MenuAttr;                  /* Attributes menu ID or -1          */
+  int        MenuSelect;                /* Selection menu ID or -1           */
+  int        MenuPaste;                 /* Menu including the Paste command
+					   or -1 */
+  int        EntryPaste;                /* Entry number of the Paste command */
+  int        MenuUndo;                  /* Menu including the Undo command
+					   or -1  */
+  int        EntryUndo;                 /* Entry number of the Undo command  */
+  int        MenuRedo;                  /* Menu including the Redo command
+					   or -1  */
+  int        EntryRedo;                 /* Entry number of the Redo command  */
+  ThotMenu   WdMenus[MAX_MENU];         /* List of menu Widgets              */
+  ThotBool   EnabledMenus[MAX_MENU];    /* Enabled menus                     */
 
 //  Proc       		Call_Button[MAX_BUTTON];   /* List of toolbar button Callbacks  */
 //  ThotControl 	Button[MAX_BUTTON];        /* List of toolbar button Widgets    */
