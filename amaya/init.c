@@ -3832,7 +3832,7 @@ CHAR_T*             data;
 	 {
 	   LastURLName[0] = WC_EOS;
 	   tempfile = TtaAllocString (MAX_LENGTH);
-	   change = NormalizeFile (data, tempfile, AM_CONV_URL_SEP);
+	   change = NormalizeFile (data, tempfile, AM_CONV_NONE);
 	   
 	   if (TtaCheckDirectory (tempfile))
 	     {
