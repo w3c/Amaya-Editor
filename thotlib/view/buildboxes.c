@@ -3603,9 +3603,11 @@ ThotBool ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
    ThotBool            change;
    ThotBool            result;
    ThotBool            lock = TRUE;
-
 #ifdef _WINDOWS
-   WIN_GetDeviceContext (frame);
+   ThotBool            nodevice = (TtDisplay == NULL);
+
+   if (nodevice)
+     WIN_GetDeviceContext (frame);
 #endif /* _WINDOWS */
    result = TRUE;
    document = FrameTable[frame].FrDoc;
@@ -3807,7 +3809,8 @@ ThotBool ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
 	  }
      }
 #ifdef _WINDOWS
-   WIN_ReleaseDeviceContext ();
+   if (nodevice)
+     WIN_ReleaseDeviceContext ();
 #endif /* _WINDOWS */
    return result;
 }
