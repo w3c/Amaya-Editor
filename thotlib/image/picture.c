@@ -1317,6 +1317,7 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
   PtrAbstractBox    pAb;
   PictureScaling    picPresent;
   int               x, y, ix, jy;
+  int               t, b, l, r;
   int               clipWidth, clipHeight;
 #ifdef _GL
   int               i, j;
@@ -1390,11 +1391,12 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
       pAb->AbLeafType != LtCompound)
     {
       /* shift in the source image */
-      x = pFrame->FrClipXBegin - box->BxXOrg - box->BxLMargin - box->BxLBorder - box->BxLPadding;
-      y = pFrame->FrClipYBegin - box->BxYOrg - box->BxTMargin - box->BxTBorder - box->BxTPadding;
+      GetExtraMargins (box, NULL, &t, &b, &l, &r);
       /* size of the copied zone */
       clipWidth = pFrame->FrClipXEnd - pFrame->FrClipXBegin;
       clipHeight = pFrame->FrClipYEnd - pFrame->FrClipYBegin;
+      x = pFrame->FrClipXBegin - l - box->BxXOrg - box->BxLMargin;
+      y = pFrame->FrClipYBegin - t - box->BxYOrg - box->BxTMargin;
 #ifdef _GL
       GL_TextureMap (imageDesc, xFrame, yFrame, w, h, frame);
 #else /*_GL*/
@@ -1462,10 +1464,11 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
     {
       /* give origins in the concrete image */
 #ifdef _GL
-      x = box->BxXOrg /*- box->BxLMargin*/ - pFrame->FrXOrg;
-      y = box->BxYOrg /*- box->BxTMargin*/ - pFrame->FrYOrg;
-      clipWidth  = pFrame->FrClipXEnd; 
-      clipHeight = pFrame->FrClipYEnd; 
+      GetExtraMargins (box, NULL, &t, &b, &l, &r);
+      x = box->BxXOrg + l - pFrame->FrXOrg;
+      y = box->BxYOrg + t - pFrame->FrYOrg;
+      clipWidth  = pFrame->FrClipXEnd;
+      clipHeight = pFrame->FrClipYEnd;
       if (pAb &&
 	  !TypeHasException (ExcSetWindowBackground, pAb->AbElement->ElTypeNumber,
 			     pAb->AbElement->ElStructSchema))
@@ -1623,8 +1626,6 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
 	}
 #endif /* _MOTIF */
 #ifdef _GTK
-      /*if (picPresent == RealSize)
-	printf ("Display RealSize x=%d y=%d w=%d+%d h=%d+%d img=%d\n", x, y, clipWidth, dx, clipHeight, dy, imageDesc->PicHArea);*/
       gdk_gc_set_fill (tiledGC, GDK_TILED);
       gdk_gc_set_tile (tiledGC, (ThotPixmap) pixmap);
       gdk_gc_set_clip_rectangle (tiledGC, (GdkRectangle *) &rect);

@@ -2949,8 +2949,11 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 		{
 		  if (pAb->AbBox->BxType == BoBlock ||
 		      pAb->AbBox->BxType == BoFloatBlock)
-		    /* Within a block of line */
-		    EncloseInLine (pBox, frame, pAb);
+		    {
+		      if (pCurrentAb->AbHeight.DimAbRef != pAb)
+			/* Within a block of line */
+			EncloseInLine (pBox, frame, pAb);
+		    }
 		  /* if the inclusion is not checked at the end */
 		  else if (!IsParentBox (pAb->AbBox, PackBoxRoot) &&
 			   pAb->AbBox != pFromBox)

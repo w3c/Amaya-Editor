@@ -3225,10 +3225,7 @@ RULES
 
  Pseudo_paragraph: BEGIN
 	Line;
-	if within List_Item
-		LineBreak: Yes;
-	if not within List_Item
-		LineBreak: No;
+	LineBreak: Yes;
 #ifdef PAGE
 	NoBreak1 : 2;
 	NoBreak2 : 2;

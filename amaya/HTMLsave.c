@@ -2036,21 +2036,12 @@ void Synchronize (Document doc, View view)
      {
        if (saveBefore)
 	 {
-	   TtaSetDisplayMode (doc, NoComputedDisplay);
 	   /* save the current selection */
 	   GetCurrentLine (doc, &line, &index);
 	   /* save the current state of the CSS document into the temporary file */
 	   tempdoc = GetLocalPath (doc, DocumentURLs[doc]);
 	   TtaExportDocument (doc, tempdoc, "TextFileT");
 	   TtaExtractName (tempdoc, tempdir, docname);
-#ifdef IV
-	   /* These lines update the text coloration but brake undo */
-	   StartParser (doc, tempdoc, docname, tempdir, tempdoc, TRUE, FALSE);
-	   /* restore the current selection */
-	   GotoLine (doc, line, index, TRUE);
-	   /* Clear the document history because the document is reparsed */
-	   TtaClearUndoHistory (doc);
-#endif /* IV */
 	   /* reapply the CSS to relative documents */
 	   UpdateStyleSheet (DocumentURLs[doc], tempdoc);
 	 }

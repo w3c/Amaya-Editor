@@ -1986,6 +1986,10 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
 	      if (inLine || inLineFloat)
 		{
 		  if (pAb->AbAcceptLineBreak && pAb->AbFloat == 'N' &&
+		      !pAb->AbHeight.DimIsPosition &&
+		      pAb->AbHeight.DimValue <= 0 &&
+		      !pAb->AbWidth.DimIsPosition &&
+		      pAb->AbWidth.DimValue <= 0 &&
 		      pCurrentBox->BxType != BoFloatGhost &&
 		      pCurrentBox->BxType != BoFloatBlock &&
 		      !HasFloatingChild (pAb, &uniqueChild))
@@ -3341,6 +3345,10 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	  if (inLine || inLineFloat)
 	    {
 	      if (pParent->AbFloat == 'N' &&
+		  !pParent->AbHeight.DimIsPosition &&
+		  pParent->AbHeight.DimValue <= 0 &&
+		  !pParent->AbWidth.DimIsPosition &&
+		  pParent->AbWidth.DimValue <= 0 &&
 		  !HasFloatingChild (pParent, &uniqueChild) ||
 		  uniqueChild)
 		{
