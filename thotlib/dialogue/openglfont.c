@@ -724,30 +724,26 @@ static void MakeBitmapGlyph (GL_font *font, unsigned int g,
 		      memset (data, 0, p);
 		      ptr = data;
 			  src = source->buffer;
-			  if (source->pitch < (int)w) /* 1 bit per pixel */
-			  {
-				/* expand the bitmap */
-				y = 0;
-		        while (y++ < h)
-				{
-			      //memcpy (ptr, src, p);
+			  switch (source->pixel_mode) {
+				/* 1 bit per pixel, expand the bitmap */
+				case ft_pixel_mode_mono:
+				  for (y=0; y<h; y++) {
 					unsigned char *bptr = src;
 					unsigned char b;
 					for (i=0; i<w; i++) {
-						if (i%8==0) {
-							b = *bptr++;
-						}
-						*ptr++ = b&0x80 ? 1 : 0;
-						b <<= 1;
+					  if (i%8==0) b = *bptr++;
+					  *ptr++ = b&0x80 ? 0xFF : 0;
+					  b <<= 1;
 					}
-			      src += source->pitch;
-				}	    
-			  }
-			  else /* one byte per pixel */
-			  {
-				/* just copy the bitmap */
-				memcpy(ptr,src,p);
-
+					src += source->pitch;
+				  }
+				break;
+				/* one byte per pixel, just copy the bitmap */
+				case ft_pixel_mode_grays:
+				  memcpy(ptr,src,p);
+				break;
+				default:
+				  ; /* currently unused by freetype */
 			  }
 		    }	      
 		}
