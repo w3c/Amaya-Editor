@@ -2489,7 +2489,6 @@ int                 messageID;
        atom = XInternAtom (TtDisplay, name, FALSE);
        event.data.l[0] = atom;
        event.data.l[1] = messageID;
-printf("ClientSend TtDisplay=%d clientWindow=%d name=%s\n", TtDisplay, clientWindow, name);
        XSendEvent (TtDisplay, clientWindow, TRUE, NoEventMask, (ThotEvent *) & event);
        XSync (TtDisplay, FALSE);
      }

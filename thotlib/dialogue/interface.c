@@ -1288,7 +1288,6 @@ void                TtaMainLoop ()
 	  }
 #ifndef _WINDOWS
         TtaFetchOneEvent(&ev);
-printf("event->type=%d\n", ev.type);
 	TtaHandleOneEvent(&ev);
 #else  /* !_WINDOWS */
 	if (GetMessage (&msg, NULL, 0, 0))
