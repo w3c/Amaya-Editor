@@ -2082,7 +2082,7 @@ void ConfigAnnot (Document doc, View view)
 void AnnotateDocument (Document doc, View view)
 {
 #ifdef ANNOTATIONS
-  ANNOT_Create (doc, view, TRUE);
+  ANNOT_Create (doc, view, TRUE, FALSE);
 #endif /* ANNOTATIONS */
 }
 
@@ -2093,7 +2093,7 @@ void AnnotateDocument (Document doc, View view)
 void AnnotateSelection (Document doc, View view)
 {
 #ifdef ANNOTATIONS
-  ANNOT_Create (doc, view, FALSE);
+  ANNOT_Create (doc, view, FALSE, FALSE);
 #endif /* ANNOTATIONS */
 }
 
@@ -2169,8 +2169,17 @@ void                MoveAnnotationSel (Document document, View view)
 void                CustomQuery (Document document, View view)
 {
 #ifdef ANNOTATIONS
+  /* for testing threading on the selection */
+  ANNOT_Create (document, view, TRUE, TRUE);
 #if 0
   CustomQueryMenuInit (document, view);
 #endif
 #endif /* ANNOTATIONS */
 }
+
+
+
+
+
+
+
