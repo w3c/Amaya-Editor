@@ -1446,6 +1446,7 @@ int             frame;
 	}
     }
 
+  GiveAttrWidth (table, &width, &percent);
   /* now update column boxes */
   pTabRel = pBox->BxColumns;
   cRef = 0;
@@ -1459,12 +1460,17 @@ int             frame;
       for (i = 0; i < MAX_RELAT_DIM && pTabRel->TaRTable[i] != NULL;  i++)
 	{
 	  box = colBox[cRef]->AbBox;
-	  if (colWidth[cRef] != 0 && colWidth[cRef] < box->BxMinWidth)
+	  if (colWidth[cRef] && colWidth[cRef] < box->BxMinWidth)
+	    /* a constrained width it must be greater than the minimum */
 	    colWidth[cRef] = box->BxMinWidth;
+	  if (width == 0 && box->BxMinWidth)
+	    /* assign a minimum width to each column */
+	    box->BxMinWidth = 1;
 	  pTabRel->TaRTWidths[i] = colWidth[cRef];
 	  pTabRel->TaRTPercents[i] = colPercent[cRef];
 	  min += box->BxMinWidth;
-	  if (colWidth[cRef]/* > box->BxMaxWidth*/)
+	  if (colWidth[cRef])
+	    /* when there is a constrained width the maximum is forced */
 	    max += colWidth[cRef];
 	  else
 	    max += box->BxMaxWidth;
@@ -1488,7 +1494,6 @@ int             frame;
 
   /* get constraints on the table itself */
   mbp = pBox->BxLMargin + pBox->BxRMargin + pBox->BxLPadding + pBox->BxRPadding + pBox->BxLBorder + pBox->BxRBorder;
-  GiveAttrWidth (table, &width, &percent);
   min = min + delta + mbp;
   max = max + delta + mbp;
   if (width)
@@ -1565,9 +1570,14 @@ int             frame;
   ThotBool            reformat;
 
   box = cell->AbBox;
+  if (width && width < min)
+    width = min;
   GiveCellWidths (cell, &min, &max, &width, &percent);
-  reformat = ((box->BxRuleWidth != width &&
-	       box->BxWidth == box->BxRuleWidth) ||
+  /* a constrained width it must be greater than the minimum */
+  if (width)
+    /* when there is a constrained width the maximum is forced */
+    max = width;
+  reformat = (box->BxRuleWidth != width ||
 	    (box->BxMinWidth != min &&
 	     (box->BxWidth < min || box->BxWidth == box->BxMinWidth)) ||
 	    (box->BxMaxWidth != max && box->BxWidth  == box->BxMaxWidth));
