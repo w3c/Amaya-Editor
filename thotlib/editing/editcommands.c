@@ -3941,13 +3941,10 @@ void TtcPaste (Document doc, View view)
 #ifdef _WINDOWS
 	  OpenClipboard (FrRef [frame]);
 	  if (hMem = GetClipboardData (CF_UNICODETEXT))
-	    {
+	    {			
 	      wchar_t* lpData = (wchar_t*) GlobalLock (hMem);
-	      lpDatalength = wcslen (lpData);
-	      if (Xbuffer == NULL /*|| wcscmp (@@@@Xbuffer, lpData)*/) /* MJD: trial-and-error hacking */
-		PasteXClipboardW (lpData, lpDatalength);
-	      else  
-		ContentEditing (TEXT_PASTE);
+		  lpDatalength = wcslen (lpData);
+  	      PasteXClipboardW (lpData, lpDatalength);
 	      GlobalUnlock (hMem);
 	    }
 	  /* the CF_TEXT part is probably not necessary, because
@@ -3956,11 +3953,8 @@ void TtcPaste (Document doc, View view)
 	  else if (hMem = GetClipboardData (CF_TEXT))
 	    {
 	      lpData = GlobalLock (hMem);
-	      lpDatalength = strlen (lpData);
-	      if (Xbuffer == NULL || strcmp (Xbuffer, lpData))
-		PasteXClipboard (lpData, lpDatalength);
-	      else  
-		ContentEditing (TEXT_PASTE);
+	      lpDatalength = strlen (lpData);	      
+	      PasteXClipboard (lpData, lpDatalength);
 	      GlobalUnlock (hMem);
 	    }
 	  else 
