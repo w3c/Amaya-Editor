@@ -669,10 +669,10 @@ Document            doc;
 View                view;
 #endif
 {
-#  ifndef _WINDOWS
-   CHAR_T             bufMenu[MAX_LENGTH];
+#ifndef _WINDOWS
+   CHAR_T           bufMenu[MAX_LENGTH];
    int              i;
-#  endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
    ThotBool           textFile;
 
    textFile = (DocumentTypes[doc] == docText ||
@@ -688,7 +688,7 @@ View                view;
    TtaGetPrintCommand (PPrinter);
    PageSize = TtaGetPrintParameter (PP_PaperSize);	  
 
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    TtaNewSheet (BasePrint + FormPrint, TtaGetViewFrame (doc, view), 
 		TtaGetMessage (LIB, TMSG_LIB_PRINT),
 	   1, TtaGetMessage (AMAYA, AM_BUTTON_PRINT), FALSE, 2, 'L', D_CANCEL);
@@ -754,9 +754,9 @@ View                view;
        TtaRedrawMenuEntry (BasePrint + PrintOptions, 1, NULL, -1, FALSE);
        TtaRedrawMenuEntry (BasePrint + PrintOptions, 2, NULL, -1, FALSE);	      
 	}
-#   else  /* _WINDOWS */
+#else  /* _WINDOWS */
     CreatePrintDlgWindow (TtaGetViewFrame (doc, view), PSdir);
-#   endif /* _WINDOWS */
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------

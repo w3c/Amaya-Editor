@@ -625,11 +625,12 @@ LPARAM lParam;
 	      
 	      EnableWindow (ghwndMain, FALSE);
 	      ThotCallback (BasePrint + PaperFormat, INTEGER_DATA, (CHAR_T*) 0);
-	      ThotCallback ((BasePrint + PPrinterName, STRING_DATA, currentFileToPrint);
+	      ThotCallback (BasePrint + PPrinterName, STRING_DATA, currentFileToPrint);
 	      ThotCallback (BasePrint + FormPrint, INTEGER_DATA, (CHAR_T*)1);
-	      if (TtPrinterDC) {
-		DeleteDC (TtPrinterDC);
-		TtPrinterDC = NULL;
+	      if (TtPrinterDC)
+		  {
+		     DeleteDC (TtPrinterDC);
+		     TtPrinterDC = NULL;
 	      }
 	    }
 	  break;
@@ -1324,7 +1325,7 @@ LPARAM lParam;
       {
       case WM_INITDIALOG:
 	SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_IMAGES_LOCATION));
-	SetWindowText (GetDlgItem (hwnDlg, IDC_URLMESSAGE), TtaGetMessage (AMAYA, AM_BUTTON_IMG),);
+	SetWindowText (GetDlgItem (hwnDlg, IDC_URLMESSAGE), TtaGetMessage (AMAYA, AM_BUTTON_IMG));
 	SetWindowText (GetDlgItem (hwnDlg, IDC_ALTMESSAGE), TtaGetMessage (AMAYA, AM_ALT));
 	SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
 	SetWindowText (GetDlgItem (hwnDlg, IDC_BROWSE), TEXT("Browse"));
@@ -3882,12 +3883,12 @@ STRING     math_entity_name;
 }
 
 /*-----------------------------------------------------------------------
- CreateCreateRuleDlgWindow
+ CreateRuleDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
-void CreateCreateRuleDlgWindow (ThotWindow parent, int nb_class, STRING class_list)
+void CreateRuleDlgWindow (ThotWindow parent, int nb_class, STRING class_list)
 #else  /* !__STDC__ */
-void CreateCreateRuleDlgWindow (parent, nb_class, class_list)
+void CreateRuleDlgWindow (parent, nb_class, class_list)
 ThotWindow  parent;
 int   nb_class;
 STRING class_list;

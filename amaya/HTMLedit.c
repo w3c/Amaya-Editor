@@ -597,14 +597,15 @@ ThotBool		    withUndo;
 
 #ifndef _WINDOWS
 	TtaNewForm (BaseDialog + AttrHREFForm, TtaGetViewFrame (doc, 1),  TtaGetMessage (AMAYA, AM_ATTRIBUTE), TRUE, 2, 'L', D_CANCEL);
-	TtaNewTextForm (BaseDialog + AttrHREFText, BaseDialog + AttrHREFForm,
-			TtaGetMessage (AMAYA, AM_HREF_VALUE), 50, 1, FALSE);
+	TtaNewTextForm (BaseDialog + AttrHREFText,
+		            BaseDialog + AttrHREFForm,
+			        TtaGetMessage (AMAYA, AM_HREF_VALUE), 50, 1, FALSE);
 	/* initialise the text field in the dialogue box */
 	TtaSetTextForm (BaseDialog + AttrHREFText, AttrHREFvalue);
 	TtaSetDialoguePosition ();
 	TtaShowDialogue (BaseDialog + AttrHREFForm, FALSE);
 #else  /* _WINDOWS */
-	CreateTextDlgWindow (currentWindow, AttrHREFvalue, BaseDialog, AttrHREFForm, AttrHREFText, TtaGetMessage (AMAYA, AM_ATTRIBUTE), TtaGetMessage (AMAYA, AM_HREF_VALUE));
+	CreateTextDlgWindow (currentWindow, AttrHREFvalue);
 #endif  /* _WINDOWS */
      }
 }
