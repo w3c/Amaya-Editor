@@ -605,7 +605,6 @@ ThotBool            isHTML;
       TtaSetStylePresentation (PRBorderTopWidth, element, tsch, context, border);
       border.typed_data.value = 1;
       border.typed_data.unit = STYLE_UNIT_REL;
-      TtaSetStylePresentation (PRShowBox, element, tsch, context, border);
     }
   return (cssRule);
 }
@@ -637,7 +636,6 @@ ThotBool            isHTML;
       TtaSetStylePresentation (PRBorderBottomWidth, element, tsch, context, border);
       border.typed_data.value = 1;
       border.typed_data.unit = STYLE_UNIT_REL;
-      TtaSetStylePresentation (PRShowBox, element, tsch, context, border);
     }
   return (cssRule);
 }
@@ -669,7 +667,6 @@ ThotBool            isHTML;
       TtaSetStylePresentation (PRBorderLeftWidth, element, tsch, context, border);
       border.typed_data.value = 1;
       border.typed_data.unit = STYLE_UNIT_REL;
-      TtaSetStylePresentation (PRShowBox, element, tsch, context, border);
     }
   return (cssRule);
 }
@@ -701,7 +698,6 @@ ThotBool            isHTML;
       TtaSetStylePresentation (PRBorderRightWidth, element, tsch, context, border);
       border.typed_data.value = 1;
       border.typed_data.unit = STYLE_UNIT_REL;
-      TtaSetStylePresentation (PRShowBox, element, tsch, context, border);
     }
   return (cssRule);
 }
