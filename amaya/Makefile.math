@@ -4,7 +4,7 @@
 # Daniel Veillard and Irene Vatton 1997
 #
 
-AMAYA_MATH_OPTIONS=-DMATHML
+AMAYA_MATH_OPTIONS=
 
 AMAYA_MATH_OBJ= \
 	MathMLAPP.o \

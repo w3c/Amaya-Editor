@@ -46,7 +46,6 @@
 
 #ifdef _WINDOWS 
 #include "units_tv.h"
-
 #include "wininclude.h"
 #endif /* _WINDOWS */
 
@@ -70,6 +69,8 @@
 #include "xpmhandler_f.h"
 
 #ifdef _GL
+#include "displaybox_f.h"
+#include "glgradient_f.h"
 #include "glprint.h"
 #endif /* _GL */
 
@@ -160,9 +161,9 @@ typedef struct _PicCache {
 */
 static Pic_Cache *PicCache = NULL;
 
-/*--------------------------------------------------
+/*----------------------------------------------------------------------
  Free_Pic_Chache : really free a unique structure Cache  
- ---------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 static void Free_Pic_Chache (Pic_Cache *Cache)
 {
   if (glIsTexture (Cache->texbind))
@@ -177,9 +178,9 @@ static void Free_Pic_Chache (Pic_Cache *Cache)
   TtaFreeMemory (Cache);
 }
 
-/*--------------------------------------------------
+/*----------------------------------------------------------------------
  Lookup for Free upon an unique index a unique Cache 
- ---------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 static int FreeAPicCache (int texbind, int frame)
 {
   Pic_Cache *Before;
@@ -215,18 +216,19 @@ static int FreeAPicCache (int texbind, int frame)
   return 0;
 }
 
-/*--------------------------------------------------
+/*----------------------------------------------------------------------
  Free index Cache freeing recursive function 
- ---------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 static void FreePicCache (Pic_Cache *Cache)
 {
   if (Cache->next)
     FreePicCache (Cache->next);
   Free_Pic_Chache (Cache);
 }
-/*--------------------------------------------------
+
+/*----------------------------------------------------------------------
  AddInPicCache : Add a new Pic
- ---------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 static void AddInPicCache (PictInfo *Image, int frame, ThotBool forever)
 {
   Pic_Cache *Cache = PicCache;
@@ -897,9 +899,12 @@ void OpaqueGroupTexturize (PtrAbstractBox pAb, int frame,
 
 
 /*----------------------------------------------------------------------
+  DisplayGradient displays gradients
+  t, b, l, and r give top, bottom, left and right extra margins.
   ----------------------------------------------------------------------*/
 ThotBool DisplayGradient (PtrAbstractBox pAb, PtrBox box,
-			  int frame, ThotBool selected)
+			  int frame, ThotBool selected,
+			  int t, int b, int l, int r)
 {
 #ifdef _GL
   GradDef            *gradient;
@@ -911,12 +916,10 @@ ThotBool DisplayGradient (PtrAbstractBox pAb, PtrBox box,
     return FALSE;
   
   /* orientation*/
-
   /*
 gradient->x2 - gradient->x1;
 gradient->y2 - gradient->y1;
 hypot ()
-
   */
   
   x = box->BxXOrg;
@@ -950,13 +953,13 @@ hypot ()
 
   if (pAb->AbLeafType == LtGraphics)
     /* Graphics */
-    DisplayGraph (box, frame, selected);
+    DisplayGraph (box, frame, selected, t, b, l, r);
   else if (pAb->AbLeafType == LtPolyLine)
     /* Polyline */
-    DisplayPolyLine (box, frame, selected);
+    DisplayPolyLine (box, frame, selected, t, b, l, r);
   else if (pAb->AbLeafType == LtPath)
     /* Path */
-    DisplayPath (box, frame, selected);
+    DisplayPath (box, frame, selected, t, b, l, r);
 
   /*Activate zone where gradient will be drawn*/
   glClear (GL_DEPTH_BUFFER_BIT);
@@ -974,13 +977,13 @@ hypot ()
     (again, but really, this time)*/
   if (pAb->AbLeafType == LtGraphics)
     /* Graphics */
-    DisplayGraph (box, frame, selected);
+    DisplayGraph (box, frame, selected, t, b, l, r);
   else if (pAb->AbLeafType == LtPolyLine)
     /* Polyline */
-    DisplayPolyLine (box, frame, selected);
+    DisplayPolyLine (box, frame, selected, t, b, l, r);
   else if (pAb->AbLeafType == LtPath)
     /* Path */
-    DisplayPath (box, frame, selected);  
+    DisplayPath (box, frame, selected, t, b, l, r);  
 
   glDisable (GL_STENCIL_TEST);
   /* GL_UnsetClipping (clipx, clipy, clipw, cliph); */

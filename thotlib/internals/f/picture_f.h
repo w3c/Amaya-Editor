@@ -31,7 +31,11 @@ extern void OpaqueGroupTexturize ( PtrAbstractBox pAb,
 extern ThotBool DisplayGradient ( PtrAbstractBox pAb,
                                   PtrBox box,
                                   int frame,
-                                  ThotBool selected );
+                                  ThotBool selected,
+                                  int t,
+                                  int b,
+                                  int l,
+                                  int r );
 extern void FreeAllPicCache ( void );
 extern void FreeAllPicCacheFromFrame ( int frame );
 extern void FreePixmap ( Pixmap pixmap );
@@ -97,7 +101,11 @@ extern void OpaqueGroupTexturize (/* PtrAbstractBox pAb,
 extern ThotBool DisplayGradient (/* PtrAbstractBox pAb,
                                     PtrBox box,
                                     int frame,
-                                    ThotBool selected */);
+                                    ThotBool selected,
+                                    int t,
+                                    int b,
+                                    int l,
+                                    int r */);
 extern void FreeAllPicCache (/* void */);
 extern void FreeAllPicCacheFromFrame (/* int frame */);
 extern void FreePixmap (/* Pixmap pixmap */);

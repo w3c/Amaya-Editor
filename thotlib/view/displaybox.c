@@ -2426,8 +2426,7 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin,
       if ((pAb->AbLeafType == LtPolyLine || pAb->AbLeafType == LtPath) &&
 	  !selected)
 	{
-	  if (!(box->VisibleModification) &&
-	      !selected &&
+	  if (!(box->VisibleModification) && !selected &&
 	      box->DisplayList && glIsList (box->DisplayList))
 	    {
 	      glCallList (box->DisplayList);
@@ -2449,7 +2448,7 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin,
 	  (pAb->AbElement->ElParent) &&
 	  (pAb->AbElement->ElParent->ElGradient))
 	{
-	  if (DisplayGradient (pAb, box, frame, selfsel))
+	  if (DisplayGradient (pAb, box, frame, selfsel, t, b, l, r))
 	    return;          
 	}
     }
