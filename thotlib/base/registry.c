@@ -23,9 +23,7 @@
  *
  */
 #if defined(_WX)
-  #if !defined(_UNIX)
-    #include "wx/wx.h"
-  #endif /* _UNIX */
+  #include "wx/wx.h"
 #endif /* _WX */
 
 #include "thot_gui.h"

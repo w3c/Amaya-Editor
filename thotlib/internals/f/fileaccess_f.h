@@ -24,6 +24,7 @@ extern ThotBool TtaReadFloat ( BinFile file,
                                float *sval );
 extern ThotBool TtaReadName ( BinFile file,
                               unsigned char *name );
+extern char * TtaGetRealFileName ( CONST char *name );
 extern char *GetRealFileName ( CONST char *name );
 extern gzFile TtaGZOpen ( CONST char *filename );
 extern void TtaGZClose ( gzFile file );
@@ -81,6 +82,7 @@ extern ThotBool TtaReadFloat ( BinFile file,
                                  float *sval );
 extern ThotBool TtaReadName ( BinFile file,
                                 unsigned char *name );
+extern char * TtaGetRealFileName ( CONST char *name );
 extern char *GetRealFileName ( CONST char *name );
 extern gzFile TtaGZOpen ( CONST char *filename );
 extern void TtaGZClose ( gzFile file );

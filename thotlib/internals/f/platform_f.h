@@ -11,12 +11,13 @@ extern int TtaDirExists ( CONST char *dirpath );
 extern int ThotFileExist ( CONST char *name );
 extern int TtaFileExist ( CONST char *filename );
 extern int TtaFileUnlink ( CONST char *filename );
+extern ThotBool TtaFileRename ( const char * oldname,
+                                const char * newname );
 extern unsigned long TtaGetFileSize ( char *filename );
 extern ThotBool TtaFileCopy ( CONST char *sourceFileName,
                               CONST char *targetFileName );
 extern ThotBool TtaCompareFiles ( CONST char *file1,
                                   CONST char *file2 );
-extern ThotBool TtaFileRename( const char * oldname, const char * newname );
 
 #else /* __STDC__ */
 
@@ -25,12 +26,13 @@ extern int TtaDirExists ( CONST char *dirpath );
 extern int ThotFileExist ( CONST char *name );
 extern int TtaFileExist ( CONST char *filename );
 extern int TtaFileUnlink ( CONST char *filename );
+extern ThotBool TtaFileRename ( const char * oldname,
+                                  const char * newname );
 extern unsigned long TtaGetFileSize ( char *filename );
 extern ThotBool TtaFileCopy ( CONST char *sourceFileName,
                                 CONST char *targetFileName );
 extern ThotBool TtaCompareFiles ( CONST char *file1,
                                     CONST char *file2 );
-extern ThotBool TtaFileRename( const char * oldname, const char * newname );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

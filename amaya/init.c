@@ -7466,7 +7466,7 @@ void InitAmaya (NotifyEvent * event)
    /* set path on current directory */
 #ifdef _WX
    wxString homedir = TtaGetHomeDir();
-   sprintf (DirectoryName, "%s", homedir.mb_str(wxConvUTF8));
+   strcpy(DirectoryName, (const char *)homedir.mb_str(wxConvUTF8));
 #else /* _WX */
 #ifdef _WINDOWS
    s = getenv ("HOMEDRIVE");
