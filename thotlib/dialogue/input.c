@@ -763,7 +763,7 @@ int                 key;
      }
 
 #ifdef _WINDOWS
-   if ((isShift || isCtrl) || (specialKey && !found))
+   if (((isShift || isCtrl) && specialKey) || (specialKey && !found))
 #else /* !_WINDOWS */
    if (!found)
 #endif /* _WINDOWS */
