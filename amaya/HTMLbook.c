@@ -525,8 +525,8 @@ STRING              data;
   val = (int) data;
   switch (ref - BasePrint)
     {
-    case NumFormPrint:
-      TtaDestroyDialogue (BasePrint+NumFormPrint);
+    case FormPrint:
+      TtaDestroyDialogue (BasePrint + FormPrint);
       switch (val)
 	{
 	case 1:
@@ -554,7 +554,7 @@ STRING              data;
 	  break;
 	}
       break;
-    case NumMenuOptions:
+    case PrintOptions:
       switch (val)
 	{
 	case 0:
@@ -581,7 +581,7 @@ STRING              data;
 	  break;
 	}
       break;
-    case NumMenuPaperFormat:
+    case PaperFormat:
       /* page size submenu */
       switch (val)
 	{
@@ -593,7 +593,7 @@ STRING              data;
 	  break;
 	}
       break;
-    case NumMenuSupport:
+    case PrintSupport:
       /* paper print/save PostScript submenu */
       switch (val)
 	{
@@ -601,9 +601,9 @@ STRING              data;
 	  if (PaperPrint == PP_PS)
 	    {
 	      PaperPrint = PP_PRINTER;
-#         ifndef _WINDOWS
-	      TtaSetTextForm (BasePrint+NumZonePrinterName, PPrinter);
-#         endif /* !_WINDOWS */
+#ifndef _WINDOWS
+	      TtaSetTextForm (BasePrint + PPrinterName, PPrinter);
+#endif /* !_WINDOWS */
 	    }
 	  break;
 	case 1:
@@ -611,13 +611,13 @@ STRING              data;
 	    {
 	      PaperPrint = PP_PS;
 #         ifndef _WINDOWS
-	      TtaSetTextForm (BasePrint+NumZonePrinterName, PSdir);
+	      TtaSetTextForm (BasePrint + PPrinterName, PSdir);
 #         endif /* !_WINDOWS */
 	    }
 	  break;
 	}
       break;
-    case NumZonePrinterName:
+    case PPrinterName:
       if (data[0] != '\0')
 	if (PaperPrint == PP_PRINTER)
 	    /* text capture zone for the printer name */
@@ -689,7 +689,7 @@ View                view;
    PageSize = TtaGetPrintParameter (PP_PaperSize);	  
 
 #  ifndef _WINDOWS
-   TtaNewSheet (BasePrint + NumFormPrint, TtaGetViewFrame (doc, view), 
+   TtaNewSheet (BasePrint + FormPrint, TtaGetViewFrame (doc, view), 
 		TtaGetMessage (LIB, TMSG_LIB_PRINT),
 	   1, TtaGetMessage (AMAYA, AM_BUTTON_PRINT), FALSE, 2, 'L', D_CANCEL);
    i = 0;
@@ -702,60 +702,60 @@ View                view;
    sprintf (&bufMenu[i], "%s%s", "T", TtaGetMessage (AMAYA, AM_PRINT_URL));
    i += ustrlen (&bufMenu[i]) + 1;
    sprintf (&bufMenu[i], "%s%s", "T", TtaGetMessage (AMAYA, AM_WITH_CSS));
-   TtaNewToggleMenu (BasePrint + NumMenuOptions, BasePrint + NumFormPrint,
+   TtaNewToggleMenu (BasePrint + PrintOptions, BasePrint + FormPrint,
 		TtaGetMessage (LIB, TMSG_OPTIONS), 5, bufMenu, NULL, FALSE);
    if (ManualFeed == PP_ON)
-     TtaSetToggleMenu (BasePrint + NumMenuOptions, 0, TRUE);
+     TtaSetToggleMenu (BasePrint + PrintOptions, 0, TRUE);
    else
-     TtaSetToggleMenu (BasePrint + NumMenuOptions, 0, FALSE);
-   TtaSetToggleMenu (BasePrint + NumMenuOptions, 1, WithToC);
-   TtaSetToggleMenu (BasePrint + NumMenuOptions, 2, NumberLinks);
-   TtaSetToggleMenu (BasePrint + NumMenuOptions, 3, PrintURL);
-   TtaSetToggleMenu (BasePrint + NumMenuOptions, 4, IgnoreCSS);
+     TtaSetToggleMenu (BasePrint + PrintOptions, 0, FALSE);
+   TtaSetToggleMenu (BasePrint + PrintOptions, 1, WithToC);
+   TtaSetToggleMenu (BasePrint + PrintOptions, 2, NumberLinks);
+   TtaSetToggleMenu (BasePrint + PrintOptions, 3, PrintURL);
+   TtaSetToggleMenu (BasePrint + PrintOptions, 4, IgnoreCSS);
 
    /* Paper format submenu */
    i = 0;
    sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_A4));
    i += ustrlen (&bufMenu[i]) + 1;
    sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_US));
-   TtaNewSubmenu (BasePrint + NumMenuPaperFormat, BasePrint + NumFormPrint, 0,
+   TtaNewSubmenu (BasePrint + PaperFormat, BasePrint + FormPrint, 0,
 	     TtaGetMessage (LIB, TMSG_PAPER_SIZE), 2, bufMenu, NULL, FALSE);
    if (PageSize == PP_US)
-      TtaSetMenuForm (BasePrint + NumMenuPaperFormat, 1);
+      TtaSetMenuForm (BasePrint + PaperFormat, 1);
    else
-      TtaSetMenuForm (BasePrint + NumMenuPaperFormat, 0);
+      TtaSetMenuForm (BasePrint + PaperFormat, 0);
 
    /* Print to paper/ Print to file submenu */
    i = 0;
    sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_PRINTER));
    i += ustrlen (&bufMenu[i]) + 1;
    sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_PS_FILE));
-   TtaNewSubmenu (BasePrint + NumMenuSupport, BasePrint + NumFormPrint, 0,
+   TtaNewSubmenu (BasePrint + PrintSupport, BasePrint + FormPrint, 0,
                   TtaGetMessage (LIB, TMSG_OUTPUT), 2, bufMenu, NULL, TRUE);
    /* text capture zone for the printer name */
-   TtaNewTextForm (BasePrint + NumZonePrinterName, BasePrint + NumFormPrint, NULL, 30, 1, FALSE);
+   TtaNewTextForm (BasePrint + PPrinterName, BasePrint + FormPrint, NULL, 30, 1, FALSE);
 
    /* initialization of the PaperPrint selector */
    if (PaperPrint == PP_PRINTER)
      {
-	TtaSetMenuForm (BasePrint + NumMenuSupport, 0);
-	TtaSetTextForm (BasePrint + NumZonePrinterName, PPrinter);
+	TtaSetMenuForm (BasePrint + PrintSupport, 0);
+	TtaSetTextForm (BasePrint + PPrinterName, PPrinter);
      }
    else
      {
-	TtaSetMenuForm (BasePrint + NumMenuSupport, 1);
-	TtaSetTextForm (BasePrint + NumZonePrinterName, PSdir);
+	TtaSetMenuForm (BasePrint + PrintSupport, 1);
+	TtaSetTextForm (BasePrint + PPrinterName, PSdir);
      }
 
    /* activates the Print form */
-    TtaShowDialogue (BasePrint+NumFormPrint, FALSE);
+    TtaShowDialogue (BasePrint+FormPrint, FALSE);
     if (textFile) {
        /* invalid dialogue entries */
-       TtaRedrawMenuEntry (BasePrint + NumMenuOptions, 1, NULL, -1, FALSE);
-       TtaRedrawMenuEntry (BasePrint + NumMenuOptions, 2, NULL, -1, FALSE);	      
+       TtaRedrawMenuEntry (BasePrint + PrintOptions, 1, NULL, -1, FALSE);
+       TtaRedrawMenuEntry (BasePrint + PrintOptions, 2, NULL, -1, FALSE);	      
 	}
 #   else  /* _WINDOWS */
-    CreatePrintDlgWindow (TtaGetViewFrame (doc, view), PSdir, BasePrint, NumMenuSupport, NumMenuOptions, NumMenuPaperFormat, NumZonePrinterName, NumFormPrint);
+    CreatePrintDlgWindow (TtaGetViewFrame (doc, view), PSdir);
 #   endif /* _WINDOWS */
 }
 

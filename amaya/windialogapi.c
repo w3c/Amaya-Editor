@@ -602,19 +602,19 @@ LPARAM lParam;
       switch (LOWORD (wParam))
 	{
 	case IDC_TABOFCONTENTS:
-	  ThotCallback (BasePrint + NumMenuOptions, INTEGER_DATA, (CHAR_T*) 1);
+	  ThotCallback (BasePrint + PrintOptions, INTEGER_DATA, (CHAR_T*) 1);
 	  break;
 	case IDC_LINKS:
-	  ThotCallback (BasePrint + NumMenuOptions, INTEGER_DATA, (CHAR_T*) 2);
+	  ThotCallback (BasePrint + PrintOptions, INTEGER_DATA, (CHAR_T*) 2);
 	  break;
 	case IDC_PRINTURL:
-	  ThotCallback (BasePrint + NumMenuOptions, INTEGER_DATA, (CHAR_T*) 3);
+	  ThotCallback (BasePrint + PrintOptions, INTEGER_DATA, (CHAR_T*) 3);
 	  break;
 	case IDC_IGNORE_CSS:
-	  ThotCallback (BasePrint + NumMenuOptions, INTEGER_DATA, (CHAR_T*) 4);
+	  ThotCallback (BasePrint + PrintOptions, INTEGER_DATA, (CHAR_T*) 4);
 	  break;
 	case ID_PRINT:
-	  ThotCallback (BasePrint + NumMenuSupport, INTEGER_DATA, (CHAR_T*) 0);
+	  ThotCallback (BasePrint + PrintSupport, INTEGER_DATA, (CHAR_T*) 0);
 	  EndDialog (hwnDlg, ID_PRINT);
 	  if (TtPrinterDC)
 	    DeleteDC (TtPrinterDC);
@@ -624,9 +624,9 @@ LPARAM lParam;
 	      WinInitPrinterColors ();
 	      
 	      EnableWindow (ghwndMain, FALSE);
-	      ThotCallback (BasePrint + NumMenuPaperFormat, INTEGER_DATA, (CHAR_T*) 0);
-	      ThotCallback ((BasePrint + NumZonePrinterName, STRING_DATA, currentFileToPrint);
-	      ThotCallback (BasePrint + NumFormPrint, INTEGER_DATA, (CHAR_T*)1);
+	      ThotCallback (BasePrint + PaperFormat, INTEGER_DATA, (CHAR_T*) 0);
+	      ThotCallback ((BasePrint + PPrinterName, STRING_DATA, currentFileToPrint);
+	      ThotCallback (BasePrint + FormPrint, INTEGER_DATA, (CHAR_T*)1);
 	      if (TtPrinterDC) {
 		DeleteDC (TtPrinterDC);
 		TtPrinterDC = NULL;
@@ -639,7 +639,7 @@ LPARAM lParam;
 	      DeleteDC (TtPrinterDC);
 	      TtPrinterDC = NULL;
 	    }
-	  ThotCallback (BasePrint + NumFormPrint, INTEGER_DATA, (CHAR_T*)0);
+	  ThotCallback (BasePrint + FormPrint, INTEGER_DATA, (CHAR_T*)0);
 	  EndDialog (hwnDlg, IDCANCEL);
 	  break;
 	}
