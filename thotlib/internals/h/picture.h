@@ -59,6 +59,11 @@ typedef struct
   char          *PicFileName; 
   Pixmap         PicPixmap;
   Pixmap         PicMask;
+# ifdef _WINDOWS
+  int            bgRed;
+  int            bgGreen;
+  int            bgBlue;
+# endif /* _WINDOWS */
   boolean        mapped;         /* Used for ExtraHandlers */
   boolean        created;        /* Used for ExtraHandlers */
   ThotWidget     wid;            /* Used for ExtraHandlers */
