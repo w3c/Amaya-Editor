@@ -122,8 +122,10 @@ static ThotBool     SkipClickEvent = FALSE;
 /*----------------------------------------------------------------------
   APPgraphicModify sends a message TteElemGraphModif to parent elements
   of a graphic.
+  The parameter openclose is TRUE when the history must be open and closed.
   ----------------------------------------------------------------------*/
-ThotBool APPgraphicModify (PtrElement pEl, int value, int frame, ThotBool pre)
+ThotBool APPgraphicModify (PtrElement pEl, int value, int frame,
+			   ThotBool pre , ThotBool openclose)
 {
   PtrElement          pAsc;
   ThotBool            result;
@@ -153,7 +155,7 @@ ThotBool APPgraphicModify (PtrElement pEl, int value, int frame, ThotBool pre)
       result = result || ok;
       if (loop)
 	{
-	  /* generates a callback for the encolsing element too */
+	  /* generates a callback for the enclosing element too */
 	  pAsc = pAsc->ElParent;
 	  loop = FALSE;
 	}
@@ -163,11 +165,11 @@ ThotBool APPgraphicModify (PtrElement pEl, int value, int frame, ThotBool pre)
   /* if it's before the actual change is made and if the application accepts
      the change, register the operation in the Undo queue (only if it's
      not a creation). */
-  if (pre && !ok)
+  if (pre && openclose && !ok)
     {
       if (((pEl->ElLeafType == LtGraphics || pEl->ElLeafType == LtSymbol) &&
-	   pEl->ElGraph != '\0') ||
-	  (pEl->ElLeafType == LtPolyLine && pEl->ElPolyLineType != '\0') ||
+	   pEl->ElGraph != EOS) ||
+	  (pEl->ElLeafType == LtPolyLine && pEl->ElPolyLineType != EOS) ||
 	  (pEl->ElLeafType == LtPath))
 	{
 	  if (ThotLocalActions[T_openhistory] != NULL)
@@ -176,9 +178,9 @@ ThotBool APPgraphicModify (PtrElement pEl, int value, int frame, ThotBool pre)
 	    (*ThotLocalActions[T_addhistory]) (pEl, pDoc, TRUE, TRUE);
 	}
     }
-  if (!pre)
-      if (isGraph && ThotLocalActions[T_closehistory] != NULL)
-	  (*ThotLocalActions[T_closehistory]) (pDoc);
+  if (!pre && openclose && isGraph &&
+      ThotLocalActions[T_closehistory] != NULL)
+    (*ThotLocalActions[T_closehistory]) (pDoc);
   return result;
 }
 
@@ -2421,6 +2423,7 @@ static ThotBool     CanBeTranslated (PtrAbstractBox pAb, int frame,
   ----------------------------------------------------------------------*/
 void ApplyDirectTranslate (int frame, int xm, int ym)
 {
+  PtrDocument         pDoc;
   PtrBox              pBox;
   PtrAbstractBox      pAb;
   PtrElement	      pEl;
@@ -2431,9 +2434,15 @@ void ApplyDirectTranslate (int frame, int xm, int ym)
   int                 ymin, ymax;
   int                 xref, yref;
   int                 pointselect;
-  ThotBool            still, okH, okV, send;
+  int                 view;
+  ThotBool            open, still;
+  ThotBool            okH, okV, send;
 
   pFrame = &ViewFrameTable[frame - 1];
+  GetDocAndView (frame, &pDoc, &view);
+  if (pDoc == NULL)
+    return;
+  open = !pDoc->DocEditSequence;
   /* by default no selected point */
   pointselect = 0;
   if (pFrame->FrAbstractBox != NULL)
@@ -2529,7 +2538,7 @@ void ApplyDirectTranslate (int frame, int xm, int ym)
 		    /* moving a point in a polyline */
 		    {
 		      /* send an event to the application */
-		      if (!APPgraphicModify (pEl, pointselect, frame,TRUE))
+		      if (!APPgraphicModify (pEl, pointselect, frame, TRUE, open))
 			/* application agrees */
 			{
 			  /* check if the polyline is open or closed */
@@ -2597,7 +2606,7 @@ void ApplyDirectTranslate (int frame, int xm, int ym)
 		  NewPosition (pAb, x, xref, y, yref, frame, TRUE);
 		}
 	      if (send)
-		APPgraphicModify (pEl, pointselect, frame, FALSE);
+		APPgraphicModify (pEl, pointselect, frame, FALSE, open);
 	    }
 	}
     }

@@ -9,7 +9,8 @@
 extern ThotBool APPgraphicModify ( PtrElement pEl,
                                    int value,
                                    int frame,
-                                   ThotBool pre );
+                                   ThotBool pre,
+                                   ThotBool openclose );
 extern void LocateSelectionInView ( int frame,
                                     int x,
                                     int y,
@@ -103,7 +104,8 @@ extern void LocateClickedChar ( PtrBox pBox,
 extern ThotBool APPgraphicModify (/* PtrElement pEl,
                                      int value,
                                      int frame,
-                                     ThotBool pre */);
+                                     ThotBool pre,
+                                     ThotBool openclose */);
 extern void LocateSelectionInView (/* int frame,
                                       int x,
                                       int y,

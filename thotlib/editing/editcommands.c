@@ -468,7 +468,8 @@ static ThotBool CloseTextInsertionWithControl ()
 	      LastInsertElText = NULL;
 	      APPtextModify (pEl, frame, FALSE);
 	      notified = TRUE;
-	      CloseHistorySequence (SelectedDocument);
+	      if (SelectedDocument)
+		CloseHistorySequence (SelectedDocument);
 	    }
 	  else if (LastInsertAttr)
 	    {
@@ -1183,33 +1184,40 @@ static void LoadSymbol (char c, PtrLine pLine, ThotBool defaultHeight,
 			ThotBool defaultWidth, PtrBox pBox, PtrAbstractBox pAb,
 			int frame)
 {
-   int                 xDelta, yDelta;
+  PtrDocument         pDoc;
+  int                 xDelta, yDelta;
+  int                 view;
+  ThotBool            open;
 
-   if (!APPgraphicModify (pAb->AbElement, (int)c, frame, TRUE))
-     {
-       pAb->AbShape = c;
-       pAb->AbElement->ElGraph = c;
-       /* Dimensions du symbole */
-       pAb->AbVolume = 1;
-       if (defaultWidth || defaultHeight)
-	 GiveSymbolSize (pAb, &xDelta, &yDelta);
-       
-       /* met a jour la boite */
-       if (defaultWidth)
-	 xDelta -= pBox->BxWidth;
-       else
-	 xDelta = 0;
-       
-       if (defaultHeight)
-	 yDelta -= pBox->BxHeight;
-       else
-	 yDelta = 0;
-       
-       BoxUpdate (pBox, pLine, 0, 0, xDelta, 0, yDelta, frame, FALSE);
-       /* adjust the width of some symbols */
-       ResizeHeight (pBox, NULL, NULL, 0, 0, 0, frame);
-       APPgraphicModify (pAb->AbElement, (int)c, frame, FALSE);
-     }
+  GetDocAndView (frame, &pDoc, &view);
+  if (pDoc == NULL)
+    return;
+  open = !pDoc->DocEditSequence;
+  if (!APPgraphicModify (pAb->AbElement, (int)c, frame, TRUE, open))
+    {
+      pAb->AbShape = c;
+      pAb->AbElement->ElGraph = c;
+      /* Dimensions du symbole */
+      pAb->AbVolume = 1;
+      if (defaultWidth || defaultHeight)
+	GiveSymbolSize (pAb, &xDelta, &yDelta);
+      
+      /* met a jour la boite */
+      if (defaultWidth)
+	xDelta -= pBox->BxWidth;
+      else
+	xDelta = 0;
+      
+      if (defaultHeight)
+	yDelta -= pBox->BxHeight;
+      else
+	yDelta = 0;
+      
+      BoxUpdate (pBox, pLine, 0, 0, xDelta, 0, yDelta, frame, FALSE);
+      /* adjust the width of some symbols */
+      ResizeHeight (pBox, NULL, NULL, 0, 0, 0, frame);
+      APPgraphicModify (pAb->AbElement, (int)c, frame, FALSE, open);
+    }
 }
 
 
@@ -1222,12 +1230,19 @@ static void LoadShape (char c, PtrLine pLine, ThotBool defaultHeight,
 {
   ViewFrame          *pFrame;
   PtrTextBuffer       pBuffer;
+  PtrDocument         pDoc;
   int                 xDelta, yDelta;
   int                 width, height;
   int                 x, y;
+  int                 view;
+  ThotBool            open;
 
   pFrame = &ViewFrameTable[frame - 1];
-  if (!APPgraphicModify (pAb->AbElement, (int) c, frame, TRUE))
+  GetDocAndView (frame, &pDoc, &view);
+  if (pDoc == NULL)
+    return;
+  open = !pDoc->DocEditSequence;
+  if (!APPgraphicModify (pAb->AbElement, (int) c, frame, TRUE, open))
     {
       /* efface la selection precedente */
       switch (c)
@@ -1356,7 +1371,7 @@ static void LoadShape (char c, PtrLine pLine, ThotBool defaultHeight,
 	    }
 	}
       /* but could notify its parent */
-      APPgraphicModify (pAb->AbElement, (int) c, frame, FALSE);
+      APPgraphicModify (pAb->AbElement, (int) c, frame, FALSE, open);
     }
 }
 
@@ -1488,6 +1503,7 @@ static void RemoveSelection (int charsDelta, int spacesDelta, int xDelta,
 			     PtrLine pLine, PtrBox pBox, PtrAbstractBox pAb,
 			     int frame, ThotBool notify)
 {
+  PtrDocument         pDoc;
   PtrTextBuffer       pTargetBuffer;
   PtrTextBuffer       pSourceBuffer;
   PictInfo           *image;
@@ -1500,6 +1516,8 @@ static void RemoveSelection (int charsDelta, int spacesDelta, int xDelta,
   int                 adjust;
   int                 yDelta;
   int                 width, height;
+  int                 view;
+  ThotBool            open;
 
   font = pBox->BxFont;
   width = BoxCharacterWidth (109, font);
@@ -1672,8 +1690,12 @@ static void RemoveSelection (int charsDelta, int spacesDelta, int xDelta,
       case LtGraphics:
 	/* send an event to the application and register the change
 	   in the Undo queue */
+	GetDocAndView (frame, &pDoc, &view);
+	if (pDoc == NULL)
+	  return;
+	open = !pDoc->DocEditSequence;
 	APPgraphicModify (pBox->BxAbstractBox->AbElement,
-			  (int) pAb->AbShape, frame, TRUE);
+			  (int) pAb->AbShape, frame, TRUE, open);
 	if (defaultWidth)
 	  xDelta = pBox->BxWidth - width;
 	else
@@ -1691,7 +1713,7 @@ static void RemoveSelection (int charsDelta, int spacesDelta, int xDelta,
 	pAb->AbVolume = 0;
 	pAb->AbShape = EOS;
 	APPgraphicModify (pBox->BxAbstractBox->AbElement,
-			  (int) pAb->AbShape, frame, FALSE);
+			  (int) pAb->AbShape, frame, FALSE, open);
 	break;
 	
       default:
@@ -1898,7 +1920,7 @@ static void PasteClipboard (ThotBool defaultHeight, ThotBool defaultWidth,
    Traite les commandes TextInserting Cut Paste Copy Oops          
    ainsi que l'insertion des Graphiques Images et Symboles         
   ----------------------------------------------------------------------*/
-static void         ContentEditing (int editType)
+static void ContentEditing (int editType)
 {
   PtrBox              pBox;
   PtrBox              pSelBox;
@@ -1920,7 +1942,7 @@ static void         ContentEditing (int editType)
   int                 frame, doc;
   ThotBool            still, ok, textPasted;
   ThotBool            defaultWidth, defaultHeight;
-  ThotBool            show, graphEdit;
+  ThotBool            show, graphEdit, open;
 
   /* termine l'insertion de caracteres en cours */
   CloseTextInsertion ();
@@ -2003,8 +2025,13 @@ static void         ContentEditing (int editType)
 	SetInsert (&pAb, &frame, ClipboardType, FALSE);
 
       pFrame = &ViewFrameTable[frame - 1];
+      doc = FrameTable[frame].FrDoc;
+      pDoc = LoadedDocument[doc - 1];
+      if (pDoc == NULL)
+	return;
+      open = !pDoc->DocEditSequence;
       pViewSel = &pFrame->FrSelectionBegin;
-      show = (documentDisplayMode[FrameTable[frame].FrDoc - 1] == DisplayImmediately);
+      show = (documentDisplayMode[doc - 1] == DisplayImmediately);
       if (pBox && editType == TEXT_SUP)
 	{
 	  /* don't remove the selection if it is at the end of the text */
@@ -2031,7 +2058,7 @@ static void         ContentEditing (int editType)
 		      still = (pAb->AbPolyLineShape == 'p' || /* plygon */
 			       pAb->AbPolyLineShape == 's');  /* closed curve*/
 		      if (!APPgraphicModify (pAb->AbElement,
-					     pAb->AbPolyLineShape, frame,TRUE))
+					     pAb->AbPolyLineShape, frame, TRUE, open))
 			{
 			  x = pBox->BxXOrg - pFrame->FrXOrg;
 			  y = pBox->BxYOrg - pFrame->FrYOrg;
@@ -2117,11 +2144,9 @@ static void         ContentEditing (int editType)
 	      if ((editType == TEXT_CUT || editType == TEXT_DEL) &&
 		  pAb->AbCreatorAttr && pAb->AbVolume == 0)
 		{
-		  /* delete on an empty attribute value remove the attribute */
+		  /* delete on an empty attribute value removes the attribute */
 		  pAttr = pAb->AbCreatorAttr;
 		  pEl = pAb->AbElement;
-		  doc = FrameTable[frame].FrDoc;
-		  pDoc = LoadedDocument[doc - 1];
 		  if (pDoc->DocEditSequence)
 		    /* close the previous sequence */
 		    CloseHistorySequence (pDoc);
@@ -2189,7 +2214,6 @@ static void         ContentEditing (int editType)
 	{
 	  /* check enclosing cell */
 	  pCell = GetParentCell (pBox);
-	  
 	  if ((editType == TEXT_DEL ||editType == TEXT_SUP) &&
 	      pAb->AbLeafType == LtPolyLine)
 	    {
@@ -2203,7 +2227,7 @@ static void         ContentEditing (int editType)
 		    {
 		      charsDelta = pViewSel->VsIndBox;
 		      if (!APPgraphicModify (pAb->AbElement,
-					     pAb->AbPolyLineShape, frame,TRUE))
+					     pAb->AbPolyLineShape, frame, TRUE, open))
 			{
 			  /* Destruction du point courant de la polyline */
 			  DeletePointInPolyline (&(pAb->AbPolyLineBuffer),
@@ -2470,7 +2494,7 @@ static void         ContentEditing (int editType)
 	    APPtextModify (pAb->AbElement, frame, FALSE);
 	  else if (graphEdit)
 	    APPgraphicModify (pAb->AbElement,pAb->AbPolyLineShape, frame,
-			      FALSE);
+			      FALSE, open);
 	  /* signale la nouvelle selection courante */
 	  if ((editType == TEXT_CUT || editType == TEXT_PASTE ||
 	       editType == TEXT_X_PASTE || editType == TEXT_DEL ||
@@ -2622,12 +2646,8 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 			xx = xx - 1;
 		      if (bottomY + 1 < FrameTable[frame].FrHeight)
 			bottomY = bottomY + 1;
-		      DefClip (frame, 
-			       xx, topY, 
-			       xx, bottomY);
-#else /*_GL*/
-		      DefClip (frame, xx, topY, xx, bottomY);
 #endif /*_GL*/
+		      DefClip (frame, xx, topY, xx, bottomY);
 		      /* Est-on au debut d'une boite entiere ou coupee ? */
 		      pBox = pAb->AbBox->BxNexChild;
 		      if ((pBox == NULL || pSelBox == pBox) &&
