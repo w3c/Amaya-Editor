@@ -351,6 +351,7 @@ static int          CharLevelElement[] =
    HTML_EL_ACRONYM,
    HTML_EL_Font_, HTML_EL_Quotation, HTML_EL_Subscript, HTML_EL_Superscript,
    HTML_EL_Span, HTML_EL_BDO, HTML_EL_INS, HTML_EL_DEL,
+   HTML_EL_Math,
    HTML_EL_Input,
    HTML_EL_Option, HTML_EL_Option_Menu,
    HTML_EL_Text_Input,
