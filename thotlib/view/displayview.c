@@ -437,7 +437,7 @@ ThotBool            lighted;
 }
 
 /*----------------------------------------------------------------------
-   CloseDocument ferme toutes les vue d'un document et decharge ce	
+   TCloseDocument ferme toutes les vue d'un document et decharge ce	
    document. Si pDoc est NULL, demande a` l'utilisateur de 
    designer le document a` fermer et lui demande           
    confirmation, sinon pDoc designe le contexte du document
@@ -445,9 +445,9 @@ ThotBool            lighted;
    Detruit egalement le fichier .BAK du document.          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CloseDocument (PtrDocument pDoc)
+void                TCloseDocument (PtrDocument pDoc)
 #else  /* __STDC__ */
-void                CloseDocument (pDoc)
+void                TCloseDocument (pDoc)
 PtrDocument         pDoc;
 #endif /* __STDC__ */
 {
@@ -569,7 +569,7 @@ ThotBool            closeDoc;
 	if (NumberOfOpenViews (pDoc) < 1)
 	  {
 	  /* il ne reste plus de vue, on libere le document */
-	  CloseDocument (pDoc);
+	  TCloseDocument (pDoc);
 	  }
     }
 }

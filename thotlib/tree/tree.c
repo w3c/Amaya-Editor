@@ -2712,6 +2712,40 @@ PtrDocument         pDoc;
 }
 
 /*----------------------------------------------------------------------
+  IsConstantConstructor returns TRUE is the element uses the constructor
+  CsConstant.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool          IsConstantConstructor (PtrElement pEl)
+#else  /* __STDC__ */
+ThotBool          IsConstantConstructor (pEl)
+PtrElement        pEl;
+#endif /* __STDC__ */
+{
+  SRule              *pSRule;
+
+  if (pEl == NULL || pEl->ElStructSchema == NULL)
+    return FALSE;
+  else
+    {
+      pSRule = &pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1];
+      if (pSRule->SrConstruct != CsConstant)
+	return TRUE;
+      else if (pSRule->SrConstruct != CsIdentity)
+	{
+	  pSRule = &pEl->ElStructSchema->SsRule[pSRule->SrIdentRule - 1];
+	  if (pSRule->SrConstruct != CsConstant)
+	    return TRUE;
+	  else
+	    return FALSE;
+	}
+      else
+	return FALSE;
+    }
+}
+
+
+/*----------------------------------------------------------------------
    NewSubtree
    Creates a subtreee and returns a pointer to it.
    If the Desc ThotBool is TRUE, all of the subtree is created according

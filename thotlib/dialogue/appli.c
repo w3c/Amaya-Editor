@@ -538,22 +538,22 @@ int                 value;
 
           case SB_LINEUP:
                delta = -13;
-               VerticalScroll (frame, delta, TRUE);
+               VerticalScroll (frame, delta, 1);
                break;
 
           case SB_LINEDOWN:
                delta = 13;
-               VerticalScroll (frame, delta, TRUE);
+               VerticalScroll (frame, delta, 1);
                break;
 
           case SB_PAGEUP:
                delta = -FrameTable[frame].FrHeight;
-               VerticalScroll (frame, delta, TRUE);
+               VerticalScroll (frame, delta, 1);
                break;
 
           case SB_PAGEDOWN:
                delta = FrameTable[frame].FrHeight;
-               VerticalScroll (frame, delta, TRUE);
+               VerticalScroll (frame, delta, 1);
                break;
 
           case SB_ENDSCROLL:
@@ -571,7 +571,7 @@ int                 value;
                       delta = nbPages * FrameTable[frame].FrHeight + (int) ((remaining * FrameTable[frame].FrHeight) / height);
                   else 
                       delta = -(nbPages * FrameTable[frame].FrHeight + (int) ((remaining * FrameTable[frame].FrHeight) / height));
-                  VerticalScroll (frame, delta, TRUE);
+                  VerticalScroll (frame, delta, 1);
 			   } else {
                      delta = (int) (((float)value / (float)FrameTable[frame].FrHeight) * 100);
                      JumpIntoView (frame, delta);
@@ -635,7 +635,7 @@ int                 value;
                break;
    }
 
-   HorizontalScroll (frame, delta, TRUE);
+   HorizontalScroll (frame, delta, 1);
    UpdateScrollbars (frame);
 }
 #endif /* _WINDOWS */
@@ -849,7 +849,7 @@ int                *param;
 #endif /* !_WINDOWS */
 
 /*----------------------------------------------------------------------
-   LineUp scrolls one line up.                                    
+   TtcLineUp scrolls one line up.                                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcLineUp (Document document, View view)
@@ -860,28 +860,29 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   int                 frame;
-#  ifndef _WINDOWS
-   XmScrollBarCallbackStruct infos;
-#  else   /* _WINDOWS */
-   int delta;
-#  endif  /* _WINDOWS */
+#ifndef _WINDOWS
+  XmScrollBarCallbackStruct infos;
+#else   /* _WINDOWS */
+  int                       delta;
+#endif  /* _WINDOWS */
+  int                       frame;
+  
+  if (document != 0)
+    frame = GetWindowNumber (document, view);
+  else
+    frame = 0;
 
-   if (document != 0)
-      frame = GetWindowNumber (document, view);
-   else
-     frame = 0;
-#  ifndef _WINDOWS
-   infos.reason = XmCR_DECREMENT;
-   FrameVScrolled (0, frame, (int *) &infos);
-#  else  /* _WINDOWS */
-   delta = -13;
-   VerticalScroll (frame, delta, TRUE);
-#  endif /* _WINDOWS */
+#ifndef _WINDOWS
+  infos.reason = XmCR_DECREMENT;
+  FrameVScrolled (0, frame, (int *) &infos);
+#else  /* _WINDOWS */
+  delta = -13;
+  VerticalScroll (frame, delta, 1);
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
-   LineDown scrolls one line down.                                
+   TtcLineDown scrolls one line down.                                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcLineDown (Document document, View view)
@@ -892,25 +893,91 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   int                 frame;
+#ifndef _WINDOWS
+  XmScrollBarCallbackStruct infos;
+#else   /* _WINDOWS */
+  int                       delta;
+#endif  /* _WINDOWS */
+  int                       frame;
 
-#  ifndef _WINDOWS
-   XmScrollBarCallbackStruct infos;
-#  else   /* _WINDOWS */
-   int delta;
-#  endif  /* !_WINDOWS */
+  if (document != 0)
+    frame = GetWindowNumber (document, view);
+  else
+    frame = 0;
 
-   if (document != 0)
-      frame = GetWindowNumber (document, view);
-   else
-     frame = 0;
-#  ifndef _WINDOWS
-   infos.reason = XmCR_INCREMENT;
-   FrameVScrolled (0, frame, (int *) &infos);
-#  else  /* _WINDOWS */
-   delta = 13;
-   VerticalScroll (frame, delta, TRUE);
-#  endif /* _WINDOWS */
+#ifndef _WINDOWS
+  infos.reason = XmCR_INCREMENT;
+  FrameVScrolled (0, frame, (int *) &infos);
+#else  /* _WINDOWS */
+  delta = 13;
+  VerticalScroll (frame, delta, 1);
+#endif /* _WINDOWS */
+}
+
+/*----------------------------------------------------------------------
+   TtcScrollLeft scrolls one position left.                                    
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtcScrollLeft (Document document, View view)
+#else  /* __STDC__ */
+void                TtcScrollLeft (document, view)
+Document            document;
+View                view;
+
+#endif /* __STDC__ */
+{
+#ifndef _WINDOWS
+  XmScrollBarCallbackStruct infos;
+#else   /* _WINDOWS */
+  int                       delta;
+#endif  /* _WINDOWS */
+  int                       frame;
+  
+  if (document != 0)
+    frame = GetWindowNumber (document, view);
+  else
+    frame = 0;
+
+#ifndef _WINDOWS
+  infos.reason = XmCR_DECREMENT;
+  FrameHScrolled (0, frame, (int *) &infos);
+#else  /* _WINDOWS */
+  delta = -13;
+  HorizontalScroll (frame, delta, 1);
+#endif /* _WINDOWS */
+}
+
+/*----------------------------------------------------------------------
+   TtcScrollRight scrolls one position right.                                
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtcScrollRight (Document document, View view)
+#else  /* __STDC__ */
+void                TtcScrollRight (document, view)
+Document            document;
+View                view;
+
+#endif /* __STDC__ */
+{
+#ifndef _WINDOWS
+  XmScrollBarCallbackStruct infos;
+#else   /* _WINDOWS */
+  int                       delta;
+#endif  /* _WINDOWS */
+  int                       frame;
+
+  if (document != 0)
+    frame = GetWindowNumber (document, view);
+  else
+    frame = 0;
+
+#ifndef _WINDOWS
+  infos.reason = XmCR_INCREMENT;
+  FrameHScrolled (0, frame, (int *) &infos);
+#else  /* _WINDOWS */
+  delta = 13;
+  HorizontalScroll (frame, delta, 1);
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -941,7 +1008,7 @@ View                view;
    FrameVScrolled (0, frame, (int *) &infos);
 #  else  /* _WINDOWS */
    delta = -FrameTable[frame].FrHeight;
-   VerticalScroll (frame, delta, TRUE);
+   VerticalScroll (frame, delta, 1);
 #  endif /* _WINDOWS */
 }
 
@@ -974,7 +1041,7 @@ View                view;
    FrameVScrolled (0, frame, (int *) &infos);
 #  else  /* _WINDOWS */
    delta = FrameTable[frame].FrHeight;
-   VerticalScroll (frame, delta, TRUE);
+   VerticalScroll (frame, delta, 1);
 #  endif /* _WINDOWS */
 }
 
@@ -1532,7 +1599,7 @@ LPARAM lParam;
               if (ptCursor.x > rect.right)
                  X_Pos = cRect.right;
 
-              VerticalScroll (frame, delta, TRUE);
+              VerticalScroll (frame, delta, 1);
               LocateSelectionInView (frame, X_Pos, Y_Pos, 0);
               /* if (wParam & MK_LBUTTON) */
                  SendMessage (hwnd, WM_MOUSEMOVE, 0, 0L);

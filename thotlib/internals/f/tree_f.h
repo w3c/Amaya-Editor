@@ -92,6 +92,7 @@ extern void AttachRequiredAttributes ( PtrElement pEl,
                                        PtrSSchema pSS,
                                        ThotBool withAttr,
                                        PtrDocument pDoc );
+extern ThotBool IsConstantConstructor ( PtrElement pEl );
 extern PtrElement NewSubtree ( int typeNum,
                                PtrSSchema pSS,
                                PtrDocument pDoc,
@@ -234,6 +235,7 @@ extern void AttachRequiredAttributes (/* PtrElement pEl,
                                          PtrSSchema pSS,
                                          ThotBool withAttr,
                                          PtrDocument pDoc */);
+extern ThotBool IsConstantConstructor (/* PtrElement pEl */);
 extern PtrElement NewSubtree (/* int typeNum,
                                  PtrSSchema pSS,
                                  PtrDocument pDoc,

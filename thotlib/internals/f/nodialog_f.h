@@ -68,8 +68,6 @@ extern void TtaSetStatus ( Document document,
                            View view,
                            CONST STRING text,
                            CONST STRING name );
-extern void CloseParagraphInsertion ( PtrAbstractBox pAb,
-                                      int frame );
 extern void UpdateScrollbars ( int frame );
 extern void ChangeFrameTitle ( int frame,
                                STRING texte );
@@ -178,8 +176,6 @@ extern void TtaSetStatus (/* Document document,
                              View view,
                              CONST STRING text,
                              CONST STRING name */);
-extern void CloseParagraphInsertion (/* PtrAbstractBox pAb,
-                                        int frame */);
 extern void UpdateScrollbars (/* int frame */);
 extern void ChangeFrameTitle (/* int frame,
                                  STRING texte */);

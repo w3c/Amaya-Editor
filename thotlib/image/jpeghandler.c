@@ -78,11 +78,11 @@ int*            height;
 ThotColorStruct colrs[256];
 #endif /* __STDC__ */
 {
-   unsigned char      *retBuffer = 0;	/* Output image buffer */
+   unsigned char      *retBuffer = 0;/* Output image buffer */
    unsigned char      *r;
-   JSAMPROW            buffer[1];	/* row pointer array for read_scanlines */
-   int                 row_stride;	/* physical row width in output buffer */
-   int                 i;
+   JSAMPROW            buffer[1];    /* row pointer array for read_scanlines */
+   int                 row_stride;   /* physical row width in output buffer */
+   int                 i, ret;
 
    /* We set up the normal JPEG error routines, 
       then override error_exit.     */
@@ -99,15 +99,14 @@ ThotColorStruct colrs[256];
 
 	if (retBuffer)
 	   TtaFreeMemory (retBuffer);
-	return 0;
+	return NULL;
      }
 
    jpeg_create_decompress (&cinfo);
 
    jpeg_stdio_src (&cinfo, infile);
 
-   (void) jpeg_read_header (&cinfo, TRUE);
-
+   ret = jpeg_read_header (&cinfo, TRUE);
    /* We can ignore the return value from jpeg_read_header since
       *   (a) suspension is not possible with the stdio data source, and
       *   (b) we passed TRUE to reject a tables-only JPEG file as an error.
@@ -145,40 +144,42 @@ ThotColorStruct colrs[256];
    *height = cinfo.output_height;
 
    /* Initialize our colormap until a clear policy for the 32-bit screen */
-
-   if (cinfo.out_color_components == 3)
+   if (ret != JPEG_HEADER_TABLES_ONLY)
      {
-	for (i = 0; i < cinfo.actual_number_of_colors; i++)
-	  {
-#            ifndef _WINDOWS
-	     colrs[i].red = cinfo.colormap[0][i] << 8;
-	     colrs[i].green = cinfo.colormap[1][i] << 8;
-	     colrs[i].blue = cinfo.colormap[2][i] << 8;
-	     colrs[i].pixel = i;
+       if (cinfo.out_color_components == 3)
+	 {
+	   for (i = 0; i < cinfo.actual_number_of_colors; i++)
+	     {
+#ifndef _WINDOWS
+	       colrs[i].red = cinfo.colormap[0][i] << 8;
+	       colrs[i].green = cinfo.colormap[1][i] << 8;
+	       colrs[i].blue = cinfo.colormap[2][i] << 8;
+	       colrs[i].pixel = i;
 #ifndef _GTK
-	     colrs[i].flags = DoRed | DoGreen | DoBlue;
+	       colrs[i].flags = DoRed | DoGreen | DoBlue;
 #endif /* ! _GTK */
-#            else /* _WINDOWS */
-	     colrs[i].red = cinfo.colormap[0][i];
-	     colrs[i].green = cinfo.colormap[1][i];
-	     colrs[i].blue = cinfo.colormap[2][i];
-#            endif /* _WINDOWS */
-	  }
-     }
-   else
-     {
-	for (i = 0; i < cinfo.actual_number_of_colors; i++)
-	  {
-#            ifndef _WINDOWS
-	     colrs[i].red = colrs[i].green = colrs[i].blue = cinfo.colormap[0][i] << 8;
-	     colrs[i].pixel = i;
+#else /* _WINDOWS */
+	       colrs[i].red = cinfo.colormap[0][i];
+	       colrs[i].green = cinfo.colormap[1][i];
+	       colrs[i].blue = cinfo.colormap[2][i];
+#endif /* _WINDOWS */
+	     }
+	 }
+       else
+	 {
+	   for (i = 0; i < cinfo.actual_number_of_colors; i++)
+	     {
+#ifndef _WINDOWS
+	       colrs[i].red = colrs[i].green = colrs[i].blue = cinfo.colormap[0][i] << 8;
+	       colrs[i].pixel = i;
 #ifndef _GTK
-	     colrs[i].flags = DoRed | DoGreen | DoBlue;
+	       colrs[i].flags = DoRed | DoGreen | DoBlue;
 #endif /* ! _GTK */
-#            else /* _WINDOWS */
-	     colrs[i].red = colrs[i].green = colrs[i].blue = cinfo.colormap[0][i];
-#            endif /* _WINDOWS */
-	  }
+#else /* _WINDOWS */
+	       colrs[i].red = colrs[i].green = colrs[i].blue = cinfo.colormap[0][i];
+#endif /* _WINDOWS */
+	     }
+	 }
      }
 
 

@@ -5149,6 +5149,26 @@ View     view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
+void                CloseDocument (Document doc, View view)
+#else
+void                CloseDocument (doc, view)
+Document            doc;
+View                view;
+
+#endif
+{
+  TtcCloseDocument (doc, view);
+  if (!W3Loading)
+    {
+      DocumentTypes[doc] = docHTML;
+      CheckAmayaClosed ();
+    }
+}
+
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
 void                AmayaClose (Document document, View view)
 #else
 void                AmayaClose (document, view)

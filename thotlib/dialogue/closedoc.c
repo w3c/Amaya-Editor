@@ -205,11 +205,11 @@ View                viewform;
 			  ok = (* (Func)ThotLocalActions[T_writedocument]) (pDoc, 4);
 		       if (ok)
 			  /* tout va bien, on ferme ce document */
-			  CloseDocument (pDoc);
+			  TCloseDocument (pDoc);
 		    }
 	       }
 	     else
-		CloseDocument (pDoc);
+		TCloseDocument (pDoc);
 	  }
      }
    return (ok);

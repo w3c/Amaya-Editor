@@ -395,12 +395,22 @@ int                 number;
    MenuActionList[CMD_LineUp].ActionName = "TtcLineUp";
    MenuActionList[CMD_LineUp].Call_Action = (Proc) TtcLineUp;
    MenuActionList[CMD_LineUp].User_Action = (UserProc) NULL;
-   MenuActionList[CMD_LineUp].ActionEquiv = CST_EquivLineUp;
+   MenuActionList[CMD_LineUp].ActionEquiv = CST_EquivScrollLeft;
 
    MenuActionList[CMD_LineDown].ActionName = "TtcLineDown";
    MenuActionList[CMD_LineDown].Call_Action = (Proc) TtcLineDown;
    MenuActionList[CMD_LineDown].User_Action = (UserProc) NULL;
    MenuActionList[CMD_LineDown].ActionEquiv = CST_EquivLineDown;
+
+   MenuActionList[CMD_ScrollRight].ActionName = "TtcScrollRight";
+   MenuActionList[CMD_ScrollRight].Call_Action = (Proc) TtcScrollRight;
+   MenuActionList[CMD_ScrollRight].User_Action = (UserProc) NULL;
+   MenuActionList[CMD_ScrollRight].ActionEquiv = CST_EquivScrollRight;
+
+   MenuActionList[CMD_ScrollLeft].ActionName = "TtcScrollLeft";
+   MenuActionList[CMD_ScrollLeft].Call_Action = (Proc) TtcScrollLeft;
+   MenuActionList[CMD_ScrollLeft].User_Action = (UserProc) NULL;
+   MenuActionList[CMD_ScrollLeft].ActionEquiv = CST_EquivScrollLeft;
 
    MenuActionList[CMD_CreateElement].ActionName = "TtcCreateElement";
    MenuActionList[CMD_CreateElement].Call_Action = (Proc) NULL;

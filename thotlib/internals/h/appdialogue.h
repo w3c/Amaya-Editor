@@ -240,7 +240,9 @@ typedef struct _SchemaMenu_Ctl
 #define CMD_NextSelLine		23
 #define CMD_LineUp		24
 #define CMD_LineDown		25
-#define MAX_INTERNAL_CMD	26
+#define CMD_ScrollLeft		26
+#define CMD_ScrollRight		27
+#define MAX_INTERNAL_CMD	28
 
 #define CST_EquivDel TEXT("Delete")
 #define CST_EquivBS TEXT("BackSpace")
@@ -250,4 +252,6 @@ typedef struct _SchemaMenu_Ctl
 #define CST_EquivEnd TEXT("End")
 #define CST_EquivLineUp TEXT("C Up")
 #define CST_EquivLineDown TEXT("C Down")
+#define CST_EquivScrollLeft TEXT("C Left")
+#define CST_EquivScrollRight TEXT("C Right")
 #endif

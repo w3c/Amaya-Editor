@@ -6,14 +6,9 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void TtcInsertChar ( Document document,
-                            View view,
-                            CHAR_T c );
 extern void TtcInsertGraph ( Document document,
                              View view,
                              CHAR_T c );
-extern void TtcDeletePreviousChar ( Document document,
-                                    View view );
 extern void CloseTextInsertion ( void );
 extern void CloseParagraphInsertion ( PtrAbstractBox pAb,
                                       int frame );
@@ -23,8 +18,13 @@ extern void InsertChar ( int frame,
                          int keyboard );
 extern void PasteXClipboard ( USTRING Xbuffer,
                               int nbytes );
+extern void TtcInsertChar ( Document document,
+                            View view,
+                            CHAR_T c );
 extern void TtcCutSelection ( Document document,
                               View view );
+extern void TtcDeletePreviousChar ( Document document,
+                                    View view );
 extern void TtcDeleteSelection ( Document document,
                                  View view );
 extern void TtcInclude ( Document document,
@@ -41,14 +41,9 @@ extern void EditingLoadResources ( void );
 
 #else /* __STDC__ */
 
-extern void TtcInsertChar (/* Document document,
-                              View view,
-                              CHAR_T c */);
 extern void TtcInsertGraph (/* Document document,
                                View view,
                                CHAR_T c */);
-extern void TtcDeletePreviousChar (/* Document document,
-                                      View view */);
 extern void CloseTextInsertion (/* void */);
 extern void CloseParagraphInsertion (/* PtrAbstractBox pAb,
                                         int frame */);
@@ -58,8 +53,13 @@ extern void InsertChar (/* int frame,
                            int keyboard */);
 extern void PasteXClipboard (/* USTRING Xbuffer,
                                 int nbytes */);
+extern void TtcInsertChar (/* Document document,
+                              View view,
+                              CHAR_T c */);
 extern void TtcCutSelection (/* Document document,
                                 View view */);
+extern void TtcDeletePreviousChar (/* Document document,
+                                      View view */);
 extern void TtcDeleteSelection (/* Document document,
                                    View view */);
 extern void TtcInclude (/* Document document,

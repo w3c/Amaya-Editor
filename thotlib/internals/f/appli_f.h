@@ -18,15 +18,9 @@ extern void FrameToRedisplay ( ThotWindow w,
 extern void FrameRedraw ( int frame,
                           Dimension width,
                           Dimension height );
-#ifdef _GTK
-extern void                FrameResized (GtkWidget *w, 
-			GdkEventConfigure *event, 
-			gpointer data);
-#else /* ! _GTK */
 extern void FrameResized ( int *w,
                            int frame,
                            int *info );
-#endif /* ! _GTK */
 extern void FrameHScrolled ( int *w,
                              int frame,
                              int *param );
@@ -37,6 +31,10 @@ extern void TtcLineUp ( Document document,
                         View view );
 extern void TtcLineDown ( Document document,
                           View view );
+extern void TtcScrollLeft ( Document document,
+                            View view );
+extern void TtcScrollRight ( Document document,
+                             View view );
 extern void TtcPageUp ( Document document,
                         View view );
 extern void TtcPageDown ( Document document,
@@ -115,6 +113,10 @@ extern void TtcLineUp (/* Document document,
                           View view */);
 extern void TtcLineDown (/* Document document,
                             View view */);
+extern void TtcScrollLeft (/* Document document,
+                              View view */);
+extern void TtcScrollRight (/* Document document,
+                               View view */);
 extern void TtcPageUp (/* Document document,
                           View view */);
 extern void TtcPageDown (/* Document document,

@@ -75,7 +75,7 @@ Ctrl <Key>v:	TtcPaste()
 Ctrl <Key>x:	TtcCutSelection()
 Ctrl <Key>y:	TtcRedo()
 Ctrl <Key>z:	TtcUndo()
-Ctrl <Key>w:	TtcCloseDocument()
+Ctrl <Key>w:	CloseDocument()
 
 Shift Ctrl <Key>D:	DeleteAnchor()
 Shift Ctrl <Key>E:	SetOnOffEmphasis()

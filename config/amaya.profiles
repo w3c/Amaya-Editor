@@ -97,7 +97,7 @@ Reload
 SaveDocumentAs
 ShowLogFile
 StopTransfer
-TtcCloseDocument
+CloseDocument
 TtcSearchText
 
 ########### EDITING

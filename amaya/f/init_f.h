@@ -37,6 +37,8 @@ extern void OpenNew ( Document document,
                       ThotBool isHTML );
 extern void OpenDoc ( Document document,
                       View view );
+extern void GoToHome ( Document doc,
+                       View view );
 extern Document InitDocView ( Document doc,
                               STRING docname,
                               DocumentType docType,
@@ -130,8 +132,12 @@ extern void HelpMakeBook ( Document document,
                            View view );
 extern void HelpConfigure ( Document document,
                             View view );
+extern void HelpAccess ( Document document,
+                         View view );
 extern void ShowLogFile ( Document doc,
                           View view );
+extern void CloseDocument ( Document doc,
+                            View view );
 extern void AmayaClose ( Document document,
                          View view );
 
@@ -168,6 +174,8 @@ extern void OpenNew (/* Document document,
                         ThotBool isHTML */);
 extern void OpenDoc (/* Document document,
                         View view */);
+extern void GoToHome (/* Document doc,
+                         View view */);
 extern Document InitDocView (/* Document doc,
                                 STRING docname,
                                 DocumentType docType,
@@ -261,8 +269,12 @@ extern void HelpMakeBook (/* Document document,
                              View view */);
 extern void HelpConfigure (/* Document document,
                               View view */);
+extern void HelpAccess (/* Document document,
+                           View view */);
 extern void ShowLogFile (/* Document doc,
                             View view */);
+extern void CloseDocument (/* Document doc,
+                              View view */);
 extern void AmayaClose (/* Document document,
                            View view */);
 

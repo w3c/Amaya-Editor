@@ -123,8 +123,8 @@ static int          SpecialShiftKeys[] = {
 };
 static int          SpecialCtrlKeys[] = {
   CMD_LineUp,
-  CMD_PreviousChar,
-  CMD_NextChar,
+  CMD_ScrollLeft,
+  CMD_ScrollRight,
   CMD_LineDown,
   CMD_DeletePrevChar,
   CMD_DeleteSelection,

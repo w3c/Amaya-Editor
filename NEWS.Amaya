@@ -9,6 +9,10 @@ Extensions 2.3:
 ---------------
 
 * As many search tools generate invalid forms, they are now suported in Amaya.
+
+* Shortcuts Control Up, Control Down, Control Left, Control Right allow one
+  to scroll smoothly the window in the four directions when the scroll is
+  possible.
  
 Fixed bugs 2.3:
 ---------------
@@ -27,6 +31,7 @@ Fixed bugs 2.3:
 
 * HTML:
   - the <input type=image> was not well supported.
+
 
 * Cache:
   - Spaces in the cache directory path were being ignored.

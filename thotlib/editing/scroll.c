@@ -879,14 +879,14 @@ ThotBool            actif;
 		 if (!pBo1->BxAbstractBox->AbHorizPos.PosUserSpecified)
 		   /* Ce n'est pas une creation interactive de boite, la boite sera */
 		   /* automatiquement placee dans la fenetre au moment de sa creation */
-		   if (x + pBo1->BxWidth <= xmin + 3 || x >= xmax - 3)
+		   if (x + pBo1->BxWidth < xmin + 10 || x > xmax + 10)
 		     /* Deplacement du cadre le la fenetre */
 		     HorizontalScroll (frame, x - xmin - dx, 0);
 
 		 if (!pBo1->BxAbstractBox->AbVertPos.PosUserSpecified)
 		   /* C'est une creation interactive de boite, la boite sera */
 		   /* automatiquement placee dans la fenetre au moment de sa creation */
-		   if (y + pBo1->BxHeight <= ymin + 3 || y >= ymax - 3)
+		   if (y + pBo1->BxHeight < ymin + 10 || y > ymax + 10)
 		     /* Deplacement du cadre le la fenetre */
 		     VerticalScroll (frame, y - ymin - dy, 0);
 	       }

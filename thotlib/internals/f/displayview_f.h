@@ -15,7 +15,7 @@ extern void RedisplayNewElement ( Document document,
                                   PtrElement sibling,
                                   ThotBool first,
                                   ThotBool creation );
-extern void CloseDocument ( PtrDocument pDoc );
+extern void TCloseDocument ( PtrDocument pDoc );
 extern int NumberOfOpenViews ( PtrDocument pDoc );
 extern void FreeView ( PtrDocument pDoc,
                        DocViewNumber view );
@@ -70,7 +70,7 @@ extern void RedisplayNewElement (/* Document document,
                                     PtrElement sibling,
                                     ThotBool first,
                                     ThotBool creation */);
-extern void CloseDocument (/* PtrDocument pDoc */);
+extern void TCloseDocument (/* PtrDocument pDoc */);
 extern int NumberOfOpenViews (/* PtrDocument pDoc */);
 extern void FreeView (/* PtrDocument pDoc,
                          DocViewNumber view */);

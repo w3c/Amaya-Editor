@@ -149,9 +149,9 @@ ThotBool            toend;
 
 
 /*----------------------------------------------------------------------
-   LocateLeafBox repe`re la boite terminale a' la position x+xDelta
-   y+yDelta. Si la selection reste identique le decalage  
-   est incremente de xDelta et yDelta.                     
+   LocateLeafBox get the box located at the position x+xDelta, y+yDelta.
+   if the box is still the same (pFrom) the position is shifted by
+   xDelta and yDelta.                     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         LocateLeafBox (int frame, int x, int y, int xDelta, int yDelta, PtrBox pFrom, ThotBool extendSel)
@@ -166,24 +166,40 @@ PtrBox              pFrom;
 ThotBool            extendSel;
 #endif /* __STDC__ */
 {
-   int                 index;
+   ViewFrame          *pFrame;
    PtrBox              pBox, pLastBox;
    PtrTextBuffer       pBuffer;
    PtrAbstractBox      pAb;
+   int                 index;
    int                 nbbl;
    int                 nChars;
+   int                 h, w, doc;
 
+   pFrame = &ViewFrameTable[frame - 1];
    if (pFrom != NULL)
      pLastBox = pFrom;
    else
      /* pLastBox = current selected box */
-     pLastBox = ViewFrameTable[frame - 1].FrSelectionBegin.VsBox;
+     pLastBox = pFrame->FrSelectionBegin.VsBox;
+
    /* skip presentation boxes */
    while (pLastBox->BxNext != NULL &&
 	  pLastBox->BxAbstractBox->AbPresentationBox &&
 	  /* constants */
 	  !pLastBox->BxAbstractBox->AbCanBeModified)
      pLastBox = pLastBox->BxNext;
+
+   /* do we need to scroll the document */
+   doc = FrameTable[frame].FrDoc;
+   GetSizesFrame (frame, &w, &h);
+   if (xDelta < 0 && pFrame->FrXOrg > 0 && x + xDelta < 0)
+     TtcScrollLeft (doc, 1);
+   else if (xDelta > 0 && x + xDelta > pFrame->FrXOrg + w)
+     TtcScrollRight (doc, 1);
+   else if (yDelta < 0 && pFrame->FrYOrg > 0 && y + yDelta < 0)
+     TtcLineUp (doc, 1);
+   else if (yDelta > 0 && y + yDelta > pFrame->FrYOrg + h)
+     TtcLineDown (doc, 1);
 
    pBox = GetLeafBox (pLastBox, frame, &x, &y, xDelta, yDelta);
    nChars = 0;
@@ -196,7 +212,10 @@ ThotBool            extendSel;
 	       {
 		  x -= pBox->BxXOrg;
 		  LocateClickedChar (pBox, &pBuffer, &x, &index, &nChars, &nbbl);
-		  nChars = pBox->BxIndChar + nChars + 1;
+		  if (extendSel && RightExtended && nChars == pBox->BxNChars)
+		    nChars = pBox->BxIndChar + nChars;
+		  else
+		    nChars = pBox->BxIndChar + nChars + 1;
 	       }
 	     /* Change the selection */
 	     if (extendSel)
@@ -220,15 +239,14 @@ View                view;
 ThotBool            extendSel;
 #endif /* __STDC__ */
 {
-   PtrBox              pBox = NULL;
+   PtrBox              pBox, pBoxBegin, pBoxEnd;
    ViewFrame          *pFrame;
    ViewSelection      *pViewSel;
    ViewSelection      *pViewSelEnd;
-   int                 frame, x, y;
+   int                 frame, x, y, i;
    int                 xDelta, yDelta;
-   int                 h, w;
+   int                 h, w, doc;
    int                 indpos, xpos;
-   ThotBool            ok;
 
    indpos = 0;
    xpos = 0;
@@ -242,57 +260,70 @@ ThotBool            extendSel;
 	 (*ThotLocalActions[T_updateparagraph]) (pFrame->FrAbstractBox, frame);
        pViewSel = &(pFrame->FrSelectionBegin);
        pViewSelEnd = &(pFrame->FrSelectionEnd);
-       if (pViewSel->VsBox != NULL)
+       /* beginning of the selection */
+       pBoxBegin = pViewSel->VsBox;
+       if (pBoxBegin != NULL)
 	 {
-	   ok = TRUE;
-	   pBox = pViewSel->VsBox;
 	   indpos = pViewSel->VsIndBox;
 	   xpos = pViewSel->VsXPos;
-	   while (pBox != NULL && pBox->BxType == BoGhost &&
-		  pBox->BxAbstractBox != NULL &&
-		  pBox->BxAbstractBox->AbFirstEnclosed != NULL)
+	   while (pBoxBegin != NULL && pBoxBegin->BxType == BoGhost &&
+		  pBoxBegin->BxAbstractBox != NULL &&
+		  pBoxBegin->BxAbstractBox->AbFirstEnclosed != NULL)
+	       /* the real selection is on child elements */
+	       pBoxBegin = pBoxBegin->BxAbstractBox->AbFirstEnclosed->AbBox;
+	 }
+
+       /* end of the selection */
+       pBoxEnd = pViewSelEnd->VsBox;
+       if (pBoxEnd != NULL)
+	 {
+	   while (pBoxEnd != NULL && pBoxEnd->BxType == BoGhost &&
+		  pBoxEnd->BxAbstractBox != NULL &&
+		  pBoxEnd->BxAbstractBox->AbFirstEnclosed != NULL)
 	     {
 	       /* the real selection is on child elements */
-	       pBox = pBox->BxAbstractBox->AbFirstEnclosed->AbBox;
-	       if (code == 2)
-		 {
-		   /* take the last child into account */
-		   while (pBox->BxAbstractBox->AbNext != NULL)
-		     pBox = pBox->BxAbstractBox->AbNext->AbBox;
-		   while (pBox->BxAbstractBox->AbPrevious != NULL &&
-			  pBox->BxAbstractBox->AbPresentationBox)
-		     pBox = pBox->BxAbstractBox->AbPrevious->AbBox;
-		   indpos = pBox->BxAbstractBox->AbBox->BxNChars;
-		   xpos = pBox->BxAbstractBox->AbBox->BxWidth;
-		 }
+	       pBoxEnd = pBoxEnd->BxAbstractBox->AbFirstEnclosed->AbBox;
+	       /* take the last child into account */
+	       while (pBoxEnd->BxAbstractBox->AbNext != NULL)
+		 pBoxEnd = pBoxEnd->BxAbstractBox->AbNext->AbBox;
+	       while (pBoxEnd->BxAbstractBox->AbPrevious != NULL &&
+		      pBoxEnd->BxAbstractBox->AbPresentationBox)
+		 pBoxEnd = pBoxEnd->BxAbstractBox->AbPrevious->AbBox;
 	     }
-	   GetSizesFrame (frame, &w, &h);
-	   if (pBox->BxYOrg + pBox->BxHeight <= pFrame->FrYOrg ||
-	       pBox->BxYOrg >= pFrame->FrYOrg + h)
-	     /* l'element n'est pas visible */
-	     pBox = NULL;
 	 }
-       else
+
+       /* Check if boxed are visible */
+       GetSizesFrame (frame, &w, &h);
+       if (pBoxBegin != NULL &&
+	   (pBoxBegin->BxYOrg + pBoxBegin->BxHeight <= pFrame->FrYOrg ||
+	    pBoxBegin->BxYOrg >= pFrame->FrYOrg + h))
+	 /* the element is not displayed within the window */
+	 pBoxBegin = NULL;
+       if (pBoxEnd != NULL &&
+	   (pBoxEnd->BxYOrg + pBoxEnd->BxHeight <= pFrame->FrYOrg ||
+	    pBoxEnd->BxYOrg >= pFrame->FrYOrg + h))
+	 /* the element is not displayed within the window */
+	 pBoxEnd = NULL;
+       if (pBoxBegin == NULL && pBoxEnd != NULL)
+	 pBoxBegin = pBoxEnd;
+       else if (pBoxBegin != NULL && pBoxEnd == NULL)
+	 pBoxEnd = pBoxBegin;
+
+       pBox = pBoxBegin;
+       if (pBox == NULL)
 	 {
 	   if (!Retry)
 	     {
 	       /* initialize a selection and retry */
 	       Retry = TRUE;
-	       /* look for the first leaf box */
-	       if (pFrame->FrAbstractBox != NULL)
-		 pBox = pFrame->FrAbstractBox->AbBox;
-	       if (pBox != NULL)
-		 pBox = pBox->BxNext;
-	       LocateSelectionInView (frame, pBox->BxXOrg - pFrame->FrXOrg,
-				      pBox->BxYOrg - pFrame->FrYOrg, 2);
+	       LocateSelectionInView (frame, 0, 0, 2);
+	       ClickX = - pFrame->FrXOrg;
+	       ClickY = - pFrame->FrYOrg;
 	       Retry = FALSE;
 	       return;
 	     }
 	   else
-	     {
-	       ok = FALSE;
-	       pBox = NULL;
-	     }
+	     pBox = NULL;
 	 }
        
        /* could we shrink the current extended selection */
@@ -328,7 +359,7 @@ ThotBool            extendSel;
 	     {
 	       if (extendSel && RightExtended)
 		 {
-		   pBox = pViewSelEnd->VsBox;
+		   pBox = pBoxEnd;
 		   x = pViewSelEnd->VsIndBox + pBox->BxIndChar;
 		 }
 	       else
@@ -360,6 +391,15 @@ ThotBool            extendSel;
 		   else
 		     /* the x is equal to FirstSelectedChar - 1 */
 		     ChangeSelection (frame, pBox->BxAbstractBox, x, FALSE, TRUE, FALSE, FALSE);
+		   /* show the beginning of the selection */
+		   doc = FrameTable[frame].FrDoc;
+		   if (pBoxBegin->BxXOrg + pViewSel->VsXPos + 4 < pFrame->FrXOrg)
+		     {
+		       if (pFrame->FrXOrg > 0)
+			 TtcScrollLeft (doc, 1);
+		     }
+		   else if (pBoxBegin->BxXOrg + pViewSel->VsXPos > pFrame->FrXOrg + w)
+		     HorizontalScroll (frame, pBoxBegin->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg - w, 0);
 		 }
 	       else
 		 {
@@ -369,15 +409,23 @@ ThotBool            extendSel;
 		   LocateLeafBox (frame, x, y, xDelta, 0, pBox, extendSel);
 		 }
 	     }
+	   /* Get the last X position */
+	   ClickX = pBoxBegin->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg;
 	   break;
 	   
 	 case 2:	/* Forward one character (^F) */
+	   indpos = pBox->BxAbstractBox->AbBox->BxNChars;
+	   xpos = pBox->BxAbstractBox->AbBox->BxWidth;
 	   if (pBox != NULL)
 	     {
 	       if (!extendSel || !LeftExtended)
 		 {
-		   pBox = pViewSelEnd->VsBox;
-		   x = pViewSelEnd->VsIndBox + pBox->BxIndChar;
+		   pBox = pBoxEnd;
+		   if (!extendSel && pViewSelEnd->VsBox &&
+		       pViewSelEnd->VsBox->BxType == BoGhost)
+		     x = pBox->BxNChars;
+		   else
+		     x = pViewSelEnd->VsIndBox + pBox->BxIndChar;
 		 }
 	       else
 		 x = indpos + pBox->BxIndChar;
@@ -407,6 +455,15 @@ ThotBool            extendSel;
 		     }
 		   else
 		     ChangeSelection (frame, pBox->BxAbstractBox, x + 2, FALSE, TRUE, FALSE, FALSE);
+		   /* show the beginning of the selection */
+		   doc = FrameTable[frame].FrDoc;
+		   if (pBoxEnd->BxXOrg + pViewSelEnd->VsXPos > pFrame->FrXOrg + w)
+		     {
+		       if (pFrame->FrAbstractBox->AbBox->BxWidth > pFrame->FrXOrg + w)
+			 TtcScrollRight (doc, 1);
+		     }
+		   else if (pBoxEnd->BxXOrg + pViewSelEnd->VsXPos - 4 < pFrame->FrXOrg)
+		     HorizontalScroll (frame, pBoxEnd->BxXOrg + pViewSelEnd->VsXPos - 4 - pFrame->FrXOrg, 0);
 		 }
 	       else
 		 {
@@ -416,6 +473,8 @@ ThotBool            extendSel;
 		   LocateLeafBox (frame, x, y, xDelta, 0, pBox, extendSel);
 		 }
 	     }
+	   /* Get the last X position */
+	   ClickX = pBoxBegin->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg;
 	   break;
 	   
 	 case 3:	/* End of line (^E) */
@@ -431,48 +490,76 @@ ThotBool            extendSel;
 	 case 7:	/* Next line (^N) */
 	   if (pBox != NULL)
 	     {
-	       pBox = pViewSelEnd->VsBox;
+	       pBox = pBoxEnd;
+	       x = pViewSelEnd->VsXPos + pBox->BxXOrg;
+	       if (pViewSelEnd->VsBuffer && pViewSelEnd->VsIndBuf < pViewSelEnd->VsBuffer->BuLength)
+		 x = x - CharacterWidth (pViewSelEnd->VsBuffer->BuContent[pViewSelEnd->VsIndBuf], pBox->BxFont);
 	       y = pBox->BxYOrg + pBox->BxHeight;
 	       yDelta = 10;
-	       if (extendSel)
-		   RightExtended = TRUE;
-	       else if (!SelPosition)
-		 {	       
-		   /* store the end position of the selection as the new reference */
-		   x = pViewSelEnd->VsXPos + pBox->BxXOrg;
-		   if (pViewSelEnd->VsBuffer && pViewSelEnd->VsIndBuf < pViewSelEnd->VsBuffer->BuLength)
-		     x = x - CharacterWidth (pViewSelEnd->VsBuffer->BuContent[pViewSelEnd->VsIndBuf], pBox->BxFont);
-		   ClickX = x;
+	       /* store the end position of the selection as the new reference */
+	       if (extendSel && LeftExtended)
+		 {
+		   i = pBoxBegin->BxYOrg - pBoxEnd->BxYOrg;
+		   if (i < 5 && i > -5)
+		     {
+		       /* change the extension direction */
+		       LeftExtended = FALSE;
+		       RightExtended = TRUE;
+		     }
+		   else
+		     {
+		       /* just decrease the current extension */
+		       y = pBoxBegin->BxYOrg;
+		       x = ClickX + pFrame->FrXOrg;
+		     }
 		 }
-	       LocateLeafBox (frame, ClickX - pFrame->FrXOrg, y, 0, yDelta, NULL, extendSel);
-	       ok = FALSE;
+	       /* there was a drag, but it's finished now */
+	       else if (!extendSel)
+		 {
+		   if (!SelPosition &&
+		       (pBoxBegin != pBoxEnd ||
+			!IsConstantConstructor (pBox->BxAbstractBox->AbElement)))
+		     /* changing from an extension to a simple selection */
+		     ClickX = x - pFrame->FrXOrg;
+		   else
+		     /* take the original position into account */
+		     x = ClickX + pFrame->FrXOrg;
+		 }
+	       else
+		 RightExtended = TRUE;
+
+	       LocateLeafBox (frame, x, y, 0, yDelta, NULL, extendSel);
 	     }
-	   else
-	     TtcLineDown (document, view);
 	   break;
 	   
 	 case 8:	/* Previous line (^P) */
 	   if (pBox != NULL)
 	     {
-	       if (extendSel && RightExtended)
-		 pBox = pViewSelEnd->VsBox;
-	       y = pBox->BxYOrg;
+	       y = pBoxBegin->BxYOrg;
+	       x = ClickX + pFrame->FrXOrg;
 	       yDelta = -10;
-	       LocateLeafBox (frame, ClickX - pFrame->FrXOrg, y, 0, yDelta, NULL, extendSel);
-	       ok = FALSE;
+	       if (extendSel && RightExtended)
+		 {
+		   i = pBoxBegin->BxYOrg - pBoxEnd->BxYOrg;
+		   if (i < 5 && i > -5)
+		     {
+		       /* change the extension direction */
+		       RightExtended = FALSE;
+		       LeftExtended = TRUE;
+		     }
+		   else
+		     {
+		       /* just decrease the curent extension */
+		       y = pBoxEnd->BxYOrg;
+		       x = pViewSelEnd->VsXPos + pBoxEnd->BxXOrg;
+		     }
+		 }
+	       else if (extendSel)
+		 LeftExtended = TRUE;
+
+	       LocateLeafBox (frame, x, y, 0, yDelta, NULL, extendSel);
 	     }
-	   else
-	     TtcLineUp (document, view);
 	   break;
-	 }
-       
-       /* Get the last X position */
-       if (ok)
-	 {
-	   if (extendSel && RightExtended && (code == 2 || code == 7))
-	     ClickX = pViewSelEnd->VsBox->BxXOrg + pViewSelEnd->VsXPos - pFrame->FrXOrg;
-	   else
-	     ClickX = pViewSel->VsBox->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg;
 	 }
      }
 }

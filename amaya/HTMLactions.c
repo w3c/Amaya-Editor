@@ -1179,12 +1179,6 @@ Document       doc;
       if (BackupDocument != doc)
 	RemoveDocumentImages (doc);
     }
-
-  if (!W3Loading)
-    {
-      DocumentTypes[doc] = docHTML;
-      CheckAmayaClosed ();
-    }
 }
 
 /*----------------------------------------------------------------------
