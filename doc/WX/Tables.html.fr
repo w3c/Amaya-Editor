@@ -28,8 +28,26 @@
   </tbody>
 </table>
 
+<div class="toc">
+<ul>
+  <li><a href="#Editer">Editer des tables</a>
+    <ul>
+      <li><a href="#L62">Créer une nouvelle table</a></li>
+      <li><a href="#Ajouter">Ajouter une colonne</a></li>
+      <li><a href="#L143">Détruire, copier, coller une colonne</a></li>
+      <li><a href="#Ajouter1">Ajouter une ligne</a></li>
+      <li><a href="#L301">Détruire, copier, coller une ligne</a></li>
+      <li><a href="#Cellules">Cellules étendues</a></li>
+      <li><a href="#Ajouter2">Ajouter un nouveau corps de table
+      (tbody)</a></li>
+      <li><a href="#Ajouter3">Ajouter quelque chose après une table</a></li>
+    </ul>
+  </li>
+</ul>
+</div>
+
 <div id="Editing">
-<h2>Editer des tables</h2>
+<h2 id="Editer">Editer des tables</h2>
 
 <p>Il n'existe pas d'éditeur de tables indépendant dans Amaya. Une table est
 simplement une structure décrite par la DTD HTML, comme tous les autres
@@ -37,7 +55,7 @@ simplement une structure décrite par la DTD HTML, comme tous les autres
 donc aux tables. Quelques commandes supplémentaires ont néanmoins été
 ajoutées pour une manipulation plus confortable.</p>
 
-<h3><a name="Creating">Créer une nouvelle table</a></h3>
+<h3 id="L62"><a name="Creating">Créer une nouvelle table</a></h3>
 <ol>
   <li>Déplacez le point d'insertion à l'endroit du document où vous voulez
     créer une table.</li>
@@ -58,7 +76,7 @@ ajoutées pour une manipulation plus confortable.</p>
     d'élément.</li>
 </ol>
 
-<h3><a id="Adding" name="Adding">Ajouter une colonne</a></h3>
+<h3 id="Ajouter"><a id="Adding" name="Adding">Ajouter une colonne</a></h3>
 
 <p>Deux commandes spécifiques permettent de créer une nouvelle colonne :</p>
 <ul>
@@ -77,7 +95,7 @@ ajoutées pour une manipulation plus confortable.</p>
 la touche <code>F2</code>), la touche <code>Enter</code> crée une nouvelle
 colonne après et la colonne de la cellule sélectionnée.</p>
 
-<h3>Détruire, copier, coller une colonne</h3>
+<h3 id="L143">Détruire, copier, coller une colonne</h3>
 
 <p>Lorsqu'une colonne entière est sélectionnée, il est possible de la
 détruire, de copier ou de la couper et de la coller avant ou après une autre
@@ -139,7 +157,7 @@ permettent de coller un colonne :</p>
   </li>
 </ol>
 
-<h3><a id="Adding1">Ajouter une ligne</a></h3>
+<h3 id="Ajouter1"><a id="Adding1">Ajouter une ligne</a></h3>
 
 <p>Il existe deux commandes spécifiques pour créer une nouvelle ligne dans
 une table :</p>
@@ -156,7 +174,7 @@ une table :</p>
 touche <code>F2</code>) puis à presser la touche <code>Enter</code> pour
 créer une nouvelle ligne après la ligne sélectionnée.</p>
 
-<h3>Détruire, copier, coller une ligne</h3>
+<h3 id="L301">Détruire, copier, coller une ligne</h3>
 
 <p>Quand une ligne de table est sélectionnée, vous pouvez la détruire, la
 copier, la couper ou la coller.</p>
@@ -194,7 +212,7 @@ couper avec les commandes habituelles.</p>
   </li>
 </ol>
 
-<h3>Cellules étendues</h3>
+<h3 id="Cellules">Cellules étendues</h3>
 
 <p>Quatre commandes spécifiques permettent d'étendre ou réduire les
 extensions de cellules :</p>
@@ -219,7 +237,7 @@ extensions de cellules :</p>
 href="Attributes.html.fr">attributs</a> <code>colspan</code> et
 <code>rowspan</code> de la cellule.</p>
 
-<h3>Ajouter un nouveau corps de table (tbody)</h3>
+<h3 id="Ajouter2">Ajouter un nouveau corps de table (tbody)</h3>
 <ol>
   <li>Pour créer un nouveau corps de table en dessous d'un corps de table
     existant, il faut placer le curseur à la fin de la dernière cellule de la
@@ -237,7 +255,8 @@ sélectionné (utilisez la touche <code>F2</code>), en tapant la touche
 <code>Enter</code> vous créez une nouveau corps de table après le corps de
 table sélectionné.</p>
 
-<h3><a name="Adding2">Ajouter quelque chose après une table</a></h3>
+<h3 id="Ajouter3"><a name="Adding2">Ajouter quelque chose après une
+table</a></h3>
 
 <p>De nombreux types d'éléments peuvent être inclus à l'intérieur des
 cellules de la table. Pour cette raison, Amaya pourrait mal comprendre vos
@@ -250,7 +269,7 @@ fenêtre) et taper la touche Enter. Amaya engendrera un paragraphe après la
 table. Ce nouveau paragraphe peut être modifié si besoin est.</p>
 
 <p><em>Notez que le modèle de table implémenté dans</em>
-<strong><em>Amaya</em></strong> <em>est le modèle de </em><a
+<strong><em>Amaya</em></strong> <em>est le modèle de</em><a
 href="../../TR/REC-html40"><em>HTML 4.0</em></a><em>. Celui-ci comporte des
 éléments comme les corps multiples (</em><code><em>tbody</em></code><em>),
 des entêtes de table (</em><code><em>thead</em></code><em>) et des bas de

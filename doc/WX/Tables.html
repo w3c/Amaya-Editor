@@ -30,8 +30,25 @@
   </tbody>
 </table>
 
+<div class="toc">
+<ul>
+  <li><a href="#Editing">Editing Tables</a>
+    <ul>
+      <li><a href="#Creating">Creating a New Table</a></li>
+      <li><a href="#Adding">Adding a New Column</a></li>
+      <li><a href="#Removing">Removing, Copying, Pasting a Column</a></li>
+      <li><a href="#Adding1">Adding a New Row</a></li>
+      <li><a href="#Removing1">Removing, Copying, Pasting a Row</a></li>
+      <li><a href="#Extending">Extending a Cell</a></li>
+      <li><a href="#Adding2">Adding a New Table body (tbody)</a></li>
+      <li><a href="#Adding3">Adding something after a table</a></li>
+    </ul>
+  </li>
+</ul>
+</div>
+
 <div id="page_body">
-<h2>Editing Tables</h2>
+<h2 id="Editing">Editing Tables</h2>
 
 <p>Amaya does not contain a separate table editor. To Amaya, a table is
 simply a structure described by the HTML document type definition (DTD), like
@@ -39,7 +56,7 @@ any other element, and it is edited as such. The same commands apply to
 tables as to other HTML structures. However, a few specific commands have
 been added for more convenient manipulations.</p>
 
-<h3>Creating a New Table</h3>
+<h3 id="Creating">Creating a New Table</h3>
 
 <p class="ProcedureCaption">To create a new table:</p>
 <ol>
@@ -61,7 +78,7 @@ been added for more convenient manipulations.</p>
     Use the arrow keys to navigate from one cell to another.</li>
 </ol>
 
-<h3>Adding a New Column</h3>
+<h3 id="Adding">Adding a New Column</h3>
 
 <p class="ProcedureCaption">To add a new column to a table:</p>
 <ol>
@@ -78,7 +95,7 @@ been added for more convenient manipulations.</p>
 <code>F2</code>), pressing the <strong>Enter</strong> key create a new cell
 and its corresponding column to the right of the selected cell.</p>
 
-<h3>Removing, Copying, Pasting a Column</h3>
+<h3 id="Removing">Removing, Copying, Pasting a Column</h3>
 
 <p>When a whole column is selected, you can delete it, copy it, cut it and
 paste it before or after another column.</p>
@@ -128,7 +145,7 @@ cut it.</p>
     Ctrl v</code>).</li>
 </ol>
 
-<h3>Adding a New Row</h3>
+<h3 id="Adding1">Adding a New Row</h3>
 
 <p>There are two specific commands to create new rows in a table:</p>
 <ol>
@@ -145,7 +162,7 @@ cut it.</p>
 <code>F2</code> for that), pressing the <strong>Enter</strong> key create a
 new row after the selected row.</p>
 
-<h3>Removing, Copying, Pasting a Row</h3>
+<h3 id="Removing1">Removing, Copying, Pasting a Row</h3>
 
 <p>When a whole row is selected, it's possible to delete it, to copy (or to
 cut) it and to paste it.</p>
@@ -171,7 +188,7 @@ the usual commands.</p>
     (<code>Ctrl t Ctrl v</code>).</li>
 </ol>
 
-<h3>Extending a Cell</h3>
+<h3 id="Extending">Extending a Cell</h3>
 
 <p class="ProcedureCaption">To extend a cell</p>
 <ol>
@@ -192,7 +209,7 @@ the usual commands.</p>
 <p>Cell extensions can be also changed by editing the <code>colspan</code>
 and <code>rowspan</code> <a href="Attributes.html">attributes</a>.</p>
 
-<h3>Adding a New Table body (tbody)</h3>
+<h3 id="Adding2">Adding a New Table body (tbody)</h3>
 
 <p class="ProcedureCaption">To create a new tbody:</p>
 <ol>
@@ -211,7 +228,7 @@ and <code>rowspan</code> <a href="Attributes.html">attributes</a>.</p>
 <code>F2</code>), pressing the <strong>Enter</strong> key creates a new table
 body after the selected table body.</p>
 
-<h3 class="ProcedureCaption">Adding something after a table</h3>
+<h3 class="ProcedureCaption" id="Adding3">Adding something after a table</h3>
 
 <p>To go out of the table and add any element after a table you have to
 select the table element (use <code>F2</code>) and press the
