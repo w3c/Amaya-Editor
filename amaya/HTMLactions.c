@@ -196,7 +196,6 @@ Document            doc;
    char                documentURL[MAX_LENGTH];
    char               *url, *info, *sourceDocUrl;
    int                 length;
-   boolean             isHelpPage;
 
    docSchema = TtaGetDocumentSSchema (doc);
    if (anchor != NULL)
@@ -268,13 +267,9 @@ Document            doc;
 		  length = strlen (DocumentURLs[doc])+1;
 		  sourceDocUrl = TtaGetMemory (length);
 		  strcpy (sourceDocUrl, DocumentURLs[doc]);
-		  /* save help status */
-		  isHelpPage = HelpDocuments[doc];
 		  /* get the referred document */
 		  targetDocument = GetHTMLDocument (documentURL, NULL,
 				   doc, doc, CE_TRUE, TRUE);
-		  /* restore help status */
-		  HelpDocuments[targetDocument] = isHelpPage;
 
 		  /* if the target document has replaced the clicked
 		     document, pseudo attribute "visited" should not be set */
@@ -479,7 +474,6 @@ Document       doc;
 	}
       TtaFreeMemory (DocumentURLs[doc]);
       DocumentURLs[doc] = NULL;
-      HelpDocuments[doc] = FALSE;
       CleanDocumentCSS (doc);
       RemoveDocumentImages (doc);
     }

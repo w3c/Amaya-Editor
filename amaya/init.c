@@ -1003,6 +1003,7 @@ char               *pathname;
 	  }
 	if (!opened)
 	  {
+	     HelpDocuments[doc] = FALSE;
 	     /* Add a button */
 #        ifndef _WINDOWS
 	     TtaAddButton (doc, 1, stopN, StopTransfer,

@@ -2584,7 +2584,7 @@ int                 doc;
 	     row1 = XmCreateRowColumn (rowv, "", args, n);
 
 	     for (i = 1; i < MAX_BUTTON; i++)
-		     TtaFreeMemory (FrameTable[frame].Button[i]);
+	       FrameTable[frame].Button[i] = 0;
 	     FrameTable[frame].Button[0] = row1;
 
 	     /* Row horizontal pour mettre le logo a gauche des commandes */
@@ -2866,12 +2866,12 @@ int                 frame;
 
 	XDestroyWindow (TtDisplay, XtWindowOfObject (XtParent (XtParent (XtParent (w)))));
 #       else  /* _WINDOWS */
-        for (i = 0; i < MAX_BUTTON; i++)
-            FrameTable[frame].Button[i] = 0;
-
         DestroyWindow (FrMainRef[frame]);
 		CleanFrameCatList (frame);
 #       endif /* _WINDOWS */
+
+        for (i = 0; i < MAX_BUTTON; i++)
+            FrameTable[frame].Button[i] = 0;
 	FrRef[frame] = 0;
 #       ifdef _WINDOWS
         FrMainRef [0] = 0;
