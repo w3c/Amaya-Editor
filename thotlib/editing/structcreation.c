@@ -180,7 +180,8 @@ PtrDocument         pDoc;
 #endif /* __STDC__ */
 {
    int                 i, h;
-   boolean             rootAbWillBeFree;
+   boolean             modifiedAbWillBeFree,
+                       rootAbWillBeFree;
 
    /* dans les vues des elements associes du document */
    for (i = 0; i < MAX_ASSOC_DOC; i++)
@@ -190,9 +191,9 @@ PtrDocument         pDoc;
 	   h = 0;
 	   ChangeConcreteImage (pDoc->DocAssocFrame[i], &h, pDoc->DocAssocModifiedAb[i]);
 	   /* libere les paves morts */
-           rootAbWillBeFree = pDoc->DocAssocModifiedAb[i]->AbDead;
+           modifiedAbWillBeFree = pDoc->DocAssocModifiedAb[i]->AbDead;
 	   FreeDeadAbstractBoxes (pDoc->DocAssocModifiedAb[i]);
-           if (rootAbWillBeFree)
+           if (modifiedAbWillBeFree)
 	     pDoc->DocAssocModifiedAb[i] = NULL;
 	}
 
@@ -205,13 +206,13 @@ PtrDocument         pDoc;
 	   h = 0;
 	   ChangeConcreteImage (pDoc->DocViewFrame[i], &h, pDoc->DocViewModifiedAb[i]);
 	   /* libere les paves morts */
-           rootAbWillBeFree = pDoc->DocViewModifiedAb[i]->AbDead;
+           modifiedAbWillBeFree = pDoc->DocViewModifiedAb[i]->AbDead;
+           rootAbWillBeFree = pDoc->DocViewRootAb[i]->AbDead;
 	   FreeDeadAbstractBoxes (pDoc->DocViewModifiedAb[i]);
+           if (modifiedAbWillBeFree)
+	     pDoc->DocViewModifiedAb[i] = NULL;
            if (rootAbWillBeFree)
-             {
-	        pDoc->DocViewModifiedAb[i] = NULL;
-                pDoc->DocViewRootAb[i] = NULL;
-             }
+             pDoc->DocViewRootAb[i] = NULL;
 	}
 }
 
@@ -1575,6 +1576,9 @@ PtrSSchema          pSS;
 		       CheckLanguageAttr (pDoc, pDoc->DocAssocRoot[nAssoc]);
 		       NotifySubTree (TteElemNew, pDoc, pDoc->DocAssocRoot[nAssoc], 0);
 		       pEl = pDoc->DocAssocRoot[nAssoc]->ElFirstChild;
+                       while ((pEl != NULL) &&
+                              (pEl->ElStructSchema != pSS))
+                          pEl = pEl->ElNext;
 		    }
 	       }
 	  }
