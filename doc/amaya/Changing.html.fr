@@ -28,7 +28,7 @@
 <div id="Changing">
 <h2>Editer la structure du document</h2>
 
-<h3><a name="L653">Changer l'élément type</a></h3>
+<h3><a name="L653">Changer le type de l'élément</a></h3>
 
 <p>Pour changer le type d'un élément, sélectionnez-le et choisissez le nouveau
 type soit dans le menu  <strong>Eléments </strong> soit en cliquant sur un
@@ -37,11 +37,11 @@ liste d'articles, ou un paragraphe en une en-tête ou une liste. Pour supprimer
 un type sélectionné dans le menu <strong>Eléments</strong> (<a
 href="HTML-elements/inline.html">inline types</a> - cela peut être une phrase
 dans un paragraphe ou une liste), utilisez l'option appropriée dans les
-sous-menus du menu <strong>Eléments....</strong>Beaucoup d'autres types
-peuvent être supprimés,  comme une transformation de l'élément lorsqu'il a été
-sélectionné ( voir plus loin). </p>
+sous-menus du menu <strong>Eléments.</strong>Beaucoup d'autres types peuvent
+être supprimés,  comme une transformation de l'élément lorsqu'il a été
+sélectionné ( voir plus loin).</p>
 
-<p>Pour sélectionner un élément entier, plcez le point d'insertion n'importe
+<p>Pour sélectionner un élément entier, palcez le point d'insertion n'importe
 où à l'intérieur et appuyez sur  <a href="Selecting.html#Selecting1">la touche
 Esc (F2 sur Windows).</a></p>
 
@@ -50,48 +50,51 @@ de structures </a>plus complexes.</p>
 
 <h3><a name="L631">Changer la structure du document</a></h3>
 
-<p>Des transformations de structure simples peuvents êtreSimple structure
-transformations can be achieved using the <strong>Types</strong> menu (see <a
-href="#L653">above</a>). More complex transformations can be obtained by other
-means.</p>
+<p>Des transformations de structure simples peuvents être effectuées en
+utilisant le menu <strong>Eléments</strong> (voir <a href="#L653">plus
+haut</a>). Des transformations de structure plus complexes s'obtiendront à
+l'aide d'autres moyens. </p>
 
-<h3><a name="L141">The <strong>Transform</strong> command</a></h3>
+<p><a name="L141">La commande <strong>Transformer</strong></a></p>
 
-<p>The <strong>Transform</strong> command from the <strong>Edit</strong> menu
-performs complex structure transformations. This command is based on a
-structure transformation language that specifies how a given structural
-pattern can be transformed into different structures.</p>
+<p>La commande <strong>Transformer _ </strong>dans le menu
+<strong>Edition</strong>_ accomplit des transformations de structure
+complexes. Cette commande est basée sur un langage de transformation de
+structure qui spécifie comment un modèle structural donné peut être transformé
+en différentes structures. </p>
 
-<p>The <strong>Transform</strong> command pops up a menu that lists all the
-transformations that can be applied to the current selection. Just choose the
-transformation you want.</p>
+<p>La commande <strong>Transformer </strong>sort un menu qui donne la lsite de
+toutes les transformations qui peuvent être appliquées à la sélection en
+cours. Il suffit de choisir la transformation que vous désirez. </p>
 
-<p>The available transformations are defined in the file
-<code>Amaya/amaya/HTML.trans</code>.  Please refer to the document <a
-href="Transform.html">Use of the file HTML.trans</a> for a description of the
-language in which the transformation rules are written.</p>
+<p>Les transformations disponibles sont définies dans le classeur 
+<code>Amaya/amaya/HTML.trans</code>.  Référez-vous au document  <a
+href="Transform.html">Utilisation du classeur  HTML.trans</a> pour une
+description du langage dans lequel les règles de transformation sont
+écrites.</p>
 
-<p>Additional transformations may be specified in the <code>HTML.trans</code>
-file. Some are provided as examples. For instance, it is possible to transform
-nested lists into a table and conversely.</p>
+<p>Des transformations supplémentaires peuvent être spécifiées dans le
+classeur HTML.trans. Certaines  sont  fournissent des exemples. Ainsi, il est
+possible de transformer des listes emboîtées en table et inversement.</p>
 
-<h3><a name="Inserting">Inserting a Division</a></h3>
+<h3><a name="Inserting">Insérer une division</a></h3>
 
-<p>One can easily group a set of paragraphs, headings, lists, tables, etc.
-within a division. To do that one has to select the elements to be grouped and
-select the entry DIV in the menu type.</p>
+<p>Il est possible de grouper une série de paragraphes, en-têtes, listes,
+tables (...) à l'intérieur d'une division. Pour cela, il faut sélectionner les
+éléments à grouper ainsi que l'entrée DIV dans le menu Eléments. </p>
 
-<h3><a name="Back">The Back Space and Delete keys</a></h3>
+<h3><a name="Back">Les touches Back Space et Delete</a></h3>
 
-<p>Successive elements can be merged, even if they are not at the same level
-in the document structure. Merging is achieved with the Back Space and Delete
-keys. When the insertion point is at the end of an element, use the Delete
-key, when it is at the beginning, use the Back Space key. In both cases, these
-keys do not delete any characters, but merge elements which are separated by a
-structure boundary.</p>
+<p>Des éléments consécutifs peuvent être incorporés, même s'ils ne sont pas au
+même niveau dans la structure du document.  L'incorporation s'effectue à
+l'aide des touches  Back Space et  Delete. Quand le point d'insertion est à la
+fin d'un élément, utilisez la touche Delete. Quand il est au début, utilisez
+la touche Back Space. Dans les deux cas, ces touches n'effacent aucun
+caractère. Elles incorporent des éléments séparés par une limite de structure.
+</p>
 
-<p>When the insertion point in within an element, these two keys delete the
-next or previous character, as usual.</p>
+<p>Quand le point d'insertion est à l'intérieur d'un élément, ces deux touches
+effacent comme d'habitude le caractère suivant ou le caractère précédent. </p>
 </div>
 
 <p align="right"><a href="Links.html"><img alt="previous" border="0"

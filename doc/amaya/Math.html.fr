@@ -36,7 +36,7 @@ documents. All editing commands provided by Amaya for handling text are also
 available for math, and there are some additional controls for entering
 mathematical constructs.</p>
 
-<h3><a name="Creating">Creating a mathematical expression</a></h3>
+<h3><a name="Creating">Creating a mathematical expression </a></h3>
 
 <h4>The Math palette and the Types/Math menu</h4>
 

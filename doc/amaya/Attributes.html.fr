@@ -27,64 +27,70 @@
 </table>
 
 <div id="Attributes">
-<h2>Editing attributes</h2>
+<h2>Editer des attributs</h2>
 
-<p>There are two ways to edit attributes:</p>
+<p>Il y a deux manières d'éditer des attributs:</p>
 <ul>
-  <li>the <strong>Attribute</strong> menu,</li>
-  <li>the Structure view.</li>
+  <li>Le menu <strong>Attributs</strong></li>
+  <li>La Structure vue</li>
 </ul>
 
-<h3><a name="L1073">Editing attributes through the menu Attributes</a></h3>
+<h3><a name="L1073">Editer des attributs par le biais du menu
+Attributs.</a></h3>
 
-<p>The <strong>Attribute</strong> menu lists all attributes that can be
-associated with the selected element. It can be used to create an attribute,
-to change the value of an existing attribute or to delete an attribute.</p>
+<p>Le menu  <strong>Attributs </strong> donne une liste de tous les attributs
+qui peuvent être associés à l'élément sélectionné. Il peut être utilisé pour
+créer un attribut, pour changer la valeur d'un attribut existant ou pour
+effacer un attribut. </p>
 
-<p>To edit an attribute, first select the appropriate element.  You must
-select the entire element, not simply a character within the element; use the
-<a href="Selecting.html#Selecting1">Esc key (on Unix platforms) or F2 key (on
-Windows platforms)</a> for this. When the element is selected, choose the
-attribute to be edited from the <strong>Attributes</strong> menu. Then
-<strong>Amaya</strong> acts according to the chosen attribute:</p>
+<p>Pour éditer un attribut, sélectionnez d'abord l'élément approprié. Vous
+devez sélectionner l'élément entier et pas seulement un caractère à
+l'intérieur de l'élément. Pour cela, utilisez <a
+href="Selecting.html#Selecting1"> la touche ESC (sur les  plateformes Unix) ou
+la touche F2  (sur  les platesformes Windows)</a> . Quand l'élément a été
+sélectionné, choisissez dans le menu  <strong>Attributs </strong>l'attribut à
+éditer.  <strong>Amaya</strong> agit alors selon l'attribut choisi:</p>
 <ul>
-  <li>If it is a boolean attribute (such as <code>ismap</code> for an image),
-    the command is finished. Choosing that attribute in the menu removes it
-    from the selected element, if it is present, or adds it if not.</li>
-  <li>If it is an attribute with a limited set of values (such as
-    <code>align</code> for a paragraph or a heading), a dialog box pops up. It
-    contains a menu of the available values and three buttons.
+  <li>Si c'est un attribut bouléen ( comme une carte pour une  image) la
+    commande est achevée. Choisir cet attribut dans le menu enlève l'attribut
+    de l'élément, s'il est présent, et l'ajoutera s'il n'y est pas.</li>
+  <li>Si c'est un attribut avec une série limitée de valeurs ( comme un
+    <code>align</code> pour un paragraphe ou une en-tête), une boîte de
+    dialogue apparaît. Elle contient trois boutons et un menu des valeurs
+    disponibles. 
     <ul>
-      <li>If you want to create this attribute or to change its value, choose
-        the desired value from the menu and click on the
-        <strong>Apply</strong> button.</li>
-      <li>If you want to remove that attribute, click on the
-        <strong>Delete</strong> button.</li>
+      <li>Si vous voulez créer cet attribut ou changer sa valeur, choisissez
+        dans le menu la valeur désirée et cliquer sur le bouton 
+        <strong>Application</strong>.</li>
+      <li>Si vous voulez supprimer l'attribut, cliquer sur le bouton 
+        <strong>Delete</strong>.</li>
     </ul>
   </li>
-  <li>If it is an attribute with a free value (such as <code>href</code> for
-    an anchor), a dialog box pops up. In this dialog box, you can edit the
-    attribute value; terminate the command with the <strong>Apply</strong>
-    button. To remove the attribute, click on the <strong>Delete</strong>
-    button.</li>
+  <li>Si c'est un attribut avec une valeur libre (comme un  <code>href</code>
+    pour une ancre), une boîte de dialogue apparaît. Dans cette boîte de
+    dialogue, vous pouvez éditer la valeur de l'attribut. Achevez la commande
+    avec le bouton  <strong>Application.</strong> Pour supprimer l'attribut,
+    cliquez sur le bouton <strong>Delete</strong>.</li>
 </ul>
 
-<h3><a name="Copying">Copying  attributes</a></h3>
+<h3><a name="Copying">Copier des attributs</a></h3>
 
-<p>An attribute is not the same thing than an element and an attribute cannot
-be copied by Copy/Paste commands.  To copy an attribute you need to use the
-Attribute menu. First you have to select the element which has  the attribute
-you want to copy. You select the appropriate attribute entry in the  menu
-Attributes. Then you select the new element to which you want to  associate
-the current attribute and click on the <strong>Apply</strong> button.</p>
+<p>Un attribut n'est pas un élément. Il ne peut pas être copié à l'aide des
+commandes Copier/Coller. Pour copier un attribut, vous devez utiliser le menu
+Attribut.Vous devez d'abord sélectionner l'élément qui contient l'attribut que
+vous voulez copier.  Sélectionnez l'entrée de l'attribut approprié dans le
+menu Attributs. Puis sélectionnez le nouvel élément auquel vous voulez
+associer l'attribut en cours et cliquez sur le bouton 
+<strong>Application.</strong></p>
 
-<h3><a name="Editing">Editing attributes in the Structure view</a></h3>
+<h3><a name="Editing">Editer des attributs dans la  Structure vue</a></h3>
 
-<p>All attributes are displayed in the Structure view. Attributes whose value
-can be chosen freely are displayed in black and you can edit their value like
-any other character string. When the attribute value is displayed in blue, you
-can only change it with the <strong>Attribute</strong> menu. This ensures that
-only one of the correct values is chosen.</p>
+<p>Tous les attributs sont affichés dans la  Structure vue. Les attributs dont
+la valeur peut être choisie librement sont affichés en noir et vous pouvez
+éditer leur valeur comme n'importe quelle autre chaîne de caractères. Quand la
+valeur de l'attribut est affichée en bleu, vous pouvez seulement la changer à
+l'aide du menu  <strong>Attributs</strong>. Ceci assure  que une seule des
+valeurs correctes est choisie. </p>
 </div>
 
 <p align="right"><a href="StyleSheets.html"><img alt="previous" border="0"

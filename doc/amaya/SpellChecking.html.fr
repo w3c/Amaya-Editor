@@ -27,35 +27,40 @@
 </table>
 
 <div id="Spell">
-<h2><a name="L1063">Spell checking</a></h2>
+<h2><a name="L1063">Vérifier l'orthographe</a></h2>
 
-<p>Amaya provides a multilingual spell checker. This tool is invoked by the
-<strong>Spell Check</strong> command from the <strong>Edit</strong> menu. It
-uses the <code>LANG</code> attribute to select the right dictionary. You can
-associate this attribute with any element in a document, even with a single
-word. Use the <strong>Language</strong> command in the <strong><a
-href="Attributes.html#L1073">Attributes</a></strong> menu  for that
-purpose.</p>
+<p>Amaya est pourvu d'un vérificateur d'orthographe multilingue. Cet outil est
+invoqué par la commande  <strong>Vérifier orthographe</strong> du menu
+<strong>Edition</strong>. L'attribut <code>LANG</code>  permet de sélectionner
+le bon dictionnaire. Vous pouvez associer cet attribut à n'importe quel
+élément dans un document, même à un mot seul.  Utilisez pour cela la commande
+<strong>Lang</strong> du menu  <strong><a
+href="Attributes.html#L1073">Attributs </a></strong>. </p>
 
-<p>When the user wants to register a new word, the spell checker creates or
-updates  the "user's personal dictionary". By default, the "user's personal
-dictionary" is $HOME/.thot.DIC, but the user can define another file. Before
-starting Amaya, the user must set the  <code>parameter <a
-href="Configure.html#Personnal">"EXTENDDICT="</a></code> in the registry file
-($HOME/.thotrc file) to change the default name . Thus, the checker will use,
-in addition to the dictionary specific to the language, this dictionary (in
-read-write mode) to control all documents.&ensp;This dictionary is created and
-automatically updated by the spelling checker when the commands ``Skip
-(+dic)'' and ``Replace (+dic)'' are issued (see below).</p>
+<p>Lorsque l'utilisateur veut enregistrer un nouveau mot, le vérificateur
+d'orthographe crée ou met à jour le " dictionnaire personnel de
+l'utilisateur".  Par défaut, le "dictionnaire personnel de l'utilisateur" est 
+$HOME/.thot.DIC,  mais l'utilisateur peut définir un autre classeur. Avant de
+démarrer Amaya, l'utilisateur doit poser le  <code>paramètre <a
+href="Configure.html#Personnal">"EXTENDDICT="</a></code> dans le registre du
+classeur ($HOME/.thotrc file) pour changer le nom manquant. Ainsi, le
+vérificateur sera utilisé, en plus du dictionnaire spécifique du langage. Ce
+dictionnaire, (dans le mode lire-écrire), contrôle tous les documents.  Ce
+dictionnaire est créé et automatiqument mis à jour par le vérificateur
+d'orthographe lorsque les commande``Skip (+dic)'' et ``Replace (+dic)'' sont
+actionnée (voir plus bas).).</p>
 
-<p>The <strong>Spell Check</strong> command in <strong>Edit</strong> menu
-displays a form which enables you to choose the correction parameters and to
-interact with the checker:</p>
+<p>La commande <strong>Vérifier orthographe </strong>dans le menu 
+<strong>Edition </strong> affiche une forme qui vous permet de choisir les
+paramètres de correction  et de les mettre en intéraction avec le
+vérificateur:</p>
 <ul>
-  <li>The maximum number of proposals is specified in the <strong>Number of
-    proposal</strong>s area. This number can take any value between 1 and 10,
-    the default value is 3. Once an error has been detected, any change made
-    to this value immediately displays a new list of proposals.</li>
+  <li>Le nombre maximum de propositions est spécifié dans l'espace
+    <strong>Nombre de propositions</strong>. Ce nombre peut avoir une valeur
+    allant de 1 à 10, la valeur par défaut étant 3. This number can take any
+    value between 1 and 10, the default value is 3. Once an error has been
+    detected, any change made to this value immediately displays a new list of
+    proposals.</li>
   <li>Several buttons in <strong>Ignore</strong> submenu allow you to ignore
     certain words: for example words that contain capital letters, digits,
     Roman numerals or special characters indicated in the list below. This
