@@ -712,8 +712,13 @@ void                PasteCommand ()
 	         AddEditOpInHistory (CreatedElement[i], pDoc, FALSE, TRUE);
 	    /* envoie l'evenement ElemPaste.Post */
 	    for (i = 0; i < NCreatedElements; i++)
+	      {
 	      NotifySubTree (TteElemPaste, pDoc, CreatedElement[i],
 			     IdentDocument (DocOfSavedElements));
+	      if (CreatedElement[i]->ElStructSchema == NULL)
+		/* application has deleted that element */
+		CreatedElement[i] = NULL;
+	      }
 	    /* close the history sequence after applications have possibly
 	       registered more changes to the pasted elements */
 	    CloseHistorySequence (pDoc);
@@ -767,22 +772,35 @@ void                PasteCommand ()
 	    /* set the selection at the end of the pasted elements */
 	    if (NCreatedElements > 0)
 	      {
+		pSel = NULL;
 		if (before)
-		  pSel = CreatedElement[0];
+		  {
+		  for (i = 0; i < NCreatedElements && !pSel; i++)
+		    if (CreatedElement[i] != NULL)
+		      pSel = CreatedElement[i];
+		  }
 		else
-		  pSel = CreatedElement[NCreatedElements - 1];
-		if (!pSel->ElTerminal)
-		  pSel = LastLeaf (pSel);
-		SelectString (pDoc, pSel, pSel->ElTextLength + 1, pSel->ElTextLength);
+		  {
+		  for (i = NCreatedElements - 1; i >= 0 && !pSel; i--)
+		    if (CreatedElement[i] != NULL)
+		      pSel = CreatedElement[i];
+		  }
+		if (pSel)
+		  if (!pSel->ElTerminal)
+		    pSel = LastLeaf (pSel);
+		if (pSel)
+		  SelectString (pDoc, pSel, pSel->ElTextLength + 1,
+				pSel->ElTextLength);
 	      }
 	    SetDocumentModified (pDoc, TRUE, 20);
 
 	    /* Reaffiche les numeros suivants qui changent */
 	    for (i = 0; i < NCreatedElements; i++)
-	      if (CreatedElement[i]->ElStructSchema)
+	      if (CreatedElement[i] != NULL)
 		{
 		  RedisplayCopies (CreatedElement[i], pDoc, TRUE);
-		  UpdateNumbers (CreatedElement[i], CreatedElement[i], pDoc, TRUE);
+		  UpdateNumbers (CreatedElement[i], CreatedElement[i], pDoc,
+				 TRUE);
 		}
 	  }
       }

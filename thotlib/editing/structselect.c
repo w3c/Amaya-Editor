@@ -1934,7 +1934,11 @@ int                 lastChar;
 {
    ThotBool            string;
 
-   /* it's a string, not a position within a string */
+   if (pDoc == NULL || pEl == NULL)
+      return;
+   if (pEl->ElStructSchema == NULL)
+      return;
+   /* by default it's a string, not a position within a string */
    string = TRUE;
    if (firstChar == lastChar+1)
       /* it's a position */
