@@ -555,9 +555,7 @@ gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
    unsigned char       string[2];
    KeySym              KS;
    GtkWidget          *drawing_area;
-   ThotComposeStatus   ComS;
    GtkEntry           *textzone;
-   static gboolean            saved_ic=FALSE;
    
       
    frame = (int) data;
@@ -584,7 +582,7 @@ gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
 	     {
 		 /* We're in the drawing so get the hidden textfield adress*/
 		 textzone = gtk_object_get_data (GTK_OBJECT (drawing_area), "Text_catcher");
-		 gtk_widget_grab_focus (GTK_WIDGET(textzone));     
+		 gtk_widget_grab_focus (GTK_WIDGET(textzone));
 	     }
      }
 

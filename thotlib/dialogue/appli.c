@@ -2066,11 +2066,6 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	  event->type != GDK_MOTION_NOTIFY || 
 	  (event->state & GDK_CONTROL_MASK ) == 0))
     return FALSE;
-  /* button 5 or 4 are wheel mouse scrollbar events */
-  if (event->type == GDK_BUTTON_PRESS && 
-      ( event->button == 4 || event->button == 5 ))
-      //gtk_widget_event(GTK_WIDGET(FrameTable[frame].WdScrollV), (GdkEvent*) event);
-       return FALSE;
   /* 
      Set the drawing area Focused
      By setting the focus on the text zone
@@ -2203,7 +2198,6 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	  /* Est-ce que la touche modifieur de geometrie est active ? */	  
 	  if ((event->state & GDK_CONTROL_MASK ) == GDK_CONTROL_MASK)
 	    {
-	      /*	      printf("boutton + GDK_CONTROL\n");*/
 	      /* moving a box */     
 	      	      ApplyDirectTranslate (frame, event->x, event->y);
 	      T1 = T2 = T3 = 0;
@@ -2341,7 +2335,17 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	      ClickY = event->y;
 	      LocateSelectionInView (frame, ClickX, ClickY, 6);
 	    }
-	  break;	  
+	  break;	
+	case 4:
+	  /* wheel mice up */
+	  TtcPageUp(document, view); 
+	  FrameToView (frame, &document, &view); 
+	  break;
+	case 5:
+           /* wheel mice down */
+	   TtcPageDown(document, view); 
+	   FrameToView (frame, &document, &view); 
+	   break;	  
 #endif /* !_GTK */
 	default:
 	  break;
@@ -2381,23 +2385,20 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	    }
 	  break;
       	case GDK_MOTION_NOTIFY:
-	  /*	  printf("GDK_MOTION_NOTIFY\n");*/
 	  /* if a selection is doing, extend the current selection */
 	  LocateSelectionInView (frame, event->x, event->y, 0);
 	  FrameToView (frame, &document, &view);
 	  TtcCopyToClipboard (document, view);
 	  break;
       	case GDK_BUTTON_RELEASE:
-	  /*	  printf("GDK_BUTTON_RELEASE\n");*/
 	  /* if a button release, we save the selection in the clipboard */
-/* a selection extension */
-	  //	      TtaAbortShowDialogue ();
-	  //   LocateSelectionInView (frame, event->x, event->y, 0);
-	  //  FrameToView (frame, &document, &view);
-	  //  TtcCopyToClipboard (document, view);
+          /* a selection extension */
+	    TtaAbortShowDialogue ();
 	  break;
-	case GDK_KEY_PRESS:
-	  /*	  printf("GDK_KEY_PRESS\n");*/
+	case GDK_KEY_PRESS: 
+	    T1 = T2 = T3 = 0;
+	    TtaAbortShowDialogue ();
+	    CharTranslationGTK (widget, (GdkEventKey*)event, data);
 	  break;
 	case GDK_ENTER_NOTIFY:
 	case GDK_LEAVE_NOTIFY:

@@ -62,8 +62,6 @@
 #ifdef _GTK
 #include "gtk-functions.h"
 
-static   GdkBitmap          *amaya_mask;
-
 /*static    Time   t1;*/
 #else /* !_GTK */
 #include "input_f.h"
@@ -2321,11 +2319,6 @@ void RemoveSignalGTK (GtkObject *w, gchar *signal_name)
   gtk_signal_disconnect (GTK_OBJECT (w), id);
 }
 
-gboolean text_wrapper_hide (GtkWidget *widget, GdkEventExpose *event, gpointer data)
-{
-    gtk_widget_hide(widget);
-}
-
 /* Signal handler called when the selections owner 
 (another application) returns the data */
 void selection_received( GtkWidget *widget, GtkSelectionData *sel_data,  gpointer data )
@@ -2799,23 +2792,18 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	      entry text catcher that will handle 
 	      advanced keboard typing (ie : multikey)*/	   
 	   wrap_text = gtk_entry_new ();
-	   gtk_widget_hide (wrap_text);	  
 	   gtk_box_pack_start (GTK_BOX (vbox1), GTK_WIDGET(wrap_text), FALSE, FALSE, 1);
 	   GTK_WIDGET_SET_FLAGS (GTK_WIDGET(wrap_text), GTK_CAN_FOCUS);
 	   GTK_WIDGET_SET_FLAGS (GTK_WIDGET(wrap_text), GTK_CAN_DEFAULT);
 	   gtk_widget_grab_focus (GTK_WIDGET(wrap_text));
+	   /* the hidden input catcher textbox is so small 
+	      that it won't be displayed.. */	
+	   gtk_widget_set_usize (GTK_WIDGET(wrap_text), 1, 1);
 
-	   /* If hidden input catcher textbox is displayed..
-	      This calllback connection will hide it */
-	   
-	   gtk_signal_connect(
-	       GTK_OBJECT(wrap_text), 
-	       "show", 
-	       GTK_SIGNAL_FUNC(text_wrapper_hide), 
-	       (gpointer*)frame);
-	   
 
-	   /* A storage for a pointer on the text catcher 
+
+
+	    /* A storage for a pointer on the text catcher 
 	      (so we can acess it in the future)  */
 	   gtk_object_set_data (GTK_OBJECT (drawing_area), 
 	       "Text_catcher", wrap_text);
