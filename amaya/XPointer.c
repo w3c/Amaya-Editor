@@ -61,6 +61,11 @@ typedef enum _selMode {
   SEL_RANGE_TO=64
 } selMode;
 
+typedef enum _selType {
+  SEL_FIRST_EL=0,
+  SEL_LAST_EL=1
+} selType;
+
 /*----------------------------------------------------------------------
   StrACat
 
@@ -94,31 +99,6 @@ static void StrACat (char ** dest, const char * src)
 }
 
 /*----------------------------------------------------------------------
-  AdjustSelMode
-
-  Makes sure that the index to a text element doesn't point outside
-  of the length of the text.
-  Returns the adjusted index, if any.
-  ----------------------------------------------------------------------*/
-static void AdjustSelMode (Element el, int *start, int index, selMode *mode)
-{
-  int len;
-
-  len = TtaGetTextLength (el);
-  if (*start > 0)
-    {
-      *mode |= SEL_STRING_RANGE;
-      if (*start > len)
-	{
-	  *mode |= SEL_END_POINT;
-	  *start = len;
-	}
-      else if (*start > index)
-	*mode |= SEL_START_POINT;
-    }
-}
-
-/*----------------------------------------------------------------------
   CountInLineChars
 
   returns the number of characters that may be found in inline
@@ -127,7 +107,7 @@ static void AdjustSelMode (Element el, int *start, int index, selMode *mode)
   If any inline sibling elements are found, the Mark element is updated
   to point to its parent.
   ----------------------------------------------------------------------*/
-static int CountInlineChars (Element *mark)
+static int CountInlineChars (Element *mark, int firstCh, selMode *mode)
 {
   ElementType elType;
   Element el;
@@ -152,9 +132,33 @@ static int CountInlineChars (Element *mark)
       count += TtaGetTextLength (el);
     }
 
-  /* @@ JK: if count? */
-  if (count > 0)
-    *mark = parent;
+  if (count > 0) 
+    {
+
+      /* if we were at an empty end text element, but there were some adjacent
+	 text sibling elements, adjust the selection mode flag */
+      if (firstCh == 0)
+	{
+	  *mode |=  SEL_STRING_RANGE;
+	  /* START or END point? */
+	  el = *mark;
+	  TtaNextSibling (&el);
+	  if (el)
+	    {
+	      elType = TtaGetElementType (el);
+	      if (elType.ElTypeNum == THOT_TEXT_UNIT)
+		*mode |= SEL_START_POINT;
+	      else
+		*mode |= SEL_END_POINT;
+	    }
+	  else
+	    *mode |= SEL_END_POINT;
+	}
+
+      /* now point to the parent */
+      /* @@ JK: if count? */
+      *mark = parent;
+    }
 
   return count;
 }
@@ -173,6 +177,115 @@ static ThotBool ElIsHidden (Element el)
     return FALSE;
   elType = TtaGetElementType (el);
   return (TtaHasHiddenException (elType));
+}
+
+/*----------------------------------------------------------------------
+  ElIsXLink
+
+  returns TRUE if the element is our special Xlink element, false
+  otherwise/
+  ----------------------------------------------------------------------*/
+static ThotBool ElIsXLink (Element el)
+{
+  ElementType elType;
+  char *schema_name;
+
+  if (!el)
+    return FALSE;
+
+  elType = TtaGetElementType (el);
+  schema_name = TtaGetSSchemaName (elType.ElSSchema);
+
+  if (!ustrcmp (schema_name, TEXT("XLink"))
+      && elType.ElTypeNum == XLink_EL_XLink)
+    return TRUE;
+  else
+    return FALSE;
+}
+
+/*----------------------------------------------------------------------
+  AdjustSelMode
+
+  Makes sure that the index to a text element doesn't point outside
+  of the length of the text.
+  If we had selected an XLink element, we chose a correct element and
+  selection mode.
+  Returns the adjusted index, if any.
+  ----------------------------------------------------------------------*/
+static void AdjustSelMode (Element *el, int *start, int index, selMode *mode, selType type)
+{
+  int len;
+  ElementType elType;
+  Element tmp_el;
+
+  /* skip the hidden XLInk element */
+  if (ElIsXLink (*el))
+    {
+      tmp_el = *el;
+      if (type == SEL_FIRST_EL)
+	{
+	  do
+	    {
+	      TtaNextSibling (&tmp_el);
+	    }
+	  while (tmp_el && ElIsXLink (tmp_el));
+	  if (tmp_el)
+	    {
+	      /* we use the first non XLink sibling. If it's of type
+	         text, we use 1 as the value of start */
+	      elType = TtaGetElementType (tmp_el);
+	      if (elType.ElTypeNum == THOT_TEXT_UNIT)
+		*start = 1;
+	    }
+	  else
+	    {
+	      /* we use the parent */
+	      tmp_el = TtaGetParent (*el);
+	      *start = 0;
+	    }
+	}
+      else
+	{
+	  do 
+	    {
+	      TtaPreviousSibling (&tmp_el);
+	    } 
+	  while (tmp_el && ElIsXLink (tmp_el));
+
+	  if (tmp_el)
+	    {
+	      /* we use the precedent non-xlink sibling. If it's of
+		 type text, we give start the value of the last char
+		 of that sibling */
+	      elType = TtaGetElementType (tmp_el);
+	      if (elType.ElTypeNum == THOT_TEXT_UNIT)
+		{
+		  len = TtaGetTextLength (tmp_el);
+		  *start = len + 1;
+		}
+	    }
+	  else
+	    {
+	      /* we use the parent */
+	      tmp_el = TtaGetParent (*el);
+	      *start = 0;
+	    }
+	}
+      *el = tmp_el;
+    }
+	  
+  len = TtaGetTextLength (*el);
+  if (*start > 0)
+    {
+      *mode |= SEL_STRING_RANGE;
+      if (*start > len)
+	{
+	  *mode |= SEL_END_POINT;
+	  *start = len;
+	}
+      else if (*start > index)
+	*mode |= SEL_START_POINT;
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -546,15 +659,7 @@ static char * XPathList2Str (XPathList *xpath_list, int firstCh, int len, int mo
   It's up to the caller to free the returned string.
   Returns NULL in case of failure.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static char *XPointer_ThotEl2XPath (Element start, int firstCh, int len, selMode mode, ThotBool firstF)
-#else
-static char *XPointer_ThotEl2XPath (start, firstCh, selMode mode, len, firstF)
-Element start;
-int firstCh;
-int len;
-ThotBool firstF;
-#endif /* __STDC__ */
 {
   Element el, prev;
   ElementType elType, prevElType;
@@ -566,7 +671,7 @@ ThotBool firstF;
 
   /* if the user selected a text, adjust the start/end indexes according
      to its siblings inlined text */
-  firstCh += CountInlineChars (&start);
+  firstCh += CountInlineChars (&start, firstCh, &mode);
 
   el = start;
   elType = TtaGetElementType (el);
@@ -632,13 +737,7 @@ ThotBool firstF;
   N.B., the view parameter isn't used, but it's included to be coherent
   with the function API.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 char * XPointer_build (Document doc, View view, ThotBool useDocRoot)
-#else
-char * XPointer_build (doc, view, useDocRoot)
-Document doc;
-View view;
-#endif
 {
   Element     firstEl, lastEl;
 
@@ -689,7 +788,7 @@ View view;
 #ifdef DEBUG_XPOINTER
       printf ("first Ch is %d, i is %d\n", firstCh, i);
 #endif 
-      AdjustSelMode (firstEl, &firstCh, i, &mode);
+      AdjustSelMode (&firstEl, &firstCh, i, &mode, SEL_FIRST_EL);
       
       if (firstEl == NULL)
 	return NULL; /* ERROR, there is no selection */
@@ -703,7 +802,7 @@ View view;
 #ifdef DEBUG_XPOINTER
 	  printf ("last Ch is %d, i is %d\n", lastCh, i);
 #endif 
-	  AdjustSelMode (lastEl, &lastCh, i, &mode);
+	  AdjustSelMode (&lastEl, &lastCh, i, &mode, SEL_LAST_EL);
 	}
       /* if the selection is in the same element, adjust the first element's
 	 length */
