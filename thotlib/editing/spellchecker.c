@@ -1276,7 +1276,7 @@ char                word[MAX_CHAR];
 
 	result = TRUE;
 	for (i = 0; i < longueur && result; i++)
-	   if (word[i] < '\0' || word[i] > '9')
+	   if (word[i] < '0' || word[i] > '9')
 	      result = FALSE;
      }
    return result;
