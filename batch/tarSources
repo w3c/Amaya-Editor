@@ -2,89 +2,89 @@ cd ..
 cp -p Amaya/thotlib/document/docs.c.grif Amaya/thotlib/document/docs.c
 cp -p Amaya/amaya/HTML.S.grif Amaya/amaya/HTML.S
 tar cvbfh 200 - \
-Amaya/amaya/AHTBridge.c\
-Amaya/amaya/AHTBridge.h\
-Amaya/amaya/AHTCommon.h\
-Amaya/amaya/AHTDialog.h\
-Amaya/amaya/AHTErrors.h\
-Amaya/amaya/AHTFWrite.c\
-Amaya/amaya/AHTFWrite.h\
-Amaya/amaya/AHTMemConv.c\
-Amaya/amaya/AHTMemConv.h\
-Amaya/amaya/AHTURLTools.c\
-Amaya/amaya/AHTURLTools.h\
-Amaya/amaya/EDITORactions.c\
-Amaya/amaya/EDITORactions.h\
-Amaya/amaya/EDITimage.c\
-Amaya/amaya/EDITimage.h\
-Amaya/amaya/EDITstyle.c\
-Amaya/amaya/HTML.S\
-Amaya/amaya/HTML.conf\
-Amaya/amaya/HTMLP.P\
-Amaya/amaya/HTMLactions.c\
-Amaya/amaya/HTMLactions.h\
-Amaya/amaya/HTMLedit.c\
-Amaya/amaya/HTMLedit.h\
-Amaya/amaya/HTMLform.c\
-Amaya/amaya/HTMLform.h\
-Amaya/amaya/HTMLhistory.c\
-Amaya/amaya/HTMLhistory.h\
-Amaya/amaya/HTMLimage.c\
-Amaya/amaya/HTMLimage.h\
-Amaya/amaya/HTMLpresentation.c\
-Amaya/amaya/HTMLsave.c\
-Amaya/amaya/HTMLsave.h\
-Amaya/amaya/HTMLstyle.c\
-Amaya/amaya/HTMLstyle.h\
-Amaya/amaya/HTMLstyleColor.h\
-Amaya/amaya/HTMLtable.c\
-Amaya/amaya/THTDialog.h\
-Amaya/amaya/UIcss.c\
-Amaya/amaya/UIcss.h\
-Amaya/amaya/amaya.h\
-Amaya/amaya/amayamsg.h\
-Amaya/amaya/answer.c\
-Amaya/amaya/answer.h\
-Amaya/amaya/css.c\
-Amaya/amaya/css.h\
-Amaya/amaya/cssInc.h\
-Amaya/amaya/f/AHTBridge_f.h\
-Amaya/amaya/f/AHTFWrite_f.h\
-Amaya/amaya/f/AHTMemConv_f.h\
-Amaya/amaya/f/AHTURLTools_f.h\
-Amaya/amaya/f/EDITORactions_f.h\
-Amaya/amaya/f/EDITimage_f.h\
-Amaya/amaya/f/EDITstyle_f.h\
-Amaya/amaya/f/HTMLactions_f.h\
-Amaya/amaya/f/HTMLedit_f.h\
-Amaya/amaya/f/HTMLform_f.h\
-Amaya/amaya/f/HTMLhistory_f.h\
-Amaya/amaya/f/HTMLimage_f.h\
-Amaya/amaya/f/HTMLpresentation_f.h\
-Amaya/amaya/f/HTMLsave_f.h\
-Amaya/amaya/f/HTMLstyle_f.h\
-Amaya/amaya/f/HTMLtable_f.h\
-Amaya/amaya/f/UIcss_f.h\
-Amaya/amaya/f/answer_f.h\
-Amaya/amaya/f/css_f.h\
-Amaya/amaya/f/html2thot_f.h\
-Amaya/amaya/f/init_f.h\
-Amaya/amaya/f/p2css_f.h\
-Amaya/amaya/f/query_f.h\
-Amaya/amaya/f/trans_f.h\
-Amaya/amaya/f/transparse_f.h\
-Amaya/amaya/html2thot.c\
-Amaya/amaya/html2thot.h\
-Amaya/amaya/init.c\
-Amaya/amaya/init.h\
-Amaya/amaya/p2css.c\
-Amaya/amaya/p2css.h\
-Amaya/amaya/query.c\
-Amaya/amaya/query.h\
-Amaya/amaya/trans.c\
-Amaya/amaya/trans.h\
-Amaya/amaya/transparse.c\
-Amaya/amaya/transparse.h\
+Amaya/amaya/AHTBridge.c \
+Amaya/amaya/AHTBridge.h \
+Amaya/amaya/AHTCommon.h \
+Amaya/amaya/AHTDialog.h \
+Amaya/amaya/AHTErrors.h \
+Amaya/amaya/AHTFWrite.c \
+Amaya/amaya/AHTFWrite.h \
+Amaya/amaya/AHTMemConv.c \
+Amaya/amaya/AHTMemConv.h \
+Amaya/amaya/AHTURLTools.c \
+Amaya/amaya/AHTURLTools.h \
+Amaya/amaya/EDITORactions.c \
+Amaya/amaya/EDITORactions.h \
+Amaya/amaya/EDITimage.c \
+Amaya/amaya/EDITimage.h \
+Amaya/amaya/EDITstyle.c \
+Amaya/amaya/HTML.S \
+Amaya/amaya/HTML.conf \
+Amaya/amaya/HTMLP.P \
+Amaya/amaya/HTMLactions.c \
+Amaya/amaya/HTMLactions.h \
+Amaya/amaya/HTMLedit.c \
+Amaya/amaya/HTMLedit.h \
+Amaya/amaya/HTMLform.c \
+Amaya/amaya/HTMLform.h \
+Amaya/amaya/HTMLhistory.c \
+Amaya/amaya/HTMLhistory.h \
+Amaya/amaya/HTMLimage.c \
+Amaya/amaya/HTMLimage.h \
+Amaya/amaya/HTMLpresentation.c \
+Amaya/amaya/HTMLsave.c \
+Amaya/amaya/HTMLsave.h \
+Amaya/amaya/HTMLstyle.c \
+Amaya/amaya/HTMLstyle.h \
+Amaya/amaya/HTMLstyleColor.h \
+Amaya/amaya/HTMLtable.c \
+Amaya/amaya/THTDialog.h \
+Amaya/amaya/UIcss.c \
+Amaya/amaya/UIcss.h \
+Amaya/amaya/amaya.h \
+Amaya/amaya/amayamsg.h \
+Amaya/amaya/answer.c \
+Amaya/amaya/answer.h \
+Amaya/amaya/css.c \
+Amaya/amaya/css.h \
+Amaya/amaya/cssInc.h \
+Amaya/amaya/f/AHTBridge_f.h \
+Amaya/amaya/f/AHTFWrite_f.h \
+Amaya/amaya/f/AHTMemConv_f.h \
+Amaya/amaya/f/AHTURLTools_f.h \
+Amaya/amaya/f/EDITORactions_f.h \
+Amaya/amaya/f/EDITimage_f.h \
+Amaya/amaya/f/EDITstyle_f.h \
+Amaya/amaya/f/HTMLactions_f.h \
+Amaya/amaya/f/HTMLedit_f.h \
+Amaya/amaya/f/HTMLform_f.h \
+Amaya/amaya/f/HTMLhistory_f.h \
+Amaya/amaya/f/HTMLimage_f.h \
+Amaya/amaya/f/HTMLpresentation_f.h \
+Amaya/amaya/f/HTMLsave_f.h \
+Amaya/amaya/f/HTMLstyle_f.h \
+Amaya/amaya/f/HTMLtable_f.h \
+Amaya/amaya/f/UIcss_f.h \
+Amaya/amaya/f/answer_f.h \
+Amaya/amaya/f/css_f.h \
+Amaya/amaya/f/html2thot_f.h \
+Amaya/amaya/f/init_f.h \
+Amaya/amaya/f/p2css_f.h \
+Amaya/amaya/f/query_f.h \
+Amaya/amaya/f/trans_f.h \
+Amaya/amaya/f/transparse_f.h \
+Amaya/amaya/html2thot.c \
+Amaya/amaya/html2thot.h \
+Amaya/amaya/init.c \
+Amaya/amaya/init.h \
+Amaya/amaya/p2css.c \
+Amaya/amaya/p2css.h \
+Amaya/amaya/query.c \
+Amaya/amaya/query.h \
+Amaya/amaya/trans.c \
+Amaya/amaya/trans.h \
+Amaya/amaya/transparse.c \
+Amaya/amaya/transparse.h \
 Amaya/batch/APP.LAN \
 Amaya/batch/META.LAN \
 Amaya/batch/PRESEN.LAN \
@@ -203,6 +203,33 @@ Amaya/thotlib/image/xpmrdftodata.c \
 Amaya/thotlib/image/xpmrdftoi.c \
 Amaya/thotlib/image/xpmrdftop.c \
 Amaya/thotlib/image/xpmrgb.c \
+Amaya/thotlib/include/app.h \
+Amaya/thotlib/include/appaction.h \
+Amaya/thotlib/include/application.h \
+Amaya/thotlib/include/attribute.h \
+Amaya/thotlib/include/browser.h \
+Amaya/thotlib/include/content.h \
+Amaya/thotlib/include/dialog.h \
+Amaya/thotlib/include/document.h \
+Amaya/thotlib/include/genericdriver.h \
+Amaya/thotlib/include/interface.h \
+Amaya/thotlib/include/language.h \
+Amaya/thotlib/include/libmsg.h \
+Amaya/thotlib/include/message.h \
+Amaya/thotlib/include/pivot.h \
+Amaya/thotlib/include/presentation.h \
+Amaya/thotlib/include/presentdriver.h \
+Amaya/thotlib/include/pschema.h \
+Amaya/thotlib/include/reference.h \
+Amaya/thotlib/include/registry.h \
+Amaya/thotlib/include/selection.h \
+Amaya/thotlib/include/specificdriver.h \
+Amaya/thotlib/include/sysdep.h \
+Amaya/thotlib/include/thot_gui.h \
+Amaya/thotlib/include/thot_sys.h \
+Amaya/thotlib/include/tree.h \
+Amaya/thotlib/include/typebase.h \
+Amaya/thotlib/include/view.h \
 Amaya/thotlib/internals/f/absboxes_f.h \
 Amaya/thotlib/internals/f/abspictures_f.h \
 Amaya/thotlib/internals/f/alloca_f.h \
