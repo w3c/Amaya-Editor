@@ -57,6 +57,7 @@
 #ifdef _GL
 #include "animbox_f.h"
 #include "glgradient_f.h"
+#define ALLOC_POINTS 100
 #endif /* _GL */
 
 
@@ -2274,15 +2275,18 @@ void TtaAppendAnim (Element element, void *anim)
 {
   Animated_Element *a_list;
   
-  if (((PtrElement)element)->ElParent->ElAnimation)
-    {
-      a_list = (Animated_Element *)((PtrElement)element)->ElParent->ElAnimation;
-      while (a_list->next)
-	a_list = a_list->next;
-      a_list->next = anim;
+  if (((PtrElement)element)->ElParent)
+    { 
+      if (((PtrElement)element)->ElParent->ElAnimation)
+	{
+	  a_list = (Animated_Element *)((PtrElement)element)->ElParent->ElAnimation;
+	  while (a_list->next)
+	    a_list = a_list->next;
+	  a_list->next = anim;
+	}
+      else
+	((PtrElement)element)->ElParent->ElAnimation = anim; 
     }
-  else
-    ((PtrElement)element)->ElParent->ElAnimation = anim; 
 }
 
 /*----------------------------------------------------------------------
@@ -2323,6 +2327,8 @@ void *TtaCopyAnim (void *void_src)
 	    *(current->AttrName) = *(src->AttrName);  
 	    break;   
 	  case Set:
+	    current->AttrName = TtaGetMemory (strlen (src->AttrName) + 1);     
+	    *(current->AttrName) = *(src->AttrName);  
 	    break;
 	  case Transformation:
 	    current->AttrName = TtaGetMemory (sizeof (int));      
@@ -2403,22 +2409,71 @@ void TtaAppendPathSegToAnim (void *anim, PathSegment segment, Document doc)
      }
 #endif /* _GL */
 }
-
 /*----------------------------------------------------------------------
-   TtaAddAnimPath
+   TtaAnimPathAddPoint
   ----------------------------------------------------------------------*/
-void TtaAddAnimPath (void *info, void *anim)
-{    
-  ((Animated_Element *) anim)->from = info;
+void TtaAnimPathAddPoint (void *anim, float x, float y)
+{
+#ifdef _GL
+  ThotPoint  *points, *tmp;
+  AnimPath *path;
+  int size;
+
+  if (anim)
+    {
+      path = (AnimPath *) anim;
+      if (path->Path == NULL ||
+	  path->npoints == 0 ||
+	  path->npoints >= path->maxpoints)
+	{
+	  /*realloc*/
+	  size = path->maxpoints + ALLOC_POINTS;
+	if ((tmp = (ThotPoint*)realloc(path->Path, size * sizeof(ThotPoint))) ==0)
+	   return;
+	else
+	  {
+	     /* la reallocation a reussi */
+	     path->Path = tmp;
+	     path->maxpoints = size;
+	  }
+	}
+      points = path->Path;
+      points[path->npoints].x = x;
+      points[path->npoints].y = y;
+      path->npoints++;
+    }
+#endif /* _GL */
 }
 /*----------------------------------------------------------------------
-   TtaSetAnimTypetoMotion
+   TtaAddAnimMotionPath
+  ----------------------------------------------------------------------*/
+void TtaAddAnimMotionPath (void *info, void *anim)
+{    
+  ((Animated_Element *) anim)->from = info;
+  populate_path_proportion ((Animated_Element *) anim);
+}
+/*----------------------------------------------------------------------
+  TtaAddAnimMotionFromTo
+  ----------------------------------------------------------------------*/
+void TtaAddAnimMotionFromTo (void *info, void *anim)
+{    
+  populate_fromto_proportion (anim);   
+}
+/*----------------------------------------------------------------------
+  TtaAddAnimMotionValues
+  ----------------------------------------------------------------------*/
+void TtaAddAnimMotionValues (void *info, void *anim)
+{    
+  ((Animated_Element *) anim)->from = info;
+  populate_values_proportion (anim);  
+}
+/*----------------------------------------------------------------------
+   TtaSetAnimTypetoTransform
   ----------------------------------------------------------------------*/
 void TtaSetAnimTypetoMotion (void *anim)
 {
   ((Animated_Element *) anim)->AnimType = Motion;
 }
-
 /*----------------------------------------------------------------------
    TtaSetAnimTypetoTransform
   ----------------------------------------------------------------------*/

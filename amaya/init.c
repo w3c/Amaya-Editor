@@ -753,6 +753,9 @@ void ResetStop (Document document)
 		TtaSetStatus (document, 1,
 			      TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
 	      TtaChangeButton (document, 1, iStop, stopN, FALSE);
+#ifdef _GL
+	      TtaPlay (document, 1);
+#endif /* _GL */
 	    }
 	  DocNetworkStatus[document] = AMAYA_NET_INACTIVE;
 	}
@@ -6568,7 +6571,7 @@ void InitAmaya (NotifyEvent * event)
    iconTable = TtaCreatePixmapLogo (Table_xpm);
    iconTableNo = TtaCreatePixmapLogo (TableNo_xpm);
 #endif /* !_GTK */
-   
+    
 #ifdef AMAYA_PLUGIN
 #ifdef _GTK
    iconPlugin = (ThotIcon) TtaCreatePixmapLogo (Plugin_xpm);

@@ -90,6 +90,13 @@ extern void ParseTransformAttribute ( Attribute attr,
                                       Element el,
                                       Document doc,
                                       ThotBool delete );
+extern void *ParseValuesDataAttribute ( Attribute attr,
+                                        Element el,
+                                        Document doc );
+extern void *ParseFromToDataAttribute ( Attribute attrfrom,
+                                        Attribute attrto,
+                                        Element el,
+                                        Document doc );
 extern void *ParsePathDataAttribute ( Attribute attr,
                                       Element el,
                                       Document doc,
@@ -186,6 +193,13 @@ extern void ParseTransformAttribute (/* Attribute attr,
                                         Element el,
                                         Document doc,
                                         ThotBool delete */);
+extern void *ParseValuesDataAttribute (/* Attribute attr,
+                                          Element el,
+                                          Document doc */);
+extern void *ParseFromToDataAttribute (/* Attribute attrfrom,
+                                          Attribute attrto,
+                                          Element el,
+                                          Document doc */);
 extern void *ParsePathDataAttribute (/* Attribute attr,
                                         Element el,
                                         Document doc,

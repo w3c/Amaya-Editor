@@ -2161,7 +2161,8 @@ void ClearOpaqueGroup (PtrAbstractBox pAb, int frame, int xmin, int xmax,
   DisplayOpaqueGroup display a translucent Group
   ----------------------------------------------------------------------*/
 void DisplayOpaqueGroup (PtrAbstractBox pAb, int frame, int xmin, int xmax,
-			 int ymin, int ymax)
+			 int ymin, int ymax, 
+				   ThotBool do_display_background)
 {
 }
 
@@ -2310,7 +2311,8 @@ PtrBox              box;
   DisplayOpaqueGroup display a translucent Group
   ----------------------------------------------------------------------*/
 void DisplayOpaqueGroup (PtrAbstractBox pAb, int frame,
-			 int xmin, int xmax, int ymin, int ymax)
+			 int xmin, int xmax, int ymin, int ymax, 
+				   ThotBool do_display_background)
 {
   int x, y, width, height; 
   double *m;
@@ -2322,14 +2324,16 @@ void DisplayOpaqueGroup (PtrAbstractBox pAb, int frame,
       glGetDoublev (GL_MODELVIEW_MATRIX, m);
       glLoadIdentity (); 
 
-      GL_SetFillOpacity (1000);     
-      GL_SetOpacity (1000);
-      GL_SetStrokeOpacity (1000);
-    
-      GL_TextureMap (pAb->AbBox->Pre_computed_Pic,  
-      		     x, y, width, height); 
-
-
+      if (do_display_background)
+	{
+	  GL_SetFillOpacity (1000);     
+	  GL_SetOpacity (1000);
+	  GL_SetStrokeOpacity (1000);
+	  
+	  GL_TextureMap (pAb->AbBox->Pre_computed_Pic,  
+			 x, y, width, height); 
+	  
+	}
       GL_SetFillOpacity (pAb->AbOpacity);
       GL_SetOpacity (pAb->AbOpacity);
       GL_SetStrokeOpacity (pAb->AbOpacity);
@@ -2346,7 +2350,6 @@ void DisplayOpaqueGroup (PtrAbstractBox pAb, int frame,
       TtaFreeMemory (m);      
     }
 }
-
 /*----------------------------------------------------------------------
   OpaqueGroupTextureFree
   ----------------------------------------------------------------------*/
@@ -2359,13 +2362,17 @@ PtrBox              box;
     {
       if (GL_prepare (frame))
 	{
-	  FreeGlTexture (pAb->AbBox->Pre_computed_Pic);
-	  FreeGlTexture (pAb->AbBox->Post_computed_Pic);
+	  FreeGlTextureNoCache (pAb->AbBox->Pre_computed_Pic);
+	 
+	  FreeGlTextureNoCache (pAb->AbBox->Post_computed_Pic);
+	  
 	}  
       TtaFreeMemory (pAb->AbBox->Pre_computed_Pic);
-      TtaFreeMemory (pAb->AbBox->Post_computed_Pic);
+
+      TtaFreeMemory (pAb->AbBox->Post_computed_Pic); 
       pAb->AbBox->Pre_computed_Pic = NULL; 
-      pAb->AbBox->Post_computed_Pic = NULL; 
+
+      pAb->AbBox->Post_computed_Pic = NULL;
     }
 }
 
@@ -2417,7 +2424,7 @@ void OpaqueGroupTexturize (PtrAbstractBox pAb, int frame,
 						   height,
 						   frame, 
 						   FALSE);
-      else
+      else 
 	pAb->AbBox->Post_computed_Pic = Group_shot (x, y,
 						    width,
 						    height,
@@ -2437,16 +2444,27 @@ static ThotBool DisplayGradient (PtrAbstractBox pAb,
   GradDef            *gradient;
   int                x, y, width, height;
   unsigned char      *pattern;
-  
+  /* int                x0,y0;   */
+
   gradient = pAb->AbElement->ElParent->ElGradient;
   if (gradient->next == NULL)
     return FALSE;
- 
+  
+  /* orientation*/
+
+  /*
+gradient->x2 - gradient->x1;
+gradient->y2 - gradient->y1;
+hypot ()
+
+  */
+  
   x = box->BxXOrg;
   y = box->BxYOrg;
   width = box->BxWidth;
   height = box->BxHeight;
   
+
   /* if gradient pict not computed*/
   if (box->Pre_computed_Pic == NULL)
   {
@@ -2589,11 +2607,12 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
       /* box->VisibleModification = TRUE; */
 
       if (pAb->AbLeafType == LtPolyLine ||
-	  pAb->AbLeafType == LtGraphics ||
+	  /* pAb->AbLeafType == LtGraphics || */
 	  pAb->AbLeafType == LtPath)
 	{
 	  if (!(box->VisibleModification) &&
 	      !selected &&
+	      box->DisplayList &&
 	      glIsList (box->DisplayList))
 	    {
 	      glCallList (box->DisplayList);
@@ -2676,7 +2695,7 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
       GL_SetStrokeOpacity (1000);
       box->VisibleModification = FALSE;  
       if (pAb->AbLeafType == LtPolyLine ||
-	  pAb->AbLeafType == LtGraphics ||
+/* 	  pAb->AbLeafType == LtGraphics || */
 	  pAb->AbLeafType == LtPath)
 	glEndList ();
     }

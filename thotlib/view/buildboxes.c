@@ -3152,9 +3152,14 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 			 pBox->BxXOrg + pBox->BxWidth,
 			 pBox->BxYOrg + pBox->BxHeight);
 #else /* _GL */
-	      DefRegion (frame, pBox->BxClipX, pBox->BxClipY,
-		       pBox->BxClipX + pBox->BxClipW,
-		       pBox->BxClipY + pBox->BxClipH);
+	      if (pBox->BxLMargin < 0)
+		DefRegion (frame, pBox->BxClipX + pBox->BxLMargin, pBox->BxClipY,
+			   pBox->BxClipX + pBox->BxClipW + pBox->BxLMargin,
+			   pBox->BxClipY + pBox->BxClipH);
+	      else
+		DefRegion (frame, pBox->BxClipX, pBox->BxClipY,
+			   pBox->BxClipX + pBox->BxClipW,
+			   pBox->BxClipY + pBox->BxClipH);
 #endif /* _GL */
 	    }
 	  

@@ -27,7 +27,7 @@
 #include "picture_f.h"
 
 #ifdef _GL
-void FreeGlTexture (PictInfo  *imageDesc);
+#include "glwindowdisplay.h"
 #endif /*_GL*/
 
 

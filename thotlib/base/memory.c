@@ -219,13 +219,8 @@ void *TtaNewAnimation ()
   Animated_Element *anim_info;
 
   anim_info = TtaGetMemory (sizeof (Animated_Element));
-  anim_info->next = NULL;
-  anim_info->duration = 0;
-  anim_info->start = 0;
-  anim_info->action_time = 0;
-  anim_info->from = NULL;
-  anim_info->to = NULL;
-  anim_info->AttrName = NULL;
+  memset (anim_info, 0, sizeof (Animated_Element));
+  anim_info->action_time = -1;
   anim_info->repeatCount = 1;
   anim_info->Fill = Otherfill;
   return anim_info;
@@ -236,8 +231,8 @@ void *TtaNewAnimation ()
   ----------------------------------------------------------------------*/
 static void TtaFreeMotionPath (void *from)
 {
-  PtrPathSeg  pPa, pPaNext;
 #ifdef _GL
+  PtrPathSeg  pPa, pPaNext;
   AnimPath    *pop_path = (AnimPath *) from;
 
   TtaFreeMemory (pop_path->Proportion);
@@ -250,7 +245,7 @@ static void TtaFreeMotionPath (void *from)
       pPa = pPaNext;
     }
   while (pPa);
-#endif _GL
+#endif/*  _GL */
 }
 
 /*----------------------------------------------------------------------
@@ -259,6 +254,7 @@ static void TtaFreeMotionPath (void *from)
 void TtaFreeAnimation (void *void_a_list)
 {  
   Animated_Element *a_list = (Animated_Element *) void_a_list;
+
   if (a_list == NULL)
     /* empty list */
     return;  

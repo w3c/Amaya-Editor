@@ -55,7 +55,8 @@ extern void DisplayOpaqueGroup ( PtrAbstractBox pAb,
                                  int xmin,
                                  int xmax,
                                  int ymin,
-                                 int ymax );
+                                 int ymax,
+                                 ThotBool do_display_background );
 extern void OpaqueGroupTextureFree ( PtrAbstractBox pAb,
                                      int frame );
 extern void OpaqueGroupTexturize ( PtrAbstractBox pAb,
@@ -128,7 +129,8 @@ extern void DisplayOpaqueGroup (/* PtrAbstractBox pAb,
                                    int xmin,
                                    int xmax,
                                    int ymin,
-                                   int ymax */);
+                                   int ymax,
+                                   ThotBool do_display_background */);
 extern void OpaqueGroupTextureFree (/* PtrAbstractBox pAb,
                                        int frame */);
 extern void OpaqueGroupTexturize (/* PtrAbstractBox pAb,

@@ -641,17 +641,16 @@ gboolean GL_DrawCallback (ThotWidget widget,
 {
   int frame;
 
-  return FALSE;
-  
-  frame = (int ) gtk_object_get_data (GTK_OBJECT (widget), "frame");
-  FrameTable[frame].DblBuffNeedSwap = TRUE;
+  frame = (int ) data;
+  GL_Swap (frame);
+  /* FrameTable[frame].DblBuffNeedSwap = TRUE; */
   return TRUE;
 }
 
 /*----------------------------------------------------------------------
- GL_Destroy :
- Close Opengl pipeline
- ----------------------------------------------------------------------*/
+  GL_Destroy :
+  Close Opengl pipeline
+  ----------------------------------------------------------------------*/
 gboolean  GL_Destroy (ThotWidget widget, GdkEventExpose *event, 
 		      gpointer data)
 {
@@ -663,9 +662,9 @@ gboolean  GL_Destroy (ThotWidget widget, GdkEventExpose *event,
 }
 
 /*----------------------------------------------------------------------
- GL_Init :
- Opengl pipeline state initialization
- ----------------------------------------------------------------------*/
+  GL_Init :
+  Opengl pipeline state initialization
+  ----------------------------------------------------------------------*/
 gboolean  GL_Init (ThotWidget widget, 
 		   GdkEventExpose *event, 
 		   gpointer data)
@@ -674,7 +673,7 @@ gboolean  GL_Init (ThotWidget widget,
  
   while (!gtk_gl_area_make_current (GTK_GL_AREA(widget)))
     ;
-  
+           
   SetGlPipelineState ();
   if (!dialogfont_enabled)
     {
@@ -683,6 +682,9 @@ gboolean  GL_Init (ThotWidget widget,
     } 
   return TRUE;   
 }
+
+static ThotBool SwapStop = FALSE;
+
 /*----------------------------------------------------------------------
   ExposeCallbackGTK : 
   When a part of the canvas is hidden by a window or menu 
@@ -693,37 +695,34 @@ gboolean ExposeCallbackGTK (ThotWidget widget,
 			    gpointer data)
 {
   int                 frame;
-  int                 x;
-  int                 y;
-  int                 width;
-  int                 height;
 
-  
-  if (event->count > 0)
-      return TRUE;
   frame = (int) data;
-  x = event->area.x;
-  y = event->area.y;
-  width = event->area.width;
-  height = event->area.height;  
-  if ((width <= 0) || 
-      (height <= 0) || 
+  if ((event->area.width <= 0) || 
+      (event->area.height <= 0) || 
       !(frame > 0 && frame <= MAX_FRAME))
     return TRUE;
   if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
     return TRUE; 
 
-  if (glhard ())
-    {
-      DefRegion (frame, x, y, width+x, y+height);
-      RedrawFrameBottom (frame, 0, NULL);
-    }
-  else
-    GL_Swap (frame);
+  /* THIS JUST DOESN'T WORK !!!
+     even when storing successive x,y and so on...
+     it's just gtk and opengl mix bad...
+     so the Xfree and gtk guys that tells us 
+     it work, just have to come here and code it here
+     with an hardware opengl implementation on their PC...
+     They will see the Speed problem...*/
+  /*if (event->count > 0)*/
+  /*    return TRUE; */
+
+  /*THIS works*/
+  if (SwapStop)
+    return TRUE;
+
+  GL_Swap (frame);
   return TRUE;
 }
 /*----------------------------------------------------------------------
-   FrameResizedGTK When user resize window
+  FrameResizedGTK When user resize window
   ----------------------------------------------------------------------*/
 gboolean FrameResizedGTK (GtkWidget *widget, 
 			  GdkEventConfigure *event, 
@@ -753,6 +752,10 @@ gboolean FrameResizedGTK (GtkWidget *widget,
   if (widget)
     if (GL_prepare (frame))
       {
+	SwapStop = TRUE;
+	while (gtk_events_pending ()) 
+	  gtk_main_iteration ();
+	SwapStop = FALSE;
 	GLResize (width, 
 		  height, 
 		  0, 0);
@@ -768,7 +771,7 @@ gboolean FrameResizedGTK (GtkWidget *widget,
 }
 #else /* _GL*/
 /*----------------------------------------------------------------------
-   FrameResizedGTK When user resize window
+  FrameResizedGTK When user resize window
   ----------------------------------------------------------------------*/
 gboolean FrameResizedGTK (GtkWidget *w, GdkEventConfigure *event, gpointer data)
 {
@@ -783,7 +786,7 @@ gboolean FrameResizedGTK (GtkWidget *w, GdkEventConfigure *event, gpointer data)
     return TRUE;
   FrameRedraw (frame, width, height);
   while (gtk_events_pending ()) 
-     gtk_main_iteration ();
+    gtk_main_iteration ();
   return TRUE;
 }
 
@@ -820,255 +823,255 @@ gboolean ExposeCallbackGTK (ThotWidget widget, GdkEventExpose *event, gpointer d
   ----------------------------------------------------------------------*/
 void FrameResized (int *w, int frame, int *info)
 {
-   int                 n;
-   Dimension           width, height;
-   Arg                 args[MAX_ARGS];
+  int                 n;
+  Dimension           width, height;
+  Arg                 args[MAX_ARGS];
 
-   n = 0;
-   XtSetArg (args[n], XmNwidth, &width);
-   n++;
-   XtSetArg (args[n], XmNheight, &height);
-   n++;
-   XtGetValues ((ThotWidget) w, args, n);
+  n = 0;
+  XtSetArg (args[n], XmNwidth, &width);
+  n++;
+  XtSetArg (args[n], XmNheight, &height);
+  n++;
+  XtGetValues ((ThotWidget) w, args, n);
 
-   FrameRedraw (frame, width, height);
+  FrameRedraw (frame, width, height);
 }
 #endif /* _GTK */
 #endif /* _WINDOWS */
 
 #ifdef _WINDOWS
 /*----------------------------------------------------------------------
-   Demande de scroll vertical.                                      
+  Demande de scroll vertical.                                      
   ----------------------------------------------------------------------*/
 void WIN_ChangeVScroll (int frame, int reason, int value)
 {
-   int        delta, x, y, width, height;
-   int        sPos, nbPages, remaining;
+  int        delta, x, y, width, height;
+  int        sPos, nbPages, remaining;
 
-   if (frame < 0)
-		return;
-   /* do not redraw it if in NoComputedDisplay mode */
-   if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
-      return;
+  if (frame < 0)
+    return;
+  /* do not redraw it if in NoComputedDisplay mode */
+  if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
+    return;
 
-   switch (reason)
-     {
-     case SB_TOP:
-       JumpIntoView (frame, 0);
-       break;
+  switch (reason)
+    {
+    case SB_TOP:
+      JumpIntoView (frame, 0);
+      break;
        
-     case SB_BOTTOM:
-       JumpIntoView (frame, 100);
-       break;
+    case SB_BOTTOM:
+      JumpIntoView (frame, 100);
+      break;
        
-     case SB_LINEUP:
-       delta = -13;
-       VerticalScroll (frame, delta, 1);
-       break;
+    case SB_LINEUP:
+      delta = -13;
+      VerticalScroll (frame, delta, 1);
+      break;
        
-     case SB_LINEDOWN:
-       delta = 13;
-       VerticalScroll (frame, delta, 1);
-       break;
+    case SB_LINEDOWN:
+      delta = 13;
+      VerticalScroll (frame, delta, 1);
+      break;
        
-     case SB_PAGEUP:
-       delta = -FrameTable[frame].FrHeight;
-       VerticalScroll (frame, delta, 1);
-       break;
+    case SB_PAGEUP:
+      delta = -FrameTable[frame].FrHeight;
+      VerticalScroll (frame, delta, 1);
+      break;
        
-     case SB_PAGEDOWN:
-       delta = FrameTable[frame].FrHeight;
-       VerticalScroll (frame, delta, 1);
-       break;
+    case SB_PAGEDOWN:
+      delta = FrameTable[frame].FrHeight;
+      VerticalScroll (frame, delta, 1);
+      break;
        
-     case SB_ENDSCROLL:
-       break;
+    case SB_ENDSCROLL:
+      break;
        
-     case SB_THUMBPOSITION:
-     case SB_THUMBTRACK:
-       ComputeDisplayedChars (frame, &x, &y, &width, &height);
-       sPos = GetScrollPos (FrameTable[frame].WdScrollV, SB_CTL);
-       delta = value - sPos;
-       nbPages = abs (delta) / height;
-       remaining = abs (delta) - (height * nbPages);
-       if (nbPages <= 3)
-	 {
-	   if (delta > 0)
-	     delta = nbPages * FrameTable[frame].FrHeight + (int) ((remaining * FrameTable[frame].FrHeight) / height);
-	   else 
-	     delta = -(nbPages * FrameTable[frame].FrHeight + (int) ((remaining * FrameTable[frame].FrHeight) / height));
-	   VerticalScroll (frame, delta, 1);
-	 } 
-       else 
-	 {
-	   delta = (int) (((float)value / (float)FrameTable[frame].FrHeight) * 100);
-	   JumpIntoView (frame, delta);
-	 }
+    case SB_THUMBPOSITION:
+    case SB_THUMBTRACK:
+      ComputeDisplayedChars (frame, &x, &y, &width, &height);
+      sPos = GetScrollPos (FrameTable[frame].WdScrollV, SB_CTL);
+      delta = value - sPos;
+      nbPages = abs (delta) / height;
+      remaining = abs (delta) - (height * nbPages);
+      if (nbPages <= 3)
+	{
+	  if (delta > 0)
+	    delta = nbPages * FrameTable[frame].FrHeight + (int) ((remaining * FrameTable[frame].FrHeight) / height);
+	  else 
+	    delta = -(nbPages * FrameTable[frame].FrHeight + (int) ((remaining * FrameTable[frame].FrHeight) / height));
+	  VerticalScroll (frame, delta, 1);
+	} 
+      else 
+	{
+	  delta = (int) (((float)value / (float)FrameTable[frame].FrHeight) * 100);
+	  JumpIntoView (frame, delta);
+	}
 #ifdef _GL
-	GL_DrawAll (NULL, frame);
+      GL_DrawAll (NULL, frame);
 #endif /*_GL*/
-       break;
-     } 
+      break;
+    } 
 }
 
 /*----------------------------------------------------------------------
-   Demande de scroll vertical.                                      
+  Demande de scroll vertical.                                      
   ----------------------------------------------------------------------*/
 void WIN_ChangeHScroll (int frame, int reason, int value)
 {
-   int        delta = 0, width = 1076, x, y, height;
-   int        sPos, nbPages, remaining;
+  int        delta = 0, width = 1076, x, y, height;
+  int        sPos, nbPages, remaining;
 
-   /* do not redraw it if in NoComputedDisplay mode */
-   if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
-      return;
+  /* do not redraw it if in NoComputedDisplay mode */
+  if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
+    return;
 
-   switch (reason)
-     {
-     case SB_LINERIGHT:
-       delta = 13;
-       break;
+  switch (reason)
+    {
+    case SB_LINERIGHT:
+      delta = 13;
+      break;
        
-     case SB_LINELEFT:
-       delta = -13;
-       break;
+    case SB_LINELEFT:
+      delta = -13;
+      break;
        
-     case SB_PAGERIGHT:
-       delta = FrameTable[frame].FrWidth;
-       break;
+    case SB_PAGERIGHT:
+      delta = FrameTable[frame].FrWidth;
+      break;
        
-     case SB_PAGELEFT:
-       delta = -FrameTable[frame].FrWidth;
-       break;
+    case SB_PAGELEFT:
+      delta = -FrameTable[frame].FrWidth;
+      break;
        
-     case SB_THUMBPOSITION:
-     case SB_THUMBTRACK:
-       ComputeDisplayedChars (frame, &x, &y, &width, &height);
-       sPos = GetScrollPos (FrameTable[frame].WdScrollH, SB_CTL);
-       delta = value - sPos;
-       nbPages = abs (delta) / width;
-       remaining = abs (delta) - (width * nbPages);
-       if (nbPages <= 3)
-	 {
-	   if (delta > 0)
-	     delta = nbPages * FrameTable[frame].FrWidth + (int) ((remaining * FrameTable[frame].FrWidth) / width);
-	   else 
-	     delta = -(nbPages * FrameTable[frame].FrWidth + (int) ((remaining * FrameTable[frame].FrWidth) / width));
-	 }
-       else
-	 delta = (int) (((float)value / (float)FrameTable[frame].FrWidth) * 100);
-       break;
-     }
+    case SB_THUMBPOSITION:
+    case SB_THUMBTRACK:
+      ComputeDisplayedChars (frame, &x, &y, &width, &height);
+      sPos = GetScrollPos (FrameTable[frame].WdScrollH, SB_CTL);
+      delta = value - sPos;
+      nbPages = abs (delta) / width;
+      remaining = abs (delta) - (width * nbPages);
+      if (nbPages <= 3)
+	{
+	  if (delta > 0)
+	    delta = nbPages * FrameTable[frame].FrWidth + (int) ((remaining * FrameTable[frame].FrWidth) / width);
+	  else 
+	    delta = -(nbPages * FrameTable[frame].FrWidth + (int) ((remaining * FrameTable[frame].FrWidth) / width));
+	}
+      else
+	delta = (int) (((float)value / (float)FrameTable[frame].FrWidth) * 100);
+      break;
+    }
 
-   HorizontalScroll (frame, delta, 1);
+  HorizontalScroll (frame, delta, 1);
 }
 #endif /* _WINDOWS */
 
 #ifndef _WINDOWS
 /*----------------------------------------------------------------------
-   Demande de scroll horizontal.                                    
+  Demande de scroll horizontal.                                    
   ----------------------------------------------------------------------*/
 #ifndef _GTK
 void FrameHScrolled (int *w, int frame, int *param)
 #else /* _GTK */
-void FrameHScrolledGTK (GtkAdjustment *w, int frame)
+     void FrameHScrolledGTK (GtkAdjustment *w, int frame)
 #endif /* _GTK */
 {
-   int                 delta, l;
-   int                 view;
+  int                 delta, l;
+  int                 view;
 #ifndef _GTK
-   int                 n;
-   Arg                 args[MAX_ARGS];
-   XmScrollBarCallbackStruct *info;
+  int                 n;
+  Arg                 args[MAX_ARGS];
+  XmScrollBarCallbackStruct *info;
 #endif /* _GTK */
-   NotifyWindow        notifyDoc;
-   Document            doc;
+  NotifyWindow        notifyDoc;
+  Document            doc;
 
-   /* ne pas traiter si le document est en mode NoComputedDisplay */
-   if (FrameTable[frame].FrDoc &&
-       documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
-      return;
+  /* ne pas traiter si le document est en mode NoComputedDisplay */
+  if (FrameTable[frame].FrDoc &&
+      documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
+    return;
 #ifndef _GTK
-   info = (XmScrollBarCallbackStruct *) param;
-   if (info->reason == XmCR_DECREMENT)
-      /* Deplacement en arriere d'un caractere de la fenetre */
-      delta = -13;
-   else if (info->reason == XmCR_INCREMENT)
-      /* Deplacement en avant d'un caractere de la fenetre */
-      delta = 13;
-   else if (info->reason == XmCR_PAGE_DECREMENT)
-      /* Deplacement en arriere du volume de la fenetre */
-      delta = -FrameTable[frame].FrWidth;
-   else if (info->reason == XmCR_PAGE_INCREMENT)
-      /* Deplacement en avant du volume de la fenetre */
-      delta = FrameTable[frame].FrWidth;
-   else
-      delta = MAX_SIZE;		/* indeterminee */
+  info = (XmScrollBarCallbackStruct *) param;
+  if (info->reason == XmCR_DECREMENT)
+    /* Deplacement en arriere d'un caractere de la fenetre */
+    delta = -13;
+  else if (info->reason == XmCR_INCREMENT)
+    /* Deplacement en avant d'un caractere de la fenetre */
+    delta = 13;
+  else if (info->reason == XmCR_PAGE_DECREMENT)
+    /* Deplacement en arriere du volume de la fenetre */
+    delta = -FrameTable[frame].FrWidth;
+  else if (info->reason == XmCR_PAGE_INCREMENT)
+    /* Deplacement en avant du volume de la fenetre */
+    delta = FrameTable[frame].FrWidth;
+  else
+    delta = MAX_SIZE;		/* indeterminee */
 #else /* _GTK */
-   /* delta is the position into the page */
-   delta = w->value;
+  /* delta is the position into the page */
+  delta = w->value;
 #endif  /* _GTK */
 
-   notifyDoc.event = TteViewScroll;
-   FrameToView (frame, &doc, &view);
-   notifyDoc.document = doc;
-   notifyDoc.view = view;
-   notifyDoc.verticalValue = 0;
-   notifyDoc.horizontalValue = delta;
-   if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
-     {
+  notifyDoc.event = TteViewScroll;
+  FrameToView (frame, &doc, &view);
+  notifyDoc.document = doc;
+  notifyDoc.view = view;
+  notifyDoc.verticalValue = 0;
+  notifyDoc.horizontalValue = delta;
+  if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
+    {
 #ifndef _GTK
-       if (info->reason == XmCR_VALUE_CHANGED || info->reason == XmCR_DRAG)
-	 {
-	   /* On recupere la largeur de l'ascenseur */
-	   n = 0;
-	   XtSetArg (args[n], XmNsliderSize, &l);
-	   n++;
-	   XtGetValues (FrameTable[frame].WdScrollH, args, n);
+      if (info->reason == XmCR_VALUE_CHANGED || info->reason == XmCR_DRAG)
+	{
+	  /* On recupere la largeur de l'ascenseur */
+	  n = 0;
+	  XtSetArg (args[n], XmNsliderSize, &l);
+	  n++;
+	  XtGetValues (FrameTable[frame].WdScrollH, args, n);
 #else /* _GTK */
-	   /* l is the width of the page */
-	   l = w->page_size;
-	   /*	   l = FrameTable[frame].FrWidth;*/
+	  /* l is the width of the page */
+	  l = w->page_size;
+	  /*	   l = FrameTable[frame].FrWidth;*/
 #endif /* _GTK */
 #ifndef _GTK
-	   /* On regarde si le deplacement bute sur le bord droit */
-	   if (info->value + l >= FrameTable[frame].FrWidth)
+	  /* On regarde si le deplacement bute sur le bord droit */
+	  if (info->value + l >= FrameTable[frame].FrWidth)
 #else /* _GTK */
-	   /* On regarde si le deplacement bute sur le bord droit */
-	   if (w->value + l >= FrameTable[frame].FrWidth)	     
+	    /* On regarde si le deplacement bute sur le bord droit */
+	    if (w->value + l >= FrameTable[frame].FrWidth)	     
 #endif /* _GTK */
-       	     delta = FrameTable[frame].FrScrollWidth;
-	   else
-	     {
+	      delta = FrameTable[frame].FrScrollWidth;
+	    else
+	      {
 #ifndef _GTK
-	       /* translate the position in the scroll bar into a shift value in the document */
-	       delta = (int) ((float) (info->value * FrameTable[frame].FrScrollWidth) / (float) FrameTable[frame].FrWidth);
+		/* translate the position in the scroll bar into a shift value in the document */
+		delta = (int) ((float) (info->value * FrameTable[frame].FrScrollWidth) / (float) FrameTable[frame].FrWidth);
 #else /* _GTK */
-	       /* translate the position in the scroll bar into a shift value in the document */
-	       delta = (int) ((float) (w->value * FrameTable[frame].FrScrollWidth) / (float) FrameTable[frame].FrWidth);
+		/* translate the position in the scroll bar into a shift value in the document */
+		delta = (int) ((float) (w->value * FrameTable[frame].FrScrollWidth) / (float) FrameTable[frame].FrWidth);
 #endif /* _GTK */
-	       delta = FrameTable[frame].FrScrollOrg + delta - ViewFrameTable[frame - 1].FrXOrg;
-	     }
+		delta = FrameTable[frame].FrScrollOrg + delta - ViewFrameTable[frame - 1].FrXOrg;
+	      }
 #ifndef _GTK
-	 }
-       else if (info->reason == XmCR_TO_TOP)
-	 /* force the left alignment */
-	 delta = -FrameTable[frame].FrScrollWidth;
-       else if (info->reason == XmCR_TO_BOTTOM)
-	 /* force the right alignment */
-	 delta = FrameTable[frame].FrScrollWidth;
+	}
+      else if (info->reason == XmCR_TO_TOP)
+	/* force the left alignment */
+	delta = -FrameTable[frame].FrScrollWidth;
+      else if (info->reason == XmCR_TO_BOTTOM)
+	/* force the right alignment */
+	delta = FrameTable[frame].FrScrollWidth;
 #endif /* _GTK */
-       HorizontalScroll (frame, delta, 1);
-       notifyDoc.document = doc;
-       notifyDoc.view = view;
-       notifyDoc.verticalValue = 0;
-       notifyDoc.horizontalValue = delta;
-       CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
-     }
+      HorizontalScroll (frame, delta, 1);
+      notifyDoc.document = doc;
+      notifyDoc.view = view;
+      notifyDoc.verticalValue = 0;
+      notifyDoc.horizontalValue = delta;
+      CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
+    }
 } 
 
 /*----------------------------------------------------------------------
-   Demande de scroll vertical.                                      
+  Demande de scroll vertical.                                      
   ----------------------------------------------------------------------*/
 #ifndef _GTK
 void FrameVScrolled (int *w, int frame, int *param)
@@ -1175,11 +1178,11 @@ void FrameVScrolled (int *w, int frame, int *param)
 	}
       else
 	VerticalScroll (frame, delta, 1);
-    notifyDoc.document = doc;
-    notifyDoc.view = view;
-    notifyDoc.verticalValue = delta;
-    notifyDoc.horizontalValue = 0;
-    CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
+      notifyDoc.document = doc;
+      notifyDoc.view = view;
+      notifyDoc.verticalValue = delta;
+      notifyDoc.horizontalValue = 0;
+      CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
     }
 }
 #else /* _GTK */
@@ -2253,9 +2256,9 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
       return 0;
 
 #ifdef _GL
-	case WM_ERASEBKGND:
-		/*Make sure Win32 doesn't draw in our buffer...*/
-		return TRUE;
+    case WM_ERASEBKGND:
+      /*Make sure Win32 doesn't draw in our buffer...*/
+      return TRUE;
 #endif /*_GL*/
 
     default:
@@ -3341,122 +3344,122 @@ void  DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd,
 #endif /* _GL */
 
   if (*xd < *xf && *yd < *yf && orgx < *xf && orgy < *yf) 
-{
-    /* compute the clipping area in the window */
-    clipx = *xd - orgx;
-    if (clipx < 0)
-      {
-	*xd -= clipx;
-	clipx = 0;
-      }
-    clipy = *yd - orgy;
-    if (clipy < 0)
-      {
-	*yd -= clipy;
-	clipy = 0;
-      }
+    {
+      /* compute the clipping area in the window */
+      clipx = *xd - orgx;
+      if (clipx < 0)
+	{
+	  *xd -= clipx;
+	  clipx = 0;
+	}
+      clipy = *yd - orgy;
+      if (clipy < 0)
+	{
+	  *yd -= clipy;
+	  clipy = 0;
+	}
 
-    clipwidth = FrameTable[frame].FrWidth + orgx;
-    if (*xf > clipwidth)
-      *xf = clipwidth;
-    clipheight = FrameTable[frame].FrHeight + orgy;
-    if (*yf > clipheight)
-      *yf = clipheight;
-    clipwidth = *xf - *xd;
-    clipheight = *yf - *yd;
-    clipy += FrameTable[frame].FrTopMargin;
+      clipwidth = FrameTable[frame].FrWidth + orgx;
+      if (*xf > clipwidth)
+	*xf = clipwidth;
+      clipheight = FrameTable[frame].FrHeight + orgy;
+      if (*yf > clipheight)
+	*yf = clipheight;
+      clipwidth = *xf - *xd;
+      clipheight = *yf - *yd;
+      clipy += FrameTable[frame].FrTopMargin;
 #ifndef _GL
 #ifdef _WINDOWS
-    if (!(clipRgn = CreateRectRgn (clipx, clipy, 
-				   clipx + clipwidth, clipy + clipheight)))
-      WinErrorBox (NULL, "DefineClipping");
+      if (!(clipRgn = CreateRectRgn (clipx, clipy, 
+				     clipx + clipwidth, clipy + clipheight)))
+	WinErrorBox (NULL, "DefineClipping");
 #else  /* _WINDOWS */ 
 #ifdef _GTK 
-    rect.x = clipx;
-    rect.y = clipy;
-    rect.width = clipwidth;
-    rect.height = clipheight;
-    gdk_gc_set_clip_rectangle (TtLineGC, &rect);	
-    gdk_gc_set_clip_rectangle (TtGreyGC, &rect);
-    gdk_gc_set_clip_rectangle (TtGraphicGC, &rect);
+      rect.x = clipx;
+      rect.y = clipy;
+      rect.width = clipwidth;
+      rect.height = clipheight;
+      gdk_gc_set_clip_rectangle (TtLineGC, &rect);	
+      gdk_gc_set_clip_rectangle (TtGreyGC, &rect);
+      gdk_gc_set_clip_rectangle (TtGraphicGC, &rect);
 #else /* _GTK */
-    rect.x = 0;
-    rect.y = 0;
-    rect.width = clipwidth;
-    rect.height = clipheight;
-    XSetClipRectangles (TtDisplay, TtLineGC, clipx,
-			clipy + FrameTable[frame].FrTopMargin, &rect, 1, Unsorted);
-    XSetClipRectangles (TtDisplay, TtGreyGC, clipx,
-			clipy + FrameTable[frame].FrTopMargin, &rect, 1, Unsorted);
-    XSetClipRectangles (TtDisplay, TtGraphicGC, clipx,
-			clipy + FrameTable[frame].FrTopMargin, &rect, 1, Unsorted);
+      rect.x = 0;
+      rect.y = 0;
+      rect.width = clipwidth;
+      rect.height = clipheight;
+      XSetClipRectangles (TtDisplay, TtLineGC, clipx,
+			  clipy + FrameTable[frame].FrTopMargin, &rect, 1, Unsorted);
+      XSetClipRectangles (TtDisplay, TtGreyGC, clipx,
+			  clipy + FrameTable[frame].FrTopMargin, &rect, 1, Unsorted);
+      XSetClipRectangles (TtDisplay, TtGraphicGC, clipx,
+			  clipy + FrameTable[frame].FrTopMargin, &rect, 1, Unsorted);
 #endif /* _GTK */
 #endif /* _WINDOWS */
-    if (raz > 0)
-      Clear (frame, clipwidth, clipheight, clipx, clipy);
+      if (raz > 0)
+	Clear (frame, clipwidth, clipheight, clipx, clipy);
 #else /* _GL */
     
-    GL_SetClipping (clipx,
-		    FrameTable[frame].FrHeight
-		    + FrameTable[frame].FrTopMargin
-		    - (clipy + clipheight),
-		    clipwidth,
-		    clipheight); 
+      GL_SetClipping (clipx,
+		      FrameTable[frame].FrHeight
+		      + FrameTable[frame].FrTopMargin
+		      - (clipy + clipheight),
+		      clipwidth,
+		      clipheight); 
 
-    if (raz > 0)
-      ClearAll (frame);
-    /* Clear (frame, clipwidth, clipheight,  */
-    /* 		 clipx, clipy); */
+      if (raz > 0)
+	ClearAll (frame);
+      /* Clear (frame, clipwidth, clipheight,  */
+      /* 		 clipx, clipy); */
 #endif /*_GL*/
-     }
+    }
 }
 
 /*----------------------------------------------------------------------
-   RemoveClipping annule le rectangle de clipping de la fenetre frame.  
+  RemoveClipping annule le rectangle de clipping de la fenetre frame.  
   ----------------------------------------------------------------------*/
 void RemoveClipping (int frame)
 {
 #ifndef _GL
 #ifndef _WINDOWS
 #ifdef _GTK
- GdkRectangle         rect;
+  GdkRectangle         rect;
 
- rect.x = 0;
- rect.y = 0;
- rect.width = MAX_SIZE;
- rect.height = MAX_SIZE;
+  rect.x = 0;
+  rect.y = 0;
+  rect.width = MAX_SIZE;
+  rect.height = MAX_SIZE;
 
- gdk_gc_set_clip_rectangle (TtLineGC, &rect);
- gdk_gc_set_clip_rectangle (TtGraphicGC, &rect);
- gdk_gc_set_clip_rectangle (TtGreyGC, &rect);
+  gdk_gc_set_clip_rectangle (TtLineGC, &rect);
+  gdk_gc_set_clip_rectangle (TtGraphicGC, &rect);
+  gdk_gc_set_clip_rectangle (TtGreyGC, &rect);
 
 
 #else /* _GTK */
-   XRectangle          rect;
+  XRectangle          rect;
 
-   rect.x = 0;
-   rect.y = 0;
-   rect.width = MAX_SIZE;
-   rect.height = MAX_SIZE;
-   XSetClipRectangles (TtDisplay, TtLineGC, 0, 0, &rect, 1, Unsorted);
-   XSetClipRectangles (TtDisplay, TtGraphicGC, 0, 0, &rect, 1, Unsorted); 
-   XSetClipRectangles (TtDisplay, TtGreyGC, 0, 0, &rect, 1, Unsorted);
-   XFlushOutput (frame);
+  rect.x = 0;
+  rect.y = 0;
+  rect.width = MAX_SIZE;
+  rect.height = MAX_SIZE;
+  XSetClipRectangles (TtDisplay, TtLineGC, 0, 0, &rect, 1, Unsorted);
+  XSetClipRectangles (TtDisplay, TtGraphicGC, 0, 0, &rect, 1, Unsorted); 
+  XSetClipRectangles (TtDisplay, TtGreyGC, 0, 0, &rect, 1, Unsorted);
+  XFlushOutput (frame);
 #endif /* _GTK */
 #else  /* _WINDOWS */
-   SelectClipRgn(TtDisplay, NULL); 
-   if (clipRgn && !DeleteObject (clipRgn))
-      WinErrorBox (NULL, "RemoveClipping");
-   clipRgn = (HRGN) 0;
+  SelectClipRgn(TtDisplay, NULL); 
+  if (clipRgn && !DeleteObject (clipRgn))
+    WinErrorBox (NULL, "RemoveClipping");
+  clipRgn = (HRGN) 0;
 #endif /* _WINDOWS */
 #else /* _GL */
-   GL_UnsetClippingRestore (FALSE);
+  GL_UnsetClippingRestore (FALSE);
 #endif /*_GL*/
 }
 
 
 /*----------------------------------------------------------------------
-   UpdateScrollbars met a jour les bandes de defilement de la fenetre    
+  UpdateScrollbars met a jour les bandes de defilement de la fenetre    
   ----------------------------------------------------------------------*/
 void UpdateScrollbars (int frame)
 {
@@ -3477,7 +3480,7 @@ void UpdateScrollbars (int frame)
 #endif /* _WINDOWS */
 
   if (FrameUpdating ||
-    documentDisplayMode[FrameTable[frame].FrDoc - 1] 
+      documentDisplayMode[FrameTable[frame].FrDoc - 1] 
       == NoComputedDisplay)
     return;
   /* Demande le volume affiche dans la fenetre */
@@ -3525,20 +3528,23 @@ void UpdateScrollbars (int frame)
     if (width + x <= l)
       {
 	tmpw = gtk_range_get_adjustment (GTK_RANGE (hscroll));
-	tmpw->lower = (gfloat) 0;
-	tmpw->upper = (gfloat) l;
-	tmpw->page_size = (gfloat) width;
-	tmpw->page_increment = (gfloat) width-13;
-	tmpw->step_increment = (gfloat) 8;
-	tmpw->value = (gfloat) x;
-	gtk_adjustment_changed (tmpw);
-	if (GTK_WIDGET_VISIBLE(GTK_WIDGET (hscroll)) == FALSE)
+	if (tmpw)
 	  {
-	    gtk_widget_show (GTK_WIDGET (hscroll));
-	    gtk_widget_draw_default (GTK_WIDGET (hscroll));
+	    tmpw->lower = (gfloat) 0;
+	    tmpw->upper = (gfloat) l;
+	    tmpw->page_size = (gfloat) width;
+	    tmpw->page_increment = (gfloat) width-13;
+	    tmpw->step_increment = (gfloat) 8;
+	    tmpw->value = (gfloat) x;
+	    gtk_adjustment_changed (tmpw);
+	    if (GTK_WIDGET_VISIBLE(GTK_WIDGET (hscroll)) == FALSE)
+	      {
+		gtk_widget_show (GTK_WIDGET (hscroll));
+		gtk_widget_draw_default (GTK_WIDGET (hscroll));
 #ifdef _GL
-	    gl_window_resize(frame, 0, hscroll->allocation.height);
+		gl_window_resize(frame, 0, hscroll->allocation.height);
 #endif /*_GL*/
+	      }
 	  }  
       }
   
@@ -3553,27 +3559,30 @@ void UpdateScrollbars (int frame)
 #endif /*_GL*/
 	}
     }  
-    else 
-      if (height + y <= h)
-	{
-	  tmpw = gtk_range_get_adjustment (GTK_RANGE (vscroll));
-	  tmpw->lower = (gfloat) 0;
-	  tmpw->upper = (gfloat) h;
-	  tmpw->page_size = (gfloat) height;
-	  tmpw->page_increment = (gfloat) height;
-	  tmpw->step_increment = (gfloat) 6;
-	  tmpw->value = (gfloat) y;
-	  gtk_adjustment_changed (tmpw);
-	  if (GTK_WIDGET_VISIBLE(GTK_WIDGET (vscroll)) == FALSE)
-	    {
-	      gtk_widget_show (GTK_WIDGET (vscroll));
-	      gtk_widget_draw_default (GTK_WIDGET (vscroll));
+  else 
+    if (height + y <= h)
+      {
+	tmpw = gtk_range_get_adjustment (GTK_RANGE (vscroll));
+	if (tmpw)
+	  {
+	    tmpw->lower = (gfloat) 0;
+	    tmpw->upper = (gfloat) h;
+	    tmpw->page_size = (gfloat) height;
+	    tmpw->page_increment = (gfloat) height;
+	    tmpw->step_increment = (gfloat) 6;
+	    tmpw->value = (gfloat) y;
+	    gtk_adjustment_changed (tmpw);
+	    if (GTK_WIDGET_VISIBLE(GTK_WIDGET (vscroll)) == FALSE)
+	      {
+		gtk_widget_show (GTK_WIDGET (vscroll));
+		gtk_widget_draw_default (GTK_WIDGET (vscroll));
 #ifdef _GL
-	      gl_window_resize (frame, 
-				vscroll->allocation.width, 
-				0);
+		gl_window_resize (frame, 
+				  vscroll->allocation.width, 
+				  0);
 #endif /*_GL*/
-	    }
+	      }
+	  }
 	}
   
 #endif /*_GTK*/  

@@ -3165,8 +3165,13 @@ void YMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 	    {
 	      if (pBox->BxType != BoSplit && pBox->BxType != BoMulScript)
 		{
+#ifndef _GL
 		  i = pBox->BxYOrg;
 		  j = pBox->BxYOrg + pBox->BxHeight;
+#else/*  _GL */
+		  i = pBox->BxClipY;
+		  j = pBox->BxClipY + pBox->BxClipH;
+#endif /* _GL */
 		  /* add margins for graphics */
 		  if (pBox->BxLMargin < 0)
 		    k = - pBox->BxLMargin;

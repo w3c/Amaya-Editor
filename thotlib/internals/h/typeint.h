@@ -343,7 +343,9 @@ typedef struct _AnimPath
   float           length;       /* total length */  
   ThotPoint       *Path;        /*The Path*/
   float           *Proportion;  /*per segment % of total length*/
+  float           *Angle;  /*per segment tangent angle for automatic rotating or text path*/
   int             npoints;
+  int             maxpoints;
  } AnimPath;
 
 

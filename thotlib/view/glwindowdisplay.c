@@ -138,7 +138,8 @@ static HGLRC GL_Context[50];
 
 /* Animation Smoothness*/
 #define FPS 25 /*Frame Per Second*/
-#define INTERVAL 0.0005 /*1/FPS*/ /* 1/25 */
+#define INTERVAL 0.02 /*1/FPS*/ /* should be 1/25 ... 1/50 */
+
 #define FRAME_TIME 5 /*(INTERVAL*1000) */
 /* milliseconds */
 
@@ -1213,7 +1214,7 @@ void GL_DrawArc (int x, int y,
       sinCache[i] = (PRECISION) DSIN(angle);
     }
 
-  if (sweepAngle == 360.0) 
+  if (fabs (sweepAngle - 360.0) < 0.0001) 
     {
       sinCache[slices] = sinCache[0];
       cosCache[slices] = cosCache[0];
@@ -1943,23 +1944,26 @@ void ComputeBoundingBox (PtrBox box, int frame, int xmin, int xmax, int ymin, in
   GLfloat feedBuffer[4096];
   GLint   size;
   
-  glFeedbackBuffer (4096, GL_2D, feedBuffer);
-  NotFeedBackMode = FALSE;  
-  glRenderMode (GL_FEEDBACK);
-  DisplayBox (box, frame, xmin, xmax, ymin, ymax);
-  size = glRenderMode (GL_RENDER);
-  NotFeedBackMode = TRUE;
-  if (size > 0)
+  if (1 || box->VisibleModification)
     {
-      box->BxClipX = -1;
-      box->BxClipY = -1;
-      getboundingbox (size, feedBuffer, frame,
-		      &box->BxClipX,
-		      &box->BxClipY,
-		      &box->BxClipW,
-		      &box->BxClipH);      
-      /* printBuffer (size, feedBuffer); */
-      box->BxBoundinBoxComputed = TRUE; 
+      glFeedbackBuffer (4096, GL_2D, feedBuffer);
+      NotFeedBackMode = FALSE;  
+      glRenderMode (GL_FEEDBACK);
+      DisplayBox (box, frame, xmin, xmax, ymin, ymax);
+      size = glRenderMode (GL_RENDER);
+      NotFeedBackMode = TRUE;
+      if (size > 0)
+	{
+	  box->BxClipX = -1;
+	  box->BxClipY = -1;
+	  getboundingbox (size, feedBuffer, frame,
+			  &box->BxClipX,
+			  &box->BxClipY,
+			  &box->BxClipW,
+			  &box->BxClipH);      
+	  /* printBuffer (size, feedBuffer); */
+	  box->BxBoundinBoxComputed = TRUE; 
+	}
     }
 }
 
@@ -2201,7 +2205,7 @@ static AnimTime ComputeAmayaCurrentTime (int frame)
       current_time = ((double) GetTickCount ()) / 1000; 
 #endif /*_WINDOWS*/	
 #endif /*_GTK*/
-      if (FrameTable[frame].BeginTime == 0)
+      if (FrameTable[frame].BeginTime < 0.0001)
 	{
 	  FrameTable[frame].BeginTime = current_time;
 	  current_time += 0.001;
@@ -2227,19 +2231,14 @@ ThotBool GL_DrawAll ()
   static double   lastime;
   char    out[2048];
   CHAR_T  outw[2048];
-  int i;
+  unsigned int     i;
 #endif /* _FPS_DEBUG */
 
   if (!FrameUpdating )
     {
       FrameUpdating = TRUE;     
       if (!frame_animating)
-	{	
-#ifdef _GTK
-	 while (gtk_events_pending ())
-	   gtk_main_iteration ();
-#endif /*_GTK*/
-	  
+	{	  
 	  frame_animating = TRUE; 
 	  for (frame = 0 ; frame < MAX_FRAME; frame++)
 	    {
@@ -2249,15 +2248,22 @@ ThotBool GL_DrawAll ()
 		  if (FrameTable[frame].Animated_Boxes &&
 		      FrameTable[frame].Anim_play)
 		    {	
+#ifdef _GTK
+		      while (gtk_events_pending ())
+			gtk_main_iteration ();
+#endif /*_GTK*/
 		      current_time = ComputeAmayaCurrentTime (frame);  
-		      if (current_time != -1)
+		      if ((current_time + 1) > 0.0001)
 			{
 			  if (Animate_boxes (frame, current_time))
 			    TtaPause (frame);
 			  FrameTable[frame].LastTime = current_time;
+
 			}
 		      else
-			current_time = FrameTable[frame].LastTime;
+			{
+			  current_time = FrameTable[frame].LastTime;
+			}
 		    }
 #endif /* _GL */		    
 		  if (FrameTable[frame].DblBuffNeedSwap)
@@ -2276,7 +2282,7 @@ ThotBool GL_DrawAll ()
 					   (double) 1 / lastime);
 
 				  i = 0;
-				  while (i < strlen(out))
+				  while (i < strlen (out))
 				    {
 				      outw[i] = TtaGetWCFromChar (out[i], 
 								  ISO_8859_1);
@@ -2288,7 +2294,7 @@ ThotBool GL_DrawAll ()
 			      
 			      RedrawFrameBottom (frame, 0, NULL); 
 #ifdef _FPS_DEBUG
-			      if (lastime != 0)
+			      if (lastime != 0 && GetFirstFont (12))
 				{
 				  GL_SetFillOpacity (500);
 				  GL_SetPicForeground ();
@@ -2636,8 +2642,12 @@ void gl_window_resize (int frame, int width, int height)
 
   FrameTable[frame].DblBuffNeedSwap = TRUE;
 
+
 /*   gdk_gl_wait_gdk ();  */
 /*   gdk_gl_wait_gl ( ); */
+
+  while (gtk_events_pending ())
+    gtk_main_iteration ();
 
   return;
 #endif /*_GTK*/

@@ -392,6 +392,12 @@ extern void *TtaNewAnimInfo ();
 extern void *TtaNewAnimation ();
 extern void TtaAddAnimPath (void *info, void *anim);
 
+extern void TtaAddAnimMotionPath (void *info, void *anim);
+extern void TtaAddAnimMotionFromTo (void *info, void *anim);
+extern void TtaAddAnimMotionValues (void *info, void *anim);
+
+extern void TtaAnimPathAddPoint (void *anim, float x, float y);
+
 extern void *TtaCopyTransform ( void *pPa );
 extern void TtaAppendAnim (Element element, void *anim);
 

@@ -70,20 +70,33 @@
       </text>
     </a>
   </g>
+
+
   <g>
     <image id="backgroundImage" xlink:href="amaya.png" width="471px"
            height="338px" y="1px">
       <desc>Leading the Web to its full potential</desc>
     </image>
-    <defs>
-      <symbol id="cube">
+<defs>     
+ <symbol id="cube">
         <polygon points="0,0 5,5 5,20 0,15" transform="translate(0,1)"
                  stroke-width="1"/>
         <polygon points="0,0 15,0 20,5 5,5" transform="translate(1,0)"
                  stroke-width="1"/>
         <rect x="6" y="6" width="15" height="15" stroke-width="1"/>
       </symbol>
+<symbol id="amayatext">
+       <text x="80" y="80" style="fill:black">AMAYA
+      </text> 
+      </symbol>
     </defs>
+
+<g transform="translate(-50,-20)" 
+style="font-family:Times New Roman;font-size:96">      
+<use xlink:href="#amayatext"/>
+<use opacity="20%" transform="matrix( 1 0 -1 -1 80 160 )" xlink:href="#amayatext"/>
+    </g>
+
     <g id="cubes">
       <animateColor attributeName="fill" attributeType="CSS"
                     from="rgb(0,0,255)" to="rgb(128,0,0)" begin="0s" dur="6s"
@@ -194,6 +207,7 @@
                           fill="freeze" />
  </text>
 </g>
+
 </svg>
 </p>
 

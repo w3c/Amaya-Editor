@@ -1053,7 +1053,8 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
 	   SetTextAnchor (attr, el, doc, FALSE);
        }
 
-     if (elType.ElTypeNum == SVG_EL_animate ||    
+     if (SVG_EL_set_ == SVG_EL_set_ || 
+	 elType.ElTypeNum == SVG_EL_animate ||    
 	 elType.ElTypeNum == SVG_EL_animateColor ||       
 	 elType.ElTypeNum == SVG_EL_animateMotion ||
 	 elType.ElTypeNum == SVG_EL_animateTransform)
@@ -2614,6 +2615,82 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
    ParsePathDataAttribute
    Parse the value of a path data attribute
   ----------------------------------------------------------------------*/
+void *ParseValuesDataAttribute (Attribute attr, Element el, Document doc)
+{
+  int          length, x, y;
+   char         *text, *ptr;
+   void         *anim_seg = NULL;
+     
+   anim_seg = TtaNewAnimPath (doc);    
+   /* get a buffer for reading the attribute value */
+   length = TtaGetTextAttributeLength (attr) + 2;
+   text = TtaGetMemory (length);
+   if (text)
+     {
+       /* get the content of the data attribute */
+       TtaGiveTextAttributeValue (attr, text, &length);
+       /* parse the attribute content */
+       ptr = text;
+       while (ptr != EOS)
+	 {
+	   ptr = TtaSkipBlanks (ptr);
+	   ptr = GetNumber (ptr, &x);
+	   ptr = GetNumber (ptr, &y);
+	   TtaFreeMemory (text);
+	   TtaAnimPathAddPoint (anim_seg, x, y);
+	 }
+     }
+   return anim_seg;
+}
+/*----------------------------------------------------------------------
+   ParseFromToDataAttribute
+   Parse the value of a path data attribute
+  ----------------------------------------------------------------------*/
+void *ParseFromToDataAttribute (Attribute attrfrom, Attribute attrto,
+				Element el, Document doc)
+{
+    int          length, x, y;
+   char         *text, *ptr;
+   void         *anim_seg = NULL;
+     
+   anim_seg = TtaNewAnimPath (doc);
+   /* get a buffer for reading the attribute value */
+   length = TtaGetTextAttributeLength (attrfrom) + 2;
+   text = TtaGetMemory (length);
+   if (text)
+     {
+       /* get the content of the data attribute */
+       TtaGiveTextAttributeValue (attrfrom, text, &length);
+       /* parse the attribute content */
+       ptr = text;
+       ptr = TtaSkipBlanks (ptr);
+       ptr = GetNumber (ptr, &x);
+       ptr = GetNumber (ptr, &y);
+       TtaFreeMemory (text);
+       TtaAnimPathAddPoint (anim_seg, x, y);
+     }
+
+   /* get a buffer for reading the attribute value */
+   length = TtaGetTextAttributeLength (attrto) + 2;
+   text = TtaGetMemory (length);
+   if (text)
+     {
+       /* get the content of the data attribute */
+       TtaGiveTextAttributeValue (attrto, text, &length);
+       /* parse the attribute content */
+       ptr = text;
+       ptr = TtaSkipBlanks (ptr);
+       ptr = GetNumber (ptr, &x);
+       ptr = GetNumber (ptr, &y);
+       TtaFreeMemory (text);
+       TtaAnimPathAddPoint (anim_seg, x, y);
+     }
+   return anim_seg;
+}
+/*----------------------------------------------------------------------
+   ParsePathDataAttribute
+   Parse the value of a path data attribute
+  ----------------------------------------------------------------------*/
 void *ParsePathDataAttribute (Attribute attr, Element el, Document doc, ThotBool IsDrawn)
 {
    int          length, x, y, x1, y1, x2, y2, xcur, ycur, xinit, yinit,
@@ -2624,7 +2701,7 @@ void *ParsePathDataAttribute (Attribute attr, Element el, Document doc, ThotBool
    ThotBool     relative, newSubpath;
    char         *text, *ptr;
    char         command, prevCommand;
-   void         *anim_seg;
+   void         *anim_seg = NULL;
    
    /* create (or get) the Graphics leaf */
    if (IsDrawn)

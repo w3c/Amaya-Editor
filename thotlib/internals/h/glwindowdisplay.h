@@ -143,6 +143,7 @@ void *Group_shot (int x, int y,
 void GL_SetPicForeground ();
 void ResetMainWindowBackgroundColor (int frame);
 void FreeGlTexture (void *Image);
+void FreeGlTextureNoCache (void *Image);
 unsigned char *test_gradien_linear (); 
 
 #ifndef _NOSHARELIST

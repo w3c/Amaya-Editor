@@ -488,6 +488,15 @@ static void CleanImageView (int View, PtrDocument pDoc, ThotBool complete)
    pAbbRoot = pDoc->DocViewRootAb[View - 1];
    frame = pDoc->DocViewFrame[View - 1];
 
+#ifdef _GL
+   TtaNoPlay (frame);
+   if (FrameTable[frame].Animated_Boxes)
+     {	    
+       FreeAnimatedBox (FrameTable[frame].Animated_Boxes);
+       FrameTable[frame].Animated_Boxes = NULL;
+     }	
+#endif /* _GL */
+
    /* All abstract boxes included into the root abs. box are marked dead */
    if (pAbbRoot == NULL)
      return;
@@ -497,14 +506,6 @@ static void CleanImageView (int View, PtrDocument pDoc, ThotBool complete)
 	SetDeadAbsBox (pAbbRoot);
 	ChangeConcreteImage (frame, &h, pAbbRoot);
 	CloseDocumentView (pDoc, View, TRUE);
-#ifdef _GL
-	TtaNoPlay (frame);
-	if (FrameTable[frame].Animated_Boxes)
-	  {	    
-	    FreeAnimatedBox (FrameTable[frame].Animated_Boxes);
-	    FrameTable[frame].Animated_Boxes = NULL;
-	  }	
-#endif /* _GL */
 	FrameTable[frame].FrDoc = 0;
 	/* selection is no more displayed */
 	ViewFrameTable[frame - 1].FrSelectShown = FALSE;

@@ -139,14 +139,15 @@ static unsigned char MirrorBytes[0x100] = {
 #undef MESA
 
 typedef struct _PicCache {
+  struct _PicCache *next;  
+  char             *filename;
   int              width;
   int              height;
+  int              texbind;
+  int              frame;
   float            TexCoordW;
   float            TexCoordH;
-  char             *filename;
-  int              texbind;
-  int              frame;  
-  struct _PicCache *next;  
+  ThotBool         ForeverPic;
 } Pic_Cache;
 
 /*             
@@ -175,7 +176,7 @@ static void Free_Pic_Chache (Pic_Cache *Cache)
 /*--------------------------------------------------
  Lookup for Free upon an unique index a unique Cache 
  ---------------------------------------------------*/
-static void FreeAPicCache (int texbind, int frame)
+static int FreeAPicCache (int texbind, int frame)
 {
   Pic_Cache *Before;
   Pic_Cache *Cache;
@@ -185,20 +186,26 @@ static void FreeAPicCache (int texbind, int frame)
   while (Cache)
     {
       if (Cache->texbind == texbind
-/*  && Cache->frame == frame */
-)
+#ifdef _NOSHARELIST
+	  && Cache->frame == frame 
+#endif /* _NOSHARELIST */
+	  )
 	break;
       Before = Cache;
       Cache = Cache->next;      
     }
   if (Cache)
     {
+      if (Cache->ForeverPic)
+	return 1;
       if (!Before)
 	PicCache = PicCache->next;
       else
 	Before->next = Cache->next;
       Free_Pic_Chache (Cache);
+      return 1;
     }
+  return 0;
 }
 
 /*--------------------------------------------------
@@ -213,7 +220,7 @@ static void FreePicCache (Pic_Cache *Cache)
 /*--------------------------------------------------
  AddInPicCache : Add a new Pic
  ---------------------------------------------------*/
-static void AddInPicCache (PictInfo *Image, int frame)
+static void AddInPicCache (PictInfo *Image, int frame, ThotBool forever)
 {
   Pic_Cache *Cache = PicCache;
 
@@ -236,7 +243,8 @@ static void AddInPicCache (PictInfo *Image, int frame)
   Cache->height = Image->PicHeight;
   Cache->width = Image->PicWidth;
   Cache->TexCoordW = Image->TexCoordW;  
-  Cache->TexCoordH = Image->TexCoordH;
+  Cache->TexCoordH = Image->TexCoordH; 
+  Cache->ForeverPic = forever;
   strcpy (Cache->filename, Image->PicFileName);
 }
 
@@ -274,7 +282,28 @@ static int LookupInPicCache (PictInfo *Image, int frame)
   return 0;  
 }
 /*----------------------------------------------------------------------
- Free video card memory from this texture.
+ FreeGlTextureNoCache : Free video card memory from this texture.
+  ----------------------------------------------------------------------*/
+void FreeGlTextureNoCache (void *ImageDesc)
+{
+  PictInfo *Image;
+  
+  Image = (PictInfo *)ImageDesc;
+  
+  if (Image->TextureBind && 
+      glIsTexture (Image->TextureBind))
+    {      
+      glDeleteTextures (1,  &(Image->TextureBind));
+#ifdef _PCLDEBUG
+      g_print ("\n Image %s Freed", Image->PicFileName);      
+#endif /*_PCLDEBUG*/
+      Image->TextureBind = 0;
+      Image->RGBA = False;
+    }
+}
+/*----------------------------------------------------------------------
+ FreeGlTexture : Free amaya Picture cache 
+ and video card memory from this texture.
   ----------------------------------------------------------------------*/
 void FreeGlTexture (void *ImageDesc)
 {
@@ -282,11 +311,13 @@ void FreeGlTexture (void *ImageDesc)
   
   Image = (PictInfo *)ImageDesc;
   
-  if (glIsTexture (Image->TextureBind))
+  if (Image->TextureBind && 
+      glIsTexture (Image->TextureBind))
     {      
-      glDeleteTextures (1,  &(Image->TextureBind));     
-      FreeAPicCache (Image->TextureBind,
-		     ActiveFrame); 
+      if (FreeAPicCache (Image->TextureBind,
+			 ActiveFrame) == 0)
+	/*not found in cache, we free it manually.*/
+	glDeleteTextures (1,  &(Image->TextureBind));
 #ifdef _PCLDEBUG
       g_print ("\n Image %s Freed", Image->PicFileName);      
 #endif /*_PCLDEBUG*/
@@ -380,7 +411,7 @@ static void GL_MakeTextureSize(PictInfo *Image,
  GL_TextureBind : Put Texture in video card's Memory at
  a power of 2 size for height and width 
   ----------------------------------------------------------------------*/
-static void GL_TextureBind (PictInfo *Image)
+static void GL_TextureBind (PictInfo *Image, ThotBool IsPixmap)
 {  
 
   int       p2_w, p2_h;
@@ -391,7 +422,7 @@ static void GL_TextureBind (PictInfo *Image)
   if (!glIsTexture (Image->TextureBind) &&
       Image->PicWidth &&
       Image->PicHeight &&
-      Image->PicPixmap)
+      (Image->PicPixmap || !IsPixmap))
     {      
       /* Another way is to split texture in 256x256 
 	 pieces and render them on different quads
@@ -425,26 +456,37 @@ static void GL_TextureBind (PictInfo *Image)
       glTexEnvi( GL_TEXTURE_ENV, 
 		 GL_TEXTURE_ENV_MODE, 
 		 GL_MODULATE);
+      if (IsPixmap)
+	{
 #ifndef POWER2TEXSUBIMAGE
-      /* create a texture whose sizes are power of 2*/
-      glTexImage2D (GL_TEXTURE_2D, 0, Mode, 
-		    p2_w, p2_h, 0, Mode, 
-		    GL_UNSIGNED_BYTE, 
-		    NULL);
-      /* Map the texture wich isn't a power of two*/
-      glTexSubImage2D (GL_TEXTURE_2D, 0, 0, 0, 
-		       Image->PicWidth, Image->PicHeight, 
-		       Mode, GL_UNSIGNED_BYTE,
-		       (GLvoid *) Image->PicPixmap);    
-      if (Image->PicPixmap != PictureLogo)
-	TtaFreeMemory (Image->PicPixmap);
+	  /* create a texture whose sizes are power of 2*/
+	  glTexImage2D (GL_TEXTURE_2D, 0, Mode, 
+			p2_w, p2_h, 0, Mode, 
+			GL_UNSIGNED_BYTE, 
+			NULL);
+	  /* Map the texture wich isn't a power of two*/
+	  glTexSubImage2D (GL_TEXTURE_2D, 0, 0, 0, 
+			   Image->PicWidth, Image->PicHeight, 
+			   Mode, GL_UNSIGNED_BYTE,
+			   (GLvoid *) Image->PicPixmap);    
+	  if (Image->PicPixmap != PictureLogo)
+	    TtaFreeMemory (Image->PicPixmap);
 #else/*  POWER2TEXSUBIMAGE */
-      GL_MakeTextureSize (Image, p2_w, p2_h);
-      glTexImage2D (GL_TEXTURE_2D, 0, Mode, p2_w, p2_h,
-		    0, Mode, GL_UNSIGNED_BYTE,
-		    (GLvoid *) Image->PicPixmap);
-      TtaFreeMemory (Image->PicPixmap);
+	  GL_MakeTextureSize (Image, p2_w, p2_h);
+	  glTexImage2D (GL_TEXTURE_2D, 0, Mode, p2_w, p2_h,
+			0, Mode, GL_UNSIGNED_BYTE,
+			(GLvoid *) Image->PicPixmap);
+	  TtaFreeMemory (Image->PicPixmap);
 #endif /* POWER2TEXSUBIMAGE */ 
+	}
+      else
+	{
+	  /* create a texture whose sizes are power of 2*/
+	  glTexImage2D (GL_TEXTURE_2D, 0, Mode, 
+			p2_w, p2_h, 0, Mode, 
+			GL_UNSIGNED_BYTE, 
+			NULL);
+	}
       Image->PicPixmap = None;
       Image->TexCoordW = GL_w;
       Image->TexCoordH = GL_h;
@@ -1977,7 +2019,7 @@ void *PutTextureOnImageDesc (unsigned char *pattern, int width, int height)
   imageDesc->PicWArea = width;
   imageDesc->PicHArea = height;
   imageDesc->PicPixmap = pattern;   
-  GL_TextureBind (imageDesc);
+  GL_TextureBind (imageDesc, TRUE);
   return (imageDesc);  
 #endif /* _GL */
   return NULL;
@@ -2414,10 +2456,14 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
   else
     imageDesc->RGBA = TRUE;
 
-  GL_TextureBind (imageDesc);
+  GL_TextureBind (imageDesc, TRUE);
   /*frame or ActiveFrame*/
-  AddInPicCache (imageDesc, frame); 
-
+  if (strcmp (imageDesc->PicFileName, TtaStrdup (LostPicturePath)) == 0 ||
+	      strcasecmp ("AmayaSrcSyncIndex.gif", imageDesc->PicFileName) == 0)
+    AddInPicCache (imageDesc, frame, TRUE); 
+  else
+    AddInPicCache (imageDesc, frame, FALSE); 
+      
 #ifdef _NOSHARELIST
   /* For the Sync Image*/
   if (frame != ActiveFrame)
@@ -2440,20 +2486,34 @@ void *Group_shot (int x, int y, int width, int height, int frame, ThotBool is_rg
       imageDesc->PicYArea = 0;
       imageDesc->PicWArea = width;
       imageDesc->PicHArea = height; 
-      imageDesc->PicPixmap = TtaGetMemory (sizeof (unsigned char) * 
-					   width * height * 4);
       imageDesc->TextureBind = 0; 
-
+      imageDesc->PicPixmap = NULL;
       glFlush ();
       glFinish ();
-      glReadBuffer (GL_BACK);  
- 
-      glReadPixels (x, y, width, height, 
-		    GL_RGBA, 
-		    GL_UNSIGNED_BYTE, 
-		    imageDesc->PicPixmap);
+      glReadBuffer (GL_BACK);   
 
-      GL_TextureBind (imageDesc);
+      if (1 
+	  /* &&  */
+	  /* 	  glhard () */
+	  )
+	{
+	  GL_TextureBind (imageDesc, FALSE);
+	  glCopyTexSubImage2D (GL_TEXTURE_2D, 0, 0, 0,
+			       x,
+			       y,
+			       width,
+			       height);
+	}
+      else
+	{
+	  imageDesc->PicPixmap = TtaGetMemory (sizeof (unsigned char) * 
+					       width * height * 4);
+	  glReadPixels (x, y, width, height, 
+			GL_RGBA, 
+			GL_UNSIGNED_BYTE, 
+			imageDesc->PicPixmap);
+	  GL_TextureBind (imageDesc, TRUE);
+	}
       return imageDesc;
     }
   else

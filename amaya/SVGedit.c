@@ -773,7 +773,7 @@ static void UpdateWidthHeightAttribute (Element el, Document doc, int dim,
 	val = (float)dim / (float)width;
       else if (height != 0)
 	val = (float)dim / (float)height;
-      if (val != 0)
+      if (fabs (val) > 0.00001)
         UpdateTransformAttr (el, doc, "scale", val, horiz, FALSE);
     }
   else
