@@ -8,7 +8,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
-<body xml:lang="fr">
+<body>
 
 <table border="0" width="100%">
   <tbody>
@@ -17,8 +17,8 @@
         border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
       <td><p align="right"><a href="Manual.html.fr"><img alt="" border="0"
-        src="../Icons/up.gif" /></a> <a href="Selecting.html.fr"><img alt="next"
-        border="0" src="../Icons/right.gif" /></a></p>
+        src="../Icons/up.gif" /></a> <a href="Selecting.html.fr"><img
+        alt="next" border="0" src="../Icons/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -31,11 +31,11 @@
 de navigation. Lorsqu'il est utilisé comme navigateur, il se comporte comme
 beaucoup d'autres navigateurs du Web, excepté pour ce qui est d'<a
 href="#L311">activer les liens</a>. Lors d'une opération normale,
-<strong>Amaya</strong>  vous permet de naviguer et d´éditer  des documents
+<strong>Amaya</strong> vous permet de naviguer et d´éditer des documents
 simultanément, mais vous pouvez changer ce comportement standard pour chaque
-fenêtre de document  indépendamment. Le bouton <img src="../Icons/Editor.gif"
-alt="editor-mode" />  indique que la fenêtre est en mode éditeur: vous pouvez
-éditer le document courant et naviguer  dans cette fenêtre. En cliquant sur ce
+fenêtre de document indépendamment. Le bouton <img src="../Icons/Editor.gif"
+alt="editor-mode" /> indique que la fenêtre est en mode éditeur: vous pouvez
+éditer le document courant et naviguer dans cette fenêtre. En cliquant sur ce
 bouton, vous faites passer la fenêtre en mode navigation. Le bouton prend
 ainsi cette représentation <img src="../Icons/Browser.gif" alt="browser-mode"
 /> et vous pouvez seulement naviguer et remplir les formulaires. cette option
@@ -46,20 +46,20 @@ défaut pour Linux).</p>
 <h3><a name="Activating">Activer un lien</a></h3>
 
 <p>Les liens sont habituellement présentés en bleu (ou soulignés en noir et
-blanc). Comme  <strong>Amaya</strong> est un éditeur, par défaut, un simple
+blanc). Comme <strong>Amaya</strong> est un éditeur, par défaut, un simple
 clic déplacera seulement le point d'insertion. Ainsi, pour activer un lien,
-vous devrez effectuer un  <em>double clic</em> dessus. Ce comportement peut
+vous devrez effectuer un <em>double clic</em> dessus. Ce comportement peut
 être modifié ainsi que d'autres paramètres par l'intermédiaire du menu
 Spécial/Préférences/Générales. En modifiant "cliquer deux fois pour suivre un
 lien", vous pourrez naviguer de document en document à l'aide d'un
 simple-clic. Dans ce cas, vous ne pouvez pas mettre aisément le point
-d'insertion à l'intérieur des liens:  vous devez soit utiliser une sélection
+d'insertion à l'intérieur des liens: vous devez soit utiliser une sélection
 étendue soit déplacer le point d'insertion à l'intérieur des liens à l'aide
 des flèches. Il est également possible d'utiliser le clavier pour activer les
 liens, ainsi que les formulaires de contrôles. La commande au clavier est
 <strong>Alt-Return</strong> par défaut.</p>
 
-<p>Le document récupéré par cette opération  <em>remplace</em> normalement le
+<p>Le document récupéré par cette opération <em>remplace</em> normalement le
 document courant dans la même fenêtre et conserve le mode (éditeur ou
 navigateur). Cependant, si le document courant a été modifié et n'a pas encore
 été sauvegardé, une autre fenêtre sera créée pour le nouveau document, afin
@@ -67,20 +67,19 @@ d'éviter la perte des derniers changements.</p>
 
 <h3><a name="L515">Ancres cibles</a></h3>
 
-<p>Certaines parties du texte  peuvent être affichées avec une icône en forme
+<p>Certaines parties du texte peuvent être affichées avec une icône en forme
 de cible<a name="target"> <img src="../Icons/target.gif" alt=" target "
 /></a>. Ces icônes ne font pas partie du document et peuvent donc être soit
-visualisées soit cachées juste en modifiant  le statut  <strong>Montrer les
+visualisées soit cachées juste en modifiant le statut <strong>Montrer les
 cibles</strong> de la fenêtre courante, qui est une option du menu
 <strong>Vues</strong>.</p>
 
-<p>Ces icônes sont associées aux  <em>éléments cibles</em>, i.e. éléments avec
+<p>Ces icônes sont associées aux <em>éléments cibles</em>, i.e. éléments avec
 un attribut <code>ID</code> , ou aux <em>ancres cibles</em>, i.e. ancres avec
-un attribut  <code>name</code>. Elles identifient les cibles possibles pour
-les liens. Ces icônes sont destinées à rendre la création de liens plus
-facile. En effet, le fait de pouvoir reconnaître rapidement la cible possible
-d'un lien, permet de <a href="Links.html.fr#L245">créer des liens</a> plus
-vite.</p>
+un attribut <code>name</code>. Elles identifient les cibles possibles pour les
+liens. Ces icônes sont destinées à rendre la création de liens plus facile. En
+effet, le fait de pouvoir reconnaître rapidement la cible possible d'un lien,
+permet de <a href="Links.html.fr#L245">créer des liens</a> plus vite.</p>
 
 <h3><a name="Opening">Ouverture de documents</a></h3>
 
@@ -132,13 +131,13 @@ chargées:</p>
 <p>Les documents peuvent être rechargés en utilisant l'option
 <strong>Recharger le document</strong> du menu <strong>Fichier</strong>, le
 raccourci clavier (Alt-R par défaut) ou le bouton <img
-src="../Icons/Reload.png" alt="reload" />  de la barre des boutons.</p>
+src="../Icons/Reload.png" alt="reload" /> de la barre des boutons.</p>
 
 <h3><a name="Keyboard">Contrôle clavier</a></h3>
 
 <p>Amaya fournit un contrôle clavier pour de nombreuses fonctions. Les
 commandes clavier par défaut sont fournies à leurs places appropriées dans la
-documentation. La section d'aide sur  <a href="Configure.html.fr">Configurer
+documentation. La section d'aide sur <a href="Configure.html.fr">Configurer
 Amaya</a> décrit comment changer les valeurs par défaut, et les raccourcis
 clavier sont affichés à côté des entrées auxquelles ils sont associés.</p>
 </div>

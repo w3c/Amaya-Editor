@@ -3,7 +3,7 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>Editing Attributes</title>
+  <title>Editer des Attributs</title>
   <meta name="GENERATOR" content="amaya V3.2.1" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
@@ -17,9 +17,9 @@
         border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
       <td><p align="right"><a href="StyleSheets.html.fr"><img alt="previous"
-        border="0" src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img
-        alt="top" border="0" src="../Icons/up.gif" /></a> <a
-        href="SpellChecking.html.fr"><img alt="next" border="0"
+        border="0" src="../Icons/left.gif" /></a> <a
+        href="Manual.html.fr"><img alt="top" border="0" src="../Icons/up.gif"
+        /></a> <a href="SpellChecking.html.fr"><img alt="next" border="0"
         src="../Icons/right.gif" /></a></p>
       </td>
     </tr>
@@ -38,7 +38,7 @@
 <h3><a name="L1073">Editer des attributs par le biais du menu
 Attributs</a></h3>
 
-<p>Le menu  <strong>Attributs </strong> donne une liste de tous les attributs
+<p>Le menu <strong>Attributs </strong> donne une liste de tous les attributs
 qui peuvent être associés à l'élément sélectionné. Il peut être utilisé pour
 créer un attribut, pour changer la valeur d'un attribut existant ou pour
 effacer un attribut.</p>
@@ -46,10 +46,10 @@ effacer un attribut.</p>
 <p>Pour éditer un attribut, sélectionnez d'abord l'élément approprié. Vous
 devez sélectionner l'élément entier et pas seulement un caractère à
 l'intérieur de l'élément. Pour cela, utilisez <a
-href="Selecting.html.fr#Selecting1"> la touche ESC (sur les stations Unix) ou la
-touche F2  (sur  les stations Windows)</a> . Quand l'élément a été
-sélectionné, choisissez dans le menu  <strong>Attributs </strong>l'attribut à
-éditer.  <strong>Amaya</strong> agit alors en fonction de  l'attribut
+href="Selecting.html.fr#Selecting1"> la touche ESC (sur les stations Unix) ou
+la touche F2 (sur les stations Windows)</a> . Quand l'élément a été
+sélectionné, choisissez dans le menu <strong>Attributs </strong>l'attribut à
+éditer. <strong>Amaya</strong> agit alors en fonction de l'attribut
 choisi:</p>
 <ul>
   <li>Si c'est un attribut bouléen ( comme <code>ismap </code> pour une image)
@@ -68,11 +68,11 @@ choisi:</p>
         <strong>Delete</strong>.</li>
     </ul>
   </li>
-  <li>Si c'est un attribut avec une valeur libre (comme  <code>href</code>
-    pour une ancre), une boîte de dialogue apparaît. Dans cette boîte de
-    dialogue, vous pouvez éditer la valeur de l'attribut. Achevez la commande
-    avec le bouton  <strong>Application.</strong> Pour supprimer l'attribut,
-    cliquez sur le bouton <strong>Delete</strong>.</li>
+  <li>Si c'est un attribut avec une valeur libre (comme <code>href</code> pour
+    une ancre), une boîte de dialogue apparaît. Dans cette boîte de dialogue,
+    vous pouvez éditer la valeur de l'attribut. Achevez la commande avec le
+    bouton <strong>Application.</strong> Pour supprimer l'attribut, cliquez
+    sur le bouton <strong>Delete</strong>.</li>
 </ul>
 
 <h3><a name="Copying">Copier des attributs</a></h3>
@@ -84,20 +84,20 @@ vous voulez copier. Sélectionnez l'entrée de l'attribut approprié dans le menu
 Attributs. Puis sélectionnez le nouvel élément auquel vous voulez associer
 l'attribut en cours et cliquez sur le bouton <strong>Application.</strong></p>
 
-<h3><a name="Editing">Editer des attributs dans la  Vue structure</a></h3>
+<h3><a name="Editing">Editer des attributs dans la Vue structure</a></h3>
 
 <p>Tous les attributs sont affichés dans la Vue structure. Les attributs dont
 la valeur peut être choisie librement sont affichés en noir et vous pouvez
 éditer leur valeur comme n'importe quelle autre chaîne de caractères. Quand la
 valeur de l'attribut est affichée en bleu, vous pouvez seulement la changer à
-l'aide du menu  <strong>Attributs</strong>. Ceci assure que seules des valeurs
-correctes soient choisies. </p>
+l'aide du menu <strong>Attributs</strong>. Ceci assure que seules des valeurs
+correctes soient choisies.</p>
 </div>
 
 <p align="right"><a href="StyleSheets.html.fr"><img alt="previous" border="0"
-src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img alt="top" border="0"
-src="../Icons/up.gif" /></a> <a href="SpellChecking.html.fr"><img alt="next"
-border="0" src="../Icons/right.gif" /></a></p>
+src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img alt="top"
+border="0" src="../Icons/up.gif" /></a> <a href="SpellChecking.html.fr"><img
+alt="next" border="0" src="../Icons/right.gif" /></a></p>
 <hr />
 </body>
 </html>
