@@ -626,6 +626,10 @@ int CharacterWidth (int c, ThotFont font)
 	l = (l + 3) / 4;
 #endif  /* _MOTIF */
 
+#ifdef _WX
+    /* TODO : a faire si on desir porter la version non opengl de wxwindows */
+#endif /* _WX */
+
 #ifndef _WINGUI
       if (c == 244)
 	{
@@ -747,6 +751,10 @@ int CharacterHeight (int c, ThotFont font)
     return xc->ascent + xc->descent;
 #endif /* #ifdef _MOTIF */
 
+#ifdef _WX
+    /* TODO : a faire si on desir porter la version non opengl de wxwindows */
+#endif /* _WX */
+
 #endif /*_GL*/
   return l;
 }
@@ -832,7 +840,11 @@ int CharacterAscent (int c, ThotFont font)
     }
   return (ascent);
 #endif /* #if defined(_GTK) || defined(_MOTIF) */
-  
+
+#ifdef _WX
+    /* TODO : a faire si on desir porter la version non opengl de wxwindows */
+#endif /* _WX */
+
 #endif /*_GL*/
 
 #ifdef _NOGUI
@@ -2482,6 +2494,7 @@ void InitDialogueFonts (char *name)
 #endif /* _WINGUI */
     
 #if defined(_GTK) || defined(_MOTIF) || defined(_WX)
+  /* WX TODO : ecrire le code de LoadFont() pour charger une wxFont utilisable dans les dialogues */
   DialogFont =  ReadFont (script, 2, 0, index, UnRelative);
   if (DialogFont == NULL)
     {

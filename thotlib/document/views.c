@@ -528,9 +528,10 @@ int CreateAbstractImage (PtrDocument pDoc, int v, PtrSSchema pSS,
    X, Y, width, height: position et dimensions de la	
    		     fenetre en mm.					
   ----------------------------------------------------------------------*/
-void OpenCreatedView (PtrDocument pDoc, int view, int X, int Y,
-		      int width, int height,
-		      ThotBool withMenu, ThotBool withButton)
+void OpenCreatedView (PtrDocument pDoc, int view,
+                      int X, int Y, int width, int height,
+		      ThotBool withMenu, ThotBool withButton,
+		      int window_id, int page_id, int page_position)
 {
   PtrSSchema          pSS;
   int                 volume = 0;
@@ -547,16 +548,19 @@ void OpenCreatedView (PtrDocument pDoc, int view, int X, int Y,
       pSS = pDoc->DocSSchema;
 
 #ifdef _WX
+      /* the new document needs a new frame */
       int doc_id = IdentDocument(pDoc);
       frame = TtaMakeFrame( pSS->SsName,
 	                    schView,
 			    doc_id,
 			    pDoc->DocDName,
 			    width, height, &volume );
+
+      /* the new document need to be attached to a page */      
       TtaAttachFrame( frame,
-		      TtaGetWindowId( doc_id ),
-		      TtaGetPageId( doc_id ),
-		      schView > 1 ? 2 : 1 /* TODO: 1=up 2=down ajouter la vue en haut ou en bas, au choix de l'utilisateur */ );
+		      window_id,
+		      page_id,
+		      page_position );
 #endif /* _WX */
       
 #if defined(_MOTIF) || defined(_GTK) || defined(_WINGUI)
@@ -685,7 +689,19 @@ int OpenViewByName (PtrDocument pDoc, Name viewName, int X, int Y,
 	     if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
 	        {
 		ret = CreateAbstractImage (pDoc, view, pSS, 1, FALSE, NULL);
-		OpenCreatedView (pDoc, ret, X, Y, width, height, TRUE, TRUE);
+
+                /* look for the current windows, current page, and current page position (top/bottom)*/
+		int doc_id = IdentDocument(pDoc);
+		int schView = -1; /* pDoc->DocView[view - 1].DvPSchemaView;*/
+      
+		int window_id = TtaGetDocumentWindowId( doc_id, schView );
+		int page_id;
+		int page_position;
+		TtaGetDocumentPageId( doc_id, schView, &page_id, &page_position );
+		
+		OpenCreatedView (pDoc, ret, X, Y, width, height, TRUE, TRUE,
+                                 window_id, page_id, page_position);
+		
 		notifyDoc.event = TteViewOpen;
 		notifyDoc.document = (Document) IdentDocument (pDoc);
 		notifyDoc.view = ret;
@@ -728,7 +744,19 @@ void OpenViewByMenu (PtrDocument pDoc, int menuItem, PtrElement subTree,
 	 view = CreateAbstractImage (pDoc, AllViews[theView - 1].VdView,
 				     AllViews[theView - 1].VdSSchema,
 				     selectedView, FALSE, subTree);
-	 OpenCreatedView (pDoc, view, X, Y, width, height, TRUE, TRUE);
+
+          /* look for the current windows, current page, and current page position (top/bottom)*/
+	  int doc_id = IdentDocument(pDoc);
+	  int schView = -1; /* pDoc->DocView[view - 1].DvPSchemaView;*/
+
+	  int window_id = TtaGetDocumentWindowId( doc_id, schView );
+	  int page_id;
+	  int page_position;
+	  TtaGetDocumentPageId( doc_id, schView, &page_id, &page_position );
+	
+          OpenCreatedView (pDoc, view, X, Y, width, height, TRUE, TRUE,
+                           window_id, page_id, page_position);
+	 
 	 if (viewHasBeenOpen)
 	    {
 	    notifyDoc.event = TteViewOpen;

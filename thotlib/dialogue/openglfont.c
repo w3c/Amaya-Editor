@@ -76,6 +76,9 @@ static GL_font* FontAlreadyLoaded (const char *font_filename, int size)
       if (FontTab[i].ref > 0 && size == FontTab[i].size &&
 	  strcasecmp (font_filename, FontTab[i].name) == 0)			
 	{
+#ifdef _TRACE_GLFONT
+	  printf( "%s %s %d\n", "FontAlreadyLoaded", font_filename, size);
+#endif /* _TRACE_GLFONT */
 	  FontTab[i].ref++;
 	  return FontTab[i].font;
 	}
@@ -124,6 +127,10 @@ static void FontCache (GL_font *font, const char *font_filename, int size)
   FontTab[i].name = (char *)TtaGetMemory (strlen(font_filename) + 1);
   strcpy (FontTab[i].name, font_filename);
   FontTab[i].ref = 1;
+
+#ifdef _TRACE_GLFONT
+  printf( "%s %s %d : Cache_index=%d\n", "FontCache", font_filename, size, i );
+#endif /* _TRACE_GLFONT */
 }
 
 /*----------------------------------------------------------------------
@@ -158,7 +165,10 @@ static void FreeFontEntry (GL_font* font)
     return;
   i = font->Cache_index;
   if (FontTab[i].ref == 1)
-    {			
+    {
+#ifdef _TRACE_GLFONT
+      printf( "%s %s %d : Cache_index=%d\n", "FreeFontEntry", FontTab[i].name, FontTab[i].size, i );
+#endif /* _TRACE_GLFONT */
       FontClose (FontTab[i].font);
       TtaFreeMemory (FontTab[i].name);
       FontTab[i].name = NULL;
@@ -329,6 +339,11 @@ static GL_font *FontOpen (const char* fontname)
       TtaFreeMemory (font);
       return NULL;
     }
+
+#ifdef _TRACE_GLFONT
+  printf( "%s %s\n", "FontOpen", fontname);
+#endif /* _TRACE_GLFONT */
+
   return font; 
 }
 
@@ -835,6 +850,9 @@ static int ceil_pow2_minus_1(unsigned int x)
 }
 #define p2(p) (is_pow2(p)?p:ceil_pow2_minus_1((unsigned int) p) + 1)
 
+/* a unique identifier is used to bind font texture into opengl memory
+ * it's not possible to reuse the same fontbind for other textures because 
+ * a texture is a word and there is not a lot of word repetition */
 static int FontBind;
 
 /*----------------------------------------------------------------------
@@ -844,10 +862,13 @@ void SetTextureScale (ThotBool Scaled)
   if (GL_NotInFeedbackMode () && !GL_TransText ())
     {
       glEnable (GL_TEXTURE_2D);
-
+      
+      /* get a new identifier for the following font texture */
       glGenTextures (1, (GLuint*)&(FontBind));
+      /* set the allocated texture id to the current used texture (setup opengl state machine to use this texture) */
       glBindTexture (GL_TEXTURE_2D, 
 		     FontBind);
+
       glTexParameteri (GL_TEXTURE_2D,
 		       GL_TEXTURE_MIN_FILTER,
 		       GL_NEAREST);
@@ -889,7 +910,7 @@ static void GL_TextureInit (unsigned char *Image,   int width, int height)
 {
   /* We give te texture to opengl Pipeline system */
   glTexImage2D (GL_TEXTURE_2D, 0, GL_ALPHA, width, height, 0,
-		GL_ALPHA, GL_UNSIGNED_BYTE, (GLvoid *) Image);
+		GL_ALPHA, GL_UNSIGNED_BYTE,(GLvoid *) Image);
 }
 
  /*----------------------------------------------------------------------

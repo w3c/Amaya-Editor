@@ -839,25 +839,6 @@ typedef struct _DocumentDescr
   PtrReferredDescr DocReferredEl; /* pointer on the fake descriptor, beginning
 				     of the string of descriptors of elements
 				     referenced in the document */
-#ifdef _WX
-  int             DocWindowId; /* this is the id which identify the 
-				  document window into WindowsTable array
-				  ! a window can contains several documents :
-				       + the source
-				       + the formatted view 
-				       + ...				      
-			       */
-  int             DocPageId;   /* this is the id which identify the 
-				  document page into a window
-				  ! a window can contains several pages :
-				       + a page contains one document for the user
-				       + a page can contains several documents for the developper
-				  ! to each page is corresponding several documents :
-				       + the source
-				       + the formatted view 
-				       + ...					       
-			       */  
-#endif /* _WX */
   
   DocViewDescr    DocView[MAX_VIEW_DOC]; /* correspondence between the document
 				     views and those defined in the present.

@@ -1833,10 +1833,24 @@ void TtaRaiseView (Document document, View view)
     {
       w = FrameTable[frame_id].WdFrame;
 #ifdef _WX
+      /* don't remember the last configuration */
+      /* we have document and view so it's possibe to know the configuration */
+      PtrDocument pDoc    = LoadedDocument[document - 1];
+      int         schView = pDoc->DocView[view - 1].DvPSchemaView;
+      int window_id;
+      int page_id;
+      int page_position;
+      window_id = TtaGetDocumentWindowId( document, schView );
+      TtaGetDocumentPageId( document, schView, &page_id, &page_position );
+      
+      /* TODO: the page position should depends of the current active view */
+      if (page_position == 0)
+	page_position = 2;
+      
       TtaAttachFrame( frame_id,
-		      TtaGetWindowId( document ),
-		      TtaGetPageId( document ),
-		      view > 1 ? 2 : 1 /* TODO: 1=up 2=down ajouter la vue en haut ou en bas, au choix de l'utilisateur */ );
+		      window_id,
+		      page_id,
+		      page_position );
 #endif /* _WX */
       
 #ifdef _MOTIF

@@ -87,6 +87,7 @@ public:
   
   void SetPageId( int page_id );
   int GetPageId();
+  void RaisePage();
 
   AmayaFrame * GetFrame( int frame_position ) const;
   int GetFramePosition( const AmayaFrame * p_frame ) const;
@@ -96,7 +97,8 @@ public:
   void OnSplitterPosChanged( wxSplitterEvent& event );
   void OnSplitterDClick( wxSplitterEvent& event );
   void OnSplitterUnsplit( wxSplitterEvent& event );
-  
+  void OnSplitButton( wxCommandEvent& event );
+
   void OnSize( wxSizeEvent& event );
   void OnClose( wxCloseEvent& event );
   void OnPaint( wxPaintEvent& event );
@@ -106,8 +108,10 @@ public:
 
  protected:
   DECLARE_EVENT_TABLE()
-
+  
+  wxBoxSizer *       m_pSizerTop;
   wxSplitterWindow * m_pSplitterWindow;
+  wxBitmapButton *   m_pSplitButton; // button used to quickly split the frame
   wxPanel *          m_DummyPanel;
   AmayaFrame *       m_pTopFrame;
   AmayaFrame *       m_pBottomFrame;
@@ -119,6 +123,11 @@ public:
   int                m_PageId;
   bool               m_IsClosed;
   int                m_ActiveFrame; // 1 first frame / 2 second frame
+
+  // these 2 atributes are used to remember the type of views on each frames
+  wxString           m_FirstViewType;
+  wxString           m_SecondViewType;
+
 //  bool               m_IsSelected;
 };
 

@@ -68,6 +68,7 @@
 #include "unstructlocate_f.h"
 #include "views_f.h"
 #include "viewapi_f.h"
+#include "appdialogue_wx_f.h"
 
 static char           nameBuffer[MAX_NAME_LENGTH];
 
@@ -87,8 +88,10 @@ static char           nameBuffer[MAX_NAME_LENGTH];
   Return value:
   the view opened or 0 if the view cannot be opened.
   ----------------------------------------------------------------------*/
-View TtaOpenMainView (Document document, int x, int y, int w, int h,
-		      ThotBool withMenu, ThotBool withButton)
+View TtaOpenMainView ( Document document,
+                       int x, int y, int w, int h,
+		       ThotBool withMenu, ThotBool withButton,
+		       int window_id, int page_id, int page_position )
 {
   PtrDocument         pDoc;
   PtrPSchema          pPS;
@@ -118,7 +121,8 @@ View TtaOpenMainView (Document document, int x, int y, int w, int h,
 		AddLastPageBreak (pDoc->DocDocElement, 1, pDoc, FALSE);
 	      nView = CreateAbstractImage (pDoc, 1, pDoc->DocSSchema, 1,
 					   TRUE, NULL);
-	      OpenCreatedView (pDoc, nView, x, y, w, h, withMenu, withButton);
+	      OpenCreatedView (pDoc, nView, x, y, w, h, withMenu, withButton,
+		               window_id, page_id, page_position);
 	      view = nView;
 	    }
      }
@@ -141,8 +145,9 @@ View TtaOpenMainView (Document document, int x, int y, int w, int h,
    Return value:
    the view opened or 0 if the view cannot be opened.
   ----------------------------------------------------------------------*/
-static View OpenView (Document document, char *viewName, int x, int y,
-		      int w, int h, Element subtree)
+static View OpenView (Document document, char *viewName,
+                      int x, int y, int w, int h,
+		      Element subtree)
 {
   int                 nView;
   int                 nbViews;
@@ -202,7 +207,18 @@ static View OpenView (Document document, char *viewName, int x, int y,
 	      {
 		if (viewHasBeenOpen)
 		  {
-		    OpenCreatedView (pDoc, nView, x, y, w, h, TRUE, TRUE);
+                    /* look for the current windows, current page, and current page position (top/bottom)*/
+		    int schView = -1; /*pDoc->DocView[view - 1].DvPSchemaView;*/
+		    int window_id = TtaGetDocumentWindowId( document, -1 );
+		    int page_id;
+		    int page_position;
+		    TtaGetDocumentPageId( document, -1, &page_id, &page_position );
+		    
+		    /* force to see the view in the second frame */
+		    page_position = 2;
+
+		    OpenCreatedView (pDoc, nView, x, y, w, h, TRUE, TRUE,
+                                     window_id, page_id, page_position);
 		    view = nView;
 		  }
 	      }
@@ -731,131 +747,6 @@ View TtaGetViewFromName (Document document, char *viewName)
    return view;
 }
 
-/*----------------------------------------------------------------------
-   TtaGetWindowId
-
-   Returns the window id to which that document belongs.
-   Parameter:
-     + document
-   Return values:
-     + int window_id : the document window id
-  ----------------------------------------------------------------------*/
-int TtaGetWindowId( Document document )
-{
-  int window_id = -1;
-#ifdef _WX  
-  PtrDocument pDoc;
-  
-  if (document < 1 || document > MAX_DOCUMENTS)
-      TtaError (ERR_invalid_document_parameter);
-   else if (LoadedDocument[document - 1] == NULL)
-      TtaError (ERR_invalid_document_parameter);
-   else
-     {
-       /* parameter document is ok */
-       pDoc = LoadedDocument[document - 1];
-       
-       /* return the corresponding window id */
-       window_id = pDoc->DocWindowId;
-     }
-#endif /* _WX */
-  return window_id;
-}
-
-/*----------------------------------------------------------------------
-   TtaSetWindowId
-
-   Set the document window id (the window is the document container).
-   Parameter:
-     + document
-     + window_id
-   Return values:
-     + nothing
-  ----------------------------------------------------------------------*/
-void TtaSetWindowId( Document document, int window_id )
-{
-#ifdef _WX  
-  PtrDocument pDoc;
-  
-  if (document < 1 || document > MAX_DOCUMENTS)
-      TtaError (ERR_invalid_document_parameter);
-   else if (LoadedDocument[document - 1] == NULL)
-      TtaError (ERR_invalid_document_parameter);
-   else
-     {
-       /* parameter document is ok */
-       pDoc = LoadedDocument[document - 1];
-       
-       /* set the corresponding window id */
-       pDoc->DocWindowId = window_id;
-     }
-#else
-   return;
-#endif /* _WX */
-}
-
-/*----------------------------------------------------------------------
-   TtaGetPageId
-
-   Returns the page id to which that document belongs.
-   Parameter:
-     + document
-   Return values:
-     + int page_id : the document page id
-  ----------------------------------------------------------------------*/
-int TtaGetPageId( Document document )
-{
-  int page_id = -1;
-#ifdef _WX  
-  PtrDocument pDoc;
-  
-  if (document < 1 || document > MAX_DOCUMENTS)
-      TtaError (ERR_invalid_document_parameter);
-   else if (LoadedDocument[document - 1] == NULL)
-      TtaError (ERR_invalid_document_parameter);
-   else
-     {
-       /* parameter document is ok */
-       pDoc = LoadedDocument[document - 1];
-       
-       /* return the corresponding page id */
-       page_id = pDoc->DocPageId;
-     }
-#endif /* _WX */
-  return page_id;
-}
-
-/*----------------------------------------------------------------------
-   TtaSetPageId
-
-   Set the document page id
-   Parameter:
-     + document
-     + page_id
-   Return values:
-     + nothing
-  ----------------------------------------------------------------------*/
-void TtaSetPageId( Document document, int page_id )
-{
-#ifdef _WX  
-  PtrDocument pDoc;
-  
-  if (document < 1 || document > MAX_DOCUMENTS)
-      TtaError (ERR_invalid_document_parameter);
-   else if (LoadedDocument[document - 1] == NULL)
-      TtaError (ERR_invalid_document_parameter);
-   else
-     {
-       /* parameter document is ok */
-       pDoc = LoadedDocument[document - 1];
-       
-       /* set the corresponding page id */
-       pDoc->DocPageId = page_id;
-     }
-#else
-   return;
-#endif /* _WX */
-}
 
 /*----------------------------------------------------------------------
    TtaGiveActiveView

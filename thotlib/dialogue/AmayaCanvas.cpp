@@ -80,16 +80,16 @@ int AmayaCanvas::AttrList[] =
  * Description:  construct the canvas : its a wxGLCanvas if opengl is used or a wxPanel if not
  *--------------------------------------------------------------------------------------
  */
-AmayaCanvas::AmayaCanvas( AmayaFrame * p_parent_window,
-			  AmayaCanvas * p_shared_canvas )
+AmayaCanvas::AmayaCanvas( AmayaFrame *  p_parent_window,
+			  wxGLContext * p_shared_context )
 #ifdef _GL
-  : wxGLCanvas( wxDynamicCast(p_parent_window, wxWindow),
-		wxDynamicCast(p_shared_canvas, wxGLCanvas),
+  : wxGLCanvas( p_parent_window,
+		p_shared_context,
 		-1,
 		wxDefaultPosition, wxDefaultSize, 0, _T("AmayaCanvas"),
 		AttrList ),
 #else // #ifdef _GL  
-  : wxPanel( wxDynamicCast(p_parent_window,wxWindow) ),
+  : wxPanel( p_parent_window ),
 #endif // #ifdef _GL
   m_pAmayaFrame( p_parent_window ),
   m_Init( false )
@@ -180,8 +180,8 @@ void AmayaCanvas::OnSize( wxSizeEvent& event )
 	new_height );
 
   // resize the frame sizer to take into account scrollbar show/hide
-  m_pAmayaFrame->Layout();
-  Layout();
+  //  m_pAmayaFrame->Layout();
+  //  Layout();
 
   //  forward the event to parents
   event.Skip();
@@ -596,20 +596,6 @@ void AmayaCanvas::Init()
   // simulate a size event to refresh the canvas 
   wxSizeEvent event( GetSize() );
   wxPostEvent(this, event );
-  /*
-  // followed by a paint event
-  wxPaintEvent event2;
-  wxPostEvent(this, event2 );
-  // simulate a size event to refresh the canvas 
-  wxSizeEvent event3( GetSize() );
-  wxPostEvent(this, event3 );
-  // followed by a paint event
-  wxPaintEvent event4;
-  wxPostEvent(this, event4 );
-  // simulate a size event to refresh the canvas 
-  wxSizeEvent event5( GetSize() );
-  wxPostEvent(this, event5 );
-  */
 }
 
 /*
@@ -617,7 +603,7 @@ void AmayaCanvas::Init()
  *       Class:  AmayaCanvas
  *      Method:  IsParentPageActive
  * Description:  test if the page which contains this canvas is selected or not
- *               maybe it needs to be optimised : remove some test ...
+ *               selected = visible + not being close
  *--------------------------------------------------------------------------------------
  */
 bool AmayaCanvas::IsParentPageActive()
@@ -629,7 +615,7 @@ bool AmayaCanvas::IsParentPageActive()
   if (!p_page)
     return FALSE;
 
-  return p_page->IsSelected();
+  return (p_page->IsSelected() && !p_page->IsClosed());
 }
 
 /*----------------------------------------------------------------------

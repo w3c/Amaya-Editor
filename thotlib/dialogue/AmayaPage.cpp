@@ -66,15 +66,35 @@ AmayaPage::AmayaPage( wxWindow * p_parent_window )
      ,m_ActiveFrame(1) // by default, frame 1 is selected
 {
   // Insert a forground sizer
-  wxBoxSizer * p_SizerTop = new wxBoxSizer ( wxVERTICAL );
-  SetSizer( p_SizerTop );
+  m_pSizerTop = new wxBoxSizer ( wxVERTICAL );
+  SetSizer( m_pSizerTop );
  
   // Insert a windows splitter 
   m_pSplitterWindow = new wxSplitterWindow( this, -1,
-                      wxDefaultPosition, wxDefaultSize,
-					    /*wxSP_FULLSASH |*/ wxSP_3DSASH/* | wxSP_NOBORDER*/ /*| wxSP_PERMIT_UNSPLIT*/ );
-  p_SizerTop->Add( m_pSplitterWindow, 1, wxGROW, 0 );
- 
+					    wxDefaultPosition, wxDefaultSize,
+					    /*wxSP_FULLSASH |*/
+					    wxSP_3DSASH
+					    /* | wxSP_NOBORDER*/
+					    | wxSP_PERMIT_UNSPLIT );
+  m_pSizerTop->Add( m_pSplitterWindow, 1, wxGROW, 0 );
+
+
+  // Split button creation
+  // this button is used to quickly split the page 
+  wxString amaya_directory( TtaGetEnvString ("THOTDIR"), AmayaWindow::conv_ascii );
+  wxBitmap button_split_icon1( amaya_directory + _T("/resources/icons/split_black.xpm"), wxBITMAP_TYPE_XPM );
+  wxBitmap button_split_icon2( amaya_directory + _T("/resources/icons/split_red.xpm"), wxBITMAP_TYPE_XPM );
+  m_pSplitButton = new wxBitmapButton( this
+				       ,-1
+				       ,button_split_icon1
+				       ,wxDefaultPosition
+				       ,wxDefaultSize
+				       ,wxBU_AUTODRAW );
+  m_pSplitButton->SetBitmapFocus(button_split_icon2);
+
+  m_pSizerTop->Add( m_pSplitButton, 0, wxGROW, 0 );
+  m_pSizerTop->SetItemMinSize( m_pSplitButton,
+			      wxSize( m_pSplitButton->GetSize().GetWidth(), 10 ) );
   /// Insert to area : Top / bottom
   m_pTopFrame     = NULL;
   m_pBottomFrame  = NULL;
@@ -135,7 +155,10 @@ AmayaFrame * AmayaPage::AttachFrame( AmayaFrame * p_frame, int position )
     {
       if (!m_pSplitterWindow->IsSplit())
       	{
-      	  m_pSplitterWindow->SplitHorizontally( m_pTopFrame, m_pBottomFrame );
+	  // on passe ici qd on essaye de charger un nouveau document dans la meme fenetre
+	  // je ne sais pas si c necessaire de forcer le split
+	  // de toute facon si on le fait il faut verifier que le top et le bottom ne sont pas null
+	  // m_pSplitterWindow->SplitHorizontally( m_pTopFrame, m_pBottomFrame );
       	  AdjustSplitterPos();
       	}
       return NULL;
@@ -178,8 +201,16 @@ AmayaFrame * AmayaPage::AttachFrame( AmayaFrame * p_frame, int position )
     p_frame->SetPageTitle(p_frame->GetPageTitle());
   
   // update the window menubar with the current frame
-  if (p_frame && GetWindowParent())
+  if (p_frame && p_frame->IsActive() && GetWindowParent())
     GetWindowParent()->SetMenuBar( p_frame->GetMenuBar() );
+
+  if ( m_pTopFrame && m_pBottomFrame )
+    {
+      /* hide the split button */
+      m_pSizerTop->SetItemMinSize( m_pSplitButton,
+				   wxSize( m_pSplitButton->GetSize().GetWidth(), 0 ) );
+      m_pSizerTop->Layout();
+    }
 
   // return the old frame : needs to be manualy deleted ..
   return oldframe;
@@ -210,7 +241,6 @@ AmayaFrame * AmayaPage::DetachFrame( int position )
       pp_frame_container = &m_pBottomFrame;
       break;
     default:
-      wxASSERT_MSG(FALSE, _T("AmayaPage::DetachFrame -> Bad position"));
       return NULL;
       break;
     }
@@ -264,7 +294,42 @@ AmayaFrame * AmayaPage::DetachFrame( int position )
       SetActiveFrame( NULL );
     }
 
+  if ( !(m_pTopFrame && m_pBottomFrame) )
+    {
+      /* show again the split button */
+      m_pSizerTop->SetItemMinSize( m_pSplitButton,
+				   wxSize( m_pSplitButton->GetSize().GetWidth(), 10 ) );
+      m_pSizerTop->Layout();
+    }
+
   return oldframe;
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaPage
+ *      Method:  OnSplitButton
+ * Description:  this method is called when the button for quickly split is pushed
+ *--------------------------------------------------------------------------------------
+ */
+extern void ShowStructure (Document doc, View view);
+void AmayaPage::OnSplitButton( wxCommandEvent& event )
+{
+  if ( event.GetId() != m_pSplitButton->GetId() )
+    {
+      event.Skip();
+      return;
+    }
+
+  wxLogDebug( _T("AmayaPage::OnSplitButton") );
+  
+  /* TODO: montrer la meme vue que la premiere frame */
+  AmayaFrame * p_frame = GetFrame(1);
+  Document document = FrameTable[p_frame->GetFrameId()].FrDoc;
+  View view         = FrameTable[p_frame->GetFrameId()].FrView;
+  ShowStructure (document, view);
+  
+  event.Skip();
 }
 
 /*
@@ -277,7 +342,7 @@ AmayaFrame * AmayaPage::DetachFrame( int position )
  */
 void AmayaPage::OnSplitterPosChanged( wxSplitterEvent& event )
 {
-    wxLogDebug( _T("AmayaPage::OnSplitterPosChanged now = %d\n"), event.GetSashPosition() );
+    wxLogDebug( _T("AmayaPage::OnSplitterPosChanged now = %d"), event.GetSashPosition() );
 
     // calculate the new ratio (depending of window size)
     float new_slash_pos = event.GetSashPosition();
@@ -358,21 +423,9 @@ void AmayaPage::OnSize( wxSizeEvent& event )
   wxLogDebug( _T("AmayaPage::OnSize w=%d h=%d \n"),
 		event.GetSize().GetWidth(),
 		event.GetSize().GetHeight() );
-  /*
-  // force the splitter position (depending of window size)
-  float new_height = event.GetSize().GetHeight();
-  float new_width = event.GetSize().GetWidth();
-  float new_slash_pos = 0;
-  int split_mode = m_pSplitterWindow->GetSplitMode();
-  if ( split_mode == 1 ) // horizontally
-    new_slash_pos = m_SlashRatio * new_height;
-  else if ( split_mode == 2 ) // vertically
-    new_slash_pos = m_SlashRatio * new_width;
-  if ( new_slash_pos > 0 && (GetFrame(1) || GetFrame(2)) )
-    m_pSplitterWindow->SetSashPosition( (int)new_slash_pos );
-  */
 
-  AdjustSplitterPos( /*event.GetSize().GetHeight(), event.GetSize().GetWidth()*/ );
+  AdjustSplitterPos();
+
   event.Skip();
 }
 
@@ -444,12 +497,14 @@ void AmayaPage::OnClose(wxCloseEvent& event)
       frame_id     = m_pTopFrame->GetFrameId();
       //      DetachFrame(1);
       p_AmayaFrame->OnClose( event );
+      /*
       if ( FrameTable[frame_id].WdFrame != 0)
 	{
 	  // if the frame didnt die, just re-attach it
 	  AttachFrame(p_AmayaFrame, 1);
 	  m_IsClosed = FALSE;
 	}
+      */
     }
 
   // Kill bottom frame
@@ -459,12 +514,14 @@ void AmayaPage::OnClose(wxCloseEvent& event)
       frame_id     = m_pBottomFrame->GetFrameId();
       //      DetachFrame(2);
       p_AmayaFrame->OnClose( event );
+      /*
       if (FrameTable[frame_id].WdFrame != 0)
 	{
 	  // if the frame didnt die, just re-attach it
 	  AttachFrame(p_AmayaFrame, 2);
 	  m_IsClosed = FALSE;
 	}
+      */
     }
 
   // Reactivate the menu bar (nothing is done if the window is goind to die)
@@ -576,7 +633,7 @@ void AmayaPage::SetSelected( bool isSelected )
   {
     for ( int frame_pos = 1; frame_pos<=2; frame_pos++ )
       {
-	if (GetFrame(frame_pos))
+	if ( GetFrame(frame_pos) )
 	  {
 	    // post a size event to force frame refresh
 	    // to canvas
@@ -603,7 +660,7 @@ void AmayaPage::SetPageId( int page_id )
   m_pBottomFrame->SetPageId( page_id );*/
 
   // update the document's page id
-  int frame_id = 0;
+/*  int frame_id = 0;
   if (m_pTopFrame)
     {
       frame_id = m_pTopFrame->GetFrameId();
@@ -614,6 +671,7 @@ void AmayaPage::SetPageId( int page_id )
       frame_id = m_pBottomFrame->GetFrameId();
       TtaSetPageId( FrameTable[frame_id].FrDoc, page_id );
     }
+    */
 }
 int AmayaPage::GetPageId()
 {
@@ -693,6 +751,16 @@ AmayaFrame * AmayaPage::GetActiveFrame() const
   return GetFrame( m_ActiveFrame );
 }
 
+void AmayaPage::RaisePage()
+{
+  AmayaNotebook * p_notebook = GetNotebookParent();
+  if (p_notebook)
+    {
+      p_notebook->SetSelection(GetPageId());
+      SetSelected( TRUE );
+    }
+}
+
 /*----------------------------------------------------------------------
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type
@@ -705,6 +773,8 @@ BEGIN_EVENT_TABLE(AmayaPage, wxPanel)
   EVT_SIZE( 				AmayaPage::OnSize )
   EVT_CLOSE( 				AmayaPage::OnClose )
   //  EVT_PAINT(                            AmayaPage::OnPaint )  
+
+  EVT_BUTTON( -1,                       AmayaPage::OnSplitButton)
 END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */ 

@@ -30,6 +30,10 @@ extern int main (int argc, char** argv);
 
 bool AmayaApp::OnInit()
 {
+  // Required for images
+  wxImage::AddHandler(new wxGIFHandler);
+  wxImage::AddHandler(new wxPNGHandler);
+
   // for debug : the output is stderr
   delete wxLog::SetActiveTarget( new wxLogStderr );
   

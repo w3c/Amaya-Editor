@@ -4213,11 +4213,10 @@ void DestroyFrame (int frame)
   int                 action;
   int                 ref, i;
   int                 item;
-
 #ifdef _GL
   GL_DestroyFrame (frame);
 #endif /* _GL */
-
+  
   if (ThotLocalActions[T_stopinsert] != NULL)
     (*ThotLocalActions[T_stopinsert]) ();
   w = FrameTable[frame].WdFrame;
@@ -4250,6 +4249,7 @@ void DestroyFrame (int frame)
 	  ref += MAX_ITEM;
 	  i++;
 	}
+
       
 #ifdef _MOTIF
       XFlushOutput (0);
@@ -4264,8 +4264,6 @@ void DestroyFrame (int frame)
 
 #ifdef _WX
 	TtaDestroyFrame( frame );
-	//	TtaDetachFrame( frame );
-	//	wxDynamicCast(w, wxWindow)->Destroy();
 #endif /* _WX */
 
 #ifdef _WINGUI
@@ -4276,10 +4274,14 @@ void DestroyFrame (int frame)
 	  hAccel[frame] = NULL;
 	}
 #endif /* _WINGUI */
+
+      /* with WX, never realy delete the widgets */
+      /* keep it alive in order to reuse it for the next frame */
 #ifndef _WX      
       FrRef[frame] = 0;
-#endif /* #ifndef _WX */      
       FrameTable[frame].WdFrame = 0;
+#endif /* #ifndef _WX */      
+
       FrameTable[frame].WdStatus = NULL;
       /* Elimine les evenements ButtonRelease, DestroyNotify, FocusOut */
       ClearConcreteImage (frame);

@@ -2551,7 +2551,9 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
   Language	lang;
   ThotBool      isOpen, reinitialized, show;
 
-#ifdef _WX
+
+  /* specific to wxWidgets user interface */
+  /* ------------------------------------ */
    /* this is the window id identifying where the document should be shown 
     * this window_id is a document attribute and the corresponding
     * window widget has been allocated before this function call */
@@ -2559,7 +2561,10 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
   /* this is the page id identifying where the document should be shown
    * into a window (window_id), each page can contain one or more documents */
   int           page_id   = -1;
-#endif /* _WX */
+  /* this is the choosen position in the given page (top or bottom) */
+  int           page_position = 0;
+  /* ------------------------------------ */
+
     
 #ifdef _WINGUI
   Window_Curs = IDC_WINCURSOR;
@@ -2586,9 +2591,9 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
     {
 #ifdef _WX
        /* get the old document window */
-       window_id = TtaGetWindowId (doc);
+       window_id = TtaGetDocumentWindowId( doc, -1 );
        /* get the old document page id */
-       page_id   = TtaGetPageId (doc);
+       TtaGetDocumentPageId( doc, -1, &page_id, &page_position );
 #endif /* _WX */
       /* keep in memory if the closed document is in read-only mode */
       if (ReadOnlyDocument[doc])
@@ -2639,6 +2644,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 #ifdef _WX
        window_id = TtaMakeWindow();
        page_id   = TtaGetFreePageId( window_id );
+       page_position = 1;
 #endif /* _WX */
      }
    else
@@ -2647,8 +2653,10 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
        isOpen = FALSE;
        requested_doc = 0;
 #ifdef _WX
-       window_id = TtaGetWindowId( oldDoc );
+       /* get the old document window */
+       window_id = TtaGetDocumentWindowId( doc, -1 );
        page_id   = TtaGetFreePageId( window_id );
+       page_position = 1;
 #endif /* _WX */
      }
 
@@ -2735,13 +2743,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 					      bookmarks */
        else
 	 TtaSetNotificationMode (doc, 1);
-
-#ifdef _WX
-       /* the document needs to have a window parent and a page id
-	* (identified by window_id and page_id) */
-       TtaSetWindowId (doc, window_id);
-       TtaSetPageId (doc, page_id);
-#endif /* _WX */
        
 #ifndef _WX
        /* get the geometry of the main view */
@@ -2807,9 +2808,11 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
        if (docType == docLog ||
 	   (docType == docLibrary && method == CE_RELATIVE))
 	 /* without menu bar */
-	 mainView = TtaOpenMainView (doc, x, y, w, h, FALSE, TRUE);
+	 mainView = TtaOpenMainView (doc, x, y, w, h, FALSE, TRUE,
+	                             window_id, page_id, page_position);
        else
-	 mainView = TtaOpenMainView (doc, x, y, w, h, TRUE, TRUE);
+	 mainView = TtaOpenMainView (doc, x, y, w, h, TRUE, TRUE,
+	                             window_id, page_id, page_position);
        
        if (mainView == 0)
 	 {
@@ -4499,7 +4502,11 @@ void ShowSource (Document document, View view)
      /* open a window for the source code */
      sourceDoc = InitDocAndView (document,
                                  FALSE /* replaceOldDoc */,
-                                 TRUE /* inNewWindow */,
+#ifdef _WX
+                                 FALSE /* inNewWindow */,
+#else /* _WX */
+				 TRUE /* inNewWindow */,
+#endif /* _WX */
 	                         documentname, (DocumentType)docSource, document, FALSE,
 				 L_Other, (ClickEvent)CE_ABSOLUTE);   
 

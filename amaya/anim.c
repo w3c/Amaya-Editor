@@ -2708,7 +2708,8 @@ static void Build_timeline (Document basedoc, char* timelineName)
   dt[basedoc].timelineView = TtaOpenMainView (dt[basedoc].timelinedoc,
 					      x_timeline, y_timeline,
 					      w_timeline, h_timeline,
-					      FALSE, FALSE);
+					      FALSE, FALSE,
+					      0 /*oldDoc*/, FALSE /*replaceOldDoc*/, TRUE /*inNewWindow*/);
 
   if (dt[basedoc].timelineView)
     TtaChangeWindowTitle (dt[basedoc].timelinedoc, dt[basedoc].timelineView,

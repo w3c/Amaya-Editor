@@ -28,6 +28,7 @@
 #include "boxparams_f.h"
 #include "dialogapi_f.h"
 #include "callback_f.h"
+#include "appdialogue_wx_f.h"
 
 #include "AmayaWindow.h"
 #include "AmayaPanel.h"
@@ -85,7 +86,7 @@ AmayaWindow::AmayaWindow (  int            window_id
 
   // Create a sizer to layout the notebook in the panel
   wxBoxSizer * p_NotebookSizer             = new wxBoxSizer ( wxHORIZONTAL );
-  p_NotebookSizer->Add(p_SpecialNotebookSizer, 1, wxEXPAND | wxALL, 4);
+  p_NotebookSizer->Add(p_SpecialNotebookSizer, 1, wxEXPAND | wxALL, 0);
   p_NotebookPanel->SetSizer(p_NotebookSizer);
   p_NotebookPanel->Layout();
   
@@ -439,8 +440,11 @@ void AmayaWindow::ActivateMenuBar()
   if ( doc < 1 || doc > MAX_DOCUMENTS )
     return;
 
-  int window_id = TtaGetWindowId ( doc );
-  int page_id   = TtaGetPageId ( doc );
+  int window_id;
+  int page_id;
+  int page_position;
+  window_id = TtaGetDocumentWindowId( doc, view );
+  TtaGetDocumentPageId( doc, view, &page_id, &page_position );
 
   AmayaWindow * p_AmayaWindow = WindowsTable[window_id];
 

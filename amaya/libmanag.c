@@ -2424,7 +2424,8 @@ Document CreateNewSVGFileofSVGSelected (char *url)
       /* get the width and height before opening the svg file */
 
       SVGView = TtaOpenMainView (newSVGDoc, 0, 0, width_box - x_box,
-				 height_box - y_box, FALSE, TRUE);
+				 height_box - y_box, FALSE, TRUE, 
+				 0 /*oldDoc*/, FALSE /*replaceOldDoc*/, TRUE /*inNewWindow*/);
 
     }
 #endif /* _SVG */

@@ -10,6 +10,7 @@ class AmayaCanvas;
 class AmayaPage;
 class AmayaWindow;
 class AmayaContext;
+class wxGLContext;
 
 /*
  *  Description:  - AmayaFrame is contained by a AmayaPage
@@ -65,6 +66,7 @@ public:
   virtual ~AmayaFrame( );
 
   int GetFrameId();
+  void RaiseFrame();
 
   wxScrollBar * GetScrollbarH();
   wxScrollBar * GetScrollbarV();
@@ -103,10 +105,15 @@ public:
 
   void DestroyFrame();
 
+  AmayaCanvas * CreateDrawingArea();
+  void ReplaceDrawingArea( AmayaCanvas * p_new_canvas );
+
 #ifdef _GL
   void SetCurrent();
   void SwapBuffers();
 #endif // #ifdef _GL
+
+  void SetNewParent( wxWindow * p_new_parent );
 
   void OnScrollLineUp( wxScrollEvent& event );
   void OnScrollLineDown( wxScrollEvent& event );
@@ -132,6 +139,8 @@ protected:
   
   AmayaPage *     m_pPageParent;  
   AmayaCanvas *   m_pCanvas;
+
+  static wxGLContext * m_pSharedContext;
 
   //wxFlexGridSizer * m_pFlexSizer;
   wxBoxSizer * m_pHSizer;

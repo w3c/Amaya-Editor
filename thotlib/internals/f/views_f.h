@@ -32,7 +32,10 @@ extern void OpenCreatedView ( PtrDocument pDoc,
                               int width,
                               int height,
                               ThotBool withMenu,
-                              ThotBool withButton );
+                              ThotBool withButton,
+                              int window_id,
+                              int page_id,
+                              int page_position );
 extern int OpenViewByName ( PtrDocument pDoc,
                             Name viewName,
                             int X,
@@ -79,7 +82,10 @@ extern void OpenCreatedView ( PtrDocument pDoc,
                                 int width,
                                 int height,
                                 ThotBool withMenu,
-                                ThotBool withButton );
+                                ThotBool withButton,
+                                int window_id,
+                                int page_id,
+                                int page_position );
 extern int OpenViewByName ( PtrDocument pDoc,
                               Name viewName,
                               int X,

@@ -40,7 +40,38 @@ DisplayMode;
   the view opened or 0 if the view cannot be opened.
    ----------------------------------------------------------------------*/
 extern View TtaOpenMainView (Document document, int x, int y, int w, int h,
-			     ThotBool withMenu, ThotBool withButton);
+			     ThotBool withMenu, ThotBool withButton,
+			     int window_id, int page_id, int page_position);
+
+/*----------------------------------------------------------------------
+  TtaGetDocumentWindowId returns the current document window id
+  params:
+    + doc_id : the dcuemnt
+    + view the document view
+      (if view == -1, just the doc_id is checked )
+    (the view is needed because a document could have 2 view into 2 differents windows)
+  returns:
+    + int : the document window id
+    + -1 if nothing is found
+  ----------------------------------------------------------------------*/
+extern int TtaGetDocumentWindowId ( Document doc_id,
+                                    int view );
+
+/*----------------------------------------------------------------------
+  TtaGetDocumentPageId returns the current document+view page_id + page_position
+  params:
+    + doc_id : the docuemnt
+    + view the document view
+      (if view == -1, just the doc_id is checked )
+    (the view is needed because a document could have 2 view into 2 differents pages)
+  returns:
+    + int page_id : the document's view page id
+    + int page_position : the document's view page position
+  ----------------------------------------------------------------------*/
+extern void TtaGetDocumentPageId ( Document doc_id,
+                                   int view,
+                                   int * page_id,
+                                   int * page_position );
 
 /*----------------------------------------------------------------------
    TtaGetViewXYWH 
@@ -300,51 +331,6 @@ extern ThotBool TtaIsViewOpen (Document document, View view);
    the view. 0 if no view of that name is currently open for the document.
   ----------------------------------------------------------------------*/
 extern View TtaGetViewFromName (Document document, char *viewName);
-
-/*----------------------------------------------------------------------
-   TtaGetWindowId
-
-   Returns the window id to which that document belongs.
-   Parameter:
-     + document
-   Return values:
-     + int window_id : the document window id
-  ----------------------------------------------------------------------*/
-extern int TtaGetWindowId( Document document );
-
-/*----------------------------------------------------------------------
-   TtaSetWindowId
-
-   Set the document window id (the window is the document container).
-   Parameter:
-     + document
-   Return values:
-     + nothing
-  ----------------------------------------------------------------------*/
-extern void TtaSetWindowId( Document document, int window_id );
-
-/*----------------------------------------------------------------------
-   TtaGetPageId
-
-   Returns the page id to which that document belongs.
-   Parameter:
-     + document
-   Return values:
-     + int page_id : the document page id
-  ----------------------------------------------------------------------*/
-extern int TtaGetPageId( Document document );
-
-/*----------------------------------------------------------------------
-   TtaSetPageId
-
-   Set the document page id
-   Parameter:
-     + document
-     + page_id
-   Return values:
-     + nothing
-  ----------------------------------------------------------------------*/
-extern void TtaSetPageId( Document document, int page_id );
 
 /*----------------------------------------------------------------------
    Map and raise the corresponding window.                          

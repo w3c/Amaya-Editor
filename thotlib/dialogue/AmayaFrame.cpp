@@ -40,6 +40,11 @@
 #include "wx/log.h"
 
 
+
+// this is the shared context used to share display lists and textures id
+wxGLContext * AmayaFrame::m_pSharedContext = NULL;
+
+
 IMPLEMENT_DYNAMIC_CLASS(AmayaFrame, wxPanel)
 
 
@@ -65,34 +70,8 @@ AmayaFrame::AmayaFrame(
      ,m_VOldPosition( 0 )
      ,m_ToDestroy( FALSE )
 {
-  // Create the empty menu bar
-  m_pMenuBar =  new wxMenuBar( /*wxMB_DOCKABLE*/ );
-
   // Create the drawing area
-  m_pCanvas = NULL;
-#ifdef _GL
-  // If opengl is used then try to share the context
-#ifndef _NOSHARELIST
-  if (GetSharedContext () == -1)
-    {
-#endif /*_NOSHARELIST*/
-      m_pCanvas = new AmayaCanvas( this );
-#ifdef _NOSHARELIST
-      wxPrintf( _T("Warning: upgrade your Opengl implementation (ie: Mesa) to get group opacity!\n") );
-#else /*_NOSHARELIST*/
-      SetSharedContext( m_FrameId );
-    }
-  else
-    {
-      int shared_frame_id = GetSharedContext();
-      wxASSERT( FrameTable[shared_frame_id].WdFrame != 0 );
-      AmayaCanvas * p_shared_canvas = FrameTable[shared_frame_id].WdFrame->GetCanvas();
-      m_pCanvas = new AmayaCanvas( this, p_shared_canvas );
-    }
-#endif /*_NOSHARELIST*/
-#else /* _GL */
-  m_pCanvas = new AmayaCanvas( this );
-#endif /* _GL */
+  m_pCanvas = CreateDrawingArea();
 
   m_pScrollBarV = NULL; 
   m_pScrollBarH = NULL;
@@ -125,14 +104,73 @@ AmayaFrame::AmayaFrame(
 AmayaFrame::~AmayaFrame()
 {
   // notifie the page that this frame has die
-  if ( GetPageParent() )
-    GetPageParent()->DeletedFrame( this );
+  //  if ( GetPageParent() )
+  //    GetPageParent()->DeletedFrame( this );
 
   // destroy the menu bar
-  m_pMenuBar->Destroy();
+  if (m_pMenuBar) m_pMenuBar->Destroy();
   m_pMenuBar = NULL;
 
+  /* destroy the canvas (it should be automaticaly destroyed by 
+     wxwidgets but due to a strange behaviour, I must explicitly delete it)*/
+  m_pCanvas->Destroy();
   m_pCanvas = NULL;
+
+  // the FrameTable array must be freed because WdFrame field is
+  // used to know if the frame is still alive or not
+  FrameTable[m_FrameId].WdFrame = 0;
+}
+
+AmayaCanvas * AmayaFrame::CreateDrawingArea()
+{
+  AmayaCanvas * p_canvas = NULL;
+
+#ifdef _GL
+  // If opengl is used then try to share the context
+#ifndef _NOSHARELIST
+  if ( m_pSharedContext == NULL || GetSharedContext () == m_FrameId )
+//  if (GetSharedContext () == -1 || GetSharedContext () == m_FrameId )
+    {
+#endif /*_NOSHARELIST*/
+      p_canvas = new AmayaCanvas( this );
+      m_pSharedContext = p_canvas->GetContext();
+#ifdef _NOSHARELIST
+      wxPrintf( _T("Warning: upgrade your Opengl implementation (ie: Mesa) to get group opacity!\n") );
+#else /*_NOSHARELIST*/
+      SetSharedContext( m_FrameId );
+    }
+  else
+    {
+      //      int shared_frame_id = GetSharedContext();
+      //      wxASSERT( FrameTable[shared_frame_id].WdFrame != 0 );
+      //      AmayaCanvas * p_shared_canvas = FrameTable[shared_frame_id].WdFrame->GetCanvas();
+      //      wxASSERT( p_shared_canvas );
+      p_canvas = new AmayaCanvas( this, m_pSharedContext );
+    }
+#endif /*_NOSHARELIST*/
+#else /* _GL */
+  p_canvas = new AmayaCanvas( this );
+#endif /* _GL */
+  return p_canvas;
+}
+
+void AmayaFrame::ReplaceDrawingArea( AmayaCanvas * p_new_canvas )
+{
+  wxASSERT( p_new_canvas );
+
+  // detach scrollbar and canvas (delete canvas)
+  m_pCanvas->Hide();
+  m_pHSizer->Remove(0);
+  m_pHSizer->Detach(0); // the scroll bar 
+
+  // assign the new canvas
+  m_pCanvas = p_new_canvas;
+
+  // add the new canvas and old scrollbar to the sizer
+  m_pHSizer->Add( m_pCanvas,     1, wxEXPAND );
+  if (m_pScrollBarV)
+    m_pHSizer->Add( m_pScrollBarV, 0, wxEXPAND );
+  m_pHSizer->Layout();
 }
 
 /*
@@ -606,6 +644,10 @@ wxMenuItem * AmayaFrame::AppendMenuItem (
 
 wxMenuBar * AmayaFrame::GetMenuBar()
 {
+  if (!m_pMenuBar)
+    // Create the empty menu bar
+    m_pMenuBar =  new wxMenuBar( /*wxMB_DOCKABLE*/ );
+
   return m_pMenuBar;
 }
 
@@ -658,6 +700,14 @@ bool AmayaFrame::IsActive()
   return m_IsActive;
 }
 
+void AmayaFrame::RaiseFrame()
+{
+ // this frame is active update its page
+  AmayaPage * p_page = GetPageParent();
+  if (p_page)
+      p_page->RaisePage();
+}
+
 void AmayaFrame::SetStatusBarText( const wxString & text )
 {
   // the new text is assigned
@@ -684,20 +734,28 @@ void AmayaFrame::DestroyFrame()
   // Detach the window menu bar to avoid  probleme when
   // AmayaWindow will be deleted.
   // (because the menu bar is owned by AmayaFrame)
-  //  GetWindowParent()->DesactivateMenuBar();
+  if (GetWindowParent())
+    GetWindowParent()->DesactivateMenuBar();
   
-  // close and destroy the frame
-  //  wxCloseEvent dummy;
-  //  OnClose( dummy );
+
+  /* first of all clean up the menubar */
+  if (m_pMenuBar)
+    m_pMenuBar->Destroy();
+  m_pMenuBar = NULL;
+
   
-  // Reparent( NULL );
-  //Close();
-  //  m_ToDestroy = TRUE;
-  //SetEventHandler( new wxEvtHandler() );
-  Destroy();
+  // Create a new drawing area
+  ReplaceDrawingArea( CreateDrawingArea() );
+
+  // do not delete realy the frame becaus there is a strang bug
+  //  Destroy();
 
   // Reactivate the menu bar (nothing is done if the window is goind to die)
-  //  GetWindowParent()->ActivateMenuBar();
+  if (GetWindowParent())
+    GetWindowParent()->ActivateMenuBar();
+
+  // the frame is destroyed so it hs no more page parent
+  SetPageParent( NULL );
 }
 
 void AmayaFrame::OnIdle( wxIdleEvent& event )

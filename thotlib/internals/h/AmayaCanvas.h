@@ -66,7 +66,7 @@ public:
   DECLARE_DYNAMIC_CLASS(AmayaCanvas)
 
   AmayaCanvas( AmayaFrame * p_parent_window = NULL,
-	       AmayaCanvas * p_shared_canvas = NULL );
+	       wxGLContext * p_shared_context = NULL );
   virtual ~AmayaCanvas( );
 
   bool IsParentPageActive();
@@ -84,7 +84,6 @@ protected:
   DECLARE_EVENT_TABLE()
   
   AmayaFrame *  m_pAmayaFrame;  // amaya frame reference (parent)
-
 
   static int AttrList[];
 

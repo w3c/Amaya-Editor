@@ -12,7 +12,10 @@ extern View TtaOpenMainView ( Document document,
                               int w,
                               int h,
                               ThotBool withMenu,
-                              ThotBool withButton );
+                              ThotBool withButton,
+                              int window_id,
+                              int page_id,
+                              int page_position );
 extern View TtaOpenView ( Document document,
                           char *viewName,
                           int x,
@@ -60,12 +63,6 @@ extern ThotBool TtaIsViewOpen ( Document document,
                                 View view );
 extern View TtaGetViewFromName ( Document document,
                                  char *viewName );
-extern int TtaGetWindowId ( Document document );
-extern void TtaSetWindowId ( Document document,
-                             int window_id );
-extern int TtaGetPageId ( Document document );
-extern void TtaSetPageId ( Document document,
-                           int page_id );
 extern void TtaGiveActiveView ( Document * document,
                                 View * view );
 extern void DisplayHolophrasted ( PtrElement pEl,
@@ -99,7 +96,10 @@ extern View TtaOpenMainView ( Document document,
                                 int w,
                                 int h,
                                 ThotBool withMenu,
-                                ThotBool withButton );
+                                ThotBool withButton,
+                                int window_id,
+                                int page_id,
+                                int page_position );
 extern View TtaOpenView ( Document document,
                             char *viewName,
                             int x,
@@ -147,12 +147,6 @@ extern ThotBool TtaIsViewOpen ( Document document,
                                   View view );
 extern View TtaGetViewFromName ( Document document,
                                    char *viewName );
-extern int TtaGetWindowId ( Document document );
-extern void TtaSetWindowId ( Document document,
-                               int window_id );
-extern int TtaGetPageId ( Document document );
-extern void TtaSetPageId ( Document document,
-                             int page_id );
 extern void TtaGiveActiveView ( Document * document,
                                   View * view );
 extern void DisplayHolophrasted ( PtrElement pEl,

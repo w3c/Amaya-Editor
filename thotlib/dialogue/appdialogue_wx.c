@@ -80,11 +80,8 @@ int TtaMakeWindow( )
 {
 #ifdef _WX
   AmayaWindow * p_AmayaWindow = NULL;
-  int window_id = 1;
+  int window_id = TtaGetFreeWindowId();
  
-  /* look for a free id */
-  while (window_id < MAX_WINDOW && WindowsTable[window_id] != NULL)
-    window_id++;
   if (window_id >= MAX_WINDOW)
     return 0; /* there is no more free windows */
 
@@ -105,6 +102,91 @@ int TtaMakeWindow( )
 #else
   return 0;
 #endif /* #ifdef _WX */
+}
+
+static void TtaMakeMenuBar( int frame_id, const char * schema_name )
+{
+#ifdef _WX
+  /* --------------------------------------------------- */
+  /* create the menu for this frame */
+  /* --------------------------------------------------- */
+  SchemaMenu_Ctl     *SCHmenu;
+  Menu_Ctl           *ptrmenu;
+  int                 i = 0;
+  /* reference du menu construit */
+  int                 ref = frame_id + MAX_LocalMenu;
+
+  int doc_id = FrameTable[frame_id].FrDoc;
+  int schView = FrameTable[frame_id].FrView;
+
+  AmayaFrame *        p_AmayaFrame = FrameTable[frame_id].WdFrame;
+  ThotMenuBar         p_menu_bar   = p_AmayaFrame->GetMenuBar();
+
+  /* Look for the menu list to be built */
+  ptrmenu = NULL;
+  ThotBool withMenu = TRUE;
+  if (withMenu)
+    {
+      SCHmenu = SchemasMenuList;
+      while (SCHmenu && ptrmenu == NULL)
+	{
+	  if (!strcmp (schema_name, SCHmenu->SchemaName))
+	    /* that document has specific menus */
+	    ptrmenu = SCHmenu->SchemaMenu;
+	  else
+	    /* next schema */
+	    SCHmenu = SCHmenu->NextSchema;
+	}
+      if (ptrmenu == NULL)
+	/* the document uses standard menus */
+	ptrmenu = DocumentMenuList;
+    }
+  
+  /**** Build menus ****/
+  FrameTable[frame_id].FrMenus = ptrmenu;
+  /* Initialise les menus dynamiques */
+  FrameTable[frame_id].MenuAttr = -1;
+  FrameTable[frame_id].MenuSelect = -1;
+  FrameTable[frame_id].MenuPaste = -1;
+  FrameTable[frame_id].MenuUndo = -1;
+  FrameTable[frame_id].MenuRedo = -1;
+  
+  while (p_menu_bar && ptrmenu)
+    {
+      /* skip menus that concern another view */
+      if ( (ptrmenu->MenuView == 0 || ptrmenu->MenuView == schView) &&
+	   Prof_ShowMenu (ptrmenu))
+	{
+	  wxMenu * p_menu = new wxMenu;
+	  p_menu_bar->Append( p_menu,
+			      wxString( TtaGetMessage (THOT, ptrmenu->MenuID),
+					AmayaWindow::conv_ascii) );
+	  
+	  FrameTable[frame_id].WdMenus[i]      = p_menu;
+	  FrameTable[frame_id].EnabledMenus[i] = TRUE;
+	  /* Evite la construction des menus dynamiques */
+	  if (ptrmenu->MenuAttr)
+	    FrameTable[frame_id].MenuAttr = ptrmenu->MenuID;
+	  else if (ptrmenu->MenuSelect) 
+	    FrameTable[frame_id].MenuSelect = ptrmenu->MenuID;
+	  else 
+	    BuildPopdown (ptrmenu, ref, p_menu, frame_id, doc_id,
+			  FALSE, FALSE);	      
+	}
+      ptrmenu = ptrmenu->NextMenu;
+      ref += MAX_ITEM;
+      i++;
+    }
+  
+  /* enable other menu entries */
+  while (i < MAX_MENU)
+    {
+      FrameTable[frame_id].EnabledMenus[i] = FALSE;
+      i++;
+    }
+
+  /* --------------------------------------------------- */
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -159,90 +241,21 @@ int TtaMakeFrame( const char * schema_name,
   if (p_AmayaFrame == NULL)
     {
       /* a new frame widget should be created */
-
-      /* get the document's top window */
-      int window_id = TtaGetWindowId( doc_id );
+      
+      /* get the first existing window (a virtual parent) */
+      /* the window parent is override when the frame is attached to a page */
+      int window_id = 1;
       AmayaWindow * p_AmayaWindow = WindowsTable[window_id]; 
+      wxASSERT_MSG(p_AmayaWindow, _T("TtaMakeFrame: the window must be created before any frame"));
       
       /* create the new frame (window_id is the parent) */
       p_AmayaFrame = new AmayaFrame( frame_id, p_AmayaWindow );
-
-
-      /* --------------------------------------------------- */
-      /* create the menu for this frame */
-      /* --------------------------------------------------- */
-      SchemaMenu_Ctl     *SCHmenu;
-      Menu_Ctl           *ptrmenu;
-      int                 i = 0;
-      /* reference du menu construit */
-      int                 ref = frame_id + MAX_LocalMenu;
-      ThotMenuBar         p_menu_bar = p_AmayaFrame->GetMenuBar();
-      
-      /* Look for the menu list to be built */
-      ptrmenu = NULL;
-      ThotBool withMenu = TRUE;
-      if (withMenu)
-	{
-	  SCHmenu = SchemasMenuList;
-	  while (SCHmenu && ptrmenu == NULL)
-	    {
-	      if (!strcmp (schema_name, SCHmenu->SchemaName))
-		/* that document has specific menus */
-		ptrmenu = SCHmenu->SchemaMenu;
-	      else
-		/* next schema */
-		SCHmenu = SCHmenu->NextSchema;
-	    }
-	  if (ptrmenu == NULL)
-	    /* the document uses standard menus */
-	    ptrmenu = DocumentMenuList;
-	}
-
-      /**** Build menus ****/
-      FrameTable[frame_id].FrMenus = ptrmenu;
-      /* Initialise les menus dynamiques */
-      FrameTable[frame_id].MenuAttr = -1;
-      FrameTable[frame_id].MenuSelect = -1;
-      FrameTable[frame_id].MenuPaste = -1;
-      FrameTable[frame_id].MenuUndo = -1;
-      FrameTable[frame_id].MenuRedo = -1;
-
-      while (p_menu_bar && ptrmenu)
-	{
-	  /* skip menus that concern another view */
-	  if ( (ptrmenu->MenuView == 0 || ptrmenu->MenuView == schView) &&
-	       Prof_ShowMenu (ptrmenu))
-	    {
-	      wxMenu * p_menu = new wxMenu;
-	      p_menu_bar->Append( p_menu,
-				  wxString( TtaGetMessage (THOT, ptrmenu->MenuID),
-					    AmayaWindow::conv_ascii) );
-
-	      FrameTable[frame_id].WdMenus[i]      = p_menu;
-	      FrameTable[frame_id].EnabledMenus[i] = TRUE;
-	      /* Evite la construction des menus dynamiques */
-	      if (ptrmenu->MenuAttr)
-		FrameTable[frame_id].MenuAttr = ptrmenu->MenuID;
-	      else if (ptrmenu->MenuSelect) 
-		FrameTable[frame_id].MenuSelect = ptrmenu->MenuID;
-	      else 
-		BuildPopdown (ptrmenu, ref, p_menu, frame_id, doc_id,
-			      FALSE, FALSE);	      
-	    }
-	  ptrmenu = ptrmenu->NextMenu;
-	  ref += MAX_ITEM;
-	  i++;
-	}
-      
-      /* enable other menu entries */
-      while (i < MAX_MENU)
-	{
-	  FrameTable[frame_id].EnabledMenus[i] = FALSE;
-	  i++;
-	}
-
-      /* --------------------------------------------------- */
-
+    }
+  else
+    {
+      /* if a frame allready exist, be sure to cleanup all its atributs */
+      DestroyFrame( frame_id );
+    }
 
       /* save frame parameters */
       FrameTable[frame_id].WdFrame 	  = p_AmayaFrame;
@@ -273,7 +286,7 @@ int TtaMakeFrame( const char * schema_name,
       /* Initialise la couleur de fond */
       /* SG : not used */
       /*BackgroundColor[frame_id] = DefaultBColor;*/
-    }
+    
   
   /* the document title will be used to name the frame's page */
   p_AmayaFrame->SetPageTitle( wxString(doc_name, AmayaWindow::conv_ascii) );
@@ -286,8 +299,7 @@ int TtaMakeFrame( const char * schema_name,
   FrameTable[frame_id].Scroll_enabled   = TRUE;
 #endif /* _GL */
 
-  /* show it ... */
-  //p_AmayaFrame->Show();
+  TtaMakeMenuBar( frame_id, schema_name );
 
   return frame_id;
 #else
@@ -341,6 +353,7 @@ ThotBool TtaAttachFrame( int frame_id, int window_id, int page_id, int position 
   FrameTable[frame_id].FrPageId         = page_id;
 
   p_page->Show();
+  FrameTable[frame_id].WdFrame->RaiseFrame();
 
   /* wait for frame initialisation (needed by opengl) */
   TtaHandlePendingEvents();
@@ -385,6 +398,7 @@ ThotBool TtaDetachFrame2( int window_id, int page_id, int position )
       //      FrameTable[frame_id].WdStatus 	= NULL;
       FrameTable[frame_id].FrWindowId   = -1;
       FrameTable[frame_id].FrPageId     = -1;
+
       return TRUE;
     }
 
@@ -433,6 +447,7 @@ ThotBool TtaDetachFrame( int frame_id )
       /* update frame infos */
       FrameTable[frame_id].FrWindowId   = -1;
       FrameTable[frame_id].FrPageId     = -1;
+
       return TRUE;
     }
 
@@ -460,9 +475,9 @@ ThotBool TtaDestroyFrame( int frame_id )
   if (!p_frame)
     return FALSE;
   
-  //  TtaDetachFrame( frame_id );
+  TtaDetachFrame( frame_id );
 
-  //  TtaHandlePendingEvents();
+  TtaHandlePendingEvents();
   p_frame->DestroyFrame();
 
   return TRUE;
@@ -489,6 +504,107 @@ int TtaGetFreePageId( int window_id )
   return p_window->GetPageCount();
 #else
   return -1;
+#endif /* #ifdef _WX */
+}
+
+/*----------------------------------------------------------------------
+  TtaGetFreeWindowId returns a free window id
+  params:
+  returns:
+    + int : the new window id or -1 if too much created window
+  ----------------------------------------------------------------------*/
+int TtaGetFreeWindowId()
+{
+#ifdef _WX
+  int window_id = 1;
+  while ( window_id < MAX_WINDOW )
+    {
+      if ( WindowsTable[window_id] == NULL )
+	return window_id;
+      window_id++;
+    }
+  return -1;
+#else
+  return -1;
+#endif /* #ifdef _WX */
+}
+
+/*----------------------------------------------------------------------
+  TtaGetDocumentWindowId returns the current document window id
+  params:
+    + doc_id : the dcuemnt
+    + schView the document schema view
+      (if view == -1, just the doc_id is checked )
+    (the view is needed because a document could have 2 view into 2 differents windows)
+  returns:
+    + int : the document window id
+    + -1 if nothing is found
+  ----------------------------------------------------------------------*/
+int TtaGetDocumentWindowId( Document doc_id, int schView )
+{
+#ifdef _WX
+  int        frame_id = 1;
+  ThotBool   found = FALSE;
+  while (frame_id <= MAX_FRAME && !found)
+    {
+      found = (FrameTable[frame_id].FrDoc == doc_id &&
+	       (schView == -1 || FrameTable[frame_id].FrView == schView));
+      if (!found)
+        frame_id++;
+    }
+  if (!found)
+    return -1;
+
+  return FrameTable[frame_id].FrWindowId;
+#else
+  return -1;
+#endif /* #ifdef _WX */
+}
+
+/*----------------------------------------------------------------------
+  TtaGetDocumentPageId returns the current document+view page_id + page_position
+  params:
+    + doc_id : the docuemnt
+    + schView the document schema view
+      (if view == -1, just the doc_id is checked )
+    (the view is needed because a document could have 2 view into 2 differents pages)
+  returns:
+    + int page_id : the document's view page id
+    + int page_position : the document's view page position
+  ----------------------------------------------------------------------*/
+void TtaGetDocumentPageId( Document doc_id, int schView,
+			   int * page_id,
+			   int * page_position )
+{
+#ifdef _WX
+  int        frame_id = 1;
+  ThotBool   found = FALSE;
+  while (frame_id <= MAX_FRAME && !found)
+    {
+      found = (FrameTable[frame_id].FrDoc == doc_id &&
+	       (schView == -1 || FrameTable[frame_id].FrView == schView));
+      if (!found)
+        frame_id++;
+    }
+  if (!found)
+    {
+      *page_id = -1;
+      *page_position = 0;
+      return;
+    }
+
+  *page_id = FrameTable[frame_id].FrPageId;
+  *page_position = 0;
+
+  if (FrameTable[frame_id].FrWindowId <= 0)
+    return;
+  AmayaWindow * p_window = WindowsTable[FrameTable[frame_id].FrWindowId];
+  if (p_window == NULL)
+    return;
+  AmayaPage * p_page = p_window->GetPage( *page_id );
+  if (!p_page)
+    return;
+  *page_position = p_page->GetFramePosition( FrameTable[frame_id].WdFrame );
 #endif /* #ifdef _WX */
 }
 
