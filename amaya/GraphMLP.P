@@ -1256,6 +1256,8 @@ RULES
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
         	Height	: Enclosed . Height;
 		Font: TAG_Font;
+		Foreground: Enclosing =;
+	        Background: Enclosing =;
 		Visibility: 10;
 		END;
 	IN Alternate_view BEGIN
@@ -1263,6 +1265,8 @@ RULES
         	Height	: Enclosed . Height;
 	   	MarginTop: 0;
 	   	MarginBottom: 0;
+		Foreground: Enclosing =;
+	        Background: Enclosing =;
 		END;		
 	END;
 
