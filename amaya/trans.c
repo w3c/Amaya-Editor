@@ -871,7 +871,10 @@ Document doc;
   if (ustrcmp (TtaGetSSchemaName (sch), TEXT("MathML")) == 0)
     TtaExportTree (subTree, doc, tmpfilename, TEXT("MathMLT"));     
   else
-    TtaExportTree (subTree, doc, tmpfilename, TEXT("HTMLT"));     
+    if (DocumentMeta[doc]->xmlformat)
+      TtaExportTree (subTree, doc, tmpfilename, TEXT("HTMLTX"));     
+    else
+      TtaExportTree (subTree, doc, tmpfilename, TEXT("HTMLT"));     
 
   StatBuffer = (struct stat *) TtaGetMemory (sizeof (struct stat));
   status = ustat (tmpfilename, StatBuffer);
@@ -901,9 +904,9 @@ Document doc;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void RemoveHTMLTree (Element elem, Document doc)
+static void RemoveFragment (Element elem, Document doc)
 #else
-static void RemoveHTMLTree (elem, doc)
+static void RemoveFragment (elem, doc)
 Element     elem;
 Document    doc;
 #endif
@@ -939,14 +942,14 @@ Document    doc;
 }
 
 /*----------------------------------------------------------------------
-   StartHtmlParser initializes  parsing environement in order to parse
+   StartFragmentParser initializes  parsing environement in order to parse
    the HTML fragment in buffer in the context of a last descendance of the
    element ElFather 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static ThotBool StartHtmlParser (strMatchChildren * sMatch, Document doc)
+static ThotBool StartFragmentParser (strMatchChildren * sMatch, Document doc)
 #else
-static ThotBool StartHtmlParser (sMatch, doc)
+static ThotBool StartFragmentParser (sMatch, doc)
 strMatch       *sMatch;
 Document        doc;
 #endif
@@ -1002,13 +1005,13 @@ Document        doc;
 	prevMatch = DMatch;
 	DMatch = DMatch->Next;
 	if (DMatch != NULL)
-	  RemoveHTMLTree (prevMatch->MatchNode->Elem, doc);
+	  RemoveFragment (prevMatch->MatchNode->Elem, doc);
      }
    if (prevMatch != NULL)
      {
 	myLastSelect = prevMatch->MatchNode->Elem;
 	TtaNextSibling (&myLastSelect);
-	RemoveHTMLTree (prevMatch->MatchNode->Elem, doc);
+	RemoveFragment (prevMatch->MatchNode->Elem, doc);
      }
    if (ustrcmp (bufHTML, TEXT("")))
      {
@@ -1016,11 +1019,14 @@ Document        doc;
        printf("%s\n\n",bufHTML);
 #endif
 	TtaSetStructureChecking (0, doc);
+
+	/* Calling of the appropriate parser */
 	if (DocumentMeta[doc]->xmlformat)
 	  ParseXmlSubTree (bufHTML, &myFirstSelect, &isClosed,
 			   doc, TtaGetDefaultLanguage());
 	else
 	  ParseSubTree (bufHTML, myFirstSelect, isClosed, doc);
+
 	courEl = myFirstSelect;
 	if (isClosed)
 	  TtaNextSibling (&courEl);
@@ -1932,7 +1938,7 @@ Document            doc;
 	  }
 	
 	/* parsing the produced structure */
-	res = res && StartHtmlParser (sm->MatchChildren, doc);
+	res = res && StartFragmentParser (sm->MatchChildren, doc);
 
 	TtaFreeMemory (bufHTML);
      }

@@ -3074,7 +3074,7 @@ int              length;
       printf ("%c", data[i]);
 #endif /* EXPAT_PARSER_DEBUG */
 
-  /* Specefic treatment for the entities */
+  /* Speceific treatment for the entities */
   if (length > 1 && data[0] == '&')
     CreateXmlEntity ((CHAR_T*) data, length);
 }
@@ -3102,7 +3102,7 @@ int              length;
        printf ("%c", data[i]);
 #endif /* EXPAT_PARSER_DEBUG */
    
-   /* Specefic treatment for the entities */
+   /* Specific treatment for the entities */
    if (length > 1 && data[0] == '&')
      CreateXmlEntity ((CHAR_T*) data, length);
 }
@@ -3229,7 +3229,8 @@ const XML_Char **attlist;
       else
 	  elementParserCtxt = currentParserCtxt;
 
-      /* Ignore the virtual root of a XML sub-tree */
+      /* Ignore the virtual root of a XML sub-tree when */
+      /* we are parsing the result of a transformation */
       if (ustrcmp (bufName, SUBTREE_ROOT) != 0)
 	{
 	  /* Treatment called at the beginning of start tag */
@@ -3239,6 +3240,8 @@ const XML_Char **attlist;
 	  nbatts = XML_GetSpecifiedAttributeCount (parser);
 	  if (isRoot && nbatts != 0)
 	    {
+	      /* Specific treatment to take into account the XML elements */
+	      /* declared previously to the root, as the comments or the PI */
 	      savCurrentElement = XMLcontext.lastElement;
 	      XMLcontext.lastElement = rootElement;
 	    }
@@ -3780,7 +3783,7 @@ ThotBool   isSubTree;
    ParseXmlSubTree
    Parse a XML sub-tree given in buffer and complete the corresponding
    Thot abstract tree.
-   Return TRUE if the parsing of the XML sub-tree don't detect errors.
+   Return TRUE if the parsing of the XML sub-tree doesn't detects errors.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 ThotBool    ParseXmlSubTree (char     *xmlBuffer,
@@ -3802,6 +3805,7 @@ Language   lang;
   CHAR_T      *transBuffer = NULL;
   CHAR_T      *schemaName;
   ElementType  elType;
+  Element      parent;
 
   if (xmlBuffer == NULL)
     return FALSE;
@@ -3817,12 +3821,24 @@ Language   lang;
   /* Expat initialization */
   InitializeExpatParser ();
 
-  /* initialize all parser contexts */
+  /* Initialize all parser contexts */
   if (firstParserCtxt == NULL)
     InitXmlParserContexts ();
-  elType = TtaGetElementType (XMLcontext.lastElement);
-  schemaName = TtaGetSSchemaName(elType.ElSSchema);
-  ChangeXmlParserContextDTD (schemaName);
+
+  /* Define the default context */
+  if (*isclosed)
+    {
+      parent = TtaGetParent (*el);
+      elType = TtaGetElementType (parent);
+      schemaName = TtaGetSSchemaName(elType.ElSSchema);
+      ChangeXmlParserContextDTD (schemaName);
+    }
+  else
+    {
+      elType = TtaGetElementType (*el);
+      schemaName = TtaGetSSchemaName(elType.ElSSchema);
+      ChangeXmlParserContextDTD (schemaName);
+    }
 
   /* Parse virtual DOCTYPE */
   if (!XML_Parse (parser, DECL_DOCTYPE, DECL_DOCTYPE_LEN, 0))
@@ -4216,6 +4232,7 @@ ThotBool    xmlDoctype;
   XMLUnknownEncoding = FALSE;
   XMLUndefinedEncoding = FALSE;
   XMLErrorsFoundInProfile = FALSE;
+  XMLErrorsFound = FALSE;
 
   /* Reading of the file */
   wc2iso_strcpy (www_file_name, htmlFileName);
