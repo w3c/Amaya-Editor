@@ -63,8 +63,6 @@ echo "Platform ------->" $MACH
    ${AMAYADIR}/amaya/*.gif \
    ${AMAYADIR}/amaya/*.png \
    ${AMAYADIR}/amaya/*.trans* \
-   ${AMAYADIR}/resources/xrc/*.xrc \
-   ${AMAYADIR}/resources/icons/*.gif \
    ${AMAYADIR}/annotlib/*.STR \
    ${AMAYADIR}/annotlib/*P.PRS \
    ${AMAYADIR}/annotlib/*T.TRA \
@@ -77,7 +75,6 @@ echo "Platform ------->" $MACH
    ${AMAYADIR}/config/en-amayadialogue \
    ${AMAYADIR}/config/en-amayamsg \
    ${AMAYADIR}/config/en-libdialogue \
-   ${AMAYADIR}/config/en-corrdialogue \
    ${AMAYADIR}/config/de-* \
    ${AMAYADIR}/config/es-* \
    ${AMAYADIR}/config/fi-* \
@@ -112,16 +109,11 @@ echo "Platform ------->" $MACH
    ${AMAYADIR}/doc/images/*.png \
    ${AMAYADIR}/doc/images/*.jpg \
    ${AMAYADIR}/doc/images/w3c_home \
-   ${AMAYADIR}/$MACH/bin/amaya \
-   ${AMAYADIR}/$MACH/bin/print \
    ${AMAYADIR}/fonts/Families.list \
    ${AMAYADIR}/fonts/fonts.dir \
-   ${AMAYADIR}/fonts/icones*
+   ${AMAYADIR}/fonts/icones* \
+   ${AMAYADIR}/resources/xrc/*.xrc \
+   ${AMAYADIR}/resources/icons/*.gif \
+   ${AMAYADIR}/$MACH/bin/amaya \
+   ${AMAYADIR}/$MACH/bin/print
 done
-
-
-
-
-
-
-

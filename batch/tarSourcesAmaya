@@ -122,7 +122,6 @@ ${AMAYADIR}/config/gtkrc \
 ${AMAYADIR}/config/*-amayadialogue \
 ${AMAYADIR}/config/*-amayamsg \
 ${AMAYADIR}/config/*-libdialogue \
-${AMAYADIR}/config/*-corrdialogue \
 ${AMAYADIR}/config/en-appdialogue \
 ${AMAYADIR}/config/en-compildialogue \
 ${AMAYADIR}/config/en-grmdialogue \
