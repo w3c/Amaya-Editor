@@ -344,7 +344,7 @@ static void UpdatePointsAttribute (el, doc, minX, minY, maxX, maxY)
   AttributeType	        attrType;
   Attribute		attr, attrX, attrY;
   TypeUnit		unit;
-  CHAR_T			buffer[512], buffer1[8];
+  CHAR_T		buffer[512], buffer1[8];
   int			nbPoints, point, x, y, posX, posY;
   int                   mainView;
 
@@ -505,9 +505,9 @@ void AttrWidthHeightChanged (event)
  AttrWidthHeightDelete
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-void AttrWidthHeightDelete (NotifyAttribute *event)
+ThotBool AttrWidthHeightDelete (NotifyAttribute *event)
 #else /* __STDC__*/
-void AttrWidthHeightDelete (event)
+ThotBool AttrWidthHeightDelete (event)
      NotifyAttribute *event;
 #endif /* __STDC__*/
 {

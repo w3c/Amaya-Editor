@@ -482,7 +482,7 @@ PresentationValue    *val;
       cssRule = ptr;
     }
   val->typed_data.real = FALSE;
- return (cssRule);
+  return (cssRule);
 }
 
 /*----------------------------------------------------------------------
@@ -695,7 +695,7 @@ ThotBool            isHTML;
    if (best.typed_data.unit != STYLE_UNIT_INVALID)
      /* install the new presentation */
      TtaSetStylePresentation (PRBorderTopColor, element, tsch, context, best);
-  return (cssRule);
+   return (cssRule);
 }
 
 /*----------------------------------------------------------------------
@@ -721,7 +721,7 @@ ThotBool            isHTML;
    if (best.typed_data.unit != STYLE_UNIT_INVALID)
      /* install the new presentation */
      TtaSetStylePresentation (PRBorderLeftColor, element, tsch, context, best);
-  return (cssRule);
+   return (cssRule);
 }
 
 /*----------------------------------------------------------------------
@@ -747,7 +747,7 @@ ThotBool            isHTML;
    if (best.typed_data.unit != STYLE_UNIT_INVALID)
      /* install the new presentation */
      TtaSetStylePresentation (PRBorderBottomColor, element, tsch, context, best);
-  return (cssRule);
+   return (cssRule);
 }
 
 /*----------------------------------------------------------------------
@@ -773,7 +773,7 @@ ThotBool            isHTML;
    if (best.typed_data.unit != STYLE_UNIT_INVALID)
      /* install the new presentation */
      TtaSetStylePresentation (PRBorderRightColor, element, tsch, context, best);
-  return (cssRule);
+   return (cssRule);
 }
 
 /*----------------------------------------------------------------------
@@ -2612,6 +2612,7 @@ ThotBool            isHTML;
       best.typed_data.value = STYLE_PATTERN_NONE;
       best.typed_data.unit = STYLE_UNIT_REL;
       TtaSetStylePresentation (PRFillPattern, element, tsch, context, best);
+      cssRule = SkipWord (cssRule);
     }
   else
     {
@@ -2629,7 +2630,6 @@ ThotBool            isHTML;
 	  TtaSetStylePresentation (PRShowBox, element, tsch, context, best);
 	}
     }
-  cssRule = SkipWord (cssRule);
 
   /* restore the refered element */
   if (moved && !element)
@@ -2637,6 +2637,43 @@ ThotBool            isHTML;
   return (cssRule);
 }
 
+
+/*----------------------------------------------------------------------
+  ParseSVGStroke: parse a SVG stroke property
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static CHAR_T*      ParseSVGStroke (Element element, PSchema tsch,
+                    PresentationContext context, CHAR_T* cssRule, CSSInfoPtr css, ThotBool isHTML)
+#else
+static CHAR_T*      ParseSVGStroke (element, tsch, context, cssRule, css, isHTML)
+Element             element;
+PSchema             tsch;
+PresentationContext context;
+CHAR_T*             cssRule;
+CSSInfoPtr          css;
+ThotBool            isHTML;
+#endif
+{
+  PresentationValue     best;
+
+  best.typed_data.unit = STYLE_UNIT_INVALID;
+  best.typed_data.real = FALSE;
+  if (!ustrncasecmp (cssRule, TEXT("none"), strlen ("none")))
+    {
+      best.typed_data.value = -2;  /* -2 means transparent */
+      best.typed_data.unit = STYLE_UNIT_REL;
+      TtaSetStylePresentation (PRForeground, element, tsch, context, best);
+      cssRule = SkipWord (cssRule);
+    }
+  else
+    {
+      cssRule = ParseCSSColor (cssRule, &best);
+      if (best.typed_data.unit != STYLE_UNIT_INVALID)
+	/* install the new presentation */
+	TtaSetStylePresentation (PRForeground, element, tsch, context, best);
+    }
+  return (cssRule);
+}
 
 /*----------------------------------------------------------------------
   ParseSVGFill: parse a SVG fill property
@@ -2663,6 +2700,7 @@ ThotBool            isHTML;
       best.typed_data.value = STYLE_PATTERN_NONE;
       best.typed_data.unit = STYLE_UNIT_REL;
       TtaSetStylePresentation (PRFillPattern, element, tsch, context, best);
+      cssRule = SkipWord (cssRule);
     }
   else
     {
@@ -2677,7 +2715,6 @@ ThotBool            isHTML;
 	  TtaSetStylePresentation (PRFillPattern, element, tsch, context, best);
 	}
     }
-  cssRule = SkipWord (cssRule);
   return (cssRule);
 }
 
@@ -3457,7 +3494,7 @@ static CSSProperty CSSProperties[] =
 
    /* SVG extensions */
    {TEXT("stroke-width"), ParseSVGStrokeWidth},
-   {TEXT("stroke"), ParseCSSForeground},
+   {TEXT("stroke"), ParseSVGStroke},
    {TEXT("fill"), ParseSVGFill}
 };
 #define NB_CSSSTYLEATTRIBUTE (sizeof(CSSProperties) / sizeof(CSSProperty))

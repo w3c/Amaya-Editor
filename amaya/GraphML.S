@@ -16,6 +16,7 @@ ATTR
    Invalid_attribute = TEXT;
    Ghost_restruct = TEXT;
    Namespace = TEXT;        { for children of element foreignObject }
+   IntEmptyShape = yes_, no_;
 
 STRUCT
 
@@ -54,7 +55,6 @@ STRUCT
 	      transform;
               points;
               linestyle_;
-              IntEmptyShape = yes_, no_;
               depth_)
         = GRAPHICS;
 
@@ -70,7 +70,6 @@ STRUCT
               stroke;
 	      stroke_width;
               linestyle_;
-              IntEmptyShape;
               depth_)
         = AGGREGATE
 	      desc; title; metadata;
@@ -83,7 +82,6 @@ STRUCT
 	      cy = text;
               r = text;
               linestyle_;
-              IntEmptyShape;
               depth_)
         = AGGREGATE
 	      desc; title; metadata;
@@ -97,7 +95,6 @@ STRUCT
 	      rx;
 	      ry;
               linestyle_;
-              IntEmptyShape;
               depth_)
         = AGGREGATE
 	      desc; title; metadata;
@@ -137,7 +134,6 @@ STRUCT
 	      transform;
               points;
               linestyle_;
-              IntEmptyShape;
               depth_)
         = AGGREGATE
 	      desc; title; metadata;
