@@ -163,7 +163,7 @@ ATTRIBUTES
    Font_size:
 	BEGIN
 	AttrCreate.Post -> AttrFontSizeCreated;
-	AttrModify.Post -> AttrFontSizeModified;
+	AttrModify.Post -> AttrFontSizeCreated;
 	AttrDelete.Pre ->  AttrFontSizeDelete;	
 	END;
 

@@ -1004,10 +1004,16 @@ NotifyAttribute    *event;
 {
    char                buffer[buflen];
    int                 length;
+   DisplayMode         dispMode;
+
+   dispMode = TtaGetDisplayMode (event->document);
+   if (dispMode == DisplayImmediately)
+     TtaSetDisplayMode (event->document, DeferredDisplay);
 
    length = buflen - 1;
    TtaGiveTextAttributeValue (event->attribute, buffer, &length);
    CreateAttrIntSize (buffer, event->element, event->document);
+   TtaSetDisplayMode (event->document, dispMode);
 }
 
 /*----------------------------------------------------------------------

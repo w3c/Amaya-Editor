@@ -823,28 +823,6 @@ NotifyOnElementType * event;
 }
 
 
-/*----------------------------------------------------------------------
-   an HTML attribute "size" has been modified for a Font element.  
-   Create the corresponding internal attribute and delete the old. 
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                AttrFontSizeModified (NotifyAttribute * event)
-#else  /* __STDC__ */
-void                AttrFontSizeModified (event)
-NotifyAttribute    *event;
-
-#endif /* __STDC__ */
-{
-   DisplayMode         dispMode;
-
-   dispMode = TtaGetDisplayMode (event->document);
-   if (dispMode == DisplayImmediately)
-     TtaSetDisplayMode (event->document, DeferredDisplay);
-
-   AttrFontSizeDelete (event);
-   AttrFontSizeCreated (event);
-   TtaSetDisplayMode (event->document, dispMode);
-}
 
 /*----------------------------------------------------------------------
    SetCharFontOrPhrase                                     

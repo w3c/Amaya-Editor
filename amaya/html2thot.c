@@ -4036,8 +4036,13 @@ Document            doc;
    else
       attrType.AttrTypeNum = HTML_ATTR_IntSizeRel;
    attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
-   attr = TtaNewAttribute (attrType);
-   TtaAttachAttribute (el, attr, doc);
+   attr = TtaGetAttribute (el, attrType);
+   if (attr == NULL)
+     {
+       /* this attribute doesn't exist, create it */
+       attr = TtaNewAttribute (attrType);
+       TtaAttachAttribute (el, attr, doc);
+     }
    sscanf (&buffer[ind], "%d", &val);
    val = val * coeff;
    TtaSetAttributeValue (attr, val, el, doc);
