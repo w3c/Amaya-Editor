@@ -8,7 +8,6 @@
 #ifndef AMAYA_LIBWWW_H
 #define AMAYA_LIBWWW_H
 
-#define DEBUG_LIBWWW
 
 #include "WWWLib.h"
 #include "WWWApp.h"

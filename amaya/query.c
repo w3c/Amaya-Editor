@@ -1276,9 +1276,9 @@ void                QueryInit ()
    ** this is a bit slower, but avoids crashes and gives us time
    ** to distribute Amaya before having to patch up libwww.
    */
-   HTHost_setPersistTimeout (-1l);
+   HTHost_setPersistTimeout (-1L);
 #else
-   HTHost_setPersistTimeout (60l);
+   HTHost_setPersistTimeout (60L);
 #endif /* _WINDOWS */
 
    /* Cache is disabled in this version */

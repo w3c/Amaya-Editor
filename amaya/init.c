@@ -1629,6 +1629,14 @@ char               *data;
   Attribute           attrHREF;
   boolean             change;
 
+  char                my_dir_sep;
+
+  if ((typedata == 2) && data && strchr (data, '/'))
+	 my_dir_sep = '/';
+  else 
+	  my_dir_sep = DIR_SEP;
+   
+
    val = (int) data;
    switch (ref - BaseDialog)
      {
@@ -1884,7 +1892,7 @@ char               *data;
        else
 	 strcpy (tempfile, data);
        
-       if (tempfile[strlen (tempfile) - 1] == DIR_SEP)
+       if (tempfile[strlen (tempfile) - 1] == my_dir_sep)
 	 {
 	   strcpy (DirectoryName, tempfile);
 	   DocumentName[0] = EOS;
