@@ -245,6 +245,21 @@ libwww_install_module_expat : force
 			$(LN_S) $(LIBWWW)/modules/expat/.libs/libexpat.a ./libexpat.a ; \
 		  fi)
 
+#libwww_make_module_idn \
+#libidn : force
+#		@(localdir=`pwd`; \
+#		  cd $(LIBWWW)/modules/idn/ ; \
+#		  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS) $(EXPAT_OPTIONS) -DLIBWWW_USEIDN" \
+#		  CPPFLAGS="$(CPPFLAGS)" \
+#	        	    )
+
+#libwww_install_module_idn : force
+#		@(if [ -e libidn.a -a ! -L libidn.a ] ; then \
+#			$(RM) libidn.a ; \
+#		  fi ; \
+#		  if [ ! -L libidn.a ] ; then \
+#			$(LN_S) $(LIBWWW)/modules/idn/.libs/libidn.a ./libidn.a ; \
+#		  fi)
 
 libwww_make_standard_libs \
 $(AMAYA_LIBWWW_STANDARD_LIBS) : force
@@ -268,8 +283,10 @@ libwww_install_standard : force
 		    fi ; \
 		done)
 
+#libwww_make_module_libs : libwww_make_module_md5 libwww_make_module_expat libwww_make_module_idn
 libwww_make_module_libs : libwww_make_module_md5 libwww_make_module_expat
 libwww_make : libwww_make_module_libs libwww_make_standard_libs
+#libwww_install_modules : libwww_install_module_md5 libwww_install_module_expat libwww_install_module_idn
 libwww_install_modules : libwww_install_module_md5 libwww_install_module_expat
 libwww_install : libwww_install_modules libwww_install_standard 
 

@@ -1054,6 +1054,7 @@ void UpdateEditorMenus (Document doc)
 
   /* Update the doctype menu */
   UpdateDoctypeMenu (doc);
+#ifndef _WX
   /* structure information is active only in the structure view */
   TtaSetItemOff (doc, 1, Types, BStyle);
   TtaSetItemOff (doc, 1, Types, BComment);
@@ -1063,6 +1064,7 @@ void UpdateEditorMenus (Document doc)
   TtaSetItemOff (doc, 1, Types, BScript);
   TtaSetItemOff (doc, 1, Types, BNoScript);
   TtaSetItemOff (doc, 1, XMLTypes, BXMLComment);
+#endif /* _WX */
   /* invalid all table edits as long as the selection is out of a table */
   if (TtaIsDocumentSelected (doc))
     SetTableMenuOn (doc, 1);
@@ -1165,6 +1167,7 @@ void UpdateEditorMenus (Document doc)
 #endif /* _WX */
 	  TtaSetItemOff (doc, view, File, BShowLogFile);
 	  TtaSetItemOff (doc, view, File, BSynchro);
+#ifndef _WX
 	  /* structure information is active only in the structure view */
 	  TtaSetItemOff (doc, view, Types, BStyle);
 	  TtaSetItemOff (doc, view, Types, BComment);
@@ -1174,6 +1177,7 @@ void UpdateEditorMenus (Document doc)
 	  TtaSetItemOff (doc, view, Types, BScript);
 	  TtaSetItemOff (doc, view, Types, BNoScript);
 	  TtaSetItemOff (doc, view, XMLTypes, BXMLComment);
+#endif /* _WX */
 	  TtaSetItemOn (doc, view, Edit_, BCut);
 	  TtaSetItemOn (doc, view, Edit_, BPaste);
 	  TtaSetItemOn (doc, view, Edit_, BClear);
@@ -1192,6 +1196,7 @@ void UpdateEditorMenus (Document doc)
 #endif /* _WX */
 	  TtaSetItemOff (doc, view, File, BShowLogFile);
 	  TtaSetItemOff (doc, view, File, BSynchro);
+#ifndef _WX
 	  /* structure information is active only in the structure view */
 	  TtaSetItemOff (doc, view, Types, BStyle);
 	  TtaSetItemOff (doc, view, Types, BComment);
@@ -1201,6 +1206,7 @@ void UpdateEditorMenus (Document doc)
 	  TtaSetItemOff (doc, view, Types, BScript);
 	  TtaSetItemOff (doc, view, Types, BNoScript);
 	  TtaSetItemOff (doc, view, XMLTypes, BXMLComment);
+#endif /* _WX */
 	  TtaSetItemOn (doc, view, Edit_, BCut);
 	  TtaSetItemOn (doc, view, Edit_, BPaste);
 	  TtaSetItemOn (doc, view, Edit_, BClear);
@@ -1223,6 +1229,7 @@ void UpdateEditorMenus (Document doc)
 #endif /* _WX */
 	  TtaSetItemOff (doc, view, File, BShowLogFile);
 	  TtaSetItemOff (doc, view, File, BSynchro);
+#ifndef _WX
 	  /* structure information is active only in the structure view */
 	  TtaSetItemOff (doc, view, Types, BStyle);
 	  TtaSetItemOff (doc, view, Types, BComment);
@@ -1232,6 +1239,7 @@ void UpdateEditorMenus (Document doc)
 	  TtaSetItemOff (doc, view, Types, BScript);
 	  TtaSetItemOff (doc, view, Types, BNoScript);
 	  TtaSetItemOff (doc, view, XMLTypes, BXMLComment);
+#endif /* _WX */
 	  TtaSetItemOn (doc, view, Edit_, BCut);
 	  TtaSetItemOn (doc, view, Edit_, BPaste);
 	  TtaSetItemOn (doc, view, Edit_, BClear);

@@ -1079,6 +1079,7 @@ void CreateBase (Document document, View view)
   el = InsertWithinHead (document, view, HTML_EL_BASE);
   if (el)
     TtaSelectElement (document, el);
+  TtaRedirectFocus();
 }
 
 /*----------------------------------------------------------------------
@@ -1090,6 +1091,7 @@ void CreateMeta (Document document, View view)
   el = InsertWithinHead (document, view, HTML_EL_META);
   if (el)
     TtaSelectElement (document, el);
+  TtaRedirectFocus();
 }
 
 /*----------------------------------------------------------------------
@@ -1107,6 +1109,7 @@ void CreateLinkInHead (Document document, View view)
       /* Select a new destination */
       SelectDestination (document, el, FALSE, FALSE);
     }
+  TtaRedirectFocus();
 }
 
 /*----------------------------------------------------------------------
@@ -1134,6 +1137,7 @@ void CreateStyle (Document document, View view)
       else
 	TtaSelectElement (document, el);
     }
+  TtaRedirectFocus();
 }
 
 
@@ -1167,6 +1171,7 @@ void CreateComment (Document doc, View view)
   else
     elType.ElTypeNum = HTML_EL_Comment_;
   TtaInsertElement (elType, doc);
+  TtaRedirectFocus();
 }
 
 /*----------------------------------------------------------------------
@@ -1368,6 +1373,7 @@ void CreateScript (Document doc, View view)
 	TtaSelectElement (doc, el);
     }
   TtaCloseUndoSequence (doc);
+  TtaRedirectFocus();
 }
 
 /*----------------------------------------------------------------------
