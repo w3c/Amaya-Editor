@@ -968,7 +968,8 @@ PtrPRule          **chain;
 	  (cur->PrType == pres && cur->PrViewNum > 1) ||
 	  (cur->PrType == pres && pres == PtFunction && cur->PrPresFunction > extra))
 	  cur = NULL;
-      else if (pres == PtFunction && cur->PrPresFunction != extra)
+      else if (pres != PtFunction ||
+	       (pres == PtFunction && cur->PrPresFunction != extra))
 	/* check for extra specification in case of function rule */
 	{
 	  *chain = &(cur->PrNextPRule);
