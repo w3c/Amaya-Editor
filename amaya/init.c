@@ -2270,6 +2270,14 @@ void UpdateDoctypeMenu (Document doc)
  
   docType = DocumentTypes[doc];
 
+  if (docType == docText || docType == docCSS ||
+      docType == docSource || docType == docLog)
+    {
+      /* Don't change the doctype for a text document */
+      TtaSetItemOff (doc, 1, File, Doctype1);
+      return;
+    }
+
   TtaSetItemOn  (doc, 1, File, Doctype1);
   TtaSetItemOn  (doc, 1, File, BRemoveDoctype);
   TtaSetItemOff (doc, 1, File, BAddDoctype);
@@ -2280,15 +2288,6 @@ void UpdateDoctypeMenu (Document doc)
   TtaSetItemOff (doc, 1, File, BDoctypeHtmlTransitional);
   TtaSetItemOff (doc, 1, File, BDoctypeHtmlStrict);
 
-
-  if (docType == docText || docType == docCSS ||
-      docType == docSource || docType == docLog)
-    {
-      /* Don't change the doctype for a text document */
-      TtaSetItemOff (doc, 1, File, Doctype1);
-      TtaSetItemOff (doc, 1, File, BRemoveDoctype);
-      return;
-    }
 
   /* look for a MathML or SVG nature within the document */
   nature = NULL;
@@ -4331,8 +4330,12 @@ void ShowSource (Document document, View view)
                                  TRUE /* inNewWindow */,
 	                         documentname, (DocumentType)docSource, document, FALSE,
 				 L_Other, (ClickEvent)CE_ABSOLUTE);   
+
      if (sourceDoc > 0)
        {
+	 /* Update the Doctype menu */
+	 UpdateDoctypeMenu (sourceDoc);
+
 	 DocumentSource[document] = sourceDoc;
 	 s = TtaStrdup (DocumentURLs[document]);
 	 DocumentURLs[sourceDoc] = s;
