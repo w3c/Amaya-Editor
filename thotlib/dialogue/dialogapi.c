@@ -8799,7 +8799,13 @@ void TtaShowDialogue (int ref, ThotBool remanent)
 	  gdk_keyboard_grab (((GtkWidget *)w)->window, TRUE, GDK_CURRENT_TIME);
 	}
       else
-	gtk_menu_popup ((GtkMenu *) w, NULL, NULL, NULL, 0, n, (guint32) 0);
+	{
+	  gtk_menu_popup ((GtkMenu *) w, NULL, NULL, NULL, 0, n, (guint32) 0);
+	  /* force grab focus ... with ?old? gtk version the focus not seems to be set by default ... */
+	  gtk_widget_grab_focus ((GtkWidget *) w);
+	  gtk_widget_show_all ((GtkWidget *) w);
+	  gdk_keyboard_grab (((GtkWidget *)w)->window, TRUE, GDK_CURRENT_TIME);
+	}
 #endif /* _GTK */
     } 
   /*===========> Active un formulaire */
