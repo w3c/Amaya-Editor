@@ -245,7 +245,7 @@ Document            document;
 {
    PtrAttribute        pAttr;
    boolean             found;
-   boolean             obligatory;
+   boolean             mandatory;
 
    UserErrorCode = 0;
    if (element == NULL || attribute == NULL)
@@ -272,14 +272,14 @@ Document            document;
 	else
 	  {
 	     (void) CanAssociateAttr ((PtrElement) element, pAttr, pAttr,
-				      &obligatory);
-	     if (!obligatory)
+				      &mandatory);
+	     if (!mandatory)
 		/* We prohibit to suppress the attbibute language of an element */
 		/* which is the root of an abstract tree */
 		if (((PtrElement) element)->ElParent == NULL)
 		   if (pAttr->AeAttrNum == 1)
-		      obligatory = TRUE;
-	     if (obligatory)
+		      mandatory = TRUE;
+	     if (mandatory)
 		/* The attribute is required for this kind of element */
 	       {
 		  TtaError (ERR_mandatory_attribute);
@@ -414,7 +414,6 @@ Document            document;
 {
    int                 lg;
    PtrAttribute        pAttr;
-   PtrAttribute        pAttrNouv;
    Language	       lang;
 
    UserErrorCode = 0;
@@ -438,13 +437,6 @@ Document            document;
 	if (pAttr->AeAttrNum == 1)
 	  /* language attribute */
 	  {
-	     GetAttribute (&pAttrNouv);
-	     pAttrNouv->AeAttrSSchema = pAttr->AeAttrSSchema;
-	     pAttrNouv->AeAttrNum = 1;
-	     pAttrNouv->AeDefAttr = FALSE;
-	     pAttrNouv->AeAttrType = pAttr->AeAttrType;
-	     GetTextBuffer (&pAttrNouv->AeAttrText);
-	     CopyStringToText (buffer, pAttrNouv->AeAttrText, &lg);
 	     lang = TtaGetLanguageIdFromName (buffer);
 #ifdef NODISPLAY
              ChangeLanguageLeaves((PtrElement) element, lang);
