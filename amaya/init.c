@@ -6788,7 +6788,6 @@ void InitAmaya (NotifyEvent * event)
    char               *s;
    char               *ptr;
    int                 i;
-   float               val=0;
    ThotBool            restoredDoc;
    ThotBool            numbering, map, add, bt;
 
