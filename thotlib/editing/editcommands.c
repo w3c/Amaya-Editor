@@ -909,9 +909,10 @@ static ThotBool GiveAbsBoxForLanguage (int frame, PtrAbstractBox *pAb, int keybo
   int                 index;
   ThotBool            cut;
   ThotBool            notification;
-  ThotBool	      setAttribute = TRUE;
+  ThotBool	      setAttribute;
 
   language = 0;
+  setAttribute = TRUE;
   pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
   notification = FALSE;
   pSelAb = *pAb;
@@ -921,13 +922,11 @@ static ThotBool GiveAbsBoxForLanguage (int frame, PtrAbstractBox *pAb, int keybo
       /* le contenu du pave a ete saisi par palette */
       /* et on a saisi au clavier : recherche la langue dans les ancetres */
       {
-	pHeritAttr = GetTypedAttrAncestor (pSelAb->AbElement->ElParent, 1, NULL, &pElAttr); 
-	if (pHeritAttr != NULL)
-	  if (pHeritAttr->AeAttrText != NULL)
-	    {
-	      language = TtaGetLanguageIdFromName (pHeritAttr->AeAttrText->BuContent);
-	      setAttribute = FALSE;
-	    }
+	pHeritAttr = GetTypedAttrAncestor (pSelAb->AbElement->ElParent, 1,
+					   NULL, &pElAttr); 
+	if (pHeritAttr != NULL && pHeritAttr->AeAttrText != NULL)
+	  language = TtaGetLanguageIdFromName (pHeritAttr->AeAttrText->BuContent);
+	setAttribute = FALSE;
       }
     else
       language = plang;
@@ -938,13 +937,16 @@ static ThotBool GiveAbsBoxForLanguage (int frame, PtrAbstractBox *pAb, int keybo
     else
       language = TtaGetLanguageIdFromAlphabet ('L');
   else if (keyboard == 3)
-    /* une langue greque saisie */
+    /* langue grecque saisie */
     if (TtaGetAlphabet (plang) == 'G')
       language = plang;
     else
       language = TtaGetLanguageIdFromAlphabet ('G');
   else
     language = 0;
+
+  if (language == 0)
+    setAttribute = FALSE;
 
   if (pSelAb->AbLeafType == LtText)
     if (plang != language && plang != 0)
