@@ -9621,7 +9621,7 @@ ATTRIBUTES
 
  Row_valign (Data_cell) = Row_middle :
 	BEGIN
-	VertPos : HMiddle = Enclosing . HMiddle;
+	{VertPos : HMiddle = Enclosing . HMiddle;}
 	IN Structure_view
 		VertPos: Top = Previous . Bottom;
 	IN Alternate_view
@@ -9629,7 +9629,7 @@ ATTRIBUTES
 	END;
  Row_valign (Heading_cell) = Row_middle :
 	BEGIN
-	VertPos : HMiddle = Enclosing . HMiddle;
+	{VertPos : HMiddle = Enclosing . HMiddle;}
 	IN Structure_view
 		VertPos: Top = Previous . Bottom;
 	IN Alternate_view
@@ -9640,7 +9640,7 @@ ATTRIBUTES
 
  Row_valign (Data_cell) = Row_bottom :
 	BEGIN
-	VertPos : Bottom = Enclosing . Bottom - TableSimpleVSpace;
+	{VertPos : Bottom = Enclosing . Bottom - TableSimpleVSpace;}
 	CreateBefore (CellHeader);
 	IN Structure_view
 		VertPos: Top = Previous . Bottom;
@@ -9649,7 +9649,7 @@ ATTRIBUTES
 	END;
  Row_valign (Heading_cell) = Row_bottom :
 	BEGIN
-	VertPos : Bottom = Enclosing . Bottom - TableSimpleVSpace;
+	{VertPos : Bottom = Enclosing . Bottom - TableSimpleVSpace;}
 	CreateBefore (CellHeader);
 	IN Structure_view
 		VertPos: Top = Previous . Bottom;
