@@ -3265,7 +3265,7 @@ const XML_Char **attlist;
 		}
 	      attlist++;
 	    }
-	  if (isRoot)
+	  if (isRoot && nbatts != 0)
 	    XMLcontext.lastElement = savCurrentElement;
 
 	  /* Restore the context (it may have been changed */
