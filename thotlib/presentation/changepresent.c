@@ -1138,6 +1138,7 @@ ThotBool           remove;
       viewSch = pDoc->DocView[view].DvPSchemaView;
       while (pAb != NULL)
 	{
+	  /* there is probably a problem with visibility rules: pAb doesn't exists */
 	  found = FALSE;
 	  if (elType > 0)
 	    /* presentation rules are associated with an element type */

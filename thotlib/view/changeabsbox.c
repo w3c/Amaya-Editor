@@ -131,28 +131,26 @@ void                UpdateAbsBoxVolume (pEl, view, pDoc)
 
 #endif /* __STDC__ */
 {
-   int		       dVol;
-   PtrAbstractBox      pAb;
+  int		       dVol;
+  PtrAbstractBox      pAb;
 
-   pAb = pEl->ElAbstractBox[view];
-   if (pAb != NULL)
-      {
-	pAb->AbChange = TRUE;
-	if (!AssocView (pEl))
-	   if (pDoc->DocView[view].DvPSchemaView > 0)
-	      pDoc->DocViewModifiedAb[view] =
-		Enclosing (pAb, pDoc->DocViewModifiedAb[view]);
-	   else
-	      pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
-		Enclosing (pAb, pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
-	dVol = pAb->AbVolume - pEl->ElTextLength;
-	do
-	   {
-	   pAb->AbVolume -= dVol;
-	   pAb = pAb->AbEnclosing;
-	   }
-	while (pAb != NULL);
-      }
+  pAb = pEl->ElAbstractBox[view];
+  if (pAb != NULL)
+    {
+      pAb->AbChange = TRUE;
+      if (AssocView (pEl))
+	pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] = Enclosing (pAb, pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
+      else if (pDoc->DocView[view].DvPSchemaView > 0)
+	pDoc->DocViewModifiedAb[view] = Enclosing (pAb, pDoc->DocViewModifiedAb[view]);
+
+      dVol = pAb->AbVolume - pEl->ElTextLength;
+      do
+	{
+	  pAb->AbVolume -= dVol;
+	  pAb = pAb->AbEnclosing;
+	}
+      while (pAb != NULL);
+    }
 }
 
 
@@ -174,7 +172,6 @@ PRuleType           typeRule;
 FunctionType        typeFunc;
 PtrPRule           *pRule;
 #endif /* __STDC__ */
-
 {
   PtrPRule            pR;
 
@@ -184,72 +181,58 @@ PtrPRule           *pRule;
   while (pR != NULL)
     {
       if (pR->PrType == typeRule &&
-	  (typeRule != PtFunction || typeFunc == FnAny ||
-	   pR->PrPresFunction == typeFunc))
-	 {
-	 /* regle du type cherche' */
-	 if (pR->PrViewNum == view &&	    /* pour la vue voulue */
-	     (pR->PrCond == NULL ||
-	      CondPresentation (pR->PrCond, pEl, NULL, NULL, view,
-		                pEl->ElStructSchema)))
-	     /* les conditions d'application de la regle sont satisfaites */
-	     /* cette regle convient, a moins qu'on en trouve une autre */
-	     /* plus specifique dans les regles qui suivent */
-	     *pRule = pR;
+	  (typeRule != PtFunction || typeFunc == FnAny || pR->PrPresFunction == typeFunc))
+	{
+	  /* regle du type cherche' */
+	  if (pR->PrViewNum == view &&	    /* pour la vue voulue */
+	      (pR->PrCond == NULL ||
+	       CondPresentation (pR->PrCond, pEl, NULL, NULL, view, pEl->ElStructSchema)))
+	    /* les conditions d'application de la regle sont satisfaites */
+	    /* cette regle convient, a moins qu'on en trouve une autre */
+	    /* plus specifique dans les regles qui suivent */
+	    *pRule = pR;
 	  else
-	     {
-	     if (pR->PrViewNum == 1 && *pRuleView1 == NULL)
-	       /* regle du type cherche' pour la vue 1 */
-	       if (pR->PrCond == NULL ||
-		   CondPresentation (pR->PrCond, pEl, NULL, NULL, view,
-		                     pEl->ElStructSchema))
-		 /* les conditions d'application de la regle sont satisfaites*/
-		 /* on la garde pour le cas ou on ne trouve pas mieux */
-		 *pRuleView1 = pR;
-	     }
-	 /* regle suivante */
-	 pR = pR->PrNextPRule;
-	 }
-      else
-	/* ce n'est pas le type de regle cherche' */
-	if (pR->PrType > typeRule)
-	  /* il n'y a plus de regle de ce type, stop */
-	  pR = NULL;
-	else
+	    {
+	      if (pR->PrViewNum == 1 && *pRuleView1 == NULL &&
+		  /* regle du type cherche' pour la vue 1 */
+		  (pR->PrCond == NULL ||
+		   CondPresentation (pR->PrCond, pEl, NULL, NULL, view, pEl->ElStructSchema)))
+		/* les conditions d'application de la regle sont satisfaites*/
+		/* on la garde pour le cas ou on ne trouve pas mieux */
+		*pRuleView1 = pR;
+	    }
 	  /* regle suivante */
 	  pR = pR->PrNextPRule;
+	}
+      else if (pR->PrType > typeRule)
+	/* ce n'est pas le type de regle cherche' */
+	/* il n'y a plus de regle de ce type, stop */
+	pR = NULL;
+      else
+	/* regle suivante */
+	pR = pR->PrNextPRule;
     }
 }
 
 
 /*----------------------------------------------------------------------
-   GlobalSearchRulepEl
-   retourne un pointeur sur la regle de type typeRule
-   a appliquer a l'element pointe' par pEl dans la vue de  
-   numero view.                                             
-   Retourne dans pSPR un pointeur sur le schema de         
-   presentation auquel appartient la regle retournee.      
-   Si presNum est nul, on cherche la regle a appliquer     
-   a l'element lui-meme, sinon, on cherche de la regle a   
-   appliquer a son pave de presentation de numero presNum. 
-   Dans ce dernier cas, si pSchP est NULL, le pave de      
-   presentation est defini dans le schema de presentation  
-   a appliquer a l'element, sinon ce pave est defini dans  
-   le schema de presentation pointe' par pSchP.            
-   Dans le cas ou pEl pointe une marque de page, si isElPage    
-   est vrai, il s'agit de la regle a appliquer au filet de 
-   separation sinon il s'agit de la regle a appliquer au   
-   bloc de separation de page.                             
-   dans V4, le booleen isElPage n'a plus aucun sens             
-   Si attr est vrai, on cherche parmi les regles de        
-   presentation des attributs de l'element, sinon, on      
-   ignore les regles de presentation des attributs.        
-   Si on trouve la regle parmi celles qui sont associees   
-   a un attribut, au retour pAttr pointe sur le bloc       
-   attribut correspondant, sinon pAttr est NULL.           
+   GlobalSearchRulepEl returns the presentation rule of type (typeRule or
+  typeFunc) that applies to the element pEl in the view.
+  If the parameter presNum is NULL, the applies to the element itself,
+  else the rule applie to that presentation box.
+  In the second case, pSchP gives the presentation schema where the
+  presentation box is defined (NULL = main presntation schema).
+  When pEl refers a page, if isElPage is TRUE, the rule applies to the
+  page break element, else the rule applies to the the enclosing block
+  (page bottom + page break + page top).
+  The parameter attr says if attributes are taken or not into account.
+  Return:
+  The rule and pSPR points to the presentation schema that gives the rule.
+  If the returned rule is associated to an attribute, pAttr points this
+  attribute.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrPRule            GlobalSearchRulepEl (PtrElement pEl, PtrPSchema * pSPR, PtrSSchema * pSSR, int presNum, PtrPSchema pSchP, int view, PRuleType typeRule, FunctionType typeFunc, ThotBool isElPage, ThotBool attr, PtrAttribute * pAttr)
+PtrPRule            GlobalSearchRulepEl (PtrElement pEl, PtrPSchema *pSPR, PtrSSchema *pSSR, int presNum, PtrPSchema pSchP, int view, PRuleType typeRule, FunctionType typeFunc, ThotBool isElPage, ThotBool attr, PtrAttribute * pAttr)
 #else  /* __STDC__ */
 PtrPRule            GlobalSearchRulepEl (pEl, pSPR, pSSR, presNum, pSchP, view, typeRule, typeFunc, isElPage, attr, pAttr)
 PtrElement          pEl;
@@ -425,90 +408,90 @@ PtrAttribute       *pAttr;
 		  }
 		for (l = 1; l <= pEl->ElStructSchema->SsNAttributes &&
 		       *pSPR == NULL; l++)
-		  if ((*inheritTable)[l - 1])
-		    /* pEl herite de l'attribut l */
-		    /* cherche si l'attribut l existe au dessus */
-		    if ((*pAttr = GetTypedAttrAncestor (pEl, l,
-							pEl->ElStructSchema,
-							&pElAttr)) != NULL)
-		      {
-			/* on traite d'abord les schemas de presentation */
-			/* additionnels les plus prioritaires si on travaille*/
-			/* pour la vue principale. Sinon, on ignore les */
-			/* schemas additionnels */
-			if (view == 1)
-			  pHd = (*pAttr)->AeAttrSSchema->SsFirstPSchemaExtens;
-			else
-			  pHd = NULL;
-			if (pHd == NULL)
-			  /* pas de schema additionnel. Prend le schema
-			     principal */
-			  pSP = (*pAttr)->AeAttrSSchema->SsPSchema;
-			else
-			  /* on cherche le schema additionnel le plus
-			     proritaire */
-			  {
-			    while (pHd->HdNextPSchema != NULL)
-			      pHd = pHd->HdNextPSchema;
-			    pSP = pHd->HdPSchema;
-			  }
-			while (pRule == NULL && pSP != NULL)
-			  {
-			    /* premiere regle de presentation de cet
-			       attribut dans ce schema de presentation */
-			    pR = AttrPresRule (*pAttr, pEl, TRUE, NULL, pSP);
-			    /* parcourt les regles de presentation de l'attr. */
-			    while (pR != NULL)
-			      {
-				if (pR->PrType == typeRule &&
-				    (typeRule != PtFunction ||
-				     typeFunc == FnAny ||
-				     pR->PrPresFunction == typeFunc) &&
-				    pR->PrViewNum == view)
-				  /*regle du type cherche' pour la vue voulue*/
-				  if (pR->PrCond == NULL ||
-				      CondPresentation (pR->PrCond, pEl,
-							*pAttr, pElAttr, view,
-							(*pAttr)->AeAttrSSchema))
-				    /*les conditions d'application de la regle
-				      sont satisfaites. On garde cette regle et
-				      on continue pour trouver les regles plus
-				      specifiques */
-				    {
-				      pRule = pR;
-				      *pSPR = pSP;
-				      *pSSR = (*pAttr)->AeAttrSSchema;
-				    }
-				if (pR->PrType <= typeRule)
-				  /* regle suivante */
-				  pR = pR->PrNextPRule;
-				else
-				  pR = NULL;
-			      }
-			    if (pRule == NULL)
-			      /* on n'a pas encore trouve'. On continue de
-				 chercher dans les schemas de presentation de
-				 moindre priorite */
-			      {
-				if (pHd == NULL)
-				  /* on cherchait dans le schema de
-				     presentation principal. Fini */
-				  pSP = NULL;
-				else
+		  if ((*inheritTable)[l - 1] &&
+		      (*pAttr = GetTypedAttrAncestor (pEl, l,
+						      pEl->ElStructSchema,
+						      &pElAttr)) != NULL)
+		    /* pEl inherit from the attribute */
+		    /* check if the attribute exists */
+		    {
+		      /* on traite d'abord les schemas de presentation */
+		      /* additionnels les plus prioritaires si on travaille*/
+		      /* pour la vue principale. Sinon, on ignore les */
+		      /* schemas additionnels */
+		      if (view == 1)
+			pHd = (*pAttr)->AeAttrSSchema->SsFirstPSchemaExtens;
+		      else
+			pHd = NULL;
+		      if (pHd == NULL)
+			/* pas de schema additionnel. Prend le schema
+			   principal */
+			pSP = (*pAttr)->AeAttrSSchema->SsPSchema;
+		      else
+			/* on cherche le schema additionnel le plus
+			   proritaire */
+			{
+			  while (pHd->HdNextPSchema != NULL)
+			    pHd = pHd->HdNextPSchema;
+			  pSP = pHd->HdPSchema;
+			}
+		      while (pRule == NULL && pSP != NULL)
+			{
+			  /* premiere regle de presentation de cet
+			     attribut dans ce schema de presentation */
+			  pR = AttrPresRule (*pAttr, pEl, TRUE, NULL, pSP);
+			  /* parcourt les regles de presentation de l'attr. */
+			  while (pR != NULL)
+			    {
+			      if (pR->PrType == typeRule &&
+				  (typeRule != PtFunction ||
+				   typeFunc == FnAny ||
+				   pR->PrPresFunction == typeFunc) &&
+				  pR->PrViewNum == view)
+				/*regle du type cherche' pour la vue voulue*/
+				if (pR->PrCond == NULL ||
+				    CondPresentation (pR->PrCond, pEl,
+						      *pAttr, pElAttr, view,
+						      (*pAttr)->AeAttrSSchema))
+				  /*les conditions d'application de la regle
+				    sont satisfaites. On garde cette regle et
+				    on continue pour trouver les regles plus
+				    specifiques */
 				  {
-				    /* on prend le schema de presentation 
-				       additionnel de moindre priorite' */
-				    pHd = pHd->HdPrevPSchema;
-				    if (pHd == NULL)
-				      /* plus de schemas additionnels, on
-					 prend le schema principal */
-				      pSP = (*pAttr)->AeAttrSSchema->SsPSchema;
-				    else
-				      pSP = pHd->HdPSchema;
+				    pRule = pR;
+				    *pSPR = pSP;
+				    *pSSR = (*pAttr)->AeAttrSSchema;
 				  }
-			      }
-			  }
-		      }
+			      if (pR->PrType <= typeRule)
+				/* regle suivante */
+				pR = pR->PrNextPRule;
+			      else
+				pR = NULL;
+			    }
+			  if (pRule == NULL)
+			    /* on n'a pas encore trouve'. On continue de
+			       chercher dans les schemas de presentation de
+			       moindre priorite */
+			    {
+			      if (pHd == NULL)
+				/* on cherchait dans le schema de
+				   presentation principal. Fini */
+				pSP = NULL;
+			      else
+				{
+				  /* on prend le schema de presentation 
+				     additionnel de moindre priorite' */
+				  pHd = pHd->HdPrevPSchema;
+				  if (pHd == NULL)
+				    /* plus de schemas additionnels, on
+				       prend le schema principal */
+				    pSP = (*pAttr)->AeAttrSSchema->SsPSchema;
+				  else
+				    pSP = pHd->HdPSchema;
+				}
+			    }
+			}
+		    }
 	      }
 	  }
 
@@ -608,13 +591,13 @@ PtrAttribute       *pAttr;
 
 
 /*----------------------------------------------------------------------
-   SearchRulepAb retourne un pointeur sur la regle de type typeRule        
-   a appliquer au pave pAb.                               
-   Selon que attr est vrai ou faux, on tient compte ou non 
-   des attributs porte's par l'element auquel correspond   
-   pAb.                                                   
-   Au retour, pSPR contient un pointeur sur le schema de   
-   presentation auquel appartient la regle.                   
+  SearchRulepAb returns the presentation rule of type (typeRule or
+  typeFunc) that applies to the abstract box pAb.
+  The parameter attr says if attributes are taken or not into account.
+  Return:
+  The rule and pSPR points to the presentation schema that gives the rule. 
+  If the returned rule is associated to an attribute, pAttr points this
+  attribute.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 PtrPRule            SearchRulepAb (PtrDocument pDoc, PtrAbstractBox pAb, PtrPSchema * pSPR, PRuleType typeRule, FunctionType typeFunc, ThotBool attr, PtrAttribute * pAttr)
@@ -664,17 +647,18 @@ ThotBool            isInverted;
 
 #endif /* __STDC__ */
 {
-   AbPosition         *pAbbox1;
-   ThotBool            different;
+  AbPosition         *pAbbox1;
+  ThotBool            different;
 
-   pAbbox1 = &abPos;
-   different = TRUE;
-   if (pAbbox1->PosRefEdge == abPosit->PosRefEdge &&
-       pAbbox1->PosRefEdge == abPosit->PosRefEdge &&
-       pAbbox1->PosDistance == abPosit->PosDistance &&
-       pAbbox1->PosUnit == abPosit->PosUnit &&
-       pAbbox1->PosUserSpecified == abPosit->PosUserSpecified &&
-       pAbbox1->PosAbRef == abPosit->PosAbRef)
+  pAbbox1 = &abPos;
+  different = TRUE;
+  if (pAbbox1->PosRefEdge == abPosit->PosRefEdge &&
+      pAbbox1->PosRefEdge == abPosit->PosRefEdge &&
+      pAbbox1->PosDistance == abPosit->PosDistance &&
+      pAbbox1->PosUnit == abPosit->PosUnit &&
+      pAbbox1->PosUserSpecified == abPosit->PosUserSpecified &&
+      pAbbox1->PosAbRef == abPosit->PosAbRef)
+    {
       if (!isInverted)
 	{
 	   if (pAbbox1->PosEdge == abPosit->PosEdge)
@@ -691,7 +675,8 @@ ThotBool            isInverted;
 	   else if (pAbbox1->PosEdge == Bottom && abPosit->PosEdge == Top)
 	      different = FALSE;
 	}
-   return different;
+    }
+  return different;
 }
 
 
@@ -743,7 +728,6 @@ AbDimension        *abDimens;
    pAttr pointe le bloc attribut auquel correspond la regle
    pR (NULL si la regle n'est pas une regle d'attribut).  
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static ThotBool     IsNewPosOrDim (PtrAbstractBox pAb, PtrPRule pR, PtrPSchema pSPR, Level levelPos, PtrDocument pDoc, PtrAttribute pAttr)
 
@@ -755,255 +739,246 @@ PtrPSchema          pSPR;
 Level               levelPos;
 PtrDocument         pDoc;
 PtrAttribute        pAttr;
-
 #endif /* __STDC__ */
-
 {
-   ThotBool            ret;
-   AbPosition          abPosit;
-   AbDimension         Dimens;
-   PosRule            *pRe1;
-   DimensionRule      *pRelD1;
-   PtrPRule            pRegleDim;
-   PtrPSchema          pSPRDim;
-   PtrAttribute        pAttrDim;
-   AbPosition          abDimElast;
-   ThotBool            nextToPage;
+  ThotBool            ret;
+  AbPosition          abPosit;
+  AbDimension         Dimens;
+  PosRule            *pRe1;
+  DimensionRule      *pRelD1;
+  PtrPRule            pRegleDim;
+  PtrPSchema          pSPRDim;
+  PtrAttribute        pAttrDim;
+  AbPosition          abDimElast;
+  ThotBool            nextToPage;
 
-   ret = FALSE;
-   if (pR != NULL)
-     {
-	/* s'il s'agit d'un positionnement vertical et que le pave precedent */
-	/* est une marque de page, il faut reevaluer la regle */
-	nextToPage = FALSE;
-	if (pR->PrType == PtVertPos)
-	   if (pAb->AbPrevious != NULL)
-	      if (pAb->AbPrevious->AbElement->ElTypeNumber == PageBreak + 1)
-		 nextToPage = TRUE;
-	switch (pR->PrType)
-	  {
-          case PtVertRef:
-          case PtHorizRef:
-          case PtVertPos:
-          case PtHorizPos:
-             pRe1 = &pR->PrPosRule;
-             if (pRe1->PoRelation == levelPos ||
-		 pRe1->PoRelation == RlReferred ||
-                 (pRe1->PoRelation == RlSameLevel &&
-                   (levelPos == RlPrevious || levelPos == RlNext)) ||
-                 nextToPage ||
-                 (pR->PrType == PtVertPos && pAb->AbHeight.DimIsPosition) ||
-                 (pR->PrType == PtHorizPos && pAb->AbWidth.DimIsPosition))
-                switch (pR->PrType)
-                  {
-                  case PtVertRef:
-                     abPosit = pAb->AbVertRef;
-                     (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
-                     ret = IsDiffPosition (pAb->AbVertRef, &abPosit, FALSE);
-                     break;
-                  case PtHorizRef:
-                     abPosit = pAb->AbHorizRef;
-                     (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
-                     ret = IsDiffPosition (pAb->AbHorizRef, &abPosit, FALSE);
-                     break;
-                  case PtVertPos:
-                     if (!pAb->AbHeight.DimIsPosition)
-                        {
-                        abPosit = pAb->AbVertPos;
-                        (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
-                        ret = IsDiffPosition (pAb->AbVertPos, &abPosit, FALSE);
-                        }
-                     else
-		        /* on reevalue la dimension d'un pave elastique en */
-                        /* meme temps que sa position */
-                        {
-                        /* on conserve la position et la dimension d'origine
-			   du pave' */
-                        abPosit = pAb->AbVertPos;
-                        abDimElast = pAb->AbHeight.DimPosition;
-                        /* applique la regle de position */
-                        (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
-                        /* cherche et applique la regle de dimension */
-                        pRegleDim = SearchRulepAb (pDoc, pAb, &pSPRDim,
-					     PtHeight, FnAny, TRUE, &pAttrDim);
-                        (void) ApplyRule (pRegleDim, pSPRDim, pAb, pDoc,
-					  pAttrDim);
-                        /* compare la position et la dimension d'origine avec
-                           celles qui viennent d'etre calculees */
-                        if (pAb->AbBox != NULL)
-                           if (pAb->AbBox->BxVertInverted)
-                              /* le mediateur avait inverse' position et
-				 dimension */
-                              {
-                              /* compare avec inversion */
-                              if (IsDiffPosition (pAb->AbVertPos, &abPosit,
-						  TRUE) ||
-                                  IsDiffPosition (pAb->AbHeight.DimPosition,
-						  &abDimElast, TRUE))
-                                 /* il y a eu au moins un changement */
-                                 {
-                                 ret = TRUE;
-                                 pAb->AbHeightChange = TRUE;
-                                 pAb->AbVertPosChange = TRUE;
-                                 if (pAb->AbLeafType == LtGraphics)
-                                    /* retablit le caractere graphique qui a
-				       ete inverse' */
-                                    if (pAb->AbElement->ElTerminal)
-                                       if (pAb->AbElement->ElLeafType == LtGraphics)
-                                          pAb->AbShape = pAb->AbElement->ElGraph;
-                                  }
-                               else
-                                  /* pas de changement, on retablit position
-				     et dimension d'origine */
-                                  {
-                                  ret = FALSE;
-                                  pAb->AbVertPos = abPosit;
-                                  pAb->AbHeight.DimPosition = abDimElast;
-                                  }
-                              }
-                           else
-                              /* pas d'inversion position/dimension */
-                              if (IsDiffPosition (pAb->AbVertPos, &abPosit,
-						  FALSE) ||
-                                  IsDiffPosition (pAb->AbHeight.DimPosition,
-						  &abDimElast, FALSE))
-                                  /* il y a eu au moins un changement */
-                                 {
-                                 ret = TRUE;
-                                 pAb->AbHeightChange = TRUE;
-                                 pAb->AbVertPosChange = TRUE;
-                                 }
-                              else
-                                 /* pas de changement */
-                                 ret = FALSE;
-                        }
-                     break;
-                  case PtHorizPos:
-                     if (!pAb->AbWidth.DimIsPosition)
-                        {
-                        abPosit = pAb->AbHorizPos;
-                        (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
-                        ret = IsDiffPosition (pAb->AbHorizPos, &abPosit,
-					      FALSE);
-                        }
-                     else
-                        /* on reevalue la dimension d'un pave elastique en
-			   meme temps que sa position */
-                        {
-                        /* on conserve la position et la dimension d'origine
-			   du pave' */
-                        abPosit = pAb->AbHorizPos;
-                        abDimElast = pAb->AbWidth.DimPosition;
-                        /* applique la regle de position */
-                        (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
-                        /* cherche et applique la regle de dimension */
-                        pRegleDim = SearchRulepAb (pDoc, pAb, &pSPRDim,
-					     PtWidth, FnAny, TRUE, &pAttrDim);
-                        (void) ApplyRule (pRegleDim, pSPRDim, pAb, pDoc,
-					  pAttrDim);
-                        /* compare la position et la dimension d'origine avec
-			   celles qui viennent d'etre calculees */
-                        if (pAb->AbBox != NULL)
-                           if (pAb->AbBox->BxHorizInverted)
-                              /* le mediateur avait inverse' position et
-				 dimension */
-                              {
-                              /* compare avec inversion */
-                              if (IsDiffPosition (pAb->AbHorizPos, &abPosit,
-						  TRUE) ||
-                                  IsDiffPosition (pAb->AbWidth.DimPosition,
-						  &abDimElast, TRUE))
-                                 /* il y a eu au moins un changement */
-                                 {
-                                 ret = TRUE;
-                                 pAb->AbWidthChange = TRUE;
-                                 pAb->AbHorizPosChange = TRUE;
-                                 if (pAb->AbLeafType == LtGraphics)
-                                    /* retablit le caractere graphique qui a
-				       ete inverse' */
-                                    if (pAb->AbElement->ElTerminal)
-                                       if (pAb->AbElement->ElLeafType == LtGraphics)
-                                          pAb->AbShape = pAb->AbElement->ElGraph;
-                                 }
-                              else
-                                 /* pas de changement, on retablit position et
-				    dimension d'origine */
-                                 {
-                                 ret = FALSE;
-                                 pAb->AbHorizPos = abPosit;
-                                 pAb->AbWidth.DimPosition = abDimElast;
-                                 }
-                              }
-                           else
-                              /* pas d'inversion position/dimension */
-                              {
-                              if (IsDiffPosition (pAb->AbHorizPos, &abPosit,
-						  FALSE) ||
-                                  IsDiffPosition (pAb->AbWidth.DimPosition,
-						  &abDimElast, FALSE))
-                                 /* il y a eu au moins un changement */
-                                 {
-                                 ret = TRUE;
-                                 pAb->AbWidthChange = TRUE;
-                                 pAb->AbHorizPosChange = TRUE;
-                                 }
-                              else
-                                 /* pas de changement */
-                                 ret = FALSE;
-                              }
-                        }
-                     break;
-                  default:
-                     break;
-               }
-             break;
-
-          case PtHeight:
-          case PtWidth:
-             /* sauve d'abord la dimension du pave' */
-             if (pR->PrType == PtHeight)
-                Dimens = pAb->AbHeight;
-             else
-                Dimens = pAb->AbWidth;
-             /* traitement selon la regle de dimension */
-             pRelD1 = &pR->PrDimRule;
-             if (pRelD1->DrPosition)
-                {
-                /* regle de dimension elastique */
-                if (!Dimens.DimIsPosition)
-                   /* pave non elastique */
-                   /* on applique la regle */
-                   {
-                   (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
-                   ret = TRUE;
-                   }
-                }
-             else
-                /* regle de dimension non elastique */
-             if (!Dimens.DimIsPosition)
-                if (!pRelD1->DrAbsolute)
-                   /* ce n'est pas une dimension absolue */
-                   if (pRelD1->DrRelation == levelPos ||
-                       (pRelD1->DrRelation == RlSameLevel &&
-			(levelPos == RlPrevious || levelPos == RlNext)))
-                      if (pR->PrType == PtHeight)
-                         /* hauteur */
-                         {
-                         (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
-                         ret = IsDiffDimension (pAb->AbHeight, &Dimens);
-                         }
-                      else
-                         /* largeur */
-                         {
-                         (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
-                         ret = IsDiffDimension (pAb->AbWidth, &Dimens);
-                         }
-             break;
-          default:
-             break;
-       }
-     }
-   return (ret);
+  ret = FALSE;
+  if (pR != NULL)
+    {
+      /* s'il s'agit d'un positionnement vertical et que le pave precedent */
+      /* est une marque de page, il faut reevaluer la regle */
+      nextToPage = FALSE;
+      if (pR->PrType == PtVertPos &&
+	  pAb->AbPrevious != NULL &&
+	  pAb->AbPrevious->AbElement->ElTypeNumber == PageBreak + 1)
+	nextToPage = TRUE;
+      switch (pR->PrType)
+	{
+	case PtVertRef:
+	case PtHorizRef:
+	case PtVertPos:
+	case PtHorizPos:
+	  pRe1 = &pR->PrPosRule;
+	  if (pRe1->PoRelation == levelPos ||
+	      pRe1->PoRelation == RlReferred ||
+	      (pRe1->PoRelation == RlSameLevel &&
+	       (levelPos == RlPrevious || levelPos == RlNext)) ||
+	      nextToPage ||
+	      (pR->PrType == PtVertPos && pAb->AbHeight.DimIsPosition) ||
+	      (pR->PrType == PtHorizPos && pAb->AbWidth.DimIsPosition))
+	    switch (pR->PrType)
+	      {
+	      case PtVertRef:
+		abPosit = pAb->AbVertRef;
+		(void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
+		ret = IsDiffPosition (pAb->AbVertRef, &abPosit, FALSE);
+		break;
+	      case PtHorizRef:
+		abPosit = pAb->AbHorizRef;
+		(void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
+		ret = IsDiffPosition (pAb->AbHorizRef, &abPosit, FALSE);
+		break;
+	      case PtVertPos:
+		if (!pAb->AbHeight.DimIsPosition)
+		  {
+		    abPosit = pAb->AbVertPos;
+		    (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
+		    ret = IsDiffPosition (pAb->AbVertPos, &abPosit, FALSE);
+		  }
+		else
+		  /* on reevalue la dimension d'un pave elastique en */
+		  /* meme temps que sa position */
+		  {
+		    /* on conserve la position et la dimension d'origine
+		       du pave' */
+		    abPosit = pAb->AbVertPos;
+		    abDimElast = pAb->AbHeight.DimPosition;
+		    /* applique la regle de position */
+		    (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
+		    /* cherche et applique la regle de dimension */
+		    pRegleDim = SearchRulepAb (pDoc, pAb, &pSPRDim,
+					       PtHeight, FnAny, TRUE, &pAttrDim);
+		    (void) ApplyRule (pRegleDim, pSPRDim, pAb, pDoc,
+				      pAttrDim);
+		    /* compare la position et la dimension d'origine avec
+		       celles qui viennent d'etre calculees */
+		    if (pAb->AbBox != NULL)
+		      {
+		      if (pAb->AbBox->BxVertInverted)
+			/* le mediateur avait inverse' position et
+			   dimension */
+			{
+			  /* compare avec inversion */
+			  if (IsDiffPosition (pAb->AbVertPos, &abPosit, TRUE) ||
+			      IsDiffPosition (pAb->AbHeight.DimPosition,
+					      &abDimElast, TRUE))
+			    /* il y a eu au moins un changement */
+			    {
+			      ret = TRUE;
+			      pAb->AbHeightChange = TRUE;
+			      pAb->AbVertPosChange = TRUE;
+			      if (pAb->AbElement->ElTerminal &&
+				  pAb->AbElement->ElLeafType == LtGraphics)
+				/* restore the graphics */
+				pAb->AbShape = pAb->AbElement->ElGraph;
+			    }
+			  else
+			    /* pas de changement, on retablit position
+			       et dimension d'origine */
+			    {
+			      ret = FALSE;
+			      pAb->AbVertPos = abPosit;
+			      pAb->AbHeight.DimPosition = abDimElast;
+			    }
+			}
+		      else if (IsDiffPosition (pAb->AbVertPos, &abPosit, FALSE) ||
+			    IsDiffPosition (pAb->AbHeight.DimPosition,
+					    &abDimElast, FALSE))
+			/* pas d'inversion position/dimension */
+			  /* il y a eu au moins un changement */
+			  {
+			    ret = TRUE;
+			    pAb->AbHeightChange = TRUE;
+			    pAb->AbVertPosChange = TRUE;
+			  }
+			else
+			  /* pas de changement */
+			  ret = FALSE;
+		      }
+		  }
+		break;
+	      case PtHorizPos:
+		if (!pAb->AbWidth.DimIsPosition)
+		  {
+		    abPosit = pAb->AbHorizPos;
+		    (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
+		    ret = IsDiffPosition (pAb->AbHorizPos, &abPosit, FALSE);
+		  }
+		else
+		  /* on reevalue la dimension d'un pave elastique en
+		     meme temps que sa position */
+		  {
+		    /* on conserve la position et la dimension d'origine
+		       du pave' */
+		    abPosit = pAb->AbHorizPos;
+		    abDimElast = pAb->AbWidth.DimPosition;
+		    /* applique la regle de position */
+		    (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
+		    /* cherche et applique la regle de dimension */
+		    pRegleDim = SearchRulepAb (pDoc, pAb, &pSPRDim,
+					       PtWidth, FnAny, TRUE, &pAttrDim);
+		    (void) ApplyRule (pRegleDim, pSPRDim, pAb, pDoc,
+				      pAttrDim);
+		    /* compare la position et la dimension d'origine avec
+		       celles qui viennent d'etre calculees */
+		    if (pAb->AbBox != NULL)
+		      {
+			if (pAb->AbBox->BxHorizInverted)
+			  /* le mediateur avait inverse' position et
+			     dimension */
+			  {
+			    /* compare avec inversion */
+			    if (IsDiffPosition (pAb->AbHorizPos, &abPosit, TRUE) ||
+				IsDiffPosition (pAb->AbWidth.DimPosition,
+						&abDimElast, TRUE))
+			      /* il y a eu au moins un changement */
+			      {
+				ret = TRUE;
+				pAb->AbWidthChange = TRUE;
+				pAb->AbHorizPosChange = TRUE;
+				if (pAb->AbElement->ElTerminal &&
+				    pAb->AbElement->ElLeafType == LtGraphics)
+				  /* restore the graphics */
+				  pAb->AbShape = pAb->AbElement->ElGraph;
+			      }
+			    else
+			      /* pas de changement, on retablit position et
+				 dimension d'origine */
+			      {
+				ret = FALSE;
+				pAb->AbHorizPos = abPosit;
+				pAb->AbWidth.DimPosition = abDimElast;
+			      }
+			  }
+			else if (IsDiffPosition (pAb->AbHorizPos, &abPosit, FALSE) ||
+				 IsDiffPosition (pAb->AbWidth.DimPosition,
+						 &abDimElast, FALSE))
+			  /* il y a eu au moins un changement */
+			  {
+			    /* pas d'inversion position/dimension */
+			    ret = TRUE;
+			    pAb->AbWidthChange = TRUE;
+			    pAb->AbHorizPosChange = TRUE;
+			  }
+			else
+			  /* pas de changement */
+			  ret = FALSE;
+		      }
+		  }
+		break;
+	      default:
+		break;
+	      }
+	  break;
+	  
+	case PtHeight:
+	case PtWidth:
+	  /* sauve d'abord la dimension du pave' */
+	  if (pR->PrType == PtHeight)
+	    Dimens = pAb->AbHeight;
+	  else
+	    Dimens = pAb->AbWidth;
+	  
+	  /* traitement selon la regle de dimension */
+	  pRelD1 = &pR->PrDimRule;
+	  if (pRelD1->DrPosition)
+	    {
+	      /* regle de dimension elastique */
+	      if (!Dimens.DimIsPosition)
+		/* pave non elastique */
+		/* on applique la regle */
+		{
+		  (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
+		  ret = TRUE;
+		}
+	    }
+	  else if (!Dimens.DimIsPosition &&
+		   !pRelD1->DrAbsolute &&
+		   /* ce n'est pas une dimension absolue */
+		   (pRelD1->DrRelation == levelPos ||
+		    (pRelD1->DrRelation == RlSameLevel &&
+		     (levelPos == RlPrevious || levelPos == RlNext))))
+	    {
+	      /* regle de dimension non elastique */
+	      if (pR->PrType == PtHeight)
+		/* hauteur */
+		{
+		  (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
+		  ret = IsDiffDimension (pAb->AbHeight, &Dimens);
+		}
+	      else
+		/* largeur */
+		{
+		  (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
+		  ret = IsDiffDimension (pAb->AbWidth, &Dimens);
+		}
+	    }
+	  break;
+	default:
+	  break;
+	}
+    }
+  return (ret);
 }
 
 
@@ -1457,18 +1432,14 @@ PtrDocument         pDoc;
    de la chaine des paves dupliques de l'element           
    Retourne un pointeur sur ce pave ou NULL si pas trouve'.
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static PtrAbstractBox AbsBoxPresType (PtrAbstractBox pAbb, PtrPRule pRPres, PtrPSchema pSchP)
-
 #else  /* __STDC__ */
 static PtrAbstractBox AbsBoxPresType (pAbb, pRPres, pSchP)
 PtrAbstractBox      pAbb;
 PtrPRule            pRPres;
 PtrPSchema          pSchP;
-
 #endif /* __STDC__ */
-
 {
    PtrAbstractBox      pAb, pAbbMain;
    ThotBool            found, stop;	/* 1er pave de l'element dans la vue */
@@ -1549,10 +1520,8 @@ PtrPSchema          pSchP;
 /*----------------------------------------------------------------------
    ApplFunctionPresRules                                               
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void         ApplFunctionPresRules (PtrPRule pRule, PtrPSchema pSchP, PtrAttribute pAttr, PtrDocument pDoc, PtrElement pEl, ThotBool change, ThotBool first)
-
 #else  /* __STDC__ */
 static void         ApplFunctionPresRules (pRule, pSchP, pAttr, pDoc, pEl, change, first)
 PtrPRule            pRule;
@@ -1562,9 +1531,7 @@ PtrDocument         pDoc;
 PtrElement          pEl;
 ThotBool            change;
 ThotBool            first;
-
 #endif /* __STDC__ */
-
 {
    int                 view;
    PtrAbstractBox      pAb, pAbbReDisp;
@@ -1676,19 +1643,15 @@ ThotBool            first;
    pDoc pointe sur le descripteur du document ou on        
    travaille.                                              
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                ChangeFirstLast (PtrElement pEl, PtrDocument pDoc, ThotBool first, ThotBool change)
-
 #else  /* __STDC__ */
 void                ChangeFirstLast (pEl, pDoc, first, change)
 PtrElement          pEl;
 PtrDocument         pDoc;
 ThotBool            first;
 ThotBool            change;
-
 #endif /* __STDC__ */
-
 {
    PtrPRule            pRPres;
    PtrPSchema          pSchP;
@@ -1982,19 +1945,15 @@ int                *boxType;
    n'existe pas et en cas de creation retourne l'adresse
    de son pave dans pAbbReDisp.
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void         CreateHeaderFooterForAssocEl (PtrElement pEl, int viewNb, PtrDocument pDoc, PtrAbstractBox * pAbbReDisp)
-
 #else  /* __STDC__ */
 static void         CreateHeaderFooterForAssocEl (pEl, viewNb, pDoc, pAbbReDisp)
 PtrElement          pEl;
 int                 viewNb;
 PtrDocument         pDoc;
 PtrAbstractBox     *pAbbReDisp;
-
 #endif /* __STDC__ */
-
 {
    PtrPSchema          pSchP;
    int                 index, boxType, TypeP;
@@ -2102,7 +2061,6 @@ PtrDocument         pDoc;
 ThotBool            assoc;
 int                 v;
 #endif /* __STDC__ */
-
 {
    int                 vol;
    PtrAbstractBox      pAb, pAbb;
@@ -2156,7 +2114,6 @@ void                CreateAllAbsBoxesOfEl (PtrElement pE, PtrDocument pDoc)
 void                CreateAllAbsBoxesOfEl (pE, pDoc)
 PtrElement          pE;
 PtrDocument         pDoc;
-
 #endif /* __STDC__ */
 {
    int                 view;
@@ -2203,7 +2160,6 @@ PtrElement          pEl;
 PtrDocument         pDoc;
 int                 viewNb;
 #endif /* __STDC__ */
-
 {
    PtrAbstractBox      pAb, pAbbReDisp, pAbbR, pAbbFirst, pAbbLast, pAbbSibling;
    PtrAbstractBox      pAbbox1;
@@ -2324,6 +2280,7 @@ int                 viewNb;
 		       if (pAbbox1->AbLeafType == LtCompound
 			   && !pAbbox1->AbInLine
 			   && pAbbox1->AbTruncatedTail)
+			 {
 			 /* le pave precedent est incomplet a la fin */
 			 if (assocView || pDoc->DocView[view - 1].DvSync)
 			   /* La vue est synchronisee, on supprime tous les paves */
@@ -2342,6 +2299,7 @@ int                 viewNb;
 				   }
 				 pAb = pAb->AbEnclosing;
 				 if (pAb != NULL)
+				   {
 				   if (pAb->AbTruncatedHead)
 				     /* le pave englobant est deja coupe' en tete. */
 				     pAb = NULL;
@@ -2352,6 +2310,7 @@ int                 viewNb;
 				     TruncateOrCompleteAbsBox (pAb, TRUE, TRUE, pDoc);
 				     pAb->AbTruncatedHead = TRUE;
 				     }
+				   }
 			       }
 			     while (pAb != NULL);
 			   }
@@ -2359,14 +2318,16 @@ int                 viewNb;
 			   /* ce n'est pas une vue synchronisee, on detruit les */
 			   /* paves que l'on vient de creer */
 			   DestroyNewAbsBox (&pAbbFirst, &pAbbLast, frame, pDoc, assocView, v);
+			 }
 		     }
-		   if (pAbbLast != NULL)
-		     if (pAbbLast->AbNext != NULL)
-		       {
-			 pAbbox1 = pAbbLast->AbNext;
-			 if (pAbbox1->AbLeafType == LtCompound
-			     && !pAbbox1->AbInLine
-			     && pAbbox1->AbTruncatedHead)
+		   if (pAbbLast != NULL &&
+		       pAbbLast->AbNext != NULL)
+		     {
+		       pAbbox1 = pAbbLast->AbNext;
+		       if (pAbbox1->AbLeafType == LtCompound
+			   && !pAbbox1->AbInLine
+			   && pAbbox1->AbTruncatedHead)
+			 {
 			   /* le pave suivant est incomplet au debut */
 			   if (assocView || pDoc->DocView[view - 1].DvSync)
 			     /* La vue est synchronisee, on supprime 
@@ -2385,14 +2346,16 @@ int                 viewNb;
 				     }
 				   pAb = pAb->AbEnclosing;
 				   if (pAb != NULL)
-				     if (pAb->AbTruncatedTail)
-				       pAb = NULL;
-				     else
-				       /* le pave englobant est coupe' en queue */
-				       {
-				       TruncateOrCompleteAbsBox (pAb, TRUE, FALSE, pDoc);
-				       pAb->AbTruncatedTail = TRUE;
-				       }
+				     {
+				       if (pAb->AbTruncatedTail)
+					 pAb = NULL;
+				       else
+					 /* le pave englobant est coupe' en queue */
+					 {
+					   TruncateOrCompleteAbsBox (pAb, TRUE, FALSE, pDoc);
+					   pAb->AbTruncatedTail = TRUE;
+					 }
+				     }
 				 }
 			       while (pAb != NULL);
 			     }
@@ -2400,7 +2363,8 @@ int                 viewNb;
 			     /* ce n'est pas une vue synchronisee, on detruit les */
 			     /* paves que l'on vient de creer */
 			     DestroyNewAbsBox (&pAbbFirst, &pAbbLast, frame, pDoc, assocView, v);
-		       }
+			 }
+		     }
 		   /* si on n'a pas pu creer tous les paves du contenu de */
 		   /* l'element (ils depasseraient la capacite de la fenetre), */
 		   /* il faut supprimer tous les paves suivant l'element */
@@ -2479,7 +2443,6 @@ PtrDocument         pDoc;
 ThotBool            verify;
 int                 view;
 #endif /* __STDC__ */
-
 {
    PtrAbstractBox      pAb, pAbbReDisp, pAbbR, pAbb, pElAscent, PcFirst;
    PtrAbstractBox      pAbbox1, PcLast;
@@ -2684,29 +2647,27 @@ PtrElement          pEl;
 PtrDocument         pDoc;
 ThotBool            verify;
 #endif /* __STDC__ */
-
 {
-   int                 view;
-   ThotBool            existingView;
+  int                 view;
+  ThotBool            existingView;
 
-   if (pEl != NULL)
-      /* traite les paves de toutes les vues */
-      for (view = 1; view <= MAX_VIEW_DOC; view++)
-	 /* teste si la vue  existe */
-	{
-	   if (!AssocView (pEl))
-	      /* ce n'est pas un element associe */
-	      existingView = pDoc->DocView[view - 1].DvPSchemaView > 0;
-	   else
-	      /* c'est un element associe */
-	   if (pDoc->DocAssocFrame[pEl->ElAssocNum - 1] == 0)
-	      existingView = FALSE;
-	   else
-	      existingView = view == 1;
-	   if (existingView)
-	      /* detruit les paves de cette vue */
-	      DestroyAbsBoxesView (pEl, pDoc, verify, view);
-	}
+  if (pEl != NULL)
+    /* traite les paves de toutes les vues */
+    for (view = 1; view <= MAX_VIEW_DOC; view++)
+      /* teste si la vue  existe */
+      {
+	if (!AssocView (pEl))
+	  /* ce n'est pas un element associe */
+	  existingView = pDoc->DocView[view - 1].DvPSchemaView > 0;
+	else if (pDoc->DocAssocFrame[pEl->ElAssocNum - 1] == 0)
+	  /* c'est un element associe */
+	  existingView = FALSE;
+	else
+	  existingView = view == 1;
+	if (existingView)
+	  /* detruit les paves de cette vue */
+	  DestroyAbsBoxesView (pEl, pDoc, verify, view);
+      }
 }
 
 
@@ -2722,22 +2683,17 @@ ThotBool            verify;
    Note: cette nouvelle procedure est extraite du code de  
    l'ancienne procedure RedispAllReferences.                           
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                RedispRef (PtrReference pRef, PtrAbstractBox pAb, PtrDocument pDocRef)
-
 #else  /* __STDC__ */
 void                RedispRef (pRef, pAb, pDocRef)
 PtrReference        pRef;
 PtrAbstractBox      pAb;
 PtrDocument         pDocRef;
-
 #endif /* __STDC__ */
-
 {
    PtrElement          pElRef;
    PtrAbstractBox      pAbb, pPavRef;
-   int                 v, frame, j, h;
    PtrPRule            pRule;
    ThotBool            found, redisp, stop, same;
    PtrTextBuffer       bufCopy, BufOriginal;
@@ -2745,6 +2701,7 @@ PtrDocument         pDocRef;
    PtrAttribute        pAttr;
    PtrPRule            pRe1;
    PtrAbstractBox      pAbbox1;
+   int                 v, frame, j, h;
    ThotBool            complete;
 
    pElRef = pRef->RdElement;
@@ -2807,6 +2764,7 @@ PtrDocument         pDocRef;
 			   pRe1 = pRule;
 			   if (pRe1->PrViewNum == pDocRef->DocView[v - 1].DvPSchemaView
 			       && pRe1->PrPresFunction == FnCopy)
+			     {
 			      if (pAb == NULL)
 				 found = TRUE;
 			      else
@@ -2817,6 +2775,7 @@ PtrDocument         pDocRef;
 				   else
 				      found = pRe1->PrPresBox[0] == pAbbox1->AbTypeNum;
 				}
+			     }
 			   if (!found)
 			      pRule = pRule->PrNextPRule;
 			}
@@ -2873,17 +2832,13 @@ PtrDocument         pDocRef;
    englobant de l'element creant ce pave et qui copient    
    ce pave. Demande leur reaffichage                       
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                RedispAllReferences (PtrAbstractBox pAb, PtrDocument pDoc)
-
 #else  /* __STDC__ */
 void                RedispAllReferences (pAb, pDoc)
 PtrAbstractBox      pAb;
 PtrDocument         pDoc;
-
 #endif /* __STDC__ */
-
 {
    PtrElement          pEl;
    PtrReference        pRef;
@@ -2922,7 +2877,6 @@ PtrDocument         pDoc;
 
 #ifdef __STDC__
 static PtrAbstractBox SearchAbsBoxBackward (PtrAbstractBox pAbb1, ThotBool Test, PtrSSchema pSchStr, PtrPSchema pSchP, int Typ, ThotBool Pres)
-
 #else  /* __STDC__ */
 static PtrAbstractBox SearchAbsBoxBackward (pAbb1, Test, pSchStr, pSchP, Typ, Pres)
 PtrAbstractBox      pAbb1;
@@ -2931,9 +2885,7 @@ PtrSSchema          pSchStr;
 PtrPSchema          pSchP;
 int                 Typ;
 ThotBool            Pres;
-
 #endif /* __STDC__ */
-
 {
    PtrAbstractBox      p, s;
    PtrAbstractBox      pAbbox1;
@@ -2991,7 +2943,6 @@ ThotBool            pres;
 int                 typeElOrPres;
 PtrPSchema          pSchP;
 PtrSSchema          pSchStr;
-
 #endif /* __STDC__ */
 {
    PtrAbstractBox      pAbbResult, pAbbForward, pAbbAscent;
@@ -3071,7 +3022,6 @@ static void         FindFirstAbsBox (PtrElement pElBegin, int nv)
 static void         FindFirstAbsBox (pElBegin, nv)
 PtrElement          pElBegin;
 int                 nv;
-
 #endif /* __STDC__ */
 {
    PtrElement          pEl;
@@ -3222,7 +3172,6 @@ PtrPSchema          pSchP;
 PtrDocument         pDoc;
 PtrElement          pElBegin;
 ThotBool            redisp;
-
 #endif /* __STDC__ */
 {
    PtrAbstractBox      pAb, pAbbFollow;
@@ -3346,7 +3295,6 @@ PtrPSchema          pSchP;
 PtrDocument         pDoc;
 PtrElement          pElBegin;
 ThotBool            redisp;
-
 #endif /* __STDC__ */
 {
    PtrAbstractBox      pAb, pAbb, pAbbNext;
@@ -3533,10 +3481,8 @@ ThotBool            redisp;
    le document inclus dans sa forme demi expansee: il est  
    alors dans le  document l'incluant.                     
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void         AttachCounterValue (PtrElement pEl, PtrElement pElIncluded, PtrDocument pDocIncluded, Name NmAttr, int counter, PtrPSchema pSchP, PtrSSchema pSchS)
-
 #else  /* __STDC__ */
 static void         AttachCounterValue (pEl, pElIncluded, pDocIncluded, NmAttr, counter, pSchP, pSchS)
 PtrElement          pEl;
@@ -3546,9 +3492,7 @@ Name                NmAttr;
 int                 counter;
 PtrPSchema          pSchP;
 PtrSSchema          pSchS;
-
 #endif /* __STDC__ */
-
 {
    int                 att;
    PtrAttribute        pAttr;
@@ -3606,7 +3550,6 @@ int                 counter;
 PtrPSchema          pSchP;
 PtrSSchema          pSchS;
 #endif /* __STDC__ */
-
 {
    PtrElement          pElIncluded;
    PtrReference        pRef;
@@ -3637,10 +3580,8 @@ PtrSSchema          pSchS;
    affectees par le compteur counter du schema de presentation 
    pSchP, apartir de l'element pElBegin.                   
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void         ChangeBoxesCounter (PtrElement pElBegin, PtrDocument pDoc, int counter, PtrPSchema pSchP, PtrSSchema pSS, ThotBool redisp)
-
 #else  /* __STDC__ */
 static void         ChangeBoxesCounter (pElBegin, pDoc, counter, pSchP, pSS, redisp)
 PtrElement          pElBegin;
@@ -3649,9 +3590,7 @@ int                 counter;
 PtrPSchema          pSchP;
 PtrSSchema          pSS;
 ThotBool            redisp;
-
 #endif /* __STDC__ */
-
 {
    int                 util, view;
    Counter            *pCo1;
@@ -3797,19 +3736,15 @@ ThotBool            redisp;
    (lui-meme compris) et qui sont affectes par l'element   
    pElModif.                                               
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void         UpdateNum1Elem (PtrElement pElBegin, PtrElement pElModif, PtrDocument pDoc, ThotBool redisp)
-
 #else  /* __STDC__ */
 static void         UpdateNum1Elem (pElBegin, pElModif, pDoc, redisp)
 PtrElement          pElBegin;
 PtrElement          pElModif;
 PtrDocument         pDoc;
 ThotBool            redisp;
-
 #endif /* __STDC__ */
-
 {
    int                 counter, oper, i;
    PtrPSchema          pSchP;
@@ -3872,19 +3807,15 @@ ThotBool            redisp;
 /*----------------------------------------------------------------------
    UpdateNum                                                          
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void         UpdateNum (PtrElement pElD, PtrElement pElM, PtrDocument pDoc, ThotBool redisp)
-
 #else  /* __STDC__ */
 static void         UpdateNum (pElD, pElM, pDoc, redisp)
 PtrElement          pElD;
 PtrElement          pElM;
 PtrDocument         pDoc;
 ThotBool            redisp;
-
 #endif /* __STDC__ */
-
 {
    PtrElement          pEl;
 
@@ -3913,19 +3844,15 @@ ThotBool            redisp;
    qui sont affectes par les elements du sous-arbre        
    (racine comprise) pointe par pElModif.                  
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                UpdateNumbers (PtrElement pElBegin, PtrElement pElModif, PtrDocument pDoc, ThotBool redisp)
-
 #else  /* __STDC__ */
 void                UpdateNumbers (pElBegin, pElModif, pDoc, redisp)
 PtrElement          pElBegin;
 PtrElement          pElModif;
 PtrDocument         pDoc;
 ThotBool            redisp;
-
 #endif /* __STDC__ */
-
 {
    int                 i;
 
@@ -3946,7 +3873,6 @@ ThotBool            redisp;
 
 #ifdef __STDC__
 void                UpdateBoxesCounter (PtrElement pElBegin, PtrDocument pDoc, int counter, PtrPSchema pSchP, PtrSSchema pSS)
-
 #else  /* __STDC__ */
 void                UpdateBoxesCounter (pElBegin, pDoc, counter, pSchP, pSS)
 PtrElement          pElBegin;
@@ -3954,9 +3880,7 @@ PtrDocument         pDoc;
 int                 counter;
 PtrPSchema          pSchP;
 PtrSSchema          pSS;
-
 #endif /* __STDC__ */
-
 {
    int                 i;
 
@@ -4046,18 +3970,14 @@ PRuleType           typeRule;
    d'heritage, on applique cette regle au pave' pointe'    
    par pAb, et on fait de meme sur son sous-arbre.        
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void         ApplyInheritPresRule (PtrAbstractBox pAb, PRuleType typeRule, PtrDocument pDoc)
-
 #else  /* __STDC__ */
 static void         ApplyInheritPresRule (pAb, typeRule, pDoc)
 PtrAbstractBox      pAb;
 PRuleType           typeRule;
 PtrDocument         pDoc;
-
 #endif /* __STDC__ */
-
 {
    PtrPRule            pRPres;
    PtrAbstractBox      pAbbChild;
@@ -4135,10 +4055,8 @@ PtrDocument         pDoc;
    inversement).                                           
    Retourne Vrai si la regle a ete appliquee.              
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static ThotBool     ApplyPresRuleAb (PtrPRule pRule, PtrPSchema pSchP, PtrAbstractBox pAb, PtrDocument pDoc, PtrAttribute pAttr)
-
 #else  /* __STDC__ */
 static ThotBool     ApplyPresRuleAb (pRule, pSchP, pAb, pDoc, pAttr)
 PtrPRule            pRule;
@@ -4146,77 +4064,81 @@ PtrPSchema          pSchP;
 PtrAbstractBox      pAb;
 PtrDocument         pDoc;
 PtrAttribute        pAttr;
-
 #endif /* __STDC__ */
-
 {
-   PtrPRule            pRegle2;
-   PtrPSchema          pSchP2;
-   PtrAttribute        pAttr2;
-   ThotBool            ret;
+  PtrPRule            pRegle2;
+  PtrPSchema          pSchP2;
+  PtrAttribute        pAttr2;
+  ThotBool            ret;
 
-   /* applique la regle a` appliquer */
-   ret = ApplyRule (pRule, pSchP, pAb, pDoc, pAttr);
-   /* verifie si c'est une regle de dimension ou de position */
-   /* qui s'applique a un pave' elastique dont la boite a ete */
-   /* inversee. Dans ce cas reapplique la regle de position ou */
-   /* de dimension */
-   if (ret && pRule != NULL)
+  /* applique la regle a` appliquer */
+  ret = ApplyRule (pRule, pSchP, pAb, pDoc, pAttr);
+  /* verifie si c'est une regle de dimension ou de position */
+  /* qui s'applique a un pave' elastique dont la boite a ete */
+  /* inversee. Dans ce cas reapplique la regle de position ou */
+  /* de dimension */
+  if (ret && pRule != NULL)
+    {
       if (pRule->PrType == PtVertPos || pRule->PrType == PtHeight)
-	 /* c'est une regle de dimension ou de position verticale */
+	/* c'est une regle de dimension ou de position verticale */
 	{
-	   if (pAb->AbHeight.DimIsPosition)
+	  if (pAb->AbHeight.DimIsPosition &&
 	      /* le pave est elastique verticalement */
-	      if (pAb->AbBox != NULL)
-		 /* le pave possede une boite dans l'image concrete */
-		 if (pAb->AbBox->BxVertInverted)
-		    /* la boite a ete inverse'e verticalement, on */
-		    /* reapplique la regle complementaire */
-		    if (pRule->PrType == PtVertPos)
-		      {
-			 pRegle2 = SearchRulepAb (pDoc, pAb, &pSchP2, PtHeight,
-						  FnAny, TRUE, &pAttr2);
-			 if (pRegle2 != NULL)
-			    if (ApplyRule (pRegle2, pSchP2, pAb, pDoc, pAttr2))
-			       pAb->AbHeightChange = TRUE;
-		      }
-		    else
-		      {
-			pRegle2 = SearchRulepAb (pDoc, pAb, &pSchP2, PtVertPos,
-						 FnAny, TRUE, &pAttr2);
-			if (pRegle2 != NULL)
-			  if (ApplyRule (pRegle2, pSchP2, pAb, pDoc, pAttr2))
-			    pAb->AbVertPosChange = TRUE;
-		      }
+	      pAb->AbBox != NULL &&
+	      /* le pave possede une boite dans l'image concrete */
+	      pAb->AbBox->BxVertInverted)
+	    /* la boite a ete inverse'e verticalement, on */
+	    {
+	      /* reapplique la regle complementaire */
+	      if (pRule->PrType == PtVertPos)
+		{
+		  pRegle2 = SearchRulepAb (pDoc, pAb, &pSchP2, PtHeight,
+					   FnAny, TRUE, &pAttr2);
+		  if (pRegle2 != NULL)
+		    if (ApplyRule (pRegle2, pSchP2, pAb, pDoc, pAttr2))
+		      pAb->AbHeightChange = TRUE;
+		}
+	      else
+		{
+		  pRegle2 = SearchRulepAb (pDoc, pAb, &pSchP2, PtVertPos,
+					   FnAny, TRUE, &pAttr2);
+		  if (pRegle2 != NULL)
+		    if (ApplyRule (pRegle2, pSchP2, pAb, pDoc, pAttr2))
+		      pAb->AbVertPosChange = TRUE;
+		}
+	    }
 	}
       else if (pRule->PrType == PtHorizPos || pRule->PrType == PtWidth)
-	 /* c'est une regle de dimension ou de position horiz. */
 	{
-	   if (pAb->AbWidth.DimIsPosition)
+	  /* c'est une regle de dimension ou de position horiz. */
+	  if (pAb->AbWidth.DimIsPosition &&
 	      /* le pave est elastique horizontalement */
-	      if (pAb->AbBox != NULL)
-		 /* le pave possede une boite dans l'image concrete */
-		 if (pAb->AbBox->BxHorizInverted)
-		   /* la boite a ete inverse'e horizontalement, on */
-		   /* reapplique la regle complementaire */
-		   if (pRule->PrType == PtHorizPos)
-		     {
-		       pRegle2 = SearchRulepAb (pDoc, pAb, &pSchP2, PtWidth,
-						FnAny, TRUE, &pAttr2);
-		       if (pRegle2 != NULL)
-			 if (ApplyRule (pRegle2, pSchP2, pAb, pDoc, pAttr2))
-			   pAb->AbWidthChange = TRUE;
-		     }
-		   else
-		     {
-		       pRegle2 = SearchRulepAb (pDoc, pAb, &pSchP2, PtHorizPos,
-						FnAny, TRUE, &pAttr2);
-		       if (pRegle2 != NULL)
-			 if (ApplyRule (pRegle2, pSchP2, pAb, pDoc, pAttr2))
-			   pAb->AbHorizPosChange = TRUE;
-		     }
+	      pAb->AbBox != NULL &&
+	      /* le pave possede une boite dans l'image concrete */
+	      pAb->AbBox->BxHorizInverted)
+	    {
+	      /* la boite a ete inverse'e horizontalement, on */
+	      /* reapplique la regle complementaire */
+	      if (pRule->PrType == PtHorizPos)
+		{
+		  pRegle2 = SearchRulepAb (pDoc, pAb, &pSchP2, PtWidth,
+					   FnAny, TRUE, &pAttr2);
+		  if (pRegle2 != NULL)
+		    if (ApplyRule (pRegle2, pSchP2, pAb, pDoc, pAttr2))
+		      pAb->AbWidthChange = TRUE;
+		}
+	      else
+		{
+		  pRegle2 = SearchRulepAb (pDoc, pAb, &pSchP2, PtHorizPos,
+					   FnAny, TRUE, &pAttr2);
+		  if (pRegle2 != NULL)
+		    if (ApplyRule (pRegle2, pSchP2, pAb, pDoc, pAttr2))
+		      pAb->AbHorizPosChange = TRUE;
+		}
+	    }
 	}
-   return ret;
+    }
+  return ret;
 }
 
 /*----------------------------------------------------------------------
@@ -4224,7 +4146,6 @@ PtrAttribute        pAttr;
    Corresponding to view may be displayed within the abstract image
    part already builded.
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 ThotBool            ElemWithinImage (PtrElement pEl, int view, PtrAbstractBox pAbbRoot, PtrDocument pDoc)
 #else  /* __STDC__ */
@@ -4374,23 +4295,25 @@ ThotBool            inherit;
 PtrAttribute        pAttrComp;
 #endif /* __STDC__ */
 {
-  PtrPRule            pR, pRuleView1, pRNA, pRSpecif, pRS, firstOfType, pRP;
+  PtrPRule            pR, pRuleView1, pRNA, firstOfType;
   PRuleType           typeRule;
-  FunctionType        TFonct;
-  PtrAbstractBox      pAbb, pReaff, pPR, pAbbNext, pAbbChild, pAbbSibling;
+  FunctionType        func;
+  PtrAbstractBox      pAb, pReaff, pPR;
+  PtrAbstractBox      pAbNext, pAbChild, pAbSibling;
   PtrPSchema          pSchP, pSPR;
   PtrAttribute        pAttrib;
   PtrHandlePSchema    pHd;
   TypeUnit            unit;
   int                 view, viewSch, val;
   ThotBool            appl, stop, sameType, found;
-  ThotBool            existingView;
+  ThotBool            existingView, assoc;
   ThotBool            createBox, complete;
 
   viewSch = 0;
-  pAbbNext = NULL;
+  pAbNext = NULL;
   typeRule = (PRuleType) 0;
-  TFonct = (FunctionType) 0;
+  func = (FunctionType) 0;
+  assoc = AssocView (pEl);
   /* on applique successivement tous les schemas de presentation en commencant
      par le moins prioritaire : le schema de presentation principal */
   pHd = NULL;
@@ -4404,13 +4327,12 @@ PtrAttribute        pAttrComp;
       /* traite toutes les regles associees a cette valeur d'attribut dans */
       /* ce schema de presentation */
       while (firstOfType != NULL)
-	/* Les regles de chaque type sont traitees dans toutes les vues ou
-	   l'element a un pave */
+	/* Manage each rule type in all views where the element is presented */
 	{
 	  typeRule = pR->PrType;
 	  /* type des regles courantes */
 	  if (typeRule == PtFunction)
-	    TFonct = pR->PrPresFunction;
+	    func = pR->PrPresFunction;
 	  pRuleView1 = NULL;
 	  if (pR->PrViewNum == 1)
 	    /* regle pour la vue 1 */
@@ -4420,29 +4342,25 @@ PtrAttribute        pAttrComp;
 	  for (view = 1; view <= MAX_VIEW_DOC; view++)
 	    {
 	      pR = firstOfType;
-	      /* verifie d'abord si la vue existe */
-	      if (AssocView (pEl))
-		/* element associe */
+	      /* check if the view exists */
+	      if (assoc)
 		existingView = pDoc->DocAssocFrame[pEl->ElAssocNum - 1] != 0 && view == 1;
 	      else
 		existingView = pDoc->DocView[view - 1].DvPSchemaView > 0;
 	      if (existingView)
 		{
 		  viewSch = AppliedView (pEl, pAttr, pDoc, view);
-		  /* on ne considere les schemas de presentation
-		     additionnels que pour la vue principale */
+		  /* look at additional presentation schemas for only the view 1 */
 		  existingView = (pHd == NULL || viewSch == 1);
 		}
 	      if (existingView)
 		{
-		  /* si c'est une regle de creation on l'applique a toutes les */
-		  /* vues */
-		  if (typeRule != PtFunction
-		      || !(TFonct == FnCreateBefore || TFonct == FnCreateFirst
-			   || TFonct == FnCreateWith
-			   || TFonct == FnCreateLast || TFonct == FnCreateAfter))
-		    /* ce n'est pas une regle de creation ; on cherche la
-		       regle de meme type qui concerne cette vue */
+		  /* if it's a creation rule it applies to all views */
+		  if (typeRule != PtFunction ||
+		      (func != FnCreateBefore && func != FnCreateFirst &&
+		       func != FnCreateWith && func == FnCreateLast && func != FnCreateAfter))
+		    /* it's not a creation rule, look for a rule of the same
+		       type and specific to that view */
 		    {
 		      pR = firstOfType;
 		      stop = FALSE;
@@ -4450,163 +4368,146 @@ PtrAttribute        pAttrComp;
 			{
 			  sameType = FALSE;
 			  if (pR->PrType == typeRule)
-			    if (typeRule != PtFunction)
-			      sameType = TRUE;
-			    else
-			      if (pR->PrPresFunction == TFonct)
+			    {
+			      if (typeRule != PtFunction)
 				sameType = TRUE;
+			      else if (pR->PrPresFunction == func)
+				sameType = TRUE;
+			    }
 			  if (!sameType)
 			    pR = NULL;
+			  else if (pR->PrViewNum == viewSch)
+			    stop = TRUE;
 			  else
-			    if (pR->PrViewNum == viewSch)
-			      stop = TRUE;
-			    else
-			      pR = pR->PrNextPRule;
+			    pR = pR->PrNextPRule;
 			}
 		      while (!stop && pR != NULL);
 		      
 		      if (pR == NULL)
 			pR = pRuleView1;
 		    }
-		  if (pR && pR->PrCond)
-		    if (!CondPresentation (pR->PrCond, pEl, pAttr, pElAttr,
-					   viewSch, pAttr->AeAttrSSchema))
-		      /* les conditions d'application de la regle ne sont
-			 pas satisfaites, on n'applique pas la regle */
-		      pR = NULL;
+		  if (pR && pR->PrCond &&
+		      !CondPresentation (pR->PrCond, pEl, pAttr, pElAttr,
+					 viewSch, pAttr->AeAttrSSchema))
+		    /* due to conditions the rule doesn't apply */
+		    pR = NULL;
 		}
 	      else
 		pR = NULL;
+
 	      if (pR != NULL)
 		{
+		  /* by default nothing to redisplay */
 		  pReaff = NULL;
-		  /* il n'y a rien (encore) a reafficher */
-		  pAbb = NULL;
-		  /* on n'a pas cree de pave */
+		  pAb = NULL;
 		  createBox = ElemWithinImage (pEl, view, pDoc->DocViewRootAb[view - 1], pDoc);
-		  if (createBox && pEl->ElAbstractBox[view - 1] == NULL && typeRule == PtVisibility)
-		    /* le pave n'existe pas et c'est une regle de visibilite */
+		  if (createBox && pEl->ElAbstractBox[view - 1] == NULL &&
+		      typeRule == PtVisibility)
 		    {
+		      /* the abstract box doesn't exist and it's a rule Visibility */
 		      val = IntegerRule (pR, pEl, view, &appl, &unit, pAttr, NULL);
 		      if ((!remove && val > 0) || (remove && val <= 0))
 			/* cette regle rend le pave visible et ce n'est pas une suppression
 			   ou c'est une suppression et le pave etait rendu invisible par la regle
 			   on cree le pave et ses paves de presentation eventuels */
 			{
-			  if (AssocView (pEl))
+			  if (assoc)
 			    pDoc->DocAssocFreeVolume[pEl->ElAssocNum - 1] = THOT_MAXINT;
 			  else
 			    pDoc->DocViewFreeVolume[view - 1] = THOT_MAXINT;
-			  pAbb = AbsBoxesCreate (pEl, pDoc, view, TRUE, TRUE, &complete);
-			  if (pAbb != NULL)
-			    /* au moins un pave a ete cree. pAbb est le
+			  pAb = AbsBoxesCreate (pEl, pDoc, view, TRUE, TRUE, &complete);
+			  if (pAb != NULL)
+			    /* au moins un pave a ete cree. pAb est le
 			       premier. Cherche le dernier cree */
 			    {
-			      pAbbNext = pAbb;
+			      pAbNext = pAb;
 			      stop = FALSE;
 			      do
-				if (pAbbNext->AbNext == NULL)
+				if (pAbNext->AbNext == NULL)
 				  stop = TRUE;
-				else if (pAbbNext->AbNext->AbElement != pEl)
+				else if (pAbNext->AbNext->AbElement != pEl)
 				  stop = TRUE;
 				else
-				  pAbbNext = pAbbNext->AbNext;
+				  pAbNext = pAbNext->AbNext;
 			      while (!stop);
 			    }
 			}
 		    }
-		  if (createBox
-		      && pEl->ElAbstractBox[view - 1] != NULL && typeRule == PtFunction
-		      && (TFonct == FnCreateBefore || TFonct == FnCreateAfter
-			  || TFonct == FnCreateWith
-			  || TFonct == FnCreateFirst || TFonct == FnCreateLast)
-		      && !remove)
+
+		  if (createBox &&
+		      pEl->ElAbstractBox[view - 1] != NULL && typeRule == PtFunction &&
+		      (func == FnCreateBefore || func == FnCreateAfter ||
+		       func == FnCreateWith || func == FnCreateFirst || func == FnCreateLast) &&
+		      !remove)
 		    /* il faut creer un pave de presentation */
 		    {
-		      if (AssocView (pEl))
+		      if (assoc)
 			pDoc->DocAssocFreeVolume[pEl->ElAssocNum - 1] = THOT_MAXINT;
 		      else
 			pDoc->DocViewFreeVolume[view - 1] = THOT_MAXINT;
-		      pAbb = CrAbsBoxesPres (pEl, pDoc, pR, pAttr->AeAttrSSchema, pAttr, view,
+		      pAb = CrAbsBoxesPres (pEl, pDoc, pR, pAttr->AeAttrSSchema, pAttr, view,
 					     pSchP, FALSE, TRUE);
-		      pAbbNext = pAbb;
+		      pAbNext = pAb;
 		    }
+
 		  /* traite les paves crees par la regle de visibilite ou de */
 		  /* creation */
 		  /* code inutile et incorrect (fait dans AbsBoxesCreate) si saut de page */
 		  /* il reste correct si on a cree seulement des paves de presentation */
-		  if (pAbb != NULL)
+		  if (pAb != NULL)
 		    /* les nouveaux paves doivent etre pris en compte par */
 		    /* leurs voisins */
-		    ApplyRefAbsBoxNew (pAbb, pAbbNext, &pReaff, pDoc);
+		    ApplyRefAbsBoxNew (pAb, pAbNext, &pReaff, pDoc);
 		  
 		  /* traite les paves qui existaient deja */
 		  /* il faut faire une boucle de parcours des paves dupliques de l'element */
-		  if (pEl->ElAbstractBox[view - 1] != NULL && pAbb == NULL)
+		  if (pEl->ElAbstractBox[view - 1] != NULL && pAb == NULL)
 		    {
-		      pAbb = pEl->ElAbstractBox[view - 1];
+		      pAb = pEl->ElAbstractBox[view - 1];
 		      /* saute les paves de presentation de l'element */
-		      while (pAbb->AbNext != NULL &&
-			     pAbb->AbPresentationBox &&
-			     pAbb->AbElement == pEl)
-			pAbb = pAbb->AbNext;
+		      while (pAb->AbNext != NULL && pAb->AbPresentationBox && pAb->AbElement == pEl)
+			pAb = pAb->AbNext;
+
 		      appl = FALSE;
 		      /* on n'a pas applique' la regle */
 		      /* applique la regle au pave de l'element s'il n'est pas mort */
-		      if (!pAbb->AbDead)
-			if (pR->PrType == typeRule && pR->PrViewNum == viewSch)
-				/* regle specifique de la vue traitee */
-			  if (remove)
-			    {
-			      pRNA = SearchRulepAb (pDoc, pAbb, &pSPR, typeRule, TFonct, TRUE, &pAttrib);
-			      appl = ApplyPresRuleAb (pRNA, pSPR, pAbb, pDoc, pAttrib);
-			    }
-			  else
-			    appl = ApplyPresRuleAb (pR, pSchP, pAbb, pDoc, pAttr);
-			else
-				/* applique la regle de la vue 1 si elle existe */
-			  if (pRuleView1 != NULL)
-			    if (remove)
-			      {
-				pRNA = SearchRulepAb (pDoc, pAbb, &pSPR, typeRule, TFonct, TRUE, &pAttrib);
-				appl = ApplyPresRuleAb (pRNA, pSPR, pAbb, pDoc, pAttrib);
-			      }
-			    else
-			      appl = ApplyPresRuleAb (pRuleView1, pSchP, pAbb, pDoc, pAttr);
-			  else
-			    appl = FALSE;
-		      if (!appl)
-			if (remove)
-			  if (pR->PrType == PtFunction && pR->PrPresFunction == FnNotInLine)
-			    /* on desapplique une regle NotInLine */
-			    {
-			      pAbb->AbNotInLine = FALSE;
-			      appl = TRUE;
-			    }
+		      if (!pAb->AbDead)
+			{
+			  pRNA = SearchRulepAb (pDoc, pAb, &pSPR, typeRule, func, TRUE, &pAttrib);
+			  if (pR == pRNA || remove)
+			    appl = ApplyPresRuleAb (pRNA, pSPR, pAb, pDoc, pAttrib);
+			}
+		      if (!appl && remove &&
+			  pR->PrType == PtFunction && pR->PrPresFunction == FnNotInLine)
+			/* remove the NotInLine */
+			{
+			  pAb->AbNotInLine = FALSE;
+			  appl = TRUE;
+			}
 		      
 		      if (appl)
 			/* on a change' la presentation du pave */
 			{
-			  if (pAbb->AbVisibility <= 0)
+			  if (pAb->AbVisibility <= 0)
 			    /* l'attribut rend le pave invisible */
 			    {
-			      pAbb = pEl->ElAbstractBox[view - 1];
+			      pAb = pEl->ElAbstractBox[view - 1];
 			      /* 1er pave a tuer */
-			      pReaff = pAbb;
+			      pReaff = pAb;
 			      /* on reaffichera au moins ce pave */
 			      do
 				/* on tue tous les paves de l'element */
 				{
-				  SetDeadAbsBox (pAbb);
+				  SetDeadAbsBox (pAb);
 				  /* tue un pave */
 				  /* change les regles des autres paves qui se */
 				  /* referent au pave detruit */
-				  ApplyRefAbsBoxSupp (pAbb, &pPR, pDoc);
+				  ApplyRefAbsBoxSupp (pAb, &pPR, pDoc);
 				  pReaff = Enclosing (pReaff, pPR);
-				  pAbb = pAbb->AbNext;
-				  if (pAbb == NULL)
+				  pAb = pAb->AbNext;
+				  if (pAb == NULL)
 				    stop = TRUE;
-				  else if (pAbb->AbElement != pEl)
+				  else if (pAb->AbElement != pEl)
 				    stop = TRUE;
 				  else
 				    stop = FALSE;
@@ -4616,26 +4517,26 @@ PtrAttribute        pAttrComp;
 			  else
 			    /* le pave est toujours visible, mais a change' */
 			    {
-			      pReaff = pAbb;
-			      SetChange (pAbb, typeRule);
+			      pReaff = pAb;
+			      SetChange (pAb, typeRule);
 			      /* le parametre de presentation qui vient
 				 d'etre change' peut se transmettre par
 				 heritage. */
 			      /* On traite le sous-arbre. */
-			      pAbbChild = pAbb->AbFirstEnclosed;
-			      while (pAbbChild != NULL)
+			      pAbChild = pAb->AbFirstEnclosed;
+			      while (pAbChild != NULL)
 				{
-				  ApplyInheritPresRule (pAbbChild, typeRule, pDoc);
-				  pAbbChild = pAbbChild->AbNext;
+				  ApplyInheritPresRule (pAbChild, typeRule, pDoc);
+				  pAbChild = pAbChild->AbNext;
 				}
 			      /* on traite les pavés freres */
-			      if (pAbb->AbEnclosing)
+			      if (pAb->AbEnclosing)
 				{
-				  pAbbSibling = pAbb->AbEnclosing->AbFirstEnclosed;
-				  while (pAbbSibling != NULL)
+				  pAbSibling = pAb->AbEnclosing->AbFirstEnclosed;
+				  while (pAbSibling != NULL)
 				    {
-				      ApplyInheritPresRule (pAbbSibling, typeRule, pDoc);
-				      pAbbSibling = pAbbSibling->AbNext;
+				      ApplyInheritPresRule (pAbSibling, typeRule, pDoc);
+				      pAbSibling = pAbSibling->AbNext;
 				    }
 				}
 			    }
@@ -4644,88 +4545,88 @@ PtrAttribute        pAttrComp;
 
 		  if (pEl->ElAbstractBox[view - 1] != NULL
 		      && typeRule == PtFunction
-		      && (TFonct == FnCreateBefore || TFonct == FnCreateAfter
-			  || TFonct == FnCreateWith
-			  || TFonct == FnCreateFirst || TFonct == FnCreateLast)
+		      && (func == FnCreateBefore || func == FnCreateAfter
+			  || func == FnCreateWith
+			  || func == FnCreateFirst || func == FnCreateLast)
 		      && remove)
 		    /* on supprime un attribut qui portait une regle de */
 		    /* creation ; il faut detruire le pave de presentation que */
 		    /* cree la regle pR */
 		    /* cherche d'abord le pave de l'element */
 		    {
-		      pAbb = pEl->ElAbstractBox[view - 1];
+		      pAb = pEl->ElAbstractBox[view - 1];
 		      /* saute les paves de presentation de l'element */
-		      while (pAbb->AbNext != NULL && pAbb->AbPresentationBox && pAbb->AbElement == pEl)
-			pAbb = pAbb->AbNext;
+		      while (pAb->AbNext != NULL && pAb->AbPresentationBox && pAb->AbElement == pEl)
+			pAb = pAb->AbNext;
 		      /* cherche le pave de presentation a detruire */
 		      found = FALSE;
-		      switch (TFonct)
+		      switch (func)
 			{
 			case FnCreateBefore:
-			  pAbb = pAbb->AbPrevious;
+			  pAb = pAb->AbPrevious;
 			  break;
 			case FnCreateAfter:
 			case FnCreateWith:
-			  pAbb = pAbb->AbNext;
+			  pAb = pAb->AbNext;
 			  break;
 			case FnCreateFirst:
-			  pAbb = pAbb->AbFirstEnclosed;
+			  pAb = pAb->AbFirstEnclosed;
 			  break;
 			case FnCreateLast:
 			  /* cherche le dernier pave englobe' */
-			  pAbb = pAbb->AbFirstEnclosed;
-			  if (pAbb != NULL)
-			    while (pAbb->AbNext != NULL)
-			      pAbb = pAbb->AbNext;
+			  pAb = pAb->AbFirstEnclosed;
+			  if (pAb != NULL)
+			    while (pAb->AbNext != NULL)
+			      pAb = pAb->AbNext;
 			  break;
 			default:
 			  break;
 			}
-		      if (pAbb != NULL)
+		      if (pAb != NULL)
 			do
 			  /* pas de cas special pour les marques de page dans V4 */
-			  if (pAbb->AbElement->ElTypeNumber == PageBreak + 1)
+			  if (pAb->AbElement->ElTypeNumber == PageBreak + 1)
 			    {
 			    /* c'est un pave marque de page,passe au pave voisin */
-			    if (TFonct == FnCreateBefore || TFonct == FnCreateLast)
-			      pAbb = pAbb->AbPrevious;
+			    if (func == FnCreateBefore || func == FnCreateLast)
+			      pAb = pAb->AbPrevious;
 			    else
-			      pAbb = pAbb->AbNext;
+			      pAb = pAb->AbNext;
 			    }
-			  else if (!pAbb->AbPresentationBox || pAbb->AbElement != pEl)
+			  else if (!pAb->AbPresentationBox || pAb->AbElement != pEl)
 			    /* ce n'est pas un pave' marque de saut de page */
 			    /* ce n'est pas un pave de presentation ou ce pave */
 			    /* n'appartient pas a l'element */
-			    pAbb = NULL;
-			  else if (pAbb->AbTypeNum == pR->PrPresBox[0] && pAbb->AbPSchema == pSchP)
+			    pAb = NULL;
+			  else if (pAb->AbTypeNum == pR->PrPresBox[0] && pAb->AbPSchema == pSchP)
 			    /* c'est un pave de presentation de l'element */
 				/* ce pave a la type cherche', on a trouve' */
 			    found = TRUE;
-			  else if (TFonct == FnCreateBefore || TFonct == FnCreateLast)
+			  else if (func == FnCreateBefore || func == FnCreateLast)
 			    /* passe au pave voisin */
-			    pAbb = pAbb->AbPrevious;
+			    pAb = pAb->AbPrevious;
 			  else
-			    pAbb = pAbb->AbNext;
-			while (pAbb != NULL && !found);
+			    pAb = pAb->AbNext;
+			while (pAb != NULL && !found);
 
 		      if (found)
-			/* le pave a detruire est pointe' par pAbb */
-			if (!pAbb->AbDead)
+			/* le pave a detruire est pointe' par pAb */
+			if (!pAb->AbDead)
 			  {
-			    pReaff = pAbb;
+			    pReaff = pAb;
 			    /* on reaffichera au moins ce pave */
-			    SetDeadAbsBox (pAbb);
+			    SetDeadAbsBox (pAb);
 			    /* tue le pave */
 			    /* change les regles des autres paves qui se referent */
 			    /* au pave detruit */
-			    ApplyRefAbsBoxSupp (pAbb, &pPR, pDoc);
+			    ApplyRefAbsBoxSupp (pAb, &pPR, pDoc);
 			    pReaff = Enclosing (pReaff, pPR);
 			  }
 		    }
 		  /* conserve le pointeur sur le pave a reafficher */
 		  if (pReaff != NULL)
 		    {
-		      if (AssocView (pEl))
+		      if (assoc)
 			pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
 			  Enclosing (pReaff, pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
 		      else
@@ -4742,7 +4643,7 @@ PtrAttribute        pAttrComp;
 		 pR->PrType == firstOfType->PrType &&
 		 pR->PrCond == firstOfType->PrCond &&
 		 (pR->PrType != PtFunction ||
-		  (pR->PrPresFunction == TFonct &&
+		  (pR->PrPresFunction == func &&
 		   (pR->PrPresFunction != FnCreateBefore ||
 		    pR->PrPresBox[0] == firstOfType->PrPresBox[0]))))
 	    pR = pR->PrNextPRule;
@@ -4787,95 +4688,89 @@ PtrAttribute        pAttrComp;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 ThotBool            IsIdenticalTextType (PtrElement pEl, PtrDocument pDoc, PtrElement * pLib)
-
 #else  /* __STDC__ */
 ThotBool            IsIdenticalTextType (pEl, pDoc, pLib)
 PtrElement          pEl;
 PtrDocument         pDoc;
 PtrElement         *pLib;
-
 #endif /* __STDC__ */
-
 {
-   PtrElement          pEl2, pEVoisin;
-   PtrAbstractBox      pAb;
-   PtrAbstractBox      pAbbox1;
-   int                 view, dvol;
-   ThotBool            equal, stop;
+  PtrElement          pEl2, pEVoisin;
+  PtrAbstractBox      pAb;
+  int                 view, dvol;
+  ThotBool            equal, stop, assoc;
 
-   equal = FALSE;
-   if (pEl != NULL)
-     {
-	pEl2 = pEl->ElNext;
-	if (pEl2 != NULL && pEl->ElLeafType == LtText && pEl->ElTerminal)
-	   if (pEl2->ElTerminal && pEl2->ElLeafType == LtText)
-	      if (pEl2->ElLanguage == pEl->ElLanguage)
-		 if (!pEl2->ElHolophrast && !pEl->ElHolophrast)
-		    if (SameAttributes (pEl, pEl2))
-		       if (pEl->ElSource == NULL && pEl2->ElSource == NULL)
-			  if (BothHaveNoSpecRules (pEl, pEl2))
-			     if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct !=
-				 CsConstant)
-				if (pEl2->ElStructSchema->SsRule[pEl2->ElTypeNumber - 1].SrConstruct
-				    != CsConstant)
-				  {
-				     equal = TRUE;
-				     if (! MergeTextElements (pEl, pLib, pDoc,
-                                                              TRUE,  /* Notifier l'application => evenements */
-                                                              TRUE)) /* Detruire les paves du 2eme element */
-                                        return FALSE;
-				     if (pEl->ElStructSchema == NULL)
-				       /* pEl a ete libere' par l'application */
-				       return equal;
-				     /* teste si pEl est le dernier fils de son pere, */
-				     /* abstraction faite des marques de page */
-				     /* fusionne les deux elements de texte */
-				     pEVoisin = pEl->ElNext;
-				     stop = FALSE;
-				     do
-					if (pEVoisin == NULL)
-					   /* pEl devient le dernier fils de son pere */
-					  {
-					     ChangeFirstLast (pEl, pDoc, FALSE, FALSE);
-					     stop = TRUE;
-					  }
-					else if (!pEVoisin->ElTerminal
-						 || pEVoisin->ElLeafType != LtPageColBreak)
-					   stop = TRUE;
-					else
-					   pEVoisin = pEVoisin->ElNext;
-				     while (!stop);
-				     /* met a jour le volume des paves correspondants */
-				     for (view = 1; view <= MAX_VIEW_DOC; view++)
-				       {
-					  pAb = pEl->ElAbstractBox[view - 1];
-					  if (pAb != NULL)
-					    {
-					       pAb->AbChange = TRUE;
-					       if (!AssocView (pEl))
-						  pDoc->DocViewModifiedAb[view - 1] =
-						     Enclosing (pAb, pDoc->DocViewModifiedAb[view - 1]);
-					       else
-						 {
-						    pEl2 = pEl;
-						    pDoc->DocAssocModifiedAb[pEl2->ElAssocNum - 1] =
-						       Enclosing (pAb, pDoc->DocAssocModifiedAb[pEl2->ElAssocNum - 1]);
-						 }
-					       dvol = pEl->ElTextLength - pAb->AbVolume;
-
-					       if (pAb->AbDead && pAb->AbNext != NULL)
-						  pAb->AbNext->AbVolume += dvol;
-
-					       do
-						 {
-						    pAbbox1 = pAb;
-						    pAbbox1->AbVolume += dvol;
-						    pAb = pAbbox1->AbEnclosing;
-						 }
-					       while (!(pAb == NULL));
-					    }
-				       }
-				  }
-     }
-   return equal;
+  equal = FALSE;
+  if (pEl != NULL)
+    {
+      assoc = AssocView (pEl);
+      pEl2 = pEl->ElNext;
+      if (pEl2 != NULL && pEl->ElLeafType == LtText && pEl->ElTerminal &&
+	  pEl2->ElTerminal && pEl2->ElLeafType == LtText &&
+	  pEl2->ElLanguage == pEl->ElLanguage &&
+	  !pEl2->ElHolophrast && !pEl->ElHolophrast &&
+	  SameAttributes (pEl, pEl2) &&
+	  pEl->ElSource == NULL && pEl2->ElSource == NULL &&
+	  BothHaveNoSpecRules (pEl, pEl2) &&
+	  pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct != CsConstant &&
+	  pEl2->ElStructSchema->SsRule[pEl2->ElTypeNumber - 1].SrConstruct != CsConstant)
+	{
+	  equal = TRUE;
+	  if (! MergeTextElements (pEl, pLib, pDoc,
+				   TRUE,  /* Notifier l'application => evenements */
+				   TRUE)) /* Detruire les paves du 2eme element */
+	    return FALSE;
+	  if (pEl->ElStructSchema == NULL)
+	    /* pEl a ete libere' par l'application */
+	    return equal;
+	  /* teste si pEl est le dernier fils de son pere, */
+	  /* abstraction faite des marques de page */
+	  /* fusionne les deux elements de texte */
+	  pEVoisin = pEl->ElNext;
+	  stop = FALSE;
+	  do
+	    if (pEVoisin == NULL)
+	      /* pEl devient le dernier fils de son pere */
+	      {
+		ChangeFirstLast (pEl, pDoc, FALSE, FALSE);
+		stop = TRUE;
+	      }
+	    else if (!pEVoisin->ElTerminal
+		     || pEVoisin->ElLeafType != LtPageColBreak)
+	      stop = TRUE;
+	    else
+	      pEVoisin = pEVoisin->ElNext;
+	  while (!stop);
+	  /* met a jour le volume des paves correspondants */
+	  for (view = 1; view <= MAX_VIEW_DOC; view++)
+	    {
+	      pAb = pEl->ElAbstractBox[view - 1];
+	      if (pAb != NULL)
+		{
+		  pAb->AbChange = TRUE;
+		  if (!assoc)
+		    pDoc->DocViewModifiedAb[view - 1] =
+		      Enclosing (pAb, pDoc->DocViewModifiedAb[view - 1]);
+		  else
+		    {
+		      pEl2 = pEl;
+		      pDoc->DocAssocModifiedAb[pEl2->ElAssocNum - 1] =
+			Enclosing (pAb, pDoc->DocAssocModifiedAb[pEl2->ElAssocNum - 1]);
+		    }
+		  dvol = pEl->ElTextLength - pAb->AbVolume;
+		  
+		  if (pAb->AbDead && pAb->AbNext != NULL)
+		    pAb->AbNext->AbVolume += dvol;
+		  
+		  do
+		    {
+		      pAb->AbVolume += dvol;
+		      pAb = pAb->AbEnclosing;
+		    }
+		  while (!(pAb == NULL));
+		}
+	    }
+	}
+    }
+  return equal;
 }
