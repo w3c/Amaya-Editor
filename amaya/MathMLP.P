@@ -1856,14 +1856,6 @@ BOXES
 		Visibility: 0;
 	END;
 
- MOspace: BEGIN
-	Content: text ' ';
-	Width : OPERATOR_SPACE;
-	HorizPos: Left = Previous . Right;
-	IN Math_Structure_view
-		Visibility: 0;
-	END;
-
  OpeningQuote: BEGIN
  	Content: Text '"';
 	IN Math_Structure_view
@@ -1890,7 +1882,7 @@ BOXES
 		END;
 	END;
 
-   Comment_Start:
+ Comment_Start:
         BEGIN
         Content: Text '<!--';
         Visibility: 0;
@@ -1900,7 +1892,7 @@ BOXES
                 END;
         END;
  
-   Comment_End:
+ Comment_End:
         BEGIN
         Content: Text '-->';
         Visibility: 0;
@@ -3258,31 +3250,32 @@ ATTRIBUTES
 
   IntAddSpace = nospace:
 	BEGIN
-	HorizPos: Left = Previous . Right;
-	IN Math_Structure_view
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	PaddingLeft: 0;
+	PaddingRight: 0;
 	END;
   IntAddSpace = spacebefore:
 	BEGIN
-	HorizPos: Left = Previous . Right + OPERATOR_SPACE;
+	PaddingLeft: OPERATOR_SPACE;
+	PaddingRight: 0;
 	IN Math_Structure_view
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		PaddingLeft: 0;
 	END;
   IntAddSpace = spaceafter:
 	BEGIN
-	HorizPos: Left = Previous . Right;
-{***	Width: Enclosed . Width + OPERATOR_SPACE;
-****}	CreateAfter(MOspace);
+        PaddingLeft: 0;
+        PaddingRight: OPERATOR_SPACE;
 	IN Math_Structure_view
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		PaddingRight: 0;
 	END;
   IntAddSpace = both:
 	BEGIN
-	HorizPos: Left = Previous . Right + OPERATOR_SPACE;
-{***	Width: Enclosed . Width + OPERATOR_SPACE;
-****}	CreateAfter(MOspace);	
+	PaddingLeft: OPERATOR_SPACE;
+	PaddingRight: OPERATOR_SPACE;
 	IN Math_Structure_view
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		BEGIN
+		PaddingLeft: 0;
+		PaddingRight: 0;
+		END;
 	END;
 
   IntHorizStretch:
