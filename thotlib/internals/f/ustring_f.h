@@ -9,15 +9,15 @@
 extern int ustrcasecmp ( const STRING str1,
                          const STRING str2 );
 extern CHAR_T* ustrcat ( CHAR_T* dest,
-                        const CHAR_T* src );
+                         const CHAR_T* src );
 extern CHAR_T* ustrchr ( const CHAR_T* src,
-                        CHAR_T c );
+                         CHAR_T c );
 extern int ustrcmp ( const CHAR_T* str1,
                      const CHAR_T* str2 );
 extern int ustrcoll ( const STRING str1,
                       const STRING str2 );
 extern CHAR_T* ustrcpy ( CHAR_T* dest,
-                        const CHAR_T* src );
+                         const CHAR_T* src );
 extern STRING iso2wc_strcpy ( STRING dest,
                               const char* src );
 extern STRING ustrdup ( const STRING str );
@@ -31,8 +31,8 @@ extern STRING ustrncat ( STRING dest,
                          const STRING src,
                          unsigned int count );
 extern CHAR_T* ustrncmp ( const CHAR_T* str1,
-                         const CHAR_T* str2,
-                         unsigned int count );
+                          const CHAR_T* str2,
+                          unsigned int count );
 extern STRING ustrncpy ( STRING dest,
                          const STRING src,
                          unsigned int count );
@@ -116,15 +116,15 @@ extern int wc2iso_strcmp ( CHAR_T* str1,
 extern int ustrcasecmp (/* const STRING str1,
                            const STRING str2 */);
 extern CHAR_T* ustrcat (/* CHAR_T* dest,
-                          const CHAR_T* src */);
+                           const CHAR_T* src */);
 extern CHAR_T* ustrchr (/* const CHAR_T* src,
-                          CHAR_T c */);
+                           CHAR_T c */);
 extern int ustrcmp (/* const CHAR_T* str1,
                        const CHAR_T* str2 */);
 extern int ustrcoll (/* const STRING str1,
                         const STRING str2 */);
 extern CHAR_T* ustrcpy (/* CHAR_T* dest,
-                          const CHAR_T* src */);
+                           const CHAR_T* src */);
 extern STRING iso2wc_strcpy (/* STRING dest,
                                 const char* src */);
 extern STRING ustrdup (/* const STRING str */);
@@ -138,8 +138,8 @@ extern STRING ustrncat (/* STRING dest,
                            const STRING src,
                            unsigned int count */);
 extern CHAR_T* ustrncmp (/* const CHAR_T* str1,
-                           const CHAR_T* str2,
-                           unsigned int count */);
+                            const CHAR_T* str2,
+                            unsigned int count */);
 extern STRING ustrncpy (/* STRING dest,
                            const STRING src,
                            unsigned int count */);

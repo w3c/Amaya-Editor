@@ -38,9 +38,9 @@ extern void CreateAttrIntSize ( STRING buffer,
 extern void InitAutomaton ( void );
 extern void FreeHTMLParser ( void );
 extern void SetElemLineNumber ( Element el );
-extern char GetNextInputChar ( FILE *infile,
-                               int *index,
-                               ThotBool *endOfFile );
+extern CHAR_T GetNextInputChar ( FILE *infile,
+                                 int *index,
+                                 ThotBool *endOfFile );
 extern ThotBool IsXHTMLDocType ( STRING fileName );
 extern ThotBool ContentIsXML ( CharUnit* fileName );
 extern void CheckAbstractTree ( CHAR_T* pathURL );
@@ -69,7 +69,7 @@ extern int MapThotAttr (/* CHAR_T* Attr,
                            CHAR_T* tag */);
 extern void InitMapping (/* void */);
 extern void ParseHTMLError (/* Document doc,
-                               CHAR_T msg */);
+                               CHAR_T* msg */);
 extern ThotBool IsCharacterLevelElement (/* Element el */);
 extern void OnlyOneOptionSelected (/* Element el,
                                       Document doc,
@@ -91,9 +91,9 @@ extern void CreateAttrIntSize (/* STRING buffer,
 extern void InitAutomaton (/* void */);
 extern void FreeHTMLParser (/* void */);
 extern void SetElemLineNumber (/* Element el */);
-extern char GetNextInputChar (/* FILE *infile,
-                                 int *index,
-                                 ThotBool *endOfFile */);
+extern CHAR_T GetNextInputChar (/* FILE *infile,
+                                   int *index,
+                                   ThotBool *endOfFile */);
 extern ThotBool IsXHTMLDocType (/* STRING fileName */);
 extern ThotBool ContentIsXML (/* CharUnit* fileName */);
 extern void CheckAbstractTree (/* CHAR_T* pathURL */);

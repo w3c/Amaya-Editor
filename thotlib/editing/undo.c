@@ -1205,6 +1205,7 @@ View                view;
 #endif /* __STDC__ */
 {
    PtrDocument          pDoc;
+   DisplayMode          dispMode;
    ThotBool		doit;
 
    pDoc = LoadedDocument [doc - 1];
@@ -1216,7 +1217,9 @@ View                view;
    OpenRedoSequence (doc);
 
    TtaUnselect (doc);
-   TtaSetDisplayMode (doc, DeferredDisplay);
+   dispMode = TtaGetDisplayMode (doc);
+   if (dispMode == DisplayImmediately)
+     TtaSetDisplayMode (doc, DeferredDisplay);
    /* disable structure checking */
    TtaSetStructureChecking (FALSE, doc);
 
@@ -1236,7 +1239,8 @@ View                view;
          Remove it from the editing history and put it in the Redo queue */
          MoveEditToRedoQueue (pDoc);
       }
-   TtaSetDisplayMode (doc, DisplayImmediately);
+   if (dispMode == DisplayImmediately)
+     TtaSetDisplayMode (doc, DisplayImmediately);
 }
 
 /*----------------------------------------------------------------------
@@ -1255,6 +1259,7 @@ View                view;
 {
    PtrDocument          pDoc;
    Element		firstSel, lastSel;
+   DisplayMode          dispMode;
    int			firstSelChar, lastSelChar, i;
    ThotBool		doit;
 
@@ -1269,7 +1274,9 @@ View                view;
    TtaUnselect (doc);
    OpenHistorySequence (pDoc, (PtrElement)firstSel, (PtrElement)lastSel,
 			firstSelChar, lastSelChar);
-   TtaSetDisplayMode (doc, DeferredDisplay);
+   dispMode = TtaGetDisplayMode (doc);
+   if (dispMode == DisplayImmediately)
+     TtaSetDisplayMode (doc, DeferredDisplay);
    /* disable structure checking */
    TtaSetStructureChecking (FALSE, doc);
 
@@ -1291,5 +1298,7 @@ View                view;
       }
    /* close sequence in Undo queue */
    pDoc->DocEditSequence = FALSE;
-   TtaSetDisplayMode (doc, DisplayImmediately);
+   if (dispMode == DisplayImmediately)
+     TtaSetDisplayMode (doc, DisplayImmediately);
 }
+

@@ -1500,11 +1500,7 @@ ThotBool            createView;
 			    SetActiveView (0);
 			}
 		if (!done)
-		  {
-		    DisplaySel (pEl, view + 1, frame, assoc, &abExist);
-		    /* if (run == 1)
-		      XFlushOutput (frame); */
-		  }
+		  DisplaySel (pEl, view + 1, frame, assoc, &abExist);
 	      }
 	  }
 

@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern Document IsDocumentLoaded ( CHAR_T* documentURL,
-                                   CHAR_T* form_data );
+                                   STRING form_data );
 extern ThotBool CanReplaceCurrentDocument ( Document document,
                                             View view );
 extern void ExtractParameters ( CHAR_T* aName,
@@ -76,7 +76,7 @@ extern void ShowToC ( Document document,
 extern ThotBool ViewToClose ( NotifyDialog * event );
 extern void GetHTMLDocument_callback ( int newdoc,
                                        int status,
-                                       CharUnit* urlName,
+                                       CHAR_T* urlName,
                                        STRING outputfile,
                                        STRING content_type,
                                        void * context );
@@ -90,8 +90,8 @@ extern Document GetHTMLDocument ( const CHAR_T* documentPath,
                                   void *ctx_cbf );
 extern void CallbackDialogue ( int ref,
                                int typedata,
-                               CharUnit* data );
-extern ThotBool CheckMakeDirectory ( CharUnit* name,
+                               CHAR_T* data );
+extern ThotBool CheckMakeDirectory ( CHAR_T* name,
                                      ThotBool recursive );
 extern void FreeAmayaStructures ( void );
 extern void InitAmaya ( NotifyEvent * event );
@@ -152,7 +152,7 @@ extern void AmayaClose ( Document document,
 #else /* __STDC__ */
 
 extern Document IsDocumentLoaded (/* CHAR_T* documentURL,
-                                     CHAR_T* form_data */);
+                                     STRING form_data */);
 extern ThotBool CanReplaceCurrentDocument (/* Document document,
                                               View view */);
 extern void ExtractParameters (/* CHAR_T* aName,
@@ -221,7 +221,7 @@ extern void ShowToC (/* Document document,
 extern ThotBool ViewToClose (/* NotifyDialog * event */);
 extern void GetHTMLDocument_callback (/* int newdoc,
                                          int status,
-                                         CharUnit* urlName,
+                                         CHAR_T* urlName,
                                          STRING outputfile,
                                          STRING content_type,
                                          void * context */);
@@ -235,8 +235,8 @@ extern Document GetHTMLDocument (/* const CHAR_T* documentPath,
                                     void *ctx_cbf */);
 extern void CallbackDialogue (/* int ref,
                                  int typedata,
-                                 CharUnit* data */);
-extern ThotBool CheckMakeDirectory (/* CharUnit* name,
+                                 CHAR_T* data */);
+extern ThotBool CheckMakeDirectory (/* CHAR_T* name,
                                        ThotBool recursive */);
 extern void FreeAmayaStructures (/* void */);
 extern void InitAmaya (/* NotifyEvent * event */);

@@ -1505,6 +1505,8 @@ STRING              valtext;
   PtrDocument         SelDoc;
   PtrElement          firstSel, lastSel;
   PtrAttribute        pAttrNew;
+  DisplayMode         dispMode = DeferredDisplay;
+  Document            doc = 0;
   int                 firstChar, lastChar;
   int                 lg, act;
   ThotBool            lock = TRUE;
@@ -1554,14 +1556,19 @@ STRING              valtext;
 		{
 		  (*ThotLocalActions[T_islock]) (&lock);
 		  if (!lock)
-		    /* table formatting is not loked, lock it now */
-		    (*ThotLocalActions[T_lock]) ();
+		    {
+		      doc = IdentDocument (SelDoc);
+		      dispMode = TtaGetDisplayMode (doc);
+		      if (dispMode == DisplayImmediately)
+			TtaSetDisplayMode (doc, DeferredDisplay);
+		      /* table formatting is not loked, lock it now */
+		      (*ThotLocalActions[T_lock]) ();
+		    }
 		}
 	      pAttrNew->AeAttrSSchema = SchCurrentAttr;
 	      pAttrNew->AeAttrNum = NumCurrentAttr;
 	      pAttrNew->AeDefAttr = FALSE;
-	      pAttrNew->AeAttrType = SchCurrentAttr->
-		SsAttribute[NumCurrentAttr - 1].AttrType;
+	      pAttrNew->AeAttrType = SchCurrentAttr->SsAttribute[NumCurrentAttr - 1].AttrType;
 	      
 	      switch (pAttrNew->AeAttrType)
 		{
@@ -1614,8 +1621,12 @@ STRING              valtext;
 		  break;
 		}
 	      if (!lock)
-		/* unlock table formatting */
-		(*ThotLocalActions[T_unlock]) ();
+		{
+		  /* unlock table formatting */
+		  (*ThotLocalActions[T_unlock]) ();
+		  if (dispMode == DisplayImmediately)
+		    TtaSetDisplayMode (doc, DisplayImmediately);
+		}
 	      UpdateAttrMenu (SelDoc);
 	    }
 	  DeleteAttribute (NULL, pAttrNew);

@@ -122,7 +122,7 @@ extern void MakeCompleteName (/* CHAR_T* fname,
 extern void GetPictureFileName (/* STRING name,
                                    STRING fileName */);
 extern void FindCompleteName (/* CHAR_T* fileName,
-                                 CharUnit* extension,
+                                 CHAR_T* extension,
                                  PathBuffer directory,
                                  PathBuffer completeName,
                                  int *length */);

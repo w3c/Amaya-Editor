@@ -444,9 +444,9 @@ extern void         TtaLockTableFormatting ();
   ----------------------------------------------------------------------*/
 extern void         TtaUnlockTableFormatting ();
 /*----------------------------------------------------------------------
-  TtaGetTableFormattingLock gives the status of the table formatting lock.
+  TtaGiveTableFormattingLock gives the status of the table formatting lock.
   ----------------------------------------------------------------------*/
-extern void         TtaGetTableFormattingLock (ThotBool *lock);
+extern void         TtaGiveTableFormattingLock (ThotBool *lock);
 
 /*----------------------------------------------------------------------
    TtaListView
@@ -518,7 +518,7 @@ extern void         TtaSetDisplayMode ( /* Document document, DisplayMode newDis
 extern DisplayMode  TtaGetDisplayMode ( /* Document document */ );
 extern void         TtaLockTableFormatting ();
 extern void         TtaUnlockTableFormatting ();
-extern void         TtaGetTableFormattingLock (/*ThotBool *lock*/);
+extern void         TtaGiveTableFormattingLock (/*ThotBool *lock*/);
 extern void         TtaListView ( /*Document document, View view, FILE *fileDescriptor */ );
 extern void         TtaListBoxes ( /*Document document, View view, FILE *fileDescriptor */ );
 extern int          TtaGetThotColor ( /*unsigned short red, unsigned short green, unsigned short blue */ );

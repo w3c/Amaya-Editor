@@ -925,9 +925,14 @@ int                *pointselect;
 	       }
 	     return (NULL);
 	  }
-	/* C'est une boite eclatee ? */
 	else if (pBox->BxType == BoGhost)
+	  /* dummy box */
 	   return (NULL);
+	else if (pAb->AbLeafType == LtGraphics &&
+		 pAb->AbPresentationBox &&
+		 pAb->AbShape == '0')
+	  /* it's also a dummy box */
+	  return (NULL);
 	/* Si le pave englobe le point designe */
 	else if (pBox->BxXOrg <= lowerX
 		 && pBox->BxXOrg + pBox->BxWidth >= higherX

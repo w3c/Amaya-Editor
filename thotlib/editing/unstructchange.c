@@ -1017,8 +1017,9 @@ void                TtcCreateElement (doc, view)
    PtrSSchema          pSS;
    NotifyElement       notifyEl;
    int                 firstChar, lastChar, NSiblings, typeNum, nComp;
-   ThotBool            ok, replicate, createAfter, selBegin, selEnd, ready,
-                       empty, list, optional, deleteEmpty, histSeq;
+   ThotBool            ok, replicate, createAfter, selBegin, selEnd, ready;
+   ThotBool            empty, list, optional, deleteEmpty, histSeq;
+   ThotBool            lock = TRUE;
 
    if (!GetCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar, &lastChar))
       /* there is no selection */
@@ -1032,6 +1033,14 @@ void                TtcCreateElement (doc, view)
       TtaDisplaySimpleMessage (INFO, LIB, TMSG_RO_DOC_FORBIDDEN);
    else
      {
+       /* lock the table formatting */
+       if (ThotLocalActions[T_islock])
+	 {
+	   (*ThotLocalActions[T_islock]) (&lock);
+	   if (!lock)
+	     /* table formatting is not loked, lock it now */
+	     (*ThotLocalActions[T_lock]) ();
+	 }
 	pListEl = NULL;
 	pAggregEl = NULL;
 	createAfter = TRUE;
@@ -1215,7 +1224,7 @@ void                TtcCreateElement (doc, view)
 	     else
 		pListEl = NULL;
 	  }
-
+	
 	if (!ready && !empty)
           {
              /* La selection commence-t-elle en tete ou en queue d'element? */
@@ -1278,6 +1287,9 @@ void                TtcCreateElement (doc, view)
 		      AddEditOpInHistory (pElReplicate->ElNext, pDoc, FALSE,
 					  TRUE);
 		      CloseHistorySequence (pDoc);
+		      if (!lock)
+			/* unlock table formatting */
+			(*ThotLocalActions[T_unlock]) ();
 		      return;
 		      }
 		   else
@@ -1507,6 +1519,9 @@ void                TtcCreateElement (doc, view)
 	  }
 	if (histSeq)
 	   CloseHistorySequence (pDoc);
+	if (!lock)
+	  /* unlock table formatting */
+	  (*ThotLocalActions[T_unlock]) ();
      }
 }
 

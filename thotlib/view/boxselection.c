@@ -108,15 +108,12 @@ ThotBool            toShow;
    if (frame > 0)
      {
        doc = FrameTable[frame].FrDoc;
-       if (documentDisplayMode[doc - 1] == DisplayImmediately)
-	 {
-	   pFrame = &ViewFrameTable[frame - 1];
-	   /* compare le booleen toShow et l'etat de la selection */
-	   if (toShow && !pFrame->FrSelectShown)
-	     DisplayCurrentSelection (frame, TRUE);
-	   else if (!toShow && pFrame->FrSelectShown)
-	   DisplayCurrentSelection (frame, TRUE);
-	 }
+       pFrame = &ViewFrameTable[frame - 1];
+       /* compare le booleen toShow et l'etat de la selection */
+       if (toShow && !pFrame->FrSelectShown)
+	 DisplayCurrentSelection (frame, TRUE);
+       else if (!toShow && pFrame->FrSelectShown)
+	 DisplayCurrentSelection (frame, TRUE);
      }
 }
 

@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void MapMathMLAttribute ( STRING Attr,
+extern void MapMathMLAttribute ( CHAR_T* Attr,
                                  AttributeType *attrType,
                                  STRING elementName,
                                  Document doc );
@@ -61,7 +61,7 @@ extern void MathMLGetDTDName ( STRING DTDname,
 
 #else /* __STDC__ */
 
-extern void MapMathMLAttribute (/* STRING Attr,
+extern void MapMathMLAttribute (/* CHAR_T* Attr,
                                    AttributeType *attrType,
                                    STRING elementName,
                                    Document doc */);

@@ -672,7 +672,10 @@ printf("<<<check cell_height=%d over %d rows_height=%d\n", height, rowSpans[i], 
 			ComputeUpdates (rowList[k], frame);
 		      }
 		  if (firstRow != NULL)
-		    HeightPack (firstRow->AbEnclosing, firstRow->AbBox, frame);
+		    {
+		      HeightPack (firstRow->AbEnclosing, firstRow->AbBox, frame);
+		      HeightPack (table, firstRow->AbEnclosing, frame);
+		    }
 		  /* Redisplay views */
 		  if (ThotLocalActions[T_redisplay] != NULL)
 		    (*ThotLocalActions[T_redisplay]) (pDoc);
@@ -826,18 +829,6 @@ printf("<<<<<<<<<<<<<<<%d\n", pBox->BxWidth);
 #ifdef TAB_DEBUG
 printf ("cref=%d: Min =%d, Max=%d, colWidth=%d, colPercent=%d\n", cRef, pBox->BxMinWidth, pBox->BxMaxWidth, colWidth[cRef], colPercent[cRef]);
 #endif
-    }
-
-  /* add the spacing after the last column */
-  if (pOldBox != NULL)
-    {
-      /* locate the enclosing box of columns */
-      pBox = pOldBox;
-      while (pBox->BxAbstractBox->AbEnclosing != NULL &&
-	     pBox->BxAbstractBox->AbEnclosing->AbBox->BxType != BoTable)
-	pBox = pBox->BxAbstractBox->AbEnclosing->AbBox;
-      WidthPack (pBox->BxAbstractBox, NULL, frame);
-      remainder += pBox->BxXOrg + pBox->BxWidth - pOldBox->BxXOrg - pOldBox->BxWidth;
     }
 
   if (min + sum > 0)
@@ -1939,12 +1930,7 @@ int              frame;
 {
   PtrAbstractBox      pAb;
 
-  if (Lock)
-    {
-      DifferFormatting (table, frame);
-      pAb = NULL;
-    }
-  else if (table == NULL)
+  if (table == NULL)
     {
       /* look for the table */
       if (col != NULL && col->AbBox != NULL)
@@ -1979,11 +1965,15 @@ int              frame;
       if (table != NULL || row != NULL)
 	/* build or rebuild rows list */
 	BuildColOrRowList (pAb, BoRow);
-      
-      /* compute widths of each column within the table */
-      if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == DisplayImmediately || table != NULL)
+
+      if (Lock)
+	/* the table formatting is locked */
+	  DifferFormatting (table, frame);
+      else if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == DisplayImmediately || table != NULL)
+	/* compute widths of each column within the table */
 	ComputeColWidth (col, pAb, frame);
       else
+	/* the table will be reactivated by TtaSetDisplayMode */
 	SaveColUpdate (col, pAb, frame);
     }
 }
@@ -2071,55 +2061,66 @@ void    TtaLockTableFormatting ()
   ----------------------------------------------------------------------*/
 void    TtaUnlockTableFormatting ()
 {
-   int                 i;
-   PtrLockRelations     pLockRel;
+  PtrLockRelations    pLockRel;
+  Propagation         savpropage;
+  int                 i;
 
-  Lock = FALSE;
-   /* Reformat all table in suspend */
-   pLockRel = DifferedChecks;
-   while (pLockRel != NULL)
-     {
-	/* Manage all locked tables */
-	i = 0;
-	while (i < MAX_RELAT_DIM)
-	  {
-	     if (pLockRel->LockRTable[i] == NULL)
+  if (Lock)
+    {
+      Lock = FALSE;
+      savpropage = Propagate;
+      Propagate = ToAll;
+      /* Reformat all table in suspend */
+      pLockRel = DifferedChecks;
+      while (pLockRel != NULL)
+	{
+	  /* Manage all locked tables */
+	  i = 0;
+	  while (i < MAX_RELAT_DIM)
+	    {
+	      if (pLockRel->LockRTable[i] == NULL)
 		i = MAX_RELAT_DIM;
-	     else if (pLockRel->LockRTable[i]->AbElement != NULL)
-	       {
-		 ComputeColWidth (NULL, pLockRel->LockRTable[i], pLockRel->LockRFrame[i]);
-		 ComputeEnclosing (pLockRel->LockRFrame[i]);
-		 DisplayFrame (pLockRel->LockRFrame[i]);
-	       }
-	     /* next entry */
-	     i++;
-	  }
+	      else if (pLockRel->LockRTable[i]->AbElement != NULL)
+		{
+		  ComputeColWidth (NULL, pLockRel->LockRTable[i], pLockRel->LockRFrame[i]);
+		  /* need to propagate to enclosing boxes */
+		  ComputeEnclosing (pLockRel->LockRFrame[i]);
+		  DisplayFrame (pLockRel->LockRFrame[i]);
+		}
+	      /* next entry */
+	      i++;
+	    }
+	  /* next block */
+	  pLockRel = pLockRel->LockRNext;
+	}
 
-	/* next block */
-	pLockRel = pLockRel->LockRNext;
-     }
-
-   /* Free allocated blocks */
-   while (DifferedChecks != NULL)
-     {
-	pLockRel = DifferedChecks;
-	DifferedChecks = DifferedChecks->LockRNext;
-	TtaFreeMemory (pLockRel);
-     }
+      Propagate = savpropage;
+      /* Free allocated blocks */
+      while (DifferedChecks != NULL)
+	{
+	  pLockRel = DifferedChecks;
+	  DifferedChecks = DifferedChecks->LockRNext;
+	  TtaFreeMemory (pLockRel);
+	}
+    }
 }
 
 
 /*----------------------------------------------------------------------
-  TtaGetTableFormattingLock gives the status of the table formatting lock.
+  TtaGiveTableFormattingLock gives the status of the table formatting lock.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void      TtaGetTableFormattingLock (ThotBool *lock)
+void      TtaGiveTableFormattingLock (ThotBool *lock)
 #else  /* __STDC__ */
-void      TtaGetTableFormattingLock (lock)
+void      TtaGiveTableFormattingLock (lock)
 ThotBool *lock;
 #endif /* __STDC__ */
 {
-  *lock = Lock;
+  /* check if we're not processing a TtaUnlockTableFormatting */
+  if (DifferedChecks != NULL)
+    *lock = TRUE;
+  else
+    *lock = Lock;
 }
 
 
@@ -2135,7 +2136,7 @@ void                TableHLoadResources ()
 	/* connecting resources */
 	TteConnectAction (T_lock, (Proc) TtaLockTableFormatting);
 	TteConnectAction (T_unlock, (Proc) TtaUnlockTableFormatting);
-	TteConnectAction (T_islock, (Proc) TtaGetTableFormattingLock);
+	TteConnectAction (T_islock, (Proc) TtaGiveTableFormattingLock);
 	TteConnectAction (T_checktable, (Proc) UpdateTable);
 	TteConnectAction (T_checkcolumn, (Proc) UpdateColumnWidth);
 	TteConnectAction (T_resizetable, (Proc) UpdateTableWidth);

@@ -37,6 +37,7 @@
 #include "page_tv.h"
 #include "platform_tv.h"
 #include "edit_tv.h"
+#include "modif_tv.h"
 #include "frame_tv.h"
 #include "appdialogue_tv.h"
 
@@ -106,8 +107,8 @@ int                 accessMode;
 }
 
 /*----------------------------------------------------------------------
-   SetAccessMode met a` jour le mode d'acces sur tout les pave's   
-   de tous les elements de toutes les vues du document pDoc. 
+   SetAccessMode updates the access  mode in all abstract boxes of
+  all document views.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SetAccessMode (PtrDocument pDoc, int accessMode)
@@ -122,31 +123,31 @@ int                 accessMode;
   int               view, assoc;
   int               h;
 
+  /* update all document views */
   displayMode = documentDisplayMode[IdentDocument (pDoc) - 1];
-  if (displayMode == NoComputedDisplay || displayMode == SuspendDisplay)
-    return;
-
-  /* met a jour les vues de l'arbre principal */
-  for (view = 0; view < MAX_VIEW_DOC; view++)
-    if (pDoc->DocView[view].DvPSchemaView > 0)
-      {
-	pAb = pDoc->DocRootElement->ElAbstractBox[view];
-	SetAbsBoxAccessMode (pAb, accessMode);
-	h = 0;
-	ChangeConcreteImage (pDoc->DocViewFrame[view], &h, pAb);
+  if (displayMode != NoComputedDisplay && displayMode != SuspendDisplay)
+    {
+      for (view = 0; view < MAX_VIEW_DOC; view++)
+	if (pDoc->DocView[view].DvPSchemaView > 0)
+	  {
+	    pAb = pDoc->DocRootElement->ElAbstractBox[view];
+	    SetAbsBoxAccessMode (pAb, accessMode);
+	    h = 0;
+	    ChangeConcreteImage (pDoc->DocViewFrame[view], &h, pAb);
+	  }
+      /* update all associated views */
+      for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++)
+	if (pDoc->DocAssocFrame[assoc] > 0)
+	  {
+	    pAb = pDoc->DocAssocRoot[assoc]->ElAbstractBox[0];
+	    SetAbsBoxAccessMode (pAb, accessMode);
+	    h = 0;
+	    ChangeConcreteImage (pDoc->DocAssocFrame[view], &h, pAb);
       }
-  /* met a jour les vues des elements associes */
-  for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++)
-    if (pDoc->DocAssocFrame[assoc] > 0)
-      {
-	pAb = pDoc->DocAssocRoot[assoc]->ElAbstractBox[0];
-	SetAbsBoxAccessMode (pAb, accessMode);
-	h = 0;
-	ChangeConcreteImage (pDoc->DocAssocFrame[view], &h, pAb);
-      }
-   /* Redisplay views */
-   if (ThotLocalActions[T_redisplay] != NULL)
-     (*ThotLocalActions[T_redisplay]) (pDoc);
+      /* Redisplay views */
+      if (ThotLocalActions[T_redisplay] != NULL)
+	(*ThotLocalActions[T_redisplay]) (pDoc);
+    }
 }
 
 

@@ -1941,7 +1941,8 @@ int                 frame;
 			      if (pRelation->ReBox == pBox)
 				{
 				  MoveVertRef (pBox, NULL, delta / 2, frame);
-				  pBox->BxMoved = pFromBox;	/* restaure le chainage */
+				  /* restore the history of moved boxes */
+				  pBox->BxMoved = pFromBox;
 				}
 			      else
 				MoveVertRef (pRelation->ReBox, pSourceBox, middleTrans, frame);
@@ -1966,7 +1967,8 @@ int                 frame;
 			      if (pRelation->ReBox == pBox)
 				{
 				  MoveVertRef (pBox, NULL, delta, frame);
-				  pBox->BxMoved = pFromBox;	/* restaure le chainage */
+				  /* restore the history of moved boxes */
+				  pBox->BxMoved = pFromBox;
 				}
 			      else
 				MoveVertRef (pRelation->ReBox, pSourceBox, endTrans, frame);
@@ -2024,7 +2026,7 @@ int                 frame;
 		    if (!pAb->AbDead && pAb->AbBox != NULL)
 		      {
 			box = pAb->AbBox;
-			/* regarde si la boite est liee a son englobante */
+			/* check if the position box depends on its enclosing */
 			pPosRel = box->BxPosRelations;
 			while (pPosRel != NULL)
 			  {
@@ -2041,7 +2043,7 @@ int                 frame;
 				      if (absoluteMove)
 					j = middleTrans;
 				      else
-					/* il faut reevaluer le centrage */
+					/* recheck the position */
 					j = (pBox->BxWidth - box->BxWidth) / 2 - box->BxXOrg;
 				      if (box->BxHorizFlex)
 					MoveBoxEdge (box, pBox, pRelation->ReOp, j, frame, TRUE);
@@ -2052,7 +2054,7 @@ int                 frame;
 				      if (absoluteMove)
 					j = endTrans;
 				      else
-					/* il faut reevaluer le cadrage */
+					/* recheck the position */
 					j = pBox->BxWidth - box->BxWidth - box->BxXOrg;
 				      if (box->BxHorizFlex)
 					MoveBoxEdge (box, pBox, pRelation->ReOp, j, frame, TRUE);
@@ -2063,7 +2065,7 @@ int                 frame;
 				      if (absoluteMove)
 					j = orgTrans;
 				      else
-					/* il faut reevaluer le cadrage */
+					/* recheck the position */
 					j = 0;
 				      if (box->BxHorizFlex)
 					MoveBoxEdge (box, pBox, pRelation->ReOp, j, frame, TRUE);
@@ -2192,7 +2194,6 @@ int                 frame;
 		  else if (!IsParentBox (pAb->AbBox, PackBoxRoot))
 		    {
 		      /* Differ the checking of the inclusion */
-		      /* when the update has an external origin  */
 		      if (Propagate != ToAll)
 			RecordEnclosing (pAb->AbBox, TRUE);
 		      /* Don't check the inclusion more than 2 times */
@@ -2205,16 +2206,14 @@ int                 frame;
 			    WidthPack (pAb, pSourceBox, frame);
 			}
 		    }
-		  else if (pAb->AbBox->BxCycles <= 1)
-		    WidthPack (pAb, pSourceBox, frame);
 		}
 	      else if (!pCurrentAb->AbNew
 		       && Propagate == ToSiblings
 		       && pCurrentAb->AbLeafType == LtCompound
 		       && pCurrentAb->AbInLine && !pBox->BxYToCompute)
 		{
-		  /* La largeur de la boite mise en lignes est donnee par une */
-		  /* boite suivante, il faut verifier l'englobement vertical */
+		  /* the width of the block of lines is given by the next box
+		     -> check vertical enclosing */
 		  if (pAb->AbBox->BxType != BoTable)
 		    HeightPack (pAb, pSourceBox, frame);
 		  Propagate = ToSiblings;
@@ -2425,7 +2424,8 @@ int                 frame;
 			      if (pRelation->ReBox == pBox)
 				{
 				  MoveHorizRef (pBox, NULL, delta / 2, frame);
-				  pBox->BxMoved = pFromBox;	/* restaure le chainage */
+				  /* restore the history of moved boxes */
+				  pBox->BxMoved = pFromBox;
 				}
 			      else
 				MoveHorizRef (pRelation->ReBox, pSourceBox, middleTrans, frame);
@@ -2455,7 +2455,8 @@ int                 frame;
 				  else
 				    j = delta;
 				  MoveHorizRef (pBox, NULL, j, frame);
-				  pBox->BxMoved = pFromBox;	/* restaure le chainage */
+				  /* restore the history of moved boxes */
+				  pBox->BxMoved = pFromBox;
 				}
 			      else
 				MoveHorizRef (pRelation->ReBox, pSourceBox, endTrans, frame);
@@ -2497,11 +2498,11 @@ int                 frame;
 	  /* Moving included boxes? */
 	  if (absoluteMove && pBox->BxType == BoBlock)
 	    {
-	      /* Il faut traiter les blocs de lignes elastiques */
-	      /* qui ne sont pas en cours de placement          */
+	      /* manage stretched block of lines */
+	      /* which are already processed     */
 	      if (orgTrans != 0)
 		{
-		  /* decale aussi les boites mises en ligne */
+		  /* move also included boxes */
 		  pAb = pCurrentAb->AbFirstEnclosed;
 		  while (pAb != NULL)
 		    {
@@ -2525,7 +2526,7 @@ int                 frame;
 		  if (!pAb->AbDead && pAb->AbBox != NULL)
 		    {
 		      box = pAb->AbBox;
-		      /* regarde si la boite est liee a son englobante */
+		      /* check if the position box depends on its enclosing */
 		      pPosRel = box->BxPosRelations;
 		      while (pPosRel != NULL)
 			{
@@ -2543,7 +2544,7 @@ int                 frame;
 				      if (absoluteMove)
 					j = middleTrans;
 				      else
-					/* il faut reevaluer le centrage */
+					/* recheck the position */
 					j = (pBox->BxHeight - box->BxHeight) / 2 - box->BxYOrg;
 				      if (box->BxVertFlex)
 					MoveBoxEdge (box, pBox, pRelation->ReOp, j, frame, FALSE);
@@ -2554,7 +2555,7 @@ int                 frame;
 				      if (absoluteMove)
 					j = endTrans;
 				      else
-					/* il faut reevaluer le cadrage */
+					/* recheck the position */
 					j = pBox->BxHeight - box->BxHeight - box->BxYOrg;
 				      if (box->BxVertFlex)
 					MoveBoxEdge (box, pBox, pRelation->ReOp, j, frame, FALSE);
@@ -2565,7 +2566,7 @@ int                 frame;
 				      if (absoluteMove)
 					j = orgTrans;
 				      else
-					/* il faut reevaluer le cadrage */
+					/* recheck the position */
 					j = 0;
 				      if (box->BxVertFlex)
 					MoveBoxEdge (box, pBox, pRelation->ReOp, j, frame, FALSE);
@@ -2701,16 +2702,12 @@ int                 frame;
 		  else if (!IsParentBox (pAb->AbBox, PackBoxRoot))
 		    {
 		      /* Differ the checking of the inclusion */
-		      /* when the update has an external origin  */
 		      if (Propagate != ToAll && pAb->AbBox->BxType != BoCell)
 			RecordEnclosing (pAb->AbBox, FALSE);
 		      /* Don't check the inclusion more than 2 times */
 		      else if (pAb->AbBox->BxPacking <= 1)
 			HeightPack (pAb, pSourceBox, frame);
 		    }
-		  /* Don't check the inclusion more than 2 times */
-		  else if (pAb->AbBox->BxPacking <= 1)
-		    HeightPack (pAb, pSourceBox, frame);
 		}
 	    }
 	}

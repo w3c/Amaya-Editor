@@ -49,14 +49,6 @@ extern void FreeTranslations ( void );
 extern void DrawAddAttr ( PtrAttribute * pAttr,
                           PtrElement pEl );
 extern void RedisplayCopies ( void );
-extern void DrawChar ( UCHAR_T car,
-                       int frame,
-                       int x,
-                       int y,
-                       ptrfont font,
-                       int RO,
-                       int active,
-                       int fg );
 extern void DrawSupprAttr ( PtrAttribute pAttr,
                             PtrElement pEl );
 extern ThotBool IsASavedElement ( PtrElement pEl );
@@ -69,6 +61,8 @@ extern void TtaSetStatus ( Document document,
                            CONST STRING text,
                            CONST STRING name );
 extern void FreeMenus ( void );
+extern void SwitchPaste ( PtrDocument pDoc,
+                          ThotBool on );
 extern void UpdateScrollbars ( int frame );
 extern void ChangeFrameTitle ( int frame,
                                STRING texte );
@@ -158,14 +152,6 @@ extern void FreeTranslations (/* void */);
 extern void DrawAddAttr (/* PtrAttribute * pAttr,
                             PtrElement pEl */);
 extern void RedisplayCopies (/* void */);
-extern void DrawChar (/* UCHAR_T car,
-                         int frame,
-                         int x,
-                         int y,
-                         ptrfont font,
-                         int RO,
-                         int active,
-                         int fg */);
 extern void DrawSupprAttr (/* PtrAttribute pAttr,
                               PtrElement pEl */);
 extern ThotBool IsASavedElement (/* PtrElement pEl */);
@@ -178,6 +164,8 @@ extern void TtaSetStatus (/* Document document,
                              CONST STRING text,
                              CONST STRING name */);
 extern void FreeMenus (/* void */);
+extern void SwitchPaste (/* PtrDocument pDoc,
+                            ThotBool on */);
 extern void UpdateScrollbars (/* int frame */);
 extern void ChangeFrameTitle (/* int frame,
                                  STRING texte */);

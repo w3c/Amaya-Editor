@@ -1508,10 +1508,13 @@ int                *carIndex;
 		     }
 
 		    /* Si le pave est mis en ligne et secable -> la boite est eclatee */
-		    if (inLines && pAb->AbAcceptLineBreak && pAb->AbFirstEnclosed != NULL)
+		    if (inLines && pAb->AbAcceptLineBreak)
 		      {
-			 split = TRUE;
-			 pCurrentBox->BxType = BoGhost;
+			if (pAb->AbFirstEnclosed != NULL)
+			  {
+			    split = TRUE;
+			    pCurrentBox->BxType = BoGhost;
+			  }
 		      }
 		    /* Is there a background image ? */
 		    if (pAb->AbPictBackground != NULL)
@@ -2063,6 +2066,9 @@ ThotBool            horizRef;
   PtrDimRelations     pPreviousDimRel;
   ThotBool            toCreate;
 
+  if (horizRef && (pBox->BxType == BoCell || pBox->BxType == BoTable))
+    /* width of these elements are computed in tableH.c */
+    return;
   /* Look for an empty entry */
   pPreviousDimRel = NULL;
   pDimRel = DifferedPackBlocks;
@@ -2076,15 +2082,17 @@ ThotBool            horizRef;
 	{
 	  if (pDimRel->DimRSame[i] == horizRef)
 	    {
-	      if (pDimRel->DimRTable[i] == pBox)
+	      if (pBox == pDimRel->DimRTable[i])
 		/* The box is already registered */
 		return;
+#ifdef IV
 	      else if (IsParentBox (pDimRel->DimRTable[i], pBox))
 		{
 		  /* store the child pBox instead of the parent */
 		  pDimRel->DimRTable[i] = pBox;
 		  return;
 		}
+#endif
 	      else
 		i++;
 	    }
@@ -3565,6 +3573,7 @@ PtrAbstractBox      pAb;
    int                 savezoom = 0;
    ThotBool            change;
    ThotBool            result;
+   ThotBool            lock = TRUE;
 
 #  ifdef _WINDOWS
    WIN_GetDeviceContext (frame);
@@ -3576,7 +3585,7 @@ PtrAbstractBox      pAb;
      return result;
 
    pLine = NULL;
-   /* Pas de pave en parametre */
+   /* Pas de pave Engen parametre */
    if (pAb == NULL)
       TtaDisplaySimpleMessage (INFO, LIB, TMSG_EMPTY_VIEW);
    /* Le numero de frame est erronne */
@@ -3644,12 +3653,11 @@ PtrAbstractBox      pAb;
 	     /* On prepare la mise a jour d'un bloc de lignes */
 	     if ((pParentAb != NULL) && (pParentAb->AbBox != NULL))
 	       {
-		  /* L'englobement doit etre repris a partir de boite du pave pere */
+		  /* differ enclosing rules for ancestor boxes */
 		  PackBoxRoot = pParentAb->AbBox;
-
-		  /* On est dans une boite eclatee, on remonte jusqu'au bloc de lignes */
 		  while (pParentAb->AbBox->BxType == BoGhost)
-		     pParentAb = pParentAb->AbEnclosing;
+		    /* get the enclosing block */
+		    pParentAb = pParentAb->AbEnclosing;
 
 		  /* On prepare la mise a jour d'un bloc de lignes */
 		  if (pParentAb->AbInLine
@@ -3681,6 +3689,14 @@ PtrAbstractBox      pAb;
 		       }
 	       }
 
+	     /* lock the table formatting */
+	     if (ThotLocalActions[T_islock])
+	       {
+		 (*ThotLocalActions[T_islock]) (&lock);
+		 if (!lock)
+		   /* table formatting is not loked, lock it now */
+		   (*ThotLocalActions[T_lock]) ();
+	       }
 	     /* Il faut annuler l'elasticite des boites dont les regles */
 	     /* de position et de dimension sont a reevaluer, sinon on  */
 	     /* risque d'alterer les nouvelles regles de position et de */
@@ -3693,10 +3709,8 @@ PtrAbstractBox      pAb;
        
 	     /* Les modifications sont traitees */
 	     Propagate = ToAll;	/* On passe en mode normal de propagation */
-
 	     /* Traitement des englobements retardes */
 	     ComputeEnclosing (frame);
-
 
 	     /* On ne limite plus le traitement de l'englobement */
 	     PackBoxRoot = NULL;
@@ -3752,6 +3766,9 @@ PtrAbstractBox      pAb;
 		 if (ThotLocalActions[T_colupdates] != NULL)
 		   (*ThotLocalActions[T_colupdates]) (FrameTable[frame].FrDoc);
 	       }
+	      if (!lock)
+		/* unlock table formatting */
+		(*ThotLocalActions[T_unlock]) ();
 
 	     /* Est-ce que l'on a de nouvelles boites dont le contenu est */
 	     /* englobe et depend de relations hors-structure ?           */

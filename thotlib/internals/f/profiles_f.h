@@ -13,7 +13,7 @@ extern void TtaRebuildProTable ( char *prof_file );
 extern ThotBool TtaCanEdit ( void );
 extern void TtaGetProfileFileName ( CHAR_T* name,
                                     int length );
-extern void TtaGetDefProfileFileName ( CharUnit* name,
+extern void TtaGetDefProfileFileName ( CHAR_T* name,
                                        int length );
 extern int TtaGetProfilesItems ( char** listEntries,
                                  int length );
@@ -33,7 +33,7 @@ extern void TtaRebuildProTable (/* char *prof_file */);
 extern ThotBool TtaCanEdit (/* void */);
 extern void TtaGetProfileFileName (/* CHAR_T* name,
                                       int length */);
-extern void TtaGetDefProfileFileName (/* CharUnit* name,
+extern void TtaGetDefProfileFileName (/* CHAR_T* name,
                                          int length */);
 extern int TtaGetProfilesItems (/* char** listEntries,
                                    int length */);

@@ -25,7 +25,7 @@ extern int ConfigMakeImportMenu ( CHAR_T* BufMenu );
 extern int ConfigMakeMenuExport ( CHAR_T* schema,
                                   CHAR_T* BufMenu );
 extern void ConfigGetExportSchemaName ( int choix,
-                                        char* schtrad );
+                                        CHAR_T* schtrad );
 extern void ConfigTranslateSSchema ( PtrSSchema pSS );
 extern ThotBool ConfigDefaultPSchema ( CHAR_T* schstr,
                                        CHAR_T* schpres );
@@ -98,7 +98,7 @@ extern int ConfigMakeImportMenu (/* CHAR_T* BufMenu */);
 extern int ConfigMakeMenuExport (/* CHAR_T* schema,
                                     CHAR_T* BufMenu */);
 extern void ConfigGetExportSchemaName (/* int choix,
-                                          char* schtrad */);
+                                          CHAR_T* schtrad */);
 extern void ConfigTranslateSSchema (/* PtrSSchema pSS */);
 extern ThotBool ConfigDefaultPSchema (/* CHAR_T* schstr,
                                          CHAR_T* schpres */);
@@ -140,8 +140,8 @@ extern void ConfigGetPresentationOption (/* PtrSSchema pSS,
                                             CHAR_T* optionName,
                                             CHAR_T* optionValue */);
 extern void ConfigGetPSchemaForPageSize (/* PtrSSchema pSS,
-                                            char* pageSize,
-                                            char* schemaName */);
+                                            CHAR_T* pageSize,
+                                            CHAR_T* schemaName */);
 extern int MakeMenuPattern (/* STRING BufMenu,
                                int LgMax */);
 extern int MakeMenuColor (/* STRING BufMenu,

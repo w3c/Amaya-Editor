@@ -50,6 +50,8 @@ extern void CreateMO ( Document document,
 extern void InitMathML ( void );
 extern void CreateMathEntity ( Document document,
                                View view );
+extern void SetMathCharFont ( Document doc,
+                              int attribute );
 extern void MtextCreated ( NotifyElement *event );
 extern void MathStringModified ( NotifyOnTarget *event );
 extern void NewMathString ( NotifyElement *event );
@@ -119,6 +121,8 @@ extern void CreateMO (/* Document document,
 extern void InitMathML (/* void */);
 extern void CreateMathEntity (/* Document document,
                                  View view */);
+extern void SetMathCharFont (/* Document doc,
+                                int attribute */);
 extern void MtextCreated (/* NotifyElement *event */);
 extern void MathStringModified (/* NotifyOnTarget *event */);
 extern void NewMathString (/* NotifyElement *event */);

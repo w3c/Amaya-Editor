@@ -544,7 +544,7 @@ CharUnit*            str;
 }
 
 /*----------------------------------------------------------------------
-   ThotReAlloc effectue un realloc blinde'.                        
+   TtaReAlloc increases the size of the memory block.                        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void               *TtaRealloc (void *ptr, unsigned int n)
@@ -561,15 +561,13 @@ unsigned int        n;
    res = realloc (ptr, (size_t) n);
 #  ifndef _WINDOWS 
    if (!res)
-     /* Plus de memoire */
      TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NOT_ENOUGH_MEMORY);
 #  endif /* _WINDOWS */
    return res;
 }
 
 /*----------------------------------------------------------------------
-   InitEditorMemory effectue l'initialisation des variables de gestion de 
-   liste.                                                  
+   InitEditorMemory initializes block contexts.                                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                InitEditorMemory ()

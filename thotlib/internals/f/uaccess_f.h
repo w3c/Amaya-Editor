@@ -6,15 +6,15 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-#ifdef __STDC__
-extern int TtaIsDigit (CHAR_T);
-extern int TtaIsAlpha (CHAR_T);
-extern int TtaIsAlnum (CHAR_T);
-#else  /* __STDC__ */
-extern int TtaIsDigit ();
-extern int TtaIsAlpha ();
-extern int TtaIsAlnum ();
-#endif /* __STDC__ */
+extern int TtaIsDigit ( CHAR_T val );
+extern int TtaIsAlpha ( CHAR_T val );
+extern int TtaIsAlnum ( CHAR_T val );
+
+#else /* __STDC__ */
+
+extern int TtaIsDigit (/* CHAR_T val */);
+extern int TtaIsAlpha (/* CHAR_T val */);
+extern int TtaIsAlnum (/* CHAR_T val */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -1445,15 +1445,16 @@ PtrLine             pLine;
   - breakLine = TRUE if the end of the line correspond to a break element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int          FillLine (PtrLine pLine, PtrAbstractBox pRootAb, ThotBool notComplete, ThotBool *full, ThotBool *adjust, ThotBool *breakLine)
+static int          FillLine (PtrLine pLine, PtrAbstractBox pRootAb, ThotBool notComplete, ThotBool *full, ThotBool *adjust, ThotBool *breakLine, int frame)
 #else  /* __STDC__ */
-static int          FillLine (pLine, pRootAb, notComplete, full, adjust, breakLine)
+static int          FillLine (pLine, pRootAb, notComplete, full, adjust, breakLine, frame)
 PtrLine             pLine;
 PtrAbstractBox      pRootAb;
 ThotBool            notComplete;
 ThotBool           *full;
 ThotBool           *adjust;
 ThotBool           *breakLine
+int                 frame;
 #endif /* __STDC__ */
 {
    PtrTextBuffer       pNewBuff;
@@ -1467,7 +1468,7 @@ ThotBool           *breakLine
    int                 boxLength;
    int                 nSpaces;
    int                 newIndex, wordWidth;
-   int                 xi, maxX;
+   int                 xi, maxX, val;
    int                 maxLength, minWidth;
    ThotBool            still;
    ThotBool            toCut;
@@ -1559,6 +1560,13 @@ ThotBool           *breakLine
 	 }
        else
 	 {
+	   if (pNextBox->BxAbstractBox->AbWidth.DimAbRef == pNextBox->BxAbstractBox->AbEnclosing && pNextBox->BxAbstractBox->AbWidth.DimValue == 0)
+	     {
+	       /* the width of the enclosed depends of the block */
+	       val = pLine->LiXMax - pNextBox->BxLMargin - pNextBox->BxLBorder - pNextBox->BxLPadding - pNextBox->BxRMargin - pNextBox->BxRBorder - pNextBox->BxRPadding - pNextBox->BxW;
+	       if (val)
+		 ResizeWidth (pNextBox, pBox, NULL, val, 0, 0, 0, frame);
+	     }
 	   /* look for a break element */
 	   if (pNextBox->BxAbstractBox->AbAcceptLineBreak)
 	     found = FindBreakLine (pNextBox, &width, &breakWidth, &boxLength, &nSpaces, &newIndex, &pNewBuff, &wordWidth);
@@ -2232,7 +2240,7 @@ int                *height;
 	      pLine->LiFirstPiece = pBoxToBreak;
 
 	      /* Remplissage de la ligne au maximum */
-	      minWidth = FillLine (pLine, pRootAb, pAb->AbTruncatedTail, &full, &toAdjust, &breakLine);
+	      minWidth = FillLine (pLine, pRootAb, pAb->AbTruncatedTail, &full, &toAdjust, &breakLine, frame);
 	      if (pBox->BxMinWidth < minWidth)
 		pBox->BxMinWidth = minWidth;
 	      /* Positionnement de la ligne en respectant l'interligne */
@@ -2373,7 +2381,7 @@ int                *height;
 	  pLine->LiFirstBox = pNextBox;
 	  pLine->LiFirstPiece = NULL;
 	  pLine->LiLastPiece = NULL;
-	  pBox->BxMinWidth = FillLine (pLine, pRootAb, pAb->AbTruncatedTail, &full, &toAdjust, &breakLine);
+	  pBox->BxMinWidth = FillLine (pLine, pRootAb, pAb->AbTruncatedTail, &full, &toAdjust, &breakLine, frame);
 	  if (full)
 	    {
 	      /* the last box has been broken */

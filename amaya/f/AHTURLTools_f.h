@@ -29,7 +29,7 @@ extern ThotBool IsW3Path ( const CHAR_T* path );
 extern ThotBool IsValidProtocol ( const STRING url );
 extern CHAR_T* GetBaseURL ( Document doc );
 extern CHAR_T* GetLocalPath ( Document doc,
-                                CHAR_T* url );
+                              CHAR_T* url );
 extern void ExtractTarget ( CHAR_T* aName,
                             CHAR_T* target );
 extern void ConvertFileURL ( CHAR_T* url );
@@ -44,8 +44,8 @@ extern ThotBool HasKnownFileSuffix ( const STRING path );
 extern void ChopURL ( char *outputURL,
                       const char *inputURL );
 extern CHAR_T* AmayaParseUrl ( const CHAR_T* aName,
-                              CHAR_T* relatedName,
-                              int wanted );
+                               CHAR_T* relatedName,
+                               int wanted );
 extern void SimplifyUrl ( CHAR_T** url );
 extern ThotBool NormalizeFile ( CHAR_T* src,
                                 CHAR_T* target );
@@ -77,7 +77,7 @@ extern ThotBool IsW3Path (/* const CHAR_T* path */);
 extern ThotBool IsValidProtocol (/* const STRING url */);
 extern CHAR_T* GetBaseURL (/* Document doc */);
 extern CHAR_T* GetLocalPath (/* Document doc,
-                                  CHAR_T* url */);
+                                CHAR_T* url */);
 extern void ExtractTarget (/* CHAR_T* aName,
                               CHAR_T* target */);
 extern void ConvertFileURL (/* CHAR_T* url */);
@@ -92,11 +92,11 @@ extern ThotBool HasKnownFileSuffix (/* const STRING path */);
 extern void ChopURL (/* char *outputURL,
                         const char *inputURL */);
 extern CHAR_T* AmayaParseUrl (/* const CHAR_T* aName,
-                                CHAR_T* relatedName,
-                                int wanted */);
+                                 CHAR_T* relatedName,
+                                 int wanted */);
 extern void SimplifyUrl (/* CHAR_T** url */);
-extern ThotBool NormalizeFile (/* CharUnit* src,
-                                  CharUnit* target */);
+extern ThotBool NormalizeFile (/* CHAR_T* src,
+                                  CHAR_T* target */);
 extern STRING MakeRelativeURL (/* STRING aName,
                                   STRING relatedName */);
 

@@ -7,14 +7,14 @@
 #ifdef __STDC__
 
 extern CHAR_T* ufgets ( CHAR_T* string,
-                       int n,
-                       FILE *stream );
+                        int n,
+                        FILE *stream );
 
 #else /* __STDC__ */
 
 extern CHAR_T* ufgets (/* CHAR_T* string,
-                         int n,
-                         FILE *stream */);
+                          int n,
+                          FILE *stream */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

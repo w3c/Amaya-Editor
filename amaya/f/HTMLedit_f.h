@@ -33,6 +33,7 @@ extern void MakeUniqueName ( Element el,
 extern void ElementCreated ( NotifyElement * event );
 extern void ElementDeleted ( NotifyElement *event );
 extern void ElementPasted ( NotifyElement * event );
+extern void CheckNewLines ( NotifyOnTarget *event );
 extern void CreateTarget ( Document doc,
                            View view );
 extern void UpdateAttrID ( NotifyAttribute * event );
@@ -132,6 +133,7 @@ extern void MakeUniqueName (/* Element el,
 extern void ElementCreated (/* NotifyElement * event */);
 extern void ElementDeleted (/* NotifyElement *event */);
 extern void ElementPasted (/* NotifyElement * event */);
+extern void CheckNewLines (/* NotifyOnTarget *event */);
 extern void CreateTarget (/* Document doc,
                              View view */);
 extern void UpdateAttrID (/* NotifyAttribute * event */);
