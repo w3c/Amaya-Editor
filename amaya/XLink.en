@@ -7,3 +7,6 @@ export
 translation                             
 
 XLink: Annotation
+title_: title
+none_: none
+href_: href
