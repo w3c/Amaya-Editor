@@ -2099,21 +2099,24 @@ int                 frame;
 		    if (pDimRel->DimRSame[i])
 		      {
 			/* Changing the width */
-			if (pAb->AbEnclosing == pCurrentAb)
+			if (pAb->AbWidth.DimUnit == UnPercent)
 			  {
-			    /* refer the inside width */
-			    val = pBox->BxW;
-			    if (pAb->AbWidth.DimUnit == UnPercent)
-			      val = val * pAb->AbWidth.DimValue / 100;
+			    if (pAb->AbEnclosing == pCurrentAb)
+			      /* refer the inside width */
+			      val = pBox->BxW;
+			    else
+			      /* refer the outside width */
+			      val = pBox->BxWidth;
+			    val = val * pAb->AbWidth.DimValue / 100;
+			    val = val - box->BxWidth;
 			  }
 			else
 			  {
-			    /* refer the outside width */
-			    val = pBox->BxWidth;
-			    if (pAb->AbWidth.DimUnit == UnPercent)
-			      val = val * pAb->AbWidth.DimValue / 100;
+			    val = delta;
+			    if (pAb->AbEnclosing != pCurrentAb)
+			      /* refer the outside width */
+			      val = val + l + r;
 			  }
-			val = val - box->BxWidth;
 			/* avoid cycles on the same box */
 			if (box != pBox)
 			  ChangeWidth (box, pSourceBox, pBox, val, 0, frame);
@@ -2121,26 +2124,27 @@ int                 frame;
 		    else
 		      {
 			/* Changing the height */
-			if (pAb->AbEnclosing == pCurrentAb)
+			if (pAb->AbHeight.DimUnit == UnPercent)
 			  {
-			    val = pBox->BxW;
-			    if (pAb->AbHeight.DimUnit == UnPercent)
-			      val = val * pAb->AbHeight.DimValue / 100;
+			    if (pAb->AbEnclosing == pCurrentAb)
+			      val = pBox->BxW;
+			    else
+			      /* refer the outside width */
+			      val = pBox->BxWidth;
+			    val = val * pAb->AbHeight.DimValue / 100;
+			    val = val - box->BxHeight;
 			  }
 			else
 			  {
-			    /* refer the outside width */
-			    val = pBox->BxWidth;
-			    if (pAb->AbHeight.DimUnit == UnPercent)
-			      val = val * pAb->AbHeight.DimValue / 100;
+			    val = delta;
+			    if (pAb->AbEnclosing != pCurrentAb)
+			      /* refer the outside width */
+			      val = val + l + r;
 			  }
-			val = val - box->BxHeight;
 			ChangeHeight (box, pSourceBox, NULL, val, frame);
 		      }
 		    
 		  i++;
-		  if (i < MAX_RELAT_DIM)
-		    box = pDimRel->DimRTable[i];
 		}
 	      /* next relation block */
 	      pDimRel = pDimRel->DimRNext;
@@ -2593,32 +2597,37 @@ int                 frame;
 		  if (pDimRel->DimRSame[i])
 		    {
 		      /* Changing the height */
-		      if (pAb->AbEnclosing == pCurrentAb)
+		      if (pAb->AbHeight.DimUnit == UnPercent)
 			{
-			  if (pCurrentAb->AbInLine || pBox->BxType == BoGhost)
+			  if (pAb->AbEnclosing == pCurrentAb)
 			    {
-			      /* inherit from the line height */
-			      pLine = SearchLine (box);
-			      if (pLine == NULL)
-				/* no line available */
-				val = box->BxHeight;
+			      if (pCurrentAb->AbInLine || pBox->BxType == BoGhost)
+				{
+				/* inherit from the line height */
+				  pLine = SearchLine (box);
+				  if (pLine == NULL)
+				    /* no line available */
+				    val = box->BxHeight;
+				  else
+				    val = pLine->LiHeight;
+				}
 			      else
-				val = pLine->LiHeight;
+				/* refer the inside height */
+				val = pBox->BxH;
 			    }
 			  else
-			    /* refer the inside height */
-			    val = pBox->BxH;
-			  if (pAb->AbHeight.DimUnit == UnPercent)
-			    val = val * pAb->AbHeight.DimValue / 100;
+			    /* refer the outside height */
+			    val = pBox->BxHeight;
+			  val = val * pAb->AbHeight.DimValue / 100;
+			  val = val - box->BxHeight;
 			}
 		      else
 			{
-			  /* refer the outside height */
-			  val = pBox->BxHeight;
-			  if (pAb->AbHeight.DimUnit == UnPercent)
-			    val = val * pAb->AbHeight.DimValue / 100;
+			  val = delta;
+			  if (pAb->AbEnclosing != pCurrentAb)
+			    /* refer the outside width */
+			    val = val + t + b;
 			}
-		      val = val - box->BxHeight;
 		      /* avoid cycles on the same box */
 		      if (box != pBox)
 			ChangeHeight (box, pSourceBox, pBox, val, frame);
@@ -2626,21 +2635,24 @@ int                 frame;
 		  else
 		    {
 		      /* Changing the width */
-		      if (pAb->AbEnclosing == pCurrentAb || pAb == pCurrentAb)
+		      if (pAb->AbWidth.DimUnit == UnPercent)
 			{
-			  /* refer the inside height */
-			  val = pBox->BxH;
-			  if (pAb->AbWidth.DimUnit == UnPercent)
-			    val = val * pAb->AbWidth.DimValue / 100;
+			  if (pAb->AbEnclosing == pCurrentAb || pAb == pCurrentAb)
+			    /* refer the inside height */
+			    val = pBox->BxH;
+			  else
+			    /* refer the outside height */
+			    val = pBox->BxHeight;
+			  val = val * pAb->AbWidth.DimValue / 100;
+			  val = val - box->BxWidth;
 			}
 		      else
 			{
-			  /* refer the outside height */
-			  val = pBox->BxHeight;
-			  if (pAb->AbWidth.DimUnit == UnPercent)
-			    val = val * pAb->AbWidth.DimValue / 100;
+			  val = delta;
+			  if (pAb->AbEnclosing != pCurrentAb)
+			    /* refer the outside width */
+			    val = val + t + b;
 			}
-		      val = val - box->BxWidth;
 		      ChangeWidth (box, pSourceBox, NULL, val, 0, frame);
 		    }
 		  i++;
