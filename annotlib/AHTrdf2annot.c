@@ -203,9 +203,10 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
           annot->mdate = TtaStrdup ((char *) object);
       else if (contains (predicate, RDFMS_NS, RDFMS_TYPE)) 
         {
-          if (contains (object, ANNOT_NS, ANNOT_ANNOTATION)) 
-            {
-              /* this is the default [annotation type], so we don't save it */
+          if (contains (object, ANNOT_NS, ANNOT_ANNOTATION) && annot->type)
+	    {
+	      /* this is the default [annotation type], and
+		 we already have a type, so we don't save it */
             } 
             else 
               {
@@ -226,7 +227,7 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
 	  /* @@@ JK This test can be removed when we decide we don't
 	     need the amaya label backward compatibilty. Xptr should
 	     be the only mechanism we use */
-	  if (!strncmp (object, "id(", 3))
+	  if (!strncmp (object, "#id(", 4))
 	    ParseIdFragment (annot, object);
 	  else
 	    ParseXptrFragment (annot, object);
