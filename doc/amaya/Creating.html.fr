@@ -26,71 +26,73 @@
 </table>
 
 <div id="Creating">
-<h2>Creating new elements</h2>
+<h2>Créer de nouveaux éléments</h2>
 
 <h3><a name="Types">Buttons and types</a> menu</h3>
 
-<p>The simplest way to create new elements in a document is to move the
-insertion point to the desired position and to use the <strong>Types</strong>
-menu or the buttons corresponding to the most common elements (image,
-headings, lists, etc.). These buttons and menu items create the corresponding
-element at the current position.</p>
+<p>La manière la plus simple de créer de nouveaux éléments dans un document
+est de placer le point d'insertion dans la position voulue et d'utiliser
+le menu Eléments, ou les boutons correspondant aux éléments les plus communs
+(images, en-têtes, listes...). Ces boutons ou articles de menu créent
+l'élément correspondant à la position courante. <strong></strong></p>
 
-<p>In some cases, the desired element cannot be created exactly at the
-position chosen, because of the constraints imposed by the HTML DTD.
-<strong>Amaya</strong> then tries to create the element at the closest
-position where it is allowed.  For instance, if the insertion point is at the
-end of the last line of a paragraph when you click on the <img
-src="../Icons/H2.gif" alt="H2" /> button, <strong>Amaya</strong> does not
-create the new heading at that particular position (which would be invalid),
-but after the paragraph (which is probably what you intended).</p>
+<p>Dans certains cas, l'élément désiré ne peut pas être créé exactement à la
+position choisie à cause des contraintes imposées par le HTML DTD.
+<strong>Amaya</strong> tente alors de créer l'élément dans la position la plus
+proche qui soit concédée. Par exemple, si le point d'insertion se trouve à la
+fin de la dernière ligne d'un paragraphe, quand vous cliquez sur le bouton
+<img src="../Icons/H2.gif" alt="H2" /> , <strong>Amaya</strong> ne crée pas la
+nouvelle en-tête à cette position (elle serait invalide) mais aprés le
+paragraphe.</p>
 
-<p>In some other cases, <strong>Amaya</strong> changes the existing structure
-for creating the desired element. If the insertion point is somewhere within a
-list item (<code>LI</code>) when you create a second level heading (for
-example with the <img src="../Icons/H2.gif" alt="H2" /> button, or from the
-menu), the list item and its enclosing list are automatically split, in order
-to create the requested heading at the chosen position and to comply with the
-HTML DTD.</p>
+<p>Dans d'autres cas,  <strong>Amaya</strong> modifie la structure existante
+pour créer l'élément désiré. Si le point d'insertion est quelque part dans la
+"liste item" (LI) quand vous créez un second niveau d'en-tête (par exemple
+avec le bouton  <img src="../Icons/H2.gif" alt="H2" /> ou à partir du menu),
+la "list item" et sa liste incluse sont automatiquement divisées afin de créer
+l'en-tête demandé et de se conformer au HTML DTD.</p>
 
-<p>When creating new elements, it is important to select an <em>insertion
-point</em>, not some text nor a single character: if the current selection is
-not empty, <strong>Amaya</strong> tries to <a
-href="Changing.html#L631"><em>transform</em></a> the selected part into the
-element type chosen.</p>
+<p>Quand vous créez de nouveaux éléments, il est important de sélectionner un
+<em> point d'insertion</em>, non du texte ou un caractère unique: si la
+sélection courante n'est pas vide,  <strong>Amaya</strong> tente de <a
+href="Changing.html#L631"><em>transformer</em></a> la partie sélectionnée dans
+l'élément caractère choisi.</p>
 
-<p>Some documentation of <a href="HTML-elements/infoTypes.html">how to use
-element types</a> is available, as well as a briefly annotated <a
-href="HTML.html">list of all the HTML 4.0 elements</a>.</p>
+<p>De la documentation sur <a href="HTML-elements/infoTypes.html">comment
+utiliser les éléments caractères</a> est disponible, aussi bien que les brèves
+notes de la is available, as well as a briefly annotated <a
+href="HTML.html">liste de tous les éléments HTML 4.0.</a></p>
 
-<h3><a name="Structure">Structure menu</a></h3>
+<h3><a name="Structure"> Menu Structure</a></h3>
 
-<p>The <a href="#Types"><strong>Types</strong> menu</a> allows you to create
-only elements that are part of the document <code>BODY</code>. To create
-elements in the document <code>HEAD</code>, use the <strong>Structure</strong>
-menu from the <a href="Views.html#Structure">Structure view</a>. This menu
-works in the same way as the <strong>Types</strong> menu: put the caret at the
-desired position and choose the element type from the
-<strong>Structure</strong> menu.</p>
+<p>Le <a href="#Types">menu Eléments </a>vous permet seulement de créer des
+éléments qui font partie du document BODY.  Pour créer des éléments dans le
+document HEAD, utilisez le menu <strong>Structure</strong>  à partir de la  <a
+href="Views.html#Structure">Structure vue</a>.  Ce menu travaille de la même
+manière que le menu  <strong>Eléments</strong>:  mettez le point d'insertion
+dans la position désirée et choisissez l'élément caractère à partir du menu
+<strong>Structure.</strong></p>
 
-<p>The <strong>Structure</strong> menu also allows you to create comments,
-using its <strong>Comment</strong> entry. Comments are shown only in the <a
-href="Views.html#Structure">Structure view</a>, but they can be inserted at
-any position in the document.</p>
+<p>Le menu <strong>Structure</strong> vous permet aussi de créer des
+commentaires.................Les commentaires sont seulement montrés dans la  
+<a href="Views.html#Structure">Structure vue,</a>, mais ils peuvent être
+insérés dans n'importe quelle position dans le document.</p>
 
-<h4>Generated elements</h4>
+<h4> Elements engendrés</h4>
 
-<p>Some HTML elements are constituted by several other elements of different
-types. For instance, a table contains usually a caption (<code>CAPTION</code>)
-and several rows (<code>TR</code>) and several cells (<code>TD</code> or
-<code>TH</code>) in each row.</p>
+<p>Certains éléments HTML sont constitués de plusieurs  autres éléments de
+différent caractères. Par exemple, un tableau contient d'habitude un......(
+CAPTION), plusieurs colonnes (TR) et plusieurs cellules (TD ou TH) dans chaque
+colonne.</p>
 
-<p>When <strong>Amaya</strong> creates such elements, it also creates their
-components. A table is created with a caption and a row containing a single
-cell. The insertion point is placed automatically in the first of these
-components. You can enter the content of that component immediately or later.
-You can move to the next (empty) component with the mouse or with the arrow
-keys.</p>
+<p>Quand  <strong>Amaya</strong> crée de tels élements, il crée aussi leurs
+composants. Un tableau est créé avec un.....et une colonne contenant une seule
+cellule. Le point d'insertion est automatiquement placécreates such elements,
+it also creates their components. A table is created with a caption and a row
+containing a single cell. The insertion point is placed automatically in the
+first of these components. You can enter the content of that component
+immediately or later. You can move to the next (empty) component with the
+mouse or with the arrow keys.</p>
 
 <h3><a name="L906">The Enter (or Return) key</a></h3>
 

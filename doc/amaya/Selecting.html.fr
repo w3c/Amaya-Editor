@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Selecting</title>
-  <meta name="GENERATOR" content="amaya V3.2" />
+  <meta name="GENERATOR" content="amaya V3.2.1" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -27,75 +27,81 @@
 </table>
 
 <div id="Selecting">
-<h2>Selecting</h2>
+<h2>Sélectionner</h2>
 
-<p>Many commands in <strong>Amaya</strong> act on the current selection.  The
-current selection can be changed in different ways.</p>
+<p>De nombreuses commandes sur  <strong>Amaya</strong> agissent sur la
+sélection courante. La sélection courante peut être changée de différentes
+manières.</p>
 <dl>
-  <dt>Selecting with the mouse</dt>
-    <dd>As usual, you can click with the left mouse button for moving the
-      insertion point.
-      <p>To select some text, drag a region - move the mouse with the left
-      button pressed down and release it when the desired part is
-      selected.</p>
-      <p>You can also extend the selection by clicking with the left button
-      combined with the Shift key.</p>
-      <p>You can select a whole element, such as a list item by clicking on
-      its bullet or its number.</p>
+  <dt>Sélectionner avec la souris.</dt>
+    <dd>Comme à l'ordinaire,vous pouvez cliquer sur le bouton gauche de la
+      souris pour déplacer le point d'insertion.
+      <p>Pour sélectionner du texte, glissez sur une zone ,déplacez la souris
+      en maintenant  le bouton gauche enfoncé et relâchez-la quand la partie
+      désirée a été selectionnée.</p>
+      <p>Vous pouvez aussi étendre la sélection en cliquant sur le bouton
+      gauche de la souris en combinaison avec la touche Shift.</p>
+      <p>Vous pouvez sélectionner um élément entier, comme une liste
+      d'articles, en cliquant sur.......ou sur son numéro.</p>
     </dd>
-  <dt>Selecting with the arrow keys</dt>
-    <dd>The four arrow keys on the keyboard move the insertion point in the
-      four directions. If there is no visible selection in that document, up
-      and down arrows allow you to scroll the document one line up or one line
-      down.</dd>
+  <dt>Sélectionner avec les touches de direction.</dt>
+    <dd>Les quatre touches de direction du clavier déplacent le point
+      d'insertion dans les quatre directions. S'il n'y a pas de sélection
+      visible sur le document, les flèches du haut et du bas vous permettent
+      de faire défiler le document une ligne au-dessus ou une ligne
+      au-dessous.</dd>
 </dl>
 
-<p>Whatever the way you change the current selection, the type of the first
-selected element is displayed at the bottom of the window. It is followed by
-the types of the enclosing elements in the structure. This may be helpful when
-the document structure is complex.</p>
+<p>Quelque soit la manière dont vous changez la sélection courante, le
+caractère du premier élément sélectionné est affiché sur le fond de la
+fenetre. Il est suivi par les caractères des éléments pris en compte dans la
+structure. Cela peut  être utile quand la structure du document est
+complexe.</p>
 
-<h3><a name="Selecting1">Selecting by Structure</a></h3>
+<h3><a name="Selecting1">Sélectionner avec la structure</a></h3>
 
-<p>The structure view is especially convenient for quickly selecting large
-elements. Just click on the blue label that represents the element, or on the
-name of any of its attributes, or even on its blue vertical line. A large
-element like a complex table or a long list can be selected with a single
-click.</p>
+<p>La vue structure est particulièrement commode pour sélectionner rapidement
+des élements longs. Il suffit de cliquer sur l'étiquette bleue  représentant
+l'élément, ou sur le nom d'un de ses attributs, ou encore sur sa ligne
+verticale bleue. Un élément long comme un tableau complexe ou une longue liste
+peut etre sélectionné par un simple clique.</p>
 
-<p>Clicking on a black character in the Structure view selects only that
-character.</p>
+<p>Cliquer sur un caractère noir  dans la vue structure sélectionne uniquement
+ce caractère.</p>
 
-<p>A bold text in the structure view represents the value of an attribute that
-can be edited directly from the keyboard. A selection in such an attribute
-value cannot be extended outside the attribute.</p>
+<p>Un texte dans la vue stucture  représente la valeur d'un attribut pouvant
+etre rédigé directement à partir du clavier. Une sélection dans une telle
+valeur d'attribut ne peut pas etre étendue en dehors de cet attribut.</p>
 
-<p>It is also possible to use the Keyboard for selecting by structure in any
-view. Pressing the Esc (F2 on Windows) key selects the parent element in the
-document structure. Pressing the Esc (F2 on Windows) key several times allows
-you to select containers (and everything in them) up the structure the
-structure towards the root. It is also possible to select child elements: the
-default shortcut key is ctrl-minus ("-"). To select the next or previous
-element at the same level (or at the level of the parent element if there is
-no next/previous child of the current parent) use control-k (for next) and
-control-j (for previous).</p>
+<p>Il est également possible d'utiliser le clavier pour sélectionner par la
+structure dans n'importe quelle vue.Presser sur la touche Esc (F2 sur Windows)
+sélectionne l'élément "parent" dans la structure du document. Presser
+plusieurs fois sur la touche ESC (F2 sur Windows) permet de sélectionner des
+contenairs ( et tous les contenus) en haut de la structure jusqu'à la base. Il
+est encore possible de sélectionner des éléments "fils":  la touche "raccourci
+clavier par défaut" est ctrl-minus ("-"). Pour sélectionner l'élément suivant
+ou l'élément précédent au meme niveau (ou au niveau de l'élément "parent" s'il
+n'y a pas de suivant/précédent "fils" du "parent" courant), utilisez control-k
+(pour le suivant) et control-j (pour le précédent).</p>
 
-<h3><a name="Selecting2">Selecting images</a></h3>
+<h3><a name="Selecting2">Sélectionner des images</a></h3>
 
-<p>If you click on the left hand part of an image, the insertion point is
-moved to the left edge of that image. This allows you to type text before the
-image. If you click on the right hand part of an image, the insertion point is
-moved to the right side of that image. This allows you to type text after the
-image.</p>
+<p>Si vous cliquez sur la partie gauche d'une image, le point d'insertion est
+déplacé vers le côté gauche de l'image. Ceci vous permet de taper le texte
+avant l'image. Si vous cliquez sur la partie droite d'une image, le point
+d'insertion est déplacé sur le côté droit de cette image. Ceci vous permet de
+taper le texte avant l'image.</p>
 
-<p>When using the arrow keys to move, the cursor will move from one side of
-the image to the image itself (selecting it)and then to the other side</p>
+<p>Quand vous utilisez les touches de direction pour vous déplacer, le curseur
+se déplacera d'um côté de l'image vers l'image elle-même (tout en la
+sélectionnant) puis vers l'autre coté.</p>
 
-<p>If you want to select the whole image, click anywhere within the image and
-move a bit with the button pressed down. Do not leave the image before
-releasing the button. The whole image is then selected. You can use the copy,
-cut and paste commands to move or duplicate the image element along with all
-its attributes.</p>
+<p>Si vouv voulez sélectionner toute l'image, cliquez n'importe où à
+l'intérieur de l'image et déplacez -vous  un peu avec le bouton enfoncé. Ne
+quittez pas l'image avant d'avoir relâcher le bouton. L'image entière est
+alors sélectionnée. Vous pouvez utiliser les commandes "copier", "couper"
+et"coller" pour déplacer ou  doubler l'élément de l'image avec tous ses
+attributs. </p>
 </div>
 
 <p align="right"><a href="Browsing.html"><img alt="previous" border="0"
