@@ -916,7 +916,12 @@ void SetNamespacesAndDTD (Document doc)
    if ((useMathML || useSVG || useHTML || useXML) && DocumentMeta[doc]->xmlformat)
      {
        /* Remove the DOCTYPE declaration for compound documents */
-       elType = TtaGetElementType (docEl);
+#ifdef ANNOTATIONS
+       if (DocumentTypes[doc]  == docAnnot)
+	 elType = TtaGetElementType (root);
+       else
+#endif /* ANNOTATIONS */
+	 elType = TtaGetElementType (docEl);
        s = TtaGetSSchemaName (elType.ElSSchema);
        if (strcmp (s, "HTML") == 0)
 	 elType.ElTypeNum = HTML_EL_DOCTYPE;
@@ -1027,15 +1032,10 @@ void SetNamespacesAndDTD (Document doc)
      {
        /* Create (or update) a META element to specify Content-type 
 	  and Charset*/
-#ifdef ANNOTATIONS
-       /* set the charset attribute type to the HTML value */
-       if (DocumentTypes[doc] == docAnnot)
-	 {
-	   attrType.AttrTypeNum = HTML_ATTR_Charset;
-	   elType = TtaGetElementType (root);
-	   attrType.AttrSSchema = elType.ElSSchema;
-	 }
-#endif /* ANNOTATIONS */
+       attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
+       if (!attrType.AttrSSchema)
+	 return;
+
        /* Get the HEAD element first */
        el = TtaGetFirstChild (root);
        head = NULL;
@@ -1048,6 +1048,7 @@ void SetNamespacesAndDTD (Document doc)
 	   else
 	     TtaNextSibling (&el);
 	 }
+
        if (head)
 	 {
 	   /* indicate the MIME type and the charset in a meta element with
