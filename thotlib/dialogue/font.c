@@ -2228,29 +2228,28 @@ void InitDialogueFonts (char *name)
   index = 0;
   while (LogicalPointsSizes[index] < MenuSize && index <= MaxNumberOfSizes)
     index++;
-  FontDialogue =  LoadNearestFont (script, 2, 0, index, index, 0, TRUE, TRUE);
+  FontDialogue =  ReadFont (script, 2, 0, index, UnRelative);
   if (FontDialogue == NULL)
     {
-      FontDialogue = LoadNearestFont ('L', 2, 0, index, index, 0, TRUE, TRUE);
+      FontDialogue = ReadFont ('L', 2, 0, index, UnRelative);
       if (FontDialogue == NULL)
 	TtaDisplaySimpleMessage (FATAL, LIB, TMSG_MISSING_FONT);
     }
   InitDialogueFont ();
-  IFontDialogue = LoadNearestFont (script, 1, 2, index, index, 0, TRUE, TRUE);
+  IFontDialogue = ReadFont (script, 1, 2, index, UnRelative);
   if (IFontDialogue == NULL)
     {
-      IFontDialogue = LoadNearestFont (script, 2, 2, index, index, 0, TRUE, TRUE);
+      IFontDialogue = ReadFont (script, 2, 2, index, UnRelative);
       if (IFontDialogue == NULL)
 	IFontDialogue = FontDialogue;
     }
-
   index = 0;
   while (LogicalPointsSizes[index] < f3 && index <= MaxNumberOfSizes)
     index++;
-  LargeFontDialogue = LoadNearestFont (script, 1, 1, index, index, 0, TRUE, TRUE);
+  LargeFontDialogue = ReadFont (script, 1, 1, index, UnRelative);
   if (LargeFontDialogue == NULL)
     {
-      LargeFontDialogue = LoadNearestFont (script, 2, 1, index, index, 0, TRUE, TRUE);
+      LargeFontDialogue = ReadFont (script, 2, 1, index, UnRelative);
       if (LargeFontDialogue == NULL)
 	LargeFontDialogue = IFontDialogue;
     }

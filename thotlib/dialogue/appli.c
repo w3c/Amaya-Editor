@@ -677,7 +677,7 @@ gboolean  GL_Init (ThotWidget widget,
   SetGlPipelineState ();
   if (!dialogfont_enabled)
     {
-      InitDialogueFonts ("");
+      /*InitDialogueFonts ("");*/
       dialogfont_enabled = TRUE;
     } 
   return TRUE;   

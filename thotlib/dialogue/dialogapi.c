@@ -2131,7 +2131,7 @@ void InitDialogueFont ()
 {
 #ifndef _WINDOWS
 #ifndef _GTK
-  DefaultFont = XmFontListCreate (XLoadQueryFont (TtDisplay, FontDialogue),
+  DefaultFont = XmFontListCreate ((XFontStruct *)FontDialogue,
 				  XmSTRING_DEFAULT_CHARSET);
 #else /* _GTK */
   DefaultFont = FontDialogue;
