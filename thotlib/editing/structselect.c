@@ -2112,7 +2112,7 @@ boolean             drag;
    if (pEl != NULL)
       /* call procedure handling selection in tables, if it is present */
       if (ThotLocalActions[T_selecttable] != NULL)
-	 (*ThotLocalActions[T_selecttable]) (pEl, SelectedDocument, TRUE,&sel);
+	 (*ThotLocalActions[T_selecttable]) (pEl, SelectedDocument, TRUE, &sel);
    if (sel)
      {
 	done = FALSE;

@@ -1407,14 +1407,12 @@ boolean		    select;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                MergeTextLeaves (PtrElement * pEl, PtrElement * pFirstFree, PtrDocument * pDoc)
-
+static void         MergeTextLeaves (PtrElement * pEl, PtrElement * pFirstFree, PtrDocument * pDoc)
 #else  /* __STDC__ */
-void                MergeTextLeaves (pEl, pFirstFree, pDoc)
+static void         MergeTextLeaves (pEl, pFirstFree, pDoc)
 PtrElement         *pEl;
 PtrElement         *pFirstFree;
 PtrDocument        *pDoc;
-
 #endif /* __STDC__ */
 
 {
@@ -1452,22 +1450,23 @@ PtrDocument        *pDoc;
 
 #ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
-   Tente de fusionner les elements pointes par firstSel et lastSel 
-   avec leurs voisins, reaffiche toutes les vues, libere les       
-   elements fusionnes et definit une nouvelle selection.           
+   Try to merge elements between firstSel and lastSel with siblings.
+   Redisplay all views and free merged elements.      
+   If the parameter caret is TRUE select only at the end. In other case
+   select the whole.
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                MergeAndSelect (PtrDocument pDoc, PtrElement firstSel, PtrElement lastSel, int firstChar, int lastChar)
+void                MergeAndSelect (PtrDocument pDoc, PtrElement firstSel, PtrElement lastSel, int firstChar, int lastChar, boolean caret)
 
 #else  /* __STDC__ */
-void                MergeAndSelect (pDoc, firstSel, lastSel, firstChar, lastChar)
+void                MergeAndSelect (pDoc, firstSel, lastSel, firstChar, lastChar, caret)
 PtrDocument         pDoc;
 PtrElement          firstSel;
 PtrElement          lastSel;
 int                 firstChar;
 int                 lastChar;
-
+boolean             caret;
 #endif /* __STDC__ */
 
 {
@@ -1480,47 +1479,62 @@ int                 lastChar;
 
    if (firstSel == NULL)
       return;
+
+   if (ElemIsAnAncestor (firstSel, lastSel))
+     {
+       /* firstSel is a parent of lastSel */
+       lastSel = firstSel;
+       firstChar = lastChar = 0;
+     }
+   else if (ElemIsAnAncestor (lastSel, firstSel))
+     {
+       /* lastSel is a parent of firstSel */
+       firstSel = lastSel;
+       firstChar = lastChar = 0;
+     }
+
    select = TRUE;
    pLast = NULL;
-   pFirstFree = NULL;		/* pas d'element a liberer */
+   pFirstFree = NULL;		/* no element to be freed */
    pEl = firstSel;
    discreteSelection = !SelContinue;
    NSelectedEls = 0;
    while (pEl != NULL)
-      /* essaie de fusionner les elements feuilles qui ont les memes */
-      /* attributs et les memes regles de presentation specifiques */
+      /* try to merge leaf elements with same attributes */
+      /* and same presentation rules */
      {
-	pEl1 = pEl;
 	prevLen = 0;
 	len = 0;
-	if (pEl1 == firstSel || pEl1 == lastSel)
-	   if (pEl1->ElPrevious != NULL)
-	      if (pEl1->ElPrevious->ElTerminal)
-		 if (pEl1->ElPrevious->ElLeafType == LtText)
-		   {
-		      prevLen = pEl1->ElPrevious->ElTextLength;
-		      len = pEl1->ElTextLength;
-		   }
+	if (pEl == firstSel || pEl == lastSel)
+	  {
+	    if (pEl->ElPrevious != NULL &&
+		pEl->ElPrevious->ElTerminal &&
+		pEl->ElPrevious->ElLeafType == LtText)
+	      prevLen = pEl->ElPrevious->ElTextLength;
+	    len = pEl->ElTextLength;
+	  }
 
+	/* The last selected element can be merged with the previous sibling
+	   and pEl is neither equal to firstSel nor lastSel */
 	if (pEl != firstSel || firstChar <= 1)
-	   MergeTextLeaves (&pEl, &pFirstFree, &pDoc);
+	  MergeTextLeaves (&pEl, &pFirstFree, &pDoc);
 
 	if (pEl->ElStructSchema == NULL)
-	  /* element pEl has been freed by application during merge */
+	  /* element pEl has been freed by application during merging */
 	  {
-	  pEl = NULL;
-	  select = FALSE;
+	    pEl = NULL;
+	    select = FALSE;
 	  }
 	else
 	  {
-	    if (pEl1 == firstSel && pEl != pEl1)
+	    if (pEl == firstSel)
 	      /* il y a eu fusion du premier element qui a change' d'attribut */
 	      {
 		firstSel = pEl;
 		firstChar = prevLen + 1;
 	      }
 	    
-	    if (pEl1 == lastSel && pEl != pEl1)
+	    if (pEl == lastSel)
 	      /* il y a eu fusion du dernier element qui a change' d'attribut */
 	      {
 		lastSel = pEl;
@@ -1540,23 +1554,23 @@ int                 lastChar;
 	  }
      }
    /* cherche si le dernier element traite' peut fusionner avec le suivant */
-   pEl1 = pLast;
-   if (select)
-     if (pEl1->ElTerminal)
-       if (pEl1->ElLeafType == LtText)
-	 if (lastChar == 0 || lastChar > pEl1->ElTextLength)
-	   {
-	      prevLen = pEl1->ElTextLength;
-	      if (IsIdenticalTextType (pLast, pDoc, &pFree))
-		{
-		   KeepFreeElements (pFree, &pFirstFree);
-		   lastSel = pLast;
-		   if (lastChar == 0)
-		      lastChar = prevLen + 1;
-		   if (discreteSelection)
-		      SelectedEl[NSelectedEls - 1] = pLast;
-		}
-	   }
+   if (select &&
+       pLast->ElTerminal &&
+       pLast->ElLeafType == LtText &&
+       (lastChar == 0 || lastChar > pLast->ElTextLength))
+     {
+       prevLen = pLast->ElTextLength;
+       if (IsIdenticalTextType (pLast, pDoc, &pFree))
+	 {
+	   KeepFreeElements (pFree, &pFirstFree);
+	   lastSel = pLast;
+	   if (lastChar == 0)
+	     lastChar = prevLen + 1;
+	   if (discreteSelection)
+	     SelectedEl[NSelectedEls - 1] = pLast;
+	 }
+     }
+
    /* reaffiche toutes les vues */
    AbstractImageUpdated (pDoc);
    RedisplayDocViews (pDoc);
@@ -1569,29 +1583,46 @@ int                 lastChar;
 	   DeleteElement (&pEl, pDoc);
 	pEl = pEl1;
      }
-   if (select)
+   if (select && !caret)
      {
-       /* retablit la selection */
-       if (lastChar > 0)
-	 lastChar--;
+       /* set the new selection */
        if (firstChar > 1)
 	 {
 	   if (firstSel == lastSel)
-	     prevLen = lastChar;
+	     prevLen = lastChar - 1;
 	   else
 	     prevLen = 0;
 	   SelectString (pDoc, firstSel, firstChar, prevLen);
 	 }
-       else if ((lastChar == 0 && firstChar!=1) || lastSel != firstSel)
+       else if (!firstSel->ElTerminal ||
+		(lastChar == 0 && firstChar == 0) ||
+		lastSel != firstSel)
 	 SelectElement (pDoc, firstSel, TRUE, TRUE);
        else
-	 SelectString (pDoc, firstSel, 1, lastChar);
+	 SelectString (pDoc, firstSel, 1, lastChar - 1);
+
        if (lastSel != firstSel)
 	 if (discreteSelection)
 	   for (index = 1; index <= NSelectedEls; index++)
 	     AddInSelection (SelectedEl[index - 1], (boolean)(index == NSelectedEls));
-	 else
+	 else if (lastChar == 0)
 	   ExtendSelection (lastSel, lastChar, TRUE, FALSE, FALSE);
+	 else
+	   ExtendSelection (lastSel, lastChar - 1, TRUE, FALSE, FALSE);
+     }
+   else if (select)
+     {
+       /* set a caret at the end of the current selection */
+       if (!lastSel->ElTerminal)
+	 {
+	   pLast = LastLeaf (lastSel);
+	   SelectString (pDoc, pLast, pLast->ElTextLength + 1, pLast->ElTextLength);
+	 }
+       else if (lastChar == 0)
+	 /* end of current element */
+	 SelectString (pDoc, lastSel, lastSel->ElTextLength + 1, lastSel->ElTextLength);
+       else
+	 SelectString (pDoc, lastSel, lastChar, lastChar - 1);
      }
 }
 #endif /* _WIN_PRINT */

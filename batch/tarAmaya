@@ -4,7 +4,7 @@
 #
 #       amaya-$MACH-$AMAYAVERSION.tar.gz
 # 
-AMAYAVERSION=1.5a
+AMAYAVERSION=2.0
 THOTDIR=/tahiti/diffusion/Amaya
 DEST=/tahiti/thottape
 PLATFORMS="solaris2 LINUX-ELF RS6000 SGI osf1"
@@ -28,10 +28,9 @@ do
  $TAR $DEST/amaya-$MACH-$AMAYAVERSION.tar.gz \
    Amaya/README.amaya \
    Amaya/config/XKeysymDB \
-   Amaya/config/thot.ini \
-   Amaya/config/amaya.keyboard \
-   Amaya/config/thot.rc \
    Amaya/config/amaya.kb \
+   Amaya/config/amaya.keyboard \
+   Amaya/config/*thot.rc \
    Amaya/config/en-amayadialogue \
    Amaya/config/en-amayamsg \
    Amaya/config/en-libdialogue \

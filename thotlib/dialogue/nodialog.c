@@ -371,16 +371,16 @@ void                CancelSelection ()
 
 
 #ifdef __STDC__
-void                MergeAndSelect (PtrDocument SelDoc, PtrElement PremSel, PtrElement DerSel, int premcar, int dercar)
+void                MergeAndSelect (PtrDocument SelDoc, PtrElement PremSel, PtrElement DerSel, int premcar, int dercar, boolean caret)
 
 #else  /* __STDC__ */
-void                MergeAndSelect (SelDoc, PremSel, DerSel, premcar, dercar)
+void                MergeAndSelect (SelDoc, PremSel, DerSel, premcar, dercar, caret)
 PtrDocument         SelDoc;
 PtrElement          PremSel;
 PtrElement          DerSel;
 int                 premcar;
 int                 dercar;
-
+boolean             caret;
 #endif /* __STDC__ */
 {
 }

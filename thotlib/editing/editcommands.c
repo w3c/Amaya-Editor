@@ -1315,6 +1315,7 @@ View                view;
 {
    ViewSelection      *pViewSel;
    int                 frame;
+   boolean             toDelete = FALSE;
 
    if (document != 0)
      {
@@ -1339,13 +1340,19 @@ View                view;
 		    (*MenuActionList[CMD_DeleteSelection].Call_Action) (document, view);
 		}
 	      else
-		{
-		  TtcPreviousChar (document, view);
-		  InsertChar (frame, 127, -1);
-		}
+		toDelete = TRUE;
 	  }
 	else
-	  InsertChar (frame, 127, -1);
+	  toDelete = TRUE;
+
+	if (toDelete)
+	  {
+	    pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
+	    if (pViewSel->VsBox != NULL &&
+		pViewSel->VsBox->BxAbstractBox != NULL &&
+		!pViewSel->VsBox->BxAbstractBox->AbReadOnly)
+	      InsertChar (frame, 127, -1);
+	  }
      }
 }
 
@@ -2188,33 +2195,24 @@ PtrTextBuffer       clipboard;
 
 	       /* termine l'insertion */
 	       pAb->AbVolume += charsDelta;
-	       /* Deplacement la selection sur la chaine inseree */
-	       if (ind == THOT_MAX_CHAR)
-		 {
-		    /* buffer debut d'insertion */
-		    pViewSel->VsBuffer = pBuffer->BuNext;
-		    /* index debut d'insertion */
-		    pViewSel->VsIndBuf = 1;
-		 }
-	       else
-		 {
-		    /* buffer debut d'insertion */
-		    pViewSel->VsBuffer = pBuffer;
-		    /* index debut d'insertion */
-		    pViewSel->VsIndBuf = ind;
-		 }
-	       /* fin de la chaine inseree */
-	       pViewSelEnd->VsIndBox = pViewSel->VsIndBox + charsDelta - 1;
-	       pViewSelEnd->VsBox = pViewSel->VsBox;
-	       /* +largeur de l'insertion */
-	       pViewSelEnd->VsXPos = pViewSel->VsXPos + xDelta;
-	       /* buffer fin d'insertion */
+	       /* Move the selection at the end of inserted text */
+	       pViewSel->VsIndBox = pViewSel->VsIndBox + charsDelta;
+	       pViewSelEnd->VsIndBox = pViewSel->VsIndBox;
+	       pViewSel->VsXPos = pViewSel->VsXPos + xDelta;
+	       pViewSelEnd->VsXPos = pViewSel->VsXPos;
+	       /* last inserted buffer */
+	       pViewSel->VsBuffer = pNewBuffer;
 	       pViewSelEnd->VsBuffer = pNewBuffer;
-	       /* index fin d'insertion */
+	       /* last inserted index */
+	       pViewSel->VsIndBuf = endInd;
 	       pViewSelEnd->VsIndBuf = endInd;
+	       pViewSelEnd->VsBox = pViewSel->VsBox;
 	       /* +nombre de blancs */
-	       pViewSelEnd->VsNSpaces = pViewSel->VsNSpaces + spacesDelta;
+	       pViewSel->VsNSpaces = pViewSel->VsNSpaces + spacesDelta;
+	       pViewSelEnd->VsNSpaces = pViewSel->VsNSpaces;
+	       pViewSel->VsLine = pLine;
 	       pViewSelEnd->VsLine = pLine;
+	       pFrame->FrSelectOnePosition = TRUE;
 	       /* Si la boite etait vide */
 	       if (pAb->AbVolume == charsDelta)
 		  xDelta -= width;

@@ -59,6 +59,7 @@ extern void GetCounterValue ( int number,
                               CounterStyle style,
                               STRING string,
                               int *len );
+extern boolean TtaCheckDirectory ( STRING directory );
 
 #else /* __STDC__ */
 
@@ -115,6 +116,7 @@ extern void GetCounterValue (/* int number,
                                 CounterStyle style,
                                 STRING string,
                                 int *len */);
+extern boolean TtaCheckDirectory (/* STRING directory */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

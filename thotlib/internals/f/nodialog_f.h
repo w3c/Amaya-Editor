@@ -74,7 +74,8 @@ extern void MergeAndSelect ( PtrDocument SelDoc,
                              PtrElement PremSel,
                              PtrElement DerSel,
                              int premcar,
-                             int dercar );
+                             int dercar,
+                             boolean caret );
 extern void SetNewSelectionStatus ( int frame,
                                     PtrAbstractBox pAb,
                                     boolean Etat );
@@ -165,7 +166,8 @@ extern void MergeAndSelect (/* PtrDocument SelDoc,
                                PtrElement PremSel,
                                PtrElement DerSel,
                                int premcar,
-                               int dercar */);
+                               int dercar,
+                               boolean caret */);
 extern void SetNewSelectionStatus (/* int frame,
                                       PtrAbstractBox pAb,
                                       boolean Etat */);

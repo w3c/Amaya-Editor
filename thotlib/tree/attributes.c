@@ -1367,7 +1367,7 @@ boolean		    reDisplay;
    /* elements voisins de meme type ayant les memes attributs, reaffiche */
    /* toutes les vues et retablit la selection */
    if (reDisplay)
-     MergeAndSelect (pDoc, pFirstSel, pLastSel, firstChar, lastChar);
+     MergeAndSelect (pDoc, pFirstSel, pLastSel, firstChar, lastChar, FALSE);
 }
 
 

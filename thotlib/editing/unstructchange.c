@@ -696,9 +696,9 @@ void                PasteCommand ()
 		/* qui viennent d'etre colle's et reaffiche le document */
 		if (NCreatedElements > 0)
 		    if (before)
-		      MergeAndSelect (pDoc, CreatedElement[NCreatedElements - 1], CreatedElement[0], 0, 0);
+		      MergeAndSelect (pDoc, CreatedElement[NCreatedElements - 1], CreatedElement[0], 0, 0, TRUE);
 		    else
-		      MergeAndSelect (pDoc, CreatedElement[0], CreatedElement[NCreatedElements - 1], 0, 0);
+		      MergeAndSelect (pDoc, CreatedElement[0], CreatedElement[NCreatedElements - 1], 0, 0, TRUE);
 
 		pDoc->DocModified = TRUE;	/* le document est modifie' */
 		pDoc->DocNTypedChars += 20;

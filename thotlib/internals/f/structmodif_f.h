@@ -35,14 +35,12 @@ extern boolean BreakElement ( PtrElement pElReplicate,
                               int splitIndex,
                               boolean block,
                               boolean select );
-extern void MergeTextLeaves ( PtrElement * pEl,
-                              PtrElement * pFirstFree,
-                              PtrDocument * pDoc );
 extern void MergeAndSelect ( PtrDocument pDoc,
                              PtrElement firstSel,
                              PtrElement lastSel,
                              int firstChar,
-                             int lastChar );
+                             int lastChar,
+                             boolean caret );
 
 #else /* __STDC__ */
 
@@ -75,14 +73,12 @@ extern boolean BreakElement (/* PtrElement pElReplicate,
                                 int splitIndex,
                                 boolean block,
                                 boolean select */);
-extern void MergeTextLeaves (/* PtrElement * pEl,
-                                PtrElement * pFirstFree,
-                                PtrDocument * pDoc */);
 extern void MergeAndSelect (/* PtrDocument pDoc,
                                PtrElement firstSel,
                                PtrElement lastSel,
                                int firstChar,
-                               int lastChar */);
+                               int lastChar,
+                               boolean caret */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -3845,18 +3845,21 @@ DocumentType     docType;
 
   W3Loading = doc;
   BackupDocument = doc;
-  TtaExtractName (docname, DirectoryName, DocumentName);
+  TtaExtractName (tempdoc, DirectoryName, DocumentName);
   newdoc = InitDocView (doc, DocumentName, docType, FALSE);
   if (newdoc != 0)
     {
       /* load the saved file */
       W3Loading = newdoc;
-      TtaExtractName (tempdoc, DirectoryName, DocumentName);
       if (IsW3Path (docname))
 	{
 	  /* it's a remote file */
+	  if (docType == docHTML)
+	    ustrcpy (tempfile, "text/html");
+	  else
+	    tempfile[0] = EOS;
 	  LoadHTMLDocument (newdoc, docname, NULL, CE_ABSOLUTE, 
-			    tempdoc, DocumentName, NULL, FALSE);
+			    tempdoc, DocumentName, tempfile, FALSE);
 	}
       else
 	{

@@ -8,7 +8,7 @@
 #
 #       amaya-libs-$MACH-$AMAYAVERSION.tar.gz
 #
-AMAYAVERSION=1.5a
+AMAYAVERSION=2.0
 THOTDIR=/tahiti/diffusion
 DEST=/tahiti/thottape
 
@@ -81,8 +81,8 @@ Amaya/amaya/*.ico \
 Amaya/amaya/*.cur \
 Amaya/amaya/f/*.h \
 Amaya/amaya/xpm/*.xpm \
-Amaya/config/amaya.keyboard \
 Amaya/config/amaya.kb \
+Amaya/config/amaya.keyboard \
 Amaya/config/en-amayadialogue \
 Amaya/config/en-amayamsg \
 Amaya/config/en-libdialogue \
@@ -117,8 +117,7 @@ Amaya/config/tr-libdialogue \
 Amaya/config/tr-transdialogue \
 Amaya/config/tr-corrdialogue \
 Amaya/config/XKeysymDB \
-Amaya/config/thot.ini \
-Amaya/config/thot.rc \
+Amaya/config/*thot.rc \
 Amaya/config/thot.color \
 Amaya/cpp/winnt/*.bat \
 Amaya/cpp/*.c \
