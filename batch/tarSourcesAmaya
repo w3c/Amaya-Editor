@@ -43,6 +43,7 @@ cd $TARDIR
 TARDIR=$PWD/
 AMAYADIR=${AMAYADIR#$TARDIR}
 LIBWWWDIR=libwww
+REDLANDDIR=redland
 
 TAR="tar cvbfh 200"
 COMPRESS="gzip -9"
@@ -462,14 +463,6 @@ ${LIBWWWDIR}/config/missing \
 ${LIBWWWDIR}/config/mkinstalldirs \
 ${LIBWWWDIR}/config/winConfigure.pl \
 ${LIBWWWDIR}/config/depcomp \
+${REDLANDDIR} \
  | $COMPRESS  > $DEST/amaya-src-$AMAYAVERSION.tgz
-
-
-
-
-
-
-
-
-
 
