@@ -3991,8 +3991,9 @@ void UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
 		      {
 		      /* create the presentation box if it does not exist
 		         and if other conditions are ok */
-		      if (!pAb && CondPresentation (pR->PrCond, pEl, pAttr,
-						   pEl, viewSch, elSSch, pDoc))
+		      if ((!pAb || pAb->AbDead) &&
+			  CondPresentation (pR->PrCond, pEl, pAttr,
+					    pEl, viewSch, elSSch, pDoc))
 			{
 			pDoc->DocViewFreeVolume[view - 1] = THOT_MAXINT;
 			pAb = CrAbsBoxesPres (pEl, pDoc, pR,
