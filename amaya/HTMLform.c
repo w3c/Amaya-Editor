@@ -282,7 +282,7 @@ Document	    doc;
   Attribute           attr;
   AttributeType       attrType;
   int                 length;
-  CHAR_T                value[MAX_LENGTH];
+  CHAR_T              value[MAX_LENGTH];
   Language            lang;
 
   /* check if element is selected */
@@ -331,7 +331,7 @@ Document	   doc;
   ElementType         elType;
   Element             option, child;
   int                 length;
-  CHAR_T                name[MAX_LENGTH];
+  CHAR_T              name[MAX_LENGTH];
   
   /* get the name of the Option Menu */
   length = MAX_LENGTH - 1;
@@ -1097,7 +1097,7 @@ Element             el;
    Attribute           attr, attrN;
    AttributeType       attrType, attrTypeN;
    int                 modified, length;
-   CHAR_T                name[MAX_LENGTH], buffer[MAX_LENGTH];
+   CHAR_T              name[MAX_LENGTH], buffer[MAX_LENGTH];
 
    if (el == NULL)
       return;
@@ -1262,8 +1262,8 @@ Element             el;
    Attribute	       attr;
    SSchema	       htmlSch;
    int                 length, nbitems, lgmenu, i, nbsubmenus, nbsubitems;
-   CHAR_T                text[MAX_LABEL_LENGTH];
-   CHAR_T                buffmenu[MAX_LENGTH];
+   CHAR_T              text[MAX_LABEL_LENGTH];
+   CHAR_T              buffmenu[MAX_LENGTH];
    Language            lang;
    int                 modified;
    ThotBool	       multipleOptions, sel;

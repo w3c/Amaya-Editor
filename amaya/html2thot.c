@@ -2324,10 +2324,12 @@ UCHAR_T               c;
 	  LgBuffer = 0;
 	}
 
-      if (len == 1) {
+      if (len == 1)
+	{
 	inputBuffer[LgBuffer++] = c;
 	inputBuffer[LgBuffer + 1] = EOS;
-      }else
+        }
+      else
 	/* HT */
 	do
 	  {
@@ -4083,22 +4085,42 @@ CHAR_T                c;
 #endif
 {
    CHAR_T                theGI[MaxMsgLength];
+   int			 i;
 
-   /* if the last character in the GI is a '/', ignore it.  This is to
-      accept the XML syntax for empty elements, for instance <br/> */
-   if (LgBuffer > 0 && inputBuffer[LgBuffer-1] == '/')
-      LgBuffer--;
-   CloseBuffer ();
-   ustrncpy (theGI, inputBuffer, MaxMsgLength - 1);
-   theGI[MaxMsgLength - 1] = EOS;
-   InitBuffer ();
-   if (lastElementClosed && (lastElement == rootElement))
-      /* an element after the tag </html>, ignore it */
+   if (ParsingTextArea)
+      /* We are parsing the contents of a TEXTAREA element. If a start
+	 tag appears, consider it as plain text */
       {
-      ParseHTMLError (theDocument, "Element after tag </html>. Ignored");
-      return;
+      /* next state is state 0, not the state computed by the automaton */
+      NormalTransition = FALSE;
+      currentState = 0; 
+      /* put a '<' and the tagname (GI) in the input buffer */
+      for (i = LgBuffer; i > 0; i--)
+	inputBuffer[i] = inputBuffer[i - 1];
+      LgBuffer++;
+      inputBuffer[0] = '<';
+      inputBuffer[LgBuffer] = EOS;
+      /* copy the input buffer in the document */
+      TextToDocument ();
       }
-   ProcessStartGI (theGI);
+   else
+      {
+      /* if the last character in the GI is a '/', ignore it.  This is to
+         accept the XML syntax for empty elements, for instance <br/> */
+      if (LgBuffer > 0 && inputBuffer[LgBuffer-1] == '/')
+         LgBuffer--;
+      CloseBuffer ();
+      ustrncpy (theGI, inputBuffer, MaxMsgLength - 1);
+      theGI[MaxMsgLength - 1] = EOS;
+      InitBuffer ();
+      if (lastElementClosed && (lastElement == rootElement))
+         /* an element after the tag </html>, ignore it */
+         {
+         ParseHTMLError (theDocument, "Element after tag </html>. Ignored");
+         return;
+         }
+      ProcessStartGI (theGI);
+      }
 }
 
 /*----------------------------------------------------------------------
@@ -4136,6 +4158,27 @@ CHAR_T                c;
    ThotBool            ok;
 
    CloseBuffer ();
+
+   if (ParsingTextArea)
+      if (ustrcasecmp (inputBuffer, "TEXTAREA") != 0)
+         /* We are parsing the contents of a TEXTAREA element. The end
+	    tag is not the one closing the current TEXTAREA, consider it
+	    as plain text */
+	 {
+         /* next state is state 0, not the state computed by the automaton */
+         NormalTransition = FALSE;
+	 currentState = 0;
+	 /* put "</" and the tag name in the input buffer */
+         for (i = LgBuffer; i > 0; i--)
+	   inputBuffer[i + 1] = inputBuffer[i - 1];
+         LgBuffer += 2;
+         inputBuffer[0] = '<';
+         inputBuffer[1] = '/';
+         inputBuffer[LgBuffer] = EOS;
+	 /* copy the input buffer into the document */
+         TextToDocument ();
+         return;
+         }
 
    /* is it the end of the current HTML fragment ? */
    ok = FALSE;
