@@ -1099,7 +1099,7 @@ static int CopyXClipboard (unsigned char **buffer, View view)
 	clipboard = pFirstEl->ElText;
     }
 
-  if (maxLength == 0)
+  if (maxLength <= 0)
     /* nothing selected */
     return 0;
   /* Adding 100 characters for extra CR */
