@@ -1593,12 +1593,7 @@ static ThotBool SaveObjectThroughNet (Document doc, View view,
     /* it's a source file, renumber lines */
     TtaExportDocumentWithNewLineNumbers (doc, tempname, "TextFileT");
   else
-    {
-      TtaExportDocument (doc, tempname, "TextFileT");
-      if (DocumentTypes[doc] == docCSS)
-	/* reapply the CSS to relative documents */
-	UpdateStyleSheet (DocumentURLs[doc], tempname);
-    }
+    TtaExportDocument (doc, tempname, "TextFileT");
 
   ActiveTransfer (doc);
   TtaHandlePendingEvents ();
@@ -2225,7 +2220,7 @@ void SaveDocument (Document doc, View view)
       TtaFreeMemory (ptr);
     }
 
-  if (TextFormat)
+  if (TextFormat && DocumentTypes[doc] == docSource)
     {
       StartParser (doc, localFile, documentname, tempdir, localFile, TRUE);
       /* restore the current selection */
@@ -2238,7 +2233,7 @@ void SaveDocument (Document doc, View view)
 
   if (DocumentTypes[doc] == docCSS)
     /* reapply the CSS to relative documents */
-    UpdateStyleSheet (DocumentURLs[doc], tempname);
+    UpdateStyleSheet (DocumentURLs[doc], localFile);
   SavingDocument = 0;
   if (newLineNumbers)
     {
@@ -3380,13 +3375,14 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
       if (TextFormat)
 	{
 	  if (dst_is_local)
-	    {
-	      /* Local to Local or Remote to Local */
-	      /* save the local document */
-	      ok = TtaExportDocument (doc, documentFile, "TextFileT");
-	    }
+	    /* Local to Local or Remote to Local */
+	    /* save the local document */
+	    ok = TtaExportDocument (doc, documentFile, "TextFileT");
 	  else
-	      ok = SaveObjectThroughNet (doc, 1, documentFile, TRUE, TRUE);
+	    ok = SaveObjectThroughNet (doc, 1, documentFile, TRUE, TRUE);
+	  if (DocumentTypes[doc] == docCSS)
+	    /* reapply the CSS to relative documents */
+	    UpdateStyleSheet (DocumentURLs[doc], documentFile);
 	}
       else
 	{
