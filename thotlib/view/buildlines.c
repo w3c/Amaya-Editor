@@ -1680,6 +1680,8 @@ static int FillLine (PtrLine pLine, PtrAbstractBox pRootAb,
 		   pBox = pNextBox->BxNexChild;
 		 pLine->LiFirstPiece = pBox;
 	       }
+	     else
+	       pBox = pNextBox;
 	   }
        else
 	 {
