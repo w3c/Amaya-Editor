@@ -17,9 +17,12 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 
-
 #include "init_f.h"
 #include "AHTURLTools_f.h"
+
+/* Local definitions */
+
+#define MAX_PRINT_URL_LENGTH 50
 
 /* Private  functions */
 #ifdef __STDC__
@@ -374,10 +377,10 @@ boolean             IsValidProtocol (url)
 char               *url;
 #endif /* __STDC__ */
 {
-   if (!strncmp (url, "http:", 5))
+   if (!strncmp (url, "http:", 5)
+       || !strncmp (url, "ftp:", 4))
        /* experimental */
-     /***|| !strncmp (path, "ftp:", 4)
-       || !strncmp (path, "news:", 5)***/ 
+     /*** || !strncmp (path, "news:", 5)***/ 
       return (TRUE);
    else
       return (FALSE);
@@ -706,7 +709,7 @@ char               *path;
    char                temppath[MAX_LENGTH];
    char                suffix[MAX_LENGTH];
 
-   if (!path || path[0] == EOS)
+   if (!path || path[0] == EOS || path[strlen(path)] == DIR_SEP)
      return (FALSE);
 
    root = HTParse(path, (char *) NULL, PARSE_PATH | PARSE_PUNCTUATION);
@@ -776,7 +779,44 @@ char                *string;
 }
 
 
+/*----------------------------------------------------------------------
+  ChopURL
+  Gives back a URL no longer than MAX_PRINT_URL_LENGTH chars (outputURL). 
+  If inputURL is  bigger than that size, outputURL receives
+  MAX_PRINT_URL_LENGTH / 2 chars from the beginning of inputURL, "...", 
+  and MAX_PRINT_URL_LENGTH / 2 chars from the end of inputURL.
+  If inputURL is not longer than MAX_PRINT_URL_LENGTH chars, it gets
+  copied into outputURL. 
+  N.B.: outputURL must point to a memory block of MAX_PRINT_URL_LENGTH
+  chars.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void ChopURL (char *outputURL, char *inputURL)
+#else
+void ChopURL (outputURL, inputURL)
+char *outputURL;
+char *inputURL;
+#endif
+
+{
+  int len;
+
+  len = strlen (inputURL);
+  if (len <= MAX_PRINT_URL_LENGTH) 
+    {
+      strcpy (outputURL, inputURL);
+    }
+  else
+    /* make a truncated urlName on the status window */
+    {
+      strncpy (outputURL, inputURL, MAX_PRINT_URL_LENGTH / 2);
+      outputURL [MAX_PRINT_URL_LENGTH / 2] = EOS;
+      strcat (outputURL, "...");
+      strcat (outputURL, &(inputURL[len - MAX_PRINT_URL_LENGTH / 2 ]));
+    }
+}
 
 
-
-
+/*
+  end of Module AHTURLTools.c
+*/

@@ -486,8 +486,10 @@ int                 status;
 	else
 	   strcpy (me->urlName, new_anchor->parent->address);
 
+	ChopURL (me->status_urlName, me->urlName);
+
 	TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_RED_FETCHING),
-		      me->urlName);
+		      me->status_urlName);
 
 	/* Start request with new credentials */
 	me->reqStatus = HT_NEW; /* reset the status */
@@ -665,11 +667,11 @@ int                 status;
      {
        /* output the status of the request */
        if (status == 200)
-	 TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_REQUEST_SUCCEEDED), me->urlName);
+	 TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_REQUEST_SUCCEEDED), me->status_urlName);
        else if (status == 201)
-	 TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CREATED_NEW_REMOTE_RESSOURCE), me->urlName);
+	 TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CREATED_NEW_REMOTE_RESSOURCE), me->status_urlName);
        else if (status == 204 && me->method == METHOD_PUT)
-	 TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_UPDATED_REMOTE_RESSOURCE), me->urlName);
+	 TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_UPDATED_REMOTE_RESSOURCE), me->status_urlName);
        else if (status == 204 && me->method == METHOD_PUT)
 	 TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_NO_DATA), (char *) NULL);
        else if (status == -400 || status == 505)
@@ -680,13 +682,13 @@ int                 status;
        else if (status == -401) 
 	 {
 	   TtaSetStatus (me->docid, 1,
-			 TtaGetMessage (AMAYA, AM_AUTHENTICATION_FAILURE), me->urlName);
-	   sprintf (AmayaLastHTTPErrorMsg, TtaGetMessage (AMAYA, AM_AUTHENTICATION_FAILURE), me->urlName);
+			 TtaGetMessage (AMAYA, AM_AUTHENTICATION_FAILURE), me->status_urlName);
+	   sprintf (AmayaLastHTTPErrorMsg, TtaGetMessage (AMAYA, AM_AUTHENTICATION_FAILURE), me->status_urlName);
 	 }
        else if (status == -403)
 	 {
 	   TtaSetStatus (me->docid, 1,
-			 TtaGetMessage (AMAYA, AM_FORBIDDEN_ACCESS), me->urlName);
+			 TtaGetMessage (AMAYA, AM_FORBIDDEN_ACCESS), me->status_urlName);
 	   sprintf (AmayaLastHTTPErrorMsg, TtaGetMessage (AMAYA, AM_FORBIDDEN_ACCESS), me->urlName);
 	 }
        else if (status == -405)
@@ -761,7 +763,6 @@ int                 status;
 
 #endif
 {
-   char               *uri = HTAnchor_address ((HTAnchor *) request->anchor);
    AHTReqContext      *me = HTRequest_context (request);
    HTAlertCallback    *cbf;
    AHTDocId_Status    *docid_status;
@@ -771,27 +772,27 @@ int                 status;
 	    case HT_LOADED:
 	       if (PROT_TRACE)
 		  HTTrace ("Load End.... OK: `%s\' has been accessed\n",
-			   uri);
+			   me->status_urlName);
 
 	       docid_status = GetDocIdStatus (me->docid,
 					      Amaya->docid_status);
 
 	       if (docid_status != NULL && docid_status->counter > 1)
 		  TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA,
-						   AM_ELEMENT_LOADED), uri);
+						   AM_ELEMENT_LOADED), me->status_urlName);
 
 	       break;
 
 	    case HT_NO_DATA:
 	       if (PROT_TRACE)
-		  HTTrace ("Load End.... OK BUT NO DATA: `%s\'\n", uri);
+		  HTTrace ("Load End.... OK BUT NO DATA: `%s\'\n", me->status_urlName);
 	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_LOADED_NO_DATA),
-			     uri);
+			     me->status_urlName);
 	       break;
 
 	    case HT_INTERRUPTED:
 	       if (PROT_TRACE)
-		  HTTrace ("Load End.... INTERRUPTED: `%s\'\n", uri);
+		  HTTrace ("Load End.... INTERRUPTED: `%s\'\n", me->status_urlName);
 	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_LOAD_ABORT), NULL);
 
 	       break;
@@ -801,7 +802,7 @@ int                 status;
 		  HTTrace ("Load End.... NOT AVAILABLE, RETRY AT %ld\n",
 			   HTResponse_retryTime (response));
 	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_NOT_AVAILABLE_RETRY),
-			     uri);
+			     me->status_urlName);
 	       break;
 
 	    case HT_ERROR:
@@ -814,17 +815,15 @@ int                 status;
 
 	       if (PROT_TRACE)
 		  HTTrace ("Load End.... ERROR: Can't access `%s\'\n",
-			   uri ? uri : "<UNKNOWN>");
+			   me->status_urlName ? me->status_urlName : "<UNKNOWN>");
 	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
-			     uri ? uri : "<UNKNOWN>");
+			     me->status_urlName ? me->status_urlName : "<UNKNOWN>");
 	       break;
 	    default:
 	       if (PROT_TRACE)
 		  HTTrace ("Load End.... UNKNOWN RETURN CODE %d\n", status);
 	       break;
 	 }
-
-   HT_FREE (uri);
 
    return HT_OK;
 }
@@ -1557,6 +1556,9 @@ boolean             error_html;
 	me->outputfile = outputfile;
 	me->urlName = urlName;
      }
+   
+   /* prepare the URLname that will be displayed in teh status bar */
+   ChopURL (me->status_urlName, me->urlName);
 
 /***
 Change for taking into account the stop button:
@@ -1567,7 +1569,7 @@ generated
 
    HTRequest_setPreemptive (me->request, NO);
    TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_FETCHING),
-		 me->urlName);
+		 me->status_urlName);
 
    me->anchor = (HTParentAnchor *) HTAnchor_findAddress (ref);
 
@@ -1607,7 +1609,7 @@ generated
 	    /* show an error message on the status bar */
 	    FilesLoading[me->docid] = 2;
 	    TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
-			  me->urlName);
+			  me->status_urlName);
 	  }
 	else
 	  status = HT_OK;
@@ -1890,8 +1892,10 @@ char               *outputfile;
      }     
    else
      {
-	TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_REMOTE_SAVING),
-		      me->urlName);
+       /* prepare the URLname that will be displayed in teh status bar */
+       ChopURL (me->status_urlName, me->urlName);
+       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_REMOTE_SAVING),
+		     me->status_urlName);
 
 	/* part of the stop button handler */
 

@@ -49,6 +49,69 @@
 
 typedef char        PathBuffer[MAX_PATH];
 
+/* The different events for a DoubleClick */
+
+typedef enum _DoubleClickEvent
+  {
+     DC_FALSE = 0,
+     DC_TRUE = 1,
+     DC_FORM_POST = 2,
+     DC_FORM_GET = 4
+  }
+DoubleClickEvent;
+
+typedef char        AmayaReadChar ();
+
+/*typedef void        *PresentationTarget; */
+
+#define NO               0
+#define YES              1
+
+/* dialogue */
+#define URLForm          1
+#define OpenForm       2
+#define URLName           3
+#define LocalName         4
+#define DirSelect           5
+#define DocSelect           6
+#define StopCommand      7
+#define SaveForm       8
+#define DirSave          9
+#define DocSave         10
+#define ToggleSave      11
+#define NameSave         12
+#define Lbl1Save        13
+#define Lbl2Save        14
+#define ImgDirSave     14
+#define Lbl3Save        15
+#define Lbl4Save        16
+#define Lbl5Save        17
+#define ConfirmForm   18
+#define ConfirmText  19
+#define AttrHREFForm    20
+#define AttrHREFText    21
+#define FormAnswer      22
+#define TextLabel       23
+#define AnswerText      24
+#define NameText        25
+#define PasswordText    26
+#define ClassForm       27
+#define ClassLabel      28
+#define ClassSelect     29
+#define AClassForm      30
+#define AClassLabel     31
+#define AClassSelect    32
+#define ConfirmSave     33
+#define ConfirmSaveLbl  34
+#define ConfirmSaveList 35
+#define OptionMenu	36
+#define MAX_REF         40
+
+#define MAX_LENGTH     512
+#define NAME_LENGTH     32
+#define HTAppName "amaya"
+#define HTAppVersion "V0.95b Beta"
+
 typedef struct _AHTDocIdStatus
   {
      int                 docid;	/* a docid */
@@ -64,18 +127,6 @@ typedef struct __AmayaContext
      int                 open_requests;		/* number of open requests */
   }
 AmayaContext;
-
-
-/* The different events for a DoubleClick */
-
-typedef enum _DoubleClickEvent
-  {
-     DC_FALSE = 0,
-     DC_TRUE = 1,
-     DC_FORM_POST = 2,
-     DC_FORM_GET = 4
-  }
-DoubleClickEvent;
 
 /* The possible GET/POST/PUT request modes */
 
@@ -136,13 +187,18 @@ typedef struct _AHTReqContext
      XtInputId           except_xtinput_id;	/* The except xt event id assocciated with
 						   the request */
 #endif				/* WWW_XWINDOWS */
+
+    /*** Experimental ****/
      SOCKET             read_sock;              /* read socket associated with the request */
      SOCKET             write_sock;             /* write socket associated with the request */
      SOCKET             except_sock;            /* except socket associated with the request */
+    /*** End of experimental stuff ****/
+
      char               *outputfile;	/* file to receive incoming data         */
      FILE               *output;	/* file pointer to outputfile            */
      int                 mode;	/* Mode of request: SYNC/ASYNC/IASYNC/FORM POST/FORM GET   */
      char               *urlName;	/* url to retrieve/or that was retrieved */
+     char               status_urlName [MAX_LENGTH]; /* url name to be displayed on the status bar */
      TIcbf              *incremental_cbf;	/* For IASYNC mode, @ of callback function */
      /* It'll be called each time a new data package */
      /* is received                                  */
@@ -167,57 +223,6 @@ typedef struct _AHTReqContext
   }
 AHTReqContext;
 
-typedef char        AmayaReadChar ();
-
-/*typedef void        *PresentationTarget; */
-
-#define NO               0
-#define YES              1
-
-/* dialogue */
-#define URLForm          1
-#define OpenForm       2
-#define URLName           3
-#define LocalName         4
-#define DirSelect           5
-#define DocSelect           6
-#define StopCommand      7
-#define SaveForm       8
-#define DirSave          9
-#define DocSave         10
-#define ToggleSave      11
-#define NameSave         12
-#define Lbl1Save        13
-#define Lbl2Save        14
-#define ImgDirSave     14
-#define Lbl3Save        15
-#define Lbl4Save        16
-#define Lbl5Save        17
-#define ConfirmForm   18
-#define ConfirmText  19
-#define AttrHREFForm    20
-#define AttrHREFText    21
-#define FormAnswer      22
-#define TextLabel       23
-#define AnswerText      24
-#define NameText        25
-#define PasswordText    26
-#define ClassForm       27
-#define ClassLabel      28
-#define ClassSelect     29
-#define AClassForm      30
-#define AClassLabel     31
-#define AClassSelect    32
-#define ConfirmSave     33
-#define ConfirmSaveLbl  34
-#define ConfirmSaveList 35
-#define OptionMenu	36
-#define MAX_REF         40
-
-#define MAX_LENGTH     512
-#define NAME_LENGTH     32
-#define HTAppName "amaya"
-#define HTAppVersion "V0.95b Beta"
 
 THOT_EXPORT int          appArgc;
 THOT_EXPORT char       **appArgv;

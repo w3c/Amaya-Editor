@@ -20,6 +20,13 @@
 #include "init_f.h"
 #include "query_f.h"
 
+/* Local definitions */
+
+/* Maximum number of chars of a url that can be displayed on the 
+** status window, before we need to truncate the url.
+*/
+
+/* libwww's interface needs this */
 struct _HTError
   {
      HTErrorElement      element;	/* Index number into HTError */
@@ -29,6 +36,8 @@ struct _HTError
      int                 length;	/* For copying by generic routine */
      char               *where;	/* Which function */
   };
+
+
 
 /*----------------------------------------------------------------------
   AHTProgress 
@@ -48,6 +57,10 @@ void               *input, HTAlertPar * reply;
 #endif
 {
    AHTReqContext      *me = HTRequest_context (request);
+   char                tempbuf[MAX_LENGTH];
+   char                buf[11];
+   long                cl, bytes_rw;
+   int                 pro;
 
    if (request && HTRequest_internal (request))
       return NO;
@@ -68,25 +81,29 @@ void               *input, HTAlertPar * reply;
 	    case HT_PROG_READ:
 	       if ((me->method != METHOD_PUT) && (me->method != METHOD_POST))
 		 {
-		    long                cl = HTAnchor_length (HTRequest_anchor (request));
-
-		    if (cl > 0)
-		      {
-			 char                tempbuf[200];
-			 char                buf[11];
-			 long                b_read = HTRequest_bytesRead (request);
-			 double              pro = (double) b_read / cl * 100;
-
-			 if (pro > 100)		/*verify this with HFN */
-			    pro = 100;
-			 HTNumToStr ((unsigned long) cl, buf, 10);
-			 sprintf (tempbuf, "%s (%d%% of %s)\n", me->urlName, (int) pro, buf);
-			 TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_PROG_READ), tempbuf);
-		      }
-		    else
-		       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_PROG_READ), me->urlName);
+		   cl = HTAnchor_length (HTRequest_anchor (request));
+		   
+		   if (cl > 0)
+		     {
+		       bytes_rw = HTRequest_bytesRead (request);
+		       pro = (int) ((bytes_rw * 100l) / cl);
+		       
+		       if (pro > 100)		/* libwww reports > 100! */
+			 pro = 100;
+		       /*
+		       ** prepare the string that will be displayed on
+		       ** the status bar
+		       */
+		       
+		       HTNumToStr ((unsigned long) cl, buf, 10);
+		       sprintf (tempbuf, "%s (%d%% of %s)\n", me->status_urlName, (int) pro, buf);
+		       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_PROG_READ), tempbuf);
+		     }
+		   else
+		     TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_PROG_READ), me->status_urlName);
 		 }
 	       break;
+
 	    case HT_PROG_WRITE:
 	       if ((me->method == METHOD_PUT) || (me->method == METHOD_POST))
 		 {
@@ -94,27 +111,25 @@ void               *input, HTAlertPar * reply;
 		   /*it still does not work (libwww bug) */
 #if 0
 		    HTParentAnchor     *anchor = HTRequest_anchor (request);
-		    long                cl = HTAnchor_length (anchor);
+		    cl = HTAnchor_length (anchor);
 
 		    if (cl > 0)
 		      {
-			 long                b_write = HTRequest_bytesWritten (request);
-			 double              pro = (double) b_write / cl * 100;
-			 char                tempbuf[255];
-			 char                buf[11];
+			 bytes_rw = HTRequest_bytesWritten (request);
+			 pro = (int) ((bytes_rw * 100l) / cl);
 
 			 HTNumToStr ((unsigned long) cl, buf, 10);
-			 sprintf (tempbuf, "%s: Writing (%d%% of %s)\n", me->urlName, (int) pro, buf);
+			 sprintf (tempbuf, "%s: Writing (%d%% of %s)\n", me->urlName, pro, buf);
 			 TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_PROG_WRITE), tempbuf);
 		      }
 		    else
 #endif
-		       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_PROG_WRITE), me->urlName);
+		       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_PROG_WRITE), me->status_urlName);
 		 }
 	       break;
 
 	    case HT_PROG_DONE:
-	       /* it's not interesting to display this message */
+	       /* a message is displayed elsewhere */
 	       break;
 	    case HT_PROG_WAIT:
 	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_WAITING_FOR_SOCKET), NULL);
@@ -475,3 +490,5 @@ BOOL             last_seconds_of_life;
 /*
   end of Module answer.c
 */
+
+
