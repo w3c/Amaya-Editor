@@ -1508,6 +1508,10 @@ ThotBool     logFile;
 	docType = docTextRO;
       else if (docType == docSource)
 	docType = docSourceRO;
+#ifdef ANNOTATIONS
+      else if (docType == docAnnot)
+	docType = docAnnotRO;
+#endif /* ANNOTATIONS */
     }
 
   old_doc = doc;		/* previous document */
@@ -1565,6 +1569,10 @@ ThotBool     logFile;
        docType == docCSS || docType == docCSSRO ||
        docType == docSource || docType == docSourceRO)
      doc = TtaNewDocument (TEXT("TextFile"), docname);
+#ifdef ANNOTATIONS
+   else if (docType == docAnnot || docType == docAnnotRO)
+     doc = TtaNewDocument (TEXT("Annot"), docname);
+#endif /* ANNOTATIONS */
    else
      doc = TtaNewDocument (TEXT("HTML"), docname);
    if (doc >= DocumentTableLength)
@@ -1579,6 +1587,11 @@ ThotBool     logFile;
 	   docType == docCSS || docType == docCSSRO ||
            docType == docSource || docType == docSourceRO)
 	   TtaSetPSchema (doc, TEXT("TextFileP"));
+#ifdef ANNOTATIONS
+       else if (docType == docAnnot || docType == docAnnotRO)
+	   TtaSetPSchema (doc, TEXT("AnnotP"));
+       /* @@ shouldn't we have a Color and BW case for annots too? */
+#endif /* ANNOTATIONS */
        else
 	 {
 	   if (TtaGetScreenDepth () > 1)
@@ -1834,6 +1847,18 @@ ThotBool     logFile;
        /* document in ReadOnly mode */
        DocumentTypes[doc] = docHTMLRO;
      }
+#ifdef ANNOTATIONS
+   else if (docType == docAnnot) /* -------->loading an Annotation */
+     {
+       DocumentTypes[doc] = docAnnot;
+     }
+   else if (docType == docAnnotRO) /* ---->loading an Annotation in ReadOnly */
+     {
+       /* document in ReadOnly mode */
+       reinitialized = TRUE;
+       DocumentTypes[doc] = docAnnotRO;
+     }
+#endif /* ANNOTATIONS */
    else 			/* -------->loading a HTML file */
      {
        if (DocumentTypes[doc] == docTextRO ||
@@ -2313,6 +2338,18 @@ ThotBool	    history;
 	      TtaSetStatus (doc, 1, TEXT(" "), NULL);
 	      ActiveTransfer (newdoc);
 	    }
+#ifdef ANNOTATIONS
+	  else if (method == CE_ANNOT
+		   && (docType == docHTML || docType == docHTMLRO))
+	    {
+	      if (docType == docHTMLRO)
+		docType = docAnnotRO;
+	      else
+		docType = docAnnot;
+	      method = CE_RELATIVE;
+	      newdoc = InitDocView (doc, documentname, docAnnot, FALSE);
+	    }
+#endif /* ANNOTATIONS */
 	  else if (method != CE_INIT 
 		   || (docType != docHTML && docType != docHTMLRO))
 	    newdoc = InitDocView (doc, documentname, docType, FALSE);
@@ -2448,11 +2485,15 @@ ThotBool	    history;
       TtaFreeMemory (tempdir);
 
       /* Set the document read-only when needed */
-      if (DocumentTypes[newdoc] == docHTMLRO ||
-	  DocumentTypes[newdoc] == docImageRO ||
-	  DocumentTypes[newdoc] == docCSSRO ||
-	  DocumentTypes[newdoc] == docTextRO ||
-	  DocumentTypes[newdoc] == docSourceRO)
+      if (DocumentTypes[newdoc] == docHTMLRO
+	  || DocumentTypes[newdoc] == docImageRO
+	  || DocumentTypes[newdoc] == docCSSRO
+	  || DocumentTypes[newdoc] == docTextRO
+	  || DocumentTypes[newdoc] == docSourceRO
+#ifdef ANNOTATIONS
+	  || DocumentTypes[newdoc] == docAnnotRO	  
+#endif /* ANNOTATIONS */
+	  )
 	SetDocumentReadOnly (newdoc);
 
       if (!plainText)
@@ -2471,7 +2512,9 @@ ThotBool	    history;
  	TtaSetItemOff (newdoc, 1, File, BTemplate);
 #ifdef ANNOTATIONS
       /* auto-load the annotations associated with the document */
-      if (!plainText)
+      if (!plainText 
+	  && DocumentTypes[newdoc] != docAnnot
+	  && DocumentTypes[newdoc] != docAnnotRO)
 	ANNOT_AutoLoad (newdoc, 1);
 #endif /* ANNOTATIONS */
     }
@@ -3462,9 +3505,13 @@ void               *ctx_cbf;
      {
        /* document not loaded yet */
        if ((CE_event == CE_RELATIVE || CE_event == CE_FORM_GET
-	    || CE_event == CE_FORM_POST || CE_event == CE_MAKEBOOK)
-	   && !IsW3Path (pathname) 
-	   && !TtaFileExist (pathname))
+	    || CE_event == CE_FORM_POST || CE_event == CE_MAKEBOOK
+#ifdef ANNOTATIONS
+	    || CE_event == CE_ANNOT
+#endif /*ANNOTATIONS */
+	    )
+	    && !IsW3Path (pathname) 
+	    && !TtaFileExist (pathname))
 	 {
 	   /* the target document doesn't exist */
 	   TtaSetStatus (baseDoc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD),

@@ -20,6 +20,10 @@
 #include "amaya.h"
 #include "css.h"
 
+#ifdef ANNOTATIONS
+#include "annotlib.h"
+#endif /* ANNOTATIONS */
+
 #ifdef _WINDOWS
 #include "resource.h"
 static CHAR_T       currentDocToSave[MAX_LENGTH];
@@ -1528,6 +1532,14 @@ View                view;
   int                 i, res;
   Document	      htmlDoc;
   ThotBool            ok, newLineNumbers;
+
+#ifdef ANNOTATIONS
+  if (DocumentTypes[doc] == docAnnot) 
+    {
+      return (ANNOT_SaveDocument (doc));
+    }
+  else
+#endif /* ANNOTATIONS */
 
   if (SavingDocument != 0 || SavingObject != 0)
     return;

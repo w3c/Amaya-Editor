@@ -190,7 +190,7 @@ CSS_OBJ = \
 	fetchXMLname.o \
 	styleparser.o
 
-# recompile this file if these schema change
+# Specific schema dependencies
 fetchXMLname.o : $(AMAYA_MATH_SCHEMAS) $(AMAYA_GRAPH_SCHEMAS)
 
 libCSS : libCSS.a
@@ -225,6 +225,9 @@ AMAYA_OBJ = \
 	transparse.o \
 	UIcss.o \
 	gtkdialogue_box.o
+
+# Specific schema dependencies
+HTMLtable.o : $(AMAYA_MATH_SCHEMAS)
 
 #
 # Structure schema compilation.

@@ -38,6 +38,10 @@
 #include "XMLparser_f.h"
 #include "UIcss_f.h"
 
+#ifdef ANNOTATIONS
+#include "annotlib.h"
+#endif /* ANNOTATIONS */
+
 typedef UCHAR_T entityName[10];
 typedef struct _CharEntityEntry
   {			 /* a SGML entity representing an ISO-Latin1 char */
@@ -7307,7 +7311,18 @@ ThotBool	    plainText;
 #ifndef STANDALONE
 	DocumentSSchema = TtaGetDocumentSSchema (doc);
 	/* is the current document a HTML document */
-	isHTML = (ustrcmp(TtaGetSSchemaName (DocumentSSchema), TEXT("HTML")) == 0);
+#ifdef ANNOTATIONS
+	if (DocumentTypes[doc] == docAnnot
+	    || DocumentTypes[doc] == docAnnotRO)
+	  {
+	    /* @@@ we know this is true, but we should try to protect */
+	    isHTML = 1;
+	    DocumentSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+	    attrType.AttrSSchema = DocumentSSchema;
+	  }
+	else
+#endif /* ANNOTATIONS */
+	  isHTML = (ustrcmp(TtaGetSSchemaName (DocumentSSchema), TEXT("HTML")) == 0);
 	if (plainText)
 	  {
 	    if (isHTML)
@@ -7346,7 +7361,22 @@ ThotBool	    plainText;
 	
 	TtaSetDisplayMode (doc, NoComputedDisplay);
 	/* add the default attribute HTML_ATTR_PrintURL */
-	rootElement = TtaGetMainRoot (doc);
+#ifdef ANNOTATIONS
+	if (DocumentTypes[doc] == docAnnot
+	    || DocumentTypes[doc] == docAnnotRO)
+	  {
+	    ElementType elType;
+
+	    /* we search the start of HTML document in the annotation struct */
+	    rootElement = TtaGetMainRoot (doc);
+	    elType = TtaGetElementType (rootElement);
+	    elType.ElTypeNum = Annot_EL_Body;
+	    el = TtaSearchTypedElement (elType, SearchInTree, rootElement);
+	    rootElement = TtaGetFirstChild (el);
+	  }
+	else
+#endif /* ANNOTATIONS */
+	  rootElement = TtaGetMainRoot (doc);
 	attr = TtaGetAttribute (rootElement, attrType);
 	if (attr == 0)
 	  {

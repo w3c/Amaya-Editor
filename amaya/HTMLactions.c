@@ -1,4 +1,4 @@
-/*
+ /*
  *
  *  (c) COPYRIGHT MIT and INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
@@ -739,7 +739,8 @@ Document            doc;
 		 targetDocument = GetHTMLDocument (documentURL, NULL,
 						   (isAnnotLink) ? 0 : doc,
 						   doc,
-						   CE_RELATIVE, TRUE, 
+						   (isAnnotLink) ? CE_ANNOT : CE_RELATIVE, 
+						   TRUE, 
 				   (void *) FollowTheLink_callback,
 						   (void *) ctx);
 #else
@@ -1184,11 +1185,16 @@ Document            doc
      NewSelInElem = FALSE;
    else
      {
+#ifdef ANNOTATIONS
+	/* a quick hack before the commit */
+        elType.ElSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+#else
 	elType.ElSSchema = TtaGetDocumentSSchema (doc);
+#endif /* ANNOTATIONS */
 	elType.ElTypeNum = HTML_EL_Preformatted;
 	NewSelInElem = (TtaGetTypedAncestor (firstSel, elType) != NULL);
      }
-   if                  (NewSelInElem != SelectionInPRE)
+   if (NewSelInElem != SelectionInPRE)
      {
 	SelectionInPRE = NewSelInElem;
 	if (NewSelInElem)

@@ -603,8 +603,8 @@ View                view;
 {
    ElementType         elType;
 
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
+   elType.ElSSchema = TtaGetSSchema (TEXT("HTML"), document);
+   if (elType.ElSSchema != NULL)
      {
        elType.ElTypeNum = HTML_EL_Paragraph;
        TtaCreateElement (elType, document);
@@ -625,8 +625,8 @@ View                view;
 {
    ElementType         elType;
 
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
+   elType.ElSSchema = TtaGetSSchema (TEXT("HTML"), document);
+   if (elType.ElSSchema != NULL)
      {
        elType.ElTypeNum = HTML_EL_H1;
        TtaCreateElement (elType, document);
@@ -647,8 +647,8 @@ View                view;
 {
    ElementType         elType;
 
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
+   elType.ElSSchema = TtaGetSSchema (TEXT("HTML"), document);
+   if (elType.ElSSchema != NULL)
      {
        elType.ElTypeNum = HTML_EL_H2;
        TtaCreateElement (elType, document);
@@ -669,9 +669,12 @@ View                view;
 {
    ElementType         elType;
 
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
-   elType.ElTypeNum = HTML_EL_H3;
-   TtaCreateElement (elType, document);
+   elType.ElSSchema = TtaGetSSchema (TEXT("HTML"), document);
+   if (elType.ElSSchema != NULL)
+     {
+       elType.ElTypeNum = HTML_EL_H3;
+       TtaCreateElement (elType, document);
+     }
 }
 
 
@@ -688,8 +691,8 @@ View                view;
 {
    ElementType         elType;
 
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
+   elType.ElSSchema = TtaGetSSchema (TEXT("HTML"), document);
+   if (elType.ElSSchema != NULL)
      {
        elType.ElTypeNum = HTML_EL_H4;
        TtaCreateElement (elType, document);
@@ -710,8 +713,8 @@ View                view;
 {
    ElementType         elType;
 
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
+   elType.ElSSchema = TtaGetSSchema (TEXT("HTML"), document);
+   if (elType.ElSSchema != NULL)
      {
        elType.ElTypeNum = HTML_EL_H5;
        TtaCreateElement (elType, document);
@@ -732,8 +735,8 @@ View                view;
 {
    ElementType         elType;
 
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
+   elType.ElSSchema = TtaGetSSchema (TEXT("HTML"), document);
+   if (elType.ElSSchema != NULL)
      {
        elType.ElTypeNum = HTML_EL_H6;
        TtaCreateElement (elType, document);
@@ -754,8 +757,8 @@ View                view;
 {
    ElementType         elType;
 
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
+   elType.ElSSchema = TtaGetSSchema (TEXT("HTML"), document);
+   if (elType.ElSSchema != NULL)
      {
        elType.ElTypeNum = HTML_EL_Unnumbered_List;
        TtaCreateElement (elType, document);
@@ -775,8 +778,8 @@ View                view;
 {
    ElementType         elType;
 
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
+   elType.ElSSchema = TtaGetSSchema (TEXT("HTML"), document);
+   if (elType.ElSSchema != NULL)
      {
        elType.ElTypeNum = HTML_EL_Numbered_List;
        TtaCreateElement (elType, document);

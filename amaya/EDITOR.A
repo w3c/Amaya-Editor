@@ -5,6 +5,9 @@ USES
 #ifdef AMAYA_PLUGIN
        , Plugin
 #endif
+#ifdef ANNOTATIONS
+       , Annot
+#endif
 #ifdef AMAYA_JAVA
        , Java
 #endif
