@@ -266,7 +266,7 @@
 264 **Saving that instance may cause a lost update problem
 265 **Creating or Changing the doctype causes the document to be reparsed.
 266 **Pending modifications won't be undone.
-267 **Use the application/xthml+xml MIME type for XHTML documents
+267 **Use the application/xhtml+xml MIME type for XHTML documents
 268 **Lock succeed!
 269 **Lock failed!
 270 **Locking %s...

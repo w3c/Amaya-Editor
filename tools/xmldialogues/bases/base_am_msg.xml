@@ -2269,8 +2269,8 @@
 	<message xml:lang="pt">Modificações pendentes nção podem ser refeitas.</message>
 </label>
 <label define="AM_USE_XHTML_MIMETYPE">
-	<message xml:lang="en">Use the application/xthml+xml MIME type for XHTML documents</message>
-	<message xml:lang="fr">Utiliser le type MIME application/xthml+xml pour	les documents XHTML</message>
+	<message xml:lang="en">Use the application/xhtml+xml MIME type for XHTML documents</message>
+	<message xml:lang="fr">Utiliser le type MIME application/xhtml+xml pour	les documents XHTML</message>
 	<message xml:lang="de">MIME-Typ application/xhtml+xml für XHTML-Dokumente verwenden</message>
 	<message xml:lang="it">Per un documento XHTML, usa il MIME type application/xhtml+xml</message>
 	<message xml:lang="es">Para documentos XHTML utilice el tipo MIME de la aplicación xhtml+xml</message>
