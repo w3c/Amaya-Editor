@@ -1,9 +1,8 @@
 
-
-1;#Latin1 (West European)
-1;1=-mozilla-arial-medium-r-normal-*-*-*-75-75-p-*-iso8859-1;2=-mozilla-arial-bold-r-normal-*-*-*-75-75-p-*-iso8859-1;3=-mozilla-arial-medium-i-normal-*-*-*-75-75-p-*-iso8859-1;
-2;1=-mozilla-times-medium-r-normal-*-*-*-75-75-p-*-iso8859-1;2=-mozilla-times-bold-r-normal-*-*-*-75-75-p-*-iso8859-1;3=-mozilla-times-medium-i-normal-*-*-*-75-75-p-*-iso8859-1;
-3;1=-mozilla-courier-medium-r-normal-*-*-*-75-75-p-*-iso8859-1;2=-mozilla-courier-bold-r-normal-*-*-*-75-75-p-*-iso8859-1;3=-mozilla-courier-medium-i-normal-*-*-*-75-75-p-*-iso8859-1;
+1;#Latin2 (East European)
+1;1=-*-*-medium-*-*-*-12-*-75-75-*-*-iso8859-1;2=-*-*-bold-*-*-*-12-*-75-75-*-*-iso8859-1;3=-*-*-medium-i-*-*-12-*-75-75-*-*-iso8859-1;
+2;1=-*-*-medium-*-*-*-12-*-75-75-*-*-iso8859-1;2=-*-*-bold-*-*-*-12-*-75-75-*-*-iso8859-1;3=-*-*-medium-i-*-*-12-*-75-75-*-*-iso8859-1;
+3;1=-*-*-medium-*-*-*-12-*-75-75-*-*-iso8859-1;2=-*-*-bold-*-*-*-12-*-75-75-*-*-iso8859-1;3=-*-*-medium-i-*-*-12-*-75-75-*-*-iso8859-1;
 
 
 
@@ -86,10 +85,18 @@
 
 
 
+
 0;#Unicode (.or ... JAPANESe)
-1;1=-*-mincho-*-*-*-*-*-*-*-*-*-*-*-*;2=*-mincho-*-*-*-*-*-*-*-*-*-*-*-*;3=*-mincho-*-*-*-*-*-*-*-*-*-*-*-*
-2;1=-*-mincho-*-*-*-*-*-*-*-*-*-*-*-*;2=*-mincho-*-*-*-*-*-*-*-*-*-*-*-*;3=*-mincho-*-*-*-*-*-*-*-*-*-*-*-*
-3;1=-*-mincho-*-*-*-*-*-*-*-*-*-*-*-*;2=*-mincho-*-*-*-*-*-*-*-*-*-*-*-*;3=*-mincho-*-*-*-*-*-*-*-*-*-*-*-*
+1;1=-daewoo-mincho-*-*-*-*-*-*-*-*-*-*-*-*;2=-daewoo-mincho-*-*-*-*-*-*-*-*-*-*-*-*;3=-*-daewoo-*-*-*-*-*-*-*-*-*-*-*-*
+2;1=-daewoo-mincho-*-*-*-*-*-*-*-*-*-*-*-*;2=-daewoo-mincho-*-*-*-*-*-*-*-*-*-*-*-*;3=-*-daewoo-*-*-*-*-*-*-*-*-*-*-*-*
+3;1=-daewoo-mincho-*-*-*-*-*-*-*-*-*-*-*-*;2=-daewoo-mincho-*-*-*-*-*-*-*-*-*-*-*-*;3=-*-daewoo-*-*-*-*-*-*-*-*-*-*-*-*
+
+
+
+
+
+
+
 
 
 
