@@ -314,7 +314,7 @@ void HTTP_headers_set (HTRequest * request, HTResponse * response, void *context
   HTParentAnchor *anchor;
   ThotBool        use_anchor;
   HTError        *pres;
-  HTList         *cur = request->error_stack;
+  HTList         *cur;
   int             index;
 
   me =  (AHTReqContext *) HTRequest_context (request);
@@ -425,7 +425,10 @@ void HTTP_headers_set (HTRequest * request, HTResponse * response, void *context
 
   /* copy the status */
   me->http_headers.status = 0;
-  while ((pres = (HTError *) HTList_nextObject (cur)))
+
+  cur = request->error_stack;
+  while (me->http_headers.reason == NULL
+	 && (pres = (HTError *) HTList_nextObject (cur)))
     {
       index = HTError_index (pres);
       switch (index)
@@ -435,9 +438,12 @@ void HTTP_headers_set (HTRequest * request, HTResponse * response, void *context
 	case HTERR_INTERNAL:
 	case HTERR_TIME_OUT:
 	case HTERR_CSO_SERVER:
+	  me->http_headers.status = index;
+	  me->http_headers.reason = TtaStrdup ("Cannot contact server");
+	  break;
 	case HTERR_INTERRUPTED:
-	  if (pres->par)
-	    me->http_headers.status = index;
+	  me->http_headers.status = index;
+	  me->http_headers.reason = TtaStrdup ("Interrupted");
 	  break;
 	}
     }
@@ -1412,7 +1418,7 @@ static int terminate_handler (HTRequest *request, HTResponse *response,
 		 }
 	       if (me->error_stream)
 		 {	/* if the stream is non-empty */
-		   fprintf (me->output, me->error_stream);/* output the errors */
+		   fprintf (me->output, "%s", me->error_stream);/* output the errors */
 		   /* Clear the error context, so that we can deal with
 		      this answer as if it were a normal reply */
 		    HTError_deleteAll( HTRequest_error (request));

@@ -4555,21 +4555,10 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
 	   ok = FALSE;
 	   if (status == -2)
 	     {
-	       switch (http_headers->status)
-		 {
-		 case HTERR_NO_REMOTE_HOST:
-		 case HTERR_SYSTEM:
-		 case HTERR_INTERNAL:
-		 case HTERR_TIME_OUT:
-		 case HTERR_CSO_SERVER:
-		   sprintf (tempdocument, "Cannot contact server");
-		   break;
-		 case HTERR_INTERRUPTED:
-		   sprintf (tempdocument, "Request interrupted");
-		   break;
-		 default:
-		   sprintf (tempdocument, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), "");
-		 }
+	       s = HTTP_headers (http_headers, AM_HTTP_REASON);
+	       if (!s)
+		 s = "";
+	       sprintf (tempdocument, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), s);
 	       InitConfirm3L (newdoc, 1, tempdocument, pathname, NULL, FALSE);
 	     }
 	 }
