@@ -608,7 +608,7 @@ void TtaRemoveFinalSpaces (Element element, Document document)
 	    }
 	  else if ( pBuf->BuLength != i + 1)
 	    {
-	      pBuf->BuContent[i] = EOS;
+	      pBuf->BuContent[i + 1] = EOS;
 	      pBuf->BuLength = i + 1;
 	    }
 	}
