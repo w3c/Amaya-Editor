@@ -1429,7 +1429,7 @@ ThotBool SimpleClick (NotifyElement *event)
 }
 
 /*----------------------------------------------------------------------
-  SimpleClick     The user has clicked an element.         
+  SimpleRClick     The user has clicked an element.         
   ----------------------------------------------------------------------*/
 ThotBool SimpleRClick (NotifyElement *event)
 {
