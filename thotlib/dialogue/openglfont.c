@@ -689,9 +689,9 @@ static void MakeBitmapGlyph (GL_font *font, unsigned int g,
   FT_BitmapGlyph  bitmap;
   FT_Bitmap       *source;
   FT_Glyph        Glyph;
-  unsigned        char *data, *ptr;
+  unsigned        char *data, *ptr, *src;
   int             err;
-  register short unsigned int y,w,h,p;
+  register unsigned int y,w,h,p, i;
 
   data = NULL;
   err = 0;
@@ -704,7 +704,7 @@ static void MakeBitmapGlyph (GL_font *font, unsigned int g,
 	{
 	  /*Last parameter tells that we destroy font's bitmap
 	    So we MUST cache it    */
-	  if (ft_glyph_format_bitmap != Glyph->format)
+	  if (Glyph->format != FT_GLYPH_FORMAT_BITMAP)
 	    err = FT_Glyph_To_Bitmap (&Glyph, ft_render_mode_normal, 0, 1);
 	  if (err)
 	    FT_Done_Glyph (Glyph);
@@ -714,23 +714,41 @@ static void MakeBitmapGlyph (GL_font *font, unsigned int g,
 	      source = &bitmap->bitmap;	 
 	      if (source->width && source->rows)
 		{
-		  w = (short unsigned int) source->width;     
-		  h = (short unsigned int) source->rows;
-		  p = w*h;
-		  /*if (source->pitch*(h-1) > p)
-		    source->pitch = w;
-		  */
-		  data = (unsigned char *)TtaGetMemory ((int)p * sizeof (unsigned char));
+		  w = (unsigned int) source->width;     
+		  h = (unsigned int) source->rows;
+		  p = w * h;
+		  
+		  data = (unsigned char *)TtaGetMemory (p);
 		  if (data)
 		    {
-		      memset (data, 0, (int)p);
-		      p = y = 0;
-		      ptr = data;	      
-		      while (y++ < h)
-			{
-			  memcpy (ptr + p, source->buffer + p, w);
-			  p += source->pitch;
-			}	    
+		      memset (data, 0, p);
+		      ptr = data;
+			  src = source->buffer;
+			  if (source->pitch < (int)w) /* 1 bit per pixel */
+			  {
+				/* expand the bitmap */
+				y = 0;
+		        while (y++ < h)
+				{
+			      //memcpy (ptr, src, p);
+					unsigned char *bptr = src;
+					unsigned char b;
+					for (i=0; i<w; i++) {
+						if (i%8==0) {
+							b = *bptr++;
+						}
+						*ptr++ = b&0x80 ? 1 : 0;
+						b <<= 1;
+					}
+			      src += source->pitch;
+				}	    
+			  }
+			  else /* one byte per pixel */
+			  {
+				/* just copy the bitmap */
+				memcpy(ptr,src,p);
+
+			  }
 		    }	      
 		}
 	      else
