@@ -1410,11 +1410,15 @@ int TtaAddButton (Document document, View view, ThotIcon picture,
 #else /* _GTK */
 		  row = FrameTable[frame].Button[0];
 		  n = 0;
-		  XtSetArg (args[n], XmNmarginWidth, 0);
+		  XtSetArg (args[n], XmNmarginWidth, 4);
 		  n++;
-		  XtSetArg (args[n], XmNmarginHeight, 0);
+		  XtSetArg (args[n], XmNmarginHeight, 2);
 		  n++;
 		  XtSetArg (args[n], XmNbackground, BgMenu_Color);
+		  n++;
+		  XtSetArg (args[n], XmNhighlightThickness, 0);
+		  n++;
+		  XtSetArg (args[n], XmNshadowThickness, 0);
 		  n++;
 		  XtSetArg (args[n], XmNtraversalOn, FALSE);
 		  n++;
