@@ -1988,6 +1988,7 @@ boolean             Background;
    int                 fillPatternNum;
    RuleSet             rulesS;
 
+   CloseInsertion ();
    /* demande quelle est la selection courante */
    selok = GetCurrentSelection (&SelDoc, &pElFirstSel, &pElLastSel, &firstChar, &lastChar);
    if (!selok)
