@@ -2373,7 +2373,10 @@ LRESULT CALLBACK InitConfirm3LDlgProc (ThotWindow hwnDlg, UINT msg,
 	  {
 	  case ID_CONFIRM:
 	    EndDialog (hwnDlg, ID_CONFIRM);
-	    ThotCallback (BaseDialog + ConfirmForm, INTEGER_DATA, (char*) 1);
+	    if (WithCancel)
+	      ThotCallback (BaseDialog + ConfirmForm, INTEGER_DATA, (char*) 1);
+		else
+	      ThotCallback (BaseDialog + ConfirmForm, INTEGER_DATA, (char*) 0);
 	    break;
 	    
 	  case IDCANCEL:
