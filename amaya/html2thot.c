@@ -3400,7 +3400,7 @@ static void      PutNonISOlatin1Char (int code, STRING prefix)
        /* Put the symbol '?' into the new symbol leaf */
        TtaSetGraphicsShape (elLeaf, buffer[0], HTMLcontext.doc);
        /* Changes the wide char code associated with that symbol */
-       TtaSetSymbolCode (elLeaf, code, HTMLcontext.doc);
+       TtaSetSymbolCode (elLeaf, (wchar_t) code, HTMLcontext.doc);
        /* Make that leaf read-only */
        TtaSetAccessRight (elLeaf, ReadOnly, HTMLcontext.doc);
        HTMLcontext.mergeText = FALSE;
