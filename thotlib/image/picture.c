@@ -1970,10 +1970,12 @@ void DrawPicture (PtrBox box, PictInfo *imageDesc,
       else
 	{
 #ifdef _GL
-	  if ((!glIsTexture (imageDesc->TextureBind)) ||
-	      (pres == ReScale &&
-	      (imageDesc->PicWArea != w || 
-	       imageDesc->PicHArea != h)))	    
+	  if ((!glIsTexture (imageDesc->TextureBind))
+ /* || */
+/* 	      (pres == ReScale && */
+/* 	      (imageDesc->PicWArea != w ||  */
+/* 	       imageDesc->PicHArea != h)) */
+)	    
 #else /*_GL*/
 	  if (imageDesc->PicPixmap == None ||
 	      (pres == ReScale &&
@@ -2195,6 +2197,34 @@ unsigned char *ZoomPicture (unsigned char *cpic, int cWIDE, int cHIGH ,
   return (epic);
 }
 
+
+/*----------------------------------------------------------------------
+   Ratio_Calculate : if one picture dimension is null
+    make sure we keep the aspect ratio
+  ----------------------------------------------------------------------*/
+static ThotBool Ratio_Calculate (int *width, int *height, 
+		     int imgwidth, int imgheight)
+{  
+  if (imgwidth && imgheight)
+    {		  
+      if (*width == 0 && *height != 0)
+	{
+	  *width = (imgwidth * *height) / imgheight;
+	  return TRUE;
+	}
+		  
+      else 
+	if (*height == 0 && *width != 0)
+	  {			
+	    *height = (imgheight * *width) / imgwidth;
+	    return TRUE;
+	    
+	  }		  
+    }
+  return FALSE;
+}
+
+
 #ifdef _GL
 /*----------------------------------------------------------------------
    Requests the picture handlers to get the corresponding RGB or RGBA buffer
@@ -2229,7 +2259,8 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
   if (imageDesc->PicFileName == NULL || 
       imageDesc->PicFileName[0] == EOS)
     return;
- GetPictureFileName (imageDesc->PicFileName, fileName);
+  pres = DefaultPres;
+  GetPictureFileName (imageDesc->PicFileName, fileName);
  /* For the Sync Image*/
  if (frame != ActiveFrame)
      GL_prepare (frame); 
@@ -2272,10 +2303,31 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	}
       else
 	{
+
+
 	  if (box->BxW != 0)
 	    xBox = w;
 	  if(box->BxH != 0)
 	    yBox = h;
+
+
+	      imageDesc->PicWArea = w;
+	      imageDesc->PicHArea = h;
+	      width = imageDesc->PicWidth;
+	      height = imageDesc->PicHeight;	      
+	      if (Ratio_Calculate (&w, &h,
+				   width, height))
+		{
+		  if (imageDesc->PicWArea == 0)
+		    ChangeWidth (box,
+				 box, NULL,
+				 w + left + right, 0, frame);		  
+		  if (imageDesc->PicHArea == 0)
+		    ChangeHeight (box,
+				  box, NULL,
+				  h + top + bottom + top + bottom, frame);
+		}
+
 	}
 
       if (pres != ReScale || Printing)
@@ -2396,6 +2448,23 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	  /* intrinsic width and height */
 	  imageDesc->PicWidth  = width;
 	  imageDesc->PicHeight = height;
+
+
+	      imageDesc->PicWArea = w;
+	      imageDesc->PicHArea = h;
+
+	      if (Ratio_Calculate (&w, &h,
+				   width, height))
+		{
+		  if (imageDesc->PicWArea == 0)
+		    ChangeWidth (box,
+				 box, NULL,
+				 w + left + right, 0, frame);		  
+		  if (imageDesc->PicHArea == 0)
+		    ChangeHeight (box,
+				  box, NULL,
+				  h + top + bottom + top + bottom, frame);
+		}
 	}
     }
 
@@ -2540,11 +2609,6 @@ void *Group_shot (int x, int y, int width, int height, int frame)
 		    GL_RGBA, 
 		    GL_UNSIGNED_BYTE, 
 		    imageDesc->PicPixmap);
-
-  /* SavePng ("/home/cheyroul/test.png", */
-/*         imageDesc->PicPixmap, */
-/*         (unsigned int) width, */
-/*         (unsigned int) height); */
 
       GL_TextureBind (imageDesc);
 
@@ -2877,6 +2941,28 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	      /* intrinsic width and height */
 	      imageDesc->PicWidth  = width;
 	      imageDesc->PicHeight = height;
+
+
+	      imageDesc->PicWArea = w;
+	      imageDesc->PicHArea = h;
+
+	      if (Ratio_Calculate (&w, &h,
+				   width, height))
+		{
+		  if (imageDesc->PicWArea == 0)
+		    ChangeWidth (box,
+				 box, NULL,
+				 w + left + right, 0, frame);		  
+		  if (imageDesc->PicHArea == 0)
+		    ChangeHeight (box,
+				  box, NULL,
+				  h + top + bottom + top + bottom, frame);
+		  /* Force Image rescaling by making box 
+		     size different of image info size*/
+		  w = w / 2;
+		  h = h / 2;		  
+		}
+
 	    }
 #ifndef _GTK
 	}
@@ -3099,11 +3185,12 @@ unsigned char *GetScreenshot (int frame, char *pngurl)
   saveBuffer (pngurl, FrameTable[frame].FrWidth, FrameTable[frame].FrHeight);
   return NULL;
 #else /*_GL*/
-  int              widthb, heightb;
 #ifdef _GTK
   GdkImlibImage *image;  
+  int              widthb, heightb;
 #else /* !_GTK */
 #ifdef _WINDOWS
+  int              widthb, heightb;
   int              x,y;
   DWORD            RGBcolor;
   unsigned char   *pixel = NULL;
@@ -3153,5 +3240,6 @@ unsigned char *GetScreenshot (int frame, char *pngurl)
   return screenshot;
 #endif /* _WINDOWS */
 #endif /* _GTK */
+  return NULL;
 #endif /*_GL*/
 }
