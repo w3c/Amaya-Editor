@@ -1,29 +1,15 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN"
       "http://www.w3.org/2002/04/xhtml-math-svg/xhtml-math-svg.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Bienvenido a Amaya</title>
-  <style type="text/css">
- body {font-family: helvetica, arial, sans-serif; color: black; background-color: #C0C0C0}
- h1 {font-size: 200%; font-weight: bold; font-style: italic; color: #488B9B;
- margin-bottom: 0}
- h2 {margin-top: 0; margin-bottom: .4em; font-style:italic;  color: #488B9B;}
- h3 {border: solid 1px #488B9B; padding: 4px; margin-bottom: .2em;  color: #488B9B }
- div p {text-align: justify}
- div {margin-top: 0}
- strong {color: #488B9B}
- .button {border: solid 1px #488B9B; padding: 4px}
- .buttonbar {text-align: center; margin-top: 1.5em}
- .pink {color: #dc5b53}
- a:link {color:#dc5b53; font-weight: bold}
- a:active {color: #ff0000; font-weight: bold}
- a:visited {color: #9820c8; font-weight: bold}</style>
+  <link href="amaya.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="es">
-<p style="text-align: center"><svg xmlns="http://www.w3.org/2000/svg"
-     width="600" height="349">
+<p><svg xmlns="http://www.w3.org/2000/svg" width="600" height="349">
   <rect x="464" y="4" width="140" height="330" style="fill: #E1E1E1"/>
   <g style="fill:#dc5b53; font: bold 16px" transform="translate(477,0)">
     <a xlink:href="http://www.w3.org/Amaya">

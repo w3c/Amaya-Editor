@@ -25,7 +25,7 @@ body {padding-left: 2em}</style>
 <h1 id="Amaya">Amaya - Guide utilisateur</h1>
 
 <p class="head"><span class="author">Irène Vatton</span> <br />
-Dernière mise à jour&nbsp;: <!--$date=-->Tuesday 08 June 2004 - 10:53:53<!--$-->
+Dernière mise à jour : <!--$date=-->Wednesday 06 October 2004 - 14:13:09<!--$-->
 </p>
 </div>
 
@@ -125,14 +125,14 @@ décrivent le découpage en fenêtres (frames). Le W3C décommande l'utilisation
 des "frames" pour faire que les sites Web soient accessibles aux handicapés
 (problèmes de navigation et de contexte).</p>
 
-<p>D'autres familles XHTML ont été introduites par&nbsp;:</p>
+<p>D'autres familles XHTML ont été introduites par :</p>
 <ul>
   <li>Besoin de <strong>modularisation</strong> pour s'adapter à de nouveaux
     supports (PDA, téléphones, télévision)</li>
   <li>Nécessité d'avoir des <strong>structures propres</strong> pour filtrer
     et transformer de façon automatique les documents
-    <p>Exemple&nbsp;: extraire les titres et ne présenter le texte qui suit
-    qu'à la demande</p>
+    <p>Exemple : extraire les titres et ne présenter le texte qui suit qu'à
+    la demande</p>
   </li>
   <li>Autoriser la <strong>composition</strong> avec d'autres langages XML
     (RDF, MathML, SVG, SMIL, autres).</li>
@@ -225,7 +225,7 @@ des "frames" pour faire que les sites Web soient accessibles aux handicapés
 <div>
 <h2 id="L271">2. Présentation générale d'Amaya</h2>
 
-<p>Amaya est à la fois navigateur et un éditeur&nbsp;:</p>
+<p>Amaya est à la fois navigateur et un éditeur :</p>
 
 <p><strong>Amaya</strong> est un éditeur doté de capacités de navigation.
 C'est à dire que pendant que l'utilisateur travaille sur les documents de son
@@ -240,19 +240,15 @@ l'activer.</p>
 
 <p></p>
 
-<p>Fenêtre initiale&nbsp;:</p>
+<p>Fenêtre initiale :</p>
 
 <p>Par défaut, l'utilisateur voit la vue formatée du document. C'est l'aspect
 final du document tel qu'il est vu par un navigateur Web</p>
 
-<div style="text-align: center">
-<img alt="Vue formattée" src="../images/View.png" /></div>
-
 <p>La barre de menu :</p>
 <ul>
-  <li>Fichier&nbsp;: création de documents, navigation, impression,
-  fermeture.</li>
-  <li>Edition&nbsp;: édition de base, recherche/remplacement, correction
+  <li>Fichier : création de documents, navigation, impression, fermeture.</li>
+  <li>Edition : édition de base, recherche/remplacement, correction
     orthographique, paramétrage.</li>
   <li>XHTML : création/remplacement d'éléments (X)HTML.</li>
   <li>XML : création d'éléments XML.</li>
@@ -268,60 +264,57 @@ final du document tel qu'il est vu par un navigateur Web</p>
 
 <p>Contient quelques boutons d'accès aux fonctions les plus utilisées</p>
 <ul>
-  <li>Stop <img alt="(Stop)" src="../images/stop.gif" />&nbsp;: arrête le
+  <li>Stop <img alt="(Stop)" src="../images/stop.gif" /> : arrête le
     transfert d'information depuis un serveur Web</li>
-  <li>Document précédent <img alt="(Précédent)" src="../images/Back.gif"
-    />&nbsp;: retour au document précédent (s'il y en a un)</li>
-  <li>Document suivant <img alt="(Suivant)" src="../images/Forward.gif"
-    />&nbsp;: retour au document suivant (s'il y en a un)</li>
+  <li>Document précédent <img alt="(Précédent)" src="../images/Back.gif" /> :
+    retour au document précédent (s'il y en a un)</li>
+  <li>Document suivant <img alt="(Suivant)" src="../images/Forward.gif" /> :
+    retour au document suivant (s'il y en a un)</li>
   <li>Recharger<img alt="(Recharger)" src="../images/Reload.gif" /> :
     recharge le document (accès serveur)</li>
-  <li>Page personnelle <img alt="(Home)" src="../images/home.gif" />&nbsp;:
+  <li>Page personnelle <img alt="(Home)" src="../images/home.gif" /> :
     affiche la page de démarrage</li>
-  <li>Sauver <img alt="(Sauver)" src="../images/floppy.gif" />&nbsp;: sauver
-    les modifications</li>
-  <li>Imprimer <img alt="(Imprimer)" src="../images/Print.gif" />&nbsp;:
-    imprime le document</li>
+  <li>Sauver <img alt="(Sauver)" src="../images/floppy.gif" /> : sauver les
+    modifications</li>
+  <li>Imprimer <img alt="(Imprimer)" src="../images/Print.gif" /> : imprime
+    le document</li>
   <li>Rechercher/Remplacer <img alt="(Rechercher)" src="../images/find.gif"
-    />&nbsp;: affiche un formulaire de recherche/remplacement de texte</li>
-  <li>Mise en évidence <img alt="(Evidence)" src="../images/Em.gif" />&nbsp;:
+    /> : affiche un formulaire de recherche/remplacement de texte</li>
+  <li>Mise en évidence <img alt="(Evidence)" src="../images/Em.gif" /> :
     permet de créer/supprimer un élément "mise en évidence"
     (&lt;em&gt;...&lt;/em&gt;)</li>
-  <li>Important <img alt="(Important)" src="../images/Strong.gif" />&nbsp;:
-    permet de créer un élément "important"
-  (&lt;strong&gt;...&lt;/strong&gt;)</li>
-  <li>Fonte fixe <img alt="(Code)" src="../images/code.gif" />&nbsp;: permet
-    de créer un élément "fonte fixe" (&lt;code&gt;...&lt;/code&gt;)</li>
-  <li>Ajout d'une image <img alt="(Image)" src="../images/Image.gif"
-    />&nbsp;: permet de créer un élément "image" (&lt;img/&gt;)</li>
-  <li>Titre niveau 1&nbsp;<img alt="(H1)" src="../images/H1.gif" />&nbsp;:
-    permet de créer un élément "titre niveau 1"
-  (&lt;h1&gt;...&lt;/h1&gt;)</li>
-  <li>Titre niveau 2 <img alt="(H2)" src="../images/H2.gif" />&nbsp;: permet
-    de créer un élément "titre niveau 2" (&lt;h2&gt;...&lt;/h2&gt;)</li>
-  <li>Titre niveau 3 <img alt="(H3)" src="../images/H3.gif" />&nbsp;: permet
-    de créer un élément "titre niveau 3" (&lt;h3&gt;...&lt;/h3&gt;)</li>
-  <li>Liste <img alt="(Liste)" src="../images/OList.gif" />&nbsp;: permet de
-    créer un élément "liste à puces" (&lt;ul&gt;...&lt;/ul&gt;)</li>
-  <li>Liste numérotée <img alt="(Liste num)" src="../images/NumList.gif"
-    />&nbsp;: permet de créer un élément "liste numérotée"
-    (&lt;ol&gt;...&lt;/ol&gt;)</li>
+  <li>Important <img alt="(Important)" src="../images/Strong.gif" /> : permet
+    de créer un élément "important" (&lt;strong&gt;...&lt;/strong&gt;)</li>
+  <li>Fonte fixe <img alt="(Code)" src="../images/code.gif" /> : permet de
+    créer un élément "fonte fixe" (&lt;code&gt;...&lt;/code&gt;)</li>
+  <li>Ajout d'une image <img alt="(Image)" src="../images/Image.gif" /> :
+    permet de créer un élément "image" (&lt;img/&gt;)</li>
+  <li>Titre niveau 1 <img alt="(H1)" src="../images/H1.gif" /> : permet de
+    créer un élément "titre niveau 1" (&lt;h1&gt;...&lt;/h1&gt;)</li>
+  <li>Titre niveau 2 <img alt="(H2)" src="../images/H2.gif" /> : permet de
+    créer un élément "titre niveau 2" (&lt;h2&gt;...&lt;/h2&gt;)</li>
+  <li>Titre niveau 3 <img alt="(H3)" src="../images/H3.gif" /> : permet de
+    créer un élément "titre niveau 3" (&lt;h3&gt;...&lt;/h3&gt;)</li>
+  <li>Liste <img alt="(Liste)" src="../images/OList.gif" /> : permet de créer
+    un élément "liste à puces" (&lt;ul&gt;...&lt;/ul&gt;)</li>
+  <li>Liste numérotée <img alt="(Liste num)" src="../images/NumList.gif" /> :
+    permet de créer un élément "liste numérotée"
+  (&lt;ol&gt;...&lt;/ol&gt;)</li>
   <li>Liste de définitions <img alt="(Définitions)" src="../images/DL.gif"
-    />&nbsp;: permet de créer un élément "liste de définition"
+    /> : permet de créer un élément "liste de définition"
     (&lt;dl&gt;...&lt;/dl&gt;)</li>
-  <li>Lien <img alt="(Lien)" src="../images/Link.gif" />&nbsp;: permet de
-    créer un élément "titre niveau 1" (&lt;a href="..."&gt;...&lt;/a&gt;)</li>
-  <li>Table <img alt="(Table)" src="../images/table.gif" />&nbsp;: permet de
-    créer un élément "titre niveau 1" (&lt;table&gt;...&lt;/table&gt;)</li>
-  <li>Maths <img alt="(Math)" src="../images/Math.gif" />&nbsp;: palette pour
+  <li>Lien <img alt="(Lien)" src="../images/Link.gif" /> : permet de créer un
+    élément "titre niveau 1" (&lt;a href="..."&gt;...&lt;/a&gt;)</li>
+  <li>Table <img alt="(Table)" src="../images/table.gif" /> : permet de créer
+    un élément "titre niveau 1" (&lt;table&gt;...&lt;/table&gt;)</li>
+  <li>Maths <img alt="(Math)" src="../images/Math.gif" /> : palette pour
     créer des formules</li>
-  <li>Graphique <img alt="(SVG)" src="../images/Graph.gif" />&nbsp;: palette
-    pour créer des graphiques vectoriels</li>
-  <li>Bibliothèque SVG <img alt="(Librairie)" src="../images/libsvg.gif"
-    />&nbsp;: affiche la palette de graphiques prédéfinis</li>
+  <li>Graphique <img alt="(SVG)" src="../images/Graph.gif" /> : palette pour
+    créer des graphiques vectoriels</li>
+  <li>Bibliothèque SVG <img alt="(Librairie)" src="../images/libsvg.gif" /> :
+    affiche la palette de graphiques prédéfinis</li>
   <li>Ligne de temps <img alt="(Animation)" src="../images/anim.gif"
-    />&nbsp;:&nbsp;affiche la ligne de temps pour l'animation des
-  graphiques</li>
+    /> : affiche la ligne de temps pour l'animation des graphiques</li>
 </ul>
 
 <p>et une zone d'affichage de l'adresse du document.</p>
@@ -354,39 +347,38 @@ summary="action button chart">
   </tbody>
 </table>
 
-<p>Voici les paramètres importants à régler&nbsp;:</p>
+<p>Voici les paramètres importants à régler :</p>
 
 <h4>Dans les préférences générales</h4>
 <ul>
-  <li><strong>Page de démarrage</strong>&nbsp;: Spécifie l'URI qu'Amaya
-    chargera au démarrage ou quand l'utilisateur pressera le bouton <img
+  <li><strong>Page de démarrage</strong> : Spécifie l'URI qu'Amaya chargera
+    au démarrage ou quand l'utilisateur pressera le bouton <img
     alt="(Page personelle)" src="../images/home.gif" /> (par exemple l'URI
     <code>http://www.w3.org</code>).</li>
-  <li><strong><a id="Enable">Activer le coller ligne à
-    ligne</a></strong>&nbsp;: Cette option concerne le coller depuis une
-    autre application. Quand cette option est activée, les lignes de
-    l'application source sont conservées. Sinon les caractères «&nbsp;fin de
-    ligne&nbsp;» sont remplacés par des espaces.</li>
-  <li><strong>Produire des fichiers de sauvegarde</strong>&nbsp;: Si cette
-    option est active Amaya va produire périodiquement un fichier de
-    sauvegarde pour chaque document édité.</li>
-  <li><strong>Montrer boutons</strong>&nbsp;: Contrôle l'affichage de la
-    barre de boutons pour tous les documents.</li>
-  <li><strong>Montrer l'adresse</strong>&nbsp;: Contrôle si Amaya affiche
+  <li><strong><a id="Enable">Activer le coller ligne à ligne</a></strong> :
+    Cette option concerne le coller depuis une autre application. Quand cette
+    option est activée, les lignes de l'application source sont conservées.
+    Sinon les caractères « fin de ligne » sont remplacés par des espaces.</li>
+  <li><strong>Produire des fichiers de sauvegarde</strong> : Si cette option
+    est active Amaya va produire périodiquement un fichier de sauvegarde pour
+    chaque document édité.</li>
+  <li><strong>Montrer boutons</strong> : Contrôle l'affichage de la barre de
+    boutons pour tous les documents.</li>
+  <li><strong>Montrer l'adresse</strong> : Contrôle si Amaya affiche
     l'adresse des documents.</li>
-  <li><strong>Montrer les cibles</strong>&nbsp;: Contrôle si les cibles de
-    liens sont visualisées ou non. Montrer les cibles peut aider quand on
-    veut créer de nouveaux liens. Cette option agit immédiatement sur tous
-    les documents édités.<br />
+  <li><strong>Montrer les cibles</strong> : Contrôle si les cibles de liens
+    sont visualisées ou non. Montrer les cibles peut aider quand on veut
+    créer de nouveaux liens. Cette option agit immédiatement sur tous les
+    documents édités.<br />
   </li>
-  <li><strong>Zoom caractères</strong>&nbsp;: Cette option vous permet de
-    réduire ou d'augmenter les tailles des polices de caractères utilisées.
-    Cette option a un effet immédiat sur tous les documents édités. <br />
+  <li><strong>Zoom caractères</strong> : Cette option vous permet de réduire
+    ou d'augmenter les tailles des polices de caractères utilisées. Cette
+    option a un effet immédiat sur tous les documents édités. <br />
   </li>
-  <li><strong>Langue du dialogue</strong>&nbsp;: Spécifie la langue utilisée
-    dans les menus et les messages. La langue par défaut est l'anglais
-    américain (valeur en). D'autres langues sont possibles comme le français
-    (fr), l'italien (it), l'espagnol (es), et l'allemand (de).</li>
+  <li><strong>Langue du dialogue</strong> : Spécifie la langue utilisée dans
+    les menus et les messages. La langue par défaut est l'anglais américain
+    (valeur en). D'autres langues sont possibles comme le français (fr),
+    l'italien (it), l'espagnol (es), et l'allemand (de).</li>
 </ul>
 
 <h4>Dans les préférences de navigation</h4>
@@ -533,7 +525,7 @@ sélection courante.</p>
 <h3>Préformaté</h3>
 
 <p>L'élément préformaté est un paragraphe particulier qui permet de préserver
-tous les caractères&nbsp;: espace, fin de ligne.</p>
+tous les caractères : espace, fin de ligne.</p>
 
 <p>Pour transformer un paragraphe en préformaté, on sélectionne le paragraphe
 en entier et on active l'entrée de menu <strong>XHTML/Préformaté</strong> (ou
@@ -583,7 +575,7 @@ depuis le clavier, Amaya utilise le support standard fournit par le
 système.</p>
 
 <p>Amaya fournit aussi des raccourcis pour certains caractères non
-disponibles au clavier comme&nbsp;:</p>
+disponibles au clavier comme :</p>
 <ul>
   <li>Pour obtenir un espace non sécable, vous devez taper <code>Ctrl -
     espace</code>. Ce caractère sera sauvé comme une entité
@@ -642,8 +634,8 @@ modifications opérées dans le document.</p>
 
 <p><a href="Creating.html.fr">A voir pour plus de détail</a></p>
 
-<p class="exercice"><em>Exercice 1&nbsp;:</em> Créer un document contenant
-des paragraphes, des en-têtes, des divisions.</p>
+<p class="exercice"><em>Exercice 1 :</em> Créer un document contenant des
+paragraphes, des en-têtes, des divisions.</p>
 
 <h2 id="L831">6. Les listes</h2>
 
@@ -733,8 +725,7 @@ créée directement après le nouveau terme.</p>
 touches <code>Back Space</code> et <code>Delete</code> pour fusionner des
 listes ou des items de listes.</p>
 
-<p class="exercice"><em>Exercice 2&nbsp;:</em> Créer et transformer des
-listes.</p>
+<p class="exercice"><em>Exercice 2 :</em> Créer et transformer des listes.</p>
 
 <div>
 <h2 id="L1002">7. Les liens</h2>
@@ -778,7 +769,7 @@ entier ou une cible.</p>
   <li>On clique sur le document cible affiché.</li>
 </ol>
 
-<p>Autre méthode&nbsp;:</p>
+<p>Autre méthode :</p>
 <ol>
   <li>On sélectionne le passage choisi.</li>
   <li>On choisit <strong>Créer/changer lien</strong> du <a
@@ -803,7 +794,7 @@ visualisation des cibles <a id="target"><img src="../images/target.gif"
 alt=" target " /></a> dans le document concerné en activant l'entrée
 <strong>Montrer les cibles</strong> du menu <strong>Vues</strong> ou ouvrant
 la vue des liens (entrée <strong>Montrer les liens</strong> du menu
-<strong>Vues</strong>). Ensuite&nbsp;:</p>
+<strong>Vues</strong>). Ensuite :</p>
 <ol>
   <li>On sélectionne le passage choisi.</li>
   <li>On clique sur le bouton <img alt="Link " src="../images/Link.gif"
@@ -813,7 +804,7 @@ la vue des liens (entrée <strong>Montrer les liens</strong> du menu
 
 <h4>Lien vers un autre document non affiché</h4>
 
-<p>Pour créer un lien vers un autre document local ou distant&nbsp;:</p>
+<p>Pour créer un lien vers un autre document local ou distant :</p>
 <ol>
   <li>On sélectionne le passage choisi.</li>
   <li>On clique sur le bouton <img alt="Link " src="../images/Link.gif"
@@ -823,7 +814,7 @@ la vue des liens (entrée <strong>Montrer les liens</strong> du menu
     peut utiliser le browser de fichier pour sélectionner le fichier.</li>
 </ol>
 
-<p>Autre méthode&nbsp;:</p>
+<p>Autre méthode :</p>
 <ol>
   <li>On sélectionne le passage choisi.</li>
   <li>On choisit <strong>Créer/changer lien</strong> du menu
@@ -849,9 +840,9 @@ ancre</strong> qui permet de détruire l'ancre cible ou le lien sélectionné.
 Il suffit que la sélection soit à l'intérieur de l'ancre à détruire. L'ancre
 est détruite, mais son contenu reste.</p>
 
-<p class="exercice"><em>Exercice 3&nbsp;:</em> Créer des liens dans un
-document et entre documents, copier/coller de structures contenant des liens,
-remplacer, détruire.</p>
+<p class="exercice"><em>Exercice 3 :</em> Créer des liens dans un document et
+entre documents, copier/coller de structures contenant des liens, remplacer,
+détruire.</p>
 </div>
 
 <div>
@@ -874,7 +865,7 @@ document et lors de l'édition de celui-ci. Par exemple, le code source
 suivant:</p>
 <pre><code>    &lt;p&gt;Amaya supprime les</code>&lt;strong&gt;<code> blancs non significatifs </code>&lt;/strong&gt;<code>au chargement&lt;/p&gt;</code></pre>
 
-<p>donnera&nbsp;:</p>
+<p>donnera :</p>
 <pre><code>    Amaya supprime les</code><code><strong>blancs non significatif</strong></code><code><strong>s</strong>au chargement</code></pre>
 
 <p>car les blancs de début et de fin de l'élément <code>strong</code> sont
@@ -926,7 +917,7 @@ l'intermédiaire des flèches du clavier.</p>
 <h3><a id="Adding3">Insérer/Ajouter une colonne</a></h3>
 
 <p>Il n'existe deux commandes spécifiques pour créer une nouvelle
-colonne&nbsp;:</p>
+colonne :</p>
 <ul>
   <li><strong>Insérer une colonne</strong> dans le sous-menu
     <strong>Table</strong> (<code>Ctrl t Ctrl b</code>) ajoute une nouvelle
@@ -974,7 +965,7 @@ sélectionner une colonne :</p>
 
 <h3>Copier/Coller ou Déplacer une colonne</h3>
 
-<p>Pour déplacer ou copier/coller une colonne de table&nbsp;:</p>
+<p>Pour déplacer ou copier/coller une colonne de table :</p>
 <ol>
   <li>Il faut sélectionner la colonne comme dans le cas de <strong>Détruire
     une colonne</strong> et copier (<code>Ctrl c</code>) ou couper
@@ -1002,8 +993,7 @@ sélectionner une colonne :</p>
 
 <h3><a id="Adding11">Insérer/Ajouter une ligne</a></h3>
 
-<p>Il n'existe deux commandes spécifiques pour créer une nouvelle
-ligne&nbsp;:</p>
+<p>Il n'existe deux commandes spécifiques pour créer une nouvelle ligne :</p>
 <ul>
   <li><strong>Insérer une ligne</strong> dans le sous-menu
     <strong>Table</strong> (<code>Ctrl t Ctrl i</code>) ajoute une nouvelle
@@ -1031,7 +1021,7 @@ sélectionner une ligne :</p>
 
 <h3>Copier/Coller ou Déplacer une ligne</h3>
 
-<p>Pour déplacer ou copier/coller une ligne de table&nbsp;:</p>
+<p>Pour déplacer ou copier/coller une ligne de table :</p>
 <ol>
   <li>Il faut sélectionner la ligne comme dans le cas de <strong>Détruire une
     ligne</strong> et copier (<code>Ctrl c</code>) ou couper (<code>Ctrl
@@ -1059,7 +1049,7 @@ sélectionner une ligne :</p>
 <h3>Cellules étendues</h3>
 
 <p>Il n'existe quatre commandes spécifiques pour étendre ou réduire
-l'extension de cellules&nbsp;:</p>
+l'extension de cellules :</p>
 <ul>
   <li><strong>Joindre avec la cellule à droite</strong> dans le sous-menu
     <strong>Table</strong> (<code>Ctrl t Ctrl e</code>) étend la cellule
@@ -1117,9 +1107,9 @@ entière en utilisant la touche <code>Esc</code> (Unix) ou <code>F2</code>
 
 <p></p>
 
-<p class="exercice"><em>Exercice 4&nbsp;:</em> Créer une table, créer une
-ligne avant/après, déplacer une ligne, créer une colonne avant/après,
-déplacer une colonne.</p>
+<p class="exercice"><em>Exercice 4 :</em> Créer une table, créer une ligne
+avant/après, déplacer une ligne, créer une colonne avant/après, déplacer une
+colonne.</p>
 </div>
 
 <div>
@@ -1188,8 +1178,8 @@ src="../images/spellchecking-fr.png" /></p>
   </li>
 </ul>
 
-<p class="exercice"><em>Exercice 5&nbsp;:</em> Rechercher/remplacer, changer
-la lange d'un passage et passer le correcteur orthographique.</p>
+<p class="exercice"><em>Exercice 5 :</em> Rechercher/remplacer, changer la
+lange d'un passage et passer le correcteur orthographique.</p>
 </div>
 
 <div>
@@ -1248,7 +1238,7 @@ externe peut s'appliquer à plusieurs documents.</p>
 <a href="Configure.html.fr#AmayaHome">répertoire d'AmayaHome</a>). Par
 exemple si vous préférez afficher les document en Helvetica et imprimer avec
 une police de caractères de petite taille, vous pouvez créer votre feuille de
-style utilisateur avec les règles CSS suivantes&nbsp;:</p>
+style utilisateur avec les règles CSS suivantes :</p>
 <pre>@media print {
  BODY {font-size: 10pt}
 }
@@ -1346,7 +1336,7 @@ produire les propriétés CSS les plus courantes pour les éléments sélectionnés
 
 <p>Pour le moment le style est associé à un ou plusieurs éléments
 particuliers. Un élément peut être utilisé comme un modèle pour créer ou
-modifier une règle de style&nbsp;:</p>
+modifier une règle de style :</p>
 <ul>
   <li>On sélectionne cet élément (un seul élément ayant un attribut
     <code>style</code>)</li>
@@ -1364,7 +1354,7 @@ modifier une règle de style&nbsp;:</p>
     éléments correspondant au sélecteur sont visualisés dans le nouveau
   style.</li>
   <li>Si une nouvelle classe est créée, elle peut être appliquée à d'autre
-    éléments du document&nbsp; par la commande <strong>Appliquer une
+    éléments du document  par la commande <strong>Appliquer une
     classe</strong> du menu <strong>Style</strong>. Une boîte de dialogue
     surgit, affichant toutes les classes existantes. On choisit une de ces
     classes. Les éléments sélectionnés sont désormais visualisés avec le
@@ -1376,8 +1366,8 @@ modifier une règle de style&nbsp;:</p>
 menu permet aussi d'effacer un attribut de classe pour un élément ou de le
 changer : l'attribut de classe se manipule comme un autre attribut.</p>
 
-<p class="exercice"><em>Exercice 6&nbsp;:</em> Mettre de la couleur,
-appliquer une feuille de style, voir le style.</p>
+<p class="exercice"><em>Exercice 6 :</em> Mettre de la couleur, appliquer une
+feuille de style, voir le style.</p>
 </div>
 
 <div>
@@ -1388,13 +1378,13 @@ le parseur HTML est très tolérant) ou des incompatibilités avec la famille
 XHTML choisie.</p>
 </div>
 <dl>
-  <dt>1er exemple&nbsp;:</dt>
+  <dt>1er exemple :</dt>
     <dd>Un document est déclaré comme HTML 4.0 Strict et contient des
       attributs non acceptés.
       <p><img alt="(profil invalide)" src="../images/invalid_profile-fr.png"
       /></p>
     </dd>
-  <dt>2ème exemple&nbsp;:</dt>
+  <dt>2ème exemple :</dt>
     <dd>Un document XHTML mal formé
       <p><img alt="(mal formé)" src="../images/not_well_formed-fr.png" /></p>
     </dd>

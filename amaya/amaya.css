@@ -1,0 +1,58 @@
+/* This is the Welcome CSS file */
+body {
+ font-family: helvetica, arial, sans-serif;
+ color: black;
+ background-color: #F6F6F6;
+}
+h1 {
+ font-size: 200%;
+ font-weight: bold;
+ font-style: italic;
+ color: #488B9B;
+ margin-bottom: 0;
+}
+h2 {
+ margin-top: 0; margin-bottom: .4em;
+ font-style:italic;  color: #488B9B;
+}
+h3 {
+ float:left;
+ width: 150px;
+ text-align: right;
+ border: solid 1px #488B9B; 
+ padding: 4px; margin-bottom: .2em;
+ color: #488B9B;
+}
+div p {
+ margin-left: 170px;
+}
+div {
+ margin-top: 2em;
+ margin-right: 0.5em;
+}
+div div {
+ margin-top: 0;
+ margin-right: 0;
+}
+strong {
+ color: #488B9B
+}
+.button {
+ border: solid 1px #488B9B;
+ padding: 4px
+;}
+.buttonbar {
+ text-align: center;
+ margin-top: 1.5em;
+}
+.pink {
+ color: #dc5b53;
+}
+a:link {
+ color:#dc5b53;
+ font-weight: bold;
+}
+a:visited {
+ color: #9820c8;
+ font-weight: bold;
+}
