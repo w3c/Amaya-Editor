@@ -177,9 +177,10 @@ char               *imageName;
    if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
       elPicture = el;
    if (elPicture != NULL)
-      TtaSetTextContent (elPicture, imageName, SPACE, doc);
-
-   UpdateImageMap (elPicture, doc);
+     {
+       TtaSetTextContent (elPicture, imageName, SPACE, doc);
+       UpdateImageMap (elPicture, doc);
+     }
    /* if the document was not modified before this update reset it unmodified */
    if (!modified)
       TtaSetDocumentUnmodified (doc);

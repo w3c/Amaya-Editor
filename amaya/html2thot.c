@@ -37,7 +37,6 @@
 #include "html2thot_f.h"
 #include "HTMLactions_f.h"
 #include "HTMLedit_f.h"
-#include "HTMLimage_f.h"
 #include "HTMLstyle_f.h"
 #include "HTMLtable_f.h"
 
@@ -5383,9 +5382,6 @@ char               *pathURL;
 #ifndef INCR_DISPLAY
 	   TtaSetDisplayMode (theDocument, DisplayImmediately);
 #endif /* INCR_DISPLAY */
-	   TtaHandlePendingEvents ();
-	   /* fetch and display all images referred by the document */
-	   FetchAndDisplayImages (theDocument);
 #endif /* STANDALONE */
 	   /* check the Thot abstract tree against the structure schema. */
 	   TtaSetStructureChecking (1, theDocument);

@@ -92,6 +92,7 @@ static Pixmap       iconPlugin;
 #include "EDITstyle_f.h"
 #include "HTMLactions_f.h"
 #include "HTMLedit_f.h"
+#include "HTMLimage_f.h"
 #include "HTMLsave_f.h"
 #include "HTMLstyle_f.h"
 #include "UIcss_f.h"
@@ -837,6 +838,9 @@ View                view;
         TtaSetCursorWatch (0, 0);
 	/* do we need to control the last slash here? */
 	newdoc = LoadHTMLDocument (newdoc, pathname, tempfile, documentname);
+	TtaHandlePendingEvents ();
+	/* fetch and display all images referred by the document */
+	FetchAndDisplayImages (newdoc);
 	TtaResetCursor (0, 0);
      }
 }
@@ -1135,6 +1139,11 @@ DoubleClickEvent    DC_event;
 	       {
 		  /* do we need to control the last slash here? */
 		  newdoc = LoadHTMLDocument (newdoc, pathname, tempfile, documentname);
+		  TtaHandlePendingEvents ();
+		  /* fetch and display all images referred by the document */
+		  if (doc == baseDoc)
+		    /* it's not a temporary document */
+		    FetchAndDisplayImages (newdoc);
 	       }
 	     else
 	       {
@@ -1709,17 +1718,42 @@ NotifyEvent        *event;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void                MoveDocumentBody (Element *el, Document destDoc, Document sourceDoc)
+static void         UpdateURLsInSubtree (NotifyElement *event, Element el)
 #else
-static void                MoveDocumentBody (el, destDoc, sourceDoc)
-Element             *el;
-Document            destDoc;
-Document            sourceDoc;
+static void         UpdateURLsInSubtree (event, el)
+NotifyElement      *event;
+Element             el;
 #endif
 {
-   Element		root, body, ancestor, elem, firstInserted,
-			lastInserted, srce, copy, old, parent, sibling;
-   ElementType		elType;
+Element             nextEl;
+
+  event->element = el;
+  ElementPasted (event);
+  nextEl = TtaGetFirstChild (el);
+  while (nextEl != NULL)
+    {
+      UpdateURLsInSubtree (event, nextEl);
+      TtaNextSibling (&nextEl);
+    }
+}
+
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         MoveDocumentBody (Element *el, Document destDoc, Document sourceDoc, boolean deleteTree)
+#else
+static void         MoveDocumentBody (el, destDoc, sourceDoc, deleteTree)
+Element            *el;
+Document           destDoc;
+Document           sourceDoc;
+boolean            deleteTree;
+#endif
+{
+   Element	   root, body, ancestor, elem, firstInserted,
+		   lastInserted, srce, copy, old, parent, sibling;
+   ElementType	   elType;
+   NotifyElement   event;
 
    root = TtaGetMainRoot (sourceDoc);
    elType = TtaGetElementType (root);
@@ -1758,10 +1792,15 @@ Document            sourceDoc;
 	   else
 	      TtaInsertSibling (copy, lastInserted, FALSE, destDoc);
 	   lastInserted = copy;
+	   /* prepare the notify element */
+	   event.document = destDoc;
+	   event.position = sourceDoc;
+	   UpdateURLsInSubtree(&event, copy);
 	   }
 	old = srce;
 	TtaNextSibling (&srce);
-	TtaDeleteTree (old, sourceDoc);
+	if (deleteTree)
+	  TtaDeleteTree (old, sourceDoc);
 	}
 
      elem = TtaGetParent (*el);
@@ -1778,7 +1817,7 @@ Document            sourceDoc;
 	   }
 	}
      while (sibling == NULL);
-     TtaDeleteTree (elem, destDoc);
+       TtaDeleteTree (elem, destDoc);
      *el = firstInserted;
      }
 }
@@ -1798,7 +1837,7 @@ Document            document;
    AttributeType	attrType;
    int			length;
    char			*text;
-   Document		includedDocument;
+   Document		includedDocument, newdoc;
 
    attrType.AttrSSchema = TtaGetDocumentSSchema (document);
    attrType.AttrTypeNum = HTML_ATTR_REL;
@@ -1832,13 +1871,11 @@ Document            document;
 	     {
 	       /* its a remote document */
 	       includedDocument = TtaNewDocument ("HTML", "tmp");
-	       includedDocument = GetHTMLDocument (text, NULL, includedDocument, document, DC_TRUE);
+	       newdoc = GetHTMLDocument (text, NULL, includedDocument, document, DC_TRUE);
 	       TtaFreeMemory (text);
-	       if (includedDocument != 0)
-		 {
-		   FetchAndDisplayImages (includedDocument);
-		   MoveDocumentBody (&next, document, includedDocument);
-		 }
+	       if (newdoc != 0 && newdoc != document)
+		   /* it's not the document itself */
+		   MoveDocumentBody (&next, document, newdoc, newdoc == includedDocument);
 	       FreeDocumentResource (includedDocument);
 	       TtaCloseDocument (includedDocument);
 	     }
@@ -1868,9 +1905,7 @@ View                view;
    elType.ElTypeNum = HTML_EL_BODY;
    body = TtaSearchTypedElement (elType, SearchForward, root);
    if (body != NULL)
-     {
        GetIncludedDocuments (body, document);
-     }
    /********
    TtaPrint (document, "Formatted_view Table_of_contents ");
    *********/
