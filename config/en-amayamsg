@@ -211,7 +211,7 @@
 209 Profiles Preferences
 210 Enter the URL of the templates server
 211 Templates Preferences
-212 Allow automatic PUT redirections on these domains
+212 Allow automatic PUT redirections to these domains
 213 Ignore style sheets
 214 Transform type
 215 (separate each entry with a space)

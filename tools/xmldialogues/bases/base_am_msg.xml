@@ -2119,8 +2119,8 @@
 	<message xml:lang="tr">Sayfa modellerin ayarları</message>
 </label>
 <label define="AM_SAFE_PUT_REDIRECT">
-	<message xml:lang="en">Allow automatic PUT redirections on these domains</message>
-	<message xml:lang="fr">Autoriser la redirection automatique du PUT dans ces domaines</message>
+	<message xml:lang="en">Allow automatic PUT redirections to these domains</message>
+	<message xml:lang="fr">Autoriser la redirection automatique du PUT vers ces domaines</message>
 	<message xml:lang="de">PUT automatisch an diese Domäne umleiten</message>
 	<message xml:lang="it">Consenti la redirezione automatica dei PUT su questi domini</message>
 	<message xml:lang="es">Permitir redirecciones PUT automáticas en los dominios:</message>
