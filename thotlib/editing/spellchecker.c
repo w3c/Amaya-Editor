@@ -819,7 +819,7 @@ static void init_param (FILE * fd)
   if (cc > 0)
     NC = cc;
   else
-    NC = 3;			/* valeur par defaut */
+    NC = NB_PROPOSALS;			/* valeur par defaut */
   if (ii > 0)
     KI = ii;
   if (oo > 0)
@@ -855,7 +855,7 @@ static void DefaultParams (int lettres)
 {
   int                 i;
 
-  NC = 3;
+  NC = NB_PROPOSALS;
   for (i = 1; i < MAX_WORD_LEN; i++)
     {
       Seuil[i] = KI + KI * (i - 1) / lettres;

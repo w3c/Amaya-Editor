@@ -46,8 +46,6 @@
 #define THOT_EXPORT extern
 #include "spell_tv.h"
 
-#define NB_PROPOSALS 5
-
 #ifdef _WX
 #include "wxinclude.h"
 #include "wx/msgdlg.h" // wxMessageDialog
