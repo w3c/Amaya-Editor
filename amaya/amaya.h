@@ -535,7 +535,7 @@ THOT_EXPORT LoadedImageDesc *ImageLocal;
 /* a collection of the XML MIME types that keep changing and that we use in Amaya */
 
 #define AM_XHTML_MIME_TYPE        "application/xhtml+xml"
-#define AM_SVG_MIME_TYPE          "application/svg+xml"
+#define AM_SVG_MIME_TYPE          "image/svg+xml"
 #define AM_MATHML_MIME_TYPE       "application/mathml+xml"
 #define AM_GENERIC_XML_MIME_TYPE  "text/xml"
 
