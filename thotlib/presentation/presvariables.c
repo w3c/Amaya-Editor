@@ -337,10 +337,10 @@ boolean             Maximum;
 	     /* englobant l'element a numeroter */
 	     pEl = GetTypedAncestor (pElNum, TypeRank, pSS);
 	     if (pEl == NULL)
-		value = 0;	/* pas found' */
+		value = 0;	/* not found */
 	     else
 	       {
-		  /* Cherche le rang de l'element found' parmi ses freres */
+		  /* Compute the rank of the element found among its siblings*/
 		  if (initattr)
 		     value = valueinitattr;
 		  else
@@ -392,7 +392,7 @@ boolean             Maximum;
 	if (pEl == NULL)
 	   pEl = pElNum;
 
-	/* l'element found' est celui qui reinitialise le compteur 
+	/* l'element trouve' est celui qui reinitialise le compteur 
 	   Sa valeur est la valeur minimale du compteur */
 	if (initattr)
 	   value = valueinitattr;
@@ -411,13 +411,13 @@ boolean             Maximum;
 	     if (pEl == NULL)
 		pEl = pElNum;
 
-	     /* l'element found' est celui qui reinitialise le compteur */
+	     /* l'element trouve' est celui qui reinitialise le compteur */
 	     if (initattr)
 		value = valueinitattr;
 	     else
 		value = GetCounterValEl (pCo1, pEl, CntrSet, pSS);
 
-	     /* a partir de l'element found', cherche en avant tous les */
+	     /* a partir de l'element trouve', cherche en avant tous les */
 	     /* elements ayant le type qui incremente le compteur, */
 	     /* jusqu'a rencontrer un autre element qui reset le compteur */
 	     if (TypeIncr <= MAX_BASIC_TYPE)
@@ -432,7 +432,7 @@ boolean             Maximum;
 						pElNum->ElStructSchema);
 		     if (pEl != NULL)
 			if (EquivalentType (pEl, TypeIncr, pSchIncr))
-			   /* on a found' un element du type qui incremente */
+			   /* on a trouve' un element du type qui incremente */
 			   value += GetCounterValEl (pCo1, pEl, CntrAdd, pSS);
 		  }
 		while (pEl != NULL && !EquivalentType (pEl, TypeSet, pSS));
@@ -468,9 +468,9 @@ int                 view;
 #endif /* __STDC__ */
 
 {
-   int                 value, valueinitattr, level;
+   int                 value, valueinitattr, level, Nincr, incrVal;
    int                 TypeIncr, TypeSet, TypeRank, TypeRLevel;
-   PtrSSchema          pSchIncr;
+   PtrSSchema          pSchIncr, pSchSet;
    boolean             stop, pstop, initattr;
    PtrElement          pEl;
    Counter            *pCo1;
@@ -479,12 +479,13 @@ int                 view;
    PtrAttribute        pAttr;
    PtrElement          pElReinit;
 
-#define MaxAncetre 50
-   PtrElement          PcWithin[MaxAncetre];
+#define MaxAncestor 50
+   PtrElement          PcWithin[MaxAncestor];
 
    pCo1 = &pSchP->PsCounter[counterNum - 1];
    initattr = FALSE;		/* a priori, la valeur initiale du compteur ne
 				   depend pas d'un attribut. */
+   value = 0;
    pstop = TRUE;
    /* Traitement de la partie initialisation du compteur */
    initattr = InitCounterByAttribute (&valueinitattr, pCo1, pElNum, pSS);
@@ -494,7 +495,6 @@ int                 view;
      {
 	TypeRLevel = pCo1->CnItem[0].CiElemType;
 	pEl = pElNum;
-	value = 0;
 	/* parcourt les elements englobants de l'element sur lequel porte */
 	/* le calcul du compteur */
 	while (pEl != NULL)
@@ -606,7 +606,7 @@ int                 view;
 		     /* on compte les ascendants en descendant de la racine vers */
 		     /* l'element concerne'. Pour cela on commence par enregistrer */
 		     /* le chemin de l'element concerne' vers la racine */
-		     level = MaxAncetre;
+		     level = MaxAncestor;
 		  pEl = pElNum;
 		  while (level > 0 && pEl != NULL)
 		    {
@@ -628,7 +628,7 @@ int                 view;
 	     value = 0;
 	     if (pEl != NULL)
 	       {
-		  /* Cherche le rang de l'element found' parmi ses freres */
+		  /* Cherche le rang de l'element trouve' parmi ses freres */
 		  if (pEl->ElPrevious == NULL && pEl->ElNext == NULL)
 		     /* l'element dont on veut le rang n'a pas de frere... */
 		     if (pEl->ElParent != NULL)
@@ -689,39 +689,87 @@ int                 view;
 	/* type ou alias qui incremente */
 	TypeIncr = MakeAliasTypeCount (pCo1, CntrAdd, pSS);
 	pSchStr = pSS;
-
-	/* Cherche le premier element de type TypeSet */
-	/* englobant l'element a numeroter */
-	pEl = GetTypedAncestor (pElNum, TypeSet, pSS);
-	/* s'il n' y a pas d'ascendant du type requis alors on reste sur pElNum */
-	if (pEl == NULL)
-	   pEl = pElNum;
-
-	/* l'element found' est celui qui reinitialise le compteur */
 	if (initattr)
 	   value = valueinitattr;
-	else
-	   value = GetCounterValEl (pCo1, pEl, CntrSet, pSS);
 
-	/* a partir de l'element found', cherche en avant tous les */
-	/* elements ayant le type qui incremente le compteur, */
-	/* jusqu'a rencontrer l'element qui a cree la boite compteur. */
-	if (TypeIncr <= MAX_BASIC_TYPE)
-	   /* c'est un type de base, on le cherche quel que soit son schema */
-	   pSchIncr = NULL;
+	/* Cherche le premier element de type TypeSet englobant l'element */
+	/* a numeroter */
+	pEl = GetTypedAncestor (pElNum, TypeSet, pSS);
+	if (pEl != NULL)
+	  {
+	  /* l'element trouve' est celui qui reinitialise le compteur */
+	  if (!initattr)
+	      value = GetCounterValEl (pCo1, pEl, CntrSet, pSS);
+	  /* a partir de l'element trouve', cherche en avant tous les */
+	  /* elements ayant le type qui incremente le compteur, */
+	  /* jusqu'a rencontrer l'element qui a cree la boite compteur. */
+	  if (TypeIncr <= MAX_BASIC_TYPE)
+	     /* c'est un type de base, on le cherche quel que soit son schema*/
+	     pSchIncr = NULL;
+	  else
+	     pSchIncr = pSchStr; /* schema de struct. du type qui incremente */
+	  if (TypeIncr > 0)
+	     do
+	       {
+		  pEl = FwdSearchElem2Types (pEl, TypeIncr,
+					     pElNum->ElTypeNumber, pSchIncr,
+					     pElNum->ElStructSchema);
+		  if (pEl != NULL)
+		     if (EquivalentType (pEl, TypeIncr, pSchIncr))
+		        /* on a trouve' un element du type qui incremente */
+		        value += GetCounterValEl (pCo1, pEl, CntrAdd, pSS);
+	       }
+	     while (pEl != NULL && pEl != pElNum);
+	  }
+
 	else
-	   pSchIncr = pSchStr;	/* schema de struct. du type qui incremente */
-	if (TypeIncr > 0)
-	   do
+	  /* il n' y a pas d'ascendant du type qui initialise le compteur. */
+	  /* On compte tous les elements precedents de type TypeIncr */
+	  /* jusqu'a en trouver un de type TypeSet */
+	  {
+	  if (TypeSet <= MAX_BASIC_TYPE)
+	     /* c'est un type de base, on le cherche quel que soit son schema*/
+	     pSchSet = NULL;
+	  else
+	     pSchSet = pSchStr; /* schema de struct. du type qui initialise */
+	  if (TypeIncr <= MAX_BASIC_TYPE)
+	     /* c'est un type de base, on le cherche quel que soit son schema*/
+	     pSchIncr = NULL;
+	  else
+	     pSchIncr = pSchStr; /* schema de struct. du type qui incremente */
+	  pEl = pElNum;
+	  incrVal = 0;
+	  if (EquivalentType (pEl, TypeIncr, pSchIncr))
 	     {
-		pEl = FwdSearchElem2Types (pEl, TypeIncr, pElNum->ElTypeNumber, pSchIncr,
-					   pElNum->ElStructSchema);
-		if (pEl != NULL)
-		   if (EquivalentType (pEl, TypeIncr, pSchIncr))
-		      /* on a found' un element du type qui incremente */
-		      value += GetCounterValEl (pCo1, pEl, CntrAdd, pSS);
+	     Nincr = 1;
+	     incrVal = GetCounterValEl (pCo1, pEl, CntrAdd, pSS);
 	     }
-	   while (pEl != NULL && pEl != pElNum);
+	  else
+	     Nincr = 0;
+	  if (TypeSet > 0 && TypeIncr > 0)
+	     do
+	       {
+		  pEl = BackSearchElem2Types (pEl, TypeSet, TypeIncr, pSchSet,
+					      pSchIncr);
+		  if (pEl != NULL)
+		     if (EquivalentType (pEl, TypeIncr, pSchIncr))
+		        /* on a trouve' un element du type qui incremente */
+			{
+			Nincr++;
+			if (incrVal == 0)
+			   incrVal = GetCounterValEl (pCo1, pEl, CntrAdd, pSS);
+			}
+		     else if (EquivalentType (pEl, TypeSet, pSchSet))
+		        /* on a trouve' un element du type qui initialise */
+			{
+			if (!initattr)
+			   value = GetCounterValEl (pCo1, pEl, CntrSet, pSS);
+			pEl = NULL;	/* on arrete */
+			}
+	       }
+	     while (pEl != NULL);
+	  value += Nincr * incrVal;
+	  }
      }
 
    if (value < 0)
@@ -1015,7 +1063,7 @@ PtrDocument         pDoc;
 		      }
 		    while ((!found) && (pEl != NULL));
 		    if (pEl == NULL)
-		       i = 1;	/* pas found', on considere que c'est la page 1 */
+		       i = 1;	/* pas trouve', on considere que c'est la page 1 */
 		    else
 		       i = pEl->ElPageNumber;	/* numero de la page trouvee */
 		    /* traduit le numero de page en ASCII selon le style voulu */
