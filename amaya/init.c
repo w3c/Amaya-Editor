@@ -256,7 +256,8 @@ Document            document;
 	   if (TtaGetViewFrame (document, 1) != 0) 
 	     /* this document is displayed */
 	     {
-	       if(!(DocNetworkStatus[document] & AMAYA_NET_ERROR))
+	       if(!(DocNetworkStatus[document] & AMAYA_NET_ERROR) &&
+		  (DocNetworkStatus[document] & AMAYA_NET_ACTIVE))
 		 /* if there was no error message, display the LOADED message */
 		 TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
 	       TtaChangeButton (document, 1, 1, stopN);
@@ -1297,7 +1298,10 @@ DoubleClickEvent    DC_event;
 	     }
              FilesLoading[newdoc]++;
 	     res = newdoc;
+#else
+	     res = (Document) None;
 #endif /* AMAYA_JAVA */
+
 	     W3Loading = newdoc;	/* this document is currently in load */
 	     ActiveTransfer (newdoc);
 	     if (IsW3Path (pathname))
@@ -1361,7 +1365,7 @@ DoubleClickEvent    DC_event;
              FilesLoading[newdoc]--;
 	     newdoc = res;
 #else
-	     ResetStop(res);
+	     ResetStop( (res == (Document) None) ? newdoc : res);
 #endif /* AMAYA_JAVA */
 	  }
      }
@@ -1922,7 +1926,7 @@ NotifyEvent        *event;
 
    /* initialize document table */
    for (i = 1; i < DocumentTableLength; i++)
-      DocumentURLs[i] = NULL;
+       DocumentURLs[i] = NULL;
 
    CurrentDocument = 0;
    InNewWindow = FALSE;
