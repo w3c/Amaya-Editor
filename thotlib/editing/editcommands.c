@@ -3428,7 +3428,7 @@ void                TtcCutSelection (Document doc, View view)
    TtcCopyToClipboard (doc, view);
 
    if (!OpenClipboard (FrRef[frame]))
-     WinErrorBox (FrRef [frame], "TtcCutSelection (1"));
+     WinErrorBox (FrRef [frame], "TtcCutSelection (1)");
    else
      {
        EmptyClipboard ();

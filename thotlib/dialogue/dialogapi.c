@@ -225,7 +225,7 @@ void WinErrorBox (HWND hWnd, STRING source)
    if (msg >= NB_WIN_ERROR)
       usprintf (str, "Error %d : not registered\n", WinLastError);
    else
-     usprintf (str, "(source: %s Error %d : %s\n"), source, WinLastError,
+     usprintf (str, "(source: %s Error %d : %s\n)", source, WinLastError,
 	       win_errtab[msg].errstr);
 
    MessageBox (hWnd, str, "Amaya", MB_OK);
@@ -4332,13 +4332,13 @@ void          TtaSetToggleMenu (int ref, int val, ThotBool on)
 	  if (IsMenu (adbloc->E_ThotWidget[ent + val]))
 	    {
               if (CheckMenuItem (adbloc->E_ThotWidget[ent], ref + val + 1, MF_CHECKED) == 0xFFFFFFFF) 
-		WinErrorBox (NULL, "WIN_TtaSetToggleMenu (1"));
+		WinErrorBox (NULL, "WIN_TtaSetToggleMenu (1)");
 	    }
 	  else if (CheckMenuItem (hMenu, ref + val, MF_CHECKED) == 0xFFFFFFFF)
 	    {
 	      hMenu = GetMenu (owner);
 	      if (CheckMenuItem (hMenu, ref + val, MF_CHECKED) == 0xFFFFFFFF) 
-		WinErrorBox (NULL, "WIN_TtaSetToggleMenu (2"));
+		WinErrorBox (NULL, "WIN_TtaSetToggleMenu (2)");
 	    }
         }
       else
@@ -4350,7 +4350,7 @@ void          TtaSetToggleMenu (int ref, int val, ThotBool on)
 		{
                   if (IsMenu (adbloc->E_ThotWidget[ent + val]) &&
 		      CheckMenuItem (adbloc->E_ThotWidget[ent], ref + val + 1, MF_UNCHECKED) == 0xFFFFFFFF) 
-		      WinErrorBox (NULL, "WIN_TtaSetToggleMenu (3"));
+		      WinErrorBox (NULL, "WIN_TtaSetToggleMenu (3)");
 		}
 	    }
 	}
@@ -6670,7 +6670,7 @@ void                TtaShowDialogue (int ref, ThotBool remanent)
     {
       GetCursorPos (&curPoint);
       if (!TrackPopupMenu (w,  TPM_LEFTALIGN, curPoint.x, curPoint.y, 0, currentParent, NULL))
-	WinErrorBox (WIN_Main_Wd, "TtaShowDialogue (1"));
+	WinErrorBox (WIN_Main_Wd, "TtaShowDialogue (1)");
     }
   else
     {

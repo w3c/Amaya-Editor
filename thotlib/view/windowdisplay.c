@@ -1000,7 +1000,7 @@ void DrawParenthesis (int frame, int thick, int x, int y, int l, int h,
 	  /* draw a closing parenthesis */
 	  xm = x + ((l - CharacterWidth (')', font)) / 2);
 	  yf = y + ((h - CharacterHeight (')', font)) / 2) - FontAscent (font) + CharacterAscent (')', font);
-	  DrawChar (''), frame, xm, yf, font, fg);
+	  DrawChar (')', frame, xm, yf, font, fg);
 	}
     }
   else

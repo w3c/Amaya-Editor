@@ -310,7 +310,7 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
   ptEnd.x = x3;
   ptEnd.y = y3;
   if (!SetCursorPos (lastx + rect.left, lasty + rect.top))
-    WinErrorBox (w, "AddPoints (1"));
+    WinErrorBox (w, "AddPoints (1)");
   SetCursor (LoadCursor (NULL, IDC_CROSS));
 #else /* !_WINDOWS */
   e = ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
@@ -358,7 +358,7 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
 		newy = y + height;
 	  
 	      if (!SetCursorPos (newx + rect.left, newy + rect.top))
-		WinErrorBox (w, "AddPoints (2"));
+		WinErrorBox (w, "AddPoints (2)");
 	    }
 
          /* refresh the display of teh two adjacent segments */
@@ -442,7 +442,7 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
 		{
 		  /* align the cursor position */
 		  if (!SetCursorPos (lastx + rect.left, lasty + rect.top))
-		    WinErrorBox (w, "AddPoints (3"));
+		    WinErrorBox (w, "AddPoints (3)");
 		  wrap = FALSE;		  
 		}
 	      break;
@@ -697,7 +697,7 @@ static void MoveApoint (int frame, int x, int y, int x1, int y1, int x3,
   ptEnd.y = y3;
   SetCursor (LoadCursor (NULL, IDC_CROSS));
   if (!SetCursorPos (lastx + rect.left, lasty + rect.top))
-    WinErrorBox (w, "MoveAPoint (1"));
+    WinErrorBox (w, "MoveAPoint (1)");
 #else /* !_WINDOWS */
   e = ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
   XMapRaised (TtDisplay, w);
@@ -741,7 +741,7 @@ static void MoveApoint (int frame, int x, int y, int x1, int y1, int x3,
 	    newy = y + height;
 	  
 	  if (!SetCursorPos (newx, newy))
-	    WinErrorBox (w, "MoveAPoint (2"));
+	    WinErrorBox (w, "MoveAPoint (2)");
 	}
 	  
       GetMessage (&event, NULL, 0, 0);

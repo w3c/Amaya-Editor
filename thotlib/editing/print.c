@@ -1674,7 +1674,7 @@ static void PrintView (PtrDocument pDoc)
        if (TtPrinterDC)
 	 {
 	   if ((StartPage (TtPrinterDC)) <= 0)
-	     WinErrorBox (NULL, "PrintView (1"));
+	     WinErrorBox (NULL, "PrintView (1)");
 	 }
        else
 #endif /* _WINDOWS */
@@ -1793,8 +1793,7 @@ static int PrintDocument (PtrDocument pDoc, int viewsCounter)
     /* ... and inform the driver */
     Escape (TtPrinterDC, SET_BOUNDS, sizeof (RECT), (LPSTR)&Rect, NULL);
     
-    if (!InitPrinting (TtPrinterDC, WIN_Main_Wd, hCurrentInstance, NULL))
-      WinErrorBox (NULL, "PrintDocument (1"));
+    InitPrinting (TtPrinterDC, WIN_Main_Wd, hCurrentInstance, NULL);
     }
 #endif /* _WINDOWS */
 
@@ -1958,7 +1957,7 @@ static int PrintDocument (PtrDocument pDoc, int viewsCounter)
   if (TtPrinterDC)
     {
     if ((EndDoc (TtPrinterDC)) <= 0)
-      WinErrorBox (NULL, "PrintDocument (2"));
+      WinErrorBox (NULL, "PrintDocument (2)");
     
     /*DeleteDC (TtPrinterDC);*/
     TtPrinterDC = NULL;
@@ -2038,7 +2037,7 @@ static int       n = 1;
   if (TtPrinterDC)
     {
       if ((StartPage (TtPrinterDC)) <= 0)
-        WinErrorBox (NULL, "PrintOnePage (1"));
+        WinErrorBox (NULL, "PrintOnePage (1)");
     }
   else
 #endif /* _WINDOWS */
@@ -2695,20 +2694,19 @@ int                 main (int argc, char **argv)
    if (removeDirectory)
     {
 #ifdef _WINDOWS
-      if (!ustrcmp (destination, "PSFILE") && !DeleteFile (cmd))
-         WinErrorBox (NULL, "PrintDoc (1"));
+      if (!ustrcmp (destination, "PSFILE"))
+		  DeleteFile (cmd);
       else {
            int cssNDX;
            STRING pivDoc = TtaAllocString (ustrlen (tmpDocName) + ustrlen (tmpDir) + 6);
            usprintf (pivDoc, "%s\\%s.PIV", tmpDir, tmpDocName); 
-           if (!DeleteFile (pivDoc))
-              WinErrorBox (NULL, "PrintDoc (2"));
+           DeleteFile (pivDoc);
            for (cssNDX = 0; cssNDX < MAX_CSS; cssNDX++)
-               if (CSSName[cssNDX] && CSSName[cssNDX][0] != EOS && TtaFileExist (CSSName[cssNDX]))
-                  if (!DeleteFile (CSSName[cssNDX]))
-                     WinErrorBox (NULL, "PrintDoc (3")); 
+               if (CSSName[cssNDX] && CSSName[cssNDX][0] != EOS &&
+				   TtaFileExist (CSSName[cssNDX]))
+                  DeleteFile (CSSName[cssNDX]); 
            if (urmdir (tempDir))
-              WinErrorBox (NULL, "PrintDoc (4"));
+              WinErrorBox (NULL, "PrintDoc (4)");
       }
 #else  /* _WINDOWS */
       sprintf (cmd, "/bin/rm -rf %s\n", tempDir);

@@ -234,7 +234,7 @@ Drawable            JpegCreate (CHAR_T *fn, PictInfo *imageDesc, int *xif, int *
   if (!buffer)
     {
 #ifdef _WINDOWS 
-      WinErrorBox (NULL, "JpegCreate(1: buffer == 0x00000000"));
+      WinErrorBox (NULL, "JpegCreate(1)");
 #endif /* _WINDOWS */
       return ((Drawable) NULL);
     }
@@ -275,7 +275,7 @@ Drawable            JpegCreate (CHAR_T *fn, PictInfo *imageDesc, int *xif, int *
   TtaFreeMemory (buffer);  
   if (pixmap == None) {
 #ifdef _WINDOWS
-     WinErrorBox (NULL, "JpegCreate(2: pixmap == 0x00000000"));
+     WinErrorBox (NULL, "JpegCreate(2)");
 #endif /* _WINDOWS */
     return ((Drawable) NULL);
   }

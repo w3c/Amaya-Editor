@@ -1373,7 +1373,7 @@ Drawable GifCreate (CHAR_T* fn, PictInfo *imageDesc, int *xif, int *yif,
   if (buffer == NULL)
     {
 #ifdef _WINDOWS
-      WinErrorBox (NULL, "GifCreate(1: buffer == 0x00000000"));
+      WinErrorBox (NULL, "GifCreate(1)");
 #endif /* _WINDOWS */
       return ((Drawable) NULL);
     }
@@ -1437,7 +1437,7 @@ Drawable GifCreate (CHAR_T* fn, PictInfo *imageDesc, int *xif, int *yif,
   if (pixmap == None)
     {
 #ifdef _WINDOWS
-      WinErrorBox (NULL, "GifCreate(2: pixmap == 0x00000000"));
+      WinErrorBox (NULL, "GifCreate(2)");
 #endif /* _WINDOWS */
       return ((Drawable) NULL);
     }

@@ -929,7 +929,7 @@ static ptrfont LoadNearestFont (char alphabet, char family, int highlight,
 		}
 	      /* SelectObject (TtDisplay, hOldFont); */
 	      if (!DeleteObject (SelectObject (TtDisplay, ActiveFont)))
-		WinErrorBox (NULL, "LoadNearestFont (1"));
+		WinErrorBox (NULL, "LoadNearestFont (1)");
 	      ActiveFont = 0;
 	    }
 #else  /* _WINDOWS */
