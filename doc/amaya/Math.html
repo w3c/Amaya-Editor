@@ -44,21 +44,28 @@ entering mathematical constructs.</p>
 <p>To create a mathematical expression in a document, just <a
 href="Selecting.html#Selecting">move the insertion point</a> (the caret) to
 the position where you want to insert that expression, and then click the
-<strong>Math</strong> button (the rightmost button), or select the last entry
-(Math) from the <strong>Types</strong> menu. The <strong>Math</strong> button
-displays a palette that stays on the screen until you click the Done button.
-The item Math from the <strong>Types</strong> menu displays a popup menu. Just
-choose the most convenient tool. Both allow you to select the mathematical
-construct to be inserted.</p>
+<strong>Math</strong> button (the rightmost button), or select the
+<strong>Math</strong> entry from the <strong>Types</strong> menu. The
+<strong>Math</strong> button displays a palette that stays on the screen until
+you click the Done button. The item <strong>Mat</strong>h from the
+<strong>Types</strong> menu displays a popup menu. Just choose the most
+convenient tool. Both allow you to select the mathematical construct to be
+inserted.</p>
 
 <p>In the Math palette (or menu) the first item allows you to create a new
 formula when the caret is in some HTML element (but the caret should not be
-within a MathML element)</p>
+within a MathML element).</p>
+
+<p>In the <strong>Math</strong> menu (not available in the palette), the next
+items allow you to create new basic elements: Plain text (<code>mtext</code>),
+Identifier (<code>mi</code>), Number (<code>mn</code>), Operator
+(<code>mo</code>). You can also use these commands to change the type of a
+single element or a sequence of elements.</p>
 
 <p>The next items of the <strong>Math</strong> menu (or palette) allow you to
 create new constructs within a formula. If the caret is not in a formula, a
 <code>Math</code> element is created first to accept the new construct. The
-available constructs are, from top to bottom:</p>
+available constructs are:</p>
 <ul>
   <li>Root with index, <code>mroot</code> in MathML:  <math>
       <mroot>
@@ -206,9 +213,9 @@ available constructs are, from top to bottom:</p>
 </ul>
 
 <p>The last item of the <strong>Math</strong> palette (<math>
-  <mi>&alpha;</mi>
+  <mi>&alpha;&beta;&gamma;</mi>
 </math>
- ) displays another palette from which you can insert mathematical symbols and
+) displays another palette from which you can insert mathematical symbols and
 greek characters.</p>
 
 <h4><a name="Entering">Entering constructs from the keyboard</a></h4>
@@ -244,6 +251,11 @@ item of the <strong>Math</strong> menu, if you are not in a mathematical
 expression) and you will get the following structure (you can check in the <a
 href="#Math_Struc">Math_Structure view</a>):</p>
 <pre>&lt;mi>x&lt;/mi>&lt;mo>=&lt;/mo>&lt;mn>2&lt;/mn>&lt;mi>a&lt;/mi>&lt;mo>+&lt;/mo>&lt;mi>b&lt;/mi></pre>
+
+<p>If the result is not exactly what you want, just select the characters that
+have been misinterpreted and change their type with one of the commands Plain
+text (mtext), Identifier (mi), Number (mn), Operator (mo) from the Types/Math
+menu.</p>
 
 <h3>Structure editing</h3>
 
