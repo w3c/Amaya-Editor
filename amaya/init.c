@@ -2041,7 +2041,7 @@ boolean		    history;
 	       else {
 		 /* wasn't a document off the web, we need to open it */
 		 TtaSetStatus (newdoc, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
-		 GetHTMLDocument_callback (newdoc, 1,
+		 GetHTMLDocument_callback (newdoc, 0,
 					   pathname,
 					   tempfile, 
 					   NULL,
@@ -2055,13 +2055,11 @@ boolean		    history;
    /* if the document couldn't be opened because of an error, we invoke
       the callback anyway, to free the allocated memory */
    if (ok == FALSE)
-     {
-       GetHTMLDocument_callback (newdoc, -1,
-				 pathname,
-				 tempfile, 
-				 NULL,
-				 (void *) ctx);
-     }
+     GetHTMLDocument_callback (newdoc, -1,
+			       pathname,
+			       tempfile, 
+			       NULL,
+			       (void *) ctx);
 
    /* so if we got here, we need to free the memory */
 
