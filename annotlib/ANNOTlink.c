@@ -424,7 +424,7 @@ ThotBool LINK_AddLinkToSource (Document source_doc, AnnotMeta *annot)
   /* Verify that the annotates property really does point to this document
      and discard if not (or if there is no annotates property). */
   if (!Annot_isSameURL (annot->source_url, DocumentURLs[source_doc]))
-    return 1;			/* treat this as not orphanned */
+    return TRUE;		/* treat this as not orphanned */
 
   /* create the anotation element */
   XLinkSchema = GetXLinkSSchema (source_doc);
