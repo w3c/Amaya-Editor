@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 <head>
 <title>
@@ -12,51 +12,79 @@ Configuring Amaya</title>
 <div id="head">
 <p>
 <a href="../../"><img border="0" alt="W3C" src="../..//Icons/WWW/w3c_home">
-</a> <a href="../"><img border="0" alt="Amaya" src="../Icons/amaya.gif"></a> <a
-href="Manual.html"><img alt="Doc" border="0" src="../Icons/doc48x.gif"></a></p>
+</a> <a href="../"><img border="0" alt="Amaya" src="../Icons/amaya.gif"></a>
+<a href="Manual.html"><img alt="Doc" border="0"
+src="../Icons/doc48x.gif"></a></p>
 </div>
 
 <div id="Configuring">
 
 <h1>Configuring Amaya</h1>
 <p>
-This document explains how to configure <strong>Amaya</strong>. A user
-configures <strong>Amaya</strong> by means of the <a name="registry">registry
-file</a> <code>$HOME/.thotrc</code> . In this file there is a section
-<code>[amaya]</code> where user can change configuration options
-concerning:</p>
+<strong>Amaya</strong> uses different configuration files to get initial
+values for global parameters, dialogue strings, shortcuts, windows size and
+position. Each Amaya user can change these different default values by
+creating or updating his/her own configuration files:</p>
 <ul>
 <li>
-default <a href="#L138">home page</a>, 
+The <a name="registry">registry file</a> <strong>$HOME/.thotrc</strong> is
+used to define global parameters of Thot applications (Amaya is a Thot
+application). On Windows version, the user has to edit directly the default
+registry file Thot/config/thot.ini. In the registry file there is a section
+<code>[amaya]</code> where user can change configuration options concerning:
+<a href="#L138">the default home page</a>,<a href="#L139"> default
+colors</a>,<a href="#L140"> the colors palette</a>, <a href="#L141">the
+dialogue language</a>, where is the personal dictionary and<a href="#L242">
+the default printer command</a>.
 <li>
-<a href="#L139">default colors</a>, 
+The keyboard file <strong>$HOME/amaya.keyboard</strong> defines specific <a
+href="#L236">Amaya shortcuts</a>. On Windows version, the user has to edit
+directly the default keyboard file Thot/config/amaya.keyboard.
 <li>
-<a href="#L140">colors palette</a>, and 
-<li>
-<a href="#L141">dialogue language</a>. and personal dictionary 
-<li>
-<a href="#L242">printer command</a> 
-<li>
-<a href="#L236">keyboard shortcuts</a> 
+The HTML configuration file <strong>$HOME/HTML.conf</strong> defines <a
+href="#HTML">position and size</a> of HTML document windows. On Windows
+version, the user has to edit directly the default configuration file
+Thot/amaya/HTML.conf.
 </ul>
-<hr>
 
-<h2><a name="L138">Home Page</a></h2>
+<h3><a name="L138">Home Page</a></h3>
 <p>
-You can change the default home page of <strong>Amaya</strong> by defining the
+You can change the default home page of <strong>Amaya</strong> by editing the
 <code>HOME_PAGE</code> variable in the <a href="#registry">registry</a>.</p>
 
-<h2><a name="L139">Default Colors</a></h2>
+<h3><a name="HTML">HTML Windows</a></h3>
+<p>
+Parameters related to the particular schema HTML are stored in the HTML.conf
+file. In that file there are different sections, one by Presentation Schema,
+that allows user to control position and size of document windows defined by
+the presentation schema:</p>
+<ul>
+<li>
+Each presentation schema name is introduced by the keyword 'style".
+<li>
+The keyword "open" declares the main view of the document. It's always the
+"Formatted-view" for HTML documents.
+<li>
+The keyword "geometry" declares other available views.
+</ul>
+<p>
+For each view, in both sections "open" and "geometry", there is a list of four
+parameters associated to the x_position, the y_position, the width and the
+height of that view. The x-position and y_position are automartically
+incremented by Amaya to display diffent document views at different places on
+the screen.</p>
+
+<h3><a name="L139">Default Colors</a></h3>
 <p>
 User interface colors have default values that can be modified in the <a
 href="#registry">registry file</a> of the user. The following parameters are
 used:</p>
 <ul>
 <li>
-<code>BackgroundColor=</code> background color of document windows. 
+<code>BackgroundColor=</code> background color of document windows.
 <li>
 <code>DocSelectColor=</code> background color of the selected part and of the
-insertion cursor. 
+insertion cursor.
 <p>
 <em>The default value for Black and White screens is
 </em><code>Black</code><em>. If you can't see a selection in your screen,
@@ -64,21 +92,21 @@ change this value to </em><code>White</code><em>.</em></p>
 </ul>
 <ul>
 <li>
-<code>ForegroundColor=</code> default color of text in documents. 
+<code>ForegroundColor=</code> default color of text in documents.
 <li>
 <code>MenuBgColor=</code> Background color of: menu bars at the top of
 windows, the area where the selection message is displayed at the top of
-document windows, menus, dialogue boxes. 
+document windows, menus, dialogue boxes.
 <li>
-<code>ButtonColor=</code> background color of buttons in dialogue forms. 
+<code>ButtonColor=</code> background color of buttons in dialogue forms.
 <li>
-<code>ScrollColor=</code> color of the scrolling bars. 
+<code>ScrollColor=</code> color of the scrolling bars.
 </ul>
 <p>
 Once the <code>.thotrc</code> file has been modified, restart
 <strong>Amaya</strong>.</p>
 
-<h2><a name="L140">Colors Palette</a></h2>
+<h3><a name="L140">Colors Palette</a></h3>
 <p>
 CSS allows the user to color documents with one of the 152 predefined colors.
 During initialization, the editor loads its color table to present them in a
@@ -86,21 +114,45 @@ palette. The number of colors loaded by the editor can be divided by two by
 editing the  <code>.thotrc</code>  file.</p>
 <ul>
 <li>
-<code>ReduceColor= yes</code> 
+<code>ReduceColor= yes</code>
 </ul>
 <p>
 Once the <code>.thotrc</code> file has been modified, restart
 <strong>Amaya</strong>.</p>
 
-<h2><a name="L141">Dialogue Language</a></h2>
+<h3><a name="L141">Dialogue Language</a></h3>
 <p>
-The dialogue language is defined by the  <code>LANG</code> <a
-href="#registry">registry</a> variable. The default language is English (value
-<code>en_US</code>).</p>
+The dialogue language is defined by the variable <code>LANG</code> in the <a
+href="#registry">registry file</a>. The default language is English (value
+<code>en_US</code>). At the moment, only two languages are available: English
+(en) and French (fr). At start time, Amaya loads dialogue files according to
+the current dialogue language: en- files or fr- files. These dialogue files
+are located in the directory Thot/config.</p>
 <p>
-For other languages support, please contact us.</p>
+Dialogue information related to the particular schema HTML is stored in the
+<strong>Thot/amaya/HTML.code</strong> file (code=en or code=fr). That file
+includes 4 sections:</p>
+<ul>
+<li>
+<strong>extension:</strong> not used by Amaya
+<li>
+<strong>presentation:</strong> give the text displayed for each presentation
+schema
+<li>
+<strong>export</strong>: give the text displayed for each translation schema
+("Save As" command)
+<li>
+<strong>translation</strong>: give the text displayed for each element and
+attribute in the Thot HTML structure.
+</ul>
+<p>
+It's possible to adapt Amaya to new ISO-Latin-1 languages by writing
+corresponding dialogue files. These dialogue files have to be located in the
+same directory Thot/config, and must use the right ISO 639 code as a prefix
+(it- for Italian, de- for German, etc.). The specific HTML.code file has also
+to be created.</p>
 
-<h2><a name="L242">Printer command</a></h2>
+<h3><a name="L242">Printer command</a></h3>
 <p>
 The standard printer command is defined by the <code>THOTPRINTER</code> <a
 href="#registry">registry</a> variable. If this command is not well adapted of
@@ -108,7 +160,7 @@ the current system, the user have to update it before printing using the
 "Print Setup" command or change this variable in the <a
 href="#registry">registry</a>.</p>
 
-<h2><a name="L236">Keyboard Shortcuts</a></h2>
+<h3><a name="L236">Keyboard Shortcuts</a></h3>
 <p>
 It is convenient to be able to invoke menu commands from the keyboard. The
 Thot toolkit provides a facility that let user accomplish this. When the
@@ -134,35 +186,34 @@ See standard amaya.keyboard  file in bin directory.</p>
 The list of available commands is:</p>
 <ul>
 <li>
-Moving commands: 
+Moving commands:
 <ul>
 <li>
-TtcNextChar, TtcPreviousChar: move chararcter by character. 
+TtcNextChar, TtcPreviousChar: move chararcter by character.
 <li>
 TtcNextLine, TtcPreviousLine, TtcStartOfLine, TtcEndOfLine: move line by line.
-
 <li>
 TtcNextElement, TtcPreviousElement, TtcChildElement, TtcParentElement: move
-element by element. 
+element by element.
 <li>
-TtcPageDown, TtcPageUp, TtcPageTop, TtcPageEnd: move page to page. 
+TtcPageDown, TtcPageUp, TtcPageTop, TtcPageEnd: move page to page.
 </ul>
 <li>
-In <code>File</code> menu: 
+In <code>File</code> menu:
 <p>
 New, OpenDoc, OpenDocInNewWindow, Reload, SaveDocument, SaveDocumentAs,
 TtcPrint, TtcPrintSetUp, TtcCloseDocument, AmayaClose</p>
 <li>
-In Edit menu: 
+In Edit menu:
 <p>
 TtcCutSelection, TtcCopySelection, TtcPaste, TtcDeleteSelection,
 TtcSearchText, EnSpellCheck, FrSpellCheck.</p>
 <li>
-In <code>Structure Types</code> menu: 
+In <code>Structure Types</code> menu:
 <p>
 CreateIsIndex, CreateBase, CreateMeta, CreateLinkInHead, CreateComment.</p>
 <li>
-In Types menu: 
+In Types menu:
 <p>
 CreateParagraph, CreateImage, CreateHeading1, CreateHeading2, CreateHeading3,
 CreateHeading4, CreateHeading5, CreateHeading6, CreateList,
@@ -175,16 +226,16 @@ CreateTextInput, CreateTextArea, CreateCommandLine, CreateAreaRect,
 CreateAreaPoly, CreateDivision, CreateApplet, CreateParameter,
 TransformType.</p>
 <li>
-In <code>Links</code> menu: 
+In <code>Links</code> menu:
 <p>
 CreateLink, CreateTarget, ChangeLink, DeleteAnchor.</p>
 <li>
-In Views menu: 
+In Views menu:
 <p>
 TtcSwitchButtonBar, TtcSwitchCommands, ShowStructure, ShowAlternate,
 ShowMapAreas.</p>
 <li>
-In <code>Style</code> menu: 
+In <code>Style</code> menu:
 <p>
 TtcChangeCharacters, TtcChangeColors, TtcChangeFormat, ChangeClass,
 ApplyClass, InitCSSDialog, CreateElemEmphasis, CreateElemStrong,
@@ -193,7 +244,7 @@ CreateElemSample, CreateElemItalic, CreateElemBold, CreateElemTeletype,
 CreateElemStrikeOut, CreateElemBig, CreateElemSmall, CreateSub, CreateSup,
 CreateElemFont.</p>
 <li>
-In <code>Help</code> menu: 
+In <code>Help</code> menu:
 <p>
 HelpAmaya, HelpBrowsing, HelpSelecting, HelpSearching, HelpViews,
 HelpCreating, HelpLinks, HelpChanging, HelpTables, HelpImageMaps,
