@@ -488,10 +488,13 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg,
   HWND            hwnRButton;
   HWND            hwnDefaultColors;
   HWND            doneButton;
+  HFONT           newFont;
 
   switch (iMsg)
     {
     case WM_CREATE:
+	  /* get the default GUI font */
+      newFont = GetStockObject (DEFAULT_GUI_FONT) ; 
       cxBlock = 39;
       cyBlock = 15;
       hwnLButton = CreateWindow ("STATIC",
@@ -500,6 +503,9 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg,
 				 : TtaGetMessage (LIB, TMSG_CPBUTTON_1), 
 				 WS_CHILD | WS_VISIBLE | SS_LEFT, 0, 0, 320, 20,
 				 hwnd, (HMENU) 99, hInstance, NULL);
+	  /* set the font of the window */
+      if(newFont)
+         SendMessage(hwnLButton, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(TRUE, 0));
       ShowWindow (hwnLButton, SW_SHOWNORMAL);
       UpdateWindow (hwnLButton);
       
@@ -509,12 +515,18 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg,
 				 : TtaGetMessage (LIB, TMSG_CPBUTTON_2), 
 				 WS_CHILD | WS_VISIBLE | SS_LEFT, 0, 20, 320, 20,
 				 hwnd, (HMENU) 101, hInstance, NULL);
+	  /* set the font of the window */
+      if(newFont)
+         SendMessage(hwnRButton, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(TRUE, 0));
       ShowWindow (hwnRButton, SW_SHOWNORMAL);
       UpdateWindow (hwnRButton);
       
       hwnDefaultColors = CreateWindow ("STATIC", TtaGetMessage (LIB, TMSG_STD_COLORS), 
 				       WS_CHILD | WS_VISIBLE | SS_CENTER | WS_BORDER, 0, 40, 320, 20,
-				       hwnd, (HMENU) DEFAULTCOLOR, hInstance, NULL); 
+				       hwnd, (HMENU) DEFAULTCOLOR, hInstance, NULL);
+	  /* set the font of the window */
+      if(newFont)
+         SendMessage(hwnDefaultColors, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(TRUE, 0));
       ShowWindow (hwnDefaultColors, SW_SHOWNORMAL);
       UpdateWindow (hwnDefaultColors);
       
@@ -522,6 +534,9 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg,
 				 WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
 				 95, 350, 80, 20, hwnd, 
 				 (HMENU) _IDDONE_, hInstance, NULL);
+	  /* set the font of the window */
+	  if(newFont)
+         SendMessage(doneButton, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(TRUE, 0));
       ShowWindow (doneButton, SW_SHOWNORMAL);
       UpdateWindow (doneButton);
       break;
@@ -651,7 +666,7 @@ ThotBool ThotCreatePalette (int x, int y)
          wndThotPaletteClass.hInstance     = hInstance;
          wndThotPaletteClass.hIcon         = LoadIcon (NULL, iconID);
          wndThotPaletteClass.hCursor       = LoadCursor (NULL, IDC_ARROW);
-         wndThotPaletteClass.hbrBackground = (HBRUSH) GetStockObject (WHITE_BRUSH);
+         wndThotPaletteClass.hbrBackground = (HBRUSH) GetStockObject (LTGRAY_BRUSH);
          wndThotPaletteClass.lpszMenuName  = NULL;
          wndThotPaletteClass.lpszClassName = "ThotColorPalette";
          wndThotPaletteClass.cbSize        = sizeof(WNDCLASSEX);
