@@ -65,13 +65,11 @@ CONST CHAR_T*       filename;
 #  ifdef _I18N_
    char        mbs_filename[2 * MAX_TXT_LEN];
 #  else  /* !_I18N_ */
-   char*       mbs_filename;
+   char*       mbs_filename = filename;
 #  endif /* !_I18N_ */
 
 #  ifdef _I18N_
    wcstombs (mbs_filename, filename, 2 * MAX_TXT_LEN);
-#  else  /* !_I18N_ */
-   mbs_filename = filename;
 #  endif /* !_I18N_ */
 
 #  ifdef _WINDOWS

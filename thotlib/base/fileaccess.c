@@ -339,7 +339,7 @@ CONST CHAR_T*       filename;
 #  ifdef _WINDOWS 
    char*   mode = "rb";
 #  else  /* !_WINDOWS */
-   char    mode = "r";
+   char*   mode = "r";
 #  endif /* !_WINDOWS */
 
 #  ifdef _I18N_
@@ -551,7 +551,7 @@ DocumentIdentifier  Ident;
    j = 1;
    while (j < MAX_DOC_IDENT_LEN && Ident[j - 1] != EOS)
          {
-#            if defined(_I18N_) && defined(_WINDOWS)
+#            ifdef _I18N_
              WCcar = Ident[j - 1];
              nbBytes = wctomb (mbcstr, WCcar);
              switch (nbBytes) {
@@ -562,9 +562,9 @@ DocumentIdentifier  Ident;
                             break;
                     default: break;
              }
-#            else  /* !(defined(_I18N_) && defined(_WINDOWS)) */
+#            else  /* !_I18N_ */
              TtaWriteByte (file, Ident[j - 1]);
-#            endif /* !(defined(_I18N_) && defined(_WINDOWS)) */
+#            endif /* !_I18N_ */
              j++;
          }
    /* termine le nom par un octet nul */
