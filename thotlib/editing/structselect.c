@@ -2075,8 +2075,7 @@ void           AddInSelection (PtrElement pEl, ThotBool last)
       while (ok && i <= NSelectedElements);
       if (NSelectedElements < MAX_SEL_ELEM && ok)
 	{
-	  NSelectedElements++;
-	  SelectedElement[NSelectedElements - 1] = pEl;
+	  SelectedElement[NSelectedElements++] = pEl;
 	  LastSelectedElement = pEl;
 	  /* highlight the new selected element in all views where is */
 	  /* is visible */

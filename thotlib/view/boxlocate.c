@@ -46,6 +46,7 @@
 #include "frame_f.h"
 #include "geom_f.h"
 #include "hyphen_f.h"
+#include "memory_f.h"
 #include "presentationapi_f.h"
 #include "structcreation_f.h"
 #include "structselect_f.h"
@@ -58,6 +59,18 @@
 
 #define Y_RATIO 200		/* penalisation en Y */
 #define ANCHOR_SIZE 3		/* taille des ancres */
+#define	MAX_STACK	50
+#define	MIDDLE_OF(v1, v2) (((v1)+(v2))/2.0)
+#define SEG_SPLINE      5
+#define ALLOC_POINTS    300
+
+typedef struct stack_point
+  {
+     float               x1, y1, x2, y2, x3, y3, x4, y4;
+  }
+StackPoint;
+static StackPoint   stack[MAX_STACK];
+static int          stack_deep;
 
 /*----------------------------------------------------------------------
   LocateSelectionInView finds out the selected Abstract Box and if it's
@@ -204,6 +217,162 @@ int    GetBoxDistance (int xRef, int yRef, int x, int y, int width, int height)
 }
 
 /*----------------------------------------------------------------------
+  PolyNewPoint : add a new point to the current polyline.
+  ----------------------------------------------------------------------*/
+ThotBool    PolyNewPoint (int x, int y, ThotPoint **points, int *npoints,
+			  int *maxpoints)
+{
+   ThotPoint          *tmp;
+   int                 size;
+
+   if (*npoints >= *maxpoints)
+     {
+	size = *maxpoints + ALLOC_POINTS;
+	if ((tmp = (ThotPoint*)realloc(*points, size * sizeof(ThotPoint))) ==0)
+	   return (FALSE);
+	else
+	  {
+	     /* la reallocation a reussi */
+	     *points = tmp;
+	     *maxpoints = size;
+	  }
+     }
+   /* ignore identical points */
+   if (*npoints > 0 &&
+       (*points)[*npoints - 1].x == x && (*points)[*npoints - 1].y == y)
+      return (FALSE);
+
+   (*points)[*npoints].x = x;
+   (*points)[*npoints].y = y;
+   (*npoints)++;
+   return (TRUE);
+}
+
+/*----------------------------------------------------------------------
+  PushStack : push a spline on the stack.
+  ----------------------------------------------------------------------*/
+static void  PushStack (float x1, float y1, float x2, float y2, float x3,
+			float y3, float x4, float y4)
+{
+   StackPoint         *stack_ptr;
+
+   if (stack_deep == MAX_STACK)
+      return;
+
+   stack_ptr = &stack[stack_deep];
+   stack_ptr->x1 = x1;
+   stack_ptr->y1 = y1;
+   stack_ptr->x2 = x2;
+   stack_ptr->y2 = y2;
+   stack_ptr->x3 = x3;
+   stack_ptr->y3 = y3;
+   stack_ptr->x4 = x4;
+   stack_ptr->y4 = y4;
+   stack_deep++;
+}
+
+/*----------------------------------------------------------------------
+  PopStack : pop a spline from the stack.
+  ----------------------------------------------------------------------*/
+static ThotBool PopStack (float *x1, float *y1, float *x2, float *y2,
+			  float *x3, float *y3, float *x4, float *y4)
+{
+   StackPoint         *stack_ptr;
+
+   if (stack_deep == 0)
+      return (FALSE);
+
+   stack_deep--;
+   stack_ptr = &stack[stack_deep];
+   *x1 = stack_ptr->x1;
+   *y1 = stack_ptr->y1;
+   *x2 = stack_ptr->x2;
+   *y2 = stack_ptr->y2;
+   *x3 = stack_ptr->x3;
+   *y3 = stack_ptr->y3;
+   *x4 = stack_ptr->x4;
+   *y4 = stack_ptr->y4;
+   return (TRUE);
+}
+
+/*----------------------------------------------------------------------
+  PolySplit : split a polyline and push the results on the stack.
+  ----------------------------------------------------------------------*/
+void        PolySplit (float a1, float b1, float a2, float b2,
+		       float a3, float b3, float a4, float b4,
+		       ThotPoint **points, int *npoints, int *maxpoints)
+{
+   register float      tx, ty;
+   float               x1, y1, x2, y2, x3, y3, x4, y4;
+   float               sx1, sy1, sx2, sy2;
+   float               tx1, ty1, tx2, ty2, xmid, ymid;
+
+   stack_deep = 0;
+   PushStack (a1, b1, a2, b2, a3, b3, a4, b4);
+
+   while (PopStack (&x1, &y1, &x2, &y2, &x3, &y3, &x4, &y4))
+     {
+	if (fabs (x1 - x4) < SEG_SPLINE && fabs (y1 - y4) < SEG_SPLINE)
+	   PolyNewPoint (FloatToInt (x1), FloatToInt (y1), points, npoints,
+			 maxpoints);
+	else
+	  {
+	     tx   = (float) MIDDLE_OF (x2, x3);
+	     ty   = (float) MIDDLE_OF (y2, y3);
+	     sx1  = (float) MIDDLE_OF (x1, x2);
+	     sy1  = (float) MIDDLE_OF (y1, y2);
+	     sx2  = (float) MIDDLE_OF (sx1, tx);
+	     sy2  = (float) MIDDLE_OF (sy1, ty);
+	     tx2  = (float) MIDDLE_OF (x3, x4);
+	     ty2  = (float) MIDDLE_OF (y3, y4);
+	     tx1  = (float) MIDDLE_OF (tx2, tx);
+	     ty1  = (float) MIDDLE_OF (ty2, ty);
+	     xmid = (float) MIDDLE_OF (sx2, tx1);
+	     ymid = (float) MIDDLE_OF (sy2, ty1);
+
+	     PushStack (xmid, ymid, tx1, ty1, tx2, ty2, x4, y4);
+	     PushStack (x1, y1, sx1, sy1, sx2, sy2, xmid, ymid);
+	  }
+     }
+}
+
+/*----------------------------------------------------------------------
+  QuadraticSplit : split a quadratic Bezier and pushes the result on the stack.
+  ----------------------------------------------------------------------*/
+void        QuadraticSplit (float a1, float b1, float a2, float b2,
+			    float a3, float b3,
+			    ThotPoint **points, int *npoints,
+			    int *maxpoints)
+{
+   register float      tx, ty;
+   float               x1, y1, x2, y2, x3, y3, i, j;
+   float               sx, sy;
+   float               xmid, ymid;
+
+   stack_deep = 0;
+   PushStack (a1, b1, a2, b2, a3, b3, 0, 0);
+
+   while (PopStack (&x1, &y1, &x2, &y2, &x3, &y3, &i, &j))
+     {
+	if (fabs (x1 - x3) < SEG_SPLINE && fabs (y1 - y3) < SEG_SPLINE)
+	   PolyNewPoint (FloatToInt (x1), FloatToInt (y1), points, npoints,
+			 maxpoints);
+	else
+	  {
+	     tx   = (float) MIDDLE_OF (x2, x3);
+	     ty   = (float) MIDDLE_OF (y2, y3);
+	     sx   = (float) MIDDLE_OF (x1, x2);
+	     sy   = (float) MIDDLE_OF (y1, y2);
+	     xmid = (float) MIDDLE_OF (sx, tx);
+	     ymid = (float) MIDDLE_OF (sy, ty);
+
+	     PushStack (xmid, ymid, tx, ty, x3, y3, 0, 0);
+	     PushStack (x1, y1, sx, sy, xmid, ymid, 0, 0);
+	  }
+     }
+}
+
+/*----------------------------------------------------------------------
   IsOnSegment checks if the point x, y is on the segment x1, y1 to
   x2, y2 with DELTA_SEL precision.
   Check if the segment is included by a rectangle of width DELTA_SEL
@@ -259,9 +428,9 @@ static int     CrossLine (int x, int y, int prevX, int prevY, int nextX, int nex
 }
 
 /*----------------------------------------------------------------------
-  InPolyline returns TRUE if the point x, y is within the polyline.
+  IsWithinPolyline returns TRUE if the point x, y is within the polyline pAb
   ----------------------------------------------------------------------*/
-static ThotBool     InPolyline (PtrAbstractBox pAb, int x, int y, int frame)
+static ThotBool  IsWithinPolyline (PtrAbstractBox pAb, int x, int y, int frame)
 {
    PtrTextBuffer       buff, pLastBuffer;
    int                 cross;
@@ -368,22 +537,64 @@ static ThotBool     InPolyline (PtrAbstractBox pAb, int x, int y, int frame)
 }
 
 /*----------------------------------------------------------------------
-  WithinPath returns TRUE if the point x, y is within the path.
+  IsWithinPath returns TRUE if the point x, y is within the path represented
+  by the polyline defined by points.
   ----------------------------------------------------------------------*/
-static ThotBool     WithinPath (PtrAbstractBox pAb, int x, int y, int frame)
+static ThotBool     IsWithinPath (int x, int y, ThotPoint *points, int npoints)
 {
    int                 cross;
    int                 i;
    int                 prevX, prevY;
    int                 nextX, nextY;
-   PtrBox              box;
    ThotBool            ok;
 
-   box = pAb->AbBox;
-   x -= box->BxXOrg;
-   y -= box->BxYOrg;
-   return (FALSE);
-   /*********/
+   ok = FALSE;
+   cross = 0;
+   nextX = points[0].x;
+   nextY = points[0].y;
+   prevX = points[npoints - 1].x;
+   prevY = points[npoints - 1].y;
+   if ((prevY >= y) != (nextY >= y))
+     /* y is between nextY and prevY */
+     cross = CrossLine (x, y, prevX, prevY, nextX, nextY, cross);
+   i = 1;
+   while (i < npoints)
+     {
+       prevX = nextX;
+       prevY = nextY;
+       nextX = points[i].x;
+       nextY = points[i].y;
+       if (prevY >= y)
+	 {
+	   while (i < npoints && nextY >= y)
+	     {
+	       i++;		/* changement de point */
+	       prevY = nextY;
+	       prevX = nextX;
+	       nextX = points[i].x;
+	       nextY = points[i].y;
+	     }
+	   if (i >= npoints)
+	     break;
+	   cross = CrossLine (x, y, prevX, prevY, nextX, nextY, cross);
+	 }
+       else
+	 {
+	   while (i < npoints && nextY < y)
+	     {
+	       i++;		/* changement de point */
+	       prevY = nextY;
+	       prevX = nextX;
+	       nextX = points[i].x;
+	       nextY = points[i].y;
+	     }
+	   if (i >= npoints)
+	     break;
+	   cross = CrossLine (x, y, prevX, prevY, nextX, nextY, cross);
+	 }
+     }
+   ok = (ThotBool) (cross & 0x01);
+   return (ok);
 }
 
 /*----------------------------------------------------------------------
@@ -470,55 +681,115 @@ static PtrBox  GetPolylinePoint (PtrAbstractBox pAb, int x, int y, int frame,
 }
 
 /*----------------------------------------------------------------------
-   GetPointInPath check if pont x,y is on the path represented by
-   abstract box pAb.
-   Si oui, retourne l'adresse de la boi^te correspondante et le    
-   point de contro^le se'lectionne' (0 pour toute la boi^te).      
-   sinon, la valeur NULL.                                          
+   BuildPolygonForPath
+   Build the polygons that approximate a path
+   A different 
+   pPa: first segment of the path
+   return a list of points and the number of points in this list (npoints).
+   if the path is unique, subpathStart is NULL, but if there are several
+   subpath, subpathStart is a table of integers: each of them is the rank
+   of the first point of each subpath in the list of points returned.
   ----------------------------------------------------------------------*/
-static PtrBox  GetPointInPath (PtrAbstractBox pAb, int x, int y, int frame,
-			       int *pointselect)
+static ThotPoint*  BuildPolygonForPath (PtrPathSeg pPa, int frame,
+					int* npoints, int **subpathStart)
 {
-  int                 X1, Y1, X2, Y2, i;
-  PtrPathSeg          pPa;
-  PtrBox              box;
-  ThotBool            OK;
+  float               x1, y1, cx1, cy1, x2, y2, cx2, cy2;
+  int                 ix1, ix2, iy1, iy2;
+  ThotPoint           *points;
+  int                 *tmp;
+  int                 maxpoints, maxsubpaths, nbsubpaths;
 
-  box = pAb->AbBox;
-  x -= box->BxXOrg;
-  y -= box->BxYOrg;
-  *pointselect = 0;
-  i = 0;
-  pPa = pAb->AbFirstPathSeg;
-  OK = FALSE;
-  while (pPa && !OK)
+  /* get a buffer to store the points of the polygon */
+  maxpoints = ALLOC_POINTS;
+  points = (ThotPoint *) TtaGetMemory (maxpoints * sizeof(ThotPoint));
+  *npoints = 0;
+  /* assume there is a single path */
+  *subpathStart = NULL;
+  nbsubpaths = 0;
+  maxsubpaths = 10;
+  /* process all segments of the path */
+  while (pPa)
     {
-      i++;
-      /* Teste si le point est sur ce segment */
-      X1 = PixelValue (pPa->XStart, UnPixel, NULL,
-		       ViewFrameTable[frame - 1].FrMagnification);
-      Y1 = PixelValue (pPa->YStart, UnPixel, NULL,
-		       ViewFrameTable[frame - 1].FrMagnification);
-      X2 = PixelValue (pPa->XEnd, UnPixel, NULL,
-		       ViewFrameTable[frame - 1].FrMagnification);
-      Y2 = PixelValue (pPa->YEnd, UnPixel, NULL,
-		       ViewFrameTable[frame - 1].FrMagnification);
-      if (x >= X2 - DELTA_SEL && x <= X2 + DELTA_SEL &&
-	  y >= Y2 - DELTA_SEL && y <= Y2 + DELTA_SEL)
+      if (pPa->PaNewSubpath && pPa->PaPrevious)
+	/* this path segment starts a new subpath */
 	{
-	  /* La selection porte sur un point de controle particulier */
-	  *pointselect = i;
-	  return (box);
+	  if (*subpathStart == NULL)
+	    /* allocate a table of subpath start points */
+	    *subpathStart = (int *) TtaGetMemory (maxsubpaths * sizeof(int));
+	  else if (nbsubpaths >= maxsubpaths - 1)
+	    /* the current table is full. Extend it */
+	    {
+	      maxsubpaths += 10;
+	      tmp = (int *) realloc(*subpathStart, maxsubpaths * sizeof(int));
+	      *subpathStart = tmp;
+	    }
+	  /* register the rank of the point starting this subpath */
+	  (*subpathStart)[nbsubpaths++] = *npoints;
+	  (*subpathStart)[nbsubpaths] = 0;   /* indicate end of table */
 	}
-      else
+
+      switch (pPa->PaShape)
 	{
-	  if (IsOnSegment (x, y, X1, Y1, X2, Y2))
-	    return (box);
+	case PtLine:
+	  ix1 = PixelValue (pPa->XStart, UnPixel, NULL,
+			    ViewFrameTable[frame - 1].FrMagnification);
+	  iy1 = PixelValue (pPa->YStart, UnPixel, NULL,
+			    ViewFrameTable[frame - 1].FrMagnification);
+	  ix2 = PixelValue (pPa->XEnd, UnPixel, NULL,
+			    ViewFrameTable[frame - 1].FrMagnification);
+	  iy2 = PixelValue (pPa->YEnd, UnPixel, NULL,
+			    ViewFrameTable[frame - 1].FrMagnification);
+	  PolyNewPoint (ix1, iy1, &points, npoints, &maxpoints);
+	  PolyNewPoint (ix2, iy2, &points, npoints, &maxpoints);
+	  break;
+
+	case PtCubicBezier:
+	  x1 = (float) (PixelValue (pPa->XStart, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+	  y1 = (float) (PixelValue (pPa->YStart, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+	  cx1 = (float) (PixelValue (pPa->XCtrlStart, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+	  cy1 = (float) (PixelValue (pPa->YCtrlStart, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+	  x2 = (float) (PixelValue (pPa->XEnd, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+	  y2 = (float) (PixelValue (pPa->YEnd, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+	  cx2 = (float) (PixelValue (pPa->XCtrlEnd, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+	  cy2 = (float) (PixelValue (pPa->YCtrlEnd, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+	  PolySplit (x1, y1, cx1, cy1, cx2, cy2, x2, y2, &points, npoints,
+		     &maxpoints);
+	  PolyNewPoint ((int) x2, (int) y2, &points, npoints, &maxpoints);
+	  break;
+
+	case PtQuadraticBezier:
+	  x1 = (float) (PixelValue (pPa->XStart, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+	  y1 = (float) (PixelValue (pPa->YStart, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+	  cx1 = (float) (PixelValue (pPa->XCtrlStart, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+	  cy1 = (float) (PixelValue (pPa->YCtrlStart, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+	  x2 = (float) (PixelValue (pPa->XEnd, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+	  y2 = (float) (PixelValue (pPa->YEnd, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+	  QuadraticSplit (x1, y1, cx1, cy1, x2, y2, &points, npoints,
+			  &maxpoints);
+	  PolyNewPoint ((int) x2, (int) y2, &points, npoints, &maxpoints);
+	  break;
+
+	case PtEllipticalArc:
+	  /**** to do ****/
+	  break;
 	}
-      if (!OK)
-	pPa = pPa->PaNext;
+      pPa = pPa->PaNext;
     }
-  return (NULL);
+  return (points);
 }
 
 /*----------------------------------------------------------------------
@@ -684,7 +955,6 @@ static ThotBool     InShape (PtrAbstractBox pAb, int x, int y)
    ok = (ThotBool) (cross & 0x01);
    return (ok);
 }
-
 
 /*----------------------------------------------------------------------
   IsOnShape checks if the point x, y is on the drawing of pAb.
@@ -900,7 +1170,6 @@ static PtrBox       IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
   return (NULL);
 }
 
-
 /*----------------------------------------------------------------------
   GetClickedAbsBox checks if the abstract box includes the reference point
   xRef, yRef.
@@ -937,6 +1206,11 @@ PtrBox          GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX,
 					int *pointselect)
 {
   PtrBox              pBox;
+  int                 i, x;
+  ThotPoint           *points = NULL;
+  int                 npoints, sub;
+  int                 *subpathStart = NULL;
+  ThotBool            OK, testSegment;
 
   *pointselect = 0;
   if (pAb->AbBox == NULL)
@@ -966,11 +1240,12 @@ PtrBox          GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX,
 	       pAb->AbShape == '0')
 	/* it's also a dummy box */
 	return (NULL);
-      /* If the box includes the point */
-      else if (pBox->BxXOrg <= lowerX &&
-	       pBox->BxXOrg + pBox->BxWidth >= higherX &&
-	       pBox->BxYOrg <= y &&
-	       pBox->BxYOrg + pBox->BxHeight >= y)
+      /* If the box is not a polyline or a path, it must include the point */
+      else if (pAb->AbLeafType == LtPolyLine || pAb->AbLeafType == LtPath ||
+	       (pBox->BxXOrg <= lowerX &&
+		pBox->BxXOrg + pBox->BxWidth >= higherX &&
+		pBox->BxYOrg <= y &&
+		pBox->BxYOrg + pBox->BxHeight >= y))
 	if (pAb->AbLeafType == LtGraphics && pAb->AbVolume != 0)
 	  /* It's a simple graphic shape */
 	  {
@@ -997,7 +1272,7 @@ PtrBox          GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX,
 	      return (pBox);
 	    if (pAb->AbFillPattern > 0 && pAb->AbBackground >= 0 &&
 		/* the shape is filled. Is the point within the shape? */
-		InPolyline (pAb, lowerX, y, frame))
+		IsWithinPolyline (pAb, lowerX, y, frame))
 	      return (pAb->AbBox);
 	    else
 	      return (pBox);
@@ -1005,16 +1280,55 @@ PtrBox          GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX,
 	else if (pAb->AbLeafType == LtPath && pAb->AbFirstPathSeg)
 	  /* it's a non-empty path */
 	  {
-	    pBox = GetPointInPath (pAb, lowerX, y, frame, pointselect);
-	    if (pBox != NULL)
-	      /* the point is on the outline */
+	    /* builds the list of points representing the path */
+	    points = BuildPolygonForPath (pAb->AbFirstPathSeg, frame,
+					  &npoints, &subpathStart);
+	    /* is the position of interest on the polyline represented by
+	       these points? */
+	    x = lowerX - pBox->BxXOrg;
+	    y -= pBox->BxYOrg;
+	    OK = FALSE;
+	    sub = 0;
+	    /* test every segment comprised between 2 successive points */
+	    for (i = 0; (i < npoints - 1) && !OK; i++)
+	      {
+		testSegment = TRUE;
+		if (subpathStart)
+		  /* there are several subpaths in this path */
+		  {
+		    if (subpathStart[sub] == i + 1)
+		      /* this segment corresponds to a moveto. Skip it */
+		      {
+			testSegment = FALSE;
+			/* get prepared for the next subpath */
+			sub++;
+			if (subpathStart[sub] == 0)
+			  /* this is the last subpath. Don't test more
+			     subpaths */
+			  {
+			    free (subpathStart);
+			    subpathStart = NULL;
+			  }
+		      }
+		  }
+		if (testSegment)
+		  OK = IsOnSegment (x, y, points[i].x, points[i].y,
+				    points[i + 1].x, points[i + 1].y);
+	      }
+	    if (!OK)
+	      /* the point is not on the path. Is it within the path ? */
+	      {
+		/* check only if the path is really filled */
+		if (pAb->AbFillPattern > 0 && pAb->AbBackground >= 0)
+		  OK = IsWithinPath (x, y, points, npoints);
+	      }
+	    free (points);
+	    if (subpathStart)
+	      free (subpathStart);
+	    if (OK)
 	      return (pBox);
-	    /* the point is not on the path. Is it within the path ? */
-	    if (pAb->AbFillPattern > 0 && pAb->AbBackground >= 0 &&
-		WithinPath (pAb, lowerX, y, frame))
-	      return (pAb->AbBox);
 	    else
-	      return (pBox);
+	      return (NULL);
 	  }
 	else
 	  return (pBox);
@@ -1022,7 +1336,6 @@ PtrBox          GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX,
 	return (NULL);
     }
 }
-
 
 /*----------------------------------------------------------------------
    GetLeafBox returns the leaf box located at the position x+xDelta
@@ -1391,7 +1704,6 @@ PtrBox              GetClickedLeafBox (int frame, int xRef, int yRef)
   return pSelBox;
 }
 
-
 /*----------------------------------------------------------------------
   GiveMovingArea get limits of the box moving.
   ----------------------------------------------------------------------*/
@@ -1495,7 +1807,6 @@ static void         GiveMovingArea (PtrAbstractBox pAb, int frame,
 #endif /* IV */
      }
 }
-
 
 /*----------------------------------------------------------------------
    CanBeTranslated teste si un pave est modifiable en position     
@@ -1858,7 +2169,6 @@ void              ApplyDirectTranslate (int frame, int xm, int ym)
     }
 }
 
-
 /*----------------------------------------------------------------------
    CanBeResized teste si un pave est modifiable en Dimension.       
   ----------------------------------------------------------------------*/
@@ -1968,7 +2278,6 @@ static ThotBool   CanBeResized (PtrAbstractBox pAb, int frame,
 
   return ok;
 }
-
 
 /*----------------------------------------------------------------------
    ApplyDirectResize looks for a box that can be resized at the current
