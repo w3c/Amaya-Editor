@@ -164,7 +164,7 @@ Element		sibling, placeholderEl;
 ElementType	elType;
 Attribute	attr;
 AttributeType	attrType;
-boolean		createConstruct;
+boolean		createConstruct, oldStructureChecking;
 
      placeholderEl = NULL;
 
@@ -199,10 +199,11 @@ boolean		createConstruct;
 	   placeholderEl = TtaNewElement (doc, elType);
 	   /* do not check the Thot abstract tree against the structure */
 	   /* schema while inserting the Placeholder */
+	   oldStructureChecking = TtaGetStructureChecking (doc);
 	   TtaSetStructureChecking (0, doc);
 	   TtaInsertSibling (placeholderEl, el, before, doc);
 	   /* resume structure checking */
-	   TtaSetStructureChecking (1, doc);
+	   TtaSetStructureChecking (oldStructureChecking, doc);
            attrType.AttrSSchema = elType.ElSSchema;
            attrType.AttrTypeNum = MathML_ATTR_placeholder;
            attr = TtaNewAttribute (attrType);
