@@ -1924,8 +1924,6 @@ int GenericGet##name(PresentationTarget t, PresentationContext c,	\
 									\
     rule = PresRuleSearch(tsch, cont, Pt##genre, 0);			\
     if (rule == NULL) return(-1);					\
-    if ((rule->PrPresMode != PresImmediate) || (rule->PrAttrValue != 0))\
-        return(-1);							\
     val->typed_data.value = rule->PrIntValue;				\
     val->typed_data.unit = DRIVERP_UNIT_REL;				\
     return(0);								\
@@ -1957,8 +1955,6 @@ int GenericGet##name(PresentationTarget t, PresentationContext c,	\
 									\
     rule = PresRuleSearch(tsch, cont, Pt##genre, category);		\
     if (rule == NULL) return(-1);					\
-    if ((rule->PrPresMode != PresImmediate) || (rule->PrAttrValue != 0))\
-        return(-1);							\
     val->typed_data.value = rule->PrIntValue;				\
     val->typed_data.unit = DRIVERP_UNIT_REL;				\
     return(0);								\
@@ -1996,8 +1992,6 @@ int GenericGet/**/name(t,c,v)						\
 									\
     rule = PresRuleSearch(tsch, cont, Pt/**/genre, 0);			\
     if (rule == NULL) return(-1);					\
-    if ((rule->PrPresMode != PresImmediate) || (rule->PrAttrValue != 0))\
-        return(-1);							\
     val->typed_data.value = rule->PrIntValue;				\
     val->typed_data.unit = DRIVERP_UNIT_REL;				\
     return(0);								\
@@ -2033,8 +2027,6 @@ int GenericGet/**/name(t,c,v)						\
 									\
     rule = PresRuleSearch(tsch, cont, Pt/**/genre, category);		\
     if (rule == NULL) return(-1);					\
-    if ((rule->PrPresMode != PresImmediate) || (rule->PrAttrValue != 0))\
-        return(-1);							\
     val->typed_data.value = rule->PrIntValue;				\
     val->typed_data.unit = DRIVERP_UNIT_REL;				\
     return(0);								\

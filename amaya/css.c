@@ -791,6 +791,12 @@ Document            doc;
    AttributeType       atType;
    PRuleInfoPtr        list, rpi;
    CSSInfoPtr          css;
+   int                 modified;
+
+   /*
+    * prerequisite : store the modified status of the document
+    */
+   modified = TtaIsDocumentModified (doc);
 
    /*
     * First search the Styles subtree in the HTML structure and
@@ -865,6 +871,11 @@ Document            doc;
      }
 
    CleanListRPI (&list);
+
+   /*
+    * final : restore the modified status of the document
+    */
+   if (! modified) TtaSetDocumentUnmodified(doc);
 }
 
 /*----------------------------------------------------------------------
@@ -1799,6 +1810,8 @@ char               *first;
    int                 index = 0;
    char               *val = NULL;
    CSSInfoPtr          css;
+
+   if ((doc < 0) || (doc > DocumentTableLength)) return(0);
 
    /*
     * add the first element if specified.

@@ -101,9 +101,9 @@ View                view;
    RedrawLRPI (NULL);
    TtaNewIconMenu (BaseCSSDialog + RPIActions, BaseCSSDialog + FormCSS, 0,
 		   NULL, 5, &opIcons[0], FALSE);
+   RedrawRRPI (NULL);
    TtaNewTextForm (BaseCSSDialog + RPIText, BaseCSSDialog + FormCSS, "CSS Rule",
 		   70, 3, TRUE);
-   RedrawRRPI (NULL);
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseCSSDialog + FormCSS, TRUE);
 }
@@ -453,6 +453,7 @@ char               *data;
 			   currentDocument = -1;
 			   break;
 		     }
+	       break;
 	    case CSSLName:
 	       RedrawLCSS (data);
 	       RedrawLRPI (NULL);
@@ -510,6 +511,7 @@ char               *data;
 			   CSSHandleMerge ('L', FALSE);
 			   break;
 		     }
+	       break;
 	    case RPIText:
 	       SelectRPIEntry ('B', -1, data);
 	       break;

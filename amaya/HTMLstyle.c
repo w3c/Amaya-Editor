@@ -3404,6 +3404,13 @@ void *extra;
      }
 
    /*
+    * Update the Document header if this is a generic rule
+    */
+   if (context->drv == &GenericStrategy) {
+       RebuildHTMLStyleHeader(doc);
+   }
+
+   /*
     * Update the rendering.
     */
    if (context->drv->UpdatePresentation != NULL)
