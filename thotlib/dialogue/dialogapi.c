@@ -120,11 +120,6 @@ struct Cat_List
 /* Declarations des options de dialogue */
 boolean             WithMessages = TRUE;
 
-#ifdef _WINDOWS
-static HFONT        formFONT;
-#else  /* _WINDOWS */
-static XmFontList   formFONT;
-#endif /* !_WINDOWS */
 
 static int          FirstFreeRef;	/* First free reference */
 /* Declarations des variables globales */
@@ -139,22 +134,22 @@ static int                 CurrentWait;
 static int                 ShowReturn;
 static int                 ShowX, ShowY;
 static struct Cat_Context* ShowCat = NULL;
+static ThotTranslations    TextTranslations;
+static ThotWidget          MainShell, PopShell;
 
-#ifndef _WINDOWS
-static ThotAppContext Def_AppCont;
-static Display*       GDp;
-#endif
 
 #ifdef _WINDOWS
+static HFONT        formFONT;
 LPCTSTR iconID = "IDI_APPICON";
 static  OPENFILENAME OpenFileName;
 static  int cyValue = 10;
 
 static HWND   currentParent;
-#endif /* _WINDOWS */
-
-static ThotTranslations TextTranslations;
-static ThotWidget       MainShell, PopShell;
+#else  /* _WINDOWS */
+static XmFontList   formFONT;
+static ThotAppContext Def_AppCont;
+static Display*       GDp;
+#endif /* !_WINDOWS */
 
 #include "appdialogue_f.h"
 #include "memory_f.h"
@@ -232,7 +227,6 @@ int                 WIN_DesReturn;	/* Selection indicator              */
 unsigned char*      WIN_buffer;	/* Buffer for exchanges with Window */
 int                 WIN_Lgbuffer;
 extern char         docToOpen [256];
-extern HMENU        currentMenu;
 #ifdef  APPFILENAMEFILTER
 #       undef  APPFILENAMEFILTER
 #endif  /* APPFILENAMEFILTER */
@@ -260,27 +254,6 @@ static char     key;
 
 UINT subMenuID [MAX_FRAME];
 #endif /* _WINDOWS */
-
-/*----------------------------------------------------------------------
-   GetFrameNumber :  returns the Thot window number associated to an         
-   X-Window window.                                            
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int GetFrameNumber (ThotWindow win)
-#else  /* !__STDC__ */
-int GetFrameNumber (win)
-ThotWindow win;
-#endif /* __STDC__ */
-{
-   int frame;
-
-   for (frame = 0; frame <= MAX_FRAME; frame++)
-       if (FrRef[frame] == win)
-	  return (frame);
-
-   fprintf (stderr, "Could not get X-Window number for %X\n", (unsigned int)win);
-   return (-1);
-}
 
 #ifdef _WINDOWS
 /*----------------------------------------------------------------------
@@ -989,6 +962,28 @@ int       nShow;
 #endif /* _WIN_PRINT */
 #endif /* _WINDOWS */
 
+/*----------------------------------------------------------------------
+   GetFrameNumber :  returns the Thot window number associated to an         
+   X-Window window.                                            
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int GetFrameNumber (ThotWindow win)
+#else  /* !__STDC__ */
+int GetFrameNumber (win)
+ThotWindow win;
+#endif /* __STDC__ */
+{
+   int frame;
+
+   for (frame = 0; frame <= MAX_FRAME; frame++)
+       if (FrRef[frame] == win)
+	  return (frame);
+
+   fprintf (stderr, "Could not get X-Window number for %X\n", (unsigned int)win);
+   return (-1);
+}
+
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    Procedure de retour par defaut.                                    
   ----------------------------------------------------------------------*/
@@ -1753,6 +1748,7 @@ caddr_t             call_d;
      }
 }
 #endif /* _WINDOWS */
+#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    warning handler                                                    
@@ -7689,7 +7685,7 @@ boolean             remanent;
       TtaError (ERR_invalid_reference);
 }
 
-
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    TtaWaitShowDialogue attends le retour du catalogue affiche par     
    TtaShowDialogue.                                                   
@@ -7776,3 +7772,4 @@ void                TtaAbortShowDialogue ()
 	  }
      }
 }
+#endif /* _WIN_PRINT */

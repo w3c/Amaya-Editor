@@ -106,7 +106,6 @@ HWND  hwndClient ;
 HWND  ToolBar ;
 HWND  StatusBar;
 HWND  logoFrame;
-HMENU currentMenu;
 int    nCust[MAX_FRAME][30];
 static HWND hwndTB;
 
