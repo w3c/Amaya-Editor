@@ -1476,79 +1476,79 @@ LRESULT CALLBACK OpenDocDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 LRESULT CALLBACK OpenImgDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 								 LPARAM lParam)
 {
-    switch (msg)
-      {
-      case WM_INITDIALOG:
-	SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_IMAGES_LOCATION));
-	SetWindowText (GetDlgItem (hwnDlg, IDC_URLMESSAGE),
-		TtaGetMessage (AMAYA, AM_BUTTON_IMG));
-	SetWindowText (GetDlgItem (hwnDlg, IDC_ALTMESSAGE), TtaGetMessage (AMAYA, AM_ALT));
-	SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM),
-		TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
-	SetWindowText (GetDlgItem (hwnDlg, IDC_BROWSE), TtaGetMessage (AMAYA, AM_BROWSE));
-	SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
-	
-	SetDlgItemText (hwnDlg, IDC_GETURL, UrlToOpen);
-	UrlToOpen[0] = EOS;
-	SetDlgItemText (hwnDlg, IDC_GETALT, ImgAlt);
-	break;
-	
-      case WM_COMMAND:
-	switch (LOWORD (wParam))
-	  {
-	  case ID_CONFIRM:
-	    GetDlgItemText (hwnDlg, IDC_GETURL, UrlToOpen, sizeof (UrlToOpen) - 1);
-	    GetDlgItemText (hwnDlg, IDC_GETALT, AltText, sizeof (AltText) - 1);
-	    if (!AltText || AltText[0] == 0)
-	      MessageBox (hwnDlg, TtaGetMessage (AMAYA, AM_ALT_MISSING),
-			  TtaGetMessage (AMAYA, AM_BUTTON_IMG),
-			  MB_OK | MB_ICONERROR);
-	    else 
-	      {
-		ThotCallback (BaseImage + ImageAlt, STRING_DATA, AltText);
-		ThotCallback (BaseImage + ImageURL, STRING_DATA, UrlToOpen);
-		ThotCallback (BaseImage + FormImage, INTEGER_DATA, (char*) 1);
-		EndDialog (hwnDlg, ID_CONFIRM);
-	      }
-	    break;
-	    
-	  case IDC_BROWSE:
-	    OpenFileName.lStructSize       = sizeof (OPENFILENAME);
-	    OpenFileName.hwndOwner         = hwnDlg;
-	    OpenFileName.hInstance         = hInstance;
-	    OpenFileName.lpstrFilter       = (LPTSTR) SzFilter;
-	    OpenFileName.lpstrCustomFilter = (LPTSTR) NULL;
-	    OpenFileName.nMaxCustFilter    = 0L;
-	    OpenFileName.nFilterIndex      = 1L;
-	    OpenFileName.lpstrFile         = (LPTSTR) TmpDocName;
-	    OpenFileName.nMaxFile          = MAX_LENGTH;
-	    OpenFileName.lpstrInitialDir   = (LPTSTR) DirectoryImage;
-	    OpenFileName.lpstrTitle        = TtaGetMessage (AMAYA, AM_FILES);
-	    OpenFileName.nFileOffset       = 0;
-	    OpenFileName.nFileExtension    = 0;
-	    OpenFileName.lpstrDefExt       = ImgFilter;
-	    OpenFileName.lCustData         = 0;
-	    OpenFileName.Flags             = OFN_SHOWHELP | OFN_HIDEREADONLY;
-	    
-	    if (GetOpenFileName (&OpenFileName))
-	      strcpy (UrlToOpen, OpenFileName.lpstrFile);
-	    
-	    SetDlgItemText (hwnDlg, IDC_GETURL, UrlToOpen);
-	    if (AltText[0] != 0)
+  switch (msg)
+    {
+    case WM_INITDIALOG:
+      SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_IMAGES_LOCATION));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_URLMESSAGE),
+		     TtaGetMessage (AMAYA, AM_BUTTON_IMG));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_ALTMESSAGE), TtaGetMessage (AMAYA, AM_ALT));
+      SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM),
+		     TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_BROWSE), TtaGetMessage (AMAYA, AM_BROWSE));
+      SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
+      
+      SetDlgItemText (hwnDlg, IDC_GETURL, UrlToOpen);
+      UrlToOpen[0] = EOS;
+      SetDlgItemText (hwnDlg, IDC_GETALT, ImgAlt);
+      break;
+      
+    case WM_COMMAND:
+      switch (LOWORD (wParam))
+	{
+	case ID_CONFIRM:
+	  GetDlgItemText (hwnDlg, IDC_GETURL, UrlToOpen, sizeof (UrlToOpen) - 1);
+	  GetDlgItemText (hwnDlg, IDC_GETALT, AltText, sizeof (AltText) - 1);
+	  if (!AltText || AltText[0] == 0)
+	    MessageBox (hwnDlg, TtaGetMessage (AMAYA, AM_ALT_MISSING),
+			TtaGetMessage (AMAYA, AM_BUTTON_IMG),
+			MB_OK | MB_ICONERROR);
+	  else 
+	    {
+	      ThotCallback (BaseImage + ImageAlt, STRING_DATA, AltText);
+	      ThotCallback (BaseImage + ImageURL, STRING_DATA, UrlToOpen);
+	      ThotCallback (BaseImage + FormImage, INTEGER_DATA, (char*) 1);
 	      EndDialog (hwnDlg, ID_CONFIRM);
-	    break;
-
-	  case IDCANCEL:
-	    ThotCallback (BaseImage + FormImage, INTEGER_DATA, (char*) 0);
-	    UrlToOpen[0] = 0;
-	    EndDialog (hwnDlg, IDCANCEL);
-	    break;
-	  }
-	break;
-      default:
-	return FALSE;
-      }
-    return TRUE;
+	    }
+	  break;
+	    
+	case IDC_BROWSE:
+	  OpenFileName.lStructSize       = sizeof (OPENFILENAME);
+	  OpenFileName.hwndOwner         = hwnDlg;
+	  OpenFileName.hInstance         = hInstance;
+	  OpenFileName.lpstrFilter       = (LPTSTR) SzFilter;
+	  OpenFileName.lpstrCustomFilter = (LPTSTR) NULL;
+	  OpenFileName.nMaxCustFilter    = 0L;
+	  OpenFileName.nFilterIndex      = 1L;
+	  OpenFileName.lpstrFile         = (LPTSTR) TmpDocName;
+	  OpenFileName.nMaxFile          = MAX_LENGTH;
+	  OpenFileName.lpstrInitialDir   = (LPTSTR) DirectoryImage;
+	  OpenFileName.lpstrTitle        = TtaGetMessage (AMAYA, AM_FILES);
+	  OpenFileName.nFileOffset       = 0;
+	  OpenFileName.nFileExtension    = 0;
+	  OpenFileName.lpstrDefExt       = ImgFilter;
+	  OpenFileName.lCustData         = 0;
+	  OpenFileName.Flags             = OFN_SHOWHELP | OFN_HIDEREADONLY;
+	  
+	  if (GetOpenFileName (&OpenFileName))
+	    strcpy (UrlToOpen, OpenFileName.lpstrFile);
+	  
+	  SetDlgItemText (hwnDlg, IDC_GETURL, UrlToOpen);
+	  if (AltText[0] != 0)
+	    EndDialog (hwnDlg, ID_CONFIRM);
+	  break;
+	  
+	case IDCANCEL:
+	  ThotCallback (BaseImage + FormImage, INTEGER_DATA, (char*) 0);
+	  UrlToOpen[0] = 0;
+	  EndDialog (hwnDlg, IDCANCEL);
+	  break;
+	}
+      break;
+    default:
+      return FALSE;
+    }
+  return TRUE;
 }
 
 /*-----------------------------------------------------------------------
@@ -3683,8 +3683,9 @@ void  CreateSaveAsDlgWindow (ThotWindow parent, char *path_name)
 /*-----------------------------------------------------------------------
  CreateOpenDocDlgWindow
  ------------------------------------------------------------------------*/
-void  CreateOpenDocDlgWindow (ThotWindow parent, char *title, char *url,
-			char *docName, int doc_select, int dir_select, DocumentType doc_type)
+void CreateOpenDocDlgWindow (ThotWindow parent, char *title, char *url,
+			     char *docName, int doc_select, int dir_select,
+			     DocumentType doc_type)
 {
   docSelect = doc_select;
   dirSelect = dir_select;
@@ -3998,7 +3999,7 @@ void CreateAuthenticationDlgWindow (ThotWindow parent, const char *realm,
  ------------------------------------------------------------------------*/
 void CreateBackgroundImageDlgWindow (ThotWindow parent, char *image_location)
 {
-  SzFilter         = APPIMAGENAMEFILTER;
+  SzFilter = APPIMAGENAMEFILTER;
   strcpy (CurrentPathName, image_location);
   DialogBox (hInstance, MAKEINTRESOURCE (BGIMAGEDIALOG), parent, (DLGPROC) BackgroundImageDlgProc);
 }

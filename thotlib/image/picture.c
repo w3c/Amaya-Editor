@@ -79,19 +79,13 @@
 
 static char*    PictureMenu;
 #ifdef _GL
-  static ThotPixmap PictureLogo;
+static ThotPixmap PictureLogo;
 #else /*_GL*/
-  
-  #if defined(_WINGUI) || defined(_MOTIF) || defined(_WX) || defined(_GTK) || defined(_NOGUI)
-    static ThotPixmap   PictureLogo;
-  #endif /* #if defined(_WINGUI) || defined(_MOTIF) || defined(_WX) || defined(_GTK) || defined(_NOGUI) */
-
+#if defined(_WINGUI) || defined(_MOTIF) || defined(_WX) || defined(_GTK) || defined(_NOGUI)
+static ThotPixmap   PictureLogo;
+#endif /* #if defined(_WINGUI) || defined(_MOTIF) || defined(_WX) || defined(_GTK) || defined(_NOGUI) */
 #endif /*_GL*/
 static ThotGC   tiledGC;
-
-char* FileExtension[] = {
-      ".xbm", ".eps", ".xpm", ".gif", ".jpg", ".png"
-};
 
 static unsigned char MirrorBytes[0x100] = {
    0x00, 0x80, 0x40, 0xc0, 0x20, 0xa0, 0x60, 0xe0,
