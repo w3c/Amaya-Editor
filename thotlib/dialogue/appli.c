@@ -96,7 +96,8 @@ extern HWND      StatusBar  ;
 extern HWND      currentWindow;
 extern HWND      WIN_curWin;
 extern HINSTANCE hInstance  ;
-extern BOOL      WIN_UserGeometry; 
+/* extern BOOL      WIN_UserGeometry;  */
+extern int       Window_Curs;
 
 static HWND      hwndHead   ;
 static char*     txtZoneLabel;
@@ -108,6 +109,8 @@ static char      doc_title [500];
 static int       oldXPos;
 static int       oldYPos;
 
+int         X_Pos;
+int         Y_Pos;
 int         cyToolBar ;
 int         CommandToString [MAX_BUTTON];
 char        szTbStrings [4096];
@@ -1089,6 +1092,7 @@ CONST char         *name;
 
 
 #ifdef _WINDOWS
+#if 0
 /*----------------------------------------------------------------------
   DrawBoxOutline :                                                    
   ----------------------------------------------------------------------*/
@@ -1107,10 +1111,12 @@ POINT ptEnd;
 
      SetROP2 (hdc, R2_NOT) ;
      SelectObject (hdc, GetStockObject (NULL_BRUSH)) ;
+     /* SelectObject (hdc, GetStockObject (BLACK_PEN)) ; */
      Rectangle (hdc, ptBeg.x, ptBeg.y, ptEnd.x, ptEnd.y) ;
 
      ReleaseDC (hwnd, hdc) ;
 }
+#endif /* 0 */
 
 /*----------------------------------------------------------------------
   WndProc :  The main MS-Windows event handler for the Thot Library.                                                    
@@ -1350,126 +1356,174 @@ LPARAM lParam;
            ClickFrame = frame;
            ClickX = LOWORD (lParam);
            ClickY = HIWORD (lParam);
-           return (DefWindowProc (hwnd, mMsg, wParam, lParam));
+		   /* if (!WIN_UserGeometry) */
+              return (DefWindowProc (hwnd, mMsg, wParam, lParam));
         }
 		
      }
 
      switch (mMsg) {
-          case WM_PAINT: 
-		      /* Some part of the Client Area has to be repaint. */
-	       saveHdc = TtDisplay;
-	       WIN_HandleExpose (hwnd, frame, wParam, lParam);
-	       TtDisplay = saveHdc;
-	       return 0;
+            case WM_PAINT: 
+	             /* Some part of the Client Area has to be repaint. */
+                 saveHdc = TtDisplay;
+                 WIN_HandleExpose (hwnd, frame, wParam, lParam);
+                 TtDisplay = saveHdc;
+                 return 0;
 
-          case WM_SIZE: {
-               HWND hwndNotify = GetWindow (hwnd, GW_CHILD) ;
-               int  cx         = LOWORD (lParam) ;
-               int  cy         = HIWORD (lParam) ;
+            case WM_SIZE: {
+                 HWND hwndNotify = GetWindow (hwnd, GW_CHILD) ;
+                 int  cx         = LOWORD (lParam) ;
+                 int  cy         = HIWORD (lParam) ;
 
-               WIN_ChangeViewSize (frame, cx, cy, 0, 0) ;
-               WIN_ReleaseDeviceContext ();
+                 WIN_ChangeViewSize (frame, cx, cy, 0, 0) ;
+                 WIN_ReleaseDeviceContext ();
 
-               return 0 ;
-               }
+                 return 0 ;
+            }
 
-          case WM_KEYDOWN:
-          case WM_CHAR:
-               TtaAbortShowDialogue ();
-               WIN_CharTranslation (FrRef[frame], frame, mMsg, wParam, lParam);
-               return 0;
+            case WM_KEYDOWN:
+            case WM_CHAR:
+                 TtaAbortShowDialogue ();
+                 WIN_CharTranslation (FrRef[frame], frame, mMsg, wParam, lParam);
+                 return 0;
 
-          case WM_LBUTTONDOWN:
-               /* Activate the client window */
-               SetFocus (FrRef[frame]);
-               /* stop any current insertion of text */
-               CloseInsertion ();
-		   
-               if (!WIN_UserGeometry) {
-                  /* if the CTRL key is pressed this is a geometry change */
-                  status = GetKeyState (VK_CONTROL);
-                  if (HIBYTE (status)) {
-                     /* changes the box position */
-                     ApplyDirectTranslate (frame, LOWORD (lParam), HIWORD (lParam));
+            case WM_LBUTTONDOWN:
+                 /* Activate the client window */
+                 SetFocus (FrRef[frame]);
+                 /* stop any current insertion of text */
+                 CloseInsertion ();
 
-                     /* This is the beginning of a selection */
-                  } else {
-                       ClickFrame = frame;
-                       oldXPos = ClickX = LOWORD (lParam);
-                       oldYPos = ClickY = HIWORD (lParam);
-                       LocateSelectionInView (frame, ClickX, ClickY, 2);
-                  }
-               } else {
-                    ClickFrame = frame;
-                    ClickX = LOWORD (lParam);
-                    ClickY = HIWORD (lParam);
-                    ptBegin.x = ptEnd.x = ClickX;
-                    ptBegin.y = ptEnd.y = ClickY;
-                    DrawBoxOutline (hwnd, ptBegin, ptEnd);
-                    SetCursor (LoadCursor (NULL, IDC_CROSS));
-               }
-               fBlocking = TRUE;
-               return 0;
+                 status = GetKeyState (VK_CONTROL);
+                 if (HIBYTE (status)) {
+                    /* changes the box position */
+                    ApplyDirectTranslate (frame, LOWORD (lParam), HIWORD (lParam));
+                    /* This is the beginning of a selection */
+                 } else {
+                      ClickFrame = frame;
+                      oldXPos = ClickX = LOWORD (lParam);
+                      oldYPos = ClickY = HIWORD (lParam);
+                      LocateSelectionInView (frame, ClickX, ClickY, 2);
+                 }
+                 fBlocking = TRUE;
 
+#                if 0		   
+                 if (!WIN_UserGeometry) {
+                    /* if the CTRL key is pressed this is a geometry change */
+                    status = GetKeyState (VK_CONTROL);
+                    if (HIBYTE (status)) {
+                       /* changes the box position */
+                       ApplyDirectTranslate (frame, LOWORD (lParam), HIWORD (lParam));
 
-          case WM_LBUTTONUP:
-               if (fBlocking) {
-                  if (WIN_UserGeometry) {
-                     DrawBoxOutline (hwnd, ptBegin, ptEnd);
-                     SetCursor (LoadCursor (NULL, IDC_ARROW));
-                     WIN_UserGeometry = FALSE;
-                  }
-				  fBlocking = FALSE;
-			   }
-               return 0;
+                       /* This is the beginning of a selection */
+                    } else {
+                         ClickFrame = frame;
+                         oldXPos = ClickX = LOWORD (lParam);
+                         oldYPos = ClickY = HIWORD (lParam);
+                         LocateSelectionInView (frame, ClickX, ClickY, 2);
+                    }
+                 } else {
+                      ClickFrame = frame;
+                      ClickX = LOWORD (lParam);
+                      ClickY = HIWORD (lParam);
+                      ptBegin.x = ptEnd.x = ClickX;
+                      ptBegin.y = ptEnd.y = ClickY;
+                      /* DrawBoxOutline (hwnd, ptBegin, ptEnd); */
+                      SetCursor (LoadCursor (NULL, IDC_CROSS));
+                 }
+                 fBlocking = TRUE;
+#                endif /* 0 */
 
-          case WM_LBUTTONDBLCLK:/* left double click handling */
-               TtaAbortShowDialogue ();
+                 return 0;
 
-               /* memorise la position de la souris */
-               ClickFrame = frame;
-               ClickX     = LOWORD (lParam);
-               ClickY     = HIWORD (lParam);
-               LocateSelectionInView (frame, ClickX, ClickY, 3);
-               return 0;
+            case WM_LBUTTONUP:
+                 if (fBlocking) {
+#                   if 0
+                    if (WIN_UserGeometry) {
+                       /* DrawBoxOutline (hwnd, ptBegin, ptEnd); */
+                       SetCursor (LoadCursor (NULL, IDC_ARROW));
+                       WIN_UserGeometry = FALSE;
+                    }
+#                   endif /* 0 */
+                    fBlocking = FALSE;
+                 }
+                 return 0;
 
-          case WM_MBUTTONDOWN:
-               /* stop any current insertion of text */
-               CloseInsertion ();
+            case WM_LBUTTONDBLCLK:/* left double click handling */
+                 TtaAbortShowDialogue ();
+	  
+                 /* memorise la position de la souris */
+                 ClickFrame = frame;
+                 ClickX     = LOWORD (lParam);
+                 ClickY     = HIWORD (lParam);
+                 LocateSelectionInView (frame, ClickX, ClickY, 3);
+                 return 0;
 
-               /* if the CTRL key is pressed this is a size change */
-               status = GetKeyState (VK_CONTROL);
-               if (HIBYTE (status)) {
-                  /* changes the box size */
-                  ApplyDirectResize (frame, LOWORD (lParam), HIWORD (lParam));
-                  /* memorize the click position */
-               } else {
-                    TtaAbortShowDialogue ();
-                    LocateSelectionInView (frame, LOWORD (lParam), HIWORD (lParam), 0);
-               }
-               return 0;
+            case WM_MBUTTONDOWN:
+                 ClickFrame = frame;
+                 ClickX = LOWORD (lParam);
+                 ClickY = HIWORD (lParam);
+#                if 0
+                 if (WIN_UserGeometry)
+                    WIN_UserGeometry = FALSE;
+#                endif /* 0 */
+                 /* stop any current insertion of text */
+                 CloseInsertion ();
+		    
+                 /* if the CTRL key is pressed this is a size change */
+                 status = GetKeyState (VK_CONTROL);
+                 if (HIBYTE (status)) {
+                    /* changes the box size */
+                    ApplyDirectResize (frame, LOWORD (lParam), HIWORD (lParam));
+                    /* memorize the click position */
+                 } else {
+                      TtaAbortShowDialogue ();
+                      LocateSelectionInView (frame, LOWORD (lParam), HIWORD (lParam), 0);
+                 }
+                 return 0;
 
-          case WM_MOUSEMOVE:
-               if (fBlocking) { 
-                  if (!WIN_UserGeometry) { 
-                     if (((oldXPos <= LOWORD (lParam) -1) || (oldXPos >= LOWORD (lParam) +1)) && 
-						 ((oldYPos <= HIWORD (lParam) -1) || (oldYPos >= HIWORD (lParam) +1)))	  
-                        LocateSelectionInView (frame, LOWORD (lParam), HIWORD (lParam), 0);
-                  } else {
-                       SetCursor (LoadCursor (NULL, IDC_CROSS));
-                       DrawBoxOutline (hwnd, ptBegin, ptEnd);
-                       ptEnd.x = LOWORD (lParam);
-                       ptEnd.y = HIWORD (lParam);
-                       DrawBoxOutline (hwnd, ptBegin, ptEnd);
-                  }
-               }
-               return 0;
+            case WM_RBUTTONDOWN:
+                 ClickFrame = frame;
+                 ClickX = LOWORD (lParam);
+                 ClickY = HIWORD (lParam);
+#                if 0
+                 if (WIN_UserGeometry)
+                    WIN_UserGeometry = FALSE;
+#                 endif /* 0 */
+				 return 0;
 
-          case WM_DESTROY: 
-			   WIN_ReleaseDeviceContext ();
-               PostQuitMessage (0);
-               return 0;
+            case WM_MOUSEMOVE:
+                 X_Pos = LOWORD (lParam) ;
+                 Y_Pos = HIWORD (lParam) ;
+                 if (fBlocking) {
+                    if (((oldXPos <= X_Pos - 1) || (oldXPos >= X_Pos + 1)) && 
+                        ((oldYPos <= Y_Pos - 1) || (oldYPos >= Y_Pos + 1)))	  
+                       LocateSelectionInView (frame, X_Pos, Y_Pos, 0);
+                 }
+#                if 0
+                 if (fBlocking) {
+                    if (!WIN_UserGeometry) { 
+                       if (((oldXPos <= X_Pos - 1) || (oldXPos >= X_Pos + 1)) && 
+		                   ((oldYPos <= Y_Pos - 1) || (oldYPos >= Y_Pos + 1)))	  
+                          LocateSelectionInView (frame, X_Pos, Y_Pos, 0);
+                    } else {
+						/*
+                         SetCursor (LoadCursor (NULL, IDC_CROSS));
+                         DrawBoxOutline (hwnd, ptBegin, ptEnd);
+                         ptEnd.x = LOWORD (lParam);
+                         ptEnd.y = HIWORD (lParam);
+                         DrawBoxOutline (hwnd, ptBegin, ptEnd);
+						 */
+                    }
+                 }
+#                endif /* 0 */
+				 oldXPos = X_Pos;
+				 oldYPos = Y_Pos;
+                 return 0;
+
+            case WM_DESTROY: 
+                 WIN_ReleaseDeviceContext ();
+                 PostQuitMessage (0);
+                 return 0;
 	       
           default:
                return (DefWindowProc (hwnd, mMsg, wParam, lParam)) ;
@@ -1873,10 +1927,11 @@ int                *pave;
 {
 #  ifndef _WINDOWS
    ThotEvent              event;
-   Drawable            drawable;
 #  else  /* _WINDOWS */
-   MSG                    event;
+   MSG     event;
+   HCURSOR cursor;          
 #  endif /* _WINDOWS */
+   Drawable            drawable;
    int                 i;
 
    if (ClickIsDone == 1) {
@@ -1885,31 +1940,31 @@ int                *pave;
    }
 
    /* Changement du curseur */
-   for (i = 1; i <= MAX_FRAME; i++)
-     {
-#   ifndef _WINDOWS
-	drawable = TtaGetThotWindow (i);
-	if (drawable != 0)
-	   XDefineCursor (TtDisplay, drawable, WindowCurs);
-#   endif /* !_WINDOWS */
+#  ifdef _WINDOWS
+   cursor = LoadCursor (hInstance, MAKEINTRESOURCE (Window_Curs));
+#  else  /* !_WINDOWS */
+   for (i = 1; i <= MAX_FRAME; i++) {
+       drawable = TtaGetThotWindow (i);
+       if (drawable != 0)
+          XDefineCursor (TtDisplay, drawable, WindowCurs);
      }
+#  endif /* !_WINDOWS */
 
    /* Boucle d'attente de designation */
    ClickIsDone = 1;
    ClickFrame = 0;
    ClickX = 0;
    ClickY = 0;
-   while (ClickIsDone == 1)
-     {
-#   ifndef _WINDOWS
-	TtaFetchOneEvent (&event);
-	TtaHandleOneEvent (&event);
-#   else  /* _WINDOWS */
-	
-	GetMessage (&event, NULL, 0, 0);
-	TtaHandleOneWindowEvent (&event);
-	
-#   endif /* _WINDOWS */
+
+   while (ClickIsDone == 1) {
+#        ifndef _WINDOWS 
+         TtaFetchOneEvent (&event);
+         TtaHandleOneEvent (&event);
+#        else /* _WINDOWS */
+         GetMessage (&event, NULL, 0, 0);
+         TtaHandleOneWindowEvent (&event);
+         SetCursor (cursor);
+#        endif /* !_WINDOWS */
      }				/*while */
 
    /* Restauration du curseur */
