@@ -117,7 +117,7 @@
 122 No translation schema for %s
 123 Incorrect .TRA file: %s
 124 Too many output files
-125 Create a window for view %s
+125 No window size for view %s
 126 %s is not a valid sibling for %s (%s)
 127 %s is not a valid child for %s (%s)
 128 Attribute required %s for element %s
