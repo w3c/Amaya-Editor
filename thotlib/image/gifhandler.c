@@ -1115,11 +1115,11 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
 	      if (withAlpha)
 		/* skip the alpha channel */
 		ind++;
-	      if (IS_WIN95)
+	      /*if (IS_WIN95)
 	      temp = (((r * 255) & 63488) |
 		      (((g * 255) >> gshift) & 2016) |
 		      (((b * 255) >> bshift) & 31));
-	      else
+	      else*/
 	      temp = (((r << 8) & 63488) |
 		      (((g << 8) >> gshift) & 2016) |
 		      (((b << 8) >> bshift) & 31));
@@ -1128,11 +1128,11 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
 	    {
 	      /* use one byte per pixel */
 	      col = data[ind++];
-	      if (IS_WIN95)
+	      /*if (IS_WIN95)
 		temp = (((colrs[col].red * 255) & 63488) |
 			(((colrs[col].green * 255) >> gshift) & 2016) |
 			((((colrs[col].blue * 255) >> bshift) & 31)));
-	      else
+	      else*/
 		temp = (((colrs[col].red << 8) & 63488) |
 			(((colrs[col].green << 8) >> gshift) & 2016) |
 			((((colrs[col].blue << 8) >> bshift) & 31)));
