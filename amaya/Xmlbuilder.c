@@ -480,3 +480,109 @@ void XmlStyleSheetPasted (NotifyElement *event)
 	 }
      }
 }
+
+/*----------------------------------------------------------------------
+  CreateXMLElementMenu
+  Create an XML element
+  ----------------------------------------------------------------------*/
+void CreateXMLElementMenu (Document doc, View view)
+{
+#ifdef _WINDOWS
+  int                 nbOldEntries = 20;
+#endif /* _WINDOWS */
+#define MAX_OPTIONS MAX_SUBMENUS
+#define MAX_SUBOPTIONS 20
+#define MAX_LABEL_LENGTH 50
+#define PARAM_INCREMENT 50
+  char           *buffer;
+  int             last_buffer_char;
+  int             nb = 0;
+
+  ElementType         elType, childType;
+  Element	      elText, menuEl, child;
+  Element             option[MAX_OPTIONS];
+  Element	      subOptions[MAX_SUBMENUS][MAX_SUBOPTIONS];
+  ThotBool	      selected[MAX_OPTIONS];
+  ThotBool            subSelected[MAX_SUBMENUS][MAX_SUBOPTIONS];
+  char                text[MAX_LABEL_LENGTH + 1];
+  char                buffmenu[MAX_LENGTH];
+  char               *tmp;
+  Language            lang;
+  int                 length, nbitems, lgmenu, i, nbsubmenus, nbsubitems;
+  int                 modified;
+  ThotBool	      multipleOptions, sel;
+
+  /* create the option menu */
+  nbitems = 0;
+  nbsubmenus = 0;
+  
+  /* use the global allocation buffer to store the entries */
+  buffer = TtaGetMemory (PARAM_INCREMENT);
+  buffer[0] = EOS;
+  last_buffer_char = 0;
+  
+  while (nb < 5 && nbitems < MAX_OPTIONS)
+    {
+      length = 4;
+      strcpy (&text[1], "toto");
+      text[length + 1] = EOS;
+      /* add an item */
+      /* we have to add the 'B', 'T' or 'M' character */
+      text[0] = 'B';
+#ifdef _I18N_
+      /* convert the UTF-8 string */
+      tmp = TtaConvertMbsToByte (text, TtaGetDefaultCharset ());
+      strcpy (&buffer[last_buffer_char], tmp);
+      last_buffer_char = last_buffer_char + (strlen (tmp) + 2) - 1;
+      TtaFreeMemory (tmp);
+#else /* _I18N_ */
+      last_buffer_char = last_buffer_char + (strlen (tmp) + 2) - 1;
+      TtaFreeMemory (text);
+#endif /* _I18N_ */
+      nbitems++; 
+      nb++;
+    }
+  
+  if (nbitems == 0)
+    TtaFreeMemory (buffer);
+  else
+    {
+      /* create the main menu */
+#if defined (_WINDOWS) || defined (_GTK)
+      TtaNewScrollPopup (BaseDialog + OptionMenu, TtaGetViewFrame (doc, 1),
+			 NULL, nbitems, buffer, NULL, multipleOptions, 'L');
+#else /* WINDOWS || _GTK */
+      TtaNewPopup (BaseDialog + OptionMenu, TtaGetViewFrame (doc, 1),
+		   NULL, nbitems, buffer, NULL, 'L');
+#endif /* WINDOWS || _GTK */
+      
+      TtaFreeMemory (buffer);
+      		     
+      /* activate the menu that has just been created */
+      ReturnOption = -1;
+      ReturnOptionMenu = -1;
+#ifndef _WINDOWS
+      TtaSetDialoguePosition ();
+#endif /* !_WINDOWS */
+      TtaShowDialogue (BaseDialog + OptionMenu, FALSE);
+      /* wait for an answer from the user */
+      if (nbsubmenus == 0)
+	TtaWaitShowProcDialogue ();
+      else
+	TtaWaitShowDialogue ();
+      /* destroy the dialogue */
+      TtaDestroyDialogue (BaseDialog + OptionMenu);
+
+
+      if (ReturnOption >= 0 && ReturnOptionMenu >= 0)
+	{
+	  /* make the returned option selected */
+	  if (ReturnOptionMenu == 0)
+	    { /* an item in the main (SELECT) menu */
+	      printf ("\nReturnOption = %d \n", ReturnOption);
+	    }
+	  /* clear the selection (which may happen from clicking on the dialogue) */
+	  TtaUnselect (doc);
+	}
+    }
+}

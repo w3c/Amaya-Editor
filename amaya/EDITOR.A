@@ -221,7 +221,7 @@ MENUS
 
         XMLTypes.SVG_ button:BShowLibrary -> ShowLibrary;
 	XMLTypes.SVG_ button:BAddNewModel -> AddNewModelIntoLibraryForm;	
-	XMLTypes button:BXMLElement -> CreateXMLElement;
+	XMLTypes button:BXMLElement -> CreateXMLElementMenu;
 
 	view:1 Links button:BLinkTarget -> LinkToPreviousTarget;
 	view:1 Links button:BCreateLink -> CreateOrChangeLink;
