@@ -5320,7 +5320,7 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 		      if (!IsMenu (catalogue->Cat_Widget))
 else  /* _WINDOWS */
 			  catalogue->Cat_Widget = w;
-##ifndef _GTK
+#ifndef _GTK
 		      n = 0;
 		      XtSetArg (args[n], XmNsubMenuId, menu);
 		      n++;
