@@ -722,18 +722,17 @@ int                 AHTOpen_file (HTRequest * request)
 static void SafePut_init (void)
 {
   char     *strptr;
-  char     *str = NULL;
-  char*     ptr, *strptrA, *ptr2;
-  char*     domain;
+  char     *ptr, *ptr2;
+  char     *domain;
 
   /* get the proxy settings from the thot.ini file */
   strptr = TtaGetEnvString ("SAFE_PUT_REDIRECT");
   if (strptr && *strptr)
     {
       /* Get copy we can mutilate */
-      ptr2 = strptr;
+      ptr2 = TtaStrdup (strptr);
       /* convert to lowercase */
-      ptr = strptr;
+      ptr = ptr2;
       while (*ptr) 
 	{
 	  *ptr = tolower (*ptr);
@@ -741,14 +740,13 @@ static void SafePut_init (void)
 	}
       
       /* create the list container */
-      safeput_list = HTList_new ();   
+      safeput_list = HTList_new ();
+ 
       /* store the domain list */
-
-      ptr = strptr;
-      while ((domain = HTNextField (&strptr)) != NULL)
+      ptr = ptr2;
+      while ((domain = HTNextField (&ptr)) != NULL)
 	  HTList_addObject (safeput_list, TtaStrdup (domain)); 
 
-      TtaFreeMemory (str);
       TtaFreeMemory (ptr2);
     }
 }
@@ -778,24 +776,25 @@ static void SafePut_delete (void)
   ----------------------------------------------------------------------*/
 static ThotBool SafePut_query (char *url)
 {
-  HTList*  cur;
-  char*    me;
-  ThotBool found;
-  char     tmp[MAX_LENGTH];
+  HTList   *cur;
+  char     *me;
+  ThotBool  found;
+  char      tmp[MAX_LENGTH];
 
   /* extract the domain path of the url and normalize it */
   /* domain = url; */
   cur = safeput_list;
   found = FALSE;
 
-  while ((me = (char*) HTList_nextObject (cur))) {
-        iso2wc_strcpy (tmp, me);
-        if (strstr (url, tmp))
-	  {
-           found = TRUE;
-           break;
-	  } 
-  } 
+  while ((me = (char *) HTList_nextObject (cur)))
+    {
+      iso2wc_strcpy (tmp, me);
+      if (strstr (url, tmp))
+	{
+	  found = TRUE;
+	  break;
+	} 
+    } 
 
   return (found);
 }
@@ -2564,10 +2563,10 @@ static char * NextNameValue (char **pstr, char **name, char **value)
   ---------------------------------------------------------------------*/
 static   HTAssocList * PrepareFormdata (char *string)
 {
-  char*        tmp_string, *tmp_string_ptr;
-  char*        name;
-  char*        value;
-  HTAssocList* formdata;
+  char          *tmp_string, *tmp_string_ptr;
+  char          *name;
+  char          *value;
+  HTAssocList   *formdata;
 
   if (!string)
     return NULL;

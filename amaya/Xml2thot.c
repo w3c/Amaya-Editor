@@ -2329,6 +2329,7 @@ static void       EndOfAttributeValue (CHAR_T *attrValue, CHAR_T *attrName)
 	       else
 		 EndOfXmlAttributeValue (buffer);
 	     }
+	   TtaFreeMemory (buffer);
 	 }
      }
 
