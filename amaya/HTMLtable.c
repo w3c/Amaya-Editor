@@ -171,9 +171,8 @@ static Element GetCloseCell (Element row, Element colhead,
 		{
 		  TtaRegisterAttributeDelete (attr, cell, doc);
 		  TtaRemoveAttribute (cell, attr, doc);
-		  /* remove the ref attribute */
+		  /* remove the ref attribute but don't register */
 		  attr = TtaGetAttribute (cell, attrTypeRef);
-		  TtaRegisterAttributeDelete (attr, cell, doc);
 		  TtaRemoveAttribute (cell, attr, doc);
 		}
 	      else
@@ -195,7 +194,7 @@ static Element GetCloseCell (Element row, Element colhead,
 	      if (attr)
 		/* this cell has an attribute rowspan */
 		*rowspan = TtaGetAttributeValue (attr);
-	      if (*rowspan < 0)
+	      if (*rowspan < 1)
 		*rowspan = 1;
 	    }
 	}

@@ -1647,12 +1647,12 @@ void InitTranslations (char *appliname)
 {
   char               *appHome;	   /* fichier de translation */
   char                fullName[200];  /* ligne en construction pour motif */
-  char                home[200]; 
-  char                name[80]; 
-  char               *text;	   
-  char               *adr;
+  char                home[200];
+  char                name[80];
+  char               *text;
+  char               *addr;
   char                transText[MAX_LENGTH];
-  char                ch[80]; 
+  char                ch[80];
   char                line[200];  /* ligne en construction pour motif */
   char                equiv[MAX_EQUIV]; /* equivalents caracteres pour motif */
   unsigned int        key1, key2; /* 1ere & 2eme cles sous forme de keysym X */
@@ -1874,19 +1874,20 @@ void InitTranslations (char *appliname)
 
 	      /* Isole l'intitule de la commande */
 	      strncpy (ch, transText, 80);
-	      adr = strchr (ch, '(');
-	      if (adr == NULL)
-		adr = strchr (ch, SPACE);
-	      if (adr == NULL)
-		i = max;
+	      addr = strchr (ch, '(');
+	      if (addr == NULL)
+		addr = strchr (ch, SPACE);
+	      if (addr)
+		addr[0] = EOS;
 	      else
-		{
-		  adr[0] = EOS;
-		  /* Selection de la bonne commande */
-		  for (i = 0; i < max; i++)
-		    if (!strcmp (ch, MenuActionList[i].ActionName))
-		      break;
-		} 
+		do
+		  i = fgetc (file);
+		while (i != ')');
+
+	      /* Selection de la bonne commande */
+	      for (i = 0; i < max; i++)
+		if (!strcmp (ch, MenuActionList[i].ActionName))
+		  break;
 
 	      if (i <= 8)
 		{
@@ -1895,7 +1896,7 @@ void InitTranslations (char *appliname)
 		  if (!strcmp (ch, "TtcInsertChar"))
 		    {
 		      strcat (text, "insert-string(");
-		      strcat (text, (char *)AsciiTranslate (&adr[1]));
+		      strcat (text, (char *)AsciiTranslate (&addr[1]));
 		    }
 		  else if (!strcmp (ch, "TtcDeleteSelection"))
 		    strcat (text, "delete-selection()");
@@ -1936,8 +1937,8 @@ void InitTranslations (char *appliname)
 		    }
 		  else
 		    {
-		      adr = (char *)AsciiTranslate (&transText[len]);
-		      value = (unsigned char) adr[0];
+		      addr = (char *)AsciiTranslate (&transText[len]);
+		      value = (unsigned char) addr[0];
 		    }
 		  MemoKey (mod1, key1, isSpecialKey1,
 			   mod2, key2, isSpecialKey2, value, 0);

@@ -161,7 +161,7 @@ Ctrl <Key>i , Ctrl <Key>y:                 SetOnOffAcronym()
 Ctrl <Key>i , Ctrl <Key>z:                 SetOnOffBDO() 
 
 #Links and SvgLibrary
-Ctrl <Key>l , Ctrl <Key>a:         AddNewModelIntoLibrary ()
+Ctrl <Key>l , Ctrl <Key>a:         AddNewModelIntoLibrary()
 Ctrl <Key>l , Ctrl <Key>d:         DeleteAnchor() 
 Ctrl <Key>l , Ctrl <Key>f:	   AddNewModelIntoLibraryForm()
 Ctrl <Key>l , Ctrl <Key>l:         CreateOrChangeLink() 
