@@ -626,6 +626,7 @@ void SetSingleIntHorizStretchAttr (Element el, Document doc, Element* selEl)
 	     /* check if the UnderOverBase has a IntHorizStretch attribute */
 	     {
 	       childType.ElTypeNum = MathML_EL_UnderOverBase;
+		   childType.ElSSchema = elType.ElSSchema;
 	       textEl = TtaSearchTypedElement (childType, SearchInTree, child);
 	       if (textEl)
 		 {
