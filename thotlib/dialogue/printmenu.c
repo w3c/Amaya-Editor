@@ -83,16 +83,6 @@ static Name         PresSchema;
 
 #ifdef _WINDOWS
 #include "win_f.h"
-
-#if 0
-#ifdef __STDC__
-extern void PrintDoc (HWND, int, char**, HDC, BOOL, int, char*, char*, HINSTANCE, BOOL);
-#else  /* __STDC__ */
-extern void PrintDoc ();
-#endif /* __STDC__ */
-#endif /* 0000 */
-extern int  currentFrame;
-extern BOOL buttonCommand;
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------

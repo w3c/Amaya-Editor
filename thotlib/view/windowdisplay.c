@@ -14,9 +14,8 @@
  *
  */
 
+#include "math.h"
 #include "thot_sys.h"
-#ifdef SYSV
-#endif
 #include "constmedia.h"
 #include "typemedia.h"
 #include "frame.h"

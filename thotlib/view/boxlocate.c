@@ -34,6 +34,7 @@
 #include "frame_tv.h"
 #include "units_tv.h"
 #include "platform_tv.h"
+#include "appdialogue_tv.h"
 
 #include "absboxes_f.h"
 #include "appdialogue_tv.h"
@@ -59,10 +60,6 @@
 
 #define Y_RATIO 200		/* penalisation en Y */
 #define ANCHOR_SIZE 3		/* taille des ancres */
-
-#ifdef _WINDOWS
-extern int currentFrame;
-#endif /* _WINDOWS */
 
 
 /*----------------------------------------------------------------------

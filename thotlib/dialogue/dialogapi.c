@@ -40,6 +40,7 @@
 #endif /* _WINDOWS */
 
 #define THOT_EXPORT extern
+#include "appdialogue_tv.h"
 #include "thotcolor_tv.h"
 #include "frame_tv.h"
 #include "font_tv.h"
@@ -232,7 +233,6 @@ unsigned char*      WIN_buffer;	/* Buffer for exchanges with Window */
 int                 WIN_Lgbuffer;
 extern char         docToOpen [256];
 extern HMENU        currentMenu;
-extern int          currentFrame;
 #ifdef  APPFILENAMEFILTER
 #       undef  APPFILENAMEFILTER
 #endif  /* APPFILENAMEFILTER */

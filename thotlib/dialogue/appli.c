@@ -109,12 +109,10 @@ extern HWND      logoFrame;
 extern HWND      StatusBar;
 extern HWND      currentWindow;
 extern HWND      WIN_curWin;
-extern HINSTANCE hInstance;
 extern HWND      currentDlg;
 extern int       ReturnOption;
 #ifndef _WIN_PRINT
 extern int  Window_Curs;
-extern int  currentFrame;
 #if 0
 HBITMAP     appLogo = (HBITMAP)0;
 int         cyLogo;
@@ -139,7 +137,6 @@ int         Y_Pos;
 int         cyToolBar;
 int         CommandToString [MAX_FRAME][MAX_BUTTON];
 char        szTbStrings [4096];
-BOOL        buttonCommand;
 BOOL        autoScroll = FALSE;
 boolean viewClosed = FALSE;
 DWORD       dwToolBarStyles   = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_TOP | TBSTYLE_TOOLTIPS;

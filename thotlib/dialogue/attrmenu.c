@@ -50,7 +50,6 @@ static char         WIN_Lab [1024];
 static int          WIN_nbItem;
 static char         WIN_title [MAX_NAME_LENGTH + 2];
 
-extern int          currentFrame;
 int                 WIN_MenuAlphabet;
 char                WIN_buffMenu [MAX_TXT_LEN];
 #endif /* _WINDOWS */

@@ -101,7 +101,6 @@ static BOOL    doSwitchButton = TRUE;
 
 static int FormattedViewXPos = 0;
 static int FormattedViewYPos = 0;
-int     currentFrame;
 
 HWND  hwndClient ;
 HWND  ToolBar ;

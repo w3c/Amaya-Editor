@@ -58,10 +58,9 @@
 #      define _IDDONE_     100
 #      define DEFAULTCOLOR 103
 
-static BOOL   wndRegistered = FALSE ;
+static BOOL   wndRegistered = FALSE;
 
 extern LPCTSTR iconID;
-extern int     currentFrame;
 
 #ifdef __STDC__
 LRESULT CALLBACK ThotColorPaletteWndProc (HWND, UINT, WPARAM, LPARAM);

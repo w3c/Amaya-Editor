@@ -21,7 +21,7 @@
  *          C. Roisin (INRIA) - Columns and pages
  *
  */
-
+#include "math.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"

@@ -22,9 +22,8 @@
  *
  */
 
+#include "math.h"
 #include "thot_sys.h"
-#ifdef SYSV
-#endif
 #include "message.h"
 #include "constmedia.h"
 #include "typemedia.h"

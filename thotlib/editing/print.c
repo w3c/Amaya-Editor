@@ -63,9 +63,7 @@
 #include "frame_tv.h"
 #include "thotcolor.h"
 #include "thotcolor_tv.h"
-#ifndef _WIN_PRINT
 #include "thotpalette_tv.h"
-#endif /* WIN_PRINT */
 #include "frame_tv.h"
 #include "platform_tv.h"
 #include "appdialogue_tv.h"
@@ -152,10 +150,6 @@ static int          LastPrinted;
 
 #ifdef _WINDOWS
 #define PRINTPROGRESSDLG 389
-extern HDC       TtPrinterDC;
-extern int       currentFrame;
-extern HINSTANCE hInstance;
-extern BOOL      buttonCommand;
 
 BOOL             bError;
 BOOL             gbAbort;
