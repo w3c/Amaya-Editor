@@ -2155,6 +2155,8 @@ SpecFont ThotLoadFont (char script, int family, int highlight, int size,
         /* adjust the font size to the printer definition */
        size = (size * 72 + DOT_PER_INCH / 2) / DOT_PER_INCH;
 #endif /* _WIN_PRINT */
+	   else
+		  size = PixelToPoint (size);
       unit = UnPoint;
     }
   else if (unit == UnXHeight || unit == UnPercent)
