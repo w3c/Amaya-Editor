@@ -2491,11 +2491,13 @@ int                 docid;
  
    if (Amaya && libDoStop)
      { 
+#if 0 /* for later */
        /* verify if there are any requests at all associated with docid */
        docid_status = (AHTDocId_Status *) GetDocIdStatus (docid,
 							  Amaya->docid_status);
        if (docid_status == (AHTDocId_Status *) NULL)
 	 return;
+#endif /* 0 */
        /* temporary call to stop all requests, as libwww changed its API */
        StopAllRequests (docid);
      }
