@@ -1768,9 +1768,11 @@ int                 pattern;
    ThotPoint          *points;
    int                 i, j;
    PtrTextBuffer       adbuff;
-
-   HPEN hPen;
-   HPEN hOldPen;
+   Pixmap              pat = (Pixmap) 0;
+   HPEN                hPen;
+   HPEN                hOldPen;
+   HBRUSH              hBrush;
+   HBRUSH              hOldBrush;
    int  result;
 
    /* Allocate a table of points */
@@ -1798,6 +1800,8 @@ int                 pattern;
    points[nb - 1].y = points[0].y;
 
    /* Fill in the polygone */
+   pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
+
 
    /* Draw the border */
    if (thick > 0) {
@@ -1812,6 +1816,11 @@ int                 pattern;
          WinErrorBox (WIN_Main_Wd, "windowdisplay.c - DrawPolygon (1)");
       hOldPen = SelectObject (TtDisplay, hPen) ;
       InitDrawing (0, style, thick, RO, active, fg);
+      if (pat != (Pixmap)0) {
+         hBrush = CreateSolidBrush (ColorPixel (bg));
+         hOldBrush = SelectObject (TtDisplay, hBrush);
+         Polygon (TtDisplay, points, nb);
+	  }
       Polyline (TtDisplay, points, nb);
       FinishDrawing (0, RO, active);
 	  SelectObject (TtDisplay, hOldPen);
@@ -1820,6 +1829,17 @@ int                 pattern;
          WinErrorBox (WIN_Main_Wd, "windowdisplay.c - DrawPolygon (2)");
       hPen = (HPEN) 0;
    }
+
+   if (hBrush) {
+      SelectObject (TtDisplay, hOldBrush);
+      if (!DeleteObject (hBrush))
+         WinErrorBox (NULL, "windowdisplay.c - DrawSpline (3)");
+   }
+
+   if (pat != (Pixmap)0)
+      if (!DeleteObject ((HGDIOBJ) pat))
+         WinErrorBox (NULL, "windowdisplay.c - DrawSpline (3)");
+
    /* free the table of points */
    free (points);
 }
@@ -2218,9 +2238,15 @@ C_points           *controls;
       FinishDrawing (0, RO, active);
    }
 
+   if (hBrush) {
+      SelectObject (TtDisplay, hOldBrush);
+      if (!DeleteObject (hBrush))
+         WinErrorBox (NULL, "windowdisplay.c - DrawSpline (3)");
+   }
+
    if (pat != (Pixmap)0)
       if (!DeleteObject ((HGDIOBJ) pat))
-         WinErrorBox (NULL, "windowdisplay.c - DrawSpline (3)");
+         WinErrorBox (NULL, "windowdisplay.c - DrawSpline (4)");
 
    /* free the table of points */
    free (points);
