@@ -165,6 +165,15 @@ extern void TtaNewNumberForm ( int ref,
                                ThotBool react );
 extern void TtaSetNumberForm ( int ref,
                                int val );
+extern ThotWidget TtaAddSubTree ( ThotWidget parent );
+extern ThotWidget TtaAddTreeItem ( ThotWidget parent,
+                                   char *item_label,
+                                   void *callback,
+                                   void *user_data );
+extern ThotWidget TtaNewTreeForm ( int ref,
+                                   int ref_parent,
+                                   char *label,
+                                   ThotBool multiple );
 extern void TtaAbortShowDialogue ( void );
 extern void TtaSetDialoguePosition ( void );
 extern void TtaShowDialogue ( int ref,
@@ -335,6 +344,15 @@ extern void TtaNewNumberForm (/* int ref,
                                  ThotBool react */);
 extern void TtaSetNumberForm (/* int ref,
                                  int val */);
+extern ThotWidget TtaAddSubTree (/* ThotWidget parent */);
+extern ThotWidget TtaAddTreeItem (/* ThotWidget parent,
+                                     char *item_label,
+                                     void *callback,
+                                     void *user_data */);
+extern ThotWidget TtaNewTreeForm (/* int ref,
+                                     int ref_parent,
+                                     char *label,
+                                     ThotBool multiple */);
 extern void TtaAbortShowDialogue (/* void */);
 extern void TtaSetDialoguePosition (/* void */);
 extern void TtaShowDialogue (/* int ref,

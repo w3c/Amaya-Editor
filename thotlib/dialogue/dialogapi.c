@@ -55,6 +55,7 @@
 #define CAT_PULL      11
 #define CAT_ICON      12
 #define CAT_SCRPOPUP  13
+#define CAT_TREE      14
 
 #define MAX_CAT       20
 #define C_NUMBER      15
@@ -1837,8 +1838,11 @@ static ThotBool CallTextChangeGTK (ThotWidget w, struct Cat_Context *catalogue)
 	  (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA,
 			       XmTextGetString ((ThotWidget) catalogue->Cat_Entries));
 #else /* _GTK */
-	  (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA,
-			       gtk_entry_get_text (GTK_ENTRY (catalogue->Cat_Entries)));
+	  if (GTK_IS_ENTRY (catalogue->Cat_Entries))
+	    text = gtk_entry_get_text (GTK_ENTRY (catalogue->Cat_Entries));
+	  else
+	    text = gtk_editable_get_chars (GTK_EDITABLE(catalogue->Cat_Entries), 0, -1);
+	  (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA, text);
 #endif /* _GTK */
 	}
       else if (catalogue->Cat_Type == CAT_SELECT)
@@ -2389,7 +2393,8 @@ static void ClearChildren (struct Cat_Context *parentCatalogue)
 		  /* Libere les blocs des entrees */
 		  if ((catalogue->Cat_Type != CAT_TEXT)
 		      && (catalogue->Cat_Type != CAT_SELECT)
-		      && (catalogue->Cat_Type != CAT_LABEL))
+		      && (catalogue->Cat_Type != CAT_LABEL)
+		      && (catalogue->Cat_Type != CAT_TREE))
 		    {
 		       FreeEList (catalogue->Cat_Entries);
 		       catalogue->Cat_Entries = NULL;
@@ -6056,7 +6061,8 @@ void TtaDestroyDialogue (int ref)
 	else if ((catalogue->Cat_Type != CAT_POPUP)
 		 && (catalogue->Cat_Type != CAT_SCRPOPUP)
 		 && (catalogue->Cat_Type != CAT_PULL)
-		 && (catalogue->Cat_Type != CAT_LABEL))
+		 && (catalogue->Cat_Type != CAT_LABEL)
+		 && (catalogue->Cat_Type != CAT_TREE))
 	  {
 	     /* C'est surement une destruction de formulaire */
 	     if (DestForm (ref) != 0)
@@ -6633,6 +6639,7 @@ void TtaAttachForm (int ref)
 	    && (catalogue->Cat_Type != CAT_TMENU)
 	    && (catalogue->Cat_Type != CAT_TEXT)
 	    && (catalogue->Cat_Type != CAT_LABEL)
+	    && (catalogue->Cat_Type != CAT_TREE)
 	    && (catalogue->Cat_Type != CAT_INT)
 	    && (catalogue->Cat_Type != CAT_SELECT))
       TtaError (ERR_invalid_reference);
@@ -6704,6 +6711,7 @@ void TtaDetachForm (int ref)
 	    && (catalogue->Cat_Type != CAT_TMENU)
 	    && (catalogue->Cat_Type != CAT_TEXT)
 	    && (catalogue->Cat_Type != CAT_LABEL)
+	    && (catalogue->Cat_Type != CAT_TREE)
 	    && (catalogue->Cat_Type != CAT_INT)
 	    && (catalogue->Cat_Type != CAT_SELECT))
       TtaError (ERR_invalid_reference);
@@ -7682,6 +7690,10 @@ void TtaNewTextForm (int ref, int ref_parent, char *title, int width,
 	/*_____________________________________________________________ Sinon __*/
 	else
 	  {
+	    /* adjust the height size */
+	     if (height < 2)
+	       height = 1;
+
 	     /* Cree a l'interieur Row-Column du formulaire */
 	     row = AddInFormulary (parentCatalogue, &i, &ent, &adbloc);
 #ifndef _GTK
@@ -7772,7 +7784,10 @@ void TtaNewTextForm (int ref, int ref_parent, char *title, int width,
 		 gtk_box_pack_start (GTK_BOX(row), w, FALSE, FALSE, 2);
 	       }	
 	     /* new text widget added into the row widget */
-	     w = gtk_entry_new ();
+	     if (height == 1)
+	       w = gtk_entry_new ();
+	     else
+	       w = gtk_text_new (NULL, NULL);
 	     gtk_widget_show (w);
 	     w->style->font=DefaultFont;
 	     gtk_box_pack_start (GTK_BOX(row), w, FALSE, FALSE, 2);
@@ -7780,11 +7795,19 @@ void TtaNewTextForm (int ref, int ref_parent, char *title, int width,
 	     if (width == 0)
 	       gtk_widget_set_usize (GTK_WIDGET(w),
 				     10*gdk_char_width (DefaultFont, 'n'),
-				     10+gdk_char_height (DefaultFont, '|'));
+				     10+height*gdk_char_height (DefaultFont, '|'));
 	     else
 	       gtk_widget_set_usize (GTK_WIDGET(w),
 				     (width)*gdk_char_width (DefaultFont, 'n'),
-				     10+gdk_char_height (DefaultFont, '|'));
+				     10+height*gdk_char_height (DefaultFont, '|'));
+
+	     /* extra things to do for the textedit */
+	     if (height > 1)
+	       {
+		 gtk_text_set_editable (GTK_TEXT(w), TRUE);
+		 gtk_text_set_word_wrap (GTK_TEXT(w), TRUE);
+	       }
+
 	     if (!parentCatalogue->Cat_Focus)
 	       {
 		 /* first entry in the form */
@@ -7871,7 +7894,10 @@ void TtaSetTextForm (int ref, char *text)
 #else /* _GTK */
         if (catalogue->Cat_React)
 	  RemoveSignalGTK (GTK_OBJECT(w), "changed");  
-	gtk_entry_set_text (GTK_ENTRY (w), text);
+	if (GTK_IS_ENTRY (w))
+	  gtk_entry_set_text (GTK_ENTRY (w), text);
+	else 
+	  gtk_text_insert (GTK_TEXT(w), NULL, NULL, NULL, text, -1);
 	/*gtk_editable_select_region(GTK_EDITABLE(w), 0, -1);*/
         if (catalogue->Cat_React)
 	  ConnectSignalGTK (GTK_OBJECT(w), "changed",
@@ -8170,6 +8196,229 @@ void TtaSetNumberForm (int ref, int val)
 	  ConnectSignalGTK (GTK_OBJECT(wtext), "changed", GTK_SIGNAL_FUNC(CallValueSet), (gpointer)catalogue);
 #endif /* _GTK */
      }
+}
+
+
+/*----------------------------------------------------------------------
+  TreeItemSelect
+  Invokes the user callback if registred and gives the selected/
+  deselected state
+  ----------------------------------------------------------------------*/
+typedef void   Treecbf (ThotWidget w, ThotBool state, void *user_data);
+static void TreeItemSelect (ThotWidget w, ThotBool state, caddr_t call_d)
+{
+#ifdef _GTK
+  Treecbf *cbf;
+  void *user_data;
+
+  cbf = (Treecbf *) gtk_object_get_data (GTK_OBJECT(w), "cbf");
+  user_data = gtk_object_get_data (GTK_OBJECT(w), "user_data");
+
+  if (cbf)
+      (*cbf) (w, state, user_data);
+
+#endif /* GTK */
+}
+
+/*----------------------------------------------------------------------
+   TtaAddSubTree
+   Creates a new subtree and returns its reference.
+   Parent gives the widget to which the new subtree should be attached.
+  ----------------------------------------------------------------------*/
+ThotWidget TtaAddSubTree (ThotWidget parent)
+     /* add some tree stuff here */
+{
+  ThotWidget subtree = NULL;
+#ifdef _GTK
+
+  if (!parent)
+    return NULL;
+
+  subtree = gtk_tree_new();
+  gtk_tree_set_view_lines (GTK_TREE(subtree), TRUE);
+  
+  gtk_tree_item_set_subtree (GTK_TREE_ITEM(parent),
+			    subtree);
+#endif
+  return (subtree);
+
+}
+
+/*----------------------------------------------------------------------
+   TtaAddTreeItem
+   parent points to the parent of the tree.
+   label gives the item's label
+   callback is the function to be invoked when the widget is selected.
+   user_data is what the user wants to feed to the callback function.
+   Returns the reference of the new widget.
+  ----------------------------------------------------------------------*/
+ThotWidget TtaAddTreeItem (ThotWidget parent, char *item_label, void *callback, void *user_data)
+{
+  ThotWidget tree_item = NULL;
+
+#ifdef _GTK
+  GtkWidget *hbox = NULL;
+  GtkWidget *label = NULL;
+
+  tree_item = gtk_tree_item_new ();
+  hbox = gtk_hbox_new(FALSE, 5);
+  gtk_container_add(GTK_CONTAINER(tree_item), hbox);
+  /* a test to find the correct item */
+  ConnectSignalGTK (GTK_OBJECT(tree_item), "select", GTK_SIGNAL_FUNC(TreeItemSelect), 
+		    (gpointer) TRUE);
+  ConnectSignalGTK (GTK_OBJECT(tree_item), "deselect", GTK_SIGNAL_FUNC(TreeItemSelect), 
+		    (gpointer) FALSE);
+  if (item_label)
+    label = gtk_label_new (item_label);
+  else
+    label = gtk_label_new ("");
+
+  gtk_box_pack_start(GTK_BOX(hbox), label, TRUE, TRUE, 0);
+
+  /* memorize callback function and client data */
+  gtk_object_set_data (GTK_OBJECT(tree_item), 
+		       "cbf", 
+		       (gpointer) callback);
+  gtk_object_set_data (GTK_OBJECT(tree_item), 
+		       "user_data", 
+		       (gpointer) user_data);
+  gtk_tree_append(GTK_TREE(parent), tree_item);
+
+  gtk_widget_show_all(tree_item);	  
+
+#endif /* _GTK */
+
+  return (tree_item);
+
+}
+
+/*----------------------------------------------------------------------
+   TtaNewTreeForm
+   The parameter ref gives the catalog reference
+   The parameter text gives the form's label
+   The parameter multiple says if mutliple selections are allowed inside
+   the tree.
+  ----------------------------------------------------------------------*/
+ThotWidget TtaNewTreeForm (int ref, int ref_parent, char *label, ThotBool multiple)
+{
+  ThotWidget          tree = NULL;
+
+#ifdef _GTK
+   /* general stuff, move it up when adding win32 */
+   int                 i;
+   int                 ent;
+   int                 rebuilded;
+   struct E_List      *adbloc;
+   ThotWidget          w, tmpw;
+   struct Cat_Context *catalogue;
+   struct Cat_Context *parentCatalogue;
+   /* end of general info */
+
+   if (ref == 0)
+     {
+	TtaError (ERR_invalid_reference);
+	return NULL;
+     }
+   /*   title_string = 0;*/
+   catalogue = CatEntry (ref);
+   rebuilded = 0;
+   if (catalogue == NULL)
+     {
+       TtaError (ERR_cannot_create_dialogue);
+       return NULL;
+     }
+   else if (catalogue->Cat_Widget != 0 && catalogue->Cat_Type == CAT_TREE)
+     {
+	/* Modification du catalogue */
+	w = catalogue->Cat_Widget;
+	gtk_widget_show (w);
+	gtk_label_set_text (GTK_LABEL (w), label);	
+     }
+   else
+     {
+	if (catalogue->Cat_Widget != 0)
+	   /* Le catalogue est a reconstruire completement */
+	   TtaDestroyDialogue (ref);
+	/*======================================> Recherche le catalogue parent */
+	parentCatalogue = CatEntry (ref_parent);
+	/*__________________________________ Le catalogue parent n'existe pas __*/
+	if (parentCatalogue == NULL)
+	  {
+	     TtaError (ERR_invalid_parent_dialogue);
+	     return NULL;
+	  }
+	else if (parentCatalogue->Cat_Widget == 0)
+	  {
+	     TtaError (ERR_invalid_parent_dialogue);
+	     return NULL;
+	  }
+	/*_________________________________________ Sous-menu d'un formulaire __*/
+	else if ((parentCatalogue->Cat_Type != CAT_FORM)
+		 && (parentCatalogue->Cat_Type != CAT_SHEET)
+		 && (parentCatalogue->Cat_Type != CAT_DIALOG))
+	  {
+	     TtaError (ERR_invalid_parent_dialogue);
+	     return NULL;
+	  }
+	else if (label == NULL)
+	  {
+	     TtaError (ERR_invalid_parameter);
+	     return NULL;
+	  }
+	/* Recupere le widget parent */
+	w = AddInFormulary (parentCatalogue, &i, &ent, &adbloc);
+	tmpw = gtk_label_new (label);
+	gtk_misc_set_alignment (GTK_MISC (tmpw), 0.0, 0.5);
+	gtk_widget_show (GTK_WIDGET(tmpw));
+	tmpw->style->font=DefaultFont;
+	gtk_label_set_justify (GTK_LABEL (tmpw), GTK_JUSTIFY_LEFT);
+	gtk_box_pack_start (GTK_BOX(w), GTK_WIDGET(tmpw), FALSE, FALSE, 0);
+	/* on fou les couleurs (A FAIRE)*/
+	gtk_widget_set_name (tmpw, "Dialogue");
+
+	/* add some tree stuff here */
+	{
+	  GtkWidget *scrolled_window;
+	  GtkWidget *label = NULL;
+
+	  scrolled_window = gtk_scrolled_window_new(NULL, NULL);
+	  gtk_scrolled_window_set_policy
+	    (GTK_SCROLLED_WINDOW(scrolled_window),
+	     GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+	  gtk_box_pack_start (GTK_BOX(w), scrolled_window,
+			      TRUE, TRUE, 0);
+	  w = scrolled_window;
+
+	  tree = gtk_tree_new();
+	  gtk_tree_set_view_lines (GTK_TREE(tree), TRUE);
+	  if (multiple)
+	    gtk_tree_set_selection_mode (GTK_TREE(tree),
+					 GTK_SELECTION_MULTIPLE);
+	  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW(scrolled_window), 
+						 tree);
+#if 0
+	  subtree = gtk_tree_new();
+	  gtk_tree_set_view_lines(GTK_TREE(subtree), TRUE);
+
+	  gtk_tree_item_set_subtree(GTK_TREE_ITEM(tree_item),
+				    subtree);
+	  tree_item =  NewTreeItem ("Blue whales");
+	  gtk_tree_append(GTK_TREE(subtree), tree_item);
+#endif
+
+	}
+	  
+	catalogue->Cat_Widget = w;
+	catalogue->Cat_Ref = ref;
+	catalogue->Cat_Type = CAT_TREE;
+	catalogue->Cat_PtParent = parentCatalogue;
+	adbloc->E_ThotWidget[ent] = (ThotWidget) (catalogue);
+	adbloc->E_Free[ent] = 'N';
+	catalogue->Cat_EntryParent = i;
+	catalogue->Cat_Entries = NULL;
+     }
+#endif /* GTK */
+   return tree;
 }
 
 /*----------------------------------------------------------------------

@@ -352,6 +352,34 @@ extern void TtaNewNumberForm (int ref, int ref_parent, char *title, int min,
 extern void TtaSetNumberForm (int ref, int val);
 
 /*----------------------------------------------------------------------
+   TtaAddSubTree
+   Creates a new subtree and returns its reference.
+   Parent gives the widget to which the new subtree should be attached.
+  ----------------------------------------------------------------------*/
+extern ThotWidget TtaAddSubTree (ThotWidget parent);
+
+/*----------------------------------------------------------------------
+   TtaAddTreeItem
+   parent points to the parent of the tree.
+   label gives the item's label
+   callback is the function to be invoked when the widget is selected.
+   user_data is what the user wants to feed to the callback function.
+   Returns the reference of the new widget.
+  ----------------------------------------------------------------------*/
+extern ThotWidget TtaAddTreeItem (ThotWidget parent, char *item_label, void *callback, 
+				  void *user_data);
+
+/*----------------------------------------------------------------------
+   TtaNewTreeForm
+   The parameter ref gives the catalog reference
+   The parameter text gives the form's label
+   The parameter multiple says if mutliple selections are allowed inside
+   the tree.
+  ----------------------------------------------------------------------*/
+extern ThotWidget TtaNewTreeForm (int ref, int ref_parent, char *label, 
+				  ThotBool multiple);
+
+/*----------------------------------------------------------------------
    TtaSetDialoguePosition me'morise la position actuelle de la souris 
    comme position d'affichage des TtaShowDialogue().               
   ----------------------------------------------------------------------*/
