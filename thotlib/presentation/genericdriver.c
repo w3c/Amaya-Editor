@@ -1500,14 +1500,14 @@ void               *param;
     */
    pSchemaStr = (PtrSSchema) TtaGetDocumentSSchema (doc);
    pSc1 = (PtrPSchema) target;
-   ctxt = GetGenericContext (doc);
    if (pSchemaStr == NULL)
       return;
    if (pSc1 == NULL)
       return;
-   if (ctxt == NULL)
-      return;
    if (handler == NULL)
+      return;
+   ctxt = GetGenericContext (doc);
+   if (ctxt == NULL)
       return;
 
    /*

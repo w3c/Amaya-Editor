@@ -1,7 +1,7 @@
 #!/bin/sh
-VERSION=2.0
+VERSION=2.0a
 THOTDIR=$HOME/opera
-DEST=$HOME/tmp
+DEST=/tahiti/thottape
 PLATFORMS="solaris2 LINUX LINUX-ELF SUN4 SGI RS6000"
 
 TAR="tar cvbfh 200"

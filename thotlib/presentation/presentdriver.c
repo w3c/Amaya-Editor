@@ -73,6 +73,7 @@ int                 specific;
    switch (unit)
 	 {
 	    case DRIVERP_UNIT_REL:
+	       int_unit = UnRelative;
 	       break;
 	    case DRIVERP_UNIT_EM:
 	       int_unit = UnRelative;
@@ -141,7 +142,7 @@ int                 specific;
 	    case PtSize:
 	    case PtLineSpacing:
 	    case PtLineWeight:
-	       rule->PrMinUnit = unit;
+	       rule->PrMinUnit = int_unit;
 	       rule->PrMinValue = value;
 	       rule->PrMinAttr = FALSE;
 	       break;
@@ -149,7 +150,7 @@ int                 specific;
 	    case PtHorizRef:
 	    case PtVertPos:
 	    case PtHorizPos:
-	       rule->PrPosRule.PoDistUnit = unit;
+	       rule->PrPosRule.PoDistUnit = int_unit;
 	       rule->PrPosRule.PoDistance = value;
 	       break;
 	    case PtHeight:
@@ -169,7 +170,7 @@ int                 specific;
     * between external and internal value.
     */
 
-   rule->PrType = type;
+   rule->PrType = (PRuleType) type;
    switch (type)
 	 {
 	    case PtVertPos:
@@ -315,7 +316,7 @@ int                 specific;
 	       {
 		  rule->PrPresMode = PresImmediate;
 		  rule->PrMinAttr = 0;
-		  rule->PrMinUnit = unit;
+		  rule->PrMinUnit = int_unit;
 		  rule->PrMinValue = value;
 		  break;
 	       }

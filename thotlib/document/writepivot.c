@@ -559,6 +559,7 @@ PtrReference        pRef;
 {
    PtrReferredDescr    pRefD;
    LabelString         label;
+   LabelString         labelNul = "";
    boolean             expansion;
 
    /* ecrit le type de la reference */
@@ -569,7 +570,7 @@ PtrReference        pRef;
    PutBoolean (pivFile, pRef->RdInternalRef);
    if (pRef->RdReferred == NULL)
       /* la reference ne designe rien, on ecrit un label nul */
-      PutLabel (pivFile, "");
+      PutLabel (pivFile, labelNul);
    else
      {
 	pRefD = pRef->RdReferred;

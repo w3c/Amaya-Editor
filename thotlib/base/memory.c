@@ -1197,6 +1197,8 @@ PtrPSchema          pSP;
   for (i = 0; i < MAX_RULES_SSCHEMA; i++)
     {
       pSP->PsElemPRule[i] = NULL;
+      if (pSP->PsInheritedAttr[i] != NULL)
+          TtaFreeMemory(pSP->PsInheritedAttr[i]);
       pSP->PsInheritedAttr[i] = NULL;
     }
   

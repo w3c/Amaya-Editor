@@ -24,7 +24,7 @@
 #define MAX_DICTS        2  /* Maximum number of dictionaries related to a given language */
 
 #define MAX_PATTERN	5000  	/* nbre max de pattern dans une langue */
-#define MAX_LET_PATTERN	13	/* nbre max de lettres dans un pattern +1 */
+#define MAX_LET_PATTERN	20	/* nbre max de lettres dans un pattern +1 */
 #define MAX_POINT_COUP	8
 
 #define ISHYPHENABLE(c) ((c) == '1' || (c) =='3' || (c) == '5' || (c) == '7' || (c) == '9')

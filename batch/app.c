@@ -198,7 +198,7 @@ PtrAppMenu          firstMenu;
 	     if (menu->AppMenuName == NULL)
 		curMenu->AppNameValue = NULL;
 	     else
-		curMenu->AppNameValue = strdup (menu->AppMenuName);
+		curMenu->AppNameValue = TtaStrdup (menu->AppMenuName);
 	     curMenu->AppNextName = NULL;
 	     if (prevMenu == NULL)
 		MenusUsed = curMenu;
@@ -235,7 +235,7 @@ PtrAppMenu          firstMenu;
 		     /* le nom de l'item n'est pas in the list, on l'y met */
 		    {
 		       curItem = (PtrAppName) TtaGetMemory (sizeof (AppName));
-		       curItem->AppNameValue = strdup (item->AppItemName);
+		       curItem->AppNameValue = TtaStrdup (item->AppItemName);
 		       curItem->AppNextName = NULL;
 		       if (prevItem == NULL)
 			  ItemsUsed = curItem;
@@ -267,7 +267,7 @@ PtrAppMenu          firstMenu;
 		     /* l'action de l'item n'est pas in the list, on l'y met */
 		    {
 		       curAction = (PtrAppName) TtaGetMemory (sizeof (AppName));
-		       curAction->AppNameValue = strdup (item->AppItemActionName);
+		       curAction->AppNameValue = TtaStrdup (item->AppItemActionName);
 		       curAction->AppStandardName = item->AppStandardAction;
 		       curAction->AppNextName = NULL;
 		       if (prevAction == NULL)
@@ -405,7 +405,7 @@ static void         NewMenuComplete ()
       /* creation d'un nouveau menu */
      {
 	NewMenu = (PtrAppMenu) TtaGetMemory (sizeof (AppMenu));
-	NewMenu->AppMenuName = strdup (MenuName);
+	NewMenu->AppMenuName = TtaStrdup (MenuName);
 	NewMenu->AppMenuView = ViewNumber;	/* la vue concenee */
 	NewMenu->AppMenuItems = NULL;
 	NewMenu->AppNextMenu = NULL;
@@ -441,7 +441,7 @@ static void         NewMenuComplete ()
 	  {
 	     /* cree un nouvel item  */
 	     NewItem = (PtrAppMenuItem) TtaGetMemory (sizeof (AppMenuItem));
-	     NewItem->AppItemName = strdup (SubmenuName);
+	     NewItem->AppItemName = TtaStrdup (SubmenuName);
 	     NewItem->AppItemActionName = NULL;
 	     NewItem->AppSubMenu = NULL;
 	     NewItem->AppItemType = ' ';
@@ -490,7 +490,7 @@ static void         NewMenuComplete ()
 	     if (ItemName[0] == '\0')
 		NewItem->AppItemName = NULL;
 	     else
-		NewItem->AppItemName = strdup (ItemName);
+		NewItem->AppItemName = TtaStrdup (ItemName);
 	     NewItem->AppItemActionName = NULL;
 	     NewItem->AppSubMenu = NULL;
 	     NewItem->AppItemType = ItemType;
@@ -523,7 +523,7 @@ static void         NewMenuComplete ()
 	     /* sous-menu dynamique */
 	     if (ActionName[0] != '\0')
 	       {
-		  NewItem->AppItemActionName = strdup (ActionName);
+		  NewItem->AppItemActionName = TtaStrdup (ActionName);
 		  /* Il faut tester s'il s'agit d'une action standard */
 		  NewItem->AppStandardAction = (strncmp (ActionName, "Ttc", 3) == 0);
 	       }
@@ -855,7 +855,7 @@ indLine             wi;
 		    /* acquiert un descripteur de schema A utilise' */
 		    newSchUsed = (PtrAppName) TtaGetMemory (sizeof (AppName));
 		    /* met le nom du schema A utilise' dans le descripteur */
-		    newSchUsed->AppNameValue = strdup (name);
+		    newSchUsed->AppNameValue = TtaStrdup (name);
 		    newSchUsed->AppStandardName = False;
 		    /* chaine ce nouveau descripteur en fin de liste */
 		    newSchUsed->AppNextName = NULL;
@@ -878,7 +878,7 @@ indLine             wi;
 		    /* alloue un descripteur de type de document */
 		    newDocType = (PtrAppDocType) TtaGetMemory (sizeof (AppDocType));
 		    /* initialise ce descripteur */
-		    newDocType->AppDocTypeName = strdup (name);
+		    newDocType->AppDocTypeName = TtaStrdup (name);
 		    newDocType->AppDocTypeMenus = NULL;
 		    newDocType->AppNextDocType = NULL;
 		    if (DocTypeMenus == NULL)
@@ -943,7 +943,7 @@ indLine             wi;
 	       else if (pr == RULE_EvtAction)
 		 {
 		    /* action associee a un evenement */
-		    eventAction = strdup (name);
+		    eventAction = TtaStrdup (name);
 		    TteAddAction (eventAction, 0);
 		 }
 	       break;

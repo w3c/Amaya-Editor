@@ -147,7 +147,10 @@ PtrSSchema          pSS;
    else
       /* c'est un nouveau schema, il faut le charger */
      {
-	pPSchema = ReadPresentationSchema (schemaName, pSS);
+	Name pschemaName;
+
+	strncpy(pschemaName, schemaName, MAX_NAME_LENGTH);
+	pPSchema = ReadPresentationSchema (pschemaName, pSS);
 	if (pPSchema != NULL)
 	   /* met le nouveau schema dans la table des schemas charges */
 	   /* cherche une entree libre dans la table */

@@ -2617,7 +2617,7 @@ boolean             Assoc;
 
 #ifndef PAGINEETIMPRIME
    PtrElement          firstSelection, lastSelection;
-   int                 FirstSelectedChar, LastSelectedChar;
+   int                 FirstSelectedChar = 0, LastSelectedChar = 0;
    boolean             sel;
 
 #endif

@@ -131,10 +131,13 @@ char               *documentName;
 	  }
 	else
 	  {
+	     Name sschemaName;
+
+	     strncpy(sschemaName, structureSchema, MAX_NAME_LENGTH);
 	     /* charge le schema de structure */
 	     GetSchStruct (&pDoc->DocSSchema);
 	     pDoc->DocSSchema->SsExtension = FALSE;
-	     if (!ReadStructureSchema (structureSchema, pDoc->DocSSchema) ||
+	     if (!ReadStructureSchema (sschemaName, pDoc->DocSSchema) ||
 		 pDoc->DocSSchema->SsExtension)
 		/* failure while reading the structure schema or while loading
 		   a schema extension */
@@ -1161,6 +1164,9 @@ char               *presentationName;
 	else
 	   /* There is no opened views */
 	  {
+	     Name pschemaName;
+
+	     strncpy(pschemaName, presentationName, MAX_NAME_LENGTH);
 	     if (pDoc->DocSSchema->SsPSchema != NULL)
 		/* a presentation schema already exist. One release it */
 	       {
@@ -1171,7 +1177,7 @@ char               *presentationName;
 	     if (pDoc->DocSSchema->SsExtension)
 		/* to avoid that ReadPresentationSchema reloades the structure schema */
 		pDoc->DocSSchema->SsRootElem = 1;
-	     pDoc->DocSSchema->SsPSchema = LoadPresentationSchema (presentationName,
+	     pDoc->DocSSchema->SsPSchema = LoadPresentationSchema (pschemaName,
 							  pDoc->DocSSchema);
 	     if (pDoc->DocSSchema->SsPSchema == NULL)
 		/* Failure while loading schema */

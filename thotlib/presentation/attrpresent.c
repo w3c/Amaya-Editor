@@ -56,13 +56,14 @@ PtrElement          pEl;
    InheritAttrTable   *table;
 
    pEl->ElTypeNumber = pEl->ElTypeNumber;
-   /* table allocation and initialization */
-   if ((table = (InheritAttrTable *) TtaGetMemory (sizeof (InheritAttrTable))) == NULL)
-      /* memory exhausted */
-      return;
-   for (attr = 0; attr < MAX_ATTR_SSCHEMA; (*table)[attr++] = FALSE);
    if (pEl->ElStructSchema->SsPSchema != NULL)
      {
+	/* table allocation and initialization */
+	if ((table = (InheritAttrTable *) TtaGetMemory (sizeof (InheritAttrTable))) == NULL)
+	   /* memory exhausted */
+	   return;
+	for (attr = 0; attr < MAX_ATTR_SSCHEMA; (*table)[attr++] = FALSE);
+
 	pEl->ElStructSchema->SsPSchema->PsInheritedAttr[pEl->ElTypeNumber - 1] = table;
 	/* for all attributes defined in the structure schema */
 	for (attr = 0; attr < pEl->ElStructSchema->SsNAttributes; attr++)
