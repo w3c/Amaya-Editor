@@ -21,11 +21,11 @@ extern void ClearCSS ( CSSInfoPtr css );
 extern void RebuildCSS ( CSSInfoPtr css );
 extern CSSInfoPtr GetDocumentStyle ( Document doc );
 extern PSchema GetDocumentGenericPresentation ( Document doc,
-						char *structName);
+                                                char *structName );
 extern CSSInfoPtr GetUserGenericPresentation ( void );
 extern void RebuildHTMLStyleHeader ( Document doc );
-extern void ParseHTMLStyleHeader ( Element elem,
-                                   char *attrstr,
+extern void ParseHTMLStyleHeader ( Element el,
+                                   char *cssRule,
                                    Document doc,
                                    boolean rebuild );
 extern void LoadHTMLStyleSheet ( char *URL,
@@ -84,11 +84,11 @@ extern void ClearCSS (/* CSSInfoPtr css */);
 extern void RebuildCSS (/* CSSInfoPtr css */);
 extern CSSInfoPtr GetDocumentStyle (/* Document doc */);
 extern PSchema GetDocumentGenericPresentation (/* Document doc,
-						  char *structName */);
+                                                  char *structName */);
 extern CSSInfoPtr GetUserGenericPresentation (/* void */);
 extern void RebuildHTMLStyleHeader (/* Document doc */);
-extern void ParseHTMLStyleHeader (/* Element elem,
-                                     char *attrstr,
+extern void ParseHTMLStyleHeader (/* Element el,
+                                     char *cssRule,
                                      Document doc,
                                      boolean rebuild */);
 extern void LoadHTMLStyleSheet (/* char *URL,

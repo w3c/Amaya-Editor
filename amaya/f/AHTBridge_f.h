@@ -9,6 +9,7 @@
 extern void *AHTCallback_bridge ( caddr_t cd,
                                   int *s,
                                   XtInputId * id );
+extern void ProcessTerminateRequest ( AHTReqContext *me );
 extern int Add_NewSocket_to_Loop ( HTRequest * request,
                                    HTAlertOpcode op,
                                    int msgnum,
@@ -23,12 +24,13 @@ extern int AHTEvent_register ( SOCKET sock,
 extern int AHTEvent_unregister ( SOCKET sock,
                                  SockOps ops );
 extern void RequestKillAllXtevents ( AHTReqContext * me );
-extern void ProcessTerminateRequest (AHTReqContext *);
+
 #else /* __STDC__ */
 
 extern void *AHTCallback_bridge (/* caddr_t cd,
                                     int *s,
                                     XtInputId * id */);
+extern void ProcessTerminateRequest (/* AHTReqContext *me */);
 extern int Add_NewSocket_to_Loop (/* HTRequest * request,
                                      HTAlertOpcode op,
                                      int msgnum,
@@ -43,6 +45,6 @@ extern int AHTEvent_register (/* SOCKET sock,
 extern int AHTEvent_unregister (/* SOCKET sock,
                                    SockOps ops */);
 extern void RequestKillAllXtevents (/* AHTReqContext * me */);
-extern void ProcessTerminateRequest (/* AHTReqContext *me */);
+
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

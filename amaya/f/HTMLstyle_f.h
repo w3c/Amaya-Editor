@@ -6,44 +6,46 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern char *SkipBlanks (char *ptr);
 extern char CSSparser ( AmayaReadChar readfunc,
                         Document doc );
-extern char *GetCSSName ( Element elem,
-			  Document doc );
+extern char *SkipBlanks ( char *ptr );
+extern boolean IsBlank ( char *ptr );
+extern char *SkipProperty ( char *ptr );
+extern char *GetCSSName ( Element el,
+                          Document doc );
 extern void PresentationSettingsToCSS ( PresentationSetting settings,
                                         char *buffer,
                                         int len );
-extern void GetHTMLStyleString ( Element elem,
-                                  Document doc,
-                                  char *buf,
-                                  int *len );
+extern void GetHTMLStyleString ( Element el,
+                                 Document doc,
+                                 char *buf,
+                                 int *len );
 extern void ParseCSSRule ( PresentationTarget target,
-			   PresentationContext context,
-			   char *attrstr );
+                           PresentationContext context,
+                           char *cssRule );
 extern void ParseHTMLSpecificStyle ( Element elem,
-                                     char *attrstr,
+                                     char *cssRule,
                                      Document doc );
+extern void ParseCSSGenericStyle ( char *selector,
+                                   char *cssRule,
+                                   Document doc,
+                                   CSSInfoPtr css );
 extern void ParseCSSBackgroundImageCallback ( Document doc,
                                               Element el,
                                               char *file,
                                               void *extra );
-extern void ParseStyleDeclaration ( Element elem,
-				    char *attrstr,
-				    Document doc,
-				    CSSInfoPtr css);
+extern void ParseStyleDeclaration ( Element el,
+                                    char *cssRule,
+                                    Document doc,
+                                    CSSInfoPtr css );
 extern void ParseHTMLClass ( Element elem,
-                             char *attrstr,
+                             char *cssRule,
                              Document doc );
-extern void ParseCSSGenericStyle (char *selector,
-				  char *cssRule,
-				  Document doc,
-				  CSSInfoPtr css);
-extern int EvaluateClassContext ( Element elem,
+extern int EvaluateClassContext ( Element el,
                                   char *class,
                                   char *selector,
                                   Document doc );
-extern int EvaluateClassSelector ( Element elem,
+extern int EvaluateClassSelector ( Element el,
                                    char *class,
                                    char *selector,
                                    Document doc );
@@ -55,21 +57,21 @@ extern int IsImplicitClassName ( char *class,
                                  Document doc );
 extern void SetHTMLStyleParserDestructiveMode ( boolean mode );
 extern void HTMLSetBackgroundColor ( Document doc,
-                                     Element elem,
+                                     Element el,
                                      char *color );
 extern void HTMLSetBackgroundImage ( Document doc,
-                                     Element elem,
+                                     Element el,
                                      int repeat,
                                      char *image );
 extern void HTMLSetForegroundColor ( Document doc,
-                                     Element elem,
+                                     Element el,
                                      char *color );
 extern void HTMLResetBackgroundColor ( Document doc,
-                                       Element elem );
+                                       Element el );
 extern void HTMLResetBackgroundImage ( Document doc,
-                                       Element elem );
+                                       Element el );
 extern void HTMLResetForegroundColor ( Document doc,
-                                       Element elem );
+                                       Element el );
 extern void HTMLSetAlinkColor ( Document doc,
                                 char *color );
 extern void HTMLSetAactiveColor ( Document doc,
@@ -82,44 +84,46 @@ extern void HTMLResetAvisitedColor ( Document doc );
 
 #else /* __STDC__ */
 
-extern char *SkipBlanks (/* char *ptr */);
 extern char CSSparser (/* AmayaReadChar readfunc,
                           Document doc */);
-extern char *GetCSSName (/* Element elem,
-			    Document doc */);
+extern char *SkipBlanks (/* char *ptr */);
+extern boolean IsBlank (/* char *ptr */);
+extern char *SkipProperty (/* char *ptr */);
+extern char *GetCSSName (/* Element el,
+                            Document doc */);
 extern void PresentationSettingsToCSS (/* PresentationSetting settings,
                                           char *buffer,
                                           int len */);
-extern void GetHTMLStyleString (/* Element elem,
-                                    Document doc,
-                                    char *buf,
-                                    int *len */);
+extern void GetHTMLStyleString (/* Element el,
+                                   Document doc,
+                                   char *buf,
+                                   int *len */);
 extern void ParseCSSRule (/* PresentationTarget target,
-			     PresentationContext context,
-			     char *attrstr */);
+                             PresentationContext context,
+                             char *cssRule */);
 extern void ParseHTMLSpecificStyle (/* Element elem,
-                                       char *attrstr,
+                                       char *cssRule,
                                        Document doc */);
+extern void ParseCSSGenericStyle (/* char *selector,
+                                     char *cssRule,
+                                     Document doc,
+                                     CSSInfoPtr css */);
 extern void ParseCSSBackgroundImageCallback (/* Document doc,
                                                 Element el,
                                                 char *file,
                                                 void *extra */);
-extern void ParseStyleDeclaration (/* Element elem,
-				      char *attrstr,
-				      Document doc,
-				      CSSInfoPtr css */);
+extern void ParseStyleDeclaration (/* Element el,
+                                      char *cssRule,
+                                      Document doc,
+                                      CSSInfoPtr css */);
 extern void ParseHTMLClass (/* Element elem,
-                               char *attrstr,
+                               char *cssRule,
                                Document doc */);
-extern void ParseCSSGenericStyle (/* char *selector,
-				     char *cssRule,
-				     Document doc,
-				     CSSInfoPtr css */);
-extern int EvaluateClassContext (/* Element elem,
+extern int EvaluateClassContext (/* Element el,
                                     char *class,
                                     char *selector,
                                     Document doc */);
-extern int EvaluateClassSelector (/* Element elem,
+extern int EvaluateClassSelector (/* Element el,
                                      char *class,
                                      char *selector,
                                      Document doc */);
@@ -131,21 +135,21 @@ extern int IsImplicitClassName (/* char *class,
                                    Document doc */);
 extern void SetHTMLStyleParserDestructiveMode (/* boolean mode */);
 extern void HTMLSetBackgroundColor (/* Document doc,
-                                       Element elem,
+                                       Element el,
                                        char *color */);
 extern void HTMLSetBackgroundImage (/* Document doc,
-                                       Element elem,
+                                       Element el,
                                        int repeat,
                                        char *image */);
 extern void HTMLSetForegroundColor (/* Document doc,
-                                       Element elem,
+                                       Element el,
                                        char *color */);
 extern void HTMLResetBackgroundColor (/* Document doc,
-                                         Element elem */);
+                                         Element el */);
 extern void HTMLResetBackgroundImage (/* Document doc,
-                                         Element elem */);
+                                         Element el */);
 extern void HTMLResetForegroundColor (/* Document doc,
-                                         Element elem */);
+                                         Element el */);
 extern void HTMLSetAlinkColor (/* Document doc,
                                   char *color */);
 extern void HTMLSetAactiveColor (/* Document doc,

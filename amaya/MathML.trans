@@ -2,6 +2,8 @@
 ! see HTML.trans for a description of Trans language
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+! WARNING : transformations does NOT work with Multiscript elements
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 !surround an element with a root
 root : *;
@@ -68,6 +70,28 @@ add superscript:*;
 	* > MSUP:MTEXT." ";
 	}
 
+!surroud element with a underover
+add underover:*;
+	{
+	* > MUNDEROVER:*;
+	* > MUNDEROVER:MTEXT." ";
+	* > MUNDEROVER:MTEXT." ";
+	}
+
+!surroud element with a over
+add over:*;
+	{
+	* > MOVER:*;
+	* > MOVER:MTEXT." ";
+	}
+
+!surroud element with a under
+add under:*;
+	{
+	* > MUNDER:*;
+	* > MUNDER:MTEXT." ";
+	}
+
 !changes MSUB in MSUP
 superscript:MSUB;
 	{
@@ -90,6 +114,7 @@ subsup:MSUB{base:*,sub:*} | MSUP{base:*,sup:*};
 	sub > MSUBSUP:MTEXT." ";
 	}
 
+
 ! removes a Row level
 remove row: MROW{*+};
         {
@@ -97,11 +122,10 @@ remove row: MROW{*+};
         }
 
 
-!does not work!!!
-!parenthesise: row:MROW | *;
-!        {
-!        *>:MF."(";
-!        *>:*;
-!        *>:MF.")";
-!        }
-
+!surround element with parenthesis
+parenthesise:*;
+        {
+        * > :MF."(";
+        * > :*;
+        * > :MF.")";
+        }

@@ -1733,21 +1733,22 @@ unsigned char       c;
   if (ok)
     {				/* the rule is linked to 1 symbol at least */
       /* check its consistence with the destination type of the current transformation */
-      if (ppRule->OptionNodes)
+      if (ppRule->OptionNodes != NULL)
 	pnode = ppRule->OptionNodes;
       else
 	pnode = ppRule->NewNodes;
-      if (pnode && ppTrans->DestinationTag == NULL)
-	{
-	  /* the destination type is undefined => the first tag of the rule defines */
-	  /* the destination type of the transformation */
-	  ppTrans->DestinationTag = TtaGetMemory (NAME_LENGTH);
-	  strcpy (ppTrans->DestinationTag, pnode->Tag);
-	}
-      else if (pnode && strcmp (ppTrans->DestinationTag, pnode->Tag))
-	/* the first tag of the rule is different from the destination type : the */
-	/* rule has no destination type */
-	strcpy (ppTrans->DestinationTag, "");
+      if (pnode && strcmp (pnode->Tag, "*") != 0)
+	if (ppTrans->DestinationTag == NULL)
+	  {
+	    /* the dest type is undefined => the first tag of the rule defines */
+	    /* the destination type of the transformation */
+	    ppTrans->DestinationTag = TtaGetMemory (NAME_LENGTH);
+	    strcpy (ppTrans->DestinationTag, pnode->Tag);
+	  }
+	else if (strcmp (ppTrans->DestinationTag, pnode->Tag))
+	  /* the first tag of the rule is different from the destination type */
+	  /* the rule has no destination type */
+	  strcpy (ppTrans->DestinationTag, "");
     }
   else
     {
@@ -1810,8 +1811,10 @@ unsigned char       c;
 {
    int                 len;
 
-   if (c == ':' || c == ';' || c == '(' || c == ')' || c == '{' || c == '}' || c == '+' ||
-       c == ',' || c == '|' || c == '>' || c == '<' || c == '.' || c == '!' || c == '?')
+   if (inputBuffer[0] != '"' &&
+       (c == ':' || c == ';' || c == '(' || c == ')' || c == '{' || 
+	c == '}' || c == '+' || c == ',' || c == '|' || c == '>' || 
+	c == '<' || c == '.' || c == '!' || c == '?'))
      {
 	ppError = TRUE;
 	ErrorMessage ("Invalid char");
@@ -2222,7 +2225,8 @@ BinFile               infile;
 				      while (readOk  && ((int) charRead == 9 ||
 							 (int) charRead == 10 || 
 							 (int) charRead == 12 || 
-							 (int) charRead == 13))
+							 (int) charRead == 13 ||
+							 (int) charRead == 32 ))
 					 readOk=TtaReadByte(infile,&charRead);
 				   }
 				 if (readOk)

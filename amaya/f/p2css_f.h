@@ -20,7 +20,7 @@ extern PRuleInfoPtr SearchRPI ( PRuleInfoPtr cour,
 extern void RemoveRPI ( Document doc,
                         PRuleInfoPtr cour );
 extern PRuleInfoPtr PSchema2RPI ( Document doc,
-                                  CSSInfoPtr css);
+                                  CSSInfoPtr css );
 extern int BuildRPIList ( Document doc,
                           CSSInfoPtr css,
                           char *buf,
@@ -45,7 +45,7 @@ extern void RemoveRPI (/* Document doc,
 extern PRuleInfoPtr PSchema2RPI (/* Document doc,
                                     CSSInfoPtr css */);
 extern int BuildRPIList (/* Document doc,
-			    CSSInfoPtr css,
+                            CSSInfoPtr css,
                             char *buf,
                             int size,
                             char *first */);

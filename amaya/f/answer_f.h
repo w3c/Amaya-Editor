@@ -45,9 +45,8 @@ extern BOOL AHTError_print ( HTRequest * request,
 extern void AHTError_MemPrint ( HTRequest * request );
 extern void AHTPrintPendingRequestStatus ( Document docid,
                                            BOOL last_seconds_of_life );
-extern void PrintTerminateStatus ( AHTReqContext *me, 
-				    int status );
-
+extern void PrintTerminateStatus ( AHTReqContext *me,
+                                   int status );
 
 #else /* __STDC__ */
 
@@ -90,8 +89,8 @@ extern BOOL AHTError_print (/* HTRequest * request,
 extern void AHTError_MemPrint (/* HTRequest * request */);
 extern void AHTPrintPendingRequestStatus (/* Document docid,
                                              BOOL last_seconds_of_life */);
-extern void PrintTerminateStatus (/*AHTReqContext *me, 
-				    int status */);
+extern void PrintTerminateStatus (/* AHTReqContext *me,
+                                     int status */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -14,7 +14,7 @@ extern int ppStartParser ( char *name,
 
 extern void FreeList (/* strListSymb * pl */);
 extern int ppStartParser (/* char *name,
-                             strTranSet **resTrSet */);
+                             strTransSet **resTrSet */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

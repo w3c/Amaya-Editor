@@ -74,6 +74,8 @@ extern void HelpChanging ( Document document,
                            View view );
 extern void HelpTables ( Document document,
                          View view );
+extern void HelpMath ( Document document,
+                       View view );
 extern void HelpImageMaps ( Document document,
                             View view );
 extern void HelpStyleSheets ( Document document,
@@ -159,6 +161,8 @@ extern void HelpChanging (/* Document document,
                              View view */);
 extern void HelpTables (/* Document document,
                            View view */);
+extern void HelpMath (/* Document document,
+                         View view */);
 extern void HelpImageMaps (/* Document document,
                               View view */);
 extern void HelpStyleSheets (/* Document document,

@@ -2988,57 +2988,69 @@ static void	CheckMathSubExpressions (el, type1, type2, type3)
    int		type3;
 #endif
 {
-   Element	child, new, prev;
-   ElementType	elType;
+  Element	child, new, prev;
+  ElementType	elType, childType;
 
-   elType.ElSSchema = MathMLSSchema;
-   child = TtaGetFirstChild (el);
-   prev = NULL;
-   NextNotSep (&child, &prev);
-   if (child != NULL && type1 != 0)
-      {
-      TtaRemoveTree (child, theDocument);
+  elType.ElSSchema = MathMLSSchema;
+  child = TtaGetFirstChild (el);
+  prev = NULL;
+  NextNotSep (&child, &prev);
+  if (child != NULL && type1 != 0)
+    {
       elType.ElTypeNum = type1;
-      new = TtaNewElement (theDocument, elType);
-      if (prev == NULL)
-         TtaInsertFirstChild (&new, el, theDocument);
-      else
-	 TtaInsertSibling (new, prev, FALSE, theDocument);
-      TtaInsertFirstChild (&child, new, theDocument);
-      CreatePlaceholders (child, theDocument);
-      child = new;
-      if (type2 != 0)
+      childType = TtaGetElementType (child);
+      if (TtaSameTypes (childType, elType) == 0)
 	{
-	prev = child;
-	TtaNextSibling (&child);
-	NextNotSep (&child, &prev);
-	if (child != NULL)
-	  {
-	  TtaRemoveTree (child, theDocument);
-	  elType.ElTypeNum = type2;
+	  TtaRemoveTree (child, theDocument);	
 	  new = TtaNewElement (theDocument, elType);
-	  TtaInsertSibling (new, prev, FALSE, theDocument);
+	  if (prev == NULL)
+	    TtaInsertFirstChild (&new, el, theDocument);
+	  else
+	    TtaInsertSibling (new, prev, FALSE, theDocument);
 	  TtaInsertFirstChild (&child, new, theDocument);
 	  CreatePlaceholders (child, theDocument);
-	  if (type3 != 0)
-	     {
-	     child = new;
-	     prev = child;
-	     TtaNextSibling (&child);
-	     NextNotSep (&child, &prev);
-	     if (child != NULL)
-	        {
-	        TtaRemoveTree (child, theDocument);
-	        elType.ElTypeNum = type3;
-	        new = TtaNewElement (theDocument, elType);
-	        TtaInsertSibling (new, prev, FALSE, theDocument);
-	        TtaInsertFirstChild (&child, new, theDocument);
-	        CreatePlaceholders (child, theDocument);
+	  child = new;
+	}
+      if (type2 != 0)
+	{
+	  prev = child;
+	  TtaNextSibling (&child);
+	  NextNotSep (&child, &prev);
+	  if (child != NULL)
+	    {
+	      elType.ElTypeNum = type2;
+	      childType = TtaGetElementType (child);
+	      if (TtaSameTypes (childType, elType) == 0)
+		{
+		  TtaRemoveTree (child, theDocument);
+		  new = TtaNewElement (theDocument, elType);
+		  TtaInsertSibling (new, prev, FALSE, theDocument);
+		  TtaInsertFirstChild (&child, new, theDocument);
+		  CreatePlaceholders (child, theDocument);
+		  child = new;
 		}
-	     }
-	  }
+	      if (type3 != 0)
+		{
+		  prev = child;
+		  TtaNextSibling (&child);
+		  NextNotSep (&child, &prev);
+		  if (child != NULL)
+		    {
+		      elType.ElTypeNum = type3;
+		      childType = TtaGetElementType (child);
+		      if (TtaSameTypes (childType, elType) == 0)
+			{
+			  TtaRemoveTree (child, theDocument);
+			  new = TtaNewElement (theDocument, elType);
+			  TtaInsertSibling (new, prev, FALSE, theDocument);
+			  TtaInsertFirstChild (&child, new, theDocument);
+			  CreatePlaceholders (child, theDocument);
+			}
+		    }
+		}
+	    }
         }
-      }
+    }
 }
 
 
@@ -3099,22 +3111,22 @@ static void BuildMultiscript (elMMULTISCRIPT)
   Element	elMMULTISCRIPT;
 #endif /* __STDC__*/
 {
-   Element	elem, base, next, group, pair, script, prevPair, prevScript;
-   ElementType	elType, elTypeGroup, elTypePair, elTypeScript;
+  Element	elem, base, next, group, pair, script, prevPair, prevScript;
+  ElementType	elType, elTypeGroup, elTypePair, elTypeScript;
 
-   base = NULL;
-   group = NULL;
-   prevPair = NULL;
-   prevScript = NULL;
+  base = NULL;
+  group = NULL;
+  prevPair = NULL;
+  prevScript = NULL;
 
-   elTypeGroup.ElSSchema = MathMLSSchema;
-   elTypePair.ElSSchema = MathMLSSchema;
-   elTypeScript.ElSSchema = MathMLSSchema;
+  elTypeGroup.ElSSchema = MathMLSSchema;
+  elTypePair.ElSSchema = MathMLSSchema;
+  elTypeScript.ElSSchema = MathMLSSchema;
 
-   /* process all children of the MMULTISCRIPT element */
-   elem = TtaGetFirstChild (elMMULTISCRIPT);
-   while (elem != NULL)
-      {
+  /* process all children of the MMULTISCRIPT element */
+  elem = TtaGetFirstChild (elMMULTISCRIPT);
+  while (elem != NULL)
+    {
       /* remember the element to be processed after the current one */
       next = elem;
       TtaNextSibling (&next);
@@ -3126,65 +3138,65 @@ static void BuildMultiscript (elMMULTISCRIPT)
 	/* the current element is the first child of the MMULTISCRIPT
 	   element */
 	{
-	/* Create a MultiscriptBase element as the first child of
-	   MMULTISCRIPT and move the current element as the first child
-	   of the MultiscriptBase element */
-	elTypeGroup.ElTypeNum = MathML_EL_MultiscriptBase;
-	base = TtaNewElement (theDocument, elTypeGroup);
-	TtaInsertFirstChild (&base, elMMULTISCRIPT, theDocument);
-	TtaInsertFirstChild (&elem, base, theDocument);
+	  /* Create a MultiscriptBase element as the first child of
+	     MMULTISCRIPT and move the current element as the first child
+	     of the MultiscriptBase element */
+	  elTypeGroup.ElTypeNum = MathML_EL_MultiscriptBase;
+	  base = TtaNewElement (theDocument, elTypeGroup);
+	  TtaInsertFirstChild (&base, elMMULTISCRIPT, theDocument);
+	  TtaInsertFirstChild (&elem, base, theDocument);
 	}
       else
 	/* the current element is a subscript or a superscript */
 	{
-        if (group == NULL)
-	  /* there is no PostscriptPairs element. Create one */
-	  {
-	  elTypeGroup.ElTypeNum = MathML_EL_PostscriptPairs;
-          group = TtaNewElement (theDocument, elTypeGroup);
-	  TtaInsertSibling (group, base, FALSE, theDocument);
-	  elTypePair.ElTypeNum = MathML_EL_PostscriptPair;
-	  /* create a first and a last PostscriptPair as placeholders */
-	  pair = TtaNewTree (theDocument, elTypePair, "");
-	  TtaInsertFirstChild (&pair, group, theDocument);
-	  SetPlaceholderAttr (pair, theDocument);
-	  prevPair = pair;
-	  pair = TtaNewTree (theDocument, elTypePair, "");
-	  TtaInsertSibling (pair, prevPair, FALSE, theDocument);
-	  SetPlaceholderAttr (pair, theDocument);
-	  prevScript = NULL;
-	  }
-        if (prevScript == NULL)
-	  /* the current element is the first subscript or superscript
-	     in a pair */
-	  {
-	  /* create a PostscriptPair or PrescriptPair element */
-	  pair = TtaNewElement (theDocument, elTypePair);
-	  if (prevPair == NULL)
-	     TtaInsertFirstChild (&pair, group, theDocument);
+	  if (group == NULL)
+	    /* there is no PostscriptPairs element. Create one */
+	    {
+	      elTypeGroup.ElTypeNum = MathML_EL_PostscriptPairs;
+	      group = TtaNewElement (theDocument, elTypeGroup);
+	      TtaInsertSibling (group, base, FALSE, theDocument);
+	      elTypePair.ElTypeNum = MathML_EL_PostscriptPair;
+	      /* create a first and a last PostscriptPair as placeholders */
+	      pair = TtaNewTree (theDocument, elTypePair, "");
+	      TtaInsertFirstChild (&pair, group, theDocument);
+	      SetPlaceholderAttr (pair, theDocument);
+	      prevPair = pair;
+	      pair = TtaNewTree (theDocument, elTypePair, "");
+	      TtaInsertSibling (pair, prevPair, FALSE, theDocument);
+	      SetPlaceholderAttr (pair, theDocument);
+	      prevScript = NULL;
+	    }
+	  if (prevScript == NULL)
+	    /* the current element is the first subscript or superscript
+	       in a pair */
+	    {
+	      /* create a PostscriptPair or PrescriptPair element */
+	      pair = TtaNewElement (theDocument, elTypePair);
+	      if (prevPair == NULL)
+		TtaInsertFirstChild (&pair, group, theDocument);
+	      else
+		TtaInsertSibling (pair, prevPair, FALSE, theDocument);
+	      prevPair = pair;
+	      /* create a MSubscript element */
+	      elTypeScript.ElTypeNum = MathML_EL_MSubscript;
+	      script = TtaNewElement (theDocument, elTypeScript);
+	      TtaInsertFirstChild (&script, pair, theDocument);
+	      prevScript = script;	  
+	    }
 	  else
-             TtaInsertSibling (pair, prevPair, FALSE, theDocument);
-	  prevPair = pair;
-	  /* create a MSubscript element */
-	  elTypeScript.ElTypeNum = MathML_EL_MSubscript;
-	  script = TtaNewElement (theDocument, elTypeScript);
-	  TtaInsertFirstChild (&script, pair, theDocument);
-	  prevScript = script;	  
-	  }
-        else
-	  /* the current element is a superscript in a pair */
-	  {
-	  /* create a MSuperscript element */
-	  elTypeScript.ElTypeNum = MathML_EL_MSuperscript;
-	  script = TtaNewElement (theDocument, elTypeScript);
-	  /* insert it as a sibling of the previous MSubscript element */
-	  TtaInsertSibling (script, prevScript, FALSE, theDocument);
-	  prevScript = NULL;	  
-	  }
-	/* insert the current element as a child of the new MSuperscript or
-	   MSubscript element */
-	TtaInsertFirstChild (&elem, script, theDocument);
-	SetPlaceholderAttr (elem, theDocument);
+	    /* the current element is a superscript in a pair */
+	    {
+	      /* create a MSuperscript element */
+	      elTypeScript.ElTypeNum = MathML_EL_MSuperscript;
+	      script = TtaNewElement (theDocument, elTypeScript);
+	      /* insert it as a sibling of the previous MSubscript element */
+	      TtaInsertSibling (script, prevScript, FALSE, theDocument);
+	      prevScript = NULL;	  
+	    }
+	  /* insert the current element as a child of the new MSuperscript or
+	     MSubscript element */
+	  TtaInsertFirstChild (&elem, script, theDocument);
+	  SetPlaceholderAttr (elem, theDocument);
 	}
 
       CreatePlaceholders (elem, theDocument);
@@ -3193,51 +3205,51 @@ static void BuildMultiscript (elMMULTISCRIPT)
       elem = next;
       if (elem != NULL)
 	{
-        elType = TtaGetElementType (elem);
-        if (elType.ElSSchema == MathMLSSchema &&
-	    elType.ElTypeNum == MathML_EL_PrescriptPairs)
-	   /* the next element is a PrescriptPairs */
-	   {
-	   /* if there there is no PostscriptPairs element, create one as a
-	      placeholder */
-	   if (elTypeGroup.ElTypeNum != MathML_EL_PostscriptPairs)
-	      {
-	      elTypeGroup.ElTypeNum = MathML_EL_PostscriptPairs;
-	      group = TtaNewTree (theDocument, elTypeGroup, "");
-	      TtaInsertSibling (group, elem, TRUE, theDocument);
-	      SetPlaceholderAttr (group, theDocument);
-	      }
-	   /* the following elements will be interpreted as sub- superscripts
-	      in PrescriptPair elements, wich will be children of this
-	      PrescriptPairs element */
-	   elTypeGroup.ElTypeNum = MathML_EL_PrescriptPairs;
-	   elTypePair.ElTypeNum = MathML_EL_PrescriptPair;
-	   group = elem;
-	   /* create a first and a last PostscriptPair as placeholders */
-	   pair = TtaNewTree (theDocument, elTypePair, "");
-	   TtaInsertFirstChild (&pair, group, theDocument);
-	   SetPlaceholderAttr (pair, theDocument);
-	   prevPair = pair;
-	   pair = TtaNewTree (theDocument, elTypePair, "");
-	   TtaInsertSibling (pair, prevPair, FALSE, theDocument);
-	   SetPlaceholderAttr (pair, theDocument);
-	   prevScript = NULL;
-	   TtaNextSibling (&elem);
-	   }
+	  elType = TtaGetElementType (elem);
+	  if (elType.ElSSchema == MathMLSSchema &&
+	      elType.ElTypeNum == MathML_EL_PrescriptPairs)
+	    /* the next element is a PrescriptPairs */
+	    {
+	      /* if there there is no PostscriptPairs element, create one as a
+		 placeholder */
+	      if (elTypeGroup.ElTypeNum != MathML_EL_PostscriptPairs)
+		{
+		  elTypeGroup.ElTypeNum = MathML_EL_PostscriptPairs;
+		  group = TtaNewTree (theDocument, elTypeGroup, "");
+		  TtaInsertSibling (group, elem, TRUE, theDocument);
+		  SetPlaceholderAttr (group, theDocument);
+		}
+	      /* the following elements will be interpreted as sub- superscripts
+		 in PrescriptPair elements, wich will be children of this
+		 PrescriptPairs element */
+	      elTypeGroup.ElTypeNum = MathML_EL_PrescriptPairs;
+	      elTypePair.ElTypeNum = MathML_EL_PrescriptPair;
+	      group = elem;
+	      /* create a first and a last PostscriptPair as placeholders */
+	      pair = TtaNewTree (theDocument, elTypePair, "");
+	      TtaInsertFirstChild (&pair, group, theDocument);
+	      SetPlaceholderAttr (pair, theDocument);
+	      prevPair = pair;
+	      pair = TtaNewTree (theDocument, elTypePair, "");
+	      TtaInsertSibling (pair, prevPair, FALSE, theDocument);
+	      SetPlaceholderAttr (pair, theDocument);
+	      prevScript = NULL;
+	      TtaNextSibling (&elem);
+	    }
 	}
-      }
-   /* all children of element MMULTISCRIPTS have been processed */
-   /* if the last group processed is not a PrescriptPairs element,
-      create one as a placeholder */
-   if (elTypeGroup.ElTypeNum != MathML_EL_PrescriptPairs && base != NULL)
-      {
+    }
+  /* all children of element MMULTISCRIPTS have been processed */
+  /* if the last group processed is not a PrescriptPairs element,
+     create one as a placeholder */
+  if (elTypeGroup.ElTypeNum != MathML_EL_PrescriptPairs && base != NULL)
+    {
       elTypeGroup.ElTypeNum = MathML_EL_PrescriptPairs;
       elem = TtaNewTree (theDocument, elTypeGroup, "");
       if (group == NULL)
-	 group = base;
+	group = base;
       TtaInsertSibling (elem, group, TRUE, theDocument);
       SetPlaceholderAttr (elem, theDocument);
-      }
+    }
 }
 
 
@@ -3382,9 +3394,9 @@ void SetAddspaceAttr (el, doc)
    Check the Thot structure of the MathML element el.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void      CheckMathElement (Element el)
+void      CheckMathElement (Element el)
 #else
-static void      CheckMathElement (el)
+void      CheckMathElement (el)
 Element                 el;
 
 #endif

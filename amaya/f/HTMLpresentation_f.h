@@ -6,9 +6,9 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern boolean MakeASpan (Element elem,
-			  Element *span,
-			  Document doc);
+extern boolean MakeASpan ( Element elem,
+                           Element *span,
+                           Document doc );
 extern void DeleteSpanIfNoAttr ( Element el,
                                  Document doc );
 extern void AttrStyleDeleted ( NotifyAttribute * event );
@@ -23,8 +23,8 @@ extern void AttrLangCreated ( NotifyAttribute *event );
 #else /* __STDC__ */
 
 extern boolean MakeASpan (/* Element elem,
-			     Element *span,
-			     Document doc */);
+                             Element *span,
+                             Document doc */);
 extern void DeleteSpanIfNoAttr (/* Element el,
                                    Document doc */);
 extern void AttrStyleDeleted (/* NotifyAttribute * event */);

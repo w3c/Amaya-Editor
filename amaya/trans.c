@@ -868,7 +868,9 @@ Element *elem;
       if (prev == NULL)
 	{
 	  prev = TtaGetParent (p);
-	  if (prev != NULL && strcmp (GITagName (prev), "???") == 0)
+	  if (prev != NULL && ((strcmp (GITagName (prev), "???") == 0)
+			       ||
+			       (strcmp (GITagName (prev), "NONE") == 0)))
 	    TtaPreviousSibling (&prev);
 	  else
 	    prev = NULL;
@@ -895,7 +897,7 @@ Document doc;
   Element parent;
   
   parent = TtaGetParent (elem);
-  if (parent != NULL)
+  if (parent != NULL && (strcmp (GITagName (parent), "???") == 0))
     if (TtaGetFirstChild (parent) == TtaGetLastChild (parent))
       elem = parent;
   TtaRemoveTree (elem, doc);
@@ -917,19 +919,37 @@ Document            doc;
    Element             lastEl, courEl, invEl;
    ElementType         typeEl;
    boolean             res;
-
-
+ 
+ res = TRUE;
    prevMatch = NULL;
    DMatch = sMatch;
    myFirstSelect = DMatch->MatchNode->Elem;
-   PreviousHTMLSibling (&myFirstSelect);
+   courEl = myFirstSelect;
+   /* PreviousHTMLSibling (&myFirstSelect);*/
+   TtaPreviousSibling (&myFirstSelect);
    isClosed = TRUE;
-   res = TRUE;
-   if (myFirstSelect == NULL)
+   while (myFirstSelect == NULL)
      {
-	myFirstSelect = DMatch->MatchNode->Parent->Elem;
-	isClosed = FALSE;
+       courEl = TtaGetParent (courEl);
+       if (strcmp (GITagName (courEl), "???") == 0)
+	 {
+	   myFirstSelect = courEl;
+	   TtaPreviousSibling (&myFirstSelect);
+	   isClosed = TRUE;
+	 }
+       else
+	 {
+	   myFirstSelect = courEl;
+	   isClosed = FALSE;
+	 }
      }
+       
+   /*   if (myFirstSelect == NULL)
+     { 
+        myFirstSelect = DMatch->MatchNode->Parent->Elem;
+        isClosed = FALSE;
+     }
+     */
    while (DMatch != NULL)
      {
 	prevMatch = DMatch;
@@ -1879,8 +1899,12 @@ Document            doc;
    maxSelDepth = 0;
    if (myFirstSelect != myLastSelect)
      {
+       /* selection crosses several elements, looks if their parents */
+       /* surround the entiere selction, if it is the case consider */
+       /* the parent is considered as a selected element */ 
 	if (myFirstSelect != NULL && ffc <= 1)
-	  {			/* searching for the first selected element */
+	  {
+	    /* searching for the first selected element */
 	     prevFirst = myFirstSelect;
 	     TtaPreviousSibling (&prevFirst);
 	     parentFirst = TtaGetParent (myFirstSelect);
@@ -1893,7 +1917,8 @@ Document            doc;
 	       }
 	  }
 	if (myLastSelect != NULL && (llc == 0 || (llc > 0 && llc >= TtaGetTextLength (myLastSelect))))
-	  {			/* searching for the last selected element */
+	  {
+	    /* searching for the last selected element */
 	     nextLast = myLastSelect;
 	     TtaNextSibling (&nextLast);
 	     parentLast = TtaGetParent (myLastSelect);
@@ -1908,6 +1933,8 @@ Document            doc;
      }
    else if (myFirstSelect != NULL)
      {
+       /* only one element is selected, check if its parent surround */
+       /* the whole selection */
 	prevFirst = TtaGetFirstChild (myFirstSelect);
 	nextLast = TtaGetLastChild (myFirstSelect);
 	while (prevFirst != NULL && prevFirst == nextLast)
@@ -2262,6 +2289,8 @@ char               *data;
 {
    int                 val;
    DisplayMode         oldDisplayMode;
+   SSchema	       sch;
+   Element	       elParent;
 
    val = (int) data;
    switch (ref - TransBaseDialog)
@@ -2273,8 +2302,9 @@ char               *data;
 		 TtaSetDisplayMode (TransDoc, DisplayImmediately);
 	       TtaSelectElement (TransDoc, NULL);
 	       /* passe en mode de display differe */
+#ifndef DEBUG
 	       TtaSetDisplayMode (TransDoc, DeferredDisplay);
-		
+#endif		
 	       resultTrans = ApplyTransformation (menuTrans[val], TransDoc);
 	       if (!resultTrans)
 		 {
@@ -2290,11 +2320,33 @@ char               *data;
 		 }
 	       else
 		 {
+
 		    /* transformation was succesful, checking the thot tree */
-		    InitializeParser (TtaGetMainRoot (TransDoc), TRUE, TransDoc);
-		    TtaSetStructureChecking (0, TransDoc);
-		    CheckAbstractTree (NULL);
-		    TtaSetStructureChecking (1, TransDoc);
+		   sch = TtaGetElementType (myFirstSelect).ElSSchema;
+		   if (strcmp (TtaGetSSchemaName (sch), "MathML") == 0)
+		     {
+		       if (isClosed)
+			 elParent = TtaGetParent (myFirstSelect);
+		       else
+			 elParent = myFirstSelect;
+		       while (elParent != NULL &&
+			      strcmp (GITagName (elParent), "???") == 0)
+			 elParent = TtaGetParent (elParent);
+		       if (elParent != NULL)
+			 {
+			   TtaSetStructureChecking (0, TransDoc);
+			   CheckMathElement (elParent);
+			   TtaSetStructureChecking (1, TransDoc);
+			 } 
+		     }
+		   else
+		     {
+		       InitializeParser (TtaGetMainRoot (TransDoc), TRUE, TransDoc);
+		       TtaSetStructureChecking (0, TransDoc);
+		       CheckAbstractTree (NULL);
+		       TtaSetStructureChecking (1, TransDoc);
+		     }
+
 		    /* selecting the new elements */
 		    if (myLastSelect == NULL)
 		       if (!isClosed)
@@ -2487,7 +2539,16 @@ Document            doc;
        if (mySelect != NULL)
 	 {
 	   elType = TtaGetElementType (mySelect);
-	   strcpy (nameSet, TtaGetSSchemaName (elType.ElSSchema));
+	   if (TtaSameSSchemas (elType.ElSSchema, resultType.ElSSchema))
+	     strcpy (nameSet, TtaGetSSchemaName (elType.ElSSchema));
+	   else if (myFirstSelect != NULL)
+	     {
+	       elType = TtaGetElementType (myFirstSelect);
+	       if (TtaSameSSchemas (elType.ElSSchema, resultType.ElSSchema))
+		 strcpy (nameSet, TtaGetSSchemaName (elType.ElSSchema));
+	     }
+	   else
+	     strcpy (nameSet, "");
 	 }
        else
 	 {
