@@ -172,8 +172,13 @@ static void PutChar (wchar_t c, int fileNum, STRING outBuffer,
 
   if (translate)
     {
+      if (c == START_ENTITY)
+	{
+	  mbc[0] = '&';
+	  nb_bytes2write = 1;
+	}
       /* translate the input character */
-      if (GetEntityFunction && c > 127 && pDoc->DocCharset == US_ASCII)
+      else if (GetEntityFunction && c > 127 && pDoc->DocCharset == US_ASCII)
 	{
 	  (*GetEntityFunction) (c, &(entity));
 	  mbc[0] = '&';
@@ -185,7 +190,7 @@ static void PutChar (wchar_t c, int fileNum, STRING outBuffer,
 	  else
 	    {
 	      mbc[1] = '#';
-	      sprintf (&mbc[2], TEXT("%d"), c);
+	      sprintf (&mbc[2], "%d", c);
 	    }
 	  nb_bytes2write = strlen (mbc);
 	  mbc[nb_bytes2write++] = ';';
@@ -202,7 +207,7 @@ static void PutChar (wchar_t c, int fileNum, STRING outBuffer,
 	  else
 	    {
 	      mbc[1] = '#';
-	      sprintf (&mbc[2], TEXT("%d"), c);
+	      sprintf (&mbc[2], "%d", c);
 	    }
 	  nb_bytes2write = strlen (mbc);
 	  mbc[nb_bytes2write++] = ';';
