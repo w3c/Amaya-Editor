@@ -361,8 +361,7 @@ int CharacterWidth (unsigned char c, PtrFont font)
   ----------------------------------------------------------------------*/
 int SpecialCharBoxWidth (CHAR_T c)
 {
-  if (c == 0x200D ||
-      c == 0x200E /* lrm */ || c == 0x200F /* rlm */ ||
+  if (c == 0x200C /* zwnj*/ || c == 0x200D /* zwj */ ||      c == 0x200E /* lrm */ || c == 0x200F /* rlm */ ||
       c == 0x202A /* lre */ || c == 0x202B /* rle */ ||
       c == 0x202D /* lro */ || c == 0x202E /* rlo */ ||
       c == 0x202C /* pdf */ || c == 0x2061 /* ApplyFunction */ ||
@@ -1185,7 +1184,7 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 	  lfont = fontset->FontIso_1;
 	  car = (char) c;
 	}
-      else if (c == 0x200D ||
+      else if (c == 0x200C /* zwnj*/ || c == 0x200D /* zwj */ || 
 	       c == 0x200E /* lrm */ || c == 0x200F /* rlm */ ||
 	       c == 0x202A /* lre */ || c == 0x202B /* rle */ ||
 	       c == 0x202D /* lro */ || c == 0x202E /* rlo */ ||
@@ -1198,7 +1197,13 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 	    {
 	      /* Greek characters */
 	      car = GreekFontScript;
-	      if (GreekFontScript == '7')
+	      if (c == 0x3D1 || c == 0x3D2 || c == 0x3D6)
+		/* thetasym, upsih, piv */
+		{
+		  pfont = &(fontset->FontSymbol);
+		  encoding = ISO_SYMBOL;
+		}
+	      else if (GreekFontScript == '7')
 		{
 		  pfont = &(fontset->FontIso_7);
 #ifdef _WINDOWS
@@ -1213,13 +1218,16 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 		  encoding = ISO_SYMBOL;
 		}
 	    }
-	  else if (c == 0x152 /*oe*/ || c == 0x153  /*OE*/ ||
-		   c == 0x178 /*ydiaeresis*/ || c == 0x20AC /*euro*/ ||
-		   c == 0x2013 /*ndash*/ || c == 0x2014 /*mdash*/ ||
+	  else if (c == 0x152  /*oe*/     || c == 0x153  /*OE*/ ||
+		   c == 0x178  /*ydiaeresis*/ ||
+		   c == 0x2C6  /*circ*/   || c == 0x2DC  /*tilde*/ ||
+		   c == 0x2002 /*ensp*/   || c == 0x2003 /*emsp*/ ||
+		   c == 0x2009 /*thinsp*/ ||
+		   c == 0x2013 /*ndash*/  || c == 0x2014 /*mdash*/ ||
 		   (c >= 0x2018 && c <= 0x201E) /*quotes*/ ||
-		   c == 0x2020 /*dagger*/ || c == 0x2021 /*ddagger*/  ||
-		   c == 0x2026 /*...*/||
-		   c == 0x2039 /*inf*/|| c == 0x203A /*sup*/)
+		   c == 0x2026 /*hellip*/    ||
+		   c == 0x2039 /*inf*/    || c == 0x203A /*sup*/ ||
+		   c == 0x20AC /*euro*/)
 	    {
 #ifdef _WINDOWS
 	      car = '1'; /* West Europe Latin */
@@ -1256,7 +1264,17 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 		  encoding = ISO_8859_1;
 		  car = '1';
 		  pfont = &(fontset->FontIso_1);
-		  if (c == 0x2018 || c == 0x201C)
+		  if (c == 0x2C6)       /*circ*/
+		    c = 94;
+		  else if (c == 0x2DC)  /*tilde*/
+		    c = 126;
+		  else if (c == 0x2002) /*ensp*/
+		    c = 130;
+                  else if (c == 0x2003) /*emsp*/
+		    c = 160;
+		  else if (c == 0x2009) /*thinsp*/
+		    c = 129;
+		  else if (c == 0x2018 || c == 0x201C)
 		    c = 96;
 		  else if (c == 0x2019 || c == 0x201D)
 		    c = 39;
@@ -1270,14 +1288,12 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 		    {
 		      car = 'G';
 		      pfont = &(fontset->FontSymbol);
-		      if (c == 0x2013)
+		      if (c == 0x2013)  /* en dash */
 			c = 45;
-		      else if (c == 0x2014)
+		      else if (c == 0x2014) /* em dash */
 			c = 190;
-		      else if (c == 0x2026)
+		      else if (c == 0x2026) /* horizontal ellipsis */
 			c = 188;
-		      else if (c == 0x2020 || c == 0x2021)
-			c = 42;
 		    }
 		}
 #endif /* _WINDOWS */
@@ -1292,9 +1308,15 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 	      encoding = ISO_8859_2;
 #endif /* _WINDOWS */
 	    }
-	  else if (c > 0x2000 && c < 0x237F &&
-		   (c < 0x2018 || c > 0x201D) /* Windows quotations */ &&
-		   c != 0x20AC /* euro */)
+	  else if ((c > 0x2000 && c < 0x237F &&
+		   (c < 0x2018 || c > 0x201D) && /* Windows quotations */
+		   c != 0x20AC) || /* euro */
+		   c == 0x25CA ||  /* lozenge */
+                   c == 0x2660 ||  /* black spade suit */
+                   c == 0x2663 ||  /* black club suit */
+                   c == 0x2665 ||  /* black heart suit */
+		   c == 0x2666 ||  /* black diamond suit */
+		   c == 0x192)     /* latin small letter f with hook */
 	    {
 	      /* Symbols */
 	      car = 'G';
