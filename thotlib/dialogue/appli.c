@@ -1869,7 +1869,8 @@ LPARAM lParam;
 
             case WM_DESTROY: 
                  WIN_ReleaseDeviceContext ();
-                 FrRef[frame] = 0;
+				 if (frame != -1)
+                   FrRef[frame] = 0;
                  PostQuitMessage (0);
                  return 0;
 	       
