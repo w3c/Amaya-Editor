@@ -29,6 +29,15 @@ private:
     // Override base class functions of a wxDialog.
   void OnConfirmButton( wxCommandEvent& event );
   void OnCancelButton( wxCommandEvent& event );
+  void OnBrowseButton( wxCommandEvent& event );
+  void OnClearButton( wxCommandEvent& event );
+  void OnEncodingButton( wxCommandEvent& event );
+  void OnMimeTypeButton( wxCommandEvent& event );
+  void OnDocFormatBox( wxCommandEvent& event );
+  void OnImagesChkBox( wxCommandEvent& event );
+  void OnUrlsChkBox( wxCommandEvent& event );
+  void OnDocLocation( wxCommandEvent& event );
+  void OnImgLocation( wxCommandEvent& event );
   // Any class wishing to process wxWindows events must use this macro
   DECLARE_EVENT_TABLE()
     
