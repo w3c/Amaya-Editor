@@ -1108,7 +1108,77 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
 	    /* pas de traduction */
 	    {
 	      if (ci != EOS)
-		PutChar ((wchar_t) ci, fnum, NULL, doc, lineBreak, TRUE, FALSE);
+		{
+		  if (pEl->ElLeafType != LtSymbol)
+		    PutChar ((wchar_t) ci, fnum, NULL, doc, lineBreak, TRUE, FALSE);
+		  else
+		    switch (ci)
+		      {
+		      case 'c':
+			c = 8750; /*ContourIntegral*/
+			break;
+		      case 'd':
+			c = 8748; /*double integral???*/
+			break;
+		      case 'h':
+			c = 175; /*OverBar*/
+			break;
+		      case 'i':
+			c = 8747; /*Integral*/
+			break;
+		      case 'o':
+			c = 65079; /*OverBrace*/
+			break;
+		      case 'r':
+			c = 8730; /*Sqrt*/
+			break;
+		      case 'u':
+			c = 65080; /*UnderBrace*/
+			break;
+		      case 'v':
+			c = 124; /*VerticalLine*/
+			break;
+		      case 'D':
+			c = 8741; /*DoubleVerticalBar*/
+			break;
+		      case 'I':
+			c = 8898; /*Intersection*/
+			break;
+		      case 'L':
+			c = 8592; /*LeftArrow*/
+			break;
+		      case 'P':
+			c = 8719; /*Product*/
+			break;
+		      case 'R':
+			c = 8658; /*Rightarrow*/
+			break;
+		      case 'S':
+			c = 8721; /*Sum*/
+			break;
+		      case 'U':
+			c = 8899; /*Union*/
+			break;
+		      case 'V':
+			c = 8595; /*DownArrow*/
+			break;
+		      case '^':
+			c = 8593; /*UpArrow*/
+			break;
+		      case '<':
+			c = 9001; /*LeftAngleBracket*/
+			break;
+		      case '>':
+			c = 9002; /*RightAngleBracket*/
+			break;
+		      case '|':
+			c = 8739; /*VerticalBar*/
+			break;
+		      default:
+			c = (CHAR_T)ci;
+		      }
+		    PutChar (c, fnum, NULL, doc, lineBreak, TRUE, FALSE);
+		}
 	    }
 	  else
 	    /* on traduit l'element */
