@@ -91,19 +91,10 @@ extern void TtaCopyIncludedElem (Element element, Document document);
    TtaUpdateInclusionElements
 
    Up to date the value of inclusions that belong to the document.
-   If loadExternalDoc is TRUE, the inclusions whose the sources belong to
-   another document, are up to date too. In this case, the others documents
-   are opened temporarely. If removeExclusions is TRUE, the exclusions
-   are removed from the documents opened temporarely.
-   Parameters:
+  Parameters:
    document: the document in question.
-   loadExternalDoc: TRUE if it is necessary to up to date the inclusions
-   whose the sources belong to another (external) document.
-   removeExclusions : TRUE if exclusions of external documents have to be
-   removed when these ones are temporarely opened.
-   ---------------------------------------------------------------------- */
-extern void TtaUpdateInclusionElements (Document document, ThotBool loadExternalDoc,
-					ThotBool removeExclusions);
+    ---------------------------------------------------------------------- */
+extern void TtaUpdateInclusionElements (Document document);
 
 /*----------------------------------------------------------------------
    TtaGiveReferredElement
