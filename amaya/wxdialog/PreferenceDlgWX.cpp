@@ -73,6 +73,15 @@ PreferenceDlgWX::PreferenceDlgWX( int ref,
 
   m_UrlList = url_list;
 
+
+#ifdef _WINDOWS
+  // change the notebook style for windows
+  wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
+  p_notebook->SetWindowStyleFlag( wxNB_MULTILINE );
+  p_notebook->Refresh();
+  p_notebook->Fit();
+#endif /* _WINDOWS */
+
   // setup dialog title
   SetTitle( TtaConvMessageToWX("TODO (ex: Preferences)") );
 
