@@ -160,6 +160,7 @@ static HFONT        hOldFont;
 static ThotBool	    saveBeforeClose;
 static ThotBool     closeDontSave;
 static ThotBool     selectionFound;
+static ThotBool     isHref;
 static ThotBool     withEdit;
 static ThotBool     withBorder;
 static ThotBool     upper_lower = FALSE;
@@ -462,14 +463,19 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
-  ThotWindow urlWnd;
-
   switch (msg)
     {
     case WM_INITDIALOG:
-      urlWnd = GetDlgItem (hwnDlg, IDC_URL_TEXT);
-      SetWindowText (hwnDlg, TtaGetMessage (1, BTitle));
-      SetWindowText (urlWnd,  TtaGetMessage (AMAYA, AM_TITLE));
+      if (isHref)
+	{
+	  SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_ATTRIBUTE));
+	  SetDlgItemText (hwnDlg, IDC_URLEDIT, TtaGetMessage (AMAYA, AM_HREF_VALUE));
+	}
+      else
+	{
+	  SetWindowText (hwnDlg, TtaGetMessage (1, BTitle));
+	  SetDlgItemText (hwnDlg, IDC_URLEDIT, TtaGetMessage (AMAYA, AM_TITLE));
+	}
       SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
       SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_CANCEL));
       SetDlgItemText (hwnDlg, IDC_URLEDIT, urlToOpen);      
@@ -481,15 +487,25 @@ LPARAM lParam;
 	{
 	case ID_CONFIRM:
 	  GetDlgItemText (hwnDlg, IDC_URLEDIT, urlToOpen, sizeof (urlToOpen) - 1);
-	  AttrHREFvalue = TtaAllocString (ustrlen (urlToOpen) + 1);
-	  ustrcpy (AttrHREFvalue, urlToOpen);
-	  ThotCallback (BaseDialog + TitleText, STRING_DATA, urlToOpen);
-	  ThotCallback (BaseDialog + TitleForm, INTEGER_DATA, (CHAR_T*) 1);
+	  if (isHref)
+	    {
+	      AttrHREFvalue = TtaAllocString (ustrlen (urlToOpen) + 1);
+	      ustrcpy (AttrHREFvalue, urlToOpen);
+	      ThotCallback (BaseDialog + AttrHREFForm, INTEGER_DATA, (CHAR_T*) 1);
+	    }
+	  else
+	    {
+	      ThotCallback (BaseDialog + TitleText, STRING_DATA, urlToOpen);
+	      ThotCallback (BaseDialog + TitleForm, INTEGER_DATA, (CHAR_T*) 1);
+	    }
 	  EndDialog (hwnDlg, ID_CONFIRM);
 	  break;
       
 	case ID_DONE:
-	  ThotCallback (BaseDialog + TitleForm, INTEGER_DATA, (CHAR_T*) 0);
+	  if (isHref)
+	    ThotCallback (BaseDialog + AttrHREFForm, INTEGER_DATA, (CHAR_T*) 0);
+	  else
+	    ThotCallback (BaseDialog + TitleForm, INTEGER_DATA, (CHAR_T*) 0);
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
       
@@ -3542,6 +3558,25 @@ STRING     msg_text;
 
 
 /*-----------------------------------------------------------------------
+ CreateTitleDlgWindow
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+void       CreateTitleDlgWindow (ThotWindow parent, STRING title)
+#else  /* !__STDC__ */
+void       CreateTitleDlgWindow (parent, title)
+ThotWindow parent;
+STRING     title;
+#endif /* __STDC__ */
+{  
+  ustrcpy (urlToOpen, title);
+  ReleaseFocus = FALSE;
+  isHref = FALSE;
+  text[0] = 0;
+  DialogBox (hInstance, MAKEINTRESOURCE (LINKDIALOG), parent, (DLGPROC) TextDlgProc);
+}
+
+
+/*-----------------------------------------------------------------------
  CreateTextDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -3550,12 +3585,11 @@ void       CreateTextDlgWindow (ThotWindow parent, STRING attrHref)
 void       CreateTextDlgWindow (parent, attrHref)
 ThotWindow parent;
 STRING     attrHref;
-CHAR_T    *title_text;
-CHAR_T    *url_text;
 #endif /* __STDC__ */
 {  
   ustrcpy (urlToOpen, attrHref);
   ReleaseFocus = FALSE;
+  isHref = TRUE;
   text[0] = 0;
   DialogBox (hInstance, MAKEINTRESOURCE (LINKDIALOG), parent, (DLGPROC) TextDlgProc);
 }
