@@ -461,6 +461,7 @@ char               *docName;
 	       /* Use the base path of the document */
 	       TtaGiveTextAttributeValue (attrHREF, basename, &length);
 	       /* base and orgName have to be separated by a DIR_SEP */
+	       length--;
 	       if (basename[0] != EOS && basename[length] != '/') 
 		 /* verify if the base has the form "protocol://server:port" */
 		 {
@@ -493,7 +494,7 @@ char               *docName;
 		 /* search for the first ":" char */
 		 {
 		   for (length = 0; basename[length] != ':' && 
-			  basename[length] != EOS; length ++);
+			  basename[length] != EOS; length++);
 		   if (basename[length] == ':')
 		     /* found, so end the string there */
 		     basename[length + 1] = EOS;
