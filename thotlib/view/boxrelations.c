@@ -801,6 +801,17 @@ void ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horiz
       pAb->AbHorizPosChange = FALSE;
       return;
     }
+  else if (pRefAb && pRefAb->AbFloat != 'N' &&
+      (pRefAb->AbLeafType == LtPicture ||
+       (pRefAb->AbLeafType == LtCompound &&
+	!pRefAb->AbWidth.DimIsPosition &&
+	pRefAb->AbWidth.DimAbRef == NULL)))
+    {
+      /* the box position is computed by the line formatter */
+      pAb->AbVertPosChange = FALSE;
+      pAb->AbHorizPosChange = FALSE;
+      return;
+    }
   
   if (horizRef)
     {
