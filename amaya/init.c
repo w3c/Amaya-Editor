@@ -84,6 +84,9 @@
 #endif /* AMAYA_PLUGIN */
 
 #include "XPointer_f.h"
+#ifdef _SVGANIM
+#include "anim_f.h"
+#endif /* _SVGANIM */
 #ifdef _SVGLIB
 #include "libmanag_f.h"
 #endif /* _SVGLIB */

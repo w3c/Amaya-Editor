@@ -44,6 +44,10 @@
 #ifdef _SVGLIB
 #include "libmanag_f.h"
 #endif /* _SVGLIB */
+#ifdef _SVGANIM
+#include "anim_f.h"
+#endif /* _SVGANIM */
+
 #include "SVGedit_f.h"
 
 static Pixmap   iconGraph;
@@ -2258,7 +2262,7 @@ ThotBool DeleteAttrXlinkHref (NotifyAttribute *event)
   /* prevents Thot from deleting the xlink:href attribute */
   return TRUE;
 }
-
+ 
 
 /*----------------------------------------------------------------------
  AttrAnimTimeChanged

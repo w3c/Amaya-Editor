@@ -262,11 +262,12 @@ static int Time_to_xposition(double t) {
    Xposition_to_time
    Convert a x position (pixels) to clock value
   ----------------------------------------------------------------------*/
+/*
 #ifdef _SVGANIM
 static double Xposition_to_time(int x) {
 	return (x - cte_left_bar - 1) / time_sep;
 }
-#endif /* _SVGANIM */
+#endif  _SVGANIM */
 
 
 
@@ -1118,15 +1119,12 @@ static int Get_id_of (Element el, char* buffer)
 	return (length);
 }
 #endif /* _SVGANIM */
-
-
-
-
+ 
 
 /*----------------------------------------------------------------------
    Get_x_of
       returns horizontal position of a Timeline Element 
-  ----------------------------------------------------------------------*/	
+  ----------------------------------------------------------------------	
 #ifdef _SVGANIM
 static int Get_x_of (Element el)
 {
@@ -1135,7 +1133,6 @@ static int Get_x_of (Element el)
     PresentationValue    pval;
     AttributeType attrType;
     Attribute attr = NULL;
-	Element parent = TtaGetParent (el);
     ElementType elType = TtaGetElementType (el);
    
     attrType.AttrSSchema = elType.ElSSchema;
@@ -1147,9 +1144,7 @@ static int Get_x_of (Element el)
     text = TtaGetMemory (length);
    
    if (text) {
-      /* get the value of the attribute */
       TtaGiveTextAttributeValue (attr, text, &length);
-      /* parse the attribute value (a number followed by a unit) */
       ptr = text;
 	  ptr = ParseNumber (ptr, &pval);
 	  r = pval.typed_data.value;
@@ -1158,7 +1153,7 @@ static int Get_x_of (Element el)
 
 return r;
 }
-#endif /* _SVGANIM */
+#endif  _SVGANIM */
 
 
 /*----------------------------------------------------------------------

@@ -36,6 +36,9 @@ static int          OldHeight;
 #include "fetchXMLname_f.h"
 #ifdef _SVG
 #include "SVGbuilder_f.h"
+#ifdef _SVGANIM
+#include "anim_f.h"
+#endif /* _SVGANIM */
 #endif
 #include "HTMLactions_f.h"
 #include "HTMLedit_f.h"
