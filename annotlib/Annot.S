@@ -23,8 +23,14 @@ STRUCT
 
 EXCEPT
 	Annot:		NoMove, NoResize;
-	Description:	NoCut, NoSelect;
+	Description:	NoCut;
+        Author:	        NoCut;
+	SourceDoc:      NoCut;
+	RDFtype:        NoCut;
+        AnnotCDate:     NoCut;
+        AnnotMDate:     NoCut;
 	Body:		NoCut;
+	C_Empty:	NoCut;
 END
 
 
