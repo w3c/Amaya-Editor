@@ -172,8 +172,10 @@ static ThotBool      AttrInitCounter;	/* on a rencontre' "Init" dans une definit
 #include "writeprs_f.h"
 
 #ifdef _WINDOWS
-#define DLLEXPORT __declspec (dllexport)
 #include "compilers_f.h"
+#      ifndef DLLEXPORT
+#      define DLLEXPORT __declspec (dllexport)
+#      endif  /* DLLEXPORT */
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------

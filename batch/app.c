@@ -205,8 +205,10 @@ STRING              RegisteredAppEvents[] =
 };
 
 #ifdef _WINDOWS
-#define DLLEXPORT __declspec (dllexport)
 #include "compilers_f.h"
+#      ifndef DLLEXPORT
+#      define DLLEXPORT __declspec (dllexport)
+#      endif  /* DLLEXPORT */ 
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
@@ -1650,8 +1652,8 @@ char              **argv;
 #endif /* _WINDOWS */
 {
    FILE               *filedesc;
-   ThotBool             fileOK;
-   CHAR_T                buffer[200];
+   ThotBool            fileOK;
+   CHAR_T              buffer[200];
    STRING              pwd, ptr;
    Name                srceFileName;
    int                 i;
@@ -1665,11 +1667,9 @@ char              **argv;
    int                 nb;
    int                 param;
 #  ifdef _WINDOWS
-   STRING               cmd [100];
-   STRING               pChar;
+   STRING              cmd [100];
    int                 ndx, pIndex = 0;
-   int                 len;
-   CHAR_T                msg [800];
+   CHAR_T              msg [800];
    HANDLE              cppLib;
    FARPROC             ptrMainProc;
 #  else  /* !_WINDOWS */

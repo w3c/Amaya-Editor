@@ -138,8 +138,10 @@ static ThotBool      SecondInPair;	/* on a rencontre' "Second" */
 #include "registry_f.h"
 
 #ifdef _WINDOWS
-#define DLLEXPORT __declspec (dllexport)
 #include "compilers_f.h"
+#      ifndef DLLEXPORT
+#      define DLLEXPORT __declspec (dllexport)
+#      endif  /* DLLEXPORT */
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------

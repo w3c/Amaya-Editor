@@ -124,8 +124,10 @@ static ThotBool      ImportExcept;/* we met exception ImportLine or ImportParagr
 #include "registry_f.h"
 
 #ifdef _WINDOWS
-#define DLLEXPORT __declspec (dllexport)
 #include "compilers_f.h"
+#      ifndef DLLEXPORT
+#      define DLLEXPORT __declspec (dllexport)
+#      endif  /* DLLEXPORT */
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------

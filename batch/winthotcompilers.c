@@ -70,7 +70,7 @@ char* ThotPath;
 char* currentFile;
 char* currentDestFile;
 char* BinFiles [100];
-char* TbStrings [2] = {"Open File", "Build"};
+char* TbStrings [2] = {"Open (Ctrl+O)", "Build (F7)"};
 
 DWORD       dwStatusBarStyles = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM | SBARS_SIZEGRIP;
 
@@ -121,11 +121,11 @@ int   msgType;
    if (hwnd) {
       LPSTR pText = (LPSTR) malloc (strlen (errorMsg) + 3);
       if ( pText ) {
-         // Set caret to end of current text
+         /* Set caret to end of current text */
          int ndx = GetWindowTextLength (hwnd);
          SetFocus (hwnd);   
          SendMessage (hwnd, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx);
-         // Append text
+         /* Append text */
          sprintf( pText, "%s\r\n", errorMsg );
          SendMessage (hwnd, EM_REPLACESEL, 0, (LPARAM) ((LPSTR) pText));
 
@@ -321,11 +321,14 @@ char* fileName;
                                command = DEST_DIR;
                           else {
                                command = ERROR_CMD;
-                               sprintf (msg, "Line %d: unknown command %s", line, token);
+                               sprintf (msg, "%s (Line %3d): unknown command %s", fileToOpen, line, token);
                                MakeMessage (hwnd, msg, FATAL_EXIT_CODE);				   
 						  } 
-					   }  
-                       if (command != ERROR_CMD) {
+					   }
+                       if (command == ERROR_CMD)
+                          return FATAL_EXIT_CODE;
+
+                       /* @@@@@ if (command != ERROR_CMD) { @@@@@ */
                           index = 0;
                           args [index] = (char*) malloc (strlen (cmdLine) + 1);
                           strcpy (args [index++], cmdLine);
@@ -835,7 +838,7 @@ char* fileName;
 									  }
                                       break;
 						  } 
-					   } 
+					   /* @@@@@ }  @@@@@ */
 					}   
                     line++;
 			  } 
@@ -1016,14 +1019,14 @@ LPARAM lParam;
                  hWndTT = (HWND)SendMessage(hWndToolBar, TB_GETTOOLTIPS, 0, 0);
 
                  if (hWndTT) {
-                    // Fill in the TOOLINFO structure.
+                    /* Fill in the TOOLINFO structure. */
                     lpToolInfo.cbSize = sizeof(lpToolInfo);
                     lpToolInfo.uFlags = TTF_IDISHWND | TTF_CENTERTIP;
                     lpToolInfo.lpszText = (LPSTR)COMP_TOOLBAR;
                     lpToolInfo.hwnd = hwnd;
                     lpToolInfo.uId = (UINT)hWndToolBar;
                     lpToolInfo.hinst = g_hInstance;
-                    // Set up tooltips for the combo box.
+                    /* Set up tooltips for the combo box. */
                     SendMessage(hWndTT, TTM_ADDTOOL, 0, (LPARAM)(LPTOOLINFO)&lpToolInfo);
 				 } else
                         MessageBox(NULL, "Could not get tooltip window handle.",NULL, MB_OK);
