@@ -561,10 +561,17 @@ void AmayaWindow::OnChar(wxKeyEvent& event)
 {
   wxLogDebug( _T("AmayaWindow::OnChar key=")+wxString(event.GetUnicodeKey()) );
 
+#ifdef _WINDOWS
   if(!CheckSpecialKey(event))
     if (!CheckShortcutKey(event))
       if (!CheckUnicodeKey(event))
         event.Skip();
+#else /* _WINDOWS */
+  if (!CheckUnicodeKey(event))
+    if(!CheckSpecialKey(event))
+      if (!CheckShortcutKey(event))
+        event.Skip();
+#endif /* _WINDOWS */
 }
 
 /*
