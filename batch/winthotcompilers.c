@@ -278,7 +278,7 @@ int Makefile (HWND hwnd, char *fileName)
 
 	       /* Establish string and get the first token: */
 	       string [0] = 0;
-	       ufgets (string, 1024, f);
+	       fgets (string, 1024, f);
 	       pChar = &string [0];
 	       while (*pChar == SPACE || *pChar == TAB || *pChar == CR)
 		 pChar++;
