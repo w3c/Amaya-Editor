@@ -1563,6 +1563,12 @@ int                *carIndex;
 		pCurrentBox->BxBuffer = NULL;
 		pCurrentBox->BxNChars = pAb->AbVolume;
 		GiveGraphicSize (pAb, &width, &height);
+		if (pAb->AbShape == 'C')
+		  {
+		    /* update radius of the rectangle with rounded corners */
+		    ComputeRadius (pAb, frame, TRUE);
+		    ComputeRadius (pAb, frame, FALSE);
+		  }
 		break;
 	      case LtPolyLine:
 		/* Prend une copie des points de controle */
@@ -2582,7 +2588,7 @@ int                 frame;
      }
    else
      {
-	/* CHANGEMENT GRAPHIQUE */
+	/* CHANGE BOX ASPECT */
 	if (pAb->AbAspectChange)
 	  {
 	     pAb->AbAspectChange = FALSE;
@@ -2646,11 +2652,20 @@ int                 frame;
 		 DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth,
 			  pBox->BxYOrg + pBox->BxHeight);
 	       }
+	     else if (pAb->AbLeafType == LtGraphics && pAb->AbShape == 'C')
+	       {
+		 /* update radius of the rectangle with rounded corners */
+		 ComputeRadius (pAb, frame, TRUE);
+		 ComputeRadius (pAb, frame, FALSE);
+		 /* mark the zone to be displayed */
+		 DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth,
+			  pBox->BxYOrg + pBox->BxHeight);
+	       }
 	  }
-	/* Taille des caracteres du CONTENU DU PAVE MODIFIE */
+	/* CHANGE CHARACTER SIZE */
 	if (pAb->AbSizeChange)
 	  {
-	    /* Il faut regarder les consequences du changement de taille */
+	    /* check the effect */
 	    pDimAb = &pAb->AbWidth;
 	    if (!pDimAb->DimIsPosition)
 	      {
@@ -2672,10 +2687,10 @@ int                 frame;
 	    pAb->AbHorizRefChange = (pAb->AbHorizRef.PosUnit == UnRelative);
 	    pAb->AbVertRefChange = (pAb->AbVertRef.PosUnit == UnRelative);
 	  }
-	/* CONTENU DU PAVE MODIFIE */
+	/* CHANGE THE CONTENTS */
 	if (pAb->AbChange || pAb->AbSizeChange)
 	  {
-	     /* On verifie que la fonte attachee au pave est chargee */
+	     /* check the font of the abstract box */
 	     height = pAb->AbSize;
 	     unit = pAb->AbSizeUnit;
 	     height += pFrame->FrMagnification;
@@ -2705,103 +2720,103 @@ int                 frame;
 	     else
 	       {
 		  switch (pAb->AbLeafType)
-			{
-			   case LtPageColBreak:
-			      width = 0;
-			      height = 0;
-			      break;
-			   case LtText:
-			      GiveTextSize (pAb, &width, &height, &nSpaces);
+		    {
+		    case LtPageColBreak:
+		      width = 0;
+		      height = 0;
+		      break;
+		    case LtText:
+		      GiveTextSize (pAb, &width, &height, &nSpaces);
 
-			      /* Si la boite est justifiee */
-			      if (pBox->BxSpaceWidth != 0)
+		      /* Si la boite est justifiee */
+		      if (pBox->BxSpaceWidth != 0)
+			{
+			  i = pBox->BxSpaceWidth - CharacterWidth (SPACE, pBox->BxFont);
+			  /* On prend la largeur justifiee */
+			  width = width + i * nSpaces + pBox->BxNPixels;
+			  /* width shift */
+			  adjustDelta = width - pBox->BxW;
+			}
+		      /* character shift */
+		      charDelta = pAb->AbVolume - pBox->BxNChars;
+		      /* space shift */
+		      nSpaces -= pBox->BxNSpaces;
+		      pBox->BxBuffer = pAb->AbText;
+		      break;
+		    case LtPicture:
+		      if (pAb->AbChange)
+			{
+			  /* the picture change, RAZ the structure */
+			  FreePictInfo ((PictInfo *) pBox->BxPictInfo);
+			  SetCursorWatch (frame);
+			  LoadPicture (frame, pBox, (PictInfo *) pBox->BxPictInfo);
+			  ResetCursorWatch (frame);
+			  GivePictureSize (pAb, ViewFrameTable[frame -1].FrMagnification, &width, &height);
+			}
+		      else
+			{
+			  width = pBox->BxW;
+			  height = pBox->BxH;
+			}
+		      break;
+		    case LtSymbol:
+		      GiveSymbolSize (pAb, &width, &height);
+		      break;
+		    case LtGraphics:
+		      /* Si le trace graphique a change */
+		      if (pAb->AbChange)
+			{
+			  /* Si transformation polyline en graphique simple */
+			  FreePolyline (pBox);
+			  pAb->AbRealShape = pAb->AbShape;
+			  
+			  /* remonte a la recherche d'un ancetre elastique */
+			  pCurrentAb = pAb;
+			  while (pCurrentAb != NULL)
+			    {
+			      pCurrentBox = pCurrentAb->AbBox;
+			      if (pCurrentBox->BxHorizFlex || pCurrentBox->BxVertFlex)
 				{
-				   i = pBox->BxSpaceWidth - CharacterWidth (SPACE, pBox->BxFont);
-				   /* On prend la largeur justifiee */
-				   width = width + i * nSpaces + pBox->BxNPixels;
-				   /* width shift */
-				   adjustDelta = width - pBox->BxW;
-				}
-			      /* character shift */
-			      charDelta = pAb->AbVolume - pBox->BxNChars;
-			      /* space shift */
-			      nSpaces -= pBox->BxNSpaces;
-			      pBox->BxBuffer = pAb->AbText;
-			      break;
-			   case LtPicture:
-			      if (pAb->AbChange)
-				{
-				   /* the picture change, RAZ the structure */
-				   FreePictInfo ((PictInfo *) pBox->BxPictInfo);
-				   SetCursorWatch (frame);
-				   LoadPicture (frame, pBox, (PictInfo *) pBox->BxPictInfo);
-				   ResetCursorWatch (frame);
-				   GivePictureSize (pAb, ViewFrameTable[frame -1].FrMagnification, &width, &height);
+				  MirrorShape (pAb, pCurrentBox->BxHorizInverted, pCurrentBox->BxVertInverted, FALSE);
+				  pCurrentAb = NULL;		/* on arrete */
 				}
 			      else
-				{
-				   width = pBox->BxW;
-				   height = pBox->BxH;
-				}
-			      break;
-			   case LtSymbol:
-			      GiveSymbolSize (pAb, &width, &height);
-			      break;
-			   case LtGraphics:
-			      /* Si le trace graphique a change */
-			      if (pAb->AbChange)
-				{
-				   /* Si transformation polyline en graphique simple */
-				   FreePolyline (pBox);
-				   pAb->AbRealShape = pAb->AbShape;
-
-				   /* remonte a la recherche d'un ancetre elastique */
-				   pCurrentAb = pAb;
-				   while (pCurrentAb != NULL)
-				     {
-					pCurrentBox = pCurrentAb->AbBox;
-					if (pCurrentBox->BxHorizFlex || pCurrentBox->BxVertFlex)
-					  {
-					     MirrorShape (pAb, pCurrentBox->BxHorizInverted, pCurrentBox->BxVertInverted, FALSE);
-					     pCurrentAb = NULL;		/* on arrete */
-					  }
-					else
-					   pCurrentAb = pCurrentAb->AbEnclosing;
-				     }
-				}
-			      GiveGraphicSize (pAb, &width, &height);
-			      break;
-			   case LtPolyLine:
-			      if (pAb->AbChange)
-				{
-				   /* Libere les anciens buffers */
-				   FreePolyline (pBox);
-				   /* Recopie les buffers du pave */
-				   pBox->BxBuffer = CopyText (pAb->AbPolyLineBuffer, NULL);
-				   pBox->BxNChars = pAb->AbVolume;
-
-				   /* remonte a la recherche d'un ancetre elastique */
-				   pCurrentAb = pAb;
-				   while (pCurrentAb != NULL)
-				     {
-					pCurrentBox = pCurrentAb->AbBox;
-					if (pCurrentBox->BxHorizFlex || pCurrentBox->BxVertFlex)
-					  {
-					     MirrorShape (pAb, pCurrentBox->BxHorizInverted, pCurrentBox->BxVertInverted, FALSE);
-					     /* on arrete */
-					     pCurrentAb = NULL;	
-					  }
-					else
-					   pCurrentAb = pCurrentAb->AbEnclosing;
-				     }
-				}
-			      GivePolylineSize (pAb, &width, &height);
-			      break;
-			   default:
-			      break;
+				pCurrentAb = pCurrentAb->AbEnclosing;
+			    }
 			}
+		      GiveGraphicSize (pAb, &width, &height);
+		      break;
+		    case LtPolyLine:
+		      if (pAb->AbChange)
+			{
+			  /* Libere les anciens buffers */
+			  FreePolyline (pBox);
+			  /* Recopie les buffers du pave */
+			  pBox->BxBuffer = CopyText (pAb->AbPolyLineBuffer, NULL);
+			  pBox->BxNChars = pAb->AbVolume;
+			  
+			  /* remonte a la recherche d'un ancetre elastique */
+			  pCurrentAb = pAb;
+			  while (pCurrentAb != NULL)
+			    {
+			      pCurrentBox = pCurrentAb->AbBox;
+			      if (pCurrentBox->BxHorizFlex || pCurrentBox->BxVertFlex)
+				{
+				  MirrorShape (pAb, pCurrentBox->BxHorizInverted, pCurrentBox->BxVertInverted, FALSE);
+				  /* on arrete */
+				  pCurrentAb = NULL;	
+				}
+			      else
+				pCurrentAb = pCurrentAb->AbEnclosing;
+			    }
+			}
+		      GivePolylineSize (pAb, &width, &height);
+		      break;
+		    default:
+		      break;
+		    }
 
-		  /* On modifie la boite  */
+		  /* update the box  */
 		  pDimAb = &pAb->AbWidth;
 		  if (pDimAb->DimIsPosition)
 		     width = 0;
@@ -2846,7 +2861,7 @@ int                 frame;
 	     if (pAb->AbSizeChange)
 	       pAb->AbSizeChange = FALSE;
 	  }
-	/* CHANGEMENT DE LARGEUR */
+	/* CHANGE WIDTH */
 	if (pAb->AbWidthChange)
 	  {
 	     AnyWidthUpdate = TRUE;
@@ -2873,7 +2888,7 @@ int                 frame;
 		   case LtCompound:
 		     if (pAb->AbInLine)
 		       {
-			 /* La regle mise en lignes est prise en compte? */
+			 /* the rule Inline is taken into account? */
 			 if (pBox->BxType != BoGhost)
 			   RecomputeLines (pAb, NULL, NULL, frame);
 			 width = pBox->BxW;
@@ -2886,13 +2901,18 @@ int                 frame;
 		     break;
 		   }
 
-		 /* Mise a jour de la largeur du contenu */
+		 /* Change the width of the contents */
 		 ChangeDefaultWidth (pBox, NULL, width, 0, frame);
 		 result = TRUE;
 	       }
-	     /* La boite ne depend pas de son contenu */
 	     else
+	       /* the box width doesn't depend on the contents */
 	       result = TRUE;
+
+	     if (pAb->AbLeafType == LtGraphics && pAb->AbShape == 'C' &&
+		 pAb->AbRxUnit == UnPercent)
+	       /* update radius of the rectangle with rounded corners */
+		 ComputeRadius (pAb, frame, TRUE);
 
 	     /* Check table consistency */
 	     if (pCurrentBox->BxType == BoColumn && ThotLocalActions[T_checktable])
@@ -2909,7 +2929,7 @@ int                 frame;
 		 (*ThotLocalActions[T_checkcolumn]) (pCell, NULL, frame);
 	       }
 	  }
-	/* CHANGEMENT DE HAUTEUR */
+	/* CHANGE HEIGHT */
 	if (pAb->AbHeightChange)
 	  {
 	     /* Remove the old value */
@@ -2935,7 +2955,7 @@ int                 frame;
 		   case LtCompound:
 		     if (pAb->AbInLine)
 		       {
-			 /* On evalue la hauteur du bloc de ligne */
+			 /* compute the height of the block of lines */
 			 pLine = pBox->BxLastLine;
 			 if (pLine == NULL || pBox->BxType == BoGhost)
 			   height = pBox->BxH;
@@ -2950,13 +2970,18 @@ int                 frame;
 		     break;
 		   }
 
-		 /* Mise a jour de la hauteur du contenu */
+		 /* Change the height of the contents */
 		 ChangeDefaultHeight (pBox, NULL, height, frame);
 		 result = TRUE;
 	       }
-	     /* La boite ne depend pas de son contenu */
 	     else
+	       /* the box height doesn't depend on the contents */
 		result = TRUE;
+
+	     if (pAb->AbLeafType == LtGraphics && pAb->AbShape == 'C' &&
+		 pAb->AbRyUnit == UnPercent)
+	       /* update radius of the rectangle with rounded corners */
+		 ComputeRadius (pAb, frame, FALSE);
 	  }
 	/* MARGIN PADDING BORDER */
 	if (pAb->AbMBPChange)

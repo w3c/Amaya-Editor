@@ -82,8 +82,8 @@ BinFile             pivFile;
 
    TtaWriteByte (pivFile, (char) C_PIV_VERSION);
    TtaWriteByte (pivFile, (char) C_PIV_VERSION);
-   /* Version courante de PIVOT: 5 */
-   version = 5;
+   /* Version courante de PIVOT: 6 */
+   version = 6;
    TtaWriteByte (pivFile, (char) version);
 }
 
@@ -567,46 +567,43 @@ BinFile       pivFile;
 PtrPRule      pPRule;
 #endif /* __STDC__ */
 {
+  PRuleType          rType;
   unsigned short     red, green, blue;
 
-  /* s'il s'agit d'une regle de dimension elastique, on ne l'ecrit pas */
-  if (pPRule->PrType == PtHeight || pPRule->PrType == PtWidth)
-    if (pPRule->PrDimRule.DrPosition)
-      return;
-
+  rType = pPRule->PrType;
   /* on ne traite que les regles de presentation directes (ni heritage */
   /* ni fonction de presentation) dont le codage pivot est defini */
-  if ((pPRule->PrType == PtHeight || pPRule->PrType == PtWidth ||
-       pPRule->PrType == PtVertPos || pPRule->PrType == PtHorizPos ||
-       pPRule->PrType == PtMarginTop || pPRule->PrType == PtMarginRight ||
-       pPRule->PrType == PtMarginBottom || pPRule->PrType == PtMarginLeft ||
-       pPRule->PrType == PtPaddingTop || pPRule->PrType == PtPaddingRight ||
-       pPRule->PrType == PtPaddingBottom || pPRule->PrType == PtPaddingLeft ||
-       pPRule->PrType == PtBorderTopWidth ||
-       pPRule->PrType == PtBorderRightWidth ||
-       pPRule->PrType == PtBorderBottomWidth ||
-       pPRule->PrType == PtBorderLeftWidth ||
-       pPRule->PrType == PtXRadius || pPRule->PrType == PtYRadius ||
-       pPRule->PrType == PtBorderTopColor ||
-       pPRule->PrType == PtBorderRightColor ||
-       pPRule->PrType == PtBorderBottomColor ||
-       pPRule->PrType == PtBorderLeftColor ||
-       pPRule->PrType == PtBorderTopStyle ||
-       pPRule->PrType == PtBorderRightStyle ||
-       pPRule->PrType == PtBorderBottomStyle ||
-       pPRule->PrType == PtBorderLeftStyle ||
-       pPRule->PrType == PtSize || pPRule->PrType == PtStyle ||
-       pPRule->PrType == PtWeight || pPRule->PrType == PtFont ||
-       pPRule->PrType == PtUnderline || pPRule->PrType == PtThickness ||
-       pPRule->PrType == PtIndent || pPRule->PrType == PtLineSpacing ||
-       pPRule->PrType == PtDepth ||
-       pPRule->PrType == PtAdjust || pPRule->PrType == PtJustify ||
-       pPRule->PrType == PtLineStyle || pPRule->PrType == PtLineWeight ||
-       pPRule->PrType == PtFillPattern ||
-       pPRule->PrType == PtBackground || pPRule->PrType == PtForeground ||
-       pPRule->PrType == PtHyphenate ||
-       pPRule->PrType == PtBreak1 || pPRule->PrType == PtBreak2 ||
-       pPRule->PrType == PtPictInfo)
+  if ((rType == PtHeight || rType == PtWidth ||
+       rType == PtVertPos || rType == PtHorizPos ||
+       rType == PtMarginTop || rType == PtMarginRight ||
+       rType == PtMarginBottom || rType == PtMarginLeft ||
+       rType == PtPaddingTop || rType == PtPaddingRight ||
+       rType == PtPaddingBottom || rType == PtPaddingLeft ||
+       rType == PtBorderTopWidth ||
+       rType == PtBorderRightWidth ||
+       rType == PtBorderBottomWidth ||
+       rType == PtBorderLeftWidth ||
+       rType == PtXRadius || rType == PtYRadius ||
+       rType == PtBorderTopColor ||
+       rType == PtBorderRightColor ||
+       rType == PtBorderBottomColor ||
+       rType == PtBorderLeftColor ||
+       rType == PtBorderTopStyle ||
+       rType == PtBorderRightStyle ||
+       rType == PtBorderBottomStyle ||
+       rType == PtBorderLeftStyle ||
+       rType == PtSize || rType == PtStyle ||
+       rType == PtWeight || rType == PtFont ||
+       rType == PtUnderline || rType == PtThickness ||
+       rType == PtIndent || rType == PtLineSpacing ||
+       rType == PtDepth ||
+       rType == PtAdjust || rType == PtJustify ||
+       rType == PtLineStyle || rType == PtLineWeight ||
+       rType == PtFillPattern ||
+       rType == PtBackground || rType == PtForeground ||
+       rType == PtHyphenate ||
+       rType == PtBreak1 || rType == PtBreak2 ||
+       rType == PtPictInfo)
       && pPRule->PrPresMode == PresImmediate)
     {
       /* ecrit la marque de regle */
@@ -616,7 +613,7 @@ PtrPRule      pPRule;
       /* ecrit le numero de la boite de presentation concernee */
       PutShort (pivFile, 0);
       /* ecrit le type de la regle et ses parametres */
-      switch (pPRule->PrType)
+      switch (rType)
 	{
 	case PtAdjust:
 	  /* mode de mise en ligne */
@@ -624,16 +621,26 @@ PtrPRule      pPRule;
 	  PutAlignment (pivFile, pPRule->PrAdjust);
 	  break;
 	case PtHeight:
-	  if (!pPRule->PrDimRule.DrPosition)
-	    {
-	      TtaWriteByte (pivFile, C_PR_HEIGHT);
-	      PutDimension (pivFile, pPRule);
-	    }
-	  break;
 	case PtWidth:
-	  if (!pPRule->PrDimRule.DrPosition)
+	  if (pPRule->PrDimRule.DrPosition)
 	    {
-	      TtaWriteByte (pivFile, C_PR_WIDTH);
+	      if (pPRule->PrType == PtHeight)
+		TtaWriteByte (pivFile, C_PR_HEIGHTPOS);
+	      else
+		TtaWriteByte (pivFile, C_PR_WIDTHPOS);
+	      PutShort (pivFile, pPRule->PrDimRule.DrPosRule.PoPosDef);
+	      PutShort (pivFile, pPRule->PrDimRule.DrPosRule.PoPosRef);
+	      PutShort (pivFile, pPRule->PrDimRule.DrPosRule.PoRelation);
+	      PutShort (pivFile, abs (pPRule->PrDimRule.DrPosRule.PoDistance));
+	      PutUnit (pivFile, pPRule->PrDimRule.DrPosRule.PoDistUnit);
+	      PutSign (pivFile, (ThotBool)(pPRule->PrDimRule.DrPosRule.PoDistance >= 0));
+	    }
+	  else
+	    {
+	      if (pPRule->PrType == PtHeight)
+		TtaWriteByte (pivFile, C_PR_HEIGHT);
+	      else
+		TtaWriteByte (pivFile, C_PR_WIDTH);
 	      PutDimension (pivFile, pPRule);
 	    }
 	  break;
@@ -643,6 +650,9 @@ PtrPRule      pPRule;
 	    TtaWriteByte (pivFile, C_PR_VPOS);
 	  else
 	    TtaWriteByte (pivFile, C_PR_HPOS);
+	  PutShort (pivFile, pPRule->PrPosRule.PoPosDef);
+	  PutShort (pivFile, pPRule->PrPosRule.PoPosRef);
+	  PutShort (pivFile, pPRule->PrPosRule.PoRelation);
 	  PutShort (pivFile, abs (pPRule->PrPosRule.PoDistance));
 	  PutUnit (pivFile, pPRule->PrPosRule.PoDistUnit);
 	  PutSign (pivFile, (ThotBool)(pPRule->PrPosRule.PoDistance >= 0));

@@ -1722,11 +1722,14 @@ ThotBool            link;
   PtrAttribute        pAttr;
   DimensionRule      *pDimRule;
   TypeUnit            unit;
+  BoxEdge             ref, def;
+  Level               rel;
   int                 pictureType, val, view, box;
   int                 PicXArea, PicYArea, PicWArea, PicHArea;
   int                 red, green, blue;
   char                ch;
   ThotBool            absolute, sign, just;
+  ThotBool            dimpos;
   
   pres = (PictureScaling) 0;
   pictureType = 0;
@@ -1749,9 +1752,11 @@ ThotBool            link;
     case C_PR_ADJUST:
       TypeRP = PtAdjust;
       break;
+    case C_PR_HEIGHTPOS:
     case C_PR_HEIGHT:
       TypeRP = PtHeight;
       break;
+    case C_PR_WIDTHPOS:
     case C_PR_WIDTH:
       TypeRP = PtWidth;
       break;
@@ -1899,13 +1904,35 @@ ThotBool            link;
 	break;
       case PtHeight:
       case PtWidth:
-	absolute = ReadDimensionType (pivFile);
-	TtaReadShort (pivFile, &val);
-	unit = ReadUnit (pivFile);
-	sign = ReadSign (pivFile);
+	if (ch == C_PR_WIDTHPOS || ch == C_PR_HEIGHTPOS)
+	  {
+	    /* get a complete rule */
+	    dimpos = TRUE;
+	    TtaReadShort (pivFile, &def);
+	    TtaReadShort (pivFile, &ref);
+	    TtaReadShort (pivFile, &rel);
+	    TtaReadShort (pivFile, &val);
+	    unit = ReadUnit (pivFile);
+	    sign = ReadSign (pivFile);
+	  }
+	else
+	  {
+	    dimpos = FALSE;
+	    absolute = ReadDimensionType (pivFile);
+	    TtaReadShort (pivFile, &val);
+	    unit = ReadUnit (pivFile);
+	    sign = ReadSign (pivFile);
+	  }
 	break;
       case PtVertPos:
       case PtHorizPos:
+	if (pDoc->DocPivotVersion >= 6)
+	  {
+	    /* get a complete rule */
+	    TtaReadShort (pivFile, &def);
+	    TtaReadShort (pivFile, &ref);	    
+	    TtaReadShort (pivFile, &rel);
+	  }
 	TtaReadShort (pivFile, &val);
 	unit = ReadUnit (pivFile);
 	sign = ReadSign (pivFile);
@@ -2011,46 +2038,67 @@ ThotBool            link;
 	  case PtHeight:
 	  case PtWidth:
 	    pDimRule = &pPRule->PrDimRule;
-	    pDimRule->DrPosition = FALSE;
-	    pDimRule->DrAbsolute = absolute;
-	    if (!pDimRule->DrAbsolute)
-	      /* c'est une dimension relative, on prend */
-	      /* la regle qui devrait s'appliquer a     */
-	      /* l'element, puis on la modifie selon    */
-	      /* ce qui est lu dans le fichier          */
+	    pDimRule->DrPosition = dimpos;
+	    if (dimpos)
 	      {
-		pR1 = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, pPRule->PrViewNum,
-					   pPRule->PrType, FnAny, FALSE, TRUE, &pAttr);
-		if (pR1 != NULL)
-		  
-		  {
-		    *pPRule = *pR1;
-		    pPRule->PrViewNum = view;
-		    pPRule->PrNextPRule = NULL;
-		    pPRule->PrCond = NULL;
-		  }
+		pDimRule->DrPosRule.PoPosDef = def;
+		pDimRule->DrPosRule.PoPosRef = ref;
+		pDimRule->DrPosRule.PoRelation = rel;
+		pDimRule->DrPosRule.PoDistance = val;
+		pDimRule->DrPosRule.PoDistUnit = unit;
+		if (!sign)
+		  pDimRule->DrPosRule.PoDistance = -pDimRule->DrPosRule.PoDistance;
 	      }
-	    pDimRule->DrAttr = FALSE;
-	    pDimRule->DrValue = val;
-	    pDimRule->DrUnit = unit;
-	    if (!sign)
-	      pDimRule->DrValue = -pDimRule->DrValue;
-	    pDimRule->DrMin = FALSE;
+	    else
+	      {
+		pDimRule->DrAbsolute = absolute;
+		if (!pDimRule->DrAbsolute)
+		  /* c'est une dimension relative, on prend */
+		  /* la regle qui devrait s'appliquer a     */
+		  /* l'element, puis on la modifie selon    */
+		  /* ce qui est lu dans le fichier          */
+		  {
+		    pR1 = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, pPRule->PrViewNum,
+					       pPRule->PrType, FnAny, FALSE, TRUE, &pAttr);
+		    if (pR1 != NULL)
+		      {
+			*pPRule = *pR1;
+			pPRule->PrViewNum = view;
+			pPRule->PrNextPRule = NULL;
+			pPRule->PrCond = NULL;
+		      }
+		  }
+		pDimRule->DrAttr = FALSE;
+		pDimRule->DrValue = val;
+		pDimRule->DrUnit = unit;
+		if (!sign)
+		  pDimRule->DrValue = -pDimRule->DrValue;
+		pDimRule->DrMin = FALSE;
+	      }
 	    break;
 	  case PtVertPos:
 	  case PtHorizPos:
 	    pPosRule = &pPRule->PrPosRule;
-	    /* c'est une position relative, on prend */
-	    /* la regle qui devrait s'appliquer a    */
-	    /* l'element, puis on la modifie selon   */
-	    /* ce qui est lu dans le fichier         */
-	    pR1 = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, pPRule->PrViewNum,
-				       pPRule->PrType, FnAny, FALSE, TRUE, &pAttr);
-	    if (pR1 != NULL)
-	      *pPRule = *pR1;
-	    pPRule->PrViewNum = view;
-	    pPRule->PrNextPRule = NULL;
-	    pPRule->PrCond = NULL;
+	    if (pDoc->DocPivotVersion >= 6)
+	      {
+		pPosRule->PoPosDef = def;
+		pPosRule->PoPosRef = ref;
+		pPosRule->PoRelation = rel;
+	      }
+	    else
+	      {
+		/* c'est une position relative, on prend */
+		/* la regle qui devrait s'appliquer a    */
+		/* l'element, puis on la modifie selon   */
+		/* ce qui est lu dans le fichier         */
+		pR1 = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, pPRule->PrViewNum,
+					   pPRule->PrType, FnAny, FALSE, TRUE, &pAttr);
+		if (pR1 != NULL)
+		  *pPRule = *pR1;
+		pPRule->PrViewNum = view;
+		pPRule->PrNextPRule = NULL;
+		pPRule->PrCond = NULL;
+	      }
 	    pPosRule->PoDistAttr = FALSE;
 	    pPosRule->PoDistance = val;
 	    pPosRule->PoDistUnit = unit;

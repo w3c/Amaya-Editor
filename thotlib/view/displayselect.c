@@ -297,6 +297,29 @@ int                 pointselect;
 	    DrawRectangle (frame, 0, 0, leftX, bottomY, thick, thick,
 			   0, 0, 0, InsertColor, 2);
 	    break;
+	  case 'g':
+	    /* Coords of the line are given by the enclosing box */
+	    pAb = pAb->AbEnclosing;
+	    if ((pAb->AbHorizPos.PosEdge == Left && pAb->AbVertPos.PosEdge == Top) ||
+		(pAb->AbHorizPos.PosEdge == Right && pAb->AbVertPos.PosEdge == Bottom))
+	      {
+		/* draw a \ */
+		/* 2 characteristic points */
+		DrawRectangle (frame, 0, 0, leftX, topY, thick, thick,
+			       0, 0, 0, InsertColor, 2);
+		DrawRectangle (frame, 0, 0, rightX, bottomY, thick, thick,
+			       0, 0, 0, InsertColor, 2);
+	      }
+	    else
+	      {
+		/* draw a / */
+		/* 2 characteristic points */
+		DrawRectangle (frame, 0, 0, rightX, topY, thick, thick,
+			       0, 0, 0, InsertColor, 2);
+		DrawRectangle (frame, 0, 0, leftX, bottomY, thick, thick,
+			       0, 0, 0, InsertColor, 2);
+	      }
+	    break;
 	  default:
 	    break;
 	  }

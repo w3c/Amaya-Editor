@@ -251,6 +251,11 @@ typedef struct _Box
       short             _BxPacking_;     /* Packing */
       PtrTabSpan        _BxSpans_;	/* list of spanned cells */
     } s3;
+    struct /* BoComplete for Graphics = 'C' */
+    {
+      int        	_BxRx_;         /* Horizontal radius */
+      int        	_BxRy_;         /* Vertical radius */
+    } s4;
   } u;
 } Box;
 
@@ -272,6 +277,8 @@ typedef struct _Box
 #define BxTable u.s3._BxColumns_
 #define BxRows u.s3._BxRows_
 #define BxSpans u.s3._BxSpans_
+#define BxRx u.s4._BxRx_
+#define BxRy u.s4._BxRy_
 
 typedef struct C_points_
 {

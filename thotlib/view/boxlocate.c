@@ -100,17 +100,16 @@ int                 button;
 
    if (frame >= 1)
      {
-	/* recherche si une boite terminale est designee */
+	/* check if a leaf box is selected */
 	pFrame = &ViewFrameTable[frame - 1];
 	x += pFrame->FrXOrg;
 	y += pFrame->FrYOrg;
 	pAb = pFrame->FrAbstractBox;
 	charsNumber = 0;
-	/* recupere la boite selectionnee */
+	/* get the selected box */
 	if (ThotLocalActions[T_selecbox] != NULL)
 	   (*ThotLocalActions[T_selecbox]) (&pBox, pAb, frame, x, y, &charsNumber);
-	/* S'il s'agit d'une extension de la selection */
-	/* il faut eviter de selectionner la boite englobante */
+	/* When it's an extended selection, avoid to extend to the enclosing box */
 	if (button == 0 || button == 1)
 	  {
 	     if (IsParentBox (pBox, pFrame->FrSelectionBegin.VsBox))
@@ -132,12 +131,12 @@ int                 button;
 
 	CloseInsertion ();
 	if (pAb != NULL)
-	   /* Initialisation de la selection */
+	   /* Initialization of the selection */
 	   if (button == 3)
 	      ChangeSelection (frame, pAb, charsNumber, FALSE, TRUE, TRUE, FALSE);
 	   else if (button == 2)
 	      ChangeSelection (frame, pAb, charsNumber, FALSE, TRUE, FALSE, FALSE);
-	/* Extension de la selection */
+	/* Extension of selection */
 	   else if (button == 0)
 	      ChangeSelection (frame, pAb, charsNumber, TRUE, TRUE, FALSE, FALSE);
 	   else if (button == 1)
@@ -170,8 +169,8 @@ int                 button;
 
 
 /*----------------------------------------------------------------------
-   GetDistance rend 0 si value dans l'intervalle de delta		
-   sinon la  distance absloue - delta.       	       		
+  GetDistance returns 0 if value is between -delta and +delta.
+  In other cases returns the absolute value of value - delta.       	       		
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          GetDistance (int value, int delta)
@@ -192,8 +191,9 @@ int                 delta;
 
 
 /*----------------------------------------------------------------------
-   GetBoxDistance calcule la distance d'un point xRef, yRef a` une    
-   boite. On penalise favorise la distance verticale.      
+  GetBoxDistance computes the distance of a point xRef, yRef to a box
+  We apply a ratio to vertical distances to give a preference to the
+  horizontal proximity.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 GetBoxDistance (int xRef, int yRef, int x, int y, int width, int height)
@@ -220,12 +220,12 @@ int                 height;
 }
 
 /*----------------------------------------------------------------------
-   IsOnPolyline teste qu'un point x,y est sur un segment P1(x1,y1)  
-   P2(x2,y2) avec une certaine precision DELTA_SEL.         
-   On teste l'appartenance du point a` un rectangle cree    
-   par e'largissement de DELTA_SEL autour des deux points.  
-   Le test est fait apres une rotation permettant de se     
-   ramener a` un rectangle horizontal.                      
+  IsOnPolyline checks if the point x, y is on the segment x1, y1 to
+  x2, y2 with DELTA_SEL precision.
+  Check if the point is included by the widen rectangle of DELTA_SEL
+  around the line.
+  The check is performed after a rotation that provides an horizontal
+  rectangle.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static ThotBool     IsOnPolyline (int x, int y, int x1, int y1, int x2, int y2)
@@ -261,11 +261,42 @@ int                 y2;
 	   && nX >= -DELTA_SEL
 	   && nX <= ra + DELTA_SEL);
 }
+/*----------------------------------------------------------------------
+  CrossLine returns the next cross value
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static int     CrossLine (int x, int y, int prevX, int prevY, int nextX, int nextY, int cross)
+#else  /* __STDC__ */
+static int     CrossLine (x, y, prevX, prevY, nextX, nextY, cross)
+int                 x;
+int                 y;
+int                 prevX;
+int                 prevY;
+int                 nextX;
+int                 nextY;
+int                 cross;
+#endif /* __STDC__ */
+{
+  int          i;
+  ThotBool     ok;
+
+  /* y between nextY and prevY */
+  if ((ok = (prevX >= x)) == (nextX >= x))
+    {
+      /* x on the same side of both extremities */
+      if (ok)
+	/* nextX et prevX >= x */
+	i = cross + 1;
+    }
+  else
+    /* x between the extremities */
+    i = cross + ((prevX - (prevY - y) * (nextX - prevX) / (nextY - prevY)) >= x);
+  return i;
+}
 
 
 /*----------------------------------------------------------------------
-   InPolyline indique si le point x,y se trouve a`                 
-   l'inte'rieur de la polyline ou non.                            
+  InPolyline returns TRUE if the point x, y is within the polyline.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static ThotBool     InPolyline (PtrAbstractBox pAb, int x, int y)
@@ -274,7 +305,6 @@ static ThotBool     InPolyline (pAb, x, y)
 PtrAbstractBox      pAb;
 int                 x;
 int                 y;
-
 #endif /* __STDC__ */
 {
    PtrTextBuffer       buff, pLastBuffer;
@@ -283,17 +313,17 @@ int                 y;
    int                 prevX, prevY;
    int                 nextX, nextY;
    PtrBox              box;
-   ThotBool            OK;
+   ThotBool            ok;
 
    box = pAb->AbBox;
    x -= box->BxXOrg;
    y -= box->BxYOrg;
    max = box->BxNChars;
    if (max < 4)
-      /* il n'y a pas de surface a l'interieur de la polyline */
+      /* no space within polyline */
       return (FALSE);
 
-   /* premier et dernier point de la polyline */
+   /* first and last oints of the polyline */
    pLastBuffer = buff = box->BxBuffer;
    i = 1;
    while (pLastBuffer->BuNext != NULL)
@@ -306,19 +336,8 @@ int                 y;
    prevX = PointToPixel (pLastBuffer->BuPoints[max].XCoord / 1000);
    prevY = PointToPixel (pLastBuffer->BuPoints[max].YCoord / 1000);
    if ((prevY >= y) != (nextY >= y))
-     {
-	/* y entre nextY et prevY */
-	if ((OK = (prevX >= x)) == (nextX >= x))
-	  {
-	     /* x du meme cote des deux extremites */
-	     if (OK)
-		/* nextX et prevX >= x */
-		cross++;
-	  }
-	else
-	   /* x entre deux extremites */
-	   cross += (prevX - (prevY - y) * (nextX - prevX) / (nextY - prevY)) >= x;
-     }
+     /* y between nextY and prevY */
+     cross = CrossLine (x, y, prevX, prevY, nextX, nextY, cross);
 
    i++;
    while (i <= max || buff != pLastBuffer)
@@ -345,14 +364,7 @@ int                 y;
 
 	     if (i > max && buff == pLastBuffer)
 		break;
-
-	     if ((OK = (prevX >= x)) == (nextX >= x))
-	       {
-		  if (OK)
-		     cross++;
-	       }
-	     else
-		cross += (prevX - (prevY - y) * (nextX - prevX) / (nextY - prevY)) >= x;
+	     cross = CrossLine (x, y, prevX, prevY, nextX, nextY, cross);
 	  }
 	else
 	  {
@@ -372,23 +384,16 @@ int                 y;
 
 	     if (i > max && buff == pLastBuffer)
 		break;
-
-	     if ((OK = (prevX >= x)) == (nextX >= x))
-	       {
-		  if (OK)
-		     cross++;
-	       }
-	     else
-		cross += (prevX - (prevY - y) * (nextX - prevX) / (nextY - prevY)) >= x;
+	     cross = CrossLine (x, y, prevX, prevY, nextX, nextY, cross);
 	  }
      }
-   OK = (ThotBool) (cross & 0x01);
-   return (OK);
+   ok = (ThotBool) (cross & 0x01);
+   return (ok);
 }
 
 
 /*----------------------------------------------------------------------
-   GetPolylinePoint teste qu'un point x,y est sur un segment de la    
+  GetPolylinePoint teste qu'un point x,y est sur un segment de la    
    boi^te polyline.                                        
    Si oui, retourne l'adresse de la boi^te correspondante et le    
    point de contro^le se'lectionne' (0 pour toute la boi^te).      
@@ -476,8 +481,7 @@ int                *pointselect;
 }
 
 /*----------------------------------------------------------------------
-   InShape indique si le point x,y se trouve a`            
-   l'inte'rieur du graphique ou non.                              
+  InShape returns TRUE if the point x, y is included by the drawing.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static ThotBool     InShape (PtrAbstractBox pAb, int x, int y)
@@ -486,7 +490,6 @@ static ThotBool     InShape (pAb, x, y)
 PtrAbstractBox      pAb;
 int                 x;
 int                 y;
-
 #endif /* __STDC__ */
 {
   int                 point[8][2];
@@ -497,14 +500,14 @@ int                 y;
   int                 arc;
   float               value1, value2;
   PtrBox              box;
-  ThotBool            OK;
+  ThotBool            ok;
 
   box = pAb->AbBox;
   x -= box->BxXOrg;
   y -= box->BxYOrg;
   max = 0;
 
-  /* Est-ce un point caracteristique specifique du graphique ? */
+  /* Is there a characteristic point of the drawing? */
   switch (pAb->AbRealShape)
     {
     case SPACE:
@@ -529,7 +532,7 @@ int                 y;
       max = 3;
       break;
     case 'C':
-    case 'P':		/* rectangles aux bords arrondis */
+    case 'P':		/* rectangles with rounded corners */
       arc = (int) ((3 * DOT_PER_INCHE) / 25.4 + 0.5);
       point[0][0] = 0;
       point[0][1] = arc;
@@ -569,18 +572,18 @@ int                 y;
       value2 = (float) box->BxWidth / 2;
       value2 = value2 * value2;
       if (value1 <= value2)
-	return (TRUE);	/* le point est dans le cercle */
+	return (TRUE);	/* within the circle */
       else
-	return (FALSE);	/* le point est hors du cercle */
+	return (FALSE);	/* out of the circle */
       break;
     default:
       break;
     }
   if (max < 2)
-    /* il n'y a pas de surface */
+    /* only lines */
     return (FALSE);
 
-   /* premier et dernier point de la polyline */
+   /* first and last points of the polyline */
    i = 0;
    cross = 0;
    nextX = point[0][0];
@@ -588,97 +591,69 @@ int                 y;
    prevX = point[max][0];
    prevY = point[max][1];
    if ((prevY >= y) != (nextY >= y))
-     {
-	/* y entre nextY et prevY */
-	if ((OK = (prevX >= x)) == (nextX >= x))
-	  {
-	     /* x du meme cote des deux extremites */
-	     if (OK)
-		/* nextX et prevX >= x */
-		cross++;
-	  }
-	else
-	   /* x entre deux extremites */
-	   cross += (prevX - (prevY - y) * (nextX - prevX) / (nextY - prevY)) >= x;
-     }
+     /* y between nextY and prevY */
+     cross = CrossLine (x, y, prevX, prevY, nextX, nextY, cross);
 
    i++;
    while (i <= max)
      {
-	prevX = nextX;
-	prevY = nextY;
-	nextX = point[i][0];
-	nextY = point[i][1];
-	if (prevY >= y)
-	  {
-	     while (i <= max && nextY >= y)
-	       {
-		  i++;		/* changement de point */
-		  prevY = nextY;
-		  prevX = nextX;
-		  if (i > max)
-		    {
-		      nextX = 0;
-		      nextY = 0;
-		    }
-		  else
-		    {
-		      nextX = point[i][0];
-		      nextY = point[i][1];
-		    }
-	       }
-
-	     if (i > max)
-		break;
-
-	     if ((OK = (prevX >= x)) == (nextX >= x))
-	       {
-		  if (OK)
-		     cross++;
-	       }
-	     else
-		cross += (prevX - (prevY - y) * (nextX - prevX) / (nextY - prevY)) >= x;
-	  }
-	else
-	  {
-	     while (i <= max && nextY < y)
-	       {
-		  i++;		/* changement de point */
-		  prevY = nextY;
-		  prevX = nextX;
-		  if (i > max)
-		    {
-		      nextX = 0;
-		      nextY = 0;
-		    }
-		  else
-		    {
-		      nextX = point[i][0];
-		      nextY = point[i][1];
-		    }
-	       }
-
-	     if (i > max)
-		break;
-
-	     if ((OK = (prevX >= x)) == (nextX >= x))
-	       {
-		  if (OK)
-		     cross++;
-	       }
-	     else
-		cross += (prevX - (prevY - y) * (nextX - prevX) / (nextY - prevY)) >= x;
-	  }
+       prevX = nextX;
+       prevY = nextY;
+       nextX = point[i][0];
+       nextY = point[i][1];
+       if (prevY >= y)
+	 {
+	   while (i <= max && nextY >= y)
+	     {
+	       i++;		/* get next point */
+	       prevY = nextY;
+	       prevX = nextX;
+	       if (i > max)
+		 {
+		   nextX = 0;
+		   nextY = 0;
+		 }
+	       else
+		 {
+		   nextX = point[i][0];
+		   nextY = point[i][1];
+		 }
+	     }
+	   if (i > max)
+	     break;
+	   cross = CrossLine (x, y, prevX, prevY, nextX, nextY, cross);
+	 }
+       else
+	 {
+	   while (i <= max && nextY < y)
+	     {
+	       i++;		/* get next point */
+	       prevY = nextY;
+	       prevX = nextX;
+	       if (i > max)
+		 {
+		   nextX = 0;
+		   nextY = 0;
+		 }
+	       else
+		 {
+		   nextX = point[i][0];
+		   nextY = point[i][1];
+		 }
+	     }
+	   if (i > max)
+	     break;
+	   cross = CrossLine (x, y, prevX, prevY, nextX, nextY, cross);
+	 }
      }
-   OK = (ThotBool) (cross & 0x01);
-   return (OK);
+   ok = (ThotBool) (cross & 0x01);
+   return (ok);
 }
 
 
 /*----------------------------------------------------------------------
-  IsOnShape teste si le point x,y appartient au pave' graphique pAb.
-  Si oui, retourne l'adresse de la boite correspondante sinon, la valeur
-  NULL.
+  IsOnShape checks if the point x, y is on the drawing of pAb.
+  If yes, returns the box address, NULL in other cases.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static PtrBox       IsOnShape (PtrAbstractBox pAb, int x, int y)
@@ -693,19 +668,19 @@ int                 y;
   int                 controlPoint;
   int                 arc;
 
-  /* coordonnees relatives a la boite (calculs plus simples) */
+  /* relative coords of the box (easy work) */
   pBox = pAb->AbBox;
   x -= pBox->BxXOrg;
   y -= pBox->BxYOrg;
 
-  /* On note eventuellement le point caracteristique selectionne */
-  /*            1-------------2-------------3                  */
-  /*            |                           |                  */
-  /*            |                           |                  */
-  /*            8                           4                  */
-  /*            |                           |                  */
-  /*            |                           |                  */
-  /*            7-------------6-------------5                  */
+  /* Keep in mind the selected caracteristic point       */
+  /*            1-------------2-------------3            */
+  /*            |                           |            */
+  /*            |                           |            */
+  /*            8                           4            */
+  /*            |                           |            */
+  /*            |                           |            */
+  /*            7-------------6-------------5            */
 
   if (x < DELTA_SEL)
     if (y < DELTA_SEL)
@@ -852,6 +827,25 @@ int                 y;
 	  IsOnPolyline (x, y, 0, pBox->BxHeight, pBox->BxWidth, 0))
 	return (pBox);
       break;
+	  case 'g':
+	    /* Coords of the line are given by the enclosing box */
+	    pAb = pAb->AbEnclosing;
+	    if ((pAb->AbHorizPos.PosEdge == Left && pAb->AbVertPos.PosEdge == Top) ||
+		(pAb->AbHorizPos.PosEdge == Right && pAb->AbVertPos.PosEdge == Bottom))
+	      {
+		/* draw a \ */
+		if (controlPoint == 1 || controlPoint == 5 ||
+		    IsOnPolyline (x, y, 0, 0, pBox->BxWidth, pBox->BxHeight))
+		  return (pBox);
+	      }
+	    else
+	      {
+		/* draw a / */
+		if (controlPoint == 3 || controlPoint == 7 ||
+		    IsOnPolyline (x, y, 0, pBox->BxHeight, pBox->BxWidth, 0))
+		  return (pBox);
+	      }
+	    break;
     default:
       break;
     }
@@ -860,10 +854,10 @@ int                 y;
 
 
 /*----------------------------------------------------------------------
-   GetClickedAbsBox recherche le pave englobant le point designe' par 
-   xRef,yRef de la fenetre frame.                          
-   La fonction rend le pointeur sur le plus elementaire    
-   des paves qui englobe le point designe ou NULL.         
+  GetClickedAbsBox checks if the abstract box includes the reference point
+  xRef, yRef.
+  Returns the most elementary box (structural level) that includes the
+  reference point.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 PtrAbstractBox      GetClickedAbsBox (int frame, int xRef, int yRef)
@@ -875,28 +869,27 @@ int                 yRef;
 
 #endif /* __STDC__ */
 {
-   ViewFrame          *pFrame;
-   PtrBox              pBox;
-   int                 pointselect;
+  ViewFrame          *pFrame;
+  PtrBox              pBox;
+  int                 pointselect;
 
-   pFrame = &ViewFrameTable[frame - 1];
-   pBox = NULL;
-   if (pFrame->FrAbstractBox != NULL)
-      if (ThotLocalActions[T_selecbox] != NULL)
-	 (*ThotLocalActions[T_selecbox]) (&pBox, pFrame->FrAbstractBox, frame, xRef + pFrame->FrXOrg,
+  pFrame = &ViewFrameTable[frame - 1];
+  pBox = NULL;
+  if (pFrame->FrAbstractBox != NULL)
+    if (ThotLocalActions[T_selecbox] != NULL)
+      (*ThotLocalActions[T_selecbox]) (&pBox, pFrame->FrAbstractBox, frame, xRef + pFrame->FrXOrg,
 				       yRef + pFrame->FrYOrg, &pointselect);
-   if (pBox == NULL)
-      return (NULL);
-   else
-      return (pBox->BxAbstractBox);
+  if (pBox == NULL)
+    return (NULL);
+  else
+    return (pBox->BxAbstractBox);
 }
 
 
 /*----------------------------------------------------------------------
-   GetEnclosingClickedBox teste si le point x, y appartient au pave' 
-   pAb.                                                            
-   Si oui, retourne l'adresse du pave' correspondant               
-   sinon, la valeur NULL.                                          
+  GetEnclosingClickedBox checks if the point x, y belongs to the abstract
+  box pAb.
+  Returns the abstract box address or NULL.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 PtrBox              GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX, int lowerX, int y, int *pointselect)
@@ -910,72 +903,71 @@ int                *pointselect;
 
 #endif /* __STDC__ */
 {
-   PtrBox              pBox;
+  PtrBox              pBox;
 
-   *pointselect = 0;
-
-   if (pAb->AbBox == NULL)
-      return (NULL);
-   else
-     {
-	pBox = pAb->AbBox;
-	/* Est-ce une boite de coupure incluse ? */
-	if (pBox->BxType == BoSplit)
-	  {
-	     for (pBox = pBox->BxNexChild; pBox != NULL; pBox = pBox->BxNexChild)
-	       {
-		  if (pBox->BxNChars > 0 &&
-		      pBox->BxXOrg <= lowerX &&
-		      pBox->BxXOrg + pBox->BxWidth >= higherX &&
-		      pBox->BxYOrg <= y &&
-		      pBox->BxYOrg + pBox->BxHeight >= y)
-		     return (pBox);
-	       }
-	     return (NULL);
-	  }
-	else if (pBox->BxType == BoGhost)
-	  /* dummy box */
-	   return (NULL);
-	else if (pAb->AbLeafType == LtGraphics &&
-		 pAb->AbPresentationBox &&
-		 pAb->AbShape == '0')
-	  /* it's also a dummy box */
+  *pointselect = 0;
+  if (pAb->AbBox == NULL)
+    return (NULL);
+  else
+    {
+      pBox = pAb->AbBox;
+      /* Is there a piece of split box? */
+      if (pBox->BxType == BoSplit)
+	{
+	  for (pBox = pBox->BxNexChild; pBox != NULL; pBox = pBox->BxNexChild)
+	    {
+	      if (pBox->BxNChars > 0 &&
+		  pBox->BxXOrg <= lowerX &&
+		  pBox->BxXOrg + pBox->BxWidth >= higherX &&
+		  pBox->BxYOrg <= y &&
+		  pBox->BxYOrg + pBox->BxHeight >= y)
+		return (pBox);
+	    }
 	  return (NULL);
-	/* Si le pave englobe le point designe */
-	else if (pBox->BxXOrg <= lowerX
-		 && pBox->BxXOrg + pBox->BxWidth >= higherX
-		 && pBox->BxYOrg <= y
-		 && pBox->BxYOrg + pBox->BxHeight >= y)
-	   /* Si c'est un pave graphique */
-	   if (pAb->AbLeafType == LtGraphics && pAb->AbVolume != 0)
-	     {
-		pBox = IsOnShape (pAb, lowerX, y);
-		if (pBox != NULL)
-		   return (pBox);
-		/* le point n'est pas sur un des segments */
-		if (InShape (pAb, lowerX, y))
-		   return (pAb->AbBox);
-		else
-		   return (pBox);
-	     }
-	   else if (pAb->AbLeafType == LtPolyLine && pAb->AbVolume > 2)
-	     {
-		/* La polyline contient au moins un segment */
-		pBox = GetPolylinePoint (pAb, lowerX, y, pointselect);
-		if (pBox != NULL)
-		   return (pBox);
-		/* le point n'est pas sur un des segments */
-		if ((pAb->AbPolyLineShape == 'p' || pAb->AbPolyLineShape == 's')
-		    && InPolyline (pAb, lowerX, y))
-		   return (pAb->AbBox);
-		else
-		   return (pBox);
-	     }
-	   else
+	}
+      else if (pBox->BxType == BoGhost)
+	/* dummy box */
+	return (NULL);
+      else if (pAb->AbLeafType == LtGraphics &&
+	       pAb->AbPresentationBox &&
+	       pAb->AbShape == '0')
+	/* it's also a dummy box */
+	return (NULL);
+      /* If the box includes the point */
+      else if (pBox->BxXOrg <= lowerX
+	       && pBox->BxXOrg + pBox->BxWidth >= higherX
+	       && pBox->BxYOrg <= y
+	       && pBox->BxYOrg + pBox->BxHeight >= y)
+	/* If it's a graphic */
+	if (pAb->AbLeafType == LtGraphics && pAb->AbVolume != 0)
+	  {
+	    pBox = IsOnShape (pAb, lowerX, y);
+	    if (pBox != NULL)
 	      return (pBox);
+	    /* the point doesn't belong box segments */
+	    if (InShape (pAb, lowerX, y))
+	      return (pAb->AbBox);
+	    else
+	      return (pBox);
+	  }
+	else if (pAb->AbLeafType == LtPolyLine && pAb->AbVolume > 2)
+	  {
+	    /* the polyline includes almost one segment */
+	    pBox = GetPolylinePoint (pAb, lowerX, y, pointselect);
+	    if (pBox != NULL)
+	      return (pBox);
+	    /* the point doesn't belong box segments */
+	    if ((pAb->AbPolyLineShape == 'p' || pAb->AbPolyLineShape == 's')
+		&& InPolyline (pAb, lowerX, y))
+	      return (pAb->AbBox);
+	    else
+	      return (pBox);
+	  }
 	else
-	   return (NULL);
-     }
+	  return (pBox);
+      else
+	return (NULL);
+    }
 }
 
 
@@ -987,12 +979,12 @@ int                *pointselect;
 PtrBox         GetLeafBox (PtrBox pSourceBox, int frame, int *x, int *y, int xDelta, int yDelta)
 #else  /* __STDC__ */
 PtrBox         GetLeafBox (pSourceBox, frame, x, y, xDelta, yDelta)
-PtrBox              pSourceBox;
-int                 frame;
-int                 *x;
-int                 *y;
-int                 xDelta;
-int                 yDelta;
+PtrBox         pSourceBox;
+int            frame;
+int           *x;
+int           *y;
+int            xDelta;
+int            yDelta;
 #endif /* __STDC__ */
 {
   int                 i;
@@ -1121,9 +1113,10 @@ int                 yDelta;
 }
 
 /*----------------------------------------------------------------------
-   GetGetMinimumDistance calcule la distance d'une ancre x,y au point
-   xRef,yRef. La fonction rend la distance minimale        
-   entre la distance calcule'e et dist.                    
+  GetGetMinimumDistance computes the distance between a reference point
+  xRef, yRef and an anchor x, y of a box.
+  We apply a ratio to vertical distances to give a preference to the
+  horizontal proximity.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          GetGetMinimumDistance (int xRef, int yRef, int x, int y, int dist)
@@ -1134,24 +1127,23 @@ int                 yRef;
 int                 x;
 int                 y;
 int                 dist;
-
 #endif /* __STDC__ */
 {
-   int                 value;
+  int                 value;
 
-   value = GetDistance (x - xRef, ANCHOR_SIZE) + GetDistance (y - yRef, ANCHOR_SIZE) * Y_RATIO;
-   if (value < dist)
-      return (value);
-   else
-      return (dist);
+  value = GetDistance (x - xRef, ANCHOR_SIZE) + GetDistance (y - yRef, ANCHOR_SIZE) * Y_RATIO;
+  if (value < dist)
+    return (value);
+  else
+    return (dist);
 }
 
 /*----------------------------------------------------------------------
-   GetShapeDistance calcule la distance d'un point xRef,yRef a`     
-   un point de la boite graphique (min des distances aux   
-   ancres).                                                
-   Cette selection est limitee aux boites terminale.       
-   Rend la distance de la boite au point.                  
+  GetShapeDistance computes the distance between a reference point
+  xRef, yRef and a point of the graphic box (minimum distance to an anchor
+  of the box.
+  This selection takes only laf boxes into account.
+  Returns the distance.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 GetShapeDistance (int xRef, int yRef, PtrBox pBox, int value)
@@ -1176,19 +1168,18 @@ int                 value;
 
    switch (value)
 	 {
-	    case 1:		/* racine .. */
+	    case 1:		/* root .. */
 	       distance = GetGetMinimumDistance (xRef, yRef, x - width + height / 3, y + height, distance);
 	       distance = GetGetMinimumDistance (xRef, yRef, x - width + (2 * height) / 3, y - height, distance);
 	       distance = GetGetMinimumDistance (xRef, yRef, x + width, y - height, distance);
 	       break;
 
-	    case 'c':		/* cercle */
+	    case 'c':		/* circle */
 	       if (width < height)
 		  height = width;
 	       else
 		  width = height;
-	       /* ATTENTION: on continue en sequence, */
-	       /* vu qu'un cercle est aussi une ellipse */
+	       /* Warning: continue as a circle is also an ellipse */
 	    case 'C':		/* ellipse */
 	       distance = GetGetMinimumDistance (xRef, yRef, x - width, y, distance);
 	       distance = GetGetMinimumDistance (xRef, yRef, x + width, y, distance);
@@ -1209,19 +1200,19 @@ int                 value;
 	       distance = GetGetMinimumDistance (xRef, yRef, x, y + height, distance);
 	       break;
 
-	    case 't':		/* trait horiz en haut */
+	    case 't':		/* top line */
 	       distance = GetGetMinimumDistance (xRef, yRef, x - width, y - height, distance);
 	       distance = GetGetMinimumDistance (xRef, yRef, x + width, y - height, distance);
 	       distance = GetGetMinimumDistance (xRef, yRef, x, y - height, distance);
 	       break;
 
-	    case 'b':		/* trait horiz en bas */
+	    case 'b':		/* bottom line */
 	       distance = GetGetMinimumDistance (xRef, yRef, x - width, y + height, distance);
 	       distance = GetGetMinimumDistance (xRef, yRef, x + width, y + height, distance);
 	       distance = GetGetMinimumDistance (xRef, yRef, x, y + height, distance);
 	       break;
 
-	    case 'h':		/* trait horizontal centre ou fleche */
+	    case 'h':		/* middle line or arrow */
 	    case '<':
 	    case '>':
 	       distance = GetGetMinimumDistance (xRef, yRef, x - width, y, distance);
@@ -1230,25 +1221,25 @@ int                 value;
 	       break;
 
 	    case 'v':
-	    case 'V':		/* trait vertical centre ou fleche ^ */
+	    case 'V':		/* centerd line or arrow (^) */
 	    case '^':
 	       distance = GetGetMinimumDistance (xRef, yRef, x, y - height, distance);
 	       distance = GetGetMinimumDistance (xRef, yRef, x, y + height, distance);
 	       distance = GetGetMinimumDistance (xRef, yRef, x, y, distance);
 	       break;
 
-	    case 'l':		/* trait vertical gauche */
+	    case 'l':		/* left line */
 	       distance = GetGetMinimumDistance (xRef, yRef, x - width, y - height, distance);
 	       distance = GetGetMinimumDistance (xRef, yRef, x - width, y + height, distance);
 	       distance = GetGetMinimumDistance (xRef, yRef, x - width, y, distance);
 	       break;
-	    case 'r':		/* trait vertical droit */
+	    case 'r':		/* right line */
 	       distance = GetGetMinimumDistance (xRef, yRef, x + width, y - height, distance);
 	       distance = GetGetMinimumDistance (xRef, yRef, x + width, y + height, distance);
 	       distance = GetGetMinimumDistance (xRef, yRef, x + width, y, distance);
 	       break;
 
-	    case '/':		/* diagonale ou fleche vers le haut */
+	    case '/':		/* diagonal (/) or arrow */
 	    case 'E':
 	    case 'o':
 	       distance = GetGetMinimumDistance (xRef, yRef, x - width, y + height, distance);
@@ -1256,14 +1247,15 @@ int                 value;
 	       distance = GetGetMinimumDistance (xRef, yRef, x, y, distance);
 	       break;
 
-	    case '\\':		/* diagonale ou fleche vers le bas */
+	    case '\\':		/* diagonal (\) or arrow */
 	    case 'e':
 	    case 'O':
 	       distance = GetGetMinimumDistance (xRef, yRef, x - width, y - height, distance);
 	       distance = GetGetMinimumDistance (xRef, yRef, x + width, y + height, distance);
 	       distance = GetGetMinimumDistance (xRef, yRef, x, y, distance);
 	       break;
-	    default:		/* rectangle ou autre */
+	    default:
+	      /* rectangle or other cases */
 	       distance = GetGetMinimumDistance (xRef, yRef, x - width, y + height, distance);
 	       distance = GetGetMinimumDistance (xRef, yRef, x - width, y - height, distance);
 	       distance = GetGetMinimumDistance (xRef, yRef, x + width, y + height, distance);
@@ -1276,8 +1268,8 @@ int                 value;
 
 
 /*----------------------------------------------------------------------
-   GetClickedLeafBox recherche la boite terminale situee au point    
-   xRef,yRef dans l'image concrete.                                
+  GetClickedLeafBox looks for a leaf box located at a reference point
+   xRef, yRef.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 PtrBox              GetClickedLeafBox (int frame, int xRef, int yRef)
@@ -1323,18 +1315,18 @@ int                 yRef;
 			  d = 0;
 		    }
 		  else if (pAb->AbLeafType == LtSymbol && pAb->AbShape == 'r')
-		     /* glitch pour le symbole racine */
+		     /* glitch for the root symbol */
 		     d = GetShapeDistance (xRef, yRef, pBox, 1);
 		  else if (pAb->AbLeafType == LtText
 			   || pAb->AbLeafType == LtSymbol
 			   || pAb->AbLeafType == LtPicture
-		     /* ou une boite composee vide */
+		     /* empty or compound box */
 		   || (pAb->AbLeafType == LtCompound && pAb->AbVolume == 0))
 		     d = GetBoxDistance (xRef, yRef, pBox->BxXOrg, pBox->BxYOrg, pBox->BxWidth, pBox->BxHeight);
 		  else
 		     d = max + 1;
 
-		  /* Prend l'element le plus proche */
+		  /* get the closest element */
 		  if (d < max)
 		    {
 		       max = d;
@@ -1342,13 +1334,13 @@ int                 yRef;
 		    }
 		  else if (d == max)
 		    {
-		       /* Si c'est la premiere boite trouvee */
+		       /* If it's the first found box */
 		       if (pSelBox == NULL)
 			 {
 			    max = d;
 			    pSelBox = pBox;
 			 }
-		       /* Si la boite est sur un plan au dessus de la precedente */
+		       /* If the box is over the previous selected box */
 		       else if (pSelBox->BxAbstractBox->AbDepth > pBox->BxAbstractBox->AbDepth)
 			 {
 			    max = d;
@@ -1364,8 +1356,7 @@ int                 yRef;
 
 
 /*----------------------------------------------------------------------
-   GiveMovingArea de'termine les limites de de'placement de la boite 
-   horizontalement/verticalement.                          
+  GiveMovingArea get limits of the box moving.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         GiveMovingArea (PtrAbstractBox pAb, int frame, ThotBool horizRef, int *min, int *max)
@@ -1382,16 +1373,16 @@ int                *max;
 #ifdef IV
    PtrAbstractBox      pParentAb;
 #endif /* IV */
-   /* Valeurs par defaut */
+   /* default values */
    *min = 0;
    *max = 100000;
 
-   /* C'est la boite racine */
+   /* It's the root box */
    if (pAb == ViewFrameTable[frame - 1].FrAbstractBox)
      {
 	if (horizRef)
 	  {
-	     /* Est-ce que la boite depend de la fenetre */
+	     /* does the box depend on the window */
 	     if ((pAb->AbWidth.DimValue == 0)
 		 || (pAb->AbBox->BxHorizEdge == Right))
 		*max = pAb->AbBox->BxWidth;
@@ -1403,25 +1394,25 @@ int                *max;
 		*max = pAb->AbBox->BxHeight;
 	  }
      }
-   /* Dans les autres cas */
+   /* Other cases */
    else if (horizRef)
      {
        *min = -50;
        *max = 100000;
 #ifdef IV
-	/* Si le pave est englobe depend de son englobant direct */
+	/* check the enclosing abstract box */
 	if (pAb->AbHorizEnclosing)
 	   pParentAb = pAb->AbEnclosing;
 	else
 	   pParentAb = ViewFrameTable[frame - 1].FrAbstractBox;
 
-	/* A priori limite dans l'espace de la boite englobante */
+	/* by default the emclosing box gives limits */
 	*min = pParentAb->AbBox->BxXOrg;
 	*max = *min + pParentAb->AbBox->BxWidth;
 
-	/* Si la boite englobante prend la taille de son contenu */
-	/* et que le pave n'est pas attache a l'englobante       */
 	if (pParentAb->AbBox->BxContentWidth)
+	  /* the enclosing box gets the contents size and the box
+	     doesn't depend of the enclosing */
 	   switch (pAb->AbBox->BxHorizEdge)
 		 {
 		    case Left:
@@ -1442,7 +1433,7 @@ int                *max;
        *min = -50;
        *max = 100000;
 #ifdef IV
-	/* Si le pave est englobe depend de son englobant direct */
+	/* check the enclosing abstract box */
 	if (pAb->AbVertEnclosing && pAb->AbEnclosing != NULL)
 	  {
 	    pParentAb = pAb;
@@ -1453,12 +1444,13 @@ int                *max;
 	else
 	   pParentAb = ViewFrameTable[frame - 1].FrAbstractBox;
 
-	/* A priori limite dans l'espace de la boite englobante */
+	/* by default the emclosing box gives limits */
 	*min = pParentAb->AbBox->BxYOrg;
 	*max = *min + pParentAb->AbBox->BxHeight;
 
-	/* Si la boite englobante prend la taille de son contenu */
 	if (pParentAb->AbBox->BxContentHeight)
+	  /* the enclosing box gets the contents size and the box
+	     doesn't depend of the enclosing */
 	   switch (pAb->AbBox->BxVertEdge)
 		 {
 		    case Top:

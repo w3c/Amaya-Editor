@@ -2157,10 +2157,10 @@ C_points           *controls;
   color, background color and fill pattern.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                DrawOval (int frame, int thick, int style, int x, int y, int width, int height, int RO, int active, int fg, int bg, int pattern)
+void                DrawOval (int frame, int thick, int style, int x, int y, int width, int height, int rx, int ry, int RO, int active, int fg, int bg, int pattern)
 
 #else  /* __STDC__ */
-void                DrawOval (frame, thick, style, x, y, width, height, RO, active, fg, bg, pattern)
+void                DrawOval (frame, thick, style, x, y, width, height, rx, ry, RO, active, fg, bg, pattern)
 int                 frame;
 int                 thick;
 int                 style;
@@ -2168,6 +2168,8 @@ int                 x;
 int                 y;
 int                 width;
 int                 height;
+int                 rx;
+int                 ry;
 int                 RO;
 int                 active;
 int                 fg;
@@ -2181,7 +2183,7 @@ int                 pattern;
    int                 i;
 #endif /* _GTK */
    Pixmap              pat;
-   int                 arc;
+   int                 arc, dx, dy;
    int                 xf, yf;
    XArc                xarc[4];
    XSegment            seg[4];
@@ -2191,48 +2193,62 @@ int                 pattern;
    height -= thick;
    x += thick / 2;
    y = y + thick / 2 + FrameTable[frame].FrTopMargin;
-   /* radius of arcs is 3mm */
-   arc = (3 * DOT_PER_INCHE) / 25.4 + 0.5;
+
+   /* radius of arcs */
+   if (rx == 0 && ry != 0)
+     rx = ry;
+   else if (ry == 0 && rx != 0)
+     ry = rx;
+   arc = width / 2;
+   if (rx > arc)
+     rx = arc;
+   arc = height / 2;
+   if (ry > arc)
+     ry = arc;
+   dx = rx;
+   dy = ry;
+   rx = rx * 2;
+   ry = ry * 2;
    xf = x + width - 1;
    yf = y + height - 1;
 
    xarc[0].x = x;
    xarc[0].y = y;
-   xarc[0].width = arc * 2;
-   xarc[0].height = xarc[0].width;
+   xarc[0].width = rx;
+   xarc[0].height = ry;
    xarc[0].angle1 = 90 * 64;
    xarc[0].angle2 = 90 * 64;
 
-   xarc[1].x = xf - arc * 2;
+   xarc[1].x = xf - rx;
    xarc[1].y = xarc[0].y;
-   xarc[1].width = xarc[0].width;
-   xarc[1].height = xarc[0].width;
+   xarc[1].width = rx;
+   xarc[1].height = ry;
    xarc[1].angle1 = 0;
    xarc[1].angle2 = xarc[0].angle2;
 
    xarc[2].x = xarc[0].x;
-   xarc[2].y = yf - arc * 2;
-   xarc[2].width = xarc[0].width;
-   xarc[2].height = xarc[0].width;
+   xarc[2].y = yf - ry;
+   xarc[2].width = rx;
+   xarc[2].height = ry;
    xarc[2].angle1 = 180 * 64;
    xarc[2].angle2 = xarc[0].angle2;
 
    xarc[3].x = xarc[1].x;
    xarc[3].y = xarc[2].y;
-   xarc[3].width = xarc[0].width;
-   xarc[3].height = xarc[0].width;
+   xarc[3].width = rx;
+   xarc[3].height = ry;
    xarc[3].angle1 = 270 * 64;
    xarc[3].angle2 = xarc[0].angle2;
 
-   seg[0].x1 = x + arc;
-   seg[0].x2 = xf - arc;
+   seg[0].x1 = x + dx;
+   seg[0].x2 = xf - dx;
    seg[0].y1 = y;
    seg[0].y2 = seg[0].y1;
 
    seg[1].x1 = xf;
    seg[1].x2 = seg[1].x1;
-   seg[1].y1 = y + arc;
-   seg[1].y2 = yf - arc;
+   seg[1].y1 = y + dy;
+   seg[1].y2 = yf - dy;
 
    seg[2].x1 = seg[0].x1;
    seg[2].x2 = seg[0].x2;

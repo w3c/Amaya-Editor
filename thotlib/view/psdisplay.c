@@ -1550,9 +1550,9 @@ int                 pattern;
    color, background color and fill pattern.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                DrawOval (int frame, int thick, int style, int x, int y, int width, int height, int RO, int active, int fg, int bg, int pattern)
+void                DrawOval (int frame, int thick, int style, int x, int y, int width, int height, int rx, int ry, int RO, int active, int fg, int bg, int pattern)
 #else  /* __STDC__ */
-void                DrawOval (frame, thick, style, x, y, width, height, RO, active, fg, bg, pattern)
+void                DrawOval (frame, thick, style, x, y, width, height, rx, ry, RO, active, fg, bg, pattern)
 int                 frame;
 int                 thick;
 int                 style;
@@ -1560,6 +1560,8 @@ int                 x;
 int                 y;
 int                 width;
 int                 height;
+int                 rx;
+int                 ry;
 int                 RO;
 int                 active;
 int                 fg;
@@ -1567,28 +1569,28 @@ int                 bg;
 int                 pattern;
 #endif /* __STDC__ */
 {
-   int                 arc, xf, yf;
-   FILE               *fout;
+  int                 arc, xf, yf;
+  FILE               *fout;
 
-   fout = (FILE *) FrRef[frame];
+  fout = (FILE *) FrRef[frame];
   if (y < 0)
     return;
-   y += FrameTable[frame].FrTopMargin;
 
+   y += FrameTable[frame].FrTopMargin;
    /* Do we need to change the current color ? */
    if (thick > 0)
-      CurrentColor (fout, fg);
+     CurrentColor (fout, fg);
 
    arc = 3 * 72 / 25.4;
    xf = PixelToPoint (x + width - 1);
    yf = PixelToPoint (y + height - 1);
    x = PixelToPoint (x);
    y = PixelToPoint (y);
-
    FillWithPattern (fout, fg, bg, pattern);
    fprintf (fout, "%d %d %d -%d %d -%d %d -%d %d -%d %d -%d %d -%d %d ov\n",
 	    style, thick,
-	    /*5 */ x, y, /*4 */ x, yf, /*3 */ xf, yf, /*2 */ xf, y, /*1 */ x, y, /*o */ x, yf - arc,
+	    /*5 */ x, y, /*4 */ x, yf, /*3 */ xf, yf, /*2 */ xf, y,
+	    /*1 */ x, y, /*o */ x, yf - arc,
 	    arc);
 }
 
@@ -1806,7 +1808,7 @@ int                 pattern;
    else
      {
 	/* draw an ellipse */
-	fprintf (fout, "%d %d %d %d %d %d ellipse\n", style, thick, xm, -ym, width, height);
+	fprintf (fout, "%d %d %d -%d %d %d ellipse\n", style, thick, xm, ym, width, height);
      }
    px7mm = 7 * 72 / 25.4 + 0.5;
    if (height > px7mm)

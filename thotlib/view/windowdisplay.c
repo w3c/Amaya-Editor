@@ -2969,10 +2969,10 @@ C_points           *controls;
   color, background color and fill pattern.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                DrawOval (int frame, int thick, int style, int x, int y, int width, int height, int RO, int active, int fg, int bg, int pattern)
+void                DrawOval (int frame, int thick, int style, int x, int y, int width, int height, int rx, int ry, int RO, int active, int fg, int bg, int pattern)
 
 #else  /* __STDC__ */
-void                DrawOval (frame, thick, style, x, y, width, height, RO, active, fg, bg, pattern)
+void                DrawOval (frame, thick, style, x, y, width, height, rx, ry RO, active, fg, bg, pattern)
 int                 frame;
 int                 thick;
 int                 style;
@@ -2980,6 +2980,8 @@ int                 x;
 int                 y;
 int                 width;
 int                 height;
+int                 rx;
+int                 ry;
 int                 RO;
 int                 active;
 int                 fg;
@@ -2996,112 +2998,25 @@ int                 pattern;
    LOGBRUSH            logBrush;
    HPEN                hPen = 0;
    HPEN                hOldPen;
-#ifdef _WIN_PRINT 
-   int                 t;
-#else /* _WIN_PRINT */
-   int                 result;
-#endif /* _WIN_PRINT */
 
-#  ifdef _WIN_PRINT 
    if (width <= 0 || height <= 0) 
       return;
 
    pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
-
    if (thick == 0 && pat == 0)
       return;
-
-   y += FrameTable[frame].FrTopMargin;
-
-   arc = (int) ((3 * DOT_PER_INCHE) / 25.4 + 0.5);
-
-   if (width > thick + 1)
-      width = width - thick - 1;
-   if (height > thick + 1)
-      height = height - thick - 1;
-   x += thick / 2;
-   y += thick / 2;
-
-   /* Fill in the rectangle */
-   if (pat != 0) {
-      hBrush = CreateSolidBrush (ColorPixel (bg));
-      hOldBrush = SelectObject (TtPrinterDC, hBrush);
-   } else {
-         SelectObject (TtPrinterDC, GetStockObject (NULL_BRUSH));
-		 hBrush = (HBRUSH) 0;
-   }
-
-   if (thick > 0)
-     {
-       t = PixelToPoint (thick);
-
-       if (t <= 1)
-	 {
-	   switch (style)
-	     {
-	     case 3:
-	       hPen = CreatePen (PS_DOT, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));
-	       break;
-	     case 4:
-	       hPen = CreatePen (PS_DASH, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue)); 
-	       break;
-	     default:
-	       hPen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));   
-	       break;
-	     } 
-	 }
-       else
-	 {
-	   logBrush.lbStyle = BS_SOLID;
-	   logBrush.lbColor = RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue);
-
-	   switch (style)
-	     {
-	     case 3:
-	       hPen = ExtCreatePen (PS_GEOMETRIC | PS_DOT | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);
-	       break;
-	     case 4:
-	       hPen = ExtCreatePen (PS_GEOMETRIC | PS_DASH | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL); 
-	       break;
-	     default:
-	       hPen = ExtCreatePen (PS_GEOMETRIC | PS_SOLID | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);   
-	       break;
-	     } 
-	 }  
-     }
-   else
-     {
-       if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (bg))))
-	 WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DrawOval (1)"));
-     }
-
-   hOldPen = SelectObject (TtPrinterDC, hPen) ;
-
-   if (!RoundRect (TtPrinterDC, x, y, x + width, y + height, arc * 2, arc * 2))
-      WinErrorBox (FrRef  [frame], TEXT("windowdisplay.c - DrawOval (2)"));
-   SelectObject (TtPrinterDC, hOldPen);
-   if (!DeleteObject (hPen))
-      WinErrorBox (FrRef [frame], TEXT("windowdisplay.c - DrawOval (3)"));
-   hPen = (HPEN) 0;
-   if (hBrush) {
-      SelectObject (TtPrinterDC, hOldBrush);
-      if (!DeleteObject (hBrush))
-         WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DrawOval (4)"));
-      hBrush = (HBRUSH)0;
-   }
-#else  /* _WIN_PRINT */
-   if (width <= 0 || height <= 0) 
-      return;
-
-   pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
-
-   if (thick == 0 && pat == 0)
-      return;
-
-   WIN_GetDeviceContext (frame);
-
-   arc = (int) ((3 * DOT_PER_INCHE) / 25.4 + 0.5);
-
+   /* radius of arcs */
+   if (rx == 0 && ry != 0)
+     rx = ry;
+   else if (ry == 0 && rx != 0)
+     ry = rx;
+   arc = width / 2;
+   if (rx > arc)
+     rx = arc;
+   arc = height / 2;
+   if (ry > arc)
+     ry = arc;
+   /* check width and height */
    if (width > thick + 1)
      width = width - thick - 1;
    if (height > thick + 1)
@@ -3109,76 +3024,92 @@ int                 pattern;
    x += thick / 2;
    y = y + thick / 2 + FrameTable[frame].FrTopMargin;
 
+#ifdef _WIN_PRINT 
+   /* Fill in the rectangle */
+   hBrush = CreateSolidBrush (ColorPixel (bg));
+   hOldBrush = SelectObject (TtPrinterDC, hBrush);
+   thick = PixelToPoint (thick);
+#else  /* _WIN_PRINT */
+   WIN_GetDeviceContext (frame);
    /* Fill in the rectangle */
    WinLoadGC (TtDisplay, fg, RO);
-   if (pat != 0) {
-      hBrush = CreateSolidBrush (ColorPixel (bg));
-      hOldBrush = SelectObject (TtDisplay, hBrush);
-   } else {
-         SelectObject (TtDisplay, GetStockObject (NULL_BRUSH));
-		 hBrush = (HBRUSH) 0;
-   }
+   hBrush = CreateSolidBrush (ColorPixel (bg));
+   hOldBrush = SelectObject (TtDisplay, hBrush);
+#endif /* _WIN_PRINT */
 
-   if (thick > 0)
+   if (thick == 1)
      {
-       if (thick <= 1)
+       switch (style)
 	 {
-	   switch (style)
-	     {
-	     case 3:
-	       hPen = CreatePen (PS_DOT, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));
-	       break;
-	     case 4:
-	       hPen = CreatePen (PS_DASH, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue)); 
-	       break;
-	     default:
-	       hPen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));   
-	       break;
-	     } 
+	 case 3:
+	   hPen = CreatePen (PS_DOT, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));
+	   break;
+	 case 4:
+	   hPen = CreatePen (PS_DASH, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue)); 
+	   break;
+	 default:
+	   hPen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));   
+	   break;
 	 }
-       else
-	 {
-	   logBrush.lbStyle = BS_SOLID;
-	   logBrush.lbColor = RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue);
-
-	   switch (style)
-	     {
-	     case 3:
-	       hPen = ExtCreatePen (PS_GEOMETRIC | PS_DOT | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);
-	       break;
-	     case 4:
-	       hPen = ExtCreatePen (PS_GEOMETRIC | PS_DASH | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL); 
-	       break;
-	     default:
-	       hPen = ExtCreatePen (PS_GEOMETRIC | PS_SOLID | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);   
-	       break;
-	     } 
-	 }  
      }
+   else if (thick > 0)
+     {
+       logBrush.lbStyle = BS_SOLID;
+       logBrush.lbColor = RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue);
+	   
+       switch (style)
+	 {
+	 case 3:
+	   hPen = ExtCreatePen (PS_GEOMETRIC | PS_DOT | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);
+	   break;
+	 case 4:
+	   hPen = ExtCreatePen (PS_GEOMETRIC | PS_DASH | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL); 
+	   break;
+	 default:
+	   hPen = ExtCreatePen (PS_GEOMETRIC | PS_SOLID | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);   
+	   break;
+	 }
+     } 
    else if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (bg))))
      WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DrawOval (1)"));
 
+#ifdef _WIN_PRINT 
+   hOldPen = SelectObject (TtPrinterDC, hPen) ;
+   if (!RoundRect (TtPrinterDC, x, y, x + width, y + height, rx * 2, ry * 2))
+      WinErrorBox (FrRef  [frame], TEXT("windowdisplay.c - DrawOval (2)"));
+   SelectObject (TtPrinterDC, hOldPen);
+   if (!DeleteObject (hPen))
+      WinErrorBox (FrRef [frame], TEXT("windowdisplay.c - DrawOval (3)"));
+   hPen = (HPEN) 0;
+   if (hBrush)
+     {
+       SelectObject (TtPrinterDC, hOldBrush);
+       if (!DeleteObject (hBrush))
+         WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DrawOval (4)"));
+       hBrush = (HBRUSH)0;
+     }
+#else  /* _WIN_PRINT */
    hOldPen = SelectObject (TtDisplay, hPen) ;
-   result = SelectClipRgn (TtDisplay, clipRgn); 
-   if (result == ERROR)
+   if (SelectClipRgn (TtDisplay, clipRgn) == ERROR)
       ClipError (frame);
-   if (!RoundRect (TtDisplay, x, y, x + width, y + height, arc * 2, arc * 2))
+   if (!RoundRect (TtDisplay, x, y, x + width, y + height, rx * 2, ry * 2))
       WinErrorBox (FrRef  [frame], TEXT("windowdisplay.c - DrawOval (2)"));
    SelectObject (TtDisplay, hOldPen);
    if (!DeleteObject (hPen))
       WinErrorBox (FrRef [frame], TEXT("windowdisplay.c - DrawOval (3)"));
    hPen = (HPEN) 0;
-   if (hBrush) {
-      SelectObject (TtDisplay, hOldBrush);
-      if (!DeleteObject (hBrush))
+   if (hBrush)
+     {
+       SelectObject (TtDisplay, hOldBrush);
+       if (!DeleteObject (hBrush))
          WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DrawOval (4)"));
-      hBrush = (HBRUSH)0;
-   }
+       hBrush = (HBRUSH)0;
+     }
    WIN_ReleaseDeviceContext ();
    
    if (pat != (Pixmap) 0)
-      if (!DeleteObject ((HGDIOBJ) pat))
-         WinErrorBox (NULL, TEXT("windowdisplay.c - DrawOval (5)"));
+     if (!DeleteObject ((HGDIOBJ) pat))
+       WinErrorBox (NULL, TEXT("windowdisplay.c - DrawOval (5)"));
 #endif /* _WIN_PRINT */
 }
 
@@ -3208,119 +3139,111 @@ int                 bg;
 int                 pattern;
 #endif /* __STDC__ */
 {
-   Pixmap   pat = (Pixmap)0;
-   HPEN     hPen;
-   HPEN     hOldPen;
-   HBRUSH   hBrush;
-   HBRUSH   hOldBrush;
-   LOGBRUSH logBrush;
-#ifdef _WIN_PRINT 
-   int      t;
-   int      xm, ym;    
-#else  /* _WIN_PRINT */
-   int      result;
-#endif  /* _WIN_PRINT */
+  Pixmap   pat = (Pixmap)0;
+  HPEN     hPen;
+  HPEN     hOldPen;
+  HBRUSH   hBrush;
+  HBRUSH   hOldBrush;
+  LOGBRUSH logBrush;
+
+  if (pattern > 2)
+    pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
+  if (pattern > 2 && pat == 0 && thick <= 0)
+    return;
 
 #ifdef _WIN_PRINT 
-   if (y < 0)   
-      return;
-   y += FrameTable[frame].FrTopMargin;
+   thick = PixelToPoint (thick);
+#endif /* _WIN_PRINT */
+   if (thick == 1)
+     {
+       switch (style)
+	 {
+	 case 3:
+	   hPen = CreatePen (PS_DOT, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));
+	   break;
+	 case 4:
+	   hPen = CreatePen (PS_DASH, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue)); 
+	   break;
+	 default:
+	   hPen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));   
+	   break;
+	 }  
+     }
+   else if (thick > 0)
+     {
+       logBrush.lbStyle = BS_SOLID;
+       logBrush.lbColor = RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue);
+       
+       switch (style)
+	 {
+	 case 3:
+	   hPen = ExtCreatePen (PS_GEOMETRIC | PS_DOT | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);
+	   break;
+	 case 4:
+	   hPen = ExtCreatePen (PS_GEOMETRIC | PS_DASH | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL); 
+	   break;
+	 default:
+	   hPen = ExtCreatePen (PS_GEOMETRIC | PS_SOLID | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);   
+	   break;
+	 } 
+     }  
+   else if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (bg))))
+     WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DrawEllips (1)"));
 
-   if (TtPrinterDC) {
-      if (pattern > 2)
-         pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
+#ifdef _WIN_PRINT 
+  if (y < 0)   
+    return;
+  y += FrameTable[frame].FrTopMargin;
 
-      if (pattern > 2 && pat == 0 && thick <= 0)
-         return;
-
-      if (pattern <= 2) {
-         switch (pattern) {
-                case 0:  SelectObject (TtPrinterDC, GetStockObject (NULL_BRUSH));
-                         hBrush = (HBRUSH) 0;
-                         break;
-
-                case 1:  hBrush = CreateSolidBrush (ColorPixel (fg));
-                         hOldBrush = SelectObject (TtPrinterDC, hBrush);
-                         break;
-
-                case 2:  hBrush = CreateSolidBrush (ColorPixel (bg));
-                         hOldBrush = SelectObject (TtPrinterDC, hBrush);
-                         break;
-
-                default: SelectObject (TtPrinterDC, GetStockObject (NULL_BRUSH));
-                         hBrush = (HBRUSH) 0;
-                         break;
-		 }
-	  } else if (pat != 0) {
-             hBrush = CreatePatternBrush (pat); 
-             hOldBrush = SelectObject (TtPrinterDC, hBrush);
-	  } else {
-             SelectObject (TtPrinterDC, GetStockObject (NULL_BRUSH));
-		     hBrush = (HBRUSH) 0;
-	  }
-
-      xm = x + width;
-      ym = y + height;
-
-      if (thick > 0)
+  if (TtPrinterDC)
+    {
+      if (pattern <= 2)
 	{
-	  t = PixelToPoint (thick);
-	  
-	  if (t <= 1)
+	  switch (pattern)
 	    {
-	      switch (style)
-		{
-		case 3:
-		  hPen = CreatePen (PS_DOT, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));
-		  break;
-		case 4:
-		  hPen = CreatePen (PS_DASH, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue)); 
-		  break;
-		default:
-		  hPen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));   
-		  break;
-		}  
-	    }
-	  else
-	    {
-	      logBrush.lbStyle = BS_SOLID;
-	      logBrush.lbColor = RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue);
+	    case 0:  SelectObject (TtPrinterDC, GetStockObject (NULL_BRUSH));
+	      hBrush = (HBRUSH) 0;
+	      break;
 	      
-	      switch (style)
-		{
-		case 3:
-		  hPen = ExtCreatePen (PS_GEOMETRIC | PS_DOT | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);
-		 break;
-		case 4:
-		  hPen = ExtCreatePen (PS_GEOMETRIC | PS_DASH | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL); 
-		  break;
-		default:
-		  hPen = ExtCreatePen (PS_GEOMETRIC | PS_SOLID | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);   
-		  break;
-		} 
-	    }  
+	    case 1:  hBrush = CreateSolidBrush (ColorPixel (fg));
+	      hOldBrush = SelectObject (TtPrinterDC, hBrush);
+	      break;
+	      
+	    case 2:  hBrush = CreateSolidBrush (ColorPixel (bg));
+	      hOldBrush = SelectObject (TtPrinterDC, hBrush);
+	      break;
+	      
+	    default: SelectObject (TtPrinterDC, GetStockObject (NULL_BRUSH));
+	      hBrush = (HBRUSH) 0;
+	      break;
+	    }
+	}
+      else if (pat != 0)
+	{
+	  hBrush = CreatePatternBrush (pat); 
+	  hOldBrush = SelectObject (TtPrinterDC, hBrush);
 	}
       else
 	{
-	  if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (bg))))
-	    WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DrawEllips (1)"));
+	  SelectObject (TtPrinterDC, GetStockObject (NULL_BRUSH));
+	  hBrush = (HBRUSH) 0;
 	}
 
-      hOldPen = SelectObject (TtPrinterDC, hPen) ;
-
+      hOldPen = SelectObject (TtPrinterDC, hPen);
       if (!Ellipse (TtPrinterDC, x, y, x + width, y + height))
-         WinErrorBox (FrRef  [frame], TEXT("windowdisplay.c - DrawEllips (2)"));
+	WinErrorBox (FrRef  [frame], TEXT("windowdisplay.c - DrawEllips (2)"));
       SelectObject (TtPrinterDC, hOldPen);
       if (!DeleteObject (hPen))
-         WinErrorBox (FrRef [frame], TEXT("windowdisplay.c - DrawEllipse (3)"));
+	WinErrorBox (FrRef [frame], TEXT("windowdisplay.c - DrawEllipse (3)"));
       hPen = (HPEN) 0;
-      if (hBrush) {
-         SelectObject (TtPrinterDC, hOldBrush);
-         if (!DeleteObject (hBrush))
-            WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DrawEllips (4)"));
-         hBrush = (HBRUSH)0;
-	  }
-   }
+      if (hBrush)
+	{
+	  SelectObject (TtPrinterDC, hOldBrush);
+	  if (!DeleteObject (hBrush))
+	    WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DrawEllips (4)"));
+	  hBrush = (HBRUSH)0;
+	}
+    }
 #else /* _WIN_PRINT */
    width -= thick + 1;
    height -= thick + 1;
@@ -3328,103 +3251,62 @@ int                 pattern;
    y = y + thick / 2 + FrameTable[frame].FrTopMargin;
 
    /* Fill in the rectangle */
-
-   if (pattern > 2)
-      pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
-
-   if (pattern > 2 && pat == 0 && thick <= 0)
-      return;
-
    WIN_GetDeviceContext (frame);
-
    WinLoadGC (TtDisplay, fg, RO);
-
-   if (pattern <= 2) {
-      switch (pattern) {
-             case 0:  SelectObject (TtDisplay, GetStockObject (NULL_BRUSH));
-                      hBrush = (HBRUSH) 0;
-                      break;
-
-             case 1:  hBrush = CreateSolidBrush (ColorPixel (fg));
-                      hOldBrush = SelectObject (TtDisplay, hBrush);
-                      break;
-
-             case 2:  hBrush = CreateSolidBrush (ColorPixel (bg));
-                      hOldBrush = SelectObject (TtDisplay, hBrush);
-                      break;
-
-             default: SelectObject (TtDisplay, GetStockObject (NULL_BRUSH));
-                      hBrush = (HBRUSH) 0;
-                      break;
-	  }
-   } else if (pat != 0) {
-      hBrush = CreatePatternBrush (pat); 
-      /* hBrush = CreateSolidBrush (ColorPixel (pattern)); */
-      hOldBrush = SelectObject (TtDisplay, hBrush);
-   } else {
-         SelectObject (TtDisplay, GetStockObject (NULL_BRUSH));
-		 hBrush = (HBRUSH) 0;
-   }
-
-   if (thick > 0)
+   if (pattern <= 2)
      {
-       if (thick <= 1)
+       switch (pattern)
 	 {
-	   switch (style)
-	     {
-	     case 3:
-	       hPen = CreatePen (PS_DOT, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));
-	       break;
-	     case 4:
-	       hPen = CreatePen (PS_DASH, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue)); 
-	       break;
-	     default:
-	       hPen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));   
-	       break;
-	     } 
+	 case 0:  SelectObject (TtDisplay, GetStockObject (NULL_BRUSH));
+	   hBrush = (HBRUSH) 0;
+	   break;
+
+	 case 1:  hBrush = CreateSolidBrush (ColorPixel (fg));
+	   hOldBrush = SelectObject (TtDisplay, hBrush);
+	   break;
+
+	 case 2:  hBrush = CreateSolidBrush (ColorPixel (bg));
+	   hOldBrush = SelectObject (TtDisplay, hBrush);
+	   break;
+
+	 default:
+	   SelectObject (TtDisplay, GetStockObject (NULL_BRUSH));
+	   hBrush = (HBRUSH) 0;
+	   break;
 	 }
-       else
-	 {
-	   logBrush.lbStyle = BS_SOLID;
-	   logBrush.lbColor = RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue);
-
-	   switch (style)
-	     {
-	     case 3:
-	       hPen = ExtCreatePen (PS_GEOMETRIC | PS_DOT | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);
-	       break;
-	     case 5:
-	       hPen = ExtCreatePen (PS_GEOMETRIC | PS_DASH | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL); 
-	       break;
-	     default:
-	       hPen = ExtCreatePen (PS_GEOMETRIC | PS_SOLID | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);   
-	       break;
-	     } 
-	 }  
      }
-   else if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (bg))))
-     WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DrawEllips (1)"));
+   else if (pat != 0)
+     {
+       hBrush = CreatePatternBrush (pat); 
+       /* hBrush = CreateSolidBrush (ColorPixel (pattern)); */
+       hOldBrush = SelectObject (TtDisplay, hBrush);
+     }
+   else
+     {
+       SelectObject (TtDisplay, GetStockObject (NULL_BRUSH));
+       hBrush = (HBRUSH) 0;
+     }
 
-   hOldPen = SelectObject (TtDisplay, hPen) ;
-   result = SelectClipRgn (TtDisplay, clipRgn); 
-   if (result == ERROR)
-      ClipError (frame);
+   hOldPen = SelectObject (TtDisplay, hPen);
+   if (SelectClipRgn (TtDisplay, clipRgn) == ERROR)
+     ClipError (frame);
    if (!Ellipse (TtDisplay, x, y, x + width, y + height))
-      WinErrorBox (FrRef  [frame], TEXT("windowdisplay.c - DrawEllips (2)"));
+     WinErrorBox (FrRef  [frame], TEXT("windowdisplay.c - DrawEllips (2)"));
    SelectObject (TtDisplay, hOldPen);
    if (!DeleteObject (hPen))
-      WinErrorBox (FrRef [frame], TEXT("windowdisplay.c - DrawEllips (3)"));
+     WinErrorBox (FrRef [frame], TEXT("windowdisplay.c - DrawEllips (3)"));
    hPen = (HPEN) 0;
-   if (hBrush) {
-      SelectObject (TtDisplay, hOldBrush);
-      if (!DeleteObject (hBrush))
+   if (hBrush)
+     {
+       SelectObject (TtDisplay, hOldBrush);
+       if (!DeleteObject (hBrush))
          WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DrawEllips (4)"));
-      hBrush = (HBRUSH)0;
-   }
+       hBrush = (HBRUSH)0;
+     }
    WIN_ReleaseDeviceContext ();
-   if (pat != (Pixmap)0)
-      if (!DeleteObject ((HGDIOBJ) pat))
-         WinErrorBox (NULL, TEXT("windowdisplay.c - DrawEllips (5)"));
+   if (pat != (Pixmap) 0)
+     if (!DeleteObject ((HGDIOBJ) pat))
+       WinErrorBox (NULL, TEXT("windowdisplay.c - DrawEllips (5)"));
    pat = (Pixmap) 0;
 #endif /* _WIN_PRINT */
 }

@@ -9,6 +9,9 @@
 extern void SetPositionConstraint ( BoxEdge localEdge,
                                     PtrBox pBox,
                                     int *val );
+extern void ComputeRadius ( PtrAbstractBox pAb,
+                            int frame,
+                            ThotBool horizRef );
 extern void ComputeMBP ( PtrAbstractBox pAb,
                          int frame,
                          ThotBool horizRef );
@@ -42,6 +45,9 @@ extern void ClearDimRelation ( PtrBox pOrginBox,
 extern void SetPositionConstraint (/* BoxEdge localEdge,
                                       PtrBox pBox,
                                       int *val */);
+extern void ComputeRadius (/* PtrAbstractBox pAb,
+                              int frame,
+                              ThotBool horizRef */);
 extern void ComputeMBP (/* PtrAbstractBox pAb,
                            int frame,
                            ThotBool horizRef */);

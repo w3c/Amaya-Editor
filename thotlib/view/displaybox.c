@@ -472,8 +472,19 @@ ThotBool            selected;
 	  case 'R':
 	    DrawRectangle (frame, i, style, xd, yd, width, height, RO, op, fg, bg, pAb->AbFillPattern);
 	    break;
+	  case 'g':
+	    /* Coords of the line are given by the enclosing box */
+	    pAb = pAb->AbEnclosing;
+	    if ((pAb->AbHorizPos.PosEdge == Left && pAb->AbVertPos.PosEdge == Top) ||
+		(pAb->AbHorizPos.PosEdge == Right && pAb->AbVertPos.PosEdge == Bottom))
+	      /* draw a \ */
+	      DrawSlash (frame, i, style, xd, yd, width, height, 1, RO, op, fg);
+	    else
+	      /* draw a / */
+	      DrawSlash (frame, i, style, xd, yd, width, height, 0, RO, op, fg);
+	    break;
 	  case 'C':
-	    DrawOval (frame, i, style, xd, yd, width, height, RO, op, fg, bg, pAb->AbFillPattern);
+	    DrawOval (frame, i, style, xd, yd, width, height, pBox->BxRx, pBox->BxRy, RO, op, fg, bg, pAb->AbFillPattern);
 	    break;
 	  case 'L':
 	    DrawDiamond (frame, i, style, xd, yd, width, height, RO, op, fg, bg, pAb->AbFillPattern);
@@ -501,12 +512,10 @@ ThotBool            selected;
 	    DrawVerticalLine (frame, i, style, xd, yd, width, height, 2, RO, op, fg);
 	    break;
 	  case '/':
-	    DrawSlash (frame, i, style, xd, yd, width,
-		       height, 0, RO, op, fg);
+	    DrawSlash (frame, i, style, xd, yd, width, height, 0, RO, op, fg);
 	    break;
 	  case '\\':
-	    DrawSlash (frame, i, style, xd, yd, width,
-		       height, 1, RO, op, fg);
+	    DrawSlash (frame, i, style, xd, yd, width, height, 1, RO, op, fg);
 	    break;
 	  case '>':
 	     DrawArrow (frame, i, style, xd, yd, width, height, 0, RO, op, fg);

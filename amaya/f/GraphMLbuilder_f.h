@@ -35,29 +35,26 @@ extern void GraphMLElementComplete ( Element el,
                                      Document doc,
                                      int *error );
 extern void UpdatePositionOfPoly ( Element el,
-				   Element leaf,
-				   Document doc,
-				   int minX,
-				   int minY,
-				   int maxX,
-				   int maxY );
+                                   Element leaf,
+                                   Document doc,
+                                   int minX,
+                                   int minY,
+                                   int maxX,
+                                   int maxY );
 extern void CreatePoints ( Attribute attr,
                            Element el,
                            Document doc );
-extern void ParsePositionAttribute ( Attribute attr,
-                                     Element el,
-                                     Document doc );
 extern void ParseCoordAttribute ( Attribute attr,
                                   Element el,
                                   Document doc );
 extern ThotBool ParseWidthHeightAttribute ( Attribute attr,
-					    Element el,
-					    Document doc,
-					    ThotBool delete );
+                                            Element el,
+                                            Document doc,
+                                            ThotBool delete );
 extern void ParseTransformAttribute ( Attribute attr,
-				      Element el,
-				      Document doc,
-				      ThotBool delete );
+                                      Element el,
+                                      Document doc,
+                                      ThotBool delete );
 extern void GraphMLAttributeComplete ( Attribute attr,
                                        Element el,
                                        Document doc );
@@ -93,29 +90,26 @@ extern void GraphMLElementComplete (/* Element el,
                                        Document doc,
                                        int *error */);
 extern void UpdatePositionOfPoly (/* Element el,
-				     Element leaf,
-				     Document doc,
-				     int minX,
-				     int minY,
-				     int maxX,
-				     int maxY */);
+                                     Element leaf,
+                                     Document doc,
+                                     int minX,
+                                     int minY,
+                                     int maxX,
+                                     int maxY */);
 extern void CreatePoints (/* Attribute attr,
                              Element el,
                              Document doc */);
-extern void ParsePositionAttribute (/* Attribute attr,
-                                       Element el,
-                                       Document doc */);
 extern void ParseCoordAttribute (/* Attribute attr,
                                     Element el,
                                     Document doc */);
 extern ThotBool ParseWidthHeightAttribute (/* Attribute attr,
-					      Element el,
-					      Document doc,
-					      ThotBool delete */);
+                                              Element el,
+                                              Document doc,
+                                              ThotBool delete */);
 extern void ParseTransformAttribute (/* Attribute attr,
-					Element el,
-					Document doc,
-				        ThotBool delete */);
+                                        Element el,
+                                        Document doc,
+                                        ThotBool delete */);
 extern void GraphMLAttributeComplete (/* Attribute attr,
                                          Element el,
                                          Document doc */);

@@ -1092,7 +1092,7 @@ int                *volume;
 	  fprintf (PSfile, "  ep 0 gt {stroke} if\n");
 	  fprintf (PSfile, "} bind def\n\n");
 
-	  fprintf (PSfile, "/ellipse { %% ep x y A B\n");
+	  fprintf (PSfile, "/ellipse { %% style ep x y A B\n");
 	  fprintf (PSfile, "  1 index div /scalef exch def /bigaxis exch def\n");
 	  fprintf (PSfile, "  moveto\n");
 	  fprintf (PSfile, "  gsave\n");
