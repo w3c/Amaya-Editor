@@ -34,7 +34,8 @@ TEXT("Publishing.html"),
 TEXT("Printing.html"),
 TEXT("Numbering.html"),
 TEXT("MakeBook.html"),
-TEXT("Configure.html")
+TEXT("Configure.html"),
+TEXT("Access.html")
 };
 
 /* index name... which relates to the precedent table */
@@ -57,6 +58,7 @@ TEXT("Configure.html")
 #define NUMBERING     15
 #define MAKEBOOK      16
 #define CONFIGURE     17
+#define ACCESS        18
 
 #endif /* AMAYA_HELP_H */
 

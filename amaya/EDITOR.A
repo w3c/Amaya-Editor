@@ -251,6 +251,7 @@ MENUS
 	view:1 Help_ button:BHelpNumbering -> HelpNumbering;
 	view:1 Help_ button:BHelpMakeBook -> HelpMakeBook;
 	view:1 Help_ button:BHelpConfigure -> HelpConfigure;
+	view:1 Help_ button:BHelpAccess -> HelpAccess;
 	END;
 
 FUNCTIONS
