@@ -1395,7 +1395,7 @@ void SelectOneOption (Document doc, Element el)
 	     {
 	       /* create the main menu */
 
-#ifdef _GTK
+#if defined (_WINDOWS) || defined (_GTK)
 	       if (nbsubmenus == 0)
 		 TtaNewScrollPopup2 (BaseDialog + OptionMenu, TtaGetViewFrame (doc, 1),
 				     NULL, nbitems, buffer, NULL, multipleOptions, 'L');
@@ -1512,7 +1512,10 @@ void SelectOneOption (Document doc, Element el)
 #endif /* !_WINDOWS */
 	       TtaShowDialogue (BaseDialog + OptionMenu, FALSE);
 	       /* wait for an answer from the user */
-	       TtaWaitShowDialogue ();
+#ifdef _WINDOWS
+	       if (nbsubmenus == 0)
+#endif /* _WINDOWS */
+		 TtaWaitShowDialogue ();
 	       /* destroy the dialogue */
 	       TtaDestroyDialogue (BaseDialog + OptionMenu);
 
@@ -1557,6 +1560,8 @@ void SelectOneOption (Document doc, Element el)
 		       /* switch Amaya buttons and menus */
 		       DocStatusUpdate (doc, modified);
 		     }
+		   /* clear the selection (which may happen from clicking on the dialogue) */
+		   TtaUnselect (doc);
 		 }
 	     }
 	 }

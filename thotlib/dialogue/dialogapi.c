@@ -3586,6 +3586,182 @@ void TtaNewPopup (int ref, ThotWidget parent, char *title, int number,
     }
 }
 
+#ifdef _WINDOWS
+/*-----------------------------------------------------------------------
+ Win_ScrPopupProc
+ The callback handler for the Scroll popup widget
+ ------------------------------------------------------------------------*/
+LRESULT CALLBACK WIN_ScrPopupProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+ static HWND scrPopupWin;
+ int itemIndex;
+ int ref;
+
+ HWND   listBox;
+ struct Cat_Context *catalogue;
+
+  switch (msg)
+    {
+
+      /* initialize the widget */
+    case WM_CREATE:
+      {
+	HFONT  newFont;
+        HWND   listBox;
+        DWORD  dwStyle;
+        RECT   rect;
+
+	/* create a list box inside the container window */
+	scrPopupWin = hwnDlg;
+	dwStyle = WS_BORDER | WS_CHILD | WS_VISIBLE | WS_VSCROLL | WS_HSCROLL 
+	  | LBS_HASSTRINGS | LBS_NOTIFY | LBS_WANTKEYBOARDINPUT;
+	
+	/* we don't use Windows MULTIPLESEL style anymore */
+#if 0
+	if (multipleSel)
+	  dwStyle = dwStyle | LBS_MULTIPLESEL;
+#endif
+	/* give it the same size as that of the container */
+	GetWindowRect (hwnDlg, &rect);
+	listBox = CreateWindowEx (WS_EX_CLIENTEDGE,
+				  "LISTBOX",
+				  NULL,
+				  dwStyle,
+				  0, 0,
+				  rect.right - rect.left, rect.bottom - rect.top,
+				  hwnDlg, (HMENU) 1, hInstance, NULL);
+	/* set the font of the window */
+	newFont = GetStockObject (DEFAULT_GUI_FONT); 
+	if (newFont)
+	  SendMessage (listBox, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
+	SetFocus (listBox);
+	return 0;
+      }
+      break;
+	
+      /* destroy the widget */
+    case WM_CLOSE:
+    case WM_DESTROY:
+      RemoveProp (hwnDlg, "cat");
+      scrPopupWin = NULL;
+      if (msg == WM_DESTROY)
+	PostQuitMessage (0);
+      return 0;
+      break;
+
+    case WM_VKEYTOITEM:
+      ref = (int) wParam;
+      switch ((TCHAR) wParam)
+	{
+	case VK_RETURN:  /* activate an entry */
+	  SendMessage (hwnDlg, WM_COMMAND, MAKEWPARAM (1, LBN_DBLCLK), MAKELPARAM(FALSE, 0));
+	  return -2;
+	  break;
+	  
+	case VK_ESCAPE:  /* cancel */
+	  DestroyWindow (hwnDlg);
+	  return -2;
+	  break;
+	}
+      break;
+      
+    case WM_COMMAND:
+      if (LOWORD (wParam) == 1)
+	{
+	  switch (HIWORD (wParam))
+	    {
+	    case LBN_DBLCLK:  /* activate an entry */
+	      {
+		listBox = GetDlgItem (hwnDlg, 1);
+		itemIndex = SendMessage (listBox, LB_GETCURSEL, 0, 0);
+		ref = (int) GetProp (hwnDlg, "ref");
+		catalogue = CatEntry (ref);
+		CallMenu ((ThotWidget) itemIndex, catalogue, NULL);
+		scrPopupWin = NULL;
+		DestroyWindow (hwnDlg);
+		return 0;
+	      }
+	      break;
+
+	    case LBN_KILLFOCUS:   /* destroy the window if we click elsewhere */
+	      if (scrPopupWin)
+		{
+		  HWND win;
+		  win = GetFocus ();
+		  
+		  if (win != scrPopupWin && GetParent (win) != scrPopupWin)
+		    {
+		      scrPopupWin = NULL;
+		      DestroyWindow (hwnDlg);
+		      return 0;
+		    }
+		}
+	      break;
+	    }
+	}
+      break;
+    }
+  return (DefWindowProc (hwnDlg, msg, wParam, lParam));
+}
+#endif /* _WINDOWS */
+
+#ifdef _WINDOWS
+/*----------------------------------------------------------------------
+  WIN_InitScrPopup
+  System calls for creating an empty  scroll popup widget under Windows.
+  Returns a pointer to the widget if succesful, NULL otherwise.
+  ----------------------------------------------------------------------*/
+static HWND WIN_InitScrPopup (ThotWindow parent, int ref,
+                              ThotBool multipleOptions, int nbOptions)
+{
+  WNDCLASS      wndSheetClass;
+  LPCSTR        szAppName;
+  static ATOM   wndScrPopupRegistered;
+  HWND          menu;
+  POINT         curPoint;
+
+  szAppName = (LPCSTR) "MYSCRPOPUP";
+
+  /* register the popup scroll widget class if it doesn't exists */
+  if (!wndScrPopupRegistered)
+    {
+      wndSheetClass.style         = CS_HREDRAW | CS_VREDRAW;
+      wndSheetClass.lpfnWndProc   = (WNDPROC) WIN_ScrPopupProc;
+      wndSheetClass.cbClsExtra    = 0;
+      wndSheetClass.cbWndExtra    = 0;
+      wndSheetClass.hInstance     = hInstance;
+      wndSheetClass.hIcon         = LoadIcon (NULL, IDI_APPLICATION);
+      wndSheetClass.hCursor       = LoadCursor (NULL, IDC_ARROW);
+      wndSheetClass.hbrBackground = (HBRUSH) GetStockObject (WHITE_BRUSH);
+      wndSheetClass.lpszMenuName  = NULL;
+      wndSheetClass.lpszClassName = szAppName;
+      wndScrPopupRegistered = RegisterClass (&wndSheetClass);
+      if (!wndScrPopupRegistered)
+	return (NULL);
+    }
+
+  /* we don't use the multipleOptions variable anymore */
+  /* we use a global variable, as I was unable to pass a parameter with CreateWindow */
+  /* multipleSel = multipleOptions; */
+  
+  /* create a widget instance at the current cursor position */
+  GetCursorPos (&curPoint);
+  menu = CreateWindow (szAppName, 
+		       NULL,
+		       WS_POPUP,
+		       curPoint.x, curPoint.y,
+		       130, (nbOptions < 15) ? 17*nbOptions : 255 ,
+		       parent, NULL, hInstance, NULL);
+  if (!menu)
+    return NULL;
+
+  /* store the catalogue reference inside the window */
+  SetProp (menu, "ref", (HANDLE) ref);
+  
+  return menu;
+}
+#endif /* _WINDOWS */
+
 /*----------------------------------------------------------------------
    TtaNewScrollPopup cre'e un pop-up menu :                                 
    The parameter ref donne la re'fe'rence pour l'application.         
@@ -4020,7 +4196,6 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
     }
 }
 
-#ifdef _WINDOWS0
 /*----------------------------------------------------------------------
    TtaNewScrollPopup cre'e un pop-up menu :                                 
    The parameter ref donne la re'fe'rence pour l'application.         
@@ -4037,6 +4212,7 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
 void TtaNewScrollPopup2 (int ref, ThotWidget parent, char *title, int number,
 			char *text, char *equiv, ThotBool multipleOptions, char button)
 {
+#if defined (_WINDOWS) || defined (_GTK)
   register int        count;
   register int        index;
   register int        ent;
@@ -4045,209 +4221,13 @@ void TtaNewScrollPopup2 (int ref, ThotWidget parent, char *title, int number,
   ThotBool            rebuilded;
   struct Cat_Context *catalogue;
   struct E_List      *adbloc;
-#ifdef _WINDOWS
-  HMENU               menu;
-  HMENU               w;
-  int                 nbOldItems, ndx;
-#endif /* _WINDOWS */
-
-  if (ref == 0)
-    {
-      TtaError (ERR_invalid_reference);
-      return;
-    }
-
-  catalogue = CatEntry (ref);
-  menu = 0;
-  if (catalogue == NULL)
-    TtaError (ERR_cannot_create_dialogue);
-  else
-    {
-      /* Est-ce que le catalogue existe deja ? */
-      rebuilded = FALSE;
-      if (catalogue->Cat_Widget != 0)
-	{
-	  if (catalogue->Cat_Type == CAT_SCRPOPUP)
-	    {
-	      /* Modification du catalogue */
-	      DestContenuMenu (catalogue);
-	      rebuilded = TRUE;
-	    }
-	  else
-	    TtaDestroyDialogue (ref);
-	}
-
-      if (!rebuilded)
-	{
-#ifndef _WINDOWS
-#else  /* _WINDOWS */
-	  DWORD dwStyle;
-
-	  dwStyle =  WS_BORDER | WS_HSCROLL | WS_VSCROLL | WS_POPUPWINDOW 
-	    | LBS_NOTIFY | LBS_WANTKEYBOARDINPUT;
-	  if (multipleOptions)
-	    dwStyle |= LBS_MULTIPLESEL;
-	  menu = CreateWindow ((LPCTSTR) "LISTBOX", 
-			       NULL,
-			       dwStyle;
-			       CW_USEDEFAULT,
-			       CW_USEDEFAULT,
-			       CW_USEDEFAULT,
-			       CW_USEDEFAULT,
-			       hwdnParent,
-			       NULL,
-			       hinst,
-			       NULL);
-#endif /* _WINDOWS */
-	  catalogue->Cat_Widget = menu;
-	  catalogue->Cat_Ref = ref;
-	  catalogue->Cat_Type = CAT_SCRPOPUP;
-	  catalogue->Cat_Button = button;
-	  /* Initialisation de la liste des widgets fils */
-	  adbloc = NewEList ();
-	  catalogue->Cat_Entries = adbloc;
-	}
-      else
-	{
-	  /* Mise a jour du menu existant */
-	  menu = catalogue->Cat_Widget;
-	  adbloc = catalogue->Cat_Entries;
-	  /* Si on a change de bouton on met a jour le widget avec args[0] */
-	  if (catalogue->Cat_Button != button)
-	    {
-	      catalogue->Cat_Button = button;
-	    }
-	  else
-	    button = catalogue->Cat_Button;
-	}
-      catalogue->Cat_Data = -1;
-#ifdef _WINDOWS
-      if (currentParent != 0)
-	WIN_AddFrameCatalogue (currentParent, catalogue);
-#endif /* _WINDOWS */
-      
-      /*** Cree le titre du menu ***/
-      if (title != NULL)
-	{
-	  if (!rebuilded)
-	    {
-#ifdef _WINDOWS
-	      adbloc->E_ThotWidget[0] = (ThotWidget) 0;
-	      adbloc->E_ThotWidget[1] = (ThotWidget) 0;
-#endif /* _WINDOWS */
-	    }
-	}
-      /* Cree les differentes entrees du menu */
-#ifndef _WINDOWS
-#else /* _WINDOWS */
-#if 0
-      nbOldItems = GetMenuItemCount (menu);
-      for (ndx = 0; ndx < nbOldItems; ndx ++)
-        if (!DeleteMenu (menu, ref + ndx, MF_BYCOMMAND))
-	  DeleteMenu (menu, ndx, MF_BYPOSITION);
-#endif
-#endif /* _WINDOWS */
-      
-      i = 0;
-      index = 0;
-      eindex = 0;
-      ent = 2;
-      if (text != NULL)
-	while (i < number)
-	  {
-	    count = strlen (&text[index]);	/* Longueur de l'intitule */
-	    /* S'il n'y a plus d'intitule -> on arrete */
-	    if (count == 0)
-	      {
-		i = number;
-		TtaError (ERR_invalid_parameter);
-		break;
-	      }
-	    else
-	      {
-		
-		/* Faut-il changer de bloc d'entrees ? */
-		if (ent >= C_NUMBER)
-		  {
-		    adbloc->E_Next = NewEList ();
-		    adbloc = adbloc->E_Next;
-		    ent = 0;
-		  }
-		
-		/* Recupere le type de l'entree */
-		adbloc->E_Type[ent] = text[index];
-		adbloc->E_Free[ent] = 'Y';
-		
-		/* Note l'accelerateur */
-		if (equiv != NULL)
-		  {
-		    eindex += strlen (&equiv[eindex]) + 1;
-		  }
-		if (text[index] == 'B' || text[indext] == 'T')
-		  /*__________________________________________ Creation d'un bouton __*/
-		  {
-#ifdef _WINDOWS
-		    SendMessage (menu, LB_INSERTSTRING, ref + i, (LPARAM) &text[index + 1]);
-		    adbloc->E_ThotWidget[ent] = (ThotWidget) i;
-#endif /* _WINDOWS */
-		  }
-		else if (text[index] == 'T')
-		  /*__________________________________________ Creation d'un toggle __*/
-		  {
-#ifdef _WINDOWS
-		    SendMessage (menu, MF_STRING | MF_UNCHECKED, ref + i,
-				 (LPARAM) &text[index + 1]);
-		    adbloc->E_ThotWidget[ent] = (ThotWidget) i;
-#endif /* _WINDOWS */
-		  }
-		else
-		  /*____________________________________ Une erreur de construction __*/
-		  {
-		    TtaDestroyDialogue (ref);
-		    TtaError (ERR_invalid_parameter);	/* Type d'entree non defini */
-		    return;
-		  }
-		i++;
-		ent++;
-		index += count + 1;
-	      }
-	  }
-      
-    }
-}
-#else
-/*----------------------------------------------------------------------
-   TtaNewScrollPopup cre'e un pop-up menu :                                 
-   The parameter ref donne la re'fe'rence pour l'application.         
-   The parameter title donne le titre du catalogue.                   
-   The parameter number indique le nombre d'entre'es dans le menu.    
-   The parameter text contient la liste des intitule's du catalogue.  
-   Chaque intitule' commence par un caracte`re qui donne le type de   
-   l'entre'e et se termine par un caracte`re de fin de chai^ne \0.    
-   S'il n'est pas nul, le parame`tre equiv donne les acce'le'rateurs  
-   des entre'es du menu.                                              
-   The parameter button indique le bouton de la souris qui active le  
-   menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
-  ----------------------------------------------------------------------*/
-void TtaNewScrollPopup2 (int ref, ThotWidget parent, char *title, int number,
-			char *text, char *equiv, ThotBool multipleOptions, char button)
-{
-#ifdef _GTK
-  register int        count;
-  register int        index;
-  register int        ent;
-  register int        i;
-  int                 eindex;
-  ThotBool            rebuilded;
-  struct Cat_Context *catalogue;
-  struct E_List      *adbloc;
-
-  GtkWidget          *table;
-  ThotWidget          wlabel;
   char                menu_item [1024];
   char                equiv_item [255];
 
-  ThotWidget          menu;
+#ifdef _WINDOWS
+  HWND                menu;
+  HWND                listBox;
+#else
   GtkWidget          *gtklist;
   GtkWidget          *scr_window;
   GtkWidget          *event_box;
@@ -4255,10 +4235,9 @@ void TtaNewScrollPopup2 (int ref, ThotWidget parent, char *title, int number,
   GList              *glist = NULL;
   ThotWidget          w;
 
-#ifdef _WINDOWS
-  HMENU               menu;
-  HMENU               w;
-  int                 nbOldItems, ndx;
+  GtkWidget          *table;
+  ThotWidget          wlabel;  
+  ThotWidget          menu;  
 #endif  /* _WINDOWS */
 
   equiv_item[0] = 0;
@@ -4272,27 +4251,39 @@ void TtaNewScrollPopup2 (int ref, ThotWidget parent, char *title, int number,
   catalogue = CatEntry (ref);
   menu = 0;
   if (catalogue == NULL)
-    TtaError (ERR_cannot_create_dialogue);
-  else
     {
-      /* Est-ce que le catalogue existe deja ? */
-      rebuilded = FALSE;
-      if (catalogue->Cat_Widget != 0)
+      TtaError (ERR_cannot_create_dialogue);
+      return;
+    }
+
+  /* Est-ce que le catalogue existe deja ? */
+  rebuilded = FALSE;
+  if (catalogue->Cat_Widget != 0)
+    {
+      if (catalogue->Cat_Type == CAT_SCRPOPUP)
 	{
-	  if (catalogue->Cat_Type == CAT_SCRPOPUP)
-	    {
-	      /* Modification du catalogue */
-	      DestContenuMenu (catalogue);
-	      rebuilded = TRUE;
-	    }
-	  else
-	    TtaDestroyDialogue (ref);
+	  /* Modification du catalogue */
+	  DestContenuMenu (catalogue);
+	  rebuilded = TRUE;
 	}
-      
+      else
+	TtaDestroyDialogue (ref);
+    }
+  
+  
+  if (!rebuilded)
+    {      
       /* Create a new dialog window for the scrolled window to be
 	 packed into. */
+#ifdef _WINDOWS
+      menu = WIN_InitScrPopup (parent, ref, multipleOptions, number);
+      if (menu)
+	listBox = GetDlgItem (menu, 1);
+      else
+	listBox = NULL;
+#else /* _GTK */
       menu =  gtk_window_new (GTK_WINDOW_POPUP);
-
+      
       /* signals */
       ConnectSignalGTK (GTK_OBJECT (menu),
 			"delete_event",
@@ -4302,7 +4293,7 @@ void TtaNewScrollPopup2 (int ref, ThotWidget parent, char *title, int number,
 			"unmap_event",
 			GTK_SIGNAL_FUNC (formKillGTK),
 			(gpointer) catalogue);
-
+      
       /* properties */
       gtk_window_set_policy (GTK_WINDOW (menu), TRUE, TRUE, FALSE);
       gtk_container_border_width (GTK_CONTAINER (menu), 0);
@@ -4313,7 +4304,7 @@ void TtaNewScrollPopup2 (int ref, ThotWidget parent, char *title, int number,
       event_box = gtk_event_box_new ();
       gtk_container_add (GTK_CONTAINER (menu), event_box);
       gtk_widget_show (event_box);
-
+      
       /* properties */
       gtk_widget_realize (event_box);
       /* change the cursor when we're inside the popup */
@@ -4323,7 +4314,7 @@ void TtaNewScrollPopup2 (int ref, ThotWidget parent, char *title, int number,
 	gdk_window_set_cursor (event_box->window, cursor);
 	gdk_cursor_destroy (cursor);
       }
-
+      
       /* create the scrolled window that will contain the list widget */
       scr_window = gtk_scrolled_window_new (NULL, NULL);
       gtk_widget_show (scr_window);
@@ -4335,50 +4326,48 @@ void TtaNewScrollPopup2 (int ref, ThotWidget parent, char *title, int number,
       GTK_WIDGET_UNSET_FLAGS (GTK_SCROLLED_WINDOW (scr_window)->hscrollbar, GTK_CAN_FOCUS);
       GTK_WIDGET_UNSET_FLAGS (GTK_SCROLLED_WINDOW (scr_window)->vscrollbar, GTK_CAN_FOCUS);
       gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scr_window), GTK_POLICY_AUTOMATIC,
-				    GTK_POLICY_AUTOMATIC);
-
+				      GTK_POLICY_AUTOMATIC);
+      
       /* add the scrwindow to its container */
       gtk_container_add (GTK_CONTAINER (event_box), scr_window);
-
+      
       /* add a signal to know if the user clicks elsewhere */
 #if 0
       ConnectSignalGTK (GTK_OBJECT (w), "button_press_event",
 			GTK_SIGNAL_FUNC (scr_popup_key_press),
 			(gpointer) catalogue);
 #endif
-
-      if (!rebuilded)
+      
+#endif /* _WINDOWS */
+	  
+      catalogue->Cat_Widget = menu;
+      catalogue->Cat_Ref = ref;
+      catalogue->Cat_Type = CAT_SCRPOPUP;
+      catalogue->Cat_Button = button;
+      /* Initialisation de la liste des widgets fils */
+      adbloc = NewEList ();
+      catalogue->Cat_Entries = adbloc;
+    }
+  else
+    {
+      /* Mise a jour du menu existant */
+      menu = catalogue->Cat_Widget;
+      adbloc = catalogue->Cat_Entries;
+      /* Si on a change de bouton on met a jour le widget avec args[0] */
+      if (catalogue->Cat_Button != button)
 	{
-	  catalogue->Cat_Widget = menu;
-	  catalogue->Cat_Ref = ref;
-	  catalogue->Cat_Type = CAT_SCRPOPUP;
 	  catalogue->Cat_Button = button;
-	  /* Initialisation de la liste des widgets fils */
-	  adbloc = NewEList ();
-	  catalogue->Cat_Entries = adbloc;
 	}
       else
-	{
-	  /* Mise a jour du menu existant */
-	  menu = catalogue->Cat_Widget;
-	  adbloc = catalogue->Cat_Entries;
-	  /* Si on a change de bouton on met a jour le widget avec args[0] */
-	  if (catalogue->Cat_Button != button)
-	    {
-	      catalogue->Cat_Button = button;
-	    }
-	  else
-	    button = catalogue->Cat_Button;
-	}
+	button = catalogue->Cat_Button;
+    }
       catalogue->Cat_Data = -1;
       
-      /*** Cree le titre du menu ***/
-      if (title != NULL)
-	{
-	  if (!rebuilded)
-	    {
-	    }
-	}
+#ifdef _WINDOWS
+      if (currentParent != 0)
+	WIN_AddFrameCatalogue (currentParent, catalogue);
+#endif /* _WINDOWS */
+      
       /* Cree les differentes entrees du menu */
       i = 0;
       index = 0;
@@ -4417,9 +4406,16 @@ void TtaNewScrollPopup2 (int ref, ThotWidget parent, char *title, int number,
 		      strcpy (equiv_item, &equiv[eindex]); 
 		    eindex += strlen (&equiv[eindex]) + 1;
 		  }
-		if (text[index] == 'B' || text[index] == 'T')
+		
+		if (text[index] == 'T' || text[index] == 'B')
 		  /*__________________________________________ Creation d'un bouton __*/
 		  {
+#ifdef _WINDOWS
+		    /* reserve the first char to indicate selected status */
+		    text[index] = ' ';
+		    SendMessage (listBox, LB_INSERTSTRING, i, (LPARAM) &text[index]);
+		    adbloc->E_ThotWidget[ent] = (ThotWidget) i;
+#else
 		    sprintf (menu_item, "%s", &text[index + 1]);
 		    /* \t doesn't mean anything to gtk... to we align ourself*/
 		    if (equiv_item && equiv_item[0] != EOS)
@@ -4445,17 +4441,17 @@ void TtaNewScrollPopup2 (int ref, ThotWidget parent, char *title, int number,
 		      }
 		    else
 		      w = gtk_list_item_new_with_label (menu_item);
-
+		    
 		    if (!first)
 		      first = w;
-
+		    
 		    /* memorize the parent window */
 		    gtk_object_set_data (GTK_OBJECT (w), "window", (gpointer) menu);
-
+		    
 		    /* for debugging, memorize the widget name */
 		    gtk_object_set_data (GTK_OBJECT (w), "item", (gpointer) 
 					 (TtaStrdup (menu_item)));
-
+		    
 		    /* get the key press */
 		    gtk_signal_connect (GTK_OBJECT (w), "key_press_event",
 					GTK_SIGNAL_FUNC (scr_popup_key_press),
@@ -4474,48 +4470,7 @@ void TtaNewScrollPopup2 (int ref, ThotWidget parent, char *title, int number,
 #endif
 		    gtk_widget_show (w);
 		    glist = g_list_append (glist, w);
-		    adbloc->E_ThotWidget[ent] = w;
-		    adbloc->E_Type[ent] = 'T';
-		  }
-		else if (text[index] == 'T')
-		  /*__________________________________________ Creation d'un toggle __*/
-		  {
-		    /* \t doesn't mean anything to gtk... to we align ourself*/
-		    sprintf (menu_item, "%s", &text[index + 1]);
-		    if (equiv_item && equiv_item[0] != 0)
-		      {
-			strcat (menu_item, "  ");
-			w = gtk_check_menu_item_new ();
-			table = gtk_table_new (1, 3, FALSE);    
-			gtk_container_add (GTK_CONTAINER (w), table);  
-			wlabel = gtk_label_new(menu_item);
-			/*(that's left-justified, right is 1.0, center is 0.5).*/
-			/*gtk_label don't seem to like table cell...so*/
-			gtk_misc_set_alignment(GTK_MISC(wlabel), 0.0 , 0); 
-			gtk_table_attach_defaults (GTK_TABLE(table), wlabel, 0, 1, 0, 1);   
-			gtk_widget_show (wlabel);
-			gtk_label_set_justify(GTK_LABEL(wlabel), GTK_JUSTIFY_LEFT);
-			
-			wlabel = gtk_label_new(equiv_item);
-			gtk_misc_set_alignment(GTK_MISC(wlabel), 1.0, 0); 
-			gtk_table_attach_defaults (GTK_TABLE(table), wlabel, 2, 3, 0, 1);   
-			gtk_widget_show (wlabel);
-			gtk_widget_show (table);
-			
-		      }
-		    else
-		      w = gtk_check_menu_item_new_with_label (menu_item);
-		    
-		    gtk_widget_show_all (w);
-		    gtk_menu_append (GTK_MENU (menu), w);
-		    gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (w), FALSE);
-		    gtk_check_menu_item_set_show_toggle (GTK_CHECK_MENU_ITEM (w), TRUE);
-#if 0
-		    ConnectSignalGTK (GTK_OBJECT(w), "activate",
-				      GTK_SIGNAL_FUNC (CallMenuGTK), (gpointer)catalogue);
-#endif
-		    adbloc->E_ThotWidget[ent] = w;
-		    adbloc->E_Type[ent] = 'T';
+#endif /* _WINDOWS */
 		  }
 		else
 		  /*____________________________________ Une erreur de construction __*/
@@ -4524,12 +4479,20 @@ void TtaNewScrollPopup2 (int ref, ThotWidget parent, char *title, int number,
 		    TtaError (ERR_invalid_parameter);	/* Type d'entree non defini */
 		    return;
 		  }
+
+		/* add the entry to the catalog list */
+		adbloc->E_ThotWidget[ent] = w;
+		adbloc->E_Type[ent] = 'T';
 		i++;
 		ent++;
 		index += count + 1;
 	      }
 	  }
 
+#ifdef _WINDOWS
+      /* remember the catalogue */
+      SetProp (menu, "ref", (HANDLE) ref);      
+#else /* _GTK */
       if (menu && glist)
 	{
 	  gtklist = gtk_list_new ();
@@ -4590,11 +4553,11 @@ void TtaNewScrollPopup2 (int ref, ThotWidget parent, char *title, int number,
 			    GTK_SIGNAL_FUNC (scr_popup_focus_out), NULL);
 #endif
 	}
-    }
-#endif /* _GTK */
-}     
-
 #endif /* _WINDOWS */
+
+#endif /* _WINDOWS || GTK*/
+}
+
 
 /*----------------------------------------------------------------------
    AddInFormulary recherche une entree libre dans le formulaire  
@@ -6136,43 +6099,63 @@ void TtaSetToggleMenu (int ref, int val, ThotBool on)
     TtaError (ERR_invalid_reference);
   else
     {
-	  if (on)
-		  uCheck = MF_CHECKED;
-	  else
-		  uCheck = MF_UNCHECKED;
-
-	  hMenu = catalogue->Cat_Widget;
-
-	  /* the first two entries of the first block
-	      are reserved */
-	  tmp_val = val + 2;
-	  /* find the correct block for the val entry */
-	  while (tmp_val >= C_NUMBER)
-	  {
-    	/* the entry is not in the first block,
-		    we update the catalog index entry */
-		  /* point to the next block */
-		  adbloc = adbloc->E_Next;
-		  tmp_val = tmp_val - C_NUMBER;
-		  /* the first two entries of the first block entry 
-		     are reserved */
-	  }
+      if (on)
+	uCheck = MF_CHECKED;
+      else
+	uCheck = MF_UNCHECKED;
+      
+      hMenu = catalogue->Cat_Widget;
+      
+      /* the first two entries of the first block
+	 are reserved */
+      tmp_val = val + 2;
+      /* find the correct block for the val entry */
+      while (tmp_val >= C_NUMBER)
+	{
+	  /* the entry is not in the first block,
+	     we update the catalog index entry */
+	  /* point to the next block */
+	  adbloc = adbloc->E_Next;
+	  tmp_val = tmp_val - C_NUMBER;
+	  /* the first two entries of the first block entry 
+	     are reserved */
+	}
+      
  
-	  if (IsMenu (adbloc->E_ThotWidget[tmp_val]))
+	  if (catalogue->Cat_Type == CAT_SCRPOPUP)
 	    {
-		  /* change the menu item */
-          if (CheckMenuItem (adbloc->E_ThotWidget[tmp_val], ref + val, uCheck) == 0xFFFFFFFF) 
-		       WinErrorBox (NULL, "WIN_TtaSetToggleMenu (1)");
+	      HWND listBox;
+	      char buffer[MAX_LENGTH];
+	      int i;
+	      
+	      /* the list box widget is inside the Cat_Widget */
+	      listBox = GetDlgItem (catalogue->Cat_Widget, 1);
+	      /* check the length of the entry to avoid a SIGSEV */
+	      i = SendMessage (listBox, LB_GETTEXTLEN, val, (LPARAM) NULL);
+	      if (i>1 && i < MAX_LENGTH)
+		{
+		  /* we get the text of the entry, add a '>' char and insert it again into
+		     the list */
+		  SendMessage (listBox, LB_GETTEXT, val, (LPARAM) buffer);
+		  SendMessage (listBox, LB_DELETESTRING, val, (LPARAM) NULL);
+		  buffer[0] = '>';
+		  SendMessage (listBox, LB_INSERTSTRING, val, (LPARAM) buffer);
+		}
 	    }
+	 else if (IsMenu (adbloc->E_ThotWidget[tmp_val]))
+	   {
+	     /* change the menu item */
+	     if (CheckMenuItem (adbloc->E_ThotWidget[tmp_val], ref + val, uCheck) == 0xFFFFFFFF) 
+	       WinErrorBox (NULL, "WIN_TtaSetToggleMenu (1)");
+	   }
 	  else if (CheckMenuItem (hMenu, ref + val, uCheck) == 0xFFFFFFFF)
 	    {
-		  /* get the parent menu reference */
+	      /* get the parent menu reference */
 	      hMenu = GetMenu (owner);
 	      if (CheckMenuItem (hMenu, ref + val, uCheck) == 0xFFFFFFFF) 
-		     WinErrorBox (NULL, "WIN_TtaSetToggleMenu (2)");
+		WinErrorBox (NULL, "WIN_TtaSetToggleMenu (2)");
 	    }
-   }
-
+    }
 #else  /* _WINDOWS  */
    ThotWidget          w;
 #ifndef _GTK
@@ -6211,20 +6194,20 @@ void TtaSetToggleMenu (int ref, int val, ThotBool on)
 	/* Est-ce que le sous-menu est actuellement affiche */
 #ifndef _GTK
 	else if (XtIsManaged (catalogue->Cat_Widget))
-	   visible = TRUE;
+	  visible = TRUE;
 	else
 	  {
-	     visible = FALSE;
-	     XtManageChild (catalogue->Cat_Widget);
+	    visible = FALSE;
+	    XtManageChild (catalogue->Cat_Widget);
 	  }
 #else /* _GTK */	
 	else if (GTK_WIDGET_VISIBLE (catalogue->Cat_Widget))
-	   visible = TRUE;
+	  visible = TRUE;
 	else
 	  {
-	     visible = FALSE;
-	     if (catalogue->Cat_Type != CAT_SCRPOPUP)
-	       gtk_widget_show_all (catalogue->Cat_Widget);
+	    visible = FALSE;
+	    if (catalogue->Cat_Type != CAT_SCRPOPUP)
+	      gtk_widget_show_all (catalogue->Cat_Widget);
 	  }
 #endif /* _GTK */
 
@@ -9226,6 +9209,18 @@ void TtaShowDialogue (int ref, ThotBool remanent)
 			   currentParent, NULL))
 	WinErrorBox (WIN_Main_Wd, "TtaShowDialogue (1)");
     }
+  else  if (catalogue->Cat_Type == CAT_SCRPOPUP)
+  {
+    /* wait until the user selects something */
+    MSG msg;
+    ShowWindow (w, SW_SHOWNORMAL);
+    UpdateWindow (w);
+    while (GetMessage (&msg, NULL, 0, 0))
+      {
+	TranslateMessage (&msg);
+	DispatchMessage (&msg);
+      }
+  }
   else
     {
       ShowWindow (w, SW_SHOWNORMAL);
