@@ -1,4 +1,4 @@
-#  Keyboard configuration file for Unix
+# Keyboard configuration file for Unix
 #
 # How keys are used:
 #
@@ -34,7 +34,9 @@
 #
 # Ctrl- b, g, h, i, n, o, q, r are not used.
 #
+
 # personal keyboard file for Amaya
+
 #moving around 
 <Key>Delete:        TtcDeleteSelection() 
 <Key>Backspace:    TtcDeletePreviousChar() 
@@ -42,14 +44,15 @@
 <Key>Return:        TtcCreateElement() 
 <Key>Home:          TtcStartOfLine() 
 <Key>End:           TtcEndOfLine()
+
 #Following commented out to make keyboard
 #selection work. Is this still necessary? 
 #<Key>Up:           TtcPreviousLine() 
 #<Key>Down:         TtcNextLine() 
 #<Key>Right:        TtcNextChar() 
 #<Key>Left:         TtcPreviousChar() 
-#Ctrl <Key>Up:       TtcLineUp()
-#Ctrl <Key>Down:     TtcLineDown()
+#Ctrl <Key>Up:      TtcLineUp()
+#Ctrl <Key>Down:    TtcLineDown()
 <Key>L6:            TtcCopyToClipboard() 
 <Key>L8:            TtcPasteFromClipboard() 
 <Key>F6:            TtcCopyToClipboard() 
@@ -62,10 +65,7 @@ Ctrl <Key>-:        TtcChildElement()
 Ctrl <Key>Home:     TtcPageTop() 
 Ctrl <Key>End:      TtcPageEnd() 
 Alt <Key>Return:    DoAction() 
-
-Alt <Key>Home: GoToHome()
-
-
+Alt <Key>Home:      GoToHome()
 
 #File menu 
 Shift Ctrl <Key>N:                 ChangeTitle()
@@ -106,28 +106,33 @@ Ctrl <Key>t , Ctrl <Key>-:         CreateHorizontalRule()
 Ctrl <Key>t , Ctrl <Key>a:         CreateAddress() 
 Ctrl <Key>t , Ctrl <Key>q:         CreateBlockQuote() 
 Ctrl <Key>t , Ctrl <Key>v:         CreateDivision() 
-# BR, and an &nbsp; (I think)
+# BR and &nbsp;
 Ctrl <Key>Return:                  CreateBreak("\212") 
 Ctrl <Key>Space:                   TtcInsertChar("\240")
+
 #lists - types submenu
 #Don't need items - these are done with return
 Ctrl <Key>l , Ctrl <Key>d:         CreateDefinitionList() 
 Ctrl <Key>l , Ctrl <Key>o:         CreateNumberedList() 
 Ctrl <Key>l , Ctrl <Key>u:         CreateList() 
+
 #tables submenu
 Ctrl <Key>t , Ctrl <Key>t:         CreateTable() 
 Ctrl <Key>t , Ctrl <Key>h:         CreateHeadingCell()
 Ctrl <Key>t , Ctrl <Key>Delete:    DeleteColumn()
+
 #Object submenu
 Ctrl <Key>t , Ctrl <Key>o:         CreateObject() 
 Ctrl <Key>t , Ctrl <Key>p:         CreateParameter() 
+
 #Headings sbmenu
 Ctrl <Key>1:                       CreateHeading1() 
 Ctrl <Key>2:                       CreateHeading2() 
 Ctrl <Key>3:                       CreateHeading3() 
 Ctrl <Key>4:                       CreateHeading4() 
 Ctrl <Key>5:                       CreateHeading5() 
-Ctrl <Key>6:                       CreateHeading6() 
+Ctrl <Key>6:                       CreateHeading6()
+
 #Forms (types submenu)
 Ctrl <Key>f , Ctrl <Key>f:         CreateForm() 
 Ctrl <Key>f , Ctrl <Key>s:         CreateSubmit() 
@@ -145,29 +150,35 @@ Ctrl <Key>f , Ctrl <Key>g:         CreateFieldset()
 Ctrl <Key>f , Ctrl <Key>l:         CreateLabel() 
 Ctrl <Key>f , Ctrl <Key>b:         CreatePushButton() 
 Ctrl <Key>f , Ctrl <Key>m:         CreateOption() 
-#math (types submenu) This doesn't seem brilliant
-#either - should try them out some more.
-Ctrl <Key>m , Ctrl <Key>t:         CreateMTABLE() 
-Ctrl <Key>m , Ctrl <Key>p:         CreateMROW() 
-Ctrl <Key>m , Ctrl <Key>m:         CreateMath() 
-Ctrl <Key>m , Ctrl <Key>-:         CreateMFRAC() 
-Ctrl <Key>m , Ctrl <Key>x:         CreateMMULTISCRIPTS() 
-Ctrl <Key>m , Ctrl <Key>o:         CreateMOVER() 
-Ctrl <Key>m , Ctrl <Key>u:         CreateMUNDER() 
-Ctrl <Key>m , Ctrl <Key>a:         CreateMSUP() 
-Ctrl <Key>m , Ctrl <Key>v:         CreateMSUB() 
-Ctrl <Key>m , Ctrl <Key>2:         CreateMSQRT() 
-Ctrl <Key>m , Ctrl <Key>r:         CreateMROOT() 
-Ctrl <Key>m , Ctrl <Key>e:         CreateMENCLOSE() 
-Ctrl <Key>m , Ctrl <Key>c:         CreateMSUBSUP() 
+
+#Math (types submenu)
+Ctrl <Key>m , Ctrl <Key>6:         CreateMSUP() 
+Ctrl <Key>m , Ctrl <Key>=:         CreateMO()
+Ctrl <Key>m , Ctrl <Key>_:         CreateMSUBSUP() 
+Ctrl <Key>m , Ctrl <Key>a:         CreateApplyFunction()
+Ctrl <Key>m , Ctrl <Key>c:         CreateMENCLOSE()
+Ctrl <Key>m , Ctrl <Key>d:         CreateMI()
+Ctrl <Key>m , Ctrl <Key>e:         CreateMathEntity()
+Ctrl <Key>m , Ctrl <Key>f:         CreateMFRAC() 
+Ctrl <Key>m , Ctrl <Key>i:         CreateInvisibleTimes()
 Ctrl <Key>m , Ctrl <Key>k:         CreateMUNDEROVER() 
+Ctrl <Key>m , Ctrl <Key>m:         CreateMath() 
+Ctrl <Key>m , Ctrl <Key>n:         CreateMN()
+Ctrl <Key>m , Ctrl <Key>o:         CreateMOVER() 
+Ctrl <Key>m , Ctrl <Key>p:         CreateMROW() 
+Ctrl <Key>m , Ctrl <Key>q:         CreateMSQRT() 
+Ctrl <Key>m , Ctrl <Key>r:         CreateMROOT() 
+Ctrl <Key>m , Ctrl <Key>s:         CreateMMULTISCRIPTS()
+Ctrl <Key>m , Ctrl <Key>t:         CreateMTABLE() 
+Ctrl <Key>m , Ctrl <Key>u:         CreateMUNDER() 
+Ctrl <Key>m , Ctrl <Key>v:         CreateMSUB() 
+Ctrl <Key>m , Ctrl <Key>x:         CreateMTEXT()
 
-
-#structure 
+#Structure 
 Shift Ctrl <Key>!:                 CreateComment() 
 Shift Ctrl <Key>S:                 CreateStyle()
  
-#links
+#Links
 Shift Alt <Key>L:                  LinkToPreviousTarget() 
 Shift Ctrl <Key>L:                 CreateOrChangeLink() 
 Shift Ctrl <Key>D:                 DeleteAnchor() 
@@ -186,7 +197,7 @@ Ctrl <Key>v , Ctrl <Key>t:         ShowTargets()
 Alt <Key>=:        ZoomIn() 
 Alt <Key>-:        ZoomOut()
  
-#style menu 
+#Style menu 
 Ctrl <Key>s , Ctrl <Key>c:         CreateClass() 
 Ctrl <Key>s , Ctrl <Key>a:         ApplyClass() 
 Ctrl <Key>s , Ctrl <Key>o:         OpenCSS() 
@@ -198,7 +209,8 @@ Ctrl <Key>s , Ctrl <Key>b:         ChangeBackgroundImage()
 Ctrl <Key>s , Ctrl <Key>l:         LinkCSS()
 Ctrl <Key>s , Ctrl <Key>e:         EnableCSS()
 Ctrl <Key>s , Ctrl <Key>d:         DisableCSS()
-#Information types (in style menu) 
+
+#Information types (in Style menu) 
 Shift Ctrl <Key>B:                 SetOnOffStrong() 
 Shift Ctrl <Key>I:                 SetOnOffEmphasis() 
 Alt <Key>t , Alt <Key>Delete:      SetOnOffDEL() 
@@ -214,8 +226,7 @@ Alt <Key>t , Alt <Key>s:           SetOnOffSample()
 Alt <Key>t , Alt <Key>k:           SetOnOffKeyboard() 
 Alt <Key>t , Alt <Key>o:           SetOnOffBDO() 
 
-# Annotations
-
+#Annotations
 Ctrl <Key>n , Ctrl <Key>s:	   AnnotateSelection()
 Ctrl <Key>n , Ctrl <Key>a:	   AnnotateDocument()
 Ctrl <Key>n , Ctrl <Key>p:	   PostAnnotation()
@@ -223,4 +234,3 @@ Ctrl <Key>n , Ctrl <Key>d:	   DeleteAnnotation()
 Ctrl <Key>n , Ctrl <Key>l:	   LoadAnnotations()
 Ctrl <Key>n , Ctrl <Key>f:	   FilterAnnot()
 Ctrl <Key>n , Ctrl <Key>o:	   ConfigAnnot()
-
