@@ -72,8 +72,14 @@ struct Cat_Context
      short               Cat_Ref;	/* CsReference appli du catalogue  */
      unsigned char       Cat_Type;	/* Type du catalogue             */
      unsigned char       Cat_Button;	/* Le bouton qui active          */
-     int                 Cat_Data;	/* Valeur de retour              */
-     int                 Cat_in_lines;	/* Orientation des formulaires   */
+     union {
+	 int             Catu_Data;	/* Valeur de retour              */
+	 ThotWidget	 Catu_XtWParent;
+     } Cat_Union1;
+     union {
+	 int             Catu_in_lines;	/* Orientation des formulaires   */
+	 ThotWidget	 Catu_SelectLabel;
+     } Cat_Union2;
      ThotWidget          Cat_Widget;	/* Le widget associe au catalogue */
      ThotWidget          Cat_Title;	/* Le widget du titre            */
      struct Cat_Context *Cat_PtParent;	/* Adresse du catalogue pere     */
@@ -85,10 +91,12 @@ struct Cat_Context
   };
 
 /* Redefiniton de champs de catalogues dans certains cas */
-#define Cat_ListLength  Cat_Data
-#define Cat_FormPack    Cat_Data
-#define Cat_XtWParent   Cat_Data
-#define Cat_SelectLabel Cat_in_lines
+#define Cat_ListLength  Cat_Union1.Catu_Data
+#define Cat_FormPack    Cat_Union1.Catu_Data
+#define Cat_Data	Cat_Union1.Catu_Data
+#define Cat_XtWParent   Cat_Union1.Catu_XtWParent
+#define Cat_in_lines	Cat_Union2.Catu_in_lines
+#define Cat_SelectLabel Cat_Union2.Catu_SelectLabel
 
 struct Cat_List
   {
@@ -2111,7 +2119,7 @@ struct Cat_Context *catalogue;
 	  }			/*else */
 
 	/* On memorise le widget parent des entrees a recreer */
-	catalogue->Cat_XtWParent = (int) w;
+	catalogue->Cat_XtWParent = w;
 	return (0);
      }
 }
@@ -3431,7 +3439,7 @@ boolean             react;
 	       }
 	     else
 		/* Sinon on recupere le widget parent des entrees */
-		row = (ThotWidget) catalogue->Cat_XtWParent;
+		row = catalogue->Cat_XtWParent;
 
 #ifndef _WINDOWS
 	     /*** Cree les differentes entrees du sous-menu ***/
@@ -4064,7 +4072,7 @@ boolean             react;
 	       }
 	     else
 		/* Sinon on recupere le widget parent des entrees */
-		row = (ThotWidget) catalogue->Cat_XtWParent;
+		row = catalogue->Cat_XtWParent;
 
 	     /* note le nombre d'entrees du toggle */
 	     catalogue->Cat_Data = number;	/* recouvre Cat_XtWParent */
@@ -5520,8 +5528,8 @@ boolean             react;
 	     title_string = XmStringCreateSimple (label);
 	     XtSetArg (args[n], XmNlabelString, title_string);
 	     n++;
-	     XtSetValues ((ThotWidget) catalogue->Cat_SelectLabel, args, n);
-	     XtManageChild ((ThotWidget) catalogue->Cat_SelectLabel);
+	     XtSetValues (catalogue->Cat_SelectLabel, args, n);
+	     XtManageChild (catalogue->Cat_SelectLabel);
 	     XmStringFree (title_string);
 	  }
 
@@ -5629,7 +5637,7 @@ boolean             react;
 	     n++;
 	     w = XmCreatePushButton (row, label, args, n);
 	     XtManageChild (w);
-	     catalogue->Cat_SelectLabel = (int) w;
+	     catalogue->Cat_SelectLabel = w;
 	     XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) CallLabel, catalogue);
 	  }
 	else
