@@ -650,7 +650,7 @@ void PasteCommand ()
   PtrElement          firstSel, lastSel, pEl, pPasted, pClose, pFollowing,
                       pNextEl, pFree, pSplitText, pSel, pasteOrig;
   PtrElement          pColHead, pNextCol, pRow, pNextRow, pTable,
-                      pRealCol, pCe, addedCell, pCell, extendedCell[500];
+                      pRealCol, addedCell, pCell, extendedCell[500];
   PtrPasteElem        pPasteD;
   ElementType         cellType;
   DisplayMode         dispMode;
@@ -865,8 +865,9 @@ void PasteCommand ()
 		  else
 		    {
 		      GetCellSpans (pEl, &colspan, &rowspan);
-		      if ((back > 0 && (colspan - back > 1 || before)) ||
-			  (back == 0 && colspan > 1 && !before))
+		      if (colspan > 1 &&
+			  ((back > 0 && (colspan - back > 1 || before)) ||
+			   (back == 0 && !before)))
 			/* extend this previous cell instead of pasting the
 			   new cell */
 			{
