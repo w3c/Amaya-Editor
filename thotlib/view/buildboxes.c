@@ -3005,20 +3005,24 @@ int                 frame;
 		else
 		  /* the inside width is constrained */
 		  ResizeWidth (pBox, pBox, NULL, 0, i, j, 0, frame);
-		    
-		 if (pAb->AbFillBox ||
-		     (pAb->AbTopStyle > 2 && pAb->AbTopBColor != -2 && pAb->AbTopBorder > 0) ||
-		     (pAb->AbLeftStyle > 2 && pAb->AbLeftBColor != -2 && pAb->AbLeftBorder > 0) ||
-		     (pAb->AbBottomStyle > 2 && pAb->AbBottomBColor != -2 && pAb->AbBottomBorder > 0) ||
-		     (pAb->AbRightStyle > 2 && pAb->AbRightBColor != -2 && pAb->AbRightBorder > 0))
-		   {
-		      if (pBox->BxType != BoCell)
-			/* register the box in filled list */
-			AddFilledBox (pBox, pMainBox, frame);
-		   }
-		 else
-		   /* unregister the box in filled list */
-		   RemoveFilledBox (pBox, pMainBox, frame);
+
+		/* do we have to register that box as filled box */
+		if (pAb->AbLeafType == LtCompound)
+		  {
+		    if (pAb->AbFillBox ||
+			(pAb->AbTopStyle > 2 && pAb->AbTopBColor != -2 && pAb->AbTopBorder > 0) ||
+			(pAb->AbLeftStyle > 2 && pAb->AbLeftBColor != -2 && pAb->AbLeftBorder > 0) ||
+			(pAb->AbBottomStyle > 2 && pAb->AbBottomBColor != -2 && pAb->AbBottomBorder > 0) ||
+			(pAb->AbRightStyle > 2 && pAb->AbRightBColor != -2 && pAb->AbRightBorder > 0))
+		      {
+			if (pBox->BxType != BoCell)
+			  /* register the box in filled list */
+			  AddFilledBox (pBox, pMainBox, frame);
+		      }
+		    else
+		      /* unregister the box in filled list */
+		      RemoveFilledBox (pBox, pMainBox, frame);
+		  }
 
 		/* Check table consistency */
 		if (pCurrentBox->BxType == BoColumn && ThotLocalActions[T_checktable])
