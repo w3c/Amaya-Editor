@@ -1102,7 +1102,8 @@ Document CreateNewLibraryFile (char *libUrl, char *libtitle)
   documentname = (char * ) TtaGetMemory (MAX_LENGTH);
   NormalizeURL (libUrl, 0, pathname, documentname, NULL);
 
-  newLibraryDoc = InitDocAndView (newLibraryDoc, documentname, 0, 0, FALSE, L_Xhtml11);
+  newLibraryDoc = InitDocAndView (newLibraryDoc, documentname, 0, 0, FALSE,
+				  L_Xhtml11, CE_ABSOLUTE);
   InNewWindow = FALSE;
 
   TtaFreeMemory (documentname);
@@ -1190,11 +1191,11 @@ Document CreateNewLibraryFile (char *libUrl, char *libtitle)
       text = TtaNewElement (newLibraryDoc, elType);
       TtaInsertFirstChild (&text, style, newLibraryDoc);
     }
-  strcpy (textStr, " .image { width : 50 ; height : 50 } ");
+  strcpy (textStr, " .image {width: 50px; height: 50px} ");
   sprintf (textStr, "%s%c", textStr, EOL);
-  strcat (textStr, " .g_title { color: #0000B2; font-family: helvetica; font-weight: bold; vertical-align: middle; }");
+  strcat (textStr, " .g_title {color: #0000B2; font-family: helvetica; font-weight: bold; vertical-align: middle}");
   sprintf (textStr, "%s%c", textStr, EOL);
-  strcat (textStr, " .g_comment {font-size: 12pt; font-weight: normal; color: #B2005A; vertical-align: middle; }");
+  strcat (textStr, " .g_comment {font-size: 12pt; font-weight: normal; color: #B2005A; vertical-align: middle}");
   TtaSetTextContent (text, textStr, language, newLibraryDoc);
 
   /* create a Document_URL element as the first child of HEAD */

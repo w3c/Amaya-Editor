@@ -36,6 +36,8 @@ extern ThotBool AddLocalImage ( char *fullname,
                                 char *url,
                                 Document doc,
                                 LoadedImageDesc **desc );
+extern void MoveDocumentImages ( Document docSrc,
+                                 Document doc );
 extern void RemoveDocumentImages ( Document doc );
 
 #else /* __STDC__ */
@@ -70,6 +72,8 @@ extern ThotBool AddLocalImage (/* char *fullname,
                                   char *url,
                                   Document doc,
                                   LoadedImageDesc **desc */);
+extern void MoveDocumentImages (/* Document docSrc,
+                                   Document doc */);
 extern void RemoveDocumentImages (/* Document doc */);
 
 #endif /* __STDC__ */

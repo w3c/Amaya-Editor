@@ -2324,7 +2324,8 @@ void AddDirAttributeToDocEl (Document doc)
    sourceOfDoc is not zero when we're opening the source view of a document.
   ----------------------------------------------------------------------*/
 Document InitDocAndView (Document doc, char *docname, DocumentType docType,
-			 Document sourceOfDoc, ThotBool readOnly, int profile)
+			 Document sourceOfDoc, ThotBool readOnly, int profile,
+			 ClickEvent method)
 {
   View          mainView, structView, altView, linksView, tocView;
   Document      old_doc;
@@ -2493,12 +2494,15 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	   h = 300;
 	   w = 580;
 	 }
-       else if (docType == docLibrary)
+       else if (docType == docLibrary || method == CE_HELP)
 	 {
 	   x += 500;
 	   y += 200;
 	   h = 500;
-	   w = 400;
+	   if (docType == docLibrary)
+	     w = 400;
+	   else
+	     w = 800;
 	 }
        /* change the position slightly to avoid hiding completely the main
 	  view of other documents */
@@ -3526,7 +3530,8 @@ static Document LoadDocument (Document doc, char *pathname,
 	      if (TtaIsDocumentModified (doc) || docType == docCSS)
 		{
 		  /* open a new window to display the new document */
-		  newdoc = InitDocAndView (0, documentname, docType, 0, FALSE, parsingLevel);
+		  newdoc = InitDocAndView (0, documentname, docType, 0, FALSE,
+					   parsingLevel, method);
 		  ResetStop (doc);
 		  /* clear the status line of previous document */
 		  TtaSetStatus (doc, 1, " ", NULL);
@@ -3534,12 +3539,14 @@ static Document LoadDocument (Document doc, char *pathname,
 		}
 	      else
 		/* replace the current document by a new one */
-		newdoc = InitDocAndView (doc, documentname, docType, 0, FALSE, parsingLevel);
+		newdoc = InitDocAndView (doc, documentname, docType, 0, FALSE,
+					 parsingLevel, method);
 	    }
 	  else if (method == CE_ABSOLUTE  || method == CE_HELP ||
 		   method == CE_FORM_POST || method == CE_FORM_GET)
 	    /* replace the current document by a new one */
-	    newdoc = InitDocAndView (doc, documentname, docType, 0, FALSE, parsingLevel);
+	    newdoc = InitDocAndView (doc, documentname, docType, 0, FALSE,
+				     parsingLevel, method);
 #ifdef ANNOTATIONS
 	  else if (method == CE_ANNOT) /*  && docType == docHTML) */
 	    {
@@ -3558,7 +3565,8 @@ static Document LoadDocument (Document doc, char *pathname,
 	    }
 	  else if (docType != DocumentTypes[doc] && DocumentTypes[doc] != docLibrary)
 	    /* replace the current document by a new one */
-	    newdoc = InitDocAndView (doc, documentname, docType, 0, FALSE, parsingLevel);
+	    newdoc = InitDocAndView (doc, documentname, docType, 0, FALSE,
+				     parsingLevel, method);
 	  else
 	    {
 	      /* document already initialized */
@@ -4192,7 +4200,8 @@ void ShowSource (Document document, View view)
        }
      TtaExtractName (tempdocument, tempdir, documentname);
      /* open a window for the source code */
-     sourceDoc = InitDocAndView (0, documentname, docSource, document, FALSE, L_Other);   
+     sourceDoc = InitDocAndView (0, documentname, docSource, document, FALSE,
+				 L_Other, CE_ABSOLUTE);   
      if (sourceDoc > 0)
        {
 	 DocumentSource[document] = sourceDoc;
@@ -4858,13 +4867,15 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
 	 }
        else if (method == CE_LOG)
 	   /* need to create a new window for the document */
-	     newdoc = InitDocAndView (doc, documentname, docLog, 0, FALSE, L_Other);
+	     newdoc = InitDocAndView (doc, documentname, docLog, 0, FALSE,
+				      L_Other, method);
        else if (method == CE_HELP)
 	 {
 	   /* add the URI in the combobox string */
 	   AddURLInCombobox (pathname, FALSE);
 	   /* need to create a new window for the document */
-	   newdoc = InitDocAndView (doc, documentname, docType, 0, TRUE, L_Other);
+	   newdoc = InitDocAndView (doc, documentname, docType, 0, TRUE,
+				    L_Other, method);
 	   if (newdoc)
 	     {
 	       /* help document has to be in read-only mode */
@@ -4877,7 +4888,8 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
        else if (method == CE_ANNOT)
 	 {
 	   /* need to create a new window for the document */
-	   newdoc = InitDocAndView (doc, documentname, docAnnot, 0, FALSE, L_Other);
+	   newdoc = InitDocAndView (doc, documentname, docAnnot, 0, FALSE,
+				    L_Other, method);
 	   /* we're downloading an annotation, fix the accept_header
 	      (thru the content_type variable) to application/rdf */
 	   content_type = "application/rdf";
@@ -4888,7 +4900,8 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
 	   /* In case of initial document, open the view before loading */
 	   /* add the URI in the combobox string */
 	   AddURLInCombobox (pathname, FALSE);
-	   newdoc = InitDocAndView (0, documentname, docType, 0, FALSE, L_Other);
+	   newdoc = InitDocAndView (0, documentname, docType, 0, FALSE,
+				    L_Other, method);
 	 }
        else
 	 {
@@ -6131,7 +6144,8 @@ static int RestoreOneAmayaDoc (Document doc, char *tempdoc, char *docname,
   W3Loading = doc;
   BackupDocument = doc;
   TtaExtractName (tempdoc, DirectoryName, DocumentName);
-  newdoc = InitDocAndView (doc, DocumentName, docType, 0, FALSE, L_Other);
+  newdoc = InitDocAndView (doc, DocumentName, docType, 0, FALSE, L_Other,
+			   CE_ABSOLUTE);
    if (newdoc != 0)
     {
       /* load the saved file */

@@ -251,7 +251,8 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
   NormalizeURL (url, 0, pathname, documentname, NULL);
   if (doc == 0 || InNewWindow)
     {
-      doc = InitDocAndView (0, documentname, docType, 0, FALSE, profile);
+      doc = InitDocAndView (0, documentname, docType, 0, FALSE, profile,
+			    CE_ABSOLUTE);
       InitDocHistory (doc);
       InNewWindow = FALSE;
     }
@@ -262,7 +263,8 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
 		     DocumentMeta[doc]->initial_url,
 		     DocumentMeta[doc]->form_data,
 		     DocumentMeta[doc]->method);
-      doc = InitDocAndView (doc, documentname, docType, 0, FALSE, profile);
+      doc = InitDocAndView (doc, documentname, docType, 0, FALSE, profile,
+			    CE_ABSOLUTE);
     }
   TtaFreeMemory (documentname);
   TtaFreeMemory (pathname);

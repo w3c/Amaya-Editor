@@ -84,7 +84,8 @@ extern Document InitDocAndView ( Document doc,
                                  DocumentType docType,
                                  Document sourceOfDoc,
                                  ThotBool readOnly,
-                                 int profile );
+                                 int profile,
+                                 ClickEvent method );
 extern void ParseAsHTML ( Document document,
                           View view );
 extern void Reload_callback ( int doc,
@@ -291,7 +292,8 @@ extern Document InitDocAndView (/* Document doc,
                                    DocumentType docType,
                                    Document sourceOfDoc,
                                    ThotBool readOnly,
-                                   int profile */);
+                                   int profile,
+                                   ClickEvent method */);
 extern void ParseAsHTML (/* Document document,
                             View view */);
 extern void Reload_callback (/* int doc,

@@ -2771,6 +2771,7 @@ static void Build_timeline (Document basedoc, char* timelineName)
   if (dt[basedoc].timelineView)
     {
       TtaChangeViewTitle (dt[basedoc].timelinedoc, dt[basedoc].timelineView, timelineName);
+#ifdef IV
       TtcSwitchButtonBar (dt[basedoc].timelinedoc, dt[basedoc].timelineView); /* no button bar */
       TtcSwitchCommands (dt[basedoc].timelinedoc, dt[basedoc].timelineView); /* no command open */
       TtaSetItemOff (dt[basedoc].timelinedoc, 1, File, New1);
@@ -2790,15 +2791,13 @@ static void Build_timeline (Document basedoc, char* timelineName)
       TtaSetItemOff (dt[basedoc].timelinedoc, 1, Views, TShowButtonbar);
       TtaSetItemOff (dt[basedoc].timelinedoc, 1, Views, TShowTextZone);
       TtaSetMenuOff (dt[basedoc].timelinedoc, 1, Special);
-      /*	TtaSetMenuOff (timelinedoc, 1, Help_); */
+#endif /* IV */
     }
   else
     {
       TtaCloseDocument (dt[basedoc].timelinedoc);
       Init_timeline_struct (basedoc);
     }
-
-
 }
 #endif /* _SVGANIM */
 
@@ -3030,7 +3029,8 @@ void ShowSourceOfTimeline (Document document, View view)
      }
 
      TtaExtractName (tempdocument, tempdir, documentname);
-     sourceDoc = InitDocAndView (0, documentname, docSource, document, FALSE, L_Other);   
+     sourceDoc = InitDocAndView (0, documentname, docSource, document, FALSE,
+     L_Other, CE_ABSOLUTE);   
      if (sourceDoc > 0) {
      DocumentSource[document] = sourceDoc;
      s =TtaStrdup (DocumentURLs[document]);
@@ -4351,13 +4351,11 @@ static void Show_timeline_help (NotifyElement *event)
   if (!dt[basedoc].helpdoc) 
     {
       /* open a new window to display the new document */
-      dt[basedoc].helpdoc = GetAmayaDoc (buffer, NULL, 0,0, CE_ABSOLUTE,
+      dt[basedoc].helpdoc = GetAmayaDoc (buffer, NULL, 0,0, CE_HELP,
 					 FALSE, FALSE, FALSE,
 					 TtaGetDefaultCharset ());
       /* no button bar */
       TtcSwitchButtonBar (dt[basedoc].helpdoc, 1);
-      /* no command open */
-      TtcSwitchCommands (dt[basedoc].helpdoc, 1);
       /* set the document in Read Only mode */
       TtaSetDocumentAccessMode (dt[basedoc].helpdoc, 0);
     }
