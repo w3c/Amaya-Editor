@@ -1472,6 +1472,12 @@ void CheckTable (Element table, Document doc)
 		}
 	    }
 
+	  /* if there is a tfoot element, put it after the Tablebody element */
+          if (tfoot && Tablebody)
+	    {
+	      TtaRemoveTree (tfoot, doc);
+	      TtaInsertSibling (tfoot, Tablebody, FALSE, doc);
+	    }
 	  /* associate each cell with a column */
 	  CheckAllRows (table, doc, FALSE, FALSE);
 	}
