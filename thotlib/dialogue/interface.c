@@ -1369,15 +1369,23 @@ void TtaHandleOneEvent (ThotEvent *ev)
 void TtaHandlePendingEvents ()
 {
 #ifndef _WINDOWS
+  static ThotBool         crit_section; /* protect against multiple imbrications of
+					   calls to this function */
 #ifndef _GTK
-   ThotEvent              ev;
+   ThotEvent              ev;  
+#endif /* !_GTK */
 
+  if (crit_section)
+    return;
+  crit_section = TRUE;
+#ifndef _GTK
    while (TtaFetchOneAvailableEvent(&ev))
      TtaHandleOneEvent (&ev);
 #else /* _GTK */
      while (gtk_events_pending ()) 
        gtk_main_iteration ();
 #endif /* !_GTK */
+   crit_section = FALSE;
 #endif /* _WINDOWS */
 }
 
