@@ -654,6 +654,27 @@ RULES
 		END;
 	END;
 
+   switch:
+	BEGIN
+	CreateBefore (ElementName);
+	CreateWith (VerticalLine);
+	Width: Enclosing . Width;
+	Height: Enclosing . Height;
+	IN Structure_view BEGIN
+	        if within use_
+	            Visibility: 0;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		END;
+	IN Alternate_view BEGIN
+		Height: Enclosed . Height;
+		Width: Enclosing . Width;
+		VertPos: Top = Previous . Bottom;
+		END;
+	END;
+
    foreignObject:
 	BEGIN
 	CreateBefore (ElementName);
@@ -911,6 +932,24 @@ ATTRIBUTES
 	CreateBefore (AttrValue);
 	END;
 
+  requiredFeatures:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  requiredExtensions:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  systemLanguage:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
   externalResourcesRequired:
 	CreateBefore (AttrNameAndValue);
 
@@ -1042,7 +1081,7 @@ ATTRIBUTES
 	CreateBefore (AttrValue);
 	END;
 
-   Unknown_attribute:
+  Unknown_attribute:
 	BEGIN
 	if TEXT_UNIT
 	   CreateBefore(UnknownAttrValue);

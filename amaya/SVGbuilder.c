@@ -27,6 +27,10 @@ static AttrValueMapping SVGAttrValueMappingTable[] =
 { 
    {SVG_ATTR_xml_space, "default", SVG_ATTR_xml_space_VAL_xml_space_default},
    {SVG_ATTR_xml_space, "preserve", SVG_ATTR_xml_space_VAL_xml_space_preserve},
+
+   {SVG_ATTR_externalResourcesRequired, "false", SVG_ATTR_externalResourcesRequired_VAL_false},
+   {SVG_ATTR_externalResourcesRequired, "true", SVG_ATTR_externalResourcesRequired_VAL_true},
+
    {0, "", 0}			/* Last entry. Mandatory */
 };
 

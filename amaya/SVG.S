@@ -13,7 +13,8 @@ ATTR
    PseudoClass = Text;
    style_ = text;
    xml_space = xml_space_default, xml_space_preserve;
-
+   { xml_base = Text; }
+	
    { global attributes for internal processing }
    Unknown_attribute = text;
    Ghost_restruct = text;
@@ -41,7 +42,9 @@ STRUCT
         = LIST OF (GraphicsElement);
 
    defs
-        (ATTR { requiredFeatures; requiredExtensions; systemLanguage }
+        (ATTR requiredFeatures = text;
+	      requiredExtensions = text;
+	      systemLanguage = text;
 	      externalResourcesRequired = false, true;
 	      fill;
 	      stroke;
@@ -172,7 +175,7 @@ STRUCT
 
    use_
         (ATTR xlink_href = text;
-	      { requiredFeatures; requiredExtensions; systemLanguage }
+	      requiredFeatures; requiredExtensions; systemLanguage;
 	      externalResourcesRequired;
 	      fill;
 	      stroke;
@@ -225,7 +228,7 @@ STRUCT
 
    a
         (ATTR xlink_href;
-	      { requiredFeatures; requiredExtensions; systemLanguage }
+	      requiredFeatures; requiredExtensions; systemLanguage;
 	      externalResourcesRequired;
 	      fill;
               stroke;
@@ -264,7 +267,16 @@ STRUCT
    { font-face-name }
    { definition-src }
    { cursor }
-   { switch }
+	
+   switch
+	(ATTR requiredFeatures; requiredExtensions; systemLanguage;
+	      externalResourcesRequired;
+	      { PresentationAttributes-All }
+	      transform;
+	      { graphicsElementEvents })
+	= LIST OF (CASE OF
+		      GraphicsElement; foreignObject;
+	              END);
 
    foreignObject
         (ATTR transform;
@@ -286,11 +298,12 @@ STRUCT
 
    GraphicsElement
 	= CASE OF
-	      desc; title; metadata; defs;
+	      desc; title; metadata;
+	      defs;
 	      path; text_; rect; circle; ellipse; line_; polyline; polygon;
-	      use_; image; SVG; g; a;
+	      use_; image; SVG; g; switch; a;
 	      script; style__; symbol_;
-	      foreignObject; XLink;
+	      XLink;
 	      END;
 
    TextComponent

@@ -216,7 +216,7 @@ ThotBool       ExtendSelectSVGElement (NotifyElement *event)
    Element	firstSel, newFirstSel, ancestor, parent, selEl;
    ElementType	elType, ancestType, parentType;
    int		c1, i;
-   SSchema	graphSSchema;
+   SSchema	SvgSSchema;
 
    TtaGiveFirstSelectedElement (event->document, &firstSel, &c1, &i);
    if (firstSel == NULL)
@@ -228,9 +228,9 @@ ThotBool       ExtendSelectSVGElement (NotifyElement *event)
    ancestor = TtaGetCommonAncestor (firstSel, event->element);
    if (ancestor == NULL)
       return TRUE;	/* Don't let Thot perform normal operation */
-   graphSSchema = TtaGetSSchema ("SVG", event->document);
+   SvgSSchema = TtaGetSSchema ("SVG", event->document);
    ancestType = TtaGetElementType (ancestor);
-   if (ancestType.ElSSchema != graphSSchema)
+   if (ancestType.ElSSchema != SvgSSchema)
       /* common ancestor is not a SVG element */
       {
       /* is the common ancestor within a SVG element? */
@@ -241,7 +241,7 @@ ThotBool       ExtendSelectSVGElement (NotifyElement *event)
 	if (parent != NULL)
 	  parentType = TtaGetElementType (parent);
 	}
-      while (parent != NULL && parentType.ElSSchema != graphSSchema);
+      while (parent != NULL && parentType.ElSSchema != SvgSSchema);
       if (parent)
 	 /* the common ancestor is within a SVG element. Let Thot
 	    perform normal operation: selection is being extended within
@@ -253,7 +253,7 @@ ThotBool       ExtendSelectSVGElement (NotifyElement *event)
 
    newFirstSel = firstSel;
    elType = TtaGetElementType (firstSel);
-   if (elType.ElSSchema != graphSSchema ||
+   if (elType.ElSSchema != SvgSSchema ||
         (elType.ElTypeNum != SVG_EL_g &&
 	 elType.ElTypeNum != SVG_EL_path &&
 	 elType.ElTypeNum != SVG_EL_rect &&
@@ -264,17 +264,17 @@ ThotBool       ExtendSelectSVGElement (NotifyElement *event)
 	 elType.ElTypeNum != SVG_EL_polygon &&
 	 elType.ElTypeNum != SVG_EL_text_ &&
 	 elType.ElTypeNum != SVG_EL_image &&
-	 elType.ElTypeNum != SVG_EL_foreignObject &&
+	 elType.ElTypeNum != SVG_EL_switch &&
 	 elType.ElTypeNum != SVG_EL_SVG))
       {
-      elType.ElSSchema = graphSSchema;
+      elType.ElSSchema = SvgSSchema;
       elType.ElTypeNum = SVG_EL_GraphicsElement;
       newFirstSel = TtaGetTypedAncestor (newFirstSel, elType);
       }
 
    selEl = event->element;
    elType = TtaGetElementType (selEl);
-   if (elType.ElSSchema != graphSSchema ||
+   if (elType.ElSSchema != SvgSSchema ||
         (elType.ElTypeNum != SVG_EL_g &&
 	 elType.ElTypeNum != SVG_EL_path &&
 	 elType.ElTypeNum != SVG_EL_rect &&
@@ -285,10 +285,10 @@ ThotBool       ExtendSelectSVGElement (NotifyElement *event)
 	 elType.ElTypeNum != SVG_EL_polygon &&
 	 elType.ElTypeNum != SVG_EL_text_ &&
 	 elType.ElTypeNum != SVG_EL_image &&
-	 elType.ElTypeNum != SVG_EL_foreignObject &&
+	 elType.ElTypeNum != SVG_EL_switch &&
 	 elType.ElTypeNum != SVG_EL_SVG))
       {
-      elType.ElSSchema = graphSSchema;
+      elType.ElSSchema = SvgSSchema;
       elType.ElTypeNum = SVG_EL_GraphicsElement;
       selEl = TtaGetTypedAncestor (selEl, elType);
       }
@@ -780,10 +780,10 @@ void             AttrPointsModified (NotifyAttribute *event)
  -----------------------------------------------------------------------*/
 void             CheckSVGRoot (Document doc, Element el)
 {
-  Element          graphRoot, child;
+  Element          SvgRoot, child;
   ElementType      elType;
   AttributeType    attrType;
-  SSchema	   graphSchema;
+  SSchema	   SvgSchema;
   PRule            rule;
   TypeUnit         unit;
   int              x, y, w, h, val;
@@ -792,28 +792,28 @@ void             CheckSVGRoot (Document doc, Element el)
 
   dw = 0;
   dh = 0;
-  graphSchema = GetSVGSSchema (doc);
+  SvgSchema = GetSVGSSchema (doc);
   elType.ElTypeNum = SVG_EL_SVG;
-  elType.ElSSchema = graphSchema;
-  attrType.AttrSSchema = graphSchema;
-  graphRoot = TtaGetTypedAncestor (el, elType);
-  while (graphRoot)
+  elType.ElSSchema = SvgSchema;
+  attrType.AttrSSchema = SvgSchema;
+  SvgRoot = TtaGetTypedAncestor (el, elType);
+  while (SvgRoot)
     {
       /* check first the position of the new element in pixel value */
       TtaGiveBoxPosition (el, doc, 1, UnPixel, &x, &y);
       /* get the unit of the SVG width */
-      rule = TtaGetPRule (graphRoot, PRWidth);
+      rule = TtaGetPRule (SvgRoot, PRWidth);
       if (rule)
 	unit = TtaGetPRuleUnit (rule);
       else
 	unit = UnPixel;
       dh = dw = 0;
-      TtaGiveBoxSize (graphRoot, doc, 1, UnPixel, &wR, &dummy);
+      TtaGiveBoxSize (SvgRoot, doc, 1, UnPixel, &wR, &dummy);
       elType = TtaGetElementType (el);
       if (x < 0 && elType.ElTypeNum != SVG_EL_tspan)
 	{
 	  /* translate the whole SVG contents */
-	  child = TtaGetFirstChild (graphRoot);
+	  child = TtaGetFirstChild (SvgRoot);
 	  val = -x;
 	  while (child)
 	    {
@@ -849,14 +849,14 @@ void             CheckSVGRoot (Document doc, Element el)
 	      /* check if the SVG width includes that element */
 	      TtaGiveBoxPosition (child, doc, 1, UnPixel, &x, &dummy);
 	      TtaGiveBoxSize (child, doc, 1, UnPixel, &w, &h);
-	      TtaGiveBoxSize (graphRoot, doc, 1, UnPixel, &wR, &hR);
+	      TtaGiveBoxSize (SvgRoot, doc, 1, UnPixel, &wR, &hR);
 	      dw = w + x - wR;
 	      if (dw > 0)
 		{
 		  /* increase the width of the SVG element */
 		  attrType.AttrTypeNum = SVG_ATTR_width_;
 		  /************** convert to the right value */
-		  UpdateAttrText (graphRoot, doc, attrType, x + w, FALSE, TRUE);
+		  UpdateAttrText (SvgRoot, doc, attrType, x + w, FALSE, TRUE);
 		}
 	      /* next element */
 	      TtaNextSibling (&child);
@@ -873,21 +873,21 @@ void             CheckSVGRoot (Document doc, Element el)
 	      /* increase the width of the SVG element */
 	      attrType.AttrTypeNum = SVG_ATTR_width_;
 	      /************** convert to the right value */
-	      UpdateAttrText (graphRoot, doc, attrType, x + w, FALSE, TRUE);
+	      UpdateAttrText (SvgRoot, doc, attrType, x + w, FALSE, TRUE);
 	    }
 	}
       /* get the unit of the SVG width */
-      rule = TtaGetPRule (graphRoot, PRHeight);
+      rule = TtaGetPRule (SvgRoot, PRHeight);
       if (rule)
 	unit = TtaGetPRuleUnit (rule);
       else
 	unit = UnPixel;
-      TtaGiveBoxSize (graphRoot, doc, 1, UnPixel, &dummy, &hR);
+      TtaGiveBoxSize (SvgRoot, doc, 1, UnPixel, &dummy, &hR);
       elType = TtaGetElementType (el);
       if (y < 0 && elType.ElTypeNum != SVG_EL_tspan)
 	{
 	  /* translate the whole SVG contents */
-	  child = TtaGetFirstChild (graphRoot);
+	  child = TtaGetFirstChild (SvgRoot);
 	  val = -y;
 	  while (child)
 	    {
@@ -923,14 +923,14 @@ void             CheckSVGRoot (Document doc, Element el)
 	      /* check if the SVG height includes that element */
 	      TtaGiveBoxPosition (child, doc, 1, UnPixel, &dummy, &y);
 	      TtaGiveBoxSize (child, doc, 1, UnPixel, &w, &h);
-	      TtaGiveBoxSize (graphRoot, doc, 1, UnPixel, &wR, &hR);
+	      TtaGiveBoxSize (SvgRoot, doc, 1, UnPixel, &wR, &hR);
 	      dh = h + y - hR;
 	      if (dh > 0)
 		{
 		  /* increase the height of the root element */
 		  attrType.AttrTypeNum = SVG_ATTR_height_;
 		  /************** convert to the right value */
-		  UpdateAttrText (graphRoot, doc, attrType, y + h, FALSE, TRUE);
+		  UpdateAttrText (SvgRoot, doc, attrType, y + h, FALSE, TRUE);
 		}
 	      /* next element */
 	      TtaNextSibling (&child);
@@ -947,7 +947,7 @@ void             CheckSVGRoot (Document doc, Element el)
 	      /* increase the height of the root element */
 	      attrType.AttrTypeNum = SVG_ATTR_height_;
 	      /************** convert to the right value */
-	      UpdateAttrText (graphRoot, doc, attrType, y + h, FALSE, TRUE);
+	      UpdateAttrText (SvgRoot, doc, attrType, y + h, FALSE, TRUE);
 	    }
 	}
 
@@ -958,7 +958,7 @@ void             CheckSVGRoot (Document doc, Element el)
 	  if (dh < 0)
 	    dh = 0;
 	  /* handle included polylines */
-	  child = TtaGetFirstChild (graphRoot);
+	  child = TtaGetFirstChild (SvgRoot);
 	  while (child)
 	    {
 	      elType = TtaGetElementType (child);
@@ -972,11 +972,11 @@ void             CheckSVGRoot (Document doc, Element el)
 	}
 
       /* check enclosing SGV */
-      el = TtaGetParent (graphRoot);
+      el = TtaGetParent (SvgRoot);
       if (el)
-	graphRoot = TtaGetTypedAncestor (el, elType);
+	SvgRoot = TtaGetTypedAncestor (el, elType);
       else
-	graphRoot = NULL;
+	SvgRoot = NULL;
     }
 }
 
@@ -1292,12 +1292,12 @@ static ThotBool     InheritAttribute (Element el, AttributeType attrType)
 void         CreateGraphicElement (int entry)
 {
   Document	    doc;
-  Element	    first, graphRoot, newEl, sibling, selEl;
+  Element	    first, SvgRoot, newEl, sibling, selEl;
   Element           child, parent, elem;
   ElementType       elType, selType, newType, childType;
   AttributeType     attrType;
   Attribute         attr;
-  SSchema	    docSchema, graphSchema;
+  SSchema	    docSchema, SvgSchema;
   DisplayMode       dispMode;
   char		    shape;
   char             *path;
@@ -1318,18 +1318,18 @@ void         CreateGraphicElement (int entry)
   docModified = TtaIsDocumentModified (doc);
   /* Are we in a drawing? */
   docSchema = TtaGetDocumentSSchema (doc);
-  graphSchema = GetSVGSSchema (doc);
-  attrType.AttrSSchema = graphSchema;
+  SvgSchema = GetSVGSSchema (doc);
+  attrType.AttrSSchema = SvgSchema;
   elType = TtaGetElementType (selEl);
   if (elType.ElTypeNum == SVG_EL_SVG &&
-      elType.ElSSchema == graphSchema)
-    graphRoot = selEl;
+      elType.ElSSchema == SvgSchema)
+    SvgRoot = selEl;
   else
     {
       elType.ElTypeNum = SVG_EL_SVG;
-      elType.ElSSchema = graphSchema;
-      graphRoot = TtaGetTypedAncestor (first, elType);
-      if (graphRoot == NULL)
+      elType.ElSSchema = SvgSchema;
+      SvgRoot = TtaGetTypedAncestor (first, elType);
+      if (SvgRoot == NULL)
 	/* the current selection is not in a SVG element, create one */
 	{
 	  selType = TtaGetElementType (first);
@@ -1339,13 +1339,13 @@ void         CreateGraphicElement (int entry)
 	      TtaCancelLastRegisteredSequence (doc);
 	      return;
 	    }
-	  graphSchema = TtaNewNature (doc, docSchema, "SVG",
+	  SvgSchema = TtaNewNature (doc, docSchema, "SVG",
 				      "SVGP");
 	  if (TtaIsSelectionEmpty ())
 	    {
 	      /* try to create the SVG here */
 	      TtaCreateElement (elType, doc);
-	      TtaGiveFirstSelectedElement (doc, &graphRoot, &c1, &i);
+	      TtaGiveFirstSelectedElement (doc, &SvgRoot, &c1, &i);
 	    }
 	  else
 	    {
@@ -1361,9 +1361,9 @@ void         CreateGraphicElement (int entry)
 		     selType.ElTypeNum != HTML_EL_Division );
 	      
 	      /* create and insert a SVG element here */
-	      graphRoot = TtaNewElement (doc, elType);
-	      TtaInsertSibling (graphRoot, first, FALSE, doc);
-	      first = graphRoot;
+	      SvgRoot = TtaNewElement (doc, elType);
+	      TtaInsertSibling (SvgRoot, first, FALSE, doc);
+	      first = SvgRoot;
 	      newGraph = TRUE;
 	    }
 	}
@@ -1371,7 +1371,7 @@ void         CreateGraphicElement (int entry)
 
   /* look for the element (sibling) in front of which the new element will be
      created */
-  if (first == graphRoot)
+  if (first == SvgRoot)
     parent = NULL;
   else
     {
@@ -1383,7 +1383,7 @@ void         CreateGraphicElement (int entry)
 	  if (parent)
 	    {
 	      elType = TtaGetElementType (parent);
-	      if (elType.ElSSchema == graphSchema &&
+	      if (elType.ElSSchema == SvgSchema &&
 		  (elType.ElTypeNum == SVG_EL_g ||
 		   elType.ElTypeNum == SVG_EL_SVG))
 		found = TRUE;
@@ -1396,11 +1396,11 @@ void         CreateGraphicElement (int entry)
 
   if (!parent)
     {
-      parent = graphRoot;
-      sibling = TtaGetLastChild (graphRoot);
+      parent = SvgRoot;
+      sibling = TtaGetLastChild (SvgRoot);
     }
 
-  newType.ElSSchema = graphSchema;
+  newType.ElSSchema = SvgSchema;
   newType.ElTypeNum = 0;
   shape = EOS;
 
@@ -1443,7 +1443,7 @@ void         CreateGraphicElement (int entry)
       shape = 's';
       break;
     case 9:	/* foreignObject with some HTML code */
-      newType.ElTypeNum = SVG_EL_foreignObject;
+      newType.ElTypeNum = SVG_EL_foreignObject; /*** @@@@@@ ***/
       break;
     case 10:	/* text */
       newType.ElTypeNum = SVG_EL_text_;
@@ -1467,7 +1467,7 @@ void         CreateGraphicElement (int entry)
 	  newType.ElTypeNum == SVG_EL_circle ||
 	  newType.ElTypeNum == SVG_EL_ellipse ||
 	  newType.ElTypeNum == SVG_EL_text_ ||
-	  newType.ElTypeNum == SVG_EL_foreignObject)
+	  newType.ElTypeNum == SVG_EL_foreignObject) /*** @@@@@@ ***/
 	TtaAskFirstCreation ();
       /* create the new element */
       newEl = TtaNewElement (doc, newType);
@@ -1515,7 +1515,7 @@ void         CreateGraphicElement (int entry)
       if (shape != EOS)
 	/* create a graphic leaf according to the element's type */
 	{
-	  childType.ElSSchema = graphSchema;
+	  childType.ElSSchema = SvgSchema;
 	  childType.ElTypeNum = SVG_EL_GRAPHICS_UNIT;
 	  child = TtaNewElement (doc, childType);
 	  TtaInsertFirstChild (&child, newEl, doc);
@@ -1534,13 +1534,13 @@ void         CreateGraphicElement (int entry)
       else if (newType.ElTypeNum == SVG_EL_text_)
 	/* create a TEXT leaf */
 	{
-	  childType.ElSSchema = graphSchema;
+	  childType.ElSSchema = SvgSchema;
 	  childType.ElTypeNum = SVG_EL_TEXT_UNIT;
 	  child = TtaNewElement (doc, childType);
 	  TtaInsertFirstChild (&child, newEl, doc);
 	  selEl = child;
 	}
-      else if (newType.ElTypeNum == SVG_EL_foreignObject)
+      else if (newType.ElTypeNum == SVG_EL_foreignObject)  /*** @@@@@ ***/
 	/* create an HTML DIV element in the new element */
 	{
 	  attrType.AttrTypeNum = SVG_ATTR_width_;
@@ -1566,7 +1566,7 @@ void         CreateGraphicElement (int entry)
 	  while (elem != NULL);
 	}
       if (newGraph)
-	TtaRegisterElementCreate (graphRoot, doc);
+	TtaRegisterElementCreate (SvgRoot, doc);
       else
 	TtaRegisterElementCreate (newEl, doc);
 
@@ -1615,7 +1615,7 @@ void         CreateGraphicElement (int entry)
 	      TtaFreeMemory (path);
 	      ParsePathDataAttribute (attr, newEl, doc);
 	      if (newGraph)
-		TtaRegisterElementCreate (graphRoot, doc);
+		TtaRegisterElementCreate (SvgRoot, doc);
 	      else
 		TtaRegisterElementCreate (newEl, doc);
 	    }
@@ -1628,7 +1628,7 @@ void         CreateGraphicElement (int entry)
   /* adapt the size of the SVG root element if necessary */
   InCreation = FALSE;
   CheckSVGRoot (doc, newEl);
-  SetGraphicDepths (doc, graphRoot);
+  SetGraphicDepths (doc, SvgRoot);
   TtaCloseUndoSequence (doc);
   TtaSetDocumentModified (doc);
   if (newType.ElTypeNum == 0)

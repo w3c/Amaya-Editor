@@ -609,7 +609,7 @@ static void         CreateMathConstruct (int construct)
 {
   Document           doc;
   Element            sibling, el, row, child, leaf, placeholderEl,
-                     parent, new, next;
+                     parent, new, next, foreignObj;
   ElementType        newType, elType, parentType;
   SSchema            docSchema, mathSchema;
   char              *name;
@@ -870,16 +870,16 @@ static void         CreateMathConstruct (int construct)
 	      if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG"))
 		/* selection is within a SVG element */
 		{
-		  elType.ElTypeNum = SVG_EL_foreignObject;
+		  elType.ElTypeNum = SVG_EL_switch;
 		  if (TtaCanInsertSibling (elType, sibling, FALSE, doc))
-		    /* insert a foreignObject element as a sibling */
+		    /* insert a switch element as a sibling */
 		    insertSibling = TRUE;
 		  else
 		    {
 		      child = TtaGetLastChild (sibling);
 		      if (TtaCanInsertSibling (elType, child, FALSE, doc))
 			{
-			  /* insert a foreignObject element as a child */
+			  /* insert a switch element as a child */
 			  sibling = child;
 			  insertSibling = TRUE;
 			}
@@ -887,8 +887,8 @@ static void         CreateMathConstruct (int construct)
 			{
 			  sibling = TtaGetParent (sibling);
 			  if (TtaCanInsertSibling (elType, sibling, FALSE,doc))
-			    /* insert a foreignObject element as a sibling of
-			       theparent element */
+			    /* insert a switch element as a sibling of
+			       the parent element */
 			    insertSibling = TRUE;
 			  else
 			    sibling = NULL;
@@ -896,12 +896,17 @@ static void         CreateMathConstruct (int construct)
 		    }
 		  if (sibling)
 		    {
-		      /* create a foreigObject element and insert it */
+		      /* create a switch element and insert it */
 		      if (dispMode == DisplayImmediately)
 			TtaSetDisplayMode (doc, dispMode);
-		      TtaAskFirstCreation ();
 		      el = TtaNewElement (doc, elType);
 		      TtaInsertSibling (el, sibling, FALSE, doc);
+		      /* create a foreignObject element and insert it as
+			 a child of the new switch element */
+		      elType.ElTypeNum = SVG_EL_foreignObject;
+		      TtaAskFirstCreation ();
+		      foreignObj = TtaNewElement (doc, elType);
+		      TtaInsertFirstChild (&foreignObj, el, doc);
 		      /* register the new element in the Undo queue */
 		      TtaRegisterElementCreate (el, doc);
 		      registered = TRUE;
@@ -909,7 +914,7 @@ static void         CreateMathConstruct (int construct)
 		      SetGraphicDepths (doc, el);
 		      elType.ElSSchema = mathSchema;
 		      elType.ElTypeNum = MathML_EL_MathML;
-		      sibling = el;
+		      sibling = foreignObj;
 		      insertSibling = FALSE;
 		    }
 		}

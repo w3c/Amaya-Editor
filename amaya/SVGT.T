@@ -348,6 +348,18 @@ RULES
 	create 'style>\12' after;
 	END;
 
+   switch:
+	BEGIN
+	create SOT;
+	create 'switch';
+	create attributes;
+	create CloseTagNL;
+	indent +2;
+	indent -2 after;
+	create SCT after;
+	create 'switch>\12' after;
+	END;
+
    foreignObject:
 	BEGIN
 	create SOT;
@@ -532,6 +544,30 @@ ATTRIBUTES
 	create SAN;
 	create 'transform="';
 	create transform;
+	create DoubleQuote;
+	END;
+
+   requiredFeatures:
+	BEGIN
+	create SAN;
+	create 'requiredFeatures="';
+	create requiredFeatures;
+	create DoubleQuote;
+	END;
+
+   requiredExtensions:
+	BEGIN
+	create SAN;
+	create 'requiredExtensions="';
+	create requiredExtensions;
+	create DoubleQuote;
+	END;
+
+   systemLanguage:
+	BEGIN
+	create SAN;
+	create 'systemLanguage="';
+	create systemLanguage;
 	create DoubleQuote;
 	END;
 
