@@ -302,7 +302,8 @@ int                 msgType;
 		}
 	    }
 	}
-      /* Display the final messge */
+      /* Display the final message */
+      buffer[i] = '\0';
       if (msgType == CONFIRM)
 	DisplayConfirmMessage (buffer);
       else
