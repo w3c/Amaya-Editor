@@ -381,6 +381,9 @@ char *PicTypeToMIME (PicType contentType)
   
   switch (contentType)
     {
+    case xbm_type:
+      mime_type ="image/x-xbitmap";
+      break;
     case eps_type:
       mime_type ="application/postscript";
       break;

@@ -3565,11 +3565,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
       if (pAb->AbAspectChange)
 	{
 	  pAb->AbAspectChange = FALSE;
-	  if (pAb->AbLeafType == LtPicture &&
-	      ((PictInfo *) pBox->BxPictInfo)->PicType == XBM_FORMAT)
-	    /* Reload the image */
-	    LoadPicture (frame, pBox, (PictInfo *) pBox->BxPictInfo);
-	  else if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
+	  if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
 	    {
 	      /* extend the clipping to the last piece when the box is split */
 	      pCurrentBox = pBox;

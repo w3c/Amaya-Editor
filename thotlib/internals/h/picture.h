@@ -15,25 +15,12 @@
 #ifndef _PICTURE_h
 #define _PICTURE_h
 
-enum ThotPictFormat
-{
-	XBM_FORMAT =      	0,     /* X11 BitmapFile format */
-	EPS_FORMAT =       	1,     /* Postscript  */
-	XPM_FORMAT =     	2,     /* Xpm XReadFileToPixmap format */
-	GIF_FORMAT =       	3,     /* gif */
-	PNG_FORMAT =            4,     /* Png */
-	JPEG_FORMAT =           5,     /* Jpeg */
-	SVG_FORMAT =            6,     /* SVG Images */
-	PLUGIN_FORMAT =         7,     /* Plugin files format */
-	MAX_PICT_FORMATS =      30
-};
-
 /* A few constants */
-
 #define MAX_FORMAT_NAMELENGHT  32       
 #define NULLIMAGEDRVR          255
 #define NOERROR                1
 #define MAX_PICT_SIZE          32768
+#define MAX_PICTURE_DRIVER     7
 
 #define XbmName  "Bitmap (.xbm)"
 #define EpsName  "EPSF (.eps)"
@@ -53,15 +40,15 @@ typedef struct
   char          *PicFileName; 
 #ifndef _GL
 #ifdef _GTK
-  GdkImlibImage *    im;
-  ThotPixmap         PicPixmap;
+  GdkImlibImage *im;
+  ThotPixmap     PicPixmap;
 #else /* _GTK*/
-  ThotPixmap         PicPixmap;
+  ThotPixmap     PicPixmap;
 #endif /*_GTK*/
 #ifdef _WINGUI
   int            PicBgMask;      /* Color Mask */
 #endif /* _WINGUI */
-  ThotPixmap         PicMask;        /* Bitmap Mask */
+  ThotPixmap     PicMask;        /* Bitmap Mask */
 #else /*_GL*/
   unsigned int   TextureBind; /* integer name of video card memory pointer*/
   ThotPixmap     PicPixmap;

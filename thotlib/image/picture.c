@@ -18,6 +18,7 @@
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
+#include "content.h"
 #include "zlib.h"
 
 #ifdef _WINGUI
@@ -1571,24 +1572,22 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
 
 /*----------------------------------------------------------------------
    GetPictureFormat returns the format of a file picture           
-   the file  fileName or UNKNOWN_FORMAT if not recognized          
+   the file  fileName or unknown_type if not recognized          
   ----------------------------------------------------------------------*/
 static int GetPictureFormat (char *fileName)
 {
   int             i;
-  int             l;
 
-  i = 0 ;
-  l = strlen (fileName);
+  i = 0;
   while (i < HandlersCounter)
     {
       if (i >= InlineHandlers)
 	currentExtraHandler = i - InlineHandlers;
       if (Match_Format (i, fileName))
-	return i ;
-      ++i ;
+	return i;
+      ++i;
     }
-  return UNKNOWN_FORMAT;
+  return unknown_type;
 }
 
 
@@ -1605,15 +1604,15 @@ Picture_Report PictureFileOk (char *fileName, int *typeImage)
   Picture_Report      status;
 
   /* we consider only the supported image formats */
-  if (*typeImage >= MAX_PICT_FORMATS || *typeImage < 0)
-    *typeImage = UNKNOWN_FORMAT;
+  if (*typeImage > unknown_type || *typeImage < 0)
+    *typeImage = unknown_type;
 
   if (TtaFileExist (fileName))
     {
-      if (*typeImage == UNKNOWN_FORMAT)
+      if (*typeImage == unknown_type)
 	{
 	  *typeImage = GetPictureFormat (fileName);
-	  if (*typeImage == UNKNOWN_FORMAT)
+	  if (*typeImage == unknown_type)
 	    status = Corrupted_File;
 	  else
 	    status = Supported_Format;
@@ -1636,19 +1635,19 @@ Picture_Report PictureFileOk (char *fileName, int *typeImage)
   ----------------------------------------------------------------------*/
 void CreateGifLogo ()
 {
-#if defined (_GTK) || defined (_WINGUI)
 #if defined(_WINGUI) || defined (_GL) 
   PictInfo            *imageDesc;
   unsigned long       Bgcolor = 0;
-  int                 xBox = 0;
-  int                 yBox = 0;
-  int                 wBox = 0;
-  int                 hBox = 0;
-  int                 width = 0, height = 0;
+  int                 xBox = 0, yBox = 0;
+  int                 wBox = 0, hBox = 0;
+  int                 width = 0, height = 0, index;
   ThotPixmap          drw;
   
   imageDesc = (PictInfo*)TtaGetMemory (sizeof (PictInfo));
-  drw = (ThotPixmap)(*(PictureHandlerTable[GIF_FORMAT].Produce_Picture)) (
+  index = 0;
+  while (PictureIdType[index] != gif_type)
+    index++;
+  drw = (ThotPixmap)(*(PictureHandlerTable[index].Produce_Picture)) (
       		(void *)LostPicturePath,
 		(void *)imageDesc,
 		(void *)&xBox,
@@ -1662,7 +1661,7 @@ void CreateGifLogo ()
   TtaFreeMemory (imageDesc);
   PictureLogo = drw;
 #else /* #if defined(_WINGUI) || defined (_GL)  */
-#ifdef _GTK  
+#ifdef _GTK
   GdkImlibImage      *im;
 
   im = gdk_imlib_load_image (LostPicturePath);
@@ -1671,7 +1670,6 @@ void CreateGifLogo ()
   TtaFreeMemory (im);
 #endif /*_GTK*/
 #endif /*_WIN && _GL*/
-#endif /*_GTK && _WIN*/
 }
 
 /*----------------------------------------------------------------------
@@ -1712,50 +1710,47 @@ void InitPictureHandlers (ThotBool printing)
    Printing = printing;
    HandlersCounter = 0;
    currentExtraHandler = 0;
-   strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, EpsName, MAX_FORMAT_NAMELENGHT);
-   PictureHandlerTable[HandlersCounter].Produce_Picture = ( PICHND_PROTO_Produce_Picture )EpsCreate;
-   PictureHandlerTable[HandlersCounter].Produce_Postscript = ( PICHND_PROTO_Produce_Postscript )EpsPrint;
-   PictureHandlerTable[HandlersCounter].Match_Format = ( PICHND_PROTO_Match_Format )IsEpsFormat;
+  strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, XbmName, MAX_FORMAT_NAMELENGHT);
+   PictureHandlerTable[HandlersCounter].Produce_Picture = (PICHND_PROTO_Produce_Picture) NULL;
+   PictureHandlerTable[HandlersCounter].Produce_Postscript = (PICHND_PROTO_Produce_Postscript) NULL;
+   PictureHandlerTable[HandlersCounter].Match_Format = (PICHND_PROTO_Match_Format) NULL;
+   PictureIdType[HandlersCounter] = xbm_type;
+   HandlersCounter++;
 
-   PictureIdType[HandlersCounter] = EPS_FORMAT;
-   PictureMenuType[HandlersCounter] = EPS_FORMAT;
+   strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, EpsName, MAX_FORMAT_NAMELENGHT);
+   PictureHandlerTable[HandlersCounter].Produce_Picture = (PICHND_PROTO_Produce_Picture )EpsCreate;
+   PictureHandlerTable[HandlersCounter].Produce_Postscript = (PICHND_PROTO_Produce_Postscript )EpsPrint;
+   PictureHandlerTable[HandlersCounter].Match_Format = (PICHND_PROTO_Match_Format )IsEpsFormat;
+   PictureIdType[HandlersCounter] = eps_type;
    HandlersCounter++;
 
    strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, XpmName, MAX_FORMAT_NAMELENGHT);
-   PictureHandlerTable[HandlersCounter].Produce_Picture = ( PICHND_PROTO_Produce_Picture )XpmCreate;
-   PictureHandlerTable[HandlersCounter].Produce_Postscript = ( PICHND_PROTO_Produce_Postscript )XpmPrint;
-   PictureHandlerTable[HandlersCounter].Match_Format = ( PICHND_PROTO_Match_Format )IsXpmFormat;
-
-   PictureIdType[HandlersCounter] = XPM_FORMAT;
-   PictureMenuType[HandlersCounter] = XPM_FORMAT;
+   PictureHandlerTable[HandlersCounter].Produce_Picture = (PICHND_PROTO_Produce_Picture)XpmCreate;
+   PictureHandlerTable[HandlersCounter].Produce_Postscript = (PICHND_PROTO_Produce_Postscript)XpmPrint;
+   PictureHandlerTable[HandlersCounter].Match_Format = (PICHND_PROTO_Match_Format)IsXpmFormat;
+   PictureIdType[HandlersCounter] = xpm_type;
    HandlersCounter++;
 
    strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, GifName, MAX_FORMAT_NAMELENGHT);
-   PictureHandlerTable[HandlersCounter].Produce_Picture = ( PICHND_PROTO_Produce_Picture )GifCreate;
-   PictureHandlerTable[HandlersCounter].Produce_Postscript = ( PICHND_PROTO_Produce_Postscript )GifPrint;
-   PictureHandlerTable[HandlersCounter].Match_Format = ( PICHND_PROTO_Match_Format )IsGifFormat;
-
-   PictureIdType[HandlersCounter] = GIF_FORMAT;
-   PictureMenuType[HandlersCounter] = GIF_FORMAT;
+   PictureHandlerTable[HandlersCounter].Produce_Picture = (PICHND_PROTO_Produce_Picture)GifCreate;
+   PictureHandlerTable[HandlersCounter].Produce_Postscript = (PICHND_PROTO_Produce_Postscript)GifPrint;
+   PictureHandlerTable[HandlersCounter].Match_Format = (PICHND_PROTO_Match_Format)IsGifFormat;
+   PictureIdType[HandlersCounter] = gif_type;
    HandlersCounter++;
 
    InitPngColors ();
    strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, PngName, MAX_FORMAT_NAMELENGHT);
-   PictureHandlerTable[HandlersCounter].Produce_Picture = ( PICHND_PROTO_Produce_Picture )PngCreate;
-   PictureHandlerTable[HandlersCounter].Produce_Postscript = ( PICHND_PROTO_Produce_Postscript )PngPrint;
-   PictureHandlerTable[HandlersCounter].Match_Format = ( PICHND_PROTO_Match_Format )IsPngFormat;
-
-   PictureIdType[HandlersCounter] = PNG_FORMAT;
-   PictureMenuType[HandlersCounter] = PNG_FORMAT;
+   PictureHandlerTable[HandlersCounter].Produce_Picture = (PICHND_PROTO_Produce_Picture)PngCreate;
+   PictureHandlerTable[HandlersCounter].Produce_Postscript = (PICHND_PROTO_Produce_Postscript)PngPrint;
+   PictureHandlerTable[HandlersCounter].Match_Format = (PICHND_PROTO_Match_Format)IsPngFormat;
+   PictureIdType[HandlersCounter] = png_type;
    HandlersCounter++;
 
    strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, JpegName, MAX_FORMAT_NAMELENGHT);
-   PictureHandlerTable[HandlersCounter].Produce_Picture = ( PICHND_PROTO_Produce_Picture )JpegCreate;
-   PictureHandlerTable[HandlersCounter].Produce_Postscript = ( PICHND_PROTO_Produce_Postscript )JpegPrint;
-   PictureHandlerTable[HandlersCounter].Match_Format = ( PICHND_PROTO_Match_Format )IsJpegFormat;
-
-   PictureIdType[HandlersCounter] = JPEG_FORMAT;
-   PictureMenuType[HandlersCounter] = JPEG_FORMAT;
+   PictureHandlerTable[HandlersCounter].Produce_Picture = (PICHND_PROTO_Produce_Picture)JpegCreate;
+   PictureHandlerTable[HandlersCounter].Produce_Postscript = (PICHND_PROTO_Produce_Postscript)JpegPrint;
+   PictureHandlerTable[HandlersCounter].Match_Format = (PICHND_PROTO_Match_Format)IsJpegFormat;
+   PictureIdType[HandlersCounter] = jpeg_type;
    HandlersCounter++;
    InlineHandlers = HandlersCounter;
 }
@@ -1768,20 +1763,19 @@ void InitPictureHandlers (ThotBool printing)
   ----------------------------------------------------------------------*/
 void GetPictHandlersList (int *count, char* buffer)
 {
-   int                 i = 0;
-   int                 index = 0;
-   char*               item;
+  int                 i = 0;
+  int                 index = 0;
+  char*               item;
 
-   *count = HandlersCounter;
-   while (i < HandlersCounter)
-     {
-	item = PictureHandlerTable[i].GUI_Name;
-	strcpy (buffer + index, item);
-	index += strlen (item) + 1;
-	i++;
-     }
-   buffer = PictureMenu;
-
+  *count = HandlersCounter;
+  while (i < HandlersCounter)
+    {
+      item = PictureHandlerTable[i].GUI_Name;
+      strcpy (buffer + index, item);
+      index += strlen (item) + 1;
+      i++;
+    }
+  buffer = PictureMenu;
 }
 
 #ifdef _WINGUI
@@ -2033,7 +2027,7 @@ void DrawPicture (PtrBox box, PictInfo *imageDesc, int frame,
   SetPictureClipping (&picWArea, &picHArea, w, h, imageDesc);
   if (!Printing)
     {
-      if (imageDesc->PicType == EPS_FORMAT) 
+      if (imageDesc->PicType == eps_type) 
 	DrawEpsBox (box, imageDesc, frame, epsflogo_width, epsflogo_height);
       else
 	{
@@ -2568,7 +2562,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	   /* a background image is repeated */
 	   pres = FillFrame;
        }
-     if (typeImage == XPM_FORMAT && pres == ReScale)
+     if (typeImage == xpm_type && pres == ReScale)
        pres = imageDesc->PicPresent = RealSize;
      /* picture dimension */
      if (pAb->AbLeafType == LtCompound)
@@ -2624,7 +2618,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
       /* Gif and Png handles transparency 
 	 so picture format is RGBA, 
 	 all others are RGB*/
-      if (typeImage != GIF_FORMAT && typeImage != PNG_FORMAT)
+      if (typeImage != gif_type && typeImage != png_type)
 	imageDesc->RGBA = FALSE;
       else
 	imageDesc->RGBA = TRUE;
@@ -2656,7 +2650,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	    /* a background image is repeated */
 	    pres = FillFrame;
 	}
-      if (typeImage == XPM_FORMAT && pres == ReScale)
+      if (typeImage == xpm_type && pres == ReScale)
 	pres = imageDesc->PicPresent = RealSize;
       /* picture dimension */
       if (pAb->AbLeafType == LtCompound)
@@ -2729,7 +2723,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
       imageDesc->PicType = 3;
       imageDesc->PicPresent = RealSize;
       imageDesc->PicPixmap = PictureLogo;
-      typeImage = GIF_FORMAT;
+      typeImage = gif_type;
       wBox = w = 40;
       hBox = h = 40;
       imageDesc->PicWidth = w;
@@ -2761,7 +2755,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
   /* Gif and Png handles transparency 
      so picture format is RGBA, 
      all others are RGB*/
-  if (typeImage != GIF_FORMAT && typeImage != PNG_FORMAT)
+  if (typeImage != gif_type && typeImage != png_type)
     imageDesc->RGBA = FALSE;
   else
     imageDesc->RGBA = TRUE;
@@ -2893,7 +2887,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	    /* a background image is repeated */
 	    pres = FillFrame;
 	}
-      if (typeImage == XPM_FORMAT && pres == ReScale)
+      if (typeImage == xpm_type && pres == ReScale)
 	pres = imageDesc->PicPresent = RealSize;
       /* picture dimension */
       if (pAb->AbLeafType == LtCompound)
@@ -2941,7 +2935,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 			(void *)ViewFrameTable[frame - 1].FrMagnification);
 #endif /* _WINGUI */
 #ifdef _GTK
-      if (typeImage == EPS_FORMAT)
+      if (typeImage == eps_type)
 	drw = (ThotPixmap) (*(PictureHandlerTable[typeImage].Produce_Picture)) (
 			(void *)fileName,
 			(void *)imageDesc,
@@ -3062,13 +3056,13 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
    GetPictureType returns the type of the image based on the index 
    in the GUI form.                                        
   ----------------------------------------------------------------------*/
-int GetPictureType (int GUIIndex)
+int GetPictureType (int index)
 {
-   if (GUIIndex == 0)
-      return UNKNOWN_FORMAT;
+   if (index == 0)
+      return unknown_type;
    else
       /* based on the function GetPictureHandlersList */
-      return PictureMenuType[GUIIndex];
+      return PictureIdType[index];
 
 }
 
@@ -3081,12 +3075,12 @@ int GetPictTypeIndex (int picType)
    int                 i = 0;
 
    /* based on the function GetPictureHandlersList */
-   if (picType == UNKNOWN_FORMAT)
+   if (picType == unknown_type)
       return 0;
 
    while (i <= HandlersCounter)
      {
-	if (PictureMenuType[i] == picType)
+	if (PictureIdType[i] == picType)
 	   return i;
 	i++;
      }

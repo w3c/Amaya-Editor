@@ -2381,10 +2381,9 @@ PicType TtaGetPictureType (Element element)
    if (imageDesc != NULL)
      {
        typeImage = imageDesc->PicType;
-       if (typeImage != UNKNOWN_FORMAT)
+       if (typeImage != unknown_type)
 	 pictType = (PicType) typeImage;
      }
-
    return pictType;
 }
 
@@ -2405,7 +2404,9 @@ void TtaSetPictureType (Element element, char *mime_type)
    imageDesc = GetImageDesc (element);
    if (imageDesc != NULL)
      {
-       if (!strcmp (mime_type, "application/postscript"))
+       if (!strcmp (mime_type, "image/x-bitmap"))
+	   typeImage = xbm_type;
+       else if (!strcmp (mime_type, "application/postscript"))
 	 typeImage = eps_type;
        else if (!strcmp (mime_type, "image/x-xpixmap"))
 	 typeImage = eps_type;
@@ -2426,7 +2427,7 @@ void TtaSetPictureType (Element element, char *mime_type)
 		!strcmp (mime_type, "application/mathml+xml"))
 	 typeImage = mathml_type;
        else 
-	 typeImage = (PicType)UNKNOWN_FORMAT;
+	 typeImage = unknown_type;
        imageDesc->PicType = typeImage;
      }
 }
