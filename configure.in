@@ -52,11 +52,11 @@ AC_PATH_PROG(SED, sed, /bin/sed, $PATH:/bin:/usr/bin:/usr/ucb/bin)
 AC_PATH_PROG(AR, ar, /usr/bin/ar, $PATH:/bin:/usr/bin:/usr/ucb/bin)
 AC_PATH_PROG(DIFF, diff, /usr/bin/diff, $PATH:/bin:/usr/bin:/usr/ucb/bin)
 
-AC_ARG_WITH(more-shared, [  --with-included-jpeg    use provided libjpeg, libpng.])
-if test "$with_included_jpeg" != "yes" ; then
+AC_ARG_WITH(more-shared, [  --without-included-jpeg    doesn't use provided libjpeg, libpng.])
+if test "$with_included_jpeg" = "no" ; then
 dnl
     AC_MSG_CHECKING([for libjpeg version = 6b])
-    AC_EGREP_CPP([x 62 x],
+    AC_EGREP_CPP([x 62 *x],
         [#include <jpeglib.h>
          x JPEG_LIB_VERSION x],
 dnl
@@ -70,7 +70,7 @@ dnl
 dnl    
 dnl
     AC_MSG_CHECKING([for libpng version = 1.0.x])
-    AC_EGREP_CPP([x \"1.0\..*\" x],
+    AC_EGREP_CPP([x \"1.0\..*\" *x],
         [#include <png.h>
 	x PNG_LIBPNG_VER_STRING x],
 dnl
@@ -229,7 +229,7 @@ AC_FUNC_MEMCMP
 AC_FUNC_MMAP
 AC_TYPE_SIGNAL
 AC_FUNC_VPRINTF
-AC_CHECK_FUNCS(getcwd gethostname gettimeofday getwd mkdir mktime putenv select socket strdup strerror strftime strstr strtod strtol uname lstat strcasecmp strncasecmp strchr)
+AC_CHECK_FUNCS(getcwd gethostname gettimeofday getwd mkdir mktime putenv select socket strdup strerror strftime strstr strtod strtol uname lstat strcasecmp strncasecmp strchr memcpy)
 
 dnl
 dnl Checking for Motif libraries and includes
@@ -410,8 +410,8 @@ dnl    SPECIFIC STUFF : CONFIGURATION OPTIONS FOR THOT AND AMAYA
 dnl
 dnl  ***************************************************************
 
-THOT_VER="2.4"
-AMAYA_VER="3.2"
+THOT_VER="2.6"
+AMAYA_VER="4.3"
 
 dnl
 dnl We use a special versoin of cextract patched for alignment
@@ -553,7 +553,7 @@ dnl
 
 THOT_OPTIONS=
 AMAYA_OPTIONS=$MATH_OPTIONS $GRAPH_OPTIONS
-PLUGIN_OPTIONS="-DPLUGIN_TRACE -DXP_UNIX"
+#PLUGIN_OPTIONS="-DPLUGIN_TRACE -DXP_UNIX"
 AMAYA_ANNOT_OPTIONS=
 IMGLIBS="-ljpeg -lpng -lz"
 EXTRA_LIBS=
@@ -568,18 +568,23 @@ INCL="\$(THOTDIR)/thotlib/internals/h"
 FUNC="\$(THOTDIR)/thotlib/internals/f"
 SCHEMAS="\$(THOTDIR)/schemas"
 SCHEMASOPERA="\$(THOTDIR)/schemasOPERA"
-test "$LIBJPEG" = '../libjpeg.a'  && JPEGINCL="-I\$(THOTDIR)/libjpeg"
-#test "$LIBPNG" = '../libpng.a'  && PNGINCL="-I\$(THOTDIR)/libpng -I\$(THOTDIR)/libpng/zlib"
+if test "${LIBPNG}" = "../libpng.a" ; then
 #there is a modified header file we need
 PNGINCL="-I\$(THOTDIR)/libpng -I\$(THOTDIR)/libpng/zlib"
+fi
+if test "${LIBJPEG}" = "../libjpeg.a" ; then
+#there is a modified header file we need
+JPEGINCL="-I\$(THOTDIR)/libjpeg"
+fi
 
 dnl
 dnl Set up the include variables.
 dnl
 
-THOTINCLUDES="-I$API -I$VAR -I$INCL -I$FUNC -I$SCHEMAS -I$SCHEMASOPERA $JPEGINCL $PNGINCL"
-APIINCLUDES=-I$API 
-if test "$VPATHOPT" = "" ; then
+THOTINCLUDES="-I${API} -I${VAR} -I${INC}L -I${FUNC} -I${SCHEMAS} ${JPEGINCL} ${PNGINCL}"
+APIINCLUDES=-I${API}
+ 
+if test "${VPATHOPT}" = "" ; then
 	VPATHOPT="VPATH"
 fi
 

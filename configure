@@ -12,7 +12,7 @@ ac_help=
 ac_default_prefix=/usr/local
 # Any additions from configure.in:
 ac_help="$ac_help
-  --with-included-jpeg    use provided libjpeg, libpng."
+  --without-included-jpeg    doesn't use provided libjpeg, libpng."
 ac_help="$ac_help
   --with-x                use the X Window System"
 ac_help="$ac_help
@@ -938,7 +938,7 @@ if test "$ac_test_CFLAGS" = set; then
   CFLAGS="$ac_save_CFLAGS"
 elif test $ac_cv_prog_cc_g = yes; then
   if test "$GCC" = yes; then
-    CFLAGS="-g -O2"
+    CFLAGS="-O2"
   else
     CFLAGS="-g"
   fi
@@ -1651,7 +1651,7 @@ if test "${with_more_shared+set}" = set; then
   :
 fi
 
-if test "$with_included_jpeg" != "yes" ; then
+if test "$with_included_jpeg" = "no" ; then
     echo $ac_n "checking for libjpeg version = 6b""... $ac_c" 1>&6
 echo "configure:1657: checking for libjpeg version = 6b" >&5
     cat > conftest.$ac_ext <<EOF
@@ -1661,7 +1661,7 @@ echo "configure:1657: checking for libjpeg version = 6b" >&5
          x JPEG_LIB_VERSION x
 EOF
 if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
-  egrep "x 62 x" >/dev/null 2>&1; then
+  egrep "x 62 *x" >/dev/null 2>&1; then
   rm -rf conftest*
           echo "$ac_t""yes" 1>&6
         LIBJPEG='-ljpeg'
@@ -1682,7 +1682,7 @@ echo "configure:1678: checking for libpng version = 1.0.x" >&5
 	x PNG_LIBPNG_VER_STRING x
 EOF
 if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
-  egrep "x \"1.0\..*\" x" >/dev/null 2>&1; then
+  egrep "x \"1.0\..*\" *x" >/dev/null 2>&1; then
   rm -rf conftest*
           echo "$ac_t""yes" 1>&6
         LIBPNG='-lpng'
@@ -6081,7 +6081,7 @@ fi
 
 fi
 
-for ac_func in getcwd gethostname gettimeofday getwd mkdir mktime putenv select socket strdup strerror strftime strstr strtod strtol uname lstat strcasecmp strncasecmp strchr
+for ac_func in getcwd gethostname gettimeofday getwd mkdir mktime putenv select socket strdup strerror strftime strstr strtod strtol uname lstat strcasecmp strncasecmp strchr memcpy
 do
 echo $ac_n "checking for $ac_func""... $ac_c" 1>&6
 echo "configure:6088: checking for $ac_func" >&5
@@ -6311,8 +6311,8 @@ fi
 
 
 
-THOT_VER="2.4"
-AMAYA_VER="3.2"
+THOT_VER="2.6"
+AMAYA_VER="4.3"
 
 CEXTRACT_VER="1.7"
 CEXTRACT_FLAGS="+O"
@@ -6437,7 +6437,7 @@ fi
 
 THOT_OPTIONS=
 AMAYA_OPTIONS=$MATH_OPTIONS $GRAPH_OPTIONS
-PLUGIN_OPTIONS="-DPLUGIN_TRACE -DXP_UNIX"
+#PLUGIN_OPTIONS="-DPLUGIN_TRACE -DXP_UNIX"
 AMAYA_ANNOT_OPTIONS=
 IMGLIBS="-ljpeg -lpng -lz"
 EXTRA_LIBS=
@@ -6449,15 +6449,20 @@ INCL="\$(THOTDIR)/thotlib/internals/h"
 FUNC="\$(THOTDIR)/thotlib/internals/f"
 SCHEMAS="\$(THOTDIR)/schemas"
 SCHEMASOPERA="\$(THOTDIR)/schemasOPERA"
-test "$LIBJPEG" = '../libjpeg.a'  && JPEGINCL="-I\$(THOTDIR)/libjpeg"
-#test "$LIBPNG" = '../libpng.a'  && PNGINCL="-I\$(THOTDIR)/libpng -I\$(THOTDIR)/libpng/zlib"
+if test "${LIBPNG}" = "../libpng.a" ; then
 #there is a modified header file we need
 PNGINCL="-I\$(THOTDIR)/libpng -I\$(THOTDIR)/libpng/zlib"
+fi
+if test "${LIBJPEG}" = "../libjpeg.a" ; then
+#there is a modified header file we need
+JPEGINCL="-I\$(THOTDIR)/libjpeg"
+fi
 
 
-THOTINCLUDES="-I$API -I$VAR -I$INCL -I$FUNC -I$SCHEMAS -I$SCHEMASOPERA $JPEGINCL $PNGINCL"
-APIINCLUDES=-I$API 
-if test "$VPATHOPT" = "" ; then
+THOTINCLUDES="-I${API} -I${VAR} -I${INC}L -I${FUNC} -I${SCHEMAS} ${JPEGINCL} ${PNGINCL}"
+APIINCLUDES=-I${API}
+ 
+if test "${VPATHOPT}" = "" ; then
 	VPATHOPT="VPATH"
 fi
 

@@ -58,15 +58,6 @@ force :
 ../tablelib/libThotTable.a : force
 	@(cd ../tablelib ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" libThotTable)
 
-../libjpeg.a :
-	@(cd ../libjpeg ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)")
-
-../libpng.a :
-	@(cd ../libpng ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)")
-
-../libz.a :
-	@(cd ../libpng/zlib ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)")
-
 ../amaya/libCSS.a : force
 	@(cd ../amaya ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" libCSS)
 
@@ -301,7 +292,7 @@ print : ../bin ../bin/print
 	@(mkdir ../bin)
 
 ../bin/print : $(THOTK_OBJ) $(DISPLAY_OBJ) $(PRINT_OBJ) ../tablelib/libThotTable.a \
-        ../libpng.a ../libz.a ../libjpeg.a ../amaya/libCSS.a
+        ../amaya/libCSS.a
 	$(CC) $(LDFLAGS) -o $@ $(THOTK_OBJ) $(DISPLAY_OBJ) $(PRINT_OBJ) ../amaya/libCSS.a -lThotTable $(LIBS)
 	@$(ECHO) "====>" print is done
 
