@@ -795,8 +795,8 @@ int                 status;
 #endif /* DEBUG_LIBWWW */
      } 
 
-   /* to avoid a hangup during downloading of css files */
-   if (AmayaAlive && !strcmp (me->content_type, "text/css"))
+   /* to avoid a hangup while downloading css files */
+   if (AmayaAlive && (me->mode & AMAYA_LOAD_CSS))
        TtaSetStatus (me->docid, 1, 
 		     TtaGetMessage (AMAYA, AM_ELEMENT_LOADED),
 		     me->status_urlName);

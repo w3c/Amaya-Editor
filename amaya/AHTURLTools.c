@@ -629,9 +629,11 @@ char               *otherPath;
        length--;
      }
 
-   /* remove extra dot */
-   if (tempOrgName[length] == '.')
-      tempOrgName[length] = EOS;
+   /* remove extra dot (which dot???) */
+   /* ugly, but faster than a strcmp */
+   if (tempOrgName[length] == '.'
+       && (length == 0 || tempOrgName[length-1] != '.'))
+	 tempOrgName[length] = EOS;
 
    if (IsW3Path (tempOrgName))
      {
