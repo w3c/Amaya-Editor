@@ -6895,6 +6895,10 @@ void StartParser (Document doc, char *fileName,
 	      attr = TtaNewAttribute (attrType);
 	      TtaAttachAttribute (rootElement, attr, doc);
 	    }
+	  if (SNumbering[doc])
+	    ChangeAttrOnRoot (doc, HTML_ATTR_SectionNumbering);
+	  if (MapAreas[doc])
+	    ChangeAttrOnRoot (doc, HTML_ATTR_ShowAreas);
 	}
 
       TtaSetDisplayMode (doc, NoComputedDisplay);

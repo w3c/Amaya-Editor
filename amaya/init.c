@@ -3363,12 +3363,6 @@ static Document LoadDocument (Document doc, char *pathname,
       /* Set the document read-only when needed */
       if (ReadOnlyDocument[newdoc])
 	SetDocumentReadOnly (newdoc);
-      /* Activate the section numbering */
-      if (docType == docHTML && SNumbering[newdoc])
-	ChangeAttrOnRoot (newdoc, HTML_ATTR_SectionNumbering);
-      /* Activate the section numbering */
-      if (docType == docHTML && MapAreas[newdoc])
-	ChangeAttrOnRoot (newdoc, HTML_ATTR_ShowAreas);
 
       if (InNewWindow || newdoc != doc)
 	/* the document is displayed in a different window */

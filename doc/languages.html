@@ -16,7 +16,7 @@
 
 <h4>Translated from French by Ethan Munson</h4>
 
-<h4>Version of January 23, 2002</h4>
+<h4>Version of March 5, 2002</h4>
 
 <p>© 1996-2002 INRIA</p>
 <hr />
@@ -3758,7 +3758,7 @@ condition type.</p>
                      ElemID /
                     'Referred' / 'FirstRef' / 'LastRef' /
                     'ExternalRef' / 'InternalRef' / 'CopyRef' /
-                     AttrID [ '=' Value ] /
+                     [ 'Inherited' ] AttrID [ '=' Value ] /
                     'AnyAttributes' / 'FirstAttr' / 'LastAttr' /
                     'UserPage' / 'StartPage' / 'ComputedPage' /
                     'Empty' / 'Root' /
@@ -3862,13 +3862,18 @@ The <tt>AnyAttributes</tt> keyword expresses this condition.</p>
 
 <p>A condition can also be based on the presence or absence of a given
 attribute associated with the element. This condition is simply expressed by
-the name of the attribute.</p>
+the name of the attribute. The condition may also be based on the presence of
+a given attribute associated with a parent of the element. This condition is
+expressed by the <code>Inherited</code> keyword, followed by the name of the
+attribute.</p>
 
 <p>The condition can be based on the value of a given attribute. It is then
 expressed by the name of the attribute, followed by the '=' sign and the
 value to be tested. Depending on the type of attribute, the value is simply
 an integer (possibly negative), the name of one of the possible values of the
-attribute or a quoted character string.</p>
+attribute or a quoted character string. If the attribute with the specified
+value has to be checked on the ancestors of the element, this condition
+starts with the keyword <code>Inherited.</code></p>
 
 <p>If the condition appears in the presentation rules of an attribute, the
 <tt>FirstAttr</tt> and <tt>LastAttr</tt> keywords can be used to indicate
@@ -7970,7 +7975,7 @@ ConditionElem   = 'First' / 'Last' /
                    ElemID /
                   'Referred' / 'FirstRef' / 'LastRef' /
                   'ExternalRef' / 'InternalRef' / 'CopyRef' /
-                   AttrID [ '=' Value ] /
+                   [ 'Inherited' ] AttrID [ '=' Value ] /
                   'AnyAttributes' / 'FirstAttr' / 'LastAttr' /
                   'UserPage' / 'StartPage' / 'ComputedPage' /
                   'Empty' / 'Root' /

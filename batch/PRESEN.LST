@@ -317,7 +317,7 @@ number
 			  CondPage '(' CounterName ')' /
 			  [ 'Immediately' ] 'Within' [ ParentLevel ] TypeName
 			  [ ExtStruct ] /
-			  AttrName [ '=' AttrValue ] / TypeName .
+			  [ 'Inherited' ] AttrName [ '=' AttrValue ] / TypeName .
 	
   153	ParentLevel =	  [ GreaterLess ] RelLevel .
   154	GreaterLess =	  '>' / '<' .
@@ -582,19 +582,20 @@ code  key-word      numbers of rules using the key-word
 1303  Empty             150
 1304  Immediately       150
 1305  Within            150
-1306  MaxRangeVal        40
-1307  MinRangeVal        40
-1308  Even              152
-1309  Odd               152
-1310  One               152
-1311  Create            148
-1312  CreateBefore      148
-1313  CreateAfter       148
-1314  CreateLast        148
-1315  CreateFirst       148
-1316  CreateWith        148
-1317  CreateEnclosing   148
-1318  To                161
+1306  Inherited         150
+1307  MaxRangeVal        40
+1308  MinRangeVal        40
+1309  Even              152
+1310  Odd               152
+1311  One               152
+1312  Create            148
+1313  CreateBefore      148
+1314  CreateAfter       148
+1315  CreateLast        148
+1316  CreateFirst       148
+1317  CreateWith        148
+1318  CreateEnclosing   148
+1319  To                161
 
 
 

@@ -5062,7 +5062,13 @@ void StartXmlParser (Document doc,
 	}
       /* Check the Thot abstract tree for XHTML documents */
       if (isXHTML)
-	CheckAbstractTree (pathURL, XMLcontext.doc);
+	{
+	  CheckAbstractTree (pathURL, XMLcontext.doc);
+	  if (SNumbering[doc])
+	    ChangeAttrOnRoot (doc, HTML_ATTR_SectionNumbering);
+	  if (MapAreas[doc])
+	    ChangeAttrOnRoot (doc, HTML_ATTR_ShowAreas);
+	}
 
       FreeExpatParser ();
       FreeXmlParserContexts ();

@@ -95,6 +95,7 @@ static ThotBool      InInLineRule;	/* on est dans une regle 'InLine' */
 static ThotBool      IncludedColumn;
 static ThotBool      InRule;	/* on est dans une regle */
 static ThotBool      InWithinCond;	/* on est dans une condition 'Within' */
+static ThotBool      CondInheritedAttr; /* on est dans une condition 'Inherited attr' */
 static ThotBool      AxisDef;	/* le prochain repere boite rencontre est une
 
 				   definition de repere */
@@ -1446,7 +1447,8 @@ static void ProcessShortKeyWord (int x, indLine wi, SyntacticCode gCode)
 	 }
        else if (gCode == RULE_ElemCondition)
 	 {
-	   if (Conditions->CoCondition != PcAttribute)
+	   if (Conditions->CoCondition != PcAttribute &&
+	       Conditions->CoCondition != PcInheritAttribute)
 	     CompilerMessage (wi, PRS, FATAL, VALID_ONLY_FOR_ATTRIBUTES,
 			      inputLine, LineNum);
            else
@@ -2485,7 +2487,8 @@ static ThotBool      SameConditions (PtrCondition pCond1, PtrCondition pCond2)
 		  if (curCond1->CoTypeElem != curCond2->CoTypeElem)
 		    sameRules = False;
 		}
-	      else if (curCond1->CoCondition == PcAttribute)
+	      else if (curCond1->CoCondition == PcAttribute ||
+		       curCond1->CoCondition == PcInheritAttribute)
 		{
 		  if (curCond1->CoTypeAttr != curCond2->CoTypeAttr)
 		    sameRules = False;
@@ -3571,6 +3574,7 @@ static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
 	break;
       case KWD_IF:
 	/* IF */
+	CondInheritedAttr = FALSE;
 	if (DefaultRuleDef)
 	  /* pas de condition dans les regles par defaut */
 	  CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_DEFAULT_RULES,
@@ -3583,6 +3587,7 @@ static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
 	break;
       case KWD_AND /* AND */ :
 	ConditionEnd ();
+	CondInheritedAttr = FALSE;
 	NewCondition (wi);
 	break;
       case KWD_Target:
@@ -3720,6 +3725,9 @@ static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
 	Conditions->CoAncestorName[0] = '\0';
 	Conditions->CoSSchemaName[0] = '\0';
 	InWithinCond = True;
+	break;
+      case KWD_Inherited:
+	CondInheritedAttr = TRUE;
 	break;
       case KWD_Create:
 	/* Create */
@@ -4288,7 +4296,13 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
 		   /* change le type de ce nom qui devient un nom d'attribut */
 		   Identifier[identnum].SrcIdentCode = RULE_AttrName;
 		   /* traite ce nom d'attribut */
-		   Conditions->CoCondition = PcAttribute;
+		   if (CondInheritedAttr)
+		     {
+		       Conditions->CoCondition = PcInheritAttribute;
+		       CondInheritedAttr = FALSE;
+		     }
+		   else
+		     Conditions->CoCondition = PcAttribute;
 		   Conditions->CoTypeAttr = i;
 		   Conditions->CoTestAttrValue = FALSE;
 		   }
@@ -4671,9 +4685,15 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
        else if (prevRule == RULE_ElemCondition)
 	  /* c'est un nom d'attribut dans une condition "if attr..." */
 	  {
-	  Conditions->CoCondition = PcAttribute;
-	  Conditions->CoTypeAttr = i;
-	  Conditions->CoTestAttrValue = FALSE;
+	    if (CondInheritedAttr)
+	      {
+		Conditions->CoCondition = PcInheritAttribute;
+		CondInheritedAttr = FALSE;
+	      }
+	    else
+	      Conditions->CoCondition = PcAttribute;
+	    Conditions->CoTypeAttr = i;
+	    Conditions->CoTestAttrValue = FALSE;
 	  }
        else if (prevRule == RULE_BoxType)
 	  /* c'est un nom d'attribut dans une regle BoxType */

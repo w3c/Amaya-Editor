@@ -225,19 +225,20 @@
 #define KWD_Empty 	1303
 #define KWD_Immediately 	1304
 #define KWD_Within 	1305
-#define KWD_MaxRangeVal 	1306
-#define KWD_MinRangeVal 	1307
-#define KWD_Even 	1308
-#define KWD_Odd 	1309
-#define KWD_One 	1310
-#define KWD_Create 	1311
-#define KWD_CreateBefore 	1312
-#define KWD_CreateAfter 	1313
-#define KWD_CreateLast 	1314
-#define KWD_CreateFirst 	1315
-#define KWD_CreateWith 	1316
-#define KWD_CreateEnclosing 	1317
-#define KWD_To 	1318
+#define KWD_Inherited 	1306
+#define KWD_MaxRangeVal 	1307
+#define KWD_MinRangeVal 	1308
+#define KWD_Even 	1309
+#define KWD_Odd 	1310
+#define KWD_One 	1311
+#define KWD_Create 	1312
+#define KWD_CreateBefore 	1313
+#define KWD_CreateAfter 	1314
+#define KWD_CreateLast 	1315
+#define KWD_CreateFirst 	1316
+#define KWD_CreateWith 	1317
+#define KWD_CreateEnclosing 	1318
+#define KWD_To 	1319
 
 /*  RULES  */
 
