@@ -951,12 +951,21 @@ void NewContent (PtrAbstractBox pAb)
 	      else
 		ClearText (pNewAttr->AeAttrText);
 	      CopyTextToText (pAb->AbText, pNewAttr->AeAttrText, &len);
+	      /* the Abstract box will be regerated by AttachAttrWithValue */
+	      ClearText (pAb->AbText);
 	      break;
 	    default:
 	      break;
 	    }
 	  /* redisplay the attribute */
 	  AttachAttrWithValue (pEl, pDoc, pNewAttr, TRUE);
+	  if (pNewAttr->AeAttrType == AtTextAttr &&
+	      pNewAttr->AeAttrText->BuLength !=  pAb->AbText->BuLength)
+	    {
+	      /* to be sure that the abstract box is updated */
+	      ClearText (pAb->AbText);
+	      CopyTextToText (pNewAttr->AeAttrText, pAb->AbText, &len);
+	    }
 	  CloseHistorySequence (pDoc);
 	  pAttr = AttributeValue (pEl, pNewAttr);
 	  DeleteAttribute (NULL, pNewAttr);

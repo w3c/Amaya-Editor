@@ -481,6 +481,7 @@ static ThotBool CloseTextInsertionWithControl (ThotBool toNotify)
 	      SelPosition = (LastSelectedCharInAttr <= FirstSelectedCharInAttr);
 	    }
 	  NewContent (pSelBox->BxAbstractBox);
+	    
 	  /* update the new selection */
 	  if (pViewSel->VsBox && LastInsertAttr == NULL)
 	    {
