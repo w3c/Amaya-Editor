@@ -775,7 +775,7 @@ int                *dvol;
 	do
 	   if (pAb == NULL)
 	      stop = TRUE;
-	   else if (pAb != pAbbRoot &&
+	   else if (pAb->AbEnclosing != NULL &&
 		    (pAb->AbVolume + volpres <= *dvol || !IsBreakable (pAb)))
 	      stop = TRUE;
 	   else
@@ -815,6 +815,9 @@ int                *dvol;
 	     }
 	while (!stop);
 	if (pAb == NULL)
+	   *dvol = 0;
+	else if (pAb->AbEnclosing == NULL)
+	   /* don't destroy the Root box */
 	   *dvol = 0;
 	else if (pAb->AbVolume + volpres > *dvol)
 	   /* on ne peut rien supprimer */
@@ -860,7 +863,6 @@ int                *dvol;
 		  else
 		     pDoc->DocViewModifiedAb[pAbbRoot->AbDocView - 1] =
 			Enclosing (pAbbReDisp, pDoc->DocViewModifiedAb[pAbbRoot->AbDocView - 1]);
-		  *dvol = 0;
 	  }			/* fin dvol > 0 */
 }
 

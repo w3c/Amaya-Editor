@@ -7116,7 +7116,7 @@ RULES
 	Width: Enclosing . Width;
 	if NOT within Definition and NOT within List_Item
 	    VertPos: Top = Previous NOT MAP . Bottom + 0.4;
-	otherwise
+        otherwise
 	    VertPos: Top = Previous NOT MAP . Bottom;
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
