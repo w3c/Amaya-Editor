@@ -1183,7 +1183,7 @@ void ParsePathDataAttribute (Attribute attr, Element el, Document doc)
    Element      leaf;
    PathSegment  seg;
    ThotBool     relative, newSubpath;
-   char        *text, *ptr;
+   char         *text, *ptr;
    char         command, prevCommand;
 
    /* create (or get) the Graphics leaf */
@@ -1191,6 +1191,9 @@ void ParsePathDataAttribute (Attribute attr, Element el, Document doc)
    if (leaf == NULL)
       return;
 
+   /* if the leaf element is a graphic element, turn it into a path */
+   TtaAppendPathSeg (leaf, NULL, doc);
+   /* get a buffer for reading the attribute value */
    length = TtaGetTextAttributeLength (attr) + 2;
    text = TtaGetMemory (length);
    if (text)

@@ -1480,12 +1480,15 @@ void TtaAppendPathSeg (Element element, PathSegment segment, Document document)
 	       pPrevPa->PaNext = (PtrPathSeg) segment;
 	       ((PtrPathSeg) segment)->PaPrevious = pPrevPa;
 	     }
-	   /* Updates the volumes of ancestors */
-	   pElAsc = (PtrElement) element;
-	   while (pElAsc != NULL)
+	   if (segment)
 	     {
-	       pElAsc->ElVolume++;
-	       pElAsc = pElAsc->ElParent;
+	       /* Updates the volumes of ancestors */
+	       pElAsc = (PtrElement) element;
+	       while (pElAsc != NULL)
+		 {
+		   pElAsc->ElVolume++;
+		   pElAsc = pElAsc->ElParent;
+		 }
 	     }
 #ifndef NODISPLAY
 	   RedisplayLeaf ((PtrElement) element, document, 1);

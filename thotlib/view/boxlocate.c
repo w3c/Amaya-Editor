@@ -1385,9 +1385,14 @@ PtrBox          GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX,
 		    return (pBox);
 		}
 	    }
-	  else if (pAb->AbLeafType == LtPath && pAb->AbFirstPathSeg)
-	    /* it's a non-empty path */
+	  else if (pAb->AbLeafType == LtPath)
 	    {
+	    if (!pAb->AbFirstPathSeg)
+	      /* empty path */
+	      return (NULL);
+	    else
+	      /* it's a non-empty path */
+	      {
 	      /* builds the list of points representing the path */
 	      points = BuildPolygonForPath (pAb->AbFirstPathSeg, frame,
 					    &npoints, &subpathStart);
@@ -1440,6 +1445,7 @@ PtrBox          GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX,
 		return (pBox);
 	      else
 		return (NULL);
+	      }
 	    }
 	  else
 	    return (pBox);
