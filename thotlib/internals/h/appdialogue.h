@@ -168,7 +168,10 @@ typedef struct _SchemaMenu_Ctl
 #define T_checkHiddenElement		90
 #define T_checkReadOnlyElement		91
 #define T_checkInsertNearElement	92
-#define MAX_LOCAL_ACTIONS 93
+#define T_rchangetype			93
+#define T_rsurround			94
+#define T_rchangepres			95
+#define MAX_LOCAL_ACTIONS 96
 
 /* Indices des actions internes accessibles au clavier et
    non presentees dans les menus */
