@@ -2791,6 +2791,27 @@ int                 height;
 
 
 /*----------------------------------------------------------------------
+   SetMainWindowBackgroundColor :                          
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void         SetMainWindowBackgroundColor (int frame, int color)
+#else  /* __STDC__ */
+void         SetMainWindowBackgroundColor (frame, color)
+int          frame;
+int          color;
+#endif /* __STDC__ */
+{
+#  ifndef _WINDOWS
+   XSetWindowBackground (TtDisplay, FrRef[frame], ColorPixel (color));
+#  else  /* _WINDOWS */
+   WIN_GetDeviceContext (frame) ;
+   SetBkColor (TtDisplay, ColorPixel (color)); 
+   WIN_ReleaseDeviceContext ();
+#  endif /* _WINDOWS */
+}
+
+
+/*----------------------------------------------------------------------
   Clear clear the area of frame located at (x, y) and of size width x height.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__

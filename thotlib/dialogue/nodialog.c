@@ -431,7 +431,16 @@ int                 frame;
    return FALSE;
 }
 
-/* Les fonctions vides pour l'edition de lien   */
+#ifdef __STDC__
+void         SetMainWindowBackgroundColor (int frame, int color)
+#else  /* __STDC__ */
+void         SetMainWindowBackgroundColor (frame, color)
+int          frame;
+int          color;
+#endif /* __STDC__ */
+{
+}
+
 #ifdef __STDC__
 void                Clear (int frame, int larg, int haut, int x, int y)
 #else  /* __STDC__ */

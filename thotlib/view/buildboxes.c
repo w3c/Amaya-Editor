@@ -974,15 +974,17 @@ PtrAbstractBox      pAb;
   registered.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         AddFilledBox (PtrBox pBox, PtrBox pMainBox)
+static void         AddFilledBox (PtrBox pBox, PtrBox pMainBox, int frame)
 #else  /* __STDC__ */
-static void         AddFilledBox (pBox, pMainBox)
+static void         AddFilledBox (pBox, pMainBox, frame)
 PtrBox              pBox;
 PtrBox              pMainBox;
+int                 frame;
 #endif /* __STDC__ */
 {
   PtrBox            pFilledBox;
   PtrAbstractBox    pAb;
+  int               color;
 
   if (pBox != pMainBox)
     {
@@ -1009,6 +1011,16 @@ PtrBox              pMainBox;
 	    }
 	}
     }
+  else
+    {
+      color = pBox->BxAbstractBox->AbBackground;
+      if (BackgroundColor[frame] != color)
+	{
+	  /* change the window background color */
+	  BackgroundColor[frame] = color;
+	  SetMainWindowBackgroundColor (frame, color);
+	}
+    }
 }
 
 
@@ -1016,11 +1028,12 @@ PtrBox              pMainBox;
   RemoveFilledBox adds the box in the filled list.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         RemoveFilledBox (PtrBox pBox, PtrBox pMainBox)
+static void         RemoveFilledBox (PtrBox pBox, PtrBox pMainBox, int frame)
 #else  /* __STDC__ */
-static void         RemoveFilledBox (pBox, pMainBox)
+static void         RemoveFilledBox (pBox, pMainBox, frame)
 PtrBox              pBox;
 PtrBox              pMainBox;
+int                 frame;
 #endif /* __STDC__ */
 {
   PtrBox            pFilledBox;
@@ -1037,6 +1050,11 @@ PtrBox              pMainBox;
 	  pFilledBox->BxNextBackground = pBox->BxNextBackground;
 	  pBox->BxNextBackground = NULL;
 	}
+    }
+  else
+    {
+      BackgroundColor[frame] = DefaultBColor;
+      SetMainWindowBackgroundColor (frame, DefaultBColor);
     }
 }
 
@@ -1250,7 +1268,7 @@ int                *carIndex;
 		    /* Is it a filled box ? */
 		    if (pAb->AbFillBox)
 		      /* register the box */
-		      AddFilledBox (pCurrentBox, pMainBox);
+		      AddFilledBox (pCurrentBox, pMainBox, frame);
 
 		    /* Il faut creer les boites des paves inclus */
 		    pChildAb = pAb->AbFirstEnclosed;
@@ -1603,7 +1621,7 @@ int                 frame;
 	     pCurrentBox = pAb->AbBox;
 	     if (pAb->AbLeafType == LtCompound)
 	       /* unregister the box */
-	       RemoveFilledBox (pCurrentBox, ViewFrameTable[frame - 1].FrAbstractBox->AbBox);
+	       RemoveFilledBox (pCurrentBox, ViewFrameTable[frame - 1].FrAbstractBox->AbBox, frame);
 
 	     if (pCurrentBox->BxType == BoBlock)
 		RemoveLines (pCurrentBox, frame, pCurrentBox->BxFirstLine, &changeSelectBegin, &changeSelectEnd);
@@ -2062,10 +2080,10 @@ int                 frame;
 		 
 		 if (pAb->AbFillBox)
 		   /* register the box in filled list */
-		   AddFilledBox (pBox, pMainBox);
+		   AddFilledBox (pBox, pMainBox, frame);
 		 else
 		   /* unregister the box in filled list */
-		   RemoveFilledBox (pBox, pMainBox);
+		   RemoveFilledBox (pBox, pMainBox, frame);
 		 
 		 /* mark the zone to be displayed */
 		 DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth,
