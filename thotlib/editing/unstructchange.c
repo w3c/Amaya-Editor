@@ -1963,7 +1963,7 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
 		 /* the application refuses to paste this element or this
 		    element is empty, free it */
 		 DeleteElement (&pElem, pDoc);
-	       else
+	       else if (pSibling && pSibling->ElParent != pElem)
 		 {
 		   /* l'application accepte */
 		   /* insere l'element a sa nouvelle position */

@@ -2883,9 +2883,9 @@ void                InsertChar (int frame, CHAR_T c, int keyboard)
 				  xDelta = 0;
 				}
 			      
-			      pFrame->FrClipXBegin = pSelBox->BxXOrg;
-			      pFrame->FrClipXEnd = pSelBox->BxXOrg + pSelBox->BxWidth;
-			      
+			      DefClip (frame, pSelBox->BxXOrg, pSelBox->BxYOrg,
+				       pSelBox->BxXOrg + pSelBox->BxWidth,
+				       pSelBox->BxYOrg + pSelBox->BxHeight);
 			      /* Prepare la mise a jour de la boite */
 			      xDelta -= pSelBox->BxWidth;
 			    }
