@@ -2409,7 +2409,8 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	      pNextBox = pLine->LiLastBox;
 	      do
 		pNextBox = GetNextBox (pNextBox->BxAbstractBox);
-	      while (pNextBox && pNextBox->BxAbstractBox->AbNotInLine);
+	      while (pNextBox && pNextBox->BxAbstractBox->AbNotInLine &&
+		     pNextBox->BxAbstractBox->AbDisplay == 'U');
 	    }
 	  else
 	    pNextBox = NULL;
