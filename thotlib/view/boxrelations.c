@@ -24,11 +24,12 @@
 #define THOT_EXPORT extern
 #include "boxes_tv.h"
 
-#include "memory_f.h"
+#include "absboxes_f.h"
 #include "appli_f.h"
 #include "boxmoves_f.h"
-#include "absboxes_f.h"
+#include "boxrelations_f.h"
 #include "font_f.h"
+#include "memory_f.h"
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -2257,7 +2258,6 @@ static ThotBool RemovePosRelation (PtrBox pOrginBox, PtrBox pTargetBox,
   PtrAbstractBox      pAb;
   BoxRelation        *pRelation;
   int                 i, found;
-  int                 j, k;
   ThotBool            loop;
   ThotBool            notEmpty;
   
@@ -2760,7 +2760,6 @@ void ClearAllRelations (PtrBox pBox, int frame)
   PtrAbstractBox      pAb;
   PtrAbstractBox      pRefAb;
   PtrPosRelations     pPosRel;
-  PtrDimRelations     pDimRel;
   BoxRelation        *pRelation;
   int                 i;
   ThotBool            loop;
