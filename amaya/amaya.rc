@@ -565,6 +565,7 @@ BEGIN
     BUTTON      ID_BUTTON40040
     SEPARATOR
     BUTTON      ID_BUTTON40041
+    BUTTON      ID_BUTTON40042
 END
 
 #endif    // English (U.S.) resources

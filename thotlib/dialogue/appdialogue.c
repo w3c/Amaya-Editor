@@ -1316,14 +1316,15 @@ ThotWidget          toplevel;
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS
 #ifdef __STDC__
-int WIN_TtaAddButton (Document document, View view, int picture, void (*procedure) (), char *info)
+int WIN_TtaAddButton (Document document, View view, int picture, void (*procedure) (), char *info, BYTE state)
 #else  /* __STDC__ */
-int WIN_TtaAddButton (document, view, picture, procedure, info)
+int WIN_TtaAddButton (document, view, picture, procedure, info, state)
 Document document;
 View     view;
 int      picture;
 void     (*procedure) ();
 char*    info;
+BYTE     state;
 #endif /* __STDC__ */
 #else  /* !_WINDOWS */
 #ifdef __STDC__
@@ -1423,7 +1424,7 @@ char               *info;
                      w = (TBBUTTON*) TtaGetMemory (sizeof (TBBUTTON));
                      w->iBitmap   = picture;
                      w->idCommand = TBBUTTONS_BASE + i; 
-                     w->fsState   = TBSTATE_ENABLED;
+                     w->fsState   = state;
                      w->fsStyle   = TBSTYLE_BUTTON;
                      w->dwData    = 0;
                      w->iString   = i;
@@ -1550,6 +1551,18 @@ int                 index;
    index: the index.
    picture: the new icon.
   ----------------------------------------------------------------------*/
+#ifdef _WINDOWS
+#ifdef __STDC__
+void                WIN_TtaChangeButton (Document document, View view, int index, int picture, BYTE state)
+#else  /* __STDC__ */
+void                WIN_TtaChangeButton (document, view, index, picture, state)
+Document            document;
+View                view;
+int                 index;
+int                 picture;
+BYTE                state;
+#endif /* __STDC__ */
+#else  /* !_WINDOWS */
 #ifdef __STDC__
 void                TtaChangeButton (Document document, View view, int index, Pixmap picture)
 #else  /* __STDC__ */
@@ -1560,19 +1573,23 @@ int                 index;
 Pixmap              picture;
 
 #endif /* __STDC__ */
+#endif /* _WINDOWS */
 {
-   int                 frame, n;
 
 #  ifndef _WINDOWS
    Arg                 args[MAX_ARGS];
+   int                 n;
 #  endif
+   int                 frame;
 
    UserErrorCode = 0;
    /* verifie le parametre document */
    if (document == 0 && view == 0)
       TtaError (ERR_invalid_parameter);
+#  ifndef _WINDOWS
    else if (picture == None)
       TtaError (ERR_invalid_parameter);
+#  endif /* !_WINDOWS */
    else
      {
 	frame = GetWindowNumber (document, view);
@@ -1586,8 +1603,11 @@ Pixmap              picture;
 	     else
 	       {
 		  /* Insere le nouvel icone */
+#                 ifdef _WINDOWS
+          SendMessage (WinToolBar[frame], TB_CHANGEBITMAP, (WPARAM) (index + TBBUTTONS_BASE - 1), (LPARAM) MAKELONG (picture, 0));
+          SendMessage (WinToolBar[frame], TB_ENABLEBUTTON, (WPARAM) (index + TBBUTTONS_BASE - 1), (LPARAM) MAKELONG (state, 0));
+#                 else  /* !_WINDOWS */
 		  n = 0;
-#                 ifndef _WINDOWS
 		  XtSetArg (args[n], XmNlabelPixmap, picture);
 		  n++;
 		  XtSetValues (FrameTable[frame].Button[index], args, n);

@@ -1128,9 +1128,12 @@ LPARAM      lParam;
 {
 	HWND  hwndTextEdit;
     HWND  hwndToolTip ;
+	RECT  rect;
 	int   doc, view ;
 	char* viewName ;
 	int  frame = GetMainFrameNumber (hwnd);
+
+	GetWindowRect (hwnd, &rect);
 
      switch (mMsg) {
             case WM_CREATE:
@@ -1320,11 +1323,14 @@ LPARAM lParam;
      HDC          saveHdc;	/* Used to save TtDisplay during current event processing */
      int          frame;
      int          status;
+	 RECT         rect;
+
 	 static POINT ptBegin;
 	 static POINT ptEnd;
 	 static BOOL  fBlocking;
 
      frame = GetFrameNumber (hwnd);
+	 GetWindowRect (hwnd, &rect);
 
      /* do not handle events if the Document is in NoComputedDisplay mode. */
 

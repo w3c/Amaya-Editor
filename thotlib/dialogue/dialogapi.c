@@ -5658,6 +5658,7 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
+   POINT ptCursor;
    struct Cat_Context* catalogue;
    int                 no = 0;
    int                 frame = GetMainFrameNumber (hWnd);
@@ -5671,36 +5672,33 @@ LPARAM lParam;
       currentParent = FrMainRef [frame];
       catalogue = WinLookupCatEntry (hWnd, LOWORD (wParam));
       if (catalogue != NULL)
-	 no = LOWORD (wParam) - catalogue->Cat_Ref;
-#     ifdef AMAYA_DEBUG
-      fprintf (stderr, "catalogue : %X, entry %d\n", catalogue, no);
-#     endif /* AMAYA_DEBUG */
+         no = LOWORD (wParam) - catalogue->Cat_Ref;
 
       if (catalogue == NULL)
-	 return;
+         return;
 
-      switch (catalogue->Cat_Type) {
+     switch (catalogue->Cat_Type) {
              case CAT_PULL:
-	     case CAT_MENU:
-	     case CAT_POPUP:
-	          CallMenu (no, catalogue, NULL);
-	          break;
-	     case CAT_TMENU:
-	          CallToggle (no, catalogue, NULL);
-	          break;
-	     case CAT_SHEET:
-	          /*
-		   CallSheet (no, catalogue, NULL);
-                   break;
-	           */
+             case CAT_MENU:
+             case CAT_POPUP:
+                  CallMenu (no, catalogue, NULL);
+                  break;
+
+             case CAT_TMENU:
+                  CallToggle (no, catalogue, NULL);
+                  break;
+
+             case CAT_SHEET:
              case CAT_FMENU:
-	          CallRadio (no, catalogue, NULL);
+                  CallRadio (no, catalogue, NULL);
+				  break;
+
              default:
-#             ifdef AMAYA_DEBUG
-	          fprintf (stderr, "unknown Cat_Type %d\n", catalogue->Cat_Type);
-#             endif /* AMAYA_DEBUG */
-	          break;
-      }
+#                   ifdef AMAYA_DEBUG
+                    fprintf (stderr, "unknown Cat_Type %d\n", catalogue->Cat_Type);
+#                   endif /* AMAYA_DEBUG */
+	                break;
+     }
    }
 
 }
@@ -7220,6 +7218,8 @@ boolean             remanent;
    int                 n;
 #  ifndef _WINDOWS
    Arg                 args[MAX_ARGS];
+#  else  /* _WINDOWS */
+   POINT               curPoint;
 #  endif /* _WINDOWS */
 
    ThotWidget          w;
@@ -7274,7 +7274,8 @@ boolean             remanent;
 	XtManageChild (w);
 #       else  /* _WINDOWS */
 	if (catalogue->Cat_Type == CAT_POPUP) {
-	   if (!TrackPopupMenu (w,  TPM_LEFTALIGN, 20, 20, 0, currentParent, NULL))
+       GetCursorPos (&curPoint);
+	   if (!TrackPopupMenu (w,  TPM_LEFTALIGN, curPoint.x, curPoint.y, 0, currentParent, NULL))
 		   WinErrorBox (NULL);
 	} else {
           ShowWindow (w, SW_SHOWNORMAL);
