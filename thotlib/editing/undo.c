@@ -473,7 +473,8 @@ void AddAttrEditOpInHistory (PtrAttribute pAttr, PtrElement pEl,
 		   done = TRUE;
 		 }
 	     }
-	   else if (editOp->EoSavedAttribute->AeAttrSSchema == pAttr->AeAttrSSchema &&
+	   else if (editOp->EoSavedAttribute && editOp->EoCreatedAttribute &&
+		    editOp->EoSavedAttribute->AeAttrSSchema == pAttr->AeAttrSSchema &&
 		    editOp->EoSavedAttribute->AeAttrNum == pAttr->AeAttrNum)
 	     /* the previous operation was a replacement of this attribute */
 	     {
