@@ -1151,22 +1151,21 @@ STRING            documentName;
     {
       if (DocumentTypes[doc] == docHTML)
 	{
+	DocumentMeta[doc]->xmlformat = SaveAsXML;
 	SetNamespacesAndDTD (doc);
         if (SaveAsXML)
-	  {
-	  ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, TEXT("HTMLTX"));
-	  DocumentMeta[doc]->xmlformat = TRUE;
-	  }
+	  ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
+						    TEXT("HTMLTX"));
         else
-	  {
-	  ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, TEXT("HTMLT"));
-	  DocumentMeta[doc]->xmlformat = FALSE;
-	  }
+	  ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
+						    TEXT("HTMLT"));
 	}
       else if (DocumentTypes[doc] == docSVG)
-	ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, TEXT("GraphMLT"));
+	ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
+						  TEXT("GraphMLT"));
       else if (DocumentTypes[doc] == docMath)
-	ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, TEXT("MathMLT"));
+	ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
+						  TEXT("MathMLT"));
       if (ok)
 	{
 	  TtaSetDocumentDirectory (doc, directoryName);
