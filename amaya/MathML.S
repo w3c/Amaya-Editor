@@ -9,7 +9,7 @@ DEFPRES MathMLP;
 
 STRUCT
 
-   MathML =	Component;
+   MathML =	MROW;
    Component = CASE OF
 		  Construction;
 		  MROW;
