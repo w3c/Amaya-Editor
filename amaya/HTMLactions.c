@@ -545,12 +545,16 @@ NotifyElement      *event;
 		       elType.ElTypeNum == HTML_EL_SYMBOL_UNIT))
      {
        /* is it a double click in BUTTON element? */
-       elType.ElTypeNum = HTML_EL_BUTTON;
-       elFound = TtaGetTypedAncestor (element, elType);
+       elType1.ElSSchema = elType.ElSSchema;
+       elType1.ElTypeNum = HTML_EL_BUTTON;
+       elFound = TtaGetTypedAncestor (element, elType1);
        if (elFound)
+	 {
 	  DblClickOnButton (elFound, event->document);
+	  return (TRUE);
+	 }
      }
-   else if (isHTML && elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+   if (isHTML && elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
      {
        /* is it a double click on a graphic submit element? */
        elType.ElTypeNum = HTML_EL_Form;
