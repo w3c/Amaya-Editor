@@ -214,10 +214,16 @@ List *CopyAnnotServers (CHAR_T *server_list)
   CHAR_T *server;
   CHAR_T *ptr;
   CHAR_T *scratch;
+  ThotBool includesPostServer = FALSE;
+  CHAR_T *postServer;
 
+  postServer = annotPostServer ? annotPostServer : "";
 
   if (!server_list || *server_list == WC_EOS)
-    return NULL;
+    if (*postServer == WC_EOS)
+      return NULL;
+    else
+      server_list = annotPostServer;
 
   /* make a copy we can modify */
   scratch = TtaWCSdup (server_list);
@@ -233,8 +239,24 @@ List *CopyAnnotServers (CHAR_T *server_list)
 	  ptr++;
 	}
       List_add (&me, TtaWCSdup (server));
+      if (!ustrcmp (server, postServer))
+	includesPostServer = TRUE;
     }
+
   TtaFreeMemory (scratch);
+
+  if (!includesPostServer && *postServer)
+    {
+      List_add (&me, TtaWCSdup (postServer));
+      /* add it to the resource also, so the user is aware */
+      scratch = TtaGetMemory (strlen (server_list) + strlen (postServer) + 2);
+      ustrcpy (scratch, server_list);
+      ustrcat (scratch, " ");
+      ustrcat (scratch, postServer);
+      TtaSetEnvString ("ANNOT_SERVERS", scratch, TRUE);
+      TtaFreeMemory (scratch);
+    }
+
   return me;
 }
 /*-----------------------------------------------------------------------
@@ -341,16 +363,17 @@ void ANNOT_Init ()
     annotUser = TtaWCSdup (tmp);
   else
     annotUser = NULL;
-  tmp = TtaGetEnvString ("ANNOT_SERVERS");
-  if (tmp)
-    annotServers = CopyAnnotServers (tmp);
-  else
-    annotServers = NULL;
+
+  /* determine the post server first, so we can be sure to include
+     it in the query servers if the user forgot to include it */
   tmp = TtaGetEnvString ("ANNOT_POST_SERVER");
   if (tmp)
     annotPostServer = TtaWCSdup (tmp);
   else
     annotPostServer = TtaWCSdup (TEXT("localhost"));
+
+  tmp = TtaGetEnvString ("ANNOT_SERVERS");
+  annotServers = CopyAnnotServers (tmp); /* NULL is ok */
 
   /* @@@ temporary custom query, as we could use the configuration menu  ***/
   annotCustomQuery = FALSE;
