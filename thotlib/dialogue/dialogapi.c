@@ -3336,27 +3336,12 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 		      catalogue->Cat_PtParent = parentCatalogue;
 		      catalogue->Cat_Widget = (ThotWidget)menu;
 #ifdef _WX
-		      wxMenu *     p_menu      = wxDynamicCast(w, wxMenu);
-		      wxMenuItem * p_menu_item = wxDynamicCast(w, wxMenuItem);
-		      if (p_menu)
-			menu = p_menu;
-		      else if (p_menu_item)
-			menu = wxDynamicCast(p_menu_item->GetSubMenu(), wxMenu);
 
-		      /*
-		      if (menu)
-			wxLogDebug( _T("menu (")
-				    + p_menu_item->GetLabel()
-				    + _T(") IsKindOf :%s"),
-				    menu->GetClassInfo()->GetClassName());
-		      else
-			wxLogDebug( _T("menu (")
-				    + p_menu_item->GetLabel()
-				    + _T(") is not a menu") );
-		      */
+		      wxMenuItem * p_menu_item = (wxMenuItem *)w;
+		      if (p_menu_item)
+			menu = p_menu_item->GetSubMenu();
+		      catalogue->Cat_Widget = (ThotWidget)w;
 
-		      if ( !wxDynamicCast(w, wxMenu) )
-			catalogue->Cat_Widget = (ThotWidget)w;
 #endif /* _WX */
 #ifdef _WINGUI
 		      WIN_AddFrameCatalogue (FrMainRef[currentFrame], catalogue);
@@ -4430,7 +4415,7 @@ void TtaSetToggleMenu (int ref, int val, ThotBool on)
 			    /* attribut active is set to the good value */
 			    //			    if (catalogue->Cat_Type == CAT_TMENU)
 			      {
-				wxDynamicCast(w, wxMenuItem)->Check( TRUE );
+				((wxMenuItem *)w)->Check( TRUE );
 			      }
 #endif /* _WX */
 			  }
@@ -4455,7 +4440,7 @@ void TtaSetToggleMenu (int ref, int val, ThotBool on)
 			    /* attribut active is set to the good value */
 			    //			    if (catalogue->Cat_Type == CAT_TMENU)
 			      {
-				wxDynamicCast(w, wxMenuItem)->Check( FALSE );
+				((wxMenuItem*)w)->Check( FALSE );
 			      }
 #endif /* _WX */
 			  }
@@ -4626,13 +4611,18 @@ void TtaRedrawMenuEntry (int ref, int entry, char *fontname,
 
 #ifdef _WX
   wxMenu * p_menu = NULL;
-  p_menu = wxDynamicCast( catalogue->Cat_Widget, wxMenu );
-  if (!p_menu)
+  if (catalogue->Cat_Type == CAT_PULL)
     {
-      // maybe a sub menu
-      wxMenuItem * p_menu_item = wxDynamicCast( catalogue->Cat_Widget, wxMenuItem );
+      // a menu
+      p_menu = (wxMenu *)catalogue->Cat_Widget;
+    }
+  else if (catalogue->Cat_Type == CAT_MENU)
+    {
+      // a sub menu
+      wxMenuItem * p_menu_item = (wxMenuItem*)catalogue->Cat_Widget;
       p_menu = p_menu_item->GetSubMenu();
     }
+
   if (p_menu)
     if (activate)
       p_menu->Enable( ref + entry, TRUE );
