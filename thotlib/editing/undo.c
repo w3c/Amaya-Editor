@@ -48,6 +48,8 @@
 #include "callback_f.h"
 #include "contentapi_f.h"
 #include "memory_f.h"
+#include "structcommands_f.h"
+#include "structcreation_f.h"
 #include "tree_f.h"
 
 /*----------------------------------------------------------------------
@@ -391,7 +393,7 @@ PtrAttribute pCopyAttr;
 
 #endif /* __STDC__ */
 {
-  PtrEditOperation	editOp, prevOp;
+  PtrEditOperation	editOp;
 
   editOp = Op->EoPreviousOp;
   while (editOp)
@@ -846,10 +848,11 @@ View                view;
 #endif /* __STDC__ */
 {
    PtrDocument          pDoc;
+/*****
    PtrElement		pEl;
    NotifyElement	notifyEl;
    NotifyAttribute	notifyAttr;
-
+*****/
    if (!pDoc->DocLastUndone)
      /* no undone command */
       return;
