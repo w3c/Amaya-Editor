@@ -957,7 +957,6 @@ void              XhtmlTypeAttrValue (char       *val,
   Attribute       attr;
   char            msgBuffer[MaxMsgLength];
   int             value;
-  int             attrKind;
   ThotBool        level;
 
   attrType.AttrTypeNum = DummyAttribute;

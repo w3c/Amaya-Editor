@@ -816,9 +816,9 @@ static ThotBool ActivateElement (Element element, Document document)
 {
    AttributeType       attrType;
    Attribute           attr, HrefAttr;
-   Element             anchor, elFound, ancestor;
+   Element             anchor, elFound;
    ElementType         elType, elType1;
-   SSchema             HTMLschema, SvgSchema, XLinkSchema;
+   SSchema             HTMLschema;
    ThotBool	       ok, isHTML, isXLink, isSVG;
 
    elType = TtaGetElementType (element);

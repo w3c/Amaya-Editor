@@ -195,7 +195,7 @@ static ThotIcon       iconPlugin;
 #define iconPlugin    20
 #endif /* AMAYA_PLUGIN */
 #define iconBrowser   23
-#define iconEditor    23
+#define iconEditor    26
 #define iconHome      10
 
 extern int       menu_item;
@@ -788,12 +788,7 @@ static void  UpdateBrowserMenus (Document doc)
 {
   View       view;
 
-#ifdef _WINDOWS 
-  WIN_TtaSwitchButton (doc, 1, iEditor, iconEditor,
-		       TB_INDETERMINATE, TRUE);
-#else  /* _WINDOWS */
   TtaChangeButton (doc, 1, iEditor, iconBrowser, TRUE);
-#endif /* _WINDOWS */
   TtaSetToggleItem (doc, 1, Edit_, TEditMode, FALSE);
 
   TtaSetItemOff (doc, 1, File, BSave);
@@ -891,12 +886,7 @@ static void  UpdateEditorMenus (Document doc)
 {
   View       view;
 
-#ifdef _WINDOWS 
-  WIN_TtaSwitchButton (doc, 1, iEditor, iconEditor,
-		       TB_INDETERMINATE, FALSE);
-#else  /* _WINDOWS */
   TtaChangeButton (doc, 1, iEditor, iconEditor, TRUE);
-#endif /* _WINDOWS */
   TtaSetToggleItem (doc, 1, Edit_, TEditMode, TRUE);
 
   TtaSetItemOn (doc, 1, Edit_, BUndo);
@@ -1997,10 +1987,19 @@ Document InitDocView (Document doc, char *docname, DocumentType docType,
 	   iHome = TtaAddButton (doc, 1, iconHome, GoToHome, "GoToHome",
 				 TtaGetMessage (AMAYA, AM_BUTTON_HOME),
 				 TBSTYLE_BUTTON, TRUE);
+#ifdef _WINDOWS
+	   /* cannot change the browser icone -> use active instead of */
+	   iEditor = TtaAddButton (doc, 1, iconBrowser, SetBrowserEditor,
+				   "SetBrowserEditor",
+				   TtaGetMessage (AMAYA, AM_BUTTON_BrowseEdit),
+				   TBSTYLE_BUTTON, TRUE);
+	   TtaChangeButton (doc, 1, iEditor, iconEditor, TRUE);
+#else /* _WINDOWS */
 	   iEditor = TtaAddButton (doc, 1, iconEditor, SetBrowserEditor,
 				   "SetBrowserEditor",
 				   TtaGetMessage (AMAYA, AM_BUTTON_BrowseEdit),
 				   TBSTYLE_BUTTON, TRUE);
+#endif /* _WINDOWS */
 	   /* SEPARATOR */
 	   TtaAddButton (doc, 1, None, NULL, NULL, NULL, TBSTYLE_SEP, FALSE);
 	   iSave = TtaAddButton (doc, 1, iconSaveNo, SaveDocument,
@@ -2015,7 +2014,7 @@ Document InitDocView (Document doc, char *docname, DocumentType docType,
 	   iPrint = TtaAddButton (doc, 1, iconPrint, PrintAs,  "PrintAs",
 				  TtaGetMessage (AMAYA, AM_BUTTON_PRINT),
 				  TBSTYLE_BUTTON, TRUE);
-#endif /* WINDOWS */
+#endif /* _WINDOWS */
 	   iFind = TtaAddButton (doc, 1, iconFind, TtcSearchText,
 				 "TtcSearchText", 
 				 TtaGetMessage (AMAYA, AM_BUTTON_SEARCH),
@@ -2207,12 +2206,7 @@ Document InitDocView (Document doc, char *docname, DocumentType docType,
 	     TtaSetItemOff (doc, 1, Edit_, BSpellCheck);
 	     TtaSetToggleItem (doc, 1, Edit_, TEditMode, FALSE);
 	     TtaSetItemOff (doc, 1, Special, TSectionNumber);
-#ifdef _WINDOWS 
-	     WIN_TtaSwitchButton (doc, 1, iEditor, iconEditor,
-				  TB_INDETERMINATE, TRUE);
-#else  /* _WINDOWS */
 	     TtaChangeButton (doc, 1, iEditor, iconBrowser, TRUE);
-#endif /* _WINDOWS */
 	   }
 	 else
 	   TtaSetToggleItem (doc, 1, Edit_, TEditMode, TRUE);
