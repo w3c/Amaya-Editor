@@ -6547,13 +6547,13 @@ ATTRIBUTES
 
  Row_valign (Data_cell) = Row_baseline :
 	BEGIN
-	VertPos : Top = Previous AnyBox . Top;
+	VertPos : HRef = Previous AnyElem . HRef;
 	IN Structure_view
 		VertPos: Top = Previous . Bottom;
 	END;
  Row_valign (Heading_cell) = Row_baseline :
 	BEGIN
-	VertPos : Top = Previous AnyBox . Top;
+	VertPos : HRef = Previous AnyElem . HRef;
 	IN Structure_view
 		VertPos: Top = Previous . Bottom;
 	IN Alternate_view
@@ -6595,7 +6595,7 @@ ATTRIBUTES
  Cell_valign = Cell_baseline :
 	BEGIN
 	CreateBefore(AttrNameAndValue);
-	VertPos : HRef = Previous Table_cell . HRef;
+	VertPos : HRef = Previous AnyElem . HRef;
 	IN Structure_view
 		VertPos: Top = Previous . Bottom;
 	IN Alternate_view
