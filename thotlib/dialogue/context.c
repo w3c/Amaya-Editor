@@ -403,10 +403,11 @@ char               *name;
    if (TtWDepth > 1)
      {
 	/* background color */
-#ifdef RAMZI
+#ifndef _WINDOWS 
 	found = FindColor (0, name, "BackgroundColor", "gainsboro", &White_Color);
-#endif /* RAMZI */
+#else  /* _WINDOWS */
 	found = FindColor (0, name, "BackgroundColor", "White", &White_Color);
+#endif /* _WINDOWS */
 	/* drawing color */
 	found = FindColor (0, name, "ForegroundColor", "black", &Black_Color);
 	/* scrolls color */
