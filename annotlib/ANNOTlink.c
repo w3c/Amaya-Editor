@@ -528,8 +528,8 @@ ThotBool LINK_AddLinkToSource (Document source_doc, AnnotMeta *annot)
 	      
 	      len = TtaGetTextLength (first);
 
-	      if (cN > len)
-		/* add it to the end */
+	      if (cN > len && c1 == cN)
+		/* add it to the end (a caret) */
 		TtaInsertSibling (anchor, first, FALSE, source_doc);
 	      else
 		{
