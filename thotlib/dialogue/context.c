@@ -136,10 +136,6 @@ void WinInitColors ()
    if (initialized)
       return;
 
-#  ifdef _WIN_DEBUG
-   fprintf (stderr, "WinInitColors\n");
-#  endif /* _WIN_DEBUG */
-
    WIN_GetDeviceContext (-1);
 
    palSize = GetDeviceCaps (TtDisplay, SIZEPALETTE);
@@ -177,7 +173,7 @@ void WinInitColors ()
           SelectPalette (TtDisplay, TtCmap, FALSE);
           nbPalEntries = RealizePalette (TtDisplay);
           if (nbPalEntries == 0)
-             WinErrorBox ();
+             WinErrorBox (WIN_Main_Wd);
    }
    *********************************************************************************/
 
@@ -669,7 +665,8 @@ static void InitGraphicContexts ()
    */
    /* !!!! WIN_LastBitmap created by pix = CreatePattern(...); */
    /* TtBlackGC.brush = CreatePatternBrush(WIN_LastBitmap); */
-   DeleteObject (WIN_LastBitmap);
+   if (WIN_LastBitmap && !DeleteObject (WIN_LastBitmap))
+      WinErrorBox (WIN_Main_Wd);
    WIN_LastBitmap = 0;
 #  endif
 }
@@ -696,7 +693,7 @@ int                 dy;
    if (TtWDepth == 1)
       TtWDepth = GetDeviceCaps (hdc, BITSPIXEL);
 
-   ReleaseDC (WIN_Main_Wd, hdc);
+   DeleteDC (hdc);
 #  endif /* _WINDOWS */
 
 #  ifndef _WINDOWS

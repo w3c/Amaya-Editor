@@ -99,7 +99,6 @@ extern HWND      StatusBar;
 extern HWND      currentWindow;
 extern HWND      WIN_curWin;
 extern HINSTANCE hInstance;
-/* extern BOOL      WIN_UserGeometry;  */
 #ifndef _WIN_PRINT
 extern int       Window_Curs;
 #endif /* !_WIN_PRINT */
@@ -120,7 +119,6 @@ int         Y_Pos;
 int         cyToolBar;
 int         CommandToString [MAX_BUTTON];
 char        szTbStrings [4096];
-/* HRGN        hrgn; */
 
 boolean viewClosed = FALSE;
 #ifdef THOT_TOOLTIPS
@@ -521,19 +519,6 @@ int                 value;
                break;
 
           case SB_THUMBPOSITION:
-			  /*
-               ComputeDisplayedChars (frame, &Xpos, &Ypos, &width, &height);
-               sPos = GetScrollPos (FrameTable[frame].WdScrollV, SB_CTL);
-               delta = value - sPos;
-               nbPages = abs (delta) / height;
-               remaining = abs (delta) - (height * nbPages);
-               if (delta > 0)
-                   delta = nbPages * FrameTable[frame].FrHeight + (int) ((remaining * FrameTable[frame].FrHeight) / height);
-               else 
-                   delta = -(nbPages * FrameTable[frame].FrHeight + (int) ((remaining * FrameTable[frame].FrHeight) / height));
-               VerticalScroll (frame, delta, TRUE);
-               break; */
-
           case SB_THUMBTRACK:
                ComputeDisplayedChars (frame, &Xpos, &Ypos, &width, &height);
                sPos = GetScrollPos (FrameTable[frame].WdScrollV, SB_CTL);
@@ -930,9 +915,9 @@ void                InitializeOtherThings ()
    ClickX = 0;
    ClickY = 0;
    /* message de selection vide */
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    null_string = XmStringCreateSimple ("");
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
    OldMsgSelect[0] = EOS;
    OldDocMsgSelect = NULL;
 }
@@ -979,11 +964,6 @@ Document            document;
 View                view;
 
 #endif /* __STDC__ */
-
-
-
-
-
 {
    int                 frame;
 
@@ -1127,7 +1107,7 @@ POINT ptEnd;
      /* SelectObject (hdc, GetStockObject (BLACK_PEN)) ; */
      Rectangle (hdc, ptBeg.x, ptBeg.y, ptEnd.x, ptEnd.y) ;
 
-     ReleaseDC (hwnd, hdc) ;
+     DeleteDC (hwnd, hdc) ;
 }
 #endif /* 0 */
 
@@ -1913,24 +1893,24 @@ PtrAbstractBox     *pave;
    ClickY = 0;
    while (ClickIsDone == 1)
      {
-#ifndef _WINDOWS 
+#        ifndef _WINDOWS 
          TtaFetchOneEvent (&event);
          TtaHandleOneEvent (&event);
-#else /* _WINDOWS */
+#        else /* _WINDOWS */
          GetMessage (&event, NULL, 0, 0);
          TtaHandleOneWindowEvent (&event);
          SetCursor (cursor);
-#endif /* !_WINDOWS */
+#        endif /* !_WINDOWS */
      }
 
    /* Restauration du curseur */
    for (i = 1; i <= MAX_FRAME; i++)
      {
-#ifndef _WINDOWS
+#      ifndef _WINDOWS
        drawable = TtaGetThotWindow (i);
        if (drawable != 0)
 	 XUndefineCursor (TtDisplay, drawable);
-#endif /* _WINDOWS */
+#      endif /* _WINDOWS */
      }
 
    *frame = ClickFrame;
@@ -2132,7 +2112,6 @@ int                 raz;
 	XSetClipRectangles (TtDisplay, TtGraphicGC, clipx + FrameTable[frame].FrLeftMargin,
 		 clipy + FrameTable[frame].FrTopMargin, &rect, 1, Unsorted);
 #   else  /* _WINDOWS */ 
-    WIN_GetDeviceContext (frame);
     clipRgn = CreateRectRgn (clipx + FrameTable[frame].FrLeftMargin, clipy + FrameTable[frame].FrTopMargin, 
                              clipx + FrameTable[frame].FrLeftMargin + clipwidth, clipy + FrameTable[frame].FrTopMargin + clipheight);
     SelectClipRgn(TtDisplay, clipRgn); 
@@ -2169,7 +2148,12 @@ int                 frame;
    XSetClipRectangles (TtDisplay, TtGreyGC, 0, 0, &rect, 1, Unsorted);
    XFlushOutput (frame);
 #  else  /* _WINDOWS */
+   WIN_GetDeviceContext (frame);
    SelectClipRgn(TtDisplay, NULL); 
+   if (clipRgn && !DeleteObject (clipRgn))
+      WinErrorBox (NULL);
+   clipRgn = (HRGN) 0;
+   WIN_ReleaseDeviceContext ();
 #  endif /* _WINDOWS */
 }
 

@@ -1337,7 +1337,7 @@ ThotColorStruct     colrs[256];
        XPutImage (TtDisplay, Img, GCimage, tmpimage, 0, 0, 0, 0, width, height);
        XDestroyImage (tmpimage);
      }
-   TtaFreeMemory ((char*) Mapping);
+   TtaFreeMemory ( Mapping);
 
    return (Img);
 
@@ -1369,8 +1369,10 @@ ThotColorStruct     colrs[256];
 			 padding = 0;
 
          bmBits = (BYTE*) TtaGetMemory ((width + padding) * height * sizeof (BYTE));
-         if (bmBits == NULL)
+         if (bmBits == NULL) {
+            DeleteDC (destMemDC);
             return NULL;
+         }
     
          for (i = 0; i < MAXNUMBER; i++)
              Mapping [i] = -1;
@@ -1379,6 +1381,7 @@ ThotColorStruct     colrs[256];
 
          if ((bmp == NULL)) {
             TtaFreeMemory (bmBits);
+            DeleteDC (destMemDC);
             return (Pixmap) bmp;
          }
     
@@ -1405,7 +1408,9 @@ ThotColorStruct     colrs[256];
          /* Cleanup */
          
          DeleteDC(destMemDC);
-		 DeleteObject (TtCmap);
+		 /*
+		 if (!DeleteObject (TtCmap))
+            WinErrorBox (WIN_Main_Wd); */
          TtaFreeMemory (bmBits);
          peInitialized = 0;	 
          return (Pixmap) bmp;
@@ -1510,7 +1515,7 @@ ThotBitmap         *mask1;
 	      *yif = ratio * *yif;
 	  }
 	  buffer2 = ZoomPicture (buffer, w , h, *xif, *yif, 1);
-	  TtaFreeMemory(buffer);
+	  TtaFreeMemory (buffer);
 	  buffer = buffer2;
 	  buffer2 = NULL;
 	  w = *xif;

@@ -19,11 +19,6 @@ THOT_EXPORT ptrfont   LargeFontDialogue;	/* Large font dialogue    */
 THOT_EXPORT ptrfont   SmallFontDialogue;	/* Small font dialogue    */
 THOT_EXPORT ptrfont   GraphicsIcons;	/* Graphics icons         */
 THOT_EXPORT ptrfont   SymbolIcons;	/* Symblol icons          */
-THOT_EXPORT int	 MenuSize;	/* Dialogue font size     */
-
-#ifdef _WINDOWS
-THOT_EXPORT HFONT   currentFont;
-THOT_EXPORT ptrfont currentFontCharacteristics;
-#endif /* _WINDOWS */
+THOT_EXPORT int	      MenuSize;	/* Dialogue font size     */
 
 #endif

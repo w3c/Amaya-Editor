@@ -69,7 +69,7 @@ POINT ptEnd;
      /* SelectObject (hdc, GetStockObject (BLACK_PEN)) ; */
      Polyline (hdc, &ptTab, 2) ;
 
-     ReleaseDC (hwnd, hdc) ;
+     DeleteDC (hdc) ;
 }
 #endif /* _WINDOWS */
 

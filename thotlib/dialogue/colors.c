@@ -749,6 +749,7 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
 			   return 0;
 
           case WM_PAINT:
+			  /*
                ptrLogPal = (PLOGPALETTE) LocalAlloc (LMEM_FIXED, sizeof(LOGPALETTE) + MAX_COLOR * sizeof(PALETTEENTRY));
 
 
@@ -765,38 +766,37 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
                TtCmap = CreatePalette (ptrLogPal);
                LocalFree (ptrLogPal);
       
-               if (TtCmap == NULL) {
-#                 ifdef _WIN_DEBUG
-                  fprintf (stderr, "couldn't CreatePalette\n");												  
-#                 endif 
+               if (TtCmap == NULL) 
                   WinErrorBox (WIN_Main_Wd);
-               } else {
-                      hdc = BeginPaint (hwnd, &ps) ;
-                      SelectPalette (hdc, TtCmap, FALSE);
-                      nbPalEntries = RealizePalette (hdc);
-                      if (nbPalEntries == 0)
-                         WinErrorBox ();
-				  
-                     /* SelectPalette (hdc, TtCmap, FALSE);
-                     RealizePalette (hdc); */
+               else {
+			   */
+               hdc = BeginPaint (hwnd, &ps) ;
+               SelectPalette (hdc, TtCmap, FALSE);
+               nbPalEntries = RealizePalette (hdc);
+               if (nbPalEntries == 0)
+                  WinErrorBox (WIN_Main_Wd);
 
-                     for (y = 0 ; y < VERT_DIV ; y++)
-                         for (x = 0 ; x < HORIZ_DIV ; x++) {
-                             hBrush = CreateSolidBrush (PALETTEINDEX (x + y * HORIZ_DIV)) ;
-                             SelectObject (hdc, hBrush);
-                             Rectangle (hdc, x * cxBlock, (y * cyBlock) + 45,(x + 1) * cxBlock, (y + 1) * cyBlock + 45) ;
-                             SelectObject (hdc, GetStockObject (WHITE_BRUSH));
-                             DeleteObject (hBrush);
-                         }
+               for (y = 0 ; y < VERT_DIV ; y++)
+                   for (x = 0 ; x < HORIZ_DIV ; x++) {
+                       hBrush = CreateSolidBrush (PALETTEINDEX (x + y * HORIZ_DIV)) ;
+                       SelectObject (hdc, hBrush);
+                       Rectangle (hdc, x * cxBlock, (y * cyBlock) + 45,(x + 1) * cxBlock, (y + 1) * cyBlock + 45) ;
+                       SelectObject (hdc, GetStockObject (WHITE_BRUSH));
+                       if (!DeleteObject (hBrush))
+                          WinErrorBox (WIN_Main_Wd);
+                   }
 			   
-                     EndPaint (hwnd, &ps) ;
-               }
+               EndPaint (hwnd, &ps);
+               DeleteDC (hdc);
+               /*} */
                return 0 ;
 
 		  case WM_COMMAND:
 			   switch (LOWORD (wParam)) {
 			          case _IDDONE_:
-                           DeleteObject (TtCmap);
+						  /*
+                           if (!DeleteObject (TtCmap))
+                              WinErrorBox (WIN_Main_Wd); */
                            DestroyWindow (hwnd);
 						   return 0;
 			   }

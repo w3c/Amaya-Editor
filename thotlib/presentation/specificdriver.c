@@ -86,7 +86,7 @@ SpecificContext     ctxt;
       return;
    if (ctxt->drv != &SpecificStrategy)
       return;
-   TtaFreeMemory ((char *) ctxt);
+   TtaFreeMemory ( ctxt);
 }
 
 /*

@@ -101,11 +101,11 @@ structureTree       t;
 	     while (mc != NULL)
 	       {
 		  mc2 = mc->Next;
-		  TtaFreeMemory ((char *) mc);
+		  TtaFreeMemory ( mc);
 		  mc = mc2;
 	       }
 	     m2 = m->Next;
-	     TtaFreeMemory ((char *) m);
+	     TtaFreeMemory ( m);
 	     m = m2;
 	  }
 
@@ -117,7 +117,7 @@ structureTree       t;
 	     c = n;
 	  }
 	TtaFreeMemory (t->Tag);
-	TtaFreeMemory ((char *) t);
+	TtaFreeMemory ( t);
      }
 }
 
@@ -140,7 +140,7 @@ static void         FreeMatchEnv ()
      {
 	l1 = l;
 	l = l->Next;
-	TtaFreeMemory ((char *) l1);
+	TtaFreeMemory ( l1);
      }
    strMatchEnv.ListSubTrees = NULL;
 
@@ -1588,8 +1588,8 @@ strNode            *TN;
   if (TransferMode == ByAttribute)
     {
       /*free the ZZGHOST attribute */
-      TtaFreeMemory ((char *) NS->Attributes->NameAttr);
-      TtaFreeMemory ((char *) NS->Attributes);
+      TtaFreeMemory ( NS->Attributes->NameAttr);
+      TtaFreeMemory ( NS->Attributes);
     }
   NS->Attributes = NULL;
   TtaFreeMemory (attrValue);
@@ -1680,7 +1680,7 @@ boolean             inplace;
 	  {
 	    res = res && PutEndTag (generationStack[topGenerStack]);
 	    TtaFreeMemory (generationStack[topGenerStack]->Tag);
-	    TtaFreeMemory ((char *) generationStack[topGenerStack]);
+	    TtaFreeMemory ( generationStack[topGenerStack]);
 	    topGenerStack--;
 	  }
       elType = TtaGetElementType (node->Elem); 
@@ -1817,7 +1817,7 @@ strMatchChildren   *sm;
 	     { /* closes the opened tags (on generation stack) */
 	       result = result && PutEndTag (generationStack[topGenerStack]);
 	       TtaFreeMemory (generationStack[topGenerStack]->Tag);
-	       TtaFreeMemory ((char *) generationStack[topGenerStack]);
+	       TtaFreeMemory ( generationStack[topGenerStack]);
 	       topGenerStack--;
 	     }
 	   
@@ -1922,7 +1922,7 @@ Document            doc;
 	  {
 	     res = res && PutEndTag (generationStack[topGenerStack]);
 	     TtaFreeMemory (generationStack[topGenerStack]->Tag);
-	     TtaFreeMemory ((char *) generationStack[topGenerStack]);
+	     TtaFreeMemory ( generationStack[topGenerStack]);
 	     topGenerStack--;
 	  }
 	
@@ -2258,7 +2258,7 @@ char               *prevtag;
     case ConstructError:
       break;
     }
-  TtaFreeMemory((char *)subTypes);
+  TtaFreeMemory((void*)subTypes);
   return result;
 }
 
@@ -2678,7 +2678,7 @@ View                view;
   else
     /* display an status message */
     TtaSetStatus (TransDoc, 1, TtaGetMessage (AMAYA, AM_NO_TRANS), NULL);
-  TtaFreeMemory(nameSet);
+  TtaFreeMemory (nameSet);
 }
 
 

@@ -55,14 +55,6 @@ extern HDC          TtDisplay;
 #define THOT_GC_FONT        0x10
 #define THOT_GC_PEN         0x20
 
-typedef struct winFont {
-        char     alphabet; 
-		char     family; 
-		int      highlight; 
-		int      size; 
-		TypeUnit unit;
-} winFont,  *ptrfont;
-
 typedef struct struct_ThotGC {
      int                 capabilities;
 	 /*
@@ -84,7 +76,7 @@ typedef HWND        ThotWindow;
 typedef HBITMAP     ThotBitmap;
 typedef COLORREF    ThotColor;
 typedef COLORREF    Pixel;
-/* typedef HFONT       ptrfont; */
+typedef HFONT       ptrfont;
 typedef char       *Pixmap;
 typedef HCURSOR     ThotCursor;
 typedef HBITMAP     Drawable;

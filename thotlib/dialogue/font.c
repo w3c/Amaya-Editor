@@ -54,13 +54,14 @@ static boolean      UseBitStreamFamily;
 #include "registry_f.h"
 
 #ifdef _WINDOWS
-static char WIN_lpszFace [255];
-static int  WIN_nHeight;
-static int  WIN_nWidth;
-static int  WIN_fnWeight;
-static int  WIN_fdwItalic;
-static int  WIN_fdwUnderline;
-static int  WIN_fdwStrikeOut;
+static char  WIN_lpszFace [255];
+static int   WIN_nHeight;
+static int   WIN_nWidth;
+static int   WIN_fnWeight;
+static int   WIN_fdwItalic;
+static int   WIN_fdwUnderline;
+static int   WIN_fdwStrikeOut;
+static HFONT previousFont;
 #endif /* _WINDOWS */
 
 
@@ -80,7 +81,7 @@ int      size;
 TypeUnit unit;
 #endif /* __STDC__ */
 {
-   HFONT hFont      = (HFONT) 0;
+   HFONT hFont;
 
    WIN_nHeight      = 0;
    WIN_nWidth       = 0;
@@ -150,7 +151,7 @@ TypeUnit unit;
                        WIN_lpszFace);
 
    if (hFont == NULL) {
-      WinErrorBox (NULL);
+      WinErrorBox (WIN_Main_Wd);
    } 
 
    return (hFont);									   
@@ -167,37 +168,7 @@ HDC     hdc;
 ptrfont font;
 #endif /* __STDC__ */
 {
-   /* SelectObject (hdc, font); */
-	if (currentFont && currentFontCharacteristics) {
-	   if (currentFontCharacteristics->alphabet  != font->alphabet  ||
-	       currentFontCharacteristics->family    != font->family    ||
-		   currentFontCharacteristics->highlight != font->highlight ||
-		   currentFontCharacteristics->size      != font->size      ||
-		   currentFontCharacteristics->unit      != font->unit) {
-          TtaFreeMemory (currentFontCharacteristics);
-          currentFontCharacteristics = (ptrfont) TtaGetMemory (sizeof (winFont));
-		  currentFontCharacteristics->alphabet  = font->alphabet;
-          currentFontCharacteristics->family    = font->family;
-		  currentFontCharacteristics->highlight = font->highlight;
-		  currentFontCharacteristics->size      = font->size;
-		  currentFontCharacteristics->unit      = font->unit;
-
-          DeleteObject (currentFont);
-          currentFont = WIN_LoadFont (font->alphabet, font->family, font->highlight, font->size, font->unit)	;
-	   }
-    } else {
-         TtaFreeMemory (currentFontCharacteristics);
-         currentFontCharacteristics = (ptrfont) TtaGetMemory (sizeof (winFont));
-         currentFontCharacteristics->alphabet  = font->alphabet;
-         currentFontCharacteristics->family    = font->family;
-         currentFontCharacteristics->highlight = font->highlight;
-         currentFontCharacteristics->size      = font->size;
-         currentFontCharacteristics->unit      = font->unit;
-
-         DeleteObject (currentFont);
-         currentFont = WIN_LoadFont (font->alphabet, font->family, font->highlight, font->size, font->unit)	;
-    }
-    SelectObject (hdc, currentFont);
+    SelectObject (hdc, font);
 }
 #endif /* _WINDOWS */
 
@@ -249,6 +220,7 @@ ptrfont             font;
         /* GetTextExtentPoint32(TtDisplay, ptcar, lg, &size); */
         GetTextExtentPoint (TtDisplay, &c, 1, &size);
 		WIN_ReleaseDeviceContext ();
+
         return (size.cx);
 #       else  /* _WINDOWS */
         int                 l;
@@ -352,6 +324,8 @@ ptrfont             font;
         WIN_GetDeviceContext (-1);
         WinLoadFont (TtDisplay, font);
         res = GetTextMetrics (TtDisplay, &textMetric);
+		WIN_ReleaseDeviceContext ();
+
         if (res)
            return (textMetric.tmAscent);
         else
@@ -384,6 +358,7 @@ ptrfont             font;
         WinLoadFont (TtDisplay, font);
         res = GetTextMetrics (TtDisplay, &textMetric);
 		WIN_ReleaseDeviceContext ();
+
         if (res)
            return (textMetric.tmAscent + textMetric.tmDescent);
         else
@@ -847,10 +822,6 @@ boolean             increase;
 	   strcpy (&TtPsFontName[i * 8], PsName);
 	   
 #          ifdef _WINDOWS
-	   ptfont = (ptrfont) TtaGetMemory (sizeof (winFont));
-	   ptfont->alphabet  = alphabet;
-	   ptfont->family    = family;
-	   ptfont->highlight = highlight;
        if (unit == UnRelative) {
           char  fontSize [5];
           char* pText = text ;
@@ -861,24 +832,15 @@ boolean             increase;
              while (isdigit (*pText))
                    *pFontSize++ = *pText++;
           *pFontSize = 0;
-          ptfont->size = atoi (fontSize);
-       } else
-           ptfont->size = size;
-	   ptfont->unit      = unit;
-#      ifndef _WIN_PRINT
-	   currentFontCharacteristics = (ptrfont) TtaGetMemory (sizeof (winFont));
-	   currentFontCharacteristics->alphabet  = alphabet;
-	   currentFontCharacteristics->family    = family;
-	   currentFontCharacteristics->highlight = highlight;
-	   currentFontCharacteristics->size      = size;
-	   currentFontCharacteristics->unit      = unit;
-#      endif /* !_WIN_PRINT */
-#          else  /* _WINDOWS */
+          size = atoi (fontSize);
+       }
+	   ptfont = WIN_LoadFont (alphabet, family, highlight, size, unit)	;
+#      else  /* _WINDOWS */
 	   if (alphabet == 'G' && (size > 8 && size < 16 || size == 24))
 	     ptfont = LoadFont (textX, size);
 	   else
 	     ptfont = LoadFont (textX, 0);
-#          endif /* !_WINDOWS */
+#      endif /* !_WINDOWS */
 	   /* Loading failed try to find a neighbour */
 	   if (ptfont == NULL)
 	     {
@@ -1068,9 +1030,9 @@ char               *name;
 #endif
 	     dirlist[ncurrent] = FONT_PATH;
 	     XSetFontPath (TtDisplay, dirlist, ndir);
-	     TtaFreeMemory ((char *) dirlist);
+	     TtaFreeMemory ( dirlist);
 	  }
-	TtaFreeMemory ((char *) currentlist);
+	TtaFreeMemory ( currentlist);
      }
 #  endif /* _WINDOWS */
 
@@ -1153,7 +1115,8 @@ int                 frame;
 		  /* Shall we free this family ? */
 		  if (j == MAX_FONT)
 #                    ifdef _WINDOWS
-		     DeleteObject (TtFonts[i]);
+		     if (!DeleteObject (TtFonts[i]))
+                WinErrorBox (WIN_Main_Wd);
 #                    else  /* _WINDOWS */
 		     XFreeFont (TtDisplay, (XFontStruct *) TtFonts[i]);
 #                    endif /* _WINDOWS */

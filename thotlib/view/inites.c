@@ -652,7 +652,8 @@ int                 motif;
 #ifdef _WINDOWS
    if (WIN_LastBitmap != 0)
      {
-	DeleteObject (WIN_LastBitmap);
+	if (!DeleteObject (WIN_LastBitmap))
+       WinErrorBox (WIN_Main_Wd);
 	WIN_LastBitmap = 0;
      }
    switch (motif)

@@ -8464,7 +8464,7 @@ boolean	            PlainText;
 		 ReadTextFile (NULL, cbuf);
 	      else
 	         HTMLparse (NULL, cbuf);
-	      TtaFreeMemory(cbuf);
+	      TtaFreeMemory (cbuf);
 	      } 
 	   else
 	      if (PlainText)

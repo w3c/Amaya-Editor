@@ -157,7 +157,7 @@ int                *desc;
      {
 	image = (PictInfo *) desc;
 	FreePicture (image);
-	TtaFreeMemory ((char *) image);
+	TtaFreeMemory ( image);
      }
 }
 

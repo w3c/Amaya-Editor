@@ -673,9 +673,9 @@ boolean             with_images;
     }
 
 DBG(fprintf(stderr, "Saving completed\n");)
-  TtaFreeMemory(msg);
+  TtaFreeMemory (msg);
   if (tempname)
-    TtaFreeMemory(tempname);
+    TtaFreeMemory (tempname);
   return (res);
 }
 

@@ -23,7 +23,7 @@
  *
  */
 
-#include "thot_sys.h"
+#include "thot_sys.h" 
 #include "constmedia.h"
 #include "typemedia.h"
 #include "typecorr.h"
@@ -161,16 +161,40 @@ unsigned int        n;
 
 {
    void               *res;
+#  if 0 /**********************************************************/
+#  ifdef _WINDOWS
+   HGLOBAL hMem;
+   if (n == 0) n++;
+
+   hMem = GlobalAlloc (GHND, (DWORD)n);
+   if (!hMem)
+      MessageBox (NULL, TtaGetMessage (NULL, LIB, TMSG_NOT_ENOUGH_MEMORY), "Amaya: fatal error", MB_ICONERROR);
+   else {
+      res = (void*) GlobalLock (hMem);
+	  if (!res)
+         MessageBox (NULL, TtaGetMessage (NULL, LIB, TMSG_NOT_ENOUGH_MEMORY), "Amaya: fatal error", MB_ICONERROR);
+   }
+#  else /* !_WINDOWS */
+   if (n == 0)
+      n++;
+   res = malloc ((size_t) n);
+
+   if (!res)
+      TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NOT_ENOUGH_MEMORY);
+#  endif /* _WINDOWS */
+#  endif /* 0 *****************************************************/
 
    if (n == 0)
       n++;
    res = malloc ((size_t) n);
+
    if (!res)
-#     ifndef _WINDOWS
-      TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NOT_ENOUGH_MEMORY);
-#     else  /* _WINDOWS */
+#     ifdef _WINDOWS
       MessageBox (NULL, TtaGetMessage (NULL, LIB, TMSG_NOT_ENOUGH_MEMORY), "Amaya: fatal error", MB_ICONERROR);
+#     else  /* _WINDOWS */
+      TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NOT_ENOUGH_MEMORY);
 #     endif /* _WINDOWS */
+
    return (res);
 }
 
@@ -195,10 +219,20 @@ void               *ptr;
 #endif /* __STDC__ */
 
 {
-   if (ptr)	{
-      free (ptr);
-	  ptr = (void*) 0;
+#  if 0 /****************************************/
+#  ifdef _WINDOWS
+   if (ptr) {
+       HGLOBAL hMem = GlobalHandle  (ptr);
+	   GlobalUnlock (hMem);
+	   GlobalFree (hMem);
    }
+#  else  /* !_WINDOWS */
+   if (ptr)	
+      free (ptr);
+#  endif /* _WINDOWS */
+#  endif /***************************************/
+   if (ptr)	
+      free (ptr);
 }
 
 
@@ -252,12 +286,33 @@ unsigned int        n;
 {
    void               *res;
 
+#  if 0 /**************************************************************/
+#  ifdef _WINDOWS 
+   HGLOBAL hMem;
+   if (n == 0) n++;
+   hMem = GlobalHandle (ptr);
+   GlobalUnlock (hMem);
+   ptr = NULL;
+   hMem = GlobalReAlloc (hMem, n, GHND);
+   if (hMem)
+      ptr = (void*) GlobalLock (hMem);
+   return ptr;
+#  else  /* _WINDOWS */
    if (n == 0)
       n++;
    res = realloc (ptr, (size_t) n);
    if (!res)			/* Plus de memoire */
       TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NOT_ENOUGH_MEMORY);
    return res;
+#  endif /* _WINDOWS */
+#  endif /* 0 *********************************************************/
+   if (n == 0)
+      n++;
+   res = realloc (ptr, (size_t) n);
+#  ifndef _WINDOWS 
+   if (!res)			/* Plus de memoire */
+      TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NOT_ENOUGH_MEMORY);
+#  endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -1197,7 +1252,7 @@ PtrPSchema          pSP;
     {
       pSP->PsElemPRule[i] = NULL;
       if (pSP->PsInheritedAttr[i] != NULL)
-          TtaFreeMemory(pSP->PsInheritedAttr[i]);
+          TtaFreeMemory (pSP->PsInheritedAttr[i]);
       pSP->PsInheritedAttr[i] = NULL;
     }
   

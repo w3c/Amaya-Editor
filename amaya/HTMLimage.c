@@ -353,7 +353,7 @@ void *context;
 	      ctxEl->callback(doc, ctxEl->currentElement, tempfile, ctxEl->extra);
 	     ctxPrev = ctxEl;
 	     ctxEl = ctxEl->nextElement;
-	     TtaFreeMemory ((char *) ctxPrev);
+	     TtaFreeMemory ( ctxPrev);
 	  }
      }
    TtaFreeMemory (tempfile);

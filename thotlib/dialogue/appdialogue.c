@@ -1454,9 +1454,6 @@ char               *info;
 						 w->bReserved[1] = 0;
                          w->dwData    = 0;
                          w->iString   = 0;
-#                        if 0
-                         w->iString   = i;
-#                        endif /* 0 */
 #                        ifdef THOT_TOOLTIPS
                          CommandToString[tipIndex++] = TBBUTTONS_BASE + i;
                          CommandToString[tipIndex]   = -1;

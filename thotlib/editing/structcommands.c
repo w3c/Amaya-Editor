@@ -645,7 +645,7 @@ void                FreeSavedElements ()
 	pNextPasteEl = pPasteEl->PeNext;
 	if (pPasteEl->PeElement != NULL)
 	   DeleteElement (&pPasteEl->PeElement);
-	TtaFreeMemory ((char *) pPasteEl);
+	TtaFreeMemory ( pPasteEl);
 	pPasteEl = pNextPasteEl;
      }
    FirstSavedElement = NULL;
@@ -2139,7 +2139,7 @@ PtrElement          pEl;
 		while (pIsoD != NULL)
 		  {
 		     pNextIsoD = pIsoD->IDNext;
-		     TtaFreeMemory ((char *) pIsoD);
+		     TtaFreeMemory ( pIsoD);
 		     pIsoD = pNextIsoD;
 		  }
 		firstIsomorphDesc = NULL;
@@ -2214,7 +2214,7 @@ PtrElement          pEl;
 		     /* passe a la regle CsChoice suivante */
 		     pOldChoiceD = pChoiceD;
 		     pChoiceD = pChoiceD->CONext;
-		     TtaFreeMemory ((char *) pOldChoiceD);
+		     TtaFreeMemory ( pOldChoiceD);
 		  }
 	     }
 	}

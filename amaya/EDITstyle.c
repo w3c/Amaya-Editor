@@ -396,7 +396,7 @@ NotifyAttribute    *event;
 	style[len] = EOS;
 
 	ParseHTMLSpecificStyle (el, style, doc);
-	TtaFreeMemory(style);
+	TtaFreeMemory (style);
      }
 }
 

@@ -211,7 +211,7 @@ int *bg;
 
     info_ptr = (png_info*) TtaGetMemory (sizeof (png_info));
     if (!info_ptr) {
-       TtaFreeMemory(png_ptr);
+       TtaFreeMemory (png_ptr);
        return NULL;
     }
 
@@ -528,12 +528,12 @@ int *bg;
 
     /* free the structures */
     if (row_pointers != (unsigned char**) NULL)
-       TtaFreeMemory((char *) row_pointers);
+       TtaFreeMemory ( row_pointers);
     if (png_pixels!= (unsigned char*) NULL)
-       TtaFreeMemory ((char*) png_pixels);
+       TtaFreeMemory ( png_pixels);
 
-    TtaFreeMemory ((char*) png_ptr);
-    TtaFreeMemory ((char*) info_ptr);
+    TtaFreeMemory ( png_ptr);
+    TtaFreeMemory ( info_ptr);
     
     return pixels;
 }
@@ -615,7 +615,7 @@ Drawable*      mask1;
     if ((*xif != 0 && *yif != 0) && (w != *xif || h != *yif)) {
        /* xif and yif contain width and height of the box */
        buffer2 = ZoomPicture (buffer, w , h, *xif, *yif, 1);
-       TtaFreeMemory(buffer);
+       TtaFreeMemory (buffer);
        buffer = buffer2;
        buffer2 = NULL;
        w = *xif;
@@ -767,7 +767,7 @@ unsigned long  BackGroundPixel;
   fprintf((FILE *)fd, "\n");
   fprintf((FILE *)fd, "grestore\n");
   fprintf((FILE *)fd, "\n");   
-  TtaFreeMemory(buffer);
+  TtaFreeMemory (buffer);
 #endif /* !_WINDOWS */
 }
 

@@ -144,13 +144,13 @@ strTransDesc          *td;
    while (ls)
      {
 	ls2 = ls->Next;
-	TtaFreeMemory ((char *) ls);
+	TtaFreeMemory ( ls);
 	ls = ls2;
      }
    if (td->RootDesc)
      {
 	TtaFreeMemory (td->RootDesc->Tag);
-	TtaFreeMemory ((char *) td->RootDesc);
+	TtaFreeMemory ( td->RootDesc);
      }
    sd = td->Symbols;
    while (sd)
@@ -161,14 +161,14 @@ strTransDesc          *td;
 	while (ls)
 	  {
 	     ls2 = ls->Next;
-	     TtaFreeMemory ((char *) ls);
+	     TtaFreeMemory ( ls);
 	     ls = ls2;
 	  }
 	ls = sd->Followings;
 	while (ls)
 	  {
 	     ls2 = ls->Next;
-	     TtaFreeMemory ((char *) ls);
+	     TtaFreeMemory ( ls);
 	     ls = ls2;
 	  }
 	ad = sd->Attributes;
@@ -184,11 +184,11 @@ strTransDesc          *td;
 		TtaFreeMemory (ad->TextVal);
 
 	     ad2 = ad->Next;
-	     TtaFreeMemory ((char *) ad);
+	     TtaFreeMemory ( ad);
 	     ad = ad2;
 	  }
 	sd2 = sd->Next;
-	TtaFreeMemory ((char *) sd);
+	TtaFreeMemory ( sd);
 	sd = sd2;
      }
    rd = td->Rules;
@@ -211,12 +211,12 @@ strTransDesc          *td;
 		       TtaFreeMemory (ad->TextVal);
 		    }
 		  ad2 = ad->Next;
-		  TtaFreeMemory ((char *) ad);
+		  TtaFreeMemory ( ad);
 		  ad = ad2;
 	       }
 	     TtaFreeMemory (n->Tag);
 	     n2 = n->Next;
-	     TtaFreeMemory ((char *) n);
+	     TtaFreeMemory ( n);
 	     n = n2;
 	  }
 	n = rd->NewNodes;
@@ -236,19 +236,19 @@ strTransDesc          *td;
 		       TtaFreeMemory (ad->TextVal);
 		    }
 		  ad2 = ad->Next;
-		  TtaFreeMemory ((char *) ad);
+		  TtaFreeMemory ( ad);
 		  ad = ad2;
 	       }
 	     TtaFreeMemory (n->Tag);
 	     n2 = n->Next;
-	     TtaFreeMemory ((char *) n);
+	     TtaFreeMemory ( n);
 	     n = n2;
 	  }
 	rd2 = rd->Next;
-	TtaFreeMemory ((char *) rd);
+	TtaFreeMemory ( rd);
 	rd = rd2;
      }
-   TtaFreeMemory ((char *) td);
+   TtaFreeMemory ( td);
 }
 
 
@@ -266,7 +266,7 @@ strListSymb           *pl;
    if (pl)
      {
 	FreeList (pl->Next);
-	TtaFreeMemory ((char *) pl);
+	TtaFreeMemory ( pl);
      }
 }
 
@@ -288,7 +288,7 @@ parForest          *pf;
 	FreeList (pf->first);
 	FreeList (pf->last);
 	FreeForest (pf->next);
-	TtaFreeMemory ((char *) pf);
+	TtaFreeMemory ( pf);
      }
 }
 
@@ -306,7 +306,7 @@ parChoice          *pc;
    if (pc)
      {
 	FreeForest (pc->forests);
-	TtaFreeMemory ((char *) pc);
+	TtaFreeMemory ( pc);
      }
 }
 
@@ -1696,11 +1696,11 @@ unsigned char       c;
 	     else if (!ad->IsInt)
 		TtaFreeMemory (ad->TextVal);
 	     ad2 = ad->Next;
-	     TtaFreeMemory ((char *) ad);
+	     TtaFreeMemory ( ad);
 	     ad = ad2;
 	  }
 	TtaFreeMemory (ppRule->OptionNodes->Tag);
-	TtaFreeMemory ((char *) ppRule->OptionNodes);
+	TtaFreeMemory ( ppRule->OptionNodes);
 	ppRule->OptionNodes = NULL;
      }
    /* allocate a New node descriptor */
@@ -1814,11 +1814,11 @@ unsigned char       c;
 	  else if (!ad->IsInt)
 	    TtaFreeMemory (ad->TextVal);
 	  ad2 = ad->Next;
-	  TtaFreeMemory ((char *) ad);
+	  TtaFreeMemory ( ad);
 	  ad = ad2;
 	}
       TtaFreeMemory (ppRule->OptionNodes->Tag);
-      TtaFreeMemory ((char *) ppRule->OptionNodes);
+      TtaFreeMemory ( ppRule->OptionNodes);
       ppRule->NewNodes = NULL;
     }
 
@@ -1836,11 +1836,11 @@ unsigned char       c;
 	  else if (!ad->IsInt)
 	    TtaFreeMemory (ad->TextVal);
 	  ad2 = ad->Next;
-	  TtaFreeMemory ((char *) ad);
+	  TtaFreeMemory ( ad);
 	  ad = ad2;
 	}
       TtaFreeMemory (ppRule->NewNodes->Tag);
-      TtaFreeMemory ((char *) ppRule->NewNodes);
+      TtaFreeMemory ( ppRule->NewNodes);
       ppRule->NewNodes = NULL;
     }
   ppNode = NULL;
@@ -2534,7 +2534,7 @@ strTransSet        **resTrSet;
 	      }
           }
      }
-   TtaFreeMemory ((char *)StatBuffer);
+   TtaFreeMemory (StatBuffer);
 #else
 	   	fclose (infile);
   	       }

@@ -617,12 +617,11 @@ void WIN_GetDeviceContext (frame)
 int frame;
 #endif /* __STDC__ */
 {
-# ifdef _WIN_PRINT
-  WIN_curWin = NULL;
-  TtDisplay = GetDC (WIN_curWin);
-# else  /* !_WIN_PRINT */
-  HWND win;
-  if (frame == -1) {
+#  ifdef _WIN_PRINT
+   WIN_curWin = NULL;
+   TtDisplay = GetDC (WIN_curWin);
+#  else  /* !_WIN_PRINT */
+   if (frame == -1) {
       if (TtDisplay != 0)
          return;
       for (frame = 0; frame <= MAX_FRAME; frame++)
@@ -630,40 +629,28 @@ int frame;
 	     break;
    }
    if ((frame < 0) || (frame > MAX_FRAME)) {
-#     ifdef AMAYA_DEBUG
-      fprintf (stderr, "Could not get Device Context for Window #%d\n", frame);
-#     endif /* AMAYA_DEBUG */
+      TtDisplay = GetDC (NULL);
       return;
    }
    
-   win = FrRef[frame];
-   
-   if (win == 0) {
-#     ifdef AMAYA_DEBUG
-      fprintf (stderr, "WIN_GetDeviceContext : No Window #%d\n", frame);
-#     endif /* AMAYA_DEBUG */
+   if (FrRef[frame] == 0)
       return;
-   }
 
    /* if the correct Device Context is already selected, returns. */
-   if ((WIN_curWin == win) && (TtDisplay != 0))
+   if ((WIN_curWin == FrRef[frame]) && (TtDisplay != 0))
       return;
 
    /* release the previous Device Context. */
-   if ((TtDisplay != 0) && (WIN_curWin != (ThotWindow) (-1)))
-      ReleaseDC (WIN_curWin, TtDisplay);
+   if (TtDisplay)
+      DeleteDC (TtDisplay);
 
    WIN_curWin = (ThotWindow) (-1);
    TtDisplay = 0;
 
    /* load the new Context. */
-   TtDisplay = GetDC (win);
-#  ifdef AMAYA_DEBUG
-   if (TtDisplay == 0)
-      fprintf (stderr, "Could not get Device Context for Window %X\n", win);
-#  endif/*  AMAYA_DEBUG */
+   TtDisplay = GetDC (FrRef[frame]);
    if (TtDisplay != 0)
-      WIN_curWin = win;
+      WIN_curWin = FrRef[frame];
 #  endif /* !_WIN_PRINT */
 }
 
@@ -677,8 +664,9 @@ void WIN_ReleaseDeviceContext ()
 #endif /* __STDC__ */
 {
    /* release the previous Device Context. */
-   if ((TtDisplay != 0) && (WIN_curWin != (ThotWindow) (-1)))
-      ReleaseDC (WIN_curWin, TtDisplay);
+   /* if ((TtDisplay != 0) && (WIN_curWin != (ThotWindow) (-1))) */
+   if (TtDisplay != 0)
+      DeleteDC (TtDisplay);
 
    WIN_curWin = (ThotWindow) (-1);
    TtDisplay = 0;
@@ -6608,7 +6596,7 @@ boolean             react;
 	XmStringFree (item[i]);
 	i++;
      }
-   TtaFreeMemory ((char *) item);
+   TtaFreeMemory ( item);
 #  endif /* _WINDOWS */
 }
 
@@ -7534,7 +7522,7 @@ boolean             remanent;
 	if (catalogue->Cat_Type == CAT_POPUP) {
        GetCursorPos (&curPoint);
 	   if (!TrackPopupMenu (w,  TPM_LEFTALIGN, curPoint.x, curPoint.y, 0, currentParent, NULL))
-		   WinErrorBox (NULL);
+		   WinErrorBox (WIN_Main_Wd);
 	} else {
           ShowWindow (w, SW_SHOWNORMAL);
           UpdateWindow (w);

@@ -419,7 +419,7 @@ Restruct resctx;
 	}
       j += 1;
     }
-  TtaFreeMemory ((char *)ClusterStack);
+  TtaFreeMemory (ClusterStack);
   
   if (i > LgU)
     {

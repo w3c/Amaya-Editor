@@ -461,7 +461,7 @@ PtrDocument         pDoc;
 		     pElem = pPasted;
 		  pChild = pChild->ElNext;
 	       }
-	     TtaFreeMemory ((char *) pPasteD);
+	     TtaFreeMemory ( pPasteD);
 	  }
      }
    return pPasted;

@@ -1263,8 +1263,8 @@ PtrSSchema          pSS;
 	   if (!error)
 	      ReadPresTRules (file, i, &pNextBlock, &pNextTRule, &pSS,
 			      &pTSch);
-	TtaFreeMemory ((char *) pNextTRule);
-	TtaFreeMemory ((char *) pNextBlock);
+	TtaFreeMemory ( pNextTRule);
+	TtaFreeMemory ( pNextBlock);
 
 	/* ferme le fichier */
 	TtaReadClose (file);
@@ -1312,5 +1312,5 @@ PtrSSchema          pSS;
    for (i = 0; i < MAX_TRANSL_PRULE; i++)
       FreeTRulesPres (i + 1, &pTSch->TsPresTRule[i]);
    /* libere le schema de traduction lui-meme */
-   TtaFreeMemory ((char *) pTSch);
+   TtaFreeMemory ( pTSch);
 }

@@ -157,7 +157,7 @@ PRuleInfoPtr        rpi;
 	     rpi->css_rule = NULL;
 	  }
 	rpi->NextRPI = NULL;
-	TtaFreeMemory ((char *) rpi);
+	TtaFreeMemory ( rpi);
      }
 }
 

@@ -211,11 +211,35 @@ int      blue;
    SelectObject (hOrDC, pOldBitmapOr);
    SelectObject (hImageDC, bitmap);
 
-   DeleteDC (hDestDC);
-   DeleteDC (hInvAndDC);
-   DeleteDC (hAndDC);
-   DeleteDC (hOrDC);
-   DeleteDC (hImageDC);
+   if (!DeleteDC (hDestDC))
+      WinErrorBox (WIN_Main_Wd);
+   if (!DeleteDC (hInvAndDC))
+      WinErrorBox (WIN_Main_Wd);
+   if (!DeleteDC (hAndDC))
+      WinErrorBox (WIN_Main_Wd);
+   if (!DeleteDC (hOrDC))
+      WinErrorBox (WIN_Main_Wd);
+   if (!DeleteDC (hImageDC))
+      WinErrorBox (WIN_Main_Wd);
+
+   if (!DeleteObject (bitmap))
+      WinErrorBox (WIN_Main_Wd);
+   if (!DeleteObject (bitmapOr))
+      WinErrorBox (WIN_Main_Wd);
+   if (!DeleteObject (pOldBitmapOr))
+      WinErrorBox (WIN_Main_Wd);
+   if (!DeleteObject (bitmapAnd))
+      WinErrorBox (WIN_Main_Wd);
+   if (!DeleteObject (pOldBitmapAnd))
+      WinErrorBox (WIN_Main_Wd);
+   if (!DeleteObject (bitmapInvAnd))
+      WinErrorBox (WIN_Main_Wd);
+   if (!DeleteObject (pOldBitmapInvAnd))
+      WinErrorBox (WIN_Main_Wd);
+   if (!DeleteObject (bitmapDest))
+      WinErrorBox (WIN_Main_Wd);
+   if (!DeleteObject (pOldBitmapDest))
+      WinErrorBox (WIN_Main_Wd);
 }
 #endif /* _WINDOWS */
 
@@ -253,7 +277,8 @@ Pixmap              pixmap;
 #     ifndef _WINDOWS
       XFreePixmap (TtDisplay, pixmap);
 #     else  /* _WINDOWS */
-      DeleteObject (pixmap);
+      if (!DeleteObject (pixmap))
+         WinErrorBox (WIN_Main_Wd);
 #     endif /* _WINDOWS */
 }
 
@@ -441,10 +466,12 @@ PictInfo           *imageDesc;
       picYOrg = 0;
     }
 # ifdef _WINDOWS 
-  WIN_InitSystemColors ();
 		 
-  SelectPalette (TtDisplay, TtCmap, FALSE);
-  nbPalColors = RealizePalette (TtDisplay);
+  if (!TtIsTrueColor) {
+     WIN_InitSystemColors ();
+     SelectPalette (TtDisplay, TtCmap, FALSE);
+     nbPalColors = RealizePalette (TtDisplay);
+  }
 # endif /* _WINDOWS */
 
   pFrame = &ViewFrameTable[frame - 1];
@@ -467,11 +494,6 @@ PictInfo           *imageDesc;
 	     }
 #         else /* _WINDOWS */
 	case RealSize:
-	  WIN_InitSystemColors ();
-		 
-	  SelectPalette (TtDisplay, TtCmap, FALSE);
-	  nbPalColors = RealizePalette (TtDisplay);
-		 
 	  if (imageDesc->bgRed == -1 && imageDesc->bgGreen == -1 && imageDesc->bgBlue == -1) {
 	    hMemDC = CreateCompatibleDC (TtDisplay);
 	    SelectObject (hMemDC, pixmap);
@@ -485,13 +507,16 @@ PictInfo           *imageDesc;
 	    DPtoLP (hMemDC, &ptOrg, 1);
 	    
 	    BitBlt (TtDisplay, xFrame, yFrame, ptSize.x, ptSize.y, hMemDC, ptOrg.x, ptOrg.y, SRCCOPY);
-	    DeleteDC (hMemDC);	    
+	    DeleteDC (hMemDC);
 	  } else {
-	    WIN_LayoutTransparentPicture (pixmap, xFrame, yFrame, w, h, imageDesc->bgRed, imageDesc->bgGreen, imageDesc->bgBlue);
+           WIN_LayoutTransparentPicture (pixmap, xFrame, yFrame, w, h, imageDesc->bgRed, imageDesc->bgGreen, imageDesc->bgBlue);
 	  }
-		 
-	  DeleteObject (TtCmap);
-	  peInitialized = FALSE;
+	/*
+      if (!TtIsTrueColor) {
+         if (!DeleteObject (TtCmap))
+            WinErrorBox (WIN_Main_Wd);
+         peInitialized = FALSE;
+	  }*/
 #         endif /* _WINDOWS */
 	  break;
 	  
@@ -585,51 +610,41 @@ PictInfo           *imageDesc;
           clipHeight = pFrame->FrClipYEnd - y;
           x          -= pFrame->FrXOrg;
           y          -= pFrame->FrYOrg;
-          if (imageDesc->PicPresent == FillFrame ||
-	      imageDesc->PicPresent == YRepeat)
-	    {
-	      /* clipping height is done by the box height */
-	      if (y < yFrame)
-		{
-		  /* reduce the height in delta value */
-		  clipHeight = clipHeight + y - yFrame;
-		  y = yFrame;
-		}
-	      if (clipHeight > h)
-		clipHeight = h;
-	    }
-	  else
-	    {
+          if (imageDesc->PicPresent == FillFrame || imageDesc->PicPresent == YRepeat) {
+             /* clipping height is done by the box height */
+             if (y < yFrame) {
+                /* reduce the height in delta value */
+                clipHeight = clipHeight + y - yFrame;
+                y = yFrame;
+             }
+             if (clipHeight > h)
+                clipHeight = h;
+          } else {
                /* clipping height is done by the image height */
                delta = yFrame + imageDesc->PicHArea - y;
                if (delta <= 0)
                   clipHeight = 0;
                else
                   clipHeight = delta;
-	    }
+          }
 	  
-          if (imageDesc->PicPresent == FillFrame ||
-	      imageDesc->PicPresent == XRepeat)
-	    {
-	      /* clipping width is done by the box width */
-	      if (x < xFrame)
-		{
-		  /* reduce the width in delta value */
-		  clipWidth = clipWidth + x - xFrame;
-		  x = xFrame;
-		}
-	      if (clipWidth > w)
+          if (imageDesc->PicPresent == FillFrame || imageDesc->PicPresent == XRepeat) {
+             /* clipping width is done by the box width */
+             if (x < xFrame) {
+                /* reduce the width in delta value */
+                clipWidth = clipWidth + x - xFrame;
+                x = xFrame;
+             }
+             if (clipWidth > w)
                 clipWidth = w;
-	    }
-	  else
-	    {
-	      /* clipping width is done by the image width */
-	      delta = xFrame + imageDesc->PicWArea - x;
-	      if (delta <= 0)
-		clipWidth = 0;
-	      else
-		clipWidth = delta;
-	    }
+          } else {
+               /* clipping width is done by the image width */
+               delta = xFrame + imageDesc->PicWArea - x;
+               if (delta <= 0)
+                  clipWidth = 0;
+               else
+                  clipWidth = delta;
+		  }
 	  
           hMemDC  = CreateCompatibleDC (TtDisplay);
           hBkgBmp = CreateCompatibleBitmap (TtDisplay, w, h);
@@ -638,27 +653,45 @@ PictInfo           *imageDesc;
           SelectClipRgn(TtDisplay, hrgn); 
           SelectObject (hOrigDC, pixmap);
           SelectObject (hMemDC, hBkgBmp);
+          
+          y = 0;
+
+		  do {
+             x = 0;
+             do {
+                if (!BitBlt (hMemDC, x, y, imageDesc->PicWArea, imageDesc->PicHArea, hOrigDC, 0, 0, SRCCOPY))
+                   WinErrorBox (WIN_Main_Wd);
+                x += imageDesc->PicWArea;
+             } while (x < (w - xFrame));
+			 y += imageDesc->PicHArea;
+		  } while (y < (h - yFrame));
+
+          /*
           for (y = 0; y < (h - yFrame); y += imageDesc->PicHArea)
               for (x = 0; x < (w - xFrame); x += imageDesc->PicWArea)
                   if (!BitBlt (hMemDC, x, y, imageDesc->PicWArea, imageDesc->PicHArea, hOrigDC, 0, 0, SRCCOPY))
-                     WinErrorBox (NULL);
+                     WinErrorBox (WIN_Main_Wd);
+          */
 
-	  if (imageDesc->bgRed == -1 && imageDesc->bgGreen == -1 && imageDesc->bgBlue == -1) {
-	     BitBlt (TtDisplay, xFrame, yFrame, w, h, hMemDC, 0, 0, SRCCOPY);
-          DeleteObject (hMemDC);
-          DeleteObject (hOrigDC);
-          DeleteObject (hBkgBmp);
-          DeleteObject (TtCmap); 
-          peInitialized = FALSE;
-	  } else {
-          DeleteObject (hMemDC);
-          DeleteObject (hOrigDC);
-          DeleteObject (TtCmap); 
-          peInitialized = FALSE;
-          WIN_LayoutTransparentPicture (hBkgBmp, xFrame, yFrame, w, h, imageDesc->bgRed, imageDesc->bgGreen, imageDesc->bgBlue);
-	  }
+          BitBlt (TtDisplay, xFrame, yFrame, w, h, hMemDC, 0, 0, SRCCOPY);
+
+          SelectClipRgn(TtDisplay, NULL); 
+
+		  if (!DeleteObject (hrgn))
+             WinErrorBox (NULL);;
+          DeleteDC (hMemDC);
+          DeleteDC (hOrigDC);
+          if (!DeleteObject (hBkgBmp))
+             WinErrorBox (WIN_Main_Wd);
+
+
+			 /*
+		  if (!TtIsTrueColor) {
+             if (!DeleteObject (TtCmap))
+                WinErrorBox (WIN_Main_Wd);
+             peInitialized = FALSE;
+		  }*/
 		 
-		  
 #         endif /* _WINDOWS */
 	  break;
 	}
@@ -819,7 +852,7 @@ boolean             printing;
 	THOT_vInfo.depth = GetDeviceCaps (hdc, BITSPIXEL);
      }
    /* THOT_vInfo.class = THOT_PseudoColor; */
-   ReleaseDC (WIN_Main_Wd, hdc);
+   DeleteDC (hdc);
    EpsfPictureLogo = CreateBitmap (epsflogo_width, epsflogo_height, THOT_vInfo.depth, 16, epsflogo_bits);
 #  endif /* 0 */
 #  else  /* _WINDOWS */
@@ -1100,6 +1133,8 @@ int                 hlogo;
    lPt[1].x = 1;
    lPt[1].y = h - 1;
    Polyline  (hMemDc, lPt, 2);
+   DeleteDC (hDc);
+   DeleteDC (hMemDc);
 #  endif /* _WINDOWS */
 
    /* copying the logo */
@@ -1147,9 +1182,8 @@ int                 hlogo;
    y += yFrame;
    LayoutPicture (pixmap, drawable, picXOrg, picYOrg, w, h, x, y, frame, imageDesc);
 #  ifdef _WINDOWS
-   DeleteDC (hDc);
-   DeleteDC (hMemDc);
-   DeleteObject (pixmap);
+   if (!DeleteObject (pixmap))
+      WinErrorBox (WIN_Main_Wd);
 #  endif /* _WINDOWS */ 
 #  ifndef _WINDOWS
    XFreePixmap (TtDisplay, pixmap);
@@ -1207,13 +1241,13 @@ int                 frame;
    picXOrg = 0;
    picYOrg = 0;
 
-   if (imageDesc->PicFileName == NULL)
+   if ((imageDesc->PicFileName == NULL) || (imageDesc->PicFileName[0] == '\0') || 
+	   (box->BxAbstractBox->AbLeafType == LtCompound && imageDesc->PicPixmap == PictureLogo)) {
+#     ifdef _WINDOWS
+      WIN_ReleaseDeviceContext ();
+#     endif /* _WINDOWS */
      return;
-   else if (imageDesc->PicFileName[0] == EOS)
-     return;
-   else if (box->BxAbstractBox->AbLeafType == LtCompound
-	    && imageDesc->PicPixmap == PictureLogo)
-     return;
+   }
 
    drawable = TtaGetThotWindow (frame);
    GetXYOrg (frame, &x, &y);
@@ -1409,10 +1443,12 @@ PictInfo           *imageDesc;
       WIN_GetDeviceContext (frame);
 #  endif /* _WINDOWS */
 
-   if (imageDesc->PicFileName == NULL)
-     return;
-   else if (imageDesc->PicFileName[0] == EOS)
-     return;
+   if (imageDesc->PicFileName == NULL || imageDesc->PicFileName[0] == '\0') {
+#     ifdef _WINDOWS
+      WIN_ReleaseDeviceContext ();
+#     endif /* _WINDOWS */
+      return;
+   }
 
    GetPictureFileName (imageDesc->PicFileName, fileName);
    typeImage = imageDesc->PicType;

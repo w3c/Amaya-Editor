@@ -484,7 +484,7 @@ TypeTree tree;
           RestFreeTree(child);
           child = nextchild;
         }
-      TtaFreeMemory((char *)tree);
+      TtaFreeMemory (tree);
     }
 }
 /*----------------------------------------------------------------------  
@@ -550,7 +550,7 @@ ElementType elType;
 	  previous->Next =  ptrDesc->Next;
 	else
 	  ListUnitDesc = ptrDesc->Next;
-	TtaFreeMemory ((char *)ptrDesc);
+	TtaFreeMemory (ptrDesc);
       }
 }
 
@@ -882,7 +882,7 @@ TypeTree tree;
   while (ptrDesc != NULL)
     {
       ListUnitDesc = ptrDesc->Next;
-      TtaFreeMemory((char *)ptrDesc);
+      TtaFreeMemory (ptrDesc);
       ptrDesc = ListUnitDesc;
     }
   ListUnitDesc = NULL;

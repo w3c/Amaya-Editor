@@ -3304,7 +3304,7 @@ void *extra;
    if (context->drv->UpdatePresentation != NULL)
       context->drv->UpdatePresentation (target, context, unused);
 
-   TtaFreeMemory(callblock);
+   TtaFreeMemory (callblock);
 }
 
 /*----------------------------------------------------------------------

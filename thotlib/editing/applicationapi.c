@@ -199,7 +199,8 @@ void                TtaQuit ()
 
 #  ifdef _WINDOWS
 #  ifndef NODISPLAY
-   DeleteObject (TtCmap);
+   if (TtIsTrueColor && !DeleteObject (TtCmap))
+      WinErrorBox (WIN_Main_Wd);
 #  endif /* NODISPLAY */
 #  endif /* _WINDOWS */
 
@@ -444,19 +445,19 @@ int                 result;
   ----------------------------------------------------------------------*/
 static void         QuitHandler ()
 {
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    signal (SIGINT, ErrorHandler);
    signal (SIGQUIT, SIG_DFL);
    signal (SIGTERM, ErrorHandler);
    if (ThotLocalActions [T_backuponfatal] != NULL)
      (*ThotLocalActions [T_backuponfatal]) ();
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
    exit (1);
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    signal (SIGINT, QuitHandler);
    signal (SIGQUIT, QuitHandler);
    signal (SIGTERM, QuitHandler);
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -464,20 +465,20 @@ static void         QuitHandler ()
   ----------------------------------------------------------------------*/
 void                InitErrorHandler ()
 {
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    signal (SIGBUS, ErrorHandler);
    signal (SIGSEGV, ErrorHandler);
-#ifdef SIGABRT
+#  ifdef SIGABRT
    signal (SIGABRT, ErrorHandler);
-#else
+#  else
    signal (SIGIOT, ErrorHandler);
-#endif
+#  endif
 
    signal (SIGHUP, ErrorHandler);
    signal (SIGINT, QuitHandler);
    signal (SIGQUIT, QuitHandler);
    signal (SIGTERM, QuitHandler);
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
 }
 
 

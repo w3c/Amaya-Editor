@@ -132,7 +132,7 @@ GenericContext      ctxt;
       return;
    if (ctxt->drv != &GenericStrategy)
       return;
-   TtaFreeMemory ((char *) ctxt);
+   TtaFreeMemory ( ctxt);
 }
 
 
@@ -886,13 +886,13 @@ GenericContext      ctxt;
 
 	if (ctxt->class)
 	  {
-	     TtaFreeMemory ((char *) pSchemaPrs->PsAttrPRule[ctxt->classattr - 1]);
+	     TtaFreeMemory ( pSchemaPrs->PsAttrPRule[ctxt->classattr - 1]);
 	     attrs = pSchemaPrs->PsAttrPRule[ctxt->classattr - 1] = found;
 	     pSchemaPrs->PsNAttrPRule[ctxt->classattr - 1] = nbrules;
 	  }
 	else if (ctxt->attr)
 	  {
-	     TtaFreeMemory ((char *) pSchemaPrs->PsAttrPRule[ctxt->attr - 1]);
+	     TtaFreeMemory ( pSchemaPrs->PsAttrPRule[ctxt->attr - 1]);
 	     attrs = pSchemaPrs->PsAttrPRule[ctxt->attr - 1] = found;
 	     pSchemaPrs->PsNAttrPRule[ctxt->attr - 1] = nbrules;
 	  }
