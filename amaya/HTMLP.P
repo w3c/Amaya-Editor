@@ -4956,6 +4956,23 @@ BOXES
 		Visibility: 0;
 	END;
 
+ CellBgColor:
+	BEGIN
+	Content: Graphics 'R';
+	VertPos: Top = Enclosing . Top;
+	HorizPos: Left = Creator . Left - TableSimpleHSpace;
+	Width: Creator . Width + TableDoubleHSpace;
+	Height: Enclosing . Height;
+	FillPattern: backgroundcolor;
+	Background : Creator = ;
+	Depth : Creator + 1;
+	Lineweight : 0;
+	IN Structure_view
+		Visibility: 0;
+	IN Alternate_view
+		Visibility: 0;
+	END;
+
  CellFooter:
 	BEGIN
 #ifdef PAGE
@@ -9234,6 +9251,12 @@ ATTRIBUTES
 	CreateBefore(ATTR_BGCOLOR);
 	CreateBefore(VALUE_BGCOLOR);
 	END;
+
+ BackgroundColor (Data_cell):
+	CreateAfter(CellBgColor);
+
+ BackgroundColor (Heading_cell):
+	CreateAfter(CellBgColor);
 
  TextColor:
 	BEGIN
