@@ -537,9 +537,10 @@ static void animate_box_transformation (PtrElement El,
       if (pAb)
 	if (pAb->AbFirstEnclosed)
 	  {
-	    UpdateClipping (pAb->AbFirstEnclosed);
-	    
-	    Trans->Angle = result;
+	    UpdateClipping (pAb->AbFirstEnclosed);	    
+	    Trans->Angle = rott;
+	    Trans->XRotate = tx;
+	    Trans->YRotate = ty;
 	    ComputeBoundingBox (pAb->AbFirstEnclosed->AbBox, 
 				Animated_Frame, 
 				0, FrameTable[Animated_Frame].FrWidth, 
