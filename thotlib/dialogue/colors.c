@@ -35,6 +35,7 @@
 #include "winsys.h"
 #endif /* _WINDOWS */
 
+static boolean ColorMenuConf = FALSE;
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -61,8 +62,6 @@
 static BOOL   wndRegistered = FALSE;
 
 extern LPCTSTR iconID;
-
-extern boolean ColorMenuConf;
 
 #ifdef __STDC__
 LRESULT CALLBACK ThotColorPaletteWndProc (HWND, UINT, WPARAM, LPARAM);
