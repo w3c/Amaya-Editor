@@ -2055,9 +2055,15 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
 		val = val * pNextBox->BxAbstractBox->AbWidth.DimValue / 100;
 	      else if ((pNextBox->BxType == BoBlock ||
 		       pNextBox->BxType == BoFloatBlock) &&
+		        pNextBox->BxAbstractBox->AbDisplay == 'I' &&
 		       pNextBox->BxMaxWidth < val)
-		/* use the max between the enclosed and the enclosing widths */
-		val =  pNextBox->BxMaxWidth;
+		{
+		  /* use the max between the enclosed and the enclosing widths */
+		  pNextBox->BxContentWidth = TRUE;
+		  val =  pNextBox->BxMaxWidth;
+		}
+	      else
+		pNextBox->BxContentWidth = FALSE;
 	      ResizeWidth (pNextBox, pBlock, NULL,
 			   val - pNextBox->BxWidth, 0, 0, 0, frame);
 	      /* recheck if the line could be moved under floating boxes */
@@ -3299,7 +3305,8 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 		    {
 		      /* line position not updated by floating boxes */
 		      /* position when line spacing applies */
-		      org = prevLine->LiYOrg + prevLine->LiHorizRef + lineSpacing - pLine->LiHorizRef;
+		      org = prevLine->LiYOrg + prevLine->LiHorizRef
+			+ lineSpacing - pLine->LiHorizRef;
 		      if (org > pLine->LiYOrg ||
 			  (!prevLine->LiNoOverlap && !standard))
 			/* apply the rule of line spacing */
