@@ -1,9 +1,9 @@
 /*
- *
- *  (c) COPYRIGHT INRIA, 1996-2002.
- *  Please first read the full copyright statement in file COPYRIGHT.
- *
- */
+*
+*  (c) COPYRIGHT INRIA, 1996-2002.
+*  Please first read the full copyright statement in file COPYRIGHT.
+*
+*/
 /*
  * Handles Opengl Fonts with Freetype 2 
  * (http://www.freetype.org)

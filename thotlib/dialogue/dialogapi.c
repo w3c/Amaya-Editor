@@ -1951,7 +1951,13 @@ void TtaInitDialogue (char *server, ThotAppContext *app_context)
    RegisterClassEx (&RootShell);
 
    /*Window canvas  class */
-   RootShell.style = CS_DBLCLKS | CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
+   RootShell.style = 
+	   /* Handle dblclks*/
+	   CS_DBLCLKS |
+	   /* Force entire window redraw on H or V resize */
+	   /* CS_HREDRAW | CS_VREDRAW | */
+	   /* Faster handling of device context*/
+	   CS_OWNDC;
    RootShell.lpfnWndProc = ClientWndProc;
    RootShell.cbClsExtra = 0;
    RootShell.cbWndExtra = 0;
