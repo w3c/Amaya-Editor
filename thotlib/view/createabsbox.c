@@ -611,7 +611,7 @@ DocViewNumber       viewNb;
 	  {
 	     pView = &pDoc->DocView[viewNb - 1];
 	     if (pView->DvSSchema == pDoc->DocSSchema)
-		if (pSS == pDoc->DocSSchema)
+		if (pSS->SsCode == pDoc->DocSSchema->SsCode)
 		  {
 		     /* c'est une element du document lui-meme */
 		     viewSch = pView->DvPSchemaView;
