@@ -2359,13 +2359,18 @@ void GenerateAutoSavedDoc (Document doc)
   int             l, interval = 0;
   ThotBool        ok;
 
-#ifdef AMAYA_DEBUG
-  fprintf (stderr, "\nGenerateAutoSavedDoc - doc %d\n", doc);
-#endif
+  if (!DocumentURLs[doc])
+    /* No URL for this document. It may be an SVG animation Timeline for
+       instance. Don't save this kind of document */
+    return;
 
   TtaGetEnvInt ("AUTO_SAVE", &interval);
   if (interval == 0)
     return;
+
+#ifdef AMAYA_DEBUG
+  fprintf (stderr, "\nGenerateAutoSavedDoc - doc %d\n", doc);
+#endif
 
   /* Generate the autosaved file name */
   l = strlen (DocumentURLs[doc]) - 1;
