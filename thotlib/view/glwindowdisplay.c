@@ -1989,7 +1989,7 @@ ThotBool GL_NotInFeedbackMode ()
   return NotFeedBackMode;
 }
 
-#define FEEDBUFFERSIZE 16384
+#define FEEDBUFFERSIZE 32768
 
 /*---------------------------------------------------
   ComputeBoundingBox :

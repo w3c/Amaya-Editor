@@ -2612,9 +2612,10 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
 
       /* box->VisibleModification = TRUE; */
 
-      if (pAb->AbLeafType == LtPolyLine ||
+      if ((pAb->AbLeafType == LtPolyLine ||
 	  /* pAb->AbLeafType == LtGraphics || */
-	  pAb->AbLeafType == LtPath)
+	  pAb->AbLeafType == LtPath) &&
+	  !selected)
 	{
 	  if (!(box->VisibleModification) &&
 	      !selected &&
@@ -2700,9 +2701,10 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
       GL_SetFillOpacity (1000);
       GL_SetStrokeOpacity (1000);
       box->VisibleModification = FALSE;  
-      if (pAb->AbLeafType == LtPolyLine ||
+      if ((pAb->AbLeafType == LtPolyLine ||
 /* 	  pAb->AbLeafType == LtGraphics || */
-	  pAb->AbLeafType == LtPath)
+	  pAb->AbLeafType == LtPath) && 
+	  !selected)
 	glEndList ();
     }
 #endif /*_GL*/
@@ -2925,46 +2927,3 @@ int GetArabFontAndIndex (CHAR_T c, CHAR_T prev, CHAR_T next,
     }
  
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

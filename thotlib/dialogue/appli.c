@@ -708,16 +708,18 @@ gboolean ExposeCallbackGTK (ThotWidget widget,
      They will see the Speed problem...*/
   /*if (event->count > 0)*/
   /*    return TRUE; */
-
-  if (glhard ()) 
+  if (GL_prepare (frame))
     {
-    DefRegion (frame,
- 	       0, 0, 
- 	       FrameTable[frame].FrWidth, FrameTable[frame].FrHeight); 
-    FrameRedraw (frame, FrameTable[frame].FrWidth, FrameTable[frame].FrHeight);
+      if (glhard ()) 
+	{
+	  DefRegion (frame,
+		     0, 0, 
+		     FrameTable[frame].FrWidth, FrameTable[frame].FrHeight); 
+	  FrameRedraw (frame, FrameTable[frame].FrWidth, FrameTable[frame].FrHeight);
+	}
+      else
+	GL_Swap (frame);
     }
-  else
-    GL_Swap (frame);
   return TRUE;
 }
 
@@ -746,11 +748,7 @@ gboolean FrameResizedGTK (GtkWidget *widget,
     if (GL_prepare (frame))
       {
 	/* prevent flickering*/
-	GL_SwapStop (frame); 	
-
-	while (gtk_events_pending ())
-	  gtk_main_iteration ();
-
+	GL_SwapStop (frame); 
 	FrameTable[frame].FrWidth = width;
 	FrameTable[frame].FrHeight = height;
 	GLResize (width, height, 0, 0);
@@ -775,12 +773,14 @@ gboolean FrameResizedGTK (GtkWidget *widget,
 	    FrameTable[frame].FrWidth = width;
 	    FrameTable[frame].FrHeight = height;
 	    if (GL_prepare (frame))
-      {
-	    GLResize (width, height, 0, 0);
-	    DefRegion (frame, 0, 0, width, height);
-	    FrameRedraw (frame, width, height);
+	      {
 
-      }
+		FrameTable[frame].FrWidth = width;
+		FrameTable[frame].FrHeight = height;
+		GLResize (width, height, 0, 0);
+		DefRegion (frame, 0, 0, width, height);
+		FrameRedraw (frame, width, height);
+	      }
 	    while (gtk_events_pending ())
 	      gtk_main_iteration ();
 

@@ -1007,7 +1007,7 @@ static int is_animated_now (Animated_Element *animated, AnimTime *current_time)
 	  return ANIMATING;
 	}
       else if ((*current_time - animated->start) > 0.00001 && 
-	       (animated->action_time - (animated->start)) > 0.00001)
+	       fabs(animated->action_time - (animated->start)) > 0.00001)
 	{
 	  *current_time = animated->start;
 	  return ANIMATING;
