@@ -4943,6 +4943,8 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer,
 		  else
 		    base = strstr (&CSSbuffer[import], "screen");
 		  if (base == NULL)
+		     base = strstr (&CSSbuffer[import], "all");
+		  if (base == NULL)
 		    ignoreMedia = TRUE;
 		  noRule = TRUE;
 		}
@@ -5015,6 +5017,14 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer,
 			  if (quoted)
 			    cssRule--;
 			  *cssRule = EOS;
+			  if (TtaIsPrinting ())
+			    base = strstr (&cssRule[1], "print");
+			  else
+			    base = strstr (&cssRule[1], "screen");
+			  if (base == NULL)
+			    base = strstr (&cssRule[1], "all");
+			  if (base == NULL)
+			    ignoreImport = TRUE;
 			  if (!ignoreImport)
 			    LoadStyleSheet (base, docRef, NULL, css,
 					    css->media[docRef],

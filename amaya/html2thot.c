@@ -6588,7 +6588,7 @@ void StartParser (Document doc, char *fileName,
 #endif /* ANNOTATIONS */
 	    rootElement = TtaGetRootElement (doc);
 
-	  if (DocumentTypes[doc] == docSource)
+	  if (DocumentTypes[doc] == docSource || DocumentTypes[doc] == docCSS)
 	    {
 	      /* add the attribute Source */
 	      attrType.AttrSSchema = DocumentSSchema;
