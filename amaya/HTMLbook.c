@@ -147,11 +147,11 @@ Document            document;
 	 }
        else
 	 {
-#ifdef _WINDOWS
+#          ifdef _WINDOWS
 	   strcpy (PSdir,"C:\\TEMP");
-#else  /* !_WINDOWS */
+#          else  /* !_WINDOWS */
 	   strcpy (PSdir,"/tmp");
-#endif /* !_WINDOWS */
+#          endif /* !_WINDOWS */
 	   lg = strlen (PSdir);
 	 }
        strcpy (docName, TtaGetDocumentName (document));

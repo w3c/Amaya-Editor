@@ -875,12 +875,20 @@ char               *documentname;
 		  return (0);
 	       }
 	     /* we have to rename the temporary file */
+#            ifndef _WINDOWS
 	     sprintf (tempdir, "%s%s%d%s", TempFileDirectory, DIR_STR, newdoc, DIR_STR);
+#            else  /* _WINDOWS */
+	     sprintf (tempdir, "C:\\TEMP\\AMAYA\\%d\\", newdoc);
+#            endif /* _WINDOWS */
 	     strcpy (tempdocument, tempdir);
 	     strcat (tempdocument, documentname);
 	     if (doc != newdoc)
 	       {
+#                 ifndef _WINDOWS
 		  tmp_fp = fopen (tempdir, "r");
+#                 else  /* _WINDOWS */
+		  tmp_fp = fopen (tempdir, "rb");
+#                 endif /* _WINDOWS */
 		  if (tmp_fp == 0)
 		     /*directory did not exist */
 		     mkdir (tempdir, S_IRWXU);
@@ -1920,10 +1928,10 @@ NotifyEvent        *event;
    TtaRegisterPixmap("Link", iconLink);
    iconTable = TtaCreatePixmapLogo (Table_xpm);
    TtaRegisterPixmap("Table", iconTable);
-#ifdef AMAYA_PLUGIN
+#  ifdef AMAYA_PLUGIN
    iconPlugin = TtaCreatePixmapLogo (Plugin_xpm);
    TtaRegisterPixmap("Plugin", iconPlugin);
-#endif
+#  endif
 #ifdef AMAYA_JAVA
    iconJava = TtaCreatePixmapLogo (Java_xpm);
    TtaRegisterPixmap("Java", iconJava);
@@ -1932,10 +1940,11 @@ NotifyEvent        *event;
    TargetName = NULL;
    /* initialize temporary directory for loaded files */
    s = (char *) TtaGetEnvString ("HOME");
+
    if (s)
       strcpy (TempFileDirectory, s);
    else
-#ifdef _WINDOWS
+#  ifdef _WINDOWS
      {
 	s = (char *) TtaGetEnvString ("TEMP");
 	if (s)
@@ -1951,7 +1960,7 @@ NotifyEvent        *event;
 	strcpy (TempFileDirectory, "C:\\TEMP\\AMAYA");
 	i = _mkdir (TempFileDirectory);
 	if (i != 0 && errno != EEXIST)
-#else  /* !_WINDOWS */
+#  else  /* !_WINDOWS */
      strcpy (TempFileDirectory, "/tmp");
    strcat (TempFileDirectory, DIR_STR);
    strcat (TempFileDirectory, ".amaya");
@@ -1961,7 +1970,7 @@ NotifyEvent        *event;
 	strcpy (TempFileDirectory, "/tmp/.amaya");
 	i = mkdir (TempFileDirectory, S_IRWXU);
 	if (i != 0 && errno != EEXIST)
-#endif /* !_WINDOWS */
+#  endif /* !_WINDOWS */
 	  {
 	     fprintf (stderr, "cannot create %s\n", TempFileDirectory);
 	     exit (1);
@@ -2035,11 +2044,7 @@ NotifyEvent        *event;
       /* No argument in the command line, no HOME_PAGE variable. Open the */
       /* default Amaya URL */
      {
-#ifdef _WINDOWS
-        strcpy (LastURLName, "/users/guetari/opera/WINNT/Amaya.html");
-#else  /* _WINDOWS */
 	strcpy (LastURLName, AMAYA_PAGE);
-#endif /* _WINDOWS */
 	CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
      }
    else if (IsW3Path (s))
@@ -2056,11 +2061,11 @@ NotifyEvent        *event;
         {
 	NormalizeFile (s, LastURLName);
 	/* check if it is an absolute or a relative name */
-#ifdef _WINDOWS
+#       ifdef _WINDOWS
 	if ((LastURLName[0] == DIR_SEP) || (LastURLName[1] == ':'))
-#else  /* !_WINDOWS */
+#       else  /* !_WINDOWS */
 	if (LastURLName[0] == DIR_SEP)
-#endif /* !_WINDOWS */
+#       endif /* !_WINDOWS */
 	   /* it is an absolute name */
 	   TtaExtractName (LastURLName, DirectoryName, DocumentName);
 	else

@@ -11,7 +11,7 @@
  * (redirection, authentication needed, not found, etc.)
  *
  * Author: J. Kahan
- *
+ *         R. Guetari (W3C/INRIA) Windows 95/NT routines
  */
 
 #ifndef AMAYA_JAVA
@@ -213,11 +213,11 @@ int                 docid;
    /* Initialize the other members of the structure */
    me->reqStatus = HT_NEW; /* initial status of a request */
    me->output = NULL;
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    me->read_xtinput_id = (XtInputId) NULL;
    me->write_xtinput_id = (XtInputId) NULL;
    me->except_xtinput_id = (XtInputId) NULL;
-#endif
+#  endif
    me->docid = docid;
    HTRequest_setMethod (me->request, METHOD_GET);
    HTRequest_setOutputFormat (me->request, WWW_SOURCE);
@@ -390,9 +390,9 @@ static void         Thread_deleteAll ()
 	       {
 		  if (me->request)
 		    {
-#ifndef _WINDOWS
+#                      ifndef _WINDOWS
 		       RequestKillAllXtevents (me);
-#endif /* !_WINDOWS */
+#                      endif /* !_WINDOWS */
 		       AHTReqContext_delete (me);
 		    }
 	       }		/* while */
@@ -984,18 +984,12 @@ static void         AHTNetInit (void)
  */
 
 #ifndef HACK_WWW
-
-   HTNet_addAfter (HTAuthFilter, "http://*", NULL, HT_NO_ACCESS,
-		   5);
-
-   HTNet_addAfter (redirection_handler, "http://*", NULL, HT_TEMP_REDIRECT,
-		   5);
-   HTNet_addAfter (redirection_handler, "http://*", NULL, HT_PERM_REDIRECT,
-		   5);
-   HTNet_addAfter (HTUseProxyFilter, "http://*", NULL, HT_USE_PROXY,
-		   5);
-
-   HTNet_addAfter (AHTLoadTerminate_handler, NULL, NULL, HT_ALL, HT_FILTER_LAST);	/* handles all errors */
+   HTNet_addAfter (HTAuthFilter, "http://*", NULL, HT_NO_ACCESS, 5);
+   HTNet_addAfter (redirection_handler, "http://*", NULL, HT_TEMP_REDIRECT, 5);
+   HTNet_addAfter (redirection_handler, "http://*", NULL, HT_PERM_REDIRECT, 5);
+   HTNet_addAfter (HTUseProxyFilter, "http://*", NULL, HT_USE_PROXY, 5);
+   HTNet_addAfter (AHTLoadTerminate_handler, NULL, NULL, HT_ALL, HT_FILTER_LAST);	
+   /* handles all errors */
    HTNet_addAfter (terminate_handler, NULL, NULL, HT_ALL, HT_FILTER_LAST);
 #endif
 }
@@ -1010,7 +1004,6 @@ static void         AHTAlertInit (void)
 static void         AHTAlertInit ()
 #endif
 {
-
    HTAlert_add (AHTProgress, HT_A_PROGRESS);
    HTAlert_add ((HTAlertCallback *) Add_NewSocket_to_Loop, HT_PROG_CONNECT);
    HTAlert_add (AHTError_print, HT_A_MESSAGE);
@@ -1198,12 +1191,13 @@ static int          LoopForStop (AHTReqContext * me)
 #endif
 {
 
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    extern ThotAppContext app_cont;
-   XEvent              ev;
-   XtInputMask         status;
-
-#endif /* !_WINDOWS */
+   XEvent                ev;
+   XtInputMask           status;
+#  else  /* _WINDOWS */
+   MSG ev;
+#  endif /* _WINDOWS */
    int                 status_req = HT_OK;
 
    /* to test the async calls  */
@@ -1212,12 +1206,11 @@ static int          LoopForStop (AHTReqContext * me)
 	  me->reqStatus != HT_END &&
 	  me->reqStatus != HT_ERR)
      {
-
-#ifndef _WINDOWS
 	if (!AmayaIsAlive)
 	  /* Amaya was killed by one of the callback handlers */
 	  exit (0);
 
+#       ifndef _WINDOWS
         status = XtAppPending (app_cont);
         if (status & XtIMXEvent)
           {
@@ -1234,7 +1227,10 @@ static int          LoopForStop (AHTReqContext * me)
              XtAppNextEvent (app_cont, &ev);
              TtaHandleOneEvent (&ev);
           }
-#endif /* !_WINDOWS */
+#       else  /* _WINDOWS */
+	if (GetMessage (&ev, NULL, 0, 0))
+	   TtaHandleOneWindowEvent (&ev);
+#       endif /* !_WINDOWS */
      }
 
    switch (me->reqStatus)
@@ -1374,6 +1370,9 @@ boolean             error_html;
    char               *ref;
    int                 status;
    HTList             *cur, *pending;
+#  ifdef _WINDOWS
+   DWORD               attribs;
+#  endif /* _WINDOWS */
 
    if (urlName == NULL || docid == 0 || outputfile == NULL)
      {
@@ -1402,30 +1401,44 @@ boolean             error_html;
    /* verify if a docid directory exists */
 
    tmp_dir = TtaGetMemory (strlen (TempFileDirectory) + 5 + 1);
+#  ifndef _WINDOWS
    sprintf (tmp_dir, "%s/%d", TempFileDirectory, docid);
+#  else  /* _WINDOWS */
+   sprintf (tmp_dir, "C:\\TEMP\\AMAYA\\%d", docid);
+#  endif /* _WINDOWS */
 
+#  ifndef _WINDOWS
    tmp_fp = fopen (tmp_dir, "r");
    if (tmp_fp == 0)
+#  else /* _WINDOWS */
+   attribs = GetFileAttributes (tmp_dir) ;
+
+   if (attribs == 0xFFFFFFFF)
+#  endif /* _WINDOWS */
      {
 	/*directory did not exist */
-	if (mkdir (tmp_dir, S_IRWXU) == -1)
-	  {
-	     /*error */
-	     outputfile[0] = EOS;
-	     TtaSetStatus (docid, 1, TtaGetMessage (AMAYA, AM_CACHE_ERROR),
-			   urlName);
-
-	     if (error_html)
-	       DocNetworkStatus[docid] |= AMAYA_NET_ERROR; /* so we can show the error message */
-	     return HT_ERROR;
-	  }
+	if (mkdir (tmp_dir, S_IRWXU) == -1) {
+	   /*error */
+	   outputfile[0] = EOS;
+	   TtaSetStatus (docid, 1, TtaGetMessage (AMAYA, AM_CACHE_ERROR), urlName);
+	   
+	   if (error_html)
+	      DocNetworkStatus[docid] |= AMAYA_NET_ERROR; /* so we can show the error message */
+	   return HT_ERROR;
+	}
      }
+#  ifndef _WINDOWS
    else
       fclose (tmp_fp);
+#  endif /* !_WINDOWS */
 
    /*create a tempfilename */
 
+#  ifndef _WINDOWS
    sprintf (outputfile, "%s/%04dAM", tmp_dir, object_counter);
+#  else  /* _WINDOWS */
+   sprintf (outputfile, "%s\\%04dAM", tmp_dir, object_counter);
+#  endif /* _WINDOWS */
 
    TtaFreeMemory (tmp_dir);
 
@@ -1437,7 +1450,7 @@ boolean             error_html;
 
    /* should we abort the request if we could not normalize the url? */
 
-   if (ref == (char *) NULL || ref[0] == EOS)
+   if (ref == (char*) NULL || ref[0] == EOS)
      {
 	/*error */
 	outputfile[0] = EOS;
@@ -1532,7 +1545,7 @@ boolean             error_html;
 
    if ((mode & AMAYA_ASYNC) || (mode & AMAYA_IASYNC))
      {
-	char               *tmp;
+	char* tmp;
 
 	tmp = TtaGetMemory (strlen (outputfile) + 1);
 	strcpy (tmp, outputfile);
@@ -1615,7 +1628,9 @@ generated
 
 	if ((mode & AMAYA_SYNC) || (mode & AMAYA_ISYNC))
 	  {
+#            ifndef _WINDOWS
 	     status = LoopForStop (me);
+#            endif /* _WINDOWS */ 
 	     AHTReqContext_delete (me);
 	  }
 	else
@@ -1789,6 +1804,158 @@ void               *context_tcbf;
    return (status);
 }
 
+#ifdef _WINDOWS
+/*----------------------------------------------------------------------
+  WIN_GetObjectWWW
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int WIN_GetObjectWWW (int doc_id, char* URL_name, char* output_file, boolean error_HTML)
+#else /* __STDC__ */
+int WIN_GetObjectWWW (int doc_id, char* URL_name, char* output_file, boolean error_HTML)
+int     doc_id;
+char*   URL_name;
+char*   output_file;
+boolean error_HTML;
+#endif /* __STDC__ */
+{
+   HTRequest* WIN_request    = HTRequest_new ();
+   HTList*    WIN_converters = HTList_new ();		/* List of converters */
+   HTList*    WIN_encodings  = HTList_new ();		/* List of encoders */
+   HTChunk*   WIN_chunk      = NULL;
+
+   FILE*      WIN_tmp_fp;
+   char*      WIN_tmp_dir;
+   char*      WIN_ref;
+   DWORD      WIN_attribs;
+
+   if (URL_name == NULL || doc_id == 0 || output_file == NULL) {
+      /* no file to be loaded */
+      TtaSetStatus (doc_id, 1, TtaGetMessage (AMAYA, AM_BAD_URL), URL_name);
+
+      if (error_HTML)
+	 DocNetworkStatus[doc_id] |= AMAYA_NET_ERROR; /* so we can show the error message */
+      return HT_ERROR;
+   }
+
+   /* do we support this protocol? */
+   if (IsValidProtocol (URL_name) == NO) {
+      /* return error */
+      output_file[0] = EOS;	/* file could not be opened */
+      TtaSetStatus (doc_id, 1, TtaGetMessage (AMAYA, AM_GET_UNSUPPORTED_PROTOCOL), URL_name);
+   
+      if (error_HTML)
+	 DocNetworkStatus[doc_id] |= AMAYA_NET_ERROR; /* so we can show the error message */
+      return HT_ERROR;
+   }
+
+   /* verify if a docid directory exists */
+   WIN_tmp_dir = TtaGetMemory (strlen (TempFileDirectory) + 5 + 1);
+   sprintf (WIN_tmp_dir, "C:\\TEMP\\AMAYA\\%d", doc_id);
+
+   WIN_attribs = GetFileAttributes (WIN_tmp_dir) ;
+
+   if (WIN_attribs == 0xFFFFFFFF) {
+      /*directory did not exist */
+      if (mkdir (WIN_tmp_dir, S_IRWXU) == -1) {
+	 /*error */
+	  output_file[0] = EOS;
+	  TtaSetStatus (doc_id, 1, TtaGetMessage (AMAYA, AM_CACHE_ERROR), URL_name);
+	   
+	  if (error_HTML)
+	     DocNetworkStatus[doc_id] |= AMAYA_NET_ERROR; /* so we can show the error message */
+	  return HT_ERROR;
+      }
+   }
+
+   /*create a tempfilename */
+   sprintf (output_file, "%s\\%04dAM", WIN_tmp_dir, object_counter);
+   TtaFreeMemory (WIN_tmp_dir);
+
+   /* update the object_counter */
+   object_counter++;
+
+   /* normalize the URL */
+   WIN_ref = AmayaParseUrl (URL_name, "", AMAYA_PARSE_ALL);
+
+   /* should we abort the request if we could not normalize the url? */
+
+   if (WIN_ref == (char*) NULL || WIN_ref[0] == EOS) {
+      /*error */
+      output_file[0] = EOS;
+      TtaSetStatus (doc_id, 1, TtaGetMessage (AMAYA, AM_BAD_URL), URL_name);
+
+      if (error_HTML)
+	 DocNetworkStatus[doc_id] |= AMAYA_NET_ERROR; /* so we can show the error message */
+      return HT_ERROR;
+   }
+   /* verify if that file name existed */
+   if (TtaFileExist (output_file))
+      TtaFileUnlink (output_file);
+
+   /* try to open the outputfile */
+   if ((WIN_tmp_fp = fopen (output_file, "wb")) == NULL) {
+      output_file[0] = EOS;	/* file could not be opened */
+      TtaSetStatus (doc_id, 1, TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE), output_file);
+      TtaFreeMemory (WIN_ref);
+    
+      if (error_HTML)
+	 DocNetworkStatus[doc_id] |= AMAYA_NET_ERROR; /* so we can show the error message */
+      return (HT_ERROR);
+   }
+
+   HTLibInit ("Amaya for Windows", "1.0a");
+
+   /* Register the default set of transport protocols */
+   HTTransportInit ();
+   
+   /* Register the default set of protocol modules */
+   HTProtocolInit ();
+   
+   /* Register the default set of BEFORE and AFTER callback functions */
+   HTNetInit ();
+   
+   /* Register the default set of converters */
+   HTConverterInit (WIN_converters);
+   HTFormat_setConversion (WIN_converters);
+   
+   /* Register the default set of transfer encoders and decoders */
+   HTEncoderInit (WIN_encodings);
+   HTFormat_setTransferCoding (WIN_encodings);
+   
+   /* Register the default set of MIME header parsers */
+   HTMIMEInit ();
+   
+   /* Set up the request and pass it to the Library */
+   HTRequest_setOutputFormat (WIN_request, WWW_SOURCE);
+   HTRequest_setPreemptive (WIN_request, YES);
+   if (WIN_ref) {
+      char*     WIN_cwd          = HTGetCurrentDirectoryURL ();
+      char*     WIN_absolute_url = HTParse (WIN_ref, WIN_cwd, PARSE_ALL);
+      HTAnchor* WIN_anchor       = HTAnchor_findAddress (WIN_absolute_url);
+      WIN_chunk                  = HTLoadAnchorToChunk (WIN_anchor, WIN_request);
+      HT_FREE (WIN_absolute_url);
+      HT_FREE (WIN_cwd);
+      
+       /* If chunk != NULL then we have the data */
+      if (WIN_chunk) {
+	 char* WIN_string = HTChunk_toCString (WIN_chunk);
+	 if (WIN_string)
+	    fprintf (WIN_tmp_fp, "%s", WIN_string);
+	 HT_FREE (WIN_string);
+      }
+   }
+   
+   /* Clean up the request */
+   HTRequest_delete(WIN_request);
+   HTFormat_deleteAll();
+   
+   /* Terminate the Library */
+   HTLibTerminate();
+   fclose (WIN_tmp_fp);
+   return 0;
+}
+#endif /* _WINDOWS */
+
 /*----------------------------------------------------------------------
   UploadMemWWW
   low level interface function to libwww for uploading a block of
@@ -1892,7 +2059,9 @@ char               *outputfile;
 
 	if ((mode & AMAYA_SYNC) || (mode & AMAYA_ISYNC))
 	  {
+#            ifndef _WINDOWS
 	     status = LoopForStop (me);
+#            endif /* _WINDOWS */ 
 	     AHTReqContext_delete (me);
 	  }
      }
@@ -1949,9 +2118,9 @@ int                 docid;
 			   case HT_NEW_PENDING:
 			   case HT_WAITING:
 			   default:
-#ifndef _WINDOWS
+#                             ifndef _WINDOWS
 			      RequestKillAllXtevents (me);
-#endif
+#                             endif
 			      me->reqStatus = HT_ABORT;
 			      HTRequest_kill (me->request);
 
