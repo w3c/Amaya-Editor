@@ -1,0 +1,64 @@
+<rdf:RDF
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+
+<rdf:Description about="http://www.w3.org/2000/10/annotation-ns#">
+ <rdfs:comment>A namespace for describing annotations</rdfs:comment>
+ <rdfs:comment>$Revision$ $Date$</rdfs:comment>
+ <rdfs:seeAlso resource="http://www.w3.org/2000/02/Collaboration/Annotation/papers"/>
+</rdf:Description>
+
+<rdfs:Class rdf:about="http://www.w3.org/2000/10/annotation-ns#Annotation">
+  <rdfs:label xml:lang="en">Annotation</rdfs:label>
+  <rdfs:comment>The target type of a annotation resource.</rdfs:comment>
+  <rdfs:isDefinedBy resource="http://www.w3.org/2000/10/annotation-ns#"/>
+</rdfs:Class>
+
+<rdf:Property rdf:about="http://www.w3.org/2000/10/annotation-ns#annotates">
+  <rdfs:label xml:lang="en">annotates</rdfs:label>
+  <rdfs:comment>Relates an Annotation to the resource to which the Annotation applies.  The inverse relation is 'hasAnnotation'</rdfs:comment>
+  <rdfs:isDefinedBy resource="http://www.w3.org/2000/10/annotation-ns#"/>
+</rdf:Property>
+
+<rdf:Property rdf:about="http://www.w3.org/2000/10/annotation-ns#body">
+  <rdfs:label xml:lang="en">body</rdfs:label>
+  <rdfs:comment>Relates the resource representing the 'content' of an Annotation to the Annotation resource</rdfs:comment>
+  <rdfs:subPropertyOf resource="http://www.w3.org/2000/10/annotation-ns#related"/>
+  <rdfs:isDefinedBy resource="http://www.w3.org/2000/10/annotation-ns#"/>
+</rdf:Property>
+
+<rdf:Property rdf:about="http://www.w3.org/2000/10/annotation-ns#context">
+  <rdfs:label xml:lang="en">context</rdfs:label>
+  <rdfs:comment>The context within the resource named in 'annotates' to which the Annotation most directly applies.</rdfs:comment>
+  <rdfs:isDefinedBy resource="http://www.w3.org/2000/10/annotation-ns#"/>
+</rdf:Property>
+
+<rdf:Property rdf:about="http://www.w3.org/2000/10/annotation-ns#author">
+  <rdfs:label xml:lang="en">author</rdfs:label>
+  <rdfs:comment>The name of the person or organization most responsible for creating the Annotation.</rdfs:comment>
+  <rdfs:subPropertyOf resource="http://purl.org/dc/elements/1.1/creator"/>
+  <rdfs:isDefinedBy resource="http://www.w3.org/2000/10/annotation-ns#"/>
+</rdf:Property>
+
+<rdf:Property rdf:about="http://www.w3.org/2000/10/annotation-ns#created">
+  <rdfs:label xml:lang="en">created</rdfs:label>
+  <rdfs:comment>The date and time on which the Annotation was created.  yyyy-mm-ddThh:mm:ssZ format recommended.</rdfs:comment>
+  <rdfs:subPropertyOf resource="http://purl.org/dc/elements/1.1/date"/>
+  <rdfs:isDefinedBy resource="http://www.w3.org/2000/10/annotation-ns#"/>
+</rdf:Property>
+
+<rdf:Property rdf:about="http://www.w3.org/2000/10/annotation-ns#modified">
+  <rdfs:label xml:lang="en">modified</rdfs:label>
+  <rdfs:comment>The date and time on which the Annotation was modified.  yyyy-mm-ddThh:mm:ssZ format recommended.</rdfs:comment>
+  <rdfs:subPropertyOf resource="http://purl.org/dc/elements/1.1/date"/>
+  <rdfs:isDefinedBy resource="http://www.w3.org/2000/10/annotation-ns#"/>
+</rdf:Property>
+
+<rdf:Property rdf:about="http://www.w3.org/2000/10/annotation-ns#related">
+  <rdfs:label xml:lang="en">related</rdfs:label>
+  <rdfs:comment>A relationship between an annotation and additional resources that is less specific than 'body'.  The 'related' property is expected to be
+ subclassed by more specific relationships.</rdfs:comment>
+  <rdfs:isDefinedBy resource="http://www.w3.org/2000/10/annotation-ns#"/>
+</rdf:Property>
+
+</rdf:RDF>
