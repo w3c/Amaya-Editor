@@ -445,7 +445,8 @@ static void ParseForm (Document doc, Element ancestor, Element el, int mode)
   Attribute           attr, attrS, def;
   AttributeType       attrType, attrTypeS;
   Language            lang;
-  DisplayMode         dispMode;
+  /* we initialiwe dispMode so that gcc feels happy */
+  DisplayMode         dispMode = DisplayImmediately;
   char                name[MAX_LENGTH];
   char               *value = NULL;
   char               *text;
