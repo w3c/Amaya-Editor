@@ -1770,7 +1770,6 @@ HWND hwnDlg;
 #endif /* __STDC__ */
 {
   SetDlgItemText (hwnDlg, IDC_HOMEPAGE, HomePage);
-  SetDlgItemInt (hwnDlg, IDC_FONTMENUSIZE, FontMenuSize, FALSE);
   CheckDlgButton (hwnDlg, IDC_MULTIKEY, (Multikey) 
 		  ? BST_CHECKED : BST_UNCHECKED);
   CheckDlgButton (hwnDlg, IDC_BGIMAGES, (BgImages) 
