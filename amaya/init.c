@@ -5117,6 +5117,7 @@ void HelpConfigure (document, view)
 }
 
 /*----------------------------------------------------------------------
+Accessibility help page. Added by Charles McCN oct 99
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
 void HelpAccess (Document document, View view)

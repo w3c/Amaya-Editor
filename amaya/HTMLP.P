@@ -7722,6 +7722,7 @@ RULES
 	Depth: 5;
 	if NOT Immediately within Object BEGIN
 		CreateBefore(IMG_S);
+		END;
 	LineBreak: No;
 	PageBreak: No;
 	if Immediately within Object BEGIN
