@@ -62,6 +62,10 @@
 #include "spline_f.h"
 #include "word_f.h"
 
+#ifdef _GL
+#include "glwindowdisplay.h"
+#endif /*_GL*/
+
 static ThotBool     SkipClickEvent = FALSE;
 
 #define Y_RATIO 200		/* penalisation en Y */

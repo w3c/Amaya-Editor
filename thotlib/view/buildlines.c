@@ -1857,7 +1857,7 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
 	      if (pBox->BxNexChild)
 		/* get the next child */
 		pNextBox = pBox->BxNexChild;
-	      else
+	      else 
 		{
 		  /* the whole box can be inserted in the line */
 		  pNextBox = GetNextBox (pBox->BxAbstractBox);

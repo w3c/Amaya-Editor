@@ -45,6 +45,9 @@
 #include "textcommands_f.h"
 #include "viewapi_f.h"
 
+#ifdef _GL
+#include "glwindowdisplay.h"
+#endif /*_GL*/
 /*----------------------------------------------------------------------
    ClearAbstractBoxSelection parcours l'arborescence pour annuler  
    toutes ls selections de pave.                           

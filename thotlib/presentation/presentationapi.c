@@ -54,6 +54,9 @@
 #include "undo_f.h"
 #include "viewapi_f.h"
 
+#ifdef _GL
+#include "glwindowdisplay.h"
+#endif /*_GL*/
 
 /*----------------------------------------------------------------------
   PRuleMessagePre	On veut ajouter ou modifier (selon isNew) la	
