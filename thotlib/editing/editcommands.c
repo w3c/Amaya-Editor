@@ -525,7 +525,7 @@ static ThotBool CloseTextInsertionWithControl ()
   ----------------------------------------------------------------------*/
 static void SetInsert (PtrAbstractBox *pAb, int *frame, LeafType nat, ThotBool del)
 {
-  PtrAbstractBox      pSelAb;
+  PtrAbstractBox      pSelAb, pSiblingAb;
   PtrBox              pBox;
   ViewFrame          *pFrame;
   ViewSelection      *pViewSel;
@@ -588,40 +588,43 @@ static void SetInsert (PtrAbstractBox *pAb, int *frame, LeafType nat, ThotBool d
 	      *pAb = CreateALeaf (pSelAb, frame, natureToCreate, TRUE);
 	      moveSelection = TRUE;
 	    }
-	  /* deplace l'insertion avant ou apres le pave selectionne */
 	  else if (!pSelAb->AbCanBeModified || pSelAb->AbReadOnly ||
 		   pSelAb->AbLeafType == LtCompound ||
 		   (pSelAb->AbLeafType != nat && nat != LtReference &&
 		    !(pSelAb->AbLeafType == LtSymbol && nat == LtText) &&
 		    !(pSelAb->AbLeafType == LtPolyLine && nat == LtGraphics)))
+	    /* deplace l'insertion avant ou apres le pave selectionne */
 	    {
 	      moveSelection = TRUE;
 	      if (pViewSel->VsXPos > 0)
 		{
 		  /* insert after */
 		  before = FALSE;
-		  pSelAb = pSelAb->AbNext;
+		  pSiblingAb = pSelAb->AbNext;
 		}
 	      else
 		{
 		  /* insert before */
 		  before = TRUE;
-		  pSelAb = pSelAb->AbPrevious;
+		  pSiblingAb = pSelAb->AbPrevious;
 		}
 	      notified = CloseTextInsertionWithControl ();
-	      if (pSelAb == NULL)
+	      if (pSiblingAb == NULL)
+		/* no sibling. Create a new leaf */
 		*pAb = CreateALeaf (*pAb, frame, natureToCreate, before);
-	      else if (!pSelAb->AbCanBeModified || pSelAb->AbReadOnly ||
+	      else if (!pSiblingAb->AbCanBeModified || pSiblingAb->AbReadOnly||
 		        natureToCreate != LtText ||
-		        pSelAb->AbLeafType != natureToCreate)
-		*pAb = CreateALeaf (*pAb, frame, natureToCreate, !before);
+		        pSiblingAb->AbLeafType != natureToCreate)
+		/* the sibling can't accept the requested content */
+		*pAb = CreateALeaf (*pAb, frame, natureToCreate, before);
 	      else
+		/* the new content will ba added to the existing sibling */
 		{
 		  if (before)
-		    i = pSelAb->AbVolume + 1;
+		    i = pSiblingAb->AbVolume + 1;
 		  else
 		    i = 1;
-		  *pAb = pSelAb;
+		  *pAb = pSiblingAb;
 		}
 	    }
 	}
