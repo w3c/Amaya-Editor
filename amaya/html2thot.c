@@ -6352,15 +6352,9 @@ void ParseSubTree (char* HTMLbuf, Element lastelem, ThotBool isclosed,
 		      &isclosed, TtaGetDefaultLanguage()))
 	 StopParsing (doc);
 #else /* OLD_XML_PARSER */
-#ifdef LC
        if (!ParseXmlSubTree (InputText, NULL, lastelem, isclosed,
 			     doc, TtaGetDefaultLanguage(), NULL))
 	 StopParsing (doc);
-#else /* LC */
-       if (!ParseXmlSubTree (InputText, &lastelem, &isclosed,
-			     doc, TtaGetDefaultLanguage()))
-	 StopParsing (doc);
-#endif /* LC */
 #endif /* OLD_XML_PARSER */
       }
 }
