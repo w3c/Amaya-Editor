@@ -4122,7 +4122,7 @@ static void  InitializeExpatParser (CHARSET charset)
 	   charset == ISO_8859_4   || charset == ISO_8859_5   ||
 	   charset == ISO_8859_6   || charset == ISO_8859_7   ||
 	   charset == ISO_8859_8   || charset == ISO_8859_9   ||
-	   charset == ISO_8859_15  ||
+	   charset == ISO_8859_15  || charset == KOI8_R       ||
 	   charset == WINDOWS_1250 || charset == WINDOWS_1251 ||
 	   charset == WINDOWS_1252 || charset == WINDOWS_1253 ||
 	   charset == WINDOWS_1254 || charset == WINDOWS_1255 ||
@@ -4899,7 +4899,7 @@ static void   XmlParse (FILE     *infile, CHARSET charset,
 	       charset == ISO_8859_4   || charset == ISO_8859_5   ||
 	       charset == ISO_8859_6   || charset == ISO_8859_7   ||
 	       charset == ISO_8859_8   || charset == ISO_8859_9   ||
-	       charset == ISO_8859_15  ||
+	       charset == ISO_8859_15  || charset == KOI8_R       ||
 	       charset == WINDOWS_1250 || charset == WINDOWS_1251 ||
 	       charset == WINDOWS_1252 || charset == WINDOWS_1253 ||
 	       charset == WINDOWS_1254 || charset == WINDOWS_1255 ||

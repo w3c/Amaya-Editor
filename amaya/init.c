@@ -3416,15 +3416,15 @@ static Document LoadDocument (Document doc, char *pathname,
       charEncoding = HTTP_headers (http_headers, AM_HTTP_CHARSET);
       httpcharset = TtaGetCharset (charEncoding);
 
-      if (charset != UNDEFINED_CHARSET)
-	{
-	  TtaSetDocumentCharset (newdoc, charset);
-	  DocumentMeta[newdoc]->charset = TtaStrdup (charsetname);
-	}
-      else if (httpcharset != UNDEFINED_CHARSET && charEncoding)
+      if (httpcharset != UNDEFINED_CHARSET && charEncoding)
 	{
 	  TtaSetDocumentCharset (newdoc, httpcharset);
 	  DocumentMeta[newdoc]->charset = TtaStrdup (charEncoding);
+	}
+      else if (charset != UNDEFINED_CHARSET)
+	{
+	  TtaSetDocumentCharset (newdoc, charset);
+	  DocumentMeta[newdoc]->charset = TtaStrdup (charsetname);
 	}
       else if (metacharset != UNDEFINED_CHARSET)
 	{

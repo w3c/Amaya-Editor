@@ -563,6 +563,7 @@ Language TtaGetLanguageIdFromName (char *name)
 	  else
 	    i++;
 	}
+
       if (again)
 	{
 	  strcpy (code, TtaGetLanguageCodeFromName (name));
