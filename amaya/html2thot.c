@@ -4826,7 +4826,7 @@ Document            doc;
 		   do
 		     {
 		     TtaRemoveTree (elem, doc);
-		     TtaInsertSibling (elem, prev, FALSE, doc);
+		     TtaInsertSibling (elem, prev, TRUE, doc);
 		     prev = elem;
 		     elem = next;
 		     if (elem == last)
