@@ -318,7 +318,17 @@
 316 Titre de la librairie
 317 URL de la librairie
 318 Créer une librairie
-319 Ajouter une librairie
+319 Butiner librairies
 320 Créer ou chercher une librairie
 321 La sélection courante contient des éléments non SVG. Effectuer une autre sélection SVP
 322 Le titre de la librairie est obligatoire
+323 Copie statique
+324 Copie dynamique
+325 Déplacer le curseur de position dans le document édité pour définir une nouvelle position clé...
+326 Position clé définie. Déplacer le curseur de temps pour définir la durée de l'animation...
+327 Sélectionner la couleur de départ de l'élément...
+328 Couleur de départ définie. Déplacer le curseur de temps pour définir la durée de l'animation...
+329 Sélectionner la couleur de fin...
+330 Animation définie.
+331 Attribut animé
+332 Elément sans identificateur
