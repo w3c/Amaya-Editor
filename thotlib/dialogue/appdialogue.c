@@ -270,7 +270,7 @@ int                 number;
    InitDocContexts ();
 
    /* Init the profile table */
-   InitProfileTable();
+   Prof_InitTable();
  
    /* Initialise le dialogue */
    servername = NULL;
@@ -474,7 +474,7 @@ Proc                procedure;
    int                 lg;
    int                 i;
 
-   if ((actionName == NULL) || (!BelongProfileTable(actionName))) 
+   if ((actionName == NULL) || (!Prof_BelongTable(actionName))) 
      //   if (actionName == NULL)  
        return;			/* pas de nom d'action declare */
 
@@ -925,7 +925,7 @@ CHAR_T                itemType;
  
 
   /* checks if the item is present in the user profile */
-  if (actionName == NULL || BelongProfileTable(actionName))
+  if (actionName == NULL || Prof_BelongTable(actionName))
     { 
       /* ajoute l'item dans le menu */
       i = 0;
@@ -1018,7 +1018,7 @@ int                 frame;
        lg = ustrlen (ptr) + 1;
        if (ptritem[item].ItemType == TEXT('S') && i + 2 < 700  )
 	 {
-	   if (( ptrmenu != NULL ) && !( RemoveBadSeparators(ptrmenu, item, LastItemType)))
+	   if (( ptrmenu != NULL ) && !( Prof_RemoveSeparators(ptrmenu, item, LastItemType)))
 	     {
 	       ustrcpy (&string[i], _S_);
 	       i += 2;
@@ -1118,7 +1118,7 @@ int                 doc;
 
 	   if ( ptrmenu != NULL ) 
 	     {
-	       if (!( RemoveBadSeparators(ptrmenu, item,LastItemType)))
+	       if (!( Prof_RemoveSeparators(ptrmenu, item,LastItemType)))
 		 {
 		   ustrcpy (&string[i], _S_);
 		   i += 2;
@@ -1215,7 +1215,7 @@ int                 doc;
 		if (action != 0 && item < MAX_MENU)
 		  /* creation du sous-menu */
 /* 		  if (ptrmenu->ItemsList[item].SubMenu->ItemsNb != 0) */
-		  if (!RemoveSubMenu(ptritem[item].SubMenu))
+		  if (!Prof_RemoveSubMenu(ptritem[item].SubMenu))
 		    BuildSubMenu (ptritem[item].SubMenu, ref, item, frame);
 	       }
 	  }
@@ -2661,7 +2661,7 @@ int                 doc;
 	     {
 	       /* saute les menus qui ne concernent pas cette vue */
 	       if (ptrmenu->MenuView == 0 || ptrmenu->MenuView == view)
-		 if (!RemoveMenu (ptrmenu))
+		 if (!Prof_RemoveMenu (ptrmenu))
 		   {
 		     if (menu_bar == 0)
 		       {
