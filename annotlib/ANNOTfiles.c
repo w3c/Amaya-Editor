@@ -421,6 +421,152 @@ CHAR_T *title;
 }
 
 /*-----------------------------------------------------------------------
+  ANNOT_AddThread
+  Experiment the S/P threads.
+
+  root = element to which we want to attach the item.
+  AsSibling = insert it as a sibling of root.
+
+  If root == NULL, we find the thread element. If this one doesn't
+  exist we create it and consider this item as the first one in the list.
+  If the thread element exists, we will use the last child of the thread 
+  as root.
+  -----------------------------------------------------------------------*/
+Element ANNOT_AddThreadItem (Document docAnnot, Element root, ThotBool AsSibling)
+{
+  ElementType elType;
+  Element     thread, thread_item, el;
+
+  if (root)
+    {
+      elType = TtaGetElementType (root);
+      if (elType.ElTypeNum !=  Annot_EL_Thread_item)
+	return NULL;
+      /* we can only add items to other items */
+    }
+  else
+    {
+      /* we find the the Thread element and make it our root */
+      root = TtaGetMainRoot (docAnnot);
+      elType = TtaGetElementType (root);
+      elType.ElTypeNum = Annot_EL_Thread;
+      thread = TtaSearchTypedElement (elType, SearchInTree, root);
+
+      if (!thread)
+	{
+	  /* create the thread element */
+	  elType.ElTypeNum = Annot_EL_Body;
+	  el = TtaSearchTypedElement (elType, SearchInTree, root);
+	  if (!el)
+	    return NULL; /* couldn't find a body! */
+	  elType.ElTypeNum = Annot_EL_Thread;
+	  thread =  TtaNewElement (docAnnot, elType);
+	  TtaInsertSibling (thread, el, FALSE, docAnnot);
+	  /* insert the new thread as a child */
+	}
+      root = thread;
+      AsSibling = FALSE;
+    }
+
+  /* create the new item */
+  elType.ElTypeNum = Annot_EL_Thread_item;
+  thread_item =  TtaNewTree (docAnnot, elType, "");
+
+  if (AsSibling)
+    {
+      /* insert as the last sibling of root */
+      TtaInsertSibling (thread_item, root, FALSE, docAnnot);
+    }
+  else
+    {
+      /* insert it as its child */
+      elType = TtaGetElementType (root);
+      if (elType.ElTypeNum == Annot_EL_Thread_item)
+	{
+	  /* create and attach the container */
+	  root = TtaGetLastChild (root);
+	  elType.ElTypeNum = Annot_EL_TI_content;
+	  el = TtaNewElement (docAnnot, elType);
+	  TtaInsertSibling (el, root, FALSE, docAnnot);
+	  root = el;
+	}
+      /* insert as the first child of root */
+      TtaInsertFirstChild (&thread_item, root, docAnnot);      
+    }
+
+  /* initialize the TI_Type item */
+  elType.ElTypeNum = Annot_EL_TI_Type;
+  el = TtaSearchTypedElement (elType, SearchInTree, thread_item);
+  if (el)
+    {
+      el = TtaGetFirstChild (el);
+      TtaSetTextContent (el, "Comment",
+			 TtaGetDefaultLanguage (), docAnnot);
+    }
+  return (thread_item);
+}
+
+/*-----------------------------------------------------------------------
+  ANNOT_InitDocumentThread
+  Experiment the S/P threads.
+  -----------------------------------------------------------------------*/
+void  ANNOT_InitDocumentThread (Document docAnnot)
+{
+  Element el, root;
+
+  /*
+  ** Thread initialization
+  */
+
+  /* Add a thread_item */
+  el = ANNOT_AddThreadItem (docAnnot, NULL, TRUE);
+
+  /* Add another thread item */
+  el = ANNOT_AddThreadItem (docAnnot, el, TRUE);
+
+  /* Add another thread item */
+  el = ANNOT_AddThreadItem (docAnnot, el, TRUE);
+ 
+  /* Add a child to this thread */
+  root = el;
+  el = ANNOT_AddThreadItem (docAnnot, el, FALSE);
+
+  /* Add another thread item sibling of the previous */
+  el = ANNOT_AddThreadItem (docAnnot, el, TRUE);
+
+  /* add another thread, sibling of the previous root */
+  el = ANNOT_AddThreadItem (docAnnot, root, TRUE);
+
+#if 0
+
+  elType.ElTypeNum = HTML_EL_META;
+  meta = TtaNewElement (docAnnot, elType);
+  attrType.AttrTypeNum = HTML_ATTR_meta_name;
+  attr = TtaNewAttribute (attrType);
+  TtaAttachAttribute (meta, attr, docAnnot);
+  TtaSetAttributeText (attr, "GENERATOR", meta, docAnnot);
+  attrType.AttrTypeNum = HTML_ATTR_meta_content;
+  attr = TtaNewAttribute (attrType);
+  TtaAttachAttribute (meta, attr, docAnnot);
+  ustrcpy (tempfile, HTAppName);
+  ustrcat (tempfile, " ");
+  ustrcat (tempfile, HTAppVersion);
+  TtaSetAttributeText (attr, tempfile, meta, docAnnot);
+  TtaInsertSibling (meta, child, FALSE, docAnnot);
+  
+  /* Create the BODY */
+  elType.ElTypeNum = HTML_EL_BODY;
+  body = TtaSearchTypedElement (elType, SearchInTree, root);
+  if (!body)
+    {
+      body = TtaNewTree (docAnnot, elType, "");
+      TtaInsertSibling (body, head, FALSE, docAnnot);
+    }
+#endif
+
+}
+
+/*-----------------------------------------------------------------------
    ANNOT_InitDocumentStructure
    Initializes an annotation document by adding a BODY part
    and adding META elements for title, author, date, and type
@@ -458,6 +604,10 @@ void  ANNOT_InitDocumentStructure (doc, docAnnot, annot, initBody)
   /* initialize the html body */
   if (initBody)
     ANNOT_InitDocumentBody (docAnnot, title);
+
+  /* @@ JK Test */
+  ANNOT_InitDocumentThread (docAnnot);
+  /* @@ */
 
   if (free_title)
     TtaFreeMemory (title);

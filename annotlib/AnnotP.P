@@ -1,7 +1,7 @@
 PRESENTATION Annot;
 
 VIEWS
-   Formatted_view;
+   Formatted_view, Links_view;
 
 #ifdef PAGE
 PRINT
@@ -13,6 +13,9 @@ PRINT
 #define STRUCT_INDENT 0.5 cm
 #define RDF_FgColor Black
 #define RDF_BgColor Yellow
+#define THREAD_INDENT 1.5
+#define POINT_INDENT 1
+#define Thread_visibility 5
 
 DEFAULT
 	BEGIN
@@ -38,6 +41,8 @@ DEFAULT
 	Indent: Enclosing =;
 	Depth: Enclosing =;
 	FillPattern: nopattern;
+	IN Links_view
+	   Visibility: 0;
 	END;
 
 BOXES
@@ -118,6 +123,43 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	END;
 
+ Thread_box: BEGIN
+	Content: (Text 'Thread ');
+	Font: Creator =;
+	Style: Creator =;
+	Weight: Creator =;
+	Width: Enclosing . Width;
+	VertPos: Top = Previous . Bottom + 0.2;
+	HorizPos: Left = Enclosing . Left;
+	Size: RDF_FONTSIZE;
+        Foreground: RDF_FgColor;
+        Background: RDF_BgColor;
+	BorderTopColor: Black;
+	BorderTopStyle: Solid;
+	BorderTopWidth: 2 px;
+	BorderBottomColor: Black;
+	BorderBottomStyle: Solid;
+	BorderBottomWidth: 2 px;
+	PaddingTop: 0.3;
+	PaddingBottom: 0.3;
+	IN Links_view
+	   Visibility: Thread_visibility;
+        END;
+
+ Thread_point_box: BEGIN
+	Content: Graphics 'c';
+	Height: 0.4;
+	Width: 0.4;
+	Size: Creator =;
+	LineWeight: 1 px;
+	Foreground: Creator =;
+        VertPos: Bottom = Creator . HRef;
+        HorizPos: Right = Creator . Left - 0.3;
+	Visibility: Creator =;
+	IN Links_view
+	   Visibility: Thread_visibility;
+	END;
+
 RULES
 
   Annot:
@@ -133,6 +175,8 @@ RULES
 	Size: DOC_FONTSIZE;
 	HorizPos: Left = Enclosing . Left;
 	VertPos: Top = Enclosing . Top;
+	IN Links_view
+	   Visibility: Thread_visibility;
 	END;
 
  Description:
@@ -228,6 +272,65 @@ RULES
 	HorizPos: Left = Previous . Right;
 	END;
 
+ { Threads }
+
+ Thread:
+        BEGIN
+	CreateBefore (Thread_box);
+	VertPos: Top = Previous . Bottom + 0.2;
+	HorizPos: Left = Enclosing . Left;
+	Width: Enclosing . Width;
+	IN Links_view
+	   Visibility: Thread_visibility;
+        END;
+
+ Thread_item:
+        BEGIN
+	CreateBefore (Thread_point_box);
+        VertPos: Top = Previous AnyElem . Bottom + 0.2;
+	HorizPos: Left = Enclosing . left + THREAD_INDENT;
+	Width: Enclosing . width - THREAD_INDENT;
+	IN Links_view
+	   Visibility: Thread_visibility;
+        END;
+
+ TI_desc:
+        BEGIN
+	Line;
+	VertPos: Top = Enclosing . Top;
+	HorizPos: Left = Enclosing . left;
+	Width: Enclosing . width;
+	IN Links_view
+	   Visibility: Thread_visibility;
+        END;
+
+ TI_content:
+	BEGIN
+	VertPos: Top = Previous . Bottom + 0.2;
+	HorizPos: Left = Enclosing . left + THREAD_INDENT;
+	Width: Enclosing . width - THREAD_INDENT;
+	IN Links_view
+	   Visibility: Thread_visibility;
+	END;
+
+ TI_Title:
+	BEGIN
+	END;
+
+ TI_Date:
+	BEGIN
+	END;
+
+ TI_Author:
+	BEGIN
+	END;
+
+ TI_Type:
+	BEGIN
+	IN Links_view
+	   Visibility: Thread_visibility;
+	END;
+
 ATTRIBUTES
 
  Resource:
@@ -236,3 +339,9 @@ ATTRIBUTES
         END;
 
 END
+
+
+
+
+
+

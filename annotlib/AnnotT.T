@@ -20,4 +20,8 @@ RULES
      Remove;
    END;
 
+   Thread : BEGIN
+     Remove;
+   END;
+
 END
