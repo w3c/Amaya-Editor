@@ -239,11 +239,14 @@ char               *filename;
 
 #endif /* __STDC__ */
 {
-#ifdef __CYGWIN32__
-   return fopen (filename, "rb");
-#else
-   return fopen (filename, "r");
-#endif
+   if (filename && filename [0] != '\0')
+#     ifdef _WINDOWS
+      return fopen (filename, "rb");
+#     else
+      return fopen (filename, "r");
+#     endif
+   else
+	   return (BinFile) NULL;
 }
 
 
