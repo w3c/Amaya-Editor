@@ -284,6 +284,10 @@ void LINK_AddAnnotIcon (Document source_doc, Element anchor, AnnotMeta *annot)
   
   if (iconS)
     {
+      char *ptr;
+      char *path;
+      char temp[MAX_LENGTH];
+
       /* @@@ JK? */
 #if 0
       sprintf (s, "%s%camaya%cannot.png",
@@ -294,26 +298,30 @@ void LINK_AddAnnotIcon (Document source_doc, Element anchor, AnnotMeta *annot)
       strcpy (iconName, iconS->object->name);
       WWWToLocal (iconName);
       /* expand $THOTDIR and $APP_HOME */
-      if (strncmp (iconName, "$THOTDIR", 8) == 0)
+      ptr = strstr (iconName, "$THOTDIR");
+      if (ptr)
 	{
-	  char temp[MAX_LENGTH];
-	  char* thotdir = TtaGetEnvString ("THOTDIR");
-	  strcpy (temp, iconName);
-	  strcpy (iconName, thotdir);
-	  strcat (iconName, temp+8);
+	  ptr += 8;
+	  path = TtaGetEnvString ("THOTDIR");
 	}
       else
-	if (strncmp (iconName, "$APP_HOME", 9) == 0)
-	  {
-	    char temp[MAX_LENGTH];
-	    char* app_home = TtaGetEnvString ("APP_HOME");
-	    strcpy (temp, iconName);
-	    strcpy (iconName, app_home);
-	    strcat (iconName, temp+9);
-	  }
+	{
+	  ptr = strstr (iconName, "$APP_HOME");
+	  if (ptr)
+	    {
+	      ptr += 9;
+	      path = TtaGetEnvString ("APP_HOME");
+	    }
+	}
+      if (ptr)
+	{
+	  strcpy (temp, ptr);
+	  strcpy (iconName, path);
+	  strcat (iconName, temp);
+	}
     }
   else
-      sprintf (iconName, "%s%camaya%cannot.gif",
+      sprintf (iconName, "%s%camaya%cannot.png",
 	       TtaGetEnvString ("THOTDIR"), DIR_SEP, DIR_SEP);
 
   /* only substitute the icon name if it has changed */
