@@ -284,7 +284,7 @@ static void         InitTypoLanguage ()
    /* Initialisation du reste de la table */
    for (i = 0; i < MAX_LANGUAGES; i++)
      {
-	TypoLangTable[i].LangNom[0] = EOS;
+	TypoLangTable[i].LangName[0] = EOS;
 	TypoLangTable[i].LangCode[0] = EOS;
 	TypoLangTable[i].LangAlphabet = TEXT('L');
 	for (j = 0; j < MAX_DICTS; j++)
@@ -292,32 +292,32 @@ static void         InitTypoLanguage ()
 	TypoLangTable[i].LangPattern[0] = EOS;
 	TypoLangTable[i].LangTabPattern.Charge = 0;
      }
-   ustrcpy (TypoLangTable[0].LangNom, TEXT("F-Short"));
+   ustrcpy (TypoLangTable[0].LangName, TEXT("F-Short"));
    TypoLangTable[0].LangAlphabet = TEXT('L');
    ustrcpy (TypoLangTable[0].LangPrincipal, TEXT("Fabbrev"));
    ustrcpy (TypoLangTable[0].LangSecondary, TEXT("Ftrabbrev"));
 
-   ustrcpy (TypoLangTable[1].LangNom, TEXT("E-Short"));
+   ustrcpy (TypoLangTable[1].LangName, TEXT("E-Short"));
    TypoLangTable[1].LangAlphabet = TEXT('L');
    ustrcpy (TypoLangTable[1].LangPrincipal, TEXT("Eabbrev"));
    ustrcpy (TypoLangTable[1].LangSecondary, TEXT("Etrabbrev"));
 
-   ustrcpy (TypoLangTable[2].LangNom, TEXT("F-Acronym"));
+   ustrcpy (TypoLangTable[2].LangName, TEXT("F-Acronym"));
    TypoLangTable[2].LangAlphabet = TEXT('L');
    ustrcpy (TypoLangTable[2].LangPrincipal, TEXT("Facronym"));
    ustrcpy (TypoLangTable[2].LangSecondary, TEXT("Ftracronym"));
 
-   ustrcpy (TypoLangTable[3].LangNom, TEXT("E-Acronym"));
+   ustrcpy (TypoLangTable[3].LangName, TEXT("E-Acronym"));
    TypoLangTable[3].LangAlphabet = TEXT('L');
    ustrcpy (TypoLangTable[3].LangPrincipal, TEXT("Eacronym"));
    ustrcpy (TypoLangTable[3].LangSecondary, TEXT("Etracronym"));
 
-   ustrcpy (TypoLangTable[4].LangNom, TEXT("F-Expo1"));
+   ustrcpy (TypoLangTable[4].LangName, TEXT("F-Expo1"));
    TypoLangTable[4].LangAlphabet = TEXT('L');
    ustrcpy (TypoLangTable[4].LangPrincipal, TEXT("Fexpo"));
    ustrcpy (TypoLangTable[4].LangSecondary, TEXT("Ftrexpo"));
 
-   ustrcpy (TypoLangTable[5].LangNom, TEXT("F-Expo2"));
+   ustrcpy (TypoLangTable[5].LangName, TEXT("F-Expo2"));
    TypoLangTable[5].LangAlphabet = TEXT('L');
    ustrcpy (TypoLangTable[5].LangPrincipal, TEXT("Fexpolex"));
 /*  ustrcpy(TypoLangTable[5].LangSecondary, "Fexpo2");
@@ -340,7 +340,7 @@ void                InitLanguage ()
    /* Initialization of remaining entries of the language table */
    for (i = 0; i < MAX_LANGUAGES; i++)
      {
-	LangTable[i].LangNom[0] = EOS;
+	LangTable[i].LangName[0] = EOS;
 	LangTable[i].LangCode[0] = EOS;
 	LangTable[i].LangAlphabet = TEXT('L');
 	for (j = 0; j < MAX_DICTS; j++)
@@ -350,28 +350,28 @@ void                InitLanguage ()
      }
    /* Loading the default system languages */
    i = 0;
-   ustrcpy (LangTable[i].LangNom, TEXT("ISO_latin_1"));
+   ustrcpy (LangTable[i].LangName, TEXT("ISO_latin_1"));
    ustrcpy (LangTable[i].LangCode, "x-Latin1");
    LangTable[i].LangAlphabet = TEXT('L');
    ustrcpy (LangTable[i].LangPrincipal, TEXT("Usigle"));
    ustrcpy (LangTable[i].LangSecondary, TEXT("Uname"));
 
    i = 1;
-   ustrcpy (LangTable[i].LangNom, TEXT("ISO_latin_2"));
+   ustrcpy (LangTable[i].LangName, TEXT("ISO_latin_2"));
    ustrcpy (LangTable[i].LangCode, TEXT("x-Latin2"));
    LangTable[i].LangAlphabet = TEXT('2');
    LangTable[i].LangPrincipal[0] = EOS;
    LangTable[i].LangSecondary[0] = EOS;
 
    i = 2;
-   ustrcpy (LangTable[i].LangNom, TEXT("ISO_latin_9"));
+   ustrcpy (LangTable[i].LangName, TEXT("ISO_latin_9"));
    ustrcpy (LangTable[i].LangCode, "x-Latin9");
    LangTable[i].LangAlphabet = TEXT('9');
    LangTable[i].LangPrincipal[0] = EOS;
    LangTable[i].LangSecondary[0] = EOS;
 
    i = 3;
-   ustrcpy (LangTable[i].LangNom, TEXT("Symbol"));
+   ustrcpy (LangTable[i].LangName, TEXT("Symbol"));
    ustrcpy (LangTable[i].LangCode, TEXT("x-Symbol"));
    LangTable[i].LangAlphabet = TEXT('G');
    LangTable[i].LangPrincipal[0] = EOS;
@@ -380,7 +380,7 @@ void                InitLanguage ()
    /* Loading the default user languages */
    FirstUserLang = 4;
    i = 4;
-   ustrcpy (LangTable[i].LangNom, TEXT("French"));
+   ustrcpy (LangTable[i].LangName, TEXT("French"));
    ustrcpy (LangTable[i].LangCode, "fr");
    LangTable[i].LangAlphabet = TEXT('L');
    ustrcpy (LangTable[i].LangPrincipal, TEXT("Fprinc"));
@@ -388,7 +388,7 @@ void                InitLanguage ()
    ustrcpy (LangTable[i].LangPattern, TEXT("francais.ptn"));
 
    i = 5;
-   ustrcpy (LangTable[i].LangNom, TEXT("English"));
+   ustrcpy (LangTable[i].LangName, TEXT("English"));
    ustrcpy (LangTable[i].LangCode, "en");
    LangTable[i].LangAlphabet = TEXT('L');
    ustrcpy (LangTable[i].LangPrincipal, TEXT("Eprinc"));
@@ -396,7 +396,7 @@ void                InitLanguage ()
    ustrcpy (LangTable[i].LangPattern, TEXT("english.ptn"));
 
    i = 6;
-   ustrcpy (LangTable[i].LangNom, TEXT("American"));
+   ustrcpy (LangTable[i].LangName, TEXT("American"));
    ustrcpy (LangTable[i].LangCode, "en-US");
    LangTable[i].LangAlphabet = TEXT('L');
    ustrcpy (LangTable[i].LangPrincipal, TEXT("Eprinc"));
@@ -404,7 +404,7 @@ void                InitLanguage ()
    ustrcpy (LangTable[i].LangPattern, TEXT("american.ptn"));
 
    i = 7;
-   ustrcpy (LangTable[i].LangNom, TEXT("German"));
+   ustrcpy (LangTable[i].LangName, TEXT("German"));
    ustrcpy (LangTable[i].LangCode, "de");
    LangTable[i].LangAlphabet = TEXT('L');
    ustrcpy (LangTable[i].LangPrincipal, TEXT("Gprinc"));
@@ -412,7 +412,7 @@ void                InitLanguage ()
    ustrcpy (LangTable[i].LangPattern, TEXT("deutsch.ptn"));
 
    i = 8;
-   ustrcpy (LangTable[i].LangNom, TEXT("Italian"));
+   ustrcpy (LangTable[i].LangName, TEXT("Italian"));
    ustrcpy (LangTable[i].LangCode, "it");
    LangTable[i].LangAlphabet = TEXT('L');
    ustrcpy (LangTable[i].LangPrincipal, TEXT("Iprinc"));
@@ -420,7 +420,7 @@ void                InitLanguage ()
    ustrcpy (LangTable[i].LangPattern, TEXT("italiano.ptn"));
 
    i = 9;
-   ustrcpy (LangTable[i].LangNom, TEXT("Spanish"));
+   ustrcpy (LangTable[i].LangName, TEXT("Spanish"));
    ustrcpy (LangTable[i].LangCode, "es");
    LangTable[i].LangAlphabet = TEXT('L');
    ustrcpy (LangTable[i].LangPrincipal, TEXT("Sprinc"));
@@ -428,7 +428,7 @@ void                InitLanguage ()
    ustrcpy (LangTable[i].LangPattern, TEXT("espanol.ptn"));
 
    i = 10;
-   ustrcpy (LangTable[i].LangNom, TEXT("Portuguese"));
+   ustrcpy (LangTable[i].LangName, TEXT("Portuguese"));
    ustrcpy (LangTable[i].LangCode, "pt");
    LangTable[i].LangAlphabet = TEXT('L');
    LangTable[i].LangPrincipal[0] = EOS;
@@ -436,7 +436,7 @@ void                InitLanguage ()
    ustrcpy (LangTable[i].LangPattern, TEXT("portug.ptn"));
 
    i = 11;
-   ustrcpy (LangTable[i].LangNom, TEXT("Dutch"));
+   ustrcpy (LangTable[i].LangName, TEXT("Dutch"));
    ustrcpy (LangTable[i].LangCode, "nl");
    LangTable[i].LangAlphabet = TEXT('L');
    ustrcpy (LangTable[i].LangPrincipal, TEXT("Nprinc"));
@@ -444,7 +444,7 @@ void                InitLanguage ()
    ustrcpy (LangTable[i].LangPattern, TEXT("nederl.ptn"));
 
    i = 12;
-   ustrcpy (LangTable[i].LangNom, TEXT("Swedish"));
+   ustrcpy (LangTable[i].LangName, TEXT("Swedish"));
    ustrcpy (LangTable[i].LangCode, "sv");
    LangTable[i].LangAlphabet = TEXT('L');
    ustrcpy (LangTable[i].LangPrincipal, TEXT("Wprinc"));
@@ -452,7 +452,7 @@ void                InitLanguage ()
    ustrcpy (LangTable[i].LangPattern, TEXT("swedish.ptn"));
 
    i = 13;
-   ustrcpy (LangTable[i].LangNom, TEXT("Finnish"));
+   ustrcpy (LangTable[i].LangName, TEXT("Finnish"));
    ustrcpy (LangTable[i].LangCode, "fi");
    LangTable[i].LangAlphabet = TEXT('L');
    LangTable[i].LangPrincipal[0] = EOS;
@@ -460,28 +460,28 @@ void                InitLanguage ()
    ustrcpy (LangTable[i].LangPattern, TEXT("finish.ptn"));
 
    i = 14;
-   ustrcpy (LangTable[i].LangNom, TEXT("Greek"));
+   ustrcpy (LangTable[i].LangName, TEXT("Greek"));
    ustrcpy (LangTable[i].LangCode, "el");
    LangTable[i].LangAlphabet = TEXT('G');
    LangTable[i].LangPrincipal[0] = EOS;
    LangTable[i].LangSecondary[0] = EOS;
 
    i = 15;
-   ustrcpy (LangTable[i].LangNom, TEXT("Czech"));
+   ustrcpy (LangTable[i].LangName, TEXT("Czech"));
    ustrcpy (LangTable[i].LangCode, "cs");
    LangTable[i].LangAlphabet = TEXT('2');
    LangTable[i].LangPrincipal[0] = EOS;
    LangTable[i].LangSecondary[0] = EOS;
 
    i = 17;
-   ustrcpy (LangTable[i].LangNom, TEXT("Polish"));
+   ustrcpy (LangTable[i].LangName, TEXT("Polish"));
    ustrcpy (LangTable[i].LangCode, "pl");
    LangTable[i].LangAlphabet = TEXT('2');
    LangTable[i].LangPrincipal[0] = EOS;
    LangTable[i].LangSecondary[0] = EOS;
 
    i = 18;
-   ustrcpy (LangTable[i].LangNom, TEXT("Turkish"));
+   ustrcpy (LangTable[i].LangName, TEXT("Turkish"));
    ustrcpy (LangTable[i].LangCode, "tr");
    LangTable[i].LangAlphabet = TEXT('9');
    LangTable[i].LangPrincipal[0] = EOS;
@@ -552,18 +552,18 @@ STRING              secondDictionary;
 	    if (!ustrcasecmp (languageName, LangTable[i].LangCode))
 	      /* The language is already defined */
 	      return i;
-	  ustrcpy (LangTable[FreeEntry].LangCode, languageName);
-	  ustrcpy (LangTable[FreeEntry].LangNom, TtaGetLanguageCodeFromName(languageName));
+	  ustrcpy (LangTable[FreeEntry].LangName, languageName);
+	  ustrcpy (LangTable[FreeEntry].LangCode, TtaGetLanguageCodeFromName(languageName));
 	  }
 	else
 	  {
 	  /* Consults the languages table to see if the language exists. */
 	  for (i = 0; i < FreeEntry; i++)
-	    if (!ustrcasecmp (languageName, LangTable[i].LangNom))
+	    if (!ustrcasecmp (languageName, LangTable[i].LangName))
 	      /* The language is already defined */
 	      return i;
-	  ustrcpy (LangTable[FreeEntry].LangNom, languageName);
-	  ustrcpy (LangTable[FreeEntry].LangCode, TtaGetLanguageNameFromCode (languageName));
+	  ustrcpy (LangTable[FreeEntry].LangName, languageName);
+	  ustrcpy (LangTable[FreeEntry].LangCode, TtaGetLanguageCodeFromName (languageName));
 	  }
 
 	/* Saves the new language */
@@ -612,7 +612,7 @@ void                TtaRemoveLanguage (language)
       TtaError (ERR_language_not_found);
    else
       {
-      LangTable[i].LangNom[0] = EOS;
+      LangTable[i].LangName[0] = EOS;
       LangTable[i].LangCode[0] = EOS;
       /* don't erase LangAlphabet */
       LangTable[i].LangPrincipal[0] = EOS;
@@ -664,7 +664,7 @@ char*               languageName;
 		/* The language is already defined */
 		again = FALSE;
 	     else
-		if (!ustrcasecmp (languageName, LangTable[i].LangNom))
+		if (!ustrcasecmp (languageName, LangTable[i].LangName))
 		   again = FALSE;
 		else
 		   i++;
@@ -675,7 +675,7 @@ char*               languageName;
 	     i = 0;
 	     while (again && i < FreeTypoEntry)
 	       {
-		  if (!ustrcmp (languageName, TypoLangTable[i].LangNom))
+		  if (!ustrcmp (languageName, TypoLangTable[i].LangName))
 		     /* The TYPO language is already defined */
 		     again = FALSE;
 		  else
@@ -852,9 +852,9 @@ Language            languageId;
 	Langbuffer[0] = EOS;
      }
    else
-      ustrcpy (Langbuffer, LangTable[i].LangNom);
+      ustrcpy (Langbuffer, LangTable[i].LangName);
    return Langbuffer;
-}				/*TtaGetLanguageName */
+}
 
 
 /*----------------------------------------------------------------------
