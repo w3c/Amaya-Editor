@@ -104,7 +104,7 @@ static int          WIN_Language;
 
 extern HINSTANCE hInstance;
 extern LPCTSTR   iconID;
-extern UINT      subMenuID;
+extern UINT      subMenuID [MAX_FRAME];
 #ifdef __STDC__
 extern BOOL RegisterWin95 (CONST WNDCLASS*);
 extern void CreateLanguageDlgWindow (HWND, char*, char*, int, char*, char*, int, int, int, char*);
@@ -1335,6 +1335,9 @@ PtrDocument         pDoc;
   for (view = 1; view <= MAX_VIEW_DOC; view++)
     {
       frame = pDoc->DocViewFrame[view - 1];
+#     ifdef _WINDOWS 
+      currentFrame = frame;
+#     endif /* _WINDOWS */
       if (frame != 0 && FrameTable[frame].MenuAttr != -1)
 	{
 	  menuID = FrameTable[frame].MenuAttr;
@@ -1361,10 +1364,12 @@ PtrDocument         pDoc;
 		  /* destroy the submenu event */
 		  TtaDestroyDialogue (EventMenu[frame - 1]);
 #         ifdef _WINDOWS
-          if (subMenuID && !DeleteMenu (FrameTable[frame].WdMenus[menu], subMenuID, MF_BYCOMMAND))
-             WinErrorBox (NULL);
-          else 
-               subMenuID = 0;
+          if (subMenuID [frame]) {
+			  if (!DeleteMenu (FrameTable[frame].WdMenus[menu], subMenuID [frame], MF_BYCOMMAND))
+                 WinErrorBox (NULL);
+          } else 
+               subMenuID [frame] = 0;
+
 #         endif /* _WINDOWS */
 		  EventMenu[frame - 1] = 0;
 		}
@@ -1377,11 +1382,11 @@ PtrDocument         pDoc;
 		  TtaNewSubmenu (EventMenu[frame - 1], ref, nbItemAttr - 1, NULL, nbEvent, bufEventAttr, NULL, FALSE);
 		  /* post active attributes */
 		  for (i = 0; i < nbEvent; i++)
-#ifdef _WINDOWS
+#           ifdef _WINDOWS
 		    WIN_TtaSetToggleMenu (EventMenu[frame - 1], i, (boolean) (ActiveEventAttr[i] == 1), FrMainRef [frame]);
-#else  /* !_WINDOWS */
+#           else  /* !_WINDOWS */
 		    TtaSetToggleMenu (EventMenu[frame - 1], i, (ActiveEventAttr[i] == 1));
-#endif /* _WINDOWS */
+#           endif /* _WINDOWS */
 		}
 
 	      /* post active attributes */

@@ -258,7 +258,7 @@ static char     key;
 #define TAB     '\t'
 #define SPACE   ' '
 
-UINT subMenuID;
+UINT subMenuID [MAX_FRAME];
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
@@ -3065,6 +3065,7 @@ char               *equiv;
 			  /* En attendant le sous-menu on cree un bouton */
 #                         ifdef _WINDOWS
                           w = (HMENU) CreatePopupMenu ();
+                          subMenuID [currentFrame] = (UINT) w;
                           if (equiv_item && equiv_item [0] != 0) {
                              sprintf (menu_item, "%s\t%s", &text[index + 1], equiv_item); 
                              InsertMenu (menu, i, MF_POPUP, (UINT) w, menu_item);
@@ -5530,7 +5531,7 @@ int                 ref;
                  for (itNdx = 0; itNdx < nbMenuItems; itNdx ++) 
                      RemoveMenu (w, ref + itNdx, MF_BYCOMMAND);
                  DestroyMenu (w);
-                 subMenuID = (UINT)w;
+                 subMenuID [currentFrame] = (UINT)w;
 #                endif /* _WINDOWS */
 				 n = 0;
 #                                ifndef _WINDOWS

@@ -1704,6 +1704,113 @@ Pixmap              picture;
      }
 }				/*TtaChangeButton */
 
+#ifdef _WINDOWS
+#ifdef __STDC__
+void                WIN_TtaSwitchButton (Document document, View view, int index, int picture, int bState, BOOL state)
+#else  /* __STDC__ */
+void                WIN_TtaSwitchButton (document, view, index, picture, bState, state)
+Document            document;
+View                view;
+int                 index;
+int                 picture;
+int                 bState;
+BOOL                state;
+#endif /* __STDC__ */
+{
+   int                 frame;
+
+   UserErrorCode = 0;
+   /* verifie le parametre document */
+   if (document == 0 && view == 0)
+      TtaError (ERR_invalid_parameter);
+   else
+     {
+	frame = GetWindowNumber (document, view);
+	if (frame == 0 || frame > MAX_FRAME)
+	   TtaError (ERR_invalid_parameter);
+	else if (FrameTable[frame].WdFrame != 0)
+	  {
+	     if (index >= MAX_BUTTON || index <= 0
+		 || FrameTable[frame].Button[index] == 0)
+		TtaError (ERR_invalid_parameter);
+	     else
+	       {
+		  /* Insere le nouvel icone */
+          SendMessage (WinToolBar[frame], bState, (WPARAM) (index + TBBUTTONS_BASE - 1), (LPARAM) MAKELONG (state, 0));
+	       }
+	  }
+     }
+}				/*TtaChangeButton */
+
+#ifdef __STDC__
+void                WIN_TtaShowButton (Document document, View view, int index)
+#else  /* __STDC__ */
+void                WIN_TtaShowButton (document, view, index)
+Document            document;
+View                view;
+int                 index;
+#endif /* __STDC__ */
+{
+   int                 frame;
+
+   UserErrorCode = 0;
+   /* verifie le parametre document */
+   if (document == 0 && view == 0)
+      TtaError (ERR_invalid_parameter);
+   else
+     {
+	frame = GetWindowNumber (document, view);
+	if (frame == 0 || frame > MAX_FRAME)
+	   TtaError (ERR_invalid_parameter);
+	else if (FrameTable[frame].WdFrame != 0)
+	  {
+	     if (index >= MAX_BUTTON || index <= 0
+		 || FrameTable[frame].Button[index] == 0)
+		TtaError (ERR_invalid_parameter);
+	     else
+	       {
+		  /* Insere le nouvel icone */
+          SendMessage (WinToolBar[frame], TB_HIDEBUTTON, (WPARAM) (index + TBBUTTONS_BASE - 1), (LPARAM) MAKELONG (FALSE, 0));
+	       }
+	  }
+     }
+}
+
+#ifdef __STDC__
+void                WIN_TtaHideButton (Document document, View view, int index)
+#else  /* __STDC__ */
+void                WIN_TtaHideButton (document, view, index)
+Document            document;
+View                view;
+int                 index;
+#endif /* __STDC__ */
+{
+   int                 frame;
+
+   UserErrorCode = 0;
+   /* verifie le parametre document */
+   if (document == 0 && view == 0)
+      TtaError (ERR_invalid_parameter);
+   else
+     {
+	frame = GetWindowNumber (document, view);
+	if (frame == 0 || frame > MAX_FRAME)
+	   TtaError (ERR_invalid_parameter);
+	else if (FrameTable[frame].WdFrame != 0)
+	  {
+	     if (index >= MAX_BUTTON || index <= 0
+		 || FrameTable[frame].Button[index] == 0)
+		TtaError (ERR_invalid_parameter);
+	     else
+	       {
+		  /* Insere le nouvel icone */
+          SendMessage (WinToolBar[frame], TB_HIDEBUTTON, (WPARAM) (index + TBBUTTONS_BASE - 1), (LPARAM) MAKELONG (TRUE, 0));
+	       }
+	  }
+     }
+}
+#endif /* _WINDOWS */
+
 /*----------------------------------------------------------------------
    TtcSwitchButtonBar
 
