@@ -563,11 +563,14 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
 	      if (!strncmp (mime_type, "image/svg", 9) 
 		  || !strcmp (mime_type, AM_SVG_MIME_TYPE))
 		is_svg = TRUE;
-	      if (!strncmp (mime_type, "text/mathml", 11)
+	      else if (!strncmp (mime_type, "text/mathml", 11)
 		  || !strcmp (mime_type, AM_MATHML_MIME_TYPE))
 		is_mml = TRUE;
+	      else
+		/* unknown mime_type, check with another method */
+		mime_type = NULL;
 	    }
-	  else
+	  if (!mime_type)
 	    {
 	      /* try the file's extension */
 	      for (i = strlen (imageName); i > 0 && imageName[i] != '.'; i--);
