@@ -1010,7 +1010,9 @@ void ThotInput (int frame, unsigned char *string, unsigned int nb,
 	  break;
 	default:
 	  index = -1;
+#ifdef _WINDOWS
 	  nb = 0;
+#endif /* _WINDOWS */
 	  break;
 	}
 
