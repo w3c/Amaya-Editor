@@ -580,15 +580,16 @@ LPARAM lParam;
       SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
       break;
 
+	case WM_CLOSE:
+	case WM_DESTROY:
+	  MathPal = NULL;
+	  EndDialog (hwnDlg, ID_DONE);
+	  break;
+
     case WM_COMMAND:
       switch (LOWORD (wParam))
 	{
 	case ID_DONE:
-	  MathPal = NULL;
-	  EndDialog (hwnDlg, ID_DONE);
-	  break;
-	case WM_CLOSE:
-	case WM_DESTROY:
 	  MathPal = NULL;
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
@@ -1505,6 +1506,12 @@ LPARAM lParam;
       SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
       break;
 
+	case WM_CLOSE:
+	case WM_DESTROY:
+	  GraphPal = NULL;
+	  EndDialog (hwnDlg, ID_DONE);
+	  break;
+
     case WM_COMMAND:
       SetFocus (FrRef[currentFrame]);
       switch (LOWORD (wParam))
@@ -1512,13 +1519,7 @@ LPARAM lParam;
 	case ID_DONE:
 	  GraphPal = NULL;
 	  EndDialog (hwnDlg, ID_DONE);
-	  break;
-	  
-	case WM_CLOSE:
-	case WM_DESTROY:
-	  GraphPal = NULL;
-	  EndDialog (hwnDlg, ID_DONE);
-	  break;
+	  break;	 
 	  
 	case IDC_GLINE:
 	  ThotCallback (GraphDialogue + MenuGraph, INTEGER_DATA, (CHAR_T*)0);
