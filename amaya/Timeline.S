@@ -175,9 +175,7 @@ STRUCT
 
    text_id
         (ATTR fill; stroke; 
-	      font_family; font_size;
-	      x;
-	      y)
+	      font_family; font_size;)
          = LIST OF (TEXT);
 
    timing_text

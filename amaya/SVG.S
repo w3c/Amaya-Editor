@@ -558,11 +558,7 @@ STRUCT
 	      y;
           width_;
           height_)
-        = AGGREGATE
-              PICTURE;
-              SVG_Image;
-	      END;
-
+        = PICTURE;
 
    GraphicsElement
 	= CASE OF

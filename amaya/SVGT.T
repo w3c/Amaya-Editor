@@ -988,6 +988,7 @@ ATTRIBUTES
 	END;
 
    x:
+	if not Timeline_cross 
 	BEGIN
 	create SAN;
 	create 'x="';
@@ -996,6 +997,7 @@ ATTRIBUTES
 	END;
 
    y:
+    if not Timeline_cross 
 	BEGIN
 	create SAN;
 	create 'y="';
@@ -1004,6 +1006,7 @@ ATTRIBUTES
 	END;
 
    width_:
+	if not Timeline_cross 
 	BEGIN
 	create SAN;
 	create 'width="';
@@ -1012,6 +1015,7 @@ ATTRIBUTES
 	END;
 
    height_:
+	if not Timeline_cross 
 	BEGIN
 	create SAN;
 	create 'height="';

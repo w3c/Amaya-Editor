@@ -84,16 +84,16 @@ RULES
 
    image_slider:
    	BEGIN
-   	HorizPos: Left = Enclosing . Left Userspecified;
-   	VertPos:  HRef = Enclosing . Top + 10 pt Userspecified;
+   	HorizPos: Left = Enclosing . Left ;
+   	VertPos:  HRef = Enclosing . Top + 10 pt ;
 	Width: Enclosed . Width;
     Height: Enclosed . Height;
 	END;
 
    image_toolbar:
 	BEGIN
-   	HorizPos: Left = Enclosing . Left Userspecified;
-   	VertPos:  HRef = Enclosing . Top + 10 pt Userspecified;
+   	HorizPos: Left = Enclosing . Left ;
+   	VertPos:  HRef = Enclosing . Top + 10 pt ;
 	Width: Enclosed . Width;
     Height: Enclosed . Height;
 	END;
@@ -101,16 +101,16 @@ RULES
 
  image_help:
 	BEGIN
-   	HorizPos: Left = Enclosing . Left Userspecified;
-   	VertPos:  HRef = Enclosing . Top + 10 pt Userspecified;
+   	HorizPos: Left = Enclosing . Left ;
+   	VertPos:  HRef = Enclosing . Top + 10 pt ;
 	Width: Enclosed . Width;
     Height: Enclosed . Height;
 	END;
 
   image_color:
 	BEGIN
-   	HorizPos: Left = Enclosing . Left Userspecified;
-   	VertPos:  HRef = Enclosing . Top + 10 pt Userspecified;
+   	HorizPos: Left = Enclosing . Left ;
+   	VertPos:  HRef = Enclosing . Top + 10 pt ;
 	Width: Enclosed . Width;
     Height: Enclosed . Height;
 	END;
@@ -118,24 +118,24 @@ RULES
 
   image_motion:
 	BEGIN
-   	HorizPos: Left = Enclosing . Left Userspecified;
-   	VertPos:  HRef = Enclosing . Top + 10 pt Userspecified;
+   	HorizPos: Left = Enclosing . Left ;
+   	VertPos:  HRef = Enclosing . Top + 10 pt ;
 	Width: Enclosed . Width;
     Height: Enclosed . Height;
 	END;
 
   image_interp:
 	BEGIN
-   	HorizPos: Left = Enclosing . Left Userspecified;
-   	VertPos:  HRef = Enclosing . Top + 10 pt Userspecified;
+   	HorizPos: Left = Enclosing . Left ;
+   	VertPos:  HRef = Enclosing . Top + 10 pt ;
 	Width: Enclosed . Width;
     Height: Enclosed . Height;
 	END;
 
    image_collapse:
 	BEGIN
-   	HorizPos: Left = Enclosing . Left Userspecified;
-   	VertPos:  HRef = Enclosing . Top + 10 pt Userspecified;
+   	HorizPos: Left = Enclosing . Left ;
+   	VertPos:  HRef = Enclosing . Top + 10 pt ;
 	Width: Enclosed . Width;
     Height: Enclosed . Height;
 	END;
@@ -143,40 +143,40 @@ RULES
 
    rect_interface:
 	BEGIN
-	Width: 2.5 cm UserSpecified;
-	Height: 1.5 cm  UserSpecified;
-	HorizPos: Left = Enclosing . Left UserSpecified;
-	VertPos:  Top = Enclosing . Top UserSpecified;
+	Width: 2.5 cm ;
+	Height: 1.5 cm  ;
+	HorizPos: Left = Enclosing . Left ;
+	VertPos:  Top = Enclosing . Top ;
 	END;
 
    rect_id:
 	BEGIN
-	Width: 2.5 cm UserSpecified;
-	Height: 1.5 cm  UserSpecified;
-	HorizPos: Left = Enclosing . Left UserSpecified;
-	VertPos:  Top = Enclosing . Top UserSpecified;
+	Width: 2.5 cm ;
+	Height: 1.5 cm  ;
+	HorizPos: Left = Enclosing . Left ;
+	VertPos:  Top = Enclosing . Top ;
 	END;
 
    col_period:
 	BEGIN
-	Width: 2.5 cm UserSpecified;
-	Height: 1.5 cm  UserSpecified;
-	HorizPos: Left = Enclosing . Left UserSpecified;
-	VertPos:  Top = Enclosing . Top UserSpecified;
+	Width: 2.5 cm ;
+	Height: 1.5 cm  ;
+	HorizPos: Left = Enclosing . Left ;
+	VertPos:  Top = Enclosing . Top ;
 	END;
 
    exp_period:
 	BEGIN
-	Width: 2.5 cm UserSpecified;
-	Height: 1.5 cm  UserSpecified;
-	HorizPos: Left = Enclosing . Left UserSpecified;
-	VertPos:  Top = Enclosing . Top UserSpecified;
+	Width: 2.5 cm ;
+	Height: 1.5 cm  ;
+	HorizPos: Left = Enclosing . Left ;
+	VertPos:  Top = Enclosing . Top ;
 	END;
 
    tline:
 	BEGIN
-        HorizPos: Left = Enclosing . Left UserSpecified;
-        VertPos:  Top = Enclosing . Top UserSpecified;
+        HorizPos: Left = Enclosing . Left ;
+        VertPos:  Top = Enclosing . Top ;
         Width: Right = Enclosing . Left;
         Height:  Bottom = Enclosing . Top;
     END;
@@ -185,8 +185,8 @@ RULES
    text_:
 	BEGIN
 	Width: Enclosed . Width;
-   	HorizPos: Left = Enclosing . Left Userspecified;
-   	VertPos:  HRef = Enclosing . Top + 0.9 Userspecified;
+   	HorizPos: Left = Enclosing . Left;
+   	VertPos:  HRef = Enclosing . Top + 0.9;
 	HorizRef: Enclosed . HRef;
 	Foreground : Black;
 	FillPattern: nopattern;
@@ -195,8 +195,8 @@ RULES
 	text_id:
 	BEGIN
 	Width: Enclosed . Width;
-   	HorizPos: Left = Enclosing . Left Userspecified;
-   	VertPos:  HRef = Enclosing . Top + 0.9 Userspecified;
+   	HorizPos: Left = Enclosing . Left + 1.2;
+   	VertPos:  HRef = Enclosing . Top + 1.1;
 	HorizRef: Enclosed . HRef;
 	Foreground : Black;
 	FillPattern: nopattern;
@@ -206,8 +206,8 @@ RULES
    timing_text:
 	BEGIN
 	Width: Enclosed . Width;
-   	HorizPos: Left = Enclosing . Left Userspecified;
-   	VertPos:  HRef = Enclosing . Top + 0.9 Userspecified;
+   	HorizPos: Left = Enclosing . Left;
+   	VertPos:  HRef = Enclosing . Top + 0.9;
 	HorizRef: Enclosed . HRef;
 	Foreground : Black;
 	FillPattern: nopattern;

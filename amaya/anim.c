@@ -1053,20 +1053,22 @@ static Element Insert_text(Document timelinedoc, Element root, char* couleur, ch
     TimelineParseColorAttribute (attrType.AttrTypeNum, attr, el, timelinedoc, FALSE);
 
 	/* Position */
-	attrType.AttrTypeNum = Timeline_ATTR_x;
-    attr = TtaNewAttribute (attrType);
-    TtaAttachAttribute (el, attr, timelinedoc);
-    sprintf (buffer, "%dpx", x);
-	TtaSetAttributeText (attr, buffer, el, timelinedoc);
-	TimelineParseCoordAttribute (attr, el, timelinedoc);
 
-	attrType.AttrTypeNum = Timeline_ATTR_y;
-    attr = TtaNewAttribute (attrType);
-    TtaAttachAttribute (el, attr, timelinedoc);
-    sprintf (buffer, "%dpx", y);
-	TtaSetAttributeText (attr, buffer, el, timelinedoc);
-	TimelineParseCoordAttribute (attr, el, timelinedoc);
-	
+	if (type_num!=Timeline_EL_text_id) {
+		attrType.AttrTypeNum = Timeline_ATTR_x;
+		attr = TtaNewAttribute (attrType);
+		TtaAttachAttribute (el, attr, timelinedoc);
+		sprintf (buffer, "%dpx", x);
+		TtaSetAttributeText (attr, buffer, el, timelinedoc);
+		TimelineParseCoordAttribute (attr, el, timelinedoc);
+
+		attrType.AttrTypeNum = Timeline_ATTR_y;
+		attr = TtaNewAttribute (attrType);
+		TtaAttachAttribute (el, attr, timelinedoc);
+		sprintf (buffer, "%dpx", y);
+		TtaSetAttributeText (attr, buffer, el, timelinedoc);
+		TimelineParseCoordAttribute (attr, el, timelinedoc);
+	}
 
 	if (font_family) {
 		attrType.AttrTypeNum = Timeline_ATTR_font_family;
@@ -3381,10 +3383,11 @@ ThotBool TimelineElSelection (NotifyElement *event)
 		/* forbid "Document" selection :*/
 		res = TRUE;
 
-		elType = TtaGetElementType (TtaGetParent (parent));
-
-		if ((elType.ElTypeNum == Timeline_EL_timing_text) || (elType.ElTypeNum == Timeline_EL_text_id))
-			res = FALSE;
+		if (TtaGetParent (parent)) {
+			elType = TtaGetElementType (TtaGetParent (parent));
+			if ((elType.ElTypeNum == Timeline_EL_timing_text) || (elType.ElTypeNum == Timeline_EL_text_id))
+				res = FALSE;
+		}
 	}
 
 	TtaSetDocumentUnmodified (event->document);
@@ -3481,6 +3484,7 @@ static void Generate_animate_color (Document basedoc, int from_c, int to_c,
 									double start, double duration,
 									pmapping_animated pm, Element period) 
 {
+	ThotBool sav;
 	ElementType elType, anType;
 	Element animtag, lastchild;
 	AttributeType attrType;
@@ -3555,9 +3559,10 @@ static void Generate_animate_color (Document basedoc, int from_c, int to_c,
 	/* insert */ 
 	lastchild = TtaGetLastChild (pm->animated_elem);
 
-	/* problem in the SVG S schema ??? */
-	if (TtaCanInsertSibling (elType, lastchild, FALSE, basedoc))
-		TtaInsertSibling (animtag, lastchild, FALSE, basedoc);
+	sav = TtaGetStructureChecking (basedoc);
+	TtaSetStructureChecking (FALSE, basedoc);
+	TtaInsertSibling (animtag, lastchild, FALSE, basedoc);
+	TtaSetStructureChecking (sav, basedoc);
 
 	/* update mapping of <animate> tags */
 	pm->mapping_animations[pm->nb_periods].animation_tag = animtag;
@@ -3583,6 +3588,7 @@ static void Generate_animate_motion (Document basedoc, int previous_x, int previ
 									pmapping_animated pm, Element period) 
 {
 	ElementType elType;
+	ThotBool sav;
 	Element animtag, lastchild;
 	AttributeType attrType;
 	Attribute attr;
@@ -3627,9 +3633,12 @@ static void Generate_animate_motion (Document basedoc, int previous_x, int previ
 	/* insert */ 
 	lastchild = TtaGetLastChild (pm->animated_elem);
 
-	/* problem in the SVG S schema ??? */
-	if (TtaCanInsertSibling (elType, lastchild, FALSE, basedoc))
-		TtaInsertSibling (animtag, lastchild, FALSE, basedoc);
+
+	sav = TtaGetStructureChecking (basedoc);
+	TtaSetStructureChecking (FALSE, basedoc);
+	TtaInsertSibling (animtag, lastchild, FALSE, basedoc);
+	TtaSetStructureChecking (sav, basedoc);
+
 
 	/* update mapping of <animate> tags */
 	pm->mapping_animations[pm->nb_periods].animation_tag = animtag;
@@ -3701,7 +3710,8 @@ void Timeline_finished_moving_slider(NotifyPresentation *event)
 			/* generate animation in basedoc */
 			Generate_animate_motion (basedoc, dt[basedoc].previous_x,
 											dt[basedoc].previous_y, dt[basedoc].x,
-				dt[basedoc].y,dt[basedoc].anim_start, 
+				dt[basedoc].y,
+				dt[basedoc].anim_start, 
 				end-dt[basedoc].anim_start, dt[basedoc].current_edited_mapping,new_period);
 
 			dt[basedoc].definition_of_motion_period = FALSE;
@@ -4095,8 +4105,9 @@ static void Define_motion_anim (NotifyElement *event)
 {
 	Element el;
 	ElementType elType;
-	int fc, lc, h;
+	int fc, lc, h, x;
 	pmapping_animated pm;
+	PRule         presRuleX;
 	Document basedoc = Get_basedoc_of (event->document);
 	Document timelinedoc = event->document;
 
@@ -4144,12 +4155,19 @@ static void Define_motion_anim (NotifyElement *event)
 
 	elType = TtaGetElementType (pm->animated_elem);
 
-	dt[basedoc].previous_x = Get_center_x_of_SVG_el (pm->animated_elem) - ct_w_image_cross/2;
-	dt[basedoc].previous_y = Get_center_y_of_SVG_el (pm->animated_elem) - ct_h_image_cross/2;
+	dt[basedoc].previous_x = Get_center_x_of_SVG_el (pm->animated_elem);
+	dt[basedoc].previous_y = Get_center_y_of_SVG_el (pm->animated_elem);
 	
-	Display_cross (basedoc, dt[basedoc].previous_x , dt[basedoc].previous_y);
+	Display_cross (basedoc, dt[basedoc].previous_x - ct_w_image_cross/2 , dt[basedoc].previous_y - ct_h_image_cross/2);
 
 	dt[basedoc].current_edited_mapping = pm;
+
+	/* get "from" value */
+	presRuleX = TtaGetPRule (dt[basedoc].slider, PRHorizPos);
+	if (presRuleX)
+		x = TtaGetPRuleValue (presRuleX);
+	dt[basedoc].anim_start = (x+6-(ct_left_bar+1))/time_sep;
+
 
 	TtaSetStatus (event->document, dt[basedoc].timelineView, TtaGetMessage (AMAYA, AM_SVGANIM_MOTION_HINT1), NULL);
 	TtaSetDisplayMode (event->document, dp);
