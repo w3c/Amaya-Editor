@@ -416,7 +416,7 @@ void WIN_ChangeViewSize (int frame, int width, int height, int top_delta,
    GL_ActivateDrawing ();
    /* need to recompute the content of the window */
    RebuildConcreteImage (frame);    
-   /*GL_DrawAll (NULL, frame);*/
+   GL_DrawAll (NULL, frame);
    GL_Swap (frame);
    glFinish();
 #endif/*_GL*/
