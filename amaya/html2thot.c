@@ -111,7 +111,6 @@ ISOlat1entry        ISOlat1table[] =
    {"copy", 169},
    {"curren", 164},
    {"deg", 176},
-   {"die", 168},
    {"divide", 247},
    {"eacute", 233},
    {"ecirc", 234},
@@ -162,6 +161,7 @@ ISOlat1entry        ISOlat1table[] =
    {"uacute", 250},
    {"ucirc", 251},
    {"ugrave", 249},
+   {"uml", 168},
    {"uuml", 252},
    {"yacute", 253},
    {"yen", 165},
@@ -357,6 +357,7 @@ MathEntity        MathEntityTable[] =
    {"thetav", 74, 'G'},
    {"thickspace", 32, 'L'},
    {"times", 180, 'G'},
+   {"trade", 212, 'G'},
    {"tradesf", 212, 'G'},
    {"tradessf", 228, 'G'},
    {"uarr", 172, 'G'},
@@ -604,7 +605,7 @@ static oneLine      StartTagEndingElem[] =
    "UL closes P P* HEAD",
    "OL closes P P* HEAD",
    "MENU closes P P* HEAD",
-   "P closes P P* HEAD",
+   "P closes P P* HEAD H1 H2 H3 H4 H5 H6",
    "P* closes P P* HEAD",
    "DIV closes P P* HEAD",
    "CENTER closes FONT B I P P* HEAD",
@@ -738,6 +739,7 @@ static AttributeMapping AttributeMappingTable[] =
    {"TITLE", "", 'A', HTML_ATTR_Title},
    {"TYPE", "LI", 'A', HTML_ATTR_ItemStyle},
 #ifdef COUGAR
+   {"TYPE", "LINK", 'A', HTML_ATTR_Link_type},
    {"TYPE", "OBJECT", 'A', HTML_ATTR_Object_type},
 #endif
    {"TYPE", "OL", 'A', HTML_ATTR_NumberStyle},
@@ -5913,10 +5915,11 @@ static sourceTransition sourceAutomaton[] =
 /* indicates the end of the start tag for an empty element (XML) */
    {23, '>', (Proc) Do_nothing, 0},		/* XML */
    {23, '*', (Proc) XMLerror, 24},		/* XML */
+/* state 24: ignore all characters until the next '>' */
    {24, '>', (Proc) Do_nothing, 0},		/* XML */
    {24, '*', (Proc) Do_nothing, 24},		/* XML */
 
-/* state 1000: fictious state. End of automaton table */
+/* state 1000: fake state. End of automaton table */
 /* the next line must be the last one in the automaton declaration */
    {1000, '*', (Proc) Do_nothing, 1000}
 };

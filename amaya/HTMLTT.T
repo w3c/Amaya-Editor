@@ -691,6 +691,9 @@ ATTRIBUTES
  Object_type: BEGIN
 	END;
 
+ Link_type: BEGIN
+	END;
+
  codetype: BEGIN
 	END;
 #endif

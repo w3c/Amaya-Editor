@@ -927,6 +927,12 @@ ATTRIBUTES
 	Create DoubleQuote;
 	END;
 
+ Link_type: BEGIN
+	Create ' type="';
+	Create Link_type;
+	Create DoubleQuote;
+	END;
+
  codetype: BEGIN
 	Create ' codetype="';
 	Create codetype;

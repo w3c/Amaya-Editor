@@ -107,7 +107,7 @@ Heading_cell: TH
 Table_cell_ghost: ghost
 MAP: MAP
 AREA: AREA
-Langue: Language
+Langue: lang
 Class: class
 PseudoClass: pseudo class
 Style\240: style
@@ -125,6 +125,7 @@ http_equiv: http-equiv
 meta_name: name
 meta_content: content
 HREF_: href
+Link_type: type
 REL: rel
 REV: rev
 Title: title
@@ -158,6 +159,10 @@ applet_name: name
 alt: alt
 Param_name: name
 Param_value: value
+classid: classid
+data: data
+Object_type: type
+codetype: codetype
 BulletStyle: type
 COMPACT: compact
 NumberStyle: type

@@ -105,6 +105,7 @@ EXCEPT
    PrescriptPair:	Hidden;
    C_Empty:		Hidden, NoSelect;
 
+   placeholder:   Invisible;
    addspace:	  Invisible;
    entity:	  Invisible;
 END

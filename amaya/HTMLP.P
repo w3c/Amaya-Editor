@@ -2687,6 +2687,28 @@ BOXES
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
+ ATTR_LINK_TYPE: BEGIN
+	Content: Text ' type=';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+ VALUE_LINK_TYPE: BEGIN
+	Content: (Link_type);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
+	END;
  ATTR_CODETYPE: BEGIN
 	Content: Text ' codetype=';
 	Visibility: 0;
@@ -6126,6 +6148,12 @@ ATTRIBUTES
 	BEGIN
 	CreateBefore(ATTR_OBJECT_TYPE);
 	CreateBefore(VALUE_OBJECT_TYPE);
+	END;
+
+ Link_type:
+	BEGIN
+	CreateBefore(ATTR_LINK_TYPE);
+	CreateBefore(VALUE_LINK_TYPE);
 	END;
 
  codetype:
