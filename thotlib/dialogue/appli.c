@@ -924,15 +924,6 @@ LRESULT CALLBACK    WndProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
    int                 frame;
    PAINTSTRUCT         ps;
    RECT                rect;
-#ifdef RAMZI
-   if (msg == WM_CREATE)
-     {
-	/* cannot get WIN_GetFen at this point */
-	fprintf (stderr, "Thot window created ...\n");
-
-	return DefWindowProc (hWnd, msg, wParam, lParam);
-     }
-#endif /* RAMZI */
    frame = GetFen (hWnd);
 
    /* 
@@ -967,8 +958,9 @@ LRESULT CALLBACK    WndProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
    /* fprintf(stderr,"WndProc\n"); */
    switch (msg)
 	 {
+#ifdef RAMZI
 	    case WM_PAINT:
-	       /* WinInitColors (); */	/* has to go to some better place !!!! */
+		/* WinInitColors (); */	/* has to go to some better place !!!! */
 	       /*
 	        * Some part of the Client Area has to be repaint.
 	        */
@@ -979,7 +971,7 @@ LRESULT CALLBACK    WndProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	       WIN_ReleaseDeviceContext ();
 	       WIN_curHdc = saveHdc;
 	       return 0;
-
+#endif /* RAMZI */
 	    case WM_KEYDOWN:
 	    case WM_CHAR:
 	       TtaAbortShowDialogue ();

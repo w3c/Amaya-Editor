@@ -162,7 +162,7 @@ struct struct_winerror win_errtab[] =
  */
 
 char               *thotargv[] =
-{"amaya", "/opera/WINNT/test.html"};
+{"amaya", "/users/guetari/opera/WINNT/test.html"};
 int                 thotargc = 1;
 
 extern LRESULT CALLBACK    WndProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);

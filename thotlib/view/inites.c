@@ -179,9 +179,7 @@ int                 i;
    ThotColorStruct     col;
 
 #ifdef _WINDOWS
-   WIN_Pix_Color[i] = PALETTERGB (RGB_Table[i].red,
-				  RGB_Table[i].green,
-				  RGB_Table[i].blue);
+   WIN_Pix_Color[i] = PALETTERGB (RGB_Table[i].red, RGB_Table[i].green, RGB_Table[i].blue);
 #else  /* _WINDOWS */
    if (Color_Table[i] != NULL)
      {
@@ -374,7 +372,11 @@ int                 num;
 #endif /* __STDC__ */
 {
    if (num < NColors && num >= 0)
+#ifdef _WINDOWS
+      return WIN_Pix_Color[num];
+#else  /* !_WINDOWS */
       return Pix_Color[num];
+#endif /* _WINDOWS */
    else
       return 0;
 }

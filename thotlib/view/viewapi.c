@@ -2993,7 +2993,6 @@ int                 color;
 #else  /* _WINDOWS */
    WIN_GetDeviceContext (frame) ;
    SetBkColor (WIN_curHdc, Bgcolor); 
-   WIN_ReleaseDeviceContext ();
 #endif /* _WINDOWS */
 }				/*SetMainWindowBackgroundColor */
 
@@ -3020,7 +3019,11 @@ View                view;
    frame = GetWindowNumber (doc, view);
    if (BackgroundColor[frame] != DefaultBColor)
      {
+#ifndef _WINDOWS
 	BackgroundColor[frame] = DefaultBColor;
+#else  /* _WINDOWS */
+	DefaultBColor = BackgroundColor[frame] ;
+#endif /* _WINDOWS */
 	SetMainWindowBackgroundColor (frame, DefaultBColor);
      }
 }

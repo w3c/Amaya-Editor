@@ -394,16 +394,19 @@ char               *name;
 	   TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NOT_ENOUGH_MEMORY);
      }
    /* Initialize colors for the application */
-   Black_Color = cblack.pixel;
+   Black_Color  = cblack.pixel;
    Button_Color = Select_Color = cblack.pixel;
-   White_Color = cwhite.pixel;
+   White_Color  = cwhite.pixel;
    Scroll_Color = BgMenu_Color = cwhite.pixel;
 #endif /* _WINDOWS */
 
    if (TtWDepth > 1)
      {
 	/* background color */
+#ifdef RAMZI
 	found = FindColor (0, name, "BackgroundColor", "gainsboro", &White_Color);
+#endif /* RAMZI */
+	found = FindColor (0, name, "BackgroundColor", "White", &White_Color);
 	/* drawing color */
 	found = FindColor (0, name, "ForegroundColor", "black", &Black_Color);
 	/* scrolls color */
