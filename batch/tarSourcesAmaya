@@ -1,6 +1,6 @@
 #!/bin/sh
 AMAYAVERSION=0.95a
-THOTDIR=$HOME/opera
+THOTDIR=/tahiti/diffusion/opera
 DEST=/tahiti/thottape
 PLATFORMS="solaris2 LINUX LINUX-ELF SUN4 SGI RS6000"
 
@@ -16,7 +16,7 @@ doc/amaya/CSS.html \
 doc/amaya/Compiling.html \
 doc/amaya/Configure.html \
 doc/amaya/Forward.gif \
-doc/amaya/Good.Overview.html \
+doc/amaya/Overview.html \
 doc/amaya/Image.gif \
 doc/amaya/Install.html \
 doc/amaya/Keyboard.html \
@@ -135,10 +135,12 @@ amaya/H2.xpm \
 amaya/H3.xpm \
 amaya/I.xpm \
 amaya/Image.xpm \
+amaya/Link.xpm \
 amaya/Num.xpm \
 amaya/Print.xpm \
 amaya/Reload.xpm \
 amaya/T.xpm \
+amaya/Table.xpm \
 amaya/button.xpm \
 amaya/css.xpm \
 amaya/destroy.xpm \

@@ -797,7 +797,9 @@ extern volatile noshare int errno;	/* noshare to avoid PSECT conflict */
 #include <string.h>
 #endif
 #ifdef HAVE_STRINGS_H
+#ifndef _AIX
 #include <strings.h>
+#endif
 #endif
 
 /* syslog.h */

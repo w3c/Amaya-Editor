@@ -1,6 +1,6 @@
 #!/bin/sh
 VERSION=2.0a
-THOTDIR=$HOME/opera
+THOTDIR=/tahiti/diffusion/opera
 DEST=/tahiti/thottape
 PLATFORMS="solaris2 LINUX LINUX-ELF SUN4 SGI RS6000"
 
@@ -34,19 +34,19 @@ Thot/dicopar/italiano.ptn \
 Thot/dicopar/nederl.ptn \
 Thot/dicopar/portug.ptn \
 Thot/dicopar/swedish.ptn \
-Thot/font/Families.list \
-Thot/font/font.dir \
-Thot/font/icones.pcf \
-Thot/font/ivgraf.pcf \
-Thot/font/ivsymb.pcf \
-Thot/font/icones.ff \
-Thot/font/ivgraf.ff \
-Thot/font/ivsymb.ff \
-Thot/font/icones1.fb \
-Thot/font/icones11.fb \
-Thot/font/ivgraf6.fb \
-Thot/font/ivsymb1.fb \
-Thot/font/ivsymb6.fb \
+Thot/fonts/Families.list \
+Thot/fonts/fonts.dir \
+Thot/fonts/icones.pcf \
+Thot/fonts/ivgraf.pcf \
+Thot/fonts/ivsymb.pcf \
+Thot/fonts/icones.ff \
+Thot/fonts/ivgraf.ff \
+Thot/fonts/ivsymb.ff \
+Thot/fonts/icones1.fb \
+Thot/fonts/icones11.fb \
+Thot/fonts/ivgraf6.fb \
+Thot/fonts/ivsymb1.fb \
+Thot/fonts/ivsymb6.fb \
 Thot/makes/Makefile \
 Thot/makes/Imakefile \
 Thot/makes/Imake.tmpl \
@@ -352,7 +352,7 @@ Thot/thotlib/base/thotmsg.c \
 Thot/thotlib/content/content.c \
 Thot/thotlib/content/contentapi.c \
 Thot/thotlib/content/dictionary.c \
-Thot/thotlib/content/regexp.c \
+Thot/thotlib/content/regularexp.c \
 Thot/thotlib/content/search.c \
 Thot/thotlib/content/searchref.c \
 Thot/thotlib/content/word.c \
@@ -465,6 +465,7 @@ Thot/thotlib/include/message.h \
 Thot/thotlib/include/pivot.h \
 Thot/thotlib/include/presentation.h \
 Thot/thotlib/include/presentdriver.h \
+Thot/thotlib/include/print.h \
 Thot/thotlib/include/pschema.h \
 Thot/thotlib/include/reference.h \
 Thot/thotlib/include/registry.h \
@@ -724,6 +725,7 @@ Thot/thotlib/presentation/pschemaapi.c \
 Thot/thotlib/presentation/specificdriver.c \
 Thot/thotlib/tree/attributeapi.c \
 Thot/thotlib/tree/attributes.c \
+Thot/thotlib/tree/checkaccess.c \
 Thot/thotlib/tree/draw.c \
 Thot/thotlib/tree/exceptions.c \
 Thot/thotlib/tree/labelalloc.c \

@@ -10,12 +10,13 @@ COMPRESS="gzip -9"
 cd $THOTDIR
 
 cd ..
+
 $TAR - \
 Thot/dicopar/alphabet \
 Thot/dicopar/Eprinc.dic \
 Thot/dicopar/Fprinc.dic \
 Thot/dicopar/*.ptn \
- | $COMPRESS  > /tahiti/thottape/Amaya-dic-tar.gz
+ | $COMPRESS  > /tahiti/thottape/amaya-dic-tar.gz
 
 for MACH in $PLATFORMS
 do
@@ -37,6 +38,8 @@ do
    Thot/config/fr-libdialogue \
    Thot/config/fr-transdialogue \
    Thot/config/fr-corrdialogue \
+   Thot/dicopar/*.ptn \
+   Thot/dicopar/alphabet \
    Thot/$MACH/bin/amaya \
    Thot/$MACH/bin/print \
    Thot/amaya/COPYRIGHT \
