@@ -25,7 +25,7 @@
 # can be useful for creating a module that consists of many directories
 # spread out over the entire source repository.
 
-amaya_windows		-a Windows
+amaya_windows		-a Windows WIN32
 amaya_schemas           -a schemas schemasOPERA
 
 amaya_configure         -a Makefile.in Options.in config.h.in \
@@ -43,7 +43,7 @@ amaya_java              -a classes javalib kaffe-cvs.tar.gz
 
 amaya_plugins           -a pluginlib
 
-amaya_doc               -a doc/amaya doc/Icons
+amaya_doc               -a doc
 
 amaya_thotlib           -a thotlib amaya_graphics amaya_tablelib
 
@@ -52,6 +52,7 @@ amaya_thot              -a thotlib
 amaya_tablelib          -a tablelib 
 # schemas/exc_Table.h
 
+amaya_annotlib		-a annotlib
 amaya_amaya             -a amaya
 
 #
@@ -59,4 +60,5 @@ amaya_amaya             -a amaya
 #
 
 Amaya                   -a amaya_base amaya_thotlib amaya_java \
-                           amaya_java amaya_amaya amaya_plugins amaya_windows
+                           amaya_doc amaya_amaya amaya_plugins amaya_windows
+			   amaya_annotlib
