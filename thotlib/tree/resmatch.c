@@ -1,3 +1,4 @@
+#ifndef STANDALONE
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "tree.h"
@@ -6,10 +7,12 @@
 #include "selection.h"
 #include "conststr.h"
 #include "typestr.h"
+#endif /* STANDALONE */
+
 #define THOT_EXPORT extern
 #include "constres.h"
 
-#undef DEBUG
+
 /*----------------------------------------------------------------------  
   RestCoupler
   ----------------------------------------------------------------------*/
@@ -101,7 +104,7 @@ int IDst;
    char CSrc, CDst;
    char *PSrc;
    char *PDst;
-   int indrec;
+
 
    PSrc = resctx->RSrcPrint->SPrint;
    PDst = resctx->RDestPrint;
@@ -115,15 +118,11 @@ int IDst;
 	resctx->RSrcPrint->SNodes[ISrc]->TypeNum == resctx->RDestNodes[IDst]->TypeNum )
        result = IDENTITE;
      else
-       if (PDst[IDst] == '@')
+       if (PDst[IDst] == '@' && (PSrc[ISrc] != '}' && PSrc[ISrc] != ')' && PSrc[ISrc] != ']'))
 	 {
-	   indrec = 0;
-	   while (indrec < ISrc && resctx->RCoupledNodes[indrec] != resctx->RDestNodes[IDst]->TRecursive)
-	     indrec ++;
-	   if (indrec < ISrc)
-	     result = IDENTITE;
+	   result = REC_MASK;
 	 }
-
+   
    if (result == NONE)
      {
        CSrc = PSrc[ISrc];
@@ -265,6 +264,37 @@ Restruct resctx;
    for (i = 0, j = 0; i < l; i++, j++)
      RestCoupler (resctx, i, j); 
 }
+/*----------------------------------------------------------------------  
+  RestCalcIndRec
+  calcule la table d'indice des noeuds récursifs
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void RestCalcIndRec (int **tabIndices, char *emp, int len, Restruct resctx)
+#else  /* __STDC__ */
+static void ( tabIndices, emp, len, resctx)
+int **tabIndices;
+char *emp;
+int len;
+Restruct resctx;
+#endif  /* __STDC__ */
+{
+  int j, k;
+
+  for (j = 0; j < len ;j++)
+    {
+      if (emp[j] != '@')
+	(*tabIndices)[j] = 0;
+      else
+	for (k = 0; k < j; k++)
+	  {
+	    if (resctx->RDestNodes[k] == resctx->RDestNodes[j]->TRecursive)
+	      {
+		(*tabIndices)[j] = k;
+		k = j;
+	      }
+	  }
+    }
+}
 
 /*----------------------------------------------------------------------  
   RestCluster
@@ -290,12 +320,16 @@ Restruct resctx;
   TyRelation	      rel;
   boolean             stop;
   int                 level;
+  int		      *indrec;
+  
 
   CSrc = resctx->RSrcPrint->SPrint;
   CDst = resctx->RDestPrint;
   V = &CDst[-1];
   LgU = strlen (CSrc);
   LgV = strlen (CDst);
+  indrec = TtaGetMemory (LgV * sizeof(int));
+  RestCalcIndRec (&indrec, CDst, LgV, resctx);
   if (LgU > LgV)
     LgMax = LgU;
   else
@@ -310,42 +344,70 @@ Restruct resctx;
 
   i = 1;
   j = 1;
-  while ((i <= LgU) && (j <= LgV))
+  while (((i <= LgU) && (j <= LgV)) || (j == LgV+1 && ClusterStack[TopMS].Compteur == 0 && ClusterStack[TopMS].Emp == '@'))
     {
-      rel = RestMatchSymb (resctx, i - 1, j - 1);
-      if (rel != NONE) /*== EQUIVALENCE)*/
-        {
-          if (V[j] == ClusterStack[TopMS].Inverse)
-            if (ClusterStack[TopMS].Compteur == 0)    /*180794 */
-              {
+      if (ClusterStack[TopMS].Compteur == 0 && ClusterStack[TopMS].Emp == '@' &&
+	  j != indrec[ClusterStack[TopMS].Retour - 1] + 1)
+	{
+#ifdef DEBUG
+	  printf (" <<<<  %d -> %d \n",j-1,ClusterStack[TopMS].Retour);
+#endif
+	  j = ClusterStack[TopMS].Retour + 1;
+	  TopMS -= 1;        /* Depiler */
+	}
+      else
+	{
+	  rel = RestMatchSymb (resctx, i - 1, j - 1);
+	  if (rel == REC_MASK)
+	    { /* on a rencontre un symbole de recursion dans la cible */
+	      if (ClusterStack[TopMS].Emp != '@')
+		/* on a pas de symbole de recursion sur le haut de la pile */
+		{ /* on developpe la recursion trans m6 */
+#ifdef DEBUG
+	  printf (" >>>>  %d -> %d \n",j-1,indrec [j - 1] -1);
+#endif
+		  TopMS += 1;    
+		  ClusterStack[TopMS].Emp = '@';
+		  ClusterStack[TopMS].Retour = j;
+		  ClusterStack[TopMS].Compteur = 0;
+		  j = indrec [j - 1];
+		}
+	      /* sinon trans m7*/
+	    }
+
+	  /* u[i] = v[j] et v[j]=^.Inv et ^.Emp!=@ : trans m1 */
+	  else if (rel != NONE && V[j] == ClusterStack[TopMS].Inverse && ClusterStack[TopMS].Emp != '@')
+	    if (ClusterStack[TopMS].Compteur == 0)    /*180794 */
+	      {
 		RestCoupler (resctx, i - 1, j - 1);
 		TopMS -= 1;        /* Depiler */
 		i += 1;
-              }
-            else            /*180794 */
-              ClusterStack[TopMS].Compteur -= 1;     /*180794 */
-          else if ((V[j] == '{') || (V[j] == '(') || (V[j] == '['))
-            {                /* on n'empile que les constructeurs */
-              TopMS += 1;    /* empiler */
-              ClusterStack[TopMS].Emp = V[j];
-              switch (V[j])
-                {
-                case '{':
-                  ClusterStack[TopMS].Inverse = '}';
-                  break;
+	      }
+	    else            /*180794 */
+	      ClusterStack[TopMS].Compteur -= 1;     /*180794 */
+
+	  /* u[i] = v[j] et v[j] in S  : trans m'1 */
+	  else if ((rel != NONE) && ((V[j] == '{') || (V[j] == '(') || (V[j] == '[')))
+	    {                /* on n'empile que les constructeurs */
+	      TopMS += 1;    /* empiler */
+	      ClusterStack[TopMS].Emp = V[j];
+	      switch (V[j])
+		{
+		case '{':
+		  ClusterStack[TopMS].Inverse = '}';
+		  break;
 		case '(':
 		  ClusterStack[TopMS].Inverse = ')';
 		  break;
 		case '[':
-                  ClusterStack[TopMS].Inverse = ']';
-                  break;
+		  ClusterStack[TopMS].Inverse = ']';
+		  break;
 		default:
-                  ClusterStack[TopMS].Inverse = V[j];
-                } 
-              ClusterStack[TopMS].Retour = i;
-              ClusterStack[TopMS].Compteur = 0;
+		  ClusterStack[TopMS].Inverse = V[j];
+		} 
+	      ClusterStack[TopMS].Retour = i;
+	      ClusterStack[TopMS].Compteur = 0;
 	      RestCoupler (resctx, i - 1, j - 1);
-	      
 	      if (rel == IDENTITE)
 		{
 		  if (CSrc[i - 1] != '@')
@@ -389,21 +451,33 @@ Restruct resctx;
 		}
 	      i += 1;
 	    }
-          else
-            { 
+	 
+	  
+	  /* u[i]!=v[j] et ^.Emp = @ : change le compteur de top de pile */
+	  else if (ClusterStack[TopMS].Emp == '@')
+	    {
+	      /*  transition m9 */
+	      if ((V[j] == '{') || (V[j] == '(') || (V[j] == '['))
+		ClusterStack[TopMS].Compteur += 1;
+	      /* transition m8 */
+	      if ((V[j] == '}') || (V[j] == ')') || (V[j] == ']'))
+		ClusterStack[TopMS].Compteur -= 1;
+	    }
+	      
+	  else if (rel != NONE)
+	    { /* on couple les types de base sans empiler*/
 	      RestCoupler (resctx, i - 1, j - 1);
-              i += 1;
-            }
-        }
-      else
-	{
-	  if (V[j] == ClusterStack[TopMS].Inverse)
+	      i += 1;
+	    }
+	      
+	  else if (rel == NONE && V[j] == ClusterStack[TopMS].Inverse)
 	    if (ClusterStack[TopMS].Compteur > 0)
+	      /* transition m2 */
 	      ClusterStack[TopMS].Compteur -= 1;
 	    else
 	      {
 		int                k;
-		/* retour en arriere, supprimer les couplages errones */
+		/* trans m3 : retour dans u, supprimer les couplages errones */
 		for (k = i - 1; k >= ClusterStack[TopMS].Retour; k--)
 		  if (!RestDeCoupler (resctx, k - 1))
 		    {
@@ -414,10 +488,14 @@ Restruct resctx;
 		i = ClusterStack[TopMS].Retour;
 		TopMS -= 1;        /* Depiler */
 	      }
-	  if (V[j] == ClusterStack[TopMS].Emp)         /*180794 */
+
+	  /* transition m4 */
+	  else if (rel == NONE && V[j] == ClusterStack[TopMS].Emp) /*180794 */
 	    ClusterStack[TopMS].Compteur += 1;
+	  
+	  /* par defaut : transition m5 */
+	  j += 1;
 	}
-      j += 1;
     }
   TtaFreeMemory (ClusterStack);
   

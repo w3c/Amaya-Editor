@@ -202,6 +202,7 @@ ElementType elemType;
 
   theTree = (TypeTree)TtaGetMemory(sizeof(StrTypeTree));
   theTree->TId = (RContext->CIdCount)++;
+  theTree->TSchema = elemType.ElSSchema;
   theTree->TParent = NULL;
   theTree->TChild = NULL;
   theTree->TPrevious = NULL;
@@ -254,7 +255,7 @@ boolean isSource;
       for (i = BuildStackTop; i >= 0 && theTree == NULL; i--)
 	{
 	  newNode = BuildStack[i];
-	  if(newNode->TypeNum == elemType.ElTypeNum)
+	  if(newNode->TypeNum == elemType.ElTypeNum && newNode->TSchema == elemType.ElSSchema)
 	    {
 	      theTree = RestNewTypeNode(elemType);
 	      theTree->TRecursive = newNode;
@@ -273,6 +274,20 @@ boolean isSource;
 	      childType.ElTypeNum = (strRule->SrIdentRule);
 	      theTree = RecBuildTypeTree (childType, isSource);
 	      theTree->TypeNum = elemType.ElTypeNum;
+	    }
+	  else if (strRule->SrConstruct == CsNatureSchema && strRule->SrSSchemaNat != NULL)
+	    { /* schema externe explicite */
+	      childType.ElSSchema = strRule->SrSSchemaNat;
+	      if (childType.ElSSchema == NULL)
+		{
+#ifdef DEBUG
+		  fprintf (stderr, "Charge nature %s\n", strRule->SrOrigNat);
+#endif
+		  childType.ElSSchema = TtaNewNature (elemType.ElSSchema, strRule->SrOrigNat,"");
+		}
+	      childType.ElTypeNum  = ((PtrSSchema)(childType.ElSSchema))->SsRootElem;
+	      theTree = RecBuildTypeTree (childType, isSource);
+	      theTree->TypeNum = childType.ElTypeNum;
 	    }
 	  else
 	    {
@@ -304,7 +319,7 @@ boolean isSource;
 		      theTree->TPrintSymb = 'U';
 		    }
 		  else if (strRule->SrNChoices == -1)
-		    {
+		    { /* it is an external schema*/
 		      theTree->TPrintSymb = 'N';
 		    }
 		  break;
@@ -336,15 +351,16 @@ boolean isSource;
 		    case 2:
 		      theTree->TPrintSymb = 'G';
 		      break;
-		    case 4:
+		    case 3:
 		      theTree->TPrintSymb = 'S';
 		      break;
-		    case 5:
-		      theTree->TPrintSymb = 'R';
-		      break;
-		    case 6:
+		    case 4:
 		      theTree->TPrintSymb = 'P';
 		      break;
+/*****		    case 6:
+		      theTree->TPrintSymb = 'P';
+		      break;
+******/
 		    }
 		  break;
 		case CsNatureSchema:
@@ -384,33 +400,6 @@ boolean isSource;
 }
 
 
-/*----------------------------------------------------------------------
-  FindTypeInTree
-  retourne un pointeur sur le noeud de type typeNum de l'arbre de types 
-  typeTree - profondeur d'abord
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static TypeTree FindTypeInTree (int typeNum, TypeTree tree)
-#else  /* __STDC__ */
-static TypeTree FindTypeInTree (typeNum, tree)
-int typeNum;
-TypeTree tree;
-#endif  /* __STDC__ */
-
-{
-  TypeTree child, res;
-  
-  if (tree == NULL || tree->TypeNum == typeNum)
-    return tree;
-  child = tree->TChild;
-  res = NULL;
-  while (res == NULL && child != NULL)
-    {
-      res = FindTypeInTree (typeNum, child);
-      child = child->TNext;
-    }
-  return res;
-}
 
 
 /*----------------------------------------------------------------------  
@@ -436,6 +425,7 @@ static TypeTree GetElemSourceTree()
   theTree->TPrintSymb = '*';
   theTree->TId = (RContext->CIdCount)++;
   theTree->TypeNum = 0;
+  theTree->TSchema = NULL;
   theTree->TDepth = 0;
   nbTypes = 0;
   
@@ -507,7 +497,7 @@ TypeTree tree;
   if (ptrDesc == NULL)
     return 'U';
   else
-    return IndexSymols[ptrDesc->TypeNumber - 1];
+    return IndexSymols[ptrDesc->TypeNumber];
 }
 
 /*----------------------------------------------------------------------  
@@ -722,6 +712,7 @@ TypeTree tree;
 #endif  /* __STDC__ */
 {
   boolean result = FALSE;
+  ElementType elTTree;
 
   switch (tree->TPrintSymb)
     {
@@ -745,7 +736,11 @@ TypeTree tree;
 	    result = TRUE;
 	}
       else
-	result = (elType.ElTypeNum == tree->TypeNum);
+	{
+	  elTTree.ElSSchema = tree->TSchema;
+	  elTTree.ElTypeNum = tree->TypeNum;
+	  result = TtaSameTypes (elType, elTTree);
+	}
       break;
     }
   return result;

@@ -58,6 +58,7 @@ typedef struct _StrTypeTree *TypeTree;
 typedef struct _StrTypeTree
 {
   int TypeNum;
+  SSchema TSchema;
   int TId;
   TypeTree TParent;
   TypeTree TChild;

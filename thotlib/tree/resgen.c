@@ -295,27 +295,126 @@ TypeTree descendTree;
 Document doc;
 #endif  /* __STDC__ */
 {
+#ifdef EN_COURS
   ElementType elType;
   Element elLast, elNew, elParent;
   TypeTree nStack [10];
-  int top, i;
+  int top, i, nbMarkedNodes;
   TypeTree tNode;
+  boolean found, fromRecursion;
+  TypeTree markedNodes[100];
  
   elNew = NULL;
   top = 1;
+  
   tNode = descendTree;
-  while (ancestTree != NULL && tNode->TId != ancestTree->TId && top < 10)
+  while (ancestTree != NULL && tNode != NULL && tNode->TId != ancestTree->TId && top < 10)
     {
       /* recherche ancestTree dans les ancetres de descendTree */
       nStack [top++] = tNode;
       tNode = tNode->TParent;
     }
-  elType = TtaGetElementType (ancestor);
-  while (!IsNodeOfType (tNode, elType))
-    { /* recherche le noeud de meme type que ancestor dans les ancetres */
-      /* de ancestTree */
-      nStack [top++] = tNode;
-      tNode = tNode->TParent;
+  if (tNode == NULL)
+    /* tNode est sur un developpement recursif */
+    {
+      tNode = ancestTree;
+      found = FALSE;
+      fromRecursion = FALSE;
+      top = 9;
+      nbMarkedNodes = 0;
+      INSERE_FILE(ancestTree);
+
+      while (dFile != fFile && !found)
+	{
+	  tNode = LIT_FILE;
+	  if (tNode->PrintSymb = '@')
+	    tNode = tNode->TRecursive;
+	  if (tNode->TRecursApplied == FALSE)
+	    {
+	      if (tNode->TId == descendTree->TId)
+		found = TRUE;
+	      if (tNode->TChild !=NULL)
+		{
+		  cNode = tNode->TChild;
+		  while (cNode != NULL)
+		    {
+		      INSERE_FILE(cNode);
+		      cNode = cNode->TNext;
+		    }
+		}
+	      
+
+      while (tNode != NULL && !found)
+	{
+	  if (tNode->TId == descendTree->TId && tNode->TRecursApplied == FALSE)
+	    {
+	      if (!fromRecursion)
+		nStack[top] = tNode;
+	      else
+		fromRecursion = FALSE;
+	      found = TRUE;
+	    }
+	  else if (tNode->TChild !=NULL && tNode->TRecursApplied == FALSE)
+	    {
+	      if (!fromRecursion)
+		nStack[top--] = tNode;
+	      else
+		fromRecursion = FALSE;
+	      tNode->TRecursApplied = TRUE;
+	      markedNodes[nbMarkedNodes++] = tNode;
+	      tNode = tNode->TChild;
+	    }
+	  else if (tNode->TPrintSymb == '@' && tNode->TRecursApplied == FALSE)
+	    {
+	      if (!fromRecursion)
+		nStack[top--] = tNode;
+	      markedNodes[nbMarkedNodes++] = tNode;
+	      tNode->TRecursApplied = TRUE;
+	      fromRecursion = TRUE;
+	      tNode = tNode->TRecursive;
+	    }
+	  else 
+	    {
+	      fromRecursion = FALSE;	      
+	      while (nStack[top+1] != ancestTree && nStack[top+1]->TNext == NULL)
+		{
+		  tNode = nStack[++top];
+		  /*tNode->TRecursApplied = FALSE;*/
+		}
+	      if (tNode == ancestTree)
+		{
+		  /*tNode->TRecursApplied = FALSE;*/
+		      tNode = NULL;
+		}
+	      else
+		{
+		  tNode = nStack[top + 1]->TNext;
+		  nStack[top + 1] = tNode;
+		}
+	    }
+	}
+
+      for (i = 0; i < nbMarkedNodes; i++)
+	markedNodes[i]->TRecursApplied = FALSE;
+
+      if (tNode !=NULL)
+	{
+	  /* on decale la pile (top...9 -> 1...top=(10-top) */
+	  for (i = top; i < 10; i++)
+	    nStack [i-top+1] = nStack [i];
+	  top = 10 - top;
+	  tNode = nStack[top];
+	}
+    }
+  if (tNode !=NULL)
+    {
+      elType = TtaGetElementType (ancestor);
+      while (top < 10 && !IsNodeOfType (tNode, elType))
+	{ /* recherche le noeud de meme type que ancestor dans les ancetres */
+	  /* de ancestTree */
+	  nStack [top++] = tNode;
+	  tNode = tNode->TParent;
+	}
     }
   if (top < 10)
     {
@@ -323,6 +422,7 @@ Document doc;
       for (i = top - 1; i > 0; i--)
 	{
 	  elType.ElTypeNum = nStack[i]->TypeNum;
+	  elType.ElSSchema = nStack[i]->TSchema;
 	  elLast = TtaGetLastChild (elParent);
 	  if (elLast == NULL)
 	    {
@@ -368,7 +468,8 @@ Document doc;
 	  elParent = elNew;
 	}
     }
-  return elNew;
+      return elNew;
+#endif /**** EN_COURS ****/
 }
 
      
@@ -391,19 +492,24 @@ Restruct restr;
 {
   int i = 0;
   TypeTree res = NULL;
+  boolean found = FALSE;
 
-  while (i<SIZEPRINT && res == NULL)
+  while (i<SIZEPRINT && !found)
     {
       if (restr->RSrcPrint->SNodes[i] == source)
-	res = restr->RCoupledNodes[i];
-      if (res == NULL) i++;
+	{
+	  res = restr->RCoupledNodes[i];
+	  found = TRUE;
+	}
+      else
+	i++;
     }
   return res;
 }
 
 /*----------------------------------------------------------------------  
   RestSearchInTree
-  Recherche un element de type searchedType dans la descendance de 
+  Recherche le dernier element de type searchedType dans la descendance de 
   rootElem, retourne l'element trouve ou NULL si aucun element n'est 
   trouve
   ----------------------------------------------------------------------*/
@@ -472,7 +578,7 @@ Document dstDoc;
   printf (" destParent : %s \n",msgbuf);
   
 #endif 
-  if ( sourceTree != NULL && sourceTree->TEffective)
+  if (sourceTree != NULL && sourceTree->TEffective)
     {
 #ifdef DEBUG
       printf("trouve noeud effectif ");
