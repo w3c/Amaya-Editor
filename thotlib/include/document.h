@@ -108,10 +108,32 @@ extern void         TtaSaveDocument (Document document, STRING documentName);
    name must not be specified in parameter TSchemaName. See
    function TtaSetSchemaPath.
    
-   Return: TRUE if the export success
-
+   Return: TRUE if done correctly
   ----------------------------------------------------------------------*/
 extern ThotBool     TtaExportDocument (Document document, STRING fileName, STRING TSchemaName);
+
+/*----------------------------------------------------------------------
+   TtaExportDocumentWithNewLineNumbers
+
+   Saves a whole document into a file in a particular format. The output
+   format is specified by a translation schema. The document is not closed
+   by the function and it can still be accessed by the application program.
+   Line numbers recorded in document elements are updated according to the
+   generated file.
+
+   Parameters:
+   document: the document to be exported.
+   fileName: name of the file in which the document must be saved,
+   including the directory name.
+   TSchemaName: name of the translation schema to be used. The directory
+   name must not be specified in parameter TSchemaName. See
+   function TtaSetSchemaPath.
+
+   Return: TRUE if done correctly
+  ----------------------------------------------------------------------*/
+extern ThotBool     TtaExportDocumentWithNewLineNumbers (Document document,
+							 STRING fileName,
+							 STRING TSchemaName);
 
 /*----------------------------------------------------------------------
    TtaCloseDocument
@@ -694,6 +716,7 @@ extern Document     TtaNewDocument ( /* char *structureSchema, char *documentNam
 extern Document     TtaOpenDocument ( /* char *documentName, int accessMode */ );
 extern void         TtaSaveDocument ( /* Document document, char *documentName */ );
 extern ThotBool     TtaExportDocument ( /* Document document, char *fileName, char* TSchemaName */ );
+extern ThotBool     TtaExportDocumentWithNewLineNumbers ( /* Document document, char *fileName, char* TSchemaName */ );
 extern void         TtaCloseDocument ( /* Document document */ );
 extern void         TtaRemoveDocument ( /* Document document */ );
 extern void         TtaSetDocumentPath ( /* char *path */ );

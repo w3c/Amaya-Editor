@@ -1458,6 +1458,7 @@ ThotBool     logFile;
 #endif /* _WINDOWS */
   old_doc = doc;		/* previous document */
   if (doc != 0 && !TtaIsDocumentModified (doc))
+    /* the new document will replace another document in the same window */
     {
       if (DocumentTypes[doc] == docHTMLRO || DocumentTypes[doc] == docHTML)
 	{
@@ -1472,11 +1473,13 @@ ThotBool     logFile;
 	  if (structView != 0 && TtaIsViewOpened (doc, structView))
 	    TtaCloseView (doc, structView);
 #ifdef MATHML
+	  /* close the Math_structure view if it is open */
 	  structView = TtaGetViewFromName (doc, TEXT("Math_Structure_view"));
 	  if (structView != 0 && TtaIsViewOpened (doc, structView))
 	    TtaCloseView (doc, structView);
 #endif /* MATHML */
 #ifdef GRAPHML
+	  /* close the Graph_structure view if it is open */
 	  structView = TtaGetViewFromName (doc, "Graph_Structure_view");
 	  if (structView != 0 && TtaIsViewOpened (doc, structView))
 	    TtaCloseView (doc, structView);
@@ -1500,9 +1503,10 @@ ThotBool     logFile;
 	TtaHandlePendingEvents ();
      }
    else
+      /* open the new document in a fresh window */
       opened = FALSE;
 
-   /* open the main view */
+   /* open the document */
    if (docType == docText || docType == docTextRO ||
        docType == docCSS || docType == docCSSRO ||
        docType == docSource || docType == docSourceRO)
@@ -1516,26 +1520,27 @@ ThotBool     logFile;
      }
    else if (doc > 0)
      {
+       /* assign a presentation model to the document */
        if (docType == docText || docType == docTextRO||
 	   docType == docCSS || docType == docCSSRO ||
            docType == docSource || docType == docSourceRO)
 	   TtaSetPSchema (doc, TEXT("TextFileP"));
        else
 	 {
-	   /* assign a presentation model to the document */
 	   if (TtaGetScreenDepth () > 1)
 	     TtaSetPSchema (doc, TEXT("HTMLP"));
 	   else
 	     TtaSetPSchema (doc, TEXT("HTMLPBW"));
 	 }
 
-       /* open the main view */
+       /* get the geometry of the main view */
        TtaGetViewGeometryRegistry (doc, TEXT("Formatted_view"), &x, &y, &w, &h);
        TtaSetNotificationMode (doc, 1);
        /* change the position slightly to avoid hiding completely the main
 	  view of other documents */
        x += (((int) doc) - 1) * 5;
        y += (((int) doc) - 1) * 5;
+       /* open the main view */
        if (logFile)
 	 mainView = TtaOpenMainView (doc, x, y, w, 60);
        else
@@ -1547,9 +1552,13 @@ ThotBool     logFile;
 	   return (0);
 	 }
 
-       if (!opened)
+       if (opened)
+	   /* the window already exists */
+	   TtaSetTextZone (doc, 1, 2, _EMPTYSTR_);
+       else
+	 /* re-use an existing window */
 	 {
-	   /* Add a button */
+	   /* Create all buttons */
 	   iStop =TtaAddButton (doc, 1, stopN, StopTransfer,"StopTransfer",
 			 TtaGetMessage (AMAYA, AM_BUTTON_INTERRUPT),
 			 TBSTYLE_BUTTON, FALSE);
@@ -1666,11 +1675,6 @@ ThotBool     logFile;
 	       ActiveTransfer (doc);
 	     }
 	 }
-       else
-	 {
-	   /* the window already exists */
-	   TtaSetTextZone (doc, 1, 2, _EMPTYSTR_);
-	 }
      }
 
    /* store the new document type */
@@ -1679,7 +1683,8 @@ ThotBool     logFile;
      {
        if (DocumentTypes[doc] == docHTMLRO ||
 	   DocumentTypes[doc] == docTextRO ||
-	   DocumentTypes[doc] == docCSSRO)
+	   DocumentTypes[doc] == docCSSRO  ||
+	   DocumentTypes[doc] == docSourceRO)
 	 {
 	   /* we need to update menus and buttons */
 	   reinitialized = TRUE;
@@ -1688,7 +1693,8 @@ ThotBool     logFile;
 	 }
        else if (DocumentTypes[doc] == docHTML ||
 		DocumentTypes[doc] == docText ||
-		DocumentTypes[doc] == docCSS)
+		DocumentTypes[doc] == docCSS  ||
+		DocumentTypes[doc] == docSource)
 	 {
 	   /* we need to update menus and buttons */
 	   reinitialized = TRUE;
@@ -1761,6 +1767,15 @@ ThotBool     logFile;
        /* document in ReadOnly mode */
        DocumentTypes[doc] = docTextRO;
      }
+   else if (docType == docSource)
+     {
+       reinitialized = TRUE;
+       DocumentTypes[doc] = docSource;
+     }
+   else if (docType == docSourceRO)
+     {
+       DocumentTypes[doc] = docSourceRO;
+     }
    else if (docType == docHTMLRO) /* -------->loading HTML in ReadOnly */
      {
        /* document in ReadOnly mode */
@@ -1795,9 +1810,12 @@ ThotBool     logFile;
 	 DocumentTypes[doc] == docText ||
 	 DocumentTypes[doc] == docTextRO ||
 	 DocumentTypes[doc] == docCSS ||
-	 DocumentTypes[doc] == docCSSRO)
+	 DocumentTypes[doc] == docCSSRO ||
+	 DocumentTypes[doc] == docSource ||
+	 DocumentTypes[doc] == docSourceRO)
        {
-	 if (DocumentTypes[doc] != docText && DocumentTypes[doc] != docCSS)
+	 if (DocumentTypes[doc] != docText && DocumentTypes[doc] != docCSS &&
+	     DocumentTypes[doc] != docSource)
 	   {
 	     /* the document is in ReadOnly mode */
 	     TtaSetItemOff (doc, 1, Edit_, BUndo);
@@ -1815,7 +1833,7 @@ ThotBool     logFile;
 #endif /* _WINDOWS */
 	   }
 	 else
-	   TtaSetToggleItem (doc, 1, Edit_, TEditMode, TRUE);
+	     TtaSetToggleItem (doc, 1, Edit_, TEditMode, TRUE);
 
 	 if (DocumentTypes[doc] == docText ||
 	     DocumentTypes[doc] == docTextRO ||
@@ -2742,6 +2760,8 @@ int                 delta;
 }
 
 /*----------------------------------------------------------------------
+  ShowSource
+  Display the source code of an HTML page.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ShowSource (Document document, View view)
@@ -2757,15 +2777,20 @@ View                view;
    Document	sourceDoc;
 
    if (DocumentSource[document])
+     /* the source code of this document is already shown */
+     /* raise its window */
      TtaRaiseView (DocumentSource[document], 1);
    else
      {
      tempdocument = TtaAllocString (MAX_LENGTH);   
      if (IsW3Path (DocumentURLs[document]))
+        /* it's a remote document. Get its local copy */
         tempdocument = GetLocalPath (document, DocumentURLs[document]);
      else
+        /* it's a local document */
         ustrcpy (tempdocument, DocumentURLs[document]);
      TtaExtractName (tempdocument, tempdir, documentname);
+     /* open a window for the source code */
      sourceDoc = InitDocView (0, documentname, docSource, FALSE);   
      if (sourceDoc > 0)
         {
@@ -2780,7 +2805,6 @@ View                view;
         StartParser (sourceDoc, tempdocument, documentname, tempdir,
 		     tempdocument, TRUE);
         TtaSetItemOff (sourceDoc, 1, File, BTemplate);
-        /***** TtaShowElement (sourceDoc, i, el, 0); ******/
         }
      TtaFreeMemory (tempdocument);
      }

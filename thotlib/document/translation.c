@@ -6,15 +6,6 @@
  */
 
 /*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
-/*
 
    This module handles document translation.
    It travels the abstract trees of a document and produces an
@@ -55,6 +46,7 @@ typedef struct _AnOutputFile
      int                 OfBufferLen;	/* current length of output buffer */
      int		 OfIndent;	/* current value of indentation */
      int		 OfPreviousIndent;/* previous value of indentation */
+     int                 OfLineNumber;  /* number of lines already written */
      ThotBool		 OfStartOfLine;	/* start a new line */
      CHAR_T              OfBuffer[MAX_BUFFER_LEN];	/* output buffer */
      ThotBool		 OfCannotOpen;	/* open failure */
@@ -152,6 +144,7 @@ ThotBool		    open;
 	OutputFile[NOutputFiles].OfBufferLen = 0;
 	OutputFile[NOutputFiles].OfIndent = 0;
 	OutputFile[NOutputFiles].OfPreviousIndent = 0;
+	OutputFile[NOutputFiles].OfLineNumber = 0;
 	OutputFile[NOutputFiles].OfStartOfLine = TRUE;
 	NOutputFiles++;
 	return (NOutputFiles - 1);
@@ -220,6 +213,7 @@ ThotBool            lineBreak;
 		  ufprintf (fileDesc, pTSch->TsEOL);
 		  /* le buffer de sortie est vide maintenant */
 		  OutputFile[fileNum].OfBufferLen = 0;
+		  OutputFile[fileNum].OfLineNumber++;
 		  OutputFile[fileNum].OfStartOfLine = TRUE;
 	       }
 	     else
@@ -273,6 +267,7 @@ ThotBool            lineBreak;
 				  putc (OutputFile[fileNum].OfBuffer[j], fileDesc);
 			       /* on ecrit un saut de ligne */
 			       ufprintf (fileDesc, pTSch->TsTranslEOL);
+			       OutputFile[fileNum].OfLineNumber++;
 			       /* on traite l'indentation */
 			       if (OutputFile[fileNum].OfIndent > pTSch->TsLineLength - 10)
 				  indent = pTSch->TsLineLength - 10;
@@ -391,7 +386,7 @@ ThotBool            lineBreak;
    GetTransSchForContent
    En examinant les elements ascendants de pEl, on cherche un schema de
    traduction qui contienne des regles de traduction de contenu pour les
-   feuille type leafType.
+   feuilles de type leafType.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static PtrTSchema   GetTransSchForContent (PtrElement pEl, LeafType leafType, AlphabetTransl **pTransAlph)
@@ -1367,7 +1362,7 @@ PtrDocument         pDoc;
 				 /* parcourt les presentations specifiques de l'element */
 				 while (pPRule != NULL && !ret)
 				   {
-				      if (pPRule->PrType == Cond->TcAttr)
+				      if (pPRule->PrType == (PRuleType)(Cond->TcAttr))
 					 /* c'est la presentation cherchee, on teste sa valeur */
 					 if (pPRule->PrType == PtSize || pPRule->PrType == PtIndent ||
 					  pPRule->PrType == PtLineSpacing ||
@@ -1769,11 +1764,12 @@ static void         ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch,
 			PtrSSchema pSSch, PtrElement pEl, ThotBool * transChar,
 				ThotBool * lineBreak, ThotBool * removeEl,
 				PtrPRule pRPres, PtrAttribute pAttr,
-				PtrDocument pDoc);
+				PtrDocument pDoc, ThotBool recordLineNb);
 
 #else  /* __STDC__ */
 static void         ApplyTRule ( /* pTRule, pTSch, pSSch, pEl, transChar,
-				lineBreak, removeEl, pRPres, pAttr, pDoc */ );
+				lineBreak, removeEl, pRPres, pAttr, pDoc,
+				recordLineNb */ );
 
 #endif /* __STDC__ */
 
@@ -1787,11 +1783,11 @@ static void         ApplyTRule ( /* pTRule, pTSch, pSSch, pEl, transChar,
 static void         ApplyAttrRulesToElem (TOrder position, PtrElement pEl,
 				     PtrAttribute pAttr, ThotBool * removeEl,
 				   ThotBool * transChar, ThotBool * lineBreak,
-					  PtrDocument pDoc)
+					  PtrDocument pDoc, ThotBool recordLineNb)
 
 #else  /* __STDC__ */
 static void         ApplyAttrRulesToElem (position, pEl, pAttr, removeEl, transChar, lineBreak,
-					  pDoc)
+					  pDoc, recordLineNb)
 TOrder              position;
 PtrElement          pEl;
 PtrAttribute        pAttr;
@@ -1799,6 +1795,7 @@ ThotBool           *removeEl;
 ThotBool           *transChar;
 ThotBool           *lineBreak;
 PtrDocument         pDoc;
+ThotBool            recordLineNb;
 
 #endif /* __STDC__ */
 
@@ -1882,7 +1879,7 @@ PtrDocument         pDoc;
 			/* on applique la regle */
 			ApplyTRule (pTRule, pTSchAttr, pAttr->AeAttrSSchema,
 				    pEl, transChar, lineBreak, removeEl, NULL,
-				    pAttr, pDoc);
+				    pAttr, pDoc, recordLineNb);
 		  /* passe a la regle suivante */
 		  pTRule = pTRule->TrNextTRule;
 	       }
@@ -1907,16 +1904,18 @@ PtrDocument         pDoc;
 
 #ifdef __STDC__
 static void         ApplyAttrRules (TOrder position, PtrElement pEl, ThotBool * removeEl,
-		 ThotBool * transChar, ThotBool * lineBreak, PtrDocument pDoc)
+		 ThotBool * transChar, ThotBool * lineBreak, PtrDocument pDoc,
+		 ThotBool recordLineNb)
 
 #else  /* __STDC__ */
-static void         ApplyAttrRules (position, pEl, removeEl, transChar, lineBreak, pDoc)
+static void         ApplyAttrRules (position, pEl, removeEl, transChar, lineBreak, pDoc, recordLineNb)
 TOrder              position;
 PtrElement          pEl;
 ThotBool           *removeEl;
 ThotBool           *transChar;
 ThotBool           *lineBreak;
 PtrDocument         pDoc;
+ThotBool            recordLineNb;
 
 #endif /* __STDC__ */
 
@@ -1951,7 +1950,7 @@ PtrDocument         pDoc;
 	      /* les regles de traduction de l'attribut s'appliquent a */
 	      /* n'importe quel type d'element, on les applique */
 	      ApplyAttrRulesToElem (position, pEl, pAttr, removeEl, transChar, lineBreak,
-				    pDoc);
+				    pDoc, recordLineNb);
 	if (position == TAfter)
 	   /* passe a l'attribut precedent de l'element */
 	  {
@@ -1996,7 +1995,7 @@ PtrDocument         pDoc;
 				/* applique les regles de traduction de */
 				/* l'attribut a l'element */
 				ApplyAttrRulesToElem (position, pEl, pAttr, removeEl, transChar,
-						      lineBreak, pDoc);
+						      lineBreak, pDoc, recordLineNb);
 				/* inutile de poursuivre la recherche */
 				pAttr = NULL;
 				pAsc = NULL;
@@ -2020,11 +2019,11 @@ PtrDocument         pDoc;
 #ifdef __STDC__
 static void         ApplyPresTRules (TOrder position, PtrElement pEl, ThotBool * removeEl,
 				   ThotBool * transChar, ThotBool * lineBreak,
-				     PtrAttribute pAttr, PtrDocument pDoc)
+				     PtrAttribute pAttr, PtrDocument pDoc, ThotBool recordLineNb)
 
 #else  /* __STDC__ */
 static void         ApplyPresTRules (position, pEl, removeEl, transChar, lineBreak, pAttr,
-				     pDoc)
+				     pDoc, recordLineNb)
 TOrder              position;
 PtrElement          pEl;
 ThotBool           *removeEl;
@@ -2032,6 +2031,7 @@ ThotBool           *transChar;
 ThotBool           *lineBreak;
 PtrAttribute        pAttr;
 PtrDocument         pDoc;
+ThotBool            recordLineNb;
 
 #endif /* __STDC__ */
 
@@ -2145,7 +2145,7 @@ PtrDocument         pDoc;
 				  ApplyTRule (pTRule, pTSch,
 					      pEl->ElStructSchema, pEl,
 					      transChar, lineBreak, removeEl,
-					      pPRule, pAttr, pDoc);
+					      pPRule, pAttr, pDoc, recordLineNb);
 			    /* passe a la regle suivante */
 			    pTRule = pTRule->TrNextTRule;
 			 }
@@ -2383,11 +2383,12 @@ ThotBool            lineBreak;
 }
 
 #ifdef __STDC__
-static void         TranslateTree (PtrElement pEl, PtrDocument pDoc, ThotBool transChar,
-				   ThotBool lineBreak, ThotBool enforce);
+static void         TranslateTree (PtrElement pEl, PtrDocument pDoc,
+				   ThotBool transChar, ThotBool lineBreak,
+				   ThotBool enforce, ThotBool recordLineNb);
 
 #else  /* __STDC__ */
-static void         TranslateTree ( /* pEl, pDoc, transChar, lineBreak, enforce */ );
+static void         TranslateTree ( /* pEl, pDoc, transChar, lineBreak, enforce, recordLineNb */ );
 
 #endif /* __STDC__ */
 
@@ -2407,21 +2408,21 @@ static void         ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch,
 			PtrSSchema pSSch, PtrElement pEl, ThotBool * transChar,
 				ThotBool * lineBreak, ThotBool * removeEl,
 				PtrPRule pRPres, PtrAttribute pAttr,
-				PtrDocument pDoc)
+				PtrDocument pDoc, ThotBool recordLineNb)
 #else  /* __STDC__ */
 static void         ApplyTRule (pTRule, pTSch, pSSch, pEl, transChar, lineBreak,
-				removeEl, pRPres, pAttr, pDoc)
+				removeEl, pRPres, pAttr, pDoc, recordLineNb)
 PtrTRule            pTRule;
 PtrTSchema          pTSch;
 PtrSSchema          pSSch;
 PtrElement          pEl;
-PtrPRule            pRPres;
-PtrAttribute        pAttr;
-PtrDocument         pDoc;
 ThotBool           *transChar;
 ThotBool           *lineBreak;
 ThotBool           *removeEl;
-
+PtrPRule            pRPres;
+PtrAttribute        pAttr;
+PtrDocument         pDoc;
+ThotBool            recordLineNb;
 #endif /* __STDC__ */
 
 {
@@ -2636,15 +2637,16 @@ ThotBool           *removeEl;
 			case ToAllAttr:
 			   /* produit la traduction de tous les attributs de l'element */
 			   ApplyAttrRules (pTRule->TrOrder, pEl, removeEl, transChar, lineBreak,
-					   pDoc);
+					   pDoc, recordLineNb);
 			   /* les regles des attributs ont ete appliquees */
 			   pEl->ElTransAttr = TRUE;
 			   break;
 			case ToAllPRules:
 			   /* produit la traduction de toutes les regles de presentation */
 			   /* specifique portees par l'element */
-			   ApplyPresTRules (pTRule->TrOrder, pEl, removeEl, transChar, lineBreak,
-					    pAttr, pDoc);
+			   ApplyPresTRules (pTRule->TrOrder, pEl, removeEl,
+					    transChar, lineBreak,
+					    pAttr, pDoc, recordLineNb);
 			   /* marque dans l'element que sa presentation a ete traduite */
 			   pEl->ElTransPres = TRUE;
 			   break;
@@ -2785,10 +2787,10 @@ ThotBool           *removeEl;
 				   /* traduit l'element reference', meme s'il a deja ete traduit */
 				   if (docIdent[0] == EOS)
 				      /* reference interne */
-				      TranslateTree (pRefEl, pDoc, *transChar, *lineBreak, TRUE);
+				      TranslateTree (pRefEl, pDoc, *transChar, *lineBreak, TRUE, recordLineNb);
 				   else if (pExtDoc != NULL)
 				      /* reference externe a un document charge' */
-				      TranslateTree (pRefEl, pExtDoc, *transChar, *lineBreak, TRUE);
+				      TranslateTree (pRefEl, pExtDoc, *transChar, *lineBreak, TRUE, recordLineNb);
 			     }
 			   break;
 
@@ -2931,6 +2933,7 @@ ThotBool           *removeEl;
 			 OutputFile[1].OfBufferLen = 0;
 			 OutputFile[1].OfIndent = 0;
 			 OutputFile[1].OfPreviousIndent = 0;
+			 OutputFile[1].OfLineNumber = 0;
 			 OutputFile[1].OfStartOfLine = TRUE;
 			 OutputFile[1].OfFileDesc = newFile;
 			 OutputFile[1].OfCannotOpen = FALSE;
@@ -3098,7 +3101,7 @@ ThotBool           *removeEl;
 	       if (pElGet != NULL)
 		  /* traduit l'element a prendre, sauf s'il a deja ete traduit et */
 		  /* qu'il s'agit d'une regle Get */
-		  TranslateTree (pElGet, pDocGet, *transChar, *lineBreak, (ThotBool)(pTRule->TrType == TCopy));
+		  TranslateTree (pElGet, pDocGet, *transChar, *lineBreak, (ThotBool)(pTRule->TrType == TCopy), recordLineNb);
 	       break;
 	    case TUse:
 	       /* On ne fait rien. Cette regle est utilisee uniquement */
@@ -3170,11 +3173,11 @@ ThotBool           *removeEl;
 static void         ApplyElTypeRules (TOrder position, ThotBool * transChar,
 				    ThotBool * lineBreak, ThotBool * removeEl,
 			       PtrElement pEl, int TypeEl, PtrTSchema pTSch,
-				      PtrSSchema pSS, PtrDocument pDoc)
+				      PtrSSchema pSS, PtrDocument pDoc, ThotBool recordLineNb)
 
 #else  /* __STDC__ */
 static void         ApplyElTypeRules (position, transChar, lineBreak, removeEl, pEl, TypeEl,
-				      pTSch, pSS, pDoc)
+				      pTSch, pSS, pDoc, recordLineNb)
 TOrder              position;
 ThotBool           *transChar;
 ThotBool           *lineBreak;
@@ -3184,6 +3187,7 @@ int                 TypeEl;
 PtrTSchema          pTSch;
 PtrSSchema          pSS;
 PtrDocument         pDoc;
+ThotBool            recordLineNb
 
 #endif /* __STDC__ */
 
@@ -3215,7 +3219,8 @@ PtrDocument         pDoc;
 		     else
 			/* on applique la regle */
 			ApplyTRule (pTRule, pTSch, pSS, pEl, transChar,
-				    lineBreak, removeEl, NULL, NULL, pDoc);
+				    lineBreak, removeEl, NULL, NULL, pDoc,
+				    recordLineNb);
 		  /* passe a la regle suivante */
 		  pTRule = pTRule->TrNextTRule;
 	       }
@@ -3233,17 +3238,18 @@ PtrDocument         pDoc;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void         TranslateTree (PtrElement pEl, PtrDocument pDoc, ThotBool transChar,
-				   ThotBool lineBreak, ThotBool enforce)
+static void         TranslateTree (PtrElement pEl, PtrDocument pDoc,
+				   ThotBool transChar, ThotBool lineBreak,
+				   ThotBool enforce, ThotBool recordLineNb)
 
 #else  /* __STDC__ */
-static void         TranslateTree (pEl, pDoc, transChar, lineBreak, enforce)
+static void         TranslateTree (pEl, pDoc, transChar, lineBreak, enforce, recordLineNb)
 PtrElement          pEl;
 PtrDocument         pDoc;
 ThotBool            transChar;
 ThotBool            lineBreak;
 ThotBool            enforce;
-
+ThotBool            recordLineNb;
 #endif /* __STDC__ */
 
 {
@@ -3320,18 +3326,22 @@ ThotBool            enforce;
 	   /* on ne traduit pas les elements dont le schema de structure n'a */
 	   /* pas de schema de traduction correspondant */
 	  {
+	     /* if needed, record the current line number of the main
+		output file in the element being translated */
+	     if (recordLineNb)
+	        pEl->ElLineNb = OutputFile[1].OfLineNumber + 1;
 	     /* Cherche et applique les regles de traduction associees au type */
 	     /* de l'element et qui doivent s'appliquer avant la traduction du */
 	     /* contenu de l'element */
-	     ApplyElTypeRules (TBefore, &transChar, &lineBreak, &removeEl, pEl, elemType,
-			       pTSch, pSS, pDoc);
+	     ApplyElTypeRules (TBefore, &transChar, &lineBreak, &removeEl,
+			       pEl, elemType, pTSch, pSS, pDoc, recordLineNb);
 	     /* on ne traduit les attributs que si ce n'est pas deja fait par */
 	     /* une regle Create Attributes associee au type */
 	     if (!pEl->ElTransAttr)
 		/* Parcourt les attributs de l'element et applique les regles
 		   des attributs qui doivent ^etre appliquees avant la
 		   traduction du contenu de l'element */
-		ApplyAttrRules (TBefore, pEl, &removeEl, &transChar, &lineBreak, pDoc);
+		ApplyAttrRules (TBefore, pEl, &removeEl, &transChar, &lineBreak, pDoc, recordLineNb);
 
 	     /* on ne traduit la presentation que si ce n'est pas deja fait par */
 	     /* une regle Create Presentation */
@@ -3339,8 +3349,8 @@ ThotBool            enforce;
 		/* Parcourt les presentations de l'element et applique les regles
 		 * de traduction correspondantes qui doivent ^etre appliquees
 		 * avant la traduction du contenu de l'element */
-		ApplyPresTRules (TBefore, pEl, &removeEl, &transChar, &lineBreak, NULL,
-				 pDoc);
+		ApplyPresTRules (TBefore, pEl, &removeEl, &transChar,
+				 &lineBreak, NULL, pDoc, recordLineNb);
 	     /* traduit le contenu de l'element, sauf si on a deja rencontre' */
 	     /* une regle Remove pour cet element. */
 	     if (!removeEl)
@@ -3356,7 +3366,8 @@ ThotBool            enforce;
 		     pChild = pEl->ElFirstChild;
 		     while (pChild != NULL)
 		       {
-			  TranslateTree (pChild, pDoc, transChar, lineBreak, enforce);
+			  TranslateTree (pChild, pDoc, transChar, lineBreak,
+					 enforce, recordLineNb);
 			  pChild = pChild->ElNext;
 		       }
 		  }
@@ -3371,17 +3382,17 @@ ThotBool            enforce;
 		/* Parcourt les presentations de l'element et applique les regles
 		 * de traduction correspondantes qui doivent ^etre appliquees
 		 * apres la traduction du contenu */
-		ApplyPresTRules (TAfter, pEl, &removeEl, &transChar, &lineBreak, NULL,
-				 pDoc);
+		ApplyPresTRules (TAfter, pEl, &removeEl, &transChar,
+				 &lineBreak, NULL, pDoc, recordLineNb);
 	     if (!pEl->ElTransAttr)
 		/* Parcourt les attributs de l'element et applique les regles des
 		 * attributs qui doivent etre appliquees apres la traduction du
 		 * contenu */
-		ApplyAttrRules (TAfter, pEl, &removeEl, &transChar, &lineBreak, pDoc);
+		ApplyAttrRules (TAfter, pEl, &removeEl, &transChar, &lineBreak, pDoc, recordLineNb);
 	     /* Cherche et applique les regles associees au type de l'element et
 	      * qui doivent s'appliquer apres la traduction du contenu */
-	     ApplyElTypeRules (TAfter, &transChar, &lineBreak, &removeEl, pEl, elemType,
-			       pTSch, pSS, pDoc);
+	     ApplyElTypeRules (TAfter, &transChar, &lineBreak, &removeEl,
+			       pEl, elemType, pTSch, pSS, pDoc, recordLineNb);
 	     if (!enforce)
 		/* marque que l'element a ete traite' */
 		pEl->ElTransContent = TRUE;
@@ -3452,6 +3463,7 @@ PtrDocument         pDoc;
    OutputFile[0].OfBufferLen = 0;
    OutputFile[0].OfIndent = 0;
    OutputFile[0].OfPreviousIndent = 0;
+   OutputFile[0].OfLineNumber = 0;
    OutputFile[0].OfStartOfLine = TRUE;
    OutputFile[0].OfCannotOpen = FALSE;
 
@@ -3461,6 +3473,7 @@ PtrDocument         pDoc;
    OutputFile[1].OfBufferLen = 0;
    OutputFile[1].OfIndent = 0;
    OutputFile[1].OfPreviousIndent = 0;
+   OutputFile[1].OfLineNumber = 0;
    OutputFile[1].OfStartOfLine = TRUE;
    OutputFile[1].OfCannotOpen = FALSE;
    NOutputFiles = 2;
@@ -3500,13 +3513,15 @@ PtrDocument         pDoc;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-ThotBool      ExportDocument (PtrDocument pDoc, STRING fName, STRING TSchemaName)
+ThotBool      ExportDocument (PtrDocument pDoc, STRING fName,
+			      STRING TSchemaName, ThotBool recordLineNb)
 
 #else  /* __STDC__ */
-ThotBool      ExportDocument (pDoc, fName, TSchemaName)
+ThotBool      ExportDocument (pDoc, fName, TSchemaName, recordLineNb)
 PtrDocument         pDoc;
 STRING              fName;
 STRING              TSchemaName;
+ThotBool            recordLineNb;
 
 #endif /* __STDC__ */
 
@@ -3566,11 +3581,13 @@ STRING              TSchemaName;
 		if (pDoc->DocAssocRoot[i] != NULL)
 		   ResetTranslTags (pDoc->DocAssocRoot[i]);
 	     /* traduit l'arbre principal du document */
-	     TranslateTree (pDoc->DocRootElement, pDoc, TRUE, TRUE, FALSE);
+	     TranslateTree (pDoc->DocRootElement, pDoc, TRUE, TRUE, FALSE,
+			    recordLineNb);
 	     /* traduit les arbres associe's */
 	     for (i = 0; i < MAX_ASSOC_DOC; i++)
 		if (pDoc->DocAssocRoot[i] != NULL)
-		   TranslateTree (pDoc->DocAssocRoot[i], pDoc,TRUE,TRUE,FALSE);
+		   TranslateTree (pDoc->DocAssocRoot[i], pDoc, TRUE, TRUE,
+				  FALSE, recordLineNb);
 	     /* vide ce qui traine dans les buffers de sortie */
 	     /* et ferme ces fichiers */
 	     FlushOutputFiles (pDoc);
@@ -3655,7 +3672,7 @@ STRING              TSchemaName;
 	  /* de l'arbre a traduire */
 	  ResetTranslTags (pEl);
 	  /* traduit l'arbre */
-	  TranslateTree (pEl, pDoc, TRUE, TRUE, FALSE);
+	  TranslateTree (pEl, pDoc, TRUE, TRUE, FALSE, FALSE);
 	  /* vide ce qui traine dans les buffers de sortie */
 	  /* et ferme ces fichiers */
 	  FlushOutputFiles (pDoc);

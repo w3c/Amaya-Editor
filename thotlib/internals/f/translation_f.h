@@ -8,7 +8,8 @@
 
 extern ThotBool ExportDocument ( PtrDocument pDoc,
                                  STRING fName,
-                                 STRING TSchemaName );
+                                 STRING TSchemaName,
+                                 ThotBool exportLineNb );
 extern void ExportTree ( PtrElement pEl,
                          PtrDocument pDoc,
                          STRING fName,
@@ -18,7 +19,8 @@ extern void ExportTree ( PtrElement pEl,
 
 extern ThotBool ExportDocument (/* PtrDocument pDoc,
                                    STRING fName,
-                                   STRING TSchemaName */);
+                                   STRING TSchemaName,
+                                   ThotBool exportLineNb */);
 extern void ExportTree (/* PtrElement pEl,
                            PtrDocument pDoc,
                            STRING fName,

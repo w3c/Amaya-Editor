@@ -587,6 +587,10 @@ View                view;
    if ((SavingDocument != 0 && SavingDocument != doc) ||
        SavingObject != 0)
       return;
+   else if (DocumentTypes[doc] == docSource ||
+	    DocumentTypes[doc] == docSourceRO)
+      /* it's a source "view". Don't save it */
+      return;
 
    TextFormat = (DocumentTypes[doc] == docText ||
 		 DocumentTypes[doc] == docTextRO ||
@@ -744,6 +748,104 @@ Document            doc;
 }
 
 /*----------------------------------------------------------------------
+   RedisplaySourceFile
+   If doc is a HTML document and the source view is open, redisplay the
+   source.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void       RedisplaySourceFile (Document doc)
+#else
+static void       RedisplaySourceFile (doc)
+Document          doc;
+
+#endif
+{
+  STRING        localFile;
+  CHAR_T	documentname[MAX_LENGTH];
+  CHAR_T	tempdir[MAX_LENGTH];
+
+  if (DocumentTypes[doc] == docHTML || DocumentTypes[doc] == docHTMLRO)
+    /* It's a HTML document */
+    {
+    if (DocumentSource[doc])
+       /* The source code of this document is currently displayed */
+       {
+       localFile = TtaAllocString (MAX_LENGTH);   
+       if (IsW3Path (DocumentURLs[doc]))
+          /* it's a remote document. Get its local copy */
+          localFile = GetLocalPath (doc, DocumentURLs[doc]);
+       else
+          /* it's a local document */
+          ustrcpy (localFile, DocumentURLs[doc]);
+       TtaExtractName (localFile, tempdir, documentname);
+       /* parse and display the new version */
+       StartParser (DocumentSource[doc], localFile, documentname, tempdir,
+		    localFile, TRUE);
+       TtaSetDocumentName (DocumentSource[doc], documentname);
+       }
+    }
+}
+
+/*----------------------------------------------------------------------
+   SaveSourceFile
+   If sourceDoc is a source file, save it in the local file and redisplay
+   the corresponding HTML document.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void       SaveSourceFile (Document sourceDoc)
+#else
+static void       SaveSourceFile (sourceDoc)
+Document          doc;
+
+#endif
+{
+  STRING        localFile;
+  CHAR_T	documentname[MAX_LENGTH];
+  CHAR_T	tempdir[MAX_LENGTH];
+  int           i;
+  Document      doc;
+  ThotBool      ok;
+
+  if (DocumentTypes[sourceDoc] == docSource ||
+      DocumentTypes[sourceDoc] == docSourceRO)
+    /* It's a source file */
+    {
+    localFile = TtaAllocString (MAX_LENGTH);   
+    if (IsW3Path (DocumentURLs[sourceDoc]))
+       /* it's a remote document. save it in the local copy */
+       localFile = GetLocalPath (sourceDoc, DocumentURLs[sourceDoc]);
+    else
+       /* it's a local document */
+       ustrcpy (localFile, DocumentURLs[sourceDoc]);
+    /* save the file locally */
+    ok = TtaExportDocumentWithNewLineNumbers (sourceDoc, localFile,
+					      TEXT("TextFileT"));
+    if (!ok)
+       /* cannot save */
+       TtaSetStatus (sourceDoc, 1, TtaGetMessage (AMAYA, AM_CANNOT_SAVE),
+		     DocumentURLs[sourceDoc]);
+    else
+      {
+      TtaSetDocumentUnmodified (sourceDoc);
+      TtaSetStatus (sourceDoc, 1, TtaGetMessage (AMAYA, AM_SAVED), DocumentURLs[doc]);
+      doc = 0;
+      for (i = 1; i < DocumentTableLength && doc == 0; i++)
+         if (DocumentTypes[i] == docHTML)
+            if (DocumentSource[i] == sourceDoc)
+	       doc = i;
+      if (doc)
+         {
+         /* parse and display the new version */
+         TtaExtractName (localFile, tempdir, documentname);
+         /* parse and display the new version */
+         StartParser (doc, localFile, documentname, tempdir, localFile,
+		      FALSE);
+         }
+      }
+    }
+}
+
+/*----------------------------------------------------------------------
    SaveDocumentLocally save the document in a local file.
    Return TRUE if the document has been saved
   ----------------------------------------------------------------------*/
@@ -758,8 +860,8 @@ STRING            documentName;
 #endif
 {
   DisplayMode         dispMode;
-  CHAR_T                tempname[MAX_LENGTH];
-  CHAR_T                docname[100];
+  CHAR_T              tempname[MAX_LENGTH];
+  CHAR_T              docname[100];
   ThotBool            ok;
 
 #ifdef AMAYA_DEBUG
@@ -783,13 +885,12 @@ STRING            documentName;
     {
       SetNamespacesAndDTD (doc);
       if (SaveAsXHTML)
-	ok = TtaExportDocument (doc, tempname, TEXT("HTMLTX"));
+	ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, TEXT("HTMLTX"));
       else
-	ok = TtaExportDocument (doc, tempname, TEXT("HTMLT"));
+	ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, TEXT("HTMLT"));
       if (ok)
 	{
 	  TtaSetDocumentDirectory (doc, directoryName);
-	  /**********/
 	  ustrcpy (docname, documentName);
 	  ExtractSuffix (docname, tempname);
 	  /* Change the document name in all views */
@@ -1095,12 +1196,13 @@ ThotBool         use_preconditions;
   /* save into the temporary document file */
   tempname = GetLocalPath (doc, url);
 
-  /* First step : build the output and ask for confirmation */
+  /* First step : generate the output file and ask for confirmation */
   SetNamespacesAndDTD (doc);
   if (SaveAsXHTML)
-    TtaExportDocument (doc, tempname, TEXT("HTMLTX"));
+    TtaExportDocumentWithNewLineNumbers (doc, tempname, TEXT("HTMLTX"));
   else
-    TtaExportDocument (doc, tempname, TEXT("HTMLT"));
+    TtaExportDocumentWithNewLineNumbers (doc, tempname, TEXT("HTMLT"));
+
   res = 0;
   if (confirm && with_images)
     {
@@ -1285,6 +1387,14 @@ View                view;
       TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_NOTHING_TO_SAVE), _EMPTYSTR_);
       return;
     }
+  else if (DocumentTypes[doc] == docSource ||
+	   DocumentTypes[doc] == docSourceRO)
+    /* it's a source "view". Don't save it */
+    {
+    SaveSourceFile (doc);   /********** provisional  *******/ 
+    return;
+    }
+
   TextFormat = (DocumentTypes[doc] == docText ||
 		DocumentTypes[doc] == docTextRO ||
 		DocumentTypes[doc] == docCSS ||
@@ -1346,9 +1456,9 @@ View                view;
 	{
 	  SetNamespacesAndDTD (doc);
 	  if (SaveAsXHTML)
-	    ok = TtaExportDocument (doc, tempname, TEXT("HTMLTX"));
+	    ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, TEXT("HTMLTX"));
 	  else
-	    ok = TtaExportDocument (doc, tempname, TEXT("HTMLT"));
+	    ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, TEXT("HTMLT"));
 	}
     }
 
@@ -1361,6 +1471,9 @@ View                view;
 	  TtaFreeMemory (DocumentMeta[doc]->form_data);
 	  DocumentMeta[doc]->form_data = NULL;
 	}
+      /* if it's a HTML document and the source view is open, redisplay
+	 the source. */
+      RedisplaySourceFile (doc);
       TtaSetDocumentUnmodified (doc);
       TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_SAVED), DocumentURLs[doc]);
     }
@@ -1368,7 +1481,6 @@ View                view;
     /* cannot save */
     TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), DocumentURLs[doc]);
 }
-
 
 /*----------------------------------------------------------------------
   BackupAll save all opened documents when the application crashes
@@ -2157,6 +2269,9 @@ void                DoSaveAs ()
 		}
 	      TtaSetDocumentUnmodified (doc);
 	    }
+	  /* if it's a HTML document and the source view is open, redisplay
+	     the source. */
+	  RedisplaySourceFile (doc);
 	  /* Sucess of the operation */
 	  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_SAVED), documentFile);
 	  /* remove the previous temporary file */

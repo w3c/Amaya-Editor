@@ -165,7 +165,7 @@ void                BuildSaveDocMenu ()
 	  {
 	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_EXPORTING), DocumentToSave->DocDName);
 	     FindCompleteName (SaveFileName, _EMPTYSTR_, SaveDirectoryName, outputFileName, &i);
-	     ExportDocument (DocumentToSave, outputFileName, TraductionSchemaName);
+	     ExportDocument (DocumentToSave, outputFileName, TraductionSchemaName, FALSE);
 	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_DOC_WRITTEN), outputFileName);
 	     /* envoie le message DocExport.Post a l'application */
 	     notifyDoc.event = TteDocExport;
