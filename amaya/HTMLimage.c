@@ -793,6 +793,13 @@ void               *extra;
 	  update = TRUE;
 	  /* add BASE to image name, if necessary */
 	  NormalizeURL (imageName, doc, pathname, imageName, NULL);
+	  /* if it's not a remote URL, make any necessary file: conversions */
+	  if (!IsW3Path (pathname))
+	  {
+	    NormalizeFile (pathname, tempfile);
+	    ustrcpy (pathname, tempfile);
+	    tempfile[0] = EOS;
+	  }
 	  /* is the image already loaded ? */
 	  newImage = AddLoadedImage (imageName, pathname, doc, &desc);
 	  if (newImage)
