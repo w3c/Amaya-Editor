@@ -293,7 +293,6 @@ int              elementT;
 	       parent = TtaGetParent (el);
 	     }
 	 }
-
        /* now insert the new element after el */
        elType.ElTypeNum = elementT;
        new = TtaNewTree (document, elType, "");
@@ -1374,6 +1373,29 @@ View                view;
        TtaInsertElement (elType, doc);
        TtaGiveFirstSelectedElement (doc, &el, &firstchar, &lastchar);
        OnlyOneOptionSelected (el, doc, FALSE);
+     }
+}
+
+
+/*----------------------------------------------------------------------
+  CreateOptGroup
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                CreateOptGroup (Document document, View view)
+#else  /* __STDC__ */
+void                CreateOptGroup (document, view)
+Document            document;
+View                view;
+
+#endif /* __STDC__ */
+{
+   ElementType         elType;
+
+   elType.ElSSchema = TtaGetDocumentSSchema (document);
+   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+     {
+       elType.ElTypeNum = HTML_EL_OptGroup;
+       TtaCreateElement (elType, document);
      }
 }
 

@@ -471,8 +471,8 @@ STRUCT
 	TEXT;
 
   OptGroup							{ OPTGROUP }
-     (ATTR disabled; label) =
-	 { disabled  label }
+     (ATTR disabled; !label) =
+	 { disabled   label }
 	LIST OF (Option);
 
   Text_Area							{ TEXTAREA }

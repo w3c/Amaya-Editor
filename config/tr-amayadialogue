@@ -68,103 +68,104 @@
 67 Deðiþtir
 68 Radio
 69 Seçenek
-70 Metin giriþi
-71 **Password input
-72 Metin alaný
-73 **File select
-74 **Hidden control
-75 **Label
-76 **Push button
-77 Submit
-78 Reset
-79 Alan haritasý
-80 Dikdörtgen
-81 Daire
-82 Çokgen
-83 Bölme
-84 **NoScript
-85 Nesne
+70 **Submenu (optgroup)
+71 Metin giriþi
+72 **Password input
+73 Metin alaný
+74 **File select
+75 **Hidden control
+76 **Label
+77 **Push button
+78 Submit
+79 Reset
+80 Alan haritasý
+81 Dikdörtgen
+82 Daire
+83 Çokgen
+84 Bölme
+85 **NoScript
 86 Nesne
-87 Parametre
-88 **IFrame
-89 Matematik
-90 Denklem
-91 Kök
-92 Karekök
-93 Kesir
-94 Alt ve üstyazý
-95 altyazý
-96 üstyazý
-97 altýnda veya üstünde
-98 altýnda
-99 üstünde
-100 Parantezler
-101 Multiscripts
-102 Matris
-103 Baðlantý yarat...
-104 Hedef yarat
-105 Baðlantý yarat...
-106 <A> tanýmý sil
-107 Tuþlarý göster
-108 Adres ve baþlýðý göster
-109 Yakýnlaþtýr
-110 **Show Targets
-111 Uzaklaþtýr
-112 Harita alanlarýný göster
-113 Yapýyý göster
-114 Alternatif gösterim
-115 Baðlantýlarý göster
-116 Ýçindekileri göster
-117 Karakter tarzý...
-118 Renkler...
-119 Biçim...
-120 Arkaplan görüntüsü...
-121 Kural yarat...
-122 \'class\' uygula...
-123 Tarzý tanýmlarý
-124 Bilgi türü
-125 Vurgu
-126 Kuvvetli
-127 Cite
-128 Taným
-129 Kod
-130 Deðiþken
-131 Örnek
-132 Tuþtakýmý
-133 **Abbreviation
-134 **Acronym
-135 **Insertion
-136 **Deletion
-137 Karakter birimi
-138 Ýtalik
-139 Kalýn
-140 Teletype
-141 Büyük
-142 Küçük
-143 Alt
-144 Üst
-145 **Quotation
-146 **BDO
-147 Dönüþtür
-148 Bölüm numaralandýrmasý
-149 Kitap yap
-150 **Purge cache
-151 Amaya hakkýnda
-152 Tarama
-153 Seçme
-154 Arama
-155 Görünümler
-156 Birim yaratma
-157 Baðlantýlar
-158 Yeniden yapýlandýrma
-159 Tablolar
-160 Matematik
-161 Görüntü haritalarý
-162 Tarz tanýmlarý
-163 Özellikler
-164 Yazým hatalarý aranýyor
-165 Sayfa yerleþtirme
-166 Bastýrma
-167 Numaralandýrmasý
-168 Kitap oluþturma
-169 Amaya yapýlandýrmasý
+87 Nesne
+88 Parametre
+89 **IFrame
+90 Matematik
+91 Denklem
+92 Kök
+93 Karekök
+94 Kesir
+95 Alt ve üstyazý
+96 altyazý
+97 üstyazý
+98 altýnda veya üstünde
+99 altýnda
+100 üstünde
+101 Parantezler
+102 Multiscripts
+103 Matris
+104 Baðlantý yarat...
+105 Hedef yarat
+106 Baðlantý yarat...
+107 <A> tanýmý sil
+108 Tuþlarý göster
+109 Adres ve baþlýðý göster
+110 Yakýnlaþtýr
+111 **Show Targets
+112 Uzaklaþtýr
+113 Harita alanlarýný göster
+114 Yapýyý göster
+115 Alternatif gösterim
+116 Baðlantýlarý göster
+117 Ýçindekileri göster
+118 Karakter tarzý...
+119 Renkler...
+120 Biçim...
+121 Arkaplan görüntüsü...
+122 Kural yarat...
+123 \'class\' uygula...
+124 Tarzý tanýmlarý
+125 Bilgi türü
+126 Vurgu
+127 Kuvvetli
+128 Cite
+129 Taným
+130 Kod
+131 Deðiþken
+132 Örnek
+133 Tuþtakýmý
+134 **Abbreviation
+135 **Acronym
+136 **Insertion
+137 **Deletion
+138 Karakter birimi
+139 Ýtalik
+140 Kalýn
+141 Teletype
+142 Büyük
+143 Küçük
+144 Alt
+145 Üst
+146 **Quotation
+147 **BDO
+148 Dönüþtür
+149 Bölüm numaralandýrmasý
+150 Kitap yap
+151 **Purge cache
+152 Amaya hakkýnda
+153 Tarama
+154 Seçme
+155 Arama
+156 Görünümler
+157 Birim yaratma
+158 Baðlantýlar
+159 Yeniden yapýlandýrma
+160 Tablolar
+161 Matematik
+162 Görüntü haritalarý
+163 Tarz tanýmlarý
+164 Özellikler
+165 Yazým hatalarý aranýyor
+166 Sayfa yerleþtirme
+167 Bastýrma
+168 Numaralandýrmasý
+169 Kitap oluþturma
+170 Amaya yapýlandýrmasý

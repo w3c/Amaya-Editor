@@ -221,6 +221,11 @@ Remove Form: FORM{*+};
 	*>:*;
 	}
 
+Remove submenu: (OPTGROUP{*+})+;
+	{
+        * > :*;
+	}
+
 ! Lists to/from elements
 !!!!!!!!!!!!!!!!!!!!!!!!
 

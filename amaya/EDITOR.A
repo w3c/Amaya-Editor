@@ -95,6 +95,7 @@ MENUS
 	Types.Form button:BToggle -> CreateToggle;
 	Types.Form button:BRadio -> CreateRadio;
 	Types.Form button:BOption -> CreateOption;
+	Types.Form button:BOptionGroup -> CreateOptGroup;
 	Types.Form button:BTextInput -> CreateTextInput;
 	Types.Form button:BPasswordInput -> CreatePasswordInput;
 	Types.Form button:BTextArea -> CreateTextArea;

@@ -2163,7 +2163,10 @@ static void         TextToDocument ()
 	     parent = TtaGetParent (lastElement);
 	     if (parent == NULL)
 		parent = lastElement;
-	     if (IsCharacterLevelElement (lastElement))
+	     elType = TtaGetElementType (parent);
+	     if (IsCharacterLevelElement (lastElement) &&
+		 elType.ElTypeNum != HTML_EL_Option_Menu &&
+		 elType.ElTypeNum != HTML_EL_OptGroup)
 		{
 	        ignoreLeadingSpaces = FALSE;
 	        elType = TtaGetElementType (lastElement);
