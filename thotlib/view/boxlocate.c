@@ -587,10 +587,10 @@ static ThotBool IsWithinPath (int x, int y, ThotPoint *points, int npoints)
 
    ok = FALSE;
    cross = 0;
-   nextX = points[0].x;
-   nextY = points[0].y;
-   prevX = points[npoints - 1].x;
-   prevY = points[npoints - 1].y;
+   nextX = (int) points[0].x;
+   nextY = (int) points[0].y;
+   prevX = (int) points[npoints - 1].x;
+   prevY = (int) points[npoints - 1].y;
    if ((prevY >= y) != (nextY >= y))
      /* y is between nextY and prevY */
      cross = CrossLine (x, y, prevX, prevY, nextX, nextY, cross);
@@ -599,8 +599,8 @@ static ThotBool IsWithinPath (int x, int y, ThotPoint *points, int npoints)
      {
        prevX = nextX;
        prevY = nextY;
-       nextX = points[i].x;
-       nextY = points[i].y;
+       nextX = (int) points[i].x;
+       nextY = (int) points[i].y;
        if (prevY >= y)
 	 {
 	   while (i < npoints && nextY >= y)
@@ -608,8 +608,8 @@ static ThotBool IsWithinPath (int x, int y, ThotPoint *points, int npoints)
 	       i++;		/* changement de point */
 	       prevY = nextY;
 	       prevX = nextX;
-	       nextX = points[i].x;
-	       nextY = points[i].y;
+	       nextX = (int) points[i].x;
+	       nextY = (int) points[i].y;
 	     }
 	   if (i >= npoints)
 	     break;
@@ -622,8 +622,8 @@ static ThotBool IsWithinPath (int x, int y, ThotPoint *points, int npoints)
 	       i++;		/* changement de point */
 	       prevY = nextY;
 	       prevX = nextX;
-	       nextX = points[i].x;
-	       nextY = points[i].y;
+	       nextX = (int) points[i].x;
+	       nextY = (int) points[i].y;
 	     }
 	   if (i >= npoints)
 	     break;
@@ -2823,7 +2823,7 @@ void LocateClickedChar (PtrBox pBox, ThotBool extend,
 		      dx++;
 		      extraSpace--;
 		    }
-		}	  
+		}
 	      dx += charWidth;
 	      if (rtl)
 		(*nChars)--;
@@ -2841,7 +2841,7 @@ void LocateClickedChar (PtrBox pBox, ThotBool extend,
       if (length == 0 && *x < pBox->BxW)
 	{
 	  /* get the ending position of the character */
-	  if (rtl)
+	  if (rtl && *nChars > 0)
 	    {
 	      if (ind <= 0 && (*pBuffer)->BuPrevious)
 		{
@@ -2853,7 +2853,7 @@ void LocateClickedChar (PtrBox pBox, ThotBool extend,
 		ind++;
 	      (*nChars)--;
 	    }
-	  else
+	  else if (*nChars < pBox->BxNChars)
 	    {
 	      if (ind >= (*pBuffer)->BuLength && (*pBuffer)->BuNext)
 		{

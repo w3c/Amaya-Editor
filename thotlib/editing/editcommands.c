@@ -215,85 +215,133 @@ static ThotBool APPattrModify (PtrAttribute pAttr, PtrElement pEl,
 
 
 /*----------------------------------------------------------------------
-   Retourne les informations sur le point d'insertion sachant que le 
-   pave se'lectionne' est pAb (si pAb != NULL) :                     
-   - la boite, le buffer, l'index dans le buffer,                  
-   - le de'calage x depuis le de'but de la boite,                  
-   - et le nombre de caracteres pre'ce'dents dans la boite.        
+  GiveInsertPoint returns the position where the new character will be
+  inserted:
+  Parameters:
+   - pAb: the current selected abstract box,
+   - script: the requested script, to select the right position when the
+             selection is between two different character scripts ('*'
+	     if there is no specific script),
+   - frame: the curent frame.
+   Returns:                     
+   - pBox: the selected box,
+   - pBuffer: the selected buffer,
+   - ind: the character position within the buffer,                  
+   - x: pixel shift from the start position of the box,
+   - previousChars: the number of previous characters in the box.        
   ----------------------------------------------------------------------*/
-static void GiveInsertPoint (PtrAbstractBox pAb, int frame, PtrBox *pBox,
-			     PtrTextBuffer *pBuffer, int *ind, int *x,
-			     int *previousChars)
+static void GiveInsertPoint (PtrAbstractBox pAb, char script, int frame,
+			     PtrBox *pBox, PtrTextBuffer *pBuffer, int *ind,
+			     int *x, int *previousChars)
 {
-   ViewSelection      *pViewSel;
-   ThotBool            ok;
-   ThotBool            endOfPicture;
+  ViewSelection      *pViewSel;
+  PtrBox              box;
+  ThotBool            ok;
+  ThotBool            endOfPicture;
 
-   /* Si le pave n'est pas identifie on prend */
-   /* le pave de la premiere boite selectionnee  */
-   pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
-   endOfPicture = FALSE;
-   if (pAb == NULL && pViewSel->VsBox)
-     pAb = pViewSel->VsBox->BxAbstractBox;
+  /* If there is no specified abstract box, use the first selected abstract box */
+  pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
+  endOfPicture = FALSE;
+  if (pAb == NULL && pViewSel->VsBox)
+    pAb = pViewSel->VsBox->BxAbstractBox;
 
-   /* S'il n'y a pas de pave selectionne */
-   if (pAb != NULL)
-     if (pAb->AbLeafType == LtPicture && pViewSel->VsIndBox == 1)
-       endOfPicture =TRUE;
-   /* Tant que le pave est un pave de presentation on saute au pave suivant */
-   /* ne saute pas les paves de presentation modifiables, i.e. les paves */
-   /* qui affichent la valeur d'un attribut */
-   do
-     {
-       if (pAb)
-	 ok = ((pAb->AbPresentationBox && !pAb->AbCanBeModified)
-	       || (pAb->AbLeafType == LtPicture && endOfPicture));
-       else
-	 ok = FALSE;
-       if (ok)
-	 pAb = pAb->AbNext;
-     }
-   while (ok);
+  /* no selected abstract box */
+  if (pAb != NULL)
+    if (pAb->AbLeafType == LtPicture && pViewSel->VsIndBox == 1)
+      endOfPicture =TRUE;
+  /* skip all presentation abstract boxes which cannot be edited */
+  do
+    {
+      if (pAb)
+	ok = ((pAb->AbPresentationBox && !pAb->AbCanBeModified) ||
+	      (pAb->AbLeafType == LtPicture && endOfPicture));
+      else
+	ok = FALSE;
+      if (ok)
+	pAb = pAb->AbNext;
+    }
+  while (ok);
 
-   if (pAb == NULL)
-     {
-	*pBox = NULL;
-	*pBuffer = NULL;
-	*ind = 0;
-	*x = 0;
-	*previousChars = 0;
-	return;
-     }
-   else if (pAb->AbLeafType == LtText)
-     {
-	if (pViewSel->VsBox && pViewSel->VsBox->BxAbstractBox == pAb)
-	  {
-	     *pBox = pViewSel->VsBox;
-	     *pBuffer = pViewSel->VsBuffer;
-	     *ind = pViewSel->VsIndBuf;
-	     *x = pViewSel->VsXPos;
-	     *previousChars = pViewSel->VsIndBox;
-	  }
-	else
-	  {
-	     *pBox = pAb->AbBox;
-	     /* Si la boite est coupee */
-	     if ((*pBox)->BxType == BoSplit)
-		*pBox = (*pBox)->BxNexChild;
-	     *pBuffer = pAb->AbText;
-	     *ind = 0;
-	     *x = 0;
-	     *previousChars = 0;
-	  }
-     }
-   else
-     {
-	*pBox = pAb->AbBox;
-	*pBuffer = NULL;
-	*ind = 0;
-	*x = 0;
-	*previousChars = 0;
-     }
+  if (pAb == NULL)
+    {
+      *pBox = NULL;
+      *pBuffer = NULL;
+      *ind = 0;
+      *x = 0;
+      *previousChars = 0;
+      return;
+    }
+  else if (pAb->AbLeafType == LtText)
+    {
+      box = pAb->AbBox;
+      if (pViewSel->VsBox && pViewSel->VsBox->BxAbstractBox == pAb)
+	{
+	  /* the box is already selected */
+	  *pBox = pViewSel->VsBox;
+	  *pBuffer = pViewSel->VsBuffer;
+	  *ind = pViewSel->VsIndBuf;
+	  *x = pViewSel->VsXPos;
+	  *previousChars = pViewSel->VsIndBox;
+	  if (script != ' ' && script != '*' &&
+	      script != pViewSel->VsBox->BxScript)
+	    {
+	      /* a specific script is requested */
+	      if (*previousChars == 0 && *pBox != box &&
+		  *pBox != box->BxNexChild)
+		{
+		  /* check with the previous box child */
+		  while (box &&  box->BxNexChild != *pBox)
+		    box = box->BxNexChild;
+		  if (box && script == box->BxScript)
+		    {
+		      *pBox = box;
+		      if (*ind == 0)
+			{
+			  *pBuffer = (*pBuffer)->BuPrevious;
+			  *ind = (*pBuffer)->BuLength;
+			}
+		      else
+		       *ind = *ind - 1;
+		      *x = box->BxW;
+		      *previousChars = box->BxNChars;
+		    }
+		}
+	      else if (*pBox != box && *previousChars >= (*pBox)->BxNChars)
+		{
+		  /* check with the next box child */
+		  box = (*pBox)->BxNexChild;
+		  if (box && script == box->BxScript)
+		    {
+		      *pBox = box;
+		      *pBuffer = box->BxBuffer;
+		      *ind = box->BxIndChar;
+		      *x = 0;
+		      *previousChars = 0;
+		    }
+		}
+	    }
+	}
+      else
+	{
+	  if (box->BxType == BoSplit || box->BxType ==BoMulScript)
+	    /* point to the first split box */
+	    *pBox = box->BxNexChild;
+	  else
+	    *pBox = box;	    
+	  *pBuffer = pAb->AbText;
+	  *ind = 0;
+	  *x = 0;
+	  *previousChars = 0;
+	}
+    }
+  else
+    {
+      *pBox = pAb->AbBox;
+      *pBuffer = NULL;
+      *ind = 0;
+      *x = 0;
+      *previousChars = 0;
+    }
 }
 
 
@@ -331,7 +379,7 @@ static ThotBool CloseTextInsertionWithControl (ThotBool toNotify)
 	  /* close the current insertion */
 	  TextInserting = FALSE;
 	  /* Where is the insert point (&i not used)? */
-	  GiveInsertPoint (NULL, frame, &pSelBox, &pBuffer, &ind, &i, &j);
+	  GiveInsertPoint (NULL, '*', frame, &pSelBox, &pBuffer, &ind, &i, &j);
 	  if (pSelBox == NULL || pSelBox->BxAbstractBox == NULL ||
 	      pSelBox->BxAbstractBox->AbLeafType != LtText)
 	    /* no more selection */
@@ -785,7 +833,7 @@ static void StartTextInsertion (PtrAbstractBox pAb, int frame, PtrBox pSelBox,
      {
 	/* get the insert point (&i not used) */
         if (pAb == NULL)
-	   GiveInsertPoint (NULL, frame, &pSelBox, &pBuffer, &ind, &i, &prev);
+	   GiveInsertPoint (NULL, '*', frame, &pSelBox, &pBuffer, &ind, &i, &prev);
 	TextInserting = TRUE;
 	/* the split box */
 	pBox = pSelBox->BxAbstractBox->AbBox;
@@ -2133,7 +2181,7 @@ void ContentEditing (int editType)
 	    }
 	  
 	  /* Recherche le point d'insertion (&i non utilise) */
-	  GiveInsertPoint (pAb, frame, &pBox, &pBuffer, &i, &x, &charsDelta);
+	  GiveInsertPoint (pAb, '*', frame, &pBox, &pBuffer, &i, &x, &charsDelta);
 	  if (pBox == NULL)
 	    {
 	      /* take in account another box */
@@ -2628,13 +2676,15 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 	      if (!toDelete)
 		notification = GiveAbsBoxForLanguage (frame, &pAb,
 						      keyboard);
+	      else
+		script = TtaGetCharacterScript (c);
 	      if (notification)
 		/* selection could be modified by the application */
 		InsertChar (frame, c, keyboard);
 	      else
 		{
 		  /* Look for the insert point */
-		  GiveInsertPoint (pAb, frame, &pSelBox, &pBuffer,
+		  GiveInsertPoint (pAb, script, frame, &pSelBox, &pBuffer,
 				   &ind, &xx, &previousChars);
 		  /* keep in mind previous information about the insert point */
 		  previousPos = pViewSel->VsXPos;
@@ -2834,9 +2884,6 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 				  /* prepare the box update */
 				  xDelta -= pSelBox->BxWidth;
 				  xx = 0;
-#ifdef CLIP_TRACE
-printf ("Change FrClipXBegin %d->%d\n", pFrame->FrClipXBegin, pSelBox->BxXOrg);
-#endif /* CLIP_TRACE */
 				}
 			      else if (previousChars == 0 && c != SPACE)
 				{
@@ -2846,16 +2893,12 @@ printf ("Change FrClipXBegin %d->%d\n", pFrame->FrClipXBegin, pSelBox->BxXOrg);
 				  /* move the selection mark to the previous box */
 				  pSelBox = pSelBox->BxPrevious;
 
-				  topY = pSelBox->BxYOrg;
 				  if ((c == BREAK_LINE || c == NEW_LINE) &&
 				      pAb->AbBox->BxNChars == 1)
 				    {
 				      /* the box becomes empty */
 				      xDelta = BoxCharacterWidth (109, font);
 				      xx = 0;
-#ifdef CLIP_TRACE
-printf ("Change FrClipXBegin %d->%d\n", pFrame->FrClipXBegin, pSelBox->BxXOrg);
-#endif /* CLIP_TRACE */
 
 				      /* update selection marks */
 				      pSelBox = pAb->AbBox;
@@ -2880,9 +2923,6 @@ printf ("Change FrClipXBegin %d->%d\n", pFrame->FrClipXBegin, pSelBox->BxXOrg);
 				      pViewSelEnd->VsIndBox = pViewSel->VsIndBox;
 				      pViewSelEnd->VsLine = pViewSel->VsLine;
 				      xx += xDelta;
-#ifdef CLIP_TRACE
-printf ("%d FrClipXBegin %d->%d\n", xDelta, pFrame->FrClipXBegin, pSelBox->BxXOrg+xx);
-#endif /* CLIP_TRACE */
 				    }
 				  /* update the redisplayed area */
 				  DefBoxRegion (frame, pSelBox, xx, xx, -1, -1);
@@ -2935,9 +2975,6 @@ printf ("%d FrClipXBegin %d->%d\n", xDelta, pFrame->FrClipXBegin, pSelBox->BxXOr
 				    }
 				  /* update the displayed area */
 				  xx += xDelta;
-#ifdef CLIP_TRACE
-printf ("%d FrClipXBegin %d->%d\n", xDelta, pFrame->FrClipXBegin, pSelBox->BxXOrg+xx);
-#endif /* CLIP_TRACE */
 				  DefBoxRegion (frame, pSelBox, xx, xx, -1, -1);
 				}
 			      else
@@ -2960,9 +2997,6 @@ printf ("%d FrClipXBegin %d->%d\n", xDelta, pFrame->FrClipXBegin, pSelBox->BxXOr
 				    xDelta = - BoxCharacterWidth (c, font);
 				  /* update the displayed area */
 				  xx += xDelta;
-#ifdef CLIP_TRACE
-printf ("%d FrClipXBegin %d->%d\n", xDelta, pFrame->FrClipXBegin, pSelBox->BxXOrg+xx);
-#endif /* CLIP_TRACE */
 				  DefBoxRegion (frame, pSelBox, xx, xx, -1, -1);
 				  /* update selection marks */
 				  if (adjust)
@@ -2986,7 +3020,6 @@ printf ("%d FrClipXBegin %d->%d\n", xDelta, pFrame->FrClipXBegin, pSelBox->BxXOr
 			    spacesDelta = 0;
 			  toSplit = FALSE;
 			  toDelete = FALSE;
-			  script = TtaGetCharacterScript (c);
 			  toSplitForScript = (pAb->AbUnicodeBidi != 'O' &&
 					      script != ' ' && script != 'D' &&
 					      pSelBox && pSelBox->BxScript != EOS &&
@@ -3226,8 +3259,13 @@ printf ("%d FrClipXBegin %d->%d\n", xDelta, pFrame->FrClipXBegin, pSelBox->BxXOr
 				if (xDelta < 0)
 				  xDelta = -xDelta;
 			      }
-			    DefClip (frame, pFrame->FrClipXBegin, topY,
-				     pFrame->FrClipXEnd + 2, bottomY);
+			    if (pSelBox)
+			      {
+				topY = pSelBox->BxYOrg;
+				bottomY = topY + pSelBox->BxHeight;
+				DefClip (frame, pFrame->FrClipXBegin, topY,
+					 pFrame->FrClipXEnd + 2, bottomY);
+			      }
 			    RedrawFrameBottom (frame, 0, NULL);
 			  }
 		      
