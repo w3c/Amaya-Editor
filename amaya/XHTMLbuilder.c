@@ -785,7 +785,7 @@ Element         PutInContent (char *ChrString, ParserData *context)
   ----------------------------------------------------------------------*/
 void           CreateHTMLAttribute (Element       el,
 				    AttributeType attrType,
-				    char*       text,
+				    char*         text,
 				    ThotBool      isInvalid,
 				    Document      doc,
 				    Attribute    *lastAttribute,
@@ -842,7 +842,7 @@ void           CreateHTMLAttribute (Element       el,
    Value val has been read for the HTML attribute TYPE.
    Create a child for the current Thot element INPUT accordingly.
   ----------------------------------------------------------------------*/
-void               HTMLTypeAttrValue (char     *val,
+void               HTMLTypeAttrValue (char       *val,
 				      Attribute   lastAttribute,
 				      Element     lastAttrElement,
 				      ParserData *context)
@@ -903,7 +903,7 @@ void               HTMLTypeAttrValue (char     *val,
    Value val has been read for the HTML attribute TYPE.
    Create a child for the current Thot element INPUT accordingly.
   ----------------------------------------------------------------------*/
-void              XhtmlTypeAttrValue (char     *val,
+void              XhtmlTypeAttrValue (char       *val,
 				      Attribute   currentAttribute,
 				      Element     lastAttrElement,
 				      ParserData *context)
@@ -918,7 +918,6 @@ void              XhtmlTypeAttrValue (char     *val,
   int             attrKind;
   ThotBool        level;
 
-  TtaGiveAttributeType (currentAttribute, &attrType, &attrKind);
   attrType.AttrTypeNum = DummyAttribute;
   MapHTMLAttributeValue (val, attrType, &value);
   if (value < 0)
@@ -941,7 +940,6 @@ void              XhtmlTypeAttrValue (char     *val,
 	}
       else
 	{
-	  /* elType.ElSSchema = currentParserCtxt->XMLSSchema; */
 	  elType.ElTypeNum = value;
 	  newChild = TtaNewTree (context->doc, elType, "");
 	  XmlSetElemLineNumber (newChild);
@@ -1052,9 +1050,7 @@ void              CreateAttrWidthPercentPxl (char *buffer, Element el,
    an HTML attribute "size" has been created for a Font element.
    Create the corresponding internal attribute.
   ----------------------------------------------------------------------*/
-void              CreateAttrIntSize (char *buffer,
-				     Element el,
-				     Document doc)
+void              CreateAttrIntSize (char *buffer, Element el, Document doc)
 
 {
    AttributeType  attrType;
@@ -1111,7 +1107,7 @@ void              CreateAttrIntSize (char *buffer,
    EndOfHTMLAttributeValue
    Filling of an HTML attribute value
   ----------------------------------------------------------------------*/
-void               EndOfHTMLAttributeValue (char     *attrValue,
+void               EndOfHTMLAttributeValue (char       *attrValue,
 					    AttributeMapping *lastMappedAttr,
 					    Attribute   currentAttribute,
 					    Element     lastAttrElement,
