@@ -66,7 +66,7 @@ Document            document;
 #endif /* __STDC__ */
 
 {
-   PtrTextBuffer       pBuf, pBufPrec, pBufSuiv;
+   PtrTextBuffer       pBuf, pPreviousBuff,pNextBuff;
    char               *ptr;
    int                 length, l, delta;
    PtrElement          pEl;
@@ -115,7 +115,7 @@ Document            document;
 		if (selDoc == TabDocuments[document - 1])
 		   if ((PtrElement) element == firstSelection ||
 		       (PtrElement) element == lastSelection)
-		      /* The selectio starts and/or stops in the element */
+		      /* The selection starts and/or stops in the element */
 		      /* First, we abort the selection */
 		     {
 			TtaSelectElement (document, NULL);
@@ -145,7 +145,7 @@ Document            document;
 	     ((PtrElement) element)->ElVolume = length;
 	     if (((PtrElement) element)->ElLeafType == LtText)
 		((PtrElement) element)->ElLanguage = language;
-	     pBufPrec = NULL;
+	     pPreviousBuff = NULL;
 	     pBuf = ((PtrElement) element)->ElText;
 
 	     do
@@ -164,29 +164,29 @@ Document            document;
 		    }
 		  pBuf->BuLength = l;
 		  pBuf->BuContent[l] = '\0';
-		  pBuf->BuPrevious = pBufPrec;
-		  if (pBufPrec == NULL)
+		  pBuf->BuPrevious = pPreviousBuff;
+		  if (pPreviousBuff == NULL)
 		     ((PtrElement) element)->ElText = pBuf;
 		  else
-		     pBufPrec->BuNext = pBuf;
-		  pBufPrec = pBuf;
+		     pPreviousBuff->BuNext = pBuf;
+		  pPreviousBuff = pBuf;
 		  pBuf = pBuf->BuNext;
-		  pBufPrec->BuNext = NULL;
+		  pPreviousBuff->BuNext = NULL;
 	       }
 	     while (length > 0);
 
 	     while (pBuf != NULL)
 		/* Release the remaining buffers */
 	       {
-		  pBufSuiv = pBuf->BuNext;
+		 pNextBuff = pBuf->BuNext;
 #ifdef NODISPLAY
 		  FreeBufTexte (pBuf);
 #else
 		  DestBuff (pBuf, ActifFen);
 #endif
-		  pBuf = pBufSuiv;
+		  pBuf =pNextBuff;
 	       }
-	     /* Updates the labels of the ancestors */
+	     /* Updates the volumes of the ancestors */
 	     pEl = ((PtrElement) element)->ElParent;
 	     while (pEl != NULL)
 	       {
@@ -202,7 +202,7 @@ Document            document;
 
 #ifndef NODISPLAY
 	     RedispLeaf ((PtrElement) element, document, delta);
-	     /* Set up a new selection if the element is within it */
+	     /* Sets up a new selection if the element is within it */
 	     if (changeSelection)
 	       {
 		  if (firstChar > 0)
@@ -237,7 +237,7 @@ Document            document;
 #endif /* __STDC__ */
 
 {
-   PtrTextBuffer       pBuf, pBufPrec, newBuf;
+   PtrTextBuffer       pBuf, pPreviousBuff, newBuf;
    char               *ptr;
    int                 stringLength, l, delta, lengthBefore;
    PtrElement          pElAsc;
@@ -265,7 +265,7 @@ Document            document;
 	     if (selOk)
 		if (selDoc == TabDocuments[document - 1])
 		   if (pEl == firstSelection || pEl == lastSelection)
-		      /* The selectio starts and/or stops in the element */
+		      /* The selection starts and/or stops in the element */
 		      /* First, we abort the selection */
 		     {
 			TtaSelectElement (document, NULL);
@@ -298,7 +298,7 @@ Document            document;
 	     lengthBefore += pBuf->BuLength;
 	     pBuf = pBuf->BuNext;
 	  }
-	/* longueur qui doit rester dans le buffer coupe' */
+	/* Length of the remaining of the buffer */
 	lengthBefore = position - lengthBefore;
 	if (lengthBefore == 0)
 	   /* one insert before the first character of the element */
@@ -312,7 +312,7 @@ Document            document;
 	     pEl->ElText = pBuf;
 	  }
 	else
-	   /* cree un buffer pour la 2eme partie de texte */
+	   /* Creates a buffer for the second part of the text */
 	if (lengthBefore < pBuf->BuLength)
 	  {
 	     newBuf = NewTextBuffer (pBuf);
@@ -321,8 +321,7 @@ Document            document;
 	  }
 	pBuf->BuContent[lengthBefore] = '\0';
 	pBuf->BuLength = lengthBefore;
-	/* s'il y a assez de place dans le buffer,
-	   on ajoute la chaine a la fin du buffer */
+	/* If there is enough space in the buffer, one add a string at its end */
 	if (stringLength < MAX_CHAR - lengthBefore)
 	  {
 	     strncpy (pBuf->BuContent + lengthBefore, content, stringLength);
@@ -330,15 +329,15 @@ Document            document;
 	     pBuf->BuContent[pBuf->BuLength] = '\0';
 	  }
 	else
-	   /* pas assez de place, on cree de nouveaux buffers */
+	   /* not enough space, another buffer is created */
 	  {
-	     pBufPrec = pBuf;
+	     pPreviousBuff = pBuf;
 	     pBuf = NULL;
 	     ptr = content;
 	     while (stringLength > 0)
 	       {
 		  if (pBuf == NULL)
-		     pBuf = NewTextBuffer (pBufPrec);
+		     pBuf = NewTextBuffer (pPreviousBuff);
 		  if (stringLength >= MAX_CHAR)
 		     l = MAX_CHAR - 1;
 		  else
@@ -348,11 +347,11 @@ Document            document;
 		  stringLength -= l;
 		  pBuf->BuLength = l;
 		  pBuf->BuContent[l] = '\0';
-		  pBufPrec = pBuf;
+		  pPreviousBuff = pBuf;
 		  pBuf = NULL;
 	       }
 	  }
-	/* met a jour le volume des elements ascendants */
+	/* Updates the volumes of ancestors */
 	pElAsc = pEl->ElParent;
 	while (pElAsc != NULL)
 	  {
@@ -363,7 +362,7 @@ Document            document;
 	if (document > 0)
 	  {
 	     RedispLeaf (pEl, document, delta);
-	     /* etablit une nouvelle selection si l'element en fait partie */
+	     /* Sets up a new selection if the element is within it */
 	     if (changeSelection)
 	       {
 		  if (firstChar > 0)
@@ -415,13 +414,13 @@ Document            document;
 	    ((PtrElement) element)->ElLeafType != LtPicture)
       TtaError (ERR_invalid_element_type);
    else
-      /* verifie le parametre document */
+      /* verifies the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
    else if (TabDocuments[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
-      /* parametre document correct */
+      /* parameter document is correct */
       InsertText ((PtrElement) element,
 		  ((PtrElement) element)->ElTextLength,
 		  content, document);
@@ -464,13 +463,13 @@ Document            document;
 	    ((PtrElement) element)->ElLeafType != LtPicture)
       TtaError (ERR_invalid_element_type);
    else
-      /* verifie le parametre document */
+      /* verifies the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
    else if (TabDocuments[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
-      /* parametre document correct */
+      /* parameter document is correct */
       InsertText ((PtrElement) element, position, content, document);
 }
 
@@ -523,37 +522,37 @@ Document            document;
 	    ((PtrElement) element)->ElLeafType != LtPicture)
       TtaError (ERR_invalid_element_type);
    else
-      /* verifie le parametre document */
+      /* verifies the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
    else if (TabDocuments[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
-      /* parametre document correct */
+      /* parameter document is correct */
       if (length < 0 || position <= 0 ||
 	  position > ((PtrElement) element)->ElTextLength)
       TtaError (ERR_invalid_parameter);
    else if (length > 0)
      {
-	/* verifie que le parametre length n'est pas trop grand */
+	/* verifies that the parameter length is not too big */
 	if (position + length > ((PtrElement) element)->ElTextLength + 1)
 	   length = ((PtrElement) element)->ElTextLength - position + 1;
 #ifndef NODISPLAY
-	/* modifie la selection si l'element en fait partie */
+	/* modifies the selection if the element belongs to it */
 	selOk = SelEditeur (&selDoc, &firstSelection, &lastSelection, &firstChar, &lastChar);
 	changeSelection = FALSE;
 	if (selOk)
 	   if (selDoc == TabDocuments[document - 1])
 	      if ((PtrElement) element == firstSelection || (PtrElement) element == lastSelection)
-		 /* la selection commence et/ou se termine dans */
-		 /* l'element. On annule la selection d'abord */
+		 /* The selection starts and/or stops in the element */
+		 /* First, we abort the selection */
 		{
 		   TtaSelectElement (document, NULL);
 		   changeSelection = TRUE;
 		   if (lastChar > 1)
 		      lastChar -= 1;
 		   if ((PtrElement) element == firstSelection)
-		      /* notre element est en tete de la selection */
+		      /* The element is at the begenning of the selection */
 		     {
 			if (firstChar > position)
 			  {
@@ -563,7 +562,7 @@ Document            document;
 			  }
 		     }
 		   if ((PtrElement) element == lastSelection)
-		      /* notre element est en queue de la selection */
+		      /* The element is at the end of the selection */
 		     {
 			if (position < lastChar)
 			  {
@@ -577,8 +576,7 @@ Document            document;
 	delta = length;
 	((PtrElement) element)->ElTextLength -= delta;
 	((PtrElement) element)->ElVolume -= delta;
-	/* cherche le buffer pBufFirst ou commence la chaine a */
-	/* retirer */
+	/* Looks for the buffer pBufFirst where starts the string to suppress */
 	pBufFirst = ((PtrElement) element)->ElText;
 	lengthBefore = 0;
 	while (pBufFirst->BuNext != NULL &&
@@ -587,13 +585,11 @@ Document            document;
 	     lengthBefore += pBufFirst->BuLength;
 	     pBufFirst = pBufFirst->BuNext;
 	  }
-	/* longueur qui doit rester dans le buffer contenant le */
-	/* debut de la chaine a retirer */
+	/* Length of the buffer containing the begenning of the string to suppress */
 	firstDeleted = position - lengthBefore;
-	/* cherche le buffer pBufLast contenant la fin de la chaine  */
-	/* a retirer et libere les buffers intermediaires (on ne     */
-	/* libere pas le buffer qui contient le debut de la chaine a */
-	/* supprimer, ni celui qui contient la fin de cette chaine)/ */
+	/* Looks for the buffer pBufLast containing the end of the string to suppress 
+           and releases the intermediate buffers. The buffers containing the begenning 
+           of the string to suppress and its end are not released */
 	pBufLast = pBufFirst;
 	lastDeleted = firstDeleted + length - 1;
 	while (pBufLast->BuNext != NULL &&
@@ -601,8 +597,7 @@ Document            document;
 	  {
 	     lastDeleted -= pBufLast->BuLength;
 	     if (pBufLast != pBufFirst)
-		/* ce n'est pas le buffer contenant le debut de chaine, */
-		/* on libere ce buffer. */
+		/* This is not the buffer containing the begenning of the string. It is released */
 	       {
 		  pBufNext = pBufLast->BuNext;
 		  pBufLast->BuPrevious->BuNext = pBufLast->BuNext;
@@ -618,31 +613,27 @@ Document            document;
 	     else
 		pBufLast = pBufLast->BuNext;
 	  }
-	/* on decale vers la droite le texte qui suit la chaine a */
-	/* supprimer */
+	/* The text following the string to suppress is moved on the right */
 	if (pBufFirst == pBufLast)
-	   /* toute la chaine a supprimer est dans le meme buffer, */
-	   /* on va decaler le texte qui suit la cahine a supprimer */
-	   /* pour l'amener a la position du debut de la chaine a */
-	   /* supprimer */
+	   /* The whole string to suppress is in the same buffer*/
+	   /* The text following the string to be suppressed is moved at 
+              the position of the begenning of the string to suppress */
 	  {
 	     dest = pBufFirst->BuContent + firstDeleted - 1;
 	     l = length;
 	  }
 	else
-	   /* le debut et la fin de la chaine a supprimer sont dans */
-	   /* buffers differents. On tronque simplement le texte du */
-	   /* premier buffer et on va decaler le texte qui doit */
-	   /* rester dans le buffer de fin pour l'amener en tete de */
-	   /* ce buffer. */
+	   /* The begenning and the and of the string to be suppressed are
+              in different buffers. The text of the first buffer is troncated
+              and the text remaining in the other buffer is moved at the
+              begenning of the buffer */
 	  {
 	     pBufFirst->BuContent[firstDeleted - 1] = '\0';
 	     pBufFirst->BuLength = firstDeleted - 1;
 	     dest = pBufLast->BuContent;
 	     l = lastDeleted;
 	  }
-	/* on decale effectivement le texte qui suit la partie */
-	/* supprimee */
+	/* The text following the part to be suppresses is moved */
 	source = pBufLast->BuContent + lastDeleted - 1;
 	do
 	  {
@@ -652,13 +643,11 @@ Document            document;
 	  }
 	while (*source != '\0');
 	pBufLast->BuLength -= l;
-	/* on verifie si les buffers de debut et de fin sont devenus */
-	/* vides, et si oui, on les libere. On garde quand meme au   */
-	/* moins un buffer pour l'element. */
+	/* If the buffers of the begening and the end of the suppresses string
+           are empty, they are released. A buffer is kept for the element */
 	if (pBufFirst->BuLength == 0 &&
 	    (pBufFirst->BuPrevious != NULL || pBufFirst->BuNext != NULL))
-	   /* le buffer de debut est vide et il reste au moins un */
-	   /* autre buffer. On libere le buffer de debut */
+	   /* If the buffer of the begenning is empty, it is released */
 	  {
 	     if (pBufFirst->BuPrevious != NULL)
 		pBufFirst->BuPrevious->BuNext = pBufFirst->BuNext;
@@ -675,8 +664,7 @@ Document            document;
 	if (pBufFirst != pBufLast)
 	   if (pBufLast->BuLength == 0 &&
 	       (pBufLast->BuPrevious != NULL || pBufLast->BuNext != NULL))
-	      /* le buffer de fin est vide et il reste au moins un */
-	      /* autre buffer. On libere le buffer de fin. */
+	      /* The buffer of the end is empty. It is released */
 	     {
 		if (pBufLast->BuPrevious != NULL)
 		   pBufLast->BuPrevious->BuNext = pBufLast->BuNext;
@@ -690,7 +678,7 @@ Document            document;
 		DestBuff (pBufLast, ActifFen);
 #endif
 	     }
-	/* met a jour le volume des elements ascendants */
+	/* Updates the volumes of the ancestors */
 	pElAsc = ((PtrElement) element)->ElParent;
 	while (pElAsc != NULL)
 	  {
@@ -698,9 +686,9 @@ Document            document;
 	     pElAsc = pElAsc->ElParent;
 	  }
 #ifndef NODISPLAY
-	/* reaffiche l'element */
+	/* Redisplays the element */
 	RedispLeaf ((PtrElement) element, document, -delta);
-	/* etablit une nouvelle selection si l'element en fait partie */
+	/* Sets up a new selection if the element belongs to it */
 	if (changeSelection)
 	  {
 	     if (firstChar > 0)
@@ -757,7 +745,7 @@ Document            document;
 	TtaError (ERR_invalid_element_type);
      }
    else
-      /* verifie le parametre document */
+      /* verification of the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
      {
 	TtaError (ERR_invalid_document_parameter);
@@ -767,7 +755,7 @@ Document            document;
 	TtaError (ERR_invalid_document_parameter);
      }
    else
-      /* parametre document correct */
+      /* parameter document is correct */
       if (position < 1 || position >
 	  ((PtrElement) element)->ElTextLength)
      {
@@ -829,7 +817,7 @@ Document            document;
 	TtaError (ERR_invalid_element_type);
      }
    else
-      /* verifie le parametre document */
+      /* verification of the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
      {
 	TtaError (ERR_invalid_document_parameter);
@@ -839,7 +827,7 @@ Document            document;
 	TtaError (ERR_invalid_document_parameter);
      }
    else
-      /* parametre document correct */
+      /* parameter document is correct */
      {
 	pEl2 = ((PtrElement) element)->ElNext;
 	if (((PtrElement) element)->ElSructSchema->SsRule[((PtrElement) element)->ElTypeNumber - 1].SrConstruct != CsConstant)
@@ -852,7 +840,7 @@ Document            document;
 			     if (MemesRegleSpecif ((PtrElement) element, pEl2))
 			       {
 #ifndef NODISPLAY
-				  /* detruit les paves du 2eme element de texte */
+				  /* destroy the second element of the text */
 				  DetrPaves (pEl2, TabDocuments[document - 1], FALSE);
 #endif
 				  MergeTextElements ((PtrElement) element, &FreeElement,
@@ -916,7 +904,7 @@ Document            document;
      }
    else
      {
-	/* verifie le parametre document */
+	/* verifies the parameter document */
 	if (document < 1 || document > MAX_DOCUMENTS)
 	  {
 	     TtaError (ERR_invalid_document_parameter);
@@ -926,7 +914,7 @@ Document            document;
 	     TtaError (ERR_invalid_document_parameter);
 	  }
 	else
-	   /* parametre document correct */
+	   /* parameter document is correct */
 	  {
 	     delta = 0;
 	     if (((PtrElement) element)->ElLeafType == LtSymbol)
@@ -945,7 +933,7 @@ Document            document;
 			      shape == 'F' || shape == 'D' || shape == 'p' ||
 			      shape == 's');
 		  if (polyline && ((PtrElement) element)->ElLeafType == LtGraphics)
-		     /* changement graphique simple --> polyline */
+		     /* changing simple graphic --> polyline */
 		    {
 		       ((PtrElement) element)->ElLeafType = LtPlyLine;
 		       GetBufTexte (&((PtrElement) element)->ElPolyLineBuffer);
@@ -955,7 +943,7 @@ Document            document;
 		       ((PtrElement) element)->ElText->BuPoints[0].YCoord = 0;
 		    }
 		  else if (!polyline && ((PtrElement) element)->ElLeafType == LtPlyLine)
-		     /* changement polyline --> graphique simple */
+		     /* changing polyline --> simple graphic*/
 		    {
 		       delta = -((PtrElement) element)->ElNPoints;
 		       if (shape != '\0')
@@ -976,7 +964,7 @@ Document            document;
 		((PtrElement) element)->ElPolyLineType = shape;
 	     else
 		((PtrElement) element)->ElGraph = shape;
-	     /* met a jour le volume des elements ascendants */
+	     /* Updates the volumes of ancestors */
 	     if (delta > 0)
 	       {
 		  pElAsc = (PtrElement) element;
@@ -1016,13 +1004,13 @@ Document            document;
    else if (((PtrElement) element)->ElLeafType != LtPlyLine)
       TtaError (ERR_invalid_element_type);
    else
-      /* verifie le parametre document */
+      /* verifies the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
    else if (TabDocuments[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
-      /* parametre document correct */
+      /* parameter document is correct */
       ok = TRUE;
    return ok;
 }
@@ -1079,10 +1067,10 @@ Document            document;
 		y = PixelToPoint (y);
 	     }
 
-	   /* ajoute le point a la polyline */
+	   /* adds the point to the polyline */
 	   AddPointInPolyline (firstBuffer, rank, x, y);
 	   ((PtrElement) element)->ElNPoints++;
-	   /* met a jour le volume des elements ascendants */
+	   /* Updates the volumes of ancestors */
 	   pEl = ((PtrElement) element)->ElParent;
 	   while (pEl != NULL)
 	     {
@@ -1126,11 +1114,11 @@ Document            document;
 	 TtaError (ERR_invalid_parameter);
       else
 	{
-	   /* retire le point de la polyline */
+	   /* Suppresses the point from the polyline */
 	   DeletePointInPolyline (&(((PtrElement) element)->ElPolyLineBuffer), rank);
-	   /* il y a un point de moins dans l'element */
+	   /* There is a point less in the element */
 	   ((PtrElement) element)->ElNPoints--;
-	   /* met a jour le volume des elements ascendants */
+	   /* Updates the volumes of ancestors */
 	   pEl = ((PtrElement) element)->ElParent;
 	   while (pEl != NULL)
 	     {
@@ -1232,7 +1220,7 @@ Document            document;
 {
    PtrTextBuffer      firstBuffer;
    PtrTextBuffer      pBuff;
-   int                 rank;
+   int                rank;
 
    if (PolylineOK (element, document))
       if (x < 0 || y < 0)
@@ -1250,8 +1238,8 @@ Document            document;
 		y = PixelToPoint (y);
 	     }
 	   firstBuffer = ((PtrElement) element)->ElPolyLineBuffer;
-	   /* verifie que les coordonnees du nouveau point limite sont */
-	   /* superieures a celles de tous les points de la polyline */
+	   /* verifies that the new point coordinates are greatest than all the coordinates of
+              the other points of the polyline */
 	   rank = 1;
 	   pBuff = firstBuffer;
 	   while (pBuff != NULL)
@@ -1267,7 +1255,7 @@ Document            document;
 		rank = 0;
 		pBuff = pBuff->BuNext;
 	     }
-	   /* met les coordonnees du nouveau point limite */
+	   /* Updates the coordinates of the new boundary point */
 	   firstBuffer->BuPoints[0].XCoord = x;
 	   firstBuffer->BuPoints[0].YCoord = y;
 #ifndef NODISPLAY
@@ -1507,14 +1495,14 @@ int                 length;
 	   len = pBuf->BuLength;
 	ptr = buffer;
 	position--;
-	/* on saute les buffers du debut */
+	/* The begenning buffer is not considered */
 	while (pBuf != NULL && len <= position)
 	  {
 	     position -= len;
 	     pBuf = pBuf->BuNext;
 	     len = pBuf->BuLength;
 	  }
-	/* on copie dans le buffer */
+	/* pying into the buffer */
 	while (pBuf != NULL && length > 0)
 	  {
 	     if (length + position < pBuf->BuLength)
@@ -1608,7 +1596,7 @@ Element             element;
    else if (((PtrElement) element)->ElLeafType != LtPlyLine)
       TtaError (ERR_invalid_element_type);
    else
-      /* on ignore le point limite, compte' dans ElNPoints */
+      /* one ignore the boundary point limite, considered in ElNPoints */
       return ((PtrElement) element)->ElNPoints - 1;
    return (0);
 }
@@ -1658,7 +1646,7 @@ int                *y;
       TtaError (ERR_invalid_parameter);
    else
      {
-	/* cherche le buffer contenant le point de rang rank */
+	/* Looking for the buffer containing the point which rank is: rank */
 	pBuff = ((PtrElement) element)->ElPolyLineBuffer;
 	while (rank > pBuff->BuLength && pBuff->BuNext != NULL)
 	  {
@@ -1772,4 +1760,4 @@ Element             pageElement;
    return pageView;
 }
 
-/* fin du module */
+/* End of the module */
