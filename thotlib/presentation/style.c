@@ -757,7 +757,6 @@ GenericContext      ctxt;
   PtrSSchema          pSS;
   PtrPRule            found;
   int                 nbrules;
-  int                 i;
 
   pSS = (PtrSSchema) ctxt->schema;
   found = PresAttrRuleSearch (tsch, attrType, ctxt, &attrs);
@@ -974,11 +973,11 @@ PtrPRule          **chain;
       /* shortcut : rules are sorted by type and view number and
 	 Functions rules are sorted by number */
       if (cur->PrType > pres ||
-	  (cur->PrType == pres && cur->PrViewNum > 1) ||
-	  (cur->PrType == pres && pres == PtFunction && cur->PrPresFunction > extra))
+	  (cur->PrType == pres && cur->PrViewNum > (unsigned int)1) ||
+	  (cur->PrType == pres && pres == PtFunction && cur->PrPresFunction > (int)extra))
 	  cur = NULL;
       else if (pres != PtFunction ||
-	       (pres == PtFunction && cur->PrPresFunction != extra))
+	       (pres == PtFunction && cur->PrPresFunction != (int)extra))
 	/* check for extra specification in case of function rule */
 	{
 	  *chain = &(cur->PrNextPRule);

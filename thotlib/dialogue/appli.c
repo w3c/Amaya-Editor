@@ -1479,6 +1479,7 @@ LPARAM lParam;
 	 static POINT ptEnd;
 	 static POINT ptCursor;
 	 static BOOL  fBlocking;
+	 static BOOL  moved = FALSE;
      static BOOL  firstTime = TRUE;
      static HWND  winCapture = (HWND) -1;
 
@@ -1580,27 +1581,34 @@ LPARAM lParam;
                  if (HIBYTE (status)) {
                     LocateSelectionInView (frame, ClickX, ClickY, 0);
 				 } else {
-                        status = GetKeyState (VK_CONTROL);
-                        if (HIBYTE (status)) {
-                           /* changes the box position */
-                           ApplyDirectTranslate (frame, LOWORD (lParam), HIWORD (lParam));
-                           /* This is the beginning of a selection */
-						} else {
-                               /* ClickFrame = frame;
-                               oldXPos = ClickX = LOWORD (lParam);
-                               oldYPos = ClickY = HIWORD (lParam); */
-                               LocateSelectionInView (frame, ClickX, ClickY, 2);
-						} 
-                        fBlocking = TRUE;
+                   status = GetKeyState (VK_CONTROL);
+                   if (HIBYTE (status)) {
+                     /* changes the box position */
+                     ApplyDirectTranslate (frame, LOWORD (lParam), HIWORD (lParam));
+                     /* This is the beginning of a selection */
+				   } else {
+                     /* ClickFrame = frame;
+                     oldXPos = ClickX = LOWORD (lParam);
+                     oldYPos = ClickY = HIWORD (lParam); */
+                     LocateSelectionInView (frame, ClickX, ClickY, 2);
+				   }
+                   fBlocking = TRUE;
+				   moved = FALSE;
 				 }
                  return 0;
 
             case WM_LBUTTONUP:
+                 X_Pos = LOWORD (lParam) ;
+                 Y_Pos = HIWORD (lParam) ;
                  ReleaseCapture ();
                  winCapture = (HWND) -1;
                  firstTime = TRUE;
                  if (fBlocking)
                     fBlocking = FALSE;
+				 /* is it a single click */
+                   fBlocking = TRUE;
+                 if (!moved)	  
+                   LocateSelectionInView (frame, ClickX, ClickY, 4);
                  if (autoScroll)
                     autoScroll = FALSE;
                  return 0;
@@ -1661,10 +1669,13 @@ LPARAM lParam;
                  /* if (fBlocking) { */
                  if (wParam & MK_LBUTTON) {
                     if (((oldXPos <= X_Pos - 1) || (oldXPos >= X_Pos + 1)) ||  
-                        ((oldYPos <= Y_Pos - 1) || (oldYPos >= Y_Pos + 1)))	  
+                        ((oldYPos <= Y_Pos - 1) || (oldYPos >= Y_Pos + 1)))
+					{
                        LocateSelectionInView (frame, X_Pos, Y_Pos, 0);
+					   moved = TRUE;
+					}
                  } else
-                        fBlocking = FALSE;
+                     fBlocking = FALSE;
 				 oldXPos = X_Pos;
 				 oldYPos = Y_Pos;
                  return 0;
