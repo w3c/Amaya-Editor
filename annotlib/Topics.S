@@ -8,8 +8,6 @@ ATTR
  
   { global attributes for all Topic elements}
 
-  Model_HREF_ = Text; { identifier of the item in the RDF model }
-
 STRUCT
 
   { A bookmark collection is a set of bookmarks and topics. }
@@ -25,7 +23,7 @@ STRUCT
   { a topic item is made of a title, a reference to the model, and an optional list
     of Items }
   
-  Topic_item = 
+  Topic_item (ATTR Model_HREF_ = Text; Closed_ = Yes; Open_ = Yes_;) = 
                 BEGIN
 	        Topic_title = Text;
 		? Topic_content = LIST OF (Item);
@@ -38,7 +36,7 @@ STRUCT
 	        END;
 
   { a Bookmark has a pointer to the bookmarked document and a title}
-  Bookmark_item (ATTR  HREF_ = Text;) =
+  Bookmark_item (ATTR  Model_HREF_; HREF_ = Text;) =
                 BEGIN
 		Bookmark_title = Text;
 		END;
