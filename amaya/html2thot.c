@@ -1187,7 +1187,14 @@ Document	    doc;
 	  {
 
 	    if (MathMLSSchema == NULL && doc != 0)
+	       {
 	       elType->ElSSchema = TtaGetSSchema ("MathML", doc);
+	       /* the document does not contain any MathML element.
+		  Associate the MathML Thot schema with the document */
+	       if (elType->ElSSchema == NULL)
+		  elType->ElSSchema = TtaNewNature (TtaGetDocumentSSchema(doc),
+						    "MathML", "MathMLP");
+	       }
 	    else
 
 	       elType->ElSSchema = MathMLSSchema;
@@ -3966,7 +3973,12 @@ char                c;
 	     attrType.AttrSSchema = elType.ElSSchema;
 	     attrType.AttrTypeNum = HTML_ATTR_Notation;
 	     attrNotation = TtaGetAttribute (lastElement, attrType);
-	     if (attrNotation != NULL)
+	     if (attrNotation == NULL)
+	       /* No Notation attribute. Assume CSS by default */
+	       ParsingCSS = TRUE;
+	     else
+	       /* the STYLE element has a Notation attribute */
+	       /* get its value */
 	       {
 		  length = TtaGetTextAttributeLength (attrNotation);
 		  text = TtaGetMemory (length + 1);
@@ -7281,6 +7293,7 @@ Document            doc;
    CharRank = 0;
    MergeText = FALSE;
    AfterTagPRE = FALSE;
+   ParsingCSS = FALSE;
    curChar = 0;
 }
 

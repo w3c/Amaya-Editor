@@ -1667,7 +1667,7 @@ void               *param;
 {
   GenericContext      ctxt;
   PtrSSchema          pSchemaStr;
-  PtrPSchema          pSchemaP, currentP;
+  PtrPSchema          pSchemaP;
   PtrPRule            rule;
   PtrCondition        prevcond, cond;
   TtAttribute        *pAt1;
@@ -1675,7 +1675,6 @@ void               *param;
   int                 El;
   int                 GetAttributeOfElement;
   int                 Val;
-  boolean             found;
 
   /* set up and check the environment */
   prevcond = 0;
@@ -1692,20 +1691,7 @@ void               *param;
      return;
 
    /* Locate the structure schema concerned (main structure or nature) */
-   pSchemaStr = NULL;
-   found = FALSE;
-   do
-     {
-       currentP = (PtrPSchema) TtaGetFirstPSchema (doc, (SSchema) pSchemaStr);
-       while (currentP != NULL && currentP != pSchemaP)
-	 TtaNextPSchema ((PSchema *) &currentP, doc, (SSchema) pSchemaStr);
-       if (currentP == NULL)
-	 TtaNextNature (doc,  (SSchema *)&pSchemaStr);
-       else
-	 found = TRUE;
-     }
-   while (!found && pSchemaStr != NULL);
-   
+   pSchemaStr = (PtrSSchema) TtaGetSSchema (pSchemaP->PsStructName, doc);
    if (pSchemaStr == NULL)
      pSchemaStr = (PtrSSchema) TtaGetDocumentSSchema (doc);
    

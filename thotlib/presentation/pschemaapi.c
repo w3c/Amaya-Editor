@@ -209,13 +209,13 @@ SSchema		    nature;
       TtaError (ERR_invalid_document_parameter);
    else
       /* parameter doc is OK */
-   if (pSchS->SsFirstPSchemaExtens != NULL)
-      TtaError (ERR_invalid_parameter);
-   else
-     {
+      if (pSchS->SsFirstPSchemaExtens != NULL)
+         TtaError (ERR_invalid_parameter);
+      else
+        {
 	ok = TRUE;
 	oldHd = NULL;
-     }
+        }
    if (ok)
      {
 	GetHandleSchPres (&newHd);
@@ -242,6 +242,9 @@ SSchema		    nature;
 	  }
 	/* number of documents using this schema */
 	((PtrPSchema) schema)->PsStructCode++;
+	/* name of associated structure schema */
+	strncpy (((PtrPSchema) schema)->PsStructName, pSchS->SsName,
+		 MAX_NAME_LENGTH);
      }
 }
 
