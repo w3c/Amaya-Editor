@@ -285,24 +285,30 @@ boolean             withAppEvent;
 }
 
 
-/*----------------------------------------------------------------------
+/***--------------------------------------------------------------------
    	MergeTextElements   si l'element pEl est une feuille de texte et si	
    	son suivant est egalement une feuille de texte dans le meme	
    	alphabet, reunit les deux elements sucessifs en un seul.	
    	Le deuxieme element, devenu vide, n'est pas libere' et un	
-   	pointeur sur cet element est retourne dans pFreeEl.		
+   	pointeur sur cet element est retourne dans pFreeEl.
+	Le parametre booleen removeAbsBox indique s'il faut liberer les
+        paves de l'element qui va etre detruit.
+
+        Cette fonction retourne TRUE si la fusion a lieu,
+                                FALSE sinon.
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                MergeTextElements (PtrElement pEl, PtrElement * pFreeEl, PtrDocument pDoc,
-				       boolean withAppEvent)
+boolean             MergeTextElements (PtrElement pEl, PtrElement * pFreeEl, PtrDocument pDoc,
+				       boolean withAppEvent, boolean removeAbsBox)
 
 #else  /* __STDC__ */
-void                MergeTextElements (pEl, pFreeEl, pDoc, withAppEvent)
+boolean             MergeTextElements (pEl, pFreeEl, pDoc, withAppEvent, removeAbsBox)
 PtrElement          pEl;
 PtrElement         *pFreeEl;
 PtrDocument         pDoc;
 boolean             withAppEvent;
+boolean             removeAbsBox;
 
 #endif /* __STDC__ */
 
@@ -318,11 +324,21 @@ boolean             withAppEvent;
    int                 nSiblings;
    boolean             merge;
 
+   merge = FALSE;
+
    *pFreeEl = NULL;
    if (pEl != NULL)
      {
 	pEl1 = pEl;
 	pEl2 = pEl1->ElNext;
+
+        if ((ElementIsHidden (pEl1)) ||
+            (ElementIsReadOnly (pEl1)) ||
+            (ElementIsHidden (pEl2)) ||
+            (ElementIsReadOnly (pEl2)))
+           /*** One or both elements are protected! ***/
+           return FALSE;
+
 	if (pEl2 != NULL && pEl1->ElLeafType == LtText && pEl1->ElTerminal)
 	   if (pEl2->ElLeafType == LtText && pEl2->ElTerminal)
 	      if (pEl2->ElLanguage == pEl->ElLanguage)
@@ -363,6 +379,15 @@ boolean             withAppEvent;
 			      }
 			    if (merge)
 			      {
+                                 /* Si l'element est selectionne, alors annule la selection */
+				 if ((pEl2 == FirstSelectedElement) ||
+				     (pEl2 == LastSelectedElement))
+                                    TtaClearViewSelections ();
+
+                                 /* Detruit eventuellement les paves du 2ieme element */
+                                 if (removeAbsBox)
+                                    DestroyAbsBoxes (pEl2, pDoc, FALSE);
+
 				 /* cherche le dernier buffer de texte du premier element */
 				 pBuf1 = pEl1->ElText;
 				 while (pBuf1->BuNext != NULL)
@@ -490,6 +515,9 @@ boolean             withAppEvent;
 			      }
 			 }
      }
+
+     return merge;
+
 }
 
 

@@ -5802,12 +5802,13 @@ PtrElement         *pLib;
 				    != CsConstant)
 				  {
 				     equal = TRUE;
-				     /* detruit les paves du 2eme element */
-				     DestroyAbsBoxes (pEl1->ElNext, pDoc, FALSE);
-				     /* fusionne les deux elements de texte */
-				     MergeTextElements (pEl, pLib, pDoc, TRUE);
+				     if (! MergeTextElements (pEl, pLib, pDoc,
+                                                              TRUE,  /* Notifier l'application => evenements */
+                                                              TRUE)) /* Detruire les paves du 2eme element */
+                                        return FALSE;
 				     /* teste si pEl est le dernier fils de son pere, */
 				     /* abstraction faite des marques de page */
+				     /* fusionne les deux elements de texte */
 				     pEVoisin = pEl->ElNext;
 				     stop = FALSE;
 				     do

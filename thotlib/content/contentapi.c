@@ -861,7 +861,7 @@ Document            document;
 				  DestroyAbsBoxes (pEl2, LoadedDocument[document - 1], FALSE);
 #endif
 				  MergeTextElements ((PtrElement) element, &FreeElement,
-				       LoadedDocument[document - 1], FALSE);
+				       LoadedDocument[document - 1], FALSE, FALSE);
 #ifndef NODISPLAY
 				  RedisplayMergedText ((PtrElement) element, document);
 #endif
