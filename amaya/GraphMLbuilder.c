@@ -430,7 +430,7 @@ Element          el;
   /* the specific presentation is not a CSS rule */
   ctxt->cssLevel = 0;
   ctxt->destroy = FALSE;
-  pval.typed_data.value = TtaGetDepth (el, doc, 1);
+  pval.typed_data.value = 0; /*TtaGetDepth (el, doc, 1)*/
   pval.typed_data.real = FALSE;
   child = TtaGetLastChild (el);
   while (child)
@@ -498,7 +498,7 @@ int             *error
 	  }
 	else
 	  /* apply a deph rule to each child */
-	  ;
+	  SetGraphicDepths (doc, el);
        }
 
      /* if it's an image element, create a PICTURE_UNIT child */
