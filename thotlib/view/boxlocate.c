@@ -1605,12 +1605,12 @@ int                 ym;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    DModifiable teste si un pave est modifiable en Dimension.       | */
+/* |    CanBeResized teste si un pave est modifiable en Dimension.       | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static boolean      DModifiable (PtrAbstractBox pAb, int frame, boolean horizRef, int *min, int *max)
+static boolean      CanBeResized (PtrAbstractBox pAb, int frame, boolean horizRef, int *min, int *max)
 #else  /* __STDC__ */
-static boolean      DModifiable (pAb, frame, horizRef, min, max)
+static boolean      CanBeResized (pAb, frame, horizRef, min, max)
 PtrAbstractBox             pAb;
 int                 frame;
 boolean             horizRef;
@@ -1696,11 +1696,11 @@ int                *max;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    DesBDimension recherche la boite selectionnee pour un changement| */
-/* |            de dimension. Si la plus petite boite englobant le point| */
-/* |            x,y de la fenetre frame ne peut pas etre redimensionnee,        | */
-/* |            la procedure prend la boite englobante et ainsi de      | */
-/* |            suite.                                                  | */
+/* |  ApplyDirectResize recherche la boite candidate pour un changement | */
+/* |          de dimension. Si la plus petite boite englobant le point  | */
+/* |          x,y de la fenetre frame ne peut pas etre redimensionnee,  | */
+/* |          la procedure prend la boite englobante et ainsi de        | */
+/* |          suite.                                                    | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 void                DesBDimension (int frame, int xm, int ym)
@@ -1709,7 +1709,6 @@ void                DesBDimension (frame, xm, ym)
 int                 frame;
 int                 xm;
 int                 ym;
-
 #endif /* __STDC__ */
 {
    PtrBox            pBox;
@@ -1759,8 +1758,8 @@ int                 ym;
 	     /* On regarde si les modifications sont autorisees */
 	     else
 	       {
-		  okH = DModifiable (pAb, frame, TRUE, &xmin, &xmax);
-		  okV = DModifiable (pAb, frame, FALSE, &ymin, &ymax);
+		  okH = CanBeResized (pAb, frame, TRUE, &xmin, &xmax);
+		  okV = CanBeResized (pAb, frame, FALSE, &ymin, &ymax);
 		  if (okH || okV)
 		     still = FALSE;
 	       }
@@ -1852,7 +1851,7 @@ int                 ym;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    ModeCreation re'alise les differents modes de cre'ation         | */
+/* |    DirectCreation re'alise les differents modes de cre'ation       | */
 /* |            interactive des boi^tes.                                | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
@@ -1861,7 +1860,6 @@ void                ModeCreation (PtrBox pBox, int frame)
 void                ModeCreation (pBox, frame)
 PtrBox            pBox;
 int                 frame;
-
 #endif /* __STDC__ */
 {
    int                 x, y;
@@ -1946,8 +1944,8 @@ int                 frame;
 	pAb->AbHorizPos.PosUserSpecified = FALSE;
 	pAb->AbVertPos.PosUserSpecified = FALSE;
      }
-   modDimension = (DModifiable (pAb, frame, TRUE, &xmin, &xmax)
-		   || DModifiable (pAb, frame, FALSE, &Ymin, &Ymax));
+   modDimension = (CanBeResized (pAb, frame, TRUE, &xmin, &xmax)
+		   || CanBeResized (pAb, frame, FALSE, &Ymin, &Ymax));
    if (!modDimension)
      {
 	pAb->AbWidth.DimUserSpecified = FALSE;
@@ -1990,7 +1988,7 @@ int                 frame;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    DesCaractere cherche le caractere affiche dans la boite pBox    | */
+/* |  LocateClickedChar cherche le caractere affiche dans la boite pBox | */
 /* |            avec un decalage x. Rend le pointeur sur le buffer qui  | */
 /* |            contient le caractere designe', l'index du caractere    | */
 /* |            dans le buffer, l'index du caractere dans la boite et   | */
@@ -1998,159 +1996,160 @@ int                 frame;
 /* |            Met a jour la valeur x.                                 | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                DesCaractere (PtrBox pBox, PtrTextBuffer * adbuff, int *x, int *icar, int *charsNumber, int *spacesNumber)
+void                DesCaractere (PtrBox pBox, PtrTextBuffer * pBuffer, int *x, int *index, int *charsNumber, int *spacesNumber)
 #else  /* __STDC__ */
-void                DesCaractere (pBox, adbuff, x, icar, charsNumber, spacesNumber)
+void                DesCaractere (pBox, pBuffer, x, index, charsNumber, spacesNumber)
 PtrBox            pBox;
-PtrTextBuffer     *adbuff;
+PtrTextBuffer     *pBuffer;
 int                *x;
-int                *icar;
+int                *index;
 int                *charsNumber;
 int                *spacesNumber;
-
 #endif /* __STDC__ */
 {
    int                 dx;
-   int                 reste;
-   int                 restbl;
-   int                 lgbl;
-   int                 lgcar;
-   int                 newcar;
+   int                 length;
+   int                 extraSpace;
+   int                 spaceWidth;
+   int                 charWidth;
+   int                 newIndex;
    ptrfont             font;
-   unsigned char       car;
-   boolean             nontrouve;
+   unsigned char       c;
+   boolean             notfound;
 
 
    /* Nombre de caracteres qui precedent */
    *charsNumber = 0;
    *spacesNumber = 0;
-   car = '\0';
-   lgcar = 0;
+   c = '\0';
+   charWidth = 0;
    if (pBox->BxNChars == 0 || *x <= 0)
      {
 	*x = 0;
-	*adbuff = pBox->BxBuffer;
-	*icar = pBox->BxFirstChar;
+	*pBuffer = pBox->BxBuffer;
+	*index = pBox->BxFirstChar;
      }
    else
      {
 	font = pBox->BxFont;
 	dx = 0;
-	newcar = pBox->BxFirstChar;
-	*icar = newcar;
-	*adbuff = pBox->BxBuffer;
-	reste = pBox->BxNChars;
+	newIndex = pBox->BxFirstChar;
+	*index = newIndex;
+	*pBuffer = pBox->BxBuffer;
+	length = pBox->BxNChars;
 	/* Calcule la largeur des blancs */
 	if (pBox->BxSpaceWidth == 0)
 	  {
-	     lgbl = CarWidth (BLANC, font);
-	     restbl = 0;
+	     spaceWidth = CarWidth (BLANC, font);
+	     extraSpace = 0;
 	  }
 	else
 	  {
-	     lgbl = pBox->BxSpaceWidth;
-	     restbl = pBox->BxNPixels;
+	     spaceWidth = pBox->BxSpaceWidth;
+	     extraSpace = pBox->BxNPixels;
 	  }
 
 	/* Recherche le caractere designe dans la boite */
 #ifdef STRUCT_EDIT
-	nontrouve = (dx < *x);
+	notfound = (dx < *x);
 #else
 	/* largeur du caractere suivant */
-	car = (unsigned char) ((*adbuff)->BuContent[newcar - 1]);
-	if (car == 0)
-	   lgcar = 0;
-	else if (car == BLANC)
-	   lgcar = lgbl;
+	c = (unsigned char) ((*pBuffer)->BuContent[newIndex - 1]);
+	if (c == 0)
+	   charWidth = 0;
+	else if (c == BLANC)
+	   charWidth = spaceWidth;
 	else
-	   lgcar = CarWidth (car, font);
-	nontrouve = (dx + lgcar / 2 < *x);
+	   charWidth = CarWidth (c, font);
+	notfound = (dx + charWidth / 2 < *x);
 #endif
-	while (nontrouve && reste > 0)
+	while (notfound && length > 0)
 	  {
 #ifdef STRUCT_EDIT
 	     /* largeur du caractere courant */
-	     car = (unsigned char) ((*adbuff)->BuContent[newcar - 1]);
-	     if (car == 0)
-		lgcar = 0;
-	     else if (car == BLANC)
-		lgcar = lgbl;
+	     c = (unsigned char) ((*pBuffer)->BuContent[newIndex - 1]);
+	     if (c == 0)
+		charWidth = 0;
+	     else if (c == BLANC)
+		charWidth = spaceWidth;
 	     else
-		lgcar = CarWidth (car, font);
+		charWidth = CarWidth (c, font);
 #endif
 
-	     if (car == BLANC)
+	     if (c == BLANC)
 	       {
 		  (*spacesNumber)++;
-		  if (restbl > 0)
+		  if (extraSpace > 0)
 		    {
 		       dx++;
-		       restbl--;
+		       extraSpace--;
 		    }
 	       }
 
-	     dx += lgcar;
+	     dx += charWidth;
 	     (*charsNumber)++;
 
 	     /* On passe au caractere suivant */
-	     *icar = newcar;
-	     if (newcar < (*adbuff)->BuLength || reste == 1)
-		newcar++;
-	     else if ((*adbuff)->BuNext == NULL)
+	     *index = newIndex;
+	     if (newIndex < (*pBuffer)->BuLength || length == 1)
+		newIndex++;
+	     else if ((*pBuffer)->BuNext == NULL)
 	       {
-		  reste = 0;
-		  newcar++;
+		  length = 0;
+		  newIndex++;
 	       }
 	     else
 	       {
-		  *adbuff = (*adbuff)->BuNext;
-		  newcar = 1;
+		  *pBuffer = (*pBuffer)->BuNext;
+		  newIndex = 1;
 	       }
-	     reste--;
+	     length--;
 #ifdef STRUCT_EDIT
-	     nontrouve = (dx < *x);
+	     notfound = (dx < *x);
 #else
 	     /* largeur du caractere suivant */
-	     car = (unsigned char) ((*adbuff)->BuContent[newcar - 1]);
-	     if (car == 0)
-		lgcar = 0;
-	     else if (car == BLANC)
-		lgcar = lgbl;
+	     c = (unsigned char) ((*pBuffer)->BuContent[newIndex - 1]);
+	     if (c == 0)
+		charWidth = 0;
+	     else if (c == BLANC)
+		charWidth = spaceWidth;
 	     else
-		lgcar = CarWidth (car, font);
-	     nontrouve = (dx + lgcar / 2 < *x);
+		charWidth = CarWidth (c, font);
+	     notfound = (dx + charWidth / 2 < *x);
 #endif
 	  }
 
 	/* On a trouve le caractere : Recadre la position x */
 	if (dx == *x)
-	   *icar = newcar;	/* BAlignment OK */
+	  /* BAlignment OK */
+	   *index = newIndex;
 	else if (dx > *x)
 	  {
 #ifdef STRUCT_EDIT
-	     *x = dx - lgcar;	/* BAlignment sur le caractere */
-	     if (car == BLANC)
+	    /* BAlignment sur le caractere */
+	     *x = dx - charWidth;
+	     if (c == BLANC)
 	       {
 		  if (*spacesNumber > 0 && pBox->BxNPixels >= *spacesNumber)
 		     (*x)--;
 		  (*spacesNumber)--;
 	       }
 
-	     if (newcar == 1)
-		*adbuff = (*adbuff)->BuPrevious;
+	     if (newIndex == 1)
+		*pBuffer = (*pBuffer)->BuPrevious;
 	     (*charsNumber)--;
 #else
 	     *x = dx;
-	     *icar = newcar;
+	     *index = newIndex;
 #endif
 	  }
 	else
 	   /* BAlignment en fin de boite */
 	  {
 	     *x = dx;
-	     if (newcar == 1)
-		*adbuff = (*adbuff)->BuPrevious;
-	     (*icar)++;
+	     if (newIndex == 1)
+		*pBuffer = (*pBuffer)->BuPrevious;
+	     (*index)++;
 	  }
      }
 }
