@@ -10083,33 +10083,7 @@ ATTRIBUTES
 	CreateBefore(VALUE_CLASS);
 	END;
 
- ID(Anchor):
-	BEGIN
-	CreateBefore(ATTR_ID);
-	CreateBefore(VALUE_ID);
-#ifndef PAGE
-	CreateFirst(Target_gif);
-#endif
-	CreateLast(ATTR_ID_ANCH);
-	CreateLast(VALUE_ID_ANCH);
-#ifdef LINK_NUMBER
-        CreateAfter(TargetPageNumber);
-#endif
-#ifndef PAGE
-#ifdef BLACK_WHITE
-	Underline: Underlined;
-#endif
-#endif
-	IN Structure_view BEGIN
-		Foreground: Enclosing =;
-		Underline: Enclosing =;
-		END;
-	IN Alternate_view BEGIN
-		Foreground: Enclosing =;
-		Underline: Enclosing =;
-		END;
-	END;
-  ID:
+ ID:
 	BEGIN
 	CreateBefore(ATTR_ID);
 	CreateBefore(VALUE_ID);
@@ -10119,6 +10093,32 @@ ATTRIBUTES
 	if not PICTURE_UNIT
 	   CreateFirst(Target_gif);
 #endif
+	if Anchor BEGIN
+	   CreateLast(ATTR_ID_ANCH);
+	   CreateLast(VALUE_ID_ANCH);
+#ifdef LINK_NUMBER
+           CreateAfter(TargetPageNumber);
+#endif
+#ifndef PAGE
+#ifdef BLACK_WHITE
+	   Underline: Underlined;
+#endif
+#endif
+	   END;
+	IN Structure_view
+           BEGIN
+	   if Anchor BEGIN
+		Foreground: Enclosing =;
+		Underline: Enclosing =;
+		END;
+	   END;
+	IN Alternate_view
+	   BEGIN
+	   if Anchor BEGIN
+		Foreground: Enclosing =;
+		Underline: Enclosing =;
+		END;
+	   END;
 	END;
 
   dir = ltr:
