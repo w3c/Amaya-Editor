@@ -1723,9 +1723,10 @@ static void   GetXmlElType (char *ns_uri, char *elementName,
 			    char *content, ThotBool *level)
 {
 #ifdef XML_GENERIC
-  ThotBool    isnew;
-  char       *s;
-  char       *ns_name;
+  ThotBool      isnew;
+  char         *s;
+  char         *ns_name;
+  ElementType   parentType;
 #endif /* XML_GENERIC */
 
  /* initialize all parser contexts if not done yet */
@@ -1788,13 +1789,18 @@ static void   GetXmlElType (char *ns_uri, char *elementName,
 		}
 	      else
 		{
-		  /* *elType = TtaGetElementType (RootElement); */
-		  isnew = FALSE;
-		  elType->ElSSchema = GetGenericXMLSSchemaByUri ("Default_Uri",
-								 XMLcontext.doc, &isnew);
-		  if (isnew)
-		    TtaChangeGenericSchemaNames ("Default_Uri", elementName,
-						 XMLcontext.doc);
+		  parentType = TtaGetElementType (XMLcontext.lastElement);
+		  if (parentType.ElSSchema == NULL)
+		    {
+		      isnew = FALSE;
+		      elType->ElSSchema = GetGenericXMLSSchemaByUri ("Default_Uri",
+								     XMLcontext.doc, &isnew);
+		      if (isnew)
+			TtaChangeGenericSchemaNames ("Default_Uri", elementName,
+						     XMLcontext.doc);
+		    }
+		  else
+		    elType->ElSSchema = parentType.ElSSchema;
 		}
 	      *level = TRUE;
 	      *content = SPACE;
