@@ -4102,6 +4102,7 @@ RULES
 	END;
 
 #ifdef COUGAR
+
  Object: BEGIN
 	CreateBefore(OBJECT_S);
 	CreateWith(VerticalLine);
@@ -4118,6 +4119,7 @@ RULES
 	IN Alternate_view
 		Height: Enclosed . Height;
 	END;
+
  Object_Image: BEGIN
 	Width: Enclosing . Width;
 	Height: Enclosing . Height;
@@ -4127,12 +4129,13 @@ RULES
 	IN Alternate_view
 		Visibility: 0;
 	END;
+
  Object_Content: BEGIN
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
 		Width: Enclosing . Width;
-		HorizPos: Left = Enclosing;
+		HorizPos: Left = Enclosing . Left;
 		VertPos: Top = Previous . Bottom;
 		END;
 	IN Alternate_view BEGIN
@@ -4140,7 +4143,7 @@ RULES
 		Width: Enclosing . Width;
 		VertPos: Top = Enclosing . Top;
 		HorizPos: Left = Enclosing . Left;
-		END:
+		END;
 	END;
 #endif
 
@@ -4655,6 +4658,8 @@ RULES
 		Width: 1 px;
 		if NOT Immediately within Object
 		   Visibility: 1;
+		if Immediately within Object
+		   Visibility: 0;
 		VertPos: Top = Previous . Bottom;
 		HorizPos: Left = Enclosing . Left;
 		END;
@@ -4663,6 +4668,8 @@ RULES
 		Width: 1 pt;
 		if NOT Immediately within Object
 		   Visibility: 1;
+		if Immediately within Object
+		   Visibility: 0;
 		END;
 	IN Anchors_view BEGIN
 		Visibility: 0;
