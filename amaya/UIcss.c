@@ -605,9 +605,15 @@ static void         InitCSSDialog (Document doc, char *s)
 		      TtaGetMessage (AMAYA, AM_NO_CCS_FILE));
 #  else  /* !_WINDOWS */
   if (nb > 0)
-    TtaNewSelector (BaseCSS + CSSSelect, BaseCSS + CSSForm,
-		    TtaGetMessage (AMAYA, AM_CSS_FILE),
-		    nb, buf, 5, NULL, FALSE, TRUE);
+    {
+      if (nb >= 10)
+	i = 10;
+      else
+	i = nb;
+      TtaNewSizedSelector (BaseCSS + CSSSelect, BaseCSS + CSSForm,
+			   TtaGetMessage (AMAYA, AM_CSS_FILE),
+			   nb, buf, 200, 1, NULL, FALSE, TRUE);
+    }
   else
     TtaNewLabel (BaseCSS + CSSSelect, BaseCSS + CSSForm,
 		 TtaGetMessage (AMAYA, AM_NO_CCS_FILE));
