@@ -229,9 +229,9 @@ ThotAppContext app_ctxt;
         if (NetRequestsAvailable) {
         }
 #ifdef _WINDOWS
-	GetMessage (&msg, NULL, 0, 0);
-	TranslateMessage (&msg);
-	TtaHandleOneWindowEvent (&msg);
+	WIN_ProcessSocketActivity ();
+	if (GetMessage (&msg, NULL, 0, 0))
+	    TtaHandleOneWindowEvent (&msg);
 #else  /* !_WINDOWS */
         AmayaFetchEvent (app_ctxt, &ev);
         AmayaHandleOneEvent (&ev);

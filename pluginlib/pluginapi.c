@@ -360,7 +360,7 @@ int   status;
     stat (file, &sbuf) ;
     progressStream->end          = sbuf.st_size;
     progressStream->lastmodified = sbuf.st_mtime;
-
+    
     if (fptr && offset < progressStream->end) {
        fseek (fptr, offset, SEEK_SET);
        
@@ -379,8 +379,7 @@ int   status;
 #         endif
 	  offset += count;
 	  free (buffer);
-	  /* fclose (fptr); */
-	  /*(*(pluginTable [currentExtraHandler]->pluginFunctionsTable->asfile)) ((NPP)(instance), stream, file); */
+	  /*(*(pluginTable [currentExtraHandler]->pluginFunctionsTable->asfile)) ((NPP)(instance), progressStream, file); */
        }
     }
 #endif /* AMAYA_JAVA */
@@ -614,7 +613,7 @@ const char* target;
 #             endif
               result = GetObjectWWW (1, url, NULL, tempfile, AMAYA_IASYNC, 
                                      (void*) Ap_GetURLNotifyProgressCallback, (void*) instance, 
-                                     (void*) Ap_GetURLNotifyCallback, (void*) instance, FALSE) ;
+                                     (void*) Ap_GetURLNotifyProgressCallback, (void*) instance, FALSE) ;
        }
     }
 #   ifdef PLUGIN_DEBUG
@@ -1075,23 +1074,23 @@ int       type;
 #endif /* __STDC__ */
 {
 
-    ElementType elType;
-    PtrElement  elem;
-    Element     object;
-    Element     param;
+    ElementType   elType;
+    PtrElement    elem;
+    Element       object;
+    Element       param;
     AttributeType attrTypeN, attrTypeV;
     Attribute     attrN, attrV;
     char*         attrValue;
     int           length;
-    NPStream*   stream;
-    NPWindow*   pwindow;
-    char        widthText[10], heightText[10];
-    char*       argn[20], *argv[20];
-    char*       url;
-    uint16      stype;
-    int         ret;
-    int16       argc; 
-    struct stat sbuf;
+    NPStream*     stream;
+    NPWindow*     pwindow;
+    char          widthText[10], heightText[10];
+    char*         argn[20], *argv[20];
+    char*         url;
+    uint16        stype;
+    int           ret;
+    int16         argc; 
+    struct stat   sbuf;
      
 #   ifdef PLUGIN_DEBUG
     printf ("***** Ap_CreatePluginInstance *****\n");
@@ -1121,12 +1120,12 @@ int       type;
 	  attrTypeN.AttrTypeNum = HTML_ATTR_Param_name;
 	  attrTypeV.AttrSSchema = elType.ElSSchema;
 	  attrTypeV.AttrTypeNum = HTML_ATTR_Param_value;
-	  while (param && TtaIsAncestor (param, object)) {
+	  while (param && TtaIsAncestor (param, object)) {	        
 	        attrN = TtaGetAttribute (param, attrTypeN);
 		length = TtaGetTextAttributeLength (attrN) ;
 		argn[argc] = (char*) TtaGetMemory (length + 1) ;
 		TtaGiveTextAttributeValue (attrN, argn[argc], &length) ;
-	    
+		
 		attrV = TtaGetAttribute (param, attrTypeV);
 		length = TtaGetTextAttributeLength (attrV) ;
 		argv[argc] = (char*) TtaGetMemory (length + 1) ;
@@ -1137,22 +1136,6 @@ int       type;
        }
     }
 
-    /*
-    argn[3] = "LOOP";
-    argn[4] = "PERIOD";
-    argn[5] = "DATAINIT";
-    argn[6] = "DATASOURCE";
-
-    argn[3] = "CONTROLS";
-    argn[4] = "AUTOSTART";
-    argn[5] = "STATUSBAR";
-    
-    argv[3] = "true";
-    argv[4] = "2";
-    argv[5] = "http://www.dvcorp.com/webxpresso/stinit.txt";
-    argv[6] = "http://www.dvcorp.com/webxpresso/KO.txt";
-    */
-    
     currentExtraHandler  = imageDesc->PicType - InlineHandlers;
 
     /* Prepare window information and "instance" structure */
@@ -1183,12 +1166,12 @@ int       type;
     
     (NPP) (imageDesc->pluginInstance) = (NPP) malloc (sizeof (NPP_t)); 
     (*(pluginTable [currentExtraHandler]->pluginFunctionsTable->newp)) (pluginTable [currentExtraHandler]->pluginMimeType, 
-                                                             (NPP)(imageDesc->pluginInstance), 
-                                                             type, 
-                                                             argc, 
-                                                             argn, 
-                                                             argv,  
-                                                             NULL);
+									(NPP)(imageDesc->pluginInstance), 
+									type, 
+									argc, 
+									argn, 
+									argv,  
+									NULL);
 
     stat (url, &sbuf);
 

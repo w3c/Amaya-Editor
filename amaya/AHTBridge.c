@@ -51,6 +51,12 @@ static void         RequestKillExceptXtevent ();
 
 #endif
 
+#ifdef _WINDOWS
+static void         WIN_ResetMaxSock (void);
+static int          WIN_ProcessFds (fd_set * fdsp, SockOps ops);
+
+#endif /* _WINDOWS */
+
 /*
  * Private variables 
  */
@@ -67,6 +73,10 @@ static const SockOps ReadBits = FD_READ | FD_ACCEPT | FD_CLOSE;
 static const SockOps WriteBits = FD_WRITE | FD_CONNECT;
 static const SockOps ExceptBits = FD_OOB;
 
+#ifdef _WINDOWS
+static fd_set read_fds, write_fds, except_fds, all_fds;
+static int maxfds;
+#endif /* _WINDOWS */
 
 /*
  * Private functions
@@ -88,7 +98,9 @@ static const SockOps ExceptBits = FD_OOB;
   the state of the request and, if it's an asynchronous request, deletes
   the memory allocated to it.
   -------------------------------------------------------------------*/
-
+#ifdef _WINDOWS
+static void *WIN_AHTCallback_bridge (SockOps _ops, int *s)
+#else
 #ifdef __STDC__
 void *AHTCallback_bridge (caddr_t cd, int *s, XtInputId * id)
 #else
@@ -97,6 +109,7 @@ caddr_t             cd;
 int                *s;
 XtInputId          *id;
 #endif /* __STDC__ */
+#endif /* _WINDOWS */
 {
    int                 status;  /* the status result of the libwwww call */
    HTRequest          *rqp = NULL;
@@ -134,7 +147,9 @@ XtInputId          *id;
 	return (0);
      }
 
-#ifndef _WINDOWS
+#ifdef _WINDOWS
+   ops = _ops;
+#else
    switch ((XtInputId) cd)
 	 {
 	    case XtInputReadMask:
@@ -152,7 +167,7 @@ XtInputId          *id;
 	 default:
 	   break;
 	 }			/* switch */
-#endif /* !_WINDOWS */
+#endif /* _WINDOWS */
 
      /* Invokes the callback associated to the requests */
      
@@ -180,7 +195,6 @@ XtInputId          *id;
     * HT_END:     Request has ended
     */
 
-#ifndef _WINDOWS
    if (me->reqStatus == HT_ABORT)
    /* Has the user stopped the request? */
      {
@@ -188,7 +202,6 @@ XtInputId          *id;
 	StopRequest (me->docid);
 	return (0);
      }
-#endif /* !_WINDOWS */
 
    if (me->reqStatus == HT_WAITING)
    /* the request is being reissued */
@@ -363,25 +376,19 @@ HTPriority          p;
 	if (ops & ReadBits)
 	  {
 	     me->read_ops = ops;
-#ifndef _WINDOWS
 	     RequestRegisterReadXtevent (me, sock);
-#endif /* !_WINDOWS */
 	  }
 
 	if (ops & WriteBits)
 	  {
 	     me->write_ops = ops;
-#ifndef _WINDOWS
 	     RequestRegisterWriteXtevent (me, sock);
-#endif /* !_WINDOWS */
 	  }
 
 	if (ops & ExceptBits)
 	  {
 	     me->except_ops = ops;
-#ifndef _WINDOWS
 	     RequestRegisterExceptXtevent (me, sock);
-#endif /* !_WINDOWS */
 	  }
      }
 
@@ -415,7 +422,6 @@ SockOps             ops;
 
    HTEventCallback    *cbf = (HTEventCallback *) __RetrieveCBF (sock, (SockOps) NULL, &rqp);
 
-#ifndef _WINDOWS
    if (cbf)
      {
 	if (rqp)
@@ -434,7 +440,6 @@ SockOps             ops;
      }
 
    status = HTEventrg_unregister (sock, ops);
-#endif /* !_WINDOWS */
    return (status);
 }
 
@@ -452,14 +457,12 @@ AHTReqContext      *me;
 
 #endif /* __STDC__ */
 {
-#ifndef _WINDOWS
    if (THD_TRACE)
       fprintf (stderr, "Request_kill: Clearing Xtinputs\n");
 
    RequestKillReadXtevent (me);
    RequestKillWriteXtevent (me);
    RequestKillExceptXtevent (me);
-#endif /* !_WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -475,7 +478,14 @@ SOCKET sock;
 
 #endif /* __STDC__ */
 {
-#ifndef _WINDOWS
+#ifdef _WINDOWS
+    FD_SET (sock, &read_fds);
+    FD_SET (sock, &all_fds);
+    me->read_sock = sock;
+
+    if (sock > maxfds) 
+        maxfds = sock;
+#else
   if (me->read_xtinput_id)
     {
       if (THD_TRACE)
@@ -509,7 +519,15 @@ AHTReqContext      *me;
 
 #endif /* __STDC__ */
 {
-#ifndef _WINDOWS
+#ifdef _WINDOWS
+    if(me->except_sock != INVSOC) 
+	{
+	    FD_CLR (me->read_sock, &read_fds);
+	    FD_CLR (me->read_sock, &all_fds);
+	    me->read_sock = INVSOC;
+	    WIN_ResetMaxSock();
+	}
+#else
    if (me->read_xtinput_id)
      {
 	if (THD_TRACE)
@@ -533,7 +551,15 @@ SOCKET              sock;
 
 #endif /* __STDC__ */
 {
-#ifndef _WINDOWS
+#ifdef _WINDOWS
+    FD_SET (sock, &write_fds);
+    FD_SET (sock, &all_fds);
+    me->write_sock = sock;
+
+    if (sock > maxfds) 
+        maxfds = sock ;
+
+#else
    if (me->write_xtinput_id)
     {
       if (THD_TRACE)
@@ -567,7 +593,15 @@ AHTReqContext      *me;
 
 #endif /* __STDC__ */
 {
-#ifndef _WINDOWS
+#ifdef _WINDOWS
+    if(me->except_sock != INVSOC) 
+	{
+	    FD_CLR (me->write_sock, &write_fds);
+	    FD_CLR (me->write_sock, &all_fds);
+	    me->write_sock = INVSOC;
+	    WIN_ResetMaxSock();
+	}
+#else
    if (me->write_xtinput_id)
      {
 	if (THD_TRACE)
@@ -591,7 +625,14 @@ SOCKET              sock;
 
 #endif /* __STDC__ */
 {
-#ifndef _WINDOWS
+#ifdef _WINDOWS
+    FD_SET (sock, &except_fds);
+    FD_SET (sock, &all_fds);
+    me->except_sock = sock;
+
+    if (sock > maxfds) 
+        maxfds = sock ;
+#else
    if (me->except_xtinput_id)
      {
        if (THD_TRACE)
@@ -626,7 +667,15 @@ AHTReqContext      *me;
 
 #endif /* __STDC__ */
 {
-#ifndef _WINDOWS
+#ifdef _WINDOWS
+    if(me->except_sock != INVSOC) 
+	{
+	    FD_CLR (me->except_sock, &except_fds);
+	    FD_CLR (me->except_sock, &all_fds);
+	    me->except_sock = INVSOC;
+	    WIN_ResetMaxSock();
+	}
+#else
    if (me->except_xtinput_id)
      {
 	if (THD_TRACE)
@@ -637,6 +686,103 @@ AHTReqContext      *me;
 #endif /* !_WINDOWS */
 }
 
+#ifdef _WINDOWS
+
+static void WIN_ResetMaxSock(void)
+{
+    SOCKET s ;
+    SOCKET t_max = 0;
+    
+    for (s = 0 ; s <= maxfds; s++) { 
+        if (FD_ISSET(s, &all_fds))
+	    {
+		if (s > t_max)
+		    t_max = s ;
+	    } /* scope */
+    } /* for */
+
+    maxfds = t_max ;
+}
+
+#ifdef __STDC__
+void         WIN_ProcessSocketActivity (void)
+#else
+void         WIN_ProcessSocketActivity ()
+#endif /* __STDC */
+{
+    int active_sockets;
+    SOCKET s;
+    struct timeval tv;
+    int exceptions, readings, writings;
+    fd_set treadset, twriteset, texceptset ;    
+
+    treadset = read_fds;
+    twriteset = write_fds ;
+    texceptset = except_fds ;  
+
+    /* do a non-blocking select */
+    tv.tv_sec = 0; 
+    tv.tv_usec = 0;
+
+    active_sockets = select(maxfds+1, &treadset, &twriteset, &texceptset, 
+				(struct timeval *) &tv);
+
+    switch(active_sockets)  {
+    case 0:         /* no activity - timeout - allowed */
+	return;
+	break;
+            
+    case -1:        /* error has occurred */
+	return;
+	break;
+
+    default:
+	break;
+    } /* switch */
+
+    exceptions = 0;
+    readings = 0;
+    writings = 0;
+
+    for (s = 0 ; s <= maxfds ; s++) 
+	{ 
+	    if (FD_ISSET(s, &texceptset))
+		exceptions++;
+	    if (FD_ISSET(s, &treadset))
+		readings++;
+	    if (FD_ISSET(s, &twriteset))
+		writings++;
+	} /* for */
+
+        if (exceptions) {
+            WIN_ProcessFds (&texceptset, FD_OOB);
+        }
+
+        if (readings) {
+            WIN_ProcessFds (&treadset, FD_READ);
+        }
+
+        if (writings) { 
+            WIN_ProcessFds (&twriteset, FD_WRITE);
+	}
+}
+
+
+static int WIN_ProcessFds( fd_set * fdsp, SockOps ops)
+{
+    SOCKET s ;
+
+    for (s = 0 ; s <= maxfds; s++) {
+        if (FD_ISSET( s, fdsp)) 
+	    {
+		WIN_AHTCallback_bridge (ops, &s);
+		return;
+	    }
+    }
+    return HT_OK;
+}
+
+#endif /* _WINDOWS */
 /*
   End of Module AHTBridge.c
 */

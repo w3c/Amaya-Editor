@@ -1228,8 +1228,9 @@ static int          LoopForStop (AHTReqContext * me)
              TtaHandleOneEvent (&ev);
           }
 #       else  /* _WINDOWS */
-	if (GetMessage (&ev, NULL, 0, 0))
-	   TtaHandleOneWindowEvent (&ev);
+	WIN_ProcessSocketActivity ();	
+	/**	if (GetMessage (&ev, NULL, 0, 0))
+	   TtaHandleOneWindowEvent (&ev); **/
 #       endif /* !_WINDOWS */
      }
 
@@ -2106,9 +2107,7 @@ int                 docid;
 			   case HT_NEW_PENDING:
 			   case HT_WAITING:
 			   default:
-#                             ifndef _WINDOWS
 			      RequestKillAllXtevents (me);
-#                             endif
 			      me->reqStatus = HT_ABORT;
 			      HTRequest_kill (me->request);
 
