@@ -6,13 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void SetImageRule ( PtrElement pEl,
-                           int x,
-                           int y,
-                           int w,
-                           int h,
-                           int typeimage,
-                           PictureScaling presimage );
 extern void NewPictInfo ( PtrAbstractBox ppav,
                           char *filename,
                           int imagetype );
@@ -22,13 +15,6 @@ extern void CopyPictInfo ( int *Imdcopie,
 
 #else /* __STDC__ */
 
-extern void SetImageRule (/* PtrElement pEl,
-                             int x,
-                             int y,
-                             int w,
-                             int h,
-                             int typeimage,
-                             PictureScaling presimage */);
 extern void NewPictInfo (/* PtrAbstractBox ppav,
                             char *filename,
                             int imagetype */);

@@ -1784,7 +1784,7 @@ int                 frame;
 	 {
 	   /* background found: clip the first box with background */
 	   pCurrentBox = pCurrentAb->AbBox;
-	   if (pCurrentBox->BxType == BoGhost)
+	   if (pCurrentBox != NULL && pCurrentBox->BxType == BoGhost)
 	     {
 	       /* move to the enclosing block */
 	       while (pCurrentAb != NULL && pCurrentAb->AbBox != NULL

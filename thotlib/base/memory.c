@@ -588,11 +588,13 @@ PtrReferredDescr    pDR;
 #endif /* __STDC__ */
 
 {
-
-   pDR->ReNext = PtFree_DescRef;
-   PtFree_DescRef = pDR;
-   NbFree_DescRef++;
-   NbUsed_DescRef--;
+  if (pDR != NULL)
+    {
+      pDR->ReNext = PtFree_DescRef;
+      PtFree_DescRef = pDR;
+      NbFree_DescRef++;
+      NbUsed_DescRef--;
+    }
 }
 
 /*----------------------------------------------------------------------

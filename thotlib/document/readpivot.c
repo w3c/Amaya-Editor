@@ -35,6 +35,7 @@
 #include "appdialogue.h"
 #include "labelAllocator.h"
 #include "registry.h"
+#include "picture.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -82,6 +83,47 @@ static int          newColor[] =
 #include "tree_f.h"
 #include "units_f.h"
 #include "viewcommands_f.h"
+
+/*----------------------------------------------------------------------
+  SetImageRule updates or creates the picture descriptor of an element.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         SetImageRule (PtrElement pEl, int x, int y, int w, int h, int typeimage, PictureScaling presimage)
+#else  /* __STDC__ */
+static void         SetImageRule (pEl, x, y, w, h, typeimage, presimage)
+PtrElement          pEl;
+int                 x;
+int                 y;
+int                 w;
+int                 h;
+PictureScaling      presimage;
+int                 typeimage;
+#endif /* __STDC__ */
+
+{
+  PictInfo           *image;
+
+  if (pEl != NULL)
+    {
+      image = (PictInfo *) pEl->ElPictInfo;
+      if (image == NULL)
+	{
+	  image = (PictInfo *) TtaGetMemory (sizeof (PictInfo));
+	  pEl->ElPictInfo = (int *) image;
+	}
+      image->PicFileName = NULL;
+      image->PicPixmap = 0;
+      image->PicMask = 0;
+      image->PicType = typeimage;
+      image->PicPresent = presimage;
+      image->PicXArea = x;
+      image->PicYArea = y;
+      image->PicWArea = w;
+      image->PicHArea = h;
+      image->mapped = FALSE;
+      image->created = FALSE;
+    }
+}
 
 /*----------------------------------------------------------------------
    	PivotError							

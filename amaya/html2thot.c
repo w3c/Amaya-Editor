@@ -5539,6 +5539,7 @@ char              **argv;
      }
    else
      {
+        TtaInitializeAppRegistry (argv[0]);
 	/* get the input file name from the command line */
 	argv++;
 	strcpy (htmlFileName, *argv);
