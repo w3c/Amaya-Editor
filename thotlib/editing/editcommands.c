@@ -1985,7 +1985,7 @@ static void ContentEditing (int editType)
 	return;
       else
 	{
-	  if (editType == TEXT_PASTE)
+	  if (editType == TEXT_PASTE || editType == TEXT_X_PASTE)
 	    CloseTextInsertionWithControl (FALSE);
 	  else
 	    {
