@@ -48,6 +48,7 @@ extern RConstruct GetElementConstruct ( PtrElement pEl,
 extern PtrElement AncestorList ( PtrElement pEl );
 extern ThotBool CanChangeNumberOfElem ( PtrElement pEl,
                                         int delta );
+extern PtrElement ParentAny ( PtrElement pEl );
 extern void SRuleForSibling ( PtrDocument pDoc,
                               PtrElement pEl,
                               ThotBool before,
@@ -157,6 +158,7 @@ extern RConstruct GetElementConstruct (/* PtrElement pEl,
 extern PtrElement AncestorList (/* PtrElement pEl */);
 extern ThotBool CanChangeNumberOfElem (/* PtrElement pEl,
                                           int delta */);
+extern PtrElement ParentAny (/* PtrElement pEl */);
 extern void SRuleForSibling (/* PtrDocument pDoc,
                                 PtrElement pEl,
                                 ThotBool before,

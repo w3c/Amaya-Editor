@@ -898,13 +898,17 @@ static void ReturnCreateNewElem (PtrElement pListEl, PtrElement pEl,
 				 ThotBool begin, PtrDocument pDoc, int *typeNum,
 				 PtrSSchema *pSS)
 {
-   int                 TypeListe, TypeElListe, TypeEl;
-   PtrSSchema          pSSList;
-   PtrSRule            pRegle;
+   int              TypeListe, TypeElListe, TypeEl;
+   int	            nComp;
+   PtrSSchema       pSSList;
+   PtrSRule         pRegle;
 
    pSSList = pListEl->ElStructSchema;
    *pSS = pEl->ElStructSchema;
    *typeNum = pEl->ElTypeNumber;
+   if (GetElementConstruct (pListEl, &nComp) == CsAny)
+     /* Don't check further for xml elements (CsAny) */
+     return;
    TypeListe = GetTypeNumIdentity (pListEl->ElTypeNumber, pSSList);
    /* le type des elements qui constituent la liste */
    TypeElListe = pSSList->SsRule->SrElem[TypeListe - 1]->SrListItem;
@@ -1090,8 +1094,7 @@ void TtcCreateElement (Document doc, View view)
 		pListEl = AncestorList (pParent);
 		if (pListEl == NULL)
 		  {
-		    if (GetElementConstruct (pParent->ElParent, &nComp) ==
-			                                           CsAggregate)
+		    if (GetElementConstruct (pParent->ElParent, &nComp) == CsAggregate)
 		      {
 			SRuleForSibling (pDoc, pParent, FALSE, 1, &typeNum,
 					 &pSS, &list, &optional);
@@ -1127,7 +1130,7 @@ void TtcCreateElement (Document doc, View view)
 				       deleted when undoing the command */
 				    AddEditOpInHistory (pParent->ElParent->ElNext, pDoc, FALSE, TRUE);
 				    SRuleForSibling (pDoc, pParent, FALSE, 1,
-					    &typeNum, &pSS, &list, &optional);
+						     &typeNum, &pSS, &list, &optional);
 				    if (typeNum > 0)
 				      {
 					pAggregEl = pParent->ElParent;
@@ -1136,11 +1139,11 @@ void TtcCreateElement (Document doc, View view)
 					pElReplicate = pParent;
 					createAfter = TRUE;
 					replicate = FALSE;
-				      list = FALSE;
+					list = FALSE;
 				      }
 				  }
 			      }
-			       }
+			  }
 			else if (!list &&
 				 !TypeHasException (ExcNoCreate,
 						    pParent->ElTypeNumber,
@@ -1160,7 +1163,7 @@ void TtcCreateElement (Document doc, View view)
 			    else
 			      {
 				list = TRUE;
-				  pAggregEl = NULL;
+				pAggregEl = NULL;
 			      }
 			  }
 		      }
@@ -1169,6 +1172,12 @@ void TtcCreateElement (Document doc, View view)
 			pParent = pParent->ElParent;
 			if (pParent != NULL)
 			  pListEl = AncestorList (pParent);
+		      }
+		    /* Specific treatment for xml */
+		    if (pListEl == NULL && pAggregEl == NULL)
+		      {
+			pParent = pElem->ElParent;		
+			pListEl = ParentAny (pElem);
 		      }
 		  }
 		if (list && pListEl != NULL)
@@ -1360,22 +1369,42 @@ void TtcCreateElement (Document doc, View view)
 	  /* on cherche l'element CsList ascendant qui permet de creer un */
 	  /* element voisin */
 	  if (lastSel->ElTerminal && lastSel->ElLeafType == LtPageColBreak)
-	    /* on ne replicate pas les sauts de pages */
+	    /* on ne duplique pas les sauts de pages */
 	    pListEl = NULL;
 	  else
 	    {
 	      pListEl = AncestorList (lastSel);
 	      /* si c'est la fin d'une liste de Textes on remonte */
-	      if (pListEl != NULL &&
-		  lastSel->ElTerminal &&
-		  /*(lastSel->ElLeafType == LtText ||
-		    lastSel->ElLeafType == LtPicture) &&*/
-		  pListEl == lastSel->ElParent &&
-		  (lastSel->ElNext == NULL || selBegin) &&
-		  !TypeHasException (ExcReturnCreateWithin,
-				     pListEl->ElTypeNumber,
-				     pListEl->ElStructSchema))
-		pListEl = AncestorList (pListEl);
+	      if (pListEl != NULL)
+		{
+		  if (lastSel->ElTerminal &&
+		      /*(lastSel->ElLeafType == LtText ||
+			lastSel->ElLeafType == LtPicture) &&*/
+		      pListEl == lastSel->ElParent &&
+		      (lastSel->ElNext == NULL || selBegin) &&
+		      !TypeHasException (ExcReturnCreateWithin,
+					 pListEl->ElTypeNumber,
+					 pListEl->ElStructSchema))
+		    pListEl = AncestorList (pListEl);
+		}
+	      else
+		{
+		  /* There is no List ancestor, search an Any parent */
+		  if (lastSel->ElTerminal)
+		    pListEl = ParentAny (lastSel->ElParent);
+		  else
+		    pListEl = ParentAny (lastSel);
+		  if (pListEl != NULL)
+		    {
+		      if (lastSel->ElTerminal &&
+			  pListEl == lastSel->ElParent &&
+			  (lastSel->ElNext == NULL || selBegin) &&
+			  !TypeHasException (ExcReturnCreateWithin,
+					     pListEl->ElTypeNumber,
+					     pListEl->ElStructSchema))
+			pListEl = ParentAny (pListEl);
+		    }
+		}
 	    }
 
 	  /* verifie si les elements a doubler portent l'exception NoCreate */
@@ -1395,7 +1424,7 @@ void TtcCreateElement (Document doc, View view)
 		      pE = pE->ElParent;
 		    }
 		}
-	      while (pE != pListEl && pListEl != NULL);
+	      while (pE != pListEl && pListEl != NULL && pE != NULL);
 
 	      /* a priori, on creera le meme type d'element */
 	      if (pElReplicate)

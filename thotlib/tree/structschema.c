@@ -774,7 +774,6 @@ PtrElement          AncestorList (PtrElement pEl)
    return pEl;
 }
 
-
 /*----------------------------------------------------------------------
    Teste si les cardinalites minimales et maximales de la liste	
    	pEl permettent d'ajouter ou retrancher delta elements.		
@@ -791,6 +790,9 @@ ThotBool            CanChangeNumberOfElem (PtrElement pEl, int delta)
    if (pEl != NULL)
      {
 	rule = pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1];
+	/* A CsAny rule have no cardinality, return TRUE */
+	if (rule->SrConstruct == CsAny || rule->SrConstruct == CsAggregate)
+	  return TRUE;
 	/* la regle de l'element n'est peut-etre pas une regle liste. */
 	/* C'est peut-etre une identite. On cherche la regle liste */
 	/* a laquelle renvoie la regle identite de l'element. */
@@ -823,6 +825,34 @@ ThotBool            CanChangeNumberOfElem (PtrElement pEl, int delta)
 	  }
      }
    return ret;
+}
+
+/*----------------------------------------------------------------------
+   Test if an element of type Any has a parent of the same type
+   Return that parent or NULL				
+  ----------------------------------------------------------------------*/
+PtrElement          ParentAny (PtrElement pEl)
+{
+   int	            nComp;
+
+   if (pEl != NULL)
+     {
+       if ((GetElementConstruct (pEl, &nComp) == CsAny) &&
+	   (pEl->ElParent != NULL) && 
+	   (GetElementConstruct (pEl->ElParent, &nComp) == CsAny))
+	 pEl = pEl->ElParent;
+       else
+	 {
+	   if ((GetElementConstruct (pEl, &nComp) == CsAny) &&
+	       (pEl->ElParent != NULL) && 
+	       (GetElementConstruct (pEl->ElParent, &nComp) == CsAggregate))
+	     pEl = pEl->ElParent;
+	   else
+	     pEl = NULL;
+	 }
+     }
+   
+   return pEl;
 }
 
 /*----------------------------------------------------------------------
@@ -2428,13 +2458,26 @@ ThotBool            CanSplitElement (PtrElement firstEl, int firstChar,
 			     *pList = AncestorList (firstEl->ElParent);
 			   else
 			     {
-			     pE = firstEl;
-			     if (GetElementConstruct (firstEl->ElParent,&nComp)
-				 == CsChoice)
-			       if (firstEl->ElParent->ElParent != NULL)
-				 if (GetElementConstruct (firstEl->ElParent->ElParent, &nComp) == CsList)
-				   pE = firstEl->ElParent->ElParent;
-			     *pList = AncestorList (pE);
+			       pE = firstEl;
+			       if (GetElementConstruct (firstEl->ElParent,&nComp)
+				   == CsChoice)
+				 if (firstEl->ElParent->ElParent != NULL)
+				   if (GetElementConstruct (firstEl->ElParent->ElParent, &nComp) == CsList)
+				     pE = firstEl->ElParent->ElParent;
+			       *pList = AncestorList (pE);
+			       if (*pList == NULL)
+				 {
+				   /* Search if the type of the parent is Any */
+				   *pList = ParentAny (firstEl->ElParent);
+				   /* old test 
+				   if ((firstEl->ElParent->ElParent != NULL) && 
+				       (GetElementConstruct
+					(firstEl->ElParent, &nComp) == CsAny) &&
+				       (GetElementConstruct
+					(firstEl->ElParent->ElParent, &nComp) == CsAny))
+				     *pList = firstEl->ElParent->ElParent;
+				   */
+				 }
 			     }
 			   }
 		       }

@@ -2431,6 +2431,8 @@ PtrElement NewSubtree (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 	      pEl->ElText->BuLength = i - 1;
 	      pEl->ElLanguage = TtaGetDefaultLanguage ();
 	      break;
+	    case CsAny:
+	      break;
 	    default:
 	      break;
 	    }
@@ -2529,6 +2531,13 @@ PtrElement NewSubtree (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 		  t1 = t2;
 		}
 	    }
+	break;
+      case CsAny:
+	t1 = NewSubtree (1, pSS, pDoc, Desc, TRUE, withAttr, withLabel);
+	if (pEl == NULL)
+	  pEl = t1;
+	else
+	  InsertFirstChild (pEl, t1);
 	break;
       default:
 	break;
