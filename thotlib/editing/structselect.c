@@ -1788,12 +1788,22 @@ void ExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin,
 	    {
 	      FirstSelectedElement = FixedElement;
 	      FirstSelectedChar = FixedChar;
-	      while (rank == 1)
+	      if (rank == 1)
 		{
-		  /* move the end selection to the end of the previous element */
-		  pEl = LastLeaf (PreviousLeaf (pEl));
-		  if (pEl && pEl->ElTerminal && pEl->ElLeafType == LtText)
-		    rank =  pEl->ElVolume + 1;
+		  pElP = pEl;
+		  while (rank == 1)
+		    {
+		      /* move the end selection to the end of the previous element */
+		      pEl = LastLeaf (PreviousLeaf (pEl));
+		      if (pEl && pEl->ElTerminal && pEl->ElLeafType == LtText)
+			rank =  pEl->ElVolume + 1;
+		    }
+		  if (pEl == oldLastEl && rank == oldLastChar)
+		    {
+		      /* probably the user wanted to move to the next element */
+		      pEl = pElP;
+		      rank = 1;
+		    }
 		}
 	      LastSelectedElement = pEl;
 	      LastSelectedChar = rank;
@@ -1811,6 +1821,7 @@ void ExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin,
 	    /* next element */
 	    {
 	      updateFixed = (FirstSelectedElement == FixedElement);
+	      pElP = FirstSelectedElement;
 	      FirstSelectedElement = FirstLeaf (NextElement (FirstSelectedElement));
 	      if (updateFixed)
 		FixedElement = FirstSelectedElement;
@@ -1819,7 +1830,11 @@ void ExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin,
 		{
 		  if (updateFixed && FirstSelectedChar == FixedChar) 
 		    FixedChar = 1;
-		  FirstSelectedChar = 1;
+		  if (FirstSelectedElement == oldFirstEl && oldFirstChar == 1)
+		    /* probably the user wanted to move to the previous element */
+		    FirstSelectedElement = pElP;
+		  else
+		    FirstSelectedChar = 1;
 		}
 	      else
 		{
