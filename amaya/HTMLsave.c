@@ -663,130 +663,124 @@ void DoSaveObjectAs (void)
   ----------------------------------------------------------------------*/
 void SaveDocumentAs (Document doc, View view)
 {
-   char           tempname[MAX_LENGTH];
-   int            i;
+  char                tempname[MAX_LENGTH];
+  int                 i;
 
-   /* Protection against multiple invocations of this function */
-   if ((SavingDocument != 0 && SavingDocument != doc) ||
-       SavingObject != 0)
-      return;
-   if (DocumentURLs[doc] == 0)
-      return;
+  /* Protection against multiple invocations of this function */
+  if ((SavingDocument && SavingDocument != doc) || SavingObject)
+    return;
+  if (DocumentURLs[doc] == 0)
+    return;
 
-   TextFormat = (DocumentTypes[doc] == docText ||
-		 DocumentTypes[doc] == docCSS ||
-		 DocumentTypes[doc] == docSource);
+  TextFormat = (DocumentTypes[doc] == docText ||
+		DocumentTypes[doc] == docCSS ||
+		DocumentTypes[doc] == docSource);
+  
+  /*
+  ** initialize the user MIME type and charset global variables 
+  */
+  /* if there's no MIME type for this document, infer one */
+  if (DocumentMeta[doc] && DocumentMeta[doc]->content_type)
+    strcpy (UserMimeType, DocumentMeta[doc]->content_type);
+  else if (DocumentTypes[doc] == docImage)
+    strcpy (UserMimeType, DocImageMimeType (doc));
+  else
+    {
+      if (DocumentTypes[doc] == docHTML)
+	{
+	  if (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat &&
+	      AM_UseXHTMLMimeType () )
+	    strcpy (UserMimeType, AM_XHTML_MIME_TYPE);
+	  else
+	    strcpy (UserMimeType, "text/html");
+	}
+      else if (DocumentTypes[doc] == docText)
+	strcpy (UserMimeType, "text/plain");
+      else if (DocumentTypes[doc] == docSVG)
+	strcpy (UserMimeType, AM_SVG_MIME_TYPE);
+      else if (DocumentTypes[doc] == docMath)
+	strcpy (UserMimeType, AM_MATHML_MIME_TYPE);
+      else if (DocumentTypes[doc] == docXml)
+	strcpy (UserMimeType, AM_GENERIC_XML_MIME_TYPE);
+      else
+	UserMimeType[0] = EOS;
+    }
 
-   /*
-   ** initialize the user MIME type and charset global variables 
-   */
+  /* charset */
+  if (DocumentMeta[doc] && DocumentMeta[doc]->charset)
+    strcpy (UserCharset, DocumentMeta[doc]->charset);
+  else
+    UserCharset[0] = EOS;
 
-   /* if there's no MIME type for this document, infer one */
-   if (DocumentMeta[doc] && DocumentMeta[doc]->content_type)
-     strcpy (UserMimeType, DocumentMeta[doc]->content_type);
-   else if (DocumentTypes[doc] == docImage)
-     strcpy (UserMimeType, DocImageMimeType (doc));
-   else
-     {
-       if (
-/*#ifdef _SVGLIB
-	   DocumentTypes[doc] == docLibrary ||
-#endif*/ /* _SVGLIB */
-	   DocumentTypes[doc] == docHTML)
-	 {
-	   if (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat &&
-	       AM_UseXHTMLMimeType () )
-	     strcpy (UserMimeType, AM_XHTML_MIME_TYPE);
-	   else
-	     strcpy (UserMimeType, "text/html");
-	 }
-       else if (DocumentTypes[doc] == docText)
-	 strcpy (UserMimeType, "text/plain");
-       else if (DocumentTypes[doc] == docSVG)
-	 strcpy (UserMimeType, AM_SVG_MIME_TYPE);
-       else if (DocumentTypes[doc] == docMath)
-	 strcpy (UserMimeType, AM_MATHML_MIME_TYPE);
-       else if (DocumentTypes[doc] == docXml)
-	 strcpy (UserMimeType, AM_GENERIC_XML_MIME_TYPE);
-       else
-	 UserMimeType[0] = EOS;
-     }
+  /* memorize the current document */
+  if (SavingDocument == 0)
+    {
+      SavingDocument = doc;
+      strcpy (tempname, DocumentURLs[doc]);
+      /* suppress compress suffixes from tempname */
+      i = strlen (tempname) - 1;
+      if (i > 2 && !strcmp (&tempname[i-2], ".gz"))
+	{
+	  tempname[i-2] = EOS;
+	  TtaFreeMemory (DocumentURLs[doc]);
+	  DocumentURLs[doc] = TtaStrdup (tempname);
+	}
+      else if (i > 1 && !strcmp (&tempname[i-1], ".Z"))
+	{
+	  tempname[i-1] = EOS;
+	  TtaFreeMemory (DocumentURLs[doc]);
+	  DocumentURLs[doc] = TtaStrdup (tempname);
+	}
 
-   /* charset */
-   if (DocumentMeta[doc] && DocumentMeta[doc]->charset)
-     strcpy (UserCharset, DocumentMeta[doc]->charset);
-   else
-     UserCharset[0] = EOS;
+      /* if it is a Web document use the current SavePath */
+      if (IsW3Path (tempname))
+	{
+	  TtaExtractName (tempname, SavePath, SaveName);
+	  if (DocumentMeta[doc] && DocumentMeta[doc]->content_location)
+	    {
+	      /* use content-location instead of the loading name */
+	      strcpy (SaveName, DocumentMeta[doc]->content_location);
+	      strcpy (tempname, SavePath);
+	      strcat (tempname, URL_STR);
+	      strcat (tempname, SaveName);
+	    }
+	  else if (SaveName[0] == EOS)
+	    {
+	      DefaultName = TtaGetEnvString ("DEFAULTNAME");
+	      if (DefaultName == NULL || *DefaultName == EOS)
+		DefaultName = StdDefaultName;
+	      strcpy (SaveName, DefaultName);
+	      strcat (tempname, SaveName);
+	    }
+	  
+	  /* add the suffix .html for HTML documents */
+	  if (!TextFormat &&
+	      DocumentTypes[SavingDocument] != docMath &&
+	      DocumentTypes[SavingDocument] != docSVG &&
+	      DocumentTypes[SavingDocument] != docImage &&
+	      !IsHTMLName (SaveName) && !IsXMLName (SaveName))
+	    {
+	      strcat (SaveName, ".html");
+	      strcpy (tempname, SavePath);
+	      strcat (tempname, URL_STR);
+	      strcat (tempname, SaveName);
+	    }
+	}
+      else
+	{
+	  TtaExtractName (tempname, SavePath, SaveName);
+	}
+      TtaSetDialoguePosition ();
+    }
+  else
+    {
+      strcpy (tempname, SavePath);
+      strcat (tempname, DIR_STR);
+      strcat (tempname, SaveName);
+    }
 
-   /* memorize the current document */
-   if (SavingDocument == 0)
-     {
-       SavingDocument = doc;
-       strcpy (tempname, DocumentURLs[doc]);
-       /* suppress compress suffixes from tempname */
-       i = strlen (tempname) - 1;
-       if (i > 2 && !strcmp (&tempname[i-2], ".gz"))
-	 {
-	   tempname[i-2] = EOS;
-	   TtaFreeMemory (DocumentURLs[doc]);
-	   DocumentURLs[doc] = TtaStrdup (tempname);
-	 }
-       else if (i > 1 && !strcmp (&tempname[i-1], ".Z"))
-	 {
-	   tempname[i-1] = EOS;
-	   TtaFreeMemory (DocumentURLs[doc]);
-	   DocumentURLs[doc] = TtaStrdup (tempname);
-	 }
-
-       /* if it is a Web document use the current SavePath */
-       if (IsW3Path (tempname))
-	 {
-	     TtaExtractName (tempname, SavePath, SaveName);
-	     if (DocumentMeta[doc] && DocumentMeta[doc]->content_location)
-	       {
-		 /* use content-location instead of the loading name */
-		 strcpy (SaveName, DocumentMeta[doc]->content_location);
-		 strcpy (tempname, SavePath);
-		 strcat (tempname, URL_STR);
-		 strcat (tempname, SaveName);
-	       }
-	     else if (SaveName[0] == EOS)
-	       {
-		 DefaultName = TtaGetEnvString ("DEFAULTNAME");
-		 if (DefaultName == NULL || *DefaultName == EOS)
-		   DefaultName = StdDefaultName;
-		 strcpy (SaveName, DefaultName);
-		 strcat (tempname, SaveName);
-	       }
-
-	   /* add the suffix .html for HTML documents */
-	   if (!TextFormat &&
-	       DocumentTypes[SavingDocument] != docMath &&
-	       DocumentTypes[SavingDocument] != docSVG &&
-	       DocumentTypes[SavingDocument] != docImage &&
-	       !IsHTMLName (SaveName) && !IsXMLName (SaveName))
-	     {
-	       strcat (SaveName, ".html");
-	       strcpy (tempname, SavePath);
-	       strcat (tempname, URL_STR);
-	       strcat (tempname, SaveName);
- 	     }
-	 }
-       else
-	 {
-	   TtaExtractName (tempname, SavePath, SaveName);
-	 }
-       TtaSetDialoguePosition ();
-     }
-   else
-     {
-       strcpy (tempname, SavePath);
-       strcat (tempname, DIR_STR);
-       strcat (tempname, SaveName);
-     }
-
-   /* display the dialog box */
-   InitSaveForm (doc, 1, tempname);
+  /* display the dialog box */
+  InitSaveForm (doc, 1, tempname);
 }
 
 /*----------------------------------------------------------------------
@@ -1149,19 +1143,15 @@ void RestartParser (Document doc, char *localFile,
   ----------------------------------------------------------------------*/
 void RedisplaySourceFile (Document doc)
 {
-  char             *localFile;
-  char	      documentname[MAX_LENGTH];
-  char	      tempdir[MAX_LENGTH];
+  char               *localFile;
+  char	              documentname[MAX_LENGTH];
+  char	              tempdir[MAX_LENGTH];
   NotifyElement       event;
 
   if (DocumentTypes[doc] == docHTML ||
-#ifdef _SVGLIB
       DocumentTypes[doc] == docLibrary ||
-#endif /* _SVGLIB */
       DocumentTypes[doc] == docSVG ||
-#ifdef XML_GENERIC      
       DocumentTypes[doc] == docXml ||
-#endif /* XML_GENERIC */
       DocumentTypes[doc] == docMath)
     /* it's a structured document */
     if (DocumentSource[doc])
@@ -1190,11 +1180,11 @@ void RedisplaySourceFile (Document doc)
 static ThotBool SaveDocumentLocally (Document doc, char *directoryName,
 				     char *documentName)
 {
-  char             *ptr;
-  char              tempname[MAX_LENGTH];
-  char              docname[100];
-  ThotBool          ok;
-  LoadedImageDesc  *pImage;
+  LoadedImageDesc    *pImage;
+  char               *ptr;
+  char                tempname[MAX_LENGTH];
+  char                docname[100];
+  ThotBool            ok;
 
 #ifdef AMAYA_DEBUG
   fprintf(stderr, "SaveDocumentLocally :  %s / %s\n", directoryName, documentName);
@@ -1204,9 +1194,9 @@ static ThotBool SaveDocumentLocally (Document doc, char *directoryName,
   strcat (tempname, DIR_STR);
   strcat (tempname, documentName);
   ok = FALSE;
-
   if (SaveAsText) 
     {
+      /* the document will be exported without line numbers */
       SetInternalLinks (doc);
       if (DocumentTypes[doc] == docHTML)
          ok = TtaExportDocument (doc, tempname, "HTMLTT");
@@ -1248,8 +1238,8 @@ static ThotBool SaveDocumentLocally (Document doc, char *directoryName,
 	      ok = TRUE;
 	    }
 	  else
-	    /* remote to local */
 	    {
+	    /* remote to local */
 	      /* copy the copy from the cache to its new destination and
 		 updated the pImage description (or maybe just erase it? */
 	      pImage = SearchLoadedDocImage (doc, DocumentURLs[doc]);
@@ -1280,8 +1270,6 @@ static ThotBool SaveDocumentLocally (Document doc, char *directoryName,
 	  /* Change the document name in all views */
 	  TtaSetDocumentName (doc, docname);
 	  SetWindowTitle (doc, doc, 0);
-	  if (DocumentSource[doc])
-	     SetWindowTitle (doc, DocumentSource[doc], 0);
 	  /* save a local copy of the current document */
 	  ptr = GetLocalPath (doc, tempname);
 	  if (DocumentTypes[doc] == docImage)
@@ -1871,6 +1859,8 @@ void Synchronize (Document doc, View view)
   ----------------------------------------------------------------------*/
 void SaveDocument (Document doc, View view)
 {
+  Document	      xmlDoc;
+  DisplayMode         dispMode;
   NotifyElement       event;
   char                tempname[MAX_LENGTH];
   char                localFile[MAX_LENGTH];
@@ -1878,20 +1868,16 @@ void SaveDocument (Document doc, View view)
   char                tempdir[MAX_LENGTH];
   char               *ptr;
   int                 i;
-  Document	      xmlDoc;
-  DisplayMode         dispMode;
   ThotBool            ok, newLineNumbers;
 
-#ifdef ANNOTATIONS
   if (DocumentTypes[doc] == docAnnot) 
     {
+#ifdef ANNOTATIONS
       ANNOT_SaveDocument (doc, view);
+#endif /* ANNOTATIONS */
       return;
     }
-  else
-#endif /* ANNOTATIONS */
-
-  if (SavingDocument != 0 || SavingObject != 0)
+  else if (SavingDocument != 0 || SavingObject != 0)
     return;
   else if (!TtaIsDocumentModified (doc))
     {
@@ -1902,21 +1888,15 @@ void SaveDocument (Document doc, View view)
   TextFormat = (DocumentTypes[doc] == docText ||
 		DocumentTypes[doc] == docCSS ||
 		DocumentTypes[doc] == docSource);
-
   /* if it's a source document, get the corresponding HTML document */
   if (DocumentTypes[doc] == docSource)
      xmlDoc = GetDocFromSource (doc);
   else
      xmlDoc = 0;
-
   SavingDocument = doc;
-
   ok = FALSE;
-  newLineNumbers = FALSE;
-
   /* attempt to save through network if possible */
   strcpy (tempname, DocumentURLs[doc]);
-
   /* don't save files that were originally compressed (unless we know how
      to compress them again */
   i = strlen (tempname) - 1;
@@ -1949,14 +1929,17 @@ void SaveDocument (Document doc, View view)
 
   /* the suffix determines the output format */
   SaveAsXML = IsXMLName (tempname) || DocumentMeta[doc]->xmlformat;
-
   /* We automatically save a HTML document as a XML one 
      when we have a xhtml profile */
-    if (!SaveAsXML &&
-	(TtaGetDocumentProfile(doc) == L_Basic ||
-	 TtaGetDocumentProfile(doc) == L_Xhtml11))
-      SaveAsXML = TRUE;
-
+  if (!SaveAsXML &&
+      (TtaGetDocumentProfile(doc) == L_Basic ||
+       TtaGetDocumentProfile(doc) == L_Xhtml11))
+    SaveAsXML = TRUE;
+  /* the document will be exported with line numbers */
+  newLineNumbers = (DocumentTypes[doc] != docText &&
+		    DocumentTypes[doc] != docCSS &&
+		    DocumentTypes[doc] != docLog &&
+		    DocumentTypes[doc] != docImage);
   if (IsW3Path (tempname))
     /* it's a remote document */
     {
@@ -1969,7 +1952,6 @@ void SaveDocument (Document doc, View view)
 	    TtaFreeMemory (DocumentMeta[doc]->content_location);
 	  ptr = TtaGetEnvString ("DEFAULTNAME");
 	  DocumentMeta[doc]->content_location = TtaStrdup (ptr);
-
 #if 0  /* JK, trying to change this */
 	  /* need to update the document url */
 	  res = strlen(tempname) - 1;
@@ -1978,28 +1960,27 @@ void SaveDocument (Document doc, View view)
 	  strcat (tempname, DefaultName);
 	  TtaFreeMemory (DocumentURLs[doc]);
 	  DocumentURLs[doc] = TtaStrdup (tempname);
-
 	  if (DocumentTypes[doc] == docHTML)
-	      /* it's an HTML document. It could have a source doc */
-	      /* change the URL of the source document if it exists */
-	     {
-	     if (DocumentSource[doc])
+	    /* it's an HTML document. It could have a source doc */
+	    /* change the URL of the source document if it exists */
+	    {
+	      if (DocumentSource[doc])
 		/* it has a source document */
 		{
-		TtaFreeMemory (DocumentURLs[DocumentSource[doc]]);
-		DocumentURLs[DocumentSource[doc]] = TtaStrdup (tempname);
+		  TtaFreeMemory (DocumentURLs[DocumentSource[doc]]);
+		  DocumentURLs[DocumentSource[doc]] = TtaStrdup (tempname);
 		}
-	      }
+	    }
 	  else if (DocumentTypes[doc] == docSource)
-	      {
+	    {
 	      /* it's a source document. Change the URL of the corresponding
 		 HTML document */
 	      if (xmlDoc)
-		 {
-		 TtaFreeMemory (DocumentURLs[xmlDoc]);
-		 DocumentURLs[xmlDoc] = TtaStrdup (tempname);
-		 }
-	      }
+		{
+		  TtaFreeMemory (DocumentURLs[xmlDoc]);
+		  DocumentURLs[xmlDoc] = TtaStrdup (tempname);
+		}
+	    }
 #endif
 	}
 
@@ -2008,75 +1989,61 @@ void SaveDocument (Document doc, View view)
           will always return something at this point */
       strcpy (localFile, ptr);
       TtaFreeMemory (ptr);
-      
       /* it's a complete name: save it */
       if (ok)
 	{
 	  if (TextFormat)
-	    {
-	      ok = SaveObjectThroughNet (doc, view, DocumentURLs[doc],
+	    ok = SaveObjectThroughNet (doc, view, DocumentURLs[doc],
 					 FALSE, TRUE);
-	      if (DocumentTypes[doc] == docSource)
-		/* it's a source file. lines have been renumbered */
-		newLineNumbers = TRUE;
-	    }
 	  else
-	    {
-	      ok = SaveDocumentThroughNet (doc, view, DocumentURLs[doc],
-					   FALSE, TRUE, TRUE);
-	      newLineNumbers = TRUE;
-	    }
+	    ok = SaveDocumentThroughNet (doc, view, DocumentURLs[doc],
+					 FALSE, TRUE, TRUE);
 	}
     }
   else
-    /* it's a local document */
     {
+      /* it's a local document */
       strcpy (localFile, tempname);
       if (TextFormat)
-	if (DocumentTypes[doc] == docSource)
-	  /* it's a source file. renumber lines */
-	  {
+	{
+	  if (DocumentTypes[doc] == docSource)
+	    /* it's a source file. renumber lines */
 	    ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, "TextFileT");
-	    newLineNumbers = TRUE;
-	  }
-	else
-	  {
-	    ok = TtaExportDocument (doc, tempname, "TextFileT");
-	    if (DocumentTypes[doc] == docCSS)
-	      /* reapply the CSS to relative documents */
-	      UpdateStyleSheet (DocumentURLs[doc], tempname);
-	  }
+	  else
+	    {
+	      ok = TtaExportDocument (doc, tempname, "TextFileT");
+	      if (DocumentTypes[doc] == docCSS)
+		/* reapply the CSS to relative documents */
+		UpdateStyleSheet (DocumentURLs[doc], tempname);
+	    }
+	}
       else
 	{
 	  SetNamespacesAndDTD (doc);
-	  if (
-#ifdef _SVGLIB
-	      DocumentTypes[doc] == docLibrary ||
-#endif /* _SVGLIB */
-	      DocumentTypes[doc] == docHTML)
-	    if (SaveAsXML)
-	      {
-		if (TtaGetDocumentProfile(doc) == L_Xhtml11)
-		  ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
-							    "HTMLT11");
-		else
-		  ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
-							    "HTMLTX");
-		DocumentMeta[doc]->xmlformat = TRUE;
-	      }
-	    else
-	      {
-		ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, "HTMLT");
-		DocumentMeta[doc]->xmlformat = FALSE;
-	      }
+	  if (DocumentTypes[doc] == docLibrary || DocumentTypes[doc] == docHTML)
+	    {
+	      if (SaveAsXML)
+		{
+		  if (TtaGetDocumentProfile(doc) == L_Xhtml11)
+		    ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
+							      "HTMLT11");
+		  else
+		    ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
+							      "HTMLTX");
+		  DocumentMeta[doc]->xmlformat = TRUE;
+		}
+	      else
+		{
+		  ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, "HTMLT");
+		  DocumentMeta[doc]->xmlformat = FALSE;
+		}
+	    }
 	  else if (DocumentTypes[doc] == docSVG)
 	    ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, "SVGT");
 	  else if (DocumentTypes[doc] == docMath)
 	    ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, "MathMLT");
 	  else if (DocumentTypes[doc] == docXml)
 	    ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, NULL);
-	  
-	  newLineNumbers = TRUE;
 	}
       /* save a local copy of the current document */
       if (xmlDoc)
@@ -2089,31 +2056,23 @@ void SaveDocument (Document doc, View view)
 
   /* restore original display mode */
   TtaSetDisplayMode (doc, dispMode);
-
   SavingDocument = 0;
   if (newLineNumbers)
     {
      /* line numbers have been changed in the saved document */
-     if (
-#ifdef _SVGLIB
-	 DocumentTypes[doc] == docLibrary ||
-#endif /* _SVGLIB */
-	 DocumentTypes[doc] == docHTML)
+      if (DocumentTypes[doc] != docSource)
         /* It's a HTML document. If the source view is open, redisplay the
 	   source. */
        RedisplaySourceFile (doc);
-     else if (DocumentTypes[doc] == docSource)
+     else if (DocumentTypes[doc] == docSource && xmlDoc)
        {
 	/* It's a source document. Reparse the corresponding HTML document */
-	if (xmlDoc)
-	   {
-	   TtaExtractName (localFile, tempdir, documentname);
-	   RestartParser (xmlDoc, localFile, tempdir, documentname);
-	   TtaSetDocumentUnmodified (xmlDoc);
-	   /* Synchronize selections */
-	   event.document = doc;
-	   SynchronizeSourceView (&event);
-	   }
+	 TtaExtractName (localFile, tempdir, documentname);
+	 RestartParser (xmlDoc, localFile, tempdir, documentname);
+	 TtaSetDocumentUnmodified (xmlDoc);
+	 /* Synchronize selections */
+	 event.document = doc;
+	 SynchronizeSourceView (&event);
        }
     }
   if (ok)
@@ -2996,8 +2955,6 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
       docModified = TtaIsDocumentModified (doc);
       /* name of local temporary files */
       oldLocal = GetLocalPath (doc, DocumentURLs[doc]);
-      newLocal = GetLocalPath (doc, SavePath);
-
       /* adjust the charset and MIME type */
       if (user_charset && *user_charset)
 	{
@@ -3150,6 +3107,11 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
 		{
 	          TtaFreeMemory (DocumentURLs[DocumentSource[doc]]);
 	          DocumentURLs[DocumentSource[doc]] = TtaStrdup (documentFile);
+		  /* update content_type and charset */
+		  TtaFreeMemory (DocumentMeta[DocumentSource[doc]]->content_type);
+		  DocumentMeta[DocumentSource[doc]]->content_type = TtaStrdup (DocumentMeta[doc]->content_type);
+		  TtaFreeMemory (DocumentMeta[DocumentSource[doc]]->charset);
+		  DocumentMeta[DocumentSource[doc]]->charset = TtaStrdup (DocumentMeta[doc]->charset);
 		}
 	      if (DocumentMeta[xmlDoc]->method == CE_TEMPLATE)
 		{
@@ -3177,6 +3139,7 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
 	  /* Sucess of the operation */
 	  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_SAVED), documentFile);
 	  /* remove the previous temporary file */
+	  newLocal = GetLocalPath (doc, documentFile);
 	  if (oldLocal && !SaveAsText && strcmp (oldLocal, newLocal))
 	    /* free the previous temporary file */
 	    TtaFileUnlink (oldLocal);

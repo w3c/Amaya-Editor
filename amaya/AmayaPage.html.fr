@@ -96,7 +96,7 @@
           style="font: 24px helvetica; font-weight: bold; fill: #488B9B;">AMAYA
     </text>
     <text id="version" x="362px" y="313"
-          style="font: bold 16px italic; fill: #0192BF;">Release 7.0
+          style="font: bold 16px italic; fill: #0192BF;">Release 7.1
     </text>
     <g id="polygonMask" style="stroke: none;">
       <polygon style="fill: #0192BF;" points="0,0 0,170 78,148"
