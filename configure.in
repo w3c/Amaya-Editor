@@ -63,8 +63,53 @@ AC_CHECK_LIB(dl, dlopen)
 AC_PATH_X
 AC_PATH_XTRA
 
-X_PRE_LIBS="-lXp ${X_PRE_LIBS}"
+dnl
+dnl Check for libXp
+dnl
 
+for ac_dir in               \
+  /usr/X11R6/lib        \
+  /usr/X11R5/lib        \
+                            \
+  /usr/lib/X11R6        \
+  /usr/lib/X11R5        \
+                            \
+  /usr/local/X11R6/lib  \
+  /usr/local/X11R5/lib  \
+                            \
+  /usr/local/lib/X11R6  \
+  /usr/local/lib/X11R5  \
+                            \
+  /usr/X11/lib          \
+  /usr/lib/X11          \
+  /usr/local/X11/lib    \
+  /usr/local/lib/X11    \
+                            \
+  /usr/X386/lib         \
+  /usr/x386/lib         \
+  /usr/XFree86/lib/X11  \
+                            \
+  /usr/dt/lib           \
+                            \
+  /usr/lib              \
+  /usr/local/lib        \
+  /usr/unsupported/lib  \
+  /usr/athena/lib       \
+  /usr/local/x11r5/lib  \
+  /usr/lpp/Xamples/lib  \
+                            \
+  /usr/lesstif/lib      \
+  /usr/local/lesstif/lib\
+  /usr/gnu/lesstif/lib  \
+  $HOME/lesstif/lib     \
+  ; \
+do
+  if test -r "$ac_dir/libXp.a" -o -r "$ac_dir/libXp.so"; then
+     echo "\nfound libXp.a\n"
+     X_PRE_LIBS="-lXp ${X_PRE_LIBS}"
+     break
+  fi
+done
 dnl
 dnl Checks for header files.
 dnl
