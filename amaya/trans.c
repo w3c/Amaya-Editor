@@ -2530,6 +2530,7 @@ View                view;
   StructureTree       node;
   boolean	       ok;
   strTransSet*	       transSets [4] = {NULL,NULL,NULL,NULL};
+  SSchema	      transSchema;
   
   strMatchEnv.SourceTree = NULL;
   strMatchEnv.ListSubTrees = NULL;
@@ -2553,7 +2554,7 @@ View                view;
 	    {
 	      elType = TtaGetElementType (elemSelect);
 	      strcpy (nameSet, TtaGetSSchemaName (elType.ElSSchema));
-	      ok =  ppStartParser (nameSet, &CourTransSet) || ok;
+	      ok =  ppStartParser (nameSet, elType.ElSSchema, &CourTransSet) || ok;
 	      if (i < 4 && ok && (i == 0 || CourTransSet != transSets[i-1]))
 		{
 		  transSets [i++] = CourTransSet;
@@ -2570,6 +2571,7 @@ View                view;
 	  elemSelect = myFirstSelect;
 	  elType = TtaGetElementType (elemSelect);
 	  strcpy (nameSet, TtaGetSSchemaName (elType.ElSSchema));
+	  transSchema = elType.ElSSchema;
 	  while (elemSelect != NULL)
 	    {
 	      elType = TtaGetElementType (elemSelect);
@@ -2580,10 +2582,11 @@ View                view;
 	      else
 		{
 		  strcpy (nameSet, "");
+		  transSchema = NULL;
 		  elemSelect = NULL;
 		}
 	    }
-	  ok = ppStartParser (nameSet, &CourTransSet);
+	  ok = ppStartParser (nameSet, transSchema, &CourTransSet);
 	  if (ok)
 	    {
 	      transSets [0] = CourTransSet;
@@ -2706,6 +2709,7 @@ Document            doc;
   strMatch           *sm;
   StructureTree       node;
   char               *tag, *nameSet;
+  SSchema	      transSchema;
 
   strMatchEnv.SourceTree = NULL;
   strMatchEnv.ListSubTrees = NULL;
@@ -2732,7 +2736,7 @@ Document            doc;
 	      if (TtaSameSSchemas (elType.ElSSchema, resultType.ElSSchema))
 		{
 		  strcpy (nameSet, TtaGetSSchemaName (elType.ElSSchema));
-		  ok =  ppStartParser (nameSet, &CourTransSet);
+		  ok =  ppStartParser (nameSet, elType.ElSSchema, &CourTransSet);
 		}
 	      if (CourTransSet == NULL)
 		elemSelect = TtaGetParent (elemSelect);
@@ -2743,6 +2747,7 @@ Document            doc;
 	  elemSelect = myFirstSelect;
 	  elType = TtaGetElementType (elemSelect);
 	  strcpy (nameSet, TtaGetSSchemaName(elType.ElSSchema));
+	  transSchema = elType.ElSSchema;
 	  while (elemSelect != NULL)
 	    {
 	      elType = TtaGetElementType (elemSelect);
@@ -2755,10 +2760,11 @@ Document            doc;
 	      else
 		{
 		  strcpy (nameSet, "");
+		  transSchema = NULL;
 		  elemSelect = NULL;
 		}
 	    }
-	  ok = ppStartParser (nameSet, &CourTransSet);
+	  ok = ppStartParser (nameSet, transSchema, &CourTransSet);
 	}
     }
   if (ok)

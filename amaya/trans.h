@@ -166,6 +166,9 @@ typedef struct _TransSet
 {
   /* name of the transformation set (eg, name of file without suffix .trans) */
   char		      TransFileName [20];
+#ifndef PPSTANDALONE
+  SSchema	      Schema;
+#endif
   time_t	      timeLastWrite;
   /* number of transformations */
   int                 NbTrans;

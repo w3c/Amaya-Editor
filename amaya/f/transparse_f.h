@@ -8,12 +8,14 @@
 
 extern void FreeList ( strListSymb * pl );
 extern int ppStartParser ( char *name,
+                           SSchema tStrSchema,
                            strTransSet **resTrSet );
 
 #else /* __STDC__ */
 
 extern void FreeList (/* strListSymb * pl */);
 extern int ppStartParser (/* char *name,
+                           SSchema tStrSchema,
                              strTransSet **resTrSet */);
 
 #endif /* __STDC__ */

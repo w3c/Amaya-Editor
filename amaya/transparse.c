@@ -497,10 +497,11 @@ static void         ProcessSymbol ()
 		sd = sd->Next;
 	     sd->Next = ppSymb;
 	  }
+	schema = ppTransSet->Schema;
 	if (strcmp (ppSymb->Tag, "*") && (MapGI (ppSymb->Tag, &schema) == -1))
 	  {
 	     ppError = TRUE;
-	     sprintf (msgBuffer, "unknown tag </%s>", ppSymb->Tag);
+	     sprintf (msgBuffer, "unknown element %s", ppSymb->Tag);
 	     ErrorMessage (msgBuffer);
 	  }
      }
@@ -1636,6 +1637,7 @@ unsigned char       c;
      {
 	strcpy (ppNode->Tag, inputBuffer);
 	ppLgBuffer = 0;
+	schema = ppTransSet->Schema;
 	if (MapGI (ppNode->Tag, &schema) == -1)
 	  {
 	     ppError = TRUE;
@@ -1671,6 +1673,7 @@ unsigned char       c;
      {
 	strcpy (ppNode->Tag, inputBuffer);
 	ppLgBuffer = 0;
+	schema = ppTransSet->Schema;
 	if (MapGI (ppNode->Tag, &schema) == -1)
 	  {
 	     ppError = TRUE;
@@ -1786,6 +1789,7 @@ unsigned char       c;
     {
       strcpy (ppNode->Tag, inputBuffer);
       ppLgBuffer = 0;
+      schema = ppTransSet->Schema;
       if (strcmp (ppNode->Tag, "*") && 
 	  strcmp (ppNode->Tag, "#") &&
 	  ppNode->Tag[0] != '\"' &&
@@ -2416,10 +2420,11 @@ static void         initpparse ()
    	ppStartParser loads the file Directory/FileName for parsing	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 ppStartParser (char *name, strTransSet **resTrSet)
+int                 ppStartParser (char *name,SSchema tStrSchema, strTransSet **resTrSet)
 #else
-int                 ppStartParser (name, resTrSet)
+int                 ppStartParser (name, tStrSchema, resTrSet)
 char               *name;
+SSchema            tStrSchema;
 strTransSet        **resTrSet;
 #endif
 {
@@ -2447,6 +2452,7 @@ strTransSet        **resTrSet;
      {
        ppTransSet = TtaGetMemory (sizeof (strTransSet));
        strcpy (ppTransSet->TransFileName, name);
+       ppTransSet->Schema = tStrSchema;
        ppTransSet->timeLastWrite = (time_t) 0;
        ppTransSet->NbTrans = 0;
        ppTransSet->MaxDepth = 0;
@@ -2551,7 +2557,7 @@ void                main ()
    strNodeDesc           *nd;
    strRuleDesc           *pr;
 
-   ppStartParser ("test.trans");
+   ppStartParser ("test.trans",NULL,NULL);
    printf ("\n");
    td = strMatchEnv.Transformations;
    while (td)
