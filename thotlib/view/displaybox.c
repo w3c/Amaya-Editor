@@ -301,8 +301,11 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
 	  pBox->BxAbstractBox->AbShape == '{' ||
 	  pBox->BxAbstractBox->AbShape == '}')
 	{
-	  /* get the regular font for that box */
-	  GetFontAndIndexFromSpec (32, pBox->BxFont, &font);
+	  /* get the regular font for that box (not the Symbol font used by
+	     the SYMBOL element, but the regular font of its parent */
+	  if (pBox->BxAbstractBox->AbEnclosing &&
+	      pBox->BxAbstractBox->AbEnclosing->AbBox)
+	    GetFontAndIndexFromSpec (32, pBox->BxAbstractBox->AbEnclosing->AbBox->BxFont, &font);
 	  if (font && pBox->BxH <= (int) (1.3 * FontHeight (font)))
 	    /* this character is almost the height of an ordinary character;
 	       use the regular font to display it */
