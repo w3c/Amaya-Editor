@@ -27,7 +27,7 @@
 </table>
 
 <div id="Saving">
-<h2><a name="L1052">Saving and Publishing documents</a></h2>
+<h2><a name="L1052">Sauver et Publier des documents</a></h2>
 
 <p>Amaya allows you to save documents either in HTML or as text format.</p>
 

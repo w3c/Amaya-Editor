@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 <head>
-  <title>Images and Client-side image maps</title>
+  <title>Images et Zones actives</title>
   <meta name="GENERATOR" content="amaya V3.2.1" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="fr" lang="fr">
 
 <table border="0" width="100%" summary="toc">
   <tbody>
@@ -28,7 +28,7 @@
 </table>
 
 <div id="Client-sid">
-<h2><a name="L1013">Images and Client-side image maps</a></h2>
+<h2><a name="L1013">Images et Zones actives</a></h2>
 
 <h3><a name="Adding">Ajouter une image</a></h3>
 
@@ -37,107 +37,114 @@
 border="0" src="../Icons/Image.gif" align="middle" longdesc="longdesc.htm" />
 (ou encore utilisez le raccourci clavier control-t, control-i pour Unix). Ceci
 fait apparaître une boîte de dialogue qui vous permet de rentrer le nom du
-fichier et le <a href="#Alternative">texte de remplacement</a> ('ALT' text) de
-l'image désirée. Si vous souhaitez fournir une longue description (par exemple
-si votre image présente une information complexe) vous devriez le faire dans
-un document séparé et le relier en donnant l'URI comme une
-<strong>longdesc</strong>, également disponible dans le menu
-<strong>Attributs</strong>. To help find an image file you can enter a
-<strong>filter</strong> field, and use the <strong>filter</strong> button, so
-the dialog lists only the files which match your pattern.</p>
+fichier et le <a href="#Alternative">texte de remplacement</a> ('ALT' texte)
+de l'image désirée. Si vous souhaitez fournir une longue description (par
+exemple si votre image présente une information complexe) vous devriez le
+faire dans un document séparé et le relier en donnant l'URI comme un
+descripteur long (<strong>longdesc</strong>), également disponible dans le
+menu <strong>Attributs</strong>. Pour faciliter la recherche d'un fichier
+image vous pouvez entrer une valeur de <strong>filtre</strong>, et utiliser le
+bouton <strong>filtre</strong>, ainsi le dialogue listera seulement les
+fichiers qui correspondent à votre critère.</p>
 
-<h3><a name="Alternative">Alternative Text and Long Descriptions</a></h3>
+<h3><a name="Alternative">Texte de remplacement et descriptions
+longues</a></h3>
 
-<p>For elements such as images (and other multimedia objects) you must provide
-alternative text. This will usually be presented instead of the image by a
-browser with a voice output system, or a Braille display (used by many people
-who are blind). It is also common for users with low-quality connections to
-request the alternative view, as text is transmitted much faster than
-images.</p>
+<p>Pour les éléments comme les images (et autres objets multimedia) vous devez
+fournir un texte de remplacement. Celui ci sera présenté, comme à l'habitude,
+à la place de l'image par un navigateur avec un système de sortie vocal, ou
+une visualisation en Braille (utilisé par de nombreux aveugles). Il est
+également courant que les utilisateurs ayant des connections de mauvaises
+qualité demandent la vue alternée, où le texte est transmis beaucoup plus vite
+que les images.</p>
 
-<p>The alternative text should replace the image in function. For example, if
-the image is used to provide an icon linking to a reference point (the first
-link on this page, to the W3C 'homepage', is such a link) then the title of
-the reference would be a good alternative text.</p>
+<p>Le texte de remplacement devrez remplacer l'image en fonction. Par exemple,
+si l'image est utilisée pour fournir une icône de lien (c'est le cas de
+l'icône du W3C en haut de cette page) ainsi le titre de la page référencée
+serait un bon texte de remplacement.</p>
 
-<p>There are also cases where an image is used for purely visual effect, and
-does not add any information value to the page. In this case it is appropriate
-to use a blank alternative, although that must still be defined - enter two
-double quotes for alternative (eg. alt="").</p>
+<p>Il existe des cas où une image n'est utilisée pour un effet visuel, et
+n'apporte aucune information supplémentaire à la page. Dans ce cas, il est
+approprié d'utiliser un blanc de remplacement, il faut toujours un texte de
+substitution - entrez deux guillemets comme alternative (eg. alt="").</p>
 
-<p>In cases where the image conveys important information which is not
-available from the text of the document you must also provide a description of
-the information. The <strong>longdesc</strong> option of the
-<strong>Attributes</strong> menu allows you to link a description (which is a
-URI - a separate document, or named part of the current document) to the
+<p>Dans les cas où l'image transporte une information importante qui n'est pas
+disponible depuis le texte du document, vous devez fournir une description de
+l'information. L'option <strong>longdesc</strong> du menu
+<strong>Attributs</strong> vous permet de relier une description (qui est un
+URI - un document séparé, ou une partie nommée du document courante) à une
 image.</p>
 
-<p>In order to give an idea of how a page might be presented without the
-images, Amaya provides a <strong>Show Alternate</strong> option in the
-<strong>Views</strong> menu. If the page were spoken, then the <a
-href="Views.html#Alternate">alternate view</a> might simply be read out.
-Without useful alternative text for images, many pages become difficult or
-impossible to navigate, and users are left 'feeling their way in the
-dark'.</p>
+<p>Afin de donner une idée de comment une page sans les images doit être
+présentée, Amaya fournit une option <strong>Montrer la vue alternée</strong>
+dans le menu <strong>Vues</strong>. Dans le cas d'un navigateur oral, la <a
+href="Views.html#Alternate">vue alternée </a>pourrait être simplement lue à
+voix haute. Sans des textes de remplacement pour les images, de nombreuses
+pages deviendraient difficile voire impossible à naviguer, et les utilisateurs
+seraient condamnés à trouver "leur chemin dans le noir".</p>
 
-<h3><a name="Using">Using client-side image maps</a></h3>
+<h3><a name="Using">Utiliser des zones actives</a></h3>
 
-<p><strong>Amaya</strong> allows you to use client-side image maps:</p>
+<p><strong>Amaya</strong> vous donne la possibilité d'utiliser des zones
+actives:</p>
 <ul>
-  <li>To activate an area in a map, double-click on the area with the left
-    mouse button. The URI attached to this area is then fetched.</li>
-  <li>To display existing areas, choose <strong>Show Map Areas</strong> from
-    the <strong>Views</strong> menu.</li>
+  <li>Pour activer une zone dans un plan, double-cliquez sur la zone avec le
+    bouton gauche de la souris. L'URI attaché à cette zone est alors
+  importé.</li>
+  <li>Pour visualiser les zones existantes, choisissez <strong>Montrer les
+    zones actives</strong> du menu <strong>Vues</strong>.</li>
 </ul>
 
-<h3><a name="Creating">Creating client-side image maps</a></h3>
+<h3><a name="Creating">Créer des zones actives</a></h3>
 
-<p>To create a new image map, you insert an image into the document, and
-define areas as links.</p>
+<p>Pour créer une nouvelle zone active, insérez une image à l'intérieur du
+document, et définissez les zones comme des liens.</p>
 
-<p>To create an area in a image, select the image or an existing area of that
-image. Then choose <strong>Rectangle</strong>, <strong>Circle</strong>,
-<strong>Polygon</strong> from the <strong>Area Map</strong> submenu of the
-<strong>Types</strong> menu, depending on the shape of the new area you want
-to create. The <strong>Show map areas</strong> option in the
-<strong>Views</strong> menu will outline each of the existing map areas on an
-image.</p>
+<p>Pour créer une zone dans une image, sélectionnez l'image ou une zone
+existante de cette image. Ensuite, choisissez une des options
+<strong>Rectangle</strong>, <strong>Cercle</strong>, <strong>Polygone</strong>
+depuis le sous-menu <strong>Zone active</strong> du menu
+<strong>Éléments</strong>, suivant la forme de la nouvelle zone que vous
+souhaitez créer. L'option <strong>Montrer les zones actives</strong> du menu
+<strong>Vues</strong> tracera le contour de chaque zone active existante sur
+une image.</p>
 <ul>
-  <li>To create a rectangular or circular area, you must first select the
-    position of one corner by pressing the left mouse button. Keep the button
-    pressed down and move to the position of the opposite corner, then release
-    the button. The area is now defined.</li>
-  <li>For a Polygon, enter each point by clicking the corresponding position
-    with the left mouse button. To indicate the last point, click with the
-    middle button.</li>
+  <li>Pour créer une zone rectangulaire ou circulaire, vous devez tout d'abord
+    sélectionner la position du coin en cliquant avec le bouton gauche de la
+    souris. Laissez le bouton appuyé et déplacé la souris jusqu'à la position
+    du coin opposé, puis lâcher le bouton. La zone est maintenant
+  définie.</li>
+  <li>Pour un polygone, entrez chaque point en cliquant la position
+    correspondante avec le bouton gauche de la souris. Pour indiquer le
+    dernier point, cliquez avec le bouton du milieu.</li>
 </ul>
 
-<p>When the area has been defined, you must first provide <a
-href="#Alternative">alternative text</a> in the dialogue provided and then
-enter the target of the link associated with that area. Just select the target
-(or enter its URI if it is not displayed), in the same way as you <a
-href="Links.html#L245">create links</a>.</p>
+<p>Quand la zone a été définie, vous devez fournir <a href="#Alternative">le
+texte de remplacement</a> dans la boîte de dialogue qui apparaît et entrer la
+cible du lien associée à cette zone. Sélectionnez uniquement la cible (ou
+entrer son URI si elle n'est pas visualisée), de la même manière que pour <a
+href="Links.html#L245">créer des liens</a>.</p>
 
-<h3><a name="L11711">Moving image map areas</a></h3>
+<h3>Déplacer des zones actives<strong></strong></h3>
 
-<p>When the area has been defined, you can move this area:</p>
+<p>Quand une zone a été définie, vous pouvez la déplacer:</p>
 <ul>
-  <li><p>By direct manipulation - combining the <strong>Control key</strong>
-    with the <strong>Left button</strong> of the mouse within an area of image
-    map allows you to move this area.</p>
+  <li><p>Par manipulation directe - en combinant la <strong>touche
+    Control</strong> et le <strong>bouton gauche</strong> de la souris dans la
+    zone active, vous pourrez déplacer cette zone.</p>
   </li>
-  <li><p>By editing the <strong>coords</strong> attribute of the area in the
-    Structure View.</p>
+  <li><p>En éditant l'attribut <strong>coords</strong> de la zone dans la vue
+    structure.</p>
   </li>
 </ul>
 
-<h3><a name="L1171">Resizing image map areas</a></h3>
+<h3><a name="L1171">Redimensionner des zones actives</a></h3>
 <ul>
-  <li>By direct manipulation - combining the <strong>Control key</strong> with
-    the <strong>Middle</strong> or the <strong>Right button</strong> of the
-    mouse within an area of image map allows you to resize this area.</li>
-  <li>By editing the <strong>coords</strong> attribute of the area in the
-    Structure View.
+  <li>Par manipulation directe - en combinant la <strong>touche
+    Control</strong> et le  <strong>bouton du milieu</strong> ou le
+    <strong>bouton droit</strong> de la souris à l'intérieur de la zone
+    active, vous pourrez  redimensionner cette zone.</li>
+  <li>En éditant l'attribut <strong>coords</strong> de la zone dans la vue.
     <p></p>
   </li>
 </ul>

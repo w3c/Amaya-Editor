@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 <head>
-  <title>Style Sheets</title>
+  <title>Les feuilles de style</title>
   <meta name="GENERATOR" content="amaya V3.2.1" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="fr" lang="fr">
 
 <table border="0" width="100%" summary="toc">
   <tbody>
@@ -27,146 +27,168 @@
 </table>
 
 <div id="Style">
-<h2><a name="L1023">Style Sheets</a></h2>
+<h2><a name="L1023">Les feuilles de style</a></h2>
 
-<p>The <strong>Style</strong> menu allows you to change the appearance of your
-documents by two different means:</p>
+<p>Le menu <strong>Style</strong> vous permet de changer l'apparence de vos
+documents de deux façons différentes:</p>
 <ul>
-  <li>using Cascading Style Sheets (CSS).</li>
-  <li>using HTML elements and attributes.</li>
+  <li>utilisant les cascades des feuilles de style (CSS).</li>
+  <li>utilisant les éléments et les attributs HTML.</li>
 </ul>
 
-<p>The first entries of the <strong>Style</strong> menu are dedicated to CSS,
-the last two entries to <a href="#L1371">HTML elements</a>.</p>
+<p>Les premières entrées du menu <strong>Style</strong> sont consacrées au CSS
+et les deux dernières entrées aux <a href="#L1371">éléments HTML</a>.</p>
 
-<h3><a name="Creating">Creating and updating a style attribute</a></h3>
+<h3><a name="Creating">Créer et mettre à jour un attribut de style</a></h3>
 
-<p>Each of the first four entries of the <strong>Style</strong> menu call a
-dialog box that allows associating a <code>style</code> attribute with the
-currently selected elements:</p>
+<p>Chacune des quatre entrées du menu <strong>Style</strong> appelle une boîte
+de dialogue qui permet l'association d'un attribut de <code>style</code> aux
+éléments courants sélectionnés:<strong>  </strong><strong></strong></p>
 <ul>
-  <li><strong>Character Style</strong> allows choosing the font family, the
-    character style, the body size and the underline style.</li>
-  <li><strong>Colors</strong> allows choosing the foreground and background
-    colors from a palette. Click on a palette cell with the left button to set
-    the foreground color, click with the middle button to set the background
-    color.</li>
-  <li><strong>Format</strong> allows setting  alignment, indentation,
-    justification and linespacing.</li>
-  <li><strong>Background Image</strong> allows choosing a background image and
-    its repeat mode.</li>
+  <li><h3><span style="font-size: 12pt"><span
+    style="font-weight: normal">L'option</span> Style de caractères<span
+    style="font-weight: normal"> permet de choisir la police de caractère, le
+    style du caractère, la taille du corps et le style
+    souligné.</span></span></h3>
+  </li>
+</ul>
+<ul>
+  <li><strong><span style="font-weight: normal">L'option</span>
+    Couleurs</strong> permet de choisir les couleurs du premier plan et de
+    l'arrière plan dans la palette. Cliquez sur une cellule de la palette avec
+    le bouton gauche de la souris pour attribuer la couleur du premier plan,
+    cliquez sur le bouton du milieu pour attribuer la couleur de l'arrière
+    plan.</li>
+  <li>L'option <strong>Format</strong> permet de choisir l'alignement, le
+    renfoncement, la justification et l'interligne.</li>
+  <li>L'option <strong>Image de fond</strong> permet de choisir une image de
+    fond et son mode de répétition.</li>
 </ul>
 
-<p>In all these dialog boxes, <strong>Default</strong> buttons allow you to
-remove the corresponding style information from the selected elements.</p>
+<p>Dans toutes ces boîtes de dialogue, les boutons <strong>Défaut</strong>
+permettent de supprimer l'information du style correspondant pour les éléments
+sélectionnés.</p>
 
-<p>All modifications made with these dialog boxes can be viewed immediately in
-both the Formatted view and the Structure view.</p>
+<p>Toutes les modifications faites avec ces boîtes de dialogue peuvent être
+vues immédiatement dans la vue formatée et également dans la vue
+structure.</p>
 
-<h4>Changing Width and Height of elements</h4>
+<h4>Changer la largeur et la hauteur des éléments</h4>
 
-<p>The width and height of any element in a document can be changed
-interactively, in the same way as <a href="ImageMaps.html#L1171">image map
-areas</a>. By pressing the Control key on the keyboard and the middle button
-of the mouse, you can resize the box associated with the element under the
-cursor. When you release the mouse button, the element size is changed and a
-<code>style</code> attribute is associated with the element.</p>
+<p>La largeur et la hauteur de n'importe quel élément dans un document peuvent
+être changées de façon intéractive, de la même façon que les <a
+href="ImageMaps.html#L1171">zones actives</a>. En tapant sur la touche Control
+sur le clavier et en cliquant sur le bouton du milieu de la souris, vous
+pouvez redimensionner la boîte associée à l'élément situé sous le curseur.
+Quand vous lâchez le bouton de la souris, la taille de l'élément est changée
+et un attribut <code>style</code> est associé à l'élément.</p>
 
-<p>When the resized element is an image, this image is zoomed to fill its new
-box.</p>
+<p>Quand l'élément redimensionné est une image, cette image est précipitée
+pour remplir sa nouvelle boîte.</p>
 
-<h3><a name="Creating,">Creating, a generic style for an element or a
-class</a></h3>
+<h3><a name="Creating,">Créer un style générique pour un élément ou une
+classe</a></h3>
 
-<p>When a <code>style</code> attribute has been associated with an element,
-you can use that element as a model for creating or modifying a style rule.
-Select this element (you must select only one element and this element must
-have a <code>style</code> attribute) and choose <strong>Create Rule</strong>
-from the <strong>Style</strong> menu. A dialog box pops up that displays a
-list of CSS selectors. This list comprises all classes that are defined for
-the current document as well as, the element types to which some style is
-associated.. Choose a selector in this list or enter a new class name or type
-name  and press the <strong>Confirm</strong> button. The style of the selected
-element is then associated with the chosen selector and the <code>style</code>
-attribute is removed from the selected element. Its content is moved to the
-<code>STYLE</code> element, in the document <code>HEAD</code>, and all
-elements matching the selector are displayed with the new style.</p>
+<p>Quand un attribut <code>style</code> a été associée à un élément, vous
+pouvez utiliser cet élément comme un modèle pour créer ou modifier une règle
+de style. Sélectionnez cet élément (vous devez sélectionner un seul élément et
+cet élément doit avoir un attribut <code>style</code>) et choisissez
+<strong>Créer une règle</strong> depuis le menu <strong>Style</strong>. Une
+boîte de dialogue surgit et visualise une liste de sélecteurs CSS. Cette liste
+inclus toutes les classes qui sont définies pour le document courant, ainsi
+que les types d'éléments auxquels un certain style est associé. Choisissez un
+sélecteur dans cette liste ou entrez un nouveau nom de classe ou un nouveau
+non de type et cliquer sur le bouton <strong>Confirmer</strong>. Le style de
+l'élément sélectionné est désormais associé au sélecteur choisi et l'attribut
+<code>style</code> est supprimé pour l'élément sélectionné. Son contenu est
+déplacé à l'élément <code>STYLE</code>, dans le document <code>HEAD</code>, et
+tous les éléments correspondant au sélecteur sont visualisés dans le nouveau
+style.</p>
 
-<p>When you have created new classes with the <strong>Create Rule</strong>
-command, you can associate these classes with some elements in the document
-document. Choose <strong>Apply Class</strong> from the <strong>Style</strong>
-menu. A dialog box pops up which displays all existing classes. Choose one of
-these classes. The selected elements are then displayed with the style
-associated with the chosen class.</p>
+<p>Quand vous avez créé de nouvelles classes avec la commande <strong>Créer
+une règle</strong>, vous pouvez associer  ces classes à certains éléments dans
+le document. Choisissez <strong>Appliquer une classe</strong> depuis le menu
+<strong>Style</strong>. Une boîte de dialogue surgit,  affichant toutes les
+classes existantes. Choisissez une de ces classes. Les éléments sélectionnés
+sont désormais visualisés avec le style associé à la classe choisie.</p>
 
-<p>To associate a class with an element, you can also use the <a
-href="Attributes.html#L1073"><strong>Attributes</strong> menu</a>. This menu
-allows you to delete a class attribute from an element or to change it: the
-class attribute is handled like any other attribute.</p>
+<p>Pour associer une classe à un élément, vous pouvez également utiliser le <a
+href="Attributes.html#L1073">menu <strong>Attributs</strong></a>. Ce menu
+permet d'effacer un attribut de classe pour un élément ou de le changer:
+l'attribut de classe se manie comme un autre attribut.</p>
 
-<h3><a name="Managing">Managing external CSS style sheets</a></h3>
+<h3><a name="Managing">Gérer des feuilles de style CSS externes</a></h3>
 
-<p>The entry Style Sheets gives access to a set of commands which allows one
-to control external and User's preference CSS style sheets:</p>
+<p>L'entrée de feuilles de style donne accès à une série de commandes qui
+permettent de contrôler les feuilles de style CSS externes et celles qui
+donnent les préférences de l'utilisateur:</p>
 <ul>
-  <li>The command <strong>Link</strong> allows one to link a new CSS style
-    sheet to the current document. One can click directly the target style
-    sheet if it is already displayed in a Amaya window. In other case the user
-    should click in the current document to get a dialog box and type the
-    target style sheet's URI. This command adds an element link with its
-    attributes into the head of the document.</li>
-  <li>The command <strong>Open</strong> allows one to open one of the CSS
-    style sheets applied to the current document.</li>
-  <li>The command <strong>Disable</strong> allows one to remove effects of one
-    of the enabled CSS style sheets to the current document. This command
-    doesn't affect the CSS link in the document.</li>
-  <li>The command<strong>Enable</strong> allows one to re-apply effects of one
-    of the disabled CSS style sheets to the current document. This command
-    doesn't affect the CSS link in the document.</li>
-  <li>The command <strong>Remove</strong> allows one to remove one of the
-    external CSS style sheets. This command acts as the Disable command but in
-    addition to that the element link which attaches the external CSS style
-    sheet is removed.</li>
+  <li>La commande <strong>Ajouter</strong> permet de lier une nouvelle feuille
+    de style CSS à un document courant. On peut cliquer directement sur la
+    cible de la feuille de style si elle est déjà visualisée dans la fenêtre
+    Amaya. Si ce n'est pas le cas, l'utilisateur devra cliquer dans le
+    document courant pour avoir accès à une boîte de dialogue et taper l'URL
+    de la cible de la feuille de style. Cette commande ajoute un élément lien
+    avec ses attributs à la tête du document.</li>
+  <li>La commande <strong>Ouvrir</strong> permet d'ouvrir une des feuilles de
+    style CSS appliquées au document courant.</li>
+  <li>La commande <strong>Désactiver</strong> permet de supprimer les effets
+    d'une des feuilles de style actives du document courant. Cette commande
+    n'affecte en rien le lien CSS dans le document.</li>
+  <li>La commande <strong>Réactiver</strong> permet de rétablir les effets
+    d'une des feuilles de style CSS désactivées du document courant. Cette
+    commande n'affecte en rien le lien CSS dans le document.</li>
+  <li>La commande <strong>Retirer</strong> permet de retirer une des feuilles
+    de style CSS externes. Cette commande agit comme la commande Désactiver en
+    plus de cela l'élément lien, qui attache les feuilles de style CSS, est
+    supprimé.</li>
 </ul>
 
-<p>Commands Open, Disable and Enable can be applied to the User's preference
-style sheet, but commands Link and Remove concern only linked CSS style
-sheets. The following figure shows the list of CSS style sheets proposed for
-the command Open. If no CSS style sheet is currently applied to a document, a
-dialog box explains that there is "No CSS file available".</p>
+<p>Les commandes Ouvrir, Désactiver et Réactiver peuvent être appliquées aux
+feuilles de style qui donnent les préférences de l'utilisateur, mais les
+commandes Ajouter et Retirer concernent uniquement les feuilles de style
+reliées. La figure suivante montre la liste des feuilles de style CSS
+proposées pour la commande Ouvrir. Si aucune feuille de style CSS n'est
+actuellement appliquée à un  document, une boîte de dialogue expliquera
+"qu'aucun fichier CSS n'est disponible".</p>
 
 <p><img alt="css.gif" src="../Icons/css.gif" /></p>
 
 <p></p>
 
-<h3><a name="L1371">Style through HTML elements</a></h3>
+<h3><a name="L1371">Mettre du style en utilisant des éléments HTML</a></h3>
 
-<p>HTML provides some character-level elements that allow you to associate
-style with character strings. Two entries from the <strong>Style</strong> menu
-allow you to handle these HTML elements.</p>
+<p>HTML fournit certains éléments de niveau de caractère qui permettent
+d'associer le style et les chaînes de caractères. Deux entrées depuis le menu
+<strong>Style</strong> permettent de manier ces éléments HTML.</p>
 
-<h4>Creating HTML style elements</h4>
+<h4>Créer des éléments de style HTML </h4>
 
-<p>Item <strong>Information type</strong> from the <strong>Style</strong> menu
-presents a submenu offering a choice of HTML elements that define abstract
-styles. Select first a character string in your page and then choose an item
-in this menu. The selected character string receives the corresponding style.
-Three of these styles are also available through buttons: <em>emphasis</em>
-(<img src="../Icons/Em.gif" alt="Emphasis button" />), <strong>strong</strong>
-(<img src="../Icons/Strong.gif" alt="Strong button" />) and <code>code</code>
-(<img src="../Icons/Cour.gif" alt="Code button" />).</p>
+<p>La commande<strong> Types information</strong> du menu
+<strong>Style</strong>  présente un sous-menu offrant un choix d'éléments HTML
+qui définissent des styles abstraits. Sélectionnez tout d'abord une chaîne de
+caractère dans votre page et ensuite choisissez une commande dans ce menu. La
+chaîne de caractère sélectionnée reçoit le style correspondant. Trois de ces
+styles sont également disponibles par l'intermédiaire des boutons:
+<em>emphasis</em> (<img src="../Icons/Em.gif" alt="Emphasis button" />),
+<strong>strong</strong> (<img src="../Icons/Strong.gif" alt="Strong button"
+/>) and <code>code</code> (<img src="../Icons/Cour.gif" alt="Code button"
+/>).</p>
 
-<p>Item <strong>Character elements</strong> from the <strong>Style</strong>
-menu offers another menu for changing the style of text. The first entries of
-this menu could be replaced by CSS and should not be used. They are here only
-for the sake of completeness of the HTML 3.2 implementation.</p>
+<p>La commande<strong> Éléments caractères</strong> du menu
+<strong>Style</strong> offre un autre menu changeant le style du texte. Les
+premières entrées de ce menu peuvent être remplacées par CSS et ne devraient
+pas être utilisées. Elles sont là uniquement pour l'amour de la perfection de
+l'implantation de HTML 3.2.</p>
 
-<h4>Removing style</h4>
+<h4>Supprimer le style</h4>
 
-<p>To remove style from a character string, select the string first and
-re-apply the command that was used for associating the style you want to
-remove. All commands in the submenus <strong>Information Type</strong> and
-<strong>Character Element</strong> toggle themselves if re-applied.</p>
+<p>Pour supprimer le style d'une chaîne de caractère, sélectionnez tout
+d'abord la chaîne et appliquez de nouveau la commande qui a été utilisée pour
+associer le style que vous voulez supprimer. Toutes les commandes des
+sous-menu<strong> Types</strong><strong> information </strong>et
+<cite></cite><strong> Éléments caractères</strong> s'annulent si elles sont
+appliquées de nouveau.</p>
 </div>
 
 <p align="right"><a href="ImageMaps.html"><img alt="previous" border="0"
