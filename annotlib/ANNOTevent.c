@@ -438,7 +438,9 @@ void ANNOT_FreeDocumentResource (Document doc)
       AnnotMeta *annot;
       Element annotEl;
       char *body_url;
-      
+#ifdef ANNOT_ON_ANNOT
+      ThotBool isThread = FALSE;
+#endif /* ANNOT_ON_ANNOT */
       source_doc = DocumentMeta[doc]->source_doc;
       if (!IsW3Path(DocumentURLs[doc]))
 	body_url = FixFileURL (DocumentURLs[doc]);
@@ -447,6 +449,17 @@ void ANNOT_FreeDocumentResource (Document doc)
       annot = AnnotList_searchAnnot (AnnotMetaData[source_doc].annotations,
 				     body_url,
 				     AM_BODY_URL);
+
+#ifdef ANNOT_ON_ANNOT
+      if (!annot && AnnotThread[doc_thread].annotations)
+	{
+	  annot = AnnotList_searchAnnot (AnnotThread[doc_thread].annotations,
+					 body_url,
+					 AM_BODY_URL);
+	  if (annot)
+	    isThread = 1;
+	}
+#endif /* ANNOT_ON_ANNOT */
       if (body_url != DocumentURLs[doc])
 	TtaFreeMemory (body_url);
 
@@ -457,9 +470,23 @@ void ANNOT_FreeDocumentResource (Document doc)
 	  ANNOT_FreeAnnotResource (source_doc, annotEl, annot);
 	  /* remove the annotation from the document's annotation list and 
 	     update it */
-	  AnnotList_delAnnot (&(AnnotMetaData[source_doc].annotations),
-			      annot->body_url, FALSE);
+#ifdef ANNOT_ON_ANNOT
+	  if (isThread)
+	    AnnotList_delAnnot (&(AnnotThread[doc_thread].annotations),
+				annot->body_url, FALSE);
+	  else
+#endif /* ANNOT_ON_ANNOT */
+	    AnnotList_delAnnot (&(AnnotMetaData[source_doc].annotations),
+				annot->body_url, FALSE);
 	}
+#ifdef ANNOT_ON_ANNOT
+      if (doc_thread > 0 && doc_thread != doc)
+	{
+	  ANNOT_DeleteThread (doc_thread);
+	  if (AnnotThread[doc_thread].annotations)
+	    ANNOT_BuildThread (doc_thread);
+	}
+#endif /* ANNOT_ON_ANNOT */
     }
   
   /* free the memory allocated for annotations */
