@@ -21,6 +21,7 @@
 #include "frame.h"
 #include "appdialogue.h"
 #include "application.h"
+
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
 #include "frame_tv.h"
@@ -112,17 +113,7 @@ static int IsXLFDPatterneAFont (char *pattern)
 
   if (IsXLFDName (pattern))
     {
-#ifdef _GTK
-      fontlist = XListFonts (GDK_DISPLAY(), 
-			     pattern, 
-			     1, 
-			     &count);
-#else /*_GTK*/
-      fontlist = XListFonts (TtDisplay, 
-			     pattern, 
-			     1, 
-			     &count);
-#endif /*_GTK*/
+      fontlist = XListFonts (TtDisplay, pattern, 1, &count);
 	 if (count)
 	{
 	  XFreeFontNames(fontlist);
@@ -474,25 +465,24 @@ char *FontLoadFromConfig (char script,
     if (font_face_index < 0 || font_face_index > 5)
     font_face_index = 1;
 
-  if (Fonttab[intscript])
-    if (Fonttab[intscript]->family[font_face_index])
-		if (Fonttab[intscript]->family[font_face_index]->highlight[font_style])
-		{
-
+  if (Fonttab[intscript] &&
+      Fonttab[intscript]->family[font_face_index] &&
+      Fonttab[intscript]->family[font_face_index]->highlight[font_style])
+    {
+      
 #ifdef _PCLFONTDEBUG
-		g_print ("\n%s",
+      g_print ("\n%s",
 	       Fonttab[intscript]->family[font_face_index]->highlight[font_style]);
 #endif /*_PCLFONTDEBUG*/
 #ifndef _GL
       if (IsXLFDPatterneAFont (Fonttab[intscript]->family[font_face_index]->highlight[font_style]))
-      	return (Fonttab[intscript]->family[font_face_index]->highlight[font_style]);
+	return (Fonttab[intscript]->family[font_face_index]->highlight[font_style]);
       else
 	return NULL;
 #else /*_GL*/
       return  (Fonttab[intscript]->family[font_face_index]->highlight[font_style]);
 #endif /*_GL*/
     }
-  
   return NULL;
 }
 
