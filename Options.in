@@ -3,7 +3,7 @@
 # Generated from Options.in
 #
 # Increase the Version number each time one entry is added
-# Version : 1.4
+# Version : 1.5
 #
 
 SHELL	= /bin/sh
@@ -57,3 +57,4 @@ X_EXTRA_LIBS=@X_EXTRA_LIBS@
 X_PRE_LIBS=@X_PRE_LIBS@
 X_LIBS=@X_LIBS@
 
+LIBWWW=libwww
