@@ -1107,7 +1107,7 @@ void                InitMathML ()
 #  ifndef _WINDOWS 
    iconMath = TtaCreatePixmapLogo (Math_xpm);
    TtaRegisterPixmap("Math", iconMath);
-   mIcons[0] = TtaCreatePixmapLogo (math_xpm);
+   mIcons[0] = TtaCreatePixmapLogo (Bmath_xpm);
    mIcons[1] = TtaCreatePixmapLogo (root_xpm);
    mIcons[2] = TtaCreatePixmapLogo (sqrt_xpm);
    mIcons[3] = TtaCreatePixmapLogo (frac_xpm);
