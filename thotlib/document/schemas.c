@@ -199,9 +199,6 @@ void RegisterSSchemaForSavedElements (PtrSSchema pSSchema)
 	fprintf (stderr, "S schema %s not loaded!?!?\n", pSSchema->SsName);
       else
         {
-#ifndef VQ
-  fprintf (stderr, "register S schema %s for saved elements\n", pSSchema->SsName);
-#endif
 	  /* increment the number of users of this schema */
 	  LoadedSSchema[i].UsageCount++;
 	  /* add the schema to the list of schemas used by the saved elements*/
@@ -249,17 +246,11 @@ void ReleaseSSchemasForSavedElements ()
 		 pSS->SsName);
       else
 	{
-#ifndef VQ
-  fprintf (stderr, "release S schema %s for saved elements\n", pSS->SsName);
-#endif
 	  pStr = &LoadedSSchema[i];
 	  pStr->UsageCount--;
 	  if (pStr->UsageCount <= 0)
 	    /* This schema is no longer used by any document. Unload it */
 	    {
-#ifndef VQ
-  fprintf (stderr, "   free S schema %s\n", pSS->SsName);
-#endif
 	      pStr->pStructSchema = NULL;
 	      pStr->StructSchemaName[0] = EOS;
 	      ResetNatureRules (pSS);
@@ -306,10 +297,6 @@ static void ReleasePresentationSchema (PtrPSchema pPSchema, PtrSSchema pSS,
   int                 i, j;
   PtrHostView         pHostView, pNextHostView;
 
-#ifndef VQ
-  fprintf (stderr, "release P schema %s for %s\n", pPSchema->PsPresentName,
-	   pSS->SsName);
-#endif
   /* look for this schema in the PSchemas table */
   for (i = 0; i < MAX_PSCHEMAS && LoadedPSchema[i].pPresSchema != pPSchema;
        i++);
@@ -322,9 +309,6 @@ static void ReleasePresentationSchema (PtrPSchema pPSchema, PtrSSchema pSS,
   if (pPres->UsageCount == 0)
     /* c'etait la derniere utilisation, on le supprime de la table */
     {
-#ifndef VQ
-  fprintf (stderr, "   free P schema %s\n", pPSchema->PsPresentName);
-#endif
       pPres->pPresSchema = NULL;
       pPres->PresSchemaName[0] = EOS;
       /* libere les regles de presentation par defaut */
@@ -416,9 +400,6 @@ ThotBool LoadPresentationSchema (Name schemaName, PtrSSchema pSS,
       {
       LoadedPSchema[i].UsageCount++;
       pPSchema = LoadedPSchema[i].pPresSchema;
-#ifndef VQ
-  fprintf (stderr, "get P schema %s\n", pPSchema->PsPresentName);
-#endif
       }
    else
       /* That's a new schema. Load it */
@@ -427,9 +408,6 @@ ThotBool LoadPresentationSchema (Name schemaName, PtrSSchema pSS,
       if (pPSchema)
 	 /* schema loaded. Register it in the table of loaded schemas */
 	 {
-#ifndef VQ
-  fprintf (stderr, "load P schema %s\n", pPSchema->PsPresentName);
-#endif
 	 /* look for an free entry in the table */
 	 for (i = 0; i < MAX_PSCHEMAS && LoadedPSchema[i].pPresSchema; i++);
 	 if (i < MAX_PSCHEMAS && LoadedPSchema[i].pPresSchema == NULL)
@@ -657,9 +635,6 @@ PtrSSchema          LoadStructureSchema (Name schemaName, PtrDocument pDoc)
       {
       LoadedSSchema[i].UsageCount++;
       pSSchema = LoadedSSchema[i].pStructSchema;
-#ifndef VQ
-  fprintf (stderr, "get S schema %s\n", pSSchema->SsName);
-#endif
       }
    else
       /* That's a new schema. Load it */
@@ -670,18 +645,12 @@ PtrSSchema          LoadStructureSchema (Name schemaName, PtrDocument pDoc)
       if (!ReadStructureSchema (schemaName, pSSchema))
 	/* failure */
 	{
-#ifndef VQ
-  fprintf (stderr, "*** failed loading S schema %s\n", schemaName);
-#endif
 	 FreeSchStruc (pSSchema);
 	 pSSchema = NULL;
 	}
       else
 	 /* schema loaded. Register it in the table of loaded schemas */
 	 {
-#ifndef VQ
-  fprintf (stderr, "load S schema %s\n", pSSchema->SsName);
-#endif
 	 /* look for an free entry in the table */
 	 for (i = 0; i < MAX_SSCHEMAS && LoadedSSchema[i].pStructSchema; i++);
 	 if (i < MAX_SSCHEMAS && LoadedSSchema[i].pStructSchema == NULL)
@@ -738,17 +707,11 @@ ThotBool      ReleaseStructureSchema (PtrSSchema pSS, PtrDocument pDoc)
   if (i >= MAX_SSCHEMAS)
     /* error. This schema is not in the table */
     return FALSE;
-#ifndef VQ
-  fprintf (stderr, "release S schema %s\n", pSS->SsName);
-#endif
   pStr = &LoadedSSchema[i];
   pStr->UsageCount--;
   if (pStr->UsageCount <= 0)
     /* This schema is no longer used by any document. Unload it */
     {
-#ifndef VQ
-  fprintf (stderr, "   free S schema %s\n", pSS->SsName);
-#endif
       pStr->pStructSchema = NULL;
       pStr->StructSchemaName[0] = EOS;
       ResetNatureRules (pSS);
