@@ -56,13 +56,10 @@ int                 imagetype;
   PtrTextBuffer       pBuffer;
   PictInfo*           image = NULL;
   CHAR_T*             ptr = NULL;
-  int                 picPresent, len;
+  PictureScaling      picPresent;
+  int                 len;
 
-  if (imagetype == XBM_FORMAT || imagetype == XPM_FORMAT)
-    picPresent = RealSize;
-  else
-    picPresent = ReScale;
-
+  picPresent = DefaultPres;
   if (!pAb->AbPresentationBox &&
       pAb->AbElement->ElTerminal && pAb->AbElement->ElLeafType == LtPicture)
     {
@@ -153,7 +150,7 @@ int                 imagetype;
       image->PicMask = 0;
 #     endif /* _WINDOWS */
       image->PicType    = imagetype;
-      image->PicPresent = (PictureScaling) picPresent;
+      image->PicPresent = picPresent;
       image->PicXArea   = 0;
       image->PicYArea   = 0;
       image->PicWArea   = 0;

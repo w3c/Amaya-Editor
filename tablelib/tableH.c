@@ -1083,7 +1083,7 @@ int            *percent;
 #ifdef __STDC__
 static ThotBool SetTableWidths (PtrAbstractBox table, int frame)
 #else
-static ThtoBool SetTableWidths (table, frame)
+static ThotBool SetTableWidths (table, frame)
 PtrAbstractBox  table;
 int             frame;
 #endif

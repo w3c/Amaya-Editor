@@ -732,7 +732,6 @@ int                *picHArea;
 int                 wFrame;
 int                 hFrame;
 PictInfo           *imageDesc;
-
 #endif /* __STDC__ */
 {
    if ((imageDesc->PicWArea == 0 && imageDesc->PicHArea == 0) ||
@@ -750,29 +749,29 @@ PictInfo           *imageDesc;
 }
 
 /*----------------------------------------------------------------------
-   LayoutPicture performs the layout of pixmap on the screen described 
-   by the drawable.                                                          
-   if picXOrg or picYOrg are postive, the copy operation is shifted      
+  LayoutPicture performs the layout of pixmap on the screen described 
+  by the drawable.                                                          
+  if picXOrg or picYOrg are postive, the copy operation is shifted      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg, int picYOrg, int w, int h, int xFrame, int yFrame, int frame, PictInfo *imageDesc)
+static void  LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg, int picYOrg, int w, int h, int xFrame, int yFrame, int frame, PictInfo *imageDesc, PtrBox box)
 #else  /* __STDC__ */
-static void         
- (pixmap, drawable, picXOrg, picYOrg, w, h, xFrame, yFrame, frame, imageDesc)
-Pixmap              pixmap;
-Drawable            drawable;
-int                 picXOrg;
-int                 picYOrg;
-int                 w;
-int                 h;
-int                 xFrame;
-int                 yFrame;
-int                 frame;
-PictInfo           *imageDesc;
+static void  LayoutPicture(pixmap, drawable, picXOrg, picYOrg, w, h, xFrame, yFrame, frame, imageDesc, box)
+Pixmap       pixmap;
+Drawable     drawable;
+int          picXOrg;
+int          picYOrg;
+int          w;
+int          h;
+int          xFrame;
+int          yFrame;
+int          frame;
+PictInfo    *imageDesc;
+PtrBox       box;
 #endif /* __STDC__ */
 {
-
   ViewFrame*        pFrame;
+  PictureScaling    picPresent;
   int               delta;
 #ifdef _WINDOWS
   HDC               hMemDC;
@@ -791,7 +790,6 @@ PictInfo           *imageDesc;
   XGCValues         values;
   unsigned int      valuemask;
 #endif /* _WINDOWS */
-
 
   if (picXOrg < 0)
     {
@@ -815,7 +813,18 @@ PictInfo           *imageDesc;
   pFrame = &ViewFrameTable[frame - 1];
   if (pixmap != None)
     {
-      switch (imageDesc->PicPresent)
+      /* the default presenation depends on the box type */
+      picPresent = imageDesc->PicPresent;
+      if (picPresent == DefaultPres)
+	{
+	  if (box->BxType == BoPicture)
+	    /* an image is rescaled */
+	    picPresent = ReScale;
+	  else
+	    /* a background image is repeated */
+	    picPresent = FillFrame;
+	}
+      switch (picPresent)
 	{
 	case ReScale:
 #ifndef _WINDOWS
@@ -875,8 +884,7 @@ PictInfo           *imageDesc;
           rect.height = pFrame->FrClipYEnd - rect.y;
           rect.x -= pFrame->FrXOrg;
           rect.y -= pFrame->FrYOrg;
-          if (imageDesc->PicPresent == FillFrame ||
-	      imageDesc->PicPresent == YRepeat)
+          if (picPresent == FillFrame || picPresent == YRepeat)
 	    {
 	      /* clipping height is done by the box height */
 	      if (rect.y < yFrame)
@@ -898,8 +906,7 @@ PictInfo           *imageDesc;
                   rect.height = delta;
 	    }
 	  
-          if (imageDesc->PicPresent == FillFrame ||
-	      imageDesc->PicPresent == XRepeat)
+          if (picPresent == FillFrame || picPresent == XRepeat)
 	    {
              /* clipping width is done by the box width */
              if (rect.x < xFrame)
@@ -925,7 +932,7 @@ PictInfo           *imageDesc;
 	  values.tile = pixmap;
 	  values.ts_x_origin = xFrame;
 	  values.ts_y_origin = yFrame;
-	  if (imageDesc->PicPresent == RealSize
+	  if (picPresent == RealSize
 	      /* || w <= imageDesc->PicWArea && h <= imageDesc->PicHArea */)
 	    {
 	      values.fill_style = FillTiled;
@@ -965,7 +972,7 @@ PictInfo           *imageDesc;
           clipHeight = pFrame->FrClipYEnd - y;
           x          -= pFrame->FrXOrg;
           y          -= pFrame->FrYOrg;
-          if (imageDesc->PicPresent == FillFrame || imageDesc->PicPresent == YRepeat)
+          if (picPresent == FillFrame || picPresent == YRepeat)
 	    {
 	      /* clipping height is done by the box height */
 	      if (y < yFrame)
@@ -987,7 +994,7 @@ PictInfo           *imageDesc;
 		clipHeight = delta;
 	    }
 	  
-          if (imageDesc->PicPresent == FillFrame || imageDesc->PicPresent == XRepeat)
+          if (picPresent == FillFrame || picPresent == XRepeat)
 	    {
 	      /* clipping width is done by the box width */
 	      if (x < xFrame)
@@ -1534,14 +1541,13 @@ int                 hlogo;
    hFrame = box->BxH;
    Picture_Center (w, h, wFrame, hFrame, RealSize, &x, &y, &picXOrg, &picYOrg);
    if (w > wFrame)
-      w = wFrame;
+     w = wFrame;
    if (h > hFrame)
-      h = hFrame;
+     h = hFrame;
    x += xFrame;
    y += yFrame;
 
-   LayoutPicture (pixmap, drawable, picXOrg, picYOrg, w, h, x, y, frame, imageDesc);
-
+   LayoutPicture (pixmap, drawable, picXOrg, picYOrg, w, h, x, y, frame, imageDesc, box);
 #ifdef _WINDOWS
    if (pixmap && !DeleteObject (pixmap))
       WinErrorBox (WIN_Main_Wd, TEXT("DrawEpsBox (1)"));
@@ -1656,7 +1662,8 @@ int                 frame;
 	    }
 	  else
 	    LayoutPicture (imageDesc->PicPixmap, drawable, picXOrg, picYOrg,
-			   w, h, x + xTranslate, y + yTranslate, frame, imageDesc);
+			   w, h, x + xTranslate, y + yTranslate, frame,
+			   imageDesc, box);
 	}
     }
   else if (typeImage < InlineHandlers && typeImage > -1)
@@ -1706,25 +1713,24 @@ int                 frame;
   UnmapImage unmaps plug-in widgets   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           UnmapImage (PictInfo* imageDesc)
+void       UnmapImage (PictInfo* imageDesc)
 #else /* __STDC__ */
-void           UnmapImage (imageDesc)
-PictInfo      *imageDesc;
+void       UnmapImage (imageDesc)
+PictInfo  *imageDesc;
 #endif /* __STDC__ */
 {
-    int typeImage;
+  int   typeImage;
 
-    if (imageDesc == NULL)
-      return;
+  if (imageDesc == NULL)
+    return;
 
-    typeImage = imageDesc->PicType;
-
+  typeImage = imageDesc->PicType;
 #ifndef _WINDOWS
-    if ((typeImage >= InlineHandlers) && (imageDesc->mapped) && (imageDesc->created))
-      {	
-	XtUnmapWidget ((Widget) (imageDesc->wid));
- 	imageDesc->mapped = FALSE;
-      }
+  if (typeImage >= InlineHandlers && imageDesc->mapped && imageDesc->created)
+    {	
+      XtUnmapWidget ((Widget) (imageDesc->wid));
+      imageDesc->mapped = FALSE;
+    }
 #endif /* !_WINDOWS */
 }
 
@@ -1733,10 +1739,10 @@ PictInfo      *imageDesc;
    Routine handling the zoom-in zoom-out of an image   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-unsigned char* ZoomPicture (unsigned char *cpic, int cWIDE, int cHIGH , int eWIDE, int eHIGH, int bperpix)
+unsigned char *ZoomPicture (unsigned char *cpic, int cWIDE, int cHIGH , int eWIDE, int eHIGH, int bperpix)
 #else  /* __STDC__ */
-unsigned char* ZoomPicture (cpic, cWIDE, cHIGH , eWIDE, eHIGH, bperpix)
-unsigned char* cpic;
+unsigned char *ZoomPicture (cpic, cWIDE, cHIGH , eWIDE, eHIGH, bperpix)
+unsigned char *cpic;
 int            cWIDE;
 int            cHIGH;
 int            eWIDE;

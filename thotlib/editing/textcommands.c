@@ -48,31 +48,32 @@ static ThotBool LeftExtended;
 static ThotBool Retry = FALSE;
 static ThotBool Moving = FALSE;
 
+#include "abspictures_f.h"
 #include "applicationapi_f.h"
 #include "appli_f.h"
-#include "tree_f.h"
-#include "textcommands_f.h"
-#include "editcommands_f.h"
-#include "structcreation_f.h"
-#include "scroll_f.h"
-#include "boxmoves_f.h"
 #include "boxlocate_f.h"
-#include "views_f.h"
-#include "callback_f.h"
-#include "windowdisplay_f.h"
-#include "font_f.h"
-#include "geom_f.h"
-#include "buildboxes_f.h"
-#include "picture_f.h"
-#include "abspictures_f.h"
-#include "buildlines_f.h"
-#include "memory_f.h"
-#include "structmodif_f.h"
+#include "boxmoves_f.h"
 #include "boxparams_f.h"
 #include "boxselection_f.h"
-#include "structselect_f.h"
+#include "buildboxes_f.h"
+#include "buildlines_f.h"
+#include "callback_f.h"
 #include "content_f.h"
+#include "editcommands_f.h"
+#include "font_f.h"
+#include "geom_f.h"
+#include "memory_f.h"
+#include "picture_f.h"
+#include "scroll_f.h"
+#include "structmodif_f.h"
+#include "structcreation_f.h"
+#include "structselect_f.h"
+#include "textcommands_f.h"
+#include "tree_f.h"
 #include "viewapi_f.h"
+#include "views_f.h"
+#include "windowdisplay_f.h"
+
 
 /*----------------------------------------------------------------------
    IsTextLeaf teste si un pave est un pave de texte modifiable.     
@@ -281,6 +282,7 @@ ThotBool            extendSel;
 #endif /* __STDC__ */
 {
    PtrBox              pBox, pBoxBegin, pBoxEnd;
+   PtrLine             pLine;
    ViewFrame          *pFrame;
    ViewSelection      *pViewSel;
    ViewSelection      *pViewSelEnd;
@@ -464,8 +466,19 @@ ThotBool            extendSel;
 	       else
 		 {
 		   /* a new box will be selected */
-		   x = pBox->BxXOrg + xpos;
-		   y = pBox->BxYOrg + (pBox->BxHeight / 2);
+		   /* check if the box is within a line */
+		   GetLine (&pLine);
+		   if (pLine)
+		     {
+		       y = pBox->BxYOrg + (pBox->BxHeight / 2);
+		       x = pBox->BxXOrg + xpos;
+		     }
+		   else
+		     {
+		       /* moving outside a block of lines */
+		       y = pBox->BxYOrg - 2;
+		       x = pBox->BxXOrg + pBox->BxWidth;
+		     }
 		   xDelta = -2;
 		   LocateLeafBox (frame, view, x, y, xDelta, 0, pBox, extendSel);
 		 }
@@ -528,8 +541,19 @@ ThotBool            extendSel;
 		 }
 	       else
 		 {
-		   x = pBox->BxXOrg + pBox->BxWidth;
-		   y = pBox->BxYOrg + (pBox->BxHeight / 2);
+		   /* check if the box is within a line */
+		   GetLine (&pLine);
+		   if (pLine)
+		     {
+		       y = pBox->BxYOrg + (pBox->BxHeight / 2);
+		       x = pBox->BxXOrg + pBox->BxWidth;
+		     }
+		   else
+		     {
+		       /* moving ouside a block of lines */
+		       y = pBox->BxYOrg + pBox->BxHeight + 2;
+		       x = pBox->BxXOrg;
+		     }
 		   xDelta = 2;
 		   LocateLeafBox (frame, view, x, y, xDelta, 0, pBox, extendSel);
 		 }

@@ -2733,7 +2733,6 @@ void    *extra;
   PSchema             tsch;
   PresentationContext context;
   PresentationValue   image;
-  PresentationValue   repeat;
   PresentationValue   value;
 
   if (callblock == NULL)
@@ -2752,16 +2751,7 @@ void    *extra;
   image.pointer = file;
   TtaSetStylePresentation (PRBackgroundPicture, el, tsch, context, image);
 
-  /* If there is no default repeat mode, enforce a V-Repeat */
-  if (TtaGetStylePresentation (PRPictureMode, el, tsch, context, &repeat) < 0)
-    {
-      repeat.typed_data.value = STYLE_REPEAT;
-      repeat.typed_data.unit = STYLE_UNIT_REL;
-      repeat.typed_data.real = FALSE;
-      TtaSetStylePresentation (PRPictureMode, el, tsch, context, repeat);
-    }
-
-  /* If there is no default repeat mode, enforce a V-Repeat */
+  /* enforce the showbox */
   value.typed_data.value = 1;
   value.typed_data.unit = STYLE_UNIT_REL;
   value.typed_data.real = FALSE;
@@ -3081,14 +3071,14 @@ ThotBool            isHTML;
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static CHAR_T*        ParseCSSBackgroundPosition (Element element, PSchema tsch,
+static CHAR_T*      ParseCSSBackgroundPosition (Element element, PSchema tsch,
 				 PresentationContext context, CHAR_T* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static CHAR_T*        ParseCSSBackgroundPosition (element, tsch, context, cssRule, css, isHTML)
+static CHAR_T*      ParseCSSBackgroundPosition (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
-CHAR_T*             cssRule;
+CHAR_T             *cssRule;
 CSSInfoPtr          css;
 ThotBool            isHTML;
 #endif

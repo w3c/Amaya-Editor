@@ -35,18 +35,19 @@
 #define UNKNOWN_FORMAT   -1
 typedef enum
 {
-        RealSize,
-        ReScale,
-        FillFrame,
-	XRepeat,
-	YRepeat
+  DefaultPres,
+  RealSize,
+  ReScale,
+  FillFrame,
+  XRepeat,
+  YRepeat
 } PictureScaling;
 
 /* dimensions and axes of the boxes */
 typedef enum
 {
-    Top, Bottom, Left, Right, HorizRef, VertRef,
-    HorizMiddle, VertMiddle, NoEdge
+  Top, Bottom, Left, Right, HorizRef, VertRef,
+  HorizMiddle, VertMiddle, NoEdge
 } BoxEdge;
 
 typedef struct _PresRule *PtrPRule;
