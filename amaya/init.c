@@ -1630,10 +1630,12 @@ NotifyEvent        *event;
    InitImage ();
    /* init the CSS context */
    InitCSS ();
-   /* init the transformation context */
+   /* initialize the structure transformation context */
    InitTransform ();
+   /* initialize automaton for the HTML parser */
+   InitAutomaton ();
 
-   /* initialise table of documents */
+   /* initialize document table */
    for (i = 1; i < DocumentTableLength; i++)
       DocumentURLs[i] = NULL;
 

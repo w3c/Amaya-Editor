@@ -32,6 +32,7 @@ extern void CreateAttrWidthPercentPxl ( char *buffer,
 extern void CreateAttrIntSize ( char *buffer,
                                 Element el,
                                 Document doc );
+extern void InitAutomaton ( void );
 extern char GetNextInputChar ( void );
 extern void HTMLparse ( FILE * infile,
                         char *HTMLbuf );
@@ -73,6 +74,7 @@ extern void CreateAttrWidthPercentPxl (/* char *buffer,
 extern void CreateAttrIntSize (/* char *buffer,
                                   Element el,
                                   Document doc */);
+extern void InitAutomaton (/* void */);
 extern char GetNextInputChar (/* void */);
 extern void HTMLparse (/* FILE * infile,
                           char *HTMLbuf */);

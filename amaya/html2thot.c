@@ -4103,7 +4103,11 @@ static sourceTransition sourceAutomaton[] =
    InitAutomaton   read the "source" form of the automaton and
    build the "executable" form.
   ----------------------------------------------------------------------*/
-static void         InitAutomaton ()
+#ifdef __STDC__
+void                InitAutomaton (void)
+#else
+void                InitAutomaton ()
+#endif
 {
    int                 entry;
    State               theState;
@@ -4143,28 +4147,6 @@ static void         InitAutomaton ()
 	  }
      }
    while (theState < 1000);
-}
-
-/*----------------------------------------------------------------------
-   FreeAutomaton
-   Free memory allocated to the automaton.
-  ----------------------------------------------------------------------*/
-static void         FreeAutomaton ()
-{
-   int                 entry;
-   PtrTransition       trans;
-   PtrTransition       nextTrans;
-
-   for (entry = 0; entry < MaxState; entry++)
-     {
-	trans = automaton[entry].firstTransition;
-	while (trans != NULL)
-	  {
-	     nextTrans = trans->nextTransition;
-	     TtaFreeMemory (trans);
-	     trans = nextTrans;
-	  }
-     }
 }
 
 /*----------------------------------------------------------------------
@@ -4218,8 +4200,6 @@ char               *HTMLbuf;
    PtrTransition       trans;
    boolean             endBuffer;
 
-   /* initialize automaton */
-   InitAutomaton ();
    currentState = 0;
    InputText = HTMLbuf;
    InputFile = infile;
@@ -4416,7 +4396,6 @@ char               *HTMLbuf;
 	  (HTMLbuf != NULL && !endBuffer));
    /* end of HTML file */
    EndOfDocument ();
-   FreeAutomaton ();
 }
 
 
@@ -5143,6 +5122,8 @@ char              **argv;
 	     strcpy (pivotFileName, *argv);
 	     /* initialize mapping table */
 	     InitMapping ();
+	     /* initialize automaton for the HTML parser */
+	     InitAutomaton ();
 	     /* initialize the Thot toolkit */
 	     TtaInitialize ("HTMLThot");
 	     /* extract directory and file name from second argument */

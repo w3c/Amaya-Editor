@@ -804,8 +804,9 @@ Element            *elem;
 }
 
 /*----------------------------------------------------------------------
-   MyStartParser initializes  parsing environement in order to parse the HTML      
-   fragment in buffer in the context of a last descendance of the element ElFather 
+   StartHtmlParser initializes  parsing environement in order to parse
+   the HTML fragment in buffer in the context of a last descendance of the
+   element ElFather 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean StartHtmlParser (strMatchChildren * sMatch, Document doc)
