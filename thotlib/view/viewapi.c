@@ -275,6 +275,7 @@ Element             subtree;
    boolean             assoc;
    boolean             found;
    View                view;
+   boolean             viewHasBeenOpen;
 
    UserErrorCode = 0;
    view = 0;
@@ -307,6 +308,9 @@ Element             subtree;
 	   TtaError (ERR_invalid_parameter);
 	else
 	   /* View found */
+
+          viewHasBeenOpen = TRUE;
+
 	  {
 	     /* Open the view */
 	     if (allViews[v].VdAssoc)
@@ -319,6 +323,9 @@ Element             subtree;
 #endif /* __COLPAGE__ */
 		  nView = CreateAbstractImage (pDoc, 0, allViews[v].VdAssocNum,
 		      allViews[v].VdSSchema, 1, TRUE, (PtrElement) subtree);
+                  if (pDoc->DocAssocRoot[nView - 1] == NULL)
+                    /*** Associated tree creation has been refused. ***/
+                    viewHasBeenOpen = FALSE;
 		  assoc = TRUE;
 	       }
 	     else
@@ -336,11 +343,14 @@ Element             subtree;
 		TtaError (ERR_cannot_open_view);
 	     else
 	       {
-		  OpenCreatedView (pDoc, nView, assoc, x, y, w, h);
-		  if (assoc)
-		     view = nView + 100;
-		  else
-		     view = nView;
+                  if (viewHasBeenOpen)
+                    {
+		       OpenCreatedView (pDoc, nView, assoc, x, y, w, h);
+		       if (assoc)
+		          view = nView + 100;
+		       else
+		          view = nView;
+                    }
 	       }
 	  }
      }
