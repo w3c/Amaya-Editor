@@ -3071,6 +3071,7 @@ CHAR_T              c;
   CHAR_T        schemaName[20];
 #endif
   CHAR_T        theGI[MaxMsgLength];
+  CHAR_T        schemaName[MaxMsgLength];
   int		 i;
 
   if (HTMLcontext.parsingTextArea)

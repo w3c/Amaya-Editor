@@ -101,6 +101,16 @@ typedef struct _XMLparserContext
     Proc	   GetDTDName;		/* returns the name of the DTD to be
 					   used for parsing the contents of an
 					   element that uses a different DTD */
+    ThotBool       DefaultLineBreak;    /* default treatmant for white-space */
+    ThotBool       DefaultLeadingSpace;   
+    ThotBool       DefaultTrailingSpace;  
+    ThotBool       DefaultContiguousSpace;
+
+                                        /* preserve treatmant for white-space */
+    ThotBool       PreserveLineBreak;    
+    ThotBool       PreserveLeadingSpace;   
+    ThotBool       PreserveTrailingSpace;  
+    ThotBool       PreserveContiguousSpace;
   }
 XMLparserContext;
 
@@ -131,18 +141,17 @@ static USTRING       nameElementStack[MAX_STACK_HEIGHT];
 static Element       elementStack[MAX_STACK_HEIGHT];
                         /* element language */
 static Language	     languageStack[MAX_STACK_HEIGHT];
+                        /* context of the element */
 static PtrParserCtxt parserCtxtStack[MAX_STACK_HEIGHT];
-static ThotBool      preserveSpaceStack[MAX_STACK_HEIGHT];
+                        /* if space preserved for thah element */
+static char          spacePreservedStack[MAX_STACK_HEIGHT];
                         /* first free element on the stack */
 static int           stackLevel = 0;
 
-
+                        /*  */
 static gzFile      stream = 0;
-                        /* Indicates if the parser has to treat white space */
-static ThotBool    SpacePreserved = FALSE;
                         /* path or URL of the document */
 static CHAR_T*     docURL = NULL;
-
 
 /* information about the Thot document under construction */
                         /* Document structure schema */
@@ -166,9 +175,17 @@ static Element      lastAttrElement = NULL;
 		        /* of the attribute being created */
 static AttributeMapping* lastMappedAttr = NULL;
 
+static ThotBool	    ImmediatelyAfterTag = FALSE;
 static ThotBool	    HTMLStyleAttribute = FALSE;
+static ThotBool	    XMLSpaceAttribute = FALSE;
 static CHAR_T	    currentElementContent = ' ';
 static CHAR_T	    currentElementName[40];
+
+/* Global variable to handle white-space in XML documents */
+static ThotBool     RemoveLineBreak = FALSE;
+static ThotBool     RemoveLeadingSpace = FALSE;   
+static ThotBool     RemoveTrailingSpace = FALSE;
+static ThotBool     RemoveContiguousSpace = FALSE;
 
 /* "Extra" counters for the characters and the lines read */
 static int          extraLineRead = 0;
@@ -310,6 +327,14 @@ static void            InitXmlParserContexts ()
    ctxt->ElementComplete = (Proc) XhtmlElementComplete;
    ctxt->AttributeComplete = NULL;
    ctxt->GetDTDName = NULL;
+   ctxt->DefaultLineBreak = TRUE;
+   ctxt->DefaultLeadingSpace = TRUE;   
+   ctxt->DefaultTrailingSpace = TRUE;  
+   ctxt->DefaultContiguousSpace = TRUE;
+   ctxt->PreserveLineBreak = FALSE;    
+   ctxt->PreserveLeadingSpace = FALSE;   
+   ctxt->PreserveTrailingSpace = FALSE;  
+   ctxt->PreserveContiguousSpace = FALSE;
    prevCtxt = ctxt;
    xhtmlParserCtxt = ctxt;
 
@@ -335,6 +360,14 @@ static void            InitXmlParserContexts ()
    ctxt->ElementComplete = (Proc) MathMLElementComplete;
    ctxt->AttributeComplete = (Proc) MathMLAttributeComplete;
    ctxt->GetDTDName = (Proc) MathMLGetDTDName;
+   ctxt->DefaultLineBreak = TRUE;
+   ctxt->DefaultLeadingSpace = TRUE;   
+   ctxt->DefaultTrailingSpace = TRUE;  
+   ctxt->DefaultContiguousSpace = TRUE;
+   ctxt->PreserveLineBreak = FALSE;    
+   ctxt->PreserveLeadingSpace = FALSE;   
+   ctxt->PreserveTrailingSpace = FALSE;  
+   ctxt->PreserveContiguousSpace = FALSE;
    prevCtxt = ctxt;
 
 #ifdef GRAPHML
@@ -359,6 +392,14 @@ static void            InitXmlParserContexts ()
    ctxt->ElementComplete = (Proc) GraphMLElementComplete;
    ctxt->AttributeComplete = (Proc) GraphMLAttributeComplete;
    ctxt->GetDTDName = (Proc) GraphMLGetDTDName;
+   ctxt->DefaultLineBreak = TRUE;
+   ctxt->DefaultLeadingSpace = TRUE;   
+   ctxt->DefaultTrailingSpace = TRUE;  
+   ctxt->DefaultContiguousSpace = TRUE;
+   ctxt->PreserveLineBreak = TRUE;    
+   ctxt->PreserveLeadingSpace = FALSE;   
+   ctxt->PreserveTrailingSpace = FALSE;  
+   ctxt->PreserveContiguousSpace = FALSE;
    prevCtxt = ctxt;
 #endif /* GRAPHML */
 
@@ -384,6 +425,14 @@ static void            InitXmlParserContexts ()
    ctxt->AttributeComplete = (Proc) XLinkAttributeComplete;
    ctxt->GetDTDName = NULL;
    XLinkParserCtxt = ctxt;
+   ctxt->DefaultLineBreak = TRUE;
+   ctxt->DefaultLeadingSpace = TRUE;   
+   ctxt->DefaultTrailingSpace = TRUE;  
+   ctxt->DefaultContiguousSpace = TRUE;
+   ctxt->PreserveLineBreak = FALSE;    
+   ctxt->PreserveLeadingSpace = FALSE;   
+   ctxt->PreserveTrailingSpace = FALSE;  
+   ctxt->PreserveContiguousSpace = FALSE;
    prevCtxt = ctxt;
 
    currentParserCtxt = NULL;
@@ -536,23 +585,99 @@ void  SubWithinTable ()
 }
 
 /*----------------------------------------------------------------------
-  XmlWithin  
+   XmlWhiteSpaceHandling
+   Is there an openend element with a xml:space attribute ?
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void    XmlWhiteSpaceHandling ()
+#else
+static void    XmlWhiteSpaceHandling ()
+
+#endif
+{
+  int        i;
+  ThotBool   found;
+
+  if (currentParserCtxt == NULL)
+    return; 
+
+  found = FALSE;
+  i = stackLevel - 1;
+  while (i > 0 && !found)
+    {
+      if (spacePreservedStack[i] == ' ')
+	i--;
+      else
+	{
+	  found = TRUE;
+	  if (spacePreservedStack[i] == 'D')
+	    {
+	      RemoveLineBreak = currentParserCtxt->DefaultLineBreak;
+	      RemoveLeadingSpace = currentParserCtxt->DefaultLeadingSpace;   
+	      RemoveTrailingSpace = currentParserCtxt->DefaultTrailingSpace;  
+	      RemoveContiguousSpace = currentParserCtxt->DefaultContiguousSpace;
+	    }
+	  else
+	    {
+	      RemoveLineBreak = currentParserCtxt->PreserveLineBreak;
+	      RemoveLeadingSpace = currentParserCtxt->PreserveLeadingSpace;   
+	      RemoveTrailingSpace = currentParserCtxt->PreserveTrailingSpace;  
+	      RemoveContiguousSpace = currentParserCtxt->PreserveContiguousSpace;
+	    }
+	}
+    }
+  
+  if (!found)
+    {
+      RemoveLineBreak = currentParserCtxt->DefaultLineBreak;
+      RemoveLeadingSpace = currentParserCtxt->DefaultLeadingSpace;   
+      RemoveTrailingSpace = currentParserCtxt->DefaultTrailingSpace;  
+      RemoveContiguousSpace = currentParserCtxt->DefaultContiguousSpace;
+    }
+}
+
+/*----------------------------------------------------------------------
+   XmlWhiteInStack
+   The last element in stack has a xml:space attribute
+   (or it is a PRE, STYLE or SCRIPT element in XHTML)
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void    XmlWhiteSpaceInStack (CHAR_T  *attrValue)
+#else
+static void    XmlWhiteSpaceInStack (attrValue)
+CHAR_T     *attrValue,
+
+#endif
+{
+  if (attrValue == NULL)
+      spacePreservedStack[stackLevel-1] = 'P';
+  else
+    {
+      if ((ustrcmp (attrValue, TEXT("default")) == 0))
+	spacePreservedStack[stackLevel-1] = 'D';
+      else
+	spacePreservedStack[stackLevel-1] = 'P';
+    }
+}
+
+/*----------------------------------------------------------------------
+  XmlWithinStack  
   Checks if an element of type ThotType is in the stack.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static ThotBool  XmlWithin (int ThotType,
-			    SSchema ThotSSchema)
+static ThotBool  XmlWithinStack (int ThotType,
+				 SSchema ThotSSchema)
 #else
-static ThotBool  XmlWithin (ThotType,
-			    ThotSSchema)
+static ThotBool  XmlWithinStack (ThotType,
+				 ThotSSchema)
 int       ThotType;
 SSchema	  ThotSSchema;
 
 #endif
 {
-   ThotBool            ret;
-   int                 i;
-   ElementType         elType;
+   ThotBool       ret;
+   int            i;
+   ElementType    elType;
 
    ret = FALSE;
    i = stackLevel - 1;
@@ -572,9 +697,10 @@ SSchema	  ThotSSchema;
 }
 
 /*----------------------------------------------------------------------
-   InsertSibling   return TRUE if the new element must be inserted
-   in the Thot document as a sibling of lastElement;
-   return FALSE if it must be inserted as a child.
+   InsertSibling
+   Return TRUE if the new element must be inserted in the Thot document
+   as a sibling of lastElement;
+   Return FALSE if it must be inserted as a child.
   ----------------------------------------------------------------------*/
 static ThotBool     InsertSibling ()
 {
@@ -667,7 +793,7 @@ Element           parent;
 	  {
 	    elType = TtaGetElementType (ancestor);
 	    if (XhtmlCannotContainText (elType) &&
-		!XmlWithin (HTML_EL_Option_Menu, DocumentSSchema))
+		!XmlWithinStack (HTML_EL_Option_Menu, DocumentSSchema))
 	      {
 		/* Element ancestor cannot contain text directly. Create a */
 		/* Pseudo_paragraph element as the parent of the text element */
@@ -759,11 +885,6 @@ Element *el;
 {
    Element   parent;
 
-#ifdef LC2
-   ElementType elType;
-   elType = TtaGetElementType (*el);
-   printf ("\nXhtmlInsertElement : elType.ElTypeNum %d \n", elType.ElTypeNum);
-#endif /* LC2 */
    if (InsertSibling ())
      {
        if (XMLcontext.lastElement == NULL)
@@ -831,31 +952,6 @@ Element    *el;
 }
 
 /*----------------------------------------------------------------------
-   XmlLastLeafInElement
-   return the last leaf element in element el.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-Element      XmlLastLeafInElement (Element el)
-#else
-Element      XmlLastLeafInElement (el)
-Element             el;
-
-#endif
-{
-   Element  child, lastLeaf;
-
-   child = el;
-   lastLeaf = NULL;
-   while (child != NULL)
-     {
-       child = TtaGetLastChild (child);
-       if (child != NULL)
-	   lastLeaf = child;
-     }
-   return lastLeaf;
-}
-
-/*----------------------------------------------------------------------
    GetXmlElType
    Search in the mapping tables the entry for the element type of
    name Xmlname and returns the corresponding Thot element type.
@@ -899,6 +995,30 @@ Document         doc;
     }
 }
 
+/*----------------------------------------------------------------------
+   XmlLastLeafInElement
+   return the last leaf element in element el.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+Element      XmlLastLeafInElement (Element el)
+#else
+Element      XmlLastLeafInElement (el)
+Element             el;
+
+#endif
+{
+   Element  child, lastLeaf;
+
+   child = el;
+   lastLeaf = NULL;
+   while (child != NULL)
+     {
+       child = TtaGetLastChild (child);
+       if (child != NULL)
+	   lastLeaf = child;
+     }
+   return lastLeaf;
+}
 
 /*----------------------------------------------------------------------
    RemoveEndingSpaces
@@ -914,11 +1034,11 @@ Element el;
 
 #endif
 {
-   int                 length, nbspaces;
-   ElementType         elType;
-   Element             lastLeaf;
-   CHAR_T                lastChar[2];
-   ThotBool            endingSpacesDeleted;
+   int           length, nbspaces;
+   ElementType   elType;
+   Element       lastLeaf;
+   CHAR_T        lastChar[2];
+   ThotBool      endingSpacesDeleted;
 
    endingSpacesDeleted = FALSE;
    if (IsBlockElement (el))
@@ -929,7 +1049,7 @@ Element el;
 	   if (lastLeaf != NULL)
 	     {
 	       elType = TtaGetElementType (lastLeaf);
-	       if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+	       if (elType.ElTypeNum == 1)
 		 /* the las leaf is a TEXT element */
 		 {
 		   length = TtaGetTextLength (lastLeaf);
@@ -939,8 +1059,7 @@ Element el;
 		       nbspaces = 0;
 		       do
 			 {
-			   TtaGiveSubString (lastLeaf, lastChar, length,
-					     1);
+			   TtaGiveSubString (lastLeaf, lastChar, length, 1);
 			   if (lastChar[0] == SPACE)
 			     {
 			       length--;
@@ -978,11 +1097,11 @@ USTRING          mappedName;
    int                 i, error;
    Element             el, parent;
    ElementType         parentType;
-   ThotBool            ret, spacesDeleted;
+   ThotBool            ret, spacesDeleted, spacePreserved;
 
    ret = FALSE;
-#ifdef LC
-   /* printf ("\nCloseElement %s \n", mappedName); */
+#ifdef LC2
+   printf ("\nCloseElement %s \n", mappedName);
 #endif /* LC */
 
    if (stackLevel > 0)
@@ -1065,91 +1184,16 @@ USTRING          mappedName;
 	     {
 	       XMLcontext.language = languageStack[stackLevel - 1];
 	       currentParserCtxt = parserCtxtStack[stackLevel - 1];
+	       spacePreserved = spacePreservedStack[stackLevel - 1];
+	       /* Is there a space attribute in the stack ? */
+	       XmlWhiteSpaceHandling ();
 	     }
 	 }
      }
-   
    return ret;
 }
 
 /*--------------------  StartElement  (start)  ---------------------*/
-
-/*----------------------------------------------------------------------
-   EndOfXmlStartTag
-   Function called at the end of a start tag.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void     EndOfXmlStartTag (CHAR_T *name)
-#else
-static void     EndOfXmlStartTag (name)
-CHAR_T   *name;
-
-#endif
-{
-
-  ElementType         elType;
-  AttributeType       attrType;
-  Attribute           attr;
-  int                 length;
-  STRING              text;
-
-  if (UnknownTag)
-    return;
-
-  if (XMLcontext.lastElement != NULL && currentElementName[0] != WC_EOS)
-    {
-      if (!ustrcmp (nameElementStack[stackLevel - 1], TEXT("pre"))   ||
-	  !ustrcmp (nameElementStack[stackLevel - 1], TEXT("style")) ||
-	  !ustrcmp (nameElementStack[stackLevel - 1], TEXT("script")))
-	{
-	  /* a <PRE>, <STYLE> or <SCRIPT> tag has been read */
-	  SpacePreserved = TRUE;
-	}
-      else
-	{
-	  if (!ustrcmp (nameElementStack[stackLevel - 1], TEXT("table")))
-	      /* <TABLE> has been read */
-	      XMLcontext.withinTable++;
-	}
-      
-      /* if it's a LI element, creates its IntItemStyle attribute
-	 according to surrounding elements */
-      SetAttrIntItemStyle (XMLcontext.lastElement, XMLcontext.doc);
-      /* if it's an AREA element, computes its position and size */
-      ParseAreaCoords (XMLcontext.lastElement, XMLcontext.doc);
- 
-      /* if it's a STYLE element in CSS notation, activate the CSS */
-      /* parser for parsing the element content */
-      elType = TtaGetElementType (XMLcontext.lastElement);
-      if (elType.ElTypeNum == HTML_EL_STYLE_)
-	{
-	  /* Search the Notation attribute */
-	  attrType.AttrSSchema = elType.ElSSchema;
-	  attrType.AttrTypeNum = HTML_ATTR_Notation;
-	  attr = TtaGetAttribute (XMLcontext.lastElement, attrType);
-	  if (attr == NULL)
-	    /* No Notation attribute. Assume CSS by default */
-	    XMLcontext.parsingCSS = TRUE;
-	  else
-	    /* the STYLE element has a Notation attribute */
-	    /* get its value */
-	    {
-	      length = TtaGetTextAttributeLength (attr);
-	      text = TtaAllocString (length + 1);
-	      TtaGiveTextAttributeValue (attr, text, &length);
-	      if (!ustrcasecmp (text, TEXT("text/css")))
-		XMLcontext.parsingCSS = TRUE;
-	      TtaFreeMemory (text);
-	    }
-	}
-      else
-	if (elType.ElTypeNum == HTML_EL_Text_Area)
-	  {
-	    /* we have to read the content as a simple text unit */
-	    XMLcontext.parsingTextArea = TRUE;
-	  }     
-    }
-}
 
 /*----------------------------------------------------------------------
    XhtmlContextOK 
@@ -1233,19 +1277,19 @@ STRING    elName;
        if (ok)
 	 /* refuse BODY within BODY */
 	 if (ustrcmp (elName, TEXT("body")) == 0)
-	     if (XmlWithin (HTML_EL_BODY, DocumentSSchema))
+	     if (XmlWithinStack (HTML_EL_BODY, DocumentSSchema))
 	         ok = FALSE;
 
        if (ok)
 	 /* refuse HEAD within HEAD */
 	 if (ustrcmp (elName, TEXT("head")) == 0)
-	   if (XmlWithin (HTML_EL_HEAD, DocumentSSchema))
+	   if (XmlWithinStack (HTML_EL_HEAD, DocumentSSchema))
 	     ok = FALSE;
 
        if (ok)
 	 /* refuse STYLE within STYLE */
 	 if (ustrcmp (elName, TEXT("style")) == 0)
-	   if (XmlWithin (HTML_EL_STYLE_, DocumentSSchema))
+	   if (XmlWithinStack (HTML_EL_STYLE_, DocumentSSchema))
 	     ok = FALSE;
 
        return ok;
@@ -1276,7 +1320,7 @@ CHAR_T*             GIname;
   /* ignore tag <P> within PRE for Xhtml elements */
   if (currentParserCtxt != NULL &&
       (ustrcmp (currentParserCtxt->SSchemaName, TEXT("HTML")) == 0) &&
-      (XmlWithin (HTML_EL_Preformatted, currentParserCtxt->XMLSSchema)) &&
+      (XmlWithinStack (HTML_EL_Preformatted, currentParserCtxt->XMLSSchema)) &&
       (ustrcasecmp (GIname, TEXT("p")) == 0))
     {
        UnknownTag = TRUE;
@@ -1366,9 +1410,92 @@ CHAR_T*             GIname;
     {
       languageStack[stackLevel] = XMLcontext.language;
       parserCtxtStack[stackLevel] = currentParserCtxt;
-      preserveSpaceStack[stackLevel] = FALSE;
+      spacePreservedStack[stackLevel] = ' ';
       stackLevel++;
     }
+}
+
+/*----------------------------------------------------------------------
+   EndOfXmlStartTag
+   Function called at the end of a start tag.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void     EndOfXmlStartTag (CHAR_T *name)
+#else
+static void     EndOfXmlStartTag (name)
+CHAR_T   *name;
+
+#endif
+{
+
+  ElementType     elType;
+  AttributeType   attrType;
+  Attribute       attr;
+  int             length;
+  STRING          text;
+  STRING          elSchemaName;
+
+  if (UnknownTag)
+    return;
+
+  if (XMLcontext.lastElement != NULL && currentElementName[0] != WC_EOS)
+    {
+      elType = TtaGetElementType (XMLcontext.lastElement);
+      elSchemaName = TtaGetSSchemaName (elType.ElSSchema);
+      
+      if (ustrcmp (TEXT("HTML"), elSchemaName) == 0)
+	{
+	  if (!ustrcmp (nameElementStack[stackLevel - 1], TEXT("pre"))   ||
+	      !ustrcmp (nameElementStack[stackLevel - 1], TEXT("style")) ||
+	      !ustrcmp (nameElementStack[stackLevel - 1], TEXT("script")))
+	    /* a <PRE>, <STYLE> or <SCRIPT> tag has been read */
+	    XmlWhiteSpaceInStack (NULL);
+	  else
+	    if (!ustrcmp (nameElementStack[stackLevel - 1], TEXT("table")))
+	      /* <TABLE> has been read */
+	      XMLcontext.withinTable++;
+	  
+	  /* if it's a LI element, creates its IntItemStyle attribute
+	     according to surrounding elements */
+	  SetAttrIntItemStyle (XMLcontext.lastElement, XMLcontext.doc);
+	  
+	  /* if it's an AREA element, computes its position and size */
+	  ParseAreaCoords (XMLcontext.lastElement, XMLcontext.doc);
+	  
+	  /* if it's a STYLE element in CSS notation, activate the CSS */
+	  /* parser for parsing the element content */
+	  if (elType.ElTypeNum == HTML_EL_STYLE_)
+	    {
+	      /* Search the Notation attribute */
+	      attrType.AttrSSchema = elType.ElSSchema;
+	      attrType.AttrTypeNum = HTML_ATTR_Notation;
+	      attr = TtaGetAttribute (XMLcontext.lastElement, attrType);
+	      if (attr == NULL)
+		/* No Notation attribute. Assume CSS by default */
+		XMLcontext.parsingCSS = TRUE;
+	      else
+		/* the STYLE element has a Notation attribute */
+		/* get its value */
+		{
+		  length = TtaGetTextAttributeLength (attr);
+		  text = TtaAllocString (length + 1);
+		  TtaGiveTextAttributeValue (attr, text, &length);
+		  if (!ustrcasecmp (text, TEXT("text/css")))
+		    XMLcontext.parsingCSS = TRUE;
+		  TtaFreeMemory (text);
+		}
+	    }
+	  else
+	    if (elType.ElTypeNum == HTML_EL_Text_Area)
+	      {
+		/* we have to read the content as a simple text unit */
+		XMLcontext.parsingTextArea = TRUE;
+	      }
+	}
+    }
+
+  XmlWhiteSpaceHandling ();
+  ImmediatelyAfterTag = TRUE;
 }
 
 /*----------------------  StartElement  (end)  -----------------------*/
@@ -1390,14 +1517,16 @@ CHAR_T     *GIname;
 {
    CHAR_T         msgBuffer[MaxMsgLength];
    ElementType    elType;
+   STRING         elSchemaName;
    STRING         mappedName = NULL;
 
+   /* Remove a line break immediately before an end tag */ 
    if (XMLcontext.parsingTextArea)
-       if (ustrcasecmp (GIname, TEXT("textarea")) != 0)
-         /* We are parsing the contents of a textarea element. */
-	 /* The end tag is not the one closing the current textarea, */
-	 /* consider it as plain text */
-	 return;
+     if (ustrcasecmp (GIname, TEXT("textarea")) != 0)
+       /* We are parsing the contents of a textarea element. */
+       /* The end tag is not the one closing the current textarea, */
+       /* consider it as plain text */
+       return;
    
    /* search the XML element name in the corresponding mapping table */
    elType.ElSSchema = NULL;
@@ -1416,7 +1545,6 @@ CHAR_T     *GIname;
        /* doesn't process that element */
        usprintf (msgBuffer, TEXT("Invalid XML element %s"), GIname);
        XmlParseError (XMLcontext.doc, msgBuffer, 0);
-       return;
      }
    else
      {
@@ -1424,8 +1552,7 @@ CHAR_T     *GIname;
        if (!CloseElement (mappedName))
 	 /* the end tag does not close any current element */
 	 {
-	   usprintf (msgBuffer,
-		     TEXT("Unexpected end tag %s"), GIname);
+	   usprintf (msgBuffer, TEXT("Unexpected end tag %s"), GIname);
 	   XmlParseError (XMLcontext.doc, msgBuffer, 0);
 	 }
      }
@@ -1434,6 +1561,73 @@ CHAR_T     *GIname;
 
 
 /*----------------------  Data  (start)  -----------------------------*/
+
+/*----------------------------------------------------------------------
+   IsLeadingSpaceUseless
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static ThotBool  IsLeadingSpaceUseless ()
+#else  /* __STDC__ */
+static ThotBool  IsLeadingSpaceUseless ()
+#endif  /* __STDC__ */
+
+{
+   ElementType     elType;
+   STRING          elSchemaName;
+   Element         parent, ancestor, prev;
+   ThotBool        removeLeadingSpaces;
+
+   if (InsertSibling ())
+     /* There is a previous sibling (XMLcontext.lastElement) 
+	for the new Text element */
+     {
+       parent = TtaGetParent (XMLcontext.lastElement);
+       if (parent == NULL)
+	 parent = XMLcontext.lastElement;
+       elType = TtaGetElementType (parent);
+       elSchemaName = TtaGetSSchemaName (elType.ElSSchema);
+       if (IsXMLElementInline (XMLcontext.lastElement) &&
+	   (ustrcmp (TEXT("HTML"), elSchemaName) == 0) &&
+	   (elType.ElTypeNum != HTML_EL_Option_Menu) &&
+	   (elType.ElTypeNum != HTML_EL_OptGroup))
+	 {
+	   removeLeadingSpaces = FALSE;
+	   elType = TtaGetElementType (XMLcontext.lastElement);
+	   if ((elType.ElTypeNum == HTML_EL_BR) && 
+	       (ustrcmp (TEXT("HTML"), elSchemaName) == 0))
+	     removeLeadingSpaces = TRUE;
+	 }
+       else
+	 removeLeadingSpaces = TRUE;
+     }
+   else
+     /* the new Text element should be the first child 
+	of the latest element encountered */
+     {
+       parent = XMLcontext.lastElement;
+       removeLeadingSpaces = TRUE;
+       elType = TtaGetElementType (XMLcontext.lastElement);
+       elSchemaName = TtaGetSSchemaName (elType.ElSSchema);
+       if ((ustrcmp (TEXT("HTML"), elSchemaName) != 0) ||
+	   ((ustrcmp (TEXT("HTML"), elSchemaName) == 0) &&
+	   elType.ElTypeNum != HTML_EL_Option_Menu &&
+	   elType.ElTypeNum != HTML_EL_OptGroup))
+	 {
+	   ancestor = parent;
+	   while (removeLeadingSpaces &&
+		  IsXMLElementInline (ancestor))
+	     {
+	       prev = ancestor;
+	       TtaPreviousSibling (&prev);
+	       if (prev == NULL)
+		 ancestor = TtaGetParent (ancestor);
+	       else
+		 removeLeadingSpaces = FALSE;
+	     }
+	 }
+     }
+   return removeLeadingSpaces;
+}
 
 /*----------------------------------------------------------------------
    PutInXmlElement
@@ -1446,139 +1640,100 @@ STRING      data;
 #endif  /* __STDC__ */
 
 {
-   ElementType     elType;
-   Element         elText, parent, ancestor, prev;
-   int             i=0;
-   int             length;
-   ThotBool        removeLeadingSpaces;
-   static ThotBool previousEndingSpace;
-   static ThotBool newLine;
-   CHAR_T         *bufferws;
+   ElementType  elType;
+   Element      elText;
+   int          i=0;
+   int          length;
+   Language     lang;
+   ThotBool     uselessSpace = FALSE;
+   CHAR_T      *buffer, *bufferws, *buffertext;
+   int          i1, i2=0, i3=0;
 
 #ifdef LC
    printf ("\n  PutInXmlElement - length : %d, data \"%s\"",
 	   ustrlen (data), data);
 #endif /* LC */
 
-   if (UnknownTag)
-     return;
-
-   /* remove leading spaces for merged text and */
-   /* replace single CR character by space character */
-   /* except for elements for which white spaces are meaninful */
    length = ustrlen (data);
-   if (!SpacePreserved)
+
+   /* Line-break and tabs treatment */
+   if ((length  == 1) &&
+       (data[0] == WC_EOL || data[0] == WC_CR) &&
+       ImmediatelyAfterTag)
      {
-       if (length == 1 &&
-	   (data[0] == WC_EOL  || data[0] == WC_CR))
+       /* Remove a line break immediately following a start tag */ 
+       ImmediatelyAfterTag = FALSE;
+       return;
+     }
+   ImmediatelyAfterTag = FALSE;
+
+   bufferws = TtaAllocString (length+1);
+   strcpy (bufferws, data);
+
+   if (RemoveLineBreak)
+     {
+       i = 0;
+       while (bufferws[i] != WC_EOS)
 	 {
-	   newLine = 1;
-	   return;
+	   if (bufferws[i] == WC_EOL ||
+	       bufferws[i] == WC_CR ||
+	       bufferws[i] == WC_TAB)
+	     bufferws[i] = WC_SPACE;
+	   i++;
 	 }
      }
+   i = 0;
 
+   /* Leading space treatment */
    if (XMLcontext.lastElement != NULL)
      {
-      bufferws  = TtaAllocString (length+2);
-       if (newLine)
+       uselessSpace = IsLeadingSpaceUseless ();
+       if (RemoveLeadingSpace && uselessSpace)
+	 /* suppress leading spaces */
 	 {
-	   strcpy (bufferws, " ");
-	   strcat (bufferws, data);
-	 }
-       else
-	 strcpy (bufferws, data);
-       
-       if (InsertSibling ())
-	 /* There is a previous sibling (XMLcontext.lastElement) 
-	    for the new Text element */
-	 {
-	   parent = TtaGetParent (XMLcontext.lastElement);
-	   if (parent == NULL)
-	     parent = XMLcontext.lastElement;
-	   elType = TtaGetElementType (parent);
-	   if (IsXMLElementInline (XMLcontext.lastElement) &&
-	       elType.ElTypeNum != HTML_EL_Option_Menu &&
-	       elType.ElTypeNum != HTML_EL_OptGroup)
-	     {
-	       removeLeadingSpaces = FALSE;
-	       elType = TtaGetElementType (XMLcontext.lastElement);
-	       if (elType.ElTypeNum == HTML_EL_BR)
-		 removeLeadingSpaces = TRUE;
-	     }
-	   else
-	     removeLeadingSpaces = TRUE;
-	 }
-       else
-	 /* the new Text element should be the first child 
-	    of the latest element encountered */
-	 {
-	   parent = XMLcontext.lastElement;
-	   removeLeadingSpaces = TRUE;
-	   elType = TtaGetElementType (XMLcontext.lastElement);
-	   if (elType.ElTypeNum != HTML_EL_Option_Menu &&
-	       elType.ElTypeNum != HTML_EL_OptGroup)
-	     {
-	       ancestor = parent;
-	       while (removeLeadingSpaces &&
-		      IsXMLElementInline (ancestor))
-		 {
-		   prev = ancestor;
-		   TtaPreviousSibling (&prev);
-		   if (prev == NULL)
-		     ancestor = TtaGetParent (ancestor);
-		   else
-		     removeLeadingSpaces = FALSE;
-		 }
-	     }
+	   i = 0;
+	   while (bufferws[i] <= WC_SPACE && bufferws[i] != WC_EOS)
+	     i++;
 	 }
        
-#ifdef LC2
-       printf ("\n  removeLeadingSpaces %d, newLine %d, previousEndingSpace %d",
-	       removeLeadingSpaces, newLine, previousEndingSpace);
-#endif /* LC */
-
-       if (removeLeadingSpaces)
-	 {
-	   /* suppress leading spaces */
-	   if (!XmlWithin (HTML_EL_Preformatted, DocumentSSchema) &&
-	       !XmlWithin (HTML_EL_STYLE_, DocumentSSchema) &&
-	       !XmlWithin (HTML_EL_SCRIPT, DocumentSSchema))
-	     { 
-	       while (bufferws[i] <= WC_SPACE && bufferws[i] != WC_EOS)
-		 i++;
-	     }	    
-	 }
-       
+       /* Contiguous spaces treatment */ 
        if (bufferws[i] != WC_EOS)
 	 {
-CHAR_T  *buffer;
-int      i1, i2=0, i3=0;
-
-           /* Concat adjoining whitespace characters */ 
-           length = ustrlen (bufferws);
+	   length = ustrlen (bufferws);
 	   buffer = TtaAllocString (length+1);
-	   for (i1 = i; i1 <= length; i1++)
+	   if (RemoveContiguousSpace)
 	     {
-	       if (bufferws[i1] <= WC_SPACE && bufferws[i1] != WC_EOS)
-		 i3++;
-	       else
-		 i3 = 0;
-	       if (i3 <= 1)
-		 buffer[i2++] = bufferws[i1];
+	       for (i1 = i; i1 <= length; i1++)
+		 {
+		   if (bufferws[i1] <= WC_SPACE && bufferws[i1] != WC_EOS)
+		     i3++;
+		   else
+		     i3 = 0;
+		   if (i3 <= 1)
+		     buffer[i2++] = bufferws[i1];
+		 }
 	     }
+	   else
+	     strcpy (buffer, bufferws);
 	   i1 = 0;
 	   
 	   /* Filling of the element value */
 	   elType = TtaGetElementType (XMLcontext.lastElement);
-	   if (elType.ElTypeNum == HTML_EL_TEXT_UNIT && XMLcontext.mergeText)
+	   if (elType.ElTypeNum == 1 && XMLcontext.mergeText)
 	     {
-	       if (newLine && previousEndingSpace && !removeLeadingSpaces)
-		 i1++;
-	       TtaAppendTextContent (XMLcontext.lastElement,
-				     &(buffer[i1]), XMLcontext.doc);
-#ifdef LC
-	       printf ("\n  PutInXmlElement : Merge \n");
-#endif /* LC */
+	       /* Is the last character of text element a space */
+	       length = TtaGetTextLength (XMLcontext.lastElement) + 1;
+	       buffertext = TtaAllocString (length);
+	       TtaGiveTextContent (XMLcontext.lastElement,
+				   buffertext, &length, &lang);
+	       if ((buffertext[length-1] == WC_SPACE) &&
+		   (buffer[i1] == WC_SPACE))
+		 TtaAppendTextContent (XMLcontext.lastElement,
+				       &(buffer[i1+1]), XMLcontext.doc);
+	       else
+		 TtaAppendTextContent (XMLcontext.lastElement,
+				       &(buffer[i1]), XMLcontext.doc);
+	       TtaFreeMemory (buffertext);
 	     }
 	   else
 	     {
@@ -1593,23 +1748,10 @@ int      i1, i2=0, i3=0;
 	       /* put the content of the input buffer into the TEXT element */
 	       if (elText != NULL)
 		 TtaSetTextContent (elText, &(buffer[i1]),
-				    XMLcontext.language,
-				    XMLcontext.doc);
-#ifdef LC
-	       printf ("\n  PutInXmlElement : Create \n");
-#endif /* LC */
+				    XMLcontext.language, XMLcontext.doc);
 	     }
-	   newLine = 0;
-	   if (buffer[i2-2] == WC_SPACE)
-	     previousEndingSpace = TRUE;
-	   else
-	     previousEndingSpace = FALSE;
 	   TtaFreeMemory (buffer);
 	 }
-#ifdef LC
-       else
-	 printf ("\n  PutInXmlElement : No create \n");
-#endif /* LC */
        TtaFreeMemory (bufferws);
      }
 }
@@ -1870,13 +2012,14 @@ CHAR_T         *attrName;
    CHAR_T         *ptr;
    CHAR_T          msgBuffer[MaxMsgLength];
 
-   if (UnknownTag)
-     return;
-
    currentAttribute = NULL;
    lastMappedAttr = NULL;
    HTMLStyleAttribute = FALSE;
-   
+   XMLSpaceAttribute = FALSE;
+ 
+   if (UnknownTag)
+     return;
+
    /* look for a NS_SEP in the tag name (namespaces) */ 
    /* and ignore the prefix if there is one */
    buffer = TtaGetMemory (strlen (attrName) + 1);
@@ -1906,6 +2049,10 @@ CHAR_T         *attrName;
      }
    else
      {
+       /* Is it a xml:space attribute */
+       if (ustrncmp (bufName, TEXT("xml:space"), 9) == 0)
+	 XMLSpaceAttribute = TRUE;
+
        if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("HTML")) == 0)
 	 XhtmlEndOfAttrName (bufName, XMLcontext.lastElement, XMLcontext.doc);
        else
@@ -1980,7 +2127,6 @@ CHAR_T*             val;
   attrType.AttrSSchema = currentParserCtxt->XMLSSchema;
   attrType.AttrTypeNum = DummyAttribute;
   MapHTMLAttributeValue (val, attrType, &value);
-
   if (value < 0)
     {
       usprintf (msgBuffer, TEXT("Unknown attribute value \"type=%s\""), val);
@@ -2070,9 +2216,6 @@ CHAR_T     *attrValue;
      (*(currentParserCtxt->AttributeComplete)) (currentAttribute,
 						XMLcontext.lastElement,
 						XMLcontext.doc);
-   
-   HTMLStyleAttribute = FALSE;
-   currentAttribute = NULL;
 }
 
 /*----------------------------------------------------------------------
@@ -2360,16 +2503,25 @@ CHAR_T     *attrValue;
 #endif
 {
 
-   if (lastMappedAttr == NULL  && currentAttribute == NULL) 
-       return;
-
-   if (currentParserCtxt != NULL)
+   if (lastMappedAttr != NULL  || currentAttribute != NULL || XMLSpaceAttribute) 
      {
-       if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("HTML")) == 0)
-	 XhtmlEndOfAttrValue (attrValue);
-       else
-	 XmlEndOfAttrValue (attrValue);
+       if (currentParserCtxt != NULL)
+	 {
+	   if (XMLSpaceAttribute)
+	     XmlWhiteSpaceInStack (attrValue);
+	   else
+	     {
+	       if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("HTML")) == 0)
+		 XhtmlEndOfAttrValue (attrValue);
+	       else
+		 XmlEndOfAttrValue (attrValue);
+	     }
+	 }
      }
+
+   currentAttribute = NULL;
+   HTMLStyleAttribute = FALSE;
+   XMLSpaceAttribute = FALSE;
 }
 
 /*--------------------  Attributes  (end)  ---------------------*/
@@ -2379,7 +2531,9 @@ CHAR_T     *attrValue;
 
 /*----------------------------------------------------------------------
    PutMathMLEntity
-   TEMPORARY FUNCTION
+   TEMPORARY FUNCTION	     XmlWhiteSpaceHandling (attrValue, XMLcontext.lastElement,
+				    XMLcontext.doc, 0);
+
    A MathML entity has been created by the XML parser.
    Create an attribute EntityName containing the entity name.
   ----------------------------------------------------------------------*/
@@ -3006,7 +3160,7 @@ const XML_Char  *name
    CHAR_T       *ptr;
 
 #ifdef LC
-   printf ("\n Hndl_ElementEnd '%s'\n", name);
+   printf ("\n Hndl_ElementEnd '%s'", name);
 #endif /* LC */
 
    /* look for the context associated with that element */
@@ -3096,7 +3250,7 @@ const XML_Char  *uri;
 
 {   
 
-#ifdef LC
+#ifdef LC2
   printf ("\n Hndl_NameSpaceStart");
   printf ("\n   prefix : %s; uri : %s", prefix, uri);
 #endif /* LC */
@@ -3117,7 +3271,7 @@ const XML_Char  *prefix;
 #endif  /* __STDC__ */
 
 {
-#ifdef LC
+#ifdef LC2
   printf ("\n Hndl_NameSpaceEnd");
   printf ("\n   prefix : %s", prefix);
 #endif /* LC */
@@ -3464,8 +3618,11 @@ Document            doc;
    lastMappedAttr = NULL;
    XMLcontext.readingAnAttrValue = FALSE;
    XMLcontext.mergeText = FALSE;
-   SpacePreserved = FALSE;
    XMLcontext.parsingCSS = FALSE;
+   UnknownTag = FALSE;
+   ImmediatelyAfterTag = FALSE;
+   htmlLineRead = 0;
+   htmlCharRead = 0;
 }
 
 /*----------------------------------------------------------------------
@@ -3546,7 +3703,6 @@ ThotBool  *endOfFile;
   XMLrootName[0] = WC_EOS;
   XMLrootClosed = FALSE;
   XMLabort = FALSE;
-  SpacePreserved = FALSE;
   stackLevel = 1;
 
   /* Specific initialization for expat */
@@ -3802,16 +3958,9 @@ ThotBool    withDoctype;
   XMLcontext.lastElement = NULL;
   XMLcontext.lastElementClosed = FALSE;
   XMLabort = FALSE;
-  currentAttribute = NULL;
-  lastAttrElement = NULL;
-  lastMappedAttr = NULL;
-  XMLcontext.readingAnAttrValue = FALSE;
-  UnknownTag = FALSE;
   rootElement = NULL;
   XMLrootName[0] = WC_EOS;
   XMLrootClosed = FALSE;
-  htmlLineRead = 0;
-  htmlCharRead = 0;
   
   /* Reading of the file */
   wc2iso_strcpy (www_file_name, htmlFileName);
@@ -3916,7 +4065,7 @@ ThotBool    withDoctype;
 
 	/* initialize parsing environment */
 	InitializeXmlParsingContext (NULL, FALSE, 0);
-	
+
 	/* initialize the error file */
 	ErrFile = (FILE*) 0;
 	ErrFileName[0] = WC_EOS;
