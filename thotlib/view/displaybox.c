@@ -750,11 +750,11 @@ int                 frame;
 		    case 'x':	/* Segments (2 points) forward arrow */
 		    case 'y':	/* Segments (2 points) backward arrow */
 		    case 'z':	/* Segments (2 points) arrows on both directions */
-		       if (pAb->AbPolyLineShape == 'S')
+		       if (pAb->AbPolyLineShape == 'S' || pAb->AbPolyLineShape == 'w')
 			  arrow = 0;
-		       else if (pAb->AbPolyLineShape == 'U')
+		       else if (pAb->AbPolyLineShape == 'U' || pAb->AbPolyLineShape == 'x')
 			  arrow = 1;
-		       else if (pAb->AbPolyLineShape == 'N')
+		       else if (pAb->AbPolyLineShape == 'N' || pAb->AbPolyLineShape == 'y')
 			  arrow = 2;
 		       else
 			  arrow = 3;
@@ -1085,30 +1085,34 @@ PtrBox              pBox;
 int                 frame;
 #endif /* __STDC__ */
 {
-   /* Empty */
-   if (pBox->BxAbstractBox->AbVolume == 0) {
+  if (pBox->BxAbstractBox->AbVolume == 0 ||
+      (pBox->BxAbstractBox->AbLeafType == LtPolyLine) && pBox->BxNChars == 1)
+    {
+      /* Empty */
       if (pBox->BxAbstractBox->AbLeafType == LtSymbol)
-         DisplayEmptyBox (pBox, frame, '2');
+	DisplayEmptyBox (pBox, frame, '2');
       else if (ThotLocalActions[T_emptybox] != NULL)
-           (*ThotLocalActions[T_emptybox]) (pBox, frame, '2');
-   } else if (pBox->BxAbstractBox->AbLeafType == LtText) /* Text */
-          /* Display a Text box */
-          DisplayJustifiedText (pBox, frame);
-   else if (pBox->BxType == BoPicture) /* Picture */
-        DisplayImage (pBox, frame);
-   else if (pBox->BxAbstractBox->AbLeafType == LtSymbol) /* Symbol */
-        if (pBox->BxAbstractBox->AbShape == EOS)
-           DisplayEmptyBox (pBox, frame, '2');
-        else
-           DisplaySymbol (pBox, frame);
-   else if (pBox->BxAbstractBox->AbLeafType == LtGraphics) /* Graphics */
-        if (pBox->BxAbstractBox->AbShape == EOS)
-           DisplayEmptyBox (pBox, frame, '2');
-        else
-           DisplayGraph (pBox, frame);
-   else if (pBox->BxAbstractBox->AbLeafType == LtPolyLine) /* Polyline */
-        if (pBox->BxNChars == 1)
-           DisplayEmptyBox (pBox, frame, '2');
-        else
-            DrawPolyLine (pBox, frame);
+	(*ThotLocalActions[T_emptybox]) (pBox, frame, '2');
+    }
+  else if (pBox->BxAbstractBox->AbLeafType == LtText)
+    /* Display a Text box */
+    DisplayJustifiedText (pBox, frame);
+  else if (pBox->BxType == BoPicture)
+    /* Picture */
+    DisplayImage (pBox, frame);
+  else if (pBox->BxAbstractBox->AbLeafType == LtSymbol)
+    /* Symbol */
+    if (pBox->BxAbstractBox->AbShape == EOS)
+      DisplayEmptyBox (pBox, frame, '2');
+    else
+      DisplaySymbol (pBox, frame);
+  else if (pBox->BxAbstractBox->AbLeafType == LtGraphics)
+    /* Graphics */
+    if (pBox->BxAbstractBox->AbShape == EOS)
+      DisplayEmptyBox (pBox, frame, '2');
+    else
+      DisplayGraph (pBox, frame);
+  else if (pBox->BxAbstractBox->AbLeafType == LtPolyLine)
+    /* Polyline */
+    DrawPolyLine (pBox, frame);
 }
