@@ -113,10 +113,12 @@ void HRefDlgWX::OnBrowse( wxCommandEvent& event )
      TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_OPEN_URL) ),
      _T(""),
      _T(""), 
-     m_Filter
+     m_Filter,
+     wxOPEN | wxCHANGE_DIR /* wxCHANGE_DIR -> remember the last directory used. */
      );
 
-  p_dlg->SetDirectory(wxGetHomeDir());
+  // do not force the directory, let wxWidgets choose for the current one
+  //  p_dlg->SetDirectory(wxGetHomeDir());
   
   if (p_dlg->ShowModal() == wxID_OK)
     {

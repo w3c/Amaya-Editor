@@ -279,10 +279,12 @@ void SaveAsDlgWX::OnBrowseButton( wxCommandEvent& event )
      TtaConvMessageToWX( "Save ..." ),
      _T(""),
      _T(""), 
-     wx_filter
+     wx_filter,
+     wxSAVE | wxCHANGE_DIR /* wxCHANGE_DIR -> remember the last directory used. */
      );
-
-  p_dlg->SetDirectory(wxGetHomeDir());
+  
+  // do not force the directory, let wxWidgets choose for the current one
+  //  p_dlg->SetDirectory(wxGetHomeDir());
   
   if (p_dlg->ShowModal() == wxID_OK)
     {
