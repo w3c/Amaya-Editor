@@ -14,15 +14,6 @@ extern void XFlushOutput ( int frame );
 extern void FrameToRedisplay ( ThotWindow w,
                                int frame,
                                void *ev );
-extern void FrameResized ( int *w,
-                           int frame,
-                           int *info );
-extern void FrameHScrolled ( int *w,
-                             int frame,
-                             int *param );
-extern void FrameVScrolled ( int *w,
-                             int frame,
-                             int *param );
 extern void TtcLineUp ( Document document,
                         View view );
 extern void TtcLineDown ( Document document,
@@ -48,8 +39,6 @@ extern void TtaSetStatus ( Document document,
                            View view,
                            char *text,
                            char *name );
-extern void FrameCallback ( int frame,
-                            void *evnt );
 extern void ThotGrab ( ThotWindow win,
                        ThotCursor cursor,
                        long events,
@@ -93,15 +82,6 @@ extern void XFlushOutput (/* int frame */);
 extern void FrameToRedisplay (/* ThotWindow w,
                                  int frame,
                                  void *ev */);
-extern void FrameResized (/* int *w,
-                             int frame,
-                             int *info */);
-extern void FrameHScrolled (/* int *w,
-                               int frame,
-                               int *param */);
-extern void FrameVScrolled (/* int *w,
-                               int frame,
-                               int *param */);
 extern void TtcLineUp (/* Document document,
                           View view */);
 extern void TtcLineDown (/* Document document,
@@ -127,8 +107,6 @@ extern void TtaSetStatus (/* Document document,
                              View view,
                              char *text,
                              char *name */);
-extern void FrameCallback (/* int frame,
-                              void *evnt */);
 extern void ThotGrab (/* ThotWindow win,
                          ThotCursor cursor,
                          long events,

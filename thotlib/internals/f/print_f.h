@@ -44,8 +44,12 @@ extern void DisplayConfirmMessage ( char *text );
 extern void DisplayMessage ( char *text,
                              int msgType );
 extern void TtaError ( int errorCode );
-extern int main ( int argc,
-                  char **argv );
+extern int while ( argCounter < argc );
+extern int if ( !realNameFound );
+extern int while ( (index < length) && !done );
+extern int if ( TheDoc != NULL );
+extern int if ( TheDoc != NULL );
+extern int if ( int removeDirectory );
 
 #else /* __STDC__ */
 
@@ -87,8 +91,12 @@ extern void DisplayConfirmMessage (/* char *text */);
 extern void DisplayMessage (/* char *text,
                                int msgType */);
 extern void TtaError (/* int errorCode */);
-extern int main (/* int argc,
-                    char **argv */);
+extern int while (/* argCounter < argc */);
+extern int if (/* !realNameFound */);
+extern int while (/* (index < length) && !done */);
+extern int if (/* TheDoc != NULL */);
+extern int if (/* TheDoc != NULL */);
+extern int if (/* int removeDirectory */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -26,12 +26,6 @@ extern int LWZReadByte ( FILE *fd,
                          int flag,
                          int input_code_size );
 extern int highbit16 ( unsigned long ul );
-extern Pixmap MakeMask ( Display *dsp,
-                         unsigned char *pixels,
-                         int w,
-                         int h,
-                         unsigned int bg,
-                         int bperpix );
 extern Pixmap DataToPixmap ( unsigned char *image_data,
                              int width,
                              int height,
@@ -102,12 +96,6 @@ extern int LWZReadByte (/* FILE *fd,
                            int flag,
                            int input_code_size */);
 extern int highbit16 (/* unsigned long ul */);
-extern Pixmap MakeMask (/* Display *dsp,
-                           unsigned char *pixels,
-                           int w,
-                           int h,
-                           unsigned int bg,
-                           int bperpix */);
 extern Pixmap DataToPixmap (/* unsigned char *image_data,
                                int width,
                                int height,

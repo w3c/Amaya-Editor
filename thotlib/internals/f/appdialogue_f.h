@@ -38,10 +38,6 @@ extern void TteAddMenuItem ( WindowType windowtype,
 extern void TteOpenMainWindow ( char *name,
                                 Pixmap logo,
                                 Pixmap icon );
-extern void APP_ButtonCallback ( ThotButton w,
-                                 int frame,
-                                 caddr_t call_d );
-extern void InitClue ( ThotWidget toplevel );
 extern int TtaAddButton ( Document document,
                           View view,
                           ThotIcon picture,
@@ -62,9 +58,6 @@ extern void TtcSwitchButtonBar ( Document doc,
                                  View view );
 extern ThotBool TtaIsButtonActivated ( Document document,
                                        View view );
-extern void APP_TextCallback ( ThotWidget w,
-                               int frame,
-                               void *call_d );
 extern int TtaAddTextZone ( Document doc,
                             View view,
                             char *label,
@@ -164,10 +157,6 @@ extern void TteAddMenuItem (/* WindowType windowtype,
 extern void TteOpenMainWindow (/* char *name,
                                   Pixmap logo,
                                   Pixmap icon */);
-extern void APP_ButtonCallback (/* ThotButton w,
-                                   int frame,
-                                   caddr_t call_d */);
-extern void InitClue (/* ThotWidget toplevel */);
 extern int TtaAddButton (/* Document document,
                             View view,
                             ThotIcon picture,
@@ -188,9 +177,6 @@ extern void TtcSwitchButtonBar (/* Document doc,
                                    View view */);
 extern ThotBool TtaIsButtonActivated (/* Document document,
                                          View view */);
-extern void APP_TextCallback (/* ThotWidget w,
-                                 int frame,
-                                 void *call_d */);
 extern int TtaAddTextZone (/* Document doc,
                               View view,
                               char *label,

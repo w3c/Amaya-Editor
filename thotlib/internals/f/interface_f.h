@@ -6,12 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern int TtaXLookupString ( ThotKeyEvent *event,
-                              char *buffer,
-                              int nbytes,
-                              KeySym *keysym,
-                              ThotComposeStatus *status );
-extern void TtaInstallMultiKey ( void );
 extern void TtaFetchOneEvent ( ThotEvent *ev );
 extern void TtaFetchOrWaitEvent ( ThotEvent *ev );
 extern ThotBool TtaFetchOneAvailableEvent ( ThotEvent *ev );
@@ -20,7 +14,6 @@ extern void TtaHandlePendingEvents ( void );
 extern void TtaMainLoop ( void );
 extern Pixel TtaGetMenuColor ( void );
 extern void DisplayEmptyBoxLoadResources ( void );
-extern Display *TtaGetCurrentDisplay ( void );
 extern int TtaGetScreenDepth ( void );
 extern void TtaClickElement ( Document * document,
                               Element * element );
@@ -32,12 +25,6 @@ extern void TtaGiveSelectPosition ( Document document,
 
 #else /* __STDC__ */
 
-extern int TtaXLookupString (/* ThotKeyEvent *event,
-                                char *buffer,
-                                int nbytes,
-                                KeySym *keysym,
-                                ThotComposeStatus *status */);
-extern void TtaInstallMultiKey (/* void */);
 extern void TtaFetchOneEvent (/* ThotEvent *ev */);
 extern void TtaFetchOrWaitEvent (/* ThotEvent *ev */);
 extern ThotBool TtaFetchOneAvailableEvent (/* ThotEvent *ev */);
@@ -46,7 +33,6 @@ extern void TtaHandlePendingEvents (/* void */);
 extern void TtaMainLoop (/* void */);
 extern Pixel TtaGetMenuColor (/* void */);
 extern void DisplayEmptyBoxLoadResources (/* void */);
-extern Display *TtaGetCurrentDisplay (/* void */);
 extern int TtaGetScreenDepth (/* void */);
 extern void TtaClickElement (/* Document * document,
                                 Element * element */);

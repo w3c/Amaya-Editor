@@ -41,6 +41,7 @@ extern void FreeAllPicCacheFromFrame ( int frame );
 extern void FreePixmap ( Pixmap pixmap );
 extern Picture_Report PictureFileOk ( char *fileName,
                                       int *typeImage );
+extern void CreateGifLogo ( void );
 extern void InitPictureHandlers ( ThotBool printing );
 extern void GetPictHandlersList ( int *count,
                                   char* buffer );
@@ -111,6 +112,7 @@ extern void FreeAllPicCacheFromFrame (/* int frame */);
 extern void FreePixmap (/* Pixmap pixmap */);
 extern Picture_Report PictureFileOk (/* char *fileName,
                                         int *typeImage */);
+extern void CreateGifLogo (/* void */);
 extern void InitPictureHandlers (/* ThotBool printing */);
 extern void GetPictHandlersList (/* int *count,
                                     char* buffer */);
