@@ -3,7 +3,7 @@
 <html>
 <head>
   <title>Editing Mathematics</title>
-  <meta name="GENERATOR" content="amaya V3.1">
+  <meta name="GENERATOR" content="amaya V3.2">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </head>
 
@@ -262,7 +262,7 @@ For instance, to enter</p>
 to first click on the Math item of the <strong>Math</strong> menu, if you are
 not in a mathematical expression), and you will get the following structure
 (you can check in the <a href="#Math_Struc">Math_Structure view</a>):</p>
-<pre>&lt;mi>x&lt;/mi>&lt;mo>=&lt;/mo>&lt;mn>2&lt;/mn>&lt;mi>a&lt;/mi>&lt;mo>+&lt;/mo>&lt;mi>b&lt;/mi></pre>
+<pre>&lt;mi&gt;x&lt;/mi&gt;&lt;mo&gt;=&lt;/mo&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;mi&gt;a&lt;/mi&gt;&lt;mo&gt;+&lt;/mo&gt;&lt;mi&gt;b&lt;/mi&gt;</pre>
 
 <p>If the result is not exactly what you want, just select the characters that
 have been misinterpreted and change their type with one of the commands Plain
@@ -336,7 +336,7 @@ below is a link to the W3C home page:</p>
     <mi>y</mi>
     <mo>=</mo>
     <mi></mi>
-    <mfrac href="http://www.w3.org/" xml:link="simple">
+    <mfrac href="http://www.w3.org/">
       <mn>1</mn>
       <msqrt>
         <mrow>
@@ -355,7 +355,7 @@ below is a link to the W3C home page:</p>
 
 <p>Double-clicking any character within the fraction fetches the W3C home
 page. In the XML file, the fraction is represented by:</p>
-<pre><code>&lt;mfrac xml:link="simple" href="http://www.w3.org/">...&lt;/mfrac></code></pre>
+<pre><code>&lt;mfrac xml:link="simple" href="http://www.w3.org/"&gt;...&lt;/mfrac&gt;</code></pre>
 
 <p>(You can only find this in the structure view - it is not currently shown
 in the links view) To create such a link, just select an expression (the
@@ -376,11 +376,12 @@ available, but only some attributes are rendered in the formatted view
 <code>denomalign</code>, <code>bevelled</code>, <code>notation</code>,
 <code>lquote</code>, <code>rquote</code>, <code>lspace</code>,
 <code>rspace</code>, <code>subscriptshift</code>,
-<code>superscriptshift</code>, <code>scriptlevel</code>, <code>form</code>,
-<code>width</code> (<code>mspace</code> only), <code>height</code>
-(<code>mspace</code> only), <code>depth</code> (<code>mspace</code> only)).
-The <code>class</code>, <code>id</code> and <code>style</code> attributes are
-available, with the same semantics as in HTML: you can <a
+<code>superscriptshift</code>, <code>form</code>, <code>width</code>
+(<code>mspace</code> only), <code>height</code> (<code>mspace</code> only),
+<code>depth</code> (<code>mspace</code> only)).</p>
+
+<p>The <code>class</code>, <code>id</code> and <code>style</code> attributes
+are available, with the same semantics as in HTML: you can <a
 href="StyleSheets.html">associate CSS style</a> with MathML elements
 (<code>class</code> and <code>style</code> attributes) and a MathML element
 can be the target of a link (<code>id</code> attribute).</p>
