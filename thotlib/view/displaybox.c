@@ -1469,7 +1469,8 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
 		 mbox->BxAbstractBox->AbEnclosing != NULL)
 	    {
 	      mbox = mbox->BxAbstractBox->AbEnclosing->AbBox;
-	      selected = selected || mbox->BxAbstractBox->AbSelected;
+	      selected = selected ||
+		(mbox->BxType == BoGhost && mbox->BxAbstractBox->AbSelected);
 	    }
 	}
     } 
