@@ -765,7 +765,7 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo,
 	TtaSetDialoguePosition ();
 	TtaShowDialogue (BaseDialog + AttrHREFForm, TRUE);
 #else  /* _WINDOWS */
-	if ((LinkAsXmlCSS || LinkAsCSS)
+	if (LinkAsXmlCSS || LinkAsCSS)
 	  /* select a CSS file */
 	  CreateHRefDlgWindow (TtaGetViewFrame (doc, 1), AttrHREFvalue,
 			       DocSelect, DirSelect, docCSS);
