@@ -1885,6 +1885,10 @@ char               *AppVersion;
 
    /* Register the default set of transfer encoders and decoders */
    HTTransferEncoderInit (transfer_encodings);
+   /* ignore all other encoding formats (or libwww will send them
+      thru a blackhole otherwise */
+   HTCoding_add (content_encodings, "*", NULL, HTIdentityCoding, 1.0);
+
    HTFormat_setTransferCoding(transfer_encodings);
    
    /* Register the default set of content encoders and decoders */
