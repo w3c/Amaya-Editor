@@ -557,14 +557,22 @@ if test "$build_amaya" = "yes" ; then
 	# Verify that Java code is available.
 	# Look first for thotlib, amaya and jigsaw classes source code
 	#
-	if test -f $srcdir/classes/org/w3c/thotlib/Element.java -a \
-		-f $srcdir/classes/org/w3c/amaya/amayaInit.java -a \
-		-f $srcdir/classes/org/w3c/www/protocol/http/HttpURLConnection.java \
+	if test -f $srcdir/classes/org/w3c/www/protocol/http/HttpURLConnection.java \
 		; then
 	    with_java_sources="yes"
 	else
 	    with_java_sources="no"
 	fi 
+	#
+	# Then check for a sources ZIP for the classes.
+	#
+	if test -f $srcdir/classes/sources.zip \
+		; then
+	    with_java_sources="yes"
+	else
+	    with_java_sources="no"
+	fi 
+
 	#
 	# Then check for precompiled classes packages.
 	#

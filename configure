@@ -6368,14 +6368,22 @@ if test "$build_amaya" = "yes" ; then
 	# Verify that Java code is available.
 	# Look first for thotlib, amaya and jigsaw classes source code
 	#
-	if test -f $srcdir/classes/org/w3c/thotlib/Element.java -a \
-		-f $srcdir/classes/org/w3c/amaya/amayaInit.java -a \
-		-f $srcdir/classes/org/w3c/www/protocol/http/HttpURLConnection.java \
+	if test -f $srcdir/classes/org/w3c/www/protocol/http/HttpURLConnection.java \
 		; then
 	    with_java_sources="yes"
 	else
 	    with_java_sources="no"
 	fi 
+	#
+	# Then check for a sources ZIP for the classes.
+	#
+	if test -f $srcdir/classes/sources.zip \
+		; then
+	    with_java_sources="yes"
+	else
+	    with_java_sources="no"
+	fi 
+
 	#
 	# Then check for precompiled classes packages.
 	#
@@ -6398,7 +6406,7 @@ if test "$build_amaya" = "yes" ; then
 	    # kaffe may require libgmp ...
 	    #
 	    echo $ac_n "checking for mpz_abs in -lgmp""... $ac_c" 1>&6
-echo "configure:6402: checking for mpz_abs in -lgmp" >&5
+echo "configure:6410: checking for mpz_abs in -lgmp" >&5
 ac_lib_var=`echo gmp'_'mpz_abs | sed 'y%./+-%__p_%'`
 if eval "test \"`echo '$''{'ac_cv_lib_$ac_lib_var'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
@@ -6406,7 +6414,7 @@ else
   ac_save_LIBS="$LIBS"
 LIBS="-lgmp  $LIBS"
 cat > conftest.$ac_ext <<EOF
-#line 6410 "configure"
+#line 6418 "configure"
 #include "confdefs.h"
 /* Override any gcc2 internal prototype to avoid an error.  */
 /* We use char because int might match the return type of a gcc2
@@ -6417,7 +6425,7 @@ int main() {
 mpz_abs()
 ; return 0; }
 EOF
-if { (eval echo configure:6421: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest; then
+if { (eval echo configure:6429: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest; then
   rm -rf conftest*
   eval "ac_cv_lib_$ac_lib_var=yes"
 else
