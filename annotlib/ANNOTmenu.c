@@ -22,8 +22,9 @@ w3c_algaeQuery=(ask '((?p ?s ?o)) :collect '(?p ?s ?o))
 #define THOT_EXPORT extern
 #include "HTML.h"
 #include "annotlib.h"
+#include "HTMLhistory_f.h"
 #include "ANNOTmenu.h"
-
+#
 #ifdef _WINDOWS
 #include "resource.h"
 #include "wininclude.h"
@@ -57,8 +58,6 @@ static CHAR_T   AnnotSelItem[MAX_LENGTH];
 static int      AnnotSelIndex;
 static SelType  AnnotSelType;
 
-static int      AnnotTypesBase;
-static CHAR_T   AnnotTypesSelItem[MAX_LENGTH];
 static List     *typesList;
 
 #ifdef _WINDOWS
@@ -430,6 +429,9 @@ ThotBool show;
 
   DisplayMode         dispMode;
 
+  int		      position;
+  int		      distance;
+
   if (AnnotSelItem[0] == WC_EOS)
     return;
 
@@ -470,7 +472,12 @@ ThotBool show;
       list_item = list_item->next;
     }
 
-  /* show/hide it on the document :) */
+  /* 
+  ** show/hide it on the document 
+  */
+
+  /* get the current position in the document */
+  position = RelativePosition (doc, &distance);
 
   /* avoid refreshing the document while we're constructing it */
   dispMode = TtaGetDisplayMode (doc);
@@ -543,9 +550,15 @@ ThotBool show;
 	    }
 	}
     }
-  /* show the document */
+
+  /* display the document */
   if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, dispMode);
+
+  /* show the document at the same position as before */
+  TtaResetCursor (0, 0);
+  el = ElementAtPosition (doc, position);
+  TtaShowElement (doc, 1, el, distance);
 
   /* finally, redraw the selector */
   BuildAnnotFilterSelector (doc, selector);
@@ -580,7 +593,8 @@ ThotBool show;
   SSchema             XLinkSchema;
   DisplayMode         dispMode;
   List                *list_item;
-  AnnotMeta           *annot;
+  int		      position;
+  int		      distance;
 
   XLinkSchema = TtaGetSSchema (TEXT("XLink"), document);
   if (!XLinkSchema)
@@ -608,6 +622,9 @@ ThotBool show;
    * Do the visible change on the document
    */
 
+  /* get the current position in the document */
+  position = RelativePosition (document, &distance);
+  
   /* avoid refreshing the document while we're constructing it */
   dispMode = TtaGetDisplayMode (document);
   if (dispMode == DisplayImmediately)
@@ -641,9 +658,14 @@ ThotBool show;
 	}
     }
 
-  /* show the document */
+  /* display the document */
   if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (document, dispMode);
+
+  /* show the document at the same position as before */
+  TtaResetCursor (0, 0);
+  el = ElementAtPosition (document, position);
+  TtaShowElement (document, 1, el, distance);
 
   /* redisplay the current selector */
   BuildAnnotFilterSelector (document, AnnotSelType);
