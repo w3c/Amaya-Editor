@@ -208,7 +208,7 @@ Document doc;
   ElementType elType;
   Element elLast, elNew;
   TypeTree firstChild, tChild;
-  boolean found;
+  boolean found = FALSE;
 
   if (descendTree->TId != ancestTree->TId)
     {
@@ -627,4 +627,5 @@ Restruct restruct;
     }
   return result;
 }
+
 
