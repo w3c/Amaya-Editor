@@ -618,8 +618,7 @@ void OpenCreatedView (PtrDocument pDoc, int view, int X, int Y,
 
 #ifdef _WX
       /* wait for frame initialisation (needed by opengl) */
-	  while ( wxTheApp->Pending() )
-	    wxTheApp->Dispatch();
+      TtaHandlePendingEvents();
 #endif /* _WX */
     }
 }
