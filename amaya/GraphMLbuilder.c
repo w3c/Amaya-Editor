@@ -1151,6 +1151,12 @@ void ParsePathDataAttribute (Attribute attr, Element el, Document doc)
       prevCommand = EOS;
       xcur = 0;
       ycur = 0;
+      xinit = 0;
+      yinit = 0;
+      x1prev = 0;
+      y1prev = 0;
+      x2prev = 0;
+      y2prev = 0;
       newSubpath = FALSE;
       while (command != EOS)
          {
