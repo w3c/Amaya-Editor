@@ -62,7 +62,7 @@
 #define FALSE 0
 #endif
 #ifndef TRUE
-#define TRUE  (!False)
+#define TRUE  (!FALSE)
 #endif
 
 /********************************************************WINDOWS**/

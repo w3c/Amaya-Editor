@@ -222,11 +222,21 @@ Menu_Ctl *ptrmenu;
 {
   int      item    = 0;
 
-  return FALSE;
+  /* If profiles are not used, do not erase any menu */
+  if (!defined_profile)
+    return FALSE;
+  /* this should not happen... */
   if (ptrmenu == NULL)
     return TRUE;
+  /* check if the attr and select menu are in the profile */
+  if (ptrmenu->MenuAttr)
+    return (!BelongProfileTable(TEXT("MenuAttribute")));
+  if (ptrmenu->MenuSelect)
+    return (!BelongProfileTable(TEXT("MenuSelection")));    
+  /* an empty menu has to be removed */
   if (ptrmenu->ItemsNb == 0)
     return TRUE;
+  /* check if the menu is only composed of empty sub menus and separators */
   while (item < ptrmenu->ItemsNb)
     {
       if (ptrmenu->ItemsList[item].ItemType != TEXT('S'))
@@ -234,9 +244,11 @@ Menu_Ctl *ptrmenu;
 	  if (ptrmenu->ItemsList[item].ItemType == TEXT('M'))
 	   {
 	     if (!RemoveSubMenu (ptrmenu->ItemsList[item].SubMenu)) 
+	       /* there is at least a non empty sub menu */
 	       return FALSE;
 	   } 
 	  else
+	    /* there is at least a standard item */
 	    return FALSE;
 	}
       item ++;
