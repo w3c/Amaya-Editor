@@ -902,7 +902,7 @@ static void BuildSubMenu (Menu_Ctl *ptrmenu, int ref, int entry,
   int                 i, j;
   int                 lg, sref;
   int                 item, profile;
-  int                 action;
+  int                 action, entries;
   ThotBool            withEquiv, hidden;
 
   /* Construit le sous-menu attache a l'item */
@@ -914,6 +914,8 @@ static void BuildSubMenu (Menu_Ctl *ptrmenu, int ref, int entry,
   j = 0;
   withEquiv = FALSE;
   equiv[0] = EOS;
+  string[0] = EOS;
+  entries = 0;
   ptritem = ptrmenu->ItemsList;
   profile = TtaGetDocumentProfile (doc);
   while (item < ptrmenu->ItemsNb)
@@ -923,12 +925,17 @@ static void BuildSubMenu (Menu_Ctl *ptrmenu, int ref, int entry,
       lg = strlen (ptr) + 1;
       hidden = FALSE;
       action = ptritem[item].ItemAction;
-      if (ptritem[item].ItemType == 'S' && i + 2 < 700  )
+      if (ptritem[item].ItemType == 'S' && i + 2 < 700)
 	{
 	  if (Prof_ShowSeparator(ptrmenu, item, LastItemType))
 	    {
 	      strcpy (&string[i], "S");
 	      i += 2;
+	    }
+	  else
+	    {
+	      hidden = TRUE;
+	      action = -1;
 	    }
 	}
       else if (i + lg < 699)
@@ -953,6 +960,7 @@ static void BuildSubMenu (Menu_Ctl *ptrmenu, int ref, int entry,
 	{
 	  /* sinon on reduit le nombre d'items */
 	  ptrmenu->ItemsNb = item - 1;
+	  hidden = TRUE;
 	  action = -1;
 	}
       
@@ -976,15 +984,18 @@ static void BuildSubMenu (Menu_Ctl *ptrmenu, int ref, int entry,
 	{
 	  equiv[j++] = EOS;
 	  LastItemType = ptrmenu->ItemsList[item].ItemType;
+	  entries++;
 	}
       item++;
     }
   sref = ((entry + 1) * MAX_MENU * MAX_ITEM) + ref;
   /* Creation du Pulldown avec ou sans equiv */
-  if (withEquiv)
-    TtaNewSubmenu (sref, ref, entry, NULL, ptrmenu->ItemsNb, string, equiv, FALSE);
+  if (entries == 0)
+    TtaRedrawMenuEntry (ref, entry, NULL, InactiveB_Color, 0);
+  else if (withEquiv)
+    TtaNewSubmenu (sref, ref, entry, NULL, entries, string, equiv, FALSE);
   else
-    TtaNewSubmenu (sref, ref, entry, NULL, ptrmenu->ItemsNb, string, NULL, FALSE);
+    TtaNewSubmenu (sref, ref, entry, NULL, entries, string, NULL, FALSE);
 }
 
 
@@ -2456,6 +2467,10 @@ void TtaUpdateMenus (Document doc, View view)
 	      if (!ptrmenu->MenuAttr)
 		{
 		  TtaDestroyDialogue (ref);
+#ifdef _WINDOWS
+		  /* Remove that reference in the window list of catalogues */
+		  CleanFrameCatList (frame, ref);
+#endif /* _WINDOWS */
 		  BuildPopdown (ptrmenu, ref,
 				FrameTable[frame].WdMenus[i], frame, doc);
 		}
@@ -3530,109 +3545,109 @@ int FindMenu (int frame, int menuID, Menu_Ctl ** ctxmenu)
 static void FindItemMenu (int frame, int menuID, int itemID, int *menu,
 			  int *submenu, int *item, int *action)
 {
-   Menu_Ctl           *ptrmenu, *ptrsmenu;
-   Item_Ctl           *ptr;
-   int                 i, j, max;
-   int                 m, sm;
-   int                 entry, sentry;             
-   ThotBool            found;
+  Menu_Ctl           *ptrmenu, *ptrsmenu;
+  Item_Ctl           *ptr;
+  int                 i, j, max;
+  int                 m, sm;
+  int                 entry, sentry;             
+  ThotBool            found;
 
-   j = 0;
-   i = 0;
-   entry = 0;
-   sm = 0;
-   sentry = 0;
-   /* look for that menu in the menu list */
-   m = FindMenu (frame, menuID, &ptrmenu);
-   found = (m != -1);
-   if (found)
-     {
-       /* search that item in the item list or in submenus */
-       ptr = ptrmenu->ItemsList;
-       found = FALSE;
-       max = ptrmenu->ItemsNb;
-       ptrsmenu = NULL;
-       while (ptrmenu != NULL && !found)
-	 {
-	   while (i < max && !found)
-	     {
-	       j = ptr[i].ItemAction;
-	       if (j == -1)
-		   {
-		 i++;	/* separator */
-		 entry++;
-		   }
-	       else if (ptr[i].ItemID == itemID)
-		 {
-		   /* the entry is found */
-		   found = TRUE;
-		   if (ptr[i].ItemType == 'M')
-		     /* it doesn't match an action */
-		     j = -1;
-		 }
-	       else if (ptr[i].ItemType == 'M')
-		 {
-		   if (ptr[i].SubMenu->ItemsNb == 0)
-		     i++;
-		   else
-		     {
-		       /* search in that submenu */
-		       sm = i + 1;
-			   sentry = entry + 1;
-		       ptrsmenu = ptr[i].SubMenu;
-		       i = 0;
-			   entry = 0;
-		       ptr = ptrsmenu->ItemsList;
-		       max = ptrsmenu->ItemsNb;
-		     }
-		 }
-	       else
-		   {
-		 /* it's not that one */
-		 i++;
-		 entry++;
-		   }
-	     }
+  j = 0;
+  i = 0;
+  entry = 0;
+  sm = 0;
+  sentry = 0;
+  /* look for that menu in the menu list */
+  m = FindMenu (frame, menuID, &ptrmenu);
+  found = (m != -1);
+  if (found)
+    {
+      /* search that item in the item list or in submenus */
+      ptr = ptrmenu->ItemsList;
+      found = FALSE;
+      max = ptrmenu->ItemsNb;
+      ptrsmenu = NULL;
+      while (ptrmenu && !found)
+	{
+	  while (i < max && !found)
+	    {
+	      j = ptr[i].ItemAction;
+	      if (j == -1)
+		{
+		  i++;	/* separator */
+		  entry++;
+		}
+	      else if (ptr[i].ItemID == itemID)
+		{
+		  /* the entry is found */
+		  found = TRUE;
+		  if (ptr[i].ItemType == 'M')
+		    /* it doesn't match an action */
+		    j = -1;
+		}
+	      else if (ptr[i].ItemType == 'M')
+		{
+		  if (ptr[i].SubMenu->ItemsNb == 0)
+		    i++;
+		  else
+		    {
+		      /* search in that submenu */
+		      sm = i + 1;
+		      sentry = entry + 1;
+		      ptrsmenu = ptr[i].SubMenu;
+		      i = 0;
+		      entry = 0;
+		      ptr = ptrsmenu->ItemsList;
+		      max = ptrsmenu->ItemsNb;
+		    }
+		}
+	      else
+		{
+		  /* it's not that one */
+		  i++;
+		  entry++;
+		}
+	    }
 	   
-	   /* do we close the search in a submenu? */
-	   if (!found && ptrsmenu != NULL)
-	     {
-	       /* continue the search in the menu */
-	       i = sm;
-	       sm = 0;
-		   entry = sentry;
-		   sentry = 0;
-	       ptrsmenu = NULL;
-	       ptr = ptrmenu->ItemsList;
-	       max = ptrmenu->ItemsNb;
-	     }
-	   else
-	     /* we close the menu search and this itemID doesn't exist */
-	     ptrmenu = NULL;
-	 }
-     }
+	  /* do we close the search in a submenu? */
+	  if (!found && ptrsmenu != NULL)
+	    {
+	      /* continue the search in the menu */
+	      i = sm;
+	      sm = 0;
+	      entry = sentry;
+	      sentry = 0;
+	      ptrsmenu = NULL;
+	      ptr = ptrmenu->ItemsList;
+	      max = ptrmenu->ItemsNb;
+	    }
+	  else
+	    /* we close the menu search and this itemID doesn't exist */
+	    ptrmenu = NULL;
+	}
+    }
 
-   /* do we sucess? */
-   if (found)
-     {
-       /* yes */
-       *menu = m;
-       *submenu = sm;
+  /* do we sucess? */
+  if (found)
+    {
+      /* yes */
+      *menu = m;
+      *submenu = sm;
 #ifdef _WINDOWS
-	   *item = entry;
+      *item = entry;
 #else /* _WINDOWS */
-       *item = i;
+      *item = i;
 #endif /* _WINDOWS */
-       *action = j;
-     }
-   else
-     {
-       /* no */
-       *menu = -1;
-       *submenu = 0;
-       *item = 0;
-       *action = -1;
-     }
+      *action = j;
+    }
+  else
+    {
+      /* no */
+      *menu = -1;
+      *submenu = 0;
+      *item = 0;
+      *action = -1;
+    }
 }
 
 /*----------------------------------------------------------------------

@@ -1077,13 +1077,18 @@ static void   DisplaySel (PtrElement pEl, int view, int frame, ThotBool *abExist
   ----------------------------------------------------------------------*/
 static ThotBool   SelectAbsBoxes (PtrElement pEl, ThotBool createView)
 {
-  NotifyDialog        notifyDoc;
-  AvailableView       viewTable;
-  DocViewNumber       docView, freeView;
   Document            doc;
-  int                 X, Y, width, height, view, lastView, frame, run;
-  int                 nViews, i, createdView;
-  ThotBool            abExist, done, deleteView;
+  int                 view, lastView, frame, run;
+  ThotBool            abExist, done;
+#ifdef VQ   /* 13 DEC 2001 */
+  NotifyDialog        notifyDoc;
+  DocViewNumber       docView, freeView;
+  AvailableView       viewTable;
+  int                 nViews, i;
+  int                 X, Y, width, height;
+  int                 createdView;
+  ThotBool            deleteView;
+#endif /* VQ */
 
   /* there is not any abstract box yet */
   abExist = FALSE;
