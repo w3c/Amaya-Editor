@@ -498,13 +498,20 @@ static char *ParseCSSColor (char *cssRule, PresentationValue * val)
 static char *CheckImportantRule (char *cssRule, PresentationContext context)
 {
   cssRule = SkipBlanksAndComments (cssRule);
-  if (!strncasecmp (cssRule, "!important", 10))
-    {
-      context->important = TRUE;
-      cssRule += 10;
-    }
-  else
+  if (*cssRule != '!')
     context->important = FALSE;
+  else
+    {
+      cssRule++;
+      cssRule = SkipBlanksAndComments (cssRule);
+      if (!strncasecmp (cssRule, "important", 9))
+	{
+	  context->important = TRUE;
+	  cssRule += 9;
+	}
+      else
+	context->important = FALSE;
+    }
   return (cssRule);
 }
 

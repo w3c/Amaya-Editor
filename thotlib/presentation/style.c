@@ -2379,8 +2379,10 @@ int TtaSetStylePresentation (unsigned int type, Element el, PSchema tsch,
 	      v.typed_data.value = cst;
 	      v.typed_data.real = FALSE;
 	    }
-	  PresentationValueToPRule (v, intRule, pRule, func, absolute, generic,
-				    minValue);
+	  /* avoid to override an important rule by a non-important rule */
+	  if (ctxt->important || !pRule->PrImportant)
+	    PresentationValueToPRule (v, intRule, pRule, func, absolute, generic,
+				      minValue);
 	  if (generic)
 	    {
 	      pRule->PrViewNum = 1;
