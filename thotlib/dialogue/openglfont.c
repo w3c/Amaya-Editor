@@ -249,8 +249,12 @@ static void FreeGlyphList (GL_font *font)
 static int FontFaceSize (GL_font *font, const unsigned int size, const unsigned int res )
 {
   unsigned int err, c, num;
-  
+
+#ifdef _WINDOWS
+  err = FT_Set_Char_Size (*(font->face), 0, size * 64, 96, 96);
+#else 
   err = FT_Set_Char_Size (*(font->face), 0, size * 64, res, res);
+#endif /*_WINDOWS*/
   /*res x_resolution, res, y_resolution*/
   if (err)
     return err;
