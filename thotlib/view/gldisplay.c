@@ -2212,10 +2212,14 @@ void VideoInvert (int frame, int width, int height, int x, int y)
   ----------------------------------------------------------------------*/
 void Scroll (int frame, int width, int height, int xd, int yd, int xf, int yf)
 {
-  GL_window_copy_area (frame,
-		       xf, yf,
-		       xd, yd,
-		       width, height);
+  if (FrRef[frame] != None)
+    GL_window_copy_area (frame,
+			 xf, 
+			 yf + FrameTable[frame].FrTopMargin,
+			 xd, 
+			 yd + FrameTable[frame].FrTopMargin,
+			 width, 
+			 height);
 }
 
 

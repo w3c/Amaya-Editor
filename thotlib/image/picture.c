@@ -92,8 +92,8 @@ void FreeGlTexture (PictInfo *Image)
     {
       if (glIsTexture (Image->TextureBind))
 	glDeleteTextures (1, &(Image->TextureBind));
-      else
-	Image->TextureBind = 0;
+      Image->TextureBind = 0;
+      Image->RGBA = False;
     }
 }
 
@@ -245,7 +245,8 @@ static void GL_TextureMap (PictInfo *Image, int xFrame, int yFrame, int w, int h
   p2_h = p2 (Image->PicHeight);
   glEnable (GL_TEXTURE_2D); 
   /* Put texture in 3d card memory */
-  if (!glIsTexture (Image->TextureBind))
+  if (!glIsTexture (Image->TextureBind) &&
+      Image->PicPixmap)
     {      
       glGenTextures (1, &(Image->TextureBind));
       glBindTexture (GL_TEXTURE_2D, Image->TextureBind);
@@ -780,32 +781,55 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	      XSetClipOrigin (TtDisplay, TtGraphicGC, xFrame - picXOrg, yFrame - picYOrg);
 	      XSetClipMask (TtDisplay, TtGraphicGC, imageDesc->PicMask);
 	    }
-	  XCopyArea (TtDisplay, pixmap, drawable, TtGraphicGC, 
-		     picXOrg, picYOrg, w, h, xFrame, yFrame);
-	   if (imageDesc->PicMask)
-	     {
-	       XSetClipMask (TtDisplay, TtGraphicGC, None);
-	       XSetClipOrigin (TtDisplay, TtGraphicGC, 0, 0);
+	  XCopyArea (TtDisplay, pixmap, drawable, TtGrap
 	     }
 #else /* _GTK */ 
-	   im = gdk_imlib_load_image (imageDesc->PicFileName);
-	   if (im )//&& w > 0 && h > 0)
+	   if (w != imageDesc->PicWArea ||
+	       h != imageDesc->PicHArea || 
+	       imageDesc->PicPixmap == NULL)
 	     {
-	       gdk_imlib_render(im, w, h);
+	       /*W and H is not the same 
+		 as when we load the image*/
+	       if (imageDesc->im && 
+		   w > 0 && h > 0)
+		 {
+		   gdk_imlib_render(imageDesc->im, w, h);
+		   if (imageDesc->PicMask)
+		     {
+		       gdk_gc_set_clip_origin (TtGraphicGC, 
+					       xFrame - picXOrg, 
+					       yFrame - picYOrg);
+		       gdk_gc_set_clip_mask (TtGraphicGC, 
+					     (GdkPixmap *) 
+					     gdk_imlib_move_mask (imageDesc->im));
+		     }		   
+		   gdk_draw_pixmap ((GdkDrawable *)drawable, TtGraphicGC,
+				    (GdkPixmap *) imageDesc->im->pixmap, 
+				    picXOrg, picYOrg, 
+				    xFrame, yFrame, w ,h);
+		 }
+	     }
+	   else
+	     {
 	       if (imageDesc->PicMask)
 		 {
-		   gdk_gc_set_clip_origin (TtGraphicGC, xFrame - picXOrg, yFrame - picYOrg);
-		   gdk_gc_set_clip_mask (TtGraphicGC, (GdkPixmap *)gdk_imlib_move_mask (im));
+		   gdk_gc_set_clip_origin (TtGraphicGC, 
+					   xFrame - picXOrg, 
+					   yFrame - picYOrg);
+		   gdk_gc_set_clip_mask (TtGraphicGC, 
+					 (GdkPixmap *) imageDesc->PicMask);
 		 }
 	       gdk_draw_pixmap ((GdkDrawable *)drawable, TtGraphicGC,
-				(GdkPixmap *) im->pixmap, 
-				picXOrg, picYOrg, xFrame, yFrame, w ,h);
-	       if (imageDesc->PicMask)
-		 {
-		   gdk_gc_set_clip_mask (TtGraphicGC, (GdkPixmap *)None);
-		   gdk_gc_set_clip_origin (TtGraphicGC, 0, 0);
-		 }
-	     } 
+				(GdkPixmap *) imageDesc->PicPixmap, 
+				picXOrg, picYOrg, 
+				xFrame, yFrame, w ,h);
+	     }
+	   /*Restablish to normal clip*/
+	   if (imageDesc->PicMask)
+	     {
+	       gdk_gc_set_clip_mask (TtGraphicGC, (GdkPixmap *)None);
+	       gdk_gc_set_clip_origin (TtGraphicGC, 0, 0);
+	     }
 #endif /* !_GTK */
 #else /* _WINDOWS */
 	case RealSize:
@@ -1845,9 +1869,10 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
   int                 w, h;
   int                 width, height;
   int                 left, right, top, bottom;
-#ifndef _GL
-  unsigned char       *drw = None;
-#endif /*_GL*/
+
+  /*
+  PictInfo *picture_cached;
+  */
 
   left = box->BxLMargin + box->BxLBorder + box->BxLPadding;
   right = box->BxRMargin + box->BxRBorder + box->BxRPadding;
@@ -1861,11 +1886,18 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
     return;
   /* If we're replacing an image*/
   if (glIsTexture (imageDesc->TextureBind))
-		{
-		glDeleteTextures (1, &(imageDesc->TextureBind));
-      	imageDesc->TextureBind = 0;
-		}
+    {
+      glDeleteTextures (1, &(imageDesc->TextureBind));
+      imageDesc->TextureBind = 0;
+    }
+  
   GetPictureFileName (imageDesc->PicFileName, fileName);
+
+  /*
+  if (PictureAlreadyLoaded (imageDesc, w, h))
+      return;    
+  */
+
   typeImage = imageDesc->PicType;
   status = PictureFileOk (fileName, &typeImage);
   w = 0;
@@ -2291,9 +2323,13 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 			wBox = im->rgb_width;
 		      if (hBox == 0)
 			hBox = im->rgb_height;
+		      if (xBox == 0)
+			xBox = im->rgb_width;
+		      if (yBox == 0)
+			yBox = im->rgb_height;
 		    }
 #ifndef _GL
-		  gdk_imlib_render(im, (gint)wBox, (gint)hBox);
+		  gdk_imlib_render(im, (gint)xBox, (gint)yBox);
 		  drw = (GdkPixmap *) gdk_imlib_move_image (im);
 		  imageDesc->PicMask = (Pixmap) gdk_imlib_move_mask (im);
 #else /* _GL */
@@ -2424,6 +2460,10 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
       imageDesc->PicHArea = h;
     }
   imageDesc->PicPixmap = drw;
+#ifdef _GTK
+  if (im)
+    imageDesc->im = im;
+#endif /*_GTK*/
 #ifdef _WIN_PRINT
   if (releaseDC)
 	  /* release the device context into TtDisplay */

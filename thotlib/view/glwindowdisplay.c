@@ -451,6 +451,12 @@ void GL_Win32ContextClose (int frame, HWND hwndClient)
 }
 #endif /*_WINDOWS*/
 
+static int Opacity = 1000;
+
+void GL_SetOpacity (int opacity)
+{
+    Opacity = (opacity/1000) * 255;
+}
 
 
 /*----------------------------------------------------------------------
@@ -461,7 +467,7 @@ void GL_SetForeground (int fg)
     unsigned short red, green, blue;
 
     TtaGiveThotRGB (fg, &red, &green, &blue);
-	glColor4ub (red, green, blue, 255);
+    glColor4ub (red, green, blue, Opacity);
 }
 /*----------------------------------------------------------------------
   InitDrawing update the Graphic Context accordingly to parameters.
@@ -1431,41 +1437,73 @@ void GL_BackBufferRegionSwapping (int x, int y,
   Soft : We copy region content of the back buffer 
          on the exposed region (=> opengl region buffer swapping )
 --------------------------------------------*/
-void GL_window_copy_area (int frame, int xf, int yf, int xd, int yd,
-			  int width, int height)
+void GL_window_copy_area (int frame, 
+			  int xf, 
+			  int yf, 
+			  int x_source, /*source x*/
+			  int y_source, /*source y*/
+			  int width, 
+			  int height)
 {
-  if (!Software_Mode || yf == yd)
+  if (0 || !Software_Mode || yf == y_source)
     DefRegion (frame, 
-	       xd, yd+FrameTable[frame].FrTopMargin, 
-	       width+xd, yd+height+FrameTable[frame].FrTopMargin);
+	       x_source, y_source+FrameTable[frame].FrTopMargin, 
+	       width+x_source, y_source+height+FrameTable[frame].FrTopMargin);
   else
     {
-      if (GL_MakeCurrent (frame))
+      if (GL_MakeCurrent (frame) || 
+	  FrRef[frame] == None)
       	return;
       
-      if ((yf + height + FrameTable[frame].FrTopMargin) > (FrameTable[frame].FrHeight)) 
- 	height += (yf + height + FrameTable[frame].FrTopMargin) - FrameTable[frame].FrHeight;
+      /*
+      if ((yf + height + FrameTable[frame].FrTopMargin) 
+	  > (FrameTable[frame].FrHeight)) 
+ 	height += 
+	  (yf + height + FrameTable[frame].FrTopMargin) 
+	  - FrameTable[frame].FrHeight;
+      */
+
+      /* Horizontal Scroll problems...*/
       if (xf < 0)
 	{
 	  width -= xf;
 	  xf = 0;
 	}
-      if (xd < 0)
+      if (x_source < 0)
 	{
-	  width -= xd;
-	  xd = 0;	
+	  width -= x_source;
+	  x_source = 0;	
 	}
-      if (xd + width > FrameTable[frame].FrWidth) 
- 	width -= (xd + width) - FrameTable[frame].FrWidth;
+      if (x_source + width > 
+	  FrameTable[frame].FrWidth) 
+ 	width -= (x_source + width) 
+	  - FrameTable[frame].FrWidth;
+
+      /* Vertical Scroll problems...*/
+     if (yf < 0)
+	{
+	  height -= yf;
+	  yf = 0;
+	}
+      if (y_source < 0)
+	{
+	  height -= y_source;
+	  y_source = 0;	
+	}
+      if (y_source + height > 
+	  FrameTable[frame].FrHeight) 
+ 	height -= (y_source + height) 
+	  - FrameTable[frame].FrHeight;
+
       if (width > 0 &&  height  > 0)
 	{
 	  /* Copy from backbuffer to backbuffer */
 	  glFinish ();
 	  glDisable (GL_BLEND);
 	  glRasterPos2i (xf, yf + height);
-	  glCopyPixels (xd,   
+	  glCopyPixels (x_source,   
 			(FrameTable[frame].FrHeight)   
-			- (yd + height + FrameTable[frame].FrTopMargin),
+			- (y_source + height + FrameTable[frame].FrTopMargin),
 			width, height, GL_COLOR); 
 	  glEnable (GL_BLEND);
 	  /*copy from back to front */
