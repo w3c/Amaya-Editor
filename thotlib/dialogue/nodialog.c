@@ -17,19 +17,21 @@
 #include "application.h"
 #include "memory_f.h"
 
+
+
 /*----------------------------------------------------------------------
    ConfigFree
    Frees the table entries of all the document types, natures and
    extensions.
   ----------------------------------------------------------------------*/
-void                ConfigFree (void)
+void ConfigFree (void)
 {
 }
 
 /*----------------------------------------------------------------------
    TtaFreeAllCatalogs frees the memory associated with catalogs.                      
   ----------------------------------------------------------------------*/
-void                TtaFreeAllCatalogs (void)
+void TtaFreeAllCatalogs (void)
 {
 }
 
@@ -37,7 +39,7 @@ void                TtaFreeAllCatalogs (void)
    TteFreeAllEventsList frees all event lists and the event/action
    context pointers.			                        
   ----------------------------------------------------------------------*/
-void                TteFreeAllEventsList (void)
+void TteFreeAllEventsList (void)
 {
 }
 

@@ -13,12 +13,6 @@ extern void TtaSetDocumentCharset ( Document document,
                                     CHARSET charSet );
 extern Document TtaOpenDocument ( STRING documentName,
                                   int accessMode );
-extern ThotBool TtaExportDocument ( Document document,
-                                    STRING fileName,
-                                    STRING TSchemaName );
-extern ThotBool TtaExportDocumentWithNewLineNumbers ( Document document,
-                                                      STRING fileName,
-                                                      STRING TSchemaName );
 extern void UnloadTree ( Document document );
 extern void UnloadDocument ( PtrDocument * pDoc );
 extern void TtaCloseDocument ( Document document );
@@ -90,12 +84,6 @@ extern void TtaSetDocumentCharset (/* Document document,
                                       CHARSET charSet */);
 extern Document TtaOpenDocument (/* STRING documentName,
                                     int accessMode */);
-extern ThotBool TtaExportDocument (/* Document document,
-                                      STRING fileName,
-                                      STRING TSchemaName */);
-extern ThotBool TtaExportDocumentWithNewLineNumbers (/* Document document,
-                                                        STRING fileName,
-                                                        STRING TSchemaName */);
 extern void UnloadTree (/* Document document */);
 extern void UnloadDocument (/* PtrDocument * pDoc */);
 extern void TtaCloseDocument (/* Document document */);

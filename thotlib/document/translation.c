@@ -88,6 +88,7 @@ static CHAR_T         fileExtension[MAX_PATH];
 #include "structschema_f.h"
 #include "translation_f.h"
 #include "tree_f.h"
+#include "thotmsg_f.h"
 
 
 /*----------------------------------------------------------------------

@@ -14,6 +14,12 @@ extern void ExportTree ( PtrElement pEl,
                          PtrDocument pDoc,
                          STRING fName,
                          STRING TSchemaName );
+extern ThotBool TtaExportDocument ( Document document,
+                                    STRING fileName,
+                                    STRING TSchemaName );
+extern ThotBool TtaExportDocumentWithNewLineNumbers ( Document document,
+                                                      STRING fileName,
+                                                      STRING TSchemaName );
 
 #else /* __STDC__ */
 
@@ -25,6 +31,12 @@ extern void ExportTree (/* PtrElement pEl,
                            PtrDocument pDoc,
                            STRING fName,
                            STRING TSchemaName */);
+extern ThotBool TtaExportDocument (/* Document document,
+                                      STRING fileName,
+                                      STRING TSchemaName */);
+extern ThotBool TtaExportDocumentWithNewLineNumbers (/* Document document,
+                                                        STRING fileName,
+                                                        STRING TSchemaName */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
