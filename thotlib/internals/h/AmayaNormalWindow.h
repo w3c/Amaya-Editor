@@ -76,24 +76,12 @@ class AmayaNormalWindow : public AmayaWindow
 
   virtual AmayaToolBar * GetAmayaToolBar();
 
-  virtual void           SetMenuBar( wxMenuBar * p_menu_bar );
-  virtual void           DesactivateMenuBar();
-  virtual void           ActivateMenuBar();
-  virtual void AppendMenu ( wxMenu * p_menu, const wxString & label );
-  virtual void AppendMenuItem ( wxMenu * 		p_menu_parent,
-				long                    id,
-				const wxString & 	label,
-				const wxString & 	help,
-				wxItemKind 		kind,
-				const AmayaCParam &     callback );
 
   // url bar control
   virtual wxString GetURL();
   virtual void     SetURL ( const wxString & new_url );
   virtual void     AppendURL ( const wxString & new_url );
   virtual void     EmptyURLBar();
-  virtual void     SetEnableURL( bool urlenabled );
-  virtual void     SetupURLBar();
 
   AmayaPanel * GetAmayaPanel() const;
   bool IsPanelOpened();
@@ -126,7 +114,6 @@ class AmayaNormalWindow : public AmayaWindow
 
   wxMenuBar *        m_pDummyMenuBar;
   wxSplitterWindow * m_pSplitterWindow;  
-  AmayaURLBar *	     m_pURLBar;
   AmayaToolBar *     m_pToolBar;
 
   AmayaQuickSplitButton * m_pSplitPanelButton;

@@ -1378,12 +1378,12 @@ void SelectOneOption (Document doc, Element el)
 		     WIN_TtaSetToggleMenu (BaseDialog + OptionMenu,
 					   i, TRUE, FrMainRef [ActiveFrame]);
 #endif /* _WINGUI */
-#if defined(_GTK) || defined(_WX)
+#if defined(_GTK)
 	       if (multipleOptions)
 		 for (i = 0; i < nbitems; i++)
 		   if (selected[i])         
 		     TtaSetToggleMenu (BaseDialog + OptionMenu, i, TRUE);
-#endif /* #if defined(_GTK) || _WX */
+#endif /* #if defined(_GTK) */
 
 #ifdef _WX
 	       wxASSERT_MSG( !multipleOptions, _T("TODO: multipleOptions") );

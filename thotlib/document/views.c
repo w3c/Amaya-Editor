@@ -553,12 +553,19 @@ void OpenCreatedView (PtrDocument pDoc, int view,
 #ifdef _WX
       /* the new document needs a new frame */
       int doc_id = IdentDocument(pDoc);
+      
+      TtaMakePage(window_id, page_id);
+
       frame = TtaMakeFrame( pSS->SsName,
 	                    schView,
 			    doc_id,
 			    pDoc->DocDName,
 			    width, height, &volume,
-			    viewName );
+			    viewName,
+			    window_id, page_id, page_position );
+
+      pDoc->DocViewFrame[view - 1] = frame;
+      pDoc->DocViewVolume[view - 1] = volume;
 
       /* the new document need to be attached to a page */      
       TtaAttachFrame( frame,

@@ -24,6 +24,7 @@
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
+#include "edit_tv.h"
 #include "font_tv.h"
 #include "frame_tv.h"
 #include "appdialogue_tv.h"
@@ -93,17 +94,6 @@ AmayaWindow::~AmayaWindow()
   wxLogDebug( _T("AmayaWindow::~AmayaWindow: window_id=%d"), m_WindowId );
   // empty the current window entry
   memset(&WindowTable[m_WindowId], 0, sizeof(Window_Ctl));
-}
-
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  AmayaWindow
- *      Method:  SetupURLBar
- * Description:  create and add the url to the toolbar if it's not allready done
- *--------------------------------------------------------------------------------------
- */
-void AmayaWindow::SetupURLBar()
-{
 }
 
 /*
@@ -182,35 +172,6 @@ int AmayaWindow::GetPageCount() const
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaWindow
- *      Method:  AppendMenu
- * Description:  TODO
- *--------------------------------------------------------------------------------------
- */
-void AmayaWindow::AppendMenu ( wxMenu * p_menu, const wxString & label )
-{
-}
-
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  AmayaWindow
- *      Method:  AppendMenuItem
- * Description:  TODO
- *--------------------------------------------------------------------------------------
- */
-void AmayaWindow::AppendMenuItem ( 
-    wxMenu * 		p_menu_parent,
-    long 		id,
-    const wxString & 	label,
-    const wxString & 	help,
-    wxItemKind 		kind,
-    const AmayaCParam & callback )
-{
-}
-
-
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  AmayaWindow
  *      Method:  GetActiveWindow
  * Description:  return the current selected window
  *--------------------------------------------------------------------------------------
@@ -272,18 +233,6 @@ wxString AmayaWindow::GetURL( )
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaWindow
- *      Method:  SetWindowEnableURL
- * Description:  set the current url status (enable or disable)
- *--------------------------------------------------------------------------------------
- */
-void AmayaWindow::SetEnableURL( bool urlenabled )
-{
-  return;
-}
-
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  AmayaWindow
  *      Method:  AppendURL
  * Description:  TODO
  *--------------------------------------------------------------------------------------
@@ -317,6 +266,7 @@ bool AmayaWindow::IsClosing()
   return m_IsClosing;
 }
 
+#if 0
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaWindow
@@ -328,31 +278,7 @@ bool AmayaWindow::IsClosing()
 void AmayaWindow::SetMenuBar( wxMenuBar * p_menu_bar )
 {
 }
-
-
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  AmayaWindow
- *      Method:  DesactivateMenuBar
- * Description:  desactivate the current window menu bar
- *               (used when the windows is going to be closed)
- *--------------------------------------------------------------------------------------
- */
-void AmayaWindow::DesactivateMenuBar()
-{
-}
-
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  AmayaWindow
- *      Method:  ActivateMenuBar
- * Description:  activate the menubar : look what is the current active frame and get
- *               its menu bar.
- *--------------------------------------------------------------------------------------
- */
-void AmayaWindow::ActivateMenuBar()
-{
-}
+#endif /* 0 */
 
 
 /*
@@ -804,6 +730,34 @@ bool AmayaWindow::IsSpecialKey( int wx_keycode )
            wx_keycode == WXK_DELETE ||
 		   (wx_keycode >= WXK_START && wx_keycode <= WXK_COMMAND)
   );
+}
+#endif /* 0 */
+
+#if 0
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaWindow
+ *      Method:  SetWindowEnableToolBarButtons
+ * Description:  setup the enable/disable state of the toolbar buttons
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaWindow::SetWindowEnableToolBarButtons( int frame_id )
+{
+  int button_id    = 1;
+  int window_id    = GetWindowId();
+  int doc_id       = TtaGetFrameDocumentId(frame_id);
+  PtrDocument pDoc = LoadedDocument[doc_id-1];
+
+  wxASSERT( window_id > 0 );
+  wxASSERT( frame_id > 0 );
+  wxASSERT( pDoc != NULL );
+     
+  while (button_id < MAX_BUTTON)
+    {
+      if ( WindowTable[window_id].Button[button_id] )
+        WindowTable[window_id].Button[button_id]->Enable( pDoc->EnabledButton[button_id] );
+      button_id++;
+    }
 }
 #endif /* 0 */
 

@@ -1630,12 +1630,12 @@ void CallbackAttrMenu (int refmenu, int att, int frame)
 					 WIN_nbItem, WIN_buffMenu, WIN_Lab, 
 					 (int)WIN_Language);
 #endif /* _WINGUI */
-#if defined(_GTK)  || defined(_WX)
+#if defined(_GTK)
 		if (ActiveAttr[item] == 0)
 		  TtaSetToggleMenu (refmenu, item, FALSE);
 		else
 		  TtaSetToggleMenu (refmenu, item, TRUE);
-#endif /* #if defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) */
 	      }
 	    else if (pAttr->AttrType == AtEnumAttr &&
 		     pAttr->AttrNEnumValues == 1)
@@ -1685,17 +1685,20 @@ void CallbackAttrMenu (int refmenu, int att, int frame)
 		CurrentAttr = att;
 		MenuValues (pAttr, mandatory, currAttr, SelDoc, view, FALSE);
 		/* restore the toggle state */
-#if defined(_GTK) || defined(_WX)
+#if defined(_GTK)
 		if (ActiveAttr[item] == 0)
 		  TtaSetToggleMenu (refmenu, item, FALSE);
 		else
 		  TtaSetToggleMenu (refmenu, item, TRUE);
+#endif /* #if defined(_GTK) */
+
+#if defined(_GTK) || defined(_WX)
 		/* display the form */
 		if (mandatory)
 		  TtaShowDialogue (NumMenuAttrRequired, TRUE);
 		else
 		  TtaShowDialogue (NumMenuAttr, TRUE);
-#endif /* #if defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) || _WX */
 	      }
 	    DeleteAttribute (NULL, pAttrNew);
 	  }

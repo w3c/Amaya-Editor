@@ -112,8 +112,7 @@ static void WriteEventsList (PtrEventsSet pAppli)
 /*----------------------------------------------------------------------
    PrintSubMenu                                                    
   ----------------------------------------------------------------------*/
-static void PrintSubMenu (PtrAppMenuItem item, WindowType winType,
-			  char *schemaName, char *menuName)
+static void PrintSubMenu (PtrAppMenuItem item, char *menuName)
 {
    PtrAppMenuItem      subitem;
    int                 itemsNumber;
@@ -127,38 +126,14 @@ static void PrintSubMenu (PtrAppMenuItem item, WindowType winType,
 	subitem = subitem->AppNextItem;
      }
    fprintf (AppFile, "  TteAddSubMenu (");
-   switch (winType)
-	 {
-	    case MainWindow:
-	       fprintf (AppFile, "MainWindow");
-	       break;
-	    case DocWindow:
-	       fprintf (AppFile, "DocWindow");
-	       break;
-	    case DocTypeWindow:
-	       fprintf (AppFile, "DocTypeWindow");
-	       break;
-	 }
-   fprintf (AppFile, ", \"%s\", %s, %s, %d);\n", schemaName, menuName, item->AppItemName, itemsNumber);
+   fprintf (AppFile, "%s, %s, %d);\n", menuName, item->AppItemName, itemsNumber);
 
    /* traite la liste des items du sous-menu */
    subitem = item->AppSubMenu;
    while (subitem != NULL)
      {
 	fprintf (AppFile, "    TteAddMenuItem (");
-	switch (winType)
-	      {
-		 case MainWindow:
-		    fprintf (AppFile, "MainWindow");
-		    break;
-		 case DocWindow:
-		    fprintf (AppFile, "DocWindow");
-		    break;
-		 case DocTypeWindow:
-		    fprintf (AppFile, "DocTypeWindow");
-		    break;
-	      }
-	fprintf (AppFile, ", \"%s\", %s, %s", schemaName, menuName, item->AppItemName);
+	fprintf (AppFile, "%s, %s", menuName, item->AppItemName);
 
 	if (subitem->AppItemName == NULL)
 	   fprintf (AppFile, ", 0");
@@ -179,7 +154,7 @@ static void PrintSubMenu (PtrAppMenuItem item, WindowType winType,
 /*----------------------------------------------------------------------
    PrintMenus                                                      
   ----------------------------------------------------------------------*/
-static void         PrintMenus (PtrAppMenu firstMenu, WindowType winType, char *schName)
+static void         PrintMenus (PtrAppMenu firstMenu)
 {
   PtrAppMenu          menu;
   PtrAppMenuItem      item;
@@ -187,20 +162,7 @@ static void         PrintMenus (PtrAppMenu firstMenu, WindowType winType, char *
   
   if (firstMenu == NULL)
     {
-      fprintf (AppFile, "  TteZeroMenu (");
-      switch (winType)
-	{
-	case MainWindow:
-	  fprintf (AppFile, "MainWindow");
-	  break;
-	case DocWindow:
-	  fprintf (AppFile, "DocWindow");
-	  break;
-	case DocTypeWindow:
-	  fprintf (AppFile, "DocTypeWindow");
-	  break;
-	}
-      fprintf (AppFile, ", \"%s\");\n", schName);
+      fprintf (AppFile, "  TteZeroMenu();");
     }
   else
     {
@@ -218,19 +180,7 @@ static void         PrintMenus (PtrAppMenu firstMenu, WindowType winType, char *
 	  
 	  /*fprintf(AppFile, "\n"); */
 	  fprintf (AppFile, "  TteAddMenu (");
-	  switch (winType)
-	    {
-	    case MainWindow:
-	      fprintf (AppFile, "MainWindow");
-	      break;
-	    case DocWindow:
-	      fprintf (AppFile, "DocWindow");
-	      break;
-	    case DocTypeWindow:
-	      fprintf (AppFile, "DocTypeWindow");
-	      break;
-	    }
-	  fprintf (AppFile, ", \"%s\", %d, %s, %d", schName, menu->AppMenuView, menu->AppMenuName, itemsNumber);
+	  fprintf (AppFile, "%d, %s, %d", menu->AppMenuView, menu->AppMenuName, itemsNumber);
 	  /* Declare les menus dynamiques */
 	  if (!strcmp (menu->AppMenuName, "Attributes_"))
 	    {
@@ -255,23 +205,11 @@ static void         PrintMenus (PtrAppMenu firstMenu, WindowType winType, char *
 	    {
 	      if (item->AppSubMenu != NULL)
 		/* traitement du sous-menu */
-		PrintSubMenu (item, winType, schName, menu->AppMenuName);
+		PrintSubMenu (item, menu->AppMenuName);
 	      else
 		{
 		  fprintf (AppFile, "    TteAddMenuItem (");
-		  switch (winType)
-		    {
-		    case MainWindow:
-		      fprintf (AppFile, "MainWindow");
-		      break;
-		    case DocWindow:
-		      fprintf (AppFile, "DocWindow");
-		      break;
-		    case DocTypeWindow:
-		      fprintf (AppFile, "DocTypeWindow");
-		      break;
-		    }
-		  fprintf (AppFile, ", \"%s\", %s, -1", schName, menu->AppMenuName);
+		  fprintf (AppFile, "%s, -1", menu->AppMenuName);
 		  
 		  if (item->AppItemName == NULL)
 		    fprintf (AppFile, ", 0");
@@ -606,14 +544,14 @@ static void         WriteActionList (char *fname)
 	}
 
       fprintf (AppFile, "\n");
-      PrintMenus (MainWindowMenus, MainWindow, "MAIN");
+      PrintMenus (MainWindowMenus);
       fprintf (AppFile, "\n");
-      PrintMenus (DocWindowMenus, DocWindow, "DOC");
+      PrintMenus (DocWindowMenus);
       menusDoc = DocTypeMenus;
       while (menusDoc != NULL)
 	{
 	  fprintf (AppFile, "\n");
-	  PrintMenus (menusDoc->AppDocTypeMenus, DocTypeWindow, menusDoc->AppDocTypeName);
+	  PrintMenus (menusDoc->AppDocTypeMenus);
 	  menusDoc = menusDoc->AppNextDocType;
 	}
 

@@ -82,7 +82,7 @@ extern void TtaRemoveAccessKey (Document doc, unsigned int key);
 /*----------------------------------------------------------------------
   TtaExecuteMenuAction execute the corresponding menu action.
   ----------------------------------------------------------------------*/
-extern void TtaExecuteMenuAction (char *actionName, Document doc, View view,
+extern void TtaExecuteMenuAction (const char *actionName, Document doc, View view,
 				  ThotBool force);
 
 /*----------------------------------------------------------------------
@@ -175,6 +175,11 @@ extern int TtaAddTextZone (Document document, View view, char *label,
    listUrl gives URLs that will be displayed in the combobox.
   ----------------------------------------------------------------------*/
 extern void TtaSetTextZone (Document document, View view, char *listUrl);
+
+/*----------------------------------------------------------------------
+  TtaEnableAction enable/disable the given action.
+  ----------------------------------------------------------------------*/
+extern void TtaEnableAction( Document document, const char * action_name, ThotBool enable );
 
 /*----------------------------------------------------------------------
    TtaSetMenuOff desactive le menu (1 a n) de la vue du document ou   

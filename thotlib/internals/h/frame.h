@@ -12,12 +12,12 @@
 #ifndef NODISPLAY
 
 #include "constmenu.h"
+#include "constbutton.h"
 
 #define MAX_FONT    60
 #define MAX_FONTNAME   10
-#define MAX_BUTTON  30
 
-#if defined(_MOTIF) || defined(_GTK) || defined(_WINGUI)
+#if defined(_GTK) || defined(_WINGUI)
 typedef struct _Frame_Ctl {
   int        FrTopMargin;               /* Window Top Margin                 */
   int        FrScrollOrg;               /* Scrolling origin                  */
@@ -72,7 +72,7 @@ typedef struct _Frame_Ctl {
 #endif /*_GL*/
 
 } Frame_Ctl;
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WINGUI) */
+#endif /* defined(_GTK) || defined(_WINGUI) */
 
 #if defined(_WX)
 /*
@@ -98,36 +98,8 @@ typedef struct _Frame_Ctl {
   ThotScrollBar WdScrollH;              /* Widget of Horizontal Scroll       */
   ThotFrame  	WdFrame;                /* Widget of the Document Frame      */
 
-  struct     _Menu_Ctl *FrMenus;        /* First menu context                */
-  int        MenuAttr;                  /* Attributes menu ID or -1          */
-  int        MenuSelect;                /* Selection menu ID or -1           */
-  int        MenuPaste;                 /* Menu including the Paste command or -1 */
-  int        MenuContext;               /* Contextual menu ID or -1          */
-
-  int        MenuShowPanelID;             /* parent menu id                         */
-  int        MenuSplitViewID;             /* parent menu id                         */
-  int        MenuFullScreenID;            /* parent menu id                         */
-  int        MenuItemShowPanelID;         /* show/hide panel menu item ID or -1     */
-  int        MenuItemSplitViewID;         /* split/unsplit menu item ID or -1       */
-  int        MenuItemFullScreenID;        /* fullscreen on/off menu item ID or -1   */
-
-  int        EntryPaste;                /* Entry number of the Paste command */
-  int        MenuUndo;                  /* Menu including the Undo command
-					   or -1  */
-  int        EntryUndo;                 /* Entry number of the Undo command  */
-  int        MenuRedo;                  /* Menu including the Redo command
-					   or -1  */
-  int        EntryRedo;                 /* Entry number of the Redo command  */
-  ThotMenu   WdMenus[MAX_MENU];         /* List of menu Widgets              */
-  ThotBool   EnabledMenus[MAX_MENU];    /* Enabled menus                     */
-
-  ThotBool   EnabledButton[MAX_BUTTON]; /* Enabled toolbar buttons           */
-  ThotBool   CheckedButton[MAX_BUTTON]; /* Checked toolbar buttons           */  
-
   bool       EnabledButton_Panel_XHTML[MAX_BUTTON]; /* Enabled XHTML panel buttons           */
   bool       CheckedButton_Panel_XHTML[MAX_BUTTON]; /* Checked XHTML panel buttons           */  
-
-  Proc       Call_Text;                 /* This is the callback which is called when a url is activated */
   
 #ifdef _GL
   ThotBool   DblBuffNeedSwap;
@@ -152,9 +124,20 @@ typedef struct _Window_Ctl {
   AmayaWindow * WdWindow;               /* Widget of the wxWidgets window    */  
   ThotStatusBar WdStatus;               /* Widget of the window status bar   */
 
-  
-  ThotBitmapButton 	Button[MAX_BUTTON];               /* List of toolbar button Widgets */
-  Proc              Call_Button[MAX_BUTTON];          /* List of toolbar button Callbacks  */
+  ThotMenu      WdMenus[MAX_MENU];      /* List of menu Widgets in the menubar
+					   these widgets are build with FrMenus model */
+  struct     _Menu_Ctl *FrMenus;        /* First menu context                */
+  int        MenuAttr;                  /* Attributes top menu ID or -1      */
+  int        MenuSelect;                /* Selection top menu ID or -1       */
+  int        MenuHelp;                  /* Help top menu or -1               */
+  int        MenuContext;               /* Contextual top menu ID or -1      */
+  int        MenuItemPaste;             /* Menu including the Paste command or -1 */
+  int        MenuItemUndo;              /* Menu including the Undo command or -1  */
+  int        MenuItemRedo;              /* Menu including the Redo command or -1  */
+  int        MenuItemShowPanelID;       /* show/hide panel menu item ID or -1     */
+  int        MenuItemSplitViewID;       /* split/unsplit menu item ID or -1       */
+  int        MenuItemFullScreenID;      /* fullscreen on/off menu item ID or -1   */
+
 } Window_Ctl;
 
 #endif /* #if defined(_WX) */

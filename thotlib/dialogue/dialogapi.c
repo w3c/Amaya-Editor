@@ -981,6 +981,7 @@ int DestContenuMenu (struct Cat_Context *catalogue)
 void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 		     char *text, char* equiv, int max_length)
 {
+#ifndef _WX
   ThotMenu            menu;
   ThotWidget          w;
   struct Cat_Context *catalogue;
@@ -1014,7 +1015,6 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
       rebuilded = FALSE;
       if (catalogue->Cat_Widget)
 	{
-#ifndef _WX /* do not destroy menu becaus it's done further */
 	  if (catalogue->Cat_Type == CAT_PULL)
 	    {
 	      DestContenuMenu (catalogue); /* Modification of the catalogue */
@@ -1022,7 +1022,6 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 	    }
 	  else
 	    TtaDestroyDialogue (ref);
-#endif /* _WX */
 	}
       if (parent == 0)
 	{
@@ -1043,31 +1042,6 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 	     se fait avec gtk_menu_set_tearoff_state;
 	  */
 #endif /* _GTK */
-#ifdef _WX
-	  menu = parent;
-	  /* this is specific to wxWindow, the menus are deleted just
-	   * when new ones are created
-	   * 
-	   * it's possible that the parent menu is not empty so
-	   * destroy every items inside */
-	  wxMenu * p_menu = wxDynamicCast(menu, wxMenu);
-	  if ( p_menu )
-	    {
-	      size_t count = p_menu->GetMenuItemCount();
-	      while ( count > 0 )
-		{
-		  wxMenuItem * p_menu_item = p_menu->GetMenuItems().Item(count - 1)->GetData();
-		  if ( p_menu_item )
-		    {
-		      if ( p_menu_item->GetSubMenu() )
-			delete p_menu_item->GetSubMenu();
-		      p_menu_item->SetSubMenu( NULL );
-		      p_menu->Destroy( p_menu_item );
-		    }
-		  count--;
-		}
-	    }
-#endif /* _WX */
 	}
       else
 	menu = (ThotMenu) catalogue->Cat_Widget;
@@ -1085,10 +1059,6 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 	/* it's a simple button not a pull-down */
 	return;
 #endif  /* _WINGUI */
-#ifdef _WX
-      if (number == 0)
-	return;
-#endif /* _WX */
 #ifdef _GTK 
       if (number == 0)
 	{
@@ -1155,14 +1125,7 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 		  {
 		    if (&equiv[eindex] != EOS)
 		      {
-#ifdef _WX
-			int k = max_length - strlen (&text[index + 1]);
-			equiv_item[k--] = EOS;
-			while (k >= 0)
-			  equiv_item[k--] = SPACE;
-#else /* _WX */
 			equiv_item[0] = EOS;
-#endif /* _WX */
 			strcat (equiv_item, &equiv[eindex]);
 		      }
 		    eindex += strlen (&equiv[eindex]) + 1;
@@ -1181,20 +1144,6 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 		      AppendMenu (menu, MF_STRING | MF_UNCHECKED, ref + i, &text[index + 1]);
 		    adbloc->E_ThotWidget[ent] = (ThotWidget) i;
 #endif  /* _WINGUI */
-#ifdef _WX
-		    sprintf (menu_item, "%s", &text[index + 1]);
-
-		    w = (ThotWidget) AmayaFrame::AppendMenuItem( 
-			menu,					/* parent */
-			ref + i,				/* id */
-			TtaConvMessageToWX( menu_item ) +
-			_T("") + TtaConvMessageToWX( equiv_item ), /* label */
-			_T(""),					/* help */
-			wxITEM_NORMAL,				/* item kind */
-			AmayaContext(catalogue) );		/* callback context */
-
-		    adbloc->E_ThotWidget[ent] = (ThotWidget) w; //p_menu_item;
-#endif /* _WX */
 #ifdef _GTK
 		    sprintf (menu_item, "%s", &text[index + 1]);
 		    /* \t doesn't mean anything to gtk... to we align ourself*/
@@ -1230,26 +1179,6 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 		  /*__________________________________________ Creation d'un toggle __*/
 		  {
 		    /* un toggle a faux */
-#ifdef _WX
-		    sprintf (menu_item, "%s", &text[index + 1]);
-
-#if 0		    
-		    wxLogDebug( _T("new wxMenuItem(toggle): name=") +
-			        TtaConvMessageToWX( menu_item ) +
-				_T("\tref=%d\tparent=%x"), ref, menu );
-#endif /* 0 */
-
-		    w = (ThotWidget) AmayaFrame::AppendMenuItem( 
-			menu,					/* parent */
-			ref + i,				/* id */
-			TtaConvMessageToWX( menu_item ) +
-			_T("") + TtaConvMessageToWX( equiv_item ), /* label */
-			_T(""),					/* help */
-			wxITEM_CHECK,				/* item kind */
-			AmayaContext(catalogue) );		/* callback */
-
-		    adbloc->E_ThotWidget[ent] = (ThotWidget)w; //p_menu_item;
-#endif /* _WX */
 #ifdef _WINGUI
 		    if (equiv_item && equiv_item[0] != EOS)
 		      {
@@ -1298,23 +1227,6 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 		  /*_______________________________________ Creation d'un sous-menu __*/
 		  {
 		    /* En attendant le sous-menu on cree un bouton */
-#ifdef _WX
-		    sprintf (menu_item, "%s", &text[index + 1]);
-#if 0		    
-		    wxLogDebug( _T("new wxMenu(submenu): name=") +
-			        TtaConvMessageToWX( menu_item ) +
-				_T("\tref=%d\tparent=%x"), ref, menu );
-#endif /* 0 */
-		    w = (ThotWidget) AmayaFrame::AppendSubMenu( 
-			menu, /* parent */
-			ref + i,
-			TtaConvMessageToWX( menu_item ),	/* label */
-			_T("") ); /* help */
-
-		    /* w is a wxMenuItem ! */
-		    /* use wxMenuItem::GetSubMenu() to know the submenu @ */
-		    adbloc->E_ThotWidget[ent] = (ThotWidget)w;
-#endif /* _WX */
 #ifdef _WINGUI
 		    w = (HMENU) CreatePopupMenu ();
 		    subMenuID [currentFrame] = (UINT) w;
@@ -1332,17 +1244,6 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 		else if (text[index] == 'S')
 		  /*_________________________________ Creation d'un separateur __*/
 		  {
-#ifdef _WX
-		    w = (ThotWidget) AmayaFrame::AppendMenuItem( 
-			menu,					/* parent */
-			wxID_SEPARATOR,				/* id */
-			_T(""), 				/* label */
-			_T(""),					/* help */
-			wxITEM_SEPARATOR,			/* item kind */
-			AmayaContext() );			/* callback */
-
-		    adbloc->E_ThotWidget[ent] = (ThotWidget) w; //p_menu_item;
-#endif /* _WX */
 #ifdef _WINGUI
 		    AppendMenu (menu, MF_SEPARATOR, 0, NULL);
 		    adbloc->E_ThotWidget[ent] = (ThotWidget) 0;
@@ -1377,6 +1278,7 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 #endif /* _GTK */
 	}
     }
+#endif /* _WX */
 }
 
 #if defined(_GTK) || defined (_WINGUI) || defined(_WX)
@@ -1390,6 +1292,7 @@ void WIN_TtaSetPulldownOff (int ref, ThotMenu parent, HWND owner)
 void TtaSetPulldownOff (int ref, ThotMenu parent)
 #endif /* #if defined(_GTK) || defined(_WX) */
 {
+#ifndef _WX
    struct Cat_Context *catalogue;
 #ifdef _WINGUI
    int                 frame;
@@ -1411,16 +1314,13 @@ void TtaSetPulldownOff (int ref, ThotMenu parent)
 	     gtk_widget_show_all (GTK_WIDGET(parent));
 	  }
 #endif /* _GTK */
-#ifdef _WX
-	/* nothing is done because this function is never called */
-	wxASSERT_MSG(FALSE, _T("This function should not be called (TODO)"));
-#endif /* _WX */
 #ifdef _WINGUI
         frame = GetMainFrameNumber (owner);
         EnableMenuItem ((HMENU)WinMenus[frame], (UINT)parent, MF_GRAYED);
 	DrawMenuBar (FrMainRef[frame]); 
 #endif /* _WINGUI */
      }
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1433,6 +1333,7 @@ void WIN_TtaSetPulldownOn (int ref, ThotMenu parent, HWND owner)
 void TtaSetPulldownOn (int ref, ThotMenu parent)
 #endif /* #if defined (_GTK) || defined(_WX) */
 {
+#ifndef _WX
    struct Cat_Context *catalogue;
    ThotWidget          menu;
 #ifdef _WINGUI
@@ -1462,6 +1363,7 @@ void TtaSetPulldownOn (int ref, ThotMenu parent)
 #endif /* _WINGUI */
 	  }
      }
+#endif /* _WX */
 }
 #endif /* #if defined(_GTK) || defined (_WINGUI) || defined(_WX) */
 
@@ -2346,6 +2248,7 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 		    int number, char *text, char* equiv, int max_length,
 		    ThotBool react)
 {
+#ifndef _WX
   ThotWidget          w;
   ThotWidget          row;
   ThotMenu            menu = NULL;
@@ -2359,7 +2262,7 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
   int                 i;
   int                 ent;
   ThotBool            rebuilded;
-#if defined (_WINGUI) || defined (_GTK) || defined(_WX)
+#if defined (_WINGUI) || defined (_GTK)
   char                menu_item [1024];
   char                equiv_item [255];
 #ifdef _GTK
@@ -2371,7 +2274,7 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 #endif /* _GTK */
 
   equiv_item[0] = EOS;
-#endif /* _WINGUI || _GTK || defined(_WX) */
+#endif /* _WINGUI || _GTK */
   if (ref == 0)
     {
       TtaError (ERR_invalid_reference);
@@ -2420,9 +2323,6 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 #ifdef _WINGUI
 	      menu = w;
 #endif  /* _WINGUI */
-#ifdef _WX
-	      menu = (ThotMenu)w;
-#endif  /* _WX */
 #ifdef _GTK
 	      menu = gtk_vbox_new (FALSE, 0);
 	      gtk_widget_show_all (menu);
@@ -2503,7 +2403,7 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 	  ent = 2;
 #ifdef _GTK
 	  GSListTmp = NULL;
-#endif
+#endif /* _GTK */
 	  while (i < number)
 	    {
 	      count = strlen (&text[index]);	/* Longueur de l'intitule */
@@ -2595,14 +2495,6 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 		      catalogue->Cat_Type = CAT_MENU;
 		      catalogue->Cat_PtParent = parentCatalogue;
 		      catalogue->Cat_Widget = (ThotWidget)menu;
-#ifdef _WX
-
-		      wxMenuItem * p_menu_item = (wxMenuItem *)w;
-		      if (p_menu_item)
-			menu = p_menu_item->GetSubMenu();
-		      catalogue->Cat_Widget = (ThotWidget)w;
-
-#endif /* _WX */
 #ifdef _WINGUI
 		      WIN_AddFrameCatalogue (FrMainRef[currentFrame], catalogue);
 		      if (!IsMenu (catalogue->Cat_Widget))
@@ -2658,15 +2550,6 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 		  adbloc->E_ThotWidget[1] = w;
 		}
 #endif /* _GTK */
-#ifdef _WX
-	      if (!rebuilded)
-		{
-		  menu->SetTitle( TtaConvMessageToWX( title ) );
-		  
-		  /* it's not needed to free later this label */
-		  adbloc->E_ThotWidget[1] = 0;
-		}
-#endif /* _WX */
 	    }
 
 	  /* Cree les differentes entrees du sous-menu */
@@ -2700,14 +2583,7 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 		    {
 		      if (&equiv[eindex] != EOS)
 			{
-#ifdef _WX
-			  int k = max_length - strlen (&text[index + 1]);
-			  equiv_item[k--] = EOS;
-			  while (k >= 0)
-			    equiv_item[k--] = SPACE;
-#else /* _WX */
 			  equiv_item[0] = EOS;
-#endif /* _WX */
 			  strcat (equiv_item, &equiv[eindex]);
 			}
 		      eindex += strlen (&equiv[eindex]) + 1;
@@ -2715,20 +2591,6 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 		  if (text[index] == 'B')
 		    {
 		      /*______________________________________ Creation d'un bouton du sous-menu__*/
-#ifdef _WX
-		      sprintf (menu_item, "%s", &text[index + 1]);
-
-		      w = (ThotWidget) AmayaFrame::AppendMenuItem(
-			  menu,
-			  ref + i,
-			  TtaConvMessageToWX( menu_item ) +
-			  _T("") + TtaConvMessageToWX( equiv_item ),  /* label */
-			  _T(""),
-			  wxITEM_NORMAL,
-			  AmayaContext(catalogue) );
-
-		      adbloc->E_ThotWidget[ent] = (ThotWidget) w; //p_menu_item;
-#endif /* _WX */
 #ifdef _WINGUI
 		      if (equiv_item && equiv_item[0] != EOS)
 			{
@@ -2777,26 +2639,6 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 		  else if (text[index] == 'T')
 		    {
 		      /*________________________________ Creation d'un toggle __*/
-#ifdef _WX
-		      sprintf (menu_item, "%s", &text[index + 1]);
-
-#if 0		    
-		      wxLogDebug( _T("new wxMenuItem(toggle): name=") +
-				  TtaConvMessageToWX( menu_item ) +
-				  _T("\tref=%d\tparent=%x"), ref, menu );
-#endif /* 0 */
-
-		      w = (ThotWidget) AmayaFrame::AppendMenuItem(
-                          menu,
-			  ref + i,
-			  TtaConvMessageToWX( menu_item ) +
-			  _T("") + TtaConvMessageToWX( equiv_item ), /* label */
-			  _T(""),
-			  wxITEM_CHECK,
-			  AmayaContext(catalogue) );
-		      
-		      adbloc->E_ThotWidget[ent] = (ThotWidget) w; //p_menu_item;
-#endif /* _WX */
 #ifdef _WINGUI
 		      if (equiv_item && equiv_item[0] != EOS)
 			{
@@ -2846,23 +2688,6 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 		  else if (text[index] == 'M')
 		    {
 		      /*_________________________________ Appel d'un sous-menu __*/
-#ifdef _WX
-		    sprintf (menu_item, "%s", &text[index + 1]);
-
-#if 0		    
-		    wxLogDebug( _T("new wxMenu(submenu): name=") +
-			        TtaConvMessageToWX( menu_item ) +
-				_T("\tref=%d\tparent=%x"), ref, menu );
-#endif /* 0 */
-		    
-		    w = (ThotWidget) AmayaFrame::AppendSubMenu( 
-			menu, /* parent */
-			ref + i,
-			TtaConvMessageToWX( menu_item ),	/* label */
-			_T("") ); /* help */
-
-		    adbloc->E_ThotWidget[ent] = (ThotWidget)w;
-#endif /* _WX */
 #ifdef _GTK
 		      w = gtk_menu_item_new_with_label (&text[index + 1]);
 		      gtk_widget_show_all (w);
@@ -2878,17 +2703,6 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 		  else if (text[index] == 'S')
 		    {
 		      /*_____________________________ Creation d'un separateur __*/
-#ifdef _WX
-		    w = (ThotWidget) AmayaFrame::AppendMenuItem( 
-			menu,					/* parent */
-			wxID_SEPARATOR,				/* id */
-			_T(""), 				/* label */
-			_T(""),					/* help */
-			wxITEM_SEPARATOR,			/* item kind */
-			AmayaContext() );			/* callback */
-
-		    adbloc->E_ThotWidget[ent] = (ThotWidget) w; //p_menu_item;
-#endif /* _WX */
 #ifdef _WINGUI
 		      AppendMenu (w, MF_SEPARATOR, 0, NULL);
 		      adbloc->E_ThotWidget[ent] = (ThotWidget) 0;
@@ -2921,6 +2735,7 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 	    }
 	}
      }
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -3240,12 +3055,13 @@ void TtaNewToggleMenu (int ref, int ref_parent, char *title, int number,
    toutes les entre'es). The parameter on indique que le bouton       
    correspondant doit e^tre allume' (on positif) ou e'teint (on nul). 
   ----------------------------------------------------------------------*/
+#ifndef _WX
 #ifdef _WINGUI 
 void WIN_TtaSetToggleMenu (int ref, int val, ThotBool on, HWND owner)
 #endif  /* _WINGUI */
-#if defined(_GTK) || defined(_WX)
+#if defined(_GTK)
 void TtaSetToggleMenu (int ref, int val, ThotBool on)
-#endif /* #if defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) */
 {
 #ifdef _WINGUI 
   struct Cat_Context *catalogue;
@@ -3313,13 +3129,11 @@ void TtaSetToggleMenu (int ref, int val, ThotBool on)
     }
 #endif /* _WINGUI  */
 
-#if defined(_GTK) || defined(_WX)
+#if defined(_GTK)
   ThotWidget          w;
   register int        i;
   register int        ent;
-#if defined(_GTK)
   ThotBool            visible;
-#endif /* _GTK */
   ThotBool            done;
   struct E_List      *adbloc;
   struct Cat_Context *catalogue;
@@ -3346,10 +3160,8 @@ void TtaSetToggleMenu (int ref, int val, ThotBool on)
 	  /* ce n'est pas une entree du toggle */
 	  TtaError (ERR_invalid_reference);
 	  return;
-	}
-  
+	}  
       /* Est-ce que le sous-menu est actuellement affiche */
-#ifdef _GTK
       else if (GTK_WIDGET_VISIBLE (catalogue->Cat_Widget))
 	visible = TRUE;
       else
@@ -3358,7 +3170,6 @@ void TtaSetToggleMenu (int ref, int val, ThotBool on)
 	  if (catalogue->Cat_Type != CAT_SCRPOPUP)
 	    gtk_widget_show_all (catalogue->Cat_Widget);
 	}
-#endif /* _GTK */
 
       /* Positionnement de la valeur de chaque entree */
       adbloc = catalogue->Cat_Entries;
@@ -3387,7 +3198,6 @@ void TtaSetToggleMenu (int ref, int val, ThotBool on)
 		      if (on)
 			/* Bouton allume */
 			{
-#ifdef _GTK
 			  /* attribut active is set to the good value */
 			  if (catalogue->Cat_Type == CAT_TMENU)
 			    {
@@ -3408,29 +3218,16 @@ void TtaSetToggleMenu (int ref, int val, ThotBool on)
 			    }
 			  else
 			    GTK_CHECK_MENU_ITEM(w)->active = TRUE;
-#endif /* _GTK */
-#ifdef _WX
-			  /* attribut active is set to the good value */
-			  //  if (catalogue->Cat_Type == CAT_TMENU)
-			  ((wxMenuItem *)w)->Check( TRUE );
-#endif /* _WX */
 			}
 		      else
 			/* Etat initial du bouton : eteint */
 			{
-#ifdef _GTK
 			  /* attribut active is set to the good value */
 			  if (catalogue->Cat_Type == CAT_TMENU)
 			    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(w), FALSE);
 			  /* JK: this is what SG did: GTK_TOGGLE_BUTTON(w)->active = FALSE; */
 			  else
 			    GTK_CHECK_MENU_ITEM(w)->active = FALSE;
-#endif /* _GTK */
-#ifdef _WX
-			  /* attribut active is set to the good value */
-			  // if (catalogue->Cat_Type == CAT_TMENU)
-			  ((wxMenuItem*)w)->Check( FALSE );
-#endif /* _WX */
 			}
 		    }
 		  adbloc->E_Free[i] = 'N';  /* La valeur est la valeur initiale */
@@ -3446,13 +3243,12 @@ void TtaSetToggleMenu (int ref, int val, ThotBool on)
 	  i = 0;
 	}
 
-#ifdef _GTK
       if (!visible && catalogue->Cat_Type != CAT_SCRPOPUP)
 	gtk_widget_hide (catalogue->Cat_Widget);
-#endif /* _GTK */
      }
-#endif /* #if defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) */
 }
+#endif /* _WX */
 
 /*----------------------------------------------------------------------
    TtaChangeMenuEntry modifie l'intitule' texte de l`entre'e entry    
@@ -3518,6 +3314,11 @@ void TtaChangeMenuEntry (int ref, int entry, char *text)
 void TtaRedrawMenuEntry (int ref, int entry, char *fontname,
 			 ThotColor color, int activate)
 {
+#ifdef _WX
+  wxASSERT_MSG(FALSE, _T("TtaRedrawMenuEntry : to remove"));
+#endif /* _WX */
+
+#ifndef _WX
   struct Cat_Context *catalogue;
 #ifdef _WINGUI
   HMENU               menu;
@@ -3634,6 +3435,7 @@ void TtaRedrawMenuEntry (int ref, int entry, char *fontname,
 	}
 #endif /* _GTK */
     }
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------

@@ -30,6 +30,7 @@
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
+#include "edit_tv.h"
 #include "frame_tv.h"
 #include "boxparams_f.h"
 #include "thotmsg_f.h"
@@ -60,12 +61,13 @@ bool AmayaFileDropTarget::OnDropFiles( wxCoord x, wxCoord y, const wxArrayString
 
   frame_id = m_pOwner->GetFrameId();
   FrameToView (frame_id, &doc, &view);
+  PtrDocument pDoc = LoadedDocument[doc-1];
 
   wxLogDebug(_T("AmayaFileDropTarget::OnDropFiles = ")+filenames[0]);
   strcpy(buffer, (const char*)filenames[0].mb_str(wxConvUTF8));
 
-  if (FrameTable[frame_id].Call_Text)
-    (*(Proc3)FrameTable[frame_id].Call_Text) ((void *)doc, (void *)view, (void *)buffer);
+  if (pDoc->Call_Text)
+    (*(Proc3)pDoc->Call_Text) ((void *)doc, (void *)view, (void *)buffer);
   
   return TRUE;
 }

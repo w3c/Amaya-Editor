@@ -141,6 +141,7 @@ extern void TtaSetMenuForm (int ref, int val);
 extern void TtaNewToggleMenu (int ref, int ref_parent, char *title, int number,
 			      char *text, char *equiv, ThotBool react);
 
+#ifndef _WX
 /*----------------------------------------------------------------------
    TtaSetToggleMenu fixe la selection dans un toggle-menu :           
    Le parame`tre ref donne la re'fe'rence du catalogue.               
@@ -149,6 +150,7 @@ extern void TtaNewToggleMenu (int ref, int ref_parent, char *title, int number,
    correspondant doit e^tre allume' (on positif) ou e'teint (on nul). 
   ----------------------------------------------------------------------*/
 extern void TtaSetToggleMenu (int ref, int val, ThotBool on);
+#endif /* _WX */
 
 /*----------------------------------------------------------------------
    TtaChangeMenuEntry modifie l'intitule' texte de l`entre'e entry    

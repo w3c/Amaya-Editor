@@ -8,33 +8,36 @@
 
 extern void TteInitMenus ( char *name,
                            int number );
+extern int TtaGetMenuActionNumber ( void );
 extern void FreeMenus ( void );
 extern void TteAddMenuAction ( char *actionName,
                                Proc procedure,
                                ThotBool state );
-extern void TtaExecuteMenuAction ( char *actionName,
+extern int FindMenuAction ( const char *actionName );
+extern int FindMenuItemIDFromMenuAction ( Menu_Ctl * ptrmenu,
+                                          int action_id );
+extern int FindMenuActionFromMenuItemID ( Menu_Ctl * ptrmenu,
+                                          int item_id );
+extern void TtaExecuteMenuAction ( const char *actionName,
                                    Document doc,
                                    View view,
                                    ThotBool force );
-extern void TteZeroMenu ( WindowType windowtype,
-                          char *schemaName );
-extern void TteAddMenu ( WindowType windowtype,
-                         char *schemaName,
-                         int view,
+extern void TtaExecuteMenuActionFromActionId ( int action_id,
+                                               Document doc,
+                                               View view,
+                                               ThotBool force );
+extern void TteZeroMenu ( void );
+extern void TteAddMenu ( int view,
                          int menuID,
                          int itemsNumber,
                          char *menuName );
-extern void TteAddSubMenu ( WindowType windowtype,
-                            char *schemaName,
-                            int menuID,
+extern void TteAddSubMenu ( int menuID,
                             int itemID,
                             int itemsNumber );
-extern void TteAddMenuItem ( WindowType windowtype,
-                             char *schemaName,
-                             int menuID,
+extern void TteAddMenuItem ( int menuID,
                              int subMenu,
                              int itemID,
-                             char *actionName,
+                             const char *actionName,
                              char itemType );
 extern void BuildPopdown ( Menu_Ctl *ptrmenu,
                            int ref,
@@ -110,6 +113,9 @@ extern void SwitchRedo ( PtrDocument pDoc,
                          ThotBool on );
 extern void SwitchPaste ( PtrDocument pDoc,
                           ThotBool on );
+extern void TtaEnableAction ( Document document,
+                              const char * action_name,
+                              ThotBool enable );
 extern void TtaSetMenuOff ( Document document,
                             View view,
                             int menuID );
@@ -139,33 +145,36 @@ extern void ThotCallback ( int ref,
 
 extern void TteInitMenus ( char *name,
                              int number );
+extern int TtaGetMenuActionNumber ( void );
 extern void FreeMenus ( void );
 extern void TteAddMenuAction ( char *actionName,
                                  Proc procedure,
                                  ThotBool state );
-extern void TtaExecuteMenuAction ( char *actionName,
+extern int FindMenuAction ( const char *actionName );
+extern int FindMenuItemIDFromMenuAction ( Menu_Ctl * ptrmenu,
+                                            int action_id );
+extern int FindMenuActionFromMenuItemID ( Menu_Ctl * ptrmenu,
+                                            int item_id );
+extern void TtaExecuteMenuAction ( const char *actionName,
                                      Document doc,
                                      View view,
                                      ThotBool force );
-extern void TteZeroMenu ( WindowType windowtype,
-                            char *schemaName );
-extern void TteAddMenu ( WindowType windowtype,
-                           char *schemaName,
-                           int view,
+extern void TtaExecuteMenuActionFromActionId ( int action_id,
+                                                 Document doc,
+                                                 View view,
+                                                 ThotBool force );
+extern void TteZeroMenu ( void );
+extern void TteAddMenu ( int view,
                            int menuID,
                            int itemsNumber,
                            char *menuName );
-extern void TteAddSubMenu ( WindowType windowtype,
-                              char *schemaName,
-                              int menuID,
+extern void TteAddSubMenu ( int menuID,
                               int itemID,
                               int itemsNumber );
-extern void TteAddMenuItem ( WindowType windowtype,
-                               char *schemaName,
-                               int menuID,
+extern void TteAddMenuItem ( int menuID,
                                int subMenu,
                                int itemID,
-                               char *actionName,
+                               const char *actionName,
                                char itemType );
 extern void BuildPopdown ( Menu_Ctl *ptrmenu,
                              int ref,
@@ -241,6 +250,9 @@ extern void SwitchRedo ( PtrDocument pDoc,
                            ThotBool on );
 extern void SwitchPaste ( PtrDocument pDoc,
                             ThotBool on );
+extern void TtaEnableAction ( Document document,
+                                const char * action_name,
+                                ThotBool enable );
 extern void TtaSetMenuOff ( Document document,
                               View view,
                               int menuID );

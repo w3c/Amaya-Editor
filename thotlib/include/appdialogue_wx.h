@@ -25,7 +25,7 @@ extern int           TtaGetFrameDocumentId( int frame_id );
 extern ThotBool      TtaRegisterWidgetWX( int ref, void * p_widget );
 extern int           TtaGetActiveWindowId();
 extern AmayaWindow * TtaGetActiveWindow();
-extern wxMenu *      TtaGetContextMenu( int window_id, int page_id, int frame_id );
+extern wxMenu *      TtaGetContextMenu( int window_id );
 extern void          TtaRefreshMenuStats( wxMenuBar * p_menu_bar );
 
 extern int TtaMakeWindow(int x, int y, int w, int h, int kind, int parent_window_id );
@@ -59,6 +59,9 @@ extern void TtaToggleOnOffSplitView( int frame_id );
 extern void TtaToggleOnOffFullScreen( int frame_id );
 extern int GetWindowNumber (Document doc, View view);
 extern void TtaRegisterOpenURLCallback( void (*callback) (void *) );
+
+extern void TtaInitTopMenuStats( int doc_id );
+extern void TtaInitMenuItemStats( int doc_id );
 
 #include "AmayaParams.h"
 extern void TtaSendDataToPanel( int panel_type, AmayaParams& params );

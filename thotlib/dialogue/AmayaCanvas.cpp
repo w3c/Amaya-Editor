@@ -100,19 +100,6 @@ AmayaCanvas::~AmayaCanvas( )
   //  SetEventHandler( new wxEvtHandler() );
   wxLogDebug( _T("AmayaCanvas::~AmayaCanvas(): frame=%d"),
 	      m_pAmayaFrame->GetFrameId() );
-  /*
-  AmayaPage * p_page = m_pAmayaFrame->GetPageParent();
-  if (p_page)
-    {
-      AmayaFrame * p_frame = p_page->GetFrame(1);
-      if (p_frame)
-	{
-	  p_frame->SetCurrent();
-	  p_frame->SetActive(TRUE);
-	}
-	  
-    }
-    Reparent(NULL);*/
 
   m_pAmayaFrame = NULL;
 }

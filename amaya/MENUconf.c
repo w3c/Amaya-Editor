@@ -469,9 +469,9 @@ static void GetDefEnvToggle (char *name, ThotBool *value, int ref, int entry)
   if (*value != old)
     /* change the toggle button state */
     {
-#ifndef _WINGUI
+#ifdef _GTK
       TtaSetToggleMenu (ref, entry, *value);
-#endif /* WINDOWS */
+#endif /* _GTK */
     }
 }
 
@@ -941,13 +941,14 @@ static void WIN_RefreshCacheMenu (HWND hwnDlg)
   SetDlgItemInt (hwnDlg, IDC_CACHESIZE, GProp_Cache.CacheSize, FALSE);
   SetDlgItemInt (hwnDlg, IDC_MAXCACHEFILE,  GProp_Cache.MaxCacheFile, FALSE);
 }
-#else /* WINDOWS */
+#else /* _WINGUI */
 /*----------------------------------------------------------------------
   RefreshCacheMenu
   Displays the current registry values in the menu
   ----------------------------------------------------------------------*/
 static void RefreshCacheMenu ()
 {
+#ifdef _GTK
   /* set the menu entries to the current values */
   TtaSetToggleMenu (CacheBase + mCacheOptions, 0, GProp_Cache.EnableCache);
   TtaSetToggleMenu (CacheBase + mCacheOptions, 1, GProp_Cache.CacheProtectedDocs);
@@ -957,6 +958,7 @@ static void RefreshCacheMenu ()
     TtaSetTextForm (CacheBase + mCacheDirectory, GProp_Cache.CacheDirectory);
   TtaSetNumberForm (CacheBase + mCacheSize, GProp_Cache.CacheSize);
   TtaSetNumberForm (CacheBase + mMaxCacheFile,  GProp_Cache.MaxCacheFile);
+#endif /* _GTK */
 }
 #endif /* !_WINGUI */
 
@@ -2065,6 +2067,7 @@ LRESULT CALLBACK WIN_GeneralDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
   ----------------------------------------------------------------------*/
 static void RefreshGeneralMenu ()
 {
+#ifdef _GTK
   TtaSetNumberForm (GeneralBase + mZoom, GProp_General.Zoom);
   TtaSetToggleMenu (GeneralBase + mToggleGeneral, 0, GProp_General.PasteLineByLine);
   TtaSetToggleMenu (GeneralBase + mToggleGeneral, 1, GProp_General.S_AutoSave);
@@ -2080,6 +2083,7 @@ static void RefreshGeneralMenu ()
   TtaSetTextForm (GeneralBase + mDialogueLang, GProp_General.DialogueLang);
   TtaSetMenuForm (GeneralBase + mGeneralAccessKey, GProp_General.AccesskeyMod);
   TtaSetNumberForm (GeneralBase + mFontMenuSize, GProp_General.FontMenuSize);
+#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -2510,11 +2514,13 @@ LRESULT CALLBACK WIN_PublishDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
   ----------------------------------------------------------------------*/
 static void RefreshPublishMenu ()
 {
+#ifdef _GTK
   TtaSetToggleMenu (PublishBase + mTogglePublish, 0, GProp_Publish.UseXHTMLMimeType);
   TtaSetToggleMenu (PublishBase + mTogglePublish, 1, GProp_Publish.LostUpdateCheck);
   TtaSetToggleMenu (PublishBase + mTogglePublish, 2, GProp_Publish.VerifyPublish);
   TtaSetTextForm (PublishBase + mDefaultName, GProp_Publish.DefaultName);
   TtaSetTextForm (PublishBase + mSafePutRedirect, GProp_Publish.SafePutRedirect);
+#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -3001,6 +3007,7 @@ static void BuildScreenSelector (void)
   ----------------------------------------------------------------------*/
 static void RefreshBrowseMenu ()
 {
+#ifdef _GTK
   TtaSetToggleMenu (BrowseBase + mToggleBrowse, 0, GProp_Browse.LoadImages);
   TtaSetToggleMenu (BrowseBase + mToggleBrowse, 1, GProp_Browse.LoadObjects);
   TtaSetToggleMenu (BrowseBase + mToggleBrowse, 2, GProp_Browse.BgImages);
@@ -3010,6 +3017,7 @@ static void RefreshBrowseMenu ()
   /* preselect the screen matching the user preference */
   BuildScreenSelector ();
   TtaSetTextForm (BrowseBase + mLanNeg, GProp_Browse.LanNeg);
+#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -3891,6 +3899,7 @@ static void WIN_RefreshAnnotMenu (HWND hwnDlg)
   ----------------------------------------------------------------------*/
 static void RefreshAnnotMenu ()
 {
+#ifdef _GTK
   /* set the menu entries to the current values */
   TtaSetTextForm (AnnotBase + mAnnotUser, GProp_Annot.AnnotUser);
   TtaSetTextForm (AnnotBase + mAnnotPostServer, GProp_Annot.AnnotPostServer);
@@ -3898,6 +3907,7 @@ static void RefreshAnnotMenu ()
   TtaSetToggleMenu (AnnotBase + mToggleAnnot, 0, GProp_Annot.AnnotLAutoLoad);
   TtaSetToggleMenu (AnnotBase + mToggleAnnot, 1, GProp_Annot.AnnotRAutoLoad);
   TtaSetToggleMenu (AnnotBase + mToggleAnnot, 2, GProp_Annot.AnnotRAutoLoadRst);
+#endif /* _GTK */
 }
 #endif /* !_WINGUI */
 

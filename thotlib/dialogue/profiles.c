@@ -534,7 +534,7 @@ static ThotBool FunctionInProfile (char *name, PtrProCtl ctxt)
   Prof_BelongTable searchs a function in the function table and returns
   TRUE if the function exists.
   ----------------------------------------------------------------------*/
-ThotBool Prof_BelongTable (char *name)
+ThotBool Prof_BelongTable (const char *name)
 {
   int              left, right, middle, i;
   ThotBool         found = FALSE;

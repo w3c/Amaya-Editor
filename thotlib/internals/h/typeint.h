@@ -20,6 +20,9 @@
 #include "typeprs.h"
 #include "language.h"
 
+#include "constmenu.h"
+#include "constbutton.h"
+
 /* document external identifier: document name for the user */
 typedef char ADocumentName[MAX_NAME_LENGTH];
 
@@ -857,6 +860,12 @@ typedef struct _DocumentDescr
   ThotBool	  DocDefaultCharset;/* TRUE if the charset is set by default */
   int		  DocProfile;	  /* profile of the document */
   PtrNsUriDescr   DocNsUriDecl;   /* first namespace declaration */
+  
+#ifdef _WX
+  ThotBool   EnabledMenus[MAX_MENU];    /* Enabled top menus in the menubar  */
+  Proc       Call_Text;                 /* This is the callback which is called when a url is activated */
+#endif /* _WX */
+  
 } DocumentDescr;
 
 #endif /* __TYPE_INT_H__ */

@@ -57,9 +57,10 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaFrame, wxPanel)
  */
 AmayaFrame::AmayaFrame(
                  int             frame_id
-		,AmayaWindow *   p_parent_window
+		 ,wxWindow * p_parent /* the final parent : the page splitter window */
+		 ,AmayaWindow *   p_amaya_parent_window
 	      )
-  :  wxPanel( p_parent_window, -1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL
+  :  wxPanel( p_parent, -1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL
 #ifndef _WINDOWS
   | wxRAISED_BORDER
 #endif /* _WINDOWS */
@@ -68,12 +69,10 @@ AmayaFrame::AmayaFrame(
      ,m_FrameTitle()
      ,m_WindowTitle()
      ,m_pPageParent( NULL )
-     ,m_pMenuBar( NULL )
      ,m_IsActive( FALSE )
      ,m_HOldPosition( 0 )
      ,m_VOldPosition( 0 )
      ,m_ToDestroy( FALSE )
-     ,m_FrameUrlEnable( FALSE )
 {
   wxLogDebug( _T("AmayaFrame::AmayaFrame() - frame_id=%d"), m_FrameId );
 
@@ -134,11 +133,6 @@ AmayaFrame::~AmayaFrame()
   // notifie the page that this frame has die
   //  if ( GetPageParent() )
   //    GetPageParent()->DeletedFrame( this );
-
-  // destroy the menu bar
-  if (m_pMenuBar)
-    m_pMenuBar->Destroy();
-  m_pMenuBar = NULL;
 
   /* destroy the canvas (it should be automaticaly destroyed by 
      wxwidgets but due to a strange behaviour, I must explicitly delete it)*/
@@ -538,8 +532,8 @@ void AmayaFrame::SetFrameURL( const wxString & new_url )
   m_FrameUrl = new_url;
   
   // update the window url if the frame is active
-  if ( IsActive() && GetPageParent() )
-    GetPageParent()->SetWindowURL( m_FrameUrl );
+  if ( IsActive() && GetWindowParent() )
+    GetWindowParent()->SetURL( m_FrameUrl );
 }
 
 /*
@@ -564,6 +558,7 @@ wxString AmayaFrame::GetFrameURL()
     }
 }
 
+#if 0
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaFrame
@@ -577,8 +572,8 @@ void AmayaFrame::SetFrameEnableURL( bool urlenabled )
   m_FrameUrlEnable = urlenabled;
 
   // update the window url if the frame is active
-  if ( IsActive() && GetPageParent() )
-    GetPageParent()->SetWindowEnableURL( GetFrameEnableURL() );
+  if ( IsActive() && GetWindowParent() )
+    GetWindowParent()->SetEnableURL( GetFrameEnableURL() );
 }
 
 /*
@@ -602,7 +597,7 @@ bool AmayaFrame::GetFrameEnableURL( )
 	return m_FrameUrlEnable;
     }
 }
-
+#endif /* 0 */
 
 /*
  *--------------------------------------------------------------------------------------
@@ -648,72 +643,6 @@ void AmayaFrame::OnClose(wxCloseEvent& event)
   CloseView (pDoc, view);
 }
 
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  AmayaFrame
- *      Method:  AppendSubMenu
- * Description:  TODO
- *--------------------------------------------------------------------------------------
- */
-wxMenuItem * AmayaFrame::AppendSubMenu (
-    wxMenu * 		p_menu_parent,
-    long                id,
-    const wxString & 	label,
-    const wxString & 	help )
-{
-  wxMenu * p_submenu = new wxMenu( );
-  
-  p_menu_parent->Append( id, label, p_submenu, help );
-
-  return p_menu_parent->FindItem( id );
-}
-
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  AmayaFrame
- *      Method:  AppendMenuItem
- * Description:  TODO
- *--------------------------------------------------------------------------------------
- */
-wxMenuItem * AmayaFrame::AppendMenuItem ( 
-    wxMenu * 		p_menu_parent,
-    long 		id,
-    const wxString & 	label,
-    const wxString & 	help,
-    wxItemKind 		kind,
-    const AmayaContext & context )
-{
-  /*  if ( kind != wxITEM_SEPARATOR )
-  {
-    wxASSERT( id+MENU_ITEM_START < MENU_ITEM_END );
-    id += MENU_ITEM_START;
-    }*/
-  wxMenuItem * p_menu_item = new wxMenuItem( p_menu_parent,
-					     id,
-					     label,
-					     help,
-					     kind );
-  p_menu_item->SetRefData( new AmayaContext(context) );
-
-  p_menu_parent->Append( p_menu_item );
-
-  // TODO : call callbacks
-  if ( kind == wxITEM_SEPARATOR )
-  {
-    // do not call callback if it's a separator
-  }
-  return p_menu_item;
-}
-
-wxMenuBar * AmayaFrame::GetMenuBar()
-{
-  if (!m_pMenuBar)
-    // Create the empty menu bar
-    m_pMenuBar =  new wxMenuBar( /*wxMB_DOCKABLE*/ );
-
-  return m_pMenuBar;
-}
-
 void AmayaFrame::SetActive( bool active )
 {
   // do nothing if the frame stat doesnt change
@@ -723,70 +652,47 @@ void AmayaFrame::SetActive( bool active )
   // Update the m_IsActive atribute
   m_IsActive = active;
 
+  if ( !IsActive() )
+    return;
+
+  // update internal thotlib global var : ActiveFrame
+  ChangeSelFrame(GetFrameId());
+  
+  // refresh the document's menu bar
+  int doc_id = FrameTable[GetFrameId()].FrDoc;
+  TtaRefreshTopMenuStats( doc_id, -1 );
+  TtaRefreshMenuItemStats( doc_id, NULL, -1 );
+
   // the window's menubar must be updated with the new active frame's one
   AmayaWindow * p_window = GetWindowParent();
   if ( !p_window )
     return;
 
-  if ( !IsActive() )
-    {
-      // the window menubar is removed if it's the same as current unactive frame
-      if (p_window->GetMenuBar() == GetMenuBar())
-	p_window->SetMenuBar( NULL );
-      return;
-    }
-  
-  // the main menubar is replaced by the current frame one
-  p_window->SetMenuBar( GetMenuBar() );
-
   // the main statusbar text is replaced by the current frame one
   wxStatusBar * p_statusbar = p_window->GetStatusBar();
   if ( p_statusbar )
-    {
       p_statusbar->SetStatusText( m_StatusBarText );
-    }
 
   // update the window title
   SetFrameTitle( GetFrameTitle() );
   
   // this frame is active update its page
-  AmayaPage * p_page = GetPageParent();
-  if (p_page)
+  AmayaPage *   p_page   = GetPageParent();
+  if (p_page && p_window)
     {
       p_page->SetActiveFrame( this );
 
       // setup the right frame url into the main window urlbar
-      p_page->SetWindowURL( p_page->GetActiveFrame()->GetFrameURL() );
-
-      // setup the enable/disable state of urlbar
-      p_page->SetWindowEnableURL( p_page->GetActiveFrame()->GetFrameEnableURL() );
+      p_window->SetURL( GetFrameURL() );
 
       // setup the enable/disable state of the toolbar buttons
-      p_page->SetWindowEnableToolBarButtons( p_page->GetActiveFrame()->GetFrameId() );
+      //      p_window->SetWindowEnableToolBarButtons( GetFrameId() );
     }
-
-  // update internal thotlib global var : ActiveFrame
-  ChangeSelFrame(GetFrameId());
 }
 
 bool AmayaFrame::IsActive()
 {
   return m_IsActive;
-}
-
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  AmayaFrame
- *      Method:  IsMenuActive
- * Description:  returns true if the frame's menu is the top menu of the parent window
- *--------------------------------------------------------------------------------------
- */
-bool AmayaFrame::IsMenuActive()
-{
-  AmayaWindow * p_window = GetWindowParent();
-  if ( !p_window )
-    return false;
-  return (p_window->GetMenuBar() == GetMenuBar());
 }
 
 /*
@@ -861,30 +767,14 @@ void AmayaFrame::SetStatusBarText( const wxString & text )
  */
 void AmayaFrame::FreeFrame()
 {
-  // Detach the window menu bar to avoid  probleme when
-  // AmayaWindow will be deleted.
-  // (because the menu bar is owned by AmayaFrame)
-  if (GetWindowParent())
-    GetWindowParent()->DesactivateMenuBar();
-  
-
-  /* first of all clean up the menubar */
-  if (m_pMenuBar)
-    m_pMenuBar->Destroy();
-  m_pMenuBar = NULL;
-
-  
   // Create a new drawing area
   // there is a strange bug :
   // the drawind area could not be reused (sometimes black background), it must be recreated.
   //  ReplaceDrawingArea( CreateDrawingArea() );
 
+  
   // do not delete realy the frame because there is a strange bug
-  // Destroy();
-
-  // Reactivate the menu bar (nothing is done if the window is goind to die)
-  if (GetWindowParent())
-    GetWindowParent()->ActivateMenuBar();
+  Destroy();
 
   // the frame is destroyed so it hs no more page parent
   SetPageParent( NULL );

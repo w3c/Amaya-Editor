@@ -219,7 +219,7 @@ void AmayaNotebook::OnContextMenu( wxContextMenuEvent & event )
   int tab_pos = HitTest(ScreenToClient(event.GetPosition()), &flags);
   wxLogDebug( _T("AmayaNotebook::OnContextMenu - tab_pos=%d, flags=%d"), tab_pos, flags);
 
-  wxMenu * p_menu = TtaGetContextMenu( m_pAmayaWindow->GetWindowId(), tab_pos, -1 );
+  wxMenu * p_menu = TtaGetContextMenu( m_pAmayaWindow->GetWindowId() );
   PopupMenu(p_menu, ScreenToClient(event.GetPosition()));
 
 //  event.Skip();

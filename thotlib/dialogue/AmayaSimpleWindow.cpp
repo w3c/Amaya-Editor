@@ -55,13 +55,16 @@ AmayaSimpleWindow::AmayaSimpleWindow (  int             window_id
   AmayaWindow( window_id, p_parent_window, pos, size, WXAMAYAWINDOW_SIMPLE, wxDEFAULT_FRAME_STYLE | wxFRAME_FLOAT_ON_PARENT ),
   m_pFrame( NULL )
 {
-  // Creation of a close button
-  wxButton * p_close_button = new wxButton( this, -1, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CANCEL)) );
 
   // Creation of the top sizer to contain simple frame
   m_pTopSizer = new wxBoxSizer ( wxVERTICAL );
-  m_pTopSizer->Add( p_close_button, 0, wxEXPAND );
   SetSizer(m_pTopSizer);
+
+#if 0
+  // Creation of a close button
+  wxButton * p_close_button = new wxButton( this, -1, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CANCEL)) );
+  m_pTopSizer->Add( p_close_button, 0, wxEXPAND );
+#endif /* 0 */
 
   SetAutoLayout(TRUE);
 
@@ -172,8 +175,8 @@ bool AmayaSimpleWindow::AttachFrame( AmayaFrame * p_frame )
   m_pFrame->SetPageParent( NULL ); // no page parent
   m_pFrame->Show();
  
- // now I am your parent.
-  m_pFrame->Reparent( this );
+  // now I am your parent.
+  //  m_pFrame->Reparent( this ); /* do not reparent because on MacOSX it is not implemented */
  
   // update the frame's window parent title
   if (m_pFrame)
@@ -237,7 +240,7 @@ void AmayaSimpleWindow::CleanUp()
  *----------------------------------------------------------------------*/
 BEGIN_EVENT_TABLE(AmayaSimpleWindow, AmayaWindow)
   EVT_CLOSE(      AmayaSimpleWindow::OnClose )
-  EVT_BUTTON( -1, AmayaSimpleWindow::OnCloseButton )
+  //  EVT_BUTTON( -1, AmayaSimpleWindow::OnCloseButton )
 END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */

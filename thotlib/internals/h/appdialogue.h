@@ -9,6 +9,7 @@
 #define _APPDIALOG_H
 
 #include "frame.h"
+#include "typebase.h"
 
 /* Structure of an item in the Actions Table */
 typedef struct _Action_Ctl
@@ -16,7 +17,13 @@ typedef struct _Action_Ctl
   char         *ActionName;    /* External name of the action           */
   Proc 		Call_Action;   /* Address C procedure                   */
   char         *ActionEquiv;   /* Displayed text for shortcuts          */
+#ifdef _WX
+  /* possible optim: these 2 field could be replaced by a unique one with multi flags support */
+  ThotBool	ActionActive[MAX_DOCUMENTS]; /* used to know if the corresponding menu item is enabled or not */
+  ThotBool	ActionToggle[MAX_DOCUMENTS]; /* used to know if the corresponding menu item is toggled or not */
+#else /* _WX */
   ThotBool	ActionActive[MAX_FRAME];
+#endif /* _WX */
 }Action_Ctl;
 
 /* Structure to declare a Menu Item */
@@ -25,6 +32,7 @@ typedef struct _Item_Ctl
   int		ItemID;		/* ID of the menu item			*/
   char          ItemType;	/* 'B'=Button, 'T'=Toggle, 'D'=Dynamic	*/
   				/* 'S'=Separator, 'M'=Menu		*/
+  int           ItemIconId;     /* a icon identifier to show in the menu near the item (on the left) */
   union
   {
     struct
@@ -54,17 +62,7 @@ typedef struct _Menu_Ctl
   struct _Menu_Ctl	*NextMenu;	/* Next menu		    	*/
 }Menu_Ctl;
 
-/* Structure to associate menus and specific structure schemas */
-typedef struct _SchemaMenu_Ctl
-{
-  char      *SchemaName;                  /* Structure schema name     */
-  Menu_Ctl  *SchemaMenu;	                 /* Pointer to the first menu */
-  struct     _SchemaMenu_Ctl *NextSchema; /* Next association          */
-}SchemaMenu_Ctl;
-
-
 /* variables defined into appdialogue.c */
-extern SchemaMenu_Ctl *	SchemasMenuList;
 extern Menu_Ctl    *	DocumentMenuList;
 
 /*

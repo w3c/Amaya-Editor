@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern ThotBool Prof_BelongTable ( char *name );
+extern ThotBool Prof_BelongTable ( const char *name );
 extern int Prof_BelongDoctype ( char *name,
                                 int docProfile,
                                 ThotBool RO );
@@ -26,7 +26,7 @@ extern ThotBool Prof_ShowMenu ( Menu_Ctl *ptrmenu );
 
 #else /* __STDC__ */
 
-extern ThotBool Prof_BelongTable ( char *name );
+extern ThotBool Prof_BelongTable ( const char *name );
 extern int Prof_BelongDoctype ( char *name,
                                   int docProfile,
                                   ThotBool RO );

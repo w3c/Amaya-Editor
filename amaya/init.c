@@ -713,7 +713,9 @@ void SetArrowButton (Document document, ThotBool back, ThotBool on)
 	  TtaSetItemOff (document, 1, File, BForward);
 	}
     }
-  TtaChangeButton (document, 1, index, picture, state);
+#ifndef _WX
+  TtaChangeButton (document, -1, index, picture, state);
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -736,7 +738,11 @@ void ResetStop (Document document)
 		/* if there was no error message, display the LOADED message */
 		TtaSetStatus (document, 1,
 			      TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
-	      TtaChangeButton (document, 1, iStop, stopN, FALSE);
+#ifndef _WX
+	      TtaChangeButton (document, -1, iStop, stopN, FALSE);
+#else /* _WX */
+	      TtaEnableAction(document, "StopTransfer", FALSE);
+#endif /* _WX */
 	    }
 	  DocNetworkStatus[document] = AMAYA_NET_INACTIVE;
 	}
@@ -754,7 +760,11 @@ void ActiveTransfer (Document document)
       FilesLoading[document] = 1;
       if (TtaGetViewFrame (document, 1) != 0)
 	/* this document is displayed */
-	TtaChangeButton (document, 1, iStop, stopR, TRUE);
+#ifndef _WX
+	TtaChangeButton (document, -1, iStop, stopR, TRUE);
+#else /* _WX */
+        TtaEnableAction(document, "StopTransfer", TRUE);
+#endif /* _WX */
     }
 }
 
@@ -774,8 +784,12 @@ void SetStopButton (Document document)
 	}
 
       if (TtaGetViewFrame (document, 1) != 0)
+#ifndef _WX
 	/* this document is displayed */
-	TtaChangeButton (document, 1, iStop, stopR, TRUE);
+	TtaChangeButton (document, -1, iStop, stopR, TRUE);
+#else /* _WX */
+        TtaEnableAction(document, "StopTransfer", TRUE);
+#endif /* _WX */
     }
 }
 
@@ -829,7 +843,9 @@ void DocStatusUpdate (Document doc, ThotBool modified)
     /* the document has been modified and is not in Read-Only mode */
     {
        TtaSetItemOn (doc, 1, File, BSave);
-       TtaChangeButton (doc, 1, iSave, iconSave, TRUE);
+#ifndef _WX
+       TtaChangeButton (doc, -1, iSave, iconSave, TRUE);
+#endif /* _WX */
        /* if we have a pair source/structured document allow synchronization */
        otherDoc = DocumentSource[doc];
        if (!otherDoc)
@@ -846,7 +862,9 @@ void DocStatusUpdate (Document doc, ThotBool modified)
     /* the document is no longer modified */
     {
       TtaSetItemOff (doc, 1, File, BSave);
-      TtaChangeButton (doc, 1, iSave, iconSaveNo, FALSE);
+#ifndef _WX
+      TtaChangeButton (doc, -1, iSave, iconSaveNo, FALSE);
+#endif /* _WX */
       if (TtaIsDocumentUpdated (doc))
 	{
 	  /* if we have a pair source/structured document allow synchronization */
@@ -1029,8 +1047,11 @@ void UpdateEditorMenus (Document doc)
   isXhtml11 = (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat &&
 	       profile != L_Strict && profile != L_Basic);
 
+#ifndef _WX
   /* update specific menu entries */
   TtaUpdateMenus (doc, 1, FALSE);
+#endif /* _WX */
+
   /* Update the doctype menu */
   UpdateDoctypeMenu (doc);
   /* structure information is active only in the structure view */
@@ -1047,11 +1068,16 @@ void UpdateEditorMenus (Document doc)
     SetTableMenuOn (doc, 1);
   else
     SetTableMenuOff (doc, 1);
+
+#ifndef _WX
+  /* SG: I dont understand why these items are enabled here ...
+   * because SwitchUndo, SwitchPaste functions do the work before  */
   TtaSetItemOn (doc, 1, Edit_, BUndo);
   TtaSetItemOn (doc, 1, Edit_, BRedo);
   TtaSetItemOn (doc, 1, Edit_, BCut);
   TtaSetItemOn (doc, 1, Edit_, BPaste);
   TtaSetItemOn (doc, 1, Edit_, BClear);
+#endif /* _WX */
 
   if (DocumentTypes[doc] == docHTML ||
       DocumentTypes[doc] == docAnnot ||
@@ -1082,18 +1108,22 @@ void UpdateEditorMenus (Document doc)
 	    TtaSetMenuOn (doc, 1, XMLTypes);
 	  TtaSetMenuOn (doc, 1, Types);
 	  TtaSetMenuOn (doc, 1, Links);
-	  TtaChangeButton (doc, 1, iI, iconI, TRUE);
-	  TtaChangeButton (doc, 1, iB, iconB, TRUE);
-	  TtaChangeButton (doc, 1, iT, iconT, TRUE);
-	  TtaChangeButton (doc, 1, iImage, iconImage, TRUE);
-	  TtaChangeButton (doc, 1, iH1, iconH1, TRUE);
-	  TtaChangeButton (doc, 1, iH2, iconH2, TRUE);
-	  TtaChangeButton (doc, 1, iH3, iconH3, TRUE);
-	  TtaChangeButton (doc, 1, iBullet, iconBullet, TRUE);
-	  TtaChangeButton (doc, 1, iNum, iconNum, TRUE);
-	  TtaChangeButton (doc, 1, iDL, iconDL, TRUE);
-	  TtaChangeButton (doc, 1, iTable, iconTable, TRUE);
-	  TtaChangeButton (doc, 1, iLink, iconLink, TRUE);
+
+#ifndef _WX
+	  TtaChangeButton (doc, -1, iI, iconI, TRUE);
+	  TtaChangeButton (doc, -1, iB, iconB, TRUE);
+	  TtaChangeButton (doc, -1, iT, iconT, TRUE);
+	  TtaChangeButton (doc, -1, iImage, iconImage, TRUE);
+	  TtaChangeButton (doc, -1, iH1, iconH1, TRUE);
+	  TtaChangeButton (doc, -1, iH2, iconH2, TRUE);
+	  TtaChangeButton (doc, -1, iH3, iconH3, TRUE);
+	  TtaChangeButton (doc, -1, iBullet, iconBullet, TRUE);
+	  TtaChangeButton (doc, -1, iNum, iconNum, TRUE);
+	  TtaChangeButton (doc, -1, iDL, iconDL, TRUE);
+	  TtaChangeButton (doc, -1, iTable, iconTable, TRUE);
+	  TtaChangeButton (doc, -1, iLink, iconLink, TRUE);
+#endif /* _WX */
+
 	  SwitchIconMath (doc, 1, TRUE);
 #ifdef _SVG
 	  SwitchIconGraph (doc, 1, TRUE);
@@ -1108,7 +1138,9 @@ void UpdateEditorMenus (Document doc)
       if (view != 0 && TtaIsViewOpen (doc, view))
 	{
 	  /* update specific menu entries */
+#ifndef _WX
 	  TtaUpdateMenus (doc, view, FALSE);
+#endif /* _WX */
 	  TtaSetItemOff (doc, view, File, BShowLogFile);
 	  TtaSetItemOff (doc, view, File, BSynchro);
 	  TtaSetItemOn (doc, view, Edit_, BCut);
@@ -1128,7 +1160,9 @@ void UpdateEditorMenus (Document doc)
       if (view != 0 && TtaIsViewOpen (doc, view))
 	{
 	  /* update specific menu entries */
+#ifndef _WX
 	  TtaUpdateMenus (doc, view, FALSE);
+#endif /* _WX */
 	  TtaSetItemOff (doc, view, File, BShowLogFile);
 	  TtaSetItemOff (doc, view, File, BSynchro);
 	  /* structure information is active only in the structure view */
@@ -1153,7 +1187,9 @@ void UpdateEditorMenus (Document doc)
       if (view != 0 && TtaIsViewOpen (doc, view))
 	{
 	  /* update specific menu entries */
+#ifndef _WX
 	  TtaUpdateMenus (doc, view, FALSE);
+#endif /* _WX */
 	  TtaSetItemOff (doc, view, File, BShowLogFile);
 	  TtaSetItemOff (doc, view, File, BSynchro);
 	  /* structure information is active only in the structure view */
@@ -1182,7 +1218,9 @@ void UpdateEditorMenus (Document doc)
       if (view != 0 && TtaIsViewOpen (doc, view))
 	{
 	  /* update specific menu entries */
+#ifndef _WX
 	  TtaUpdateMenus (doc, view, FALSE);
+#endif /* _WX */
 	  TtaSetItemOff (doc, view, File, BShowLogFile);
 	  TtaSetItemOff (doc, view, File, BSynchro);
 	  /* structure information is active only in the structure view */
@@ -1452,7 +1490,11 @@ void StopTransfer (Document document, View view)
   else if (DocNetworkStatus[document] & AMAYA_NET_ACTIVE)
     {
       if (TtaGetViewFrame (document, 1) != 0)
-	TtaChangeButton (document, 1, iStop, stopN, FALSE);
+#ifndef _WX
+	TtaChangeButton (document, -1, iStop, stopN, FALSE);
+#else /* _WX */
+        TtaEnableAction(document, "StopTransfer", FALSE);
+#endif /* _WX */
       StopRequest (document);
       FilesLoading[document] = 0;
       DocNetworkStatus[document] = AMAYA_NET_INACTIVE;
@@ -2491,7 +2533,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 
   /* previous document */
   doc = oldDoc;
-  if (replaceOldDoc)
+  if (replaceOldDoc && oldDoc>0)
     /* the new document will replace another document in the same window */
     {
 #ifdef _WX
@@ -2681,6 +2723,14 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	 }
 #endif /* _WX */
 
+#ifdef _WX
+       /* init the internal default documents menus states : enable/disable, toggle/untoggle
+	* need to be done before frame creation because the active frame will use it to refresh the menus */
+       if (!replaceOldDoc || !isOpen)
+	 TtaInitMenuItemStats(doc);
+       TtaInitTopMenuStats(doc);
+#endif /* _WX */
+
        /* open the main view */
        if (docType == docLog)
 	 /* without menu bar */
@@ -2716,6 +2766,18 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
        reinitialized = (docType != DocumentTypes[doc]);
        if (docType == docLog || docType == docLibrary || docType == docSource)
 	 {
+#ifdef _WX
+#ifdef _SVG
+	   if (docType == docLibrary)
+	     {
+	       /* Initialize SVG Library Buffer string */
+	       TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
+			       FALSE, (Proc)OpenLibraryCallback, SVGlib_list);
+	     }
+#endif /* _SVG */
+#endif /* _WX */
+
+#ifndef _WX
 	   TtcSwitchButtonBar (doc, 1); /* no button bar */
 	   if (docType != docLibrary)
 	     TtcSwitchCommands (doc, 1); /* no command open */
@@ -2727,6 +2789,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 			       FALSE, (Proc)OpenLibraryCallback, SVGlib_list);
 #endif /* _SVG */
 	     }
+#endif /* _WX */
 	 }
        else if (!isOpen)
 	 /* if isOpen is true, it means that a new window has been opened for this document 
@@ -2753,6 +2816,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 
 	   /* create the  button bar */
 #ifdef _WX
+#if 0
 	   iBack = TtaAddToolBarButton( window_id,
 					iconBack,
 					TtaGetMessage (AMAYA, AM_BUTTON_PREVIOUS),
@@ -2803,6 +2867,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 					"TtcSearchText",
 					(Proc)TtcSearchText,
 					TRUE );
+#endif /* 0 */
 #else /* _WX */
 	   /* use a new window: Create all buttons */
 	   iStop =TtaAddButton (doc, 1, stopN, (Proc)StopTransfer,"StopTransfer",
@@ -2941,16 +3006,20 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	       TtaSetStatus (oldDoc, 1, " ", NULL);
 	       ActiveTransfer (doc);
 	     }
+#endif /* _GTK */
+
+
 #ifdef BOOKMARKS
 	   /* if there are multiple instances of Amaya, disable the bookmark menu */
 	   if (!GetBookmarksEnabled ())
 	     TtaSetMenuOff (doc, 1, Bookmarks_);
-#endif /* BOOKMARKS */
-#endif /* _GTK */
-	   
-
+#endif /* BOOKMARKS */   
 	 } /* isOpen */
+	 
+     }
 
+   if (!replaceOldDoc || !isOpen)
+     {
 #ifdef _WX
        /* initial state for menu entries */
        TtaSetItemOff (doc, 1, File, BBack);
@@ -2968,28 +3037,30 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
        else
 	 TtaSetToggleItem (doc, 1, Views, TShowTargets, FALSE);
 #endif /* _WX */
-	 
      }
 
 #if _WX
+#if 0
    /* only if it's the first document open in this frame */
   if (!replaceOldDoc)
     {
       /* initialize the enable/disable buttons states */
-      TtaChangeButton (doc, 1, iBack,    iconBackNo,    FALSE);
-      TtaChangeButton (doc, 1, iForward, iconForwardNo, FALSE);
-      TtaChangeButton (doc, 1, iReload,  iconReload,    TRUE);
-      TtaChangeButton (doc, 1, iStop,    stopN,         FALSE);
-      TtaChangeButton (doc, 1, iHome,    iconHome,      TRUE);
-      TtaChangeButton (doc, 1, iSave,    iconSaveNo,    FALSE);
-      TtaChangeButton (doc, 1, iPrint,   iconPrint,     TRUE);
-      TtaChangeButton (doc, 1, iFind,    iconFind,      TRUE);
+      TtaChangeButton (doc, -1, iBack,    iconBackNo,    FALSE);
+      TtaChangeButton (doc, -1, iForward, iconForwardNo, FALSE);
+      TtaChangeButton (doc, -1, iReload,  iconReload,    TRUE);
+      TtaChangeButton (doc, -1, iStop,    stopN,         FALSE);
+      TtaChangeButton (doc, -1, iHome,    iconHome,      TRUE);
+      TtaChangeButton (doc, -1, iSave,    iconSaveNo,    FALSE);
+      TtaChangeButton (doc, -1, iPrint,   iconPrint,     TRUE);
+      TtaChangeButton (doc, -1, iFind,    iconFind,      TRUE);
     }
+#endif /* 0 */
   
   /* now be sure that the urlbar is setup */
   TtaAddTextZone ( doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
    	               TRUE, (Proc)TextURL, URL_list );
 
+#if 0
   if (!isOpen) /* only if this page is not already open */
     {
       /* add the amaya logo after the url bar */
@@ -2999,7 +3070,9 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 				   "HelpLocal", (Proc)HelpLocal, TRUE );
     }
   /* force the logo to be enable */
-  TtaChangeButton (doc, 1, iLogo, iconLogo, TRUE);
+  TtaChangeButton (doc, -1, iLogo, iconLogo, TRUE);
+#endif /* 0 */
+
 #endif /* _WX */
 
    /* store the new document type */
@@ -3077,18 +3150,20 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	   DocumentTypes[doc] == docCSS ||
 	   DocumentTypes[doc] == docMath)
 	 {
-	   TtaChangeButton (doc, 1, iI, iconINo, FALSE);
-	   TtaChangeButton (doc, 1, iB, iconBNo, FALSE);
-	   TtaChangeButton (doc, 1, iT, iconTNo, FALSE);
-	   TtaChangeButton (doc, 1, iImage, iconImageNo, FALSE);
-	   TtaChangeButton (doc, 1, iH1, iconH1No, FALSE);
-	   TtaChangeButton (doc, 1, iH2, iconH2No, FALSE);
-	   TtaChangeButton (doc, 1, iH3, iconH3No, FALSE);
-	   TtaChangeButton (doc, 1, iBullet, iconBulletNo, FALSE);
-	   TtaChangeButton (doc, 1, iNum, iconNumNo, FALSE);
-	   TtaChangeButton (doc, 1, iDL, iconDLNo, FALSE);
-	   TtaChangeButton (doc, 1, iTable, iconTableNo, FALSE);
-	   TtaChangeButton (doc, 1, iLink, iconLinkNo, FALSE);
+#ifndef _WX
+	   TtaChangeButton (doc, -1, iI, iconINo, FALSE);
+	   TtaChangeButton (doc, -1, iB, iconBNo, FALSE);
+	   TtaChangeButton (doc, -1, iT, iconTNo, FALSE);
+	   TtaChangeButton (doc, -1, iImage, iconImageNo, FALSE);
+	   TtaChangeButton (doc, -1, iH1, iconH1No, FALSE);
+	   TtaChangeButton (doc, -1, iH2, iconH2No, FALSE);
+	   TtaChangeButton (doc, -1, iH3, iconH3No, FALSE);
+	   TtaChangeButton (doc, -1, iBullet, iconBulletNo, FALSE);
+	   TtaChangeButton (doc, -1, iNum, iconNumNo, FALSE);
+	   TtaChangeButton (doc, -1, iDL, iconDLNo, FALSE);
+	   TtaChangeButton (doc, -1, iTable, iconTableNo, FALSE);
+	   TtaChangeButton (doc, -1, iLink, iconLinkNo, FALSE);
+#endif /* _WX */
 	   TtaSetItemOff (doc, 1, Views, TShowMapAreas);
 	   TtaSetItemOff (doc, 1, Views, TShowTargets);
 	   TtaSetMenuOff (doc, 1, Doctype1);
@@ -4622,8 +4697,10 @@ void ShowFormatted (Document doc, View view)
       structView = TtaOpenView (doc, structureName, x, y, w, h);
       if (structView != 0)
 	{
+#ifndef _WX
 	  TtcSwitchButtonBar (doc, structView); /* no button bar */
 	  TtcSwitchCommands (doc, structView); /* no command open */
+#endif /* _WX */
 	  UpdateEditorMenus (doc);
 	}
     }
@@ -4656,8 +4733,10 @@ void ShowStructure (Document doc, View view)
       structView = TtaOpenView (doc, structureName, x, y, w, h);
       if (structView != 0)
 	{
+#ifndef _WX
 	  TtcSwitchButtonBar (doc, structView); /* no button bar */
 	  TtcSwitchCommands (doc, structView); /* no command open */
+#endif /* _WX */
 	  UpdateEditorMenus (doc);
 	}
     }
@@ -4691,8 +4770,10 @@ void ShowAlternate (Document doc, View view)
       if (altView != 0)
 	{
 	  SetWindowTitle (doc, doc, altView);
+#ifndef _WX
 	  TtcSwitchButtonBar (doc, altView); /* no button bar */
 	  TtcSwitchCommands (doc, altView); /* no command open */
+#endif /* _WX */
 	  UpdateEditorMenus (doc);
 	}
     }
@@ -4726,8 +4807,10 @@ void ShowLinks (Document doc, View view)
       if (linksView != 0)
 	{
 	  SetWindowTitle (doc, doc, linksView);
+#ifndef _WX
 	  TtcSwitchButtonBar (doc, linksView); /* no button bar */
 	  TtcSwitchCommands (doc, linksView); /* no command open */
+#endif /* _WX */
 	  UpdateEditorMenus (doc);
 	}
     }
@@ -4761,8 +4844,10 @@ void ShowToC (Document doc, View view)
       if (tocView != 0)
 	{
 	  SetWindowTitle (doc, doc, tocView);
+#ifndef _WX
 	  TtcSwitchButtonBar (doc, tocView); /* no button bar */
 	  TtcSwitchCommands (doc, tocView); /* no command open */
+#endif /* _WX */
 	  UpdateEditorMenus (doc);
 	}
     }
@@ -5266,7 +5351,9 @@ Document GetAmayaDoc (char *urlname, char *form_data,
 	  if (newdoc)
 	    {
 	      /* help document has to be in read-only mode */
+#ifndef _WX
 	      TtcSwitchCommands (newdoc, 1); /* no command open */
+#endif /* _WX */
 	      TtaSetToggleItem (newdoc, 1, Views, TShowTextZone, FALSE);
 	      TtaSetMenuOff (newdoc, 1, Help_);
 	    }
@@ -7708,7 +7795,9 @@ void ShowButtons (Document doc, View view)
 #endif /* #if defined(_GTK) || defined(_WX) */
   
   TtaSetToggleItem (doc, 1, Views, TShowButtonbar, SButtons[doc]);
+#ifndef _WX
   TtcSwitchButtonBar (doc, view);
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------

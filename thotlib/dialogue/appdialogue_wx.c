@@ -1,4 +1,3 @@
-
 #ifdef _WX
   #include "wx/wx.h"
   #include "wx/bmpbuttn.h"
@@ -38,6 +37,8 @@
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
+#include "edit_tv.h"
+#include "appdialogue_tv.h"
 #include "frame_tv.h"
 #include "boxparams_f.h"
 #include "thotmsg_f.h"
@@ -55,6 +56,20 @@
 #include "AmayaSubPanel.h"
 #include "AmayaXHTMLPanel.h"
 #include "AmayaSubPanelManager.h"
+
+
+static int g_back_action_id = -1;
+static int g_forward_action_id = -1;
+static int g_reload_action_id = -1;
+static int g_stop_action_id = -1;
+static int g_home_action_id = -1;
+static int g_save_action_id = -1;
+static int g_print_action_id = -1;
+static int g_find_action_id = -1;
+static int g_logo_action_id = -1;
+
+static void TtaMakeWindowMenuBar( int window_id );
+static void BuildPopdownWX ( int window_id, Menu_Ctl *ptrmenu, ThotMenu p_menu );
 
 /* 
  * In this file there is a list of functions useful
@@ -223,6 +238,10 @@ int TtaMakeWindow( int x, int y, int w, int h, int kind, int parent_window_id )
 	p_panel->CloseSubPanel( WXAMAYA_PANEL_SPECHAR );
     }
 
+  /* do not create menus for a simple window */
+  if (kind != WXAMAYAWINDOW_SIMPLE)
+    TtaMakeWindowMenuBar( window_id );
+  
   // show the window if not already show
   TtaShowWindow( window_id, TRUE );
 
@@ -233,105 +252,463 @@ int TtaMakeWindow( int x, int y, int w, int h, int kind, int parent_window_id )
 }
 
 /*----------------------------------------------------------------------
-  TtaMakeMenuBar creates the frame
+  BuildPopdownWX builds menus items and sub-menus and hangs it to the given p_menu
   ----------------------------------------------------------------------*/
-static void TtaMakeMenuBar( int frame_id, const char * schema_name )
+static void BuildPopdownWX ( int window_id, Menu_Ctl *ptrmenu, ThotMenu p_menu )
 {
 #ifdef _WX
-  SchemaMenu_Ctl     *SCHmenu;
-  Menu_Ctl           *ptrmenu;
-  int                 i = 0;
-  /* reference of the buildbing menu */
-  int                 ref = frame_id + MAX_LocalMenu;
-  int doc_id = FrameTable[frame_id].FrDoc;
-  int schView = FrameTable[frame_id].FrView;
+  Item_Ctl *   ptritem = ptrmenu->ItemsList;
+  Menu_Ctl *   item_submenu = NULL;
+  int          item_nb = 0;
+  int          item_id = 0;
+  char *       item_label = NULL;
+  int          item_label_lg = 0;
+  char *       item_equiv = NULL;
+  char         item_type = ' ';
+  int          item_action = 0;
+  wxMenuItem * p_menu_item = NULL;
+  wxMenu *     p_submenu = NULL;
+  int          max_item_label_lg = 0;
+  wxString     label;
 
-  AmayaFrame *        p_AmayaFrame = FrameTable[frame_id].WdFrame;
-  ThotMenuBar         p_menu_bar   = p_AmayaFrame->GetMenuBar();
-
-  /* Look for the menu list to be built */
-  ptrmenu = NULL;
-  ThotBool withMenu = TRUE;
-  if (withMenu)
+  /* first of all check for the largest menuitem label */
+  while (item_nb < ptrmenu->ItemsNb)
     {
-      SCHmenu = SchemasMenuList;
-      while (SCHmenu && ptrmenu == NULL)
-	{
-	  if (!strcmp (schema_name, SCHmenu->SchemaName))
-	    /* that document has specific menus */
-	    ptrmenu = SCHmenu->SchemaMenu;
-	  else
-	    /* next schema */
-	    SCHmenu = SCHmenu->NextSchema;
-	}
-      if (ptrmenu == NULL)
-	/* the document uses standard menus */
-	ptrmenu = DocumentMenuList;
+      item_id       = ptritem[item_nb].ItemID;
+      item_label    = TtaGetMessage (THOT, item_id);
+      item_label_lg = strlen(item_label);
+      if ( max_item_label_lg < item_label_lg )
+	max_item_label_lg = item_label_lg;
+      item_nb++;
     }
   
-  /**** Build menus ****/
-  FrameTable[frame_id].FrMenus = ptrmenu;
-  /* Initialise les menus dynamiques */
-  FrameTable[frame_id].MenuAttr = -1;
-  FrameTable[frame_id].MenuSelect = -1;
-  FrameTable[frame_id].MenuPaste = -1;
-  FrameTable[frame_id].MenuUndo = -1;
-  FrameTable[frame_id].MenuRedo = -1;
-  FrameTable[frame_id].MenuContext = -1;
-  FrameTable[frame_id].MenuShowPanelID = -1;
-  FrameTable[frame_id].MenuSplitViewID = -1;
-  FrameTable[frame_id].MenuFullScreenID = -1;
-  FrameTable[frame_id].MenuItemShowPanelID = -1;
-  FrameTable[frame_id].MenuItemSplitViewID = -1;
-  FrameTable[frame_id].MenuItemFullScreenID = -1;
-  
-  while (p_menu_bar && ptrmenu)
+  /* now create the menu items */
+  item_nb = 0;
+  while (item_nb < ptrmenu->ItemsNb)
     {
-      /* skip menus that concern another view */
-      if ( (ptrmenu->MenuView == 0 || ptrmenu->MenuView == schView) &&
-	   Prof_ShowMenu (ptrmenu))
+      item_id      = ptritem[item_nb].ItemID;
+      item_label   = TtaGetMessage (THOT, item_id);
+      item_type    = ptritem[item_nb].ItemType;
+
+      label = TtaConvMessageToWX(item_label);
+      label.Pad(max_item_label_lg-strlen(item_label)+1, wxChar(' '));
+
+      switch (item_type)
 	{
-	  wxMenu * p_menu = new wxMenu;
+	case 'B': /* a normal menu item */
+	  item_action  = ptritem[item_nb].ItemAction;
+	  item_equiv   = MenuActionList[item_action].ActionEquiv;
+	  label += TtaConvMessageToWX(item_equiv);
+	  p_menu_item = p_menu->Append(item_id, label, _T(""), wxITEM_NORMAL);
+	  break;
+
+	case 'S': /* a separator */
+	  item_action  = -1;
+	  p_menu_item = p_menu->AppendSeparator();
+	  break;
+
+	case 'T': /* a toggle menu item (checkbox) */
+	  item_action  = ptritem[item_nb].ItemAction;
+	  item_equiv   = MenuActionList[item_action].ActionEquiv;
+	  label += TtaConvMessageToWX(item_equiv);
+	  p_menu_item = p_menu->AppendCheckItem(item_id, label);
+	  break;
+
+	case 'M': /* a submenu */
+	  item_action  = -1;
+	  item_submenu = ptritem[item_nb].SubMenu;
+	  p_submenu = new wxMenu();
+	  BuildPopdownWX( window_id, item_submenu, p_submenu );
+	  p_menu_item = p_menu->Append(item_id, TtaConvMessageToWX(item_label), p_submenu);
+	  break;
+
+	default: /* a unknown type */
+	  item_action  = -1;
+	  p_menu_item = NULL;
+	  wxASSERT_MSG(FALSE, _T("Unknown menu item type"));
+	  break;
+	}
+
+      if (item_action != -1)
+	{
+	  /* Is it the "Show/Hide panel" command */
+	  if (!strcmp (MenuActionList[item_action].ActionName, "ShowPanel"))
+	    WindowTable[window_id].MenuItemShowPanelID = item_id;
+	  /* Is it the "Split/Unsplit view" command */
+	  else if (!strcmp (MenuActionList[item_action].ActionName, "SplitUnsplitPage"))
+	    WindowTable[window_id].MenuItemSplitViewID = item_id;
+	  /* Is it the "Fullscreen on/off" command */
+	  else if (!strcmp (MenuActionList[item_action].ActionName, "FullScreen"))
+	    WindowTable[window_id].MenuItemFullScreenID = item_id;
+	  /* Is it the "Paste" command */
+	  else if (!strcmp (MenuActionList[item_action].ActionName, "PasteBuffer"))
+	    WindowTable[window_id].MenuItemPaste = item_id;
+	  /* Is it the "Undo" command */
+	  else if (!strcmp (MenuActionList[item_action].ActionName, "TtcUndo"))
+	    WindowTable[window_id].MenuItemUndo = item_id;
+	  /* Is it the "Redo" command */
+	  else if (!strcmp (MenuActionList[item_action].ActionName, "TtcRedo"))
+	    WindowTable[window_id].MenuItemRedo = item_id;
+	}
+
+      item_nb++;
+    }
+#endif /* _WX */
+}
+
+
+
+/*----------------------------------------------------------------------
+  TtaMakeWindowMenuBar creates the window menu bar widgets from the model (DocumentMenuList)
+  ----------------------------------------------------------------------*/
+static void TtaMakeWindowMenuBar( int window_id )
+{
+#ifdef _WX
+  AmayaWindow        *p_window = TtaGetWindowFromId( window_id );
+  Menu_Ctl           *ptrmenu = DocumentMenuList; /* this is the menus model */
+  wxMenuBar          *p_menu_bar = p_window->GetMenuBar();
+
+  if (p_menu_bar)
+    /* destroy the old menubar, because we are rebuilding a new one */
+    p_menu_bar->Destroy();
+  p_menu_bar = new wxMenuBar( wxMB_DOCKABLE );
+
+  while (ptrmenu)
+    {
+      /* Check if a menu has to be displayed. */
+      if ( Prof_ShowMenu (ptrmenu) )
+	{
+	  wxMenu * p_menu = new wxMenu();
+	  
+	  /* remember the top menubar widgets because wxMenu doesn't have ids to identify it */
+	  WindowTable[window_id].WdMenus[ptrmenu->MenuID] = p_menu;
+
+	  /* remember specials menus */
+	  if (ptrmenu->MenuContext) 
+	    WindowTable[window_id].MenuContext = ptrmenu->MenuID;
+	  else if (ptrmenu->MenuAttr)
+	    WindowTable[window_id].MenuAttr = ptrmenu->MenuID;
+	  else if (ptrmenu->MenuSelect) 
+	    WindowTable[window_id].MenuSelect = ptrmenu->MenuID;
+	  else if (ptrmenu->MenuHelp) 
+	    WindowTable[window_id].MenuHelp = ptrmenu->MenuID;
+	  
+	  /* Now create the menu's widgets and hangs it to our p_menu */
+	  BuildPopdownWX( window_id, ptrmenu, p_menu );
 	  
 	  /* Le menu contextuel ne doit pas etre accroche a notre bar de menu */
 	  /* il sera affiche qd le boutton droit de la souris sera active */
 	  if (!ptrmenu->MenuContext)
-	    {
-	      p_menu_bar->Append( p_menu,
-				  TtaConvMessageToWX( TtaGetMessage (THOT, ptrmenu->MenuID) ) );
-	    }
-	  
-	  FrameTable[frame_id].WdMenus[i]      = p_menu;
-	  FrameTable[frame_id].EnabledMenus[i] = TRUE;
-	  
-	  /* On note l'id du menu contextuel pour notre frame courante,
-	   * c'est ce qui nous permettra de l'afficher plus tard */
-	  if (ptrmenu->MenuContext) 
-	    FrameTable[frame_id].MenuContext = ptrmenu->MenuID;
-
-	  /* Evite la construction des menus dynamiques */
-	  if (ptrmenu->MenuAttr)
-	    FrameTable[frame_id].MenuAttr = ptrmenu->MenuID;
-	  else if (ptrmenu->MenuSelect) 
-	    FrameTable[frame_id].MenuSelect = ptrmenu->MenuID;
-	  else 
-	    /* on termine par la construction des widgets que l'on accroche a notre p_menu */
-	    BuildPopdown (ptrmenu, ref, p_menu, frame_id, doc_id,
-			  FALSE, FALSE);	      
+	    p_menu_bar->Append( p_menu,
+				TtaConvMessageToWX( TtaGetMessage (THOT, ptrmenu->MenuID) ) );
+ 
 	}
       ptrmenu = ptrmenu->NextMenu;
-      ref += MAX_ITEM;
-      i++;
     }
-  
-  /* enable other menu entries */
-  while (i < MAX_MENU)
+
+  p_window->SetMenuBar( p_menu_bar );
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  TtaInitMenuItemStats enable/disable, toggle/untoggle menu items for the given doc
+ ----------------------------------------------------------------------*/
+void TtaInitMenuItemStats( int doc_id )
+{
+#ifdef _WX
+  /* loop on each menu actions */
+  int action_id = MAX_INTERNAL_CMD;
+  while ( action_id < TtaGetMenuActionNumber() )
     {
-      FrameTable[frame_id].EnabledMenus[i] = FALSE;
-      i++;
+      /* by default everything is active,
+       * TtaSetMenuOff/TtaSetMenuOn will change the state further */
+      MenuActionList[action_id].ActionActive[doc_id] = TRUE;
+      MenuActionList[action_id].ActionToggle[doc_id] = FALSE;
+      action_id++;
     }
 #endif /* _WX */
 }
+
+/*----------------------------------------------------------------------
+  TtaInitTopMenuStats enable/disable, toggle/untoggle top menu for the given doc
+ ----------------------------------------------------------------------*/
+void TtaInitTopMenuStats( int doc_id )
+{
+#ifdef _WX
+  /* enable every menu */
+  PtrDocument pDoc = LoadedDocument[doc_id-1];
+  memset(pDoc->EnabledMenus, TRUE, sizeof(pDoc->EnabledMenus));
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  TtaRefreshMenuStats enable/disable top menubar menus for the given doc
+ ----------------------------------------------------------------------*/
+void TtaRefreshTopMenuStats( int doc_id, int menu_id )
+{
+#ifdef _WX
+  int           window_id  = TtaGetDocumentWindowId( doc_id, -1 );
+  AmayaWindow * p_window   = TtaGetWindowFromId(window_id);
+  wxMenuBar *   p_menu_bar = p_window->GetMenuBar();
+  PtrDocument   pDoc       = LoadedDocument[doc_id-1];
+  wxMenu *      p_top_menu = NULL;
+  int           top_menu_pos = 0;
+
+  /* do nothing if there is no menubar : it's the case of AmayaSimpleWindow (log, show apply style ...)*/
+  if(!p_menu_bar)
+    return;
+
+  /* check that the current menu correspond to the current document
+   * do nothing if the current document is not the refreshed one */
+  Document      active_doc_id;
+  View          view;
+  FrameToView(TtaGiveActiveFrame(), &active_doc_id, &view);
+  if (active_doc_id != doc_id)
+    return;
+
+  /* refresh only one menu ? */
+  if (menu_id >= 0 && menu_id < MAX_MENU)
+    {
+      p_top_menu = WindowTable[window_id].WdMenus[menu_id];
+      if (p_top_menu)
+	{
+	  // find the corrsponding menu position in the Top Menubar
+	  top_menu_pos = p_menu_bar->FindMenu(p_top_menu->GetTitle());
+	  // we must check that the menu has been found because the contextual menu do not have a title
+	  if (top_menu_pos >= 0)
+	    {
+	      // it has been found, update it
+	      p_menu_bar->EnableTop(top_menu_pos, pDoc->EnabledMenus[menu_id]);
+	    }
+	}
+      return;
+    }
+
+  /* refresh every menus in the menubar */
+  menu_id = 0;
+  while (menu_id < MAX_MENU)
+    {
+      p_top_menu = WindowTable[window_id].WdMenus[menu_id];
+      if (p_top_menu)
+	{
+	  // find the corrsponding menu position in the Top Menubar
+	  top_menu_pos = p_menu_bar->FindMenu(p_top_menu->GetTitle());
+	  // we must check that the menu has been found because the contextual menu do not have a title
+	  if (top_menu_pos >= 0)
+	    {
+	      // it has been found, update it
+	      p_menu_bar->EnableTop(top_menu_pos, pDoc->EnabledMenus[menu_id]);
+	    }
+	}
+      menu_id++;
+    }
+#endif /* _WX */
+}
+
+  /* ---------------------------------------------------------------- */
+
+/*----------------------------------------------------------------------
+  TtaRefreshMenuItemStats enable/disable, toggle/untoggle menu items widgets for the given doc
+ ----------------------------------------------------------------------*/
+void TtaRefreshMenuItemStats( int doc_id, Menu_Ctl * ptrmenu, int menu_item_id )
+{
+#ifdef _WX
+  int           window_id  = TtaGetDocumentWindowId( doc_id, -1 );
+  AmayaWindow * p_window   = TtaGetWindowFromId(window_id);
+  wxMenuBar *   p_menu_bar = p_window->GetMenuBar();
+  wxMenuItem *  p_menu_item = NULL;
+  Item_Ctl *    ptritem = NULL;
+  Menu_Ctl *    item_submenu = NULL;
+  int           item_nb = 0;
+  int           item_id = menu_item_id;
+  char          item_type = ' ';
+  int           item_action = 0;
+  ThotBool      item_enable = FALSE;
+  ThotBool      item_toggle = FALSE;
+
+  /* do nothing if there is no menubar : it's the case of AmayaSimpleWindow (log, show apply style ...)*/
+  if(!p_menu_bar)
+    return;
+
+  /* check that the current menu correspond to the current document
+   * do nothing if the current document is not the refreshed one */
+  Document      active_doc_id;
+  View          view;
+  FrameToView(TtaGiveActiveFrame(), &active_doc_id, &view);
+  if (active_doc_id != doc_id)
+    return;
+  
+  if (ptrmenu == NULL)
+    ptrmenu = DocumentMenuList; /* this is the menus model */
+
+  /* try to refresh only the given menu item */
+  if (menu_item_id != -1)
+    {
+      p_menu_item = p_menu_bar->FindItem(item_id);
+      item_action = FindMenuActionFromMenuItemID(ptrmenu, item_id);
+      if (item_action != -1)
+	{
+	  p_menu_item = p_menu_bar->FindItem(item_id);
+	  wxASSERT(p_menu_item);
+
+	  /* enable or disable the item */
+	  item_enable = MenuActionList[item_action].ActionActive[doc_id];
+	  p_menu_item->Enable(item_enable);
+
+	  /* check or uncheck a checkable item */
+	  if (p_menu_item->GetKind() == wxITEM_CHECK)
+	    {
+	      item_toggle = MenuActionList[item_action].ActionToggle[doc_id];	      
+	      p_menu_item->Check(item_toggle);
+	    }
+
+	  /* refresh the corresponding toolbar tool */
+	  TtaRefreshToolbarStats( item_action );
+	}
+      return;
+    }
+
+
+  /* refresh every entry */
+  while (ptrmenu)
+    {
+      ptritem = ptrmenu->ItemsList;
+
+      item_nb = 0;      
+      while (item_nb < ptrmenu->ItemsNb)
+	{
+	  item_id      = ptritem[item_nb].ItemID;
+	  item_type    = ptritem[item_nb].ItemType;
+	  
+	  switch (item_type)
+	    {
+	    case 'B': /* a normal menu item */
+	      item_action  = ptritem[item_nb].ItemAction;
+	      item_enable  = MenuActionList[item_action].ActionActive[doc_id];
+	      p_menu_bar->Enable(item_id, item_enable);
+	      /* refresh the corresponding toolbar tool */
+	      TtaRefreshToolbarStats( item_action );
+	      break;
+	      	      
+	    case 'T': /* a toggle menu item (checkbox) */
+	      item_action  = ptritem[item_nb].ItemAction;
+	      item_enable  = MenuActionList[item_action].ActionActive[doc_id];
+	      item_toggle  = MenuActionList[item_action].ActionToggle[doc_id];
+	      p_menu_bar->Check(item_id, item_toggle);
+	      p_menu_bar->Enable(item_id, item_enable);
+	      /* refresh the corresponding toolbar tool */
+	      TtaRefreshToolbarStats( item_action );
+	      break;
+	      
+	    case 'M': /* a submenu */
+	      item_submenu = ptritem[item_nb].SubMenu;
+	      TtaRefreshMenuItemStats( doc_id, item_submenu, menu_item_id );
+	      break;
+
+	    case 'S': /* a separator */
+	      break;
+
+	    default: /* a unknown type */
+	      wxASSERT(FALSE);
+	      break;
+	    }
+	  
+	  item_nb++;
+	}
+      
+      ptrmenu = ptrmenu->NextMenu;
+    }
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  TtaRefreshToolbarStats enable/disable, toggle/untoggle toolbar items widgets for the given doc
+ ----------------------------------------------------------------------*/
+void TtaRefreshToolbarStats( int changed_action_id )
+{
+#ifdef _WX
+  Document      doc_id;
+  View          view;
+  FrameToView(TtaGiveActiveFrame(), &doc_id, &view);
+
+  int            window_id = TtaGetDocumentWindowId( doc_id, -1 );
+  AmayaWindow *   p_window = TtaGetWindowFromId(window_id);
+  AmayaToolBar * p_toolbar = p_window->GetAmayaToolBar();
+  ThotBool   action_enable = FALSE;
+
+  /* do nothing if there is no toolbar : it's the case of AmayaSimpleWindow (log, show apply style ...)*/
+  if(!p_toolbar)
+    return;
+
+  /* initialize toolbar actions id */
+  if ( g_back_action_id == -1 )
+    g_back_action_id = FindMenuAction("GotoPreviousHTML");
+  if ( g_forward_action_id == -1 )
+    g_forward_action_id = FindMenuAction("GotoNextHTML");
+  if ( g_reload_action_id == -1 )
+    g_reload_action_id = FindMenuAction("Reload");
+  if ( g_stop_action_id == -1 )
+    g_stop_action_id = FindMenuAction("StopTransfer");
+  if ( g_home_action_id == -1 )
+    g_home_action_id = FindMenuAction("GoToHome");
+  if ( g_save_action_id == -1 )
+    g_save_action_id = FindMenuAction("SaveDocument");
+  if ( g_print_action_id == -1 )
+    g_print_action_id = FindMenuAction("SetupAndPrint");
+  if ( g_find_action_id == -1 )
+    g_find_action_id = FindMenuAction("TtcSearchText");
+  if ( g_logo_action_id == -1 )
+    g_logo_action_id = FindMenuAction("HelpLocal");
+
+  /* refresh the specified tool */
+  if (changed_action_id == g_back_action_id)
+    {
+      action_enable = MenuActionList[changed_action_id].ActionActive[doc_id];
+      p_toolbar->EnableTool(_T("wxID_TOOL_BACK"), action_enable);
+    }
+  else if (changed_action_id == g_forward_action_id)
+    {
+      action_enable = MenuActionList[changed_action_id].ActionActive[doc_id];
+      p_toolbar->EnableTool(_T("wxID_TOOL_FORWARD"), action_enable);
+    }
+  else if (changed_action_id == g_reload_action_id)
+    {
+      action_enable = MenuActionList[changed_action_id].ActionActive[doc_id];
+      p_toolbar->EnableTool(_T("wxID_TOOL_RELOAD"), action_enable);
+    }
+  else if (changed_action_id == g_stop_action_id)
+    {
+      action_enable = MenuActionList[changed_action_id].ActionActive[doc_id];
+      p_toolbar->EnableTool(_T("wxID_TOOL_STOP"), action_enable);
+    }
+  else if (changed_action_id == g_home_action_id)
+    {
+      action_enable = MenuActionList[changed_action_id].ActionActive[doc_id];
+      p_toolbar->EnableTool(_T("wxID_TOOL_HOME"), action_enable);
+    }
+  else if (changed_action_id == g_save_action_id)
+    {
+      action_enable = MenuActionList[changed_action_id].ActionActive[doc_id];
+      p_toolbar->EnableTool(_T("wxID_TOOL_SAVE"), action_enable);
+    }
+  else if (changed_action_id == g_print_action_id)
+    {
+      action_enable = MenuActionList[changed_action_id].ActionActive[doc_id];
+      p_toolbar->EnableTool(_T("wxID_TOOL_PRINT"), action_enable);
+    }
+  else if (changed_action_id == g_find_action_id)
+    {
+      action_enable = MenuActionList[changed_action_id].ActionActive[doc_id];
+      p_toolbar->EnableTool(_T("wxID_TOOL_FIND"), action_enable);
+    }
+  else if (changed_action_id == g_logo_action_id)
+    {
+      action_enable = MenuActionList[changed_action_id].ActionActive[doc_id];
+      p_toolbar->EnableTool(_T("wxID_TOOL_LOGO"), action_enable);
+    }
+#endif /* _WX */
+}
+
 
 /*----------------------------------------------------------------------
   TtaMakeFrame create a frame (view container)
@@ -353,7 +730,8 @@ int TtaMakeFrame( const char * schema_name,
 		  int width,
 		  int height,
 		  int * volume,
-		  const char * viewName )
+		  const char * viewName,
+		  int window_id, int page_id, int page_position )
 {
 #ifdef _WX
   /* finding a free frame id */
@@ -385,31 +763,33 @@ int TtaMakeFrame( const char * schema_name,
   AmayaFrame * p_AmayaFrame = FrameTable[frame_id].WdFrame;
   if (p_AmayaFrame == NULL)
     {
-      /* a new frame widget should be created */
-      
-      /* get the first existing window (a virtual parent) */
-      /* the window parent is override when the frame is attached to a page */
-      int window_id = 1;
-      while ( window_id < MAX_WINDOW && !WindowTable[window_id].WdWindow )
-	  window_id++;
-      AmayaWindow * p_AmayaWindow = WindowTable[window_id].WdWindow; 
+      /* get the window parent */
+      AmayaWindow * p_AmayaWindow = TtaGetWindowFromId(window_id);
       wxASSERT_MSG(p_AmayaWindow, _T("TtaMakeFrame: the window must be created before any frame"));
       
-      /* create the new frame (window_id is the parent) */
-      p_AmayaFrame = new AmayaFrame( frame_id, p_AmayaWindow );
+      /* on MacOSX Reparenting is forbidden, so we must give the right parent to the frame at creation */
+      AmayaPage * p_page = p_AmayaWindow->GetPage(page_id);
+      wxWindow * p_real_parent = NULL;
+      if (p_page)
+	p_real_parent = p_page->GetSplitterWindow(); /* it's a AmayaNormalWindow */
+      else
+	p_real_parent = p_AmayaWindow; /* it's a AmayaSimpleWindow */
+
+      /* create the new frame */
+      p_AmayaFrame = new AmayaFrame( frame_id, p_real_parent, p_AmayaWindow );
     }
   else
     {
       /* if a frame already exist, be sure to cleanup all its atributs */
-      DestroyFrame( frame_id );
+      //      DestroyFrame( frame_id );
     }
   
   /* save frame parameters */
   FrameTable[frame_id].WdFrame 	      = p_AmayaFrame;
   FrameTable[frame_id].WdScrollH      = p_AmayaFrame->GetScrollbarH();
   FrameTable[frame_id].WdScrollV      = p_AmayaFrame->GetScrollbarV();
-  FrameTable[frame_id].FrWindowId     = -1; /* this attribut is set when TtaAttachFrame is called */
-  FrameTable[frame_id].FrPageId       = -1; /* this attribut is set when TtaAttachFrame is called */
+  FrameTable[frame_id].FrWindowId     = window_id; /* this attribut is set when TtaAttachFrame is called */
+  FrameTable[frame_id].FrPageId       = page_id; /* this attribut is set when TtaAttachFrame is called */
   FrameTable[frame_id].FrTopMargin    = 0; // TODO
   FrameTable[frame_id].FrScrollOrg    = 0; // TODO
   FrameTable[frame_id].FrScrollWidth  = width; // TODO
@@ -444,12 +824,44 @@ int TtaMakeFrame( const char * schema_name,
   *volume = GetCharsCapacity (width * height * 5);
   FrameTable[frame_id].FrDoc   		= doc_id;
   FrameTable[frame_id].FrView   	= schView;
-  TtaMakeMenuBar( frame_id, schema_name );
 
   return frame_id;
 #else
   return 0;
 #endif /* #ifdef _WX */
+}
+
+/*----------------------------------------------------------------------
+  TtaMakePage create an empty page in the window
+  params:
+    + window_id : the window where the page should be attached
+    + page_id : the page index into the window where the page must be inserted
+  returns:
+    + true if ok
+    + false if it's impossible to create this page because another
+      page exists at this place or the window is invalid
+  ----------------------------------------------------------------------*/
+ThotBool TtaMakePage( int window_id, int page_id )
+{
+#ifdef _WX
+  AmayaWindow * p_window = TtaGetWindowFromId(window_id);
+  if (p_window == NULL)
+    return FALSE;
+
+  if (p_window->GetKind() == WXAMAYAWINDOW_NORMAL)
+    {
+      AmayaPage * p_page = p_window->GetPage(page_id);
+      if (!p_page)
+	{
+	  /* the page does not exist yet, just create it */
+	  p_page = p_window->CreatePage();
+	  /* and link it to the window */
+	  p_window->AttachPage(page_id, p_page);
+	  return TRUE;
+	}      
+    }
+#endif /* _WX */
+  return FALSE;
 }
 
 /*----------------------------------------------------------------------
@@ -468,20 +880,14 @@ ThotBool TtaAttachFrame( int frame_id, int window_id, int page_id, int position 
   if (!FrameTable[frame_id].WdFrame)
     return FALSE;
   
-  AmayaWindow * p_window = WindowTable[window_id].WdWindow;
+  AmayaWindow * p_window = TtaGetWindowFromId(window_id);
   if (p_window == NULL)
     return FALSE;
   
   if (p_window->GetKind() == WXAMAYAWINDOW_NORMAL)
     {
       AmayaPage * p_page = p_window->GetPage(page_id);
-      if (!p_page)
-	{
-	  /* the page does not exist yet, just create it */
-	  p_page = p_window->CreatePage();
-	  /* and link it to the window */
-	  p_window->AttachPage(page_id, p_page);
-	}
+      wxASSERT_MSG(p_page, _T("TtaAttachFrame: the page doesn't exists"));
       
       /* now detach the old frame -> unsplit the page */
       //  p_page->DetachFrame( position );
@@ -508,7 +914,8 @@ ThotBool TtaAttachFrame( int frame_id, int window_id, int page_id, int position 
   
   /* wait for frame initialisation (needed by opengl) 
    * this function waits for complete widgets initialisation */
-  wxSafeYield();
+  /* notice: no not use safe yield here because it use a wxWindowDisabler and it makes menus blinking */
+  wxYield();
 
   return TRUE;
 #else
@@ -1020,47 +1427,16 @@ ThotBool TtaFrameIsClosed( int frame_id )
 }
 
 /*----------------------------------------------------------------------
-  TtaInitializeURLBar initialize urlbar with given parameters
-  this will add the urlbar to the toolbar if it doesn't exist yet
-  params:
-    + frame_id : frame identifier
-    + label : the new url entry
-    + editable
-    + procedure: procedure to be executed when the new entry is changed by the user.
-  returns:
-  ----------------------------------------------------------------------*/
-void TtaInitializeURLBar( int          frame_id,
-			  const char * label,
-			  ThotBool     editable,
-			  void (*      procedure)() )
-{
-#ifdef _WX
-  if (!FrameTable[frame_id].WdFrame || FrameTable[frame_id].FrWindowId == -1)
-    return;
-  AmayaWindow * p_window = WindowTable[FrameTable[frame_id].FrWindowId].WdWindow;
-  if ( !p_window )
-    return;
-  
-  // add the url to the toolbar if it's not allready done
-  p_window->SetupURLBar();
-
-  // setup the callback to activate when a url is selected
-  FrameTable[frame_id].Call_Text = procedure;
-
-  // setup the enable/disable flag of the url bar
-  FrameTable[frame_id].WdFrame->SetFrameEnableURL( TRUE );
-#endif /* #ifdef _WX */
-}
-
-/*----------------------------------------------------------------------
   TtaSetURLBar setup the urlbar with a given list of urls (destroy existing urls)
   params:
     + frame_id : frame identifier
     + listUrl : the url list
+    + procedure : the callback to activate when a url is selected
   returns:
   ----------------------------------------------------------------------*/
 void TtaSetURLBar( int frame_id,
-		   const char * listUrl )
+		   const char * listUrl,
+		   void (*      procedure)() )
 {
 #ifdef _WX
   if (!FrameTable[frame_id].WdFrame || FrameTable[frame_id].FrWindowId == -1)
@@ -1069,6 +1445,14 @@ void TtaSetURLBar( int frame_id,
   if ( !p_window )
     return;
 
+  /* setup the callback to activate when a url is selected */
+  if (procedure)
+    {
+      int doc_id = FrameTable[frame_id].FrDoc;
+      PtrDocument pDoc = LoadedDocument[doc_id-1];
+      pDoc->Call_Text = procedure;
+    }
+    
   /* First of all empty the url bar */
   p_window->EmptyURLBar();
 
@@ -1097,8 +1481,6 @@ void TtaSetURLBar( int frame_id,
    * this string is temporary and is updated each times the user modify the string.
    * when the user switch between frames, the window urlbar is updated with this string */
   FrameTable[frame_id].WdFrame->SetFrameURL( firsturl );
-
-  // wxLogDebug( _T("TtaSetURLBar:")+ wxString(_T(" url="))+firsturl );
 #endif /* #ifdef _WX */
 }
 
@@ -1111,6 +1493,8 @@ void TtaSetURLBar( int frame_id,
   ----------------------------------------------------------------------*/
 void APP_Callback_URLActivate (int frame_id, const char *text)
 {
+#if 0
+#ifdef _WX
   Document            doc;
   View                view;
 
@@ -1118,9 +1502,12 @@ void APP_Callback_URLActivate (int frame_id, const char *text)
   if (text && strlen(text) > 0)
     {
       FrameToView (frame_id, &doc, &view);
-      if (FrameTable[frame_id].Call_Text)
-	(*(Proc3)FrameTable[frame_id].Call_Text) ((void *)doc, (void *)view, (void *)text);
+      PtrDocument pDoc = LoadedDocument[doc-1];
+      if (pDoc->Call_Text)
+	(*(Proc3)pDoc->Call_Text) ((void *)doc, (void *)view, (void *)text);
     }
+#endif /* _WX */
+#endif /* 0 */
 }
 
 /*----------------------------------------------------------------------
@@ -1132,6 +1519,7 @@ void APP_Callback_URLActivate (int frame_id, const char *text)
   ----------------------------------------------------------------------*/
 void APP_Callback_ToolBarButtonActivate (int frame_id, int button_id)
 {
+#if 0
 #ifdef _WX
   Document            document;
   View                view;
@@ -1139,7 +1527,10 @@ void APP_Callback_ToolBarButtonActivate (int frame_id, int button_id)
   if ( button_id < MAX_BUTTON &&
        button_id > 0 )
     {
-      if ( !FrameTable[frame_id].EnabledButton[button_id] )
+      int doc_id = TtaGetFrameDocumentId( frame_id );
+      PtrDocument pDoc = LoadedDocument[doc_id-1];
+
+      if ( !pDoc->EnabledButton[button_id] )
 	  return; /* the button is not active */
 
       // get the parent window
@@ -1158,6 +1549,7 @@ void APP_Callback_ToolBarButtonActivate (int frame_id, int button_id)
       TtaRedirectFocus();
     }
 #endif /* _WX */
+#endif /* 0 */
 }
 
 /*----------------------------------------------------------------------
@@ -1176,6 +1568,7 @@ int TtaAddToolBarButton( int window_id,
 			 void (*procedure) (),
 			 ThotBool status )
 {
+#if 0
 #ifdef _WX
   AmayaWindow * p_window = TtaGetWindowFromId(window_id);
   wxASSERT( p_window );
@@ -1203,7 +1596,9 @@ int TtaAddToolBarButton( int window_id,
     {
       if ( FrameTable[frame_id].FrWindowId == window_id )
 	{
-	  FrameTable[frame_id].EnabledButton[button_id] = status;
+	  int doc_id = TtaGetFrameDocumentId( frame_id );
+	  PtrDocument pDoc = LoadedDocument[doc_id-1];
+	  pDoc->EnabledButton[button_id] = status;
 	  /*FrameTable[frame_id].CheckedButton[button_id] = ??? ;*/
 	}
       frame_id++;
@@ -1239,6 +1634,8 @@ int TtaAddToolBarButton( int window_id,
 #else /* _WX */
   return 0;
 #endif /* _WX */
+#endif /* 0 */
+  return 0;
 }
 
 /*----------------------------------------------------------------------
@@ -1471,51 +1868,22 @@ ThotBool TtaRegisterWidgetWX( int ref, void * p_widget )
 #ifdef _WX
 /*----------------------------------------------------------------------
   TtaGetContextMenu - 
-  this function returns the contextual menu of the active frame into the given window
+  this function returns the contextual menu of the given window
   params:
     + window_id : the parent window of the active frame
   returns:
     + wxMenu * : a pointer on a wxMenu, call PopupMenu to show it.
   ----------------------------------------------------------------------*/
-wxMenu * TtaGetContextMenu( int window_id, int page_id, int frame_id )
+wxMenu * TtaGetContextMenu( int window_id )
 {
-  int menu_id = 0;
-  if (frame_id == -1)
-    {
-      if (window_id == -1)
-	{
-	  wxASSERT_MSG(FALSE, _T("Context menu cannot be created"));
-	  return NULL;
-	}
-      AmayaWindow * p_window = TtaGetWindowFromId( window_id );
-      if (page_id == -1)
-	{
-	  // take the current active frame of the current active page
-	  if ( p_window && p_window->GetActiveFrame() )
-	    frame_id = p_window->GetActiveFrame()->GetFrameId();
-	}
-      else
-	{
-	  // take the current active frame of the given page
-	  AmayaPage * p_page = p_window->GetPage( page_id );
-	  if (!p_page)
-	    {
-	      wxASSERT_MSG(FALSE, _T("Context menu cannot be created (given page does not exists)"));
-	      return NULL;
-	    }
-	  frame_id = p_page->GetActiveFrame()->GetFrameId();
-	}
-    }
+  int menu_id = WindowTable[window_id].MenuContext;
 
-  if (frame_id)
-    menu_id = FrameTable[frame_id].MenuContext;
   if (menu_id)
-    return FrameTable[frame_id].WdMenus[menu_id];
+    return WindowTable[window_id].WdMenus[menu_id];
   else
     return NULL;
 }
 #endif /* _WX */
-
 
 #ifdef _WX
 /*----------------------------------------------------------------------
@@ -1528,6 +1896,8 @@ wxMenu * TtaGetContextMenu( int window_id, int page_id, int frame_id )
   ----------------------------------------------------------------------*/
 void TtaRefreshMenuStats( wxMenuBar * p_menu_bar )
 {
+  wxASSERT_MSG(FALSE, _T("TtaRefreshMenuStats: to remove"));
+#if 0
   // find the frame owner
   int        frame_id = 1;
   ThotBool   found = FALSE;
@@ -1543,13 +1913,17 @@ void TtaRefreshMenuStats( wxMenuBar * p_menu_bar )
       return;
     }
 
+  int doc_id       = TtaGetFrameDocumentId( frame_id );
+  PtrDocument pDoc = LoadedDocument[doc_id-1];
+  int window_id    = TtaGetFrameWindowParentId(frame_id);
+
   // the frame owner has been found, update it !
   int menu_id = 0;
   int top_menu_id = 0;
   wxMenu * p_menu = NULL;
   while ( menu_id < MAX_MENU )
     {
-      p_menu = FrameTable[frame_id].WdMenus[menu_id];
+      p_menu = WindowTable[window_id].WdMenus[menu_id];
       if (p_menu)
 	{
 	  // find the corrsponding menu position in the Top Menubar
@@ -1558,11 +1932,12 @@ void TtaRefreshMenuStats( wxMenuBar * p_menu_bar )
 	  if (top_menu_id >= 0)
 	    {
 	      // it has been found, update it
-	      p_menu_bar->EnableTop(top_menu_id, FrameTable[frame_id].EnabledMenus[menu_id]);
+	      p_menu_bar->EnableTop(top_menu_id, pDoc->EnabledMenus[menu_id]);
 	    }
 	}
       menu_id++;
     }
+#endif /* 0 */
 }
 #endif /* _WX */
 

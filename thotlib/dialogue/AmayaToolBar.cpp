@@ -2,6 +2,7 @@
 
 #include "wx/wx.h"
 #include "wx/string.h"
+#include "wx/xrc/xmlres.h"
 
 // Thotlib includes
 #include "thot_gui.h"
@@ -16,6 +17,12 @@
 #include "document.h"
 #include "message.h"
 #include "libmsg.h"
+
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
+#include "edit_tv.h"
+#include "displayview_f.h"
+#include "editcommands_f.h"
 
 #include "AmayaParams.h"
 #include "appdialogue_wx_f.h"
@@ -34,17 +41,12 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaToolBar, wxPanel)
  *--------------------------------------------------------------------------------------
  */
 AmayaToolBar::AmayaToolBar( wxWindow * p_parent, AmayaWindow * p_amaya_window_parent ) : 
-  wxPanel( p_parent,
-	   -1,
-	   wxDefaultPosition,
-	   wxDefaultSize /*wxSize(-1, 28)*/, /* here it's possible to setup the toolbar size (height) */
-	   wxTAB_TRAVERSAL )
+  wxPanel()
 {
-  m_pAmayaWindowParent = p_amaya_window_parent;
+  wxXmlResource::Get()->LoadPanel(this, p_parent, wxT("AmayaToolbar"));
 
-  // Creation of the top sizer to contain tools
-  m_pTopSizer = new wxBoxSizer ( wxHORIZONTAL );
-  SetSizer( m_pTopSizer );
+  m_pAmayaWindowParent = p_amaya_window_parent;
+  m_pComboBox          = XRCCTRL(*this, "wxID_TOOL_URL", wxComboBox);
 
   SetAutoLayout(TRUE);
 }
@@ -60,93 +62,282 @@ AmayaToolBar::~AmayaToolBar()
 {
 }
 
+
+
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaToolBar
- *      Method:  AddTool
- * Description:  add a tool
+ *      Method:  OnURLText
+ * Description:  the user has typed ENTER with his keyboard or clicked on validate button =>
+ *               simply activate the callback
  *--------------------------------------------------------------------------------------
  */
-void AmayaToolBar::AddTool( wxWindow * p_tool, bool expand, int border )
+void AmayaToolBar::OnURLTextEnter( wxCommandEvent& event )
 {
-  int flag = wxEXPAND | wxALIGN_CENTER;
-  int proportion = 0;
-
-  if ( border > 0 )
-    flag |= wxALL;
+  GotoSelectedURL();
   
-  if (expand)
-    proportion = 1;
-
-  m_pTopSizer->Add( p_tool, proportion, flag, border );
-  m_pTopSizer->Layout();
-  GetParent()->Layout();
+  // do not skip this event because we don't want to propagate this event
+  //  event.Skip();
 }
 
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaToolBar
- *      Method:  AddSeparator
- * Description:  add a separator (vertical black line)
+ *      Method:  GotoSelectedURL
+ * Description:  validate the selection
  *--------------------------------------------------------------------------------------
  */
-void AmayaToolBar::AddSeparator()
+void AmayaToolBar::GotoSelectedURL()
 {
-  wxPanel * p_separator = new wxPanel( this, -1, wxDefaultPosition, wxSize(2, -1) );
-  p_separator->SetBackgroundColour( wxColour(_T("black")) );
-  AddTool( p_separator, FALSE, 3 );
+  Document doc;
+  View view;
+  FrameToView (TtaGiveActiveFrame(), &doc, &view);
+
+  CloseTextInsertion ();
+
+  /* call the callback  with the url selected text */
+  PtrDocument pDoc = LoadedDocument[doc-1];
+  wxASSERT(pDoc);
+  if (pDoc && pDoc->Call_Text)
+    {
+      char buffer[512];
+      strcpy(buffer, (m_pComboBox->GetValue()).mb_str(wxConvUTF8));
+      (*(Proc3)pDoc->Call_Text) ((void *)doc, (void *)view, (void *)buffer);
+    }
 }
 
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaToolBar
- *      Method:  AddSpacer
- * Description:  add a spacer (transparent box)
+ *      Method:  Clear
+ * Description:  Removes all items from the control.
  *--------------------------------------------------------------------------------------
  */
-void AmayaToolBar::AddSpacer( int width )
+void AmayaToolBar::ClearURL()
 {
-  wxPanel * p_spacer = new wxPanel( this, -1, wxDefaultPosition, wxSize(width, -1) );
-  AddTool( p_spacer, FALSE, 3 );
+  m_pComboBox->Clear();
 }
 
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaToolBar
- *      Method:  OnSize
- * Description:  not used
+ *      Method:  Append
+ * Description:  Adds the item to the end of the combobox.
  *--------------------------------------------------------------------------------------
  */
-void AmayaToolBar::OnSize( wxSizeEvent& event )
+void AmayaToolBar::AppendURL( const wxString & newurl )
 {
-  wxLogDebug( _T("AmayaToolBar::OnSize - ")+
-	      wxString(_T(" w=%d h=%d")),
-	      event.GetSize().GetWidth(),
-	      event.GetSize().GetHeight() );
+  m_pComboBox->Append( newurl );
+}
 
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaToolBar
+ *      Method:  SetValue
+ * Description:  Sets the text for the combobox text field.
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaToolBar::SetURLValue( const wxString & newurl )
+{
+  if (m_pComboBox->FindString(newurl) == wxNOT_FOUND)
+    m_pComboBox->Append(newurl);
+  // new url should exists into combobox items so just select it.
+  m_pComboBox->SetStringSelection( newurl );
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaToolBar
+ *      Method:  GetValue
+ * Description:  Returns the current value in the combobox text field.
+ *--------------------------------------------------------------------------------------
+ */
+wxString AmayaToolBar::GetURLValue()
+{
+  return m_pComboBox->GetValue( );
+}
+
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaToolBar
+ *      Method:  OnURLSelected
+ * Description:  Called when the user select a new url
+ *               there is a bug in wxWidgets on GTK version, this event is 
+ *               called to often : each times user move the mouse with button pressed.
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaToolBar::OnURLSelected( wxCommandEvent& event )
+{
+  GotoSelectedURL();
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaToolBar
+ *      Method:  OnURLText
+ * Description:  Called when the url text is changed
+ *               Just update the current frame internal url variable
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaToolBar::OnURLText( wxCommandEvent& event )
+{
+  AmayaFrame * p_frame = m_pAmayaWindowParent->GetActiveFrame();
+  if (p_frame)
+    p_frame->UpdateFrameURL(m_pComboBox->GetValue());
+  
   event.Skip();
 }
 
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaToolBar
- *      Method:  OnSize
- * Description:  called when a toolbar button is clicked
+ *      Method:  OnButton_Back
+ * Description:  
  *--------------------------------------------------------------------------------------
  */
-void AmayaToolBar::OnButtonActivated( wxCommandEvent &event )
+void AmayaToolBar::OnButton_Back( wxCommandEvent& event )
 {
-  wxLogDebug( _T("AmayaToolBar::OnButtonActivated - ")+
-	      wxString(_T(" id=%d")), event.GetId() );
+  Document doc;
+  View view;
+  FrameToView (TtaGiveActiveFrame(), &doc, &view);
+  TtaExecuteMenuAction ("GotoPreviousHTML", doc, view, FALSE);
+}
 
-  // Activate the correspondig callback
-  AmayaFrame * p_frame = m_pAmayaWindowParent->GetActiveFrame();
-  wxASSERT( p_frame != NULL );
-  if ( p_frame )
-    {
-      int frame_id =  p_frame->GetFrameId();
-      APP_Callback_ToolBarButtonActivate ( frame_id, event.GetId() );
-    }
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaToolBar
+ *      Method:  OnButton_Forward
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaToolBar::OnButton_Forward( wxCommandEvent& event )
+{
+  Document doc;
+  View view;
+  FrameToView (TtaGiveActiveFrame(), &doc, &view);
+  TtaExecuteMenuAction ("GotoNextHTML", doc, view, FALSE);
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaToolBar
+ *      Method:  OnButton_Reload
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaToolBar::OnButton_Reload( wxCommandEvent& event )
+{
+  Document doc;
+  View view;
+  FrameToView (TtaGiveActiveFrame(), &doc, &view);
+  TtaExecuteMenuAction ("Reload", doc, view, FALSE);
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaToolBar
+ *      Method:  OnButton_Stop
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaToolBar::OnButton_Stop( wxCommandEvent& event )
+{
+  Document doc;
+  View view;
+  FrameToView (TtaGiveActiveFrame(), &doc, &view);
+  TtaExecuteMenuAction ("StopTransfer", doc, view, FALSE);
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaToolBar
+ *      Method:  OnButton_Home
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaToolBar::OnButton_Home( wxCommandEvent& event )
+{
+  Document doc;
+  View view;
+  FrameToView (TtaGiveActiveFrame(), &doc, &view);
+  TtaExecuteMenuAction ("GoToHome", doc, view, FALSE);
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaToolBar
+ *      Method:  OnButton_Save
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaToolBar::OnButton_Save( wxCommandEvent& event )
+{
+  Document doc;
+  View view;
+  FrameToView (TtaGiveActiveFrame(), &doc, &view);
+  TtaExecuteMenuAction ("SaveDocument", doc, view, FALSE);
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaToolBar
+ *      Method:  OnButton_Print
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaToolBar::OnButton_Print( wxCommandEvent& event )
+{
+  Document doc;
+  View view;
+  FrameToView (TtaGiveActiveFrame(), &doc, &view);
+  TtaExecuteMenuAction ("SetupAndPrint", doc, view, FALSE);
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaToolBar
+ *      Method:  OnButton_Find
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaToolBar::OnButton_Find( wxCommandEvent& event )
+{
+  Document doc;
+  View view;
+  FrameToView (TtaGiveActiveFrame(), &doc, &view);
+  TtaExecuteMenuAction ("TtcSearchText", doc, view, FALSE);
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaToolBar
+ *      Method:  OnButton_Logo
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaToolBar::OnButton_Logo( wxCommandEvent& event )
+{
+  Document doc;
+  View view;
+  FrameToView (TtaGiveActiveFrame(), &doc, &view);
+  TtaExecuteMenuAction ("HelpLocal", doc, view, FALSE);
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaToolBar
+ *      Method:  EnableTool
+ * Description:  enable/disable toolbar tools
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaToolBar::EnableTool( const wxString & xrc_id, bool enable )
+{
+  wxWindow * p_window = FindWindow(wxXmlResource::GetXRCID(xrc_id));
+  wxASSERT(p_window);
+
+  if (p_window)
+    p_window->Enable(enable);
 }
 
 /*----------------------------------------------------------------------
@@ -154,8 +345,18 @@ void AmayaToolBar::OnButtonActivated( wxCommandEvent &event )
  *  the callbacks are assigned to an event type
  *----------------------------------------------------------------------*/
 BEGIN_EVENT_TABLE(AmayaToolBar, wxPanel)
-  EVT_SIZE( 		    AmayaToolBar::OnSize )
-  EVT_BUTTON( -1,           AmayaToolBar::OnButtonActivated )
+  EVT_BUTTON( XRCID("wxID_TOOL_BACK"),           AmayaToolBar::OnButton_Back )
+  EVT_BUTTON( XRCID("wxID_TOOL_FORWARD"),        AmayaToolBar::OnButton_Forward )
+  EVT_BUTTON( XRCID("wxID_TOOL_RELOAD"),         AmayaToolBar::OnButton_Reload )
+  EVT_BUTTON( XRCID("wxID_TOOL_STOP"),           AmayaToolBar::OnButton_Stop )
+  EVT_BUTTON( XRCID("wxID_TOOL_HOME"),           AmayaToolBar::OnButton_Home )
+  EVT_BUTTON( XRCID("wxID_TOOL_SAVE"),           AmayaToolBar::OnButton_Save )
+  EVT_BUTTON( XRCID("wxID_TOOL_PRINT"),          AmayaToolBar::OnButton_Print )
+  EVT_BUTTON( XRCID("wxID_TOOL_FIND"),           AmayaToolBar::OnButton_Find )
+  EVT_BUTTON( XRCID("wxID_TOOL_LOGO"),           AmayaToolBar::OnButton_Logo )
+  EVT_COMBOBOX( XRCID("wxID_TOOL_URL"),          AmayaToolBar::OnURLSelected )
+  EVT_TEXT_ENTER( XRCID("wxID_TOOL_URL"),        AmayaToolBar::OnURLTextEnter )
+  EVT_TEXT( XRCID("wxID_TOOL_URL"),              AmayaToolBar::OnURLText )
 END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */

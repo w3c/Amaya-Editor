@@ -60,10 +60,12 @@ static int        AnimButton;
 void SwitchIconAnimPlay (Document doc, View view, ThotBool state)
 {
 #ifdef _GL
+#ifndef _WX
   if (state)
     TtaChangeButton (doc, view, AnimButton, (ThotIcon)iconAnim, state);
   else
     TtaChangeButton (doc, view, AnimButton, (ThotIcon)iconAnimNo, state);
+#endif /* _WX */
 #endif /* _GL */
 }
 

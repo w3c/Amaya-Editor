@@ -2222,10 +2222,12 @@ void AddGraphicsButton (Document doc, View view)
 void SwitchIconGraph (Document doc, View view, ThotBool state)
 {
 #ifdef _SVG
+#ifndef _WX
   if (state)
     TtaChangeButton (doc, view, GraphButton, (ThotIcon)iconGraph, state);
   else
     TtaChangeButton (doc, view, GraphButton, (ThotIcon)iconGraphNo, state);
+#endif /* _WX */
 #endif /* _SVG */
 }
 

@@ -22,6 +22,7 @@
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
+#include "edit_tv.h"
 #include "font_tv.h"
 #include "frame_tv.h"
 #include "appdialogue_tv.h"
@@ -59,12 +60,12 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaPage, wxPanel)
  *   ]
  *--------------------------------------------------------------------------------------
  */
-AmayaPage::AmayaPage( wxWindow * p_parent_window )
+AmayaPage::AmayaPage( wxWindow * p_parent_window, AmayaWindow * p_amaya_parent_window )
   :  wxPanel( p_parent_window, -1 )
      ,m_SlashRatio( 0.5 )
      ,m_IsClosed( FALSE )
      ,m_pNoteBookParent( NULL )
-     ,m_pWindowParent( NULL )
+     ,m_pWindowParent( p_amaya_parent_window )
      ,m_PageId(-1)
      ,m_ActiveFrame(1) // by default, frame 1 is selected
      ,m_IsSelected(false)
@@ -181,7 +182,7 @@ AmayaFrame * AmayaPage::AttachFrame( AmayaFrame * p_frame, int position )
   *pp_frame_container = p_frame;
 
   /* the frame needs a new parent ! */
-  p_frame->Reparent( m_pSplitterWindow );
+  //p_frame->Reparent( m_pSplitterWindow ); /* do not reparent becaus on MacOSX it is not implemented */
 
   bool ok = false;
   if (oldframe != NULL)
@@ -208,10 +209,6 @@ AmayaFrame * AmayaPage::AttachFrame( AmayaFrame * p_frame, int position )
   // update the page title (same as bottom frame)
   if (p_frame)
     p_frame->SetFrameTitle(p_frame->GetFrameTitle());
-  
-  // update the window menubar with the current frame
-  if (p_frame && p_frame->IsActive() && GetWindowParent())
-    GetWindowParent()->SetMenuBar( p_frame->GetMenuBar() );
 
   if ( m_pTopFrame && m_pBottomFrame )
     {
@@ -312,8 +309,6 @@ AmayaFrame * AmayaPage::DetachFrame( int position )
     }
   else
     {
-      GetWindowParent()->DesactivateMenuBar();
-
       // there is no more frame
       SetActiveFrame( NULL );
     }
@@ -367,6 +362,18 @@ void AmayaPage::OnSplitButton( wxCommandEvent& event )
   DoSplitUnsplit();
 
   //  event.Skip();
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaPage
+ *      Method:  GetSplitterWindow
+ * Description:  return the page's splitter window pointer 
+ *--------------------------------------------------------------------------------------
+ */
+wxSplitterWindow * AmayaPage::GetSplitterWindow()
+{
+  return m_pSplitterWindow;
 }
 
 /*
@@ -573,11 +580,6 @@ void AmayaPage::OnClose(wxCloseEvent& event)
 		m_pTopFrame ? m_pTopFrame->GetFrameId() : -1,
 		m_pBottomFrame ? m_pBottomFrame->GetFrameId() : -1 );
 
-  // Detach the window menu bar to avoid  probleme when
-  // AmayaWindow will be deleted.
-  // (because the menu bar is owned by AmayaFrame)
-  GetWindowParent()->DesactivateMenuBar();
-
   /* I suppose the page will be closed */
   /* but it can be override to FALSE if the top or bottom frame has been modified */
   m_IsClosed = TRUE;
@@ -619,9 +621,6 @@ void AmayaPage::OnClose(wxCloseEvent& event)
 	}
       
     }
-
-  // Reactivate the menu bar (nothing is done if the window is goind to die)
-  GetWindowParent()->ActivateMenuBar();
 }
 
 /*
@@ -648,7 +647,7 @@ void AmayaPage::SetNotebookParent( AmayaNotebook * p_notebook )
 {
   /* notebook is a new parent for the page
    * warning: AmayaPage original parent must be a wxNotbook */
-  Reparent( p_notebook );
+  //Reparent( p_notebook ); /* do not reparent becaus on MacOSX it is not implemented */
 
   m_pNoteBookParent = p_notebook;
 
@@ -756,69 +755,6 @@ void AmayaPage::SetSelected( bool isSelected )
 	  // activate it : setup the corresponding menu and update internal boolean
 	  GetActiveFrame()->SetActive( TRUE );
 	}
-    }
-}
-
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  AmayaPage
- *      Method:  SetWindowURL
- * Description:  update the page's window with the given url string
- *--------------------------------------------------------------------------------------
- */
-void AmayaPage::SetWindowURL(const wxString & window_url)
-{  
-   if ( IsSelected() )
-    {
-      // update the window url bar
-      AmayaWindow * p_window = GetWindowParent();
-      if (p_window)
-	p_window->SetURL( window_url );
-    }
-}
-
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  AmayaPage
- *      Method:  SetWindowEnableURL
- * Description:  update the page's window with the given url status (enabled or disabled)
- *--------------------------------------------------------------------------------------
- */
-void AmayaPage::SetWindowEnableURL( bool urlenabled )
-{  
-  // check if this frame's page is active or not
-  if ( IsSelected() )
-    {
-      // if the frame's page is active then update the window url bar
-      AmayaWindow * p_window = GetWindowParent();
-      if (p_window)
-	p_window->SetEnableURL( urlenabled );
-    }
-}
-
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  AmayaPage
- *      Method:  SetWindowEnableToolBarButtons
- * Description:  setup the enable/disable state of the toolbar buttons
- *--------------------------------------------------------------------------------------
- */
-void AmayaPage::SetWindowEnableToolBarButtons( int frame_id )
-{
-  int window_id          = 0;
-  int button_id          = 1;
-  AmayaWindow * p_window = GetWindowParent();
-  if (!p_window)
-    return;
-  window_id = p_window->GetWindowId();
-  wxASSERT( window_id > 0 );
-  wxASSERT( frame_id > 0 );
-  
-  while (button_id < MAX_BUTTON)
-    {
-      if ( WindowTable[window_id].Button[button_id] )
-	WindowTable[window_id].Button[button_id]->Enable( FrameTable[frame_id].EnabledButton[button_id] );
-      button_id++;
     }
 }
 
@@ -998,19 +934,31 @@ void AmayaPage::RefreshSplitToggleMenu()
 {
   wxLogDebug( _T("AmayaPage::RefreshSplitToggleMenu") );
   
-  int frame_id = GetActiveFrame() ? GetActiveFrame()->GetFrameId() : 0;
-  if (!frame_id)
-    return;
+  int window_id = GetWindowParent()->GetWindowId();
+  int page_id   = GetPageId();
 
-  Document document;
-  View view;
-  FrameToView (frame_id, &document, &view);
+  // update menu items of each documents
+  int doc_id    = 1;
+  int frame_id  = 0;
+  int itemID    = WindowTable[window_id].MenuItemSplitViewID;
+  int action    = FindMenuActionFromMenuItemID(NULL, itemID);
+  ThotBool on   = m_pSplitterWindow->IsSplit();
 
-  int menuID = FrameTable[frame_id].MenuSplitViewID;
-  int itemID = FrameTable[frame_id].MenuItemSplitViewID;
-  ThotBool on = m_pSplitterWindow->IsSplit();
-
-  TtaSetToggleItem( document, view, menuID, itemID, on );
+  while ( doc_id < MAX_DOCUMENTS )
+    {
+      if (LoadedDocument[doc_id-1])
+	{
+	  frame_id = LoadedDocument[doc_id-1]->DocViewFrame[0];
+	  if (FrameTable[frame_id].FrWindowId == window_id &&
+	      FrameTable[frame_id].FrPageId == page_id)
+	    {
+	      /* toggle the menu item of every documents */
+	      MenuActionList[action].ActionToggle[doc_id] = on;
+	      TtaRefreshMenuItemStats( doc_id, NULL, itemID );
+	    }
+	}
+      doc_id++;
+    }
 }
 
 /*

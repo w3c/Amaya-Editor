@@ -858,8 +858,13 @@ void HelpAtW3C (Document document, View view)
 #endif /* LC */
   strcpy (localname, AMAYA_PAGE_DOC);
   strcat (localname, "BinDist.html");
+#ifdef _WX
+  document = GetAmayaDoc (localname, NULL, document, document, (ClickEvent)CE_HELP,
+			  FALSE, NULL, NULL);
+#else /* _WX */
   document = GetAmayaDoc (localname, NULL, 0, 0, (ClickEvent)CE_HELP,
 			  FALSE, NULL, NULL);
+#endif /* _WX */
   InitDocHistory (document);
 }
 
@@ -882,8 +887,13 @@ void HelpLocal (Document doc, View view)
 	/* get the standard english documentation */
 	sprintf (localname, "%s%camaya%c%s", s, DIR_SEP, DIR_SEP, AMAYA_PAGE);
     }
+#ifdef _WX
+  document = GetAmayaDoc (localname, NULL, doc, doc, (ClickEvent)CE_HELP,
+			  FALSE, NULL, NULL);
+#else /* _WX */
   document = GetAmayaDoc (localname, NULL, 0, 0, (ClickEvent)CE_HELP,
 			  FALSE, NULL, NULL);
+#endif /* _WX */
   InitDocHistory (document);
 }
 
@@ -909,8 +919,13 @@ static void DisplayHelp (int doc, int index)
 	sprintf (localname, "%s%cdoc%chtml%c%s", s, DIR_SEP, DIR_SEP,
 		  DIR_SEP, Manual[index]);
     }
+#ifdef _WX
+  document = GetAmayaDoc (localname, NULL, doc, doc, (ClickEvent)CE_HELP,
+			  FALSE, NULL, NULL);
+#else /* _WX */
   document = GetAmayaDoc (localname, NULL, 0, 0, (ClickEvent)CE_HELP,
 			  FALSE, NULL, NULL);
+#endif /* _WX */
   InitDocHistory (document);
 }
 

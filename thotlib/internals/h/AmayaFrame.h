@@ -63,7 +63,8 @@ public:
   DECLARE_DYNAMIC_CLASS(AmayaFrame)
 
   AmayaFrame(  int            frame_id = -1
-      	      ,AmayaWindow *     p_parent_window = NULL
+	       ,wxWindow * p_parent = NULL
+	       ,AmayaWindow * p_amaya_parent_window = NULL
 	    );
   virtual ~AmayaFrame( );
 
@@ -88,8 +89,6 @@ public:
   void     UpdateFrameURL( const wxString & new_url );
   void     SetFrameURL( const wxString & new_url );
   wxString GetFrameURL();
-  void     SetFrameEnableURL( bool urlenabled );
-  bool     GetFrameEnableURL( );
 
   void        SetPageParent( AmayaPage * p_page );
   AmayaPage * GetPageParent();
@@ -100,21 +99,9 @@ public:
 
   bool DisplayIsReady();
   
-  wxMenuBar * GetMenuBar();
-  static wxMenuItem * AppendMenuItem ( wxMenu * 		p_menu_parent,
-				       long 		        id,
-				       const wxString & 	label,
-				       const wxString & 	help,
-				       wxItemKind 		kind,
-				       const AmayaContext &    context );
-  static wxMenuItem * AppendSubMenu ( wxMenu * 		p_menu_parent,
-				  long                 id,
-				  const wxString & 	label,
-				  const wxString & 	help );
 
   void SetActive( bool active = TRUE );
   bool IsActive();
-  bool IsMenuActive();
 
   void FreeFrame();
 
@@ -142,7 +129,6 @@ protected:
   wxString     m_WindowTitle;
   wxString     m_StatusBarText;
   wxString     m_FrameUrl;
-  bool         m_FrameUrlEnable;
 
   int          m_HOldPosition;
   int          m_VOldPosition;
@@ -157,8 +143,6 @@ protected:
   AmayaScrollBar *   m_pScrollBarV;
 
   //  AmayaTextGraber * m_pTextGraber;
-
-  wxMenuBar *     m_pMenuBar;
 };
 
 #endif // __AMAYAFRAME_H__

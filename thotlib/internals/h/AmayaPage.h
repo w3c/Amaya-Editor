@@ -66,7 +66,7 @@ class AmayaPage : public wxPanel
 public:
   DECLARE_DYNAMIC_CLASS(AmayaPage)
 
-  AmayaPage( wxWindow * p_parent_window = NULL );
+  AmayaPage( wxWindow * p_parent_window = NULL, AmayaWindow * p_amaya_parent_window = NULL );
   virtual ~AmayaPage();
 
   AmayaFrame * AttachFrame( AmayaFrame * p_frame, int position );
@@ -88,12 +88,9 @@ public:
   AmayaWindow * GetWindowParent();
   void SetWindowParent( AmayaWindow * p_window );
 
-  void SetWindowURL(const wxString & window_url);
-  void SetWindowEnableURL( bool urlenabled );
-  void SetWindowEnableToolBarButtons( int frame_id );
-
   void SetPageId( int page_id );
   int  GetPageId();
+
 
   void RaisePage();
 
@@ -103,6 +100,8 @@ public:
   void DeletedFrame( AmayaFrame * p_frame );
 
   int GetMasterFrameId();
+
+  wxSplitterWindow * GetSplitterWindow();
 
  protected:
   void AdjustSplitterPos( int height = -1, int width = -1 );

@@ -3177,10 +3177,12 @@ void AddLibraryButton (Document doc, View view)
 void SwitchIconLibrary (Document doc, View view, ThotBool state)
 {
 #ifdef _SVG
+#ifndef _WX
   if (state)
     TtaChangeButton (doc, view, LibSVGButton, iconLibsvg, state);
   else
     TtaChangeButton (doc, view, LibSVGButton, iconLibsvgNo, state);
+#endif /* _WX */
 #endif /* _SVG */
 }
 

@@ -20,6 +20,7 @@
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
+#include "edit_tv.h"
 #include "font_tv.h"
 #include "frame_tv.h"
 #include "appdialogue_tv.h"
@@ -42,7 +43,6 @@
 #include "AmayaPage.h"
 #include "AmayaFrame.h"
 #include "AmayaCallback.h"
-#include "AmayaURLBar.h"
 #include "AmayaToolBar.h"
 #include "AmayaQuickSplitButton.h"
 #include "AmayaSubPanelManager.h"
@@ -62,7 +62,6 @@ AmayaNormalWindow::AmayaNormalWindow (  int             window_id
 					,const wxSize&  size
 					) : 
   AmayaWindow( window_id, p_parent_window, pos, size, WXAMAYAWINDOW_NORMAL ),
-  m_pURLBar( NULL ),
   m_pDummyMenuBar( NULL ),
   m_SlashPos( 194 )
 {
@@ -83,15 +82,15 @@ AmayaNormalWindow::AmayaNormalWindow (  int             window_id
   m_pNotebookPanel = new wxPanel( m_pSplitterWindow, -1, wxDefaultPosition, wxDefaultSize,
 				  wxTAB_TRAVERSAL | wxCLIP_CHILDREN | wxNO_BORDER);
 
-  // Create the notebook with its special sizer
-  m_pNotebook                              = new AmayaNotebook( m_pNotebookPanel, this );
-  wxNotebookSizer * p_SpecialNotebookSizer = new wxNotebookSizer( m_pNotebook );
 
+  // Create the notebook
+  m_pNotebook                              = new AmayaNotebook( m_pNotebookPanel, this );
   // Create a sizer to layout the notebook in the panel
   wxBoxSizer * p_NotebookSizer             = new wxBoxSizer ( wxHORIZONTAL );
-  p_NotebookSizer->Add(p_SpecialNotebookSizer, 1, wxEXPAND | wxALL, 0);
+  p_NotebookSizer->Add(m_pNotebook, 1, wxEXPAND | wxALL, 0);
   m_pNotebookPanel->SetSizer(p_NotebookSizer);
   m_pNotebookPanel->Layout();
+
   
   // Create a AmayaPanel to contains commands shortcut
   m_pPanel = new AmayaPanel( m_pSplitterWindow, this, -1, wxDefaultPosition, wxDefaultSize,
@@ -118,23 +117,21 @@ AmayaNormalWindow::AmayaNormalWindow (  int             window_id
   // add the splitter window to the top sizer : panel + notebook
   p_SizerFrame->Add( m_pSplitterWindow, 1, wxALL | wxEXPAND, 0 );
 
-  // Create the toolbar
-  m_pToolBar = new AmayaToolBar( p_TopParent, this );
 
   // Creation of the top sizer to contain toolbar and framesizer
   wxBoxSizer * p_TopLayoutSizer = new wxBoxSizer ( wxVERTICAL );
-  p_TopLayoutSizer->Add( m_pToolBar, 0, wxALL | wxEXPAND, 1 );
   p_TopLayoutSizer->Add( p_SizerFrame, 1, wxALL | wxEXPAND, 0 );
   p_TopParent->SetSizer(p_TopLayoutSizer);
   //  p_TopLayoutSizer->Fit(p_TopParent);
+
+  // Create the toolbar
+  m_pToolBar = new AmayaToolBar( p_TopParent, this );
+  p_TopLayoutSizer->Prepend( m_pToolBar, 0, wxALL | wxEXPAND, 1 );
 
   // Creation of the statusbar
   CreateStatusBar( 1 );
 
   SetAutoLayout(TRUE);
-
-  // NOTICE : the menu bar is created for each AmayaFrame, 
-  //          the menu bar is not managed by the window
 }
 
 /*
@@ -151,25 +148,6 @@ AmayaNormalWindow::~AmayaNormalWindow()
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaNormalWindow
- *      Method:  SetupURLBar
- * Description:  create and add the url to the toolbar if it's not allready done
- *--------------------------------------------------------------------------------------
- */
-void AmayaNormalWindow::SetupURLBar()
-{
-  if ( !m_pURLBar )
-    {
-      // Create the url entry and add it to the toolbar
-      m_pURLBar = new AmayaURLBar( m_pToolBar, this );
-      m_pToolBar->AddSpacer();
-
-      m_pToolBar->AddTool( m_pURLBar, TRUE );
-    }
-}
-
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  AmayaNormalWindow
  *      Method:  CreatePage
  * Description:  create a new AmayaPage, the notebook will be the parent page
  *               it's possible to attach automaticaly this page to the window or not
@@ -177,7 +155,7 @@ void AmayaNormalWindow::SetupURLBar()
  */
 AmayaPage * AmayaNormalWindow::CreatePage( bool attach, int position )
 {
-  AmayaPage * p_page = new AmayaPage( m_pNotebook );
+  AmayaPage * p_page = new AmayaPage( m_pNotebook, this );
   
   if (attach)
     AttachPage( position, p_page );
@@ -210,7 +188,6 @@ bool AmayaNormalWindow::AttachPage( int position, AmayaPage * p_page )
                                    _T(""),  /* this is the page name */
 				   false,
 				   0 ); /* this is the default image id */
-    //ret = m_pNotebook->AddPage( p_page, _T("Nom de la Page") );
 
     // update the pages ids
     m_pNotebook->UpdatePageId();
@@ -321,50 +298,12 @@ int AmayaNormalWindow::GetPageCount() const
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaNormalWindow
- *      Method:  AppendMenu
- * Description:  TODO
- *--------------------------------------------------------------------------------------
- */
-void AmayaNormalWindow::AppendMenu ( wxMenu * p_menu, const wxString & label )
-{
-  GetMenuBar()->Append( p_menu,
-			label );
-}
-
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  AmayaNormalWindow
- *      Method:  AppendMenuItem
- * Description:  TODO
- *--------------------------------------------------------------------------------------
- */
-void AmayaNormalWindow::AppendMenuItem ( 
-    wxMenu * 		p_menu_parent,
-    long 		id,
-    const wxString & 	label,
-    const wxString & 	help,
-    wxItemKind 		kind,
-    const AmayaCParam & callback )
-{
-  p_menu_parent->Append(
-     id,
-     label,
-     help,
-     kind );
-}
-
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  AmayaNormalWindow
  *      Method:  OnClose
  * Description:  just close the contained AmayaPage
  *--------------------------------------------------------------------------------------
  */
 void AmayaNormalWindow::OnClose(wxCloseEvent& event)
 {
-  // remove the menu when the window is going to die
-  DesactivateMenuBar();
-
   m_IsClosing = TRUE;
 
   // Ask the notebook to close its pages
@@ -377,9 +316,6 @@ void AmayaNormalWindow::OnClose(wxCloseEvent& event)
   wxPostEvent(this, idle_event);
 
   m_IsClosing = FALSE;
-  
-  // reactivate the menubar if the windows is still alive
-  ActivateMenuBar();
 
   // !! DO NOT SKIP THE EVENT !!
   // the event is skiped or vetoed into childs widgets (notebook) depending of document modification status
@@ -396,30 +332,17 @@ void AmayaNormalWindow::OnMenuItem( wxCommandEvent& event )
 {
   wxMenu * p_menu = (wxMenu *)event.GetEventObject();
   long     id     = event.GetId();
-  
-  wxMenuItem * p_menu_item = NULL;
-  
-  // try to find the menu item from the top level menubar (necessary for _WINDOWS)
-  if (GetMenuBar())
-    p_menu_item = GetMenuBar()->FindItem(id);
-  // then try to find the menu item from the parent menu (necessary for popup menu)
-  if (!p_menu_item)
-    p_menu_item = p_menu->FindItem(id);
-  
-  if (!p_menu_item)
-  {
-    wxASSERT_MSG(FALSE,_T("Menu item doesnt existe"));
-    return;
-  }
+  int action_id = -1;
 
-  AmayaContext * p_context = (AmayaContext *)p_menu_item->GetRefData();
-  if (p_context)
-    {
-      void * p_data = p_context->GetData();
-      
-      // call the generic callback
-      CallMenuWX( (ThotWidget)p_menu_item, p_data );
-    }
+  action_id = FindMenuActionFromMenuItemID (DocumentMenuList, id);
+
+  wxLogDebug(_T("AmayaNormalWindow::OnMenuItem id=%d action_id=%d"), id, action_id);
+
+  /* ok now execute the callback */
+  Document            doc;
+  View                view;
+  FrameToView (TtaGiveActiveFrame(), &doc, &view);
+  TtaExecuteMenuActionFromActionId(action_id, doc, view, FALSE);
 }
 
 /*
@@ -464,11 +387,8 @@ AmayaFrame * AmayaNormalWindow::GetActiveFrame() const
  */
 void AmayaNormalWindow::SetURL ( const wxString & new_url )
 {
-  if (m_pURLBar)
-    m_pURLBar->SetValue( new_url );
-
-  // Just select url
-  //m_pURLBar->SetSelection( 0, new_url.Length() );
+  if (m_pToolBar)
+    m_pToolBar->SetURLValue( new_url );
 }
 
 /*
@@ -480,23 +400,10 @@ void AmayaNormalWindow::SetURL ( const wxString & new_url )
  */
 wxString AmayaNormalWindow::GetURL( )
 {
-  if (m_pURLBar)
-    return m_pURLBar->GetValue();
+  if (m_pToolBar)
+    return m_pToolBar->GetURLValue();
   else
     return wxString(_T(""));
-}
-
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  AmayaNormalWindow
- *      Method:  SetWindowEnableURL
- * Description:  set the current url status (enable or disable)
- *--------------------------------------------------------------------------------------
- */
-void AmayaNormalWindow::SetEnableURL( bool urlenabled )
-{
-  if (m_pURLBar)
-    m_pURLBar->Enable( urlenabled );
 }
 
 /*
@@ -508,8 +415,8 @@ void AmayaNormalWindow::SetEnableURL( bool urlenabled )
  */
 void AmayaNormalWindow::AppendURL ( const wxString & new_url )
 {
-  if (m_pURLBar)
-    m_pURLBar->Append( new_url );
+  if (m_pToolBar)
+    m_pToolBar->AppendURL( new_url );
 }
 
 /*
@@ -521,123 +428,8 @@ void AmayaNormalWindow::AppendURL ( const wxString & new_url )
  */
 void AmayaNormalWindow::EmptyURLBar()
 {
-  if (m_pURLBar)
-    m_pURLBar->Clear();
-}
-
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  AmayaNormalWindow
- *      Method:  SetMenuBar
- * Description:  override the wxFrame::SetMenuBar methode and check if the menu bar is NULL
- *               if NULL then replace the menubar with a dummy menu bar to avoid ugly effects when closing a frame
- *--------------------------------------------------------------------------------------
- */
-void AmayaNormalWindow::SetMenuBar( wxMenuBar * p_menu_bar )
-{
-  if ( p_menu_bar )
-    {
-      wxFrame::SetMenuBar( p_menu_bar );
-
-      // the menu need to be synchronized with FrameTable.EnabledMenus array
-      TtaRefreshMenuStats( p_menu_bar );
-
-      // create a dummy menu bar to avoid ugly effects when a frame is closed
-      if ( m_pDummyMenuBar )
-	delete m_pDummyMenuBar;
-      m_pDummyMenuBar = new wxMenuBar();
-      int menu_id = 0;
-      wxMenu * p_menu = NULL;
-      while ( menu_id < p_menu_bar->GetMenuCount() )
-	{
-	  p_menu = new wxMenu();
-	  m_pDummyMenuBar->Append( p_menu , p_menu_bar->GetLabelTop(menu_id) );
-	  menu_id++;
-	}
-    }
-  else
-    {
-      // setup the dummy menubar
-      wxFrame::SetMenuBar( m_pDummyMenuBar );
-
-      // disable dummy menu entries
-      // this should be done after SetMenuBar because on MSW it does'nt work before. 
-      int menu_id = 0;
-      while ( menu_id < m_pDummyMenuBar->GetMenuCount() )
-	{
-	  m_pDummyMenuBar->EnableTop(menu_id, FALSE);
-	  menu_id++;
-	}
-    }
-}
-
-
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  AmayaNormalWindow
- *      Method:  DesactivateMenuBar
- * Description:  desactivate the current window menu bar
- *               (used when the windows is going to be closed)
- *--------------------------------------------------------------------------------------
- */
-void AmayaNormalWindow::DesactivateMenuBar()
-{
-  SetMenuBar( NULL );
-}
-
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  AmayaNormalWindow
- *      Method:  ActivateMenuBar
- * Description:  activate the menubar : look what is the current active frame and get
- *               its menu bar.
- *--------------------------------------------------------------------------------------
- */
-void AmayaNormalWindow::ActivateMenuBar()
-{
-  /* this is only used into normal window */
-  if ( GetKind() != WXAMAYAWINDOW_NORMAL )
-    return;
-
-  // TODO : aller chercher la bonne bar de menu
-  
-  // If the current windows is goind to die, do not activate the menubar
-  if (m_IsClosing)
-    return;
-
-  Document doc;
-  View     view;
-  TtaGetActiveView( &doc, &view );
-  
-  if ( doc < 1 || doc > MAX_DOCUMENTS )
-    return;
-
-  int window_id;
-  int page_id;
-  int page_position;
-  window_id = TtaGetDocumentWindowId( doc, view );
-  TtaGetDocumentPageId( doc, view, &page_id, &page_position );
-
-  AmayaWindow * p_window = WindowTable[window_id].WdWindow;
-
-  if ( p_window != this )
-    {
-      // the active page is not into the current window
-      // so exit
-      return;
-    }
-
-  AmayaPage * p_AmayaPage = p_window->GetPage( page_id );
-
-  if (!p_AmayaPage)
-    return;
-
-  AmayaFrame * p_AmayaFrame = p_AmayaPage->GetFrame( 1 /* TODO : indiquer la frame top ou bottom en fonction de la vue (view) */ );
-
-  if (!p_AmayaFrame)
-    return;
-
-  SetMenuBar( p_AmayaFrame->GetMenuBar() );
+  if (m_pToolBar)
+    m_pToolBar->ClearURL();
 }
 
 /*
@@ -678,8 +470,6 @@ void AmayaNormalWindow::CleanUp()
       else
 	page_id++;
     }
-
-
 
   // now check that notebook is not empty
   if (GetPageCount() == 0)
@@ -856,24 +646,27 @@ void AmayaNormalWindow::RefreshShowPanelToggleMenu()
 {
   wxLogDebug( _T("AmayaNormalWindow::RefreshShowPanelToggleMenu") );
 
-  // update menu items of each window's frames
-  int         frame_id = 0;
-  Document document;
-  View view;
-  int menuID;
-  int itemID;
-  ThotBool on;
-  while ( frame_id < MAX_FRAME )
+  // update menu items of each documents
+  int doc_id    = 1;
+  int frame_id  = 0;
+  int window_id = GetWindowId();
+  int itemID    = WindowTable[window_id].MenuItemShowPanelID;
+  int action    = FindMenuActionFromMenuItemID(NULL, itemID);
+  ThotBool on   = IsPanelOpened();
+
+  while ( doc_id < MAX_DOCUMENTS )
     {
-      if (FrameTable[frame_id].FrWindowId == GetWindowId())
+      if (LoadedDocument[doc_id-1])
 	{
-	  FrameToView (frame_id, &document, &view);
-	  menuID = FrameTable[frame_id].MenuShowPanelID;
-	  itemID = FrameTable[frame_id].MenuItemShowPanelID;
-	  on = IsPanelOpened();
-	  TtaSetToggleItem( document, view, menuID, itemID, on );
+	  frame_id = LoadedDocument[doc_id-1]->DocViewFrame[0];
+	  if (FrameTable[frame_id].FrWindowId == window_id)
+	    {
+	      /* toggle the menu item of every documents */
+	      MenuActionList[action].ActionToggle[doc_id] = on;
+	      TtaRefreshMenuItemStats( doc_id, NULL, itemID );
+	    }
 	}
-      frame_id++;
+      doc_id++;
     }
 }
 
@@ -889,24 +682,27 @@ void AmayaNormalWindow::RefreshFullScreenToggleMenu()
 {
   wxLogDebug( _T("AmayaNormalWindow::RefreshFullScreenToggleMenu") );
 
-  // update menu items of each window's frames
-  int         frame_id = 0;
-  Document document;
-  View view;
-  int menuID;
-  int itemID;
-  ThotBool on;
-  while ( frame_id < MAX_FRAME )
+  // update menu items of each documents
+  int doc_id    = 1;
+  int frame_id  = 0;
+  int window_id = GetWindowId();
+  int itemID    = WindowTable[window_id].MenuItemFullScreenID;
+  int action    = FindMenuActionFromMenuItemID(NULL, itemID);
+  ThotBool on   = IsFullScreen();
+
+  while ( doc_id < MAX_DOCUMENTS )
     {
-      if (FrameTable[frame_id].FrWindowId == GetWindowId())
+      if (LoadedDocument[doc_id-1])
 	{
-	  FrameToView (frame_id, &document, &view);
-	  menuID = FrameTable[frame_id].MenuFullScreenID;
-	  itemID = FrameTable[frame_id].MenuItemFullScreenID;
-	  on = IsFullScreen();
-	  TtaSetToggleItem( document, view, menuID, itemID, on );
+	  frame_id = LoadedDocument[doc_id-1]->DocViewFrame[0];
+	  if (FrameTable[frame_id].FrWindowId == window_id)
+	    {
+	      /* toggle the menu item of every documents */
+	      MenuActionList[action].ActionToggle[doc_id] = on;
+	      TtaRefreshMenuItemStats( doc_id, NULL, itemID );
+	    }
 	}
-      frame_id++;
+      doc_id++;
     }
 }
 
