@@ -2514,8 +2514,8 @@ static char *ParseCSSBackgroundColor (Element element, PSchema tsch,
   ThotBool              moved;
 
   /* Horrible hack requested by CSS: move the rule to the root element */
-  moved = (isHTML && ctxt->attrType[0] == 0 &&
-	   (ctxt->type == HTML_EL_HTML || ctxt->type == HTML_EL_BODY) && isHTML);
+  moved = (isHTML && (element != NULL || ctxt->attrType[0] == 0) &&
+	   (ctxt->type == HTML_EL_HTML || ctxt->type == HTML_EL_BODY));
   if (moved)
     {
       if (element)
@@ -2765,8 +2765,8 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
   /* default element for FetchImage */
   el = TtaGetMainRoot (context->doc);
   /* Horrible hack requested by CSS: move the rule to the root element */
-  moved = (isHTML && ctxt->attrType[0] == 0 &&
-	   (ctxt->type == HTML_EL_HTML || ctxt->type == HTML_EL_BODY) && isHTML);
+  moved = (isHTML && (element != NULL || ctxt->attrType[0] == 0) &&
+	   (ctxt->type == HTML_EL_HTML || ctxt->type == HTML_EL_BODY));
   if (moved)
     {
       if (element)
@@ -2883,8 +2883,8 @@ static char *ParseCSSBackgroundRepeat (Element element, PSchema tsch,
   ThotBool            moved;
 
   /* Horrible hack requested by CSS: move the rule to the root element */
-  moved = (isHTML && ctxt->attrType[0] == 0 &&
-	   (ctxt->type == HTML_EL_HTML || ctxt->type == HTML_EL_BODY) && isHTML);
+  moved = (isHTML && (element != NULL || ctxt->attrType[0] == 0) &&
+	   (ctxt->type == HTML_EL_HTML || ctxt->type == HTML_EL_BODY));
   if (moved)
     {
       if (element)
@@ -2941,8 +2941,8 @@ static char *ParseCSSBackgroundAttachment (Element element, PSchema tsch,
   ThotBool              moved;
 
   /* Horrible hack requested by CSS: move the rule to the root element */
-  moved = (isHTML && ctxt->attrType[0] == 0 &&
-	   (ctxt->type == HTML_EL_HTML || ctxt->type == HTML_EL_BODY) && isHTML);
+  moved = (isHTML && (element != NULL || ctxt->attrType[0] == 0) &&
+	   (ctxt->type == HTML_EL_HTML || ctxt->type == HTML_EL_BODY));
   if (moved)
     {
       if (element)
@@ -2982,8 +2982,8 @@ static char *ParseCSSBackgroundPosition (Element element, PSchema tsch,
   ThotBool              ok;
 
   /* Horrible hack requested by CSS: move the rule to the root element */
-  moved = (isHTML && ctxt->attrType[0] == 0 &&
-	   (ctxt->type == HTML_EL_HTML || ctxt->type == HTML_EL_BODY) && isHTML);
+  moved = (isHTML && (element != NULL || ctxt->attrType[0] == 0) &&
+	   (ctxt->type == HTML_EL_HTML || ctxt->type == HTML_EL_BODY));
   if (moved)
     {
       if (element)
