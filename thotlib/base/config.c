@@ -1,12 +1,5 @@
-
-/* -- Copyright (c) 1990 - 1995 Inria/CNRS  All rights reserved. -- */
-
 /*
-   config.c : gestion des fichiers de configuration et de langue.
-   V. Quint : novembre 1995
-
-   ajout typography
-   H. Richy : fevrier 1996
+   gestion des fichiers de configuration et de langue.
  */
 
 #include "thot_gui.h"

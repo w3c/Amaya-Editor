@@ -118,25 +118,6 @@ static PtrDico PtFreeDico;
 #include "memory_f.h"
 #include "fileaccess_f.h"
 
-/* ---------------------------------------------------------------------- */
-/* |    DicoAlloc effectue un malloc controle.                          | */
-/* ---------------------------------------------------------------------- */
-#ifdef __STDC__
-void               *DicoAlloc (unsigned int n)
-
-#else  /* __STDC__ */
-void               *DicoAlloc (n)
-unsigned int        n;
-
-#endif /* __STDC__ */
-
-{
-
-   if (n > 0)
-      return ((char *) malloc ((size_t) n));
-   return (NULL);
-}
-
 /* ----------------------------------------------------------------------
    TtaGetMemory
 
@@ -519,15 +500,15 @@ FILE               *outfile;
 	    Size, Total);
    GrandTotal += Total;
 
-/*CORR */ fprintf (outfile, "%10d dicos libres\n", NbLibDico);
-/*CORR */ fprintf (outfile, "%10d dicos utilises\n", NbOccDico);
-/*CORR */ Size = sizeof (Dictionnaire);
-/*CORR */ Total = (NbLibDico + NbOccDico) * Size;
-/*CORR */ fprintf (outfile, "     %10d octets par dico, total =%10d\n",
-/*CORR */ Size, Total);
-/*CORR */ GrandTotal += Total;
+ fprintf (outfile, "%10d dicos libres\n", NbLibDico);
+ fprintf (outfile, "%10d dicos utilises\n", NbOccDico);
+ Size = sizeof (Dictionnaire);
+ Total = (NbLibDico + NbOccDico) * Size;
+ fprintf (outfile, "     %10d octets par dico, total =%10d\n",
+ Size, Total);
+ GrandTotal += Total;
 /*CORR il faut ajouter la place occupe par les chaines de caracteres ??? */
-/*CORR */
+
    fprintf (outfile, "\n");
    fprintf (outfile, "Total pour l\'Editeur : %10d octets.\n", GrandTotal);
    fprintf (outfile, "\n");
@@ -2209,44 +2190,54 @@ PtrSearchContext          *pSearch;
 /* ---------------------------------------------------------------------- */
 /* | FreeChaine libere les entre'es d'un dictionnaire.                  | */
 /* ---------------------------------------------------------------------- */
-/*CORR */
-
 #ifdef __STDC__
 void                FreeChaine (PtrDico pDict)
-
 #else  /* __STDC__ */
 void                FreeChaine (pDict)
 PtrDico             pDict;
-
 #endif /* __STDC__ */
-
 {
-/*CORR */ PtrChaine pCh1;
-/*CORR */ PtrCommuns pCommun;
-/*CORR */ PtrMots   pMot;
-/*CORR */ int       i;
+ PtrChaine pCh1;
+ PtrCommuns pCommun;
+ PtrMots   pMot;
+ int       i;
 
-/*CORR */ pCh1 = pDict->chaine;
-/*CORR */ if (pCh1 != NULL)
-/*CORR */ free (pCh1);
+ pCh1 = pDict->chaine;
+ if (pCh1 != NULL)
+ free (pCh1);
 
-/*CORR */ pMot = pDict->pdico;
-/*CORR */ if (pMot != NULL)
-/*CORR */ free (pMot);
+ pMot = pDict->pdico;
+ if (pMot != NULL)
+ free (pMot);
 
-/*CORR */ pCommun = pDict->commun;
-/*CORR */ if (pCommun != NULL)
-/*CORR */ free (pCommun);
+ pCommun = pDict->commun;
+ if (pCommun != NULL)
+ free (pCommun);
 
-   /*CORR *//* maj du contexte du dictionnaire : chaine et mots */
-/*CORR */ pDict->nbcars = 0;
-/*CORR */ pDict->chaine = NULL;
-/*CORR */ pDict->nbmots = -1;
-/*CORR */ pDict->pdico = NULL;
-/*CORR */ pDict->commun = NULL;
-/*CORR */ for (i = 0; i < MAX_WORD_LEN; i++)
-/*CORR */ pDict->plgdico[i] = 0;
-/*CORR */ 
+   /* maj du contexte du dictionnaire : chaine et mots */
+ pDict->nbcars = 0;
+ pDict->chaine = NULL;
+ pDict->nbmots = -1;
+ pDict->pdico = NULL;
+ pDict->commun = NULL;
+ for (i = 0; i < MAX_WORD_LEN; i++)
+ pDict->plgdico[i] = 0;
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    GetDictContext effectue un malloc controle.                     | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+static void               *GetDictContext (unsigned int n)
+#else  /* __STDC__ */
+static void               *GetDictContext (n)
+unsigned int        n;
+#endif /* __STDC__ */
+{
+
+   if (n > 0)
+      return ((char *) malloc ((size_t) n));
+   return (NULL);
 }
 
 
@@ -2254,59 +2245,54 @@ PtrDico             pDict;
 /* | GetChaine retourne -1 en cas de manque de memoire                  | */
 /* |            retourne  0 si OK.                                      | */
 /* ---------------------------------------------------------------------- */
-/*CORR */
-
 #ifdef __STDC__
 int                 GetChaine (PtrDico * pDict, boolean readonly)
-
 #else  /* __STDC__ */
 int                 GetChaine (pDict, readonly)
 PtrDico            *pDict;
 boolean             readonly;
-
 #endif /* __STDC__ */
-
 {
-/*CORR */ PtrDico   pdict;
-/*CORR */ unsigned int i;
+ PtrDico   pdict;
+ unsigned int i;
 
-/*CORR */ pdict = *pDict;
-/*CORR */ pdict->MAXcars += (pdict->DicoReadOnly == FALSE) ? 600 : 2;
-/*CORR */ i = pdict->MAXcars;
-   /*CORR *//* alloue la chaine necessaire */
-/*CORR */ pdict->chaine = (PtrChaine) DicoAlloc (i);
-/*CORR */ if (pdict->chaine == NULL)
-/*CORR */ 
+ pdict = *pDict;
+ pdict->MAXcars += (pdict->DicoReadOnly == FALSE) ? 600 : 2;
+ i = pdict->MAXcars;
+   /* alloue la chaine necessaire */
+ pdict->chaine = (PtrChaine) GetDictContext (i);
+ if (pdict->chaine == NULL)
+ 
      {
-/*CORR */ FreeChaine (pdict);
-/*CORR */ return (-1);
-/*CORR */ 
+       FreeChaine (pdict);
+       return (-1);
+ 
      }
 
-/*CORR */ pdict->MAXmots += (pdict->DicoReadOnly == FALSE) ? 50 : 2;
-/*CORR */ i = pdict->MAXmots;
-/*CORR */ pdict->commun = (PtrCommuns) DicoAlloc (i);
-/*CORR */ if (pdict->commun == NULL)
-/*CORR */ 
+ pdict->MAXmots += (pdict->DicoReadOnly == FALSE) ? 50 : 2;
+ i = pdict->MAXmots;
+ pdict->commun = (PtrCommuns) GetDictContext (i);
+ if (pdict->commun == NULL)
+ 
      {
-/*CORR */ FreeChaine (pdict);
-/*CORR */ return (-1);
-/*CORR */ 
+       FreeChaine (pdict);
+       return (-1);
+ 
      }
 
-   /*CORR *//* ATTENTION : ce sont des entiers */
-/*CORR */ pdict->pdico = (PtrMots) DicoAlloc (i * sizeof (int));
+   /* ATTENTION : ce sont des entiers */
+ pdict->pdico = (PtrMots) GetDictContext (i * sizeof (int));
 
-/*CORR */ if (pdict->pdico == NULL)
-/*CORR */ 
+ if (pdict->pdico == NULL)
+ 
      {
-/*CORR */ FreeChaine (pdict);
-/*CORR */ return (-1);
-/*CORR */ 
+ FreeChaine (pdict);
+ return (-1);
+ 
      }
 
-/*CORR */ return (0);
-/*CORR */ 
+ return (0);
+ 
 }
 
 
@@ -2314,83 +2300,72 @@ boolean             readonly;
 /* | GetDico retourne dans pDico un pointeur vers le dictionaire alloue | */
 /* | ou NULL si manque de memoire                                       | */
 /* ---------------------------------------------------------------------- */
-/*CORR */
-
 #ifdef __STDC__
 void                GetDico (PtrDico * pDico)
-
 #else  /* __STDC__ */
 void                GetDico (pDico)
 PtrDico            *pDico;
-
 #endif /* __STDC__ */
-
 {
-/*CORR */ int       i;
-/*CORR */ PtrDico   pdict;
+ int       i;
+ PtrDico   pdict;
 
-/*CORR */ if (PtFreeDico == NULL)
-/*CORR */ *pDico = (PtrDico) DicoAlloc (sizeof (Dictionnaire));
-/*CORR */ 
+ if (PtFreeDico == NULL)
+ *pDico = (PtrDico) GetDictContext (sizeof (Dictionnaire));
+ 
    else
-/*CORR */ 
+ 
      {
-/*CORR */ *pDico = PtFreeDico;
-/*CORR */ PtFreeDico = (*pDico)->DicoSuivant;
-/*CORR */ NbLibDico--;
-/*CORR */ 
+ *pDico = PtFreeDico;
+ PtFreeDico = (*pDico)->DicoSuivant;
+ NbLibDico--;
+ 
      }
-/*CORR */ if (*pDico != NULL)
-/*CORR */ 
+ if (*pDico != NULL)
+ 
      {
-/*CORR */ NbOccDico++;
-/*CORR */
-	/*CORR *//* initialise le contexte de dictionnaire */
-/*CORR */ pdict = *pDico;
+ NbOccDico++;
 
-/*CORR */ pdict->DicoNom[0] = '\0';
-/*CORR */ pdict->DicoDirectory[0] = '\0';
-						/*CORR */ pdict->DicoReadOnly = TRUE;
-						/* readonly */
-						/*CORR */ pdict->DicoCharge = FALSE;
-						/* contenu non charge' */
-						/*CORR */ pdict->DicoModifie = FALSE;
-						/* contenu non modifie' */
-/*CORR */ pdict->chaine = NULL;
-/*CORR */ pdict->pdico = NULL;
-/*CORR */ pdict->commun = NULL;
+	/* initialise le contexte de dictionnaire */
+ pdict = *pDico;
 
-/*CORR */ for (i = 0; i < MAX_WORD_LEN; i++)
-/*CORR */ pdict->plgdico[i] = 0;
-/*CORR */ pdict->MAXmots = 0;
-/*CORR */ pdict->MAXcars = 0;
-/*CORR */ pdict->nbmots = -1;
-/*CORR */ pdict->nbcars = 0;
-/*CORR */ 
+ pdict->DicoNom[0] = '\0';
+ pdict->DicoDirectory[0] = '\0';
+ pdict->DicoReadOnly = TRUE;
+ /* readonly */
+ pdict->DicoCharge = FALSE;
+ /* contenu non charge' */
+ pdict->DicoModifie = FALSE;
+ /* contenu non modifie' */
+ pdict->chaine = NULL;
+ pdict->pdico = NULL;
+ pdict->commun = NULL;
+
+ for (i = 0; i < MAX_WORD_LEN; i++)
+ pdict->plgdico[i] = 0;
+ pdict->MAXmots = 0;
+ pdict->MAXcars = 0;
+ pdict->nbmots = -1;
+ pdict->nbcars = 0;
+ 
      }
-/*CORR */ 
+ 
 }
 
 
 /* ---------------------------------------------------------------------- */
 /* | FreeDico libere le dictionnaire.                                   | */
 /* ---------------------------------------------------------------------- */
-/*CORR */
-
 #ifdef __STDC__
 void                FreeDico (PtrDico pDico)
-
 #else  /* __STDC__ */
 void                FreeDico (pDico)
 PtrDico             pDico;
-
 #endif /* __STDC__ */
-
 {
-/*CORR */ pDico->DicoSuivant = PtFreeDico;
-/*CORR */ PtFreeDico = pDico;
-/*CORR */ NbLibDico++;
-/*CORR */ NbOccDico--;
-/*CORR */ 
+ pDico->DicoSuivant = PtFreeDico;
+ PtFreeDico = pDico;
+ NbLibDico++;
+ NbOccDico--;
+ 
 }
-/* End Of Module memory */

@@ -1,6 +1,3 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /* 
    Construction des noms de fichiers. 
  */
@@ -17,49 +14,6 @@
 
 #include "dofile_f.h"
 #include "platform_f.h"
-
-/* ---------------------------------------------------------------------- */
-/* |    IsExtended compare la fin de fname avec fext. Si la fin est     | */
-/* |            identique, retourne Vrai.                               | */
-/* ---------------------------------------------------------------------- */
-#ifdef __STDC__
-static boolean      IsExtended (Name fname, char *fext)
-
-#else  /* __STDC__ */
-static boolean      IsExtended (fname, fext)
-Name                 fname;
-char               *fext;
-
-#endif /* __STDC__ */
-
-{
-   int                 i, j, namelong, extlong;
-   boolean             res;
-
-   namelong = 0;
-   extlong = 0;
-
-   /* on mesure fext */
-   extlong = strlen (fext);
-   /* on mesure fname */
-   namelong = strlen (fname);
-   if (namelong >= MAX_CHAR)
-      res = FALSE;
-   else if (namelong > 0 && extlong > 0)
-     {
-	res = TRUE;
-	j = namelong - 1;
-	for (i = extlong - 1; i >= 0; i--)
-	  {
-	     res = fext[i] == fname[j] && res;
-	     j--;
-	  }
-	res = res && fname[j] == '.';
-     }
-   else
-      res = FALSE;
-   return res;
-}
 
 /* ---------------------------------------------------------------------- */
 /* |    BuildFileName compose un nom de fichier absolu en concatenant   | */
@@ -175,6 +129,49 @@ char               *fn;
 	     BuildFileName (name, "", Directory, fn, &lg);
 	  }
      }
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    IsExtended compare la fin de fname avec fext. Si la fin est     | */
+/* |            identique, retourne Vrai.                               | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+static boolean      IsExtended (Name fname, char *fext)
+
+#else  /* __STDC__ */
+static boolean      IsExtended (fname, fext)
+Name                 fname;
+char               *fext;
+
+#endif /* __STDC__ */
+
+{
+   int                 i, j, namelong, extlong;
+   boolean             res;
+
+   namelong = 0;
+   extlong = 0;
+
+   /* on mesure fext */
+   extlong = strlen (fext);
+   /* on mesure fname */
+   namelong = strlen (fname);
+   if (namelong >= MAX_CHAR)
+      res = FALSE;
+   else if (namelong > 0 && extlong > 0)
+     {
+	res = TRUE;
+	j = namelong - 1;
+	for (i = extlong - 1; i >= 0; i--)
+	  {
+	     res = fext[i] == fname[j] && res;
+	     j--;
+	  }
+	res = res && fname[j] == '.';
+     }
+   else
+      res = FALSE;
+   return res;
 }
 
 

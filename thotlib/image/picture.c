@@ -10,53 +10,15 @@
 #include "thotfile.h"
 #include "thotdir.h"
 #include "png.h"
-
-typedef enum
-{
-  Supported_Format,
-  Corrupted_File,
-  Unsupported_Format
-} FileStatus;
-
-typedef struct
-{
-  char     menuName[MAX_FORMAT_NAMELENGHT];
-  Drawable (*CreateImage) ();
-  void     (*PrintImage) ();
-  boolean  (*IsFormat) ();
-} PictureHandler;
-
 #define EXPORT extern
 #include "boxes_tv.h"
 #include "frame_tv.h"
 #include "font_tv.h"
 #include "platform_tv.h"
-
-static boolean      Printing;
-ThotGC       GCpicture;	/* for bitmap */
-char               *SuffixImage[] =
-{".xbm", ".eps", ".xpm", ".gif", ".jpg", ".png"};
-THOT_VInfo          THOT_vInfo;
-#ifndef NEW_WILLOWS
-XVisualInfo        *vptr;
-Visual             *theVisual;
-#endif
-
-static PictureHandler  PictureHandlerTable[MAX_PICT_FORMATS];
-static int          ImageIDType[MAX_PICT_FORMATS];
-static int          ImageMenuType[MAX_PICT_FORMATS];
-static char        *ImageMenu;
-static int          ImageDrvrCount;
-static Pixmap       ImageLostPixmapID;
-static Pixmap       ImageBadPixmapID;
-
-Pixmap              ImageEPSFPixmapID;
-
 #include "appli_f.h"
 #include "tree_f.h"
 #include "xbmhandler_f.h"
 #include "views_f.h"
-#include "xbmhandler_f.h"
 #include "dofile_f.h"
 #include "platform_f.h"
 #include "font_f.h"
@@ -70,20 +32,36 @@ Pixmap              ImageEPSFPixmapID;
 #include "epshandler_f.h"
 #include "inites_f.h"
 
+#ifndef NEW_WILLOWS
+XVisualInfo            *vptr;
+Visual                 *theVisual;
+#endif
+static PictureHandler  PictureHandlerTable[MAX_PICT_FORMATS];
+static int             PictureIdType      [MAX_PICT_FORMATS];
+static int             PictureMenuType      [MAX_PICT_FORMATS];
+static char            *PictureMenu;
+static int             HandlersCounter;
+static Pixmap          PictureLogo;
+Pixmap                 EpsfPictureLogo;
+static boolean         Printing;
+ThotGC                 GCpicture;	
+THOT_VInfo             THOT_vInfo;
+
+
 /* ---------------------------------------------------------------------- */
-/* |    IsFormat retourne TRUE si le fichier de nom fileName contient une     | */
-/* |            image de type typeImage. FALSE sinon.                   | */
+/* |    Match_Format returns TRUE if the considered header file matches the                            | */
+/* |    image file description, FALSE in the the other cases                                                         | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static boolean      IsFormat (int typeImage, char *fileName)
+static boolean      Match_Format (int typeImage, char *fileName)
 #else  /* __STDC__ */
-static boolean      IsFormat (typeImage, fileName)
+static boolean      Match_Format (typeImage, fileName)
 int                 typeImage;
 char               *fileName;
 #endif /* __STDC__ */
 {
-  if (PictureHandlerTable[typeImage].IsFormat != NULL)
-    return (*(PictureHandlerTable[typeImage].IsFormat)) (fileName);
+  if (PictureHandlerTable[typeImage].Match_Format != NULL)
+    return (*(PictureHandlerTable[typeImage].Match_Format)) (fileName);
   else
     return MAX_PICT_FORMATS;
 }
@@ -111,7 +89,7 @@ register long       n;
 
 /* ---------------------------------------------------------------------- */
 /* |    FreePixmap detruit le pixmap Pix s'il est non vide et different | */
-/* |            des images predefinies LostPixmap et BadPixmap.         | */
+/* |            des images predefinies          | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 static void         FreePixmap (Pixmap pix)
@@ -122,9 +100,8 @@ Pixmap              pix;
 {
 #ifndef NEW_WILLOWS
    if ((pix != None)
-       && (pix != ImageLostPixmapID)
-       && (pix != ImageBadPixmapID)
-       && (pix != ImageEPSFPixmapID))
+       && (pix != PictureLogo)
+       && (pix != EpsfPictureLogo))
       XFreePixmap (TtDisplay, pix);
 #endif /* NEW_WILLOWS */
 }
@@ -235,9 +212,7 @@ PictInfo    *imageDesc;
 {
    if (((imageDesc->PicWArea == 0) && (imageDesc->PicHArea == 0)) ||
        ((imageDesc->PicWArea > 32768) || (imageDesc->PicHArea > 32768)))
-      /*TODO : valeur 32768 pour essayer de pallier aux imageDesc archifaux */
-      /* obtenus avec plusieurs vues */
-     {
+    {
 	*PicWArea = wif;
 	*PicHArea = hif;
      }
@@ -288,36 +263,10 @@ int                 desory;
 
 
 
-
-/* ---------------------------------------------------------------------- */
-/* |    ImageLostPixmap retourne le pixmap Picture perdue.                | */
-/* ---------------------------------------------------------------------- */
-#ifdef __STDC__
-static Pixmap       ImageLostPixmap ()
-#else  /* __STDC__ */
-static Pixmap       ImageLostPixmap ()
-#endif				/* __STDC__ */
-{
-   return ImageLostPixmapID;
-}
-
-/* ---------------------------------------------------------------------- */
-/* |    ImageBadPixmap retourne le pixmap Picture incorrecte.             | */
-/* ---------------------------------------------------------------------- */
-#ifdef __STDC__
-static Pixmap       ImageBadPixmap ()
-#else  /* __STDC__ */
-static Pixmap       ImageBadPixmap ()
-#endif				/* __STDC__ */
-{
-   return ImageBadPixmapID;
-}
-
-
 /* ---------------------------------------------------------------------- */
 /* |    PixmapIsOk retourne FALSE si le pixmap contenu dans imageDesc   | */
 /* |            est vide. On retourne TRUE s'il est egal aux images     | */
-/* |            predefinies LostPixmap et BadPixmap.                    | */
+/* |            predefinies BadPixmap.                    | */
 /* |            - Si on presente RealSize, on retourne TRUE.    | */
 /* |            - Si on presente ReScale, on retourne TRUE si  | */
 /* |            la boite box possede au moins une dimension egale a`    | */
@@ -339,9 +288,8 @@ PictInfo    *imageDesc;
    Drawable            root;
 
    pixmapok = TRUE;
-   if ((imageDesc->PicPixmap == ImageLostPixmapID)
-       || (imageDesc->PicPixmap == ImageBadPixmapID)
-       || (imageDesc->PicPixmap == ImageEPSFPixmapID))
+   if ((imageDesc->PicPixmap == PictureLogo)
+       || (imageDesc->PicPixmap == EpsfPictureLogo))
       return TRUE;
 
    if (imageDesc->PicPixmap == None)
@@ -415,7 +363,7 @@ char               *fileName;
      }
    while (i > UNKNOWN_FORMAT)
      {
-	if (IsFormat (i, fileName))
+	if (Match_Format (i, fileName))
 	  {
 	     return i;
 	  }
@@ -438,15 +386,15 @@ char               *fileName;
 /* |            et Corrupted_File sinon.                                   | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static FileStatus   FileIsOk (char *fileName, int *typeImage)
+static Picture_Report   FileIsOk (char *fileName, int *typeImage)
 #else  /* __STDC__ */
-static FileStatus   FileIsOk (fileName, typeImage)
+static Picture_Report   FileIsOk (fileName, typeImage)
 char               *fileName;
 int                *typeImage;
 #endif /* __STDC__ */
 
 {
-   FileStatus          status;
+   Picture_Report          status;
 
    /* on ne prend que des types connus */
    if (*typeImage >= MAX_PICT_FORMATS || *typeImage < 0)
@@ -464,7 +412,7 @@ int                *typeImage;
 	  }
 	else
 	  {
-	     if (IsFormat (*typeImage, fileName))
+	     if (Match_Format (*typeImage, fileName))
 		status = Supported_Format;
 	     else
 		status = Corrupted_File;
@@ -503,6 +451,7 @@ boolean    printing;
      }
    THOT_vInfo.class = THOT_PseudoColor;
    ReleaseDC (WIN_Main_Wd, hdc);
+
 #endif /* 0 */
 #else  /* NEW_WILLOWS */
    TtGraphicGC = XCreateGC (TtDisplay, TtRootWindow, 0, NULL);
@@ -515,9 +464,8 @@ boolean    printing;
    XSetBackground (TtDisplay, GCpicture, White_Color);
    XSetGraphicsExposures (TtDisplay, GCpicture, FALSE);
 
-   ImageLostPixmapID = TtaCreatePixmapLogo (lost_xpm);
-   ImageBadPixmapID = TtaCreatePixmapLogo (lost_xpm);
-   ImageEPSFPixmapID = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow,
+   PictureLogo = TtaCreatePixmapLogo (lost_xpm);
+   EpsfPictureLogo = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow,
 						    epsflogo_bits,
 						    epsflogo_width,
 				  epsflogo_height, Black_Color, White_Color,
@@ -532,60 +480,60 @@ boolean    printing;
 
    Printing = printing;
    i = 0;
-   strncpy (PictureHandlerTable[i].menuName, XbmName, MAX_FORMAT_NAMELENGHT);
-   PictureHandlerTable[i].CreateImage = XbmCreate;
-   PictureHandlerTable[i].PrintImage = XbmPrint;
-   PictureHandlerTable[i].IsFormat = IsXbmFormat;
+   strncpy (PictureHandlerTable[i].GUI_Name, XbmName, MAX_FORMAT_NAMELENGHT);
+   PictureHandlerTable[i].Produce_Picture = XbmCreate;
+   PictureHandlerTable[i].Produce_Postscript = XbmPrint;
+   PictureHandlerTable[i].Match_Format = IsXbmFormat;
 
-   ImageIDType[i] = XBM_FORMAT;
-   ImageMenuType[i] = XBM_FORMAT;
+   PictureIdType[i] = XBM_FORMAT;
+   PictureMenuType[i] = XBM_FORMAT;
    i++;
 
-   strncpy (PictureHandlerTable[i].menuName, EpsName, MAX_FORMAT_NAMELENGHT);
-   PictureHandlerTable[i].CreateImage = EpsCreate;
-   PictureHandlerTable[i].PrintImage = EpsPrint;
-   PictureHandlerTable[i].IsFormat = IsEpsFormat;
+   strncpy (PictureHandlerTable[i].GUI_Name, EpsName, MAX_FORMAT_NAMELENGHT);
+   PictureHandlerTable[i].Produce_Picture = EpsCreate;
+   PictureHandlerTable[i].Produce_Postscript = EpsPrint;
+   PictureHandlerTable[i].Match_Format = IsEpsFormat;
 
-   ImageIDType[i] = EPS_FORMAT;
-   ImageMenuType[i] = EPS_FORMAT;
+   PictureIdType[i] = EPS_FORMAT;
+   PictureMenuType[i] = EPS_FORMAT;
    i++;
 
-   strncpy (PictureHandlerTable[i].menuName, XpmName, MAX_FORMAT_NAMELENGHT);
-   PictureHandlerTable[i].CreateImage = XpmCreate;
-   PictureHandlerTable[i].PrintImage = XpmPrint;
-   PictureHandlerTable[i].IsFormat = IsXpmFormat;
+   strncpy (PictureHandlerTable[i].GUI_Name, XpmName, MAX_FORMAT_NAMELENGHT);
+   PictureHandlerTable[i].Produce_Picture = XpmCreate;
+   PictureHandlerTable[i].Produce_Postscript = XpmPrint;
+   PictureHandlerTable[i].Match_Format = IsXpmFormat;
 
-   ImageIDType[i] = XPM_FORMAT;
-   ImageMenuType[i] = XPM_FORMAT;
+   PictureIdType[i] = XPM_FORMAT;
+   PictureMenuType[i] = XPM_FORMAT;
    i++;
 
-   strncpy (PictureHandlerTable[i].menuName, GifName, MAX_FORMAT_NAMELENGHT);
-   PictureHandlerTable[i].CreateImage = GifCreate;
-   PictureHandlerTable[i].PrintImage = GifPrint;
-   PictureHandlerTable[i].IsFormat = IsGifFormat;
+   strncpy (PictureHandlerTable[i].GUI_Name, GifName, MAX_FORMAT_NAMELENGHT);
+   PictureHandlerTable[i].Produce_Picture = GifCreate;
+   PictureHandlerTable[i].Produce_Postscript = GifPrint;
+   PictureHandlerTable[i].Match_Format = IsGifFormat;
 
-   ImageIDType[i] = GIF_FORMAT;
-   ImageMenuType[i] = GIF_FORMAT;
+   PictureIdType[i] = GIF_FORMAT;
+   PictureMenuType[i] = GIF_FORMAT;
    i++;
 
-   strncpy (PictureHandlerTable[i].menuName, JpegName, MAX_FORMAT_NAMELENGHT);
-   PictureHandlerTable[i].CreateImage = JpegCreate;
-   PictureHandlerTable[i].PrintImage = JpegPrint;
-   PictureHandlerTable[i].IsFormat = IsJpegFormat;
+   strncpy (PictureHandlerTable[i].GUI_Name, JpegName, MAX_FORMAT_NAMELENGHT);
+   PictureHandlerTable[i].Produce_Picture = JpegCreate;
+   PictureHandlerTable[i].Produce_Postscript = JpegPrint;
+   PictureHandlerTable[i].Match_Format = IsJpegFormat;
 
-   ImageIDType[i] = JPEG_FORMAT;
-   ImageMenuType[i] = JPEG_FORMAT;
+   PictureIdType[i] = JPEG_FORMAT;
+   PictureMenuType[i] = JPEG_FORMAT;
    i++;
 
-   strncpy (PictureHandlerTable[i].menuName, PngName, MAX_FORMAT_NAMELENGHT);
-   PictureHandlerTable[i].CreateImage = PngCreate;
-   PictureHandlerTable[i].PrintImage = PngPrint;
-   PictureHandlerTable[i].IsFormat = IsPngFormat;
+   strncpy (PictureHandlerTable[i].GUI_Name, PngName, MAX_FORMAT_NAMELENGHT);
+   PictureHandlerTable[i].Produce_Picture = PngCreate;
+   PictureHandlerTable[i].Produce_Postscript = PngPrint;
+   PictureHandlerTable[i].Match_Format = IsPngFormat;
 
-   ImageIDType[i] = PNG_FORMAT;
-   ImageMenuType[i] = PNG_FORMAT;
+   PictureIdType[i] = PNG_FORMAT;
+   PictureMenuType[i] = PNG_FORMAT;
    i++;
-   ImageDrvrCount = i;
+   HandlersCounter = i;
 }
 
 
@@ -606,15 +554,15 @@ char               *buffer;
    int                 index = 0;
    char               *item;
  
-   *count = ImageDrvrCount;
-   while (i < ImageDrvrCount)
+   *count = HandlersCounter;
+   while (i < HandlersCounter)
      {
-        item = PictureHandlerTable[i].menuName;
+        item = PictureHandlerTable[i].GUI_Name;
         strcpy (buffer + index, item);
         index += strlen (item) + 1;
         i++;
      }
-   buffer = ImageMenu;
+   buffer = PictureMenu;
  
 }
 
@@ -802,7 +750,7 @@ int                 frame;
   if (!Printing)
     {
       SetCursorWatch (frame);
-      if (imageDesc->PicPixmap == ImageEPSFPixmapID)
+      if (imageDesc->PicPixmap == EpsfPictureLogo)
 	DrawImageBox (box, imageDesc, frame, epsflogo_width, epsflogo_height);
       else
 	{
@@ -837,8 +785,8 @@ int                 frame;
 	}
       ResetCursorWatch (frame);
     }
-  else if (typeImage < ImageDrvrCount && typeImage > -1)
-    (*(PictureHandlerTable[typeImage].PrintImage)) (fileName, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHArea,
+  else if (typeImage < HandlersCounter && typeImage > -1)
+    (*(PictureHandlerTable[typeImage].Produce_Postscript)) (fileName, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHArea,
 						    (FILE *) drawable, BackGroundPixel);
 #endif /* NEW_WILLOWS */
 }
@@ -865,7 +813,7 @@ PictInfo    *imageDesc;
    int                 wif, hif, w, h;
    Drawable            PicMask = None;
    Drawable            myDrawable = None;
-   FileStatus          status;
+   Picture_Report      status;
    boolean             noCroppingFrame;
    unsigned long       Bgcolor;
 
@@ -925,7 +873,7 @@ PictInfo    *imageDesc;
 	       Bgcolor = ColorPixel (box->BxAbstractBox->AbBackground);
 
 	       myDrawable = (*(PictureHandlerTable[typeImage].
-			       CreateImage)) (fileName, pres, &xif, &yif, &wif, &hif, Bgcolor, &PicMask);
+			       Produce_Picture)) (fileName, pres, &xif, &yif, &wif, &hif, Bgcolor, &PicMask);
 
 	       noCroppingFrame = ((wif == 0) && (hif == 0));
 	       /* utilise' pour le cgm */
@@ -933,7 +881,7 @@ PictInfo    *imageDesc;
 
 	       if (myDrawable == None)
 		 {
-		    myDrawable = ImageBadPixmap ();
+		    myDrawable = PictureLogo;
 		    imageDesc->PicType = -1;
 		    w = 40;
 		    h = 40;
@@ -956,7 +904,7 @@ PictInfo    *imageDesc;
 	       break;
 	    case (int) Corrupted_File:
 	    case (int) Unsupported_Format:
-	       myDrawable = ImageLostPixmap ();
+	       myDrawable = PictureLogo;
 	       imageDesc->PicType = -1;
 	       w = 40;
 	       h = 40;
@@ -968,7 +916,7 @@ PictInfo    *imageDesc;
    imageDesc->PicWArea = w;
    imageDesc->PicHArea = h;
 
-   if (!Printing || imageDesc->PicPixmap != ImageEPSFPixmapID)
+   if (!Printing || imageDesc->PicPixmap != EpsfPictureLogo)
       SetImageDescPixmap (imageDesc, myDrawable, PicMask);
 
 
@@ -1000,7 +948,7 @@ unsigned long       BackGroundPixel;
    char                fileName[1023];
 
    GetImageFileName (name, fileName);
-   (*(PictureHandlerTable[typeImage].PrintImage)) (fileName, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHArea, fd, BackGroundPixel);
+   (*(PictureHandlerTable[typeImage].Produce_Postscript)) (fileName, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHArea, fd, BackGroundPixel);
 
 }				/*PrintImage */
 
@@ -1034,17 +982,17 @@ PictInfo    *imageDesc;
 /* |            l'index dans le menu type d'image.                      | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-int                 GetImageType (int menuIndex)
+int                 GetImageType (int GUIIndex)
 #else  /* __STDC__ */
-int                 GetImageType (menuIndex)
+int                 GetImageType (GUIIndex)
 int                 menuIndex;
 #endif /* __STDC__ */
 {
-   if (menuIndex == 0)
+   if (GUIIndex == 0)
       return UNKNOWN_FORMAT;
    else
       /* repose sur l'implementation de GetPictureHandlersList */
-      return ImageMenuType[menuIndex];
+      return PictureMenuType[GUIIndex];
 
 }				/*GetImageType */
 
@@ -1065,9 +1013,9 @@ int                 PicType;
    if (PicType == UNKNOWN_FORMAT)
       return 0;
 
-   while (i <= ImageDrvrCount)
+   while (i <= HandlersCounter)
      {
-	if (ImageMenuType[i] == PicType)
+	if (PictureMenuType[i] == PicType)
 	   return i;
 	else
 	   i++;
@@ -1140,15 +1088,15 @@ char               *buffer;
    int                 index = 0;
    char               *item;
 
-   *count = ImageDrvrCount;
-   while (i < ImageDrvrCount)
+   *count = HandlersCounter;
+   while (i < HandlersCounter)
      {
-	item = PictureHandlerTable[i].menuName;
+	item = PictureHandlerTable[i].GUI_Name;
 	strcpy (buffer + index, item);
 	index += strlen (item) + 1;
 	i++;
      }
-   buffer = ImageMenu;
+   buffer = PictureMenu;
 
 }
 
@@ -1180,7 +1128,7 @@ char               *imageFile;
   GetImageFileName(imageFile, fileName);
   typeImage = GetImageFileFormat(fileName);
   myDrawable = (*(PictureHandlerTable[typeImage].
-		  CreateImage))(fileName, pres, &xif, &yif, &wif, &hif, Bgcolor,
+		  Produce_Picture))(fileName, pres, &xif, &yif, &wif, &hif, Bgcolor,
 		                &PicMask );
   XSetWindowBackgroundPixmap(TtDisplay,w,myDrawable);
   FreePixmap(myDrawable);
