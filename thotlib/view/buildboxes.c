@@ -4444,7 +4444,7 @@ void CheckScrollingWidth (int frame)
   PtrBox              pBox;
   ViewFrame          *pFrame;
   int                 max, org;
-  int                 w, h, l;
+  int                 w, h;
 
   if  (AnyWidthUpdate)
     {
