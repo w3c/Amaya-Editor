@@ -1395,14 +1395,14 @@
 	<message xml:lang="ru">Величина атрибута:</message>
 </label>
 <label define="TMSG_VALUE_OF_ATTR">
-	<message xml:lang="en">Attribute value:</message>
-	<message xml:lang="fr">Valeur de l'attribut :</message>
-	<message xml:lang="de">Wert des Attributs:</message>
-	<message xml:lang="it">Valore dell\'attributo:</message>
+	<message xml:lang="en">Attribute value</message>
+	<message xml:lang="fr">Valeur de l'attribut</message>
+	<message xml:lang="de">Wert des Attributs</message>
+	<message xml:lang="it">Valore dell\'attributo</message>
 	<message xml:lang="tr">Özellik değeri</message>
-	<message xml:lang="es">Valores de atributo:</message>
-	<message xml:lang="pt">Valor do atributo:</message>
-	<message xml:lang="fi">Määreen arvo:</message>
+	<message xml:lang="es">Valores de atributo</message>
+	<message xml:lang="pt">Valor do atributo</message>
+	<message xml:lang="fi">Määreen arvo</message>
 	<message xml:lang="ru">Неизвестный атрибут</message>
 </label>
 <label define="TMSG_UNKNOWN_ATTR">
@@ -1811,10 +1811,6 @@
 <label define="TMSG_NOT_AVAILABLE">
 	<message xml:lang="en">Not available in this version</message>
 	<message xml:lang="en">Pas disponible dans cette version</message>
-</label>
-<label define="TMSG_VALUE">
-	<message xml:lang="en">Value</message>
-	<message xml:lang="fr">Valeur</message>
 </label>
 <label define="TMSG_ATTACHDETACH">
 	<message xml:lang="en">Enable/Disable floating panel</message>

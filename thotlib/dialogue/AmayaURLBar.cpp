@@ -1,6 +1,8 @@
 #ifdef _WX
 
 #include "wx/wx.h"
+#include "wx/combobox.h"
+#include "wx/bmpbuttn.h"
 #include "wx/string.h"
 
 // Thotlib includes
@@ -23,8 +25,6 @@
 #include "AmayaWindow.h"
 #include "AmayaFrame.h"
 
-#include "wx/combobox.h"
-#include "wx/bmpbuttn.h"
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaURLBar, wxPanel)
 
@@ -137,6 +137,22 @@ wxString AmayaURLBar::GetValue()
   return m_pComboBox->GetValue( );
 }
 
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaURLBar
+ *      Method:  OnURLSelected
+ * Description:  Called when the user select a new url
+ *               there is a bug in wxWidgets on GTK version, this event is 
+ *               called to often : each times user move the mouse with button pressed.
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaURLBar::OnURLSelected( wxCommandEvent& event )
+{
+  wxLogDebug( _T("AmayaURLBar::OnURLSelected") );
+}
+
+
 #if 0
 void AmayaURLBar::OnChar( wxKeyEvent& event )
 {
@@ -161,8 +177,9 @@ void AmayaURLBar::OnURLText( wxCommandEvent& event )
  *  the callbacks are assigned to an event type
  *----------------------------------------------------------------------*/
 BEGIN_EVENT_TABLE(AmayaURLBar, wxPanel)
+  EVT_COMBOBOX( -1,         AmayaURLBar::OnURLSelected )
   EVT_TEXT_ENTER( -1,       AmayaURLBar::OnURLTextEnter )
-  EVT_BUTTON( -1,           AmayaURLBar::OnURLTextEnter )
+  //  EVT_BUTTON( -1,           AmayaURLBar::OnURLTextEnter )
   //  EVT_TEXT(-1,              AmayaURLBar::OnURLText )
   //  EVT_CHAR(		    AmayaURLBar::OnChar) // Process a wxEVT_CHAR event. 
 END_EVENT_TABLE()

@@ -36,7 +36,7 @@ CheckedListDlgWX::CheckedListDlgWX( int ref,
 				    int nb,
 				    const wxArrayString& items,
 				    bool *checks) :
-  AmayaDialog( NULL, ref )
+  AmayaDialog( parent, ref )
 {
   char *ptr, *label;
   int   i;

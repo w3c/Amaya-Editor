@@ -3,13 +3,11 @@
 #ifndef __AMAYAURLBAR_H__
 #define __AMAYAURLBAR_H__
 
+#include "wx/wx.h"
 #include "wx/panel.h"
 
 class AmayaFrame;
 class AmayaWindow;
-
-class wxComboBox;
-class wxBitmapButton;
 
 /*
  * =====================================================================================
@@ -28,23 +26,18 @@ public:
 		,AmayaWindow *  amaya_window_parent = NULL );
   virtual ~AmayaURLBar();
 
-  void OnURLSelected( wxCommandEvent& event );
-  //  void OnURLText( wxCommandEvent& event );
-  void OnURLTextEnter( wxCommandEvent& event );
-
   void Clear();
   void Append( const wxString & newurl );
   void SetValue( const wxString & newurl );
   wxString GetValue();
 
-  //  void OnChar( wxKeyEvent& event );
-
  protected:
   DECLARE_EVENT_TABLE()
+  void OnURLSelected( wxCommandEvent& event );
+  void OnURLTextEnter( wxCommandEvent& event );
   
-  AmayaWindow * m_pAmayaWindowParent;
-
-  wxComboBox * m_pComboBox;
+  AmayaWindow *    m_pAmayaWindowParent;
+  wxComboBox *     m_pComboBox;
   wxBitmapButton * m_pValidateButton;
 };
 

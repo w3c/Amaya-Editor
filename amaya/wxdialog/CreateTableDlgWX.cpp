@@ -32,7 +32,7 @@ END_EVENT_TABLE()
 				      int def_rows,
 				      int def_border,
 				      const wxString & caption ) : 
-    AmayaDialog( NULL, ref )
+    AmayaDialog( parent, ref )
 {
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("CreateTableDlgWX"));
   wxLogDebug( _T("CreateTableDlgWX::CreateTableDlgWX - caption=")+caption);

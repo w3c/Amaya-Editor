@@ -31,7 +31,7 @@ CSSDlgWX::CSSDlgWX( int ref,
 		    wxWindow* parent,
 		    const wxString & title,
 		    const wxArrayString& items ) :
-  AmayaDialog( NULL, ref )
+  AmayaDialog( parent, ref )
 {
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("CSSDlgWX"));
 

@@ -80,7 +80,7 @@ void SpellCheckDlgWX::Set_Proposals ( )
 SpellCheckDlgWX::SpellCheckDlgWX( int ref,
 				  int base,
 				  wxWindow* parent ) :
-  AmayaDialog( NULL, ref )
+  AmayaDialog( parent, ref )
 {
   m_base = base;
   m_ref = ref;

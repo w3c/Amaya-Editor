@@ -32,7 +32,7 @@ AuthentDlgWX::AuthentDlgWX( int ref,
 			    wxWindow* parent,
 			    char * auth_realm,
 			    char * server) :
-  AmayaDialog( NULL, ref )
+  AmayaDialog( parent, ref )
 {
   char *ptr, *label;
 

@@ -125,7 +125,7 @@
 123 Attributo da cercare
 124 Tipo da cercare
 125 Nature
-126 Valore dell\'attributo:
+126 Valore dell\'attributo
 127 Attributo sconosciuto
 128 Annulla
 129 Errore nella traduzione in PostScript
@@ -164,7 +164,6 @@
 162 Seleziona un documento
 163 Dizionario del documento salvato: %s
 164 **Pas disponible dans cette version
-165 **Value
-166 **Enable/Disable floating panel
-167 **Tools
-168 **Auto refresh
+165 **Enable/Disable floating panel
+166 **Tools
+167 **Auto refresh

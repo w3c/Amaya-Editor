@@ -41,7 +41,7 @@ END_EVENT_TABLE()
 			    const wxString & replace,
 			    bool do_replace,
 			    bool searchAfter) : 
-    AmayaDialog( NULL, ref )
+    AmayaDialog( parent, ref )
 {
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("SearchDlgWX"));
   wxLogDebug( _T("SearchDlgWX::SearchDlgWX - caption=")+caption);

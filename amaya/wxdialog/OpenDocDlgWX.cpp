@@ -36,7 +36,7 @@ OpenDocDlgWX::OpenDocDlgWX( int ref,
 			    const wxString & title,
 			    const wxString & docName,
 			    const wxString & filter ) :
-  AmayaDialog( NULL, ref ),
+  AmayaDialog( parent, ref ),
   m_Filter(filter)
 {
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("OpenDocDlgWX"));

@@ -34,7 +34,7 @@ END_EVENT_TABLE()
 			  wxWindow* parent,
 			  const wxString & title,
 			  const wxString & doc_title ) :
-    AmayaDialog( NULL, ref )
+    AmayaDialog( parent, ref )
 {
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("TitleDlgWX"));
 

@@ -28,7 +28,7 @@ END_EVENT_TABLE()
   DocInfoDlgWX::DocInfoDlgWX( int ref, 
 			      wxWindow* parent,
 			      int doc ) : 
-    AmayaDialog( NULL, ref )
+    AmayaDialog( parent, ref )
 {
   char         *content;
 

@@ -39,7 +39,7 @@ END_EVENT_TABLE()
 PrintDlgWX::PrintDlgWX( int ref,
 			wxWindow* parent,
 			const wxString & ps_file ) :
-  AmayaDialog( NULL, ref )
+  AmayaDialog( parent, ref )
 {
   int  page_size;
   m_Printer = TtaConvMessageToWX( TtaGetEnvString ("THOTPRINT") );

@@ -38,7 +38,7 @@ InitConfirmDlgWX::InitConfirmDlgWX( int ref,
 				    const wxString & label,
 				    const wxString & label2,
 				    const wxString & label3 ) :
-  AmayaDialog( NULL, ref )
+  AmayaDialog( parent, ref )
 {
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("InitConfirmDlgWX"));
   wxString cancelbutton = TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CANCEL));

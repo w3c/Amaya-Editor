@@ -48,7 +48,7 @@ SaveAsDlgWX::SaveAsDlgWX( int ref,
 			  wxWindow* parent,
 			  const wxString & pathname,
 			  int doc ) :
-  AmayaDialog( NULL, ref )
+  AmayaDialog( parent, ref )
 {
   int  doc_type;
 

@@ -41,7 +41,7 @@ HRefDlgWX::HRefDlgWX( int ref,
 		      const wxString & wx_init_value,		     
 		      const wxString & title,
 		      const wxString & filter ) :
-  AmayaDialog( NULL, ref ),
+  AmayaDialog( parent, ref ),
   m_Filter(filter)
 {
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("HRefDlgWX"));

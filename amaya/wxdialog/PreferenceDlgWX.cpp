@@ -65,7 +65,7 @@ END_EVENT_TABLE()
 PreferenceDlgWX::PreferenceDlgWX( int ref,
 				  wxWindow* parent,
 				  const wxArrayString & url_list ) :
-  AmayaDialog( NULL, ref )
+  AmayaDialog( parent, ref )
 {
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("PreferenceDlgWX"));
   m_UrlList = url_list;

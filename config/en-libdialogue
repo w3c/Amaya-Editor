@@ -125,7 +125,7 @@
 123 Attribute to search
 124 Type to search
 125 Natures
-126 Attribute value:
+126 Attribute value
 127 Unknown attribute
 128 Cancel
 129 Error in PostScript translation
@@ -165,7 +165,6 @@
 163 Document dictionary saved: %s
 164 Not available in this version
 164 Pas disponible dans cette version
-165 Value
-166 Enable/Disable floating panel
-167 Tools
-168 Auto refresh
+165 Enable/Disable floating panel
+166 Tools
+167 Auto refresh

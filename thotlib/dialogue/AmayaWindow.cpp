@@ -41,7 +41,6 @@
 #include "AmayaPage.h"
 #include "AmayaFrame.h"
 #include "AmayaCallback.h"
-#include "AmayaURLBar.h"
 #include "AmayaToolBar.h"
 #include "AmayaPanel.h"
 
