@@ -1999,8 +1999,8 @@ boolean             Background;
 	/* Coupe les elements du debut et de la fin de la selection */
 	/* s'ils sont partiellement selectionnes */
 	if (firstChar > 1 || lastChar > 0)
-	   CutSelection (SelDoc, &pElFirstSel, &pElLastSel, &firstChar,
-			 &lastChar);
+	   IsolateSelection (SelDoc, &pElFirstSel, &pElLastSel, &firstChar,
+			     &lastChar, TRUE);
 
 	if (colorNum < 0)
 	   /* standard color */

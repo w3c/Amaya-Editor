@@ -396,10 +396,10 @@ PtrDocument         pDoc;
 }
 
 /*----------------------------------------------------------------------
-   SplitAfterSelection     coupe en deux l'element de texte	
-   lastSel. lastChar est le rang dans cet element du	
-   caractere ou on coupe.                                  
-  ----------------------------------------------------------------------*/
+   SplitAfterSelection
+   Coupe en deux l'element de texte lastSel.
+   lastChar est le rang dans cet element du caractere ou on coupe.
+ ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SplitAfterSelection (PtrElement lastSel, int lastChar, PtrDocument pDoc)
 #else
@@ -707,14 +707,14 @@ boolean             before;
 					 lastChar = 0;
 					 /* empeche la coupure apres le dernier */
 					 /* caractere selectionne' */
-					 CutSelection (pDoc, &pEl, &lastSel, &firstChar, &lastChar);
+					 IsolateSelection (pDoc, &pEl, &lastSel, &firstChar, &lastChar, FALSE);
 				      }
 				    if (!before && lastChar <= pEl->ElTextLength)
 				      {
 					 firstChar = 0;
 					 /* empeche la coupure avant le premier */
 					 /* caractere selectionne' */
-					 CutSelection (pDoc, &pEl, &lastSel, &firstChar, &lastChar);
+					 IsolateSelection (pDoc, &pEl, &lastSel, &firstChar, &lastChar, FALSE);
 				      }
 				 }
 			       nNew = 1;

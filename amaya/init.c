@@ -1788,7 +1788,7 @@ boolean		    history;
 	   /* show the target element in all views */
 	   for (i = 1; i < 4; i++)
 	     if (TtaIsViewOpened (newdoc, i))
-	       TtaShowElement (newdoc, i, elFound, 10);
+	       TtaShowElement (newdoc, i, elFound, 0);
 	 }
      }
    TtaFreeMemory (tempdocument);

@@ -365,26 +365,30 @@ PtrDocument         pDoc;
 }
 
 /*----------------------------------------------------------------------
+   IsolateSelection
    Si la selection passee en parametre commence ou finit sur des   
    elements partiellement selectionnes, ces elements sont coupes   
    en deux et leurs paves egalement.                               
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                CutSelection (PtrDocument pDoc, PtrElement * pFirstSel, PtrElement * pLastSel, int *firstChar, int *lastChar)
+void                IsolateSelection (PtrDocument pDoc, PtrElement * pFirstSel, PtrElement * pLastSel, int *firstChar, int *lastChar, boolean createEmpty)
 
 #else  /* __STDC__ */
-void                CutSelection (pDoc, pFirstSel, pLastSel, firstChar, lastChar)
+void                IsolateSelection (pDoc, pFirstSel, pLastSel, firstChar, lastChar, createEmpty)
 PtrDocument         pDoc;
 PtrElement         *pFirstSel;
 PtrElement         *pLastSel;
 int                *firstChar;
 int                *lastChar;
+boolean		    createEmpty;
 
 #endif /* __STDC__ */
 
 {
+   PtrElement	       pEl;
    int                 view;
+   boolean	       done;
 
    if (*firstChar > 1)
       if ((*pFirstSel)->ElTerminal && (*pFirstSel)->ElLeafType == LtText)
@@ -393,7 +397,6 @@ int                *lastChar;
 	 /* coupe le premier element selectionne' */
 	{
 	   SplitBeforeSelection (pFirstSel, firstChar, pLastSel, lastChar, pDoc);
-
 	   /* prepare la creation des paves de la 2eme partie */
 	   for (view = 0; view < MAX_VIEW_DOC; view++)
 	      if (!AssocView (*pFirstSel))
@@ -408,8 +411,33 @@ int                *lastChar;
 	   CreateNewAbsBoxes (*pFirstSel, pDoc, 0);
 	   ApplDelayedRule (*pFirstSel, pDoc);
 	}
-   if (*lastChar > 0 && *pLastSel != NULL)
-      if ((*pLastSel)->ElTerminal && (*pLastSel)->ElLeafType == LtText)
+   done = FALSE;
+   if (createEmpty)
+     if (*firstChar == 1 && *lastChar == 1 && *pFirstSel == *pLastSel)
+       if ((*pLastSel)->ElTerminal && (*pLastSel)->ElLeafType == LtText)
+	  {
+	  pEl = NewSubtree ((*pFirstSel)->ElTypeNumber, (*pFirstSel)->ElStructSchema, pDoc, (*pFirstSel)->ElAssocNum, FALSE, TRUE, FALSE, TRUE);
+	  InsertElementBefore (*pFirstSel, pEl);
+	  for (view = 0; view < MAX_VIEW_DOC; view++)
+	      if (!AssocView (*pFirstSel))
+		{
+		   if (pDoc->DocView[view].DvPSchemaView > 0)
+		      /* la vue est ouverte */
+		      pDoc->DocViewFreeVolume[view] = THOT_MAXINT;
+		}
+	      else if (pDoc->DocAssocFrame[(*pFirstSel)->ElAssocNum - 1] != 0)
+		 pDoc->DocAssocFreeVolume[(*pFirstSel)->ElAssocNum - 1] = THOT_MAXINT;
+	  CreateNewAbsBoxes (pEl, pDoc, 0);
+	  ApplDelayedRule (pEl, pDoc);
+	  *pFirstSel = pEl;
+	  *pLastSel = pEl;
+	  *firstChar = 0;
+	  *lastChar = 0;
+	  done = TRUE;
+	  }
+   if (!done)
+     if (*lastChar > 0 && *pLastSel != NULL)
+       if ((*pLastSel)->ElTerminal && (*pLastSel)->ElLeafType == LtText)
 	 SplitAfterSelection (*pLastSel, *lastChar, pDoc);
 }
 
@@ -1252,7 +1280,7 @@ boolean		    reDisplay;
    TtaClearViewSelections ();
    /* Coupe les elements du debut et de la fin de la selection s'ils */
    /* sont partiellement selectionnes */
-   CutSelection (pDoc, &pFirstSel, &pLastSel, &firstChar, &lastChar);
+   IsolateSelection (pDoc, &pFirstSel, &pLastSel, &firstChar, &lastChar, TRUE);
    /* parcourt les elements selectionnes */
    pEl = pFirstSel;
    while (pEl != NULL)

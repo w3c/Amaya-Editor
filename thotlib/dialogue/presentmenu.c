@@ -201,7 +201,6 @@ int                 applyDomain;
   boolean             locChngIndent;
   boolean             locChngLineSp;
   boolean	      addPresRule;
-  boolean	      doIt;
 
   selectionOK = GetCurrentSelection (&pSelDoc, &pFirstSel, &pLastSel, &firstChar, &lastChar);
   if (selectionOK && pSelDoc != NULL)
@@ -318,17 +317,12 @@ int                 applyDomain;
 			    || applyDomain == Apply_All));
 	chngGraphics = (locChngLineStyle || locChngLineWeight || locChngTrame);
 
-	doIt = True;
 	if (ChngStandardColor || chngChars || chngGraphics || locChngHyphen)
 	  /* changement des caracteres */
-	  if (pFirstSel == pLastSel && firstChar == lastChar && firstChar > 0)
-	     /* no character selected. Do nothing */
-	     doIt = FALSE;
-	  else
-	    /* coupe les elements du debut et de la fin de la selection */
-	    /* s'ils sont partiellement selectionnes */
-	    if (firstChar > 1 || lastChar > 0)
-	      CutSelection (pSelDoc, &pFirstSel, &pLastSel, &firstChar, &lastChar);
+	  /* coupe les elements du debut et de la fin de la selection */
+	  /* s'ils sont partiellement selectionnes */
+	  if (firstChar > 1 || lastChar > 0)
+	     IsolateSelection (pSelDoc, &pFirstSel, &pLastSel, &firstChar, &lastChar, TRUE);
 	if (!addPresRule)
 	   /* only changes to standard presentation */
 	   {
@@ -573,8 +567,7 @@ int                 applyDomain;
 	      }
 	  }
 
-	if (doIt)
-	 if (chngChars || chngFormat || chngGraphics
+	if (chngChars || chngFormat || chngGraphics
 	     || ChngStandardColor || ChngStandardGeom)
 	   /* il y a quelque chose a changer, on parcourt la selection */
 	   /* courante et on change ce qu'a demande' l'utilisateur */

@@ -6563,13 +6563,17 @@ ATTRIBUTES
 	BEGIN
 	CreateBefore(ATTR_COLS);
 	CreateBefore(VALUE_COLS);
-	Width: Columns ex;
+	if Text_Area
+	   Width: Columns ex;
 	IN Structure_view
+	    BEGIN
+	    if Text_Area
 		BEGIN
 		VertPos: HRef = Previous . HRef;
 		HorizPos: Left = Previous . Right;
 		Width: Enclosed . Width;
 		END;
+	    END;
 	END;
 
 { ---- Table ---- }

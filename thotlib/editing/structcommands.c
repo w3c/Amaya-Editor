@@ -751,6 +751,7 @@ void                CopyCommand ()
 	  {
 	     if (firstSel->ElTerminal
 		 && firstSel->ElLeafType == LtText
+		 && firstSel->ElTextLength > 0
 		 && firstSel->ElTextLength < firstChar)
 		/* la selection commence apres l'element complet */
 	       {
@@ -1172,6 +1173,7 @@ boolean             save;
 		     pEl1 = firstSel;
 		     if (pEl1->ElTerminal
 			 && pEl1->ElLeafType == LtText
+			 && pEl1->ElTextLength > 0
 			 && pEl1->ElTextLength < firstChar)
 			/* debut de la selection apres l'element complet */
 		       {
@@ -2439,7 +2441,7 @@ PtrDocument	 pDoc;
 
 
 /*----------------------------------------------------------------------
-   	CreateNewElement						
+   CreateNewElement						
    L'utilisateur veut creer, pour le document pDoc, au voisinage   
    de la selection courante, un element du type typeNum defini     
    dans le schema de structure pSS.               			
@@ -2515,7 +2517,8 @@ boolean             Before;
 	  /* Coupe les elements du debut et de la fin de la selection s'ils */
 	  /* sont partiellement selectionnes */
 	  TtaClearViewSelections ();
-	  CutSelection (pSelDoc, &firstSel, &lastSel, &firstChar, &lastChar);
+	  IsolateSelection (pSelDoc, &firstSel, &lastSel, &firstChar,
+			    &lastChar, FALSE);
 	  AbstractImageUpdated (pSelDoc);
 	  RedisplayDocViews (pSelDoc);
 	  if (lastSel->ElTerminal && lastSel->ElLeafType == LtText &&
