@@ -41,6 +41,9 @@
 #define URL_SEP '/'
 #define URL_STR "/"
 
+/* Number of views used in Amaya */
+#define AMAYA_MAX_VIEW_DOC  7
+
 /* The structures used for request callbacks */
 
 typedef void   TIcbf (Document doc, int status, char *urlName,

@@ -2520,39 +2520,47 @@ int                 delta;
 #endif
 {
   int               zoom, zoomVal;
-  int               doc;
+  int               doc, view;
 
-  /* recalibrate the zoom settings in all the active documents */
-  for (doc = 1; doc < DocumentTableLength -1; doc++)
+  /* recalibrate the zoom settings in all the active documents and
+   active views*/
+  for (doc = 1; doc < DocumentTableLength; doc++)
     {
       if (DocumentURLs[doc])
 	{
-	  /* calculate the new zoom */
-	  zoom = TtaGetZoom (doc, 1);
-	  zoom = zoom + delta;
-	  if (zoom > 10)
-	    zoom = 10;
-	  else
-	    if (zoom < -10)
-	      zoom = -10;
-	  /* update the zoom settings */
-	  if (zoom > 0) 
+	  /* calculate the new zoom for each open view*/
+	  for (view = 1; view < AMAYA_MAX_VIEW_DOC; view++)
+	    if (TtaIsViewOpened (doc, view))
 	    {
-	      TtaSetToggleItem (doc, 1, Views, TZoomIn, TRUE);
-	      TtaSetToggleItem (doc, 1, Views, TZoomOut, FALSE);
+	      zoom = TtaGetZoom (doc, view);
+	      zoom = zoom + delta;
+	      if (zoom > 10)
+		zoom = 10;
+	      else
+		if (zoom < -10)
+		  zoom = -10;
+	      if (view == 1)
+		/* update the zoom settings only in the Formatted view */
+		{
+		  if (zoom > 0) 
+		    {
+		      TtaSetToggleItem (doc, view, Views, TZoomIn, TRUE);
+		      TtaSetToggleItem (doc, view, Views, TZoomOut, FALSE);
+		    }
+		  else if (zoom < 0)
+		    {
+		      TtaSetToggleItem (doc, view, Views, TZoomIn, FALSE);
+		      TtaSetToggleItem (doc, view, Views, TZoomOut, TRUE);
+		    }
+		  else
+		    {
+		      TtaSetToggleItem (doc, view, Views, TZoomIn, FALSE);
+		      TtaSetToggleItem (doc, view, Views, TZoomOut, FALSE);
+		    }
+		}
+	      /* zoom the view */
+	      TtaSetZoom (doc, view, zoom);
 	    }
-	  else if (zoom < 0)
-	    {
-	      TtaSetToggleItem (doc, 1, Views, TZoomIn, FALSE);
-	      TtaSetToggleItem (doc, 1, Views, TZoomOut, TRUE);
-	    }
-	  else
-	    {
-	      TtaSetToggleItem (doc, 1, Views, TZoomIn, FALSE);
-	      TtaSetToggleItem (doc, 1, Views, TZoomOut, FALSE);
-	    }
-	  /* zoom the document */
-	  TtaSetZoom (doc, 1, zoom);
 	}
     }
 }
