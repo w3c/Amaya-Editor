@@ -317,15 +317,19 @@ void AmayaSubPanel::ChangeState( unsigned int new_state )
   wxBitmapButton* p_expand_button = XRCCTRL(*this, "wxID_BUTTON_EXPAND", wxBitmapButton);
   if (IsExpanded())
     {
+#ifndef _WINDOWS
       p_expand_button->SetBitmapLabel( m_Bitmap_ExpandOn );
       p_expand_button->SetBitmapSelected( wxBitmap() );
       p_expand_button->SetBitmapFocus( wxBitmap() );
+#endif /* _WINDOWS */
     }
   else
     {
+#ifndef _WINDOWS
       p_expand_button->SetBitmapLabel( m_Bitmap_ExpandOff );
       p_expand_button->SetBitmapSelected( wxBitmap() );
       p_expand_button->SetBitmapFocus( wxBitmap() );
+#endif /* _WINDOWS */
     }
 
   wxBitmapButton* p_detach_button = XRCCTRL(*this, "wxID_BUTTON_DETACH", wxBitmapButton);
@@ -333,15 +337,19 @@ void AmayaSubPanel::ChangeState( unsigned int new_state )
     {
       // disable the expand button
       p_expand_button->Disable();
-      // setup bitmaps
+#ifndef _WINDOWS
+	  // setup bitmaps
       p_detach_button->SetBitmapLabel( m_Bitmap_DetachOn );
+#endif /* _WINDOWS */
     }
   else
     {
       // enable the expand button
       p_expand_button->Enable();
+#ifndef _WINDOWS
       // setup bitmaps
       p_detach_button->SetBitmapLabel( m_Bitmap_DetachOff );
+#endif /* _WINDOWS */
     }
   Refresh();
 }
