@@ -486,6 +486,8 @@
 #define IDC_PASSWD                      1185
 #define IDC_PASSWDEDIT                  1186
 #define IDC_ALIGN2                      1188
+#define IDC_AUTHSERVER                  1189
+#define IDC_AUTHREALM                   1190
 #define IDC_LOGO                        1192
 #define IDC_MATH                        1193
 #define IDC_MATHD                       1194
@@ -780,7 +782,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        534
 #define _APS_NEXT_COMMAND_VALUE         40052
-#define _APS_NEXT_CONTROL_VALUE         1466
+#define _APS_NEXT_CONTROL_VALUE         1469
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

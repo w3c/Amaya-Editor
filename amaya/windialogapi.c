@@ -4361,8 +4361,11 @@ LPARAM lParam;
     case WM_INITDIALOG:
       hwnNameEdit = GetDlgItem (hwnDlg, IDC_NAMEEDIT);
       hwnPasswdEdit = GetDlgItem (hwnDlg, IDC_PASSWDEDIT);
+	  SetDlgItemText (hwnDlg, IDC_AUTHREALM, string_par1);
+	  SetDlgItemText (hwnDlg, IDC_AUTHSERVER, string_par2);
 	  SetDlgItemText (hwnDlg, IDC_PASSWDEDIT, _EMPTYSTR_);
       SetDlgItemText (hwnDlg, IDC_NAMEEDIT, _EMPTYSTR_);
+
 	  setFirstFocus = FALSE;
       break;
 
