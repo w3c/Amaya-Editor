@@ -618,6 +618,19 @@ bool AmayaCanvas::IsParentPageActive()
   return (p_page->IsSelected() && !p_page->IsClosed());
 }
 
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaCanvas
+ *      Method:  IsInit
+ * Description:  test if the opengl canvas is initialized or not
+ *               (if the canvas is not ini each opengl command which are sent will be ignored)
+ *--------------------------------------------------------------------------------------
+ */
+bool AmayaCanvas::IsInit()
+{
+  return m_Init;
+}
+
 /*----------------------------------------------------------------------
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type
