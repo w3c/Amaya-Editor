@@ -48,21 +48,14 @@ amaya_thotlib           -a thotlib amaya_graphics amaya_tablelib
 
 amaya_thot              -a thotlib
 
-amaya_indexlib          -a indexlib
-
 amaya_tablelib          -a tablelib 
 # schemas/exc_Table.h
 
-amaya_drawlib           -a drawlib
-
-amaya_alliance          -a alliance
-amaya_amaya             -d amaya
-
-amaya_full              -a opera
+amaya_amaya             -a amaya
 
 #
 # Macro packages
 #
 
-amaya                   -a amaya_base amaya_thotlib amaya_java \
+Amaya                   -a amaya_base amaya_thotlib amaya_java \
                            amaya_java amaya_amaya amaya_plugins
