@@ -3170,8 +3170,6 @@ void YMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
        * and it's not a stretchable box.
        * In other cases, move also enclosed boxes.
        */
-      /*if (pBox->BxAbstractBox->AbLeafType == LtGraphics)
-	printf ("YMove %c y=%d + %d\n", pBox->BxAbstractBox->AbRealShape, pBox->BxYOrg, delta);*/
       if (absoluteMove)
 	{
 	  if (pBox->BxVertFlex)

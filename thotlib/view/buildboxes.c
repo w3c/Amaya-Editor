@@ -4925,6 +4925,7 @@ ThotBool ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
 		  pFrame->FrXOrg = 0;
 		  pFrame->FrYOrg = 0;
 	       }
+
 	     /* Faut-il verifier l'englobement ? */
 	     if (change && pParentAb)
 	       {
@@ -4970,9 +4971,11 @@ ThotBool ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
 	     /* restore the current mode and  update tables if necessary */
 	     if (saveMode == DisplayImmediately)
 	       documentDisplayMode[doc - 1] = saveMode;
+
 	      if (!lock)
 		/* unlock table formatting */
 		TtaUnlockTableFormatting ();
+
 	     /* Est-ce que l'on a de nouvelles boites dont le contenu est */
 	     /* englobe et depend de relations hors-structure ?           */
 	     ComputeEnclosing (frame);

@@ -2043,6 +2043,7 @@ void TtaUnlockTableFormatting ()
 {
   PtrLockRelations    pLockRel, first;
   PtrAbstractBox      table, cell;
+  PtrLine             pLine;
   Propagation         savpropage;
   int                 i;
 
@@ -2149,6 +2150,17 @@ void TtaUnlockTableFormatting ()
 				pLockRel->LockRFrame[i]);
 		  CheckRowHeights (table, pLockRel->LockRFrame[i]);
 		  /* need to propagate to enclosing boxes */
+		  if (table && table->AbEnclosing->AbBox &&
+		      table->AbEnclosing->AbBox->BxType == BoBlock ||
+		      table->AbEnclosing->AbBox->BxType == BoFloatBlock ||
+		      table->AbEnclosing->AbBox->BxType == BoGhost)
+		    {
+		      if (table->AbBox)
+			pLine = SearchLine (table->AbBox, pLockRel->LockRFrame[i]);
+		      else
+			pLine = NULL;
+		       RecomputeLines (table->AbEnclosing, pLine, NULL, pLockRel->LockRFrame[i]);
+		    }
 		  ComputeEnclosing (pLockRel->LockRFrame[i]);
 		  DisplayFrame (pLockRel->LockRFrame[i]);
 		}
