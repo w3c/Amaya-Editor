@@ -1422,11 +1422,11 @@ void TtaGetViewXYWH (Document doc, int view, int *xmm, int *ymm, int *width,
 {
 #ifndef _WINDOWS
   int                 frame;
-  int                 n;
   ThotWidget          widget;
 #ifdef _GTK
-  GtkArg              args[20];
-#else /* ! _GTK */
+  ThotWidget          tmpw;
+#else /* ! _GTK */  
+  int                 n;
   Arg                 args[20];
 #endif /* ! _GTK */
   Position            x, y;
@@ -1435,10 +1435,11 @@ void TtaGetViewXYWH (Document doc, int view, int *xmm, int *ymm, int *width,
   frame =  GetWindowNumber (doc, view);
   widget = (ThotWidget) FrameTable[frame].WdFrame;
 #ifdef _GTK
-  widget = widget->parent->parent;
-  args[0].name = "width";
-  args[1].name = "height";
-  gtk_object_getv(GTK_OBJECT(widget), 2, args);
+  tmpw = gtk_widget_get_toplevel (GTK_WIDGET(widget));
+  w = tmpw->allocation.width;
+  h = tmpw->allocation.width;
+  x = tmpw->allocation.x;
+  y = tmpw->allocation.y;
 #else /* !_GTK */
   widget = XtParent (XtParent (XtParent (widget)));
 
