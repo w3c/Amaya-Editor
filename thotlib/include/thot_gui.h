@@ -150,6 +150,7 @@ typedef XColor    ThotColorStruct;
  */
 
 #ifdef OWN_XLOOKUPSTRING
+#define X_USEBFUNCS
 #include <X11/Xlibint.h>
 #endif /* OWN_XLOOKUPSTRING */
 
