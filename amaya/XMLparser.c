@@ -14,6 +14,7 @@
 #include "amaya.h"
 #include "css.h"
 #include "parser.h"
+#include "fetchHTMLname_f.h"
 
 #define MAX_LENGTH     512
 

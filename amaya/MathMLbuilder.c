@@ -19,6 +19,7 @@
 #include "undo.h"
 #include "MathML.h"
 #include "parser.h"
+#include "html2thot_f.h"
 
 typedef UCHAR_T  MathEntityName[30];
 typedef struct _MathEntity
