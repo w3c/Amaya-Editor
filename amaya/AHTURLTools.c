@@ -415,14 +415,14 @@ char               *docName;
 
    ptr = orgName;
    /* skip leading white space and new line characters */
-   while ((*ptr == ' ' || *ptr == '\n') && *ptr++ != EOS);
+   while ((*ptr == ' ' || *ptr == EOL) && *ptr++ != EOS);
    strcpy (tempOrgName, ptr);
    /* clean trailing white space */
    ptr = strchr (tempOrgName, ' ');
    if (ptr)
       *ptr = EOS;
    /* clean trailing new lines */
-   ptr = strchr (tempOrgName, '\n');
+   ptr = strchr (tempOrgName, EOL);
    if (ptr)
       *ptr = EOS;
 
@@ -434,7 +434,7 @@ char               *docName;
    */
 
    if (tempOrgName[0] == EOS || IsW3Path (tempOrgName) || doc == 0)
-     /* the name is complete, go to the Fifth Step */
+     /* the name is complete, go to the Sixth Step */
      strcpy (newName, tempOrgName);
    else
      {
@@ -475,20 +475,41 @@ char               *docName;
 		   if (ptr)
 		     HT_FREE (ptr);
 		 }
-	       /* search for the first DIR_SEP char */
+	       /* Third Step: prepare the base
+	       ** Removing anything after the
+	       ** last DIR_SEP char. If no such char is found, then search for
+	       ** the first ":" char, hoping that what's before that is a
+	       ** protocol. If found, end the string there. If neither
+	       ** char is found, then discard the whole base element.
+	       */
+
+	       /* search for the last DIR_SEP char */
 	       while (length >= 0  && basename[length] != DIR_SEP)
-		 basename[length--] = EOS;		   
+		 length--;
+	       if (length >= 0)
+		 /* found the last DIR_SEP char, end the string there */
+		 basename[length + 1] = EOS;		   
+	       else
+		 /* search for the first ":" char */
+		 {
+		   for (length = 0; basename[length] != ':' && 
+			  basename[length] != EOS; length ++);
+		   if (basename[length] == ':')
+		     /* found, so end the string there */
+		     basename[length + 1] = EOS;
+		   else
+		     /* not found, discard the base */
+		     basename[0] = EOS;
+		 }
 	     }
 	   else
 	     basename[0] = EOS;
 	 }
-       else
-	 basename[0] = EOS;
 
        /*
-       ** Third Step: 
+       ** Fourth Step: 
        ** If there's no base element, and if we're following
-       ** a link, use the URL of the current document as a base
+       ** a link, use the URL of the current document as a base.
        */
 
        if (!attrHREF)
@@ -498,18 +519,31 @@ char               *docName;
 	       strcpy (basename, DocumentURLs[(int) doc]);
 	       /* base and orgName have to be separated by a DIR_SEP */
 	       length = strlen (basename) - 1;
-	       /* search for the first DIR_SEP char */
+	       /* search for the last DIR_SEP char */
 	       while (length >= 0  && basename[length] != DIR_SEP)
-		 basename[length--] = EOS;		   
+		 length--;
+	       if (length >= 0)
+		 /* found the last DIR_SEP char, end the string there */
+		 basename[length + 1] = EOS;		   
+	       else
+		 /* search for the first ":" char */
+		 {
+		   for (length = 0; basename[length] != ':' && 
+			  basename[length] != EOS; length ++);
+		   if (basename[length] == ':')
+		     /* found, so end the string there */
+		     basename[length + 1] = EOS;
+		   else
+		     /* not found, discard the base */
+		     basename[0] = EOS;
+		 }
 	     }
 	   else
-	     {
-	       basename [0] = EOS;
-	     }
+	       basename[0] = EOS;
 	 }
   
        /*
-       ** Fourth Step, calculate the absolute URL, using the base
+       ** Fifth Step, calculate the absolute URL, using the base
        */
 
        ptr = HTParse (tempOrgName, basename, PARSE_ALL);
@@ -525,14 +559,15 @@ char               *docName;
      }
 
    /*
-   ** Fifth step:
+   ** Sixth and last Step:
    ** Prepare the docname that will refer to this ressource in the
-   ** .amaya directory. If the new URL finishes on "/", then use
+   ** .amaya directory. If the new URL finishes on DIR_SEP, then use
    ** noname.html as a default ressource name
    */
-   length = strlen (newName) - 1;
-   if (length > 0)
+
+   if (newName[0] != EOS)
      {
+       length = strlen (newName) - 1;
        if (newName[length] == DIR_SEP)
 	 {
 	   /* docname was not comprised inside the URL, so let's */
@@ -551,6 +586,7 @@ char               *docName;
 	   else
 	     strcpy (docName, &newName[length+1]);
 	 }
+
      }
    else
      docName[0] = EOS;
