@@ -816,6 +816,7 @@ void FontIdentifier (char script, int family, int highlight, int size,
 {
   char        *cfamily = "sthc";
   char        *wght, *slant, *ffamily;
+  char         encoding[3];
 
   /* apply the current font zoom */
   if (unit == UnRelative)
@@ -831,6 +832,12 @@ void FontIdentifier (char script, int family, int highlight, int size,
 
   if (script != 'L' && script != 'G')
     {
+      if (script == 'F')
+	strcpy (encoding, "15");
+      else if (script == 'D')
+	strcpy (encoding, "13");
+      else
+	sprintf (encoding, "%c", script);
       ffamily = "-*-*";
       if (highlight > MAX_HIGHLIGHT)
 	wght = "*";
@@ -844,13 +851,13 @@ void FontIdentifier (char script, int family, int highlight, int size,
 	slant = "o";
       if (size < 0)
 	{
-	  sprintf (r_nameX, "%s-%s-%s-*-*-13-*-*-*-*-*-iso8859-%c",
-		   ffamily, wght, slant, script);
+	  sprintf (r_nameX, "%s-%s-%s-*-*-13-*-*-*-*-*-iso8859-%s",
+		   ffamily, wght, slant, encoding);
 	  size = 12;
 	}
       else
-	sprintf (r_nameX, "%s-%s-%s-*-*-%d-*-*-*-*-*-iso8859-%c",
-		 ffamily, wght, slant, size, script);
+	sprintf (r_nameX, "%s-%s-%s-*-*-%d-*-*-*-*-*-iso8859-%s",
+		 ffamily, wght, slant, size, encoding);
     }
   else if (script == 'G' || family == 0)
     {
@@ -1186,8 +1193,14 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 	  lfont = fontset->FontIso_1;
 	  car = (char) c;
 	}
-      else if (c >= 0x370 && c < 0x3FF)
+      else if ((c >= 0x370 && c < 0x3FF)
+#ifndef _WINDOWS
+	       /* Windows quotations */
+	       || c == 0x2018|| c == 0x2019
+#endif /* _WINDOWS */
+	       )
 	{
+	  /* greek characters */
 	  if (fontset->FontIso_7 == NULL)
 	    {
 	      /* load that font */
@@ -1233,8 +1246,11 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 	       c == 0x202C /* pdf */ || c == 0x2061 /* ApplyFunction */ ||
 	       c == 0x2062 /* InvisibleTimes */)
 	car =  INVISIBLE_CHAR;
-      else if (c > 0x2000 && c < 0x237F && c != 0x20AC /* euro */)
+      else if (c > 0x2000 && c < 0x237F &&
+	       (c < 0x2018 || c > 0x201D) /* Windows quotations */ &&
+	       c != 0x20AC /* euro */)
 	{
+	  /* symbols */
 	  if (fontset->FontSymbol == NULL)
 	    {
 	      /* load the Adobe Symbol font */
@@ -1260,7 +1276,23 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 	}
       else
 	{
-	  if (c < 0x17F)
+	  if (c == 0x152 /* OE */ || c == 0x153 /* oe */ ||
+	      c == 0x178 /* Y WITH DIAERESIS */ || c == 0x20AC /* euro */)
+	    {
+	      car = 'F'; /* Extended Latin */
+	      pfont = &(fontset->FontIso_15);
+#ifdef _WINDOWS
+	      encoding = WINDOWS_1252;
+#else /* _WINDOWS */
+	      encoding = ISO_8859_15;
+#endif /* _WINDOWS */
+	    }
+	  else if (c < 0x17F
+#ifdef _WINDOWS
+	      /* Windows quotations */
+	      || (c >= 0x2018 && c <= 0x201D)
+#endif /* _WINDOWS */
+	      )
 	    {
 	      car = '2'; /* Central Europe */
 	      pfont = &(fontset->FontIso_2);
@@ -1270,6 +1302,14 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 	      encoding = ISO_8859_2;
 #endif /* _WINDOWS */
 	    }
+#ifndef _WINDOWS
+	  else if (c == 0x201C || c == 0x201D /* Windows quotations */)
+	    {
+	      car = 'D'; /* Latin Extended */
+	      pfont = &(fontset->FontIso_13);
+	      encoding = ISO_8859_13;
+	    }
+#endif /* _WINDOWS */
 	  else if (c < 0x24F)
 	    {
 	      car = '3';

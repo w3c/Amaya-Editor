@@ -488,7 +488,7 @@ static int          EntityTableEntry = 0; /* entry of the entity table that
 static int          CharRank = 0;	  /* rank of the last matching
 					     character in that entry */
 #ifdef _I18N_
-static unsigned char SecondByte = EOS;    /* second char of an UTF-8 string */
+static unsigned char SecondByte[3] = {EOS, EOS, EOS}; /* second char of an UTF-8 string */
 #endif /* _I18N_ */
 
 static void         ProcessStartGI (char* GIname);
@@ -4110,11 +4110,12 @@ static char GetNextChar (FILE *infile, char* buffer, int *index,
     {
       /* read from a buffer */
 #ifdef _I18N_
-      if (SecondByte != EOS)
+      if (SecondByte[0] != EOS)
 	{
 	  /* return the second UTF-8 byte */
-	  charRead = SecondByte;
-	  SecondByte = EOS;
+	  charRead = SecondByte[0];
+	  /* shift */
+	  strncpy (SecondByte, &SecondByte[1], 4);
 	}
       else
 	{
@@ -4132,8 +4133,12 @@ static char GetNextChar (FILE *infile, char* buffer, int *index,
 		  /* handle the first character */
 		  charRead = fallback[0];
 		  if (res > 1)
-		    /* store the second UTF-8 byte */
-		    SecondByte = fallback[1];
+		    {
+		      /* store the second UTF-8 byte */
+		      res--;
+		      strncpy (SecondByte, &fallback[1], res);
+		      SecondByte[res] = EOS;
+		    }
 		}
 	    }
 	}
@@ -4163,7 +4168,7 @@ static char GetNextChar (FILE *infile, char* buffer, int *index,
     {
       /* read from a file */
 #ifdef _I18N_
-      if (*index == 0 && SecondByte == EOS)
+      if (*index == 0 && SecondByte[0] == EOS)
 #else /* _I18N_ */
       if (*index == 0)
 #endif /* _I18N_ */
@@ -4196,11 +4201,12 @@ static char GetNextChar (FILE *infile, char* buffer, int *index,
       else if (*endOfFile == FALSE)
 	{
 #ifdef _I18N_
-	  if (SecondByte != EOS)
+	  if (SecondByte[0] != EOS)
 	    {
 	      /* return the second UTF-8 byte */
-	      charRead = SecondByte;
-	      SecondByte = EOS;
+	      charRead = SecondByte[0];
+	      /* shift */
+	      strncpy (SecondByte, &SecondByte[1], 4);
 	    }
 	  else
 	    {
@@ -4218,8 +4224,12 @@ static char GetNextChar (FILE *infile, char* buffer, int *index,
 		      /* handle the first character */
 		      charRead = fallback[0];
 		      if (res > 1)
-			/* store the second UTF-8 byte */
-			SecondByte = fallback[1];
+			{
+			  /* store the second UTF-8 byte */
+			  res--;
+			  strncpy (SecondByte, &fallback[1], res);
+			  SecondByte[res] = EOS;
+			}
 		    }
 		}
 	    }

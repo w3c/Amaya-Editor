@@ -38,6 +38,7 @@ typedef struct _FontSet {
   PtrFont       FontIso_7;
   PtrFont       FontIso_8;
   PtrFont       FontIso_9;
+  PtrFont       FontIso_13;
   PtrFont       FontIso_15;
   PtrFont       FontSymbol;
 } FontSet;

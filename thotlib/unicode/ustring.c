@@ -66,6 +66,8 @@ static CharsetCode CharsetCodeTable[] =
     {"iso-8859-9",       ISO_8859_9},
     {"iso_8859-9:1989",  ISO_8859_9},
     {"latin5",           ISO_8859_9},
+    {"iso-8859-10",      ISO_8859_10},
+    {"iso-8859-15",      ISO_8859_15},
 
     {"UNICODE-1-1",      UNICODE_1_1},
     {"csUnicode11",      UNICODE_1_1},
