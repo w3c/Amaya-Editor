@@ -1167,10 +1167,15 @@ FILE               *fileDescriptor;
 		 case LtCompound:
 		    image = (PictInfo *) pPa1->AbPictBackground;
 		    if (image != NULL)
-		      fprintf (fileDescriptor, "Picture: x = %d, y = %d, w = %d, h = %d, name = %s ",
-			       image->PicXArea, image->PicYArea, image->PicWArea, image->PicHArea,
-			       image->PicFileName);
-		    fprintf (fileDescriptor, "Fill-Background:");
+		      {
+			fprintf (fileDescriptor, "Picture: x = %d, y = %d, w = %d, h = %d, name = \"",
+				 image->PicXArea, image->PicYArea, image->PicWArea, image->PicHArea);
+			if (image->PicFileName)
+			  fprintf (fileDescriptor, "%s\" ", image->PicFileName);
+			else
+			  fprintf (fileDescriptor, "\"");
+		      }
+		    fprintf (fileDescriptor, "ShowBox:");
 		    if (pPa1->AbFillBox)
 		      fprintf (fileDescriptor, "Y");
 		    else

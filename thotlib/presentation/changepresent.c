@@ -562,15 +562,10 @@ boolean             isNew;
    boolean             noApply;
 
    if (isNew)
-     {
-	notifyPres.event = TtePRuleCreate;
-	notifyPres.pRule = NULL;
-     }
+     notifyPres.event = TtePRuleCreate;
    else
-     {
-	notifyPres.event = TtePRuleModify;
-	notifyPres.pRule = (PRule) pPRule;
-     }
+     notifyPres.event = TtePRuleModify;
+   notifyPres.pRule = (PRule) pPRule;
    notifyPres.document = (Document) IdentDocument (pDoc);
    notifyPres.element = (Element) pEl;
    notifyPres.pRuleType = NumTypePRuleAPI (pPRule);
@@ -607,10 +602,9 @@ boolean             isNew;
 }
 
 /*----------------------------------------------------------------------
-   	PRuleMessagePost      On vient d'ajouter ou de modifier (selon	
-   	isNew) la regle de presentation specifique pPRule pour	
-   	l'element pEl du document pDoc. On envoie le message APP	
-   	correspondant a l'application.					
+  PRuleMessagePost      On vient d'ajouter ou de modifier (selon isNew)
+  la regle de presentation specifique pPRule pour l'element pEl du document
+  pDoc. On envoie le message APP correspondant a l'application.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         PRuleMessagePost (PtrElement pEl, PtrPRule pPRule, PtrDocument pDoc, boolean isNew)
@@ -1536,95 +1530,93 @@ PtrElement          pEl;
 
 #endif /* __STDC__ */
 {
-   PtrAbstractBox      pAb;
-   int                 view;
-   boolean             stop;
-
+  PtrAbstractBox      pAb;
+  int                 view;
+  boolean             stop;
 #ifdef __COLPAGE__
-   boolean             bool;
-
+  boolean             bool;
 #endif /* __COLPAGE__ */
 
-   /* parcourt toutes les vues du document */
-   for (view = 1; view <= MAX_VIEW_DOC; view++)
-      if (pEl->ElAbstractBox[view - 1] != NULL)
-	 /* l'element traite' a un pave dans cette view */
-	 if (pDoc->DocView[view - 1].DvSSchema == pDoc->DocSSchema &&
-	     pDoc->DocView[view - 1].DvPSchemaView == pPRule->PrViewNum)
-	   {
-	      /* c'est une view de meme type que la view traitee, on */
-	      /* traite le pave de l'element dans cette view */
-	      pAb = pEl->ElAbstractBox[view - 1];
-	      /* saute les paves de presentation */
-	      stop = FALSE;
-	      do
-		 if (pAb == NULL)
-		    stop = TRUE;
-		 else if (!pAb->AbPresentationBox)
-		    stop = TRUE;
-		 else
-		    pAb = pAb->AbNext;
-	      while (!stop);
+  /* parcourt toutes les vues du document */
+  for (view = 1; view <= MAX_VIEW_DOC; view++)
+    if (pEl->ElAbstractBox[view - 1] != NULL)
+      /* l'element traite' a un pave dans cette view */
+      if (pDoc->DocView[view - 1].DvSSchema == pDoc->DocSSchema &&
+	  pDoc->DocView[view - 1].DvPSchemaView == pPRule->PrViewNum)
+	{
+	  /* c'est une view de meme type que la view traitee, on */
+	  /* traite le pave de l'element dans cette view */
+	  pAb = pEl->ElAbstractBox[view - 1];
+	  /* saute les paves de presentation */
+	  stop = FALSE;
+	  do
+	    if (pAb == NULL)
+	      stop = TRUE;
+	    else if (!pAb->AbPresentationBox)
+	      stop = TRUE;
+	    else
+	      pAb = pAb->AbNext;
+	  while (!stop);
 #ifdef __COLPAGE__
-	      /* boucle sur les paves de l'element */
-	      while (pAb != NULL)
-		{
+	  /* boucle sur les paves de l'element */
+	  while (pAb != NULL)
+	    {
 #else  /* __COLPAGE__ */
 	      if (pAb != NULL)
 #endif /* __COLPAGE__ */
-		 /* applique la regle de presentation specifique a ce pave' */
+		/* applique la regle de presentation specifique a ce pave' */
 #ifdef __COLPAGE__
-		 if (ApplyRule (pPRule, NULL, pAb, pDoc, NULL, &bool))
+		if (ApplyRule (pPRule, NULL, pAb, pDoc, NULL, &bool))
 #else  /* __COLPAGE__ */
-		 if (ApplyRule (pPRule, NULL, pAb, pDoc, NULL))
+		  if (ApplyRule (pPRule, NULL, pAb, pDoc, NULL))
 #endif /* __COLPAGE__ */
-		   {
+		    {
 		      switch (pPRule->PrType)
-			    {
-			       case PtHeight:
-				  pAb->AbHeightChange = TRUE;
-				  break;
-			       case PtWidth:
-				  pAb->AbWidthChange = TRUE;
-				  break;
-			       case PtVertPos:
-				  pAb->AbVertPosChange = TRUE;
-				  break;
-			       case PtHorizPos:
-				  pAb->AbHorizPosChange = TRUE;
-				  break;
-			       case PtSize:
-				  pAb->AbSizeChange = TRUE;
-				  break;
-			       case PtDepth:
-			       case PtLineStyle:
-			       case PtLineWeight:
-			       case PtFillPattern:
-			       case PtBackground:
-			       case PtForeground:
-				  pAb->AbAspectChange = TRUE;
-				  break;
-			       case PtFunction:
-				 if (pPRule->PrPresFunction == FnPictureMode
-				     || pPRule->PrPresFunction == FnBackgroundPicture
-				     || pPRule->PrPresFunction == FnShowBox)
-				   pAb->AbAspectChange = TRUE;
-				 else
-				   pAb->AbChange = TRUE;
-				  break;
-			       default:
-				  pAb->AbChange = TRUE;
-				  break;
-			    }
+			{
+			case PtHeight:
+			  pAb->AbHeightChange = TRUE;
+			  break;
+			case PtWidth:
+			  pAb->AbWidthChange = TRUE;
+			  break;
+			case PtVertPos:
+			  pAb->AbVertPosChange = TRUE;
+			  break;
+			case PtHorizPos:
+			  pAb->AbHorizPosChange = TRUE;
+			  break;
+			case PtSize:
+			  pAb->AbSizeChange = TRUE;
+			  break;
+			case PtDepth:
+			case PtLineStyle:
+			case PtLineWeight:
+			case PtFillPattern:
+			case PtBackground:
+			case PtForeground:
+			  pAb->AbAspectChange = TRUE;
+			  break;
+			case PtFunction:
+			  if (pPRule->PrPresFunction == FnPictureMode
+			      || pPRule->PrPresFunction == FnBackgroundPicture
+			      || pPRule->PrPresFunction == FnShowBox)
+			    pAb->AbAspectChange = TRUE;
+			  else
+			    pAb->AbChange = TRUE;
+			  break;
+			default:
+			  pAb->AbChange = TRUE;
+			  break;
+			}
 		      ApplyInherit (pPRule->PrType, pAb, pDoc);
 		      /* indique le pave a faire reafficher */
 		      RedispAbsBox (pAb, pDoc);
-		   }
+		    }
 #ifdef __COLPAGE__
 	      pAb = pAb->AbNextRepeated;
-	   }
+	    }
 #endif /* __COLPAGE__ */
-}
+	}
 }
 
 
@@ -1655,151 +1647,181 @@ int                 LineColor;
 #endif /* __STDC__ */
 
 {
-   boolean             isNew;
-   PtrPRule            pPRule, pFunctRule;
-   int                 viewSch;
+  TypeUnit            unit;
+  PtrPRule            pPRule, pFunctRule;
+  int                 viewSch, value;
+  boolean             isNew;
 
-   viewSch = AppliedView (pEl, NULL, pDoc, viewToApply);	/* numero de cette view */
-   /* style des traits dans le graphique */
-   if (modifLineStyle)
-     {
-	/*cherche la regle de presentation specifique 'LineStyle' de l'element */
-	/* ou en cree une nouvelle */
-	pPRule = SearchPresRule (pEl, PtLineStyle, 0, &isNew, pDoc, viewToApply);
-	if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
-	  {
-	     /* met les choix de l'utilisateur dans cette regle */
-	     pPRule->PrType = PtLineStyle;
-	     pPRule->PrViewNum = viewSch;
-	     pPRule->PrPresMode = PresImmediate;
-	     pPRule->PrChrValue = LineStyle;
-	     pDoc->DocModified = TRUE;	/* le document est modifie' */
-	     /* si le pave existe, applique la nouvelle regle au pave */
-	     ApplyNewRule (pDoc, pPRule, pEl);
-	     PRuleMessagePost (pEl, pPRule, pDoc, isNew);
-	  }
-     }
-   /* epaisseur des traits dans le graphique */
-   if (modifLineWeight)
-     {
-	/* cherche la regle de presentation specifique 'Epaisseur Trait' de */
-	/* l'element ou en cree une nouvelle */
-	pPRule = SearchPresRule (pEl, PtLineWeight, 0, &isNew, pDoc, viewToApply);
-	if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
-	  {
-	     /* met les choix de l'utilisateur dans cette regle */
-	     pPRule->PrType = PtLineWeight;
-	     pPRule->PrViewNum = viewSch;
-	     pPRule->PrPresMode = PresImmediate;
-	     pPRule->PrMinUnit = LineWeightUnit;
-	     pPRule->PrMinAttr = FALSE;
-	     pPRule->PrMinValue = LineWeight;
-	     pDoc->DocModified = TRUE;	/* le document est modifie' */
-	     /* si le pave existe, applique la nouvelle regle au pave */
-	     ApplyNewRule (pDoc, pPRule, pEl);
-	     PRuleMessagePost (pEl, pPRule, pDoc, isNew);
-	  }
-     }
-   /* trame de remplissage */
-   if (modifFillPattern)
-     {
-	/* cherche la regle de presentation specifique 'FillPattern' de */
-	/* l'element ou en cree une nouvelle */
-	pPRule = SearchPresRule (pEl, PtFillPattern, 0, &isNew, pDoc, viewToApply);
-	if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
-	  {
-	     /* met les choix de l'utilisateur dans cette regle */
-	     pPRule->PrType = PtFillPattern;
-	     pPRule->PrViewNum = viewSch;
-	     pPRule->PrPresMode = PresImmediate;
-	     pPRule->PrIntValue = FillPattern;
-	     pPRule->PrAttrValue = FALSE;
-	     pDoc->DocModified = TRUE;	/* le document est modifie' */
-	     /* si le pave existe, applique la nouvelle regle au pave */
-	     ApplyNewRule (pDoc, pPRule, pEl);
-	     PRuleMessagePost (pEl, pPRule, pDoc, isNew);
+  /* numero de cette view */
+  viewSch = AppliedView (pEl, NULL, pDoc, viewToApply);
+  /* style des traits dans le graphique */
+  if (modifLineStyle)
+    {
+      /*cherche la regle de presentation specifique 'LineStyle' de l'element */
+      /* ou en cree une nouvelle */
+      pPRule = SearchPresRule (pEl, PtLineStyle, 0, &isNew, pDoc, viewToApply);
+      /* met les choix de l'utilisateur dans cette regle */
+      pPRule->PrType = PtLineStyle;
+      pPRule->PrViewNum = viewSch;
+      pPRule->PrPresMode = PresImmediate;
+      value = (int) pPRule->PrChrValue;
+      pPRule->PrChrValue = LineStyle;
+      if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
+	{
+	  pDoc->DocModified = TRUE;	/* le document est modifie' */
+	  /* si le pave existe, applique la nouvelle regle au pave */
+	  ApplyNewRule (pDoc, pPRule, pEl);
+	  PRuleMessagePost (pEl, pPRule, pDoc, isNew);
+	}
+      else if (!isNew)
+	/* reset the previous value */
+	pPRule->PrChrValue = (char) value;
+    }
 
-	     /* It the element is not a leaf in the abstract tree, create a
-		ShowBox rule for the element if there is none */
-	     if (!pEl->ElTerminal)
-	       {
-	       pFunctRule = SearchPresRule (pEl, PtFunction, FnShowBox, &isNew,
-					    pDoc, viewToApply);
-	       if (isNew)
-	         if (!PRuleMessagePre (pEl, pFunctRule, pDoc, isNew))
-		   {
-		   pFunctRule->PrType = PtFunction;
-		   pFunctRule->PrViewNum = viewSch;
-		   pFunctRule->PrPresMode = PresFunction;
-		   pFunctRule->PrPresFunction = FnShowBox;
-		   pFunctRule->PrPresBoxRepeat = FALSE;
-		   pFunctRule->PrNPresBoxes = 0;
-		   ApplyNewRule (pDoc, pFunctRule, pEl);
-		   PRuleMessagePost (pEl, pFunctRule, pDoc, isNew);
-		   }
-		}
-	  }
-     }
-   /* couleur de fond */
-   if (modifColorBackground)
-     {
-	/* cherche la regle de presentation specifique 'ColoreurFond' de */
-	/* l'element ou en cree une nouvelle */
-	pPRule = SearchPresRule (pEl, PtBackground, 0, &isNew, pDoc, viewToApply);
-	if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
-	  {
-	     /* met les choix de l'utilisateur dans cette regle */
-	     pPRule->PrType = PtBackground;
-	     pPRule->PrViewNum = viewSch;
-	     pPRule->PrPresMode = PresImmediate;
-	     pPRule->PrIntValue = ColorBackground;
-	     pPRule->PrAttrValue = FALSE;
-	     pDoc->DocModified = TRUE;	/* le document est modifie' */
-	     /* si le pave existe, applique la nouvelle regle au pave */
-	     ApplyNewRule (pDoc, pPRule, pEl);
-	     PRuleMessagePost (pEl, pPRule, pDoc, isNew);
+  /* epaisseur des traits dans le graphique */
+  if (modifLineWeight)
+    {
+      /* cherche la regle de presentation specifique 'Epaisseur Trait' de */
+      /* l'element ou en cree une nouvelle */
+      pPRule = SearchPresRule (pEl, PtLineWeight, 0, &isNew, pDoc, viewToApply);
+      /* met les choix de l'utilisateur dans cette regle */
+      pPRule->PrType = PtLineWeight;
+      pPRule->PrViewNum = viewSch;
+      pPRule->PrPresMode = PresImmediate;
+      unit = pPRule->PrMinUnit;
+      pPRule->PrMinUnit = LineWeightUnit;
+      pPRule->PrMinAttr = FALSE;
+      value = pPRule->PrMinValue;
+      pPRule->PrMinValue = LineWeight;
+      if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
+	{
+	  pDoc->DocModified = TRUE;	/* le document est modifie' */
+	  /* si le pave existe, applique la nouvelle regle au pave */
+	  ApplyNewRule (pDoc, pPRule, pEl);
+	  PRuleMessagePost (pEl, pPRule, pDoc, isNew);
+	}
+      else if (!isNew)
+	{
+	  /* reset the previous value */
+	  pPRule->PrMinUnit = unit;
+	  pPRule->PrMinValue = value;
+	}
+    }
 
-	     /* It the element is not a leaf in the abstract tree, create a
-		ShowBox rule for the element if there is none */
-	     if (!pEl->ElTerminal)
-	       {
-	       pFunctRule = SearchPresRule (pEl, PtFunction, FnShowBox, &isNew,
-					    pDoc, viewToApply);
-	       if (isNew)
-	         if (!PRuleMessagePre (pEl, pFunctRule, pDoc, isNew))
-		   {
-		   pFunctRule->PrType = PtFunction;
-		   pFunctRule->PrViewNum = viewSch;
-		   pFunctRule->PrPresMode = PresFunction;
-		   pFunctRule->PrPresFunction = FnShowBox;
-		   pFunctRule->PrPresBoxRepeat = FALSE;
-		   pFunctRule->PrNPresBoxes = 0;
-		   ApplyNewRule (pDoc, pFunctRule, pEl);
-		   PRuleMessagePost (pEl, pFunctRule, pDoc, isNew);
-		   }
-		}
-	  }
-     }
-   /* couleur du trace' */
-   if (modifLineColor)
-     {
-	/* cherche la regle de presentation specifique 'CouleurTrace' de */
-	/* l'element ou en cree une nouvelle */
-	pPRule = SearchPresRule (pEl, PtForeground, 0, &isNew, pDoc, viewToApply);
-	if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
-	  {
-	     /* met les choix de l'utilisateur dans cette regle */
-	     pPRule->PrType = PtForeground;
-	     pPRule->PrViewNum = viewSch;
-	     pPRule->PrPresMode = PresImmediate;
-	     pPRule->PrIntValue = LineColor;
-	     pPRule->PrAttrValue = FALSE;
-	     pDoc->DocModified = TRUE;	/* le document est modifie' */
-	     /* si le pave existe, applique la nouvelle regle au pave */
-	     ApplyNewRule (pDoc, pPRule, pEl);
-	     PRuleMessagePost (pEl, pPRule, pDoc, isNew);
-	  }
-     }
+  /* trame de remplissage */
+  if (modifFillPattern)
+    {
+      /* cherche la regle de presentation specifique 'FillPattern' de */
+      /* l'element ou en cree une nouvelle */
+      pPRule = SearchPresRule (pEl, PtFillPattern, 0, &isNew, pDoc, viewToApply);
+      /* met les choix de l'utilisateur dans cette regle */
+      pPRule->PrType = PtFillPattern;
+      pPRule->PrViewNum = viewSch;
+      pPRule->PrPresMode = PresImmediate;
+      value = pPRule->PrIntValue;
+      pPRule->PrIntValue = FillPattern;
+      pPRule->PrAttrValue = FALSE;
+      if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
+	{
+	  pDoc->DocModified = TRUE;	/* le document est modifie' */
+	  /* si le pave existe, applique la nouvelle regle au pave */
+	  ApplyNewRule (pDoc, pPRule, pEl);
+	  PRuleMessagePost (pEl, pPRule, pDoc, isNew);
+	  
+	  /* It the element is not a leaf in the abstract tree, create a
+	     ShowBox rule for the element if there is none */
+	  if (!pEl->ElTerminal)
+	    {
+	      pFunctRule = SearchPresRule (pEl, PtFunction, FnShowBox, &isNew,
+					   pDoc, viewToApply);
+	      pFunctRule->PrType = PtFunction;
+	      pFunctRule->PrViewNum = viewSch;
+	      pFunctRule->PrPresMode = PresFunction;
+	      pFunctRule->PrPresFunction = FnShowBox;
+	      pFunctRule->PrPresBoxRepeat = FALSE;
+	      pFunctRule->PrNPresBoxes = 0;
+	      if (isNew)
+		if (!PRuleMessagePre (pEl, pFunctRule, pDoc, isNew))
+		  {
+		    ApplyNewRule (pDoc, pFunctRule, pEl);
+		    PRuleMessagePost (pEl, pFunctRule, pDoc, isNew);
+		  }
+	    }
+	}
+      else if (!isNew)
+	/* reset the previous value */
+	pPRule->PrIntValue = value;
+    }
+
+  /* couleur de fond */
+  if (modifColorBackground)
+    {
+      /* cherche la regle de presentation specifique 'ColoreurFond' de */
+      /* l'element ou en cree une nouvelle */
+      pPRule = SearchPresRule (pEl, PtBackground, 0, &isNew, pDoc, viewToApply);
+      pPRule->PrType = PtBackground;
+      pPRule->PrViewNum = viewSch;
+      pPRule->PrPresMode = PresImmediate;
+      value = pPRule->PrIntValue;
+      pPRule->PrIntValue = ColorBackground;
+      pPRule->PrAttrValue = FALSE;
+      if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
+	{
+	  /* met les choix de l'utilisateur dans cette regle */
+	  pDoc->DocModified = TRUE;	/* le document est modifie' */
+	  /* si le pave existe, applique la nouvelle regle au pave */
+	  ApplyNewRule (pDoc, pPRule, pEl);
+	  PRuleMessagePost (pEl, pPRule, pDoc, isNew);
+	  
+	  /* It the element is not a leaf in the abstract tree, create a
+	     ShowBox rule for the element if there is none */
+	  if (!pEl->ElTerminal)
+	    {
+	      pFunctRule = SearchPresRule (pEl, PtFunction, FnShowBox, &isNew,
+					   pDoc, viewToApply);
+	      pFunctRule->PrType = PtFunction;
+	      pFunctRule->PrViewNum = viewSch;
+	      pFunctRule->PrPresMode = PresFunction;
+	      pFunctRule->PrPresFunction = FnShowBox;
+	      pFunctRule->PrPresBoxRepeat = FALSE;
+	      pFunctRule->PrNPresBoxes = 0;
+	      if (isNew)
+		if (!PRuleMessagePre (pEl, pFunctRule, pDoc, isNew))
+		  {
+		    ApplyNewRule (pDoc, pFunctRule, pEl);
+		    PRuleMessagePost (pEl, pFunctRule, pDoc, isNew);
+		  }
+	    }
+	}
+      else if (!isNew)
+	/* reset the previous value */
+	pPRule->PrIntValue = value;
+    }
+
+  /* couleur du trace' */
+  if (modifLineColor)
+    {
+      /* cherche la regle de presentation specifique 'CouleurTrace' de */
+      /* l'element ou en cree une nouvelle */
+      pPRule = SearchPresRule (pEl, PtForeground, 0, &isNew, pDoc, viewToApply);
+      /* met les choix de l'utilisateur dans cette regle */
+      pPRule->PrType = PtForeground;
+      pPRule->PrViewNum = viewSch;
+      pPRule->PrPresMode = PresImmediate;
+      value = pPRule->PrIntValue;
+      pPRule->PrIntValue = LineColor;
+      pPRule->PrAttrValue = FALSE;
+      if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
+	{
+	  pDoc->DocModified = TRUE;	/* le document est modifie' */
+	  /* si le pave existe, applique la nouvelle regle au pave */
+	  ApplyNewRule (pDoc, pPRule, pEl);
+	  PRuleMessagePost (pEl, pPRule, pDoc, isNew);
+	}
+      else if (!isNew)
+	/* reset the previous value */
+	pPRule->PrIntValue = value;
+    }
 }
 
 
@@ -1822,7 +1844,8 @@ int                 viewToApply;
    int                 viewSch;
    NotifyPresentation  notifyPres;
 
-   viewSch = AppliedView (pEl, NULL, pDoc, viewToApply);	/* type de cette view */
+   /* type de cette view */
+   viewSch = AppliedView (pEl, NULL, pDoc, viewToApply);
    pPRule = pEl->ElFirstPRule;
    pR = NULL;
    /* parcourt les regles de presentation specifiques de l'element */
@@ -2580,9 +2603,7 @@ boolean            remove;
 			{
 			  /* apply a new rule */
 			  found = TRUE;
-			  if (pRP != NULL)
-			    ApplyPRuleAndRedisplay (pAb, pDoc, pAttr, pRP, pSPR);
-			  else if (remove && ruleType == PtFunction &&
+			  if (remove && ruleType == PtFunction &&
 			           pAb->AbLeafType == LtCompound)
 			    {
 			      /* remove a PtFunction rule */
@@ -2599,7 +2620,10 @@ boolean            remove;
 			      else if (pCurrentRule->PrPresFunction == FnShowBox)
 				pAb->AbFillBox = FALSE;
 			      pAb->AbAspectChange = TRUE;
+			      pDoc->DocViewModifiedAb[view] = pAb;
 			    }
+			  else if (pRP != NULL)
+			    ApplyPRuleAndRedisplay (pAb, pDoc, pAttr, pRP, pSPR);
 			}
 		    }
 		  pCurrentRule = pCurrentRule->PrNextPRule;

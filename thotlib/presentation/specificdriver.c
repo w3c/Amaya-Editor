@@ -164,7 +164,8 @@ PresentationValue   v;
    int elType = 0;
    PtrPRule pRule;
 
-   if (ctxt == NULL) return(-1);
+   if (ctxt == NULL)
+     return(-1);
 
    doc = ctxt->doc;
    pSS = (PtrSSchema) TtaGetDocumentSSchema (doc);
@@ -179,7 +180,7 @@ PresentationValue   v;
    if (pRule == NULL)
       return (-1);
 
-   ApplyPRules (doc, pSS, elType, 0, 0, pRule, FALSE);
+   ApplyPRules (doc, pSS, elType, 0, 0, pRule, ctxt->destroy);
    return(0);
 }
 

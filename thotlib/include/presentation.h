@@ -135,7 +135,7 @@ extern PRule        TtaNewPRule (int presentationType, View view, Document docum
    new presentation rule.
 
   ----------------------------------------------------------------------*/
-extern PRule        TtaNewPRuleForNamedView (int presentationType, char *viewName, Document document);
+extern PRule        TtaNewPRuleForView (int presentationType, int view, Document document);
 
 /*----------------------------------------------------------------------
    TtaNewPRuleForNamedView
@@ -150,6 +150,21 @@ extern PRule        TtaNewPRuleForNamedView (int presentationType, char *viewNam
    PRFillPattern, PRBackground, PRForeground, PRHyphenate.
    viewName: the name of the view (this view does not need to be open).
    document: the document.
+
+   Return value:
+   new presentation rule.
+
+  ----------------------------------------------------------------------*/
+extern PRule        TtaNewPRuleForNamedView (int presentationType, char *viewName, Document document);
+
+/*----------------------------------------------------------------------
+   TtaCopyPRule
+
+   Creates a new presentation rule and initializes it with a copy of an existing
+   presentation rule.
+
+   Parameter:
+   pRule: presentation rule to be copied.
 
    Return value:
    new presentation rule.
@@ -437,6 +452,7 @@ extern int          TtaSamePRules (PRule pRule1, PRule pRule2);
 #else  /* __STDC__ */
 
 extern PRule        TtaNewPRule ( /* int presentationType, View view, Document document */ );
+extern PRule        TtaNewPRuleForView (/* int presentationType, int view, Document document */);
 extern PRule        TtaNewPRuleForNamedView ( /* int presentationType, char *viewName, Document document */ );
 extern PRule        TtaCopyPRule ( /* PRule pRule */ );
 extern void         TtaAttachPRule ( /* Element element, PRule pRule, Document document */ );

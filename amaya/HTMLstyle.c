@@ -713,18 +713,18 @@ Document            doc;
    CSS names of an element                                   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 GetHTML3Names (Element elem, Document doc, char **lst, int max)
+int             GetHTML3Names (Element elem, Document doc, char **lst, int max)
 #else
-int                 GetHTML3Names (elem, doc, lst, max)
-Element             elem;
-Document            doc;
-char              **lst;
-int                 max;
+int             GetHTML3Names (elem, doc, lst, max)
+Element         elem;
+Document        doc;
+char          **lst;
+int             max;
 #endif
 {
-   char               *res;
-   int                 deep;
-   Element             father = elem;
+   char        *res;
+   int          deep;
+   Element      father = elem;
 
    for (deep = 0; deep < max;)
      {
@@ -3280,28 +3280,30 @@ PresentationContext context;
 char               *attrstr;
 #endif
 {
+   ElementType	         elType;
    PresentationValue     best;
    GenericContext        gblock;
    SpecificContextBlock *sblock;
    SpecificTarget        elem;
-   char                 *name;
    boolean               setColor;
 
    best.typed_data.unit = DRIVERP_UNIT_INVALID;
    setColor = TRUE;
-   if (IS_CASE_WORD (attrstr, "transparent")) {
+   if (IS_CASE_WORD (attrstr, "transparent"))
+     {
        best.typed_data.value = DRIVERP_PATTERN_NONE;
        best.typed_data.unit = DRIVERP_UNIT_REL;
        if (context->drv->SetFillPattern)
 	 context->drv->SetFillPattern (target, context, best);
        return (attrstr);
-   }
+     }
 
    attrstr = ParseCSSColor (attrstr, &best);
    if (best.typed_data.unit == DRIVERP_UNIT_INVALID)
      setColor = FALSE;
 
-   if (setColor) {
+   if (setColor)
+     {
        /*
 	* if the background is set on the HTML or BODY element,
 	* set the background color for the full window.
@@ -3309,8 +3311,9 @@ char               *attrstr;
        if (context->drv == &GenericStrategy)
 	 {
 	   gblock = (GenericContext) context;
-	   if ((gblock->type == HTML_EL_HTML) || (gblock->type == HTML_EL_BODY) ||
-	       (gblock->type == HTML_EL_HEAD))
+	   if ((gblock->type == HTML_EL_HTML)
+	       || (gblock->type == HTML_EL_BODY)
+	       || (gblock->type == HTML_EL_HEAD))
 	     {
 	       if (setColor)
 		 {
@@ -3323,10 +3326,10 @@ char               *attrstr;
 	 {
 	   sblock = (SpecificContextBlock *) context;
 	   elem = (SpecificTarget) target;
-	   name = GetHTML3Name (elem, sblock->doc);
-	   
-	   if ((!strcmp (name, "HTML")) || (!strcmp (name, "BODY")) ||
-	       (!strcmp (name, "HEAD")))
+	   elType = TtaGetElementType (elem);
+	   if ((elType.ElTypeNum == HTML_EL_HTML)
+	       || (elType.ElTypeNum == HTML_EL_BODY)
+	       || (elType.ElTypeNum == HTML_EL_HEAD))
 	     {
 	       if (setColor)
 		 {
@@ -3386,7 +3389,7 @@ void *extra;
    PresentationContext context;
    PresentationValue   image;
    PresentationValue   repeat;
-   PresentationValue   unused;
+   PresentationValue   unused, value;
 
    if (callblock == NULL)
      return;
@@ -3403,17 +3406,24 @@ void *extra;
    /*
     * If there is no default repeat mode, enforce a V-Repeat
     */
-   if (context->drv->GetPictureMode)
+   if (context->drv->GetPictureMode && context->drv->SetPictureMode)
      {
-       if ((context->drv->GetPictureMode(target, context, &repeat)) < 0)
+       if (context->drv->GetPictureMode(target, context, &repeat) < 0)
          {
-	   if (context->drv->SetPictureMode)
-	     {
-	       repeat.typed_data.value = DRIVERP_REPEAT;
-	       repeat.typed_data.unit = DRIVERP_UNIT_REL;
-	       context->drv->SetPictureMode (target, context, repeat);
-	     }
+	   repeat.typed_data.value = DRIVERP_REPEAT;
+	   repeat.typed_data.unit = DRIVERP_UNIT_REL;
+	   context->drv->SetPictureMode (target, context, repeat);
 	 }
+     }
+
+   /*
+    * If there is no default repeat mode, enforce a V-Repeat
+    */
+   if (context->drv->SetShowBox)
+     {
+       value.typed_data.value = 1;
+       value.typed_data.unit = DRIVERP_UNIT_REL;
+       context->drv->SetShowBox (target, context, value);
      }
 
    /*
@@ -3450,7 +3460,7 @@ char               *attrstr;
    SpecificContextBlock *sblock;
    char                 *url;
    BackgroundImageCallbackPtr callblock;
-   PresentationValue     image;
+   PresentationValue     image, value;
    char                 *no_bg_image;
 
        url = NULL;
@@ -3465,6 +3475,17 @@ char               *attrstr;
        image.pointer = NULL;
        if (context->drv->SetBgImage)
 	 context->drv->SetBgImage (target, context, image);
+       if (context->drv->GetFillPattern)
+	 {
+	   if (context->drv->GetFillPattern (target, context, &value) < 0)
+	     /* there is no FillPattern rule -> remove ShowBox rule */
+	     if (context->drv->SetShowBox)
+	       {
+		 value.typed_data.value = 1;
+		 value.typed_data.unit = DRIVERP_UNIT_REL;
+		 context->drv->SetShowBox (target, context, value);
+	       }
+	 }
      }
    else
      {   
@@ -3628,13 +3649,13 @@ PresentationContext context;
 char               *attrstr;
 #endif
 {
-   Element             el;
+   ElementType	         elType;
+   Element               el;
    PresentationValue     best;
    GenericContext        gblock;
    SpecificContextBlock *sblock;
    SpecificTarget        elem;
    char                 *url;
-   char                 *name;
    char                 *no_bg_image;
    boolean               setColor;
    BackgroundImageCallbackPtr callblock;
@@ -3670,8 +3691,9 @@ char               *attrstr;
        if (context->drv == &GenericStrategy)
 	 {
 	   gblock = (GenericContext) context;
-	   if ((gblock->type == HTML_EL_HTML) || (gblock->type == HTML_EL_BODY) ||
-	       (gblock->type == HTML_EL_HEAD))
+	   if ((gblock->type == HTML_EL_HTML)
+	       || (gblock->type == HTML_EL_BODY)
+	       || (gblock->type == HTML_EL_HEAD))
 	     {
 	       if (setColor)
 		 {
@@ -3702,10 +3724,10 @@ char               *attrstr;
 	 {
 	   sblock = (SpecificContextBlock *) context;
 	   elem = (SpecificTarget) target;
-	   name = GetHTML3Name (elem, sblock->doc);
-	   
-	   if ((!strcmp (name, "HTML")) || (!strcmp (name, "BODY")) ||
-	       (!strcmp (name, "HEAD")))
+	   elType = TtaGetElementType (elem);
+	   if ((elType.ElTypeNum == HTML_EL_HTML)
+	       || (elType.ElTypeNum == HTML_EL_BODY)
+	       || (elType.ElTypeNum == HTML_EL_HEAD))
 	     {
 	       if (setColor)
 		 {

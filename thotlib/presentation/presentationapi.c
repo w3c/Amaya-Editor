@@ -137,7 +137,7 @@ Document            document;
 
    UserErrorCode = 0;
    pPres = NULL;
-   if (presentationType < 0 || presentationType > PRHyphenate)
+   if (presentationType != PRShowBox && (presentationType < 0 || presentationType > PRHyphenate))
      TtaError (ERR_invalid_parameter);
    else if (document < 1 || document > MAX_DOCUMENTS)
      TtaError (ERR_invalid_document_parameter);
@@ -149,9 +149,15 @@ Document            document;
      /* parameters document and view are correct */
      {
        GetPresentRule (&pPres);
-       pPres->PrType = (PRuleType) presentationType;
        pPres->PrNextPRule = NULL;
        pPres->PrViewNum = view;
+       if (presentationType == PRShowBox)
+	 {
+	   pPres->PrType = PtFunction;
+	   pPres->PrPresFunction = FnShowBox;
+	 }
+       else
+	 pPres->PrType = (PRuleType) presentationType;
      }
    return ((PRule) pPres);
 }
@@ -191,7 +197,7 @@ Document            document;
 
    UserErrorCode = 0;
    pPres = NULL;
-   if (presentationType < 0 || presentationType > PRHyphenate)
+   if (presentationType != PRShowBox && (presentationType < 0 || presentationType > PRHyphenate))
      TtaError (ERR_invalid_parameter);
    else if (document < 1 || document > MAX_DOCUMENTS)
      TtaError (ERR_invalid_document_parameter);
@@ -221,9 +227,15 @@ Document            document;
        else
 	 {
 	   GetPresentRule (&pPres);
-	   pPres->PrType = (PRuleType) presentationType;
 	   pPres->PrNextPRule = NULL;
 	   pPres->PrViewNum = vue;
+	   if (presentationType == PRShowBox)
+	     {
+	       pPres->PrType = PtFunction;
+	       pPres->PrPresFunction = FnShowBox;
+	     }
+	   else
+	     pPres->PrType = (PRuleType) presentationType;
 	 }
      }
    return ((PRule) pPres);
@@ -438,261 +450,266 @@ Document            document;
 {
 #ifndef NODISPLAY
    boolean             done;
-
 #endif
 
    UserErrorCode = 0;
    if (element == NULL || pRule == NULL)
-      TtaError (ERR_invalid_parameter);
+     TtaError (ERR_invalid_parameter);
    else if (document < 1 || document > MAX_DOCUMENTS)
-      /* verifies the parameter document */
-      TtaError (ERR_invalid_document_parameter);
+     /* verifies the parameter document */
+     TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
-      TtaError (ERR_invalid_document_parameter);
+     TtaError (ERR_invalid_document_parameter);
    else
-      /* parameter document is correct */
+     /* parameter document is correct */
      {
 #ifndef NODISPLAY
-	done = TRUE;
+       done = TRUE;
 #endif
-	switch (((PtrPRule) pRule)->PrType)
-	      {
-		 case PtSize:
-		    /* Body-size in typographic points */
-		    ((PtrPRule) pRule)->PrPresMode = PresImmediate;
-		    ((PtrPRule) pRule)->PrMinUnit = UnPoint;
-		    ((PtrPRule) pRule)->PrMinAttr = FALSE;
-		    ((PtrPRule) pRule)->PrMinValue = value;
-		    break;
-		 case PtStyle:
-		    ((PtrPRule) pRule)->PrPresMode = PresImmediate;
-		    switch (value)
-			  {
-			     case StyleRoman:
-				((PtrPRule) pRule)->PrChrValue = 'R';
-				break;
-			     case StyleBold:
-				((PtrPRule) pRule)->PrChrValue = 'B';
-				break;
-			     case StyleItalics:
-				((PtrPRule) pRule)->PrChrValue = 'I';
-				break;
-			     case StyleOblique:
-				((PtrPRule) pRule)->PrChrValue = 'O';
-				break;
-			     case StyleBoldItalics:
-				((PtrPRule) pRule)->PrChrValue = 'G';
-				break;
-			     case StyleBoldOblique:
-				((PtrPRule) pRule)->PrChrValue = 'Q';
-				break;
-			     default:
+       switch (((PtrPRule) pRule)->PrType)
+	 {
+	 case PtSize:
+	   /* Body-size in typographic points */
+	   ((PtrPRule) pRule)->PrPresMode = PresImmediate;
+	   ((PtrPRule) pRule)->PrMinUnit = UnPoint;
+	   ((PtrPRule) pRule)->PrMinAttr = FALSE;
+	   ((PtrPRule) pRule)->PrMinValue = value;
+	   break;
+	 case PtStyle:
+	   ((PtrPRule) pRule)->PrPresMode = PresImmediate;
+	   switch (value)
+	     {
+	     case StyleRoman:
+	       ((PtrPRule) pRule)->PrChrValue = 'R';
+	       break;
+	     case StyleBold:
+	       ((PtrPRule) pRule)->PrChrValue = 'B';
+	       break;
+	     case StyleItalics:
+	       ((PtrPRule) pRule)->PrChrValue = 'I';
+	       break;
+	     case StyleOblique:
+	       ((PtrPRule) pRule)->PrChrValue = 'O';
+	       break;
+	     case StyleBoldItalics:
+	       ((PtrPRule) pRule)->PrChrValue = 'G';
+	       break;
+	     case StyleBoldOblique:
+	       ((PtrPRule) pRule)->PrChrValue = 'Q';
+	       break;
+	     default:
 #ifndef NODISPLAY
-				done = FALSE;
+	       done = FALSE;
 #endif
-				TtaError (ERR_invalid_parameter);
-				break;
-			  }
-		    break;
-		 case PtFont:
-		    ((PtrPRule) pRule)->PrPresMode = PresImmediate;
-		    switch (value)
-			  {
-			     case FontTimes:
-				((PtrPRule) pRule)->PrChrValue = 'T';
-				break;
-			     case FontHelvetica:
-				((PtrPRule) pRule)->PrChrValue = 'H';
-				break;
-			     case FontCourier:
-				((PtrPRule) pRule)->PrChrValue = 'C';
-				break;
-			     default:
+	       TtaError (ERR_invalid_parameter);
+	       break;
+	     }
+	   break;
+	 case PtFont:
+	   ((PtrPRule) pRule)->PrPresMode = PresImmediate;
+	   switch (value)
+	     {
+	     case FontTimes:
+	       ((PtrPRule) pRule)->PrChrValue = 'T';
+	       break;
+	     case FontHelvetica:
+	       ((PtrPRule) pRule)->PrChrValue = 'H';
+	       break;
+	     case FontCourier:
+	       ((PtrPRule) pRule)->PrChrValue = 'C';
+	       break;
+	     default:
 #ifndef NODISPLAY
-				done = FALSE;
+	       done = FALSE;
 #endif
-				TtaError (ERR_invalid_parameter);
-				break;
-			  }
-		    break;
-		 case PtUnderline:
-		    ((PtrPRule) pRule)->PrPresMode = PresImmediate;
-		    switch (value)
-			  {
-			     case NoUnderline:
-				((PtrPRule) pRule)->PrChrValue = 'N';
-				break;
-			     case Underline:
-				((PtrPRule) pRule)->PrChrValue = 'U';
-				break;
-			     case Overline:
-				((PtrPRule) pRule)->PrChrValue = 'O';
-				break;
-			     case CrossOut:
-				((PtrPRule) pRule)->PrChrValue = 'C';
-				break;
-			     default:
+	       TtaError (ERR_invalid_parameter);
+	       break;
+	     }
+	   break;
+	 case PtUnderline:
+	   ((PtrPRule) pRule)->PrPresMode = PresImmediate;
+	   switch (value)
+	     {
+	     case NoUnderline:
+	       ((PtrPRule) pRule)->PrChrValue = 'N';
+	       break;
+	     case Underline:
+	       ((PtrPRule) pRule)->PrChrValue = 'U';
+	       break;
+	     case Overline:
+	       ((PtrPRule) pRule)->PrChrValue = 'O';
+	       break;
+	     case CrossOut:
+	       ((PtrPRule) pRule)->PrChrValue = 'C';
+	       break;
+	     default:
 #ifndef NODISPLAY
-				done = FALSE;
+	       done = FALSE;
 #endif
-				TtaError (ERR_invalid_parameter);
-				break;
-			  }
-		    break;
-		 case PtThickness:
-		    ((PtrPRule) pRule)->PrPresMode = PresImmediate;
-		    switch (value)
-			  {
-			     case ThinUnderline:
-				((PtrPRule) pRule)->PrChrValue = 'N';
-				break;
-			     case ThickUnderline:
-				((PtrPRule) pRule)->PrChrValue = 'T';
-				break;
-			     default:
+	       TtaError (ERR_invalid_parameter);
+	       break;
+	     }
+	   break;
+	 case PtThickness:
+	   ((PtrPRule) pRule)->PrPresMode = PresImmediate;
+	   switch (value)
+	     {
+	     case ThinUnderline:
+	       ((PtrPRule) pRule)->PrChrValue = 'N';
+	       break;
+	     case ThickUnderline:
+	       ((PtrPRule) pRule)->PrChrValue = 'T';
+	       break;
+	     default:
 #ifndef NODISPLAY
-				done = FALSE;
+	       done = FALSE;
 #endif
-				TtaError (ERR_invalid_parameter);
-				break;
-			  }
-		    break;
-		 case PtIndent:
-		    ((PtrPRule) pRule)->PrPresMode = PresImmediate;
-		    ((PtrPRule) pRule)->PrMinUnit = UnPoint;
-		    ((PtrPRule) pRule)->PrMinAttr = FALSE;
-		    ((PtrPRule) pRule)->PrMinValue = value;
-		    break;
-		 case PtLineSpacing:
-		    ((PtrPRule) pRule)->PrPresMode = PresImmediate;
-		    ((PtrPRule) pRule)->PrMinUnit = UnPoint;
-		    ((PtrPRule) pRule)->PrMinAttr = FALSE;
-		    ((PtrPRule) pRule)->PrMinValue = value;
-		    break;
-		 case PtDepth:
-		    ((PtrPRule) pRule)->PrPresMode = PresImmediate;
-		    ((PtrPRule) pRule)->PrIntValue = value;
-		    ((PtrPRule) pRule)->PrAttrValue = FALSE;
-		    break;
-		 case PtAdjust:
-		    ((PtrPRule) pRule)->PrPresMode = PresImmediate;
-		    switch (value)
-			  {
-			     case AdjustLeft:
-				((PtrPRule) pRule)->PrAdjust = AlignLeft;
-				break;
-			     case AdjustRight:
-				((PtrPRule) pRule)->PrAdjust = AlignRight;
-				break;
-			     case Centered:
-				((PtrPRule) pRule)->PrAdjust = AlignCenter;
-				break;
-			     case LeftWithDots:
-				((PtrPRule) pRule)->PrAdjust = AlignLeftDots;
-				break;
-			     default:
+	       TtaError (ERR_invalid_parameter);
+	       break;
+	     }
+	   break;
+	 case PtIndent:
+	   ((PtrPRule) pRule)->PrPresMode = PresImmediate;
+	   ((PtrPRule) pRule)->PrMinUnit = UnPoint;
+	   ((PtrPRule) pRule)->PrMinAttr = FALSE;
+	   ((PtrPRule) pRule)->PrMinValue = value;
+	   break;
+	 case PtLineSpacing:
+	   ((PtrPRule) pRule)->PrPresMode = PresImmediate;
+	   ((PtrPRule) pRule)->PrMinUnit = UnPoint;
+	   ((PtrPRule) pRule)->PrMinAttr = FALSE;
+	   ((PtrPRule) pRule)->PrMinValue = value;
+	   break;
+	 case PtDepth:
+	   ((PtrPRule) pRule)->PrPresMode = PresImmediate;
+	   ((PtrPRule) pRule)->PrIntValue = value;
+	   ((PtrPRule) pRule)->PrAttrValue = FALSE;
+	   break;
+	 case PtAdjust:
+	   ((PtrPRule) pRule)->PrPresMode = PresImmediate;
+	   switch (value)
+	     {
+	     case AdjustLeft:
+	       ((PtrPRule) pRule)->PrAdjust = AlignLeft;
+	       break;
+	     case AdjustRight:
+	       ((PtrPRule) pRule)->PrAdjust = AlignRight;
+	       break;
+	     case Centered:
+	       ((PtrPRule) pRule)->PrAdjust = AlignCenter;
+	       break;
+	     case LeftWithDots:
+	       ((PtrPRule) pRule)->PrAdjust = AlignLeftDots;
+	       break;
+	     default:
 #ifndef NODISPLAY
-				done = FALSE;
+	       done = FALSE;
 #endif
-				TtaError (ERR_invalid_parameter);
-				break;
-			  }
-		    break;
-		 case PtJustify:
-		    ((PtrPRule) pRule)->PrPresMode = PresImmediate;
-		    switch (value)
-			  {
-			     case Justified:
-				((PtrPRule) pRule)->PrJustify = TRUE;
-				break;
-			     case NotJustified:
-				((PtrPRule) pRule)->PrJustify = FALSE;
-				break;
-			     default:
+	       TtaError (ERR_invalid_parameter);
+	       break;
+	     }
+	   break;
+	 case PtJustify:
+	   ((PtrPRule) pRule)->PrPresMode = PresImmediate;
+	   switch (value)
+	     {
+	     case Justified:
+	       ((PtrPRule) pRule)->PrJustify = TRUE;
+	       break;
+	     case NotJustified:
+	       ((PtrPRule) pRule)->PrJustify = FALSE;
+	       break;
+	     default:
 #ifndef NODISPLAY
-				done = FALSE;
+	       done = FALSE;
 #endif
-				TtaError (ERR_invalid_parameter);
-				break;
-			  }
-		    break;
-		 case PtHyphenate:
-		    ((PtrPRule) pRule)->PrPresMode = PresImmediate;
-		    switch (value)
-			  {
-			     case Hyphenation:
-				((PtrPRule) pRule)->PrJustify = TRUE;
-				break;
-			     case NoHyphenation:
-				((PtrPRule) pRule)->PrJustify = FALSE;
-				break;
-			     default:
+	       TtaError (ERR_invalid_parameter);
+	       break;
+	     }
+	   break;
+	 case PtHyphenate:
+	   ((PtrPRule) pRule)->PrPresMode = PresImmediate;
+	   switch (value)
+	     {
+	     case Hyphenation:
+	       ((PtrPRule) pRule)->PrJustify = TRUE;
+	       break;
+	     case NoHyphenation:
+	       ((PtrPRule) pRule)->PrJustify = FALSE;
+	       break;
+	     default:
 #ifndef NODISPLAY
-				done = FALSE;
+	       done = FALSE;
 #endif
-				TtaError (ERR_invalid_parameter);
-				break;
-			  }
-		    break;
-		 case PtLineStyle:
-		    ((PtrPRule) pRule)->PrPresMode = PresImmediate;
-		    switch (value)
-			  {
-			     case SolidLine:
-				((PtrPRule) pRule)->PrChrValue = 'S';
-				break;
-			     case DashedLine:
-				((PtrPRule) pRule)->PrChrValue = '-';
-				break;
-			     case DottedLine:
-				((PtrPRule) pRule)->PrChrValue = '.';
-				break;
-			     default:
+	       TtaError (ERR_invalid_parameter);
+	       break;
+	     }
+	   break;
+	 case PtLineStyle:
+	   ((PtrPRule) pRule)->PrPresMode = PresImmediate;
+	   switch (value)
+	     {
+	     case SolidLine:
+	       ((PtrPRule) pRule)->PrChrValue = 'S';
+	       break;
+	     case DashedLine:
+	       ((PtrPRule) pRule)->PrChrValue = '-';
+	       break;
+	     case DottedLine:
+	       ((PtrPRule) pRule)->PrChrValue = '.';
+	       break;
+	     default:
 #ifndef NODISPLAY
-				done = FALSE;
+	       done = FALSE;
 #endif
-				TtaError (ERR_invalid_parameter);
-				break;
-			  }
-		    break;
-		 case PtLineWeight:
-		    /* value = thickness of the line in typo points. */
-		    ((PtrPRule) pRule)->PrPresMode = PresImmediate;
-		    ((PtrPRule) pRule)->PrMinUnit = UnPoint;
-		    ((PtrPRule) pRule)->PrMinAttr = FALSE;
-		    ((PtrPRule) pRule)->PrMinValue = value;
-		    break;
-		 case PtFillPattern:
-		    if (value < 0)
-		       TtaError (ERR_invalid_parameter);
-		    else
-		      {
-			 ((PtrPRule) pRule)->PrPresMode = PresImmediate;
-			 ((PtrPRule) pRule)->PrIntValue = value;
-			 ((PtrPRule) pRule)->PrAttrValue = FALSE;
-		      }
-		    break;
-		 case PtBackground:
-		 case PtForeground:
-		    if (value < 0)
-		       TtaError (ERR_invalid_parameter);
-		    else
-		      {
-			 ((PtrPRule) pRule)->PrPresMode = PresImmediate;
-			 ((PtrPRule) pRule)->PrIntValue = value;
-			 ((PtrPRule) pRule)->PrAttrValue = FALSE;
-		      }
-		    break;
-		 default:
-		    TtaError (ERR_invalid_parameter);
+	       TtaError (ERR_invalid_parameter);
+	       break;
+	     }
+	   break;
+	 case PtLineWeight:
+	   /* value = thickness of the line in typo points. */
+	   ((PtrPRule) pRule)->PrPresMode = PresImmediate;
+	   ((PtrPRule) pRule)->PrMinUnit = UnPoint;
+	   ((PtrPRule) pRule)->PrMinAttr = FALSE;
+	   ((PtrPRule) pRule)->PrMinValue = value;
+	   break;
+	 case PtFillPattern:
+	   if (value < 0)
+	     TtaError (ERR_invalid_parameter);
+	   else
+	     {
+	       ((PtrPRule) pRule)->PrPresMode = PresImmediate;
+	       ((PtrPRule) pRule)->PrIntValue = value;
+	       ((PtrPRule) pRule)->PrAttrValue = FALSE;
+	     }
+	   break;
+	 case PtBackground:
+	 case PtForeground:
+	   if (value < 0)
+	     TtaError (ERR_invalid_parameter);
+	   else
+	     {
+	       ((PtrPRule) pRule)->PrPresMode = PresImmediate;
+	       ((PtrPRule) pRule)->PrIntValue = value;
+	       ((PtrPRule) pRule)->PrAttrValue = FALSE;
+	     }
+	   break;
+	 case PtFunction:
+	   if (((PtrPRule) pRule)->PrPresFunction == FnBackgroundPicture)
+	     ((PtrPRule) pRule)->PrPresBox[0] = value;
+	   else if (((PtrPRule) pRule)->PrPresFunction == FnPictureMode)
+	     ((PtrPRule) pRule)->PrPresBox[0] = value;
+	   break;
+	 default:
+	   TtaError (ERR_invalid_parameter);
 #ifndef NODISPLAY
-		    done = FALSE;
+	   done = FALSE;
 #endif
-		    break;
-	      }
+	   break;
+	 }
 #ifndef NODISPLAY
-	if (done)
-	   RedisplayNewPRule (document, (PtrElement) element, (PtrPRule) pRule);
+       if (done)
+	 RedisplayNewPRule (document, (PtrElement) element, (PtrPRule) pRule);
 #endif
      }
 }
@@ -1212,42 +1229,44 @@ PRule              *pRule;
    does not have this type of presentation rule.
 
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 PRule               TtaGetPRule (Element element, int presentationType)
-
 #else  /* __STDC__ */
 PRule               TtaGetPRule (element, presentationType)
 Element             element;
 int                 presentationType;
-
 #endif /* __STDC__ */
 
 {
-   PtrPRule            pRule;
-   PtrPRule            pPres;
-   boolean             found;
+  PtrPRule          pRule;
+  PtrPRule          pPres;
+  int               func;
+  boolean           found;
 
-   UserErrorCode = 0;
-   pRule = NULL;
-   if (element == NULL || presentationType < 0)
-     {
-	TtaError (ERR_invalid_parameter);
-     }
-   else
-     {
-	pPres = ((PtrElement) element)->ElFirstPRule;
-	found = FALSE;
-	while (pPres != NULL && !found)
-	   if (pPres->PrType == presentationType)
-	     {
-		pRule = pPres;
-		found = TRUE;
-	     }
-	   else
-	      pPres = pPres->PrNextPRule;
-     }
-   return ((PRule) pRule);
+  UserErrorCode = 0;
+  pRule = NULL;
+  if (element == NULL || presentationType < 0)
+    TtaError (ERR_invalid_parameter);
+  else
+    {
+      if (presentationType == PRShowBox)
+	func = FnShowBox;
+      else
+	func = -1;
+
+      pPres = ((PtrElement) element)->ElFirstPRule;
+      found = FALSE;
+      while (pPres != NULL && !found)
+	if (pPres->PrType == presentationType
+	    || (pPres->PrType == PtFunction && pPres->PrPresFunction == func))
+	  {
+	    pRule = pPres;
+	    found = TRUE;
+	  }
+	else
+	  pPres = pPres->PrNextPRule;
+    }
+  return ((PRule) pRule);
 }
 
 /*----------------------------------------------------------------------
@@ -1272,15 +1291,19 @@ int                 TtaGetPRuleType (pRule)
 PRule               pRule;
 #endif /* __STDC__ */
 {
-   int                 presentationType;
+  int               presentationType;
 
-   UserErrorCode = 0;
-   presentationType = 0;
-   if (pRule == NULL)
-     TtaError (ERR_invalid_parameter);
-   else
-     presentationType = ((PtrPRule) pRule)->PrType;
-   return presentationType;
+  UserErrorCode = 0;
+  presentationType = 0;
+  if (pRule == NULL)
+    TtaError (ERR_invalid_parameter);
+  else
+    {
+      presentationType = ((PtrPRule) pRule)->PrType;
+      if (presentationType == PtFunction && ((PtrPRule) pRule)->PrPresFunction == FnShowBox)
+	presentationType = PRShowBox;
+    }
+  return presentationType;
 }
 
 /*----------------------------------------------------------------------

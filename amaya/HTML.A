@@ -7,9 +7,9 @@ DEFAULT
 	DocSave.Pre -> DocumentToSave;
 	ElemPaste.Post -> ElementPasted;
 	ElemNew.Post -> ElementCreated;
-	PRuleCreate.Post -> ChangePRule;
-	PRuleModify.Post -> ChangePRule;
-	PRuleDelete.Post -> ChangePRule;
+	PRuleCreate.Pre -> ChangePRule;
+	PRuleModify.Pre -> ChangePRule;
+	PRuleDelete.Pre -> ChangePRule;
 	ViewOpen.Pre -> ViewToOpen;
 	ViewClose.Pre -> ViewToClose;
 	ElemSelect.Post -> SelectionChanged;
