@@ -135,6 +135,7 @@ static ThotBool PrintingGL = FALSE;
  if too sloooooow we'll revert*/
 #undef MESA
 
+#ifdef WITH_CACHE
 typedef struct _PicCache {
   struct _PicCache *next;  
   char             *filename;
@@ -147,10 +148,8 @@ typedef struct _PicCache {
   int              RefCount;
 } Pic_Cache;
 
-/*             
-  static linked list containing all
-  pictures in video card memory
-*/
+
+/* the cache didn't work with resized images */
 static Pic_Cache *PicCache = NULL;
 
 /*----------------------------------------------------------------------
@@ -306,6 +305,7 @@ static int LookupInPicCache (PictInfo *Image, int frame)
   FreeGlTexture (Image);
   return 0;  
 }
+#endif /* WITH_CACHE */
 
 /*----------------------------------------------------------------------
  FreeGlTextureNoCache : Free video card memory from this texture.
@@ -350,18 +350,20 @@ void FreeGlTexture (void *imagedesc)
       /* && glIsTexture (img->TextureBind) */ )
     {
 #ifdef _TRACE_GL_PICTURE
-	  printf ( "FreeGlTexture :\n\tfilename=%s\n\twidth=%d\n\theight=%d\n\tTexU=%f\n\tTexV=%f\n\tTexBind=%d\n\tglIsTexture=%s (pose prb sur certaines machines)\n", 
-		   img->PicFileName,
-		   img->PicWidth,
-		   img->PicHeight,
-		   img->TexCoordW,
-		   img->TexCoordH,
-		   img->TextureBind );
+      printf ( "FreeGlTexture :\n\tfilename=%s\n\twidth=%d\n\theight=%d\n\tTexU=%f\n\tTexV=%f\n\tTexBind=%d\n\tglIsTexture=%s (pose prb sur certaines machines)\n", 
+	       img->PicFileName,
+	       img->PicWidth,
+	       img->PicHeight,
+	       img->TexCoordW,
+	       img->TexCoordH,
+	       img->TextureBind );
 #endif /* _TRACE_GL_PICTURE */
-      if (FreeAPicCache (img->TextureBind,
-			 ActiveFrame) == 0)
-			/*not found in cache, we free it manually.*/
-			glDeleteTextures (1, &(img->TextureBind));
+#ifdef WITH_CACHE
+      /* cache inactive */
+      if (FreeAPicCache (img->TextureBind, ActiveFrame) == 0)
+#endif /* WITH_CACHE */
+	/*not found in cache, we free it manually.*/
+	glDeleteTextures (1, &(img->TextureBind));
 #ifdef _PCLDEBUG
       printf ("\n img %s Freed", img->PicFileName);      
 #endif /*_PCLDEBUG*/
@@ -1129,11 +1131,13 @@ static void TransparentPicture (HBITMAP pixmap, int xFrame, int yFrame,
 }
 #endif /* _WINGUI */
 
+      /* cache inactive */
 /*----------------------------------------------------------------------
  Free All pics in video card memory and empty cache list in GL
   ----------------------------------------------------------------------*/
 void FreeAllPicCache ()
 {
+#ifdef WITH_CACHE
 #ifdef _GL
   if (PicCache)
     {
@@ -1141,6 +1145,7 @@ void FreeAllPicCache ()
       PicCache = NULL;
     }
 #endif /* _GL */
+#endif /* WITH_CACHE */
 }
 
 /*----------------------------------------------------------------------
@@ -1148,6 +1153,7 @@ void FreeAllPicCache ()
   ----------------------------------------------------------------------*/
 void FreeAllPicCacheFromFrame (int frame)
 {
+#ifdef WITH_CACHE
 #ifdef _GL
 #ifdef _NOSHARELIST
   Pic_Cache *Cache = PicCache;
@@ -1186,7 +1192,9 @@ void FreeAllPicCacheFromFrame (int frame)
   return;
 #endif /* _NOSHARELIST */
 #endif /* _GL */
+#endif /* WITH_CACHE */
 }
+
 /*----------------------------------------------------------------------
   Match_Format returns TRUE if the considered header file matches   
   the image file description, FALSE in the the other cases        
@@ -2809,7 +2817,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
  if (frame != ActiveFrame)
      GL_prepare (frame); 
 #endif /* _NOSHARELIST */
-#ifdef IV
+#ifdef WITH_CACHE
  typeImage = LookupInPicCache (imageDesc, frame); 
  if (typeImage)
    {  
@@ -2891,7 +2899,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
       */
       return;      
     }
-#endif
+#endif /* WITH_CACHE */
   typeImage = imageDesc->PicType;
   if (typeImage >= InlineHandlers)
     return;
@@ -3020,12 +3028,14 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
     imageDesc->RGBA = TRUE;
 
   GL_TextureBind (imageDesc, TRUE);
-  /*frame or ActiveFrame*/
+#ifdef WITH_CACHE
+  /* desactive the cache of images */
   if (strcmp (imageDesc->PicFileName, LostPicturePath) == 0 ||
 	      strcasecmp ("AmayaSrcSyncIndex.gif", imageDesc->PicFileName) == 0)
     AddInPicCache (imageDesc, frame, TRUE); 
   else
-    AddInPicCache (imageDesc, frame, FALSE); 
+    AddInPicCache (imageDesc, frame, FALSE);
+#endif /* WITH_CACHE */
 #ifdef _NOSHARELIST
   /* For the Sync Image*/
   if (frame != ActiveFrame)
