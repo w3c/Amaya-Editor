@@ -194,7 +194,6 @@ EDITOR_OBJ = \
 	content/word.o \
 	dialogue/callback.o\
 	dialogue/callbackinit.o \
-	dialogue/LiteClue.o \
 	dialogue/appdialogue.o \
 	dialogue/appli.o \
 	dialogue/attrmenu.o \

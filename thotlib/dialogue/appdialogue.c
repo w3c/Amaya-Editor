@@ -29,7 +29,6 @@
 #endif /* _WX */
 #ifdef _GTK
 #include "logowindow.h"
-#include "LiteClue.h"
 #include "logo.xpm"
 #endif /* _GTK */
 
@@ -86,7 +85,6 @@ static GdkAtom String_Type = GDK_SELECTION_TYPE_STRING; /* info=1 */
 #include "thotmsg_f.h"
 
 #if defined(_GTK)
-#include "LiteClue_f.h"
 #include "xwindowdisplay_f.h"
 #endif /* #if defined(_GTK) */
 #ifdef _GL
@@ -3205,13 +3203,13 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 				(gpointer) Main_Wd);
 	   ConnectSignalGTK (GTK_OBJECT (drawing_area),
 			     "configure_event",
-			     GTK_SIGNAL_FUNC(FrameResizedGTK),
+			     GTK_SIGNAL_FUNC (FrameResizedGTK),
 			     (gpointer)frame);
 	   /* Put the scrollbars */
 	   tmpw = gtk_adjustment_new (0, 0, dy, 6, dy-13, dy);
 	   ConnectSignalGTK (GTK_OBJECT (tmpw),
 			     "value_changed",
-			     GTK_SIGNAL_FUNC(FrameVScrolledGTK),
+			     GTK_SIGNAL_FUNC (FrameVScrolledGTK),
 			     (gpointer)frame);
     	   vscrl = gtk_vscrollbar_new (GTK_ADJUSTMENT (tmpw));
 	   /* ALL the signal connecting code permits to 
@@ -3231,11 +3229,11 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   /* catch use of scrollbar */
 	   ConnectSignalGTK (GTK_OBJECT (vscrl),
 			     "key_press_event",
-			     GTK_SIGNAL_FUNC(KeyScrolledGTK),
+			     GTK_SIGNAL_FUNC (KeyScrolledGTK),
 			     (gpointer)frame);
 	   ConnectSignalGTK (GTK_OBJECT (vscrl),
 			     "button_press_event",
-			     GTK_SIGNAL_FUNC(KeyScrolledGTK),
+			     GTK_SIGNAL_FUNC (KeyScrolledGTK),
 			     (gpointer)frame);
 	   /* 
 	      those one permits use to stop the timer when user
@@ -3245,24 +3243,24 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	    */
 	   ConnectSignalGTK (GTK_OBJECT (vscrl),
 			     "button_release_event",
-			     GTK_SIGNAL_FUNC(KeyScrolledGTK),
+			     GTK_SIGNAL_FUNC (KeyScrolledGTK),
 			     (gpointer)frame);
 	  ConnectSignalGTK (GTK_OBJECT (vscrl),
 			     "leave_notify_event",
-			     GTK_SIGNAL_FUNC(KeyScrolledGTK),
+			     GTK_SIGNAL_FUNC (KeyScrolledGTK),
 			     (gpointer)frame); 
 	   ConnectSignalGTK (GTK_OBJECT (vscrl),
 			     "key_release_event",
-			     GTK_SIGNAL_FUNC(KeyScrolledGTK),
+			     GTK_SIGNAL_FUNC (KeyScrolledGTK),
 			     (gpointer)frame);
 
 	  
 	   tmpw = gtk_adjustment_new (0, 0, dx, 13, dx-13, dx);
 	   ConnectSignalGTK (GTK_OBJECT (tmpw),
 			     "value_changed",
-			     GTK_SIGNAL_FUNC(FrameHScrolledGTK),
+			     GTK_SIGNAL_FUNC (FrameHScrolledGTK),
 			     (gpointer)frame);
-      	   hscrl = gtk_hscrollbar_new (GTK_ADJUSTMENT(tmpw)); 
+      	   hscrl = gtk_hscrollbar_new (GTK_ADJUSTMENT (tmpw)); 
 	   
 #ifdef _GTKRULERS
 	   {

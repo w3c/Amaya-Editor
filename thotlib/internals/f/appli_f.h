@@ -11,7 +11,6 @@ extern void FrameKilled ( int *w,
                           int frame,
                           int *info );
 extern ThotBool KillFrameCallback ( int frame );
-extern void XFlushOutput ( int frame );
 extern void FrameToRedisplay ( ThotWindow w,
                                int frame,
                                void *ev );
@@ -23,21 +22,12 @@ extern ThotBool FrameExposeCallback ( int frame,
                                       int y,
                                       int w,
                                       int h );
-extern void FrameResized ( int *w,
-                           int frame,
-                           int *info );
 extern ThotBool FrameResizedCallback ( int frame,
                                        int new_width,
                                        int new_height );
 extern void FrameHScrolledCallback ( int frame,
                                      int position,
                                      int page_size );
-extern void FrameHScrolled ( int *w,
-                             int frame,
-                             int *param );
-extern void FrameVScrolled ( int *w,
-                             int frame,
-                             int *param );
 extern void FrameVScrolledCallback ( int frame,
                                      int position );
 extern void TtcLineUp ( Document document,
@@ -90,8 +80,6 @@ extern ThotBool FrameMouseWheelCallback ( int frame,
                                           int delta,
                                           int x,
                                           int y );
-extern void FrameCallback ( int frame,
-                            void *evnt );
 extern void ThotGrab ( ThotWindow win,
                        ThotCursor cursor,
                        long events,
@@ -132,7 +120,6 @@ extern void FrameKilled ( int *w,
                             int frame,
                             int *info );
 extern ThotBool KillFrameCallback ( int frame );
-extern void XFlushOutput ( int frame );
 extern void FrameToRedisplay ( ThotWindow w,
                                  int frame,
                                  void *ev );
@@ -144,21 +131,12 @@ extern ThotBool FrameExposeCallback ( int frame,
                                         int y,
                                         int w,
                                         int h );
-extern void FrameResized ( int *w,
-                             int frame,
-                             int *info );
 extern ThotBool FrameResizedCallback ( int frame,
                                          int new_width,
                                          int new_height );
 extern void FrameHScrolledCallback ( int frame,
                                        int position,
                                        int page_size );
-extern void FrameHScrolled ( int *w,
-                               int frame,
-                               int *param );
-extern void FrameVScrolled ( int *w,
-                               int frame,
-                               int *param );
 extern void FrameVScrolledCallback ( int frame,
                                        int position );
 extern void TtcLineUp ( Document document,
@@ -211,8 +189,6 @@ extern ThotBool FrameMouseWheelCallback ( int frame,
                                             int delta,
                                             int x,
                                             int y );
-extern void FrameCallback ( int frame,
-                              void *evnt );
 extern void ThotGrab ( ThotWindow win,
                          ThotCursor cursor,
                          long events,
