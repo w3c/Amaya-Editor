@@ -69,7 +69,7 @@
 67 Kurzinfo
 68 Druckoptionen...
 69 Drucken
-70 **Close &tab
+70 Registerkarte schlieﬂen
 71 Schlieﬂen
 72 Beenden
 73 Ansicht schlieﬂen
@@ -176,7 +176,7 @@
 174 Ruby
 175 Abschnitte numerieren
 176 Buch erstellen
-177 **Insert time stamp
+177 Zeitstempel einf¸gen
 178 Inhaltsorientiert
 179 Betont (em)
 180 Hervorgehoben (strong)
@@ -285,8 +285,8 @@
 283 Lesezeichen ansehen
 284 Neues Lesezeichen
 285 Neue ‹berschrift
-286 **New Separator
-287 **Move Item
+286 Neues Trennelement
+287 Item verschieben
 288 Resource sperren...
 289 Resource entsperren...
 290 Resourceeigenschaften anzeigen...
