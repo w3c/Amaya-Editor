@@ -2099,6 +2099,24 @@
 	<message xml:lang="pt">Templates...</message>
 	<message xml:lang="fi">Mallit...</message>
 </label>
+<label define="SVG_">
+	<message xml:lang="en">SVG</message>
+	<message xml:lang="fr">SVG</message>
+	<message xml:lang="de">SVG</message>
+	<message xml:lang="it">SVG</message>
+	<message xml:lang="tr">SVG</message>
+	<message xml:lang="es">SVG</message>
+	<message xml:lang="pt">SVG</message>
+	<message xml:lang="fi">SVG</message>
+</label>
+<label define="BShowLibrary">
+	<message xml:lang="en">Show SVG Library</message>
+	<message xml:lang="fr">Montrer la librairie SVG</message>
+</label>
+<label define="BAddNewModel">
+	<message xml:lang="en">Add selection in SVG Library</message>
+	<message xml:lang="fr">Ajouter la sélection dans une librairie</message>
+</label>
 <label define="BAnnotateSelection">
 	<message xml:lang="en">Annotate selection</message>
 	<message xml:lang="fr">Annoter la séléction</message>

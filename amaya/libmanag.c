@@ -79,10 +79,23 @@ typedef struct _Library_URITitle
   char          *Title;
   int            indice;
   ThotBool       customLibrary;
-  struct _Library_URITitle *next;
+  struct         _Library_URITitle *next;
 } ListUriTitle;
 /* List header */
 static ListUriTitle *HeaderListUriTitle = NULL;
+
+#ifdef EBDEBUG
+/* Structure List Uri-Id */
+typedef struct _Copy_UseElement
+{
+  char          Uri[MAX_LENGTH];
+  char          Id[MAX_LENGTH];
+  ThotBool      IdAlreadyExist;
+  struct        _Copy_UseElement *Next;
+} ListUriId;
+/* List Header */
+static ListUriId *HeaderlistUriId = NULL;
+#endif /* EBDEBUG */
 
 /* variable to handle SVGLibrary dialogue */
 static char libraryFilter[MAX_LENGTH];
@@ -1143,11 +1156,11 @@ Document CreateNewLibraryFile (char *libUrl, char *libtitle)
       text = TtaNewElement (newLibraryDoc, elType);
       TtaInsertFirstChild (&text, style, newLibraryDoc);
     }
-  strcpy (textStr, " image { width : 50 ; height : 50 } ");
+  strcpy (textStr, " .image { width : 50 ; height : 50 } ");
   sprintf (textStr, "%s%c", textStr, EOL);
-  strcat (textStr, " g_title { color: #0000B2; font-family: helvetica; font-weight: bold; vertical-align: middle; }");
+  strcat (textStr, " .g_title { color: #0000B2; font-family: helvetica; font-weight: bold; vertical-align: middle; }");
   sprintf (textStr, "%s%c", textStr, EOL);
-  strcat (textStr, " g_comment {font-size: 12pt; font-weight: normal; color: #B2005A; vertical-align: middle; }");
+  strcat (textStr, " .g_comment {font-size: 12pt; font-weight: normal; color: #B2005A; vertical-align: middle; }");
   TtaSetTextContent (text, textStr, language, newLibraryDoc);
 
   /* create a Document_URL element as the first child of HEAD */
@@ -1307,8 +1320,7 @@ void AddLibraryDataIntoStructure (ThotBool persLib, char *url, char *title)
 
   path = (char *) TtaGetMemory (strlen (url) + 1);
   strcpy (path, url);
-  Title = (char *) TtaGetMemory (strlen (title) + 2);
-  strcpy (Title, title);
+  Title = CreateUniqueLibraryTitle (title);
   if (HeaderListUriTitle)
     {
       /* list exist */
@@ -1316,11 +1328,8 @@ void AddLibraryDataIntoStructure (ThotBool persLib, char *url, char *title)
       while (listNext)
 	{
 	  listCur = listNext;
-	  if (!strcmp (listCur->Title, title))
-	    {
-	      /* create a unique title */
-	      /* a effectuer */
-	    }
+	  /* A EFFECTUER test pour savoir si l'url est deja placer dans la liste */
+	  /* il n'est pas necessaire d'ajouter deux fois la même librairie dans la liste!!!*/
 	  listNext = listNext->next;
 	  index++;
 	}
@@ -1349,6 +1358,50 @@ void AddLibraryDataIntoStructure (ThotBool persLib, char *url, char *title)
 	HeaderListUriTitle->customLibrary = FALSE;
     }
 #endif /* _SVGLIB */
+}
+
+/*----------------------------------------------------------------------
+  CreateUniqueLibraryTitle
+  This function allocates and returns a unique library title
+  by adding a int at the end of the library title
+  ----------------------------------------------------------------------*/
+char *CreateUniqueLibraryTitle (char *title)
+{
+  char *Title = NULL;
+#ifdef _SVGLIB
+  int   i = 1;
+  Title = (char *) TtaGetMemory (MAX_LENGTH); /*strlen (title) + 3*/
+  strcpy (Title, title);
+  while (IsLibraryTitleExist (Title))
+    {
+      /* A EFFECTUER : ajouter des parenthèses autour du nombre */
+      sprintf (Title, "%s%d", title, i);
+      i++;
+    }
+#endif /* _SVGLIB */
+  return Title;
+}
+
+
+/*----------------------------------------------------------------------
+  IsLibraryTitleExist
+  check if libray title already exist in the structure list to avoid
+  a couple of same title in the structure (in combobox too)
+  returns TRUE if title already exist, FALSE elseif
+  ----------------------------------------------------------------------*/
+ThotBool IsLibraryTitleExist (char *title)
+{
+  ThotBool          tExist = FALSE;
+#ifdef _SVGLIB
+  ListUriTitle     *listCur = HeaderListUriTitle;
+  while (listCur)
+    {
+      if (!strcmp (listCur->Title, title))
+	tExist = TRUE;
+      listCur = listCur->next;
+    }
+#endif /* _SVGLIB */
+  return tExist;
 }
 
 
@@ -2262,6 +2315,7 @@ void CreatePNGofSVGFile (Document svgDoc, char *pngurl)
 /*----------------------------------------------------------------------
   GiveSVGXYWidthAndHeight
   Gets x min, y min, width max and height max
+  (Cf.TtaGiveXYWH)
   ----------------------------------------------------------------------*/
 void   GiveSVGXYWidthAndHeight (Element el, Document svgDoc, View view,
 				int *x, int *y, int *width, int *height)
@@ -2434,7 +2488,6 @@ Document CreateNewSVGFileofSVGSelected (char *url)
   return newSVGDoc;
 }
 
-
 /*----------------------------------------------------------------------
   MakeStaticCopy
   parameters:
@@ -2456,6 +2509,10 @@ void MakeStaticCopy (Element copiedEl, Document selDoc, Document destDoc,
   ThotBool              stop = FALSE;
 
   elType = TtaGetElementType (copiedEl);
+  if (elType.ElTypeNum == SVG_EL_symbol_)
+    {/* it's simple selection  on a use element */
+      copiedEl = TtaGetParent (copiedEl);
+    }
 
   /* replace use element by it's content definition*/
   attrType.AttrSSchema = elType.ElSSchema;
@@ -2543,6 +2600,9 @@ void MakeStaticCopy (Element copiedEl, Document selDoc, Document destDoc,
 
 /*----------------------------------------------------------------------
   CopyUseElementAttribute
+  A REFLECHIR: le mode de copie pour l'ajout d'un modèle dans la librairie
+  lorsqu'on a la présence d'un ou plusieurs éléments "use" référencant le
+  même objet graphique.
   ----------------------------------------------------------------------*/
 void CopyUseElementAttribute (Element useEl, Element destElement, Document doc)
 {
@@ -2607,6 +2667,11 @@ void CopyUseElementAttribute (Element useEl, Element destElement, Document doc)
 		    }
 		  SVGAttributeComplete (attrExist, destElement, doc);
 		}
+	      else
+		{ /* change the value of the concerned attribute */
+/*A EFFECTUER une fonction générique qui remplace la valeur courante d'un attribut */
+/*prototype void ChangeAttributeValue (Element curEl, Attribute currentAttr, int TypeOfValue, char *value)*/
+		}
 	    }
 	  else
 	    {
@@ -2627,12 +2692,17 @@ void CopyUseElementAttribute (Element useEl, Element destElement, Document doc)
 		  text = (char * ) TtaGetMemory (length);
 		  TtaGiveTextAttributeValue (attrFound, text, &length);
 		  TtaSetAttributeText (newAttr, text, destElement, doc);
-		  TtaFreeMemory (text);
+/*		  TtaFreeMemory (text);*/
 		  break;
 		case 3:	/* reference */
 		  break;
 		}
-	      SVGAttributeComplete (newAttr, destElement, doc);
+	      if (attrType.AttrTypeNum == SVG_ATTR_style_)
+		ApplyCSSRules (destElement, text, doc, FALSE);
+	      else
+		SVGAttributeComplete (newAttr, destElement, doc);
+	      if (text)
+		TtaFreeMemory (text);
 	    }
 	}
       TtaNextAttribute (useEl, &attrFound);
@@ -2676,7 +2746,9 @@ void AddSVGModelIntoLibrary (Document libraryDoc, ThotBool newLib, char *library
 	  libraryURL = (char *) TtaGetMemory (MAX_LENGTH);
 	  strcpy (libraryURL, tmp);
 	  /* Open it */
-	  tmpDoc = TtaNewDocument ("HTML", "temp_library"); 
+	  tmpDoc = TtaNewDocument ("HTML", "temp_library");
+	  DocumentTypes[tmpDoc] = docLibrary;
+	  InNewWindow = TRUE;
 	  libraryDoc = GetAmayaDoc (libraryURL, NULL, tmpDoc, tmpDoc, CE_ABSOLUTE,
 				    FALSE, FALSE, FALSE, TtaGetDefaultCharset ());
 	}
@@ -3215,10 +3287,16 @@ void OpenLibraryCallback (Document doc, View view, char *text)
       else
 	{
 	  InNewWindow = FALSE;
-	  CurrentDocument = doc;
-	  GetAmayaDoc (url, NULL, CurrentDocument,
-		       CurrentDocument, CE_ABSOLUTE, TRUE,
-		       NULL, NULL, TtaGetDefaultCharset ());
+	  /* TESTER si le document a été modifié avant d'ouvrir le nouveau document */
+	  if (TtaIsDocumentModified (doc))
+	    CanReplaceCurrentDocument (doc, 1);
+	  else
+	    {
+	      CurrentDocument = doc;
+	      GetAmayaDoc (url, NULL, CurrentDocument,
+			   CurrentDocument, CE_ABSOLUTE, TRUE,
+			   NULL, NULL, TtaGetDefaultCharset ());
+	    }
 	  TtaFreeMemory (url);
 	}
     }

@@ -962,6 +962,9 @@ static void UpdateBrowserMenus (Document doc)
 #ifdef _SVG
       SwitchIconGraph (doc, 1, FALSE);
 #endif /* _SVG */
+#ifdef _SVGLIB
+	 SwitchIconLibrary (doc, 1, FALSE);
+#endif /* _SVGLIB */
       
       TtaSetItemOff (doc, 1, Edit_, BSpellCheck);
       TtaSetItemOff (doc, 1, Edit_, BTransform);
@@ -1087,6 +1090,9 @@ static void  UpdateEditorMenus (Document doc)
 #ifdef _SVG
 	  SwitchIconGraph (doc, 1, TRUE);
 #endif /* _SVG */
+#ifdef _SVGLIB
+	 SwitchIconLibrary (doc, 1, TRUE);
+#endif /* _SVGLIB */
 	}
 
       TtaChangeButton (doc, 1, iLink, iconLink, TRUE);
@@ -2789,7 +2795,9 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 #ifdef _SVG
 	 SwitchIconGraph (doc, 1, FALSE);
 #endif /* _SVG */
-/*Etienne Ajouter peut être un SwitchIconSVGLib (doc, 1, FALSE) pour tourner le bouton en mode off*/
+#ifdef _SVGLIB
+	 SwitchIconLibrary (doc, 1, FALSE);
+#endif /* _SVGLIB */
 	 if (ReadOnlyDocument[doc] || DocumentTypes[doc] != docMath)
 	   {
 	     TtaChangeButton (doc, 1, iLink, iconLinkNo, FALSE);
@@ -2864,8 +2872,15 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
      TtaSetMenuOn (doc,DAV_VIEW,Cooperation_);     
 #else
      TtaSetMenuOff (doc,1,Cooperation_);
-#endif  /* DAV */ 
+#endif  /* DAV */
 
+#ifdef _SVGLIB
+     TtaSetItemOn (doc, 1, Special, BShowLibrary);
+     TtaSetItemOn (doc, 1, Special, BAddNewModel);
+#else /* !_SVGLIB */
+     TtaSetItemOff (doc, 1, Special, BShowLibrary);
+     TtaSetItemOff (doc, 1, Special, BAddNewModel); 
+#endif /* _SVGLIB */
    
    return (doc);
 }
@@ -7129,6 +7144,7 @@ void HelpSVG (Document document, View view)
 {
   DisplayHelp (document, SVG);
 }
+
 
 /*----------------------------------------------------------------------
  -----------------------------------------------------------------------*/

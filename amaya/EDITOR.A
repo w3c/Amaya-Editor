@@ -267,7 +267,8 @@ MENUS
 	view:1 Special.Coptions button:BConfigProfile -> ConfigProfile;
 	view:1 Special.Coptions button:BConfigTemplates -> ConfigTemplates;
 
-	
+        view:1 Special.SVG_ button:BShowLibrary -> ShowLibrary;
+	view:1 Special.SVG_ button:BAddNewModel -> AddNewModelIntoLibraryForm;	
 
 	Attributes_;
 

@@ -8,8 +8,8 @@
 
 extern ThotBool IsCurrentSelectionSVG ( void );
 extern ThotBool IsCurrentSelectionContainsUseElement ( void );
-extern void CopySvgInformationTree ( Document doc,
-                                     View view );
+extern void AddNewModelIntoLibraryForm ( Document doc,
+                                         View view );
 extern void CallbackLibrary ( int ref,
                               int typedata,
                               char *data );
@@ -26,6 +26,8 @@ extern char *GetLibraryFileTitle ( char *url );
 extern void AddLibraryDataIntoStructure ( ThotBool persLib,
                                           char *url,
                                           char *title );
+extern char *CreateUniqueLibraryTitle ( char *title );
+extern ThotBool IsLibraryTitleExist ( char *title );
 extern ThotBool SearchURIinCurrentSVGLibraryList ( char *URI );
 extern void SVGLIB_FreeDocumentResource ( void );
 extern char *GetLibraryTitleFromPath ( char *path );
@@ -94,8 +96,8 @@ extern void OpenLibraryCallback ( Document doc,
 
 extern ThotBool IsCurrentSelectionSVG (/* void */);
 extern ThotBool IsCurrentSelectionContainsUseElement (/* void */);
-extern void CopySvgInformationTree (/* Document doc,
-                                       View view */);
+extern void AddNewModelIntoLibraryForm (/* Document doc,
+                                           View view */);
 extern void CallbackLibrary (/* int ref,
                                 int typedata,
                                 char *data */);
@@ -112,6 +114,8 @@ extern char *GetLibraryFileTitle (/* char *url */);
 extern void AddLibraryDataIntoStructure (/* ThotBool persLib,
                                             char *url,
                                             char *title */);
+extern char *CreateUniqueLibraryTitle (/* char *title */);
+extern ThotBool IsLibraryTitleExist (/* char *title */);
 extern ThotBool SearchURIinCurrentSVGLibraryList (/* char *URI */);
 extern void SVGLIB_FreeDocumentResource (/* void */);
 extern char *GetLibraryTitleFromPath (/* char *path */);
