@@ -2771,7 +2771,8 @@ static Document LoadDocument (Document doc, char *pathname,
 	{
 	  /* it seems to be an HTML document */
 	  docType = docHTML;
-	  parsingLevel = L_Transitional;
+	  if (parsingLevel != L_Strict)
+	    parsingLevel = L_Transitional;
 	  unknown = FALSE;
 	}
       /* Assign a content type to that local document */
@@ -4321,6 +4322,95 @@ Document GetHTMLDocument (const char *documentPath, char *form_data,
 }
 
 /*----------------------------------------------------------------------
+  ChangeDoctype
+  Mofity the doctype declaration for a HTML document saved as
+  an XML one and vice-versa.
+  isXml indicates is the new doctype corresponds to an XML document
+  ----------------------------------------------------------------------*/
+static void    ChangeDoctype (ThotBool isXml)
+{
+  int          profile;
+  Document     doc;
+  ElementType  elType;
+  Element      root, doctype, doctypeLine, prevLine, text;
+
+  doc = SavingDocument;
+  /* Search the DOCTYPE element if it exists */
+  root = TtaGetMainRoot (doc);
+  elType.ElSSchema = TtaGetDocumentSSchema (doc);
+  if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+    return;
+  elType.ElTypeNum = HTML_EL_DOCTYPE;
+  doctype = TtaSearchTypedElement (elType, SearchForward, root);
+  if (!doctype)
+    return;
+  
+  /* Remove the previous doctype element */
+  TtaDeleteTree (doctype, doc);
+  
+  profile = TtaGetDocumentProfile (doc);
+  /* Check the Thot abstract tree against the structure schema. */
+  TtaSetStructureChecking (0, doc);
+  
+  doctype = TtaNewElement (doc, elType);
+  TtaInsertFirstChild (&doctype, root, doc);
+  /* create the first DOCTYPE_line element */
+  elType.ElTypeNum = HTML_EL_DOCTYPE_line;
+  doctypeLine = TtaNewElement (doc, elType);
+  TtaInsertFirstChild (&doctypeLine, doctype, doc);
+  elType.ElTypeNum = 1;
+  text = TtaNewElement (doc, elType);
+  if (text != NULL)
+    {
+      TtaInsertFirstChild (&text, doctypeLine, SavingDocument);
+      if (isXml)
+	{
+	  /* XML document */
+	  if (profile == L_Strict)
+	    TtaSetTextContent (text, "html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"", TtaGetDefaultLanguage (), doc);
+	  else
+	    TtaSetTextContent (text, "html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"", TtaGetDefaultLanguage (), doc);
+	}
+      else
+	{
+	  /* HTML document */
+	  if (profile == L_Strict)
+	    TtaSetTextContent (text, "html PUBLIC \"-//W3C//DTD HTML 4.01//EN\"", TtaGetDefaultLanguage (), doc);
+	  else
+	    TtaSetTextContent (text, "html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"", TtaGetDefaultLanguage (), doc);
+	}
+    }
+  /* create the second DOCTYPE_line element */
+  elType.ElTypeNum = HTML_EL_DOCTYPE_line;
+  prevLine = doctypeLine;
+  doctypeLine = TtaNewElement (doc, elType);
+  TtaInsertSibling (doctypeLine, prevLine, FALSE, doc);
+  elType.ElTypeNum = 1;
+  text = TtaNewElement (doc, elType);
+  if (text != NULL)
+    {
+      TtaInsertFirstChild (&text, doctypeLine, doc);
+      if (isXml)
+	{
+	  /* XML document */
+	  if (profile == L_Strict)
+	    TtaSetTextContent (text, "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\"", TtaGetDefaultLanguage (), doc);
+	  else
+	    TtaSetTextContent (text, "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\"", TtaGetDefaultLanguage (), doc);
+	}
+      else
+	{
+	  /* HTML document */
+	  if (profile == L_Strict)
+	    TtaSetTextContent (text, "\"http://www.w3.org/TR/html4/strict.dtd\"", TtaGetDefaultLanguage (), doc);
+	  else
+	    TtaSetTextContent (text, "\"http://www.w3.org/TR/html4/loose.dtd\"", TtaGetDefaultLanguage (), doc);
+	}
+    }
+  TtaSetStructureChecking (1, doc);  
+}
+
+/*----------------------------------------------------------------------
    UpdateSaveAsButtons
    Maintain consistency between buttons in the Save As dialog box
   ----------------------------------------------------------------------*/
@@ -4697,6 +4787,9 @@ void CallbackDialogue (int ref, int typedata, char *data)
        switch (val)
 	 {
 	 case 0:	/* "Save as HTML" button */
+	   if (SaveAsXML == TRUE)
+	     /* XML -> HTML : modify the doctype declaration */
+	     ChangeDoctype (FALSE);
 	   SaveAsHTML = TRUE;
 	   SaveAsXML = FALSE;
 	   SaveAsText = FALSE;
@@ -4704,8 +4797,11 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	   SetFileSuffix ();
 	   break;
 	 case 1:	/* "Save as XML" button */
-	   SaveAsHTML = FALSE;
+	   if (SaveAsHTML == TRUE)
+	     /* HTML -> XML : modify the doctype declaration */
+	     ChangeDoctype (TRUE);
 	   SaveAsXML = TRUE;
+	   SaveAsHTML = FALSE;
 	   SaveAsText = FALSE;
 	   UpdateSaveAsButtons ();
 	   SetFileSuffix ();
