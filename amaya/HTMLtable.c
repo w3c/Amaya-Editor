@@ -85,11 +85,13 @@ Document            doc;
 #endif
 {
    ElementType	       elType;
+   Element	       child, leaf;
    AttributeType       attrType;
-   Attribute           attrCellWidth, attrColWidth, attrColspan;
+   Attribute           attrCellWidth, attrColWidth, attrColspan, attrPictWidth;
    int                 max, length, cellWidth;
    char		       *attrVal;
 
+   cellWidth = 0;
    elType = TtaGetElementType (cell);
    attrType.AttrSSchema = elType.ElSSchema;
    attrType.AttrTypeNum = HTML_ATTR_colspan;
@@ -116,6 +118,37 @@ Document            doc;
 	 attrType.AttrTypeNum = HTML_ATTR_Col_width_pxl;
       sscanf (attrVal, "%d", &cellWidth);
       TtaFreeMemory (attrVal);
+      }
+   else
+      /* no attribute Cell_width on the cell */
+      /* if the cell contains only an <IMG> with an attribute WIDTH, the */
+      /* cell takes that width */
+      {
+      child = cell;
+      while (child != NULL)
+	{
+	leaf = child;
+        child = TtaGetFirstChild (child);
+	}
+      elType = TtaGetElementType (leaf);
+      if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+	/* the first leaf in the cell is a picture */
+        if (TtaGetElementVolume (leaf) == TtaGetElementVolume (cell))
+	  /* the cell has the same volume as the picture */
+	  {
+	  attrType.AttrTypeNum = HTML_ATTR_Width_;
+	  attrPictWidth = TtaGetAttribute (leaf, attrType);
+	  if (attrPictWidth != NULL)
+	     /* the picture has an attribute WIDTH */
+	     {
+	     cellWidth = TtaGetAttributeValue (attrPictWidth);
+	     cellWidth += 6;
+	     attrType.AttrTypeNum = HTML_ATTR_Col_width_pxl;
+	     }
+	  }
+      }
+   if (cellWidth > 0)
+      {
       attrColWidth = TtaGetAttribute (colhead, attrType);
       if (attrColWidth != NULL)
 	/* the Column_head has this attribute, get its value */
