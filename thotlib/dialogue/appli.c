@@ -862,7 +862,7 @@ View                view;
 #ifndef _WINDOWS
       return (FrameTable[frame].WdFrame);
 #else  /* _WINDOWS */
-      return (FrRef[frame]);
+      return (FrMainRef[frame]);
 #endif /* _WINDOWS */
 }
 
@@ -947,6 +947,7 @@ char               *name;
 
 #            ifdef _WINDOWS
 	     SendMessage (FrameTable[frame].WdStatus, SB_SETTEXT, (WPARAM) 0, (LPARAM) & s[0]);
+		 SendMessage (FrameTable[frame].WdStatus, WM_PAINT, (WPARAM) 0, (LPARAM) 0);
 #            else  /* !_WINDOWS */
 	     XtSetArg (args[0], XmNlabelString, title_string);
 	     XtSetValues (FrameTable[frame].WdStatus, args, 1);

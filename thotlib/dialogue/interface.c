@@ -1290,7 +1290,7 @@ void                TtaMainLoop ()
         TtaFetchOneEvent(&ev);
 	TtaHandleOneEvent(&ev);
 #       else  /* !_WINDOWS */
-	WIN_ProcessSocketActivity ();	
+/*	WIN_ProcessSocketActivity ();*/	 /* Taking this out to see if it interferes. Should be erase? */
 	if (GetMessage (&msg, NULL, 0, 0))
 	   TtaHandleOneWindowEvent (&msg);
 #       endif /* _WINDOWS */
