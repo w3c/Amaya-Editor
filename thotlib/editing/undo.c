@@ -1210,8 +1210,7 @@ View                view;
    OpenRedoSequence (doc);
 
    TtaUnselect (doc);
-/*****   TtaSetDisplayMode (doc, DeferredDisplay);
-*****/   TtaSetDisplayMode (doc, DisplayImmediately);
+   TtaSetDisplayMode (doc, DeferredDisplay);
    /* disable structure checking */
    TtaSetStructureChecking (FALSE, doc);
 
@@ -1231,6 +1230,7 @@ View                view;
          Remove it from the editing history and put it in the Redo queue */
          MoveEditToRedoQueue (pDoc);
       }
+   TtaSetDisplayMode (doc, DisplayImmediately);
 }
 
 /*----------------------------------------------------------------------
@@ -1263,8 +1263,7 @@ View                view;
    TtaUnselect (doc);
    OpenHistorySequence (pDoc, (PtrElement)firstSel, (PtrElement)lastSel,
 			firstSelChar, lastSelChar);
-/*****   TtaSetDisplayMode (doc, DeferredDisplay);
-*****/   TtaSetDisplayMode (doc, DisplayImmediately);
+   TtaSetDisplayMode (doc, DeferredDisplay);
    /* disable structure checking */
    TtaSetStructureChecking (FALSE, doc);
 
@@ -1286,4 +1285,5 @@ View                view;
       }
    /* close sequence in Undo queue */
    pDoc->DocEditSequence = FALSE;
+   TtaSetDisplayMode (doc, DisplayImmediately);
 }
