@@ -3416,7 +3416,10 @@ static void  ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 		    pRuleView = pRule;
 		  /* if it's the main view, record the rule for the cascade */
 		  /* but presentation function are applied immediately */
-		  if (pRuleView->PrType != PtFunction)
+		  /* except BackgroundPicture */
+		  if (pRuleView->PrType != PtFunction ||
+		      (pRuleView->PrType == PtFunction &&
+		       pRuleView->PrPresFunction == FnBackgroundPicture))
 		    {
 		      selectedRule[pRuleView->PrType] = pRuleView;
 		      schemaOfSelectedRule[pRuleView->PrType] = pSchP;      
@@ -3466,7 +3469,9 @@ static void  ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 		{
 		  /* keep that rule only if it has a higher priority than the
 		     rule for the same property we have already encountered */
-		  if (pRule->PrType != PtFunction)
+		  if (pRule->PrType != PtFunction ||
+		      (pRule->PrType == PtFunction &&
+		       pRule->PrPresFunction == FnBackgroundPicture))
 		    {
 		      if (RuleHasHigherPriority (pRule, pSchPres,
 						 selectedRule[pRule->PrType],
@@ -3554,7 +3559,9 @@ static void  ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 				  /* this rule applies to the element */
 				  {
 				    if (viewSch == 1 &&
-					ruleToApply->PrType != PtFunction)
+					(ruleToApply->PrType != PtFunction ||
+					 (ruleToApply->PrType == PtFunction &&
+					  ruleToApply->PrPresFunction == FnBackgroundPicture)))
 				      /* main view. Record the rule for cascade */
 				      /* but apply presentation function */
 				      /* immediately */
@@ -3639,7 +3646,9 @@ static void  ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 			    /* this rule applies to the element */
 			    {
 			      if (viewSch == 1 &&
-				  ruleToApply->PrType != PtFunction)
+				  (ruleToApply->PrType != PtFunction ||
+				   (ruleToApply->PrType == PtFunction &&
+				    ruleToApply->PrPresFunction == FnBackgroundPicture)))
 				/* main view. Record the rule for the cascade*/
 				/* but apply presentation functions
 				   immediately */

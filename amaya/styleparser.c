@@ -148,9 +148,8 @@ char *SkipBlanksAndComments (char *ptr)
   return (ptr);
 }
 
-
 /*----------------------------------------------------------------------
-   SkipQuotedString:                                                  
+   SkipQuotedString
   ----------------------------------------------------------------------*/
 static char *SkipQuotedString (char *ptr, char quote)
 {
@@ -2688,6 +2687,7 @@ static char *ParseSVGFill (Element element, PSchema tsch,
     }
   return (cssRule);
 }
+
 /*----------------------------------------------------------------------
   ParseSVGOpacity: parse a SVG fill property
   ----------------------------------------------------------------------*/
@@ -2710,6 +2710,7 @@ static char *ParseSVGOpacity (Element element, PSchema tsch,
     }
   return (cssRule);
 }
+
 /*----------------------------------------------------------------------
   ParseCSSBackgroundImageCallback: Callback called asynchronously by
   FetchImage when a background image has been fetched.
@@ -2754,7 +2755,6 @@ void ParseCSSBackgroundImageCallback (Document doc, Element element,
     TtaSetDisplayMode (doc, dispMode);
 }
 
-
 /*----------------------------------------------------------------------
    GetCSSBackgroundURL searches a CSS BackgroundImage url within
    the styleString.
@@ -2775,15 +2775,21 @@ char *GetCSSBackgroundURL (char *styleString)
 	{
 	  b++;
 	  b = SkipBlanksAndComments (b);
-	  /*** Caution: Strings can either be written with double quotes or
-	       with single quotes. Only double quotes are handled here.
-	       Escaped quotes are not handled. See function SkipQuotedString */
+	  /*** Escaped quotes are not handled. See function SkipQuotedString */
 	  if (*b == '"')
 	    {
 	      b++;
 	      /* search the url end */
 	      e = b;
 	      while (*e != EOS && *e != '"')
+		e++;
+	    }
+	  else if (*b == '\'')
+	    {
+	      b++;
+	      /* search the url end */
+	      e = b;
+	      while (*e != EOS && *e != '\'')
 		e++;
 	    }
 	  else
@@ -2847,7 +2853,13 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
 
   url = NULL;
   cssRule = SkipBlanksAndComments (cssRule);
-  if (!strncasecmp (cssRule, "url", 3))
+  if (!strncasecmp (cssRule, "none", 4))
+    {
+      image.pointer = NULL;
+      TtaSetStylePresentation (PRBackgroundPicture, element, tsch, context,
+			       image);
+    }
+  else if (!strncasecmp (cssRule, "url", 3))
     {  
       cssRule += 3;
       cssRule = SkipBlanksAndComments (cssRule);
@@ -2855,14 +2867,19 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
 	{
 	  cssRule++;
 	  cssRule = SkipBlanksAndComments (cssRule);
-	  /*** Caution: Strings can either be written with double quotes or
-	    with single quotes. Only double quotes are handled here.
-	    Escaped quotes are not handled. See function SkipQuotedString */
+	  /*** Escaped quotes are not handled. See function SkipQuotedString */
 	  if (*cssRule == '"')
 	    {
 	      cssRule++;
 	      base = cssRule;
 	      while (*cssRule != EOS && *cssRule != '"')
+		cssRule++;
+	    }
+	  else if (*cssRule == '\'')
+	    {
+	      cssRule++;
+	      base = cssRule;
+	      while (*cssRule != EOS && *cssRule != '\'')
 		cssRule++;
 	    }
 	  else
@@ -2875,9 +2892,12 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
 	  *cssRule = EOS;
 	  url = TtaStrdup (base);
 	  *cssRule = saved;
-	  if (saved == '"')
-	    /* we need to skip two characters */
-	    cssRule++;	    
+	  if (saved == '"' || saved == '\'')
+	    /* we need to skip the quote character and possinble spaces */
+	    {
+	      cssRule++;	    
+	      cssRule = SkipBlanksAndComments (cssRule);
+	    }
 	}
       cssRule++;
 
@@ -2899,6 +2919,7 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
 	{
 	  bg_image = TtaGetEnvString ("ENABLE_BG_IMAGES");
 	  if (bg_image == NULL || !strcasecmp (bg_image, "yes"))
+	    /* background images are enabled */
 	    {
 	      callblock = (BackgroundImageCallbackPtr) TtaGetMemory(sizeof(BackgroundImageCallbackBlock));
 	      if (callblock != NULL)
@@ -2917,10 +2938,12 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
 		    {
 		      NormalizeURL (url, 0, tempname, imgname, css->url);
 		      /* fetch and display background image of element */
-		      FetchImage (context->doc, el, tempname, AMAYA_LOAD_IMAGE, ParseCSSBackgroundImageCallback, callblock);
+		      FetchImage (context->doc, el, tempname, AMAYA_LOAD_IMAGE,
+				  ParseCSSBackgroundImageCallback, callblock);
 		    }
 		  else
-		    FetchImage (context->doc, el, url, AMAYA_LOAD_IMAGE, ParseCSSBackgroundImageCallback, callblock);
+		    FetchImage (context->doc, el, url, AMAYA_LOAD_IMAGE,
+				ParseCSSBackgroundImageCallback, callblock);
 		}
 	    }
 

@@ -3065,6 +3065,7 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
   ThotBool            appl;
   ThotBool            insidePage, afterPageBreak;
   AbPosition         *pPavP1;
+  PictInfo           *image;
 
   appl = FALSE;
   if (pPRule && pAb && pAb->AbElement)
@@ -3135,32 +3136,48 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 		}
 	      break;
 	    case FnBackgroundPicture:
+	      appl = TRUE;
 	      if (pAb->AbLeafType == LtCompound &&
 		  pPRule->PrViewNum == viewSch)
 		{
-		  if (pSchP == NULL)
-		    pSchP = PresentationSchema (pDoc->DocSSchema, pDoc);
-		  pConst = &pSchP->PsConstant[pPRule->PrPresBox[0] - 1];
-		  if (pConst->PdString[0] != EOS)
+		  if (pPRule->PrPresBox[0] <= 0)
+		    /* it's a CSS rule "background-picture: none" */
 		    {
-#ifndef _WINDOWS
-		      if (pConst->PdString[0] == DIR_SEP)
-#else  /* _WINDOWS */
-		      if (pConst->PdString[0] == DIR_SEP ||
-			  (pConst->PdString[1] == ':' &&
-			   pConst->PdString[2] == DIR_SEP))
-#endif /* _WINDOWS */
-			/* absolute file name */
-			strncpy (fname, pConst->PdString, MAX_PATH - 1);
-		      else
-			/* relative file name */
+		      if (pAb->AbPictBackground)
+			/* remove the background image */
 			{
-			  strncpy (directoryName, SchemaPath, MAX_PATH - 1);
-			  MakeCompleteName (pConst->PdString, "",
-					    directoryName, fname, &i);
+			  image = (PictInfo *)pAb->AbPictBackground;
+			  CleanPictInfo (image);
+			  TtaFreeMemory (image->PicFileName);
+			  TtaFreeMemory (pAb->AbPictBackground);
+			  pAb->AbPictBackground = NULL;
+			} 
+		    }
+		  else
+		    {
+		      if (pSchP == NULL)
+			pSchP = PresentationSchema (pDoc->DocSSchema, pDoc);
+		      pConst = &pSchP->PsConstant[pPRule->PrPresBox[0] - 1];
+		      if (pConst->PdString[0] != EOS)
+			{
+#ifndef _WINDOWS
+			  if (pConst->PdString[0] == DIR_SEP)
+#else  /* _WINDOWS */
+			    if (pConst->PdString[0] == DIR_SEP ||
+				(pConst->PdString[1] == ':' &&
+				 pConst->PdString[2] == DIR_SEP))
+#endif /* _WINDOWS */
+			      /* absolute file name */
+			      strncpy (fname, pConst->PdString, MAX_PATH - 1);
+			    else
+			      /* relative file name */
+			      {
+			       strncpy (directoryName, SchemaPath, MAX_PATH-1);
+			       MakeCompleteName (pConst->PdString, "",
+						 directoryName, fname, &i);
+			      }
+			  NewPictInfo (pAb, fname, UNKNOWN_FORMAT);
 			}
-		      NewPictInfo (pAb, fname, UNKNOWN_FORMAT);
-		      appl = TRUE;
 		    }
 		}
 	      break;
