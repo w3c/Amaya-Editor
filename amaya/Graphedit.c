@@ -795,7 +795,7 @@ int                 construct;
 #endif
 {
    Document	        doc;
-   Element	        last, first, graphRoot, newEl, sibling;
+   Element	        last, first, graphRoot, newEl, sibling, selEl;
    Element              child, parent, elem;
    ElementType	        elType, wrapperType, newType, childType;
    AttributeType	attrType;
@@ -806,7 +806,6 @@ int                 construct;
    int		        c1, c2, i, j, w, h, minX, minY, maxX, maxY;
    boolean	        found, automaticPlacement;
 
-
    doc = TtaGetSelectedDocument ();
    newEl = NULL;
    child = NULL;
@@ -816,6 +815,7 @@ int                 construct;
       return;
    TtaGiveLastSelectedElement (doc, &last, &c2, &j);
    TtaGiveFirstSelectedElement (doc, &first, &c1, &i);
+   selEl = first;
    /* Are we in a drawing? */
    docSchema = TtaGetDocumentSSchema (doc);
    GraphMLSSchema = GetGraphMLSSchema (doc);
@@ -995,6 +995,7 @@ int                 construct;
 	 child = TtaNewElement (doc, childType);
 	 TtaInsertFirstChild (&child, newEl, doc);
 	 TtaSetGraphicsShape (child, shape, doc);
+	 selEl = child;
 	 }
       else if (newType.ElTypeNum == GraphML_EL_Label ||
 	       newType.ElTypeNum == GraphML_EL_Text_)
@@ -1009,6 +1010,14 @@ int                 construct;
 	 TtaSetStructureChecking (0, doc);
 	 TtaInsertFirstChild (&child, newEl, doc);
 	 TtaSetStructureChecking (1, doc);
+	 /* select the first leaf */
+	 elem = child;
+	 do
+	    {
+	    selEl = elem;
+	    elem = TtaGetFirstChild (elem);
+	    }
+         while (elem != NULL);
 	 }
 
       /* if the parent element is a Group, create the internal attribute
@@ -1021,9 +1030,9 @@ int                 construct;
       TtaSetDisplayMode (doc, dispMode);
       }
 
-   if (child != NULL)
+   if (selEl != NULL)
       /* select the right element */
-      TtaSelectElement (doc, child);
+      TtaSelectElement (doc, selEl);
 
    if (shape == 'S' || shape == 'w' || shape == 'p' || shape == 'B' || shape == 's')
       /* multipoints element. Let the user enter the points */

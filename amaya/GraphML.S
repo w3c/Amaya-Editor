@@ -256,6 +256,7 @@ EXCEPT
    Math:		MoveResize;
    Group:               MoveResize;
    PICTURE:		MoveResize;
+   TEXT:		NoMove, NoResize;
 
    Invalid_attribute:	Invisible;
    Ghost_restruct:	Invisible;
