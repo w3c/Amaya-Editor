@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
 
 /*
    Chargement et liberation des schemas de structure et de traduction
@@ -33,10 +37,10 @@ ATranslation;
 /* table des schemas de traduction charges */
 static ATranslation    LoadedTSchema[MAX_TSCHEMAS];
 
-/* ---------------------------------------------------------------------- */
-/* |    InitTranslationSchemasTable initialise la table des schemas de	| */
-/* |            traduction charges.					| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   InitTranslationSchemasTable initialise la table des schemas de	
+   traduction charges.					
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                InitTranslationSchemasTable ()
 
@@ -56,10 +60,10 @@ void                InitTranslationSchemasTable ()
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ClearTranslationSchemasTable libere tous les schemas de         | */
-/* |    traduction pointe's par la table des schemas de traduction      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ClearTranslationSchemasTable libere tous les schemas de         
+   traduction pointe's par la table des schemas de traduction      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ClearTranslationSchemasTable ()
 
@@ -84,9 +88,9 @@ void                ClearTranslationSchemasTable ()
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    LoadTranslationSchema charge un schema de traduction.           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   LoadTranslationSchema charge un schema de traduction.           
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 PtrTSchema        LoadTranslationSchema (Name schName, PtrSSchema pSS)
@@ -143,12 +147,12 @@ PtrSSchema        pSS;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    GetUSErule cherche une regle USE dans la suite de blocs de      | */
-/* |            regles pBlock. Si une regle USE pour la nature de nom   | */
-/* |            schName est trouvee dans ce bloc, on met dans schName	| */
-/* |            le nom du schema de traduction a` utiliser.		| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetUSErule cherche une regle USE dans la suite de blocs de      
+   regles pBlock. Si une regle USE pour la nature de nom   
+   schName est trouvee dans ce bloc, on met dans schName	
+   le nom du schema de traduction a` utiliser.		
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static boolean      GetUSErule (PtrTRuleBlock pBlock, Name schName)
@@ -190,12 +194,12 @@ Name                schName;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    GetTransSchName       trouve le nom du schema de traduction a`	| */
-/* |            utiliser pour le schema de structure de nom schName.    | */
-/* |            Au retour, rend dans schName le nom du schema de        | */
-/* |            traduction.                                             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetTransSchName       trouve le nom du schema de traduction a`	
+   utiliser pour le schema de structure de nom schName.    
+   Au retour, rend dans schName le nom du schema de        
+   traduction.                                             
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         GetTransSchName (Name schName)
@@ -251,10 +255,10 @@ Name                 schName;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    GetTranslationSchema retourne le schema de traduction a`	| */
-/* |	appliquer aux elements appartenant au schema de structure pSS.	| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetTranslationSchema retourne le schema de traduction a`	
+   	appliquer aux elements appartenant au schema de structure pSS.	
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 PtrTSchema        GetTranslationSchema (PtrSSchema pSS)
 

@@ -1,11 +1,12 @@
-/*=======================================================================*/
-/*|                                                                     | */
-/*|     Thot Toolkit: Application Program Interface                     | */
-/*|     --->Language managment                                          | */
-/*|                                                                     | */
-/*|                     I. Vatton       January 93                      | */
-/*|                                                                     | */
-/*=======================================================================*/
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*----------------------------------------------------------------------
+   
+   Application Program Interface                     
+   --->Language managment                                          
+  ----------------------------------------------------------------------*/
 
 #include "thot_sys.h"
 #include "constmedia.h"
@@ -27,8 +28,8 @@ static char         StandardLANG[3];
 
 #include "thotmsg_f.h"
 
-/* ---------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         InitTypoLanguage ()
 #else  /* __STDC__ */
@@ -83,8 +84,8 @@ static void         InitTypoLanguage ()
 
 }				
 
-/* ---------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                InitLanguage ()
 
@@ -189,7 +190,7 @@ void                InitLanguage ()
 
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaNewLanguage
 
    Not available for TYPO languages.
@@ -216,7 +217,7 @@ void                InitLanguage ()
    Return value:
    identifier of the new language or 0 if the language cannot be added.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 Language            TtaNewLanguage (char *languageName, char languageAlphabet, char *principalDictionary, char *secondDictionary)
@@ -276,7 +277,7 @@ char               *secondDictionary;
 }				/*TtaNewLanguage */
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGetLanguageIdFromName
 
    Available for TYPO languages.
@@ -289,7 +290,7 @@ char               *secondDictionary;
    Return value:
    identifier of that language or 0 if the language is unknown.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 Language            TtaGetLanguageIdFromName (char *languageName)
@@ -349,7 +350,7 @@ char               *languageName;
    return (Language) i;
 }				/*TtaGetLanguageIdFromName */
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGetVarLANG
 
    Returns the 2 first chars of environment variable LANG or 'fr'.
@@ -357,7 +358,7 @@ char               *languageName;
    Return value:
    a string of 2 chars.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 char               *TtaGetVarLANG ()
 {
    char               *name;
@@ -375,7 +376,7 @@ char               *TtaGetVarLANG ()
    return (StandardLANG);
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGetDefaultLanguage
 
    Returns the identifier of the default language.
@@ -383,7 +384,7 @@ char               *TtaGetVarLANG ()
    Return value:
    identifier of the default language.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 Language            TtaGetDefaultLanguage ()
 {
    char               *name;
@@ -409,7 +410,7 @@ Language            TtaGetDefaultLanguage ()
    return TtaGetLanguageIdFromName (language);
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGetLanguageIdFromAlphabet
 
    Not available for TYPO languages.
@@ -422,7 +423,7 @@ Language            TtaGetDefaultLanguage ()
    Return value:
    identifier of that language or 0 if the language is unknown.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 Language            TtaGetLanguageIdFromAlphabet (char languageAlphabet)
@@ -465,7 +466,7 @@ char                languageAlphabet;
 }				/*TtaGetLanguageIdFromAlphabet */
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGetAlphabet
 
    Not available for TYPO languages.
@@ -478,7 +479,7 @@ char                languageAlphabet;
    Return value:
    a character that identifies the alphabet ('L' = latin, 'G' = greek).
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 char                TtaGetAlphabet (Language languageId)
@@ -503,7 +504,7 @@ Language            languageId;
 }				/*TtaGetAlphabet */
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGetLanguageName
 
    Not available for TYPO languages.
@@ -516,7 +517,7 @@ Language            languageId;
    Return value:
    the name of the language.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 char               *TtaGetLanguageName (Language languageId)
@@ -542,7 +543,7 @@ Language            languageId;
 }				/*TtaGetLanguageName */
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGetNumberOfLanguages
 
    Not available for TYPO languages.
@@ -552,7 +553,7 @@ Language            languageId;
    Return value:
    the current number of languages.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 TtaGetNumberOfLanguages ()
@@ -731,7 +732,7 @@ char                wordToCut[MAX_CHAR];
 }
 
 
-/* TtaGetPatternHyphenList --------------------------------------------
+/* TtaGetPatternHyphenList 
    returns a pointer on the list of values representing the hyphen points
    or NULL 
  */

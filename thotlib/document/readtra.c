@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
    Ce module charge un schema de traduction depuis un fichier .TRA
  */
 
@@ -23,9 +27,9 @@ static boolean      error = FALSE;
 #include "message_f.h"
 
 
-/* ---------------------------------------------------------------------- */
-/* |    TSchemaError positionne error dans le cas d'une erreur de lecture| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TSchemaError positionne error dans le cas d'une erreur de lecture
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TSchemaError (int err)
 
@@ -41,10 +45,10 @@ int                 err;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ReadTransCondition lit un type de condition d'application de	| */
-/* |            regle de traduction.					| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReadTransCondition lit un type de condition d'application de	
+   regle de traduction.					
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static TransCondition ReadTransCondition (BinFile file)
 
@@ -139,9 +143,9 @@ BinFile             file;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ReadTRuleType lit un type de regle de traduction.             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReadTRuleType lit un type de regle de traduction.             
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static TRuleType ReadTRuleType (BinFile file)
@@ -211,9 +215,9 @@ BinFile             file;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ReadRelatNAscend                                                | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReadRelatNAscend                                                
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static RelatNAscend  ReadRelatNAscend (BinFile file)
@@ -248,10 +252,10 @@ BinFile             file;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ReadTOrder lit la position ou` il faut creer les chaines	| */
-/* |            produites par le traducteur.                            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReadTOrder lit la position ou` il faut creer les chaines	
+   produites par le traducteur.                            
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static TOrder   ReadTOrder (BinFile file)
@@ -288,10 +292,10 @@ BinFile         file;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ReadCreatedObject lit le type de chose a` creer dans le fichier | */
-/* |            de sortie.                                  		| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReadCreatedObject lit le type de chose a` creer dans le fichier 
+   de sortie.                                  		
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static CreatedObject     ReadCreatedObject (BinFile file)
@@ -382,9 +386,9 @@ BinFile             file;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | ReadTRelatPosition lit la position relative d'un element a` prendre | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReadTRelatPosition lit la position relative d'un element a` prendre 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static TRelatPosition     ReadTRelatPosition (BinFile file)
@@ -426,9 +430,9 @@ BinFile             file;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ReadTCounterOp lit le type< d'une operation sur un compteur.    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReadTCounterOp lit le type< d'une operation sur un compteur.    
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static TCounterOp  ReadTCounterOp (BinFile file)
@@ -470,10 +474,10 @@ BinFile             file;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ReadTranslVarType lit le type des elements de variables de      | */
-/* |            traduction.                                             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReadTranslVarType lit le type des elements de variables de      
+   traduction.                                             
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static TranslVarType  ReadTranslVarType (BinFile file)
@@ -531,10 +535,10 @@ BinFile             file;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ReadCounterStyle  lit un style de compteur dans le fichier et   | */
-/* |            retourne sa valeur.                                     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReadCounterStyle  lit un style de compteur dans le fichier et   
+   retourne sa valeur.                                     
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static CounterStyle   ReadCounterStyle (BinFile file)
 
@@ -578,10 +582,10 @@ BinFile             file;
    return style;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ReadPtrTRule retourne un pointeur sur la regle suivante ou NULL   | */
-/* |            s'il n'y a pas de regle suivante.                       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReadPtrTRule retourne un pointeur sur la regle suivante ou NULL   
+   s'il n'y a pas de regle suivante.                       
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static PtrTRule ReadPtrTRule (BinFile file, PtrTRule * pNextTRule)
@@ -607,10 +611,10 @@ PtrTRule            *pNextTRule;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ReadTRules ecrit une suite de regles chainees et fait pointer	| */
-/* |    pFirstTRule sur la premiere regle de la suite de regles lues.   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReadTRules ecrit une suite de regles chainees et fait pointer	
+   pFirstTRule sur la premiere regle de la suite de regles lues.   
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         ReadTRules (BinFile file, PtrTRule * pFirstTRule, PtrTRule * pNextTRule)
@@ -690,9 +694,9 @@ PtrTRule            *pNextTRule;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    FreeTRules    libere une suite de regles chainees.              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   FreeTRules    libere une suite de regles chainees.              
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         FreeTRules (PtrTRule pTRule)
@@ -715,10 +719,10 @@ PtrTRule        pTRule;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ReadPtrTRuleBlock retourne un pointeur sur le bloc de regles	| */
-/* |	suivant ou NULL s'il n'y a pas de bloc suivant.                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReadPtrTRuleBlock retourne un pointeur sur le bloc de regles	
+   	suivant ou NULL s'il n'y a pas de bloc suivant.                 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static PtrTRuleBlock ReadPtrTRuleBlock (BinFile file, PtrTRuleBlock * pNextBlock)
 
@@ -740,9 +744,9 @@ PtrTRuleBlock      *pNextBlock;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ReadBlocks lit une suite de blocs de regles.                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReadBlocks lit une suite de blocs de regles.                    
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         ReadBlocks (BinFile file, PtrTRuleBlock * pBlock, PtrTRule * pNextTRule, PtrSSchema * pSS, PtrTRuleBlock * pNextBlock)
@@ -851,10 +855,10 @@ PtrTRuleBlock       *pNextBlock;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    FreeBlocks     libere une suite de blocs de regles ainsi que    | */
-/* |            les regles attachees.                                   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   FreeBlocks     libere une suite de blocs de regles ainsi que    
+   les regles attachees.                                   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         FreeBlocks (PtrTRuleBlock pBlock)
 
@@ -877,10 +881,10 @@ PtrTRuleBlock       pBlock;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ReadAttrTRules lit les regles de traduction de l'attribut de    | */
-/* |            numero att appartenant au schema de structure pSS.      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReadAttrTRules lit les regles de traduction de l'attribut de    
+   numero att appartenant au schema de structure pSS.      
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         ReadAttrTRules (BinFile file, int att, PtrTRuleBlock * pNextBlock, PtrTRule * pNextTRule, PtrSSchema * pSS, PtrTSchema * pTSch)
@@ -939,9 +943,9 @@ PtrTSchema          *pTSch;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    FreeTRulesAttr libere les regles de traduction d'un attribut.   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   FreeTRulesAttr libere les regles de traduction d'un attribut.   
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         FreeTRulesAttr (AttributeTransl * pAttrT, TtAttribute * pAttr)
@@ -977,10 +981,10 @@ TtAttribute         *pAttr;
 	 }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ReadPresTRules lit les regles de traduction de la presentation  | */
-/* |            de numero pres appartenant au schema de structure pSS.  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReadPresTRules lit les regles de traduction de la presentation  
+   de numero pres appartenant au schema de structure pSS.  
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         ReadPresTRules (BinFile file, int pres, PtrTRuleBlock * pNextBlock, PtrTRule * pNextTRule, PtrSSchema * pSS, PtrTSchema * pTSch)
@@ -1033,10 +1037,10 @@ PtrTSchema          *pTSch;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    FreeTRulesPres libere les regles de traduction d'une regle de	| */
-/* |            presentation                                            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   FreeTRulesPres libere les regles de traduction d'une regle de	
+   presentation                                            
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         FreeTRulesPres (int pres, PRuleTransl * pPruleTr)
 
@@ -1064,15 +1068,15 @@ PRuleTransl         *pPruleTr;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ReadTranslationSchema						| */
-/* |		lit un fichier contenant un schema de traduction et     | */
-/* |            le charge en memoire. Retourne un pointeur sur le       | */
-/* |            schema de presentation en memoire si chargement reussi, | */
-/* |            NULL si echec.                                          | */
-/* |            - fileName: nom du fichier a lire, sans le suffixe .TRA | */
-/* |            - pSS: schema de structure correspondant, deja rempli.  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReadTranslationSchema						
+   		lit un fichier contenant un schema de traduction et     
+   le charge en memoire. Retourne un pointeur sur le       
+   schema de presentation en memoire si chargement reussi, 
+   NULL si echec.                                          
+   - fileName: nom du fichier a lire, sans le suffixe .TRA 
+   - pSS: schema de structure correspondant, deja rempli.  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 PtrTSchema        ReadTranslationSchema (Name fileName, PtrSSchema pSS)
 
@@ -1323,10 +1327,10 @@ PtrSSchema        pSS;
    return pTSch;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    FreeTranslationSchema   libere le schema de traduction pTSch    | */
-/* |            correspondant au schema de structure pSS.               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   FreeTranslationSchema   libere le schema de traduction pTSch    
+   correspondant au schema de structure pSS.               
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                FreeTranslationSchema (PtrTSchema pTSch, PtrSSchema pSS)
 

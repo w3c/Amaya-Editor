@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
    Management of external references files.
 
  */
@@ -21,9 +25,9 @@
 #include "message_f.h"
 
 
-/* ---------------------------------------------------------------------- */
-/* |    LabelIntToString converts integer num into a Thot label		| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   LabelIntToString converts integer num into a Thot label		
+  ----------------------------------------------------------------------*/
 
 
 #ifdef __STDC__
@@ -41,10 +45,10 @@ LabelString         strng;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |     ReadLabel reads a label from a file				| */
-/* |		The label type is specified by labelType.		| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReadLabel reads a label from a file				
+   		The label type is specified by labelType.		
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                ReadLabel (char labelType, LabelString label, BinFile file)
@@ -95,15 +99,15 @@ BinFile             file;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    LoadEXTfile lit le fichier de references externes.EXT et		| */
-/* |            charge son contenu pour le document pDoc, si pDoc	| */
-/* |            n'est pas NULL. Si pDoc est NULL, met le contenu du	| */
-/* |            fichier dans une chaine de descripteurs d'elements      | */
-/* |            reference's dont l'ancre est Anchor.			| */
-/* |            Si labelsOnly est vrai, ne charge que les labels,	| */
-/* |            et pas les noms des documents externes.			| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   LoadEXTfile lit le fichier de references externes.EXT et		
+   charge son contenu pour le document pDoc, si pDoc	
+   n'est pas NULL. Si pDoc est NULL, met le contenu du	
+   fichier dans une chaine de descripteurs d'elements      
+   reference's dont l'ancre est Anchor.			
+   Si labelsOnly est vrai, ne charge que les labels,	
+   et pas les noms des documents externes.			
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                LoadEXTfile (BinFile file, PtrDocument pDoc, PtrReferredDescr * Anchor, boolean labelsOnly)
@@ -219,11 +223,11 @@ boolean             labelsOnly;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    LoadREFfile lit le fichier de mise a` jour des references		| */
-/* |            sortantes .REF et met le contenu du fichier dans	| */
-/* |            une chaine de descripteurs dont l'ancre est Anchor.	| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   LoadREFfile lit le fichier de mise a` jour des references		
+   sortantes .REF et met le contenu du fichier dans	
+   une chaine de descripteurs dont l'ancre est Anchor.	
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                LoadREFfile (BinFile file, PtrChangedReferredEl * Anchor)
@@ -309,11 +313,11 @@ PtrChangedReferredEl     *Anchor;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    UpdateREFdescriptors execute les demandes de mise a` jour de references | */
-/* |            contenues dans la chaine de descripteurs dont l'ancre   | */
-/* |            est Anchor et qui concernent le document pDoc.          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   UpdateREFdescriptors execute les demandes de mise a` jour de references 
+   contenues dans la chaine de descripteurs dont l'ancre   
+   est Anchor et qui concernent le document pDoc.          
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                UpdateREFdescriptors (PtrChangedReferredEl Anchor, PtrDocument pDoc)

@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
 
 /* 
 	Chargement et liberation des schemas de structure sans schemas
@@ -24,10 +28,10 @@ void                InitNatures ()
 {
 }
 
-/* ---------------------------------------------------------------------- */
-/* | LoadNatureSchema    Charge la nature definie dans la regle r	| */
-/* | du schema de structure pointe par pSS.				| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   LoadNatureSchema    Charge la nature definie dans la regle r	
+   du schema de structure pointe par pSS.				
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                LoadNatureSchema (PtrSSchema pSS, Name PSchName, int rule)
 
@@ -72,10 +76,10 @@ int         rule;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    AppendSRule     ajoute une nouvelle regle a la fin de la table  | */
-/* |                    des regles                                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   AppendSRule     ajoute une nouvelle regle a la fin de la table  
+   des regles                                      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         AppendSRule (int * ret, PtrSSchema pSS)
 
@@ -104,14 +108,14 @@ PtrSSchema          pSS;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    CreateNature retourne le numero de la regle definissant le type | */
-/* |    de nom SSchName dans le schema de structure pointe par pSS.     | */
-/* |    S'il n'existe pas de type de ce nom, ajoute une regle de type   | */
-/* |    CsNatureSchema au schema de structure et charge le schema de    | */
-/* |    structure de nom SSchName; retourne le numero de la regle       | */
-/* |    creee ou 0 si echec creation.                                   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CreateNature retourne le numero de la regle definissant le type 
+   de nom SSchName dans le schema de structure pointe par pSS.     
+   S'il n'existe pas de type de ce nom, ajoute une regle de type   
+   CsNatureSchema au schema de structure et charge le schema de    
+   structure de nom SSchName; retourne le numero de la regle       
+   creee ou 0 si echec creation.                                   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int         CreateNature (Name SSchName, Name PSchName, PtrSSchema pSS)
 
@@ -192,13 +196,13 @@ PtrSSchema          pSS;
    return ret;
 }
 
-/* ---------------------------------------------------------------------- */
-/* | LoadSchemas  charge en memoire, pour le document pointe par pDocu, | */
-/* | le schema de structure de nom SSchName.                            | */
-/* | Si pLoadedSS n'est pas NULL, on ne charge rien                     | */
-/* | Extension indique s'il s'agit d'une extension de schema ou d'un    | */
-/* | schema de structure complet.                                       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   LoadSchemas  charge en memoire, pour le document pointe par pDocu, 
+   le schema de structure de nom SSchName.                            
+   Si pLoadedSS n'est pas NULL, on ne charge rien                     
+   Extension indique s'il s'agit d'une extension de schema ou d'un    
+   schema de structure complet.                                       
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                LoadSchemas (Name SSchName, Name PSchName, PtrSSchema * pSS, PtrSSchema pLoadedSS, boolean Extension)
 
@@ -239,10 +243,10 @@ boolean             Extension;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | LoadExtension charge en memoire, pour le document pDoc, le schema  | */
-/* |     d'extension de nom SSchName.                                   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   LoadExtension charge en memoire, pour le document pDoc, le schema  
+   d'extension de nom SSchName.                                   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 PtrSSchema        LoadExtension (Name SSchName, Name PSchName, PtrDocument pDoc)
 
@@ -282,13 +286,13 @@ PtrDocument       pDoc;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    FreeNatureRules cherche dans le schema de structure pointe' par | */
-/* |    pSS les regles de nature qui font reference au schema pointe'	| */
-/* |    par pNatureSS.                                                  | */
-/* |    S'il y en a, retourne Vrai, annule ces regles et traite de meme | */
-/* |    les autres natures. S'il n'y en a pas, retourne Faux.           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   FreeNatureRules cherche dans le schema de structure pointe' par 
+   pSS les regles de nature qui font reference au schema pointe'	
+   par pNatureSS.                                                  
+   S'il y en a, retourne Vrai, annule ces regles et traite de meme 
+   les autres natures. S'il n'y en a pas, retourne Faux.           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      FreeNatureRules (PtrSSchema pSS, PtrSSchema pNatureSS)
 #else  /* __STDC__ */
@@ -321,13 +325,13 @@ PtrSSchema        pNatureSS;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    FreeNature  Si le schema de structure pointe' par pSS contient  | */
-/* |    une regle de nature pour le schema pointe' par pNatureSS,       | */
-/* |    retourne Vrai et libere le schema de structure pointe par	| */
-/* |	pNatureSS et son schema de presentation.			| */
-/* |    Retourne faux sinon.                                            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   FreeNature  Si le schema de structure pointe' par pSS contient  
+   une regle de nature pour le schema pointe' par pNatureSS,       
+   retourne Vrai et libere le schema de structure pointe par	
+   	pNatureSS et son schema de presentation.			
+   Retourne faux sinon.                                            
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             FreeNature (PtrSSchema pSS, PtrSSchema pNatureSS)
 
@@ -352,13 +356,13 @@ PtrSSchema          pNatureSS;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    FreeDocumentSchemas libere tous les schemas de structure et de  | */
-/* |    presentation utilises par le document dont le descripteur est   | */
-/* |    pointe par pDoc.                                                | */
-/* |    Pour les schemas de presentation, la liberation n'est effective | */
-/* |    que s'ils ne sont pas utilises par d'autres documents.          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   FreeDocumentSchemas libere tous les schemas de structure et de  
+   presentation utilises par le document dont le descripteur est   
+   pointe par pDoc.                                                
+   Pour les schemas de presentation, la liberation n'est effective 
+   que s'ils ne sont pas utilises par d'autres documents.          
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                FreeDocumentSchemas (PtrDocument pDoc)
 #else  /* __STDC__ */

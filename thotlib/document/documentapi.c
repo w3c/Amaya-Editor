@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -65,7 +69,7 @@ PtrDocument         pDoc;
 }
 
 
-/* ---------------------------------------------------------------------- 
+/*----------------------------------------------------------------------
    TtaNewDocument
 
    Creates the internal representation of a new document according to a given
@@ -83,7 +87,7 @@ PtrDocument         pDoc;
    Return value:
    the document that has been created or 0 if the document has not
    been created.
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 Document            TtaNewDocument (char *structureSchema, char *documentName)
 
@@ -185,7 +189,7 @@ char               *documentName;
 
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaOpenDocument
 
    Opens an existing document for subsequent operations.
@@ -199,7 +203,7 @@ char               *documentName;
    Return value:
    the opened document, or 0 if the document cannot be open.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 Document            TtaOpenDocument (char *documentName, int accessMode)
@@ -260,7 +264,7 @@ int                 accessMode;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaSaveDocument
 
    Saves a document into a file in Thot format. The document is not closed
@@ -277,7 +281,7 @@ int                 accessMode;
    i. e. a new version is created. If necessary, the old file can be
    removed by the function TtaRemoveDocument.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TtaSaveDocument (Document document, char *documentName)
@@ -353,7 +357,7 @@ char               *documentName;
      }
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaExportDocument
 
    Saves a whole document into a file in a particular format. The output
@@ -368,7 +372,7 @@ char               *documentName;
    name must not be specified in parameter TSchemaName. See
    function TtaSetSchemaPath.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TtaExportDocument (Document document, char *fileName, char *TSchemaName)
@@ -399,7 +403,7 @@ char               *TSchemaName;
      }
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaCloseDocument
 
    Closes a document that is no longer needed and releases all ressources
@@ -408,7 +412,7 @@ char               *TSchemaName;
    Parameter:
    document: the document to be closed.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TtaCloseDocument (Document document)
@@ -464,7 +468,7 @@ Document            document;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaRemoveDocument
 
    Closes a document, releases all ressources allocated to that document,
@@ -474,7 +478,7 @@ Document            document;
    Parameter:
    document: the document to be removed.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TtaRemoveDocument (Document document)
@@ -565,7 +569,7 @@ Document            document;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaSetDocumentPath
 
    Sets a new list of document directories. This list replaces the existing one.
@@ -575,10 +579,10 @@ Document            document;
    (see TtaNewDocument).
 
    Parameter:
-	path: the directory list, where directory names are separated by
-		the character PATH_SEP.
+   path: the directory list, where directory names are separated by
+   the character PATH_SEP.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaSetDocumentPath (char *path)
 #else  /* __STDC__ */
@@ -597,17 +601,17 @@ char               *path;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaCheckDirectory
 
    Ckecks that a directory exists and can be accessed.
 
    Parameter:
-	directory: the directory name.
+   directory: the directory name.
    Return value:
-   	TRUE if the directory is OK, FALSE if not.
+   TRUE if the directory is OK, FALSE if not.
 	
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             TtaCheckDirectory (char *directory)
  
@@ -645,7 +649,7 @@ char               *directory;
 #endif /* !WWW_MSWINDOWS */
 }
  
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaCheckPath
 
    Checks if all directories in a path can be accessed.
@@ -657,7 +661,7 @@ char               *directory;
    TRUE if all directories are OK, FALSE if at least one cannot be
    accessed.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             TtaCheckPath (PathBuffer path)
  
@@ -695,15 +699,15 @@ PathBuffer          path;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaIsInDocumentPath
 
    returns TRUE if the directory is in the list of document directories.
 
    Parameter:
-	directory: the new directory name.
+   directory: the new directory name.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             TtaIsInDocumentPath (char *directory)
 
@@ -730,16 +734,16 @@ char               *directory;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaAppendDocumentPath
 
    Appends a new directory in the list of document directories if this
    directory is not already in the list and if the directory exists.
 
    Parameter:
-	directory: the new directory name.
+   directory: the new directory name.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TtaAppendDocumentPath (char *directory)
@@ -776,7 +780,7 @@ char               *directory;
      }
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaSetSchemaPath
 
    Sets a new list of schema directories. This list replaces the existing one.
@@ -786,7 +790,7 @@ char               *directory;
    path: the directory list, where directory names are separated by
    the character PATH_SEP.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TtaSetSchemaPath (char *path)
@@ -805,7 +809,7 @@ char               *path;
       strcpy (SchemaPath, path);
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaNewNature
 
    Adds a new nature in a structure schema and returns the structure schema
@@ -824,7 +828,7 @@ char               *path;
    the structure schema of the new nature; NULL if the structure schema
    has not been loaded.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 SSchema             TtaNewNature (SSchema schema, char *natureName, char *presentationName)
@@ -862,7 +866,7 @@ char               *presentationName;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaNewSchemaExtension
 
    Loads a structure schema extension and associates it with
@@ -878,7 +882,7 @@ char               *presentationName;
    Return value:
    the extension schema, NULL if the extension schema has not been loaded.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 SSchema             TtaNewSchemaExtension (Document document, char *extensionName, char *presentationName)
@@ -988,7 +992,7 @@ int                *removedAttributes;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaRemoveSchemaExtension
 
    Removes a structure schema extension from a given document. Removes also from
@@ -1003,7 +1007,7 @@ int                *removedAttributes;
    removedElements: number of elements actually removed.
    removedAttributes: number of attributes actually removed.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TtaRemoveSchemaExtension (Document document, SSchema extension, int *removedElements, int *removedAttributes)
@@ -1080,7 +1084,7 @@ int                *removedAttributes;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaSetPSchema
 
    Sets or changes the main presentation schema of a document. The document
@@ -1091,7 +1095,7 @@ int                *removedAttributes;
    presentationName: Name of the presentation schema to be associated
    with the document.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TtaSetPSchema (Document document, char *presentationName)
@@ -1171,7 +1175,7 @@ char               *presentationName;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaSetDocumentDirectory
 
    Sets the directory to which the document is supposed to be saved.
@@ -1180,7 +1184,7 @@ char               *presentationName;
    document: the document whose directory is set.
    directory: new document directory.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TtaSetDocumentDirectory (Document document, char *directory)
@@ -1213,7 +1217,7 @@ char               *directory;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaSetDocumentName
 
    Sets or changes the name of a document. The document must be loaded.
@@ -1225,7 +1229,7 @@ char               *directory;
    for changing the directory of a document.
    The name must not exceed 31 characters.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TtaSetDocumentName (Document document, char *documentName)
@@ -1266,7 +1270,7 @@ char               *documentName;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaSetDocumentAccessMode
 
    Sets the access mode for a document.
@@ -1275,7 +1279,7 @@ char               *documentName;
    document: the document whose access mode is changed.
    accessMode: 0 = read only, 1 = read-write.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TtaSetDocumentAccessMode (Document document, int accessMode)
@@ -1309,7 +1313,7 @@ int                 accessMode;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaSetDocumentBackUpInterval
 
    Sets the backup interval for a document.
@@ -1321,7 +1325,7 @@ int                 accessMode;
    positive integer : number of characters typed which triggers
    automatic save of the document into a .BAK file.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TtaSetDocumentBackUpInterval (Document document, int interval)
@@ -1354,7 +1358,7 @@ int                 interval;
       LoadedDocument[document - 1]->DocBackUpInterval = interval;
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaSetNotificationMode
 
    Sets the ECF notification mode for a document.
@@ -1364,7 +1368,7 @@ int                 interval;
    be notified, 1 = all elements of created and deleted subtrees must
    be notified.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TtaSetNotificationMode (Document document, int notificationMode)
@@ -1393,7 +1397,7 @@ int                 notificationMode;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaSetDocumentModified
 
    Notifies the tool kit that a document has been modified by the application.
@@ -1402,7 +1406,7 @@ int                 notificationMode;
    Parameter:
    document: the document.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TtaSetDocumentModified (Document document)
@@ -1429,7 +1433,7 @@ Document            document;
       LoadedDocument[document - 1]->DocModified = TRUE;
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaSetDocumentUnmodified
 
    Notifies the tool kit that a document must be considered as not modified
@@ -1440,7 +1444,7 @@ Document            document;
    Parameter:
    document: the document.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TtaSetDocumentUnmodified (Document document)
@@ -1467,7 +1471,7 @@ Document            document;
       LoadedDocument[document - 1]->DocModified = FALSE;
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGetDocumentName
 
    Returns the name of a document.
@@ -1478,7 +1482,7 @@ Document            document;
    Return value:
    name of that document.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 char               *TtaGetDocumentName (Document document)
@@ -1510,7 +1514,7 @@ Document            document;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGetDocumentFromName
 
    Returns the document having a given name.
@@ -1521,7 +1525,7 @@ Document            document;
    Return value:
    the document having that name.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 Document            TtaGetDocumentFromName (char *documentName)
@@ -1553,7 +1557,7 @@ char               *documentName;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGetDocumentDirectory
 
    Returns the directory to which the document is supposed to be saved.
@@ -1566,7 +1570,7 @@ char               *documentName;
    Return parameter:
    buffer: the document directory.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TtaGetDocumentDirectory (Document document, char *buffer, int bufferLength)
@@ -1600,7 +1604,7 @@ int                 bufferLength;
      }
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGetDocumentSSchema
 
    Returns the main structure schema of a document.
@@ -1611,7 +1615,7 @@ int                 bufferLength;
    Return value:
    the structure schema of that document.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 SSchema             TtaGetDocumentSSchema (Document document)
@@ -1644,7 +1648,7 @@ Document            document;
    return schema;
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGetSSchemaName
 
    Returns the name of a structure schema.
@@ -1655,7 +1659,7 @@ Document            document;
    Return value:
    name of that structure schema.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 char               *TtaGetSSchemaName (SSchema schema)
@@ -1680,7 +1684,7 @@ SSchema             schema;
    return nameBuffer;
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGetPSchemaName
 
    Returns the name of the presentation schema currently associated
@@ -1692,7 +1696,7 @@ SSchema             schema;
    Return value:
    name of the associated presentation schema.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 char               *TtaGetPSchemaName (SSchema schema)
@@ -1752,7 +1756,7 @@ char               *name;
    return retour;
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGetSSchema
 
    Returns a structure schema whose name is known and that is used in a
@@ -1766,7 +1770,7 @@ char               *name;
    the structure schema having this name, or NULL if this structure
    schema is not loaded or not used by the document.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 SSchema             TtaGetSSchema (char *name, Document document)
@@ -1805,7 +1809,7 @@ Document            document;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaSameSSchemas
 
    Compares two structure schemas.
@@ -1817,7 +1821,7 @@ Document            document;
    Return value:
    0 if both schemas are different, 1 if they are identical.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 TtaSameSSchemas (SSchema schema1, SSchema schema2)
@@ -1844,7 +1848,7 @@ SSchema             schema2;
    return result;
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGiveSchemasOfDocument
 
    Returns the names of the main structure schema and presentation schema
@@ -1861,7 +1865,7 @@ SSchema             schema2;
    structureName: Name of the document structure schema.
    presentationName: Name of the document presentation schema.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TtaGiveSchemasOfDocument (char *documentName, char *structureName, char *presentationName)
@@ -1982,7 +1986,7 @@ char               *presentationName;
      }
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaNextSchemaExtension
 
    Returns a structure schema extension associated with a given document.
@@ -1996,7 +2000,7 @@ char               *presentationName;
    extension of the document if parameter extension is NULL.
    NULL if there is no more schema extension.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TtaNextSchemaExtension (Document document, SSchema * extension)
@@ -2038,7 +2042,7 @@ SSchema            *extension;
    *extension = (SSchema) nextExtension;
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaNextNature
 
    Returns the structure schema of a nature used in a given document.
@@ -2053,7 +2057,7 @@ SSchema            *extension;
    when calling.
    NULL if there is no more nature for the document.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TtaNextNature (Document document, SSchema * nature)
@@ -2127,7 +2131,7 @@ SSchema            *nature;
    *nature = (SSchema) nextNature;
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaIsDocumentModified
 
    Indicates whether a document has been modified by the user or not.
@@ -2141,7 +2145,7 @@ SSchema            *nature;
    1 if the document has been modified by the user since it has been saved,
    loaded or created, 0 if it has not been modified.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 TtaIsDocumentModified (Document document)
@@ -2173,7 +2177,7 @@ Document            document;
    return modified;
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGetDocumentAccessMode
 
    Returns the access mode for a document.
@@ -2183,7 +2187,7 @@ Document            document;
    Return value:
    0 if access mode is read only, 1 if access mode is read-write.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 TtaGetDocumentAccessMode (Document document)
@@ -2218,7 +2222,7 @@ Document            document;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGetDocumentBackUpInterval
 
    Returns backup interval for a document.
@@ -2230,7 +2234,7 @@ Document            document;
    positive integer : number of typed characters which trigger an autamatic
    save of the document into a .BAK file.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 TtaGetDocumentBackUpInterval (Document document)
@@ -2262,7 +2266,7 @@ Document            document;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGetNotificationMode
 
    Returns the ECF notification mode for a document.
@@ -2273,7 +2277,7 @@ Document            document;
    0 = if only roots of created and deleted subtrees must be notified,
    1 = all elements of created and deleted subtrees must be notified.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 TtaGetNotificationMode (Document document)
@@ -2308,7 +2312,7 @@ Document            document;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGetDocumentPath
 
    Returns the current list of the directories used when a document is open
@@ -2322,7 +2326,7 @@ Document            document;
    buffer: the list of directories. Directory names are separated by
    the character PATH_SEP.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TtaGetDocumentPath (char *buffer, int bufferLength)
@@ -2342,7 +2346,7 @@ int                 bufferLength;
    strncpy (buffer, DocumentPath, bufferLength - 1);
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGetSchemaPath
 
    Returns the current list of directories used for accessing schemas.
@@ -2355,7 +2359,7 @@ int                 bufferLength;
    buffer: the list of directories. Directory names are separated by
    the character PATH_SEP.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TtaGetSchemaPath (char *buffer, int bufferLength)
@@ -2376,7 +2380,7 @@ int                 bufferLength;
 }
 
 #ifndef NODISPLAY
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGetDocumentOfSavedElements
 
    Returns the document for which the last Copy or Cut command has been
@@ -2389,7 +2393,7 @@ int                 bufferLength;
    the document for which the last Copy or Cut command has been issued.
    0 if the clipboard is empty.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 Document            TtaGetDocumentOfSavedElements ()

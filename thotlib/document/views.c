@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
    Module de gestion des vues des documents
 
  */
@@ -64,10 +68,10 @@
 static AvailableView    AllViews;
 static int          ViewMenuItem[MAX_VIEW_OPEN];
 
-/* ---------------------------------------------------------------------- */
-/* |    PaginatedView rend vrai si la vue Vue du document pDoc est une	| */
-/* |		vue paginee						| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PaginatedView rend vrai si la vue Vue du document pDoc est une	
+   		vue paginee						
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             PaginatedView (PtrDocument pDoc, int view, boolean assoc)
 
@@ -106,13 +110,13 @@ boolean             assoc;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    GetViewFromFrame retourne le pointeur sur le numero de vue (viewNum)      | */
-/* |        dans le document pDoc, correspondant a`                 	| */
-/* |        la fenetre de numero nframe. Si c'est une frame         	| */
-/* |        d'elements associes, rend assoc vrai et viewNum = numero	| */
-/* |        d'element associe, sinon rend assoc faux.               	| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetViewFromFrame retourne le pointeur sur le numero de vue (viewNum)      
+   dans le document pDoc, correspondant a`                 	
+   la fenetre de numero nframe. Si c'est une frame         	
+   d'elements associes, rend assoc vrai et viewNum = numero	
+   d'element associe, sinon rend assoc faux.               	
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                GetViewFromFrame (int nframe, PtrDocument pDoc, int *viewNum, boolean * assoc)
 #else  /* __STDC__ */
@@ -158,14 +162,14 @@ boolean            *assoc;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    GetDocAndView retourne le pointeur sur le document (pDoc) et le	| */
-/* |    numero de vue (viewNum) dans ce document, correspondant a	| */
-/* |    la fenetre de numero nframe. Si c'est une fenetre		| */
-/* |    d'elements associes, rend assoc vrai et viewNum = numero	| */
-/* |    d'element associe, sinon rend assoc faux.			| */
-/* |    Rend pDoc = NULL si la selection a echoue.			| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetDocAndView retourne le pointeur sur le document (pDoc) et le	
+   numero de vue (viewNum) dans ce document, correspondant a	
+   la fenetre de numero nframe. Si c'est une fenetre		
+   d'elements associes, rend assoc vrai et viewNum = numero	
+   d'element associe, sinon rend assoc faux.			
+   Rend pDoc = NULL si la selection a echoue.			
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                GetDocAndView (int frame, PtrDocument * pDoc, int *viewNum, boolean * assoc)
 #else  /* __STDC__ */
@@ -197,10 +201,10 @@ boolean            *assoc;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    BuildSSchemaViewList						| */
-/* |	Construit la liste des vues possibles d'un document.		| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   BuildSSchemaViewList						
+   	Construit la liste des vues possibles d'un document.		
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         BuildSSchemaViewList (PtrDocument pDoc, PtrSSchema pSS, AvailableView viewList, int *nViews, boolean nature)
 #else  /* __STDC__ */
@@ -274,10 +278,10 @@ boolean             nature;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    BuildNatureList	cree la liste des natures du schema		| */
-/* |	de structure pSS.						| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   BuildNatureList	cree la liste des natures du schema		
+   	de structure pSS.						
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         BuildNatureList (PtrSSchema pSS, int *nViews, AvailableView viewList, PtrDocument pDoc)
@@ -316,11 +320,11 @@ PtrDocument         pDoc;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    BuildDocumentViewList	construit la liste des vues definies pour	| */
-/* |	le document pDoc: vues de l'arbre principal, vues des elements	| */
-/* |	assoocies et vues des natures.                                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   BuildDocumentViewList	construit la liste des vues definies pour	
+   	le document pDoc: vues de l'arbre principal, vues des elements	
+   	assoocies et vues des natures.                                  
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 BuildDocumentViewList (PtrDocument pDoc, AvailableView viewList)
@@ -441,10 +445,10 @@ AvailableView       viewList;
    return nViews;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    NumberOfOpenViews retourne le nombre de vues qui existent pour	| */
-/* |            le document pDoc					| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   NumberOfOpenViews retourne le nombre de vues qui existent pour	
+   le document pDoc					
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int                 NumberOfOpenViews (PtrDocument pDoc)
 #else  /* __STDC__ */
@@ -467,10 +471,10 @@ PtrDocument         pDoc;
    return result;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    FreeView libere les paves et le contexte de la vue view du	| */
-/* |            document pDoc.						| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   FreeView libere les paves et le contexte de la vue view du	
+   document pDoc.						
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                FreeView (PtrDocument pDoc, DocViewNumber view)
 #else  /* __STDC__ */
@@ -493,13 +497,13 @@ DocViewNumber           view;
    pDoc->DocViewSubTree[view] = NULL;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    CloseDocumentView detruit la vue de numero view (si assoc est	| */
-/* |		faux) pour le document pDoc. S'il s'agit de la derniere	| */
-/* |            vue, libere le document dans le cas seulement ou        | */
-/* |            closeDoc est vrai. Si assoc est vrai, detruit la vue	| */
-/* |            des elements associes de numero view du document.	| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CloseDocumentView detruit la vue de numero view (si assoc est	
+   		faux) pour le document pDoc. S'il s'agit de la derniere	
+   vue, libere le document dans le cas seulement ou        
+   closeDoc est vrai. Si assoc est vrai, detruit la vue	
+   des elements associes de numero view du document.	
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CloseDocumentView (PtrDocument pDoc, int view, boolean assoc, boolean closeDoc)
 #else  /* __STDC__ */
@@ -546,9 +550,9 @@ boolean             closeDoc;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ChangeDocumentName change le nom d'un document pDoc en newName	| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ChangeDocumentName change le nom d'un document pDoc en newName	
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ChangeDocumentName (PtrDocument pDoc, char *newName)
 #else  /* __STDC__ */
@@ -597,11 +601,11 @@ char               *newName;
 	   }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ViewClosed	libere tous les paves de la vue correspondant a 	| */
-/* |          la fenetre de numero nframe. Appele lorsque l'utilisateur	| */
-/* |	      ferme une fenetre.					| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ViewClosed	libere tous les paves de la vue correspondant a 	
+   la fenetre de numero nframe. Appele lorsque l'utilisateur	
+   	      ferme une fenetre.					
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                ViewClosed (int nFrame)
@@ -640,10 +644,10 @@ int                 nFrame;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | OpenDefaultViews ouvre, pour le document pDoc, toutes les vues	| */
-/* |            qui doivent etre ouvertes a l'ouverture du document.    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   OpenDefaultViews ouvre, pour le document pDoc, toutes les vues	
+   qui doivent etre ouvertes a l'ouverture du document.    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                OpenDefaultViews (PtrDocument pDoc)
 
@@ -737,19 +741,19 @@ PtrDocument         pDoc;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    CreateAbstractImage cree l'image abstraite pour une vue du       | */
-/* |            document pDoc. Si v est nul, il                         | */
-/* |            s'agit d'une vue d'elements associes de type r,         | */
-/* |            appartenant au schema de structure pSS; sinon c'est la  | */
-/* |            vue de numero v definie dans le schema de presentation  | */
-/* |            associe' au schema de structure pointe' par pSS.        | */
-/* |            Si viewRoot est NULL, la vue presentera un arbre        | */
-/* |            entier, sinon elle n'affichera que le sous-arbre de     | */
-/* |            racine viewRoot.                                        | */
-/* |    Retourne 0 si echec ou le numero de vue pour le document ou le  | */
-/* |            numero d'element associe' de la vue creee.              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CreateAbstractImage cree l'image abstraite pour une vue du       
+   document pDoc. Si v est nul, il                         
+   s'agit d'une vue d'elements associes de type r,         
+   appartenant au schema de structure pSS; sinon c'est la  
+   vue de numero v definie dans le schema de presentation  
+   associe' au schema de structure pointe' par pSS.        
+   Si viewRoot est NULL, la vue presentera un arbre        
+   entier, sinon elle n'affichera que le sous-arbre de     
+   racine viewRoot.                                        
+   Retourne 0 si echec ou le numero de vue pour le document ou le  
+   numero d'element associe' de la vue creee.              
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 CreateAbstractImage (PtrDocument pDoc, int v, int r, PtrSSchema pSS, int chosenView, boolean begin, PtrElement viewRoot)
 #else  /* __STDC__ */
@@ -1026,15 +1030,15 @@ PtrElement          viewRoot;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    OpenCreatedView ouvre une vue dont on a deja cree' l'image        | */
-/* |            pDoc: document concerne'.                               | */
-/* |            view: si assoc est faux, numero de la vue,              | */
-/* |                 si assoc est vrai, numero des elements associes    | */
-/* |                 dont on ouvre la vue.                              | */
-/* |            X, Y, width, height: position et dimensions de la	| */
-/* |		     fenetre en mm.					| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   OpenCreatedView ouvre une vue dont on a deja cree' l'image        
+   pDoc: document concerne'.                               
+   view: si assoc est faux, numero de la vue,              
+   si assoc est vrai, numero des elements associes    
+   dont on ouvre la vue.                              
+   X, Y, width, height: position et dimensions de la	
+   		     fenetre en mm.					
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                OpenCreatedView (PtrDocument pDoc, int view, boolean assoc, int X, int Y, int width, int height)
 #else  /* __STDC__ */
@@ -1114,9 +1118,9 @@ int                 height;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    GetViewByName cherche la vue de nom viewName.                   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetViewByName cherche la vue de nom viewName.                   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      GetViewByName (PtrDocument pDoc, Name viewName, int *view, boolean * assoc, PtrSSchema * pSS)
 #else  /* __STDC__ */
@@ -1215,9 +1219,9 @@ PtrSSchema         *pSS;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    OpenViewByName ouvre la vue de nom viewName			| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   OpenViewByName ouvre la vue de nom viewName			
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 OpenViewByName (PtrDocument pDoc, Name viewName, int X, int Y, int width, int height)
 #else  /* __STDC__ */
@@ -1273,10 +1277,10 @@ int                 height;
    return ret;
 }
 
-/* ---------------------------------------------------------------------- */
-/* | OpenViewByMenu ouvre effectivement une vue apres les retours	| */
-/* |            des menus d'ouverture de Vues                           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   OpenViewByMenu ouvre effectivement une vue apres les retours	
+   des menus d'ouverture de Vues                           
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                OpenViewByMenu (PtrDocument pDoc, int menuItem, PtrElement subTree, DocViewNumber selectedView)
@@ -1332,12 +1336,12 @@ DocViewNumber       selectedView;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    BuildViewList construit le menu des vues qu'il est possible	| */
-/* |    d'ouvrir pour le document pDoc.                                 | */
-/* |    buffer: buffer pour le texte du menu.                           | */
-/* |    Au retour nItems indique le nombre d'items dans le menu.        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   BuildViewList construit le menu des vues qu'il est possible	
+   d'ouvrir pour le document pDoc.                                 
+   buffer: buffer pour le texte du menu.                           
+   Au retour nItems indique le nombre d'items dans le menu.        
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                BuildViewList (PtrDocument pDoc, char *buffer, int *nItems)
@@ -1405,11 +1409,11 @@ int                *nItems;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    CloseView ferme la vue de numero view du document pDoc, ou le| */
-/* |    document complet s'il s'agit de la derniere vue de ce document. | */
-/* |    Si assoc est vrai, view un numero d'elements associe's          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CloseView ferme la vue de numero view du document pDoc, ou le
+   document complet s'il s'agit de la derniere vue de ce document. 
+   Si assoc est vrai, view un numero d'elements associe's          
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                CloseView (PtrDocument pDoc, int view, boolean assoc)

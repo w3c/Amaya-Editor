@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
    This module loads a presentation schema from a .PRS file
 
  */
@@ -23,10 +27,10 @@ static boolean      error;
 #include "readprs_f.h"
 
 
-/* ---------------------------------------------------------------------- */
-/* |	ReadrdTypeRegle  lit un type de regle de presentation et	| */
-/* |	retourne sa valeur.						| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	ReadrdTypeRegle  lit un type de regle de presentation et	
+   	retourne sa valeur.						
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static PRuleType    ReadrdTypeRegle (BinFile file)
 #else  /* __STDC__ */
@@ -129,9 +133,9 @@ BinFile             file;
 	 }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |	ReadPresMode lit un mode de presentation et retourne sa valeur.	| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	ReadPresMode lit un mode de presentation et retourne sa valeur.	
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static PresMode   ReadPresMode (BinFile file)
 #else  /* __STDC__ */
@@ -165,10 +169,10 @@ BinFile             file;
 	 }
 }
 
-/* ---------------------------------------------------------------------- */
-/* | rdTypeUnite lit un type d'unite dans le fichier                    | */
-/* |            et retourne sa valeur.                                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   rdTypeUnite lit un type d'unite dans le fichier                    
+   et retourne sa valeur.                                  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static TypeUnit     rdUnit (BinFile file)
 #else  /* __STDC__ */
@@ -208,9 +212,9 @@ BinFile             file;
 	 }
 }
 
-/* ---------------------------------------------------------------------- */
-/* | ReadInheritMode lit un mode d'heritage et retourne sa valeur.	| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReadInheritMode lit un mode d'heritage et retourne sa valeur.	
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static InheritMode ReadInheritMode (BinFile file)
 #else  /* __STDC__ */
@@ -251,10 +255,10 @@ BinFile             file;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	ReadFunctionType  lit un type de fonction de presentation et	| */
-/* |	retourne sa valeur.						| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	ReadFunctionType  lit un type de fonction de presentation et	
+   	retourne sa valeur.						
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static FunctionType    ReadFunctionType (BinFile file, boolean * repeat)
 #else  /* __STDC__ */
@@ -343,10 +347,10 @@ boolean            *repeat;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	ReadAlignment   lit un mode d'alignement des lignes et retourne	| */
-/* |	sa valeur.							| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	ReadAlignment   lit un mode d'alignement des lignes et retourne	
+   	sa valeur.							
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static BAlignment      ReadAlignment (BinFile file)
 #else  /* __STDC__ */
@@ -387,10 +391,10 @@ BinFile             file;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	ReadPresCondition      lit un type de condition et retourne	| */
-/* |	sa valeur.							| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	ReadPresCondition      lit un type de condition et retourne	
+   	sa valeur.							
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static PresCondition ReadPresCondition (BinFile file)
 #else  /* __STDC__ */
@@ -490,9 +494,9 @@ BinFile             file;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	ReadArithRel     lit la relation d'une condition Within		| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	ReadArithRel     lit la relation d'une condition Within		
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static ArithRel   ReadArithRel (BinFile file)
 #else  /* __STDC__ */
@@ -523,9 +527,9 @@ BinFile           file;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	ReadBoxEdge   lit un repere de boite et retourne sa valeur.	| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	ReadBoxEdge   lit un repere de boite et retourne sa valeur.	
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static BoxEdge  ReadBoxEdge (BinFile file)
 #else  /* __STDC__ */
@@ -580,10 +584,10 @@ BinFile         file;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	ReadLevel     lit un niveau relatif de boite et retourn		| */
-/* |	sa valeur.							| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	ReadLevel     lit un niveau relatif de boite et retourn		
+   	sa valeur.							
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static Level       ReadLevel (BinFile file)
 
@@ -641,10 +645,10 @@ BinFile             file;
    return level;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |	ReadCounterOp  lit un type d'operation sur compteur et retourne	| */
-/* |	sa valeur.							| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	ReadCounterOp  lit un type d'operation sur compteur et retourne	
+   	sa valeur.							
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static CounterOp    ReadCounterOp (BinFile file)
 #else  /* __STDC__ */
@@ -684,10 +688,10 @@ BinFile             file;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	ReadBasicType lit un type de base dans le fichier et retourne	| */
-/* |	sa valeur.							| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	ReadBasicType lit un type de base dans le fichier et retourne	
+   	sa valeur.							
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static BasicType   ReadBasicType (BinFile file)
 #else  /* __STDC__ */
@@ -733,9 +737,9 @@ BinFile             file;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	ReadVariableType  lit un type de variable et retourne sa valeur	| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	ReadVariableType  lit un type de variable et retourne sa valeur	
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static VariableType      ReadVariableType (BinFile file)
 
@@ -795,9 +799,9 @@ BinFile                  file;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	ReadCounterStyle lit un style de compteur et retourne sa valeur	| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	ReadCounterStyle lit un style de compteur et retourne sa valeur	
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static CounterStyle   ReadCounterStyle (BinFile file)
 #else  /* __STDC__ */
@@ -840,10 +844,10 @@ BinFile               file;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	ReadCounterValue    lit la nature du compteur inclus dans une	| */
-/* |	variable et retourne sa valeur.					| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	ReadCounterValue    lit la nature du compteur inclus dans une	
+   	variable et retourne sa valeur.					
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static CounterValue ReadCounterValue (BinFile file)
 #else  /* __STDC__ */
@@ -880,9 +884,9 @@ BinFile             file;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	ReadContentType	lit un type de contenu retourne sa valeur.	| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	ReadContentType	lit un type de contenu retourne sa valeur.	
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 ContentType         ReadContentType (BinFile file)
 
@@ -923,10 +927,10 @@ BinFile             file;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	ReadPRulePtr	retourne un pointeur sur la regle suivante ou	| */
-/* |	s'il n'y a pas de regle suivante.				| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	ReadPRulePtr	retourne un pointeur sur la regle suivante ou	
+   	s'il n'y a pas de regle suivante.				
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 PtrPRule        ReadPRulePtr (BinFile file, PtrPRule * pNextPRule)
 
@@ -948,9 +952,9 @@ PtrPRule       *pNextPRule;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	ReadPosRule   lit un positionnement relatif			| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	ReadPosRule   lit un positionnement relatif			
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ReadPosRule (BinFile file, PosRule * pPosRule)
 #else  /* __STDC__ */
@@ -977,10 +981,10 @@ PosRule            *pPosRule;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	ReadAttrCompar lit un type de comparaison pour les valeurs	| */
-/* |	d'attributs retourne sa valeur.					| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	ReadAttrCompar lit un type de comparaison pour les valeurs	
+   	d'attributs retourne sa valeur.					
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 AttrComparType      ReadAttrCompar (BinFile file)
 #else  /* __STDC__ */
@@ -1009,10 +1013,10 @@ BinFile             file;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	ReadPRules    lit une suite de regles chainees et fait pointer	| */
-/* |	le pointeur pPRule sur la premiere regle de la suite de regles lues	| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	ReadPRules    lit une suite de regles chainees et fait pointer	
+   	le pointeur pPRule sur la premiere regle de la suite de regles lues	
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ReadPRules (BinFile file, PtrPRule * pPRule, PtrPRule * pNextPRule)
 #else  /* __STDC__ */
@@ -1205,17 +1209,17 @@ PtrPRule            *pNextPRule;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	ReadPresentationSchema 						| */
-/* |	lit un fichier contenant un schema de presentation et le charge	| */
-/* |	en memoire.							| */
-/* |	fileName: nom du fichier a lire.				| */
-/* |	pSS: pointeur sur le schema de structure correspondant, deja	| */
-/* |	rempli si SsRootElem n'est pas nul, a charger si SsRootElem	| */
-/* |	est nul.							| */
-/* |	Retourne un pointeur sur le schema de presentation en memoire	| */
-/* |	chargement reussi, NULL si echec.				| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	ReadPresentationSchema 						
+   	lit un fichier contenant un schema de presentation et le charge	
+   	en memoire.							
+   	fileName: nom du fichier a lire.				
+   	pSS: pointeur sur le schema de structure correspondant, deja	
+   	rempli si SsRootElem n'est pas nul, a charger si SsRootElem	
+   	est nul.							
+   	Retourne un pointeur sur le schema de presentation en memoire	
+   	chargement reussi, NULL si echec.				
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 PtrPSchema          ReadPresentationSchema (Name fileName, PtrSSchema pSS)
 #else  /* __STDC__ */

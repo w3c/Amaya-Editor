@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
    Ce module charge un schema de structure depuis un fichier .STR
  */
 
@@ -18,10 +22,10 @@
 #include "readstr_f.h"
 #include "memory_f.h"
 
-/* ---------------------------------------------------------------------- */
-/* |    ReadAttribType                                                  | */
-/* |    lit un type d'attribut et retourne sa valeur.   		| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReadAttribType                                                  
+   lit un type d'attribut et retourne sa valeur.   		
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static boolean      ReadAttribType (BinFile file, AttribType * attrType)
@@ -60,10 +64,10 @@ AttribType       *attrType;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ReadRConstruct							| */
-/* |	lit un constructeur et retourne sa valeur.                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReadRConstruct							
+   	lit un constructeur et retourne sa valeur.                      
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static boolean      ReadRConstruct (BinFile file, RConstruct * constr)
@@ -122,10 +126,10 @@ RConstruct       *constr;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ReadBasicType                                                   | */
-/* |    lit un type de base et retourne sa valeur.      		| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReadBasicType                                                   
+   lit un type de base et retourne sa valeur.      		
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static boolean      ReadBasicType (BinFile file, BasicType * typ)
@@ -172,9 +176,9 @@ BasicType         *typ;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ReadAttribute                                			| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReadAttribute                                			
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static boolean      ReadAttribute (BinFile file, TtAttribute * pAttr)
@@ -220,9 +224,9 @@ TtAttribute         *pAttr;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ReadSRule                                  			| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReadSRule                                  			
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static boolean      ReadSRule (BinFile file, SRule * pSRule)
@@ -329,9 +333,9 @@ SRule              *pSRule;
    return TRUE;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ReadConstants                                          		| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReadConstants                                          		
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static boolean      ReadConstants (BinFile file, PtrSSchema pSS)
@@ -367,14 +371,14 @@ PtrSSchema        pSS;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ReadStructureSchema                                             | */
-/* |    lit un fichier contenant un schema de structure et charge       | */
-/* |    ce schema en memoire.                                           | */
-/* |    fileName: nom du fichier a lire, sans le suffixe .STR       	| */
-/* |    pSS: schema de structure en memoire a remplir.               	| */
-/* |    Retourne VRAI si chargement reussi, FAUX si echec.              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReadStructureSchema                                             
+   lit un fichier contenant un schema de structure et charge       
+   ce schema en memoire.                                           
+   fileName: nom du fichier a lire, sans le suffixe .STR       	
+   pSS: schema de structure en memoire a remplir.               	
+   Retourne VRAI si chargement reussi, FAUX si echec.              
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 boolean             ReadStructureSchema (Name fileName, PtrSSchema pSS)

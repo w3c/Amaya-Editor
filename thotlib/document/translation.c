@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
 
   This module handles document translation.
   It travels the abstract trees of a document and produces an
@@ -75,10 +79,10 @@ static char         fileExtension[MAX_PATH];
 #include "structschema_f.h"
 #include "content_f.h"
 
-/* ---------------------------------------------------------------------- */
-/* | GetSecondaryFile  retourne le fichier secondaire de nom fName.	| */
-/* |    Si ce fichier n'est pas ouvert, il est cree' et ouvert.         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetSecondaryFile  retourne le fichier secondaire de nom fName.	
+   Si ce fichier n'est pas ouvert, il est cree' et ouvert.         
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static int          GetSecondaryFile (char *fName, PtrDocument pDoc)
@@ -128,13 +132,13 @@ PtrDocument         pDoc;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | PutChar   ecrit le caractere c sur le terminal ou dans le fichier de  | */
-/* |    sortie, selon fileNum. S'il s'agit du fichier de sortie,        | */
-/* |    le caractere est range' dans le buffer de sortie et ce buffer   | */
-/* |    est ecrit dans le fichier des que la longueur limite des lignes | */
-/* |    est atteinte.                                                   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PutChar   ecrit le caractere c sur le terminal ou dans le fichier de  
+   sortie, selon fileNum. S'il s'agit du fichier de sortie,        
+   le caractere est range' dans le buffer de sortie et ce buffer   
+   est ecrit dans le fichier des que la longueur limite des lignes 
+   est atteinte.                                                   
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         PutChar (char c, int fileNum, char *outBuffer, PtrDocument pDoc,
@@ -229,10 +233,10 @@ boolean             lineBreak;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | PutColor        sort dans fichier le nom de la couleur qui se	| */
-/* |     trouve au rang n dans la table des couleurs.                   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PutColor        sort dans fichier le nom de la couleur qui se	
+   trouve au rang n dans la table des couleurs.                   
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         PutColor (int n, int fileNum, PtrDocument pDoc, boolean lineBreak)
@@ -257,10 +261,10 @@ boolean             lineBreak;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* | PutPattern  sort dans fichier le nom du motif qui se trouve au	| */
-/* |    rang n dans la table des motifs.				| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PutPattern  sort dans fichier le nom du motif qui se trouve au	
+   rang n dans la table des motifs.				
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         PutPattern (int n, int fileNum, PtrDocument pDoc, boolean lineBreak)
@@ -285,10 +289,10 @@ boolean             lineBreak;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* | PutInt convertit le nombre n sous la forme d'une chaine de         | */
-/* |    caracteres et sort cette chaine de caracteres dans fichier      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PutInt convertit le nombre n sous la forme d'une chaine de         
+   caracteres et sort cette chaine de caracteres dans fichier      
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         PutInt (int n, int fileNum, char *outBuffer, PtrDocument pDoc,
@@ -314,11 +318,11 @@ boolean             lineBreak;
       PutChar (buffer[i++], fileNum, outBuffer, pDoc, lineBreak);
 }
 
-/* ---------------------------------------------------------------------- */
-/* | TranslateLeaf   traite l'element feuille pointe' par pEl, en	| */
-/* |    traduisant son contenu si transChar est vrai. Produit le	| */
-/* |    contenu dans le fichier de sortie fileNum.			| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TranslateLeaf   traite l'element feuille pointe' par pEl, en	
+   traduisant son contenu si transChar est vrai. Produit le	
+   contenu dans le fichier de sortie fileNum.			
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         TranslateLeaf (PtrElement pEl, boolean transChar, boolean lineBreak,
@@ -729,10 +733,10 @@ PtrDocument         pDoc;
 	 }
 }
 
-/* ---------------------------------------------------------------------- */
-/* | PresRuleValue      retourne le code caractere de la valeur de la   | */
-/* |    regle de presentation specifique pointee par pPRule.            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PresRuleValue      retourne le code caractere de la valeur de la   
+   regle de presentation specifique pointee par pPRule.            
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static char         PresRuleValue (PtrPRule pPRule)
@@ -788,10 +792,10 @@ PtrPRule        pPRule;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | EmptyElement       retourne TRUE si l'element pEl est vide ou n'a  | */
-/* |    que des descendants vides.                                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   EmptyElement       retourne TRUE si l'element pEl est vide ou n'a  
+   que des descendants vides.                                      
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static boolean      EmptyElement (PtrElement pEl)
@@ -853,12 +857,12 @@ PtrElement          pEl;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | ConditionIsTrue   evalue la condition du bloc de regles pointe' par| */
-/* |    pBlock pour l'element pointe' par pEl et l'attribut pointe' par | */
-/* |    pAttr s'il est different de NULL. Retourne vrai si la condition | */
-/* |    satisfaite, faux sinon.                                         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ConditionIsTrue   evalue la condition du bloc de regles pointe' par
+   pBlock pour l'element pointe' par pEl et l'attribut pointe' par 
+   pAttr s'il est different de NULL. Retourne vrai si la condition 
+   satisfaite, faux sinon.                                         
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static boolean      ConditionIsTrue (PtrTRuleBlock pBlock, PtrElement pEl,
@@ -1328,12 +1332,12 @@ PtrDocument         pDoc;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | CounterVal     retourne la valeur du compteur de numero countNum	| */
-/* |    (defini dans le schema de traduction  pointe' par pTSch qui     | */
-/* |    s'applique au schema de structure pointe' par pSS) pour         | */
-/* |    l'element pointe' par pElNum.                                   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CounterVal     retourne la valeur du compteur de numero countNum	
+   (defini dans le schema de traduction  pointe' par pTSch qui     
+   s'applique au schema de structure pointe' par pSS) pour         
+   l'element pointe' par pElNum.                                   
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static int          CounterVal (int countNum, PtrTSchema pTSch, PtrSSchema pSS, PtrElement pElNum)
@@ -1529,12 +1533,12 @@ PtrElement          pElNum;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | SearchDescent   cherche dans le sous-arbre de racine pEl (racine	| */
-/* |    exclue), un element de type typeNum defini dans le schema de    | */
-/* |    structure pointe' par pSS, ou si pSS est nul dans le schema de  | */
-/* |    nom schemaName.                                                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SearchDescent   cherche dans le sous-arbre de racine pEl (racine	
+   exclue), un element de type typeNum defini dans le schema de    
+   structure pointe' par pSS, ou si pSS est nul dans le schema de  
+   nom schemaName.                                                 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         SearchDescent (PtrElement * pEl, int typeNum, PtrSSchema pSS, Name schemaName)
@@ -1591,12 +1595,12 @@ Name                schemaName;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | PutContent   e'crit le contenu des feuilles de l'element pEl dans  | */
-/* |    dans le fichier.                                                | */
-/* |    La traduction du contenu des feuilles a lieu seulement si       | */
-/* |    transChar est vrai.                                             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PutContent   e'crit le contenu des feuilles de l'element pEl dans  
+   dans le fichier.                                                
+   La traduction du contenu des feuilles a lieu seulement si       
+   transChar est vrai.                                             
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         PutContent (PtrElement pEl, boolean transChar, boolean lineBreak,
@@ -1642,10 +1646,10 @@ static void         ApplyTRule (/* pTRule, pTSch, pSSch, pEl, transChar, lineBre
 #endif /* __STDC__ */
 
 
-/* ---------------------------------------------------------------------- */
-/* | ApplyAttrRulesToElem    applique a l'element pEl les regles de	| */
-/* |    traduction associees a l'attribut pAttr.			| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ApplyAttrRulesToElem    applique a l'element pEl les regles de	
+   traduction associees a l'attribut pAttr.			
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         ApplyAttrRulesToElem (TOrder position, PtrElement pEl,
@@ -1763,9 +1767,9 @@ PtrDocument         pDoc;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | ApplyAttrRules                                                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ApplyAttrRules                                                        
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         ApplyAttrRules (TOrder position, PtrElement pEl, boolean * removeEl,
@@ -1872,10 +1876,10 @@ PtrDocument         pDoc;
 	}
 }
 
-/* ---------------------------------------------------------------------- */
-/* | ApplyPresTRules applique a l'element pointe' par pEl les regles de	| */
-/* |    traduction associees aux presentations portees par l'element.   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ApplyPresTRules applique a l'element pointe' par pEl les regles de	
+   traduction associees aux presentations portees par l'element.   
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         ApplyPresTRules (TOrder position, PtrElement pEl, boolean * removeEl,
@@ -2029,9 +2033,9 @@ PtrDocument         pDoc;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | PutVariable                               				| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PutVariable                               				
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         PutVariable (PtrElement pEl, PtrAttribute pAttr,
@@ -2246,16 +2250,16 @@ static void         TranslateTree (PtrElement pEl, PtrDocument pDoc, boolean tra
 static void         TranslateTree (/* pEl, pDoc, transChar, lineBreak, enforce */);
 #endif /* __STDC__ */
 
-/* ---------------------------------------------------------------------- */
-/* | ApplyTRule   applique la regle de traduction pTRule du schema de	| */
-/* |    traduction pTSch (qui correspond au schema de structure pointe' | */
-/* |    par pSSch) a l'element pointe par pEl, en demandant la          | */
-/* |    traduction des caracteres contenus si transChar est vrai.       | */
-/* |    S'il s'agit de la traduction d'une presentation, pRPres pointe  | */
-/* |    sur la regle de presentation specifique traduite.               | */
-/* |    S'il s'agit de la traduction des regles d'un attribut,          | */
-/* |    pAttr pointe sur l'attribut que l'on traduit.			| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ApplyTRule   applique la regle de traduction pTRule du schema de	
+   traduction pTSch (qui correspond au schema de structure pointe' 
+   par pSSch) a l'element pointe par pEl, en demandant la          
+   traduction des caracteres contenus si transChar est vrai.       
+   S'il s'agit de la traduction d'une presentation, pRPres pointe  
+   sur la regle de presentation specifique traduite.               
+   S'il s'agit de la traduction des regles d'un attribut,          
+   pAttr pointe sur l'attribut que l'on traduit.			
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch,
@@ -2947,11 +2951,11 @@ boolean           *removeEl;
 	 }
 }
 
-/* ---------------------------------------------------------------------- */
-/* | ApplyElTypeRules   applique a l'element pointe' par pEl les regles | */
-/* |    de traduction qui correspondent a son type et qui doivent       | */
-/* |    s'appliquer a la position position.                             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ApplyElTypeRules   applique a l'element pointe' par pEl les regles 
+   de traduction qui correspondent a son type et qui doivent       
+   s'appliquer a la position position.                             
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         ApplyElTypeRules (TOrder position, boolean * transChar,
@@ -3013,11 +3017,11 @@ PtrDocument        pDoc;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | TranslateTree   traduit le sous-arbre dont la racine est pEl	| */
-/* |    et applique les regles de traduction des feuilles si transChar  | */
-/* |    est vrai.                                                       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TranslateTree   traduit le sous-arbre dont la racine est pEl	
+   et applique les regles de traduction des feuilles si transChar  
+   est vrai.                                                       
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         TranslateTree (PtrElement pEl, PtrDocument pDoc, boolean transChar,
@@ -3186,10 +3190,10 @@ boolean             enforce;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | ResetTranslTags   remet a zero tous les indicateurs "deja traduit" | */
-/* |    de l'arbre de racine pEl.                                       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ResetTranslTags   remet a zero tous les indicateurs "deja traduit" 
+   de l'arbre de racine pEl.                                       
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         ResetTranslTags (PtrElement pEl)
@@ -3219,9 +3223,9 @@ PtrElement          pEl;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    InitOutputFiles initialise les fichiers de sortie.              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   InitOutputFiles initialise les fichiers de sortie.              
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         InitOutputFiles (FILE * mainFile, PtrDocument pDoc)
@@ -3244,10 +3248,10 @@ PtrDocument         pDoc;
    NOutputFiles = 2;
 }
 
-/* ---------------------------------------------------------------------- */
-/* | FlushOutputFiles vide les buffers dans les fichiers de sortie      | */
-/* |    correspondants.                                                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   FlushOutputFiles vide les buffers dans les fichiers de sortie      
+   correspondants.                                                 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         FlushOutputFiles (PtrDocument pDoc)
@@ -3269,11 +3273,11 @@ PtrDocument         pDoc;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* | ExportDocument     exporte le document pointe' par pDoc, selon le  | */
-/* |    schema de traduction de nom TSchemaName et produit le resultat  | */
-/* |    dans le fichier de nom fName.					| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ExportDocument     exporte le document pointe' par pDoc, selon le  
+   schema de traduction de nom TSchemaName et produit le resultat  
+   dans le fichier de nom fName.					
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                ExportDocument (PtrDocument pDoc, char *fName, char *TSchemaName)

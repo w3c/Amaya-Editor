@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
    ce module charge un document depuis un fichier contenant une representation
    pivot et construit les arbres abstraits correspondants.
  */
@@ -63,9 +67,9 @@ static int          newColor[] =
 #include "content_f.h"
 
 
-/* ---------------------------------------------------------------------- */
-/* |	PivotError							| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	PivotError							
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         PivotError (BinFile file)
 #else  /* __STDC__ */
@@ -100,14 +104,14 @@ BinFile             file;
    error = TRUE;
 }
 
-/* ---------------------------------------------------------------------- */
-/* | NormalizeFileName recupere les informations contenues dans le      | */
-/* |            nom de fichier (cas des anciens fichiers pivots).       | */
-/* |            La presentation et le type de l'image sont code's sur   | */
-/* |            1 octet au debut du nom. On retourne dans name, le nom  | */
-/* |            correct et dans oldTypeImage et oldPres le type et la   | */
-/* |            presentation trouve ou 0.                               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   NormalizeFileName recupere les informations contenues dans le      
+   nom de fichier (cas des anciens fichiers pivots).       
+   La presentation et le type de l'image sont code's sur   
+   1 octet au debut du nom. On retourne dans name, le nom  
+   correct et dans oldTypeImage et oldPres le type et la   
+   presentation trouve ou 0.                               
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *NormalizeFileName (char *fileName, int *oldTypeImage, PictureScaling * oldPres, boolean * found)
 
@@ -141,10 +145,10 @@ boolean            *found;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    CreatePRule cree une regle de presentation pour l'image		| */
-/* |            contenue dans pEl.                                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CreatePRule cree une regle de presentation pour l'image		
+   contenue dans pEl.                                      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         CreatePRule (PtrElement pEl, int pictureType, PictureScaling scaling, int view)
 
@@ -178,10 +182,10 @@ int                 view;
    pEl->ElFirstPRule = pPRule;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ReadDimensionType lit un type de dimension dans le fichier et	| */
-/* |	retourne sa valeur.                                             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReadDimensionType lit un type de dimension dans le fichier et	
+   	retourne sa valeur.                                             
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      ReadDimensionType (BinFile file)
 #else  /* __STDC__ */
@@ -204,9 +208,9 @@ BinFile             file;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | ReadUnit lit une unite dans le fichier et retourne sa valeur.	| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReadUnit lit une unite dans le fichier et retourne sa valeur.	
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static TypeUnit     ReadUnit (BinFile file)
 #else  /* __STDC__ */
@@ -239,9 +243,9 @@ BinFile             file;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ReadSign lit un signe dans le fichier et retourne sa valeur.    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReadSign lit un signe dans le fichier et retourne sa valeur.    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      ReadSign (BinFile file)
 #else  /* __STDC__ */
@@ -263,9 +267,9 @@ BinFile             file;
       return FALSE;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ReadBoolean lit un booleen dans le fichier et retourne sa valeur| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReadBoolean lit un booleen dans le fichier et retourne sa valeur
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static boolean      ReadBoolean (BinFile file)
@@ -290,9 +294,9 @@ BinFile             file;
       return FALSE;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |  ReadAlign lit un BAlignment dans le fichier et retourne sa valeur. | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReadAlign lit un BAlignment dans le fichier et retourne sa valeur. 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static BAlignment      ReadAlign (BinFile file)
@@ -335,10 +339,10 @@ BinFile             file;
    return align;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ReadPageType	lit un Type de page dans le fichier et retourne	| */
-/* |            sa valeur.                                              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReadPageType	lit un Type de page dans le fichier et retourne	
+   sa valeur.                                              
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static PageType     ReadPageType (BinFile file)
@@ -420,15 +424,15 @@ BinFile             file;
    return typ;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ReadComment lit un commentaire dans le fichier file et retourne | */
-/* |            un pointeur sur le premier buffer du texte du           | */
-/* |            commentaire lu, si store est vrai. Si store est		| */
-/* |            faux, le commentaire est simplement saute' et la        | */
-/* |            fonction retourne NULL.                                 | */
-/* |            Si oldformat est vrai, le commentaire est lu selon      | */
-/* |            l'ancien format.                                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReadComment lit un commentaire dans le fichier file et retourne 
+   un pointeur sur le premier buffer du texte du           
+   commentaire lu, si store est vrai. Si store est		
+   faux, le commentaire est simplement saute' et la        
+   fonction retourne NULL.                                 
+   Si oldformat est vrai, le commentaire est lu selon      
+   l'ancien format.                                        
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 PtrTextBuffer      ReadComment (BinFile file, boolean store, boolean oldformat)
@@ -554,9 +558,9 @@ boolean             oldformat;
    return firstBuf;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ReadPictureType lit le type de l'image d'un PictInfo.		| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReadPictureType lit le type de l'image d'un PictInfo.		
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static int          ReadPictureType (BinFile file)
@@ -578,9 +582,9 @@ BinFile             file;
       return n;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ReadPictureArea lit la zone affichable d'un PictInfo.		| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReadPictureArea lit la zone affichable d'un PictInfo.		
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         ReadPictureArea (BinFile file, int *PicXArea, int *PicYArea, int *PicWArea, int *PicHArea)
@@ -608,9 +612,9 @@ int                *PicHArea;
    *PicHArea = PointToPixel (n);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ReadPicturePresentation lit la presentation d'un PictInfo	| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReadPicturePresentation lit la presentation d'un PictInfo	
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static PictureScaling    ReadPicturePresentation (BinFile file)
@@ -652,10 +656,10 @@ BinFile             file;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    LabelStringToInt convertit le label strn en un entier           | */
-/* |            retourne 0 si label mal construit.                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   LabelStringToInt convertit le label strn en un entier           
+   retourne 0 si label mal construit.                      
+  ----------------------------------------------------------------------*/
 
 
 #ifdef __STDC__
@@ -699,14 +703,14 @@ int                *number;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ReadReference lit une reference dans le fichier file et retourne| */
-/* |       le type de la reference lue (refType), le label de l'element | */
-/* |       reference' (label), un booleen indiquant si la reference	| */
-/* |       est interne ou externe (refExt) et, dans le cas d'une	| */
-/* |       reference externe, le nom (docIdent) du document contenant	| */
-/* |       l'element reference'. 					| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReadReference lit une reference dans le fichier file et retourne
+   le type de la reference lue (refType), le label de l'element 
+   reference' (label), un booleen indiquant si la reference	
+   est interne ou externe (refExt) et, dans le cas d'une	
+   reference externe, le nom (docIdent) du document contenant	
+   l'element reference'. 					
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         ReadReference (ReferenceType * refType, LabelString label, boolean * refExt, DocumentIdentifier * docIdent, BinFile file)
@@ -828,17 +832,17 @@ BinFile             file;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    GetElRefer cherche s'il existe un descripteur de reference	| */
-/* |            designant l'element de label label dans le document de	| */
-/* |            docIdent. Si docIdent est un identificateur vide,	| */
-/* |		l'element designe'					| */
-/* |            est interne au document en cours de lecture, dont le    | */
-/* |            contexte est pointe' par pDoc. Si le descripteur        | */
-/* |            n'existe pas, il est cree' et chaine'.                  | */
-/* |            La fonction rend un pointeur sur le descripteur trouve' | */
-/* |            ou cree'.                                               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetElRefer cherche s'il existe un descripteur de reference	
+   designant l'element de label label dans le document de	
+   docIdent. Si docIdent est un identificateur vide,	
+   		l'element designe'					
+   est interne au document en cours de lecture, dont le    
+   contexte est pointe' par pDoc. Si le descripteur        
+   n'existe pas, il est cree' et chaine'.                  
+   La fonction rend un pointeur sur le descripteur trouve' 
+   ou cree'.                                               
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static PtrReferredDescr GetElRefer (LabelString label, DocumentIdentifier docIdent, PtrDocument pDoc)
@@ -898,14 +902,14 @@ PtrDocument         pDoc;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    CreateReference chaine le descripteur de reference pointe' par  | */
-/* |            pRef appartenant au document dont le contexte est       | */
-/* |            pointe' par pDoc et initialise ce descripteur pour      | */
-/* |            qu'il designe l'element de label label appartenant au   | */
-/* |            document docIdent. Si docIdent est un identificateur	| */
-/* |            vide, il s'agit du document pDoc.			| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CreateReference chaine le descripteur de reference pointe' par  
+   pRef appartenant au document dont le contexte est       
+   pointe' par pDoc et initialise ce descripteur pour      
+   qu'il designe l'element de label label appartenant au   
+   document docIdent. Si docIdent est un identificateur	
+   vide, il s'agit du document pDoc.			
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         CreateReference (PtrReference pRef, ReferenceType refType, LabelString label, boolean refExt, DocumentIdentifier docIdent, PtrDocument pDoc)
@@ -952,14 +956,14 @@ PtrDocument         pDoc;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ReadType lit dans le fichier pivot, selon la valeur de tag,     | */
-/* |            un numero de type ou un nom de nature et rend le numero | */
-/* |            de la regle definissant le type lu. Retourne 0 si       | */
-/* |            erreur. Si tag est une tag de nature, au retour		| */
-/* |            pSS contient un pointeur sur le schema de structure | */
-/* |            de cette nature.                                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReadType lit dans le fichier pivot, selon la valeur de tag,     
+   un numero de type ou un nom de nature et rend le numero 
+   de la regle definissant le type lu. Retourne 0 si       
+   erreur. Si tag est une tag de nature, au retour		
+   pSS contient un pointeur sur le schema de structure 
+   de cette nature.                                        
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static int  ReadType (PtrDocument pDoc, PtrSSchema * pSS, BinFile pivFile, char *tag)
@@ -1042,14 +1046,14 @@ char                *tag;
    return rule;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |   ExportedContent compare le type de l'element en cours de lecture | */
-/* |            avec le type qui doit constituer le contenu d'un        | */
-/* |            element exporte'. Si le type correspond, positionne les | */
-/* |            indicateurs marquant qu'on doit creer tout le contenu   | */
-/* |            de l'element courant et qu'on ne cherche plus a` creer  | */
-/* |            de contenu.                                             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ExportedContent compare le type de l'element en cours de lecture 
+   avec le type qui doit constituer le contenu d'un        
+   element exporte'. Si le type correspond, positionne les 
+   indicateurs marquant qu'on doit creer tout le contenu   
+   de l'element courant et qu'on ne cherche plus a` creer  
+   de contenu.                                             
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         ExportedContent (boolean * createAll, int * elType, PtrSSchema * pSS, PtrSSchema * pContSS, int * contentType)
@@ -1133,12 +1137,12 @@ int		 *contentType;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    CheckMandatAttrSRule verifie que l'element pointe' par pEl      | */
-/* |    possede les attributs requis indique's dans la regle pSRule du  | */
-/* |    schema de structure pSS et, si certains attributs requis        | */
-/* |    manquent, affiche un message d'erreur.                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CheckMandatAttrSRule verifie que l'element pointe' par pEl      
+   possede les attributs requis indique's dans la regle pSRule du  
+   schema de structure pSS et, si certains attributs requis        
+   manquent, affiche un message d'erreur.                          
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         CheckMandatAttrSRule (PtrElement pEl, SRule * pSRule, PtrSSchema pSS)
@@ -1178,11 +1182,11 @@ PtrSSchema         pSS;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |  CheckMandatoryAttr verifie que l'element pointe' par pEl possede  | */
-/* |            les attributs requis et, si certains attributs requis   | */
-/* |            manquent, affiche un message d'erreur.                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CheckMandatoryAttr verifie que l'element pointe' par pEl possede  
+   les attributs requis et, si certains attributs requis   
+   manquent, affiche un message d'erreur.                  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         CheckMandatoryAttr (PtrElement pEl, PtrDocument pDoc)
 #else  /* __STDC__ */
@@ -1226,18 +1230,18 @@ PtrDocument         pDoc;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ReadAttr lit dans le fichier pivFile un attribut qui est sous   | */
-/* |    forme pivot. Le fichier doit etre positionne' juste apres       | */
-/* |    la Marque-Attribut (qui a deja ete lue). Au retour, le fichier  | */
-/* |    est positionne' sur le premier octet qui suit l'attribut        | */
-/* |    (prochain octet qui sera lu).                                   | */
-/* |    Si create est faux, rien n'est cree', l'attribut est simplement | */
-/* |    saute' dans le fichier.                                         | */
-/* |    Si create est vrai, un attribut est cree' et  est retourne'     | */
-/* |    dans pReadAttr.                                                 | */
-/* |    ATTENTION: ReadAttr utilise la table des natures du document    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReadAttr lit dans le fichier pivFile un attribut qui est sous   
+   forme pivot. Le fichier doit etre positionne' juste apres       
+   la Marque-Attribut (qui a deja ete lue). Au retour, le fichier  
+   est positionne' sur le premier octet qui suit l'attribut        
+   (prochain octet qui sera lu).                                   
+   Si create est faux, rien n'est cree', l'attribut est simplement 
+   saute' dans le fichier.                                         
+   Si create est vrai, un attribut est cree' et  est retourne'     
+   dans pReadAttr.                                                 
+   ATTENTION: ReadAttr utilise la table des natures du document    
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                ReadAttr (BinFile pivFile, PtrElement pEl, PtrDocument pDoc, boolean create, PtrAttribute * pReadAttr, PtrAttribute * pAttr)
@@ -1434,19 +1438,19 @@ PtrAttribute        *pAttr;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ReadAttribute lit dans le fichier pivFile un attribut qui est   | */
-/* |    sous forme pivot. Le fichier doit etre positionne' juste apres  | */
-/* |    la Marque-Attribut (qui a deja ete lue). Au retour, le fichier  | */
-/* |    est positionne' sur le premier octet qui suit l'attribut        | */
-/* |    (prochain octet qui sera lu).                                   | */
-/* |    Si create est faux, rien n'est cree' dans l'arbre abstrait,     | */
-/* |    l'attribut est simplement saute' dans le fichier.               | */
-/* |    Si create est vrai, un attribut est cree' et attache' a l'element | */
-/* |    pointe' par pEl; un pointeur sur cet attribut est retourne'     | */
-/* |    dans pReadAttr.                                                 | */
-/* |    ATTENTION: ReadAttribute utilise la table des natures du document  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReadAttribute lit dans le fichier pivFile un attribut qui est   
+   sous forme pivot. Le fichier doit etre positionne' juste apres  
+   la Marque-Attribut (qui a deja ete lue). Au retour, le fichier  
+   est positionne' sur le premier octet qui suit l'attribut        
+   (prochain octet qui sera lu).                                   
+   Si create est faux, rien n'est cree' dans l'arbre abstrait,     
+   l'attribut est simplement saute' dans le fichier.               
+   Si create est vrai, un attribut est cree' et attache' a l'element 
+   pointe' par pEl; un pointeur sur cet attribut est retourne'     
+   dans pReadAttr.                                                 
+   ATTENTION: ReadAttribute utilise la table des natures du document  
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         ReadAttribute (BinFile pivFile, PtrElement pEl, PtrDocument pDoc, boolean create, PtrAttribute * pReadAttr)
@@ -1488,19 +1492,19 @@ PtrAttribute        *pReadAttr;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ReadPRulePiv lit dans le fichier pivFile une regle de           | */
-/* |    presentation qui est sous forme pivot. Le fichier doit etre     | */
-/* |    positionne' juste apres la Marque-Presentation (qui a deja ete  | */
-/* |    lue). Au retour, le fichier est positionne' sur le premier      | */
-/* |    octet qui suit la regle de presentation lue (prochain octet qui | */
-/* |    sera lu).                                                       | */
-/* |    Si create est faux, rien n'est cree' dans l'arbre abstrait, la  | */
-/* |    regle de presentation est simplement saute'e dans le fichier.   | */
-/* |    Si create est vrai, une regle est cree'e et attache'e a l'element| */
-/* |    pointe' par pEl; un pointeur sur cette regle est retourne'      | */
-/* |    dans pRuleRead.                                                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReadPRulePiv lit dans le fichier pivFile une regle de           
+   presentation qui est sous forme pivot. Le fichier doit etre     
+   positionne' juste apres la Marque-Presentation (qui a deja ete  
+   lue). Au retour, le fichier est positionne' sur le premier      
+   octet qui suit la regle de presentation lue (prochain octet qui 
+   sera lu).                                                       
+   Si create est faux, rien n'est cree' dans l'arbre abstrait, la  
+   regle de presentation est simplement saute'e dans le fichier.   
+   Si create est vrai, une regle est cree'e et attache'e a l'element
+   pointe' par pEl; un pointeur sur cette regle est retourne'      
+   dans pRuleRead.                                                 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl, boolean create, PtrPRule * pRuleRead, boolean link)
 #else  /* __STDC__ */
@@ -1820,10 +1824,10 @@ boolean             link;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    SendEventAttrRead       envoie les evenements TteAttrRead       | */
-/* |            pour les attributs de l'element pEl qui vient d'etre lu | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SendEventAttrRead       envoie les evenements TteAttrRead       
+   pour les attributs de l'element pEl qui vient d'etre lu 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         SendEventAttrRead (PtrElement pEl, PtrDocument pDoc)
 
@@ -1869,37 +1873,37 @@ PtrDocument         pDoc;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ReadTreePiv effectue la traduction de la forme pivot commencant | */
-/* |            a` la position courante dans pivFile vers la            | */
-/* |            representation interne. Au retour le fichier est        | */
-/* |            positionne' apres la partie traduite. Le fichier doit   | */
-/* |            etre ouvert avant l'appel et il reste ouvert au retour. | */
-/* |            Le fichier doit etre positionne' sur un numero de type  | */
-/* |            ou un nom de nature.                                    | */
-/* |            - pSSchema: pointeur sur le schema de structure courant.| */
-/* |            - pDoc:    pointeur sur le contexte du document en      | */
-/* |            cours de lecture.                                       | */
-/* |            - tag:  tag precedent le numero de type ou le nom 	| */
-/* |            de nature. Au retour: 1er octet suivant l'element.      | */
-/* |            - assocNum:  numero de la liste d'elements associes a`  | */
-/* |            laquelle appartient le texte a` internaliser. Zero si   | */
-/* |            c'est l'arbre principal.                                | */
-/* |            - createParam: indique s'il faut creer un parametre ou non.| */
-/* |            - createAll:indique qu'il faut creer tous les elements  | */
-/* |            qui descendent de l'element courant et qui sont dans le | */
-/* |            fichier. Si createAll est faux, on ne cree que les      | */
-/* |            elements exportes et dans ceux-ci tout le sous-arbre    | */
-/* |            des elements de type contentType definis dans le schema | */
-/* |            de structure pointe' par pContSS.                       | */
-/* |            - typeRead:  au retour, indique le type de l'element lu,| */
-/* |            qu'il ait ete cree' ou pas.                             | */
-/* |            - pSSRead: au retour, pointeur sur le schema de         | */
-/* |            structure de l'element lu, qu'il ait ete cree' ou pas.  | */
-/* |            - Pere: element qui sera le pere de l'element lu.       | */
-/* |            - createDesc: si cree<desc est faux, on ne cree pas     | */
-/* |            l'element lu ni sa descendance. Prioritaire sur createAll| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReadTreePiv effectue la traduction de la forme pivot commencant 
+   a` la position courante dans pivFile vers la            
+   representation interne. Au retour le fichier est        
+   positionne' apres la partie traduite. Le fichier doit   
+   etre ouvert avant l'appel et il reste ouvert au retour. 
+   Le fichier doit etre positionne' sur un numero de type  
+   ou un nom de nature.                                    
+   - pSSchema: pointeur sur le schema de structure courant.
+   - pDoc:    pointeur sur le contexte du document en      
+   cours de lecture.                                       
+   - tag:  tag precedent le numero de type ou le nom 	
+   de nature. Au retour: 1er octet suivant l'element.      
+   - assocNum:  numero de la liste d'elements associes a`  
+   laquelle appartient le texte a` internaliser. Zero si   
+   c'est l'arbre principal.                                
+   - createParam: indique s'il faut creer un parametre ou non.
+   - createAll:indique qu'il faut creer tous les elements  
+   qui descendent de l'element courant et qui sont dans le 
+   fichier. Si createAll est faux, on ne cree que les      
+   elements exportes et dans ceux-ci tout le sous-arbre    
+   des elements de type contentType definis dans le schema 
+   de structure pointe' par pContSS.                       
+   - typeRead:  au retour, indique le type de l'element lu,
+   qu'il ait ete cree' ou pas.                             
+   - pSSRead: au retour, pointeur sur le schema de         
+   structure de l'element lu, qu'il ait ete cree' ou pas.  
+   - Pere: element qui sera le pere de l'element lu.       
+   - createDesc: si cree<desc est faux, on ne cree pas     
+   l'element lu ni sa descendance. Prioritaire sur createAll
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 PtrElement          ReadTreePiv (BinFile pivFile, PtrSSchema pSSchema, PtrDocument pDoc, char *tag, int assocNum, boolean createParam, boolean createAll, int * contentType, PtrSSchema * pContSS, int * typeRead, PtrSSchema * pSSRead, boolean createPage, PtrElement pParent, boolean createDesc)
@@ -1949,7 +1953,6 @@ boolean             createDesc;
    create = FALSE;
    if (*tag != (char) C_PIV_TYPE && *tag != (char) C_PIV_NATURE)
      {
-/*************/
 	i = 1;
 	while (!error && i < 200)
 	  {
@@ -1968,7 +1971,6 @@ boolean             createDesc;
 	       }
 	  }
 	printf ("\n");
-/*************/
 	DisplayPivotMessage ("I");	/* erreur */
 	PivotError (pivFile);
      }
@@ -2666,10 +2668,10 @@ boolean             createDesc;
    return NULL;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    AbstractTreeOK verifie que l'element pEl et tous ses descendants  | */
-/* |    peuvent figurer a la place ou` ils sont dans leur arbre abstrait| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   AbstractTreeOK verifie que l'element pEl et tous ses descendants  
+   peuvent figurer a la place ou` ils sont dans leur arbre abstrait
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             AbstractTreeOK (PtrElement pEl, PtrDocument pDoc)
 #else  /* __STDC__ */
@@ -2724,10 +2726,10 @@ PtrDocument         pDoc;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    AssociatePairs  etablit les liens qui relient les elements de   | */
-/* |    paires deux a deux dans tout l'arbre de racine pRoot.		| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   AssociatePairs  etablit les liens qui relient les elements de   
+   paires deux a deux dans tout l'arbre de racine pRoot.		
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                AssociatePairs (PtrElement pRoot)
 #else  /* __STDC__ */
@@ -2771,10 +2773,10 @@ PtrElement          pRoot;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | SetLabel       affecte un label a tous les elements du         	| */
-/* |    sous-arbre de racine pEl qui n'en ont pas.                     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SetLabel       affecte un label a tous les elements du         	
+   sous-arbre de racine pEl qui n'en ont pas.                     
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         SetLabel (PtrElement pEl, PtrDocument pDoc)
 #else  /* __STDC__ */
@@ -2804,13 +2806,13 @@ PtrDocument         pDoc;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    PutNatureInTable verifie si la nature de nom SSName se trouve   | */
-/* |    dans la table des natures du document pDoc, au rang rank.       | */
-/* |    Si elle n'y est pas, on l'y met, soit en la deplacant, si elle  | */
-/* |    figure deja dans la table, soit en creant une nouvelle entree   | */
-/* |    au rang desire'.                                                | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PutNatureInTable verifie si la nature de nom SSName se trouve   
+   dans la table des natures du document pDoc, au rang rank.       
+   Si elle n'y est pas, on l'y met, soit en la deplacant, si elle  
+   figure deja dans la table, soit en creant une nouvelle entree   
+   au rang desire'.                                                
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         PutNatureInTable (PtrDocument pDoc, Name SSName, int rank)
 #else  /* __STDC__ */
@@ -2875,11 +2877,11 @@ int                 rank;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	ReadSchemaNamesPiv lit les noms des schemas de structure et de	| */
-/* |	presentation qui se trouvent dans le fichier file et charge ces	| */
-/* |	schemas								| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	ReadSchemaNamesPiv lit les noms des schemas de structure et de	
+   	presentation qui se trouvent dans le fichier file et charge ces	
+   	schemas								
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                ReadSchemaNamesPiv (BinFile file, PtrDocument pDoc, char *tag, PtrSSchema pLoadedSS)
@@ -3032,10 +3034,10 @@ PtrSSchema          pLoadedSS;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	rdTableLangues	lit la table des langues qui se trouve en tete	| */
-/* |		du fichier pivot.					| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	rdTableLangues	lit la table des langues qui se trouve en tete	
+   		du fichier pivot.					
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                ReadLanguageTablePiv (BinFile file, PtrDocument pDoc, char *tag)
@@ -3081,10 +3083,10 @@ char               *tag;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ReadVersionNumberPiv lit la version dans le fichier pivot et         | */
-/* |    met sa valeur dans le contexte pDoc. Retourne 0 si OK.          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReadVersionNumberPiv lit la version dans le fichier pivot et         
+   met sa valeur dans le contexte pDoc. Retourne 0 si OK.          
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 ReadVersionNumberPiv (BinFile file, PtrDocument pDoc)
@@ -3117,9 +3119,9 @@ PtrDocument         pDoc;
    return ret;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ReadPivotHeader   lit l'entete d'un fichier pivot.                | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReadPivotHeader   lit l'entete d'un fichier pivot.                
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                ReadPivotHeader (BinFile file, PtrDocument pDoc, char *tag)
@@ -3172,19 +3174,19 @@ char               *tag;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    LoadDocumentPiv charge en memoire (representation interne) un document| */
-/* |            qui se trouve sous la forme pivot dans le fichier file. | */
-/* |            Le fichier doit etre ouvert et positionne' au debut.    | */
-/* |            Il n'est pas ferme' par LoadDocumentPiv.                | */
-/* |            pDoc est le pointeur sur le descripteur de document du  | */
-/* |            document a` charger.                                    | */
-/* |            Si loadExternalDoc est vrai, on charge temporairement les| */
-/* |            documents externes reference's pour pouvoir copier les  | */
-/* |            elements inclus. Les documents externes ainsi charge's  | */
-/* |            sont decharge's au retour. Si skeleton est vrai, le     | */
-/* |            document est charge sous forme squelette.               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   LoadDocumentPiv charge en memoire (representation interne) un document
+   qui se trouve sous la forme pivot dans le fichier file. 
+   Le fichier doit etre ouvert et positionne' au debut.    
+   Il n'est pas ferme' par LoadDocumentPiv.                
+   pDoc est le pointeur sur le descripteur de document du  
+   document a` charger.                                    
+   Si loadExternalDoc est vrai, on charge temporairement les
+   documents externes reference's pour pouvoir copier les  
+   elements inclus. Les documents externes ainsi charge's  
+   sont decharge's au retour. Si skeleton est vrai, le     
+   document est charge sous forme squelette.               
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                LoadDocumentPiv (BinFile file, PtrDocument pDoc, boolean loadExternalDoc, boolean skeleton, PtrSSchema pLoadedSS, boolean withEvent)

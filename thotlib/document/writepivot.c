@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
 
  This module writes in an output file the pivot representation of a
  document.
@@ -50,10 +54,10 @@ extern int          RemoveFile ();
 
 #endif /* __STDC__ */
 
-/* ---------------------------------------------------------------------- */
-/* |    Retourne Vrai si les deux elements pointes par pEl1 et pEl2     | */
-/* |    possedent les memes attributs avec les memes valeurs            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Retourne Vrai si les deux elements pointes par pEl1 et pEl2     
+   possedent les memes attributs avec les memes valeurs            
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             MemesAttributs (PtrElement pEl1, PtrElement pEl2)
 #else  /* __STDC__ */
@@ -134,9 +138,9 @@ PtrElement          pEl2;
    return same;
 }
 
-/* ---------------------------------------------------------------------- */
-/* | Ecrit dans le fichier le numero de version pivot courant           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Ecrit dans le fichier le numero de version pivot courant           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                WriteVersionNumber (BinFile pivFile)
 #else  /* __STDC__ */
@@ -154,9 +158,9 @@ BinFile             pivFile;
    BIOwriteByte (pivFile, (char) version);
 }
 
-/* ---------------------------------------------------------------------- */
-/* | PutShort   ecrit un entier court dans le fichier sur deux octets   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PutShort   ecrit un entier court dans le fichier sur deux octets   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void                PutShort (BinFile pivFile, int n)
 #else  /* __STDC__ */
@@ -170,9 +174,9 @@ int                 n;
    BIOwriteByte (pivFile, (char) (n % 256));
 }
 
-/* ---------------------------------------------------------------------- */
-/* | PutInteger ecrit un entier long dans le fichier, sur 4 octets      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PutInteger ecrit un entier long dans le fichier, sur 4 octets      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         PutInteger (BinFile pivFile, int n)
 #else  /* __STDC__ */
@@ -186,10 +190,10 @@ int                 n;
    PutShort (pivFile, n % 65536);
 }
 
-/* ---------------------------------------------------------------------- */
-/* | PutDimensionType ecrit dans le fichier un type de dimension sur	| */
-/* | 1 octet.								| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PutDimensionType ecrit dans le fichier un type de dimension sur	
+   1 octet.								
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         PutDimensionType (BinFile pivFile, boolean b)
 #else  /* __STDC__ */
@@ -205,9 +209,9 @@ boolean             b;
       BIOwriteByte (pivFile, C_PIV_RELATIVE);
 }
 
-/* ---------------------------------------------------------------------- */
-/* | PutUnit ecrit dans le fichier l'unite                              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PutUnit ecrit dans le fichier l'unite                              
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         PutUnit (BinFile pivFile, TypeUnit unit)
 #else  /* __STDC__ */
@@ -223,9 +227,9 @@ TypeUnit            unit;
       BIOwriteByte (pivFile, C_PIV_EM);
 }
 
-/* ---------------------------------------------------------------------- */
-/* | PutSign   ecrit un signe dans le fichier sur un octet             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PutSign   ecrit un signe dans le fichier sur un octet             
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         PutSign (BinFile pivFile, boolean b)
 #else  /* __STDC__ */
@@ -241,10 +245,10 @@ boolean             b;
       BIOwriteByte (pivFile, C_PIV_MINUS);
 }
 
-/* ---------------------------------------------------------------------- */
-/* | PutDimension ecrit dans le fichier le contenu de la regle de       | */
-/* |            dimension pointee par pRegle                            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PutDimension ecrit dans le fichier le contenu de la regle de       
+   dimension pointee par pRegle                            
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         PutDimension (BinFile pivFile, PtrPRule pPRule)
 #else  /* __STDC__ */
@@ -264,9 +268,9 @@ PtrPRule            pPRule;
    PutSign (pivFile, (boolean) (pPRule->PrDimRule.DrValue >= 0));
 }
 
-/* ---------------------------------------------------------------------- */
-/* | PutBoolean ecrit un booleen dans le fichier sur un octet           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PutBoolean ecrit un booleen dans le fichier sur un octet           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         PutBoolean (BinFile pivFile, boolean b)
 #else  /* __STDC__ */
@@ -282,9 +286,9 @@ boolean             b;
       BIOwriteByte (pivFile, C_PIV_FALSE);
 }
 
-/* ---------------------------------------------------------------------- */
-/* | PutAlignment ecrit un BAlignment dans le fichier sur un octet      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PutAlignment ecrit un BAlignment dans le fichier sur un octet      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         PutAlignment (BinFile pivFile, BAlignment c)
 #else  /* __STDC__ */
@@ -311,9 +315,9 @@ BAlignment             c;
 	 }
 }
 
-/* ---------------------------------------------------------------------- */
-/* | PutPageType ecrit un type de page dans le fichier sur un octet     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PutPageType ecrit un type de page dans le fichier sur un octet     
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         PutPageType (BinFile pivFile, PageType t)
 #else  /* __STDC__ */
@@ -353,11 +357,11 @@ PageType            t;
 	 }
 }
 
-/* ---------------------------------------------------------------------- */
-/* | PutReferenceType ecrit un type de reference dans le fichier sur un	| */
-/* |    octet. S'il s'agit d'une inclusion, expansion indique si c'est	| */
-/* |    une inclusion avec ou sans expansion a l'ecran.                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PutReferenceType ecrit un type de reference dans le fichier sur un	
+   octet. S'il s'agit d'une inclusion, expansion indique si c'est	
+   une inclusion avec ou sans expansion a l'ecran.                 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         PutReferenceType (BinFile pivFile, ReferenceType t, boolean expansion)
 #else  /* __STDC__ */
@@ -382,10 +386,10 @@ boolean             expansion;
 	 }
 }
 
-/* ---------------------------------------------------------------------- */
-/* | PutComment ecrit dans le fichier un commentaire dont le		| */
-/* |            texte commence dans le buffer pointe par pBuf.          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PutComment ecrit dans le fichier un commentaire dont le		
+   texte commence dans le buffer pointe par pBuf.          
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         PutComment (BinFile pivFile, PtrTextBuffer pBuf)
 #else  /* __STDC__ */
@@ -426,10 +430,10 @@ PtrTextBuffer      pBuf;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | EcritNat ecrit une marque de nature suivie du numero du schema    | */
-/* |            de structure pointe par pSS.                            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   EcritNat ecrit une marque de nature suivie du numero du schema    
+   de structure pointe par pSS.                            
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                EcritNat (PtrSSchema pSS, BinFile pivFile, PtrDocument pDoc)
 #else  /* __STDC__ */
@@ -461,9 +465,9 @@ PtrDocument         pDoc;
    PutShort (pivFile, n);
 }
 
-/* ---------------------------------------------------------------------- */
-/* | PutLabel   ecrit le label label dans le fichier pivFile            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PutLabel   ecrit le label label dans le fichier pivFile            
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                PutLabel (BinFile pivFile, LabelString label)
 #else  /* __STDC__ */
@@ -482,9 +486,9 @@ LabelString         label;
    while (label[i - 1] != '\0');
 }
 
-/* ---------------------------------------------------------------------- */
-/* | PutPictureArea							| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PutPictureArea							
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         PutPictureArea (BinFile pivFile, int *pictInfo)
 #else  /* __STDC__ */
@@ -503,9 +507,9 @@ int                *pictInfo;
    PutShort (pivFile, PixelToPoint (pictDesc->PicHArea));
 }
 
-/* ---------------------------------------------------------------------- */
-/* |	PutPresentation							| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	PutPresentation							
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         PutPresentation (BinFile pivFile, PictureScaling PicPresent)
 #else  /* __STDC__ */
@@ -529,10 +533,10 @@ PictureScaling           PicPresent;
 	 }
 }
 
-/* ---------------------------------------------------------------------- */
-/* | PutReference ecrit dans le fichier pivFile la reference pointee	| */
-/* |            par pRef.                                               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PutReference ecrit dans le fichier pivFile la reference pointee	
+   par pRef.                                               
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         PutReference (BinFile pivFile, PtrReference pRef)
 #else  /* __STDC__ */
@@ -587,10 +591,10 @@ PtrReference        pRef;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* | PutAttribut ecrit dans le fichier pivFile l'attribut pointe' par  | */
-/* |            pAttr.                                                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PutAttribut ecrit dans le fichier pivFile l'attribut pointe' par  
+   pAttr.                                                  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                PutAttribut (BinFile pivFile, PtrAttribute pAttr, PtrDocument pDoc)
 #else  /* __STDC__ */
@@ -681,10 +685,10 @@ PtrDocument         pDoc;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* | PutReglePres ecrit dans le fichier pivFile la regle de presentation| */
-/* |            specifique pointee par pPRule                           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PutReglePres ecrit dans le fichier pivFile la regle de presentation
+   specifique pointee par pPRule                           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                PutReglePres (BinFile pivFile, PtrPRule pPRule)
 #else  /* __STDC__ */
@@ -836,18 +840,18 @@ PtrPRule        pPRule;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* | Externalise effectue la traduction sous forme pivot du sous-arbre  | */
-/* |    ou de l'element pointe par pEl.                                 | */
-/* |    subTree indique si on veut ecrire le sous-arbre ou l'element    | */
-/* |    seul.                                                           | */
-/* |    Le fichier 'pivFile' ou est ecrit la representation pivot doit  | */
-/* |    deja etre ouvert a l'appel et il n'est pas ferme au retour.     | */
-/* |    Si l'element externalise est une feuille texte suivie d'autres  | */
-/* |    feuilles de texte ayant les m^emes attributs, ces elements sont | */
-/* |    externalise's sous la forme d'un seul element, et au retour,    | */
-/* |    pEl pointe sur le dernier de ces elements successifs.           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Externalise effectue la traduction sous forme pivot du sous-arbre  
+   ou de l'element pointe par pEl.                                 
+   subTree indique si on veut ecrire le sous-arbre ou l'element    
+   seul.                                                           
+   Le fichier 'pivFile' ou est ecrit la representation pivot doit  
+   deja etre ouvert a l'appel et il n'est pas ferme au retour.     
+   Si l'element externalise est une feuille texte suivie d'autres  
+   feuilles de texte ayant les m^emes attributs, ces elements sont 
+   externalise's sous la forme d'un seul element, et au retour,    
+   pEl pointe sur le dernier de ces elements successifs.           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                Externalise (BinFile pivFile, PtrElement * pEl, PtrDocument pDoc, boolean subTree)
 #else  /* __STDC__ */
@@ -1124,9 +1128,9 @@ boolean             subTree;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |	PutName								| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	PutName								
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         PutName (BinFile pivFile, Name N)
 #else  /* __STDC__ */
@@ -1143,10 +1147,10 @@ Name                 N;
    BIOwriteByte (pivFile, '\0');
 }
 
-/* ---------------------------------------------------------------------- */
-/* | AddNature  met dans la table des natures du document pDoc          | */
-/* |    les schemas references par le schema de structure pSS       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   AddNature  met dans la table des natures du document pDoc          
+   les schemas references par le schema de structure pSS       
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         AddNature (PtrSSchema pSS, PtrDocument pDoc)
 #else  /* __STDC__ */
@@ -1226,10 +1230,10 @@ PtrDocument         pDoc;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* | BuildDocNatureTable remplit la table des schemas utilises          | */
-/* |            par le document pDoc.                                   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   BuildDocNatureTable remplit la table des schemas utilises          
+   par le document pDoc.                                   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                BuildDocNatureTable (PtrDocument pDoc)
 #else  /* __STDC__ */
@@ -1271,11 +1275,11 @@ PtrDocument         pDoc;
    AddNature (pDoc->DocSSchema, pDoc);
 }
 
-/* ---------------------------------------------------------------------- */
-/* | WriteNomsSchemasDoc ecrit dans le fichier pivFile les noms de tous | */
-/* |    les schemas de structure et de presentation utilises par le     | */
-/* |    document pDoc.                                                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteNomsSchemasDoc ecrit dans le fichier pivFile les noms de tous 
+   les schemas de structure et de presentation utilises par le     
+   document pDoc.                                                  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                WriteNomsSchemasDoc (BinFile pivFile, PtrDocument pDoc)
 #else  /* __STDC__ */
@@ -1305,11 +1309,11 @@ PtrDocument         pDoc;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* | UpdateLanguageTable met dans la table des langues du document pDoc | */
-/* |    toutes les langues utilisees dans l'arbre de racine pEl et qui  | */
-/* |    ne sont pas encore dans la table.				| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   UpdateLanguageTable met dans la table des langues du document pDoc 
+   toutes les langues utilisees dans l'arbre de racine pEl et qui  
+   ne sont pas encore dans la table.				
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         UpdateLanguageTable (PtrDocument pDoc, PtrElement pEl)
 #else  /* __STDC__ */
@@ -1338,10 +1342,10 @@ PtrElement          pEl;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* | WriteTableLangues	ecrit dans le fichier pivFile la table des	| */
-/* |		langues utilisees par le document pDoc.			| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteTableLangues	ecrit dans le fichier pivFile la table des	
+   		langues utilisees par le document pDoc.			
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                WriteTableLangues (BinFile pivFile, PtrDocument pDoc)
 #else  /* __STDC__ */
@@ -1367,9 +1371,9 @@ PtrDocument         pDoc;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | WritePivotHeader ecrit l'entete d'un fichier pivot                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WritePivotHeader ecrit l'entete d'un fichier pivot                 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                WritePivotHeader (BinFile pivFile, PtrDocument pDoc)
 #else  /* __STDC__ */
@@ -1391,11 +1395,11 @@ PtrDocument         pDoc;
 }
 
 
-/* ---------------------------------------------------------------------  */
-/* | SauveDoc	sauve le document pDoc dans le fichier pivFile, sous	| */
-/* | la forme pivot. Le fichier doit etre ouvert avant l'appel et est	| */
-/* | toujours ouvert au retour.						| */
-/* ---------------------------------------------------------------------  */
+/*----------------------------------------------------------------------
+   SauveDoc	sauve le document pDoc dans le fichier pivFile, sous	
+   la forme pivot. Le fichier doit etre ouvert avant l'appel et est	
+   toujours ouvert au retour.						
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SauveDoc (BinFile pivFile, PtrDocument pDoc)
 #else  /* __STDC__ */
@@ -1540,16 +1544,16 @@ PtrDocument         pDoc;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | SauveRefSortantes							| */
-/* | sauve dans le fichier de nom fileName la liste des			| */
-/* | references du document pDoc qui designent des elements appartenant | */
-/* | a d'autres documents.                                              | */
-/* | Le fichier n'est ecrit que s'il y a effectivement des references   | */
-/* | sortantes. Dans ce cas, chaque reference sortante est e'crite      | */
-/* | dans le fichier sous la meme forme que dans le fichier pivot.      | */
-/* | S'il n'y a aucune reference sortante, le fichier est detruit.      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SauveRefSortantes							
+   sauve dans le fichier de nom fileName la liste des			
+   references du document pDoc qui designent des elements appartenant 
+   a d'autres documents.                                              
+   Le fichier n'est ecrit que s'il y a effectivement des references   
+   sortantes. Dans ce cas, chaque reference sortante est e'crite      
+   dans le fichier sous la meme forme que dans le fichier pivot.      
+   S'il n'y a aucune reference sortante, le fichier est detruit.      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SauveRefSortantes (char *fileName, PtrDocument pDoc)
 #else  /* __STDC__ */
@@ -1627,11 +1631,11 @@ PtrDocument         pDoc;
       RemoveFile (fileName);
 }
 
-/* ---------------------------------------------------------------------- */
-/* | SauveRef   ecrit dans le fichier de nom fileName le fichier	| */
-/* |    .REF dont la representation en memoire est pointee par firstChng| */
-/* |    Libere la representation en memoire                             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SauveRef   ecrit dans le fichier de nom fileName le fichier	
+   .REF dont la representation en memoire est pointee par firstChng
+   Libere la representation en memoire                             
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SauveRef (PtrChangedReferredEl firstChng, PathBuffer fileName)
 #else  /* __STDC__ */
@@ -1673,12 +1677,12 @@ PathBuffer          fileName;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | SauveExt   ecrit dans le fichier de nom fileName (de type .EXT)    | */
-/* |    la liste des descripteurs d'elements reference's dont le	| */
-/* |    premier est pointe' par pFirstRefD.				| */
-/* |    Libere tous ces descripteurs.                                   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SauveExt   ecrit dans le fichier de nom fileName (de type .EXT)    
+   la liste des descripteurs d'elements reference's dont le	
+   premier est pointe' par pFirstRefD.				
+   Libere tous ces descripteurs.                                   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SauveExt (PtrReferredDescr pFirstRefD, PathBuffer fileName)
 #else  /* __STDC__ */
@@ -1772,18 +1776,18 @@ PathBuffer          fileName;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | UpdateExt  Met a jour le fichier .EXT de chaque document contenant | */
-/* | des elements reference's par les references externes du document   | */
-/* | pDoc qui ont ete creees ou detruites depuis la derniere sauvegarde | */
-/* | de ce document decidee par l'utilisateur (ou a defaut depuis le    | */
-/* | chargement du document).                                           | */
-/* | Un fichier .EXT contient, pour chaque element reference' de        | */
-/* | l'exterieur,le label de cet element suivi des noms de tous les     | */
-/* |  documents qui font reference a l'element.                         | */
-/* | S'il n'y a aucune reference externe entrante, le fichier .EXT est  | */
-/* | detruit.                                                           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   UpdateExt  Met a jour le fichier .EXT de chaque document contenant 
+   des elements reference's par les references externes du document   
+   pDoc qui ont ete creees ou detruites depuis la derniere sauvegarde 
+   de ce document decidee par l'utilisateur (ou a defaut depuis le    
+   chargement du document).                                           
+   Un fichier .EXT contient, pour chaque element reference' de        
+   l'exterieur,le label de cet element suivi des noms de tous les     
+   documents qui font reference a l'element.                         
+   S'il n'y a aucune reference externe entrante, le fichier .EXT est  
+   detruit.                                                           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                UpdateExt (PtrDocument pDoc)
 #else  /* __STDC__ */
@@ -1996,18 +2000,18 @@ PtrDocument         pDoc;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* | UpdateRef  Met a jour le fichier .REF de chaque document contenant | */
-/* | des references a des elements qui appartenaient au document pointe'| */
-/* | par pDoc et qui ont ete detruits ou ont change' de document depuis | */
-/* | la derniere sauvegarde de ce document decidee par l'utilisateur    | */
-/* | (ou a defaut depuis le chargement du document).                    | */
-/* | (Un fichier .REF contient un enregistrement pour chaque reference  | */
-/* | dont l'element cible a ete detruit ou a change' de document).      | */
-/* | met egalement a jour le fichier .EXT du document pour prendre en   | */
-/* | compte les elements reference's qui ont ete detruits ou colle's    | */
-/* | dans ce document.                                                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   UpdateRef  Met a jour le fichier .REF de chaque document contenant 
+   des references a des elements qui appartenaient au document pointe'
+   par pDoc et qui ont ete detruits ou ont change' de document depuis 
+   la derniere sauvegarde de ce document decidee par l'utilisateur    
+   (ou a defaut depuis le chargement du document).                    
+   (Un fichier .REF contient un enregistrement pour chaque reference  
+   dont l'element cible a ete detruit ou a change' de document).      
+   met egalement a jour le fichier .EXT du document pour prendre en   
+   compte les elements reference's qui ont ete detruits ou colle's    
+   dans ce document.                                                  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                UpdateRef (PtrDocument pDoc)
 #else  /* __STDC__ */
@@ -2260,20 +2264,20 @@ PtrDocument         pDoc;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | ChangeNomExt       Le document pDoc change de nom.			| */
-/* | Son ancien nom est dans pDoc->DocDName, son nouveau nom est        | */
-/* | dans newName.                                                      | */
-/* | Si copyDoc est vrai, il s'agit d'une copie de document : dans      | */
-/* | tous les fichiers .EXT qui contiennent l'ancien nom on ajoute      | */
-/* | le nouveau nom                                                     | */
-/* | Si copyDoc est faux, il s'agit d'un renommage du document : on     | */
-/* | change le nom du document dans tous les fichiers .EXT qui          | */
-/* | contiennent le nom de ce document.                                 | */
-/* | Dans les deux cas, on met a jour le nom du document dans les       | */
-/* | descripteurs de document externes des autres documents charge's    | */
-/* | en memoire.                                                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ChangeNomExt       Le document pDoc change de nom.			
+   Son ancien nom est dans pDoc->DocDName, son nouveau nom est        
+   dans newName.                                                      
+   Si copyDoc est vrai, il s'agit d'une copie de document : dans      
+   tous les fichiers .EXT qui contiennent l'ancien nom on ajoute      
+   le nouveau nom                                                     
+   Si copyDoc est faux, il s'agit d'un renommage du document : on     
+   change le nom du document dans tous les fichiers .EXT qui          
+   contiennent le nom de ce document.                                 
+   Dans les deux cas, on met a jour le nom du document dans les       
+   descripteurs de document externes des autres documents charge's    
+   en memoire.                                                        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ChangeNomExt (PtrDocument pDoc, Name newName, boolean copyDoc)
 #else  /* __STDC__ */
@@ -2440,17 +2444,17 @@ boolean             copyDoc;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* | ChangeNomRef       Le document pointe' par pDoc change de nom.     | */
-/* | Son ancien nom est dans pDoc->DocDName, son nouveau nom est dans	| */
-/* | newName.								| */
-/* | Indique le changement de nom dans les fichiers .REF de tous les    | */
-/* | documents qui referencent celui qui change de nom.                 | */
-/* | Si certains de ces documents referencant sont charge's, on met     | */
-/* | a jour le nom de document dans leurs descripteurs d'element        | */
-/* | reference's qui representent des elements se trouvant dans le      | */
-/* | document qui change de nom                                         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ChangeNomRef       Le document pointe' par pDoc change de nom.     
+   Son ancien nom est dans pDoc->DocDName, son nouveau nom est dans	
+   newName.								
+   Indique le changement de nom dans les fichiers .REF de tous les    
+   documents qui referencent celui qui change de nom.                 
+   Si certains de ces documents referencant sont charge's, on met     
+   a jour le nom de document dans leurs descripteurs d'element        
+   reference's qui representent des elements se trouvant dans le      
+   document qui change de nom                                         
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ChangeNomRef (PtrDocument pDoc, Name newName)
 #else  /* __STDC__ */

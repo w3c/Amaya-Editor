@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
    Module de gestion des documents
 
  */
@@ -62,13 +66,13 @@
 #include "appdialogue_f.h"
 
 
-/* ---------------------------------------------------------------------- */
-/* | RedisplayExternalRefs cherche, pour tous les elements du document	| */
-/* |            pDoc qui sont designes par des references, toutes les   | */
-/* |            references appartenant a` d'autres documents charges et | */
-/* |            fait reafficher ces references si elles sont deja       | */
-/* |            affichees.                                              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RedisplayExternalRefs cherche, pour tous les elements du document	
+   pDoc qui sont designes par des references, toutes les   
+   references appartenant a` d'autres documents charges et 
+   fait reafficher ces references si elles sont deja       
+   affichees.                                              
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         RedisplayExternalRefs (PtrDocument pDoc)
@@ -131,12 +135,12 @@ PtrDocument         pDoc;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    LoadDocument charge le document que contient le fichier nomme'  | */
-/* |            fileName dans le descripteur pointe par pDoc. Au	| */
-/* |            retour pDoc est NIL si le document n'a pas pu etre      | */
-/* |            charge.                                                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   LoadDocument charge le document que contient le fichier nomme'  
+   fileName dans le descripteur pointe par pDoc. Au	
+   retour pDoc est NIL si le document n'a pas pu etre      
+   charge.                                                 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                LoadDocument (PtrDocument * pDoc, char *fileName)
 #else  /* __STDC__ */
@@ -233,13 +237,13 @@ char               *fileName;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    NewDocument cree un document vide, conforme au schema de nom    | */
-/* |            SSchemaName, dans le descripteur pointe' par pDoc.      | */
-/* |            docName est le nom a donner au document                 | */
-/* |            directory est le directory ou il faut creer le document | */
-/* |            Au retour pDoc est NIL si le document n'a pas ete cree. | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   NewDocument cree un document vide, conforme au schema de nom    
+   SSchemaName, dans le descripteur pointe' par pDoc.      
+   docName est le nom a donner au document                 
+   directory est le directory ou il faut creer le document 
+   Au retour pDoc est NIL si le document n'a pas ete cree. 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                NewDocument (PtrDocument * pDoc, PtrBuffer SSchemaName, Name docName, PathBuffer directory)
 #else  /* __STDC__ */
@@ -395,10 +399,10 @@ PathBuffer          directory;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    SetAbsBoxAccessMode met a` jour le mode d'acces accessMode sur  | */
-/* |            le pave pAb et tous ses descendants.                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SetAbsBoxAccessMode met a` jour le mode d'acces accessMode sur  
+   le pave pAb et tous ses descendants.                    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         SetAbsBoxAccessMode (PtrAbstractBox pAb, int accessMode)
 #else  /* __STDC__ */
@@ -439,10 +443,10 @@ int                 accessMode;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    SetAccessMode met a` jour le mode d'acces sur tout les pave's   | */
-/* |          de tous les elements de toutes les vues du document pDoc. | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SetAccessMode met a` jour le mode d'acces sur tout les pave's   
+   de tous les elements de toutes les vues du document pDoc. 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SetAccessMode (PtrDocument pDoc, int accessMode)
 #else  /* __STDC__ */
@@ -474,9 +478,9 @@ int                 accessMode;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    UnloadDocument libere le document pDoc				| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   UnloadDocument libere le document pDoc				
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                UnloadDocument (PtrDocument * pDoc)
 #else  /* __STDC__ */
@@ -512,9 +516,9 @@ PtrDocument        *pDoc;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    PaginateDocument	pagine toutes les vues du document pDoc		| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PaginateDocument	pagine toutes les vues du document pDoc		
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                PaginateDocument (PtrDocument pDoc)
@@ -557,9 +561,9 @@ PtrDocument         pDoc;
 	      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    DocumentModified positionne le flag modification d'un document a` TRUE.| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   DocumentModified positionne le flag modification d'un document a` TRUE.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DocumentModified (PtrDocument pDoc, PtrElement pEl)
 #else  /* __STDC__ */
@@ -576,11 +580,11 @@ PtrElement          pEl;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    simpleSave sauve un document sous forme pivot dans un fichier   | */
-/* |            dont le nom est donne par name, et ne fait rien d'autre.| */
-/* |            Rend false si l'ecriture n'a pu se faire.               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   simpleSave sauve un document sous forme pivot dans un fichier   
+   dont le nom est donne par name, et ne fait rien d'autre.
+   Rend false si l'ecriture n'a pu se faire.               
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      simpleSave (PtrDocument pDoc, char *name, boolean withAPP)
 #else  /* __STDC__ */
@@ -634,10 +638,10 @@ boolean             withAPP;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    UpdateIncludedElement met a` jour et reaffiche l'element pEl inclus dans  | */
-/* |            le document pDoc.                                       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   UpdateIncludedElement met a` jour et reaffiche l'element pEl inclus dans  
+   le document pDoc.                                       
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                UpdateIncludedElement (PtrElement pEl, PtrDocument pDoc)
 #else  /* __STDC__ */
@@ -737,10 +741,10 @@ PtrDocument         pDoc;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    UpdateAllInclusions met a` jour tous les elements inclus d'un	| */
-/* |		document.						| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   UpdateAllInclusions met a` jour tous les elements inclus d'un	
+   		document.						
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         UpdateAllInclusions (PtrDocument pDoc)
 #else  /* __STDC__ */
@@ -809,12 +813,12 @@ PtrDocument         pDoc;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    saveWithExtension sauve un document sous forme pivot en         | */
-/* |            concatenant l'extension au nom stocke' dans le document.| */
-/* |            Envoie un message et rend false si l'ecriture n'a pu se | */
-/* |            faire.                                                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   saveWithExtension sauve un document sous forme pivot en         
+   concatenant l'extension au nom stocke' dans le document.
+   Envoie un message et rend false si l'ecriture n'a pu se 
+   faire.                                                  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      saveWithExtension (PtrDocument pDoc, char *extension)
 #else  /* __STDC__ */
@@ -842,9 +846,9 @@ char               *extension;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    StoreDocument       effectue la sauvegarde du document pDoc         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   StoreDocument       effectue la sauvegarde du document pDoc         
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             StoreDocument (PtrDocument pDoc, Name NomDuDocument, PathBuffer NomDirectory, boolean SauveDocAvecCopie, boolean SauveDocAvecMove)
 #else  /* __STDC__ */
@@ -1014,11 +1018,11 @@ boolean             SauveDocAvecMove;
    return status;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    interactiveSave sauve un document sous forme pivot en proposant | */
-/* |            un menu a` l'utilisateur (si 'ask'). Rend false si      | */
-/* |            l'ecriture n'a pu se faire.                             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   interactiveSave sauve un document sous forme pivot en proposant 
+   un menu a` l'utilisateur (si 'ask'). Rend false si      
+   l'ecriture n'a pu se faire.                             
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static boolean      interactiveSave (PtrDocument pDoc, boolean ask)
@@ -1061,16 +1065,16 @@ boolean             ask;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    WriteDocument sauve sous forme pivot le document pointe' par    | */
-/* |            pDoc. Retourne Vrai si le document a pu etre sauve,     | */
-/* |            Faux si echec.                                          | */
-/* |            - Mode = 0 : demander le nom de fichier a` l'utilisateur| */
-/* |            - Mode = 1 : fichier de sauvegarde automatique (.BAK)   | */
-/* |            - Mode = 2 : fichier scratch (pas de message)           | */
-/* |            - Mode = 3 : fichier de sauvegarde urgente (.SAV)       | */
-/* |            - Mode = 4 : sauve sans demander de nom.                | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteDocument sauve sous forme pivot le document pointe' par    
+   pDoc. Retourne Vrai si le document a pu etre sauve,     
+   Faux si echec.                                          
+   - Mode = 0 : demander le nom de fichier a` l'utilisateur
+   - Mode = 1 : fichier de sauvegarde automatique (.BAK)   
+   - Mode = 2 : fichier scratch (pas de message)           
+   - Mode = 3 : fichier de sauvegarde urgente (.SAV)       
+   - Mode = 4 : sauve sans demander de nom.                
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 boolean             WriteDocument (PtrDocument pDoc, int Mode)

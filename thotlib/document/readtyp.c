@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
    rdschtyp.c : chargement d'un schema de typographie
  */
 #include "thot_sys.h"
@@ -15,10 +19,10 @@
 
 static boolean      erreurSchema;
 
-/* ---------------------------------------------------------------------- */
-/* |    erreurTypo positionne erreurSchema dans le cas d'une erreur     | */
-/* |            de lecture.                                             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   erreurTypo positionne erreurSchema dans le cas d'une erreur     
+   de lecture.                                             
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                erreurTypo (int err)
 
@@ -31,10 +35,10 @@ int                 err;
    erreurSchema = TRUE;
 }
 
-/* ---------------------------------------------------------------------- */
-/* | RdPtrBlocTypo retourne un pointeur sur le bloc de regles suivant   | */
-/* |            ou NULL s'il n'y a pas de bloc suivant.                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RdPtrBlocTypo retourne un pointeur sur le bloc de regles suivant   
+   ou NULL s'il n'y a pas de bloc suivant.                 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static PtrRegleTypo RdPtrBlocTypo (BinFile fich, PtrRegleTypo * nextr)
@@ -59,10 +63,10 @@ PtrRegleTypo       *nextr;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | RdPtrAttrTypo retourne un pointeur sur le bloc attribut suivant    | */
-/* |            ou NULL s'il n'y a pas de bloc attribut suivant.        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RdPtrAttrTypo retourne un pointeur sur le bloc attribut suivant    
+   ou NULL s'il n'y a pas de bloc attribut suivant.        
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static PtrRTypoAttribut RdPtrAttrTypo (BinFile fich, PtrRTypoAttribut * nexta)
@@ -92,10 +96,10 @@ PtrRTypoAttribut   *nexta;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    RdPtrRegle retourne un pointeur sur la regle suivante ou        | */
-/* |            NULL s'il n'y a pas de regle suivante.                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RdPtrRegle retourne un pointeur sur la regle suivante ou        
+   NULL s'il n'y a pas de regle suivante.                  
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static PtrRegleTypo RdPtrRegle (BinFile fich, PtrRegleTypo * nextr)
@@ -119,10 +123,10 @@ PtrRegleTypo       *nextr;
    return regtyp;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    RdPtrFunction retourne un pointeur sur la fonction suivante ou  | */
-/* |            NULL s'il n'y a pas de fonction suivante.               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RdPtrFunction retourne un pointeur sur la fonction suivante ou  
+   NULL s'il n'y a pas de fonction suivante.               
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static PtrTypoFunction RdPtrFunction (BinFile fich, PtrTypoFunction * nextf)
@@ -146,9 +150,9 @@ PtrTypoFunction    *nextf;
    return fcttyp;
 }
 
-/* ---------------------------------------------------------------------- */
-/* | RdTypeCondTypo lit un type de condition de regle de typographie.   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RdTypeCondTypo lit un type de condition de regle de typographie.   
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static TypeCondTypo RdTypeCondTypo (BinFile fich)
@@ -198,9 +202,9 @@ BinFile             fich;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    RdTypeRegleTypo lit un type de regle de typographie.            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RdTypeRegleTypo lit un type de regle de typographie.            
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static TypeFunct    RdTypeRegleTypo (BinFile fich)
@@ -257,9 +261,9 @@ BinFile             fich;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | ReadTypoFunctions  lit une suite de focntions chainees             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReadTypoFunctions  lit une suite de focntions chainees             
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         ReadTypoFunctions (BinFile fich, PtrTypoFunction * pF, PtrTypoFunction * nextf)
@@ -299,9 +303,9 @@ PtrTypoFunction    *nextf;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | ReadReglesTypo  lit une suite de regles chainees                   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReadReglesTypo  lit une suite de regles chainees                   
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         ReadReglesTypo (BinFile fich, PtrRegleTypo * pR, PtrRegleTypo * nextr)
@@ -365,10 +369,10 @@ PtrRegleTypo       *nextr;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ReadReglesAttr lit les regles de typographie de l'attribut de   | */
-/* |            numero att appartenant au schema de structure SS.       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReadReglesAttr lit les regles de typographie de l'attribut de   
+   numero att appartenant au schema de structure SS.       
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         ReadReglesAttr (BinFile fich, int att, PtrRTypoAttribut * pA, PtrRTypoAttribut * nextA, PtrRegleTypo * nextR, PtrSSchema * SS)
@@ -433,16 +437,16 @@ PtrSSchema       *SS;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    RdSchTyp lit un fichier contenant un schema de typographie et   | */
-/* |            le charge en memoire. Retourne un pointeur sur le       | */
-/* |            schema de typographie en memoire si chargement reussi,  | */
-/* |            NULL si echec.                                          | */
-/* |            - fname: nom du fichier a lire, sans le suffixe .TYP    | */
-/* |            - SS: schema de structure correspondant, deja rempli    | */
-/* |                  si SsRootElem != 0. Charge le schema de structure | */
-/* |                  si SsRootElem == 0.                               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RdSchTyp lit un fichier contenant un schema de typographie et   
+   le charge en memoire. Retourne un pointeur sur le       
+   schema de typographie en memoire si chargement reussi,  
+   NULL si echec.                                          
+   - fname: nom du fichier a lire, sans le suffixe .TYP    
+   - SS: schema de structure correspondant, deja rempli    
+   si SsRootElem != 0. Charge le schema de structure 
+   si SsRootElem == 0.                               
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 PtrSchTypo          RdSchTypo (Name fname, PtrSSchema SS)
