@@ -3006,7 +3006,7 @@ LRESULT CALLBACK DocumentInfoDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam
       /* document URL */
       SetDlgItemText (hwnDlg, IDC_DIURL,
 		      TtaGetMessage (AMAYA, AM_DOC_INFO_LOCATION_TITLE));
-      if (DocumentURLs[document] != NULL)
+      if (DocumentURLs[doc] != NULL)
 	SetDlgItemText (hwnDlg, IDC_DIURL_VAL, DocumentURLs[doc]);
       else
 	SetDlgItemText (hwnDlg, IDC_DIURL_VAL, TEXT("Unknown"));
@@ -3014,7 +3014,7 @@ LRESULT CALLBACK DocumentInfoDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam
       /* MIME type */
       SetDlgItemText (hwnDlg, IDC_DICONTENTTYPE,
 		      TtaGetMessage (AMAYA, AM_DOC_INFO_TYPE_TITLE));
-      if (DocumentMeta[document]->content_type != NULL)
+      if (DocumentMeta[doc]->content_type != NULL)
 	SetDlgItemText (hwnDlg, IDC_DICONTENTTYPE_VAL, 
 			DocumentMeta[doc]->content_type);
       else
