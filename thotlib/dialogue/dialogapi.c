@@ -8369,6 +8369,7 @@ ThotWidget TtaNewTreeForm (int ref, int ref_parent, char *label, ThotBool multip
    /* general stuff, move it up when adding win32 */
    int                 i;
    int                 ent;
+   int                 width, height;
    int                 rebuilded;
    struct E_List      *adbloc;
    ThotWidget          w, tmpw;
@@ -8447,6 +8448,12 @@ ThotWidget TtaNewTreeForm (int ref, int ref_parent, char *label, ThotBool multip
 	  gtk_box_pack_start (GTK_BOX(w), scrolled_window,
 			      TRUE, TRUE, 0);
 	  w = scrolled_window;
+
+	  /* make it at least 6 lines high and 15 chars long */
+	  width = 1;
+	  /* width =  150 * (gdk_char_width (DialogFont, 'm')); */
+	  height = 10 * (gdk_char_height (DialogFont, 'M'));
+	  gtk_widget_set_usize (GTK_WIDGET(w), width, height);
 
 	  tree = gtk_tree_new();
 	  gtk_tree_set_view_lines (GTK_TREE(tree), TRUE);
