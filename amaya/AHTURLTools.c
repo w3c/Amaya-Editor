@@ -1816,7 +1816,17 @@ void         SimplifyUrl (char **url)
       /* Doesn't need to do any more */
       return;
     }
-
+  else if (**url != '/' && !IsW3Path(*url))
+  {
+      newptr = malloc (strlen(path)+7);
+      *newptr = '\0';
+      strcat (newptr, "http://");
+      strcat (newptr, *url);
+      **url = '\0';
+      strcpy(*url, newptr);
+      free (newptr);
+      return;
+  }
   if ((p = path))
     {
       if (!((end = strchr (path, ';')) || (end = strchr (path, '?')) ||
