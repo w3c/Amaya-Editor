@@ -628,6 +628,7 @@ void UpdateInclusionElements (PtrDocument pDoc)
   PtrReference          pRef;
   PtrReferredDescr      pRefD;
   Document              doc;
+  NotifyOnTarget	notifyEl;
 
   /* parcourt la chaine des descripteurs d'elements references */
   /* du document, pour traiter toutes les references */
@@ -648,6 +649,33 @@ void UpdateInclusionElements (PtrDocument pDoc)
 	      /* on copie l'arbre abstrait de l'element inclus */
 	      {
 		pSource = ReferredElement (pRef);
+		notifyEl.event = TteElemFetchInclude;
+		notifyEl.target = (Element) pSource;
+		notifyEl.targetdocument = doc;
+		notifyEl.element = (Element) pRef->RdElement;
+		notifyEl.document = doc;
+		if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
+		  /* l'application accepte le traitement */ 
+		  {
+		    /* inclusion d'un document externe */
+		    CopyIncludedElem (pRef->RdElement, pDoc);
+		    
+		    /* Envoyer le message post de TteElemFetchInclude */
+		    pSource = ReferredElement (pRef);
+		    notifyEl.event = TteElemFetchInclude;
+		    notifyEl.target = (Element) pSource;
+		    notifyEl.targetdocument = doc;
+		    notifyEl.element = (Element) pRef->RdElement;
+		    notifyEl.document = doc;
+		    
+		    /* Ici notifyEl.target et notifyEl.targetdocument
+		       sont differents de NULL si loadExternalDoc == TRUE.
+		       Dans le cas ou la cible (source) d'une
+		       inclusion n'est pas dans le meme document que l'inclusion,
+		       le document externe a ete ouvert temporairement. */
+		    
+		    CallEventType ((NotifyEvent *) & notifyEl, FALSE);
+		  } 
 	      }
 	  pRef = pRef->RdNext;
 	  /* passe a la reference suivante */
