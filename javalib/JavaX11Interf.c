@@ -8,6 +8,7 @@
  * the general event registration mecanism is in events.c
  */
 
+#include "ustring.h"
 #include "thot_sys.h"
 #include "interface.h"
 #include "registry.h"

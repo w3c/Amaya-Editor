@@ -14,6 +14,7 @@
 #include "events.h"
 #include "JavaX11Interf.h"
 #include "jsyscall.h"
+#include "ustring.h"
 
 #include "org_w3c_thotlib_APIApplication_stubs.h"
 #include "org_w3c_thotlib_APIDocument_stubs.h"

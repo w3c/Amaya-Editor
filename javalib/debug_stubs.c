@@ -9,6 +9,7 @@
 #endif
 #define CONST
 
+#include "ustring.h"
 #include "appstruct.h"
 #include "appaction.h"
 #include "memory.h"

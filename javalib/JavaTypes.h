@@ -31,6 +31,7 @@ extern void addNativeMethod(char*, void*);
 #include "attribute.h"
 #include "presentation.h"
 #include "language.h"
+#include "ustring.h"
 
 #include "native.h"
 
