@@ -183,7 +183,7 @@ void LINK_AddAnnotIcon (Document source_doc, Element anchor, AnnotMeta *annot)
   Element el;
   char s[MAX_LENGTH];
   char *iconName;
-  RDFStatementP iconS;
+  RDFStatementP iconS = (RDFStatementP)NULL;
 
   el = TtaGetFirstChild (anchor);
   
@@ -192,7 +192,9 @@ void LINK_AddAnnotIcon (Document source_doc, Element anchor, AnnotMeta *annot)
 					   USESICON_PROPNAME,
 					   TRUE);
 
-  iconS = ANNOT_FindRDFStatement (annot->type->statements, PROP_usesIcon);
+  if (annot->type) {
+    iconS = ANNOT_FindRDFStatement (annot->type->statements, PROP_usesIcon);
+  }
 
   if (iconS)
     iconName = iconS->object->name;
