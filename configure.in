@@ -865,10 +865,8 @@ if test "$build_amaya" = "yes" ; then
     if test "$with_raptor" = "yes" ; then
        dnl not all the function calls have been cleared as of today, 
        dnl we still need libwww's rdf parser 
-       MAKE_LIBWWW_RDF_PARSER="libwwwxml"
-       LIBWWW_RDF_PARSER="-lwwwxml"
-       dnl MAKE_LIBWWW_RDF_PARSER=
-       dnl# LIBWWW_RDF_PARSER=
+       MAKE_LIBWWW_RDF_PARSER=
+       LIBWWW_RDF_PARSER=
     else
        MAKE_LIBWWW_RDF_PARSER="libwwwxml"
        LIBWWW_RDF_PARSER="-lwwwxml"
