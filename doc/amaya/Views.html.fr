@@ -27,91 +27,98 @@
 </table>
 
 <div id="Views">
-<h2>Views</h2>
+<h2>Vues</h2>
 
-<p><strong>Amaya</strong> can present different <em>views</em> of a document
-simultaneously.  Each view is displayed in a different window. This allows you
-to clearly see what is happening when you edit complex documents. It is also
-an aid for moving across a document. Six views are available:</p>
+<p><strong>Amaya</strong> peut présenter différentes <em>vues</em> d'un
+document simultanément.  Chaque vue est exposée dans une fenêtre différente,
+ce qui vous permet de voir clairement ce qui se passe quand vous rédigez des
+documents complexes. C'est également une aide pour se déplacer à travers un
+document. Six vues sont disponibles:</p>
 <dl>
-  <dt>Formatted view</dt>
-    <dd>Here you see a similar view of the document to that provided in other
-      popular graphical browsers. It is a dynamic, direct manipulation view,
-      in the sense that, at all times, it displays the changes you are making
-      to the document. This is in contrast to editors which only provide a
-      series of static snapshots of the document.</dd>
-  <dt><a name="Structure">Structure view</a></dt>
-    <dd>This view shows the actual structure of the document being edited.
-      Each element is represented by its tag name, followed by its attributes,
-      on the same line. The elements it contains are represented underneath
-      along a blue vertical line that shows the extent of the element. Parts
-      displayed in black can be edited directly, by clicking and typing. Parts
-      displayed in blue can be changed only by editing commands.</dd>
-  <dt><a name="Alternate">Alternate view</a></dt>
-    <dd>This view allows you to see how the document looks like when displayed
-      by a text-only browser. It is useful for checking the accessibility of
-      your documents.</dd>
-  <dt>Links view</dt>
-    <dd>This view shows all anchors in a document, but only the anchors and
-      the elements they contain. You can focus on it when working on hypertext
-      links.</dd>
-  <dt>Table of Contents view</dt>
-    <dd>This view displays all headings (<code>Hn</code> elements), but only
-      those elements. If the document is well structured, it displays an
-      overview of the document.</dd>
-  <dt>Source view</dt>
-    <dd>Here you see the actual source code of the document. You can use it to
-      edit the syntax of your document.</dd>
+  <dt>Vue formatée</dt>
+    <dd>Ici vous voyez une vue similaire d'un document qui fournit un autre
+      navigateur graphique populaire. C'est une vue dynamique à manipulation
+      directe, dans le sens que, à n'importe quel moment, il montre les
+      changements que vous êtes entrain d'effectuer sur le document. Cette
+      propriété diffère des autres éditeurs qui eux fournissent seulement des
+      séries de photos instantannées du document.</dd>
+  <dt><a name="Structure">Vue structure</a></dt>
+    <dd>Cette vue montre la structure actuelle du document qui est entrain
+      d'être rédigé. Chaque élément est représenté par son nom  d'étiquette,
+      suivi de ses attributs, sur la même ligne. Les éléments qu'elle contient
+      sont représentés dessous, le long d'une ligne verticale bleue qui montre
+      l'étendue de l'élément. Les parties visualisées en noir peuvent être
+      éditées directement , en cliquant et en tapant. Les parties visualisées
+      en bleu peuvent être modifiées uniquement par l'intermédiaire des
+      commandes d'édition.</dd>
+  <dt><a name="Alternate">Vue alternée</a></dt>
+    <dd>Cette vue vous permet de voir à quoi ressemble quand il est visualisé
+      par un navigateur en mode texte. Elle est utile pour vérifier
+      l'accessibilité de vos documents.</dd>
+  <dt>Vue liens</dt>
+    <dd>Cette vue montre tous les ancres d'un document (les ancres et leur
+      contenu). Vous pouvez vous focaliser dessus en travaillant en liens
+      hypertextes.</dd>
+  <dt>Vue table des matières</dt>
+    <dd>Cette vue visualise tous les titres (<code>Hn</code> éléments) et
+      uniquement ces éléments. Si le document est bien structuré, elle
+      visualise une vue d'ensemble du document.</dd>
+  <dt>Vue source</dt>
+    <dd>Ici vous voyez le code source actuel du document. Vous pouvez
+      l'utiliser pour éditer la syntaxe de votre document.</dd>
 </dl>
 
-<p>You can open and close any view at any time.</p>
+<p>Vous pouvez ouvrir et fermer n'importe quelle vue, à n'importe quel
+moment.</p>
 
-<h3><a name="Opening">Opening a view</a></h3>
+<h3><a name="Opening">Ouvrir une vue</a></h3>
 
-<p>To open a view, choose the corresponding <strong>Show ...</strong> command
-in the <strong>Views</strong> menu (only available in the Formatted view). The
-<strong>Show ...</strong> commands from the <strong>Views</strong> menu can
-also be used to raise the corresponding window when it is in the
-background.</p>
+<p>Pour ouvrir une vue, choisissez la commande <strong>Montrer ...</strong>
+correspondante; commande du menu <strong>Vues</strong> (disponible uniquement
+à partir de la vue formatée). Les commandes <strong>Montrer ...</strong> du
+menu <strong>Vues</strong> peuvent être également utilisées pour obtenir la
+fenêtre correspondante quand elle est en arrière plan.</p>
 
-<h3><a name="Closing">Closing a view</a></h3>
+<h3><a name="Closing">Fermer une vue</a></h3>
 
-<p>To close a view choose the <strong>Close view</strong>  (or simply
-<strong>Close</strong> in the Source view) command from the
-<strong>File</strong> menu of that view. In the Formatted view, the
-<strong>Close</strong> command closes the whole document, i.e. all views
-displaying the same document.</p>
+<p>Pour fermer une vue choisissez la commande <strong>Fermer la vue</strong>
+(ou simplement <strong>Fermer la fenêtre</strong> dans la vue source) du menu
+<strong>Fichier</strong> de la vue en question. Dans la vue formatée, la
+commande <strong>Fermer la fenêtre</strong> ferme le document entier, i.e.
+toutes les vues visualisant le même document.</p>
 
-<h3><a name="Using">Using views</a></h3>
+<h3><a name="Using">Utiliser les vues</a></h3>
 
-<p>All views (except the Source view) are automatically <em>synchronized</em>:
-whenever you select some character or element in one view, the other views of
-the same document are automatically scrolled to show the same part of the
-document.</p>
+<p>Toutes les vues (excepté la vue source) sont automatiquement
+<em>synchronisées</em>: chaque fois que vous sélectionnnez quelques caractères
+ou éléments dans une vue, les autres vues du même document défilent
+automatiquement de telle sorte qu'on voit la même partie du document.</p>
 
-<p>You can edit the document in any view. For optimum responsiveness when
-typing, the entered characters are displayed only in the view where you have
-clicked. As soon as you activate a command or click somewhere, these
-characters are also displayed in the other views.</p>
+<p>Vous pouvez rédiger le document dans n'importe quelle vue. Pour une
+sensibilité otpimum quand vous tapez, les charactères entrés sont visualisés
+uniquement dans la vue où vous avez cliqué. Dès que vous activez une commande
+ou cliquez quelque part, ces caractères sont également visualisés dans les
+autres vues.</p>
 
-<p>The Source view behaves differently: you have to explicitly ask for
-synchronization, using the <strong>Synchronize</strong> command from the
-<strong>File</strong> menu. When you have made a series of edits in the Source
-view, you have to enter the <strong>Synchronize</strong> command from any view
-to update all other views of the document. Conversely, when you have made
-changes in any other view, enter the <strong>Synchronize</strong> command to
-update the Source view.</p>
+<p>La vue source se comporte différemment: vous devez demander la
+synchronisation explicitement, en utilisant la commande
+<strong>Synchroniser</strong> du menu <strong>Fichier</strong>. Quand vous
+avez effectué une série d'éditions dans la vue source, vous devez entrer la
+commande <strong>Synchroniser</strong>  depuis n'importe quelle vue pour
+mettre à jour toutes les autres vues du document. Inversement, quand vous avez
+effectué des changements dans une autre vue, entrer la commande
+<strong>Synchroniser</strong> pour mettre à jour la vue source.</p>
 
-<p>Synchronizing a document will cause Amaya to attempt to re-validate it. If
-markup errors have been introduced in the source view Amaya will attempt to
-recover as well as it can. You should check the document in the Structure view
-or Formatted view after editing in the source to ensure that synchronization
-has done what you expected.</p>
+<p>Synchroniser un document tentera Amaya de le revalider. Si des erreurs de
+balisage ont été introduites dans la vue source, Amaya tentera de les corriger
+du  mieux qu'il pourra. Vous devriez vérifier le document dans la vue
+structure ou bien dans la vue formatée après avoir édité dans le source pour
+s'assurer que la synchronisation a effectué ce que vous attendiez.</p>
 
-<p>Whenever you <a href="Publishing.html#L1104">save</a> a document, locally
-or remotely, from the Source view or from the Formatted view, a
-synchronization occurs automatically: all views reflect the state of the
-document at the time it is saved.</p>
+<p>Chaque fois que vous <a href="Publishing.html#L1104">sauvez</a> un
+document, localement ou à distance, depuis la vue source ou depuis la vue
+formatée, une synchronisation s'effectue automatiquement: toutes les vues
+refletent l'état du document au moment où il est sauvé.</p>
 </div>
 
 <p align="right"><a href="Searching.html"><img alt="previous" border="0"

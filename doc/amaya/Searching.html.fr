@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Search and Replace</title>
-  <meta name="GENERATOR" content="amaya V3.2" />
+  <meta name="GENERATOR" content="amaya V3.2.1" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -27,73 +27,80 @@
 </table>
 
 <div id="Searching">
-<h2><a name="L1042">Searching and replacing text</a></h2>
+<h2><a name="L1042">Rechercher et remplacer du texte</a></h2>
 
-<p>You can search and replace text with the <strong>Search</strong> dialog
-box. Call this box by choosing <strong>Find</strong> from the
-<strong>Edit</strong> menu, click on the corresponding button <img
-src="../Icons/find.gif" alt="find " />, or use the keyboard shortcut
-(control-shift-% in Unix, control-f in Windows)</p>
+<p>Vous pouvez rechercher et remplacer du texte par l'intermédiaire de la
+boîte de dialogue <strong>Rechercher</strong>. On appelle cette boîte soit en
+choisissant <strong>Rechercher</strong> dans le menu <strong>Édition</strong>,
+soit en cliquant sur le bouton correspondant <img src="../Icons/find.gif"
+alt="find " />, ou encore en utilisant le raccourci clavier  (control-shift-%
+sur Unix, control-f sur Windows)</p>
 
-<p>This form allows you to search or replace text using different
-criteria:</p>
+<p>Cette procédure vous permet de rechercher ou de remplacer du texte selon
+différents critères: </p>
 <ul>
-  <li>The character string to be searched for must be entered in the
-    <strong>Search for</strong> input area.</li>
-  <li>If the <strong>UPPER=lower</strong> button is selected, a
-    case-insensitive search is performed; otherwise, the string is searched
-    for as it appears within the "Search for" input area.</li>
-  <li>Strings can also be replaced using the same operation. The replacement
-    text is entered in the <strong>Replace by</strong> input area and a
-    replacement mode is selected from the <strong>Replace</strong> menu. The
-    replacement modes are as follows:
+  <li>La chaîne de caractères cherchée doit être écrite dans la zône d'entrée
+    <strong>Texte à chercher</strong>.</li>
+  <li>Si le bouton <strong>MAJUSCULES=minuscules</strong> est sélectionné,
+    l'écriture en majuscules ou en minuscules est infifférente; dans le cas
+    contraire, la chaîne sera recherchée telle qu'elle a été écrite.</li>
+  <li>Les chaînes peuvent être également remplacées en effectuant une
+    opération similaire. Le texte de remplacement est écrit dans la zône
+    d'entrée <strong>Texte de remplacement </strong>et le mode de remplacement
+    est sélectionné depuis le menu <strong>Remplacement</strong>. Les modes de
+    remplacements sont les suivants:
     <ul>
-      <li><strong>No replace</strong>: no replacement occurs even if the
-        ``Replace by'' input area contains a character string. It is just a
-        simple search.</li>
-      <li><strong>Replace on request</strong>: when the string is found, it is
-        selected. The user can then select one of the following buttons:
+      <li><strong>Sans remplacement</strong>: même si la zône d'entrée "Texte
+        de remplacement" contient une chaîne de caractères, rien ne sera
+        remplacé. On se trouve dans la configuration d'une simple
+      recherche.</li>
+      <li><strong>Remplacement à la demande </strong>: quand la chaîne est
+        trouvée, elle est sélectionnée. L'utilisateur peut alors sélectionner
+        l'un des boutons suivants:
         <ul>
-          <li><strong>Confirm</strong> to replace and carry out the search
-            again.</li>
-          <li><strong>Do not replace</strong> to search for the next instance
-            without replacing the string which has been found.</li>
+          <li><strong>Confirmer</strong> pour remplacer et effectuer la
+            recherche de nouveau.</li>
+          <li><strong>Sauter</strong> pour chercher le prochain résultat de la
+            recherche sans remplacer la chaîne qui a été trouvée.</li>
         </ul>
       </li>
-      <li><strong>Automatic replace</strong>: all instances of the string
-        searched for are automatically replaced within the portion of document
-        defined in the "Search where" menu.</li>
+      <li><strong>Remplacement automatique</strong>: tous les résultats de la
+        recherche de la chaîne sont remplacés automatiquement dans la partie
+        concernée du document, définie dans le menu "Où rechercher".</li>
     </ul>
   </li>
-  <li>The <strong>Search where</strong> menu allows you to specify the part of
-    document in which the search occurs:
+  <li>Le menu <strong>Où rechercher</strong> vous permet de spécifier la
+    partie du document dans laquelle la recherche s'effectue:
     <ul>
-      <li><strong>Before selection</strong>: the search starts at the
-        beginning of the selected part and moves backwards to the beginning of
-        the document.</li>
-      <li><strong>Within selection</strong>: the search only occurs within the
-        selected part, from its beginning to its end.</li>
-      <li><strong>After selection</strong>: the search starts at the end of
-        the selected part and moves forwards to the end of the document.</li>
-      <li><strong>In the whole document</strong>: the search is carried out in
-        the whole document from the beginning to the end regardless of which
-        part is selected.</li>
+      <li><strong>Avant la sélection</strong>: la recherche commence au début
+        de la partie sélectionnée et remonte jusqu'au début du document.</li>
+      <li><strong>Dans la sélection</strong>: la recherche s'effectue
+        uniquement dans la partie sélectionnée, depuis son début jusqu'à sa
+        fin.</li>
+      <li><strong>Après la sélection</strong>: la recherche commence à la fin
+        de la partie sélectionnée et redescend  jusqu'à la fin du
+      document.</li>
+      <li><strong>Dans tout le document</strong>: la recherche est effectuée
+        dand tout le document du début jusqu'à la fin, sans tenir compte des
+        parties éventuellement sélectionnées.</li>
     </ul>
   </li>
 </ul>
 
-<p>To initiate the search operation, click on the <strong>Confirm</strong>
-button at the bottom of the form. If the string searched for is found, it is
-selected and the document is positioned so as to make this string visible; you
-can then search for the next instance of this string by selecting the
-<strong>Confirm</strong> button again. If the string is not found, the "Not
-found" message appears in the bottom right-hand corner of the form.</p>
+<p>Pour lancer l'opération de recherche, cliquer sur le bouton
+<strong>Confirmer</strong> situé au bas de la boîte de dialogue. Si la chaîne
+recherchée est trouvée, elle est sélectionnée et le document est positionné de
+telle sorte que la chaîne soit visisble; vous pouvez alors aller au prochain
+résultat de la recherche en cliquant de nouveau sur le bouton
+<strong>Confirmer</strong>. Si la chaîne n'est pas trouvée, Le message "Pas
+trouvé"  apparaît au dessus du bouton Confirmer  .</p>
 
-<p>Search or replace can be abandoned at any moment by clicking on the
-<strong>Done</strong> button.</p>
+<p>L'option de recherche ou de remplacement peut être abandonnée à n'importe
+quel moment en cliquant sur le bouton <strong>Terminer</strong>.</p>
 
-<p><strong>New</strong>:  Replacement operations can now be undone with the
-Undo function (in the Edit menu, or keyboard shortcut control-z).</p>
+<p><strong>Nouveau</strong>:  Les opérations de remplacement peuvent être
+désormais annulées à l'aide de la fonction Défaire (dans le menu Édition, ou
+par le raccourci clavier control-z).</p>
 </div>
 
 <p align="right"><a href="Selecting.html"><img alt="previous" border="0"
