@@ -1022,8 +1022,6 @@ static void  UpdateEditorMenus (Document doc)
   TtaSetItemOn (doc, 1, Edit_, BPaste);
   TtaSetItemOn (doc, 1, Edit_, BClear);
   
-  TtaChangeButton (doc, 1, iSave, iconSaveNo, FALSE);
-  
   if (DocumentTypes[doc] == docHTML ||
       DocumentTypes[doc] == docSVG ||
       DocumentTypes[doc] == docMath ||
