@@ -308,14 +308,14 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame,
   y = pFrame->FrYOrg;
   GetSizesFrame (frame, &w, &h);
   GetExtraMargins (pBox, pFrom, &t, &b, &l, &r);
- if ( pBox == from)
-   {
-     /* display borders and fill of the current box */
-     l += pBox->BxLMargin;
-     b += pBox->BxBMargin;
-     t += pBox->BxTMargin;
-     r += pBox->BxRMargin;
-   }
+  if (pBox == from)
+    {
+      /* display borders and fill of the current box */
+      l += pBox->BxLMargin;
+      b += pBox->BxBMargin;
+      t += pBox->BxTMargin;
+      r += pBox->BxRMargin;
+    }
   /* the default area to be painted with the background */
   xd = pBox->BxXOrg + l;
   yd = pBox->BxYOrg + t;

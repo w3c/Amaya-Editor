@@ -2598,8 +2598,11 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 #endif /* _WX */
 
        /* open the main view */
-       if (docType == docLog ||
-	   (docType == docLibrary && method == CE_RELATIVE))
+       if (docType == docLog)
+	 /* without menu bar */
+	 mainView = TtaOpenMainView (doc, x, y, w, h, FALSE, FALSE,
+	                             window_id, page_id, page_position);
+       else if (docType == docLibrary && method == CE_RELATIVE)
 	 /* without menu bar */
 	 mainView = TtaOpenMainView (doc, x, y, w, h, FALSE, TRUE,
 	                             window_id, page_id, page_position);
