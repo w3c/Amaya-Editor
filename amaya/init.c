@@ -2839,7 +2839,12 @@ View                view;
      if (TtaIsDocumentModified (document))
        {
 	  SetNamespacesAndDTD (document);
-	  TtaExportDocumentWithNewLineNumbers (document, tempdocument, TEXT("HTMLT"));
+	  if (DocumentMeta[document]->xmlformat)
+	     TtaExportDocumentWithNewLineNumbers (document, tempdocument,
+						  TEXT("HTMLTX"));
+	  else
+	     TtaExportDocumentWithNewLineNumbers (document, tempdocument,
+						  TEXT("HTMLT"));
        }
      TtaExtractName (tempdocument, tempdir, documentname);
      /* open a window for the source code */
@@ -3661,16 +3666,14 @@ static void	SetFileSuffix ()
 
   if (SavingDocument != 0 && SaveName[0] != EOS)
     {
-      if (SaveAsHTML)
+      if (SaveAsHTML || SaveAsXHTML)
 #ifdef _WINDOWS
-	ustrcpy (suffix, CUSTEXT("html"));
+	 ustrcpy (suffix, CUSTEXT("html"));
 #else /* _WINDOWS */
-	ustrcpy (suffix, "html");
+	 ustrcpy (suffix, "html");
 #endif /* _WINDOWS */
-       else if (SaveAsXHTML)
-	ustrcpy (suffix, TEXT("xht"));
-       else if (SaveAsText)
-	ustrcpy (suffix, TEXT("txt"));
+      else if (SaveAsText)
+	 ustrcpy (suffix, TEXT("txt"));
       else
 	 return;
 
