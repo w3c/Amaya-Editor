@@ -456,7 +456,7 @@ EXCEPT
                         NoCreate;
    script_:	        NoMove, NoResize, NoShowBox, NoCreate;
    style__:             NoMove, NoResize, NoShowBox, NoCreate;
-   switch:              NoMove, NoResize, NoShowBox, NoCreate;
+   switch:              NoMove, NoResize, NoShowBox, NoCreate, HighlightChildren;
    foreignObject:       MoveResize, HighlightChildren, NoCreate;
    SVG_Image:           Hidden, SelectParent;
    GRAPHICS:	        SelectParent;

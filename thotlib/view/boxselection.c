@@ -674,6 +674,10 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 			  pBox = pBox->BxNexChild;
 			}
 		    }
+		  else if (graphSel)
+                      DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
+                               pBox->BxXOrg + pBox->BxWidth,
+                               pBox->BxYOrg + pBox->BxHeight);
 		  else
 		    /* a substring or a point of the box is selected */
 		    DefClip (frame,
