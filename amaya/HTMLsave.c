@@ -677,9 +677,7 @@ void                SaveDocumentAs (Document doc, View view)
 	 {
 	   TtaExtractName (tempname, SavePath, SaveName);
 	 }
-#ifndef _WINDOWS
        TtaSetDialoguePosition ();
-#endif /* !_WINDOWS */
      }
    else
      {

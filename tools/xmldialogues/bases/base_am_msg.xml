@@ -1097,7 +1097,7 @@
 </label>
 <label define="AM_BORDER">
 	<message xml:lang="en">Border</message>
-	<message xml:lang="fr">paisseur des traits</message>
+	<message xml:lang="fr">Bordure</message>
 	<message xml:lang="de">Rahmen:</message>
 	<message xml:lang="it">Bordo</message>
 	<message xml:lang="es">Borde</message>

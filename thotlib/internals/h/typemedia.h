@@ -243,8 +243,8 @@ typedef struct _Box
       PtrLine 	 _BxLastLine_;	/* Last line */
       int        _BxMaxWidth_;  /* Width without line wrapping */
       int        _BxMinWidth_;  /* Mininmum width */
-      short      _BxCycles_;    /* count reformatting cycles */
-      short      _BxPacking_;   /* Packing */
+      int        _BxCycles_;    /* count reformatting cycles */
+      int        _BxPacking_;   /* Packing */
     } s2;
     struct /* BoTable BoColumn BoRow */
     {
@@ -252,8 +252,8 @@ typedef struct _Box
       PtrTabRelations	_BxRows_;	/* list of rows within a table */
       int        	_BxMaxWidth_;   /* Width without line wrapping */
       int        	_BxMinWidth_;   /* Mininmum width */
-      short             _BxCycles_;     /* count reformatting cycles */
-      short             _BxPacking_;     /* Packing */
+      int               _BxCycles_;     /* count reformatting cycles */
+      int               _BxPacking_;     /* Packing */
       PtrTabSpan        _BxSpans_;	/* list of spanned cells */
     } s3;
     struct /* BoComplete for Graphics = 'C' */

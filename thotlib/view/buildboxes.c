@@ -663,7 +663,7 @@ void                GiveTextSize (PtrAbstractBox pAb, int *width, int *height, i
 /*----------------------------------------------------------------------
   GiveEnclosureSize gives the size of a compound box.
   ----------------------------------------------------------------------*/
-void                GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width, int *height)
+void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width, int *height)
 {
   PtrAbstractBox      pChildAb;
   PtrAbstractBox      pFirstAb;
@@ -914,7 +914,7 @@ void                GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width
 /*----------------------------------------------------------------------
   IsAbstractBoxEmpty returns TRUE is the abstract box is empty.
   ----------------------------------------------------------------------*/
-static ThotBool     IsAbstractBoxEmpty (PtrAbstractBox pAb)
+static ThotBool IsAbstractBoxEmpty (PtrAbstractBox pAb)
 {
    PtrAbstractBox      pChildAb;
    ThotBool            complete;
@@ -1193,7 +1193,8 @@ static void  TransmitMBP (PtrBox pBox, int frame, int i, int j, ThotBool horizon
   Store the box address into the abstract box.
   Return the box address.
   ----------------------------------------------------------------------*/
-static PtrBox       CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines, int *carIndex)
+static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
+			 int *carIndex)
 {
   PtrSSchema          pSS;
   PtrAbstractBox      pChildAb;
@@ -1706,7 +1707,9 @@ PtrLine             SearchLine (PtrBox pBox)
   between two lines. In that case only the main box is updated and the
   algorithm that splits the ext in lines is called.
   ----------------------------------------------------------------------*/
-void   BoxUpdate (PtrBox pBox, PtrLine pLine, int charDelta, int spaceDelta, int wDelta, int adjustDelta, int hDelta, int frame, ThotBool splitBox)
+void BoxUpdate (PtrBox pBox, PtrLine pLine, int charDelta, int spaceDelta,
+		int wDelta, int adjustDelta, int hDelta, int frame,
+		ThotBool splitBox)
 {
    PtrBox              box1;
    PtrBox              pMainBox;
@@ -1986,7 +1989,7 @@ static void         CheckDefaultPositions (PtrAbstractBox pAb, int frame)
 /*----------------------------------------------------------------------
    RecordEnclosing  registers differed packings.        
   ----------------------------------------------------------------------*/
-void                RecordEnclosing (PtrBox pBox, ThotBool horizRef)
+void RecordEnclosing (PtrBox pBox, ThotBool horizRef)
 {
   int                 i;
   PtrDimRelations     pDimRel;
@@ -2055,7 +2058,7 @@ void                RecordEnclosing (PtrBox pBox, ThotBool horizRef)
   ComputeUpdates checks what is changing in the current Abstract Box.
   Return TRUE if there is at least one change.
   ----------------------------------------------------------------------*/
-ThotBool            ComputeUpdates (PtrAbstractBox pAb, int frame)
+ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 {
   PtrLine             pLine;
   PtrAbstractBox      pCurrentAb, pCell, pBlock;
@@ -3565,7 +3568,7 @@ void     CheckScrollingWidth (int frame)
    Si le retour est Faux, tous les paves dont la boite     
    coupe la limite ou de'borde sont marque's.              
   ----------------------------------------------------------------------*/
-ThotBool      ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
+ThotBool ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
 {
    Document            document;
    PtrAbstractBox      pParentAb;

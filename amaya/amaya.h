@@ -40,8 +40,8 @@
 #define NAME_LENGTH     32
 
 #define HTAppName     "amaya"
-#define HTAppVersion  "V4.3.1"
-#define HTAppDate     "15 March 2001"
+#define HTAppVersion  "V4.3.2"
+#define HTAppDate     "23 March 2001"
 
 #define URL_STR       "/"
 #define URL_SEP       '/'
