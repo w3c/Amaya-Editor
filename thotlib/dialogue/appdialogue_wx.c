@@ -25,6 +25,7 @@
 #include "frame_tv.h"
 #include "boxparams_f.h"
 
+#include "AmayaCanvas.h"
 #include "AmayaFrame.h"
 #include "AmayaWindow.h"
 #include "AmayaPage.h"
@@ -107,9 +108,6 @@ int TtaMakeWindow( int x, int y, int w, int h )
   WindowTable[window_id].FrHeight = p_AmayaWindow->GetSize().GetHeight();
   WindowTable[window_id].WdStatus = p_AmayaWindow->GetStatusBar();
 
-  // show it
-  TtaShowWindow( window_id, TRUE );
-  
   return window_id;
 #else
   return 0;
@@ -362,11 +360,15 @@ ThotBool TtaAttachFrame( int frame_id, int window_id, int page_id, int position 
   FrameTable[frame_id].FrWindowId   	= window_id;
   FrameTable[frame_id].FrPageId         = page_id;
 
-  p_page->Show();
+  // show the parent window if not already shown
+  TtaShowWindow( window_id, TRUE );
+ 
+  // Popup the frame : bring it to top
   FrameTable[frame_id].WdFrame->RaiseFrame();
 
-  /* wait for frame initialisation (needed by opengl) */
-  TtaHandlePendingEvents();
+  /* wait for frame initialisation (needed by opengl) 
+   * this function waits for complete widgets initialisation */
+  wxTheApp->Yield( TRUE );
   
   return TRUE;
 #else

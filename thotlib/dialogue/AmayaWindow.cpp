@@ -206,6 +206,12 @@ bool AmayaWindow::AttachPage( int position, AmayaPage * p_page )
     // update the pages ids
     m_pNotebook->UpdatePageId();
 
+    // the inserted page should be forced to notebook size
+    m_pNotebook->Layout();
+    wxLogDebug( _T("AmayaWindow::AttachPage - pagesize: w=%d h=%d"),
+		p_page->GetSize().GetWidth(),
+		p_page->GetSize().GetHeight() );
+
     SetAutoLayout(TRUE);
   }
   return ret;

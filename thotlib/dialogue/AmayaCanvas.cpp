@@ -567,7 +567,11 @@ void AmayaCanvas::Init()
 
   wxLogDebug( _T("AmayaCanvas::Init (init opengl canvas) : frame=%d"),
       m_pAmayaFrame->GetFrameId() );
-  
+  wxLogDebug(_T("AmayaCanvas::Init - frame=%d w=%d h=%d"),
+	     m_pAmayaFrame->GetFrameId(),
+	     GetSize().GetWidth(),
+	     GetSize().GetHeight() );
+
 #ifdef _GL
   SetCurrent();
   SetGlPipelineState ();
