@@ -72,6 +72,7 @@ XmlEntity  MathEntityTable[] =
    {TEXT("Kgr"), 75, 'G'},
    {TEXT("KHgr"), 67, 'G'},
    {TEXT("Lambda"), 76, 'G'},
+   {TEXT("LeftAngleBracket"), 225, 'G'},
    {TEXT("LeftArrow"), 172, 'G'},
    {TEXT("LeftCeiling"), 233, 'G'},
    {TEXT("LeftFloor"), 235, 'G'},
