@@ -59,8 +59,6 @@
 #endif /* DAV */
 #include "libmanag_f.h"
 
-/*  Does a modified doctype refer to an XML DTD ? */
-static ThotBool	     XmlDoctype = FALSE;
 
 /*----------------------------------------------------------------------
   NewXHTMLBasic: Create a new Basic XHTML document
@@ -120,12 +118,14 @@ void NewCss (Document document, View view)
 
 /*--------------------------------------------------------------------------
   CreateDoctype creates a doctype declaration
+  The parameter doctype points to the current DOCTYPE or NULL.
   Parameters useMathML and useSVG determine the XHTML 1.1 profile.
   --------------------------------------------------------------------------*/
-void CreateDoctype (Document doc, int profile, ThotBool useMathML, ThotBool useSVG)
+void CreateDoctype (Document doc, Element doctype, int profile,
+		    ThotBool useMathML, ThotBool useSVG)
 {
   ElementType     elType, lineType;
-  Element         docEl, doctype, doctypeLine, text, child;
+  Element         docEl, doctypeLine, text, child;
   Language        language;
   char		  buffer[400];
   
@@ -155,11 +155,24 @@ void CreateDoctype (Document doc, int profile, ThotBool useMathML, ThotBool useS
       elType.ElTypeNum = MathML_EL_DOCTYPE;
       lineType.ElTypeNum = MathML_EL_DOCTYPE_line;
     }
-  
-  doctype = TtaNewElement (doc, elType);
-  TtaInsertFirstChild (&doctype, docEl, doc);
-  /* Make the DOCTYPE element read-only */
-  TtaSetAccessRight (doctype, ReadOnly, doc);
+
+  if (doctype == NULL)
+    {
+      /* no DOCTYPE already declared */
+      doctype = TtaNewElement (doc, elType);
+      TtaInsertFirstChild (&doctype, docEl, doc);
+      /* Make the DOCTYPE element read-only */
+      TtaSetAccessRight (doctype, ReadOnly, doc);
+    }
+  else
+    {
+      doctypeLine = TtaGetFirstChild (doctype);
+      while (doctypeLine)
+	{
+	  TtaDeleteTree (doctypeLine, doc);
+	  doctypeLine = TtaGetFirstChild (doctype);
+	}
+    }
   /* Create the first DOCTYPE_line element */
   elType.ElTypeNum = lineType.ElTypeNum;
   doctypeLine = TtaNewElement (doc, elType);
@@ -345,10 +358,10 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
       /* create the DOCTYPE element corresponding to the document's profile */
       elType.ElTypeNum = HTML_EL_DOCTYPE;
       doctype = TtaSearchTypedElement (elType, SearchInTree, docEl);
-      if (doctype != NULL)
-	TtaDeleteTree (doctype, doc);
       if (profile != L_Other)
-	CreateDoctype (doc, profile, FALSE, FALSE);
+	CreateDoctype (doc, doctype, profile, FALSE, FALSE);
+      else if (doctype)
+	TtaDeleteTree (doctype, doc);
       
       /* Load user's style sheet */
       LoadUserStyleSheet (doc);
@@ -453,9 +466,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
       /* create the MathML DOCTYPE element */
       elType.ElTypeNum = MathML_EL_DOCTYPE;
       doctype = TtaSearchTypedElement (elType, SearchInTree, docEl);
-      if (doctype != NULL)
-	TtaDeleteTree (doctype, doc);
-      CreateDoctype (doc, L_MathML, FALSE, FALSE);
+      CreateDoctype (doc, doctype, L_MathML, FALSE, FALSE);
 
       /* Set the namespace declaration */
       root = TtaGetRootElement (doc);
@@ -480,9 +491,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
       /* create the SVG DOCTYPE element */
       elType.ElTypeNum = SVG_EL_DOCTYPE;
       doctype = TtaSearchTypedElement (elType, SearchInTree, docEl);
-      if (doctype != NULL)
-	TtaDeleteTree (doctype, doc);
-      CreateDoctype (doc, L_SVG, FALSE, FALSE);
+      CreateDoctype (doc, doctype, L_SVG, FALSE, FALSE);
 
       /* Set the namespace declaration */
       root = TtaGetRootElement (doc);
@@ -570,7 +579,8 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
   CreateOrChangeDoctype
   Create or change the doctype of a document
   --------------------------------------------------------------------------*/
-static void CreateOrChangeDoctype (Document doc, View view, int new_doctype)
+static void CreateOrChangeDoctype (Document doc, View view, int new_doctype,
+				   ThotBool xmlDoctype)
 {
   char           *tempdoc = NULL; 
   char            documentname[MAX_LENGTH];
@@ -579,16 +589,33 @@ static void CreateOrChangeDoctype (Document doc, View view, int new_doctype)
   ThotBool        ok = FALSE, error = FALSE;
   
   /* The document has to be parsed with the new doctype */
-  /* Synchronize the document */
-  Synchronize (doc, view);
+  tempdoc = GetLocalPath (doc, DocumentURLs[doc]);
+  if (TtaIsDocumentUpdated (doc))
+    {
+      /* save the current state of the document */
+      if (DocumentTypes[doc] == docLibrary || DocumentTypes[doc] == docHTML)
+	{
+	  if (TtaGetDocumentProfile (doc) == L_Xhtml11)
+	    TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "HTMLT11");
+	  else if (DocumentMeta[doc]->xmlformat)
+	    TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "HTMLTX");
+	  else
+	    TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "HTMLT");
+	}
+      else if (DocumentTypes[doc] == docSVG)
+	TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "SVGT");
+      else if (DocumentTypes[doc] == docMath)
+	TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "MathMLT");
+      else
+	TtaExportDocumentWithNewLineNumbers (doc, tempdoc, NULL);
+    }
 
   /* Parse the document with the new doctype */
-  tempdoc = GetLocalPath (doc, DocumentURLs[doc]);
   TtaExtractName (tempdoc, tempdir, documentname);
   /* change the document profile */
   oldprofile = TtaGetDocumentProfile (doc);
   ok = ParseWithNewDoctype (doc, tempdoc, tempdir, documentname, new_doctype,
-			    &error, XmlDoctype);
+			    &error, xmlDoctype);
 
   if (ok)
     {
@@ -686,20 +713,14 @@ void AddDoctype (Document document, View view)
       if (useMathML || useSVG)
 	profile = L_Xhtml11;
       else
-	{
-	  if (DocumentMeta[document]->xmlformat)
-	    XmlDoctype = TRUE;
-	  else
-	    XmlDoctype = FALSE;
-	  profile = L_Transitional;
-	}
+	profile = L_Transitional;
     }
   else if (docType == docMath)
     profile = L_MathML;
   else if (docType == docSVG)
     profile = L_SVG;
 
-  CreateOrChangeDoctype (document, view, profile);
+  CreateOrChangeDoctype (document, view, profile, DocumentMeta[document]->xmlformat);
   UpdateEditorMenus (document);
 }
 
@@ -709,8 +730,7 @@ void AddDoctype (Document document, View view)
   --------------------------------------------------------------------------*/
 void CreateDoctypeXhtml11 (Document document, View view)
 {
-  XmlDoctype = TRUE;
-  CreateOrChangeDoctype (document, view, L_Xhtml11);
+  CreateOrChangeDoctype (document, view, L_Xhtml11, TRUE);
   UpdateEditorMenus (document);
 }
 
@@ -720,8 +740,7 @@ void CreateDoctypeXhtml11 (Document document, View view)
   --------------------------------------------------------------------------*/
 void CreateDoctypeXhtmlTransitional (Document document, View view)
 {
-  XmlDoctype = TRUE;
-  CreateOrChangeDoctype (document, view, L_Transitional);
+  CreateOrChangeDoctype (document, view, L_Transitional, TRUE);
   UpdateEditorMenus (document);
 }
 
@@ -731,8 +750,7 @@ void CreateDoctypeXhtmlTransitional (Document document, View view)
   --------------------------------------------------------------------------*/
 void CreateDoctypeXhtmlStrict (Document document, View view)
 {
-  XmlDoctype = TRUE;
-  CreateOrChangeDoctype (document, view, L_Strict);
+  CreateOrChangeDoctype (document, view, L_Strict, TRUE);
   UpdateEditorMenus (document);
 }
 
@@ -742,8 +760,7 @@ void CreateDoctypeXhtmlStrict (Document document, View view)
   --------------------------------------------------------------------------*/
 void CreateDoctypeXhtmlBasic (Document document, View view)
 {
-  XmlDoctype = TRUE;
-  CreateOrChangeDoctype (document, view, L_Basic);
+  CreateOrChangeDoctype (document, view, L_Basic, TRUE);
   UpdateEditorMenus (document);
 }
 
@@ -753,8 +770,7 @@ void CreateDoctypeXhtmlBasic (Document document, View view)
   --------------------------------------------------------------------------*/
 void CreateDoctypeHtmlTransitional (Document document, View view)
 {
-  XmlDoctype = FALSE;
-  CreateOrChangeDoctype (document, view, L_Transitional);
+  CreateOrChangeDoctype (document, view, L_Transitional, FALSE);
   UpdateEditorMenus (document);
 }
 
@@ -764,8 +780,7 @@ void CreateDoctypeHtmlTransitional (Document document, View view)
   --------------------------------------------------------------------------*/
 void CreateDoctypeHtmlStrict (Document document, View view)
 {
-  XmlDoctype = FALSE;
-  CreateOrChangeDoctype (document, view, L_Strict);
+  CreateOrChangeDoctype (document, view, L_Strict, FALSE);
   UpdateEditorMenus (document);
 }
 
@@ -775,8 +790,7 @@ void CreateDoctypeHtmlStrict (Document document, View view)
   --------------------------------------------------------------------------*/
 void CreateDoctypeMathML (Document document, View view)
 {
-  XmlDoctype = TRUE;
-  CreateOrChangeDoctype (document, view, L_MathML);
+  CreateOrChangeDoctype (document, view, L_MathML, TRUE);
 }
 
 /*--------------------------------------------------------------------------
@@ -785,8 +799,7 @@ void CreateDoctypeMathML (Document document, View view)
   --------------------------------------------------------------------------*/
 void CreateDoctypeSVG (Document document, View view)
 {
-  XmlDoctype = TRUE;
-  CreateOrChangeDoctype (document, view, L_SVG);
+  CreateOrChangeDoctype (document, view, L_SVG, TRUE);
 }
 
 /*----------------------------------------------------------------------

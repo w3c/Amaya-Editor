@@ -21,6 +21,7 @@ extern void NewSVG ( Document document,
 extern void NewCss ( Document document,
                      View view );
 extern void CreateDoctype ( Document doc,
+                            Element doctype,
                             int profile,
                             ThotBool useMathML,
                             ThotBool useSVG );
@@ -283,6 +284,7 @@ extern void NewSVG ( Document document,
 extern void NewCss ( Document document,
                        View view );
 extern void CreateDoctype ( Document doc,
+                              Element doctype,
                               int profile,
                               ThotBool useMathML,
                               ThotBool useSVG );

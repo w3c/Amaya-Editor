@@ -21,19 +21,6 @@ VAR
 
 RULES
 
-#ifdef XML
- Document: BEGIN
-	Create '<?xml version="1.0"';
-	if Charset
-	   BEGIN
-	   Create ' encoding="';
-	   Create Charset;
-	   Create '"';
-	   END;
-	Create '?>\12';
-	END;
-#endif
-
  HTML : BEGIN
 	Use MathMLT for MathML;
 	Use SVGT for SVG;
@@ -2821,8 +2808,8 @@ TextTRANSLATE
 	'\46' -> '&amp;';	{ ampersand, U+0026 ISOnum }
 	'\74' -> '&lt;';	{ less-than sign, U+003C ISOnum }
 	'\76' -> '&gt;'; 	{ greater-than sign, U+003E ISOnum }
-	'\240' -> '&nbsp;';     { no-break space = non-breaking space, U+00A0 ISOnum }
-	'\260' -> '&deg;';	{ degree sign, U+00B0 ISOnum }
+{	'\240' -> '&nbsp;';     no-break space = non-breaking space, U+00A0 ISOnum 
+	'\260' -> '&deg;';	 degree sign, U+00B0 ISOnum }
 	END;
 
 #include "greek.sgml"

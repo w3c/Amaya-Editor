@@ -1433,7 +1433,11 @@ void TtaGetViewXYWH (Document doc, int view, int *xmm, int *ymm, int *width,
   w = tmpw->allocation.width - 4;
   h = tmpw->allocation.height - 4;
   x = tmpw->allocation.x;
+  if (x > 500)
+    x = 500;
   y = tmpw->allocation.y;
+  if (y > 300)
+    y = 300;
   *xmm = x;
   *ymm = y;
   *width = w;

@@ -2914,7 +2914,9 @@ ThotBool RightClickInText (NotifyElement *event)
   ----------------------------------------------------------------------*/
 void CheckSynchronize (NotifyElement *event)
 {
-  if (event->document != SelectionDoc)
+  if (event->document != SelectionDoc &&
+      DocumentURLs[event->document] != NULL &&
+       DocumentTypes[event->document] != docLog) /* it's not a Log file */
     {
       if (SelectionDoc && DocumentURLs[SelectionDoc])
 	{

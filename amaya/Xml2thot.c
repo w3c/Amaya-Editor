@@ -2860,7 +2860,9 @@ static void EndOfAttributeName (char *xmlName)
    else
      {
        /* This attribute belongs to the same namespace than the element */
-       attrName = (char *)TtaStrdup ((char *)nsURI);
+       TtaFreeMemory (nsURI);
+       nsURI = NULL;
+       attrName = (char *)TtaStrdup ((char *)xmlName);
        if (UnknownNS)
 	 /* The corresponding element doesn't belong to a supported namespace */ 
 	 {

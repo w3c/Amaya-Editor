@@ -475,4 +475,9 @@ ATTRIBUTES
 	AttrModify.Post -> AddAccessKey;
 	AttrDelete.Pre -> RemoveAccessKey;	
 	END;
+
+   EntityName:
+	BEGIN
+	AttrExport.Pre ->  CheckValidEntity;
+	END;
 END

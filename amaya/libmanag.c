@@ -1168,9 +1168,7 @@ Document CreateNewLibraryFile (char *libUrl, char *libtitle)
 
   elType.ElTypeNum = HTML_EL_DOCTYPE;
   doctype = TtaSearchTypedElement (elType, SearchInTree, docEl);
-  if (doctype != NULL)
-    TtaDeleteTree (doctype, newLibraryDoc);
-  CreateDoctype (newLibraryDoc, L_Xhtml11, FALSE, FALSE);
+  CreateDoctype (newLibraryDoc, doctype, L_Xhtml11, FALSE, FALSE);
   
   /* Load user's style sheet */
   LoadUserStyleSheet (newLibraryDoc);
@@ -2343,9 +2341,7 @@ Document CreateNewSVGFileofSVGSelected (char *url)
      /* create the SVG DOCTYPE element */
       elType.ElTypeNum = SVG_EL_DOCTYPE;
       doctype = TtaSearchTypedElement (elType, SearchInTree, root);
-      if (doctype != NULL)
-	TtaDeleteTree (doctype, newSVGDoc);
-      CreateDoctype (newSVGDoc, L_SVG, FALSE, FALSE);
+      CreateDoctype (newSVGDoc, doctype, L_SVG, FALSE, FALSE);
 
       root = TtaGetRootElement (newSVGDoc);
       elType.ElTypeNum = SVG_EL_XMLcomment;

@@ -250,8 +250,22 @@ static void ExportChar (wchar_t c, int fnum, char *outBuf, Document doc,
 	    }
 	  else if (c == 0xA0) /* &nbsp; */
 	    {
-	      strcpy ((char *)&mbc[0], "&nbsp;");
-	      nb_bytes2write = 6;
+	      if (GetEntityFunction)
+		/* check if there is a DOCTYPE */
+		(*(Proc3)GetEntityFunction) ((void *)c, (void *)doc, (void *)&entity);
+	      else
+		entity = NULL;
+	      if (entity)
+		{
+		  /* alphanumeric entity accepted */
+		  strcpy ((char *)&mbc[0], "&nbsp;");
+		  nb_bytes2write = 6;
+		}
+	      else
+		{
+		  nb_bytes2write = 1;
+		  mbc[0] = (unsigned char)0xA0;
+		}
 	    }
 	}
       /* translate the input character */

@@ -249,16 +249,23 @@ ThotBool CheckValidEntity (NotifyAttribute *event)
   Attribute         attr;
   CHAR_T            c[3];
   Language	    lang;
-  char              mbc[20];
+  char              mbc[20], *s;
   int               length;
 
   if (HasADoctype (event->document))
-     /* the document has a DocType */
-     return FALSE;  /* let Thot perform normal operation */
+    /* the document has a DocType */
+    return FALSE;  /* let Thot perform normal operation */
 
   attrType = event->attributeType;
+  s = TtaGetSSchemaName (attrType.AttrSSchema);
+  if (strcmp (s, "HTML") == 0)
+    attrType.AttrTypeNum = HTML_ATTR_EntityName;
+  else if (strcmp (s, "MathML") == 0)
+    attrType.AttrTypeNum = MathML_ATTR_EntityName;
+  else
+    return FALSE;  /* let Thot perform normal operation */
+
   /* this function applies only to MathML elements */
-  attrType.AttrTypeNum = MathML_ATTR_EntityName;
   attr = TtaGetAttribute (event->element, attrType);
   if (attr)
      /* there is an entity attribute and the document doesn't have a DocType */
@@ -922,6 +929,7 @@ void SetNamespacesAndDTD (Document doc)
    Attribute		attr;
    AttributeType	attrType;
    SSchema              nature;
+  Language              lang;
    char                *ptr, *s;
    char                *charsetname = NULL;
    char		        buffer[300];
@@ -934,7 +942,7 @@ void SetNamespacesAndDTD (Document doc)
    useSVG = FALSE;
    useXML = FALSE;
    nature = NULL; 
-
+   doctype = NULL; /* no DOCTYPE */
 #ifdef ANNOTATIONS
    if (DocumentTypes[doc] == docAnnot)
      /* in an annotation, the body of the annotation corresponds to the
@@ -974,44 +982,51 @@ void SetNamespacesAndDTD (Document doc)
    while (nature);
    
    docEl = TtaGetMainRoot (doc);
-   /* a PI is generated when the document includes a math element */
+   /* a PI is generated when the XHTML document includes math elements and
+    doesn't include a DOCTYPE */
    usePI = useMathML && DocumentMeta[doc]->xmlformat;
+
+   /* check if the document has a DOCTYPE declaration */
+#ifdef ANNOTATIONS
+   if (DocumentTypes[doc]  == docAnnot)
+     elType = TtaGetElementType (root);
+   else
+#endif /* ANNOTATIONS */
+     elType = TtaGetElementType (docEl);
+   s = TtaGetSSchemaName (elType.ElSSchema);
+   if (strcmp (s, "HTML") == 0)
+     elType.ElTypeNum = HTML_EL_DOCTYPE;
+#ifdef _SVG
+   else if (strcmp (s, "SVG") == 0)
+     elType.ElTypeNum = SVG_EL_DOCTYPE;
+#endif /* _SVG */
+   else if (strcmp (s, "MathML") == 0)
+     elType.ElTypeNum = MathML_EL_DOCTYPE;
+   else
+     elType.ElTypeNum = XML_EL_doctype;
+   doctype = TtaSearchTypedElement (elType, SearchInTree, docEl);
+
+       /* check if the compound document requests a DOCTYPE declaration */
    if ((useMathML || useSVG || useHTML || useXML) && DocumentMeta[doc]->xmlformat)
      {
-       /* Remove the DOCTYPE declaration for compound documents */
-#ifdef ANNOTATIONS
-       if (DocumentTypes[doc]  == docAnnot)
-	 elType = TtaGetElementType (root);
-       else
-#endif /* ANNOTATIONS */
-	 elType = TtaGetElementType (docEl);
-
-       s = TtaGetSSchemaName (elType.ElSSchema);
-       if (strcmp (s, "HTML") == 0)
-	 elType.ElTypeNum = HTML_EL_DOCTYPE;
-       else if (strcmp (s, "SVG") == 0)
-	 elType.ElTypeNum = SVG_EL_DOCTYPE;
-       else if (strcmp (s, "MathML") == 0)
-	 elType.ElTypeNum = MathML_EL_DOCTYPE;
-       else
-	 elType.ElTypeNum = XML_EL_doctype;
-       doctype = TtaSearchTypedElement (elType, SearchInTree, docEl);
        profile = TtaGetDocumentProfile(doc);
-       if (DocumentTypes[doc] == docHTML)
+       if (DocumentTypes[doc] == docHTML && doctype)
 	 {
 	   /* Create a XHTML + MathML + SVG doctype */
-	   if (doctype)
-	     /* the document has a current doctype */
-	     TtaDeleteTree (doctype, doc);
 	   if ((useMathML || useSVG) && profile == L_Xhtml11)
 	     {
-	       CreateDoctype (doc, L_Xhtml11, useMathML, useSVG);
+	       CreateDoctype (doc, doctype, L_Xhtml11, useMathML, useSVG);
 	       /* it's not necessary to generate a PI attribute */
 	       usePI = FALSE;
 	     }
 	 }
+       else if (doctype)
+	 /* remove the current doctype */
+	 TtaDeleteTree (doctype, doc);
      }
    
+   /* Create or update the document charset */
+   charsetname = UpdateDocumentCharset (doc);
    if (
 #ifdef ANNOTATIONS
        (DocumentTypes[doc] == docAnnot && ANNOT_bodyType (doc) == docHTML) ||
@@ -1026,18 +1041,52 @@ void SetNamespacesAndDTD (Document doc)
 	 TtaRemoveAttribute (root, attr, doc);
        if (usePI)
 	 {
-	   /* generate the David Carliste's xsl stylesheet for MathML */
+	   /* check if this PI is not already defined */
+	   elType.ElTypeNum = HTML_EL_XMLPI;
+	   el = TtaSearchTypedElement (elType, SearchInTree, docEl);
+	   if (el)
+	     {
+	       el = TtaGetFirstChild (el);
+	       while (el)
+		 {
+		   elFound = TtaGetFirstChild (el);
+		   if (elFound == NULL)
+		     elFound = el;
+		   length = 300;
+		   TtaGiveTextContent (elFound, (unsigned char *)buffer, &length, &lang);
+		   if (strstr (buffer, "pmathml.xsl"))
+		     {
+		       usePI = FALSE;
+		       el = NULL;
+		     }
+		   else
+		     TtaNextSibling (&el);
+		 }
+	     }
+	   if (usePI && !doctype)
+	     {
+	       /* generate the David Carliste's xsl stylesheet for MathML */
+	       attr = TtaNewAttribute (attrType);
+	       TtaAttachAttribute (root, attr, doc);
+	       strcpy (buffer, MATHML_XSLT_URI);
+	       strcat (buffer, MATHML_XSLT_NAME);
+	       strcat (buffer, "\"?>\n");
+	       TtaSetAttributeText (attr, buffer, root, doc);
+	     }
+	 }
+       else if (DocumentMeta[doc]->xmlformat &&
+		(DocumentTypes[doc] != docHTML || doctype == NULL))
+	 {
+	   /* generate the XML declaration */
 	   attr = TtaNewAttribute (attrType);
 	   TtaAttachAttribute (root, attr, doc);
-	   strcpy (buffer, MATHML_XSLT_URI);
-	   strcat (buffer, MATHML_XSLT_NAME);
+	   strcpy (buffer, "<?xml version=\"1.0\" encoding=\"");
+	   strcat (buffer, charsetname);
 	   strcat (buffer, "\"?>\n");
 	   TtaSetAttributeText (attr, buffer, root, doc);
 	 }
      }
-   
-   /* Create or update the document charset */
-   charsetname = UpdateDocumentCharset (doc);
+
    /* Create or update a META element to specify Content-type and Charset */
    if (
 #ifdef ANNOTATIONS
@@ -1164,8 +1213,8 @@ ThotBool ParseWithNewDoctype (Document doc, char *localFile, char *tempdir,
   CHARSET       charset;
   DocumentType  thotType;
   Document      ext_doc = 0;
-  ElementType     elType;
-  Element         docEl, old_doctype;
+  ElementType   elType;
+  Element       docEl, eltype;
   char          charsetname[MAX_LENGTH];
   int           parsingLevel;
   char         *s;
@@ -1252,7 +1301,6 @@ ThotBool ParseWithNewDoctype (Document doc, char *localFile, char *tempdir,
       ok =  UserAnswer;
       *error = TRUE;
       TtaFileUnlink (err_doc);
-
     }
   else
     ok = TRUE;
@@ -1271,11 +1319,9 @@ ThotBool ParseWithNewDoctype (Document doc, char *localFile, char *tempdir,
 	elType.ElTypeNum = MathML_EL_DOCTYPE;
       else if (new_doctype == L_SVG) 
 	elType.ElTypeNum = SVG_EL_DOCTYPE;
-      old_doctype = TtaSearchTypedElement (elType, SearchInTree, docEl);
-      if (old_doctype)
-	TtaDeleteTree (old_doctype, ext_doc);
+      eltype = TtaSearchTypedElement (elType, SearchInTree, docEl);
       /* Add the new doctype */
-      CreateDoctype (ext_doc, new_doctype, FALSE, FALSE);
+      CreateDoctype (ext_doc, eltype, new_doctype, FALSE, FALSE);
       /* link the source view to this new document */
       DocumentSource[ext_doc] = DocumentSource[doc];
       DocumentSource[doc] = 0;
