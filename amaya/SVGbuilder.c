@@ -20,6 +20,7 @@
 #include "HTML.h"
 #include "XLink.h"
 #include "parser.h"
+#include "registry.h"
 #include "style.h"
 
 /* mapping table of attribute values */
@@ -150,7 +151,7 @@ void   ParseCSSequivAttribute (int attrType, Attribute attr, Element el,
 #define buflen 200
   char               css_command[buflen+20];
   int                length, val;
-  char *             text;
+  char               *text;
 
   text = NULL;
   /* get the value of the attribute */
@@ -518,7 +519,7 @@ void  CopyUseContent (Element el, Document doc, char *href)
   ----------------------------------------------------------------------*/
 static void CheckHrefAttr (Element el, Document doc)
 {
-  SSchema     XLinkSSchema;
+  SSchema              XLinkSSchema;
   AttributeType        attrType;
   Attribute            attr;
   int                  length;
@@ -550,6 +551,200 @@ static void CheckHrefAttr (Element el, Document doc)
 	  TtaFreeMemory (href);
 	}
     }
+}
+
+/*----------------------------------------------------------------------
+   EvaluateFeatures
+   Evaluates the requiredFeatures attribute
+  ----------------------------------------------------------------------*/
+static ThotBool EvaluateFeatures (Attribute attr)
+{
+  int          length;
+  char         *text, *ptr;
+  ThotBool     ok, supported;
+
+  ok = False;
+  length = TtaGetTextAttributeLength (attr);
+  if (length > 0)
+    {
+      text = TtaGetMemory (length + 2);
+      if (text)
+	{
+	  TtaGiveTextAttributeValue (attr, text, &length);
+	  ptr = text;
+	  ptr = TtaSkipBlanks (ptr);
+	  supported = True;
+	  while (*ptr != EOS && supported)
+	    {
+	      /* only SVG static is supported in this version of Amaya */
+	      if (strcmp (ptr, "org.w3c.svg") &&
+		  strcmp (ptr, "org.w3c.svg.static"))
+		supported = False;
+	      if (supported)
+		/* this feature is supported. Check to the next one */
+		{
+		  while (*ptr != EOS && *ptr != SPACE && *ptr != BSPACE &&
+			 *ptr != EOL && *ptr != TAB && *ptr != CR)
+		    ptr++;
+		  ptr = TtaSkipBlanks (ptr);
+		}
+	    }
+	  ok = supported;
+	  TtaFreeMemory (text);
+	}
+    }
+  return ok;
+}
+
+/*----------------------------------------------------------------------
+   EvaluateExtensions
+   Evaluates the requiredExtensions attribute
+  ----------------------------------------------------------------------*/
+static ThotBool EvaluateExtensions (Attribute attr)
+{
+  /* this version of Amaya does not support any SVG extension */
+  return False;
+}
+
+/*----------------------------------------------------------------------
+   EvaluateSystemLanguage
+   Evaluates the systemLanguage attribute
+  ----------------------------------------------------------------------*/
+static ThotBool EvaluateSystemLanguage (Attribute attr)
+{
+  int          length;
+  char         *text, *ptr, *acceptLang, *pref;
+  ThotBool     ok;
+
+  ok = False;
+  length = TtaGetTextAttributeLength (attr);
+  if (length > 0)
+    {
+      text = TtaGetMemory (length + 2);
+      if (text)
+	{
+	  /* get the list of languages accepted by the user */
+	  acceptLang = TtaGetEnvString ("ACCEPT_LANGUAGES");
+	  if (!acceptLang)
+	    return (ok);
+	  acceptLang = TtaSkipBlanks (acceptLang);
+	  if (*acceptLang != EOS)
+	    /* the list of user's preferred languages is not empty */
+	    {
+	      TtaGiveTextAttributeValue (attr, text, &length);
+	      ptr = text;
+	      ptr = TtaSkipBlanks (ptr);
+	      while (*ptr != EOS && !ok)
+		{
+		  pref = acceptLang;
+		  while (*pref != EOS && !ok)
+		    {
+		      if (strncmp (ptr, pref, 2) == 0)
+			ok = True;
+		      else
+			{
+			  while (*pref != EOS && *pref != ',' &&
+				 *pref != SPACE && *pref != BSPACE &&
+				 *pref != EOL && *pref != TAB && *pref != CR)
+			    pref++;
+			  if (*pref == ',')
+			    pref++;
+			  pref = TtaSkipBlanks (pref);
+			}
+		    }
+		  if (!ok)
+		    {
+		      while (*ptr != EOS && *ptr != ',' && *ptr != SPACE &&
+			     *ptr != BSPACE && *ptr != EOL && *ptr != TAB &&
+			     *ptr != CR)
+			ptr++;
+		      if (*ptr == ',')
+			ptr++;
+		      ptr = TtaSkipBlanks (ptr);
+		    }
+		}
+	    }
+	  TtaFreeMemory (text);
+	}
+    }
+  return ok;
+}
+
+/*----------------------------------------------------------------------
+   EvaluateTestAttrs
+   Evaluates the requiredFeatures, requiredExtensions and systemLanguage
+   attributes on the direct child elements of element el and selects
+   the child to be rendered
+  ----------------------------------------------------------------------*/
+void EvaluateTestAttrs (Element el, Document doc)
+{
+  ElementType          elType;
+  Element              child, renderedChild;
+  AttributeType        attrType;
+  Attribute            attr;
+  SSchema              SVGSSchema;
+  PresentationValue    pval;
+  PresentationContext  ctxt;
+  ThotBool             ok;
+
+  renderedChild = NULL;
+  attrType.AttrSSchema = TtaGetElementType (el).ElSSchema;
+  ctxt = TtaGetSpecificStyleContext (doc);
+  ctxt->cssLevel = 0;   /* the presentation rule to be set is not a CSS rule */
+  pval.typed_data.unit = STYLE_UNIT_PX;
+  pval.typed_data.value = 0;
+  pval.typed_data.real = FALSE;
+  SVGSSchema = TtaGetElementType(el).ElSSchema;
+  /* process all children in order */
+  child = TtaGetFirstChild (el);
+  while (child)
+    {
+      /* if this child is a comment or a processing instruction, skip it */
+      elType = TtaGetElementType (child);
+      if (elType.ElSSchema == SVGSSchema &&
+	  elType.ElTypeNum != SVG_EL_XMLcomment &&
+	  elType.ElTypeNum != SVG_EL_XMLPI &&
+	  elType.ElTypeNum != SVG_EL_TEXT_UNIT &&
+	  elType.ElTypeNum != SVG_EL_Unknown_namespace)
+	{
+	  ctxt->destroy = FALSE; /* we will most probably create a PRule
+				    Visibility: 0; for this child */
+	  if (!renderedChild)
+	    /* we have not encountered yet a child that can be rendered */
+	    {
+	      ok = True;
+	      attrType.AttrTypeNum = SVG_ATTR_requiredFeatures;
+	      attr = TtaGetAttribute (child, attrType);
+	      if (attr)
+		ok = EvaluateFeatures (attr);
+	      if (ok)
+		{
+		  attrType.AttrTypeNum = SVG_ATTR_requiredExtensions;
+		  attr = TtaGetAttribute (child, attrType);
+		  if (attr)
+		    ok = EvaluateExtensions (attr);
+		  if (ok)
+		    {
+		      attrType.AttrTypeNum = SVG_ATTR_systemLanguage;
+		      attr = TtaGetAttribute (child, attrType);
+		      if (attr)
+			ok = EvaluateSystemLanguage (attr);
+		    }
+		}
+	      if (ok)
+		/* all test attributes return True. Select that child by
+		   removing its visibility rule if it got one */
+		{
+		  renderedChild = child;
+		  ctxt->destroy = TRUE;
+		}
+	    }
+	  /* set or remove a visibility PRule for this child */
+	  TtaSetStylePresentation (PRVisibility, child, NULL, ctxt, pval);
+	}
+      TtaNextSibling (&child);
+    }
+  TtaFreeMemory (ctxt);
 }
 
 /*----------------------------------------------------------------------
@@ -652,6 +847,14 @@ void SVGElementComplete (Element el, Document doc, int *error)
 	 /* if it has a href attribute from the XLink namespace, replace
 	    that attribute by a href attribute from the SVG namespace */
 	 CheckHrefAttr (el, doc);
+	 break;
+
+       case SVG_EL_switch:
+	 /* it's a switch element */
+	 /* Evaluate the requiredFeatures, requiredExtensions and
+	    systemLanguage attributes on its direct child elements to select
+	    the child to be rendered */
+	 EvaluateTestAttrs (el, doc);
 	 break;
 
        case SVG_EL_style__:

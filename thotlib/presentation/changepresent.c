@@ -65,86 +65,92 @@ static void   ApplyRuleSubTree (PtrElement pE, PRuleType ruleType,
 				PtrDocument pDoc, PtrPRule * pPRule,
 				int view, ThotBool display)
 {
-   PtrAbstractBox      pAbb, pAbbF;
-   PtrPSchema          pSPR;
-   PtrAttribute        pAttr;
+  PtrAbstractBox      pAbb, pAbbF;
+  PtrPSchema          pSPR;
+  PtrAttribute        pAttr;
+  ThotBool            complete;
 
-   if (pE->ElTerminal)
-      pE = NULL;
-   else
-      /* on passe au premier fils */
-      pE = pE->ElFirstChild;
-   /* traite tous les fils */
-   while (pE)
-     {
-	/* 1er pave de l'element dans la view */
-	pAbb = pE->ElAbstractBox[view - 1];
-	if (pAbb)
-	   if (pAbb->AbDead)
-	      pAbb = NULL;	/* on ne traite pas les paves morts */
-	if (pAbb == NULL)
-	   /* cet element n'a pas de pave, mais ses descendants en */
-	   /* ont peut etre... */
-	   ApplyRuleSubTree (pE, ruleType, pDoc, pPRule, view, display);
-	else
-	  {
-	     /* il y a un element descendant dont les paves peuvent heriter
-		de pAb. On parcourt ses paves dans la vue */
-	     do
-	       {
-		  *pPRule = SearchRulepAb (pDoc, pAbb, &pSPR, ruleType, FnAny,
-					   TRUE, &pAttr);
-		  if (*pPRule)
+  if (pE->ElTerminal)
+    pE = NULL;
+  else
+    /* on passe au premier fils */
+    pE = pE->ElFirstChild;
+  /* traite tous les fils */
+  while (pE)
+    {
+      /* 1er pave de l'element dans la view */
+      pAbb = pE->ElAbstractBox[view - 1];
+      if (pAbb == NULL)
+	/* no abstract box */
+	if (ruleType == PtVisibility)
+	  /* it's a visibility rule. Try to create the abstract box */
+	  pAbb = AbsBoxesCreate (pE, pDoc, view, True, True, &complete);
+      if (pAbb)
+	if (pAbb->AbDead)
+	  pAbb = NULL;	/* on ne traite pas les paves morts */
+      if (pAbb == NULL)
+	/* cet element n'a pas de pave, mais ses descendants en */
+	/* ont peut etre... */
+	ApplyRuleSubTree (pE, ruleType, pDoc, pPRule, view, display);
+      else
+	{
+	  /* il y a un element descendant dont les paves peuvent heriter
+	     de pAb. On parcourt ses paves dans la vue */
+	  do
+	    {
+	      *pPRule = SearchRulepAb (pDoc, pAbb, &pSPR, ruleType, FnAny,
+				       TRUE, &pAttr);
+	      if (*pPRule)
+		{
+		  if ((*pPRule)->PrPresMode == PresInherit &&
+		      ((*pPRule)->PrInheritMode == InheritParent ||
+		       (*pPRule)->PrInheritMode == InheritGrandFather))
+		    /* la regle de ce pave herite de l'ascendant, */
+		    /* on applique la regle */
+		    if (ApplyRule (*pPRule, pSPR, pAbb, pDoc, pAttr))
+		      {
+			SetChange (pAbb, ruleType);
+			if (display)
+			  RedispAbsBox (pAbb, pDoc);
+			if (!pAbb->AbPresentationBox)
+			  ApplyInherit (ruleType, pAbb, pDoc, display);
+		      }
+		}
+	      if (!pAbb->AbPresentationBox)
+		/* c'est le pave principal de l'element, on traite */
+		/* les paves crees par l'element au niveau inferieur */
+		{
+		  pAbbF = pAbb->AbFirstEnclosed;
+		  while (pAbbF)
 		    {
-		       if ((*pPRule)->PrPresMode == PresInherit &&
-			   ((*pPRule)->PrInheritMode == InheritParent ||
-			    (*pPRule)->PrInheritMode == InheritGrandFather))
-			  /* la regle de ce pave herite de l'ascendant, */
-			  /* on applique la regle */
-			  if (ApplyRule (*pPRule, pSPR, pAbb, pDoc, pAttr))
+		      if (pAbbF->AbElement == pE)
+			{
+			  *pPRule = SearchRulepAb (pDoc, pAbbF, &pSPR,ruleType,
+						   FnAny, TRUE, &pAttr);
+			  if (*pPRule)
 			    {
-			       SetChange (pAbb, ruleType);
-			       if (display)
-				 RedispAbsBox (pAbb, pDoc);
-			       if (!pAbb->AbPresentationBox)
-				 ApplyInherit (ruleType, pAbb, pDoc, display);
+			      if ((*pPRule)->PrPresMode == PresInherit
+				  && (*pPRule)->PrInheritMode == InheritParent)
+				if (ApplyRule (*pPRule, pSPR, pAbbF,
+					       pDoc, pAttr))
+				  {
+				    SetChange (pAbbF, ruleType);
+				    if (display)
+				      RedispAbsBox (pAbbF, pDoc);
+				  }
 			    }
+			}
+		      pAbbF = pAbbF->AbNext;
 		    }
-		  if (!pAbb->AbPresentationBox)
-		     /* c'est le pave principal de l'element, on traite */
-		     /* les paves crees par l'element au niveau inferieur */
-		    {
-		       pAbbF = pAbb->AbFirstEnclosed;
-		       while (pAbbF)
-			 {
-			    if (pAbbF->AbElement == pE)
-			      {
-				 *pPRule = SearchRulepAb (pDoc, pAbbF, &pSPR,
-						ruleType, FnAny, TRUE, &pAttr);
-				 if (*pPRule)
-				   {
-				      if ((*pPRule)->PrPresMode == PresInherit
-					  && (*pPRule)->PrInheritMode == InheritParent)
-					 if (ApplyRule (*pPRule, pSPR, pAbbF,
-							pDoc, pAttr))
-					   {
-					     SetChange (pAbbF, ruleType);
-					     if (display)
-					       RedispAbsBox (pAbbF, pDoc);
-					   }
-				   }
-			      }
-			    pAbbF = pAbbF->AbNext;
-			 }
-		    }
-		  pAbb = pAbb->AbNext;	/* passe au pave suivant */
-	       }
-	       /* on arrete s'il n'y a pas de pave suivant ou si le pave
-		  suivant n'appartient pas a l'element */
-	     while (pAbb && pAbb->AbElement == pE);
-	  }
-	pE = pE->ElNext;	/* on traite l'element suivant */
-     }
+		}
+	      pAbb = pAbb->AbNext;	/* passe au pave suivant */
+	    }
+	  /* on arrete s'il n'y a pas de pave suivant ou si le pave
+	     suivant n'appartient pas a l'element */
+	  while (pAbb && pAbb->AbElement == pE);
+	}
+      pE = pE->ElNext;	/* on traite l'element suivant */
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -858,7 +864,7 @@ void  ApplyASpecificStyleRule (PtrPRule pRule, PtrElement pEl,
   PRuleType	  ruleType;
   int             viewSch;
   int             view;
-  ThotBool	  done, enclosed;
+  ThotBool	  done, enclosed, complete;
 
   enclosed = FALSE;
   /* do nothing if the document no longer exists */
@@ -868,6 +874,11 @@ void  ApplyASpecificStyleRule (PtrPRule pRule, PtrElement pEl,
     {
       /* the abstract box of the root element */
       pAb = pEl->ElAbstractBox[view];
+      if (pAb == NULL)
+	/* no abstract box */
+	if (pRule->PrType == PtVisibility)
+	  /* it's a visibility rule. Try to create the abstract box */
+	  pAb = AbsBoxesCreate (pEl, pDoc, view+1, True, True, &complete);
       /* the schema view associatde with the current view */
       viewSch = pDoc->DocView[view].DvPSchemaView;
       while (pAb != NULL)

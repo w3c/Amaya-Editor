@@ -3039,9 +3039,51 @@ static void ComputeVisib (PtrElement pEl, PtrDocument pDoc,
    PtrAttribute        pAttr;
    PtrPSchema          pSP;
    InheritAttrTable   *inheritTable;
-   ThotBool            ok;
+   ThotBool            ok, stop;
    TypeUnit            unit;
 
+   /* si un element ascendant est rendu invisible, notre element a une */
+   /* visibilite' nulle */
+   *vis = 0;
+   pAsc = pEl;
+   while (pAsc)
+     if (pAsc->ElAccess == AccessHidden)
+       return;
+     else
+       pAsc = pAsc->ElParent;
+
+   /* cherche parmi les regles de presentation specifique de l'element */
+   pRule = pEl->ElFirstPRule;
+   while (pRule)
+     /* applique une regle si elle concerne la vue */
+     /* et si ce n'est pas une hauteur de page */
+     {
+       if (pRule->PrType == PtVisibility && pRule->PrViewNum == viewSch)
+	 {
+	   if (pRule->PrSpecifAttr == 0)
+	     /* cette regle ne depend pas d'un attribut */
+	     pAttr = NULL;
+	   else
+	     /* cherche l'attribut dont depend la regle */
+	     {
+	       pAttr = pEl->ElFirstAttr;
+	       stop = FALSE;
+	       while (pAttr != NULL && !stop)
+		 if (pAttr->AeAttrNum == pRule->PrSpecifAttr &&
+		     !strcmp (pAttr->AeAttrSSchema->SsName,
+			      pRule->PrSpecifAttrSSchema->SsName))
+		   stop = TRUE;
+		 else
+		   pAttr = pAttr->AeNext;
+	     }
+	   *vis = IntegerRule (pRule, pEl, viewNb, &ok, &unit, pAttr, NULL);
+	   if (ok)
+	     return;
+	 }
+       pRule = pRule->PrNextPRule;
+     }
+
+   /* cherche les regles de visibilite du schema de presentation */
    pRule = GetRule (pRSpec, pRDef, pEl, NULL, pEl->ElStructSchema, pDoc);
    /* pointeur sur la 1ere regle a appliquer */
 
@@ -3064,7 +3106,7 @@ static void ComputeVisib (PtrElement pEl, PtrDocument pDoc,
 	   if (pRegleV != NULL)
 	      *vis = IntegerRule (pRegleV, pEl, viewNb, &ok, &unit, NULL,
 				  NULL);
-	/* sinon, on prend celle de la vue 1 */
+	   /* sinon, on prend celle de la vue 1 */
 	   else
 	      *vis = IntegerRule (pRule, pEl, viewNb, &ok, &unit, NULL, NULL);
 	  }
@@ -3213,17 +3255,6 @@ static void ComputeVisib (PtrElement pEl, PtrDocument pDoc,
 	     }
 	  }
      }
-   /* si un element ascendant est rendu invisible, on annule la */
-   /* visibilite' de l'element */
-   pAsc = pEl;
-   while (pAsc != NULL)
-      if (pAsc->ElAccess == AccessHidden)
-	{
-	   *vis = 0;
-	   pAsc = NULL;
-	}
-      else
-	 pAsc = pAsc->ElParent;
 }
 
 /*----------------------------------------------------------------------

@@ -153,6 +153,26 @@ ATTRIBUTES
 	AttrCreate.Post -> AttrCSSequivModified;
 	AttrDelete.Pre ->  AttrCSSequivDelete;
 	END;
+
+   requiredFeatures:
+        BEGIN
+	AttrModify.Post -> EvaluateSwitch;
+	AttrCreate.Post -> EvaluateSwitch;
+	AttrDelete.Post -> EvaluateSwitch;
+	END;
+   requiredExtensions:
+        BEGIN
+	AttrModify.Post -> EvaluateSwitch;
+	AttrCreate.Post -> EvaluateSwitch;
+	AttrDelete.Post -> EvaluateSwitch;
+	END;
+   systemLanguage:
+        BEGIN
+	AttrModify.Post -> EvaluateSwitch;
+	AttrCreate.Post -> EvaluateSwitch;
+	AttrDelete.Post -> EvaluateSwitch;
+	END;
+
    transform:
 	BEGIN
 	AttrModify.Post -> AttrTransformChanged;

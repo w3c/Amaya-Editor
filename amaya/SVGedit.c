@@ -337,6 +337,28 @@ ThotBool         AttrTransformDelete (NotifyAttribute * event)
 }
 
 /*----------------------------------------------------------------------
+ EvaluateSwitch
+ An attribute requiredFeatures, requiredExtensions or systemLanguage
+ has been created, modified or deleted.
+ If the parent is a switch element, reevaluate the test attributes
+ for all children of the switch element.
+ -----------------------------------------------------------------------*/
+void             EvaluateSwitch (NotifyAttribute *event)
+{
+  Element         parent;
+  ElementType     elType;
+
+  parent = TtaGetParent (event->element);
+  if (parent)
+    {
+      elType = TtaGetElementType (parent);
+      if (elType.ElTypeNum == SVG_EL_switch &&
+	  !strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG"))
+	  EvaluateTestAttrs (parent, event->document);
+    }
+}
+
+/*----------------------------------------------------------------------
  AttrPathDataChanged
  -----------------------------------------------------------------------*/
 void             AttrPathDataChanged (NotifyAttribute *event)

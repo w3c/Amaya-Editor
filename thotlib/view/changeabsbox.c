@@ -3112,6 +3112,13 @@ void SetChange (PtrAbstractBox pAb, PRuleType typeRule)
 {
   switch (typeRule)
     {
+    case PtVisibility:
+      pAb->AbWidthChange = TRUE;
+      pAb->AbHeightChange = TRUE;
+      pAb->AbHorizPosChange = TRUE;
+      pAb->AbVertPosChange = TRUE;
+      pAb->AbChange = TRUE;
+      break;
     case PtWidth:
       pAb->AbWidthChange = TRUE;
       break;

@@ -33,6 +33,8 @@ extern void SetGraphicDepths ( Document doc,
 extern void CopyUseContent ( Element el,
                              Document doc,
                              char *href );
+extern void EvaluateTestAttrs ( Element el,
+                                Document doc );
 extern void SVGElementComplete ( Element el,
                                  Document doc,
                                  int *error );
@@ -94,6 +96,8 @@ extern void SetGraphicDepths (/* Document doc,
 extern void CopyUseContent (/* Element el,
                                Document doc,
                                char *href */);
+extern void EvaluateTestAttrs (/* Element el,
+                                  Document doc */);
 extern void SVGElementComplete (/* Element el,
                                    Document doc,
                                    int *error */);

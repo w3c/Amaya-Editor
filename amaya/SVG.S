@@ -26,7 +26,14 @@ ATTR
 STRUCT
 
    SVG
-	(ATTR font_family = text;
+	(ATTR requiredFeatures = text;
+	      requiredExtensions = text;
+	      systemLanguage = text;
+	      externalResourcesRequired = false, true;
+	      fill = text;
+	      stroke = text;
+	      stroke_width = text;
+	      font_family = text;
 	      font_size = text;
 	      font_style = normal_, italic, oblique_, inherit;
 	      font_variant = normal_, small_caps, inherit;
@@ -42,22 +49,18 @@ STRUCT
         = LIST OF (GraphicsElement) + (XMLcomment, XMLPI, Unknown_namespace);
 
    g
-        (ATTR fill = text;
-	      stroke = text;
-	      stroke_width = text;
+        (ATTR requiredFeatures; requiredExtensions; systemLanguage;
+	      externalResourcesRequired; 
+	      fill; stroke; stroke_width;
 	      font_family; font_size; font_style; font_variant; font_weight;
 	      text_decoration;
 	      transform = text)
         = LIST OF (GraphicsElement);
 
    defs
-        (ATTR requiredFeatures = text;
-	      requiredExtensions = text;
-	      systemLanguage = text;
-	      externalResourcesRequired = false, true;
-	      fill;
-	      stroke;
-	      stroke_width;
+        (ATTR requiredFeatures; requiredExtensions; systemLanguage;
+	      externalResourcesRequired;
+	      fill; stroke; stroke_width;
 	      font_family; font_size; font_style; font_variant; font_weight;
 	      text_decoration;
 	      transform;
@@ -65,10 +68,9 @@ STRUCT
         = LIST OF (GraphicsElement);
 
    path
-	(ATTR externalResourcesRequired; 
-	      fill;
-              stroke;
-	      stroke_width;
+	(ATTR requiredFeatures; requiredExtensions; systemLanguage;
+	      externalResourcesRequired; 
+	      fill; stroke; stroke_width;
               transform;
 	      d = text;
 	      pathLength = text)
@@ -78,103 +80,107 @@ STRUCT
 	      END;
 
    rect
-        (ATTR transform;
+        (ATTR requiredFeatures; requiredExtensions; systemLanguage;
+	      externalResourcesRequired; 
+	      fill; stroke; stroke_width;
+	      transform;
 	      x;
               y;
               width_;
               height_;
 	      rx = text;
-	      ry = text;
-	      fill;
-              stroke;
-	      stroke_width)
+	      ry = text)
         = AGGREGATE
 	      desc; title; metadata;
 	      GRAPHICS;
 	      END;
 	
    circle
-        (ATTR transform;
+        (ATTR requiredFeatures; requiredExtensions; systemLanguage;
+	      externalResourcesRequired; 
+	      fill; stroke; stroke_width;
+	      transform;
 	      cx = text;
 	      cy = text;
-              r = text;
-	      fill;
-              stroke;
-	      stroke_width)
+              r = text)
         = AGGREGATE
 	      desc; title; metadata;
 	      GRAPHICS;
 	      END;
 	
    ellipse
-        (ATTR transform;
+        (ATTR requiredFeatures; requiredExtensions; systemLanguage;
+	      externalResourcesRequired; 
+	      fill; stroke; stroke_width;
+	      transform;
 	      cx;
 	      cy;
 	      rx;
-	      ry;
-	      fill;
-              stroke;
-	      stroke_width)
+	      ry)
         = AGGREGATE
 	      desc; title; metadata;
 	      GRAPHICS;
 	      END;
 	
    line_
-        (ATTR transform;
+        (ATTR requiredFeatures; requiredExtensions; systemLanguage;
+	      externalResourcesRequired; 
+	      fill; stroke; stroke_width;
+	      transform;
 	      x1 = text;
 	      y1 = text;
               x2 = text;
-	      y2 = text;
-	      fill;
-              stroke;
-	      stroke_width)
+	      y2 = text)
         = AGGREGATE
 	      desc; title; metadata;
 	      GRAPHICS;
 	      END;
 	
    polyline
-        (ATTR width_;
-              height_;
+        (ATTR requiredFeatures; requiredExtensions; systemLanguage;
+	      externalResourcesRequired; 
+	      fill; stroke; stroke_width;
 	      transform;
-              points = text;
-	      fill;
-              stroke;
-	      stroke_width)
+              points = text)
         = AGGREGATE
 	      desc; title; metadata;
 	      GRAPHICS;
 	      END;
 	
    polygon
-        (ATTR width_;
-              height_;
+        (ATTR requiredFeatures; requiredExtensions; systemLanguage;
+	      externalResourcesRequired; 
+	      fill; stroke; stroke_width;
 	      transform;
-              points;
-	      fill;
-              stroke;
-	      stroke_width)
+              points)
         = AGGREGATE
 	      desc; title; metadata;
 	      GRAPHICS;
 	      END;
 
    text_
-        (ATTR font_family; font_size; font_style; font_variant; font_weight;
+        (ATTR requiredFeatures; requiredExtensions; systemLanguage;
+	      externalResourcesRequired; 
+	      fill; stroke; stroke_width;
+	      font_family; font_size; font_style; font_variant; font_weight;
 	      text_decoration;
 	      transform;
 	      x;
-	      y)
+	      y;
+	      dx = text;
+	      dy = text)
          = LIST OF (TextComponent);
 
    tspan
-	(ATTR font_family; font_size; font_style; font_variant; font_weight;
+	(ATTR requiredFeatures; requiredExtensions; systemLanguage;
+	      externalResourcesRequired; 
+	      fill; stroke; stroke_width;
+	      font_family; font_size; font_style; font_variant; font_weight;
 	      text_decoration;
 	      x;
               y;
-	      dx = text;
-	      dy = text)
+	      dx;
+	      dy)
 	= LIST OF (SpanElement);
 
    { tref }
@@ -193,9 +199,7 @@ STRUCT
         (ATTR xlink_href = text;
 	      requiredFeatures; requiredExtensions; systemLanguage;
 	      externalResourcesRequired;
-	      fill;
-	      stroke;
-	      stroke_width;
+	      fill; stroke; stroke_width;
 	      font_family; font_size; font_style; font_variant; font_weight;
 	      text_decoration;
 	      transform;
@@ -210,6 +214,8 @@ STRUCT
 	
    image
 	(ATTR xlink_href;
+	      requiredFeatures; requiredExtensions; systemLanguage;
+	      externalResourcesRequired; 
 	      transform;
 	      x; 
 	      y;
@@ -223,9 +229,7 @@ STRUCT
 
    symbol_
 	(ATTR externalResourcesRequired;
-	      fill;
-	      stroke;
-	      stroke_width;
+	      fill; stroke; stroke_width;
 	      font_family; font_size; font_style; font_variant; font_weight;
 	      text_decoration;
 	      viewBox;
@@ -250,9 +254,7 @@ STRUCT
         (ATTR xlink_href;
 	      requiredFeatures; requiredExtensions; systemLanguage;
 	      externalResourcesRequired;
-	      fill;
-              stroke;
-	      stroke_width;
+	      fill; stroke; stroke_width;
 	      font_family; font_size; font_style; font_variant; font_weight;
 	      text_decoration;
 	      transform;
@@ -294,6 +296,7 @@ STRUCT
 	(ATTR requiredFeatures; requiredExtensions; systemLanguage;
 	      externalResourcesRequired;
 	      { PresentationAttributes-All }
+	      fill; stroke; stroke_width;
 	      font_family; font_size; font_style; font_variant; font_weight;
 	      text_decoration;
 	      transform;
@@ -303,8 +306,9 @@ STRUCT
 	              END);
 
    foreignObject
-        (ATTR fill;
-              stroke;
+        (ATTR requiredFeatures; requiredExtensions; systemLanguage;
+	      externalResourcesRequired; 
+	      fill; stroke; stroke_width;
 	      font_family; font_size; font_style; font_variant; font_weight;
 	      text_decoration;
 	      transform;

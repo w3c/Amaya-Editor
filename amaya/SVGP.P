@@ -810,6 +810,15 @@ RULES
 		Visibility: 0;
 	END;
 
+   SYMBOL_UNIT:
+	BEGIN
+   	HorizPos: Left = Previous . Right;
+   	VertPos: HRef = Previous . HRef;
+	HorizRef: Enclosed . HRef;
+	IN Structure_view
+   		VertPos: HRef = Previous . HRef;
+	END;
+
    PICTURE_UNIT:
 	BEGIN
 	Width: Enclosing . Width;
