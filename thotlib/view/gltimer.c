@@ -120,6 +120,15 @@ void TtaSetFrameCurrentTime (AnimTime current_time, int frame)
 {
   FrameTable[frame].LastTime = current_time;
 }
+#ifdef _WINDOWS
+/*----------------------------------------------------------------------
+  MyTimerProc : Call drawing upon timer calls
+  ----------------------------------------------------------------------*/
+VOID CALLBACK MyTimerProc (HWND hwnd, UINT message, UINT idTimer, DWORD dwTime)     
+{ 
+ GL_DrawAll ();   
+} 
+#endif /*_WINDOWS*/
 /*----------------------------------------------------------------------
   TtaChangePlay : Activate Animation
   ----------------------------------------------------------------------*/

@@ -186,6 +186,8 @@ void getboundingbox (int size, float *buffer, int frame,
 		     int *worig, int *horig);
 
 void GL_SetPrintForeground (int fg);
+void GL_KillFrame (int frame);
+void SetSoftware_Mode (ThotBool value);
 
 #ifdef _WINDOWS
 void WinGL_Swap (HDC hDC);

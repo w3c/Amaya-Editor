@@ -303,10 +303,6 @@ SOURCE=..\..\thotlib\view\gldisplay.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\view\glevents.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\thotlib\dialogue\glglyph.c
 # End Source File
 # Begin Source File
@@ -412,10 +408,6 @@ SOURCE=..\..\thotlib\presentation\presrules.c
 # Begin Source File
 
 SOURCE=..\..\thotlib\presentation\presvariables.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\thotlib\view\printgl.c
 # End Source File
 # Begin Source File
 

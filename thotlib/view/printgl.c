@@ -99,7 +99,9 @@ static GdkVisual    *visual = NULL;
 
 #include "buildlines_f.h"
 #include "font_f.h"
+#ifndef _WINDOWS
 #include "initpses_f.h"
+#endif /*_WINDOWS*/
 #include "memory_f.h"
 #include "units_f.h"
 
