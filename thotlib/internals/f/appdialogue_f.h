@@ -57,6 +57,8 @@ extern void TtaChangeButton ( Document doc,
                               ThotBool state );
 extern void TtcSwitchButtonBar ( Document doc,
                                  View view );
+extern ThotBool TtaIsButtonActivated ( Document document,
+                                       View view );
 extern void APP_TextCallback ( ThotWidget w,
                                int frame,
                                void *call_d );
@@ -176,6 +178,8 @@ extern void TtaChangeButton (/* Document doc,
                                 ThotBool state */);
 extern void TtcSwitchButtonBar (/* Document doc,
                                    View view */);
+extern ThotBool TtaIsButtonActivated (/* Document document,
+                                         View view */);
 extern void APP_TextCallback (/* ThotWidget w,
                                  int frame,
                                  void *call_d */);

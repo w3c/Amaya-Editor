@@ -50,9 +50,10 @@ static int          OldHeight;
 #include "Mathedit_f.h"
 #include "MathMLbuilder_f.h"
 #include "styleparser_f.h"
-#include "tree.h"
 #include "XHTMLbuilder_f.h"
 #include "XLinkedit_f.h"
+#include "tree.h"
+#include "interface.h"
 
 #ifdef _WINDOWS
 #include "wininclude.h"
@@ -646,38 +647,43 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo)
    char                s[MAX_LENGTH];
 #endif
    ThotBool            isHTML;
+   ThotBool            fromButton = FALSE;
 
-   /* ask the user to select target document and target anchor */
-   TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_SEL_TARGET), NULL);
-   TtaClickElement (&targetDoc, &targetEl);
-   if (targetDoc != 0)
-     isHTML = !(strcmp (TtaGetSSchemaName (TtaGetDocumentSSchema (targetDoc)),
-			 "HTML"));
-   else
-     isHTML = FALSE;
-
-   if (targetDoc != 0 && targetEl != NULL && DocumentURLs[targetDoc] != NULL)
+   fromButton = TtaIsButtonActivated (doc, 1);
+   if (fromButton)
      {
-       if (isHTML)
+       /* ask the user to select target document and target anchor */
+       TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_SEL_TARGET), NULL);
+       TtaClickElement (&targetDoc, &targetEl);
+       if (targetDoc != 0)
+	 isHTML = !(strcmp (TtaGetSSchemaName (TtaGetDocumentSSchema (targetDoc)),
+			    "HTML"));
+       else
+	 isHTML = FALSE;
+       
+       if (targetDoc != 0 && targetEl != NULL && DocumentURLs[targetDoc] != NULL)
 	 {
-	   /* get attrName of the enclosing end anchor */
-	   attr = GetNameAttr (targetDoc, targetEl);
-	   /* the document becomes the target doc */
-	   SetTargetContent (targetDoc, attr);
+	   if (isHTML)
+	     {
+	       /* get attrName of the enclosing end anchor */
+	       attr = GetNameAttr (targetDoc, targetEl);
+	       /* the document becomes the target doc */
+	       SetTargetContent (targetDoc, attr);
+	     }
+	   else
+	     SetTargetContent (targetDoc, NULL);
 	 }
        else
-	 SetTargetContent (targetDoc, NULL);
+	 {
+	   targetDoc = doc;
+	   SetTargetContent (0, NULL);
+	 }
      }
-   else
-     {
-	targetDoc = doc;
-	SetTargetContent (0, NULL);
-     }
-
+   
    AttrHREFelement = el;
    AttrHREFdocument = doc;
    AttrHREFundoable = withUndo;
-   if (doc != targetDoc || TargetName != NULL)
+   if (fromButton && (doc != targetDoc || TargetName != NULL))
      /* the user has clicked another document or a target element */
      /* create the attribute HREF or CITE */
      SetREFattribute (el, doc, TargetDocumentURL, TargetName);
@@ -1793,6 +1799,23 @@ void ElementCreated (NotifyElement *event)
   CheckPseudoParagraph (event->element, event->document);
 }
 
+#ifdef LC
+/*----------------------------------------------------------------------
+   ElementWillBeDeleted
+   Anhtml element will be deleted.
+   Update the namespace declarations linked to that element
+  ----------------------------------------------------------------------*/
+ThotBool ElementWillBeDeleted (NotifyElement *event)
+{
+  ElementType	elType;
+  
+  elType = TtaGetElementType (event->element);
+  if (elType.ElTypeNum != 1)
+    TtaFreeElemNamespaceDeclarations (event->document, event->element);
+  return FALSE; /* let Thot perform normal operation */
+}
+#endif /* LC */
+ 
 /*----------------------------------------------------------------------
    ElementDeleted
    An element has been deleted. If it was the only child of element

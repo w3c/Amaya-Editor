@@ -111,6 +111,14 @@ extern void TtaChangeButton (Document document, View view, int index,
 			     ThotIcon picture, ThotBool state);
 
 /*----------------------------------------------------------------------
+   TtaIsButtonActivated
+
+   Indicates if a callback function has been called from the menu 
+   or from a button
+  ----------------------------------------------------------------------*/
+extern ThotBool TtaIsButtonActivated (Document document, View view);
+
+/*----------------------------------------------------------------------
    TtaAddTextZone
    Adds a new textual command in a document view.
    This function must specify a valid view of a valid document.

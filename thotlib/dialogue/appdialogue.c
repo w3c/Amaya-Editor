@@ -102,6 +102,7 @@ static PtrCallbackCTX FirstCallbackAPI;
 static int          FreeMenuAction;
 static Pixmap       wind_pixmap;
 static  void       *LastProcedure = NULL;   
+static  ThotBool    ActivatedButton = FALSE;   
 
 /* LISTES DES MENUS : chaque menu pointe sur une liste d'items.  */
 /* Chaque item contient le numero d'entree dans le fichier de    */
@@ -1456,7 +1457,9 @@ static gboolean APP_ButtonCallbackGTK (ThotButton w, int frame)
 	}
       CloseInsertion ();
       FrameToView (frame, &document, &view);
+      ActivatedButton = TRUE;
       (*FrameTable[frame].Call_Button[i]) (document, view);
+      ActivatedButton = FALSE;
 #ifdef _WINDOWS
       /* check the button status */
       if (FrameTable[frame].EnabledButton[i])
@@ -2014,6 +2017,17 @@ void TtcSwitchButtonBar (Document doc, View view)
    TtaHandlePendingEvents ();
 }
 
+
+/*----------------------------------------------------------------------
+   TtaIsButtonActivated
+
+   Indicates if a callback function has been called from the menu 
+   or from a button
+  ----------------------------------------------------------------------*/
+ThotBool TtaIsButtonActivated (Document document, View view)
+{
+  return (ActivatedButton);
+}
 
 #ifndef _GTK
 /*----------------------------------------------------------------------
