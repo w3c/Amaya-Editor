@@ -2145,7 +2145,9 @@ static void BrowserForm (Document doc, View view, char *urlname)
        NormalizeFile (urlname, tempfile, AM_CONV_NONE);
    
    if (tempfile[0] != EOS && !IsW3Path (tempfile))
-     { 
+     {
+       /* it's a local file,
+	  initialize the file selector to the current position */
        if (TtaCheckDirectory (tempfile))
 	 {
 	   strcpy (DirectoryName, tempfile);
@@ -2153,35 +2155,16 @@ static void BrowserForm (Document doc, View view, char *urlname)
 	 }
        else
 	 TtaExtractName (tempfile, DirectoryName, DocumentName);
-       if (DirectoryName[0] == EOS)
-	 {
-	   getcwd (DirectoryName, MAX_LENGTH);
-	   DocumentName[0] = EOS;
-	 }
-       strcpy (s, DirectoryName);
-       strcat (s, DIR_STR);
-       strcat (s, DocumentName);
      }
-   else
+   /* use the last selection in other cases */
+   if (DirectoryName[0] == EOS)
      {
-       if (tempfile[0] != EOS && IsW3Path (tempfile))
-	 {
-	   getcwd (DirectoryName, MAX_LENGTH);
-	   DocumentName[0] = EOS;
-	 }
-       else
-	 {
-	   if (DirectoryName[0] == EOS)
-	     {
-	       getcwd (DirectoryName, MAX_LENGTH);
-	       DocumentName[0] = EOS;
-	     }
-	 }
-       strcpy (s, DirectoryName);
-       strcat (s, DIR_STR);
-       strcat (s, DocumentName);
+       getcwd (DirectoryName, MAX_LENGTH);
+       DocumentName[0] = EOS;
      }
-
+   strcpy (s, DirectoryName);
+   strcat (s, DIR_STR);
+   strcat (s, DocumentName);
    TtaListDirectory (DirectoryName, BaseDialog + FileBrowserForm,
 		     TtaGetMessage (LIB, TMSG_DOC_DIR),
 		     BaseDialog + BrowserDirSelect, ScanFilter,
@@ -2246,19 +2229,6 @@ static void InitOpenDocForm (Document doc, View view, char *name, char *title,
   else
     {
       /* check if it's the default Welcome page */
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
-      if (WelcomePage)
-	{
-	  getcwd (s, MAX_LENGTH);
-	  if (name[0] != EOS)
-	    {
-	      strcat (s, DIR_STR);
-	      strcat (s, name);
-	    }
-	}
-      else
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
-        
       if (name[0] == EOS)
 	{
 	  if (DocumentURLs[doc])
@@ -7379,26 +7349,22 @@ void InitAmaya (NotifyEvent * event)
        else
 	 {
 	   /* check if it is an absolute or a relative name */
-
-#ifdef _WINGUI
+#ifdef _WINDOWS
 	   if (LastURLName[0] == DIR_SEP || LastURLName[1] == ':')
 	     /* it is an absolute name */
 	     TtaExtractName (LastURLName, DirectoryName, DocumentName);
 	   else
 	     /* it is a relative name */
 	     strcpy (DocumentName, LastURLName);
-#endif /* !_WINGUI */
-
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
+#else /* _WINDOWS */
 	   if (LastURLName[0] == DIR_SEP)
 	     /* it is an absolute name */
 	     TtaExtractName (LastURLName, DirectoryName, DocumentName);
 	   else
 	     /* it is a relative name */
 	     strcpy (DocumentName, LastURLName);
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
-
-     /* start with the local document */
+#endif /* _WINDOWS */
+	   /* start with the local document */
 	   LastURLName[0] = EOS;
 	   CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
 	 }
