@@ -1184,9 +1184,6 @@ void   TtaSetDisplayMode (Document document, DisplayMode newDisplayMode)
 	      else if (oldDisplayMode == SuspendDisplay)
 		AbstractImageUpdated (pDoc);
 	      
-              /* reaffiche ce qui a deja ete prepare' */
-              RedisplayDocViews (pDoc);
-	      
 	      if (!documentNewSelection[document - 1].SDSelActive)
 		{
 		  /* la selection n'a pas change', on la rallume */
@@ -1234,6 +1231,9 @@ void   TtaSetDisplayMode (Document document, DisplayMode newDisplayMode)
 		  /* plus de selection a faire pour ce document */
 		  documentNewSelection[document - 1].SDSelActive = FALSE;
 		}
+	      
+              /* reaffiche ce qui a deja ete prepare' */
+              RedisplayDocViews (pDoc);
 	    }
 	  else if (newDisplayMode == NoComputedDisplay)
 	    {

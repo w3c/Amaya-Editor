@@ -3439,6 +3439,7 @@ BOXES
  ATTR_HREF: BEGIN
 	Content: Text ' href=';
 	Visibility: 0;
+	Depth: Creator =;
 	IN Structure_view BEGIN
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
@@ -5477,6 +5478,7 @@ BOXES
  AREA_S: BEGIN
 	Content: Text 'area';
 	Visibility: 0;
+	Depth: Creator =;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
 		Weight: TAG_Weight;
@@ -5487,6 +5489,7 @@ BOXES
  ATTR_SHAPE_RECT: BEGIN
 	Content: Text ' shape=rect';
 	Visibility: 0;
+	Depth: Creator =;
 	IN Structure_view BEGIN
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
@@ -5499,6 +5502,7 @@ BOXES
  ATTR_SHAPE_CIRCLE: BEGIN
 	Content: Text ' shape=circle';
 	Visibility: 0;
+	Depth: Creator =;
 	IN Structure_view BEGIN
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
@@ -5523,6 +5527,7 @@ BOXES
  ATTR_COORDS: BEGIN
 	Content: Text ' coords=';
 	Visibility: 0;
+	Depth: Creator =;
 	IN Structure_view BEGIN
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
@@ -5535,6 +5540,7 @@ BOXES
  VALUE_COORDS: BEGIN
 	Content: (coords);
 	Visibility: 0;
+	Depth: Creator =;
 	IN Structure_view BEGIN
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
@@ -5547,6 +5553,7 @@ BOXES
  ATTR_NOHREF: BEGIN
 	Content: Text ' nohref';
 	Visibility: 0;
+	Depth: Creator =;
 	IN Structure_view BEGIN
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;

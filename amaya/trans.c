@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2000
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -85,21 +85,11 @@ static Element      myFirstSelect, origFirstSelect;
 static Element      myLastSelect, origLastSelect;
 static Element      mySelect;
 
-#ifdef __STDC__
-void		    TransCallbackDialog(int ref, int typedata, CHAR_T* data);
-#else
-void                TransCallbackDialog (/*ref, typedata, data*/);
-#endif
+
 /*----------------------------------------------------------------------
    FreeStructTree: frees the structure tree and matching relations. 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         FreeStructTree (StructureTree t)
-#else
-static void         FreeStructTree (t)
-structureTree       t;
-
-#endif
 {
   strMatch           *m, *m2;
   strMatchChildren   *mc, *mc2;
@@ -139,11 +129,7 @@ structureTree       t;
 /*----------------------------------------------------------------------
   FreeMatchEnv : frees the transformation context . 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         FreeMatchEnv ()
-#else
-static void         FreeMatchEnv ()
-#endif
 {
    strListElem           *l, *l1;
 
@@ -164,28 +150,9 @@ static void         FreeMatchEnv ()
 }
 
 /*----------------------------------------------------------------------
-   InitTransform: initialisation, called during Amaya initialisation
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                InitTransform ()
-#else
-void                InitTransform ()
-#endif
-{
-  TransBaseDialog = TtaSetCallback (TransCallbackDialog, MAX_TRANS_DLG);
-  ppInitAutomaton ();
-}
-
-/*----------------------------------------------------------------------
    NewNode: allocation of a Structure tree node.     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static strNode *NewNode (STRING tag)
-#else
-static strNode * NewNode (tag)
-STRING              tag;
-
-#endif
 {
    StructureTree res;
 
@@ -209,17 +176,7 @@ STRING              tag;
 /*----------------------------------------------------------------------
     thot tree -> structure tree
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         BuildStructureTree (Element elem, Document doc, StructureTree father, int maxdepth, int depth)
-#else
-static void         BuildStructureTree (elem, doc, father, maxdepth, depth)
-Element             elem;
-Document            doc;
-strNode            *father;
-int                 maxdepth;
-int                 depth;
-
-#endif
 {
    Element             elemCour;
    Attribute           attr;
@@ -289,15 +246,7 @@ int                 depth;
    IntersectMatch: builds the symbol list res, intersection of symbol list LS with the 
     symbols contained in matching relation list MS
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         IntersectMatch (strListSymb ** res, strListSymb * LS, strMatch * MS)
-#else
-static void         IntersectMatch (res, LS, MS)
-strListSymb          **res;
-strListSymb           *LS;
-strMatch              *MS;
-
-#endif
+static void IntersectMatch (strListSymb **res, strListSymb *LS, strMatch *MS)
 {
    strListSymb        *pLS, *pRes;
    strMatch           *pMS;
@@ -344,11 +293,7 @@ strMatch              *MS;
 /*----------------------------------------------------------------------
   initialistion of pattern matching stack
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void InitMatchStack (void)
-#else
-static void InitMatchStack ()
-#endif
 {
    int i;
 
@@ -359,16 +304,12 @@ static void InitMatchStack ()
      }
     topMatchStack = 0;
 }
+
+
 /*----------------------------------------------------------------------
   push a node of source tree with the symbols it matches in  pattern matching stack
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void PushMatchStack (strNode * t, strListSymb * v)
-#else
-static void PushMatchStack (t, v)
-strNode     *t;
-strListSymb *v;
-#endif
 {
    if (topMatchStack < MAX_STACK)
      {
@@ -382,13 +323,9 @@ strListSymb *v;
 }
 
 
-#ifdef __STDC__
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 static void PopMatchStack (strNode ** t, strListSymb ** v)
-#else
-static void PopMatchStack (t, v)
-strNode     **t;
-strListSymb **v;
-#endif
 {
    if (topMatchStack > 0)
      {
@@ -407,13 +344,7 @@ strListSymb **v;
 /*----------------------------------------------------------------------
   ConstListMatch: adds the symbol symb to the list of symbols matched with node.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void ConstListMatch (strNode * node, strSymbDesc * symb)
-#else
-static void ConstListMatch (node, symb)
-strNode            *node;
-strSymbDesc        *symb;
-#endif
 {
    strMatch           *sm;
    strMatchChildren   *smc;
@@ -458,14 +389,7 @@ strSymbDesc        *symb;
   ChildrenMatch: return TRUE if the chidren of node n are matched with the possible 
    children of the pattern symbol p.
    ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static ThotBool ChildrenMatch (strNode * n, strSymbDesc * p)
-#else
-static ThotBool ChildrenMatch (n, p)
-strNode     *n;
-strSymbDesc *p;
-#endif
 {
    strNode            *child;
    strListSymb        *candidate, *ms;
@@ -569,14 +493,7 @@ strSymbDesc *p;
 /*----------------------------------------------------------------------
   check if elem actually has mandatory attributes of the pattern symbol pSymb
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     MatchAttributes (strSymbDesc * pSymb, Element elem)
-#else
-static ThotBool     MatchAttributes (pSymb, elem)
-strSymbDesc           *pSymb;
-Element             elem;
-
-#endif
 {
    ThotBool            result;
    strAttrDesc        *pAttr = NULL;
@@ -623,13 +540,7 @@ Element             elem;
 /*----------------------------------------------------------------------
    MatchNode : builds a pointer list to symbols that match with the node n
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     MatchNode (strNode * n)
-#else
-static ThotBool     MatchNode (n)
-strNode            *n;
-
-#endif
 {
    strTransDesc          *td;
    strSymbDesc           *sd;
@@ -667,13 +578,7 @@ strNode            *n;
   the search end if f(n) = False, or if the entiere tree has been traversed.
   returns the node beeing tested if failure, NULL if the entiere tree has been searched.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static strNode *RecursivePostfixSearch (StructureTree t, ThotBool (*f) (strNode *))
-#else
-static strNode *RecursivePostfixSearch (t, f)
-StructureTree t;
-ThotBool      (*f) (strNode *);
-#endif
 {
    strNode *n, *res;
 
@@ -720,15 +625,7 @@ ThotBool      (*f) (strNode *);
  AddListSubTree:  inserts the reference to a structure subtree, with its rank between its sibling,
  and its identifier in the environment's subtrees list
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void AddListSubTree (Element elem, int idf, int rank)
-#else
-static void AddListSubTree (elem, idf, rank)
-Element             elem;
-int                 idf;
-int                 rank;
-
-#endif
 {
    strListElem           *pcour, *pprec;
 
@@ -761,13 +658,7 @@ int                 rank;
   Searches an element identified with a given label in the environement
   subtrees list.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static Element      FindListSTreeByLabel (STRING label)
-#else
-static Element      FindListSTreeByLabel (label)
-STRING              label;
-
-#endif
 {
    strListElem        *pcour;
    ThotBool            found;
@@ -790,14 +681,7 @@ STRING              label;
    search for the next element with the identifier id in the ListSubTrees, 
    searches the first one if *elem =NULL 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static int          FindListSubTree (int id, Element * elem)
-#else
-static int          FindListSubTree (id, elem)
-int                 id;
-Element            *elem;
-
-#endif
 {
    strListElem        *pcour;
    ThotBool            found;
@@ -844,13 +728,7 @@ Element            *elem;
    ExportSubTree Exports a subtree in generation buffer without any
    change
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool ExportSubTree (Element subTree, Document doc)
-#else 
-static ThotBool ExportSubTree (subTree, doc)
-Element subTree;
-Document doc;
-#endif
 {
   CHAR_T	      tmpfilename[25];
   CHAR_T	      charRead;
@@ -903,13 +781,7 @@ Document doc;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void RemoveFragment (Element elem, Document doc)
-#else
-static void RemoveFragment (elem, doc)
-Element     elem;
-Document    doc;
-#endif
 {
   Element parent;
   SSchema parSch, elSch;
@@ -948,13 +820,7 @@ Document    doc;
    the HTML fragment in buffer in the context of a last descendance of the
    element ElFather 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool StartFragmentParser (strMatchChildren * sMatch, Document doc)
-#else
-static ThotBool StartFragmentParser (sMatch, doc)
-strMatch       *sMatch;
-Document        doc;
-#endif
 {
    strMatchChildren   *prevMatch, *DMatch;
    Element             courEl, invEl;
@@ -1090,18 +956,9 @@ Document        doc;
   sibling is true) returns the number of higer-level nodes created in nbCreated and the 
   rightmost of them in lastCreated.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool   FlattenAndInsertElement (Element elSource, Element elDest, ThotBool sibling, Document doc, Element * lastCreated, int *nbCreated)
-#else
-static ThotBool   FlattenAndInsertElement  (elSource, elDest, sibling, doc, lastCreated, nbCreated)
-Element             elSource;
-Element             elDest;
-ThotBool            sibling;
-Document            doc;
-Element            *lastCreated;
-int                *nbCreated;
-
-#endif
+static ThotBool FlattenAndInsertElement (Element elSource, Element elDest,
+					 ThotBool sibling, Document doc,
+					 Element * lastCreated, int *nbCreated)
 {
    Element             elCour, elPreced, elNext;
    int                 nbc;
@@ -1157,11 +1014,8 @@ int                *nbCreated;
 }
 /*----------------------------------------------------------------------
    RankedInsertion
-
-
    Inserts an element as a given child or sibling of an element, creating a
    descendance between the two elements if necesary. 
-
    Parameters:
    newEl: the element to be inserted
    parent: the element in which newEl will be inserted
@@ -1169,18 +1023,8 @@ int                *nbCreated;
    rank:  rank of newEl 
    doc: document in which newwEl have to be inserted
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static ThotBool     RankedInsertion (Element newEl, Element parent, Element prevEl, int *rank, Document doc)
-#else
-static ThotBool     RankedInsertion (newEl, parent, prevEl, *rank, doc)
-Element             newEl;
-Element             parent;
-Element             prevEl;
-int                 rank;
-Document            doc;
-
-#endif
+static ThotBool RankedInsertion (Element newEl, Element parent, Element prevEl,
+				 int *rank, Document doc)
 {
    ElementType         elemTypeNew;
    Element             elFirst, elLast, elPrevious, elCour, elem;
@@ -1287,17 +1131,10 @@ Document            doc;
 }
 
 /*----------------------------------------------------------------------
- CopySubTreeChildren: copies the descendants of matched nodes from source tree to result 
-  instance
+  CopySubTreeChildren: copies the descendants of matched nodes from
+  source tree to result instance
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         CopySubTreeChildren (Element father, Document doc)
-#else
-static void         CopySubTreeChildren (father, doc)
-Element             father;
-Document            doc;
-
-#endif
 {
    Element             elCour, elOriginal;
    AttributeType       attrType;
@@ -1335,14 +1172,7 @@ Document            doc;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         CopySubTrees (strNode * Root, Document doc)
-#else
-static void         CopySubTrees (Root, doc)
-strNode            *Root;
-Document            doc;
-
-#endif
 {
    CHAR_T              label[10];
    int                 l, idf, rank, delta;
@@ -1407,14 +1237,7 @@ Document            doc;
    PutBeginTag,PutEndTag,TransferNode 
    fill the HTML buffer with the generated nodes 
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static ThotBool     PutInHtmlBuffer (STRING s)
-#else
-static ThotBool     PutInHtmlBuffer (s)
-STRING              s;
-
-#endif
 {
   int len;
   
@@ -1435,14 +1258,7 @@ STRING              s;
 /*----------------------------------------------------------------------
   PutBeginTag
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool        PutBeginTag (strNodeDesc * ND, strNode * TN)
-#else
-static ThotBool        PutBeginTag (ND, TN)
-strNodeDesc           *ND;
-strNode               *TN;
-
-#endif
 {
   ElementType	      elType;
   strAttrDesc        *AD;
@@ -1607,12 +1423,7 @@ strNode               *TN;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool PutEndTag (strGenStack * ND)
-#else
-static ThotBool PutEndTag (ND)
-strGenStack *ND;
-#endif
 {
   ThotBool res = TRUE;
 
@@ -1630,14 +1441,7 @@ strGenStack *ND;
 /*----------------------------------------------------------------------
    TransferChildren : copies the children of node into the result instance 
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static ThotBool        TransferChildren (strNode * node)
-#else
-static ThotBool        TransferChildren (strNode * node)
-strNode            *node;
-
-#endif
 {
    strNode            *child;
    ElementType	       elType; 
@@ -1666,15 +1470,7 @@ strNode            *node;
 /*----------------------------------------------------------------------
    TransferNode : copies a node and its content into the result instance 
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static ThotBool        TransferNode (strNode * node, ThotBool inplace)
-#else
-static ThotBool        TransferNode (node, inplace)
-strNode            *node;
-ThotBool            inplace;
-
-#endif
 {
   ElementType elType; 
   ThotBool res = TRUE;
@@ -1706,21 +1502,12 @@ ThotBool            inplace;
 /*----------------------------------------------------------------------
    Fonctions de transformation par regles            
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool TransformNode (strMatchChildren * sm);
-#else
-static ThotBool TransformNode ();
-#endif
 
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool        ApplyTransChild (strMatchChildren * smc)
-#else
-static ThotBool        ApplyTransChild (smc)
-strMatchChildren   *smc;
-#endif
 {
    strMatchChildren   *smc2;
    strMatch           *sm;
@@ -1772,13 +1559,7 @@ return result;
   transforms a matched node acconding to the rule relative to the 
   matched symbol
   ---------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool        TransformNode (strMatchChildren * sm)
-#else
-static ThotBool        TransformNode (sm)
-strMatchChildren   *sm;
-
-#endif
 {
    int                 courNode, l;
    strMatch           *sm2;
@@ -1896,14 +1677,7 @@ strMatchChildren   *sm;
   ApplyTransformation:
   applies the transformation based on sm matching descriptors
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     ApplyTransformation (strMatch * sm, Document doc)
-#else
-static ThotBool     ApplyTransformation (sm, doc)
-strMatch           *sm;
-Document            doc;
-
-#endif
 {
    strGenStack          *ND;
    strMatchChildren   *DMatch;
@@ -1973,16 +1747,11 @@ Document            doc;
 }
 
 /*----------------------------------------------------------------------
-   CheckSelection : checks if all the selected element are at the same level. Extends the selction  
-   to an element if all its children are selected                                       
+  CheckSelection : checks if all the selected element are at the same
+  level.
+  Extends the selection to an element if all its children are selected
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     CheckSelectionLevel (Document doc)
-#else
-static ThotBool     CheckSelectionLevel (doc)
-Document            doc;
-
-#endif
 {
   Element             prevFirst, parentFirst, nextLast;
   Element             parentLast = NULL;
@@ -2095,17 +1864,10 @@ Document            doc;
 
 /*----------------------------------------------------------------------
    MyNextSelectedElement
-   Gives the next selected element, accordingly  to extension given by 
-   CheckSelectionLevel 
+   Gives the next selected element, accordingly  to extension given by
+   CheckSelectionLevel
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         MyNextSelectedElement (Document doc, Element * elSelect)
-#else
-static void         MyNextSelectedElement (doc, elSelect)
-Document            doc;
-Element            *elSelect;
-
-#endif
 {
   Element             elFirst;
   int                 fc, lc;
@@ -2144,15 +1906,7 @@ Element            *elSelect;
    WARNING This function works as long as there are no cycles in S schema
            whithout any HTML element inside....
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     IsValidHtmlChild (ElementType elemType, STRING tag, STRING prevtag)
-#else
-static ThotBool     IsValidHtmlChild (elemType, tag, prevtag)
-Element             element;
-STRING              tag;
-STRING              prevtag;
-
-#endif
 {
 
   ElementType         elemTypeChild, tagElType, prevElType;
@@ -2339,15 +2093,8 @@ STRING              prevtag;
    checks if the higher-level generated elements are possible children of the   
    transformation root element                                          
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool     CheckValidTransRoot (strMatch * sm, ElementType elemTypeRoot, STRING prevTag)
-#else
-static ThotBool     CheckValidTransRoot (sm, elemTypeRoot, prevTag)
-strMatch           *sm;
-ElementType         elemTypeRoot;
-STRING              prevTag;
-
-#endif
+static ThotBool CheckValidTransRoot (strMatch * sm, ElementType elemTypeRoot,
+				     STRING prevTag)
 {
   strMatchChildren   *smc;
   strMatch           *sm2;
@@ -2435,15 +2182,7 @@ STRING              prevTag;
 /*----------------------------------------------------------------------
    callback of the transformation selection menu 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TransCallbackDialog (int ref, int typedata, CHAR_T* data)
-#else
-void                TransCallbackDialog (ref, typedata, data)
-int                 ref;
-int                 typedata;
-CHAR_T*             data;
-
-#endif
 {
   int                 val, length;
   DisplayMode         oldDisplayMode;
@@ -2465,9 +2204,7 @@ CHAR_T*             data;
 	TtaSetDisplayMode (TransDoc, DisplayImmediately);
       TtaSelectElement (TransDoc, NULL);
       /* passe en mode de display differe */
-#ifndef AMAYA_DEBUG
       TtaSetDisplayMode (TransDoc, DeferredDisplay);
-#endif		
       resultTrans = ApplyTransformation (menuTrans[val], TransDoc);
       if (!resultTrans)
 	{
@@ -2589,15 +2326,18 @@ CHAR_T*             data;
 }
 
 /*----------------------------------------------------------------------
+   InitTransform: initialisation, called during Amaya initialisation
+  ----------------------------------------------------------------------*/
+void                InitTransform ()
+{
+  TransBaseDialog = TtaSetCallback (TransCallbackDialog, MAX_TRANS_DLG);
+  ppInitAutomaton ();
+}
+
+/*----------------------------------------------------------------------
    callback of  the transform entry of Edit menu 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TransformType (Document doc, View view)
-#else
-void                TransformType (doc, view)
-Document            doc;
-View                view;
-#endif
 {
   Element             elemSelect;
   ElementType	       elType;
@@ -2783,18 +2523,12 @@ View                view;
 
 
 /*----------------------------------------------------------------------
-   TransformIntoType:  Changes the type of a the selected elements into the given DestType
-   Selects the transformations that produces the givem type, matches teir patterns, and
-   applies the first matched transformation
+   TransformIntoType:  Changes the type of a the selected elements into
+   the given DestType.
+   Selects the transformations that produces the givem type, matches
+   their patterns, and applies the first matched transformation
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            TransformIntoType (ElementType resultType, Document doc)
-#else
-ThotBool            TransformIntoType (resultType, doc)
-ElementType         resultType;
-Document            doc;
-
-#endif
+ThotBool TransformIntoType (ElementType resultType, Document doc)
 {
   CHAR_T                DestTag[20];
   ThotBool            ok, chglev;

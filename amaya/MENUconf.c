@@ -3243,7 +3243,7 @@ static void BuildProfileList (void)
   while (i < nbprofiles && MenuText[i] != '\0')
     {
       /* keep in mind the current selected entry */
-      if (ptr && !wc2iso_strcmp (ptr, MenuText[i]))
+      if (ptr && !strcmp (ptr, MenuText[i]))
          CurrentProfile = i;
       SendMessage (wndProfilesList, LB_INSERTSTRING, i, (LPARAM) MenuText[i]);
       i++;

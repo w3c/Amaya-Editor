@@ -646,7 +646,7 @@ ThotBool            RedrawFrameTop (int frame, int scroll)
 	}
     }
   else
-    /* The nodified area is not visible */
+    /* The modified area is not visible */
     DefClip (frame, 0, 0, 0, 0);
    return toadd;
 }
@@ -863,21 +863,24 @@ void                DisplayFrame (int frame)
   ViewFrame          *pFrame;
   int                 w, h;
 
-  /* Check that the frame exists */
-  pFrame = &ViewFrameTable[frame - 1];
-  if (pFrame->FrAbstractBox != NULL)
+  if (documentDisplayMode[frame - 1] == DisplayImmediately)
     {
-      /* Drawing of the updated area */
-      RedrawFrameBottom (frame, 0, NULL);
-      
-      /* recompute scrolls */
-      CheckScrollingWidth (frame);
-      UpdateScrollbars (frame);
+      /* Check that the frame exists */
+      pFrame = &ViewFrameTable[frame - 1];
+      if (pFrame->FrAbstractBox != NULL)
+	{
+	  /* Drawing of the updated area */
+	  RedrawFrameBottom (frame, 0, NULL);
+	  
+	  /* recompute scrolls */
+	  CheckScrollingWidth (frame);
+	  UpdateScrollbars (frame);
+	}
+      else
+	{
+	  /* clean the frame */
+	  GetSizesFrame (frame, &w, &h);
+	  Clear (frame, w, h, 0, 0);
+	}
     }
-   else
-     {
-       /* clean the frame */
-       GetSizesFrame (frame, &w, &h);
-       Clear (frame, w, h, 0, 0);
-     }
 }
