@@ -3341,9 +3341,8 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 			menu = p_menu;
 		      else if (p_menu_item)
 			menu = wxDynamicCast(p_menu_item->GetSubMenu(), wxMenu);
-		      //		      wxLogDebug( _T("submenu name=%s"),
-		      //		  menu ? menu->GetTitle() );
 
+		      /*
 		      if (menu)
 			wxLogDebug( _T("menu (")
 				    + p_menu_item->GetLabel()
@@ -3353,6 +3352,7 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 			wxLogDebug( _T("menu (")
 				    + p_menu_item->GetLabel()
 				    + _T(") is not a menu") );
+		      */
 
 		      if ( !wxDynamicCast(w, wxMenu) )
 			catalogue->Cat_Widget = (ThotWidget)w;
@@ -4624,7 +4624,14 @@ void TtaRedrawMenuEntry (int ref, int entry, char *fontname,
 #endif /* _WINGUI */
 
 #ifdef _WX
-  wxMenu * p_menu = wxDynamicCast( catalogue->Cat_Widget, wxMenu );
+  wxMenu * p_menu = NULL;
+  p_menu = wxDynamicCast( catalogue->Cat_Widget, wxMenu );
+  if (!p_menu)
+    {
+      // maybe a sub menu
+      wxMenuItem * p_menu_item = wxDynamicCast( catalogue->Cat_Widget, wxMenuItem );
+      p_menu = p_menu_item->GetSubMenu();
+    }
   if (p_menu)
     if (activate)
       p_menu->Enable( ref + entry, TRUE );
