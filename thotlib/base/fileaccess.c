@@ -269,7 +269,7 @@ union ieee754_float {
   /* This is the IEEE 754 float-precision format.  */
   struct {
 #ifdef _WINDOWS
-	unsigned int negative:1;
+    unsigned int negative:1;
     unsigned int exponent:8;
     unsigned int mantissa:23;
 #else /*_WINDOWS*/
@@ -278,29 +278,29 @@ union ieee754_float {
     unsigned int negative:1;
     unsigned int exponent:8;
     unsigned int mantissa:23;
-#endif
-#if     __BYTE_ORDER == __LITTLE_ENDIAN
+#else
     unsigned int mantissa:23;
     unsigned int exponent:8;
     unsigned int negative:1;
 #endif
-#else
+#else /* i386 || __i386 */
 #if defined(_BIG_ENDIAN)
     unsigned int negative:1;
     unsigned int exponent:8;
     unsigned int mantissa:23;
-#endif
-#if defined(_LITTLE_ENDIAN)
+#else
     unsigned int mantissa:23;
     unsigned int exponent:8;
     unsigned int negative:1;
 #endif
-#endif
+#endif /* i386 || __i386 */
 #endif /*_WINDOWS*/
   } ieee;
 };
 
-float readFloat(unsigned int *bytes) 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+static float readFloat(unsigned int *bytes) 
 {
   union ieee754_float f;
 
@@ -309,6 +309,7 @@ float readFloat(unsigned int *bytes)
   f.ieee.mantissa = (f.ieee.exponent == 0)? (*bytes & 0x7fffff) << 1 : (*bytes & 0x7fffff) | 0x800000;
   return f.f;
 }
+
 /*----------------------------------------------------------------------
   TtaReadInteger reads an integer.
   ----------------------------------------------------------------------*/
