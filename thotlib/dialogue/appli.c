@@ -2966,8 +2966,10 @@ void  DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd, int *xf, 
 {
    int              clipx, clipy, clipwidth, clipheight;
 #ifndef _WINDOWS
-#ifdef _GTK 
+#ifdef _GTK
+#ifndef _GL 
    GdkRectangle      rect;
+#endif /* _GL */
 #else /* _GTK */
    XRectangle        rect;
 #endif /* _GTK */
@@ -3017,7 +3019,7 @@ void  DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd, int *xf, 
 	/* defines what part of the buffer is swapped
 	 so here we swap only what we do..*/
 	/* if (FrameTable[frame].WdFrame) */
-	/* 	  glAddSwapHintRectWIN (clipx, clipy, clipwidth, clipheight);	 */
+	/* 	 win32 solution only  glAddSwapHintRectWIN (clipx, clipy, clipwidth, clipheight);	 */
 #endif /*_GL*/
 #else /* _GTK */
 	rect.x = 0;
