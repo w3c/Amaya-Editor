@@ -1816,7 +1816,7 @@ void SetFontstyleAttr (Element el, Document doc)
  -----------------------------------------------------------------------*/
 void SetIntAddSpaceAttr (Element el, Document doc)
 {
-  Element	textEl, previous;
+  Element	textEl, previous, ancestor;
   ElementType	elType;
   AttributeType	attrType;
   Attribute	attr, formAttr;
@@ -1933,10 +1933,7 @@ void SetIntAddSpaceAttr (Element el, Document doc)
 		       text[0] == '<' ||
 		       text[0] == '=' ||
 		       text[0] == '>' ||
-		       text[0] == '^' ||
-		       (int)text[0] == 177 || /* plus or minus */
-		       (int)text[0] == 215 || /* times */
-		       (int)text[0] == 247)   /* divide */
+		       text[0] == '^')
 		/* infix operator */
 		val = MathML_ATTR_IntAddSpace_VAL_both_;
 	      else if (text[0] == ',' ||
@@ -1960,8 +1957,8 @@ void SetIntAddSpaceAttr (Element el, Document doc)
 		val = MathML_ATTR_IntAddSpace_VAL_nospace;
 	      else
 		if ((int)text[0] == 0x2264 || /* less or equal */
-		    (int)text[0] == 0x00B1 || /* plus or minus */
 		    (int)text[0] == 0x2265 || /* greater or equal */
+		    (int)text[0] == 0x00B1 || /* plus or minus */
 		    (int)text[0] == 0x00D7 || /* times */
 		    (int)text[0] == 0x00F7 || /* divide */
 		    (int)text[0] == 0x2260 || /* not equal */
@@ -1969,6 +1966,7 @@ void SetIntAddSpaceAttr (Element el, Document doc)
 		    (int)text[0] == 0x2248 || /* equivalent */
 		    (int)text[0] == 0x2297 || /* circle times */
 		    (int)text[0] == 0x2295 || /* circle plus */
+		    (int)text[0] == 0x2218 || /* ring operator */
 		    (int)text[0] == 0x2229 || /* Intersection */
 		    (int)text[0] == 0x222A || /* Union */
 		    (int)text[0] == 0x2283 || /* Superset of */

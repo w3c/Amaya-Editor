@@ -844,7 +844,7 @@ int TtaMakeFrame( const char * schema_name,
 #endif /* _GL */
 
   /* Window volume in characters */
-  *volume = GetCharsCapacity (width * height * 5);
+  *volume = GetCharsCapacity (width * height);
   FrameTable[frame_id].FrDoc   		= doc_id;
   FrameTable[frame_id].FrView   	= schView;
 

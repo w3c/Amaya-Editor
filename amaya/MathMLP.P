@@ -2886,8 +2886,13 @@ ATTRIBUTES
 	END;
   IntAddSpace = both_:
 	BEGIN
-	PaddingLeft: OPERATOR_SPACE;
-	PaddingRight: OPERATOR_SPACE;
+        if not within Subscript  and not within Superscript and
+           not within Overscript and not within Underscript and
+	   not within MSubscript and not within MSuperscript
+	   BEGIN
+	   PaddingLeft: OPERATOR_SPACE;
+	   PaddingRight: OPERATOR_SPACE;
+	   END;
 	IN Structure_view
 		BEGIN
 		PaddingLeft: 0;
