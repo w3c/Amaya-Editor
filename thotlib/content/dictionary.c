@@ -60,8 +60,7 @@ static void LoadAlphabet ()
 
   strcat (alphaName, WC_DIR_STR);
   strcat (alphaName, "alphabet");
-  
-  if ((falpha = fopen (alphaName, "r")) != NULL)
+  if ((falpha = TtaReadOpen (alphaName)) != NULL)
     {
       for (i = 0; i < 256; i++)
           Code[i] = (unsigned char) 100;
@@ -71,7 +70,7 @@ static void LoadAlphabet ()
 	  Code[x] = (unsigned char) i;
 	  ReverseCode[i++] = (unsigned char) x;
 	}
-      fclose (falpha);
+      TtaReadClose (falpha);
     }
   else
     TtaDisplaySimpleMessage (INFO, LIB, TMSG_MISSING_ALPHABET);
@@ -377,21 +376,18 @@ static void PrepareDictionary (PtrDict *pDictionary, char *dictName,
     {
       /* Alterable dictionary */
       if (TtaFileExist (tempbuffer) != 0)
-	  dictFile = fopen (tempbuffer, "rw");
+	  dictFile = TtaRWOpen (tempbuffer);
       else
 	{
 	  /* new dictionary */
 	  new_ = TRUE;
-	  dictFile = fopen (tempbuffer, "w+");
+	  dictFile = TtaReadOpen (tempbuffer);
 	}
     }
   else
     {
       /* READONLY dictionary (generally pre-treated) */
-      if (treated)
-	dictFile = TtaReadOpen (tempbuffer);
-      else
-	dictFile = fopen (tempbuffer, "r");
+      dictFile = TtaReadOpen (tempbuffer);
     }
   
   if (dictFile == NULL)
@@ -404,7 +400,7 @@ static void PrepareDictionary (PtrDict *pDictionary, char *dictName,
   CreateDictionary (pDictionary, document);
   if (*pDictionary == NULL)
     {
-      fclose (dictFile);
+      TtaReadClose (dictFile);
       /* no memory */
       return;
     }
@@ -465,7 +461,7 @@ static void PrepareDictionary (PtrDict *pDictionary, char *dictName,
 	      /* Only a FILE dictionary may be empty at the starting */
 	      if (readonly != FALSE)
 		{
-		  fclose (dictFile);
+		  TtaWriteClose (dictFile);
 		  /* Error while reading, the FILE dictionary is empty */
 		  return;
 		}
@@ -497,7 +493,7 @@ static void PrepareDictionary (PtrDict *pDictionary, char *dictName,
 	/* The loading of the dictionary failed */
 	*pDictionary = NULL;
     }
-  fclose (dictFile);
+  TtaReadClose (dictFile);
 }
 
 

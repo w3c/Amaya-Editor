@@ -43,6 +43,7 @@
 #  define fstat _fstat
 # endif
 #endif
+#include "fileaccess.h"
 
 LFUNC(OpenReadFile, int, (char *filename, xpmData *mdata));
 LFUNC(xpmDataClose, void, (xpmData *mdata));
@@ -177,7 +178,7 @@ OpenReadFile(
 		} else {
 # endif
 #endif
-		    if (!(mdata->stream.file = fopen(filename, "r"))) {
+		    if (!(mdata->stream.file = TtaReadOpen(filename))) {
 #if !defined(NO_ZPIPE) && defined(STAT_ZFILE)
 			XpmFree(compressfile);
 #endif
@@ -211,7 +212,7 @@ xpmDataClose(
     switch (mdata->type) {
     case XPMFILE:
 	if (mdata->stream.file != (stdin))
-	    fclose(mdata->stream.file);
+	    TtaReadClose(mdata->stream.file);
 	break;
 #ifndef NO_ZPIPE
     case XPMPIPE:

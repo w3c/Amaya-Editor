@@ -1839,7 +1839,7 @@ int savetga (const char *filename, unsigned char *Data,
   int i;
 
   length = width * height * 4;
-  screenFile = fopen("screenshot.tga", "w");
+  screenFile = TtaWriteOpen ("screenshot.tga");
   pixelDepth = 16;
   /* compute image type: 2 for RGB(A), 3 for greyscale*/
   mode = pixelDepth / 8;
@@ -1849,12 +1849,13 @@ int savetga (const char *filename, unsigned char *Data,
     type = 3;
   /* convert the image data from RGB(a) to BGR(A)*/
   if (mode >= 3)
-    for (i=0; i < width * height * mode ; i+= mode) {
+    for (i=0; i < width * height * mode ; i+= mode)
+      {
       aux = Data[i];
       Data[i] = Data[i+2];
       Data[i+2] = aux;
       Data[i+3] = 255;
-    }
+      }
   /* write the header*/
   fwrite(&cGarbage, sizeof(unsigned char), 1,screenFile);
   fwrite(&cGarbage, sizeof(unsigned char), 1, screenFile);  
@@ -1869,7 +1870,7 @@ int savetga (const char *filename, unsigned char *Data,
   fwrite(&pixelDepth, sizeof(unsigned char), 1, screenFile);  
   fwrite(&cGarbage, sizeof(unsigned char), 1, screenFile);  
   fwrite(Data, sizeof(unsigned char), length, screenFile);
-  fclose(screenFile);
+  TtaWriteClose (screenFile);
   return 0;
 }
 

@@ -691,37 +691,37 @@ void HelpAmaya (Document document, View view)
    strcpy (localname, TempFileDirectory);
    strcat (localname, DIR_STR);
    strcat (localname, "tree.debug");
-   list = fopen (localname, "w");
+   list = TtaWriteOpen (localname);
    el = TtaGetMainRoot (document);
    TtaListAbstractTree (el, list);
-   fclose (list);
+   TtaWriteClose (list);
    strcpy (localname, TempFileDirectory);
    strcat (localname, DIR_STR);
    strcat (localname, "view.debug");
-   list = fopen (localname, "w");
+   list = TtaWriteOpen (localname);
    TtaListView (document, view, list);
-   fclose (list);
+   TtaWriteClose (list);
    strcpy (localname, TempFileDirectory);
    strcat (localname, DIR_STR);
    strcat (localname, "boxes.debug");
-   list = fopen (localname, "w");
+   list = TtaWriteOpen (localname);
    TtaListBoxes (document, view, list);
-   fclose (list);
+   TtaWriteClose (list);
    structView = TtaGetViewFromName (document, "Structure_view");
    if (structView != 0 && TtaIsViewOpen (document, structView))
      {
        strcpy (localname, TempFileDirectory);
        strcat (localname, DIR_STR);
        strcat (localname, "structview.debug");
-       list = fopen (localname, "w");
+       list = TtaWriteOpen (localname);
        TtaListView (document, structView, list);
-       fclose (list);
+       TtaWriteClose (list);
        strcpy (localname, TempFileDirectory);
        strcat (localname, DIR_STR);
        strcat (localname, "structboxes.debug");
-       list = fopen (localname, "w");
+       list = TtaWriteOpen (localname);
        TtaListBoxes (document, structView, list);
-       fclose (list);
+       TtaWriteClose (list);
      }
    altView = TtaGetViewFromName (document, "Alternate_view");
    if (altView != 0 && TtaIsViewOpen (document, altView))
@@ -729,15 +729,15 @@ void HelpAmaya (Document document, View view)
        strcpy (localname, TempFileDirectory);
        strcat (localname, DIR_STR);
        strcat (localname, "altview.debug");
-       list = fopen (localname, "w");
+       list = TtaWriteOpen (localname);
        TtaListView (document, altView, list);
-       fclose (list);
+       TtaWriteClose (list);
        strcpy (localname, TempFileDirectory);
        strcat (localname, DIR_STR);
        strcat (localname, "altboxes.debug");
-       list = fopen (localname, "w");
+       list = TtaWriteOpen (localname);
        TtaListBoxes (document, altView, list);
-       fclose (list);
+       TtaWriteClose (list);
      }
    linksView = TtaGetViewFromName (document, "Links_view");
    if (linksView != 0 && TtaIsViewOpen (document, linksView))
@@ -745,15 +745,15 @@ void HelpAmaya (Document document, View view)
        strcpy (localname, TempFileDirectory);
        strcat (localname, DIR_STR);
        strcat (localname, "linksview.debug");
-       list = fopen (localname, "w");
+       list = TtaWriteOpen (localname);
        TtaListView (document, linksView, list);
-       fclose (list);
+       TtaWriteClose (list);
        strcpy (localname, TempFileDirectory);
        strcat (localname, DIR_STR);
        strcat (localname, "linksboxes.debug");
-       list = fopen (localname, "w");
+       list = TtaWriteOpen (localname);
        TtaListBoxes (document, linksView, list);
-       fclose (list);
+       TtaWriteClose (list);
      }
    tocView = TtaGetViewFromName (document, "Table_of_contents");
    if (tocView != 0 && TtaIsViewOpen (document, tocView))
@@ -761,42 +761,42 @@ void HelpAmaya (Document document, View view)
        strcpy (localname, TempFileDirectory);
        strcat (localname, DIR_STR);
        strcat (localname, "tocview.debug");
-       list = fopen (localname, "w");
+       list = TtaWriteOpen (localname);
        TtaListView (document, tocView, list);
-       fclose (list);
+       TtaWriteClose (list);
        strcpy (localname, TempFileDirectory);
        strcat (localname, DIR_STR);
        strcat (localname, "tocboxes.debug");
-       list = fopen (localname, "w");
+       list = TtaWriteOpen (localname);
        TtaListBoxes (document, tocView, list);
-       fclose (list);
+       TtaWriteClose (list);
      }
    /* list now CSS rules */
    strcpy (localname, TempFileDirectory);
    strcat (localname, DIR_STR);
    strcat (localname, "style.debug");
-   list = fopen (localname, "w");
+   list = TtaWriteOpen (localname);
    TtaListStyleSchemas (document, list);
-   fclose (list);
+   TtaWriteClose (list);
    /* list CSS rules applied to the current selection */
    strcpy (localname, TempFileDirectory);
    strcat (localname, DIR_STR);
    strcat (localname, "style_element.debug");
-   list = fopen (localname, "w");
+   list = TtaWriteOpen (localname);
    n = TtaListStyleOfCurrentElement (document, list);
    if (n == 0)
      {
        fprintf (list, TtaGetMessage (AMAYA, AM_NO_STYLE_FOR_ELEM));
        fprintf (list, "\n");
      }
-   fclose (list);
+   TtaWriteClose (list);
    /* list now shortcuts */
    strcpy (localname, TempFileDirectory);
    strcat (localname, DIR_STR);
    strcat (localname, "shortcuts.debug");
-   list = fopen (localname, "w");
+   list = TtaWriteOpen (localname);
    TtaListShortcuts (document, list);
-   fclose (list);
+   TtaWriteClose (list);
 #endif /* AMAYA_DEBUG */
 
 #if defined(_GTK) || defined(_WX) 

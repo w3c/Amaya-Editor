@@ -946,16 +946,6 @@ void SubmitForm (Document doc, Element element)
 	}
     }
 
-#ifdef FORM_DEBUG
-  {
-  /* dump the abstract tree */
- FILE               *fp2;
- fp2 = fopen ("/tmp/FormTree.dbg", "w");
- TtaListAbstractTree(elForm, fp2);
-   fclose (fp2);
-  }
-#endif
-
   /* get the  ACTION attribute value */
   if (button_type == HTML_EL_Submit_Input)
     {

@@ -70,7 +70,7 @@ ThotBool IsXpmFormat (char *fn)
   ThotBool            res;
 
   res = FALSE;
-  f = fopen (fn, "r");
+  f = TtaReadOpen (fn);
   if (f != NULL)
     {
       c = getc (f);
@@ -85,6 +85,6 @@ ThotBool IsXpmFormat (char *fn)
 	    }
 	}
     }
-  fclose (f);
+  TtaReadClose (f);
   return res;
 }			

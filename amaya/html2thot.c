@@ -4904,7 +4904,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
   *docProfile = L_Other;
   *charset = UNDEFINED_CHARSET;
   *thotType = docText;
-  stream = gzopen (fileName, "r");
+  stream = TtaGZOpen (fileName);
   if (stream != 0)
     {
       InputText = NULL;
@@ -4916,7 +4916,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 	  res = gzread (stream, FileBuffer, INPUT_FILE_BUFFER_SIZE);
 	  if (res < 0)
 	    {
-	      gzclose (stream);
+	      TtaGZClose (stream);
 	      return;
 	    }
 	  if (res >= 5)
@@ -5255,7 +5255,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 	      beginning = FALSE;
 	    }
 	}
-      gzclose (stream);
+      TtaGZClose (stream);
     }
 }
 
@@ -5272,7 +5272,7 @@ void CheckCharsetInMeta (char *fileName, CHARSET *charset, char *charsetname)
   ThotBool   endOfSniffedFile;
 
   *charset = UNDEFINED_CHARSET;
-  stream = gzopen (fileName, "r");
+  stream = TtaGZOpen (fileName);
   if (stream != 0)
     {
       InputText = NULL;
@@ -5283,7 +5283,7 @@ void CheckCharsetInMeta (char *fileName, CHARSET *charset, char *charsetname)
 	  res = gzread (stream, FileBuffer, INPUT_FILE_BUFFER_SIZE);
 	  if (res < 0)
 	    {
-	      gzclose (stream);
+	      TtaGZClose (stream);
 	      return;
 	    }
 	  if (res >= 5)
@@ -5361,7 +5361,7 @@ void CheckCharsetInMeta (char *fileName, CHARSET *charset, char *charsetname)
 		endOfSniffedFile = TRUE;
 	    }
 	}
-      gzclose (stream);
+      TtaGZClose (stream);
     }
 }
 
@@ -6753,7 +6753,7 @@ void StartParser (Document doc, char *fileName,
   CharRank = 0;
 
   HTMLcontext.encoding = TtaGetDocumentCharset (doc);
-  stream = gzopen (fileName, "r");
+  stream = TtaGZOpen (fileName);
   if (stream != 0)
     {
       FileBuffer[0] = EOS;
@@ -6936,7 +6936,7 @@ void StartParser (Document doc, char *fileName,
 	  CheckAbstractTree (HTMLcontext.doc);
 	}
 
-      gzclose (stream);
+      TtaGZClose (stream);
       if (docURL)
 	{
 	  TtaFreeMemory (docURL);

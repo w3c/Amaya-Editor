@@ -385,6 +385,27 @@ ThotBool TtaReadName (BinFile file, unsigned char *name)
 }
 
 
+/*----------------------------------------------------------------------
+   TtaGZOpen opens a file for reading.
+  ----------------------------------------------------------------------*/
+gzFile TtaGZOpen (CONST char *filename)
+{
+   if (filename && filename[0] != EOS)
+     return gzopen (filename, "r");
+   else
+     return (gzFile) NULL;
+}
+
+
+/*----------------------------------------------------------------------
+   TtaGZClose closes a file.
+  ----------------------------------------------------------------------*/
+void TtaGZClose (gzFile file)
+{
+  if (file)
+    gzclose (file);
+}
+
 
 /*----------------------------------------------------------------------
    TtaReadOpen opens a file for reading.
@@ -396,7 +417,6 @@ BinFile TtaReadOpen (CONST char *filename)
 #else /* _WINDOWS */
    char   *mode = "r";
 #endif /* _WINDOWS */
-
    if (filename && filename[0] != EOS)
      return fopen (filename, mode);
    else
@@ -435,6 +455,16 @@ void TtaWriteClose (BinFile file)
   if (file)
     fclose (file);
 }
+
+
+/*----------------------------------------------------------------------
+   TtaRWOpen opens a file for reading and writing.
+  ----------------------------------------------------------------------*/
+BinFile TtaRWOpen (CONST char *filename)
+{
+  return fopen (filename, "r+");
+}
+
 
 /*----------------------------------------------------------------------
    TtaWriteByte writes a character (or byte) value.

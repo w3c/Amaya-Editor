@@ -11,6 +11,7 @@
 
 #include "thot_sys.h"
 #include "typebase.h"
+#include "zlib.h"
 
 typedef FILE *BinFile;
 
@@ -106,9 +107,12 @@ extern ThotBool TtaReadInteger ( BinFile file,
                                 int *sval );
 extern ThotBool TtaReadName ( BinFile file,
                              unsigned char *name );
+extern gzFile TtaGZOpen (CONST char *filename);
+extern void TtaGZClose (gzFile file);
 extern BinFile TtaReadOpen (CONST char *filename);
 extern void TtaReadClose ( BinFile file );
 extern BinFile TtaWriteOpen (CONST char *filename);
+extern BinFile TtaRWOpen (CONST char *filename);
 extern void TtaWriteClose ( BinFile file );
 extern ThotBool TtaWriteByte ( BinFile file,
                               char bval );
@@ -124,3 +128,4 @@ extern ThotBool TtaCheckDirectory ( char *directory );
 
 #endif /* __CEXTRACT__ */
 #endif /* _FILEACCESS_H_ */
+

@@ -985,7 +985,7 @@ void TtaSaveAppRegistry ()
        fprintf (stderr, "Cannot save Registry no APP_HOME dir\n");
        return;
      }
-   output = fopen (filename, "w");
+   output = TtaWriteOpen (filename);
    if (output == NULL)
      {
        fprintf (stderr, "Cannot save Registry to %s :\n", filename);
@@ -994,7 +994,7 @@ void TtaSaveAppRegistry ()
    SortEnv ();
    PrintEnv (output);
    AppRegistryModified = 0;
-   fclose (output);
+   TtaWriteClose (output);
 }
 
 
@@ -1012,7 +1012,7 @@ static void ImportRegistryFile (char *filename, RegistryLevel level)
   char     *value;
 
   strcpy (appli, THOT_LIB_DEFAULTNAME);
-  input = fopen (filename, "r");
+  input = TtaReadOpen (filename);
   if (input == NULL)
     {
       fprintf (stderr, "Cannot read Registry from %s :\n", filename);
@@ -1064,7 +1064,7 @@ static void ImportRegistryFile (char *filename, RegistryLevel level)
       *str = EOS;
       AddRegisterEntry (appli, name, value, level, TRUE);
     }
-  fclose (input);
+  TtaReadClose (input);
 }
 
 

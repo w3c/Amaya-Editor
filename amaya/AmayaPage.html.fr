@@ -132,6 +132,8 @@
 </p>
 
 <div>
+<h3>Amaya</h3>
+
 <p><strong>Amaya</strong> est un client Web qui sert à la fois de navigateur
 et d'outil d'édition. Il a été conçu par le <a
 href="http://www.w3.org/">W3C</a> avec pour but essentiel la démonstration

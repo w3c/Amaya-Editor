@@ -2237,20 +2237,16 @@ ThotBool TtaFileCopyUncompress (CONST char *sourceFile, CONST char *targetFile)
     return FALSE;
   if (strcmp (sourceFile, targetFile) != 0)
     {
-#ifdef _WINGUI
-      if ((targetf = fopen (targetFile, "wb")) == NULL)
-#else
-      if ((targetf = fopen (targetFile, "w")) == NULL)
-#endif
+      if ((targetf = TtaWriteOpen (targetFile)) == NULL)
 	/* cannot write into the target file */
 	return FALSE;
       else
 	{
-	  stream = gzopen (sourceFile, "r");
+	  stream = TtaGZOpen (sourceFile);
 	  if (stream == 0)
 	    {
 	      /* cannot read the source file */
-	      fclose (targetf);
+	      TtaWriteClose (targetf);
 	      unlink (targetFile);
 	      return FALSE;
 	    }
@@ -2259,9 +2255,9 @@ ThotBool TtaFileCopyUncompress (CONST char *sourceFile, CONST char *targetFile)
 	      /* copy the file contents */
 	      while ((size = gzread (stream, buffer, 8192)) != 0)
 		fwrite (buffer, 1, size, targetf);
-	      gzclose (stream);
+	      TtaGZClose (stream);
 	    }
-	  fclose (targetf);
+	  TtaWriteClose (targetf);
 	}
     }
   return TRUE;

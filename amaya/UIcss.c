@@ -138,11 +138,11 @@ void InitUserStyleSheet (char *url)
 
   if (!TtaFileExist (url))
     {
-      f = fopen (url, "w");
+      f = TtaWriteOpen (url);
       if (f)
 	{
 	  fprintf (f, "/* This is the default Amaya CSS file */\n");
-	  fclose (f);
+	  TtaWriteClose (f);
 	}
     }
 }
@@ -191,7 +191,7 @@ void LoadUserStyleSheet (Document doc)
   if (ptr[0] != EOS  && TtaFileExist (ptr))
     {
       /* read User preferences */
-      res = fopen (ptr, "r");
+      res = TtaReadOpen (ptr);
       if (res != NULL)
 	{
 #ifdef _WINGUI
@@ -199,12 +199,12 @@ void LoadUserStyleSheet (Document doc)
 #else  /* !_WINGUI */
 	  if (fstat (fileno (res), &buf))
 #endif /* !_WINGUI */
-	    fclose (res);
+	    TtaReadClose (res);
 	  else
 	    {
 	      buffer = (char *)TtaGetMemory (buf.st_size + 1000);
 	      if (buffer == NULL)
-		fclose (res);
+		TtaReadClose (res);
 	      else
 		{
 		  len = fread (buffer, buf.st_size, 1, res);
@@ -212,12 +212,12 @@ void LoadUserStyleSheet (Document doc)
 		    {
 		      TtaFreeMemory (buffer);
 		      buffer = NULL;
-		      fclose (res);
+		      TtaReadClose (res);
 		    }
 		  else
 		    {
 		      buffer[buf.st_size] = 0;
-		      fclose (res);
+		      TtaReadClose (res);
 		    }
 		}
 	    }
@@ -605,7 +605,7 @@ char *CssToPrint (Document doc, char *printdir)
 		      i += 3;
 		      sprintf (&tempfile[i], "%d", index);
 		      index++;
-		      file = fopen (tempfile, "w");
+		      file = TtaWriteOpen (tempfile);
 		      if (file)
 			{
 			  /* add that file name to the list */
@@ -634,7 +634,7 @@ char *CssToPrint (Document doc, char *printdir)
     }
   if (file)
     /* close the new css file */
-    fclose (file);
+    TtaReadClose (file);
   return ptr;
 }
 
@@ -805,7 +805,7 @@ static void GenerateStyleListFileForElem (Element el, Document doc,
 	elType = TtaGetElementType (el);
     }
   /* open the file */
-  list = fopen (fileName, "w");
+  list = TtaWriteOpen (fileName);
   /* generate its contents */
   fprintf (list, "\n\n");
   if (TtaIsXmlSSchema(elType.ElSSchema))
@@ -826,7 +826,7 @@ static void GenerateStyleListFileForElem (Element el, Document doc,
       fprintf (list, "\n     ");
       fprintf (list, TtaGetMessage (AMAYA, AM_NO_STYLE_FOR_ELEM));
     }
-  fclose (list);
+  TtaWriteClose (list);
 }
 
 /*----------------------------------------------------------------------

@@ -4999,7 +4999,7 @@ void ParseExternalDocument (char     *fileName,
   if (tempName)
     {
       /* Parse the file and build the external document */
-      infile = gzopen (tempName, "r");
+      infile = TtaGZOpen (tempName);
       if (infile != 0)
 	{
 	  /* Check if there is an xml declaration with a charset declaration */
@@ -5037,7 +5037,7 @@ void ParseExternalDocument (char     *fileName,
 	      FreeXmlParserContexts ();
 	      FreeExpatParser ();
 	    }
-	  gzclose (infile);
+	  TtaGZClose (infile);
 	} 
     }
 
@@ -5642,7 +5642,7 @@ void StartXmlParser (Document doc, char *fileName,
     DocumentSSchema = TtaGetDocumentSSchema (doc);
   
   /* Reading of the file */
-  stream = gzopen (fileName, "r");
+  stream = TtaGZOpen (fileName);
   if (stream != 0)
     {
       if (documentName[0] == EOS &&
@@ -5754,7 +5754,7 @@ void StartXmlParser (Document doc, char *fileName,
 
       FreeExpatParser ();
       FreeXmlParserContexts ();
-      gzclose (stream);
+      TtaGZClose (stream);
       if (docURL)
 	{
 	  TtaFreeMemory (docURL);

@@ -377,45 +377,15 @@ CHARSET TtaGetCharset (char *charsetname)
 
 
 /*----------------------------------------------------------------------
-  TtaGetDefaultCharset gives the default charset 
-  ----------------------------------------------------------------------*/
-CHARSET TtaGetDefaultCharset ()
-{
-  char     *charsetname;
-
-  /* it should be given by the system locale */
-  charsetname = TtaGetEnvString ("Default_Charset");
-  if (charsetname)
-    return TtaGetCharset (charsetname);
-  else
-    return ISO_8859_1;
-}
-
-/*----------------------------------------------------------------------
-  TtaGetCharsetName gives the constant string of the charset ISO name.
-  ----------------------------------------------------------------------*/
-char *TtaGetCharsetName (CHARSET charset)
-{
-  int index = 0;
-
-  if (charset == UNDEFINED_CHARSET)
-    return NULL;
-  while (CharsetCodeTable[index].Charset != UNSUPPORTED_CHARSET)
-    {
-      if (CharsetCodeTable[index].Charset == charset)
-	return (CharsetCodeTable[index].ISOCode);
-      index++;
-    }
-  return NULL;
-}
-
-
-/*----------------------------------------------------------------------
   TtaGetLocaleCharset returns the user system charset
   ----------------------------------------------------------------------*/
-CHARSET TtaGetLocaleCharset()
+CHARSET TtaGetLocaleCharset ()
 {
-#ifdef _UNIX
+#ifdef _WINDOWS
+  /* TODO : if this function is used on window, write the code to detect
+     the local charset ... */
+  LocaleSystemCharset = WINDOWS_1252;
+#else /* _WINDOWS */
   if (LocaleSystemCharset == UNSUPPORTED_CHARSET)
     {
       char * lang = getenv("LANG");
@@ -440,10 +410,46 @@ CHARSET TtaGetLocaleCharset()
 	/* default unix charset is iso-latin-1 */
 	LocaleSystemCharset = ISO_8859_1;
     }
-#else /* _UNIX */
-  /* TODO : if this function is used on window, write the code to detect the local charset ... */
-  LocaleSystemCharset = ISO_8859_1;
-#endif /* _UNIX */
+#endif /* _WINDOWS */
   return LocaleSystemCharset;
 }
+
+
+/*----------------------------------------------------------------------
+  TtaGetDefaultCharset gives the default charset 
+  ----------------------------------------------------------------------*/
+CHARSET TtaGetDefaultCharset ()
+{
+#ifdef _WX
+  return UTF_8;
+#else /* _WX */
+  char     *charsetname;
+
+  /* it should be given by the system locale */
+  charsetname = TtaGetEnvString ("Default_Charset");
+  if (charsetname)
+    return TtaGetCharset (charsetname);
+  else
+    return TtaGetLocaleCharset ();
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  TtaGetCharsetName gives the constant string of the charset ISO name.
+  ----------------------------------------------------------------------*/
+char *TtaGetCharsetName (CHARSET charset)
+{
+  int index = 0;
+
+  if (charset == UNDEFINED_CHARSET)
+    return NULL;
+  while (CharsetCodeTable[index].Charset != UNSUPPORTED_CHARSET)
+    {
+      if (CharsetCodeTable[index].Charset == charset)
+	return (CharsetCodeTable[index].ISOCode);
+      index++;
+    }
+  return NULL;
+}
+
 

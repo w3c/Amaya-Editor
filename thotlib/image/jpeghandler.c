@@ -226,22 +226,23 @@ static unsigned char *ReadJpegToData (char *datafile, int * w, int* h,
   unsigned char      *bit_data;
   FILE               *fp;
   
-  fp = fopen (datafile, "rb");
+  fp = TtaReadOpen (datafile);
   if (fp != NULL)
     {
 #ifdef _GL      
-      bit_data = (unsigned char *) ReadJPEG (fp, (unsigned int*)w, (unsigned int*)h, colrs);
+      bit_data = (unsigned char *) ReadJPEG (fp, (unsigned int*)w,
+					     (unsigned int*)h, colrs);
 #else /* _GL */      
       bit_data = (unsigned char *) ReadJPEG (fp, w, h, colrs);      
 #endif /* #ifdef _GL */      
       if (bit_data != NULL)
 	{
 	  if (fp != stdin)
-	    fclose (fp);
+	    TtaReadClose (fp);
 	  return (bit_data);
 	}
       if (fp != stdin)
-	fclose (fp);
+	TtaReadClose (fp);
     }
   return ( NULL);
 }
@@ -358,7 +359,7 @@ ThotBool IsJpegFormat (char *fn)
 { 
    FILE               *fd;
 
-   if ((fd = fopen (fn, "rb")) == NULL)
+   if ((fd = TtaReadOpen (fn)) == NULL)
      {
 	fprintf (stderr, "can't open %s\n", fn);
 	return FALSE;
@@ -374,14 +375,13 @@ ThotBool IsJpegFormat (char *fn)
      {
 	/* If we get here, the JPEG code has signaled an error. */
 	jpeg_destroy_decompress (&cinfo);
-	fclose (fd);
+	TtaReadClose (fd);
 	return FALSE;
      }
    jpeg_create_decompress (&cinfo);
    jpeg_stdio_src (&cinfo, fd);
    (void) jpeg_read_header (&cinfo, TRUE);
    jpeg_destroy_decompress (&cinfo);
-   fclose (fd);
-
+   TtaReadClose (fd);
    return TRUE;
 }

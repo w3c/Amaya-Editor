@@ -26,6 +26,7 @@
 #include "libmsg.h"
 #include "message.h"
 #include "appdialogue.h"
+#include "fileaccess.h"
 #define MAX_EQUIV 25
 #define MAX_AUTOMATA	80
 /* automata structure for the keys */
@@ -1632,7 +1633,7 @@ void InitTranslations (char *appliname)
   if (!SearchFile (home, 0, fullName))
     SearchFile (name, 2, fullName);
 
-  file = fopen (fullName, "r");
+  file = TtaReadOpen (fullName);
   if (file)
     /*Fichier inaccessible */
     {
@@ -1914,7 +1915,7 @@ void InitTranslations (char *appliname)
 	  fscanf (file, "%80s", ch);
 	} while (e != 0);
 
-      fclose (file);
+      TtaReadClose (file);
       TtaFreeMemory (text);
     }
 }

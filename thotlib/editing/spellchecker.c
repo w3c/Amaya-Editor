@@ -585,7 +585,7 @@ static void SaveDictFile (PtrDict docDict)
    FindCompleteName (docDict->DictName, "", docDict->DictDirectory, tempbuffer, &i);
    if (docDict->DictNbWords > 0)
      {
-	f = fopen (tempbuffer, "w");
+	f = TtaWriteOpen (tempbuffer);
 	if (f != NULL)
 	  {
 	    /* enregistrer d'abord nb words and nb chars effectifs */
@@ -600,7 +600,7 @@ static void SaveDictFile (PtrDict docDict)
 		  fprintf (f, "%s\n", word);
 		  /* ajouter le CR de fin de ligne */
 	       }
-	     fclose (f);
+	     TtaWriteClose (f);
 	     /* OK sauvegarde dictionnaire document */
 	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_OK_SAVE),
 				docDict->DictName);
@@ -790,7 +790,7 @@ static void init_Tsub (FILE *ftsub)
 	  }
 	Tsub[Code[x]][Code[y]] = coeff;
      }
-   fclose (ftsub);
+   TtaReadClose (ftsub);
 }
 
 
@@ -879,9 +879,9 @@ int ParametrizeChecker ()
 	  {
 	     /* Lecture du fichier parametres */
 	     strcpy (paramnom, corrpath);
-         strcat (paramnom, DIR_STR);
+	     strcat (paramnom, DIR_STR);
 	     strcat (paramnom, "param");
-	     if ((fparam = fopen (paramnom, "r")) != NULL)
+	     if ((fparam = TtaReadOpen (paramnom)) != NULL)
 	       /* Existence du fichier */
 		init_param (fparam);
 	     else
@@ -892,9 +892,9 @@ int ParametrizeChecker ()
 
 	     /* Lecture du  fichier clavier */
 	     strcpy (clavnom, corrpath);
-         strcat (clavnom, DIR_STR);
+	     strcat (clavnom, DIR_STR);
 	     strcat (clavnom, "clavier");
-	     if ((ftsub = fopen (clavnom, "r")) != NULL)
+	     if ((ftsub = TtaReadOpen (clavnom)) != NULL)
 	       /* Existence du fichier */
 	       {
 		  init_Tsub (ftsub);

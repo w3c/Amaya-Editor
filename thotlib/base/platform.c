@@ -263,23 +263,15 @@ ThotBool TtaFileCopy (CONST char *sourceFileName, CONST char *targetFileName)
     return FALSE;
   if (strcmp (sourceFileName, targetFileName) != 0)
     {
-#ifdef _WINDOWS
-      if ((targetf = fopen (targetFileName, "wb")) == NULL)
-#else
-      if ((targetf = fopen (targetFileName, "w")) == NULL)
-#endif
+      if ((targetf = TtaWriteOpen (targetFileName)) == NULL)
 	/* cannot write into the target file */
 	return FALSE;
       else
 	{
-#ifdef _WINDOWS
-	  if ((sourcef = fopen (sourceFileName, "rb")) == NULL)
-#else
-          if ((sourcef = fopen (sourceFileName, "r")) == NULL)
-#endif
+	  if ((sourcef = TtaReadOpen (sourceFileName)) == NULL)
 	    {
 	      /* cannot read the source file */
-	      fclose (targetf);
+	      TtaWriteClose (targetf);
 	      unlink (targetFileName);
 	      return FALSE;
 	    }
@@ -288,9 +280,9 @@ ThotBool TtaFileCopy (CONST char *sourceFileName, CONST char *targetFileName)
 	      /* copy the file contents */
 	      while ((size = fread (buffer, 1, 8192, sourcef)) != 0)
 		fwrite (buffer, 1, size, targetf);
-	      fclose (sourcef);
+	      TtaReadClose (sourcef);
 	    }
-	  fclose (targetf);
+	  TtaWriteClose (targetf);
 	}
     }
   return TRUE;
@@ -312,24 +304,18 @@ ThotBool TtaCompareFiles(CONST char *file1, CONST char *file2)
   size_t  res2;
 
   if (file1 == NULL)
-    return(FALSE);
+    return (FALSE);
   if (file2 == NULL)
-    return(FALSE);
-#ifdef _WINDOWS
-  f1 = fopen(file1,"rb");
-#else
-  f1 = fopen(file1, "r");
-#endif
-  if (f1 == NULL) return(FALSE);
-#ifdef _WINDOWS
-  f2 = fopen(file2, "rb");
-#else
-  f2 = fopen(file2, "r");
-#endif
+    return (FALSE);
+  f1 = TtaReadOpen (file1);
+  if (f1 == NULL)
+    return (FALSE);
+
+  f2 = TtaReadOpen (file2);
   if (f2 == NULL)
     {
-      fclose(f1);
-      return(FALSE);
+      TtaReadClose (f1);
+      return (FALSE);
     }
   while (1)
     {
@@ -337,28 +323,29 @@ ThotBool TtaCompareFiles(CONST char *file1, CONST char *file2)
       res2 = fread(&buffer2[0], 1, sizeof(buffer2), f2);
       if (res1 != res2)
 	{
-	  fclose(f1);
-	  fclose(f2);
-	  return(FALSE);
+	  TtaReadClose (f1);
+	  TtaReadClose (f2);
+	  return (FALSE);
 	}
       if (memcmp(&buffer1[0], &buffer2[0], res2))
 	{
-	  fclose(f1);
-	  fclose(f2);
-	  return(FALSE);
+	  TtaReadClose (f1);
+	  TtaReadClose (f2);
+	  return (FALSE);
 	}
       res1 = feof(f1);
       res2 = feof(f2);
       if (res1 != res2)
 	{
-	  fclose(f1);
-	  fclose(f2);
-	  return(FALSE);
+	  TtaReadClose (f1);
+	  TtaReadClose (f2);
+	  return (FALSE);
 	}
-      if (res1) break;
+      if (res1)
+	break;
     }
-  fclose(f1);
-  fclose(f2);
-  return(TRUE);
+  TtaReadClose (f1);
+  TtaReadClose (f2);
+  return (TRUE);
 }
 

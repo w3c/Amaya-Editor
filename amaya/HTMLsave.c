@@ -2579,7 +2579,7 @@ void BackUpDocs ()
 	  {
 	    /* open the crash file */
 	    sprintf (pathname, "%s%cCrash.amaya", TempFileDirectory, DIR_SEP);
-	    f = fopen (pathname, "w");
+	    f = TtaWriteOpen (pathname);
 	    if (f == NULL)
 	      return;
 	  }
@@ -2612,7 +2612,7 @@ void BackUpDocs ()
       }
   /* now close the crash file */
   if (f != NULL)
-    fclose (f);
+    TtaWriteClose (f);
 }
 
 /*----------------------------------------------------------------------

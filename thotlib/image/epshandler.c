@@ -55,7 +55,7 @@ static void GetPictureBoundaries (char *fn, int *xif, int *yif, int *wif,
   *yif = 0;
   *wif = 590;
   *hif = 840;
-  fin = fopen (fn, "r");
+  fin = TtaReadOpen (fn);
   if (fin)
     {
       pt = buff;
@@ -76,7 +76,7 @@ static void GetPictureBoundaries (char *fn, int *xif, int *yif, int *wif,
 		}
 	    }
 	}
-      fclose (fin);
+      TtaReadClose (fin);
     }
 }
 
@@ -158,7 +158,7 @@ void EpsPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
      default:
        break;
      }
-   fin = fopen (fn, "r");
+   fin = TtaReadOpen (fn);
    if (fin)
      {
        c = getc (fin);
@@ -167,7 +167,7 @@ void EpsPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
 	   putc ((char) c, fd);
 	   c = getc (fin);
 	 }
-       fclose (fin);
+       TtaReadClose (fin);
      }
    fprintf (fd, "\n");
    fprintf (fd, "%%%% end of file %s\n", fn);
@@ -185,7 +185,7 @@ ThotBool IsEpsFormat (char *fn)
    ThotBool            res;
 
    res = FALSE;
-   fin = fopen (fn, "r");
+   fin = TtaReadOpen (fn);
    if (fin)
      {
 	/* search for %! signature of the eps and ps files */
@@ -197,6 +197,6 @@ ThotBool IsEpsFormat (char *fn)
 		res = TRUE;
 	  }
      }
-   fclose (fin);
+   TtaReadClose (fin);
    return res;
 }

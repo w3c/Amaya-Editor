@@ -632,12 +632,7 @@ static unsigned char *ReadPngToData (char *datafile, int *w, int *h,
   unsigned char *bit_data;
   FILE           *fp;
       
-#ifdef _WINDOWS
-  fp = fopen (datafile, "rb");
-#else /* _WINDOWS */
-  fp = fopen (datafile, "r");
-#endif /* _WINDOWS */
-
+  fp = TtaReadOpen (datafile);
   if (fp != NULL)
     {
 #ifdef _GL
@@ -651,11 +646,11 @@ static unsigned char *ReadPngToData (char *datafile, int *w, int *h,
       if (bit_data != NULL)
 	{
 	  if (fp != stdin) 
-	    fclose(fp);
+	    TtaReadClose (fp);
 	  return(bit_data);
 	}
       if (fp != stdin) 
-	fclose(fp);
+	TtaReadClose (fp);
     }
   return (NULL);
 }
@@ -815,14 +810,14 @@ ThotBool IsPngFormat(char *fn)
    char   buf[8];
    int    ret;
 
-   fp = fopen(fn , "rb");
+   fp = TtaReadOpen (fn);
    if (!fp)
       return 0;
-   ret = fread(buf, 1, 8, fp);
-   fclose(fp);
+   ret = fread (buf, 1, 8, fp);
+   TtaReadClose (fp);
    if (ret != 8)
       return FALSE;
-   ret = png_check_sig((png_byte*)buf, 8);
+   ret = png_check_sig ((png_byte*)buf, 8);
    if (ret) return (TRUE);
    return(FALSE);
 }
@@ -852,7 +847,7 @@ ThotBool SavePng (const char *filename,
       png_destroy_write_struct(&png, (png_infopp) NULL);
       return FALSE;
     }
-  pngFile = fopen (filename, "wb");
+  pngFile = TtaWriteOpen (filename);
   if (!(pngFile))
     {
       png_destroy_write_struct(&png, (png_infopp) NULL);
@@ -861,7 +856,7 @@ ThotBool SavePng (const char *filename,
   if (setjmp(png->jmpbuf)) 
     {
         png_destroy_write_struct(&png, &pngInfo);
-        fclose(pngFile);
+        TtaWriteClose (pngFile);
         return FALSE;
     }
   png_init_io (png, pngFile);
@@ -884,7 +879,7 @@ ThotBool SavePng (const char *filename,
   rowPtrs = (unsigned char**)malloc (sizeof(unsigned char *) * m_height);
   if (!rowPtrs)
     {
-      fclose (pngFile);
+      TtaWriteClose (pngFile);
       png_destroy_read_struct (&png, &pngInfo, 0);
       return FALSE;
     }
@@ -903,7 +898,7 @@ ThotBool SavePng (const char *filename,
   png_write_flush (png);  
   free (rowPtrs);  
   png_destroy_read_struct (&png, &pngInfo, 0);  
-  fclose (pngFile);
+  TtaWriteClose (pngFile);
   return TRUE;
 }
 

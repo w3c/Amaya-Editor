@@ -11,7 +11,7 @@ THOTDIR = @top_srcdir@
 
 include ../Options
 
-LIBS	= -L../thotlib/ -lThotKernel @LIBS@ @EXTRA_LIBS@ $(WX_LIBRARIES)
+LIBS	= -L../thotlib/ -lThotKernel -lz @LIBS@ @EXTRA_LIBS@ $(WX_LIBRARIES)
 INCLUDES= -DHAVE_CONFIG_H -I.. -I@srcdir@/f @THOTINCLUDES@ $(GUI_INCLUDES)
 
 prefix = @prefix@

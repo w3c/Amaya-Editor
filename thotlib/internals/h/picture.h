@@ -14,6 +14,7 @@
 #endif /* _WINGUI */
 #ifndef _PICTURE_h
 #define _PICTURE_h
+#include "fileaccess.h"
 
 /* A few constants */
 #define MAX_FORMAT_NAMELENGHT  32       

@@ -1020,7 +1020,7 @@ void LoadStyleSheet (char *url, Document doc, Element link, CSSInfoPtr css,
   if ( pInfo->PiSchemas == NULL || import)
     {
       /* load the resulting file in memory */
-      res = fopen (tempfile, "r");
+      res = TtaReadOpen (tempfile);
       if (res == NULL)
 	{
 	  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
@@ -1033,27 +1033,27 @@ void LoadStyleSheet (char *url, Document doc, Element link, CSSInfoPtr css,
 #endif /* _WINGUI */
 	  {
 	    TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
-	    fclose (res);
+	    TtaReadClose (res);
 	    return;
 	  }
       tmpBuff = (char *)TtaGetMemory (buf.st_size + 1000);
       if (tmpBuff == NULL)
 	{
 	  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
-	  fclose (res);
+	  TtaReadClose (res);
 	  return;
 	}
       len = fread (tmpBuff, buf.st_size, 1, res);
       if (len != 1)
 	{
 	  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
-	  fclose (res);
+	  TtaReadClose (res);
 	  ReadCSSRules (doc, refcss, tmpBuff, tempURL, 0, FALSE, NULL);
 	  TtaFreeMemory (tmpBuff);
 	  return;
 	}
       tmpBuff[buf.st_size] = 0;
-      fclose (res);
+      TtaReadClose (res);
       if (css)
 	ReadCSSRules (doc, refcss, tmpBuff, css->url, 0, FALSE, link);
       else

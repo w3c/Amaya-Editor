@@ -1413,9 +1413,9 @@ static void SetPage (PtrElement *pPage, int frame, PtrAbstractBox *origCutAbsBox
 
    sprintf (localname, "/tmp/printpage%d.debug", n);
    n++;
-   list = fopen (localname, "w");
+   list = TtaWriteOpen (localname);
    TtaListBoxes (1, 1, list);
-   fclose (list);
+   TtaWriteClose (list);
 #endif
   /* explore deux fois l'arbre des paves a la recherche des paves */
   /* traverses par la frontiere de page et decale la frontiere de page */
@@ -1486,9 +1486,9 @@ static PtrElement  PutMark (PtrElement rootEl, int nbView, PtrDocument pDoc,
    
   sprintf (localname, "/tmp/print%d.debug", n);
   n++;
-  list = fopen (localname, "w");
+  list = TtaWriteOpen (localname);
   TtaListBoxes (1, 1, list);
-  fclose (list);
+  TtaWriteClose (list);
 #endif
   pPage = NULL;
   needBreak = FALSE;

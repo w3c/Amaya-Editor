@@ -629,7 +629,7 @@ void Prof_InitTable (char *profile)
     {
       if (SearchFile (ptr, 2, buffer))
 	{
-	  profFile = fopen (buffer, "r");
+	  profFile = TtaReadOpen (buffer);
 	  /* if the caller didn't specify any profile, we use the one
 	     given in the registry */
 	  strcpy (UserProfile, "Editor");
@@ -659,7 +659,7 @@ void Prof_InitTable (char *profile)
 	      if (strlen (ProfileBuff) >=2 && ProfileBuff[0] != '#')
 		ProcessDefinition (ProfileBuff);
 	    }
-	  fclose (profFile);
+	  TtaReadClose (profFile);
 
 	}
     }

@@ -241,12 +241,7 @@ int MakeImageFromBase64 (char *imagename)
     /*illustrator doesn't give image type...*/
     strcat (fname, "\0");
 
-#ifdef _WINGUI
-  file = fopen (fname, "wb+");
-#else /* _WINGUI */
-  file = fopen (fname, "w");
-#endif /* _WINGUI */
-  
+  file = TtaWriteOpen (fname);
   if (file == NULL)
      {
 	fprintf (stderr, "cannot open any file on your system %s\n", fname);
@@ -262,7 +257,7 @@ int MakeImageFromBase64 (char *imagename)
   count = 0;
   output = Base64Decode(input, &size);  
   fwrite (output, sizeof (char), size, file);  
-  fclose (file);
+  TtaWriteClose (file);
   strcpy (imagename, "file://");
   strcat (imagename, fname);
   return 1;

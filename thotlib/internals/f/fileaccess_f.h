@@ -24,10 +24,13 @@ extern ThotBool TtaReadFloat ( BinFile file,
                                float *sval );
 extern ThotBool TtaReadName ( BinFile file,
                               unsigned char *name );
+extern gzFile TtaGZOpen ( CONST char *filename );
+extern void TtaGZClose ( gzFile file );
 extern BinFile TtaReadOpen ( CONST char *filename );
 extern void TtaReadClose ( BinFile file );
 extern BinFile TtaWriteOpen ( CONST char *filename );
 extern void TtaWriteClose ( BinFile file );
+extern BinFile TtaRWOpen ( CONST char *filename );
 extern ThotBool TtaWriteByte ( BinFile file,
                                char bval );
 extern ThotBool TtaWrite4Byte ( BinFile file,
@@ -77,10 +80,13 @@ extern ThotBool TtaReadFloat ( BinFile file,
                                  float *sval );
 extern ThotBool TtaReadName ( BinFile file,
                                 unsigned char *name );
+extern gzFile TtaGZOpen ( CONST char *filename );
+extern void TtaGZClose ( gzFile file );
 extern BinFile TtaReadOpen ( CONST char *filename );
 extern void TtaReadClose ( BinFile file );
 extern BinFile TtaWriteOpen ( CONST char *filename );
 extern void TtaWriteClose ( BinFile file );
+extern BinFile TtaRWOpen ( CONST char *filename );
 extern ThotBool TtaWriteByte ( BinFile file,
                                  char bval );
 extern ThotBool TtaWrite4Byte ( BinFile file,

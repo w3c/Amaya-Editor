@@ -857,7 +857,7 @@ ThotBool GetPatternList (Language langId)
    lang = (int) langId - FirstUserLang;
    ptPattern = LangTable[lang].LangPattern;
    strcat (patternFileName, ptPattern);
-   if ((in = fopen (patternFileName, "r")) == NULL)
+   if ((in = TtaReadOpen (patternFileName)) == NULL)
      return (FALSE);
 
    currentIndex = 0;
@@ -878,7 +878,7 @@ ThotBool GetPatternList (Language langId)
      }
    LangTable[lang].LangTabPattern.NbPatt = i;
    LangTable[lang].LangTabPattern.Charge = 1;
-   fclose (in);
+   TtaReadClose (in);
    return (TRUE);
 }
 

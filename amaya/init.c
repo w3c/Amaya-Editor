@@ -1224,7 +1224,8 @@ ThotBool OpenParsingErrors (Document document)
 
   sprintf (fileName, "%s%c%d%cPARSING.ERR",
 	   TempFileDirectory, DIR_SEP, document, DIR_SEP); 
-  if ((ErrFile = fopen (fileName, "w")) == NULL)
+  ErrFile = TtaWriteOpen (fileName);
+  if ((ErrFile == NULL))
     return FALSE;
   else
     fprintf (ErrFile, TtaGetMessage (AMAYA, AM_LINK_LINE));      
@@ -1261,7 +1262,7 @@ void CleanUpParsingErrors ()
   /* close the error file */
   if (ErrFile)
     {
-      fclose (ErrFile);
+      TtaWriteClose (ErrFile);
       ErrFile = NULL;
     }
 }
@@ -3147,14 +3148,14 @@ static void CreateHTMLContainer (char *pathname, char *docname,
     }
   /* create a temporary file for the container and make Amaya think
      that it is the current downloaded file */
-  file = fopen (tempfile, "w");
+  file = TtaWriteOpen (tempfile);
   fprintf (file, "<html><head><title>%s</title></head><body>", docname);
   if (local)
     fprintf (file, "<img src=\"%s\">", pathname);
   else
     fprintf (file, "<img src=\"internal:%s\">", pathname);
   fprintf (file, "</body></html>");
-  fclose (file);
+  TtaWriteClose (file);
 }
 
 /*----------------------------------------------------------------------
@@ -6524,7 +6525,7 @@ static ThotBool RestoreAmayaDocs ()
     {
       InitConfirm (0, 0, TtaGetMessage (AMAYA, AM_RELOAD_FILES));
       restore = UserAnswer;
-      f = fopen (tempname, "r");
+      f = TtaReadOpen (tempname);
       if (f != NULL)
 	{
 	  DontReplaceOldDoc = TRUE;
@@ -6594,7 +6595,7 @@ static ThotBool RestoreAmayaDocs ()
 	      fread (&line[i], 1, 1, f);
 	    }
 	  DontReplaceOldDoc = FALSE;	  
-	  fclose (f);
+	  TtaReadClose (f);
 	}
 
       if (iscrash)
@@ -6603,7 +6604,7 @@ static ThotBool RestoreAmayaDocs ()
 	  sprintf (tempname, "%s%cAutoSave.dat", TempFileDirectory, DIR_SEP);
 	  if (TtaFileExist (tempname))
 	    {
-	      f = fopen (tempname, "r");
+	      f = TtaReadOpen (tempname);
 	      if (f != NULL)
 		{
 		  i = 0;
@@ -6662,7 +6663,7 @@ static ThotBool RestoreAmayaDocs ()
 		      line[i] = EOS;
 		      fread (&line[i], 1, 1, f);
 		    }
-		  fclose (f);
+		  TtaReadClose (f);
 		}
 	      TtaFileUnlink (tempname);
 	    }

@@ -1214,22 +1214,18 @@ unsigned char *ReadGifToData (char *datafile, int *w, int *h, int *ncolors,
    unsigned char      *bit_data;
    FILE               *fp;
 
-#ifdef _WINDOWS
-   fp = fopen (datafile, "rb");
-#else /* _WINDOWS */
-   fp = fopen (datafile, "r");
-#endif /* _WINDOWS */
+   fp = TtaReadOpen (datafile);
    if (fp != NULL)
      {
 	bit_data = ReadGIF (fp, w, h, ncolors, cpp, colrs);
 	if (bit_data != NULL)
 	  {
 	     if (fp != stdin)
-		fclose (fp);
+		TtaReadClose (fp);
 	     return (bit_data);
 	  }
 	if (fp != stdin)
-	   fclose (fp);
+	   TtaReadClose (fp);
      }
    return (NULL);
 }
@@ -1543,23 +1539,23 @@ ThotBool IsGifFormat (char *datafile)
    FILE               *fp;
    char                version[4];
 
-   fp = fopen (datafile, "r");
+   fp = TtaReadOpen (datafile);
    if (fp == NULL)
      {
 	if (fp != stdin)
-	   fclose (fp);
+	   TtaReadClose (fp);
 	return FALSE;
      }
    if (!ReadOK (fp, buf, 6))
      {
 	if (fp != stdin)
-	   fclose (fp);
+	   TtaReadClose (fp);
 	return FALSE;
      }
    if (strncmp ((char *) buf, "GIF", 3) != 0)
      {
 	if (fp != stdin)
-	   fclose (fp);
+	   TtaReadClose (fp);
 	return (FALSE);
      }
 
@@ -1568,13 +1564,13 @@ ThotBool IsGifFormat (char *datafile)
    if ((strcmp (version, "87a") != 0) && (strcmp (version, "89a") != 0))
      {
 	if (fp != stdin)
-	   fclose (fp);
+	   TtaReadClose (fp);
 	return (FALSE);
      }
    else
      {
 	if (fp != stdin)
-	   fclose (fp);
+	   TtaReadClose (fp);
 	return (TRUE);
      }
 }

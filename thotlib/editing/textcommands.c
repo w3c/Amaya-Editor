@@ -263,6 +263,7 @@ static void LocateLeafBox (int frame, View view, int x, int y, int xDelta,
 #endif /* _GL */
      pBox = GetLeafBox (endBox, frame, &x, &y, xDelta, yDelta);
      }
+
    if (pBox)
      {
 	pAb = pBox->BxAbstractBox;
@@ -1378,15 +1379,11 @@ static int CopyXClipboard (unsigned char **buffer, View view)
   if (*buffer)
     TtaFreeMemory (*buffer);
   /* What is the encoding used by external applications ??? */
-#ifdef _GTK
+#ifdef _WINGUI
+  *buffer = TtaConvertCHARToByte (text, TtaGetDefaultCharset ());
+#else /* _WINGUI */
   *buffer = TtaConvertCHARToByte (text, UTF_8);
-#else /* _GTK */
-  #ifdef _WX
-    *buffer = TtaConvertCHARToByte (text, UTF_8);
-  #else /* _WX */
-    *buffer = TtaConvertCHARToByte (text, TtaGetDefaultCharset ());
-  #endif /* _WX */
-#endif /* _GTK */
+#endif /* _WINGUI */
   TtaFreeMemory (text);
   return i;
 }

@@ -654,7 +654,7 @@ static int OpenPSFile (PtrDocument pDoc, int *volume)
       MakeCompleteName (pDoc->DocDName, "PIV", tmp, fileName, &len);
       /* generate the full name directory/name.ps */
       FindCompleteName (pDoc->DocDName, "ps", tmp, fileName, &len);
-      if ((PSfile = fopen (fileName, "w")) == NULL)
+      if ((PSfile = TtaWriteOpen (fileName)) == NULL)
 	TtaDisplayMessage (FATAL, TtaGetMessage (LIB, TMSG_CANNOT_CREATE_PS), fileName);
       else
 	{
@@ -1419,7 +1419,7 @@ static void ClosePSFile (int frame)
       fprintf (PSfile, "grestore\n%%%%Trailer\n");
       fprintf (PSfile, "end end end %%close all open dict\n");
       fprintf (PSfile, "%%%%Pages: %d\n%%%%EOF\n", NumberOfPages);
-      fclose (PSfile);
+      TtaReadClose (PSfile);
     }
   FrRef[frame] = 0;
   /* Libere toutes les boites allouees */

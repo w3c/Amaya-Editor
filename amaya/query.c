@@ -652,7 +652,7 @@ ThotBool  AHTReqContext_delete (AHTReqContext * me)
 	   fprintf (stderr, "AHTReqContext_delete: URL is  %s, closing "
 		    "FILE %p\n", me->urlName, me->output); 
 #endif
-	   fclose (me->output);
+	   TtaReadClose (me->output);
 	   me->output = NULL;
 	 }
 	  
@@ -802,17 +802,10 @@ int                 AHTOpen_file (HTRequest * request)
   fprintf(stderr, "AHTOpen_file: opening output stream for url %s\n", me->urlName);
 #endif /* DEBUG_LIBWWW */      
 
-#if defined(_UNIX)
   if (!(me->output) && 
       (me->output != stdout) && 
-      (me->output = fopen (me->outputfile, "w")) == NULL)
-#endif /* #if defined(_UNIX) */
-#ifdef _WINDOWS    
-  if (!(me->output) && 
-      (me->output != stdout) && 
-      (me->output = fopen (me->outputfile, "wb")) == NULL)  
-#endif /* _WINDOWS */
-      {
+      (me->output = TtaWriteOpen (me->outputfile)) == NULL)
+    {
       me->outputfile[0] = EOS;	/* file could not be opened */
 #ifdef DEBUG_LIBWWW
       fprintf(stderr, "AHTOpen_file: couldn't open output stream for url %s\n", me->urlName);
@@ -1048,7 +1041,7 @@ static int redirection_handler (HTRequest *request, HTResponse *response,
 #ifdef DEBUG_LIBWWW
 	       fprintf (stderr, "redirection_handler: New URL is  %s, closing FILE %p\n", me->urlName, me->output); 
 #endif 
-	       fclose (me->output);
+	       TtaReadClose (me->output);
 	       me->output = NULL;
 	     }
 	 }
@@ -1158,7 +1151,7 @@ static int precondition_handler (HTRequest *request, HTResponse *response,
       /* @@ do we need to kill the request? */
       if (me->output && me->output != stdout)
 	{
-	  fclose (me->output);
+	  TtaReadClose (me->output);
 	  me->output = NULL;
 	}
       /*
@@ -1475,7 +1468,7 @@ static int terminate_handler (HTRequest *request, HTResponse *response,
        fprintf (stderr, "terminate_handler: URL is  %s, closing "
 		"FILE %p\n", me->urlName, me->output); 
 #endif
-       fclose (me->output);
+       TtaWriteClose (me->output);
        me->output = NULL;
      }
 
@@ -3273,7 +3266,7 @@ int GetObjectWWW (int docid, int refdoc, char *urlName, char *formdata,
 	 char c;
 
 	 me->document = (char *)TtaGetMemory (me->block_size + 1);
-	 fp = fopen (formdata, "r");
+	 fp = TtaReadOpen (formdata);
 	 i = 0; 
 	 c = getc (fp);
 	 while (!feof (fp))
@@ -3281,8 +3274,8 @@ int GetObjectWWW (int docid, int refdoc, char *urlName, char *formdata,
 	     me->document[i++] = c;
 	     c = getc (fp);
 	   }
-	 me->document[i] = '\0';
-	 fclose (fp);
+	 me->document[i] = EOS;
+	 TtaReadClose (fp);
        }
        HTAnchor_setDocument ( (HTParentAnchor *) me->source,
 			      (void * ) me->document);

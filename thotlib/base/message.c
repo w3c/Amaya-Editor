@@ -22,6 +22,7 @@
 #include "language.h"
 #include "message.h"
 #include "appdialogue.h"
+#include "fileaccess.h"
 
 #define THOT_EXPORT extern
 #include "edit_tv.h"
@@ -157,7 +158,7 @@ int TtaGetMessageTable (CONST char *msgName, int msgNumber)
   fileName[2] = '-';
   strcpy (&fileName[3], msgName);
   SearchFile (fileName, 2, pBuffer);
-  file = fopen (pBuffer, "r"); 
+  file = TtaReadOpen (pBuffer); 
   if (file == NULL)
     {
       printf ("WARNING: cannot open file %s\n", pBuffer);
@@ -204,49 +205,7 @@ int TtaGetMessageTable (CONST char *msgName, int msgNumber)
 	  fseek (file, 0L, 0);
 	  encoding = ISO_8859_1;
 	}
-#ifndef _WX
-      if (!strcmp (lan, "hu") || !strcmp (lan, "pl") || !strcmp (lan, "zh"))
-	/* Central Europe */
-#ifdef _WINDOWS
-	DialogCharset = WINDOWS_1250;
-#else /* _WINDOWS */
-	DialogCharset = ISO_8859_2;
-#endif /* _WINDOWS */
-      else if (!strcmp (lan, "fi"))
-	/* Baltic RIM */
-#ifdef _WINDOWS
-	DialogCharset = WINDOWS_1257;
-#else /* _WINDOWS */
-	DialogCharset = ISO_8859_4;
-#endif /* _WINDOWS */
-      else if (!strcmp (lan, "tr"))
-	/* Turkish */
-#ifdef _WINDOWS
-	DialogCharset = WINDOWS_1254;
-#else /* _WINDOWS */
-	DialogCharset = ISO_8859_9;
-#endif /* _WINDOWS */
-      else if (!strcmp (lan, "ru"))
-	/* Russian */
-#ifdef _WINDOWS
-	DialogCharset = WINDOWS_1251;
-#else /* _WINDOWS */
-	DialogCharset = ISO_8859_5;
-#endif /* _WINDOWS */
-      else
-	/* Latin 1 */
-#ifdef _WINDOWS
-	DialogCharset = WINDOWS_1252;
-#else /* _WINDOWS */
-	DialogCharset = ISO_8859_1;
-#endif /* _WINDOWS */
-#endif /* _WX */
-
-#ifdef _WX
-	/* wxWidgets dialogues support utf8 strings (gtk2 feature) */
-	DialogCharset = UTF_8;
-#endif /* _WX */
-
+      DialogCharset = TtaGetDefaultCharset ();
       /* Load messages */
       while (fscanf (file, "%d %[^#\r\n]", &num, pBuff) != EOF &&
 	     num < msgNumber)
@@ -264,7 +223,6 @@ int TtaGetMessageTable (CONST char *msgName, int msgNumber)
 	  else
 	    currenttable->TabMessages[num] = s;
 #endif /* _WX */
-
 #ifdef _WX
 	  /* now we convert every strings to UTF-8 (DialogCharset) */
 	  if (encoding == DialogCharset)
@@ -282,7 +240,7 @@ int TtaGetMessageTable (CONST char *msgName, int msgNumber)
 #endif /* _WX */
 
 	}
-      fclose (file);
+      TtaReadClose (file);
     }
   return (origineid);
 }

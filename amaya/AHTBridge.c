@@ -281,7 +281,9 @@ void  ProcessTerminateRequest (HTRequest *request, HTResponse *response,
   Consult the libwww manual for more details on the signature
   of this function.
   ----------------------------------------------------------------*/
-int WIN_Activate_Request (HTRequest * request, HTAlertOpcode op, int msgnum, const char *dfault, void *input, HTAlertPar * reply)
+int WIN_Activate_Request (HTRequest * request, HTAlertOpcode op,
+			  int msgnum, const char *dfault, void *input,
+			  HTAlertPar * reply)
 {
    AHTReqContext      *me = HTRequest_context (request);
 
@@ -290,14 +292,17 @@ int WIN_Activate_Request (HTRequest * request, HTAlertOpcode op, int msgnum, con
        if (!(me->output)
 	   && (me->output != stdout) 
 	   && me->outputfile
-	   &&  (me->output = fopen (me->outputfile, "wb")) == NULL) {
+	   &&  (me->output = TtaWriteOpen (me->outputfile) == NULL)
+       {
 	 /* the request is associated with a file */
 	 me->outputfile[0] = EOS;	/* file could not be opened */
-	 TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE), me->outputfile);
+	 TtaSetStatus (me->docid, 1,
+		       TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE), me->outputfile);
 	 me->reqStatus = HT_ERR;
 
 	 if (me->error_html)
-	   DocNetworkStatus[me->docid] |= AMAYA_NET_ERROR; /* so we can show the error message */
+	   /* so we can show the error message */
+	   DocNetworkStatus[me->docid] |= AMAYA_NET_ERROR;
        } 
        else
 	 {
@@ -306,7 +311,8 @@ int WIN_Activate_Request (HTRequest * request, HTAlertOpcode op, int msgnum, con
 	     fprintf (stderr, "WIN_Activate_Request: Activating pending %s. "
 		      "Open fd %d\n", me->urlName, (int) me->output);
 #endif /* DEBUG_LIBWWW */
-	   HTRequest_setOutputStream (me->request, AHTFWriter_new (me->request, me->output, YES));    
+	   HTRequest_setOutputStream (me->request,
+				      AHTFWriter_new (me->request, me->output, YES));    
 	   /*change the status of the request */
 	   me->reqStatus = HT_WAITING;
 	 }
