@@ -68,9 +68,6 @@ ELEMENTS
 	ElemReturn.Pre -> HandleReturn;
 	END;
 
-   Frame:
-	ElemSelect.Pre -> SelectInsertedText;
-
    TITLE:
 	ElemTextModify.Post -> TitleModified;
 

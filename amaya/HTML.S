@@ -532,7 +532,7 @@ STRUCT
 	   onfocus; onblur; onselect = Text; onchange;
 	 { onfocus  onblur  onselect         onchange }
 	   Default_Value = Text) =
-	Text_With_Frame - (Input) with Rows ?= 4, Columns ?= 20;
+	Input_Text - (Input) with Rows ?= 4, Columns ?= 20;
 
   FIELDSET =							{ FIELDSET }
 	BEGIN
@@ -557,7 +557,7 @@ STRUCT
 		  onfocus; onblur; onselect; onchange;
 		{ onfocus  onblur  onselect  onchange }
 		  Default_Value) =
-		Text_With_Frame - (Input);
+		Input_Text - (Input);
 	Password_Input					{ INPUT / PASSWORD }
 	   (ATTR !NAME; Value_; disabled; readonly;
 		{ name  value   disabled  readonly }
@@ -568,7 +568,7 @@ STRUCT
 		  onfocus; onblur; onselect; onchange;
 		{ onfocus  onblur  onselect  onchange }
 		  Default_Value) =
-		Text_With_Frame  - (Input);
+		Input_Text  - (Input);
 	File_Input					{ INPUT / FILE }
 	   (ATTR !NAME; Value_; disabled; readonly;
 		{ name  value   disabled  readonly }
@@ -579,7 +579,7 @@ STRUCT
 		  onfocus; onblur; accept = Text;
 		{ onfocus  onblur }
 		  Default_Value) =
-		Text_With_Frame - (Input);
+		Input_Text - (Input);
 	Checkbox_Input					{ INPUT / CHECKBOX }
 	   (ATTR !NAME; Value_; Checked = Yes_, No_;
 		{ name  value   checked }
@@ -659,9 +659,8 @@ STRUCT
 	Text_Area;					{ TEXTAREA }
 	END;
 
-  Text_With_Frame = BEGIN
+  Input_Text = BEGIN
 	Inserted_Text = TEXT;
-	Frame = CONSTANT C_Empty;
 	END;
 
   Table_row							{ TR }
@@ -878,7 +877,6 @@ EXCEPT
 	C_BR:		SelectParent;
 	Head_misc:	Hidden;
 	Frames:		Hidden;
-	Frame:		Hidden, NoCut;
 	FRAMESET:	NoCreate;	{ prevent a Return at the end of the
 					  document from creating a FRAMESET }
 	Inserted_Text:	Hidden, NoCut;

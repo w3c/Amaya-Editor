@@ -115,9 +115,7 @@ Button_Input: input
 BUTTON_: button
 LABEL: label
 Hidden_Input: input
-Text_With_Frame: text
 Inserted_Text: text
-Frame: frame
 Table_row: tr
 Table: table
 Cols: cols

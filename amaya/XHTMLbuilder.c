@@ -626,12 +626,8 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
 		 }
 	     }
 	 }
-       /* insert a Frame element */
-       newElType.ElTypeNum = HTML_EL_Frame;
-       constElem = TtaNewTree (doc, newElType, "");
-       TtaInsertSibling (constElem, child, FALSE, doc);
        break;
-       
+
      case HTML_EL_Radio_Input:
      case HTML_EL_Checkbox_Input:
        /* put an attribute Checked if it is missing */

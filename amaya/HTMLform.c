@@ -640,7 +640,7 @@ static void ParseForm (Document doc, Element ancestor, Element el, int mode)
 	    case HTML_EL_Password_Input:
 	      if (mode == HTML_EL_Submit_Input)
 		{
-		  /* search the value in the Text_With_Frame element */
+		  /* search the value in the text element */
 		  elType.ElTypeNum = HTML_EL_TEXT_UNIT;
 		  elForm = TtaSearchTypedElement (elType, SearchInTree, el);
 		  /* save the NAME attribute of the element el */
@@ -677,7 +677,7 @@ static void ParseForm (Document doc, Element ancestor, Element el, int mode)
 		      value = (char *)TtaGetMemory (1);
 		      value[0] = EOS;
 		    }
-		  /* search the value in the Text_With_Frame element */
+		  /* search the value in the text element */
 		  elType.ElTypeNum = HTML_EL_TEXT_UNIT;
 		  elForm = TtaSearchTypedElement (elType, SearchInTree, el);
 		  /* reset the value of the element */
@@ -1223,48 +1223,6 @@ void SelectOneRadio (Document doc, Element el)
     }
 }
 
-
-/*----------------------------------------------------------------------
-  SelectInsertedText
-  The user has clicked on a Frame element.
-  if it's within a Button_Input, a Reset_Input or a Submit_Input, select
-  the parent element.
-  If it's within a Text_Area, a Text_Input, a File_Input or a Password_Input,
-  put the caret at the end of the text element within the Inserted_Text
-  element.
-  ----------------------------------------------------------------------*/
-ThotBool SelectInsertedText (NotifyElement *event)
-{
-   ElementType         elType;
-   Element             textLeaf, parent;
-   int		       length;
-   ThotBool	       ret;
-
-   /* search the first text leaf */
-   parent = TtaGetParent(event->element);
-   elType = TtaGetElementType (parent);
-   if (elType.ElTypeNum == HTML_EL_Submit_Input ||
-       elType.ElTypeNum == HTML_EL_Reset_Input ||
-       elType.ElTypeNum == HTML_EL_Button_Input)
-     {
-     TtaSelectElement (event->document, parent);
-     ret = TRUE;	/* prevent Thot from selecting the clicked element */
-     }
-   else
-     {
-     elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-     textLeaf = TtaSearchTypedElement (elType, SearchForward, parent);
-     if (textLeaf != NULL && TtaIsAncestor(textLeaf, parent))
-        {
-	length = TtaGetTextLength (textLeaf);
-        TtaSelectString (event->document, textLeaf, length+1, length);
-        ret = TRUE;	/* prevent Thot from selecting the clicked element */
-        }
-     else
-	ret = FALSE;
-     }
-   return ret;
-}
 
 /*----------------------------------------------------------------------
    SelectOneOption

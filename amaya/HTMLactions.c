@@ -907,7 +907,6 @@ static ThotBool ActivateElement (Element element, Document document)
 	     elType.ElTypeNum == HTML_EL_C_Empty ||
 	     elType.ElTypeNum == HTML_EL_Radio_Input ||
 	     elType.ElTypeNum == HTML_EL_Checkbox_Input ||
-	     elType.ElTypeNum == HTML_EL_Frame ||
 	     elType.ElTypeNum == HTML_EL_Option_Menu ||
 	     elType.ElTypeNum == HTML_EL_Submit_Input ||
 	     elType.ElTypeNum == HTML_EL_Reset_Input ||
@@ -923,18 +922,11 @@ static ThotBool ActivateElement (Element element, Document document)
      /* DoubleClick is disabled for this element type */
      return (FALSE);
 
-   if (isHTML && (elType.ElTypeNum == HTML_EL_Frame ||
-		  elType.ElTypeNum == HTML_EL_Submit_Input ||
+   if (isHTML && (elType.ElTypeNum == HTML_EL_Submit_Input ||
 		  elType.ElTypeNum == HTML_EL_Reset_Input))
-     /* Form button or Frame */
+     /* Form button */
      {
-	if (elType.ElTypeNum == HTML_EL_Frame)
-	   {
-	     element = TtaGetParent (element);
-	     elType1 = TtaGetElementType (element);
-	   }
-	else
-	   elType1.ElTypeNum = elType.ElTypeNum;
+	elType1.ElTypeNum = elType.ElTypeNum;
 	if (elType1.ElTypeNum == HTML_EL_Submit_Input ||
 	    elType1.ElTypeNum == HTML_EL_Reset_Input)
 	   /* it 's a double click on a submit or reset button */

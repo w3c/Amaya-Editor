@@ -729,27 +729,31 @@ BOXES
 	END;
 
  BrowseLabel: BEGIN
-	Content: Text ' Browse...';
+	Content: Text 'Browse...';
 	VertPos: Top = Creator . Top;
 	HorizPos: Left = Creator . Right;
 	Width: Enclosed . Width;
 	Height: Enclosed . Height;
-	MarginTop: 1 px;
-	MarginLeft: 3 px;
-	MarginBottom: 1 px;
-	MarginRight: 3 px;
+	MarginTop: 0;
+	MarginLeft: 0;
+	MarginBottom: 0;
+	MarginRight: 2 px;
 	PaddingTop: 1 px;
-	PaddingLeft: 1 px;
 	PaddingBottom: 1 px;
-	PaddingRight: 1 px;
-	BorderTopWidth: 2 px;
-	BorderLeftWidth: 2 px;
-	BorderBottomWidth: 2 px;
-	BorderRightWidth: 2 px;
-	BorderTopColor: White;
-	BorderLeftColor: White;
-	BorderBottomColor: Black;
-	BorderRightColor: Black;
+	PaddingLeft: 0.3;
+	PaddingRight: 0.3;
+	BorderTopWidth: 1 px;
+	BorderLeftWidth: 1 px;
+	BorderBottomWidth: 1 px;
+	BorderRightWidth: 1 px;
+	BorderTopColor: LightGrey1;
+	BorderLeftColor: LightGrey1;
+	BorderBottomColor: DarkGrey3;
+	BorderRightColor: DarkGrey3;
+	BorderTopStyle: Solid;
+	BorderLeftStyle: Solid;
+	BorderBottomStyle: Solid;
+	BorderRightStyle: Solid;
 	Visibility: Creator =;
 #ifndef BLACK_WHITE
 	Background : Grey;
@@ -1064,16 +1068,8 @@ BOXES
 
  Value_Box: BEGIN
 	Content: (Value_);
-	HorizPos: Left = Previous . Right;
-	VertPos: HRef = Previous . HRef;
-	MarginTop: 1 px;
-	MarginLeft: 3 px;
-	MarginBottom: 1 px;
-	MarginRight: 3 px;
-	PaddingTop: 1 px;
-	PaddingLeft: 3 px;
-	PaddingBottom: 1 px;
-	PaddingRight: 3 px;
+	HorizPos: Left = Enclosing . Left;
+	VertPos: Top = Enclosing . Top;
 	Background: Creator =;
 	Foreground: Creator =;
 	FillPattern: backgroundcolor;
@@ -2289,8 +2285,7 @@ RULES
  C_Empty: BEGIN
 	Width: 0;
 	Height: 0;
-	if not within Frame
-	   Visibility: 0;
+	Visibility: 0;
 	FillPattern: nopattern;
 	IN Structure_view
 	   BEGIN
@@ -3422,14 +3417,15 @@ RULES
 	PaddingTop: 0.1;
 	PaddingLeft: 0.4;
 	PaddingRight: 0.4;
+	PaddingBottom: 0.2;
 	BorderTopWidth: 1 px;
 	BorderRightWidth: 1 px;
 	BorderBottomWidth: 1 px;
 	BorderLeftWidth: 1 px;
-	BorderTopColor: Grey;
-	BorderRightColor: Black;
-	BorderBottomColor: Black;
-	BorderLeftColor: Grey;
+	BorderTopColor: LightGrey1;
+	BorderRightColor: DarkGrey3;
+	BorderBottomColor: DarkGrey3;
+	BorderLeftColor: LightGrey1;
 	BorderTopStyle: Solid;
 	BorderRightStyle: Solid;
 	BorderBottomStyle: Solid;
@@ -3443,6 +3439,7 @@ RULES
 	IN Structure_view BEGIN
 		PaddingTop: 0;
 		PaddingLeft: 0;
+		PaddingBottom: 0;
 		BorderTopWidth: 0;
 		BorderRightWidth: 0;
 		BorderBottomWidth: 0;
@@ -3455,6 +3452,7 @@ RULES
 		Background : Transparent;
 		PaddingTop: 0;
 		PaddingLeft: 0;
+		PaddingBottom: 0;
 		BorderTopWidth: 0;
 		BorderRightWidth: 0;
 		BorderBottomWidth: 0;
@@ -3499,18 +3497,18 @@ RULES
 
  Text_Area: BEGIN
 	CreateBefore(ElementName);
-	MarginTop: 1 px;
-	MarginLeft: 3 px;
-	MarginBottom: 1 px;
-	MarginRight: 3 px;
-	BorderTopWidth: 2 px;
-	BorderLeftWidth: 2 px;
-	BorderBottomWidth: 2 px;
-	BorderRightWidth: 2 px;
-	BorderTopColor: Black;
-	BorderLeftColor: Black;
-	BorderBottomColor: LightGrey2;
-	BorderRightColor: LightGrey2;
+	MarginTop: 0;
+	MarginLeft: 2 px;
+	MarginBottom: 0;
+	MarginRight: 2 px;
+	BorderTopWidth: 1 px;
+	BorderLeftWidth: 1 px;
+	BorderBottomWidth: 1 px;
+	BorderRightWidth: 1 px;
+	BorderTopColor: DarkGrey3;
+	BorderLeftColor: DarkGrey3;
+	BorderBottomColor: LightGrey1;
+	BorderRightColor: LightGrey1;
 	BorderTopStyle: Solid;
 	BorderLeftStyle: Solid;
 	BorderBottomStyle: Solid;
@@ -3520,12 +3518,10 @@ RULES
 	ShowBox;
 	Width: 20 ex;
 	Height: 2 Min;
-	LineBreak: No;
 	Font: INPUT_Font;
+	LineBreak: No;
 	Depth: Enclosing - 1;
-	HorizPos: Left = Enclosing . Left + 0.2;	
-	VertPos: Top = Enclosing . Top + 0.4;
-	HorizRef: Enclosed . HRef;
+	HorizRef: * . Bottom - 0.3;
 	IN Structure_view BEGIN
 		MarginTop: 0;
 		MarginLeft: 0;
@@ -3535,13 +3531,23 @@ RULES
 		BorderRightWidth: 0;
 		BorderBottomWidth: 0;
 		BorderLeftWidth: 0;
-		VertPos: HRef = Previous . HRef;
-		HorizPos: Left = Previous . Right;
 		Width: Enclosed . Width;
 		Height: Enclosed . Height;
 		Size: Enclosing =;
 		Depth: 0;
 		END;
+	IN Alternate_view BEGIN
+		MarginTop: 0;
+		MarginLeft: 0;
+		MarginBottom: 0;
+		MarginRight: 0;
+		BorderTopWidth: 0;
+		BorderRightWidth: 0;
+		BorderBottomWidth: 0;
+		BorderLeftWidth: 0;
+		Height: Enclosed . Height;
+		Depth: 0;
+		END;	
 	END;
 
  FIELDSET: BEGIN
@@ -3556,10 +3562,10 @@ RULES
 	BorderRightWidth: 1 px;
 	BorderBottomWidth: 1 px;
 	BorderLeftWidth: 1 px;
-	BorderTopColor: LightGrey2;
-	BorderRightColor: Black;
-	BorderBottomColor: Black;
-	BorderLeftColor: LightGrey2;
+	BorderTopColor: DarkGrey2;
+	BorderRightColor: DarkGrey2;
+	BorderBottomColor: DarkGrey2;
+	BorderLeftColor: DarkGrey2;
 	BorderTopStyle: Solid;
 	BorderRightStyle: Solid;
 	BorderBottomStyle: Solid;
@@ -3604,42 +3610,20 @@ RULES
 
  Inserted_Text: BEGIN
 	Line;
-	HorizPos: Left = Enclosing . Left + 0.4;
-	VertPos: Top = Enclosing . Top + 0.3;
-	Width: Enclosing . Width - 0.6;
+	VertPos: Top = Enclosing . Top;
+	HorizPos: Left = Enclosing . Left + 0.3;
+	Width: Enclosing . Width - 0.5;
 	Background: Enclosing =;
 	FillPattern: nopattern;
-	BorderTopWidth: 0;
-	BorderRightWidth: 0;
-	BorderBottomWidth: 0;
-	BorderLeftWidth: 0;
+        Foreground: Black;
 	IN Structure_view BEGIN
 		Visibility: 0;
-		END;
-	IN Alternate_view BEGIN
 		HorizPos: Left = Enclosing . Left;
-		VertPos: Top = Enclosing . Top;
 		Width: Enclosing . Width;
 		END;
-	END;
-
- Frame: BEGIN
-	VertPos: Top = Enclosing . Top - 1 px;
-	HorizPos: Left = Enclosing . Left - 1 px;
-        Width: 1 px;
-        Height: 1 px;
-	FillPattern: nopattern;
-	BorderTopWidth: 0;
-	BorderRightWidth: 0;
-	BorderBottomWidth: 0;
-	BorderLeftWidth: 0;
-	Depth: Enclosing =;
-	IN Structure_view
-		Visibility: 0;
-	IN Alternate_view
-		Visibility: 0;
-	IN Links_view
-		Visibility: 0;
+	IN Alternate_view BEGIN
+		Width: Enclosing . Width;
+		END;
 	END;
 
  Checkbox_Input: BEGIN
@@ -3687,18 +3671,20 @@ RULES
  Text_Input: BEGIN
 	CreateBefore(ElementName);
 	CreateBefore(ATTR_Text);
-	MarginTop: 1 px;
-	MarginLeft: 3 px;
-	MarginBottom: 1 px;
-	MarginRight: 3 px;
-	BorderTopWidth: 2 px;
-	BorderLeftWidth: 2 px;
-	BorderBottomWidth: 2 px;
-	BorderRightWidth: 2 px;
-	BorderTopColor: Black;
-	BorderLeftColor: Black;
-	BorderBottomColor: LightGrey2;
-	BorderRightColor: LightGrey2;
+	MarginTop: 0;
+	MarginLeft: 2 px;
+	MarginBottom: 0;
+	MarginRight: 2 px;
+	PaddingTop: 1 px;
+	PaddingBottom: 1 px;
+	BorderTopWidth: 1 px;
+	BorderLeftWidth: 1 px;
+	BorderBottomWidth: 1 px;
+	BorderRightWidth: 1 px;
+	BorderTopColor: DarkGrey3;
+	BorderLeftColor: DarkGrey3;
+	BorderBottomColor: LightGrey1;
+	BorderRightColor: LightGrey1;
 	BorderTopStyle: Solid;
 	BorderLeftStyle: Solid;
 	BorderBottomStyle: Solid;
@@ -3707,15 +3693,13 @@ RULES
 	FillPattern: backgroundcolor;
 	ShowBox;
 	Width: 20 ex Min;
-	Height: 2 Min;
 	Font: INPUT_Font;
-	Depth: Enclosing - 2;
+	Depth: Enclosing - 1;
 	LineBreak: No;
 	Adjust: Left;
 	IN Structure_view BEGIN
 		Width: 0;
 		Height: DOC_FONTSIZE;
-		Size: Enclosing =;
 		MarginTop: 0;
 		MarginLeft: 0;
 		MarginBottom: 0;
@@ -3735,7 +3719,6 @@ RULES
 		BorderRightWidth: 0;
 		BorderBottomWidth: 0;
 		BorderLeftWidth: 0;
-		Height: Enclosed . Height;
 		Depth: 0;
 		END;	
 	END;
@@ -3747,15 +3730,15 @@ RULES
 	MarginTop: 1 px;
 	MarginLeft: 3 px;
 	MarginBottom: 1 px;
-	MarginRight: 3 px;
+	MarginRight: 0;
 	BorderTopWidth: 2 px;
 	BorderLeftWidth: 2 px;
 	BorderBottomWidth: 2 px;
 	BorderRightWidth: 2 px;
-	BorderTopColor: Black;
-	BorderLeftColor: Black;
-	BorderBottomColor: LightGrey2;
-	BorderRightColor: LightGrey2;
+	BorderTopColor: DarkGrey3;
+	BorderLeftColor: DarkGrey3;
+	BorderBottomColor: LightGrey1;
+	BorderRightColor: LightGrey1;
 	BorderTopStyle: Solid;
 	BorderLeftStyle: Solid;
 	BorderBottomStyle: Solid;
@@ -3764,7 +3747,6 @@ RULES
 	FillPattern: backgroundcolor;
 	ShowBox;
 	Width: 20 ex Min;
-	Height: 2 Min;
 	Font: INPUT_Font;
 	Depth: Enclosing - 2;
 	LineBreak: No;
@@ -3798,27 +3780,43 @@ RULES
  Password_Input: BEGIN
 	CreateBefore(ElementName);
 	CreateBefore(ATTR_Password);
-	MarginTop: 1 px;
-	MarginLeft: 3 px;
-	MarginBottom: 1 px;
-	MarginRight: 3 px;
+	MarginTop: 0;
+	MarginLeft: 2 px;
+	MarginBottom: 0;
+	MarginRight: 2 px;
+	PaddingTop: 1 px;
+	PaddingBottom: 1 px;
+	BorderTopWidth: 1 px;
+	BorderLeftWidth: 1 px;
+	BorderBottomWidth: 1 px;
+	BorderRightWidth: 1 px;
+	BorderTopColor: DarkGrey3;
+	BorderLeftColor: DarkGrey3;
+	BorderBottomColor: LightGrey1;
+	BorderRightColor: LightGrey1;
+	BorderTopStyle: Solid;
+	BorderLeftStyle: Solid;
+	BorderBottomStyle: Solid;
+	BorderRightStyle: Solid;
+	Background: White;
+	FillPattern: backgroundcolor;
+	ShowBox;
 	Width: 20 ex Min;
-	Height: 2 Min;
 	Font: INPUT_Font;
-	Depth: Enclosing - 2;
+	Depth: Enclosing - 1;
 	LineBreak: No;
 	Adjust: Left;
-#ifndef BLACK_WHITE
-	Background : LightRed4;
-#endif
 	IN Structure_view BEGIN
+		Width: 0;
+		Height: DOC_FONTSIZE;
 		MarginTop: 0;
 		MarginLeft: 0;
 		MarginBottom: 0;
 		MarginRight: 0;
-		Width: 0;
-		Height: DOC_FONTSIZE;
-		Size: Enclosing =;
+		BorderTopWidth: 0;
+		BorderRightWidth: 0;
+		BorderBottomWidth: 0;
+		BorderLeftWidth: 0;
 		Depth: 0;
 		END;
 	IN Alternate_view BEGIN
@@ -3826,6 +3824,10 @@ RULES
 		MarginLeft: 0;
 		MarginBottom: 0;
 		MarginRight: 0;
+		BorderTopWidth: 0;
+		BorderRightWidth: 0;
+		BorderBottomWidth: 0;
+		BorderLeftWidth: 0;
 		Depth: 0;
 		END;
 	END;
@@ -3835,35 +3837,34 @@ RULES
 	CreateBefore(ATTR_Reset);
 	CreateFirst(Value_Box);
 	CreateFirst(Value_Box_Alt);
-	MarginTop: 1 px;
-	MarginLeft: 3 px;
-	MarginBottom: 1 px;
-	MarginRight: 3 px;
+	MarginTop: 0;
+	MarginLeft: 2 px;
+	MarginBottom: 0;
+	MarginRight: 2 px;
 	PaddingTop: 1 px;
-	PaddingLeft: 3 px;
+	PaddingLeft: 0.3;
 	PaddingBottom: 1 px;
-	PaddingRight: 3 px;
+	PaddingRight: 0.3;
 	BorderTopWidth: 1 px;
 	BorderLeftWidth: 1 px;
 	BorderBottomWidth: 1 px;
 	BorderRightWidth: 1 px;
-	BorderTopColor: LightGrey2;
-	BorderLeftColor: LightGrey2;
-	BorderBottomColor: Black;
-	BorderRightColor: Black;
+	BorderTopColor: LightGrey1;
+	BorderLeftColor: LightGrey1;
+	BorderBottomColor: DarkGrey3;
+	BorderRightColor: DarkGrey3;
 	BorderTopStyle: Solid;
 	BorderLeftStyle: Solid;
 	BorderBottomStyle: Solid;
 	BorderRightStyle: Solid;
-	Depth: Enclosing - 2;
+	Depth: Enclosing - 1;
 #ifndef BLACK_WHITE
 	Background : Grey;
 #endif
 	FillPattern: backgroundcolor;
 	ShowBox;
 	LineBreak: No;
-	HorizPos: Left = Enclosing . Left + 0.2;	
-	VertPos: Top = Enclosing . Top + 0.4;
+	HorizPos: Left = Previous . Right;	
 	HorizRef: Enclosed . HRef;
 	IN Structure_view BEGIN
 		MarginTop: 0;
@@ -3891,35 +3892,35 @@ RULES
 	CreateBefore(ATTR_Submit);
 	CreateFirst(Value_Box);
 	CreateFirst(Value_Box_Alt);
-	MarginTop: 1 px;
-	MarginLeft: 3 px;
-	MarginBottom: 1 px;
-	MarginRight: 3 px;
+	MarginTop: 0;
+	MarginLeft: 2 px;
+	MarginBottom: 0;
+	MarginRight: 2 px;
 	PaddingTop: 1 px;
-	PaddingLeft: 3 px;
+	PaddingLeft: 0.3;
 	PaddingBottom: 1 px;
-	PaddingRight: 3 px;
+	PaddingRight: 0.3;
 	BorderTopWidth: 1 px;
 	BorderLeftWidth: 1 px;
 	BorderBottomWidth: 1 px;
 	BorderRightWidth: 1 px;
-	BorderTopColor: LightGrey2;
-	BorderLeftColor: LightGrey2;
-	BorderBottomColor: Black;
-	BorderRightColor: Black;
+	BorderTopColor: LightGrey1;
+	BorderLeftColor: LightGrey1;
+	BorderBottomColor: DarkGrey3;
+	BorderRightColor: DarkGrey3;
 	BorderTopStyle: Solid;
 	BorderLeftStyle: Solid;
 	BorderBottomStyle: Solid;
 	BorderRightStyle: Solid;
-	Depth: Enclosing - 2;
+	Depth: Enclosing - 1;
 #ifndef BLACK_WHITE
-	Background : Grey;
+	Background: Grey;
 #endif
+	Foreground: Black;
 	FillPattern: backgroundcolor;
 	ShowBox;
 	LineBreak: No;
-	HorizPos: Left = Enclosing . Left + 0.2;	
-	VertPos: Top = Enclosing . Top + 0.4;
+	VertPos: HRef = Previous . HRef;
 	HorizRef: Enclosed . HRef;
 	IN Structure_view BEGIN
 		MarginTop: 0;
@@ -3947,35 +3948,35 @@ RULES
 	CreateBefore(ATTR_Button);
 	CreateFirst(Value_Box);
 	CreateFirst(Value_Box_Alt);
-	MarginTop: 1 px;
-	MarginLeft: 3 px;
-	MarginBottom: 1 px;
-	MarginRight: 3 px;
+	MarginTop: 0;
+	MarginLeft: 2 px;
+	MarginBottom: 0;
+	MarginRight: 2 px;
 	PaddingTop: 1 px;
-	PaddingLeft: 3 px;
 	PaddingBottom: 1 px;
-	PaddingRight: 3 px;
+	PaddingLeft: 0.3;
+	PaddingRight: 0.3;
 	BorderTopWidth: 1 px;
 	BorderLeftWidth: 1 px;
 	BorderBottomWidth: 1 px;
 	BorderRightWidth: 1 px;
-	BorderTopColor: LightGrey2;
-	BorderLeftColor: LightGrey2;
-	BorderBottomColor: Black;
-	BorderRightColor: Black;
+	BorderTopColor: LightGrey1;
+	BorderLeftColor: LightGrey1;
+	BorderBottomColor: DarkGrey3;
+	BorderRightColor: DarkGrey3;
 	BorderTopStyle: Solid;
 	BorderLeftStyle: Solid;
 	BorderBottomStyle: Solid;
 	BorderRightStyle: Solid;
-	Depth: Enclosing - 2;
+	Depth: Enclosing - 1;
 #ifndef BLACK_WHITE
 	Background : Grey;
 #endif
 	FillPattern: backgroundcolor;
 	ShowBox;
 	LineBreak: No;
-	HorizPos: Left = Enclosing . Left + 0.2;	
-	VertPos: Top = Enclosing . Top + 0.4;
+	HorizPos: Left = Previous . Right;	
+	VertPos: HRef = Previous . HRef;
 	HorizRef: Enclosed . HRef;
 	IN Structure_view BEGIN
 	        VertPos: Top = Previous . Bottom;
@@ -4001,22 +4002,22 @@ RULES
  BUTTON_: BEGIN
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
-	MarginTop: 1 px;
-	MarginLeft: 3 px;
-	MarginBottom: 1 px;
-	MarginRight: 3 px;
+	MarginTop: 0;
+	MarginLeft: 2 px;
+	MarginBottom: 0;
+	MarginRight: 1 px;
 	PaddingTop: 1 px;
-	PaddingLeft: 1 px;
+	PaddingLeft: 0.3;
 	PaddingBottom: 1 px;
-	PaddingRight: 1 px;
-	BorderTopWidth: 2 px;
-	BorderLeftWidth: 2 px;
-	BorderBottomWidth: 2 px;
-	BorderRightWidth: 2 px;
-	BorderTopColor: White;
-	BorderLeftColor: White;
-	BorderBottomColor: Black;
-	BorderRightColor: Black;
+	PaddingRight: 0.3;
+	BorderTopWidth: 1 px;
+	BorderLeftWidth: 1 px;
+	BorderBottomWidth: 1 px;
+	BorderRightWidth: 1 px;
+	BorderTopColor: LightGrey1;
+	BorderLeftColor: LightGrey1;
+	BorderBottomColor: DarkGrey3;
+	BorderRightColor: DarkGrey3;
 	BorderTopStyle: Solid;
 	BorderLeftStyle: Solid;
 	BorderBottomStyle: Solid;
