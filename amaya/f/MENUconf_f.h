@@ -23,6 +23,7 @@ extern void PublishConfMenu ( Document document,
                               View view );
 extern void GetBrowseConf ( void );
 extern void SetBrowseConf ( void );
+extern void ApplyConfigurationChanges ( void );
 extern void GetDefaultBrowseConf ( void );
 extern void BrowseConfMenu ( Document document,
                              View view );
@@ -82,6 +83,7 @@ extern void PublishConfMenu ( Document document,
                                 View view );
 extern void GetBrowseConf ( void );
 extern void SetBrowseConf ( void );
+extern void ApplyConfigurationChanges ( void );
 extern void GetDefaultBrowseConf ( void );
 extern void BrowseConfMenu ( Document document,
                                View view );

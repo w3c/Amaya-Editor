@@ -501,8 +501,8 @@ void PreferenceDlgWX::SetupLabelDialog_Cache()
 
   XRCCTRL(*this, "wxID_BUTTON_EMPTYCACHE", wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_FLUSH_CACHE_BUTTON)) );
 
-  XRCCTRL(*this, "wxID_CACHESIZE_VALUE",  wxSlider)->SetRange( 1, 100 );
-  XRCCTRL(*this, "wxID_MAXSIZEITEM_VALUE",  wxSlider)->SetRange( 1, 5 );
+  XRCCTRL(*this, "wxID_CACHESIZE_VALUE", wxSlider)->SetRange( 1, 100 );
+  XRCCTRL(*this, "wxID_MAXSIZEITEM_VALUE", wxSlider)->SetRange( 1, 5 );
 }
 
 /*----------------------------------------------------------------------
@@ -1113,9 +1113,17 @@ void PreferenceDlgWX::OnOk( wxCommandEvent& event )
   SetProp_Color( &prop_color );
   ThotCallback (GetPrefColorBase() + ColorMenu, INTEGER_DATA, (char*) 1);
 
-  Prop_Annot prop_lan = GetValueDialog_Annot();
-  SetProp_Annot( &prop_lan );
+#ifdef ANNOTATIONS
+  Prop_Annot prop_annot = GetValueDialog_Annot();
+  SetProp_Annot( &prop_annot );
   ThotCallback (GetPrefAnnotBase() + AnnotMenu, INTEGER_DATA, (char*) 1);
+#endif /* ANNOTATIONS */
+
+#ifdef DAV
+  Prop_DAV prop_dav = GetValueDialog_DAV();
+  SetProp_DAV( &prop_dav );
+  ThotCallback (GetPrefDAVBase() + DAVMenu, INTEGER_DATA, (char*) 1);
+#endif /* DAV */
 
   ThotCallback (m_Ref, INTEGER_DATA, (char*) 1);
 }
@@ -1128,7 +1136,7 @@ void PreferenceDlgWX::OnOk( wxCommandEvent& event )
 void PreferenceDlgWX::OnDefault( wxCommandEvent& event )
 {
   wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
-  wxWindow *    p_page    = (wxWindow *) (p_notebook->GetSelection() != -1) ? p_notebook->GetPage(p_notebook->GetSelection()) : NULL;
+  wxWindow * p_page = (wxWindow *) (p_notebook->GetSelection() != -1) ? p_notebook->GetPage(p_notebook->GetSelection()) : NULL;
 
   if (!p_page)
     return;
@@ -1168,7 +1176,7 @@ void PreferenceDlgWX::OnDefault( wxCommandEvent& event )
     {
     }
 #ifdef ANNOTATIONS
-  else if ( p_page->GetId() == wxXmlResource::GetXRCID(_T("wxID_PAGE_LANNEG")) )
+  else if ( p_page->GetId() == wxXmlResource::GetXRCID(_T("wxID_PAGE_ANNOT")) )
     {
       ThotCallback (GetPrefAnnotBase() + AnnotMenu, INTEGER_DATA, (char*) 2);
       SetupDialog_Annot( GetProp_Annot() );

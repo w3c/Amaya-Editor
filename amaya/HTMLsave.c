@@ -2079,11 +2079,11 @@ Document GetDocFromSource (Document sourceDoc)
   return xmlDoc;
 }
 
- 
+
 /*----------------------------------------------------------------------
    DoSynchronize
-   save the current view (source/structure) in a temporary file 
-   and update the other view (structure/source).      
+   save the current view (source/structure) in a temporary file
+   and update the other view (structure/source).
   ----------------------------------------------------------------------*/
 void DoSynchronize (Document doc, View view, NotifyElement *event)
 {
@@ -2177,13 +2177,6 @@ void DoSynchronize (Document doc, View view, NotifyElement *event)
 	   ANNOT_Reload (otherDoc, 1);
 #endif /* ANNOTATIONS */
 	 }
-       else
-	 {
-	   /* do not restart parser if the document didn't change because
-	      it will lost the selection position */
-	   /*TtaExtractName (tempdoc, tempdir, docname);
-	     RestartParser (doc, tempdoc, tempdir, docname, TRUE);*/
-	}
 
        /* restore original display mode */
        TtaSetDisplayMode (doc, dispMode);
@@ -2256,6 +2249,37 @@ void DoSynchronize (Document doc, View view, NotifyElement *event)
 }
 
 /*----------------------------------------------------------------------
+  SaveBefore
+  Returns TRUE if the temporary file doesn't include all current changes.
+  ----------------------------------------------------------------------*/
+ThotBool SaveBefore (Document doc)
+{
+  Document          otherDoc;
+
+  if (doc == 0 || !DocumentURLs[doc])
+    /* the document is not loaded yet */
+    return FALSE;
+   if (DocumentTypes[doc] == docCSS && !TtaIsDocumentModified (doc))
+    return FALSE;
+  else if (DocumentTypes[doc] == docHTML ||
+	   DocumentTypes[doc] == docSVG ||
+	   DocumentTypes[doc] == docLibrary ||
+	   DocumentTypes[doc] == docMath)
+    /* it's a structured document */
+    otherDoc = DocumentSource[doc];
+  else if (DocumentTypes[doc] == docSource)
+    otherDoc = GetDocFromSource (doc);
+  else
+    otherDoc = 0;
+
+   if (TtaIsDocumentUpdated (doc) ||
+       (otherDoc && TtaIsDocumentUpdated (otherDoc)))
+     return TRUE;
+   else
+     return FALSE;
+}
+
+/*----------------------------------------------------------------------
    Synchronize
    save the current view (source/structure) in a temporary file 
    and update the other view (structure/source).      
@@ -2267,6 +2291,29 @@ void Synchronize (Document doc, View view)
   event.document = doc;
   event.element = NULL;
   DoSynchronize (doc, view, &event);
+}
+
+/*----------------------------------------------------------------------
+   RedisplayDoc
+   Synchronize the document or just redisplay the formatted view.      
+  ----------------------------------------------------------------------*/
+void RedisplayDoc (Document doc)
+{
+  char             *tempdoc = NULL;
+  char              docname[MAX_LENGTH];
+  char              tempdir[MAX_LENGTH];
+
+  if (SaveBefore (doc))
+    Synchronize (doc, 1);
+  else
+    {
+      /* do not restart parser if the document didn't change because
+	 it will lost the selection position */
+      tempdoc = GetLocalPath (doc, DocumentURLs[doc]);
+      TtaExtractName (tempdoc, tempdir, docname);
+      RestartParser (doc, tempdoc, tempdir, docname, TRUE);
+      TtaFreeMemory (tempdoc);
+    }
 }
 
 

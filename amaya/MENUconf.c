@@ -2755,6 +2755,30 @@ void SetBrowseConf (void)
 }
 
 /*----------------------------------------------------------------------
+  ApplyConfigurationChanges
+  Updates displayed documents according to current changes.
+  ----------------------------------------------------------------------*/
+void ApplyConfigurationChanges (void)
+{
+  DisplayMode       dispMode;
+  int               doc;
+
+  for (doc = 1; doc < MAX_DOCUMENTS; doc++)
+    {
+      if (DocumentURLs[doc] &&
+	  (DocumentTypes[doc] == docHTML ||
+	   DocumentTypes[doc] == docSVG ||
+	   DocumentTypes[doc] == docMath))
+	{
+	  dispMode = TtaGetDisplayMode (doc);
+	  TtaSetDisplayMode (doc, NoComputedDisplay);
+	  RedisplayDoc (doc);
+	  TtaSetDisplayMode (doc, dispMode);
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
   GetDefaultBrowseConf
   Loads the default registry Browse values
   ----------------------------------------------------------------------*/
@@ -2829,8 +2853,7 @@ void WIN_RefreshBrowseMenu (HWND hwnDlg)
 LRESULT CALLBACK WIN_BrowseDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 				    LPARAM lParam)
 { 
-  DisplayMode       dispMode;
-  int               itemIndex = 0, doc;
+  int               itemIndex = 0;
 
   switch (msg)
     {
@@ -2890,19 +2913,7 @@ LRESULT CALLBACK WIN_BrowseDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	    {
 	      strcpy (GProp_Browse.ScreenType, NewScreen);
 	      SetBrowseConf ();
-	      for (doc = 1; doc < MAX_DOCUMENTS; doc++)
-		{
-		  if (DocumentURLs[doc] &&
-		      (DocumentTypes[doc] == docHTML ||
-		       DocumentTypes[doc] == docSVG ||
-		       DocumentTypes[doc] == docMath))
-		    {
-		      dispMode = TtaGetDisplayMode (doc);
-		      TtaSetDisplayMode (doc, NoComputedDisplay);
-		      Synchronize (doc, 1);
-		      TtaSetDisplayMode (doc, dispMode);
-		    }
-		}
+	      ApplyConfigurationChanges ();
 	      InitLoadImages = GProp_Browse.LoadImages;
 	      InitLoadObjects = GProp_Browse.LoadObjects;	      
 	      InitLoadCss = GProp_Browse.LoadCss;
@@ -2991,8 +3002,7 @@ static void RefreshBrowseMenu ()
   ----------------------------------------------------------------------*/
 static void BrowseCallbackDialog (int ref, int typedata, char *data)
 {
-  DisplayMode       dispMode;
-  int               val, doc;
+  int               val;
 
   if (ref == -1)
     /* removes the network conf menu */
@@ -3022,19 +3032,7 @@ static void BrowseCallbackDialog (int ref, int typedata, char *data)
 		{
 		  strcpy (GProp_Browse.ScreenType, NewScreen);
 		  SetBrowseConf ();
-		  for (doc = 1; doc < MAX_DOCUMENTS; doc++)
-		    {
-		      if (DocumentURLs[doc] &&
-			  (DocumentTypes[doc] == docHTML ||
-			   DocumentTypes[doc] == docSVG ||
-			   DocumentTypes[doc] == docMath))
-			{
-			  dispMode = TtaGetDisplayMode (doc);
-			  TtaSetDisplayMode (doc, NoComputedDisplay);
-			  Synchronize (doc, 1);
-			  TtaSetDisplayMode (doc, dispMode);
-			}
-		    }
+		  ApplyConfigurationChanges ();
 		  InitLoadImages = GProp_Browse.LoadImages;
 		  InitLoadObjects = GProp_Browse.LoadObjects;
 		  InitBgImages = GProp_Browse.BgImages;

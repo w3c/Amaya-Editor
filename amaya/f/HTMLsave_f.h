@@ -38,8 +38,10 @@ extern Document GetDocFromSource ( Document sourceDoc );
 extern void DoSynchronize ( Document doc,
                             View view,
                             NotifyElement *event );
+extern ThotBool SaveBefore ( Document doc );
 extern void Synchronize ( Document doc,
                           View view );
+extern void RedisplayDoc ( Document doc );
 extern void SaveDocument ( Document doc,
                            View view );
 extern ThotBool CanReplaceCurrentDocument ( Document doc,
@@ -85,8 +87,10 @@ extern Document GetDocFromSource ( Document sourceDoc );
 extern void DoSynchronize ( Document doc,
                               View view,
                               NotifyElement *event );
+extern ThotBool SaveBefore ( Document doc );
 extern void Synchronize ( Document doc,
                             View view );
+extern void RedisplayDoc ( Document doc );
 extern void SaveDocument ( Document doc,
                              View view );
 extern ThotBool CanReplaceCurrentDocument ( Document doc,
