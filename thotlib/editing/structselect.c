@@ -494,10 +494,9 @@ PtrElement NextRowInTable (PtrElement pRow, PtrElement pTable)
     {
       /* next row */
       pNextRow = pRow->ElNext;
-      while (pNextRow &&
-	     !TypeHasException (ExcIsRow,
-				pNextRow->ElTypeNumber,
-				pNextRow->ElStructSchema))
+      while (pNextRow &&  !TypeHasException (ExcIsRow,
+					     pNextRow->ElTypeNumber,
+					     pNextRow->ElStructSchema))
 	/* skip comments */
 	pNextRow = pNextRow->ElNext;
       if (pNextRow == NULL && pRow->ElParent &&
@@ -506,7 +505,7 @@ PtrElement NextRowInTable (PtrElement pRow, PtrElement pTable)
 	  pAsc = pRow->ElParent->ElNext;
 	  while (pNextRow == NULL && pAsc)
 	    {
-	      /* look for a row into another tbody */
+	      /* look for a row in another tbody */
 	      pNextRow = SearchTypedElementInSubtree (pAsc,
 						      pRow->ElTypeNumber,
 						      pRow->ElStructSchema);
@@ -517,6 +516,55 @@ PtrElement NextRowInTable (PtrElement pRow, PtrElement pTable)
   else
     pNextRow = NULL;
   return (pNextRow);
+}
+
+/*----------------------------------------------------------------------
+  PreviousRowInTable
+  Return the row before the current row pRow in the table pTable.
+  ----------------------------------------------------------------------*/
+static PtrElement PreviousRowInTable (PtrElement pRow, PtrElement pTable)
+{
+  PtrElement pPrevRow, pAsc, pRow1;
+
+  if (pRow)
+    {
+      /* previous row */
+      pPrevRow = pRow->ElPrevious;
+      while (pPrevRow && !TypeHasException (ExcIsRow,
+					    pPrevRow->ElTypeNumber,
+					    pPrevRow->ElStructSchema))
+	/* skip comments */
+	pPrevRow = pPrevRow->ElPrevious;
+      if (!pPrevRow && pRow->ElParent &&
+	  pRow->ElParent != pTable && pRow->ElParent->ElPrevious)
+	{
+	  pAsc = pRow->ElParent->ElPrevious;
+	  while (!pPrevRow && pAsc)
+	    {
+	      /* look for a row in another tbody */
+	      if (pAsc->ElTerminal)
+		pRow1 = NULL;
+	      else
+		{
+		  pRow1 = pAsc->ElFirstChild;
+		  while (pRow1->ElNext)
+		    pRow1 = pRow1->ElNext;
+		}
+	      while (pRow1 && !TypeHasException (ExcIsRow,
+						pRow1->ElTypeNumber,
+						pRow1->ElStructSchema))
+		/* skip comments */
+		pRow1 = pRow1->ElPrevious;
+	      if (pRow1)
+		pPrevRow = pRow1;
+	      else
+	        pAsc = pAsc->ElPrevious;
+	    }
+	}
+    }
+  else
+    pPrevRow = NULL;
+  return (pPrevRow);
 }
 
 /*----------------------------------------------------------------------
@@ -3343,7 +3391,7 @@ ThotBool SelectPairInterval ()
   ----------------------------------------------------------------------*/
 void SelectAround (int val)
 {
-  PtrElement          pEl, pParent, pNextRow;
+  PtrElement          pEl, pParent, pNextRow, pCell;
   PtrElement          pFirst, pLast, firstParent, lastParent, pRow, pTable;
   int                 rowType;
   ThotBool            done, ColSelectedCompletely;
@@ -3448,7 +3496,14 @@ void SelectAround (int val)
 		      pRow = FwdSearchTypedElem (SelectedColumn, rowType,
 					       SelectedColumn->ElStructSchema);
 		      /* get the relevant cell in the first row */
-		      pFirst = GetCellInRow (pRow, SelectedColumn);
+		      do
+			{
+			  pCell = GetCellInRow (pRow, SelectedColumn);
+			  if (!pCell)
+			    pRow = NextRowInTable (pRow, pTable);
+			}
+		      while (pRow && !pCell);
+		      pFirst = pCell;
 		      /* get the last row of the table */
 		      pNextRow = pRow;
 		      do
@@ -3458,7 +3513,14 @@ void SelectAround (int val)
 			}
 		      while (pNextRow);
 		      /* get the relevant cell in the last row */
-		      pLast = GetCellInRow (pRow, SelectedColumn);
+		      do
+			{
+		          pCell = GetCellInRow (pRow, SelectedColumn);
+			  if (!pCell)
+			    pRow = PreviousRowInTable (pRow, pTable);
+			}
+		      while (pRow && !pCell);
+		      pLast = pCell;
 		      ColSelectedCompletely = TRUE;
 		    }
 		}
