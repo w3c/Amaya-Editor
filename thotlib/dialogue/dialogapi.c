@@ -3788,7 +3788,6 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
   ThotBool            rebuilded;
   struct Cat_Context *catalogue;
   struct E_List      *adbloc;
-  char                menu_item [1024];
   char                equiv_item [255];
   ThotWidget          w;
 
@@ -3796,6 +3795,7 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
   HWND                menu;
   HWND                listBox;
 #else
+  char                menu_item [1024];
   GtkWidget          *gtklist;
   GtkWidget          *scr_window;
   GtkWidget          *event_box;
@@ -8783,18 +8783,6 @@ void TtaShowDialogue (int ref, ThotBool remanent)
 			   currentParent, NULL))
 	WinErrorBox (WIN_Main_Wd, "TtaShowDialogue (1)");
     }
-  else  if (catalogue->Cat_Type == CAT_SCRPOPUP)
-  {
-    /* wait until the user selects something */
-    MSG msg;
-    ShowWindow (w, SW_SHOWNORMAL);
-    UpdateWindow (w);
-    while (GetMessage (&msg, NULL, 0, 0))
-      {
-	TranslateMessage (&msg);
-	DispatchMessage (&msg);
-      }
-  }
   else
     {
       ShowWindow (w, SW_SHOWNORMAL);
@@ -8904,9 +8892,12 @@ void TtaWaitShowDialogue ()
   ThotEvent              event;
 
 #ifdef _WINDOWS
-   GetMessage (&event, NULL, 0, 0);
-   TranslateMessage (&event);
-   DispatchMessage(&event);   
+   /* wait until the user selects something */
+   while (GetMessage (&event, NULL, 0, 0))
+      {
+	TranslateMessage (&event);
+	DispatchMessage (&event);
+      }
 #else  /* _WINDOWS */
 
    /* Un TtaWaitShowDialogue en cours */
