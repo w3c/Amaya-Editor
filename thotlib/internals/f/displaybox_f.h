@@ -34,8 +34,7 @@ extern void DisplayBorders ( PtrBox box,
 extern void DisplayViewBox ( PtrTransform Trans,
                              int Width,
                              int Height );
-extern void DisplayTransformation ( int frame,
-                                    PtrTransform Trans,
+extern void DisplayTransformation ( PtrTransform Trans,
                                     int Width,
                                     int Height );
 extern void DisplayTransformationExit ( void );
@@ -109,8 +108,7 @@ extern void DisplayBorders (/* PtrBox box,
 extern void DisplayViewBox (/* PtrTransform Trans,
                                int Width,
                                int Height */);
-extern void DisplayTransformation (/* int frame,
-                                      PtrTransform Trans,
+extern void DisplayTransformation (/* PtrTransform Trans,
                                       int Width,
                                       int Height */);
 extern void DisplayTransformationExit (/* void */);

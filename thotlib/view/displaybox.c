@@ -1444,6 +1444,9 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	      restbl = newbl;
 	      x += lg;
 	      c = adbuff->BuContent[indbuff];
+	      if ( c == 0x28 && script == 'A') 
+		c = 0x29;
+	      else if ( c == 0x29 && script == 'A') c = 0x28;
 	      if (c >= 0x0600 && c <= 0x06B0 ) /*arabic character */
 		{
 		  /* index of the character in arabic font */
@@ -1463,9 +1466,11 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		      else
 			prevChar = 0x0020;
 		    }
-       		  val = GetArabFontAndIndex (c, prevChar, nextChar, font, &nextfont);
+       		  
+		  val = GetArabFontAndIndex (c, prevChar, nextChar, font, &nextfont);
 		}
 	      else
+		
 		val = GetFontAndIndexFromSpec (c, font, &nextfont);
 	      if (val == SPACE)
 		{
@@ -1608,6 +1613,9 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		 (!rtl && indbuff <= indmax))
 	    {
 	      c = adbuff->BuContent[indbuff];
+	      if ( c == 0x28 && script == 'A') 
+		c = 0x29;
+	      else if ( c == 0x29 && script == 'A') c = 0x28;
 	      if ( c >= 0x0600 && c <= 0x06B0 ) /* arabic char */
 		{
 		  nextChar = Previous_Char (&adbuff, &indbuff);
@@ -1629,6 +1637,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		  val = GetArabFontAndIndex (c ,prevChar, nextChar, font, &nextfont);
 		}
 	      else
+		
 		val = GetFontAndIndexFromSpec (c, font, &nextfont);
 	      if (val == INVISIBLE_CHAR || c == ZERO_SPACE ||
 		  c == EOL || c == BREAK_LINE)
@@ -2130,7 +2139,7 @@ void DisplayViewBox (PtrTransform Trans, int Width, int Height)
 /*----------------------------------------------------------------------
   DisplayTransformation :
   ----------------------------------------------------------------------*/
-void DisplayTransformation (int frame, PtrTransform Trans, int Width, int Height)
+void DisplayTransformation (PtrTransform Trans, int Width, int Height)
 {
   while (Trans)
     {

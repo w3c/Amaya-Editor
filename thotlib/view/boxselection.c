@@ -514,7 +514,7 @@ void ComputeViewSelMarks (ViewSelection *selMark)
 	  pBuffer = pBox->BxBuffer;
 	  ind = pBox->BxIndChar;
 	  /* Only the width is requested: Override and Latin */
-	  GiveTextParams (&pBuffer, &ind, &pos, pBox->BxFont, &x, &spaces, 'L', 'O');
+	  GiveTextParams (&pBuffer, &ind, &pos, pBox->BxFont, &x, &spaces, 'L', 'O',0,'*');
 	  if (pBox->BxScript == 'A' || pBox->BxScript == 'H')
 	    x = - x + pBox->BxW;
 	  if (pBox->BxSpaceWidth)

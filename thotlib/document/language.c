@@ -715,12 +715,9 @@ Language TtaGetLanguageIdFromScript (char languageScript)
   ----------------------------------------------------------------------*/
 char TtaGetCharacterScript (wchar_t c)
 {
-  if (c == SPACE || c == 0x9A /* nbsp */ || c == 0x200D ||
-      c == 0x200E /* lrm */ || c == 0x200F /* rlm */ ||
-      c == 0x202A /* lre */ || c == 0x202B /* rle */ ||
-      c == 0x202D /* lro */ || c == 0x202E /* rlo */ ||
-      c == 0x202C /* pdf */)
-    return ' ';
+
+  if (c == SPACE || c == 0x9A /* nbsp */ || c == 0x200D || c == 0x202C)
+  return ' ';
     else if (c == 0x25 || c == 0xFF05 /* % */ ||
 	     c == 0x2B || c == 0xFF0B  /* + */ ||
 	     c == 0x2D || c == 0xFF0D  /* - */)
@@ -729,7 +726,7 @@ char TtaGetCharacterScript (wchar_t c)
     return ' '; /* a slash */
   else if ((c >= 0x30 && c <= 0x39) || (c >= 0xFF10 && c < 0xFF1A))
     return 'D'; /* a digit */
-  else if (c <= 0x32 || (c >= 0xFF01 && c < 0xFF20))
+  else if (c <= 0x2F || c == 0x3A || c == 0x3D || (c >= 0xFF01 && c < 0xFF20))
     return ' '; /* a punctuation */
   else if (c >= 0x370 && c < 0x400)
     return 'L'; /* Greek */
@@ -737,7 +734,7 @@ char TtaGetCharacterScript (wchar_t c)
     return 'L'; /* Cyrillic */
   else if (c >= 0x45F && c < 0x600)
     return 'H'; /* Hebrew */
-  else if (c >= 0x600 && c < 0x6B0 )
+  else if ((c >= 0x600 && c < 0x6B0 )|| c == 0x200F || c == 0x202B || c == 0x202E)
 
     return 'A'; /* Arabic */
   else if (c >= 0x2E80 && c < 0xA000)

@@ -13,14 +13,6 @@ extern PtrAbstractBox GetParentDraw ( PtrBox pBox );
 extern C_points *ComputeControlPoints ( PtrTextBuffer buffer,
                                         int nb,
                                         int zoom );
-extern char GiveTextParams ( PtrTextBuffer *pBuffer,
-                             int *ind,
-                             int *nChars,
-                             SpecFont font,
-                             int *width,
-                             int *nSpaces,
-                             char dir,
-                             char bidi );
 extern void GiveSymbolSize ( PtrAbstractBox pAb,
                              int *width,
                              int *height );
@@ -84,14 +76,6 @@ extern PtrAbstractBox GetParentDraw (/* PtrBox pBox */);
 extern C_points *ComputeControlPoints (/* PtrTextBuffer buffer,
                                           int nb,
                                           int zoom */);
-extern char GiveTextParams (/* PtrTextBuffer *pBuffer,
-                               int *ind,
-                               int *nChars,
-                               SpecFont font,
-                               int *width,
-                               int *nSpaces,
-                               char dir,
-                               char bidi */);
 extern void GiveSymbolSize (/* PtrAbstractBox pAb,
                                int *width,
                                int *height */);

@@ -295,6 +295,8 @@ typedef struct _Box
       int	 _BxSpaceWidth_;/* >0 of the box is justified */
       int	 _BxFirstChar_;	/* First character in buffer */
       char       _BxScript_;    /* Script of the current text */
+      char       _BxFirstScript_;/*Script of the first element*/
+      char       _BxLastScript_;/*Script of the last element*/
     } s0;
     struct /* BoPicture - used for pictures, polylines and paths */
     {
@@ -344,6 +346,10 @@ typedef struct _Box
 #define BxSpaceWidth u.s0._BxSpaceWidth_
 #define BxFirstChar u.s0._BxFirstChar_
 #define BxScript u.s0._BxScript_
+
+#define BxFirstScript u.s0._BxFirstScript_
+#define BxLastScript u.s0._BxLastScript_
+
 #define BxPictInfo u.s1.u._BxPictInfo_
 #define BxFirstPathSeg u.s1.u._BxFirstPathSeg_
 #define BxXRatio u.s1._BxXRatio_

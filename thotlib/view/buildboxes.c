@@ -364,13 +364,14 @@ C_points *ComputeControlPoints (PtrTextBuffer buffer, int nb, int zoom)
   nChars returns the number of characters not handled.
   width returns the width of the text.
   ----------------------------------------------------------------------*/
+
 char GiveTextParams (PtrTextBuffer *pBuffer, int *ind, int *nChars,
 		     SpecFont font, int *width, int *nSpaces,
-		     char dir, char bidi)
+		     char dir, char bidi, int * em, char Precscript)
 {
-  char                script, embed;
+  char                script,sc;
 #ifdef _I18N_
-  char                newscript, prevscript = '*';
+  char                newscript, prevscript = '*',embed;
   int                 oldind = 0;
   int                 oldpos = 0;
   int                 oldspaces = 0;
@@ -381,7 +382,8 @@ char GiveTextParams (PtrTextBuffer *pBuffer, int *ind, int *nChars,
   int                 pos, max;
   int                 charWidth;
   int                 spaceWidth;
-  
+  char                ss;  
+
   /* space width */
   if (*nSpaces == 0)
     spaceWidth = BoxCharacterWidth (SPACE, font);
@@ -395,7 +397,6 @@ char GiveTextParams (PtrTextBuffer *pBuffer, int *ind, int *nChars,
   *width = 0;
   /* initial scripts */
   script = '*';
-  embed = '*';
   pos = 0;
   while (pos < max)
     {
@@ -414,13 +415,82 @@ char GiveTextParams (PtrTextBuffer *pBuffer, int *ind, int *nChars,
 	{
 	  /* the text must be analysed and may be split */
 	  newscript = TtaGetCharacterScript (car);
-	  if (newscript == ' ' || newscript == 'D')
+	  if (newscript == 'A')
+	    newscript = TtaGetCharacterScript (car);
+	
+	  if (newscript == ' ')
 	    {
-	      if (newscript == prevscript && newscript == 'D')
-		/* several digits are considered as Latin string */
-		newscript = 'L';
+	     
+	      /* if (script == 'L'&& Precscript != 'L' && (*em) == 0)
+		{
+		  *nChars = max - pos ; 
+		  return script; 
+		}
+	      */
+      if (script == '*' && (*ind == 0))
+		{
+		  if (*em == 0)
+		  script = Precscript;
+		  else if (Precscript == 'A') script = 'L';
+		  else script = 'A';
+		}
+	      if (script == 'A')
+		{
+		  if (car >= 0x060C && car <= 0x06B0) /* arabic char */
+		    charWidth = BoxArabicCharacterWidth (car, pBuffer, ind, font);
+		  else
+		    charWidth = BoxCharacterWidth (car, font);
+		  *width += charWidth;
+		  if (car == 0x28 || car == 0x29 ) *em = 1;
+		  if (car != EOS)
+		    pos++;
+		  /* next character */
+		  (*ind)++;
+		  
+		  continue;
+		}
+	      if (script == 'L')
+		{
+		  if (*em == 1)  /* embedded script compute the next*/
+		    {
+		      if ((*ind == *nChars)&&((*pBuffer)->BuNext))
+			ss = TtaGetCharacterScript((*pBuffer)->BuNext->BuContent[0]);
+		      else if (*ind == *nChars -1)
+			{
+			  if (dir == 'R' ) ss = 'A';
+			  else ss = 'L';
+			}
+		      else ss = TtaGetCharacterScript((*pBuffer)->BuContent[*ind +1]);
+		    
+						      		
+						      
+		  if ( ss  !='L'){
+		    newscript = 'A';
+		     oldpos = pos;
+		     oldind = *ind;
+		     oldspaces = *nSpaces;
+		     oldwidth = *width;
+		     oldbuff = *pBuffer;
+		  }}
+		}		    
+              prevscript = newscript;
+	      if (script == '*' && (*em == 1))
+		{
+		  script=prevscript=newscript = 'A';
+		  *em = 0;
+		}
+ 
+		
+	    }
+  
+  if (newscript == 'D')
+	    {
+	      if (script!='*' && embed !='*')
+		embed= 'E';
+
 	      prevscript = newscript;
-	      if (oldbuff == NULL && pos)
+	  
+	      if (oldbuff==NULL && pos)
 		{
 		  /* keep in memory a possible splitting position */
 		  oldpos = pos;
@@ -429,9 +499,70 @@ char GiveTextParams (PtrTextBuffer *pBuffer, int *ind, int *nChars,
 		  oldwidth = *width;
 		  oldbuff = *pBuffer;
 		}
+	     
+	    
+	         if ((*ind == *nChars)&&((*pBuffer)->BuNext))
+		   ss = TtaGetCharacterScript((*pBuffer)->BuNext->BuContent[0]); 
+		 else if (*ind == *nChars -1) 
+		   {
+		     if (dir == 'R' ) ss = 'A'; 
+		     else ss = 'L';  
+		   }
+		 else ss = TtaGetCharacterScript((*pBuffer)->BuContent[*ind +1]); 
+		
+		  
+		 if (ss == 'D' && script == '*')
+		   script =newscript= 'L';
+		 if (ss == 'D' && (script == 'A')) 
+		{
+		  *nChars = max - oldpos;
+		  *ind = oldind;
+		  *nSpaces = oldspaces;
+		  *width = oldwidth;
+		  *pBuffer = oldbuff;
+		  return script; 
+		}
+	      
+	       
+	      
 	    }
-
-	  if (script == '*' && newscript != ' ' && newscript != 'D')
+ 
+  
+  if (newscript == 'A')
+    {
+      if ((*ind == *nChars)&&((*pBuffer)->BuNext))
+       	ss = TtaGetCharacterScript((*pBuffer)->BuNext->BuContent[0]); 
+      else if (*ind == *nChars -1) 
+	{
+	  if (dir == 'R' ) ss = 'A'; 
+	  else ss = 'L';  
+	}
+      else ss = TtaGetCharacterScript((*pBuffer)->BuContent[*ind +1]); 
+      
+      if (ss != 'D' && newscript == 'D')
+	{
+	  if (Precscript == 'A')
+	    {
+	      oldpos = pos;
+	      oldind = *ind;
+	      oldspaces = *nSpaces;
+	      oldwidth = *width;
+	      oldbuff = *pBuffer;
+	      if (script == '*') script = 'L';
+	    }
+	  return script;
+	}
+      if ( ss == 'D' )
+	{
+	  oldpos = pos;
+	  oldind = *ind;
+	  oldspaces = *nSpaces;
+	  oldwidth = *width;
+	  oldbuff = *pBuffer;
+	}
+    }
+      
+  if (script == '*' && newscript != ' ' && newscript != 'D')
 	    {
 	      /* no script detected */
 	      if (oldbuff && bidi == 'E')
@@ -439,11 +570,13 @@ char GiveTextParams (PtrTextBuffer *pBuffer, int *ind, int *nChars,
 		  /* neutral characters found before and direction requested */
 		  if (dir == 'R' && newscript != 'A' && newscript != 'H')
 		    script = embed = 'A';
+		  
 		  else if (dir == 'L' && (newscript == 'A' || newscript == 'H'))
 		    script = embed = 'L';
 		  else
 		    {
 		      script = newscript;
+		      sc = script;
 		      if (embed == '*')
 			embed = script;
 		    }
@@ -482,7 +615,7 @@ char GiveTextParams (PtrTextBuffer *pBuffer, int *ind, int *nChars,
 		    }
 		  else
 		    /* attach neutral to the previous substring */
-		    *nChars = max - pos;
+		    *nChars = max - pos ;
 		}
 	      else if (script != 'A' && script != 'H')
 		{
@@ -497,11 +630,11 @@ char GiveTextParams (PtrTextBuffer *pBuffer, int *ind, int *nChars,
 		    }
 		  else
 		    /* attach neutral to the previous substring */
-		    *nChars = max - pos;
+		    *nChars = max - pos ;
 		}
 	      else
 		/* split here */
-		*nChars = max - pos;
+		*nChars = max - pos ;
 	      return script;
 	    }
 	}
@@ -956,6 +1089,9 @@ PtrBox SplitForScript (PtrBox box, PtrAbstractBox pAb, char script, int lg,
 /*----------------------------------------------------------------------
   GiveTextSize gives the internal width and height of a text box.
   ----------------------------------------------------------------------*/
+/* variable globale*/
+static int em = 0;
+
 static void GiveTextSize (PtrAbstractBox pAb, PtrBox pMainBox, int *width,
 			  int *height, int *nSpaces)
 {
@@ -966,7 +1102,8 @@ static void GiveTextSize (PtrAbstractBox pAb, PtrBox pMainBox, int *width,
   int                 ind, nChars;
   int                 l, pos;
   int                 lg, spaces, bwidth;
-
+  char                Precscript='*';
+  // char                *car;
   box = pAb->AbBox;
   font = box->BxFont;
   *height = BoxFontHeight (font);
@@ -995,8 +1132,16 @@ static void GiveTextSize (PtrAbstractBox pAb, PtrBox pMainBox, int *width,
 	  bwidth = 0;
 	  spaces = 0; /* format with the standard space width */
 	  lg = nChars;
-	  script = GiveTextParams (&pBuffer, &ind, &nChars, font, &bwidth, &spaces,
-				   dir, pAb->AbUnicodeBidi);
+	    if (box->BxPrevious)
+	    {
+	      Precscript = box->BxPrevious->BxScript;
+	       script = GiveTextParams (&pBuffer, &ind, &nChars, font, &bwidth, &spaces,
+	  		   dir, pAb->AbUnicodeBidi,&em,Precscript);
+	  
+	   }
+	   else
+	    script = GiveTextParams (&pBuffer, &ind, &nChars, font, &bwidth, &spaces,
+				   dir, pAb->AbUnicodeBidi,&em,'*');
 	  box->BxScript = script;
 	  *width += bwidth;
 	  *nSpaces += spaces;
@@ -1533,7 +1678,7 @@ static void TransmitMBP (PtrBox pBox, int frame, int i, int j,
 ThotBool CheckMBP (PtrAbstractBox pAb, PtrBox pBox, int frame,
 		   ThotBool evalAuto)
 {
-  int                 lt, rb;
+  int lt, rb;
 
   /* update vertical margins, borders and paddings */
   lt = pBox->BxTMargin + pBox->BxTPadding + pBox->BxTBorder;
@@ -1545,10 +1690,11 @@ ThotBool CheckMBP (PtrAbstractBox pAb, PtrBox pBox, int frame,
   pAb->AbBox->BxHorizRef += lt;
   if (pAb->AbBox->BxType == BoGhost || pAb->AbBox->BxType == BoFloatGhost)
     TransmitMBP (pBox, frame, lt, rb, FALSE);
-  else if (lt || rb)
+  else if (lt != 0 || rb != 0)
     {
       if (pAb->AbHeight.DimIsPosition ||
-	  pAb->AbHeight.DimAbRef)
+	  pAb->AbHeight.DimAbRef/* ||
+	  pAb->AbHeight.DimAbRef == pAb->AbEnclosing*/)
 	/* the outside height is constrained */
 	ResizeHeight (pBox, pBox, NULL, - lt - rb, lt, rb, frame);
       else
@@ -1565,11 +1711,13 @@ ThotBool CheckMBP (PtrAbstractBox pAb, PtrBox pBox, int frame,
   /* Check if the changes affect the inside or the outside width */
   if (pAb->AbBox->BxType == BoGhost || pAb->AbBox->BxType == BoFloatGhost)
     TransmitMBP (pBox, frame, lt, rb, TRUE);
-  else if (lt || rb)
+  else if (lt != 0 || rb != 0)
     {
       pAb->AbBox->BxVertRef += lt;
       if (pAb->AbWidth.DimIsPosition ||
-	  pAb->AbWidth.DimAbRef)
+	  pAb->AbWidth.DimAbRef
+	  /* ||
+	     pAb->AbWidth.DimAbRef == pAb->AbEnclosing*/)
 	/* the outside width is constrained */
 	ResizeWidth (pBox, pBox, NULL, - lt - rb, lt, rb, 0, frame);
       else
@@ -2156,7 +2304,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
 	GiveEnclosureSize (pAb, frame, &width, &height);
       ChangeDefaultHeight (pCurrentBox, pCurrentBox, height, frame);
       /* recheck auto and % margins */
-     CheckMBP (pAb, pCurrentBox, frame, TRUE);
+      CheckMBP (pAb, pCurrentBox, frame, TRUE);
       
       /* Positionnement des origines de la boite construite */
       i = 0;
@@ -2252,119 +2400,99 @@ PtrAbstractBox SearchEnclosingType (PtrAbstractBox pAb, BoxType type1,
   ----------------------------------------------------------------------*/
 PtrLine SearchLine (PtrBox pBox)
 {
-  PtrLine             pLine;
-  PtrBox              pBoxPiece;
-  PtrBox              pBoxInLine;
-  PtrBox              box;
-  PtrAbstractBox      pAb;
-  int                 orgY;
-  ThotBool            xAbs, yAbs;
-  ThotBool            still;
+   PtrLine             pLine;
+   PtrBox              pBoxPiece;
+   PtrBox              pBoxInLine;
+   PtrBox              pCurrentBox;
+   PtrAbstractBox      pAb;
+   ThotBool            still;
 
-  /* check enclosing element */
-  pLine = NULL;
-  pAb = NULL;
-  if (pBox)
-    {
-      pAb = pBox->BxAbstractBox;
-      if (pAb && (pAb->AbNotInLine || !pAb->AbHorizEnclosing))
-	pAb = NULL;
-      else
-	pAb = pAb->AbEnclosing;
-    }
+   /* check enclosing element */
+   pLine = NULL;
+   pAb = NULL;
+   if (pBox)
+     {
+       pAb = pBox->BxAbstractBox;
+       if (pAb && (pAb->AbNotInLine || !pAb->AbHorizEnclosing))
+	 pAb = NULL;
+       else
+	 pAb = pAb->AbEnclosing;
+     }
 
-  /* look for an enclosing block of lines */
-  if (pAb)
-    {
-      if (pAb->AbBox == NULL)
-	pAb = NULL;
-      else if (pAb->AbBox->BxType == BoGhost)
-	{
-	  /* It's a ghost, look for the enclosing block */
-	  still = TRUE;
-	  while (still)
-	    {
-	      pAb = pAb->AbEnclosing;
-	      if (pAb == NULL)
-		still = FALSE;
-	      else if (pAb->AbBox == NULL)
-		{
-		  pAb = NULL;
-		  still = FALSE;
-		}
-	      else if (pAb->AbBox->BxType != BoGhost)
-		still = FALSE;
-	    }
-	}
-      else if (pAb->AbBox->BxType == BoFloatGhost)
-	pAb = pAb->AbEnclosing;
-      else if (pAb->AbBox->BxType != BoBlock &&
-	       pAb->AbBox->BxType != BoFloatBlock)
-	/* the box in not within a block of lines */
-	pAb = NULL;
-    }
+   /* look for an enclosing block of lines */
+   if (pAb)
+     {
+	if (pAb->AbBox == NULL)
+	   pAb = NULL;
+	else if (pAb->AbBox->BxType == BoGhost)
+	  {
+	     /* It's a ghost, look for the enclosing block */
+	     still = TRUE;
+	     while (still)
+	       {
+		  pAb = pAb->AbEnclosing;
+		  if (pAb == NULL)
+		     still = FALSE;
+		  else if (pAb->AbBox == NULL)
+		    {
+		       pAb = NULL;
+		       still = FALSE;
+		    }
+		  else if (pAb->AbBox->BxType != BoGhost)
+		     still = FALSE;
+	       }
+	  }
+	else if (pAb->AbBox->BxType == BoFloatGhost)
+	  pAb = pAb->AbEnclosing;
+	else if (pAb->AbBox->BxType != BoBlock &&
+		 pAb->AbBox->BxType != BoFloatBlock)
+	  /* the box in not within a block of lines */
+	   pAb = NULL;
+     }
 
-  if (pAb)
-    {
-      box = pAb->AbBox;
-      pLine = box->BxFirstLine;
-      still = TRUE;
-      if (pBox->BxAbstractBox->AbFloat == 'N')
-	{
-	  /* Look for the line which includes the current box */
-	  while (still && pLine)
-	    {
-	      /* Locate the box in the set of lines */
-	      if (pLine->LiFirstPiece)
+   if (pAb)
+     {
+	pCurrentBox = pAb->AbBox;
+	pLine = pCurrentBox->BxFirstLine;
+	/* Look for the line which includes the current box */
+	still = TRUE;
+	while (still && pLine)
+	  {
+	     /* Locate the box in the set of lines */
+	     if (pLine->LiFirstPiece)
 		pBoxInLine = pLine->LiFirstPiece;
-	      else
+	     else
 		pBoxInLine = pLine->LiFirstBox;
-	      if (pBoxInLine)
-		do
-		  {
-		    if (pBoxInLine->BxType == BoSplit ||
-			pBoxInLine->BxType == BoMulScript)
-		      pBoxPiece = pBoxInLine->BxNexChild;
-		    else
-		      pBoxPiece = pBoxInLine;
-		    if (pBoxPiece == pBox)
-		      {
-			/* the line is founs */
-			still = FALSE;
-			pBoxPiece = pLine->LiLastBox;
-		      }
-		    /* else get next box */
-		    else if ((pBoxPiece->BxType == BoScript ||
-			      pBoxPiece->BxType == BoPiece) &&
-			     pBoxPiece->BxNexChild)
-		      pBoxInLine = pBoxPiece->BxNexChild;
-		    else
-		      pBoxInLine = GetNextBox (pBoxInLine->BxAbstractBox);
-		  }
-		while (pBoxPiece != pLine->LiLastBox
-		       && pBoxPiece != pLine->LiLastPiece
-		       && pBoxInLine);
-	      
-	      if (still)
-		/* get next line */
-		pLine = pLine->LiNext;
-	    }
-	}
-      else
-	{
-	  /* Locate the last adjacent line */
-	  orgY = 0;
-	  IsXYPosComplete (box, &xAbs, &yAbs);
-	  if (yAbs)
-	    orgY += box->BxYOrg;
-	  while (still && pLine)
-	    {
-	      still = pLine->LiYOrg + orgY < pBox->BxYOrg;
-	      if (still)
-		/* get next line */
-		pLine = pLine->LiNext;
-	    }
-	}
+	     if (pBoxInLine)
+	       do
+		 {
+		  if (pBoxInLine->BxType == BoSplit ||
+		      pBoxInLine->BxType == BoMulScript)
+		     pBoxPiece = pBoxInLine->BxNexChild;
+		  else
+		     pBoxPiece = pBoxInLine;
+		  if (pBoxPiece == pBox)
+		    {
+		       /* the line is founs */
+		       still = FALSE;
+		       pBoxPiece = pLine->LiLastBox;
+		    }
+		  /* else get next box */
+		  else if ((pBoxPiece->BxType == BoScript ||
+			    pBoxPiece->BxType == BoPiece) &&
+			   pBoxPiece->BxNexChild)
+		    pBoxInLine = pBoxPiece->BxNexChild;
+		  else
+		     pBoxInLine = GetNextBox (pBoxInLine->BxAbstractBox);
+		 }
+	       while (pBoxPiece != pLine->LiLastBox
+		      && pBoxPiece != pLine->LiLastPiece
+		      && pBoxInLine);
+
+	     if (still)
+	       /* get next line */
+	       pLine = pLine->LiNext;
+	  }
      }
    return pLine;
 }
@@ -2909,7 +3037,6 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
   ViewFrame          *pFrame;
   AbDimension        *pDimAb;
   AbPosition         *pPosAb;
-  PictInfo	         *picture;
   int                 width, height;
   int                 nSpaces;
   int                 i, k, charDelta, adjustDelta;
@@ -3033,12 +3160,11 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 
 	      /* Compute Bounding Box*/
 	      ComputeABoundingBox (pCurrentBox->BxAbstractBox, frame);
-	      
-	      if (k || (pCurrentBox->BxClipH && pCurrentBox->BxClipW))
-		DefRegion (frame, pCurrentBox->BxClipX - k,
-			   pCurrentBox->BxClipY - k,
-			   pCurrentBox->BxClipX + pCurrentBox->BxClipW +pCurrentBox->BxLMargin + k,
-			   pCurrentBox->BxClipY + pCurrentBox->BxClipH + k);
+
+	      DefRegion (frame, pCurrentBox->BxClipX - k,
+			 pCurrentBox->BxClipY - k,
+			 pCurrentBox->BxClipX + pCurrentBox->BxClipW + k,
+			 pCurrentBox->BxClipY + pCurrentBox->BxClipH + k);
 #endif /* _GL */
 	    }
 	}
@@ -3375,8 +3501,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		  /* force filling */
 		  pAb->AbFillBox = TRUE;
 		  /* load the picture */
-           picture = (PictInfo *) pAb->AbPictBackground;
-		  LoadPicture (frame, pBox, picture);
+		  LoadPicture (frame, pBox, (PictInfo *) pAb->AbPictBackground);
 		}
 	    }
 	  else if (pAb->AbLeafType == LtGraphics && pAb->AbShape == 'C')
@@ -3974,19 +4099,6 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	  ComputeAxisRelation (pAb->AbVertRef, pBox, frame, TRUE);
 	  result = TRUE;
 	}
-#ifdef _GL  
-      if (pAb->AbBox)
-	{
-	  ComputeABoundingBox (pAb, 
-			       frame);
-     
-	  if (pAb->AbBox->BxClipH && pAb->AbBox->BxClipW)
-	    DefRegion (frame, pAb->AbBox->BxClipX,
-		       pAb->AbBox->BxClipY,
-		       pAb->AbBox->BxClipX + pAb->AbBox->BxClipW + pAb->AbBox->BxLMargin,
-		       pAb->AbBox->BxClipY + pAb->AbBox->BxClipH);
-	}
-#endif /* _GL */
     }
 #ifdef _GL  
   FrameUpdating = FrameUpdatingStatus;  
@@ -4498,18 +4610,21 @@ void CheckScrollingWidth (int frame)
 	      pBox = pBox->BxNext;
 	      while (pBox)
 		{
+		  /* check if this box is displayed outside the document box */
 #ifdef _GL
 		  /* check if this box is displayed outside the document box */
-		  /*if (pBox->BxXOrg == pBox->BxClipX)*/
-#endif /* _GL */
-		    {
-		      if (pBox->BxXOrg + pBox->BxWidth > max)
-			max = pBox->BxXOrg + pBox->BxWidth;
-		      if (pBox->BxXOrg < org)
-			org = pBox->BxXOrg;
-		      if (pBox->BxXOrg + pBox->BxLMargin < org)
-			org = pBox->BxXOrg + pBox->BxLMargin;
-		    }
+		  if (pBox->BxClipX + pBox->BxClipW > max)
+		    max = pBox->BxClipX + pBox->BxClipW;
+		  if (pBox->BxClipX < org)
+		    org = pBox->BxClipX;
+#else /* _GL */
+		  if (pBox->BxXOrg + pBox->BxWidth > max)
+		    max = pBox->BxXOrg + pBox->BxWidth;
+		  if (pBox->BxXOrg < org)
+		    org = pBox->BxXOrg;
+		  if (pBox->BxXOrg + pBox->BxLMargin < org)
+		    org = pBox->BxXOrg + pBox->BxLMargin;
+#endif /*  _GL */
 		  pBox = pBox->BxNext;
 		}
 	    }
