@@ -2536,7 +2536,9 @@ PtrElement         *pSplitEl;
 		if (firstEl->ElTerminal)
 		   if (firstEl->ElLeafType != LtPageColBreak)
 		      if (firstEl->ElParent != NULL)
-			 if (firstEl->ElPrevious != NULL || firstChar > 1)
+			 if (firstEl->ElPrevious != NULL ||
+			     (firstEl->ElLeafType == LtText && firstChar > 1) ||
+			     (firstEl->ElLeafType == LtPicture && firstChar > 0))
 			   {
 			      /* on cherche d'abord si un element ascendant
 			         possede une exception ParagraphBreak */

@@ -778,8 +778,8 @@ PtrSSchema         *pSS;
 void                TtcCreateElement (Document doc, View view)
 #else
 void                TtcCreateElement (doc, view)
-Document doc  ; 
-View     view ;
+   Document doc  ; 
+   View     view ;
 #endif
 {
    PtrElement          firstSel, lastSel, pListEl, pE, pNew, pSibling,
@@ -884,18 +884,27 @@ View     view ;
 	if (!ready && !empty)
 	  {
 	     /* la selection commence-t-elle en tete d'un element ? */
-	     selBegin = (firstSel == lastSel && firstSel->ElPrevious == NULL &&
-		     lastSel->ElTerminal && lastSel->ElLeafType == LtText &&
-			 firstChar <= 1);
+	     selBegin = FALSE;
+	     if (firstSel == lastSel && firstSel->ElPrevious == NULL)
+		if (firstSel->ElTerminal)
+		   if (firstSel->ElLeafType == LtText && firstChar <= 1)
+		      selBegin = TRUE;
+		   else if (firstSel->ElLeafType == LtPicture && firstChar ==0)
+		      selBegin = TRUE;
 
-	     /* la selection est-t-elle a la fin de la derniere feuille de texte */
-	     /* d'un element */
-	     selEnd = (firstSel == lastSel && lastSel->ElNext == NULL &&
-		     lastSel->ElTerminal && lastSel->ElLeafType == LtText &&
-		       firstChar > lastSel->ElTextLength);
+	     /* la selection est-t-elle a la fin de la derniere feuille de */
+	     /* texte ou image d'un element ? */
+	     selEnd = FALSE;
+	     if (firstSel == lastSel && lastSel->ElNext == NULL)
+		if (lastSel->ElTerminal)
+		   if (lastSel->ElLeafType == LtText &&
+		       firstChar > lastSel->ElTextLength)
+		      selEnd = TRUE;
+		   else if (firstSel->ElLeafType == LtPicture && firstChar > 0)
+		      selEnd = TRUE;
 
-	     /* Si la selection ne commence ni en tete ni en queue, on essaie de */
-	     /* couper un paragraphe en deux */
+	     /* Si la selection ne commence ni en tete ni en queue, on */
+	     /* essaie de couper un paragraphe en deux */
 	     if (!selBegin && !selEnd)
 		if (BreakElement (NULL, firstSel, firstChar, TRUE))
 		   return;
@@ -910,7 +919,8 @@ View     view ;
 		  pListEl = AncestorList (lastSel);
 		  /* si c'est la fin d'une liste de Textes on remonte */
 		  if (pListEl != NULL)
-		     if (lastSel->ElTerminal && lastSel->ElLeafType == LtText)
+		     if (lastSel->ElTerminal &&
+			 (lastSel->ElLeafType == LtText || lastSel->ElLeafType == LtPicture))
 			if (pListEl == lastSel->ElParent)
 			   if (lastSel->ElNext == NULL || selBegin)
 			      pListEl = AncestorList (pListEl);

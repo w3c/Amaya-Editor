@@ -1182,6 +1182,16 @@ boolean             block;
 			  nextChar = 1;
 		       }
 		  }
+		else if (pEl->ElLeafType == LtPicture && firstChar > 0 &&
+			 pEl->ElNext != NULL )
+		  {
+		    pPrev = pEl;
+		    pNext = pEl->ElNext;
+		    if (pNext->ElTerminal && pNext->ElLeafType == LtText)
+			nextChar = 1;
+		     else
+			nextChar = 0;
+		  }
 	     pClose = pPrev->ElNext;
 	     /* detruit les paves des elements qui vont etre deplaces au niveau */
 	     /* le plus bas */

@@ -332,6 +332,11 @@ int                *lastChar;
 	     *firstChar = SelectedPointInPolyline;
 	     *lastChar = SelectedPointInPolyline;
 	  }
+	else if (pEl->ElTerminal && pEl->ElLeafType == LtPicture)
+	  {
+	     *firstChar = SelectedPictureEdge;
+	     *lastChar = 0;
+	  }
 	else
 	  {
 	     *firstChar = FirstSelectedChar;
