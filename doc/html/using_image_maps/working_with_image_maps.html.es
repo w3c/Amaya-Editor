@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+	
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 5.2" />
+  <title>Working with Image Maps</title>
+  <style type="text/css"></style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+
+
+<body xml:lang="en" lang="en">
+
+<table border="0" summary="toc">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya.gif" /></td>
+      <td><p> 
+		<a href="../ImageMaps.html.es" accesskey="t"><img alt="top" src="../../images/up.gif" /></a> 
+		<a href="adding_an_image.html.es" accesskey="n"><img alt="next"
+        src="../../images/right.gif" /></a></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Working with Image Maps</h1>
+
+<p>Amaya enables you to include images and client-side image maps in Web
+pages. For more information on working with images or image maps, see the
+following:</p>
+<ul>
+  <li><a href="adding_an_image.html.es">Adding an Image</a></li>
+  <li><a href="creating_clientside_image_maps.html.es">Creating Client-Side
+    Image Maps</a></li>
+  <li><a href="using_clientside_image_maps.html.es">Using Client-Side Image
+    Maps</a></li>
+  <li><a href="moving_image_map_areas.html.es">Moving Image Map Areas</a></li>
+  <li><a href="resizing_image_map_areas.html.es">Resizing Image Map
+  Areas</a></li>
+  <li><a href="about_alternative_text_and_long_descriptions.html.es">About
+    Alternative Text and Long Descriptions</a></li>
+</ul>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+	
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 5.2" />
+  <title>Handling External CSS Style Sheet</title>
+  <style type="text/css">  </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="en" lang="en">
+
+<table border="0" summary="toc">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya.gif" /></td>
+      <td><p><a href="about_linking_external_and_user_style_sheets.html.es" accesskey="p"><img alt="previous"
+        src="../../images/left.gif" /></a> 
+		<a href="../StyleSheets.html.es" accesskey="t"><img alt="top" src="../../images/up.gif" /></a> 
+		<a href="about_applying_style_using_html_elements.html.es" accesskey="n"><img alt="next"
+        src="../../images/right.gif" /></a></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Handling External CSS Style Sheets</h1>
+
+<p>The Style Sheets option on the Style menu provides a set of commands which
+enable you to control external and user's CSS style sheets.</p>
+<ul>
+  <li>Select <strong>Link</strong> to link a new CSS style sheet to the
+    current document. Amaya displays a pointing hand cursor. If the target
+    style sheet is already displayed in an Amaya window, click the style
+    sheet. If the style sheet is not displayed, click the current document to
+    display a dialog and type the target style sheet's URI. The
+    <strong>Link</strong> command adds an element link with its attributes
+    into the head of the document.
+    <p></p>
+  </li>
+  <li>Select <strong>Open</strong> to open a CSS style sheet applied to the
+    current document.
+    <p></p>
+  </li>
+  <li>Select <strong>Disable</strong> to remove the effect of an enabled CSS
+    style sheet from the current document. This command does not affect the
+    CSS link in the document.
+    <p></p>
+  </li>
+  <li>Select <strong>Enable</strong> to reapply the effects of a disabled CSS
+    style sheet to the current document. This command does not affect the CSS
+    link in the document.
+    <p></p>
+  </li>
+  <li>Select <strong>Remove</strong> to remove an external CSS style sheet.
+    This command is similar to the Disable command, but it also removes the
+    element link that attaches the external CSS style sheet.</li>
+</ul>
+
+<p>The <strong>Open</strong>, <strong>Disable</strong> and
+<strong>Enable</strong> commands can be applied to the user's preference
+style sheet, but the Link and Remove commands apply to only linked CSS style
+sheets.</p>
+
+<p>A dialog shows the list of CSS style sheets proposed for the
+<strong>Open</strong> command. If no CSS style sheet is currently applied to
+a document, the dialog indicates that there is no CSS file available.</p>
+</div>
+
+</body>
+</html>

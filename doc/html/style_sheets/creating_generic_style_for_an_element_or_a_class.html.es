@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="GENERATOR" content="amaya 6.4, see http://www.w3.org/Amaya/" />
+  <title>Creating a Generic Style for an Element or Class</title>
+  <style type="text/css">
+ </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="en" lang="en">
+
+<table border="0" summary="toc">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya.gif" /></td>
+      <td><p><a href="creating_and_updating_a_style_attribute.html.es"
+        accesskey="p"><img alt="previous" src="../../images/left.gif" /></a>
+        <a href="../StyleSheets.html.es" accesskey="t"><img alt="top"
+        src="../../images/up.gif" /></a> <a
+        href="about_linking_external_and_user_style_sheets.html.es"
+        accesskey="n"><img alt="next" src="../../images/right.gif" /></a></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Creating a Generic Style for an Element or Class</h1>
+
+<p>When a style attribute is associated with an element, you can use that
+element as a model for creating or modifying a style rule by using the
+<strong>Create Rule</strong> command.</p>
+
+<h2>Using the Create Rule Command</h2>
+
+<p class="ProcedureCaption">To create a generic style for an element or
+class:</p>
+<ol>
+  <li>Select the element you wish to use as the template. 
+    <p class="StepNote"><strong>Note:</strong> You must select only one
+    element and this element must have a style attribute.</p>
+    <p class="StepNote"></p>
+  </li>
+  <li>Choose <strong>Create Rule</strong> from the <strong>Style</strong>
+    menu. Amaya opens a dialog displaying a list of CSS selectors. This list
+    contains all classes that are defined for the current document (including
+    those defined in linked CSS style sheets), as well as the element type to
+    which the style is associated. 
+    <p></p>
+  </li>
+  <li>Choose a selector in this list or enter a new class name and click
+    <strong>Confirm</strong>. The style of the selected element is then
+    associated with the chosen selector and the style attribute is removed
+    from the selected element. Its content is moved to the <code>style</code>
+    element, in the document <code>HEAD</code>, and all elements matching the
+    selector are displayed with the new style.</li>
+</ol>
+
+<h2>Associating Classes with Elements</h2>
+
+<p>When you create new classes with the <strong>Create Rule</strong> command,
+you can associate these classes with some elements in the document.</p>
+<ol>
+  <li>Choose <strong>Apply Class</strong> from the <strong>Style</strong>
+    menu. 
+    <p></p>
+  </li>
+  <li>A dialog displays all existing classes. Choose one of these classes. 
+    <p>Amaya displays the selected elements with the style associated with
+    the chosen class.</p>
+  </li>
+</ol>
+
+<p>To associate a class with an element, you can also use the
+<strong>Attributes</strong> menu. This menu also enables you to delete a
+class attribute from an element or to change it (the class attribute is
+handled like any other attribute).</p>
+</div>
+</body>
+</html>

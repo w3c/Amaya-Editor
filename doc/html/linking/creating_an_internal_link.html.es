@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+	
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 5.2" />
+  <title>Crear un Enlace Interno</title>
+  <style type="text/css"> </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="en" lang="en">
+
+<table border="0" summary="toc">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya.gif" /></td>
+      <td><p><a href="creating_an_external_link.html.es" accesskey="p"><img alt="previous"
+        src="../../images/left.gif" /></a> 
+		<a href="../Links.html.es" accesskey="t"><img alt="top" src="../../images/up.gif" /></a> 
+		<a href="creating_a_target_anchor.html.es" accesskey="n"><img alt="next"
+        src="../../images/right.gif" /></a></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Crear un Enlace Interno</h1>
+
+<p class="ProcedureCaption">To create a link to a target anchor or target
+element in the same document:</p>
+<ol>
+  <li>Click and drag to select the text for the link you are creating.
+    <p></p>
+  </li>
+  <li>Click the <strong>Link</strong> button. The cursor changes from an
+    arrow to a hand.
+    <p></p>
+  </li>
+  <li>Click the target icon to create the link.</li>
+</ol>
+
+<h2>See also:</h2>
+<ul>
+  <li><a href="creating_an_external_link.html.es">Creating an External
+  Link</a></li>
+</ul>
+</div>
+
+</body>
+</html>

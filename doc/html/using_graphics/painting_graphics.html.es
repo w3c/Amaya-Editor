@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+	
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 5.2" />
+  <title>Painting Graphics</title>
+  <style type="text/css">  </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="en" lang="en">
+
+<table border="0" summary="toc">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya.gif" /></td>
+      <td><p><a href="resizing_graphics.html.es" accesskey="p"><img alt="previous"
+        src="../../images/left.gif" /></a> 
+		<a href="../SVG.html.es" accesskey="t"><img alt="top" src="../../images/up.gif" /></a> 
+		</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Painting Graphics</h1>
+
+<p>With Amaya, you can paint (fill or stroke) SVG graphic elements with a
+single color. The default fill color is black and the default stroke color is
+transparent, but you can change these values.</p>
+
+<p>There are two ways to change the default fill and stroke value: by editing
+the SVG attributes from the <strong>Attributes</strong> menu, or by editing
+the SVG attribute style with CSS properties</p>
+
+<p class="ProcedureCaption">To edit the SVG attributes:</p>
+<ol>
+  <li>Select the graphic.</li>
+  <li>Open the <strong>Attributes</strong> menu. You will see both of the
+    attributes<strong> Fill </strong>and <strong>Stroke.</strong></li>
+  <li>Select the attribute you want to edit.</li>
+  <li>In the dialog, change the attribute (for example,<kbd> fill=&quot;
+    #C8ff95&quot;; stroke=&quot;#000000&quot;</kbd>), click <strong>Apply</strong>, then
+    click <strong>Close</strong>.
+    <p></p>
+    <p class="Note"><strong>Note:</strong>  You can use either
+    a hexidecimal number for colors, or use a specific basic color names such
+    as black, white, blue, green, red, pink, purple, violet or yellow.</p>
+  </li>
+</ol>
+
+<p class="ProcedureCaption">To edit the SVG attribute style with CSS
+properties:</p>
+<ol>
+  <li>Select the graphic.</li>
+  <li>Open the <strong>Style</strong> menu and select
+    <strong>Colors</strong>. The color palette will open.</li>
+  <li>Select the desired color from the color palette. When you click the
+    mouse, you generate the <kbd>stroke</kbd> property, and when you
+    right-click the mouse, you generate the <code>fill</code> property.
+    <p></p>
+    <p class="Note"><strong>Note:</strong>    SVG text is
+    considered as a graphic shape, so the <kbd>fill</kbd> property paints
+    the character contents and the <kbd>stroke</kbd> property paints the
+    character border. Amaya applies the <kbd>fill</kbd> property to
+    characters, but not the <kbd>stroke</kbd> property. Therefore, a click
+    with the left mouse button has no immediate effect, while a click with
+    the middle or right mouse button paints the text element.</p>
+  </li>
+</ol>
+
+
+</div>
+
+</body>
+</html>

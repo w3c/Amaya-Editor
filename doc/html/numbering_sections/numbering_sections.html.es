@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Section Numbering</title>
+  <meta name="GENERATOR" content="amaya 5.2" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <style type="text/css">
+  </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="en" lang="en">
+
+<table border="0" summary="toc">
+  <tbody>
+    <tr>
+      <td><p><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya.gif" /></p>
+      </td>
+      <td><p><a href="../Numbering.html.es" accesskey="t"><img alt="top"
+        src="../../images/up.gif" /></a></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="Section">
+<h1><a name="L1064">Section Numbering</a></h1>
+
+<p>Section headings (<code>Hn</code> elements) can be automatically numbered
+to reflect the document structure. Element <code>H1</code> is supposed to be
+the document title and is not numbered, but, when this function is on, all
+other headings (<code>H2</code> to <code>H6</code>) receive a number that is
+computed according to their type and their position in the document
+structure. These numbers are displayed in blue and cannot be edited directly,
+but they are updated automatically whenever a heading is created or deleted.
+They appear not only in the main view, but also in the Table of contents
+view.</p>
+
+<p>When the document is <a href="../Printing.html.es#L1062">printed</a>, section
+numbers appear in the printed document only if the numbering function is on
+at that time.</p>
+
+<p>When the document is saved, section numbers are not saved in the <a
+href="../Publishing.html.es#L1104">HTML form</a>, but they are generated in the
+<a href="../Publishing.html.es#L1105">text form</a>.</p>
+
+<p>The <strong>Section Numbering</strong> command from the
+<strong>Special</strong> menu is a toggle that allows you to switch the
+numbering function on or off.</p>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>About Keyboard Shortcuts</title>
+  <style type="text/css">
+  </style>
+  <meta name="GENERATOR" content="amaya 6.2, see http://www.w3.org/Amaya/" />
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="en" lang="en">
+
+<table border="0" summary="toc">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya.gif" /></td>
+      <td><p><a href="menu_preferences.html.es" accesskey="p"><img
+        alt="previous" src="../../images/left.gif" /></a> <a
+        href="../Configure.html.es" accesskey="t"><img alt="top"
+        src="../../images/up.gif" /></a></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>About Keyboard Shortcuts</h1>
+
+<p>It is useful to invoke menu commands directly from the keyboard. The Thot
+toolkit enables you accomplish this using an application keyboard shortcuts
+file. This file defines a list of associations between an invoked command and
+a keyboard sequence.</p>
+
+<p>The syntax used to define an association is:</p>
+
+<p><code>Directive = KeySeq ':' IdentCommand ;<br />
+&nbsp;KeysSeq = KeySet [ ',' KeySet ] ;<br />
+&nbsp;KeySet = [ Modifier ] [ 'Shift' ] Key ;<br />
+&nbsp;Key = '&lt;Key&gt;' KeyValue / '&lt;Key&gt;' SpecialKey ;<br />
+&nbsp;Modifier = 'Ctrl' / 'Alt' / 'Meta' ;<br />
+&nbsp;KeyValue = 'a' / 'b' / ... ;<br />
+&nbsp;SpecialKey = 'Escape' / 'Delete' / 'Space' / 'BackSpace' /<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+'Enter' / 'Up' / 'Down' / 'Left' / 'Right' /<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+'Home' / 'End' / 'F1' / ... / 'L1' / ... / 'R1' / ... ;<br />
+&nbsp;IdentCommand = 'TtcInsertChar(' Char ')' / NAME '()' ;<br />
+&nbsp;Char = KeyValue / OctalValue / Entity ;</code><code><br />
+OctalValue = '\' NUMBER ;<br />
+Entity = DecEntity / HexaEntity ; <br />
+DecEntity = '&amp;' '#' NUMBER ';' ; <br />
+HexaEntity = '&amp;' '#' 'x' HEXADECIMAL ';' ;</code></p>
+
+<p>To view an example, see the standard files amaya.keyboard (for Unix
+platforms) and amaya.kb (for Windows platforms), which are located in the
+<span class="Link0">Amaya/config directory</span>.</p>
+
+<p>The list of available commands is:</p>
+<ul>
+  <li>Moving commands: 
+    <ul>
+      <li>Move character by character: <code>TtcNextChar</code>,
+        <code>TtcPreviousChar</code></li>
+      <li>Move word by word: <code>TtcNextWord</code>,
+        <code>TtcPreviousWord</code></li>
+      <li>Move to then beginning/end of the current line:
+        <code>TtcStartOfLine</code>, <code>TtcEndOfLine</code></li>
+      <li>Move line by
+        line:<code>TtcNextLine</code>,<code>TtcPreviousLine</code></li>
+      <li>Move element by element:
+        <code>TtcNextElement</code>,<code>TtcPreviousElement</code>,
+        <code>TtcChildElement</code>, <code>TtcParentElement</code></li>
+      <li>Scroll from page to page: <code>TtcPageDown</code>,
+        <code>TtcPageUp</code>,<code>TtcPageTop</code>,<code>TtcPageEnd</code></li>
+      <li>Scroll one line up or one line down: <code>TtcLineUp</code>,
+        <code>TtcLineDown</code> 
+        <p></p>
+      </li>
+    </ul>
+  </li>
+  <li>Selection extension commands: 
+    <ul>
+      <li>Select character by character: <code>TtcNextSelChar</code>,
+        <code>TtcPreviousSelChar</code></li>
+      <li>Select word by word: <code>TtcNextSelWord</code>,
+        <code>TtcPreviousSelWord</code></li>
+      <li>Select to then beginning/end of the current line:
+        cStartOfLine<code>TtcSelStartOfLine</code>,
+        <code>TtcSelEndOfLine</code></li>
+      <li>Select line by
+        line:<code>TtcNextSelLine</code>,<code>TtcPreviousSelLine</code></li>
+    </ul>
+    <p></p>
+  </li>
+  <li>Follow a link or activate an HTML form element (menu, button, etc.):
+    <code>DoAction</code>. 
+    <p></p>
+  </li>
+  <li>Skip to the next (or the first if there is selection) link or HTML form
+    element in the document: <code>NextLinkOrFormElement</code>. 
+    <p></p>
+  </li>
+  <li>Skip to the previous link or HTML form element in the document:
+    <code>PreviousLinkOrFormElement</code>. 
+    <p></p>
+  </li>
+  <li>In File menu: <code>New</code>, <code>NewTemplate</code>,
+    <code>NewCss</code>, <code>OpenDoc</code>,
+    <code>OpenDocInNewWindow</code>, <code>Reload</code>,
+    <code>GotoPreviousHTML</code>, <code>GotoNextHTML</code>,
+    <code>GoToHome</code>, <code>SaveDocument</code>,
+    <code>SaveDocumentAs</code>, <code>Synchronize</code>,
+    <code>SetupAndPrint</code>, <code>PrintAs</code>,
+    <code>CloseDocument</code>, <code>AmayaClose</code> 
+    <p></p>
+  </li>
+  <li>In Edit menu: <code>TtcUndo</code>, <code>TtcRedo</code>,
+    <code>TtcCutSelection</code>, <code>TtcCopySelection</code>,
+    <code>TtcPaste</code>, <code>TtcDeleteSelection</code>,
+    <code>SetBrowserEditor</code>, <code>TtcSearchText</code>,
+    <code>SpellCheck</code>, <code>TransformType</code>. 
+    <p></p>
+  </li>
+  <li>In Structure menu: <code>CreateBase</code>, <code>CreateMeta</code>,
+    <code>CreateLinkInHead</code>, <code>CreateScript</code>,
+    <code>CreateStyle</code>, <code>CreateComment.</code> 
+    <p></p>
+  </li>
+  <li>In Types menu: 
+    <ul>
+      <li>Main Menu: <code>ChangeTitle</code>, <code>CreateAddress</code>
+        <code>CreateParagraph</code>, <code>CreateImage</code>,
+        <code>CreateHorizontalRule</code>, <code>CreateBlockQuote</code>,
+        <code>CreatePreformatted</code>, <code>CreateAddress</code>,
+        <code>CreateDivision</code>, <code>CreateNOSCRIPT</code>,
+        <code>CreateObject</code>, <code>CreateParameter</code>,
+        <code>CreateIFrame</code>, <code>CreateBreak("\212")</code></li>
+      <li>AREA submenu: <code>CreateAreaRect</code>,
+        <code>CreateAreaCircle</code>, <code>CreateAreaPoly</code></li>
+      <li>Form submenu: <code>CreateForm</code>,
+        <code>CreateFileInput</code>, <code>CreateImageInput</code>,
+        <code>CreatePasswordInput</code>, <code>CreateHiddenInput</code>,
+        <code>CreateLabel</code>, <code>CreateFieldset</code>,
+        <code>CreateOptGroup</code>, <code>CreateToggle</code>,
+        <code>CreateRadio</code>, <code>CreateOption</code>,
+        <code>CreateTextInput</code>, <code>CreateTextArea</code>,
+        <code>CreateSubmit</code>, <code>CreateReset</code></li>
+      <li>Heading submenu: <code>CreateHeading1</code>,
+        <code>CreateHeading2</code>, <code>CreateHeading3</code>,
+        <code>CreateHeading4</code>, <code>CreateHeading5</code>,
+        <code>CreateHeading6</code></li>
+      <li>List submenu: <code>CreateList</code>,
+        <code>CreateNumberedList</code>, <code>ThotCreateMenu</code>,
+        <code>ThotCreateDirectory</code>, <code>CreateDefinitionList</code>,
+        <code>CreateDefinitionTerm</code>,
+      <code>CreateDefinitionDef</code></li>
+      <li>Math submenu: <code>CreateInlineMath</code>,
+        <code>CreateMath</code>, <code>CreateMROOT</code>,
+        <code>CreateMSQRT</code>, <code>CreateMFRAC</code>,
+        <code>CreateMSUBSUP</code>, <code>CreateMSUB</code>,
+        <code>CreateMSUP</code>, <code>CreateMUNDEROVER</code>,
+        <code>CreateMUNDER</code>, <code>CreateMOVER</code>,
+        <code>CreateMROW</code>, <code>CreateMMULTISCRIPTS</code>,
+        <code>CreateMTABLE</code></li>
+      <li>OBJECT submenu:
+        <code>CreateObject</code>,<code>CreateParameter</code></li>
+      <li>Table submenu: <code>CreateTable</code>,
+        <code>CreateCaption</code>, <code>CreateTHead</code>,
+        <code>CreateTBody</code>, <code>CreateTFoot</code>,
+        <code>CreateRow</code>, <code>CreateDataCell</code>,
+        <code>CreateHeadingCell</code>, <code>DeleteColumn</code></li>
+    </ul>
+    <p></p>
+  </li>
+  <li>In Links menu: <code>LinkToPreviousTarget</code>,
+    <code>CreateOrChangeLink</code>, <code>CreateTarget</code>,
+    <code>DeleteAnchor</code>. 
+    <p></p>
+  </li>
+  <li>In Views menu: <code>ShowButtons</code>, <code>ShowAddress</code>,
+    <code>ShowMapAreas</code>, <code>ShowTargets</code>, <code>ZoomIn</code>,
+    <code>ZoomOut</code>, <code>ShowStructure</code>,
+    <code>ShowAlternate</code>, <code>ShowLinks</code>, <code>ShowToC</code>,
+    <code>ShowSource</code> 
+    <p></p>
+  </li>
+  <li>In Style menu: 
+    <ul>
+      <li>Main Menu: <code>TtcChangeCharacters</code>,
+        <code>TtcChangeColors</code>, <code>TtcChangeFormat</code>,
+        <code>ChangeBackgroundImage</code>, <code>CreateClass</code>,
+        <code>ApplyClass</code>.</li>
+      <li>Style Sheets submenu: <code>LinkCSS</code>, <code>OpenCSS</code>,
+        <code>DisableCSS</code>, <code>EnableCSS</code>,
+        <code>RemoveCSS</code>.</li>
+      <li>Information Types submenu: <code>SetOnOffEmphasis</code>,
+        <code>SetOnOffStrong</code>, <code>SetOnOffCite</code>,
+        <code>SetOnOffDefinition</code>, <code>SetOnOffCode</code>,
+        <code>SetOnOffVariable</code>, <code>SetOnOffSample</code>,
+        <code>SetOnOffKeyboard</code>, <code>SetOnOffAbbr</code>,
+        <code>SetOnOffAcronym</code>, <code>SetOnOffINS</code>,
+        <code>SetOnOffDEL</code>.</li>
+      <li>Character Element submenu: <code>SetOnOffItalic</code>,
+        <code>SetOnOffBold</code>, <code>SetOnOffTeletype</code>,
+        <code>SetOnOffBig</code>, <code>SetOnOffSmall</code>,
+        <code>SetOnOffSub</code>, <code>SetOnOffSup</code>,
+        <code>SetOnOffQuotation</code>, <code>SetOnOffBDO</code>. 
+        <p></p>
+      </li>
+    </ul>
+  </li>
+  <li>In Special menu: <code>MakeBook</code>, <code>MakeID</code>,
+    <code>ShowLogFile</code>, <code>ConfigGeneral</code>,
+    <code>ConfigPublish</code>, <code>ConfigCache</code>,
+    <code>ConfigProxy</code>, <code>ConfigColor</code>,
+    <code>ConfigGeometry</code>, <code>ConfigLanNeg</code>,
+    <code>ConfigProfile</code>, <code>ConfigTemplates</code>. 
+    <p></p>
+  </li>
+  <li>In Annotations Menu:<code>AnnotateSelection</code>,
+    <code>AnnotateDocument</code>, <code>LoadAnnotations</code>,
+    <code>PostAnnotation</code>, <code>DeleteAnnotation</code>,
+    <code>FilterAnnot</code>, <code>ConfigAnnot</code>. 
+    <p></p>
+  </li>
+  <li>In Help Menu: <code>HelpAmaya</code>, <code>HelpAtW3C</code>,
+    <code>HelpBrowsing</code>, <code>HelpSelecting</code>,
+    <code>HelpSearching</code>, <code>HelpViews</code>,
+    <code>HelpCreating</code>, <code>HelpLinks</code>,
+    <code>HelpChanging</code>, <code>HelpTables</code>,
+    <code>HelpMath</code>, <code>HelpSVG</code>, <code>HelpImageMaps</code>,
+    <code>HelpStyleSheets</code>, <code>HelpAttributes</code>,
+    <code>HelpPublishing</code>, <code>HelpPrinting</code>,
+    <code>HelpNumbering</code>, <code>HelpMakeBook</code>,
+    <code>HelpAnnotation</code>, <code>HelpConfigure</code>,
+    <code>HelpShortCuts</code>, <code>HelpAccess</code>.</li>
+</ul>
+</div>
+</body>
+</html>

@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 6.0, see http://www.w3.org/Amaya/" />
+  <title>Removing Style</title>
+  <style type="text/css">
+  </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="en" lang="en">
+
+<table border="0" summary="toc">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya.gif" /></td>
+      <td><p><a href="creating_html_style_elements.html.es" accesskey="p"><img
+        alt="previous" src="../../images/left.gif" /></a> <a
+        href="../StyleSheets.html.es" accesskey="t"><img alt="top"
+        src="../../images/up.gif" /></a></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Removing Style</h1>
+
+<p>HTML provides some character-level elements that allow you to associate
+style with character strings. You can also remove any associated style from a
+character string.</p>
+
+<p class="ProcedureCaption">To remove style from a character string</p>
+<ol>
+  <li>Select the character string from within the document from which youwant
+    to remove the style. 
+    <p></p>
+  </li>
+  <li>Choose <strong>InformationType</strong> from the
+    <strong>Style</strong>menu. 
+    <p></p>
+  </li>
+  <li>From the submenu, select the style command that you want to remove. For
+    example, if you want to remove the <strong>emphasis</strong> style
+    command from a character string, select <strong>emphasis.</strong> 
+    <p></p>
+    <p class="Note"><strong>Note:</strong> &nbsp;&nbsp; You can also select
+    styles directly from the keyboard. Keyboard shortcuts are listed on the
+    <strong>Style &gt; Information Type</strong> submenu and in the following
+    table.</p>
+  </li>
+</ol>
+
+<p class="TableTitle" style="margin-left:0in"><strong>Table 1: Style Menu
+Commands</strong></p>
+
+<table class="characters">
+  <tbody>
+    <tr>
+      <td width="147" valign="top"><p class="TableTitle"><strong>Style Menu
+        Command</strong></p>
+      </td>
+      <td width="147" valign="top"><p class="TableTitle"><strong>Keyboard
+        Shortcut</strong></p>
+      </td>
+      <td width="147" valign="top"><p class="TableTitle"><strong>Related
+        button</strong></p>
+      </td>
+    </tr>
+    <tr>
+      <td width="147" valign="top"><p class="TableText">Emphasis (em)</p>
+      </td>
+      <td valign="top"><p class="TableText"><code>Shift + Ctrl + I</code></p>
+      </td>
+      <td valign="top"><img src="../../images/Em.gif" alt="Emphasis button"
+      /></td>
+    </tr>
+    <tr>
+      <td width="147" valign="top"><p class="TableText">Strong</p>
+      </td>
+      <td valign="top"><p class="TableText"><code>Shift + Ctrl + B</code></p>
+      </td>
+      <td valign="top"><img src="../../images/Strong.gif" alt="Strong button"
+        /></td>
+    </tr>
+    <tr>
+      <td width="147" valign="top"><p class="TableText">Cite</p>
+      </td>
+      <td valign="top"><p class="TableText"><code>Alt + t</code><br />
+        <code>Alt + w</code></p>
+      </td>
+      <td></td>
+    </tr>
+    <tr>
+      <td width="147" valign="top"><p class="TableText">Definition (dfn)</p>
+      </td>
+      <td valign="top"><p class="TableText"><code>Alt + t</code><br />
+        <code>Alt + d</code></p>
+      </td>
+      <td></td>
+    </tr>
+    <tr>
+      <td width="147" valign="top"><p class="TableText">Code</p>
+      </td>
+      <td valign="top"><p class="TableText"><code>Alt + t</code><br />
+        <code>Alt + c</code></p>
+      </td>
+      <td valign="top"><img src="../../images/code.gif" alt="Code button"
+      /></td>
+    </tr>
+    <tr>
+      <td width="147" valign="top"><p class="TableText">Variable (var)</p>
+      </td>
+      <td valign="top"><p class="TableText"><code>Alt + t</code><br />
+        <code>Alt + v</code></p>
+      </td>
+      <td></td>
+    </tr>
+    <tr>
+      <td width="147" valign="top"><p class="TableText">Sample (samp)</p>
+      </td>
+      <td valign="top"><p class="TableText"><code>Alt + t</code><br />
+        <code>Alt + s</code></p>
+      </td>
+      <td></td>
+    </tr>
+    <tr>
+      <td width="147" valign="top"><p class="TableText">Keyboard (kbd)</p>
+      </td>
+      <td valign="top"><p class="TableText"><code>Alt + t</code><br />
+        <code>Alt + k</code></p>
+      </td>
+      <td></td>
+    </tr>
+    <tr>
+      <td width="147" valign="top"><p class="TableText">Abbreviation
+        (abbr)</p>
+      </td>
+      <td valign="top"><p class="TableText"><code>Alt + t</code><br />
+        <code>Alt + a</code></p>
+      </td>
+      <td></td>
+    </tr>
+    <tr>
+      <td width="147" valign="top"><p class="TableText">Acronym</p>
+      </td>
+      <td valign="top"><p class="TableText"><code>Alt + t</code><br />
+        <code>Alt + z</code></p>
+      </td>
+      <td></td>
+    </tr>
+    <tr>
+      <td width="147" valign="top"><p class="TableText">Insertion (ins)</p>
+      </td>
+      <td valign="top"><p class="TableText"><code>Alt + t</code><br />
+        <code>Alt + i</code></p>
+      </td>
+      <td></td>
+    </tr>
+    <tr>
+      <td width="147" valign="top"><p class="TableText">Deletion (del)</p>
+      </td>
+      <td valign="top"><p class="TableText"><code>Alt + t</code><br />
+        <code>Alt + Delete</code></p>
+      </td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>&nbsp;<strong>Note:</strong> The attributes of all style commands
+attributed to any character string are removed when you highlight that text
+and reselect the style commands.</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 5.1" />
+  <title>About Linking External and User Style Sheets</title>
+  <style type="text/css">
+ </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="en" lang="en">
+
+<table border="0" summary="toc">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya.gif" /></td>
+      <td><p><a href="creating_generic_style_for_an_element_or_a_class.html.es"
+        accesskey="p"><img alt="previous" src="../../images/left.gif" /></a>
+        <a href="../StyleSheets.html.es" accesskey="t"><img alt="top"
+        src="../../images/up.gif" /></a> <a href="handling_external_css.html.es"
+        accesskey="n"><img alt="next" src="../../images/right.gif" /></a></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>About Linking External and User Style Sheets</h1>
+
+<p>A document can link to several external style sheets that are downloaded
+with the document and applied to it.</p>
+
+<p>An external style sheet can apply to multiple documents. When the same
+style sheet applies to several displayed documents, Amaya loads only one
+instance of the style sheet.</p>
+
+<p>Any user can define a specific style sheet that applies to all documents
+loaded on their system. This style sheet is called the <b>user's</b> style
+sheet. It is stored in the user's local environment, in the <span
+class="Link0"><code>AmayaHome</code> directory</span> as the local file
+<code>amaya.css</code>.</p>
+
+<p>For example, if you prefer to display documents in Helvetica on your
+screen and print them in small size, you can create a user's style sheet with
+following CSS rules:</p>
+
+<p><code>@media print {<br />
+body {font-size: 10pt}<br />
+}<br />
+@media screen {<br />
+body {font-family: Helvetica}<br />
+}</code></p>
+</div>
+
+</body>
+</html>

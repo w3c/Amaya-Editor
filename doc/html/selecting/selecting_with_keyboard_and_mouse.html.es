@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 5.3, see http://www.w3.org/Amaya/" />
+  <title>Selecting with Keyboard and Mouse</title>
+  <style type="text/css">
+ </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="en" lang="en">
+
+<table border="0" summary="toc">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya.gif" /></td>
+      <td><p><a href="../Selecting.html.es" accesskey="t"><img alt="top"
+        src="../../images/up.gif" /></a> <a href="selecting_images.html.es"
+        accesskey="n"><img alt="next" src="../../images/right.gif" /></a></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Selecting with Keyboard and Mouse</h1>
+
+<p>Many commands in Amaya act on the current selection. You can make a
+selection using the keyboard or the mouse, as described below.</p>
+
+<p>No matter how you make the current selection, Amaya displays the type of
+the first selected element at the bottom of the window, followed by the types
+of the enclosing elements in the structure. This may be helpful when the
+document structure is complex.</p>
+
+<p>For example, selecting a word in this sentence means that the status bar
+reads</p>
+
+<p><samp>text \ p \ body \ html \ Document</samp></p>
+
+<p>meaning that the thing selected is some text within a <code>p</code>
+element (which is within the body etc)</p>
+
+<p>Selecting <strong>this structure element</strong> (for example click on
+the word structure, then press <kbd>esc</kbd>/<kbd>f2</kbd>) gives</p>
+
+<p><samp>strong \ p \ body \ html \ Document</samp></p>
+
+<h2>Selecting with the mouse</h2>
+<ul>
+  <li>To move the insertion point, click with the left mouse button.<br />
+  </li>
+  <li>To select some text, drag across a region: hold down the left mouse
+    button, move the mouse, and release the button when the desired text is
+    selected.<br />
+  </li>
+  <li>To select an entire word, double-click on any character of a word.<br />
+  </li>
+  <li>To select a whole element such as a list item, click its bullet or
+    number.<br />
+  </li>
+  <li>To extend the selection, click with the left mouse button while holding
+    down the <code>Shift</code> key.</li>
+  <li>To select a structure element, click within the element you want and
+    then select the desired structure level via the keyboard as described
+    below</li>
+</ul>
+
+<h2>Selecting from the keyboard</h2>
+<ul>
+  <li>To select structure elements using the keyboard: 
+    <ul>
+      <li>Press the <code>Esc</code> key on Unix/Mac or the <code>F2</code>
+        key on Windows to select the parent element in the document
+        structure. Press the key several times to select containers (and
+        everything in them) up the structure towards the root.</li>
+      <li>Press <code>Control -</code> (minus key) to select a child
+      element.</li>
+      <li>Press <code>Control k</code> to select the next element at the same
+        level, or at the level of the parent element if there is no next or
+        previous child of the current level.</li>
+      <li>Press <code>Control j</code> to select the previous element at the
+        same level, or at the level of the parent element if there is no
+        previous child of the current level.</li>
+    </ul>
+  </li>
+  <li>To move the insertion point in the four directions, use the four arrow
+    keys (<code>Left</code>, <code>Right</code>, <code>Up</code>, and
+    <code>Down</code>). If there is no visible selection in the document
+    window, Amaya generates a new selection at the top left corner of the
+    window.<br />
+  </li>
+  <li>To extend the current selection in one of these directions, hold down
+    the <code>Shift</code> key while pressing the four arrow keys
+    (<code>Shift-Left</code>, <code>Shift-Right</code>,
+    <code>Shift-Up</code>, and <code>Shift-Down</code>).<br />
+  </li>
+  <li>To move the insertion point to the beginning of the line, press the
+    <code>Home</code> key.<br />
+  </li>
+  <li>To move the insertion point to the end of the line, press the
+    <code>End</code> Key.<br />
+  </li>
+  <li>To extend the current selection to the current word, press
+    <code>Alt-Enter</code>. If the selection is within a link,
+    <code>Alt-Enter</code> will activate the link instead of selecting the
+    current word.<br />
+  </li>
+  <li>To move the current selection to the beginning of the previous word,
+    press <code>Control-Left</code>.<br />
+  </li>
+  <li>To move the current selection to the beginning of the next word, press
+    <code>Control-Right</code>.<br />
+  </li>
+  <li>To extend the current selection to the beginning of the previous word,
+    press <code>Shift-Control-Left</code>.<br />
+  </li>
+  <li>To extend the current selection to the end of the next word, press
+    <code>Shift-Control-Right</code>.<br />
+  </li>
+  <li>To scroll the document one line up, press <code>Control-Up</code>.<br />
+  </li>
+  <li>To scroll the document one line down, press
+    <code>Control-Down</code>.<br />
+  </li>
+  <li>To scroll to the beginning of the document, press
+    <code>Control-Home</code>.<br />
+  </li>
+  <li>To scroll to the end of the document, press
+  <code>Control-End</code>.</li>
+</ul>
+
+<p>You can also select elements using the Structure view or select images.</p>
+</div>
+</body>
+</html>

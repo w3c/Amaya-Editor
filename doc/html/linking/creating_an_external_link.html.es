@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content="amaya 6.4, see http://www.w3.org/Amaya/" />
+  <title>Crear un Enlace Externo</title>
+  <style type="text/css">
+  </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="en" lang="en">
+
+<table border="0" summary="toc">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya.gif" /></td>
+      <td><p><a href="../Links.html.es" accesskey="t"><img alt="top"
+        src="../../images/up.gif" /></a> <a
+        href="creating_an_internal_link.html.es" accesskey="n"><img
+        alt="next" src="../../images/right.gif" /></a></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Crear un Enlace Externo</h1>
+
+<p class="ProcedureCaption">To create an anchor that is a link to another
+document:</p>
+<ol>
+  <li>Click and drag to select the text for the link you are creating. 
+    <p></p>
+  </li>
+  <li>Click the <strong>Link</strong> button. The cursor changes from an
+    arrow to a hand. 
+    <p></p>
+  </li>
+  <li>To create the link to the other document, do one of the following: 
+    <p></p>
+    <ul>
+      <li>If the target document is displayed in another Amaya window, click
+        anywhere within that window to create the link. 
+        <p></p>
+      </li>
+      <li>If the target document is not displayed in another Amaya window,
+        press any key.&nbsp; A dialog prompts you for the location of the
+        target document. Type the URI of the target document and then click
+        <strong>Confirm</strong> to create the link.</li>
+    </ul>
+  </li>
+</ol>
+
+<h2>See also:</h2>
+<ul>
+  <li><a href="creating_an_internal_link.html.es">Creating and Internal
+    Link</a></li>
+</ul>
+
+<p></p>
+</div>
+</body>
+</html>

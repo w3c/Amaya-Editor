@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+	
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 5.2" />
+  <title>Creating and Updating a Style Attribute</title>
+  <style type="text/css"></style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="en" lang="en">
+
+<table border="0" summary="toc">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya.gif" /></td>
+      <td><p><a href="working_with_styles.html.es" accesskey="p"><img alt="previous"
+        src="../../images/left.gif" /></a> 
+		<a href="../StyleSheets.html.es" accesskey="t"><img alt="top" src="../../images/up.gif" /></a> 
+		<a href="creating_generic_style_for_an_element_or_a_class.html.es" accesskey="n"><img alt="next"
+        src="../../images/right.gif" /></a></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Creating and Updating a Style Attribute</h1>
+
+<p>The first four entries of the <strong>Style</strong> menu open a dialog
+that lets you associate a style attribute with the currently selected
+elements:</p>
+<ul>
+  <li><strong>Character style</strong> lets you choose the font family, the
+    character style, the body size, and the underline style.
+    <p></p>
+  </li>
+  <li><strong>Colors</strong> let you choose the foreground and background
+    colors from a palette. Click a palette cell with the left button to set
+    the foreground color, and click with the middle button to set the
+    background color.
+    <p></p>
+  </li>
+  <li><strong>Format</strong> enables you to set alignment, indentation,
+    justification, and line spacing.
+    <p></p>
+  </li>
+  <li><strong>Background image</strong> enables you to choose a background
+    image and its repeat mode.</li>
+</ul>
+
+<p>In all these dialogs, Default options enable you to remove any
+corresponding style information for the selected elements.</p>
+
+<p>All modifications made with these dialogs can be viewed immediately in the
+Formatted and Structure views.</p>
+
+<h2>See Also:</h2>
+<ul>
+  <li><span class="Link"><a href="working_with_styles.html.es">Working with
+    Styles</a></span></li>
+</ul>
+</div>
+
+</body>
+</html>

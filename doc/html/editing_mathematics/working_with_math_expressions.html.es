@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="amaya 5.3, see http://www.w3.org/Amaya/">
+  <title>Working with Mathematical Expressions</title>
+  <style type="text/css">
+  </style>
+  <link href="../style.css" rel="stylesheet" type="text/css">
+</head>
+
+<body xml:lang="en" lang="en">
+
+<table border="0" summary="toc">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home"> <img alt="Amaya"
+        src="../../images/amaya.gif"></td>
+      <td><p><a href="../Math.html.es" accesskey="t"><img alt="top"
+        src="../../images/up.gif"></a> <a
+        href="about_entering_math_constructs_using_the_keyboard.html.es"
+        accesskey="n"><img alt="next" src="../../images/right.gif"></a></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body" class="Section1">
+<h1>Working with Mathematical Expressions</h1>
+
+<p>Amaya enables you to include mathematical expressions in web pages, using
+the Mathematical Markup Language (<a
+href="http://www.w3.org/TR/MathML2/">MathML</a>) specification.</p>
+
+<p>Mathematical expressions are handled as structured components, in the same
+way as HTML elements. Therefore, you can manipulate math expressions in the
+same way you manipulate other parts of HTML documents. All editing commands
+provided by Amaya for handling text are also available for math. In addition,
+there are some other controls for entering mathematical constructs.</p>
+
+<p>For more information on working with mathematical expressions, see the
+following:</p>
+<ul>
+  <li><a href="editing_math_expressions.html.es">Creating a Mathematical
+    Expression</a></li>
+  <li><a href="about_entering_math_characters.html.es">About Entering Math
+    Characters</a></li>
+  <li><a href="about_entering_math_constructs_using_the_keyboard.html.es">About
+    Entering Math Constructs using the Keyboard</a></li>
+  <li><a href="the_math_palette_and_the_types.html.es">The Math Palette and the
+    Types &gt; Math Menu</a></li>
+</ul>
+
+
+</div>
+</body>
+</html>

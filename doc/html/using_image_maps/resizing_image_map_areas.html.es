@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+	
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 5.2" />
+  <title>Resizing Image Map Areas</title>
+  <style type="text/css"> </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="en" lang="en">
+
+<table border="0" summary="toc">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya.gif" /></td>
+      <td><p> <a href="moving_image_map_areas.html.es" accesskey="p"><img alt="previous"
+        src="../../images/left.gif" /></a>
+		<a href="../ImageMaps.html.es" accesskey="t"><img alt="top" src="../../images/up.gif" /></a> 
+		<a href="about_alternative_text_and_long_descriptions.html.es" accesskey="n"><img alt="next"
+        src="../../images/right.gif" /></a></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Resizing Image Map Areas</h1>
+
+<p>After you have <a href="creating_clientside_image_maps.html.es">defined an
+area</a> within an image map, you may need to resize that area.</p>
+
+<p class="ProcedureCaption">To resize the image map area directly from the
+keyboard</p>
+<ol>
+  <li>Move the cursor into an area of the image map.</li>
+  <li>Press the <code>Control</code> key and right-click the mouse. This will
+    highlight the image map area.</li>
+  <li>Release the Control key but continue to hold down the right-button of
+    the mouse. Use the mouse to drag the image area to the size you want.</li>
+</ol>
+
+<p class="ProcedureCaption">To resize the area using the Structure view</p>
+<ol>
+  <li>Select <strong>Show Structure</strong> from the Select Show Structure
+    menu (or press <code>Alt + v</code> then <code>Alt + s</code>). The
+    structure view of the document will open in another window.</li>
+  <li>Edit the <code>coords</code> attribute manually. For example,
+    <code>coords=25,29,16</code> might become
+  <code>coords=25,28,24.</code></li>
+  <li>The image map area will resize in the open browser window.</li>
+</ol>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+	
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <title>Adding a New Column to a Table</title>
+  <style type="text/css">
+  </style>
+  <meta name="GENERATOR" content="amaya 5.2" />
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="en" lang="en">
+
+<table border="0" summary="toc">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya.gif" /></td>
+      <td><p><a href="create_table.html.es" accesskey="p"><img alt="previous"
+        src="../../images/left.gif" /></a> 
+		<a href="../Tables.html.es" accesskey="t"><img alt="top" src="../../images/up.gif" /></a> 
+		<a href="add_row.html.es" accesskey="n"><img alt="next"
+        src="../../images/right.gif" /></a></p>
+      </td>
+    </tr>
+  </tbody>
+</table> 
+
+<div id="page_body">
+<h1>Adding a New Column to a Table</h1>
+
+<p>New columns can be easily added to a table using the
+<strong>Enter</strong> key.</p>
+
+<p class="ProcedureCaption">To add a new column to a table:</p>
+<ol>
+  <li>To create a new column to the left of an existing cell, click at the
+    beginning of the cell content. To create a new column to the right of an
+    existing cell, move the cursor to the end of the cell content.
+    <p></p>
+  </li>
+  <li>Press the <strong>Enter</strong> key twice to create a new cell and its
+    corresponding column.</li>
+</ol>
+</div>
+
+</body>
+</html>

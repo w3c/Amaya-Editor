@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <title>Exiting Anchors or Styled Character Strings</title>
+  <style type="text/css">
+  </style>
+  <meta name="generator" content="amaya 6.0, see http://www.w3.org/Amaya/" />
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="en" lang="en">
+
+<table border="0" summary="toc">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya.gif" /></td>
+      <td><p><a href="the_enter_key.html.es" accesskey="p"><img alt="previous"
+        src="../../images/left.gif" /></a> <a href="../Changing.html.es"
+        accesskey="t"><img alt="top" src="../../images/up.gif" /></a> <a
+        href="creating_nested_structures.html.es" accesskey="n"><img alt="next"
+        src="../../images/right.gif" /></a></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Exiting Anchors, Styled Character Strings, etc.</h1>
+
+<p>When a paragraph or another block of text is styled—terminated by an
+anchor or a character string in bold, italic or other such style—moving the
+insertion point to the end and typing new text appends characters to the
+anchor or the styled string.</p>
+
+<p>To exit an anchor or styled element and enter plain text:</p>
+<ol>
+  <li>Move the cursor to the end of the anchor or style element, and then
+    press <b>Enter</b> and continue typing after the element. </li>
+  <li>The same method can be used to enter plain text at the beginning of a
+    block starting with an anchor or styled characters. Move the cursor to
+    the beginning of the anchor or style element, and then press <b>Enter</b>
+    and continue typing before the element.</li>
+</ol>
+
+<p>To get out of a &lt;pre&gt; or a table:</p>
+<ul>
+  <li>When the cursor is at the end of  a <code>&lt;pre&gt;</code>formatted,
+    hitting the <b>Enter</b> key creates a new line in the &lt;pre&gt;. To
+    create another element, say a paragraph, after the &lt;pre&gt;, you can
+    use the Types menu and select the type of the element you want to
+  create.</li>
+  <li>Another way to achieve this result is to select the whole
+    <code>&lt;pre&gt;</code> element with the <b>ESC</b> key (Linux) or the
+    <b>F2</b> key (Windows) and to press <b>Enter</b>. This creates a new
+    paragraph after the <code>&lt;pre&gt;</code> element.</li>
+</ul>
+
+<p>This works also for a table: select the whole table and press <b>Enter</b>
+to create a new paragraph after the table. You can also get out of a table 
+by pressing Enter until you are out of the table.</p>
+
+<p></p>
+</div>
+</body>
+</html>

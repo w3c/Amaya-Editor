@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+	
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 5.2" />
+  <title>Using client-side image maps</title>
+  <style type="text/css"></style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="en" lang="en">
+
+<table border="0" summary="toc">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya.gif" /></td>
+      <td><p> <a href="creating_clientside_image_maps.html.es" accesskey="p"><img alt="previous"
+        src="../../images/left.gif" /></a>
+		<a href="../ImageMaps.html.es" accesskey="t"><img alt="top" src="../../images/up.gif" /></a> 
+		<a href="moving_image_map_areas.html.es" accesskey="n"><img alt="next"
+        src="../../images/right.gif" /></a></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Using client-side image maps</h1>
+
+<p>Amaya enables you to use client-side image maps.</p>
+
+<p class="ProcedureCaption">To activate an area in an image map</p>
+<ul>
+  <li>Double-click on the area within the image. Amaya retieves the URI
+    associated to this area, and opens it in the browser.
+    <p></p>
+  </li>
+</ul>
+
+<p class="ProcedureCaption">To display the existing areas within an image
+map</p>
+<ul>
+  <li>Select <strong>Show Map Areas</strong> from the <strong>Views</strong>
+    menu.
+    <p></p>
+    <p class="Note"><strong>Note: </strong>   You can also
+    display existing areas directly from the keyboard by clicking <code>Alt +
+    V</code> then <code>Alt + M</code>.</p>
+  </li>
+</ul>
+</div>
+
+</body>
+</html>

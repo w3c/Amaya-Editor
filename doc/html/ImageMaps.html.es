@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <title>Using Image Maps</title>
+  <style type="text/css">
+  </style>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="en" lang="en">
+
+<table border="0" summary="toc">
+  <tbody>
+    <tr>
+      <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
+        src="../images/amaya.gif" /></p>
+      </td>
+      <td><p><a href="Tables.html.es" accesskey="p"><img alt="previous"
+        src="../images/left.gif" /></a> <a href="Manual.html.es"
+        accesskey="t"><img alt="top" src="../images/up.gif" /></a> <a
+        href="Math.html.es" accesskey="n"><img alt="next"
+        src="../images/right.gif" /></a></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="Client-sid">
+<h1>Using Image Maps</h1>
+
+<p>The following topics are covered in this section:</p>
+<ul>
+  <li><a href="using_image_maps/working_with_image_maps.html.es#page_body"
+    rel="subducment">Working with Image Maps</a></li>
+  <li><a href="using_image_maps/adding_an_image.html.es#page_body"
+    rel="subdocument">Adding an Image</a></li>
+  <li><a
+    href="using_image_maps/creating_clientside_image_maps.html.es#page_body"
+    rel="subdocument">Creating Clientside Image Maps</a></li>
+  <li><a href="using_image_maps/using_clientside_image_maps.html.es#page_body"
+    rel="subdocument">Using Clientside Image Maps</a></li>
+  <li><a href="using_image_maps/moving_image_map_areas.html.es#page_body"
+    rel="subdocument">Moving Image Map Areas</a></li>
+  <li><a href="using_image_maps/resizing_image_map_areas.html.es#page_body"
+    rel="subdocument">Resizing Image Map Areas</a></li>
+  <li><a
+    href="using_image_maps/about_alternative_text_and_long_descriptions.html.es#page_body"
+    rel="subdocument">About Alternative Text and Long Descriptions</a></li>
+</ul>
+</div>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 5.2" />
+  <title>Resizing graphics</title>
+  <style type="text/css">
+  </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="en" lang="en">
+
+<table border="0" summary="toc">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya.gif" /></td>
+      <td><p><a href="moving_graphics.html.es" accesskey="p"><img alt="previous"
+        src="../../images/left.gif" /></a> <a href="../SVG.html.es"
+        accesskey="t"><img alt="top" src="../../images/up.gif" /></a> <a
+        href="SVGLibrary.html.es" accesskey="n"><img alt="next"
+        src="../../images/right.gif" /></a></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Resizing Graphics</h1>
+
+<p>After you have <a href="creating_graphics_with_the_palette.html.es">created a
+new SVG graphic</a>, you can resize the graphic.</p>
+
+<p class="ProcedureCaption">To resize the graphic directly using the
+keyboard</p>
+<ol>
+  <li>Move the cursor into an area of the graphic.</li>
+  <li>Press the <code>Control</code> key and right-click the mouse. This will
+    highlight the image map area.</li>
+  <li>Release the <code>Control</code> key but continue to hold down the
+    right mouse button. Use the mouse to change the size of the highlighted
+    graphic.</li>
+</ol>
+
+<p class="ProcedureCaption">To resize the graphic by editing the
+attributes</p>
+<ol>
+  <li>Select the graphic.</li>
+  <li>Open the <strong>Attributes</strong> menu and select the attribute you
+    want to edit.</li>
+  <li>In the dialog, change the attribute, click <strong>Apply</strong>, then
+    click <strong>Close</strong>.</li>
+</ol>
+</div>
+
+</body>
+</html>

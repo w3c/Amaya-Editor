@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 5.4, see http://www.w3.org/Amaya/" />
+  <title>Windows Platforms</title>
+  <style type="text/css">
+ </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="en" lang="en">
+
+<table border="0" summary="toc">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya.gif" /></td>
+      <td><p><a href="unix_platforms.html.es" accesskey="p"><img alt="previous"
+        src="../../images/left.gif" /></a> <a href="../Printing.html.es"
+        accesskey="t"><img alt="top" src="../../images/up.gif" /></a> <a
+        href="print_command.html.es" accesskey="n"><img alt="next"
+        src="../../images/right.gif" /></a></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Printing on Windows Platforms</h1>
+
+<p>On Windows platforms, the first dialog when <strong>Setup and
+Print</strong> is pressed allows you to make some choices like: </p>
+<ul>
+  <li>generate a table of contents for the document,</li>
+  <li>generate a table of links for the document,</li>
+  <li>print the document URL on top of each page,</li>
+  <li>and print with or without style sheets.</li>
+</ul>
+
+<p>The next dialog, or when the <strong>Print</strong> command is selected, 
+is the standard Windows dialog, which allows you to choose the other printing
+parameters.</p>
+
+<h2>See Also:</h2>
+<ul>
+  <li><a href="using_the_setup_and_print_command.html.es">Using the Setup and
+    Print Command</a></li>
+  <li><a href="unix_platforms.html.es">Printing on Unix Platforms</a></li>
+  <li><a href="print_command.html.es">The Print Command</a></li>
+</ul>
+</div>
+</body>
+</html>
