@@ -383,24 +383,22 @@ void FrameToRedisplay (ThotWindow w, int frame, void *ev)
      /* don't handle a document in mode NoComputedDisplay */
      documentDisplayMode[FrameTable[frame].FrDoc - 1] != NoComputedDisplay)
    {
-	 /* save the previous clipping */
+     /* save the previous clipping */
      pFrame = &ViewFrameTable[frame - 1];
-	 xmin = pFrame->FrClipXBegin;
-	 xmax = pFrame->FrClipXEnd;
-	 ymin = pFrame->FrClipYBegin;
-	 ymax = pFrame->FrClipYEnd;
-     pFrame = &ViewFrameTable[frame - 1];
-	 pFrame->FrClipXBegin = 0;
-	 pFrame->FrClipXEnd = 0;
-	 pFrame->FrClipYBegin = 0;
+     xmin = pFrame->FrClipXBegin;
+     xmax = pFrame->FrClipXEnd;
+     ymin = pFrame->FrClipYBegin;
+     ymax = pFrame->FrClipYEnd;
+     pFrame->FrClipXBegin = 0;
+     pFrame->FrClipXEnd = 0;
+     pFrame->FrClipYBegin = 0;
      DefRegion (frame, x, y, x + l, y + h);
      RedrawFrameBottom (frame, 0, NULL);
-	 /* restore the previous clipping */
-     pFrame = &ViewFrameTable[frame - 1];
-	 pFrame->FrClipXBegin = xmin;
-	 pFrame->FrClipXEnd = xmax;
-	 pFrame->FrClipYBegin = ymin;
-	 pFrame->FrClipYEnd = ymax;
+     /* restore the previous clipping */
+     pFrame->FrClipXBegin = xmin;
+     pFrame->FrClipXEnd = xmax;
+     pFrame->FrClipYBegin = ymin;
+     pFrame->FrClipYEnd = ymax;
    }
 }
 

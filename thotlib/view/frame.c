@@ -455,7 +455,8 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 			box = pBox;
 		      if (topBox == NULL)
 			topBox = box;
-		      else if (box->BxYOrg < topBox->BxYOrg)
+		      else if (bt >= winTop && topBox->BxYOrg < winTop)
+			  /* the top of the box should be visible */
 			topBox = box;
 		      userSpec = FALSE;
 		      if (pBox->BxNew)
