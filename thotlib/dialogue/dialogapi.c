@@ -604,8 +604,6 @@ void TtaInitDialogue (char *server, ThotAppContext *app_context)
      printf ("cannot open display\n");
      gtk_exit (0);
    }
-   else
-     gtk_init (&appArgc, &appArgv);
    
    /* load specific gtkrc file */
    char                fname[MAX_TXT_LEN], name[MAX_TXT_LEN];
