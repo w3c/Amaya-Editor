@@ -1072,151 +1072,142 @@ char               *tempfile;
 char               *documentname;
 char               *content_type;
 boolean		    history;
-
 #endif
 {
-   Document            newdoc = 0;
-   char               *tempdocument;
-   char               *tempdir;
-   char               *s;
-   int                 i, j;
-   boolean	       PlainText;
-   boolean	       HTMLfile;
+  Document            newdoc = 0;
+  char               *tempdocument;
+  char               *tempdir;
+  char               *s;
+  int                 i, j;
+  boolean	       PlainText;
+  boolean	       HTMLfile;
 
-   tempdocument = TtaGetMemory (MAX_LENGTH);
-
-   PlainText = FALSE;
-   HTMLfile = FALSE;
-   if (content_type == NULL || content_type[0] == EOS)
-      /* no content type */
-      {
+  PlainText = FALSE;
+  HTMLfile = FALSE;
+  tempdir = tempdocument = NULL;
+  if (content_type == NULL || content_type[0] == EOS)
+    /* no content type */
+    {
       if (tempfile[0] != EOS)
-	  /* It's a document loaded from the Web */
-	  /* Let's suppose it's HTML */
-          HTMLfile = TRUE;
-      else
-          /* local document */
-          /* try to guess the document type after its file name extension */
-          if (IsHTMLName (pathname))
-	     HTMLfile = TRUE;
-	  else
-	     if (!IsImageName (pathname))
-	        PlainText = TRUE;
+	/* It's a document loaded from the Web */
+	/* Let's suppose it's HTML */
+	HTMLfile = TRUE;
+      else if (IsHTMLName (pathname))
+	/* local document */
+	/* try to guess the document type after its file name extension */
+	HTMLfile = TRUE;
+      else if (!IsImageName (pathname))
+	PlainText = TRUE;
       }
    else
-      /* the server returned a content type */
-      {
-      i = 0;
-      while (content_type[i] != '/' && content_type[i] != EOS)
-	  i++;
-      if (content_type[i] == '/')
+     /* the server returned a content type */
+     {
+       i = 0;
+       while (content_type[i] != '/' && content_type[i] != EOS)
+	 i++;
+       if (content_type[i] == '/')
 	 {
-	 content_type[i] = EOS;
-	 j = i+1;
-	 while (content_type[j] != ';' && content_type[j] != EOS)
-	    j++;
-         if (content_type[j] == ';')
-	    content_type[j] = EOS;
-	 if (strcasecmp (content_type, "text") == 0)
-	    {
-	    if (strncasecmp (&content_type[i+1], "html", 4) == 0)
-	       HTMLfile = TRUE;
-	    else
-	       PlainText = TRUE;
-	    }
+	   content_type[i] = EOS;
+	   j = i+1;
+	   while (content_type[j] != ';' && content_type[j] != EOS)
+	     j++;
+	   if (content_type[j] == ';')
+	     content_type[j] = EOS;
+	   if (strcasecmp (content_type, "text") == 0)
+	     {
+	       if (strncasecmp (&content_type[i+1], "html", 4) == 0)
+		 HTMLfile = TRUE;
+	       else
+		 PlainText = TRUE;
+	     }
 	 }
-      }
-   if (!PlainText && !HTMLfile && tempfile[0] != EOS)
-     {
-	/* The document is not an HTML file and cannot be parsed */
-	/* rename the temporary file */
-	strcpy (SavingFile, tempfile);
-	SavingDocument = (Document) None;
-	SavingObject = (Document) None;
-	TtaExtractName (pathname, tempfile, tempdocument);
-	/* reinitialize directories and document lists */
-	strcpy (pathname, DirectoryName);
-	strcat (pathname, DIR_STR);
-	strcat (pathname, tempdocument);
-	ResetStop (doc);
-	InitSaveObjectForm (doc, 1, SavingFile, pathname);
      }
-   else if (pathname[0] != EOS)
-     {
-	if (DocumentURLs[doc])
-	   {
-	   /* save the URL of the old document in the history, if the same
-	      window is reused, i.e. if the old document has not been
-	      modified */
-	   if (history)
-	      if (!TtaIsDocumentModified (doc))
-	         AddDocHistory (doc, DocumentURLs[doc]);
-	   /* free the previous document */
-	   newdoc = InitDocView (doc, pathname);
-	   }
-	else
-	   newdoc = doc;
-
-	/* what we have to do if doc and targetDocument are different */
-	tempdir = TtaGetMemory (MAX_LENGTH);
-	if (tempfile[0] != EOS)
-	  {
-	     /* It is a document loaded from the Web */
-	     if (!TtaFileExist (tempfile))
-	       {
-		  /* Nothing is loaded */
-		  ResetStop (doc);
-		  TtaFreeMemory (tempdocument);
-		  return (0);
-	       }
-	     /* we have to rename the temporary file */
-	     sprintf (tempdir, "%s%s%d%s", TempFileDirectory, DIR_STR, newdoc, DIR_STR);
-	     strcpy (tempdocument, tempdir);
-	     strcat (tempdocument, documentname);
-	     if (doc != newdoc)
-	       {
-                 if (!TtaCheckDirectory (tempdir))
-		    /* directory did not exist */
-		    mkdir (tempdir, S_IRWXU);
-		 /* now we can rename the local name of a remote document */
-		 TtaFileCopy (tempfile, tempdocument);
-		 TtaFileUnlink (tempfile);
-	       }
-	     else
-	       {
-		  /* now we can rename the local name of a remote document */
-		  TtaFileUnlink (tempdocument);
-		  rename (tempfile, tempdocument);
-	       }
-	  }
-	else
-	  {
-	     /* It is a local document */
-	     strcpy (tempdocument, pathname);
-	     TtaExtractName (tempdocument, tempdir, documentname);
-	  }
-
-	/* save the document name into the document table */
-	i = strlen (pathname) + 1;
-	s = TtaGetMemory (i);
-	strcpy (s, pathname);
-	if (DocumentURLs[(int) newdoc] != NULL)
-	   TtaFreeMemory (DocumentURLs[(int) newdoc]);
-	DocumentURLs[(int) newdoc] = s;
-	if (TtaGetViewFrame (newdoc, 1) != 0)
-	   /* this document is displayed */
-	   TtaSetTextZone (newdoc, 1, 1, s);
-
-	StartHTMLParser (newdoc, tempdocument, documentname, tempdir, pathname,
-			 PlainText);
-	if (newdoc != doc)
-	   /* the document is displayed in a different window */
-	   /* reset the history of the new window */
-           InitDocHistory (newdoc);
-	TtaFreeMemory (tempdir);
-     }
-   TtaFreeMemory (tempdocument);
-   return (newdoc);
+  if (!PlainText && !HTMLfile && tempfile[0] != EOS)
+    {
+      /* The document is not an HTML file and cannot be parsed */
+      /* rename the temporary file */
+      strcpy (SavingFile, tempfile);
+      SavingDocument = 0;
+      SavingObject = 0;
+      tempdocument = TtaGetMemory (MAX_LENGTH);
+      TtaExtractName (pathname, tempfile, tempdocument);
+      /* reinitialize directories and document lists */
+      strcpy (pathname, DirectoryName);
+      strcat (pathname, DIR_STR);
+      strcat (pathname, tempdocument);
+      ResetStop (doc);
+      InitSaveObjectForm (doc, 1, SavingFile, pathname);
+    }
+  else if (pathname[0] != EOS)
+    {
+      if (DocumentURLs[doc])
+	{
+	  /* save the URL of the old document in the history, if the same
+	     window is reused, i.e. if the old document has not been
+	     modified */
+	  if (history)
+	    if (!TtaIsDocumentModified (doc))
+	      AddDocHistory (doc, DocumentURLs[doc]);
+	  /* free the previous document */
+	  newdoc = InitDocView (doc, pathname);
+	}
+      else
+	newdoc = doc;
+      
+      /* what we have to do if doc and targetDocument are different */
+      if (tempfile[0] != EOS)
+	{
+	  /* It is a document loaded from the Web */
+	  if (!TtaFileExist (tempfile))
+	    {
+	      /* Nothing is loaded */
+	      ResetStop (doc);
+	      return (0);
+	    }
+	  /* we have to rename the temporary file */
+	  /* allocate and initialize tempdocument */
+	  tempdocument = GetLocalPath (newdoc, pathname);
+	  TtaFileUnlink (tempdocument);
+	  if (doc != newdoc)
+	    {
+	      /* now we can rename the local name of a remote document */
+	      TtaFileCopy (tempfile, tempdocument);
+	      TtaFileUnlink (tempfile);
+	    }
+	  else
+	    /* now we can rename the local name of a remote document */
+	    rename (tempfile, tempdocument);
+	}
+      else
+	{
+	  /* It is a local document */
+	  tempdocument = TtaGetMemory (MAX_LENGTH);
+	  strcpy (tempdocument, pathname);
+	}
+      
+      /* save the document name into the document table */
+      i = strlen (pathname) + 1;
+      s = TtaGetMemory (i);
+      strcpy (s, pathname);
+      if (DocumentURLs[newdoc] != NULL)
+	TtaFreeMemory (DocumentURLs[(int) newdoc]);
+      DocumentURLs[newdoc] = s;
+      if (TtaGetViewFrame (newdoc, 1) != 0)
+	/* this document is displayed */
+	TtaSetTextZone (newdoc, 1, 1, s);
+      
+      tempdir = TtaGetMemory (MAX_LENGTH);
+      TtaExtractName (tempdocument, tempdir, documentname);
+      StartHTMLParser (newdoc, tempdocument, documentname, tempdir, pathname,
+		       PlainText);
+      TtaFreeMemory (tempdir);
+      if (newdoc != doc)
+	/* the document is displayed in a different window */
+	/* reset the history of the new window */
+	InitDocHistory (newdoc);
+    }
+  TtaFreeMemory (tempdocument);
+  return (newdoc);
 }
 
 
@@ -1903,18 +1894,18 @@ int                 typedata;
 char               *data;
 #endif
 {
-  int                 val, i;
-  char               *tempfile;
-  char               *tempname;
   AttributeType       attrType;
   Attribute           attrHREF;
+  char               *tempfile;
+  char               *tempname;
+  char                url_sep;
+  int                 val, i;
   boolean             change;
-  char                my_dir_sep;
 
-  if ((typedata == 2) && data && strchr (data, '/'))
-    my_dir_sep = '/';
+  if (typedata == STRING_DATA && data && strchr (data, '/'))
+    url_sep = '/';
   else 
-    my_dir_sep = DIR_SEP;
+    url_sep = DIR_SEP;
 
    val = (int) data;
    switch (ref - BaseDialog)
@@ -2187,14 +2178,10 @@ char               *data;
        else
 	 strcpy (tempfile, data);
        
-       if (tempfile[strlen (tempfile) - 1] == my_dir_sep)
+       if (tempfile[strlen (tempfile) - 1] == url_sep)
 	 {
 	   strcpy (DirectoryName, tempfile);
 	   DocumentName[0] = EOS;
-	   /* reinitialize directories and document lists */
-	   TtaListDirectory (DirectoryName, BaseDialog + SaveForm,
-			     TtaGetMessage (LIB, TMSG_DOC_DIR), BaseDialog + DirSave,
-			     ScanFilter, TtaGetMessage (AMAYA, AM_FILES), BaseDialog + DocSave);
 	 }
        else
 	 {

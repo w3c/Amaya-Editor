@@ -301,8 +301,6 @@ Document            doc;
   fprintf (stderr, "ApplyExtraPresentation(color = %d)\n", color);
 #endif
 
-  if (color != -1)
-    TtaSetViewBackgroundColor (doc, 1, color);
   if (zoom != -1000)
     {
       old_zoom = TtaGetZoom (doc, 1);

@@ -411,21 +411,6 @@ extern void         TtaListView (Document document, View view, FILE * fileDescri
 extern void         TtaListBoxes (Document document, View view, FILE * fileDescriptor);
 
 /*----------------------------------------------------------------------
-   TtaResetViewBackgroundColor : reset the background color for a view        
-  ----------------------------------------------------------------------*/
-extern void         TtaResetViewBackgroundColor (Document doc, View view);
-
-/*----------------------------------------------------------------------
-   TtaSetViewBackgroundColor : set the background color for a view 
-  ----------------------------------------------------------------------*/
-extern void         TtaSetViewBackgroundColor (Document doc, View view, int color);
-
-/*----------------------------------------------------------------------
-   TtaGetViewBackgroundColor : returns the background color for a view        
-  ----------------------------------------------------------------------*/
-extern int          TtaGetViewBackgroundColor (Document doc, View view);
-
-/*----------------------------------------------------------------------
  * TtaGetThotColor returns the Thot Color.
  *            red, green, blue express the color RGB in 8 bits values
  ----------------------------------------------------------------------*/
@@ -462,9 +447,6 @@ extern void         TtaSetDisplayMode ( /* Document document, DisplayMode newDis
 extern DisplayMode  TtaGetDisplayMode ( /* Document document */ );
 extern void         TtaListView ( /*Document document, View view, FILE *fileDescriptor */ );
 extern void         TtaListBoxes ( /*Document document, View view, FILE *fileDescriptor */ );
-extern void         TtaResetViewBackgroundColor ( /*Document doc, View view */ );
-extern void         TtaSetViewBackgroundColor ( /*Document doc, View view, int color */ );
-extern int          TtaGetViewBackgroundColor ( /*Document doc, View view */ );
 extern int          TtaGetThotColor ( /*unsigned short red, unsigned short green, unsigned short blue */ );
 extern void TtaClearViewSelections ( /*void*/ );
 

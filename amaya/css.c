@@ -1421,37 +1421,6 @@ Document            doc;
     }
 }
 
-/*----------------------------------------------------------------------
-   CSSSetBackground : called by the parser when a Background is    
-   specified by a CSS, this is not supported at the P level.    
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                CSSSetBackground (Document doc, PSchema gpres, int color)
-#else
-void                CSSSetBackground (doc, gpres, color)
-Document            doc;
-PSchema             gpres;
-int                 color;
-#endif
-{
-   CSSInfoPtr          css = ListCSS;
-
-#ifdef DEBUG_CSS
-   fprintf (stderr, "CSSSetBackground(%d)\n", color);
-#endif
-
-   while (css != NULL)
-     {
-	if (css->pschema == gpres)
-	  {
-	     TtaSetViewBackgroundColor (doc, 1, color);
-	     css->view_background_color = color;
-	     NonPPresentChanged = TRUE;
-	     return;
-	  }
-	css = css->NextCSS;
-     }
-}
 
 /*----------------------------------------------------------------------
    CSSSetMagnification : called by the parser when a Magnification 

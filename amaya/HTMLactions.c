@@ -453,53 +453,48 @@ Document       doc;
 
 #endif /* __STDC__ */
 {
-   int                 i;
-   char                tempdocument[MAX_LENGTH];
-   char                documentname[MAX_LENGTH];
+  int                i;
+  char              *tempdocument;
 
-   if (doc == 0)
-      return;
-   if (DocumentURLs[doc] != NULL)
-     {
-	if (IsHTTPPath (DocumentURLs[doc]))
-	  {
-	     /* remove the temporary document file */
-	     TtaExtractName (DocumentURLs[doc], tempdocument, documentname);
-	     sprintf (tempdocument, "%s%s%d%s", TempFileDirectory, DIR_STR, doc, DIR_STR);
-	     if (documentname[0] == '\0')
-		strcat (tempdocument, "noname.html");
-	     else
-		strcat (tempdocument, documentname);
-	     TtaFileUnlink (tempdocument);
-	  }
-	TtaFreeMemory (DocumentURLs[doc]);
-	DocumentURLs[doc] = NULL;
-	HelpDocuments[doc] = FALSE;
-	CleanDocumentCSS (doc);
-	RemoveDocumentImages (doc);
-     }
+  if (doc == 0)
+    return;
+  if (DocumentURLs[doc] != NULL)
+    {
+      if (IsHTTPPath (DocumentURLs[doc]))
+	{
+	  /* remove the temporary document file */
+	  tempdocument = GetLocalPath (doc, DocumentURLs[doc]);
+	  TtaFileUnlink (tempdocument);
+	  TtaFreeMemory (tempdocument);
+	}
+      TtaFreeMemory (DocumentURLs[doc]);
+      DocumentURLs[doc] = NULL;
+      HelpDocuments[doc] = FALSE;
+      CleanDocumentCSS (doc);
+      RemoveDocumentImages (doc);
+    }
 
-   if (!W3Loading)
-     {
-	/* is it the last loaded document ? */
-	i = 1;
-	while (i < DocumentTableLength && DocumentURLs[i] == NULL)
-	   i++;
-
-	if (i == DocumentTableLength)
-	  {
-	     /* now exit the application */
+  if (!W3Loading)
+    {
+      /* is it the last loaded document ? */
+      i = 1;
+      while (i < DocumentTableLength && DocumentURLs[i] == NULL)
+	i++;
+      
+      if (i == DocumentTableLength)
+	{
+	  /* now exit the application */
 #ifdef AMAYA_JAVA
-             CloseJava ();
+	  CloseJava ();
 #else
 #ifdef AMAYA_ILU
 #else
-	     QueryClose ();
+	  QueryClose ();
 #endif
 #endif
-	     TtaQuit ();
-	  }
-     }
+	  TtaQuit ();
+	}
+    }
 }
 
 /*----------------------------------------------------------------------

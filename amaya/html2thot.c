@@ -7522,8 +7522,6 @@ boolean	            PlainText;
 	   HTMLSSchema = TtaGetDocumentSSchema (theDocument);
 	   rootElement = TtaGetMainRoot (theDocument);
 #ifndef STANDALONE
-	   /* reset the background color */
-	   TtaResetViewBackgroundColor (theDocument, 1);
 #ifndef INCR_DISPLAY
 	   TtaSetDisplayMode (theDocument, NoComputedDisplay);
 #endif /* INCR_DISPLAY */

@@ -56,12 +56,7 @@ LoadedImageDesc   **desc;
    if (pathname == NULL || name == NULL)
       return (FALSE);
    else if (IsHTTPPath (pathname))
-     {
-	   localname = (char*) TtaGetMemory (sizeof (char) * MAX_LENGTH);
-	/* It is an image loaded from the Web */
-	sprintf (localname, "%s%s%d%s", TempFileDirectory, DIR_STR, doc, DIR_STR);
-	strcat (localname, name);
-     }
+     localname = GetLocalPath (doc, pathname);
    else
       /* it is a local image */
       return (FALSE);		/* nothing to do */

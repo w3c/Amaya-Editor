@@ -541,6 +541,7 @@ boolean             closeDoc;
 	  LibAbbView (pDoc->DocAssocRoot[view - 1]->ElAbstractBox[0]);
 	  pDoc->DocAssocFrame[view - 1] = 0;
 	}
+
       if (closeDoc)
 	/* verifie qu'il reste au moins une vue pour ce document */
 	if (NumberOfOpenViews (pDoc) < 1)

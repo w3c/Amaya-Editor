@@ -1435,8 +1435,11 @@ boolean             before;
 		       }
 		     else
 		       {
-			  /* set selection before the first character of the string */
-			  SelectString (pDoc, pSibling, 1, 0);
+			 /* set selection before the first character of the string */
+			 if (pSibling->ElVolume == 0)
+			   SelectElement (pDoc, pSibling, FALSE, FALSE);
+			 else
+			   SelectString (pDoc, pSibling, 1, 0);
 			  /* simulate a delete */
 			  TtcDeleteSelection (0, 0);
 		       }

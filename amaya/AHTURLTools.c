@@ -523,6 +523,49 @@ Document            doc;
 
 
 /*----------------------------------------------------------------------
+   GetLocalPath
+   Allocate and return the local document path associated to the url
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+char      *GetLocalPath (Document doc, char *url)
+#else  /* __STDC__ */
+char      *GetLocalPath (doc, url)
+Document   doc;
+char      *url;
+#endif /* __STDC__ */
+{
+  char    *ptr;
+  char    *documentname;
+  int      len;
+  boolean  noFile;
+
+  if (url != NULL)
+    {
+      ptr = TtaGetMemory (MAX_LENGTH);
+      documentname = TtaGetMemory (MAX_LENGTH);
+      /* check whether the file name exists */
+      len = strlen (url) - 1;
+      noFile = (url[len] == DIR_SEP);
+      if (noFile)
+	url[len] = EOS;
+      TtaExtractName (url, ptr, documentname);
+      sprintf (ptr, "%s%s%d%s", TempFileDirectory, DIR_STR, doc, DIR_STR);
+      if (!TtaCheckDirectory (ptr))
+	/* directory did not exist */
+	mkdir (ptr, S_IRWXU);
+      strcat (ptr, documentname);
+      TtaFreeMemory (documentname);
+      /* restore the url */
+      if (noFile)
+	url[len] = DIR_SEP;
+      return (ptr);
+    }
+  else
+    return (NULL);
+}
+
+
+/*----------------------------------------------------------------------
    NormalizeURL
    normalizes orgName according to a base associated with doc, and
    following the standard URL format rules.

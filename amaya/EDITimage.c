@@ -612,73 +612,66 @@ LoadedImageDesc   **desc;
 
 #endif /* __STDC__ */
 {
-   LoadedImageDesc    *pImage, *previous;
-   char*                localname = (char*) TtaGetMemory (MAX_LENGTH * sizeof (char));
+  LoadedImageDesc    *pImage, *previous;
+  char               *localname;
 
-   if (!TtaFileExist (fullname))
-      return (FALSE);
+  *desc = NULL;
+  if (!TtaFileExist (fullname))
+    return (FALSE);
+  else if (url == NULL || name == NULL)
+    return (FALSE);
+  else if (!IsHTTPPath (url))
+    /* it is a local image - nothing to do */
+    return (FALSE);
+  else
+    {
+      /* It is an image loaded from the Web */
+      localname = GetLocalPath (doc, url);
 
-   *desc = NULL;
-   if (url == NULL || name == NULL)
-      return (FALSE);
-   else if (IsHTTPPath (url))
-     {
-	/* It is an image loaded from the Web */
-	sprintf (localname, "%s%s%d%s", TempFileDirectory, DIR_STR, doc, DIR_STR);
-	strcat (localname, name);
-     }
-   else
-      /* it is a local image */
-      return (FALSE);		/* nothing to do */
+      pImage = ImageURLs;
+      previous = NULL;
+      while (pImage != NULL)
+	{
+	  if ((pImage->document == doc) &&
+	      (strcmp (url, pImage->originalName) == 0))
+	    {
+	      /* image already loaded */
+	      *desc = pImage;
+	      break;
+	    }
+	  else
+	    {
+	      /* see the next descriptor */
+	      previous = pImage;
+	      pImage = pImage->nextImage;
+	    }
+	}
 
-   pImage = ImageURLs;
-   previous = NULL;
-   while (pImage != NULL)
-     {
-	if ((pImage->document == doc) &&
-	    (strcmp (url, pImage->originalName) == 0))
-	  {
-	     /* image already loaded */
-	     *desc = pImage;
-	     break;
-	  }
-	else
-	  {
-	     /* see the next descriptor */
-	     previous = pImage;
-	     pImage = pImage->nextImage;
-	  }
-     }
-
-   /*
-    * copy the image in place.
-    */
-   TtaFileCopy (fullname, localname);
-
-   /*
-    * add a new identifier to the list if necessary.
-    */
-   if (pImage == NULL)
-     {
-	/* It is a new loaded image */
-	pImage = (LoadedImageDesc *) TtaGetMemory (sizeof (LoadedImageDesc));
-	pImage->originalName = TtaGetMemory (strlen (url) + 1);
-	strcpy (pImage->originalName, url);
-	pImage->localName = TtaGetMemory (strlen (localname) + 1);
-	strcpy (pImage->localName, localname);
-	pImage->prevImage = previous;
-	if (previous != NULL)
-	   previous->nextImage = pImage;
-	else
-	   ImageURLs = pImage;
-	pImage->nextImage = NULL;
-	pImage->document = doc;
-	pImage->elImage = NULL;
-     }
-   pImage->status = IMAGE_MODIFIED;
-   *desc = pImage;
-   TtaFreeMemory (localname);
-   return (TRUE);
+      /* copy the image in place */
+      TtaFileCopy (fullname, localname);
+      /* add a new identifier to the list if necessary */
+      if (pImage == NULL)
+	{
+	  /* It is a new loaded image */
+	  pImage = (LoadedImageDesc *) TtaGetMemory (sizeof (LoadedImageDesc));
+	  pImage->originalName = TtaGetMemory (strlen (url) + 1);
+	  strcpy (pImage->originalName, url);
+	  pImage->localName = TtaGetMemory (strlen (localname) + 1);
+	  strcpy (pImage->localName, localname);
+	  pImage->prevImage = previous;
+	  if (previous != NULL)
+	    previous->nextImage = pImage;
+	  else
+	    ImageURLs = pImage;
+	  pImage->nextImage = NULL;
+	  pImage->document = doc;
+	  pImage->elImage = NULL;
+	}
+      pImage->status = IMAGE_MODIFIED;
+      *desc = pImage;
+      TtaFreeMemory (localname);
+      return (TRUE);
+    }
 }
 
 /*----------------------------------------------------------------------

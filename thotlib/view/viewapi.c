@@ -511,7 +511,11 @@ boolean             complete;
 	pAbbRoot = pDoc->DocViewRootAb[View - 1];
 	frame = pDoc->DocViewFrame[View - 1];
      }
+
    /* All abstract boxes included into the root abs. box are marked dead */
+   if (pAbbRoot == NULL)
+     return;
+
    if (complete)
      {
 	SetDeadAbsBox (pAbbRoot);
@@ -551,7 +555,7 @@ boolean             complete;
 	if (pAbbRoot->AbLeafType == LtCompound)
 	   pAbbRoot->AbTruncatedHead = FALSE;
      }
-}				/* CleanImageView */
+}
 
 /*----------------------------------------------------------------------
    TtaFreeView
@@ -2833,104 +2837,6 @@ Document            document;
       /* parameter document is ok */
       result = documentDisplayMode[document - 1];
    return result;
-}
-
-/*----------------------------------------------------------------------
-   SetMainWindowBackgroundColor :                          
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         SetMainWindowBackgroundColor (int frame, int color)
-#else  /* __STDC__ */
-static void         SetMainWindowBackgroundColor (frame, color)
-int                 frame;
-int                 color;
-#endif /* __STDC__ */
-{
-#  ifndef _WINDOWS
-   XSetWindowBackground (TtDisplay, FrRef[frame], ColorPixel (color));
-#  else  /* _WINDOWS */
-   WIN_GetDeviceContext (frame) ;
-   SetBkColor (TtDisplay, ColorPixel (color)); 
-   WIN_ReleaseDeviceContext ();
-#  endif /* _WINDOWS */
-}				/*SetMainWindowBackgroundColor */
-
-
-/*----------------------------------------------------------------------
-   TtaResetViewBackgroundColor : reset the background color for a view        
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaResetViewBackgroundColor (Document doc, View view)
-#else  /* __STDC__ */
-void                TtaResetViewBackgroundColor (doc, view)
-Document            doc;
-View                view;
-#endif /* __STDC__ */
-{
-   int                 frame;
-
-   if ((doc <= 0) || (doc > MAX_DOCUMENTS))
-      return;
-   if ((view <= 0) || (view > MAX_VIEW_DOC))
-      return;
-
-   frame = GetWindowNumber (doc, view);
-   if (BackgroundColor[frame] != DefaultBColor)
-     {
-	BackgroundColor[frame] = DefaultBColor;
-	SetMainWindowBackgroundColor (frame, DefaultBColor);
-     }
-}
-
-/*----------------------------------------------------------------------
-   TtaSetViewBackgroundColor : set the background color for a view 
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaSetViewBackgroundColor (Document doc, View view, int color)
-#else  /* __STDC__ */
-void                TtaSetViewBackgroundColor (doc, view, color)
-Document            doc;
-View                view;
-int                 color;
-#endif /* __STDC__ */
-{
-   int                 frame;
-
-   if ((doc <= 0) || (doc > MAX_DOCUMENTS))
-      return;
-   if ((view <= 0) || (view > MAX_VIEW_DOC))
-      return;
-   if ((color < 0) || (color >= MAX_COLOR))
-      return;
-
-   frame = GetWindowNumber (doc, view);
-   if (BackgroundColor[frame] != color)
-     {
-	BackgroundColor[frame] = color;
-	SetMainWindowBackgroundColor (frame, color);
-     }
-}
-
-/*----------------------------------------------------------------------
-   TtaGetViewBackgroundColor : returns the background color for a view        
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int TtaGetViewBackgroundColor (Document doc, View view)
-#else  /* __STDC__ */
-int TtaSetViewBackgroundColor (doc, view)
-Document            doc;
-View                view;
-#endif /* __STDC__ */
-{
-   int                 frame;
-
-   if ((doc <= 0) || (doc > MAX_DOCUMENTS))
-      return (-1);
-   if ((view <= 0) || (view > MAX_VIEW_DOC))
-      return (-1);
-
-   frame = GetWindowNumber (doc, view);
-   return (BackgroundColor[frame]);
 }
 
 /* End of module */

@@ -19,6 +19,8 @@ extern boolean IsWithParameters ( const char *url );
 extern boolean IsW3Path ( const char *path );
 extern boolean IsValidProtocol ( const char *url );
 extern char *GetBaseURL ( Document doc );
+extern char *GetLocalPath (Document doc,
+			   char *url);
 extern void NormalizeURL ( char *orgName,
                            Document doc,
                            char *newName,
@@ -52,6 +54,8 @@ extern boolean IsWithParameters (/* const char *url */);
 extern boolean IsW3Path (/* const char *path */);
 extern boolean IsValidProtocol (/* const char *url */);
 extern char *GetBaseURL (/* Document doc */);
+extern char *GetLocalPath (/* Document doc,
+			      char *url */);
 extern void NormalizeURL (/* char *orgName,
                              Document doc,
                              char *newName,

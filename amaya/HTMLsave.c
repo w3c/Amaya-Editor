@@ -425,13 +425,11 @@ boolean             with_images;
 
 #endif
 {
-   char             url[MAX_LENGTH];
-   char             tempname[MAX_LENGTH];
-   char             documentname[MAX_LENGTH];
+   LoadedImageDesc *pImage;
+   char            *tempname;
    char            *msg;
    int              free = 10000;
    int              index = 0, len, nb = 0;
-   LoadedImageDesc *pImage;
    int              res;
    int              imageType;
 
@@ -442,6 +440,8 @@ boolean             with_images;
     * Don't use memory allocated on the stack ! May overflow the 
     * memory allocated for this Java thread.
     */
+   /* save into the temporary document file */
+   tempname = GetLocalPath (document, DocumentURLs[document]);
    msg = TtaGetMemory(free);
    if (msg == NULL)
        return (-1);
@@ -449,15 +449,8 @@ boolean             with_images;
    /*
     * First step : build the output and ask for confirmation.
     */
-   /* save into the temporary document file */
-   TtaExtractName (DocumentURLs[document], url, documentname);
-   sprintf (tempname, "%s%s%d%s", TempFileDirectory, DIR_STR, document, DIR_STR);
-   strcat (tempname, documentname);
-
-DBG(fprintf(stderr, "SaveFileThroughNet :  export to %s \n", tempname);)
-
    TtaExportDocument (document, tempname, "HTMLT");
-
+   res = 0;
    if (confirm && with_images)
      {
        TtaNewForm (BaseDialog + ConfirmSave, TtaGetViewFrame (document, view), 
@@ -500,45 +493,42 @@ DBG(fprintf(stderr, "SaveFileThroughNet :  export to %s \n", tempname);)
 	 }
 
        TtaNewSelector (BaseDialog + ConfirmSaveList, BaseDialog + ConfirmSave,
-		       NULL, nb, &msg[0], 6, NULL, FALSE, TRUE);
+		       NULL, nb, msg, 6, NULL, FALSE, TRUE);
        
        TtaSetDialoguePosition ();
        TtaShowDialogue (BaseDialog + ConfirmSave, FALSE);
        /* wait for an answer */
        TtaWaitShowDialogue ();
-       if (!UserAnswer) {
-	 TtaFreeMemory(msg);
-	 return (-1);
-       }
+       if (!UserAnswer)
+	 res = -1;
      }
+
    /*
     * Second step : saving the HTML content and the images modified locally.
     *               if saving failed, suggest to save to disk.
     */
-
-   ActiveTransfer (document);
-   TtaHandlePendingEvents ();
-
-   if (with_images)
-      pImage = ImageURLs;
-   else
-      pImage = NULL;
-   while (pImage != NULL)
+   if (res == 0)
      {
-	if (pImage->document == document)
-	  {
-	     if (pImage->status == IMAGE_MODIFIED)
-	       {
-
-DBG(fprintf(stderr, "Image %s modified\n", pImage->localName);)
-
-		  imageType = (int) TtaGetPictureType ((Element) pImage->elImage);
-		  res = SafeSaveFileThroughNet(document, pImage->localName,
-					   pImage->originalName, imageType);
-		  if (res)
-		    {
+       ActiveTransfer (document);
+       TtaHandlePendingEvents ();
+       
+       if (with_images)
+	 pImage = ImageURLs;
+       else
+	 pImage = NULL;
+       while (pImage != NULL)
+	 {
+	   if (pImage->document == document)
+	     {
+	       if (pImage->status == IMAGE_MODIFIED)
+		 {
+		   imageType = (int) TtaGetPictureType ((Element) pImage->elImage);
+		   res = SafeSaveFileThroughNet(document, pImage->localName,
+						pImage->originalName, imageType);
+		   if (res)
+		     {
 #if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
-		      DocNetworkStatus[document] |= AMAYA_NET_ERROR;
+		       DocNetworkStatus[document] |= AMAYA_NET_ERROR;
 #endif /* AMAYA_JAVA  || AMAYA_ILU */
 		       ResetStop (document);
 #if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
@@ -556,60 +546,67 @@ DBG(fprintf(stderr, "Image %s modified\n", pImage->localName);)
 		       InitConfirm (document, view, msg);
 		       /* erase the last status message */
 		       TtaSetStatus (document, view, "", NULL);
-
-		       TtaFreeMemory(msg);
 		       if (UserAnswer)
-			  return (-1);
-		       return (0);
-		    }
-		  pImage->status = IMAGE_LOADED;
-	       }
+			  res = -1;
+		       else
+			 res = 1;
+		       /* do not continue */
+		       pImage = NULL;
+		     }
+		   else
+		     pImage->status = IMAGE_LOADED;
+		 }
+               }
 
-DBG(  else fprintf(stderr, "Image %s not modified\n", pImage->localName);)
+	   if (pImage != NULL)
+	     pImage = pImage->nextImage;
+	 }
 
-	  }
-	pImage = pImage->nextImage;
-     }
-
-DBG(fprintf(stderr, "Saving HTML document %s\n", tempname);)
-
-   res = SafeSaveFileThroughNet (document, tempname, DocumentURLs[document],
-                             unknown_type);
-
-   if (res)
-     {
+       if (res == 1)
+	 /* now it's the returned value */
+	 res = 0;
+       else if (res == 0)
+	 {
+	   res = SafeSaveFileThroughNet (document, tempname,
+					 DocumentURLs[document], unknown_type);
+	   if (res)
+	     {
 #if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
-       DocNetworkStatus[document] |= AMAYA_NET_ERROR;
+	       DocNetworkStatus[document] |= AMAYA_NET_ERROR;
 #endif /* AMAYA_JAVA || AMAYA_ILU */
-        ResetStop (document);
+	       ResetStop (document);
 #if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
-	sprintf (msg, "%s %s \n%s",
-		 TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
-		 DocumentURLs[document],
-		 TtaGetMessage (AMAYA, AM_SAVE_DISK));
+	       sprintf (msg, "%s %s \n%s",
+			TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
+			DocumentURLs[document],
+			TtaGetMessage (AMAYA, AM_SAVE_DISK));
 #else /* AMAYA_JAVA || AMAYA_ILU */
-	sprintf (msg, "%s %s \n%s\n%s",
-		 TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
-		 DocumentURLs[document],
-		 AmayaLastHTTPErrorMsg,
-		 TtaGetMessage (AMAYA, AM_SAVE_DISK));
+	       sprintf (msg, "%s %s \n%s\n%s",
+			TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
+			DocumentURLs[document],
+			AmayaLastHTTPErrorMsg,
+			TtaGetMessage (AMAYA, AM_SAVE_DISK));
 #endif /* AMAYA_JAVA || AMAYA_ILU */
-	InitConfirm (document, view, msg);
-	/* JK: to erase the last status message */
-	TtaSetStatus (document, view, "", NULL);
-
-        TtaFreeMemory(msg);
-	if (UserAnswer)
-	   return (-1);
-	return (0);
+	       InitConfirm (document, view, msg);
+	       /* JK: to erase the last status message */
+	       TtaSetStatus (document, view, "", NULL);	       
+	       if (UserAnswer)
+		 res = -1;
+	       else
+		 res = 0;
+	     }
+	   else
+	     {
+	       ResetStop (document);
+	       TtaSetDocumentUnmodified (document);	     
+	     }
+	 }
      }
-   ResetStop (document);
-   TtaSetDocumentUnmodified (document);
-
 DBG(fprintf(stderr, "Saving completed\n");)
-
    TtaFreeMemory(msg);
-   return (0);
+   if (tempname)
+     TtaFreeMemory(tempname);
+   return (res);
 }
 
 /*----------------------------------------------------------------------
@@ -942,191 +939,226 @@ void                DoSaveAs (void)
 void                DoSaveAs ()
 #endif
 {
-   Document            doc;
-   AttributeType       attrType;
-   ElementType         elType;
-   Element             el, root;
-   char                documentFile[MAX_LENGTH];
-   char                tempname[MAX_LENGTH];
-   char               *imagePath, *base;
-   char                imgbase[MAX_LENGTH];
-   boolean             src_is_local;
-   boolean             dst_is_local, ok;
-   int                 res;
+  Document            doc;
+  AttributeType       attrType;
+  ElementType         elType;
+  Element             el, root;
+  char               *documentFile;
+  char               *tempname, *localPath;
+  char               *imagePath, *base;
+  char                imgbase[MAX_LENGTH];
+  char                url_sep;
+  int                 res;
+  boolean             src_is_local;
+  boolean             dst_is_local, ok;
 
-   src_is_local = !IsW3Path (DocumentURLs[SavingDocument]);
-   dst_is_local = !IsW3Path (DirectoryName);
+  src_is_local = !IsW3Path (DocumentURLs[SavingDocument]);
+  dst_is_local = !IsW3Path (DirectoryName);
+  ok = TRUE;
+
 DBG(fprintf(stderr, "DoSaveAs : from %s to %s/%s , with images %d\n", DocumentURLs[SavingDocument], DirectoryName, DocumentName, (int) CopyImages);)
 
-   if (DocumentName[0] == EOS)
-     {
-       /* there i no document name */
-       strcpy (documentFile, DirectoryName);
-       if (AddNoName (SavingDocument, 1, documentFile, &ok))
-	 {
-	   res = strlen(DirectoryName) - 1;
-	   if (DirectoryName[res] == DIR_SEP)
-	     DirectoryName[res] = EOS;
-	   /* need to update the document url */
-	   strcpy (DocumentName, "noname.html");
-DBG(fprintf(stderr, " set DocumentName to noname.html\n");)
-	 }
-       else if (!ok)
-	 {
-	   /* save into the temporary document file */
-	   doc = SavingDocument;
-	   TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), DocumentURLs[doc]);
-	   SavingDocument = 0;
-	   SaveDocumentAs (doc, 1);
-	   return;
-	 }
-     }
-
-   /* New document path */
-   strcpy (documentFile, DirectoryName);
-   strcat (documentFile, DIR_STR);
-   strcat (documentFile, DocumentName);
-   if (dst_is_local)
-     {
-       /* verify that the directory exists */
-       if (!TtaCheckDirectory (DirectoryName))
-	 {
-	   doc = SavingDocument;
-	   TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), DirectoryName);
-	   /* the user has to change the name of the images directory */
-	   SaveDocumentAs(SavingDocument, 1);
-	   return;
-	 }
-	/* verify that we don't overwite anything and ask for confirmation */
-       if (TtaFileExist (documentFile))
-	 {
-	   /* ask confirmation */
-	   sprintf (tempname, TtaGetMessage (LIB, TMSG_FILE_EXIST), documentFile);
-	   InitConfirm (SavingDocument, 1, tempname);
-	   if (!UserAnswer)
-	     {
-	       /* the user has to change the name of the saving file */
-	       SaveDocumentAs(SavingDocument, 1);
-	       return;
-	     }
-	 }
-     }
-
-  /* search if there is a BASE element within the document */
-  root = TtaGetMainRoot (SavingDocument);
-  elType.ElSSchema = TtaGetDocumentSSchema (SavingDocument);
-  attrType.AttrSSchema = elType.ElSSchema;
-  /* search the BASE element */
-  elType.ElTypeNum = HTML_EL_BASE;
-  el = TtaSearchTypedElement (elType, SearchInTree, root);
-  if (el)
-    /* URLs are still relative to the document base */
-    base = GetBaseURL (SavingDocument);
-  else
-    base = NULL;
-
-   /* Create the base directory/url for the images output */
-   if (CopyImages && SaveImgsURL[0] != EOS)
-     {
-       if (base)
-	 imagePath = MakeRelativeURL (SaveImgsURL, base);
-       else
-	 imagePath = MakeRelativeURL (SaveImgsURL, documentFile);
-       if (imagePath != NULL)
-	 {
-	   strcpy (imgbase, imagePath);
-	   TtaFreeMemory (imagePath);
-	 }
-       else
-	 imgbase[0] = EOS;
-       /* verify that the directory exists */
-       strcpy (tempname, DirectoryName);
-       strcat (tempname, DIR_STR);
-       strcat (tempname, imgbase);
-       if (!TtaCheckDirectory (tempname))
-	 {
-	   doc = SavingDocument;
-	   TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), tempname);
-	   /* the user has to change the name of the images directory */
-	   SaveDocumentAs(SavingDocument, 1);
-	   /* free base before returning*/
-	   if (base)
-	     TtaFreeMemory (base);
-	   return;
-	 }
-     }
-   else if (CopyImages)
-     {
-       if (base)
-	 {
-	   imagePath = MakeRelativeURL (DirectoryName, base);
-	   strcpy (imgbase, imagePath);
-	   TtaFreeMemory (imagePath);
-	 }
-       else
-	 imgbase[0] = EOS;
-     }
-   else
-     imgbase[0] = EOS;
-
-DBG(fprintf(stderr, "   image directory : %s\n", imgbase);)
-
-  /* Transform all URLs to absolute ones */
-  if (UpdateURLs)
+  /* New document path */
+  documentFile = TtaGetMemory (MAX_LENGTH);
+  strcpy (documentFile, DirectoryName);
+  if (dst_is_local)
     {
-      if (base)
-	/* URLs are still relative to the document base */
-	SetRelativeURLs (SavingDocument, base);
-      else
-	/* URLs are relative to the new document directory */
-	SetRelativeURLs (SavingDocument, documentFile);
+      strcat (documentFile, DIR_STR);
+      url_sep = DIR_SEP;
     }
-  /* now free base */
-  if (base)
-    TtaFreeMemory (base);
+  else
+    {
+      strcat (documentFile, "/");
+      url_sep = '/';
+    }
+  strcat (documentFile, DocumentName);
+  if (DocumentName[0] == EOS)
+    {
+      /* there is no document name */
+      if (AddNoName (SavingDocument, 1, documentFile, &ok))
+	{
+	  res = strlen(DirectoryName) - 1;
+	  if (DirectoryName[res] == url_sep)
+	    DirectoryName[res] = EOS;
+	  /* need to update the document url */
+	  strcpy (DocumentName, "noname.html");
+DBG(fprintf(stderr, " set DocumentName to noname.html\n");)
+	}
+      else if (!ok)
+	{
+	  /* save into the temporary document file */
+	  doc = SavingDocument;
+	  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), DocumentURLs[doc]);
+	  SavingDocument = 0;
+	  SaveDocumentAs (doc, 1);
+	}
+    }
 
-  /* Change the document URL and if CopyImage is TRUE change all
-   * picture SRC attribute. If pictures are saved locally, make the copy
-   * else add them to the list of remote images to be copied.
-   */
-  UpdateDocAndImages (src_is_local, dst_is_local, imgbase, documentFile);
+  if (ok && dst_is_local)
+    {
+      /* verify that the directory exists */
+      if (!TtaCheckDirectory (DirectoryName))
+	{
+	  doc = SavingDocument;
+	  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), DirectoryName);
+	  /* the user has to change the name of the images directory */
+	  SaveDocumentAs(SavingDocument, 1);
+	  ok = FALSE;
+	}
+      /* verify that we don't overwite anything and ask for confirmation */
+      else if (TtaFileExist (documentFile))
+	{
+	  /* ask confirmation */
+	  tempname = TtaGetMemory (MAX_LENGTH);
+	  sprintf (tempname, TtaGetMessage (LIB, TMSG_FILE_EXIST), documentFile);
+	  InitConfirm (SavingDocument, 1, tempname);
+	  TtaFreeMemory (tempname);
+	  if (!UserAnswer)
+	    {
+	      /* the user has to change the name of the saving file */
+	      SaveDocumentAs(SavingDocument, 1);
+	      ok = FALSE;
+	    }
+	}
+    }
 
-  /* update informations on the document. */
-  TtaSetTextZone (SavingDocument, 1, 1, DocumentURLs[SavingDocument]);
+  if (ok)
+    {
+      /* search if there is a BASE element within the document */
+      root = TtaGetMainRoot (SavingDocument);
+      elType.ElSSchema = TtaGetDocumentSSchema (SavingDocument);
+      attrType.AttrSSchema = elType.ElSSchema;
+      /* search the BASE element */
+      elType.ElTypeNum = HTML_EL_BASE;
+      el = TtaSearchTypedElement (elType, SearchInTree, root);
+      if (el)
+	/* URLs are still relative to the document base */
+	base = GetBaseURL (SavingDocument);
+      else
+	base = NULL;
+      
+      /* Create the base directory/url for the images output */
+      if (CopyImages && SaveImgsURL[0] != EOS)
+	{
+	  if (base)
+	    imagePath = MakeRelativeURL (SaveImgsURL, base);
+	  else
+	    imagePath = MakeRelativeURL (SaveImgsURL, documentFile);
+	  if (imagePath != NULL)
+	    {
+	      strcpy (imgbase, imagePath);
+	      TtaFreeMemory (imagePath);
+	    }
+	  else
+	    imgbase[0] = EOS;
+	  
+	  /* verify that the directory exists */
+	  if (dst_is_local)
+	    {
+	      tempname = TtaGetMemory (MAX_LENGTH);
+	      strcpy (tempname, DirectoryName);
+	      strcat (tempname, DIR_STR);
+	      strcat (tempname, imgbase);
+	      ok = TtaCheckDirectory (tempname);
+	      if (!ok)
+		{
+		  doc = SavingDocument;
+		  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), tempname);
+		  TtaFreeMemory (tempname);
+		  /* free base before returning*/
+		  if (base)
+		    TtaFreeMemory (base);
+		  /* the user has to change the name of the images directory */
+		  SaveDocumentAs(SavingDocument, 1);
+		}
+	      else
+		TtaFreeMemory (tempname);
+	    }
+	}
+      else if (CopyImages)
+	{
+	  if (base)
+	    {
+	      imagePath = MakeRelativeURL (DirectoryName, base);
+	      strcpy (imgbase, imagePath);
+	      TtaFreeMemory (imagePath);
+	    }
+	  else
+	    imgbase[0] = EOS;
+	}
+      else
+	imgbase[0] = EOS;
+    }
 
-   if ( dst_is_local)
-     {
-       /* Local to Local or Remote to Local */
-
+  if (ok)
+    {
+      /* Transform all URLs to absolute ones */
+        if (UpdateURLs)
+	  {
+	    if (base)
+	      /* URLs are still relative to the document base */
+	      SetRelativeURLs (SavingDocument, base);
+	    else
+	      /* URLs are relative to the new document directory */
+	      SetRelativeURLs (SavingDocument, documentFile);
+	  }
+	/* now free base */
+	if (base)
+	  TtaFreeMemory (base);
+	
+	if (!src_is_local)
+	  /* store the name of the local temporary file */
+	  localPath = GetLocalPath (SavingDocument, DocumentURLs[SavingDocument]);
+	else
+	  localPath = NULL;
+	/* Change the document URL and if CopyImage is TRUE change all
+	 * picture SRC attribute. If pictures are saved locally, make the copy
+	 * else add them to the list of remote images to be copied.
+	 */
+	UpdateDocAndImages (src_is_local, dst_is_local, imgbase, documentFile);
+	  
+	/* update informations on the document. */
+	TtaSetTextZone (SavingDocument, 1, 1, DocumentURLs[SavingDocument]);
+	  
+	if (dst_is_local)
+	  {
+	    /* Local to Local or Remote to Local */
 DBG(fprintf(stderr, "   Saving document locally : to %s\n", documentFile);)
-       /* save the local document */
-       SaveDocumentLocally (DirectoryName, DocumentName);
-       TtaSetStatus (SavingDocument, 1, TtaGetMessage (AMAYA, AM_SAVED), documentFile);
-       SavingDocument = 0;
-     }
-   else
-     {
-       /* Local to Remote or Remote to Remote */
 
+	    /* save the local document */
+	    SaveDocumentLocally (DirectoryName, DocumentName);
+	    TtaSetStatus (SavingDocument, 1, TtaGetMessage (AMAYA, AM_SAVED), documentFile);
+	    SavingDocument = 0;
+	  }
+	else
+	  {
+	    /* Local to Remote or Remote to Remote */
 DBG(fprintf(stderr, "   Uploading document to net %s\n", documentFile);)
 
-       /* now save the file as through the normal process of saving */
-       /* to a remote URL. */
-       doc = SavingDocument;
-       res = SaveDocumentThroughNet (SavingDocument, 1, TRUE, CopyImages);
+	    /* now save the file as through the normal process of saving */
+	    /* to a remote URL. */
+            doc = SavingDocument;
+	    res = SaveDocumentThroughNet (SavingDocument, 1, TRUE, CopyImages);
+	    
+	    if (res)
+	      /* restore all urls */
+	      SaveDocumentAs(doc, 1);
+	    else
+	      {
+		TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_SAVED), documentFile);
+		SavingDocument = 0;
+	      }
+	  }
 
-       if (res)
-	 /* restore all urls */
-	 SaveDocumentAs(doc, 1);
-       else
-	 {
-	   TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_SAVED), documentFile);
-	   SavingDocument = 0;
-	 }
-     }
-
+	/* remove the previous temporary file */
+	if (localPath)
+	  {
+	    TtaFileUnlink (localPath);
+	    TtaFreeMemory (localPath);
+	  }
+    }
+  TtaFreeMemory (documentFile);
 }
-
 
 
 /*----------------------------------------------------------------------

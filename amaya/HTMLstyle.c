@@ -3268,59 +3268,19 @@ char               *cssRule;
      setColor = FALSE;
    if (setColor)
      {
-       /*
-	* if the background is set on the HTML or BODY element,
-	* set the background color for the full window.
-	*/
-       if (context->drv == &GenericStrategy)
-	 {
-	   gblock = (GenericContext) context;
-	   if (gblock->type == HTML_EL_HTML
-	       || gblock->type == HTML_EL_BODY
-	       || gblock->type == HTML_EL_HEAD)
-	     {
-	       if (setColor)
-		 {
-		   CSSSetBackground (gblock->doc, (PSchema) target, best.typed_data.value);
-		   setColor = FALSE;
-		 }
-	     }
-	 }
-       else if (context->drv == &SpecificStrategy)
-	 {
-	   sblock = (SpecificContextBlock *) context;
-	   elem = (SpecificTarget) target;
-	   elType = TtaGetElementType (elem);
-	   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0 &&
-	       (elType.ElTypeNum == HTML_EL_HTML
-		|| elType.ElTypeNum == HTML_EL_BODY
-		|| elType.ElTypeNum == HTML_EL_HEAD))
-	     {
-	       if (setColor)
-		 {
-		   TtaSetViewBackgroundColor (sblock->doc, 1, best.typed_data.value);
-		   setColor = FALSE;
-		 }
-	     }
-	 }
-
-       if (setColor)
-	 {
-	   /* install the new presentation. */
-	   if (context->drv->SetBackgroundColor)
-	     context->drv->SetBackgroundColor (target, context, best);
-	   /* thot specificity : need to set fill pattern for background color */
-	   best.typed_data.value = DRIVERP_PATTERN_BACKGROUND;
-	   best.typed_data.unit = DRIVERP_UNIT_REL;
-	   if (context->drv->SetFillPattern)
-	     context->drv->SetFillPattern (target, context, best);
-	   best.typed_data.value = 1;
-	   best.typed_data.unit = DRIVERP_UNIT_REL;
-	   if (context->drv->SetShowBox)
-	     context->drv->SetShowBox (target, context, best);
-	 }
+       /* install the new presentation. */
+       if (context->drv->SetBackgroundColor)
+	 context->drv->SetBackgroundColor (target, context, best);
+       /* thot specificity : need to set fill pattern for background color */
+       best.typed_data.value = DRIVERP_PATTERN_BACKGROUND;
+       best.typed_data.unit = DRIVERP_UNIT_REL;
+       if (context->drv->SetFillPattern)
+	 context->drv->SetFillPattern (target, context, best);
+       best.typed_data.value = 1;
+       best.typed_data.unit = DRIVERP_UNIT_REL;
+       if (context->drv->SetShowBox)
+	 context->drv->SetShowBox (target, context, best);
      }
-
    return (cssRule);
 }
 
@@ -3659,12 +3619,6 @@ char               *cssRule;
 	       || gblock->type == HTML_EL_BODY
 	       || gblock->type == HTML_EL_HEAD)
 	     {
-	       if (setColor)
-		 {
-		   CSSSetBackground (gblock->doc, (PSchema) target,
-		                     best.typed_data.value);
-		   setColor = FALSE;
-		 }
 	       if (url)
 		 {
 		   callblock = (BackgroundImageCallbackPtr)
@@ -3694,12 +3648,6 @@ char               *cssRule;
 	       || elType.ElTypeNum == HTML_EL_BODY
 	       || elType.ElTypeNum == HTML_EL_HEAD))
 	     {
-	       if (setColor)
-		 {
-		   TtaSetViewBackgroundColor (sblock->doc, 1,
-		                              best.typed_data.value);
-		   setColor = FALSE;
-		 }
 	       if (url)
 		 {
 		   callblock = (BackgroundImageCallbackPtr)
