@@ -114,7 +114,6 @@ KERNEL_OBJ = \
 	content/contentND.o \
 	dialogue/nodisplay.o \
 	document/documentapiND.o \
-	document/pivot.o \
 	document/readpivot.o \
 	document/schemasND.o \
 	document/writepivotND.o \
@@ -233,7 +232,6 @@ EDITOR_OBJ = \
 	dialogue/AmayaTextGraber.o \
 	dialogue/AmayaScrollBar.o \
 	dialogue/appdialogue_wx.o \
-	document/pivot.o \
 	document/docs.o \
 	document/views.o \
 	document/writedoc.o \
