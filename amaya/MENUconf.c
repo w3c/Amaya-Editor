@@ -151,7 +151,7 @@ static STRING MenuText[MAX_PRO];
 static HWND TemplatesHwnd = NULL;
 #endif /* _WINDOWS */
 static int TemplatesBase;
-static CHAR_T Templates [MAX_LENGTH+1];
+static CHAR_T TemplatesUrl [MAX_LENGTH+1];
 
 
 /* 
@@ -3619,11 +3619,6 @@ static void SetProfileConf ()
 }
 
 
-
-
-
-
-
 /**********************
 ** Templates Menu
 **********************/
@@ -3644,7 +3639,48 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
- 
+  switch (msg)
+    {
+    case WM_INITDIALOG:
+      TemplatesHwnd = hwnDlg;
+      WIN_RefreshTemplatesMenu (hwnDlg);
+      break;
+
+    case WM_CLOSE:
+    case WM_DESTROY:
+      /* reset the status flag */
+      TemplatesHwnd = NULL;
+      EndDialog (hwnDlg, ID_DONE);
+      break;
+
+    case WM_COMMAND:
+      switch (LOWORD (wParam))
+	{
+	case IDC_TEMPLATESURL:
+	  GetDlgItemText (hwnDlg, IDC_TEMPLATESURL, TemplatesUrl,
+			  sizeof (TemplatesUrl) - 1);
+	  break;
+	  /* action buttons */
+	case ID_APPLY:
+	  SetTemplatesConf ();	  
+	  /* reset the status flag */
+	  EndDialog (hwnDlg, ID_DONE);
+	  break;
+	case ID_DONE:
+	  /* reset the status flag */
+	  TemplatesHwnd = NULL;
+	  EndDialog (hwnDlg, ID_DONE);
+	  break;
+	case ID_DEFAULTS:
+	  /* always signal this as modified */
+	  GetDefaultTemplatesConf ();
+	  WIN_RefreshTemplatesMenu (hwnDlg);
+	  break;
+	}
+      break;	     
+    default: return FALSE;
+    }
+  return TRUE; 
 }
 #endif /* _WINDOWS */
 
@@ -3696,9 +3732,9 @@ STRING              data;
 
 	case mTemplates:
 	  if (data)
-	    ustrcpy (Templates, data);
+	    ustrcpy (TemplatesUrl, data);
 	  else
-	    Templates [0] = EOS;
+	    TemplatesUrl [0] = EOS;
 	  break;
 	  
 	default:
@@ -3752,22 +3788,20 @@ STRING              pathname;
    if (!TemplatesHwnd)
     /* only activate the menu if it isn't active already */
     {
-/*
-      switch (app_lang)
+     switch (app_lang)
 	{
 	case FR_LANG:
-	  DialogBox (hInstance, MAKEINTRESOURCE (FR_LANNEGMENU), NULL, 
+	  DialogBox (hInstance, MAKEINTRESOURCE (FR_TEMPLATESMENU), NULL, 
 		     (DLGPROC) WIN_TemplatesDlgProc);
 	  break;
 	case DE_LANG:
-	  DialogBox (hInstance, MAKEINTRESOURCE (DE_LANNEGMENU), NULL, 
+	  DialogBox (hInstance, MAKEINTRESOURCE (DE_TEMPLATESMENU), NULL, 
 		     (DLGPROC) WIN_TemplatesDlgProc);
-	  break;
+	 break;
 	default:
-	  DialogBox (hInstance, MAKEINTRESOURCE (EN_LANNEGMENU), NULL, 
+		DialogBox (hInstance, MAKEINTRESOURCE (EN_TEMPLATESMENU), NULL, 
 		     (DLGPROC) WIN_TemplatesDlgProc);
 	}
-*/
     }
    else
      SetFocus (TemplatesHwnd);
@@ -3786,7 +3820,7 @@ void WIN_RefreshTemplatesMenu (hwnDlg)
 HWND hwnDlg;
 #endif /* __STDC__ */
 {
- /* SetDlgItemText (hwnDlg, IDC_LANNEG, Templates);*/
+  SetDlgItemText (hwnDlg, IDC_TEMPLATESURL, TemplatesUrl);
 }
 #endif /* WINDOWS */
 
@@ -3801,7 +3835,7 @@ static void RefreshTemplatesMenu ()
 static void RefreshTemplatesMenu ()
 #endif /* __STDC__ */
 {
-  TtaSetTextForm (TemplatesBase + mTemplates, Templates);
+  TtaSetTextForm (TemplatesBase + mTemplates, TemplatesUrl);
 }
 #endif /* !_WINDOWS */
 
@@ -3815,7 +3849,7 @@ static void GetTemplatesConf (void)
 static void GetTemplatesConf ()
 #endif /* __STDC__ */
 {
-  GetEnvString (TEXT("URL_TEMPLATE"), Templates);
+  GetEnvString (TEXT("URL_TEMPLATE"), TemplatesUrl);
 }
 
 /*----------------------------------------------------------------------
@@ -3828,7 +3862,7 @@ static void GetDefaultTemplatesConf (void)
 static void GetDefaultTemplatesConf ()
 #endif /* __STDC__ */
 {
-  GetDefEnvString (TEXT("URL_TEMPLATE"), Templates);
+  GetDefEnvString (TEXT("URL_TEMPLATE"), TemplatesUrl);
 }
 
 
@@ -3842,9 +3876,6 @@ static void SetTemplatesConf (void)
 static void SetTemplatesConf ()
 #endif /* __STDC__ */
 {
-  TtaSetEnvString (TEXT("URL_TEMPLATE"), Templates, TRUE);
+  TtaSetEnvString (TEXT("URL_TEMPLATE"), TemplatesUrl, TRUE);
   TtaSaveAppRegistry ();
-
-  /* change the current settings */
-/*  libwww_updateNetworkConf (AMAYA_LANNEG_RESTART);*/
 }

@@ -1206,6 +1206,19 @@ BEGIN
     EDITTEXT        IDC_TMPDIR,7,49,188,14,ES_AUTOHSCROLL
 END
 
+DE_TEMPLATESMENU DIALOG DISCARDABLE  100, 100, 198, 68
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Templates Preferences"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Apply",ID_APPLY,7,47,50,14
+    PUSHBUTTON      "Done",ID_DONE,141,47,50,14
+    PUSHBUTTON      "Defaults",ID_DEFAULTS,76,47,50,14
+    LTEXT           "Enter the URL of the templates server",-1,7,7,152,11
+    EDITTEXT        IDC_TEMPLATESURL,7,22,184,13,ES_AUTOHSCROLL | NOT 
+                    WS_TABSTOP
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -1474,6 +1487,14 @@ BEGIN
         RIGHTMARGIN, 195
         TOPMARGIN, 7
         BOTTOMMARGIN, 223
+    END
+
+    DE_TEMPLATESMENU, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 191
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 61
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -2676,6 +2697,19 @@ BEGIN
     EDITTEXT        IDC_LANNEG,7,22,184,13,ES_AUTOHSCROLL | NOT WS_TABSTOP
 END
 
+EN_TEMPLATESMENU DIALOG DISCARDABLE  100, 100, 198, 68
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Templates Preferences"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Apply",ID_APPLY,7,47,50,14
+    PUSHBUTTON      "Done",ID_DONE,141,47,50,14
+    PUSHBUTTON      "Defaults",ID_DEFAULTS,76,47,50,14
+    LTEXT           "Enter the URL of the templates server",-1,7,7,152,11
+    EDITTEXT        IDC_TEMPLATESURL,7,22,184,13,ES_AUTOHSCROLL | NOT 
+                    WS_TABSTOP
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -2938,6 +2972,14 @@ BEGIN
     END
 
     EN_LANNEGMENU, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 191
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 61
+    END
+
+    EN_TEMPLATESMENU, DIALOG
     BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 191
@@ -4260,6 +4302,20 @@ BEGIN
     EDITTEXT        IDC_TMPDIR,7,49,188,14,ES_AUTOHSCROLL
 END
 
+FR_TEMPLATESMENU DIALOG DISCARDABLE  100, 100, 198, 68
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Templates Preferences"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Saisissez l'URL du serveur de modèles de pages",-1,7,7,
+                    184,11
+    EDITTEXT        IDC_TEMPLATESURL,7,22,184,13,ES_AUTOHSCROLL | NOT 
+                    WS_TABSTOP
+    DEFPUSHBUTTON   "Appliquer",ID_APPLY,7,47,50,14
+    PUSHBUTTON      "Terminer",ID_DONE,141,47,50,14
+    PUSHBUTTON      "Défaut",ID_DEFAULTS,76,47,50,14
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -4536,6 +4592,14 @@ BEGIN
         RIGHTMARGIN, 195
         TOPMARGIN, 7
         BOTTOMMARGIN, 223
+    END
+
+    FR_TEMPLATESMENU, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 191
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 61
     END
 END
 #endif    // APSTUDIO_INVOKED
