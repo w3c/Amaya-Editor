@@ -343,8 +343,7 @@ HTAlertPar         *reply;
    multi-linguistic.                            
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-BOOL                AHTError_print (HTRequest * request, HTAlertOpcode op, int msgnum, const char *dfault,
-				    void *input, HTAlertPar * reply)
+BOOL                AHTError_print (HTRequest * request, HTAlertOpcode op, int msgnum, const char *dfault, void *input, HTAlertPar * reply)
 #else  /* __STDC__ */
 BOOL                AHTError_print (request, op, msgnum, dfault, input, reply)
 HTRequest          *request;
@@ -429,36 +428,45 @@ HTRequest          *request;
    while ((pres = (HTError *) HTList_nextObject (cur)))
      {
 	index = HTError_index (pres);
-	/*	if (HTError_doShow (pres)) */
-	  {			/* Error number */
-	     switch (index)
-		   {
-		      case HTERR_SYSTEM:
-		      case HTERR_INTERNAL:
-			 if (pres->par != NULL)
-			   {
-			     if (me->method != METHOD_PUT) 
-			       {
-				 sprintf (buffer, TtaGetMessage (AMAYA, AM_SYS_ERROR_TMPL), me->urlName, me->urlName, pres->element, (char *) pres->par);
-				 StrAllocCat (me->error_stream, buffer);
-			       }
-			     else
-			       {
-				 sprintf (buffer, "Error: Server is unavaiable or doesn't exist");
-				 StrAllocCat (me->error_stream, buffer);
-			       }
-			   }
-			 return;
-			 break;
-		      default:
-			if (pres->par != NULL)
-			   {
-			     StrAllocCat (me->error_stream, pres->par);
-			   }
-			 return;
-			 break;
-		   }
-	  }
+	{			/* Error number */
+	  switch (index)
+	    {
+	    case HTERR_SYSTEM:
+	    case HTERR_INTERNAL:
+	      if (pres->par != NULL)
+		{
+		  if (me->method != METHOD_PUT) 
+		    {
+		      sprintf (buffer, TtaGetMessage (AMAYA, AM_SYS_ERROR_TMPL), me->urlName, me->urlName, pres->element, (char *) pres->par);
+		      StrAllocCat (me->error_stream, buffer);
+		    }
+		  else
+		    {
+		      sprintf (buffer, "Error: Server is unavaiable or doesn't exist");
+		      StrAllocCat (me->error_stream, buffer);
+		    }
+		}
+	      return;
+	      break;
+	    case HTERR_TIME_OUT:
+	      if (me->method != METHOD_PUT)
+		{
+		  sprintf (buffer, TtaGetMessage (AMAYA, AM_SYS_ERROR_TMPL), me->urlName, me->urlName, pres->element, (char *) "connection timeout");
+		  StrAllocCat (me->error_stream, buffer);
+		}
+	      else
+		{
+		  sprintf (buffer, "Error: Server is unavaiable or doesn't exist");
+		  StrAllocCat (me->error_stream, buffer);
+		}
+	      break;	   
+	    default:
+	      if (pres->par != NULL)
+		  StrAllocCat (me->error_stream, pres->par);
+	      return;
+	      break;
+	    }
+	}
      }
 }
 

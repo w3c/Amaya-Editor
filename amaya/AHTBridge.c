@@ -206,8 +206,8 @@ int status;
     }
 
    /* we erase the context if we're dealing with an asynchronous request */
-  if ((me->mode & AMAYA_ASYNC) ||
-      (me->mode & AMAYA_IASYNC)) 
+  if ((me->mode & AMAYA_ASYNC)
+      || (me->mode & AMAYA_IASYNC))
     {
       me->reqStatus = HT_END;
       /*** @@@ do we need this? yes!! **/
