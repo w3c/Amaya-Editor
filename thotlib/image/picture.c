@@ -266,6 +266,7 @@ static int LookupInPicCache (PictInfo *Image, int frame)
     }
   return 0;  
 }
+#ifdef PCL_BDUG
 /*----------------------------------------------------------------------
  CacheLookupHeightAndWidth :
 Get Height and Width based on cache info on this 
@@ -296,7 +297,7 @@ static void CacheLookupHeightAndWidth (PictInfo *Image,
   *height = 0;
   return;  
 }
-
+#endif /*BUG*/
 /*----------------------------------------------------------------------
  Free video card memory from this texture.
   ----------------------------------------------------------------------*/
@@ -2331,6 +2332,62 @@ static ThotBool Ratio_Calculate (PtrAbstractBox pAb,
   return FALSE;
 }
 
+/*----------------------------------------------------------------------
+  Do you have to extend the clipping ?
+  ----------------------------------------------------------------------*/
+static void ClipAndBoxUpdate (PtrAbstractBox pAb, PtrBox box, 
+			      int w, int h, 
+			      int top, int bottom, 
+			      int left, int right, 
+			      int frame)   
+{
+#ifndef _GLTRANSFORMATION
+   if (pAb->AbLeafType == LtCompound)
+    DefClip (frame, box->BxXOrg, box->BxYOrg,
+	     box->BxXOrg + w, box->BxYOrg + h);
+  else
+    DefClip (frame, box->BxXOrg - left, box->BxYOrg - top,
+	     box->BxXOrg + right + w, box->BxYOrg + bottom + h);
+#else/*  _GLTRANSFORMATION */
+      if (pAb->AbLeafType == LtCompound)
+	DefClip (frame, box->BxClipX, box->BxClipY,
+		 box->BxClipX + w, box->BxClipY + h);
+      else
+	DefClip (frame, box->BxClipX - left, box->BxClipY - top,
+		 box->BxClipX + right + w, box->BxClipY + bottom + h);
+#endif /*  _GLTRANSFORMATION */
+
+  if (pAb->AbLeafType == LtPicture)
+    {
+      /* transmit picture dimensions */
+      if (!(pAb->AbWidth.DimIsPosition))
+	{
+	  if (pAb->AbWidth.DimMinimum)
+	    /* the rule min is applied to this box */
+	    ChangeDefaultWidth (box, box, w, 0, frame);
+	  else if (pAb->AbEnclosing &&
+		   pAb->AbWidth.DimAbRef == pAb->AbEnclosing &&
+		   pAb->AbNext == NULL && pAb->AbPrevious == NULL)
+	    /* the parent box should inherit the picture width */
+	    ChangeWidth (pAb->AbEnclosing->AbBox,
+			 pAb->AbEnclosing->AbBox, NULL,
+			 w + left + right, 0, frame);
+	}
+      if (!(pAb->AbHeight.DimIsPosition))
+	{
+	  if (pAb->AbHeight.DimMinimum)
+	    /* the rule min is applied to this box */
+	    ChangeDefaultHeight (box, box, h, frame);
+	  else if (pAb->AbEnclosing &&
+		   pAb->AbWidth.DimAbRef == pAb->AbEnclosing &&
+		   pAb->AbNext == NULL && pAb->AbPrevious == NULL)
+	    /* the parent box should inherit the picture height */
+	    ChangeHeight (pAb->AbEnclosing->AbBox,
+			  pAb->AbEnclosing->AbBox, NULL,
+			  h + top + bottom + top + bottom, frame);
+	}
+    }
+}
 
 #ifdef _GL
 /*----------------------------------------------------------------------
@@ -2373,34 +2430,35 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
      GL_prepare (frame); 
  typeImage = LookupInPicCache (imageDesc, frame); 
  if (typeImage)
-    {  
-      typeImage = imageDesc->PicType;
-      pres = imageDesc->PicPresent;
-      if (pres == DefaultPres)
-	{
-	  if (box->BxType == BoPicture)
-	    /* an image is rescaled */
-	    pres = ReScale;
-	  else
-	    /* a background image is repeated */
-	    pres = FillFrame;
+   {  
+     typeImage = imageDesc->PicType;
+     pres = imageDesc->PicPresent;
+     if (pres == DefaultPres)
+       {
+	 if (box->BxType == BoPicture)
+	   /* an image is rescaled */
+	   pres = ReScale;
+	 else
+	   /* a background image is repeated */
+	   pres = FillFrame;
+       }
+     if ((typeImage == XBM_FORMAT || typeImage == XPM_FORMAT) && 
+	 pres == ReScale)
+       pres = imageDesc->PicPresent = RealSize;
+     /* picture dimension */
+     if (pAb->AbLeafType == LtCompound)
+       {
+	 /* a background image, draw over the whole box */
+	 w = box->BxWidth;
+	 h = box->BxHeight;
+       }
+     else
+       {
+	 /* draw within the inside box */
+	 w = box->BxW;
+	 h = box->BxH;
 	}
-      if ((typeImage == XBM_FORMAT || typeImage == XPM_FORMAT) && 
-	  pres == ReScale)
-	pres = imageDesc->PicPresent = RealSize;
-      /* picture dimension */
-      if (pAb->AbLeafType == LtCompound)
-	{
-	  /* a background image, draw over the whole box */
-	  w = box->BxWidth;
-	  h = box->BxHeight;
-	}
-      else
-	{
-	  /* draw within the inside box */
-	  w = box->BxW;
-	  h = box->BxH;
-	}
+
       /* xBox and yBox get the box size if picture is */
       /* rescaled and receives the position of the picture */
       if (pres != ReScale || Printing)
@@ -2410,33 +2468,41 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	}
       else
 	{
-
-
 	  if (box->BxW != 0)
 	    xBox = w;
 	  if(box->BxH != 0)
 	    yBox = h;
 
 
-	      imageDesc->PicWArea = w;
-	      imageDesc->PicHArea = h;
-	      width = imageDesc->PicWidth;
-	      height = imageDesc->PicHeight;	      
-	      if (Ratio_Calculate (pAb, &w, &h,
-				   width, height))
-		{
-		  if (imageDesc->PicWArea == 0)
-		    ChangeWidth (box,
-				 box, NULL,
-				 w + left + right, 0, frame);		  
-		  if (imageDesc->PicHArea == 0)
-		    ChangeHeight (box,
-				  box, NULL,
-				  h + top + bottom + top + bottom, frame);
-		}
 
+      imageDesc->PicWArea = w;
+      imageDesc->PicHArea = h;
+      width = imageDesc->PicWidth;
+      height = imageDesc->PicHeight;	      
+      if (Ratio_Calculate (pAb, &w, &h,
+			   width, height))
+	{
+	  if (imageDesc->PicWArea == 0)
+	    ChangeWidth (box,
+			 box, NULL,
+			 w + left + right, 0, frame);		  
+	  if (imageDesc->PicHArea == 0)
+	    ChangeHeight (box,
+			  box, NULL,
+			  h + top + bottom + top + bottom, frame);
 	}
 
+	}
+      if (w == 0 || h == 0)
+	{
+	  /* one of box size is unknown, keep the image size */
+	  if (w == 0)
+	    w = wBox = imageDesc->PicWidth;
+	  if (h == 0)
+	    h = hBox = imageDesc->PicHeight;
+	  ClipAndBoxUpdate (pAb, box, w, h, top, bottom, left, right, frame);
+	}
+      
       if (pres != ReScale || Printing)
 	{
 	  imageDesc->PicXArea = xBox;
@@ -2540,17 +2606,26 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 		  if(box->BxH != 0)
 		    yBox = h;
 		}
-	      if (imageDesc->TextureBind == 0)
+	      if (imageDesc->TextureBind != 0)
+		imageDesc->TextureBind = 0;
+	      
+		/* if (glIsTexture (Image->TextureBind)) */
+/* 		  glDeleteTextures (1,  */
+/* 				    &(Image->TextureBind)); */
+
+		  /* if (imageDesc->TextureBind == 0)*/
 		imageDesc->PicPixmap = (unsigned char *) 
 		  (*(PictureHandlerTable[typeImage].Produce_Picture))
 		  (fileName, imageDesc, &xBox, &yBox, &wBox, &hBox,
 		   Bgcolor, &width, &height,
 		   ViewFrameTable[frame - 1].FrMagnification);
-	      else
-		CacheLookupHeightAndWidth (imageDesc,
-					   &width,
-					   &height,
-					   frame);
+
+	      /* else */
+/* 		CacheLookupHeightAndWidth (imageDesc, */
+/* 					   &width, */
+/* 					   &height, */
+/* 					   frame); */
+
 	      if  (width == 0 && height == 0)
 		{
 		  imageDesc->PicPixmap = (unsigned char *) 
@@ -2619,53 +2694,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	w = wBox;
       if (h == 0)
 	h = hBox;
-      /* Do you have to extend the clipping */
-#ifndef _GLTRANSFORMATION
-      if (pAb->AbLeafType == LtCompound)
-	DefClip (frame, box->BxXOrg, box->BxYOrg,
-		 box->BxXOrg + w, box->BxYOrg + h);
-      else
-	DefClip (frame, box->BxXOrg - left, box->BxYOrg - top,
-		 box->BxXOrg + right + w, box->BxYOrg + bottom + h);
-#else/*  _GLTRANSFORMATION */
-      if (pAb->AbLeafType == LtCompound)
-	DefClip (frame, box->BxClipX, box->BxClipY,
-		 box->BxClipX + w, box->BxClipY + h);
-      else
-	DefClip (frame, box->BxClipX - left, box->BxClipY - top,
-		 box->BxClipX + right + w, box->BxClipY + bottom + h);
-#endif /*  _GLTRANSFORMATION */
-
-      if (pAb->AbLeafType == LtPicture)
-	{
-	  /* transmit picture dimensions */
-	  if (!(pAb->AbWidth.DimIsPosition))
-	    {
-	      if (pAb->AbWidth.DimMinimum)
-		/* the rule min is applied to this box */
-		ChangeDefaultWidth (box, box, w, 0, frame);
-	      else if (pAb->AbEnclosing &&
-		       pAb->AbWidth.DimAbRef == pAb->AbEnclosing &&
-		       pAb->AbNext == NULL && pAb->AbPrevious == NULL)
-		/* the parent box should inherit the picture width */
-		ChangeWidth (pAb->AbEnclosing->AbBox,
-			     pAb->AbEnclosing->AbBox, NULL,
-			     w + left + right, 0, frame);
-	    }
-	  if (!(pAb->AbHeight.DimIsPosition))
-	    {
-	      if (pAb->AbHeight.DimMinimum)
-		/* the rule min is applied to this box */
-		ChangeDefaultHeight (box, box, h, frame);
-	      else if (pAb->AbEnclosing &&
-		       pAb->AbWidth.DimAbRef == pAb->AbEnclosing &&
-		       pAb->AbNext == NULL && pAb->AbPrevious == NULL)
-		/* the parent box should inherit the picture height */
-		ChangeHeight (pAb->AbEnclosing->AbBox,
-			      pAb->AbEnclosing->AbBox, NULL,
-			      h + top + bottom + top + bottom, frame);
-	    }
-	}
+      ClipAndBoxUpdate (pAb, box, w, h, top, bottom, left, right, frame);
     }  
   if (pres != ReScale || Printing)
     {
@@ -2764,7 +2793,8 @@ void testing_gradient ()
 }
 
 
-#else /* _GL */    
+#else /* _GL */ 
+
 
 /*----------------------------------------------------------------------
    Requests the picture handlers to get the corresponding pixmaps    
@@ -3114,43 +3144,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	    w = wBox;
 	  if (h == 0)
 	    h = hBox;
-	  /* Do you have to extend the clipping */
-	  if (pAb->AbLeafType == LtCompound)
-	    DefClip (frame, box->BxXOrg, box->BxYOrg,
-		     box->BxXOrg + w, box->BxYOrg + h);
-	  else
-	    DefClip (frame, box->BxXOrg - left, box->BxYOrg - top,
-		     box->BxXOrg + right + w, box->BxYOrg + bottom + h);
-	  if (pAb->AbLeafType == LtPicture)
-	    {
-	      /* transmit picture dimensions */
-	      if (!(pAb->AbWidth.DimIsPosition))
-		{
-		  if (pAb->AbWidth.DimMinimum)
-		    /* the rule min is applied to this box */
-		    ChangeDefaultWidth (box, box, w, 0, frame);
-		  else if (pAb->AbEnclosing &&
-			   pAb->AbWidth.DimAbRef == pAb->AbEnclosing &&
-			   pAb->AbNext == NULL && pAb->AbPrevious == NULL)
-		    /* the parent box should inherit the picture width */
-		      ChangeWidth (pAb->AbEnclosing->AbBox,
-				   pAb->AbEnclosing->AbBox, NULL,
-				   w + left + right, 0, frame);
-		}
-	      if (!(pAb->AbHeight.DimIsPosition))
-		{
-		  if (pAb->AbHeight.DimMinimum)
-		    /* the rule min is applied to this box */
-		    ChangeDefaultHeight (box, box, h, frame);
-		  else if (pAb->AbEnclosing &&
-			   pAb->AbWidth.DimAbRef == pAb->AbEnclosing &&
-			   pAb->AbNext == NULL && pAb->AbPrevious == NULL)
-		    /* the parent box should inherit the picture height */
-		      ChangeHeight (pAb->AbEnclosing->AbBox,
-				    pAb->AbEnclosing->AbBox, NULL,
-				    h + top + bottom + top + bottom, frame);
-		}
-	    }
+	  ClipAndBoxUpdate (pAb, box, w, h, top, bottom, left, right, frame);
 	}
     }
 
