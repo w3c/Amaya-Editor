@@ -9,7 +9,7 @@
 <PRE>
 <EM>Thot V2.0</EM></PRE>
 <PRE>
-Date: Draft, February 11, 1997</PRE>
+Date: Draft, March 20, 1997</PRE>
 
 <H1>The Thot Tool Kit API</H1>
 <ADDRESS>Vincent QUINT, Ir&egrave;ne VATTON</ADDRESS>
@@ -7517,7 +7517,27 @@ export was succesful. The export function have the following prototype :</P>
 export.
 </DL>
 
-<H4><A NAME="sectc1922">19.2.2</A> TtaSetPrintParameter</H4>
+<H4><A NAME="sectc1922">19.2.2</A> TtaSetPrintSchema</H4>
+
+<P>This procedure defines the presentation schema that has to be used by the
+editor when printing or saving a PostScript file. By default, he name is ""
+and the editor searches in the configuration file $STRUCTURE.conf the first
+presentation schema supporting the current paper format (A4 or US). To return
+to the default status, the application has to resets the empty name "".</P>
+
+<HR>
+
+<P>void TtaSetPrintSchema (char *name)</P>
+
+<HR>
+
+<DL>
+<DT>Parameter :</DT>
+
+<DD><EM>name</EM>: The schema name without the suffix .PRS.
+</DL>
+
+<H4><A NAME="sectc1923">19.2.3</A> TtaSetPrintParameter</H4>
 
 <P>Thit procedure changes a print paramenter. Modifiable parameters belongs to
 PrintParameter type. The different parameters are listed below, with the range
@@ -7571,7 +7591,7 @@ of their values.</P>
 
 </DL>
 
-<H4><A NAME="sectc1923">19.2.3</A> TtaSetPrintCommand</H4>
+<H4><A NAME="sectc1924">19.2.4</A> TtaSetPrintCommand</H4>
 
 <P>This procedure modifies the system printing command called by the editor
 (the default value is given by the parameter THOTPRINT in <I>.thotrc</I>
@@ -7590,7 +7610,7 @@ option.</P>
 <DD><EM>command </EM>: The printing command.
 </DL>
 
-<H4><A NAME="sectc1924">19.2.4</A> TtaSetPsFile</H4>
+<H4><A NAME="sectc1925">19.2.5</A> TtaSetPsFile</H4>
 
 <P>This procedure modifies the current path used by the editor when saving a
 PostScript file.</P>
