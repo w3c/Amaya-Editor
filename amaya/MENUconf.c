@@ -325,14 +325,22 @@ static AM_WIN_MenuText WIN_ColorMenuText[] =
 };
 #endif /* _WINGUI */
 static int      ColorBase;
+
+#ifndef _WINGUI
+static Prop_Color GProp_Color;
+static char *    FgColor     = GProp_Color.FgColor;
+static char *    BgColor     = GProp_Color.BgColor;
+static char *    BgSelColor  = GProp_Color.BgSelColor;
+static char *    FgSelColor  = GProp_Color.FgSelColor;
+static char *    MenuFgColor = GProp_Color.MenuFgColor;
+static char *    MenuBgColor = GProp_Color.MenuBgColor;
+#else /* !_WINGUI */
+/* do not use references on Windows C compiler, it doesn't understand it :( */
 static char     FgColor[MAX_LENGTH];
 static char     BgColor[MAX_LENGTH];
 static char     BgSelColor[MAX_LENGTH];
 static char     FgSelColor[MAX_LENGTH];
-#ifndef _WINGUI
-static char     MenuFgColor[MAX_LENGTH];
-static char     MenuBgColor[MAX_LENGTH];
-#endif /* !_WINGUI */
+#endif /* _WINGUI */
 
 /* Geometry menu options */
 static int      GeometryBase;
@@ -5204,6 +5212,29 @@ Prop_Proxy GetProp_Proxy()
 }
 
 /*----------------------------------------------------------------------
+  Use to set the Amaya global variables (Color preferences)
+  ----------------------------------------------------------------------*/
+void SetProp_Color( const Prop_Color * prop )
+{
+#ifdef _WX
+  GProp_Color = *prop;
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  Use to get the Amaya global variables (Color preferences)
+  ----------------------------------------------------------------------*/
+Prop_Color GetProp_Color()
+{
+#ifdef _WX
+  return GProp_Color;
+#else /* _WX */
+  Prop_Color prop;
+  memset(&prop, 0, sizeof(Prop_Color) );
+  return prop;
+#endif /* _WX */
+}
+/*----------------------------------------------------------------------
   PreferenceMenu
   Build and display the preference dialog
   ----------------------------------------------------------------------*/
@@ -5233,6 +5264,9 @@ void PreferenceMenu (Document document, View view)
   /* ---> Proxy Tab */
   ProxyStatus = 0; /* reset the modified flag */
   GetProxyConf (); /* load and display the current values */
+
+  /* ---> Color Tab */   
+  GetColorConf (); /* load and display the current values */
 
   ThotBool created = CreatePreferenceDlgWX ( PreferenceBase,
 					     TtaGetViewFrame (document, view),

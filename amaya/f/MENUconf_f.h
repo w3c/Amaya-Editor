@@ -61,6 +61,8 @@ extern void SetProp_Cache ( const Prop_Cache * prop );
 extern Prop_Cache GetProp_Cache ( void );
 extern void SetProp_Proxy ( const Prop_Proxy * prop );
 extern Prop_Proxy GetProp_Proxy ( void );
+extern void SetProp_Color ( const Prop_Color * prop );
+extern Prop_Color GetProp_Color ( void );
 extern void PreferenceMenu ( Document document,
                              View view );
 extern void InitConfMenu ( void );
@@ -122,6 +124,8 @@ extern void SetProp_Cache ( const Prop_Cache * prop );
 extern Prop_Cache GetProp_Cache ( void );
 extern void SetProp_Proxy ( const Prop_Proxy * prop );
 extern Prop_Proxy GetProp_Proxy ( void );
+extern void SetProp_Color ( const Prop_Color * prop );
+extern Prop_Color GetProp_Color ( void );
 extern void PreferenceMenu ( Document document,
                                View view );
 extern void InitConfMenu ( void );

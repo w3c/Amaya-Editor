@@ -54,6 +54,12 @@ private:
   void SetupDialog_Proxy( const Prop_Proxy & prop );
   Prop_Proxy GetValueDialog_Proxy();
 
+  // "Color" tab
+  void SetupLabelDialog_Color();
+  void SetupDialog_Color( const Prop_Color & prop );
+  Prop_Color GetValueDialog_Color();
+  void OnColorPalette( wxCommandEvent& event );
+
   int GetPagePosFromXMLID( const wxString & xml_id );
 
   void OnOk( wxCommandEvent& event );
@@ -65,7 +71,9 @@ private:
 
 private:
   wxArrayString m_UrlList;
-
+  
+  // "Color" tab
+  wxColourData colour_data;
 };
 
 #endif  // __PREFERENCEDLGWX_H__

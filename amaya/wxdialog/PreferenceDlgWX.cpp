@@ -7,6 +7,7 @@
 #include "wx/spinctrl.h"
 #include "wx/notebook.h"
 #include "wx/xrc/xmlres.h"
+#include "wx/colordlg.h"
 #include "AmayaApp.h"
 
 #define THOT_EXPORT extern
@@ -28,6 +29,12 @@ BEGIN_EVENT_TABLE(PreferenceDlgWX, AmayaDialog)
 
   // Cache tab callbacks
   EVT_BUTTON(     XRCID("wxID_BUTTON_EMPTYCACHE"), PreferenceDlgWX::OnEmptyCache )
+
+  // Color tab callbacks
+  EVT_BUTTON(     XRCID("wxID_BUTTON_TEXTCOLOR"),    PreferenceDlgWX::OnColorPalette )
+  EVT_BUTTON(     XRCID("wxID_BUTTON_BACKCOLOR"),    PreferenceDlgWX::OnColorPalette )
+  EVT_BUTTON(     XRCID("wxID_BUTTON_SELCOLOR"),     PreferenceDlgWX::OnColorPalette )
+  EVT_BUTTON(     XRCID("wxID_BUTTON_SELBACKCOLOR"), PreferenceDlgWX::OnColorPalette )
 
 END_EVENT_TABLE()
 
@@ -60,6 +67,7 @@ PreferenceDlgWX::PreferenceDlgWX( int ref,
   SetupLabelDialog_Publish();
   SetupLabelDialog_Cache();
   SetupLabelDialog_Proxy();
+  SetupLabelDialog_Color();
 
   XRCCTRL(*this, "wxID_OK",      wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage (AMAYA, AM_APPLY_BUTTON)));
   XRCCTRL(*this, "wxID_CANCEL",  wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CANCEL)) );
@@ -71,9 +79,13 @@ PreferenceDlgWX::PreferenceDlgWX( int ref,
   SetupDialog_Publish( GetProp_Publish() );
   SetupDialog_Cache( GetProp_Cache() );
   SetupDialog_Proxy( GetProp_Proxy() );
+  SetupDialog_Color( GetProp_Color() );
 
   // give focus to ...
   XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE", wxComboBox)->SetFocus();
+
+  // on windows, the color selector dialog must be complete.
+  colour_data.SetChooseFull(true);
 
   SetAutoLayout( TRUE );
 }
@@ -541,6 +553,150 @@ Prop_Proxy PreferenceDlgWX::GetValueDialog_Proxy()
 }
 
 
+/************************************************************************/
+/* Color tab                                                            */
+/************************************************************************/
+
+/*----------------------------------------------------------------------
+  SetupLabelDialog_Color init labels
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::SetupLabelDialog_Color()
+{
+  wxLogDebug( _T("PreferenceDlgWX::SetupLabelDialog_Color") );
+
+  // Setup notebook tab names :
+  int page_id;
+  wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
+  page_id = GetPagePosFromXMLID( _T("wxID_PAGE_COLOR") );
+  if (page_id >= 0)
+    p_notebook->SetPageText( page_id, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_COLOR_MENU)) );
+
+  XRCCTRL(*this, "wxID_LABEL_TEXTCOLOR", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_DOC_FG_COLOR)) );
+  XRCCTRL(*this, "wxID_LABEL_BACKCOLOR", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_DOC_BG_COLOR)) );
+  XRCCTRL(*this, "wxID_LABEL_SELCOLOR", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_FG_SEL_COLOR)) );
+  XRCCTRL(*this, "wxID_LABEL_SELBACKCOLOR", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_BG_SEL_COLOR)) );
+
+  XRCCTRL(*this, "wxID_LABEL_COLORGEOCHG", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_GEOMETRY_CHANGE)) );
+}
+
+/*----------------------------------------------------------------------
+  SetupDialog_Color send init value to dialog 
+  params:
+    + const Prop_Color & prop : the values to setup into the dialog
+  returns:
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::SetupDialog_Color( const Prop_Color & prop )
+{
+  wxLogDebug( _T("PreferenceDlgWX::SetupDialog_Color") );
+
+  XRCCTRL(*this, "wxID_COMBO_SELBACKCOLOR",  wxComboBox)->SetValue( TtaConvMessageToWX(prop.BgSelColor) );
+  XRCCTRL(*this, "wxID_COMBO_SELCOLOR",      wxComboBox)->SetValue( TtaConvMessageToWX(prop.FgSelColor) );
+  XRCCTRL(*this, "wxID_COMBO_BACKCOLOR",     wxComboBox)->SetValue( TtaConvMessageToWX(prop.BgColor) );
+  XRCCTRL(*this, "wxID_COMBO_TEXTCOLOR",     wxComboBox)->SetValue( TtaConvMessageToWX(prop.FgColor) );
+
+  // setup background colours
+  unsigned short      red;
+  unsigned short      green;
+  unsigned short      blue;
+  TtaGiveRGB ((char *)prop.BgSelColor, &red, &green, &blue);
+  XRCCTRL(*this, "wxID_COMBO_SELBACKCOLOR",  wxComboBox)->SetBackgroundColour( wxColour(red, green, blue) );
+  TtaGiveRGB ((char *)prop.FgSelColor, &red, &green, &blue);
+  XRCCTRL(*this, "wxID_COMBO_SELCOLOR",      wxComboBox)->SetBackgroundColour( wxColour(red, green, blue) );
+  TtaGiveRGB ((char *)prop.BgColor, &red, &green, &blue);
+  XRCCTRL(*this, "wxID_COMBO_BACKCOLOR",     wxComboBox)->SetBackgroundColour( wxColour(red, green, blue) );
+  TtaGiveRGB ((char *)prop.FgColor, &red, &green, &blue);
+  XRCCTRL(*this, "wxID_COMBO_TEXTCOLOR",     wxComboBox)->SetBackgroundColour( wxColour(red, green, blue) );
+}
+
+/*----------------------------------------------------------------------
+  GetValueDialog_Color get dialog values
+  params:
+  returns:
+    + Prop_Color prop : the dialog values
+  ----------------------------------------------------------------------*/
+Prop_Color PreferenceDlgWX::GetValueDialog_Color()
+{
+  wxString        value;
+  Prop_Color      prop;
+  memset( &prop, 0, sizeof(Prop_Color) );
+
+  value = XRCCTRL(*this, "wxID_COMBO_SELBACKCOLOR", wxComboBox)->GetValue();
+  strcpy( prop.BgSelColor, (const char*)value.mb_str(wxConvUTF8) );
+
+  value = XRCCTRL(*this, "wxID_COMBO_SELCOLOR", wxComboBox)->GetValue();
+  strcpy( prop.FgSelColor, (const char*)value.mb_str(wxConvUTF8) );
+
+  value = XRCCTRL(*this, "wxID_COMBO_BACKCOLOR", wxComboBox)->GetValue();
+  strcpy( prop.BgColor, (const char*)value.mb_str(wxConvUTF8) );
+
+  value = XRCCTRL(*this, "wxID_COMBO_TEXTCOLOR", wxComboBox)->GetValue();
+  strcpy( prop.FgColor, (const char*)value.mb_str(wxConvUTF8) );
+
+  return prop;
+}
+
+/*----------------------------------------------------------------------
+  OnColorPalette is called when the user click on the color palette button
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::OnColorPalette( wxCommandEvent& event )
+{
+  wxLogDebug( _T("PreferenceDlgWX::OnColorPalette") );
+  
+  int textcolor_id     = wxXmlResource::GetXRCID(_T("wxID_BUTTON_TEXTCOLOR"));
+  int backcolor_id     = wxXmlResource::GetXRCID(_T("wxID_BUTTON_BACKCOLOR"));
+  int selcolor_id      = wxXmlResource::GetXRCID(_T("wxID_BUTTON_SELCOLOR"));
+  int selbackcolor_id  = wxXmlResource::GetXRCID(_T("wxID_BUTTON_SELBACKCOLOR"));
+
+  // First of all setup the dialog with the combobox color
+  wxString value;
+  unsigned short      red;
+  unsigned short      green;
+  unsigned short      blue;
+  char buffer[512];
+  if (event.GetId() == textcolor_id)
+    value = XRCCTRL(*this, "wxID_COMBO_TEXTCOLOR", wxComboBox)->GetValue();
+  else if (event.GetId() == backcolor_id)
+    value = XRCCTRL(*this, "wxID_COMBO_BACKCOLOR", wxComboBox)->GetValue();
+  else if (event.GetId() == selcolor_id)
+    value = XRCCTRL(*this, "wxID_COMBO_SELCOLOR", wxComboBox)->GetValue();
+  else if (event.GetId() == selbackcolor_id)
+    value = XRCCTRL(*this, "wxID_COMBO_SELBACKCOLOR", wxComboBox)->GetValue();
+  strcpy(buffer, (const char*)value.mb_str(wxConvUTF8) );
+  TtaGiveRGB (buffer, &red, &green, &blue);
+  colour_data.SetColour( wxColour( red, green, blue ) );
+
+  // open the color dialog and ask user to select a color.
+  wxColourDialog dialog(this, &colour_data);
+  if (dialog.ShowModal() == wxID_OK)
+  {
+    colour_data   = dialog.GetColourData();
+    wxColour col  = colour_data.GetColour();
+
+    char color_string[7];
+    sprintf( color_string, "#%02x%02x%02x", col.Red(), col.Green(), col.Blue() );
+    wxComboBox * p_combo = NULL;
+    if (event.GetId() == textcolor_id)
+      p_combo = XRCCTRL(*this, "wxID_COMBO_TEXTCOLOR", wxComboBox);
+    else if (event.GetId() == backcolor_id)
+      p_combo = XRCCTRL(*this, "wxID_COMBO_BACKCOLOR", wxComboBox);
+    else if (event.GetId() == selcolor_id)
+      p_combo = XRCCTRL(*this, "wxID_COMBO_SELCOLOR", wxComboBox);
+    else if (event.GetId() == selbackcolor_id)
+      p_combo = XRCCTRL(*this, "wxID_COMBO_SELBACKCOLOR", wxComboBox);
+
+    if (p_combo)
+      {
+	p_combo->SetValue( TtaConvMessageToWX(color_string) );
+	p_combo->SetBackgroundColour( col );
+      }
+  }
+}
+
+
 /*----------------------------------------------------------------------
   OnOk called when the user validates his selection
   params:
@@ -567,6 +723,10 @@ void PreferenceDlgWX::OnOk( wxCommandEvent& event )
   Prop_Proxy prop_px = GetValueDialog_Proxy();
   SetProp_Proxy( &prop_px );
   ThotCallback (GetPrefProxyBase() + ProxyMenu, INTEGER_DATA, (char*) 1);
+
+  Prop_Color prop_color = GetValueDialog_Color();
+  SetProp_Color( &prop_color );
+  ThotCallback (GetPrefColorBase() + ColorMenu, INTEGER_DATA, (char*) 1);
 
   ThotCallback (m_Ref, INTEGER_DATA, (char*) 1);
 }
@@ -610,6 +770,11 @@ void PreferenceDlgWX::OnDefault( wxCommandEvent& event )
       ThotCallback (GetPrefProxyBase() + ProxyMenu, INTEGER_DATA, (char*) 2);
       SetupDialog_Proxy( GetProp_Proxy() );
     }
+  else if ( p_page->GetId() == wxXmlResource::GetXRCID(_T("wxID_PAGE_COLOR")) )
+    {
+      ThotCallback (GetPrefColorBase() + ColorMenu, INTEGER_DATA, (char*) 2);
+      SetupDialog_Color( GetProp_Color() );
+    }
 
   ThotCallback (m_Ref, INTEGER_DATA, (char*) 2);
 }
@@ -626,6 +791,7 @@ void PreferenceDlgWX::OnCancel( wxCommandEvent& event )
   ThotCallback (GetPrefPublishBase() + PublishMenu, INTEGER_DATA, (char*) 0);
   ThotCallback (GetPrefCacheBase() + CacheMenu, INTEGER_DATA, (char*) 0);
   ThotCallback (GetPrefProxyBase() + ProxyMenu, INTEGER_DATA, (char*) 0);
+  ThotCallback (GetPrefColorBase() + ColorMenu, INTEGER_DATA, (char*) 0);
   ThotCallback (m_Ref, INTEGER_DATA, (char*) 0);
 }
 

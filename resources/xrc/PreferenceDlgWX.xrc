@@ -602,13 +602,13 @@
                           <item>Grey</item>
                           <item>Red</item>
                         </content>
-                        <size></size>
+                        <style>wxCB_READONLY</style>
                       </object>
                       <flag>wxEXPAND</flag>
                     </object>
                     <object class="sizeritem">
                       <object class="wxBitmapButton" name="wxID_BUTTON_TEXTCOLOR">
-                        <bitmap>../icons/nouvelles/colorize.png</bitmap>
+                        <bitmap>../icons/colorize.gif</bitmap>
                         <style>wxNO_BORDER</style>
                       </object>
                       <flag>wxALIGN_CENTRE_VERTICAL</flag>
@@ -627,13 +627,13 @@
                           <item>Grey</item>
                           <item>Red</item>
                         </content>
-                        <size></size>
+                        <style>wxCB_READONLY</style>
                       </object>
                       <flag>wxEXPAND</flag>
                     </object>
                     <object class="sizeritem">
                       <object class="wxBitmapButton" name="wxID_BUTTON_BACKCOLOR">
-                        <bitmap>../icons/nouvelles/colorize.png</bitmap>
+                        <bitmap>../icons/colorize.gif</bitmap>
                         <style>wxNO_BORDER</style>
                       </object>
                       <flag>wxALIGN_CENTRE_VERTICAL</flag>
@@ -652,13 +652,13 @@
                           <item>Grey</item>
                           <item>Red</item>
                         </content>
-                        <size></size>
+                        <style>wxCB_READONLY</style>
                       </object>
                       <flag>wxEXPAND</flag>
                     </object>
                     <object class="sizeritem">
                       <object class="wxBitmapButton" name="wxID_BUTTON_SELCOLOR">
-                        <bitmap>../icons/nouvelles/colorize.png</bitmap>
+                        <bitmap>../icons/colorize.gif</bitmap>
                         <style>wxNO_BORDER</style>
                       </object>
                       <flag>wxALIGN_CENTRE_VERTICAL</flag>
@@ -677,13 +677,13 @@
                           <item>Grey</item>
                           <item>Red</item>
                         </content>
-                        <size></size>
+                        <style>wxCB_READONLY</style>
                       </object>
                       <flag>wxEXPAND</flag>
                     </object>
                     <object class="sizeritem">
                       <object class="wxBitmapButton" name="wxID_BUTTON_SELBACKCOLOR">
-                        <bitmap>../icons/nouvelles/colorize.png</bitmap>
+                        <bitmap>../icons/colorize.gif</bitmap>
                         <style>wxNO_BORDER</style>
                       </object>
                       <flag>wxALIGN_CENTRE_VERTICAL</flag>
@@ -697,7 +697,7 @@
                   <border>10</border>
                 </object>
                 <object class="sizeritem">
-                  <object class="wxStaticText">
+                  <object class="wxStaticText" name="wxID_LABEL_COLORGEOCHG">
                     <label>Ces changements seront effectifs lors de l ouverture d une fenetre</label>
                   </object>
                   <option>0</option>
@@ -707,6 +707,7 @@
               </object>
             </object>
           </object>
+          <style>wxNB_LEFT</style>
         </object>
         <option>1</option>
         <flag>wxALL|wxEXPAND</flag>

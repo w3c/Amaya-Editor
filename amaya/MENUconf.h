@@ -153,4 +153,15 @@ typedef struct Prop_Proxy_t
   ThotBool ProxyDomainIsOnlyProxy;
 } Prop_Proxy;
 
+typedef struct Prop_Color_t
+{
+  char     FgColor[MAX_LENGTH];
+  char     BgColor[MAX_LENGTH];
+  char     BgSelColor[MAX_LENGTH];
+  char     FgSelColor[MAX_LENGTH];
+  char     MenuFgColor[MAX_LENGTH];
+  char     MenuBgColor[MAX_LENGTH];
+} Prop_Color;
+
+
 #endif /* _MENUCONF.h */
