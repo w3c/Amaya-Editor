@@ -5909,16 +5909,30 @@ ATTRIBUTES
  TextAlign = center_:
 	BEGIN
 	CreateBefore(AttrNameAndValue);
-	Adjust: VMiddle;	
-	In Structure_view
+	if Table
+	  HorizPos: VMiddle = Enclosing . VMiddle;
+	if NOT Table
+	  Adjust: VMiddle;	
+	In Structure_view BEGIN
 	   Adjust: Left;
+	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	   END;
+	IN Alternate_view
+	   HorizPos: Left = Enclosing . Left;
 	END;
  TextAlign = right_:
 	BEGIN
 	CreateBefore(AttrNameAndValue);
-	Adjust: Right;
-	In Structure_view
+	if Table
+	   HorizPos: Right = Enclosing . Right;
+	if NOT Table
+	   Adjust: Right;
+	In Structure_view BEGIN
+	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 	   Adjust: Left;
+	   END;
+	IN Alternate_view
+	   HorizPos: Left = Enclosing . Left;
 	END;
  TextAlign = justify_:
 	BEGIN
@@ -5926,23 +5940,6 @@ ATTRIBUTES
 	Adjust: Justify;
 	In Structure_view
 	   Adjust: Enclosing =;
-	END;
-
- TextAlign (Table) = center_:
-	BEGIN
-	HorizPos: VMiddle = Enclosing . VMiddle;
-	In Structure_view
-	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	IN Alternate_view
-	   HorizPos: Left = Enclosing . Left;
-	END;
- TextAlign (Table) = right_:
-	BEGIN
-	HorizPos: Right = Enclosing . Right;
-	In Structure_view
-	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	IN Alternate_view
-	   HorizPos: Left = Enclosing . Left;
 	END;
 
  ISMAP:
@@ -6086,20 +6083,21 @@ ATTRIBUTES
 		Visibility: Enclosing =;
 	END;
 
- Checked(Checkbox_Input) = Yes_:
+ Checked = Yes_:
 	BEGIN
-	CreateBefore(ToggleS_gif);
+	if Checkbox_Input
+	  CreateBefore(ToggleS_gif);
+	if Radio_Input
+	  CreateBefore(RadioS_gif);
 	CreateBefore(AttrNameOnly);
 	END;
- Checked(Checkbox_Input) = No_:
-	CreateBefore(Toggle_gif);
- Checked(Radio_Input) = Yes_:
+ Checked = No_:
 	BEGIN
-	CreateBefore(RadioS_gif);
-	CreateBefore(AttrNameOnly);
+	if Checkbox_Input
+	  CreateBefore(Toggle_gif);
+	if Radio_Input
+	  CreateBefore(Radio_gif);
 	END;
- Checked(Radio_Input) = No_:
-	CreateBefore(Radio_gif);
 
  disabled:
 	CreateBefore(AttrNameOnly);
@@ -6844,13 +6842,13 @@ ATTRIBUTES
 		END;
 	END;
 
- x_coord(AREA):
+ x_coord:
 	BEGIN
  	HorizPos: Left = Enclosing . Left + x_coord px UserSpecified;
 	IN Structure_view
 	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 	END;
- y_coord(AREA):
+ y_coord:
 	BEGIN
  	VertPos: Top = Enclosing . Top + y_coord px UserSpecified;
 	IN Structure_view
