@@ -275,8 +275,9 @@ int CharacterWidth (unsigned char c, PtrFont font)
 {
 #if !defined(_WINDOWS) && !defined(_GTK)
   XFontStruct        *xf = (XFontStruct *) font;
+  int                 i;
 #endif /* !defined(_WINDOWS) && !defined(_GTK) */
-  int                 i, l;
+  int                 l;
 
   if (font == NULL)
     return 0;
