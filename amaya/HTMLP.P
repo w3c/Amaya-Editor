@@ -1932,7 +1932,6 @@ RULES
 #endif
 	Visibility: 0;
 	IN Structure_view BEGIN
-		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Foreground: ATTR_Color;
 		Style: ATTR_Style; Weight: ATTR_Weight;
@@ -1972,7 +1971,6 @@ RULES
 	CreateBefore(ElementName);
 	Visibility: 0;
 	IN Structure_view BEGIN
-		Width: 0;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous ElementName . Top;
 		Foreground: Enclosing =;
@@ -1987,7 +1985,6 @@ RULES
 #endif
 	Visibility: 0;
 	IN Structure_view BEGIN
-		Width: 0;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous ElementName . Top;
 		Foreground: Enclosing =;

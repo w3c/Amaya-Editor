@@ -5264,25 +5264,6 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 			    ptr = strstr (&FileBuffer[i], "xhtml");
 			  if (ptr && ptr < end)
 			    *isXML = TRUE;
-			  ptr = strstr (&FileBuffer[i], "Basic");
-			  if (!ptr || (ptr && ptr > end))
-			    ptr = strstr (&FileBuffer[i], "basic");
-			  if (ptr && ptr < end)
-			    *parsingLevel = L_Basic;
-			  else
-			    {
-			      ptr = strstr (&FileBuffer[i], "Strict");
-			      if (!ptr || (ptr && ptr > end))
-				ptr = strstr (&FileBuffer[i], "strict");
-			      if (ptr && ptr < end)
-				*parsingLevel = L_Strict;
-			      else
-				{
-				  ptr = strstr (&FileBuffer[i], "1.1");
-				  if (ptr && ptr < end)
-				    *parsingLevel = L_Xhtml11;
-				}
-			    }
 			}
 		      else if (!strncasecmp (&FileBuffer[i], "svg", 3))
 			{
