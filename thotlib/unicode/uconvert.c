@@ -1184,7 +1184,10 @@ unsigned char *TtaConvertWCToByte (wchar_t *src, CHARSET encoding)
     {
       if (encoding == UTF_8)
 	{
-	  len = strlen ((char *) src) * 4;
+	  len = 0;
+	  while (src[len] != 0)
+	    len++;
+	  len *= 4;
 	  dest = (unsigned char *) TtaGetMemory (len + 1);
 	  i = 0;
 	  l = 0;
