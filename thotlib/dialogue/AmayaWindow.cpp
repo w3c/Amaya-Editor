@@ -459,9 +459,7 @@ void AmayaWindow::EmptyURLBar()
  *--------------------------------------------------------------------------------------
  */
 void AmayaWindow::OnSplitterUnsplit( wxSplitterEvent& event )
-{
-  wxPrintf( _T("EVT_SPLITTER_UNSPLIT\n") );
-  
+{ 
   event.Skip();  
 }
 
