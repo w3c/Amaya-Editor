@@ -3305,6 +3305,7 @@ static void TranslateTree (PtrElement pEl, PtrDocument pDoc,
    ThotBool            found;
    ThotBool            removeEl;
    ThotBool            ignoreEl;
+   ThotBool            withBreak = lineBreak;
 
    if (!pEl->ElTransContent || enforce)
      {
@@ -3378,7 +3379,7 @@ static void TranslateTree (PtrElement pEl, PtrDocument pDoc,
        /* Cherche et applique les regles de traduction associees au type */
        /* de l'element et qui doivent s'appliquer avant la traduction du */
        /* contenu de l'element */
-       ApplyElTypeRules (TBefore, &transChar, &lineBreak, &removeEl, &ignoreEl,
+       ApplyElTypeRules (TBefore, &transChar, &withBreak, &removeEl, &ignoreEl,
 			 pEl, elemType, pTSch, pSS, pDoc, recordLineNb);
        /* on ne traduit les attributs que si ce n'est pas deja fait par */
        /* une regle Create Attributes associee au type et si on n'a pas */
@@ -3388,7 +3389,7 @@ static void TranslateTree (PtrElement pEl, PtrDocument pDoc,
 	    des attributs qui doivent ^etre appliquees avant la
 	    traduction du contenu de l'element */
 	 ApplyAttrRules (TBefore, pEl, &removeEl, &ignoreEl, &transChar,
-			 &lineBreak, pDoc, recordLineNb);
+			 &withBreak, pDoc, recordLineNb);
 
        /* on ne traduit la presentation que si ce n'est pas deja fait par */
        /* une regle Create Presentation et si on n'a pas rencontre' de */
@@ -3398,7 +3399,7 @@ static void TranslateTree (PtrElement pEl, PtrDocument pDoc,
 	    de traduction correspondantes qui doivent ^etre appliquees
 	    avant la traduction du contenu de l'element */
 	 ApplyPresTRules (TBefore, pEl, &removeEl, &ignoreEl, &transChar,
-			  &lineBreak, NULL, pDoc, recordLineNb);
+			  &withBreak, NULL, pDoc, recordLineNb);
        /* traduit le contenu de l'element, sauf si on a deja rencontre' */
        /* une regle Remove ou Ignore pour cet element. */
        if (!removeEl && !ignoreEl)
@@ -3407,7 +3408,7 @@ static void TranslateTree (PtrElement pEl, PtrDocument pDoc,
 	 if (pEl->ElTerminal)
 	   /* c'est une feuille, applique les regles de traduction des */
 	   /* feuilles et sort le contenu dans le fichier principal */
-	   TranslateLeaf (pEl, transChar, lineBreak, 1, pDoc);
+	   TranslateLeaf (pEl, transChar, withBreak, 1, pDoc);
 	 else
 	   /* ce n'est pas une feuille, traduit successivement tous les */
 	   /* fils de l'element */
@@ -3415,7 +3416,7 @@ static void TranslateTree (PtrElement pEl, PtrDocument pDoc,
 	   pChild = pEl->ElFirstChild;
 	   while (pChild != NULL)
 	     {
-	     TranslateTree (pChild, pDoc, transChar, lineBreak, enforce,
+	     TranslateTree (pChild, pDoc, transChar, withBreak, enforce,
 			    recordLineNb);
 	     pChild = pChild->ElNext;
 	     }
@@ -3434,17 +3435,17 @@ static void TranslateTree (PtrElement pEl, PtrDocument pDoc,
 	    de traduction correspondantes qui doivent ^etre appliquees
 	    apres la traduction du contenu */
 	 ApplyPresTRules (TAfter, pEl, &removeEl, &ignoreEl, &transChar,
-			  &lineBreak, NULL, pDoc, recordLineNb);
+			  &withBreak, NULL, pDoc, recordLineNb);
        if (!pEl->ElTransAttr && !ignoreEl)
 	 /* Parcourt les attributs de l'element et applique les regles des
 	    attributs qui doivent etre appliquees apres la traduction du
 	    contenu */
 	 ApplyAttrRules (TAfter, pEl, &removeEl, &ignoreEl, &transChar,
-			 &lineBreak, pDoc, recordLineNb);
+			 &withBreak, pDoc, recordLineNb);
        /* Cherche et applique les regles associees au type de l'element et
 	  qui doivent s'appliquer apres la traduction du contenu */
        if (!ignoreEl)
-         ApplyElTypeRules (TAfter, &transChar, &lineBreak, &removeEl,
+         ApplyElTypeRules (TAfter, &transChar, &withBreak, &removeEl,
 			   &ignoreEl, pEl, elemType, pTSch, pSS, pDoc,
 			   recordLineNb);
        if (!enforce)
