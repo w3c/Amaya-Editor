@@ -32,24 +32,57 @@
 
 <p>Many commands in <strong>Amaya</strong> act on the current selection. The
 current selection can be provided in different ways.</p>
-<dl>
-  <dt>Selecting with the mouse</dt>
-    <dd>As usual, you can click with the left mouse button for moving the
-      insertion point. 
-      <p>To select some text, drag a region - move the mouse with the left
-      button pressed down and release it when the desired part is
-      selected.</p>
-      <p>You can also extend the selection by clicking with the left button
-      combined with the Shift key.</p>
-      <p>You can select a whole element, such as a list item by clicking on
-      its bullet or its number.</p>
-    </dd>
-  <dt>Selecting with the arrow keys</dt>
-    <dd>The four arrow keys on the keyboard move the insertion point in the
-      four directions. If there is no visible selection in that document, up
-      and down arrows allow you to scroll the document one line up or one line
-      down.</dd>
-</dl>
+<ul>
+  <li>Selecting with the mouse
+    <ul>
+      <li>As usual, you can click with the left mouse button for moving the
+        insertion point.</li>
+      <li><p>To select some text, drag a region - move the mouse with the left
+        button pressed down and release it when the desired part is
+        selected.</p>
+      </li>
+      <li><p>You can also extend the selection by clicking with the left
+        button combined with the Shift key.</p>
+      </li>
+      <li>A double click on a character of a word selects the whole word.</li>
+      <li><p>You can select a whole element, such as a list item by clicking
+        on its bullet or its number.</p>
+      </li>
+    </ul>
+  </li>
+  <li>Selecting from the keyboard
+    <ul>
+      <li>The four arrow keys on the keyboard <strong>Left</strong>,
+        <strong>Right</strong>, <strong>Up</strong>, and <strong>Down</strong>
+        move the insertion point in the four directions. If there is no
+        visible selection in the document window, a new selection is generated
+        at the top left corner of the window.</li>
+      <li>Combining the key Shift with these four arrow keys
+        (<strong>Shift-Left</strong>, <strong>Shift-Right</strong>,
+        <strong>Shift-Up</strong>, and <strong>Shift-Down</strong>) extends
+        the current selection in one of these four directions.</li>
+      <li>Keys <strong>Home</strong> and <strong>End</strong> move the
+        insertion point to the beginning of the line or the end of the
+      line.</li>
+      <li>The default keyboard command <strong>Alt-Enter</strong> allows you
+        to extend the current selection to the current word. If the selection
+        is within a link that command will <a
+        href="Browsing.html#Activating">activate the link</a> instead of
+        selecting the current word.</li>
+      <li>Keys  <strong>Control-Left</strong>, <strong>Control-Right</strong>
+        move the current selection to the beginning of the previous or of the
+        next word.</li>
+      <li><strong>Shift-Control-Left</strong>,
+        <strong>Shift-Control-Right</strong> extend the current selection to
+        the beginning of the previous word or to the end of the next
+      word.</li>
+      <li><strong>Control-Up</strong> and <strong>Control-Down</strong> allow
+        you to scroll the document one line up or one line down.</li>
+      <li><strong>Control-Home</strong> and <strong>Control-End</strong> allow
+        you to scroll to the beginning and to the end of the document.</li>
+    </ul>
+  </li>
+</ul>
 
 <p>Whatever the way you make the current selection, the type of the first
 selected element is displayed at the bottom of the window. It is followed by
@@ -72,14 +105,16 @@ can be edited directly from the keyboard. A selection in such an attribute
 value cannot be extended outside the attribute.</p>
 
 <p>It is also possible to use the Keyboard for selecting by structure in any
-view. Pressing the Esc (F2 on Windows) key selects the parent element in the
-document structure. Pressing the Esc (F2 on Windows) key several times allows
+view. Pressing the <strong>Esc</strong> (<strong>F2</strong> on Windows) key
+selects the parent element in the document structure. Pressing the
+<strong>Esc</strong> (<strong>F2</strong> on Windows) key several times allows
 you to select containers (and everything in them) up the structure the
 structure towards the root. It is also possible to select child elements: the
-default shortcut key is control-minus ("-"). To select the next or previous
-element at the same level (or at the level of the parent element if there is
-no next/previous child of the current level) use control-k (for next) and
-control-j (for previous).</p>
+default shortcut key is <strong>Control-minus</strong> ("-"). To select the
+next or previous element at the same level (or at the level of the parent
+element if there is no next/previous child of the current level) use
+<strong>Control-k</strong> (for next) and <strong>Control-j</strong> (for
+previous).</p>
 
 <h3><a name="Selecting2">Selecting images</a></h3>
 

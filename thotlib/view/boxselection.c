@@ -489,8 +489,7 @@ void                ComputeViewSelMarks (ViewSelection *selMark)
 		if (pBox->BxNexChild == NULL)
 		  dummy = 0;
 		else
-		  dummy = pBox->BxNexChild->BxIndChar - pBox->BxIndChar -
-		          pBox->BxNChars;
+		  dummy = pBox->BxNexChild->BxIndChar - pBox->BxIndChar - pBox->BxNChars;
 		/* Cas particulier du premier caractere d'une boite coupee */
 		if (pSelBuffer == pBuffer->BuPrevious)
 		  {

@@ -58,7 +58,7 @@ pas mettre aisément le point d'insertion à l'intérieur des liens : vous devez
 soit utiliser une sélection étendue soit déplacer le point d'insertion à
 l'intérieur des liens à l'aide des flèches. Il est également possible
 d'utiliser le clavier pour activer les liens, ainsi que les formulaires de
-contrôles. La commande au clavier est <strong>Alt-Return</strong> par
+contrôles. La commande au clavier est <strong>Alt-Enter</strong> par
 défaut.</p>
 
 <p>Le document récupéré par cette opération <em>remplace</em> normalement le

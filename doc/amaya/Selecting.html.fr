@@ -8,7 +8,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="fr" lang="fr">
 
 <table border="0" width="100%" summary="toc">
   <tbody>
@@ -32,25 +32,59 @@
 
 <p>De nombreuses commandes <strong>Amaya</strong> agissent sur la sélection
 courante. La sélection courante peut être changée de différentes manières.</p>
-<dl>
-  <dt>Sélectionner avec la souris.</dt>
-    <dd>Comme à l'ordinaire,vous pouvez cliquer sur le bouton gauche de la
-      souris pour déplacer le point d'insertion. 
-      <p>Pour sélectionner du texte, glissez sur une zone, déplacez la souris
-      en maintenant le bouton gauche enfoncé et relâchez-la quand la partie
-      désirée a été selectionnée.</p>
-      <p>Vous pouvez aussi étendre la sélection en cliquant sur le bouton
-      gauche de la souris en combinaison avec la touche Shift.</p>
-      <p>Vous pouvez sélectionner un élément entier, comme un item de liste,
-      en cliquant surS sa puce ou sur son numéro.</p>
-    </dd>
-  <dt>Sélectionner avec les touches de direction.</dt>
-    <dd>Les quatre touches de direction du clavier déplacent le point
-      d'insertion dans les quatre directions. S'il n'y a pas de sélection
-      visible sur le document, les flèches du haut et du bas vous permettent
-      de faire défiler le document une ligne au-dessus ou une ligne
-      au-dessous.</dd>
-</dl>
+<ul>
+  <li>Sélectionner avec la souris.
+    <ul>
+      <li>Comme à l'ordinaire,vous pouvez cliquer sur le bouton gauche de la
+        souris pour déplacer le point d'insertion.</li>
+      <li><p>Pour sélectionner du texte, glissez sur une zone, déplacez la
+        souris en maintenant le bouton gauche enfoncé et relâchez-la quand la
+        partie désirée a été sélectionnée.</p>
+      </li>
+      <li><p>Vous pouvez aussi étendre la sélection en cliquant sur le bouton
+        gauche de la souris en combinaison avec la touche Shift.</p>
+      </li>
+      <li>Un double-clic sur un caractère d'un mot sélectionne le mot
+      entier.</li>
+      <li><p>Vous pouvez sélectionner un élément entier, comme un item de
+        liste, en cliquant sur sa puce ou sur son numéro.</p>
+      </li>
+    </ul>
+  </li>
+  <li>Sélectionner depuis le clavier.
+    <ul>
+      <li>Les quatre touches de direction du clavier <strong>Left</strong>,
+        <strong>Right</strong>, <strong>Up</strong>, <strong>Down</strong>
+        déplacent le point d'insertion dans les quatre directions. S'il n'y a
+        pas de sélection visible dans la fenêtre du document, une nouvelle
+        sélection est engendrée en haut à gauche de la fenêtre.</li>
+      <li>La combinaison de la touche Shift avec ces quatre touches de
+        direction (<strong>Shift-Left</strong>, <strong>Shift-Right</strong>,
+        <strong>Shift-Up</strong>, et <strong>Shift-Down</strong>)étend la
+        sélection courante dans une de ces quatre directions.</li>
+      <li>Les touches <strong>Home</strong> et <strong>End</strong> déplacent
+        le point d'insertion au début ou à la fin de la ligne courante.</li>
+      <li>La commande clavier par défaut <strong>Alt-Enter</strong> vous
+        permet d'étendre la sélection courante au mot courant. Si la sélection
+        est dans un lien, cette commande <a
+        href="Browsing.html.fr#Activating">activera le lien</a> au lieu de
+        sélectionner le mot courant.</li>
+      <li>Les touches <strong>Control-Left</strong>,
+        <strong>Control-Right</strong> déplacent la sélection courante sur le
+        début du mot qui précède ou qui suit.</li>
+      <li><strong>Shift-Control-Left,
+        <strong>Shift-Control-Right</strong></strong> étendent la sélection
+        courante jusqu'au début du mot qui précède ou jusqu'à la fin du mot
+        qui suit.</li>
+      <li><strong>Control-Up</strong> et <strong>Control-Down</strong> vous
+        permettent de faire défiler le document d'une ligne vers le haut ou
+        d'une ligne vers le bas.</li>
+      <li><strong>Control-Home</strong> et
+        <strong><strong>Control-End</strong></strong> vous permettent de
+        sauter au début ou à la fin du document.</li>
+    </ul>
+  </li>
+</ul>
 
 <p>Quelque soit la manière dont vous effectuez la sélection courante, le type
 du premier élément sélectionné est affiché en bas de la fenêtre. Il est suivi
@@ -68,20 +102,22 @@ peut être sélectionné par un simple clic.</p>
 <p>Le fait de cliquer sur un caractère noir dans la Vue structure vue
 sélectionne uniquement ce caractère.</p>
 
-<p>Un texte en caractères gras dans la Vue stucture représente la valeur d'un
+<p>Un texte en caractères gras dans la Vue structure représente la valeur d'un
 attribut pouvant être édité directement à partir du clavier. Une sélection
 dans une telle valeur d'attribut ne peut pas être étendue en dehors de cet
 attribut.</p>
 
 <p>Il est également possible d'utiliser le clavier pour sélectionner par la
-structure dans n'importe quelle vue. Pressez la touche Esc (F2 sur Windows)
-pour sélectionner l'élément "parent" dans la structure du document. Pressez la
-touche ESC (F2 sur Windows) plusieurs fois pour augmenter d'un niveau la
+structure dans n'importe quelle vue. Pressez la touche <strong>Esc</strong>
+(<strong>F2</strong> sur Windows) pour sélectionner l'élément "parent" dans la
+structure du document. Pressez la touche <strong>ESC</strong>
+(<strong>F2</strong> sur Windows) plusieurs fois pour augmenter d'un niveau la
 structure sélectionnée jusqu'à sélectionner la racine du document. Il est
 encore possible de sélectionner des éléments "fils" : la touche "raccourci
-clavier par défaut" est control-moins ("-"). Pour sélectionner l'élément
-suivant ou l'élément précédent au même niveau, utilisez control-k (pour le
-suivant) et control-j (pour le précédent).</p>
+clavier par défaut" est <strong>Control-moins</strong> ("-"). Pour
+sélectionner l'élément suivant ou l'élément précédent au même niveau, utilisez
+<strong>Control-k</strong> (pour le suivant) et <strong>Control-j</strong>
+(pour le précédent).</p>
 
 <h3><a name="Selecting2">Sélectionner des images</a></h3>
 
@@ -89,7 +125,7 @@ suivant) et control-j (pour le précédent).</p>
 placé sur le côté gauche de l'image. Ceci vous permet de taper le texte avant
 l'image. Si vous cliquez sur la partie droite d'une image, le point
 d'insertion est placé sur le côté droit de cette image. Ceci vous permet de
-taper le texte aprés l'image.</p>
+taper le texte après l'image.</p>
 
 <p>Quand vous utilisez les touches de direction pour vous déplacer, le curseur
 se déplacera d'un côté de l'image vers l'image elle-même (en la sélectionnant)
