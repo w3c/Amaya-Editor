@@ -1502,8 +1502,8 @@ ThotBool            createView;
 		if (!done)
 		  {
 		    DisplaySel (pEl, view + 1, frame, assoc, &abExist);
-		    if (run == 1)
-		      XFlushOutput (frame);
+		    /* if (run == 1)
+		      XFlushOutput (frame); */
 		  }
 	      }
 	  }

@@ -1553,7 +1553,6 @@ int                 fg;
 #endif /* _WIN_PRINT */
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
   DrawArrow draw an arrow following the indicated direction in degrees :
   0 (right arrow), 45, 90, 135, 180,
@@ -1676,6 +1675,7 @@ int                 fg;
      }
 #endif /* _WIN_PRINT */
 }
+
 
 /*----------------------------------------------------------------------
   DrawBracket draw an opening or closing bracket (depending on direction)
@@ -2350,7 +2350,7 @@ int                 arrow;
 
    /* free the table of points */
    free (points);
-#else  /* !_WIN_PRINT */
+#else  /* _WIN_PRINT */
    if (thick == 0)
       return;
 
@@ -2439,7 +2439,7 @@ int                 pattern;
 #else /* _WIN_PRINT */
    Pixmap              pat = (Pixmap) 0;
    int                 result;
-#ifdef /* _WIN_PRINT */
+#endif /* _WIN_PRINT */
 
 #ifdef _WIN_PRINT
    /* Allocate a table of points */
@@ -2720,7 +2720,6 @@ float               a1, b1, a2, b2, a3, b3, a4, b4;
      }
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
   DrawCurb draw an open curb.
   Parameter buffer is a pointer to the list of control points.
@@ -3244,14 +3243,13 @@ int                 pattern;
    int      t;
 #else  /* _WIN_PRINT */
    int      result;
-#end  /* _WIN_PRINT */
+#endif  /* _WIN_PRINT */
 
 #ifdef _WIN_PRINT 
    if (y < 0)   
       return;
    y += FrameTable[frame].FrTopMargin;
 
-#  ifdef _WIN_PRINT 
    if (TtPrinterDC) {
       if (pattern > 2)
          pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
@@ -3489,7 +3487,6 @@ int                 fg;
    if (thick <= 0)
      return;
 
-#  ifdef _WIN_PRINT 
    if (TtPrinterDC) {
       if (align == 1)
          Y = y + (h - thick) / 2;
@@ -3673,7 +3670,6 @@ int                 fg;
    if (thick <= 0)
       return;
 
-#  ifdef _WIN_PRINT
    if (TtPrinterDC) {
       xf = PixelToPoint (x + l);
       yf = PixelToPoint (y + h);
@@ -3938,7 +3934,7 @@ int                 y;
     hBrush = (HBRUSH) 0;
      }
 }
-#endif /* _WIN_PRINT */
+
 
 /*----------------------------------------------------------------------
   WChaine draw a string in frame, at location (x, y) and using font.
