@@ -2591,17 +2591,95 @@ void ShowLogFile (doc, view)
   A frontend to the CleanCache function, called thru an Amaya menu
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void CleanCache (Document doc, View view)
+void FlushCache (Document doc, View view)
 #else 
-void CleanCache (doc, view);
+void FlushCache (doc, view);
 Document doc;
 View view;
 #endif /* __STDC__ */
 {
 #if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
 #else
- StopAllRequests (doc);
+  StopAllRequests (doc);
   libwww_CleanCache ();
 #endif /* AMAYA_JAVA */
 }
+
+/*----------------------------------------------------------------------
+  ConfigAppearance
+  A frontend to the Appearance configuration menu
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void ConfigAppearance (Document doc, View view)
+#else 
+void ConfigAppearance (doc, view);
+Document doc;
+View view;
+#endif /* __STDC__ */
+{
+#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
+#else
+#ifndef _WINDOWS
+   AppearanceConfMenu (doc, view);
+#endif /* !_WINDOWS */
+#endif /* AMAYA_JAVA */
+}
+
+/*----------------------------------------------------------------------
+  ConfigBrEd
+  A frontend to the Browsing Editing configuration menu
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void ConfigBrEd (Document doc, View view)
+#else 
+void ConfigBrEd (doc, view);
+Document doc;
+View view;
+#endif /* __STDC__ */
+{
+#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
+#else
+#ifndef _WINDOWS
+   BrEdConfMenu (doc, view);
+#endif /* !_WINDOWS */
+#endif /* AMAYA_JAVA */
+}
+
+/*----------------------------------------------------------------------
+  ConfigNetwork
+  A frontend to the network configuration menu
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void ConfigNetwork (Document doc, View view)
+#else 
+void ConfigNetwork (doc, view);
+Document doc;
+View view;
+#endif /* __STDC__ */
+{
+#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
+#else
+#ifndef _WINDOWS
+  NetworkConfMenu (doc, view);
+#endif /* !_WINDOWS */
+#endif /* AMAYA_JAVA */
+}
+
+#ifdef __STDC__
+void SaveOptions (Document doc, View view)
+#else 
+void SaveOptions (doc, view);
+Document doc;
+View view;
+#endif /* __STDC__ */
+{
+#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
+#else
+  TtaSaveAppRegistry ();
+#endif /* AMAYA_JAVA */
+}
+
+
+
+
 

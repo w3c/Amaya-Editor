@@ -2745,7 +2745,13 @@ void               *ctx_cbf;
      NormalizeURL (tempdocument, 0, pathname, documentname, NULL);
 
    if (parameters[0] == EOS)
-     newdoc = IsDocumentLoaded (pathname, form_data);
+     {
+       if (CE_event == CE_FORM_POST)
+	 /* we need to ask the server again */
+	 newdoc = 0;
+       else
+	 newdoc = IsDocumentLoaded (pathname, form_data);
+     }
    else
      {
        /* we need to ask the server */
@@ -3846,6 +3852,8 @@ NotifyEvent        *event;
    InitTransform ();
    /* initialize automaton for the HTML parser */
    InitAutomaton ();
+   /* initialize the configuration menu context */
+   InitConfMenu ();
 #if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
    /* initialize the libwww */
    QueryInit ();

@@ -206,7 +206,8 @@ AMAYA_OBJ = \
 	AHTURLTools.o \
 	trans.o \
 	transparse.o \
-	HTMLtable.o
+	HTMLtable.o \
+	MENUconf.o
 
 #
 # Structure schema compilation.

@@ -162,23 +162,27 @@
 161 Kitap yap
 162 **Show log file
 163 **Purge cache
-164 Amaya hakkýnda
-165 **About Amaya at W3C
-166 Tarama
-167 Seçme
-168 Arama
-169 Görünümler
-170 Birim yaratma
-171 Baðlantýlar
-172 Yeniden yapýlandýrma
-173 Tablolar
-174 Matematik
-175 Görüntü haritalarý
-176 Tarz tanýmlarý
-177 Özellikler
-178 Yazým hatalarý aranýyor
-179 Sayfa yerleþtirme
-180 Bastýrma
-181 Numaralandýrmasý
-182 Kitap oluþturma
-183 Amaya yapýlandýrmasý
+164 **Appearance options
+165 **Browsing/Editing options
+166 **Networking options
+167 **Save the options
+168 Amaya hakkýnda
+169 **About Amaya at W3C
+170 Tarama
+171 Seçme
+172 Arama
+173 Görünümler
+174 Birim yaratma
+175 Baðlantýlar
+176 Yeniden yapýlandýrma
+177 Tablolar
+178 Matematik
+179 Görüntü haritalarý
+180 Tarz tanýmlarý
+181 Özellikler
+182 Yazým hatalarý aranýyor
+183 Sayfa yerleþtirme
+184 Bastýrma
+185 Numaralandýrmasý
+186 Kitap oluþturma
+187 Amaya yapýlandýrmasý

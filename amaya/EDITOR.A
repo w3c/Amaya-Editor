@@ -204,7 +204,13 @@ MENUS
 	view:1 Special button:BMakeBook -> MakeBook;
 	view:1 Special Separator;
     view:1 Special button:BShowLogFile -> ShowLogFile;
-	view:1 Special button:BCleanCache -> CleanCache;
+        view:1 Special Separator;
+	view:1 Special button:BFlushCache -> FlushCache;
+	view:1 Special button:BConfigappearance -> ConfigAppearance;
+	view:1 Special button:BConfigBrEd -> ConfigBrEd;
+	view:1 Special button:BConfigNetwork -> ConfigNetwork;
+	view:1 Special button:BSaveOptions -> SaveOptions;
+	
 
 	Attributes_;
 

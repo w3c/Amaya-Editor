@@ -169,10 +169,11 @@ libwww libwww.a :
 	@(localdir=`pwd` ; libwwwdir="$(THOTDIR)/../$(LIBWWW)" ; cd $(LIBWWW) ; \
 	  unset LANG; \
 	  if [ ! -f Makefile ] ; then \
-	  	../$$libwwwdir/configure --disable-shared \
+	  	../$$libwwwdir/configure --disable-shared --disable-expat \
 			-with-zlib="$$localdir/libz.a"; \
 	  fi)
-	@(cd $(LIBWWW)/Library/src ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" all-am)
+	@(cd $(LIBWWW)/Library/src ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" \
+		-I$(THOTDIR)/libpng/zlib all-am)
 	@($(CP) $(LIBWWW)/Library/src/.libs/libwww.a libwww.a)
 	@echo libwww.a reinstalled
 

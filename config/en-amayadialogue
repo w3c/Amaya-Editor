@@ -161,24 +161,28 @@
 160 Section numbering
 161 Make book
 162 Show log file
-163 Purge cache
-164 About Amaya
-165 About Amaya at W3C
-166 Browsing
-167 Selecting
-168 Searching
-169 Views
-170 Creating elements
-171 Links
-172 Restructuring
-173 Tables
-174 Math
-175 Image maps
-176 Style sheets
-177 Attributes
-178 Spell Checking
-179 Publishing
-180 Printing
-181 Numbering
-182 Making books
-183 Configuring Amaya
+163 Flush cache
+164 Appearance options
+165 Browsing/Editing options
+166 Networking options
+167 Save the options
+168 About Amaya
+169 About Amaya at W3C
+170 Browsing
+171 Selecting
+172 Searching
+173 Views
+174 Creating elements
+175 Links
+176 Restructuring
+177 Tables
+178 Math
+179 Image maps
+180 Style sheets
+181 Attributes
+182 Spell Checking
+183 Publishing
+184 Printing
+185 Numbering
+186 Making books
+187 Configuring Amaya
