@@ -210,6 +210,7 @@ static CHAR_T     key;
 UINT subMenuID [MAX_FRAME];
 static ThotWindow WIN_curWin = NULL;
 extern int main (int, CHAR_T**);
+static struct Cat_Context *CatEntry (int ref);
 
 /*----------------------------------------------------------------------
    WinErrorBox :  Pops-up a message box when an MS-Window error      
@@ -712,6 +713,72 @@ static void FreeEList (struct E_List *adbloc)
 	else
 	   cebloc = cebloc->E_Next;
      }
+}
+
+/*----------------------------------------------------------------------
+   CatEntry recherche si le catalogue de'signe' par sa re'fe'rence   
+   existe de'ja` ou une entre'e libre dans la table des catalogues.   
+   Retourne l'adresse du catalogue cre'e' ou NULL.                    
+  ----------------------------------------------------------------------*/
+static struct Cat_Context *CatEntry (int ref)
+{
+   register int        icat;
+   struct Cat_Context *catlib;
+   struct Cat_Context *catval;
+   struct Cat_Context *catalogue;
+   struct Cat_List    *adlist;
+
+   /* Si la reference depasse la borne declaree */
+   if (ref >= FirstFreeRef)
+      return (NULL);
+
+   /* Une entree de catalogue libre */
+   catlib = NULL;
+   /* L'entree qui porte la reference */
+   catval = NULL;
+
+   /* Parcours toutes les entrees existantes */
+   adlist = PtrCatalogue;
+   while (adlist != NULL && catval == NULL)
+     {
+	icat = 0;
+	while (icat < MAX_CAT && catval == NULL)
+	  {
+	     catalogue = &adlist->Cat_Table[icat];
+	     /*===============> C'est la premiere entree libre */
+	     if (catalogue->Cat_Widget == 0)
+	       {
+		  if (catlib == NULL)
+		     catlib = catalogue;
+	       }
+	     /*===============> Le catalogue existe deja */
+	     else if (catalogue->Cat_Ref == ref)
+		catval = catalogue;
+
+	     icat++;
+	  }
+
+	/* On passe au bloc suivant */
+	if (adlist->Cat_Next == NULL && catval == NULL && catlib == NULL)
+	  {
+	     /* Cree une nouvelle liste de catalogues */
+	     adlist->Cat_Next = NewCatList ();
+	  }
+	adlist = adlist->Cat_Next;
+     }
+
+   /* Si le catalogue n'existe pas encore */
+   if (catval == NULL && catlib != NULL)
+     {
+#ifndef _GTK
+	catlib->Cat_PtParent = NULL;
+#endif /* _GTK */
+	NbOccCat++;
+	NbLibCat--;
+	return (catlib);
+     }
+   else
+      return (catval);
 }
 
 #ifndef _WINDOWS
@@ -2020,72 +2087,6 @@ static void         ClearChildren (struct Cat_Context *parentCatalogue)
      }				/*while */
 #endif /* _GTK */
 }				/*ClearChildren */
-
-/*----------------------------------------------------------------------
-   CatEntry recherche si le catalogue de'signe' par sa re'fe'rence   
-   existe de'ja` ou une entre'e libre dans la table des catalogues.   
-   Retourne l'adresse du catalogue cre'e' ou NULL.                    
-  ----------------------------------------------------------------------*/
-static struct Cat_Context *CatEntry (int ref)
-{
-   register int        icat;
-   struct Cat_Context *catlib;
-   struct Cat_Context *catval;
-   struct Cat_Context *catalogue;
-   struct Cat_List    *adlist;
-
-   /* Si la reference depasse la borne declaree */
-   if (ref >= FirstFreeRef)
-      return (NULL);
-
-   /* Une entree de catalogue libre */
-   catlib = NULL;
-   /* L'entree qui porte la reference */
-   catval = NULL;
-
-   /* Parcours toutes les entrees existantes */
-   adlist = PtrCatalogue;
-   while (adlist != NULL && catval == NULL)
-     {
-	icat = 0;
-	while (icat < MAX_CAT && catval == NULL)
-	  {
-	     catalogue = &adlist->Cat_Table[icat];
-	     /*===============> C'est la premiere entree libre */
-	     if (catalogue->Cat_Widget == 0)
-	       {
-		  if (catlib == NULL)
-		     catlib = catalogue;
-	       }
-	     /*===============> Le catalogue existe deja */
-	     else if (catalogue->Cat_Ref == ref)
-		catval = catalogue;
-
-	     icat++;
-	  }
-
-	/* On passe au bloc suivant */
-	if (adlist->Cat_Next == NULL && catval == NULL && catlib == NULL)
-	  {
-	     /* Cree une nouvelle liste de catalogues */
-	     adlist->Cat_Next = NewCatList ();
-	  }
-	adlist = adlist->Cat_Next;
-     }
-
-   /* Si le catalogue n'existe pas encore */
-   if (catval == NULL && catlib != NULL)
-     {
-#ifndef _GTK
-	catlib->Cat_PtParent = NULL;
-#endif /* _GTK */
-	NbOccCat++;
-	NbLibCat--;
-	return (catlib);
-     }
-   else
-      return (catval);
-}
 
 
 /*----------------------------------------------------------------------
