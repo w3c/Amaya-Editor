@@ -1,0 +1,189 @@
+﻿# encoding= UTF-8
+0 X11 hiba: %s\n
+1 Megerősítés
+2 Nincs ábécéfájl
+3 Az új nézet nem válthatja fel a régit
+4 Összegyeztethetetlen leírók. %s újrafordítása
+5 Végzetes huba: a betűkészlet nem található
+6 A memória megtelt
+7 Végzetes hiba: Nem lehet csatlakozni X-hez
+8 A nézet módosult létrehozása előtt
+9 Szabályok tábla megtelt.
+10 Érvénytelen fájl: %s.STR
+11 Érvénytelen fájl: %s.PRS
+12 Dokumentum %s nyomtatása
+13 Disposition
+14 1 oldal/lap
+15 2 oldal/lap
+16 4 oldal/lap
+17 %s
+18 kevés a memória
+19 *** Amaya: helyreállíthatatlan hiba ***
+20 A mádosult dokumentums, ha van, mentése
+21 Érvénytelen .TRA fájl: %s
+22 %s érvénytelen testvére ennek: %s (%s)
+23 %s érvénytelen utóda ennek az elődnek: %s (%s)
+24 %s, oldal %d
+25 Nyelv
+26 Attribútumok
+27 Szabványos bemutató
+28 Alkalmaz
+29 Karakterek
+30 Aláhúzás
+31 Grafika
+32 Formátum
+33 Alap
+34 Igazítás
+35 Behúzás
+36 Nyomtatás folyamatban
+37 Nyomtatás
+38 Kézi lapadagolás
+39 Beállítások
+40 A4
+41 US
+42 Papírfajta
+43 Bezár
+44 Mappák
+45 A dokumentum (%s) már létezik. Felülírjuk?
+46 A bal egérgomb a szöveg színét adja meg
+47 A középső vagy jobb egérgomb a háttérszínt adja meg
+48 Betűkészlet
+49 Normál
+50 Félkövér
+51 Dőlt
+52 Kurzív
+53 Normál
+54 Vastagság
+55 Normál
+56 Aláhúzott
+57 Áthúzott
+58 Betáméret (pt)
+59 Behúzás (pt)
+60 Sortávolság (pt)
+61 Sortávolság
+62 Dokumentum mentése
+63 Bezárás mentés nélkül
+64 Karakter stílus
+65 Színek
+66 XHTML
+67 Törlés
+68 Kimenet
+69 PostScript fájl
+70 Nyomtató
+71 Keresés
+72 Ignore case
+73 Csere
+74 Csere
+75 Nincs csere
+76 Csere kérésre
+77 Automatikus csere
+78 Keresés helye
+79 Kijelölés előtt
+80 Kijelölésben
+81 Kijelölés után
+82 A teljes dokumentumban
+83 Ne cseréljen
+84 Alapszínek
+85 bezárás előtt
+86 Dokumentum bezárása
+87 Matematikai szimbólumok
+88 Grafika
+89 Latin ábécé
+90 Görög ábécé
+91 Mentés
+92 Szöveg
+93 Grafika
+94 szimbólum
+95 Kép
+96 XML elem típus
+97 után
+98 előtt
+99 körül
+100 Include
+101 Beilleszt
+102 létrehozni
+103 Beilleszt
+104 Lapdobás
+105 Nyelvi elem
+106 Örökölt nyelv:
+107 nem található
+108 Keresés helye
+109 Keresés
+110 Csak olvasható elem
+111 Nincs mit cserélni
+112 Szabványos karakterek
+113 Szabványos grafika
+114 Szabványos formátum
+115 Szabványos elhelyezkedés
+116 pt
+117 Sor stílus
+118 Sor magasság
+119 Kitöltési mintázat
+120 Osztás
+121 Objektum típus
+122 Ugrás oldalszámra:
+123 Bármely
+124 Keresendő attribútum
+125 Keresendő típus
+126 Natures
+127 Attribútum érték
+128 Ismeretlen attribútum
+129 Mégsem
+130 HIba a PostScript fordításban
+131 A parancsot visszautasította a sorkezelő "%s"
+132 "%s" nem hozható létre
+133 Felülvonás
+134 Dokumentum formátum
+135 Események
+136 Attribútum eltávolítása
+137 A bal egérgomb a kijelölés színét adja meg
+138 A középső vagy jobb egérgomb a caret adja meg
+139 Egyéb...
+140 Get
+141 Szín
+142 Háttérszín
+143 Szín
+144 Színek cseréje
+145 Adjon meg egy általános XML szerkezetet
+146 Ellenőrzés
+147 Keresés/Kihagyás
+148 Csere (+ dic)
+149 Csere és következő
+150 Másik nyelv
+151 Kihagyás (+ dic)
+152 words containing:
+153 Szóellenőrző...
+154 Római számok
+155 Kihagy
+156 csupa nagybetűs szavak
+157 számokat tartalmazó szavak
+158 Parameter fájl hiba
+159 Nincs billentyűzet fájl
+160 A dokumentum szótár nem menthető
+161 Ezt az érvénytelen szót (%s) elutasította a szótár
+162 Szó (%s) hozzáadva a dokumentum szótárhoz
+163 Szóellenőrzés vége
+164 Szóellenőrzés megszakadt
+165 Adjon meg egy dokumentumot
+166 Dokumentum szótár mentve: %s
+167 Ebben a változatban nem elérhető
+168 Dokkoló rögzítése/úsztatása
+169 Eszközök
+170 Kötelező attribútum, nem távolítható el
+171 Frissítés
+172 Balra zárt
+173 Jobbra zárt
+174 Középre zárt
+175 Sorkizárt
+176 Osztály alkalmazása
+177 Adja meg az osztályt vagy álosztályt
+178 Kijelöl
+179 Az F2 billentyűvel jelölhető ki az elődelem
+180 Matematika
+181 Egyéb
+182 Bináris műveletek
+183 Bináris műveletek vagy negálás
+184 Máveletek
+185 Görög ábécé (nagybetűs)
+186 Nyilak
+187 Különleges karakterek
