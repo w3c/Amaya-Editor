@@ -556,6 +556,11 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
 	 }
        break;
        
+     case HTML_EL_Form:
+       /* Check the mandatory action attribute */
+       CheckMandatoryAttribute (el, doc, HTML_ATTR_Script_URL);
+       break;
+
      case HTML_EL_Input:	/* it's an INPUT without any TYPE attribute */
        /* Create a child of type Text_Input */
        elType.ElTypeNum = HTML_EL_Text_Input;
@@ -566,11 +571,6 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
 	 SetHtmlElemLineNumber (child);
        TtaInsertFirstChild (&child, el, doc);
        /* now, process it like a Text_Input element */
-
-     case HTML_EL_Form:
-       /* Check the mandatory action attribute */
-       CheckMandatoryAttribute (el, doc, HTML_ATTR_Script_URL);
-       break;
 
      case HTML_EL_Text_Input:
      case HTML_EL_Password_Input:
@@ -612,8 +612,6 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
 		 }
 	     }
 	 }
-       /* Check the mandatory name attribute */
-       CheckMandatoryAttribute (el, doc, HTML_ATTR_NAME);
        break;
        
      case HTML_EL_META:
@@ -762,15 +760,6 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
 	   TtaAttachAttribute (el, attr, doc);
 	   TtaSetAttributeValue (attr, HTML_ATTR_Checked_VAL_No_, el, doc);
 	 }
-       /* Check the mandatory name attribute */
-       CheckMandatoryAttribute (el, doc, HTML_ATTR_NAME);
-       break;
-       
-     case HTML_EL_Button_Input:
-     case HTML_EL_Hidden_Input:
-     case HTML_EL_BUTTON_:
-       /* Check the mandatory name attribute */
-       CheckMandatoryAttribute (el, doc, HTML_ATTR_NAME);
        break;
        
      case HTML_EL_Option_Menu:
@@ -780,14 +769,20 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
        CheckMandatoryAttribute (el, doc, HTML_ATTR_NAME);
        break;
 
-     case HTML_EL_Option:
-       /* Check the mandatory value attribute */
-       CheckMandatoryAttribute (el, doc, HTML_ATTR_Value_);
-       break;
-
      case HTML_EL_OptGroup:
        /* Check the mandatory label attribute */
        CheckMandatoryAttribute (el, doc, HTML_ATTR_label);
+       break;
+
+     case HTML_EL_MAP:
+     case HTML_EL_map:
+       /* Check the mandatory name attribute */
+       CheckMandatoryAttribute (el, doc, HTML_ATTR_NAME);
+       break;
+
+     case HTML_EL_AREA:
+       /* Check the mandatory alt attribute */
+       CheckMandatoryAttribute (el, doc, HTML_ATTR_ALT);
        break;
 
      case HTML_EL_PICTURE_UNIT:

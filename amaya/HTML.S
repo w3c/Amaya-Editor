@@ -145,7 +145,7 @@ STRUCT
 	Address;						{ ADDRESS }
 	PICTURE							{ IMG }
 	    (ATTR !SRC = Text; !ALT = Text; longdesc = Text;
-		{ !src         !alt         longdesc }
+		{  src          alt         longdesc }
 		  Height_ = Text; Width__ = Text;
 		{ height          width }
 		  IntWidthPercent = Integer; IntWidthPxl = Integer;
@@ -497,7 +497,7 @@ STRUCT
 	END;
 
   Option_Menu   						{ SELECT }
-     (ATTR !NAME; MenuSize = Integer; Multiple = Yes_;
+     (ATTR  NAME; MenuSize = Integer; Multiple = Yes_;
 	 {  name  size                multiple }
 	    disabled = Yes_; tabindex; onfocus; onblur;
 	  { disabled         tabindex  onfocus  onblur}
@@ -508,8 +508,8 @@ STRUCT
   Option							{ OPTION }
      (ATTR Selected = Yes_; DefaultSelected = Yes_; ShowMe = Yes_;
 	 { selected }
-	   disabled; label = Text; !Value_ = Text) =
-         { disabled  label          value }
+	   disabled; label = Text; Value_ = Text) =
+         { disabled  label         value }
 	TEXT;
 
   OptGroup							{ OPTGROUP }
@@ -540,7 +540,7 @@ STRUCT
 
   Input = CASE OF					{ formctrl }
 	Text_Input					{ INPUT / TEXT }
-	   (ATTR !NAME; Value_; disabled; readonly;
+	   (ATTR  NAME; Value_; disabled; readonly;
 	        { name  value   disabled  readonly }
 		  Area_Size = Integer; MaxLength = Integer;
 		{ size                 maxlength }
@@ -552,7 +552,7 @@ STRUCT
 		  Default_Value) =
 		Input_Text - (Input);
 	Password_Input					{ INPUT / PASSWORD }
-	   (ATTR !NAME; Value_; disabled; readonly;
+	   (ATTR  NAME; Value_; disabled; readonly;
 		{ name  value   disabled  readonly }
 		  Area_Size; IntAreaSize; MaxLength;
 		{ size                    maxlength }
@@ -563,7 +563,7 @@ STRUCT
 		  Default_Value) =
 		Input_Text  - (Input);
 	File_Input					{ INPUT / FILE }
-	   (ATTR !NAME; Value_; disabled; readonly;
+	   (ATTR  NAME; Value_; disabled; readonly;
 		{ name  value   disabled  readonly }
 		  Area_Size; IntAreaSize; MaxLength;
 		{ size                    maxlength }
@@ -574,7 +574,7 @@ STRUCT
 		  Default_Value) =
 		Input_Text - (Input);
 	Checkbox_Input					{ INPUT / CHECKBOX }
-	   (ATTR !NAME; Value_; Checked = Yes_, No_;
+	   (ATTR  NAME; Value_; Checked = Yes_, No_;
 		{ name  value   checked }
 		  disabled; readonly;
 		{ disabled  readonly }
@@ -583,8 +583,8 @@ STRUCT
 		  DefaultChecked = Yes_, No_) =
 		CONSTANT C_Empty with Checked ?= No_;
 	Radio_Input					{ INPUT / RADIO }
-	   (ATTR !NAME; !Value_; Checked; disabled;
-		{ name  value    checked   disabled }
+	   (ATTR  NAME; Value_; Checked; disabled;
+		{ name  value   checked  disabled }
 		  readonly; tabindex; accesskey;
 		{ readonly  tabindex  accesskey }
 		  onfocus; onblur;
@@ -614,7 +614,7 @@ STRUCT
 		END  - (Input) with NAME ?= 'Reset',
 				    Value_ ?= 'Reset';
         Button_Input					{ INPUT / BUTTON }
-	   (ATTR !NAME; Value_; disabled; readonly;
+	   (ATTR  NAME; Value_; disabled; readonly;
 		{ name  value   disabled  readonly }
 		  tabindex; accesskey;
 		{ tabindex  accesskey }
@@ -625,7 +625,7 @@ STRUCT
 		END;
 
 	Hidden_Input					{ INPUT / HIDDEN }
-	   (ATTR !NAME; Value_; disabled;
+	   (ATTR  NAME; Value_; disabled;
 		{ name  value   disabled }
 		  tabindex; accesskey;
 		{ tabindex  accesskey }
@@ -634,7 +634,7 @@ STRUCT
 		CONSTANT C_Empty;
 
         BUTTON_						{ BUTTON }
-	   (ATTR !NAME; Value_;
+	   (ATTR  NAME; Value_;
 		{ name  value }
 		  Button_type = button, submit, reset;
 		{ type          button  submit  reset }
