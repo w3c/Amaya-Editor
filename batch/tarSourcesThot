@@ -756,6 +756,7 @@ Thot/thotlib/internals/h/typemedia.h \
 Thot/thotlib/internals/h/typeprs.h \
 Thot/thotlib/internals/h/typestr.h \
 Thot/thotlib/internals/h/typetra.h \
+Thot/thotlib/internals/h/winsys.h \
 Thot/thotlib/internals/h/xpm.h \
 Thot/thotlib/internals/h/xpmP.h \
 Thot/thotlib/internals/var/analsynt_tv.h \

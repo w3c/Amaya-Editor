@@ -275,7 +275,6 @@ unsigned short      blue;
    for (i = 0; i < maxcolor; i++)
      {
 	TtaGiveThotRGB (i, &delred, &delgreen, &delblue);
-	/* delred <<= 8; delgreen <<= 8; delblue <<= 8; */
 	delred   -= red;
 	delgreen -= green;
 	delblue  -= blue;

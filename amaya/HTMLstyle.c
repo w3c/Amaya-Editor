@@ -638,52 +638,6 @@ PresentationValue  *pval;
  *									*  
  ************************************************************************/
 
-/*----------------------------------------------------------------------
-   ParseHTMLURL :                                                    
-   parse a CSS URL construct, returning the string for the URL   
-   this string need to be freed.                                 
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static char        *ParseHTMLURL (char *cssRule, char **url)
-#else
-static char        *ParseHTMLURL (cssRule, url)
-char               *cssRule;
-char              **url;
-#endif
-{
-  char                sauve;
-  char               *base;
-  if (((cssRule[0] == 'u') || (cssRule[0] = 'U')) &&
-      ((cssRule[0] == 'r') || (cssRule[0] = 'R')) &&
-      ((cssRule[0] == 'l') || (cssRule[0] = 'L')))
-    {
-      cssRule += 3;
-      cssRule = SkipBlanks (cssRule);
-      if (*cssRule == '(')
-	{
-	  cssRule++;
-	  cssRule = SkipBlanks (cssRule);
-	  base = cssRule;
-	  while ((*cssRule != EOS) && (!IsBlank (cssRule)) &&
-		 (*cssRule != ')'))
-	    cssRule++;
-      
-	  if (url != NULL)
-	    {
-	      sauve = *cssRule;
-	      *cssRule = EOS;
-	      *url = TtaStrdup (base);
-	      *cssRule = sauve;
-	    }
-	  cssRule++;
-	  return (cssRule);
-	}
-    }
-
-  if (url != NULL)
-    *url = NULL;  
-  return (cssRule);
-}
 
 /*----------------------------------------------------------------------
    GetHTMLStyleAttrIndex : returns the index of the current         
@@ -1198,9 +1152,7 @@ char               *cssRule;
 	     cssRule = SkipBlanks (cssRule);
 	     continue;
 	  }
-	/*
-	 * update index and skip the ":" indicator if present
-	 */
+	/* update index and skip the ":" indicator if present */
 	cssRule = new;
 	cssRule = SkipBlanks (cssRule);
 	if (*cssRule == ':')
@@ -1208,22 +1160,16 @@ char               *cssRule;
 	     cssRule++;
 	     cssRule = SkipBlanks (cssRule);
 	  }
-	/*
-	 * try to parse the attribute associated to this attribute.
-	 */
+	/* try to parse the attribute associated to this attribute */
 	if (HTMLStyleAttributes[styleno].parsing_function != NULL)
 	   new = HTMLStyleAttributes[styleno].
 	      parsing_function (target, context, cssRule);
 
-	/*
-	 * Update the rendering.
-	 */
+	/* Update the rendering */
 	if (context->drv->UpdatePresentation != NULL)
 	   context->drv->UpdatePresentation (target, context, unused);
 
-	/*
-	 * update index and skip the ";" separator if present
-	 */
+	/* update index and skip the ";" separator if present */
 	cssRule = new;
 	cssRule = SkipBlanks (cssRule);
 	if (*cssRule == ',' || *cssRule == ';')
@@ -2547,7 +2493,7 @@ char               *cssRule;
    else
      {
 	/* !!!!!! manque cursive et fantasy !!!!!!!! */
-	MSG ("invalid font familly\n");
+	MSG ("invalid font family\n");
 	cssRule = SkipProperty (cssRule);
 	return (cssRule);
      }
@@ -2951,7 +2897,6 @@ PresentationValue  *val;
 #endif
 {
   char                colname[100];
-  char               *url;
   unsigned short      redval = (unsigned short) -1;
   unsigned short      greenval = 0;	/* composant of each RGB       */
   unsigned short      blueval = 0;	/* default to red if unknown ! */
@@ -3000,13 +2945,6 @@ PresentationValue  *val;
 	  blueval = hexa_val (cssRule[4]) * 16 + hexa_val (cssRule[5]);
 	}
     }
-  else if (!strncasecmp (cssRule, "url", 3))
-    {
-      /* we don't currently support URL just parse it to skip it */
-      cssRule = ParseHTMLURL (cssRule, &url);
-      TtaFreeMemory (url);
-      return (cssRule);
-    }
   else if (isalpha (*cssRule))
     {
       /* we expect a color name like "red", store it in colname */
@@ -3038,7 +2976,7 @@ PresentationValue  *val;
 	  failed = FALSE;
 	}
     }
-  else if ((isdigit (*cssRule)) || (*cssRule == '.'))
+  else if (isdigit (*cssRule) || *cssRule == '.')
     {
       /*
        * we expect a color defined by it's three components.
@@ -3240,33 +3178,31 @@ char               *cssRule;
    boolean               setColor;
 
    best.typed_data.unit = DRIVERP_UNIT_INVALID;
-   setColor = TRUE;
    if (!strncasecmp (cssRule, "transparent", strlen("transparent")))
      {
        best.typed_data.value = DRIVERP_PATTERN_NONE;
        best.typed_data.unit = DRIVERP_UNIT_REL;
        if (context->drv->SetFillPattern)
 	 context->drv->SetFillPattern (target, context, best);
-       return (cssRule);
      }
-
-   cssRule = ParseCSSColor (cssRule, &best);
-   if (best.typed_data.unit == DRIVERP_UNIT_INVALID)
-     setColor = FALSE;
-   if (setColor)
+   else
      {
-       /* install the new presentation. */
-       if (context->drv->SetBackgroundColor)
-	 context->drv->SetBackgroundColor (target, context, best);
-       /* thot specificity : need to set fill pattern for background color */
-       best.typed_data.value = DRIVERP_PATTERN_BACKGROUND;
-       best.typed_data.unit = DRIVERP_UNIT_REL;
-       if (context->drv->SetFillPattern)
-	 context->drv->SetFillPattern (target, context, best);
-       best.typed_data.value = 1;
-       best.typed_data.unit = DRIVERP_UNIT_REL;
-       if (context->drv->SetShowBox)
-	 context->drv->SetShowBox (target, context, best);
+       cssRule = ParseCSSColor (cssRule, &best);
+       if (best.typed_data.unit != DRIVERP_UNIT_INVALID)
+	 {
+	   /* install the new presentation. */
+	   if (context->drv->SetBackgroundColor)
+	     context->drv->SetBackgroundColor (target, context, best);
+	   /* thot specificity : need to set fill pattern for background color */
+	   best.typed_data.value = DRIVERP_PATTERN_BACKGROUND;
+	   best.typed_data.unit = DRIVERP_UNIT_REL;
+	   if (context->drv->SetFillPattern)
+	     context->drv->SetFillPattern (target, context, best);
+	   best.typed_data.value = 1;
+	   best.typed_data.unit = DRIVERP_UNIT_REL;
+	   if (context->drv->SetShowBox)
+	     context->drv->SetShowBox (target, context, best);
+	 }
      }
    return (cssRule);
 }
@@ -3367,93 +3303,100 @@ PresentationContext context;
 char               *cssRule;
 #endif
 {
-   Element               el;
-   GenericContext        gblock;
-   SpecificContextBlock *sblock;
-   char                 *url;
-   BackgroundImageCallbackPtr callblock;
-   PresentationValue     image, value;
-   char                 *no_bg_image;
+  Element              el;
+  ElementType          elType;
+  GenericContext        gblock;
+  SpecificContextBlock *sblock;
+  BackgroundImageCallbackPtr callblock;
+  PresentationValue     image, value;
+  char                 *url;
+  char                 *no_bg_image;
+  char                  sauve;
+  char                 *base;
 
-   url = NULL;
-   if (strncasecmp (cssRule, "url", 3))
-     return (cssRule);
-       
-   cssRule = ParseHTMLURL (cssRule, &url);
-   if (context->destroy == 1)
-     {
-       /* remove the background image PRule */
-       image.pointer = NULL;
-       if (context->drv->SetBgImage)
-	 context->drv->SetBgImage (target, context, image);
-       if (context->drv->GetFillPattern)
-	 {
-	   if (context->drv->GetFillPattern (target, context, &value) < 0)
-	     /* there is no FillPattern rule -> remove ShowBox rule */
-	     if (context->drv->SetShowBox)
-	       {
-		 value.typed_data.value = 1;
-		 value.typed_data.unit = DRIVERP_UNIT_REL;
-		 context->drv->SetShowBox (target, context, value);
-	       }
-	 }
-     }
-   else
-     {   
-       if (url)
-	 {
-	   no_bg_image = TtaGetEnvString("NO_BG_IMAGES");
-	   if ((no_bg_image != NULL) &&
-	       ((!(strcasecmp(no_bg_image,"yes"))) ||
-		(!(strcasecmp(no_bg_image,"true")))))
-	     return (cssRule);
-	   
-	   /*
-	    * if the background is set on the HTML or BODY element,
-	    * set the background color for the full window.
-	    */
-	   if (context->drv == &GenericStrategy)
-	     {
-	       gblock = (GenericContext) context;
-	       callblock = (BackgroundImageCallbackPtr)
-		 TtaGetMemory(sizeof(BackgroundImageCallbackBlock));
-	       if (callblock != NULL) {
-		 callblock->target = target;
-		 memcpy(&callblock->context.generic, gblock,
-			sizeof(GenericContextBlock));
-		 
-		 /* fetch and display background image of element */
-		 el = TtaGetMainRoot (gblock->doc);
-		 
-		 FetchImage (gblock->doc, el, url, 0,
-			     ParseCSSBackgroundImageCallback,
-			     callblock);
-	       }
-	     }
-	   else if (context->drv == &SpecificStrategy)
-	     {
-	       sblock = (SpecificContextBlock *) context;
-	       callblock = (BackgroundImageCallbackPtr)
-		 TtaGetMemory(sizeof(BackgroundImageCallbackBlock));
-	       if (callblock != NULL) {
-		 callblock->target = target;
-		 memcpy(&callblock->context.specific, sblock,
-			sizeof(SpecificContextBlock));
-		 
-		 /* fetch and display background image of element */
-		 el = TtaGetMainRoot (sblock->doc);
-		 
-		 FetchImage (sblock->doc, el, url, 0,
-			     ParseCSSBackgroundImageCallback,
-			     callblock);
-	       }
-	     }
-	 }
-       
-       if (url)
-	 TtaFreeMemory (url);
-     }
-       return (cssRule);
+  url = NULL;
+  cssRule = SkipBlanks (cssRule);
+  if (!strncasecmp (cssRule, "url", 3))
+    {  
+      cssRule += 3;
+      cssRule = SkipBlanks (cssRule);
+      if (*cssRule == '(')
+	{
+	  cssRule++;
+	  cssRule = SkipBlanks (cssRule);
+	  base = cssRule;
+	  while (*cssRule != EOS && !IsBlank (cssRule) && *cssRule != ')')
+	    cssRule++;
+	  sauve = *cssRule;
+	  *cssRule = EOS;
+	  url = TtaStrdup (base);
+	  *cssRule = sauve;
+	}
+      cssRule++;
+
+      if (context->destroy == 1)
+	{
+	  /* remove the background image PRule */
+	  image.pointer = NULL;
+	  if (context->drv->SetBgImage)
+	    context->drv->SetBgImage (target, context, image);
+	  if (context->drv->GetFillPattern)
+	    {
+	      if (context->drv->GetFillPattern (target, context, &value) < 0)
+		/* there is no FillPattern rule -> remove ShowBox rule */
+		if (context->drv->SetShowBox)
+		  {
+		    value.typed_data.value = 1;
+		    value.typed_data.unit = DRIVERP_UNIT_REL;
+		    context->drv->SetShowBox (target, context, value);
+		  }
+	    }
+	}
+      else if (url)
+	{
+	  no_bg_image = TtaGetEnvString("NO_BG_IMAGES");
+	  if (no_bg_image == NULL ||
+	      (strcasecmp(no_bg_image,"yes") && strcasecmp(no_bg_image,"true")))
+	    {	       
+	      /*
+	       * if the background is set on the HTML or BODY element,
+	       * set the background color for the full window.
+	       */
+	      callblock = (BackgroundImageCallbackPtr) TtaGetMemory(sizeof(BackgroundImageCallbackBlock));
+	      if (callblock != NULL)
+		{
+		  callblock->target = target;
+		  if (context->drv == &GenericStrategy)
+		    {
+		      gblock = (GenericContext) context;
+		      memcpy (&callblock->context.generic, gblock,
+			      sizeof(GenericContextBlock));
+		      el = TtaGetMainRoot (context->doc);
+		    }
+		  else if (context->drv == &SpecificStrategy)
+		    {
+		      sblock = (SpecificContextBlock *) context;
+		      memcpy (&callblock->context.specific, sblock,
+			      sizeof(SpecificContextBlock));
+		      el = (SpecificTarget) target;
+		      elType = TtaGetElementType (el);
+		      if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0 &&
+			  (elType.ElTypeNum == HTML_EL_HTML
+			   || elType.ElTypeNum == HTML_EL_BODY
+			   || elType.ElTypeNum == HTML_EL_HEAD))
+			el = TtaGetMainRoot (context->doc);
+		    }
+		  /* fetch and display background image of element */
+		  FetchImage (context->doc, el, url, 0,
+			      ParseCSSBackgroundImageCallback, callblock);
+		}
+	    }
+		
+	  if (url)
+	    TtaFreeMemory (url);
+	}
+    }
+  return (cssRule);
 }
 
 /*----------------------------------------------------------------------
@@ -3496,10 +3439,7 @@ char               *cssRule;
 	cssRule = SkipWord (cssRule);
      }
    else
-     {
-	fprintf (stderr, "invalid repeat\n");
-	return (cssRule);
-     }
+     return (cssRule);
 
    /*
     * install the new presentation.
@@ -3523,9 +3463,12 @@ PresentationContext context;
 char               *cssRule;
 #endif
 {
-   MSG ("ParseCSSBackgroundAttachment ");
-   TODO
-      return (cssRule);
+   cssRule = SkipBlanks (cssRule);
+   if (!strncasecmp (cssRule, "scroll", 6))
+     cssRule = SkipWord (cssRule);
+   else if (!strncasecmp (cssRule, "fixed", 5))
+     cssRule = SkipWord (cssRule);
+   return (cssRule);
 }
 
 /*----------------------------------------------------------------------
@@ -3542,9 +3485,20 @@ PresentationContext context;
 char               *cssRule;
 #endif
 {
-   MSG ("ParseCSSBackgroundPosition ");
-   TODO
-      return (cssRule);
+   cssRule = SkipBlanks (cssRule);
+   if (!strncasecmp (cssRule, "left", 4))
+     cssRule = SkipWord (cssRule);
+   else if (!strncasecmp (cssRule, "right", 5))
+     cssRule = SkipWord (cssRule);
+   else if (!strncasecmp (cssRule, "center", 6))
+     cssRule = SkipWord (cssRule);
+   else if (!strncasecmp (cssRule, "top", 3))
+     cssRule = SkipWord (cssRule);
+   else if (!strncasecmp (cssRule, "bottom", 6))
+     cssRule = SkipWord (cssRule);
+   else if (isdigit (*cssRule))
+     cssRule = SkipWord (cssRule);
+   return (cssRule);
 }
 
 /*----------------------------------------------------------------------
@@ -3560,120 +3514,18 @@ PresentationContext context;
 char               *cssRule;
 #endif
 {
-   ElementType	         elType;
-   Element               el;
-   PresentationValue     best;
-   GenericContext        gblock;
-   SpecificContextBlock *sblock;
-   SpecificTarget        elem;
-   char                 *url;
-   char                 *no_bg_image;
-   boolean               setColor;
-   BackgroundImageCallbackPtr callblock;
-
-   url = NULL;
-   best.typed_data.unit = DRIVERP_UNIT_INVALID;
-   setColor = TRUE;
-   if (!strncasecmp (cssRule, "url", 3))
-     /*
-      * we don't currently support URL just parse it to skip it.
-      */
-     cssRule = ParseHTMLURL (cssRule, &url);
-
-   no_bg_image = TtaGetEnvString("NO_BG_IMAGES");
-   if ((no_bg_image != NULL) &&
-       ((!(strcasecmp(no_bg_image,"yes"))) ||
-	(!(strcasecmp(no_bg_image,"true"))))) {
-       if (url) TtaFreeMemory (url);
-       url = NULL;
-   }
-       
-
-   cssRule = ParseCSSColor (cssRule, &best);
-   if (best.typed_data.unit == DRIVERP_UNIT_INVALID)
-     setColor = FALSE;
-
-   if (url || setColor)
-     {
-       /*
-	* if the background is set on the HTML or BODY element,
-	* set the background color for the full window.
-	*/
-       if (context->drv == &GenericStrategy)
-	 {
-	   gblock = (GenericContext) context;
-	   if (gblock->type == HTML_EL_HTML
-	       || gblock->type == HTML_EL_BODY
-	       || gblock->type == HTML_EL_HEAD)
-	     {
-	       if (url)
-		 {
-		   callblock = (BackgroundImageCallbackPtr)
-		       TtaGetMemory(sizeof(BackgroundImageCallbackBlock));
-		   if (callblock != NULL) {
-		       callblock->target = target;
-		       memcpy(&callblock->context.generic, gblock,
-		              sizeof(GenericContextBlock));
-
-		       /* fetch and display background image of element */
-		       el = TtaGetMainRoot (gblock->doc);
-
-		       FetchImage (gblock->doc, el, url, 0,
-		                   ParseCSSBackgroundImageCallback,
-				   callblock);
-		   }
-		 }
-	     }
-	 }
-       else if (context->drv == &SpecificStrategy)
-	 {
-	   sblock = (SpecificContextBlock *) context;
-	   elem = (SpecificTarget) target;
-	   elType = TtaGetElementType (elem);
-	   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0 &&
-	       (elType.ElTypeNum == HTML_EL_HTML
-	       || elType.ElTypeNum == HTML_EL_BODY
-	       || elType.ElTypeNum == HTML_EL_HEAD))
-	     {
-	       if (url)
-		 {
-		   callblock = (BackgroundImageCallbackPtr)
-		       TtaGetMemory(sizeof(BackgroundImageCallbackBlock));
-		   if (callblock != NULL) {
-		       callblock->target = target;
-		       memcpy(&callblock->context.specific, sblock,
-		              sizeof(SpecificContextBlock));
-
-		       /* fetch and display background image of element */
-		       el = TtaGetMainRoot (sblock->doc);
-
-		       FetchImage (sblock->doc, el, url, 0,
-		                   ParseCSSBackgroundImageCallback,
-				   callblock);
-		   }
-		 }
-	     }
-	 }
-
-       if (setColor)
-	 {
-	   /* install the new presentation. */
-	   if (context->drv->SetBackgroundColor)
-	     context->drv->SetBackgroundColor (target, context, best);
-	   /* thot specificity : need to set fill pattern for background color */
-	   best.typed_data.value = DRIVERP_PATTERN_BACKGROUND;
-	   best.typed_data.unit = DRIVERP_UNIT_REL;
-	   if (context->drv->SetFillPattern)
-	     context->drv->SetFillPattern (target, context, best);
-	   best.typed_data.value = 1;
-	   best.typed_data.unit = DRIVERP_UNIT_REL;
-	   if (context->drv->SetShowBox)
-	     context->drv->SetShowBox (target, context, best);
-	 }
-     }
-
-   if (url)
-     TtaFreeMemory (url);
+   cssRule = ParseCSSBackgroundImage (target, context, cssRule);
+   /* perhaps there is no BackgroundColor */
+   cssRule = ParseCSSBackgroundRepeat (target, context, cssRule);
+   cssRule = ParseCSSBackgroundPosition (target, context, cssRule);
+   /*
+    *we need to eliminate repeat or position names
+    * before looking for a color name
+    */
+   cssRule = ParseCSSBackgroundColor (target, context, cssRule);
+   /* perhaps there is a BackgroundColor */
+   cssRule = ParseCSSBackgroundRepeat (target, context, cssRule);
+   cssRule = ParseCSSBackgroundPosition (target, context, cssRule);
    return (cssRule);
 }
 
