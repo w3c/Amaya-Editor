@@ -4709,17 +4709,17 @@ static void    ChangeDoctype (ThotBool isXml)
 	{
 	  /* XML document */
 	  if (profile == L_Strict)
-	    TtaSetTextContent (text, "html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"", Latin_Script, doc);
+	    TtaSetTextContent (text, DOCTYPE1_XHTML10_STRICT, Latin_Script, doc);
 	  else
-	    TtaSetTextContent (text, "html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"", Latin_Script, doc);
+	    TtaSetTextContent (text, DOCTYPE1_XHTML10_TRANSITIONAL, Latin_Script, doc);
 	}
       else
 	{
 	  /* HTML document */
 	  if (profile == L_Strict)
-	    TtaSetTextContent (text, "html PUBLIC \"-//W3C//DTD HTML 4.01//EN\"", Latin_Script, doc);
+	    TtaSetTextContent (text, DOCTYPE1_HTML_STRICT, Latin_Script, doc);
 	  else
-	    TtaSetTextContent (text, "html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"", Latin_Script, doc);
+	    TtaSetTextContent (text, DOCTYPE1_HTML_TRANSITIONAL, Latin_Script, doc);
 	}
     }
   /* create the second DOCTYPE_line element */
@@ -4736,17 +4736,17 @@ static void    ChangeDoctype (ThotBool isXml)
 	{
 	  /* XML document */
 	  if (profile == L_Strict)
-	    TtaSetTextContent (text, "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\"", Latin_Script, doc);
+	    TtaSetTextContent (text, DOCTYPE2_XHTML10_STRICT, Latin_Script, doc);
 	  else
-	    TtaSetTextContent (text, "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\"", Latin_Script, doc);
+	    TtaSetTextContent (text, DOCTYPE2_XHTML10_TRANSITIONAL, Latin_Script, doc);
 	}
       else
 	{
 	  /* HTML document */
 	  if (profile == L_Strict)
-	    TtaSetTextContent (text, "\"http://www.w3.org/TR/html4/strict.dtd\"", Latin_Script, doc);
+	    TtaSetTextContent (text, DOCTYPE2_HTML_STRICT, Latin_Script, doc);
 	  else
-	    TtaSetTextContent (text, "\"http://www.w3.org/TR/html4/loose.dtd\"", Latin_Script, doc);
+	    TtaSetTextContent (text, DOCTYPE2_HTML_TRANSITIONAL, Latin_Script, doc);
 	}
     }
   TtaSetStructureChecking (1, doc);  

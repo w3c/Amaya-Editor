@@ -329,39 +329,39 @@
 	<message xml:lang="es">Cambiar/Crear doctype XHTML 1.0 Básico</message>
 </label>
 <label define="BBDoctypeHtmlTransitional">
-	<message xml:lang="en">Set doctype to HTML Transitional</message>
-	<message xml:lang="fr">Changer/Créer doctype HTML Transitional</message>
-	<message xml:lang="it">Cambia/Crea doctype HTML Transitional</message>
-	<message xml:lang="de">Dokumenttyp HTML Transitional zuweisen</message>
-	<message xml:lang="es">Cambiar/Crear doctype HTML Transicional</message>
+	<message xml:lang="en">Set doctype to HTML 4.01 Transitional</message>
+	<message xml:lang="fr">Changer/Créer doctype HTML 4.01 Transitional</message>
+	<message xml:lang="it">Cambia/Crea doctype HTML 4.01 Transitional</message>
+	<message xml:lang="de">Dokumenttyp HTML 4.01 Transitional zuweisen</message>
+	<message xml:lang="es">Cambiar/Crear doctype HTML 4.01 Transicional</message>
 </label>
 <label define="BDoctypeHtmlStrict">
-	<message xml:lang="en">Set doctype to HTML Strict</message>
-	<message xml:lang="fr">Changer/Créer doctype HTML Strict</message>
-	<message xml:lang="it">Cambia/Crea doctype HTML Strict</message>
-	<message xml:lang="de">Dokumenttyp HTML Strict zuweisen</message>
-	<message xml:lang="es">Cambiar/Crear doctype HTML Estricto</message>
+	<message xml:lang="en">Set doctype to HTML 4.01 Strict</message>
+	<message xml:lang="fr">Changer/Créer doctype HTML 4.01 Strict</message>
+	<message xml:lang="it">Cambia/Crea doctype HTML 4.01 Strict</message>
+	<message xml:lang="de">Dokumenttyp HTML 4.01 Strict zuweisen</message>
+	<message xml:lang="es">Cambiar/Crear doctype HTML 4.01 Estricto</message>
 </label>
 <label define="BDoctypeXhtmlPlusMath">
-	<message xml:lang="en">Set doctype to XHTML 1.1 + MathML</message>
-	<message xml:lang="fr">Changer/Créer doctype XHTML 1.1 + MathML</message>
-	<message xml:lang="it">Cambia/Crea doctype XHTML 1.1 + MathML</message>
-	<message xml:lang="de">Dokumenttyp XHTML 1.1 + MathML zuweisen</message>
-	<message xml:lang="es">Cambiar/Crear doctype XHTML 1.1 + MathML</message>
+	<message xml:lang="en">Set doctype to XHTML 1.1 + MathML 2.0</message>
+	<message xml:lang="fr">Changer/Créer doctype XHTML 1.1 + MathML 2.0</message>
+	<message xml:lang="it">Cambia/Crea doctype XHTML 1.1 + MathML 2.0</message>
+	<message xml:lang="de">Dokumenttyp XHTML 1.1 + MathML 2.0 zuweisen</message>
+	<message xml:lang="es">Cambiar/Crear doctype XHTML 1.1 + MathML 2.0</message>
 </label>
 <label define="BDoctypeMathML">
-	<message xml:lang="en">Set doctype to MathML</message>
-	<message xml:lang="fr">Changer/Créer doctype MathML</message>
-	<message xml:lang="it">Cambia/Crea doctype MathML</message>
-	<message xml:lang="de">Dokumenttyp MathML zuweisen</message>
-	<message xml:lang="es">Cambiar/Crear doctype MathML</message>
+	<message xml:lang="en">Set doctype to MathML 2.0</message>
+	<message xml:lang="fr">Changer/Créer doctype MathML 2.0</message>
+	<message xml:lang="it">Cambia/Crea doctype MathML 2.0</message>
+	<message xml:lang="de">Dokumenttyp MathML zuweisen 2.0</message>
+	<message xml:lang="es">Cambiar/Crear doctype MathML 2.0</message>
 </label>
 <label define="BDoctypeSVG">
-	<message xml:lang="en">Set doctype to SVG</message>
-	<message xml:lang="fr">Changer/Créer doctype SVG</message>
-	<message xml:lang="it">Cambia/Crea doctype SVG</message>
-	<message xml:lang="de">Dokumenttyp SVG zuweisen</message>
-	<message xml:lang="es">Cambiar/Crear doctype SVG</message>
+	<message xml:lang="en">Set doctype to SVG 1.0</message>
+	<message xml:lang="fr">Changer/Créer doctype SVG 1.0</message>
+	<message xml:lang="it">Cambia/Crea doctype SVG 1.0</message>
+	<message xml:lang="de">Dokumenttyp SVG 1.0 zuweisen</message>
+	<message xml:lang="es">Cambiar/Crear doctype SVG 1.0</message>
 </label>
 <label define="BDocInfo">
 	<message xml:lang="en">Document Information</message>

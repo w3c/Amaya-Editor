@@ -37,11 +37,11 @@
 35 **Set doctype to XHTML 1.0 Transitional
 36 **Set doctype to XHTML 1.0 Strict
 37 **Set doctype to XHTML 1.0 Basic
-38 **Set doctype to HTML Transitional
-39 **Set doctype to HTML Strict
-40 **Set doctype to XHTML 1.1 + MathML
-41 **Set doctype to MathML
-42 **Set doctype to SVG
+38 **Set doctype to HTML 4.01 Transitional
+39 **Set doctype to HTML 4.01 Strict
+40 **Set doctype to XHTML 1.1 + MathML 2.0
+41 **Set doctype to MathML 2.0
+42 **Set doctype to SVG 1.0
 43 Informação sobre o document
 44 Configurar e imprimir...
 45 Imprimir

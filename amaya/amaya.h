@@ -539,4 +539,26 @@ THOT_EXPORT LoadedImageDesc *ImageLocal;
 #define AM_MATHML_MIME_TYPE       "application/mathml+xml"
 #define AM_GENERIC_XML_MIME_TYPE  "text/xml"
 
+
+/* Doctype declarations used in Amaya */
+#define DOCTYPE1_HTML_STRICT          "html PUBLIC \"-//W3C//DTD HTML 4.01//EN\""
+#define DOCTYPE1_HTML_TRANSITIONAL    "html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\""
+#define DOCTYPE1_XHTML10_BASIC        "html PUBLIC \"-//W3C//DTD XHTML Basic 1.0//EN\""
+#define DOCTYPE1_XHTML10_STRICT       "html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\""
+#define DOCTYPE1_XHTML11              "html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\""
+#define DOCTYPE1_XHTML11_PLUS_MATHML  "html PUBLIC \"-//W3C//DTD XHTML 1.1 plus MathML 2.0//EN\""
+#define DOCTYPE1_XHTML10_TRANSITIONAL "html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\""
+#define DOCTYPE1_MATHML20             "math PUBLIC \"-//W3C//DTD MathML 2.0//EN\""
+#define DOCTYPE1_SVG10                "svg PUBLIC \"-//W3C//DTD SVG 1.0//EN\""
+
+#define DOCTYPE2_HTML_STRICT          "      \"http://www.w3.org/TR/html4/strict.dtd\""
+#define DOCTYPE2_HTML_TRANSITIONAL    "      \"http://www.w3.org/TR/html4/loose.dtd\""
+#define DOCTYPE2_XHTML10_BASIC        "      \"http://www.w3.org/TR/xhtml-basic/xhtml-basic10.dtd\""
+#define DOCTYPE2_XHTML10_STRICT       "      \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\""
+#define DOCTYPE2_XHTML11              "      \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\""
+#define DOCTYPE2_XHTML11_PLUS_MATHML  "      \"http://www.w3.org/TR/MathML2/dtd/xhtml-math11-f.dtd\""
+#define DOCTYPE2_XHTML10_TRANSITIONAL "      \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\""
+#define DOCTYPE2_MATHML20             "      \"http://www.w3.org/TR/MathML2/dtd/mathml2.dtd\""
+#define DOCTYPE2_SVG10                "      \"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd\""
+
 #endif /* AMAYA_H */
