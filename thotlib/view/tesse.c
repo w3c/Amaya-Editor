@@ -13,6 +13,11 @@
 #include <stdio.h>
 #include <malloc.h>
 #include <string.h>
+
+#ifdef _WINDOWS
+#include <windows.h>
+#endif /*_WINDOWS*/
+
 #ifdef _GL
 #include <GL/gl.h>
 #include <GL/glu.h>
@@ -25,7 +30,7 @@
 
 
 /* not needed if using Thot includes */
-/***************************/
+/***************************/ 
 #ifndef FALSE
 #define FALSE 0
 #endif
