@@ -17,10 +17,12 @@
  *
  */
 
-#ifdef ANNOTATIONS
+#undef DEBUG_XPOINTER
 
 #define THOT_EXPORT extern
 #include "amaya.h"
+#include "XPointer.h"
+#include "XPointerparse_f.h"
 #undef THOT_EXPORT
 #include "XPointer_f.h"
 
@@ -48,17 +50,21 @@ typedef XPathItem * XPathList;
   A not very efficient function that makes a dynamic memory allocation
   strcat
   ----------------------------------------------------------------------*/
-static char * StrACat (char ** dest, const char * src)
+static void StrACat (char ** dest, const char * src)
 {
+ void *status;
+
   if (src && *src) 
     {
     if (*dest) 
       {
 	int length = strlen (*dest);
-	if ((*dest  = (char  *) TtaRealloc (*dest, length + strlen(src) + 1)) == NULL)
-	/* @@ what to do ?? */
-          exit (0);
-	strcpy (*dest + length, src);
+	status = TtaRealloc (*dest, length + strlen(src) + 1);
+        if (status != NULL)
+	  {
+            *dest = status;
+	    strcpy (*dest + length, src);
+          }
       } 
     else 
       {
@@ -68,7 +74,6 @@ static char * StrACat (char ** dest, const char * src)
 	strcpy (*dest, src);
       }
     }
-  return (*dest);
 }
 
 /*----------------------------------------------------------------------
@@ -201,7 +206,9 @@ static ThotBool TestElName (Element el, char *name)
 
   elType = TtaGetElementType (el);
   typeName = TtaGetElementTypeName (elType);
+#ifdef DEBUG_XPOINTER
   printf ("testing element: %s\n", typeName);
+#endif
   if (typeName && !strcmp (name, typeName))
       return TRUE;
   else
@@ -321,7 +328,7 @@ Element SearchAttrId (Element root, char *val)
   ----------------------------------------------------------------------*/
 Element SearchSiblingIndex (Element root, char *el_name, int *index)
 {
-  Element sibling, result;
+  Element sibling, child, result;
 
   if (!root)
     return NULL;
@@ -336,10 +343,12 @@ Element SearchSiblingIndex (Element root, char *el_name, int *index)
   /* get the next sibling in the Thot tree */
   while (sibling)
     {
-      /* if the element call the algorithm recursively from this point */
+      /* if the element is hidden, call the algorithm recursively from 
+	 this point */
       if (ElIsHidden (sibling))
 	  {
-	    result = SearchSiblingIndex (sibling, el_name, index);
+	    child = TtaGetFirstChild (sibling);
+	    result = SearchSiblingIndex (child, el_name, index);
 	    if (result)
 	      return result;
 	  }
@@ -529,6 +538,7 @@ ThotBool firstF;
   if (id_value)
     {
       xpath_item = TtaGetMemory (sizeof (XPathItem));
+      xpath_item->elType = TtaGetElementType (el);	
       xpath_item->id_value = id_value;
       xpath_item->next = xpath_list;
       xpath_list = xpath_item;
@@ -540,25 +550,8 @@ ThotBool firstF;
   return (xpath_expr);
 }
 
-
 /*----------------------------------------------------------------------
-  XPointer_Xptr2Thot
-  Convers an XPointer expression into ... a selection? returns the nodes?
-  API yet to be defined.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void XPointer_Xptr2tThot (Document doc, View view, CHAR_T *expr)
-#else
-void XPointer_Xptr2Thot (doc, view, expr)
-Document doc;
-View view;
-CHAR_T *expr;
-#endif
-{
-}
-
-/*----------------------------------------------------------------------
-  XPointer_Thot2Xptr
+  XPointer_build
   If there is a selection in the document, it returns a pointer
   to an  XPointer expression that represents what was selected.
   It's up to the caller to free the returned string.
@@ -567,9 +560,9 @@ CHAR_T *expr;
   with the function API.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char * XPointer_Thot2Xptr (Document doc, View view)
+char * XPointer_build (Document doc, View view)
 #else
-char * XPointer_Thot2Xptr (doc, view)
+char * XPointer_build (doc, view)
 Document doc;
 View view;
 #endif
@@ -581,11 +574,12 @@ View view;
   int         firstLen;
 
   char       *firstXpath;
-  char       *lastXpath;
+  char       *lastXpath = NULL;
   ElementType elType;
 
   /* @@ debug */
   char       *xptr_expr = NULL;
+
 
   elType.ElSSchema = TtaGetDocumentSSchema (doc);
   /* only do this operation on XML and HTML documents */
@@ -626,16 +620,23 @@ View view;
     firstLen = 1;
 
   firstXpath = XPointer_ThotEl2XPath (firstEl, firstCh, firstLen, TRUE);
+#ifdef DEBUG_XPOINTER
   fprintf (stderr, "\nfirst xpointer is %s", firstXpath);
-  
+#endif  
   if (lastEl)
     {
       lastXpath = XPointer_ThotEl2XPath (lastEl, lastCh, 1, FALSE);
+#ifdef DEBUG_XPOINTER
       fprintf (stderr, "\nlast xpointer is %s\n", lastXpath);
+#endif  
     }
   else 
+    {
+#ifdef DEBUG_XPOINTER
     fprintf (stderr, "\n");
-  
+#endif  
+    }
+
   /* calculate the length of the xptr buffer */
   i = sizeof ("xpointer()/range-to()") + strlen (firstXpath) 
 	      + ((lastEl) ? strlen (lastXpath) : 0) + 1;
@@ -650,43 +651,21 @@ View view;
   if (lastEl)
     TtaFreeMemory (lastXpath);
 
-  fprintf (stderr, "final expression is: %s\n", xptr_expr);
-
-  /* @@@ test */
-  printf ("first el is %d\n", firstEl);
-  printf ("last el is %d\n", lastEl);
-
-  /* now, let's try to parse what we generated */
-  XPointer_Parse (doc, xptr_expr);
-
-#if 0
-  firstEl = TtaGetMainRoot (doc);
-  firstEl = SearchAttrId (firstEl, "jose");
-  if (firstEl)
-    printf ("found id on element %d\n", firstEl);
-  else
-    printf ("no attribute found\n");
-
-  /* point to body */
-  firstEl = TtaGetMainRoot (doc);
-  firstEl = TtaGetFirstChild (firstEl);
-  TtaNextSibling (&firstEl);
-  /* point to the first child */
-  firstEl = TtaGetFirstChild (firstEl);
+#ifdef ANNOTATIONS  
   {
-    int *ptr;
-    i = 3;
-    firstEl = SearchSiblingIndex (firstEl, "dt", &i);
-    if (firstEl)
-      printf ("found element %d\n", firstEl);
-    else
-      printf ("no element found\n");
+    parserContextPtr ctx;
+    fprintf (stderr, "final expression is: %s\n", xptr_expr);
+    printf ("first el is %d\n", firstEl);
+    printf ("last el is %d\n", lastEl);
+    /* now, let's try to parse what we generated */
+    ctx = XPointer_parse (doc, xptr_expr);
+    XPointer_free (ctx);
   }
 #endif
-  /* @@@ test */
-
-  /* @@ should return xptr_expr */
-  TtaFreeMemory (xptr_expr);
-  return NULL;
+  
+  return xptr_expr;
 }
-#endif ANNOTATIONS
+
+
+
+

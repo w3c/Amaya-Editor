@@ -18,57 +18,32 @@
  *
  */
 
-#ifdef ANNOTATIONS
 #define THOT_EXPORT extern
 #include "amaya.h"
+#include "XPointer.h"
+#include "XPointer_f.h"
 #undef THOT_EXPORT
 #include "XPointerparse_f.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "XPointer_f.h"
+
 
 /* #define XPTR_PARSE_DEBUG */
+#ifdef ANNOTATIONS
 #define XPTR_ACTION_DEBUG
+#endif
 
 #define BSIZE 128       /* size of the lexical analyzer temporary buffer */
 
 #define INC_CUR ctx->cur++
 #define VAL_CUR *(ctx->cur)
 
-#define HAS_STRING_RANGE 1
-
 /***************************************************
-  Symbol table 
+  Symbol table  (move this back to XPointerparse.c)
 ***************************************************/
-
-#define STRMAX 999 /* size of lexemes array */
-#define SYMMAX 100 /* size of symtable */
-
-/* forms of symbol table entry */
-struct entry { 
-  char *lexptr;
-  int token;
-};
-
-/* tokens */
-typedef enum {
-  /* type identifiers */
-  NUM=256,
-  ID,
-  /* the xpointer functions */
-  FID,            
-  FRANGE_TO,
-  FSTRING_RANGE,
-  FSTARTP,
-  FENDP,
-  /* non-operators */
-  DONE,
-  NONE
-} tokEnum;
-
 /* values for pre-initializing the symbol tables */
-struct entry keywords[] = {
+static struct entry keywords[] = {
   "id", FID,
   "range-to", FRANGE_TO,
   "string-range", FSTRING_RANGE,
@@ -77,53 +52,7 @@ struct entry keywords[] = {
   "", 0
 };
 
-/* the symbol table */
-typedef struct _symTableCtx {
-  char lexemes[STRMAX];  /* lexemes table */
-  int lastchar;          /* last used position in lexemes */
-  struct entry symtable[SYMMAX]; 
-  int lastentry;        /* last entry in the symtable */
-} symTableCtx;
-
 static symTableCtx symtable;
-
-/***************************************************
-  The parser context
-**************************************************/
-
-/* the node info that the parsing will return */
-typedef struct _nodeInfo {
-  Element  el;
-  char node[10];
-  int  type; /* 0, just point at the node, 1, point at its content */
-  int  startC;
-  int  endC;
-  int  index;
-  int  processed;
-} nodeInfo;
-
-typedef struct _parserContext {
-  Document doc; /* document where we are resolving the XPointer */
-  Element root; /* root element of the document */
-
-  char *cur;    /* the current char being parsed */
-  char *buffer; /* the input string */
-
-  char *error;    /* error code */
-
-  int   lookahead;  /* the lookahead token */
-  tokEnum tok;      /* token */
-  int tokval;       /* token value */
-
-  symTableCtx *symtable; /* the symbol table */
-  
-  nodeInfo  *curNode;
-  nodeInfo   nodeA;
-  nodeInfo   nodeB;
-} parserContext;
-
-typedef parserContext *parserContextPtr;
-
 
 /***************************************************
  local function prototypes 
@@ -136,7 +65,7 @@ static void Factor (parserContextPtr ctx);
   CtxAddError
   puts an error code in the context
   ----------------------------------------------------------------------*/
-static int CtxAddError (parserContextPtr ctx, char *msg)
+static void CtxAddError (parserContextPtr ctx, char *msg)
 {
   if (!ctx->error)
     ctx->error = strdup (msg);
@@ -151,7 +80,7 @@ static int CtxAddError (parserContextPtr ctx, char *msg)
   ----------------------------------------------------------------------*/
 int LookupSymbol (parserContextPtr ctx, char *s)
 {
-  symTableCtx *me = ctx->symtable;
+  symTableCtxPtr me = ctx->symtable;
 
   int p;
   for (p = me->lastentry; p > 0; p = p - 1)
@@ -283,7 +212,8 @@ static void RangeTo (parserContextPtr ctx)
     CtxAddError (ctx, "RangeTo: no existing content");
   else
     {
-      /* GotoChild (ctx); */
+      ctx->type = RANGE_TO;
+      /* point to the context of the second node */
       curNode->processed = 1;
       ctx->curNode = &(ctx->nodeB);
     }
@@ -310,8 +240,11 @@ static void StringRange (parserContextPtr ctx, int startC, int len)
 	{
 	  curNode->processed = 1;
 	  curNode->startC = pos;
-	  curNode->endC = pos + len;
-	  curNode->type = curNode->type | HAS_STRING_RANGE;
+	  if (len > 1)
+	    curNode->endC = pos + len - 1;
+	  else
+	    curNode->endC = curNode->startC;
+	  curNode->type = STRING_RANGE;
 	}
     }
   
@@ -437,9 +370,8 @@ static int LexAn (parserContextPtr ctx)
 	      break;
 	    default:
 	      CtxAddError (ctx, "LexAn : syntax error");
+              return NONE;			 
 	    }
-	  INC_CUR;
-	  return (i);
 	}
     }
 }
@@ -464,7 +396,6 @@ static void Match (parserContextPtr ctx, int t)
 static void Term (parserContextPtr ctx)
 {
   int i;
-  symTableCtx *symt = ctx->symtable;
 
   while (1)
     {
@@ -558,7 +489,7 @@ static void Term (parserContextPtr ctx)
 /*----------------------------------------------------------------------
   Factor
   ----------------------------------------------------------------------*/
-void Factor (parserContextPtr ctx)
+static void Factor (parserContextPtr ctx)
 {
   int startC;
   int len;
@@ -639,7 +570,7 @@ void Factor (parserContextPtr ctx)
 /*----------------------------------------------------------------------
   Expr
   ----------------------------------------------------------------------*/
-void Expr (parserContextPtr ctx)
+static void Expr (parserContextPtr ctx)
 {
   int i;
 
@@ -681,7 +612,7 @@ void Expr (parserContextPtr ctx)
 /*----------------------------------------------------------------------
   InitSymTable
   ----------------------------------------------------------------------*/
-void InitSymtable (parserContextPtr ctx)
+static void InitSymtable (parserContextPtr ctx)
 {
   struct entry *p;
 
@@ -690,62 +621,197 @@ void InitSymtable (parserContextPtr ctx)
     InsertSymbol (ctx, p->lexptr, p->token);
 }
 
-/*----------------------------------------------------------------------
-  XPointer_Parse
-  ----------------------------------------------------------------------*/
-ThotBool XPointer_Parse (Document doc, char *buffer) 
+/**************************************************
+  PUBLIC API 
+**************************************************/						  
+static void SelectNode (Document doc, nodeInfo *node)
 {
-  parserContext context;
+  if (node->type == STRING_RANGE)
+    TtaSelectString (doc, node->el, node->startC, node->endC);
+  else
+    TtaSelectElement (doc, node->el);
+}
+
+static void SelectToNode (Document doc, nodeInfo *node)
+{
+  TtaExtendSelection (doc, node->el, node->endC);
+}
+
+/*----------------------------------------------------------------------
+  XPointer_select
+  ----------------------------------------------------------------------*/
+void XPointer_select (parserContextPtr ctx)
+{
+  nodeInfo node;
+
+  if (!ctx || ctx->error)
+    return;
+
+  if (TtaGetSelectedDocument () == ctx->doc)
+    TtaUnselect (ctx->doc);
+
+  SelectNode (ctx->doc, &(ctx->nodeA));
+  if (ctx->type == RANGE_TO)
+    SelectToNode (ctx->doc, &(ctx->nodeB));
+}
+
+/*----------------------------------------------------------------------
+  XPointer_free
+  ----------------------------------------------------------------------*/
+void XPointer_free (parserContextPtr ctx)
+{
+  if (!ctx)
+    return;
   
-  /* verify the schema */
-  if (strncmp (buffer, "xpointer(", 9))
+  if (ctx->error)
+    TtaFreeMemory (ctx->error);
+  TtaFreeMemory (ctx);
+}
+
+
+/*----------------------------------------------------------------------
+  XPointer_isRangeTo
+  ----------------------------------------------------------------------*/
+ThotBool XPointer_isRangeTo (parserContextPtr ctx)
+{
+  if (!ctx)
     return FALSE;
 
+  return (ctx->type == RANGE_TO);
+}
+
+/*----------------------------------------------------------------------
+  XPointer_isStringRange
+  ----------------------------------------------------------------------*/
+ThotBool XPointer_isStringRange (nodeInfo *node)
+{
+  if (!node)
+    return FALSE;
+
+  return (node->type == STRING_RANGE);
+}
+
+/*----------------------------------------------------------------------
+  XPointer_nodeA
+  ----------------------------------------------------------------------*/
+nodeInfo *XPointer_nodeA (parserContextPtr ctx)
+{
+  if (!ctx)
+    return NULL;
+
+  return (&(ctx->nodeA));
+}
+
+/*----------------------------------------------------------------------
+  XPointer_nodeB
+  ----------------------------------------------------------------------*/
+nodeInfo *XPointer_nodeB (parserContextPtr ctx)
+{
+  if (!ctx)
+    return NULL;
+
+  return (&(ctx->nodeB));
+}
+
+/*----------------------------------------------------------------------
+  XPointer_el
+  ----------------------------------------------------------------------*/
+Element XPointer_el (nodeInfo *node)
+{
+  if (!node)
+    return NULL;
+
+  return (node->el);
+}
+
+/*----------------------------------------------------------------------
+  XPointer_startC
+  ----------------------------------------------------------------------*/
+int XPointer_startC (nodeInfo *node)
+{
+  if (!node)
+    return 0;
+
+  return (node->startC);
+}
+
+/*----------------------------------------------------------------------
+  XPointer_endC
+  ----------------------------------------------------------------------*/
+int XPointer_endC (nodeInfo *node)
+{
+  if (!node)
+    return 0;
+
+  return (node->endC);
+}
+
+/*----------------------------------------------------------------------
+  XPointer_parse
+  ----------------------------------------------------------------------*/
+parserContextPtr XPointer_parse (Document doc, char *buffer) 
+{
+  parserContextPtr context;
+  
   /* init the context */
-  memset (&context, 0, sizeof (parserContext));
+  context = (parserContextPtr) TtaGetMemory (sizeof (parserContext));
+  memset (context, 0, sizeof (parserContext));
+
+  /* verify the schema */
+  if (!buffer || buffer[0] == EOS)
+    {
+      CtxAddError (context, "Empty buffer");
+      return (context);
+    }
+
+  /* verify the schema */
+  if (strncmp (buffer, "xpointer(", 9))
+    {
+      CtxAddError (context, "Unknown XPointer schema");
+      return (context);
+    }
 
   /* point to the buffer (while removing the schema) */
-  context.buffer = buffer+9;
-  buffer[strlen (buffer) -1] = EOS;
-  context.cur = context.buffer;
+  context->buffer = buffer+9;
+  buffer[strlen (buffer) - 1] = EOS;
+  context->cur = context->buffer;
 
   /* symtable (in case one day we want to use dynamically 
      allocated symtables) */
   symtable.lastchar = -1;
   symtable.lastentry = 0;
-  context.symtable = &symtable;
-  InitSymtable (&context);
+  context->symtable = &symtable;
+  InitSymtable (context);
 
   /* point to the first node */
-  context.curNode = &(context.nodeA);
+  context->curNode = &(context->nodeA);
   /* and initialize the document root */
-  context.doc = doc;
-  context.root = TtaGetMainRoot (doc);
+  context->doc = doc;
+  context->root = TtaGetMainRoot (doc);
 
   /* start parsing */
-  context.lookahead = LexAn (&context);
-  while (context.lookahead != DONE && !context.error)
-    Expr (&context);
+  context->lookahead = LexAn (context);
+  while (context->lookahead != DONE && !context->error)
+    Expr (context);
 
   /* restore the buffer */
   buffer[strlen (buffer)] = ')';
   /* print parse results */
-  if (context.error)
-    {
-      printf ("Error: %s\n",context.error);
-      free (context.error);
 
-      return FALSE;
-    }
+#ifdef XPTR_ACTION_DEBUG
+  if (context->error)
+      printf ("Error: %s\n", context->error);
   else
     {
-      if (context.nodeA.el)
-	printf ("el 1 is %d\n", context.nodeA.el);
-      if (context.nodeB.el)
-	printf ("el 2 is %d\n", context.nodeB.el);
-
-      return TRUE;
+      if (context->nodeA.el)
+	printf ("el 1 is %d\n", context->nodeA.el);
+      if (context->nodeB.el)
+	printf ("el 2 is %d\n", context->nodeB.el);
     }
+  XPointer_select (context);
+#endif /*  XPTR_ACTION_DEBUG */
+
+  return (context);
 }
 
 
@@ -766,5 +832,3 @@ int main(void)
   return 0;
 }
 #endif /* XPTR_PARSE_DEBUG */
-
-#endif /* ANNOTATIONS */

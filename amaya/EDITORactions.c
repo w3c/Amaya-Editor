@@ -2608,7 +2608,9 @@ View                view;
 {
 #ifdef ANNOTATIONS
   /* temporary change for testing the xpointer generation */
-  XPointer_Thot2Xptr (document, view);
+  char *xptr;
+  xptr = XPointer_build (document, view);
+  TtaFreeMemory (xptr);
   /*
   CustomQueryMenuInit (document, view);
   */

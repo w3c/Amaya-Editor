@@ -5,7 +5,10 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
-
+Element SearchSiblingIndex (Element root, char *el_name, int *index);
+Element SearchAttrId (Element root, char *val);
+char * XPointer_build (Document doc, View view);
+ThotBool SearchTextPosition (Element *mark, int *firstCh);
 #else /* __STDC__ */
 
 #endif /* __STDC__ */
