@@ -102,140 +102,141 @@
 100 Identificador (mi)
 101 Número (mn)
 102 Operador (mo)
-103 Carácter (&xxx;)
-104 Multiplicação Invisível (InvisibleTimes)
-105 Aplicar função (ApplyFunction)
-106 Raiz (mroot)
-107 Raiz quadrada (msqrt)
-108 Englobar (menclose)
-109 Fração (mfrac)
-110 Índice e Expoente (msubsup)
-111 Índice (msub)
-112 Expoente (msup)
-113 Sob e sobre (munderover)
-114 Sob (munder)
-115 Sobre (mover)
-116 Parêntesis (mrow)
-117 Multiscripts (mmultiscripts)
-118 Matriz (mtable)
-119 eliminar coluna de matriz
-120 noscript
-121 Objeto
-122 objeto
-123 Parâmetro (param)
-124 Parágrafo (p)
-125 Preformatado (pre)
-126 rubi
-127 Tabela
-128 tabela
-129 Legenda (caption)
-130 Grupo de colunas (colgroup)
-131 Coluna (col)
-132 Cabeçalho (thead)
-133 Corpo (tbody)
-134 Rodapé (tfoot)
-135 Linha (tr)
-136 Célula de dados (td)
-137 Célula de cabeçalho (th)
-138 Elminar coluna da tabela
-139 Ligar ao destino precedente
-140 Criar ou mudar enlace (link)...
-141 Create destino
-142 Apagar âncora
-143 Salvar seleção como XPointer
-144 Exibir barra de ferramentas
-145 Exibir endereço
-146 Exibir áreas de mapa
-147 Exibir destinos
-148 Ampliar (Zoom in)
-149 Reduzir (Zoom out)
-150 Exibir erros de gramática (parsing)
-151 Exibir estrutura
-152 Exibir alternativa
-153 Exibir enlaces (links)
-154 Exibir índice de conteúdos
-155 Exibir fonte
-156 Estilo de carácter...
-157 Cores...
-158 Formato...
-159 Imagem de fundo...
-160 Criar regra...
-161 Aplicar classe...
-162 Folhas de estilo
-163 Ligar...
-164 Abrir...
-165 Desabilitar...
-166 Habilitar...
-167 Remover...
-168 tipo de Informação
-169 Ênfase (em)
-170 Forte (strong)
-171 Citação (cite)
-172 Definição (dfn)
-173 Código (code)
-174 Variável (var)
-175 Exemplo (samp)
-176 Teclado (kbd)
-177 Abreviação (abbr)
-178 Acrônimo (acronym)
-179 Inserção (ins)
-180 Supressão (del)
-181 Elemento carácter
-182 Itálico (i)
-183 Negrito (b)
-184 Teletipo (tt)
-185 Grande (big)
-186 Pequeno (small)
-187 Índice (sub)
-188 Expoente (sup)
-189 Citação (q)
-190 Sobrepor BiDi (bdo)
-191 Numeração de seção
-192 Construir livro
-193 Adicionar/Remover IDs...
-194 Preferências
-195 Geral...
-196 Publicação...
-197 Cache...
-198 Proxy...
-199 Cores...
-200 Geometria da janela...
-201 Negociação de idioma...
-202 Perfís...
-203 Templates...
-204 Anotar seleção
-205 Anotar documento
-206 Mover até a seleção
-207 Mover para o XPointer memorizado
-208 Responder à anotação
-209 Registrar
-210 Apagar
-211 Carregar
-212 Personalizar consulta...
-213 Filtro local...
-214 **Configure...
-215 Sobre Amaya
-216 Sobre Amaya no W3C
-217 Índice
-218 Navegar
-219 Selecionar
-220 **Searching
-221 Vistas
-222 Criar elementos
-223 Enlaces (links)
-224 Reestruturar
-225 Tabelas
-226 Matemática
-227 Gráficos
-228 Mapas de Imagem
-229 Folhas de estilo
-230 Atributos
-231 Verificar ortografia
-232 Publicar
-233 Imprimir
-234 Numberar
-235 Criar livros
-236 Anotações
-237 Configurar Amaya
-238 Atalhos
-239 Accessibilidade em Amaya
+103 Espao (mspace)
+104 Carácter (&xxx;)
+105 Multiplicação Invisível (InvisibleTimes)
+106 Aplicar função (ApplyFunction)
+107 Raiz (mroot)
+108 Raiz quadrada (msqrt)
+109 Englobar (menclose)
+110 Fração (mfrac)
+111 Índice e Expoente (msubsup)
+112 Índice (msub)
+113 Expoente (msup)
+114 Sob e sobre (munderover)
+115 Sob (munder)
+116 Sobre (mover)
+117 Parêntesis (mrow)
+118 Multiscripts (mmultiscripts)
+119 Matriz (mtable)
+120 eliminar coluna de matriz
+121 noscript
+122 Objeto
+123 objeto
+124 Parâmetro (param)
+125 Parágrafo (p)
+126 Preformatado (pre)
+127 rubi
+128 Tabela
+129 tabela
+130 Legenda (caption)
+131 Grupo de colunas (colgroup)
+132 Coluna (col)
+133 Cabeçalho (thead)
+134 Corpo (tbody)
+135 Rodapé (tfoot)
+136 Linha (tr)
+137 Célula de dados (td)
+138 Célula de cabeçalho (th)
+139 Elminar coluna da tabela
+140 Ligar ao destino precedente
+141 Criar ou mudar enlace (link)...
+142 Create destino
+143 Apagar âncora
+144 Salvar seleção como XPointer
+145 Exibir barra de ferramentas
+146 Exibir endereço
+147 Exibir áreas de mapa
+148 Exibir destinos
+149 Ampliar (Zoom in)
+150 Reduzir (Zoom out)
+151 Exibir erros de gramática (parsing)
+152 Exibir estrutura
+153 Exibir alternativa
+154 Exibir enlaces (links)
+155 Exibir índice de conteúdos
+156 Exibir fonte
+157 Estilo de carácter...
+158 Cores...
+159 Formato...
+160 Imagem de fundo...
+161 Criar regra...
+162 Aplicar classe...
+163 Folhas de estilo
+164 Ligar...
+165 Abrir...
+166 Desabilitar...
+167 Habilitar...
+168 Remover...
+169 tipo de Informação
+170 Ênfase (em)
+171 Forte (strong)
+172 Citação (cite)
+173 Definição (dfn)
+174 Código (code)
+175 Variável (var)
+176 Exemplo (samp)
+177 Teclado (kbd)
+178 Abreviação (abbr)
+179 Acrônimo (acronym)
+180 Inserção (ins)
+181 Supressão (del)
+182 Elemento carácter
+183 Itálico (i)
+184 Negrito (b)
+185 Teletipo (tt)
+186 Grande (big)
+187 Pequeno (small)
+188 Índice (sub)
+189 Expoente (sup)
+190 Citação (q)
+191 Sobrepor BiDi (bdo)
+192 Numeração de seção
+193 Construir livro
+194 Adicionar/Remover IDs...
+195 Preferências
+196 Geral...
+197 Publicação...
+198 Cache...
+199 Proxy...
+200 Cores...
+201 Geometria da janela...
+202 Negociação de idioma...
+203 Perfís...
+204 Templates...
+205 Anotar seleção
+206 Anotar documento
+207 Mover até a seleção
+208 Mover para o XPointer memorizado
+209 Responder à anotação
+210 Registrar
+211 Apagar
+212 Carregar
+213 Personalizar consulta...
+214 Filtro local...
+215 **Configure...
+216 Sobre Amaya
+217 Sobre Amaya no W3C
+218 Índice
+219 Navegar
+220 Selecionar
+221 **Searching
+222 Vistas
+223 Criar elementos
+224 Enlaces (links)
+225 Reestruturar
+226 Tabelas
+227 Matemática
+228 Gráficos
+229 Mapas de Imagem
+230 Folhas de estilo
+231 Atributos
+232 Verificar ortografia
+233 Publicar
+234 Imprimir
+235 Numberar
+236 Criar livros
+237 Anotações
+238 Configurar Amaya
+239 Atalhos
+240 Accessibilidade em Amaya

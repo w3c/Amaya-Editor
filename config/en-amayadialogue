@@ -102,140 +102,141 @@
 100 Identifier (mi)
 101 Number (mn)
 102 Operator (mo)
-103 Character (&xxx;)
-104 InvisibleTimes
-105 ApplyFunction
-106 Root (mroot)
-107 Square root (msqrt)
-108 Enclose (menclose)
-109 Fraction (mfrac)
-110 Subscript and superscript (msubsup)
-111 Subscript (msub)
-112 Superscript (msup)
-113 Under and over (munderover)
-114 Under (munder)
-115 Over (mover)
-116 Parentheses (mrow)
-117 Multiscripts (mmultiscripts)
-118 Matrix (mtable)
-119 Delete matrix column
-120 noscript
-121 Object
-122 object
-123 Parameter (param)
-124 Paragraph (p)
-125 Preformatted (pre)
-126 ruby
-127 Table
-128 table
-129 caption
-130 colgroup
-131 col
-132 thead
-133 tbody
-134 tfoot
-135 Row (tr)
-136 Data cell (td)
-137 Heading cell (th)
-138 Delete table column
-139 Link to previous target
-140 Create or change link...
-141 Create target
-142 Delete anchor
-143 Store selection as XPointer
-144 Show buttonbar
-145 Show address
-146 Show map areas
-147 Show targets
-148 Zoom in
-149 Zoom out
-150 Show parsing errors
-151 Show structure
-152 Show alternate
-153 Show links
-154 Show table of contents
-155 Show source
-156 Character style...
-157 Colors...
-158 Format...
-159 Background image...
-160 Create rule...
-161 Apply class...
-162 Style sheets
-163 Link...
-164 Open...
-165 Disable...
-166 Enable...
-167 Remove...
-168 Information type
-169 Emphasis (em)
-170 strong
-171 cite
-172 Definition (dfn)
-173 code
-174 Variable (var)
-175 Sample (samp)
-176 Keyboard (kbd)
-177 Abbreviation (abbr)
-178 acronym
-179 Insertion (ins)
-180 Deletion (del)
-181 Character element
-182 Italic (i)
-183 Bold (b)
-184 Teletype (tt)
-185 big
-186 small
-187 Subscript (sub)
-188 Superscript (sup)
-189 Quotation (q)
-190 BiDi override (bdo)
-191 Section numbering
-192 Make book
-193 Add/Remove IDs...
-194 Preferences
-195 General...
-196 Publishing...
-197 Cache...
-198 Proxy...
-199 Colors...
-200 Window Geometry...
-201 Language Negotiation...
-202 Profiles...
-203 Templates...
-204 Annotate selection
-205 Annotate document
-206 Move to selection
-207 Move to stored XPointer
-208 Reply to annotation
-209 Post to server
-210 Delete
-211 Load
-212 Customize query...
-213 Local filter...
-214 Configure...
-215 About Amaya
-216 About Amaya at W3C
-217 Index
-218 Browsing
-219 Selecting
-220 Searching
-221 Views
-222 Creating elements
-223 Links
-224 Restructuring
-225 Tables
-226 Math
-227 Graphics
-228 Image maps
-229 Style sheets
-230 Attributes
-231 Spell Checking
-232 Publishing
-233 Printing
-234 Numbering
-235 Making books
-236 Annotations
-237 Configuring Amaya
-238 ShortCuts
-239 Accessibility in Amaya
+103 Space (mspace)
+104 Character (&xxx;)
+105 InvisibleTimes
+106 ApplyFunction
+107 Root (mroot)
+108 Square root (msqrt)
+109 Enclose (menclose)
+110 Fraction (mfrac)
+111 Subscript and superscript (msubsup)
+112 Subscript (msub)
+113 Superscript (msup)
+114 Under and over (munderover)
+115 Under (munder)
+116 Over (mover)
+117 Parentheses (mrow)
+118 Multiscripts (mmultiscripts)
+119 Matrix (mtable)
+120 Delete matrix column
+121 noscript
+122 Object
+123 object
+124 Parameter (param)
+125 Paragraph (p)
+126 Preformatted (pre)
+127 ruby
+128 Table
+129 table
+130 caption
+131 colgroup
+132 col
+133 thead
+134 tbody
+135 tfoot
+136 Row (tr)
+137 Data cell (td)
+138 Heading cell (th)
+139 Delete table column
+140 Link to previous target
+141 Create or change link...
+142 Create target
+143 Delete anchor
+144 Store selection as XPointer
+145 Show buttonbar
+146 Show address
+147 Show map areas
+148 Show targets
+149 Zoom in
+150 Zoom out
+151 Show parsing errors
+152 Show structure
+153 Show alternate
+154 Show links
+155 Show table of contents
+156 Show source
+157 Character style...
+158 Colors...
+159 Format...
+160 Background image...
+161 Create rule...
+162 Apply class...
+163 Style sheets
+164 Link...
+165 Open...
+166 Disable...
+167 Enable...
+168 Remove...
+169 Information type
+170 Emphasis (em)
+171 strong
+172 cite
+173 Definition (dfn)
+174 code
+175 Variable (var)
+176 Sample (samp)
+177 Keyboard (kbd)
+178 Abbreviation (abbr)
+179 acronym
+180 Insertion (ins)
+181 Deletion (del)
+182 Character element
+183 Italic (i)
+184 Bold (b)
+185 Teletype (tt)
+186 big
+187 small
+188 Subscript (sub)
+189 Superscript (sup)
+190 Quotation (q)
+191 BiDi override (bdo)
+192 Section numbering
+193 Make book
+194 Add/Remove IDs...
+195 Preferences
+196 General...
+197 Publishing...
+198 Cache...
+199 Proxy...
+200 Colors...
+201 Window Geometry...
+202 Language Negotiation...
+203 Profiles...
+204 Templates...
+205 Annotate selection
+206 Annotate document
+207 Move to selection
+208 Move to stored XPointer
+209 Reply to annotation
+210 Post to server
+211 Delete
+212 Load
+213 Customize query...
+214 Local filter...
+215 Configure...
+216 About Amaya
+217 About Amaya at W3C
+218 Index
+219 Browsing
+220 Selecting
+221 Searching
+222 Views
+223 Creating elements
+224 Links
+225 Restructuring
+226 Tables
+227 Math
+228 Graphics
+229 Image maps
+230 Style sheets
+231 Attributes
+232 Spell Checking
+233 Publishing
+234 Printing
+235 Numbering
+236 Making books
+237 Annotations
+238 Configuring Amaya
+239 ShortCuts
+240 Accessibility in Amaya

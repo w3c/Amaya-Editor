@@ -389,6 +389,7 @@ HelpTables
 &CreateMI
 &CreateMN
 &CreateMO
+&CreateMSPACE
 &CreateMathEntity
 &CreateInvisibleTimes
 &CreateApplyFunction
