@@ -47,13 +47,16 @@ THOT_EXPORT HFONT        DefaultFont; /* default Font                */
 THOT_EXPORT HDC          TtDisplay;
 THOT_EXPORT HPALETTE     TtCmap;      /* Table des couleurs pour Thot  */
 THOT_EXPORT LPLOGPALETTE ptrLogPal;
+/*
 THOT_EXPORT WIN_GC_BLK   TtWhiteGC;
 THOT_EXPORT WIN_GC_BLK   TtBlackGC;
 THOT_EXPORT WIN_GC_BLK   TtInvertGC;
 THOT_EXPORT WIN_GC_BLK   TtGreyGC;
+*/
 THOT_EXPORT WIN_GC_BLK   TtLineGC;
+/*
 THOT_EXPORT WIN_GC_BLK   TtDialogueGC;
-THOT_EXPORT WIN_GC_BLK   TtGraphicGC;	/* Graphic context pour les images      */
+THOT_EXPORT WIN_GC_BLK   TtGraphicGC;	*/ /* Graphic context pour les images      */
 THOT_EXPORT boolean      TtIsTrueColor;
 #else /* _WINDOWS */
 THOT_EXPORT ThotWidget   RootShell;
