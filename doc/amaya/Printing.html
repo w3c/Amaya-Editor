@@ -3,7 +3,8 @@
 <html>
 <head>
   <title>Printing</title>
-  <meta name="GENERATOR" content="amaya V2.1">
+  <meta name="GENERATOR" content="amaya V3.1">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </head>
 
 <body lang="en">
@@ -27,19 +28,62 @@
 <div id="Printing">
 <h2><a name="L1062">Printing documents</a></h2>
 
-<p>To print a document, choose <strong>Print</strong> from the
-<strong>File</strong> menu or click on the corresponding button. Before
-executing that command, you may need to set some parameters with the
-<strong>Setup and Print</strong> command from the <strong>File</strong>
-menu.</p>
+<p>Amaya is able to print your documents with or without CSS style sheets on
+both Unix and Windows platforms. On Unix platforms it is only able to generate
+Postcript description, so you need to have a PostScript printer or use a
+application able to translate the PostScript into your specific printer
+language.</p>
 
-<p>The <strong>Setup and Print</strong> command allows you to print only the
-document, or the document with its table of contents, and/or its table of
-links.</p>
+<p>There are two commands for printing a document:</p>
+<ul>
+  <li>The <strong>Setup and Print</strong> command (File/Setup and Print)
+    allows you to set some parameters before printing.
+    <p>On Unix platforms these parameters are:</p>
+    <ul>
+      <li>the paper format: A4. US</li>
+      <li>the orientation: Portrait, Landscape</li>
+      <li>the number of pages printed on the same sheet of paper: 1, 2, 4
+        pages per sheet</li>
+      <li>the output: file, or printer</li>
+      <li>options:
+        <ul>
+          <li>Manual feed</li>
+          <li>Generation of the table of cotents of the document</li>
+          <li>Generation of  the table of links: a number is generated after
+            each link in the document that refers an entry within the table of
+            links; each table entry lists the corresponding URL</li>
+          <li>Printing of the document URL</li>
+          <li>Printing with CSS style sheets</li>
+        </ul>
+      </li>
+    </ul>
+    <p>On Windows platforms, a first dialogue box propose following
+    options:</p>
+    <ul type="square">
+      <li>Generation of the table of cotents of the document</li>
+      <li>Generation of  the table of links of the document</li>
+      <li>Printing of the document URL,</li>
+      <li>Printing with CSS style sheets</li>
+    </ul>
+    <p>then the standard Windows dialogue will let you choose the other
+    parameters.</p>
+  </li>
+  <li>The <strong>Print</strong> command (File/Print) prints the current
+    document with default parameters or previous values set  by the command
+    <strong>Setup and Print</strong>. You may pay attention that parameters
+    (Manual feed, Orinetation, etc.) are reset to the default value when the
+    document change.
+    <p>On Windows platforms, the first times you launch the command
+    <strong>Print</strong> the standard Windows dialogue will be displayed to
+    let you check that the default printer is correct. Following printing will
+    be launched without any dialogue.</p>
+  </li>
+</ul>
 
-<p>The <strong>Numbered Links</strong> option prints a number after each link
-in the document and generates a table where these link numbers are associated
-with the corresponding URL.</p>
+<p>In the button bar, the button <img src="../Icons/Print.gif" alt="Print"> 
+gives you access to the command <strong>Print</strong>. Due to a trouble with
+the use of DLLs on Windows 95, that  button calls the command <strong>Setup
+and Print</strong> on all Windows platforms.</p>
 </div>
 
 <p align="right"><a href="Publishing.html"><img alt="previous" border="0"
@@ -47,6 +91,5 @@ src="../Icons/left.gif"></a> <a href="Manual.html"><img alt="top" border="0"
 src="../Icons/up.gif"></a> <a href="Numbering.html"><img alt="next" border="0"
 src="../Icons/right.gif"></a></p>
 <hr>
-
 </body>
 </html>
