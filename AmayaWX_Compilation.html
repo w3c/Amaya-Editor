@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <title>AmayaWX installation steps</title>
+  <meta name="generator" content="amaya 8.6, see http://www.w3.org/Amaya/" />
+</head>
+
+<body>
+<h2>wxWidgets installation</h2>
+<ol>
+  <li>Download <a
+    href="http://sourceforge.net/project/showfiles.php?group_id=9863">wxMSW-$version.zip</a>
+    form <a href="http://www.wxwidgets.org/">wxWidgets Web site</a>.</li>
+  <li>Unzip wxMSW-$version.zip into <code>C:\src\</code> and rename
+    <code>wxWindows-$version</code> to <code>wxWidgets</code></li>
+  <li>Copy C:\src\Amaya\WindowsWX\wx-setup\setup.h to
+    C:\src\wxWidgets\include\wx\msw</li>
+  <li>Open the workspace <code>C:\src\wxWidgets\build\msw\wx.dsw</code></li>
+  <li>Run : Build -&gt; Batch Build -&gt; Rebuild All</li>
+  <li>Open the workspace
+    <code>C:\src\wxWidgets\contrib\build\xrc\xrc.dsw</code></li>
+  <li>Run : Build -&gt; Batch Build -&gt; Rebuild All</li>
+</ol>
+
+<h2>AmayaWX compilation</h2>
+<ol>
+  <li>Open the workspace <code>C:\src\Amaya\WindowsWX\amaya.dsw</code></li>
+  <li>Press F7 to compile Amaya</li>
+</ol>
+</body>
+</html>
