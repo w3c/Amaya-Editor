@@ -3348,7 +3348,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	    }
 
 	  /* On prepare le reaffichage */
-	  if (!inLine && !inLineFloat)
+	  if (pAb->AbNotInLine || (!inLine && !inLineFloat))
 	    DefBoxRegion (frame, pBox, -1, -1, -1, -1);
 	  
 	  pAb->AbChange = FALSE;

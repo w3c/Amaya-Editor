@@ -174,21 +174,25 @@ void DefBoxRegion (int frame, PtrBox pBox, int xstart, int xstop,
 	{
 	  /* clip on the enclosing box that changes the System origin */
 	  pAb = pBox->BxAbstractBox;
-	  pClipAb = pAb;
-	  while (pAb)
+	  if (pAb && strcmp (pAb->AbPSchema->PsStructName, "TextFile"))
 	    {
-	      if (pAb->AbElement &&
-		  pAb->AbBox &&
-		  pAb->AbElement->ElSystemOrigin)
-		pClipAb = pAb;
-	      pAb = pAb->AbEnclosing;
-	    }
-	  if (pClipAb != pBox->BxAbstractBox)
-	    {
-	      /* clip the enclosing limits */
-	      xstart = xstop = ystart = ystop = -1;
-	      pBox = pClipAb->AbBox;
-	      k = EXTRA_GRAPH;
+	      pClipAb = pAb;
+	      /* the box could be included within a SVG element */
+	      while (pAb)
+		{
+		  if (pAb->AbElement &&
+		      pAb->AbBox &&
+		      pAb->AbElement->ElSystemOrigin)
+		    pClipAb = pAb;
+		  pAb = pAb->AbEnclosing;
+		}
+	      if (pClipAb != pBox->BxAbstractBox)
+		{
+		  /* clip the enclosing limits */
+		  xstart = xstop = ystart = ystop = -1;
+		  pBox = pClipAb->AbBox;
+		  k = EXTRA_GRAPH;
+		}
 	    }
 	}
 #endif /* _GL */

@@ -1393,7 +1393,7 @@ void CheckParsingErrors (Document doc)
 	}
       else if (XMLErrorsFound)
 	{
-	  /* Some elements or attributes are not supported */
+	  /* Parsing errors detected */
 	  strcpy (profile, "");
 	  InitConfirm (doc, 1, TtaGetMessage (AMAYA, AM_XML_WARNING));
 	  CleanUpParsingErrors ();
