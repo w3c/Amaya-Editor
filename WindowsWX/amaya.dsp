@@ -47,7 +47,7 @@ RSC=rc.exe
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /o /win32 "NUL"
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /o /win32 "NUL"
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
-# ADD RSC /l 0x409 /d "NDEBUG"
+# ADD RSC /l 0x409 /i "..\..\..\wxWidgets\include" /i "..\..\wxWidgets\include" /d "NDEBUG" /d "__WXMSW__" /d "_UNICODE" /d "WXUSINGDLL" /d "_WINDOWS"
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
@@ -78,7 +78,7 @@ PreLink_Cmds=copy                     ..\..\wxWidgets\lib\vc_dll\*.dll          
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /o /win32 "NUL"
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /o /win32 "NUL"
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
-# ADD RSC /l 0x409 /d "_DEBUG"
+# ADD RSC /l 0x409 /i "..\..\..\wxWidgets\include" /i "..\..\wxWidgets\include" /d "_DEBUG" /d "__WXMSW__" /d "__WXDEBUG__" /d "_UNICODE" /d "WXUSINGDLL" /d "_WINDOWS"
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
@@ -227,7 +227,31 @@ SOURCE=..\amaya\wxdialog\appicon.ico
 # End Source File
 # Begin Source File
 
+SOURCE=..\amaya\wxdialog\wx\msw\blank.cur
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\wxdialog\wx\msw\bullseye.cur
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\wxdialog\wx\msw\cdrom.ico
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\wxdialog\wx\msw\colours.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\wxdialog\wx\msw\computer.ico
+# End Source File
+# Begin Source File
+
 SOURCE=..\amaya\css.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\wxdialog\wx\msw\drive.ico
 # End Source File
 # Begin Source File
 
@@ -255,7 +279,27 @@ SOURCE=..\Amaya\fetchXMLname.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\amaya\wxdialog\wx\msw\file1.ico
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\wxdialog\wx\msw\floppy.ico
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\wxdialog\wx\msw\folder1.ico
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\wxdialog\wx\msw\folder2.ico
+# End Source File
+# Begin Source File
+
 SOURCE=..\thotlib\view\gldisplay.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\wxdialog\wx\msw\hand.cur
 # End Source File
 # Begin Source File
 
@@ -311,6 +355,10 @@ SOURCE=..\amaya\libmanag.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\amaya\wxdialog\wx\msw\magnif1.cur
+# End Source File
+# Begin Source File
+
 SOURCE=..\amaya\Mathedit.c
 # End Source File
 # Begin Source File
@@ -327,7 +375,43 @@ SOURCE=..\amaya\MENUconf.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\amaya\wxdialog\wx\msw\noentry.cur
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\wxdialog\wx\msw\pbrush.cur
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\wxdialog\wx\msw\pencil.cur
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\wxdialog\wx\msw\pntleft.cur
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\wxdialog\wx\msw\pntright.cur
+# End Source File
+# Begin Source File
+
 SOURCE=..\amaya\query.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\wxdialog\wx\msw\query.cur
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\wxdialog\wx\msw\removble.ico
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\wxdialog\wx\msw\rightarr.cur
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\wxdialog\wx\msw\roller.cur
 # End Source File
 # Begin Source File
 
@@ -368,6 +452,14 @@ SOURCE=..\amaya\transparse.c
 # Begin Source File
 
 SOURCE=..\amaya\UIcss.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\wxdialog\wx\msw\watch1.cur
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\wxdialog\wx\msw\wx.manifest
 # End Source File
 # Begin Source File
 
