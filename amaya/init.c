@@ -1415,14 +1415,16 @@ View            view;
 /*----------------------------------------------------------------------
    InitDocView prepares the main view of a new document.
    logFile is TRUE if the new view is created to display a log file
+   sourceOfDoc is not zero when we're opening the source view of a document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Document     InitDocView (Document doc, CHAR_T* docname, DocumentType docType, ThotBool logFile)
+Document     InitDocView (Document doc, CHAR_T* docname, DocumentType docType, Document sourceOfDoc, ThotBool logFile)
 #else
-Document     InitDocView (doc, docname, logFile)
+Document     InitDocView (doc, docname, docType, sourceOfDoc, logFile)
 Document     doc;
 CHAR_T*      docname;
 DocumentType docType;
+Document     sourceOfDoc;
 ThotBool     logFile;
 #endif
 {
@@ -1549,6 +1551,12 @@ ThotBool     logFile;
        /* open the main view */
        if (logFile)
 	 mainView = TtaOpenMainView (doc, x, y, w, 60);
+       else if (sourceOfDoc &&
+		(docType == docSource || docType == docSourceRO))
+	 {
+	   TtaGetViewGeometryRegistry (sourceOfDoc, "Structure_view", &x, &y, &w, &h);
+	   mainView = TtaOpenMainView (doc, x, y, w, h);
+	 }
        else
 	 mainView = TtaOpenMainView (doc, x, y, w, h);
        
@@ -2272,7 +2280,7 @@ ThotBool            history;
 	  if (method == CE_RELATIVE && docType == docCSS)
 	    {
 	      /* display the CSS in a new window */
-	      newdoc = InitDocView (0, documentname, docType, FALSE);
+	      newdoc = InitDocView (0, documentname, docType, 0, FALSE);
 	      ResetStop (doc);
 	      /* clear the status line of previous document */
 	      TtaSetStatus (doc, 1, TEXT(" "), NULL);
@@ -2287,12 +2295,12 @@ ThotBool            history;
 	      else
 		docType = docAnnot;
 	      method = CE_RELATIVE;
-	      newdoc = InitDocView (doc, documentname, docAnnot, FALSE);
+	      newdoc = InitDocView (doc, documentname, docAnnot, 0, FALSE);
 	    }
 #endif /* ANNOTATIONS */
 	  else if (method != CE_INIT 
 		   || (docType != docHTML && docType != docHTMLRO))
-	    newdoc = InitDocView (doc, documentname, docType, FALSE);
+	    newdoc = InitDocView (doc, documentname, docType, 0, FALSE);
 	  else
 	    newdoc = doc;
 	}
@@ -2823,7 +2831,7 @@ View                view;
        }
      TtaExtractName (tempdocument, tempdir, documentname);
      /* open a window for the source code */
-     sourceDoc = InitDocView (0, documentname, docSource, FALSE);   
+     sourceDoc = InitDocView (0, documentname, docSource, document, FALSE);   
      if (sourceDoc > 0)
        {
 	 DocumentSource[document] = sourceDoc;
@@ -3495,15 +3503,15 @@ void               *ctx_cbf;
 	     {
 	       /* need to create a new window for the document */
 	       if (CE_event == CE_LOG)
-		   newdoc = InitDocView (doc, documentname, docTextRO, TRUE);
+		   newdoc = InitDocView (doc, documentname, docTextRO, 0, TRUE);
 	       else if (CE_event == CE_HELP)
-		   newdoc = InitDocView (doc, documentname, docHTMLRO, FALSE);
+		   newdoc = InitDocView (doc, documentname, docHTMLRO, 0, FALSE);
 #ifdef ANNOTATIONS
 	       else if (CE_event == CE_ANNOT)
-		 newdoc = InitDocView (doc, documentname, docAnnot, FALSE);
+		 newdoc = InitDocView (doc, documentname, docAnnot, 0, FALSE);
 #endif /* ANNOTATIONS */
 	       else
-		   newdoc = InitDocView (doc, documentname, docHTML, FALSE);
+		   newdoc = InitDocView (doc, documentname, docHTML, 0, FALSE);
 	       if (newdoc == 0)
 		 /* cannot display the new document */
 		 ok = FALSE;
@@ -4263,7 +4271,7 @@ DocumentType     docType;
   W3Loading = doc;
   BackupDocument = doc;
   TtaExtractName (tempdoc, DirectoryName, DocumentName);
-  newdoc = InitDocView (doc, DocumentName, docType, FALSE);
+  newdoc = InitDocView (doc, DocumentName, docType, 0, FALSE);
   if (newdoc != 0)
     {
       /* load the saved file */

@@ -34,10 +34,10 @@ extern void InitFormAnswer ( Document document,
 extern void InitInfo ( CHAR_T* label,
                        CHAR_T* info );
 extern void InitConfirm3L ( Document document,
-			    View view,
-			    CHAR_T* label1,
-			    CHAR_T* label2,
-			    CHAR_T* label3 );
+                            View view,
+                            CHAR_T *label1,
+                            CHAR_T *label2,
+                            CHAR_T *label3 );
 extern void InitConfirm ( Document document,
                           View view,
                           CHAR_T* label );
@@ -53,6 +53,7 @@ extern void GoToHome ( Document doc,
 extern Document InitDocView ( Document doc,
                               CHAR_T* docname,
                               DocumentType docType,
+                              Document sourceOfDoc,
                               ThotBool logFile );
 extern void Reload_callback ( int doc,
                               int status,
@@ -184,10 +185,10 @@ extern void InitFormAnswer (/* Document document,
 extern void InitInfo (/* CHAR_T* label,
                          CHAR_T* info */);
 extern void InitConfirm3L (/* Document document,
-			      View view,
-			      CHAR_T* label1,
-			      CHAR_T* label2,
-			      CHAR_T* label3 */ );
+                              View view,
+                              CHAR_T *label1,
+                              CHAR_T *label2,
+                              CHAR_T *label3 */);
 extern void InitConfirm (/* Document document,
                             View view,
                             CHAR_T* label */);
@@ -203,6 +204,7 @@ extern void GoToHome (/* Document doc,
 extern Document InitDocView (/* Document doc,
                                 CHAR_T* docname,
                                 DocumentType docType,
+                                Document sourceOfDoc,
                                 ThotBool logFile */);
 extern void Reload_callback (/* int doc,
                                 int status,

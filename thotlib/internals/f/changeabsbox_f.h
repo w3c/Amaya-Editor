@@ -86,7 +86,7 @@ extern void UpdateBoxesCounter ( PtrElement pElBegin,
                                  PtrPSchema pSchP,
                                  PtrSSchema pSS );
 extern void SetChange ( PtrAbstractBox pAb,
-			PRuleType typeRule );
+                        PRuleType typeRule );
 extern ThotBool ElemWithinImage ( PtrElement pEl,
                                   int view,
                                   PtrAbstractBox pAbbRoot,
@@ -178,13 +178,13 @@ extern void UpdateNumbers (/* PtrElement pElBegin,
                               PtrElement pElModif,
                               PtrDocument pDoc,
                               ThotBool redisp */);
-extern void SetChange (/* PtrAbstractBox pAb,
-			  PRuleType typeRule */);
 extern void UpdateBoxesCounter (/* PtrElement pElBegin,
                                    PtrDocument pDoc,
                                    int counter,
                                    PtrPSchema pSchP,
                                    PtrSSchema pSS */);
+extern void SetChange (/* PtrAbstractBox pAb,
+                          PRuleType typeRule */);
 extern ThotBool ElemWithinImage (/* PtrElement pEl,
                                     int view,
                                     PtrAbstractBox pAbbRoot,
