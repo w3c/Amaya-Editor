@@ -7434,7 +7434,7 @@ RULES
 	Width: 20 ex Min;
 	Height: 2 Min;
 	Font: INPUT_Font;
-	Depth: Enclosing + 1;
+	Depth: Enclosing - 2;
 	LineBreak: No;
 	Adjust: Left;
 #ifndef BLACK_WHITE
@@ -7465,7 +7465,7 @@ RULES
 	Width: 20 ex Min;
 	Height: 2 Min;
 	Font: INPUT_Font;
-	Depth: Enclosing + 1;
+	Depth: Enclosing - 2;
 	LineBreak: No;
 	Adjust: Left;
 #ifndef BLACK_WHITE
@@ -7498,7 +7498,7 @@ RULES
 	Width: 20 ex Min;
 	Height: 2 Min;
 	Font: INPUT_Font;
-	Depth: Enclosing + 1;
+	Depth: Enclosing - 2;
 	LineBreak: No;
 	Adjust: Left;
 #ifndef BLACK_WHITE
@@ -7526,7 +7526,7 @@ RULES
 	CreateBefore(ATTR_Reset);
 	CreateFirst(Value_Box);
 	CreateFirst(Value_Box_Alt);
-	Depth: Enclosing + 1;
+	Depth: Enclosing - 2;
 #ifndef BLACK_WHITE
 	Background : Grey;
 #endif
@@ -7546,7 +7546,7 @@ RULES
 	CreateBefore(ATTR_Submit);
 	CreateFirst(Value_Box);
 	CreateFirst(Value_Box_Alt);
-	Depth: Enclosing + 1;
+	Depth: Enclosing - 2;
 #ifndef BLACK_WHITE
 	Background : Grey;
 #endif
@@ -7566,7 +7566,7 @@ RULES
 	CreateBefore(ATTR_Button);
 	CreateFirst(Value_Box);
 	CreateFirst(Value_Box_Alt);
-	Depth: Enclosing + 1;
+	Depth: Enclosing - 2;
 #ifndef BLACK_WHITE
 	Background : Grey;
 #endif
