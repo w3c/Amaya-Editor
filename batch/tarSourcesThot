@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=2.0a
+VERSION=2.0b
 THOTDIR=/tahiti/diffusion/opera
 DEST=/tahiti/thottape
 PLATFORMS="solaris2 LINUX LINUX-ELF SUN4 SGI RS6000"
@@ -463,6 +463,7 @@ Thot/thotlib/include/labelAllocator.h \
 Thot/thotlib/include/libmsg.h \
 Thot/thotlib/include/message.h \
 Thot/thotlib/include/pivot.h \
+Thot/thotlib/include/plugin.h \
 Thot/thotlib/include/presentation.h \
 Thot/thotlib/include/presentdriver.h \
 Thot/thotlib/include/print.h \

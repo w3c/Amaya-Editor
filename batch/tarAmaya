@@ -1,5 +1,5 @@
 #!/bin/sh
-AMAYAVERSION=0.95a
+AMAYAVERSION=0.95b
 THOTDIR=/tahiti/diffusion/opera
 DEST=/tahiti/thottape
 PLATFORMS="solaris2 LINUX LINUX-ELF SUN4 SGI RS6000"

@@ -1,6 +1,6 @@
 #!/bin/sh
-EDITORVERSION=2.0
-THOTDIR=$HOME/opera
+EDITORVERSION=2.0b
+THOTDIR=/tahiti/diffusion/opera
 DEST=/tahiti/thottape
 
 TAR="tar cvbfh 200"
@@ -9,28 +9,6 @@ COMPRESS="gzip -9"
 cd $THOTDIR
 
 $TAR - \
-thotlib/internals/h/indmsg.h \
-thotlib/internals/h/constind.h \
-thotlib/internals/h/typeind.h \
-thotlib/internals/var/index_tv.h \
-thotlib/internals/f/indcree_f.h \
-thotlib/internals/f/indmenu_f.h \
-thotlib/internals/f/indpres_f.h \
-thotlib/internals/f/indtable_f.h \
-thotlib/internals/f/indtri_f.h \
-thotlib/internals/f/Draw3APP_f.h \
-thotlib/internals/f/Draw3actions_f.h \
-thotlib/internals/f/PaletteAPP_f.h \
-thotlib/internals/f/Paletteactions_f.h \
-thotlib/internals/f/boutons_f.h \
-thotlib/internals/f/edition_f.h \
-thotlib/internals/f/initdraw_f.h \
-thotlib/internals/f/liens_f.h \
-thotlib/internals/f/menus_f.h \
-thotlib/internals/f/objets_f.h \
-thotlib/internals/f/paloutils_f.h \
-thotlib/internals/f/utilitaires_f.h \
-thotlib/internals/f/indcharge_f.h \
 NEWS.LibThot2.0 \
 README.2.0 \
 config/thot.keyboard \
@@ -44,25 +22,29 @@ doc/APIman-F.PIV \
 doc/Appman-E.PIV \
 doc/Appman-F.PIV \
 doc/Dialogue.PIV \
+doc/button.gif \
+doc/thoteditor/Bilbon.gif \
 doc/thoteditor/COPYRIGHT.html \
 doc/thoteditor/Compiling.html \
 doc/thoteditor/Configure.html \
 doc/thoteditor/EditorArchi.html \
 doc/thoteditor/Index.html \
 doc/thoteditor/Keyboard.html \
+doc/thoteditor/ManDraw.PIV \
+doc/thoteditor/Opera.eps \
 doc/thoteditor/Platforms.html \
 doc/thoteditor/Porting.html \
 doc/thoteditor/Registry.html \
 doc/thoteditor/SourceDist.html \
+doc/thoteditor/Sources.fig \
+doc/thoteditor/Sources.gif \
 doc/thoteditor/Sources.html \
-doc/thoteditor/ManDraw.PIV \
 doc/thoteditor/Thotman-E.PIV \
 doc/thoteditor/Thotman-F.EXT \
 doc/thoteditor/Thotman-F.PIV \
-doc/thoteditor/Bilbon.gif \
-doc/thoteditor/Sources.gif \
 doc/thoteditor/mainwindow.gif \
 doc/thoteditor/opera.gif \
+doc/thoteditor/opera.xpm \
 doc/thoteditor/outils.gif \
 doc/thoteditor/palette1.gif \
 doc/thoteditor/palette2.gif \
@@ -70,8 +52,6 @@ doc/thoteditor/polygones.gif \
 doc/thoteditor/thot.gif \
 doc/thoteditor/thotdraw.gif \
 doc/thoteditor/traits.gif \
-doc/thoteditor/Opera.eps \
-doc/thoteditor/opera.xpm \
 drawlib/Draw3.A \
 drawlib/Draw3actions.c \
 drawlib/Draw3actions.h \
@@ -95,6 +75,31 @@ drawlib/paloutils.c \
 drawlib/paloutils.h \
 drawlib/utilitaires.c \
 drawlib/utilitaires.h \
+drawlib/Draw3.h \
+drawlib/Draw3actions.h \
+drawlib/Palette.h \
+drawlib/Paletteactions.h \
+drawlib/boutons.h \
+drawlib/drawmsg.h \
+drawlib/edition.h \
+drawlib/initdraw.h \
+drawlib/liens.h \
+drawlib/menus.h \
+drawlib/objets.h \
+drawlib/paloutils.h \
+drawlib/utilitaires.h \
+drawlib/f/Draw3APP_f.h \
+drawlib/f/Draw3actions_f.h \
+drawlib/f/PaletteAPP_f.h \
+drawlib/f/Paletteactions_f.h \
+drawlib/f/boutons_f.h \
+drawlib/f/edition_f.h \
+drawlib/f/initdraw_f.h \
+drawlib/f/liens_f.h \
+drawlib/f/menus_f.h \
+drawlib/f/objets_f.h \
+drawlib/f/paloutils_f.h \
+drawlib/f/utilitaires_f.h \
 drawlib/Icons/AligneB.xpm \
 drawlib/Icons/AligneC.xpm \
 drawlib/Icons/AligneD.xpm \
@@ -186,29 +191,22 @@ drawlib/Icons/texte.xpm \
 drawlib/Icons/trait.xpm \
 drawlib/Icons/vide.xpm \
 drawlib/Icons/xx.xpm \
-drawlib/f/Draw3APP_f.h \
-drawlib/f/Draw3actions_f.h \
-drawlib/f/PaletteAPP_f.h \
-drawlib/f/Paletteactions_f.h \
-drawlib/f/boutons_f.h \
-drawlib/f/edition_f.h \
-drawlib/f/initdraw_f.h \
-drawlib/f/liens_f.h \
-drawlib/f/menus_f.h \
-drawlib/f/objets_f.h \
-drawlib/f/paloutils_f.h \
-drawlib/f/utilitaires_f.h \
 indexlib/indcharge.c \
 indexlib/indcree.c \
 indexlib/indmenu.c \
 indexlib/indpres.c \
 indexlib/indtable.c \
 indexlib/indtri.c \
+indexlib/constind.h \
+indexlib/index_tv.h \
+indexlib/indmsg.h \
+indexlib/typeind.h \
 indexlib/f/indcharge_f.h \
 indexlib/f/indcree_f.h \
 indexlib/f/indmenu_f.h \
 indexlib/f/indpres_f.h \
 indexlib/f/indtable_f.h \
+indexlib/f/indtri_f.h \
 schemas/Makefile \
 schemas/exc_matrix.h \
 schemas/exc_tableau.h \

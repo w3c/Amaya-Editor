@@ -1,6 +1,6 @@
 #!/bin/sh
-AMAYAVERSION=0.95a
-THOTVERSION=2.0a
+AMAYAVERSION=0.95b
+THOTVERSION=2.0b
 
 CC=gcc
 CFLAGS=-O2
@@ -19,12 +19,14 @@ fi
 echo Creating the Test directory
 mkdir -p $TESTDIR
 cd $TESTDIR
-echo Extracting Thot sources $THOTVERSION
+echo Extracting Thot library sources $THOTVERSION
 tar xvzf $THOTTAPE/thot-src-$THOTVERSION.tar.gz
 echo Extracting Thot libs $THOTVERSION for $MACHINE
 tar xvzf $THOTTAPE/thot-libs-$MACHINE-$THOTVERSION.tar.gz
 cd Thot
-echo Extracting Amaya sources $THOTVERSION
+echo Extracting Thot Editor sources $THOTVERSION
+tar xvzf $THOTTAPE/thoteditor-src-$THOTVERSION.tar.gz
+echo Extracting Amaya sources $AMAYAVERSION
 tar xvzf $THOTTAPE/amaya-src-$AMAYAVERSION.tar.gz
 echo Extracting Amaya libs $THOTVERSION for $MACHINE
 tar xvzf $THOTTAPE/amaya-libs-$MACHINE-$AMAYAVERSION.tar.gz
