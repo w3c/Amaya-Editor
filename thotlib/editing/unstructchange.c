@@ -783,12 +783,11 @@ void PasteCommand ()
 	      within = TRUE;
 	    }
 	  else if (firstSel->ElTerminal &&
-		   ((firstSel->ElLeafType == LtPicture &&
-		     firstChar == 1) ||
+		   ((firstSel->ElLeafType == LtPicture && firstChar == 1) ||
 		    (firstSel->ElLeafType == LtText &&
-		     firstChar > firstSel->ElTextLength)))
+		     (firstChar > firstSel->ElTextLength || firstSel->ElTextLength == 0))))
 	    /* the right edge of an image is selected or the selection starts
-	       at the end of a text element. Paste after the selected element*/
+	       at the end of a text element. Paste after the selected element */
 	    {
 	      pEl = firstSel;
 	      within = FALSE;
