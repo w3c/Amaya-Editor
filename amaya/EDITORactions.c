@@ -141,7 +141,7 @@ void CreateDoctype (Document doc, Element doctype, int profile,
   Language        language;
   char		  buffer[400], *name;
   
-  /* Check the Thot abstract tree against the structure schema. */
+  /* Don't check the Thot abstract tree against the structure schema. */
   TtaSetStructureChecking (FALSE, doc);
   
   /* We use the Latin_Script language to avoid */
@@ -3668,9 +3668,13 @@ void  CreateObject (Document document, View view)
 
   if (HTMLelementAllowed (document))
     {
+      /* Don't check mandatory attributes */
+      TtaSetStructureChecking (FALSE, document);
       elType.ElSSchema = TtaGetSSchema ("HTML", document);
       elType.ElTypeNum = HTML_EL_Object;
       TtaInsertElement (elType, document);
+      /* Check the Thot abstract tree against the structure schema. */
+      TtaSetStructureChecking (TRUE, document);
 
       /* get the first selected element, i.e. the Object element */
       TtaGiveFirstSelectedElement (document, &el, &firstchar, &lastchar);
