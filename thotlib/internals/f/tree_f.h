@@ -60,16 +60,18 @@ extern PtrElement BackSearchTypedElem ( PtrElement pEl,
 extern PtrElement BackSearchVisibleElem ( PtrElement pRoot,
                                           PtrElement pEl,
                                           int view );
-extern PtrElement FwdSearchAttribute ( PtrElement pEl,
-                                       int attrNum,
-                                       int val,
-                                       char *textVal,
-                                       PtrSSchema pSS );
-extern PtrElement BackSearchAttribute ( PtrElement pEl,
-                                        int attNum,
-                                        int val,
-                                        char *textVal,
-                                        PtrSSchema pSS );
+extern PtrElement FwdSearch2Attributes ( PtrElement pEl,
+                                         int attNum,
+                                         int val,
+                                         char *textVal,
+                                         int attNum2,
+                                         PtrSSchema pSS );
+extern PtrElement BackSearch2Attributes ( PtrElement pEl,
+                                          int attNum,
+                                          int val,
+                                          char *textVal,
+                                          int attNum2,
+                                          PtrSSchema pSS );
 extern void FwdSkipPageBreak ( PtrElement * pEl );
 extern void FwdSkipPageBreakAndExtension ( PtrElement * pEl );
 extern void SkipPageBreakBegin ( PtrElement * pEl );
@@ -121,10 +123,10 @@ extern void CopyIncludedElem ( PtrElement pEl,
 extern PtrElement ReplicateElement ( PtrElement pEl,
                                      PtrDocument pDoc );
 extern PtrAttribute GetTypedAttrForElem ( PtrElement pEl,
-                                          int attrNum,
+                                          int attNum,
                                           PtrSSchema pSSattr );
 extern PtrAttribute GetTypedAttrAncestor ( PtrElement pEl,
-                                           int attrNum,
+                                           int attNum,
                                            PtrSSchema pSSattr,
                                            PtrElement * pElAttr );
 extern void CheckLanguageAttr ( PtrDocument pDoc,
@@ -199,16 +201,18 @@ extern PtrElement BackSearchTypedElem (/* PtrElement pEl,
 extern PtrElement BackSearchVisibleElem (/* PtrElement pRoot,
                                             PtrElement pEl,
                                             int view */);
-extern PtrElement FwdSearchAttribute (/* PtrElement pEl,
-                                         int attrNum,
-                                         int val,
-                                         char *textVal,
-                                         PtrSSchema pSS */);
-extern PtrElement BackSearchAttribute (/* PtrElement pEl,
-                                          int attNum,
-                                          int val,
-                                          char *textVal,
-                                          PtrSSchema pSS */);
+extern PtrElement FwdSearch2Attributes (/* PtrElement pEl,
+                                           int attNum,
+                                           int val,
+                                           char *textVal,
+                                           int attNum2,
+                                           PtrSSchema pSS */);
+extern PtrElement BackSearch2Attributes (/* PtrElement pEl,
+                                            int attNum,
+                                            int val,
+                                            char *textVal,
+                                            int attNum2,
+                                            PtrSSchema pSS */);
 extern void FwdSkipPageBreak (/* PtrElement * pEl */);
 extern void FwdSkipPageBreakAndExtension (/* PtrElement * pEl */);
 extern void SkipPageBreakBegin (/* PtrElement * pEl */);
@@ -260,10 +264,10 @@ extern void CopyIncludedElem (/* PtrElement pEl,
 extern PtrElement ReplicateElement (/* PtrElement pEl,
                                        PtrDocument pDoc */);
 extern PtrAttribute GetTypedAttrForElem (/* PtrElement pEl,
-                                            int attrNum,
+                                            int attNum,
                                             PtrSSchema pSSattr */);
 extern PtrAttribute GetTypedAttrAncestor (/* PtrElement pEl,
-                                             int attrNum,
+                                             int attNum,
                                              PtrSSchema pSSattr,
                                              PtrElement * pElAttr */);
 extern void CheckLanguageAttr (/* PtrDocument pDoc,

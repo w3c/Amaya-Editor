@@ -282,27 +282,27 @@ void AttachMandatoryAttributes (PtrElement pEl, PtrDocument pDoc)
 
    Creates an attribute that will be attached to an element.
    Parameter:
-   attributeType: type of the attribute to be created.
+   attType: type of the attribute to be created.
    Return value:
    the attribute that has been created.
    ---------------------------------------------------------------------- */
-Attribute           TtaNewAttribute (AttributeType attributeType)
+Attribute           TtaNewAttribute (AttributeType attType)
 {
   PtrAttribute        pAttr;
 
   UserErrorCode = 0;
   pAttr = NULL;
-  if (attributeType.AttrSSchema == NULL)
+  if (attType.AttrSSchema == NULL)
     TtaError (ERR_invalid_attribute_type);
-  else if (attributeType.AttrTypeNum < 1 ||
-	   attributeType.AttrTypeNum > ((PtrSSchema) (attributeType.AttrSSchema))->SsNAttributes)
+  else if (attType.AttrTypeNum < 1 ||
+	   attType.AttrTypeNum > ((PtrSSchema) (attType.AttrSSchema))->SsNAttributes)
     TtaError (ERR_invalid_attribute_type);
   else
     {
       GetAttribute (&pAttr);
       pAttr->AeNext = NULL;
-      pAttr->AeAttrSSchema = (PtrSSchema) (attributeType.AttrSSchema);
-      pAttr->AeAttrNum = attributeType.AttrTypeNum;
+      pAttr->AeAttrSSchema = (PtrSSchema) (attType.AttrSSchema);
+      pAttr->AeAttrNum = attType.AttrTypeNum;
       pAttr->AeDefAttr = FALSE;
       pAttr->AeAttrType =
               pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrType;
@@ -645,46 +645,44 @@ void TtaNextAttribute (Element element, Attribute *attribute)
    Parameter:
    attribute: the attribute of interest.
    Return parameters:
-   attributeType: type of the attribute.
+   attType: type of the attribute.
    attrKind: kind of the attribute: 0 = Enumerate, 1 = Integer, 2 = Text,
    3 = CsReference
    ---------------------------------------------------------------------- */
 void TtaGiveAttributeType (Attribute attribute,
-			   AttributeType *attributeType, int *attrKind)
+			   AttributeType *attType, int *attrKind)
 {
-
-   UserErrorCode = 0;
-   if (attribute == NULL)
-     {
-       *attrKind = 0;
-       (*attributeType).AttrSSchema = NULL;
-       (*attributeType).AttrTypeNum = 0;
-       TtaError (ERR_invalid_parameter);
-     }
-   else
-     {
-       (*attributeType).AttrSSchema = (SSchema)
-	                          ((PtrAttribute) attribute)->AeAttrSSchema;
-       (*attributeType).AttrTypeNum = ((PtrAttribute) attribute)->AeAttrNum;
-       switch (((PtrAttribute) attribute)->AeAttrType)
-	 {
-	 case AtEnumAttr:
-	   *attrKind = 0;
-	   break;
-	 case AtNumAttr:
-	   *attrKind = 1;
-	   break;
-	 case AtTextAttr:
-	   *attrKind = 2;
-	   break;
-	 case AtReferenceAttr:
-	   *attrKind = 3;
-	   break;
-	 default:
-	   TtaError (ERR_invalid_attribute_type);
-	   break;
-	 }
-     }
+  UserErrorCode = 0;
+  if (attribute == NULL)
+    {
+      *attrKind = 0;
+      (*attType).AttrSSchema = NULL;
+      (*attType).AttrTypeNum = 0;
+      TtaError (ERR_invalid_parameter);
+    }
+  else
+    {
+      (*attType).AttrSSchema = (SSchema)((PtrAttribute) attribute)->AeAttrSSchema;
+      (*attType).AttrTypeNum = ((PtrAttribute) attribute)->AeAttrNum;
+      switch (((PtrAttribute) attribute)->AeAttrType)
+	{
+	case AtEnumAttr:
+	  *attrKind = 0;
+	  break;
+	case AtNumAttr:
+	  *attrKind = 1;
+	  break;
+	case AtTextAttr:
+	  *attrKind = 2;
+	  break;
+	case AtReferenceAttr:
+	  *attrKind = 3;
+	  break;
+	default:
+	  TtaError (ERR_invalid_attribute_type);
+	  break;
+	}
+    }
 }
 
 /* ----------------------------------------------------------------------
@@ -695,33 +693,33 @@ void TtaGiveAttributeType (Attribute attribute,
    name: name of the attribute.
    element: the element with which the attribute is associated.
    Return parameters:
-   attributeType: type of the attribute.
+   attType: type of the attribute.
    attrKind: kind of the attribute: 0 = Enumerate, 1 = Integer, 2 = Text,
    3 = CsReference
    ---------------------------------------------------------------------- */
 void TtaGiveAttributeTypeFromName (char *name, Element element,
-				   AttributeType *attributeType, int *attrKind)
+				   AttributeType *attType, int *attrKind)
 {
   PtrSSchema          pSS;
 
   UserErrorCode = 0;
-  (*attributeType).AttrSSchema = NULL;
-  (*attributeType).AttrTypeNum = 0;
+  (*attType).AttrSSchema = NULL;
+  (*attType).AttrTypeNum = 0;
   *attrKind = 0;
   if (name[0] == EOS || strlen (name) >= MAX_NAME_LENGTH ||
       element == NULL)
     TtaError (ERR_invalid_parameter);
   else
     {
-      GetAttrRuleFromName (&((*attributeType).AttrTypeNum),
-			   (PtrSSchema *)&((*attributeType).AttrSSchema),
+      GetAttrRuleFromName (&((*attType).AttrTypeNum),
+			   (PtrSSchema *)&((*attType).AttrSSchema),
 			   (PtrElement) element, name, USER_NAME);
-      if ((*attributeType).AttrTypeNum == 0)
+      if ((*attType).AttrTypeNum == 0)
 	TtaError (ERR_invalid_parameter);
       else
 	{
-	  pSS = (PtrSSchema)((*attributeType).AttrSSchema);
-	  switch (pSS->SsAttribute[(*attributeType).AttrTypeNum - 1].AttrType)
+	  pSS = (PtrSSchema)((*attType).AttrSSchema);
+	  switch (pSS->SsAttribute[(*attType).AttrTypeNum - 1].AttrType)
 	    {
 	     case AtEnumAttr:
 	       *attrKind = 0;
@@ -751,34 +749,34 @@ void TtaGiveAttributeTypeFromName (char *name, Element element,
    name: name of the attribute (in the language of the structure schema).
    element: the element with which the attribute is associated.
    Return parameters:
-   attributeType: type of the attribute.
+   attType: type of the attribute.
    attrKind: kind of the attribute: 0 = Enumerate, 1 = Integer, 2 = Text,
    3 = CsReference
    ---------------------------------------------------------------------- */
 void TtaGiveAttributeTypeFromOriginalName (char *name, Element element,
-					   AttributeType *attributeType,
+					   AttributeType *attType,
 					   int *attrKind)
 {
   PtrSSchema          pSS;
 
   UserErrorCode = 0;
-  (*attributeType).AttrSSchema = NULL;
-  (*attributeType).AttrTypeNum = 0;
+  (*attType).AttrSSchema = NULL;
+  (*attType).AttrTypeNum = 0;
   *attrKind = 0;
   if (name[0] == EOS || strlen (name) >= MAX_NAME_LENGTH ||
       element == NULL)
     TtaError (ERR_invalid_parameter);
   else
     {
-      GetAttrRuleFromName (&((*attributeType).AttrTypeNum),
-			   (PtrSSchema *)&((*attributeType).AttrSSchema),
+      GetAttrRuleFromName (&((*attType).AttrTypeNum),
+			   (PtrSSchema *)&((*attType).AttrSSchema),
 			   (PtrElement) element, name, SCHEMA_NAME);
-      if ((*attributeType).AttrTypeNum == 0)
+      if ((*attType).AttrTypeNum == 0)
 	TtaError (ERR_invalid_parameter);
       else
 	{
-	  pSS = (PtrSSchema)((*attributeType).AttrSSchema);
-	  switch (pSS->SsAttribute[(*attributeType).AttrTypeNum - 1].AttrType)
+	  pSS = (PtrSSchema)((*attType).AttrSSchema);
+	  switch (pSS->SsAttribute[(*attType).AttrTypeNum - 1].AttrType)
 	    {
 	    case AtEnumAttr:
 	      *attrKind = 0;
@@ -805,22 +803,21 @@ void TtaGiveAttributeTypeFromOriginalName (char *name, Element element,
 
    Returns the name of an attribute type.
    Parameter:
-   attributeType: type of the attribute.
+   attType: type of the attribute.
    Return value:
    name of that type.
    ---------------------------------------------------------------------- */
-char *TtaGetAttributeName (AttributeType attributeType)
+char *TtaGetAttributeName (AttributeType attType)
 {
-
   UserErrorCode = 0;
   bufferName[0] = EOS;
-  if (attributeType.AttrSSchema == NULL)
+  if (attType.AttrSSchema == NULL)
     TtaError (ERR_invalid_attribute_type);
-  else if (attributeType.AttrTypeNum < 1 ||
-	   attributeType.AttrTypeNum > ((PtrSSchema) (attributeType.AttrSSchema))->SsNAttributes)
+  else if (attType.AttrTypeNum < 1 ||
+	   attType.AttrTypeNum > ((PtrSSchema) (attType.AttrSSchema))->SsNAttributes)
     TtaError (ERR_invalid_attribute_type);
   else
-    strncpy (bufferName, ((PtrSSchema) (attributeType.AttrSSchema))->SsAttribute[attributeType.AttrTypeNum - 1].AttrName, MAX_NAME_LENGTH);
+    strncpy (bufferName, ((PtrSSchema) (attType.AttrSSchema))->SsAttribute[attType.AttrTypeNum - 1].AttrName, MAX_NAME_LENGTH);
   return bufferName;
 }
 
@@ -829,22 +826,21 @@ char *TtaGetAttributeName (AttributeType attributeType)
 
    Returns the name of an attribute type in the schema language.
    Parameter:
-   attributeType: type of the attribute.
+   attType: type of the attribute.
    Return value:
    name of that type.
    ---------------------------------------------------------------------- */
-char *TtaGetAttributeOriginalName (AttributeType attributeType)
+char *TtaGetAttributeOriginalName (AttributeType attType)
 {
-
   UserErrorCode = 0;
   bufferName[0] = EOS;
-  if (attributeType.AttrSSchema == NULL)
+  if (attType.AttrSSchema == NULL)
     TtaError (ERR_invalid_attribute_type);
-  else if (attributeType.AttrTypeNum < 1 ||
-	   attributeType.AttrTypeNum > ((PtrSSchema) (attributeType.AttrSSchema))->SsNAttributes)
+  else if (attType.AttrTypeNum < 1 ||
+	   attType.AttrTypeNum > ((PtrSSchema) (attType.AttrSSchema))->SsNAttributes)
     TtaError (ERR_invalid_attribute_type);
   else
-    strncpy (bufferName, ((PtrSSchema) (attributeType.AttrSSchema))->SsAttribute[attributeType.AttrTypeNum - 1].AttrOrigName, MAX_NAME_LENGTH);
+    strncpy (bufferName, ((PtrSSchema) (attType.AttrSSchema))->SsAttribute[attType.AttrTypeNum - 1].AttrOrigName, MAX_NAME_LENGTH);
   return bufferName;
 }
 
@@ -896,7 +892,7 @@ int TtaSameAttributeTypes (AttributeType type1, AttributeType type2)
    Value of that attribute.
 
    ---------------------------------------------------------------------- */
-int                 TtaGetAttributeValue (Attribute attribute)
+int TtaGetAttributeValue (Attribute attribute)
 {
   int                 value;
 
@@ -918,27 +914,27 @@ int                 TtaGetAttributeValue (Attribute attribute)
    Returns the original name of a value of an attribute of type enumerate.
    (as it is defined in the S schema)
    Parameter:
-   attributeType: type of the attribute.
+   attType: type of the attribute.
    value: the value
    Return value:
    name of that value or empty string if error.
    ---------------------------------------------------------------------- */
-char *TtaGetAttributeValueOriginalName (AttributeType attributeType, int value)
+char *TtaGetAttributeValueOriginalName (AttributeType attType, int value)
 {
 
   UserErrorCode = 0;
   bufferName[0] = EOS;
-  if (attributeType.AttrSSchema == NULL)
+  if (attType.AttrSSchema == NULL)
     TtaError (ERR_invalid_attribute_type);
-  else if (attributeType.AttrTypeNum < 1 ||
-	   attributeType.AttrTypeNum > ((PtrSSchema) (attributeType.AttrSSchema))->SsNAttributes)
+  else if (attType.AttrTypeNum < 1 ||
+	   attType.AttrTypeNum > ((PtrSSchema) (attType.AttrSSchema))->SsNAttributes)
     TtaError (ERR_invalid_attribute_type);
-  else if (((PtrSSchema) (attributeType.AttrSSchema))->SsAttribute[attributeType.AttrTypeNum - 1].AttrType != AtEnumAttr )
+  else if (((PtrSSchema) (attType.AttrSSchema))->SsAttribute[attType.AttrTypeNum - 1].AttrType != AtEnumAttr )
     TtaError (ERR_invalid_attribute_type);
-  else if (value < 1 || value > ((PtrSSchema) (attributeType.AttrSSchema))->SsAttribute[attributeType.AttrTypeNum - 1].AttrNEnumValues)
+  else if (value < 1 || value > ((PtrSSchema) (attType.AttrSSchema))->SsAttribute[attType.AttrTypeNum - 1].AttrNEnumValues)
     TtaError (ERR_invalid_parameter);
   else
-    strncpy (bufferName, ((PtrSSchema) (attributeType.AttrSSchema))->SsAttribute[attributeType.AttrTypeNum - 1].AttrEnumOrigValue[value - 1], MAX_NAME_LENGTH);
+    strncpy (bufferName, ((PtrSSchema) (attType.AttrSSchema))->SsAttribute[attType.AttrTypeNum - 1].AttrEnumOrigValue[value - 1], MAX_NAME_LENGTH);
   return bufferName;
 }
 
@@ -948,26 +944,26 @@ char *TtaGetAttributeValueOriginalName (AttributeType attributeType, int value)
 
    Returns the name of a value of an attribute of type enumerate.
    Parameter:
-   attributeType: type of the attribute.
+   attType: type of the attribute.
    value: the value
    Return value:
    name of that value or empty string if error.
    ---------------------------------------------------------------------- */
-char *TtaGetAttributeValueName (AttributeType attributeType, int value)
+char *TtaGetAttributeValueName (AttributeType attType, int value)
 {
   UserErrorCode = 0;
   bufferName[0] = EOS;
-  if (attributeType.AttrSSchema == NULL)
+  if (attType.AttrSSchema == NULL)
     TtaError (ERR_invalid_attribute_type);
-  else if (attributeType.AttrTypeNum < 1 ||
-	   attributeType.AttrTypeNum > ((PtrSSchema) (attributeType.AttrSSchema))->SsNAttributes)
+  else if (attType.AttrTypeNum < 1 ||
+	   attType.AttrTypeNum > ((PtrSSchema) (attType.AttrSSchema))->SsNAttributes)
     TtaError (ERR_invalid_attribute_type);
-  else if (((PtrSSchema) (attributeType.AttrSSchema))->SsAttribute[attributeType.AttrTypeNum - 1].AttrType != AtEnumAttr )
+  else if (((PtrSSchema) (attType.AttrSSchema))->SsAttribute[attType.AttrTypeNum - 1].AttrType != AtEnumAttr )
     TtaError (ERR_invalid_attribute_type);
-  else if (value < 1 || value > ((PtrSSchema) (attributeType.AttrSSchema))->SsAttribute[attributeType.AttrTypeNum - 1].AttrNEnumValues)
+  else if (value < 1 || value > ((PtrSSchema) (attType.AttrSSchema))->SsAttribute[attType.AttrTypeNum - 1].AttrNEnumValues)
     TtaError (ERR_invalid_parameter);
   else
-    strncpy (bufferName, ((PtrSSchema) (attributeType.AttrSSchema))->SsAttribute[attributeType.AttrTypeNum - 1].AttrEnumValue[value - 1], MAX_NAME_LENGTH);
+    strncpy (bufferName, ((PtrSSchema) (attType.AttrSSchema))->SsAttribute[attType.AttrTypeNum - 1].AttrEnumValue[value - 1], MAX_NAME_LENGTH);
   return bufferName;
 }
 
@@ -983,7 +979,7 @@ char *TtaGetAttributeValueName (AttributeType attributeType, int value)
    the corresponding int value, or 0 if error.
    ---------------------------------------------------------------------- */
 int TtaGetAttributeValueFromOriginalName (char *name,
-					  AttributeType attributeType)
+					  AttributeType attType)
 {
   TtAttribute	      *attr;
   int		       value, i;
@@ -992,16 +988,16 @@ int TtaGetAttributeValueFromOriginalName (char *name,
   value = 0;
   if (name[0] == EOS || strlen (name) >= MAX_NAME_LENGTH)
     TtaError (ERR_invalid_parameter);
-  if (attributeType.AttrSSchema == NULL)
+  if (attType.AttrSSchema == NULL)
     TtaError (ERR_invalid_attribute_type);
-  else if (attributeType.AttrTypeNum < 1 ||
-	   attributeType.AttrTypeNum > ((PtrSSchema) (attributeType.AttrSSchema))->SsNAttributes)
+  else if (attType.AttrTypeNum < 1 ||
+	   attType.AttrTypeNum > ((PtrSSchema) (attType.AttrSSchema))->SsNAttributes)
     TtaError (ERR_invalid_attribute_type);
-  else if (((PtrSSchema) (attributeType.AttrSSchema))->SsAttribute[attributeType.AttrTypeNum - 1].AttrType != AtEnumAttr )
+  else if (((PtrSSchema) (attType.AttrSSchema))->SsAttribute[attType.AttrTypeNum - 1].AttrType != AtEnumAttr )
     TtaError (ERR_invalid_attribute_type);
   else
     {
-      attr = & ((PtrSSchema) (attributeType.AttrSSchema))->SsAttribute[attributeType.AttrTypeNum - 1];
+      attr = & ((PtrSSchema) (attType.AttrSSchema))->SsAttribute[attType.AttrTypeNum - 1];
       for (i = 0; value == 0 && i < attr->AttrNEnumValues; i++)
 	if (strncmp (attr->AttrEnumOrigValue[i], name, MAX_NAME_LENGTH) == 0)
 	  value = i+1;
@@ -1019,7 +1015,7 @@ int TtaGetAttributeValueFromOriginalName (char *name,
    Return value:
    the corresponding int value, or 0 if error.
    ---------------------------------------------------------------------- */
-int TtaGetAttributeValueFromName (char *name, AttributeType attributeType)
+int TtaGetAttributeValueFromName (char *name, AttributeType attType)
 {
   TtAttribute	      *attr;
   int		       value, i;
@@ -1028,16 +1024,16 @@ int TtaGetAttributeValueFromName (char *name, AttributeType attributeType)
   value = 0;
   if (name[0] == EOS || strlen (name) >= MAX_NAME_LENGTH)
     TtaError (ERR_invalid_parameter);
-  if (attributeType.AttrSSchema == NULL)
+  if (attType.AttrSSchema == NULL)
     TtaError (ERR_invalid_attribute_type);
-  else if (attributeType.AttrTypeNum < 1 ||
-	   attributeType.AttrTypeNum > ((PtrSSchema) (attributeType.AttrSSchema))->SsNAttributes)
+  else if (attType.AttrTypeNum < 1 ||
+	   attType.AttrTypeNum > ((PtrSSchema) (attType.AttrSSchema))->SsNAttributes)
     TtaError (ERR_invalid_attribute_type);
-  else if (((PtrSSchema) (attributeType.AttrSSchema))->SsAttribute[attributeType.AttrTypeNum - 1].AttrType != AtEnumAttr )
+  else if (((PtrSSchema) (attType.AttrSSchema))->SsAttribute[attType.AttrTypeNum - 1].AttrType != AtEnumAttr )
     TtaError (ERR_invalid_attribute_type);
   else
     {
-      attr = & ((PtrSSchema) (attributeType.AttrSSchema))->SsAttribute[attributeType.AttrTypeNum - 1];
+      attr = & ((PtrSSchema) (attType.AttrSSchema))->SsAttribute[attType.AttrTypeNum - 1];
       for (i = 0; value == 0 && i < attr->AttrNEnumValues; i++)
 	if (strncmp(attr->AttrEnumValue[i], name, MAX_NAME_LENGTH) == 0)
 	  value = i+1;
@@ -1059,7 +1055,6 @@ int TtaGetAttributeValueFromName (char *name, AttributeType attributeType)
    element: the element that is the root of the tree
    (if scope = SearchInTree) or the starting element
    (if scope = SearchForward or SearchBackward).
-
    Return parameters:
    elementFound: the element found, or NULL if not found.
    attributeFound: the searched attribute, or NULL if not 
@@ -1093,19 +1088,19 @@ void TtaSearchAttribute (AttributeType searchedAttribute,
 	   searchedAttribute.AttrTypeNum >
 	   ((PtrSSchema) (searchedAttribute.AttrSSchema))->SsNAttributes)
     {
-    TtaError (ERR_invalid_attribute_type);
-    ok = FALSE;
+      TtaError (ERR_invalid_attribute_type);
+      ok = FALSE;
     }
   if (ok)
     {
     if (scope == SearchBackward)
-      pEl = BackSearchAttribute ((PtrElement) element,
-				 searchedAttribute.AttrTypeNum, 0, "",
-				 (PtrSSchema) (searchedAttribute.AttrSSchema));
+      pEl = BackSearch2Attributes ((PtrElement) element,
+				   searchedAttribute.AttrTypeNum, 0, "", 0,
+				   (PtrSSchema) (searchedAttribute.AttrSSchema));
     else
-      pEl = FwdSearchAttribute ((PtrElement) element,
-				searchedAttribute.AttrTypeNum, 0, "",
-				(PtrSSchema) (searchedAttribute.AttrSSchema));
+      pEl = FwdSearch2Attributes ((PtrElement) element,
+				  searchedAttribute.AttrTypeNum, 0, "", 0,
+				  (PtrSSchema) (searchedAttribute.AttrSSchema));
     if (pEl != NULL && scope == SearchInTree &&
 	!ElemIsWithinSubtree (pEl, (PtrElement) element))
       pEl = NULL;
@@ -1122,6 +1117,102 @@ void TtaSearchAttribute (AttributeType searchedAttribute,
 	    if (pAttr->AeAttrNum == searchedAttribute.AttrTypeNum &&
 		!strcmp (pAttr->AeAttrSSchema->SsName,
 		       ((PtrSSchema) (searchedAttribute.AttrSSchema))->SsName))
+	      /* the expected attribute */
+	      *attributeFound = (Attribute) pAttr;
+	    else
+	      pAttr = pAttr->AeNext;
+	  while (pAttr != NULL && *attributeFound == NULL);
+      }
+    }
+}
+
+
+/* ----------------------------------------------------------------------
+   TtaSearchAttributes
+
+   Searches the next element that has one of given attributes.
+   Searching can be done in a subtree or starting from a given element towards
+   the beginning or the end of the abstract tree.
+   Parameters:
+   searchedAtt1, searchedAtt2: attributes to be searched.
+   If searchedAtt.AttrSSchema is NULL, the next element
+   that has an attribute is searched, whatever the attribute.
+   scope: SearchForward, SearchBackward or SearchInTree.
+   element: the element that is the root of the tree
+   (if scope = SearchInTree) or the starting element
+   (if scope = SearchForward or SearchBackward).
+   Return parameters:
+   elementFound: the element found, or NULL if not found.
+   attributeFound: the searched attribute, or NULL if not 
+   ---------------------------------------------------------------------- */
+void TtaSearchAttributes (AttributeType searchedAtt1, AttributeType searchedAtt2,
+			 SearchDomain scope, Element element,
+			 Element *elementFound,
+			 Attribute *attributeFound)
+{
+  PtrElement          pEl;
+  PtrAttribute        pAttr;
+  ThotBool            ok;
+
+  UserErrorCode = 0;
+  ok = TRUE;
+  *elementFound = NULL;
+  *attributeFound = NULL;
+  if (element == NULL)
+    {
+      TtaError (ERR_invalid_parameter);
+      ok = FALSE;
+    }
+  else if (((PtrElement) element)->ElStructSchema == NULL)
+    {
+      TtaError (ERR_invalid_parameter);
+      ok = FALSE;
+    }
+  else if (searchedAtt1.AttrSSchema == NULL ||
+	   searchedAtt1.AttrTypeNum < 1 ||
+	   searchedAtt1.AttrTypeNum > ((PtrSSchema) (searchedAtt1.AttrSSchema))->SsNAttributes)
+    {
+      TtaError (ERR_invalid_attribute_type);
+      ok = FALSE;
+    }
+  else if (searchedAtt2.AttrSSchema == NULL ||
+	   searchedAtt2.AttrTypeNum < 1 ||
+	   searchedAtt2.AttrTypeNum > ((PtrSSchema) (searchedAtt2.AttrSSchema))->SsNAttributes)
+    {
+      TtaError (ERR_invalid_attribute_type);
+      ok = FALSE;
+    }
+
+  if (ok)
+    {
+    if (scope == SearchBackward)
+      pEl = BackSearch2Attributes ((PtrElement) element,
+				   searchedAtt1.AttrTypeNum, 0, "",
+				   searchedAtt2.AttrTypeNum,
+				   (PtrSSchema) (searchedAtt1.AttrSSchema));
+    else
+      pEl = FwdSearch2Attributes ((PtrElement) element,
+				  searchedAtt1.AttrTypeNum, 0, "",
+				  searchedAtt2.AttrTypeNum,
+				  (PtrSSchema) (searchedAtt1.AttrSSchema));
+    if (pEl != NULL && scope == SearchInTree &&
+	!ElemIsWithinSubtree (pEl, (PtrElement) element))
+      pEl = NULL;
+    if (pEl != NULL)
+      {
+	*elementFound = (Element) pEl;
+	pAttr = pEl->ElFirstAttr;
+	if (pAttr != NULL)
+	  /* if we look at any attribute, we find the first attribut of the
+	     given element, else we go over the attributs of the element
+	     until we find the right one */
+	  do
+	    if ((pAttr->AeAttrNum == searchedAtt1.AttrTypeNum &&
+		 !strcmp (pAttr->AeAttrSSchema->SsName,
+			  ((PtrSSchema) (searchedAtt1.AttrSSchema))->SsName)) ||
+		(pAttr->AeAttrNum == searchedAtt2.AttrTypeNum &&
+		 !strcmp (pAttr->AeAttrSSchema->SsName,
+			  ((PtrSSchema) (searchedAtt2.AttrSSchema))->SsName)))
 	      /* the expected attribute */
 	      *attributeFound = (Attribute) pAttr;
 	    else

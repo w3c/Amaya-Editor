@@ -79,7 +79,7 @@ PtrDocument         DocumentOfElement (PtrElement pEl)
    ProtectElement
    sets the ElIsCopy flag in the elements of the subtree of pEl.
   ----------------------------------------------------------------------*/
-void                ProtectElement (PtrElement pEl)
+void ProtectElement (PtrElement pEl)
 {
    pEl->ElIsCopy = TRUE;
    if (!pEl->ElTerminal)
@@ -98,7 +98,7 @@ void                ProtectElement (PtrElement pEl)
    GetOtherPairedElement
    returns a pointer on the mark which is pair to the one pointed to by pEl.
   ----------------------------------------------------------------------*/
-PtrElement          GetOtherPairedElement (PtrElement pEl)
+PtrElement GetOtherPairedElement (PtrElement pEl)
 {
    PtrElement          pOther;
    PtrSSchema          pSS;
@@ -166,7 +166,7 @@ PtrElement          GetOtherPairedElement (PtrElement pEl)
    returns TRUE if the element pointed by pEl is hidden to the user, or 
    if it belongs to a hidden tree.
   ----------------------------------------------------------------------*/
-ThotBool            ElementIsHidden (PtrElement pEl)
+ThotBool ElementIsHidden (PtrElement pEl)
 {
 register Proc HiFunction;
 
@@ -187,7 +187,7 @@ ThotBool isHI;
    returns TRUE if the element pointed by pEl is protected against user
    modifications, or if it belongs to a protected tree.
   ----------------------------------------------------------------------*/
-ThotBool            ElementIsReadOnly (PtrElement pEl)
+ThotBool ElementIsReadOnly (PtrElement pEl)
 {
   Proc              Rofunction;
   ThotBool          isRO;
@@ -417,8 +417,8 @@ static PtrElement BackSearchVisibleSubtree (PtrElement pEl, int *view)
    Returns TRUE if the element pointed by pEL is the one we are looking
    for, FALSE otherwise.
   ----------------------------------------------------------------------*/
-static ThotBool AttrFound (PtrElement pEl, char *textVal, int val,
-			   int attrNum, PtrSSchema pSS)
+static ThotBool AttrFound (PtrElement pEl, int val, char *textVal,
+			   int attNum, PtrSSchema pSS)
 {
    PtrAttribute        pAttr;
    ThotBool            ret;
@@ -427,7 +427,7 @@ static ThotBool AttrFound (PtrElement pEl, char *textVal, int val,
    if (pEl->ElFirstAttr != NULL)
      {
        /* element has an attribute */
-       if (pSS == NULL && attrNum == 0)
+       if (pSS == NULL && attNum == 0)
 	 /* we search any attribute */
 	 ret = TRUE;		/* found ! */
        else
@@ -438,7 +438,7 @@ static ThotBool AttrFound (PtrElement pEl, char *textVal, int val,
 	     {
 	       if ((pSS == NULL ||
 		    !strcmp (pAttr->AeAttrSSchema->SsName, pSS->SsName))
-		   && pAttr->AeAttrNum == attrNum)
+		   && pAttr->AeAttrNum == attNum)
 		 {
 		 /* it's the attribute we are searching */
 		 if (val == 0)
@@ -469,99 +469,100 @@ static ThotBool AttrFound (PtrElement pEl, char *textVal, int val,
 }
 
 /*----------------------------------------------------------------------
-   FwdSearchAttrInSubtree                                          
+   FwdSearchAttrInSubtree
   ----------------------------------------------------------------------*/
-static PtrElement FwdSearchAttrInSubtree (PtrElement pEl, ThotBool test,
-					  PtrSSchema pSS, int attrNum,
-					  int val, char *textVal)
+static PtrElement FwdSearch2AttrInSubtree (PtrElement pEl, ThotBool test,
+					   int val, char *textVal,
+					   int attNum, int attNum2,
+					   PtrSSchema pSS)
 {
-   PtrElement          pRet, pChild;
+  PtrElement          pRet, pChild;
 
-   pRet = NULL;
-   if (test)
-      if (AttrFound (pEl, textVal, val, attrNum, pSS))
-	 pRet = pEl;
-   if (pRet == NULL)
-      if (!pEl->ElTerminal)
-	 /* search among the children of the element */
+  pRet = NULL;
+  if (test &&
+      (AttrFound (pEl, val, textVal, attNum, pSS) ||
+       AttrFound (pEl, 0, "", attNum2, pSS)))
+      pRet = pEl;
+  if (pRet == NULL && !pEl->ElTerminal)
+    /* search among the children of the element */
+    {
+      pChild = pEl->ElFirstChild;
+      while (pChild != NULL && pRet == NULL)
 	{
-	   pChild = pEl->ElFirstChild;
-	   while (pChild != NULL && pRet == NULL)
-	     {
-		pRet = FwdSearchAttrInSubtree (pChild, TRUE, pSS, attrNum, val, textVal);
-		pChild = pChild->ElNext;
-	     }
+	  pRet = FwdSearch2AttrInSubtree (pChild, TRUE, val, textVal, attNum, attNum2, pSS);
+	  pChild = pChild->ElNext;
 	}
-   return pRet;
+    }
+  return pRet;
 }
 
 /*----------------------------------------------------------------------
-   BackSearchAttrInSubtree                                         
+   BackSearchAttrInSubtree
   ----------------------------------------------------------------------*/
-static PtrElement BackSearchAttrInSubtree (PtrElement pEl, char *textVal,
-					   int val, int attrNum, PtrSSchema pSS)
+static PtrElement BackSearch2AttrInSubtree (PtrElement pEl, int val,
+					    char *textVal,
+					    int attNum, int attNum2,
+					    PtrSSchema pSS)
 {
-   PtrElement          pRet, pChild;
-   PtrAttribute        pAttr;
+  PtrElement          pRet, pChild;
+  PtrAttribute        pAttr;
 
-   pRet = NULL;
-   if (pEl->ElFirstAttr != NULL)
-     {
+  pRet = NULL;
+  if (pEl->ElFirstAttr != NULL)
+    {
       /* element has an attribute */
-      if (pSS == NULL && attrNum == 0)
-	 /* we search any attribute */
-	 pRet = pEl;		/* found ! */
+      if (pSS == NULL && attNum == 0)
+	/* we search any attribute */
+	pRet = pEl;		/* found ! */
       else
-	 /* searches the element's attributes */
+	/* searches the element's attributes */
 	{
-	   pAttr = pEl->ElFirstAttr;
-	   while (pAttr != NULL && pRet == NULL)
-	     {
-		if (pAttr->AeAttrNum == attrNum &&
-		    (pSS == NULL ||
-		     !strcmp (pAttr->AeAttrSSchema->SsName, pSS->SsName)))
-		  {
-		    /* it's the attribute we are looking for */
-		    if (val == 0)
-		      /* search any value */
-		      pRet = pEl;	/* found ! */
-		    else
-		      switch (pAttr->AeAttrType)
-			{
-			case AtNumAttr:
-			case AtEnumAttr:
-			  if (pAttr->AeAttrValue == val)
-			    /* it's the value we are looking for */
-			    pRet = pEl;	/* found ! */
-			  break;
-			case AtTextAttr:
-			  if (StringAndTextEqual (textVal, pAttr->AeAttrText))
-			    pRet = pEl;	/* found ! */
-			  break;
-			default:
-			  break;
-			}
-		  }
-
-		pAttr = pAttr->AeNext;
-	     }
+	  pAttr = pEl->ElFirstAttr;
+	  while (pAttr != NULL && pRet == NULL)
+	    {
+	      if ((pAttr->AeAttrNum == attNum || pAttr->AeAttrNum == attNum2) &&
+		  (pSS == NULL || !strcmp (pAttr->AeAttrSSchema->SsName, pSS->SsName)))
+		{
+		  /* it's the attribute we are looking for */
+		  if (val == 0)
+		    /* search any value */
+		    pRet = pEl;	/* found ! */
+		  else
+		    switch (pAttr->AeAttrType)
+		      {
+		      case AtNumAttr:
+		      case AtEnumAttr:
+			if (pAttr->AeAttrValue == val)
+			  /* it's the value we are looking for */
+			  pRet = pEl;	/* found ! */
+			break;
+		      case AtTextAttr:
+			if (StringAndTextEqual (textVal, pAttr->AeAttrText))
+			  pRet = pEl;	/* found ! */
+			break;
+		      default:
+			break;
+		      }
+		}
+	      pAttr = pAttr->AeNext;
+	    }
 	}
-     }
-   if (pRet == NULL && !pEl->ElTerminal)
-     {
-       /* searches the last child */
-       pChild = pEl->ElFirstChild;
-       if (pChild != NULL)
-	 while (pChild->ElNext != NULL)
-	   pChild = pChild->ElNext;
-       /* search the previous siblings */
-       while (pChild != NULL && pRet == NULL)
-	 {
-	   pRet = BackSearchAttrInSubtree (pChild, textVal, val, attrNum, pSS);
-	   pChild = pChild->ElPrevious;
-	 }
-     }
-   return pRet;
+    }
+  if (pRet == NULL && !pEl->ElTerminal)
+    {
+      /* searches the last child */
+      pChild = pEl->ElFirstChild;
+      if (pChild != NULL)
+	while (pChild->ElNext != NULL)
+	  pChild = pChild->ElNext;
+      /* search the previous siblings */
+      while (pChild != NULL && pRet == NULL)
+	{
+	  pRet = BackSearch2AttrInSubtree (pChild, val, textVal, attNum, attNum2, pSS);
+	  pChild = pChild->ElPrevious;
+	}
+    }
+  return pRet;
 }
 
 /*----------------------------------------------------------------------
@@ -570,7 +571,7 @@ static PtrElement BackSearchAttrInSubtree (PtrElement pEl, char *textVal,
    reference element (Kind = 2), or if its a pair element (Kind = 3).
    Returns TRUE or FALSE, according to the result of the test.
   ----------------------------------------------------------------------*/
-static ThotBool     ElemIsEmptyOrRefOrPair (PtrElement pEl, int Kind)
+static ThotBool ElemIsEmptyOrRefOrPair (PtrElement pEl, int Kind)
 {
    ThotBool            ret;
 
@@ -1561,97 +1562,98 @@ PtrElement BackSearchVisibleElem (PtrElement pRoot, PtrElement pEl, int view)
 /*----------------------------------------------------------------------
    FwdSearchAttribute 
    starting from the pEl element, forward searches in the tree an element
-   having the attribute attrNum defined in the structure scheme pSS and having
+   having the attribute attNum defined in the structure scheme pSS and having
    a val value. If pSS is NULL, the search stops on the first element
    having an attribute, regardless of the type of this attribute. If val = 0,
-   the search stops on the first element having un attrNum attribute, 
+   the search stops on the first element having un attNum attribute, 
    regardless of its value. 
+   If attNum2 != 0 the search stops on the first attNum or attNum2 found.
    The function returns a pointer to the found element or NULL.
   ----------------------------------------------------------------------*/
-PtrElement FwdSearchAttribute (PtrElement pEl, int attrNum, int val,
-			       char *textVal, PtrSSchema pSS)
+PtrElement FwdSearch2Attributes (PtrElement pEl, int attNum, int val,
+				 char *textVal, int attNum2, PtrSSchema pSS)
 {
-   PtrElement          pRet, pCur, pAsc;
-   ThotBool            stop;
+  PtrElement          pRet, pCur, pAsc;
+  ThotBool            stop;
 
-   pRet = NULL;
-   if (pEl != NULL)
-      /* searches in the subtree of the element */
-     {
-	pRet = FwdSearchAttrInSubtree (pEl, FALSE, pSS, attrNum, val, textVal);
-	if (pRet == NULL)
-	   /* if failure, searches in the subtrees of the next siblings of the element */
-	  {
-	     pCur = pEl->ElNext;
-	     while (pCur != NULL && pRet == NULL)
-	       {
-		  pRet = FwdSearchAttrInSubtree (pCur, TRUE, pSS, attrNum, val, textVal);
-		  pCur = pCur->ElNext;
-	       }
-	     /* if failure, searches the first ancestor with a next sibling */
-	     if (pRet == NULL)
-	       {
-		  stop = FALSE;
-		  pAsc = pEl;
-		  do
-		    {
-		       pAsc = pAsc->ElParent;
-		       if (pAsc == NULL)
-			  stop = TRUE;
-		       else if (pAsc->ElNext != NULL)
-			  stop = TRUE;
-		    }
-		  while (!stop);
+  pRet = NULL;
+  if (pEl != NULL)
+    /* searches in the subtree of the element */
+    {
+      pRet = FwdSearch2AttrInSubtree (pEl, FALSE, val, textVal, attNum, attNum2, pSS);
+      if (pRet == NULL)
+	/* if failure, searches in the subtrees of the next siblings of the element */
+	{
+	  pCur = pEl->ElNext;
+	  while (pCur != NULL && pRet == NULL)
+	    {
+	      pRet = FwdSearch2AttrInSubtree (pCur, TRUE, val, textVal, attNum, attNum2, pSS);
+	      pCur = pCur->ElNext;
+	    }
+	  /* if failure, searches the first ancestor with a next sibling */
+	  if (pRet == NULL)
+	    {
+	      stop = FALSE;
+	      pAsc = pEl;
+	      do
+		{
+		  pAsc = pAsc->ElParent;
+		  if (pAsc == NULL)
+		    stop = TRUE;
+		  else if (pAsc->ElNext != NULL)
+		    stop = TRUE;
+		}
+	      while (!stop);
+	      if (pAsc != NULL)
+		/* verifies if this element is the one we're looking for */
+		{
+		  pAsc = pAsc->ElNext;
 		  if (pAsc != NULL)
-		     /* verifies if this element is the one we're looking for */
 		    {
-		       pAsc = pAsc->ElNext;
-		       if (pAsc != NULL)
-			 {
-			  if (AttrFound (pAsc, textVal, val, attrNum, pSS))
-			     pRet = pAsc;	/* found */
-			  else
-			     pRet = FwdSearchAttribute (pAsc, attrNum, val, textVal, pSS);
-			 }
+		      if (AttrFound (pAsc, val, textVal, attNum, pSS))
+			pRet = pAsc;	/* found */
+		      else
+			pRet = FwdSearch2Attributes (pAsc, attNum, val, textVal, attNum2, pSS);
 		    }
-	       }
-	  }
-     }
-   return pRet;
+		}
+	    }
+	}
+    }
+  return pRet;
 }
 
 
 /*----------------------------------------------------------------------
-   BackSearchAttribute
+   BackSearch2Attributes
    starting from the pEl element, backward searches in the tree an element
-   having the attribute attrNum defined in the structure scheme pSS and having
+   having the attribute attNum defined in the structure scheme pSS and having
    a val value. If pSS is NULL, the search stops on the first element
    having an attribute, regardless of the type of this attribute. If val = 0,
-   the search stops on the first element having un attrNum attribute, 
-   regardless of its value. 
+   the search stops on the first element having un attNum attribute, 
+   regardless of its value.
+   If attNum2 != 0 the search stops on the first attNum or attNum2 found.
    The function returns a pointer to the found element or NULL.   
   ----------------------------------------------------------------------*/
-PtrElement BackSearchAttribute (PtrElement pEl, int attNum, int val,
-				char *textVal, PtrSSchema pSS)
+PtrElement BackSearch2Attributes (PtrElement pEl, int attNum, int val,
+				  char *textVal, int attNum2, PtrSSchema pSS)
 {
-   PtrElement          pRet, pCur;
+  PtrElement          pRet, pCur;
 
-   pRet = NULL;
-   if (pEl != NULL)
-      /* searches in the subtree of the siblings preceding the element */ 
-     {
-	pCur = pEl->ElPrevious;
-	while (pCur != NULL && pRet == NULL)
-	  {
-	     pRet = BackSearchAttrInSubtree (pCur, textVal, val, attNum, pSS);
-	     pCur = pCur->ElPrevious;
-	  }
-	/* if failure, searches in the subtrees of the uncles of the element */
-	if (pRet == NULL)
-	   if (pEl->ElParent != NULL)
-	      pRet = BackSearchAttribute (pEl->ElParent, attNum, val, textVal, pSS);
-     }
-   return pRet;
+  pRet = NULL;
+  if (pEl != NULL)
+    /* searches in the subtree of the siblings preceding the element */ 
+    {
+      pCur = pEl->ElPrevious;
+      while (pCur != NULL && pRet == NULL)
+	{
+	  pRet = BackSearch2AttrInSubtree (pCur, val, textVal, attNum, attNum2, pSS);
+	  pCur = pCur->ElPrevious;
+	}
+      /* if failure, searches in the subtrees of the uncles of the element */
+      if (pRet == NULL && pEl->ElParent != NULL)
+	pRet = BackSearch2Attributes (pEl->ElParent, attNum, val, textVal, attNum2, pSS);
+    }
+  return pRet;
 }
 
 /*----------------------------------------------------------------------
@@ -1663,7 +1665,7 @@ PtrElement BackSearchAttribute (PtrElement pEl, int attNum, int val,
    from a page break.
    Does not do anything if pEl does not point to a page break.
   ----------------------------------------------------------------------*/
-void                FwdSkipPageBreak (PtrElement * pEl)
+void FwdSkipPageBreak (PtrElement * pEl)
 {
    ThotBool            stop;
 
@@ -3459,11 +3461,11 @@ PtrElement          ReplicateElement (PtrElement pEl, PtrDocument pDoc)
 
 /*----------------------------------------------------------------------
    GetTypedAttrForElem
-   searches an attribute of type attrNum eamong the attributes attached
+   searches an attribute of type attNum eamong the attributes attached
    to the pEl element. 
    Returns a pointer to the attribute or NULL.
   ----------------------------------------------------------------------*/
-PtrAttribute GetTypedAttrForElem (PtrElement pEl, int attrNum, PtrSSchema pSSattr)
+PtrAttribute GetTypedAttrForElem (PtrElement pEl, int attNum, PtrSSchema pSSattr)
 {
    ThotBool            found;
    PtrAttribute        pAttr;
@@ -3473,10 +3475,10 @@ PtrAttribute GetTypedAttrForElem (PtrElement pEl, int attrNum, PtrSSchema pSSatt
    /* first attribute of the element */
    while (pAttr != NULL && !found)
      {
-	if (pAttr->AeAttrNum == attrNum)
+	if (pAttr->AeAttrNum == attNum)
 	  {
 	   /* same attribute numbers */
-	   if (attrNum == 1)
+	   if (attNum == 1)
 	      /* it's the language attribute, no use to compare the schemes */
 	      found = TRUE;
 	   else if (!strcmp (pAttr->AeAttrSSchema->SsName, pSSattr->SsName))
@@ -3495,10 +3497,10 @@ PtrAttribute GetTypedAttrForElem (PtrElement pEl, int attrNum, PtrSSchema pSSatt
    GetTypedAttrAncestor
    returns a pointer to the attribute of the first
    element which encloses pEl and that has an attribute
-   of type attrNum. The function returns pElAttr if
+   of type attNum. The function returns pElAttr if
    the search is succesful, NULL otherwise.
   ----------------------------------------------------------------------*/
-PtrAttribute GetTypedAttrAncestor (PtrElement pEl, int attrNum,
+PtrAttribute GetTypedAttrAncestor (PtrElement pEl, int attNum,
 				   PtrSSchema pSSattr, PtrElement * pElAttr)
 {
    PtrElement          pElAtt;
@@ -3511,7 +3513,7 @@ PtrAttribute GetTypedAttrAncestor (PtrElement pEl, int attrNum,
    /* searches its ancestors */
    while (pElAtt != NULL && pAttr == NULL)
       /* searches in the element's attributes */
-      if ((pAttr = GetTypedAttrForElem (pElAtt, attrNum, pSSattr)) == NULL)
+      if ((pAttr = GetTypedAttrForElem (pElAtt, attNum, pSSattr)) == NULL)
 	 /* the element does not have this attribute, climb up to the ancestor */
 	 pElAtt = pElAtt->ElParent;
       else
@@ -3525,7 +3527,7 @@ PtrAttribute GetTypedAttrAncestor (PtrElement pEl, int attrNum,
    verifies that the root pEl has a language attribute. If not,
    we add one.
   ----------------------------------------------------------------------*/
-void                CheckLanguageAttr (PtrDocument pDoc, PtrElement pEl)
+void CheckLanguageAttr (PtrDocument pDoc, PtrElement pEl)
 {
    PtrAttribute        pAttr, pA;
    int                 len;

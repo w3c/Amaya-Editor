@@ -1209,7 +1209,7 @@ void NextLinkOrFormElement (Document doc, View view)
   ElementType         elType;
   Element             root, child, next, startEl, el;
   Attribute           attr;
-  AttributeType       attrType;
+  AttributeType       attrType1, attrType2;
   ThotBool            found, cycle;
   int                 i;
   int                 firstChar, lastChar;
@@ -1222,11 +1222,13 @@ void NextLinkOrFormElement (Document doc, View view)
   /* don't manage this element */
   startEl = el;
   elType = TtaGetElementType (el);
-  attrType.AttrTypeNum = HTML_ATTR_NAME;
-  attrType.AttrSSchema = elType.ElSSchema;
+  attrType1.AttrTypeNum = HTML_ATTR_NAME;
+  attrType1.AttrSSchema = elType.ElSSchema;
+  attrType2.AttrTypeNum = HTML_ATTR_HREF_;
+  attrType2.AttrSSchema = elType.ElSSchema;
   /* we're looking for a next element */
   cycle = FALSE;
-  TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
+  TtaSearchAttributes (attrType1, attrType2, SearchForward, el, &el, &attr);
   found = FALSE;
   while (!found)
     {
@@ -1264,6 +1266,7 @@ void NextLinkOrFormElement (Document doc, View view)
 	    case HTML_EL_Reset_Input:
 	    case HTML_EL_Button_Input:
 	    case HTML_EL_BUTTON_:
+	    case HTML_EL_Anchor:
 	      /* no included text: select the element itself */
 	      TtaSelectElement (doc, el);
 	      found =TRUE;
@@ -1298,7 +1301,7 @@ void NextLinkOrFormElement (Document doc, View view)
 	    }
 	}
       if (!found)
-	TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
+	TtaSearchAttributes (attrType1, attrType2, SearchForward, el, &el, &attr);
     }
 }
 
