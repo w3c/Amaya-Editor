@@ -21,7 +21,6 @@
 #include "frame.var"
 #include "environ.var"
 
-#include "environ.f"
 #include "dofile.f"
 
 static ThotFileHandle msgfile_fid = ThotFile_BADHANDLE;		/* le fichier temporaire des messages */

@@ -38,7 +38,6 @@ static boolean      EnBitStream;
 
 
 #include "memory.f"
-#include "environ.f"
 #include "font.f"
 #include "es.f"
 #include "lig.f"

@@ -11,7 +11,6 @@
 #include "libmsg.h"
 #define EXPORT extern
 #include "environ.var"
-#include "environ.f"
 #include "dofile.f"
 #include "memory.f"
 #include "storage.h"

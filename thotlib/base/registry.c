@@ -1176,3 +1176,107 @@ char               *appArgv0;
    InitEnviron ();
    AppRegistryModified = 0;
 }
+
+
+/* ---------------------------------------------------------------------- */
+/* |    SearchFile recherche un fichier en suivant les indications      | */
+/* |            donnees par dir.                                        | */
+/* |            Retourne 1 avec le nom absolu dans fullName si on       | */
+/* |            le trouve et 0 sinon.                                   | */
+/* |            Suivant la valeur de dir, on cherche dans:              | */
+/* |            - 0 : /                                                 | */
+/* |            - 1 : ThotDir                                           | */
+/* |            - 2 : ThotDir/bin                                       | */
+/* |            - 3 : ThotDir/compil                                    | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+int                 SearchFile (char *fileName, int dir, char *fullName)
+
+#else  /* __STDC__ */
+int                 SearchFile (fileName, dir, fullName)
+char               *fileName;
+int                 dir;
+char               *fullName;
+
+#endif /* __STDC__ */
+
+{
+   char                tmpbuf[200];
+   char               *imagepath;
+   int                 i, j;
+   int                 ret;
+
+   if (ThotDir () != NULL)
+      strcpy (fullName, ThotDir ());
+   else
+      *fullName = '\0';
+   switch (dir)
+	 {
+	    case 1:
+		/* Recherche dans les schemas et les documents */
+	       strcat (fullName, fileName);
+	       ret = FileExist (fullName);
+	       /* Recherche le fichier dans les directories de schemas */
+	       i = 0;
+	       j = 0;
+	       imagepath = DirectorySchemas;
+	       while (ret == 0 && imagepath[i] != '\0')
+		 {
+		    while (imagepath[i] != '\0' && imagepath[i] != PATH_SEP && i < 200)
+		       tmpbuf[j++] = imagepath[i++];
+
+		    tmpbuf[j] = '\0';
+		    i++;
+		    j = 0;
+		    sprintf (fullName, "%s%s%s", tmpbuf, DIR_STR, fileName);
+		    ret = FileExist (fullName);
+		 }
+
+	       /* continue la recheche dans les repertoires de documents */
+	       i = 0;
+	       j = 0;
+	       imagepath = DirectorySchemas;
+	       while (ret == 0 && imagepath[i] != '\0')
+		 {
+		    while (imagepath[i] != '\0' && imagepath[i] != PATH_SEP && i < 200)
+		       tmpbuf[j++] = imagepath[i++];
+
+		    tmpbuf[j] = '\0';
+		    i++;
+		    j = 0;
+		    sprintf (fullName, "%s%s%s", tmpbuf, DIR_STR, fileName);
+		    ret = FileExist (fullName);
+		 }
+	       break;
+
+	    case 2:
+		/* Recherche dans config */
+	       strcat (fullName, DIR_STR);
+	       strcat (fullName, "config");
+	       strcat (fullName, DIR_STR);
+	       strcat (fullName, fileName);
+	       break;
+
+	    case 3:
+		/* Recherche dans batch */
+	       strcat (fullName, DIR_STR);
+	       strcat (fullName, "batch");
+	       strcat (fullName, DIR_STR);
+	       strcat (fullName, fileName);
+	       break;
+
+	    default:
+	       strcat (fullName, DIR_STR);
+	       strcat (fullName, fileName);
+	 }
+
+   /* on cherche le fichier */
+   ret = FileExist (fullName);
+   if (ret == 0)
+     {
+	strcpy (fullName, fileName);
+	ret = FileExist (fullName);
+     }
+   return ret;
+}
+

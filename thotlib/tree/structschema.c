@@ -25,7 +25,6 @@
 #include "appdialogue.var"
 
 #include "arbabs.f"
-#include "environ.f"
 #include "except.f"
 #include "memory.f"
 #include "schemastr.f"

@@ -27,7 +27,6 @@
 #include "environ.var"
 static boolean      erreur;
 
-#include "environ.f"
 #include "dofile.f"
 #include "storage.f"
 #include "memory.f"

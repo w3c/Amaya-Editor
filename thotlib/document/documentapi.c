@@ -596,8 +596,8 @@ Document            document;
    (see TtaNewDocument).
 
    Parameter:
-   path: the directory list, where directory names are separated by
-   the character PATH_SEP.
+	path: the directory list, where directory names are separated by
+		the character PATH_SEP.
 
    ---------------------------------------------------------------------- */
 #ifdef __STDC__
@@ -619,19 +619,119 @@ char               *path;
 
 
 /* ----------------------------------------------------------------------
-   TtaIsInDocumentPath
+   TtaCheckDirectory
 
-   returns True if the directory is in the list of document directories.
+   Ckecks that a directory exists and can be accessed.
+
    Parameter:
-   aDirectory: the new directory name.
+	directory: the directory name.
+   Return value:
+   	True if the directory is OK, False if not.
+	
+   ---------------------------------------------------------------------- */
+#ifdef __STDC__
+boolean             TtaCheckDirectory (char *directory)
+ 
+#else  /* __STDC__ */
+boolean             TtaCheckDirectory (directory)
+char               *directory;
+ 
+#endif /* __STDC__ */
+ 
+{
+#ifdef WWW_MSWINDOWS
+   DWORD               attribs;
+ 
+   /* NEW_WINDOWS - mark for furthur security stuff - EGP
+      SECURITY_INFORMATION secInfo;
+      SECURITY_DESCRIPTOR secDesc; */
+   attribs = GetFileAttributes (directory);
+   if (!(attribs & FILE_ATTRIBUTE_DIRECTORY))
+      return False;
+   return True;
+#else  /* WWW_MSWINDOWS */
+   struct stat         fileStat;
+ 
+   /* does the directory exist ? */
+   if (strlen (directory) < 1)
+      return (False);
+   else if (access (directory, 0) != 0)
+      return (False);
+   else if (stat (directory, &fileStat) != 0)
+      return (False); 
+   else if (S_ISDIR (fileStat.st_mode))
+      return (True);
+   else
+      return (False);
+#endif /* !WWW_MSWINDOWS */
+}
+ 
+/* ----------------------------------------------------------------------
+   TtaCheckPath
+
+   Checks if all directories in a path can be accessed.
+
+   Parameter:
+   path: the path to be checked
+
+   Return value:
+   True if all directories are OK, False if at least one cannot be
+   accessed.
 
    ---------------------------------------------------------------------- */
 #ifdef __STDC__
-boolean             TtaIsInDocumentPath (char *aDirectory)
+boolean             TtaCheckPath (PathBuffer path)
+ 
+#else  /* __STDC__ */
+boolean             TtaCheckPath (path)
+PathBuffer          path;
+ 
+#endif /* __STDC__ */
+ 
+{
+   int                 i, j;
+   PathBuffer          single_directory;
+   boolean             OK;
+ 
+   i = 0;
+   OK = True;
+   while (OK && path[i] != '\0')
+     {
+        j = 0;
+        while (path[i] != PATH_SEP && path[i] != '\0' && i <= MAX_PATH)
+          {
+             /* on decoupe la liste en directories individuels */
+             single_directory[j] = path[i];
+             i++;
+             j++;
+          }
+        /* on ajoute une fin de chaine */
+        single_directory[j] = '\0';
+ 
+        OK = TtaCheckDirectory (single_directory);
+        /* on essaie avec un autre directory en sautant le PATH_SEP */
+        if (path[i] == PATH_SEP)
+           i++;
+     }
+   return (OK);
+}
+
+
+/* ----------------------------------------------------------------------
+   TtaIsInDocumentPath
+
+   returns True if the directory is in the list of document directories.
+
+   Parameter:
+	directory: the new directory name.
+
+   ---------------------------------------------------------------------- */
+#ifdef __STDC__
+boolean             TtaIsInDocumentPath (char *directory)
 
 #else  /* __STDC__ */
-boolean             TtaIsInDocumentPath (aDirectory)
-char               *aDirectory;
+boolean             TtaIsInDocumentPath (directory)
+char               *directory;
 
 #endif /* __STDC__ */
 
@@ -640,14 +740,14 @@ char               *aDirectory;
    char               *ptr;
 
    /* Regarde si ce directory est deja dans la liste */
-   ptr = strstr (DirectoryDoc, aDirectory);
-   i = strlen (aDirectory);
+   ptr = strstr (DirectoryDoc, directory);
+   i = strlen (directory);
    while (ptr != NULL && ptr[i] != PATH_SEP && ptr[i] != '\0')
      {
 	/* on a trouve une sous-chaine */
 	ptr = strstr (ptr, PATH_STR);
 	if (ptr != NULL)
-	   ptr = strstr (ptr, aDirectory);
+	   ptr = strstr (ptr, directory);
      }
    return (ptr != NULL);
 }
@@ -656,20 +756,20 @@ char               *aDirectory;
 /* ----------------------------------------------------------------------
    TtaAppendDocumentPath
 
-   Appends a new directory in the list of document directories if this directory
-   is not already in the list and if the directory exists.
+   Appends a new directory in the list of document directories if this
+   directory is not already in the list and if the directory exists.
 
    Parameter:
-   aDirectory: the new directory name.
+	directory: the new directory name.
 
    ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                TtaAppendDocumentPath (char *aDirectory)
+void                TtaAppendDocumentPath (char *directory)
 
 #else  /* __STDC__ */
-void                TtaAppendDocumentPath (aDirectory)
-char               *aDirectory;
+void                TtaAppendDocumentPath (directory)
+char               *directory;
 
 #endif /* __STDC__ */
 
@@ -678,13 +778,13 @@ char               *aDirectory;
    int                 lg;
 
    UserErrorCode = 0;
-   lg = strlen (aDirectory);
+   lg = strlen (directory);
 
    if (lg >= MAX_PATH)
       TtaError (ERR_string_too_long);
-   else if (!TtaCheckDirectory (aDirectory))
+   else if (!TtaCheckDirectory (directory))
       TtaError (ERR_invalid_parameter);
-   else if (!TtaIsInDocumentPath (aDirectory))
+   else if (!TtaIsInDocumentPath (directory))
      {
 	/* add the directory in the path */
 	i = strlen (DirectoryDoc);
@@ -694,7 +794,7 @@ char               *aDirectory;
 	  {
 	     if (i > 0)
 		strcat (DirectoryDoc, PATH_STR);
-	     strcat (DirectoryDoc, aDirectory);
+	     strcat (DirectoryDoc, directory);
 	  }
      }
 }

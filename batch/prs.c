@@ -29,7 +29,6 @@
 
 #define EXPORT
 #include "compil.var"
-#include "environ.var"
 #include "thotcolor.h"
 #include "thotcolor.var"
 #include "thotpalette.var"
@@ -154,7 +153,6 @@ static boolean      AttrInitCounter;	/* on a rencontre' "Init" dans une definiti
 #include "analsynt.f"
 #include "cdialog.f"
 #include "compilmsg.f"
-#include "environ.f"
 #include "filesystem.f"
 #include "message.f"
 #include "prs.f"

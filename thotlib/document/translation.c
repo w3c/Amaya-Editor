@@ -68,7 +68,6 @@ static char         tra_extension[MAX_PATH];	/* extension du fichier a traduire 
 #include "commun.f"
 #include "dofile.f"
 #include "appexec.f"
-#include "environ.f"
 #include "exportm.f"
 #include "imabs.f"
 #include "memory.f"

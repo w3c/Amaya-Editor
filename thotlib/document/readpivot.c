@@ -60,7 +60,6 @@ static int          newColor[] =
 #include "appexec.f"
 #include "edit.f"
 #include "editmenu.f"
-#include "environ.f"
 #include "except.f"
 #include "font.f"
 #include "indcharge.f"

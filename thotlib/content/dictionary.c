@@ -39,7 +39,6 @@ static PtrDico      TabDicos[MaxDicos];
 unsigned char       Code[256];	/* code des caracteres de l'alphabet */
 
 /* procedures importees */
-#include "environ.f"
 #include "memory.f"
 #include "storage.f"
 #include "thotmsg.f"

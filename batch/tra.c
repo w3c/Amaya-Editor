@@ -110,7 +110,6 @@ static boolean      SecondInPair;	/* on a rencontre' "Second" */
 #include "cdialog.f"
 #include "storage.f"
 #include "message.f"
-#include "environ.f"
 #include "compilmsg.f"
 
 #ifdef __STDC__

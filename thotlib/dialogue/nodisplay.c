@@ -11,7 +11,6 @@
 #include "edit.var"
 
 /* procedures importees */
-#include "environ.f"
 #include "schemas.f"
 #include "dofile.f"
 #include "ouvre.f"

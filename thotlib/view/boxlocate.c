@@ -28,7 +28,6 @@
 #include "des.f"
 #include "docvues.f"
 #include "appexec.f"
-#include "environ.f"
 #include "font.f"
 #include "geom.f"
 #include "imabs.f"

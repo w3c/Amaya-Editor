@@ -24,7 +24,6 @@
 
 static boolean      erreurTra = False;
 
-#include "environ.f"
 #include "dofile.f"
 #include "rdschtra.f"
 #include "memory.f"

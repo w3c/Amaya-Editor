@@ -25,7 +25,6 @@
 #include "attribute.f"
 #include "commun.f"
 #include "creation.f"
-#include "environ.f"
 #include "modif.f"
 #include "refelem.f"
 #include "refext.f"

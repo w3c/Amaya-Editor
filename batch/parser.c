@@ -18,6 +18,7 @@
 #include "typemedia.h"
 #include "compilmsg.h"
 #include "message.h"
+#include "registry.h"
 #include "storage.h"
 
 typedef gname      *ptrgname;
@@ -51,7 +52,6 @@ static boolean      comment;	/* on est dans un commentaire */
 static int          sptr;	/* pointeur de pile */
 static stackelem    stack[STACKSIZE];	/* pile d'analyse */
 
-#include "environ.f"
 #include "storage.f"
 #include "analsynt.f"
 

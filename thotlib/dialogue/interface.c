@@ -51,7 +51,6 @@
 #include "docvues.f"
 #include "appdialogue.f"
 #include "appexec.f"
-#include "environ.f"
 #include "environmenu.f"
 #include "font.f"
 #include "inites.f"

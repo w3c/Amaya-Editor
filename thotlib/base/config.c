@@ -31,7 +31,6 @@
 
 #include "docvues.f"
 #include "dofile.f"
-#include "environ.f"
 #include "inites.f"
 #include "memory.f"
 #include "message.f"

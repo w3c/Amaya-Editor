@@ -15,7 +15,6 @@
 
 #include "analsynt.f"
 #include "compilmsg.f"
-#include "environ.f"
 #include "filesystem.f"
 #include "memory.f"
 #include "message.f"

@@ -19,7 +19,6 @@
 #define EXPORT extern
 #include "environ.var"
 
-#include "environ.f"
 #include "dofile.f"
 #include "storage.f"
 #include "rdschstr.f"

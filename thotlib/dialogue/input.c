@@ -102,8 +102,6 @@ static TOUCHE      *Automate_META = NULL;
 static TOUCHE      *Automate_ALT = NULL;
 static TOUCHE      *Automate_current = NULL;
 
-#include "environ.f"
-
 /* ---------------------------------------------------------------------- */
 /* |    NomCle traduit les noms de cle's non supporte's par             | */
 /* |            l'interpre'teur des translations Motif.                 | */

@@ -47,7 +47,6 @@
 #include "dofile.f"
 #include "edit.f"
 #include "editmenu.f"
-#include "environ.f"
 #include "environmenu.f"
 #include "except.f"
 #include "liste.f"

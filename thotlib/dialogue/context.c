@@ -39,7 +39,6 @@ static ThotColorStruct cwhite;
 #include "cmd.f"
 #include "cmdedit.f"
 #include "corrmenu.f"
-#include "environ.f"
 #include "font.f"
 #include "imagedrvr.f"
 #include "indmenu.f"

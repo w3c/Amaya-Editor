@@ -20,7 +20,6 @@ int                 UserErrorCode;
 boolean             PrintErrorMessages;
 
 #include "edit.f"
-#include "environ.f"
 #include "sysexec.f"
 
 

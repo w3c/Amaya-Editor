@@ -28,7 +28,6 @@ static char         Langbuffer[2 * MAX_NAME_LENGTH];
 static int          Points_de_coupure[MAX_POINT_COUP];
 static char         StandardLANG[3];
 
-#include "environ.f"
 #include "thotmsg.f"
 
 /* ---------------------------------------------------------------------- */

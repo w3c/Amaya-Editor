@@ -33,7 +33,6 @@ static char         DirectoryDocACreer[MAX_PATH] = "";
 #include "docvues.f"
 #include "config.f"
 #include "environmenu.f"
-#include "environ.f"
 #include "opendoc.f"
 
 #ifdef __STDC__

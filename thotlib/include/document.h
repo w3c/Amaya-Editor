@@ -22,6 +22,8 @@ extern void         TtaExportDocument (Document document, char *fileName, char *
 extern void         TtaCloseDocument (Document document);
 extern void         TtaRemoveDocument (Document document);
 extern void         TtaSetDocumentPath (char *path);
+extern boolean	    TtaCheckDirectory ( char *aDirectory );
+extern boolean      TtaCheckPath (char *path );
 extern boolean      TtaIsInDocumentPath (char *aDirectory);
 extern void         TtaAppendDocumentPath (char *aDirectory);
 extern void         TtaSetSchemaPath (char *path);
@@ -65,6 +67,8 @@ extern void         TtaExportDocument ( /* Document document, char *fileName, ch
 extern void         TtaCloseDocument ( /* Document document */ );
 extern void         TtaRemoveDocument ( /* Document document */ );
 extern void         TtaSetDocumentPath ( /* char *path */ );
+extern boolean      TtaCheckDirectory (/* char *aDirectory */);
+extern boolean      TtaCheckPath (/* char *path */);
 extern boolean      TtaIsInDocumentPath ( /*char *aDirectory */ );
 extern void         TtaAppendDocumentPath ( /*char *aDirectory */ );
 extern void         TtaSetSchemaPath ( /* char *path */ );

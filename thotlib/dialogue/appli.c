@@ -52,7 +52,6 @@ static XmString     null_string;
 #include "docvues.f"
 #include "appexec.f"
 #include "edit.f"
-#include "environ.f"
 #include "es.f"
 #include "font.f"
 #include "imabs.f"

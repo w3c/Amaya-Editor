@@ -32,7 +32,6 @@
 #include "creation.f"
 #include "crimabs.f"
 #include "edit.f"
-#include "environ.f"
 #include "except.f"
 #include "font.f"
 #include "inites.f"
