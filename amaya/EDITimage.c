@@ -54,7 +54,7 @@ static CHAR         ImgAlt[NAME_LENGTH];
 #include "html2thot_f.h"
 
 #ifdef _WINDOWS
-#include "windialogapi_f.h"
+#include "wininclude.h"
 #endif /* _WINDOWS */
 
 

@@ -403,7 +403,7 @@ boolean             createLink;
     {
       /* search if the selection is within an anchor */
       if (TtaSameSSchemas (elType.ElSSchema, HTMLSSchema))
-	el = SearchAnchor (doc, first, !createLink);
+	el = SearchAnchor (doc, first, (boolean)(!createLink));
       else
 	el = NULL;
       if (el != NULL)
@@ -1085,7 +1085,7 @@ NotifyElement      *event;
       TtaFreeMemory (path);
       TtaFreeMemory (documentURL);
       TtaFreeMemory (tempURL);
-      TtaSetStructureChecking (oldStructureChecking, doc);
+      TtaSetStructureChecking ((boolean)oldStructureChecking, doc);
       TtaSetDisplayMode (doc, DisplayImmediately);
     }
 }

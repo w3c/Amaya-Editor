@@ -24,7 +24,7 @@
 #include "UIcss_f.h"
 
 #ifdef _WINDOWS
-#include "windialogapi_f.h"
+#include "wininclude.h"
 #endif /* _WINDOWS */
 
 static CHAR         ListBuffer[MAX_CSS_LENGTH + 1];

@@ -52,7 +52,7 @@ static boolean  PaletteDisplayed = FALSE;
 
 #include "HTMLpresentation_f.h"
 #ifdef _WINDOWS
-#include "windialogapi_f.h"
+#include "wininclude.h"
 #define iconGraphics 22
 #endif /* _WINDOWS */
 

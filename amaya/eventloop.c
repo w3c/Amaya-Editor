@@ -19,9 +19,13 @@
 #include "amaya.h"
 #include "netamaya.h"
 #include "eventamaya.h"
-
+#include "interface.h"
 /* #include "netamaya_f.h" */
 #include "eventamaya_f.h"
+
+#ifdef _WINDOWS
+#include "wininclude.h"
+#endif /* _WINDOWS */
 
 /************************************************************************
  *									*
@@ -143,10 +147,10 @@ ThotAppContext app_ctxt;
 ThotEvent *ev;
 #endif
 {
-  int status;
-
 #ifdef _WINDOWS
 #else  /* _WINDOWS */
+  int status;
+
   status = XtAppPending (app_ctxt);
   while (status & XtIMXEvent) {
      XtAppProcessEvent (app_ctxt, XtIMXEvent);
@@ -158,10 +162,10 @@ ThotEvent *ev;
    */
   /* blockOnFile(x_window_socket, 0); */
   XtAppNextEvent (app_ctxt, ev);
-
 #endif /* !_WINDOWS */
 }
 
+#ifndef _WINDOWS
 /*----------------------------------------------------------------------
   AmayaFetchAvailableEvent
 
@@ -181,8 +185,6 @@ ThotEvent *ev;
 {
   int status;
 
-#ifdef _WINDOWS
-#else  /* _WINDOWS */
   status = XtAppPending (app_ctxt);
   while (status & XtIMXEvent) {
      XtAppProcessEvent (app_ctxt, XtIMXEvent);
@@ -193,8 +195,8 @@ ThotEvent *ev;
      return(TRUE);
   }
   return(FALSE);
-#endif /* !_WINDOWS */
 }
+#endif /* !_WINDOWS */
 
 /*----------------------------------------------------------------------
   AmayaEventLoop

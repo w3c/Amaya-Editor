@@ -39,7 +39,7 @@
 #include "selection.h"
 
 #ifdef _WINDOWS
-#include "windialogapi_f.h"
+#include "wininclude.h"
 
 HWND currentWindow = NULL;
 static CHAR WIN_buffer [1024];

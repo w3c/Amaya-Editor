@@ -4328,7 +4328,7 @@ CHAR                c;
 		    attrType.AttrSSchema = schema;
 		    attrType.AttrTypeNum = tableEntry->ThotAttribute;
 		    CreateAttr (lastElement, attrType, inputBuffer,
-				tableEntry == &HTMLAttributeMappingTable[0]);
+				(boolean)(tableEntry == &HTMLAttributeMappingTable[0]));
 		    ReadingHREF = (attrType.AttrTypeNum == HTML_ATTR_HREF_);
 		    if (ReadingHREF)
 		      {

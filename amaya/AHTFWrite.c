@@ -164,7 +164,7 @@ int                 l;
 
 #endif /* __STDC__ */
 {
-   int                 status;
+   boolean            status;
    AHTReqContext      *reqcont;
 
    if (me->fp == NULL) {
@@ -178,7 +178,7 @@ int                 l;
    if (me->fp == stdout) 
      return HT_OK;
 
-   status = (fwrite (s, 1, l, me->fp) != l) ? HT_ERROR : HT_OK;
+   status = (fwrite (s, 1, l, me->fp) != (unsigned int)l) ? HT_ERROR : HT_OK;
    if (l > 1 && status == HT_OK)
       (void) AHTFWriter_flush (me);
 

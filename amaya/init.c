@@ -169,6 +169,8 @@ extern CHAR LostPicturePath [512];
 BOOL        tbStringsInitialized = FALSE;
 int         tipIndex;
 int         iString;
+
+#include "wininclude.h"
 #endif /* _WINDOWS */
 
 #include "css_f.h"
@@ -199,8 +201,12 @@ int         iString;
 #include "UIcss_f.h"
 
 #ifdef _WINDOWS
-#include "windialogapi_f.h"
+#include "wininclude.h"
 #endif /* _WINDOWS */
+
+#ifdef MATHML
+extern void InitMathML ();
+#endif /* MATHML */
 
 #ifdef AMAYA_PLUGIN
 extern void CreateFormPlugin (Document, View);
@@ -2687,7 +2693,14 @@ void *context;
     - history: record the URL in the browsing history
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Document            GetHTMLDocument (const STRING documentPath, STRING form_data, Document doc, Document baseDoc, ClickEvent CE_event, boolean history, TTcbf *cbf, void *ctx_cbf)
+Document            GetHTMLDocument (const STRING documentPath, 
+									 STRING form_data, 
+									 Document doc, 
+									 Document baseDoc, 
+									 ClickEvent CE_event, 
+									 boolean history, 
+									 TTcbf *cbf, 
+									 void *ctx_cbf)
 #else
 Document            GetHTMLDocument (documentPath, const STRING form_data, doc, baseDoc, CE_event, history, void *cbf, void *ctx_cbf)
 STRING              documentPath;
@@ -2808,7 +2821,7 @@ void               *ctx_cbf;
 	   /* In case of initial document, open the view before loading */
 	   if (doc == 0)
 	     {
-	       newdoc = InitDocView (doc, pathname, CE_event == CE_LOG);
+	       newdoc = InitDocView (doc, pathname, (boolean)(CE_event == CE_LOG));
 	       if (newdoc == 0)
 		 /* cannot display the new document */
 		 ok = FALSE;
@@ -2835,7 +2848,11 @@ void               *ctx_cbf;
 			 {
 			   TtaSetToggleItem (newdoc, 1, Views, TShowTextZone, FALSE);
 			   TtaSetToggleItem (newdoc, 1, Edit_, TEditMode, FALSE);
+#              ifdef _WINDOWS
+               WIN_TtaChangeButton (newdoc, 1, 5, iconBrowser, FALSE);
+#              else  /* !_WINDOWS */
 			   TtaChangeButton (newdoc, 1, 5, iconBrowser);
+#              endif /* _WINDOWS */
 			 }
 		       else
 			 {
@@ -3763,14 +3780,18 @@ NotifyEvent        *event;
    else
 #  ifdef _WINDOWS
      if (!TtaFileExist ("C:\\TEMP"))
-        mkdir ("C:\\TEMP");
+        _mkdir ("C:\\TEMP");
    ustrcpy (TempFileDirectory, "C:\\TEMP\\AMAYA");
 #  else  /* !_WINDOWS */
      ustrcpy (TempFileDirectory, "/tmp");
    ustrcat (TempFileDirectory, "/.amaya");
 #  endif /* _WINDOWS */
 
+#  ifdef _WINDOWS
+   i = _mkdir (TempFileDirectory);
+#  else  /* !_WINDOWS */
    i = mkdir (TempFileDirectory, S_IRWXU);
+#  endif /* _WINDOWS */
    if (i != 0 && errno != EEXIST)
      {
 #  ifndef _WINDOWS
@@ -3805,7 +3826,11 @@ NotifyEvent        *event;
        /* Create a temporary sub-directory for storing the HTML and image files */
        sprintf (tempname, "%s%c%d", TempFileDirectory, DIR_SEP, i);
        if (!TtaCheckDirectory (tempname))
+#         ifdef _WINDOWS
+          _mkdir (tempname);
+#         else  /* !_WINDOWS */
           mkdir (tempname, S_IRWXU);
+#         endif /* !_WINDOWS */
      }
 
    /* set path on current directory */

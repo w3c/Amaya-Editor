@@ -24,6 +24,8 @@
 #include "amaya.h"
 #include "constmenu.h"
 
+#include "wininclude.h"
+
 #ifdef  APPFILENAMEFILTER
 #       undef  APPFILENAMEFILTER
 #endif  /* APPFILENAMEFILTER */
@@ -99,8 +101,6 @@ static int          ChkrFormCorrect;
 static int          ChkrMenuIgnore;
 static int          ChkrCaptureNC;
 static int          ChkrSpecial;
-static int          nbClass;
-static int          nbItem;
 static int          classForm;
 static int          classSelect;
 static int          baseDlg;
@@ -177,6 +177,8 @@ static TCHAR        szFileName[256];
 static HWND         currentWnd;
 static HWND         parentWnd;
 static HWND         currentDlg;
+static UINT         nbClass;
+static UINT         nbItem;
 
 HWND wordButton;
 HWND hwnListWords;
@@ -320,7 +322,7 @@ int   nb;
 STRING buffer;
 #endif /* __STDC__ */
 {
-    nbItem    = nb_item;
+    nbItem    = (UINT)nb_item;
     baseDlg   = base_dlg;
     cssSelect = css_select;
 	formCss   = form_css;
@@ -624,7 +626,7 @@ int   base_dialog;
 int   confirm_save;
 #endif /* __STDC__ */
 {  
-    nbItem      = nb_item;
+    nbItem      = (UINT)nb_item;
     saveList    = save_list;
 	baseDlg     = base_dialog;
 	confirmSave = confirm_save;
@@ -677,7 +679,7 @@ STRING curLang;
 	sprintf (message2, msg2);
 	sprintf (winCurLang, curLang);
 	langList                = lang_list;
-	nbItem                  = nb_item;
+	nbItem                  = (UINT)nb_item;
 	NumMenuAlphabetLanguage = nmenuLanguage;
     menuAlphaLanguage       = menu_alpha_language; 
     LangValue               = lang_value;
@@ -754,7 +756,7 @@ int   nb_class;
 STRING class_list;
 #endif /* __STDC__ */
 {  
-	nbClass     = nb_class;
+	nbClass     = (UINT)nb_class;
 	classList   = class_list;
 	baseDlg     = base_dlg;
 	classForm   = class_form;
@@ -775,7 +777,7 @@ int   nb_class;
 STRING class_list;
 #endif /* __STDC__ */
 {  
-	nbClass     = nb_class;
+	nbClass     = (UINT)nb_class;
 	classList   = class_list;
 	baseDlg     = base_dlg;
 	classForm   = class_form;
@@ -953,7 +955,7 @@ LPARAM lParam;
 	HWND wndMessage;
 
 	static HWND wndCSSList;
-	static int itemIndex; 
+	static UINT itemIndex; 
 	static char szBuffer [MAX_BUFF];
 
     switch (msg) {
@@ -1590,7 +1592,6 @@ LPARAM lParam;
     HWND       hwndRadio1;
     HWND       hwndRadio2;
     HWND       hwndRadio3;
-    HWND       hwndRadio4;
     HWND       groupBx;
     TEXTMETRIC tm;
 
@@ -2254,7 +2255,7 @@ LPARAM lParam;
 	int   index = 0;
 	UINT  i = 0;
 
-	static int itemIndex; 
+	static UINT itemIndex; 
 	static CHAR szBuffer [MAX_BUFF];
 
     switch (msg) {
@@ -2365,7 +2366,7 @@ LPARAM lParam;
 	HWND wndMessage2;
 
 	static HWND wndLangList;
-	static int itemIndex; 
+	static UINT itemIndex; 
 	static CHAR szBuffer [MAX_BUFF];
 
     switch (msg) {
@@ -2766,7 +2767,7 @@ LPARAM lParam;
 #endif /* __STDC__ */
 {
 	int  index = 0;
-	int  i = 0;
+	UINT i = 0;
 
 	static HWND wndListRule;
 	static HWND wndEditRule;
@@ -2841,7 +2842,7 @@ LPARAM lParam;
 	UINT  i = 0;
 
 	static HWND wndListRule;
-	static int  itemIndex;
+	static UINT  itemIndex;
 	static CHAR szBuffer [MAX_BUFF];
 
     switch (msg) {
@@ -2927,8 +2928,8 @@ LPARAM lParam;
 					                     13, 29, 150, 16, hwnDlg, (HMENU) 99, 
 										 (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 
-			    wordButton = CreateWindow ("BUTTON", NULL, WS_CHILD | BS_DEFPUSHBUTTON | WS_VISIBLE,
-                                            13, 48, 150, 20, hwnDlg, IDC_WORDBUTTON, 
+			    wordButton = CreateWindow ((LPCTSTR)"BUTTON", (LPCTSTR)NULL, WS_CHILD | BS_DEFPUSHBUTTON | WS_VISIBLE,
+                                            13, 48, 150, 20, (HWND)hwnDlg, (HMENU)IDC_WORDBUTTON, 
 											(HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 
 				hwnListWords = CreateWindow ("listbox", NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD,

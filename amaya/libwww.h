@@ -69,10 +69,6 @@ typedef enum _AHTReqStatus
   }
 AHTReqStatus;
 
-#ifdef _WINDOWS
-typedef int XtInputId;
-#endif 
-
 typedef struct _AHTReqContext
   {
     HTRequest          *request;	/* Pointer to the associated request object     */

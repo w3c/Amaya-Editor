@@ -24,8 +24,7 @@
 #include "UIcss_f.h"
 
 #ifdef _WINDOWS
-#include "win_f.h"
-#include "windialogapi_f.h"
+#include "wininclude.h"
 #endif /* _WINDOWS */
  
 /*----------------------------------------------------------------------

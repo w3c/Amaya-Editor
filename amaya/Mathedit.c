@@ -19,6 +19,8 @@
 #include "css.h"
 #include "trans.h"
 
+#include "interface.h"
+
 #include "MathML.h"
 #ifdef GRAPHML
 #include "GraphML.h"
@@ -56,7 +58,7 @@ static Element	LastDeletedElement = NULL;
 #include "html2thot_f.h"
 #include "trans_f.h"
 #ifdef _WINDOWS
-#include "windialogapi_f.h"
+#include "wininclude.h"
 #define iconMath 21 
 #endif /* _WINDOWS */
 
@@ -113,7 +115,7 @@ int                 index;
   /* move the old element into the new MROW */
   TtaInsertFirstChild (&el, added, doc);
   /* check the Thot abstract tree against the structure schema. */
-  TtaSetStructureChecking (oldStructureChecking, doc);
+  TtaSetStructureChecking ((boolean)oldStructureChecking, doc);
   return (el);
 }
 
@@ -774,7 +776,7 @@ int                 construct;
 
 	  TtaSetDisplayMode (doc, DisplayImmediately);
 	  /* check the Thot abstract tree against the structure schema. */
-	  TtaSetStructureChecking (oldStructureChecking, doc);
+	  TtaSetStructureChecking ((boolean)oldStructureChecking, doc);
 	  
 	  /* selected the leaf in the first (or second) child of the new
 	     element */
@@ -1194,7 +1196,7 @@ static void CheckMROW (el, doc)
 	  }
        TtaDeleteTree (*el, doc);
        *el = NULL;
-       TtaSetStructureChecking (oldStructureChecking, doc);
+       TtaSetStructureChecking ((boolean)oldStructureChecking, doc);
        TtaSetDisplayMode (doc, DisplayImmediately);
        }
      }
@@ -1774,7 +1776,7 @@ static void ParseMathString (theText, theElem, doc)
      CreateParentMROW (firstEl, doc);
      }
 
-  TtaSetStructureChecking (oldStructureChecking, doc);
+  TtaSetStructureChecking ((boolean)oldStructureChecking, doc);
   TtaSetDisplayMode (doc, DisplayImmediately);
 
   /* set a new selection */
@@ -1851,7 +1853,7 @@ void MathElementPasted(event)
    placeholderEl = InsertPlaceholder (event->element, TRUE, event->document);
    placeholderEl = InsertPlaceholder (event->element, FALSE, event->document);
 
-   TtaSetStructureChecking (oldStructureChecking, event->document);
+   TtaSetStructureChecking ((boolean)oldStructureChecking, event->document);
 }
 
 
@@ -2076,7 +2078,7 @@ void MathElementDeleted(event)
 	   }
 	}
       }
-   TtaSetStructureChecking (oldStructureChecking, event->document);
+   TtaSetStructureChecking ((boolean)oldStructureChecking, event->document);
 }
 
 /*----------------------------------------------------------------------

@@ -27,7 +27,6 @@
 #include "tree.h"
 #include "view.h"
 #include "undo.h"
-
 /* Included headerfiles */
 #include "EDITOR.h"
 #include "HTML.h"

@@ -60,7 +60,7 @@ static int              basePrint;
 #include "HTMLhistory_f.h"
 
 #ifdef _WINDOWS 
-#include "windialogapi_f.h"
+#include "wininclude.h"
 #endif /* _WINDOWS */
 
 /*-----------------------------------------------------------------------
@@ -881,7 +881,7 @@ boolean        deleteTree;
       while (sibling == NULL);
       TtaDeleteTree (elem, destDoc);
       /* restore previous chacking mode */
-      TtaSetStructureChecking (checkingMode, destDoc);
+      TtaSetStructureChecking ((boolean)checkingMode, destDoc);
       /* return the address of the first copied element */
       *el = firstInserted;
     }
@@ -940,7 +940,7 @@ void *context;
 		  /* it's not the document itself */
 		  /* copy the target document at the position of the link */
 		  MoveDocumentBody (&next, document, newdoc, ptr, url,
-				    newdoc == IncludedDocument);
+				    (boolean)(newdoc == IncludedDocument));
 		}
 	      /* global variables */
 	      FreeDocumentResource (IncludedDocument);

@@ -506,7 +506,11 @@ Document            doc;
       res = fopen (ptr, "r");
       if (res != NULL)
 	{
+#     ifdef _WINDOWS
+	  if (fstat (_fileno (res), &buf))
+#     else  /* !_WINDOWS */
 	  if (fstat (fileno (res), &buf))
+#     endif /* !_WINDOWS */
 	    fclose (res);
 	  else
 	    {

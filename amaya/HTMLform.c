@@ -30,6 +30,9 @@
 
 #define PARAM_INCREMENT 50
 
+#ifdef _WINDOWS
+#include "wininclude.h"
+#endif /* _WINDOWS */
 #include "init_f.h"
 #include "html2thot_f.h"
 #include "HTMLactions_f.h"

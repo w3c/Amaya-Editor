@@ -22,6 +22,7 @@
 
 #ifdef _WINDOWS
 #include "resource.h"
+
 static CHAR         currentDocToSave[MAX_LENGTH];
 static CHAR         currentPathName[MAX_LENGTH];
 extern HINSTANCE    hInstance;
@@ -66,7 +67,7 @@ static STRING       QuotedText;
 
 
 #ifdef _WINDOWS
-#include "windialogapi_f.h"
+#include "wininclude.h"
 
 /*-----------------------------------------------------------------------
  CreateGetSaveDlgWindow

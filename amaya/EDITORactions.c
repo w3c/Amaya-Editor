@@ -17,6 +17,10 @@
 #include "amaya.h"
 #include "css.h"
 
+#ifdef _WINDOWS
+#include "wininclude.h"
+#endif /* _WINDOWS */
+
 #include "css_f.h"
 #include "html2thot_f.h"
 #include "init_f.h"

@@ -606,7 +606,11 @@ char      *url;
       sprintf (ptr, "%s%s%d%s", TempFileDirectory, DIR_STR, doc, DIR_STR);
       if (!TtaCheckDirectory (ptr))
 	/* directory did not exist */
+#   ifdef _WINDOWS
+	_mkdir (ptr);
+#   else  /* !_WINDOWS */
 	mkdir (ptr, S_IRWXU);
+#   endif /* !_WINDOWS */
 
       /* don't include the query string within document name */
       n = strrchr(documentname, '?');

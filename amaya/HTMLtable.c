@@ -910,7 +910,7 @@ Document            doc;
 	}
     }
   /* resume document structure checking */
-  TtaSetStructureChecking (PreviousStuctureChecking, doc);
+  TtaSetStructureChecking ((boolean)PreviousStuctureChecking, doc);
 }
 
 /*----------------------------------------------------------------------

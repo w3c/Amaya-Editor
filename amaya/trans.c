@@ -25,6 +25,9 @@
 #include "MathML.h"
 #endif
 
+#ifdef _WINDOWS
+#include "wininclude.h"
+#endif /* _WINDOWS */
 /*
  * pattern matching stack associates a node of source structure tree to a 
  * list of pat.

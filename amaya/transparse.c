@@ -86,6 +86,10 @@ static State        returnState;	/* return state from subautomaton */
 #include "html2thot_f.h"
 #include "transparse_f.h"
 
+#ifdef _WINDOWS
+#include "wininclude.h"
+#endif /* _WINDOWS */
+
 /*----------------------------------------------------------------------
   Init all transformation of the transformation set to valid,
    sets the value  transSet.MaxDepth 
