@@ -113,6 +113,7 @@ extern void TtaSetUriSSchema ( SSchema sSchema,
 extern void TtaChangeGenericSchemaNames ( char *sSchemaUri,
                                           char *sSchemaName,
                                           Document document );
+extern ThotBool TtaIsXmlSSchema ( SSchema schema );
 
 #else /* __STDC__ */
 
@@ -223,6 +224,7 @@ extern void TtaSetUriSSchema (/* SSchema sSchema,
 extern void TtaChangeGenericSchemaNames (/* char *sSchemaUri,
                                             char *sSchemaName,
                                             Document document */);
+extern ThotBool TtaIsXmlSSchema (/* SSchema schema */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

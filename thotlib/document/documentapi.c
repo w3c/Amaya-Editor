@@ -1801,3 +1801,17 @@ void TtaChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName,
       ChangeGenericSchemaNames (sSchemaUri, sSchemaName, pDoc);
     }
 }
+
+/*----------------------------------------------------------------------
+  TtaIsXmlSSchema
+  Returns yes if schema corresponds to a generic xml structure schema
+  Parameter:
+  schema: the structure schema of interest.
+  ----------------------------------------------------------------------*/
+ThotBool TtaIsXmlSSchema (SSchema schema)
+{
+  UserErrorCode = 0;
+  if (schema)
+    TtaError (ERR_invalid_parameter);
+  return ((PtrSSchema) schema)->SsIsXml;
+}

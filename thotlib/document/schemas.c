@@ -2495,6 +2495,8 @@ void ChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName, PtrDocument 
 
   if (pSS != NULL)
     {
+      /* It's a generic xml schema */
+      pSS->SsIsXml = TRUE;
       /* Modify the name of the structure schema */
       if (sSchemaUri != NULL && pSS->SsUriName == NULL)
 	{

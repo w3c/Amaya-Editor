@@ -838,4 +838,13 @@ void TtaSetUriSSchema (SSchema sSchema, char *sSchemaUri);
 
 #endif /* __CEXTRACT__ */
 
+/*----------------------------------------------------------------------
+  TtaIsXmlSSchema
+  Returns yes if schema corresponds to a generic xml structure schema
+  Parameter:
+  schema: the structure schema of interest.
+  ----------------------------------------------------------------------*/
+ThotBool TtaIsXmlSSchema (SSchema schema);
+
+
 #endif
