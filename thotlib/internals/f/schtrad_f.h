@@ -11,6 +11,8 @@ extern void ClearTranslationSchemasTable ( void );
 extern PtrTSchema LoadTranslationSchema ( Name schName,
                                           PtrSSchema pSS );
 extern PtrTSchema GetTranslationSchema ( PtrSSchema pSS );
+extern ThotBool IsTranslateTag ( PtrTSchema pTSch,
+                                 PtrSSchema pSSch );
 
 #else /* __STDC__ */
 
@@ -19,6 +21,8 @@ extern void ClearTranslationSchemasTable (/* void */);
 extern PtrTSchema LoadTranslationSchema (/* Name schName,
                                             PtrSSchema pSS */);
 extern PtrTSchema GetTranslationSchema (/* PtrSSchema pSS */);
+extern ThotBool IsTranslateTag (/* PtrTSchema pTSch,
+                                   PtrSSchema pSSch */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

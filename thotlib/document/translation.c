@@ -2756,8 +2756,11 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 	  /* Export the namespace declarations associated with  
 	     this element before exporting its attributes */ 
 	  if (!pEl->ElTransAttr)
-	    ExportNsDeclaration (pDoc, pEl);
-
+	    {
+	      if (IsTranslateTag (pTSch, pSSch) != 0)
+		ExportNsDeclaration (pDoc, pEl);
+	    }
+	  
 	  /* produit la traduction de tous les attributs de l'element */
 	  ApplyAttrRules (pTRule->TrOrder, pEl, removeEl, ignoreEl, transChar,
 			  lineBreak, pDoc, recordLineNb);
@@ -3448,7 +3451,8 @@ static void TranslateTree (PtrElement pEl, PtrDocument pDoc,
 	 {
 	   /* Export the namespace declarations associated with  
 	      this element before exporting its attributes */
-	   ExportNsDeclaration (pDoc, pEl);
+	   if (IsTranslateTag (pTSch, pSS) != 0)
+	     ExportNsDeclaration (pDoc, pEl);
 	   /* Parcourt les attributs de l'element et applique les regles
 	      des attributs qui doivent ^etre appliquees avant la
 	      traduction du contenu de l'element */

@@ -266,3 +266,37 @@ PtrTSchema          GetTranslationSchema (PtrSSchema pSS)
      }
    return pTSchema;
 }
+
+/*----------------------------------------------------------------------
+  IsTranslateTag
+  ----------------------------------------------------------------------*/
+ThotBool        IsTranslateTag (PtrTSchema pTSch, PtrSSchema pSSch)
+{
+   int                 i;
+   ThotBool            found, translate;
+
+   found = FALSE;
+   translate = FALSE;
+   i = 0;
+
+   if ((pSSch->SsName != NULL) &&
+       (strcmp (pSSch->SsName, "HTML") == 0))
+     {
+       do
+	 {
+	   if (LoadedTSchema[i].pTransSchema == pTSch)
+	     {
+	       found = TRUE;
+	       if (strcmp (LoadedTSchema[i].TransSchemaName, "HTMLTT"))
+		 translate = TRUE;
+	     }
+	   if (!found)
+	     i++;
+	 }
+       while (!found && i < MAX_TSCHEMAS);
+     }
+   else
+     translate = TRUE;
+
+   return translate;
+}
