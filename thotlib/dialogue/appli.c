@@ -1759,38 +1759,40 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
       }
     return 0L;
 
+  case WM_CLOSE:
   case WM_DESTROY:
     if (frame >= 0 && frame <= MAX_FRAME)
       {
 #ifdef _GL 
 	  GL_Win32ContextClose (frame, hwnd);
-	  
 #endif /*_GL*/
 	GetDocAndView (frame, &pDoc, &view);
 	if (pDoc && view)
 	  CloseView (pDoc, view);
 	if (FrameTable[frame].FrDoc == 0)
+	{
 	  FrMainRef[frame] = 0;
- 
+	  DestroyWindow (hwnd);
+	}
 	if (mMsg == WM_DESTROY)
 	  {
-	    for (frameNDX = 0; frameNDX <= MAX_FRAME; frameNDX++)
+	    for (frameNDX = 1; frameNDX <= MAX_FRAME; frameNDX++)
 	      if (FrMainRef[frameNDX] != 0)
-		{
 		  /* there is still an active frame */
-		  FrMainRef[frame] = 0;
-		  return 0L;
+		  break;
+		if (frameNDX > MAX_FRAME || FrMainRef[frameNDX] == 0)
+		{
+		  UnregisterClass ("Amaya",hInstance);
+		  UnregisterClass ("ClientWndProc",hInstance);
+		  UnregisterClass ("WNDIALOGBOX",hInstance);
+          if (mMsg == WM_DESTROY)
+            PostQuitMessage (0);
+	      TtaQuit();
 		}
-		  
-		UnregisterClass ("Amaya",hInstance);
-		UnregisterClass ("ClientWndProc",hInstance);
-		UnregisterClass ("WNDIALOGBOX",hInstance);
-	    TtaQuit();
 	  }
       }
     if (mMsg == WM_DESTROY)
       PostQuitMessage (0);
-	DestroyWindow (hwnd);
     return 0L;
         
   case WM_SIZE:
@@ -2174,13 +2176,6 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 	}
       return 0;
 
-    case WM_CLOSE:
-    case WM_DESTROY: 
-      if (frame > 0 && frame <= MAX_FRAME)
-	FrRef[frame] = 0;
-      PostQuitMessage (0);
-      return 0;
-      
     default:
       break;
     }
