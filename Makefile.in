@@ -158,7 +158,7 @@ libwww libwww.a :
 	-@(cd $(THOTDIR)/$(LIBWWW)/Library/src ; \
 	   touch *.html ; touch *.h ; touch *.c)
 	@(cd $(LIBWWW)/Library/src ; $(MAKE) CC=$(CC) CFLAGS="-O" libwww.a)
-	@($(CP) ../$(LIBWWW)/Library/src/libwww.a libwww.a)
+	@($(CP) $(LIBWWW)/Library/src/libwww.a libwww.a)
 	@echo libwww.a reinstalled
 
 #
