@@ -752,7 +752,7 @@ void ChangeLanguageLeaves (PtrElement pEl, Language lang)
 
    if (pEl == NULL)
       return;
-
+#ifdef IV
    if (!pEl->ElTerminal)
       /* The element is not a leaf. We recursively process all of the */
       /* element's subtree */
@@ -769,6 +769,7 @@ void ChangeLanguageLeaves (PtrElement pEl, Language lang)
    else if (pEl->ElLeafType == LtText && pEl->ElLanguage != lang)
      /* changes the language of the element */
      pEl->ElLanguage = lang;
+#endif /* IV */
 }
 
 

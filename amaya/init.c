@@ -5966,12 +5966,12 @@ static void DisplayHelp (int doc, int index)
   if (s != NULL)
     {
       /* get the documentation in the current language */
-      sprintf (localname, "%s%cdoc%camaya%c%s.%s", s, DIR_SEP, DIR_SEP,
+      sprintf (localname, "%s%cdoc%chtml%c%s.%s", s, DIR_SEP, DIR_SEP,
 		DIR_SEP, Manual[index], lang);
 
       if (!TtaFileExist (localname))
       /* get the standard english documentation */
-	sprintf (localname, "%s%cdoc%camaya%c%s", s, DIR_SEP, DIR_SEP,
+	sprintf (localname, "%s%cdoc%chtml%c%s", s, DIR_SEP, DIR_SEP,
 		  DIR_SEP, Manual[index]);
     }
   document = GetHTMLDocument (localname, NULL, 0, 0, CE_HELP, FALSE, NULL,
