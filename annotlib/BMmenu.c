@@ -40,7 +40,9 @@ static int       TopicBase;
 static int       TopicURLBase;
 
 static BookmarkP aBookmark;
+static dynBookmarkP aDynBookmark;
 static BookmarkP aTopic;
+static dynBookmarkP aDynTopic;
 static Document  BTopicTree; /* points to a thot sorted topic tree */
 static Document  TTopicTree; /* points to a thot sorted topic tree */
 
@@ -125,43 +127,182 @@ BookmarkP Bookmark_new_init (BookmarkP initial, ThotBool isTopic)
   return (me);
 }
 
+/*----------------------------------------------------------------------
+  BMMenu_new_init
+  Intializes both the bm and dynbookmark structures.
+  ----------------------------------------------------------------------*/
+static void BMmenu_Bookmark_new_init (BookmarkP initial, ThotBool isTopic, BookmarkP *bm, 
+				      dynBookmarkP *dbm)
+{
+  BookmarkP bme;
+  dynBookmarkP dbme;
+  char *tmp;
+
+  /* the dynamic bookmark */
+  dbme = (dynBookmarkP) TtaGetMemory (sizeof (dynBookmark));
+  *dbm = dbme;
+
+  memset (dbme, 0, sizeof (dynBookmark));
+
+  if (isTopic)
+    {
+      dbme->parent_url = BM_bufferNew ();
+      if (initial)
+	{
+	  if (initial->parent_url)
+	    BM_bufferCopy (dbme->parent_url, initial->parent_url);
+	}
+      else
+	BM_bufferCopy (dbme->parent_url, GetHomeTopicURI ());
+    }
+
+  dbme->self_url = BM_bufferNew ();
+  if (initial && initial->self_url)
+    BM_bufferCopy (dbme->self_url, initial->self_url);
+  dbme->bookmarks = BM_bufferNew ();
+  if (initial && initial->bookmarks)
+    BM_bufferCopy (dbme->bookmarks, initial->bookmarks);
+  dbme->title = BM_bufferNew ();
+  if (initial && initial->title)
+    {
+      tmp = TtaConvertMbsToByte (initial->title, ISO_8859_1);
+      BM_bufferCopy (dbme->title, tmp);
+      TtaFreeMemory (tmp);
+    }
+  dbme->author = BM_bufferNew ();
+  if (initial && initial->author)
+    {
+      tmp = TtaConvertMbsToByte (initial->author, ISO_8859_1);
+      BM_bufferCopy (dbme->author, tmp);
+      TtaFreeMemory (tmp);
+    }
+  dbme->description = BM_bufferNew ();
+  if (initial && initial->description)
+    {
+      tmp = TtaConvertMbsToByte (initial->description, ISO_8859_1);
+      BM_bufferCopy (dbme->description, tmp);
+      TtaFreeMemory (tmp);
+    }
+
+  /* the normal bookmark */
+  bme = (BookmarkP) TtaGetMemory (sizeof (Bookmark));
+  *bm = bme;
+
+  memset (bme, 0, sizeof (Bookmark));
+
+  if (initial && initial->created)
+    bme->created = TtaStrdup (initial->created);
+  else
+    bme->created = NULL;
+  if (initial && initial->modified)
+    bme->modified = TtaStrdup (initial->modified);
+  else
+    bme->modified = NULL;
+  if (initial)
+    bme->isUpdate = initial->isUpdate;
+}
+
+/*----------------------------------------------------------------------
+  BMenu_bookmarkSynchronize
+  Updates the pointers on a bookmark from the dynamic bookmark fields.
+  ----------------------------------------------------------------------*/
+static void BMenu_bookmarkSynchronize (dynBookmarkP dbme, BookmarkP bme)
+{
+  /* we link to the values of the dynamic bookmark */
+  bme->parent_url = BM_bufferContent (dbme->parent_url);
+  bme->self_url = BM_bufferContent (dbme->self_url);
+  bme->bookmarks = BM_bufferContent (dbme->bookmarks);
+  bme->title = BM_bufferContent (dbme->title);
+  bme->author = BM_bufferContent (dbme->author);
+  bme->description = BM_bufferContent (dbme->description);
+}
+
+/*----------------------------------------------------------------------
+  BMenu_bookmarkclear
+  Clears the Bookmark structure of the fields that are just copies
+  from the dynamic structure one.
+  ----------------------------------------------------------------------*/
+static void BMenu_bookmarkclear (BookmarkP bme)
+{
+
+  bme->parent_url = NULL;
+  bme->self_url = NULL;
+  bme->bookmarks = NULL;
+  bme->title = NULL;
+  bme->author = NULL;
+  bme->description = NULL;
+}
+
+/*----------------------------------------------------------------------
+  BMenu_bookmarkFree
+  Frees the memory allocated to a dbme and bme structure.
+  ----------------------------------------------------------------------*/
+static void BMmenu_bookmarkFree (dynBookmarkP *dbm, BookmarkP *bm)
+{
+  BookmarkP bme = *bm;
+  dynBookmarkP dbme = *dbm;
+
+  if (bme)
+    {
+      BMenu_bookmarkclear (bme);
+      Bookmark_free (bme);
+      *bm = NULL;
+    }
+
+  if (dbme)
+    {
+      BM_bufferFree (dbme->parent_url);
+      BM_bufferFree (dbme->self_url);
+      BM_bufferFree (dbme->bookmarks);
+      BM_bufferFree (dbme->title);
+      BM_bufferFree (dbme->author);
+      BM_bufferFree (dbme->description);
+      TtaFreeMemory (dbme);
+      *dbm = NULL;
+    }
+}
 
 /*----------------------------------------------------------------------
   ControlURIs
   Checks if the topic and bookmarks URLs are relative or absolute.
   ----------------------------------------------------------------------*/
-static void ControlURIs (BookmarkP me)
+static void ControlURIs (dynBookmarkP me)
 {
+  char *url;
   char *ptr;
   char *base;
   
   base = GetLocalBookmarksBaseURI ();
 
-  if (me->parent_url && me->parent_url[0] && me->parent_url[0] == '#')
+  url = BM_bufferContent (me->parent_url);
+  if (url && url[0] && url[0] == '#')
     {
-      ptr = Annot_ConcatenateBase (base, me->parent_url);
+      ptr = Annot_ConcatenateBase (base, url);
       if (ptr)
 	{
-	  TtaFreeMemory (me->parent_url);
-	  me->parent_url = ptr;
+	  BM_bufferCopy (me->parent_url, ptr);
+	  TtaFreeMemory (ptr);
 	}
     }
-  if (me->self_url && me->self_url[0] && me->self_url[0] == '#')
+  
+  url = BM_bufferContent (me->self_url);
+  if (url && url[0] && url[0] == '#')
     {
-      ptr = Annot_ConcatenateBase (base, me->self_url);
+      ptr = Annot_ConcatenateBase (base, url);
       if (ptr)
 	{
-	  TtaFreeMemory (me->self_url);
-	  me->self_url = ptr;
+	  BM_bufferCopy (me->self_url, ptr);
+	  TtaFreeMemory (ptr);
 	}
     }
-  if (me->bookmarks && me->bookmarks[0] && !IsW3Path (me->bookmarks) 
-      && !IsFilePath (me->bookmarks))
+  
+  url = BM_bufferContent (me->bookmarks);
+  if (url && url[0] && !IsW3Path (url) && !IsFilePath (url))
     {
       char *ptr;
-      ptr = ANNOT_MakeFileURL ((const char *) me->bookmarks);
-      TtaFreeMemory (me->bookmarks);
-      me->bookmarks = ptr;
+      ptr = ANNOT_MakeFileURL ((const char *) url);
+      BM_bufferCopy (me->bookmarks, ptr);
+      TtaFreeMemory (ptr);
     }
 }
 
@@ -174,7 +315,7 @@ static void InitBookmarkMenu (Document doc, BookmarkP bookmark)
   char *ptr;
   char *ptr2;
 
-  aBookmark = Bookmark_new_init (bookmark, FALSE);
+ BMmenu_Bookmark_new_init (bookmark, FALSE, &aBookmark, &aDynBookmark);
 
   if (!bookmark)
     {
@@ -197,19 +338,19 @@ static void InitBookmarkMenu (Document doc, BookmarkP bookmark)
 	    TtaFreeMemory (ptr);
 	  ptr = ptr2;
 	}
-      strcpy (aBookmark->bookmarks, ptr);
+      BM_bufferCopy (aDynBookmark->bookmarks, ptr);
 
       if (ptr != DocumentURLs[doc])
 	TtaFreeMemory (ptr);
 
       ptr = ANNOT_GetHTMLTitle (doc);
       ptr2 = TtaConvertMbsToByte (ptr, ISO_8859_1);
-      strcpy (aBookmark->title, ptr2);
+      BM_bufferCopy (aDynBookmark->title, ptr2);
       TtaFreeMemory (ptr);
       TtaFreeMemory (ptr2);
       ptr = GetAnnotUser ();
       ptr2 = TtaConvertMbsToByte (ptr, ISO_8859_1);
-      strcpy (aBookmark->author, ptr2);
+      BM_bufferCopy (aDynBookmark->author, ptr2);
       TtaFreeMemory (ptr2);
       aBookmark->created = StrdupDate ();
       aBookmark->modified = StrdupDate ();
@@ -223,12 +364,12 @@ static void InitBookmarkMenu (Document doc, BookmarkP bookmark)
 static void RefreshBookmarkMenu ()
 {
   /* set the menu entries to the current values */
-  TtaSetTextForm (BookmarkBase + mBMTitle, aBookmark->title);
-  TtaSetTextForm (BookmarkBase + mBMBookmarks, aBookmark->bookmarks);
-  TtaSetTextForm (BookmarkBase + mBMAuthor, aBookmark->author);
+  TtaSetTextForm (BookmarkBase + mBMTitle, BM_bufferContent (aDynBookmark->title));
+  TtaSetTextForm (BookmarkBase + mBMBookmarks, BM_bufferContent (aDynBookmark->bookmarks));
+  TtaSetTextForm (BookmarkBase + mBMAuthor, BM_bufferContent (aDynBookmark->author));
   TtaSetTextForm (BookmarkBase + mBMCreated, aBookmark->created);
   TtaSetTextForm (BookmarkBase + mBMModified, aBookmark->modified);
-  TtaSetTextForm (BookmarkBase + mBMDescription, aBookmark->description);
+  TtaSetTextForm (BookmarkBase + mBMDescription, BM_bufferContent (aDynBookmark->description));
 }
 
 /*-----------------------------------------------------------------------
@@ -279,14 +420,14 @@ static void BookmarkMenuCallbackDialog (int ref, int typedata, char *data)
 	  switch (val) 
 	    {
 	    case 0: /* done */
-	      Bookmark_free (aBookmark);
-	      aBookmark = NULL;
+	      BMmenu_bookmarkFree (&aDynBookmark, &aBookmark);
 	      TtaCloseDocument (BTopicTree);
 	      BTopicTree = 0;
 	      TtaDestroyDialogue (ref);
 	      break;
 	    case 1: /* create bookmark */
-	      ControlURIs (aBookmark);
+	      ControlURIs (aDynBookmark);
+	      BMenu_bookmarkSynchronize (aDynBookmark, aBookmark);
 	      BM_dumpTopicTreeSelections (BTopicTree, &parent_url_list);
 	      if (parent_url_list)
 		{
@@ -304,8 +445,7 @@ static void BookmarkMenuCallbackDialog (int ref, int typedata, char *data)
 		  if (result)
 		    {
 		      /* if successful, close the dialog */
-		      Bookmark_free (aBookmark);
-		      aBookmark = NULL;
+		      BMmenu_bookmarkFree (&aDynBookmark, &aBookmark);
 		      TtaCloseDocument (BTopicTree);
 		      BTopicTree = 0;
 		      TtaDestroyDialogue (ref);
@@ -325,30 +465,30 @@ static void BookmarkMenuCallbackDialog (int ref, int typedata, char *data)
 
 	case mBMTitle:
 	  if (data)
-	    strcpy (aBookmark->title, data);
+	    BM_bufferCopy (aDynBookmark->title, data);
 	  else
-	    aBookmark->title[0] = EOS;
+	    BM_bufferClear (aDynBookmark->title);
 	  break;
 
 	case mBMBookmarks:
 	  if (data)
-	    strcpy (aBookmark->bookmarks, data);
+	    BM_bufferCopy (aDynBookmark->bookmarks, data);
 	  else
-	    aBookmark->bookmarks[0] = EOS;
+	    BM_bufferClear (aDynBookmark->bookmarks);
 	  break;
 
 	case mBMAuthor:
 	  if (data)
-	    strcpy (aBookmark->author, data);
+	    BM_bufferCopy (aDynBookmark->author, data);
 	  else
-	    aBookmark->author[0] = EOS;
+	    BM_bufferClear (aDynBookmark->author);
 	  break;
 
 	case mBMDescription:
 	  if (data)
-	    strcpy (aBookmark->description, data);
+	    BM_bufferCopy (aDynBookmark->description, data);
 	  else
-	    aBookmark->description[0] = EOS;
+	    BM_bufferClear (aDynBookmark->description);
 	  break;
 
 	default:
@@ -370,11 +510,8 @@ void BM_BookmarkMenu (Document doc, View view, BookmarkP bookmark)
    if (BookmarkBase == 0)
      BookmarkBase = TtaSetCallback (BookmarkMenuCallbackDialog, MAX_BOOKMARKMENU_DLG);
    
-   if (aBookmark)
-     {
-       Bookmark_free (aBookmark);
-       aBookmark = NULL;
-     }
+   if (aDynBookmark && aBookmark)
+     BMmenu_bookmarkFree (&aDynBookmark, &aBookmark);
 
    /* dump the topics as a thot three */
    if (BTopicTree != 0)
@@ -468,14 +605,14 @@ static void InitTopicMenu (Document doc, BookmarkP bookmark)
   char *annotUser;
   char *tmp;
 
-  aTopic = Bookmark_new_init (bookmark, TRUE);
+  BMmenu_Bookmark_new_init (bookmark, TRUE, &aTopic, &aDynTopic);
   aTopic->isTopic = TRUE;
 
   if (!bookmark)
     {
       annotUser = GetAnnotUser ();
       tmp = TtaConvertMbsToByte (annotUser, ISO_8859_1);
-      strcpy (aTopic->author, tmp);
+      BM_bufferCopy (aDynTopic->author, tmp);
       TtaFreeMemory (tmp);
       aTopic->created = StrdupDate ();
       aTopic->modified = StrdupDate ();
@@ -489,12 +626,12 @@ static void InitTopicMenu (Document doc, BookmarkP bookmark)
 static void RefreshTopicMenu ()
 {
   /* set the menu entries to the current values */
-  TtaSetTextForm (TopicBase + mTMParentTopic, aTopic->parent_url);
-  TtaSetTextForm (TopicBase + mTMTitle, aTopic->title);
-  TtaSetTextForm (TopicBase + mTMAuthor, aTopic->author);
+  TtaSetTextForm (TopicBase + mTMParentTopic, BM_bufferContent (aDynTopic->parent_url));
+  TtaSetTextForm (TopicBase + mTMTitle, BM_bufferContent (aDynTopic->title));
+  TtaSetTextForm (TopicBase + mTMAuthor, BM_bufferContent (aDynTopic->author));
   TtaSetTextForm (TopicBase + mTMCreated, aTopic->created);
   TtaSetTextForm (TopicBase + mTMModified, aTopic->modified);
-  TtaSetTextForm (TopicBase + mTMDescription, aTopic->description);
+  TtaSetTextForm (TopicBase + mTMDescription, BM_bufferContent (aDynTopic->description));
 }
 
 /*-----------------------------------------------------------------------
@@ -513,9 +650,9 @@ static void TopicMenuSelect_cbf (ThotWidget w, ThotBool state, void *cdata)
 	printf ("Selected URL %s\n", url);
       else
 	printf ("Deselected URL %s\n", url);
-      strcpy (aTopic->parent_url, url);
+      BM_bufferCopy (aDynTopic->parent_url, url);
       /* @@ JK: just for debugging */
-      TtaSetTextForm (TopicBase + mTMParentTopic, aTopic->parent_url);
+      TtaSetTextForm (TopicBase + mTMParentTopic, BM_bufferContent (aDynTopic->parent_url));
       TtaFreeMemory (url);
     }
 }
@@ -544,14 +681,14 @@ static void TopicMenuCallbackDialog (int ref, int typedata, char *data)
 	  switch (val) 
 	    {
 	    case 0: /* done */
-	      Bookmark_free (aTopic);
-	      aTopic = NULL;
+	      BMmenu_bookmarkFree (&aDynTopic, &aTopic);
 	      TtaCloseDocument (TTopicTree);
 	      TTopicTree = 0;
 	      TtaDestroyDialogue (ref);
 	      break;
 	    case 1: /* create topic */
-	      ControlURIs (aTopic);
+	      ControlURIs (aDynTopic);
+	      BMenu_bookmarkSynchronize (aDynTopic, aTopic);
 	      if (aTopic->isUpdate)
 		result = BM_updateItem (aTopic, TRUE);
 	      else
@@ -559,8 +696,7 @@ static void TopicMenuCallbackDialog (int ref, int typedata, char *data)
 	      if (result)
 		{
 		  /* if successful, close the dialog */
-		  Bookmark_free (aTopic);
-		  aTopic = NULL;
+		  BMmenu_bookmarkFree (&aDynTopic, &aTopic);
 		  TtaCloseDocument (TTopicTree);
 		  TTopicTree = 0;
 		  TtaDestroyDialogue (ref);
@@ -578,30 +714,30 @@ static void TopicMenuCallbackDialog (int ref, int typedata, char *data)
 
 	case mTMParentTopic:
 	  if (data)
-	    strcpy (aTopic->parent_url, data);
+	    BM_bufferCopy (aDynTopic->parent_url, data);
 	  else
-	    aTopic->parent_url[0] = EOS;
+	    BM_bufferClear (aDynTopic->parent_url);
 	  break;
 
 	case mTMTitle:
 	  if (data)
-	    strcpy (aTopic->title, data);
+	    BM_bufferCopy (aDynTopic->title, data);
 	  else
-	    aTopic->title[0] = EOS;
+	    BM_bufferClear (aDynTopic->title);
 	  break;
 
 	case mTMAuthor:
 	  if (data)
-	    strcpy (aTopic->author, data);
+	    BM_bufferCopy (aDynTopic->author, data);
 	  else
-	    aTopic->author[0] = EOS;
+	    BM_bufferClear (aDynTopic->author);
 	  break;
 
 	case mTMDescription:
 	  if (data)
-	    strcpy (aTopic->description, data);
+	    BM_bufferCopy (aDynTopic->description, data);
 	  else
-	    aTopic->description[0] = EOS;
+	    BM_bufferClear (aDynTopic->description);
 	  break;
 
 	default:
@@ -623,11 +759,9 @@ void BM_TopicMenu (Document doc, View view, BookmarkP bookmark)
    if (TopicBase == 0)
      TopicBase = TtaSetCallback (TopicMenuCallbackDialog, MAX_TOPICMENU_DLG);
   
-   if (aTopic)
-     {
-       Bookmark_free (aTopic);
-       aTopic = NULL;
-     }
+   if (aTopic && aDynTopic)
+     BMmenu_bookmarkFree (&aDynTopic, &aTopic);
+
    /* dump the topics as a thot three */
    if (TTopicTree != 0)
      TtaCloseDocument (TTopicTree);
@@ -716,7 +850,7 @@ void BM_TopicMenu (Document doc, View view, BookmarkP bookmark)
 
 /*----------------------------------------------------------------------
   TopicURLCallbackDialog
-  callback of the Bookmark menu
+  callback of the Topic menu
   ----------------------------------------------------------------------*/
 static void TopicURLCallbackDialog (int ref, int typedata, char *data)
 {
@@ -734,7 +868,7 @@ static void TopicURLCallbackDialog (int ref, int typedata, char *data)
       val = (int) data;
       switch (ref - TopicURLBase)
 	{
-	case BookmarkMenu:
+	case TopicURLMenu:
 	  switch (val) 
 	    {
 	    case 0: /* cancel */

@@ -202,5 +202,118 @@ List *BM_expandBookmarks (List **list)
   return new_list;
 }
 
+#define PARAM_INCREMENT 5
+
+/*----------------------------------------------------------------------
+  BM_bufferNew
+  Creates and initializes a new dynamic buffer structure.
+  ----------------------------------------------------------------------*/
+BM_dyn_buffer * BM_bufferNew (void)
+{
+  BM_dyn_buffer *me;
+
+  me = TtaGetMemory (sizeof (BM_dyn_buffer));
+  if (me)
+    {
+      me->buffer = TtaGetMemory (PARAM_INCREMENT);
+      me->buffer[0] = EOS;
+      me->lgbuffer = PARAM_INCREMENT;
+    }
+  return me;
+}
+
+/*----------------------------------------------------------------------
+  BM_bufferFree
+  Frees the memory associated with a dynamic buffer
+  ----------------------------------------------------------------------*/
+void BM_bufferFree (BM_dyn_buffer * me)
+{
+  if (!me)
+    return;
+
+  if (me->buffer)
+    TtaFreeMemory (me->buffer);
+  TtaFreeMemory (me);
+}
+
+/*----------------------------------------------------------------------
+  BM_bufferContent
+  Returns the content of a dynamic buffer
+  ----------------------------------------------------------------------*/
+char * BM_bufferContent (BM_dyn_buffer * me)
+{
+  if (!me)
+    return NULL;
+
+  return me->buffer;
+}
+
+/*----------------------------------------------------------------------
+  BM_bufferClear
+  Clears the content  of a dynamic buffer
+  ----------------------------------------------------------------------*/
+void BM_bufferClear (BM_dyn_buffer * me)
+{
+  if (!me || !me->buffer)
+    return;
+
+  me->buffer[0] = EOS;
+}
+
+/*----------------------------------------------------------------------
+  BM_bufferCat
+  reallocates memory and concatenates a string into buffer	
+  ----------------------------------------------------------------------*/
+void BM_bufferCat (BM_dyn_buffer *me, char *src)
+{
+  void               *status;
+  int                 lg;
+
+  lg = strlen (src) + 1;
+  if ((int)strlen (me->buffer) + lg > me->lgbuffer)
+    {
+      /* it is necessary to extend the buffer */
+      if (lg < PARAM_INCREMENT)
+	lg = PARAM_INCREMENT;
+      status = TtaRealloc (me->buffer, sizeof (char) * (me->lgbuffer + lg));      
+      if (status != NULL)
+	{
+	  me->buffer = status;
+	  me->lgbuffer += lg;
+	  strcat (me->buffer, src);
+	}
+    }
+  else
+    strcat (me->buffer, src);
+}
+
+/*----------------------------------------------------------------------
+  BM_bufferCopy
+  reallocates memory and copies a string into buffer	
+  ----------------------------------------------------------------------*/
+void BM_bufferCopy (BM_dyn_buffer *me, char *src)
+{
+  void               *status;
+  int                 lg;
+
+  lg = strlen (src) + 1;
+  if (lg > me->lgbuffer)
+    {
+      /* it is necessary to extend the buffer */
+      if (lg < PARAM_INCREMENT)
+	lg = PARAM_INCREMENT;
+      else
+	lg = lg + PARAM_INCREMENT; /* always get some extra chars */
+      status = TtaRealloc (me->buffer, sizeof (char) * (lg));
+      if (status != NULL)
+	{
+	  me->buffer = status;
+	  me->lgbuffer = lg;
+	  strcpy (me->buffer, src);
+	}
+    }
+  else
+    strcpy (me->buffer, src);
+}
 
 

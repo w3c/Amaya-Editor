@@ -54,4 +54,18 @@ typedef struct _Bookmark
   char *context;   /* not used yet, but XPointer like */
 } Bookmark, *BookmarkP;
 
+typedef struct _BM_dyn_buffer {
+  char *buffer;
+  unsigned int lgbuffer;
+} BM_dyn_buffer;
 
+
+typedef struct _dynBookmark
+{
+  BM_dyn_buffer *parent_url;     /* the parent topic */
+  BM_dyn_buffer *self_url;       /* the id that talks about this item */
+  BM_dyn_buffer *bookmarks;      /* for bookmarks, what we're bookmarking */
+  BM_dyn_buffer *title;      
+  BM_dyn_buffer *author;
+  BM_dyn_buffer *description;
+} dynBookmark, *dynBookmarkP;
