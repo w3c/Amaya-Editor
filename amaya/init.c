@@ -77,7 +77,7 @@ char docToOpen [256];
 #ifdef WITH_SOCKS
 char                __res = 0;
 #endif
-#define AMAYA_PAGE "http://www.inrialpes.fr:1080/"
+#define AMAYA_PAGE "http://www.w3.org/pub/WWW/Amaya/Manual.html"
 static int          AmayaInitialized = 0;
 static Pixmap       stopR;
 static Pixmap       stopN;
