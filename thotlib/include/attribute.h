@@ -9,17 +9,6 @@
 #define _ATTRIBUTE_H_
 #include "tree.h"
 
-/* attribute */
-typedef int        *Attribute;
-
-/* attribute type */
-typedef struct _AttributeType
-  {
-     SSchema             AttrSSchema;
-     int                 AttrTypeNum;
-  }
-AttributeType;
-
 #ifndef __CEXTRACT__
 
 /* ----------------------------------------------------------------------

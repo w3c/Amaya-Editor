@@ -160,6 +160,24 @@ STRUCT
         GraphML;		                                { SVG }
 	MAP;							{ MAP }
 	XLink;							{ Annotations }
+	SVG_Image						{ GRAPHIC }
+	    (ATTR SRC; ALT; longdesc;
+		{ src  alt  longdesc }
+		  Height_; Width__;
+		{ height   width }
+		  IntWidthPercent; IntWidthPxl;
+		  USEMAP; ISMAP;
+		{ usemap  ismap }
+		 IsInput;    NAME;
+		{ input type=IMAGE  name }
+		  Alignment;
+		{ align   top   middle   bottom   left   right }
+		  Img_border;
+		{ border }
+		  hspace; vspace) =
+		{ hspace  vspace }
+		 SVG_ImageContent;
+	SVG_ImageContent  = GraphML;
 	END;
 
 	HTMLfragment = LIST OF (Element);
@@ -209,7 +227,7 @@ STRUCT
 	Basic_Set
 	     - (PICTURE, Object, Applet,
 		Big_text, Small_text, Subscript, Superscript,
-		Font_, BaseFont);
+		Font_, BaseFont, SVG_Image);
 
   Anchor							{ A }
      (ATTR charset; Link_type; NAME;
@@ -250,6 +268,7 @@ STRUCT
 	ruby;                                                   { ruby }
 	MathML;							{ MATH }
 	XLink;							{ Annotations }
+	SVG_Image;						{ GRAPHIC }
 	END;
 
   BaseFont							{ BASEFONT }
@@ -914,5 +933,6 @@ EXCEPT
 	onkeyup:	EventAttr;
 	ID :		CssId;
 	Class:		CssClass;
+	SVG_ImageContent: Hidden;
 
 END

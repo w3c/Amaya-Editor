@@ -29,7 +29,7 @@
  
 #include "appstruct.h"
  
-typedef CHAR_T    Name[MAX_NAME_LENGTH]; /* a name terminated by a null char */
+typedef char    Name[MAX_NAME_LENGTH]; /* a name terminated by a null char */
 
 /* values for using schema or user attribute and element type names */ 
 #define USER_NAME 1
@@ -278,6 +278,8 @@ typedef struct _StructSchema
    PtrSSchema       SsPrevExtens;        /* Pointer to the previous schema
 					    extension or NULL if no extens. */
    Name             SsName;              /* generic structure name*/
+   char            *SsUriName;           /* Pointer to the URI associated with
+					    this schema */
    int              SsCode;              /* code to identify the version */
    Name             SsDefaultPSchema;    /* name of the default presentation 
 					    schema associated with this
@@ -306,7 +308,7 @@ typedef struct _StructSchema
 					    and the attributes */
    int              SsException[MAX_EXCEPT_SSCHEMA]; /* buffer for the text of
 							the constants */
-   CHAR_T           SsConstBuffer[MAX_LEN_ALL_CONST];/* number of the rule
+   char             SsConstBuffer[MAX_LEN_ALL_CONST];/* number of the rule
 					    defining the first dynamically
 					    loaded nature */
    int              SsFirstDynNature;    /* attributes for this schema */

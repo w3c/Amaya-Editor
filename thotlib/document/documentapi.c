@@ -975,6 +975,36 @@ SSchema TtaGetSSchema (char *name, Document document)
    return schema;
 }
 
+/*----------------------------------------------------------------------
+   TtaGetSSchemaByUri
+
+   Returns a structure schema whose URI is known and that is used in a
+   given document.
+   Parameter:
+   uriName: the URI of the structure schema of interest.
+   document: the document that uses this structure schema.
+   Return value:
+   the structure schema having this URI, or NULL if this structure
+   schema is not loaded or not used by the document.
+  ----------------------------------------------------------------------*/
+SSchema             TtaGetSSchemaByUri (CHAR_T* uriName, Document document)
+{
+   SSchema          schema;
+
+   UserErrorCode = 0;
+   schema = NULL;
+   if (uriName == NULL || uriName[0] == WC_EOS)
+     TtaError (ERR_invalid_parameter);
+   /* verifies the parameter document */
+   else if (document < 1 || document > MAX_DOCUMENTS)
+     TtaError (ERR_invalid_document_parameter);
+   else if (LoadedDocument[document - 1] == NULL)
+     TtaError (ERR_invalid_document_parameter);
+   else
+     /* parameter document is correct */
+     schema = (SSchema) GetSSchemaByUriForDoc (uriName, LoadedDocument[document - 1]);
+   return schema;
+}
 
 /*----------------------------------------------------------------------
    TtaSameSSchemas

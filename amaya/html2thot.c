@@ -4965,9 +4965,9 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 		      i += 6;
 		      *xmlDec = TRUE;
 		      *isXML = TRUE;
-#ifdef XML_GEN
+#ifdef XML_GENERIC
 		      *thotType = docXml;
-#endif /* XML_GEN */
+#endif /* XML_GENERIC */
 		      /* check whether there is an encoding */
 		      ptr = strstr (&FileBuffer[i], "encoding");
 		      end = NULL;

@@ -26,6 +26,7 @@
 #include "HTMLactions_f.h"
 #include "HTMLedit_f.h"
 #include "html2thot_f.h"
+#include "Xml2thot_f.h"
 
 /*----------------------------------------------------------------------
    AddLoadedImage adds a new image into image descriptor table.	
@@ -514,7 +515,8 @@ void                DisplayImage (Document doc, Element el, char *imageName, cha
 	  /* it's an SVG image */
 	  /* parse the SVG file and include the parse tree at the
 	     position of the image element */
-	  /****** to do *****/;
+	  ParseXmlSubTree (NULL, imageName, el, FALSE,
+				doc, TtaGetDefaultLanguage(), "SVG");
 	}
       else /* svg images don't use Image Maps */
 	UpdateImageMap (el, doc, -1, -1);
@@ -888,7 +890,7 @@ ThotBool FetchAndDisplayImages (Document doc, int flags)
    AttributeType       attrType;
    Attribute           attr;
    ElementType         elType;
-   Element             el, elFound, pic;
+   Element             el, elFound, pic, elNext;
    char               *currentURL, *imageURI;
    int                 length;
    ThotBool            stopped_flag;
@@ -919,6 +921,8 @@ ThotBool FetchAndDisplayImages (Document doc, int flags)
        attrType.AttrTypeNum = HTML_ATTR_SRC;
        /* Start from the root element */
        el = TtaGetMainRoot (doc);
+       TtaSearchAttribute (attrType, SearchForward, el, &elFound, &attr);
+       el = elFound;
        do
 	 {
 	   TtaHandlePendingEvents ();
@@ -930,13 +934,17 @@ ThotBool FetchAndDisplayImages (Document doc, int flags)
 	   
 	   if (W3Loading == doc || DocNetworkStatus[doc] & AMAYA_NET_INACTIVE)
 	     break;
-	   /* search the next element having an attribute SRC */
-	   TtaSearchAttribute (attrType, SearchForward, el, &elFound, &attr);
-	   el = elFound;
 	   /* FetchImage increments FilesLoading[doc] for each new get
 	      request */
 	   if (el != NULL)
-	     FetchImage (doc, el, NULL, flags, NULL, NULL);
+	     {
+	       /* search the next element having an attribute SRC */
+	       elNext = el;
+	       TtaSearchAttribute (attrType, SearchForward,
+				   elNext, &elFound, &attr);
+	       FetchImage (doc, el, NULL, flags, NULL, NULL);
+	       el = elFound;
+	     }
 	 }
        while (el);
      }

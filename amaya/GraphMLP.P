@@ -215,6 +215,7 @@ RULES
 	BEGIN
 	Size: 12 pt;
 	Font: helvetica;
+        Visibility: 10;
 	IN Structure_view BEGIN
 		Width: Enclosing . Width;
 		PaddingLeft: 0.4;
@@ -248,8 +249,6 @@ RULES
 	IN Structure_view BEGIN
 	        if within use_
 	            Visibility: 0;
-	        if not within use_
-		    Visibility: 10;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
         	Height	: Enclosed . Height;

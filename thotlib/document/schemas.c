@@ -117,6 +117,28 @@ PtrSSchema GetSSchemaForDoc (char *name, PtrDocument pDoc)
 }
 
 /*----------------------------------------------------------------------
+  GetSSchemaByUriForDoc
+  Return the structure schema with URI uriName used by document pDoc.
+  Return NULL if this document does not use this structure schema.
+  ----------------------------------------------------------------------*/
+PtrSSchema GetSSchemaByUriForDoc (char *uriName, PtrDocument pDoc)
+{
+  PtrSSchema          pSS;
+  PtrDocSchemasDescr  pPfS;
+
+  pSS = NULL;
+  pPfS = pDoc->DocFirstSchDescr;
+  while (pPfS && !pSS)
+    {
+      if (pPfS->PfSSchema && pPfS->PfSSchema->SsUriName)
+	if (strcmp (uriName, pPfS->PfSSchema->SsUriName) == 0)
+	  pSS = pPfS->PfSSchema;
+      pPfS = pPfS->PfNext;
+    }
+  return pSS;
+}
+
+/*----------------------------------------------------------------------
    StructSchemaForDoc
    Return the block describing structure schema pSS used by a document pDoc
   ----------------------------------------------------------------------*/
@@ -834,8 +856,8 @@ static void         AppendSRule (int *ret, PtrSSchema pSS)
    le schema de presentation par defaut defini dans le schema de	
    structure, sauf si le premier octet de PSchName est nul.	
   ----------------------------------------------------------------------*/
-int          CreateNature (char *SSchName, char *PSchName, PtrSSchema pSS,
-			   PtrDocument pDoc)
+int          CreateNature (char *SSchName, char *PSchName,
+			   PtrSSchema pSS, PtrDocument pDoc)
 {
 #ifndef NODISPLAY
    PtrPSchema  pPS;
@@ -1340,3 +1362,250 @@ void SearchNatures (PtrDocument pDoc, PtrSSchema natureTable[MAX_NAT_TABLE],
     }
 }
 #endif   /* NODISPLAY */
+
+/*----------------------------------------------------------------------
+   TtaAppendXMLAttribute
+   Add a new XML-generic global attribute
+  ----------------------------------------------------------------------*/
+void    TtaAppendXMLAttribute (char *XMLName, AttributeType *attrType)
+{
+  PtrSSchema      pSS;
+  int             i;
+
+  pSS = (PtrSSchema) attrType->AttrSSchema;
+  i = pSS->SsNAttributes;
+  strncpy (pSS->SsAttribute[i].AttrName, XMLName, MAX_NAME_LENGTH);
+  strncpy (pSS->SsAttribute[i].AttrOrigName, XMLName, MAX_NAME_LENGTH);
+  pSS->SsAttribute[i].AttrGlobal = TRUE;
+  pSS->SsAttribute[i].AttrFirstExcept = 0;
+  pSS->SsAttribute[i].AttrLastExcept = 0;
+  pSS->SsAttribute[i].AttrType = AtTextAttr;
+  pSS->SsNAttributes++;
+  attrType->AttrTypeNum = pSS->SsNAttributes;
+}
+
+/*----------------------------------------------------------------------
+  TtaGetXMLAttributeType
+  ----------------------------------------------------------------------*/
+void    TtaGetXMLAttributeType (char *XMLName, AttributeType *attrType)
+
+{
+   PtrSSchema    pSS;
+   int           nbattr;
+   ThotBool      found;
+
+   found = FALSE;
+   pSS = (PtrSSchema) attrType->AttrSSchema;
+   for (nbattr = 0;  !found && nbattr < pSS->SsNAttributes; nbattr++)
+     {
+       if (strcmp (pSS->SsAttribute[nbattr].AttrName, XMLName) == 0)
+	 {
+	   attrType->AttrTypeNum = nbattr + 1;
+	   found = TRUE;
+	 }
+     }
+}
+
+/*----------------------------------------------------------------------
+   TtaAppendXMLSRule
+   Add a new rule at the end of the table
+  ----------------------------------------------------------------------*/
+void    TtaAppendXMLElement (char *XMLName,
+			     ElementType *elType,
+			     char **mappedName)
+{
+  PtrSSchema      pSS;
+
+  pSS = (PtrSSchema) elType->ElSSchema;
+
+  if (pSS->SsNRules >= MAX_RULES_SSCHEMA)
+    TtaDisplaySimpleMessage (FATAL, LIB, TMSG_LIB_RULES_TABLE_FULL);
+  else
+    {
+      /* Initializes a new structure rule */
+      pSS->SsRule[pSS->SsNRules].SrNDefAttrs = 0;
+      pSS->SsRule[pSS->SsNRules].SrNLocalAttrs = 0;
+      pSS->SsRule[pSS->SsNRules].SrUnitElem = FALSE;
+      pSS->SsRule[pSS->SsNRules].SrRecursive = FALSE;
+      pSS->SsRule[pSS->SsNRules].SrExportedElem = FALSE;
+      pSS->SsRule[pSS->SsNRules].SrFirstExcept = 0;
+      pSS->SsRule[pSS->SsNRules].SrLastExcept = 0;
+      pSS->SsRule[pSS->SsNRules].SrNInclusions = 0;
+      pSS->SsRule[pSS->SsNRules].SrNExclusions = 0;
+      pSS->SsRule[pSS->SsNRules].SrRefImportedDoc = FALSE;
+      pSS->SsRule[pSS->SsNRules].SrSSchemaNat = NULL;
+      
+      strncpy (pSS->SsRule[pSS->SsNRules].SrName, XMLName, MAX_NAME_LENGTH);
+      strncpy (pSS->SsRule[pSS->SsNRules].SrOrigName, XMLName, MAX_NAME_LENGTH);
+      *mappedName = pSS->SsRule[pSS->SsNRules].SrName;
+      pSS->SsRule[pSS->SsNRules].SrConstruct = CsAny;
+
+      /* Initializes a new presentation rule */
+
+      /* Update the rule number */
+      pSS->SsNRules++;
+      elType->ElTypeNum = pSS->SsNRules;
+    }
+}
+
+/*----------------------------------------------------------------------
+  TtaGetXMLElementType
+  ----------------------------------------------------------------------*/
+void    TtaGetXMLElementType (char* XMLName,
+			      ElementType *elType,
+			      char** mappedName)
+
+{
+   PtrSSchema    pSS;
+   int           rule;
+   ThotBool      found;
+
+   found = FALSE;
+   pSS = (PtrSSchema) elType->ElSSchema;
+   for (rule = 0;  !found && rule < pSS->SsNRules; rule++)
+     {
+       if (strcmp (pSS->SsRule[rule].SrName, XMLName) == 0)
+	 {
+	   elType->ElTypeNum = rule + 1;
+	   *mappedName = pSS->SsRule[rule].SrName;
+	   found = TRUE;
+	 }
+     }
+}
+
+/*----------------------------------------------------------------------
+  TtaChangeXMLRootElement
+  ----------------------------------------------------------------------*/
+void    TtaChangeGenericSchemaNames (char* sSchemaUri,
+				     char* sSchemaName,
+				     Document document)
+
+{
+  PtrDocument         pDoc;
+  PtrSSchema          pSS;
+  PtrPSchema          pPS;
+  PtrDocSchemasDescr  pPfS;
+  PtrPRule            nextPRule;
+  int                 i;
+
+  pDoc = LoadedDocument[document - 1];
+  pSS = NULL;
+  pPS = NULL;
+  pPfS = pDoc->DocFirstSchDescr;
+
+  while (pPfS && !pSS)
+    {
+      if (pPfS->PfSSchema &&
+	  (strcmp ("XML", pPfS->PfSSchema->SsName) == 0))
+	{
+	  pSS = pPfS->PfSSchema;
+	  pPS = pPfS->PfPSchema;
+	}
+      pPfS = pPfS->PfNext;
+    }
+
+  if (pSS != NULL)
+    {
+      /* Modify the structure schema name */
+      if (sSchemaUri != NULL && pSS->SsUriName == NULL)
+	{
+	  pSS->SsUriName = TtaGetMemory (strlen (sSchemaUri) + 1);
+	  strcpy (pSS->SsUriName, sSchemaUri);
+	}
+      if (sSchemaName == NULL)
+	{
+	  pSS->SsName[0] = WC_EOS;
+	  strcpy (pSS->SsDefaultPSchema, "Unknown");
+	  strcat (pSS->SsDefaultPSchema, "P");
+	}
+      else
+	{
+	  strncpy (pSS->SsName, sSchemaName, MAX_NAME_LENGTH);
+	  strcpy (pSS->SsDefaultPSchema, sSchemaName);
+	  strcat (pSS->SsDefaultPSchema, "P");
+	  for (i = 0; i < pSS->SsNRules; i++)
+	    if (strcmp (pSS->SsRule[i].SrName, "XML") == 0)
+	      {
+		strncpy (pSS->SsRule[i].SrName, sSchemaName, MAX_NAME_LENGTH);
+		strncpy (pSS->SsRule[i].SrOrigName, sSchemaName, MAX_NAME_LENGTH);
+		i = pSS->SsNRules;
+	      }
+	}
+      /* 
+      printf ("\nNombre d'attributs : %d\n", pSS->SsNAttributes);
+      for (i = 0;  i < pSS->SsNAttributes; i++)
+	{
+	  printf ("AttrName : %s\n", pSS->SsAttribute[i].AttrName);
+	  printf ("AttrOrigName : %s\n", pSS->SsAttribute[i].AttrOrigName);
+	  printf ("AttrGlobal : %d\n", pSS->SsAttribute[i].AttrGlobal);
+	  printf ("AttrFirstExcept : %d\n", pSS->SsAttribute[i].AttrFirstExcept);
+	  printf ("AttrAttrLastExcept : %d\n", pSS->SsAttribute[i].AttrLastExcept);
+	  printf ("AttrType : %d\n", pSS->SsAttribute[i].AttrType);
+	}
+      */
+     
+      /* Modify the presentation schema name */
+      if (pPS != NULL)
+	{
+	  printf ("\n%d Regles de presentation\n", pSS->SsNRules);
+	  for (i = 0; i < pSS->SsNRules; i++)
+	    {
+	      printf ("\nRule %d Element : %s\n", i, pSS->SsRule[i].SrName);
+	      if (pPS->PsElemPRule[i] != NULL)
+		{
+		  printf ("PrType : %d\n", pPS->PsElemPRule[i]->PrType);
+		  if (pPS->PsElemPRule[i]->PrCond != NULL)
+		    printf ("PrCond : %d\n", pPS->PsElemPRule[i]->PrCond->CoCondition);
+		  else
+		    printf ("PrCond : 0\n");
+		  printf ("PrViewNum : %d\n", pPS->PsElemPRule[i]->PrViewNum);
+		  printf ("PrPresMode : %d\n", pPS->PsElemPRule[i]->PrPresMode);
+		  printf ("PrSpecifAttr : %d\n", pPS->PsElemPRule[i]->PrSpecifAttr);
+		  printf ("PrLevel : %d\n\n", pPS->PsElemPRule[i]->PrLevel);
+		  nextPRule = pPS->PsElemPRule[i]->PrNextPRule;
+		  while (nextPRule != NULL)
+		    {
+		      printf ("  PrType : %d\n", nextPRule->PrType);
+		      if (nextPRule->PrCond != NULL)
+			printf ("  PrCond : %d\n", nextPRule->PrCond->CoCondition);
+		      else
+			printf ("  PrCond : 0\n");
+		      printf ("  PrViewNum : %d\n", nextPRule->PrViewNum);
+		      printf ("  PrPresMode : %d\n", nextPRule->PrPresMode);
+		      printf ("  PrSpecifAttr : %d\n", nextPRule->PrSpecifAttr);
+		      printf ("  PrLevel : %d\n\n", nextPRule->PrLevel);
+		      nextPRule = nextPRule->PrNextPRule;
+		    }
+		}
+	    }
+	}
+      
+      /* Update the LoadedSSchema table */
+      for (i = 0; i < MAX_SSCHEMAS &&
+	     ustrcmp ("XML", LoadedSSchema[i].StructSchemaName); i++);
+      if (i < MAX_SSCHEMAS)
+	{
+	  /* The generic schema is found in the table, modify its name */
+	  if (sSchemaName != NULL)
+	    strncpy (LoadedSSchema[i].StructSchemaName, sSchemaName,
+		     MAX_NAME_LENGTH);
+	  else
+	    LoadedSSchema[i].StructSchemaName[0] = WC_EOS;
+	}
+
+      /* Update the LoadedPSchema table */
+#ifndef NODISPLAY
+      for (i = 0; i < MAX_SSCHEMAS &&
+	     ustrcmp ("XMLP", LoadedPSchema[i].PresSchemaName); i++);
+      if (i < MAX_SSCHEMAS)
+	{
+	  /* The generic schema is found in the table, modify its name */
+	  if (sSchemaName != NULL)
+	    strncpy (LoadedPSchema[i].PresSchemaName, sSchemaName,
+		     MAX_NAME_LENGTH);
+	  else
+	    LoadedPSchema[i].PresSchemaName[0] = WC_EOS;
+	}
+#endif
+    }
+}

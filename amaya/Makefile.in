@@ -58,7 +58,7 @@ amaya : ../thotlib/libThotEditor.a ../tablelib/libThotTable.a amaya_schemas amay
 all : amaya_schemas amaya_src ../bin/amaya ../bin/print
 
 clean :
-	$(RM) *.o *.h *.c EDITOR* HTML* TextFile* MathML* GraphML* XLink* logo.*
+	$(RM) *.o *.h *.c EDITOR* HTML* TextFile* MathML* GraphML* XLink* XML* logo.*
 
 include .depends
 
@@ -167,7 +167,7 @@ AMAYA_LIBS= ../thotlib/libThotEditor.a ../tablelib/libThotTable.a \
 
 HTML2THOT_LIBS= -L../thotlib/ -lThotKernel -L.. -lz
 
-amaya_schemas : compHTML compHTMLP compHTMLT compTextFile  compTextFileP compTextFileT compXLink compXLinkP compXLinkT compHTMLA compTextFileA compXLinkA $(graph_schema) $(math_schema) $(annot_schema) compEDITORA
+amaya_schemas : compHTML compHTMLP compHTMLT compTextFile  compTextFileP compTextFileT compXLink compXLinkP compXLinkT compXML compXMLP compXMLT compHTMLA compTextFileA compXLinkA compXMLA $(graph_schema) $(math_schema) $(annot_schema) compEDITORA
 
 amaya_src :  HTML.h $(AMAYA_SRC)
 
@@ -227,6 +227,7 @@ AMAYA_OBJ = \
 	UIcss.o \
 	gtkdialogapi.o \
 	Xml2thot.o \
+	Xmlbuilder.o \
 	XHTMLbuilder.o \
 	XPointer.o \
 	XPointerparse.o 	
@@ -353,6 +354,44 @@ $(AMAYA)/XLinkT.TRA : $(AMAYA)/XLinkT.T ../bin/tra
 	$$TRA $(ALL_AMAYA_OPTIONS) XLinkT
 
 #
+# Generic XML structure schema compilation.
+#
+compXML: $(AMAYA)/XML.STR
+$(AMAYA)/XML.STR : $(AMAYA)/XML.S ../bin/str
+	STR=`pwd`/../bin/str;PRS=`pwd`/../bin/prs;TRA=`pwd`/../bin/tra;\
+	cd $(AMAYA); THOTDIR=`pwd`/.. ;export THOTDIR; \
+	$$STR $(ALL_AMAYA_OPTIONS) XML ;\
+	$$PRS $(ALL_AMAYA_OPTIONS) XMLP ;\
+	$$PRS $(ALL_AMAYA_OPTIONS) -DPAGE XMLP XMLPP ;\
+	$$PRS $(ALL_AMAYA_OPTIONS) -DPAGE -DLANDSCAPE XMLP XMLPL ;\
+	$$PRS $(ALL_AMAYA_OPTIONS) -DUS_PAPER XMLP XMLPPUS ;\
+	$$PRS $(ALL_AMAYA_OPTIONS) -DUS_PAPER -DLANDSCAPE XMLP XMLUSL ;\
+	$$TRA $(ALL_AMAYA_OPTIONS) XMLT
+
+#
+# Generic XML presentation schemas compilation
+#
+compXMLP: $(AMAYA)/XMLP.PRS
+$(AMAYA)/XMLP.PRS : $(AMAYA)/XMLP.P ../bin/prs
+	PRS=`pwd`/../bin/prs ; \
+	cd $(AMAYA); THOTDIR=`pwd`/.. ;export THOTDIR; \
+	$$STR $(ALL_AMAYA_OPTIONS) XML ;\
+	$$PRS $(ALL_AMAYA_OPTIONS) XMLP ;\
+	$$PRS $(ALL_AMAYA_OPTIONS) -DPAGE XMLP XMLPP ;\
+	$$PRS $(ALL_AMAYA_OPTIONS) -DPAGE -DLANDSCAPE XMLP XMLPL ;\
+	$$PRS $(ALL_AMAYA_OPTIONS) -DUS_PAPER XMLP XMLPPUS ;\
+	$$PRS $(ALL_AMAYA_OPTIONS) -DUS_PAPER -DLANDSCAPE XMLP XMLUSL
+
+#
+# Generic XML translation schemas compilation
+#
+compXMLT: $(AMAYA)/XMLT.TRA
+$(AMAYA)/XMLT.TRA : $(AMAYA)/XMLT.T ../bin/tra
+	TRA=`pwd`/../bin/tra ; \
+	cd $(AMAYA); THOTDIR=`pwd`/.. ;export THOTDIR ;\
+	$$TRA $(ALL_AMAYA_OPTIONS) XMLT
+
+#
 # Interface schemas compilation
 #
 HTMLAPP.o : HTMLAPP.c
@@ -393,6 +432,19 @@ XLink.h XLinkAPP.c : @srcdir@/XLink.STR @srcdir@/XLink.A
 	fi)
 	THOTDIR=$(THOTDIR) ; export THOTDIR ; \
 	../bin/app $(ALL_AMAYA_OPTIONS) XLink.A
+
+XMLAPP.o : XMLAPP.c
+	$(CC) $(CFLAGS) $(ALL_AMAYA_OPTIONS) $(INCLUDES) -c XMLAPP.c -o $@
+
+compXMLA : XML.h XMLAPP.c
+
+XML.h XMLAPP.c : @srcdir@/XML.STR @srcdir@/XML.A
+	(if test "@srcdir@" != "" -a "@srcdir@" != "." ; then \
+	    $(CP) @srcdir@/XML.A .  ; \
+	    $(CP) @srcdir@/XML.STR .  ; \
+	fi)
+	THOTDIR=$(THOTDIR) ; export THOTDIR ; \
+	../bin/app $(ALL_AMAYA_OPTIONS) XML.A
 
 EDITORAPP.o : EDITORAPP.c
 	$(CC) $(CFLAGS) $(ALL_AMAYA_OPTIONS) $(INCLUDES) -c EDITORAPP.c -o $@

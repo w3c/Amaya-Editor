@@ -587,6 +587,11 @@ static void WrTree (PtrElement pNode, int Indent, FILE *fileDescriptor,
 	   fprintf (fileDescriptor, "(%s %x)", pNode->ElStructSchema->SsName,
 		    (unsigned int)pNode->ElStructSchema);
 	 }
+       /* ecrit l'URI associee au schema de structure */
+       if (pNode->ElStructSchema->SsUriName == NULL)
+	 fprintf (fileDescriptor, " Uri=NULL");
+       else
+	 fprintf (fileDescriptor, " Uri=%s", pNode->ElStructSchema->SsUriName);
        fprintf (fileDescriptor, " Label=%s", pNode->ElLabel);
        /* ecrit le volume de l'element */
        fprintf (fileDescriptor, " Vol=%d", pNode->ElVolume);

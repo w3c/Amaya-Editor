@@ -9,6 +9,8 @@
 extern void InitNatures ( void );
 extern PtrSSchema GetSSchemaForDoc ( char *name,
                                      PtrDocument pDoc );
+extern PtrSSchema GetSSchemaByUriForDoc ( char *uriName,
+                                          PtrDocument pDoc );
 extern void RegisterSSchemaForSavedElements ( PtrSSchema pSSchema );
 extern void ReleaseSSchemasForSavedElements ( void );
 extern ThotBool LoadPresentationSchema ( Name schemaName,
@@ -62,12 +64,27 @@ extern void BuildDocNatureTable ( PtrDocument pDoc );
 extern void SearchNatures ( PtrDocument pDoc,
                             PtrSSchema natureTable[10 ],
                             int *natureTableLen );
+extern void TtaAppendXMLAttribute ( char *XMLName,
+                                    AttributeType *attrType );
+extern void TtaGetXMLAttributeType ( char *XMLName,
+                                     AttributeType *attrType );
+extern void TtaAppendXMLElement ( char *XMLName,
+                                  ElementType *elType,
+                                  char **mappedName );
+extern void TtaGetXMLElementType ( char* XMLName,
+                                   ElementType *elType,
+                                   char** mappedName );
+extern void TtaChangeGenericSchemaNames ( char* sSchemaUri,
+                                          char* sSchemaName,
+                                          Document document );
 
 #else /* __STDC__ */
 
 extern void InitNatures (/* void */);
 extern PtrSSchema GetSSchemaForDoc (/* char *name,
                                        PtrDocument pDoc */);
+extern PtrSSchema GetSSchemaByUriForDoc (/* char *uriName,
+                                            PtrDocument pDoc */);
 extern void RegisterSSchemaForSavedElements (/* PtrSSchema pSSchema */);
 extern void ReleaseSSchemasForSavedElements (/* void */);
 extern ThotBool LoadPresentationSchema (/* Name schemaName,
@@ -121,6 +138,19 @@ extern void BuildDocNatureTable (/* PtrDocument pDoc */);
 extern void SearchNatures (/* PtrDocument pDoc,
                               PtrSSchema natureTable[10 ],
                               int *natureTableLen */);
+extern void TtaAppendXMLAttribute (/* char *XMLName,
+                                      AttributeType *attrType */);
+extern void TtaGetXMLAttributeType (/* char *XMLName,
+                                       AttributeType *attrType */);
+extern void TtaAppendXMLElement (/* char *XMLName,
+                                    ElementType *elType,
+                                    char **mappedName */);
+extern void TtaGetXMLElementType (/* char* XMLName,
+                                     ElementType *elType,
+                                     char** mappedName */);
+extern void TtaChangeGenericSchemaNames (/* char* sSchemaUri,
+                                            char* sSchemaName,
+                                            Document document */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

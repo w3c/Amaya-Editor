@@ -49,7 +49,17 @@ AttrValueMapping XmlAttrValueMappingTable[] =
   XmlElementComplete
   Complete XML elements. Check its attributes and its contents.
   ----------------------------------------------------------------------*/
-void           XmlElementComplete (Element el, Document doc, int *error)
+void        XmlElementComplete (Element el, Document doc, int *error)
+
+{
+  return;
+}
+
+/*----------------------------------------------------------------------
+  XmlAttributeComplete
+  Complete XML elements. Check its attributes and its contents.
+  ----------------------------------------------------------------------*/
+void        XmlAttributeComplete (Attribute attr, Element el, Document doc)
 
 {
   return;
@@ -59,13 +69,13 @@ void           XmlElementComplete (Element el, Document doc, int *error)
    CreateXmlAttribute
    create an attribute of type attrType for the element el.
   ----------------------------------------------------------------------*/
-void           CreateXmlAttribute (Element       el,
-				   AttributeType attrType,
-				   char*       text,
-				   ThotBool      isInvalid,
-				   Document      doc,
-				   Attribute    *lastAttribute,
-				   Element      *lastAttrElement)
+void        CreateXmlAttribute (Element       el,
+				AttributeType attrType,
+				char*         text,
+				ThotBool      isInvalid,
+				Document      doc,
+				Attribute    *lastAttribute,
+				Element      *lastAttrElement)
      
 {
 }
@@ -75,40 +85,56 @@ void           CreateXmlAttribute (Element       el,
    Search in the Attribute Value Mapping Table the entry for the attribute
    ThotAtt and its value AttrVal. Returns the corresponding Thot value.
   ----------------------------------------------------------------------*/
-void    MapXmlAttributeValue (char        *AttrVal,
-			      AttributeType  attrType,
-			      int           *value)
+void        MapXmlAttributeValue (char *AttrVal,
+				  AttributeType  attrType,
+				  int *value)
 
 {
 
 }
 
 /*----------------------------------------------------------------------
+   MapGenericXmlAttribute
+  ----------------------------------------------------------------------*/
+void        MapGenericXmlAttribute (char *attrName,
+				    AttributeType *attrType,
+				    Document doc)
+{
+
+  if (attrType->AttrSSchema == NULL)
+    return;
+
+  attrType->AttrTypeNum = 0;
+  /* Search for the attribute XMLName in the structure schema */
+  TtaGetXMLAttributeType (attrName, attrType);
+
+  if (attrType->AttrTypeNum <= 0)
+    {
+      /* The attribute is not yet present in the tree */
+      /* Create a new global attribute */
+      TtaAppendXMLAttribute (attrName, attrType);
+    }
+}
+
+/*----------------------------------------------------------------------
   MapGenericXmlType
   ----------------------------------------------------------------------*/
-void MapGenericXmlType (char *XMLname, ElementType *elType,
-			char **mappedName, char *content,
-			ThotBool *highEnoughLevel, Document doc)
-
+void        MapGenericXmlElement (char *XMLName,
+				  ElementType *elType,
+				  char **mappedName,
+				  Document doc)
 {
-#ifdef XML_GEN
-  int        i;
+  if (elType->ElSSchema == NULL)
+    return;
 
-  printf ("\n MapGenericXmlType\n");
-  /* Initialize variables */
-  *mappedName = NULL;
-  *highEnoughLevel = TRUE;
   elType->ElTypeNum = 0;
+  /* Search for the element XMLName in the structure schema */
+  TtaGetXMLElementType (XMLName, elType, mappedName);
 
-  /* Search for the element name in the structure schema */
-
-  if (1)
+  if (elType->ElTypeNum <= 0)
     {
-      /* that element already exists */
+      /* The element is not yet present in the tree */
+      /* Create a new rule in the generic schema */
+      TtaAppendXMLElement (XMLName, elType, mappedName);
     }
-  else
-    {
-      /* Create a new rule for that element */
-    }
-#endif  /* XML_GEN */
 }

@@ -530,7 +530,7 @@ extern CHAR_T*       TtaGetPSchemaName (SSchema schema);
    Returns a structure schema whose name is known and that is used in a
    given document.
 
-   Parameter:
+   Parameters:
    name: the name of the structure schema of interest.
    document: the document that uses this structure schema.
 
@@ -540,6 +540,23 @@ extern CHAR_T*       TtaGetPSchemaName (SSchema schema);
 
   ----------------------------------------------------------------------*/
 extern SSchema      TtaGetSSchema (CHAR_T* name, Document document);
+
+/*----------------------------------------------------------------------
+   TtaGetSSchemaByUri
+
+   Returns a structure schema whose URI is known and that is used in a
+   given document.
+
+   Parameters:
+   uriName: the URI of the structure schema of interest.
+   document: the document that uses this structure schema.
+
+   Return value:
+   the structure schema having this URI, or NULL if this structure
+   schema is not loaded or not used by the document.
+
+  ----------------------------------------------------------------------*/
+SSchema             TtaGetSSchemaByUri (CHAR_T* uriName, Document document);
 
 /*----------------------------------------------------------------------
    TtaSameSSchemas

@@ -792,9 +792,9 @@ static void  UpdateBrowserMenus (Document doc)
   if (DocumentTypes[doc] == docHTML ||
       DocumentTypes[doc] == docSVG ||
       DocumentTypes[doc] == docMath ||
-#ifdef XML_GEN      
+#ifdef XML_GENERIC      
       DocumentTypes[doc] == docXml ||
-#endif /* XML_GEN */
+#endif /* XML_GENERIC */
       DocumentTypes[doc] == docImage)
     {
       TtaChangeButton (doc, 1, iI, iconINo, FALSE);
@@ -1578,9 +1578,9 @@ Document InitDocView (Document doc, char *docname, DocumentType docType,
 
       if (DocumentTypes[doc] == docHTML ||
 	  DocumentTypes[doc] == docSVG ||
-#ifdef XML_GEN      
+#ifdef XML_GENERIC      
 	  DocumentTypes[doc] == docXml ||
-#endif /* XML_GEN */
+#endif /* XML_GENERIC */
 	  DocumentTypes[doc] == docMath)
 	{
 	  TtaSetToggleItem (doc, 1, Views, TShowMapAreas, FALSE);
@@ -1630,10 +1630,10 @@ Document InitDocView (Document doc, char *docname, DocumentType docType,
      doc = TtaInitDocument ("GraphML", docname, requested_doc);
    else if (docType == docMath)
      doc = TtaInitDocument ("MathML", docname, requested_doc);
-#ifdef XML_GEN      
+#ifdef XML_GENERIC      
    else if (docType == docXml)
      doc = TtaInitDocument ("XML", docname, requested_doc);
-#endif /* XML_GEN */
+#endif /* XML_GENERIC */
    else
      doc = TtaInitDocument ("HTML", docname, requested_doc);
    if (doc >= DocumentTableLength)
@@ -1653,10 +1653,10 @@ Document InitDocView (Document doc, char *docname, DocumentType docType,
 	   TtaSetPSchema (doc, "GraphMLP");
        else if (docType == docMath)
 	   TtaSetPSchema (doc, "MathMLP");
-#ifdef XML_GEN      
+#ifdef XML_GENERIC      
        else if (docType == docXml)
 	   TtaSetPSchema (doc, "XMLP");
-#endif /* XML_GEN */
+#endif /* XML_GENERIC */
        /* @@ shouldn't we have a Color and BW case for annots too? */
        else
 	 {
@@ -1892,9 +1892,9 @@ Document InitDocView (Document doc, char *docname, DocumentType docType,
 	 /* we need to update menus and buttons */
 	 reinitialized = TRUE;
        else if (docType == docMath || docType == docAnnot ||
-#ifdef XML_GEN      
+#ifdef XML_GENERIC      
 	        docType == docXml ||
-#endif /* XML_GEN */
+#endif /* XML_GENERIC */
 		docType == docSource)
 	 reinitialized = TRUE;
      }
@@ -1914,9 +1914,9 @@ Document InitDocView (Document doc, char *docname, DocumentType docType,
 	 (ReadOnlyDocument[doc] &&
 	  (DocumentTypes[doc] == docHTML || DocumentTypes[doc] == docImage ||
 	   DocumentTypes[doc] == docSVG ||
-#ifdef XML_GEN      
+#ifdef XML_GENERIC      
 	   DocumentTypes[doc] == docXml ||
-#endif /* XML_GEN */
+#endif /* XML_GENERIC */
 	   DocumentTypes[doc] == docMath)))
        {
 	 TtaChangeButton (doc, 1, iI, iconINo, FALSE);
@@ -1976,9 +1976,9 @@ Document InitDocView (Document doc, char *docname, DocumentType docType,
 	      DocumentTypes[doc] == docSource) ||
 	     (ReadOnlyDocument[doc] &&
 	      (DocumentTypes[doc] == docSVG ||
-#ifdef XML_GEN      
+#ifdef XML_GENERIC      
 	       DocumentTypes[doc] == docXml ||
-#endif /* XML_GEN */
+#endif /* XML_GENERIC */
 	       DocumentTypes[doc] == docMath)))
 	   {
 	     TtaSetItemOff (doc, 1, Views, TShowMapAreas);
@@ -1993,9 +1993,9 @@ Document InitDocView (Document doc, char *docname, DocumentType docType,
      else if (DocumentTypes[doc] == docHTML ||
 	      DocumentTypes[doc] == docImage ||
 	      DocumentTypes[doc] == docSVG ||
-#ifdef XML_GEN      
+#ifdef XML_GENERIC      
 	      DocumentTypes[doc] == docXml ||
-#endif /* XML_GEN */
+#endif /* XML_GENERIC */
 	      DocumentTypes[doc] == docMath)
        {
 	 TtaSetToggleItem (doc, 1, Edit_, TEditMode, TRUE);
@@ -2323,9 +2323,9 @@ static Document LoadDocument (Document doc, char *pathname,
 		   /* it's an XML document */
 		   isXML = TRUE;
 		   if (thotType == docSVG ||
-#ifdef XML_GEN      
+#ifdef XML_GENERIC      
 		       thotType == docXml ||
-#endif /* XML_GEN */
+#endif /* XML_GENERIC */
 		       thotType == docMath)
 		     docType = thotType;
 		   else if (parsingLevel == L_Other)
@@ -2667,9 +2667,9 @@ static Document LoadDocument (Document doc, char *pathname,
 	}
       
 	if (docType == docSVG ||
-#ifdef XML_GEN
+#ifdef XML_GENERIC
 	    docType == docXml ||
-#endif /* XML_GEN */    
+#endif /* XML_GENERIC */    
 	    docType == docMath)
 	plainText = FALSE;
       else
@@ -3029,9 +3029,9 @@ void ShowSource (Document document, View view)
      return;
    if (DocumentTypes[document] != docHTML &&
        DocumentTypes[document] != docSVG &&
-#ifdef XML_GEN      
+#ifdef XML_GENERIC      
        DocumentTypes[document] != docXml &&
-#endif /* XML_GEN */
+#endif /* XML_GENERIC */
        DocumentTypes[document] != docMath)
      /* it's not an HTML or an XML document */
      return;
@@ -3059,11 +3059,11 @@ void ShowSource (Document document, View view)
 	 else if (DocumentTypes[document] == docMath)
 	   TtaExportDocumentWithNewLineNumbers (document, tempdocument,
 						"MathMLT");
-#ifdef XML_GEN
+#ifdef XML_GENERIC
 	 else if (DocumentTypes[document] == docXml)
 	   TtaExportDocumentWithNewLineNumbers (document, tempdocument,
 						"XMLT");
-#endif /* XML_GEN */
+#endif /* XML_GENERIC */
        }
      TtaExtractName (tempdocument, tempdir, documentname);
      /* open a window for the source code */
@@ -3548,10 +3548,10 @@ Document GetHTMLDocument (const char *documentPath, char *form_data,
      docType = docCSS;
    else if (IsTextName (documentname))
      docType = docText;
-#ifdef XML_GEN
+#ifdef XML_GENERIC
    else if (IsXMLName (documentname))
      docType = docXml;
-#endif /* XML_GEN */
+#endif /* XML_GENERIC */
    else if (CE_event == CE_CSS)
      docType = docCSS;
    else
@@ -3966,10 +3966,10 @@ void CallbackDialogue (int ref, int typedata, char *data)
 		     NewDocType = docSVG;
 		   else if (IsCSSName (tempfile))
 		     NewDocType = docCSS;
-#ifdef XML_GEN
+#ifdef XML_GENERIC
 		   else if (IsXMLName (tempfile))
 		     NewDocType = docXml;
-#endif /* XML_GEN */
+#endif /* XML_GENERIC */
 		   else
 		     NewDocType = docHTML;
 		   InitializeNewDoc (tempfile, NewDocType, CurrentDocument);

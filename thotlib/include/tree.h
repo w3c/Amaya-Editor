@@ -13,6 +13,9 @@
 /* element */
 typedef int        *Element;
 
+/* attribute */
+typedef int        *Attribute;
+
 #include "document.h"
 
 /* element type */
@@ -23,6 +26,13 @@ typedef struct _ElementType
   }
 ElementType;
 
+/* attribute type */
+typedef struct _AttributeType
+  {
+     SSchema             AttrSSchema;
+     int                 AttrTypeNum;
+  }
+AttributeType;
 
 /* search domain */
 typedef enum _SearchDomain
@@ -1262,6 +1272,31 @@ extern ThotBool     TtaHasHiddenException (ElementType elType);
 
    ---------------------------------------------------------------------- */
 /* extern ThotBool     TtaHasInvisibleException (AttributeType attrType); */
+
+/*----------------------------------------------------------------------
+  TtaAppendXMLAttribute
+  ----------------------------------------------------------------------*/
+extern void TtaAppendXMLAttribute (char *XMLName, AttributeType *attrType);
+
+/*----------------------------------------------------------------------
+  TtaGetXMLAttributeType
+  ----------------------------------------------------------------------*/
+extern void TtaGetXMLAttributeType (char *XMLName, AttributeType *attrType);
+
+/*----------------------------------------------------------------------
+  TtaAppendXMLElement
+  ----------------------------------------------------------------------*/
+extern void TtaAppendXMLElement (char *XMLName, ElementType *elType, char **mappedName);
+
+/*----------------------------------------------------------------------
+  TtaGetXMLElementType
+  ----------------------------------------------------------------------*/
+extern void TtaGetXMLElementType (char *XMLElementName, ElementType *elType, char **mappedName);
+
+/*----------------------------------------------------------------------
+  TtaChangeGenericSSchemaName
+  ----------------------------------------------------------------------*/
+extern void TtaChangeGenericSchemaNames (char *sSchemauri, char *sSchemaName, Document doc);
 
 #endif /* __CEXTRACT__ */
 

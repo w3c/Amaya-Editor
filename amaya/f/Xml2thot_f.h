@@ -21,10 +21,12 @@ extern Element XmlLastLeafInElement ( Element el );
 extern void PutInXmlElement ( char *data );
 extern void FreeXmlParserContexts ( void );
 extern ThotBool ParseXmlSubTree ( char *xmlBuffer,
-                                  Element *el,
-                                  ThotBool *isclosed,
+                                  char *fileName,
+                                  Element el,
+                                  ThotBool isclosed,
                                   Document doc,
-                                  Language lang );
+                                  Language lang,
+                                  char *DTDname );
 extern ThotBool ParseIncludedXml ( FILE *infile,
                                    char *infileBuffer,
                                    int infileBufferLength,
@@ -66,10 +68,12 @@ extern Element XmlLastLeafInElement (/* Element el */);
 extern void PutInXmlElement (/* char *data */);
 extern void FreeXmlParserContexts (/* void */);
 extern ThotBool ParseXmlSubTree (/* char *xmlBuffer,
-                                    Element *el,
-                                    ThotBool *isclosed,
+                                    char *fileName,
+                                    Element el,
+                                    ThotBool isclosed,
                                     Document doc,
-                                    Language lang */);
+                                    Language lang,
+                                    char *DTDname */);
 extern ThotBool ParseIncludedXml (/* FILE *infile,
                                      char *infileBuffer,
                                      int infileBufferLength,

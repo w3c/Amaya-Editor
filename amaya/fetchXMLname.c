@@ -9,7 +9,8 @@
  *
  * fetchXMLname
  *
- * Author: I. Vatton
+ * Authors: I. Vatton
+ *          L. Carcone
  *
  */
 
@@ -38,36 +39,36 @@ static int        MathSup = 0;
 /*----------------------------------------------------------------------
    GetXHTMLSSchema returns the XHTML Thot schema for document doc.
   ----------------------------------------------------------------------*/
-SSchema            GetXHTMLSSchema (Document doc)
+SSchema         GetXHTMLSSchema (Document doc)
 {
   SSchema	XHTMLSSchema;
 
    XHTMLSSchema = TtaGetSSchema ("HTML", doc);
    if (XHTMLSSchema == NULL)
        XHTMLSSchema = TtaNewNature(doc, TtaGetDocumentSSchema(doc),
-				    "HTML", "HTMLP");
+				   "HTML", "HTMLP");
    return (XHTMLSSchema);
 }
 
 /*----------------------------------------------------------------------charName
    GetMathMLSSchema returns the MathML Thot schema for document doc.
   ----------------------------------------------------------------------*/
-SSchema            GetMathMLSSchema (Document doc)
+SSchema         GetMathMLSSchema (Document doc)
 {
   SSchema	MathMLSSchema;
 
   MathMLSSchema = TtaGetSSchema ("MathML", doc);
   if (MathMLSSchema == NULL)
      MathMLSSchema = TtaNewNature(doc, 
-				  TtaGetDocumentSSchema(doc), "MathML",
-				  "MathMLP");
+				  TtaGetDocumentSSchema(doc),
+				  "MathML", "MathMLP");
   return (MathMLSSchema);
 }
 
 /*----------------------------------------------------------------------
    GetGraphMLSSchema returns the GraphML Thot schema for document doc.
   ----------------------------------------------------------------------*/
-SSchema            GetGraphMLSSchema (Document doc)
+SSchema         GetGraphMLSSchema (Document doc)
 
 {
   SSchema	GraphMLSSchema;
@@ -75,24 +76,57 @@ SSchema            GetGraphMLSSchema (Document doc)
   GraphMLSSchema = TtaGetSSchema ("GraphML", doc);
   if (GraphMLSSchema == NULL)
     GraphMLSSchema = TtaNewNature(doc,
-				  TtaGetDocumentSSchema(doc), "GraphML",
-				  "GraphMLP");
+				  TtaGetDocumentSSchema(doc),
+				  "GraphML", "GraphMLP");
   return (GraphMLSSchema);
 }
 
 /*----------------------------------------------------------------------
    GetXLinkSSchema returns the XLink Thot schema for document doc.
   ----------------------------------------------------------------------*/
-SSchema            GetXLinkSSchema (Document doc)
+SSchema         GetXLinkSSchema (Document doc)
 
 {
   SSchema	XLinkSSchema;
 
   XLinkSSchema = TtaGetSSchema ("XLink", doc);
   if (XLinkSSchema == NULL)
-    XLinkSSchema = TtaNewNature(doc, TtaGetDocumentSSchema(doc), "XLink",
-				"XLinkP");
+    XLinkSSchema = TtaNewNature(doc, TtaGetDocumentSSchema(doc),
+				"XLink", "XLinkP");
   return (XLinkSSchema);
+}
+
+/*----------------------------------------------------------------------
+   GetGenericXMLSSchema returns the XML Thot schema for the document doc.
+  ----------------------------------------------------------------------*/
+SSchema         GetGenericXMLSSchema (Document doc)
+
+{
+  SSchema	XMLSSchema;
+
+  XMLSSchema = TtaGetSSchema ("XML", doc);
+  if (XMLSSchema == NULL)
+      XMLSSchema = TtaNewNature(doc, TtaGetDocumentSSchema(doc),
+				"XML", "XMLP");
+  return (XMLSSchema);
+}
+
+/*----------------------------------------------------------------------
+   GetGenericXMLSSchemaByUri returns the XML Thot schema for the document doc.
+  ----------------------------------------------------------------------*/
+SSchema         GetGenericXMLSSchemaByUri (char *uriName, Document doc, ThotBool *isnew)
+
+{
+  SSchema	XMLSSchema;
+
+  XMLSSchema = TtaGetSSchemaByUri (uriName, doc);
+  if (XMLSSchema == NULL)
+    {
+      XMLSSchema = TtaNewNature(doc, TtaGetDocumentSSchema(doc),
+				"XML", "XMLP");
+      *isnew = TRUE;
+    }
+  return (XMLSSchema);
 }
 
 /*----------------------------------------------------------------------
@@ -123,9 +157,12 @@ SSchema GetXMLSSchema (int XMLtype, Document doc)
     - ElTypeNum and ElSSchema into elType  ElTypeNum = 0 if not found.
     - content 
   ----------------------------------------------------------------------*/
-void MapXMLElementType (int XMLtype, char *XMLname,
-			ElementType *elType, char **mappedName,
-			char *content, ThotBool *highEnoughLevel,
+void MapXMLElementType (int XMLtype,
+			char *XMLname,
+			ElementType *elType,
+			char **mappedName,
+			char *content,
+			ThotBool *highEnoughLevel,
 			Document doc)
 {
    int                 i;
@@ -203,10 +240,10 @@ void MapXMLElementType (int XMLtype, char *XMLname,
   ----------------------------------------------------------------------*/
 char*           GetXMLElementName (ElementType elType, Document doc)
 {
-  ElemMapping        *ptr;
-  char               *name;
-  int                 i;
-  ThotBool            invalid = FALSE;
+  ElemMapping  *ptr;
+  char         *name;
+  int           i;
+  ThotBool      invalid = FALSE;
 
   if (elType.ElTypeNum > 0)
     {
@@ -324,7 +361,7 @@ int       MapXMLAttribute (int XMLtype, char *attrName,
 	  (ptr[i].XMLelement[0] != EOS &&
 	   strcmp (ptr[i].XMLelement, elementName)))
 	i++;
-      else if (ptr[i].Level > ParsingLevel[doc])
+      else if (ParsingLevel[doc] != L_Other && ptr[i].Level > ParsingLevel[doc])
 	{
 	  *highEnoughLevel = FALSE;
 	  i++;
@@ -345,8 +382,8 @@ int       MapXMLAttribute (int XMLtype, char *attrName,
    a given Thot type.
   ----------------------------------------------------------------------*/
 char*           GetXMLAttributeName (AttributeType attrType,
-				       ElementType elType,
-				       Document doc)
+				     ElementType elType,
+				     Document doc)
 {
   AttributeMapping   *ptr;
   char               *name, *tag;
@@ -401,7 +438,7 @@ char*           GetXMLAttributeName (AttributeType attrType,
    the entry entityName and give the corresponding decimal value.
    Returns FALSE if entityName is not found.
   ----------------------------------------------------------------------*/
-ThotBool   MapXMLEntity (int XMLtype, char *entityName, int *entityValue)
+ThotBool      MapXMLEntity (int XMLtype, char *entityName, int *entityValue)
 {
   XmlEntity  *ptr;
   ThotBool    found;

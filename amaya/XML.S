@@ -23,11 +23,11 @@ ATTR
 STRUCT
 
    XML
-       = LIST OF (GenElem) + (XMLcomment, XMLPI);
+       = LIST OF (XML_Gen) + (XMLcomment, XMLPI);
 	
-   GenElem = LIST OF (Elements);
+   XML_Gen = LIST OF (XML_Elements);
 
-   Elements = CASE OF
+   XML_Elements = CASE OF
 		TEXT; 
 	      END;
            

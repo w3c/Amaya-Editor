@@ -3527,6 +3527,59 @@ RULES
 		Visibility: 0;
 	END;
 
+ SVG_Image: BEGIN
+	if IsInput
+		CreateBefore(IMG_in_S);
+	if NOT Immediately within Object AND NOT IsInput
+		CreateBefore(ElementName);
+	LineBreak: No;
+	PageBreak: No;
+	if Immediately within Object BEGIN
+		Width: Enclosing . Width;
+		Height: Enclosing . Height;
+		VertPos: Top = Enclosing . Top;
+		END;
+	HorizRef: * . Bottom;
+	IN Structure_view BEGIN
+		Height: 0;
+		Width: 0;
+		if NOT Immediately within Object
+		   Visibility: 1;
+		if Immediately within Object
+		   Visibility: 0;
+		VertPos: Top = Previous . Bottom;
+		HorizPos: Left = Enclosing . Left;
+		END;
+	IN Alternate_view BEGIN
+		Height: 0;
+		Width: 0;
+		if NOT Immediately within Object
+		   Visibility: 1;
+		if Immediately within Object
+		   Visibility: 0;
+		END;
+	IN Links_view
+#ifndef PAGE
+		if Immediately within BODY
+#endif
+		   Visibility: 0;
+	IN Table_of_contents
+		Visibility: 0;
+	END;
+
+ SVG_ImageContent: BEGIN
+	LineBreak: No;
+	PageBreak: No;
+	IN Structure_view
+		Visibility: 0;
+	IN Alternate_view
+		Visibility: 0;
+	IN Links_view
+		Visibility: 0;
+	IN Table_of_contents
+		Visibility: 0;
+	END;
+
  Anchor: BEGIN
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);

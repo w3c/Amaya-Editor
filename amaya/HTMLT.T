@@ -781,6 +781,36 @@ RULES
 		Create '\12' After;
 	END;
 
+ SVG_Image: BEGIN
+	if IsInput BEGIN
+		Create '<input type="image"';
+		Create Attributes;
+#ifdef XML
+		Create ' />';
+#else
+		Create '>';
+#endif
+		END;
+	if Immediately within Object
+		Remove;
+	if NOT Immediately within Object AND NOT IsInput BEGIN
+		Create '<img';
+		Create Attributes;
+#ifdef XML
+		Create ' />';
+#else
+		Create '>';
+#endif
+		END;
+	if NOT within Paragraph AND NOT Immediately within Object
+           AND NOT within Pseudo_paragraph
+		Create '\12' After;
+	END;
+
+ SVG_ImageContent: BEGIN
+	Remove;
+	END;
+
  Anchor: BEGIN
 	 Create '<a';
 	 Create Attributes;

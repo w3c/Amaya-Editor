@@ -1346,6 +1346,11 @@ void                FreeSchStruc (PtrSSchema pSS)
       FreeExternalBlock (pSS->SsExtensBlock);
       pSS->SsExtensBlock = NULL;
     }
+  if (pSS->SsUriName != NULL)
+    {
+      TtaFreeMemory (pSS->SsUriName);
+      pSS->SsUriName = NULL;
+    }
   pSS->SsPrevExtens = NULL;
   pSS->SsExtension = FALSE;
   pSS->SsNExtensRules = 0;
