@@ -38,7 +38,6 @@ CheckedListDlgWX::CheckedListDlgWX( int ref,
 				    bool *checks) :
   AmayaDialog( parent, ref )
 {
-  char *ptr, *label;
   int   i;
 
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("CheckedListDlgWX"));

@@ -1305,8 +1305,7 @@ void CheckTable (Element table, Document doc)
   ElementType         elType;
   Element             el, columnHeads, thead, tfoot, firstcolhead,
                       tbody, Tablebody, prevrow,
-                      foot, prevEl, nextEl,
-		      enclosingTable;
+                      prevEl, nextEl, enclosingTable;
   AttributeType       attrType;
   Attribute           attr;
   int                 PreviousStuctureChecking;
