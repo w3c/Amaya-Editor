@@ -315,7 +315,7 @@ void CreateSearchDlgWindow (ThotWindow parent)
 }
 #endif /* _WINGUI */
 
-#if defined(_GTK) || defined(_MOTIF)
+#ifdef _GTK
 /*----------------------------------------------------------------------
   InitMenuWhereToSearch 
   inits the "Where to search" submenu.
@@ -339,28 +339,25 @@ static void InitMenuWhereToSearch (int ref)
 		 NULL, FALSE);
   TtaSetMenuForm (NumMenuOrSearchText, 2);
 }
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* _GTK */
 
 
 /*----------------------------------------------------------------------
   ResetSearchInDocument
   cleans up the search domain if it refers a closed document.
   ----------------------------------------------------------------------*/
-void         ResetSearchInDocument (PtrDocument pDoc)
+void ResetSearchInDocument (PtrDocument pDoc)
 {
   if (SearchingD && pDoc == SearchingD->SDocument)
     {
       SearchingD->SDocument = NULL;
-
 #ifdef _WINGUI
       EndDialog (SearchW, ID_DONE);
       SearchW = NULL;
 #endif /* _WINGUI */
-      
-#if defined(_GTK) || defined(_MOTIF)      
+#ifdef _GTK
       TtaDestroyDialogue (NumFormSearchText);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
-      
+#endif /* _GTK */
     }
 }
 
@@ -436,7 +433,7 @@ void TtcSearchText (Document document, View view)
   i = strlen (TtaGetMessage (LIB, TMSG_LIB_CONFIRM)) + 1;
   strcpy (string + i, TtaGetMessage (LIB, TMSG_DO_NOT_REPLACE));
 
-#if defined(_GTK) || defined(_MOTIF)  
+#ifdef _GTK
   TtaNewSheet (NumFormSearchText, TtaGetViewFrame (document, view), 
 	       bufTitle, 2, string, FALSE, 6, 'L', D_DONE);
   
@@ -490,7 +487,7 @@ void TtcSearchText (Document document, View view)
   
   /* sous-menu Ou` rechercher */
   InitMenuWhereToSearch (NumFormSearchText);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* _GTK */
   
   WithReplace = FALSE;
   ReplaceDone = FALSE;
@@ -508,17 +505,15 @@ void TtcSearchText (Document document, View view)
   SearchingD->SDocument = pDoc;
   TextOK = FALSE;
 
-#if defined(_GTK) || defined(_MOTIF)
+#ifdef _GTK
   TtaShowDialogue (NumFormSearchText, TRUE);
   if (!ok)
     TtaSetMenuForm (NumMenuOrSearchText, 3);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
-
+#endif /* _GTK */
 #ifdef _WINGUI
   searchEnd = FALSE;
   CreateSearchDlgWindow (TtaGetViewFrame (document, view));
 #endif /* _WINGUI */
-
 }
 
 /*----------------------------------------------------------------------
@@ -576,11 +571,9 @@ void CallbackTextReplace (int ref, int val, char *txt)
 	    {
 	      WithReplace = TRUE;
 	      DoReplace = TRUE;
-        
-#if defined(_GTK) || defined(_MOTIF)
+#ifdef _GTK
 	      TtaSetMenuForm (NumMenuReplaceMode, 1);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
-
+#endif /* _GTK */
 	    }
 	}
       strcpy ((char *)pReplaceString, txt);
@@ -627,16 +620,13 @@ void CallbackTextReplace (int ref, int val, char *txt)
       if (SearchingD->SDocument == NULL ||
 	  SearchingD->SDocument->DocSSchema == NULL)
 	{
-
 #ifdef _WINGUI
       EndDialog (SearchW, ID_DONE);
       SearchW = NULL;
 #endif /* _WINGUI */
-
-#if defined(_GTK) || defined(_MOTIF)      
+#ifdef _GTK 
       TtaDestroyDialogue (NumFormSearchText);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
-      
+#endif /* _GTK */
 	  TtaFreeMemory (SString);
 	  SString = NULL;
 	  TtaFreeMemory (RString);
@@ -828,8 +818,7 @@ void CallbackTextReplace (int ref, int val, char *txt)
 	  if (found)
 	    {
 	      /* on a trouve' et selectionne'. */
-        
-#if defined(_GTK) || defined(_MOTIF)
+#ifdef _GTK
 	     if (!AutoReplace)
 	       {
 		 /* On prepare la recherche suivante */
@@ -838,8 +827,7 @@ void CallbackTextReplace (int ref, int val, char *txt)
 		 else /* Before selection */
 		   TtaSetMenuForm (NumMenuOrSearchText, 0);
 	       }
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
-       
+#endif /* _GTK */
 	     StartSearch = FALSE;
 	    }
 	  else
@@ -861,8 +849,7 @@ void CallbackTextReplace (int ref, int val, char *txt)
 				msgCaption, MB_OK | MB_ICONEXCLAMATION);
 		}
 #endif /* _WINGUI */
-        
-#if defined(_GTK) || defined(_MOTIF)        
+#ifdef _GTK      
 	      if (WithReplace && ReplaceDone)
 		{
 		  if (!AutoReplace)
@@ -874,8 +861,7 @@ void CallbackTextReplace (int ref, int val, char *txt)
 		TtaDisplayMessage (CONFIRM,
 				   TtaGetMessage (LIB, TMSG_NOT_FOUND),
 				   NULL);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
-        
+#endif /* _GTK */
 	      StartSearch = TRUE;
 	    }
 	}

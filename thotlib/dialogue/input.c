@@ -54,10 +54,10 @@ KEY;
   #include "gtk-functions.h"
   #include "absboxes_f.h" 
 #endif /* _GTK */
-#if defined(_WINGUI) || defined(_MOTIF)
+#if defined(_WINGUI)
   #include "appli_f.h"
   #include "input_f.h"
-#endif /* #if defined(_WINGUI) || defined(_MOTIF) */
+#endif /* #if defined(_WINGUI) */
 
 /* Actions table */
 #include "applicationapi_f.h"
@@ -910,79 +910,6 @@ void CharTranslationWX ( int frame, int thot_mask, ThotKeySym thot_keysym,
 #endif
 }
 
-/*----------------------------------------------------------------------
-   CharTranslation
-   X-Window front-end to the character translation and handling.
-   Decodes the X-Window event  and calls the generic character
-   handling function.
-  ----------------------------------------------------------------------*/
-void CharTranslation (ThotKeyEvent *event)
-{
-#ifdef _MOTIF
-  CHARSET             charset;
-  wchar_t            *str, *p;
-  Document            document;
-  View                view;
-  KeySym              key;
-  ThotComposeStatus   comp;
-  unsigned char       string[2];
-  int                 status, command;
-  int                 PicMask;
-  int                 frame;
-  unsigned int        state;
- 
-  frame = GetWindowFrame (event->window);
-  if (frame > MAX_FRAME)
-    frame = 0;
-
-  FrameToView (frame, &document, &view);
-  status = 0;
-  /* control, alt and mouse status bits of the state are ignored */
-  state = event->state & 127;
-  if (event->state == 127)
-    status = TtaXLookupString (event, (char *)string, 2, &key, &comp);
-  else
-    status = XLookupString (event, (char *)string, 2, &key, &comp);
-
-  PicMask = 0;
-  if (state & ShiftMask)
-    PicMask |= THOT_MOD_SHIFT;
-  /*if (state & LockMask)
-    PicMask |= THOT_MOD_SHIFT;*/
-  if (state & ControlMask)
-    PicMask |= THOT_MOD_CTRL;
-  if (state & Mod1Mask || state & Mod4Mask)
-    PicMask |= THOT_MOD_ALT;
-
-  if (key == 0)
-    {
-      charset = TtaGetCharset (TtaGetEnvString ("Default_Charset"));
-      if (charset != UNDEFINED_CHARSET)
-	{
-	  str = TtaConvertByteToWC (string, charset);
-	  p = str;
-	  while (*p)
-	    {
-	      if (MenuActionList[0].Call_Action)
-		(*(Proc3)MenuActionList[0].Call_Action) (
-			(void *)document,
-			(void *)view,
-			(void *)*p);
-	      p++;
-	    }
-	  TtaFreeMemory (str);
-	  return /* FALSE */;
-	}
-    }
-
-  if (status == 2)
-    command = (int) string[1];
-  else
-    command = 0;
-  ThotInput (frame, (unsigned int) string[0], command, PicMask, key);
-#endif /* _MOTIF */
-}
-
 
 /*----------------------------------------------------------------------
    APPKey send a message msg to the application.   
@@ -1165,9 +1092,9 @@ ThotBool ThotInput (int frame, unsigned int value, int command, int PicMask, int
 		  if (ptr->K_EntryCode == key
 		      && ptr->K_Special == Special)
 #endif /* _WINGUI */
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
+#if defined(_GTK) || defined(_WX)
 		  if (ptr->K_EntryCode == key)
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) || defined(_WX) */
 		    {
 		      /* first level entry found */
 		      found = TRUE;
@@ -1179,10 +1106,10 @@ ThotBool ThotInput (int frame, unsigned int value, int command, int PicMask, int
 			  command = ptr->K_Command;
 			}
 		    }
-#if defined(_MOTIF) || defined(_GTK) || defined(_WINGUI) || defined(_WX)
+#if defined(_GTK) || defined(_WINGUI) || defined(_WX)
 		  else
 		    ptr = ptr->K_Other;
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WINGUI) || defined(_WX) */
+#endif /* #if defined(_GTK) || defined(_WINGUI) || defined(_WX) */
 		}
 	    }
 	}
@@ -1190,10 +1117,10 @@ ThotBool ThotInput (int frame, unsigned int value, int command, int PicMask, int
   
 #ifdef _WINGUI
   if (Special && !found)
-#endif /* !_WINGUI */
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
+#endif /* _WINGUI */
+#if defined(_GTK) || defined(_WX)
   if (!found)
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) || defined(_WX) */
     {
       /* Handling special keys */
       switch (key)
@@ -1679,9 +1606,9 @@ void InitTranslations (char *appliname)
   strcat (name, ".kb");
 #endif  /* _WINGUI */
   
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
+#if defined(_GTK) || defined(_WX)
   strcat (name, ".keyboard");
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) || defined(_WX) */
 
   strcpy (home, appHome);
   strcat (home, DIR_STR);
@@ -1972,12 +1899,6 @@ void InitTranslations (char *appliname)
 	} while (e != 0);
 
       fclose (file);
-
-#ifdef _MOTIF
-      /* Creation of the translation table */
-      TextTranslations = XtParseTranslationTable (text);
-#endif /* _MOTIF */
-
       TtaFreeMemory (text);
     }
 }

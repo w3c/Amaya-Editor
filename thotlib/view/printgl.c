@@ -94,9 +94,9 @@ static GdkGLPixmap  *glpixmap = NULL;
 #include "glprint.h"
 #include "buildlines_f.h"
 #include "font_f.h"
-#if defined(_MOTIF) || defined(_GTK)
+#ifdef _GTK
 #include "initpses_f.h"
-#endif /*#if defined(_MOTIF) || defined(_GTK)*/
+#endif /* _GTK */
 #include "memory_f.h"
 #include "units_f.h"
 
@@ -541,11 +541,11 @@ GLint GLParseFeedbackBuffer (GLfloat *current)
 	      i = GLGetVertex (&vertices[0], current);
 	      current += i;
 	      used    -= i;
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
+#if defined(_GTK) || defined(_WX)
 	      GLPrintPostScriptColor (vertices[0].rgb);
 	      fprintf (FILE_STREAM, "%g -%g %g P\n", 
 		       vertices[0].xyz[0], GL_HEIGHT - vertices[0].xyz[1], 0.5*psize);
-#endif /*#if defined(_MOTIF) || defined(_GTK) || defined(_WX)*/
+#endif /*#if defined(_GTK) || defined(_WX)*/
 	      /* Call Win32 function */
 	      break;
 
@@ -560,7 +560,7 @@ GLint GLParseFeedbackBuffer (GLfloat *current)
 	      current += i;
 	      used    -= i;
 
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
+#if defined(_GTK) || defined(_WX)
 	      if (LastLineWidth != lwidth)
 		{
 		  LastLineWidth = lwidth;
@@ -575,12 +575,9 @@ GLint GLParseFeedbackBuffer (GLfloat *current)
 		       vertices[1].xyz[0], GL_HEIGHT - vertices[1].xyz[1],
 		       vertices[0].xyz[0], GL_HEIGHT - vertices[0].xyz[1]);   
 	      if (dash)
-		{
-		  fprintf (FILE_STREAM, "[] 0 setdash\n");
-		}
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
-
-        break;
+		fprintf (FILE_STREAM, "[] 0 setdash\n");
+#endif /* #if defined(_GTK) || defined(_WX) */
+	      break;
 
 	    case GL_POLYGON_TOKEN :
 	      count = (GLint)current[1];
@@ -596,17 +593,15 @@ GLint GLParseFeedbackBuffer (GLfloat *current)
 		  vtot++;
 		  if (v == 2)
 		    {
-          flag = 0;
-
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
+		      flag = 0;
+#if defined(_GTK) || defined(_WX)
 		      GLPrintPostScriptColor (vertices[0].rgb);
 		      fprintf (FILE_STREAM, "%g -%g %g -%g %g -%g T\n",
 			       vertices[2].xyz[0], GL_HEIGHT - vertices[2].xyz[1],
 			       vertices[1].xyz[0], GL_HEIGHT - vertices[1].xyz[1],
 			       vertices[0].xyz[0], GL_HEIGHT - vertices[0].xyz[1]);
 		      vertices[1] = vertices[2];
-#endif/*#if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
-          
+#endif /*#if defined(_GTK) || defined(_WX) */
 		    }
 		  else
 		    v ++;

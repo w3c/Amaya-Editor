@@ -20,9 +20,9 @@
 #include "typemedia.h"
 #include "zlib.h"
 
-#if defined(_WINGUI) || defined(_MOTIF)
+#ifdef _WINGUI
   #include "lost.xpm"
-#endif /* #if defined(_WINGUI) || defined(_MOTIF) */
+#endif /* _WINGUI */
 
 #include "picture.h"
 #include "frame.h"
@@ -65,7 +65,6 @@
 #include "presrules_f.h"
 #include "tree_f.h"
 #include "views_f.h"
-#include "xbmhandler_f.h"
 #include "xpmhandler_f.h"
 #ifdef _GL
 #include "displaybox_f.h"
@@ -78,9 +77,9 @@ static char*    PictureMenu;
 #ifdef _GL
 static ThotPixmap PictureLogo;
 #else /*_GL*/
-#if defined(_WINGUI) || defined(_MOTIF) || defined(_WX) || defined(_GTK) || defined(_NOGUI)
+#if defined(_WINGUI) || defined(_WX) || defined(_GTK) || defined(_NOGUI)
 static ThotPixmap   PictureLogo;
-#endif /* #if defined(_WINGUI) || defined(_MOTIF) || defined(_WX) || defined(_GTK) || defined(_NOGUI) */
+#endif /* #if defined(_WINGUI) || defined(_WX) || defined(_GTK) || defined(_NOGUI) */
 #endif /*_GL*/
 static ThotGC   tiledGC;
 
@@ -1195,9 +1194,6 @@ void FreePixmap (ThotPixmap pixmap)
 #ifdef _GL
     TtaFreeMemory ((void *)pixmap);
 #else /*_GL*/
-#ifdef _MOTIF
-    XFreePixmap (TtDisplay, pixmap);
-#endif /* _MOTIF */
 #ifdef _GTK 
     gdk_imlib_free_pixmap ((ThotPixmap) pixmap);
 #endif /* _GTK */
@@ -1315,11 +1311,6 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
   HDC               hOrigDC;
   HRGN              hrgn;
 #endif /* !GL  && _WINGUI */
-#ifdef _MOTIF
-  XRectangle        rect;
-  XGCValues         values;
-  unsigned int      valuemask;
-#endif /* _MOTIF */
 
 #ifdef _GL
   if (!glIsTexture (imageDesc->TextureBind))
@@ -1365,20 +1356,6 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
   if ((picPresent == ReScale || picPresent == RealSize) &&
       pAb->AbLeafType != LtCompound)
     {
-#ifdef _MOTIF
-      if (imageDesc->PicMask)
-	{
-	  XSetClipOrigin (TtDisplay, TtGraphicGC, xFrame - picXOrg, yFrame - picYOrg);
-	  XSetClipMask (TtDisplay, TtGraphicGC, imageDesc->PicMask);
-	}
-      XCopyArea (TtDisplay, pixmap, drawable, TtGraphicGC, 
-		 picXOrg, picYOrg, w, h, xFrame, yFrame);
-      if (imageDesc->PicMask)
-	{
-	  XSetClipMask (TtDisplay, TtGraphicGC, None);
-	  XSetClipOrigin (TtDisplay, TtGraphicGC, 0, 0);
-	}
-#endif /* _MOTIF */
 #ifdef _GL
       GL_TextureMap (imageDesc, xFrame, yFrame, w, h, frame);
 #else /*_GL*/
@@ -1518,35 +1495,6 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
       /* compute the clipping in the drawing area */
       x -= pFrame->FrXOrg;
       y -= pFrame->FrYOrg;
-#if defined(_MOTIF)
-      ix = -pFrame->FrXOrg;
-      jy = -pFrame->FrYOrg;
-      rect.x = x;
-      rect.y = y;
-      rect.width = clipWidth + dx;
-      rect.height = clipHeight + dy;
-      valuemask = GCTile | GCFillStyle | GCTileStipXOrigin | GCTileStipYOrigin;
-      values.tile = pixmap;
-      values.ts_x_origin = ix;
-      values.ts_y_origin = jy;
-      values.fill_style = FillTiled;
-      XChangeGC (TtDisplay, tiledGC, valuemask, &values);
-      XSetClipRectangles (TtDisplay, tiledGC, 0, 0, &rect, 1, Unsorted);
-      XSetClipOrigin (TtDisplay, tiledGC, -dx, -dy);
-      if (h > 0 && w > 0)
-	XFillRectangle (TtDisplay, drawable, tiledGC, x, y, w, h);
-      /* remove clipping */
-      rect.x = 0;
-      rect.y = 0;
-      rect.width = MAX_SIZE;
-      rect.height = MAX_SIZE;
-      XSetClipRectangles (TtDisplay, tiledGC, 0, 0, &rect, 1, Unsorted);
-      if (imageDesc->PicMask)
-	{
-	  XSetClipMask (TtDisplay, tiledGC, None);
-	  XSetClipOrigin (TtDisplay, tiledGC, 0, 0);
-	}
-#endif /* _MOTIF */
 #if !defined(_GL) && defined(_WINGUI)
       hMemDC  = CreateCompatibleDC (TtDisplay);
       bitmapTiled = CreateCompatibleBitmap (TtDisplay, w, h);
@@ -1760,56 +1708,10 @@ void InitPictureHandlers (ThotBool printing)
     }
   theVisual = (Visual *) gdk_visual_get_system ();
 #endif /* _GTK */
-  
-#ifdef _MOTIF
-   /* initialize Graphic context to display pictures */
-   TtGraphicGC = XCreateGC (TtDisplay, TtRootWindow, 0, NULL);
-   XSetForeground (TtDisplay, TtGraphicGC, Black_Color);
-   XSetBackground (TtDisplay, TtGraphicGC, White_Color);
-   XSetGraphicsExposures (TtDisplay, TtGraphicGC, FALSE);
-   /* initialize Graphic context to create pixmap */
-   GCimage = XCreateGC (TtDisplay, TtRootWindow, 0, NULL);
-   XSetForeground (TtDisplay, GCimage, Black_Color);
-   XSetBackground (TtDisplay, GCimage, White_Color);
-   XSetGraphicsExposures (TtDisplay, GCimage, FALSE);
-
-   /* initialize Graphic context to display tiled pictures */
-   tiledGC = XCreateGC (TtDisplay, TtRootWindow, 0, NULL);
-   XSetForeground (TtDisplay, tiledGC, Black_Color);
-   XSetBackground (TtDisplay, tiledGC, White_Color);
-   XSetGraphicsExposures (TtDisplay, tiledGC, FALSE);
-
-   /* special Graphic context to display bitmaps */
-   GCpicture = XCreateGC (TtDisplay, TtRootWindow, 0, NULL);
-   XSetForeground (TtDisplay, GCpicture, Black_Color);
-   XSetBackground (TtDisplay, GCpicture, White_Color);
-   XSetGraphicsExposures (TtDisplay, GCpicture, FALSE);
-   /* create a special logo for lost pictures */
-   PictureLogo = TtaCreatePixmapLogo (lost_xpm);
-   EpsfPictureLogo = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow,
-						  (char *)epsflogo_bits,
-						  epsflogo_width,
-						  epsflogo_height,
-						  Black_Color,
-						  White_Color,
-						  TtWDepth);
-   theVisual = DefaultVisual (TtDisplay, TtScreen);
-#endif /* _MOTIF */
-
    
    Printing = printing;
-   /* by default no plugins loaded */
    HandlersCounter = 0;
    currentExtraHandler = 0;
-   strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, XbmName, MAX_FORMAT_NAMELENGHT);
-   PictureHandlerTable[HandlersCounter].Produce_Picture = ( PICHND_PROTO_Produce_Picture ) XbmCreate;
-   PictureHandlerTable[HandlersCounter].Produce_Postscript = ( PICHND_PROTO_Produce_Postscript ) XbmPrint;
-   PictureHandlerTable[HandlersCounter].Match_Format = ( PICHND_PROTO_Match_Format ) IsXbmFormat;
-
-   PictureIdType[HandlersCounter] = XBM_FORMAT;
-   PictureMenuType[HandlersCounter] = XBM_FORMAT;
-   HandlersCounter++;
-
    strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, EpsName, MAX_FORMAT_NAMELENGHT);
    PictureHandlerTable[HandlersCounter].Produce_Picture = ( PICHND_PROTO_Produce_Picture )EpsCreate;
    PictureHandlerTable[HandlersCounter].Produce_Postscript = ( PICHND_PROTO_Produce_Postscript )EpsPrint;
@@ -1882,7 +1784,7 @@ void GetPictHandlersList (int *count, char* buffer)
 
 }
 
-#if defined(_MOTIF) || defined(_WINGUI)
+#ifdef _WINGUI
 /*----------------------------------------------------------------------
   SimpleName
   If the filename is a complete name returns into simplename the file name.
@@ -1915,31 +1817,23 @@ static void SimpleName (char *filename, char *simplename)
       *to++ = *from++;
    *to = EOS;
 }
-#endif /* #if defined(_MOTIF) || defined(_WINGUI) */
+#endif /* _WINGUI */
 
 /*----------------------------------------------------------------------
    DrawEpsBox draws the eps logo into the picture box.            
   ----------------------------------------------------------------------*/
-static void  DrawEpsBox (PtrBox box, PictInfo *imageDesc, int frame,
-			 int wlogo, int hlogo)
+static void DrawEpsBox (PtrBox box, PictInfo *imageDesc, int frame,
+			int wlogo, int hlogo)
 {
-#if defined(_MOTIF) || defined(_WINGUI)
+#ifdef _WINGUI
    ThotWindow          drawable;
    ThotPixmap          pixmap;
    float               scaleX, scaleY;
    int                 x, y, w, h, xFrame, yFrame, wFrame, hFrame;
    int                 XOrg, YOrg, picXOrg, picYOrg;
-#ifdef _WINGUI   
    HDC                 hDc, hMemDc;
    POINT               lPt[2];
    HBITMAP             hOldBitmap;
-#endif /* _WINGUI */
-
-#ifdef _MOTIF
-   char                filename[255];
-   int                 fileNameWidth;
-   int                 fnposx, fnposy;
-#endif /* _MOTIF */
 
    /* Create the temporary picture */
    scaleX = 0.0;
@@ -1977,20 +1871,7 @@ static void  DrawEpsBox (PtrBox box, PictInfo *imageDesc, int frame,
      default:
        break;
      }
-   
-#ifdef _MOTIF
-   pixmap = XCreatePixmap (TtDisplay, TtRootWindow, w, h, TtWDepth);
-   XFillRectangle (TtDisplay, pixmap, TtBlackGC, x, y, w, h);
-   
-   /* putting the cross edges */
-   XDrawRectangle (TtDisplay, pixmap, TtDialogueGC, x, y, w - 1, h - 1);
-   XDrawLine (TtDisplay, pixmap, TtDialogueGC, x, y, x + w - 1, y + h - 2);
-   XDrawLine (TtDisplay, pixmap, TtDialogueGC, x + w - 1, y, x, y + h - 2);
-   XDrawLine (TtDisplay, pixmap, TtWhiteGC, x, y + 1, x + w - 1, y + h - 1);
-   XDrawLine (TtDisplay, pixmap, TtWhiteGC, x + w - 1, y + 1, x, y + h - 1);
-#endif /* _MOTIF */   
-   
-#ifdef _WINGUI
+
    pixmap = CreateBitmap (w, h, TtWDepth, 1, NULL);
    hDc    = GetDC (drawable);
    hMemDc = CreateCompatibleDC (hDc);
@@ -2022,7 +1903,6 @@ static void  DrawEpsBox (PtrBox box, PictInfo *imageDesc, int frame,
    SelectObject (hMemDc, hOldBitmap);
    DeleteDC (hDc);
    DeleteDC (hMemDc);
-#endif /* _WINGUI */
 
    /* copying the logo */
    /* 2 pixels used by the enclosing rectangle */
@@ -2052,11 +1932,6 @@ static void  DrawEpsBox (PtrBox box, PictInfo *imageDesc, int frame,
        picYOrg = 0;
      }
    /* Drawing In the Picture Box */
-
-#ifdef _MOTIF
-   XCopyArea (TtDisplay, imageDesc->PicPixmap, pixmap, TtDialogueGC, picXOrg, picYOrg, wFrame, hFrame, xFrame, yFrame);
-#endif /* _MOTIF */
-   
    GetXYOrg (frame, &XOrg, &YOrg);
    xFrame = box->BxXOrg + box->BxLMargin + box->BxLBorder + box->BxLPadding - XOrg;
    yFrame = box->BxYOrg + box->BxTMargin + box->BxTBorder + box->BxTPadding + FrameTable[frame].FrTopMargin - YOrg;
@@ -2074,34 +1949,9 @@ static void  DrawEpsBox (PtrBox box, PictInfo *imageDesc, int frame,
    LayoutPicture (pixmap, drawable, picXOrg, picYOrg, w, h, x, y, 0, 0,
 		  frame, imageDesc, box);
 #endif /*_GL*/
-
-#ifdef _WINGUI
    if (pixmap)
 	   DeleteObject (pixmap);
 #endif /* _WINGUI */ 
-
-#ifdef _MOTIF
-   XFreePixmap (TtDisplay, pixmap);
-   pixmap = None;
-   XSetLineAttributes (TtDisplay, TtLineGC, 1, LineSolid, CapButt, JoinMiter);
-   XDrawRectangle (TtDisplay, drawable, TtLineGC, xFrame, yFrame,
-	               wFrame - 1, hFrame - 1);
-
-   /* Display the filename in the bottom of the Picture Box */
-   SimpleName (imageDesc->PicFileName, filename);
-   fileNameWidth = XTextWidth ((XFontStruct *) DialogFont, filename,
-	                           strlen (filename));
-   if ((fileNameWidth + wlogo <= wFrame) &&
-	   (FontHeight (DialogFont) + hlogo <= hFrame))
-     {
-       fnposx = (wFrame - fileNameWidth) / 2 + xFrame;
-       fnposy = hFrame - 5 + yFrame;
-       XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) DialogFont)->fid);
-       XDrawString (TtDisplay, drawable, TtLineGC, fnposx, fnposy,
-		            filename, strlen (filename));
-     }
-#endif /* _MOTIF */
-#endif /* #if defined(_MOTIF) || defined(_WINGUI) */
 }
 
 
@@ -2315,7 +2165,7 @@ void DrawPicture (PtrBox box, PictInfo *imageDesc, int frame,
       }
 #endif /* _WINGUI */
     
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
+#if defined(_GTK) || defined(_WX)
   (*(PictureHandlerTable[typeImage].Produce_Postscript)) (
 	(void *)fileName,
 	(void *)pres,
@@ -2327,7 +2177,7 @@ void DrawPicture (PtrBox box, PictInfo *imageDesc, int frame,
 	(void *)bgColor,
 	(void *)0,
 	(void *)0);  
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) || defined(_WX) */
    }
 
 #ifdef _GL
@@ -2337,7 +2187,6 @@ void DrawPicture (PtrBox box, PictInfo *imageDesc, int frame,
     Printing = TRUE;
   }
 #endif /* _GL */
-
 }
 
 /*----------------------------------------------------------------------
@@ -2719,8 +2568,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	   /* a background image is repeated */
 	   pres = FillFrame;
        }
-     if ((typeImage == XBM_FORMAT || typeImage == XPM_FORMAT) && 
-	 pres == ReScale)
+     if (typeImage == XPM_FORMAT && pres == ReScale)
        pres = imageDesc->PicPresent = RealSize;
      /* picture dimension */
      if (pAb->AbLeafType == LtCompound)
@@ -2808,8 +2656,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	    /* a background image is repeated */
 	    pres = FillFrame;
 	}
-      if ((typeImage == XBM_FORMAT || typeImage == XPM_FORMAT) && 
-	  pres == ReScale)
+      if (typeImage == XPM_FORMAT && pres == ReScale)
 	pres = imageDesc->PicPresent = RealSize;
       /* picture dimension */
       if (pAb->AbLeafType == LtCompound)
@@ -3029,10 +2876,6 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
       imageDesc->PicWidth = 40;
       drw = (ThotPixmap) PictureLogo;
 #endif /*_GTK*/
-#ifdef _MOTIF
-      drw = PictureLogo;
-      imageDesc->PicType = -1;
-#endif /* _MOTIF */
       wBox = w = 40;
       hBox = h = 40;
     }
@@ -3050,7 +2893,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	    /* a background image is repeated */
 	    pres = FillFrame;
 	}
-      if ((typeImage == XBM_FORMAT || typeImage == XPM_FORMAT) && pres == ReScale)
+      if (typeImage == XPM_FORMAT && pres == ReScale)
 	pres = imageDesc->PicPresent = RealSize;
       /* picture dimension */
       if (pAb->AbLeafType == LtCompound)
@@ -3069,38 +2912,6 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	  h = box->BxH;
 	}
 
-      if (!Printing)
-	{
-#ifdef _MOTIF
-	  /* set the colors of the  graphic context GC */
-	  if (TtWDepth == 1)
-	    {
-	      /* Black and white screen */
-	      XSetForeground (TtDisplay, TtGraphicGC, Black_Color);
-	      XSetBackground (TtDisplay, TtGraphicGC,
-			      ColorPixel (BackgroundColor[frame]));
-	    }
-	  else if (pAb->AbSensitive && !pAb->AbPresentationBox)
-	    {
-	      /* Set active Box Color */
-	      XSetForeground (TtDisplay, TtGraphicGC, Box_Color);
-	      XSetForeground (TtDisplay, GCpicture, Box_Color);
-	      XSetBackground (TtDisplay, TtGraphicGC,
-			      ColorPixel (pAb->AbBackground));
-	    }
-	  else
-	    {
-	      /* Set Box Color */
-	      XSetForeground (TtDisplay, TtGraphicGC,
-			      ColorPixel (pAb->AbForeground));
-	      XSetForeground (TtDisplay, GCpicture,
-			      ColorPixel (pAb->AbForeground));
-	      XSetBackground (TtDisplay, TtGraphicGC,
-			      ColorPixel (pAb->AbBackground));
-	    }
-#endif /* _MOTIF */
-	}
-
       /* xBox and yBox get the box size if picture is */
       /* rescaled and receives the position of the picture */
       if (pres != ReScale || Printing)
@@ -3116,7 +2927,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	    yBox = h;
 	}
 
-#if defined(_MOTIF) || defined(_WINGUI)
+#ifdef _WINGUI
       drw = (*(PictureHandlerTable[typeImage].Produce_Picture)) (
 			(void *)fileName,
 			(void *)imageDesc,
@@ -3128,7 +2939,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 			(void *)&width,
 			(void *)&height,
 			(void *)ViewFrameTable[frame - 1].FrMagnification);
-#endif /* #if defined(_MOTIF) || defined(_WINGUI) */
+#endif /* _WINGUI */
 #ifdef _GTK
       if (typeImage == EPS_FORMAT)
 	drw = (ThotPixmap) (*(PictureHandlerTable[typeImage].Produce_Picture)) (
@@ -3202,10 +3013,6 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	  imageDesc->PicFileName = TtaStrdup (LostPicturePath);
 	  drw = (ThotPixmap) PictureLogo;
 #endif /*_GTK*/   
-#ifdef _MOTIF
-	  drw = PictureLogo;
-	  imageDesc->PicType = -1;
-#endif /* #ifdef _MOTIF */
 	  wBox = w = 40;
 	  hBox = h = 40;
 	}

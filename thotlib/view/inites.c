@@ -50,7 +50,7 @@ static int             allocation_index[256];
 static int             have_colors = 0;
 
 
-#if defined(_MOTIF) || defined(_GTK)
+#ifdef _GTK
 /*----------------------------------------------------------------------
    FindOutColor finds the closest color by allocating it, or picking
    an already allocated color.
@@ -58,104 +58,68 @@ static int             have_colors = 0;
 static void FindOutColor (ThotDisplay *dsp, Colormap colormap,
 			  ThotColorStruct *colr)
 {
-   int                 i;
-   int                 rd, gd, bd, dist, mindist;
-   int                 cindx;
-   int                 NumCells;
-#ifdef _MOTIF
-   int                 match;
-#endif /* #ifdef _MOTIF */
-   
-#ifdef _GTK
-   gboolean            match;
-#endif /* _GTK */
+  int                 i;
+  int                 rd, gd, bd, dist, mindist;
+  int                 cindx;
+  int                 NumCells;
+  gboolean            match;
 
-#ifdef _GTK
- match = gdk_colormap_alloc_color ((GdkColormap *)colormap, (GdkColor *)colr, FALSE, TRUE);
-#endif /* _GTK */
-
-#ifdef _MOTIF 
- match = XAllocColor (dsp, colormap, colr);
-#endif /* #ifdef _MOTIF */
-
- NumCells = 0;
-
-#ifdef _MOTIF
-  if (match == 0)
-#endif /* #ifdef _MOTIF */
-       
-#ifdef _GTK
+  match = gdk_colormap_alloc_color ((GdkColormap *)colormap,
+				    (GdkColor *)colr, FALSE, TRUE);
+  NumCells = 0;
   if (!match)
-#endif /* !_GTK */
-  {
-       
-#ifdef _GTK
-    NumCells = gdk_colormap_get_system_size (); 
-#endif /* _GTK */
-    
-#ifdef _MOTIF    
-    NumCells = XDisplayCells (dsp, TtScreen);
-#endif /* #ifdef _MOTIF */
-    
-    if (!have_colors)
-	  {
-	     for (i = 0; i < NumCells; i++)
-		def_colrs[i].pixel = i;
+    {
+      NumCells = gdk_colormap_get_system_size (); 
+      if (!have_colors)
+	{
+	  for (i = 0; i < NumCells; i++)
+	    def_colrs[i].pixel = i;
+	  match = gdk_colormap_alloc_colors ((GdkColormap *)colormap,
+					     (GdkColor *)&def_colrs[0],
+					     NumCells,
+					     FALSE,
+					     TRUE, 
+					     NULL); 
+	  have_colors = 1;
+	}
+      mindist = 196608;	/* 256 * 256 * 3 */
+      cindx = colr->pixel;
+      for (i = 0; i < NumCells; i++)
+	{
+	  rd = ((int) (def_colrs[i].red >> 8) - (int) (colr->red >> 8));
+	  gd = ((int) (def_colrs[i].green >> 8) - (int) (colr->green >> 8));
+	  bd = ((int) (def_colrs[i].blue >> 8) - (int) (colr->blue >> 8));
+	  dist = (rd * rd) + (gd * gd) + (bd * bd);
+	  if (dist < mindist)
+	    {
+	      mindist = dist;
+	      cindx = def_colrs[i].pixel;
+	      if (dist == 0)
+		break;
+	    }
+	}
+      colr->pixel = cindx;
+      colr->red = def_colrs[cindx].red;
+      colr->green = def_colrs[cindx].green;
+      colr->blue = def_colrs[cindx].blue;
+    }
+  else
+    {
+      /*
+       * Keep a count of how many times we have allocated the
+       * same color, so we can properly free them later.
+       */
+      allocation_index[match]++;
 
-#ifdef _GTK
-	     match = gdk_colormap_alloc_colors ((GdkColormap *)colormap,
-						(GdkColor *)&def_colrs[0],
-						NumCells,
-						FALSE,
-						TRUE, 
-						NULL); 
-#endif /* _GTK */
-
-#ifdef _MOTIF       
-	     XQueryColors (dsp, colormap, def_colrs, NumCells);
-#endif /* _MOTIF */
-       
-	     have_colors = 1;
-	  }
-	mindist = 196608;	/* 256 * 256 * 3 */
-	cindx = colr->pixel;
-	for (i = 0; i < NumCells; i++)
-	  {
-	     rd = ((int) (def_colrs[i].red >> 8) - (int) (colr->red >> 8));
-	     gd = ((int) (def_colrs[i].green >> 8) - (int) (colr->green >> 8));
-	     bd = ((int) (def_colrs[i].blue >> 8) - (int) (colr->blue >> 8));
-	     dist = (rd * rd) + (gd * gd) + (bd * bd);
-	     if (dist < mindist)
-	       {
-		  mindist = dist;
-		  cindx = def_colrs[i].pixel;
-		  if (dist == 0)
-		     break;
-	       }
-	  }
-	colr->pixel = cindx;
-	colr->red = def_colrs[cindx].red;
-	colr->green = def_colrs[cindx].green;
-	colr->blue = def_colrs[cindx].blue;
-     }
-   else
-     {
-	/*
-	 * Keep a count of how many times we have allocated the
-	 * same color, so we can properly free them later.
-	 */
-	allocation_index[match]++;
-
-	/*
-	 * If this is a new color, we've actually changed the default
-	 * colormap, and may have to re-query it later.
-	 */
-	if (allocation_index[match] == 1)
-	   have_colors = 0;
-     }
+      /*
+       * If this is a new color, we've actually changed the default
+       * colormap, and may have to re-query it later.
+       */
+      if (allocation_index[match] == 1)
+	have_colors = 0;
+    }
 }
-
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* _GTK */
 
 
 /*----------------------------------------------------------------------
@@ -166,7 +130,6 @@ static void InstallColor (int i)
 #ifdef _WINGUI
    Pix_Color[i] = RGB (RGB_Table[i].red, RGB_Table[i].green, RGB_Table[i].blue);
 #endif /* _WINGUI */
-   
 #if defined(_WX)
    if (Pix_Color[i])
      {
@@ -181,8 +144,7 @@ static void InstallColor (int i)
 				    RGB_Table[i].blue );
      }
 #endif /* #if defined(_WX) */
-   
-#if defined(_MOTIF) || defined(_GTK)
+#ifdef _GTK
    ThotColorStruct     col;
 
    if (Color_Table[i] != NULL)
@@ -197,7 +159,7 @@ static void InstallColor (int i)
 	Pix_Color[i] = col.pixel;
 	/* TODO: find the nearest color */
      }
-#endif /* #if defined(_MOTIF) || defined(_GTK)*/
+#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -271,38 +233,22 @@ static void ApproximateColors (void)
 void         FreeDocColors ()
 {
 #ifndef _WIN_PRINT
-
 #ifdef _WINGUI
   /* free extended colors */
   if (!TtIsTrueColor && TtCmap && !DeleteObject (TtCmap))
     WinErrorBox (WIN_Main_Wd, "FreeDocColors (1)");
   TtCmap = 0;
 #endif /* _WINGUI */
-
 #ifdef _GTK
   int        i;
 
   /* free standard colors */
   gdk_colors_free (TtCmap, &Pix_Color[0], NColors, (gulong)0 );
-
   /* free extended colors */
   for (i = 0; i < NbExtColors; i++)
     if (ExtColor[i])
       gdk_colors_free (TtCmap, &ExtColor[i], 1, (gulong)0);
 #endif /* _GTK */
-
-#ifdef _MOTIF  
-  int        i;
-
-  /* free standard colors */
-  XFreeColors (TtDisplay, TtCmap, Pix_Color, NColors, (unsigned long) 0);
-
-  /* free extended colors */
-  for (i = 0; i < NbExtColors; i++)
-    if (ExtColor[i])
-      XFreeColors (TtDisplay, TtCmap, &ExtColor[i], 1, (unsigned long) 0);
-#endif /* _MOTIF */
-
 #if defined(_WX)
   int        i;
   
@@ -322,7 +268,6 @@ void         FreeDocColors ()
 	ExtColor[i] = NULL;
       }
 #endif /* #if defined(_WX) */
-
 #endif /* _WIN_PRINT */
 
   TtaFreeMemory (ExtRGB_Table);
@@ -410,15 +355,14 @@ void InitDocColors (char *name)
 	}
     }
 #endif /* _WINGUI */
-
-#if defined(_GTK) || defined(_MOTIF) || defined(_WX)
+#if defined(_GTK) || defined(_WX)
   int                 i, j, k;
   char               *value;
   ThotBool            reducecolor;
   ThotBool            colormap_full;
 #ifdef _GTK
   ThotColorStruct     gdkwhite, gdkblack;
-#endif /* _GTK */
+#endif /* #if defined(_GTK) || defined(_WX) */
   
   /* Initializes the color table */
   NColors = MAX_COLOR;
@@ -441,28 +385,17 @@ void InitDocColors (char *name)
   Pix_Color[0] = gdkwhite.pixel;
   Pix_Color[1] = gdkblack.pixel;
 #endif /* _GTK */
-
-#ifdef _MOTIF
-  Pix_Color[0] = WhitePixel (TtDisplay, DefaultScreen (TtDisplay));
-  Pix_Color[1] = BlackPixel (TtDisplay, DefaultScreen (TtDisplay));
-#endif /* _MOTIF */
-
 #ifdef _WX
   Pix_Color[0] = new wxColour(_T("WHITE"));
   Pix_Color[1] = new wxColour(_T("BLACK"));;
-#endif /* _WX */
-
-#ifndef _WX  
+  /* clean up everything with white */
+  for (i = 2; i < NColors; i++)
+    Pix_Color[i] = new wxColour( *Pix_Color[0] );  
+#else /* _WX */
   /* clean up everything with white */
   for (i = 2; i < NColors; i++)
     Pix_Color[i] = Pix_Color[0];
-#else /* #ifndef _WX */
-  /* clean up everything with white */
-  for (i = 2; i < NColors; i++)
-  {
-    Pix_Color[i] = new wxColour( *Pix_Color[0] );  
-  }
-#endif /* #ifndef _WX */
+#endif /* _WX */
   
   /* setup greyscale colors */
   for (i = 2; i < 8; i++)
@@ -479,19 +412,17 @@ void InitDocColors (char *name)
   if (colormap_full)
     {
       for (j = 1; j <= (NColors / 8); j++)
-	      for (i = j * 8, k = 0; (i < NColors) && (k < 8); i++, k++)
-#ifndef _WX  
-                Pix_Color[i] = Pix_Color[j * 8 + 4];
-#else /* #ifndef _WX */
-              {         
-                if (Pix_Color[i])
-		    *Pix_Color[i] = *Pix_Color[j * 8 + 4];
-		else
-		  Pix_Color[i] = new wxColour( *Pix_Color[j * 8 + 4] );  
-              }
-#endif /* #ifndef _WX */
-  
-	        
+	for (i = j * 8, k = 0; (i < NColors) && (k < 8); i++, k++)
+#ifdef _WX  
+	  {         
+	    if (Pix_Color[i])
+	      *Pix_Color[i] = *Pix_Color[j * 8 + 4];
+	    else
+	      Pix_Color[i] = new wxColour( *Pix_Color[j * 8 + 4] );  
+	  }
+#else /* _WX */
+          Pix_Color[i] = Pix_Color[j * 8 + 4];
+#endif /* _WX */
       return;
     }
   
@@ -543,7 +474,7 @@ void InitDocColors (char *name)
 
   ExtCount_Table = (int *) TtaGetMemory (Max_Extend_Colors * sizeof (int));
   memset( ExtCount_Table, 0, Max_Extend_Colors * sizeof (int) );  
-#endif /* #if defined(_GTK) || defined(_MOTIF) || defined(_WX) */
+#endif /* #if defined(_GTK) || defined(_WX) */
 }
 
 /*----------------------------------------------------------------------
@@ -585,47 +516,38 @@ ThotColor ColorPixel (int num)
   color |= (blue & 0xFF);
   return (color);
 #endif /* _GTK */
-  
-#if defined(_MOTIF) || defined(_WINGUI) || defined(_WX)
+#if defined(_WINGUI) || defined(_WX)
    if (num < NColors && num >= 0)
     return (Pix_Color[num]);
   else if (num < NColors + NbExtColors && num >= 0)
     return (ExtColor[num - NColors]);
   else
     return ((ThotColor) 0);
-#endif /* #if defined(_MOTIF) || defined(_WINGUI) || defined(_WX) */
+#endif /* #if defined(_WINGUI) || defined(_WX) */
 }
 
 /*----------------------------------------------------------------------
   TtaFreeThotColor frees the Thot Color.
  ----------------------------------------------------------------------*/
-void             TtaFreeThotColor (int num)
+void TtaFreeThotColor (int num)
 {
   if (num < NColors + NbExtColors && num >= NColors)
-  {
-    num -= NColors;
-    if (ExtCount_Table[num] == 1)
-	  {
-
+    {
+      num -= NColors;
+      if (ExtCount_Table[num] == 1)
+	{
 #if defined(_WX)
-	    if (ExtColor[num])
-	      delete ExtColor[num];
-	    ExtColor[num] = (ThotColor) 0;
+	  if (ExtColor[num])
+	    delete ExtColor[num];
+	  ExtColor[num] = (ThotColor) 0;
 #endif /* defined(_WX) */
-
 #ifdef _GTK
-	    gdk_colors_free (TtCmap, &ExtColor[num], 1, (gulong)0);
-	    ExtColor[num] = (ThotColor) 0;	    
+	  gdk_colors_free (TtCmap, &ExtColor[num], 1, (gulong)0);
+	  ExtColor[num] = (ThotColor) 0;	    
 #endif /* _GTK */
-
-#ifdef _MOTIF    
-	    XFreeColors (TtDisplay, TtCmap, &ExtColor[num], 1, (unsigned long) 0);
-    	    ExtColor[num] = (ThotColor) 0;
-#endif /* _GTK */
-
-	  }
-    ExtCount_Table[num]--;
-  }
+	}
+      ExtCount_Table[num]--;
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -635,84 +557,81 @@ void             TtaFreeThotColor (int num)
 int TtaGetThotColor (unsigned short red, unsigned short green,
 		     unsigned short blue)
 {
-   short               delred, delgreen, delblue;
-   int                 best;
-   int                 i, prev;
-   unsigned int        dsquare;
-   unsigned int        best_dsquare = (unsigned int) -1;
+  short               delred, delgreen, delblue;
+  int                 best;
+  int                 i, prev;
+  unsigned int        dsquare;
+  unsigned int        best_dsquare = (unsigned int) -1;
 
-#if defined(_MOTIF) || defined(_GTK)
-   ThotColorStruct     col;
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
-   
-   ThotBool            found;
+#ifdef _GTK
+  ThotColorStruct     col;
+#endif /* _GTK */
+  ThotBool            found;
 
 #if defined(_NOGUI)
   return 0;
 #endif /* #ifdef _NOGUI */  
    
-   /*
-    * lookup for the color number among the color set allocated
-    * by the application.
-    * The lookup is based on a closest in cube algorithm hence
-    * we try to get the closest color available for the display.
-    */
+  /*
+   * lookup for the color number among the color set allocated
+   * by the application.
+   * The lookup is based on a closest in cube algorithm hence
+   * we try to get the closest color available for the display.
+   */
+  best = 0;			/* best color in list not found */
+  for (i = 0; i < NColors; i++)
+    {
+      delred = RGB_Table[i].red - red;
+      delgreen = RGB_Table[i].green - green;
+      delblue = RGB_Table[i].blue - blue;
+      dsquare = delred * delred + delgreen * delgreen + delblue * delblue;
+      if (dsquare < best_dsquare)
+	{
+	  best = i;
+	  best_dsquare = dsquare;
+	}
+    }
 
-   best = 0;			/* best color in list not found */
-   for (i = 0; i < NColors; i++)
-     {
-	delred = RGB_Table[i].red - red;
-	delgreen = RGB_Table[i].green - green;
-	delblue = RGB_Table[i].blue - blue;
-	dsquare = delred * delred + delgreen * delgreen + delblue * delblue;
-	if (dsquare < best_dsquare)
-	  {
-	     best = i;
-	     best_dsquare = dsquare;
-	  }
-     }
+  if (best_dsquare != 0)
+    {
+      prev = Max_Extend_Colors;
+      /* look in the extended table */
+      for (i = 0; i < NbExtColors; i++)
+	{
+	  if (ExtCount_Table[i] > 0)
+	    {
+	      delred = ExtRGB_Table[i].red - red;
+	      delgreen = ExtRGB_Table[i].green - green;
+	      delblue = ExtRGB_Table[i].blue - blue;
+	      dsquare  = delred * delred + delgreen * delgreen + delblue * delblue;
+	      if (dsquare < best_dsquare)
+		{
+		  best = i + NColors;
+		  best_dsquare = dsquare;
+		}
+	    }
+	  else if (prev == Max_Extend_Colors)
+	    /* get the first empty entry */
+	    prev = i;
+	}
 
-   if (best_dsquare != 0)
-     {
-       prev = Max_Extend_Colors;
-       /* look in the extended table */
-       for (i = 0; i < NbExtColors; i++)
-	 {
-	   if (ExtCount_Table[i] > 0)
-	     {
-	       delred = ExtRGB_Table[i].red - red;
-	       delgreen = ExtRGB_Table[i].green - green;
-	       delblue = ExtRGB_Table[i].blue - blue;
-	       dsquare  = delred * delred + delgreen * delgreen + delblue * delblue;
-	       if (dsquare < best_dsquare)
-		 {
-		   best = i + NColors;
-		   best_dsquare = dsquare;
-		 }
-	     }
-	   else if (prev == Max_Extend_Colors)
-	     /* get the first empty entry */
-	     prev = i;
-	 }
-
-       if (prev == Max_Extend_Colors)
-	 /* this is the first empty entry */
-	 prev = NbExtColors;
+      if (prev == Max_Extend_Colors)
+	/* this is the first empty entry */
+	prev = NbExtColors;
 	 
-       if (best_dsquare != 0 && prev < Max_Extend_Colors)
-	 {
-	   /* try to allocate the right color */
+      if (best_dsquare != 0 && prev < Max_Extend_Colors)
+	{
+	  /* try to allocate the right color */
 #ifdef _WINGUI
-	   ExtColor[prev] = RGB ((BYTE)red, (BYTE)green, (BYTE)blue);
+	  ExtColor[prev] = RGB ((BYTE)red, (BYTE)green, (BYTE)blue);
 #endif  /* _WINGUI */
-
 #if defined(_WX)
-	   if (ExtColor[prev])
-	     {
-	       ExtColor[prev]->Set( red,
-				    green,
-				    blue );
-	     }
+	  if (ExtColor[prev])
+	    {
+	      ExtColor[prev]->Set( red,
+				   green,
+				   blue );
+	    }
 	   else
 	     {
 	       ExtColor[prev] = new wxColour( red,
@@ -720,15 +639,13 @@ int TtaGetThotColor (unsigned short red, unsigned short green,
 					      blue );
 	     }
 #endif /* #if defined(_WX) */
-
-#if defined(_MOTIF) || defined(_GTK)
+#ifdef _GTK
 	   col.red   = red * 256;
 	   col.green = green * 256;
 	   col.blue  = blue * 256;
 	   FindOutColor (TtDisplay, (Colormap)TtCmap, &col);
 	   ExtColor[prev] = col.pixel;
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
-
+#endif /* _GTK */
 #ifndef _WX	   
 	   /* check if this color is already in the table */
 	   found = FALSE;
@@ -744,7 +661,6 @@ int TtaGetThotColor (unsigned short red, unsigned short green,
 	   for (i = 0; i < NbExtColors && !found; i++)
 	     found = (*ExtColor[prev] == *ExtColor[i]);	   
 #endif /* #ifndef _WX */
-	   
 	   if (!found)
 	     {
 #ifdef _WINGUI
@@ -752,19 +668,16 @@ int TtaGetThotColor (unsigned short red, unsigned short green,
 	       ExtRGB_Table[prev].green = green;
 	       ExtRGB_Table[prev].blue = blue;
 #endif  /* _WINGUI */
-
 #ifdef _WX
 	       ExtRGB_Table[prev].red = red;
 	       ExtRGB_Table[prev].green = green;
 	       ExtRGB_Table[prev].blue = blue;
 #endif  /* _WX */
-	       
-#if defined(_MOTIF) || defined(_GTK)
+#ifdef _GTK
 	       ExtRGB_Table[prev].red = col.red / 256;
 	       ExtRGB_Table[prev].green = col.green / 256;
 	       ExtRGB_Table[prev].blue = col.blue / 256;
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
-         
+#endif /* _GTK */
 	       best = prev + NColors;
 	       ExtCount_Table[prev] = 1;
 	       if (prev == NbExtColors)
@@ -777,7 +690,6 @@ int TtaGetThotColor (unsigned short red, unsigned short green,
        else if (best >= NColors)
 	 ExtCount_Table[best - NColors]++;
      }
-
    return (best);
 }
 
@@ -1376,137 +1288,9 @@ ThotPixmap CreatePattern (int disp, int fg, int bg, int motif)
        break;
      }
 #endif /* _GTK */
-
-#ifdef _MOTIF   
-   switch (motif)
-     {
-     case 1:
-       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray8_bits, gray8_width,
-					     gray8_height, FgPixel, BgPixel, TtWDepth);
-       break;
-     case 2:
-       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray0_bits, gray0_width,
-					     gray0_height, FgPixel, BgPixel, TtWDepth);
-       break;
-     case 3:
-       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray1_bits, gray1_width,
-					     gray1_height, FgPixel, BgPixel, TtWDepth);
-       break;
-     case 4:
-       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray2_bits, gray2_width,
-					     gray2_height, FgPixel, BgPixel, TtWDepth);
-       break;
-     case 5:
-       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray3_bits, gray3_width,
-					     gray3_height, FgPixel, BgPixel, TtWDepth);
-       break;
-     case 6:
-       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray4_bits, gray4_width,
-					     gray4_height, FgPixel, BgPixel, TtWDepth);
-       break;
-     case 7:
-       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray5_bits, gray5_width,
-					     gray5_height, FgPixel, BgPixel, TtWDepth);
-       break;
-     case 8:
-       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray6_bits, gray6_width,
-					     gray6_height, FgPixel, BgPixel, TtWDepth);
-       break;
-     case 9:
-       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray7_bits, gray7_width,
-					     gray7_height, FgPixel, BgPixel, TtWDepth);
-       break;
-     case 10:
-       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) horiz1_bits, horiz1_width,
-					     horiz1_height, FgPixel, BgPixel, TtWDepth);
-       break;
-     case 11:
-       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) horiz2_bits, horiz2_width,
-					     horiz2_height, FgPixel, BgPixel, TtWDepth);
-       break;
-     case 12:
-       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) horiz3_bits, horiz3_width,
-					     horiz3_height, FgPixel, BgPixel, TtWDepth);
-       break;
-     case 13:
-       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) vert1_bits, vert1_width,
-					     vert1_height, FgPixel, BgPixel, TtWDepth);
-       break;
-     case 14:
-       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) vert2_bits, vert2_width,
-					     vert2_height, FgPixel, BgPixel, TtWDepth);
-       break;
-     case 15:
-       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) vert3_bits, vert3_width,
-					     vert3_height, FgPixel, BgPixel, TtWDepth);
-       break;
-     case 16:
-       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) left1_bits, left1_width,
-					     left1_height, FgPixel, BgPixel, TtWDepth);
-       break;
-     case 17:
-       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) left2_bits, left2_width,
-					     left2_height, FgPixel, BgPixel, TtWDepth);
-       break;
-     case 18:
-       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) left3_bits, left3_width,
-					     left3_height, FgPixel, BgPixel, TtWDepth);
-       break;
-     case 19:
-       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) right1_bits, right1_width,
-					     right1_height, FgPixel, BgPixel, TtWDepth);
-       break;
-     case 20:
-       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) right2_bits, right2_width,
-					     right2_height, FgPixel, BgPixel, TtWDepth);
-       break;
-     case 21:
-       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) right3_bits, right3_width,
-					     right3_height, FgPixel, BgPixel, TtWDepth);
-       break;
-     case 22:
-       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) square1_bits, square1_width,
-					     square1_height, FgPixel, BgPixel, TtWDepth);
-       break;
-     case 23:
-       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) square2_bits, square2_width,
-					     square2_height, FgPixel, BgPixel, TtWDepth);
-       break;
-     case 24:
-       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) square3_bits, square3_width,
-					     square3_height, FgPixel, BgPixel, TtWDepth);
-       break;
-     case 25:
-       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) lozenge_bits, lozenge_width,
-					     lozenge_height, FgPixel, BgPixel, TtWDepth);
-       break;
-     case 26:
-       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) brick_bits, brick_width,
-					     brick_height, FgPixel, BgPixel, TtWDepth);
-       break;
-     case 27:
-       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) tile_bits, tile_width,
-					     tile_height, FgPixel, BgPixel, TtWDepth);
-       break;
-     case 28:
-       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) sea_bits, sea_width,
-					     sea_height, FgPixel, BgPixel, TtWDepth);
-       break;
-     case 29:
-       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) basket_bits, basket_width,
-					     basket_height, FgPixel, BgPixel, TtWDepth);
-       break;
-     default:
-       pixmap = None;
-       break;
-     }
-   XFlush (TtDisplay);
-#endif /* _MOTIF */
-
 #if defined(_WX)
    /* TODO */
    pixmap = NULL;
 #endif /* defined(_WX) */
-   
    return (pixmap);
 }

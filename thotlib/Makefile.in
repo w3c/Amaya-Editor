@@ -137,7 +137,6 @@ DISPLAY_OBJ = \
 	image/jpeghandler.o \
 	image/picture.o \
 	image/pnghandler.o \
-	image/xbmhandler.o \
 	image/xpmattrib.o \
 	image/xpmcreate.o \
 	image/xpmcrifrdata.o \

@@ -2405,9 +2405,7 @@ void TtaSetPictureType (Element element, char *mime_type)
    imageDesc = GetImageDesc (element);
    if (imageDesc != NULL)
      {
-       if (!strcmp (mime_type, "image/x-bitmap"))
-	   typeImage = xbm_type;
-       else if (!strcmp (mime_type, "application/postscript"))
+       if (!strcmp (mime_type, "application/postscript"))
 	 typeImage = eps_type;
        else if (!strcmp (mime_type, "image/x-xpixmap"))
 	 typeImage = eps_type;

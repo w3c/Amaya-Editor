@@ -46,6 +46,8 @@
 #include <gdk/gdkx.h>
 #include <gtk/gtkprivate.h>
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 ThotBool is_gtk_font_2byte (ThotFont font)
 {
   XFontStruct *xfs;
@@ -61,7 +63,6 @@ ThotBool is_gtk_font_2byte (ThotFont font)
     }
   return FALSE;  
 }
-
 #endif /*_GTK*/
 
 /*----------------------------------------------------------------------
@@ -70,11 +71,11 @@ ThotBool is_gtk_font_2byte (ThotFont font)
   ----------------------------------------------------------------------*/
 void FontOrig (ThotFont font, char firstchar, int *pX, int *pY)
 {
-#if defined(_MOTIF) || defined(_GTK)
+#ifdef _GTK
    if (!font)
       return;
    *pY += ((XFontStruct *) font)->ascent;
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* _GTK */
 }
 
 
@@ -88,10 +89,6 @@ static void LoadColor (int fg)
   /* Color of the box */
     gdk_rgb_gc_set_foreground (TtLineGC, ColorPixel (fg));
 #endif /* _GTK */
-
-#ifdef _MOTIF    
-    XSetForeground (TtDisplay, TtLineGC, ColorPixel (fg));
-#endif /* _MOTIF */
 }
 
 
@@ -110,11 +107,6 @@ static void InitDrawing (int style, int thick, int fg)
       gdk_gc_set_line_attributes (TtLineGC, thick, GDK_LINE_SOLID,
 				  GDK_CAP_BUTT, GDK_JOIN_MITER);
 #endif /* _GTK */
-      
-#ifdef _MOTIF      
-      XSetLineAttributes (TtDisplay, TtLineGC, thick, LineSolid,
-			  CapButt, JoinMiter);
-#endif /* _MOTIF */
     }
   else
     {
@@ -131,12 +123,6 @@ static void InitDrawing (int style, int thick, int fg)
 				  GDK_CAP_BUTT, GDK_JOIN_MITER);
 
 #endif /* _GTK */
-
-#ifdef _MOTIF      
-      XSetDashes (TtDisplay, TtLineGC, 0, dash, 2);
-      XSetLineAttributes (TtDisplay, TtLineGC, thick, LineOnOffDash,
-			  CapButt, JoinMiter);
-#endif /* _MOTIF */
     }
   /* Load the correct color */
   LoadColor (fg);
@@ -150,10 +136,6 @@ static void DoDrawOneLine (int frame, int x1, int y1, int x2, int y2)
 #ifdef _GTK
   gdk_draw_line (FrRef[frame], TtLineGC, x1, y1, x2, y2);
 #endif /* _GTK */
-  
-#ifdef _MOTIF  
-  XDrawLine (TtDisplay, FrRef[frame], TtLineGC, x1, y1, x2, y2);
-#endif /* _MOTIF */
 }
 
 
@@ -215,11 +197,6 @@ void DrawChar (char car, int frame, int x, int y, ThotFont font, int fg)
 #ifdef _GTK
    gdk_draw_text (w, font, TtLineGC, x, y, &car, 1);
 #endif /* _GTK */
-
-#ifdef _MOTIF
-   XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) font)->fid); 
-   XDrawString (TtDisplay, w, TtLineGC, x, y, &car, 1);
-#endif /* _MOTIF */
 }
 
 #ifdef XFTGTK
@@ -295,10 +272,6 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
   if (lg > 0 && w)
     {
       /* Dealing with BR tag for windows */
-#ifdef _MOTIF
-      if (fg >= 0)
-	XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) font)->fid);
-#endif /* _MOTIF */
       buff[lg] = EOS;
       TranslateChars (buff);
       j = 0;
@@ -321,13 +294,6 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
 	    /* draw the hyphen */
 	    gdk_draw_string (w, font,TtLineGC, x + width, y, "\255");
 #endif /* _GTK */
-
-#ifdef _MOTIF    
-	  XDrawString (TtDisplay, w, TtLineGC, x, y, (char *)buff, lg);
-	  if (hyphen)
-	    /* draw the hyphen */
-	    XDrawString (TtDisplay, w, TtLineGC, x + width, y, "\255", 1);
-#endif /* _MOTIF */
 	}
     }
   return (width);
@@ -352,11 +318,6 @@ int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
 {
   ThotWindow          w;
   int                 width, j;
-#ifdef _MOTIF
-  XChar2b            *buff2b;
-
-  buff2b = (XChar2b*)TtaGetMemory (lg * sizeof(XChar2b));
-#endif /* _MOTIF */
   
   w = FrRef[frame];
   y += FrameTable[frame].FrTopMargin;
@@ -365,12 +326,6 @@ int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
   if (lg > 0 && w)
     {
       /* Dealing with BR tag for windows */
-
-#ifdef _MOTIF
-      if (fg >= 0)
-	XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) font)->fid);
-#endif /* _MOTIF */
-
       buff[lg] = EOS;
       j = 0;
       while (j < lg)
@@ -389,25 +344,8 @@ int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
 	    /* draw the hyphen */
 	    gdk_draw_string (w, font,TtLineGC, x + width, y, "\255");
 #endif /* _GTK */
-
-#ifdef _MOTIF    
-	  for (j = 0; j < lg; j++)
-	    {
-	      buff2b[j].byte1 = buff[j] >> 8;
-	      buff2b[j].byte2 = buff[j];
-	    }
-	  XDrawString16 (TtDisplay, w, TtLineGC, x, y, buff2b, lg);
-	  if (hyphen)
-	    /* draw the hyphen */
-	    XDrawString (TtDisplay, w, TtLineGC, x + width, y, "\255", 1);
-#endif /* _MOTIF */
 	}
     }
-
-#ifdef _MOTIF
-  TtaFreeMemory (buff2b);
-#endif /* _MOTIF */
-  
   return (width);
 }
 
@@ -514,27 +452,15 @@ void DrawPoints (int frame, int x, int y, int boxWidth, int fg)
 	nb = boxWidth / width;
 	xcour = x + (boxWidth % width);
 	y = y + FrameTable[frame].FrTopMargin;
-
-#ifdef _MOTIF
- 	XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) font)->fid);
-#endif /* _MOTIF */
-        
 	LoadColor (fg);
-
 	/* draw the points */
 	FontOrig (font, *ptcar, &x, &y);
 	while (nb > 0)
 	  {
-
 #ifdef _GTK
 	  gdk_draw_string (w,font, TtLineGC, xcour, y, ptcar);
 #endif /* _GTK */
-
-#ifdef _MOTIF    
-	   XDrawString (TtDisplay, w, TtLineGC, xcour, y, ptcar, 2);
-#endif /* _MOTIF */
-
-     xcour += width;
+	  xcour += width;
 	   nb--;
 	  }
      }
@@ -726,12 +652,9 @@ void DrawIntersection (int frame, int x, int y, int l, int h, ThotFont font,
 
 	/* Upper part */
 #ifdef _GTK
-	gdk_draw_arc (FrRef[frame], TtLineGC,FALSE, x + 1, y + 1, l - 3, arc * 2, 0 * 64, 180 * 64);
+	gdk_draw_arc (FrRef[frame], TtLineGC,FALSE, x + 1, y + 1,
+		      l - 3, arc * 2, 0 * 64, 180 * 64);
 #endif /* _GTK */
-
-#ifdef _MOTIF  
-	XDrawArc (TtDisplay, FrRef[frame], TtLineGC, x + 1, y + 1, l - 3, arc * 2, 0 * 64, 180 * 64);
-#endif /* _MOTIF */
      }
 }
 
@@ -762,7 +685,6 @@ void DrawUnion (int frame, int x, int y, int l, int h, ThotFont font, int fg)
 	DoDrawOneLine (frame, x + l - 2, y, x + l - 2, y + h - arc);
 
 	/* Lower part */
-
 #ifdef _GTK
 	gdk_draw_arc (FrRef[frame], TtLineGC,FALSE,
 		      x + 1, y + h - arc * 2 - 2,
@@ -770,11 +692,6 @@ void DrawUnion (int frame, int x, int y, int l, int h, ThotFont font, int fg)
 		      -0 * 64, -180 * 64);
 
 #endif /* _GTK */
-
-#ifdef _MOTIF  
-	XDrawArc (TtDisplay, FrRef[frame], TtLineGC, x + 1, y + h - arc * 2 - 2, l - 3, arc * 2, -0 * 64, -180 * 64);
-#endif /* _MOTIF */
-  
      }
 }
 
@@ -784,10 +701,10 @@ void DrawUnion (int frame, int x, int y, int l, int h, ThotFont font, int fg)
 static void ArrowDrawing (int frame, int x1, int y1, int x2, int y2,
 			  int thick, int fg)
 {
-   double               x, y, xb, yb, dx, dy, l, sina, cosa;
+   double              x, y, xb, yb, dx, dy, l, sina, cosa;
    int                 xc, yc, xd, yd;
-   double               width, height;
-   ThotPixmap              pattern;
+   double              width, height;
+   ThotPixmap          pattern;
    ThotPoint           point[3];
 
    width = (double) (5 + thick);
@@ -803,11 +720,11 @@ static void ArrowDrawing (int frame, int x1, int y1, int x2, int y2,
    yb = x2 * sina + y2 * cosa;
    x = xb - height;
    y = yb - width / 2;
-   xc = (double)(x * cosa + y * sina + .5);
-   yc = (double)(-x * sina + y * cosa + .5);
+   xc = (int)(x * cosa + y * sina + .5);
+   yc = (int)(-x * sina + y * cosa + .5);
    y = yb + width / 2;
-   xd = (double)(x * cosa + y * sina + .5);
-   yd = (double)(-x * sina + y * cosa + .5);
+   xd = (int)(x * cosa + y * sina + .5);
+   yd = (int)(-x * sina + y * cosa + .5);
 
    /* draw */
    point[0].x = x2;
@@ -820,19 +737,11 @@ static void ArrowDrawing (int frame, int x1, int y1, int x2, int y2,
    pattern = (ThotPixmap) CreatePattern (0, fg, fg, 1);
    if (pattern != 0)
      {
-       
 #ifdef _GTK
       gdk_gc_set_tile (TtGreyGC, (GdkPixmap *)pattern);
       gdk_draw_polygon (FrRef[frame], TtGreyGC, TRUE, point, 3);
       gdk_pixmap_unref ((GdkPixmap *)pattern);
 #endif /* _GTK */
-
-#ifdef _MOTIF
-      XSetTile (TtDisplay, TtGreyGC, pattern);     
-      XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC, point, 3, Convex, CoordModeOrigin);
-      XFreePixmap (TtDisplay, pattern);
-#endif /* _MOTIF */
-      
      }
 }
 
@@ -1224,12 +1133,6 @@ void DrawRectangle (int frame, int thick, int style, int x, int y, int width,
       gdk_draw_rectangle (FrRef[frame], TtGreyGC, TRUE, x, y, width, height);
       gdk_pixmap_unref ((GdkPixmap *)pat);
 #endif /* _GTK */
-      
-#ifdef _MOTIF
-      XSetTile (TtDisplay, TtGreyGC, pat);
-      XFillRectangle (TtDisplay, FrRef[frame], TtGreyGC, x, y, width, height);
-      XFreePixmap (TtDisplay, pat);
-#endif /* _MOTIF */
     }
 
   /* Draw the border */
@@ -1246,10 +1149,6 @@ void DrawRectangle (int frame, int thick, int style, int x, int y, int width,
 #ifdef _GTK
       gdk_draw_rectangle ( FrRef[frame],TtLineGC,FALSE, x, y, width, height);
 #endif /* _GTK */
-
-#ifdef _MOTIF      
-      XDrawRectangle (TtDisplay, FrRef[frame], TtLineGC, x, y, width, height);
-#endif /* _MOTIF */      
     }
 }
 
@@ -1291,14 +1190,6 @@ void DrawDiamond (int frame, int thick, int style, int x, int y, int width,
       gdk_draw_polygon (FrRef[frame], TtGreyGC, TRUE, point, 5);
       gdk_pixmap_unref ((GdkPixmap *)pat); 
 #endif /* _GTK */
-
-#ifdef _MOTIF      
-       XSetTile (TtDisplay, TtGreyGC, pat);
-       XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC,
-		      point, 5, Convex, CoordModeOrigin);
-       XFreePixmap (TtDisplay, pat);
-#endif /* _MOTIF */
-
      }
 
    /* Draw the border */
@@ -1308,10 +1199,6 @@ void DrawDiamond (int frame, int thick, int style, int x, int y, int width,
 #ifdef _GTK
 	gdk_draw_polygon (FrRef[frame], TtLineGC, FALSE, point, 5);
 #endif /* _GTK */
-
-#ifdef _MOTIF  
-	XDrawLines (TtDisplay, FrRef[frame], TtLineGC, point, 5, CoordModeOrigin);
-#endif /* _MOTIF */
      }
 }
 
@@ -1381,13 +1268,7 @@ void DrawSegments (int frame, int thick, int style, int x, int y,
     gdk_draw_line (FrRef[frame], TtLineGC,
 		   points[k].x, points[k].y,
 		   points[k+1].x, points[k+1].y);
-
 #endif /* _GTK */
-  
-#ifdef _MOTIF
-  XDrawLines (TtDisplay, FrRef[frame], TtLineGC,
-	      points, nb - 1, CoordModeOrigin);
-#endif /* _MOTIF */
 
   /* Forward arrow */
   if (arrow == 1 || arrow == 3)
@@ -1420,16 +1301,7 @@ static void DoDrawLines (int frame, int thick, int style,
        gdk_gc_set_tile (TtGreyGC, (GdkPixmap *)pat);
        gdk_draw_polygon (FrRef[frame], TtGreyGC, TRUE, points, npoints); 
        gdk_pixmap_unref ((GdkPixmap *)pat);
-
-
 #endif /* _GTK */
-
-#ifdef _MOTIF       
-       XSetTile (TtDisplay, TtGreyGC, pat);
-       XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC, points, npoints,
-		     Complex, CoordModeOrigin);
-       XFreePixmap (TtDisplay, pat);
-#endif /* _MOTIF */
      }
 
    /* Draw the border */
@@ -1439,11 +1311,6 @@ static void DoDrawLines (int frame, int thick, int style,
 #ifdef _GTK
        gdk_draw_lines (FrRef[frame], TtLineGC, points, npoints); 
 #endif /* _GTK */
-
-#ifdef _MOTIF
-       XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, npoints,
-		   CoordModeOrigin);
-#endif /* _MOTIF */
      }
 }
 
@@ -1595,14 +1462,9 @@ void DrawCurve (int frame, int thick, int style, int x, int y,
 
    /* Draw the border */
    InitDrawing (style, thick, fg);
-
 #ifdef _GTK
-  gdk_draw_lines (FrRef[frame], TtLineGC, points, npoints);
+   gdk_draw_lines (FrRef[frame], TtLineGC, points, npoints);
 #endif /* _GTK */
-
-#ifdef _MOTIF
-  XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, npoints, CoordModeOrigin);
-#endif /* _MOTIF */
   
    /* Forward arrow */
    if (arrow == 1 || arrow == 3)
@@ -1712,35 +1574,20 @@ void DrawSpline (int frame, int thick, int style, int x, int y,
   pat = (ThotPixmap) CreatePattern (0, fg, bg, pattern);
   if (pat != 0)
     {
-
 #ifdef _GTK
       gdk_gc_set_tile ( TtGreyGC, (GdkPixmap *)pat);
       gdk_draw_polygon (FrRef[frame], TtGreyGC, TRUE , points, npoints); 
       gdk_pixmap_unref ((GdkPixmap *)pat);
 #endif /* _GTK */
-
-#ifdef _MOTIF
-      XSetTile (TtDisplay, TtGreyGC, pat);
-      XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC, points, npoints, Complex, CoordModeOrigin);
-      XFreePixmap (TtDisplay, pat);
-#endif /* #ifdef _MOTIF */
-      
     }
 
   /* Draw the border */
   if (thick > 0 && fg >= 0)
     {
       InitDrawing (style, thick, fg);
-
 #ifdef _GTK
       gdk_draw_polygon (FrRef[frame], TtLineGC, FALSE, points, npoints);
-
 #endif /* _GTK */
-
-#ifdef _MOTIF
-      XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, npoints, CoordModeOrigin);
-#endif /* #ifdef _MOTIF */
-      
     }
 
   /* free the table of points */
@@ -1876,7 +1723,7 @@ void DrawPath (int frame, int thick, int style, int x, int y,
 			     (double) x1, (double) y1, 
 			     (double) x2, (double) y2, 
 			     (double) cx1, (double) cy1,
-			     fmod(pPa->XAxisRotation, 360), 
+			     (int)fmod (pPa->XAxisRotation, 360), 
 			     pPa->LargeArc, pPa->Sweep,
 			     &points, &npoints, &maxpoints);
 	      x2 = (double) (x + PixelValue (pPa->XEnd, UnPixel, NULL,
@@ -1905,10 +1752,8 @@ void DrawPath (int frame, int thick, int style, int x, int y,
 void DrawOval (int frame, int thick, int style, int x, int y, int width,
 	       int height, int rx, int ry, int fg, int bg, int pattern)
 {
-#if defined(_MOTIF) || defined(_GTK)  
 #ifdef _GTK
    int                 i;
-#endif /* _GTK */
    ThotPixmap              pat;
    int                 arc, dx, dy;
    int                 xf, yf;
@@ -2031,52 +1876,33 @@ void DrawOval (int frame, int thick, int style, int x, int y, int width,
 	point[12].x = point[0].x;
 	point[12].y = point[0].y;
 
-#ifdef _GTK
 	gdk_gc_set_tile (TtGreyGC, (GdkPixmap *)pat);
 	gdk_draw_polygon (FrRef[frame], TtGreyGC, TRUE, point, 13);
-	
 	/* Trace quatre arcs de cercle */
-	for (i=0;i<4;i++){
-	  gdk_draw_arc (FrRef[frame], TtGreyGC, TRUE,
-			xarc[i].x, xarc[i].y, 
-			xarc[i].width, xarc[i].height, 
-			xarc[i].angle1,xarc[i].angle2); 
-	}
+	for (i=0;i<4;i++)
+	  {
+	    gdk_draw_arc (FrRef[frame], TtGreyGC, TRUE,
+			  xarc[i].x, xarc[i].y, 
+			  xarc[i].width, xarc[i].height, 
+			  xarc[i].angle1,xarc[i].angle2); 
+	  }
 	gdk_pixmap_unref ((GdkPixmap *)pat);
-#endif /* _GTK */
-
-#ifdef _MOTIF  
-	XSetTile (TtDisplay, TtGreyGC, pat);
-	XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC,
-		      point, 13, Convex, CoordModeOrigin);
-	/* Trace quatre arcs de cercle */
-	XFillArcs (TtDisplay, FrRef[frame], TtGreyGC, xarc, 4);
-	XFreePixmap (TtDisplay, pat);
-#endif /* #ifdef _MOTIF */
-  
      }
 
    /* Draw the border */
    if (thick > 0 && fg >= 0)
      {
 	InitDrawing (style, thick, fg);
-#ifdef _GTK
-	for (i=0;i<4;i++){
-	  gdk_draw_arc (FrRef[frame], TtLineGC, FALSE, 
-			xarc[i].x, xarc[i].y, 
-			xarc[i].width, xarc[i].height, 
-			xarc[i].angle1,xarc[i].angle2);
-	}
+	for (i=0;i<4;i++)
+	  {
+	    gdk_draw_arc (FrRef[frame], TtLineGC, FALSE, 
+			  xarc[i].x, xarc[i].y, 
+			  xarc[i].width, xarc[i].height, 
+			  xarc[i].angle1,xarc[i].angle2);
+	  }
 	gdk_draw_segments (FrRef[frame], TtLineGC, (GdkSegment *)seg, 4);
-#endif /* _GTK */
-
-#ifdef _MOTIF
-	XDrawArcs (TtDisplay, FrRef[frame], TtLineGC, xarc, 4);
-	XDrawSegments (TtDisplay, FrRef[frame], TtLineGC, seg, 4);
-#endif /* #ifdef _MOTIF */
-
      }
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -2102,33 +1928,20 @@ void DrawEllips (int frame, int thick, int style, int x, int y, int width,
 
    if (pat != 0)
      {
-       
 #ifdef _GTK 
       gdk_gc_set_tile ( TtGreyGC, (GdkPixmap *)pat);
       gdk_draw_arc (FrRef[frame], TtGreyGC, TRUE, x, y, width, height, 0, 360 * 64);
       gdk_pixmap_unref ((GdkPixmap *)pat);
 #endif /* _GTK */
-
-#ifdef _MOTIF      
-      XSetTile (TtDisplay, TtGreyGC, pat);
-      XFillArc (TtDisplay, FrRef[frame], TtGreyGC, x, y, width, height, 0, 360 * 64);
-      XFreePixmap (TtDisplay, pat);
-#endif /* #ifdef _MOTIF */
-      
      }
 
    /* Draw the border */
    if (thick > 0 && fg >= 0)
      {
       InitDrawing (style, thick, fg);
-
 #ifdef _GTK
       gdk_draw_arc (FrRef[frame], TtLineGC, FALSE,  x, y, width, height, 0, 360 * 64);
 #endif /* _GTK */
-
-#ifdef _MOTIF
-      XDrawArc (TtDisplay, FrRef[frame], TtLineGC, x, y, width, height, 0, 360 * 64);
-#endif /* #ifdef _MOTIF */
      }
 }
 
@@ -2318,11 +2131,6 @@ void DrawCorner (int frame, int thick, int style, int x, int y, int l,
 #ifdef _GTK
    gdk_draw_lines (FrRef[frame], TtLineGC, point, 3);
 #endif /* _GTK */
-
-#ifdef _MOTIF
-   XDrawLines (TtDisplay, FrRef[frame], TtLineGC, point, 3, CoordModeOrigin);
-#endif /* #ifdef _MOTIF */
-   
 }
 
 /*----------------------------------------------------------------------
@@ -2334,10 +2142,8 @@ void DrawCorner (int frame, int thick, int style, int x, int y, int l,
 void DrawRectangleFrame (int frame, int thick, int style, int x, int y,
 			 int width, int height, int fg, int bg, int pattern)
 {
-#if defined(_MOTIF) || defined(_GTK)  
 #ifdef _GTK
    int                 i;
-#endif /* _GTK */
    int                 arc, arc2, xf, yf;
    ThotArc             xarc[4];
    ThotSegment         seg[5];
@@ -2349,7 +2155,7 @@ void DrawRectangleFrame (int frame, int thick, int style, int x, int y,
    x += thick / 2;
    y = y + FrameTable[frame].FrTopMargin + thick / 2;
    /* radius of arcs is 3mm */
-   arc = (3 * DOT_PER_INCH) / 25.4 + 0.5;
+   arc = (int)((3 * DOT_PER_INCH) / 25.4 + 0.5);
    arc2 = 2 * arc;
 
    xf = x + width;
@@ -2457,8 +2263,6 @@ void DrawRectangleFrame (int frame, int thick, int style, int x, int y,
 	point[11].y = point[10].y;
 	point[12].x = point[0].x;
 	point[12].y = point[0].y;
-
-#ifdef _GTK
 	gdk_gc_set_tile (TtGreyGC, (GdkPixmap *)pat);
 	gdk_draw_polygon (FrRef[frame], TtGreyGC, TRUE,  point, 13);
 	/* Trace quatre arcs de cercle */
@@ -2470,64 +2274,26 @@ void DrawRectangleFrame (int frame, int thick, int style, int x, int y,
 			xarc[i].angle1, xarc[i].angle2);
 	  }
 	gdk_pixmap_unref ((GdkPixmap *)pat);
-#endif /* _GTK */
-
-#ifdef _MOTIF  
-	XSetTile (TtDisplay, TtGreyGC, pat);
-	XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC,
-		      point, 13, Convex, CoordModeOrigin);
-	/* Trace quatre arcs de cercle */
-	XFillArcs (TtDisplay, FrRef[frame], TtGreyGC, xarc, 4);
-	XFreePixmap (TtDisplay, pat);
-#endif /* #ifdef _MOTIF */
-  
      }
 
    /* Draw the border */
    if (thick > 0 && fg >= 0)
      {
 	InitDrawing (style, thick, fg);
-
-#ifdef _GTK
 	for (i = 0 ; i < 4; i++)
-	{ 
-	  gdk_draw_arc (FrRef[frame], TtLineGC, FALSE, 
-			xarc[i].x, xarc[i].y, 
-			xarc[i].width, xarc[i].height, 
-			xarc[i].angle1, xarc[i].angle2);
-  }
-#endif /* _GTK */
-
-#ifdef _MOTIF  
-	XDrawArcs (TtDisplay, FrRef[frame], TtLineGC, xarc, 4);
-#endif /* #ifdef _MOTIF */
+	  { 
+	    gdk_draw_arc (FrRef[frame], TtLineGC, FALSE, 
+			  xarc[i].x, xarc[i].y, 
+			  xarc[i].width, xarc[i].height, 
+			  xarc[i].angle1, xarc[i].angle2);
+	  }
   
 	if (arc2 < height / 2)
-	  {
-
-#ifdef _GTK
 	   gdk_draw_segments (FrRef[frame], TtLineGC, (GdkSegment *)seg, 5);
-#endif /* _GTK */
-
-#ifdef _MOTIF     
-	   XDrawSegments (TtDisplay, FrRef[frame], TtLineGC, seg, 5);
-#endif /* #ifdef _MOTIF */
-     
-	  }
 	else
-	  {
-
-#ifdef _GTK 
 	   gdk_draw_segments (FrRef[frame], TtLineGC, (GdkSegment *)seg, 4);
-#endif /* _GTK */
-
-#ifdef _MOTIF
-	   XDrawSegments (TtDisplay, FrRef[frame], TtLineGC, seg, 4);
-#endif /* #ifdef _MOTIF */
-
-    }
      }
-#endif /* #if defined(_MOTIF) || defined(_GTK) */   
+#endif /* _GTK */   
 }
 
 
@@ -2553,56 +2319,32 @@ void DrawEllipsFrame (int frame, int thick, int style, int x, int y,
    pat = CreatePattern (0, fg, bg, pattern);
    if (pat != 0)
      {
-
 #ifdef _GTK
         gdk_gc_set_tile (TtGreyGC, (GdkPixmap *)pat);
 	gdk_draw_arc (FrRef[frame], TtGreyGC, TRUE,
 		  x, y, width, height, 0, 360 * 64);
 	gdk_pixmap_unref ((GdkPixmap *)pat);
 #endif /* _GTK */
-
-#ifdef _MOTIF
-	XSetTile (TtDisplay, TtGreyGC, pat);
-	XFillArc (TtDisplay, FrRef[frame], TtGreyGC,
-		  x, y, width, height, 0, 360 * 64);
-	XFreePixmap (TtDisplay, pat);
-#endif /* #ifdef _MOTIF */
-  
      }
 
    /* Draw the border */
    if (thick > 0 && fg >= 0)
      {
 	InitDrawing (style, thick, fg);
-
 #ifdef _GTK
 	gdk_draw_arc (FrRef[frame], TtLineGC, FALSE,
 		      x, y, width, height, 0, 360 * 64); 
-
 #endif /* _GTK */
-
-#ifdef _MOTIF  
-	XDrawArc (TtDisplay, FrRef[frame], TtLineGC,
-		  x, y, width, height, 0, 360 * 64);
-#endif /* #ifdef _MOTIF */
-
-	px7mm = (7 * DOT_PER_INCH) / 25.4 + 0.5;
+	px7mm = (int)((7 * DOT_PER_INCH) / 25.4 + 0.5);
 	if (height > 2 * px7mm)
 	  {
 	     A = ((double) height - 2 * px7mm) / height;
 	     A = 1.0 - sqrt (1 - A * A);
-	     shiftX = width * A * 0.5 + 0.5;
-
+	     shiftX = (int)(width * A * 0.5 + 0.5);
 #ifdef _GTK
 	     gdk_draw_line (FrRef[frame], TtLineGC,
 			    x + shiftX, y + px7mm, x + width - shiftX, y + px7mm);
 #endif /* _GTK */	    
-
-#ifdef _MOTIF
-	     XDrawLine (TtDisplay, FrRef[frame], TtLineGC,
-		      x + shiftX, y + px7mm, x + width - shiftX, y + px7mm);
-#endif /* #ifdef _MOTIF */
-       
 	  }
      }
 }
@@ -2619,10 +2361,6 @@ void SetMainWindowBackgroundColor (int frame, int color)
    gdkcolor.pixel = gdk_rgb_xpixel_from_rgb (ColorPixel (color));
    gdk_window_set_background (FrRef[frame], &gdkcolor);
 #endif /* _GTK */
-
-#ifdef _MOTIF
-   XSetWindowBackground (TtDisplay, FrRef[frame], ColorPixel (color));
-#endif /* #ifdef _MOTIF */
 }
 
 /*----------------------------------------------------------------------
@@ -2639,10 +2377,6 @@ void Clear (int frame, int width, int height, int x, int y)
 #ifdef _GTK
       gdk_window_clear_area (w, x, y + FrameTable[frame].FrTopMargin, width, height);
 #endif /* _GTK */
-
-#ifdef _MOTIF      
-      XClearArea (TtDisplay, w, x, y + FrameTable[frame].FrTopMargin, width, height, FALSE);
-#endif /* #ifdef _MOTIF */
     }
 }
 
@@ -2655,12 +2389,6 @@ void WChaine (ThotWindow w, char *string, int x, int y, ThotFont font,
 #ifdef _GTK
    gdk_draw_string (w, font, GClocal, x, y+gdk_string_height (font, string), string); 
 #endif /* _GTK */
-
-#ifdef _MOTIF
-   XSetFont (TtDisplay, GClocal, ((XFontStruct *) font)->fid);
-   FontOrig (font, string[0], &x, &y);
-   XDrawString (TtDisplay, w, GClocal, x, y, string, strlen (string));
-#endif /* #ifdef _MOTIF */
 }
 
 
@@ -2673,17 +2401,11 @@ void VideoInvert (int frame, int width, int height, int x, int y)
    ThotWindow          w;
 
    w = FrRef[frame];
-
 #ifdef _GTK  
    if (w != None)
      gdk_draw_rectangle (w, TtInvertGC, TRUE, x, 
 			 y + FrameTable[frame].FrTopMargin, width, height);
 #endif /* _GTK */
-   
-#ifdef _MOTIF
-   if (w != None)
-     XFillRectangle (TtDisplay, w, TtInvertGC, x, y + FrameTable[frame].FrTopMargin, width, height);
-#endif /* #ifdef _MOTIF */
 }
 
 
@@ -2695,7 +2417,6 @@ void Scroll (int frame, int width, int height, int xd, int yd, int xf, int yf)
 {
   if (FrRef[frame] != None)
     {
-
 #ifdef _GTK 
       gdk_window_copy_area (FrRef[frame], TtWhiteGC,
 			    xf,
@@ -2706,13 +2427,6 @@ void Scroll (int frame, int width, int height, int xd, int yd, int xf, int yf)
 			    width,
 			    height);
 #endif /* _GTK */
-
-#ifdef _MOTIF      
-      XCopyArea (TtDisplay, FrRef[frame], FrRef[frame], TtWhiteGC,
-		 xd, yd + FrameTable[frame].FrTopMargin, width, height,
-		 xf, yf + FrameTable[frame].FrTopMargin);
-#endif /* #ifdef _MOTIF */
-
     }
 }
 
@@ -2732,36 +2446,17 @@ void PaintWithPattern (int frame, int x, int y, int width, int height,
   /* Fill the rectangle associated to the given frame */
   pat = (ThotPixmap) CreatePattern (0, fg, 0, pattern);
   if (pat != 0)
-  {
-    
+    {
 #ifdef _GTK
-    gdk_gc_set_tile (TtGreyGC, (GdkPixmap *)pat);
-	  if (w != 0)
-    {
-	    gdk_draw_rectangle (w, TtGreyGC, TRUE, x, y, width, height);     
-	  }
-    else
-    {
-	    gdk_draw_rectangle (FrRef[frame], TtGreyGC, TRUE,
-			                    x, y + FrameTable[frame].FrTopMargin, 
-			                    width, height);
-    }    
-  	gdk_pixmap_unref ((GdkPixmap *)pat);
+      gdk_gc_set_tile (TtGreyGC, (GdkPixmap *)pat);
+      if (w != 0)
+	gdk_draw_rectangle (w, TtGreyGC, TRUE, x, y, width, height);     
+      else
+	gdk_draw_rectangle (FrRef[frame], TtGreyGC, TRUE,
+			    x, y + FrameTable[frame].FrTopMargin, 
+			    width, height);
+      gdk_pixmap_unref ((GdkPixmap *)pat);
 #endif /* _GTK */
-
-#ifdef _MOTIF
-    XSetTile (TtDisplay, TtGreyGC, pat);
-	  if (w != 0)
-    {
-	    XFillRectangle (TtDisplay, w, TtGreyGC, x, y, width, height);
-	  }
-    else
-    {
-	    XFillRectangle (TtDisplay, FrRef[frame], TtGreyGC, x, y + FrameTable[frame].FrTopMargin, width, height);
     }    
-  	XFreePixmap (TtDisplay, pat);
-#endif /* #ifdef _MOTIF */    
-
-  }    
 }
 #endif /*_GL*/
