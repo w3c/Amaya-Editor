@@ -132,6 +132,14 @@ typedef struct _TabRelations
   int              TaRTPercents[MAX_RELAT_DIM];
 } TabRelations;
 
+typedef struct _TabSpan *PtrTabSpan;
+typedef struct _TabSpan
+{
+  PtrTabSpan       TaSpanNext;	/* Next block */
+  PtrAbstractBox   TaSpanCell[MAX_RELAT_DIM];
+  int              TaSpanNumber[MAX_RELAT_DIM];
+} TabSpan;
+
 /* Structure to store table updates */
 typedef struct _TabUpdate *PtrTabUpdate;
 typedef struct _TabUpdate
@@ -241,6 +249,7 @@ typedef struct _Box
       int        	_BxMinWidth_;   /* Mininmum width */
       short             _BxCycles_;     /* count reformatting cycles */
       short             _BxPacking_;     /* Packing */
+      PtrTabSpan        _BxSpans_;	/* list of spanned cells */
     } s3;
   } u;
 } Box;
@@ -262,6 +271,7 @@ typedef struct _Box
 #define BxColumns u.s3._BxColumns_
 #define BxTable u.s3._BxColumns_
 #define BxRows u.s3._BxRows_
+#define BxSpans u.s3._BxSpans_
 
 typedef struct C_points_
 {

@@ -412,7 +412,7 @@ ThotBool            status;
   ViewSelection      *pViewSelEnd;
 
   /* On ne visualise la selection que si la selection est coherente */
-  if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == DisplayImmediately)
+  if (FrameTable[frame].FrDoc && documentDisplayMode[FrameTable[frame].FrDoc - 1] == DisplayImmediately)
     {
       pFrame = &ViewFrameTable[frame - 1];
       pViewSel = &pFrame->FrSelectionBegin;

@@ -699,6 +699,12 @@ int                 frame;
 
    if (pBox != NULL)
      {
+#ifdef TAB_DEBUG
+if (pBox->BxType == BoTable)
+printf ("ChangeDefaultWidth (table=%s, value=%d)\n", pBox->BxAbstractBox->AbElement->ElLabel, delta);
+else if (pBox->BxType == BoColumn)
+printf ("ChangeDefaultWidth (column=%s, value=%d)\n", pBox->BxAbstractBox->AbElement->ElLabel, delta);
+#endif
 	/* Regarde si la largeur reelle actuelle depend du contenu */
 	if (pBox->BxContentWidth)
 	  {
@@ -753,9 +759,14 @@ int                 frame;
   int                 width;
   ThotBool            minimumRule;
 
-
   if (pBox != NULL)
     {
+#ifdef TAB_DEBUG
+if (pBox->BxType == BoTable)
+printf ("ChangeWidth (table=%s, value=%d)\n", pBox->BxAbstractBox->AbElement->ElLabel, delta);
+else if (pBox->BxType == BoColumn)
+printf ("ChangeWidth (column=%s, value=%d)\n", pBox->BxAbstractBox->AbElement->ElLabel, delta);
+#endif
       minimumRule = (!pBox->BxAbstractBox->AbWidth.DimIsPosition
 		     && pBox->BxAbstractBox->AbWidth.DimMinimum);
 
@@ -2254,7 +2265,7 @@ int                 frame;
 {
   PtrBox              box;
   PtrLine             pLine;
-  PtrAbstractBox      pAb/*, pCell*/;
+  PtrAbstractBox      pAb;
   PtrAbstractBox      pCurrentAb;
   PtrPosRelations     pPosRel;
   PtrDimRelations     pDimRel;
@@ -2711,6 +2722,10 @@ int                 frame;
 		    }
 		}
 	    }
+	  else if (pBox->BxType == BoCell &&
+		   ThotLocalActions[T_checktableheight])
+	    /* it's a cell with a rowspan attribute */
+	    (*ThotLocalActions[T_checktableheight]) (pCurrentAb, frame);
 	}
     }
   

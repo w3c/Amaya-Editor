@@ -208,7 +208,7 @@ ThotBool            extendSel;
 	   TtcLineUp (doc, view);
 	   /* update the new position */
 	   if (org != pLastBox->BxYOrg)
-	     y = y + org - pLastBox->BxYOrg;
+	     y = y - org + pLastBox->BxYOrg;
 	 }
        while (y + yDelta < pFrame->FrYOrg &&
 	      /* we don't see the top of the box */
@@ -228,11 +228,11 @@ ThotBool            extendSel;
 	   TtcLineDown (doc, view);
 	   /* update the new position */
 	   if (org != pLastBox->BxYOrg)
-	     y = y + org - pLastBox->BxYOrg;
+	     y = y - org + pLastBox->BxYOrg;
 	 }
        while (y + yDelta > pFrame->FrYOrg + h &&
 	      /* we don't see the bottom of the box */
-	      (org + pLastBox->BxHeight > pFrame->FrYOrg + h ||
+	      (pLastBox->BxYOrg + pLastBox->BxHeight > pFrame->FrYOrg + h ||
 	       /* the frame is not on the top of the concrete image */
 	       pFrame->FrYOrg + h < pFrame->FrAbstractBox->AbBox->BxHeight ||
 	       /* we don't see the top of the document */

@@ -140,7 +140,6 @@ int                 h;
 		nView = CreateAbstractImage (pDoc, 1, 0, pDoc->DocSSchema, 1, TRUE, NULL);
 		OpenCreatedView (pDoc, nView, FALSE, x, y, w, h);
 		view = nView;
-        /* TtaSetToggleItem (document, view, Special, BShowLogFile, FALSE); */
 	     }
      }
    return view;
