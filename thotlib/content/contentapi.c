@@ -193,6 +193,7 @@ static void InsertText (PtrElement pEl, int position, unsigned char *content,
 }
 
 /*----------------------------------------------------------------------
+  SetContent
   ----------------------------------------------------------------------*/
 static void SetContent (Element element, unsigned char *content,
 			Language language, Document document)
@@ -2742,8 +2743,8 @@ void TtaSetBufferContent (Element element, CHAR_T *content,
 			  Language language, Document document)
 {
   PtrElement    pEl;
-  PtrTextBuffer pBuf;
-  int           max, length, delta;
+  PtrTextBuffer pBuf, prevBuf;
+  int           remaining, length, delta, bulen, i;
 
   UserErrorCode = 0;
   pEl = NULL;
@@ -2764,29 +2765,65 @@ void TtaSetBufferContent (Element element, CHAR_T *content,
       pEl->ElLanguage = language;
       
       /* store the contents of the element */
+      pBuf = pEl->ElText;
       if (content)
+	length = ustrlen (content);
+      else
+	length = 0;
+      if (length == 0)
+	/* the new content of the element is null */
 	{
-	  max = ustrlen (content);
-	  if (max >= THOT_MAX_CHAR)
-	    max = THOT_MAX_CHAR - 1;
-	  pBuf = pEl->ElText;
-	  if (pBuf == NULL)
+	  if (pBuf)
 	    {
-	      GetTextBuffer (&pEl->ElText);
-	      pBuf = pEl->ElText;
+	      pBuf->BuContent[0] = EOS;
+	      pBuf->BuLength = 0;
+	      prevBuf = pBuf;
+	      pBuf = pBuf->BuNext;
 	    }
-	  if (pBuf && max > 0)
-	    {
-	      ustrncpy (pBuf->BuContent, content, max);
-	      pBuf->BuContent[max] = EOS;
-	      pBuf->BuLength = max;
-	      length = max;
-	    }
-	  else
-	    length = 0;
 	}
       else
-	  length = 0;
+	{
+	  prevBuf = NULL;
+	  remaining = length;
+	  i = 0;
+	  while (remaining > 0)
+	    {
+	      if (!pBuf)
+		/* create and initialize a new buffer */
+		{
+		  GetTextBuffer (&pBuf);
+		  pBuf->BuNext = NULL;
+		  if (prevBuf)
+		    prevBuf->BuNext = pBuf;
+		  else
+		    pEl->ElText = pBuf;
+		}
+	      if (remaining >= THOT_MAX_CHAR)
+		/* the remaining length is longer than a single buffer */
+		bulen = THOT_MAX_CHAR - 1;
+	      else
+		bulen = remaining;
+	      ustrncpy (pBuf->BuContent, &content[i], bulen);
+	      i += bulen;
+	      pBuf->BuContent[bulen] = EOS;
+	      pBuf->BuLength = bulen;
+	      remaining -= bulen;
+	      prevBuf = pBuf;
+	      pBuf = pBuf->BuNext;
+	    }
+	}
+
+      /* free the remaining buffers, if any */
+      if (pBuf && prevBuf)
+	{
+	  prevBuf->BuNext = NULL;
+	  while (pBuf)
+	    {
+	      prevBuf = pBuf;
+	      pBuf = pBuf->BuNext;
+	      FreeTextBuffer (prevBuf);
+	    }
+	}
 
       delta = length - pEl->ElTextLength;
       pEl->ElTextLength = length;
@@ -2797,11 +2834,14 @@ void TtaSetBufferContent (Element element, CHAR_T *content,
 #endif /* NODISPLAY */
 
       /* Updates the volume of ancestors */
-      pEl = pEl->ElParent;
-      while (pEl != NULL)
+      if (delta != 0)
 	{
-	  pEl->ElVolume += delta;
 	  pEl = pEl->ElParent;
+	  while (pEl != NULL)
+	    {
+	      pEl->ElVolume += delta;
+	      pEl = pEl->ElParent;
+	    }
 	}
     }
 }

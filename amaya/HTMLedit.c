@@ -2301,8 +2301,12 @@ void ElementPasted (NotifyElement * event)
 
 /*----------------------------------------------------------------------
    CheckNewLines
-   Some new text has been pasted or typed in a text element. Check the
-   NewLine characters and replace them by spaces, except if it's in a PRE
+   Some new text has been pasted or typed in a text element.
+   If it's not in a <pre>, check the NewLine characters and replace them by
+   spaces. Replace a sequence of spaces by a single space.
+   If its in a paragraph, generate a new paragraph for each newline (if
+   mode PasteLineByLine is on), or for each pair of newlines (if this mode
+   is off).
  -----------------------------------------------------------------------*/
 void CheckNewLines (NotifyOnTarget *event)
 {
@@ -2310,18 +2314,20 @@ void CheckNewLines (NotifyOnTarget *event)
               child, orig, prev, next;
   Document    doc;
   ElementType elType;
-  char       *content;
+  CHAR_T      *content;
   int         firstSelChar, lastSelChar, length, i, j;
   Language    lang;
   ThotBool    pre, para, changed, selChanged, newParagraph, undoSeqExtended,
               prevCharEOL;
+  /**** @@@@@ PasteLineByLine should be a preference setting ****/
+  ThotBool PasteLineByLine = TRUE;
 
   if (!event->target)
     return;
   leaf = event->target;
   firstLeaf = leaf;
   doc = event->document;
-  length = TtaGetTextLength (leaf);
+  length = TtaGetElementVolume (leaf);
   if (length == 0)
     return;
 
@@ -2363,80 +2369,102 @@ void CheckNewLines (NotifyOnTarget *event)
        the selection */
     selEl = NULL;
   length++;
-  content = TtaGetMemory (length);
-  TtaGiveTextContent (leaf, content, &length, &lang);
+  content = TtaGetMemory (length * sizeof(CHAR_T));
+  TtaGiveBufferContent (leaf, content, length, &lang);
   changed = FALSE;
   selChanged = FALSE;
   prevCharEOL = FALSE;
   j = 0;
   for (i = 0; i < length; i++)
     {
-      if (content[i] == (char) EOL)
+      if (content[i] == EOL)
+	/* the current character is a newline */
 	{
 	  if (!para)
-	    /* replace the new line by a space */
+	    /* We are not within a paragraph. Replace the newline by a space */
 	    {
 	      content[i] = SPACE;
 	      changed = TRUE;
 	    }
 	  else
-	    /* We are within a paragraph. Break that paragraph */
+	    /* The pasted text is within a paragraph */
 	    {
-	      /******** we could do that only when there are two EOL in a row,
-                        even with some spaces in between @@@@@@@ *******/
-	      /* create new elements to duplicate the ancestors of the
-		 leaf until the paragraph (included) */
-	      child = NULL; newLeaf = NULL; prev = NULL;
-	      orig = leaf;
-	      while (orig)
+	      if (!PasteLineByLine && !prevCharEOL)
+		/* in this mode (!PasteLineByLine), create a paragraph only
+                   when there are two newlines (possibly with some spaces) */
 		{
-		  el = TtaCopyElement (orig, doc, doc, TtaGetParent (orig));
-		  elType = TtaGetElementType (orig);
-		  if (elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
-		    ChangeElementType (el, HTML_EL_Paragraph);
-		  if (orig == leaf)
-		    newLeaf = el;
-		  if (prev)
-		    TtaInsertFirstChild (&prev, el, doc);
-		  prev = el;
-		  if (orig == ancestor)
-		    orig = NULL;
-		  else
-		    orig = TtaGetParent (orig);
+		  content[i] = SPACE;
+		  changed = TRUE;
 		}
-	      TtaInsertSibling (el, ancestor, FALSE, doc);
-	      newParagraph = TRUE;
-	      /* extend the previous undo sequence if it's not done already */
-	      if (!undoSeqExtended)
+	      else
+	        /* Break the current paragraph */
 		{
-		  TtaExtendUndoSequence (doc);
-		  undoSeqExtended = TRUE;
+		  /* create new elements to duplicate the ancestors of the
+		     leaf until the paragraph (included) */
+		  child = NULL; newLeaf = NULL; prev = NULL;
+		  orig = leaf;
+		  while (orig)
+		    {
+		      el = TtaCopyElement (orig, doc, doc, TtaGetParent(orig));
+		      elType = TtaGetElementType (orig);
+		      if (elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
+			ChangeElementType (el, HTML_EL_Paragraph);
+		      if (orig == leaf)
+			newLeaf = el;
+		      if (prev)
+			TtaInsertFirstChild (&prev, el, doc);
+		      prev = el;
+		      if (orig == ancestor)
+			orig = NULL;
+		      else
+			orig = TtaGetParent (orig);
+		    }
+		  TtaInsertSibling (el, ancestor, FALSE, doc);
+		  newParagraph = TRUE;
+		  /* extend the previous undo sequence if it's not done */
+		  if (!undoSeqExtended)
+		    {
+		      TtaExtendUndoSequence (doc);
+		      undoSeqExtended = TRUE;
+		    }
+		  TtaRegisterElementCreate (el, doc);
+		  if (j > 0 && content[j-1] == SPACE)
+		    /* remove trailing space */
+		    {
+		      j--;
+		      if (selEl)
+			if (firstSelChar >= j)
+			  /* The selection is after the current position.
+			     Update it */
+			  {
+			    firstSelChar--;
+			    selChanged = TRUE;
+			  }
+		    }
+		  content[j] = EOS;
+		  content[i] = EOS;
+		  TtaSetBufferContent (leaf, content, lang, doc);
+		  if (selChanged && firstSelChar <= j)
+		    /* update the current selection */
+		    {
+		      TtaSelectString (doc, leaf, firstSelChar,firstSelChar-1);
+		      selChanged = FALSE;
+		      selEl = NULL;
+		    }
+		  else if (selEl)
+		    /* the current selection is further in the element */
+		    {
+		      /* substract the characters moved to the new element and
+			 the EOL */
+		      firstSelChar-= j; 
+		      firstSelChar--;
+		      selChanged = TRUE;
+		    }
+		  leaf = newLeaf;
+		  j = 0;
+		  changed = TRUE;
+		  ancestor = el;
 		}
-	      TtaRegisterElementCreate (el, doc);
-
-	      content[j] = EOS;
-	      content[i] = EOS;
-	      TtaSetTextContent (leaf, content, lang, doc);
-	      if (selChanged && firstSelChar <= j)
-		/* update the current selection */
-		{
-		  TtaSelectString (doc, leaf, firstSelChar, firstSelChar-1);
-		  selChanged = FALSE;
-		  selEl = NULL;
-		}
-	      else if (selEl)
-		/* the current selection is further in the element */
-		{
-		  /* substract the characters moved to the new element and
-		     the EOL */
-		  firstSelChar-= j; 
-		  firstSelChar--;
-		  selChanged = TRUE;
-		}
-	      leaf = newLeaf;
-	      j = 0;
-	      changed = TRUE;
-	      ancestor = el;
 	      prevCharEOL = TRUE;
 	    }
 	}
@@ -2469,7 +2497,7 @@ void CheckNewLines (NotifyOnTarget *event)
 	    }
 	  else
 	    {
-	      if (content[j-1] != SPACE && !prevCharEOL)
+	      if (content[j-1] != SPACE)
 		/* the previous character is not a space nor a newline.
 		   Keep that space */
 		content[j++] = SPACE;
@@ -2492,7 +2520,7 @@ void CheckNewLines (NotifyOnTarget *event)
       else
 	{
 	  if (content[i] != EOS)
-	    /* an ordinary character. Don't change it */
+	    /* an ordinary character. Keep it */
 	    {
 	      if (i > j)
 		/* some characters have been deleted. Move this character */
@@ -2504,16 +2532,30 @@ void CheckNewLines (NotifyOnTarget *event)
     }
 
   /* all the content of the modified element has been processed */
+  if (j > 0 && content[j-1] == SPACE)
+    /* remove trailing space */
+    {
+      j--;
+      if (selEl)
+	if (firstSelChar >= j)
+	  /* The selection is after the current position.
+	     Update it */
+	  {
+	    firstSelChar--;
+	    selChanged = TRUE;
+	  }
+    }
   content[j] = EOS;
   if (changed)
     /* we have made changes in the text buffer, update the element */
     {
-      TtaSetTextContent (leaf, content, lang, doc);
+      TtaSetBufferContent (leaf, content, lang, doc);
       if (selChanged)
 	/* update the current selection */
 	TtaSelectString (doc, leaf, firstSelChar, firstSelChar-1);
     }
   TtaFreeMemory (content);
+
   if (newParagraph)
     /* New paragraphs have been created. Move the content that follows
        the pasted text from the initial paragraph to the last one created */
@@ -2553,7 +2595,6 @@ void CreateTarget (Document doc, View view)
 {
    CreateAnchor (doc, view, FALSE);
 }
-
 
 /*----------------------------------------------------------------------
    UpdateAttrID
