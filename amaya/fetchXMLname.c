@@ -97,21 +97,6 @@ SSchema GetXLinkSSchema (Document doc)
 }
 
 /*----------------------------------------------------------------------
-   GetGenericXMLSSchema returns the XML Thot schema for the document doc.
-  ----------------------------------------------------------------------*/
-SSchema GetGenericXMLSSchema (Document doc)
-
-{
-  SSchema	XMLSSchema;
-
-  XMLSSchema = TtaGetSSchema ("XML", doc);
-  if (XMLSSchema == NULL)
-      XMLSSchema = TtaNewNature(doc, TtaGetDocumentSSchema(doc),
-				"XML", "XMLP");
-  return (XMLSSchema);
-}
-
-/*----------------------------------------------------------------------
    GetTextSSchema returns the TextFile Thot schema for document doc.
    (this is not XML, but its useful to have this function here).
   ----------------------------------------------------------------------*/
@@ -127,9 +112,25 @@ SSchema         GetTextSSchema (Document doc)
   return (XLinkSSchema);
 }
 
+/*----------------------------------------------------------------------
+   GetGenericXMLSSchema
+   Returns the XML Thot schema of name schemaName for the document doc.
+  ----------------------------------------------------------------------*/
+SSchema GetGenericXMLSSchema (char *schemaName, Document doc)
+
+{
+  SSchema	XMLSSchema;
+
+  XMLSSchema = TtaGetSSchema (schemaName, doc);
+  if (XMLSSchema == NULL)
+      XMLSSchema = TtaNewNature(doc, TtaGetDocumentSSchema(doc),
+				"XML", "XMLP");
+  return (XMLSSchema);
+}
 
 /*----------------------------------------------------------------------
-   GetGenericXMLSSchemaByUri returns the XML Thot schema for the document doc.
+   GetGenericXMLSSchemaByUri
+   Returns the XML Thot schema for the document doc.
   ----------------------------------------------------------------------*/
 SSchema GetGenericXMLSSchemaByUri (char *uriName, Document doc, ThotBool *isnew)
 

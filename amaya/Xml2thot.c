@@ -1625,6 +1625,7 @@ static void   GetXmlElType (char *ns_uri, char *elementName,
 {
 #ifdef XML_GENERIC
   ThotBool    isnew;
+  char       *s;
   char       *ns_name;
 #endif /* XML_GENERIC */
 
@@ -1638,11 +1639,12 @@ static void   GetXmlElType (char *ns_uri, char *elementName,
 #ifdef XML_GENERIC
       if (currentParserCtxt == GenericXmlParserCtxt)
 	{
-	  /* Search the element inside a no-supported DTD */
+	  /* Search the element inside a not supported DTD */
 	  if (XMLRootName[0] == EOS)
 	    {
 	      /* This is the document root */
-	      elType->ElSSchema = GetGenericXMLSSchema (XMLcontext.doc);
+	      s = TtaGetSSchemaName (DocumentSSchema);
+	      elType->ElSSchema = GetGenericXMLSSchema (s, XMLcontext.doc);
 	      /* We instanciate the XML schema with the element name */
 	      /* (except for the elements 'comment', doctype and 'pi') */
 	      if (strcmp (elementName, "xmlcomment") &&
@@ -1652,11 +1654,14 @@ static void   GetXmlElType (char *ns_uri, char *elementName,
 		  strcmp (elementName, "xmlpi") &&
 		  strcmp (elementName, "xmlpi_line"))
 		{
-		  ns_name = NsGetPrefix (ns_uri);
-		  if (ns_name != NULL)
-		    TtaChangeGenericSchemaNames (ns_uri, ns_name, XMLcontext.doc);
-		  else
-		    TtaChangeGenericSchemaNames (ns_uri, elementName, XMLcontext.doc);
+		  if (strcmp (s, "XML") == 0)
+		    {
+		      ns_name = NsGetPrefix (ns_uri);
+		      if (ns_name != NULL)
+			TtaChangeGenericSchemaNames (ns_uri, ns_name, XMLcontext.doc);
+		      else
+			TtaChangeGenericSchemaNames (ns_uri, elementName, XMLcontext.doc);
+		    }
 		}
 	    }
 	  else
@@ -5281,7 +5286,7 @@ void StartXmlParser (Document doc, char *fileName,
   char           *s;
   int             error;
   ThotBool        isXHTML;
-  CHARSET         charset;
+  CHARSET         charset;  
 #ifdef XML_GENERIC
   ThotBool        isXml = FALSE;
 #endif /* XML_GENERIC */

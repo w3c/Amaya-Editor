@@ -10,8 +10,9 @@ extern SSchema GetXHTMLSSchema ( Document doc );
 extern SSchema GetMathMLSSchema ( Document doc );
 extern SSchema GetSVGSSchema ( Document doc );
 extern SSchema GetXLinkSSchema ( Document doc );
-extern SSchema GetGenericXMLSSchema ( Document doc );
 extern SSchema GetTextSSchema ( Document doc );
+extern SSchema GetGenericXMLSSchema ( char *schemaName,
+                                      Document doc );
 extern SSchema GetGenericXMLSSchemaByUri ( char *uriName,
                                            Document doc,
                                            ThotBool *isnew );
@@ -53,8 +54,9 @@ extern SSchema GetXHTMLSSchema (/* Document doc */);
 extern SSchema GetMathMLSSchema (/* Document doc */);
 extern SSchema GetSVGSSchema (/* Document doc */);
 extern SSchema GetXLinkSSchema (/* Document doc */);
-extern SSchema GetGenericXMLSSchema (/* Document doc */);
 extern SSchema GetTextSSchema (/* Document doc */);
+extern SSchema GetGenericXMLSSchema (/* char *schemaName,
+                                        Document doc */);
 extern SSchema GetGenericXMLSSchemaByUri (/* char *uriName,
                                              Document doc,
                                              ThotBool *isnew */);
