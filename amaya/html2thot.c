@@ -4966,6 +4966,8 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
       elType.ElTypeNum = TextFile_EL_Document_URL;
       prev = TtaNewTree (doc, elType, "");
       TtaInsertFirstChild (&prev, parent, doc);
+      /* prevent the user from editing this element */
+      TtaSetAccessRight (prev, ReadOnly, doc);
       if (pathURL != NULL && prev != NULL)
         {
           el = TtaGetFirstChild (prev);
@@ -6068,11 +6070,11 @@ void            CheckAbstractTree (char* pathURL, Document doc)
 	      {
 		el = TtaNewElement (doc, newElType);
 		TtaInsertFirstChild (&el, elHead, doc);
-		TtaSetAccessRight (el, ReadOnly, doc);
 		newElType.ElTypeNum = HTML_EL_TEXT_UNIT;
 		elText = TtaNewElement (doc, newElType);
 		TtaInsertFirstChild (&elText, el, doc);
 	      }
+	    TtaSetAccessRight (el, ReadOnly, doc);
 	    if (pathURL != NULL && elText != NULL)
 	      TtaSetTextContent (elText, pathURL, HTMLcontext.language, doc);
 	    /* check all chidren of the HEAD Element, except the first one */

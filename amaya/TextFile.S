@@ -19,7 +19,8 @@ STRUCT
 
 EXCEPT
 	TextFile: 	NoMove, NoResize, ImportLine;
-	BODY:           Hidden;
+        Document_URL:	Hidden, NoCut;
+	BODY:           Hidden, NoCut;
         Language:	Invisible; 
 	Highlight:	Invisible;
         PrintURL:       Invisible;

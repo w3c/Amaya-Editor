@@ -249,11 +249,12 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
       el = TtaSearchTypedElement (elType, SearchInTree, head);
       if (el == NULL)
 	{
-	  /* there is no Document_URL element */
+	  /* there is no Document_URL element, create one */
 	  el = TtaNewElement (doc, elType);
 	  TtaInsertFirstChild (&el, head, doc);
-	  TtaSetAccessRight (el, ReadOnly, doc);
 	}
+      /* prevent the user from editing this element */
+      TtaSetAccessRight (el, ReadOnly, doc);
       /* element Document_URL already exists */
       text = TtaGetFirstChild (el);
       if (text == NULL)
@@ -355,6 +356,8 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
 	  el = TtaNewTree (doc, elType, "");
 	  TtaInsertFirstChild (&el, root, doc);
 	}
+      /* prevent the user from editing this element */
+      TtaSetAccessRight (el, ReadOnly, doc);
       el = TtaGetFirstChild (el);     
       TtaSetTextContent (el, url, language, doc);
 
