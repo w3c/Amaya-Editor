@@ -85,9 +85,7 @@ my $text;
 		$text =~ s/&/&amp;/g; # to avoid problem with message in HTML
 		$text	=~ s/</&lt;/g;
 		$textunicode = latin1($text); #because english is typed from the terminal in latin1
-		$_ = `date`;
-		chomp;
-		$labels{$THE_label} .= "\n\t<message xml::lang=\"en\" last_update=\"$_\">";
+		$labels{$THE_label} .= "\n\t<message xml:lang=\"en\">";
 		$labels{$THE_label} .= $text ;
 		$labels{$THE_label} .= "</message>\n</label>";
 		# no more need to : push (@labels , $THE_label);

@@ -147,7 +147,7 @@ sub import_a_language {
 		 	die "can't rename $newbasefile to $basefile because of: $! \nthe old base still exist, the new base name is $newbasefile\n";							
 			
 	debug ( "the encodage is $encodage ");
-	print "\tEnd IMPORT\n";
+	print "\tEnd Add/Update a language\n";
 	
 	if ($debug) {
 		print "\tThere is ",$_ = @list_of_lang_occur,"langues presentes:\n\t" ;
@@ -411,6 +411,7 @@ sub default_hndl {	#for all the cases of an invalid xml document
 		if ( $current_tag eq "language") {
 			#if ( )
 			@list_of_lang_occur = (@list_of_lang_occur, $data) ;
+			recopy ($data);
 		}
 		elsif ($current_tag eq "message") {
 			$text .= $data;

@@ -57,7 +57,7 @@ sub create_base {
 
 # 	indicates the languages that occur into the field <control>, 
 #	Engish is mandatory, beause it's the refference 
-	print OUT "<control>\n</control>\n";
+	print OUT "<control><language encoding=\"latin1\">en</language></control>\n";
 	
 #to indicate the begin of the labels
 	print OUT "<messages>\n";
@@ -68,10 +68,14 @@ sub create_base {
 	do {
 	 	$_ = @list = Read_label::init_label ($in_headfile);
 	}while ($_ == 0);
-	my $i;	
-	for ( $i = 1,$i <= $list[0],$i++ ) {
+	my $total = $list[0];
+	my $i = 1;	
+	do {
 		push (@list_of_label, $list[$i]  );
-	}
+		$i++;
+	}while ( $i <= $total );
+	
+	
 # write the labels
 	foreach (@list_of_label){
 		print OUT "<label define=\"$_\"></label>\n";

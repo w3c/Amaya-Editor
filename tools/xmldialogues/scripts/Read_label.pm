@@ -159,6 +159,7 @@ my $i = 1;
 		push (@a, $list[$i]  );
 		$i++;
 	}while ( $i <= $total );
+	$i = $total + 1;
 	do {
 		$b{$list[$i]} = $list[$i+1];
 		$i += 2;

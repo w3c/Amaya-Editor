@@ -20,7 +20,10 @@ BEGIN {
 use Unicode::String qw(utf8 latin1);
 
 my %texts = ();
-my $encodage;
+my $encodage = "";
+
+my @list_of_references_that_dont_have_a_translate = ();
+
 ################################################################################
 ##							sub exported (see how to use it at the end)
 ################################################################################
@@ -94,7 +97,10 @@ my @rest = ();
 	foreach (keys (%texts)) {
 		$i += 1;
 	}
-	print "\tThere was $i texts recognised\n"	;
+	print "\tThere are $i texts recognised\n"	;
+	$_ = @list_of_references_that_dont_have_a_translate;
+	print "\tAnd there are $_ references that aren't already translale\n";
+	############### if you want the list of those reference read @list_of_references_that_dont_have_a_translate
 	print "\tEND of reading $file\n";
 	
 	return ($encodage, $i, %texts);
@@ -146,7 +152,8 @@ use Unicode::String qw(utf8 latin1);
 		if ( 	!defined ($text) 
 				|| ($text =~ /^\*\*/ && $text !~ /^\*\*\*/ )
 			 	) {
-			print "The reference $label_ref don't have a text at line $line:$text\n";
+			push (@list_of_references_that_dont_have_a_translate, $label_ref);
+			#print "The reference $label_ref don't have a text at line $line:$text\n";
 		}	
 		else {
 			#	OK but need translate for any html tags and the unicode

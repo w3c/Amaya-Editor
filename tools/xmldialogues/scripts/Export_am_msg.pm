@@ -36,13 +36,10 @@ BEGIN {
 
 
 
-################################################################################
-## 									sub  main
-################################################################################
-	my $base = "/home/ehuck/xmldoc/base_am_msg.xml"; #complete name of the base
-	my $where = "/home/ehuck/xmldoc"; # directory where the result files are putting
-	my $sufix = "-amayamsg"; # sufix of the dialogues files = result
-	my $head_name = "amayamsg.h";
+	my $base = ""; #complete name of the base
+	my $where = ""; # directory where the result files are putting
+	my $sufix = ""; # sufix of the dialogues files = result
+	my $head_name = "";
 	
 	my @list_of_lang_occur = ();
 	my $current_label;
@@ -67,6 +64,9 @@ BEGIN {
 						#coresspondig language is nown after as a char
 	my $label_ending = "";
 	
+################################################################################
+## 									sub  main
+################################################################################
 sub export {
 	$base = shift ; #complete name of the base
 	$where = shift ; # where out put files ares 
@@ -91,7 +91,9 @@ sub export {
 			   Comment => \&comment_hndl,
 			   Default => \&default_hndl
 				);
-								
+	
+	
+	print "\tBegin EXPORT\n";						
 # pb pour le cas ou les fichiers existent deja			
 	open ( IN, "<$base") || die "can't read $base because: $! \n";
 	#push (@list_of_dialogues_files, "$base") ;
@@ -152,8 +154,8 @@ sub start_hndl {
 
 #	use the result 				
 	if ( $element eq "message" ) {
-		if ( $attributes {"xml::lang"} ) {			 
-			$current_language = $attributes{'xml::lang'} ;
+		if ( $attributes {"xml:lang"} ) {			 
+			$current_language = $attributes{'xml:lang'} ;
 		}
 		else {
 			print "the message at line ". $expat->current_line ."don't have a lang attribute\n"
@@ -244,7 +246,9 @@ sub end_hndl { #	do the modification if necessary
 				$english_text_reference= "$reference_value " .  "**" . $string ;
 			}				
 			$string = "$reference_value " . $string ;
-			$fh =  $list_handles [ $handle_names_ref{$current_language} ];
+			$fh =  $list_handles [ 
+			$handle_names_ref{
+			$current_language} ];
 	    	print_in_a_file ( $fh,"$string\n");
 			$record_verification {$current_language } = 1 ;
 			
@@ -339,7 +343,7 @@ sub default_hndl {	#for all the cases of an invalid xml document
 	
 	}
 	elsif ( $data ne "\n" ) {
-	print "voici une irregularite" . $data . "\n";
+	print "voici une irregularite" . $data . "at line $line\n";
 #	  print " Y'en a marre! :line $line \=> $data\n";
 	}
 } #End default_hndl

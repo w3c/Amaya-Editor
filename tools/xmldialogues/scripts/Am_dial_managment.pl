@@ -40,7 +40,7 @@ my %ending_label = qw (	dia MAX_EDITOR_LABEL
   $head_name {'dia'}= 'EDITOR.h';
   $lang_dir{'dia'} = $OUT_MSG_directory;
   $lang_sufix {'dia'} = '-amayadialogue';
-  $base_name {'dia'} = 'base_am_dial.xml';
+  $base_name {'dia'} = 'base_am_dia.xml';
 
 ####	for Amayamsg => msg or $index {2}
  $head_dir {'msg'} = "$home/$rep_amaya/Amaya/amaya/";
@@ -177,29 +177,31 @@ do { # to continue to treat the same type of dialogue
 													$BASE_directory, 
 													$base_name { $index{ $last_choice} });
 			# to initialise with english
-			print "now,fill the base with english by default\n";
-			$Import_am_msg::in_labelfile = $head_dir{ $index{ $last_choice}} . $head_name{ $index{ $last_choice}};
-			$Import_am_msg::basefile = $BASE_directory . $base_name { $index{ $last_choice}};
-			$Import_am_msg::in_textdirectory = $lang_dir { $index{ $last_choice}};
-			$Import_am_msg::in_textsufix = $lang_sufix { $index{ $last_choice}};
-			$Import_am_msg::encodage = "latin1";
-			Import_am_msg::import_a_language ("en", $ending_label{ $index{ $last_choice}}) ;
+			#print "\n\tNow,fill the base with english by default\n\n";
+			#$Import_am_msg::in_labelfile = $head_dir{ $index{ $last_choice}} . $head_name{ $index{ $last_choice}};
+			#$Import_am_msg::basefile = $BASE_directory . $base_name { $index{ $last_choice}};
+			#$Import_am_msg::in_textdirectory = $lang_dir { $index{ $last_choice}};
+			#$Import_am_msg::in_textsufix = $lang_sufix { $index{ $last_choice}};
+			#$Import_am_msg::encodage = "latin1";
+			#Import_am_msg::import_a_language ("en", $ending_label{ $index{ $last_choice}}) ;
 		}
 
+		$choice = -1; #to avoid problem		
 	}
 #||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 	elsif ($choice == 2) { #Adding/Updating a language	
-		print "What language do you want to treat? (in two letters like the
-		standard ISO-638-1988 i.e.: en or fr)\n";
+		print "\tWhat language do you want to treat? (in two letters like the standard ISO-638-1988 i.e.: en or fr)\n";
 		$lang = <STDIN>;
 		chomp $lang;
 		do {
-		 	print "Are files in the normal repertory for Amaya (0)or (for \"new\")the \"IN\" repertory (1)?\n",
-					"Our choice [0] : ";
+		 	print "\tAre files in the normal repertory for Amaya (0)or (for \"new\")the \"IN\" repertory (1)?\n",
+					"\tOur choice [0] : ";
 			$choice = <STDIN>;
-			chomp ($choice);if ( $choice eq "") { $choice = 0;}
-		} 
-		while ($choice != /^[0-1]/);
+			chomp ($choice ) ;
+			if ( $choice eq "") { 
+				$choice = 0;
+			}
+		} while ($choice != /^[0-1]/);
 		$_ = $choice;
 		if (/0/)
 			{	
@@ -216,6 +218,7 @@ do { # to continue to treat the same type of dialogue
 		$Import_am_msg::in_textsufix = $lang_sufix { $index{ $last_choice}};				
 			}
 		Import_am_msg::import_a_language ($lang, $ending_label{ $index{$last_choice}} ) ;		
+		$choice = -1; #to avoid problem		
 	}	
 #||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 	elsif ($choice == 3) { # Export all dialogues files
@@ -225,18 +228,21 @@ do { # to continue to treat the same type of dialogue
 										$head_name{ $index{ $last_choice}},
 										$ending_label { $index{ $last_choice}}
 										);
+		$choice = -1; #to avoid problem		
 	}
 #||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 	elsif ($choice == 4) { # Add a label
 		Dial_tool_box::add_label ( $BASE_directory,
 											$base_name{ $index{ $last_choice}} 
 											);						
+		$choice = -1; #to avoid problem		
 	}
 #||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 	elsif ($choice == 5) { # Delete a label
 		Dial_tool_box::delete_label ( $BASE_directory,
 												$base_name{ $index{ $last_choice}} 
 												);
+		$choice = -1; #to avoid problem		
 	}
 #||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 	elsif ($choice == 6) { # n'arrive que si last_choice = 1
@@ -248,7 +254,8 @@ do { # to continue to treat the same type of dialogue
 									$head_dir{ $index{ $last_choice}},
 									$head_name{ $index{ $last_choice}}
 								);	
-		}	
+		}
+		$choice = -1; #to avoid problem		
 	}	
 } while ( $choice != 0 ); 
 
