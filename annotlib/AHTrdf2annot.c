@@ -532,8 +532,6 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
 	  predicateP = ANNOT_FindRDFResource (&annot_schema_list,
 					      predicate,
 					      TRUE);
-	  /* ugly, ugly; libwww discards info -- is the object a Literal? 
-	    JK: What do we need to do in this case? */
 	  objectP = ANNOT_FindRDFResource (rdf_model, object, TRUE);
 
 	  SCHEMA_AddStatement (subjectP, predicateP, objectP);
