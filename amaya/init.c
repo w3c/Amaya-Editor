@@ -1607,6 +1607,13 @@ boolean		    history;
 		   TtaSetDocumentAccessMode (newdoc, 0);
 		   TtcSwitchCommands (newdoc, 1);
 		   HelpDocuments[newdoc] = TRUE;
+		   TtaSetMenuOff (newdoc, 1, Edit_);
+		   TtaSetMenuOff (newdoc, 1, Types);
+		   TtaSetMenuOff (newdoc, 1, Links);
+		   TtaSetMenuOff (newdoc, 1, Style);
+		   TtaSetMenuOff (newdoc, 1, Special);
+		   TtaSetMenuOff (newdoc, 1, Attributes_);
+		   TtaSetMenuOff (newdoc, 1, Help_);
 		 }
 	     }
 	   else

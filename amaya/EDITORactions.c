@@ -1842,6 +1842,7 @@ View                view;
 		  child = next;
 	       }
 	     TtaDeleteTree (anchor, doc);
+	     TtaSetDocumentModified (doc);
 	  }
      }
    /* ask Thot to display changes made in the document */
