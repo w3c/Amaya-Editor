@@ -3,6 +3,9 @@ APPLICATION XML;
 DEFAULT
    BEGIN
         ElemSelect.Post -> XmlSelectionChanged;
+        ElemActivate.Pre -> DoubleClick;
+        ElemClick.Pre -> SimpleClick;
+        ElemRClick.Pre -> SimpleRClick;
    END;
 
 ATTRIBUTES
