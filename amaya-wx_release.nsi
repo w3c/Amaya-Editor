@@ -3,6 +3,7 @@
 
   !include "MUI.nsh"
 
+
 ;--------------------------------
 ;General
 
@@ -13,7 +14,6 @@
   
   ;Use lzma to compress (better than zip)
   SetCompressor lzma
-
 
   ;Default installation folder
   InstallDir "$PROGRAMFILES\AmayaWX"
@@ -220,6 +220,8 @@ Section "Amaya" SecAmaya
   File resources\icons\*.gif
   SetOutPath "$INSTDIR\resources\xrc"
   File resources\xrc\*.xrc
+  SetOutPath "$INSTDIR\amaya\wxdialog"
+  File amaya\wxdialog\appicon.ico
 
   SetDetailsPrint textonly
   DetailPrint "Installing Amaya schemas"
@@ -357,11 +359,18 @@ Section "Amaya" SecAmaya
   WriteRegExpandStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\AmayaWX" "UninstallString" '"$INSTDIR\Uninstall.exe"'
   WriteRegExpandStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\AmayaWX" "InstallLocation" "$INSTDIR"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\AmayaWX" "DisplayName" "Amaya"
-  ;WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\AmayaWX" "DisplayIcon" "$INSTDIR\NSIS.exe,0"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\AmayaWX" "DisplayIcon" "$INSTDIR\WindowsWX\bin\amaya.exe"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\AmayaWX" "DisplayVersion" "${VERSION}"
-;  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\AmayaWX" "VersionMajor" "${VER_MAJOR}"
-;  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\AmayaWX" "VersionMinor" "${VER_MINOR}.${VER_REVISION}"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\AmayaWX" "URLInfoAbout" "http://www.w3.org/Amaya"
+
+  ; Associate files to amaya
+  WriteRegStr HKCR "Amaya" "" "Amaya Files"
+  WriteRegStr HKCR "Amaya\DefaultIcon" "" "$INSTDIR\WindowsWX\bin\amaya.exe"
+  ReadRegStr $R0 HKCR "Amaya\shell\open\command" ""
+  StrCmp $R0 "" 0 no_amayaopen
+    WriteRegStr HKCR "Amaya\shell" "" "open"
+    WriteRegStr HKCR "Amaya\shell\open\command" "" '"$INSTDIR\WindowsWX\bin\amaya.exe" "%1"'
+  no_amayaopen:
   
   ;Create uninstaller
   WriteUninstaller "$INSTDIR\Uninstall.exe"
@@ -377,6 +386,31 @@ Section "Amaya" SecAmaya
   ;Create desktop link
   CreateShortCut "$DESKTOP\AmayaWX.lnk" "$INSTDIR\WindowsWX\bin\amaya.exe"
 SectionEnd
+
+
+SubSection "File association" SecFileAss
+
+Section ".html (HyperText Markup Language)" SecAssHTML
+  WriteRegStr HKCR ".html" "" "Amaya"
+SectionEnd
+
+Section ".xml (eXtensible Markup Language)" SecAssXML
+  WriteRegStr HKCR ".xml" "" "Amaya"
+SectionEnd
+
+Section ".svg (Scalable Vector Graphics)" SecAssSVG
+  WriteRegStr HKCR ".svg" "" "Amaya"
+SectionEnd
+
+Section ".mml (MathML)" SecAssMML
+  WriteRegStr HKCR ".mml" "" "Amaya"
+SectionEnd
+
+Section ".css (Cascading Style Sheets)" SecAssCSS
+  WriteRegStr HKCR ".css" "" "Amaya"
+SectionEnd
+
+SubSectionEnd
 
 ;--------------------------------
 ;Installer Functions
@@ -395,9 +429,9 @@ FunctionEnd
   ;Assign descriptions to sections
   !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
     !insertmacro MUI_DESCRIPTION_TEXT ${SecAmaya} "Amaya."
+    !insertmacro MUI_DESCRIPTION_TEXT ${SecFileAss} "Amaya files associations."
   !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
- 
 ;--------------------------------
 ;Uninstaller Section
 
@@ -435,6 +469,7 @@ Section "Uninstall"
 
   DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\AmayaWX"
   DeleteRegKey HKLM "Software\AmayaWX"
+  DeleteRegKey HKCR "Amaya"
 
 SectionEnd
 
