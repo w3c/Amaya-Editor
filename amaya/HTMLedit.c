@@ -2488,7 +2488,7 @@ void CheckNewLines (NotifyOnTarget *event)
 	    {
 	      /* if this space is after a newline, remove it */
 	      if (prevCharEOL ||
-		  (!prev || TtaGetLastBufferContent (prev) == SPACE))
+		  (prev && TtaGetLastBufferContent (prev) == SPACE))
 		{
 		  changed = TRUE;
 		  if (selEl)
