@@ -192,7 +192,12 @@ static void Adjust (PtrBox pParentBox, PtrLine pLine, int frame,
   if (pLine->LiFirstBox == NULL)
     /* no box in the current line */
     return;
+  /* take into account the writing direction */
+  rtl = pParentBox->BxAbstractBox->AbDirection == 'R';
   x = pLine->LiXOrg;
+  if (rtl)
+    /* right-to-left wirting */
+    x += pLine->LiXMax;
   if (xAbs)
     x += pParentBox->BxXOrg;
   nSpaces = 0;	/* number of spaces */
@@ -286,11 +291,6 @@ static void Adjust (PtrBox pParentBox, PtrLine pLine, int frame,
 	}
     }
 
-  /* take into account the writing direction */
-  rtl = pParentBox->BxAbstractBox->AbDirection == 'R';
-  if (rtl)
-    /* right-to-left wirting */
-    x += pLine->LiXMax;
   /* Now handle included boxes */
   for (i = 0; i < max; i++)
     {
@@ -378,7 +378,19 @@ void Align (PtrBox pParentBox, PtrLine pLine, int delta, int frame,
     return;
   /* The baseline of the line */
   baseline = pLine->LiYOrg + pLine->LiHorizRef;
-  x = delta;
+  /* take into account the writing direction */
+  rtl = pParentBox->BxAbstractBox->AbDirection == 'R';
+  if (rtl)
+    {
+      /* right-to-left writing */
+      if (pLine->LiRealLength > pLine->LiXMax)
+	/* this could be the case of a too short table */
+	x = pLine->LiXOrg + pLine->LiRealLength;
+      else
+	x = pLine->LiXOrg + pLine->LiXMax;
+    }
+  else
+    x = delta;
   if (xAbs)
     x += pParentBox->BxXOrg;
   if (yAbs)
@@ -418,11 +430,6 @@ void Align (PtrBox pParentBox, PtrLine pLine, int delta, int frame,
     while (max < 200 && pBoxInLine && pBox != pLine->LiLastBox &&
 	   pBox != pLine->LiLastPiece);
 
-  /* take into account the writing direction */
-  rtl = pParentBox->BxAbstractBox->AbDirection == 'R';
-  if (rtl)
-    /* right-to-left writing */
-    x += pLine->LiRealLength;
   /* Now handle included boxes */
   for (i = 0; i < max; i++)
     {
@@ -2860,7 +2867,10 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 		  x = pLine->LiXOrg;
 		  if (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum &&
 		      pLine->LiRealLength > pBox->BxW)
-		    pBox->BxContentWidth = TRUE;
+		    {
+		      pBox->BxContentWidth = TRUE;
+		      pLine->LiXMax = pLine->LiRealLength;
+		    }
 		  if (!pBox->BxContentWidth && !extensibleBox)
 		    {
 		      if (pAb->AbAdjust == AlignCenter)

@@ -511,15 +511,10 @@ char GiveTextParams (PtrTextBuffer *pBuffer, int *ind, int *nChars,
 	  (*nSpaces)++;	/* a space */
 	  charWidth = spaceWidth;
 	}
-      else   
-	if (( car >= 0x060C )&&( car <= 0x066A )) /* arabic char */
-	  {
-	  charWidth = BoxArabicCharacterWidth(car, pBuffer,ind, font);
-	  }
-	else
-	  {
+      else if (car >= 0x060C && car <= 0x066A) /* arabic char */
+	charWidth = BoxArabicCharacterWidth (car, pBuffer, ind, font);
+      else
 	charWidth = BoxCharacterWidth (car, font);
-	  }
       *width += charWidth;
       if (car != EOS)
 	pos++;

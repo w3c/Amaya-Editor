@@ -1959,7 +1959,7 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, PtrFont *font)
 			encoding = ISO_SYMBOL;
 		    }
 		}
-	      /* font not found: avoid to retry later */
+	      /* even if the font is not found avoid to retry later */
 	      *pfont = lfont;
 	      *font = lfont;
 	    }
@@ -2444,52 +2444,62 @@ void ThotFreeAllFonts (void)
 }
 
 
-/*---------------------------------------------------
-  LoadingArabicFont is a special function which load
-  only arabic font "arabweb.ttf"                       
-  ---------------------------------------------------*/
+/*---------------------------------------------------------------------------
+  LoadingArabicFont is a special function which load only arabic font
+  "arabweb.ttf"
+  ----------------------------------------------------------------------------*/
 void LoadingArabicFont (SpecFont fontset ,PtrFont *font)
 {
-
+#ifdef _I18N_
   PtrFont      lfont, *pfont;
   int          encoding;
   int          frame;
   unsigned int mask;
 
   *font = NULL;
-  *font = fontset->FontIso_6;
-  pfont = &(fontset->FontIso_1);
   encoding = ISO_8859_1;
-  lfont = *pfont;
+  lfont = fontset->FontIso_6;
   for (frame = 1 ; frame <= MAX_FRAME ; frame++)
     {
       mask = 1 << (frame - 1);
       if (fontset->FontMask & mask)
-  lfont = LoadNearestFont ('6',fontset->FontFamily,fontset->FontHighlight,fontset->FontSize, fontset->FontSize, frame, TRUE, TRUE);
+	lfont = LoadNearestFont ('6', fontset->FontFamily,
+				 fontset->FontHighlight,
+				 fontset->FontSize,
+				 fontset->FontSize, frame, TRUE, TRUE);
 
     }
+  /* even if the font is not found avoid to retry later */
+  fontset->FontIso_6 = lfont;
+  *font = lfont;
+#else /* _I18N_ */
+  *font = fontset;
+#endif /* _I18N_ */
 }
 
 
 /*---------------------------------------------------------------------------
   BoxArabicCharacterWidth returns the width of an arabic char in a given font
   ----------------------------------------------------------------------------*/
-int BoxArabicCharacterWidth ( CHAR_T c, PtrTextBuffer *adbuff, int *ind, SpecFont specfont)
+int BoxArabicCharacterWidth (CHAR_T c, PtrTextBuffer *adbuff, int *ind,
+			     SpecFont specfont)
 {
   PtrFont      font; 
   int          car;
-  CHAR_T       prevChar,nextChar; 
+  CHAR_T       prevChar, nextChar; 
 
-  if ( c != (*adbuff)->BuContent[*ind] ) 
+  if (c != (*adbuff)->BuContent[*ind]) 
     return 6;
-  if ( (*ind) > 0 )
-    prevChar=(*adbuff)->BuContent[(*ind) - 1 ];
-  else prevChar=0x0020;
-  if ( (*ind) < (*adbuff)->BuLength - 1 )
-    nextChar=(*adbuff)->BuContent[(*ind) + 1 ];
-  else nextChar=0x0020;
-  car=GetArabFontAndIndex(c ,prevChar ,nextChar ,specfont ,&font);
-  if ( font == NULL )
+  if ( (*ind) > 0)
+    prevChar = (*adbuff)->BuContent[(*ind) - 1];
+  else
+    prevChar = 0x0020;
+  if ( (*ind) < (*adbuff)->BuLength - 1)
+    nextChar = (*adbuff)->BuContent[(*ind) + 1];
+  else
+    nextChar = 0x0020;
+  car = GetArabFontAndIndex(c, prevChar, nextChar, specfont, &font);
+  if (font == NULL)
     return 6;
   else
 #ifdef _I18N_
