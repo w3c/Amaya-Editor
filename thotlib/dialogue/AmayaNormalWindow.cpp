@@ -186,7 +186,9 @@ bool AmayaNormalWindow::AttachPage( int position, AmayaPage * p_page )
     /* insert the page in the notebook */
     ret = m_pNotebook->InsertPage( position,
        	                           p_page,
-                                   _T("") ); /* this is the page name */
+                                   _T(""),  /* this is the page name */
+				   false,
+				   0 ); /* this is the default image id */
     //ret = m_pNotebook->AddPage( p_page, _T("Nom de la Page") );
 
     // update the pages ids

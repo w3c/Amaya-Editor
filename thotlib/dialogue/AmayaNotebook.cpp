@@ -14,6 +14,8 @@
 #include "application.h"
 #include "appdialogue_wx.h"
 #include "windowtypes_wx.h"
+#include "registry_wx.h"
+
 #include "appdialogue_wx_f.h"
 
 #include "AmayaNotebook.h"
@@ -21,6 +23,7 @@
 #include "AmayaWindow.h"
 #include "AmayaFrame.h"
 #include "AmayaCanvas.h"
+#include "AmayaApp.h"
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaNotebook, wxNotebook)
 
@@ -29,10 +32,11 @@ AmayaNotebook::AmayaNotebook( wxWindow * p_parent_window,
 	:  wxNotebook( wxDynamicCast(p_parent_window, wxWindow),
 		       -1,
 		       wxDefaultPosition, wxDefaultSize,
-		       wxNB_FIXEDWIDTH )
+		       wxNB_FIXEDWIDTH /* only windows */ | wxNB_MULTILINE /* only windows */ )
 	   ,m_pAmayaWindow( p_amaya_window )
 	   ,m_ShouldLostFocus( FALSE )
 {
+  SetImageList( AmayaApp::GetDocumentIconList() );
 }
 
 AmayaNotebook::~AmayaNotebook()

@@ -75,6 +75,8 @@ int AmayaApp::AttrList[] =
 
 #endif /* _GL */
 
+wxImageList * AmayaApp::m_pDocImageList = NULL;
+
 bool AmayaApp::OnInit()
 {
   // under X we usually want to use the primary selection by default (which
@@ -154,6 +156,13 @@ bool AmayaApp::OnInit()
   m_SocketEventLoop = new wxAmayaSocketEventLoop( 100 );
   wxAmayaSocketEvent::InitSocketEvent( m_SocketEventLoop );
 
+  /* setup the documents image list
+   * this is where the document's icons are stored (as mozilla) */
+  m_pDocImageList = new wxImageList( 16, 16 );
+  /* add the default document icon */
+  wxIcon default_icon( TtaGetResourcePathWX( WX_RESOURCES_ICON, (const char *)"default_document.gif"), wxBITMAP_TYPE_GIF );
+  m_pDocImageList->Add( default_icon );
+
 #endif /* _GLPRINT */
 
   return true;
@@ -171,9 +180,14 @@ int AmayaApp::OnExit()
   // flush the clipboard in order to keep current text for further use in other applications
   wxTheClipboard->Flush();
 
+  // stop network loop
   m_SocketEventLoop->Stop();
   delete m_SocketEventLoop;
   m_SocketEventLoop = NULL;
+
+  // free documents icons
+  delete m_pDocImageList;
+  m_pDocImageList = NULL;
 
   // free arguments
   ClearAmayaArgs();
@@ -257,6 +271,16 @@ int * AmayaApp::GetGL_AttrList()
   return AttrList;
 }
 #endif /* _GL */
+
+/*
+ * Returns the documents image list
+ * this is where the document's icons are stored (as mozilla)
+ */
+wxImageList * AmayaApp::GetDocumentIconList()
+{
+  return m_pDocImageList;
+}
+
 
 BEGIN_EVENT_TABLE(AmayaApp, wxApp)
   EVT_IDLE( AmayaApp::OnIdle ) // Process a wxEVT_IDLE event  
