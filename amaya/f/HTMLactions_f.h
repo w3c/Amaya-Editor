@@ -27,6 +27,7 @@ extern void FollowTheLink_callback ( int targetDocument,
                                      void *context );
 extern ThotBool IsCSSLink ( Element el,
                             Document doc );
+extern void CheckRefresh ( Document doc );
 extern void DoAction ( Document doc,
                        View view );
 extern ThotBool AcceptTab ( NotifyOnTarget *event );
@@ -89,6 +90,7 @@ extern void FollowTheLink_callback ( int targetDocument,
                                        void *context );
 extern ThotBool IsCSSLink ( Element el,
                               Document doc );
+extern void CheckRefresh ( Document doc );
 extern void DoAction ( Document doc,
                          View view );
 extern ThotBool AcceptTab ( NotifyOnTarget *event );

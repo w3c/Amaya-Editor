@@ -5787,11 +5787,12 @@ void CheckBlocksInCharElem (Document doc)
   LastElemToBeChecked = NULL;
 }
 
+
 /*----------------------------------------------------------------------
    CheckAbstractTree
    Check the Thot abstract tree and create the missing elements.
   ----------------------------------------------------------------------*/
-void            CheckAbstractTree (Document doc)
+void CheckAbstractTree (Document doc)
 {
   ElementType	elType, newElType, headElType;
   Element	elRoot;

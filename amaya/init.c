@@ -5169,6 +5169,8 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
    if (form_data)
      TtaFreeMemory (form_data);
    TtaFreeMemory (ctx);
+   /* check if a refresh is requested */
+  CheckRefresh (newdoc);
 }
 
 /*----------------------------------------------------------------------

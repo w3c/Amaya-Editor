@@ -84,6 +84,8 @@ typedef struct _FollowTheLink_context {
 static Document	    HighlightDocument = 0;
 static Element	    HighlightElement = NULL;
 static Attribute    HighLightAttribute = NULL;
+static ThotBool     Follow_exclusive = FALSE;
+static ThotBool     Refresh_exclusive = FALSE;
 
 /*----------------------------------------------------------------------
    ResetFontOrPhraseOnText: The text element elem should
@@ -747,8 +749,13 @@ static ThotBool FollowTheLink (Element anchor, Element elSource,
    FollowTheLink_context *ctx;
    ThotBool		  isHTML, history;
 
+  if (Follow_exclusive)
+     return FALSE;
+   else
+     Follow_exclusive = TRUE;
    if (anchor == NULL || HrefAttr == NULL)
      return FALSE;
+
    info = pathname = NULL;
    elType = TtaGetElementType (anchor);
    attrType.AttrTypeNum = 0;
@@ -849,6 +856,7 @@ static ThotBool FollowTheLink (Element anchor, Element elSource,
 	       TtaFreeMemory (pathname);
 	       TtaFreeMemory (utf8path);
 	       TtaFreeMemory (ctx);
+	       Follow_exclusive = FALSE;
 	       return (FALSE);
 	     }
 #ifdef ANNOTATIONS
@@ -902,9 +910,87 @@ static ThotBool FollowTheLink (Element anchor, Element elSource,
 	     }
 	   TtaFreeMemory (pathname);
 	 }
+       Follow_exclusive = FALSE;
        return (TRUE);
      }
+   Follow_exclusive = FALSE;
    return (FALSE);
+}
+
+/*----------------------------------------------------------------------
+   CheckRefresh checks if a refresh is requested.
+  ----------------------------------------------------------------------*/
+void CheckRefresh (Document doc)
+{
+  Element	 elhead, el;
+  ElementType	 elType;
+  Attribute      attr;
+  AttributeType  attrType, attrType1;
+  char           value[MAX_LENGTH], *ptr;
+   char          pathname[MAX_LENGTH], documentname[MAX_LENGTH];
+  int            length;
+
+  if (Refresh_exclusive)
+    return;
+  else
+    Refresh_exclusive = TRUE;
+
+  if (DocumentTypes[doc] == docHTML)
+    /* it's an HTML document */
+    {
+      el = TtaGetRootElement (doc);
+      elType = TtaGetElementType (el);
+      elType.ElTypeNum = HTML_EL_HEAD;
+      elhead = TtaSearchTypedElement (elType, SearchInTree, el);
+      el = elhead;
+      elType.ElTypeNum = HTML_EL_META;
+      attrType.AttrSSchema = elType.ElSSchema;
+      attrType.AttrTypeNum = HTML_ATTR_http_equiv;
+      attrType1.AttrSSchema = elType.ElSSchema;
+      attrType1.AttrTypeNum = HTML_ATTR_meta_content;
+      while (el)
+	{
+	  /* look for meta element within the head element */
+	  el = TtaSearchTypedElementInTree (elType, SearchForward, elhead, el);
+	  if (el)
+	    {
+	      attr = TtaGetAttribute (el, attrType);
+	      if (attr)
+		{
+		  value[0] = EOS;
+		  length = MAX_LENGTH;
+		  TtaGiveTextAttributeValue (attr, value, &length);
+		  if (!strcasecmp (value, "refresh"))
+		    {
+		      attr = TtaGetAttribute (el, attrType1);
+		      if (attr)
+			{
+			  value[0] = EOS;
+			  length = MAX_LENGTH;
+			  TtaGiveTextAttributeValue (attr, value, &length);
+			  ptr = strstr (value, "URL=");
+			  if (ptr == NULL)
+			    ptr = strstr (value, "url=");
+			  if (ptr)
+			    {
+			      NormalizeURL (&ptr[4], doc, pathname, documentname, NULL);
+			      if (IsUndisplayedName (pathname))
+				/* it's not necessary to open a new window */
+				DontReplaceOldDoc = FALSE;
+			      
+			      /* Load the new document */
+			      doc = GetAmayaDoc (pathname, NULL, doc, doc, 
+						 (ClickEvent)CE_RELATIVE, FALSE, 
+						 NULL, NULL);
+			      el = NULL;
+			    }
+			}
+		    }
+		}
+	    }
+	}
+    }
+   Refresh_exclusive = FALSE;
 }
 
 /*----------------------------------------------------------------------
