@@ -235,10 +235,14 @@ int WordInDictionary (unsigned char *word, PtrDict dict)
    /* premier mot */
    inf = dict->DictLengths[size];
    if (size >= MAX_WORD_LEN || (dict->DictLengths[size + 1] - 1 > dict->DictNbWords))
-     sup = dict->DictNbWords;
+     sup = dict->DictNbWords - 1;
    else
-     /* dernier mot */
-     sup = dict->DictLengths[size + 1] - 1;
+     {
+       /* dernier mot */
+       sup = dict->DictLengths[size + 1] - 1;
+       if (sup == dict->DictNbWords)
+	 sup--;
+     }
 
    while (sup >= inf)
      /* Recherche dichotomique */
