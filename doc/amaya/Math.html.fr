@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Editer des mathématiques</title>
-  <meta name="GENERATOR" content="amaya V4.2" />
+  <meta name="GENERATOR" content="amaya V4.2.1" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -407,8 +407,9 @@ suivant sont pris en compte dans le formatage : <code>alttext</code>,
 <code>lspace</code>, <code>rspace</code>, <code>subscriptshift</code>,
 <code>superscriptshift</code>, <code>form</code>, <code>width</code>
 (<code>mspace</code> only), <code>height</code> (<code>mspace</code> only),
-<code>depth</code> (<code>mspace</code> only), <code>rowalign</code>,
-<code>columnalign</code>.</p>
+<code>depth</code> (<code>mspace</code> only), <code>align</code>,
+<code>rowalign</code>, <code>columnalign</code>, <code>frame</code>,
+<code>side</code>.</p>
 
 <p>Les attributs <code>class</code>, <code>id</code> et <code>style</code>
 sont utilisables, avec la même sémantique que dans HTML : vous pouvez <a
