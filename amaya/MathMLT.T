@@ -465,12 +465,6 @@ RULES
    C_Empty:
 	remove;
 
-   SEP:
-	begin
-	create SOT;
-	create 'sep/>\12';
-	end;
-
    C_Space:
 	remove;
 

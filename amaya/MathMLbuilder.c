@@ -792,10 +792,8 @@ static void	CreatePlaceholders (el, doc)
    if (prev != NULL && create)
       {
 	elType = TtaGetElementType (prev);
-	/* don't insert a placeholder after the last element if it's a MF
-	   or a SEP */
-	if (elType.ElTypeNum == MathML_EL_MF ||
-	    elType.ElTypeNum == MathML_EL_SEP)
+	/* don't insert a placeholder after the last element if it's a MF */
+	if (elType.ElTypeNum == MathML_EL_MF)
 	   create = FALSE;
 	else if (elType.ElTypeNum == MathML_EL_MROW)
 	   /* the last element is a MROW */
@@ -826,15 +824,14 @@ static void	CreatePlaceholders (el, doc)
 }
 
 /*----------------------------------------------------------------------
-  NextNotSepOrComment
-  Return the next sibling of element el that is not a SEP element
-  nor an XMLcomment element.
-  Return el itself if it's not a SEP or a comment.
+  NextNotComment
+  Return the next sibling of element el that is not an XMLcomment element.
+  Return el itself if it's not a comment.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void	NextNotSepOrComment (Element* el, Element* prev)
+static void	NextNotComment (Element* el, Element* prev)
 #else
-static void	NextNotSepOrComment (el, prev)
+static void	NextNotComment (el, prev)
    Element	*el;
 #endif
 {
@@ -843,8 +840,7 @@ static void	NextNotSepOrComment (el, prev)
    if (*el == NULL)
       return;
    elType = TtaGetElementType (*el);
-   while (*el != NULL && (elType.ElTypeNum == MathML_EL_SEP ||
-			  elType.ElTypeNum == MathML_EL_XMLcomment))
+   while (*el != NULL && elType.ElTypeNum == MathML_EL_XMLcomment)
       {
       *prev = *el;
       TtaNextSibling (el);
@@ -878,7 +874,7 @@ static ThotBool CheckMathSubExpressions (el, type1, type2, type3, doc)
   elType.ElSSchema = GetMathMLSSchema (doc);
   child = TtaGetFirstChild (el);
   prev = NULL;
-  NextNotSepOrComment (&child, &prev);
+  NextNotComment (&child, &prev);
   if (type1 == 0)
     {
     if (child)
@@ -907,7 +903,7 @@ static ThotBool CheckMathSubExpressions (el, type1, type2, type3, doc)
 	}
       prev = child;
       TtaNextSibling (&child);
-      NextNotSepOrComment (&child, &prev);
+      NextNotComment (&child, &prev);
       if (type2 == 0)
         {
         if (child)
@@ -934,7 +930,7 @@ static ThotBool CheckMathSubExpressions (el, type1, type2, type3, doc)
 		}
 	      prev = child;
 	      TtaNextSibling (&child);
-	      NextNotSepOrComment (&child, &prev);
+	      NextNotComment (&child, &prev);
 	      if (type3 == 0)
 		{
 		if (child)
@@ -962,7 +958,7 @@ static ThotBool CheckMathSubExpressions (el, type1, type2, type3, doc)
 		    }
 		  prev = child;
 		  TtaNextSibling (&child);
-		  NextNotSepOrComment (&child, &prev);
+		  NextNotComment (&child, &prev);
 		  if (child)
 		    /* this fourth child is unexpected */
 		    result = FALSE;

@@ -17,6 +17,7 @@ PICTURE_UNIT: IMG
 REFERENCE_UNIT: Reference
 PAGE_BREAK: Page_break
 
+C_Empty: \0
 MathML: math
 XMLcomment: comment
 MTEXT: mtext
@@ -49,7 +50,6 @@ MTR: mtr
 MLABELEDTR: mlabeledtr
 MGLYPH: mglyph
 MACTION: maction
-SEP: sep
 MTD: mtd
 MALIGNGROUP: maligngroup
 MALIGNMARK: malignmark

@@ -346,10 +346,7 @@ STRUCT
 	        selection = INTEGER)
 	  = LIST OF (Construct);
 
-      { sep: provision for content tags }
-      SEP = CONSTANT C_Empty;
-
-      XLink;  { Annotations }
+      XLink;     { for annotations }
       END;	 { End of Construct definition }
 
    TableRow = CASE OF

@@ -371,17 +371,6 @@ BOXES
 		END;
 	END;
 
- SEP_S: BEGIN
-	Content: Text 'sep';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Size: TAG_FONTSIZE;
-		Font: TAG_Font;
-		Style: TAG_Style; Weight: TAG_Weight;
-		Visibility: TAG_Visibility;  Foreground: TAG_Color;
-		END;
-	END;
-
  MSPACE_S: BEGIN
 	Content: Text 'mspace';
 	Visibility: 0;
@@ -446,6 +435,11 @@ BOXES
 		Style: TAG_Style; Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
+	END;
+ QuestionMark: BEGIN
+	Content: Text '?';
+	IN Structure_view
+		Visibility: 0;
 	END;
 
  MACTION_S: BEGIN
@@ -3463,7 +3457,6 @@ RULES
 		VertPos: Top =  Previous . Bottom;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Width: Enclosing . Width - STRUCT_INDENT;
-		Line;
 		END;
 	END;
 
@@ -3478,7 +3471,6 @@ RULES
 		VertPos: Top =  Previous . Bottom;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Width: Enclosing . Width - STRUCT_INDENT;
-		Line;
 		Style: Enclosing =;
 		END;
 	END;
@@ -3494,7 +3486,6 @@ RULES
 		VertPos: Top =  Previous . Bottom;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Width: Enclosing . Width - STRUCT_INDENT;
-		Line;
 		END;
 	END;
 
@@ -3508,7 +3499,6 @@ RULES
 		VertPos: Top =  Previous . Bottom;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Width: Enclosing . Width - STRUCT_INDENT;
-		Line;
 		END;
 	END;
 
@@ -3522,7 +3512,6 @@ RULES
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top =  Previous . Bottom;
 		Width: Enclosing . Width - STRUCT_INDENT;
-		Line;
 		END;
 	END;
 
@@ -3542,19 +3531,7 @@ RULES
 	END;
 
    C_Empty:
-	IN Structure_view
-		Visibility: 0;
-
-   SEP:
-	BEGIN
-	CreateBefore(SEP_S);
 	Visibility: 0;
-	IN Structure_view BEGIN
-		Visibility: Enclosing =;
-		Size: DOC_FONTSIZE;
-		Font: Helvetica;
-		END;		
-	END;
 
    C_Space:
 	BEGIN
@@ -3644,11 +3621,12 @@ RULES
    MGLYPH:
 	BEGIN
 	CreateBefore(MGLYPH_S);
+	CreateFirst (QuestionMark);
 	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
 	IN Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		VertPos: Top =  Previous . Top;
-		Width: 1 pt;
+		Height: 1 pt;
 		END;
 	END;
 

@@ -2067,7 +2067,6 @@ static ThotBool MathMoveForward ()
 	  if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema),TEXT("MathML")) &&
 	      (elType.ElTypeNum == MathML_EL_MSPACE ||
 	       elType.ElTypeNum == MathML_EL_MGLYPH ||
-	       elType.ElTypeNum == MathML_EL_SEP ||
 	       elType.ElTypeNum == MathML_EL_MALIGNMARK ||
 	       elType.ElTypeNum == MathML_EL_MALIGNGROUP))
 	    /* select the element itself, not its contents */
@@ -2162,7 +2161,6 @@ static ThotBool MathMoveBackward ()
 	  if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema),TEXT("MathML")) &&
 	      (elType.ElTypeNum == MathML_EL_MSPACE ||
 	       elType.ElTypeNum == MathML_EL_MGLYPH ||
-	       elType.ElTypeNum == MathML_EL_SEP ||
 	       elType.ElTypeNum == MathML_EL_MALIGNMARK ||
 	       elType.ElTypeNum == MathML_EL_MALIGNGROUP))
 	    /* select the element itself, not its contents */

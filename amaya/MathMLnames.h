@@ -42,7 +42,6 @@ static ElemMapping    MathMLElemMappingTable[] =
    {TEXT("munder"), SPACE, MathML_EL_MUNDER, L_Other, FALSE},
    {TEXT("munderover"), SPACE, MathML_EL_MUNDEROVER, L_Other, FALSE},
    {TEXT("none"), SPACE, MathML_EL_Construct, L_Other, FALSE},
-   {TEXT("sep"), 'E', MathML_EL_SEP, L_Other, FALSE},
    {TEXT(""), SPACE, 0, L_Other, FALSE}	 /* Last entry. Mandatory */
 };
 
