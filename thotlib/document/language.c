@@ -888,7 +888,7 @@ Language           languageId;
 	Langbuffer[0] = EOS;
      }
    else
-      strcasecmp (Langbuffer, LangTable[i].LangCode);
+      strcpy (Langbuffer, LangTable[i].LangCode);
    return Langbuffer;
 }
 
