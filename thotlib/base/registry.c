@@ -858,6 +858,7 @@ static void         InitEnviron ()
 
 {
    char               *pT;
+   char               *Thot_Sys_Sch;
    char               *Thot_Sch;
 
    /* default values for various global variables */
@@ -878,19 +879,22 @@ static void         InitEnviron ()
    else
       strncpy (DocumentPath, pT, MAX_PATH);
 
-   /* The user path to schemas */
+   /* Read the schemas Paths */
    Thot_Sch = (char *) TtaGetEnvString ("THOTSCH");
-   if (Thot_Sch == NULL)
-      SchemaPath[0] = '\0';
-   else
-      strncpy (SchemaPath, Thot_Sch, MAX_PATH);
+   Thot_Sys_Sch = (char *) TtaGetEnvString ("THOTSYSSCH");
 
-   /* The system path to schemas */
-   Thot_Sch = (char *) TtaGetEnvString ("THOTSYSSCH");
-   if (Thot_Sch != NULL) {
-      strcat (SchemaPath,PATH_STR);
-      strcat (SchemaPath, Thot_Sch);
-   }
+   /* set up SchemaPath accordingly */
+   if ((Thot_Sch != NULL) && (Thot_Sys_Sch != NULL)) {
+       strncpy (SchemaPath, Thot_Sch, MAX_PATH);
+       strcat (SchemaPath,PATH_STR);
+       strcat (SchemaPath, Thot_Sch);
+   } else if (Thot_Sch != NULL)
+       strncpy (SchemaPath, Thot_Sch, MAX_PATH);
+   else if (Thot_Sys_Sch != NULL)
+       strncpy (SchemaPath, Thot_Sys_Sch, MAX_PATH);
+   else
+       SchemaPath[0] = '\0';
+
 }
 
 /*
