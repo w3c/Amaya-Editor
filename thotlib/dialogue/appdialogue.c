@@ -4166,7 +4166,6 @@ void  TtaSetItemOn (Document document, View view, int menuID, int itemID)
    if (menu > 0)
      {
        PtrDocument         pDoc;
-       int                 frame;
        /* enable the menu entry */
        ref = ((menu - 1) * MAX_ITEM) + frame + MAX_LocalMenu;
        if (submenu != 0)
