@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA 1996-2001
+ *  (c) COPYRIGHT INRIA 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -822,7 +822,7 @@ void InitSyntax (char *fileName)
   char                pnomcourt[200];
   int                 l;
   int                 ruleptr;
-  int                 currule;
+  int                 currule = 1;
   ThotBool            readingKeywordTable;
   ThotBool             fileOK;
 
