@@ -16,6 +16,17 @@ RULES
 	begin
 	end;
 
+   XMLcomment:
+        BEGIN
+        NoLineBreak;
+        Create '<!--';
+	NoTranslation;
+        Create '-->\12' after;
+        END;
+
+   XMLcomment_line:
+	if not last create '\12' after;
+
    MROW:
 	begin
 	create '<mrow';
@@ -184,7 +195,7 @@ RULES
 
    MF :
 	begin
-	create '<mo fence="true"';
+	create '<mo';
 	create Attributes;
 	create '>';
 	create '</mo>\12' after;
@@ -311,10 +322,10 @@ ATTRIBUTES
 	create separators;
 	create '"';
 	end;
-   fontslant = plain:
-	create ' fontslant="plain"';
-   fontslant = italic:
-	create ' fontslant="italic"';
+   fontstyle = normal:
+	create ' fontstyle="normal"';
+   fontstyle = italic:
+	create ' fontstyle="italic"';
    fence = true:
 	create ' fence="true"';
    fence = false:

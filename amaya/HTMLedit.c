@@ -35,6 +35,7 @@ static int          OldHeight;
 #include "HTMLimage_f.h"
 #include "HTMLpresentation_f.h"
 #include "HTMLstyle_f.h"
+#include "HTMLimage_f.h"
 #include "tree.h"
 
 /*----------------------------------------------------------------------
@@ -1290,7 +1291,10 @@ NotifyAttribute    *event;
 }
 
 /*----------------------------------------------------------------------
-   AttrSTYLEinMenu doen't display STYLE in HEAD and MAP
+   AttrSTYLEinMenu
+   Called by Thot when building the Attribute menu.
+   Prevent Thot from including item "style" in the menu if current
+   selection is in HEAD or MAP
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             AttrSTYLEinMenu (NotifyAttribute * event)
@@ -1301,17 +1305,18 @@ NotifyAttribute    *event;
 #endif /* __STDC__ */
 {
    ElementType         elType;
+   SSchema	       HTMLSSchema;
    Element             el;
 
+   HTMLSSchema = TtaGetSSchema ("HTML", event->document);
    elType = TtaGetElementType (event->element);
-   if (elType.ElSSchema != TtaGetDocumentSSchema (event->document))
-     return FALSE;
-   if (elType.ElTypeNum == HTML_EL_HEAD)
-     return TRUE;
-   else if (elType.ElTypeNum == HTML_EL_MAP)
+   if (elType.ElTypeNum == HTML_EL_HEAD && elType.ElSSchema == HTMLSSchema)
+    return TRUE;
+   else if (elType.ElTypeNum == HTML_EL_MAP && elType.ElSSchema == HTMLSSchema)
      return TRUE;
    else
      {
+       elType.ElSSchema = HTMLSSchema;
        elType.ElTypeNum = HTML_EL_HEAD;
        el = TtaGetTypedAncestor (event->element, elType);
        if (el != NULL)
@@ -1322,7 +1327,7 @@ NotifyAttribute    *event;
 	   elType.ElTypeNum = HTML_EL_MAP;
 	   el = TtaGetTypedAncestor (event->element, elType);
 	   if (el != NULL)
-	     /* whitin the head */
+	     /* whitin a map */
 	     return TRUE;
 	   else
 	     return FALSE;		/* let Thot perform normal operation */

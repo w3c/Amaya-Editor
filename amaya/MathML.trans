@@ -10,18 +10,18 @@
 !surround an element with a mrow
 surrounding row: *;
         {
-        * > MROW:*;
+        * > mrow:*;
         }
 
 
 !surround a sequence of elements with a mrow
 surrounding row: *,*+;
         {
-        * > MROW:*;
+        * > mrow:*;
         }
 
 ! remove a mrow level
-remove row: MROW{*+};
+remove row: mrow{*+};
         {
         * > :*;
         }
@@ -31,20 +31,20 @@ remove row: MROW{*+};
 !surround an element with a root
 surrounding root : *;
 	{
-	* > MROOT:*;
-	* > MROOT:NONE % ;
+	* > mroot:*;
+	* > mroot:none % ;
 	}
 
 !surround a sequence of elements with a root
 surrounding root: *+,last:*;
         {
-        * > MROOT.MROW:*;
-	last > MROOT.MROW:*;
-	last > MROOT:NONE % ;
+        * > mroot.mrow:*;
+	last > mroot.mrow:*;
+	last > mroot:none % ;
         }
 
 !remove a root
-remove root: MROOT{base:*,? index:*};
+remove root: mroot{base:*,? index:*};
         {
         base > :*;
 	index / ;
@@ -56,70 +56,70 @@ remove root: MROOT{base:*,? index:*};
 !surround an element with a square root
 surrounding square root: *;
         {
-        * > MSQRT:*;
+        * > msqrt:*;
         }
 
 
 !surround a sequence of elements with a square root
 surrounding square root: *,*+;
         {
-        * > MSQRT.MROW:*;
+        * > msqrt.mrow:*;
         }
 
 !remove a square root
-remove square root: MSQRT{*};
+remove square root: msqrt{*};
         {
         * > :*;
         }
 
 !transform a square root into a root
-root with index: MSQRT{*};
+root with index: msqrt{*};
 	{
-	* > MROOT:*;
-	* > MROOT:NONE %;
+	* > mroot:*;
+	* > mroot:none %;
 	}
 
 !!! Fraction transformations
 
 !transform 2 elements into a fraction
-fraction: (num:*,den:*) | MROW{num:*,den:*};
+fraction: (num:*,den:*) | mrow{num:*,den:*};
         {
-        num > MFRAC:*;
-        den > MFRAC:*;
+        num > mfrac:*;
+        den > mfrac:*;
         }
 
 !transform an  element into a numerator
 numerator: *;
         {
-        * > MFRAC:*;
-        * > MFRAC:NONE %;
+        * > mfrac:*;
+        * > mfrac:none %;
         }
 
 !transform an sequence of elements into a numerator
 numerator: ?*+,last:*;
         {
-        * > MFRAC.MROW:*;
-	last > MFRAC.MROW:*;
-        last > MFRAC:NONE %;
+        * > mfrac.mrow:*;
+	last > mfrac.mrow:*;
+        last > mfrac:none %;
         }
 
 !transform an element into a denominator
 denominator: *;
         {
-        * > MFRAC:NONE %;
-        * > MFRAC:*;
+        * > mfrac:none %;
+        * > mfrac:*;
         }
 
 !transform an sequence of elements into a denominator
 denominator: first:*,?*+;
         {
-        first > MFRAC:NONE %;
-	first > MFRAC.MROW:*;
-        * > MFRAC.MROW:*;
+        first > mfrac:none %;
+	first > mfrac.mrow:*;
+        * > mfrac.mrow:*;
         }
 
 !remove a fraction
-remove fraction: MFRAC{?(num:*),?(den:*)};
+remove fraction: mfrac{?(num:*),?(den:*)};
         {
         num > :*;
         den > :*;
@@ -131,13 +131,13 @@ remove fraction: MFRAC{?(num:*),?(den:*)};
 !surroud an element with a subsup
 add sub and sup:*;
 	{
-	* > MSUBSUP:*;
-	* > MSUBSUP:NONE%;
-	* > MSUBSUP:NONE;
+	* > msubsup:*;
+	* > msubsup:none%;
+	* > msubsup:none;
 	}
 
 !removes a subsup
-remove subsup: MSUBSUP{base:*,?sub:*,?sup:*};
+remove subsup: msubsup{base:*,?sub:*,?sup:*};
 	{
 	base > :*;
 	sub /;
@@ -145,28 +145,28 @@ remove subsup: MSUBSUP{base:*,?sub:*,?sup:*};
 	}
 
 !removes a superscript
-remove superscript: MSUBSUP{base:*,?sub:*,?sup:*};
+remove superscript: msubsup{base:*,?sub:*,?sup:*};
 	{
-	MSUBSUP > MSUB;
+	msubsup > msub;
 	sup /;
 	}
 
 !removes a subscript
-remove subscript: MSUBSUP{base:*,?sub:*,?sup:*};
+remove subscript: msubsup{base:*,?sub:*,?sup:*};
 	{
-	MSUBSUP > MSUP;
+	msubsup > msup;
 	sub /;
 	}
 
 !surroud element with a sub
 add subscript:*;
 	{
-	* > MSUB:*;
-	* > MSUB:NONE %;
+	* > msub:*;
+	* > msub:none %;
 	}
 
 !removes a subscript
-remove subscript: MSUB{base:*,?sub:*};
+remove subscript: msub{base:*,?sub:*};
 	{
 	base > :*;
 	sub /;
@@ -175,37 +175,37 @@ remove subscript: MSUB{base:*,?sub:*};
 !surroud an element with a sup
 add superscript:*;
 	{
-	* > MSUP:*;
-	* > MSUP:NONE %;
+	* > msup:*;
+	* > msup:none %;
 	}
 
 !removes a superscript
-remove superscript: MSUP{base:*,?sup:*};
+remove superscript: msup{base:*,?sup:*};
 	{
 	base > :*;
 	sup /;
 	}
 
-!change MSUB into MSUP
-superscript:MSUB;
+!change msub into msup
+superscript:msub;
 	{
-	MSUB > MSUP;
+	msub > msup;
 	}
 
-!change MSUP into MSUB
-subscript:MSUP;
+!change msup into msub
+subscript:msup;
 	{
-	MSUP > MSUB;
+	msup > msub;
 	}
 
-!change MSUB or MSUP into MSUBSUP
-subsup:MSUB{base:*,sub:*} | MSUP{base:*,sup:*};
+!change msub or msup into msubsup
+subsup:msub{base:*,sub:*} | msup{base:*,sup:*};
 	{
-	base > MSUBSUP:*;
-	sup > MSUBSUP:NONE %;
-	sup > MSUBSUP:*;
-	sub > MSUBSUP:*;
-	sub > MSUBSUP:NONE %;
+	base > msubsup:*;
+	sup > msubsup:none %;
+	sup > msubsup:*;
+	sub > msubsup:*;
+	sub > msubsup:none;
 	}
 
 !!! Under and Over transformations
@@ -213,13 +213,13 @@ subsup:MSUB{base:*,sub:*} | MSUP{base:*,sup:*};
 !surroud an element with a underover
 add under and over:*;
 	{
-	* > MUNDEROVER:*;
-	* > MUNDEROVER:NONE %;
-	* > MUNDEROVER:NONE;
+	* > munderover:*;
+	* > munderover:none %;
+	* > munderover:none;
 	}
 
 ! remove an underover
-remove under and over:MUNDEROVER{base:*,?under:*,?over:*};
+remove under and over:munderover{base:*,?under:*,?over:*};
 	{
 	base > :*;
 	under /;
@@ -229,12 +229,12 @@ remove under and over:MUNDEROVER{base:*,?under:*,?over:*};
 !surroud an element with a over
 add over:*;
 	{
-	* > MOVER:*;
-	* > MOVER:NONE %;
+	* > mover:*;
+	* > mover:none %;
 	}
 
 ! remove an over
-remove under and over:MOVER{base:*,?over:*};
+remove under and over:mover{base:*,?over:*};
 	{
 	base > :*;
 	over /;
@@ -243,12 +243,12 @@ remove under and over:MOVER{base:*,?over:*};
 !surroud an element with a under
 add under:*;
 	{
-	* > MUNDER:*;
-	* > MUNDER:NONE;
+	* > munder:*;
+	* > munder:none;
 	}
 
 ! remove an under
-remove under:MUNDER{base:*,?under:*};
+remove under:munder{base:*,?under:*};
 	{
 	base > :*;
 	under /;
@@ -259,24 +259,24 @@ remove under:MUNDER{base:*,?under:*};
 !surround an element with parentheses
 parenthesize:*;
         {
-        * > MROW:MO."(";
-        * > MROW:*;
-        * > MROW:MO.")";
+        * > mrow:mo."(";
+        * > mrow:*;
+        * > mrow:mo.")";
         }
 
 !surround a sequence of elements with parentheses
 parenthesize: first:*,?*+, last:* ;
         {
-        first > MROW:MO."(";
-        first > MROW:*;
-        * > MROW:*;
-        last > MROW:*;
-        last > MROW:MO.")";
+        first > mrow:mo."(";
+        first > mrow:*;
+        * > mrow:*;
+        last > mrow:*;
+        last > mrow:mo.")";
         }
 
 !remove parenthesis
-remove parenthesis: MROW{MO,?*+,MO};
+remove parenthesis: mrow{mo,?*+,mo};
 	{
-	MO /;
+	mo /;
 	* > :*;
 	}

@@ -44,9 +44,9 @@
 43 This version of Amaya does not support this feature
 44 Finished writing %s
 45 Could not normalize %s
-46 Coult not create temporary file directory %s
+46 Could not create temporary file directory %s
 47 No transformation applicable to the selection
-48 The transformation failed 
+48 Transformation failed 
 49 syntax error in file HTML.trans line %s
 50 Add
 51 Show
@@ -132,10 +132,11 @@
 131 repeat-y
 132 no-repeat
 133 Amaya - an editor/browser for the Web
-134 developed by W3C as a testbed client (http://www.w3.org/)
-135 Maths
-136 Can't handle for the moment URLs having more than %s chars
-137 CSS error: %s
-138 Only default type is allowed
-139 Links update: %s%% has been done
-140 Nothing to save
+134 developed by W3C (http://www.w3.org/)
+135 Can't handle URLs having more than %s chars
+136 CSS error: %s
+137 Only default type is allowed
+138 Links update: %s%% has been done
+139 Nothing new to be saved
+140 Maths
+141 Graphics

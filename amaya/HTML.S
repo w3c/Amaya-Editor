@@ -72,12 +72,19 @@ STRUCT
 #ifdef MATHML
 	MathDisp (ATTR mode = display, inline_math) = MathML;
 #endif
+#ifdef GRAPHML
+        XMLGraphics = GraphML;
+#endif
 	Form;
 	Table;
 	PICTURE;
 	MAP;
 	ISINDEX;
 	END;
+
+#ifdef GRAPHML
+	HTMLfragment = LIST OF (Element);
+#endif
 
   Horizontal_Rule (ATTR Align = left_, center_, right_;
 			NoShade = NoShade_; Size_ = Integer;
@@ -337,8 +344,7 @@ STRUCT
                  No_wrap = no_wrap) = LIST OF (Element);
 	Heading_cell(ATTR Ref_column; ColExt; RowExt; colspan_; rowspan_;
 		 Cell_align; Cell_valign; Width__; IntWidthPxl; IntWidthPercent;
-		 Cell_height; No_wrap) =
-		 LIST OF (Element);
+		 Cell_height; No_wrap) = LIST OF (Element);
 	END;
 
   MAP (ATTR NAME; Ref_IMG = REFERENCE(Any)) = LIST OF (AREA);
@@ -382,6 +388,9 @@ EXCEPT
 	MAP:		IsDraw;
 	AREA:		MoveResize;
 	Preformatted:	ReturnCreateNL;
+#ifdef GRAPHML
+	HTMLfragment:	NoMove, NoResize, Hidden, NoSelect;
+#endif
 
 #ifndef COUGAR
 	Langue:         Invisible;

@@ -33,6 +33,8 @@
 #include "HTMLform_f.h"
 #include "HTMLhistory_f.h"
 #include "HTMLimage_f.h"
+#include "html2thot_f.h"
+#include "XMLparser_f.h"
 #include "trans_f.h"
 #include "selection.h"
 
@@ -606,6 +608,7 @@ Document       doc;
 	  TtaFreeMemory (SavingFile);
 	  TtaFreeMemory (AttrHREFvalue);
 	  FreeHTMLParser ();
+	  FreeXMLParser ();
 	  TtaQuit ();
 	}
     }

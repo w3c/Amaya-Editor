@@ -1005,11 +1005,14 @@ Document            document;
 	     {
 	       /* create a new document and loads the target document */
 	       IncludedDocument = TtaNewDocument ("HTML", "tmp");
-	       TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_FETCHING), url);
-	       newdoc = GetHTMLDocument (url, NULL, IncludedDocument,
+	       if (IncludedDocument != 0)
+		  {
+	          TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_FETCHING), url);
+	          newdoc = GetHTMLDocument (url, NULL, IncludedDocument,
 					 document, CE_MAKEBOOK, FALSE, 
 					 (void *) GetIncludedDocuments_callback,
 					 (void *) ctx);
+		  }
 	     }
 	   else 
 	     call_callback = TRUE;

@@ -539,7 +539,13 @@ PtrAttribute       *pAttr;
 	       }
 	     else if (presNum == 0 || pSchP == NULL)
 		/* cherche le schema de presentation de l'element */
+		{
 		SearchPresSchema (pEl, &pSchP, &index, &pSchS);
+		/***** s'il s'agit de l'element racine d'un objet d'une nature
+		differente de son pere, pSchP est le schema de presentation
+		de la nature englobante et view (numero de vue dans le
+		schema devrait etre mis a jour... */
+		}
 	     /* on traite d'abord les schemas de presentation additionnels les */
 	     /* plus prioritaires */
 	     pHd = pSchS->SsFirstPSchemaExtens;

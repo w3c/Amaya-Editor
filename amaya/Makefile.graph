@@ -1,0 +1,68 @@
+#
+# Makefile.graph
+# Autoconf Fragment when using Graph
+# Irene Vatton 1998
+#
+
+AMAYA_GRAPH_OPTIONS=-DGRAPHML
+
+AMAYA_GRAPH_OBJ= \
+	GraphMLAPP.o \
+	GraphMLbuilder.o \
+	Graphedit.o
+
+AMAYA_GRAPH_SRC= \
+        GraphML.h \
+	GraphMLAPP.c 
+
+AMAYA_GRAPH_LIBS= 
+
+AMAYA_GRAPH_EXTRA_LIBS= 
+
+AMAYA_GRAPH_INCLUDES= 
+
+AMAYA_GRAPH_SCHEMAS= $(AMAYA)/GraphML.S $(AMAYA)/GraphMLP.P $(AMAYA)/GraphMLT.T
+
+amaya_graph_schema : compGRAPH compGRAPHP compGRAPHT
+
+#
+# Structure schema compilation.
+#
+compGRAPH : $(AMAYA)/GraphML.STR
+$(AMAYA)/GraphML.STR : $(AMAYA)/GraphML.S ../bin/str ../bin/prs ../bin/tra
+	STR=`pwd`/../bin/str;PRS=`pwd`/../bin/prs;TRA=`pwd`/../bin/tra;\
+	cd $(AMAYA); THOTDIR=`pwd`/.. ;export THOTDIR; \
+	$$STR $(ALL_AMAYA_OPTIONS) GraphML ; \
+	$$PRS $(ALL_AMAYA_OPTIONS) GraphMLP ; \
+	$$TRA $(ALL_AMAYA_OPTIONS) GraphMLT
+
+#
+# Presentation schemas compilation
+#
+compGRAPHP : $(AMAYA)/GraphMLP.PRS
+$(AMAYA)/GraphMLP.PRS : $(AMAYA)/GraphMLP.P ../bin/prs
+	PRS=`pwd`/../bin/prs;\
+	cd $(AMAYA); THOTDIR=`pwd`/.. ;export THOTDIR; \
+	$$PRS $(ALL_AMAYA_OPTIONS) GraphMLP
+
+#
+# Traduction schemas compilation
+#
+compGRAPHT : $(AMAYA)/GraphMLT.TRA
+$(AMAYA)/GraphMLT.TRA : $(AMAYA)/GraphMLT.T ../bin/tra
+	TRA=`pwd`/../bin/tra;\
+	cd $(AMAYA); THOTDIR=`pwd`/.. ;export THOTDIR; \
+	$$TRA $(ALL_AMAYA_OPTIONS) GraphMLT
+
+#
+# Interface schemas compilation
+#
+GraphML.h GraphMLAPP.c : $(AMAYA)/GraphML.STR $(AMAYA)/GraphML.A ../bin/app
+	(if test "$(AMAYA)" != "" -a "$(AMAYA)" != "." -a \
+	         "$(AMAYA)" != "../amaya" ; then \
+	    $(CP) $(AMAYA)/GraphML.A .  ; \
+	    $(CP) $(AMAYA)/GraphML.STR .  ; \
+	fi)
+	THOTDIR=$(THOTDIR) ; export THOTDIR ; \
+	../bin/app $(ALL_AMAYA_OPTIONS) GraphML.A
+

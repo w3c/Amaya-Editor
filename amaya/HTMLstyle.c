@@ -53,27 +53,26 @@ extern boolean      NonPPresentChanged;
    prevent prehistoric browser from displaying the CSS as a text
    content. It will stop on any sequence "<x" where x is different
    from ! and will return x as to the caller. Theorically x should
-   be equal to / for the </STYLE> end of style. In this case CSSparsing 
-   will be FALSE.
+   be equal to / for the </STYLE> end of style.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char                CSSparser (Document doc, boolean *CSSparsing)
+char                CSSparser (Document doc)
 #else
-char                CSSparser (doc, CSSparsing)
+char                CSSparser (doc)
 AmayaReadChar       readfunc;
 Document            doc;
-boolean            *CSSparsing;
 #endif
 {
   char                c;
-  boolean             toParse;
+  boolean             toParse, eof, CSSparsing;
 
-  *CSSparsing = TRUE;
+  CSSparsing = TRUE;
   toParse = FALSE;
+  eof = FALSE;
   c = SPACE;
-  while (CSSindex < MAX_CSS_LENGTH && c != EOS && *CSSparsing)
+  while (CSSindex < MAX_CSS_LENGTH && c != EOS && CSSparsing && !eof)
     {
-      c = GetNextInputChar ();
+      c = GetNextInputChar (&eof);
       CSSbuffer[CSSindex] = c;
       switch (c)
 	{
@@ -92,17 +91,17 @@ boolean            *CSSparsing;
 	  else if (CSSindex > 0 && CSSbuffer[CSSindex - 1] ==  '<')
 	    {
 	      /* this is the closing tag ! */
-	      *CSSparsing = FALSE;
+	      CSSparsing = FALSE;
 	      CSSindex -= 2; /* remove </ from the CSS string */
 	    }	    
 	  break;
 	case '<':
-	  c = GetNextInputChar ();
+	  c = GetNextInputChar (&eof);
 	  if (c == '!')
 	    {
 	      if (CSSindex > 0)
 		/* Ok we consider this as a closing tag ! */
-		*CSSparsing = FALSE;
+		CSSparsing = FALSE;
 	      else
 		{
 		  /* CSS within an HTML comment */
@@ -115,7 +114,7 @@ boolean            *CSSparsing;
 	    {
 	      CSSindex--;
 	      /* Ok we consider this as a closing tag ! */
-	      *CSSparsing = FALSE;
+	      CSSparsing = FALSE;
 	    }
 	  else if (c == EOS)
 	    CSSindex++;
@@ -135,10 +134,12 @@ boolean            *CSSparsing;
 	case '}':
 	  toParse = TRUE;
 	  break;
+        default:
+	  break;
 	}
       if (c != EOS)
 	CSSindex++;
-      if  (CSSindex >= MAX_CSS_LENGTH || !*CSSparsing || toParse)
+      if  (CSSindex >= MAX_CSS_LENGTH || !CSSparsing || toParse)
 	{
 	  CSSbuffer[CSSindex] = EOS;
 	  /* parse a not empty string */

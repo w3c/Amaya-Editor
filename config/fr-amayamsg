@@ -133,9 +133,10 @@
 132 no-repeat
 133 Amaya, un navigateur et \351diteur pour le Web
 134 d\351velopp\351 par le W3C (http://www.w3.org/)
-135 Maths
-136 Erreur Interne: L'URL a une longueur supérieure à  %s caractères
-137 Erreur CSS : %s
-138 Seul le type par d\351faut est autoris\351
-139 Mise \340 jour des liens : %s%% a \351t\351 trait\351
-140 Rien à sauver
+135 Erreur Interne: L'URL a une longueur supérieure à  %s caractères
+136 Erreur CSS : %s
+137 Seul le type par d\351faut est autoris\351
+138 Mise \340 jour des liens : %s%% a \351t\351 trait\351
+139 Rien à sauver
+140 Maths
+141 Graphique

@@ -758,6 +758,18 @@ BOXES
 		END;
 	END;
 #endif
+#ifdef GRAPHML
+ Graph_S: BEGIN
+	Content: Text 'GRAPHICS';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+#endif
+
  P_S: BEGIN
 	Content: Text 'P';
 	Visibility: 0;
@@ -4687,13 +4699,13 @@ RULES
 	CreateBefore(Math_S);
 	VertPos: Top = Previous NOT MAP . Bottom + 0.4;
 	LineBreak: No;
-	IN Structure_view BEGIN
-		Width: Enclosing . Width - STRUCT_INDENT;
-		Height: Enclosed . Height;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		VertPos: Top = Previous . Bottom;
-		Visibility: 5;
-		END;	
+        IN Structure_view BEGIN
+                Width: 1 pt;
+                Height: 1 pt;
+                HorizPos: Left = Enclosing . Left;
+                VertPos: Top = Previous . Bottom;
+                Visibility: 1;
+                END;
 	IN Alternate_view
 		Visibility: 0;
 	END;
@@ -4703,15 +4715,71 @@ RULES
         VertPos: Top = Previous NOT MAP . Bottom + 0.4;
         LineBreak: No;
         IN Structure_view BEGIN
-                Width: Enclosing . Width - STRUCT_INDENT;
-                Height: Enclosed . Height;
-                HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+                Width: 1 pt;
+                Height: 1 pt;
+                HorizPos: Left = Enclosing . Left;
                 VertPos: Top = Previous . Bottom;
-                Visibility: 5;
+                Visibility: 1;
                 END;
         IN Alternate_view
                 Visibility: 0;
         END;
+   MathML:
+        BEGIN
+        PageBreak: No;
+        LineBreak: No;
+        LineWeight: 1 pt;
+	IN Structure_view
+		BEGIN
+		Visibility: 0;
+		{***** Next rule specifies the width of a MathML in
+		Math_structure_view.  Thot is confusing the Structure_view
+		defined in the present schema and the Math_structure_view
+		defined in schema MathMLP. ******}
+		Width: Enclosing . Width;
+		END;
+	IN Alternate_view
+		Visibility: 0;
+        END;
+#endif /* MATHML */
+#ifdef GRAPHML
+
+ XMLGraphics: BEGIN
+	CreateBefore(Graph_S);
+	VertPos: Top = Previous NOT MAP . Bottom + 0.4;
+	LineBreak: No;
+        IN Structure_view BEGIN
+                Width: 1 pt;
+                Height: 1 pt;
+                HorizPos: Left = Enclosing . Left;
+                VertPos: Top = Previous . Bottom;
+                Visibility: 1;
+                END;
+	IN Alternate_view
+		Visibility: 0;
+	END;
+ GraphML:
+	BEGIN
+	Justify: No;
+	Hyphenate: No;
+	LineWeight: 1 pt;
+	IN Structure_view
+		BEGIN
+		Visibility: 0;
+		{***** Next rule specifies the width of a MathML in
+		Math_structure_view.  Thot is confusing the Structure_view
+		defined in the present schema and the Math_structure_view
+		defined in schema MathMLP. ******}
+		Width: Enclosing . Width;
+		END;
+	IN Alternate_view
+		Visibility: 0;
+	END;
+
+ HTMLfragment:
+	BEGIN
+	Width: Enclosing . Width;
+	END;
 #endif
 
  Paragraph: BEGIN
@@ -4723,6 +4791,9 @@ RULES
 	NoBreak1 : 2;
 	NoBreak2 : 2;
 	if NOT within Table
+#ifdef GRAPHML
+	   and NOT within XMLGraphics
+#endif
 	   Justify: Yes;
 #endif
 	Adjust: Enclosing =;
@@ -4748,6 +4819,9 @@ RULES
 	NoBreak1 : 2;
 	NoBreak2 : 2;
 	if NOT within Table
+#ifdef GRAPHML
+	   and NOT within XMLGraphics
+#endif
 	   Justify: Yes;
 #endif
 	Adjust: Enclosing =;
@@ -4810,6 +4884,9 @@ RULES
 	Width: Enclosing . Width - LIST_INDENT;
 	HorizPos: Left = Enclosing . Left + LIST_INDENT;
 #ifdef PAGE
+#ifdef GRAPHML
+	if NOT within XMLGraphics
+#endif
 	Justify: Yes;
 #endif
 	IN Structure_view BEGIN
@@ -4825,6 +4902,9 @@ RULES
 	LineBreak: No;
 #ifdef PAGE
 	if NOT within Table
+#ifdef GRAPHML
+	   and NOT within XMLGraphics
+#endif
 	   Justify: Yes;
 #endif
 	Width: Enclosing . Width;
@@ -4848,6 +4928,9 @@ RULES
 	LineBreak: No;
 #ifdef PAGE
 	if NOT within Table
+#ifdef GRAPHML
+	   and NOT within XMLGraphics
+#endif
 	   Justify: Yes;
 #endif
 	Width: Enclosing . Width;

@@ -20,13 +20,11 @@
 #include "trans.h"
 
 #include "html2thot_f.h"
-#ifdef __STDC__
-extern boolean ElementNeedsPlaceholder (Element el);
-#else
-extern boolean ElementNeedsPlaceholder ();
-#endif
-
+#include "MathMLbuilder_f.h"
 #include "MathML.h"
+#ifdef GRAPHML
+#include "GraphML.h"
+#endif
 #ifndef _WINDOWS
 #include "Math.xpm"
 #include "math.xpm"
@@ -372,11 +370,10 @@ int                 construct;
       docSchema = TtaGetDocumentSSchema (doc);
 
       if (construct == 0 || construct == 1)
-	/* button Math or Display Math */
+	/* button Math or DisplayMath */
 	{
-	/* cannot create a Math element within a MathML element */
-	if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "MathML") != 0)
-	   /* not within a MathML element */
+	if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+	   /* selection is in an HTML element */
 	   {
            if (construct == 0)
               newType.ElTypeNum = HTML_EL_Math;
@@ -385,6 +382,16 @@ int                 construct;
            newType.ElSSchema = docSchema;
            TtaCreateElement (newType, doc);
 	   }
+#ifdef GRAPHML
+	if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "GraphML") == 0)
+	   /* selection is in a GraphML element */
+	   {
+           newType.ElTypeNum = GraphML_EL_Math;
+           newType.ElSSchema = elType.ElSSchema;
+	   TtaAskFirstCreation ();
+           TtaCreateElement (newType, doc);
+	   }
+#endif /* GRAPHML */
 	return;
 	}
 
@@ -713,9 +720,9 @@ int                 construct;
    CallbackMaths: manage Maths dialogue events.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CallbackMaths (int ref, int typedata, char *data)
+static void         CallbackMaths (int ref, int typedata, char *data)
 #else
-void                CallbackMaths (ref, typedata, data)
+static void         CallbackMaths (ref, typedata, data)
 int                 ref;
 int                 typedata;
 char               *data;
@@ -755,9 +762,9 @@ char               *data;
    CreateMaths creates the maths menus.           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CreateMaths (Document doc, View view)
+static void         CreateMaths (Document doc, View view)
 #else
-void                CreateMaths (doc, view)
+static void         CreateMaths (doc, view)
 Document            doc;
 View                view;
 #endif
@@ -767,7 +774,7 @@ View                view;
     {
       InitMaths = TRUE;
 
-      /* Dialogue form for answering text, user name and password */
+      /* Dialogue box for the Math palette */
       TtaNewSheet (MathsDialogue + FormMaths, TtaGetViewFrame (doc, view), 
 		   TtaGetMessage (AMAYA, AM_BUTTON_MATH),
 		   0, NULL, TRUE, 1, 'L', D_DONE);
@@ -1177,9 +1184,9 @@ static void MathSetAttributes (el, doc, selEl)
   else
      RemoveAttr (el, doc, MathML_ATTR_addspace);
   if (elType.ElTypeNum == MathML_EL_MI)
-     SetFontslantAttr (el, doc);
+     SetFontstyleAttr (el, doc);
   else
-     RemoveAttr (el, doc, MathML_ATTR_IntFontslant);		
+     RemoveAttr (el, doc, MathML_ATTR_IntFontstyle);		
 }
 
 /*----------------------------------------------------------------------

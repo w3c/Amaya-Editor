@@ -353,9 +353,19 @@ RULES
 	Create '</math>\12' After;	
 	END;
  MathML:
-        begin
 	Use MathMLT;	
-        end;
+#endif
+#ifdef GRAPHML
+ XMLGraphics: BEGIN
+	Create '<xmlgraphics';
+	Create Attributes;
+	Create '>\12';
+        indent +2;
+        indent -2 after;
+	Create '</xmlgraphics>\12' After;	
+	END;
+ GraphML:
+	Use GraphMLT;	
 #endif
 
  Paragraph: BEGIN

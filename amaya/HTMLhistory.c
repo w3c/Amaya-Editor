@@ -252,8 +252,9 @@ View                view;
 
    /* if the document has been edited, ask the user to confirm, except
       if it's simply a jump in the same document */
-   if (strcmp(DocumentURLs[doc], DocHistory[doc][prev].HistUrl))
-      if (!CanReplaceCurrentDocument (doc, view))
+   if (DocumentURLs[doc] != NULL)
+     if (strcmp(DocumentURLs[doc], DocHistory[doc][prev].HistUrl))
+       if (!CanReplaceCurrentDocument (doc, view))
          return;
 
    /* the current document must be put in the history if it's the last one */
@@ -386,8 +387,9 @@ View                view;
 
    /* if the document has been edited, ask the user to confirm, except
       if it's simply a jump in the same document */
-   if (strcmp(DocumentURLs[doc], DocHistory[doc][next].HistUrl))
-      if (!CanReplaceCurrentDocument (doc, view))
+   if (DocumentURLs[doc] != NULL)
+     if (strcmp(DocumentURLs[doc], DocHistory[doc][next].HistUrl))
+       if (!CanReplaceCurrentDocument (doc, view))
          return;
 
    /* set the Back button on if it's off */

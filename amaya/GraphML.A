@@ -1,0 +1,69 @@
+APPLICATION GraphML;
+
+DEFAULT
+   BEGIN
+   PRuleCreate.Post -> GraphicsPRuleChanged;
+   PRuleModify.Post -> GraphicsPRuleChanged;
+   END;
+
+ELEMENTS
+
+   GraphML:
+	ElemExport.Pre -> SetEmptyShapeAttribute;
+   Line_:
+	ElemGraphModify.Post -> ControlPointChanged;
+   Polyline:
+	ElemGraphModify.Post -> ControlPointChanged;
+   Polygon:
+	ElemGraphModify.Post -> ControlPointChanged;
+   Spline:
+	ElemGraphModify.Post -> ControlPointChanged;
+   ClosedSpline:
+	ElemGraphModify.Post -> ControlPointChanged;
+
+ATTRIBUTES
+
+   position:
+	AttrModify.Post -> AttrPositionChanged;
+   IntPosX:
+	AttrModify.Post -> AttrIntPosChanged;
+   IntPosY:
+        AttrModify.Post -> AttrIntPosChanged;
+   width_:
+	AttrModify.Post -> AttrWidthChanged;
+   height_:
+	AttrModify.Post -> AttrHeightChanged;
+   IntWidth:
+        AttrModify.Post -> AttrIntSizeChanged;
+   IntHeight:
+        AttrModify.Post -> AttrIntSizeChanged;
+   direction:
+	BEGIN
+	AttrModify.Post -> AttrDirectionModified;
+	AttrCreate.Post -> AttrDirectionModified;
+	AttrDelete.Post -> AttrDirectionModified;
+	END;
+   hspace:
+	BEGIN
+	AttrModify.Post -> AttrSpaceModified;
+	AttrCreate.Post -> AttrSpaceModified;
+	AttrDelete.Post -> AttrSpaceModified;
+	END;
+   vspace:
+	BEGIN
+	AttrModify.Post -> AttrSpaceModified;
+	AttrCreate.Post -> AttrSpaceModified;
+	AttrDelete.Post -> AttrSpaceModified;
+	END;
+   arrowhead:
+	BEGIN
+	AttrModify.Post -> AttrArrowHeadModified;
+	AttrCreate.Post -> AttrArrowHeadModified;
+	AttrDelete.Post -> AttrArrowHeadModified;
+	END;
+   points:
+	BEGIN
+	AttrDelete.Pre ->  DeleteAttrPoints;
+	AttrModify.Post -> AttrPointsModified;
+	END;
+END

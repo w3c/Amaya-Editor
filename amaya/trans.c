@@ -226,7 +226,7 @@ int                 depth;
    strcpy (tag, GITagNameByType (elemType));
    attr = NULL;
    TtaNextAttribute (elem, &attr);
-   if (strcmp (tag, "???") && strcmp (tag, "NONE") && (TtaGetFirstChild (elem) != NULL || attr != NULL || TtaIsLeaf (elemType)))
+   if (strcmp (tag, "???") && strcmp (tag, "none") && (TtaGetFirstChild (elem) != NULL || attr != NULL || TtaIsLeaf (elemType)))
      {
 	added = NewNode (tag);
 	added->Elem = elem;
@@ -909,7 +909,7 @@ Element *elem;
 	  prev = TtaGetParent (p);
 	  if (prev != NULL && ((strcmp (GITagName (prev), "???") == 0)
 			       ||
-			       (strcmp (GITagName (prev), "NONE") == 0)))
+			       (strcmp (GITagName (prev), "none") == 0)))
 	    TtaPreviousSibling (&prev);
 	  else
 	    prev = NULL;
@@ -1011,9 +1011,7 @@ Document            doc;
        printf("%s\n\n",bufHTML);
 #endif
 	TtaSetStructureChecking (0, doc);
-	InitializeParser (myFirstSelect, isClosed, doc);
-	HTMLparse (NULL, bufHTML);
-
+	ParseSubTree (bufHTML, myFirstSelect, isClosed, doc);
 	TtaSetStructureChecking (1, doc);
 	typeEl.ElSSchema = TtaGetDocumentSSchema (doc);
 	typeEl.ElTypeNum = HTML_EL_Invalid_element;
@@ -2166,7 +2164,7 @@ char               *prevtag;
       if (subTypes[0].ElTypeNum == tagElType.ElTypeNum)
 	result = TRUE;
       else if (!strcmp (GITagNameByType (subTypes[0]), "???") ||
-	       !strcmp (GITagNameByType (subTypes[0]), "NONE"))
+	       !strcmp (GITagNameByType (subTypes[0]), "none"))
 	/* search if tag can be inserted as a child of the identity */
 	result = IsValidHtmlChild (subTypes[0], tag, "");
 #ifdef MATHML
@@ -2181,7 +2179,7 @@ char               *prevtag;
       if (subTypes[0].ElTypeNum == tagElType.ElTypeNum)
 	result = TRUE;
       else if (!strcmp (GITagNameByType (subTypes[0]), "???") ||
-	       !strcmp (GITagNameByType (subTypes[0]), "NONE"))
+	       !strcmp (GITagNameByType (subTypes[0]), "none"))
 	result = IsValidHtmlChild (subTypes[0], tag, "");
       break;
 
@@ -2191,7 +2189,7 @@ char               *prevtag;
 	  if (subTypes[i].ElTypeNum == tagElType.ElTypeNum)
 	    result = TRUE;
 	  else if (!strcmp (GITagNameByType (subTypes[i]),"???") ||
-		   !strcmp (GITagNameByType (subTypes[i]), "NONE"))
+		   !strcmp (GITagNameByType (subTypes[i]), "none"))
 	    result = IsValidHtmlChild (subTypes[i], tag, "");
 	}
       break;
@@ -2206,7 +2204,7 @@ char               *prevtag;
 	  if (prevElType.ElTypeNum == subTypes[i].ElTypeNum)
 	    found = TRUE;
 	  else if (strcmp (GITagNameByType (subTypes[i]),"???") ||
-		   strcmp (GITagNameByType (subTypes[i]), "NONE"))
+		   strcmp (GITagNameByType (subTypes[i]), "none"))
 	    i = cardinal;
 	}
       if (found)
@@ -2216,11 +2214,11 @@ char               *prevtag;
 	      if (tagElType.ElTypeNum == subTypes[i].ElTypeNum)
 		result = TRUE;
 	      else if (!strcmp (GITagNameByType (subTypes[i]), "???") ||
-		       !strcmp (GITagNameByType (subTypes[i]), "NONE"))
+		       !strcmp (GITagNameByType (subTypes[i]), "none"))
 		result = IsValidHtmlChild (subTypes[i], tag, "");
 	      if (!result)
 		if (!strcmp (GITagNameByType (subTypes[i]), "???") ||
-		    !strcmp (GITagNameByType (subTypes[i]), "NONE") ||
+		    !strcmp (GITagNameByType (subTypes[i]), "none") ||
 		    TtaIsOptionalInAggregate(i,elemType)) 
 		  i++;
 		else
@@ -2234,7 +2232,7 @@ char               *prevtag;
 	  if (tagElType.ElTypeNum == subTypes[i].ElTypeNum)
 	    result = TRUE;
 	  else if (!strcmp (GITagNameByType (subTypes[i]), "???") ||
-		   !strcmp (GITagNameByType (subTypes[i]), "NONE"))
+		   !strcmp (GITagNameByType (subTypes[i]), "none"))
 	    result = IsValidHtmlChild (subTypes[i], tag, "");
 	  if (!result)
 	    if (TtaIsOptionalInAggregate(i,elemType)) 
@@ -2251,7 +2249,7 @@ char               *prevtag;
 	    if (tagElType.ElTypeNum == subTypes[0].ElTypeNum)
 	      result = TRUE;
 	    else if (!strcmp (GITagNameByType (subTypes[0]), "???") ||
-		     !strcmp (GITagNameByType (subTypes[0]), "NONE"))
+		     !strcmp (GITagNameByType (subTypes[0]), "none"))
 	    result = IsValidHtmlChild (subTypes[0], tag, "");
 	  }
       }
@@ -2430,19 +2428,9 @@ char               *data;
 	      if (elParent != NULL)
 		{
 		  TtaSetStructureChecking (0, TransDoc);
-#              ifdef MATHML
-		  CheckMathElement (elParent);
-#              endif /* MATHML */
+		  XMLElementComplete (elParent, TransDoc);
 		  TtaSetStructureChecking (1, TransDoc);
 		} 
-	    }
-	  else
-	    {
-	      /* checking the HTML thot tree */
-	      /***InitializeParser (TtaGetMainRoot (TransDoc), TRUE, TransDoc);
-	      TtaSetStructureChecking (0, TransDoc);
-	      CheckAbstractTree (NULL);
-	      TtaSetStructureChecking (1, TransDoc);****/
 	    }
 		   
 	  if (myLastSelect == NULL)
@@ -2641,7 +2629,7 @@ View                view;
 		  TtaPreviousSibling (&elemSelect);
 		  if (elemSelect != NULL)
 		    strcpy (tag, GITagNameByType (TtaGetElementType (elemSelect)));
-		  while (elemSelect != NULL && (!strcmp (tag, "???") || !strcmp (tag, "NONE")))
+		  while (elemSelect != NULL && (!strcmp (tag, "???") || !strcmp (tag, "none")))
 		    {
 		      TtaPreviousSibling (&elemSelect);
 		      if (elemSelect != NULL)

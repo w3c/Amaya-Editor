@@ -1131,9 +1131,9 @@ char                  *newURL;
 			 - buf gives the old image full name
 			 - imgname contains the image file name
 			 */
-DBG(fprintf(stderr, "     SRC from %s to %s\n", buf, url);)
 		       if (url[0] != EOS && buf[0] != EOS)
 			 {
+DBG(fprintf(stderr, "     SRC from %s to %s\n", buf, url);)
 			   if ((src_is_local) && (!dst_is_local))
 			     /* add the localfile to the images list */
 			     AddLocalImage (buf, imgname, tempname, SavingDocument, &pImage);

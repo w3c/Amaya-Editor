@@ -60,7 +60,7 @@
 59 Neu
 60 CSS
 61 Speichern überschreibt die folgenden URL:
-62 Speichern der URL fehlerhaft: 
+62 Speichern der URL fehlerhaft
 63 Speichern auf Festplatte?
 64 Grafiken speichern
 65 Absolute Verknüpfungszieladressen
@@ -132,10 +132,11 @@
 131 Wiederholung y
 132 keine Wiederholung
 133 Amaya - ein Editor/Browser für das Web
-134 entwickelt vom W3C als Testclient (http://www.w3.org/)
-135 Formeln
-136 URL länger als %s Zeichen werden zur Zeit nicht unterstützt
-137 CSS-Fehler: %s
-138 Nur Standardtyp erlaubt
-139 Aktualisierung der Verknüpfung : %s%% erfolgreich
-140 Nichts zu speichern
+134 entwickelt vom W3C (http://www.w3.org/)
+135 URL länger als %s Zeichen werden zur Zeit nicht unterstützt
+136 CSS-Fehler: %s
+137 Nur Standardtyp erlaubt
+138 Aktualisierung der Verknüpfung : %s%% erfolgreich
+139 Nichts zu speichern
+140 Formeln
+141 Graphics

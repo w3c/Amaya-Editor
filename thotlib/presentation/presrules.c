@@ -1965,7 +1965,7 @@ boolean            *appl;
 		  }
 	  }
 	else
-	   /* on n'a pas found le pave de reference */
+	   /* on n'a pas trouve' le pave' de reference */
 	   if (pAbb1->AbLeafType != LtCompound
 	       && !(pPosRule->PoRelation == RlNext
 		    || pPosRule->PoRelation == RlPrevious
@@ -2018,7 +2018,7 @@ boolean            *appl;
 	     *appl = TRUE;
 	  }
 	else
-	   /* on n'a pas found' le pave' de reference */
+	   /* on n'a pas trouv' le pave' de reference */
 	   /* si c'est un positionnement par rapport au precedent ou au */
 	   /* suivant, on positionne le pave par rapport a l'englobant */
 	   if (pAbb1->AbEnclosing != NULL &&
@@ -2036,7 +2036,7 @@ boolean            *appl;
 	   /* c'est une regle de positionnement vertical en dessous du
 	      precedent et on n'a pas trouve' le precedent. On remplace par
 	      un positionnement en haut de l'englobant */
-	  {
+	     {
 	     PPos->PosAbRef = pAbb1->AbEnclosing;
 	     PPos->PosEdge = pPosRule->PoPosDef;
 	     PPos->PosRefEdge = pPosRule->PoPosDef;
@@ -2063,7 +2063,19 @@ boolean            *appl;
 	     if (PPos->PosUserSpecified)
 		PPos->PosUserSpecified = CheckPPosUser (pAbb1, pDoc);
 	     pAbb1->AbVertEnclosing = TRUE;
-	  }
+	     }
+           else
+             /* position flottante, equivalente a une regle VertPos=NULL ou
+                HorizPos=NULL */
+             {
+	     PPos->PosEdge = NoEdge;
+             PPos->PosRefEdge = NoEdge;
+             PPos->PosDistance = 0;
+             PPos->PosUnit = UnRelative;
+             PPos->PosAbRef = NULL;
+             PPos->PosUserSpecified = FALSE;
+	     *appl = FALSE;
+             }
      }
 }
 

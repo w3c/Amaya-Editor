@@ -3217,6 +3217,18 @@ PtrDocument         pDoc;
 			/* cherche la 1ere regle de presentation associee a ce type */
 			/* d'element */
 			SearchPresSchema (pAb->AbElement, &pSchP, &index, &pSchS);
+/*********/
+			if (pSchS != NULL && pSchS != pAb->AbElement->ElStructSchema)
+			   /* il s'agit de l'element racine d'une nature qui
+			   utilise le schema de presentation de son englobant*/
+			   if (pDoc->DocView[pAb->AbDocView - 1].DvSSchema !=
+					 pDoc->DocSSchema)
+			      {
+			      pSchS = pAb->AbElement->ElStructSchema;
+			      pSchP = pSchS->SsPSchema;
+			      index = pAb->AbElement->ElTypeNumber;
+			      }
+/*********/
 			pRule = pSchP->PsElemPRule[index - 1];
 
 			/* traite les regles de creation associees au type de l'element */
@@ -5144,7 +5156,7 @@ boolean            *complete;
    PtrAbstractBox      pAbb, pAbbChild, pNewAbbox, pAbbReturn, pAbbPres;
    PtrAbstractBox      pPRP, pAbbParentAssoc;
    PtrAbstractBox      pAb1;
-   PtrSSchema          pSchS;
+   PtrSSchema          pSchS, savePSS;
    PtrAttribute        pAttr;
    PtrPRule            queuePR[MAX_QUEUE_LEN];
    PtrAbstractBox      queuePP[MAX_QUEUE_LEN];
@@ -5233,6 +5245,26 @@ boolean            *complete;
 	   /* cherche le schema de presentation a appliquer */
 	  {
 	     SearchPresSchema (pEl, &pSchP, &index, &pSchS);
+/*********/
+	     if (pSchS != NULL && pSchS != pEl->ElStructSchema)
+	        /* il s'agit de l'element racine d'une nature qui utilise le
+		   schema de presentation de son englobant */
+	        if (pDoc->DocView[viewNb - 1].DvSSchema == pDoc->DocSSchema)
+		   {
+		   /* il faut utiliser le schema de presentation de
+		   l'environnement englobant. On reevalue la vue a appliquer */
+		   savePSS = pEl->ElStructSchema;
+		   pEl->ElStructSchema = pSchS;
+		   viewSch = AppliedView (pEl, NULL, pDoc, viewNb);
+		   pEl->ElStructSchema = savePSS;
+		   }
+		else
+		   {
+		   pSchS = pEl->ElStructSchema;
+		   pSchP = pSchS->SsPSchema;
+		   index = pEl->ElTypeNumber;
+		   }
+/*********/
 	     /* pRSpec: premiere regle de presentation specifique. */
 	     pRSpec = pSchP->PsElemPRule[index - 1];
 	     /* premiere regle de presentation par defaut */

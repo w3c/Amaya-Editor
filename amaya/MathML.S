@@ -16,7 +16,9 @@ CONST
 
 STRUCT
 
-   MathML =	MROW;
+   MathML = MROW + (XMLcomment);
+
+   XMLcomment = LIST OF (XMLcomment_line = TEXT);
 
    MROW = LIST OF (Construct);
 
@@ -83,8 +85,8 @@ STRUCT
 						MSuperscript;
 						END);
 			END;
-		  MI (ATTR fontslant = plain, italic;
-			   IntFontslant = IntPlain, IntItalic) = TEXT;
+		  MI (ATTR fontstyle = normal, italic;
+			   IntFontstyle = IntNormal, IntItalic) = TEXT;
 		  MN = TEXT;
 		  MO (ATTR fence = true, false;
 			   vertstretch;
@@ -102,7 +104,7 @@ STRUCT
 
 EXCEPT
 
-   MathML:		Hidden;
+   MathML:		Hidden, NoMove, NoResize;
    Construct:		Hidden;
    Index:		Hidden;
    RootBase:		Hidden, NoCut;
@@ -130,7 +132,7 @@ EXCEPT
    Invalid_attribute:	Invisible;
    Ghost_restruct:	Invisible;
    placeholder:   	Invisible;
-   IntFontslant:	Invisible;
+   IntFontstyle:	Invisible;
    addspace:	  	Invisible;
    entity:	  	Invisible;
    horizstretch:  	Invisible;

@@ -1453,6 +1453,10 @@ PRule               pRule;
       case PtHeight:
 	value = ((PtrPRule) pRule)->PrDimRule.DrValue;
 	break;
+      case PtVertPos:
+      case PtHorizPos:
+	value = ((PtrPRule) pRule)->PrPosRule.PoDistance;
+	break;
       default:
 	TtaError (ERR_invalid_parameter);
 	break;

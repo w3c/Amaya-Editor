@@ -176,6 +176,9 @@ extern char LostPicturePath [512];
 #ifdef MATHML
 #include "Mathedit_f.h"
 #endif /* MATHML */
+#ifdef GRAPHML
+#include "Graphedit_f.h"
+#endif /* GRAPHML */
 #include "HTMLactions_f.h"
 #include "HTMLbook_f.h"
 #include "HTMLedit_f.h"
@@ -996,6 +999,12 @@ char               *pathname;
 	   if (TtaIsViewOpened (doc, structView))
 	      TtaCloseView (doc, structView);
 #endif /* MATHML */
+#ifdef GRAPHML
+	structView = TtaGetViewFromName (doc, "Graph_Structure_view");
+	if (structView != 0)
+	   if (TtaIsViewOpened (doc, structView))
+	      TtaCloseView (doc, structView);
+#endif /* GRAPHML */
         /* close the Links view if it is open */
 	linksView = TtaGetViewFromName (doc, "Links_view");
 	if (linksView != 0)
@@ -1154,6 +1163,9 @@ char               *pathname;
 #ifdef MATHML
 	     AddMathButton (doc, 1);
 #endif /* MATHML */
+#ifdef GRAPHML
+	     AddGraphicsButton (doc, 1);
+#endif /* GRAPHML */
 	     TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA, AM_LOCATION), TRUE,
 			     TextURL);
 	     TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA, AM_TITLE), TRUE,
@@ -1487,6 +1499,9 @@ View                view;
 #ifdef MATHML
    View                mathView;
 #endif /* MATHML */
+#ifdef GRAPHML
+   View                graphView;
+#endif /* GRAPHML */
    int                 x, y, w, h;
 
    structView = TtaGetViewFromName (document, "Structure_view");
@@ -1514,6 +1529,21 @@ View                view;
 	 }
      }
 #endif /* MATHML */
+#ifdef GRAPHML
+   graphView = TtaGetViewFromName (document, "Graph_Structure_view");
+   if (graphView != 0 && TtaIsViewOpened (document, graphView))
+     TtaRaiseView (document, graphView);
+   else
+     {
+       TtaGetViewGeometry (document, "Graph_Structure_view", &x, &y, &w, &h);
+       graphView = TtaOpenView (document, "Graph_Structure_view", x, y, w, h);
+       if (graphView != 0)
+	 {
+	   TtcSwitchButtonBar (document, graphView);
+	   TtcSwitchCommands (document, graphView);
+	 }
+     }
+#endif /* GRAPHML */
 }
 
 /*----------------------------------------------------------------------
@@ -1686,6 +1716,9 @@ NotifyDialog       *event;
 #ifdef MATHML
    View          mathView;
 #endif /* MATHML */
+#ifdef GRAPHML
+   View          graphView;
+#endif /* GRAPHML */
 
    view = event->view;
    document = event->document;
@@ -1696,6 +1729,9 @@ NotifyDialog       *event;
 #ifdef MATHML
    mathView = TtaGetViewFromName (document, "Math_Structure_view");
 #endif /* MATHML */
+#ifdef GRAPHML
+   graphView = TtaGetViewFromName (document, "Graph_Structure_view");
+#endif /* GRAPHML */
    if (view != 1)
      /* let Thot perform normal operation */
      return FALSE;
@@ -1718,6 +1754,10 @@ NotifyDialog       *event;
    if (mathView != 0 && TtaIsViewOpened (document, mathView))
      TtaCloseView (document, mathView);
 #endif /* MATHML */
+#ifdef GRAPHML
+   if (graphView != 0 && TtaIsViewOpened (document, graphView))
+     TtaCloseView (document, graphView);
+#endif /* GRAPHML */
    /* let Thot perform normal operation */
    return FALSE;
 }
@@ -2766,6 +2806,9 @@ NotifyEvent        *event;
 #ifdef MATHML
    InitMathML ();
 # endif /* MATHML */
+#ifdef GRAPHML
+   InitGraphML ();
+# endif /* GRAPHML */
 
    TargetName = NULL;
    /* initialize temporary directory for loaded files */
