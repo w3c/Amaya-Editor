@@ -19,7 +19,6 @@ STRUCT
 
    XML =
        BEGIN
-	? DOCTYPE = LIST OF (DOCTYPE_line = TEXT);
 	LIST OF (XML_Gen); 
        END + (XMLcomment, XMLPI);
 	
@@ -32,6 +31,8 @@ STRUCT
    XMLcomment = LIST OF (XMLcomment_line = TEXT);
 
    XMLPI = LIST OF (XMLPI_line = TEXT);
+	
+   DOCTYPE = LIST OF (DOCTYPE_line = TEXT);
 
 EXCEPT
 

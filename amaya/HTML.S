@@ -51,9 +51,8 @@ STRUCT
 	HEAD;
       ? BODY;	{ only one of BODY, document type }
       ? FRAMESET;
-      ? DOCTYPE = LIST OF (DOCTYPE_line = TEXT);
 	END + (Invalid_element, Unknown_namespace, Comment\240, XMLPI);
-
+	
   BODY								{ BODY }
      (ATTR onload = Text; onunload = Text;
 	 { onload         onunload }
@@ -72,6 +71,8 @@ STRUCT
   Comment\240 = LIST OF (Comment_line = TEXT);
 
   XMLPI = LIST OF (PI_line = TEXT);
+
+  DOCTYPE = LIST OF (DOCTYPE_line = TEXT);
 	
   Head_misc =
 	CASE OF

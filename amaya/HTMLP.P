@@ -4381,8 +4381,6 @@ RULES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
-		Font: COMMENT_Font;
-		Style: COMMENT_Style; Weight: COMMENT_Weight;
 		Width: Enclosing . Width;
 		END;
 	END;
