@@ -1719,11 +1719,17 @@ void InitConfirm3L (Document document, View view, char *label1, char *label2,
    /* open as many label widgets as \n we find in the label */
    if (label1 && *label1 != EOS)
      TtaNewLabel (BaseDialog + Label1, BaseDialog + ConfirmForm, label1);
+   else
+     TtaNewLabel (BaseDialog + Label1, BaseDialog + ConfirmForm, "");
    /* open as many label widgets as \n we find in the label */
    if (label2 && *label2 != EOS)
      TtaNewLabel (BaseDialog + Label2, BaseDialog + ConfirmForm, label2);
+   else
+     TtaNewLabel (BaseDialog + Label2, BaseDialog + ConfirmForm, "");
    if (label3 && *label3  != EOS)
      TtaNewLabel (BaseDialog + Label3, BaseDialog + ConfirmForm, label3);
+   else
+     TtaNewLabel (BaseDialog + Label3, BaseDialog + ConfirmForm, "");
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseDialog + ConfirmForm, FALSE);
    /* wait for an answer */
