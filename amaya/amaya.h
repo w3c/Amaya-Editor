@@ -391,14 +391,3 @@ THOT_EXPORT LoadedImageDesc *ImageLocal;
 #endif /* !_I18N_ */
 
 #endif /* AMAYA_H */
-
-
-
-
-
-
-
-
-
-
-

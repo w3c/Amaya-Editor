@@ -44,8 +44,8 @@
 #include "styleparser_f.h"
 
 #ifdef ANNOTATIONS
-#include "annot.h"
-#endif
+#include "ANNOTevent_f.h"
+#endif /* ANNOTATIONS */
 
 #ifdef _WINDOWS
 #include "wininclude.h"

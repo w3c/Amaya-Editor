@@ -18,6 +18,10 @@
 #include "css.h"
 #include "undo.h"
 
+#ifdef ANNOTATIONS
+#include "ANNOTevent_f.h"
+#endif /* ANNOTATIONS */
+
 #ifdef _WINDOWS
 #include "wininclude.h"
 #endif /* _WINDOWS */

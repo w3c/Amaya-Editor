@@ -76,6 +76,10 @@
 #include "Java.xpm"
 #endif /* AMAYA_JAVA */
 
+#ifdef ANNOTATIONS
+#include "ANNOTevent_f.h"
+#endif /* ANNOTATIONS */
+
 #ifdef _WINDOWS
 /*
 #ifndef __GNUC__
@@ -2392,7 +2396,7 @@ ThotBool	    history;
 #ifdef ANNOTATIONS
       /* auto-load the annotations associated with the document */
       if (!plainText)
-	ANNOT_AutoLoad (newdoc);
+	ANNOT_AutoLoad (newdoc, 1);
 #endif /* ANNOTATIONS */
     }
   TtaFreeMemory (tempdocument);

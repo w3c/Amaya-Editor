@@ -12,7 +12,8 @@ include ../Options
 INCLUDES= -DHAVE_CONFIG_H $(AMAYA_INCLUDES) $(X_FLAGS)
 XMLIB   = -lXm
 LIBS	=  $(LIBWWW_LIBS) $(AMAYA_JAVA_LIBS) $(AMAYA_PLUGIN_LIBS) \
-	  $(AMAYA_MATH_LIBS) $(AMAYA_GRAPH_LIBS) $(AMAYA_ILU_LIBS) \
+	  $(AMAYA_MATH_LIBS) $(AMAYA_GRAPH_LIBS) $(AMAYA_ANNOT_LIBS) \
+	  $(AMAYA_ILU_LIBS) \
           -L../tablelib -L../thotlib -L.. -lThotTable -lThotEditor \
           $(AMAYA_OPTION_EXTRA_LIBS) $(IMGLIBS) \
 	  $(MOTIF_LIBRARIES) $(XMLIB) $(X_LIBS) -lXt $(X_PRE_LIBS) \
@@ -363,7 +364,8 @@ html2piv: ../bin/html2piv
 	$(CC) $(LDFLAGS) -DSTANDALONE $(AMAYA_INCLUDES) $(INCLUDES) -o ../bin/html2piv  @srcdir@/html2thot.c $(HTML2THOT_LIBS)
 	@$(ECHO) "====>" html2piv is done
 
-install : all ../bin/print $(AMAYA_JAVA_INSTALL) $(AMAYA_PLUGIN_INSTALL)
+install : all ../bin/print $(AMAYA_JAVA_INSTALL) $(AMAYA_PLUGIN_INSTALL) \
+		$(AMAYA_ANNOT_INSTALL)
 	@(if test ! -d $(prefix) ; then $(MKDIR) $(prefix) ; fi)
 	@(if test ! -d $(prefix)/Amaya ; then $(MKDIR) $(prefix)/Amaya ; fi)
 	@(if test ! -d $(prefix)/Amaya/amaya ; then $(MKDIR) $(prefix)/Amaya/amaya ; fi)
@@ -396,7 +398,8 @@ install : all ../bin/print $(AMAYA_JAVA_INSTALL) $(AMAYA_PLUGIN_INSTALL)
 	    $(INSTALL_DATA) $$file $(prefix)/Amaya/fonts ; \
 	  done ; done)
 
-uninstall : $(AMAYA_JAVA_UNINSTALL) $(AMAYA_PLUGIN_UNINSTALL)
+uninstall : $(AMAYA_JAVA_UNINSTALL) $(AMAYA_PLUGIN_UNINSTALL) \
+		$(AMAYA_ANNOT_UNINSTALL) \
 	$(RM) -rf $(prefix)/thot
 	$(RM) -rf $(prefix)/Amaya
 	$(RM) $(bindir)/amaya
