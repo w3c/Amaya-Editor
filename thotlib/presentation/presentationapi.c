@@ -307,8 +307,11 @@ void NewPosition (PtrAbstractBox pAb, int X, int xref, int Y, int yref,
 	      /* send the event message to the application */
 	      doitV = !PRuleMessagePre (pEl, pRuleV, dy, pDoc, isNew);
 	      if (doitV || isNew)
+		  {
 		/* store the new value in the specific rule */
 		pRuleV->PrPosRule.PoDistance = dy;
+		  pRuleV->PrPosRule.PoDistUnit = unit;
+		  }
 	    }
 	   
 	  if (doitV)
@@ -454,8 +457,11 @@ void NewPosition (PtrAbstractBox pAb, int X, int xref, int Y, int yref,
 	      /* send the event message to the application */
 	      doitH = !PRuleMessagePre (pEl, pRuleH, dx, pDoc, isNew);
 	      if (doitH || isNew)
+		  {
 		/* store the new value in the specific rule */
 		pRuleH->PrPosRule.PoDistance = dx;
+		  pRuleH->PrPosRule.PoDistUnit = unit;
+		  }
 	    }
 	  if (doitH)
 	    {
@@ -716,7 +722,10 @@ void NewDimension (PtrAbstractBox pAb, int width, int height, int frame,
 		{
 		  /* store the new value in the specific rule */
 		  if (isDimH)
+		  {
 		    pRuleH->PrDimRule.DrValue = dx;
+		    pRuleH->PrDimRule.DrUnit = unit;
+		  }
 		  else
 		    pRuleH->PrDimRule.DrPosRule.PoDistance = dx;		  
 		}
@@ -887,7 +896,10 @@ void NewDimension (PtrAbstractBox pAb, int width, int height, int frame,
 		 {
 		   /* store the new value in the specific rule */
 		   if (isDimV)
+		   {
 		     pRuleV->PrDimRule.DrValue = dy;
+		    pRuleV->PrDimRule.DrUnit = unit;
+		   }
 		   else
 		     pRuleV->PrDimRule.DrPosRule.PoDistance = dy;
 		 }
