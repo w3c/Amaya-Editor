@@ -79,7 +79,6 @@ Shift Ctrl <Key>O , Shift Ctrl <Key>E:      TtcInsertChar("&#338;")
 Alt <Key>e:                                 TtcInsertChar("&#8364;")
 
 #File menu 
-Shift Ctrl <Key>N:                 ChangeTitle()
 Ctrl <Key>x , Ctrl <Key>f:         OpenDoc() 
 Ctrl <Key>x , Ctrl <Key>o:         OpenDocInNewWindow() 
 Ctrl <Key>x , Ctrl <Key>b:         NewXHTMLBasic() 
@@ -115,6 +114,7 @@ Ctrl <Key>t , Ctrl <Key>x:         TransformType()
 Ctrl <Key>u , Ctrl <Key>s:         SpellCheck()
  
 #Types 
+Ctrl <Key>t , Ctrl <Key>n:         ChangeTitle()
 Shift <Key>Return:                 CreateParagraph() 
 Ctrl <Key>t , Ctrl <Key>w:         CreatePreformatted() 
 Ctrl <Key>t , Ctrl <Key>i:         CreateImage() 
