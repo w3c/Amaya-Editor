@@ -142,13 +142,7 @@ extern int   WIN_NormalLineSpacing;
    return the first ancestor of element pEl that has a Line presentation
    rule for the active view.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static PtrElement   GetEnclosingBlock (PtrElement pEl, PtrDocument pDoc)
-#else  /* __STDC__ */
-static PtrElement   GetEnclosingBlock (pEl, pDoc)
-PtrElement          pEl;
-PtrDocument	    pDoc;
-#endif /* __STDC__ */
 {
   PtrElement	pBlock;
   int		viewSch;
@@ -176,28 +170,14 @@ PtrDocument	    pDoc;
   ModifyGraphics applique a l'element pEl les modifications sur	
   les graphiques demandes par l'utilisateur.		
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ModifyGraphics (PtrElement pEl, PtrDocument pDoc, int viewToApply, ThotBool modifLineStyle, char LineStyle, ThotBool modifLineWeight, int LineWeight, TypeUnit LineWeightUnit, ThotBool modifFillPattern, int FillPattern, ThotBool modifColorBackground, int ColorBackground, ThotBool modifLineColor, int LineColor)
-
-#else  /* __STDC__ */
-static void         ModifyGraphics (pEl, pDoc, viewToApply, modifLineStyle, LineStyle, modifLineWeight, LineWeight, LineWeightUnit, modifFillPattern, FillPattern, modifColorBackground, ColorBackground, modifLineColor, LineColor)
-PtrElement          pEl;
-PtrDocument         pDoc;
-int                 viewToApply;
-ThotBool            modifLineStyle;
-char                LineStyle;
-ThotBool            modifLineWeight;
-int                 LineWeight;
-TypeUnit            LineWeightUnit;
-ThotBool            modifFillPattern;
-int                 FillPattern;
-ThotBool            modifColorBackground;
-int                 ColorBackground;
-ThotBool            modifLineColor;
-int                 LineColor;
-
-#endif /* __STDC__ */
-
+static void         ModifyGraphics (PtrElement pEl, PtrDocument pDoc,
+				    int viewToApply, ThotBool modifLineStyle,
+				    char LineStyle, ThotBool modifLineWeight,
+				    int LineWeight, TypeUnit LineWeightUnit,
+				    ThotBool modifFillPattern, int FillPattern,
+				    ThotBool modifColorBackground,
+				    int ColorBackground,
+				    ThotBool modifLineColor, int LineColor)
 {
   TypeUnit            unit;
   PtrPRule            pPRule, pFunctRule;
@@ -393,13 +373,7 @@ int                 LineColor;
   de fond ou de trace' (selon Background) pour tous les elements de la	
   selection courante.						
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         ModifyColor (int colorNum, ThotBool Background)
-#else  /* __STDC__ */
-void         ModifyColor (colorNum, Background)
-int          colorNum;
-ThotBool     Background;
-#endif /* __STDC__ */
 {
    PtrDocument         SelDoc;
    PtrElement          pElFirstSel, pElLastSel, pEl;
@@ -533,29 +507,13 @@ ThotBool     Background;
   ModifyChar applique a l'element pEl les modifications sur	
   les caracteres demandes par l'utilisateur.		
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ModifyChar (PtrElement pEl, PtrDocument pDoc, int viewToApply, ThotBool modifFamily, char family, ThotBool modifStyle, int charStyle, ThotBool modifWeight, int charWeight, ThotBool modifsize, int size, ThotBool modifUnderline, int underline, ThotBool modifUlWeight, int weightUnderline)
-
-#else  /* __STDC__ */
-static void         ModifyChar (pEl, pDoc, viewToApply, modifFamily, family, modifStyle, charStyle, modifWeight, charWeight, modifsize, size, modifUnderline, underline, modifUlWeight, weightUnderline)
-PtrElement          pEl;
-PtrDocument         pDoc;
-int                 viewToApply;
-ThotBool            modifFamily;
-char                family;
-ThotBool            modifStyle;
-int                 charStyle;
-ThotBool	    modifWeight;
-int		    charWeight;
-ThotBool            modifsize;
-int                 size;
-ThotBool            modifUnderline;
-int                 underline;
-ThotBool            modifUlWeight;
-int                 weightUnderline;
-
-#endif /* __STDC__ */
-
+static void  ModifyChar (PtrElement pEl, PtrDocument pDoc, int viewToApply,
+			 ThotBool modifFamily, char family,
+			 ThotBool modifStyle, int charStyle,
+			 ThotBool modifWeight, int charWeight,
+			 ThotBool modifsize, int size,
+			 ThotBool modifUnderline, int underline,
+			 ThotBool modifUlWeight, int weightUnderline)
 {
    ThotBool            isNew;
    PtrPRule            pPRule;
@@ -905,12 +863,7 @@ static void         ModifyLining (PtrElement pEl, PtrDocument pDoc, int viewToAp
    of the Characters form, the Format form, the Graphics form, or the
    Standard Geometry entry of the Present menu.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         ApplyPresentMod (int applyDomain)
-#else  /* __STDC__ */
-static void         ApplyPresentMod (applyDomain)
-int                 applyDomain;
-#endif /* __STDC__ */
 {
   PtrElement          pEl, pFirstSel, pLastSel, pElem, pBlock, pPrevBlock,
                       pElNext;
@@ -1069,26 +1022,14 @@ int                 applyDomain;
 	  /* coupe les elements du debut et de la fin de la selection */
 	  /* s'ils sont partiellement selectionnes */
 	  if (firstChar > 1 || lastChar > 0)
-	     IsolateSelection (pSelDoc, &pFirstSel, &pLastSel, &firstChar, &lastChar, TRUE);
+	     IsolateSelection (pSelDoc, &pFirstSel, &pLastSel, &firstChar,
+			       &lastChar, TRUE);
 	if (!addPresRule)
 	   /* only changes to standard presentation */
 	   {
-	   /* set selection to the highest level elements having the same
-	      content */
 	     if (ThotLocalActions[T_selectsiblings] != NULL)
-	       (*ThotLocalActions[T_selectsiblings]) (&pFirstSel, &pLastSel, &firstChar, &lastChar);
-	     if (firstChar == 0 && lastChar == 0)
-	       if (pFirstSel->ElPrevious == NULL && pLastSel->ElNext == NULL)
-		 if (pFirstSel->ElParent != NULL &&
-		     pFirstSel->ElParent == pLastSel->ElParent)
-		   {
-		   pFirstSel = pFirstSel->ElParent;
-		   while (pFirstSel->ElPrevious == NULL &&
-			  pFirstSel->ElNext == NULL &&
-			  pFirstSel->ElParent != NULL)
-		     pFirstSel = pFirstSel->ElParent;
-		   pLastSel = pFirstSel;
-		   }
+	       (*ThotLocalActions[T_selectsiblings]) (&pFirstSel, &pLastSel,
+						      &firstChar, &lastChar);
 	   }
 	
 	/* evalue les difference entre le pave traite' et les demandes
@@ -1425,13 +1366,7 @@ int                 applyDomain;
    handles the return of the Standard Geometry entry of the Present
    menu.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtcStandardGeometry (Document document, View view)
-#else  /* __STDC__ */
-void                TtcStandardGeometry (document, view)
-Document            document;
-View                view;
-#endif /* __STDC__ */
 {
   PtrElement          pEl, pFirstSel, pLastSel;
   PtrDocument         pSelDoc;
@@ -1440,7 +1375,8 @@ View                view;
 
   /* just to avoid deadlocks */
   TtaHandlePendingEvents ();
-  selectionOK = GetCurrentSelection (&pSelDoc, &pFirstSel, &pLastSel, &firstChar, &lastChar);
+  selectionOK = GetCurrentSelection (&pSelDoc, &pFirstSel,
+				     &pLastSel, &firstChar, &lastChar);
   if (selectionOK && pSelDoc != NULL)
     if (pSelDoc->DocSSchema != NULL)
       /* il y a bien une selection et le document selectionne' n'a pas */
@@ -1451,7 +1387,8 @@ View                view;
 	/* set selection to the highest level elements having the same
 	   content */
 	if (ThotLocalActions[T_selectsiblings] != NULL)
-	  (*ThotLocalActions[T_selectsiblings]) (&pFirstSel, &pLastSel, &firstChar, &lastChar);
+	  (*ThotLocalActions[T_selectsiblings]) (&pFirstSel, &pLastSel,
+						 &firstChar, &lastChar);
 	if (firstChar == 0 && lastChar == 0)
 	  if (pFirstSel->ElPrevious == NULL && pLastSel->ElNext == NULL)
 	    if (pFirstSel->ElParent != NULL &&
@@ -1490,13 +1427,7 @@ View                view;
    handles the return of the Standard Presentation entry of the Present
    menu.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtcStandardPresentation (Document document, View view)
-#else  /* __STDC__ */
-void                TtcStandardPresentation (document, view)
-Document            document;
-View                view;
-#endif /* __STDC__ */
 {
 #ifndef _WINDOWS
    int                 i;
@@ -1541,14 +1472,7 @@ View                view;
    CallbackStdPresMenu
    callback handler for the Standard Presentation popup menu.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CallbackStdPresMenu (int ref, int val)
-#else  /* __STDC__ */
-void                CallbackStdPresMenu (ref, val)
-int                 ref;
-int                 val;
-
-#endif /* __STDC__ */
 {
   switch (ref)
     {
@@ -1618,14 +1542,7 @@ int                 val;
    CallbackPresMenu
    callback handler for the Presentation forms.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CallbackPresMenu (int ref, int val, STRING txt)
-#else  /* __STDC__ */
-void                CallbackPresMenu (ref, val, txt)
-int                 ref;
-int                 val;
-STRING              txt;
-#endif /* __STDC__ */
 {
   char                c;
   int                 i;
@@ -1969,14 +1886,7 @@ STRING              txt;
    associated to view number "view" (if Assoc = True).
    Initializes and activates the corresponding form.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtcChangeCharacters (Document document, View view)
-#else  /* __STDC__ */
-void                TtcChangeCharacters (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    PtrDocument         pSelDoc;
    PtrDocument         pDoc;
@@ -2193,14 +2103,7 @@ View                view;
   associated to view number "view" (if Assoc = True).  Initializes
   and activates the corresponding form.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtcChangeGraphics (Document document, View view)
-#else  /* __STDC__ */
-void                TtcChangeGraphics (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    PtrDocument         pSelDoc;
    PtrDocument         pDoc;
@@ -2349,14 +2252,7 @@ View                view;
    associated to view number "view" (if Assoc = True).  Initializes
    and activates the corresponding form.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtcChangeFormat (Document document, View view)
-#else  /* __STDC__ */
-void                TtcChangeFormat (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    PtrDocument         pSelDoc;
    PtrDocument         pDoc;
