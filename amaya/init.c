@@ -4266,12 +4266,14 @@ void Reload (Document doc, View view)
    int		       position;
    int		       distance;
 
+   /* if it is a source document, reload its corresponding document */
+   if (DocumentTypes[doc] == docSource)
+     doc = GetDocFromSource (doc);
+
    if (DocumentURLs[doc] == NULL)
       /* the document has not been loaded yet */
       return;
-   if (DocumentTypes[doc] == docSource)
-      /* don't reload a source document */
-      return;
+
    /* abort all current exchanges concerning this document */
    StopTransfer (doc, 1);
    if (!CanReplaceCurrentDocument (doc, view))
