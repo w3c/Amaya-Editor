@@ -2192,6 +2192,11 @@ LPARAM lParam;
       
       
       CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
+	  CheckDlgButton (hwnDlg, IDC_IGNORE1, BST_CHECKED);
+	  CheckDlgButton (hwnDlg, IDC_IGNORE2, BST_CHECKED);
+	  CheckDlgButton (hwnDlg, IDC_IGNORE3, BST_CHECKED);
+	  CheckDlgButton (hwnDlg, IDC_IGNORE4, BST_CHECKED);
+
       SetDlgItemInt (hwnDlg, IDC_EDITPROPOSALS, 3, FALSE);
       SetDlgItemText (hwnDlg, IDC_EDITIGNORE, currentRejectedchars);
       iLocation = 2;
@@ -3954,13 +3959,19 @@ int   chkrSpecial;
   ChkrFormCorrect = chkrFormCorrect;
   ChkrMenuIgnore  = chkrMenuIgnore;
   ChkrCaptureNC   = chkrCaptureNC;
-  
+  ChkrSpecial     = chkrSpecial;
+
   ustrcpy (currentLabel, label);
   ustrcpy (currentRejectedchars, rejectedChars); 
-  if (SpellChecker)
- 	SetFocus (SpellChecker);
-  else 
-    DialogBox (hInstance, MAKEINTRESOURCE (SPELLCHECKDIALOG), NULL, (DLGPROC) SpellCheckDlgProc);
+  /* to have the same behavior as under Unix, we need to destroy the
+     dialog if it already existed */
+  if (SpellChecker) 
+  {
+    EndDialog (SpellChecker, ID_DONE);
+	SpellChecker = NULL;
+	hwndLanguage = NULL;
+  }
+  DialogBox (hInstance, MAKEINTRESOURCE (SPELLCHECKDIALOG), NULL, (DLGPROC) SpellCheckDlgProc);
 }
 
 /*-----------------------------------------------------------------------
