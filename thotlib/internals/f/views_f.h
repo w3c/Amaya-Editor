@@ -57,7 +57,7 @@ extern void BuildViewList ( PtrDocument pDoc,
                             char *buffer,
                             int *nItems );
 extern void CloseView ( PtrDocument pDoc,
-                        int view,
+                        int viewNb,
                         boolean assoc );
 
 #else /* __STDC__ */
@@ -113,7 +113,7 @@ extern void BuildViewList (/* PtrDocument pDoc,
                               char *buffer,
                               int *nItems */);
 extern void CloseView (/* PtrDocument pDoc,
-                          int view,
+                          int viewNb,
                           boolean assoc */);
 
 #endif /* __STDC__ */

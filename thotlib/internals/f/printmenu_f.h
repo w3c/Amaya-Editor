@@ -6,11 +6,15 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void InitPrintParameters (PtrDocument pDoc);
+extern void InitPrintParameters ( PtrDocument pDoc );
 extern void TtcPrint ( Document document,
                        View view );
 extern void TtaPrint ( Document document,
                        char* viewNames );
+extern void TtaSetPrintExportFunc ( Func exportFunc );
+extern void TtaSetPrintParameter ( PrintParameter parameter,
+                                   int value );
+extern void TtaSetPrintCommand ( char *command );
 extern void CallbackPrintmenu ( int ref,
                                 int val,
                                 char *txt );
@@ -24,6 +28,10 @@ extern void TtcPrint (/* Document document,
                          View view */);
 extern void TtaPrint (/* Document document,
                          char* viewNames */);
+extern void TtaSetPrintExportFunc (/* Func exportFunc */);
+extern void TtaSetPrintParameter (/* PrintParameter parameter,
+                                     int value */);
+extern void TtaSetPrintCommand (/* char *command */);
 extern void CallbackPrintmenu (/* int ref,
                                   int val,
                                   char *txt */);

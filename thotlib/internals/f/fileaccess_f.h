@@ -50,7 +50,7 @@ extern void FindCompleteName ( char *fileName,
                                PathBuffer directory,
                                PathBuffer completeName,
                                int *length );
-extern void GetDocIdent ( DocumentIdentifier * Ident,
+extern void GetDocIdent ( DocumentIdentifier *Ident,
                           Name docName );
 extern void GetDocName ( DocumentIdentifier Ident,
                          Name docName );
@@ -106,7 +106,7 @@ extern void FindCompleteName (/* char *fileName,
                                  PathBuffer directory,
                                  PathBuffer completeName,
                                  int *length */);
-extern void GetDocIdent (/* DocumentIdentifier * Ident,
+extern void GetDocIdent (/* DocumentIdentifier *Ident,
                             Name docName */);
 extern void GetDocName (/* DocumentIdentifier Ident,
                            Name docName */);

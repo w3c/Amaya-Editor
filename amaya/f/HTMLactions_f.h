@@ -10,6 +10,7 @@ extern boolean DoubleClick ( NotifyElement * event );
 extern void DocumentClosed ( NotifyDialog * event );
 extern void UpdateContextSensitiveMenus ( Document doc );
 extern void SelectionChanged ( NotifyElement * event );
+extern boolean ElemToTransform ( NotifyOnElementType * event );
 extern void CreateAnchor ( Document doc,
                            View view,
                            boolean createLink );
@@ -25,6 +26,7 @@ extern boolean DoubleClick (/* NotifyElement * event */);
 extern void DocumentClosed (/* NotifyDialog * event */);
 extern void UpdateContextSensitiveMenus (/* Document doc */);
 extern void SelectionChanged (/* NotifyElement * event */);
+extern boolean ElemToTransform (/* NotifyOnElementType * event */);
 extern void CreateAnchor (/* Document doc,
                              View view,
                              boolean createLink */);

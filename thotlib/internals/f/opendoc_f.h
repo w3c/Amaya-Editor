@@ -9,6 +9,9 @@
 extern void BuildPathDocBuffer ( char *bufDir,
                                  char separator,
                                  int *nbItems );
+extern int SearchStringInBuffer ( char *buffer,
+                                  char *s,
+                                  int nbStr );
 extern void BuildSchPresNameMenu ( PtrSSchema pSchStr,
                                    Name name );
 extern void CallbackSchPresNameMenu ( int ref,
@@ -28,6 +31,9 @@ extern void TtcOpenDocument ( Document document,
 extern void BuildPathDocBuffer (/* char *bufDir,
                                    char separator,
                                    int *nbItems */);
+extern int SearchStringInBuffer (/* char *buffer,
+                                    char *s,
+                                    int nbStr */);
 extern void BuildSchPresNameMenu (/* PtrSSchema pSchStr,
                                      Name name */);
 extern void CallbackSchPresNameMenu (/* int ref,

@@ -21,6 +21,7 @@
 #include "dialog.h"
 #include "appdialogue.h"
 #include "view.h"
+#include "print.h"
 #undef EXPORT
 #define EXPORT extern
 #include "print_tv.h"

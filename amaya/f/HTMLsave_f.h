@@ -21,10 +21,6 @@ extern int SaveDocumentThroughNet ( Document document,
 extern void SaveDocument ( Document document,
                            View view );
 extern boolean DocumentToSave ( NotifyDialog * event );
-extern void CreateNewImagePaths ( char *DocUrl,
-                                  char *OldPath,
-                                  char *NewUrl,
-                                  char *NewPath );
 extern void DoSaveAs ( void );
 extern void InitSaveObjectForm ( Document document,
                                  View view,
@@ -49,10 +45,6 @@ extern int SaveDocumentThroughNet (/* Document document,
 extern void SaveDocument (/* Document document,
                              View view */);
 extern boolean DocumentToSave (/* NotifyDialog * event */);
-extern void CreateNewImagePaths (/* char *DocUrl,
-                                    char *OldPath,
-                                    char *NewUrl,
-                                    char *NewPath */);
 extern void DoSaveAs (/* void */);
 extern void InitSaveObjectForm (/* Document document,
                                    View view,

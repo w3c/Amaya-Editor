@@ -6,7 +6,305 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern Pixmap TtaCreatePixmapLogo ( char **data );
+extern void ConfigTranslateSSchema ( PtrSSchema pSS );
+extern void RedisplayCopies ( void );
+extern void DrawAjAttr ( void );
+extern void DrawChar ( unsigned char car,
+                       int frame,
+                       int x,
+                       int y,
+                       ptrfont font,
+                       int RO,
+                       int active,
+                       int fg );
+extern void DrawSupprAttr ( PtrAttribute pAttr,
+                            PtrElement pEl );
+extern void AttachAttrWithValue ( PtrElement pEl,
+                                  PtrDocument pDoc,
+                                  PtrAttribute pNewAttr );
+extern boolean IsASavedElement ( PtrElement pEl );
+extern boolean LinkReference ( void );
+extern void NewPosition ( PtrAbstractBox pAb,
+                          int DeltaX,
+                          int DeltaY,
+                          int frame,
+                          boolean Disp );
+extern void NewDimension ( PtrAbstractBox pAb,
+                           int DeltaX,
+                           int DeltaY,
+                           int frame,
+                           boolean Disp );
+extern boolean BothHaveNoSpecRules ( PtrElement pEl1,
+                                     PtrElement pEl2 );
+extern void ModPresent ( boolean OnlyChars );
+extern void ShowBox ( int frame,
+                      PtrBox boite,
+                      int position,
+                      int pourcent );
+extern int IdentDocument ( PtrDocument pDoc );
+extern boolean CallEventType ( int *notifyEvent,
+                               boolean pre );
+extern boolean CallEventAttribute ( NotifyAttribute * notifyAttr,
+                                    boolean pre );
+extern void CloseParagraphInsertion ( PtrAbstractBox pAb,
+                                      int frame );
+extern int CopyXClipboard ( unsigned char **buffer );
+extern void UpdateScrollbars ( int frame );
+extern void ChangeFrameTitle ( int frame,
+                               char *texte );
+extern void DefineClipping ( int frame,
+                             int orgx,
+                             int orgy,
+                             int *xd,
+                             int *yd,
+                             int *xf,
+                             int *yf );
+extern void RemoveClipping ( int frame );
+extern void SetCursorWatch ( int thotWindowid );
+extern void ResetCursorWatch ( int thotWindowid );
+extern void InsertOption ( PtrElement pEl,
+                           PtrElement * p,
+                           PtrDocument pDoc );
+extern void ShowSelection ( PtrAbstractBox PavRac,
+                            boolean Visible );
+extern void SwitchSelection ( int frame,
+                              boolean Allume );
+extern PtrElement NextInSelection ( PtrElement pEl,
+                                    PtrElement PcLast );
+extern void AddInSelection ( PtrElement pEl,
+                             boolean dernier );
+extern void ClearViewSelection ( int frame );
+extern void TtaClearViewSelections ( void );
+extern void SelectElement ( PtrDocument pDoc,
+                            PtrElement pEl,
+                            boolean Debut,
+                            boolean Controle );
+extern void ComputeViewSelMarks ( ViewSelection * marque );
+extern void HighlightSelection ( boolean DebVisible );
+extern void CancelSelection ( void );
+extern void MergeAndSelect ( PtrDocument SelDoc,
+                             PtrElement PremSel,
+                             PtrElement DerSel,
+                             int premcar,
+                             int dercar );
+extern void SetNewSelectionStatus ( int frame,
+                                    PtrAbstractBox pAb,
+                                    boolean Etat );
+extern void DirectCreation ( PtrBox pBox,
+                             int frame );
+extern boolean IsAbstractBoxDisplayed ( PtrAbstractBox pav,
+                                        int frame );
+extern void Clear ( int frame,
+                    int larg,
+                    int haut,
+                    int x,
+                    int y );
+extern boolean ConfigGetPSchemaNature ( PtrSSchema pSS,
+                                        char *nomNature,
+                                        char *presNature );
+extern boolean ConfigDefaultPSchema ( char *schema,
+                                      char *schpres );
+extern void UserGeometryMove ( int frame,
+                               int *x,
+                               int *y,
+                               int large,
+                               int haut,
+                               int xr,
+                               int yr,
+                               int xmin,
+                               int xmax,
+                               int ymin,
+                               int ymax,
+                               int xm,
+                               int ym );
+extern void UserGeometryResize ( int frame,
+                                 int x,
+                                 int y,
+                                 int *large,
+                                 int *haut,
+                                 int xr,
+                                 int yr,
+                                 int xmin,
+                                 int xmax,
+                                 int ymin,
+                                 int ymax,
+                                 int xm,
+                                 int ym );
+extern void UserGeometryCreate ( int frame,
+                                 int *x,
+                                 int *y,
+                                 int xr,
+                                 int yr,
+                                 int *large,
+                                 int *haut,
+                                 int xmin,
+                                 int xmax,
+                                 int ymin,
+                                 int ymax,
+                                 int PosX,
+                                 int PosY,
+                                 int DimX,
+                                 int DimY );
+extern void PolyLineModification ( int frame,
+                                   int x,
+                                   int y,
+                                   PtrTextBuffer Pbuffer,
+                                   PtrTextBuffer Bbuffer,
+                                   int nbpoints,
+                                   int point,
+                                   boolean close );
+
 #else /* __STDC__ */
+
+extern Pixmap TtaCreatePixmapLogo (/* char **data */);
+extern void ConfigTranslateSSchema (/* PtrSSchema pSS */);
+extern void RedisplayCopies (/* void */);
+extern void DrawAjAttr (/* void */);
+extern void DrawChar (/* unsigned char car,
+                         int frame,
+                         int x,
+                         int y,
+                         ptrfont font,
+                         int RO,
+                         int active,
+                         int fg */);
+extern void DrawSupprAttr (/* PtrAttribute pAttr,
+                              PtrElement pEl */);
+extern void AttachAttrWithValue (/* PtrElement pEl,
+                                    PtrDocument pDoc,
+                                    PtrAttribute pNewAttr */);
+extern boolean IsASavedElement (/* PtrElement pEl */);
+extern boolean LinkReference (/* void */);
+extern void NewPosition (/* PtrAbstractBox pAb,
+                            int DeltaX,
+                            int DeltaY,
+                            int frame,
+                            boolean Disp */);
+extern void NewDimension (/* PtrAbstractBox pAb,
+                             int DeltaX,
+                             int DeltaY,
+                             int frame,
+                             boolean Disp */);
+extern boolean BothHaveNoSpecRules (/* PtrElement pEl1,
+                                       PtrElement pEl2 */);
+extern void ModPresent (/* boolean OnlyChars */);
+extern void ShowBox (/* int frame,
+                        PtrBox boite,
+                        int position,
+                        int pourcent */);
+extern int IdentDocument (/* PtrDocument pDoc */);
+extern boolean CallEventType (/* int *notifyEvent,
+                                 boolean pre */);
+extern boolean CallEventAttribute (/* NotifyAttribute * notifyAttr,
+                                      boolean pre */);
+extern void CloseParagraphInsertion (/* PtrAbstractBox pAb,
+                                        int frame */);
+extern int CopyXClipboard (/* unsigned char **buffer */);
+extern void UpdateScrollbars (/* int frame */);
+extern void ChangeFrameTitle (/* int frame,
+                                 char *texte */);
+extern void DefineClipping (/* int frame,
+                               int orgx,
+                               int orgy,
+                               int *xd,
+                               int *yd,
+                               int *xf,
+                               int *yf */);
+extern void RemoveClipping (/* int frame */);
+extern void SetCursorWatch (/* int thotWindowid */);
+extern void ResetCursorWatch (/* int thotWindowid */);
+extern void InsertOption (/* PtrElement pEl,
+                             PtrElement * p,
+                             PtrDocument pDoc */);
+extern void ShowSelection (/* PtrAbstractBox PavRac,
+                              boolean Visible */);
+extern void SwitchSelection (/* int frame,
+                                boolean Allume */);
+extern PtrElement NextInSelection (/* PtrElement pEl,
+                                      PtrElement PcLast */);
+extern void AddInSelection (/* PtrElement pEl,
+                               boolean dernier */);
+extern void ClearViewSelection (/* int frame */);
+extern void TtaClearViewSelections (/* void */);
+extern void SelectElement (/* PtrDocument pDoc,
+                              PtrElement pEl,
+                              boolean Debut,
+                              boolean Controle */);
+extern void ComputeViewSelMarks (/* ViewSelection * marque */);
+extern void HighlightSelection (/* boolean DebVisible */);
+extern void CancelSelection (/* void */);
+extern void MergeAndSelect (/* PtrDocument SelDoc,
+                               PtrElement PremSel,
+                               PtrElement DerSel,
+                               int premcar,
+                               int dercar */);
+extern void SetNewSelectionStatus (/* int frame,
+                                      PtrAbstractBox pAb,
+                                      boolean Etat */);
+extern void DirectCreation (/* PtrBox pBox,
+                               int frame */);
+extern boolean IsAbstractBoxDisplayed (/* PtrAbstractBox pav,
+                                          int frame */);
+extern void Clear (/* int frame,
+                      int larg,
+                      int haut,
+                      int x,
+                      int y */);
+extern boolean ConfigGetPSchemaNature (/* PtrSSchema pSS,
+                                          char *nomNature,
+                                          char *presNature */);
+extern boolean ConfigDefaultPSchema (/* char *schema,
+                                        char *schpres */);
+extern void UserGeometryMove (/* int frame,
+                                 int *x,
+                                 int *y,
+                                 int large,
+                                 int haut,
+                                 int xr,
+                                 int yr,
+                                 int xmin,
+                                 int xmax,
+                                 int ymin,
+                                 int ymax,
+                                 int xm,
+                                 int ym */);
+extern void UserGeometryResize (/* int frame,
+                                   int x,
+                                   int y,
+                                   int *large,
+                                   int *haut,
+                                   int xr,
+                                   int yr,
+                                   int xmin,
+                                   int xmax,
+                                   int ymin,
+                                   int ymax,
+                                   int xm,
+                                   int ym */);
+extern void UserGeometryCreate (/* int frame,
+                                   int *x,
+                                   int *y,
+                                   int xr,
+                                   int yr,
+                                   int *large,
+                                   int *haut,
+                                   int xmin,
+                                   int xmax,
+                                   int ymin,
+                                   int ymax,
+                                   int PosX,
+                                   int PosY,
+                                   int DimX,
+                                   int DimY */);
+extern void PolyLineModification (/* int frame,
+                                     int x,
+                                     int y,
+                                     PtrTextBuffer Pbuffer,
+                                     PtrTextBuffer Bbuffer,
+                                     int nbpoints,
+                                     int point,
+                                     boolean close */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

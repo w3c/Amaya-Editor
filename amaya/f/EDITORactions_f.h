@@ -76,6 +76,8 @@ extern void CreateHeadingCell ( Document document,
                                 View view );
 extern Element GetEnclosingForm ( Document document,
                                   View view );
+extern void CreateForm ( Document document,
+                         View view );
 extern void CreateToggle ( Document document,
                            View view );
 extern void CreateRadio ( Document document,
@@ -183,6 +185,8 @@ extern void CreateHeadingCell (/* Document document,
                                   View view */);
 extern Element GetEnclosingForm (/* Document document,
                                     View view */);
+extern void CreateForm (/* Document document,
+                           View view */);
 extern void CreateToggle (/* Document document,
                              View view */);
 extern void CreateRadio (/* Document document,

@@ -34,6 +34,11 @@ extern void PrintOnePage ( PtrDocument pDoc,
 extern void ClientSend ( ThotWindow clientWindow,
                          char *name,
                          int messageID );
+extern void DisplayConfirmMessage ( char *text );
+extern void DisplayMessage ( char *text,
+                             int msgType );
+extern void TtaError ( int errorCode );
+extern void CloseInsertion ( void );
 extern void main ( int argc,
                    char **argv );
 
@@ -67,6 +72,11 @@ extern void PrintOnePage (/* PtrDocument pDoc,
 extern void ClientSend (/* ThotWindow clientWindow,
                            char *name,
                            int messageID */);
+extern void DisplayConfirmMessage (/* char *text */);
+extern void DisplayMessage (/* char *text,
+                               int msgType */);
+extern void TtaError (/* int errorCode */);
+extern void CloseInsertion (/* void */);
 extern void main (/* int argc,
                      char **argv */);
 

@@ -78,6 +78,8 @@ extern int TtaGetCardinalOfType ( ElementType elementType );
 extern void TtaGiveConstructorsOfType ( ElementType **typesArray,
                                         int *size,
                                         ElementType elementType );
+extern int TtaGetRankInAggregate ( ElementType componentType,
+                                   ElementType aggregateType );
 extern boolean TtaIsOptionalInAggregate ( int rank,
                                           ElementType elementType );
 extern Construct TtaGetConstruct ( Element element );
@@ -186,6 +188,8 @@ extern int TtaGetCardinalOfType (/* ElementType elementType */);
 extern void TtaGiveConstructorsOfType (/* ElementType **typesArray,
                                           int *size,
                                           ElementType elementType */);
+extern int TtaGetRankInAggregate (/* ElementType componentType,
+                                     ElementType aggregateType */);
 extern boolean TtaIsOptionalInAggregate (/* int rank,
                                             ElementType elementType */);
 extern Construct TtaGetConstruct (/* Element element */);

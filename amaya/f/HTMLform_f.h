@@ -14,7 +14,7 @@ extern void SelectCheckbox ( Document doc,
                              Element el );
 extern void SelectOneRadio ( Document doc,
                              Element el );
-extern boolean FrameToSelect ( NotifyElement * event );
+extern boolean SelectIncludedText ( NotifyElement * event );
 extern void SelectOneOption ( Document doc,
                               Element el );
 
@@ -28,7 +28,7 @@ extern void SelectCheckbox (/* Document doc,
                                Element el */);
 extern void SelectOneRadio (/* Document doc,
                                Element el */);
-extern boolean FrameToSelect (/* NotifyElement * event */);
+extern boolean SelectIncludedText (/* NotifyElement * event */);
 extern void SelectOneOption (/* Document doc,
                                 Element el */);
 
