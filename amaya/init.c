@@ -788,9 +788,6 @@ void ResetStop (Document document)
 		TtaSetStatus (document, 1,
 			      TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
 	      TtaChangeButton (document, 1, iStop, stopN, FALSE);
-#ifdef _GL
-	      TtaPlay (document, 1);
-#endif /* _GL */
 	    }
 	  DocNetworkStatus[document] = AMAYA_NET_INACTIVE;
 	}
@@ -4801,7 +4798,16 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
 	 }
 
        if (ok && !stopped_flag)
-	 ResetStop(newdoc);
+	 {
+	   ResetStop (newdoc);
+#ifdef _GL
+	   if (FilesLoading[newdoc] == 0 &&
+	       TtaGetViewFrame (newdoc, 1) != 0)
+	     /* all files included in this document have been loaded and the
+		document is displayed. Animations can be played now */
+	     TtaPlay (newdoc, 1);
+#endif /* _GL */
+	 }
      }
 
    /* select the target if present */

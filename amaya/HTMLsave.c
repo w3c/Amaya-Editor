@@ -1154,6 +1154,13 @@ void RestartParser (Document doc, char *localFile,
   ActiveTransfer (doc);
   FetchAndDisplayImages (doc, AMAYA_LOAD_IMAGE, NULL);
   ResetStop (doc);
+#ifdef _GL
+  if (FilesLoading[doc] == 0 &&
+      TtaGetViewFrame (doc, 1) != 0)
+    /* all files included in this document have been loaded and the
+       document is displayed. Animations can be played now */
+    TtaPlay (doc, 1);
+#endif /* _GL */
 
   /* check parsing errors */
   CheckParsingErrors (doc);

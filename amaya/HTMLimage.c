@@ -531,12 +531,14 @@ static void SetAttrOnElement ( Document doc, Element el, int attrNum, int value 
   attr = TtaGetAttribute (el, attrType);
   if (attr == NULL)
     {
-    /* the el element does not have that attribute. Create it */
+    /* the element does not have that attribute. Create it */
       attr = TtaNewAttribute (attrType);
+      TtaSetAttributeValue (attr, value, el, doc);
       TtaAttachAttribute (el, attr, doc);
     }
-  /* force he attr value */
-  TtaSetAttributeValue (attr, value, el, doc);
+  else
+    /* changee the attribute value */
+    TtaSetAttributeValue (attr, value, el, doc);
 
   if (!docModified)
     {
@@ -908,6 +910,13 @@ static void libWWWImageLoaded (int doc, int status, char *urlName,
       /* an image of the document is now loaded */
       /* update the stop button status */
       ResetStop (doc);
+#ifdef _GL
+      if (FilesLoading[doc] == 0 &&
+	  TtaGetViewFrame (doc, 1) != 0)
+	/* all files included in this document have been loaded and the
+	   document is displayed. Animations can be played now */
+	TtaPlay (doc, 1);
+#endif /* _GL */
       
       /* rename the local file of the image */
       HandleImageLoaded (doc, status, urlName, outputfile, http_headers,
