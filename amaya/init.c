@@ -2740,11 +2740,6 @@ View                view;
    if (DocumentMeta[doc]->method == CE_TEMPLATE)
       ReloadTemplateParams (&(DocumentURLs[doc]), &(DocumentMeta[doc]->method));
    NormalizeURL (DocumentURLs[doc], 0, pathname, documentname, NULL);
-   if (DocumentMeta[doc]->form_data)
-     form_data = TtaWCSdup (DocumentMeta[doc]->form_data);
-   else
-     form_data = NULL;
-   method = DocumentMeta[doc]->method;
 
    if (!IsW3Path (pathname) && !TtaFileExist (pathname))
      {
@@ -2754,6 +2749,12 @@ View                view;
        /* cannot reload this document */
        return;
      }
+
+   if (DocumentMeta[doc]->form_data)
+     form_data = TtaWCSdup (DocumentMeta[doc]->form_data);
+   else
+     form_data = NULL;
+   method = DocumentMeta[doc]->method;
 
    /* get the current position in the document */
    position = RelativePosition (doc, &distance);
