@@ -3799,7 +3799,10 @@ STRING path_name;
 	            DocumentTypes[SavingDocument] != docMath &&
 	            DocumentTypes[SavingDocument] != docSVG);
   ustrcpy (currentPathName, path_name);
-  DialogBox (hInstance, MAKEINTRESOURCE (SAVEASDIALOG), parent, (DLGPROC) SaveAsDlgProc);
+  if (HTMLFormat)
+    DialogBox (hInstance, MAKEINTRESOURCE (SAVEASDIALOG), parent, (DLGPROC) SaveAsDlgProc);
+  else
+    DialogBox (hInstance, MAKEINTRESOURCE (SAVEASDIALOG1), parent, (DLGPROC) SaveAsDlgProc);
 }
 
 /*-----------------------------------------------------------------------

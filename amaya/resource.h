@@ -247,6 +247,7 @@
 #define INITCONFIRM3LDIALOG1            543
 #define ANNOTFILTERMENU                 544
 #define MAKEIDMENU                      545
+#define SAVEASDIALOG1                   546
 #define ID_CONFIRM                      1000
 #define ID_DONE                         1001
 #define IDC_URLEDIT                     1002
