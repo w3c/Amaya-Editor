@@ -13,7 +13,11 @@ Extensions 2.3:
 * Shortcuts Control Up, Control Down, Control Left, Control Right allow one
   to scroll smoothly the window in the four directions when the scroll is
   possible.
- 
+
+* libwww:
+  It's now possible to say that the proxy should ONLY be used with
+  a given list of domains.
+
 Fixed bugs 2.3:
 ---------------
 
