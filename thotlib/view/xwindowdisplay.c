@@ -40,7 +40,6 @@ static ThotColorStruct  cwhite;
 static ThotPoint   *points;	/* control points for curbs */
 static int          npoints;
 static int          MAX_points;
-static int i;
 
 typedef struct stack_point
   {
@@ -1602,7 +1601,7 @@ int                 arrow;
 
 {
    ThotPoint          *points;
-   int                 i, j, k;
+   int                 i, j;
    PtrTextBuffer       adbuff;
 
    if (thick == 0)
