@@ -755,6 +755,8 @@ if test "$with_annot" = "" ; then
     else
 	with_annot="yes"
     fi
+else
+    with_annot="yes"
 fi
 
 
@@ -765,8 +767,10 @@ if test "$with_raptor" = "" ; then
     if test "$enable_raptor" = "no" ; then
 	with_raptor="no"
     else
-	with_raptor"yes"
+	with_raptor="yes"
     fi
+else
+    with_raptor="yes"
 fi
 
 dnl
