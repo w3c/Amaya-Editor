@@ -1,256 +1,256 @@
-i! file MathML.trans : structure transformation for MathML
-! see HTML.trans for a description of Trans language
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! fichero MathML.trans.es: transformación de estructuras para MathML
+! ver HTML.trans.es para la descripción del lenguaje Trans
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-! WARNING : transformations do NOT work with Multiscript elements
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! NOTA: las transformaciones no funcionan con elementos multiscript
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-!!! mrow transformations
+!!! transformaciones mrow
 
-!surround an element with a mrow
-surrounding row: *;
+! Incluir un elemento en mrow
+Incluir en mrow: *;
         {
         * > mrow:*;
         }
 
-!surround a sequence of elements with a mrow
-surrounding row: *,*+;
+! Incluir una secuencia de elementos en mrow
+Incluir en mrow: *,*+;
         {
         * > mrow:*;
         }
 
-! remove a mrow level
-remove row: mrow{*+};
+! Eliminar un nivel de mrow
+Eliminar mrow: mrow{*+};
         {
         * > :*;
         }
 
-!!! mstyle transformations
+!!! Transformaciones mstyle
 
-!surround an element with a mstyle
-surrounding mstyle: *;
+! Incluir un elemento en mstyle
+Incluir en mstyle: *;
         {
         * > mstyle:*;
         }
 
-!surround a sequence of elements with a mstyle
-surrounding mstyle: *,*+;
+! Incluir una secuencia de elementos en mstyle
+Incluir en mstyle: *,*+;
         {
         * > mstyle:*;
         }
 
-! remove a mstyle level
-remove mstyle: mstyle{*+};
+! Eliminar un nivel de mstyle
+Eliminar mstyle: mstyle{*+};
         {
         * > :*;
         }
 
-!!! Root Transformations
+!!! Transformaciones de raíz (root)
 
-!surround an element with a root
-surrounding root : *;
+! Incluir un elemento en raíz
+Incluir en raís : *;
 	{
 	* > mroot:*;
 	* > mroot:none % ;
 	}
 
-!surround a sequence of elements with a root
-surrounding root: *+,last:*;
+! Incluir una secuencia de elementos en raíz (root)
+Incluir en raíz: *+,last:*;
         {
         * > mroot.mrow:*;
 	last > mroot.mrow:*;
 	last > mroot:none % ;
         }
 
-!remove a root
-remove root: mroot{base:*,? index:*};
+! Eliminar raíz
+Eliminar raíz: mroot{base:*,? index:*};
         {
         base > :*;
 	index / ;
         }
 
 
-!!! Square Root Transformations
+!!! Transformaciones de raíz cuadrada
 
-!surround an element with a square root
-surrounding square root: *;
+! Incluir un elemento en raíz cuadrada
+Incluir en raíz cuadrada: *;
         {
         * > msqrt:*;
         }
 
 
-!surround a sequence of elements with a square root
-surrounding square root: *,*+;
+! Incluir una secuencia de elementos en raíz cuadrada
+Incluir en raíz cuadrada: *,*+;
         {
         * > msqrt.mrow:*;
         }
 
-!remove a square root
-remove square root: msqrt{*};
+! Eliminar raíz cuadrada
+Eliminar raíz cuadrada: msqrt{*};
         {
         * > :*;
         }
 
-!transform a square root into a root
-root with index: msqrt{*};
+! Transformar una raíz cuadrada en raíz 
+raíz con índice: msqrt{*};
 	{
 	* > mroot:*;
 	* > mroot:none %;
 	}
 
-!transform a square root into a menclose
+! Transformar una raíz cuadrada en menclose
 menclose: msqrt{*};
 	{
 	* > menclose:*;
 	}
 
-!!! menclose Transformations
+!!! Tranformaciones de menclose
 
-!surround an element with a menclose
-surrounding menclose: *;
+! Incluir un elemento en menclose
+Incluir en menclose: *;
         {
         * > menclose:*;
         }
 
 
-!surround a sequence of elements with a menclose
-surrounding menclose: *,*+;
+! Incluir una secuencia de elementos en menclose
+Incluir en menclose: *,*+;
         {
         * > menclose:*;
         }
 
-!remove a menclose
-remove menclose: menclose{*};
+! Eliminar menclose
+Eliminar menclose: menclose{*};
         {
         * > :*;
         }
 
-!transform a menclose into a square root
-square root: menclose{*};
+! Transformar menclose en raíz cuadrada
+Raíz cuadrada: menclose{*};
 	{
 	* > msqrt:*;
 	}
 
-!!! Fraction transformations
+!!! Transformaciones de fracción
 
-!transform 2 elements into a fraction
-fraction: (num:*,den:*) | mrow{num:*,den:*};
+! Transformar 2 elementos en una fracción
+Fracción: (num:*,den:*) | mrow{num:*,den:*};
         {
         num > mfrac:*;
         den > mfrac:*;
         }
 
-!transform an  element into a numerator
-numerator: *;
+! Transformar un elemento en numerador
+Numerador: *;
         {
         * > mfrac:*;
         * > mfrac:none %;
         }
 
-!transform an sequence of elements into a numerator
-numerator: ?*+,last:*;
+! Transformar una secuencia de elementos en numerador
+Numerador: ?*+,last:*;
         {
         * > mfrac.mrow:*;
 	last > mfrac.mrow:*;
         last > mfrac:none %;
         }
 
-!transform an element into a denominator
-denominator: *;
+! Transformar un elemento en denominador
+Denominador: *;
         {
         * > mfrac:none %;
         * > mfrac:*;
         }
 
-!transform an sequence of elements into a denominator
-denominator: first:*,?*+;
+! Transformar una secuencia de elementos en denominador
+Denominador: first:*,?*+;
         {
         first > mfrac:none %;
 	first > mfrac.mrow:*;
         * > mfrac.mrow:*;
         }
 
-!remove a fraction
-remove fraction: mfrac{?(num:*),?(den:*)};
+! Eliminar una fracción
+Eliminar fracción: mfrac{?(num:*),?(den:*)};
         {
         num > :*;
         den > :*;
         }
 
 
-!!! Sub and Sup Transformations
+!!! Trasnformaciones de Sub y Sup
 
-!surroud an element with a subsup
-add sub and sup:*;
+! Incluir elemento en subsup
+Incluir en subsup:*;
 	{
 	* > msubsup:*;
 	* > msubsup:none%;
 	* > msubsup:none;
 	}
 
-!removes a subsup
-remove subsup: msubsup{base:*,?sub:*,?sup:*};
+! Eliminar subsup
+Eliminar subsup: msubsup{base:*,?sub:*,?sup:*};
 	{
 	base > :*;
 	sub /;
 	sup /;
 	}
 
-!removes a superscript
-remove superscript: msubsup{base:*,?sub:*,?sup:*};
+! Eliminar superscript
+Eliminar superscript: msubsup{base:*,?sub:*,?sup:*};
 	{
 	msubsup > msub;
 	sup /;
 	}
 
-!removes a subscript
-remove subscript: msubsup{base:*,?sub:*,?sup:*};
+! Eliminar subscript
+Eliminar subscript: msubsup{base:*,?sub:*,?sup:*};
 	{
 	msubsup > msup;
 	sub /;
 	}
 
-!surroud element with a sub
-add subscript:*;
+! Incluir elemento en sub
+Incluir en subscript:*;
 	{
 	* > msub:*;
 	* > msub:none %;
 	}
 
-!removes a subscript
-remove subscript: msub{base:*,?sub:*};
+! Eliminar subscript
+Eliminar subscript: msub{base:*,?sub:*};
 	{
 	base > :*;
 	sub /;
 	}
 
-!surroud an element with a sup
-add superscript:*;
+! Incluir elemento en sup
+Incluir en superscript:*;
 	{
 	* > msup:*;
 	* > msup:none %;
 	}
 
-!removes a superscript
-remove superscript: msup{base:*,?sup:*};
+! Eliminar superscript
+Eliminar superscript: msup{base:*,?sup:*};
 	{
 	base > :*;
 	sup /;
 	}
 
-!change msub into msup
+! Transformar msub en msup
 superscript:msub;
 	{
 	msub > msup;
 	}
 
-!change msup into msub
+! Transformar msup en msub
 subscript:msup;
 	{
 	msup > msub;
 	}
 
-!change msub or msup into msubsup
+! Transformar msub o msup en msubsup
 subsup:msub{base:*,sub:*} | msup{base:*,sup:*};
 	{
 	base > msubsup:*;
@@ -260,80 +260,80 @@ subsup:msub{base:*,sub:*} | msup{base:*,sup:*};
 	sub > msubsup:none;
 	}
 
-!change msubsup into munderover
-change into munderover: msubsup{base:*,sub:*,sup:*};
+! Transformar msubsup en munderover
+munderover: msubsup{base:*,sub:*,sup:*};
   {
   base > munderover:*;
   sub > munderover:*;
   sup > munderover:*;
   }
 
-!!! Under and Over transformations
+!!! Transformaciones Under y Over
 
-!surroud an element with a underover
-add under and over:*;
+! Incluir un elemento en underover
+Incluir en underover:*;
 	{
 	* > munderover:*;
 	* > munderover:none %;
 	* > munderover:none;
 	}
 
-! remove an underover
-remove under and over:munderover{base:*,?under:*,?over:*};
+! Eliminar underover
+Eliminar underover:munderover{base:*,?under:*,?over:*};
 	{
 	base > :*;
 	under /;
 	over /;
 	}
  
-!surroud an element with a over
-add over:*;
+! Incluir un elemento en over
+Incluir en over:*;
 	{
 	* > mover:*;
 	* > mover:none %;
 	}
 
-! remove an over
-remove under and over:mover{base:*,?over:*};
+! Eliminar over
+Eliminar over:mover{base:*,?over:*};
 	{
 	base > :*;
 	over /;
 	}
  
-!surroud an element with a under
-add under:*;
+! Incluir un elemento en under
+Incluir en under:*;
 	{
 	* > munder:*;
 	* > munder:none;
 	}
 
-! remove an under
-remove under:munder{base:*,?under:*};
+! Eliminar under
+Eliminar under:munder{base:*,?under:*};
 	{
 	base > :*;
 	under /;
 	}
 
-!change munderover into msubsup
-change into msubsup: munderover{base:*,under:*,over:*};
+! Transformar munderover en msubsup
+msubsup: munderover{base:*,under:*,over:*};
   {
   base > msubsup:*;
   under > msubsup:*;
   over > msubsup:*;
   }
  
-!!! Parenthesis Transformations
+!!! Transformaciones de paréntesis
 
-!surround an element with parentheses
-parenthesize:*;
+! Incluir un elemento entre paréntesis
+Entre paréntesis:*;
         {
         * > mrow:mo."(";
         * > mrow:*;
         * > mrow:mo.")";
         }
 
-!surround a sequence of elements with parentheses
-!group: first:*,?*+, last:* ;
+! Incluir una secuencia de elementos entre paréntesis
+!grupo: first:*,?*+, last:* ;
 !        {
 !        first > mrow:mo."(";
 !        first > mrow:*;
@@ -342,8 +342,8 @@ parenthesize:*;
 !        last > mrow:mo.")";
 !        }
 
-!remove parenthesis
-remove parenthesis: mrow{mf,?*+,mf};
+! Eliminar paréntesis
+Eliminar paréntesis: mrow{mf,?*+,mf};
 	{
 	mf /;
 	* > :*;

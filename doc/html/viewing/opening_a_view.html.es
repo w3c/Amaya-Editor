@@ -40,51 +40,53 @@ disponibles desde la vista de navegador normal (vista Formateada).</p>
 
 <p class="ProcedureCaption">Para abrir una vista:</p>
 <ul>
-  <li>Elige el comando de <strong>Ver &gt; ...</strong>:
+  <li>Elige el comando correspondiente del menú <strong>Ver &gt; ...</strong>:
     <p></p>
 
-    <table border="1" cellspacing="0" cellpadding="0">
+    <table border="1" cellspacing="0" cellpadding="0"
+    style="margin-left:.5in">
       <tbody>
         <tr>
-          <td><p class="TableTitle"><strong>Elemento de menú
-            Mostrar</strong></p>
+          <td><p class="TableTitle"><strong>Elemento de menú Ver</strong></p>
           </td>
           <td><p class="TableTitle"><strong>Atajo de teclado</strong></p>
           </td>
         </tr>
         <tr>
-          <td><p class="TableText">Mostrar estructura</p>
+          <td><p class="TableText">Estructura</p>
           </td>
-          <td><p class="TableText"><code>Ctrl&nbsp;v Ctrl&nbsp;s</code></p>
-          </td>
-        </tr>
-        <tr>
-          <td><p class="TableText">Mostrar alternativo</p>
-          </td>
-          <td><p class="TableText"><code>Ctrl&nbsp;v Ctrl&nbsp;i</code></p>
+          <td><p class="TableText"><code>Ctrl+v Ctrl+s</code></p>
           </td>
         </tr>
         <tr>
-          <td><p class="TableText">Mostrar enlaces</p>
+          <td><p class="TableText">Alternativo</p>
           </td>
-          <td><p class="TableText"><code>Ctrl&nbsp;v Ctrl&nbsp;l</code></p>
-          </td>
-        </tr>
-        <tr>
-          <td><p class="TableText">Mostrar tabla de contenidos</p>
-          </td>
-          <td><p class="TableText"><code>Ctrl&nbsp;v Ctrl&nbsp;c</code></p>
+          <td><p class="TableText"><code>Ctrl+v Ctrl+i</code></p>
           </td>
         </tr>
         <tr>
-          <td><p class="TableText">Mostrar fuente</p>
+          <td><p class="TableText">Enlaces</p>
           </td>
-          <td><p class="TableText"><code>Ctrl&nbsp;v Ctrl&nbsp;h</code></p>
+          <td><p class="TableText"><code>Ctrl+v Ctrl+l</code></p>
+          </td>
+        </tr>
+        <tr>
+          <td><p class="TableText">Tabla de contenidos</p>
+          </td>
+          <td><p class="TableText"><code>Ctrl+v Ctrl+c</code></p>
+          </td>
+        </tr>
+        <tr>
+          <td><p class="TableText">Fuente</p>
+          </td>
+          <td><p class="TableText"><code>Ctrl+v Ctrl+h</code></p>
           </td>
         </tr>
       </tbody>
     </table>
-    <p>&nbsp;</p>
+    <p>&nbsp;<strong>Nota</strong>: En Windows debes utilizar
+    <code>Ctrl+u</code> en vez de <code>Ctrl+v</code>, ya que
+    <code>Ctrl+v</code> corresponde a la orden <strong>Pegar</strong>.</p>
     <p class="Note"><strong>Nota:</strong> También puedes emplear el comando
     de menú <strong>Ver &gt; ...</strong> para mostrar en primer plano la
     ventana correspondiente si esta ventana ya estaba abierta, pero

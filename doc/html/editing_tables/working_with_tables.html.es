@@ -3,9 +3,9 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Trabajar con tablas</title>
-  <meta name="GENERATOR"
-  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -33,7 +33,36 @@ simplemente una estructura descrita en la definición de tipo de documento
 (DTD) HTML y se edita como tal. Se aplican a las tablas los mismos comandos
 que a otras estructuras HTML y algunos comandos más.</p>
 
-<p>Ver también:</p>
+<p class="ProcedureCaption">Para extender una celda:</p>
+<ol>
+  <li>Para extender una celda a la celda situada a su derecha, elige la
+    opción <strong>Unir con celda derecha</strong> del submenú
+    <strong>Tabla</strong> (<code>Ctrl+t Ctrl+e</code>).</li>
+  <li>Para extender una celda a la celda situada abajo, elige la opción
+    <strong>Unir con celda inferior</strong> del submenú
+    <strong>Tabla</strong> (<code>Ctrl+t Ctrl+j</code>).</li>
+  <li>Para reducir la extensión horizontal de una celda una posición, elige
+    la opción <strong>Reducir extensión horizontal</strong> del submenú
+    <strong>Tabla</strong> (<code>Ctrl+t Ctrl+s</code>).</li>
+  <li>Para reducir la extensión vertical de una celda una posición, elige la
+    opción <strong>Reducir extensión certical</strong> del submenú
+    <strong>Tabla</strong> (<code>Ctrl+t Ctrl+m</code>).</li>
+</ol>
+
+<p>La extensión de una celda también puede modificarse editando los <a
+href="../../../Amaya_CVS_040110_en/html/Attributes.html">atributos</a>
+colspan y rowspan.</p>
+
+<p class="ProcedureCaption">Para añadir elemtnos después de una tabla:</p>
+
+<p>Si una tabla está situada al final de un documento, para poder "salir" de
+la tabla y añadir otros elementos a continuación, es necesario seleccionar la
+tabla completa (mediante la tecla <code>F2</code> en Windows y
+<code>Escape</code> en Unix) y pulsar la tecla <strong>Intro</strong>. Amaya
+creará un nuevo párrafo después de la tabla. El párrafo creado puede ser
+sustituido por otro elemento.</p>
+
+<p>Para más información acerca de las tablas, ver también:</p>
 <ul>
   <li><a href="create_table.html.es">Crear una tabla</a></li>
   <li><a href="add_column.html.es">Añadir columnas a una tabla</a></li>

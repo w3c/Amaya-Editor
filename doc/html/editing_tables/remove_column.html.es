@@ -3,9 +3,9 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Eliminar columnas de una tabla</title>
-  <meta name="GENERATOR"
-  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -26,19 +26,59 @@
 </table>
 
 <div id="page_body">
-<h1>Eliminar columnas de una tabla</h1>
+<h1>Eliminar/Copiar/Pegar columnas de una tabla</h1>
+
+<p>Una vez seleccionada una columna completa, es posible borrarla, copiarla
+(o cortarla) y pegarla antes o después de otra columna.</p>
+
+<p class="ProcedureCaption">Para seleccionar una columna de una tabla:</p>
+<ol>
+  <li>Elige la opción <strong>Seleccionar columna</strong> del submenú
+    <strong>Tabla</strong> (<code>Ctrl+t Ctrl+c</code>).</li>
+  <li>También puedes seleccionar varias celdas de una misma columna (por
+    ejemplo, desde la celda 1.2 hasta la celda 3.2). Amaya cambia
+    automáticamente al modo de selección de columna. Al pulsar la tecla
+    <code>F2</code> en Windows (o la tecla <code>Escape</code> en Linux), se
+    extiende la selección a las casillas intermedias, incluyendo los extremos
+    (celdas 1.2, 2.2 y 3.2).
+
+    <table border="1" summary="table">
+      <tbody>
+        <tr>
+          <td>Celda 1.1</td>
+          <td>Celda 1.2</td>
+          <td>Celda 1.3</td>
+        </tr>
+        <tr>
+          <td>Celda 2.1</td>
+          <td>Celda 2.2</td>
+          <td>Celda 2.3</td>
+        </tr>
+        <tr>
+          <td>Celda 3.1</td>
+          <td>Celda 3.2</td>
+          <td>Celda 3.3</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ol>
+
+<p>Una vez seleccionada una columna completa, es posible borrarla, copiarla
+(o cortarla) y pegarla antes o después de otra columna.</p>
 
 <p>Cuando eliminas una celda de una columna vacía, Amaya elimina
 automáticamente la columna. Pero también puedes eliminar una columna sin
 eliminar previamente su contenido.</p>
-
-<p class="ProcedureCaption">Para borrar una columna de una tabla:</p>
 <ol>
-  <li>Sitúa el cursor en la columna que quieres eliminar.
-    <p></p>
-  </li>
-  <li>Elige el comando de menú <strong>XHTML &gt; Tabla &gt; Eliminar columna
-    de tabla</strong>.</li>
+  <li>Para pegar una columna antes de una columna ya existente, sitúa el
+    cursor al principio de una celda de la columna y pega la columna copiada
+    o cortada mediante la opción <strong>Pegar antes</strong> del submenú
+    <strong>Tabla</strong> (<code>Ctrl+t Ctrl+p</code>).</li>
+  <li>Para pegar una columna después de una columna ya existente, sitúa el
+    cursor al final de una celda de la columna y pega la columna copiada o
+    cortada mediante la opción <strong>Pegar después</strong> del submenú
+    <strong>Tabla</strong> (<code>Ctrl+t Ctrl+v</code>).</li>
 </ol>
 </div>
 </body>

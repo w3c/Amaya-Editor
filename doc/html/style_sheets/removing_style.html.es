@@ -3,8 +3,8 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR"
-  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
   <title>Eliminar estilos</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -67,14 +67,14 @@ caracteres</p>
     <tr>
       <td width="147" valign="top"><p class="TableText">énfasis (em)</p>
       </td>
-      <td valign="top"><p class="TableText"><code>Shift + Ctrl + I</code></p>
+      <td valign="top"><p class="TableText"><code>Ctrl+i Ctrl+e</code></p>
       </td>
       <td valign="top"><img src="../../images/Em.gif" alt="Botón em" /></td>
     </tr>
     <tr>
       <td width="147" valign="top"><p class="TableText">Strong</p>
       </td>
-      <td valign="top"><p class="TableText"><code>Shift + Ctrl + B</code></p>
+      <td><p><code>Ctrl+i Ctrl+s</code></p>
       </td>
       <td valign="top"><img src="../../images/Strong.gif" alt="Botón strong"
         /></td>
@@ -82,24 +82,21 @@ caracteres</p>
     <tr>
       <td width="147" valign="top"><p class="TableText">Cita (cite)</p>
       </td>
-      <td valign="top"><p class="TableText"><code>Alt + t</code><br />
-        <code>Alt + w</code></p>
+      <td><p><code>Ctrl+i Ctrl+w</code></p>
       </td>
       <td></td>
     </tr>
     <tr>
       <td width="147" valign="top"><p class="TableText">Definición (dfn)</p>
       </td>
-      <td valign="top"><p class="TableText"><code>Alt + t</code><br />
-        <code>Alt + d</code></p>
+      <td><p><code>Ctrl+i Ctrl+x</code></p>
       </td>
       <td></td>
     </tr>
     <tr>
       <td width="147" valign="top"><p class="TableText">Código (code)</p>
       </td>
-      <td valign="top"><p class="TableText"><code>Alt + t</code><br />
-        <code>Alt + c</code></p>
+      <td><p><code>Ctrl+i Ctrl+t</code></p>
       </td>
       <td valign="top"><img src="../../images/code.gif" alt="Botón code"
       /></td>
@@ -107,56 +104,49 @@ caracteres</p>
     <tr>
       <td width="147" valign="top"><p class="TableText">Variable (var)</p>
       </td>
-      <td valign="top"><p class="TableText"><code>Alt + t</code><br />
-        <code>Alt + v</code></p>
+      <td><p><code>Ctrl+i Ctrl+v</code></p>
       </td>
       <td></td>
     </tr>
     <tr>
       <td width="147" valign="top"><p class="TableText">Muestra (samp)</p>
       </td>
-      <td valign="top"><p class="TableText"><code>Alt + t</code><br />
-        <code>Alt + s</code></p>
+      <td><p><code>Ctrl+i Ctrl+m</code></p>
       </td>
       <td></td>
     </tr>
     <tr>
       <td width="147" valign="top"><p class="TableText">Teclado (kbd)</p>
       </td>
-      <td valign="top"><p class="TableText"><code>Alt + t</code><br />
-        <code>Alt + k</code></p>
+      <td><p><code>Ctrl+i Ctrl+k</code></p>
       </td>
       <td></td>
     </tr>
     <tr>
       <td width="147" valign="top"><p class="TableText">Abreviatura (abbr)</p>
       </td>
-      <td valign="top"><p class="TableText"><code>Alt + t</code><br />
-        <code>Alt + a</code></p>
+      <td><p><code>Ctrl+i Ctrl+u</code></p>
       </td>
       <td></td>
     </tr>
     <tr>
       <td width="147" valign="top"><p class="TableText">Acrónimo (acronym)</p>
       </td>
-      <td valign="top"><p class="TableText"><code>Alt + t</code><br />
-        <code>Alt + z</code></p>
+      <td><p><code>Ctrl+i Ctrl+y</code></p>
       </td>
       <td></td>
     </tr>
     <tr>
       <td width="147" valign="top"><p class="TableText">Añadido (ins)</p>
       </td>
-      <td valign="top"><p class="TableText"><code>Alt + t</code><br />
-        <code>Alt + i</code></p>
+      <td><p><code>Ctrl+i Ctrl+i</code></p>
       </td>
       <td></td>
     </tr>
     <tr>
       <td width="147" valign="top"><p class="TableText">Eliminado (del)</p>
       </td>
-      <td valign="top"><p class="TableText"><code>Alt + t</code><br />
-        <code>Alt + Supr</code></p>
+      <td><p><code>Ctrl+i Ctrl+d</code></p>
       </td>
       <td></td>
     </tr>

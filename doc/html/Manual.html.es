@@ -15,7 +15,7 @@
 <div id="page_body">
 <h1 style="text-align : center">Manual de Usuario de Amaya</h1>
 
-<h4 style="text-align:center">Versión 8.2 - Noviembre de 2003<br />
+<h4 style="text-align:center">Versión 8.3 - Enero de 2004<br />
 <br />
 <img src="../images/amaya.gif" alt="Amaya" />
 </h4>
@@ -234,7 +234,7 @@ bienvenida de Amaya.</p>
       <li><a href="editing_tables/add_tbody.html.es#page_body"
         rel="subdocument">Añadir cuerpos de tabla</a></li>
       <li><a href="editing_tables/remove_column.html.es#page_body"
-        rel="subdocument">Eliminar columnas</a></li>
+        rel="subdocument">Eliminar/Copiar/Pegar columnas</a></li>
     </ul>
   </li>
   <li><a href="ImageMaps.html.es#page_body" rel="subdocument">Utilizar
@@ -262,8 +262,7 @@ bienvenida de Amaya.</p>
         rel="subdocument">Texto alternativo y descripciones largas</a></li>
     </ul>
   </li>
-  <li><a href="Math.html.es#page_body" rel="subdocument">Editar
-    MathML</a>
+  <li><a href="Math.html.es#page_body" rel="subdocument">Editar MathML</a>
     <ul>
       <li><a
         href="editing_mathematics/working_with_math_expressions.html.es#page_body"
@@ -274,7 +273,7 @@ bienvenida de Amaya.</p>
       teclado</a></li>
       <li><a
         href="editing_mathematics/the_math_palette_and_the_types.html.es#page_body"
-        rel="subdocument">La paleta MathML y el menú XML &gt;  MathML</a></li>
+        rel="subdocument">La paleta MathML y el menú XML &gt; MathML</a></li>
       <li><a
         href="editing_mathematics/about_entering_math_characters.html.es#page_body"
         rel="subdocument">Escribir caracteres matemáticos</a></li>
