@@ -1611,11 +1611,11 @@ unsigned char      *msg;
       {
       if (docURL != NULL)
 	 {
-	 fprintf (stderr, "*** Errors in %s:\n", docURL);
+	 fprintf (stderr, "*** Errors in %s\n", docURL);
 	 docURL = NULL;
 	 }
       /* print the line number and character number before the message */
-      fprintf (stderr, "line %d, char %d: %s\n", numberOfLinesRead,
+      fprintf (stderr, "   line %d, char %d: %s\n", numberOfLinesRead,
 	       numberOfCharRead, msg);
       }
    else
@@ -7524,6 +7524,7 @@ boolean	            PlainText;
 {
    FILE               *infile;
    Element             el, oldel;
+   int		       length;
    char               *s;
    char                tempname[MAX_LENGTH];
    char                temppath[MAX_LENGTH];
@@ -7556,7 +7557,18 @@ boolean	            PlainText;
 	/* the Thot document has been successfully created */
 	{
 #ifndef STANDALONE
-	   docURL = pathURL;
+	   length = strlen (pathURL);
+	   if (strcmp (pathURL, htmlFileName) == 0)
+	      {
+	      docURL = TtaGetMemory (length+1);
+	      strcpy (docURL, pathURL);
+	      }
+	   else
+	      {
+	      length += strlen (htmlFileName) + 20;
+	      docURL = TtaGetMemory (length+1);
+	      sprintf (docURL, "%s temp file: %s", pathURL, htmlFileName);
+	      }
 #endif /* STANDALONE */
 	   /* do not allow the user to edit the document while parsing */
 	   /**** TtaSetDocumentAccessMode(theDocument, 0);  ****/
@@ -7635,6 +7647,7 @@ boolean	            PlainText;
 #endif /* AMAYA_JAVA */
 	   if (TtaIsViewOpened (theDocument, 1))
 	       ApplyFinalStyle (theDocument);
+	   TtaFreeMemory (docURL);
 #ifndef INCR_DISPLAY
 	   TtaSetDisplayMode (theDocument, DeferredDisplay);
 	   TtaSetDisplayMode (theDocument, DisplayImmediately);
