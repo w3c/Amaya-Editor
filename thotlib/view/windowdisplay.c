@@ -2434,5 +2434,5 @@ void psBoundingBox (int frame, int width, int height)
 void PaintWithPattern (int frame, int x, int y, int width, int height,
 		       ThotWindow w, int fg, int bg, int pattern)
 {
-  DrawRectangle (frame, 0, 0, x, y, width, height, fg, bg, 3)
+  DrawRectangle (frame, 0, 0, x, y, width, height, fg, bg, 3);
 }
