@@ -57,15 +57,15 @@ static int      AnimButton;
   ----------------------------------------------------------------------*/
 void SwitchIconAnimPlay (Document doc, View view, ThotBool state)
 {
-#ifdef _GLANIM
+#ifdef _GL
   if (state)
     TtaChangeButton (doc, view, AnimButton, (ThotIcon)iconAnim, state);
   else
     TtaChangeButton (doc, view, AnimButton, (ThotIcon)iconAnimNo, state);
-#endif /* _GLANIM */
+#endif /* _GL */
 }
 
-#ifdef _GLANIM
+#ifdef _GL
 /*-----------------------------------------------
   AnimPlay : Launch the timer needed to change time.
   -----------------------------------------------*/
@@ -73,14 +73,14 @@ void Anim_Play (Document document, View view)
 {
  TtaPlay (document, view);
 }
-#endif /*_GLANIM*/
+#endif /*_GL*/
 
 /*-----------------------------------------------
   AddAnimPlayButton : Add a play button
   -----------------------------------------------*/
 void AddAnimPlayButton (Document doc, View view)
 {
-#ifdef _GLANIM
+#ifdef _GL
 #ifndef _WINDOWS
   iconAnim = TtaCreatePixmapLogo (animplay_xpm);
   iconAnimNo = TtaCreatePixmapLogo (animstop_xpm);
@@ -92,7 +92,7 @@ void AddAnimPlayButton (Document doc, View view)
 			     "Anim_Play",
 			     TtaGetMessage (AMAYA, AM_BUTTON_ANIM),
 			     TBSTYLE_BUTTON, TRUE);
-#endif /*_GLANIM*/
+#endif /*_GL*/
 }
 
 /*-----------------------------------------------
