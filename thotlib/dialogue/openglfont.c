@@ -644,6 +644,7 @@ static void MakeBitmapGlyph (GL_font *font,
   register short unsigned int y,w,h,p;
 
   data = NULL;
+  err = 0;
   if (g != 0)
     /*use of FT_LOAD_DEFAULT when quality will be ok*/
     if (!FT_Load_Glyph (font->face, 
@@ -661,7 +662,7 @@ static void MakeBitmapGlyph (GL_font *font,
 				      1);
       
       
-	  if (err || ft_glyph_format_bitmap != Glyph->format)
+	  if (err)
 	    FT_Done_Glyph (Glyph);
 	  else
 	    {

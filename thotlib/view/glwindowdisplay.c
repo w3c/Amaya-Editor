@@ -150,13 +150,15 @@ ThotBool GL_Err()
 {
   GLenum errCode = GL_NO_ERROR;
 
-  if((errCode = glGetError()) != GL_NO_ERROR)
+  if((errCode = glGetError ()) != GL_NO_ERROR)
     {
+#ifdef _PCLDEBUG
 #ifdef _GTK
-      g_print ("\n%s :", (char*) gluErrorString(errCode));
+      g_print ("\n%s :", (char*) gluErrorString (errCode));
 #else /*_GTK*/
-      WinErrorBox (NULL, (char*) gluErrorString(errCode));;
+      WinErrorBox (NULL, (char*) gluErrorString (errCode));;
 #endif /*_GTK*/
+#ifdef /*_PCLDEBUG*/
       return TRUE;
     }
   else 
@@ -1734,12 +1736,7 @@ ThotBool GL_DrawAll ()
 			      GL_Swap (frame);  
 			      /* All transformation resetted*/   
 			      /*glLoadIdentity (); */
-			      if (GL_Err ())
-#ifdef _GTK
-				g_print ("Bad drawing\n"); 
-#else /*_GTK*/
-			      WinErrorBox (NULL, "Bad drawing\n");
-#endif /*_GTK*/
+			      GL_Err ();
 			      FrameTable[frame].DblBuffNeedSwap = FALSE;
 			    }
 			}
