@@ -5,7 +5,7 @@
 #       thoteditor-$MACH-$THOTVERSION.tar.gz
 #
 
-THOTVERSION=2.1
+THOTVERSION=2.2
 THOTDIR=/tahiti/diffusion/opera
 DEST=/tahiti/thottape
 PLATFORMS="solaris2 LINUX-ELF LINUX-SPARC SUN4 SGI RS6000 osf1"
@@ -20,10 +20,11 @@ cd ..
 for MACH in $PLATFORMS
 do
    $TAR - \
-   Thot/NEWS.LibThot2.0 \
+   Thot/NEWS.LibThot2.0b \
+   Thot/NEWS.LibThot2.1 \
    Thot/COPYRIGHT \
    Thot/AboutThot \
-   Thot/README \
+   Thot/README.2.0b \
    Thot/doc/thoteditor/Bilbon.gif \
    Thot/doc/thoteditor/COPYRIGHT.html \
    Thot/doc/thoteditor/Compiling.html \
@@ -31,6 +32,7 @@ do
    Thot/doc/thoteditor/EditorArchi.html \
    Thot/doc/thoteditor/Index.html \
    Thot/doc/thoteditor/Keyboard.html \
+   Thot/doc/thoteditor/New.html \
    Thot/doc/thoteditor/ManDraw.PIV \
    Thot/doc/thoteditor/Opera.eps \
    Thot/doc/thoteditor/Platforms.html \

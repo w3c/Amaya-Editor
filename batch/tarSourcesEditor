@@ -6,7 +6,7 @@
 #
 # And the associated Librairies for supported versions.
 #
-EDITORVERSION=2.1
+EDITORVERSION=2.2
 THOTDIR=/tahiti/diffusion/opera
 DEST=/tahiti/thottape
 
@@ -16,8 +16,11 @@ COMPRESS="gzip -9"
 cd $THOTDIR
 
 $TAR - \
-NEWS.LibThot2.0 \
-README.2.0 \
+NEWS.LibThot2.0b \
+NEWS.LibThot2.1 \
+README.2.0b \
+COPYRIGHT \
+AboutThot \
 config/XKeysymDB \
 config/thot.ini \
 config/thot.color \
@@ -60,9 +63,7 @@ batch/MachineType \
 dicopar/*.tri \
 dicopar/*.ptn \
 doc/APIman-E.PIV \
-doc/APIman-F.PIV \
 doc/Appman-E.PIV \
-doc/Appman-F.PIV \
 doc/Dialogue.PIV \
 doc/button.gif \
 doc/Thotman-E.PIV \
@@ -76,6 +77,7 @@ doc/thoteditor/EditorArchi.html \
 doc/thoteditor/Index.html \
 doc/thoteditor/Keyboard.html \
 doc/thoteditor/ManDraw.PIV \
+doc/thoteditor/New.html \
 doc/thoteditor/Opera.eps \
 doc/thoteditor/Platforms.html \
 doc/thoteditor/Porting.html \
