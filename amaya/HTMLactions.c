@@ -658,10 +658,6 @@ Document            doc;
 	     else
 		/* the target element seems to be in another document */
 	       {
-		 /* remove any form parameters concatenated to the URL */
-		 form_data = strchr (url, '?');
-		 if (form_data)
-		   *form_data++ = EOS;
 		 strncpy (documentURL, url, MAX_LENGTH - 1);
 		 documentURL[MAX_LENGTH - 1] = EOS;
 		 url[0] = EOS;
@@ -683,7 +679,7 @@ Document            doc;
 		 /* interrupt current transfer */
 		 StopTransfer (doc, 1);	   
 		 /* get the referred document */
-		 targetDocument = GetHTMLDocument (documentURL, form_data,
+		 targetDocument = GetHTMLDocument (documentURL, NULL,
 				   doc, doc, CE_RELATIVE, TRUE, 
 				   (void *) FollowTheLink_callback, (void *) ctx);
 	       }
