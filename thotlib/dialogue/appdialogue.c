@@ -61,6 +61,9 @@
 #include "inites_f.h"
 #ifdef _GTK
 #include "gtk-functions.h"
+
+static   GdkBitmap          *amaya_mask;
+
 /*static    Time   t1;*/
 #else /* !_GTK */
 #include "input_f.h"
@@ -1403,7 +1406,7 @@ int TtaAddButton (Document document, View view, ThotIcon picture,
 		      /* set the relief to none */
 		      gtk_button_set_relief (GTK_BUTTON (row), GTK_RELIEF_NONE);
 		      /* insert the icon */
-		      w = gtk_pixmap_new (picture, NULL);
+		      w = gtk_pixmap_new (picture->pixmap, picture->mask);
 		      gtk_container_add (GTK_CONTAINER (row), w);
 		      gtk_box_pack_start (GTK_BOX (toolbar), row, FALSE, TRUE, 2);
 		      tooltipstmp = gtk_tooltips_new ();
@@ -1704,7 +1707,7 @@ void TtaChangeButton (Document doc, View view, int index,
 	      /* The old picture is linked to the button widget with gtk_object_set_data */
 	      tmpw = GTK_WIDGET(gtk_object_get_data (GTK_OBJECT (FrameTable[frame].Button[index]), "Icon")); 
 	      if (tmpw)
-		gtk_pixmap_set (GTK_PIXMAP(tmpw), picture, NULL);
+		  gtk_pixmap_set (GTK_PIXMAP(tmpw), picture->pixmap, picture->mask);
 	      gtk_widget_show_all (GTK_WIDGET(FrameTable[frame].Button[index]));
 #endif /* !_GTK */
 #endif /* _WINDOWS */
@@ -2304,16 +2307,13 @@ void DrawingInput (int *w, int frame, int *infos)
   good event and to attache the signal connect ID to the widget in order
   to disconnect it further.
 -------------------------------------------------------------------------*/
-void ConnectSignalGTK (GtkObject *w, gchar *signal_name,
-		       GtkSignalFunc callback, gpointer data)
+void ConnectSignalGTK (GtkObject *w, gchar *signal_name, GtkSignalFunc callback, gpointer data)
 {
   guint id;
   id = gtk_signal_connect (GTK_OBJECT(w), signal_name, GTK_SIGNAL_FUNC(callback), data);
   gtk_object_set_data (GTK_OBJECT (w), signal_name, (gpointer)id);
 }
 
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
 void RemoveSignalGTK (GtkObject *w, gchar *signal_name)
 {
   guint id;
@@ -2321,17 +2321,13 @@ void RemoveSignalGTK (GtkObject *w, gchar *signal_name)
   gtk_signal_disconnect (GTK_OBJECT (w), id);
 }
 
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
 gboolean text_wrapper_hide (GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
     gtk_widget_hide(widget);
 }
 
-/*----------------------------------------------------------------------
-  Signal handler called when the selections owner (another application)
-  returns the data
-  ----------------------------------------------------------------------*/
+/* Signal handler called when the selections owner 
+(another application) returns the data */
 void selection_received( GtkWidget *widget, GtkSelectionData *sel_data,  gpointer data )
 {   
     if (Xbuffer != NULL)
@@ -2346,9 +2342,7 @@ void selection_received( GtkWidget *widget, GtkSelectionData *sel_data,  gpointe
     return;
 } 
 
-/*----------------------------------------------------------------------
-  Signal handler invoked when user focus on drawing area
-  ----------------------------------------------------------------------*/
+/* Signal handler invoked when user focus on drawing area */
 void get_targets( GtkWidget *widget,  gpointer data )
 {
   static GdkAtom targets_atom = GDK_NONE;
@@ -2367,9 +2361,7 @@ void get_targets( GtkWidget *widget,  gpointer data )
   }
 }
 
-/*----------------------------------------------------------------------
-  Called when another application claims the selection
-  ----------------------------------------------------------------------*/
+/* Called when another application claims the selection */
 gint selection_clear( GtkWidget         *widget,
     GdkEventSelection *event,
     gpointer data )
@@ -2380,9 +2372,7 @@ gint selection_clear( GtkWidget         *widget,
   return TRUE;
 }
  
-/*----------------------------------------------------------------------
-  Supplies the Xbuffer as the selection.
-  ----------------------------------------------------------------------*/
+/* Supplies the Xbuffer as the selection. */
 void selection_handle( GtkWidget        *widget,
     GtkSelectionData *selection_data,
     guint             info,
@@ -2912,27 +2902,28 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 			     "configure_event",
 			     GTK_SIGNAL_FUNC(FrameResizedGTK),
 			     (gpointer)frame);
+
 	   /* Put the scrollbars */
 	   tmpw = gtk_adjustment_new (0, 0, dy, 13, dy-13, dy);
 	   ConnectSignalGTK (GTK_OBJECT (tmpw),
 			     "value_changed",
 			     GTK_SIGNAL_FUNC(FrameVScrolledGTK),
 			     (gpointer)frame);
-      	   vscrl = gtk_vscrollbar_new (GTK_ADJUSTMENT (tmpw));
+	   
+    	   vscrl = gtk_vscrollbar_new (GTK_ADJUSTMENT (tmpw));
 	   gtk_widget_show (vscrl);
-	   gtk_object_set_data (GTK_OBJECT(vscrl), "Adjustment", (gpointer)tmpw);
 	   gtk_table_attach (GTK_TABLE (table2), vscrl, 1, 2, 0, 1,
 			     (GtkAttachOptions) (GTK_FILL | GTK_SHRINK),
 			     (GtkAttachOptions) (GTK_FILL | GTK_SHRINK), 0, 0);
+
 	   tmpw = gtk_adjustment_new (0, 0, dx, 13, dx-13, dx);
 	   ConnectSignalGTK (GTK_OBJECT (tmpw),
 			     "value_changed",
 			     GTK_SIGNAL_FUNC(FrameHScrolledGTK),
 			     (gpointer)frame);
-      	   hscrl = gtk_hscrollbar_new (GTK_ADJUSTMENT(tmpw));
+      	   hscrl = gtk_hscrollbar_new (GTK_ADJUSTMENT(tmpw)); 
 	   gtk_widget_show (hscrl);
 
-	   gtk_object_set_data (GTK_OBJECT(hscrl), "Adjustment", (gpointer)tmpw);
 	   gtk_table_attach (GTK_TABLE (table2), hscrl, 0, 1, 1, 2,
 			     (GtkAttachOptions) (GTK_FILL | GTK_SHRINK),
 			     (GtkAttachOptions) (GTK_FILL | GTK_SHRINK), 0, 0);

@@ -69,30 +69,28 @@ Pixmap TtaCreateBitmapLogo (int width, int height, char *bits)
 /*----------------------------------------------------------------------
    TtaCreatePixmapLogo create a pixmap from an XPM file.           
   ----------------------------------------------------------------------*/
+#ifdef _GTK
+Pixmap TtaCreatePixmapLogo(char **d)
+{
+  _Thot_icon            *icon;
+
+  icon = malloc(sizeof(_Thot_icon));
+  if (d != NULL)
+     {
+       icon->pixmap = gdk_pixmap_create_from_xpm_d (DefaultWindow->window,
+						      &(icon->mask),
+						      &DefaultWindow->style->bg[GTK_STATE_NORMAL] ,
+						      (gchar **) d); 
+     }
+  return (icon);
+}
+#else /* !_GTK */
 Pixmap TtaCreatePixmapLogo (char **d)
 {
 #ifdef _WINDOWS
    return (Pixmap) NULL;
 #else  /* _WINDOWS */
    Pixmap              pixmap;
-#ifdef _GTK
-   /*ThotIcon            icon;*/
-   ThotBitmap          mask;
-
-   /*   icon = 0;*/
-   pixmap = 0;
-   if (d != NULL)
-     {
-       pixmap = (Pixmap)gdk_pixmap_create_from_xpm_d (DefaultWindow->window,
-						      &mask ,
-						      &DefaultWindow->style->bg[GTK_STATE_NORMAL] ,
-						      (gchar **) d); 
-       /*       icon = gtk_pixmap_new (pixmap, mask);
-       gdk_pixmap_unref (pixmap);
-       gdk_bitmap_unref (mask);	*/
-     }	    
-   return (pixmap);
-#else /* _GTK */
    Pixmap              PicMask;
    XpmAttributes       att;
    XpmColorSymbol      cs;
@@ -124,6 +122,6 @@ Pixmap TtaCreatePixmapLogo (char **d)
 	   XFreePixmap (TtDisplay, PicMask);
      }
    return (pixmap);
-#endif /* _GTK */
-#endif /* _WINDOWS */
 }
+#endif /* _WINDOWS */
+#endif /* _GTK */
