@@ -479,7 +479,12 @@ static void MovingCommands (int code, Document doc, View view,
 		}
 	    }
 	}
-
+      /* Check if a previous extension was closed */
+      if (SelPosition)
+	{
+	  RightExtended = FALSE;
+	  LeftExtended = FALSE;
+	}
       /* doesn't change the current Shrink value in other cases */
       switch (code)
 	{
