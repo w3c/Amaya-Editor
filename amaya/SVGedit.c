@@ -1806,7 +1806,7 @@ void                InitSVG ()
 void AddGraphicsButton (Document doc, View view)
 {
 #ifdef _SVG
-  GraphButton = TtaAddButton (doc, 1, iconGraph, ShowGraphicsPalette, "ShowGraphicsPalette",
+  GraphButton = TtaAddButton (doc, 1, (ThotIcon)iconGraph, ShowGraphicsPalette, "ShowGraphicsPalette",
 			      TtaGetMessage (AMAYA, AM_BUTTON_GRAPHICS),
 			      TBSTYLE_BUTTON, TRUE);
 #endif /* _SVG */
@@ -1819,9 +1819,9 @@ void SwitchIconGraph (Document doc, View view, ThotBool state)
 {
 #ifdef _SVG
   if (state)
-    TtaChangeButton (doc, view, GraphButton, iconGraph, state);
+    TtaChangeButton (doc, view, GraphButton, (ThotIcon)iconGraph, state);
   else
-    TtaChangeButton (doc, view, GraphButton, iconGraphNo, state);
+    TtaChangeButton (doc, view, GraphButton, (ThotIcon)iconGraphNo, state);
 #endif /* _SVG */
 }
 
