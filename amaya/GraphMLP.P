@@ -1354,8 +1354,8 @@ RULES
 	BEGIN
 	CreateBefore (PATH_S);
 	CreateWith (VerticalLine);
-	HorizPos: Left = Enclosing . Left + 1 pt UserSpecified;
-	VertPos:  Top = Enclosing . Top + 1 pt UserSpecified;
+	HorizPos: Left = Enclosing . Left UserSpecified;
+	VertPos:  Top = Enclosing . Top UserSpecified;
 	Width: Enclosing . Width;
 	Height: Enclosing . Height;
 	IN Structure_view BEGIN
@@ -1377,8 +1377,8 @@ RULES
 	CreateWith (VerticalLine);
 	Width: 2.5 cm UserSpecified;
 	Height: 1.5 cm UserSpecified;
-	HorizPos: Left = Enclosing . Left + 1 pt UserSpecified;
-	VertPos:  Top = Enclosing . Top + 1 pt UserSpecified;
+	HorizPos: Left = Enclosing . Left UserSpecified;
+	VertPos:  Top = Enclosing . Top UserSpecified;
 	IN Structure_view BEGIN
 	        if within use_
 	            Visibility: 0;
@@ -1437,10 +1437,10 @@ RULES
    line_:
 	BEGIN
 	CreateBefore (LINE_S);
-        HorizPos: Left = Enclosing . Left + 1 pt UserSpecified;
-        VertPos:  Top = Enclosing . Top + 1 pt UserSpecified;
-        Width: Right = Enclosing . Left + 4 pt;
-        Height:  Bottom = Enclosing . Top + 4 pt;
+        HorizPos: Left = Enclosing . Left UserSpecified;
+        VertPos:  Top = Enclosing . Top UserSpecified;
+        Width: Right = Enclosing . Left;
+        Height:  Bottom = Enclosing . Top;
        	IN Structure_view BEGIN
 	        if within use_
 	            Visibility: 0;
@@ -1492,7 +1492,7 @@ RULES
 	CreateBefore (TEXT_S);
 	CreateWith (VerticalLine);
 	Width: Enclosed . Width;
-   	HorizPos: Left = Enclosing . Left + 1 pt Userspecified;
+   	HorizPos: Left = Enclosing . Left Userspecified;
    	VertPos:  HRef = Enclosing . Top + 10 pt Userspecified;
 	HorizRef: Enclosed . HRef;
 	IN Structure_view BEGIN
@@ -1554,7 +1554,7 @@ RULES
 	BEGIN
 	CreateBefore (IMAGE_S);
 	CreateWith (VerticalLine);
-   	HorizPos: Left = Enclosing . Left + 1 pt Userspecified;
+   	HorizPos: Left = Enclosing . Left Userspecified;
    	VertPos:  HRef = Enclosing . Top + 10 pt Userspecified;
 	Width: Enclosed . Width;
         Height: Enclosed . Height;
@@ -1674,7 +1674,7 @@ RULES
 	BEGIN
 	CreateBefore (FOREIGNOBJECT_S);
 	CreateWith (VerticalLine);
-   	HorizPos: Left = Enclosing . Left + 1 pt Userspecified;
+   	HorizPos: Left = Enclosing . Left Userspecified;
    	VertPos:  HRef = Enclosing . Top + 10 pt Userspecified;
 	Foreground: Black;
 	FillPattern: nopattern;
