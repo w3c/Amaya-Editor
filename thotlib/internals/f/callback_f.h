@@ -7,17 +7,17 @@
 #if __STDC__
 
 extern void NoOp ( PtrElement pEl );
-extern boolean SendAttributeMessage ( NotifyAttribute * notifyAttr,
+extern boolean CallEventAttribute ( NotifyAttribute * notifyAttr,
                                       boolean pre );
-extern boolean ThotSendMessage ( NotifyEvent * notifyEvent,
+extern boolean CallEventType ( NotifyEvent * notifyEvent,
                                  boolean pre );
 
 #else /* __STDC__ */
 
 extern void NoOp (/* PtrElement pEl */);
-extern boolean SendAttributeMessage (/* NotifyAttribute * notifyAttr,
+extern boolean CallEventAttribute (/* NotifyAttribute * notifyAttr,
                                         boolean pre */);
-extern boolean ThotSendMessage (/* NotifyEvent * notifyEvent,
+extern boolean CallEventType (/* NotifyEvent * notifyEvent,
                                    boolean pre */);
 
 #endif /* __STDC__ */

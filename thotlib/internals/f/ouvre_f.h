@@ -6,25 +6,25 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern PtrDocument pDocument ( DocumentIdentifier docIdent );
-extern boolean OuvreDoc ( Name docName,
+extern PtrDocument GetPtrDocument ( DocumentIdentifier docIdent );
+extern boolean OpenDocument ( Name docName,
                           PtrDocument pDoc,
                           boolean loadIncludedDoc,
                           boolean skeleton,
                           PtrSSchema pSS,
                           boolean withAppEvent );
-extern void SupprDoc ( PtrDocument pDoc );
+extern void DeleteAllTrees ( PtrDocument pDoc );
 
 #else /* __STDC__ */
 
-extern PtrDocument pDocument (/* DocumentIdentifier docIdent */);
-extern boolean OuvreDoc (/* Name docName,
+extern PtrDocument GetPtrDocument (/* DocumentIdentifier docIdent */);
+extern boolean OpenDocument (/* Name docName,
                             PtrDocument pDoc,
                             boolean loadIncludedDoc,
                             boolean skeleton,
                             PtrSSchema pSS,
                             boolean withAppEvent */);
-extern void SupprDoc (/* PtrDocument pDoc */);
+extern void DeleteAllTrees (/* PtrDocument pDoc */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

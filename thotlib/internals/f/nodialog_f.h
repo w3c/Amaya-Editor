@@ -53,9 +53,9 @@ extern void MontrerBoite ( int frame,
                            int position,
                            int pourcent );
 extern int IdentDocument ( PtrDocument pDoc );
-extern boolean ThotSendMessage ( int *notifyEvent,
+extern boolean CallEventType ( int *notifyEvent,
                                  boolean pre );
-extern boolean SendAttributeMessage ( NotifyAttribute * notifyAttr,
+extern boolean CallEventAttribute ( NotifyAttribute * notifyAttr,
                                       boolean pre );
 extern void EndInsert ( void );
 extern void FinInsertParagraph ( PtrAbstractBox pAb,
@@ -222,9 +222,9 @@ extern void MontrerBoite (/* int frame,
                              int position,
                              int pourcent */);
 extern int IdentDocument (/* PtrDocument pDoc */);
-extern boolean ThotSendMessage (/* int *notifyEvent,
+extern boolean CallEventType (/* int *notifyEvent,
                                    boolean pre */);
-extern boolean SendAttributeMessage (/* NotifyAttribute * notifyAttr,
+extern boolean CallEventAttribute (/* NotifyAttribute * notifyAttr,
                                         boolean pre */);
 extern void EndInsert (/* void */);
 extern void FinInsertParagraph (/* PtrAbstractBox pAb,

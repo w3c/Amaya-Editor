@@ -27,7 +27,7 @@ extern void AjouteACreer ( PtrBox * acreer,
                            int frame );
 extern boolean AfFinFenetre ( int frame,
                               int delta );
-extern void AfficherVue ( int frame );
+extern void DisplayFrame ( int frame );
 
 #else /* __STDC__ */
 
@@ -52,7 +52,7 @@ extern void AjouteACreer (/* PtrBox * acreer,
                              int frame */);
 extern boolean AfFinFenetre (/* int frame,
                                 int delta */);
-extern void AfficherVue (/* int frame */);
+extern void DisplayFrame (/* int frame */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

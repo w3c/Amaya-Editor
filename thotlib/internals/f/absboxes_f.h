@@ -6,66 +6,66 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern char *TypePave ( PtrAbstractBox pAb );
-extern void LibPavVue ( PtrAbstractBox pAb );
-extern void LibPavElem ( PtrElement pEl );
-extern void LibPavMort ( PtrAbstractBox pAb );
-extern void AjoutePaves ( PtrAbstractBox pAbbRoot,
+extern char *AbsBoxType ( PtrAbstractBox pAb );
+extern void LibAbbView ( PtrAbstractBox pAb );
+extern void LibAbbEl ( PtrElement pEl );
+extern void LibAbbDead ( PtrAbstractBox pAb );
+extern void AddAbsBoxes ( PtrAbstractBox pAbbRoot,
                           PtrDocument pDoc,
                           boolean Tete );
 extern boolean NonSecable ( PtrAbstractBox pAb );
-extern void AjusteVolume ( PtrElement pEl,
+extern void AdjustVolume ( PtrElement pEl,
                            PtrDocument pDoc );
-extern void VolAugmente ( boolean EnTete,
+extern void IncreaseVolume ( boolean EnTete,
                           int dVol,
                           int frame );
-extern void VolReduit ( boolean EnTete,
+extern void DecreaseVolume ( boolean EnTete,
                         int dVol,
                         int frame );
-extern void VerifPave ( PtrElement pEl,
+extern void VerifAbsBoxe ( PtrElement pEl,
                         int Vue,
                         PtrDocument pDoc,
                         boolean debut,
                         boolean affiche );
-extern void VolumeArbAbs ( PtrAbstractBox pAbbRoot,
+extern void VolumeTree ( PtrAbstractBox pAbbRoot,
                            PtrAbstractBox pAbbFirst,
                            PtrAbstractBox pAbbLast,
                            int *VolAvant,
                            int *VolApres,
                            int *VolArbre );
-extern void SauterDansVue ( int frame,
+extern void JumpIntoView ( int frame,
                             int distance );
 
 #else /* __STDC__ */
 
-extern char *TypePave (/* PtrAbstractBox pAb */);
-extern void LibPavVue (/* PtrAbstractBox pAb */);
-extern void LibPavElem (/* PtrElement pEl */);
-extern void LibPavMort (/* PtrAbstractBox pAb */);
-extern void AjoutePaves (/* PtrAbstractBox pAbbRoot,
+extern char *AbsBoxType (/* PtrAbstractBox pAb */);
+extern void LibAbbView (/* PtrAbstractBox pAb */);
+extern void LibAbbEl (/* PtrElement pEl */);
+extern void LibAbbDead (/* PtrAbstractBox pAb */);
+extern void AddAbsBoxes (/* PtrAbstractBox pAbbRoot,
                             PtrDocument pDoc,
                             boolean Tete */);
 extern boolean NonSecable (/* PtrAbstractBox pAb */);
-extern void AjusteVolume (/* PtrElement pEl,
+extern void AdjustVolume (/* PtrElement pEl,
                              PtrDocument pDoc */);
-extern void VolAugmente (/* boolean EnTete,
+extern void IncreaseVolume (/* boolean EnTete,
                             int dVol,
                             int frame */);
-extern void VolReduit (/* boolean EnTete,
+extern void DecreaseVolume (/* boolean EnTete,
                           int dVol,
                           int frame */);
-extern void VerifPave (/* PtrElement pEl,
+extern void VerifAbsBoxe (/* PtrElement pEl,
                           int Vue,
                           PtrDocument pDoc,
                           boolean debut,
                           boolean affiche */);
-extern void VolumeArbAbs (/* PtrAbstractBox pAbbRoot,
+extern void VolumeTree (/* PtrAbstractBox pAbbRoot,
                              PtrAbstractBox pAbbFirst,
                              PtrAbstractBox pAbbLast,
                              int *VolAvant,
                              int *VolApres,
                              int *VolArbre */);
-extern void SauterDansVue (/* int frame,
+extern void JumpIntoView (/* int frame,
                               int distance */);
 
 #endif /* __STDC__ */
