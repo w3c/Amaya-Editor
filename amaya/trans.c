@@ -2079,156 +2079,43 @@ static ThotBool IsValidHtmlChild (ElementType elemType, char *tag, char *prevtag
   result = FALSE;
   elemTypeChild.ElSSchema = elemType.ElSSchema;
   cardinal = TtaGetCardinalOfType (elemType);
+  if (cardinal <= 0)
+    return FALSE;
   subTypes = (ElementType *) TtaGetMemory (cardinal * sizeof (ElementType));
   TtaGiveConstructorsOfType (&subTypes, &cardinal, elemType);
   constOfType = TtaGetConstructOfType (elemType);
   GIType (tag, &tagElType, TransDoc);
   if (!TtaSameSSchemas(elemType.ElSSchema, tagElType.ElSSchema) ||
       tagElType.ElTypeNum == 0)
-    return FALSE;
-  switch (constOfType)
+    result = FALSE;
+  else
     {
-    case ConstructAny:
-      result = TRUE;
-      break;
-
-    case ConstructIdentity:
-      if (subTypes[0].ElTypeNum == tagElType.ElTypeNum)
-	result = TRUE;
-      else
+      switch (constOfType)
 	{
-	  name = GetXMLElementName (subTypes[0], TransDoc);
-	  if (!strcmp ((char *)name, "???") ||
-    	      !strcmp ((char *)name, "none"))
-	    /* search if tag can be inserted as a child of the identity */
-	    result = IsValidHtmlChild (subTypes[0], tag, "");
-	}
-      /* any math element can be inserted under <math> (only row in MathML.S)*/
-      if (!result &&
-	  !strcmp ((char *)TtaGetElementTypeName (elemType), "math") && 
-	  !strcmp ((char *)TtaGetSSchemaName (elemType.ElSSchema), "MathML"))
-	result = IsValidHtmlChild (subTypes[0], tag, "");
-      break;
-
-    case ConstructList:
-      if (subTypes[0].ElTypeNum == tagElType.ElTypeNum)
-	result = TRUE;
-      else
-	{
-	  name = GetXMLElementName (subTypes[0], TransDoc);
-	  if (!strcmp ((char *)name, "???") ||
-	      !strcmp ((char *)name, "p*") ||
-    	      !strcmp ((char *)name, "none"))
-	    result = IsValidHtmlChild (subTypes[0], tag, "");
-	}
-      break;
-
-    case ConstructChoice:
-      for (i = 0; !result && i < cardinal; i++)
-	 if (subTypes[i].ElTypeNum == tagElType.ElTypeNum)
+	case ConstructAny:
+	  result = TRUE;
+	  break;
+	  
+	case ConstructIdentity:
+	  if (subTypes[0].ElTypeNum == tagElType.ElTypeNum)
 	    result = TRUE;
-      if (!result)
-         for (i = 0; !result && i < cardinal; i++)
-	   {
-	     name = GetXMLElementName (subTypes[i], TransDoc);
-	     if (!strcmp ((char *)name, "???") ||
-		 !strcmp ((char *)name, "p*") ||
-		 !strcmp ((char *)name, "none"))
-	       result = IsValidHtmlChild (subTypes[i], tag, "");
-	   }
-      break;
-
-    case ConstructOrderedAggregate:
-      start = 0;
-      if (!strcmp ((char *)prevtag, ""))
-	found = TRUE;
-      else
-	/* there is a previous sibling */
-	{
-        /* search the rule of that previous sibling */
-	GIType (prevtag, &prevElType, (Document)TransDoc);
-	found = (prevElType.ElTypeNum == 0);
-	for (i = 0; !found && i < cardinal; i++)
-	  {
-	  if (prevElType.ElTypeNum == subTypes[i].ElTypeNum)
-	    {
-	    found = TRUE;
-	    start = i+1;
-	    }
 	  else
 	    {
-	      name = GetXMLElementName (subTypes[i], TransDoc);
-	      if (strcmp ((char *)name, "???") ||
-		  strcmp ((char *)name, "p*") ||
-		  strcmp ((char *)name, "none"))
-		i = cardinal;
+	      name = GetXMLElementName (subTypes[0], TransDoc);
+	      if (!strcmp ((char *)name, "???") ||
+		  !strcmp ((char *)name, "none"))
+		/* search if tag can be inserted as a child of the identity */
+		result = IsValidHtmlChild (subTypes[0], tag, "");
 	    }
-	  }
-	}
-      if (found)
-	{
-	  i = start;
-	  while (!result && i < cardinal)
-	    {
-	      if (tagElType.ElTypeNum == subTypes[i].ElTypeNum)
-		result = TRUE;
-	      else
-		{
-		  name = GetXMLElementName (subTypes[i], TransDoc);
-		  if (!strcmp ((char *)name, "???") ||
-		      !strcmp ((char *)name, "p*") ||
-		      !strcmp ((char *)name, "none") ||
-		      TtaIsOptionalInAggregate (i, elemType)) 
-		    i++;
-		  else
-		    i = cardinal;
-		}
-	    }
-	  if (!result)
-	    {
-	    i = start;
-	    while (!result && i < cardinal)
-	      {
-		name = GetXMLElementName (subTypes[i], TransDoc);
-		if (!strcmp ((char *)name, "???") ||
-		    !strcmp ((char *)name, "p*") ||
-		    !strcmp ((char *)name, "none"))
-		  {
-		    result = IsValidHtmlChild (subTypes[i], tag, "");
-		    if (!result &&
-			TtaIsOptionalInAggregate(i, elemType)) 
-		      i++;
-		    else
-		      i = cardinal;
-		  }
-		else
-		  i = cardinal;
-	      }
-	    }
-	}
-      break;
-
-    case ConstructUnorderedAggregate:
-      for (i = 0; !result && i < cardinal; i++)
-	  if (tagElType.ElTypeNum == subTypes[i].ElTypeNum)
-	    result = TRUE;
-      if (!result)
-	for (i = 0; !result && i < cardinal; i++)
-	  {
-	    name = GetXMLElementName (subTypes[i], TransDoc);
-	    if (!strcmp ((char *)name, "???") ||
-		!strcmp ((char *)name, "p*") ||
-		!strcmp ((char *)name, "none"))
-	      result = IsValidHtmlChild (subTypes[i], tag, "");
-	  }
-      break;
-
-    case ConstructNature:
-      if (TtaSameSSchemas (tagElType.ElSSchema, subTypes[0].ElSSchema))
-	{
-	  if (subTypes[0].ElTypeNum == 0)
-	    TtaGiveTypeFromName (&subTypes[0], TtaGetElementTypeName(elemType));
-	  if (tagElType.ElTypeNum == subTypes[0].ElTypeNum)
+	  /* any math element can be inserted under <math> (only row in MathML.S)*/
+	  if (!result &&
+	      !strcmp ((char *)TtaGetElementTypeName (elemType), "math") && 
+	      !strcmp ((char *)TtaGetSSchemaName (elemType.ElSSchema), "MathML"))
+	    result = IsValidHtmlChild (subTypes[0], tag, "");
+	  break;
+	  
+	case ConstructList:
+	  if (subTypes[0].ElTypeNum == tagElType.ElTypeNum)
 	    result = TRUE;
 	  else
 	    {
@@ -2238,17 +2125,135 @@ static ThotBool IsValidHtmlChild (ElementType elemType, char *tag, char *prevtag
 		  !strcmp ((char *)name, "none"))
 		result = IsValidHtmlChild (subTypes[0], tag, "");
 	    }
-	}
-      break;
+	  break;
+	  
+	case ConstructChoice:
+	  for (i = 0; !result && i < cardinal; i++)
+	    if (subTypes[i].ElTypeNum == tagElType.ElTypeNum)
+	      result = TRUE;
+	  if (!result)
+	    for (i = 0; !result && i < cardinal; i++)
+	      {
+		name = GetXMLElementName (subTypes[i], TransDoc);
+		if (!strcmp ((char *)name, "???") ||
+		    !strcmp ((char *)name, "p*") ||
+		    !strcmp ((char *)name, "none"))
+		  result = IsValidHtmlChild (subTypes[i], tag, "");
+	      }
+	  break;
+	  
+	case ConstructOrderedAggregate:
+	  start = 0;
+	  if (!strcmp ((char *)prevtag, ""))
+	    found = TRUE;
+	  else
+	    /* there is a previous sibling */
+	    {
+	      /* search the rule of that previous sibling */
+	      GIType (prevtag, &prevElType, (Document)TransDoc);
+	      found = (prevElType.ElTypeNum == 0);
+	      for (i = 0; !found && i < cardinal; i++)
+		{
+		  if (prevElType.ElTypeNum == subTypes[i].ElTypeNum)
+		    {
+		      found = TRUE;
+		      start = i+1;
+		    }
+		  else
+		    {
+		      name = GetXMLElementName (subTypes[i], TransDoc);
+		      if (strcmp ((char *)name, "???") ||
+			  strcmp ((char *)name, "p*") ||
+			  strcmp ((char *)name, "none"))
+			i = cardinal;
+		    }
+		}
+	    }
+	  if (found)
+	    {
+	      i = start;
+	      while (!result && i < cardinal)
+		{
+		  if (tagElType.ElTypeNum == subTypes[i].ElTypeNum)
+		    result = TRUE;
+		  else
+		    {
+		      name = GetXMLElementName (subTypes[i], TransDoc);
+		      if (!strcmp ((char *)name, "???") ||
+			  !strcmp ((char *)name, "p*") ||
+			  !strcmp ((char *)name, "none") ||
+			  TtaIsOptionalInAggregate (i, elemType)) 
+			i++;
+		      else
+			i = cardinal;
+		    }
+		}
+	      if (!result)
+		{
+		  i = start;
+		  while (!result && i < cardinal)
+		    {
+		      name = GetXMLElementName (subTypes[i], TransDoc);
+		      if (!strcmp ((char *)name, "???") ||
+			  !strcmp ((char *)name, "p*") ||
+			  !strcmp ((char *)name, "none"))
+			{
+			  result = IsValidHtmlChild (subTypes[i], tag, "");
+			  if (!result &&
+			      TtaIsOptionalInAggregate(i, elemType)) 
+			    i++;
+			  else
+			    i = cardinal;
+			}
+		      else
+			i = cardinal;
+		    }
+		}
+	    }
+	  break;
+	  
+	case ConstructUnorderedAggregate:
+	  for (i = 0; !result && i < cardinal; i++)
+	    if (tagElType.ElTypeNum == subTypes[i].ElTypeNum)
+	      result = TRUE;
+	  if (!result)
+	    for (i = 0; !result && i < cardinal; i++)
+	      {
+		name = GetXMLElementName (subTypes[i], TransDoc);
+		if (!strcmp ((char *)name, "???") ||
+		    !strcmp ((char *)name, "p*") ||
+		    !strcmp ((char *)name, "none"))
+		  result = IsValidHtmlChild (subTypes[i], tag, "");
+	      }
+	  break;
+	  
+	case ConstructNature:
+	  if (TtaSameSSchemas (tagElType.ElSSchema, subTypes[0].ElSSchema))
+	    {
+	      if (subTypes[0].ElTypeNum == 0)
+		TtaGiveTypeFromName (&subTypes[0], TtaGetElementTypeName(elemType));
+	      if (tagElType.ElTypeNum == subTypes[0].ElTypeNum)
+		result = TRUE;
+	      else
+		{
+		  name = GetXMLElementName (subTypes[0], TransDoc);
+		  if (!strcmp ((char *)name, "???") ||
+		      !strcmp ((char *)name, "p*") ||
+		      !strcmp ((char *)name, "none"))
+		    result = IsValidHtmlChild (subTypes[0], tag, "");
+		}
+	    }
+	  break;
 
-    case ConstructConstant:
-    case ConstructReference:
-    case ConstructBasicType:
-    case ConstructPair:
-    case ConstructEmpty:
-    case ConstructDocument:
-    case ConstructError:
-      break;
+	case ConstructConstant:
+	case ConstructReference:
+	case ConstructBasicType:
+	case ConstructPair:
+	case ConstructEmpty:
+	case ConstructDocument:
+	case ConstructError:
+	  break;
+	}
     }
   TtaFreeMemory((void*)subTypes);
   return result;
