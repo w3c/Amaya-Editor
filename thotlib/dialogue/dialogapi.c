@@ -1757,7 +1757,9 @@ int TtaGetReferencesBase (int number)
 
 /*----------------------------------------------------------------------
    TtaInitDialogueWindow Cre'ation et initialisation de la fenetree^tre    
-   principale d'une application.                           
+   principale d'une application.
+  ----------------------------------------------------------------------
+   REMARQUE: Cette fonction n'est plus utilisee, on doit pouvoir la supprimer
   ----------------------------------------------------------------------*/
 void TtaInitDialogueWindow (char* name, char *geometry, Pixmap logo,
 			    Pixmap icon, int number, char *textmenu)

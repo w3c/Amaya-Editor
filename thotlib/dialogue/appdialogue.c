@@ -1392,16 +1392,13 @@ int TtaAddButton (Document document, View view, ThotIcon picture,
 		      row = gtk_vseparator_new ();
 		      gtk_widget_show (row);
 		      gtk_box_pack_start (GTK_BOX (toolbar), row, FALSE, TRUE, 4);
-		      /* gtk_toolbar_append_space (GTK_TOOLBAR (FrameTable[frame].Button[0]));*/
-		      /* gtk_object_set_data (GTK_OBJECT(row), "Icon", (gpointer)NULL);*/
-		      /*	              row = NULL;*/
 		    }
 		  else
 		    {
 		      /* Add a button widget to the toolbar and put a pixmap into */
 		      /* 2 widgets are created , and only the pixmap widget will be updated */
 		      row = gtk_button_new ();
-		      /* set the relief to null */
+		      /* set the relief to none */
 		      gtk_button_set_relief (GTK_BUTTON (row), GTK_RELIEF_NONE);
 		      w = gtk_pixmap_new (picture, NULL);
 
@@ -1619,6 +1616,16 @@ void TtaSwitchButton (Document doc, View view, int index)
 	      n++;
 	      XtSetValues (FrameTable[frame].Button[index], args, n);
 #else /* _GTK */
+	      if (!status)
+		/* becomes checked */
+		gtk_button_set_relief (GTK_BUTTON (FrameTable[frame].Button[index]),
+				       GTK_RELIEF_HALF);
+	      else
+		/* becomes normal */
+		gtk_button_set_relief (GTK_BUTTON (FrameTable[frame].Button[index]),
+				       GTK_RELIEF_NONE);
+	      gtk_widget_show_all (GTK_WIDGET(FrameTable[frame].Button[index]));
+
 #endif /* !_GTK */
 #endif /* _WINDOWS */
 	    }
@@ -2760,14 +2767,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 		     {
 		       /*** The menu bar ***/
 		       menu_bar = gtk_menu_bar_new ();
-		       /*gtk_menu_bar_set_shadow_type (menu_bar, GTK_SHADOW_NONE);*/
-		       /*GTK_WIDGET_SET_FLAGS (menu_bar, GTK_SENSITIVE);*/
-		       
-		       /* gtk_widget_ref (menu_bar);*/
-		       /* gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "menubar", menu_bar,
-			  (GtkDestroyNotify) gtk_widget_unref);*/
 		       gtk_widget_show (menu_bar);
-		       /* gtk_container_add (GTK_CONTAINER (vbox1), menu_bar);*/
 		       gtk_box_pack_start (GTK_BOX (vbox1), menu_bar, FALSE, FALSE, 0);
 		     }
 		   menu_item = gtk_menu_item_new_with_label (TtaGetMessage (THOT, ptrmenu->MenuID));
@@ -2777,11 +2777,6 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 		     gtk_menu_item_right_justify(GTK_MENU_ITEM(menu_item));
 		   gtk_container_add(GTK_CONTAINER (menu_bar), menu_item);
 		   w = menu_item;
-#if 0
-		   w = gtk_menu_new ();
-		   gtk_menu_item_set_submenu (GTK_MENU_ITEM (menu_item), w);
-		   gtk_object_set_data (GTK_OBJECT(w), "MenuItem", (gpointer)menu_item);
-#endif
 #else /* _GTK */
 		   if (menu_bar == NULL)
 		     {
@@ -2819,7 +2814,6 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 #endif /* _GTK */
 #endif /* _WINDOWS */
 		   }
-
 	       ptrmenu = ptrmenu->NextMenu;
 	       ref += MAX_ITEM;
 	       i++;
@@ -2835,25 +2829,19 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 #ifndef _WINDOWS
 #ifdef _GTK
 	   /* Creation of the toolbar */
-	   /*toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);*/
+           /* I dont use the toolbarwidget because it's difficulte to manipulate it */
 	   toolbar = gtk_hbox_new (FALSE, 0);
-	   /*	   gtk_toolbar_set_space_size (GTK_TOOLBAR (toolbar), 2);*/
 	   gtk_widget_show (toolbar);
-	
-	   /* gtk_widget_set_usize (GTK_WIDGET (toolbar),-1, 20);*/
 	   gtk_box_pack_start (GTK_BOX (vbox1), toolbar, FALSE, FALSE, 2);
 
 	   for (i=1; i<MAX_BUTTON ; i++)
 	     FrameTable[frame].Button[i] = NULL;
 	   FrameTable[frame].Button[0] = toolbar;
 
-	   /* The hbox which includes the logo and text zone */
+	   /* The hbox which includes the logo and text zone (URL) */
 	   hbox1 = gtk_hbox_new (FALSE, 5);
 	   gtk_widget_show (hbox1);
 	   gtk_box_pack_start (GTK_BOX (vbox1), hbox1, FALSE, FALSE, 5);
-	   /*gtk_misc_set_alignment (GTK_MISC (hbox1), 0.5, 0.5);*/
-
-
 	   /* Put the logo */
 	   amaya_pixmap = gdk_pixmap_create_from_xpm_d (DefaultWindow->window, &amaya_mask,
 						      &DefaultWindow->style->bg[GTK_STATE_NORMAL],
