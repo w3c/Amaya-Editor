@@ -2257,6 +2257,7 @@ View                view;
    char                localname[MAX_LENGTH];
 #ifdef AMAYA_DEBUG
    Element             el;
+   View                structView;
    FILE               *list;
 
    /* get the root element */
@@ -2276,7 +2277,22 @@ View                view;
    list = fopen (localname, "w");
    TtaListBoxes (document, view, list);
    fclose (list);
+   structView = TtaGetViewFromName (document, "Structure_view");
+   if (structView != 0 && TtaIsViewOpened (document, structView))
+     {
+       strcpy (localname, TempFileDirectory);
+       strcat (localname, "/structview.debug");
+       list = fopen (localname, "w");
+       TtaListView (document, structView, list);
+       fclose (list);
+       strcpy (localname, TempFileDirectory);
+       strcat (localname, "/structboxes.debug");
+       list = fopen (localname, "w");
+       TtaListBoxes (document, structView, list);
+       fclose (list);
+     }
 #endif /* AMAYA_DEBUG */
+
   TtaNewDialogSheet (BaseDialog + FormAbout, TtaGetViewFrame (document, view), HTAppName, 1,TtaGetMessage(LIB, TMSG_LIB_CONFIRM), TRUE, 1,'L');
   strcpy (localname, HTAppName);
   strcat (localname, " - ");
