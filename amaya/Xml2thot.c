@@ -4714,20 +4714,13 @@ static Element  SetExternalElementType (Element el, Document doc,
 	  if (elemContent != NULL)
 	    {
 	      TtaInsertSibling (elemContent, el, FALSE, doc);
-	      /* Remove the IntHeightPercent and IntHeightPxl Thot attributes */
-	      attrType.AttrSSchema = elType.ElSSchema;
-	      attrType.AttrTypeNum = HTML_ATTR_IntHeightPxl;
+	      /* Remove the IntHeightPercent Thot attributes: this attribute
+	       does not make sense for Thot. */
+              attrType.AttrSSchema = elType.ElSSchema;
+	      attrType.AttrTypeNum = HTML_ATTR_IntHeightPercent;
 	      attr = TtaGetAttribute (el, attrType);
 	      if (attr != NULL)
 		TtaRemoveAttribute (el, attr, doc);
-	      else
-		{
-		  attrType.AttrTypeNum = HTML_ATTR_IntHeightPercent;
-		  attr = TtaGetAttribute (el, attrType);
-		  if (attr != NULL)
-		    TtaRemoveAttribute (el, attr, doc);
-		}
-	      
 	      /* Attach the attributes to that new element */
 	       MoveExternalAttribute (el, elemContent, doc);
 	      /* Remove the PICTURE_UNIT element form the tree */
