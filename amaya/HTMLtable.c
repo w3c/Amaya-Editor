@@ -85,13 +85,18 @@ Document            doc;
 {
    ElementType	       elType;
    AttributeType       attrType;
-   Attribute           attrCellWidth, attrColWidth;
+   Attribute           attrCellWidth, attrColWidth, attrColspan;
    int                 max, length, cellWidth;
    char		       *attrVal;
 
-   /* look for an attribute Cell_width (width, in HTML) */
    elType = TtaGetElementType (cell);
    attrType.AttrSSchema = elType.ElSSchema;
+   attrType.AttrTypeNum = HTML_ATTR_colspan;
+   attrColspan = TtaGetAttribute (cell, attrType);
+   if (attrColspan != NULL)
+      /* the cell has an attribute colspan, ignore its width */
+      return;
+   /* look for an attribute Cell_width (width, in HTML) */
    attrType.AttrTypeNum = HTML_ATTR_Cell_width;
    attrCellWidth = TtaGetAttribute (cell, attrType);
    if (attrCellWidth != NULL)

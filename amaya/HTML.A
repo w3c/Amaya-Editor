@@ -239,8 +239,11 @@ ATTRIBUTES
 	BEGIN
 	AttrCreate.Post -> UpdateAttrSelected;
 	AttrModify.Post -> UpdateAttrSelected;
-	AttrDelete.Pre ->  DeleteAttrSelected;	
+	AttrDelete.Post -> AttrSelectedDeleted;	
 	END;
+
+   Multiple:
+	AttrDelete.Post -> UpdateAttrSelected;
 
    Checked:
 	BEGIN

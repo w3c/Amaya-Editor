@@ -83,6 +83,7 @@ extern void CreateToggle ( Document document,
 extern void CreateRadio ( Document document,
                           View view );
 extern void UpdateAttrSelected ( NotifyAttribute * event );
+extern void AttrSelectedDeleted ( NotifyAttribute * event );
 extern boolean DeleteAttrSelected ( NotifyAttribute * event );
 extern void CreateOption ( Document document,
                            View view );
@@ -192,6 +193,7 @@ extern void CreateToggle (/* Document document,
 extern void CreateRadio (/* Document document,
                             View view */);
 extern void UpdateAttrSelected (/* NotifyAttribute * event */);
+extern void AttrSelectedDeleted (/* NotifyAttribute * event */);
 extern boolean DeleteAttrSelected (/* NotifyAttribute * event */);
 extern void CreateOption (/* Document document,
                              View view */);

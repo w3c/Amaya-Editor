@@ -1298,6 +1298,18 @@ BOXES
 		END;
 	END;
 
+ VALUE_MENUSIZE: BEGIN
+	Content: (MenuSize);
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
+	END;
+
  ATTR_SIZE: BEGIN
 	Content: Text ' size=';
 	HorizPos: Left = Previous . Right;
@@ -5521,6 +5533,12 @@ dans des paragraphes s affichent a cote de leur cadre...
 	END;
  Multiple:
 	CreateBefore(ATTR_MULTIPLE);
+ MenuSize:
+	BEGIN
+	CreateBefore(ATTR_SIZE);
+	CreateBefore(VALUE_MENUSIZE);
+	END;
+
  Selected:
 	BEGIN
 	CreateBefore(ATTR_SELECTED);

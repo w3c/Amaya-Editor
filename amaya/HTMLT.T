@@ -978,6 +978,11 @@ ATTRIBUTES
  Multiple:
 	Create ' multiple';
 
+ MenuSize: BEGIN
+	Create ' size=';
+	Create MenuSize;
+	END;
+
  Default_Value: BEGIN
 	Create ' value="';
 	Create Default_Value;

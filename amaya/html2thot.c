@@ -454,6 +454,7 @@ static AttributeMapping AttributeMappingTable[] =
    {"SIZE", "FONT", 'A', HTML_ATTR_Font_size},
    {"SIZE", "HR", 'A', HTML_ATTR_Size_},
    {"SIZE", "INPUT", 'A', HTML_ATTR_Area_Size},
+   {"SIZE", "SELECT", 'A', HTML_ATTR_MenuSize},
    {"SRC", "", 'A', HTML_ATTR_SRC},
    {"START", "", 'A', HTML_ATTR_Start},
    {"STYLE", "", 'A', HTML_ATTR_Style_},
@@ -1798,91 +1799,135 @@ boolean             invalid;
 }
 
 /*----------------------------------------------------------------------
-   	OnlyOneOptionSelected sets unselected other options		
-   		if parsed is True, sets the DefaultSelected attribute	
+   	OnlyOneOptionSelected
+	If the option menu is a single-choice menu, check that only
+	one option has an attribute Selected.
+	Check that at least one option has an attribute Selected.
+	If parsing is TRUE, associate an attribute DefaultSelected with
+	each option having an attribute Selected.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                OnlyOneOptionSelected (Element el, Document doc, boolean parsed)
+void                OnlyOneOptionSelected (Element el, Document doc, boolean parsing)
 #else  /* __STDC__ */
-void                OnlyOneOptionSelected (el, doc, parsed)
+void                OnlyOneOptionSelected (el, doc, parsing)
 Element             el;
 Document            doc;
-boolean             parsed;
+boolean             parsing;
 
 #endif /* __STDC__ */
 {
    ElementType         elType;
-   Element             option;
+   Element             option, menu;
    AttributeType       attrType;
    Attribute           attr;
 
    if (el == NULL)
       return;
 
-   /* search which option received this attribute before */
    elType = TtaGetElementType (el);
 
    if (elType.ElTypeNum == HTML_EL_Option_Menu)
      {
-	el = TtaGetFirstChild (el);
-	while (el != NULL && elType.ElTypeNum != HTML_EL_Option)
+	/* it's an menu (SELECT) */
+	/* search the first OPTION element having an attribute SELECTED */
+	attr = NULL;
+	attrType.AttrSSchema = elType.ElSSchema;
+	attrType.AttrTypeNum = HTML_ATTR_Selected;
+	option = TtaGetFirstChild (el);
+	while (option != NULL && attr == NULL)
 	  {
-	     elType = TtaGetElementType (el);
-	     if (elType.ElTypeNum != HTML_EL_Option)
-		TtaNextSibling (&el);
+	     elType = TtaGetElementType (option);
+	     if (elType.ElTypeNum == HTML_EL_Option)
+		attr = TtaGetAttribute (option, attrType);
+	     if (attr == NULL)
+		TtaNextSibling (&option);
+	  }
+	if (option != NULL)
+	  el = option;
+	else
+	  {
+	  option = TtaGetFirstChild (el);
+	  elType = TtaGetElementType (option);
+	  while (option != NULL && elType.ElTypeNum != HTML_EL_Option)
+	     {
+	     TtaNextSibling (&option);
+	     if (option != NULL)
+		elType = TtaGetElementType (option);
+	     }
+	  if (elType.ElTypeNum == HTML_EL_Option)
+	     el = option;
 	  }
      }
    else
-      while (elType.ElTypeNum != HTML_EL_BODY && elType.ElTypeNum != HTML_EL_Option
-	     && el != NULL)
+      while (elType.ElTypeNum != HTML_EL_BODY &&
+	     elType.ElTypeNum != HTML_EL_Option && el != NULL)
 	{
 	   el = TtaGetParent (el);
 	   elType = TtaGetElementType (el);
 	}
 
-   if (elType.ElTypeNum == HTML_EL_Option)
+   if (elType.ElTypeNum == HTML_EL_Option && el != NULL)
      {
-	/* set selected this option */
+	/* set this option SELECTED */
 	attrType.AttrSSchema = elType.ElSSchema;
 	attrType.AttrTypeNum = HTML_ATTR_Selected;
 	attr = TtaGetAttribute (el, attrType);
 	if (attr == NULL)
 	  {
-	     /* create the selected attribute */
+	     /* create the SELECTED attribute */
 	     attr = TtaNewAttribute (attrType);
 	     TtaAttachAttribute (el, attr, doc);
 	     TtaSetAttributeValue (attr, HTML_ATTR_Selected_VAL_Yes_, el, doc);
 	  }
 
-	/* set unselected other options */
-	option = TtaGetParent (el);
-	if (option != NULL)
+	/* remove the SELECTED attribute from other options in the menu */
+	/* if it's not a multiple-choices menu */
+	menu = TtaGetParent (el);
+	if (menu != NULL)
 	  {
-	     option = TtaGetFirstChild (option);
-	     while (option != NULL)
-	       {
+	     attrType.AttrTypeNum = HTML_ATTR_Multiple;
+	     attr = TtaGetAttribute (menu, attrType);
+	     if (attr == NULL)
+		{
+		attrType.AttrTypeNum = HTML_ATTR_Selected;
+	        option = TtaGetFirstChild (menu);
+	        while (option != NULL)
+	          {
 		  if (option != el)
 		    {
-		       /* Search the Ref_IMG attribute */
+		       /* Search the SELECTED attribute */
 		       attr = TtaGetAttribute (option, attrType);
-		       /* remove Selected attribute */
+		       /* remove it if it exists */
 		       if (attr != NULL)
 			  TtaRemoveAttribute (option, attr, doc);
 		    }
 		  TtaNextSibling (&option);
-	       }
-	  }
-	if (parsed)
-	  {
-	     attrType.AttrTypeNum = HTML_ATTR_DefaultSelected;
-	     attr = TtaGetAttribute (el, attrType);
-	     if (attr == NULL)
-	       {
-		  /* create the selected attribute */
-		  attr = TtaNewAttribute (attrType);
-		  TtaAttachAttribute (el, attr, doc);
-		  TtaSetAttributeValue (attr, HTML_ATTR_DefaultSelected_VAL_Yes_, el, doc);
-	       }
+	          }
+		}
+	     if (parsing)
+		/* when parsing the HTML file, associate a DefaultSelected
+		   attribute with each element having a SELECTED attribute */
+		{
+		  option = TtaGetFirstChild (menu);
+		  while (option != NULL)
+		     {
+		     attrType.AttrTypeNum = HTML_ATTR_Selected;
+		     attr = TtaGetAttribute (option, attrType);
+		     if (attr != NULL)
+			{
+			attrType.AttrTypeNum = HTML_ATTR_DefaultSelected;
+			attr = TtaGetAttribute (option, attrType);
+			if (attr == NULL)
+			   {
+			   /* create the DefaultSelected attribute */
+			   attr = TtaNewAttribute (attrType);
+			   TtaAttachAttribute (option, attr, doc);
+			   TtaSetAttributeValue (attr, HTML_ATTR_DefaultSelected_VAL_Yes_, option, doc);
+			   }
+			}
+		     TtaNextSibling (&option);
+		     }
+		}
 	  }
      }
 }
@@ -2082,7 +2127,7 @@ Element             el;
 	       break;
 
 	    case HTML_EL_Option_Menu:
-	       /* put selected attribute on the first option */
+	       /* Check that at least one option has a SELECTED attribute */
 	       OnlyOneOptionSelected (el, theDocument, TRUE);
 	       break;
 	    case HTML_EL_PICTURE_UNIT:
@@ -3340,7 +3385,6 @@ char                c;
 #endif
 {
    int                 attrKind;
-   Attribute           attr;
    AttributeType       attrType;
    int                 entry;
    int                 val;
@@ -3518,31 +3562,6 @@ char                c;
 	else if (!strcmp (AttributeMappingTable[lastAttrEntry].htmlAttribute, "TEXT") ||
 		 !strcmp (AttributeMappingTable[lastAttrEntry].htmlAttribute, "COLOR"))
 	   HTMLSetForegroundColor (theDocument, lastElement, inputBuffer);
-	else if (!strcmp (AttributeMappingTable[lastAttrEntry].htmlAttribute, "CHECKED"))
-	  {
-	     if (TtaGetAttributeValue (attr) == HTML_ATTR_Checked_VAL_Yes_)
-	       {
-		  /* create Default-Checked attribute */
-		  attrType.AttrSSchema = structSchema;
-		  attrType.AttrTypeNum = HTML_ATTR_DefaultChecked;
-		  attr = TtaNewAttribute (attrType);
-		  TtaAttachAttribute (lastAttrElement, attr, theDocument);
-		  TtaSetAttributeValue (attr, HTML_ATTR_DefaultChecked_VAL_Yes_, lastAttrElement, theDocument);
-	       }
-	  }
-	else if (!strcmp (AttributeMappingTable[lastAttrEntry].htmlAttribute, "SELECTED"))
-	  {
-	     if (TtaGetAttributeValue (attr) == HTML_ATTR_Selected_VAL_Yes_)
-	       {
-		  /* create Default-Selected attribute */
-		  attrType.AttrSSchema = structSchema;
-		  attrType.AttrTypeNum = HTML_ATTR_DefaultSelected;
-		  attr = TtaNewAttribute (attrType);
-		  TtaAttachAttribute (lastAttrElement, attr, theDocument);
-		  TtaSetAttributeValue (attr, HTML_ATTR_DefaultSelected_VAL_Yes_, lastAttrElement, theDocument);
-	       }
-	  }
-
      }
    InitBuffer ();
 }

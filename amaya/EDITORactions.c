@@ -875,6 +875,23 @@ NotifyAttribute    *event;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
+void                AttrSelectedDeleted (NotifyAttribute * event)
+#else  /* __STDC__ */
+void                AttrSelectedDeleted (event)
+NotifyAttribute    *event;
+
+#endif /* __STDC__ */
+{
+   Element	menu;
+
+   menu = TtaGetParent (event->element);
+   OnlyOneOptionSelected (menu, event->document, FALSE);
+}
+
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
 boolean             DeleteAttrSelected (NotifyAttribute * event)
 #else  /* __STDC__ */
 boolean             DeleteAttrSelected (event)

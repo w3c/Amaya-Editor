@@ -221,7 +221,7 @@ STRUCT
 	ISINDEX;
 	END;
 
-  Option_Menu (ATTR !NAME; Multiple = Yes_) =
+  Option_Menu (ATTR !NAME; Multiple = Yes_; MenuSize = Integer) =
 	LIST OF (Option) - (Input);
   Option (ATTR Selected = Yes_; DefaultSelected = Yes_; !Default_Value) =
 	TEXT;

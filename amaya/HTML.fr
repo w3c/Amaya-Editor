@@ -164,6 +164,7 @@ ENCTYPE: enctype
 Rows: rows
 Columns: cols
 Multiple: multiple
+MenuSize: size
 Selected: selected
 Default_Value: value
 Checked: checked
