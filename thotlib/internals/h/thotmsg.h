@@ -31,6 +31,10 @@ int indexTable ;
 #define NUMBER_OF_CHAR_BEFORE_SAVE	10
 #define VIEWS_TO_PRINT		11
 #define HELP			12
+#define SPACES_MODE		13
+#define VAL_CHARACTER		14
+#define VAL_SPACE		15
+#define OUTPUT_MODE		16
 
-#define THOT_MAX_MSG			13
+#define THOT_MAX_MSG			17
 #endif
