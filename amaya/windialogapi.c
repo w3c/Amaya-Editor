@@ -95,7 +95,7 @@ static char       AttDlgTitle[100];
 static char       MathEntName[MAX_TXT_LEN];
 static char       szBuffer[MAX_BUFF];
 static char      *ClassList;
-static char      *LangList;
+static char      *ItemList;
 static char      *SavList;
 static char      *cssList;
 static char      *mimeType;
@@ -810,71 +810,71 @@ LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg,
       SetWindowText (GetDlgItem (hwnDlg, ID_DONE),
 		     TtaGetMessage (LIB, TMSG_DONE));
       
-      radio1 = CreateWindow ("BUTTON", &LangList[ndx],
+      radio1 = CreateWindow ("BUTTON", &ItemList[ndx],
 			     WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
 			     cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
 			     (HMENU) OPT1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
        /* set the font of the window */
       if (newFont)
 	SendMessage (radio1, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
-      ndx += strlen (&LangList[ndx]) + 1;
+      ndx += strlen (&ItemList[ndx]) + 1;
       i++;
-      radio2 = CreateWindow ("BUTTON", &LangList[ndx],
+      radio2 = CreateWindow ("BUTTON", &ItemList[ndx],
 		  WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
 		  cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
 		  (HMENU) OPT2, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
        /* set the font of the window */
       if (newFont)
 	SendMessage (radio2, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
-      ndx += strlen (&LangList[ndx]) + 1;
+      ndx += strlen (&ItemList[ndx]) + 1;
       i++;
       if (attDlgNbItems > 2)
 	{
-	  radio3 = CreateWindow ("BUTTON", &LangList[ndx],
+	  radio3 = CreateWindow ("BUTTON", &ItemList[ndx],
 				 WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
 				 cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
 				 (HMENU) OPT3, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 	  /* set the font of the window */
 	  if (newFont)
 	    SendMessage (radio3, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
-	  ndx += strlen (&LangList[ndx]) + 1;
+	  ndx += strlen (&ItemList[ndx]) + 1;
 	  i++;
 	  if (attDlgNbItems > 3)
 	    {	  
-	      radio4 = CreateWindow ("BUTTON", &LangList[ndx],
+	      radio4 = CreateWindow ("BUTTON", &ItemList[ndx],
 				     WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
 				     cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
 				     (HMENU) OPT4, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 	      /* set the font of the window */
 	      if (newFont)
 		SendMessage (radio4, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
-	      ndx += strlen (&LangList[ndx]) + 1;
+	      ndx += strlen (&ItemList[ndx]) + 1;
 	      i++;
 	      if (attDlgNbItems > 4)
 		{
-		  radio5 = CreateWindow ("BUTTON", &LangList[ndx],
+		  radio5 = CreateWindow ("BUTTON", &ItemList[ndx],
 					 WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
 					 cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
 					 (HMENU) OPT5, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 		  /* set the font of the window */
 		  if (newFont)
 		    SendMessage (radio5, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
-		  ndx += strlen (&LangList[ndx]) + 1;
+		  ndx += strlen (&ItemList[ndx]) + 1;
 		  i++;
           if (attDlgNbItems > 5)
 		  {
-	         radio6 = CreateWindow ("BUTTON", &LangList[ndx],
+	         radio6 = CreateWindow ("BUTTON", &ItemList[ndx],
 				 WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
 				 cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
 				 (HMENU) OPT6, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 		 /* set the font of the window */
 		 if (newFont)
 		   SendMessage (radio6, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
-	         ndx += strlen (&LangList[ndx]) + 1;
+	         ndx += strlen (&ItemList[ndx]) + 1;
 	         i++;
 	         if (attDlgNbItems > 6)
 			 {	  
-	            radio7 = CreateWindow ("BUTTON", &LangList[ndx],
+	            radio7 = CreateWindow ("BUTTON", &ItemList[ndx],
 					WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
 					cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
 					(HMENU) OPT7, (HINSTANCE) GetWindowLong (hwnDlg,
@@ -882,29 +882,29 @@ LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg,
 		    /* set the font of the window */
 		    if (newFont)
 		      SendMessage (radio7, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
-	            ndx += strlen (&LangList[ndx]) + 1;
+	            ndx += strlen (&ItemList[ndx]) + 1;
 	            i++;
 	            if (attDlgNbItems > 7)
 				{
-		          radio8 = CreateWindow ("BUTTON", &LangList[ndx],
+		          radio8 = CreateWindow ("BUTTON", &ItemList[ndx],
 					  WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
 					  cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
 					  (HMENU) OPT8, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 			  /* set the font of the window */
 			  if (newFont)
 			    SendMessage (radio8, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
-	              ndx += strlen (&LangList[ndx]) + 1;
+	              ndx += strlen (&ItemList[ndx]) + 1;
 		          i++;
 				  if (attDlgNbItems > 8)
 				  {
-		            radio9 = CreateWindow ("BUTTON", &LangList[ndx],
+		            radio9 = CreateWindow ("BUTTON", &ItemList[ndx],
 					  WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
 					  cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
 					  (HMENU) OPT9, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 			    /* set the font of the window */
 			    if (newFont)
 			      SendMessage (radio9, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
-	                ndx += strlen (&LangList[ndx]) + 1;
+	                ndx += strlen (&ItemList[ndx]) + 1;
 		            i++;
 				  }
 				}
@@ -1806,10 +1806,10 @@ LRESULT CALLBACK LanguageDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       if (newFont)
          SendMessage (wndLangList, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
       SendMessage (wndLangList, LB_RESETCONTENT, 0, 0);
-      while (i < NbItem && LangList[index] != '\0')
+      while (i < NbItem && ItemList[index] != '\0')
 	{
-	  SendMessage (wndLangList, LB_INSERTSTRING, i, (LPARAM) &LangList[index]); 
-	  index += strlen (&LangList[index]) + 1;/* Longueur de l'intitule */
+	  SendMessage (wndLangList, LB_INSERTSTRING, i, (LPARAM) &ItemList[index]); 
+	  index += strlen (&ItemList[index]) + 1;/* Longueur de l'intitule */
 	  i++;
       }
       SetWindowText (GetDlgItem (hwnDlg, IDC_LNGEDIT), WinCurLang);
@@ -3795,7 +3795,7 @@ void CreateLanguageDlgWindow (ThotWindow parent, char *title, char *msg1,
 	   strcpy (WinCurLang, TtaGetLanguageName (lang_value));
    else
 	   WinCurLang[0] = EOS;
-   LangList = lang_list;
+   ItemList = lang_list;
    NbItem = (UINT)nb_item;
    DialogBox (hInstance, MAKEINTRESOURCE (LANGUAGEDIALOG), NULL,
 	   (DLGPROC) LanguageDlgProc);
@@ -3823,7 +3823,8 @@ void CreateCharacterDlgWindow (ThotWindow parent, int font_num, int font_style,
 /*-----------------------------------------------------------------------
  CreateAttributeDlgWindow
  ------------------------------------------------------------------------*/
-void CreateAttributeDlgWindow (char *title, int curr_val, int nb_items) 
+void CreateAttributeDlgWindow (char *title, int curr_val, int nb_items,
+			       char *item_list) 
 {
   /* destroy the precent attribute menu */
   if (AttrForm)
@@ -3832,6 +3833,7 @@ void CreateAttributeDlgWindow (char *title, int curr_val, int nb_items)
 	  AttrForm = NULL;
   }
   strcpy (AttDlgTitle, title);
+  ItemList = item_list;
   currAttrVal = curr_val;
   attDlgNbItems = nb_items;
   switch (attDlgNbItems)

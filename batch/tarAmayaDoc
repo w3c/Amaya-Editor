@@ -18,13 +18,6 @@ echo "Generating doc tar files "
    Amaya/README.gl \
    Amaya/amaya/COPYRIGHT* \
    Amaya/amaya/AmayaPage.html.* \
-   Amaya/config/de-* \
-   Amaya/config/es-* \
-   Amaya/config/fi-* \
-   Amaya/config/fr-* \
-   Amaya/config/it-* \
-   Amaya/config/pt-* \
-   Amaya/config/tr-* \
    Amaya/dicopar/F*.dic \
    Amaya/dicopar/*.ptn \
    Amaya/dicopar/alphabet \

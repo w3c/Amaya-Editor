@@ -70,7 +70,7 @@ extern void       CreateSaveListDlgWindow (ThotWindow parent, int nb_item, char 
 extern void       CreateCloseDocDlgWindow (ThotWindow parent, char *msg, ThotBool* save_befor, ThotBool* close_dont_save);
 extern void       CreateLanguageDlgWindow (ThotWindow parent, char *title, char *msg1, int nb_item, char *lang_list, char *msg2, int lang_value);
 extern void       CreateCharacterDlgWindow (ThotWindow, int, int, int, int, int);
-extern void       CreateAttributeDlgWindow (char *, int, int);
+extern void       CreateAttributeDlgWindow (char *title, int curr_val, int nb_items, char *item_list);
 extern void       CreateRuleDlgWindow (ThotWindow parent, int nb_class, char *class_list);
 extern void       CreateApplyClassDlgWindow (ThotWindow parent, int nb_class, char *class_list);
 extern void       CreateSpellCheckDlgWindow (ThotWindow, char *, char *, int, int, int, int, int, int, int);

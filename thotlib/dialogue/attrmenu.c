@@ -1751,7 +1751,8 @@ void CallbackAttrMenu (int refmenu, int att, int frame)
 		else if (WIN_AtTextAttr && !isForm) 
 		  WIN_InitSheetDialog (TtaGetViewFrame (doc, view));
 		else if (WIN_AtEnumAttr) 
-                  CreateAttributeDlgWindow (pAttr->AttrName, currAttrVal, nbDlgItems);
+                  CreateAttributeDlgWindow (pAttr->AttrName, currAttrVal,
+					    nbDlgItems, WIN_buffMenu);
 #endif /* _WINDOWS */
 	      }
 	    DeleteAttribute (NULL, pAttrNew);
