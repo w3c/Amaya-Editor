@@ -6,30 +6,22 @@
  */
  
 /* Included headerfiles */
+#define EXPORT extern
 #include "amaya.h"
-#include "interface.h"
-#include "content.h"
-#include "reference.h"
-#include "tree.h"
-#include "browser.h"
-#include "selection.h"
-#include "dialog.h"
-#include "app.h"
-#include "message.h"
-#include "HTMLactions.h"
-#include "HTMLstyle.h"
-#include "EDITOR.h"
-
 #include "css.h"
 
-#include "AHTURLTools.h"
-#include "HTMLimage.h"
-#include "EDITimage.h"
-#include "HTMLedit.h"
-#include "HTMLform.h"
-#include "init.h"
 
-extern char        *TargetName;
+#include "css_f.h"
+#include "init_f.h"
+#include "query_f.h"
+#include "AHTURLTools_f.h"
+#include "EDITimage_f.h"
+#include "HTMLactions_f.h"
+#include "HTMLstyle_f.h"
+#include "HTMLedit_f.h"
+#include "HTMLform_f.h"
+#include "HTMLimage_f.h"
+
 
 /*----------------------------------------------------------------------
    SetFontOrPhraseOnElement                                
@@ -325,7 +317,7 @@ NotifyDialog       *event;
 	     /* now exit the application */
 	     QueryClose ();
 	     CloseCSS ();
-	     QuitEditor ();
+	     TtaQuit ();
 	  }
      }
 }
@@ -905,7 +897,7 @@ int                 eltype;
    /* process all selected elements */
    firstSelectedElem = selectedEl;
    firstSelectedChar = firstChar;
-   ClearAllViewSelection ();
+   TtaClearViewSelections ();
    while (selectedEl != NULL)
      {
 	/* get the element to be processed after the current element: the */

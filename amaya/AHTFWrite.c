@@ -25,6 +25,7 @@
  *
  */
 
+#define EXPORT extern
 #include "amaya.h"
 
 struct _HTStream
@@ -39,15 +40,40 @@ struct _HTStream
      HTRequestCallback  *callback;
   };
 
+#ifdef __STDC__
+static int AHTFWriter_flush ( HTStream * me );
+static int AHTFWriter_put_character ( HTStream * me,
+                                              char c );
+static int AHTFWriter_put_string ( HTStream * me,
+                                           const char *s );
+static int AHTFWriter_write ( HTStream * me,
+                                      const char *s,
+                                      int l );
+static int AHTFWriter_HT_FREE ( HTStream * me );
+static int AHTFWriter_abort ( HTStream * me,
+                                      HTList * e );
+#else 
+static int AHTFWriter_flush (/* HTStream * me */);
+static int AHTFWriter_put_character (/* HTStream * me,
+                                                char c */);
+static int AHTFWriter_put_string (/* HTStream * me,
+                                             const char *s */);
+static int AHTFWriter_write (/* HTStream * me,
+                                        const char *s,
+                                        int l */);
+static int AHTFWriter_HT_FREE (/* HTStream * me */);
+static int AHTFWriter_abort (/* HTStream * me,
+                                       HTList * e */);
+#endif
 
 /*----------------------------------------------------------------------
    SOCKET WRITER STREAM			     
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-PRIVATE int         AHTFWriter_flush (HTStream * me)
+static int         AHTFWriter_flush (HTStream * me)
 #else  /* __STDC__ */
-PRIVATE int         AHTFWriter_flush (me)
+static int         AHTFWriter_flush (me)
 HTStream           *me
 #endif				/* __STDC__ */
 {
@@ -55,9 +81,9 @@ HTStream           *me
 }
 
 #ifdef __STDC__
-PRIVATE int         AHTFWriter_put_character (HTStream * me, char c)
+static int         AHTFWriter_put_character (HTStream * me, char c)
 #else				/* __STDC__ */
-PRIVATE int         AHTFWriter_put_character (me, c)
+static int         AHTFWriter_put_character (me, c)
 Stream             *me;
 char                c;
 
@@ -77,9 +103,9 @@ char                c;
 }
 
 #ifdef __STDC__
-PRIVATE int         AHTFWriter_put_string (HTStream * me, const char *s)
+static int         AHTFWriter_put_string (HTStream * me, const char *s)
 #else  /* __STDC__ */
-PRIVATE int         AHTFWriter_put_string (me, s)
+static int         AHTFWriter_put_string (me, s)
 HTStream           *me;
 const char         *s;
 
@@ -103,9 +129,9 @@ const char         *s;
 
 
 #ifdef __STDC__
-PRIVATE int         AHTFWriter_write (HTStream * me, const char *s, int l)
+static int         AHTFWriter_write (HTStream * me, const char *s, int l)
 #else  /* __STDC__ */
-PRIVATE int         AHTFWriter_write (me, s, l)
+static int         AHTFWriter_write (me, s, l)
 HTStream           *me;
 const char         *s;
 int                 l;
@@ -127,9 +153,9 @@ int                 l;
 }
 
 #ifdef __STDC__
-PRIVATE int         AHTFWriter_HT_FREE (HTStream * me)
+static int         AHTFWriter_HT_FREE (HTStream * me)
 #else  /* __STDC__ */
-PRIVATE int         AHTFWriter_HT_FREE (me)
+static int         AHTFWriter_HT_FREE (me)
 HTStream           *me;
 
 #endif /* __STDC__ */
@@ -158,9 +184,9 @@ HTStream           *me;
 }
 
 #ifdef __STDC__
-PRIVATE int         AHTFWriter_abort (HTStream * me, HTList * e)
+static int         AHTFWriter_abort (HTStream * me, HTList *e)
 #else  /* __STDC__ */
-PRIVATE int         AHTFWriter_abort (me, e)
+static int         AHTFWriter_abort (me, e)
 HTStream           *me;
 HTList             *e;
 
@@ -184,7 +210,7 @@ HTList             *e;
    return HT_ERROR;
 }
 
-PRIVATE const HTStreamClass AHTFWriter =	/* As opposed to print etc */
+static const HTStreamClass AHTFWriter =	/* As opposed to print etc */
 {
    "FileWriter",
    AHTFWriter_flush,
@@ -197,12 +223,11 @@ PRIVATE const HTStreamClass AHTFWriter =	/* As opposed to print etc */
 
 #ifdef __STDC__
 HTStream           *AHTFWriter_new (HTRequest * request, FILE * fp, BOOL leave_open)
-#else  /* __STDC__ */
+#else  
 HTStream           *AHTFWriter_new (request, fp, leave_open)
 HTRequest          *request;
 FILE               *fp;
 BOOL                leave_open;
-
 #endif /* __STDC__ */
 {
    HTStream           *me = NULL;

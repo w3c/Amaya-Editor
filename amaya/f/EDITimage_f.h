@@ -21,11 +21,11 @@ extern void UpdateSRCattribute ( NotifyElement * event );
 extern void SRCattrModified ( NotifyAttribute * event );
 extern void CreateImage ( Document document,
                           View view );
-extern unsigned char AddLocalImage ( char *fullname,
-                                     char *name,
-                                     char *url,
-                                     Document doc,
-                                     LoadedImageDesc ** desc );
+extern boolean AddLocalImage ( char *fullname,
+                               char *name,
+                               char *url,
+                               Document doc,
+                               LoadedImageDesc ** desc );
 extern void RemoveDocumentImages ( Document doc );
 extern void UpdateImageMap ( Element image,
                              Document document );
@@ -47,11 +47,11 @@ extern void UpdateSRCattribute (/* NotifyElement * event */);
 extern void SRCattrModified (/* NotifyAttribute * event */);
 extern void CreateImage (/* Document document,
                             View view */);
-extern unsigned char AddLocalImage (/* char *fullname,
-                                       char *name,
-                                       char *url,
-                                       Document doc,
-                                       LoadedImageDesc ** desc */);
+extern boolean AddLocalImage (/* char *fullname,
+                                 char *name,
+                                 char *url,
+                                 Document doc,
+                                 LoadedImageDesc ** desc */);
 extern void RemoveDocumentImages (/* Document doc */);
 extern void UpdateImageMap (/* Element image,
                                Document document */);

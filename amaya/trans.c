@@ -6,22 +6,15 @@
  */
 
 /* Included headerfiles */
+#define EXPORT extern
 #include "amaya.h"
-#include "content.h"
-#include "tree.h"
-#include "browser.h"
-#include "interface.h"
-#include "selection.h"
-#include "dialog.h"
-#include "app.h"
-#include "message.h"
-#include "HTMLstyle.h"
 #include "trans.h"
-#include "conststr.h"
-#include "typestr.h"
 
-#include "html2thot.h"
-#include "f/transparse_f.h"
+#include "../thotlib/internals/h/conststr.h"
+#include "../thotlib/internals/h/typestr.h"
+
+#include "html2thot_f.h"
+#include "transparse_f.h"
  
 /* variables du pattern matching */
 

@@ -17,10 +17,10 @@ extern void InitSaveForm ( Document document,
                            char *pathname );
 extern int SaveDocumentThroughNet ( Document document,
                                     View view,
-                                    Boolean confirm );
+                                    boolean confirm );
 extern void SaveDocument ( Document document,
                            View view );
-extern unsigned char DocumentToSave ( NotifyDialog * event );
+extern boolean DocumentToSave ( NotifyDialog * event );
 extern void CreateNewImagePaths ( char *DocUrl,
                                   char *OldPath,
                                   char *NewUrl,
@@ -45,10 +45,10 @@ extern void InitSaveForm (/* Document document,
                              char *pathname */);
 extern int SaveDocumentThroughNet (/* Document document,
                                       View view,
-                                      Boolean confirm */);
+                                      boolean confirm */);
 extern void SaveDocument (/* Document document,
                              View view */);
-extern unsigned char DocumentToSave (/* NotifyDialog * event */);
+extern boolean DocumentToSave (/* NotifyDialog * event */);
 extern void CreateNewImagePaths (/* char *DocUrl,
                                     char *OldPath,
                                     char *NewUrl,

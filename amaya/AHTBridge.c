@@ -15,27 +15,15 @@
  *      the Xt, libwww, and Amaya procedures
  *
  * History:
- *      May 02 96 JK    First semi-stable version, Jose Kahan
- *      June 01 96 JK   First almost-complete version, Jose Kahan 
+ *
  */
 
-/* Unix/C/X */
-#include "thot_gui.h"
-#include "thot_sys.h"
-#include "message.h"
-#include "dialog.h"
-#include "application.h"
-#include "content.h"
-#include "view.h"
-#include "interface.h"
+#define EXPORT extern
 #include "amaya.h"
-
-#if 0
-#include "AHTCommon.h"
-#include "query.h"
-#endif
-
-#include "AHTBridge.h"		/* implemented here */
+#include "AHTBridge_f.h"
+#include "AHTFWrite_f.h"
+#include "query_f.h"
+#include "answer_f.h"
 
 #ifdef WWW_XWINDOWS
 /* Amaya's X appcontext */
@@ -45,7 +33,7 @@ extern XtAppContext app_cont;
 
 
 #ifndef HACK_WWW
-extern PUBLIC HTEventCallback *HTEvent_Retrieve (SOCKET, SockOps, HTRequest ** arp);
+extern  HTEventCallback *HTEvent_Retrieve (SOCKET, SockOps, HTRequest ** arp);
 
 #endif
 
@@ -76,22 +64,22 @@ static void         RequestKillExceptXtevent ();
  * if the connection has been closed, the socket will appear readable under
  * BSD Unix semantics 
  */
-PRIVATE const SockOps ReadBits = FD_READ | FD_ACCEPT | FD_CLOSE;
-PRIVATE const SockOps WriteBits = FD_WRITE | FD_CONNECT;
-PRIVATE const SockOps ExceptBits = FD_OOB;
+static const SockOps ReadBits = FD_READ | FD_ACCEPT | FD_CLOSE;
+static const SockOps WriteBits = FD_WRITE | FD_CONNECT;
+static const SockOps ExceptBits = FD_OOB;
 
 /*
  * Private functions
  */
 
-/*
- * Callback that acts as a bridge between X and wwwlib.
- * This function is equivalent to the library's __DoCallback()
- * function, but with a different API, to conform to Xt's event loop
- * specifications. For more info, cf. the library's HTEvntrg.c module.
- */
+/*--------------------------------------------------------------------
+  AHTCallback_bridge
+  Callback that acts as a bridge between X and wwwlib.
+  This function is equivalent to the library's __DoCallback()
+  function, but with a different API, to conform to Xt's event loop
+  specifications. For more info, cf. the library's HTEvntrg.c module.
+  -------------------------------------------------------------------*/
 
-#ifdef WWW_XWINDOWS
 #ifdef __STDC__
 XtInputCallbackProc AHTCallback_bridge (caddr_t cd, int *s, XtInputId * id)
 #else
@@ -99,10 +87,11 @@ XtInputCallbackProc AHTCallback_bridge (cd, s, id)
 caddr_t             cd;
 int                *s;
 XtInputId          *id;
-
 #endif /* __STDC__ */
-
-#else  /* WWW_XWINDOWS */
+/** JK: 26/Dec/96: Took out this code as Cextract has problems to
+generate a prototype when there are 2 imbricated ifdefs. ***/
+#ifdef 0
+/* Windows prototype */
 /* some winproc someday? */
 LONG                AHTCallback_bridge (caddr_t cd, int *s)
 #endif				/* !WWW_XWINDOWS */
@@ -111,9 +100,9 @@ LONG                AHTCallback_bridge (caddr_t cd, int *s)
    HTRequest          *rqp = NULL;
    AHTReqContext      *me;
    SOCKET              sock;
-   SockOps             ops;	/* what value goes here ? Ask eric */
+   SockOps             ops=0;	
 
-   /* Libwww 4.1 does not take into account the third parameter
+   /* Libwww 5.0a does not take into account the ops parameter
       for this function call */
 
 #ifdef HACK_WWW
@@ -125,44 +114,8 @@ LONG                AHTCallback_bridge (caddr_t cd, int *s)
 #endif
    me = HTRequest_context (rqp);
 
-#if 0
-   switch ((XtInputId) cd)
-	 {
-	    case XtInputReadMask:
-	       ops = me->read_ops;
-	       if (me->read_xtinput_id)
-		 {
-		    XtRemoveInput (me->read_xtinput_id);
-		    if (THD_TRACE)
-		       fprintf (stderr, "(BT) removing Xtinput %lu R (AHTBridge before cbf), sock %d\n", me->read_xtinput_id, *s);
-		    me->read_xtinput_id = 0;
-		 }
-	       break;
-	    case XtInputWriteMask:
-	       ops = me->write_ops;
-	       if (me->write_xtinput_id)
-		 {
-		    XtRemoveInput (me->write_xtinput_id);
-		    if (THD_TRACE)
-		       fprintf (stderr, "(BT) removing Xtinput %lu W (AHTBridge before cbf), sock %d\n", me->write_xtinput_id, *s);
-		    me->write_xtinput_id = 0;
-		 }
-	       break;
-	    case XtInputExceptMask:
-	       ops = me->except_ops;
-	       if (me->except_xtinput_id)
-		 {
-		    XtRemoveInput (me->except_xtinput_id);
-		    if (THD_TRACE)
-		       fprintf (stderr, "(BT) removing Xtinput %lu E (AHTBridge before cbf), sock %d\n", me->except_xtinput_id, *s);
-		    me->except_xtinput_id = 0;
-		 }
-	       break;
-	 }			/* switch */
-#endif
-
    if (THD_TRACE)
-      fprintf (stderr, "AHTBridge: Processing url %s \n", me->urlName);
+     fprintf (stderr, "AHTBridge: Processing url %s \n", me->urlName);
 
 
 #ifdef WWW_XWINDOWS
@@ -257,7 +210,6 @@ LONG                AHTCallback_bridge (caddr_t cd, int *s)
 	return (0);
      }
 
-
    /* verify if the request is still alive !! */
 
    if ((me->request->net == (HTNet *) NULL) || (me->reqStatus == HT_END || me->reqStatus == HT_ERR))
@@ -281,13 +233,12 @@ LONG                AHTCallback_bridge (caddr_t cd, int *s)
 }
 
 
-/* 
- * This function is called whenever a socket is available
- * for a request. It  the necessary events to the Xt
- * A small interface to the HTLoadAnchor libwww function.
- * It prepares Xt to handle the asynchronous data requests.
- */
-
+/*----------------------------------------------------------------
+  Add_NewSocket_to_Loop
+  This function is called whenever a socket is available
+  for a request. It prepares Xt to handle the
+  asynchronous data requests.
+  ----------------------------------------------------------------*/
 #ifdef __STDC__
 int                 Add_NewSocket_to_Loop (HTRequest * request, HTAlertOpcode op, int msgnum, const char *dfault, void *input, HTAlertPar * reply)
 #else
@@ -303,8 +254,6 @@ HTAlertPar         *reply;
 {
    SOCKET              req_socket;
    AHTReqContext      *me = HTRequest_context (request);
-
-   /* AmayaOpenRequests *reqState; */
 
    if (me->reqStatus == HT_NEW_PENDING)
      {
@@ -330,13 +279,7 @@ HTAlertPar         *reply;
 
    /* reusing this function to save on file descriptors */
 
-
    return (HT_OK);
-
-    /***
-    if(me->method == METHOD_PUT || me->method == METHOD_POST)
-	return (HT_OK);
-    ***/
 
    /* get the socket number associated to the request */
 
@@ -366,16 +309,7 @@ HTAlertPar         *reply;
      }
 
 #endif /* WWW_XWINDOWS */
-   /* To speed up the stop performances, we move the active requests to the top of the Amaya list */
 
-   /*
-      reqState  = DocRequestState(Amaya->open_requests, me->docid);
-
-      if(reqState->counter > 1) {
-      HTList_removeObject (Amaya->reqlist, (void *) me);
-      HTList_addObject (Amaya->reqlist, (void *) me);
-      }
-    */
    return (HT_OK);
 }
 

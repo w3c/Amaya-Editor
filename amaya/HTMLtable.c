@@ -5,25 +5,13 @@
  *
  */
 
-/* Included header files */
-#include "HTML.h"
-#include "app.h"
-#include "application.h"
-#include "attribute.h"
-#include "reference.h"
-#include "selection.h"
-#include "conststr.h"
-#include "constprs.h"
-#include "constint.h"
-#include "constmedia.h"
-#include "typeint.h"
-#include "typemedia.h"
-#include "tree.h"
+/* Amaya includes  */
+#define EXPORT extern
+#include "amaya.h"
 
 static Element      CurrentPastedRow = NULL;
 static Element      CurrentCreatedRow = NULL;
 
-#include "memory_f.h"
 
 /*----------------------------------------------------------------------
    GetCellFromColumnHead
@@ -2507,9 +2495,9 @@ NotifyElement      *event;
    delete unnecessary Table_cell_ghost elements.   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void static         CheckGhosts (Element row, Document doc)
+static void         CheckGhosts (Element row, Document doc)
 #else
-void static         CheckGhosts (row, doc)
+static void         CheckGhosts (row, doc)
 Element             row;
 Document            doc;
 

@@ -6,30 +6,8 @@
  */
  
 /* Included headerfiles */
+#define EXPORT extern
 #include "amaya.h"
-#include "content.h"
-#include "view.h"
-#include "interface.h"
-#include "appaction.h"
-#include "message.h"
-#include "libmsg.h"
-#include "dialog.h"
-#include "browser.h"
-#include "selection.h"
-#include "presentation.h"
-#include "HTMLactions.h"
-#include "HTMLstyle.h"
-#include "EDITOR.h"
-#include "dialog.h"
-#include "css.h"
-
-#include "HTMLsave.h"
-#include "init.h"
-#include "HTMLimage.h"
-#include "EDITimage.h"
-#include "css.h"
-#include "AHTURLTools.h"
-#include "HTMLsave.h"
 
 static char         tempSavedObject[MAX_LENGTH];
 
@@ -67,6 +45,14 @@ URL_elem            URL_elem_tab[] =
 };
 
 #define NB_URL_PAIR ((sizeof(URL_elem_tab)) / (sizeof(URL_elem)))
+
+#include "init_f.h"
+#include "query_f.h"
+#include "AHTURLTools_f.h"
+#include "EDITimage_f.h"
+#include "HTMLimage_f.h"
+#include "HTMLsave_f.h"
+
 
 /*----------------------------------------------------------------------
    SetAbsoluteURLs : change relative URLs to absolute ones.        
@@ -263,12 +249,12 @@ char               *pathname;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 SaveDocumentThroughNet (Document document, View view, Boolean confirm)
+int                 SaveDocumentThroughNet (Document document, View view, boolean confirm)
 #else
 int                 SaveDocumentThroughNet (document, view, confirm)
 Document            document;
 View                view;
-Boolean             confirm;
+boolean             confirm;
 
 #endif
 {
@@ -434,7 +420,6 @@ View                view;
       return;
    SavingDocument = document;
 
-   CloseInsertion ();
    TtaGetDocumentDirectory (document, tempname, MAX_LENGTH);
 
    /* attempt to save through network if possible */

@@ -19,27 +19,15 @@
 /* Without this option, it creates a function ppStartParser that parses a   */
 /* trans file and displays the internal representation of transformations.  */
 
+#define EXPORT extern
 #include "amaya.h"
-#ifndef  PPSTANDALONE
-#include "application.h"
-#include "document.h"
-#include "content.h"
-#include "tree.h"
-#include "browser.h"
-#include "interface.h"
-#include "selection.h"
-#include "dialog.h"
-#include "app.h"
-#include "message.h"
-#include "HTMLstyle.h"
-#include "trans.h"
-#endif
-#ifdef   PPSTANDALONE
+#ifdef  PPSTANDALONE
 #define  NAME_LENGTH 20
 #include "parser.h"
+#else
+#include "trans.h"
 #endif
 
-#include "f/transparse_f.h"
 
 extern PathBuffer   SchemaPath;
 
@@ -91,7 +79,8 @@ typedef int         State;	/* a state of the automaton */
 static State        currentState;	/* current state of the automaton */
 static State        returnState;	/* return state from subautomaton */
 
-#include "html2thot.h"
+#include "html2thot_f.h"
+#include "transparse_f.h"
 
 /*----------------------------------------------------------------------
    initialise toutes les transformations a valide     

@@ -6,18 +6,11 @@
  */
  
 /* Included headerfiles */
+#define EXPORT extern
 #include "amaya.h"
+#include "css.h"
 
-#include "content.h"
-#include "tree.h"
-#include "browser.h"
-#include "interface.h"
-#include "selection.h"
-#include "presentation.h"
-#include "dialog.h"
-#include "app.h"
-#include "message.h"
-#include "HTMLstyle.h"
+#include "HTMLstyle_f.h"
 
 
 /*----------------------------------------------------------------------

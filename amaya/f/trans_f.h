@@ -17,8 +17,8 @@ extern void TransCallbackDialog ( int ref,
                                   char *data );
 extern void TransformType ( Document doc,
                             View view );
-extern unsigned char TransformIntoType ( ElementType resultType,
-                                         Document doc );
+extern boolean TransformIntoType ( ElementType resultType,
+                                   Document doc );
 
 #else /* __STDC__ */
 
@@ -33,8 +33,8 @@ extern void TransCallbackDialog (/* int ref,
                                     char *data */);
 extern void TransformType (/* Document doc,
                               View view */);
-extern unsigned char TransformIntoType (/* ElementType resultType,
-                                           Document doc */);
+extern boolean TransformIntoType (/* ElementType resultType,
+                                     Document doc */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

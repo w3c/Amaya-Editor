@@ -20,10 +20,10 @@ extern int MapAttrValue ( int ThotAtt,
 extern void InitMapping ( void );
 extern void ParseHTMLError ( Document doc,
                              unsigned char *msg );
-extern unsigned char IsCharacterLevelElement ( Element el );
+extern boolean IsCharacterLevelElement ( Element el );
 extern void OnlyOneOptionSelected ( Element el,
                                     Document doc,
-                                    unsigned char parsed );
+                                    boolean parsed );
 extern void SetAttrIntItemStyle ( Element el,
                                   Document doc );
 extern void CreateAttrWidthPercentPxl ( char *buffer,
@@ -37,7 +37,7 @@ extern void HTMLparse ( FILE * infile,
                         char *HTMLbuf );
 extern void CheckAbstractTree ( char *pathURL );
 extern void InitializeParser ( Element lastelem,
-                               unsigned char isclosed,
+                               boolean isclosed,
                                Document doc );
 extern void StartHTMLParser ( Document doc,
                               char *htmlFileName,
@@ -61,10 +61,10 @@ extern int MapAttrValue (/* int ThotAtt,
 extern void InitMapping (/* void */);
 extern void ParseHTMLError (/* Document doc,
                                unsigned char *msg */);
-extern unsigned char IsCharacterLevelElement (/* Element el */);
+extern boolean IsCharacterLevelElement (/* Element el */);
 extern void OnlyOneOptionSelected (/* Element el,
                                       Document doc,
-                                      unsigned char parsed */);
+                                      boolean parsed */);
 extern void SetAttrIntItemStyle (/* Element el,
                                     Document doc */);
 extern void CreateAttrWidthPercentPxl (/* char *buffer,
@@ -78,7 +78,7 @@ extern void HTMLparse (/* FILE * infile,
                           char *HTMLbuf */);
 extern void CheckAbstractTree (/* char *pathURL */);
 extern void InitializeParser (/* Element lastelem,
-                                 unsigned char isclosed,
+                                 boolean isclosed,
                                  Document doc */);
 extern void StartHTMLParser (/* Document doc,
                                 char *htmlFileName,

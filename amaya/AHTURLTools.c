@@ -5,16 +5,131 @@
  *
  */
  
+/* Amaya includes  */
+#define EXPORT extern
 #include "amaya.h"
 
-#include "dialog.h"
-#include "content.h"
-#include "view.h"
-#include "interface.h"
-#include "message.h"
-#include "AHTMemConv.h"
-#include "init.h"
-#include "AHTURLTools.h"	/* defined here */
+
+#include "init_f.h"
+#include "AHTURLTools_f.h"
+
+/*----------------------------------------------------------------------
+   ExplodeURL :                                                   
+  ----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+void                ExplodeURL (char *url, char **proto, char **host, char **dir, char **file)
+#else
+void                ExplodeURL (url, proto, host, dir, file)
+char               *url;
+char              **proto;
+char              **host;
+char              **dir;
+char              **file;
+
+#endif
+{
+   char               *cour, *temp;
+
+   if ((url == NULL) || (proto == NULL) || (host == NULL) ||
+       (dir == NULL) || (file == NULL))
+      return;
+
+   /* initialize every pointer */
+   *proto = *host = *dir = *file = NULL;
+
+   /* skip any leading space */
+   while ((*url == SPACE) || (*url == TAB))
+      url++;
+   cour = url;
+   if (*cour == 0)
+      goto finished;
+
+   /* go to the end of the URL */
+   while ((*cour != 0) && (*cour != SPACE) && (*cour != '\b') &&
+	  (*cour != '\r') && (*cour != EOL))
+      cour++;
+
+   /* mark the end of the chain */
+   *cour = EOS;
+   cour--;
+   if (cour <= url)
+      goto finished;
+
+   /* search the next DIR_SEP indicating the beginning of the file name */
+   do
+     {
+	cour--;
+     }
+   while ((cour >= url) && (*cour != DIR_SEP));
+   if (cour < url)
+      goto finished;
+   *file = cour + 1;
+
+   /* mark the end of the dir */
+   *cour = EOS;
+   cour--;
+   if (cour < url)
+      goto finished;
+
+   /* search for the "/" indicating the host name start */
+   while ((cour > url) && ((*cour != DIR_SEP) || (*(cour + 1) != DIR_SEP)))
+      cour--;
+
+   /* if we found it, separate the host name from the directory */
+   if ((*cour == DIR_SEP) && (*(cour + 1) == DIR_SEP))
+     {
+	*host = temp = cour + 2;
+	while ((*temp != 0) && (*temp != DIR_SEP))
+	   temp++;
+	if (*temp == DIR_SEP)
+	  {
+	     *temp = EOS;
+	     *dir = temp + 1;
+	  }
+     }
+   else
+     {
+	*dir = cour;
+     }
+   if (cour <= url)
+      goto finished;
+
+   /* mark the end of the proto */
+   *cour = EOS;
+   cour--;
+   if (cour < url)
+      goto finished;
+
+   if (*cour == ':')
+     {
+	*cour = EOS;
+	cour--;
+     }
+   else
+      goto finished;
+   if (cour < url)
+      goto finished;
+   while ((cour > url) && (isalpha (*cour)))
+      cour--;
+   *proto = cour;
+
+ finished:;
+
+#ifdef AMAYA_DEBUG
+   fprintf (stderr, "ExplodeURL(%s)\n\t", url);
+   if (*proto)
+      fprintf (stderr, "proto : %s, ", *proto);
+   if (*host)
+      fprintf (stderr, "host : %s, ", *host);
+   if (*dir)
+      fprintf (stderr, "dir : %s, ", *dir);
+   if (*file)
+      fprintf (stderr, "file : %s ", *file);
+   fprintf (stderr, "\n");
+#endif
+
+}
 
 /*----------------------------------------------------------------------
    IsHTMLName                                                         
@@ -210,9 +325,9 @@ char               *path;
    if (!strncmp (path, "http:", 5)
       /***|| !strncmp (path, "ftp:", 4)
       || !strncmp (path, "news:", 5)***/ )
-      return (YES);
+      return (TRUE);
    else
-      return (NO);
+      return (FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -228,9 +343,9 @@ char               *path;
 #endif /* __STDC__ */
 {
    if (strchr (path, ':') && !strncmp (path, "http:", 5))
-      return (YES);
+      return (TRUE);
    else
-      return (NO);
+      return (FALSE);
 }
 
 
@@ -409,9 +524,9 @@ char               *path;
    basename_ptr2 = HTParse (url2, "", PARSE_ACCESS | PARSE_HOST | PARSE_PUNCTUATION);
 
    if (strcmp (basename_ptr1, basename_ptr2))
-      result = NO;
+      result = FALSE;
    else
-      result = YES;
+      result = TRUE;
 
    HT_FREE (basename_ptr1);
    HT_FREE (basename_ptr2);

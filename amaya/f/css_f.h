@@ -6,15 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void __assert_fail ( char *expression,
-                            char *file,
-                            unsigned int lineno );
 extern void CSSClassChanged ( NotifyAttribute * event );
-extern void ExplodeURL ( char *url,
-                         char **proto,
-                         char **host,
-                         char **dir,
-                         char **file );
 extern void PrintCSS ( CSSInfoPtr css,
                        FILE * output );
 extern int DumpCSSToFile ( Document doc,
@@ -45,7 +37,7 @@ extern void RebuildHTMLStyleHeader ( Document doc );
 extern void ParseHTMLStyleHeader ( Element elem,
                                    char *attrstr,
                                    Document doc,
-                                   Bool rebuild );
+                                   boolean rebuild );
 extern void LoadHTMLStyleSheet ( char *URL,
                                  Document doc );
 extern void LoadHTMLExternalStyleSheet ( char *URL,
@@ -80,7 +72,7 @@ extern void RedrawLRPI ( char *name );
 extern void RedrawRCSS ( char *name );
 extern void RedrawRRPI ( char *name );
 extern void CSSHandleMerge ( char which,
-                             Bool copy );
+                             boolean copy );
 extern void RebuildAllCSS ( void );
 extern int SaveCSSThroughNet ( Document doc,
                                View view,
@@ -90,15 +82,7 @@ extern void CloseCSS ( void );
 
 #else /* __STDC__ */
 
-extern void __assert_fail (/* char *expression,
-                              char *file,
-                              unsigned int lineno */);
 extern void CSSClassChanged (/* NotifyAttribute * event */);
-extern void ExplodeURL (/* char *url,
-                           char **proto,
-                           char **host,
-                           char **dir,
-                           char **file */);
 extern void PrintCSS (/* CSSInfoPtr css,
                          FILE * output */);
 extern int DumpCSSToFile (/* Document doc,
@@ -129,7 +113,7 @@ extern void RebuildHTMLStyleHeader (/* Document doc */);
 extern void ParseHTMLStyleHeader (/* Element elem,
                                      char *attrstr,
                                      Document doc,
-                                     Bool rebuild */);
+                                     boolean rebuild */);
 extern void LoadHTMLStyleSheet (/* char *URL,
                                    Document doc */);
 extern void LoadHTMLExternalStyleSheet (/* char *URL,
@@ -164,7 +148,7 @@ extern void RedrawLRPI (/* char *name */);
 extern void RedrawRCSS (/* char *name */);
 extern void RedrawRRPI (/* char *name */);
 extern void CSSHandleMerge (/* char which,
-                               Bool copy */);
+                               boolean copy */);
 extern void RebuildAllCSS (/* void */);
 extern int SaveCSSThroughNet (/* Document doc,
                                  View view,

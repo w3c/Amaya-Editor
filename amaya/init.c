@@ -8,24 +8,8 @@
 /* Included headerfiles */
 #define EXPORT
 #include "amaya.h"
-#include "content.h"
-#include "view.h"
-#include "interface.h"
-#include "appaction.h"
-#include "message.h"
-#include "libmsg.h"
-#include "dialog.h"
-#include "browser.h"
-#include "selection.h"
-#include "presentation.h"
-#include "HTMLactions.h"
-#include "HTMLstyle.h"
-#include "EDITOR.h"
-#include "dialog.h"
-
 #include "css.h"
-
-#include "init.h"
+#include "trans.h"
 
 #include "stopN.xpm"
 #include "stopR.xpm"
@@ -47,16 +31,6 @@
 #include "Image.xpm"
 #include "DL.xpm"
 
-#include "css.h"
-
-#include "EDITORactions.h"
-#include "AHTURLTools.h"
-#include "EDITimage.h"
-#include "html2thot.h"
-#include "HTMLsave.h"
-#include "init.h"
-#include "css.h"
-#include "UIcss.h"
 
 #ifdef _WINDOWS
 #ifndef __GNUC__
@@ -64,6 +38,12 @@
 #endif
 #endif
 
+
+#ifdef WITH_SOCKS
+char                __res = 0;
+#endif
+
+static int          AmayaInitialized = 0;
 static Pixmap       stopR;
 static Pixmap       stopN;
 static Pixmap       iconSave;
@@ -84,8 +64,20 @@ static Pixmap       iconBullet;
 static Pixmap       iconNum;
 static Pixmap       iconDL;
 
-#include "f/HTMLactions_f.h"
+
+#include "css_f.h"
+#include "html2thot_f.h"
+#include "init_f.h"
+#include "query_f.h"
+#include "trans_f.h"
+#include "AHTURLTools_f.h"
+#include "EDITORactions_f.h"
+#include "EDITimage_f.h"
 #include "f/EDITstyle_f.h"
+#include "HTMLactions_f.h"
+#include "HTMLsave_f.h"
+#include "HTMLstyle_f.h"
+#include "UIcss_f.h"
 
 /*----------------------------------------------------------------------
    IsDocumentLoaded returns the document identification if the        
@@ -1442,13 +1434,9 @@ char               *data;
 	 }
 }
 
+
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef WITH_SOCKS
-char                __res = 0;
-
-#endif
-
 #ifdef __STDC__
 void                InitAmaya (NotifyEvent * event)
 #else
@@ -1459,7 +1447,6 @@ NotifyEvent        *event;
 {
    int                 i;
    char               *s;
-   static int          AmayaInitialized = 0;
 
    if (AmayaInitialized)
       return;
@@ -1483,7 +1470,6 @@ NotifyEvent        *event;
    SelectionInSTRIKE = FALSE;
    SelectionInBIG = FALSE;
    SelectionInSMALL = FALSE;
-
    /* initialize icons */
    stopR = TtaCreatePixmapLogo (stopR_xpm);
    stopN = TtaCreatePixmapLogo (stopN_xpm);
@@ -1504,6 +1490,8 @@ NotifyEvent        *event;
    iconNum = TtaCreatePixmapLogo (Num_xpm);
    iconImage = TtaCreatePixmapLogo (Image_xpm);
    iconDL = TtaCreatePixmapLogo (DL_xpm);
+
+   TargetName = NULL;
    /* initialize temporary directory for loaded files */
    s = (char *) TtaGetEnvString ("HOME");
    if (s)

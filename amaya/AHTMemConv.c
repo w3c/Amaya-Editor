@@ -25,14 +25,17 @@
  *
  */
 
+#define EXPORT extern
 #include "amaya.h"
-#include "AHTMemConv.h"		/* Implemented here   */
 
 struct _HTStream
   {
      const HTStreamClass *isa;
      HTRequest          *request;	/* saved for callback */
   };
+
+#include "AHTMemConv_f.h"
+
 
 
 
@@ -47,9 +50,9 @@ struct _HTStream
  */
 
 #ifdef __STDC__
-PRIVATE int         AHTMemConv_put_character (HTStream * me, char c)
+static int         AHTMemConv_put_character (HTStream * me, char c)
 #else  /* __STDC__ */
-PRIVATE int         AHTMemConv_put_character (me, c)
+static int         AHTMemConv_put_character (me, c)
 HTStream           *me;
 char                c;
 
@@ -70,9 +73,9 @@ char                c;
 }
 
 #ifdef __STDC__
-PRIVATE int         AHTMemConv_put_string (HTStream * me, const char *s)
+static int         AHTMemConv_put_string (HTStream * me, const char *s)
 #else  /* __STDC__ */
-PRIVATE int         AHTMemConv_put_string (me, s)
+static int         AHTMemConv_put_string (me, s)
 HTStream           *me;
 const char         *s;
 
@@ -89,9 +92,9 @@ const char         *s;
 }
 
 #ifdef __STDC__
-PRIVATE int         AHTMemConv_write (HTStream * me, const char *s, int l)
+static int         AHTMemConv_write (HTStream * me, const char *s, int l)
 #else  /* __STDC__ */
-PRIVATE int         AHTMemConv_write (me, s, l)
+static int         AHTMemConv_write (me, s, l)
 HTStream           *me;
 const char         *s;
 int                 l;
@@ -125,9 +128,9 @@ int                 l;
 }
 
 #ifdef __STDC__
-PRIVATE int         AHTMemConv_flush (HTStream * me)
+static int         AHTMemConv_flush (HTStream * me)
 #else  /* __STDC__ */
-PRIVATE int         AHTMemConv_flush (me)
+static int         AHTMemConv_flush (me)
 HTStream           *me;
 
 #endif /* __STDC__ */
@@ -139,9 +142,9 @@ HTStream           *me;
 }
 
 #ifdef __STDC__
-PRIVATE int         AHTMemConv_HT_FREE (HTStream * me)
+static int         AHTMemConv_HT_FREE (HTStream * me)
 #else  /* __STDC__ */
-PRIVATE int         AHTMemConv_HT_FREE (me)
+static int         AHTMemConv_HT_FREE (me)
 HTStream           *me;
 
 #endif /* __STDC__ */
@@ -153,9 +156,9 @@ HTStream           *me;
 }
 
 #ifdef __STDC__
-PRIVATE int         AHTMemConv_abort (HTStream * me, HTList * e)
+static int         AHTMemConv_abort (HTStream * me, HTList * e)
 #else  /* __STDC__ */
-PRIVATE int         AHTMemConv_abort (me, e)
+static int         AHTMemConv_abort (me, e)
 HTStream           *me;
 HTList             *e;
 

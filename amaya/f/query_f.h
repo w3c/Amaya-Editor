@@ -6,9 +6,9 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern BOOL AHTReqContext_delete ( AHTReqContext * me );
 extern AHTDocId_Status *GetDocIdStatus ( int docid,
                                          HTList * documents );
+extern boolean AHTReqContext_delete ( AHTReqContext * me );
 extern void QueryInit ( void );
 extern void QueryClose ( void );
 extern int GetObjectWWW ( int docid,
@@ -20,7 +20,7 @@ extern int GetObjectWWW ( int docid,
                           void *context_icbf,
                           TTcbf * terminate_cbf,
                           void *context_tcbf,
-                          BOOL error_html );
+                          boolean error_html );
 extern int PutObjectWWW ( int docid,
                           char *fileName,
                           char *urlName,
@@ -40,9 +40,9 @@ extern void StopRequest ( int docid );
 
 #else /* __STDC__ */
 
-extern BOOL AHTReqContext_delete (/* AHTReqContext * me */);
 extern AHTDocId_Status *GetDocIdStatus (/* int docid,
                                            HTList * documents */);
+extern boolean AHTReqContext_delete (/* AHTReqContext * me */);
 extern void QueryInit (/* void */);
 extern void QueryClose (/* void */);
 extern int GetObjectWWW (/* int docid,
@@ -54,7 +54,7 @@ extern int GetObjectWWW (/* int docid,
                             void *context_icbf,
                             TTcbf * terminate_cbf,
                             void *context_tcbf,
-                            BOOL error_html */);
+                            boolean error_html */);
 extern int PutObjectWWW (/* int docid,
                             char *fileName,
                             char *urlName,

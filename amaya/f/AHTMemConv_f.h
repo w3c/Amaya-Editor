@@ -6,17 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern PRIVATE int AHTMemConv_put_character ( HTStream * me,
-                                              char c );
-extern PRIVATE int AHTMemConv_put_string ( HTStream * me,
-                                           const char *s );
-extern PRIVATE int AHTMemConv_write ( HTStream * me,
-                                      const char *s,
-                                      int l );
-extern PRIVATE int AHTMemConv_flush ( HTStream * me );
-extern PRIVATE int AHTMemConv_HT_FREE ( HTStream * me );
-extern PRIVATE int AHTMemConv_abort ( HTStream * me,
-                                      HTList * e );
 extern HTStream *AHTMemConv_new ( HTRequest * request );
 extern HTStream *AHTMemConverter ( HTRequest * request,
                                    void *param,
@@ -26,17 +15,6 @@ extern HTStream *AHTMemConverter ( HTRequest * request,
 
 #else /* __STDC__ */
 
-extern PRIVATE int AHTMemConv_put_character (/* HTStream * me,
-                                                char c */);
-extern PRIVATE int AHTMemConv_put_string (/* HTStream * me,
-                                             const char *s */);
-extern PRIVATE int AHTMemConv_write (/* HTStream * me,
-                                        const char *s,
-                                        int l */);
-extern PRIVATE int AHTMemConv_flush (/* HTStream * me */);
-extern PRIVATE int AHTMemConv_HT_FREE (/* HTStream * me */);
-extern PRIVATE int AHTMemConv_abort (/* HTStream * me,
-                                        HTList * e */);
 extern HTStream *AHTMemConv_new (/* HTRequest * request */);
 extern HTStream *AHTMemConverter (/* HTRequest * request,
                                      void *param,

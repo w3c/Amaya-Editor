@@ -8,26 +8,36 @@
 #ifndef AMAYA_H
 #define AMAYA_H
 
-/* Included headerfiles */
-
+/* Thot interface */
+#include "thot_gui.h"
+#include "thot_sys.h"
 #include "app.h"
-#include "HTML.h"
+#include "application.h"
+#include "attribute.h"
+#include "browser.h"
+#include "content.h"
+#include "dialog.h"
+#include "interface.h"
+#include "libmsg.h"
+#include "message.h"
+#include "presentation.h"
+#include "selection.h"
+#include "reference.h"
+#include "tree.h"
+#include "view.h"
 
+/* Included headerfiles */
+#include "EDITOR.h"
+#include "HTML.h"
 #include "amayamsg.h"
 
 /* libwww interface */
-
-#include "thot_gui.h"
-#include "thot_sys.h"
-
 #include "WWWLib.h"
 #include "WWWApp.h"
 #include "WWWHTTP.h"
 #include "WWWInit.h"
 #include "HTReqMan.h"
-#include "HTAncMan.h"
-#include "AHTDialog.h"
-#include "HTReqMan.h"
+#include "HTReq.h"
 #include "HTAncMan.h"
 #include "HTAccess.h"
 #include "HTEvntrg.h"
@@ -36,7 +46,6 @@
 #include "HTBInit.h"
 #include "WWWHTTP.h"		/* HTTP access module */
 #include "HTProxy.h"
-#include "application.h"
 
 typedef char        PathBuffer[MAX_PATH];
 
@@ -144,7 +153,7 @@ typedef struct _AHTReqContext
      int                *s;	/* socket number                                */
      char               *error_stream;
      int                 error_stream_size;
-     BOOL                error_html;
+     boolean                error_html;
   }
 AHTReqContext;
 
@@ -191,16 +200,10 @@ AHTReqContext;
 #define MenuOption	36
 #define MAX_REF         40
 
-
 #define MAX_LENGTH     512
 #define NAME_LENGTH     32
-
 #define HTAppName "amaya"
 #define HTAppVersion "V0.95 Alpha"
-
-#ifndef EXPORT
-#define EXPORT extern
-#endif /* VSTAUS */
 
 EXPORT int          appArgc;
 EXPORT char       **appArgv;
@@ -214,17 +217,18 @@ EXPORT int          BaseDialog;
 EXPORT char        *LastURLName;	/* last URL requested               */
 EXPORT char        *DirectoryName;	/* local path of the document       */
 EXPORT char        *DocumentName;	/* document name                    */
-EXPORT char        *ObjectName;	/* document name                    */
+EXPORT char        *ObjectName;		/* document name                    */
 EXPORT char        *SaveImgsURL;	/* where to save remote Images      */
-EXPORT int          CopyImages;	/* should we copy images in Save As */
-EXPORT int          UpdateURLs;	/* should we update URLs in Save As */
+EXPORT char        *TargetName;
+EXPORT int          CopyImages;		/* should we copy images in Save As */
+EXPORT int          UpdateURLs;		/* should we update URLs in Save As */
 EXPORT boolean      UserAnswer;
 EXPORT int          ReturnOption;
 EXPORT boolean      InNewWindow;
 EXPORT Document     CurrentDocument;
 EXPORT Document     SavingDocument;
 EXPORT Document     SavingObject;
-EXPORT char        *SavingFile;	/* complete path or URL of the document */
+EXPORT char        *SavingFile;		/* complete path or URL of the document */
 EXPORT Document     AttrHREFdocument;
 EXPORT Element      AttrHREFelement;
 EXPORT char        *AttrHREFvalue;
@@ -283,13 +287,12 @@ LoadedImageDesc;
 
 EXPORT LoadedImageDesc *ImageURLs;
 
-extern HTList      *conv;	/* List of global converters */
-extern AmayaContext *Amaya;	/* Amaya's global context    */
+EXPORT HTList      *conv;	/* List of global converters */
+EXPORT AmayaContext *Amaya;	/* Amaya's global context    */
 
 #define EOS     '\0'
 #define EOL     '\n'
 #define TAB     '\t'
 #define SPACE    ' '
-#define boolean unsigned char
 
 #endif /* AMAYA_H */

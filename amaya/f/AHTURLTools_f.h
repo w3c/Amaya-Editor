@@ -6,39 +6,49 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern unsigned char IsHTMLName ( char *path );
-extern unsigned char IsImageName ( char *path );
-extern unsigned char IsTextName ( char *path );
-extern unsigned char IsHTTPPath ( char *path );
-extern unsigned char IsWithParameters ( char *path );
-extern unsigned char IsW3Path ( char *path );
-extern unsigned char IsValidProtocol ( char *path );
-extern unsigned char IsValidNormalizeURL ( char *path );
+extern void ExplodeURL ( char *url,
+                         char **proto,
+                         char **host,
+                         char **dir,
+                         char **file );
+extern boolean IsHTMLName ( char *path );
+extern boolean IsImageName ( char *path );
+extern boolean IsTextName ( char *path );
+extern boolean IsHTTPPath ( char *path );
+extern boolean IsWithParameters ( char *path );
+extern boolean IsW3Path ( char *path );
+extern boolean IsValidProtocol ( char *path );
+extern boolean IsValidNormalizeURL ( char *path );
 extern void NormalizeURL ( char *orgName,
                            Document doc,
                            char *newName,
                            char *docName );
-extern unsigned char IsSameHost ( char *url1,
-                                  char *url2 );
+extern boolean IsSameHost ( char *url1,
+                            char *url2 );
 extern char *AHTMakeRelativeName ( char *url,
                                    char *base_url );
 
 #else /* __STDC__ */
 
-extern unsigned char IsHTMLName (/* char *path */);
-extern unsigned char IsImageName (/* char *path */);
-extern unsigned char IsTextName (/* char *path */);
-extern unsigned char IsHTTPPath (/* char *path */);
-extern unsigned char IsWithParameters (/* char *path */);
-extern unsigned char IsW3Path (/* char *path */);
-extern unsigned char IsValidProtocol (/* char *path */);
-extern unsigned char IsValidNormalizeURL (/* char *path */);
+extern void ExplodeURL (/* char *url,
+                           char **proto,
+                           char **host,
+                           char **dir,
+                           char **file */);
+extern boolean IsHTMLName (/* char *path */);
+extern boolean IsImageName (/* char *path */);
+extern boolean IsTextName (/* char *path */);
+extern boolean IsHTTPPath (/* char *path */);
+extern boolean IsWithParameters (/* char *path */);
+extern boolean IsW3Path (/* char *path */);
+extern boolean IsValidProtocol (/* char *path */);
+extern boolean IsValidNormalizeURL (/* char *path */);
 extern void NormalizeURL (/* char *orgName,
                              Document doc,
                              char *newName,
                              char *docName */);
-extern unsigned char IsSameHost (/* char *url1,
-                                    char *url2 */);
+extern boolean IsSameHost (/* char *url1,
+                              char *url2 */);
 extern char *AHTMakeRelativeName (/* char *url,
                                      char *base_url */);
 

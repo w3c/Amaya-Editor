@@ -68,7 +68,7 @@ extern void RemoveStyleRule ( Element elClass,
                               Document doc );
 extern void RemoveStyle ( Element elem,
                           Document doc );
-extern void SetHTMLStyleParserDestructiveMode ( Bool mode );
+extern void SetHTMLStyleParserDestructiveMode ( boolean mode );
 extern void HTMLSetBackgroundColor ( Document doc,
                                      Element elem,
                                      char *color );
@@ -153,7 +153,7 @@ extern void RemoveStyleRule (/* Element elClass,
                                 Document doc */);
 extern void RemoveStyle (/* Element elem,
                             Document doc */);
-extern void SetHTMLStyleParserDestructiveMode (/* Bool mode */);
+extern void SetHTMLStyleParserDestructiveMode (/* boolean mode */);
 extern void HTMLSetBackgroundColor (/* Document doc,
                                        Element elem,
                                        char *color */);

@@ -5,7 +5,10 @@
  *
  */
 
-#include "cssInc.h"
+/* Included headerfiles */
+#define EXPORT extern
+#include "amaya.h"
+#include "css.h"
 
 #include "rcopy.xpm"
 #include "lcopy.xpm"
@@ -16,7 +19,7 @@
 static CSSBrowseStatus CSSBrowseState = CSS_BROWSE_None;
 static char         currentExternalCSS[500] = "";
 static char         currentDeleteCSS[500] = "";
-static Bool         CSSUserAnswer = FALSE;
+static boolean         CSSUserAnswer = FALSE;
 static CSSInfoPtr   sauve_css = NULL;
 
 
@@ -26,7 +29,7 @@ extern CSSInfoPtr   User_CSS;
 extern char        *CSSDocumentName;
 extern char        *CSSDirectoryName;
 extern char        *amaya_save_dir;
-extern Bool         NonPPresentChanged;
+extern boolean         NonPPresentChanged;
 extern int          BaseCSSDialog;
 extern CSSInfoPtr   LCSS;
 extern CSSInfoPtr   RCSS;
@@ -36,13 +39,14 @@ extern int          LListRPIIndex;
 extern int          RListRPIIndex;
 extern PRuleInfoPtr LListRPI;
 extern PRuleInfoPtr RListRPI;
-extern Bool         LListRPIModified;
-static Bool         RListRPIModified;
+extern boolean         LListRPIModified;
+static boolean         RListRPIModified;
 
-#include "UIcss.h"
-#include "HTMLhistory.h"
-#include "AHTURLTools.h"
-#include "css.h"
+#include "css_f.h"
+#include "p2css_f.h"
+#include "HTMLhistory_f.h"
+#include "AHTURLTools_f.h"
+#include "UIcss_f.h"
 
 
 /*----------------------------------------------------------------------
@@ -292,7 +296,7 @@ char               *url;
 #endif
 {
    char               *proto, *host, *dir, *file;
-   Bool                dir_ok = FALSE;
+   boolean                dir_ok = FALSE;
    static char         URL[500];
 
    strcpy (URL, url);

@@ -6,10 +6,10 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern unsigned char AddLoadedImage ( char *name,
-                                      char *pathname,
-                                      Document doc,
-                                      LoadedImageDesc ** desc );
+extern boolean AddLoadedImage ( char *name,
+                                char *pathname,
+                                Document doc,
+                                LoadedImageDesc ** desc );
 extern void DisplayImage ( Document doc,
                            Element el,
                            char *imageName );
@@ -21,10 +21,10 @@ extern void FetchAndDisplayImages ( Document doc );
 
 #else /* __STDC__ */
 
-extern unsigned char AddLoadedImage (/* char *name,
-                                        char *pathname,
-                                        Document doc,
-                                        LoadedImageDesc ** desc */);
+extern boolean AddLoadedImage (/* char *name,
+                                  char *pathname,
+                                  Document doc,
+                                  LoadedImageDesc ** desc */);
 extern void DisplayImage (/* Document doc,
                              Element el,
                              char *imageName */);

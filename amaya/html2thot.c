@@ -17,32 +17,24 @@
 /* Without this option, it creates a function StartHTMLParser that parses */
 /* a HTML file and creates the internal representation of a Thot document. */
 
-#include "thot_gui.h"
-#include "thot_sys.h"
-#include "application.h"
-#include "attribute.h"
-#include "content.h"
-#include "document.h"
-#include "language.h"
-#include "presentation.h"
-#include "dialog.h"
-#include "tree.h"
-#include "libmsg.h"
+/* Amaya includes  */
 #ifdef STANDALONE
 #include "HTML.h"
-#include "HTMLtable.c"
 #else
-#include "HTMLactions.h"
-#include "interface.h"
-#include "message.h"
 #define EXPORT extern
 #include "amaya.h"
 #endif
-
 #include "css.h"
-#include "html2thot.h"
-#include "HTMLstyle.h"
-#include "HTMLimage.h"
+
+
+#include "css_f.h"
+#include "html2thot_f.h"
+#include "HTMLactions_f.h"
+#include "HTMLedit_f.h"
+#include "HTMLimage_f.h"
+#include "HTMLstyle_f.h"
+#include "HTMLtable_f.h"
+
 
 typedef unsigned char entityName[10];
 typedef struct _ISOlat1entry

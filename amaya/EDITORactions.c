@@ -6,31 +6,19 @@
  */
  
 /* Included headerfiles */
-#include "thot_gui.h"
-#include "thot_sys.h"
-#include "EDITOR.h"
-#include "application.h"
-#include "content.h"
-#include "selection.h"
-#include "tree.h"
-#include "app.h"
-#include "document.h"
-#include "view.h"
-#include "attribute.h"
-#include "reference.h"
-
-#include "dialog.h"
-#include "message.h"
 #define EXPORT extern
 #include "amaya.h"
-
 #include "css.h"
-#include "HTMLstyle.h"
-#include "EDITORactions.h"
-#include "HTMLedit.h"
-#include "init.h"
-#include "html2thot.h"
-#include "f/HTMLactions_f.h"
+
+#include "css_f.h"
+#include "html2thot_f.h"
+#include "init_f.h"
+#include "EDITORactions_f.h"
+#include "HTMLactions_f.h"
+#include "HTMLedit_f.h"
+#include "HTMLstyle_f.h"
+
+
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -39,7 +27,6 @@ void                New (Document document, View view)
 void                New (document, view)
 Document            document;
 View                view;
-
 #endif /* __STDC__ */
 {
    char                tempfile[MAX_LENGTH];
@@ -152,7 +139,6 @@ void                FrSpellCheck (Document document, View view)
 void                FrSpellCheck (document, view)
 Document            document;
 View                view;
-
 #endif /* __STDC__ */
 {
    AttributeType       attrType;

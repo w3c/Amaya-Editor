@@ -5,6 +5,12 @@
  *
  */
 
+/* Amaya includes  */
+#define EXPORT extern
+#include "amaya.h"
+#include "css.h"
+
+
 /*----------------------------------------------------------------------
    CSS.c : Handle all the dialogs and interface functions needed 
    to manipulate CSS.                                    
@@ -49,9 +55,6 @@
  */
 
 
-#include "css.h"
-
-
 #define AMAYA_SAVE_DIR "AMAYA_SAVE_DIR"
 
 static char        *currentLCSS = NULL;
@@ -60,8 +63,8 @@ static char         currentBRPI[2000] = "";
 static int          CSSLEntry = -1;
 static int          CSSREntry = -1;
 
-Bool                RListRPIModified = FALSE;
-Bool                LListRPIModified = FALSE;
+boolean                RListRPIModified = FALSE;
+boolean                LListRPIModified = FALSE;
 PRuleInfoPtr        RListRPI = NULL;
 PRuleInfoPtr        LListRPI = NULL;
 int                 RListRPIIndex = -1;
@@ -76,7 +79,7 @@ CSSInfoPtr          User_CSS = NULL;
 char               *CSSDocumentName = NULL;
 char               *CSSDirectoryName = NULL;
 char               *amaya_save_dir = NULL;
-Bool                NonPPresentChanged = FALSE;
+boolean                NonPPresentChanged = FALSE;
 int                 BaseCSSDialog = -1;
 
 extern char        *CSSHistory[CSS_HISTORY_SIZE];
@@ -92,16 +95,18 @@ static char        *last_message = NULL;
 #define MSG(msg) last_message = msg
 #endif
 
-#include "HTMLhistory.h"
-#include "AHTURLTools.h"
-#include "UIcss.h"
-#include "init.h"
+#include "css_f.h"
+#include "init_f.h"
+#include "p2css_f.h"
+#include "query_f.h"
+#include "AHTURLTools_f.h"
+#include "HTMLhistory_f.h"
+#include "UIcss_f.h"
 
 #ifdef linux
 /* due to changes in /usr/include/assert.h */
 void                __assert_fail (char *expression, char *file, unsigned int lineno)
-{
-   fprintf (stderr, "%s:%u: failed assertion `%s'\n", file, lineno, "expression");
+{   fprintf (stderr, "%s:%u: failed assertion `%s'\n", file, lineno, "expression");
 }
 
 #endif
@@ -125,127 +130,8 @@ NotifyAttribute    *event;
 }
 
 /*----------------------------------------------------------------------
-   ExplodeURL :                                                   
-  ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                ExplodeURL (char *url, char **proto, char **host, char **dir, char **file)
-#else
-void                ExplodeURL (url, proto, host, dir, file)
-char               *url;
-char              **proto;
-char              **host;
-char              **dir;
-char              **file;
-
-#endif
-{
-   char               *cour, *temp;
-
-   if ((url == NULL) || (proto == NULL) || (host == NULL) ||
-       (dir == NULL) || (file == NULL))
-      return;
-
-   /* initialize every pointer */
-   *proto = *host = *dir = *file = NULL;
-
-   /* skip any leading space */
-   while ((*url == SPACE) || (*url == TAB))
-      url++;
-   cour = url;
-   if (*cour == 0)
-      goto finished;
-
-   /* go to the end of the URL */
-   while ((*cour != 0) && (*cour != SPACE) && (*cour != '\b') &&
-	  (*cour != '\r') && (*cour != EOL))
-      cour++;
-
-   /* mark the end of the chain */
-   *cour = EOS;
-   cour--;
-   if (cour <= url)
-      goto finished;
-
-   /* search the next DIR_SEP indicating the beginning of the file name */
-   do
-     {
-	cour--;
-     }
-   while ((cour >= url) && (*cour != DIR_SEP));
-   if (cour < url)
-      goto finished;
-   *file = cour + 1;
-
-   /* mark the end of the dir */
-   *cour = EOS;
-   cour--;
-   if (cour < url)
-      goto finished;
-
-   /* search for the "/" indicating the host name start */
-   while ((cour > url) && ((*cour != DIR_SEP) || (*(cour + 1) != DIR_SEP)))
-      cour--;
-
-   /* if we found it, separate the host name from the directory */
-   if ((*cour == DIR_SEP) && (*(cour + 1) == DIR_SEP))
-     {
-	*host = temp = cour + 2;
-	while ((*temp != 0) && (*temp != DIR_SEP))
-	   temp++;
-	if (*temp == DIR_SEP)
-	  {
-	     *temp = EOS;
-	     *dir = temp + 1;
-	  }
-     }
-   else
-     {
-	*dir = cour;
-     }
-   if (cour <= url)
-      goto finished;
-
-   /* mark the end of the proto */
-   *cour = EOS;
-   cour--;
-   if (cour < url)
-      goto finished;
-
-   if (*cour == ':')
-     {
-	*cour = EOS;
-	cour--;
-     }
-   else
-      goto finished;
-   if (cour < url)
-      goto finished;
-   while ((cour > url) && (isalpha (*cour)))
-      cour--;
-   *proto = cour;
-
- finished:;
-
-#ifdef DEBUG_CSS
-   fprintf (stderr, "ExplodeURL(%s)\n\t", url);
-   if (*proto)
-      fprintf (stderr, "proto : %s, ", *proto);
-   if (*host)
-      fprintf (stderr, "host : %s, ", *host);
-   if (*dir)
-      fprintf (stderr, "dir : %s, ", *dir);
-   if (*file)
-      fprintf (stderr, "file : %s ", *file);
-   fprintf (stderr, "\n");
-#endif
-
-}
-
-/*----------------------------------------------------------------------
    PrintCSS                                                       
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                PrintCSS (CSSInfoPtr css, FILE * output)
 #else
@@ -1132,13 +1018,13 @@ Document            doc;
    e.g: H2 { color: blue } pinky { color: pink }                     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ParseHTMLStyleHeader (Element elem, char *attrstr, Document doc, Bool rebuild)
+void                ParseHTMLStyleHeader (Element elem, char *attrstr, Document doc, boolean rebuild)
 #else
 void                ParseHTMLStyleHeader (elem, attrstr, doc, rebuild)
 Element             elem;
 char               *attrstr;
 Document            doc;
-Bool                rebuild;
+boolean                rebuild;
 
 #endif
 {
@@ -2550,11 +2436,11 @@ char               *name;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                CSSHandleMerge (char which, Bool copy)
+void                CSSHandleMerge (char which, boolean copy)
 #else
 void                CSSHandleMerge (which, copy)
 char                which;
-Bool                copy;
+boolean                copy;
 
 #endif
 {

@@ -6,34 +6,12 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern PRIVATE int AHTFWriter_flush ( HTStream * me );
-extern PRIVATE int AHTFWriter_put_character ( HTStream * me,
-                                              char c );
-extern PRIVATE int AHTFWriter_put_string ( HTStream * me,
-                                           const char *s );
-extern PRIVATE int AHTFWriter_write ( HTStream * me,
-                                      const char *s,
-                                      int l );
-extern PRIVATE int AHTFWriter_HT_FREE ( HTStream * me );
-extern PRIVATE int AHTFWriter_abort ( HTStream * me,
-                                      HTList * e );
 extern HTStream *AHTFWriter_new ( HTRequest * request,
                                   FILE * fp,
                                   BOOL leave_open );
 
 #else /* __STDC__ */
 
-extern PRIVATE int AHTFWriter_flush (/* HTStream * me */);
-extern PRIVATE int AHTFWriter_put_character (/* HTStream * me,
-                                                char c */);
-extern PRIVATE int AHTFWriter_put_string (/* HTStream * me,
-                                             const char *s */);
-extern PRIVATE int AHTFWriter_write (/* HTStream * me,
-                                        const char *s,
-                                        int l */);
-extern PRIVATE int AHTFWriter_HT_FREE (/* HTStream * me */);
-extern PRIVATE int AHTFWriter_abort (/* HTStream * me,
-                                        HTList * e */);
 extern HTStream *AHTFWriter_new (/* HTRequest * request,
                                     FILE * fp,
                                     BOOL leave_open */);

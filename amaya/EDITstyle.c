@@ -4,6 +4,9 @@
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
+#define EXPORT extern
+#include "amaya.h"
+#include "css.h"
  
 /*----------------------------------------------------------------------
    
@@ -11,20 +14,10 @@
    
   ----------------------------------------------------------------------*/
 
-/* Included headerfiles */
-#include "amaya.h"
-#include "dialog.h"
-#include "content.h"
-#include "message.h"
-#include "HTML.h"
-#include "tree.h"
-#include "attribute.h"
-#include "selection.h"
-#include "reference.h"
-#include "HTMLstyle.h"
-#include "css.h"
-
-#include "html2thot.h"
+#include "css_f.h"
+#include "html2thot_f.h"
+#include "HTMLstyle_f.h"
+#include "UIcss_f.h"
 
 /* CSSLEVEL2 adding new features to the standard */
 /* DEBUG_STYLES verbose output of style actions */
@@ -55,7 +48,6 @@ static Element      AClassFirstReference;
 static Element      AClassLastReference;
 static Document     ADocReference;
 
-#include "f/UIcss_f.h"
 
 /*----------------------------------------------------------------------
    ApplyClassChange : Change all the presentation attributes of    

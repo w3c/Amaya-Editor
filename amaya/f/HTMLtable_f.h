@@ -25,8 +25,6 @@ extern boolean DeleteCell ( NotifyElement * event );
 extern void CellDeleted ( NotifyElement * event );
 extern void TableCreated ( NotifyElement * event );
 extern void RowCreated ( NotifyElement * event );
-extern void static CheckGhosts ( Element row,
-                                 Document doc );
 extern void RowPasted ( NotifyElement * event );
 extern void ColspanCreated ( NotifyAttribute * event );
 extern boolean RegisterColspan ( NotifyAttribute * event );
@@ -36,6 +34,9 @@ extern void RowspanCreated ( NotifyAttribute * event );
 extern boolean RegisterRowspan ( NotifyAttribute * event );
 extern void RowspanModified ( NotifyAttribute * event );
 extern boolean RowspanDelete ( NotifyAttribute * event );
+extern void CellWidthCreated ( NotifyAttribute *event );
+extern void CellWidthModified ( NotifyAttribute *event );
+extern void CellWidthDeleted ( NotifyAttribute *event );
 
 #else /* __STDC__ */
 
@@ -58,8 +59,6 @@ extern boolean DeleteCell (/* NotifyElement * event */);
 extern void CellDeleted (/* NotifyElement * event */);
 extern void TableCreated (/* NotifyElement * event */);
 extern void RowCreated (/* NotifyElement * event */);
-extern void static CheckGhosts (/* Element row,
-                                   Document doc */);
 extern void RowPasted (/* NotifyElement * event */);
 extern void ColspanCreated (/* NotifyAttribute * event */);
 extern boolean RegisterColspan (/* NotifyAttribute * event */);
@@ -69,6 +68,9 @@ extern void RowspanCreated (/* NotifyAttribute * event */);
 extern boolean RegisterRowspan (/* NotifyAttribute * event */);
 extern void RowspanModified (/* NotifyAttribute * event */);
 extern boolean RowspanDelete (/* NotifyAttribute * event */);
+extern void CellWidthCreated (/* NotifyAttribute *event */);
+extern void CellWidthModified (/* NotifyAttribute *event */);
+extern void CellWidthDeleted (/* NotifyAttribute *event */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

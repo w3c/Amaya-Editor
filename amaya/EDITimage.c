@@ -6,20 +6,8 @@
  */
  
 /* Included headerfiles */
+#define EXPORT extern
 #include "amaya.h"
-
-#include "content.h"
-#include "tree.h"
-#include "browser.h"
-#include "interface.h"
-#include "selection.h"
-#include "dialog.h"
-#include "app.h"
-#include "message.h"
-#include "libmsg.h"
-#include "HTMLstyle.h"
-#include "EDITOR.h"
-
 
 #define ImageURL	1
 #define ImageLabel	2
@@ -33,11 +21,13 @@ static char         DirectoryImage[MAX_LENGTH];
 static char         LastURLImage[MAX_LENGTH];
 static char         ImageName[MAX_LENGTH];
 
-#include "init.h"
-#include "HTMLimage.h"
-#include "HTMLedit.h"
-#include "AHTURLTools.h"
-#include "EDITimage.h"
+#include "init_f.h"
+#include "AHTURLTools_f.h"
+#include "EDITimage_f.h"
+#include "HTMLimage_f.h"
+#include "HTMLedit_f.h"
+
+
 /*----------------------------------------------------------------------
    CallbackImage manage returns of Picture form.                   
   ----------------------------------------------------------------------*/

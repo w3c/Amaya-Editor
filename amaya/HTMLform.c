@@ -6,25 +6,15 @@
  */
  
 /* Included headerfiles */
+#define EXPORT extern
 #include "amaya.h"
-#include "interface.h"
-#include "content.h"
-#include "reference.h"
-#include "tree.h"
-#include "browser.h"
-#include "selection.h"
-#include "dialog.h"
-#include "app.h"
-#include "message.h"
-#include "HTMLactions.h"
-#include "HTMLstyle.h"
-#include "EDITOR.h"
 
 #define PARAM_INCREMENT 50
-#include "css.h"
-#include "html2thot.h"
-#include "init.h"
-#include "HTMLform.h"
+
+#include "init_f.h"
+#include "html2thot_f.h"
+#include "HTMLactions_f.h"
+#include "HTMLform_f.h"
 
 static char        *buffer;
 static int          lgbuffer;
@@ -34,9 +24,9 @@ static int          lgbuffer;
    	writes the equivalent escape code of a car in a string		
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         escape_char (char *string, unsigned char c)
+static void         EscapeChar (char *string, unsigned char c)
 #else
-static void         escape_char (string, c)
+static void         EscapeChar (string, c)
 char               *string;
 unsigned char       c;
 
@@ -66,7 +56,7 @@ char               *orig;
 	/* it is necessary to extend the buffer */
 	if (lg < PARAM_INCREMENT)
 	   lg = PARAM_INCREMENT;
-	status = realloc (buffer, sizeof (char) * (lgbuffer + lg));
+	status = TtaRealloc (buffer, sizeof (char) * (lgbuffer + lg));
 
 	if (status != NULL)
 	  {
@@ -84,9 +74,9 @@ char               *orig;
    	add a string into the query buffer				
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         add_element (unsigned char *element)
+static void         AddElement (unsigned char *element)
 #else
-static void         add_element (element)
+static void         AddElement (element)
 unsigned char      *element;
 
 #endif
@@ -111,7 +101,7 @@ unsigned char      *element;
 		      case SPACE:
 		      case '+':
 		      case '&':
-			 escape_char (&tmp[1], *element);
+			 EscapeChar (&tmp[1], *element);
 			 AddToBuffer (tmp);
 			 break;
 
@@ -124,7 +114,7 @@ unsigned char      *element;
 	/* for all other characters */
 	else
 	  {
-	     escape_char (&tmp[1], *element);
+	     EscapeChar (&tmp[1], *element);
 	     AddToBuffer (tmp);
 	  }
 
@@ -136,16 +126,16 @@ unsigned char      *element;
    	add a name=value pair, and a trailling & into the query buffer	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         add_NameValue (char *name, char *value)
+static void         AddNameValue (char *name, char *value)
 #else
-static void         add_NameValue (name, value)
+static void         AddNameValue (name, value)
 char               *name, *value,
 #endif
 {
-   add_element (name);
+   AddElement (name);
    AddToBuffer ("=");
    if (value)
-      add_element (value);
+      AddElement (value);
    AddToBuffer ("&");
 }
 
@@ -179,13 +169,13 @@ Attribute           attr;
 }
 
 /*----------------------------------------------------------------------
-   parse_form traverses the tree of element, applying the parse_input 
+   ParseForm traverses the tree of element, applying the parse_input 
    function to each element with an attribute NAME                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         parse_form (Document doc, Element el, int mode)
+static void         ParseForm (Document doc, Element el, int mode)
 #else
-static void         parse_form (doc, el, mode)
+static void         ParseForm (doc, el, mode)
 Document            doc;
 Element             el;
 int                 mode;
@@ -240,7 +230,7 @@ int                 mode;
 					     /* save the Default_Value attribute of the element elForm */
 					     length = 200;
 					     TtaGiveTextAttributeValue (attrS, value, &length);
-					     add_NameValue (name, value);
+					     AddNameValue (name, value);
 					  }
 				     }
 				}
@@ -276,7 +266,7 @@ int                 mode;
 					     /* save the Default_Value attribute of the element el */
 					     length = 200;
 					     TtaGiveTextAttributeValue (attrS, value, &length);
-					     add_NameValue (name, value);
+					     AddNameValue (name, value);
 					  }
 				     }
 				}
@@ -316,7 +306,7 @@ int                 mode;
 					/* save of the element content */
 					length = MAX_LENGTH - 1;
 					TtaGiveTextContent (elForm, value, &length, &lang);
-					add_NameValue (name, value);
+					AddNameValue (name, value);
 				     }
 				}
 			      else if (mode == HTML_EL_Reset_Input)
@@ -350,7 +340,7 @@ int                 mode;
 					/* save of the element content */
 					length = MAX_LENGTH - 1;
 					TtaGiveTextAttributeValue (def, value, &length);
-					add_NameValue (name, value);
+					AddNameValue (name, value);
 				     }
 				}
 			      break;
@@ -373,9 +363,9 @@ int                 mode;
    	submit a form : builds URL and get the result			
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         do_submit (Document doc, int method, char *action)
+static void         DoSubmit (Document doc, int method, char *action)
 #else
-static void         do_submit (doc, method, action)
+static void         DoSubmit (doc, method, action)
 Document            doc;
 int                 method;
 char               *action;
@@ -503,7 +493,7 @@ Element             element;
 			 if (attr != NULL)
 			    GetAttrValue (&value, attr);
 		      }
-		    add_NameValue (name, value);
+		    AddNameValue (name, value);
 		    if (name)
 		      {
 			 TtaFreeMemory (name);
@@ -555,11 +545,11 @@ Element             element;
 
    /* search the subtree for the form elements */
    elForm = TtaGetFirstChild (elForm);
-   parse_form (doc, elForm, button_type);
+   ParseForm (doc, elForm, button_type);
 
    if (button_type == HTML_EL_Submit_Input)
      {
-	do_submit (doc, method, action);
+	DoSubmit (doc, method, action);
 	TtaFreeMemory (action);
 	free (buffer);
      }

@@ -6,8 +6,9 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern LONG AHTCallback_bridge ( caddr_t cd,
-                                 int *s );
+extern XtInputCallbackProc AHTCallback_bridge ( caddr_t cd,
+                                                int *s,
+                                                XtInputId * id );
 extern int Add_NewSocket_to_Loop ( HTRequest * request,
                                    HTAlertOpcode op,
                                    int msgnum,
@@ -25,8 +26,9 @@ extern void RequestKillAllXtevents ( AHTReqContext * me );
 
 #else /* __STDC__ */
 
-extern LONG AHTCallback_bridge (/* caddr_t cd,
-                                   int *s */);
+extern XtInputCallbackProc AHTCallback_bridge (/* caddr_t cd,
+                                                  int *s,
+                                                  XtInputId * id */);
 extern int Add_NewSocket_to_Loop (/* HTRequest * request,
                                      HTAlertOpcode op,
                                      int msgnum,

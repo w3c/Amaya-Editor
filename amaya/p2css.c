@@ -10,15 +10,13 @@
  *           modify it on the fly. Complementary to api/genericdriver.c .
  */
 
+#define EXPORT extern
 #include "amaya.h"
-#include "message.h"
-#include "pschema.h"
-#include "application.h"
+#include "css.h"
 
-#include "p2css.h"
-#include "html2thot.h"
-#include "HTML.h"
-#include "HTMLstyle.h"
+#include "html2thot_f.h"
+#include "p2css_f.h"
+#include "HTMLstyle_f.h"
 
 /* DEBUG_RPI turn on verbose debugging of the RPI manipulations */
 
@@ -367,11 +365,11 @@ void               *param;
    switch (settings->type)
 	 {
 	    case DRIVERP_FOREGROUND_COLOR:
-	       ColorRGB (settings->value.value, &red, &green, &blue);
+	       TtaGiveThotRGB (settings->value.value, &red, &green, &blue);
 	       sprintf (string, "color : #%02X%02X%02X", red, green, blue);
 	       break;
 	    case DRIVERP_BACKGROUND_COLOR:
-	       ColorRGB (settings->value.value, &red, &green, &blue);
+	       TtaGiveThotRGB (settings->value.value, &red, &green, &blue);
 	       sprintf (string, "background : #%02X%02X%02X", red, green, blue);
 	       break;
 	    case DRIVERP_FONT_SIZE:
@@ -739,7 +737,7 @@ int                 background;
 	if (((zoom >= -10) && (zoom <= 10) && (zoom != 0)) &&
 	    (background >= 0))
 	  {
-	     ColorRGB (background, &red, &green, &blue);
+	     TtaGiveThotRGB (background, &red, &green, &blue);
 	     sprintf (rule, "magnification : %d; background : #%02X%02X%02X",
 		      zoom, red, green, blue);
 	  }
@@ -749,7 +747,7 @@ int                 background;
 	  }
 	else if (background >= 0)
 	  {
-	     ColorRGB (background, &red, &green, &blue);
+	     TtaGiveThotRGB (background, &red, &green, &blue);
 	     sprintf (rule, "background : #%02X%02X%02X", red, green, blue);
 	  }
 	rpi->css_rule = TtaStrdup (rule);

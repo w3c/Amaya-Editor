@@ -6,36 +6,36 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern PUBLIC BOOL AHTProgress ( HTRequest * request,
-                                 HTAlertOpcode op,
-                                 int msgnum,
-                                 const char *dfault,
-                                 void *input,
-                                 HTAlertPar * reply );
-extern PUBLIC BOOL AHTConfirm ( HTRequest * request,
+extern BOOL AHTProgress ( HTRequest * request,
+                          HTAlertOpcode op,
+                          int msgnum,
+                          const char *dfault,
+                          void *input,
+                          HTAlertPar * reply );
+extern BOOL AHTConfirm ( HTRequest * request,
+                         HTAlertOpcode op,
+                         int msgnum,
+                         const char *dfault,
+                         void *input,
+                         HTAlertPar * reply );
+extern BOOL AHTPrompt ( HTRequest * request,
+                        HTAlertOpcode op,
+                        int msgnum,
+                        const char *dfault,
+                        void *input,
+                        HTAlertPar * reply );
+extern BOOL AHTPromptPassword ( HTRequest * request,
                                 HTAlertOpcode op,
                                 int msgnum,
                                 const char *dfault,
                                 void *input,
                                 HTAlertPar * reply );
-extern PUBLIC BOOL AHTPrompt ( HTRequest * request,
-                               HTAlertOpcode op,
-                               int msgnum,
-                               const char *dfault,
-                               void *input,
-                               HTAlertPar * reply );
-extern PUBLIC BOOL AHTPromptPassword ( HTRequest * request,
-                                       HTAlertOpcode op,
-                                       int msgnum,
-                                       const char *dfault,
-                                       void *input,
-                                       HTAlertPar * reply );
-extern PUBLIC BOOL AHTPromptUsernameAndPassword ( HTRequest * request,
-                                                  HTAlertOpcode op,
-                                                  int msgnum,
-                                                  const char *dfault,
-                                                  void *input,
-                                                  HTAlertPar * reply );
+extern BOOL AHTPromptUsernameAndPassword ( HTRequest * request,
+                                           HTAlertOpcode op,
+                                           int msgnum,
+                                           const char *dfault,
+                                           void *input,
+                                           HTAlertPar * reply );
 extern BOOL AHTError_print ( HTRequest * request,
                              HTAlertOpcode op,
                              int msgnum,
@@ -44,40 +44,40 @@ extern BOOL AHTError_print ( HTRequest * request,
                              HTAlertPar * reply );
 extern void AHTError_MemPrint ( HTRequest * request );
 extern void AHTPrintPendingRequestStatus ( Document docid,
-                                           unsigned char last_seconds_of_life );
+                                           BOOL last_seconds_of_life );
 
 #else /* __STDC__ */
 
-extern PUBLIC BOOL AHTProgress (/* HTRequest * request,
-                                   HTAlertOpcode op,
-                                   int msgnum,
-                                   const char *dfault,
-                                   void *input,
-                                   HTAlertPar * reply */);
-extern PUBLIC BOOL AHTConfirm (/* HTRequest * request,
+extern BOOL AHTProgress (/* HTRequest * request,
+                            HTAlertOpcode op,
+                            int msgnum,
+                            const char *dfault,
+                            void *input,
+                            HTAlertPar * reply */);
+extern BOOL AHTConfirm (/* HTRequest * request,
+                           HTAlertOpcode op,
+                           int msgnum,
+                           const char *dfault,
+                           void *input,
+                           HTAlertPar * reply */);
+extern BOOL AHTPrompt (/* HTRequest * request,
+                          HTAlertOpcode op,
+                          int msgnum,
+                          const char *dfault,
+                          void *input,
+                          HTAlertPar * reply */);
+extern BOOL AHTPromptPassword (/* HTRequest * request,
                                   HTAlertOpcode op,
                                   int msgnum,
                                   const char *dfault,
                                   void *input,
                                   HTAlertPar * reply */);
-extern PUBLIC BOOL AHTPrompt (/* HTRequest * request,
-                                 HTAlertOpcode op,
-                                 int msgnum,
-                                 const char *dfault,
-                                 void *input,
-                                 HTAlertPar * reply */);
-extern PUBLIC BOOL AHTPromptPassword (/* HTRequest * request,
-                                         HTAlertOpcode op,
-                                         int msgnum,
-                                         const char *dfault,
-                                         void *input,
-                                         HTAlertPar * reply */);
-extern PUBLIC BOOL AHTPromptUsernameAndPassword (/* HTRequest * request,
-                                                    HTAlertOpcode op,
-                                                    int msgnum,
-                                                    const char *dfault,
-                                                    void *input,
-                                                    HTAlertPar * reply */);
+extern BOOL AHTPromptUsernameAndPassword (/* HTRequest * request,
+                                             HTAlertOpcode op,
+                                             int msgnum,
+                                             const char *dfault,
+                                             void *input,
+                                             HTAlertPar * reply */);
 extern BOOL AHTError_print (/* HTRequest * request,
                                HTAlertOpcode op,
                                int msgnum,
@@ -86,7 +86,7 @@ extern BOOL AHTError_print (/* HTRequest * request,
                                HTAlertPar * reply */);
 extern void AHTError_MemPrint (/* HTRequest * request */);
 extern void AHTPrintPendingRequestStatus (/* Document docid,
-                                             unsigned char last_seconds_of_life */);
+                                             BOOL last_seconds_of_life */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

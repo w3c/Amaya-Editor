@@ -6,28 +6,17 @@
  */
  
 /* Included headerfiles */
+#define EXPORT extern
 #include "amaya.h"
 
-#include "content.h"
-#include "tree.h"
-#include "browser.h"
-#include "interface.h"
-#include "selection.h"
-#include "dialog.h"
-#include "app.h"
-#include "reference.h"
-#include "message.h"
-#include "HTMLstyle.h"
-#include "HTMLactions.h"
-#include "HTMLstyle.h"
-#include "EDITOR.h"
 
-#include "HTMLimage.h"
-#include "init.h"
-#include "AHTURLTools.h"
-#include "HTMLedit.h"
+#include "init_f.h"
+#include "query_f.h"
+#include "AHTURLTools_f.h"
+#include "EDITimage_f.h"
+#include "HTMLactions_f.h"
+#include "HTMLedit_f.h"
 
-#include "f/EDITimage_f.h"
 
 /*----------------------------------------------------------------------
    AddLoadedImage adds a new image into image descriptor table.	

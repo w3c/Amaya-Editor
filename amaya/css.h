@@ -5,101 +5,136 @@
  *
  */
 
-#ifndef __INCLUDE_CSS_H__
-#define __INCLUDE_CSS_H__
+#ifndef CSS_INC_H
+#define CSS_INC_H
 #include "pschema.h"
-#include "cssInc.h"
+#include "genericdriver.h"
+#include "specificdriver.h"
+ 
+typedef enum
+  {
+     UnknownRPI,
+     NormalRPI,
+     ModifiedRPI,
+     RemovedRPI
+  }
+RPIstate;
+ 
+typedef struct PRuleInfo
+  {
+     struct PRuleInfo   *NextRPI;
+ 
+     RPIstate            state;
+ 
+     PSchema             pschema;
+ 
+     GenericContext      ctxt;
+ 
+     /* the CSS rule */
+     char               *selector;
+     char               *css_rule;
+  }
+PRuleInfo          , *PRuleInfoPtr;
 
-#ifdef __STDC__
-extern void         CSSClassChanged (NotifyAttribute * event);
-extern void         ExplodeURL (char *url, char **proto, char **host, char **dir, char **file);
-extern void         PrintCSS (CSSInfoPtr css, FILE * output);
-extern int          DumpCSSToFile (Document doc, CSSInfoPtr css, char *filename);
-extern void         PrintListCSS (FILE * output);
-extern void         GotoPreviousHTML (Document doc, View view);
-extern void         GotoNextHTML (Document doc, View view);
-extern void         AddCSS (CSSInfoPtr css);
-extern void         FreeCSS (CSSInfoPtr css);
-extern void         InitDocumentCSS (Document doc);
-extern void         CleanDocumentCSS (Document doc);
-extern void         CleanListCSS (void);
-extern CSSInfoPtr   NewCSS (void);
-extern int          CmpCSS (CSSInfoPtr css, CSSInfoPtr cour);
-extern CSSInfoPtr   SearchCSS (Document doc, CSSCategory category, char *url);
-extern void         ClearCSS (CSSInfoPtr css);
-extern void         RebuildCSS (CSSInfoPtr css);
-extern CSSInfoPtr   GetDocumentStyle (Document doc);
-extern PSchema      GetDocumentGenericPresentation (Document doc);
-extern CSSInfoPtr   GetUserGenericPresentation (void);
-extern void         RebuildHTMLStyleHeader (Document doc);
-extern void         ParseHTMLStyleHeader (Element elem, char *attrstr, Document doc, Bool rebuild);
-extern void         LoadHTMLStyleSheet (char *URL, Document doc);
-extern void         LoadHTMLExternalStyleSheet (char *URL, Document doc, int merge);
-extern void         LoadUserStyleSheet (Document doc);
-extern void         CSSSetBackground (Document doc, PSchema gpres, int color);
-extern void         CSSSetMagnification (Document doc, PSchema gpres, int zoom);
-extern void         ApplyFinalStyle (Document doc);
-extern void         MergeNewCSS (char *attrstr, Document doc, PSchema gPres);
-extern void         RemoveCSS (char *name, Document doc);
-extern PRuleInfoPtr SearchRPISel (char *selector, PRuleInfoPtr list);
-extern void         SelectRPIEntry (char which, int index, char *value);
-extern int          BuildCSSList (Document doc, char *buf, int size, char *first);
-extern char        *GetlistEntry (char *list, int entry);
-extern void         RedrawLCSS (char *name);
-extern void         RedrawLRPI (char *name);
-extern void         RedrawRCSS (char *name);
-extern void         RedrawRRPI (char *name);
-extern void         CSSHandleMerge (char which, Bool copy);
-extern void         RebuildAllCSS (void);
-extern int          SaveCSSThroughNet (Document doc, View view, CSSInfoPtr css);
-extern void         InitCSS (void);
-extern void         CloseCSS (void);
 
-#else  /* __STDC__ */
-extern void         CSSClassChanged ();
-extern void         ExplodeURL ();
-extern void         PrintCSS ();
-extern int          DumpCSSToFile ();
-extern void         PrintListCSS ();
-extern void         GotoPreviousHTML ();
-extern void         GotoNextHTML ();
-extern void         AddCSS ();
-extern void         FreeCSS ();
-extern void         InitDocumentCSS ();
-extern void         CleanDocumentCSS ();
-extern void         CleanListCSS ();
-extern CSSInfoPtr   NewCSS ();
-extern int          CmpCSS ();
-extern CSSInfoPtr   SearchCSS ();
-extern void         ClearCSS ();
-extern void         RebuildCSS ();
-extern CSSInfoPtr   GetDocumentStyle ();
-extern PSchema      GetDocumentGenericPresentation ();
-extern CSSInfoPtr   GetUserGenericPresentation ();
-extern void         RebuildHTMLStyleHeader ();
-extern void         ParseHTMLStyleHeader ();
-extern void         LoadHTMLStyleSheet ();
-extern void         LoadHTMLExternalStyleSheet ();
-extern void         LoadUserStyleSheet ();
-extern void         CSSSetBackground ();
-extern void         CSSSetMagnification ();
-extern void         ApplyFinalStyle ();
-extern void         MergeNewCSS ();
-extern void         RemoveCSS ();
-extern PRuleInfoPtr SearchRPISel ();
-extern void         SelectRPIEntry ();
-extern int          BuildCSSList ();
-extern char        *GetlistEntry ();
-extern void         RedrawLCSS ();
-extern void         RedrawLRPI ();
-extern void         RedrawRCSS ();
-extern void         RedrawRRPI ();
-extern void         CSSHandleMerge ();
-extern void         RebuildAllCSS ();
-extern int          SaveCSSThroughNet ();
-extern void         InitCSS ();
-extern void         CloseCSS ();
+#define SKIP_BLANK(ptr) \
+     { while (((*(ptr)) == ' ') || ((*(ptr)) == '\b') || \
+              ((*(ptr)) == '\n') || ((*(ptr)) == '\r')) ptr++; }
 
-#endif /* __STDC__ */
+typedef enum
+  {
+     CSS_Unknown,		/* for detecting uninitialized fields */
+     CSS_USER_STYLE,		/* the CSS associated to the browser */
+     CSS_DOCUMENT_STYLE,	/* CSS set in the document header */
+     CSS_EXTERNAL_STYLE,	/* external CSS referenced by the document */
+     CSS_BROWSED_STYLE		/* an external CSS browsed but not linked */
+  }
+CSSCategory;
 
-#endif /* __INCLUDE_CSS_H__ */
+typedef enum
+  {
+     CSS_STATE_Unknown,		/* for detecting uninitialized fields */
+     CSS_STATE_Modified,	/* the CSS associated to the browser */
+     CSS_STATE_Unmodified	/* CSS set in the document header */
+  }
+CSSState;
+
+typedef enum
+  {
+     CSS_BROWSE_None,		/* No browsing operation current */
+     CSS_BROWSE_SaveAll,	/* Saving all modified CSS files */
+     CSS_BROWSE_SaveAs,		/* Saving one CSS file to local filesystem */
+     CSS_BROWSE_Loading		/* Browsing local filesystem to find CSS files */
+  }
+CSSBrowseStatus;
+
+typedef struct CSSInfo
+  {
+     struct CSSInfo     *NextCSS;
+
+     /* the CSS name */
+     char               *name;
+     char               *url;
+     char               *tempfile;
+     CSSCategory         category;
+     CSSState            state;
+
+     /* the associated pSchema */
+     PSchema             pschema;
+
+     /* documents using this CSS */
+     boolean                documents[DocumentTableLength + 1];
+
+     /* The original CSS text. Needed for the Dismiss function */
+     char               *css_rule;
+
+     /*
+      * Extra informations needed to support presentation not
+      * currently available at the P level.
+      */
+     int                 view_background_color;
+     int                 magnification;
+  }
+CSSInfo            , *CSSInfoPtr;
+
+
+/************************************************************************
+ *									*
+ *	Constants and variables needed to build the CSS Dialogs		*
+ *									*
+ ************************************************************************/
+
+#define FormCSS		1
+#define CSSSelect	2
+#define CSSRName	3
+#define CSSLabel	4
+#define CSSLName	5
+#define RPILList	6
+#define RPIActions	7
+#define RPIRList	8
+#define RPIText		9
+#define FormExternalCSS 10
+#define ListExternalCSS 11
+#define CSSFormSauver	12
+#define CSSSauvDir	13
+#define CSSSauvDoc	14
+#define CSSNomURL	15
+#define CSSFormConfirm	16
+#define CSSTextConfirm	17
+#define FormDeleteCSS	18
+#define ListDeleteCSS 19
+
+#define NB_CSS_DIALOGS	20
+
+/*
+ * Parameters for the CSS History, size and filename (UNIX) !
+ * First string is home directory, second is the application name
+ */
+
+#define CSS_HISTORY_FILE "%s/.%s/history.css"
+#define CSS_HISTORY_SIZE 50
+
+#define HTML_HISTORY_FILE "%s/.%s/history.html"
+#define HTML_HISTORY_SIZE 50
+
+#endif /* CSS_INC_H */

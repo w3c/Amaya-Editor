@@ -23,17 +23,17 @@ extern void CreateTarget ( Document doc,
 extern void coordsModified ( NotifyAttribute * event );
 extern void graphicsModified ( NotifyAttribute * event );
 extern void AttrWidthCreated ( NotifyAttribute * event );
-extern unsigned char AttrWidthDelete ( NotifyAttribute * event );
+extern boolean AttrWidthDelete ( NotifyAttribute * event );
 extern void AttrWidthModified ( NotifyAttribute * event );
 extern void AttrFontSizeCreated ( NotifyAttribute * event );
-extern unsigned char AttrFontSizeDelete ( NotifyAttribute * event );
+extern boolean AttrFontSizeDelete ( NotifyAttribute * event );
 extern void AttrColorCreated ( NotifyAttribute * event );
-extern unsigned char AttrColorDelete ( NotifyAttribute * event );
+extern boolean AttrColorDelete ( NotifyAttribute * event );
 extern void ListItemCreated ( NotifyElement * event );
 extern void ListChangedType ( NotifyElement * event );
 extern void UpdateAttrIntItemStyle ( NotifyAttribute * event );
 extern void AttrItemStyle ( NotifyAttribute * event );
-extern unsigned char AttrNAMEinMenu ( NotifyAttribute * event );
+extern boolean AttrNAMEinMenu ( NotifyAttribute * event );
 extern void ResetFontOrPhraseOnText ( Document document,
                                       Element elem,
                                       int notType );
@@ -79,7 +79,7 @@ extern Element SearchNAMEattribute ( Document doc,
                                      Attribute ignore );
 extern Element SearchAnchor ( Document doc,
                               Element element,
-                              unsigned char link );
+                              boolean link );
 extern char *GetActiveImageInfo ( Document document,
                                   Element element );
 extern void UpdateAtom ( Document doc,
@@ -108,17 +108,17 @@ extern void CreateTarget (/* Document doc,
 extern void coordsModified (/* NotifyAttribute * event */);
 extern void graphicsModified (/* NotifyAttribute * event */);
 extern void AttrWidthCreated (/* NotifyAttribute * event */);
-extern unsigned char AttrWidthDelete (/* NotifyAttribute * event */);
+extern boolean AttrWidthDelete (/* NotifyAttribute * event */);
 extern void AttrWidthModified (/* NotifyAttribute * event */);
 extern void AttrFontSizeCreated (/* NotifyAttribute * event */);
-extern unsigned char AttrFontSizeDelete (/* NotifyAttribute * event */);
+extern boolean AttrFontSizeDelete (/* NotifyAttribute * event */);
 extern void AttrColorCreated (/* NotifyAttribute * event */);
-extern unsigned char AttrColorDelete (/* NotifyAttribute * event */);
+extern boolean AttrColorDelete (/* NotifyAttribute * event */);
 extern void ListItemCreated (/* NotifyElement * event */);
 extern void ListChangedType (/* NotifyElement * event */);
 extern void UpdateAttrIntItemStyle (/* NotifyAttribute * event */);
 extern void AttrItemStyle (/* NotifyAttribute * event */);
-extern unsigned char AttrNAMEinMenu (/* NotifyAttribute * event */);
+extern boolean AttrNAMEinMenu (/* NotifyAttribute * event */);
 extern void ResetFontOrPhraseOnText (/* Document document,
                                         Element elem,
                                         int notType */);
@@ -164,7 +164,7 @@ extern Element SearchNAMEattribute (/* Document doc,
                                        Attribute ignore */);
 extern Element SearchAnchor (/* Document doc,
                                 Element element,
-                                unsigned char link */);
+                                boolean link */);
 extern char *GetActiveImageInfo (/* Document document,
                                     Element element */);
 extern void UpdateAtom (/* Document doc,

@@ -6,13 +6,13 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern unsigned char DoubleClick ( NotifyElement * event );
+extern boolean DoubleClick ( NotifyElement * event );
 extern void DocumentClosed ( NotifyDialog * event );
 extern void UpdateContextSensitiveMenus ( Document doc );
 extern void SelectionChanged ( NotifyElement * event );
 extern void CreateAnchor ( Document doc,
                            View view,
-                           unsigned char createLink );
+                           boolean createLink );
 extern void AttrFontSizeModified ( NotifyAttribute * event );
 extern void SetCharFontOrPhrase ( int document,
                                   int eltype );
@@ -21,13 +21,13 @@ extern void SelectDestination ( Document doc,
 
 #else /* __STDC__ */
 
-extern unsigned char DoubleClick (/* NotifyElement * event */);
+extern boolean DoubleClick (/* NotifyElement * event */);
 extern void DocumentClosed (/* NotifyDialog * event */);
 extern void UpdateContextSensitiveMenus (/* Document doc */);
 extern void SelectionChanged (/* NotifyElement * event */);
 extern void CreateAnchor (/* Document doc,
                              View view,
-                             unsigned char createLink */);
+                             boolean createLink */);
 extern void AttrFontSizeModified (/* NotifyAttribute * event */);
 extern void SetCharFontOrPhrase (/* int document,
                                     int eltype */);

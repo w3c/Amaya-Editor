@@ -6,36 +6,24 @@
  */
  
 /* Included headerfiles */
+#define EXPORT extern
 #include "amaya.h"
-
-#include "content.h"
-#include "tree.h"
-#include "browser.h"
-#include "interface.h"
-#include "selection.h"
-#include "dialog.h"
-#include "attribute.h"
-#include "app.h"
-#include "message.h"
-#include "HTMLstyle.h"
-#include "HTMLactions.h"
-#include "HTMLstyle.h"
-#include "EDITOR.h"
+#include "css.h"
 
 
 static char        *TargetDocumentURL = NULL;
-char               *TargetName = NULL;
 
 #define buflen 50
 
-#include "HTMLedit.h"
-#include "init.h"
-#include "html2thot.h"
-#include "HTMLedit.h"
-#include "EDITORactions.h"
-#include "AHTURLTools.h"
-#include "css.h"
-#include "EDITimage.h"
+#include "css_f.h"
+#include "init_f.h"
+#include "html2thot_f.h"
+#include "AHTURLTools_f.h"
+#include "EDITimage_f.h"
+#include "EDITORactions_f.h"
+#include "HTMLactions_f.h"
+#include "HTMLedit_f.h"
+#include "HTMLstyle_f.h"
 
 /*----------------------------------------------------------------------
    SetTargetContent sets the new value of Target.                  
@@ -46,7 +34,6 @@ void                SetTargetContent (Document doc, Attribute attrNAME)
 void                SetTargetContent (doc, attrNAME)
 Document            doc;
 Attribute           attrNAME;
-
 #endif /* __STDC__ */
 {
    int                 length;

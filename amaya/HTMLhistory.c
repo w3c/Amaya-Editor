@@ -5,8 +5,11 @@
  *
  */
  
-#include "cssInc.h"
-#include "HTMLhistory.h"
+#define EXPORT extern
+#include "amaya.h"
+#include "css.h"
+
+#include "HTMLhistory_f.h"
 
 char               *CSSHistory[CSS_HISTORY_SIZE];
 char               *HTMLHistory[CSS_HISTORY_SIZE];

@@ -6,19 +6,11 @@
  */
 
 /* Included headerfiles */
-#include "thot_gui.h"
-#include "thot_sys.h"
-#include "message.h"
-#include "amayamsg.h"
-#include "dialog.h"
-#include "application.h"
-#include "content.h"
-#include "view.h"
-#include "interface.h"
 #define EXPORT extern
 #include "amaya.h"
 
-#include "init.h"
+#include "init_f.h"
+#include "query_f.h"
 
 struct _HTError
   {
@@ -34,10 +26,10 @@ struct _HTError
    AHTProgress: Prints in the status bar the current state of a request   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PUBLIC BOOL         AHTProgress (HTRequest * request, HTAlertOpcode op, int msgnum, const char *dfault,
+ BOOL         AHTProgress (HTRequest * request, HTAlertOpcode op, int msgnum, const char *dfault,
 				 void *input, HTAlertPar * reply)
 #else  /* __STDC__ */
-PUBLIC BOOL         AHTProgress (request, op, msgnum, dfault, input, reply)
+ BOOL         AHTProgress (request, op, msgnum, dfault, input, reply)
 HTRequest          *request;
 HTAlertOpcode       op;
 int                 msgnum;
@@ -138,10 +130,10 @@ void               *input, HTAlertPar * reply;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PUBLIC BOOL         AHTConfirm (HTRequest * request, HTAlertOpcode op, int msgnum, const char *dfault,
+ BOOL         AHTConfirm (HTRequest * request, HTAlertOpcode op, int msgnum, const char *dfault,
 				void *input, HTAlertPar * reply)
 #else  /* __STDC__ */
-PUBLIC BOOL         AHTConfirm (request, op, msgnum, dfault, input, reply)
+ BOOL         AHTConfirm (request, op, msgnum, dfault, input, reply)
 HTRequest          *request;
 HTAlertOpcode       op;
 int                 msgnum;
@@ -170,10 +162,10 @@ HTAlertPar         *reply;
    	Prompt for answer and get text back				
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PUBLIC BOOL         AHTPrompt (HTRequest * request, HTAlertOpcode op, int msgnum, const char *dfault,
+ BOOL         AHTPrompt (HTRequest * request, HTAlertOpcode op, int msgnum, const char *dfault,
 			       void *input, HTAlertPar * reply)
 #else  /* __STDC__ */
-PUBLIC BOOL         AHTPrompt (request, op, msgnum, dfault, input, reply)
+ BOOL         AHTPrompt (request, op, msgnum, dfault, input, reply)
 HTRequest          *request;
 HTAlertOpcode       op;
 int                 msgnum;
@@ -220,10 +212,10 @@ HTAlertPar         *reply;
    	Prompt for password without echoing the reply			
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PUBLIC BOOL         AHTPromptPassword (HTRequest * request, HTAlertOpcode op, int msgnum, const char *dfault,
+ BOOL         AHTPromptPassword (HTRequest * request, HTAlertOpcode op, int msgnum, const char *dfault,
 				       void *input, HTAlertPar * reply)
 #else  /* __STDC__ */
-PUBLIC BOOL         AHTPromptPassword (request, op, msgnum, dfault, input, reply)
+ BOOL         AHTPromptPassword (request, op, msgnum, dfault, input, reply)
 HTRequest          *request;
 HTAlertOpcode       op;
 int                 msgnum;
@@ -271,10 +263,10 @@ HTAlertPar         *reply;
    		Initial value of *password is completely discarded.	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PUBLIC BOOL         AHTPromptUsernameAndPassword (HTRequest * request, HTAlertOpcode op, int msgnum,
+ BOOL         AHTPromptUsernameAndPassword (HTRequest * request, HTAlertOpcode op, int msgnum,
 			const char *dfault, void *input, HTAlertPar * reply)
 #else
-PUBLIC BOOL         AHTPromptUsernameAndPassword (request, op, msgnum, dfault, input reply)
+BOOL         AHTPromptUsernameAndPassword (request, op, msgnum, dfault, input reply)
 HTRequest          *request;
 HTAlertOpcode       op;
 int                 msgnum;
@@ -406,11 +398,11 @@ HTRequest          *request;
    AHTPrintPendingRequestStatus                       
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                AHTPrintPendingRequestStatus (Document docid, boolean last_seconds_of_life)
+void                AHTPrintPendingRequestStatus (Document docid, BOOL last_seconds_of_life)
 #else
 void                AHTPrintPendingRequestStatus (doc, last_seconds_of_life)
 Document            doc;
-boolean             last_seconds_of_life;
+BOOL             last_seconds_of_life;
 
 #endif
 

@@ -4,6 +4,11 @@
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
+ 
+/* Included headerfiles */
+#define EXPORT extern
+#include "amaya.h"
+#include "css.h"
 
 /*----------------------------------------------------------------------
 
@@ -36,23 +41,9 @@
 
   ----------------------------------------------------------------------*/
 
-/* Included headerfiles */
-#include "amaya.h"
-#include "dialog.h"
-#include "content.h"
-#include "HTML.h"
-#include "tree.h"
-#include "attribute.h"
-#include "reference.h"
-#include "application.h"
-#include "specificdriver.h"
-#include "genericdriver.h"
-#include "HTMLstyle.h"
-#define EXPORT extern
-#include "css.h"
-
-#include "HTMLstyle.h"
-#include "html2thot.h"
+#include "css_f.h"
+#include "html2thot_f.h"
+#include "HTMLstyle_f.h"
 
 #ifdef AMAYA_DEBUG
 #define MSG(msg) fprintf(stderr,msg)
@@ -62,13 +53,6 @@ static char        *last_message = NULL;
 #define MSG(msg) last_message = msg
 #endif
 
-#ifdef __STDC__
-int                 EvaluateClassSelector (Element, char *, char *, Document);
-
-#else
-int                 EvaluateClassSelector ();
-
-#endif
 
 /* CSSLEVEL2 adding new features to the standard */
 /* DEBUG_STYLES verbose output of style actions */
@@ -128,7 +112,7 @@ int                 strncasecmp (char *s1, char *s2, size_t n)
 #define CSS_CHECK_BUFFER					\
 {								\
     if (index >= (buffer_size - 2)) {				\
-        char *new =(char *)ThotRealloc(buffer, buffer_size * 2);\
+        char *new =(char *)TtaRealloc(buffer, buffer_size * 2); \
 	if (new == NULL) return(EOS);				\
 	buffer_size *= 2;					\
 	buffer = new;						\
@@ -214,7 +198,7 @@ Document            doc;
  * Manipulate with care !!!
  */
 
-static Bool         HTMLStyleParserDestructiveMode = False;
+static boolean         HTMLStyleParserDestructiveMode = False;
 
 /*
  * A HTML3StyleValueParser is a function used to parse  the
@@ -998,14 +982,14 @@ int                *len;
 			 if ((context->drv->GetForegroundColor == NULL) ||
 			     context->drv->GetForegroundColor (elem, context, &pval))
 			    break;
-			 ColorRGB (pval.value, &red, &green, &blue);
+			 TtaGiveThotRGB (pval.value, &red, &green, &blue);
 			 sprintf (mybuf, "color : #%02X%02X%02X", red, green, blue);
 			 break;
 		      case PRBackground:
 			 if ((context->drv->GetBackgroundColor == NULL) ||
 			     context->drv->GetBackgroundColor (elem, context, &pval))
 			    break;
-			 ColorRGB (pval.value, &red, &green, &blue);
+			 TtaGiveThotRGB (pval.value, &red, &green, &blue);
 			 sprintf (mybuf, "background : #%02X%02X%02X", red, green, blue);
 			 type = elType.ElTypeNum;
 			 if ((type == HTML_EL_HTML) || (type == HTML_EL_BODY) ||
@@ -3915,10 +3899,10 @@ Document            doc;
    SetHTMLStyleParserDestructiveMode :                             
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                SetHTMLStyleParserDestructiveMode (Bool mode)
+void                SetHTMLStyleParserDestructiveMode (boolean mode)
 #else
 void                SetHTMLStyleParserDestructiveMode (mode)
-Bool                mode;
+boolean                mode;
 
 #endif
 {

@@ -36,15 +36,15 @@ extern void ShowStructure ( Document document,
                             View view );
 extern void ShowAlternate ( Document document,
                             View view );
-extern unsigned char ViewToOpen ( NotifyDialog * event );
+extern boolean ViewToOpen ( NotifyDialog * event );
 extern void ShowMapAreas ( Document document,
                            View view );
 extern Document GetHTMLDocument ( char *documentPath,
                                   char *form_data,
                                   Document doc,
                                   DoubleClickEvent DC_event );
-extern unsigned char NormalizeFile ( char *src,
-                                     char *target );
+extern boolean NormalizeFile ( char *src,
+                               char *target );
 extern void CallbackDialogue ( int ref,
                                int typedata,
                                char *data );
@@ -86,15 +86,15 @@ extern void ShowStructure (/* Document document,
                               View view */);
 extern void ShowAlternate (/* Document document,
                               View view */);
-extern unsigned char ViewToOpen (/* NotifyDialog * event */);
+extern boolean ViewToOpen (/* NotifyDialog * event */);
 extern void ShowMapAreas (/* Document document,
                              View view */);
 extern Document GetHTMLDocument (/* char *documentPath,
                                     char *form_data,
                                     Document doc,
                                     DoubleClickEvent DC_event */);
-extern unsigned char NormalizeFile (/* char *src,
-                                       char *target */);
+extern boolean NormalizeFile (/* char *src,
+                                 char *target */);
 extern void CallbackDialogue (/* int ref,
                                  int typedata,
                                  char *data */);

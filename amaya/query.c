@@ -6,18 +6,8 @@
  */
 
 /* Amaya includes  */
-
+#define EXPORT extern
 #include "amaya.h"
-#include "dialog.h"
-#include "content.h"
-#include "view.h"
-#include "interface.h"
-#include "amaya.h"
-#include "message.h"
-#include "application.h"
-#include "AHTURLTools.h"
-#include "AHTBridge.h"
-#include "AHTMemConv.h"
 
 #if defined(__svr4__)
 #define CATCH_SIG
@@ -29,8 +19,16 @@
 
 struct _HTStream
   {
-     HTStreamClass      *isa;
+     const HTStreamClass *isa;
+     FILE               *fp;
+     BOOL                leave_open;	/* Close file when HT_FREE? */
+     char               *end_command;	/* Command to execute       */
+     BOOL                remove_on_close;	/* Remove file?             */
+     char               *filename;	/* Name of file             */
+     HTRequest          *request;	/* saved for callback       */
+     HTRequestCallback  *callback;
   };
+
 
 struct _HTError
   {
@@ -62,52 +60,16 @@ struct _HTHost
 
 /* Type definitions and global variables etc. local to this module */
 
-
-/**** Global variables ****/
-
-AmayaContext       *Amaya;	/* Amaya's global context */
-
 /*** private variables ***/
-
 static HTList      *converters = NULL;	/* List of global converters */
 static HTList      *encodings = NULL;
 
-/*** private functions ***/
-
-/***
-#ifdef __STDC__
-char *ExtractFileName(char);
-#else
-char *ExtractFileName();
-#endif *__STDC__*
-***/
-
-
-#ifdef __STDC__
-static int          AHTUpload_callback (HTRequest *, HTStream *);
-static AHTReqContext *AHTReqContext_new (int);
-static void         Thread_deleteAll (void);
-static int          authentication_handler (HTRequest *, void *, int);
-static int          redirection_handler (HTRequest *, HTResponse *, void *, int);
-static int          terminate_handler (HTRequest * request, HTResponse *, void *, int);
-static int          AHTLoadTerminate_handler (HTRequest *, HTResponse *, void *, int);
-static int          LoopForStop (AHTReqContext *);
-static void         AHTProfile_delete (void);
-static void         AHTAlertInit (void);
-
-#else
-static int          AHTUpload_callback ();
-static AHTReqContext *AHTReqContext_new ();
-static void         Thread_deleteAll ();
-static int          authentication_handler ();
-static int          redirection_handler ();
-static int          terminate_handler ();
-static int          AHTLoadTerminate_handler ();
-static int          LoopForStop ();
-static void         AHTProfile_delete ();
-static void         AHTAlertInit ();
-
-#endif
+#include "answer_f.h"
+#include "query_f.h"
+#include "AHTURLTools_f.h"
+#include "AHTBridge_f.h"
+#include "AHTMemConv_f.h"
+#include "AHTFWrite_f.h"
 
 #ifdef CATCH_SIG
 
@@ -138,9 +100,38 @@ static void         SetSignal ()
 }
 #endif /* CATCH_SIG */
 
+
+/*----------------------------------------------------------------------
+   Gets the status associated to a docid                         
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+AHTDocId_Status    *GetDocIdStatus (int docid, HTList * documents)
+#else
+AHTDocID_Status    *GetDocIdStatus (docid, documents)
+int                 docid;
+HTList             *documents;
+
+#endif
+{
+   AHTDocId_Status    *me;
+   HTList             *cur;
+
+   if (documents)
+     {
+	cur = documents;
+
+	while ((me = (AHTDocId_Status *) HTList_nextObject (cur)))
+	  {
+	     if (me->docid == docid)
+		return (me);
+	  }			/* while */
+     }				/* if */
+   return (AHTDocId_Status *) NULL;
+
+}
+
 /*----------------------------------------------------------------------
    Create a new Amaya Context Object
- 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static AHTReqContext *AHTReqContext_new (int docid)
@@ -216,9 +207,9 @@ int                 docid;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-BOOL                AHTReqContext_delete (AHTReqContext * me)
+boolean   AHTReqContext_delete (AHTReqContext * me)
 #else
-BOOL                AHTReqContext_delete (me)
+boolean   AHTReqContext_delete (me)
 AHTReqContext      *me;
 
 #endif
@@ -252,13 +243,16 @@ AHTReqContext      *me;
 
 	Amaya->open_requests--;
 
-	return YES;
+	return TRUE;
 
      }
-   return NO;
+   return FALSE;
 }
 
 
+/*----------------------------------------------------------------------
+  AHTUpload_callback
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          AHTUpload_callback (HTRequest * request, HTStream * target)
 #else
@@ -310,36 +304,6 @@ HTStream           *target;
      }
 }
 
-
-/*----------------------------------------------------------------------
-   Gets the status associated to a docid                         
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-AHTDocId_Status    *GetDocIdStatus (int docid, HTList * documents)
-#else
-AHTDocID_Status    *GetDocIdStatus (docid, documents)
-int                 docid;
-HTList             *documents;
-
-#endif
-{
-   AHTDocId_Status    *me;
-   HTList             *cur;
-
-   if (documents)
-     {
-	cur = documents;
-
-	while ((me = (AHTDocId_Status *) HTList_nextObject (cur)))
-	  {
-	     if (me->docid == docid)
-		return (me);
-	  }			/* while */
-     }				/* if */
-   return (AHTDocId_Status *) NULL;
-
-}
-
 /*----------------------------------------------------------------------
    This function deletes the whole list of active threads.           
   ----------------------------------------------------------------------*/
@@ -385,89 +349,10 @@ static void         Thread_deleteAll ()
 }
 
 /*----------------------------------------------------------------------
-   authentication_handler                                         
-   This function is registered to handle access authentication,   
-   for example for HTTP                                           
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static int          authentication_handler (HTRequest * request, void *context, int status)
-#else
-static int          authentication_handler (request, context, status)
-HTRequest          *request;
-void               *context;
-int                 status;
-
-#endif
-{
-   AHTReqContext      *me = HTRequest_context (request);
-
-
-   /* check how many times we have passed this way, to protect against
-      ** traviserrors (tm) 
-    */
-
-   /* Ask the authentication module for getting credentials */
-
-   if (HTRequest_retrys (request) /*&& HTBasic_parse (request, context, status) */ )
-     {
-
-	/* Make sure we do a reload from cache */
-	/*
-	   #ifndef HACK_WWW
-	   HTRequest_setReloadMode(request, HT_FORCE_RELOAD);
-	   #endif
-	 */
-	/* Log current request */
-	if (HTLog_isOpen ())
-	   HTLog_add (request, status);
-
-	/* Start request with new credentials */
-
-    /***
-    if(me->xtinput_id != (XtInputId) NULL ) {
-      if (THD_TRACE)
-        fprintf(stderr, "AH: Removing Xtinput: %lu\n",
-                me->xtinput_id);
-      XtRemoveInput(me->xtinput_id);
-      me->xtinput_id = (XtInputId) NULL;
-    }
-    ***/
-
-	/* Start request with new credentials */
-	me->reqStatus = HT_NEW;
-
-	if (me->method == METHOD_PUT || me->method == METHOD_POST)
-	   /* PUT, POST etc. */
-	   /*      HTCopyAnchor((HTAnchor *) HTRequest_anchor(request), request); */
-	   status = HTLoadAbsolute (me->urlName, request);
-	else
-	   HTLoadAnchor ((HTAnchor *) HTRequest_anchor (request), request);
-
-     }
-   else
-     {
-	TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_ACCESS_DENIED),
-		      me->urlName);
-	me->reqStatus = HT_ERR;
-	if (me->error_html)
-	   FilesLoading[me->docid] = 2;		/* so we can show the error message */
-     }
-
-   return HT_ERROR;		/* Make sure this is the last callback in the list */
-}
-
-
-/*----------------------------------------------------------------------
    redirection_handler
-   **      This function is registered to handle permanent and temporary
-   **      redirections
- 
-
-   [x] Verfiy Put, Post
-   [ ] Verify if NormalizeURL is not redundant
-   [ ] Errors, should be done here or in terminate handler??
- 
-  ----------------------------------------------------------------------*/
+   This function is registered to handle permanent and temporary
+   redirections.
+   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          redirection_handler (HTRequest * request, HTResponse * response, void *param, int status)
 #else
@@ -624,7 +509,7 @@ int                 status;
 	  {			/* if the request was not aborted and */
 	    if (error_flag)
 	      {		/* there were some errors */
-		if (me->error_html == YES)
+		if (me->error_html == TRUE)
 		  {		/* and we want to print errors */
 		    if (me->error_stream_size == 0)	/* and the stream is empty */
 			  AHTError_MemPrint (request);	/* copy errors from the error stack 
@@ -889,8 +774,12 @@ static int          AHTSaveFilter (HTRequest * request, HTResponse * response, v
 /*----------------------------------------------------------------------
    BINDINGS BETWEEN A SOURCE MEDIA TYPE AND A DEST MEDIA TYPE (CONVERSION) 
   ----------------------------------------------------------------------*/
-
-static void         AHTConverterInit (HTList * c)
+#ifdef __STDC__
+static void         AHTConverterInit (HTList *c)
+#else  /* __STDC__ */
+static void         AHTConverterInit (c)
+HTList             *c;
+#endif /* __STDC__ */
 {
 
    /* Handler for custom http error messages */
@@ -945,28 +834,14 @@ static void         AHTConverterInit (HTList * c)
    HTConversion_add (c, "*/*", "www/present", HTSaveLocally,
 		     0.3, 0.0, 0.0);
 
-#if 0				/* no use to send this in our request */
-   HTConversion_add (c, "application/octet-stream", "www/present",
-		     HTSaveLocally, 0.1, 0.0, 0.0);
-   HTConversion_add (c, "application/x-compressed", "www/present",
-		     HTSaveLocally, 0.1, 0.0, 0.0);
-#endif
-
-   /* Normal converters */
-   /* this one was 0.5 before */
-#if 0
-   HTConversion_add (c, "*/*", "www/present", HTSaveLocally, 1.0, 0.0, 0.0);
-#endif
-
 }
 
-/*      REGISTER BEFORE AND AFTER FILTERS
-   **      We register a commonly used set of BEFORE and AFTER filters.
-   **      Not done automaticly - may be done by application!
- */
-
-/*      REGISTER ALL AMAYA SUPPORTED PROTOCOLS
- */
+/*----------------------------------------------------------------------
+  REGISTER BEFORE AND AFTER FILTERS
+  We register a commonly used set of BEFORE and AFTER filters.
+  Not done automaticly - may be done by application!
+  REGISTER ALL AMAYA SUPPORTED PROTOCOLS
+  ----------------------------------------------------------------------*/
 static void         AHTProtocolInit (void)
 {
 
@@ -987,6 +862,8 @@ static void         AHTProtocolInit (void)
    HTProtocol_add ("news", "tcp", NO, HTLoadNews, NULL);
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 static void         AHTNetInit (void)
 {
 
@@ -1027,7 +904,42 @@ static void         AHTNetInit (void)
 #endif
 }
 
-static void         AHTProfile_newAmaya (const char *AppName, const char *AppVersion)
+/*      REGISTER CALLBACKS FOR THE ALERT MANAGER
+   **      We register a set of alert messages
+ */
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         AHTAlertInit (void)
+#else
+static void         AHTAlertInit ()
+#endif
+{
+
+   HTAlert_add (AHTProgress, HT_A_PROGRESS);
+   HTAlert_add ((HTAlertCallback *) Add_NewSocket_to_Loop, HT_PROG_CONNECT);
+   HTAlert_add (AHTError_print, HT_A_MESSAGE);
+   HTError_setShow (0xFF);	/* process all messages */
+   /*   HTAlert_add (HTError_print, HT_A_MESSAGE); */
+   HTAlert_add (AHTConfirm, HT_A_CONFIRM);
+   HTAlert_add (AHTPrompt, HT_A_PROMPT);
+   HTAlert_add (AHTPromptPassword, HT_A_SECRET);
+   HTAlert_add (AHTPromptUsernameAndPassword, HT_A_USER_PW);
+   /* Setup a global call to input XtEvents for new sockets */
+   /* should not be necessary anymore */
+
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         AHTProfile_newAmaya (char *AppName, char *AppVersion)
+#else  /* __STDC__ */
+static void         AHTProfile_newAmaya (AppName, AppVersion)
+char               *AppName;
+char               *AppVersion;
+#endif /* __STDC__ */
 {
    /* If the Library is not already initialized then do it */
    if (!HTLib_isInitialized ())
@@ -1082,7 +994,6 @@ static void         AHTProfile_newAmaya (const char *AppName, const char *AppVer
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void         AHTProfile_delete (void)
 #else
@@ -1101,34 +1012,6 @@ static void         AHTProfile_delete ()
 	HTLibTerminate ();
 	/* Terminate libwww */
      }
-}
-
-/*      REGISTER CALLBACKS FOR THE ALERT MANAGER
-   **      We register a set of alert messages
- */
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static void         AHTAlertInit (void)
-#else
-static void         AHTAlertInit ()
-#endif
-{
-
-   HTAlert_add (AHTProgress, HT_A_PROGRESS);
-   HTAlert_add ((HTAlertCallback *) Add_NewSocket_to_Loop, HT_PROG_CONNECT);
-   HTAlert_add (AHTError_print, HT_A_MESSAGE);
-   HTError_setShow (0xFF);	/* process all messages */
-   /*   HTAlert_add (HTError_print, HT_A_MESSAGE); */
-   HTAlert_add (AHTConfirm, HT_A_CONFIRM);
-   HTAlert_add (AHTPrompt, HT_A_PROMPT);
-   HTAlert_add (AHTPromptPassword, HT_A_SECRET);
-   HTAlert_add (AHTPromptUsernameAndPassword, HT_A_USER_PW);
-   /* Setup a global call to input XtEvents for new sockets */
-   /* should not be necessary anymore */
-
 }
 
 /*----------------------------------------------------------------------
@@ -1197,12 +1080,77 @@ void                QueryInit ()
 #ifdef CATCH_SIG
    SetSignal ();
 #endif
-
-
 }
 
 
 /*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static int          LoopForStop (AHTReqContext * me)
+#else
+static int          LoopForStop (AHTReqContext * me)
+#endif
+{
+
+#ifdef WWW_XWINDOWS
+   extern XtAppContext app_cont;
+   XEvent              ev;
+   XtInputMask         status;
+
+#endif /* WWW_XWINDOWS */
+   int                 status_req;
+
+   /* to test the async calls  */
+   /* Boucle d'attente des evenements */
+
+   while (me->reqStatus != HT_ABORT &&
+	  me->reqStatus != HT_END &&
+	  me->reqStatus != HT_ERR)
+     {
+
+#ifdef WWW_XWINDOWS
+	status = XtAppPending (app_cont);
+	if (status & XtIMXEvent)
+	  {
+	     XtAppNextEvent (app_cont, &ev);
+	     TtaHandleOneEvent (&ev);
+	  }
+	else if (status & (XtIMAll & (~XtIMXEvent)))
+	  {
+	     XtAppProcessEvent (app_cont,
+				(XtIMAll & (~XtIMXEvent)));
+	  }
+	else
+	  {
+	     XtAppNextEvent (app_cont, &ev);
+	     TtaHandleOneEvent (&ev);
+	  }
+
+#endif /* WWW_XWINDOWS */
+     }
+
+   switch (me->reqStatus)
+	 {
+
+	    case HT_ERR:
+	    case HT_ABORT:
+	       status_req = HT_ERROR;
+	       break;
+
+	    case HT_END:
+	       status_req = HT_OK;
+	       break;
+
+	    default:
+	       break;
+	 }
+
+   return (status_req);
+}
+
+
+/*----------------------------------------------------------------------
+  QueryClose
   ----------------------------------------------------------------------*/
 void                QueryClose ()
 {
@@ -1223,9 +1171,8 @@ void                QueryClose ()
 
 
 /*----------------------------------------------------------------------
-   GetObjectWWW loads the file designated by urlName in a temporary   
-   file.                                                 
-   
+   GetObjectWWW
+   loads the file designated by urlName in a temporary file.                                                 
    4  file retrieval modes are proposed:                              
    AMAYA_SYNC : blocking mode                            
    AMAYA_ISYNC : incremental, blocking mode              
@@ -1279,7 +1226,7 @@ void                QueryClose ()
 int                 GetObjectWWW (int docid, char *urlName, char *postString,
 				  char *outputfile, int mode,
 				TIcbf * incremental_cbf, void *context_icbf,
-		 TTcbf * terminate_cbf, void *context_tcbf, BOOL error_html)
+		 TTcbf * terminate_cbf, void *context_tcbf, boolean  error_html)
 #else
 int                 GetObjectWWW (docid, urlName, postString, outputfile, mode,
 		 incremental_cbf, context_icbf, terminate_cbf, context_tcbf,
@@ -1293,8 +1240,7 @@ TIcbf              *incremental_cbf;
 void               *context_icbf;
 TTcbf              *terminate_cbf;
 void               *context_tcbf;
-BOOL                error_html;
-
+boolean             error_html;
 #endif
 {
    AHTReqContext      *me;
@@ -1619,7 +1565,6 @@ generated
    Returns:
    HT_ERROR
    HT_OK
- 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 PutObjectWWW (int docid, char *fileName, char *urlName, int mode,
@@ -1720,7 +1665,6 @@ void               *context_tcbf;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 int                 UploadMemWWW (int docid, HTMethod method,
 		     char *urlName, char *mem_ptr, unsigned long block_size,
@@ -1839,7 +1783,7 @@ char               *outputfile;
 	     status = LoopForStop (me);
 	     AHTReqContext_delete (me);
 	  }
-     }				/* if-else */
+     }
 
    return (status);
 
@@ -1854,7 +1798,6 @@ void                StopRequest (int docid)
 #else
 void                StopRequest (docid)
 int                 docid;
-
 #endif
 {
    HTList             *cur;
@@ -1923,70 +1866,3 @@ int                 docid;
 	  }			/* while */
      }				/* if amaya open requests */
 }				/* StopRequest */
-
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static int          LoopForStop (AHTReqContext * me)
-#else
-static int          LoopForStop (AHTReqContext * me)
-#endif
-{
-
-#ifdef WWW_XWINDOWS
-   extern XtAppContext app_cont;
-   XEvent              ev;
-   XtInputMask         status;
-
-#endif /* WWW_XWINDOWS */
-   int                 status_req;
-
-   /* to test the async calls  */
-   /* Boucle d'attente des evenements */
-
-   while (me->reqStatus != HT_ABORT &&
-	  me->reqStatus != HT_END &&
-	  me->reqStatus != HT_ERR)
-     {
-
-#ifdef WWW_XWINDOWS
-	status = XtAppPending (app_cont);
-	if (status & XtIMXEvent)
-	  {
-	     XtAppNextEvent (app_cont, &ev);
-	     TtaHandleOneEvent (&ev);
-	  }
-	else if (status & (XtIMAll & (~XtIMXEvent)))
-	  {
-	     XtAppProcessEvent (app_cont,
-				(XtIMAll & (~XtIMXEvent)));
-	  }
-	else
-	  {
-	     XtAppNextEvent (app_cont, &ev);
-	     TtaHandleOneEvent (&ev);
-	  }
-
-#endif /* WWW_XWINDOWS */
-     }				/* while */
-
-   switch (me->reqStatus)
-	 {
-
-	    case HT_ERR:
-	    case HT_ABORT:
-	       status_req = HT_ERROR;
-	       break;
-
-	    case HT_END:
-	       status_req = HT_OK;
-	       break;
-
-	    default:
-	       break;
-	 }
-
-   return (status_req);
-}

@@ -6,12 +6,12 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern unsigned char DeleteStyleRule ( NotifyElement * event );
+extern boolean DeleteStyleRule ( NotifyElement * event );
 extern void ChangePRule ( NotifyPresentation * event );
 
 #else /* __STDC__ */
 
-extern unsigned char DeleteStyleRule (/* NotifyElement * event */);
+extern boolean DeleteStyleRule (/* NotifyElement * event */);
 extern void ChangePRule (/* NotifyPresentation * event */);
 
 #endif /* __STDC__ */
