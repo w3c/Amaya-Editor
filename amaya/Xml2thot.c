@@ -2685,8 +2685,8 @@ int      length;
        usprintf (msgBuffer, TEXT("Unknown entity %s"), buffer);
        XmlParseError (XMLcontext.doc, msgBuffer, 0);
      }
-   else
-     lang = TtaGetLanguageIdFromAlphabet(alphabet);
+   else if (alphabet != TEXT(' '))   
+       lang = TtaGetLanguageIdFromAlphabet(alphabet);
    
    /* Creation of the entity */
    if (currentAttribute)
