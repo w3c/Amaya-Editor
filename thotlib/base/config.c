@@ -691,6 +691,12 @@ static FILE *openConfigFile (char *name, ThotBool lang)
        /* des schemas et le suffixe */
        strncpy (DirBuffer, SchemaPath, MAX_PATH);
        MakeCompleteName (name, suffix, DirBuffer, filename, &i);
+       if (!TtaFileExist (filename))
+	 {
+	   /* it's probably a generic name */
+	   strncpy (DirBuffer, SchemaPath, MAX_PATH);
+	   MakeCompleteName ("XML", suffix, DirBuffer, filename, &i);
+	 }
      }
    /* ouvre le fichier */
    file = TtaReadOpen (filename);
@@ -1123,7 +1129,8 @@ static ThotBool readUntilStyle (FILE *file, char *namePSchema)
               {
                  getSecondWord (line, word);
                  strcpy (name, word);
-                 if (strcmp (name, namePSchema) == 0)
+                 if (strcmp (name, namePSchema) == 0 ||
+		     strcmp (name, "XMLP") == 0)
                     ok = TRUE;
               }
         }
