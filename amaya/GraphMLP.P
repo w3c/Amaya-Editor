@@ -966,6 +966,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
+		HorizRef: Enclosed . HRef;
 		Foreground: TAG_Color;
 		END;
 	END;
@@ -976,6 +977,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
+		HorizRef: Enclosed . HRef;
 		Foreground: TAG_Color;
 		VertPos: HRef = Previous . HRef;
 		HorizPos: Left = Previous . Right;
@@ -988,6 +990,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
+		HorizRef: Enclosed . HRef;
 		Foreground: TAG_Color;
 		END;
 	END;
@@ -998,6 +1001,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
+		HorizRef: Enclosed . HRef;
 		Foreground: TAG_Color;
 		VertPos: HRef = Previous . HRef;
 		HorizPos: Left = Previous . Right;
@@ -1039,6 +1043,7 @@ RULES
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
         	Height	: Enclosed . Height;
+		Font: TAG_Font;
 		Visibility: 10;
 		END;
 	IN Alternate_view BEGIN
@@ -1057,7 +1062,6 @@ RULES
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		Font: TAG_Font;
 		END;
 	IN Alternate_view
 		Visibility: 0;
@@ -1396,10 +1400,14 @@ RULES
 		   HorizPos: Left = Enclosing . Left;
 		   VertPos: Top = Previous . Bottom;
 		   END;
-		if within XMLcomment_line
+		if within XMLcomment_line BEGIN
 		   HorizPos: Left = Previous . Right;
-		if within XMLPI_line
+                   VertPos: HRef = Previous . HRef;
+		   END;
+		if within XMLPI_line BEGIN
 		   HorizPos: Left = Previous . Right;
+                   VertPos: HRef = Previous . HRef;
+		   END;
 		END;
 	IN Alternate_view BEGIN
 	        Width: Enclosed . Width;
