@@ -3,10 +3,11 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Soporte de marcadores</title>
   <style type="text/css">
   </style>
-  <meta name="GENERATOR" content="amaya 8.1, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.1a, see http://www.w3.org/Amaya/" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -159,13 +160,13 @@ alt="Ventana Propiedades de tema" border="2" /></p>
 <img alt="collapsed topic" src="../images/closed.png" /> o <img
 alt="expanded topic" src="../images/open.png" />. El resto de items son
 marcadores. Puedes activar un item haciendo clic con el botón derecho del
-ratón o puedes ver sus propiedades haciendo clic con el botón izquierdo del
+ratón o puedes ver sus propiedades haciendo clic con el botón derecho del
 ratón. Si ves las propiedades de un item, también puedes editarlo y guardar
 las modificaciones.</p>
 
-<p>En el caso de un marcador, al hacer clic derecho se abrirá una nueva
+<p>En el caso de un marcador, al hacer clic izquierdo se abrirá una nueva
 ventana que mostrará el documento al que apunta el marcador. En el caso de un
-tema, al hacer clic derecho se desplegará o plegará su contenido. El icono
+tema, al hacer clic izquierdo se desplegará o plegará su contenido. El icono
 <img alt="collapsed topic" src="../images/closed.png" /> representa un tema
 plegado, y el icono <img alt="expanded topic" src="../images/open.png" />
 representa un tema desplegado.</p>
