@@ -6075,10 +6075,12 @@ RULES
 #endif
 	CreateAfter(THeadBottomBorder);
 	IN Structure_view BEGIN
-		Visibility: 0;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Width: Enclosing . Width - STRUCT_INDENT;
 		END;
 	IN Alternate_view BEGIN
-		Visibility: 0;
+		HorizPos: Left = Enclosing . Left;
+		Width: Enclosing . Width;
 		END;
 	END;
 
@@ -6091,10 +6093,12 @@ RULES
 	PageBreak: No;
 #endif
 	IN Structure_view BEGIN
-		Visibility: 0;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Width: Enclosing . Width - STRUCT_INDENT;
 		END;
 	IN Alternate_view BEGIN
-		Visibility: 0;
+		HorizPos: Left = Enclosing . Left;
+		Width: Enclosing . Width;
 		END;
 	END;
 
