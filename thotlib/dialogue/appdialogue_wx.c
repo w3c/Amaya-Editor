@@ -325,37 +325,25 @@ ThotBool TtaAttachFrame( int frame_id, int window_id, int page_id, int position 
   }
   
   /* now detach the old frame -> unsplit the page */
-  switch (position)
-    {
-    case 1:
-      p_page->DetachTopFrame();
-      break;
-    case 2:
-      p_page->DetachBottomFrame();;
-      break;
-    }
+  //  p_page->DetachFrame( position );
 
   /* now attach the frame to this page */
-  switch (position)
-    {
-    case 1:
-      p_page->AttachTopFrame( FrameTable[frame_id].WdFrame );
-      break;
-    case 2:
-      p_page->AttachBottomFrame( FrameTable[frame_id].WdFrame );
-      break;
-    }
+  AmayaFrame * p_oldframe = NULL;
+  p_oldframe = p_page->AttachFrame( FrameTable[frame_id].WdFrame, position );
+
+  /* hide the previous frame */
+  if (p_oldframe)
+    p_oldframe->Hide();
 
   /* update frame infos */
-  //  FrameTable[frame_id].WdStatus 	= p_window->GetStatusBar();
+  /*  FrameTable[frame_id].WdStatus 	= p_window->GetStatusBar(); */
   FrameTable[frame_id].FrWindowId   	= window_id;
   FrameTable[frame_id].FrPageId         = page_id;
 
   p_page->Show();
 
   /* wait for frame initialisation (needed by opengl) */
-  while ( wxTheApp->Pending() )
-	wxTheApp->Dispatch();
+  TtaHandlePendingEvents();
   
   return TRUE;
 #else
@@ -386,15 +374,7 @@ ThotBool TtaDetachFrame( int window_id, int page_id, int position )
 
   /* now detach the frame from this page */
   AmayaFrame * p_frame = NULL;
-  switch( position )
-    {
-    case 1:
-      p_frame = p_page->DetachTopFrame();
-      break;
-    case 2:
-      p_frame = p_page->DetachBottomFrame();
-      break;
-    }
+  p_frame = p_page->DetachFrame( position );
 
   if (p_frame)
     {
@@ -410,6 +390,83 @@ ThotBool TtaDetachFrame( int window_id, int page_id, int position )
 
   return FALSE;
 #else
+  return FALSE;
+#endif /* #ifdef _WX */
+}
+
+/*----------------------------------------------------------------------
+  TtaDetachFrame detachs a frame from a window
+  params:
+    + frame_id : the frame identifier
+
+  returns:
+    + true if ok
+    + false if it's impossible to detach the frame
+  ----------------------------------------------------------------------*/
+ThotBool TtaDetachFrame( int frame_id )
+{
+#ifdef _WX
+  int window_id        = FrameTable[frame_id].FrWindowId;
+  int page_id          = FrameTable[frame_id].FrPageId;
+  AmayaFrame * p_frame = FrameTable[frame_id].WdFrame;
+  
+  if (window_id < 0 || page_id < 0)
+    return FALSE;
+
+  AmayaWindow * p_window = WindowsTable[window_id];
+  if (p_window == NULL)
+    return FALSE;
+  
+  AmayaPage * p_page = p_window->GetPage(page_id);
+  if (!p_page)
+    return FALSE;
+
+
+  /* now detach the frame from this page */
+  int position = p_page->GetFramePosition( p_frame );
+  AmayaFrame * p_detached_frame = NULL;
+  p_detached_frame = p_page->DetachFrame( position );
+
+  if (p_frame == p_detached_frame)
+    {
+      /* a frame hs been detached so update the FrameTable */
+      /* update frame infos */
+      FrameTable[frame_id].FrWindowId   = -1;
+      FrameTable[frame_id].FrPageId     = -1;
+      return TRUE;
+    }
+
+  return FALSE;
+#else
+  return FALSE;
+#endif /* #ifdef _WX */
+}
+
+/*----------------------------------------------------------------------
+  TtaDestroyFrame destroy a frame
+  params:
+    + frame_id : the frame identifier
+  returns:
+    + true
+    + false
+  ----------------------------------------------------------------------*/
+ThotBool TtaDestroyFrame( int frame_id )
+{
+#ifdef _WX
+  wxLogDebug(_T("TtaDestroyFrame: frame_id=%d"), frame_id);
+
+  AmayaFrame * p_frame = FrameTable[frame_id].WdFrame;
+  
+  if (!p_frame)
+    return FALSE;
+  
+  //  TtaDetachFrame( frame_id );
+
+  //  TtaHandlePendingEvents();
+  p_frame->DestroyFrame();
+
+  return TRUE;
+#else /* _WX */
   return FALSE;
 #endif /* #ifdef _WX */
 }
