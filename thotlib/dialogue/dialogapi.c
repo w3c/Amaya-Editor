@@ -555,54 +555,6 @@ void WIN_ListSaveDirectory (int parentRef, char *title, char *fileName)
     strcpy (fileName, OpenFileName.lpstrFile);
 }
 
-/*----------------------------------------------------------------------
-  WIN_InitScrPopup
-  System calls for creating an empty  scroll popup widget under Windows.
-  Returns a pointer to the widget if succesful, NULL otherwise.
-  ----------------------------------------------------------------------*/
-static HWND WIN_InitScrPopup (ThotWindow parent, int ref,
-                              ThotBool multipleOptions, int nbOptions)
-{
-  WNDCLASS      wndSheetClass;
-  LPCSTR        szAppName;
-  static ATOM   wndScrPopupRegistered;
-  HWND          menu;
-  POINT         curPoint;
-
-  szAppName = (LPCSTR) "MYSCRPOPUP";
-  /* register the popup scroll widget class if it doesn't exists */
-  if (!wndScrPopupRegistered)
-    {
-      wndSheetClass.style         = CS_HREDRAW | CS_VREDRAW;
-      wndSheetClass.lpfnWndProc   = (WNDPROC) WIN_ScrPopupProc;
-      wndSheetClass.cbClsExtra    = 0;
-      wndSheetClass.cbWndExtra    = 0;
-      wndSheetClass.hInstance     = hInstance;
-      wndSheetClass.hIcon         = LoadIcon (NULL, IDI_APPLICATION);
-      wndSheetClass.hCursor       = LoadCursor (NULL, IDC_ARROW);
-      wndSheetClass.hbrBackground = (HBRUSH) GetStockObject (WHITE_BRUSH);
-      wndSheetClass.lpszMenuName  = NULL;
-      wndSheetClass.lpszClassName = szAppName;
-      wndScrPopupRegistered = RegisterClass (&wndSheetClass);
-      if (!wndScrPopupRegistered)
-	return (NULL);
-    }
-  /* we don't use the multipleOptions variable anymore */
-  /* we use a global variable, as I was unable to pass a parameter with CreateWindow */
-  /* multipleSel = multipleOptions; */
-  /* create a widget instance at the current cursor position */
-  GetCursorPos (&curPoint);
-  menu = CreateWindow (szAppName,  NULL,
-		       WS_POPUP, curPoint.x, curPoint.y,
-		       130, (nbOptions < 15) ? 17*nbOptions : 255 ,
-		       parent, NULL, hInstance, NULL);
-  if (!menu)
-    return NULL;
-  /* store the catalogue reference inside the window */
-  SetProp (menu, "ref", (HANDLE) ref);
-  return menu;
-}
-
 /*-----------------------------------------------------------------------
  ThotDlgProc
  ------------------------------------------------------------------------*/
@@ -1051,6 +1003,54 @@ LRESULT CALLBACK WIN_ScrPopupProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM 
       break;
     }
   return (DefWindowProc (hwnDlg, msg, wParam, lParam));
+}
+
+/*----------------------------------------------------------------------
+  WIN_InitScrPopup
+  System calls for creating an empty  scroll popup widget under Windows.
+  Returns a pointer to the widget if succesful, NULL otherwise.
+  ----------------------------------------------------------------------*/
+static HWND WIN_InitScrPopup (ThotWindow parent, int ref,
+                              ThotBool multipleOptions, int nbOptions)
+{
+  WNDCLASS      wndSheetClass;
+  LPCSTR        szAppName;
+  static ATOM   wndScrPopupRegistered;
+  HWND          menu;
+  POINT         curPoint;
+
+  szAppName = (LPCSTR) "MYSCRPOPUP";
+  /* register the popup scroll widget class if it doesn't exists */
+  if (!wndScrPopupRegistered)
+    {
+      wndSheetClass.style         = CS_HREDRAW | CS_VREDRAW;
+      wndSheetClass.lpfnWndProc   = (WNDPROC) WIN_ScrPopupProc;
+      wndSheetClass.cbClsExtra    = 0;
+      wndSheetClass.cbWndExtra    = 0;
+      wndSheetClass.hInstance     = hInstance;
+      wndSheetClass.hIcon         = LoadIcon (NULL, IDI_APPLICATION);
+      wndSheetClass.hCursor       = LoadCursor (NULL, IDC_ARROW);
+      wndSheetClass.hbrBackground = (HBRUSH) GetStockObject (WHITE_BRUSH);
+      wndSheetClass.lpszMenuName  = NULL;
+      wndSheetClass.lpszClassName = szAppName;
+      wndScrPopupRegistered = RegisterClass (&wndSheetClass);
+      if (!wndScrPopupRegistered)
+	return (NULL);
+    }
+  /* we don't use the multipleOptions variable anymore */
+  /* we use a global variable, as I was unable to pass a parameter with CreateWindow */
+  /* multipleSel = multipleOptions; */
+  /* create a widget instance at the current cursor position */
+  GetCursorPos (&curPoint);
+  menu = CreateWindow (szAppName,  NULL,
+		       WS_POPUP, curPoint.x, curPoint.y,
+		       130, (nbOptions < 15) ? 17*nbOptions : 255 ,
+		       parent, NULL, hInstance, NULL);
+  if (!menu)
+    return NULL;
+  /* store the catalogue reference inside the window */
+  SetProp (menu, "ref", (HANDLE) ref);
+  return menu;
 }
 
 /*----------------------------------------------------------------------
@@ -1852,8 +1852,7 @@ void TtaInitDialogue (char *server, ThotAppContext *app_context)
    RootShell.lpszClassName = "Amaya";
    RootShell.cbSize = sizeof(WNDCLASSEX);
    RootShell.hIconSm = LoadIcon (hInstance, iconID);
-   if (!RegisterClassEx (&RootShell))
-      return (FALSE);
+   RegisterClassEx (&RootShell);
    RootShell.style = CS_DBLCLKS;
    RootShell.lpfnWndProc = ClientWndProc;
    RootShell.cbClsExtra = 0;
@@ -1866,8 +1865,7 @@ void TtaInitDialogue (char *server, ThotAppContext *app_context)
    RootShell.lpszMenuName = NULL;
    RootShell.cbSize = sizeof(WNDCLASSEX);
    RootShell.hIconSm = LoadIcon (hInstance, iconID);
-   if (!RegisterClassEx (&RootShell))
-      return (FALSE);
+   RegisterClassEx (&RootShell);
    RootShell.style = 0;
    RootShell.lpfnWndProc = ThotDlgProc;
    RootShell.cbClsExtra = 0;
@@ -1880,9 +1878,7 @@ void TtaInitDialogue (char *server, ThotAppContext *app_context)
    RootShell.hbrBackground = (HBRUSH) GetStockObject (LTGRAY_BRUSH);
    RootShell.cbSize = sizeof(WNDCLASSEX);
    RootShell.hIconSm = LoadIcon (hInstance, iconID);
-   if (!RegisterClassEx (&RootShell))
-     return (FALSE);
-   return TRUE;
+   RegisterClassEx (&RootShell);
 #else /* _WINDOWS */
 #ifndef _GTK
    /* Ouverture de l'application pour le serveur X-ThotWindow */
