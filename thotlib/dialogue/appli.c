@@ -339,15 +339,18 @@ static void CopyToolTipText (int frame, LPTOOLTIPTEXT lpttt)
 void WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LPARAM lParam)
 {
  PAINTSTRUCT         ps;
+#ifndef _GL
  RECT                rect;
  ViewFrame          *pFrame;
  int                 xmin, xmax, ymin, ymax;
+#endif /*_GL*/
 
  if (frame > 0 && frame <= MAX_FRAME)
  {
    /* Do not redraw if the document is in NoComputedDisplay mode. */
    if (documentDisplayMode[FrameTable[frame].FrDoc - 1] != NoComputedDisplay)
    {
+#ifndef _GL
 	 BeginPaint (w, &ps);
 	 GetClientRect (w, &rect);
 	 /* save the previous clipping */
@@ -371,10 +374,19 @@ void WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LPARAM lParam)
 	 pFrame->FrClipXEnd = xmax;
 	 pFrame->FrClipYBegin = ymin;
 	 pFrame->FrClipYEnd = ymax;
-#ifndef _GL
+
 #else /*_GL*/
+
+	 BeginPaint (w, &ps);
     GL_MakeCurrent (frame);	
+	GL_ActivateDrawing ();
+	 DefRegion (frame, ps.rcPaint.left, 
+		 ps.rcPaint.top, ps.rcPaint.right,
+		 ps.rcPaint.bottom);
+	RedrawFrameBottom (frame, 0, NULL);
+   /* glMatroxBUG (frame, x, y, width, height);	*/
     GL_Swap (frame);
+	 EndPaint (w, &ps);
 #endif /*_GL*/
    }
  }
@@ -387,29 +399,30 @@ void WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LPARAM lParam)
 void WIN_ChangeViewSize (int frame, int width, int height, int top_delta,
 						 int bottom_delta)
 {
-   int                 view;
-   Document            doc;
 
    if ((width <= 0) || (height <= 0))
       return;
    if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
       return;
-   FrameToView (frame, &doc, &view);
    FrameTable[frame].FrTopMargin = top_delta;
-   /* FrameTable[frame].FrWidth = (int) width - bottom_delta; */
    FrameTable[frame].FrWidth = (int) width - bottom_delta;
    FrameTable[frame].FrHeight = (int) height;
+#ifndef _GL
    /* need to recompute the content of the window */
    RebuildConcreteImage (frame);
-   /* recompute the scroll bars */
-    UpdateScrollbars (frame);
-#ifdef _GL
+#else /*_GL*/
     GL_MakeCurrent (frame);	
     GLResize (width, height, 0 ,0);
-    Clear (frame, width, height, 0, 0);
-    GL_ActivateDrawing ();
-    GL_DrawAll (NULL, frame);
+    /*Clear (frame, width, height, 0, 0);*/
+	GL_ActivateDrawing ();
+    /* need to recompute the content of the window */
+    RebuildConcreteImage (frame);    
+    /*GL_DrawAll (NULL, frame);*/
+	GL_Swap (frame);
+	glFinish();
 #endif/*_GL*/
+   /* recompute the scroll bars */
+   UpdateScrollbars (frame);
 }
 #else /* _WINDOWS */
 
@@ -821,8 +834,13 @@ void WIN_ChangeVScroll (int frame, int reason, int value)
 	   delta = (int) (((float)value / (float)FrameTable[frame].FrHeight) * 100);
 	   JumpIntoView (frame, delta);
 	 }
+#ifdef _GL
+	GL_ActivateDrawing ();
+    GL_DrawAll (NULL, frame);
+	GL_Swap (frame);
+#endif /*_GL*/
        break;
-     }
+     } 
 }
 
 /*----------------------------------------------------------------------

@@ -40,6 +40,12 @@ static int          GridSize = 1;
 #include "units_f.h"
 #include "windowdisplay_f.h"
 
+#ifdef _GL
+#include <GL/gl.h>
+#include "glwindowdisplay.h"
+#endif /*_GL*/
+
+
 #ifdef _WINDOWS
 #include "wininclude.h"
 
@@ -56,7 +62,7 @@ static void DrawOutline (HWND hwnd, POINT ptBeg, POINT ptEnd)
 #ifndef _GL
   HDC hdc;
 #endif /*_GL*/
-  POINT ptTab [2];
+  ThotPoint ptTab [2];
 
   ptTab[0].x = ptBeg.x;
   ptTab[0].y = ptBeg.y;
@@ -154,7 +160,9 @@ static void InvertEllipse (int frame, int x, int y, int width, int height,
 {
   ThotWindow      w;
 #ifdef _WINDOWS
+#ifndef _GL
   HRGN            rgn;
+#endif /*_GL*/
 #endif /* _WINDOWS */
 
   w = FrRef[frame];
