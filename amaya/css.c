@@ -71,8 +71,8 @@ PSchema GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css)
   PInfoPtr            pInfo;
   PISchemaPtr         pIS;
   PSchema             pSchema, nSchema, prevS;
-  Element             prevLink, nextLink, parent;
-  ElementType	      elType;
+  Element             prevLink, nextLink, parent, prevStyle, nextStyle;
+  ElementType	      elType, styleType;
   AttributeType       attrType;
   Attribute           attr;
   char                buffer[MAX_LENGTH];
@@ -83,6 +83,7 @@ PSchema GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css)
     sSchema = TtaGetDocumentSSchema (doc);
   pInfo = css->infos;
   nextLink = NULL;
+  nextStyle = NULL;
   found = FALSE;
   pIS = NULL;
   while (pInfo && !found)
@@ -141,30 +142,24 @@ PSchema GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css)
       /* link the new presentation schema */
       TtaAddPSchema (nSchema, pSchema, TRUE, doc, sSchema);
     }
-  else if (css->category == CSS_DOCUMENT_STYLE)
-    {
-      /* add in last position and first priority */
-      while (pSchema != NULL)
-	{
-	  prevS = pSchema;
-	  TtaNextPSchema (&pSchema, doc, NULL);
-	}
-      /* link the new presentation schema */
-      TtaAddPSchema (nSchema, prevS, FALSE, doc, sSchema);
-    }
-  else if (css->category == CSS_EXTERNAL_STYLE)
+  else if (css->category == CSS_DOCUMENT_STYLE || css->category == CSS_EXTERNAL_STYLE)
     {
       /* check the order among its external style sheets */
-      if (pInfo->PiLink != NULL)
+      if (pInfo->PiLink)
 	{
 	  /* look for the previous link with rel="STYLESHEET" */
 	  prevLink = pInfo->PiLink;
 	  parent = TtaGetParent (prevLink);
 	  elType = TtaGetElementType (prevLink);
 	  attrType.AttrSSchema = elType.ElSSchema;
+	  /******* todo do the same thing for other structure schemas ****/
+	  styleType.ElSSchema = elType.ElSSchema;
+	  styleType.ElTypeNum = HTML_EL_STYLE_;
 	  attrType.AttrTypeNum = HTML_ATTR_REL;
 	  found = FALSE;
-	  while (!found && prevLink != NULL)
+	  prevStyle = TtaSearchTypedElementInTree (styleType, SearchBackward, parent, prevLink);
+	  nextStyle = TtaSearchTypedElementInTree (styleType, SearchForward, parent, prevLink);
+	  while (!found && (prevLink || prevStyle))
 	    {
 	      prevLink = TtaSearchTypedElementInTree (elType, SearchBackward, parent, prevLink);
 	      if (prevLink)
@@ -177,43 +172,47 @@ PSchema GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css)
 		      TtaGiveTextAttributeValue (attr, buffer, &length);
 		      found = (!strcasecmp (buffer, "STYLESHEET") || !strcasecmp (buffer, "STYLE"));
 		    }
-		  if (found)
+		}
+	      if (!found && prevStyle)
+		found = TRUE;
+	      if (found)
+		{
+		  /* there is another linked CSS style sheet before */
+		  oldcss = CSSList;
+		  /* search if that previous CSS context */
+		  while (oldcss)
 		    {
-		      /* there is another linked CSS style sheet before */
-		      oldcss = CSSList;
-		      /* search if that previous CSS context */
-		      while (oldcss)
+		      if (oldcss != css && oldcss->documents[doc] &&
+			  (oldcss->category == CSS_DOCUMENT_STYLE ||
+			   oldcss->category == CSS_EXTERNAL_STYLE))
 			{
-			  if (oldcss != css && oldcss->documents[doc] &&
-			      oldcss->category == CSS_EXTERNAL_STYLE)
+			  /* check if it includes a presentation schema
+			     for that structure */
+			  pInfo = oldcss->infos;
+			  while (pInfo && pInfo->PiDoc != doc)
+			    pInfo = pInfo->PiNext;
+			  if (pInfo && (pInfo->PiLink == prevLink ||
+					pInfo->PiLink == prevStyle))
 			    {
-			      /* check if it includes a presentation schema
-				 for that structure */
-			      pInfo = oldcss->infos;
-			      while (pInfo && pInfo->PiDoc != doc)
-				pInfo = pInfo->PiNext;
-			      if (pInfo && pInfo->PiLink == prevLink)
+			      pIS = pInfo->PiSchemas;
+			      while (pIS && pIS->PiSSchema != sSchema)
+				pIS = pIS->PiSNext;
+			      if (pIS && pIS->PiPSchema)
 				{
-				  pIS = pInfo->PiSchemas;
-				  while (pIS && pIS->PiSSchema != sSchema)
-				    pIS = pIS->PiSNext;
-				  if (pIS && pIS->PiPSchema)
-				    {
-				      /* link after that presentation schema */
-				      before = FALSE;
-				      prevS = pIS->PiPSchema;
-				    }
-				  else
-				    found = FALSE;
-				  oldcss = NULL;
+				  /* link after that presentation schema */
+				  before = FALSE;
+				  prevS = pIS->PiPSchema;
 				}
 			      else
-				/* it's not the the previous style sheet */
-				oldcss = oldcss->NextCSS;
+				found = FALSE;
+			      oldcss = NULL;
 			    }
 			  else
+			    /* it's not the the previous style sheet */
 			    oldcss = oldcss->NextCSS;
 			}
+		      else
+			oldcss = oldcss->NextCSS;
 		    }
 		}
 	    }
@@ -221,7 +220,7 @@ PSchema GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css)
 	    {
 	      /* look for the next link with rel="STYLESHEET" */
 	      nextLink = pInfo->PiLink;
-	      while (!found && nextLink != NULL)
+	      while (!found && (nextLink || nextStyle))
 		{
 		  nextLink = TtaSearchTypedElementInTree (elType, SearchForward, parent, nextLink);
 		  if (nextLink)
@@ -234,45 +233,49 @@ PSchema GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css)
 			  TtaGiveTextAttributeValue (attr, buffer, &length);
 			  found = (!strcasecmp (buffer, "STYLESHEET") || !strcasecmp (buffer, "STYLE"));
 			}
-		      /* search if the previous CSS has a presentation schema */
-		      if (found)
+		    }
+		  if (!found && prevStyle)
+		    found = TRUE;
+		  /* search if the previous CSS has a presentation schema */
+		  if (found)
+		    {
+		      /* there is another linked CSS style sheet after */
+		      oldcss = CSSList;
+		      while (oldcss)
 			{
-			  /* there is another linked CSS style sheet after */
-			  oldcss = CSSList;
-			  while (oldcss)
+			  if (oldcss != css && oldcss->documents[doc] &&
+			      (oldcss->category == CSS_DOCUMENT_STYLE ||
+			       oldcss->category == CSS_EXTERNAL_STYLE))
 			    {
-			      if (oldcss != css && oldcss->documents[doc] &&
-				  oldcss->category == CSS_EXTERNAL_STYLE)
+			      /* check if it includes a presentation schema
+				 for that structure */
+			      pInfo = oldcss->infos;
+			      while (pInfo && pInfo->PiDoc != doc)
+				pInfo = pInfo->PiNext;
+			      if (pInfo && (pInfo->PiLink == nextStyle ||
+					    pInfo->PiLink == nextLink))
 				{
-				  /* check if it includes a presentation schema
-				     for that structure */
-				  pInfo = oldcss->infos;
-				  while (pInfo != NULL && pInfo->PiDoc != doc)
-				    pInfo = pInfo->PiNext;
-				  if (pInfo != NULL && pInfo->PiLink == nextLink)
+				  pIS = pInfo->PiSchemas;
+				  while (pIS && pIS->PiSSchema != sSchema)
+				    pIS = pIS->PiSNext;
+				  if (pIS && pIS->PiPSchema)
 				    {
-				      pIS = pInfo->PiSchemas;
-				      while (pIS && pIS->PiSSchema != sSchema)
-					pIS = pIS->PiSNext;
-				      if (pIS && pIS->PiPSchema)
-					{
-					  /* link before that presentation schema */
-					  before = TRUE;
-					  prevS = pIS->PiPSchema;
-					}
-				      else
-					found = FALSE;
+				      /* link before that presentation schema */
+				      before = TRUE;
+				      prevS = pIS->PiPSchema;
 				    }
-				  oldcss = NULL;
+				  else
+				    found = FALSE;
 				}
-			      else
-				oldcss = oldcss->NextCSS;
+			      oldcss = NULL;
 			    }
+			  else
+			    oldcss = oldcss->NextCSS;
 			}
 		    }
 		}
 	    }
-
+	  
 	  if (!found)
 	    {
 	      /* look for CSS_USER_STYLE or CSS_DOCUMENT_STYLE */
@@ -299,31 +302,6 @@ PSchema GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css)
 				/* add after that schema with a higher priority */
 				prevS = pIS->PiPSchema;
 				before = FALSE;
-			      }
-			    else
-			      oldcss = oldcss->NextCSS;
-			  }
-			else
-			  oldcss = oldcss->NextCSS;
-		      }
-		    else if (oldcss->category == CSS_DOCUMENT_STYLE)
-		      {
-			/* check if it includes a presentation schema
-			   for that structure */
-			pInfo = oldcss->infos;
-			while (pInfo && pInfo->PiDoc != doc)
-			  pInfo = pInfo->PiNext;
-			if (pInfo && pInfo->PiLink == nextLink)
-			  {
-			    pIS = pInfo->PiSchemas;
-			    while (pIS && pIS->PiSSchema != sSchema)
-			      pIS = pIS->PiSNext;
-			    if (pIS && pIS->PiPSchema)
-			      {
-				found = TRUE;
-				/* add before that schema with a lower priority */
-				prevS = pIS->PiPSchema;
-				before = TRUE;
 			      }
 			    else
 			      oldcss = oldcss->NextCSS;
