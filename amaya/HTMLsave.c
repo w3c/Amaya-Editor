@@ -701,7 +701,7 @@ void                SaveDocumentAs (Document doc, View view)
   ----------------------------------------------------------------------*/
 void         SetNamespacesAndDTD (Document doc)
 {
-   Element		root, el, head, meta;
+   Element		root, el, head, meta, docEl;
    ElementType		elType;
    AttributeType	attrType;
    Attribute		attr, charsetAttr;
@@ -712,6 +712,7 @@ void         SetNamespacesAndDTD (Document doc)
    char                 Charset[MAX_CHARSET_LEN];
    char		        buffer[200];
    ThotBool		useMathML, useGraphML, useFrames;
+   int                  oldStructureChecking;
 
    root = TtaGetRootElement (doc);
    if (DocumentTypes[doc] == docHTML)
@@ -865,12 +866,17 @@ void         SetNamespacesAndDTD (Document doc)
 	 attrType.AttrTypeNum = MathML_ATTR_Charset;
        else if (DocumentTypes[doc] == docSVG)
 	 attrType.AttrTypeNum = GraphML_ATTR_Charset;
-       charsetAttr = TtaGetAttribute (root, attrType);
+       docEl = TtaGetParent (root);
+       charsetAttr = TtaGetAttribute (docEl, attrType); 
+
        if (!charsetAttr)
 	 {
+	   oldStructureChecking = TtaGetStructureChecking (doc);
+	   TtaSetStructureChecking (0, doc);
 	   charsetAttr = TtaNewAttribute (attrType);
-	   TtaAttachAttribute (root, charsetAttr, doc);
-	   TtaSetAttributeText (charsetAttr, Charset, root, doc);	
+	   TtaAttachAttribute (docEl, charsetAttr, doc);
+	   TtaSetAttributeText (charsetAttr, Charset, docEl, doc);	
+	   TtaSetStructureChecking ((ThotBool)oldStructureChecking, doc);
 	 }
      }
 

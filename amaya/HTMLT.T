@@ -12,11 +12,8 @@ CONST
 
 RULES
 
- HTML : BEGIN
-	Use MathMLT for MathML;
-	Use GraphMLT for GraphML;
-	Use XLinkT for XLink;
 #ifdef XML
+ Document: BEGIN
 	Create '<?xml version="1.0"';
 	if Charset
 	   BEGIN
@@ -25,11 +22,18 @@ RULES
 	   Create '"';
 	   END;
 	Create '?>\12';
+	END;
+#endif
+
+ HTML : BEGIN
+	Use MathMLT for MathML;
+	Use GraphMLT for GraphML;
+	Use XLinkT for XLink;
 	Create HtmlDTD;
+#ifdef XML
 	Create '<html xmlns="http://www.w3.org/1999/xhtml"';
 	{*** Create Namespaces; ***}
 #else
-	Create HtmlDTD;
 	Create '<html';
 #endif
 	Create Attributes;
