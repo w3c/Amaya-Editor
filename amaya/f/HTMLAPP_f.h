@@ -6,11 +6,13 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void HTMLApplicationInitialise ( void );
 extern void HTMLActionListInit ( void );
 extern void HTMLLoadResources ( void );
 
 #else /* __STDC__ */
 
+extern void HTMLApplicationInitialise (/* void */);
 extern void HTMLActionListInit (/* void */);
 extern void HTMLLoadResources (/* void */);
 

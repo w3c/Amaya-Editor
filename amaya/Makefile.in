@@ -203,6 +203,7 @@ AMAYA_OBJ = \
 	HTMLAPP.o \
 	TextFileAPP.o \
 	XLinkAPP.o \
+	XMLAPP.o \
 	AHTURLTools.o \
 	EDITORactions.o \
 	EDITimage.o \

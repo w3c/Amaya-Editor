@@ -159,6 +159,7 @@ static PtrDocSchemasDescr StructSchemaForDoc (PtrDocument pDoc,
 	  pPfS = pPfS->PfNext;
 	}
     }
+
   return pPfS;
 }
 
@@ -1464,12 +1465,12 @@ static void      InsertXmlAtRules (PtrPSchema pPS, int nAtRules)
 void    TtaAppendXmlAttribute (char *XMLName, AttributeType *attrType,
 			       Document document)
 {
-  PtrSSchema      pSS;
-  PtrPSchema      pPSch;
-  int             i, size;
-
-  PtrDocument         pDoc;
-  PtrDocSchemasDescr  pPfS;
+  PtrSSchema           pSS;
+  PtrPSchema           pPSch, pPSchExt;
+  int                  i, size;
+  PtrDocument          pDoc;
+  PtrDocSchemasDescr   pPfS, pPfSsav;
+  PtrHandlePSchema     pHSP, pNextHSP;
 
   attrType->AttrTypeNum = -1;           /* -1 means failure */
   pSS = (PtrSSchema) attrType->AttrSSchema;
@@ -1483,7 +1484,10 @@ void    TtaAppendXmlAttribute (char *XMLName, AttributeType *attrType,
   while (pPfS && !pPSch)
     {
       if (pPfS->PfSSchema && (pPfS->PfSSchema == pSS))
-	pPSch = pPfS->PfPSchema;
+	{
+	  pPSch = pPfS->PfPSchema;
+	  pPfSsav = pPfS;
+	}
       pPfS = pPfS->PfNext;
     }
   if (pPSch == NULL)
@@ -1511,7 +1515,9 @@ void    TtaAppendXmlAttribute (char *XMLName, AttributeType *attrType,
       size = pSS->SsNAttributes + 10;
       i = size * sizeof (PtrTtAttribute);
       pSS->SsAttribute = (TtAttrTable*) realloc (pSS->SsAttribute, i);
+      
       /* extend all tables that map attributes */
+      /* extend the main presentation schema */
       i = size * sizeof (PtrAttributePres);
       pPSch->PsAttrPRule = (AttrPresTable*) realloc (pPSch->PsAttrPRule, i);
       i = size * sizeof (int);
@@ -1534,9 +1540,40 @@ void    TtaAppendXmlAttribute (char *XMLName, AttributeType *attrType,
 	  for (i = pSS->SsNAttributes; i < size; i++)
 	    pSS->SsAttribute->TtAttr[i] = NULL;
 	}
+      
+      /* extend the associated extension schemas */
+      pHSP = pPfSsav->PfFirstPSchemaExtens;
+      while (pHSP)
+	{
+	  pNextHSP = pHSP->HdNextPSchema;
+	  pPSchExt = pHSP->HdPSchema;
+	  i = size * sizeof (PtrAttributePres);
+	  pPSchExt->PsAttrPRule =
+	    (AttrPresTable*) realloc (pPSchExt->PsAttrPRule, i);
+	  i = size * sizeof (int);
+	  pPSchExt->PsNAttrPRule =
+	    (NumberTable*) realloc (pPSchExt->PsNAttrPRule, i);
+	  i = size * sizeof (int);
+	  pPSchExt->PsNHeirElems =
+	    (NumberTable*) realloc (pPSchExt->PsNHeirElems, i);
+	  i = size * sizeof (int);
+	  pPSchExt->PsNComparAttrs =
+	    (NumberTable*) realloc (pPSchExt->PsNComparAttrs,i);
+	  i = size * sizeof (ComparAttrTable*);
+	  pPSchExt->PsComparAttr =
+	    (CompAttrTbTb*) realloc (pPSchExt->PsComparAttr, i);
+	  if (!pPSchExt->PsAttrPRule || !pPSchExt->PsNAttrPRule ||
+	      !pPSchExt->PsNHeirElems)
+	    {
+	      TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NO_MEMORY);
+	      return;
+	    }
+	  /* next extension schema */
+	  pHSP = pNextHSP;
+	}
     }
 
-  /* Append a new attribute type */
+  /* Add a new attribute type */
   i = pSS->SsNAttributes;
   pSS->SsAttribute->TtAttr[i] = (PtrTtAttribute) malloc (sizeof (TtAttribute));
   if (pSS->SsAttribute->TtAttr[i] == NULL)
@@ -1550,14 +1587,29 @@ void    TtaAppendXmlAttribute (char *XMLName, AttributeType *attrType,
   pSS->SsAttribute->TtAttr[i]->AttrFirstExcept = 0;
   pSS->SsAttribute->TtAttr[i]->AttrLastExcept = 0;
   pSS->SsAttribute->TtAttr[i]->AttrType = AtTextAttr;
-
+  
   /* no presentation rule nor inherit tables for this new attribute */
   pPSch->PsAttrPRule->AttrPres[i] = NULL;
   pPSch->PsNAttrPRule->Num[i] = 0;
   pPSch->PsNHeirElems->Num[i] = 0;
   pPSch->PsNComparAttrs->Num[i] = 0;
   pPSch->PsComparAttr->CATable[i] = NULL;
-
+  
+  /*no presentation rule nor inherit tables in the extension schemas */
+  pHSP = pPfSsav->PfFirstPSchemaExtens;
+  while (pHSP)
+    {
+      pNextHSP = pHSP->HdNextPSchema;
+      pPSchExt = pHSP->HdPSchema;
+      pPSchExt->PsAttrPRule->AttrPres[i] = NULL;
+      pPSchExt->PsNAttrPRule->Num[i] = 0;
+      pPSchExt->PsNHeirElems->Num[i] = 0;
+      pPSchExt->PsNComparAttrs->Num[i] = 0;
+      pPSchExt->PsComparAttr->CATable[i] = NULL;
+      /* next extension schema */
+      pHSP = pNextHSP;
+    }
+  
   /* Initialize and insert the presentation rules */
   /* associed with this new attribute */
   InsertXmlAtRules (pPSch, pSS->SsNAttributes);
@@ -1590,7 +1642,7 @@ void    TtaGetXmlAttributeType (char *XMLName, AttributeType *attrType)
 }
 
 /*----------------------------------------------------------------------
-   InsertAXmlElementPRule
+   InsertAXmlPRule
    Add a specific presentation rule.
   ----------------------------------------------------------------------*/
 static PtrPRule InsertAXmlPRule (PRuleType type,  int view, PresMode mode,
@@ -1622,31 +1674,16 @@ static PtrPRule InsertAXmlPRule (PRuleType type,  int view, PresMode mode,
 }
 
 /*----------------------------------------------------------------------
-   InsertXmlElementPRules
+   InsertXmlPRules
    Add the presentation rules associated to the new element type
   ----------------------------------------------------------------------*/
 static void    InsertXmlPRules (PtrPSchema pPSch, int nSRules)
 {
 
-  PtrPRule     prevPRule, pRule;
-  PtrPRule     nextPRule;
+  PtrPRule     prevPRule, pRule, nextPRule;
 
-  /* First specific rule associated with this element type */
+  /* First presention rule associated with this element type */
   prevPRule = pPSch->PsElemPRule[nSRules];
-
-  /* Rule 'Line' view 1 */
-  /*
-  pRule = InsertAXmlPRule (PtFunction, FORMATTED_VIEW, PresFunction,
-			   prevPRule, pPS, nSRules);
-  if (pRule != NULL)
-    {
-      pRule->PrPresFunction = FnLine;
-      pRule->PrPresBoxRepeat = 0;
-      pRule->PrExternal = 0;
-      pRule->PrElement = 0;
-      prevPRule = pRule;
-    }
-  */
 
  /* Rule 'NoLine' view 2 */
   pRule = InsertAXmlPRule (PtFunction, STRUCTURE_VIEW, PresFunction,
@@ -1690,64 +1727,6 @@ static void    InsertXmlPRules (PtrPSchema pPSch, int nSRules)
       prevPRule = pRule;
     }
 
-  /* Rule 'Width' view 1 */
-  pRule = InsertAXmlPRule (PtWidth, FORMATTED_VIEW, PresImmediate,
-			   prevPRule, pPSch, nSRules);
-  if (pRule != NULL)
-    {
-      pRule->PrDimRule.DrPosition = FALSE;
-      pRule->PrDimRule.DrAbsolute = FALSE;
-      pRule->PrDimRule.DrSameDimens = TRUE;
-      pRule->PrDimRule.DrUnit = UnRelative;
-      pRule->PrDimRule.DrAttr = FALSE;
-      pRule->PrDimRule.DrMin = FALSE;
-      pRule->PrDimRule.DrUserSpecified = FALSE;
-      pRule->PrDimRule.DrValue = 0;
-      pRule->PrDimRule.DrRelation = RlEnclosed;
-      pRule->PrDimRule.DrNotRelat = FALSE;
-      pRule->PrDimRule.DrRefKind = RkPresBox;
-      pRule->PrDimRule.DrRefIdent = 0;
-      prevPRule = pRule;
-    }
-
-  /* Rule 'Width' view 2 */
-  pRule = InsertAXmlPRule (PtWidth, STRUCTURE_VIEW, PresImmediate,
-			   prevPRule, pPSch, nSRules);
-  if (pRule != NULL)
-    {
-      pRule->PrDimRule.DrPosition = FALSE;
-      pRule->PrDimRule.DrAbsolute = FALSE;
-      pRule->PrDimRule.DrSameDimens =TRUE ;
-      pRule->PrDimRule.DrUnit = UnRelative;
-      pRule->PrDimRule.DrAttr = FALSE;
-      pRule->PrDimRule.DrMin = FALSE;
-      pRule->PrDimRule.DrUserSpecified = FALSE;
-      pRule->PrDimRule.DrValue = -STRUCT_INDENT;
-      pRule->PrDimRule.DrRelation = RlEnclosing;
-      pRule->PrDimRule.DrNotRelat = FALSE;
-      pRule->PrDimRule.DrRefKind = RkPresBox;
-      pRule->PrDimRule.DrRefIdent = 0;
-      prevPRule = pRule;
-    }
-
-  /* Rule 'VertPos' view 1 */
-  pRule = InsertAXmlPRule (PtVertPos, FORMATTED_VIEW, PresImmediate,
-			   prevPRule, pPSch, nSRules);
-  if (pRule != NULL)
-    {
-      pRule->PrPosRule.PoPosDef = Top;
-      pRule->PrPosRule.PoPosRef = Bottom;
-      pRule->PrPosRule.PoDistUnit = UnRelative;
-      pRule->PrPosRule.PoDistAttr = FALSE;
-      pRule->PrPosRule.PoDistance = DIST_BOTTOM;
-      pRule->PrPosRule.PoRelation = RlPrevious;
-      pRule->PrPosRule.PoNotRel = FALSE;
-      pRule->PrPosRule.PoUserSpecified = FALSE;
-      pRule->PrPosRule.PoRefKind = RkPresBox;
-      pRule->PrPosRule.PoRefIdent = 0;
-      prevPRule = pRule;
-    }
-
   /* Rule 'VertPos' view 2 */
   pRule = InsertAXmlPRule (PtVertPos, STRUCTURE_VIEW, PresImmediate,
 			   prevPRule, pPSch, nSRules);
@@ -1759,24 +1738,6 @@ static void    InsertXmlPRules (PtrPSchema pPSch, int nSRules)
       pRule->PrPosRule.PoDistAttr = FALSE;
       pRule->PrPosRule.PoDistance = 0;
       pRule->PrPosRule.PoRelation = RlPrevious;
-      pRule->PrPosRule.PoNotRel = FALSE;
-      pRule->PrPosRule.PoUserSpecified = FALSE;
-      pRule->PrPosRule.PoRefKind = RkPresBox;
-      pRule->PrPosRule.PoRefIdent = 0;
-      prevPRule = pRule;
-    }
-
-  /* Rule 'HorizPos' view 1 */
-  pRule = InsertAXmlPRule (PtHorizPos, FORMATTED_VIEW, PresImmediate,
-			   prevPRule, pPSch, nSRules);
-  if (pRule != NULL)
-    {
-      pRule->PrPosRule.PoPosDef = Left;
-      pRule->PrPosRule.PoPosRef = Left;
-      pRule->PrPosRule.PoDistUnit = UnRelative;
-      pRule->PrPosRule.PoDistAttr = FALSE;
-      pRule->PrPosRule.PoDistance = 0;
-      pRule->PrPosRule.PoRelation = RlEnclosing;
       pRule->PrPosRule.PoNotRel = FALSE;
       pRule->PrPosRule.PoUserSpecified = FALSE;
       pRule->PrPosRule.PoRefKind = RkPresBox;
@@ -1825,41 +1786,145 @@ static void    InsertXmlPRules (PtrPSchema pPSch, int nSRules)
       pRule->PrBoolValue = TRUE;
       prevPRule = pRule;
     }
+}
 
-  printf ("\nRule %d \n", nSRules);
-  nextPRule = pPSch->PsElemPRule[nSRules];
-  while (nextPRule != NULL)
+/*----------------------------------------------------------------------
+   TtaGetXmlPRule
+   Returns a presentation rule of a given type associated
+   with a given element type.
+   Return value:
+   the presentation rule found, or NULL if the element type
+   hasn't this type of presentation rule.
+  ----------------------------------------------------------------------*/
+PtrPRule    TtaGetXmlPRule (PtrPSchema pPSch, int nSRule, PRuleType PrType,
+			    FunctionType FcType, int view)
+
+{
+  PtrPRule   prevPRule, pRule, nextPRule;
+  ThotBool   found;
+
+  /* First presention rule associated with this element type */
+  pRule = pPSch->PsElemPRule[nSRule];
+  found = FALSE;
+  while (pRule && !found)
     {
-      printf ("\n  PrType : %d\n", nextPRule->PrType);
-      if (nextPRule->PrCond != NULL)
-	printf ("  PrCond : %d\n", nextPRule->PrCond->CoCondition);
-      else
-	printf ("  PrCond : 0\n");
-      printf ("  PrViewNum : %d\n", nextPRule->PrViewNum);
-      printf ("  PrSpecifAttr : %d\n", nextPRule->PrSpecifAttr);
-      printf ("  PrLevel : %d\n", nextPRule->PrLevel);
-      printf ("  PrPresMode : %d\n", nextPRule->PrPresMode);
-      if (nextPRule->PrType == PtVisibility)
-	{
-	  printf ("  PrAttrValue : %d\n", nextPRule->PrAttrValue);
-	  printf ("  PrIntValue : %d\n", nextPRule->PrIntValue);
-	}
-      if (nextPRule->PrPresMode == PresFunction)
-	{
-	  int j;
-	  printf ("  PrPresFunction : %d\n", nextPRule->PrPresFunction);
-	  printf ("  PrPresBoxRepeat : %d\n", nextPRule->PrPresBoxRepeat);
-	  printf ("  PrExternal : %d\n", nextPRule->PrExternal);
-	  printf ("  PrElement : %d\n", nextPRule->PrElement);
-	  printf ("  PrNPresBoxes : %d\n", nextPRule->PrNPresBoxes);
-	  for (j = 0; j <MAX_COLUMN_PAGE; j++)
-	    printf ("  PrPresBoxes[%d] : %d\n", j, nextPRule->PrPresBox[j]);
-	  printf ("  PrPresBoxname : %s\n", nextPRule->PrPresBoxName);
-	}
-      nextPRule = nextPRule->PrNextPRule;
+      if (pRule->PrType == PrType &&
+	  (PrType == PtFunction &&
+	   pRule->PrPresFunction == FcType) &&
+	  pRule->PrViewNum == view)
+	found = TRUE;
+      if (!found)
+	pRule = pRule->PrNextPRule;
     }
-  printf ("\n");
+  return pRule;
+}
 
+/*----------------------------------------------------------------------
+   TtaIsXmlTypeInLine
+   Retuns TRUE if the element type has a 'Line' presentation rule
+  ----------------------------------------------------------------------*/
+ThotBool    TtaIsXmlTypeInLine (ElementType elType, Document document)
+
+{
+  PtrSSchema          pSS;
+  PtrPSchema          pPSch;
+  PtrDocument         pDoc;
+  PtrDocSchemasDescr  pPfS;
+  PtrPRule            prevPRule, pRule;
+  int                 nSRule;
+
+  pSS = NULL;
+  pPSch = NULL;
+  pDoc = LoadedDocument[document - 1];
+  pPfS = pDoc->DocFirstSchDescr;
+  pSS = (PtrSSchema) elType.ElSSchema;
+
+  /* Search the associated presentation schema */
+  while (pSS && pPfS && !pPSch)
+    {
+      if (pPfS->PfSSchema &&
+	  (pPfS->PfSSchema == pSS))
+	pPSch = pPfS->PfPSchema;
+      pPfS = pPfS->PfNext;
+    }
+
+  if (pSS == NULL || pPSch == NULL)
+    return FALSE;
+
+  nSRule = elType.ElTypeNum - 1;
+  /* Does this rule exists ? */
+  pRule = TtaGetXmlPRule (pPSch, nSRule, PtFunction, FnLine, FORMATTED_VIEW);
+  if (pRule != NULL)
+    return TRUE;
+  else
+    return FALSE;
+
+}
+
+/*----------------------------------------------------------------------
+   TtaModifySpecificXmlPRule
+   Add a generic rule to an element type
+  ----------------------------------------------------------------------*/
+void    TtaSetXmlTypeInLine (ElementType elType, Document document)
+
+{
+  PtrSSchema          pSS;
+  PtrPSchema          pPSch;
+  PtrDocument         pDoc;
+  PtrDocSchemasDescr  pPfS;
+  PtrPRule            prevPRule, pRule;
+  int                 nSRule;
+
+  pSS = NULL;
+  pPSch = NULL;
+  pDoc = LoadedDocument[document - 1];
+  pPfS = pDoc->DocFirstSchDescr;
+  pSS = (PtrSSchema) elType.ElSSchema;
+
+  /* Search the associated presentation schema */
+  while (pSS && pPfS && !pPSch)
+    {
+      if (pPfS->PfSSchema &&
+	  (pPfS->PfSSchema == pSS))
+	pPSch = pPfS->PfPSchema;
+      pPfS = pPfS->PfNext;
+    }
+
+  if (pSS == NULL || pPSch == NULL)
+    return;
+
+  nSRule = elType.ElTypeNum - 1;
+        
+  /* This rule already exists */
+  pRule = TtaGetXmlPRule (pPSch, nSRule, PtFunction, FnLine, FORMATTED_VIEW);
+  if (pRule != NULL)
+    return;
+
+  /* First specific rule associated with this element type */
+  prevPRule = pPSch->PsElemPRule[nSRule];
+
+  /* Rule 'Line' view 1 */
+   pRule = NULL;
+   GetPresentRule (&pRule);
+   if (pRule != NULL)
+     {
+       pRule->PrType = PtFunction;
+       pRule->PrNextPRule = NULL;
+       pRule->PrCond = NULL;
+       pRule->PrViewNum = FORMATTED_VIEW;
+       pRule->PrSpecifAttr = 0;
+       pRule->PrLevel = 0;
+       pRule->PrSpecifAttrSSchema = NULL;
+       pRule->PrPresMode = PresFunction;
+       pRule->PrPresFunction = FnLine;
+       pRule->PrPresBoxRepeat = 0;
+       pRule->PrExternal = 0;
+       pRule->PrElement = 0;
+    
+       /* Add the new rule into the chain */
+       pPSch->PsElemPRule[nSRule] = pRule;
+       pRule->PrNextPRule = prevPRule; 
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -2014,171 +2079,6 @@ void TtaChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName,
 	}
       */
 
-      printf ("\nNombre d'attributs : %d\n", pSS->SsNAttributes);
-      for (i = 0;  i < pSS->SsNAttributes; i++)
-	{
-	  printf ("AttrName : %s\n", pSS->SsAttribute->TtAttr[i]->AttrName);
-	  printf ("AttrOrigName : %s\n",
-		  pSS->SsAttribute->TtAttr[i]->AttrOrigName);
-	  printf ("AttrGlobal : %d\n",
-		  pSS->SsAttribute->TtAttr[i]->AttrGlobal);
-	  printf ("AttrFirstExcept : %d\n",
-		  pSS->SsAttribute->TtAttr[i]->AttrFirstExcept);
-	  printf ("AttrAttrLastExcept : %d\n",
-		  pSS->SsAttribute->TtAttr[i]->AttrLastExcept);
-	  printf ("AttrType : %d\n", pSS->SsAttribute->TtAttr[i]->AttrType);
-	}
-     
-      if (pPSch != NULL)
-	{
-	  printf ("\n Boites de presentation\n");
-	  for (i = 0; i < pPSch->PsNPresentBoxes; i++)
-	    printf ("PbName : %s\n", pPSch->PsPresentBox[i].PbName);
-	  nextPRule = pPSch->PsFirstDefaultPRule;
-	  while (nextPRule != NULL)	
-	    {
-	      printf ("  PrType : %d\n", nextPRule->PrType);
-	      if (nextPRule->PrCond != NULL)
-		printf ("  PrCond : %d\n", nextPRule->PrCond->CoCondition);
-	      else
-		printf ("  PrCond : 0\n");
-	      printf ("  PrViewNum : %d\n", nextPRule->PrViewNum);
-	      printf ("  PrPresMode : %d\n", nextPRule->PrPresMode);
-	      printf ("  PrSpecifAttr : %d\n", nextPRule->PrSpecifAttr);
-	      printf ("  PrLevel : %d\n\n", nextPRule->PrLevel);
-	      nextPRule = nextPRule->PrNextPRule;
-	    }      
-
-	  printf ("\n%d Types d'elements\n", pSS->SsNRules);
-	  for (i = 0; i < pSS->SsNRules; i++)
-	    {
-	      printf ("\nRule %d Element : %s\n", i, pSS->SsRule[i].SrName);
-	      printf ("  SrNDefAttrs : %d\n", pSS->SsRule[i].SrNDefAttrs);
-	      printf ("  SrNLocalAttrs : %d\n", pSS->SsRule[i].SrNLocalAttrs);
-	      nextPRule = pPSch->PsElemPRule[i];
-	      while (nextPRule != NULL)
-		{
-		  printf ("\n  PrType : %d\n", nextPRule->PrType);
-		  if (nextPRule->PrCond != NULL)
-		    printf ("  PrCond : %d\n", nextPRule->PrCond->CoCondition);
-		  else
-		    printf ("  PrCond : 0\n");
-		  printf ("  PrViewNum : %d\n", nextPRule->PrViewNum);
-		  printf ("  PrSpecifAttr : %d\n", nextPRule->PrSpecifAttr);
-		  printf ("  PrLevel : %d\n", nextPRule->PrLevel);
-		  if (nextPRule->PrType == PtVisibility)
-		    {
-		      printf ("  PrAttrValue : %d\n", nextPRule->PrAttrValue);
-		      printf ("  PrIntValue : %d\n", nextPRule->PrIntValue);
-		    }
-		  if (nextPRule->PrType == PtWidth)
-		    {
-		      printf ("  DrPosition : %d\n", nextPRule->PrDimRule.DrPosition);
-		      if (nextPRule->PrDimRule.DrPosition == FALSE)
-			{
-			  printf ("  DrAbsolute : %d\n", nextPRule->PrDimRule.DrAbsolute);
-			  printf ("  DrSameDimens : %d\n", nextPRule->PrDimRule.DrSameDimens);
-			  printf ("  DrUnit : %d\n", nextPRule->PrDimRule.DrUnit);
-			  printf ("  DrAttr : %d\n", nextPRule->PrDimRule.DrAttr);
-			  printf ("  DrMin : %d\n", nextPRule->PrDimRule.DrMin);
-			  printf ("  DrUserSpecified : %d\n", nextPRule->PrDimRule.DrUserSpecified);
-			  printf ("  DrValue : %d\n", nextPRule->PrDimRule.DrValue);
-			  printf ("  DrRelation : %d\n", nextPRule->PrDimRule.DrRelation);
-			  printf ("  DrNotRelat : %d\n", nextPRule->PrDimRule.DrNotRelat);
-			  printf ("  DrRefKind : %d\n", nextPRule->PrDimRule.DrRefKind);
-			  printf ("  DrRefIdent : %d\n", nextPRule->PrDimRule.DrRefIdent);
-			}
-		    }
-		  if (nextPRule->PrType == PtVertPos || nextPRule->PrType == PtHorizPos)
-		    {
-			  printf ("  PoPosDef : %d\n", nextPRule->PrPosRule.PoPosDef);
-			  printf ("  PoPosRef : %d\n", nextPRule->PrPosRule.PoPosRef);
-			  printf ("  PoDistUnit : %d\n", nextPRule->PrPosRule.PoDistUnit);
-			  printf ("  PoDistAttr : %d\n", nextPRule->PrPosRule.PoDistAttr);
-			  printf ("  PoDistance : %d\n", nextPRule->PrPosRule.PoDistance);
-			  printf ("  PoRelation : %d\n", nextPRule->PrPosRule.PoRelation);
-			  printf ("  PoNotRel : %d\n", nextPRule->PrPosRule.PoNotRel);
-			  printf ("  PoUserSpecified : %d\n", nextPRule->PrPosRule.PoUserSpecified);
-			  printf ("  PoRefKind : %d\n", nextPRule->PrPosRule.PoRefKind);
-			  printf ("  PoRefIdent : %d\n", nextPRule->PrPosRule.PoRefIdent);
-		    }
-		  if (nextPRule->PrType == PtSize)
-		    {
-		      printf ("  PrInheritMode : %d\n", nextPRule->PrInheritMode);
-		      printf ("  PrInhPercent : %d\n", nextPRule->PrInhPercent);
-		      printf ("  PrInhAttr : %d\n", nextPRule->PrInhAttr);
-		      printf ("  PrInhDelta : %d\n", nextPRule->PrInhDelta);
-		      printf ("  PrMinMaxAttr : %d\n", nextPRule->PrMinMaxAttr);
-		      printf ("  PrInhMinOrMax : %d\n", nextPRule->PrInhMinOrMax);
-		      printf ("  PrInhUnit : %d\n", nextPRule->PrInhUnit);
-		    }
-		  if (nextPRule->PrType == PtLineBreak)
-		    {
-		      printf ("  PrBoolValue : %d\n", nextPRule->PrBoolValue);
-		    }
-		  printf ("  PrPresMode : %d\n", nextPRule->PrPresMode);
- 		  if (nextPRule->PrPresMode == PresFunction)
-		    {
-		      int j;
-		      printf ("  PrPresFunction : %d\n", nextPRule->PrPresFunction);
-		      printf ("  PrPresBoxRepeat : %d\n", nextPRule->PrPresBoxRepeat);
-		      printf ("  PrExternal : %d\n", nextPRule->PrExternal);
-		      printf ("  PrElement : %d\n", nextPRule->PrElement);
-		      printf ("  PrNPresBoxes : %d\n", nextPRule->PrNPresBoxes);
-		      for (j = 0; j <MAX_COLUMN_PAGE; j++)
-			printf ("  PrPresBoxes[%d] : %d\n", j, nextPRule->PrPresBox[j]);
-		      printf ("  PrPresBoxname : %s\n", nextPRule->PrPresBoxName);
-		    }
-		  nextPRule = nextPRule->PrNextPRule;
-		}
-	    }
-
-	  printf ("\n Boites de presentation des attributs\n");
-	  for (i = 0; i < pSS->SsNAttributes; i++)
-	    {
-	      AttributePres *nextAtRule;
-	      printf ("\nAttribut %d Nom : %s\n", i, pSS->SsAttribute->TtAttr[i]->AttrName);
-	      printf ("  PsAttrType : %d\n", pSS->SsAttribute->TtAttr[i]->AttrType);
-	      nextAtRule = pPSch->PsAttrPRule->AttrPres[i];
-	      while (nextAtRule != NULL)
-		{
-		  printf ("  ApElemType : %d\n", nextAtRule->ApElemType);
-		  if (pSS->SsAttribute->TtAttr[i]->AttrType == AtTextAttr)
-		    {
-		      printf ("  ApString : %s\n", nextAtRule->ApString);
-		      nextPRule = (pPSch->PsAttrPRule->AttrPres[i])->ApTextFirstPRule;
-		      while (nextPRule != NULL)
-			{
-			  printf ("  PrType : %d\n", nextPRule->PrType);
-			  if (nextPRule->PrCond != NULL)
-			    printf ("  PrCond : %d\n", nextPRule->PrCond->CoCondition);
-			  else
-			    printf ("  PrCond : 0\n");
-			  printf ("  PrViewNum : %d\n", nextPRule->PrViewNum);
-			  printf ("  PrSpecifAttr : %d\n", nextPRule->PrSpecifAttr);
-			  printf ("  PrLevel : %d\n", nextPRule->PrLevel);
-			  printf ("  PrPresMode : %d\n", nextPRule->PrPresMode);
-			  if (nextPRule->PrPresMode == PresFunction)
-			    {
-			      int j;
-			      printf ("  PrPresFunction : %d\n", nextPRule->PrPresFunction);
-			      printf ("  PrPresBoxRepeat : %d\n", nextPRule->PrPresBoxRepeat);
-			      printf ("  PrExternal : %d\n", nextPRule->PrExternal);
-			      printf ("  PrElement : %d\n", nextPRule->PrElement);
-			      printf ("  PrNPresBoxes : %d\n", nextPRule->PrNPresBoxes);
-			      for (j = 0; j <MAX_COLUMN_PAGE; j++)
-				printf ("  PrPresBoxes[%d] : %d\n", j, nextPRule->PrPresBox[j]);
-			      if (nextPRule->PrPresBoxName != NULL)
-				printf ("  PrPresBoxname : %s\n", nextPRule->PrPresBoxName);
-			    }
-			  nextPRule = nextPRule->PrNextPRule;
-			}
-		    }
-		  nextAtRule = nextAtRule->ApNextAttrPres;
-		}
-	    }
-	}
-      
       /* Update the LoadedSSchema table */
       for (i = 0; i < MAX_SSCHEMAS &&
 	     strcmp ("XML", LoadedSSchema[i].StructSchemaName); i++);

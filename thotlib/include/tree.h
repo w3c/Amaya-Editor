@@ -1112,6 +1112,18 @@ extern void TtaAppendXmlAttribute (char *XMLName, AttributeType *attrType,
 extern void TtaGetXmlAttributeType (char *XMLName, AttributeType *attrType);
 
 /*----------------------------------------------------------------------
+   TtaIsXmlTypeInLine
+   Retuns TRUE if the element type has a 'Line' presentation rule
+  ----------------------------------------------------------------------*/
+extern ThotBool TtaIsXmlTypeInLine (ElementType elType, Document document);
+
+/*----------------------------------------------------------------------
+   TtaSetXmlTypeInLine
+   Add a generic rule to an element type
+  ----------------------------------------------------------------------*/
+extern void TtaSetXmlTypeInLine (ElementType elType, Document document);
+
+/*----------------------------------------------------------------------
   TtaAppendXMLElement
   ----------------------------------------------------------------------*/
 extern void TtaAppendXmlElement (char *XMLName, ElementType *elType,

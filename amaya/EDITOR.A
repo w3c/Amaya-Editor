@@ -1,7 +1,7 @@
 APPLICATION EDITOR;
 
 USES
-	HTML, TextFile
+	HTML, TextFile, XML
 #ifdef AMAYA_PLUGIN
        , Plugin
 #endif

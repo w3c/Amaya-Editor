@@ -25,7 +25,8 @@ extern void MapXMLElementType ( int XMLtype,
                                 Document doc );
 extern char* GetXMLElementName ( ElementType elType,
                                  Document doc );
-extern ThotBool IsXMLElementInline ( ElementType elType );
+extern ThotBool IsXMLElementInline ( ElementType elType,
+                                     Document doc );
 extern int MapXMLAttribute ( int XMLtype,
                              char *attrName,
                              char *elementName,
@@ -62,7 +63,8 @@ extern void MapXMLElementType (/* int XMLtype,
                                   Document doc */);
 extern char* GetXMLElementName (/* ElementType elType,
                                    Document doc */);
-extern ThotBool IsXMLElementInline (/* ElementType elType */);
+extern ThotBool IsXMLElementInline (/* ElementType elType,
+                                       Document doc */);
 extern int MapXMLAttribute (/* int XMLtype,
                                char *attrName,
                                char *elementName,

@@ -9,6 +9,8 @@ ATTR
 
    { global attributes for all XML elements }
    xml_space = xml_space_default, xml_space_preserve;
+   Highlight = Yes_;    { to show the XML element corresponding to the
+			  current selection in the source view }
 
 STRUCT
 
@@ -30,5 +32,6 @@ EXCEPT
    XML:                 MoveResize, NoShowBox, NoMove;
    PICTURE:             NoMove, NoResize;
    TEXT:                NoMove, NoResize;
+   Highlight:	        Invisible;
 
 END

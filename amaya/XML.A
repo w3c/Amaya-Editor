@@ -2,8 +2,7 @@ APPLICATION XML;
 
 DEFAULT
    BEGIN
-	DocClose.Post -> DocumentClosed;
-	DocSave.Pre -> DocumentToSave;
+        ElemSelect.Post -> XmlSelectionChanged;
    END;
 
 ATTRIBUTES

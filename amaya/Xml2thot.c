@@ -833,7 +833,7 @@ static void  XmlCheckInsert (Element *el, Element parent,
 	 return;
 
        while (ancestor != NULL &&
-	      IsXMLElementInline (elType))
+	      IsXMLElementInline (elType, doc))
 	 {
 	   ancestor = TtaGetParent (ancestor);
 	   elType = TtaGetElementType (ancestor);
@@ -868,7 +868,7 @@ static void  XmlCheckInsert (Element *el, Element parent,
 		     while (prev != NULL)
 		       {
 			 prevType = TtaGetElementType (prev);
-			 if (IsXMLElementInline (prevType))
+			 if (IsXMLElementInline (prevType, doc))
 			   {
 			     prevprev = prev;  TtaPreviousSibling (&prevprev);
 			     TtaRemoveTree (prev, doc);
@@ -918,7 +918,7 @@ static void  XhtmlCheckInsert (Element *el, Element  parent,
        ancestor = parent;
        ancestorType = TtaGetElementType (ancestor);
        while (ancestor != NULL &&
-	      IsXMLElementInline (ancestorType))
+	      IsXMLElementInline (ancestorType, doc))
 	 {
 	   ancestor = TtaGetParent (ancestor);
 	   ancestorType = TtaGetElementType (ancestor);
@@ -953,7 +953,7 @@ static void  XhtmlCheckInsert (Element *el, Element  parent,
 		   while (prev != NULL)
 		     {
 		       prevType = TtaGetElementType (prev);
-		       if (!IsXMLElementInline (prevType))
+		       if (!IsXMLElementInline (prevType, doc))
 			 prev = NULL;
 		       else
 			 {
@@ -969,7 +969,7 @@ static void  XhtmlCheckInsert (Element *el, Element  parent,
 	 }
      }
    else
-     if (!IsXMLElementInline (elType) &&
+     if (!IsXMLElementInline (elType, doc) &&
 	 elType.ElTypeNum != HTML_EL_Comment_ &&
 	 elType.ElTypeNum != HTML_EL_XMLPI)
        /* it is not a character level element nor a comment or a PI */
@@ -986,7 +986,7 @@ static void  XhtmlCheckInsert (Element *el, Element  parent,
    if (!*inserted)
      if (elType.ElTypeNum == HTML_EL_TEXT_UNIT ||
          (elType.ElTypeNum != HTML_EL_Inserted_Text &&
-	  IsXMLElementInline (TtaGetElementType (*el))))
+	  IsXMLElementInline (TtaGetElementType (*el), doc)))
        {
          /* it is a character level element */
 	 parentType = TtaGetElementType (parent);
@@ -1397,7 +1397,7 @@ static void   XhtmlCheckContext (char *elName,
 	 {
 	   /* Block elements are not allowed within an anchor */
 	   if (!strcmp (nameElementStack[stackLevel - 1], "a") &&
-	       (!IsXMLElementInline (elType)))
+	       (!IsXMLElementInline (elType,XMLcontext.doc )))
 	       *isAllowed = FALSE;
 	 }
        
@@ -1902,6 +1902,7 @@ static ThotBool  IsLeadingSpaceUseless ()
    Element       parent, ancestor, prev;
    ThotBool      removeLeadingSpaces;
 
+
    if (InsertSibling ())
      /* There is a previous sibling (XMLcontext.lastElement) 
 	for the new Text element */
@@ -1912,28 +1913,38 @@ static ThotBool  IsLeadingSpaceUseless ()
        elType = TtaGetElementType (parent);
        lastElType = TtaGetElementType (XMLcontext.lastElement);
        removeLeadingSpaces = TRUE;
-       if (IsXMLElementInline (lastElType))
+
+       if (strcmp (currentParserCtxt->SSchemaName, "XML") == 0)
 	 {
-	   if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") != 0)
+	   /* Does the parent element contain a 'Line' presentation rule ? */
+	   if (TtaIsXmlTypeInLine (elType, XMLcontext.doc))
 	     removeLeadingSpaces = FALSE;
-	   else
-	     {
-	       if (elType.ElTypeNum != HTML_EL_Option_Menu &&
-		   elType.ElTypeNum != HTML_EL_OptGroup)
-		 {
-		   removeLeadingSpaces = FALSE;
-		   if (lastElType.ElTypeNum == HTML_EL_BR)
-		     removeLeadingSpaces = TRUE;
-		 }
-	     }
 	 }
        else
 	 {
-	   if ((strcmp (TtaGetSSchemaName (lastElType.ElSSchema), "HTML") == 0) &&
-	       ((lastElType.ElTypeNum == HTML_EL_Comment_) ||
-		(lastElType.ElTypeNum == HTML_EL_XMLPI)))
-	     removeLeadingSpaces = XhtmlCannotContainText (elType);
-	 }
+	   if (IsXMLElementInline (lastElType, XMLcontext.doc))
+	     {
+	       if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") != 0)
+		 removeLeadingSpaces = FALSE;
+	       else
+		 {
+		   if (elType.ElTypeNum != HTML_EL_Option_Menu &&
+		       elType.ElTypeNum != HTML_EL_OptGroup)
+		     {
+		       removeLeadingSpaces = FALSE;
+		       if (lastElType.ElTypeNum == HTML_EL_BR)
+			 removeLeadingSpaces = TRUE;
+		     }
+		 }
+	     }
+	   else
+	     {
+	       if ((strcmp (TtaGetSSchemaName (lastElType.ElSSchema), "HTML") == 0) &&
+		   ((lastElType.ElTypeNum == HTML_EL_Comment_) ||
+		    (lastElType.ElTypeNum == HTML_EL_XMLPI)))
+		 removeLeadingSpaces = XhtmlCannotContainText (elType);
+	     }
+ 	 }
      }
    else
      /* the new Text element should be the first child 
@@ -1950,7 +1961,7 @@ static ThotBool  IsLeadingSpaceUseless ()
 	   ancestor = parent;
 	   ancestorType = TtaGetElementType (ancestor);
 	   while (removeLeadingSpaces &&
-		  IsXMLElementInline (ancestorType))
+		  IsXMLElementInline (ancestorType, XMLcontext.doc))
 	     {
 	       prev = ancestor;
 	       TtaPreviousSibling (&prev);
@@ -2089,6 +2100,10 @@ void PutInXmlElement (char *data, int length)
 	       if (elText != NULL)
 		 TtaSetTextContent (elText, &(buffer[i1]),
 				    XMLcontext.language, XMLcontext.doc);
+	       /* associate a specific 'Line' presentation rule to the 
+		  parent element if we are parsing a generic-XML element */
+	       if (strcmp (currentParserCtxt->SSchemaName, "XML") == 0)
+		   CreateXmlLinePRule (elText, XMLcontext.doc);
 	     }
 	   TtaFreeMemory (buffer);
 	 }

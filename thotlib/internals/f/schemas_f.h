@@ -69,6 +69,15 @@ extern void TtaAppendXmlAttribute ( char *XMLName,
                                     Document document );
 extern void TtaGetXmlAttributeType ( char *XMLName,
                                      AttributeType *attrType );
+extern PtrPRule TtaGetXmlPRule ( PtrPSchema pPSch,
+                                 int nSRule,
+                                 PRuleType PrType,
+                                 FunctionType FcType,
+                                 int view );
+extern ThotBool TtaIsXmlTypeInLine ( ElementType elType,
+                                     Document document );
+extern void TtaSetXmlTypeInLine ( ElementType elType,
+                                  Document document );
 extern void TtaAppendXmlElement ( char *XMLName,
                                   ElementType *elType,
                                   char **mappedName,
@@ -145,6 +154,15 @@ extern void TtaAppendXmlAttribute (/* char *XMLName,
                                       Document document */);
 extern void TtaGetXmlAttributeType (/* char *XMLName,
                                        AttributeType *attrType */);
+extern PtrPRule TtaGetXmlPRule (/* PtrPSchema pPSch,
+                                   int nSRule,
+                                   PRuleType PrType,
+                                   FunctionType FcType,
+                                   int view */);
+extern ThotBool TtaIsXmlTypeInLine (/* ElementType elType,
+                                       Document document */);
+extern void TtaSetXmlTypeInLine (/* ElementType elType,
+                                    Document document */);
 extern void TtaAppendXmlElement (/* char *XMLName,
                                     ElementType *elType,
                                     char **mappedName,

@@ -3459,7 +3459,8 @@ ThotBool ExportDocument (PtrDocument pDoc, char *fName,
 	  fileDirectory[i] = EOS;
 	}
       /* charge le schema de traduction du document */
-      if (!LoadTranslationSchema (TSchemaName, pDoc->DocSSchema) != 0)
+      if ((TSchemaName != NULL) &&
+	  !LoadTranslationSchema (TSchemaName, pDoc->DocSSchema) != 0)
 	{
 	  /* echec au chargement du schema de traduction */
 	  fclose (outputFile);
@@ -3483,8 +3484,12 @@ ThotBool ExportDocument (PtrDocument pDoc, char *fName,
 	  /* du document */
 	  ResetTranslTags (pDoc->DocDocElement);
 	  /* traduit l'arbre principal du document */
-	  TranslateTree (pDoc->DocDocElement, pDoc, TRUE, TRUE, FALSE,
-			 recordLineNb);
+	  if (TSchemaName == NULL)
+	    /* Save of a Generic-Xml document */
+	    printf ("\nGRNERIC-XML\n");
+	  else
+	    TranslateTree (pDoc->DocDocElement, pDoc, TRUE, TRUE, FALSE,
+			   recordLineNb);
 	  /* vide ce qui traine dans les buffers de sortie */
 	  /* et ferme ces fichiers */
 	  FlushOutputFiles (pDoc);

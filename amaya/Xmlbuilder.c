@@ -81,6 +81,25 @@ void        CreateXmlAttribute (Element       el,
 }
 
 /*----------------------------------------------------------------------
+   CreateXmlLinePRule
+   Create a generic 'Line' presentation rule for each element that
+   has at least one Text child
+  ----------------------------------------------------------------------*/
+void        CreateXmlLinePRule (Element elText, Document doc)
+  
+{
+   ElementType  parentType;
+   Element      parent;
+
+   parent = TtaGetParent (elText);
+   if (parent != NULL)
+     {
+       parentType = TtaGetElementType (parent);
+       TtaSetXmlTypeInLine (parentType, doc);
+     }
+}
+
+/*----------------------------------------------------------------------
    MapXmLAttributeValue
    Search in the Attribute Value Mapping Table the entry for the attribute
    ThotAtt and its value AttrVal. Returns the corresponding Thot value.
@@ -115,6 +134,7 @@ void        MapGenericXmlAttribute (char *attrName,
       TtaAppendXmlAttribute (attrName, attrType, doc);
     }
 }
+
 
 /*----------------------------------------------------------------------
   MapGenericXmlType

@@ -38,19 +38,32 @@ VIEWS
 DEFAULT
 
    BEGIN
-   HorizRef: * . Top;
+   HorizRef: Enclosed . HRef;
    VertRef: * . Left;
+   Width: Enclosing . Width;
+   Height: Enclosed . Height;
+   VertPos: Top = Previous . Bottom;
    HorizPos: Left = Enclosing . Left;
-   VertPos:  Top = Enclosing . Top;
+   Hyphenate: Enclosing =;
+   LineSpacing: Enclosing =;
+   LineWeight: Enclosing =;
+   LineBreak: Yes;
+   PageBreak: Yes;
    Visibility: Enclosing =;
-   FillPattern: Enclosing =;
-   Depth: Enclosing =;
    Font: Enclosing =;
+   Style: Enclosing =;
+   Weight: Enclosing =;
+   Underline: Enclosing =;
+   Thickness: Enclosing =;
+   Size: Enclosing =;
+   Adjust: Enclosing =;
+   Indent: Enclosing =;
+   Depth: Enclosing =;
+   FillPattern: nopattern;
    IN Structure_view
 	BEGIN
 	VertPos: Top = Previous . Bottom;
 	Width: Enclosed . Width;
-	HorizRef: Enclosed . HRef;
 	END;
    END;
 
@@ -85,7 +98,7 @@ BOXES
 		END;
 	END;
 
- AttrName: BEGIN
+   AttrName: BEGIN
 	Content: (Text ' ' AttributeName Text '=');
 	Visibility: 0;
 	IN Structure_view BEGIN
@@ -99,7 +112,7 @@ BOXES
 		END;
 	END;
 
- AttrValue: BEGIN
+   AttrValue: BEGIN
 	Content: (AttributeValue);
 	Visibility: 0;
 	IN Structure_view BEGIN
@@ -185,6 +198,19 @@ BOXES
 		END;
 	END;
 
+ IndexBox: BEGIN
+	Content: Picture 'index.gif';
+	HorizPos: Left = Root . Left;
+	VertPos: Top = Creator . Top;
+	VertOverflow : Yes;
+	HorizOverflow : Yes;
+	Width : Enclosed . Width;
+	Inline: No;
+	Visibility: Creator =;
+	IN Structure_view
+		Visibility: 0;
+	END;
+
 RULES
 
    Document:
@@ -196,12 +222,11 @@ RULES
 	Style: Roman;
 	Weight: Normal;
 	LineWeight: 0;
-        Width: Enclosing . Width;
 	Height: Enclosing . Height min;
 	Size: DOC_FONTSIZE;
-	HorizPos: Left = Enclosing . Left;
 	PaddingBottom: 2 cm;
-	MarginLeft: 0.5 cm;
+	PaddingLeft: 0.5 cm;
+	PaddingRight: 0.5 cm;
 	IN Structure_view BEGIN
 		Visibility: 10;
 		Size: DOC_FONTSIZE;
@@ -215,7 +240,6 @@ RULES
 
    XML:
 	BEGIN
-	Width: Enclosing . Width;
 	VertPos: Top = Enclosing . Top;
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
@@ -276,7 +300,7 @@ RULES
    foo:
 	BEGIN
 	CreateBefore(ElementName);
-	CreateWith(VerticalLine);
+	CreateWith(VerticalLine);a 
 	LineBreak: Yes;
 	Width: Enclosing . Width;
 	HorizPos: Left = Enclosing . Left;
@@ -292,10 +316,7 @@ RULES
  
    TEXT_UNIT:
 	BEGIN
-	HorizPos: Left = Previous . Right;
-	VertPos: HRef = Previous . HRef;
 	Width: Enclosed . Width;
-        Height: Enclosed . Height;
 	IN Structure_view BEGIN
 		if NOT within XMLcomment_line AND NOT within XMLPI_line
 		   BEGIN
@@ -344,6 +365,18 @@ ATTRIBUTES
 
   xml_space = xml_space_preserve:
 	CreateBefore (ATTR_xml_space_preserve);
+
+  Highlight:
+	BEGIN
+        if TEXT_UNIT
+	   CreateAfter (IndexBox);
+        if SYMBOL_UNIT
+	   CreateAfter (IndexBox);
+        if PICTURE_UNIT
+	   CreateAfter (IndexBox);
+	if not TEXT_UNIT and not SYMBOL_UNIT and not PICTURE_UNIT
+	   CreateLast (IndexBox);
+	END;
 
 { 
   bar:

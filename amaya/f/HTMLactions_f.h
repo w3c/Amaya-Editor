@@ -42,6 +42,7 @@ extern void UpdateContextSensitiveMenus ( Document doc );
 extern void ResetHighlightedElement ( void );
 extern void SynchronizeSourceView ( NotifyElement * event );
 extern void SelectionChanged ( NotifyElement *event );
+extern void XmlSelectionChanged ( NotifyElement *event );
 extern void SetCharFontOrPhrase ( int document,
                                   int elemtype );
 
@@ -83,6 +84,7 @@ extern void UpdateContextSensitiveMenus (/* Document doc */);
 extern void ResetHighlightedElement (/* void */);
 extern void SynchronizeSourceView (/* NotifyElement * event */);
 extern void SelectionChanged (/* NotifyElement *event */);
+extern void XmlSelectionChanged (/* NotifyElement *event */);
 extern void SetCharFontOrPhrase (/* int document,
                                     int elemtype */);
 

@@ -235,7 +235,7 @@ void MapXMLElementType (int XMLtype,
 
 /*----------------------------------------------------------------------
    GetXMLElementName
-   Generic function which searchs in the mapping table the XML name for
+   Generic function which searchs in the mapping tables the XML name for
    a given Thot type.
   ----------------------------------------------------------------------*/
 char*           GetXMLElementName (ElementType elType, Document doc)
@@ -283,10 +283,10 @@ char*           GetXMLElementName (ElementType elType, Document doc)
 
 /*----------------------------------------------------------------------
    IsXMLElementInline
-   Generic function which searchs in the mapping table if a given
+   Generic function which searchs in the mapping tables if a given
    Thot type is an inline character or not
   ----------------------------------------------------------------------*/
-ThotBool         IsXMLElementInline (ElementType elType)
+ThotBool         IsXMLElementInline (ElementType elType, Document doc)
 {
   int            i;
   ThotBool       ret = FALSE;
@@ -302,8 +302,10 @@ ThotBool         IsXMLElementInline (ElementType elType)
 	ptr = MathMLElemMappingTable;
       else if (strcmp ("SVG", name) == 0)
 	ptr = SVGElemMappingTable;
-      else
+      else if (strcmp ("HTML", name) == 0)
 	ptr = XHTMLElemMappingTable;
+      else
+	ptr = NULL;
       
       if (ptr)
 	{
@@ -385,7 +387,7 @@ int       MapXMLAttribute (int XMLtype, char *attrName,
 
 /*----------------------------------------------------------------------
    GetXMLAttributeName
-   Generic function which searchs in the mapping table the XML name for
+   Generic function which searchs in the mapping tables the XML name for
    a given Thot type.
   ----------------------------------------------------------------------*/
 char*           GetXMLAttributeName (AttributeType attrType,

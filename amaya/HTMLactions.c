@@ -24,6 +24,7 @@
 #ifdef _SVG
 #include "SVG.h"
 #endif
+#include "XML.h"
 
 #include "css_f.h"
 #include "init_f.h"
@@ -2135,7 +2136,8 @@ void SynchronizeSourceView (NotifyElement * event)
    otherDocIsStruct = FALSE;
    if (DocumentTypes[doc] == docHTML ||
        DocumentTypes[doc] == docMath ||
-       DocumentTypes[doc] == docSVG )
+       DocumentTypes[doc] == docSVG  ||
+       DocumentTypes[doc] == docXml)
       /* the user clicked on a structured document, the other doc is the
          corresponding source document */
       otherDoc = DocumentSource[doc];
@@ -2148,7 +2150,8 @@ void SynchronizeSourceView (NotifyElement * event)
          if (DocumentURLs[i] != NULL)
 	    if (DocumentTypes[i] == docHTML ||
 		DocumentTypes[i] == docMath ||
-		DocumentTypes[i] == docSVG)
+		DocumentTypes[i] == docSVG ||
+		DocumentTypes[i] == docXml)
 	       if (DocumentSource[i] == doc)
 		  {
 	          otherDoc = i;
@@ -2223,6 +2226,13 @@ void SynchronizeSourceView (NotifyElement * event)
 		   attrType.AttrTypeNum = SVG_ATTR_Highlight;
 		   val = SVG_ATTR_Highlight_VAL_Yes_;
 		 }
+	       else if (DocumentTypes[otherDoc] == docXml)
+		 {
+		   attrType.AttrSSchema = TtaGetSSchema ("XML",
+							 otherDoc);
+		   attrType.AttrTypeNum = XML_ATTR_Highlight;
+		   val = XML_ATTR_Highlight_VAL_Yes_;
+		 }
 	       else
 		 {
 		   attrType.AttrSSchema = NULL;
@@ -2287,6 +2297,15 @@ void SelectionChanged (NotifyElement *event)
    TtaSelectView (SelectionDoc, 1);
 }
 
+
+/*----------------------------------------------------------------------
+   A new XML element has been selected. Update menus accordingly.      
+  ----------------------------------------------------------------------*/
+void XmlSelectionChanged (NotifyElement *event)
+{
+   SynchronizeSourceView (event);
+   TtaSelectView (SelectionDoc, 1);
+}
 
 /*----------------------------------------------------------------------
    SetCharFontOrPhrase                                     

@@ -328,7 +328,7 @@ void       XhtmlElementComplete (Element el, Document doc, int *error)
 
    elType = TtaGetElementType (el);
    /* is this a block-level element in a character-level element? */
-   if (!IsXMLElementInline (elType) &&
+   if (!IsXMLElementInline (elType, doc) &&
        elType.ElTypeNum != HTML_EL_Comment_ &&
        elType.ElTypeNum != HTML_EL_XMLPI)
        BlockInCharLevelElem (el);
