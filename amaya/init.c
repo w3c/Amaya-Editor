@@ -968,21 +968,6 @@ static void UpdateBrowserMenus (Document doc)
       DocumentTypes[doc] == docXml ||
       DocumentTypes[doc] == docImage)
     {
-      TtaSetItemOn (doc, 1, Views, TShowMapAreas);
-      TtaSetItemOn (doc, 1, Views, TShowTargets);
-      TtaSetItemOn (doc, 1, Views, BShowAlternate);
-      TtaSetItemOn (doc, 1, Views, BShowToC);
-      TtaSetItemOn (doc, 1, Views, BShowStructure);
-      TtaSetItemOn (doc, 1, Views, BShowLinks);
-      TtaSetItemOn (doc, 1, Views, BShowSource);
-      if (DocumentTypes[doc] == docXml)
-	{
-	  TtaSetMenuOff (doc, 1, Annotations_);
-	  TtaSetItemOff (doc, 1, Views, TShowMapAreas);
-	  TtaSetItemOff (doc, 1, Views, TShowTargets);
-	  TtaSetItemOff (doc, 1, Views, BShowAlternate);
-	  TtaSetItemOff (doc, 1, Views, BShowToC);
-	}
       TtaChangeButton (doc, 1, iI, iconINo, FALSE);
       TtaChangeButton (doc, 1, iB, iconBNo, FALSE);
       TtaChangeButton (doc, 1, iT, iconTNo, FALSE);
@@ -2437,7 +2422,8 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc, ThotBool inNew
   /* previous document */
   old_doc = oldDoc;
   doc     = oldDoc;
-  reinitialized = FALSE;
+  /* do we have to redraw buttons and menus? */
+  reinitialized = (docType != DocumentTypes[doc]);
 
   /* if there is no old doc then force the document to
      be created in a new window */
@@ -2449,18 +2435,16 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc, ThotBool inNew
     {
 #ifdef _WX
        /* get the old document window */
-       window_id = TtaGetWindowId( doc );
+       window_id = TtaGetWindowId (doc);
        /* get the old document page id */
-       page_id   = TtaGetPageId( doc );
+       page_id   = TtaGetPageId (doc);
 #endif /* _WX */
-       
       /* keep in memory if the closed document is in read-only mode */
       if (ReadOnlyDocument[doc])
 	readOnly = TRUE;
-      else
+      else if (!TtaGetDocumentAccessMode (doc))
 	/* if there is a parsing error/warning for the old document */
-	if (!TtaGetDocumentAccessMode (doc))
-	  reinitialized = TRUE;
+	reinitialized = TRUE;
 
       if (DocumentTypes[doc] == docHTML ||
 	  DocumentTypes[doc] == docSVG ||
@@ -2917,9 +2901,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc, ThotBool inNew
 	     TtaSetMenuOff (doc, 1, Bookmarks_);
 #endif /* BOOKMARKS */
 	 }
-       else if (!reinitialized)
-	 /* we have to redraw buttons and menus? */
-	 reinitialized = docType != DocumentTypes[doc];
      }
 
    /* store the new document type */
@@ -2972,6 +2953,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc, ThotBool inNew
 	 {
 	   TtaSetMenuOn (doc, 1, Views);
 	   TtaSetItemOn (doc, 1, Views, TShowTargets);
+	   TtaSetItemOn (doc, 1, Views, BShowLinks);
 	   if (DocumentTypes[doc] == docHTML)
 	     {
 	       TtaSetItemOn (doc, 1, Views, TShowMapAreas);
@@ -2982,18 +2964,13 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc, ThotBool inNew
 		   profile == L_Strict || profile == L_Basic)
 		 TtaSetMenuOff (doc, 1, XMLTypes);
 	     }
-	   if (DocumentTypes[doc] == docSVG)
-	     {
-	       TtaSetItemOff (doc, 1, Views, TShowMapAreas);
-	       TtaSetItemOn (doc, 1, Views, BShowAlternate);
-	       TtaSetItemOff (doc, 1, Views, BShowToC);
-	       TtaSetItemOff (doc, 1, Special, TSectionNumber);
-	       TtaSetItemOff (doc, 1, Special, BMakeBook);
-	     }
 	   else
 	     {
 	       TtaSetItemOff (doc, 1, Views, TShowMapAreas);
-	       TtaSetItemOff (doc, 1, Views, BShowAlternate);
+	       if (DocumentTypes[doc] == docSVG)
+		 TtaSetItemOn (doc, 1, Views, BShowAlternate);
+	       else
+		 TtaSetItemOff (doc, 1, Views, BShowAlternate);
 	       TtaSetItemOff (doc, 1, Views, BShowToC);
 	       TtaSetItemOff (doc, 1, Special, TSectionNumber);
 	       TtaSetItemOff (doc, 1, Special, BMakeBook);

@@ -68,7 +68,7 @@
                begin="12s" dur="2s" fill="freeze"/>
     </image>
     <rect y="0" x="0" width="155px" height="150px"
-          style="fill: yellow; stroke: black" stroke="1px">
+          style="fill: yellow; stroke: black; stroke-width: 1px">
       <set attributeName="opacity" attributeType="CSS" to="0" begin="0s"
            dur="10s" fill="freeze"/>
       <animate attributeName="opacity" attributeType="CSS" from="1" to="0"
@@ -100,7 +100,7 @@
                         type="scale" from="1" to="0" begin="16s" dur="8s"
                         fill="freeze"/>
       <rect y="0" x="0" width="200px" height="200px"
-            style="fill: #95E4FF; stroke: none" stroke="1px"/>
+            style="fill: #95E4FF; stroke: none"/>
       <switch>
         <foreignObject y="-17" x="-5px" width="150px">
           <h2 xmlns="http://www.w3.org/1999/xhtml">XML Document</h2>
@@ -133,7 +133,7 @@
           <p xmlns="http://www.w3.org/1999/xhtml"><svg
                xmlns="http://www.w3.org/2000/svg" width="135px" height="5px">
             <rect y="0" x="0" width="100px" height="5px"
-                  style="fill: #FF0000; stroke: #FFFF00" stroke="1px"/>
+                  style="fill: #FF0000; stroke: #FFFF00; stroke-width: 1px"/>
           </svg>
           </p>
           </div>
@@ -149,7 +149,7 @@
                         type="scale" from="0" to="1" begin="24s" dur="5s"
                         fill="freeze"/>
       <rect y="0" x="-10" width="500px" height="500px"
-            style="fill: #95E4FF; stroke: none" stroke="1px"/>
+            style="fill: #95E4FF; stroke: none"/>
       <switch>
         <foreignObject y="0" x="2px" width="500px">
 
