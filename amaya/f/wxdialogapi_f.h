@@ -49,6 +49,11 @@ extern ThotBool CreateHRefDlgWX ( int ref,
                                   int doc_select,
                                   int dir_select,
                                   int doc_type );
+extern ThotBool CreateCreateTableDlgWX ( int ref,
+                                         ThotWindow parent,
+                                         int def_cols,
+                                         int def_rows,
+                                         int def_border );
 extern ThotBool CreatePreferenceDlgWX ( int ref,
                                         ThotWindow parent,
                                         const char *url_list );
@@ -98,6 +103,11 @@ extern ThotBool CreateHRefDlgWX ( int ref,
                                     int doc_select,
                                     int dir_select,
                                     int doc_type );
+extern ThotBool CreateCreateTableDlgWX ( int ref,
+                                           ThotWindow parent,
+                                           int def_cols,
+                                           int def_rows,
+                                           int def_border );
 extern ThotBool CreatePreferenceDlgWX ( int ref,
                                           ThotWindow parent,
                                           const char *url_list );

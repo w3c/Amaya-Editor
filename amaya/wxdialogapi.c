@@ -20,6 +20,7 @@
   #include "wxdialog/DocInfoDlgWX.h"
   #include "wxdialog/HRefDlgWX.h"
   #include "wxdialog/PreferenceDlgWX.h"
+  #include "wxdialog/CreateTableDlgWX.h"
 #endif /* _WX */
 
 
@@ -463,6 +464,40 @@ ThotBool CreateHRefDlgWX ( int ref, ThotWindow parent,
 				     wx_init_value,
 				     wx_title,
 				     wx_filter );
+
+  if ( TtaRegisterWidgetWX( ref, p_dlg ) )
+    {
+      /* the dialog has been sucesfully registred */
+      return TRUE;
+    }
+  else
+    {
+      /* an error occured durring registration */
+      p_dlg->Destroy();
+      return FALSE;
+    }
+#else /* _WX */
+  return FALSE;
+#endif /* _WX */
+}
+
+/*-----------------------------------------------------------------------
+ CreateCreateTableDlgWX
+ params: nb of cols, nb of rows, border attribute
+ ------------------------------------------------------------------------*/
+ThotBool CreateCreateTableDlgWX ( int ref, ThotWindow parent,
+				  int def_cols, int def_rows, int def_border)
+{
+#ifdef _WX
+  wxString wx_title = TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_BUTTON_TABLE) );
+  wxLogDebug( _T("CreateCreateTableDlgWX - title=")+wx_title);
+
+  CreateTableDlgWX * p_dlg = new CreateTableDlgWX( ref,
+						   parent,
+						   def_cols,
+						   def_rows,
+						   def_border,
+						   wx_title );
 
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
     {

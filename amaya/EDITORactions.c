@@ -14,6 +14,11 @@
 
 /* Included headerfiles */
 #define THOT_EXPORT extern
+
+#ifdef _WX
+  #include "wx/wx.h"
+#endif /* _WX */
+
 #include "amaya.h"
 #include "css.h"
 #include "undo.h"
@@ -53,6 +58,12 @@
 #include "SVGbuilder_f.h"
 #include "SVGedit_f.h"
 #include "XHTMLbuilder_f.h"
+#include "wxdialogapi_f.h"
+
+#ifdef _WX
+  #include "wxdialogapi_f.h"
+  #include "appdialogue_wx.h"
+#endif /* _WX */
 
 #ifdef DAV
 #define WEBDAV_EXPORT extern
@@ -1887,7 +1898,20 @@ void CreateTable (Document document, View view)
 	  TBorder = 1;
 #ifdef _WINGUI
 	  CreateTableDlgWindow (NumberCols, NumberRows, TBorder);
-#else  /* !_WINGUI */
+#endif  /* !_WINGUI */
+#ifdef _WX
+	  ThotBool created;
+	  created = CreateCreateTableDlgWX (BaseDialog + TableForm,
+					    TtaGetViewFrame (document, view),
+					    NumberCols, NumberRows, TBorder);
+	  if (created)
+	    {
+	      TtaShowDialogue (BaseDialog + TableForm, FALSE);
+	      /* wait for an answer */
+	      TtaWaitShowDialogue ();
+	    }
+#endif /* _WX */
+#ifdef _GTK
 	  TtaNewForm (BaseDialog + TableForm, TtaGetViewFrame (document, 1),
 		      TtaGetMessage (AMAYA, AM_BUTTON_TABLE), TRUE, 1, 'L', D_CANCEL);
 	  TtaNewNumberForm (BaseDialog + TableCols, BaseDialog + TableForm,
@@ -1903,7 +1927,8 @@ void CreateTable (Document document, View view)
 	  TtaShowDialogue (BaseDialog + TableForm, FALSE);
 	  /* wait for an answer */
 	  TtaWaitShowDialogue ();
-#endif /* !_WINGUI */
+#endif /* _GTK */
+
 	  if (!UserAnswer)
 	    return;
 
