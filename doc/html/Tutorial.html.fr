@@ -452,7 +452,7 @@ l'élément &lt;body&gt; et lui appliquer l'attribut lang=fr.</p>
 <h4>Première méthode</h4>
 
 <p>On pose la sélection n'importe où dans le document et on utilise la touche
-F2 sous Windows (Esc sous Linux) pour remonter la sélection sur l'élément
+<code>F2</code> pour remonter la sélection sur l'élément
 &lt;body&gt;. La barre de statut affiche l'élément sélectionné. A ce moment
 là on sélectionne l'entrée du menu <strong>Attributs/Langue</strong> pour
 afficher le formulaire de choix de la langue.</p>
@@ -515,8 +515,8 @@ paragraphe existant en deux et insère l'en-tête au milieu.</p>
 l'en-tête, ce texte sera supprimé dans le paragraphe et inséré dans l'en-tête
 créé.</p>
 
-<p>On peut aussi sélectionner le paragraphe (touche <code>F2</code> ou
-<code>Esc</code>) et transformer ainsi le paragraphe en en-tête. Un ou
+<p>On peut aussi sélectionner le paragraphe (touche <code>F2</code>)
+et transformer ainsi le paragraphe en en-tête. Un ou
 plusieurs paragraphes peuvent en fait se transformer en liste, table,
 préformaté en fonction de l'élément cible choisi. L'entrée de menu
 <strong>Edition/Transformer</strong> propose les cibles possibles pour la
@@ -537,8 +537,7 @@ en entier et on active l'entrée de menu <strong>XHTML/Paragraphe</strong>.</p>
 <p>Quand la sélection se trouve à la fin d'un &lt;pre&gt;, la touche
 <code>Enter</code> crée une nouvelle ligne du &lt;pre&gt;. Pour créer un
 paragraphe après le &lt;pre&gt;, il faut sélectionner le &lt;pre&gt; en
-utilisant la touche <code>Esc</code> (Linux) ou <code>F2</code> (Windows)
-puis <code>Enter</code>.</p>
+utilisant la touche <code>F2</code> puis <code>Enter</code>.</p>
 
 <h3>Division</h3>
 
@@ -675,12 +674,12 @@ et cliquer sur <img alt="(Liste)" src="../images/OList.gif" /> (ou <code>Ctrl
 h Ctrl l</code>) pour créer une liste à puces.</p>
 
 <p>Pour sélectionner tout le contenu d'une suite de paragraphes, on utilise
-la touche <code>F2</code> sous Windows (<code>Esc</code> sous Linux).</p>
+la touche <code>F2</code>.</p>
 
 <h4>Transformation d'une liste à puces et en liste numérotée</h4>
 
 <p>On pose la sélection dans un item de liste, puis en doublant la touche
-<code>F2</code> sous Windows (<code>Esc</code> sous Linux) on sélectionne la
+<code>F2</code> on sélectionne la
 liste complète. En cliquant sur <img alt="(Liste numérotée)"
 src="../images/NumList.gif" /> (ou <code>Ctrl h Ctrl n</code>) on crée une
 liste numérotée à la place. On peut bien sûr passer de la même façon d'une
@@ -927,8 +926,8 @@ colonne :</p>
     colonne après la colonne sélectionnée.</li>
 </ul>
 
-<p>Si on a sélectionné une cellule complète par <code>F2</code> (Windows) ou
-<code>Esc</code> (Unix) la touche Enter crée une nouvelle cellule après et la
+<p>Si on a sélectionné une cellule complète par <code>F2</code>
+la touche <code>Enter</code> crée une nouvelle cellule après et la
 colonne correspondante.</p>
 
 <h3>Détruire une colonne</h3>
@@ -941,8 +940,7 @@ sélectionner une colonne :</p>
     sous-menu <strong>Table</strong> (<code>Ctrl t Ctrl c</code>).</li>
   <li>Soit étendre la sélection sur au moins deux cellules dans la même
     colonne (Cell 1.1 à Cell 2.1 dans l'exemple ci-dessous) puis deux fois
-    <code>F2</code> (Windows) ou <code>Esc</code> (Unix) pour sélectionner la
-    colonne.</li>
+    <code>F2</code> pour sélectionner la colonne.</li>
 </ol>
 
 <table border="1" summary="table">
@@ -1003,8 +1001,8 @@ sélectionner une colonne :</p>
     ligne après la ligne sélectionnée.</li>
 </ul>
 
-<p>Si on a sélectionné une ligne complète par <code>F2</code> (Windows) ou
-<code>Esc</code> (Unix) la touche Enter crée une nouvelle ligne après.</p>
+<p>Si on a sélectionné une ligne complète par <code>F2</code>
+la touche Enter crée une nouvelle ligne après.</p>
 
 <h3>Détruire une ligne</h3>
 
@@ -1015,8 +1013,7 @@ sélectionner une ligne :</p>
   <li>Soit l'entrée <strong>Sélectionner la ligne</strong> dans le sous-menu
     <strong>Table</strong> (<code>Ctrl t Ctrl r</code>).</li>
   <li>Soit poser la sélection sur une cellule de la ligne (Cell 1.1 dans
-    l'exemple ci-dessous) puis deux fois <code>F2</code> (Windows) ou
-    <code>Esc</code> (Unix) pour sélectionner la ligne.</li>
+    l'exemple ci-dessous) puis deux fois <code>F2</code> pour sélectionner la ligne.</li>
 </ol>
 
 <h3>Copier/Coller ou Déplacer une ligne</h3>
@@ -1082,8 +1079,8 @@ cellule.</p>
 
 <p>De nouveaux corps de table peuvent être créés efficacement avec la touche
 <a href="Creating.html.fr#L906">Enter</a>. Quand le corps de table entier est
-sélectionné (il faut utiliser la touche <code>F2</code> sous Windows et
-<code>Esc</code> sous Linux pour ça), en tapant la touche <code>Enter</code>
+sélectionné (il faut utiliser la touche <code>F2</code>), en tapant
+la touche <code>Enter</code>
 vous créez une nouveau corps de table après le corps de table sélectionné.</p>
 
 <h3><a id="Adding21">Ajouter quelque chose après une table</a></h3>
@@ -1100,8 +1097,7 @@ pendant qu'un composant de la table est sélectionné.</p>
 crée un nouveau paragraphe dans la table.</p>
 
 <p>Pour créer un paragraphe après la table, il faut sélectionner la table
-entière en utilisant la touche <code>Esc</code> (Unix) ou <code>F2</code>
-(Windows) puis <code>Enter</code>.</p>
+entière en utilisant la touche <code>F2</code> puis <code>Enter</code>.</p>
 
 <p>Ce nouveau paragraphe peut être modifié si besoin est.</p>
 
@@ -1201,7 +1197,7 @@ effacer un attribut.</p>
 <p>Pour éditer un attribut, sélectionnez d'abord l'élément approprié. Vous
 devez sélectionner l'élément entier et pas seulement un caractère à
 l'intérieur de l'élément. Pour cela, il faut utiliser la touche
-<code>F2</code> (Windows) ou <code>Esc</code> (Linux). Quand l'élément est
+<code>F2</code>. Quand l'élément est
 sélectionné, le menu <strong>Attributs</strong> affiche la liste des
 attributs applicables. On peut voir rapidement si l'attribut a une valeur ou
 non</p>
@@ -1216,7 +1212,7 @@ changer à l'aide du menu <strong>Attributs</strong>. Ceci assure que seules
 des valeurs correctes soient choisies.</p>
 
 <p>Quand la sélection se trouve dans une valeur d'attribut, la touche
-<code>F2</code> (Windows) ou <code>Esc</code> (Linux) sélectionne la valeur
+<code>F2</code> sélectionne la valeur
 complète. La touche <code>Delete</code> détruit alors la valeur, et un
 deuxième <code>Delete</code> supprimera l'attribut.</p>
 </div>
@@ -1299,9 +1295,8 @@ double (ou simple) cliquant sur la propriété. Aussi longtemps que la fenêtre
 est ouverte, Amaya met à jour le contenu de la fenêtre quand la sélection
 change.</p>
 
-<p>En appuyant sur la touche <code>F2</code> (ou <code>Esc</code> sur les
-plates-formes Linux), l'utilisateur peut voir les propriétés CSS appliquées
-aux éléments englobants.</p>
+<p>En appuyant sur la touche <code>F2</code> sur les, l'utilisateur peut
+voir les propriétés CSS appliquées aux éléments englobants.</p>
 
 <h3>Créer des propriétés CSS</h3>
 

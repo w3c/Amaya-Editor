@@ -183,9 +183,8 @@ externe les propriétés CSS appliquées au premier élément de la sélection
 courante. L'utilisateur peut afficher le source CSS qui engendre chaque
 propriété en double (ou simple) cliquant sur la propriété. Aussi longtemps
 que la fenêtre est ouverte, Amaya met à jour le contenu de la fenêtre quand
-la sélection change. En appuyant sur la touche <code>F2</code> (ou
-<code>Esc</code> sur les plates-formes Linux), l'utilisateur peut voir les
-propriétés CSS appliquées aux éléments englobants.</p>
+la sélection change. En appuyant sur la touche <code>F2</code>, l'utilisateur
+peut voir les propriétés CSS appliquées aux éléments englobants.</p>
 
 <h3><a name="L1371">Mettre du style en utilisant des éléments HTML</a></h3>
 

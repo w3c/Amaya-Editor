@@ -85,7 +85,7 @@ Markierungsfarbe kann man im Menü <strong>Extras</strong>, Untermenü
   Wortanfang.</li>
   <li><kbd>Umsch Strg &rarr;</kbd> markiert vom Cursor bis zum Ende des
     nächsten Wortes.</li>
-  <li><kbd>Esc</kbd> (Unix) oder <kbd>F2</kbd> (Windows) markiert das
+  <li><kbd>F2</kbd> markiert das
     gesammte Element, in dem sich der Cursor befindet.</li>
   <li>Wiederholtes Drücken dieser Tasten erweitert die Markierung auf die
     übergeordneten Elemente.</li>

@@ -45,8 +45,8 @@
 
 <p>Ein neuer Tabellenkörper kann auch einfach mit Hilfe der
 <strong>Enter</strong> Taste hinzugefügt werden. Wenn ein vollständiger
-Tabellenkörper ausgewählt ist (mit <code>F2</code> unter Windows bzw.
-<code>Esc</code> unter Linux), wird durch Drücken der <strong>Enter</strong>
+Tabellenkörper ausgewählt ist (mit <code>F2</code>), wird durch Drücken
+der <strong>Enter</strong>
 Taste ein neuer Tabellenkörper hinter dem ausgewählten Tabellenkörper
 erzeugt.</p>
 </div>

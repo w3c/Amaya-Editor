@@ -45,8 +45,8 @@
 
 <p>Neue Tabellenzeilen können auch einfach mit Hilfe der
 <strong>Enter</strong> Taste eingefügt werden. Wenn eine vollständige
-Tabellenzeile ausgewählt ist (mit <code>F2</code> unter Windows bzw.
-<code>Esc</code> unter Linux), wird durch Drücken der <strong>Enter</strong>
+Tabellenzeile ausgewählt ist (mit <code>F2</code>), wird durch Drücken
+der <strong>Enter</strong>
 Taste eine neue Tabellenzeile unterhalb der ausgewählten Zeile erzeugt.</p>
 
 <p class="ProcedureCaption">Um eine Tabellenzeile zu löschen oder zu kopieren
@@ -62,8 +62,7 @@ Tabellenzeile einfügen.</p>
     <strong>Tabelle</strong> (<code>Ctrl t Ctrl r</code>).</li>
   <li>Alternativ kann man auch den Cursor in eine Zelle der gewünschten
     Tabellenzeile setzen und durch (gegebenenfalls mehrfaches) Drücken der
-    <code>F2</code> Taste unter Windows (bzw. der <code>Esc</code> Taste
-    unter Linux) die Auswahl auf die ganze Tabellenzeile erweitern.</li>
+    <code>F2</code>) die Auswahl auf die ganze Tabellenzeile erweitern.</li>
 </ol>
 
 <p>Wenn eine vollständige Tabellenzeile ausgewählt ist, kann man diese

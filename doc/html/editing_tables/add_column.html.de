@@ -44,8 +44,8 @@ hinzuzufügen:</p>
 
 <p>Neue Spalten können auch einfach mit Hilfe der <strong>Enter</strong>
 Taste zu einer Tabelle hinzugefügt werden. Wenn eine vollständige Zelle
-ausgewählt ist (mit <code>F2</code> unter Windows bzw. <code>Esc</code> unter
-Linux), wird durch Drücken der <strong>Enter</strong> Taste eine neue
+ausgewählt ist (mit <code>F2</code>), wird durch Drücken der
+<strong>Enter</strong> Taste eine neue
 Tabellenzelle und die zugehörige Spalte rechts von der ausgewählten Zelle
 erzeugt.</p>
 

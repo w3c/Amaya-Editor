@@ -86,8 +86,8 @@ colonne&nbsp;:</p>
     colonne après la colonne sélectionnée.</li>
 </ul>
 
-<p>Si on a sélectionné une cellule complète par <code>F2</code> (Windows) ou
-<code>Esc</code> (Unix) la touche Enter crée une nouvelle cellule après et la
+<p>Si on a sélectionné une cellule complète par <code>F2</code>
+la touche <code>Enter</code> crée une nouvelle cellule après et la
 colonne correspondante.</p>
 
 <h3>Détruire une colonne</h3>
@@ -100,8 +100,7 @@ sélectionner une colonne :</p>
     sous-menu <strong>Table</strong> (<code>Ctrl t Ctrl c</code>).</li>
   <li>Soit étendre la sélection sur au moins deux cellules dans la même
     colonne (Cell 1.1 à Cell 2.1 dans l'exemple ci-dessous) puis deux fois
-    <code>F2</code> (Windows) ou <code>Esc</code> (Unix) pour sélectionner la
-    colonne.</li>
+    <code>F2</code> pour sélectionner la colonne.</li>
 </ol>
 
 <table border="1" summary="table">
@@ -163,8 +162,8 @@ ligne&nbsp;:</p>
     ligne après la ligne sélectionnée.</li>
 </ul>
 
-<p>Si on a sélectionné une ligne complète par <code>F2</code> (Windows) ou
-<code>Esc</code> (Unix) la touche Enter crée une nouvelle ligne après.</p>
+<p>Si on a sélectionné une ligne complète par <code>F2</code>
+la touche <code>Enter</code> crée une nouvelle ligne après.</p>
 
 <h3>Détruire une ligne</h3>
 
@@ -175,8 +174,7 @@ sélectionner une ligne :</p>
   <li>Soit l'entrée <strong>Sélectionner la ligne</strong> dans le sous-menu
     <strong>Table</strong> (<code>Ctrl t Ctrl r</code>).</li>
   <li>Soit poser la sélection sur une cellule de la ligne (Cell 1.1 dans
-    l'exemple ci-dessous) puis deux fois <code>F2</code> (Windows) ou
-    <code>Esc</code> (Unix) pour sélectionner la ligne.</li>
+    l'exemple ci-dessous) puis deux fois <code>F2</code> pour sélectionner la ligne.</li>
 </ol>
 
 <h3>Copier/Coller ou Déplacer une ligne</h3>
@@ -242,8 +240,7 @@ cellule.</p>
 
 <p>De nouveaux corps de table peuvent être créés efficacement avec la touche
 <a href="Creating.html.fr#L906">Enter</a>. Quand le corps de table entier est
-sélectionné (il faut utiliser la touche <code>F2</code> sous Windows et
-<code>Esc</code> sous Linux pour ça), en tapant la touche <code>Enter</code>
+sélectionné (il faut utiliser la touche <code>F2</code>), en tapant la touche <code>Enter</code>
 vous créez une nouveau corps de table après le corps de table sélectionné.</p>
 
 <h3><a name="Adding2">Ajouter quelque chose après une table</a></h3>

@@ -38,8 +38,7 @@ muss man dieses zuerst als Anker deklarieren.</p>
 <p class="ProcedureCaption">Um einen Ankerelement zu erzeugen:</p>
 <ol>
   <li>Eine Zeichenkette innerhalb des Elements markieren oder den Cursor dort
-    plazieren und die Taste <kbd>Esc</kbd> (Unix) oder <kbd>F2</kbd>
-    (Windows) drücken um das ganze Element zu markieren.</li>
+    plazieren <kbd>F2</kbd> drücken um das ganze Element zu markieren.</li>
   <li>Das Menü <strong>Verweis</strong> öffnen und <strong>Anker
     erzeugen</strong> wählen. Das gewählte Element besitzt nun das Attribut
     <code>id</code> und identifiziert es damit als Anker. Amaya generiert

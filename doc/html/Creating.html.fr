@@ -108,8 +108,7 @@ href="Tables.html.fr#Editing">cellules de table</a> par exemple.</p>
 <p>Quand la sélection se trouve à la fin d'un <code>&lt;pre&gt;</code>, la
 touche Enter crée une nouvelle ligne du &lt;pre&gt;. Pour créer un paragraphe
 après le <code>&lt;pre&gt;</code>, il faut sélectionner le &lt;pre&gt; en
-utilisant la touche <kbd>Esc</kbd> (Unix) ou <kbd>F2</kbd> (Windows) puis
-Enter.</p>
+utilisant la touche <kbd>F2</kbd> puis <kbd>Enter</kbd>.</p>
 
 <p>Le plus souvent, le nouvel élément créé est simplement un paragraphe, quel
 que soit le type de l'élément précédent. Si vous avez besoin d'un autre type
@@ -204,7 +203,7 @@ autre élément, un paragraphe, après le &lt;pre&gt;, vous pouvez utiliser le
 menu Types et sélectionner le type désiré.</p>
 
 <p>Un autre moyen d'obtenir ce résultat est de sélectionner le &lt;pre&gt; en
-entier avec la touche "Esc" (Unix) ou "F2" (Windows) et de presser la touche
+entier avec la touche <kbd>F2</kbd> et de presser la touche
 <kbd>Enter</kbd>. Un nouveau paragraphe après le &lt;pre&gt; sera créé.</p>
 
 <p>Ceci marche aussi pour une table&nbsp;: il faut sélectionner la table

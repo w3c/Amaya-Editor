@@ -69,7 +69,7 @@ référencé par un lien (une ancre source). Avant de créer un lien à un tel
 
 <p>Vous pouvez créer un élément cible de la même manière que vous créez une
 ancre cible. Vous avez juste à sélectionner une chaîne de caractère dans
-l'élément, d'utiliser la touche Esc (F2 pour Windows) afin de sélectionner
+l'élément, d'utiliser la touche <kbd>F2</kbd> afin de sélectionner
 l'élément lui même et de choisir <strong>Créer cible</strong> depuis le menu
 <strong>Liens</strong>. L'élément sélectionné a maintenant un attribut ID,
 qui l'identifie comme un élément cible. Amaya génère automatiquement cette
@@ -123,7 +123,7 @@ alt="The Add/Remove ID menu" /></p>
           </li>
           <li>Si vous n'êtes pas à l'aise avec la souris :
             <ul>
-              <li>Tapez sur la touche <code>Esc</code> ou
+              <li>Tapez sur la touche <code>F2</code> ou
                 <code>Delete</code>. Cela fera surgir une boîte de dialogue :
                 entrez l'URI du document cible et taper sur la touche
                 <strong>Enter ou Return</strong> pour confirmer. Le lien est

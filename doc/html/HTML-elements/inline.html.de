@@ -99,7 +99,7 @@ herangezogen werden: man möchte beispielsweise den Text <acronym
 title="World Wide Web Consortium">W3C</acronym>, als Akronym auszeichnen. Aus
 dem Untermenü <strong>Inhaltsorientiert</strong> des Menüs
 <strong>XHTML</strong> den Befehl <strong>Akronym</strong> wählen, das ganze
-Element mittels der Taste <kbd>Esc</kbd> (Unix) oder <kbd>F2</kbd> (Windows)
+Element mittels <kbd>F2</kbd>
 markieren, aus dem Menü <strong>Attribute</strong> das Attribut
 <strong>title</strong> wählen, den Text <code>World Wide Web
 Consortium</code> eingeben und den Knopf <strong>Übernehmen</strong>
@@ -143,9 +143,8 @@ Kind des bestehenden Elementes erzeugt.</p>
 
 <p>Die Elemente zur Betonung werden unter Amaya wie ein Umschalter behandelt.
 Plaziert man den Cursor beispielsweise innerhalb des Elements
-<code>strong</code>, markiert das Ganze mit <kbd>Esc</kbd> (Unix) oder
-<kbd>F2</kbd> (Windows) und klickt den Knopf <img
-src="../../images/Strong.gif" alt="Strong" /> in der Knopfleiste, dann wird
+<code>strong</code>, markiert das Ganze mit <kbd>F2</kbd> und klickt den Knopf
+<img src="../../images/Strong.gif" alt="Strong" /> in der Knopfleiste, dann wird
 das Element <code>strong</code> entfernt.</p>
 
 <p>Man kann <a href="../StyleSheets.html.de">Formatvorlagen</a> verwenden um

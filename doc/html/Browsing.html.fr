@@ -252,7 +252,7 @@ est ensuite utilisable soit avec le clavier, soit avec la souris.</p>
 touches flèches puis valider avec la touche <strong>Entrée</strong>. Les
 touches <strong>PageUp</strong> et <strong>PageDown</strong> permettent de
 faire défiler plus rapidement la liste des entrées. Vous pouvez annuler
-l'action de ce popup en appuyant sur la touche <strong>Escape</strong> à
+l'action de ce popup en appuyant sur la touche <code>F2</code> à
 n'importe quel moment.</p>
 
 <p>Avec la souris, il y a deux types de comportement. Un simple clic permet à
@@ -271,7 +271,7 @@ Lorsque ce widget est activé, il montre l'état courant des sélections, en
 concaténant un caractère '&gt;' aux entrées sélectionnées (Win32) ou par
 l'utilisation d'une barre de couleur bleue (GTK). Comme pécédemment, vous
 pouvez annuler l'action de ce widget soit en utilisant la touche
-<strong>Escape</strong> soit en cliquant à l'extérieur du widget (Win32
+<code>F2</code> soit en cliquant à l'extérieur du widget (Win32
 uniquement).</p>
 
 <p></p>

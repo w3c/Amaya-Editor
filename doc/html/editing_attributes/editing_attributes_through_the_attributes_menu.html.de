@@ -39,8 +39,7 @@ erzeugt, entfernt oder dessen Wert geändert werden.</p>
 
 <p class="ProcedureCaption">Um ein Attribut zu editieren:</p>
 <ol>
-  <li>Das ganze Element mit <kbd>Esc</kbd> (Unix) oder <kbd>F2</kbd>
-    (Windows) markieren.</li>
+  <li>Das ganze Element mit <kbd>F2</kbd> markieren.</li>
   <li>Im Menü <strong>Attribute</strong> das gewünschte Attribut
   anklicken.</li>
   <li>Amaya agiert gemäß dem gewählten Attribut:

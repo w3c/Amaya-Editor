@@ -106,9 +106,8 @@ href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-ACRONYM"><code>acron
 определения расширения акронима. Выберите текст для маркировки, например
 <acronym title="World Wide Web Consortium">W3C</acronym>, выберите меню
 <strong>XHTML</strong>, в подменю тип информации выберите пункт акроним.
-Затем выберите полный элемент (<kbd>Escape key</kbd> на Unix, <kbd>F2
-key</kbd> на Windows), откройте меню Атрибуты, выберите заголовок, введите
-<kbd>World Wide Web Consortium</kbd>, и примените его.</p>
+Затем выберите полный элемент (<kbd>F2 key</kbd>), откройте меню Атрибуты,
+выберите заголовок, введите <kbd>World Wide Web Consortium</kbd>, и примените его.</p>
 
 <p><a href="../StyleSheets.html.ru">Таблица стилей</a> может использоваться
 для изменения представления акронимов и абревиатур.</p>

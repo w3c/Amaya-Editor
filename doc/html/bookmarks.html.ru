@@ -172,7 +172,7 @@ alt="свёрнутая тема" src="../images/closed.png" /> указывает на свёрнутую
 тему.</p>
 
 <p>Чтобы удалить указатель, поместите курсор на указатель, выберите его,
-нажав на кнопку <em>Escape</em> (Linux) или <em>F2</em> (WIN32):</p>
+нажав на кнопку <code>F2</code>:</p>
 
 <p style="text-align: center"><img src="../images/bmview2.png"
 alt="Выбор темы и её подпунктов" border="2" /></p>

@@ -58,8 +58,8 @@ rowspan geändert werden.</p>
 <p class="ProcedureCaption">Einfügen von Elementen hinter einer Tabelle:</p>
 
 <p>Um Elemente hinter einer Tabelle einzufügen muss die Tabelle verlassen
-werden. Dazu wählt man das table Element (mit <code>F2</code> unter Windows
-bzw. <code>Esc</code> unter Unix) und drückt die <strong>Enter</strong>
+werden. Dazu wählt man das table Element (mit <code>F2</code>) und drückt
+die <strong>Enter</strong>
 Taste. Amaya fügt dann einen neuen Absatz hinter der ausgewählten Tabelle
 ein. Dieser kann dann durch ein anderes Element ersetzt werden.</p>
 

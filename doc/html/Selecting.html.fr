@@ -47,8 +47,7 @@ sélection :</p>
 <code>p</code> (qui est dans un body etc.)</p>
 
 <p>La sélection de <strong>cet élément de structure</strong> (par exemple
-cliquez sur le mot structure, puis pressez <code>Esc</code> ou
-<code>F2</code>) donne :</p>
+cliquez sur le mot structure, puis pressez <code>F2</code> donne :</p>
 
 <p><samp style="color: #B20000">strong \ p \ body \ html \ Document</samp></p>
 <ul>
@@ -78,8 +77,7 @@ cliquez sur le mot structure, puis pressez <code>Esc</code> ou
     <ul>
       <li>Pour sélectionner un élément de structure avec le clavier
         <ul>
-          <li>Pressez la touche <code>Esc</code> sur Unix/Mac ou la touche
-            <code>F2</code> sur Windows pour sélectionner l'élément parent
+          <li>Pressez la touche <code>F2</code> pour sélectionner l'élément parent
             dans la structure du document. Presser la touche plusieurs fois
             pour sélectionner le conteneur au dessus (et tout ce qu'il
             englobe) et ce jusqu'à la racine.</li>
@@ -144,10 +142,10 @@ sélection dans une telle valeur d'attribut ne peut pas être étendue en dehors
 de cet attribut.</p>
 
 <p>Il est également possible d'utiliser le clavier pour sélectionner par la
-structure dans n'importe quelle vue. Pressez la touche <strong>Esc</strong>
-(<strong>F2</strong> sur Windows) pour sélectionner l'élément "parent" dans
-la structure du document. Pressez la touche <strong>ESC</strong>
-(<strong>F2</strong> sur Windows) plusieurs fois pour augmenter d'un niveau
+structure dans n'importe quelle vue. Pressez la touche <code>F2</code> pour
+sélectionner l'élément "parent" dans
+la structure du document. Pressez la touche <code>F2</code> plusieurs fois
+pour augmenter d'un niveau
 la structure sélectionnée jusqu'à sélectionner la racine du document. Il est
 encore possible de sélectionner des éléments "fils" : la touche "raccourci
 clavier par défaut" est <strong>Control-moins</strong> ("-"). Pour

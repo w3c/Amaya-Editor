@@ -45,7 +45,7 @@ l'élément lorsqu'il a été sélectionné ( voir plus loin).</p>
 
 <p>Pour sélectionner un élément entier, placez le point d'insertion n'importe
 où à l'intérieur et appuyez sur <a href="Selecting.html.fr#Selecting1">la
-touche <kbd>Esc</kbd> (<kbd>F2</kbd> sur Windows).</a></p>
+touche <kbd>F2</kbd>.</a></p>
 
 <p>Il est également possible d'effectuer des <a href="#L631">transformations
 de structure</a> plus complexes.</p>

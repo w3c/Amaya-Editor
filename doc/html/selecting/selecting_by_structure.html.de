@@ -53,8 +53,8 @@ schnell große Elemente oder Gruppen von Elementen markieren.</span></p>
 
 <p class="ProcedureCaption">Strukturelemente mit der Tastatur markieren:</p>
 <ul>
-  <li>Ein Element wird mit der Taste <kbd>Esc</kbd> (Unix) oder <kbd>F2</kbd>
-    (Windows) markiert. Drückt man diese Taste mehrmals, dann werden auch
+  <li>Ein Element wird mit <kbd>F2</kbd>
+    markiert. Drückt man diese Taste mehrmals, dann werden auch
     dessen übergeordneten Elemente (und deren Inhalt) markiert.</li>
   <li><kbd>Alt c</kbd> markiert ein Kindelement.</li>
   <li><kbd>Alt n</kbd> markiert das nächste Element auf der gleichen Ebene

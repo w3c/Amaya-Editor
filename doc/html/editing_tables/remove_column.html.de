@@ -40,12 +40,10 @@ Spalte einfügen.</p>
   <li>Alternativ kann man auch in eine beliebige Zelle der gewünschten Spalte
     klicken und mit der Maus die Auswahl bis zu einer anderen Zelle derselben
     Spalte erweitern. Dies bewirkt, dass Amaya in den Spaltenauswahlmodus
-    wechselt. Durch Drücken der <code>F2</code> Taste unter Windows (bzw. der
-    <code>Esc</code> Taste unter Linux) wird die Auswahl auf die gesamte
+    wechselt. Durch Drücken der <code>F2</code>) wird die Auswahl auf die gesamte
     Spalte, welche die beiden Zellen enthält, erweitert. Beispiel: Um in der
     folgenden Tabelle die mittlere Spalte auszuwählen, klickt man in Zelle
-    1.2 und zieht den Cursor in Zelle 2.2 und drückt zweimal <code>F2</code>
-    unter Windows, bzw. <code>Esc</code> unter Linux:</li>
+    1.2 und zieht den Cursor in Zelle 2.2 und drückt zweimal <code>F2</code>:</li>
 </ol>
 
 <table border="1" summary="table">
