@@ -35,10 +35,10 @@ caractéristiques du software. Ce document est organisé comme un livre. Vous
 pouvez utiliser la commande "<a href="MakeBook.html#L1065">Construire un
 livre</a>" pour construire et imprimer la totalité du manuel.</p>
 
-<p>Beaucoup de commandes dans  <strong>Amaya</strong> sont les mêmes que
-celles fournies par  les éditeurs et les processeurs communs. Elles ne sont
-pas présentées ici.  Seuls les aspects spécifiques d' <strong>Amaya</strong>
-sont décrits.</p>
+<p>Beaucoup de commandes  <strong>Amaya</strong> sont les mêmes que celles
+fournies par  les éditeurs et les processeurs communs. Elles ne sont pas
+présentées ici.  Seuls les aspects spécifiques d' <strong>Amaya</strong> sont
+décrits.</p>
 <hr />
 
 <h1>Table des matières</h1>
@@ -161,10 +161,10 @@ sont décrits.</p>
             attribut Style</a></li>
           <li><a href="StyleSheets.html#Creating,">Créer un style générique
             pour un élément ou une classe</a></li>
-          <li><a href="StyleSheets.html#Managing">Diriger des feuilles de
-            style externes CSS</a></li>
-          <li><a href="StyleSheets.html#L1371">Style à travers des éléments
-            HTML</a></li>
+          <li><a href="StyleSheets.html#Managing">Gérer des feuilles de style
+            externes CSS</a></li>
+          <li><a href="StyleSheets.html#L1371">Mettre du style en utilisant 
+            des éléments HTML</a></li>
         </ul>
       </li>
       <li><a href="Attributes.html#Attributes">Editer des attributs</a>
@@ -194,11 +194,12 @@ sont décrits.</p>
     <ul>
       <li><a href="Configure.html#Conventions">Conventions</a>
         <ul>
-          <li><a href="Configure.html#L979">L'annuaire d'Amaya/Config</a></li>
-          <li><a href="Configure.html#AmayaHome">L'annuaire
-          d'AmayaHome</a></li>
-          <li><a href="Configure.html#AmayaTemp">L'annuaire d'
-          AmayaTemp</a></li>
+          <li><a href="Configure.html#L979">Le répertoire 
+          d'Amaya/Config</a></li>
+          <li><a href="Configure.html#AmayaHome">Le répertoire 
+            d'Amaya/Home</a></li>
+          <li><a href="Configure.html#AmayaTemp">Le répertoire d'
+            Amaya/Temp</a></li>
         </ul>
       </li>
       <li><a href="Configure.html#preferences">Les  Menus Préférences</a></li>
@@ -210,15 +211,15 @@ sont décrits.</p>
 
 <h2><a name="L920" id="L920">Démarrer Amaya</a></h2>
 
-<p>Pour démarrer  <strong>Amaya</strong> dans une station  Unix:</p>
+<p>Pour démarrer  <strong>Amaya</strong> sur  une station  Unix:</p>
 <pre>    amaya [-display host] [document]</pre>
 
-<p>Le paramètre [-display host] est optionnel. Il détermine  l'écran d'acceuil
-distant  quand Amaya doit afficher des pages Web. Si ce paramètre est omis,
-Amaya affiche dans l'écran d'accueil local.</p>
+<p>Le paramètre [-display host] est optionnel. Il détermine  l'écran hôte
+lointain  quand Amaya doit afficher des pages Web. Si ce paramètre est omis,
+Amaya affiche dans l'écran hôte local.</p>
 
 <p>Le paramètre <code>[document]</code> est optionnel. C'est le nom de fichier
-ou le URI du premier document.  <strong>Amaya</strong> devrait l'afficher
+ou le URI du premier document qu' <strong>Amaya</strong> devrait afficher
 quand il démarre. Si aucun paramètre n'est donné, un document par défaut est
 présenté. Le document par défaut pourrait être votre  <em>home page</em> (voir
 <a href="Configure.html#L138">comment configurer votre Home Page</a>) ou la
@@ -229,13 +230,13 @@ page de bienvenue d'Amaya.</p>
 <p><strong>Amaya</strong> ne vous permet pas seulement de naviguer des
 documents sur le Web, il vous permet aussi de les éditer et de les <a
 href="Publishing.html#Saving">sauver</a> soit localement soit dans des
-serveurs Web distants. .</p>
+serveurs Web lointains. </p>
 
 <p>Nous tentons de faire Amaya aussi robuste que  possible. Une session
-d'Amaya peut néanmoins faillir. Si cela arrive,  Amaya tente de sauver les
-documents modifiés dans les fichiers d'aide.  Quand l'utilisateur redémarre
-une nouvelle session d'Amaya, la recharge des fichiers  d'aide est
-automatiquement proposée.</p>
+d'Amaya peut néanmoins faillir. Si cela arrive,  Amaya tente de sauver
+couremment les documents modifiés dans les fichiers d'aide.  Quand
+l'utilisateur redémarre une nouvelle session d'Amaya, la recharge des fichiers
+ d'aide est automatiquement proposée.</p>
 
 <p>Chaque section suivante décrit brièvement  comment utiliser une fonction
 spécifique d'Amaya:</p>
@@ -278,8 +279,8 @@ rel="Chapter">Configurer Amaya</a>).</p>
 
 <p>La page sur  <a href="Access.html#Access" rel="Chapter">Accessibilité dans
 Amaya</a> décrit l'accessibilité d'Amaya, et explique comment l'utiliser pour
-produire des pages pouvant être utilisées aussi bien par les non connaisseurs
-que par les connaisseurs.</p>
+produire des pages pouvant être utilisées aussi bien par les gens qui ont des
+incapacités que par ceux qui n'en ont pas. </p>
 <hr />
 
 <p><a name="There" id="There">Il y a également une brève introduction qui
@@ -287,8 +288,8 @@ décrit quelques uns des différents types qui peuvent être utilisés dans Amaya
 (comme les en-têtes, les listes, les citations) et qui explique comment les
 utiliser.</a></p>
 <ul>
-  <li><a href="HTML-elements/infoTypes.html#Informatio"
-    rel="Chapter">Informations types dans  HTML</a></li>
+  <li><a href="HTML-elements/infoTypes.html#Informatio" rel="Chapter">Types
+    information  dans  HTML</a></li>
   <li><a href="HTML-elements/structure.html#HTML" rel="Chapter">Structure du
     document HTML</a></li>
   <li><a href="HTML-elements/headings.html#Heading"
@@ -297,11 +298,10 @@ utiliser.</a></p>
   <li><a href="HTML-elements/address.html#About" rel="Chapter">A propos de
     l'auteur</a></li>
   <li><a href="HTML-elements/inline.html#Inline3" rel="Chapter">Définitions en
-    ligne, citations, code échantillon, insertions et effacements,
-    abréviations, etc</a></li>
+    ligne, citations, sample code, insertions et effacements, abréviations,
+    etc</a></li>
   <li><a href="HTML-elements/40styling.html#Character" rel="Chapter">Eléments
-    Style ( ce qu'il ne faut pas faire et  comment cela devrait être
-    fait...)</a></li>
+    Style ( ce qu'il ne faut pas faire et ce qui doit être fait...)</a></li>
 </ul>
 <hr />
 <address>
