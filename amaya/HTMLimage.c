@@ -357,6 +357,8 @@ void               *extra;
 	      desc->elImage = ctxEl;
 	      ctxEl->currentElement = el;
 	      ctxEl->nextElement = NULL;
+	      ctxEl->callback = callback;
+	      ctxEl->extra = extra;
 	      update = FALSE;	/* the image is not loaded yet */
 #ifdef AMAYA_JAVA
 	      FilesLoading[doc]++;
@@ -404,11 +406,11 @@ void               *extra;
 		      while (ctxEl->nextElement != NULL)
 			ctxEl = ctxEl->nextElement;
 		      ctxEl->nextElement = (ElemImage *) TtaGetMemory (sizeof (ElemImage));
+		      ctxEl->callback = callback;
+		      ctxEl->extra = extra;
 		      ctxEl = ctxEl->nextElement;
 		      ctxEl->currentElement = el;
 		      ctxEl->nextElement = NULL;
-		      ctxEl->callback = callback;
-		      ctxEl->extra = extra;
 		    }
 		}
 	    }
