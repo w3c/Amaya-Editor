@@ -3635,9 +3635,12 @@ void MathPresentAttrCreated (event)
   if (length > 0)
      TtaGiveTextAttributeValue (event->attribute, value, &length);
   TtaGiveAttributeType (event->attribute, &attrType, &attrKind);
-  /* associate a CSS property font-size with the element */
-  MathMLAttrToStyleProperty (event->document, event->element, value,
-			     attrType.AttrTypeNum);
+  /* associate a CSS property with the element */
+  if (attrType.AttrTypeNum == MathML_ATTR_linethickness)
+     MathMLlinethickness (event->document, event->element, value);
+  else
+     MathMLAttrToStyleProperty (event->document, event->element, value,
+			        attrType.AttrTypeNum);
   TtaFreeMemory (value);
 }
  
@@ -3936,6 +3939,25 @@ ThotBool AttrSpacingDelete (event)
   TtaGiveAttributeType (event->attribute, &attrType, &attrKind);
   MathMLSpacingAttr (event->document, event->element, NULL,
 		     attrType.AttrTypeNum);
+  return FALSE; /* let Thot perform normal operation */
+}
+
+/*----------------------------------------------------------------------
+ AttrLinethicknessDelete
+ The user is deleting an attribute linethickness.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool AttrLinethicknessDelete (NotifyAttribute *event)
+#else /* __STDC__*/
+ThotBool AttrLinethicknessDelete (event)
+     NotifyAttribute *event;
+#endif /* __STDC__*/
+{
+  /* ask the CSS handler to remove the effect of property stroke-width */
+  /* in the statement below, "1pt" is meaningless. It's here just to
+     make the CSS parser happy */
+  ParseHTMLSpecificStyle (event->element, TEXT("stroke-width: 1pt"),
+			  event->document, 0, TRUE);
   return FALSE; /* let Thot perform normal operation */
 }
 

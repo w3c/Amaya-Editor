@@ -2604,6 +2604,33 @@ void SetFontfamily (doc, el, value)
 }
 
 /*----------------------------------------------------------------------
+ MathMLlinethickness
+ The MathML attribute linthickness is associated with element el. Generate
+ the corresponding style property for this element. 
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void MathMLlinethickness (Document doc, Element el, STRING value)
+#else /* __STDC__*/
+void MathMLlinethickness (doc, el, value)
+  Document doc;
+  Element el;
+  STRING value;
+#endif /* __STDC__*/
+{
+#define buflen 50
+  CHAR_T           css_command[buflen+20];
+
+  if (ustrcmp (value, TEXT("thin")) == 0)
+     ustrcpy (value, TEXT("1pt"));
+  else if (ustrcmp (value, TEXT("medium")) == 0)
+     ustrcpy (value, TEXT("1pt"));
+  else if (ustrcmp (value, TEXT("thick")) == 0)
+     ustrcpy (value, TEXT("2pt"));
+  usprintf (css_command, TEXT("stroke-width: %s"), value);
+  ParseHTMLSpecificStyle (el, css_command, doc, 0, FALSE);
+}
+
+/*----------------------------------------------------------------------
  MathMLAttrToStyleProperty
  The MathML attribute attr is associated with element el. Generate
  the corresponding style property for this element.
@@ -2618,7 +2645,6 @@ void MathMLAttrToStyleProperty (doc, el, value, attr)
   int attr;
 #endif /* __STDC__*/
 {
-#define buflen 50
   CHAR_T           css_command[buflen+20];
 
   switch (attr)
@@ -2823,6 +2849,7 @@ Document	doc;
        attrType.AttrTypeNum == MathML_ATTR_background_ ||
        attrType.AttrTypeNum == MathML_ATTR_fontsize ||
        attrType.AttrTypeNum == MathML_ATTR_fontfamily ||
+       attrType.AttrTypeNum == MathML_ATTR_linethickness ||
        attrType.AttrTypeNum == MathML_ATTR_lspace ||
        attrType.AttrTypeNum == MathML_ATTR_rspace ||
        attrType.AttrTypeNum == MathML_ATTR_scriptlevel ||
@@ -2848,6 +2875,9 @@ Document	doc;
 	       break;
 	     case MathML_ATTR_fontfamily:
 	       SetFontfamily (doc, el, value);
+	       break;
+	     case MathML_ATTR_linethickness:
+	       MathMLlinethickness (doc, el, value);
 	       break;
 	     case MathML_ATTR_fontsize:
 	     case MathML_ATTR_lspace:

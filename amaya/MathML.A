@@ -146,6 +146,13 @@ ATTRIBUTES
         AttrDelete.Pre ->  AttrSpacingDelete;
         END;
 
+   linethickness:
+	BEGIN
+	AttrCreate.Post -> MathPresentAttrCreated;
+        AttrModify.Post -> MathPresentAttrCreated;
+        AttrDelete.Pre ->  AttrLinethicknessDelete;
+	END;
+
    bevelled:
 	BEGIN
 	AttrCreate.Post -> AttrBevelledChanged;

@@ -61,6 +61,9 @@ extern void MathMLElementComplete ( Element el,
 extern void SetFontfamily ( Document doc,
                             Element el,
                             STRING value );
+extern void MathMLlinethickness ( Document doc,
+                                  Element el,
+                                  STRING value );
 extern void MathMLAttrToStyleProperty ( Document doc,
                                         Element el,
                                         STRING value,
@@ -135,6 +138,9 @@ extern void MathMLElementComplete (/* Element el,
 extern void SetFontfamily (/* Document doc,
                               Element el,
                               STRING value */);
+extern void MathMLlinethickness (/* Document doc,
+                                    Element el,
+                                    STRING value */);
 extern void MathMLAttrToStyleProperty (/* Document doc,
                                           Element el,
                                           STRING value,

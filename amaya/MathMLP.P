@@ -12,7 +12,8 @@ VIEWS
    Math_Alternate_view merge with Alternate_view;
 
 #define SCRIPTSIZEMULTIPLIER 70 %
-#define OPERATOR_SPACE 0.27
+#define SMALLER 85 %
+#define OPERATOR_SPACE 0.25
 #define ROOT_OFFSET 0.6
 #define STRUCT_INDENT 1.5
 #define TAG_FONTSIZE 12 pt
@@ -2287,14 +2288,14 @@ BOXES
 		HorizPos: Left = Enclosing . Left;
 		Height: Creator . Height;
 		Width: 1.1;
-		LineWeight: 1 px;
+		LineWeight: 1 pt;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
 
  Bar:	{ fraction bar }
 	BEGIN
-	LineWeight: 1 pt;
+	LineWeight: Creator =;
 	Height: 0.1;
         Width: Enclosing . Width ;
 	HorizPos: Left = Enclosing . Left;
@@ -2654,12 +2655,25 @@ RULES
 	CreateBefore(MFRAC_S);
 	CreateWith(VerticalLine);
 	CreateFirst (Bar);
+	LineWeight: 1 pt;
 	HorizRef: Enclosed Bar . Bottom + 0.1;
 	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
         if within MFRAC
 		Size: Enclosing * SCRIPTSIZEMULTIPLIER;
         if within BevelledMFRAC
 		Size: Enclosing * SCRIPTSIZEMULTIPLIER;
+        if within Superscript
+		Size: Enclosing * SMALLER;
+        if within Subscript
+		Size: Enclosing * SMALLER;
+        if within Overscript
+		Size: Enclosing * SMALLER;
+        if within Underscript
+		Size: Enclosing * SMALLER;
+        if within MSubscript
+		Size: Enclosing * SMALLER;
+        if within MSuperscript
+		Size: Enclosing * SMALLER;
 	Gather: Yes;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
@@ -2976,8 +2990,8 @@ RULES
 	Size: Enclosing * SCRIPTSIZEMULTIPLIER;
 	HorizRef: * . Top;
 	HorizPos: Left = MultiscriptBase . Right;
-	Height: MultiscriptBase . Height + 1;
-	VertPos: Top = MultiscriptBase . Top - 0.5;
+	Height: MultiscriptBase . Height + 0.6;
+	VertPos: Top = MultiscriptBase . Top - 0.3;
 	IN Math_Structure_view BEGIN
 		Size: Enclosing =;
 		Width: Enclosing . Width;
@@ -2991,8 +3005,8 @@ RULES
 	Size: Enclosing * SCRIPTSIZEMULTIPLIER;
 	HorizRef: * . Top;
 	HorizPos: Right = MultiscriptBase . Left;
-	Height: MultiscriptBase . Height + 1;
-	VertPos: Top = MultiscriptBase . Top - 0.5;
+	Height: MultiscriptBase . Height + 0.6;
+	VertPos: Top = MultiscriptBase . Top - 0.3;
 	IN Math_Structure_view BEGIN
 		Size: Enclosing =;
 		Width: Enclosing . Width;
@@ -3003,7 +3017,7 @@ RULES
    PrescriptPair:
 	BEGIN
 	HorizRef: * . Top;
-	HorizPos: Left = Previous . Right + 0.2;
+	HorizPos: Left = Previous . Right + 0.1;
 	VertPos: Top = Enclosing . Top;
 	Height: Enclosing . Height;
 	IN Math_Structure_view BEGIN
@@ -3015,7 +3029,7 @@ RULES
    PostscriptPair:
 	BEGIN
 	HorizRef: * . Top;
-	HorizPos: Left = Previous . Right + 0.2;
+	HorizPos: Left = Previous . Right + 0.1;
 	VertPos: Top = Enclosing . Top;
 	Height: Enclosing . Height;
 	IN Math_Structure_view BEGIN
