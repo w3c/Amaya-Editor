@@ -315,13 +315,12 @@ void HTTP_headers_set (HTRequest * request, HTResponse * response, void *context
 {
   AHTReqContext  *me;
   HTAtom         *tmp_atom;
-#if 0
-  HTAtom *unk_atom;
-#endif
   char           *tmp_char;
   char            tmp_wchar[MAX_LENGTH];
   HTParentAnchor *anchor;
+#if 0
   ThotBool        use_anchor = FALSE;
+#endif
 
   me =  (AHTReqContext *) HTRequest_context (request);
   anchor = HTRequest_anchor (request);
@@ -336,21 +335,6 @@ void HTTP_headers_set (HTRequest * request, HTResponse * response, void *context
 	 Seems it's more recent */
       tmp_atom = HTAnchor_format (anchor);
 
-#if 0
-      tmp_atom =  HTResponse_format (response);
-      /* @@JK :a complete hack, until I find out how to fix the cache 
-	 return type */
-      unk_atom = HTAtom_for ("www/unknown");
-      if (!tmp_atom || tmp_atom == unk_atom)
-	{
-	  use_anchor = TRUE;
-	  anchor = HTRequest_anchor (request);
-	  tmp_atom = HTAnchor_format (anchor);
-	}
-      else
-	use_anchor = FALSE;
-#endif
-      
       if (tmp_atom)
 	tmp_char = HTAtom_name (tmp_atom);
       else
@@ -398,6 +382,10 @@ void HTTP_headers_set (HTRequest * request, HTResponse * response, void *context
       me->http_headers.charset = TtaWCSdup (tmp_wchar);
     }
 
+  /* copy the content length */
+  snprintf (tmp_wchar, sizeof (tmp_wchar), "%d", HTAnchor_length (anchor));
+  me->http_headers.content_length = TtaStrdup (tmp_wchar);
+
   /* copy the reason */
   tmp_char = HTResponse_reason (response);
   if (tmp_char)
@@ -418,6 +406,9 @@ static void HTTP_headers_delete (AHTHeaders me)
 
   if (me.charset)
     TtaFreeMemory (me.charset);
+
+  if (me.content_length)
+    TtaFreeMemory (me.content_length);
   
   if (me.reason)
     TtaFreeMemory (me.reason);
@@ -442,6 +433,9 @@ char   *HTTP_headers (AHTHeaders *me, AHTHeaderName param)
       break;
     case AM_HTTP_CHARSET:
       result = me->charset;
+      break;
+    case AM_HTTP_CONTENT_LENGTH:
+      result = me->content_length;
       break;
     case AM_HTTP_REASON:
       result = me->reason;

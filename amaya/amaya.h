@@ -65,7 +65,8 @@ typedef enum _AHTHeaderName
   {
     AM_HTTP_CONTENT_TYPE = 0,
     AM_HTTP_CHARSET = 1,
-    AM_HTTP_REASON = 2
+    AM_HTTP_CONTENT_LENGTH = 2,
+    AM_HTTP_REASON = 3
   } 
 AHTHeaderName;
 
@@ -75,6 +76,7 @@ typedef struct _AHTHeaders
   {
     CHAR_T *content_type;
     CHAR_T *charset;
+    CHAR_T *content_length;
     CHAR_T *reason;
   }
 AHTHeaders;
@@ -386,6 +388,7 @@ typedef struct _DocumentMetaDataElement
   CHAR_T    *form_data;        /* form data associated with a URL */
   CHAR_T    *content_type;     /* content type returned by the server */
   CHAR_T    *charset;          /* charset returned by the server */
+  CHAR_T    *content_length;   /* content length returned by the server */
   ClickEvent method;           /* method used to send this data */
   ThotBool   put_default_name; /* URL name was concatenated with DEFAULT_NAME*/
   ThotBool   xmlformat;        /* the document should be exported in xml format */

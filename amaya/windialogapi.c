@@ -2991,8 +2991,8 @@ static void ResetDocInfo (ThotWindow hwnDlg)
 LRESULT CALLBACK DocumentInfoDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 {
   Document    doc;
-  CHAR_T     *charsetName = NULL;
-
+  CHAR_T     *content;
+  
   switch (msg)
     {
     case WM_INITDIALOG:
@@ -3009,29 +3009,34 @@ LRESULT CALLBACK DocumentInfoDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam
       /* document URL */
       SetDlgItemText (hwnDlg, IDC_DIURL, TEXT ("LOCATION"));
       if (DocumentURLs[doc] != NULL)
-	SetDlgItemText (hwnDlg, IDC_DIURL_VAL, DocumentURLs[doc]);
+	content = DocumentURLs[doc];
       else
-	SetDlgItemText (hwnDlg, IDC_DIURL_VAL, TEXT("Unknown"));
+	content = TEXT("Unknown");
+      SetDlgItemText (hwnDlg, IDC_DIURL_VAL, content);
 
       /* MIME type */
       SetDlgItemText (hwnDlg, IDC_DICONTENTTYPE, TEXT ("MIME TYPE"));
       if (DocumentMeta[doc]->content_type != NULL)
-	SetDlgItemText (hwnDlg, IDC_DICONTENTTYPE_VAL, 
-			DocumentMeta[doc]->content_type);
+	content  = DocumentMeta[doc]->content_type;
       else
-	SetDlgItemText (hwnDlg, IDC_DICONTENTTYPE_VAL, TEXT("Unknown"));
+	content = TEXT("Unknown");
+      SetDlgItemText (hwnDlg, IDC_DICONTENTTYPE_VAL, content);
 
       /* charset */
       SetDlgItemText (hwnDlg, IDC_DICHARSET, TEXT ("CHARSET"));
-      charsetName = DocumentMeta[doc]->charset;
-      if (charsetName != NULL)
-	SetDlgItemText (hwnDlg, IDC_DICHARSET_VAL, charsetName);
+      if (DocumentMeta[doc]->charset != NULL)
+	content = DocumentMeta[doc]->charset;
       else
-	SetDlgItemText (hwnDlg, IDC_DICHARSET_VAL, TEXT("Unknown"));
+	content = TEXT("Unknown");
+      SetDlgItemText (hwnDlg, IDC_DICHARSET_VAL, content);
 
       /* content length */
       SetDlgItemText (hwnDlg, IDC_DICONTENTLEN, TEXT ("CONTENT LENGTH"));
-      SetDlgItemText (hwnDlg, IDC_DICONTENTLEN_VAL, TEXT("Unknown"));
+      if (DocumentMeta[doc]->content_length != NULL)
+	content = DocumentMeta[doc]->content_length;
+      else
+	content = TEXT("Unknown");
+      SetDlgItemText (hwnDlg, IDC_DICONTENTLEN_VAL, content);
       break;
 
     case WM_CLOSE:

@@ -321,6 +321,11 @@ void                DocumentMetaClear (DocumentMetaDataElement *me)
       TtaFreeMemory (me->charset);
       me->charset = NULL;
     }
+  if (me->content_length)
+    {
+      TtaFreeMemory (me->content_length);
+      me->content_length = NULL;
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -331,7 +336,7 @@ void                DocumentInfo (Document document, View view)
 {
 #ifndef _WINDOWS
   CHAR_T         *content;
-  CHAR_T         *charsetName = NULL;
+
   /* Main form */
    TtaNewSheet (BaseDialog + DocInfoForm, TtaGetViewFrame (document, 1),
 		TEXT ("Document Information"),
@@ -387,19 +392,22 @@ void                DocumentInfo (Document document, View view)
 		BaseDialog + DocInfoForm, content);
 
    /* Charset */
-   charsetName = DocumentMeta[document]->charset;
-   if (charsetName != NULL)
-     content = charsetName;
+   if (DocumentMeta[document]->charset != NULL)
+     content = DocumentMeta[document]->charset;
    else
      content = TEXT("Unknown");
    TtaNewLabel (BaseDialog + DocInfoCharset,
 		BaseDialog + DocInfoForm, content);
 
    /* Content Length */
-   content = TEXT("Unknown");
+   if (DocumentMeta[document]->content_length != NULL)
+     content = DocumentMeta[document]->content_length;
+   else
+     content = TEXT("Unknown");
    TtaNewLabel (BaseDialog + DocInfoContent,
 		BaseDialog + DocInfoForm, content);
 
+   /* end of dialogue */
    TtaNewLabel (BaseDialog + DocInfoContent2,
 		BaseDialog + DocInfoForm,
 		"___________________________________________");
@@ -2547,20 +2555,21 @@ static Document  LoadDocument (Document doc, char *pathname,
       else if (charsetname[0] != EOS)
 	DocumentMeta[newdoc]->charset = TtaWCSdup (charsetname);
 
-      /* @@@ JK: Test do we need to copy the charset? @@@ */
-      /* copy some headers to the metadata */
+      /*
+      ** copy some HTTP headers to the metadata 
+      */
+      /* content-type */
       if (http_content_type)
 	DocumentMeta[newdoc]->content_type = TtaWCSdup (http_content_type);
       else
 	DocumentMeta[newdoc]->content_type = NULL;
-      /*
-	if (charEncoding)
-	DocumentMeta[newdoc]->charset = TtaWCSdup (charEncoding);
-	else
-	DocumentMeta[newdoc]->charset = NULL;
-      */
-      /* @@@ JK: Test @@@ */
-      
+      /* content-length */
+      s = HTTP_headers (http_headers, AM_HTTP_CONTENT_LENGTH);
+      if (s)
+	DocumentMeta[newdoc]->content_length = TtaWCSdup (s);
+      else
+	DocumentMeta[newdoc]->content_length = NULL;
+
       if (TtaGetViewFrame (newdoc, 1) != 0)
 	/* this document is displayed */
 	{
