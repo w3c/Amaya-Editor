@@ -1365,9 +1365,9 @@ void TtaSetStatus (Document document, View view, char *text, char *name)
 	       /* text est un format */
 	       sprintf (s, text, name);
 	     else
-	       strncpy (s, text, MAX_LENGTH);
+	       strncpy (s, text, length);
 
-	     SendMessage (FrameTable[frame].WdStatus, SB_SETTEXT, (WPARAM) 0, (LPARAM) & s[0]);
+	     SendMessage (FrameTable[frame].WdStatus, SB_SETTEXT, (WPARAM) 0, (LPARAM) s);
 	     SendMessage (FrameTable[frame].WdStatus, WM_PAINT, (WPARAM) 0, (LPARAM) 0);
 #else  /* _WINDOWS */
 #ifndef _GTK
