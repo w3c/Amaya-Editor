@@ -16,6 +16,7 @@
 #include "JavaTypes.h"
 #include "w3c_thotlib_Action.h"
 #include "w3c_thotlib_Extra.h"
+#include "w3c_thotlib_ButtonCallback.h"
 #include "w3c_amaya_HTTPRequest.h"
 
 #include "JavaTypes_f.h"
@@ -541,6 +542,157 @@ w3c_thotlib_Extra_TtaCreateDescentWithContent( /* struct Hw3c_thotlib_Extra* non
     return(CPtr2JavaLong(el));
 }
 
+/****************************************************************
+ *								*
+ * 	Handling of support for new Button from Java		*
+ *								*
+ ****************************************************************/
+#define MAX_JAVA_BUTTONS 5
+#define MAX_BUTTONS	 30
+
+typedef void (*ButtonCCallback)(Document document, View view);
+
+static int JavaButtonsInitialized = 0;
+static int nbJavaButtons = 0;
+static struct Hw3c_thotlib_ButtonCallback 
+                       *ButtonJavaCallbacks[MAX_JAVA_BUTTONS];
+static ButtonCCallback *ButtonCCallbacks[MAX_JAVA_BUTTONS];
+static char            *ButtonImageName[MAX_JAVA_BUTTONS];
+
+/*
+ * This register a Java ButtonCallback object.
+ */
+
+int registerJavaButtonCallback(Hw3c_thotlib_ButtonCallback *callback) {
+    int i;
+
+    /* first find whether the Java callback is registered */
+    for (i=0;i < nbJavaButtons;i++)
+        if (ButtonJavaCallbacks[i] == callback) return(i);
+
+    /* check for overflow */
+    if (nbJavaButtons >= MAX_JAVA_BUTTONS) {
+        fprintf(stderr, "MAX_JAVA_BUTTONS %d overflow\n", MAX_JAVA_BUTTONS);
+	return(-1);
+    }
+
+    /*
+     * Reference the Java object from the C space and ensure
+     * persistancy of the Java object .
+     */
+    i = nbJavaButtons++;
+    ButtonJavaCallbacks[i] = callback;
+    do_execute_java_class_method("w3c.thotlib.Application",
+	    "makePersistant", "(Ljava/lang/Object;)V", callback);
+    return(i);
+}
+
+/*
+ * This check for the existence of a button 
+ */
+
+int hasJavaButton(Document document, int callback) {
+    int i;
+
+    /* Now, check whether this document has a button with this callback */
+    for (i = 0;i < MAX_BUTTONS;i++)
+        if (TtaGetButtonCallback(document, 1, i) == ButtonCCallbacks[callback])
+	    return(i);
+    return(-1);
+}
+
+#define NewButtonCCallback(no)					\
+static void ButtonCCallback##no( Document document, View view) {\
+    ButtonCCallbackDispatcher(no, document, view);}
+
+/*
+ * This dispatcher is called each time a Java button is pressed.
+ */
+void ButtonCCallbackDispatcher(int no, Document document, View view) {
+    if ((no < 0) || (no >= MAX_JAVA_BUTTONS)) return;
+    if (ButtonJavaCallbacks[no] == NULL) return;
+
+    do_execute_java_method(0, ButtonJavaCallbacks[no],
+                           "callback", "(II)V", 0, 0,
+			   document, view);
+}
+
+NewButtonCCallback(0)
+NewButtonCCallback(1)
+NewButtonCCallback(2)
+NewButtonCCallback(3)
+NewButtonCCallback(4)
+
+/*
+ * initialize the button handler arrays.
+ */
+void initializeJavaButtons(void) {
+    int i;
+
+    if (JavaButtonsInitialized) return;
+    for (i = 0;i < MAX_JAVA_BUTTONS;i++) {
+        ButtonJavaCallbacks[i] = 0;
+        ButtonImageName[i] = NULL;
+    }
+    ButtonCCallbacks[0] = ButtonCCallback0;
+    ButtonCCallbacks[1] = ButtonCCallback1;
+    ButtonCCallbacks[2] = ButtonCCallback2;
+    ButtonCCallbacks[3] = ButtonCCallback3;
+    ButtonCCallbacks[4] = ButtonCCallback4;
+    JavaButtonsInitialized = 1;
+}
+ 
+/*
+ * This method install a new button asked by Java code.
+ */
+jint
+w3c_thotlib_Extra_TtaNewButton(jint document,
+                 struct Hw3c_thotlib_ButtonCallback *jcallback,
+		 struct Hjava_lang_String* jimgname,
+		 struct Hjava_lang_String* jinfos)
+{
+    char infos[300] = "";
+    char imgname[300];
+    Pixmap pixmap;
+    int callback;
+    int button;
+
+    if (!JavaButtonsInitialized) initializeJavaButtons();
+
+    callback = registerJavaButtonCallback(jcallback);
+    if (callback < 0) return(-1);
+
+    /* is the document ok ? */
+    if ((document <= 0) || (document > 10)) document = 1;
+
+    /* has this document already this new button */
+    button = hasJavaButton(document, callback);
+    if (button >= 0) return(button);
+
+    /* convert the string(s) to C format */
+    if (jinfos != NULL)
+	javaString2CString(jinfos, infos, sizeof(infos));
+    javaString2CString(jimgname, imgname, sizeof(imgname));
+
+    /* Search the pixmap */
+    pixmap = TtaGetImage(imgname);
+    if (pixmap == NULL) {
+        fprintf(stderr, "TtaNewButton : unregistered image name %s\n",
+	        imgname);
+	return(-1);
+    }
+
+    /* Register the callback and add the button */
+    if (infos[0] == '\0')
+	button = TtaAddButton (document, 1, pixmap,
+	                       ButtonCCallbacks[callback], NULL);
+    else	
+	button = TtaAddButton (document, 1, pixmap,
+			       ButtonCCallbacks[callback], infos);
+
+    return(button);
+}
+
 
 /*
  * Java to C function Ttaxxx stub.
@@ -597,6 +749,8 @@ void register_w3c_thotlib_Extra_stubs(void)
 	                w3c_thotlib_Extra_TtaCreateDescent);
         addNativeMethod("w3c_thotlib_Extra_TtaCreateDescentWithContent",
 	                w3c_thotlib_Extra_TtaCreateDescentWithContent);
+        addNativeMethod("w3c_thotlib_Extra_TtaNewButton",
+	                w3c_thotlib_Extra_TtaNewButton);
 
         addNativeMethod("w3c_amaya_HTTPRequest_Callback",
 	                w3c_amaya_HTTPRequest_Callback);

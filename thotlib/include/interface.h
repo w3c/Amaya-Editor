@@ -75,6 +75,20 @@ extern void         TtaSetMainLoop (ExternalInitMainLoop init,
 extern int          TtaAddButton (Document document, View view, Pixmap icon, void (*procedure) (), char *info);
 
 /*----------------------------------------------------------------------
+   TtaGetButtonCallback
+
+   Get the callback of a button in a document view.
+   Returns the callback if it exists
+           NULL if it doesn't exists
+
+   Parameters:
+   document: the concerned document.
+   view: the concerned view.
+   index: the index.
+  ----------------------------------------------------------------------*/
+extern void *TtaGetButtonCallback (Document document, View view, int index);
+
+/*----------------------------------------------------------------------
    TtaSwitchButton
 
    Change the status of the button entry in a document view.
@@ -330,6 +344,7 @@ extern void         TtaSetMainLoop ( /* ExternalInitMainLoop init,
 				    ExternalFetchAvailableEvent fetchavail */ );
 
 extern int          TtaAddButton ( /*Document document, View view, Pixmap icon, void (*procedure) (), char *info */ );
+extern void        *TtaGetButtonCallback ( /*Document document, View view, int index */);
 extern void         TtaSwitchButton ( /*Document document, View view, int index */ );
 extern void         TtaChangeButton ( /*Document document, View view, int index, Pixmap picture */ );
 extern int          TtaAddTextZone ( /*Document document, View view, char *label, boolean editable, void (*procedure) () */ );

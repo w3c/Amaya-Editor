@@ -113,6 +113,14 @@ w3c_thotlib_Element.h : $(THOTDIR)/classes/w3c/thotlib/Element.java $(COMPILERS)
 	@echo "Producing header for class Element"
 	$(KAFFEH) w3c.thotlib.Element
 
+w3c_thotlib_ButtonCallback.h : $(THOTDIR)/classes/w3c/thotlib/ButtonCallback.java $(COMPILERS)
+	@echo
+	@echo "Compiling Java class ButtonCallback"
+	$(JAVAC) w3c/thotlib/ButtonCallback.java
+	@echo
+	@echo "Producing header for class ButtonCallback"
+	$(KAFFEH) w3c.thotlib.ButtonCallback
+
 w3c_amaya_HTTPRequest.h : $(THOTDIR)/classes/w3c/amaya/HTTPRequest.java $(COMPILERS)
 	@echo
 	@echo "Compiling Amaya class HTTPRequest"

@@ -78,6 +78,11 @@ w3c_thotlib_Element.h :
 	@echo "Producing header for class Element"
 	$(KAFFEH) w3c.thotlib.Element
 
+w3c_thotlib_ButtonCallback.h : 
+	@echo
+	@echo "Producing header for class ButtonCallback"
+	$(KAFFEH) w3c.thotlib.ButtonCallback
+
 w3c_amaya_HTTPRequest.h :
 	@echo
 	@echo "Producing header for class HTTPRequest"

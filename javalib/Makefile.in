@@ -142,6 +142,7 @@ w3c_thotlib_stubs = \
     w3c_thotlib_APIDialog.h \
     w3c_thotlib_APILibMsg.h \
     w3c_thotlib_APIAppAction.h \
+    w3c_thotlib_ButtonCallback.h \
     w3c_thotlib_Element.h \
     w3c_thotlib_SSchema.h \
     w3c_thotlib_Document.h \

@@ -48,6 +48,7 @@ extern void addNativeMethod(char*, void*);
 #include "w3c_thotlib_PRule.h"
 #include "w3c_thotlib_Language.h"
 #include "w3c_thotlib_IntPtr.h"
+#include "w3c_thotlib_ButtonCallback.h"
 
 /*
  * Includes auto-generated interface to stubs.

@@ -1482,6 +1482,51 @@ char               *info;
 
 
 /*----------------------------------------------------------------------
+   TtaGetButtonCallback
+
+   Get the callback of a button in a document view.
+   Returns the callback if it exists
+           NULL if it doesn't exists
+
+   Parameters:
+   document: the concerned document.
+   view: the concerned view.
+   index: the index.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void *              TtaGetButtonCallback (Document document, View view, int index)
+#else  /* __STDC__ */
+void *              TtaGetButtonCallback (document, view, index)
+Document            document;
+View                view;
+int                 index;
+
+#endif /* __STDC__ */
+{
+   int                 frame;
+
+   UserErrorCode = 0;
+   /* verifie le parametre document */
+   if (document == 0 && view == 0)
+      return(NULL);
+   else
+     {
+	frame = GetWindowNumber (document, view);
+	if (frame == 0 || frame > MAX_FRAME)
+	   return(NULL);
+	else if (FrameTable[frame].WdFrame != 0)
+	  {
+	     if (index >= MAX_BUTTON || index <= 0
+		 || FrameTable[frame].Button[index] == 0)
+		return(FrameTable[frame].Call_Button[index]);
+	     else
+	        return(NULL);
+	  }
+     }
+}
+
+
+/*----------------------------------------------------------------------
    TtaSwitchButton
 
    Change the status of the button entry in a document view.
