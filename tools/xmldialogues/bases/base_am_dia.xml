@@ -136,7 +136,7 @@
 	<message xml:lang="tr">Yeni</message>
 	<message xml:lang="es">Nuevo</message>
 </label>
-<label define="BXhtml">
+<label define="BHtml">
 	<message xml:lang="en">New XHTML document...</message>
 	<message xml:lang="fr">Nouveau document XHTML...</message>
 	<message xml:lang="de">Leer...</message>
