@@ -172,7 +172,7 @@ PtrAbstractBox     *pAbFootTable;
 	 /* cette regle s'applique a un pave de presentation */
 	{
 	   pEl = pAb->AbElement;
-	   if (TypeHasException (EXC_ID_FootTable, position->PoTypeRefElem,
+	   if (TypeHasException (EXC_ID_FootTable, position->PoRefIdent,
 				 pEl->ElStructSchema))
 	      /* la regle exprime une position par rapport a un element */
 	      /* Bas_Table */
@@ -356,9 +356,9 @@ PtrDocument         pDoc;
 	     pRule = SearchRulepAb (pDoc, pAb, &pSPR, PtHeight, FnAny, TRUE, &pAttr);
 	     if (pRule->PrDimRule.DrPosition)
 		/* c'est une hauteur elastique */
-		if (pRule->PrDimRule.DrPosRule.PoRefElem)
+		if (pRule->PrDimRule.DrPosRule.PoRefKind == RkElType)
 		   if (TypeHasException (EXC_ID_FootTable,
-					 pRule->PrDimRule.DrPosRule.PoTypeRefElem, pEl->ElStructSchema))
+					 pRule->PrDimRule.DrPosRule.PoRefIdent, pEl->ElStructSchema))
 		      /* la regle exprime une position par rapport a un */
 		      /* element FootTable */
 		      /*c'est bien un filet vertical, on reapplique la regle */

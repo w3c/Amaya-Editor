@@ -43,16 +43,16 @@
 #define MenuMaths 1
 #define MAX_MATHS  2
 
-static Pixmap       iconMath;
-static Pixmap       mIcons[14];
-static int          MathsDialogue;
-static boolean      InitMaths;
+static Pixmap	iconMath;
+static Pixmap	mIcons[14];
+static int	MathsDialogue;
+static boolean	InitMaths;
+static boolean	IsLastDeletedElement = FALSE;
+static Element	LastDeletedElement = NULL;
 
 #ifdef _WINDOWS
 #define iconMath 21 
 #endif /* _WINDOWS */
-
-
 
 /*----------------------------------------------------------------------
    SplitTextInMathML
@@ -126,6 +126,8 @@ Attribute	attr;
 ElementType	elType;
 AttributeType	attrType;
 
+     if (*el == NULL)
+       return;
      elType = TtaGetElementType (*el);
      if (elType.ElTypeNum == MathML_EL_Construct)
 	{
@@ -164,14 +166,14 @@ AttributeType	attrType;
 boolean		createConstruct;
 
      placeholderEl = NULL;
+     createConstruct = FALSE;
      elType = TtaGetElementType (el);
 
      if (elType.ElTypeNum == MathML_EL_Construct)
 	{
         attrType.AttrSSchema = elType.ElSSchema;
         attrType.AttrTypeNum = MathML_ATTR_placeholder;
-	attr = TtaGetAttribute (el, attrType);
-	if (attr != NULL)
+	attr = TtaGetAttribute (el, attrType);	if (attr != NULL)
 	   /* this element is a placeholder. Delete its next or previous
 	      siblings if they are placeholders too */
 	   {	
@@ -183,6 +185,9 @@ boolean		createConstruct;
 	   DeleteIfPlaceholder (&sibling, doc);
 	   }
 	}
+     else if (elType.ElTypeNum == MathML_EL_MO)
+	/* a MO element that contains a single SYMBOL needs a placeholder */
+	createConstruct = ElementNeedsPlaceholder (el);
      else if (elType.ElTypeNum == MathML_EL_MROW ||
 	 elType.ElTypeNum == MathML_EL_MROOT ||
 	 elType.ElTypeNum == MathML_EL_MSQRT ||
@@ -195,13 +200,14 @@ boolean		createConstruct;
 	 elType.ElTypeNum == MathML_EL_MUNDEROVER ||
 	 elType.ElTypeNum == MathML_EL_MMULTISCRIPTS)
         /* this element accepts a Construct as its neighbour */
+	createConstruct = TRUE;
+     if (createConstruct)
 	{
 	sibling = el;
 	if (before)
 	   TtaPreviousSibling (&sibling);
 	else
 	   TtaNextSibling (&sibling);
-	createConstruct = TRUE;
 	if (sibling != NULL)
 	   if (!ElementNeedsPlaceholder (sibling))
 	      createConstruct = FALSE;
@@ -209,7 +215,12 @@ boolean		createConstruct;
 	   {
 	   elType.ElTypeNum = MathML_EL_Construct;
 	   placeholderEl = TtaNewElement (doc, elType);
+	   /* do not check the Thot abstract tree against the structure */
+	   /* schema while inserting the Placeholder */
+	   TtaSetStructureChecking (0, doc);
 	   TtaInsertSibling (placeholderEl, el, before, doc);
+	   /* resume structure checking */
+	   TtaSetStructureChecking (1, doc);
            attrType.AttrSSchema = elType.ElSSchema;
            attrType.AttrTypeNum = MathML_ATTR_placeholder;
            attr = TtaNewAttribute (attrType);
@@ -1095,14 +1106,16 @@ static int GetCharType (c, alphabet)
    Set attributes of element el according to its content.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void MathSetAttributes (Element el, Document doc)
+static void MathSetAttributes (Element el, Document doc, Element* selEl)
 #else /* __STDC__*/
-static void MathSetAttributes (el, doc)
+static void MathSetAttributes (el, doc, selEl)
      Element el;
      Document doc;
+     Element* selEl;
 #endif /* __STDC__*/
 {
-  ElementType	elType;
+  ElementType	elType, parentType;
+  Element	parent, grandParent;
 
   elType = TtaGetElementType (el);
   if (elType.ElTypeNum == MathML_EL_MI)
@@ -1112,7 +1125,23 @@ static void MathSetAttributes (el, doc)
      /* TO DO ******/
      }
   if (elType.ElTypeNum == MathML_EL_MO)
+     {
      SetAddspaceAttr (el, doc);
+     parent = TtaGetParent (el);
+     if (parent != NULL)
+	{
+	parentType = TtaGetElementType (parent);
+	if (parentType.ElTypeNum != MathML_EL_Base &&
+	    parentType.ElTypeNum != MathML_EL_UnderOverBase)
+	   SetVertStretchAttr (el, doc, 0, selEl);
+	else
+	   {
+	   grandParent = TtaGetParent (parent);
+	   if (grandParent != NULL)
+	      SetVertStretchAttr (grandParent, doc, parentType.ElTypeNum, selEl);
+	   }
+	}
+     }
   else
      RemoveAttr (el, doc, MathML_ATTR_addspace);
   if (elType.ElTypeNum == MathML_EL_MI)
@@ -1155,7 +1184,7 @@ static void MergeMathEl (el, el2, before, doc)
      textEl2 = nextEl;
      }
   TtaDeleteTree (el2, doc);
-  MathSetAttributes (el, doc);
+  MathSetAttributes (el, doc, NULL);
 }
 
 /*----------------------------------------------------------------------
@@ -1253,7 +1282,8 @@ static Element ClosestLeaf (el, pos)
    ParseMathString
    The content of an element MTEXT, MI, MO, or MN, has been modified
    or created.
-   Parse the new content and create the appropriate MI, MO, MN elements.
+   Parse the new content and create the appropriate MI, MO, MN elements
+   according to the new contents.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void ParseMathString (Element theText, Element theElem, Document doc)
@@ -1266,8 +1296,7 @@ static void ParseMathString (theText, theElem, doc)
 
 {
   Element	el, selEl, prevEl, nextEl, textEl, newEl, lastEl,
-		firstEl, newSelEl, prev, next, parent, UnderOverComp,
-		placeholderEl;
+		firstEl, newSelEl, prev, next, parent, placeholderEl;
   ElementType	elType, elType2;
   SSchema	MathMLSchema;
   int		firstSelChar, lastSelChar, newSelChar, len, totLen, i, j,
@@ -1285,6 +1314,7 @@ static void ParseMathString (theText, theElem, doc)
 
   elType = TtaGetElementType (theElem);
   MathMLSchema = elType.ElSSchema;
+
   prevEl = NULL;
   el = theElem;
   TtaPreviousSibling (&el);
@@ -1419,15 +1449,37 @@ static void ParseMathString (theText, theElem, doc)
     for (i = 1; i <= totLen; i++)
      if (mathType[i] != mathType[i-1] ||
 	 language[i] != language[i-1] ||
+	 mathType[i-1] == MathML_EL_MO ||
 	 i == totLen)
        /* create a new element */
        {
        if (lastEl == NULL)
 	  {
-	  newEl = theElem;
 	  elType = TtaGetElementType (theElem);
-	  if (elType.ElTypeNum != mathType[i-1])
+	  if (elType.ElTypeNum != mathType[i-1] ||
+	      mathType[i-1] == MathML_EL_MO)
 	     {
+	     prev = theText;
+	     TtaPreviousSibling (&prev);
+	     if (prev != NULL)
+		{
+		textEl = prev;
+		TtaPreviousSibling (&prev);
+		newEl = TtaNewElement (doc, elType);
+		TtaInsertSibling (newEl, theElem, TRUE, doc);
+		prevEl = newEl;
+		TtaRemoveTree (textEl, doc);
+		TtaInsertFirstChild (&textEl, newEl, doc);
+		while (prev != NULL)
+		   {
+		   next = textEl;
+		   textEl = prev;
+		   TtaPreviousSibling (&prev);
+		   TtaRemoveTree (textEl, doc);
+		   TtaInsertSibling (textEl, next, TRUE, doc);
+		   }
+		MathSetAttributes (newEl, doc, &newSelEl);
+		}
 	     prev = theElem;
 	     TtaPreviousSibling (&prev);
 	     if (prev == NULL)
@@ -1446,6 +1498,28 @@ static void ParseMathString (theText, theElem, doc)
 	     else
 	        TtaInsertFirstChild (&theElem, parent, doc);	     
 	     }
+	  next = theText;
+	  TtaNextSibling (&next);
+	  if (next != NULL)
+	     {
+	     textEl = next;
+	     TtaNextSibling (&next);
+	     newEl = TtaNewElement (doc, elType);
+	     TtaInsertSibling (newEl, theElem, FALSE, doc);
+	     nextEl = newEl;
+	     TtaRemoveTree (textEl, doc);
+	     TtaInsertFirstChild (&textEl, newEl, doc);
+	     while (next != NULL)
+		{
+	        prev = textEl;
+		textEl = next;
+		TtaNextSibling (&next);
+		TtaRemoveTree (textEl, doc);
+		TtaInsertSibling (textEl, prev, FALSE, doc);
+		}
+	     MathSetAttributes (newEl, doc, &newSelEl);
+	     }
+	  newEl = theElem;
 	  textEl = theText;
 	  firstEl = theElem;
 	  }
@@ -1469,7 +1543,6 @@ static void ParseMathString (theText, theElem, doc)
        TtaSetTextContent (textEl, &text[start], language[start], doc);
        text[j] = c;
        lastEl = newEl;
-       MathSetAttributes (newEl, doc);
        if (newSelEl != NULL)
 	  {
 	  newSelEl = textEl;
@@ -1479,71 +1552,72 @@ static void ParseMathString (theText, theElem, doc)
 	     else
 		newSelChar -= start;
 	  }
+       MathSetAttributes (newEl, doc, &newSelEl);
        start = i;
+
+       if (mathType[i-1] == MathML_EL_MO)
+	  /* the new element is an operator */
+	  {
+	  /* if the new element contains a single SYMBOL, placeholders may
+	     be needed before or after that operator */
+	  placeholderEl = InsertPlaceholder (newEl, TRUE, doc);
+	  placeholderEl = InsertPlaceholder (newEl, FALSE, doc);
+	  /* the new contents may be an horizontally stretchable symbol */
+	  if (newEl != NULL)
+	    {
+	    parent = TtaGetParent (newEl);
+	    elType = TtaGetElementType (parent);
+	    if (elType.ElTypeNum == MathML_EL_UnderOverBase ||
+		elType.ElTypeNum == MathML_EL_Underscript ||
+		elType.ElTypeNum == MathML_EL_Overscript)
+	       SetSingleHorizStretchAttr (parent, doc, &newSelEl);
+	    }
+	  }
        }
 
   /* try to merge the first element processed with its previous sibling */
   if (prevEl != NULL && firstEl != NULL)
     {
     elType = TtaGetElementType (prevEl);
-    elType2 = TtaGetElementType (firstEl);
-    if (elType.ElTypeNum == elType2.ElTypeNum &&
-        elType.ElSSchema == elType2.ElSSchema)
-       {
-       if (newSelEl == prevEl)
-	  newSelEl = firstEl;
-       else if (newSelEl == firstEl)
-	  newSelChar += TextLength (prevEl);
-       MergeMathEl (firstEl, prevEl, TRUE, doc);
+    if (elType.ElTypeNum != MathML_EL_MO)
+      /* Don't merge operators */
+      {
+      elType2 = TtaGetElementType (firstEl);
+      if (elType.ElTypeNum == elType2.ElTypeNum &&
+          elType.ElSSchema == elType2.ElSSchema)
+         {
+         if (newSelEl == prevEl)
+	    newSelEl = firstEl;
+         else if (newSelEl == firstEl)
+	    newSelChar += TextLength (prevEl);
+         MergeMathEl (firstEl, prevEl, TRUE, doc);
+	 }
        }
     }
   /* try to merge the last element processed with its next sibling */
   if (nextEl != NULL && lastEl != NULL)
     {
     elType = TtaGetElementType (nextEl);
-    elType2 = TtaGetElementType (lastEl);
-    if (elType.ElTypeNum == elType2.ElTypeNum &&
-        elType.ElSSchema == elType2.ElSSchema)
-       {
-       if (newSelEl == nextEl)
-	  {
-	  newSelEl = lastEl;
-	  newSelChar += TextLength (lastEl);
-	  }
-       MergeMathEl (lastEl, nextEl, FALSE, doc);
+    if (elType.ElTypeNum != MathML_EL_MO)
+      /* Don't merge operators */
+      {
+      elType2 = TtaGetElementType (lastEl);
+      if (elType.ElTypeNum == elType2.ElTypeNum &&
+          elType.ElSSchema == elType2.ElSSchema)
+         {
+         if (newSelEl == nextEl)
+	    {
+	    newSelEl = lastEl;
+	    newSelChar += TextLength (lastEl);
+	    }
+         MergeMathEl (lastEl, nextEl, FALSE, doc);
+	 }
        }
     }
 
   /* Create a MROW element that encompasses the new elements if necessary */
   if (firstEl != NULL)
     CreateParentMROW (firstEl, doc);
-
-  /* the new contents may be an horizontally stretchable symbol */
-  if (firstEl != NULL)
-    {
-    elType = TtaGetElementType (firstEl);
-    elType.ElTypeNum = MathML_EL_UnderOverBase;
-    UnderOverComp = TtaGetTypedAncestor (firstEl, elType);
-    if (UnderOverComp != NULL)
-       /* the new content is in a UnderOverBase */
-       SetSingleHorizStretchAttr (UnderOverComp, doc, &newSelEl);
-    else
-       {
-       elType.ElTypeNum = MathML_EL_Underscript;
-       UnderOverComp = TtaGetTypedAncestor (firstEl, elType);
-       if (UnderOverComp != NULL)
-          /* the new content is in a Underscript */
-	  SetSingleHorizStretchAttr (UnderOverComp, doc, &newSelEl);
-       else
-          {
-          elType.ElTypeNum = MathML_EL_Overscript;
-          UnderOverComp = TtaGetTypedAncestor (firstEl, elType);
-          if (UnderOverComp != NULL)
-             /* the new content is in a Overscript */
-	     SetSingleHorizStretchAttr (UnderOverComp, doc, &newSelEl);
-          }
-       }
-    }
 
   TtaSetStructureChecking (1, doc);
   TtaSetDisplayMode (doc, DisplayImmediately);
@@ -1613,6 +1687,33 @@ void MathElementPasted(event)
 
 
 /*----------------------------------------------------------------------
+ MathElementWillBeDeleted
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+boolean MathElementWillBeDeleted (NotifyElement *event)
+#else /* __STDC__*/
+boolean MathElementWillBeDeleted(event)
+     NotifyElement *event;
+#endif /* __STDC__*/
+{
+  if (!IsLastDeletedElement)
+     {
+     IsLastDeletedElement = (event->position == TTE_STANDARD_DELETE_LAST_ITEM);
+     if (IsLastDeletedElement)
+	LastDeletedElement = event->element;
+     }
+  else
+     {
+     if (!TtaIsAncestor (event->element, LastDeletedElement))
+	{
+	LastDeletedElement = NULL;
+	IsLastDeletedElement = False;
+	}
+     }
+  return FALSE; /* let Thot perform normal operation */
+}
+
+/*----------------------------------------------------------------------
  MathElementDeleted
  An element has been deleted in a MathML structure.
  Create the necessary placeholders.
@@ -1636,47 +1737,17 @@ void MathElementDeleted(event)
       if (child != NULL)
          placeholderEl = InsertPlaceholder (child, TRUE, event->document);
       }
-   else
+   else if (IsLastDeletedElement)
       {
       for (i = 1; i < event->position && child != NULL; i++)
          TtaNextSibling (&child);
       if (child != NULL)
          placeholderEl = InsertPlaceholder (child, FALSE, event->document);
       }
+   IsLastDeletedElement = FALSE;
+   LastDeletedElement = NULL;
    
    CheckMROW (&event->element, event->document);
 }
-
-/*----------------------------------------------------------------------
- DeleteConstruct
- The user wants to delete a Construct element
- Prevent him from deleting plave holders.
- -----------------------------------------------------------------------*/
-#ifdef __STDC__
-boolean DeleteConstruct (NotifyElement *event)
-#else /* __STDC__*/
-boolean DeleteConstruct(event)
-     NotifyElement *event;
-#endif /* __STDC__*/
-{
-  ElementType	elType;
-  AttributeType	attrType;
-  Attribute	attr;
-
-  elType = TtaGetElementType (event->element);
-  attrType.AttrSSchema = elType.ElSSchema;
-  attrType.AttrTypeNum = MathML_ATTR_placeholder;
-  attr = TtaGetAttribute (event->element, attrType);
-  if (attr == NULL)
-     /* this is not a placeholder */
-     return FALSE; /* let Thot perform normal operation */
-  else
-     {
-     TtaSelectElement (event->document, event->element);
-     /* ask Thot to not perform the Delete operation */
-     return TRUE;
-     }
-}
-
 
 #endif /* MATHML */

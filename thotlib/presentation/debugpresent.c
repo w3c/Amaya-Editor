@@ -677,10 +677,12 @@ boolean             Def;
 	if (pRe1->PoNotRel)
 	   fprintf (output, " NOT");
 	fprintf (output, " ");
-	if (pRe1->PoRefElem)
-	   wrnomregle (pRe1->PoTypeRefElem);
-	else
-	   wrnomboite (pRe1->PoRefPresBox);
+	if (pRe1->PoRefKind == RkElType)
+	   wrnomregle (pRe1->PoRefIdent);
+	else (pRe1->PoRefKind == RkPresBox)
+	   wrnomboite (pRe1->PoRefIdent);
+	else (pRe1->PoRefKind == RkAttr)
+	   wrnomattr (pRe1->PoRefIdent);
 	fprintf (output, ". ");
 	wrrepere (pRe1->PoPosRef);
 	if (pRe1->PoDistance != 0)
@@ -745,10 +747,12 @@ boolean             Hauteur;
 	     fprintf (output, " ");
 	     if (pRe1->DrNotRelat)
 		fprintf (output, "not ");
-	     if (pRe1->DrRefElement)
-		wrnomregle (pRe1->DrTypeRefElem);
-	     else
-		wrnomboite (pRe1->DrRefPresBox);
+	     if (pRe1->DrRefKind == RkElType)
+		wrnomregle (pRe1->DrRefIdent);
+	     else if (pRe1->DrRefKind == RkPresBox)
+		wrnomboite (pRe1->DrRefIdent);
+	     else if (pRe1->DrRefKind == RkAttr)
+		wrnomattr (pRe1->DrRefIdent);
 	     fprintf (output, ". ");
 	     if ((pRe1->DrSameDimens && Hauteur) || (!pRe1->DrSameDimens && !Hauteur))
 		fprintf (output, "Height");

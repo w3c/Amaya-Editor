@@ -655,16 +655,28 @@ int                 fg;
 
    exnum = 0;
 
-   xm = x + ((l - CharacterWidth ('\364', font)) / 2);
-   yf = y - FontAscent (font) + CharacterAscent ('\363', font);
-   DrawChar ('\363', frame, xm, yf, font, RO, active, fg);
-   yend = y + h - CharacterHeight ('\365', font) - FontAscent (font) + CharacterAscent ('\365', font) - 1;
-   DrawChar ('\365', frame, xm, yend, font, RO, active, fg);
-
-   yf += CharacterHeight ('\363', font);
-   delta = yend - yf;
-   if (delta >= 0)
+   if (FontHeight (font) *1.2 >= h)
+     /* display a single glyph */
      {
+     xm = x + ((l - CharacterWidth ('\362', font)) / 2);
+     yf = y + ((h - CharacterHeight ('\362', font)) / 2) - FontAscent (font) +
+	  CharacterAscent ('\362', font);
+     DrawChar ('\362', frame, xm, yf, font, RO, active, fg);
+     }
+   else
+     {
+     /* Need more than one glyph */
+     xm = x + ((l - CharacterWidth ('\364', font)) / 2);
+     yf = y - FontAscent (font) + CharacterAscent ('\363', font);
+     DrawChar ('\363', frame, xm, yf, font, RO, active, fg);
+     yend = y + h - CharacterHeight ('\365', font) - FontAscent (font) +
+	    CharacterAscent ('\365', font) - 1;
+     DrawChar ('\365', frame, xm, yend, font, RO, active, fg);
+
+     yf += CharacterHeight ('\363', font);
+     delta = yend - yf;
+     if (delta >= 0)
+       {
 	for (yf += CharacterAscent ('\364', font) - FontAscent (font),
 	     yend -= CharacterHeight ('\364', font) - 1;
 	     yf < yend;
@@ -674,6 +686,7 @@ int                 fg;
 	   DrawChar ('\364', frame, xm, yend, font, RO, active, fg);
 	else
 	   DrawChar ('\364', frame, xm, yf + ((delta - CharacterHeight ('\364', font)) / 2), font, RO, active, fg);
+       }
      }
 
    if (type == 2)		/* double integral */

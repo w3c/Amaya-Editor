@@ -2168,7 +2168,7 @@ int                 delta;
 		       break;
 		    case LtSymbol:
 		    case LtGraphics:
-		       pAbbox1->AbLeafType = LtGraphics;
+		       pAbbox1->AbLeafType = element->ElLeafType;
 		       pAbbox1->AbShape = element->ElGraph;
 		       pAbbox1->AbGraphAlphabet = 'G';
 		       break;

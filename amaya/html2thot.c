@@ -236,6 +236,7 @@ MathEntity        MathEntityTable[] =
    {"Kgr", 75, 'G'},
    {"KHgr", 67, 'G'},
    {"Lambda", 76, 'G'},
+   {"LeftArrow", 172, 'G'},
    {"Mgr", 77, 'G'},
    {"Ngr", 78, 'G'},
    {"Ogr", 79, 'G'},
@@ -1923,19 +1924,44 @@ Element el;
 #endif
 {
   ElementType   elType;
+  Element	child, parent;
+  boolean	ret;
  
+  ret = TRUE;
   elType = TtaGetElementType (el);
   if (elType.ElTypeNum == MathML_EL_Construct ||
       elType.ElTypeNum == MathML_EL_SEP ||
       elType.ElTypeNum == MathML_EL_TEXT_UNIT ||
       elType.ElTypeNum == MathML_EL_MI  ||
-      elType.ElTypeNum == MathML_EL_MO ||
       elType.ElTypeNum == MathML_EL_MN ||
       elType.ElTypeNum == MathML_EL_MS ||
       elType.ElTypeNum == MathML_EL_MTEXT)
-     return FALSE;
+     ret = FALSE;
   else
-     return TRUE;
+     if (elType.ElTypeNum == MathML_EL_MO)
+	/* an operator that contains a single Symbol needs a placeholder,
+	   except when it is in a Base or UnderOverBase */
+	{
+	ret = FALSE;
+	child = TtaGetFirstChild (el);
+	if (child != NULL)
+	   {
+	   elType = TtaGetElementType (child);
+	   if (elType.ElTypeNum == MathML_EL_SYMBOL_UNIT)
+	      {
+	      ret = TRUE;
+	      parent = TtaGetParent (el);
+	      if (parent != NULL)
+		{
+		elType = TtaGetElementType (parent);
+		if (elType.ElTypeNum == MathML_EL_Base ||
+		    elType.ElTypeNum == MathML_EL_UnderOverBase)
+		   ret = False;
+		}
+	      }
+	   }
+	}
+  return ret;
 }
  
 /*----------------------------------------------------------------------
@@ -3183,6 +3209,122 @@ static void SetHorizStretchAttr (el, doc)
 }
 
 /*----------------------------------------------------------------------
+   SetVertStretchAttr
+
+   Put a vertstretch attribute on element el if its base element
+   (Base for a MSUBSUP, MSUP or MSUB; UnderOverBase for a MUNDEROVER,
+   a MUNDER of a MOVER) contains only a MO element that is a vertically
+   stretchable symbol.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void SetVertStretchAttr (Element el, Document doc, int base, Element* selEl)
+#else /* __STDC__*/
+void SetVertStretchAttr (el, doc, base, selEl)
+  Element	el;
+  Document	doc;
+  int		base;
+  Element*	selEl;
+#endif /* __STDC__*/
+{
+  Element	child, sibling, textEl, symbolEl, parent, operator;
+  ElementType	elType;
+  Attribute	attr;
+  AttributeType	attrType;
+  int		len;
+  Language	lang;
+  char		alphabet;
+  unsigned char	text[2], c;
+
+  if (el == NULL)
+     return;
+  operator = NULL;
+  if (base == 0)
+     /* it's a MO */
+     {
+     parent = TtaGetParent (el);
+     if (parent != NULL)
+	{
+	elType = TtaGetElementType (parent);
+	if (elType.ElTypeNum != MathML_EL_Base &&
+	    elType.ElTypeNum != MathML_EL_UnderOverBase &&
+	    elType.ElTypeNum != MathML_EL_MSUBSUP &&
+	    elType.ElTypeNum != MathML_EL_MSUB &&
+	    elType.ElTypeNum != MathML_EL_MSUP &&
+	    elType.ElTypeNum != MathML_EL_MUNDEROVER &&
+	    elType.ElTypeNum != MathML_EL_MUNDER &&
+	    elType.ElTypeNum != MathML_EL_MUNDEROVER)
+	   operator = el;
+        }
+     }
+  else
+     /* it's not a MO */
+     {
+     /* search the Base or UnderOverBase child */
+     child = TtaGetFirstChild (el);
+     if (child != NULL)
+        {
+        elType = TtaGetElementType (child);
+        if (elType.ElTypeNum == base)
+	   /* the first child is a Base or UnderOverBase */
+           {
+	   child = TtaGetFirstChild (child);
+	   if (child != NULL)
+	      {
+	      elType = TtaGetElementType (child);
+              if (elType.ElTypeNum == MathML_EL_MO)
+	         /* its first child is a MO */
+                 {
+                 sibling = child;
+                 TtaNextSibling (&sibling);
+	         if (sibling == NULL)
+	            /* there is no other child */
+	            operator = child;
+		 }
+	      }
+	   }
+	}
+     }
+  if (operator != NULL)
+     {
+	   textEl = TtaGetFirstChild (operator);
+	   elType = TtaGetElementType (textEl);
+	   if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
+	      {
+	      len = TtaGetTextLength (textEl);
+	      if (len == 1)
+		{
+		len = 2;
+		TtaGiveTextContent (textEl, text, &len, &lang);
+		alphabet = TtaGetAlphabet (lang);
+		if (len == 1)
+		   if (alphabet == 'G')
+		     /* a single Symbol character */
+		     if ((int)text[0] == 242)
+			/* Integral */
+			{
+			/* attach a vertstretch attribute */
+			attrType.AttrSSchema = elType.ElSSchema;
+			attrType.AttrTypeNum = MathML_ATTR_vertstretch;
+			attr = TtaNewAttribute (attrType);
+			TtaAttachAttribute (el, attr, doc);
+			TtaSetAttributeValue (attr, MathML_ATTR_vertstretch_VAL_yes_, el, doc);
+			/* replace the TEXT element by a Thot SYMBOL element */
+			elType.ElTypeNum = MathML_EL_SYMBOL_UNIT;
+			symbolEl = TtaNewElement (doc, elType);
+			TtaInsertSibling (symbolEl, textEl, FALSE, doc);
+			if (selEl != NULL)
+			   if (*selEl == textEl)
+			      *selEl = symbolEl;
+			TtaDeleteTree (textEl, doc);
+			c = 'i';
+			TtaSetGraphicsShape (symbolEl, c, doc);
+			}
+		}
+	      }
+     }
+}
+
+/*----------------------------------------------------------------------
    SetPlaceholderAttr
 
    Put a placeholder attribute on all Construct elements in the
@@ -3508,9 +3650,20 @@ void SetAddspaceAttr (el, doc)
 	     }
 	   else if (alphabet == 'G')
 	     /* Symbol character set */
-	     if ((int)text[0] == 177)	/* PlusMinus */
+	     if ((int)text[0] == 163 || /* less or equal */
+		 (int)text[0] == 177 ||	/* plus or minus */
+		 (int)text[0] == 179 || /* greater or equal */
+		 (int)text[0] == 180 || /* times */
+		 (int)text[0] == 184 || /* divide */
+		 (int)text[0] == 185 || /* not equal */
+		 (int)text[0] == 186 || /* identical */
+		 (int)text[0] == 187 || /* equivalent */
+		 (int)text[0] == 196 || /* circle times */
+		 (int)text[0] == 197 || /* circle plus */
+		 ((int)text[0] >= 199 && (int)text[0] <= 209) || /*  */
+		 (int)text[0] == 217 || /* and */
+		 (int)text[0] == 218 )  /* or */
 		val = MathML_ATTR_addspace_VAL_both;
-	/**** to be completed *****/
 	}
      TtaSetAttributeValue (attr, val, el, doc);
      }
@@ -3541,6 +3694,7 @@ Element                 el;
 	break;
      case MathML_EL_MO:
 	SetAddspaceAttr (el, theDocument);
+	SetVertStretchAttr (el, theDocument, 0, NULL);
 	break;
      case MathML_EL_MROOT:
 	/* end of a Root. Create a RootBase and an Index */
@@ -3559,14 +3713,17 @@ Element                 el;
 	/* end of a MSUBSUP. Create Base, Subscript, and Superscript */
 	CheckMathSubExpressions (el, MathML_EL_Base, MathML_EL_Subscript,
 				 MathML_EL_Superscript);
+	SetVertStretchAttr (el, theDocument, MathML_EL_Base, NULL);
 	break;
      case MathML_EL_MSUB:
 	/* end of a MSUB. Create Base and Subscript */
 	CheckMathSubExpressions (el, MathML_EL_Base, MathML_EL_Subscript, 0);
+	SetVertStretchAttr (el, theDocument, MathML_EL_Base, NULL);
 	break;
      case MathML_EL_MSUP:
 	/* end of a MSUP. Create Base and Superscript */
 	CheckMathSubExpressions (el, MathML_EL_Base, MathML_EL_Superscript, 0);
+	SetVertStretchAttr (el, theDocument, MathML_EL_Base, NULL);
 	break;
      case MathML_EL_MUNDEROVER:
 	/* end of a MUNDEROVER. Create UnderOverBase, Underscript, and
@@ -3574,18 +3731,21 @@ Element                 el;
 	CheckMathSubExpressions (el, MathML_EL_UnderOverBase,
 				 MathML_EL_Underscript, MathML_EL_Overscript);
 	SetHorizStretchAttr (el, theDocument);
+	SetVertStretchAttr (el, theDocument, MathML_EL_UnderOverBase, NULL);
 	break;
      case MathML_EL_MUNDER:
 	/* end of a MUNDER. Create UnderOverBase, and Underscript */
 	CheckMathSubExpressions (el, MathML_EL_UnderOverBase,
 				 MathML_EL_Underscript, 0);
 	SetHorizStretchAttr (el, theDocument);
+	SetVertStretchAttr (el, theDocument, MathML_EL_UnderOverBase, NULL);
 	break;
      case MathML_EL_MOVER:
 	/* end of a MOVER. Create UnderOverBase, and Overscript */
 	CheckMathSubExpressions (el, MathML_EL_UnderOverBase,
 				 MathML_EL_Overscript, 0);
 	SetHorizStretchAttr (el, theDocument);
+	SetVertStretchAttr (el, theDocument, MathML_EL_UnderOverBase, NULL);
 	break;
      case MathML_EL_MMULTISCRIPTS:
 	/* end of a MMULTISCRIPTS. Create all elements defined in the

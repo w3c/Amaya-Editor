@@ -58,6 +58,12 @@ typedef enum
   RlContainsRef, RlRoot, RlReferred, RlCreator
 } Level;
 
+/* Kind of object used as a reference in a relative position */
+typedef enum
+{
+  RkElType, RkPresBox, RkAttr
+} RefKind;
+
 /* relative positionning rule for the dimensions or axes of two boxes */
 typedef struct _PosRule
 {
@@ -77,25 +83,12 @@ typedef struct _PosRule
 				   if 'true', the exclusive type. */
   boolean	PoUserSpecified;/* the distance may be chosen by the user
 				   during the creation */
-  boolean	PoRefElem;	/* the reference is the box of an element,
-				   a presentation box otherwise */
-  union
-  {
-    struct			/* PoRefElem = True */
-    {
-      int	 _PoTypeRefElem_;	/* type of the element from which the
-					   position is defined */ 
-    } s0;
-    struct			/* PoRefElem = False */
-    {
-      int _PoRefPresBox_;	/* type of the box from which the
-				   position is defined, 0 if any */
-    } s1;
-  } u;
+  RefKind	PoRefKind;	/* the reference is the box of an element,
+				   a presentation box or the box of an element
+				   with an attribute */
+  int		PoRefIdent;	/* depending on PoRefKind, element type number,
+				   pres box number or attribute number */
 } PosRule;
-
-#define PoTypeRefElem u.s0._PoTypeRefElem_
-#define PoRefPresBox u.s1._PoRefPresBox_
 
 /* Box dimensionning rule */
 typedef struct _DimensionRule
@@ -126,21 +119,11 @@ typedef struct _DimensionRule
       boolean	_DrNotRelat_;   /* if false, DrTypeRefElem or DrRefPresBox
 				  indicates the type of the reference elt.
 				  if false, the exclusive type. */
-      boolean	_DrRefElement_; /* the reference is the box of an element,
-				    otherwise a presentation box */
-      union
-      {
-	struct			/* DrRefElement = True */
-	{
-	  int	_DrTypeRefElem_;	/* type of the element in regards to
-					   which the dimension is defined */ 
-	} s0;
-	struct			/* DrRefElement = False */
-	{
-	  int _DrRefPresBox_;	/* type of the box in regards to
-				   which the dimension is defined, 0 if any */
-	} s1;
-      } u;
+      RefKind	_DrRefKind_;	/* the reference is the box of an element,
+				   a presentation box or the box of an element
+				   with an attribute */
+      int	_DrRefIdent_;	/* depending on DrRefKind, element type number,
+				   pres box number or attribute number */
     } s1;
   } u;
 } DimensionRule;
@@ -155,9 +138,8 @@ typedef struct _DimensionRule
 #define DrValue u.s1._DrValue_
 #define DrRelation u.s1._DrRelation_
 #define DrNotRelat u.s1._DrNotRelat_
-#define DrRefElement u.s1._DrRefElement_
-#define DrTypeRefElem u.s1.u.s0._DrTypeRefElem_
-#define DrRefPresBox u.s1.u.s1._DrRefPresBox_
+#define DrRefKind u.s1._DrRefKind_
+#define DrRefIdent u.s1._DrRefIdent_
 
 /* type of the content of a presentation box */
 typedef enum

@@ -381,7 +381,6 @@ BOXES
  MOspace: BEGIN
 	Content: text ' ';
 	Width : OPERATOR_SPACE;
-	VertPos: HRef = Previous . HRef;
 	HorizPos: Left = Previous . Right;
 	IN Math_Structure_view
 		Visibility: 0;
@@ -434,8 +433,8 @@ RULES
 	BEGIN
 	CreateBefore(MROW_S);
 	CreateWith(VerticalLine);
-        HorizRef: Enclosed not MF . HRef;
-	VertPos: HRef = Previous not MF . HRef;
+        HorizRef: Enclosed not ElemWithAttr vertstretch . HRef;
+	VertPos: HRef = Previous not ElemWithAttr vertstretch . HRef;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - STRUCT_INDENT;
@@ -450,7 +449,7 @@ RULES
 		CreateFirst (NONE_S);
 	if empty and immediately within MSuperscript
 		CreateFirst (NONE_S);
-	VertPos: HRef = Previous not MF . HRef;
+	VertPos: HRef = Previous not ElemWithAttr vertstretch . HRef;
 	Fillpattern: gray2;
 	LineWeight: 0;	{ do not draw the outline }
 	ShowBox;
@@ -470,7 +469,7 @@ RULES
 	CreateBefore(MROOT_S);
 	CreateWith(VerticalLine);
 	HorizRef: Enclosed RootBase . HRef ;
-	VertPos: HRef = Previous not MF . HRef;
+	VertPos: HRef = Previous not ElemWithAttr vertstretch . HRef;
 	Gather: Yes;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
@@ -487,7 +486,7 @@ RULES
 	CreateBefore(MSQRT_S);
 	CreateWith(VerticalLine);
 	HorizRef: Enclosed RootBase . HRef ;
-	VertPos: HRef = Previous not MF . HRef;
+	VertPos: HRef = Previous not ElemWithAttr vertstretch . HRef;
 	Gather: Yes;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
@@ -531,7 +530,7 @@ RULES
 	CreateWith(VerticalLine);
 	Width: 0.7 min;
 	HorizRef: Enclosed Bar . Bottom + 0.1;
-	VertPos: HRef = Previous not MF . HRef;
+	VertPos: HRef = Previous not ElemWithAttr vertstretch . HRef;
 	Gather: Yes;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
@@ -569,7 +568,7 @@ RULES
 	HorizRef: Enclosed  Base. HRef;
 	CreateBefore(MSUBSUP_S);
 	CreateWith(VerticalLine);
-	VertPos: HRef = Previous not MF . HRef;
+	VertPos: HRef = Previous not ElemWithAttr vertstretch . HRef;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - STRUCT_INDENT;
@@ -584,7 +583,7 @@ RULES
 	HorizRef: Enclosed  Base. HRef;
 	CreateBefore(MSUB_S);
 	CreateWith(VerticalLine);
-	VertPos: HRef = Previous not MF . HRef;
+	VertPos: HRef = Previous not ElemWithAttr vertstretch . HRef;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - STRUCT_INDENT;
@@ -599,7 +598,7 @@ RULES
 	HorizRef: Enclosed  Base. HRef;
 	CreateBefore(MSUP_S);
 	CreateWith(VerticalLine);
-	VertPos: HRef = Previous not MF . HRef;
+	VertPos: HRef = Previous not ElemWithAttr vertstretch . HRef;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - STRUCT_INDENT;
@@ -623,7 +622,7 @@ RULES
 	Size: Enclosing -2 min 1;
 	HorizRef: * . Top;
 	HorizPos: Left = Base . Right;
-	VertPos: Bottom = Base . Top + 0.6;
+	VertPos: Bottom = Base . Top + 0.7;
 	IN Math_Structure_view BEGIN
 		Width: Enclosing . Width;
 		Height: Enclosed . Height;
@@ -635,7 +634,7 @@ RULES
 	Size: Enclosing -2 min 1;
 	HorizRef: * . Top;
 	HorizPos: Left = Base . Right;
-	VertPos: Top = Base . Bottom - 0.6;
+	VertPos: Top = Base . Bottom - 0.7;
 	IN Math_Structure_view BEGIN
 		Width: Enclosing . Width;
 		Height: Enclosed . Height;
@@ -648,7 +647,7 @@ RULES
 	HorizRef: Enclosed UnderOverBase . HRef;
 	CreateBefore(MUNDER_S);
 	CreateWith(VerticalLine);
-	VertPos: HRef = Previous not MF . HRef;
+	VertPos: HRef = Previous not ElemWithAttr vertstretch . HRef;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - STRUCT_INDENT;
@@ -663,7 +662,7 @@ RULES
 	HorizRef: Enclosed UnderOverBase . HRef;
 	CreateBefore(MOVER_S);
 	CreateWith(VerticalLine);
-	VertPos: HRef = Previous not MF . HRef;
+	VertPos: HRef = Previous not ElemWithAttr vertstretch . HRef;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - STRUCT_INDENT;
@@ -678,7 +677,7 @@ RULES
 	HorizRef: Enclosed UnderOverBase . HRef;
 	CreateBefore(MUNDEROVER_S);
 	CreateWith(VerticalLine);
-	VertPos: HRef = Previous not MF . HRef;
+	VertPos: HRef = Previous not ElemWithAttr vertstretch . HRef;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - STRUCT_INDENT;
@@ -727,7 +726,7 @@ RULES
 	HorizRef: Enclosed MultiscriptBase . HRef;
 	CreateBefore(MMULTISCRIPTS_S);
 	CreateWith(VerticalLine);
-	VertPos: HRef = Previous not MF . HRef;
+	VertPos: HRef = Previous not ElemWithAttr vertstretch . HRef;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - STRUCT_INDENT;
@@ -835,7 +834,7 @@ RULES
    MI:
 	BEGIN
 	CreateFirst(MI_S);
-	VertPos: HRef = Previous not MF . HRef;
+	VertPos: HRef = Previous not ElemWithAttr vertstretch . HRef;
 	Style: Italics;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
@@ -848,7 +847,7 @@ RULES
    MO:
 	BEGIN
 	CreateFirst(MO_S);
-	VertPos: HRef = Previous not MF . HRef;
+	VertPos: HRef = Previous not ElemWithAttr vertstretch . HRef;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width;
@@ -859,7 +858,7 @@ RULES
    MN:
 	BEGIN
 	CreateFirst(MN_S);
-	VertPos: HRef = Previous not MF . HRef;
+	VertPos: HRef = Previous not ElemWithAttr vertstretch . HRef;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width;
@@ -872,7 +871,7 @@ RULES
 	CreateFirst(MS_S);
 	CreateFirst (OpeningQuote);
 	CreateLast (ClosingQuote);
-	VertPos: HRef = Previous not MF . HRef;
+	VertPos: HRef = Previous not ElemWithAttr vertstretch . HRef;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width;
@@ -883,7 +882,7 @@ RULES
    MTEXT:
 	BEGIN
 	CreateFirst(MTEXT_S);
-	VertPos: HRef = Previous not MF . HRef;
+	VertPos: HRef = Previous not ElemWithAttr vertstretch . HRef;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width;
@@ -909,7 +908,7 @@ RULES
    MSPACE:
 	BEGIN
 	CreateFirst(MSPACE_S);
-	VertPos: HRef = Previous not MF . HRef;
+	VertPos: HRef = Previous not ElemWithAttr vertstretch . HRef;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width;
@@ -1057,8 +1056,111 @@ ATTRIBUTES
 	HorizPos: Left = Enclosing . Left;
 	IN Math_Structure_view BEGIN
 		HorizPos: Left = Previous . Right + 0.5;
+		Height: 1;
 		Width: 2;
 		END;
 	END;
 
+  vertstretch:
+	BEGIN
+	if MO
+		BEGIN
+		Height: Next not Construct . Height;
+		VertPos: Top = Next not Construct . Top;
+		END;
+	if MSUBSUP
+		BEGIN
+		Height: Next not Construct . Height + 1;
+		VertPos: Top = Next not Construct . Top - 0.5;
+		END;
+	if MSUB
+		BEGIN
+		Height: Next not Construct . Height + 0.5;
+		VertPos: Top = Next not Construct . Top;
+		END;
+	if MSUP
+		BEGIN
+		Height: Next not Construct . Height + 0.5;
+		VertPos: Top = Next not Construct . Top - 0.5;
+		END;
+	if MUNDEROVER
+		BEGIN
+		Height: Next not Construct . Height + 1.6;
+		VertPos: Top = Next not Construct . Top - 0.8;
+		END;
+	if MUNDER
+		BEGIN
+		Height: Next not Construct . Height + 0.8;
+		VertPos: Top = Next not Construct . Top;
+		END;
+	if MOVER
+		BEGIN
+		Height: Next not Construct . Height + 0.8;
+		VertPos: Top = Next not Construct . Top - 0.8;
+		END;
+	IN Math_Structure_view BEGIN
+		Height: Enclosed . Height;
+		VertPos: Top = Previous . Bottom;
+		END;
+	END;
+  vertstretch (Base):
+	BEGIN
+	IF within MSUBSUP BEGIN
+		Height: Enclosing . Height - 1;
+		VertPos: Top = Enclosing . Top + 0.5;
+		END;
+	IF within MSUB BEGIN
+		Height: Enclosing . Height - 0.5;
+		VertPos: Top = Enclosing . Top;
+		END;
+	IF within MSUP BEGIN
+		Height: Enclosing . Height - 0.5;
+		VertPos: Top = Enclosing . Top + 0.5;
+		END;
+	IN Math_Structure_view BEGIN
+		Height: Enclosed . Height;
+		VertPos: Top = Enclosing . Top;
+		END;
+	END;
+  vertstretch (UnderOverBase):
+	BEGIN
+	VertPos: Top = Overscript . Bottom;
+	Height: Bottom = Underscript . Top;
+	IN Math_Structure_view BEGIN
+		Height: Enclosed . Height;
+		VertPos: Top = Enclosing . Top;
+		END;
+	END;
+  vertstretch (Overscript):
+	BEGIN
+	VertPos: Top = Enclosing . Top;
+	IN Math_Structure_view
+		VertPos: Top = Previous . Bottom;
+	END;
+  vertstretch (Underscript):
+	BEGIN
+	VertPos: Bottom = Enclosing . Bottom;	
+	IN Math_Structure_view
+		VertPos: Top = Previous . Bottom;
+	END;
+  vertstretch (MO):
+	BEGIN
+	IF immediately within UnderOverBase
+		BEGIN
+		Height: Enclosing . Height;
+		VertPos: Top = Enclosing . Top;
+		HorizRef: * . HMiddle + 0.3;
+		END;
+	IF immediately within Base
+		BEGIN
+		Height: Enclosing . Height;
+		VertPos: Top = Enclosing . Top;
+		HorizRef: * . HMiddle + 0.3;
+		END;
+	IN Math_Structure_view BEGIN
+		Height: Enclosed . Height;
+		VertPos: Top = Previous . Bottom;
+		HorizRef: Enclosed . HRef;
+		END;
+	END;
 END

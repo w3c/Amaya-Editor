@@ -794,21 +794,21 @@ PtrAttribute        pAttr;
 }
 
 /*----------------------------------------------------------------------
-   	VerifyAbsBox : Teste si le pave pAb a les caracteristiques		
-   		numAbType (type du pave) et PoRefElem (pave de presentation	
-   		ou d'element) si notType est faux ou s'il n'a pas les	
-   		caracteristiques numAbType et PoRefElem si notType est vrai.
-   		 Cela permet de determiner le pave pAb par rapport	
-   		 auquel le pave en cours de traitement va se positionner
+   VerifyAbsBox : Teste si le pave pAb a les caracteristiques
+   	numAbType (type du pave) et refKind (pave de presentation
+   	ou d'element) si notType est faux ou s'il n'a pas les
+	caracteristiques numAbType et refKind si notType est vrai.
+   	Cela permet de determiner le pave pAb par rapport	
+   	auquel le pave en cours de traitement va se positionner
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         VerifyAbsBox (boolean * found, PtrPSchema pSP, boolean PoRefElem, int numAbType, boolean notType, PtrAbstractBox pAb)
+static void         VerifyAbsBox (boolean * found, PtrPSchema pSP, RefKind refKind, int numAbType, boolean notType, PtrAbstractBox pAb)
 
 #else  /* __STDC__ */
-static void         VerifyAbsBox (found, pSP, PoRefElem, numAbType, notType, pAb)
+static void         VerifyAbsBox (found, pSP, refKind, numAbType, notType, pAb)
 boolean            *found;
 PtrPSchema          pSP;
-boolean             PoRefElem;
+RefKind             refKind;
 int                 numAbType;
 boolean             notType;
 PtrAbstractBox      pAb;
@@ -816,50 +816,111 @@ PtrAbstractBox      pAb;
 #endif /* __STDC__ */
 
 {
-   PtrAbstractBox      pAbba1;
+   PtrAttribute	    pAttr;
+   boolean	    attrFound;
 
-   pAbba1 = pAb;
-   if (!pAbba1->AbDead)
-      if (notType)		/* on accepte le pave s'il est de type different de numAbType */
+   if (!pAb->AbDead)
+      {
+      pAttr = NULL;
+      if (refKind == RkAttr && pAb->AbElement != NULL)
+	if (!pAb->AbPresentationBox)
+	  {
+	  pAttr = pAb->AbElement->ElFirstAttr;
+	  attrFound = FALSE;
+	  while (pAttr != NULL && !attrFound)
+             if (pAttr->AeAttrSSchema->SsCode == pSP->PsStructCode &&
+		 pAttr->AeAttrNum == numAbType)
+                attrFound = TRUE;
+             else
+                pAttr = pAttr->AeNext;
+	  }
+      if (notType)
+	/* on accepte le pave s'il est de type different de numAbType */
 	{
-	   if (PoRefElem)	/* un pave d'un element de structure */
+	   if (refKind == RkElType)
+	     /* un pave d'un element de structure */
 	     {
-		if ((numAbType == MAX_PRES_VARIABLE + 1) && (pAbba1->AbPresentationBox))
-		   /* Cas d'une regle Not AnyElem, on accepte la premiere boite */
-		   /* de presentation trouvee */
+	     if (numAbType == MAX_PRES_VARIABLE + 1)
+		{
+		/* C'est une regle Not AnyElem, on accepte la premiere */
+		/* boite de presentation trouvee */
+		if (pAb->AbPresentationBox)
+		   *found = TRUE;
+		}
+	     else
+		/* c'est une regle Not Type */
+		if (pAb->AbTypeNum != numAbType ||
+		    pAb->AbPresentationBox ||
+		    pAb->AbPSchema != pSP)
 		   *found = TRUE;
 	     }
-	   else
-	      /* un pave d'une boite de pres. */ if ((numAbType == MAX_PRES_BOX + 1) && (!pAbba1->AbPresentationBox))
-	      /* Cas d'une regle Not AnyBox, on accepte le premier element */
-	      /* found' */
-	      *found = TRUE;
-	   /* on est dans une regle differente de Any... */
-	   if (pAbba1->AbTypeNum != numAbType
-	       || pAbba1->AbPresentationBox == PoRefElem
-	       || pAbba1->AbPSchema != pSP)
-	      *found = TRUE;
+	   else if (refKind == RkPresBox)
+	     /* un pave d'une boite de pres. */
+	     {
+	     if (numAbType == MAX_PRES_BOX + 1)
+		{
+	        /* Cas d'une regle Not AnyBox, on accepte le premier */
+	        /* element trouve' */
+		if (!pAb->AbPresentationBox)
+	           *found = TRUE;
+		}
+	     else
+		/* c'est une regle Not Box */
+		if (pAb->AbTypeNum != numAbType ||
+		    !pAb->AbPresentationBox ||
+		    pAb->AbPSchema != pSP)
+		   *found = TRUE;
+	     }
+	   else if (refKind == RkAttr)
+	     /* le pave d'un element portant un attribut */
+	     {
+	     if (pAttr == NULL)
+		*found = TRUE;
+	     }
 	}
       else
 	{
-	   if (PoRefElem)	/* un pave d'un element de structure */
+	   if (refKind == RkElType)
+	     /* un pave d'un element de structure */
 	     {
-		if ((numAbType == MAX_PRES_VARIABLE + 1) && (!pAbba1->AbPresentationBox))
-		   /* Cas d'une regle AnyElem, on accepte le premier element found */
+	     if (numAbType == MAX_PRES_VARIABLE + 1)
+		{
+		/* C'est une regle AnyElem, on accepte le premier element
+		   trouve' */
+		if (!pAb->AbPresentationBox)
+		   *found = TRUE;
+		}
+	     else
+		/* C'est une regle Type */
+		if (pAb->AbTypeNum == numAbType &&
+		    !pAb->AbPresentationBox &&
+		    (pAb->AbPSchema == pSP || pSP == NULL))
 		   *found = TRUE;
 	     }
-	   else
-	      /* un pave d'une boite de pres. */ if ((numAbType == MAX_PRES_BOX + 1) && (pAbba1->AbPresentationBox))
-	      /* Cas d'une regle AnyBox, on accepte la premiere boite de */
-	      /* presentation trouvee */
-	      *found = TRUE;
-	   /* on est dans une regle differente de Any... */
-	   if (pAbba1->AbTypeNum == numAbType
-	       && pAbba1->AbPresentationBox != PoRefElem
-	       && (pAbba1->AbPSchema == pSP
-		   || pSP == NULL))
-	      *found = TRUE;
+	   else if (refKind == RkPresBox)
+	     /* un pave d'une boite de presentation */
+	     {
+	     if (numAbType == MAX_PRES_BOX + 1)
+		{
+	        /* C'est une regle AnyBox, on accepte la premiere boite de */
+	        /* presentation trouvee */
+		if (pAb->AbPresentationBox)
+	           *found = TRUE;
+		}
+	     else
+		/* C'est une regle Box */
+		if (pAb->AbTypeNum == numAbType &&
+		    pAb->AbPresentationBox &&
+		    (pAb->AbPSchema == pSP || pSP == NULL))
+		   *found = TRUE;
+	     }
+	   else if (refKind == RkAttr)
+	     {
+	     if (pAttr != NULL)
+		*found = TRUE;
+	     }
 	}
+   }
 }
 
 /*----------------------------------------------------------------------
@@ -974,21 +1035,21 @@ PtrAbstractBox      pAb;
 /*----------------------------------------------------------------------
    	VerifyAbsBoxDescent : Teste si le pave pAb ou un de ses		
    		descendants a les caracteristiques			
-   		numAbType (type du pave) et PoRefElem (pave de presentation	
+   		numAbType (type du pave) et refKind (pave de presentation
    		ou d'element) si notType est faux ou s'il n'a pas les	
-   		caracteristiques numAbType et PoRefElem si notType est vrai.
+   		caracteristiques numAbType et refKind si notType est vrai.
    		Cela permet de determiner le pave pAb par rapport	
    		auquel le pave en cours de traitement va se positionner	
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void         VerifyAbsBoxDescent (boolean * found, PtrPSchema pSP, boolean PoRefElem, int numType, boolean notType, PtrAbstractBox pAb)
+static void         VerifyAbsBoxDescent (boolean * found, PtrPSchema pSP, RefKind refKind, int numType, boolean notType, PtrAbstractBox pAb)
 
 #else  /* __STDC__ */
-static void         VerifyAbsBoxDescent (found, pSP, PoRefElem, numType, notType, pAb)
+static void         VerifyAbsBoxDescent (found, pSP, refKind, numType, notType, pAb)
 boolean            *found;
 PtrPSchema          pSP;
-boolean             PoRefElem;
+RefKind		    refKind;
 int                 numType;
 boolean             notType;
 PtrAbstractBox      pAb;
@@ -996,14 +1057,14 @@ PtrAbstractBox      pAb;
 #endif /* __STDC__ */
 
 {
-   VerifyAbsBox (found, pSP, PoRefElem, numType, notType, pAb);
+   VerifyAbsBox (found, pSP, refKind, numType, notType, pAb);
    if (!(*found))
       if (pAb->AbFirstEnclosed != NULL)
 	{
 	   pAb = pAb->AbFirstEnclosed;
 	   do
 	     {
-		VerifyAbsBoxDescent (found, pSP, PoRefElem, numType, notType, pAb);
+		VerifyAbsBoxDescent (found, pSP, refKind, numType, notType, pAb);
 		if (!(*found))
 		   pAb = pAb->AbNext;
 	     }
@@ -1018,10 +1079,10 @@ PtrAbstractBox      pAb;
    		pAbb). Si notType est vrai, rend un pointeur sur le	
    		premier pave de niveau level (relativement a pAbb) qui n'est
    		pas de type numAbType.					
-   		Si PoRefElem est vrai, le pave represente par numAbType est	
-   		celui d'un element de la representation interne, sinon	
-   		c'est une boite de presentation definie dans le schema	
-   		de presentation pointe' par pSP.			
+   		Si refKind == RkElType, le pave represente par numAbType est
+   		celui d'un element de la representation interne,
+		si refKind == RkPresBox, c'est une boite de presentation
+		definie dans le schema de presentation pointe' par pSP.				si refKind == RkAttr, c'est un numero d'attribut.
    		Si level vaut RlReferred, on cherche parmi les paves de	
    		l'element designe' par l'attribut reference pointe'	
    		par pAttr.						
@@ -1030,15 +1091,15 @@ PtrAbstractBox      pAb;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static PtrAbstractBox SearchAbsBoxRef (boolean notType, int numAbType, PtrPSchema pSP, Level level, boolean PoRefElem, PtrAbstractBox pAbb, PtrAttribute pAttr)
+static PtrAbstractBox SearchAbsBoxRef (boolean notType, int numAbType, PtrPSchema pSP, Level level, RefKind refKind, PtrAbstractBox pAbb, PtrAttribute pAttr)
 
 #else  /* __STDC__ */
-static PtrAbstractBox SearchAbsBoxRef (notType, numAbType, pSP, level, PoRefElem, pAbb, pAttr)
+static PtrAbstractBox SearchAbsBoxRef (notType, numAbType, pSP, level, refKind, pAbb, pAttr)
 boolean             notType;
 int                 numAbType;
 PtrPSchema          pSP;
 Level               level;
-boolean             PoRefElem;
+RefKind		    refKind;
 PtrAbstractBox      pAbb;
 PtrAttribute        pAttr;
 
@@ -1063,7 +1124,7 @@ PtrAttribute        pAttr;
 			 if (numAbType == 0)
 			    found = TRUE;
 			 else if (pAb != NULL)
-			    VerifyAbsBox (&found, pSP, PoRefElem, numAbType, notType, pAb);
+			    VerifyAbsBox (&found, pSP, refKind, numAbType, notType, pAb);
 		      }
 		    while (pAb != NULL && !found);
 		    break;
@@ -1081,7 +1142,7 @@ PtrAttribute        pAttr;
 			     found = TRUE;
 		       else
 			 {
-			    VerifyAbsBox (&found, pSP, PoRefElem, numAbType, notType, pAb);
+			    VerifyAbsBox (&found, pSP, refKind, numAbType, notType, pAb);
 			    if (!found)
 			       pAb = pAb->AbNext;
 			 }
@@ -1099,7 +1160,7 @@ PtrAttribute        pAttr;
 				found = TRUE;
 			  else
 			    {
-			       VerifyAbsBox (&found, pSP, PoRefElem, numAbType, notType, pAb);
+			       VerifyAbsBox (&found, pSP, refKind, numAbType, notType, pAb);
 			       if (!found)
 				  pAb = pAb->AbNext;
 			    }
@@ -1117,7 +1178,7 @@ PtrAttribute        pAttr;
 				found = TRUE;
 			  else
 			    {
-			       VerifyAbsBox (&found, pSP, PoRefElem, numAbType, notType, pAb);
+			       VerifyAbsBox (&found, pSP, refKind, numAbType, notType, pAb);
 			       if (!found)
 				  pAb = pAb->AbPrevious;
 			    }
@@ -1135,7 +1196,7 @@ PtrAttribute        pAttr;
 				found = TRUE;
 			  else
 			    {
-			       VerifyAbsBox (&found, pSP, PoRefElem, numAbType, notType, pAb);
+			       VerifyAbsBox (&found, pSP, refKind, numAbType, notType, pAb);
 			       if (!found)
 				  pAb = pAb->AbNext;
 			    }
@@ -1249,7 +1310,7 @@ PtrAttribute        pAttr;
 				found = TRUE;
 			  else
 			    {
-			       VerifyAbsBox (&found, pSP, PoRefElem, numAbType, notType, pAb);
+			       VerifyAbsBox (&found, pSP, refKind, numAbType, notType, pAb);
 			       if (!found)
 				 {
 				    if (!pAb->AbPresentationBox)
@@ -1270,7 +1331,7 @@ PtrAttribute        pAttr;
 			 pAb = pAbbMain->AbFirstEnclosed;
 			 while (pAb != NULL && !found)
 			   {
-			      VerifyAbsBoxDescent (&found, pSP, PoRefElem, numAbType, notType, pAb);
+			      VerifyAbsBoxDescent (&found, pSP, refKind, numAbType, notType, pAb);
 			      if (!found && pAb != NULL)
 				 pAb = pAb->AbNext;
 			   }
@@ -1782,24 +1843,21 @@ boolean            *appl;
      {
 	/* cherche le pave (pAbbPos) par rapport auquel le pave */
 	/* traite' se positionne  */
-	if (pPosRule->PoRefElem)
-	  {
-	     /* appelle l'exception des tableaux, au cas ou ce serait la regle */
-	     /* de hauteur d'un filet vertical d'un tableau */
-	     pAbbPos = NULL;
-	     if (ThotLocalActions[T_abref] != NULL)
-		(*ThotLocalActions[T_abref]) (pAbb1, pPosRule, pPRule, &pAbbPos);
-	     /* si l'exception n'a pas ete traitee, effectue un traitement normal */
-	     if (pAbbPos == NULL)
-		pAbbPos = SearchAbsBoxRef (pPosRule->PoNotRel, pPosRule->PoTypeRefElem, pSchP,
-		   pPosRule->PoRelation, pPosRule->PoRefElem, pAbb1, pAttr);
-	  }
-	else
-	   pAbbPos = SearchAbsBoxRef (pPosRule->PoNotRel, pPosRule->PoRefPresBox, pSchP, pPosRule->PoRelation, pPosRule
-				      ->PoRefElem, pAbb1, pAttr);
+	pAbbPos = NULL;
+	if (pPosRule->PoRefKind == RkElType)
+	   /* appelle l'exception des tableaux, au cas ou ce serait la */
+	   /* regle de hauteur d'un filet vertical d'un tableau */
+	   if (ThotLocalActions[T_abref] != NULL)
+	      (*ThotLocalActions[T_abref]) (pAbb1, pPosRule, pPRule, &pAbbPos);
+	      /* si l'exception n'a pas ete traitee, effectue un traitement
+		 normal */
+	if (pAbbPos == NULL)
+	   pAbbPos = SearchAbsBoxRef (pPosRule->PoNotRel,
+			  pPosRule->PoRefIdent, pSchP, pPosRule->PoRelation,
+			  pPosRule->PoRefKind, pAbb1, pAttr);
 	if (pAbbPos != NULL)
 	  {
-	     /* on a found le pave de reference */
+	     /* on a trouve' le pave de reference */
 	     PPos->PosEdge = pPosRule->PoPosDef;
 	     PPos->PosRefEdge = pPosRule->PoPosRef;
 	     if (pPosRule->PoDistAttr)
@@ -2092,12 +2150,8 @@ PtrDocument         pDoc;
 	/* dimensions relatives a l'englobant ou un frere */
 	pdimAb->DimSameDimension = pDRule->DrSameDimens;
 	/* essaie d'appliquer la regle de dimensionnement relatif */
-	if (pDRule->DrRefElement)
-	   pAbbRef = SearchAbsBoxRef (pDRule->DrNotRelat, pDRule->DrTypeRefElem, pSchP,
-		      pDRule->DrRelation, pDRule->DrRefElement, pAb, pAttr);
-	else
-	   pAbbRef = SearchAbsBoxRef (pDRule->DrNotRelat, pDRule->DrRefPresBox, pSchP,
-		      pDRule->DrRelation, pDRule->DrRefElement, pAb, pAttr);
+	pAbbRef = SearchAbsBoxRef (pDRule->DrNotRelat, pDRule->DrRefIdent, pSchP,
+		      pDRule->DrRelation, pDRule->DrRefKind, pAb, pAttr);
 	pdimAb->DimAbRef = pAbbRef;
 	if (pAbbRef == NULL && pAb->AbElement != NULL)
 	   if (pAb->AbEnclosing == NULL && pDRule->DrRelation == RlEnclosing)

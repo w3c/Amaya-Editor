@@ -405,9 +405,9 @@ indLine             wi;
 	       CurRule->PrPosRule.PoDistance = 0;
 	       CurRule->PrPosRule.PoRelation = RlSameLevel;
 	       CurRule->PrPosRule.PoNotRel = False;
-	       CurRule->PrPosRule.PoRefElem = False;
+	       CurRule->PrPosRule.PoRefKind = RkPresBox;
 	       CurRule->PrPosRule.PoUserSpecified = False;
-	       CurRule->PrPosRule.PoRefPresBox = 0;
+	       CurRule->PrPosRule.PoRefIdent = 0;
 	       break;
 	    case PtHeight:
 	    case PtWidth:
@@ -418,10 +418,10 @@ indLine             wi;
 	       CurRule->PrDimRule.DrValue = 0;
 	       CurRule->PrDimRule.DrRelation = RlSameLevel;
 	       CurRule->PrDimRule.DrNotRelat = False;
-	       CurRule->PrDimRule.DrRefElement = True;
+	       CurRule->PrDimRule.DrRefKind = RkPresBox;
 	       CurRule->PrDimRule.DrMin = False;
 	       CurRule->PrDimRule.DrUserSpecified = False;
-	       CurRule->PrDimRule.DrTypeRefElem = 0;
+	       CurRule->PrDimRule.DrRefIdent = 0;
 	       break;
 	    default:
 	       break;
@@ -1111,7 +1111,7 @@ SyntacticCode       gCode;
 			  if (!CurRule->PrDimRule.DrPosition)
 			     if (!CurRule->PrDimRule.DrAbsolute)
 				if (CurRule->PrDimRule.DrRelation == RlEnclosed)
-				   if (CurRule->PrDimRule.DrTypeRefElem != 0 || CurRule->PrDimRule.DrValue != 0)
+				   if (CurRule->PrDimRule.DrRefIdent != 0 || CurRule->PrDimRule.DrValue != 0)
 				      CompilerMessage (wi, PRS, FATAL, BAD_DIM_RULE, inputLine, LineNum);
 		    InRule = False;
 		    if (RulesForView && !RuleBlock && !CondBlock)
@@ -1338,8 +1338,8 @@ indLine             wi;
 		       CurRule->PrDimRule.DrPosRule.PoDistance = 0;
 		       CurRule->PrDimRule.DrPosRule.PoRelation = RlSameLevel;
 		       CurRule->PrDimRule.DrPosRule.PoNotRel = False;
-		       CurRule->PrDimRule.DrPosRule.PoRefElem = False;
-		       CurRule->PrDimRule.DrPosRule.PoRefPresBox = 0;
+		       CurRule->PrDimRule.DrPosRule.PoRefKind = RkPresBox;
+		       CurRule->PrDimRule.DrPosRule.PoRefIdent = 0;
 		       AxisDef = False;
 		    }
 	       else
@@ -1552,8 +1552,8 @@ indLine             wi;
 	CurRule->PrPosRule.PoRelation = RlSelf;
 	CurRule->PrPosRule.PoNotRel = False;
 	CurRule->PrPosRule.PoUserSpecified = False;
-	CurRule->PrPosRule.PoRefElem = False;
-	CurRule->PrPosRule.PoRefPresBox = 0;
+	CurRule->PrPosRule.PoRefKind = RkPresBox;
+	CurRule->PrPosRule.PoRefIdent = 0;
      }
    if (GetTypedRule (PtHorizRef, pPSchema->PsFirstDefaultPRule) == NULL)
       /* pas de regle HorizRef par defaut, on en cree une : */
@@ -1569,8 +1569,8 @@ indLine             wi;
 	CurRule->PrPosRule.PoRelation = RlEnclosed;
 	CurRule->PrPosRule.PoNotRel = False;
 	CurRule->PrPosRule.PoUserSpecified = False;
-	CurRule->PrPosRule.PoRefElem = False;
-	CurRule->PrPosRule.PoRefPresBox = 0;
+	CurRule->PrPosRule.PoRefKind = RkPresBox;
+	CurRule->PrPosRule.PoRefIdent = 0;
      }
    if (GetTypedRule (PtVertPos, pPSchema->PsFirstDefaultPRule) == NULL)
       /* pas de regle VertPos par defaut, on en cree une : */
@@ -1586,8 +1586,8 @@ indLine             wi;
 	CurRule->PrPosRule.PoRelation = RlPrevious;
 	CurRule->PrPosRule.PoNotRel = False;
 	CurRule->PrPosRule.PoUserSpecified = False;
-	CurRule->PrPosRule.PoRefElem = False;
-	CurRule->PrPosRule.PoRefPresBox = 0;
+	CurRule->PrPosRule.PoRefKind = RkPresBox;
+	CurRule->PrPosRule.PoRefIdent = 0;
      }
    if (GetTypedRule (PtHorizPos, pPSchema->PsFirstDefaultPRule) == NULL)
       /* pas de regle HorizPos par defaut, on en cree une : */
@@ -1603,8 +1603,8 @@ indLine             wi;
 	CurRule->PrPosRule.PoRelation = RlEnclosing;
 	CurRule->PrPosRule.PoNotRel = False;
 	CurRule->PrPosRule.PoUserSpecified = False;
-	CurRule->PrPosRule.PoRefElem = False;
-	CurRule->PrPosRule.PoRefPresBox = 0;
+	CurRule->PrPosRule.PoRefKind = RkPresBox;
+	CurRule->PrPosRule.PoRefIdent = 0;
      }
    if (GetTypedRule (PtHeight, pPSchema->PsFirstDefaultPRule) == NULL)
       /* pas de regle Height par defaut, on en cree une : */
@@ -1622,8 +1622,8 @@ indLine             wi;
 	CurRule->PrDimRule.DrValue = 0;
 	CurRule->PrDimRule.DrRelation = RlEnclosed;
 	CurRule->PrDimRule.DrNotRelat = False;
-	CurRule->PrDimRule.DrRefElement = True;
-	CurRule->PrDimRule.DrTypeRefElem = 0;
+	CurRule->PrDimRule.DrRefKind = RkElType;
+	CurRule->PrDimRule.DrRefIdent = 0;
      }
    if (GetTypedRule (PtWidth, pPSchema->PsFirstDefaultPRule) == NULL)
       /* pas de regle Width par defaut, on en cree une : */
@@ -1641,8 +1641,8 @@ indLine             wi;
 	CurRule->PrDimRule.DrValue = 0;
 	CurRule->PrDimRule.DrRelation = RlEnclosed;
 	CurRule->PrDimRule.DrNotRelat = False;
-	CurRule->PrDimRule.DrRefElement = True;
-	CurRule->PrDimRule.DrTypeRefElem = 0;
+	CurRule->PrDimRule.DrRefKind = RkElType;
+	CurRule->PrDimRule.DrRefIdent= 0;
      }
    if (GetTypedRule (PtSize, pPSchema->PsFirstDefaultPRule) == NULL)
       /* pas de regle Size par defaut, on en cree une : */
@@ -2974,12 +2974,14 @@ indLine             wi;
 		  SetLevel (RlReferred, wi);
 	       break;
 	    case KWD_AnyElem:
-	       CurRule->PrPosRule.PoRefElem = True;
-	       CurRule->PrPosRule.PoTypeRefElem = MAX_PRES_VARIABLE + 1;
+	       CurRule->PrPosRule.PoRefKind = RkElType;
+	       CurRule->PrPosRule.PoRefIdent = MAX_PRES_VARIABLE + 1;
 	       break;
 	    case KWD_AnyBox:
-	       CurRule->PrPosRule.PoRefElem = False;
-	       CurRule->PrPosRule.PoRefPresBox = MAX_PRES_BOX + 1;
+	       CurRule->PrPosRule.PoRefKind = RkPresBox;
+	       CurRule->PrPosRule.PoRefIdent = MAX_PRES_BOX + 1;
+	       break;
+	    case KWD_ElemWithAttr:
 	       break;
 	    case KWD_NOT /* NOT */ :
 	       if (gCode == RULE_Condition)
@@ -3529,20 +3531,20 @@ indLine             wl;
 			 case PtHorizRef:
 			 case PtVertPos:
 			 case PtHorizPos:
-			    CurRule->PrPosRule.PoRefElem = True;
-			    CurRule->PrPosRule.PoTypeRefElem = i;
+			    CurRule->PrPosRule.PoRefKind = RkElType;
+			    CurRule->PrPosRule.PoRefIdent = i;
 			    break;
 			 case PtHeight:
 			 case PtWidth:
 			    if (CurRule->PrDimRule.DrPosition)
 			      {
-				 CurRule->PrDimRule.DrPosRule.PoRefElem = True;
-				 CurRule->PrDimRule.DrPosRule.PoTypeRefElem = i;
+				 CurRule->PrDimRule.DrPosRule.PoRefKind = RkElType;
+				 CurRule->PrDimRule.DrPosRule.PoRefIdent = i;
 			      }
 			    else
 			      {
-				 CurRule->PrDimRule.DrRefElement = True;
-				 CurRule->PrDimRule.DrTypeRefElem = i;
+				 CurRule->PrDimRule.DrRefKind = RkElType;
+				 CurRule->PrDimRule.DrRefIdent = i;
 			      }
 			    break;
 			 case PtFunction:
@@ -4108,7 +4110,8 @@ indLine             wi;
 			  || prevRule == RULE_AttrValue
 			  || prevRule == RULE_AttrRelat
 			  || prevRule == RULE_ElemCondition
-			  || prevRule == RULE_CounterAttrPage))
+			  || prevRule == RULE_CounterAttrPage
+			  || prevRule == RULE_BoxType))
 		  /* c'est un nom d'attribut a la place d'une valeur numerique */
 		  IntAttribute (i, prevRule, wi);
 
@@ -4207,6 +4210,41 @@ indLine             wi;
 		 {
 		    Conditions->CoCondition = PcAttribute;
 		    Conditions->CoTypeElAttr = i;
+		 }
+	       else if (prevRule == RULE_BoxType)
+		  /* c'est un nom d'attribut dans une regle BoxType */
+		 {
+		    if ((CurRule->PrType == PtVertRef ||
+			 CurRule->PrType == PtHorizRef) &&
+			CurRule->PrPosRule.PoRelation != RlEnclosed)
+		       CompilerMessage (wi, PRS, FATAL,
+				 ONLY_ENCLOSED_AND_ARE_ALLOWED,
+				 inputLine, LineNum);
+		    else
+		      switch (CurRule->PrType)
+			{
+			case PtVertRef:
+			case PtHorizRef:
+			case PtVertPos:
+			case PtHorizPos:
+			   CurRule->PrPosRule.PoRefKind = RkAttr;
+			   CurRule->PrPosRule.PoRefIdent = i;
+			   break;
+			case PtWidth:
+			case PtHeight:
+			   if (CurRule->PrDimRule.DrPosition)
+			     {
+			     CurRule->PrDimRule.DrPosRule.PoRefKind = RkAttr;
+			     CurRule->PrDimRule.DrPosRule.PoRefIdent = i;
+			     }
+			   else
+			     {
+			     CurRule->PrDimRule.DrRefKind = RkAttr;
+			     CurRule->PrDimRule.DrRefIdent = i;
+			     }
+			   break;
+			default: break;
+			}
 		 }
 	       break;
 
@@ -4394,14 +4432,15 @@ indLine             wi;
 				   BeginCopyType = wi;
 				}
 			   }
-			 if ((prevRule == RULE_BoxType || prevRule == RULE_BoxTypeCopied) && i != 0)
+			 if ((prevRule == RULE_BoxType ||
+			      prevRule == RULE_BoxTypeCopied) && i != 0)
 			    /* si on vient de la regle BoxType ou BoxTypeCopied, */
 			    /* voyons si ce n'est pas un identificateur de type */
 			   {
 			      ProcessTypeName (prevRule, n, wi, wl);
+			      /* changement de type, c'est maintenant un
+				 identificateur de type d'element */
 			      Identifier[identnum].SrcIdentCode = RULE_TypeName;
-			      /* changement de type, c'est */
-			      /* maintenant un identificateur de type structure */
 			   }
 			 else if (i != 0)
 			    CompilerMessage (wi, PRS, FATAL, UNDECLARED_IDENTIFIER, inputLine, LineNum);
@@ -4411,29 +4450,29 @@ indLine             wi;
 		       if ((CurRule->PrType == PtVertRef
 			    || CurRule->PrType == PtHorizRef)
 			   && CurRule->PrPosRule.PoRelation != RlEnclosed)
-		       CompilerMessage (wi, PRS, FATAL, ONLY_ENCLOSED_AND_ARE_ALLOWED, inputLine, LineNum);
-		    else
-		       switch (CurRule->PrType)
+		           CompilerMessage (wi, PRS, FATAL, ONLY_ENCLOSED_AND_ARE_ALLOWED, inputLine, LineNum);
+		       else
+		          switch (CurRule->PrType)
 			     {
 				case PtVertRef:
 				case PtHorizRef:
 				case PtVertPos:
 				case PtHorizPos:
-				   CurRule->PrPosRule.PoRefElem = False;
-				   CurRule->PrPosRule.PoRefPresBox = Identifier[identnum].SrcIdentDefRule;
+				   CurRule->PrPosRule.PoRefKind = RkPresBox;
+				   CurRule->PrPosRule.PoRefIdent = Identifier[identnum].SrcIdentDefRule;
 				   break;
 				case PtWidth:
 				case PtHeight:
 				   if (CurRule->PrDimRule.DrPosition)
 				     {
-					CurRule->PrDimRule.DrPosRule.PoRefElem = False;
-					CurRule->PrDimRule.DrPosRule.PoRefPresBox =
+					CurRule->PrDimRule.DrPosRule.PoRefKind = RkPresBox;
+					CurRule->PrDimRule.DrPosRule.PoRefIdent =
 					   Identifier[identnum].SrcIdentDefRule;
 				     }
 				   else
 				     {
-					CurRule->PrDimRule.DrRefElement = False;
-					CurRule->PrDimRule.DrRefPresBox =
+					CurRule->PrDimRule.DrRefKind = RkPresBox;
+					CurRule->PrDimRule.DrRefIdent =
 					   Identifier[identnum].SrcIdentDefRule;
 				     }
 				   break;
@@ -5576,15 +5615,15 @@ static void         CheckPageBoxes ()
 				  if (!(pPRule->PrPosRule.PoPosDef == Top
 				     || pPRule->PrPosRule.PoPosDef == Bottom
 					|| pPRule->PrPosRule.PoPosDef == HorizMiddle))
-				     /* on ne teste plus PoPosDef,PoNotRel et PoRefElem */
+				     /* on ne teste plus PoPosDef,PoNotRel et PoRefKind */
 				     /* suppression test elt ref. != marque de page */
 #else  /* __COLPAGE__ */
 				  if (!(pPRule->PrPosRule.PoPosDef == Top
 				     || pPRule->PrPosRule.PoPosDef == Bottom
 					|| pPRule->PrPosRule.PoPosDef == HorizMiddle)
 				      || pPRule->PrPosRule.PoNotRel
-				      || !pPRule->PrPosRule.PoRefElem
-				      || pPRule->PrPosRule.PoTypeRefElem != PageBreak + 1)
+				      || pPRule->PrPosRule.PoRefKind != RkElType
+				      || pPRule->PrPosRule.PoRefIdent != PageBreak + 1)
 #endif /* __COLPAGE__ */
 				     TtaDisplayMessage (FATAL, TtaGetMessage (PRS, INVALID_VERTIC_POS_IN_PAGE), pPSchema->PsPresentBox[hfB].PbName);
 				  if (pPRule->PrPosRule.PoDistance != 0)
@@ -5968,9 +6007,9 @@ static void         CheckPageBoxes ()
 	pR->PrPosRule.PoDistance = 0;
 	pR->PrPosRule.PoRelation = RlPrevious;
 	pR->PrPosRule.PoNotRel = False;
-	pR->PrPosRule.PoRefElem = True;
+	pR->PrPosRule.PoRefKind = RkElType;
 	pR->PrPosRule.PoUserSpecified = False;
-	pR->PrPosRule.PoTypeRefElem = 0;
+	pR->PrPosRule.PoRefIdent = 0;
 	/* cherche la regle de positionnement horizontal */
 	pR = SearchPRule (&pPSchema->PsElemPRule[PageBreak], PtHorizPos, view);
 	/* modifie la regle: positionnement sur le bord gauche de la */
@@ -5982,9 +6021,9 @@ static void         CheckPageBoxes ()
 	pR->PrPosRule.PoDistance = 0;
 	pR->PrPosRule.PoRelation = RlRoot;
 	pR->PrPosRule.PoNotRel = False;
-	pR->PrPosRule.PoRefElem = True;
+	pR->PrPosRule.PoRefKind = RkElType;
 	pR->PrPosRule.PoUserSpecified = False;
-	pR->PrPosRule.PoTypeRefElem = 0;
+	pR->PrPosRule.PoRefIdent = 0;
 	/* cherche la regle de largeur */
 	pR = SearchPRule (&pPSchema->PsElemPRule[PageBreak], PtWidth, view);
 	/* modifie la regle: largeur du contenu */
@@ -5996,9 +6035,9 @@ static void         CheckPageBoxes ()
 	pR->PrDimRule.DrValue = 0;
 	pR->PrDimRule.DrRelation = RlEnclosed;
 	pR->PrDimRule.DrNotRelat = False;
-	pR->PrDimRule.DrRefElement = True;
+	pR->PrDimRule.DrRefKind = RkElType;
 	pR->PrDimRule.DrUserSpecified = False;
-	pR->PrDimRule.DrTypeRefElem = 0;
+	pR->PrDimRule.DrRefIdent = 0;
 	/* cherche la regle de hauteur */
 	pR = SearchPRule (&pPSchema->PsElemPRule[PageBreak], PtHeight, view);
 	/* modifie la regle: hauteur du contenu */
@@ -6010,9 +6049,9 @@ static void         CheckPageBoxes ()
 	pR->PrDimRule.DrValue = 0;
 	pR->PrDimRule.DrRelation = RlEnclosed;
 	pR->PrDimRule.DrNotRelat = False;
-	pR->PrDimRule.DrRefElement = True;
+	pR->PrDimRule.DrRefKind = RkElType;
 	pR->PrDimRule.DrUserSpecified = False;
-	pR->PrDimRule.DrTypeRefElem = 0;
+	pR->PrDimRule.DrRefIdent = 0;
        /* modifie la regle: HorizOverflow: True; */
 	pR = SearchPRule (&pPSchema->PsElemPRule[PageBreak], PtHorizOverflow, view);
 	pR->PrType = PtHorizOverflow;

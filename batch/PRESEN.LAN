@@ -169,7 +169,8 @@ Reference =	  'Enclosing' [ NBoxType ] /
 		  '*' /
 		  BoxType .
 NBoxType =	  [ 'NOT' ] BoxType .
-BoxType =	  BoxName / [ '*' ] [ FirstSec ] TypeName / 'AnyElem' / 'AnyBox'.
+BoxType =	  BoxName / [ '*' ] [ FirstSec ] TypeName /
+		  'AnyElem' / 'AnyBox' / 'ElemWithAttr' AttrName .
 VertAxis =	  'Left' / 'VMiddle' / 'VRef' / 'Right' . 
 HorizAxis =	  'Top' / 'HMiddle' /'HRef' / 'Bottom' .
 

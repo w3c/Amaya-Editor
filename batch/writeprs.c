@@ -906,6 +906,34 @@ AttrComparType      typ;
 }
 
 /*----------------------------------------------------------------------
+   WriteRefKind						
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         WriteRefKind (RefKind kind)
+#else  /* __STDC__ */
+static void         WriteRefKind (kind)
+RefKind      kind;
+
+#endif /* __STDC__ */
+{
+   switch (kind)
+	 {
+	    case RkElType:
+	       TtaWriteByte (outfile, C_KIND_ELEMENT_TYPE);
+	       break;
+	    case RkPresBox:
+	       TtaWriteByte (outfile, C_KIND_PRES_BOX);
+	       break;
+	    case RkAttr:
+	       TtaWriteByte (outfile, C_KIND_ATTRIBUTE);
+	       break;
+	    default:
+	       fprintf (stderr, "Invalid reference %X\n", kind);
+	       break;
+	 }
+}
+
+/*----------------------------------------------------------------------
    WritePosRule   ecrit un positionnement relatif			
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -924,11 +952,8 @@ PosRule             posRule;
    WriteLevel (posRule.PoRelation);
    WriteBoolean (posRule.PoNotRel);
    WriteBoolean (posRule.PoUserSpecified);
-   WriteBoolean (posRule.PoRefElem);
-   if (posRule.PoRefElem)
-      WriteShort (posRule.PoTypeRefElem);
-   else
-      WriteShort (posRule.PoRefPresBox);
+   WriteRefKind (posRule.PoRefKind);
+   WriteShort (posRule.PoRefIdent);
 }
 
 
@@ -1076,11 +1101,8 @@ PtrPRule            pPRule;
 				     WriteSignedShort (pDim->DrValue);
 				     WriteLevel (pDim->DrRelation);
 				     WriteBoolean (pDim->DrNotRelat);
-				     WriteBoolean (pDim->DrRefElement);
-				     if (pDim->DrRefElement)
-					WriteShort (pDim->DrTypeRefElem);
-				     else
-					WriteShort (pDim->DrRefPresBox);
+				     WriteRefKind (pDim->DrRefKind);
+				     WriteShort (pDim->DrRefIdent);
 				  }
 				break;
 			     case PtAdjust:

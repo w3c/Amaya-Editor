@@ -131,8 +131,8 @@ int                 frame;
 
 
 /*----------------------------------------------------------------------
-  DisplaySymbol displays a mathematic symbols box enclosed in
-  frame. The glyphs are drawn with the Greek font and lines.
+  DisplaySymbol displays a mathematical symbols box enclosed in
+  a frame. The glyphs are drawn with the Greek font and lines.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         DisplaySymbol (PtrBox pBox, int frame)

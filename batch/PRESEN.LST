@@ -175,7 +175,8 @@ number
 			  '*' /
 			  BoxType .
    87	NBoxType =	  [ 'NOT' ] BoxType .
-   88	BoxType =	  BoxName / [ '*' ] [ FirstSec ] TypeName / 'AnyElem' / 'AnyBox'.
+   88	BoxType =	  BoxName / [ '*' ] [ FirstSec ] TypeName /
+			  'AnyElem' / 'AnyBox' / 'ElemWithAttr' AttrName .
    81	VertAxis =	  'Left' / 'VMiddle' / 'VRef' / 'Right' . 
    79	HorizAxis =	  'Top' / 'HMiddle' /'HRef' / 'Bottom' .
 	
@@ -444,73 +445,74 @@ code  key-word      numbers of rules using the key-word
 1209  NOT                87 135
 1210  AnyElem            88
 1211  AnyBox             88
-1212  Left               81 110
-1213  VMiddle            81 110
-1214  VRef               81
-1215  Right              81 110
-1216  Top                79
-1217  HMiddle            79
-1218  HRef               79
-1219  Bottom             79
-1220  Min                56  56  99 112
-1221  CM                 95
-1222  MM                 95
-1223  PT                 95  62 112 112
-1224  PC                 95
-1225  PX                 95
-1226  EM                 95
-1227  EX                 95
-1228  GrandFather        77
-1229  Max                99 112
-1230  Yes                59
-1231  No                 59
-1232  LeftWithDots      110
-1233  Roman              67
-1234  Bold               67
-1235  Italics            67
-1236  BoldItalics        67
-1237  Oblique            67
-1238  BoldOblique        67
-1239  NoUnderline        65
-1240  Underlined         65
-1241  Overlined          65
-1242  CrossedOut         65
-1243  Thick              66
-1244  Thin               66
-1245  GREATER           125
-1246  LESS              125
-1247  EQUAL             125
-1248  Repeated           71
-1249  AND                49
-1250  Target            135
-1251  Last              136
-1252  FirstRef          136
-1253  LastRef           136
-1254  ExternalRef       136
-1255  InternalRef       136
-1256  CopyRef           136
-1257  AnyAttributes     136
-1258  FirstAttr         136
-1259  LastAttr          136
-1260  UserPage          136
-1261  StartPage         136
-1262  ComputedPage      136
-1263  Empty             136
-1264  Immediately       136
-1265  Within            136
-1266  MaxRangeVal        39
-1267  MinRangeVal        39
-1268  Even              138
-1269  Odd               138
-1270  One               138
-1271  Create            134
-1272  CreateBefore      134
-1273  CreateAfter       134
-1274  CreateLast        134
-1275  CreateFirst       134
-1276  CreateWith        134
-1277  CreateEnclosing   134
-1278  To                147
+1212  ElemWithAttr       88
+1213  Left               81 110
+1214  VMiddle            81 110
+1215  VRef               81
+1216  Right              81 110
+1217  Top                79
+1218  HMiddle            79
+1219  HRef               79
+1220  Bottom             79
+1221  Min                56  56  99 112
+1222  CM                 95
+1223  MM                 95
+1224  PT                 95  62 112 112
+1225  PC                 95
+1226  PX                 95
+1227  EM                 95
+1228  EX                 95
+1229  GrandFather        77
+1230  Max                99 112
+1231  Yes                59
+1232  No                 59
+1233  LeftWithDots      110
+1234  Roman              67
+1235  Bold               67
+1236  Italics            67
+1237  BoldItalics        67
+1238  Oblique            67
+1239  BoldOblique        67
+1240  NoUnderline        65
+1241  Underlined         65
+1242  Overlined          65
+1243  CrossedOut         65
+1244  Thick              66
+1245  Thin               66
+1246  GREATER           125
+1247  LESS              125
+1248  EQUAL             125
+1249  Repeated           71
+1250  AND                49
+1251  Target            135
+1252  Last              136
+1253  FirstRef          136
+1254  LastRef           136
+1255  ExternalRef       136
+1256  InternalRef       136
+1257  CopyRef           136
+1258  AnyAttributes     136
+1259  FirstAttr         136
+1260  LastAttr          136
+1261  UserPage          136
+1262  StartPage         136
+1263  ComputedPage      136
+1264  Empty             136
+1265  Immediately       136
+1266  Within            136
+1267  MaxRangeVal        39
+1268  MinRangeVal        39
+1269  Even              138
+1270  Odd               138
+1271  One               138
+1272  Create            134
+1273  CreateBefore      134
+1274  CreateAfter       134
+1275  CreateLast        134
+1276  CreateFirst       134
+1277  CreateWith        134
+1278  CreateEnclosing   134
+1279  To                147
 
 
 
@@ -544,8 +546,8 @@ right part.
    18  CountFunction      16
    19  TypeOrPage         18  22  23
    20  RelAncestorLevel   18
-   21  AttrName           18  18  18  24  24  36  37  91  93 100 102 101 103  63
-                           111 113 115 114 116 123 125 125 125 136
+   21  AttrName           18  18  18  24  24  36  37  88  91  93 100 102 101 103
+                            63 111 113 115 114 116 123 125 125 125 136
    22  SetRule            18  18
    23  AddRule            18  18
    24  CondAttr           18  19

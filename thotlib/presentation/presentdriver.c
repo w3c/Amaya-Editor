@@ -184,8 +184,8 @@ int                 specific;
       rule->PrPosRule.PoRelation = RlPrevious;
       rule->PrPosRule.PoNotRel = FALSE;
       rule->PrPosRule.PoUserSpecified = FALSE;
-      rule->PrPosRule.PoRefElem = FALSE;
-      rule->PrPosRule.PoRefPresBox = 0;
+      rule->PrPosRule.PoRefKind = RkPresBox;
+      rule->PrPosRule.PoRefIdent = 0;
       break;
     case PtHeight:
     case PtWidth:

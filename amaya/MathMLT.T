@@ -257,13 +257,6 @@ RULES
 
    SYMBOL_UNIT :
 	begin
-	if NOT Within MF
-		begin
-		create '<MO';
-		create Attributes;
-		create '>';
-		create '</MO>\12' after;
-		end;
 	end;
 
 ATTRIBUTES
@@ -277,11 +270,19 @@ ATTRIBUTES
 #include "greek.sgml"
 SYMBTRANSLATE
         BEGIN
-	'i'     -> '&Integral;';
+	'r'	-> '&Sqrt;';
+	'i'     -> '&int;';
+	'c'     -> '&ContourIntegral;';
+	'd'	-> '&Integral;&Integral;';
+	't'	-> '&Integral;&Integral;&Integral;';
         'S'     -> '&Sum;';
-        'P'     -> '&PI;';
-        'U'     -> '&Cap;';
-        'I'     -> '&Cup;';
+        'P'     -> '&Product;';
+        'U'     -> '&Union;';
+        'I'     -> '&Intersection;';
+	'>'	-> '&RightArrow;';
+	'<'	-> '&LeftArrow;';
+	'^'	-> '&UpArrow;';
+	'V'	-> '&DownArrow;';
         END;
 
 END

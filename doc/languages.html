@@ -12,7 +12,7 @@
 
 <H4>Translated from French by Ethan Munson</H4>
 
-<H4>Version of April 1st, 1997</H4>
+<H4>Version of December 29, 1997</H4>
 
 <P>&copy; 1996 INRIA
 
@@ -4378,7 +4378,7 @@ being used to define the juxtapositioning (vertical or horizontal) of boxes,
 the middle axes being used to define centering, and the reference axes being
 used for alignment.</P>
 <P>
-Two rules allow a box to placed relative to other boxes.  The <TT>VertPos</TT>
+Two rules allow a box to be placed relative to other boxes.  The <TT>VertPos</TT>
 rule positions the box vertically.  The <TT>HorizPos</TT> rule positions the
 box horizontally.  It is possible that a box's position could be entirely
 determined by other boxes positioned relative to it. In this case, the
@@ -4417,17 +4417,23 @@ rules for presentation boxes to designate the box of the element which created
 the presentation box.  Finally, the <TT>Root</TT> keyword can be used to
 designate the root of the document.</P>
 <P>
-When the keyword is ambiguous, it is followed by a name of a type or
+When the keyword is ambiguous, it is followed by the name of an element type or
 presentation box which resolves the ambiguity (the <TT>Creator</TT> and
 <TT>Root</TT> keywords are never ambiguous).  If this name is not given, then
 the first box encountered is used as the reference box. It is also possible to
-use just the name of a type or presentation box without an initial keyword. In
+use just the name of an element type or presentation box without an initial keyword. In
 this case, a sibling having that name will be used.  If the name is preceded
 by the keyword <TT>NOT</TT>, then the reference box will be the first box
-whose type is not the named one.  In place of the box or type name, the
-keywords <TT>AnyElem</TT> and <TT>AnyBox</TT> can be used, representing
-respectively, any structured element box and any presentation box.  A type
-name may be preceded by a star in order to resolve the ambiguity in the
+whose type is not the named one.
+<P>
+In place of the box or type name, the keywords <TT>AnyElem</TT>,
+<TT>AnyBox</TT> and <TT>ElemWithAttr</TT> can be used, representing
+respectively, any structured element box, any presentation box, and the box
+corresponding to any structured element having a particular attribute,
+whatever its value; the name of this attribute must follow the keyword
+<TT>ElemWithAttr</TT>.
+<P>
+A type name may be preceded by a star in order to resolve the ambiguity in the
 special case where the structure schema defines an <A
 href="#sectd3284">inclusion</A> without expansion (or with partial expansion)
 of the same type as an element of the scheme.  For mark pairs (and only for <A
@@ -4483,7 +4489,8 @@ rule, the horizontal position rule, or both.</P>
                      BoxOrType .
      BoxOrType     = BoxID /
                      [ '*' ] [ FirstSec ] ElemID /
-                    'AnyElem' / 'AnyBox' .
+                    'AnyElem' / 'AnyBox' /
+                    'ElemWithAttr' AttrID .
      BoxTypeNot    = [ 'NOT' ] BoxOrType .
 </PRE>
 <BLOCKQUOTE class="example">
@@ -8577,7 +8584,8 @@ Reference       = 'Enclosing' [ BoxTypeNot ] /
                   BoxOrType .
 BoxOrType       = BoxID /
                   [ '*' ] [ FirstSec ] ElemID /
-                  'AnyElem' / 'AnyBox' .
+                  'AnyElem' / 'AnyBox' /
+                  'ElemWithAttr' AttrID .
 BoxTypeNot      = [ 'NOT' ] BoxOrType .
 
 Extent          = Reference '.' HeightWidth

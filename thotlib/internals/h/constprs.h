@@ -81,6 +81,11 @@
 #define C_REFERRED 'D'
 #define C_CREATOR 'C'
 
+/* Kind of object used as a reference in a relative position */
+#define C_KIND_ELEMENT_TYPE 'E'
+#define C_KIND_PRES_BOX 'B'
+#define C_KIND_ATTRIBUTE 'A'
+
 /* presentation box contents type */
 /* type du contenu d'une boite de presentation */
 #define C_CONT_FREE 'L'
@@ -89,7 +94,7 @@
 #define C_CONT_ELEM 'E'
 
 /* alignment */
-/*    Defined in constopiv.h */
+/*    Defined in constpiv.h */
 /* C_PIV_LEFT	= 'G'; */
 /* C_PIV_RIGHT	= 'D'; */
 /* C_PIV_CENTERED	= 'C'; */

@@ -984,6 +984,40 @@ PtrPRule           *pNextPRule;
 
 
 /*----------------------------------------------------------------------
+   	ReadRefKind
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static RefKind      ReadRefKind (BinFile file)
+#else  /* __STDC__ */
+static RefKind      ReadRefKind (file)
+BinFile             file;
+
+#endif /* __STDC__ */
+{
+   char                c;
+
+   if (!TtaReadByte (file, &c))
+      c = ' ';
+   switch (c)
+	 {
+	    case C_KIND_ELEMENT_TYPE:
+	       return (RkElType);
+	       break;
+	    case C_KIND_PRES_BOX:
+	       return (RkPresBox);
+	       break;
+	    case C_KIND_ATTRIBUTE:
+	       return (RkAttr);
+	       break;
+	    default:
+	       error = True;
+	       return (RkElType);
+	       break;
+	 }
+}
+
+
+/*----------------------------------------------------------------------
    	ReadPosRule   lit un positionnement relatif			
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1003,12 +1037,8 @@ PosRule            *pPosRule;
    pPosRule->PoRelation = ReadLevel (file);
    TtaReadBool (file, &pPosRule->PoNotRel);
    TtaReadBool (file, &pPosRule->PoUserSpecified);
-   TtaReadBool (file, &pPosRule->PoRefElem);
-   if (pPosRule->PoRefElem)
-      TtaReadShort (file, &pPosRule->PoTypeRefElem);
-   else
-      TtaReadShort (file, &pPosRule->PoRefPresBox);
-
+   pPosRule->PoRefKind = ReadRefKind (file);
+   TtaReadShort (file, &pPosRule->PoRefIdent);
 }
 
 
@@ -1214,11 +1244,8 @@ PtrPRule           *pNextPRule;
 					     TtaReadSignedShort (file, &pDim->DrValue);
 					     pDim->DrRelation = ReadLevel (file);
 					     TtaReadBool (file, &pDim->DrNotRelat);
-					     TtaReadBool (file, &pDim->DrRefElement);
-					     if (pDim->DrRefElement)
-						TtaReadShort (file, &pDim->DrTypeRefElem);
-					     else
-						TtaReadShort (file, &pDim->DrRefPresBox);
+					     pDim->DrRefKind = ReadRefKind (file);
+					     TtaReadShort (file, &pDim->DrRefIdent);
 					  }
 					break;
 				     case PtAdjust:

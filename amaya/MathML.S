@@ -30,28 +30,28 @@ STRUCT
 			Numerator = Construct;
 			Denominator = Construct;
 			END;
-		  MSUBSUP = BEGIN
+		  MSUBSUP (ATTR vertstretch = yes_) = BEGIN
 			Base = Construct;
 		  	Subscript = Construct;
 		  	Superscript = Construct;
 			END;
-		  MSUB = BEGIN
+		  MSUB (ATTR vertstretch) = BEGIN
 			Base;
 		  	Subscript;
 			END;
-		  MSUP = BEGIN
+		  MSUP (ATTR vertstretch) = BEGIN
 			Base;
 		  	Superscript;
 			END;
-		  MUNDER = BEGIN
+		  MUNDER (ATTR vertstretch) = BEGIN
 			UnderOverBase (ATTR horizstretch = yes_) = Construct;
 			Underscript (ATTR horizstretch) = Construct;
 			END;
-		  MOVER = BEGIN
+		  MOVER (ATTR vertstretch) = BEGIN
 			UnderOverBase;
 			Overscript (ATTR horizstretch) = Construct;
 			END;
-		  MUNDEROVER = BEGIN
+		  MUNDEROVER (ATTR vertstretch) = BEGIN
 			UnderOverBase;
 			Underscript;
 			Overscript;
@@ -71,10 +71,11 @@ STRUCT
 			END;
 		  MN = TEXT;
 		  MI (ATTR fontslant = plain, italic) = TEXT;
-		  MO (ATTR addspace = nospace, spacebefore, spaceafter, both) =
+		  MO (ATTR addspace = nospace, spacebefore, spaceafter, both;
+			   vertstretch) =
 			TEXT;
 		  MS = TEXT;
-		  MF = TEXT;
+		  MF = TEXT with vertstretch = yes_;
 		  SEP = CONSTANT C_Empty;
 		  MSPACE = CONSTANT C_Empty;
 		  MSTYLE = LIST OF (Construct);
@@ -108,4 +109,6 @@ EXCEPT
    placeholder:   Invisible;
    addspace:	  Invisible;
    entity:	  Invisible;
+   horizstretch:  Invisible;
+   vertstretch:	  Invisible;
 END
