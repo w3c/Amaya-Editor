@@ -289,7 +289,7 @@
 #define IDC_NORMAL                      1073
 #define IDC_UNDERLINE                   1074
 #define IDC_CROSSOUT                    1075
-#define IDC_DEFAULTUNDERLINE            1076
+#define IDC_OVERLINE                    1076
 #define IDC_06PT                        1079
 #define IDC_10PT                        1090
 #define IDC_08PT                        1091
@@ -558,7 +558,7 @@
 #define IDC_IGNORE_CSS                  1412
 #define IDC_GPOLYLINE                   1413
 #define IDC_NUMROWS                     1413
-#define IDC_OVERLINE                    1413
+#define IDC_DEFAULTUNDERLINE            1413
 #define IDC_GALPHA2                     1414
 #define IDC_BORDER                      1414
 #define IDC_GGROUP                      1415

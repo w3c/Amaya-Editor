@@ -197,7 +197,7 @@ void ReusePrinterDC ()
 {
   int        orientation, paper;
 
-  if (TtaGetPrinterDC (FALSE, &orientation, &paper))
+  if (TtaGetPrinterDC (TRUE, &orientation, &paper))
     {
       /* EnableWindow (ghwndMain, FALSE); */
       ThotCallback (BasePrint + PPrinterName, STRING_DATA, currentFileToPrint);
@@ -1817,6 +1817,7 @@ LPARAM lParam;
       case IDC_UNDERLINE:
 	ThotCallback (NumMenuUnderlineType, INTEGER_DATA, (CHAR_T*) 1);
 	break;
+	  case IDC_OVERLINE:
 	ThotCallback (NumMenuUnderlineType, INTEGER_DATA, (CHAR_T*) 2);
 	break;
       case IDC_CROSSOUT:

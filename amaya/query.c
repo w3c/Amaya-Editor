@@ -2380,6 +2380,7 @@ static void         AHTProfile_delete ()
   HTAA_deleteAllModules ();
   HTAlertCall_deleteAll (HTAlert_global () );
   HTAlert_setGlobal ((HTList *) NULL);
+  HTTimer_deleteAll ();
   HTEventList_unregisterAll ();
   /* these two functions are broken, so we can't call them right now 
   HTHeader_deleteAll ();

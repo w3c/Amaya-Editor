@@ -22,80 +22,55 @@
 </head>
 
 <body xml:lang="fr" lang="fr">
-<p align="center">
-<svg xmlns="http://www.w3.org/2000/svg" width="466" height="349">
+
+<p align="center"><svg xmlns="http://www.w3.org/2000/svg" width="466"
+height="349">
   <image id="backgroundImage" x="0" y="0" width="466" height="349"
          xlink:href="amaya.png">
     <desc>Leading the Web to its full potential</desc>
   </image>
   <defs>
     <symbol id="cube">
-      <polygon points="0,1  5,6  5,21  0,16"/>
-      <polygon points="1,0  16,0  21,5  6,5"/>
-      <rect x="6" y="6" width="15" height="15"/>
+      <polygon points="0,1  5,6  5,21  0,16" stroke="1"/>
+      <polygon points="1,0  16,0  21,5  6,5" stroke="1"/>
+      <rect x="6" y="6" width="15" height="15" stroke="1"/>
     </symbol>
   </defs>
   <g id="cubes">
-    <use x="200" y="112" xlink:href="#cube" style="fill: #0192BF">
-    </use>
-    <use x="230" y="112" xlink:href="#cube" style="fill: #2B9FC3">
-    </use>
-    <use x="260" y="112" xlink:href="#cube" style="fill: #53AAC5">
-    </use>
-    <use x="290" y="112" xlink:href="#cube" style="fill: #7AB4C6">
-    </use>
-    <use x="320" y="112" xlink:href="#cube" style="fill: #A3C0C9">
-    </use>
-    <use x="350" y="112" xlink:href="#cube" style="fill: #A3C0C9">
-    </use>
-    <use x="380" y="112" xlink:href="#cube" style="fill: #A3C0C9">
-    </use>
-    <use x="410" y="112" xlink:href="#cube" style="fill: #EC1608">
-    </use>
-    <use x="410" y="142" xlink:href="#cube" style="fill: #E2372C">
-    </use>
-    <use x="350" y="172" xlink:href="#cube" style="fill: #DAAFAC">
-    </use>
-    <use x="380" y="172" xlink:href="#cube" style="fill: #DF8984">
-    </use>
-    <use x="410" y="172" xlink:href="#cube" style="fill: #DC5B53">
-    </use>
+    <use x="200" y="112" xlink:href="#cube" style="fill: #0192BF"/>
+    <use x="230" y="112" xlink:href="#cube" style="fill: #2B9FC3"/>
+    <use x="260" y="112" xlink:href="#cube" style="fill: #53AAC5"/>
+    <use x="290" y="112" xlink:href="#cube" style="fill: #7AB4C6"/>
+    <use x="320" y="112" xlink:href="#cube" style="fill: #A3C0C9"/>
+    <use x="350" y="112" xlink:href="#cube" style="fill: #A3C0C9"/>
+    <use x="380" y="112" xlink:href="#cube" style="fill: #A3C0C9"/>
+    <use x="410" y="112" xlink:href="#cube" style="fill: #EC1608"/>
+    <use x="410" y="142" xlink:href="#cube" style="fill: #E2372C"/>
+    <use x="350" y="172" xlink:href="#cube" style="fill: #DAAFAC"/>
+    <use x="380" y="172" xlink:href="#cube" style="fill: #DF8984"/>
+    <use x="410" y="172" xlink:href="#cube" style="fill: #DC5B53"/>
   </g>
   <text id="logo" x="304" y="162"
   style="font: 24pt helvetica; font-weight: bold; fill: #488B9B;">AMAYA
   </text>
   <text id="version" x="344px" y="306"
-  style="font: bold 16pt italic; fill: #0192BF;">Release 4.1
+  style="font: bold 16pt italic; fill: #0192BF;">Release 4.2
   </text>
   <g id="polygonMask" style="stroke: none;">
-    <polygon style="fill: #0192BF;" points="30,60  30,230  108,208"/>
+    <polygon style="fill: #0192BF;" points="30,60  30,230  108,208"
+             stroke="1"/>
     <foreignObject y="156px" x="35px">
-      <math xmlns="http://www.w3.org/1998/Math/MathML"
-      style="color: #FFFFFF; font-family: times">
-        <mrow>
-          <mi>y</mi>
-          <mo>=</mo>
-          <mfrac>
-            <mn>1</mn>
-            <msqrt>
-              <mrow>
-                <msup>
-                  <mi>x</mi>
-                  <mn>2</mn>
-                </msup>
-                <mo>+</mo>
-                <mn>1</mn>
-              </mrow>
-            </msqrt>
-          </mfrac>
-        </mrow>
-      </math>
-    </foreignObject>
-    <polygon style="fill: #9EA4A6;" points="30,60  108,208  125,155"/>
-    <polygon style="fill: #89A5C7;" points="30,60  125,155  144,161"/>
-    <polygon style="fill: #488B9B;" points="30,60  144,161  138,115"/>
-    <polygon style="fill: #9EA4A6;" points="30,60  138,115  180,114"/>
-    <polygon style="fill: #EC1608;" points="30,60  180,114  160,60"/>
+       xlink:href="color: #FFFFFF; font-family: times"y=1x2+1</foreignObject>
+    <polygon style="fill: #9EA4A6;" points="30,60  108,208  125,155"
+             stroke="1"/>
+    <polygon style="fill: #89A5C7;" points="30,60  125,155  144,161"
+             stroke="1"/>
+    <polygon style="fill: #488B9B;" points="30,60  144,161  138,115"
+             stroke="1"/>
+    <polygon style="fill: #9EA4A6;" points="30,60  138,115  180,114"
+             stroke="1"/>
+    <polygon style="fill: #EC1608;" points="30,60  180,114  160,60"
+             stroke="1"/>
   </g>
 </svg>
 </p>
@@ -114,19 +89,19 @@ supporte les recommendations HTML, XHTML, MathML, SVG, CSS, et  HTTP.</p>
 <h3>Caractéristiques principales</h3>
 
 <p>Avec Amaya, vous pouvez manipuler des pages Web contenant des formulaires,
-des tables et les caractéristiques les plus avancées de HTML. Vous
-pouvez créer et éditer des <a href="../doc/amaya/Math.html.fr">expressions
+des tables et les caractéristiques les plus avancées de HTML. Vous pouvez
+créer et éditer des <a href="../doc/amaya/Math.html.fr">expressions
 mathématiques</a> complexes et des <a
 href="../doc/amaya/SVG.html.fr">graphiques SVG</a> dans les pages Web. Vous
 pouvez styler vos documents en utilisant les cascades de feuilles de style
-(CSS). Vous pouvez publier des documents HTML et XHTML sur un serveur local
-ou distant à travers HTTP.</p>
+(CSS). Vous pouvez publier des documents HTML et XHTML sur un serveur local ou
+distant à travers HTTP.</p>
 
 <p>La navigation et l'édition sont intimement intégrées. Vous pouvez naviguer
-et éditer des pages Web en même temps. Pour rendre l'édition plus
-aisée, un simple clic dans Amaya change seulement le point d'insertion et
-permet de rentrer le texte; pour suivre un lien, vous devez double-cliquer.
-Ce comportement peut être modifié ainsi que de nombreuses caractéristiques en
+et éditer des pages Web en même temps. Pour rendre l'édition plus aisée, un
+simple clic dans Amaya change seulement le point d'insertion et permet de
+rentrer le texte; pour suivre un lien, vous devez double-cliquer. Ce
+comportement peut être modifié ainsi que de nombreuses caractéristiques en
 utilisant le menu Spécial/Préférences.</p>
 
 <p>Amaya inclut une application <a
@@ -150,7 +125,7 @@ Défaire/Refaire multi-niveaux et multi-documents.</p>
 
 <p>Un manuel d'utilisation est disponible en ligne. Vous pouvez y accéder avec
 le menu Aide, qui affiche chaque section séparément. Vous pouvez également
-l'imprimer&nbsp;: il suffit de suivre le lien <a
+l'imprimer : il suffit de suivre le lien <a
 href="../doc/amaya/Manual.html.fr">Manuel en ligne</a>. Vous obtiendrez la
 page de garde. Construisez ensuite le livre entier à l'aide de l'entrée
 "Construire un livre" du menu Spécial et imprimez le résultat</p>
