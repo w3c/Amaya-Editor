@@ -641,7 +641,6 @@ static void FrameRedraw (int frame, Dimension width, Dimension height)
 }
 
 
-
 #ifdef _GTK
 #ifdef _GL
 /*----------------------------------------------------------------------

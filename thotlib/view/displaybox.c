@@ -1586,7 +1586,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	      else if (!pFrame->FrSelectOnePosition)
 		DisplayBgBoxSelection (frame, pBox);
 	    }
-	  else
+	  else if (!pFrame->FrSelectOnePosition)
 	    DisplayBgBoxSelection (frame, pBox);
 	}
 
