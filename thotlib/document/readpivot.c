@@ -55,7 +55,6 @@ static int          newColor[] =
 #include "viewcommands_f.h"
 #include "exceptions_f.h"
 #include "font_f.h"
-#include "indcharge_f.h"
 #include "memory_f.h"
 #include "message_f.h"
 #include "changeabsbox_f.h"
@@ -1175,10 +1174,8 @@ PtrDocument         pDoc;
    document docIdent. Si docIdent est un identificateur	
    vide, il s'agit du document pDoc.			
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void         CreateReference (PtrReference RefPtr, ReferenceType TRef, LabelString lab, boolean RExt, DocumentIdentifier I, PtrDocument pDoc)
-
 #else  /* __STDC__ */
 static void         CreateReference (RefPtr, TRef, lab, RExt, I, pDoc)
 PtrReference        RefPtr;
@@ -1187,9 +1184,7 @@ LabelString         lab;
 boolean             RExt;
 DocumentIdentifier  I;
 PtrDocument         pDoc;
-
 #endif /* __STDC__ */
-
 {
    PtrReferredDescr    r;
    PtrReference        pRf;
@@ -1223,51 +1218,6 @@ PtrDocument         pDoc;
 }
 
 
-#ifdef __STDC__
-static void         NewCreateReference (PtrReference pRef1, ReferenceType refType, LabelString label, boolean refExt, DocumentIdentifier docIdent, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-static void         NewCreateReference (pRef1, refType, label, refExt, docIdent, pDoc)
-PtrReference        pRef1;
-ReferenceType       refType;
-LabelString         label;
-boolean             refExt;
-DocumentIdentifier  docIdent;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
-{
-   PtrReferredDescr    pRefD;
-   PtrReference        pRef;
-
-   if (label[0] != '\0')
-      /* cherche le descripteur d'element reference' correspondant */
-     {
-	pRefD = GetElRefer (label, docIdent, pDoc);
-	/* met le descripteur de reference a la fin de la chaine des */
-	/* descripteur de reference du document */
-	if (pRefD->ReFirstReference == NULL)
-	  {
-	     pRefD->ReFirstReference = pRef;
-	     pRef1->RdPrevious = NULL;
-	  }
-	else
-	  {
-	     pRef = pRefD->ReFirstReference;
-	     while (pRef->RdNext != NULL)
-		pRef = pRef->RdNext;
-	     pRef->RdNext = pRef;
-	     pRef1->RdPrevious = pRef;
-	  }
-	/* remplit le descripteur de reference */
-	pRef1->RdNext = NULL;
-	pRef1->RdReferred = pRefD;
-	pRef1->RdTypeRef = refType;
-	pRef1->RdInternalRef = !refExt;
-     }
-}
-
 /*----------------------------------------------------------------------
    ReadType lit dans le fichier pivot, selon la valeur de tag,     
    un numero de type ou un nom de nature et rend le numero 
@@ -1276,19 +1226,15 @@ PtrDocument         pDoc;
    pSS contient un pointeur sur le schema de structure 
    de cette nature.                                        
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static int          ReadType (PtrDocument pDoc, PtrSSchema * pSS, BinFile pivFile, char *tag)
-
 #else  /* __STDC__ */
 static int          ReadType (pDoc, pSS, pivFile, tag)
 PtrDocument         pDoc;
 PtrSSchema         *pSS;
 BinFile             pivFile;
 char               *tag;
-
 #endif /* __STDC__ */
-
 {
    Name                PSchemaName;
    int                 nat, rule;
