@@ -1281,11 +1281,11 @@ View               view;
 STRING             title;
 #endif
 {
+   CHAR_T            s[MAX_LENGTH];
 #  ifndef _WINDOWS
    /* For Windoz have a look to OPENFILENAME structure and
       GetOpenFileName function */
    int               i;
-   CHAR_T            s[MAX_LENGTH];
 
    CurrentDocument = document;
    /* Dialogue form for open URL or local */
@@ -1323,8 +1323,13 @@ STRING             title;
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseDialog + OpenForm, FALSE);
 #  else /* _WINDOWS */
+   if (LastURLName[0] != EOS)
+      sprintf (s, "%s", LastURLName);
+   else
+        sprintf (s, "%s%c%s", DirectoryName, DIR_STR, DocumentName);
+
    CurrentDocument = document;
-   CreateOpenDocDlgWindow (TtaGetViewFrame (document, view), docToOpen, BaseDialog, OpenForm, DocSelect, DirSelect, URLName, 2);
+   CreateOpenDocDlgWindow (TtaGetViewFrame (document, view), title, s, docToOpen, BaseDialog, OpenForm, DocSelect, DirSelect, URLName, 2);
 #  endif /* _WINDOWS */
 }
 
@@ -1368,7 +1373,7 @@ ThotBool    isHTML;
       if (LastURLName[0] != EOS)
 	{
 	  TtaExtractName (LastURLName, tempfile, DocumentName);
-	  sprintf (LastURLName, "%s/New.html", tempfile);
+	  sprintf (LastURLName, "%s%cNew.html", tempfile, DIR_SEP);
 	}
       else
 	ustrcpy (DocumentName, "New.html");
@@ -1381,7 +1386,7 @@ ThotBool    isHTML;
       if (LastURLName[0] != EOS)
 	{
 	  TtaExtractName (LastURLName, tempfile, DocumentName);
-	  sprintf (LastURLName, "%s/New.css", tempfile);
+	  sprintf (LastURLName, "%s%cNew.css", tempfile, DIR_SEP);
 	}
       else
       ustrcpy (DocumentName, "New.css");

@@ -80,6 +80,7 @@ extern HWND         hWndParent;
 extern int          ClickX, ClickY;
 
 static CHAR_T       urlToOpen [256];
+static CHAR_T       tmpDocName [256];
 static CHAR_T       altText [256];
 static CHAR_T       message [300];
 static CHAR_T       message2 [300];
@@ -668,17 +669,19 @@ int   toggle_save;
  CreateOPenDocDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
-void CreateOpenDocDlgWindow (HWND parent, STRING doc_to_open, int base_doc, int form_doc, int doc_select, int dir_select, int url_name, int doc_type)
+void CreateOpenDocDlgWindow (HWND parent, STRING title, STRING docName, STRING doc_to_open, int base_doc, int form_doc, int doc_select, int dir_select, int url_name, int doc_type)
 #else  /* !__STDC__ */
-void CreateOpenDocDlgWindow (parent, doc_to_open, base_doc, form_doc, doc_select, dir_select, url_name, doc_type)
+void CreateOpenDocDlgWindow (parent, title, docName, doc_to_open, base_doc, form_doc, doc_select, dir_select, url_name, doc_type)
 HWND  parent;
 STRING doc_to_open;
-int   base_doc;
-int   for_doc;
-int   doc_select;
-int   dir_select;
-int   url_name;
-int   doc_type;
+STRING title;
+STRING docName; 
+int    base_doc;
+int    for_doc;
+int    doc_select;
+int    dir_select;
+int    url_name;
+int    doc_type;
 #endif /* __STDC__ */
 {  
 	baseDoc   = base_doc;
@@ -686,6 +689,8 @@ int   doc_type;
 	docSelect = doc_select;
 	dirSelect = dir_select;
 	urlName   = url_name;
+    sprintf (wndTitle,  "%s", title);
+    sprintf (tmpDocName, "%s", docName);
     
     if (doc_type == TEXT_FILE)
        szFilter = APPFILENAMEFILTER;
@@ -2441,7 +2446,8 @@ LPARAM lParam;
 {
     switch (msg) {
 	       case WM_INITDIALOG:
-			    SetDlgItemText (hwnDlg, IDC_GETURL, "");
+                SetWindowText (hwnDlg, wndTitle);
+			    SetDlgItemText (hwnDlg, IDC_GETURL, tmpDocName);
 				urlToOpen [0] = 0;
 				break;
 
