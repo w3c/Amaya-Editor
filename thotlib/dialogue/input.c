@@ -553,7 +553,7 @@ ThotBool WIN_CharTranslation (HWND hWnd, int frame, UINT msg, WPARAM wParam,
      /* the Shift key is pressed */
      keyboard_mask |= THOT_MOD_SHIFT;
    status = GetKeyState (VK_CONTROL);
-   if (HIBYTE (status))
+   if (msg != WM_CHAR && HIBYTE (status))
      /* the Control key is pressed */
      keyboard_mask |= THOT_MOD_CTRL;
    /* Alt key is a particular key for Windows. It generates a WM_SYSKEYDOWN and */
@@ -561,7 +561,7 @@ ThotBool WIN_CharTranslation (HWND hWnd, int frame, UINT msg, WPARAM wParam,
    /* we do not use the standard accelerator tables as in common Windows appli. */
    /* Is the Alt key pressed ?? */
    status = GetKeyState (VK_MENU);
-   if (HIBYTE (status))
+   if (msg != WM_CHAR && HIBYTE (status))
      /* the Alt key is pressed */
      keyboard_mask |= THOT_MOD_ALT;
 
