@@ -1144,7 +1144,8 @@ ThotBool            CondPresentation (PtrCondition pCond, PtrElement pEl,
 	    while (pA != NULL && !currentCond)
 	      /* boucle sur les attributs de l'element */
 	      {
-		if (pA->AeAttrNum == pCond->CoTypeElAttr)
+		if (pA->AeAttrNum == pCond->CoTypeElAttr &&
+		    strcmp (pA->AeAttrSSchema->SsName, pSS->SsName) == 0)
 		  currentCond = TRUE;
 		else
 		  pA = pA->AeNext;		/* attribut suivant */
