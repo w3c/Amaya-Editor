@@ -3247,7 +3247,7 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
 	      /* Update the Document_URL element */
 	      root = TtaGetMainRoot (xmlDoc);
 	      elType = TtaGetElementType (root);
-	      doc_url == NULL;
+	      doc_url = NULL;
 	      if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
 		{
 		  elType.ElTypeNum = HTML_EL_Document_URL;
