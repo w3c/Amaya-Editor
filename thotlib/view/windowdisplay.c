@@ -1198,7 +1198,6 @@ void DrawRectangle (int frame, int thick, int style, int x, int y, int width,
 		    int height, int fg, int bg, int pattern)
 {
    LOGBRUSH    logBrush;
-   Pixmap      pat = (Pixmap) 0;
    HBRUSH      hBrush;
    HBRUSH      hOldBrush;
    HPEN        hPen;
@@ -1235,14 +1234,15 @@ void DrawRectangle (int frame, int thick, int style, int x, int y, int width,
 	 }
      }
    /* how to fill the polygone */
-   pat = (Pixmap) CreatePattern (0, fg, bg, pattern);
-   if (pat == 0)
+   if (pattern == 0)
      logBrush.lbStyle = BS_NULL;
    else
      {
-       logBrush.lbColor = ColorPixel (bg);
+       if (pattern == 1)
+	 logBrush.lbColor = ColorPixel (fg);
+       else
+	 logBrush.lbColor = ColorPixel (bg);
        logBrush.lbStyle = BS_SOLID;
- 
      } 
    hBrush = CreateBrushIndirect (&logBrush);
 
@@ -1263,8 +1263,6 @@ void DrawRectangle (int frame, int thick, int style, int x, int y, int width,
      }
    SelectObject (display, hOldPen);
    DeleteObject (hPen);
-   if (pat != NULL)
-      DeleteObject ((HGDIOBJ)pat);
 }
 
 /*----------------------------------------------------------------------
@@ -1293,7 +1291,6 @@ static void  DoDrawPolygon (int frame, int thick, int style,
    LOGBRUSH            logBrush;
    HBRUSH              hBrush = NULL;
    HBRUSH              hOldBrush;
-   Pixmap              pat;
 
    if (fg < 0)
      thick = 0;
@@ -1305,10 +1302,12 @@ static void  DoDrawPolygon (int frame, int thick, int style,
 #endif /* _WIN_PRINT */
 
    /* how to fill the polygon */
-   pat = (Pixmap) CreatePattern (0, fg, bg, pattern);
-   if (pat != NULL)
+   if (pattern > 0)
      {
-       logBrush.lbColor = ColorPixel (bg);
+       if (pattern == 1)
+	 logBrush.lbColor = ColorPixel (fg);
+       else
+	 logBrush.lbColor = ColorPixel (bg);
        logBrush.lbStyle = BS_SOLID;
        hBrush = CreateBrushIndirect (&logBrush); 
        /* fill the polygon */
@@ -1320,7 +1319,6 @@ static void  DoDrawPolygon (int frame, int thick, int style,
        DeleteObject (hPen);
        SelectObject (display, hOldBrush);
        DeleteObject (hBrush);
-       DeleteObject ((HGDIOBJ) pat);
      }
 
    /* how to stroke the polygon */
@@ -1594,7 +1592,6 @@ void DrawSpline (int frame, int thick, int style, int x, int y,
   int           i, j;
   float         x1, y1, x2, y2;
   float         cx1, cy1, cx2, cy2;
-  Pixmap        pat = (Pixmap) 0;
   HDC           display;
   HPEN          hPen;
   HPEN          hOldPen;
@@ -1616,12 +1613,14 @@ void DrawSpline (int frame, int thick, int style, int x, int y,
    SelectClipRgn (display, clipRgn);
 #endif /* _WIN_PRINT */
   /* how to fill the polygon */
-  pat = (Pixmap) CreatePattern (0, fg, bg, pattern);
-  if (pat == 0)
-    logBrush.lbStyle = BS_NULL;
-  else
-    {
-      logBrush.lbColor = ColorPixel (bg);
+   if (pattern == 0)
+     logBrush.lbStyle = BS_NULL;
+   else
+     {
+       if (pattern == 1)
+	 logBrush.lbColor = ColorPixel (fg);
+       else
+	 logBrush.lbColor = ColorPixel (bg);
       logBrush.lbStyle = BS_SOLID;
     } 
   hBrush = CreateBrushIndirect (&logBrush);
@@ -1734,9 +1733,6 @@ void DrawSpline (int frame, int thick, int style, int x, int y,
       SelectObject (display, hOldBrush);
       DeleteObject (hBrush);
     }
-  if (pat != 0)
-    if (!DeleteObject ((HGDIOBJ) pat))
-      WinErrorBox (NULL, TEXT("Pattern"));
   SelectObject (display, hOldPen);
   DeleteObject (hPen);
 }
@@ -1837,7 +1833,6 @@ void DrawPath (int frame, int thick, int style, int x, int y,
 	       PtrPathSeg path, int fg, int bg, int pattern)
 {
   HDC                 display;
-  Pixmap              pat;
   HPEN                hPen;
   HPEN                hOldPen;
   LOGBRUSH            logBrush;
@@ -1855,10 +1850,12 @@ void DrawPath (int frame, int thick, int style, int x, int y,
       SelectClipRgn (display, clipRgn);
 #endif /* _WIN_PRINT */
       /* first, fill the path */
-      pat = (Pixmap) CreatePattern (0, fg, bg, pattern);
-      if (pat)
+      if (pattern > 0)
 	{
-	  logBrush.lbColor = ColorPixel (bg);
+	  if (pattern == 1)
+	    logBrush.lbColor = ColorPixel (fg);
+	  else
+	    logBrush.lbColor = ColorPixel (bg);
 	  logBrush.lbStyle = BS_SOLID;
 	  hBrush = CreateBrushIndirect (&logBrush); 
 	  hOldBrush = SelectObject (display, hBrush);
@@ -1868,7 +1865,6 @@ void DrawPath (int frame, int thick, int style, int x, int y,
 	  FillPath (display);
 	  SelectObject (display, hOldBrush);
 	  DeleteObject (hBrush);
-	  DeleteObject ((HGDIOBJ) pat);
 	}
 
       if (thick > 0)
@@ -1902,7 +1898,6 @@ void DrawOval (int frame, int thick, int style, int x, int y,
 	       int width, int height, int rx, int ry,
 	       int fg, int bg, int pattern)
 {
-  Pixmap        pat = (Pixmap) 0;
   HPEN          hPen;
   HPEN          hOldPen;
   LOGBRUSH      logBrush;
@@ -1959,12 +1954,14 @@ void DrawOval (int frame, int thick, int style, int x, int y,
 	 }
      }
    /* how to fill the polygone */
-   pat = (Pixmap) CreatePattern (0, fg, bg, pattern);
-   if (pat == 0)
+   if (pattern == 0)
      logBrush.lbStyle = BS_NULL;
    else
      {
-       logBrush.lbColor = ColorPixel (bg);
+       if (pattern == 1)
+	 logBrush.lbColor = ColorPixel (fg);
+       else
+	 logBrush.lbColor = ColorPixel (bg);
        logBrush.lbStyle = BS_SOLID;
  
      } 
@@ -1984,8 +1981,6 @@ void DrawOval (int frame, int thick, int style, int x, int y,
    DeleteObject (hBrush);
    SelectObject (display, hOldPen);
    DeleteObject (hPen);
-   if (pat != 0)
-     DeleteObject ((HGDIOBJ) pat);
 }
 
 /*----------------------------------------------------------------------
@@ -1996,7 +1991,6 @@ void DrawOval (int frame, int thick, int style, int x, int y,
 void DrawEllips (int frame, int thick, int style, int x, int y, int width,
 		 int height, int fg, int bg, int pattern)
 {
-  Pixmap   pat = (Pixmap)0;
   HDC      display;
   HPEN     hPen;
   HPEN     hOldPen;
@@ -2037,12 +2031,14 @@ void DrawEllips (int frame, int thick, int style, int x, int y, int width,
 	 }
     }
   /* how to fill the polygone */
-  pat = (Pixmap) CreatePattern (0, fg, bg, pattern);
-  if (pat == 0)
-    logBrush.lbStyle = BS_NULL;
-  else
+   if (pattern == 0)
+     logBrush.lbStyle = BS_NULL;
+   else
      {
-       logBrush.lbColor = ColorPixel (bg);
+       if (pattern == 1)
+	 logBrush.lbColor = ColorPixel (fg);
+       else
+	 logBrush.lbColor = ColorPixel (bg);
        logBrush.lbStyle = BS_SOLID;
  
      } 
@@ -2057,8 +2053,6 @@ void DrawEllips (int frame, int thick, int style, int x, int y, int width,
    DeleteObject (hBrush);
    SelectObject (display, hOldPen);
    DeleteObject (hPen);
-   if (pat != 0)
-     DeleteObject ((HGDIOBJ) pat);
 }
 
 /*----------------------------------------------------------------------
