@@ -1234,18 +1234,35 @@ void SVGLIB_FreeDocumentResource ()
 {
 #ifdef _SVGLIB
   ListUriTitle      *curList, *prevList;
+  int                i = 1;
+  /* is it the last loaded document ? */
 
-  /* Free structure memory */
-  curList = HeaderListUriTitle;
-  while (curList)
+  while (i < DocumentTableLength && 
+	 ((DocumentURLs[i] == NULL) || (DocumentTypes[i] == docLibrary)))
+    i++;
+  
+  if (i == DocumentTableLength)
     {
-      TtaFreeMemory (curList->URI);
-      TtaFreeMemory (curList->Title);
-      prevList = curList;
-      curList = curList->next;
-      TtaFreeMemory (prevList);
+      i = 1;
+      while (i < DocumentTableLength && DocumentTypes[i] != docLibrary)
+	i++;
+      if (DocumentTypes[i] == docLibrary && !TtaIsDocumentModified (i))
+	{
+	  FreeDocumentResource (i);
+	  TtaCloseDocument (i);
+	}
+      /* Free structure memory */
+      curList = HeaderListUriTitle;
+      while (curList)
+	{
+	  TtaFreeMemory (curList->URI);
+	  TtaFreeMemory (curList->Title);
+	  prevList = curList;
+	  curList = curList->next;
+	  TtaFreeMemory (prevList);
+	}
+      HeaderListUriTitle = NULL;
     }
-  HeaderListUriTitle = NULL;
 #endif /* _SVGLIB */
 }
 

@@ -7235,9 +7235,6 @@ void CheckAmayaClosed ()
   
   if (i == DocumentTableLength)
     {
-#ifdef _SVGLIB
-      SVGLIB_FreeDocumentResource ();
-#endif /* _SVGLIB */
       TtaQuit ();
     }
 }
@@ -7284,9 +7281,9 @@ void AmayaClose (Document document, View view)
   ----------------------------------------------------------------------*/
 char *InitStringForCombobox()
 {
-  char   *buffer = NULL;
-  char   *url_home, *urlstring, *app_home;
-  FILE   *urlfile;
+  char     *buffer = NULL;
+  char     *url_home, *urlstring, *app_home;
+  FILE     *urlfile;
 
   /* Initialize string
      by reading a file in APPHOME 
@@ -7305,11 +7302,11 @@ char *InitStringForCombobox()
     {
       buffer = (char *) TtaGetMemory (MAX_LENGTH);
       *buffer = EOS;
+      if (fscanf (urlfile, "%s", urlstring) > 0)
+	strcat (buffer, urlstring);
       while (fscanf (urlfile, "%s", urlstring) > 0)
 	{
-	  strcat (buffer, urlstring);
-	  if (*urlstring != EOL)
-	    sprintf (buffer, "%s%c", buffer, EOL);
+	  sprintf (buffer, "%s%c%s", buffer, EOL, urlstring);
 	}
       TtaReadClose (urlfile);
     }
