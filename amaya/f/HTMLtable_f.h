@@ -6,6 +6,9 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern Element GetSiblingRow ( Element row,
+			       ThotBool before,
+			       ThotBool inMath );
 extern int SetRowExt ( Element cell,
                        int span,
                        Document doc,
@@ -15,6 +18,9 @@ extern int SetColExt ( Element cell,
                        Document doc,
                        ThotBool inMath,
                        ThotBool deletingLastCol );
+extern Element GetCellFromColumnHead ( Element row,
+				       Element colhead,
+				       ThotBool inMath );
 extern Element NewColumnHead ( Element lastcolhead,
                                ThotBool before,
                                ThotBool last,
@@ -35,7 +41,8 @@ extern void CheckTable ( Element table,
 extern void NewCell ( Element cell,
                       Document doc,
                       ThotBool generateColumn,
-                      ThotBool generateEmptyCells );
+                      ThotBool generateEmptyCells,
+		      ThotBool check );
 extern ThotBool CreateCell ( NotifyElement *event );
 extern void CellCreated ( NotifyElement * event );
 extern void CellPasted ( NotifyElement * event );
@@ -80,6 +87,9 @@ extern void RowspanDeleted ( NotifyAttribute * event );
 
 #else /* __STDC__ */
 
+extern Element GetSiblingRow ( Element row,
+			         ThotBool before,
+			         ThotBool inMath );
 extern int SetRowExt ( Element cell,
                          int span,
                          Document doc,
@@ -89,6 +99,9 @@ extern int SetColExt ( Element cell,
                          Document doc,
                          ThotBool inMath,
                          ThotBool deletingLastCol );
+extern Element GetCellFromColumnHead ( Element row,
+				         Element colhead,
+				         ThotBool inMath );
 extern Element NewColumnHead ( Element lastcolhead,
                                  ThotBool before,
                                  ThotBool last,
@@ -109,7 +122,8 @@ extern void CheckTable ( Element table,
 extern void NewCell ( Element cell,
                         Document doc,
                         ThotBool generateColumn,
-                        ThotBool generateEmptyCells );
+		        ThotBool generateEmptyCells,
+		        ThotBool check );
 extern ThotBool CreateCell ( NotifyElement *event );
 extern void CellCreated ( NotifyElement * event );
 extern void CellPasted ( NotifyElement * event );

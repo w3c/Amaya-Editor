@@ -30,7 +30,7 @@ static int          PreviousRowspan;
   GetSiblingRow
   returns the sibling row before or after the cuttent row.
   ----------------------------------------------------------------------*/
-static Element GetSiblingRow (Element row, ThotBool before, ThotBool inMath)
+Element GetSiblingRow (Element row, ThotBool before, ThotBool inMath)
 {
   ElementType         elType;
   SSchema             rowSS;
@@ -241,8 +241,7 @@ int SetColExt (Element cell, int span, Document doc, ThotBool inMath,
    returns the cell that corresponds to the Column_head element colhead
    in a given row.
   ----------------------------------------------------------------------*/
-static Element GetCellFromColumnHead (Element row, Element colhead,
-				      ThotBool inMath)
+Element GetCellFromColumnHead (Element row, Element colhead, ThotBool inMath)
 {
    Element             cell, currentcolhead;
    ThotBool            found;
@@ -1670,7 +1669,7 @@ static Element SpanningCellForRow (Element row, Element colhead,
   in other rows.
   ----------------------------------------------------------------------*/
 void NewCell (Element cell, Document doc, ThotBool generateColumn,
-	      ThotBool generateEmptyCells)
+	      ThotBool generateEmptyCells, ThotBool check)
 {
   Element             newcell, row, colhead, lastColhead, chead, pcell;
   ElementType         elType;
@@ -1867,8 +1866,26 @@ void NewCell (Element cell, Document doc, ThotBool generateColumn,
 	TtaNextSibling (&colhead);
       /* next pasted cells with info = 3 should be linked to this column */
       CurrentColumn = colhead;
+      pcell = NULL;
+      if (check)
+        /* is a cell already linked to this column head? */
+	{
+	  attr = TtaGetAttribute (newcell, attrTypeRefC);
+	  if (attr)
+	    TtaRemoveAttribute (newcell, attr, doc);
+	  pcell = GetCellFromColumnHead (row, colhead, inMath);
+	  if (pcell)
+	    {
+	      attr = TtaGetAttribute (pcell, attrTypeRefC);
+	      if (attr)
+		TtaRemoveAttribute (pcell, attr, doc);
+	    }
+	}
       /* link the new cell to the new colhead */
       LinkCellToColumnHead (newcell, colhead, doc, inMath);
+      if (check && pcell)
+	/* link the cell that was there before to its right column */
+	NewCell (pcell, doc, FALSE, FALSE, TRUE);
     }
    TtaSetDisplayMode (doc, dispMode);
 }
@@ -1931,7 +1948,7 @@ void CellCreated (NotifyElement * event)
   /* the creation of the cell must be registered after
      the created colhead */
   TtaCancelLastRegisteredOperation (doc);
-  NewCell (cell, doc, TRUE, TRUE);
+  NewCell (cell, doc, TRUE, TRUE, FALSE);
   TtaRegisterElementCreate (cell, doc);
   /* change the value of "info" in the latest cell
      deletion recorded in the Undo queue. The goal is to
@@ -1968,7 +1985,7 @@ void CellPasted (NotifyElement * event)
 	command. Regenerate the corresponding ColumnHead and link the
 	restored cell with that ColumnHead, but do not generate empty
 	cells in other rows */
-     NewCell (cell, doc, TRUE, FALSE);
+     NewCell (cell, doc, TRUE, FALSE, FALSE);
    else if (event->info == 3)
      {
      /* undoing the deletion of any other cell in a "delete column"
@@ -1981,7 +1998,7 @@ void CellPasted (NotifyElement * event)
    else
      /* undoing/redoing. Link the cell with ColumnHead elements, but do not
 	generate empty cells in other rows */
-     NewCell (cell, doc, FALSE, FALSE);
+     NewCell (cell, doc, FALSE, FALSE, TRUE);
 
    /* update row extensions */
    rowspanType.AttrSSchema = elType.ElSSchema;
@@ -2858,6 +2875,9 @@ static void MoveCellContents (Element nextCell, Element cell,
     }
   /* delete the cell */
   TtaDeleteTree (nextCell, doc);
+  /* check the column and the row of the deleted cell: they may be
+     empty now. In that case we should delete them */
+  /******************/
 }
 
 /*----------------------------------------------------------------------
@@ -2915,7 +2935,7 @@ void ChangeColspan (Element cell, int oldspan, int newspan, Document doc)
                       row, curRow, prevCell;
   ElementType         tableType;
   AttributeType       attrType, rowspanType, colspanType;
-  Attribute           attr;
+  Attribute           attr, attrRowspan;
   Document            refDoc;
   char                name[50];
   int                 ncol, nrow, i, j, rowspan, curColspan, curRowspan;
@@ -2997,35 +3017,41 @@ void ChangeColspan (Element cell, int oldspan, int newspan, Document doc)
 			}
 		      else
 			curColspan = 1;
-		      if (newspan > 0 &&
-			  (curColspan > newspan - ncol + 1 || curColspan == 0))
+		      /* get the rowspan value of the current cell */
+		      attrRowspan = TtaGetAttribute (nextCell, rowspanType);
+		      if (attrRowspan)
 			{
-			  prevCell = nextCell;
-			  cHead = colHead;
-			  for (j = 0; j < newspan && cHead; j++)
-			    TtaNextSibling (&cHead);
-			  for (j = 0; j < curColspan-newspan+ncol-1 && cHead;
-			       j++)
-			    {
-			      prevCell = AddEmptyCellInRow (curRow, cHead,
-				    prevCell, FALSE, doc, inMath, FALSE, TRUE);
-			      TtaNextSibling (&cHead);
-			    }
-			}
-		      attr = TtaGetAttribute (nextCell, rowspanType);
-		      if (attr)
-			/* this cell has a rowspan attribute */
-			{
-			  curRowspan = TtaGetAttributeValue (attr);
+			  curRowspan = TtaGetAttributeValue (attrRowspan);
 			  if (curRowspan < 0)
 			    curRowspan = 1;
 			}
 		      else
 			curRowspan = 1;
-		      if ((curRowspan == 0 || nrow + curRowspan -1 > rowspan)&&
+		      if (newspan > 0 &&
+			  (curColspan > newspan - ncol + 1 || curColspan == 0))
+			/* this cell is deeper than the extended cell */
+			/* create empty cells to fill the extra depth */
+			ChangeColspan (nextCell, curColspan,
+				       newspan - ncol + 1, doc);
+		      /* if this cell extends beyound the limit of the
+			 extension of the cell of interest, fill the holes
+			 with empty cells */
+		      if ((curRowspan == 0 ||
+			   nrow + curRowspan -1 > rowspan) &&
 			  rowspan > 0)
-			ChangeRowspan (nextCell, curRowspan,
-				       rowspan - nrow + 1, doc);
+			{
+			  ChangeRowspan (nextCell, curRowspan,
+					 rowspan - nrow + 1, doc);
+			  /* update the rowspan attribute to allow undo to
+			     work properly */
+			  if (rowspan - nrow + 1 > 1)
+			    TtaSetAttributeValue (attrRowspan, rowspan-nrow+1,
+						  nextCell, doc);
+			  else if (rowspan - nrow + 1 == 1)
+			    if (attrRowspan)
+			       TtaRemoveAttribute (nextCell, attrRowspan, doc);
+			}
+		      /* merge a cell from that column */
 		      MoveCellContents (nextCell, cell, &previous, doc,inMath);
 		    }
 		  curRow = GetSiblingRow (curRow, FALSE, inMath);
@@ -3265,10 +3291,10 @@ void ChangeRowspan (Element cell, int oldspan, int newspan, Document doc)
                       prevCell, siblingColhead;
   ElementType         tableType;
   AttributeType       attrType, colspanType, rowspanType;
-  Attribute           attr;
+  Attribute           attr, attrColspan;
   Document            refDoc;
   char                name[50];
-  int                 i, nrows, colspan, curColspan, curRowspan;
+  int                 i, nrows, ncol, colspan, curColspan, curRowspan;
   ThotBool            inMath, before;
 
   if (oldspan == newspan)
@@ -3318,77 +3344,72 @@ void ChangeRowspan (Element cell, int oldspan, int newspan, Document doc)
 
   nrows = 0;
   if ((newspan > oldspan && oldspan > 0) || newspan == 0)
-    /* merge with following cells */
+    /* merge with cells in the following rows */
     {
       previous = TtaGetLastChild (cell);
       if (inMath)
 	/* get the last element contained in the CellWrapper */
 	previous = TtaGetLastChild (previous);
-      while (row && (newspan == 0 || nrows < newspan))
+      while (row && (nrows < newspan || newspan == 0))
 	{
 	  nrows++; /* count rows */
 	  if (nrows > oldspan)
 	    {
-	      nextCell = GetCellFromColumnHead (row, colHead, inMath);
-	      if (nextCell)
+	      curColHead = colHead; ncol = 0;
+	      while (curColHead && (ncol < colspan || colspan == 0))
 		{
-		  attr = TtaGetAttribute (nextCell, colspanType);
-		  if (attr)
-		    /* this cell has a colspan attribute */
+		  ncol++;
+		  nextCell = GetCellFromColumnHead (row, curColHead, inMath);
+		  if (nextCell)
 		    {
-		      curColspan = TtaGetAttributeValue (attr);
-		      if (curColspan < 0)
-			curColspan = 1;
-		      else if (curColspan == 0)
-			curColspan = THOT_MAXINT;
-		    }
-		  else
-		    curColspan = 1;
-		  curColHead = colHead;
-		  if (curColspan > colspan && colspan > 0)
-		    /* create empty cells */
-		    {
-		      prevCell = nextCell;
-		      for (i = 1; i < curColspan && curColHead; i++)
+		      /* get the colspan value of the current cell */
+		      attrColspan = TtaGetAttribute (nextCell, colspanType);
+		      if (attrColspan)
 			{
-			  TtaNextSibling (&curColHead);
-			  if (i >= colspan && curColHead)
-			    prevCell = AddEmptyCellInRow (row, curColHead,
-							  prevCell, FALSE, doc,
-							  inMath, FALSE, TRUE);
+			  curColspan = TtaGetAttributeValue (attrColspan);
+			  if (curColspan < 0)
+			    curColspan = 1;
 			}
+		      else
+			curColspan = 1;
+		      /* get the rowspan value of the current cell */
+		      attr = TtaGetAttribute (nextCell, rowspanType);
+		      if (attr)
+			{
+			  curRowspan = TtaGetAttributeValue (attr);
+			  if (curRowspan < 0)
+			    curRowspan = 1;
+			}
+		      else
+			curRowspan = 1;
+		      if (colspan > 0 &&
+			  (curColspan > colspan || curColspan == 0))
+			/* this cell is wider than the extended cell */
+			/* create empty cells to fill the extra width */
+			{
+			  ChangeColspan (nextCell, curColspan,
+					 colspan - ncol + 1, doc);
+			  /* update the colspan attribute to allow undo to
+			     work properly */
+			  if (colspan - ncol + 1 > 1)
+			    TtaSetAttributeValue (attrColspan, colspan-ncol+1,
+						  nextCell, doc);
+			  else if (colspan - ncol + 1 == 1)
+			    if (attrColspan)
+			       TtaRemoveAttribute (nextCell, attrColspan, doc);
+			}
+		      /* if this cell extends beyound the limit of the
+			 extension of the cell of interest, fill the holes
+			 with empty cells */
+		      if ((curRowspan == 0 ||
+			   nrows + curRowspan - 1 > newspan) &&
+			  newspan >  0)
+			ChangeRowspan (nextCell, curRowspan,
+				       newspan - nrows + 1, doc);
+		      /* merge a cell from that row */
+		      MoveCellContents (nextCell, cell, &previous, doc,inMath);
 		    }
-		  else if (colspan > 0)
-		    /* merge cells from that row */
-		    for (i = curColspan; i <= colspan && curColHead; i++)
-		      {
-			if (nextCell)
-			  {
-			    attr = TtaGetAttribute (nextCell, rowspanType);
-			    if (attr)
-			      /* this cell has a rowspan attribute */
-			      {
-				curRowspan = TtaGetAttributeValue (attr);
-				if (curRowspan < 0)
-				  curRowspan = 1;
-			      }
-			    else
-			      curRowspan = 1;
-			    if ((curRowspan == 0 ||
-				 nrows + curRowspan - 1 > newspan) &&
-				newspan>0)
-			      /* this cell extends beyound the limit of the
-				 extension of the cell of interest. Fill the
-			         holes with empty cells */
-			      ChangeRowspan (nextCell, curRowspan,
-					     newspan - nrows + 1, doc);
-			    MoveCellContents (nextCell, cell, &previous, doc,
-					      inMath);
-			  }
-			TtaNextSibling (&curColHead);
-			nextCell = GetCellFromColumnHead (row, curColHead,
-							  inMath);
-		      }
+		  TtaNextSibling (&curColHead);
 		}
 	    }
 	  row = GetSiblingRow (row, FALSE, inMath);

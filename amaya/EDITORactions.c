@@ -2052,28 +2052,73 @@ static Element GetEnclosingCell (Document doc)
 
 /*----------------------------------------------------------------------
   CellVertExtend
-  Extend the current table cell to the next row.
+  Merge the cell that contains the selection with the next cell in the
+  same column.
   ----------------------------------------------------------------------*/
 void CellVertExtend (Document doc, View view)
 {
-  Element       cell, nextCell;
+  Element       cell, nextCell, colhead, row;
   ElementType   elType;
   Attribute     attr;
   AttributeType attrType;
-  int           span, nextSpan, newSpan;
+  int           span, nextSpan, newSpan, i;
+  char          name[50];
+  Document      refdoc;
   ThotBool      inMath, newAttr;
 
   cell = GetEnclosingCell (doc);
   if (cell)
     {
       elType = TtaGetElementType (cell);
-      inMath = !TtaSameSSchemas (elType.ElSSchema,
+      inMath = !TtaSameSSchemas (elType.ElSSchema, 
 				 TtaGetSSchema ("HTML", doc));
-      nextCell = NextCellInColumn (cell, inMath);
-      /* can't extend the last cell */
-      if (nextCell)
+      /* get the column of the cell */
+      attrType.AttrSSchema = elType.ElSSchema;
+      if (inMath)
+	attrType.AttrTypeNum = MathML_ATTR_MRef_column;
+      else
+	attrType.AttrTypeNum = HTML_ATTR_Ref_column;
+      attr = TtaGetAttribute (cell, attrType);
+      nextCell = NULL;
+      if (attr)
+	/* the cell has an attribute Ref_column */
 	{
-	  attrType.AttrSSchema = elType.ElSSchema;
+	  TtaGiveReferenceAttributeValue (attr, &colhead, name, &refdoc);
+	  if (colhead)
+	    {
+	      /* get the rowspan of the cell */
+	      if (inMath)
+		attrType.AttrTypeNum = MathML_ATTR_rowspan_;
+	      else
+		attrType.AttrTypeNum = HTML_ATTR_rowspan_;
+	      attr = TtaGetAttribute (cell, attrType);
+	      if (!attr)
+		span = 1;
+	      else
+		{
+		  span = TtaGetAttributeValue (attr);
+		  if (span < 0)
+		    span = 1;
+		}
+	      /* if spanning is 0 (infinite), stop */
+	      if (span != 0)
+		{
+		  /* get the next row after the cell */
+		  row = TtaGetParent (cell);
+		  for (i = 1; i <= span && row; i++)
+		    row = GetSiblingRow (row, FALSE, inMath);
+		  if (row)
+		    /* check if there is a cell in that row, in the same
+		       column. Another cell could span horizontally and
+		       make the merger impossible */
+		    nextCell = GetCellFromColumnHead (row, colhead, inMath);
+		}
+	    }
+	}
+      
+      if (nextCell)
+	/* we can extend the cell */
+	{
 	  if (inMath)
 	    attrType.AttrTypeNum = MathML_ATTR_rowspan_;
 	  else
@@ -2128,15 +2173,18 @@ void CellVertExtend (Document doc, View view)
 
 /*----------------------------------------------------------------------
   CellHorizExtend
-  Extend the current table cell to the next column.
+  Merge the cell that contains the selection with the next cell in the
+  same row.
   ----------------------------------------------------------------------*/
 void CellHorizExtend (Document doc, View view)
 {
-  Element       cell, nextCell;
+  Element       cell, row, nextCell, colhead;
   ElementType   elType;
-  Attribute     attr;
-  AttributeType attrType;
-  int           span, nextSpan, newSpan;
+  Attribute     attr, colspanAttr;
+  AttributeType attrType, colspanType;
+  int           span, nextSpan, newSpan, i;
+  char          name[50];
+  Document      refdoc;
   ThotBool      inMath, newAttr;
 
   cell = GetEnclosingCell (doc);
@@ -2145,16 +2193,60 @@ void CellHorizExtend (Document doc, View view)
       elType = TtaGetElementType (cell);
       inMath = !TtaSameSSchemas (elType.ElSSchema,
 				 TtaGetSSchema ("HTML", doc));
-      nextCell = NextCellInRow (cell, inMath);
-      /* can't extend the last cell */
-      if (nextCell)
+      /* get the column of the cell */
+      attrType.AttrSSchema = elType.ElSSchema;
+      colspanType.AttrSSchema = elType.ElSSchema;
+      if (inMath)
 	{
-	  attrType.AttrSSchema = elType.ElSSchema;
-	  if (inMath)
-	    attrType.AttrTypeNum = MathML_ATTR_columnspan;
-	  else
-	    attrType.AttrTypeNum = HTML_ATTR_colspan_;
-          attr = TtaGetAttribute (nextCell, attrType);
+	  colspanType.AttrTypeNum = MathML_ATTR_columnspan;
+	  attrType.AttrTypeNum = MathML_ATTR_MRef_column;
+	}
+      else
+	{
+	  colspanType.AttrTypeNum = HTML_ATTR_colspan_;
+	  attrType.AttrTypeNum = HTML_ATTR_Ref_column;
+	}
+      /* get the colspan of the cell */
+      colspanAttr = TtaGetAttribute (cell, colspanType);
+      if (!colspanAttr)
+	span = 1;
+      else
+	{
+	  span = TtaGetAttributeValue (colspanAttr);
+	  if (span < 0)
+	    span = 1;
+	}
+      /* get the next cell */
+      attr = TtaGetAttribute (cell, attrType);
+      nextCell = NULL;
+      if (attr)
+	/* the cell has an attribute Ref_column */
+	{
+	  TtaGiveReferenceAttributeValue (attr, &colhead, name, &refdoc);
+	  if (colhead)
+	    {
+	      /* if spanning is 0 (infinite), stop */
+	      if (span != 0)
+		{
+		  /* get the next column after the cell */
+		  for (i = 1; i <= span && colhead; i++)
+		    TtaNextSibling (&colhead);
+		  if (colhead)
+		    /* check if there is a cell in that column, in the same
+		       row. Another cell could span horizontally and make the
+		       merger impossible */
+		    {
+		      row = TtaGetParent (cell);
+		      nextCell = GetCellFromColumnHead (row, colhead, inMath);
+		    }
+		}
+	    }
+	}
+
+      if (nextCell)
+	/* we can extend the cell */
+	{
+          attr = TtaGetAttribute (nextCell, colspanType);
 	  if (attr)
 	    {
 	      nextSpan = TtaGetAttributeValue (attr);
@@ -2163,22 +2255,16 @@ void CellHorizExtend (Document doc, View view)
 	    }
           else
 	    nextSpan = 1;
-	  attr = TtaGetAttribute (cell, attrType);
-	  if (attr)
-	    {
-	      newAttr = FALSE;
-	      span = TtaGetAttributeValue (attr);
-	      if (span < 1)
-		span = 1;
-	    }
+	  if (colspanAttr)
+	    newAttr = FALSE;
 	  else
 	    {
-	      span = 1;
-	      attr = TtaNewAttribute (attrType);
-	      TtaAttachAttribute (cell, attr, doc);
+	      colspanAttr = TtaNewAttribute (colspanType);
+	      TtaAttachAttribute (cell, colspanAttr, doc);
 	      newAttr = TRUE;
 	    }
 	  if (nextSpan == 0)
+	    /* "infinite" spanning */
 	    newSpan = 0;
 	  else
 	    newSpan = span + nextSpan;
@@ -2191,13 +2277,13 @@ void CellHorizExtend (Document doc, View view)
 	     the right (old) value of the attribute */
 	  if (newAttr)
 	    {
-	      TtaSetAttributeValue (attr, newSpan, cell, doc);
-	      TtaRegisterAttributeCreate (attr, cell, doc);
+	      TtaSetAttributeValue (colspanAttr, newSpan, cell, doc);
+	      TtaRegisterAttributeCreate (colspanAttr, cell, doc);
 	    }
 	  else
 	    {
-	      TtaRegisterAttributeReplace (attr, cell, doc);
-	      TtaSetAttributeValue (attr, newSpan, cell, doc);
+	      TtaRegisterAttributeReplace (colspanAttr, cell, doc);
+	      TtaSetAttributeValue (colspanAttr, newSpan, cell, doc);
 	    }
 	  TtaCloseUndoSequence (doc);
 	  TtaSetDocumentModified (doc);

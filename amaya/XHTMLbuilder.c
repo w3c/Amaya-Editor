@@ -674,12 +674,12 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
        if (DocumentMeta[doc]->xmlformat)
 	 {
 	   if (IsWithinXmlTable ())
-	     NewCell (el, doc, FALSE, FALSE);
+	     NewCell (el, doc, FALSE, FALSE, FALSE);
 	 }
        else
 	 {
 	   if (IsWithinHtmlTable ())
-	     NewCell (el, doc, FALSE, FALSE);
+	     NewCell (el, doc, FALSE, FALSE, FALSE);
 	 }
        break;
        
