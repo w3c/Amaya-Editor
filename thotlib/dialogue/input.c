@@ -699,6 +699,7 @@ int                 key;
   int                 value;
   int                 modtype;
   int                 command;
+  int                 mainframe;
   ThotBool            found;
 #ifdef _WINDOWS
   ThotBool            endOfSearch = FALSE;
@@ -963,6 +964,7 @@ int                 key;
     {
       /* Appel d'une action Thot */
       FrameToView (frame, &document, &view);
+      mainframe = GetWindowNumber (document, 1);
       if (command > 0)
 	{
 	  /* Termine l'insertion eventuellement en cours */
@@ -971,10 +973,10 @@ int                 key;
 	    CloseInsertion ();
       
 	  /* Call action if it's active */
-	  if (MenuActionList[command].ActionActive[frame])
+	  if (MenuActionList[command].ActionActive[frame] ||
+	      MenuActionList[command].ActionActive[mainframe])
 	    {
-	      /* l'action est active pour la fenetre courante */
-	      /* prepare les parametres */
+	      /* available action for this frame or the main frame */
 	      if (MenuActionList[command].Call_Action)
 		(*MenuActionList[command].Call_Action) (document, view);
 	    }
