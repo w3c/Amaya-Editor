@@ -25,4 +25,8 @@
 # can be useful for creating a module that consists of many directories
 # spread out over the entire source repository.
 
-amaya_doc		-a amaya Icons
+## The amaya documentation
+
+amaya-html      -d html amaya
+amaya-images    -d images Icons
+amaya-doc       &amaya-html &amaya-images
