@@ -159,10 +159,7 @@ static PtrElement PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
    if (addedCell)
      pOrig = addedCell;
    else if (*pasteOrig)
-     {
-       pOrig = *pasteOrig;
-       before = FALSE;
-     }
+     pOrig = *pasteOrig;
    else
      pOrig = pSavedEl->PeElement;
 
@@ -178,7 +175,7 @@ static PtrElement PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
 	   pOrig = pOrig->ElFirstChild;
 	   if (pOrig->ElStructSchema &&
 	       !strcmp (pOrig->ElStructSchema->SsName, "MathML"))
-	     /* go down one mor step */
+	     /* go down one more step */
 	     pOrig = pOrig->ElFirstChild;
 	   /* this is the original of the new pasted element */
 	   *pasteOrig = pOrig;
