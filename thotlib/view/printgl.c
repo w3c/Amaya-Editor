@@ -58,7 +58,6 @@
 
 
 #ifdef _GTK
-
 #include <gtk/gtk.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
@@ -68,8 +67,6 @@
 static GdkGLContext *context = NULL;
 static GdkPixmap    *pixmap = NULL;
 static GdkGLPixmap  *glpixmap = NULL;
-static GdkVisual    *visual = NULL;
-
 #endif /* _GTK */
 
 #include "GL/gl.h"
@@ -94,15 +91,11 @@ static GdkVisual    *visual = NULL;
 
 #include "glwindowdisplay.h"
 #include "glprint.h"
-
-
 #include "buildlines_f.h"
 #include "font_f.h"
-
 #if defined(_MOTIF) || defined(_GTK)
-  #include "initpses_f.h"
+#include "initpses_f.h"
 #endif /*#if defined(_MOTIF) || defined(_GTK)*/
-
 #include "memory_f.h"
 #include "units_f.h"
 
@@ -139,8 +132,9 @@ static int            X, Y;
   ----------------------------------------------------------------------*/
 void GetGLContext ()
 {
-  int i;
+  int           i;
 #ifdef _GTK
+  GdkVisual    *visual = NULL;
   /*       Parameters of the opengl Buffers
 	   More tweaks we have the less memory we use !!
 	   => ie depth, stencil, shadow...
@@ -149,30 +143,35 @@ void GetGLContext ()
   int attrlist[] =
     {
       GDK_GL_RGBA,
-      GDK_GL_RED_SIZE,1,
-      GDK_GL_GREEN_SIZE,1,
-      GDK_GL_BLUE_SIZE,1,
-      GDK_GL_ALPHA_SIZE,1,
+      GDK_GL_RED_SIZE, 1,
+      GDK_GL_GREEN_SIZE, 1,
+      GDK_GL_BLUE_SIZE, 1,
+      GDK_GL_ALPHA_SIZE, 1, /* don't change the position of the entry (8) */
       GDK_GL_STENCIL_SIZE, 1,
       GDK_GL_NONE
-    }; 
+    };
 
   /* Is opengl working ? */
-  if(gdk_gl_query() == FALSE) 
+  if (gdk_gl_query() == FALSE) 
     {
       g_print("OpenGL not supported!\n");
       exit(0);
     }
-
   /* select and use visual as default so all widgets are OpenGL renderable */
   visual = gdk_gl_choose_visual (attrlist);
+  if (visual == NULL)
+    {
+      /* remove the alpha channel: entry  (8)*/
+      attrlist[8] = 0;
+      visual = gdk_gl_choose_visual (attrlist);
+    }  
   if (visual == NULL)
     {
       g_print("Error creating GtkGLArea!\n");
       exit(0);
     }
-  gtk_widget_set_default_colormap(gdk_colormap_new(visual, TRUE));
-  gtk_widget_set_default_visual(visual);
+  gtk_widget_set_default_colormap (gdk_colormap_new (visual, TRUE));
+  gtk_widget_set_default_visual (visual);
   /* FrameTable[1].WdFrame = visual;  */
   context  = gdk_gl_context_new (visual);
   pixmap = gdk_pixmap_new (NULL, GL_HEIGHT, GL_WIDTH, visual->depth);
@@ -181,7 +180,7 @@ void GetGLContext ()
 #endif /* _GTK */
 
   SetGlPipelineState ();
-  GLResize (GL_HEIGHT, GL_WIDTH,0,0);
+  GLResize (GL_HEIGHT, GL_WIDTH, 0, 0);
   glScissor (0, 0, GL_HEIGHT, GL_WIDTH);
   GL_Err();
 
@@ -195,10 +194,8 @@ void GetGLContext ()
   ----------------------------------------------------------------------*/
 void initwgl (HDC hDC, int frame)
 {
-	HGLRC hGLRC = 0;
-
+  HGLRC hGLRC = 0;
   hGLRC = wglCreateContext (hDC);
-
   GL_Windows[frame] = hDC;
   GL_Context[frame] = hGLRC;
   if (wglMakeCurrent (hDC, hGLRC))
@@ -386,9 +383,7 @@ void PrintBox (PtrBox box, int frame, int xmin, int xmax,
 void ComputeBoundingBox (PtrBox box, int frame, int xmin, int xmax, 
 			 int ymin, int ymax)
 {
-  
   return;
-
 }
 
 /*----------------------------------------------------------------------
@@ -398,9 +393,7 @@ void ComputeBoundingBox (PtrBox box, int frame, int xmin, int xmax,
   ----------------------------------------------------------------------*/
 void ComputeFilledBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
 {
-  
   return;
-
 }
 
 /*----------------------------------------------------------------------
@@ -408,15 +401,12 @@ void ComputeFilledBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int 
   ----------------------------------------------------------------------*/
 ThotBool GL_prepare (int frame)
 { 
-  
 #ifdef _GTK
   return gdk_gl_pixmap_make_current (glpixmap, context);
 #endif 
-  
 #ifdef _WINDOWS
-   return wglMakeCurrent (GL_Windows[frame], GL_Context[frame]);
+  return wglMakeCurrent (GL_Windows[frame], GL_Context[frame]);
 #endif /* _WINDOWS */
-   
   return TRUE;
 }
 

@@ -589,16 +589,10 @@ void TtaExtractName (char *text, char *aDirectory, char *aName)
    int                lg, i, j;
    char              *ptr;
    char              *oldptr;
-   char               URL_DIR_SEP;
 
    if (text == NULL || aDirectory == NULL || aName == NULL)
      /* No input text or error in input parameters */
       return;
-   if (text && strchr (text, '/'))
-     URL_DIR_SEP = '/';
-   else 
-     URL_DIR_SEP = DIR_SEP;
-   
    aDirectory[0] = EOS;
    aName[0] = EOS;
    lg = strlen (text);
@@ -608,22 +602,23 @@ void TtaExtractName (char *text, char *aDirectory, char *aName)
        ptr = oldptr = &text[0];
        do
 	 {
-	   ptr = strrchr (oldptr, URL_DIR_SEP);
+	   ptr = strrchr (oldptr, '/');
 	   if (ptr == NULL)
-		   /* check erroneous Windows files */
-		 ptr = strrchr (oldptr, DIR_SEP);
+	     /* check erroneous Windows files */
+	     ptr = strrchr (oldptr, '\\');
 	   if (ptr != NULL)
 	     oldptr = &ptr[1];
 	 }
        while (ptr != NULL);
+
        /* the length of the directory part */
        i = ((int) (oldptr) - (int) (text)) / sizeof (char);
        if (i > 1)
 	 {
 	   strncpy (aDirectory, text, i);
 	   j = i - 1;
-	   /* Suppresses the / characters at the end of the path */
-	   while (aDirectory[j] == URL_DIR_SEP)
+	   /* Suppresses the / or  \ characters at the end of the path */
+	   while (aDirectory[j] == '/' || aDirectory[j] == '\\')
 	     aDirectory[j--] = EOS;
 	 }
        if (i != lg)

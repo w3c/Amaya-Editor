@@ -1517,12 +1517,13 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		      if (script == 'Z' || script == 'A')
 #endif /*_GL*/
 			x += WDrawString (wbuffer, nbcar, frame, x, y1, prevfont,
-					  org, bl, x, blockbegin, fg);
+					  org, bl, 0, blockbegin, fg);
 		      else
 			x += DrawString (buffer, nbcar, frame, x, y1, prevfont,
-					 org, bl, x, blockbegin, fg);
+					 org, bl, 0, blockbegin, fg);
 		      width = width - x;
 		      org = x;
+		      bl = 0; /* all previous spaces are managed */
 		    }
 		  withinSel = !withinSel;
 		  if (withinSel)
@@ -1555,9 +1556,9 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 			x += DrawString (buffer, nbcar, frame, x, y1, prevfont,
 					 org, bl, x, blockbegin, fg);
 		      width = width - x;
+		      bl = 0; /* all previous spaces are managed */
 		    }
 		  nbcar = 0;
-		  bl = 0; /* all previous spaces are managed */
 		  prevfont = nextfont;
 		  DrawRectangle (frame, 1, 5, x, y, 6, pBox->BxH - 1, fg, 0, 0);
 		  x += 6;
@@ -1643,7 +1644,9 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 			    DrawChar ((char) SHOWN_UNBREAKABLE_SPACE, frame, x, y,
 				      nextfont, fg);
 			}
-		 
+		      else
+			/* a new space is handled */
+			bl++;	 
 		      nbcar = 0;
 		      if (c == SPACE)
 			{
@@ -1667,8 +1670,6 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 			x += lg;
 #endif /* _WINDOWS */
 		      xpos = x;
-		      /* a new space is handled */
-		      bl++;
 		    }
 		  else
 		    {
@@ -1743,17 +1744,20 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		 Call the function in any case to let Postscript justify the
 		 text of the box.
 	      */
+	      if (nbcar > 0)
+		{
 #ifdef _GL
-	      if (script == 'Z' || script == 'A' ||
-		  !Printing || GL_TransText ())
+		  if (script == 'Z' || script == 'A' ||
+		      !Printing || GL_TransText ())
 #else /*_GL*/
-	      if (script == 'Z' || script == 'A')
+		  if (script == 'Z' || script == 'A')
 #endif /*_GL*/
-		x += WDrawString (wbuffer, nbcar, frame, x, y1, prevfont, width,
-				  bl, hyphen, blockbegin, fg);
-	      else
-		x += DrawString (buffer, nbcar, frame, x, y1, prevfont, width,
-				 bl, hyphen, blockbegin, fg);
+		    x += WDrawString (wbuffer, nbcar, frame, x, y1, prevfont, width,
+				      bl, hyphen, blockbegin, fg);
+		  else
+		    x += DrawString (buffer, nbcar, frame, x, y1, prevfont, width,
+				     bl, hyphen, blockbegin, fg);
+		}
 	      if (pBox->BxUnderline != 0)
 		{
 #ifdef _GL

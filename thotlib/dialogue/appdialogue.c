@@ -217,12 +217,10 @@ LRESULT CALLBACK TextZoneProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
 	  if (GetParent (hwnd))
 	    if (GetParent (GetParent (hwnd)))
 	      {
-		SendMessage(GetParent (GetParent (hwnd)), 
-			    WM_ENTER, 0, 0); 
+		SendMessage(GetParent (GetParent (hwnd)), WM_ENTER, 0, 0); 
 		return 0;
 	      }
-	  SendMessage (GetParent (hwnd), 
-		       WM_ENTER, 0, 0); 
+	  SendMessage (GetParent (hwnd), WM_ENTER, 0, 0); 
 	  return 0;
 	case VK_BACK:
 	case VK_DELETE:
@@ -1475,7 +1473,7 @@ void TteOpenMainWindow (char *name, Pixmap logo, Pixmap icon)
      else
 #endif     /* ----- #ifdef _GTK  ----- */
        
-{
+       {
 	/* Compte le nombre de menus a creer */
 	n = 0;
 	i = 0;
@@ -3015,12 +3013,25 @@ void TtaUpdateMenus (Document doc, View view, ThotBool RO)
 }
 
 #if defined(_GL) && defined(_GTK)
+static int          AttrList[] =
+{
+  GDK_GL_RGBA,
+  GDK_GL_RED_SIZE, 1,
+  GDK_GL_GREEN_SIZE, 1,
+  GDK_GL_BLUE_SIZE, 1,
+  GDK_GL_ALPHA_SIZE, 1, /* don't change the position of the entry (8) */
+  GDK_GL_STENCIL_SIZE, 1,
+  GDK_GL_DOUBLEBUFFER,
+  GDK_GL_NONE
+};
+
 /*----------------------------------------------------------------------
-  GetNoAlphaVisual :
-     if opengl implementation doesn't support ALPHA BUFFER, allow amaya to work
-     but warns about group opacity
+  GetGLArea:
+  if opengl implementation doesn't support ALPHA BUFFER, allow amaya to work
+  but warns about group opacity.
+  Update the current AttrList used (Alpha channel).
   ----------------------------------------------------------------------*/
-static ThotWidget GetNoAlphaVisual ()
+static ThotWidget GetGLArea ()
 {
   /* 
      Parameters of the opengl Buffers
@@ -3028,19 +3039,33 @@ static ThotWidget GetNoAlphaVisual ()
      => ie depth, stencil, shadow...
      double buffering or not...
   */
-  int attrlist[] =
+  GtkWidget    *area = NULL;
+   /* 
+      Parameters of the opengl Buffers
+      More tweaks we have the less memory we use !!
+      => ie depth, stencil, shadow...
+      double buffering or not...
+   */
+  
+  /* Is opengl working ? */
+  if (gdk_gl_query () == FALSE) 
     {
-      GDK_GL_RGBA,
-      GDK_GL_RED_SIZE,1,
-      GDK_GL_GREEN_SIZE,1,
-      GDK_GL_BLUE_SIZE,1,
-      GDK_GL_ALPHA_SIZE,0,
-      GDK_GL_STENCIL_SIZE, 1,
-      GDK_GL_DOUBLEBUFFER,
-      GDK_GL_NONE
-    };		   
-
-  return (gtk_gl_area_new (attrlist));
+      g_print ("OpenGL not supported!\n");
+      exit(0);
+    }
+  area = gtk_gl_area_new (AttrList);
+  if (area == NULL)
+    {
+      /* remove the alpha channel: entry  (8)*/
+      AttrList[8] = 0;
+      area = gtk_gl_area_new (AttrList);
+    }
+  if (area == NULL)
+    {
+      g_print ("Error creating GtkGLArea!\n");
+      exit(0);
+    }
+  return area;
 }
 #endif /* #if defined(_GL) && defined(_GTK) */
 
@@ -3087,28 +3112,10 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
    GtkObject          *tmpw;
    GtkAccelGroup      *accel_group;
    GtkWidget          *wrap_text;
+#ifdef _GL
+#endif /* _GL */
 #endif /* _GTK */
-   
-#if defined(_GL) && defined(_GTK)
-   /* 
-      Parameters of the opengl Buffers
-      More tweaks we have the less memory we use !!
-      => ie depth, stencil, shadow...
-      double buffering or not...
-   */
-   int attrlist[] =
-     {
-       GDK_GL_RGBA,
-       GDK_GL_RED_SIZE,1,
-       GDK_GL_GREEN_SIZE,1,
-       GDK_GL_BLUE_SIZE,1,
-       GDK_GL_ALPHA_SIZE,1,
-       GDK_GL_STENCIL_SIZE, 1,
-       GDK_GL_DOUBLEBUFFER,
-       GDK_GL_NONE
-     };
-#endif /* #if defined(_GL) && defined(_GTK) */
-   
+ 
 #ifdef _MOTIF 
    ThotWidget          drawing_frame; 
    ThotWidget          table1;
@@ -3469,45 +3476,19 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	       gdk_bitmap_unref (amaya_mask);
 	     }
 #ifdef _GL
-	   /* Is opengl working ? */
-	   if (gdk_gl_query() == FALSE) 
-	     g_print("OpenGL not supported!\n");
-#ifdef _NOSHARELIST	  
-	   if ((drawing_area = gtk_gl_area_new (attrlist)) == NULL) 
+#ifndef _NOSHARELIST
+	   if (GetSharedContext () == -1)
 	     {
-	       drawing_area = GetNoAlphaVisual ();
-	       if (drawing_area == NULL)
-		 {
-		   g_print("Error creating GtkGLArea!\n");
-		   exit(0);
-		 }
-	       else
-                  g_print("Warning : upgrade you Opengl implementation (ie: Mesa) to get group opacity !\n");
-	     }
+#endif /*_NOSHARELIST*/
+	       drawing_area = GetGLArea ();
+#ifdef _NOSHARELIST
+	       g_print ("Warning: upgrade your Opengl implementation (ie: Mesa) to get group opacity!\n");
 #else /*_NOSHARELIST*/
-	   /* can we create a new opengl context 
-	      (or shall we share it with the first one
-	      we had in order to share display list and texture binding ?)*/	   
-	   if (GetSharedContext() == -1)
-	     {
-	       if ((drawing_area = gtk_gl_area_new (attrlist)) == NULL) 
-		 {
-		   drawing_area = GetNoAlphaVisual ();
-		   if (drawing_area == NULL)
-		       g_print("Error creating GtkGLArea!\n");
-		 }	       
 	       SetSharedContext (frame);
 	     }
-	   else if ((drawing_area = gtk_gl_area_share_new (attrlist, 
-							  GTK_GL_AREA (FrameTable[GetSharedContext ()].WdFrame))) == NULL) 
-		 {
-		   drawing_area = GetNoAlphaVisual ();
-		   if (drawing_area == NULL)
-		     {
-		       g_print("Error creating GtkGLArea!\n");
-		       exit(0);
-		     }
-		 }
+	   else
+	     drawing_area = gtk_gl_area_share_new (AttrList, 
+						   GTK_GL_AREA (FrameTable[GetSharedContext ()].WdFrame)); 
 #endif /*_NOSHARELIST*/
 #else /*  _GL */
 	   drawing_area = gtk_drawing_area_new ();

@@ -84,7 +84,6 @@
  * degrees to radians and so on...
  * All for EllipticSplit and/or GL_DrawArc
  */
-
 #define PRECISION float
 
 #ifndef M_PI
@@ -151,13 +150,7 @@ static int      Width_Clip = 0;
 static int      Height_Clip = 0;
 /*if no 3d card available*/
 static ThotBool Software_Mode = TRUE;
-/*if just computing bounding box*/
-static ThotBool PRINTINGMode = FALSE;
-#ifdef _GLPRINT
 static ThotBool TransText = FALSE;
-#else /* _GLPRINT */
-static ThotBool TransText = FALSE;
-#endif /* _GLPRINT */
 
 
 /*----------------------------------------------------------------------
@@ -174,13 +167,6 @@ void SetSoftware_Mode (ThotBool value)
 ThotBool GL_TransText ()
 {
   return TransText;
-}
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-ThotBool GL_Printing () 
-{
-  return PRINTINGMode;
 }
 
 /*----------------------------------------------------------------------

@@ -484,12 +484,13 @@ static int XWindowFatalError (Display *dpy)
 static void usage (char *processName) 
 {
        fprintf (stderr, "\n\nusage: %s [-lang value] <file name>\n", processName);
-       fprintf (stderr, "       -v <view name> [-v <view name> [...]]\n");
        fprintf (stderr, "       -sch <schema directories> -doc <doc directories>\n");
        fprintf (stderr, "       -ps <psfile> | -out <printer>\n");
+       fprintf (stderr, "       [-v <view name> [...]]\n");
        fprintf (stderr, "       [-portrait | -landscape]\n");
        fprintf (stderr, "       [-display <display>]\n");
-       fprintf (stderr, "       [-css <file name> [...]]\n");
+       fprintf (stderr, "       [-cssa <author CSS file name> [...]]\n");
+       fprintf (stderr, "       [-cssu <user CSS file name>]\n");
        fprintf (stderr, "       [-name <document name>]\n");
        fprintf (stderr, "       [-npps <number of pages per sheet>]\n");
        fprintf (stderr, "       [-bw]\t\t /* for black & white output */\n");
@@ -2656,6 +2657,11 @@ int main (int argc, char **argv)
   gtk_print_dialog ();
 #endif /* _GTK */
 
+#if defined(_MOTIF) || defined(_GTK)
+  if (!strcmp (argv[argCounter], "--help"))
+    usage (argv[0]);
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+
   while (argCounter < argc)
     {
       /* Parsing the command line */
@@ -2842,10 +2848,8 @@ int main (int argc, char **argv)
     }
   
   /* At least one view is mandatory */
-#if defined(_MOTIF) || defined(_GTK)
   if (!viewFound)
-    usage (argv[0]);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+    strcpy (PrintViewName[0], "Formatted_view");
   
   length = strlen (name);
   if (!realNameFound)
