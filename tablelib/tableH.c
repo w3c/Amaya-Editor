@@ -801,7 +801,7 @@ printf ("Minimum Widths ...\n");
       width = min + sum + sumPercent;
       /* the table width is constrained by the enclosing box */
       table->AbWidth.DimAbRef = table->AbEnclosing;
-      if (width - pBox->BxW)
+      if (width - pBox->BxW && pCell == NULL)
 	/* we will have to recheck scrollbars */
 	AnyWidthUpdate = TRUE;
       /*if (width != pBox->BxW)*/
@@ -833,7 +833,7 @@ printf ("Width[%d]=%d\n", cRef, box->BxWidth);
 printf ("Specific Widths ...\n");
 #endif
       /* assign the specific width to the table */
-      if (width - pBox->BxW)
+      if (width - pBox->BxW != 0 && pCell == NULL)
 	/* we will have to recheck scrollbars */
 	AnyWidthUpdate = TRUE;
       /* the table width is constrained by the enclosing box */
