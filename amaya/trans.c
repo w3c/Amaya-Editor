@@ -746,29 +746,36 @@ static ThotBool ExportSubTree (Element subTree, Document doc)
   FILE		     *inputFile = NULL;
   struct stat        *StatBuffer;
   SSchema	      sch;
-  char	              tmpfilename[MAX_PATH];
+  ElementType         elType;
+  char	              tmpfilename[MAX_PATH], *name;
   int	              charRead;
   int                 len;
-  ThotBool	      result = FALSE;
   int		      status;
+  ThotBool	      result = FALSE;
 
   len = BUFFER_LEN - szHTML;
   strcpy ((char *)tmpfilename, (char *)TtaGetEnvString ("APP_TMPDIR"));
   strcat ((char *)tmpfilename, (char *)DIR_STR);
   strcat ((char *)tmpfilename, (char *)"amayatrans.tmp");
   
-  sch = TtaGetDocumentSSchema (doc);
-  if (strcmp ((char *)TtaGetSSchemaName (sch), "MathML") == 0)
+  elType = TtaGetElementType (subTree);
+  sch = elType.ElSSchema;
+  name = (char *) TtaGetSSchemaName (sch);
+  if (strcmp (name, "MathML") == 0)
     TtaExportTree (subTree, doc, tmpfilename, "MathMLT");
-  else if (strcmp ((char *)TtaGetSSchemaName (sch), "SVG") == 0)
+  else if (strcmp (name, "SVG") == 0)
     TtaExportTree (subTree, doc, tmpfilename, "SVGT");
-  else if (strcmp ((char *)TtaGetSSchemaName (sch), "Annot") == 0)
+  else if (strcmp (name, "Annot") == 0)
     TtaExportTree (subTree, doc, tmpfilename, "AnnotT");
-  else
+  else if (strcmp (name, "HTML") == 0)
+    {
     if (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat)
       TtaExportTree (subTree, doc, tmpfilename, "HTMLTX");
     else
       TtaExportTree (subTree, doc, tmpfilename, "HTMLT");
+    }
+  else
+    TtaExportTree (subTree, doc, tmpfilename, "XMLT");
 
   StatBuffer = (struct stat *) TtaGetMemory (sizeof (struct stat));
   status = stat (tmpfilename, StatBuffer);

@@ -4434,7 +4434,7 @@ void ExportTree (PtrElement pEl, Document doc, char *fName,
       fileDirectory[i] = EOS;
       }
     /* charge le schema de traduction du document */
-    if (!LoadTranslationSchema (tschema, pDoc->DocSSchema) != 0 ||
+    if (!LoadTranslationSchema (tschema, pEl->ElStructSchema) != 0 ||
 	!GetTranslationSchema (pEl->ElStructSchema) != 0)
       /* echec au chargement du schema de traduction */
       TtaReadClose (outputFile);
