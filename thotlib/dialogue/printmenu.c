@@ -44,9 +44,11 @@
 #include "docs_f.h"
 #include "exceptions_f.h"
 #include "memory_f.h"
+#include "fileaccess_f.h"
 #include "presentmenu_f.h"
 #include "printmenu_f.h"
 #include "registry_f.h"
+#include "schemas_f.h"
 #include "search_f.h"
 #include "searchmenu_f.h"
 #include "selectmenu_f.h"
@@ -59,6 +61,8 @@
 #include "views_f.h"
 #include "viewapi_f.h"
 #include "writedoc_f.h"
+#include "writeprs_f.h"
+#include "writestr_f.h"
 
 #ifdef _WINGUI
 #include "thotprinter_f.h"
@@ -821,10 +825,12 @@ void TtaPrint (Document document, char *viewNames, char *cssNames)
    PathBuffer          dirName;
    Name                docName;
    Name                newPres;
+   PtrPSchema          pPSch;
    char               *savePres, *tmpDirName, *tmpDocName;
-   int                 orientation;
+   char                fileName[MAX_TXT_LEN];
+   int                 orientation, i, k;
    ThotBool	       docReadOnly;
-   ThotBool            ok;
+   ThotBool            ok, firstGenericXML;
 
    pDoc = LoadedDocument[document - 1];
    /* prepares the execution of the print command */
@@ -852,10 +858,38 @@ void TtaPrint (Document document, char *viewNames, char *cssNames)
    else
      /* standard export */
      {
-       docReadOnly = pDoc->DocReadOnly;
-
        strcpy (pDoc->DocDirectory, PrintDirName);
        strcpy (pDoc->DocDName, PrintDocName);
+
+       /* save the schemas that have been created dynamically for
+	  generic XML namespaces */
+       BuildDocNatureTable (pDoc);
+       firstGenericXML = TRUE;
+       for (i = 0; i < pDoc->DocNNatures; i++)
+	 {
+	   if (pDoc->DocNatureSSchema[i]->SsIsXml)
+	     /* this is a generic XML schema. Save it in a temp file */
+	     {
+	       if (firstGenericXML)
+		 {
+		   strcat (pDoc->DocSchemasPath, ":");
+		   strcat (pDoc->DocSchemasPath, pDoc->DocDirectory);
+		   firstGenericXML = FALSE;
+		 }
+	       FindCompleteName (pDoc->DocNatureName[i], "STR",
+				 pDoc->DocDirectory, fileName, &k);
+	       WriteStructureSchema (fileName , pDoc->DocNatureSSchema[i],
+	                             pDoc->DocNatureSSchema[i]->SsCode);
+	       FindCompleteName (pDoc->DocNaturePresName[i], "PRS",
+				 pDoc->DocDirectory, fileName, &k);
+	       pPSch = PresentationSchema (pDoc->DocNatureSSchema[i], pDoc);
+	       WritePresentationSchema (fileName, pPSch,
+					pDoc->DocNatureSSchema[i]);
+	     }
+	 }
+
+       /* write the pivot representation of the document */
+       docReadOnly = pDoc->DocReadOnly;
        pDoc->DocReadOnly = FALSE;
 
        ok = WriteDocument (pDoc, 5);

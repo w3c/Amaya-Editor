@@ -30,6 +30,7 @@
 #include "platform_tv.h"
 #include "appdialogue_tv.h"
 #include "frame_tv.h"
+#include "edit_tv.h"
 
 #include "tree_f.h"
 #include "structcreation_f.h"
@@ -2412,17 +2413,67 @@ static void ApplyDim (AbDimension *pdimAb, PtrAbstractBox pAb,
 }
 
 /*----------------------------------------------------------------------
-  ApplyPage applies the page rule.
+   SearchPRule  cherche pour la vue view une regle de type ruleType
+   dans la chaine de regles dont l'ancre est firstRule. Retourne   
+   un pointeur sur cette regle si elle existe ou insere une regle  
+   de ce type dans la chaine et retourne un pointeur sur la        
+   regle creee.                                                    
+  ----------------------------------------------------------------------*/
+static PtrPRule SearchPRule (PtrPRule *firstRule, PRuleType ruleType, int view)
+{
+   PtrPRule            pR, pPRule;
+
+   pR = *firstRule;
+   pPRule = NULL;
+   while (pR && pR->PrType < ruleType)
+     {
+       pPRule = pR;
+       pR = pR->PrNextPRule;
+     }
+   while (pR && pR->PrType == ruleType && pR->PrViewNum < view)
+     {
+       pPRule = pR;
+       pR = pR->PrNextPRule;
+     }
+   if (pR == NULL || pR->PrType != ruleType || pR->PrViewNum != view)
+     /* il n'y a pas de regle de ce type pour cette vue, on en cree une */
+     {
+        GetPresentRule (&pR);
+	if (pR)
+	  {
+	    pR->PrType = ruleType;
+	    /* on insere la regle cree */
+	    if (pPRule == NULL)
+	      {
+		pR->PrNextPRule = *firstRule;
+		*firstRule = pR;
+	      }
+	    else
+	      {
+		pR->PrNextPRule = pPRule->PrNextPRule;
+		pPRule->PrNextPRule = pR;
+	      }
+	    pR->PrCond = NULL;
+	    pR->PrViewNum = view;
+	    pR->PrSpecifAttr = 0;
+	    pR->PrSpecifAttrSSchema = NULL;
+	  }
+     }
+   return pR;
+}
+
+/*----------------------------------------------------------------------
+  ApplyPage applies the Page presentation rule.
   ----------------------------------------------------------------------*/
 static void ApplyPage (PtrDocument pDoc, PtrAbstractBox pAb, int viewSch,
-		       PtrPRule pPRule, FunctionType pageType)
+		       PtrPRule pPRule, FunctionType pageType,
+		       PtrPSchema pSchP)
 {
   PtrElement          pElPage, pEl, pElChild, pPrec;
   PtrAbstractBox      pP;
-  PtrPSchema          pSchP;
-  PtrElement          pEl1;
+  PtrPRule            pRWidth, pPageWidthRule;
   int                 counter;
-  ThotBool            exitingPage, stop;
+  ThotBool            existingPage, stop;
   ThotBool            complete;
   ThotBool            create;
 
@@ -2430,36 +2481,30 @@ static void ApplyPage (PtrDocument pDoc, PtrAbstractBox pAb, int viewSch,
     /* la regle Page concerne la vue du pave traite' */
     {
       pElPage = NULL;
-      exitingPage = FALSE;
+      existingPage = FALSE;
       pEl = pAb->AbElement;
       /* l'element contient-il deja une marque de page de debut */
       /* d'element pour cette vue ? */
       if (!pEl->ElTerminal)
 	{
 	  pElChild = pEl->ElFirstChild;
-	  stop = FALSE;
-	  do
-	    if (pElChild == NULL)
-	      stop = TRUE;
-	    else
+	  while (pElChild && !existingPage)
 	      {
-		pEl1 = pElChild;
-		if (pEl1->ElTypeNumber != PageBreak + 1)
-		  stop = TRUE;
-		else if (pEl1->ElViewPSchema == viewSch && pEl1->ElPageType == PgBegin)
+		if (pElChild->ElTypeNumber != PageBreak + 1)
+		  pElChild = NULL;
+		else if (pElChild->ElViewPSchema == viewSch &&
+			 pElChild->ElPageType == PgBegin)
 		  {
-		    pElPage = pEl1;
-		    exitingPage = TRUE;
-		    stop = TRUE;
+		    pElPage = pElChild;
+		    existingPage = TRUE;
 		  }
 		else
-		  /* on saute les eventuelles marque page d'autres vues ? */
-		  pElChild = pEl1->ElNext;
+		  /* on saute les eventuelles marque page d'autres vues */
+		  pElChild = pElChild->ElNext;
 	      }
-	  while (!stop);
 	}
-      if (!exitingPage)
-	/* l'element ne contient pas de marque de page en tete */
+      if (!existingPage)
+	/* l'element ne contient pas de marque de page en tete pour cette vue*/
 	/* l'element est-il precede' par un saut de page identique a */
 	/* celui qu'on veut creer ? */
 	{
@@ -2467,87 +2512,100 @@ static void ApplyPage (PtrDocument pDoc, PtrAbstractBox pAb, int viewSch,
 	  while (pPrec->ElPrevious == NULL && pPrec->ElParent != NULL)
 	    pPrec = pPrec->ElParent;
 	  pPrec = pPrec->ElPrevious;
-	  stop = pPrec == NULL;
+	  stop = (pPrec == NULL);
 	  while (!stop)
 	    if (pPrec->ElTerminal)
 	      {
 		stop = TRUE;
 		/* ignore les saut de pages pour les autres vues */
-		if (pPrec->ElTypeNumber == PageBreak + 1)
-		  if (pPrec->ElViewPSchema != viewSch)
-		    {
-		      pPrec = pPrec->ElPrevious;
-		      stop = pPrec == NULL;
-		    }
+		if (pPrec->ElTypeNumber == PageBreak + 1 &&
+		    pPrec->ElViewPSchema != viewSch)
+		  {
+		    pPrec = pPrec->ElPrevious;
+		    stop = (pPrec == NULL);
+		  }
 	      }
 	    else
 	      {
 		pPrec = pPrec->ElFirstChild;
-		if (pPrec == NULL)
+		if (!pPrec)
 		  stop = TRUE;
 		else
-		  while (pPrec->ElNext != NULL)
+		  while (pPrec->ElNext)
 		    pPrec = pPrec->ElNext;
 	      }
-	  if (pPrec != NULL)
+	  if (pPrec && pPrec->ElTerminal &&
+	      pPrec->ElTypeNumber == PageBreak + 1 &&
+	      pPrec->ElViewPSchema == viewSch &&
+	      pPrec->ElPageType == PgBegin)
 	    {
-	      pEl1 = pPrec;
-	      if (pEl1->ElTerminal &&
-		  pEl1->ElTypeNumber == PageBreak + 1 &&
-		  pEl1->ElViewPSchema == viewSch && pEl1->ElPageType == PgBegin)
-		{
-		  exitingPage = TRUE;
-		  pElPage = pEl1;
-		}
+	      existingPage = TRUE;
+	      pElPage = pPrec;
 	    }
 	}
 
-      if (!exitingPage &&
+      if (!existingPage &&
 	  pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct != CsChoice)
 	{
+	  /* c'est la premiere fois qu'on applique la regle page a cet
+	     element. On cree pour cet element une regle de largeur qui
+	     lui donne la largeur de la boite page */
+          /* cherche d'abord la regle de largeur de l'element qui porte la
+	     regle Page */
+	  pRWidth = SearchPRule (&pSchP->PsElemPRule->ElemPres[pEl->ElTypeNumber-1],
+				 PtWidth, pPRule->PrViewNum);
+	  if (pRWidth)
+	    {
+	      /* cherche la regle de largeur de la boite page referencee par la
+		 regle Page */
+	      pPageWidthRule = SearchPRule (&pSchP->PsPresentBox->PresBox[pPRule->PrPresBox[0]-1]->PbFirstPRule, PtWidth, pPRule->PrViewNum);
+	      /* modifie la regle de largeur */
+	      pRWidth->PrPresMode = PresImmediate;
+	      pRWidth->PrDimRule = pPageWidthRule->PrDimRule;
+	    }
+
 	  /* on cree une marque de page */
 	  pElPage = NewSubtree (PageBreak + 1, pEl->ElStructSchema, pDoc,
 				TRUE, TRUE, TRUE, TRUE);
-	  if (pElPage != NULL)
+	  if (pElPage)
 	    /* on a cree une marque de page */
-	    
-	    /* le reste de la procedure est different entre les deux versions */
-	    /* on la chaine comme premier fils de l'element */
+	    /* on l'insere comme premier fils de l'element */
 	    {
 	      InsertFirstChild (pEl, pElPage);
 	      /* on l'initialise */
-	      pEl1 = pElPage;
-	      pEl1->ElPageType = PgBegin;
-	      pEl1->ElViewPSchema = viewSch;
+	      pElPage->ElPageType = PgBegin;
+	      pElPage->ElViewPSchema = viewSch;
 	      /* cherche le compteur de pages a appliquer */
-	      counter = GetPageCounter (pElPage, pDoc, pEl1->ElViewPSchema, &pSchP);
+	      counter = GetPageCounter (pElPage, pDoc, pElPage->ElViewPSchema,
+					&pSchP);
 	      if (counter > 0)
 		/* calcule la valeur du compteur de pages */
-		pEl1->ElPageNumber = CounterVal (counter,
-						 pElPage->ElStructSchema,
-						 pSchP, pElPage,
-						 pEl1->ElViewPSchema);
+		pElPage->ElPageNumber = CounterVal (counter,
+						    pElPage->ElStructSchema,
+						    pSchP, pElPage,
+						    pElPage->ElViewPSchema);
 	      else
 		/* page non numerotee */
-		pEl1->ElPageNumber = 1;
+		pElPage->ElPageNumber = 1;
 	      /* faut-il creer les paves de la marque de page ? */
 	      create = TRUE;	/* a priori, on les cree */
-	      if (pElPage->ElNext != NULL)
+	      if (pElPage->ElNext)
 		/* la marque de page a un element suivant */
 		{
 		  pP = pElPage->ElNext->ElAbstractBox[pAb->AbDocView - 1];
 		  if (pP == NULL)
 		    /* l'element suivant la marque de page n'a pas de pave */
-		    /* dans la vue,on ne cree pas les paves de la marque page */
+		    /* dans la vue,on ne cree pas les paves de la marque page*/
 		    create = FALSE;
 		  else
-		    /* on ne cree les paves de la marque de page que le pave */
-		    /* de l'element suivant est complete en tete. */
+		    /* on ne cree les paves de la marque de page que si le */
+		    /* pave de l'element suivant est complet en tete */
 		    create = !pP->AbTruncatedHead;
 		}
 	      if (create)
-		/* cree les paves de la marque de page */
-		pP = AbsBoxesCreate (pElPage, pDoc, pAb->AbDocView, TRUE, TRUE, &complete);
+		/* on cree les paves de la marque de page */
+		pP = AbsBoxesCreate (pElPage, pDoc, pAb->AbDocView, TRUE,
+				     TRUE, &complete);
 	      /* on met a jour les numeros des pages suivantes */
 	      UpdateNumbers (NextElement (pElPage), pElPage, pDoc, TRUE);
 	    }
@@ -3116,7 +3174,13 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 		}
 	      break;
 	    case FnPage:
-	      ApplyPage (pDoc, pAb, viewSch, pPRule, pPRule->PrPresFunction);
+	      /* ignore the Page rule when working for the editor (as opposed
+		 to the printer) and if it applies to the root of a generic
+		 XML document */
+	      if (Printing || pAb->AbElement->ElParent ||
+		  !pDoc->DocSSchema->SsIsXml)
+		ApplyPage (pDoc, pAb, viewSch, pPRule, pPRule->PrPresFunction,
+			   pSchP);
 	      appl = TRUE;
 	      break;
 	    case FnColumn:
@@ -3145,14 +3209,12 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 	      break;
 	    case FnBackgroundPicture:
 	      appl = TRUE;
-	      /*printf ("-----------background-picture---------\n");*/
 	      if (pAb->AbLeafType == LtCompound &&
 		  pPRule->PrViewNum == viewSch)
 		{
 		  if (pPRule->PrPresBox[0] <= 0)
 		    /* it's a CSS rule "background-picture: none" */
 		    {
-		      /*printf ("background-picture: none\n");*/
 		      if (pAb->AbPictBackground)
 			/* remove the background image */
 			{
@@ -3186,7 +3248,6 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 			       MakeCompleteName (pConst->PdString, "",
 						 directoryName, fname, &i);
 			      }
-			  /*printf ("background-picture: %s\n", fname);*/
 			  NewPictInfo (pAb, fname, UNKNOWN_FORMAT);
 			}
 		    }

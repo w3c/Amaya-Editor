@@ -2079,7 +2079,7 @@ void *TtaNewAnimPath (Document doc)
 }
 
 /*----------------------------------------------------------------------
-  TtaAppendPathSeg
+  TtaAppendPathSegToAnim
 
   Appends a path segment at the end of an animation
 
@@ -2109,7 +2109,9 @@ void TtaAppendPathSegToAnim (void *anim, PathSegment segment, Document doc)
 	   ((PtrPathSeg) segment)->PaPrevious = pPrevPa;
 	 }
      }
+   else
 #endif /* _GL */
+     FreePathSeg ((PtrPathSeg)segment);
 }
 /*----------------------------------------------------------------------
    TtaAnimPathAddPoint

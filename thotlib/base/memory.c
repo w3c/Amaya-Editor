@@ -235,16 +235,16 @@ static void TtaFreeMotionPath (void *from)
   TtaFreeMemory (pop_path->Tangent_angle);
   TtaFreeMemory (pop_path->Path);
   if (pop_path->FirstPathSeg)
-  {
-  pPa = pop_path->FirstPathSeg;
-  do
     {
-      pPaNext = pPa->PaNext;
-      FreePathSeg (pPa);
-      pPa = pPaNext;
+      pPa = pop_path->FirstPathSeg;
+      do
+	{
+	  pPaNext = pPa->PaNext;
+	  FreePathSeg (pPa);
+	  pPa = pPaNext;
+	}
+      while (pPa);
     }
-  while (pPa);
-  }
 #endif/*  _GL */
 }
 

@@ -449,44 +449,46 @@ static void PrintDocument (Document doc, View view)
     TtaSetPrintSchema ("MathMLP");
   else if (DocumentTypes[doc] == docAnnot)
     TtaSetPrintSchema ("AnnotP");
-  else if (DocumentTypes[doc] == docHTML && NumberLinks)
-    /* display numbered links */
+  else if (DocumentTypes[doc] == docHTML)
     {
-      /* associate an attribute InternalLink with all anchors refering
-	 a target in the same document.  This allows P schemas to work
-	 properly */
-      SetInternalLinks (DocPrint);
-      if (PageSize == PP_A4)
+      if (NumberLinks)
+	/* display numbered links */
+	{
+	  /* associate an attribute InternalLink with all anchors refering
+	     a target in the same document.  This allows P schemas to work
+	     properly */
+	  SetInternalLinks (DocPrint);
+	  if (PageSize == PP_A4)
+	    {
+	      if (Orientation == PP_Landscape)
+		TtaSetPrintSchema ("HTMLPLL");
+	      else
+		TtaSetPrintSchema ("HTMLPLP");
+	    }
+	  else
+	    {
+	      if (Orientation == PP_Landscape)
+		TtaSetPrintSchema ("HTMLUSLL");
+	      else
+		TtaSetPrintSchema ("HTMLPLPUS");
+	    }
+	  strcat (viewsToPrint, "Links_view ");
+	}
+      else if (PageSize == PP_A4)
 	{
 	  if (Orientation == PP_Landscape)
-	    TtaSetPrintSchema ("HTMLPLL");
+	    TtaSetPrintSchema ("HTMLPL");
 	  else
-	    TtaSetPrintSchema ("HTMLPLP");
+	    TtaSetPrintSchema ("HTMLPP");
 	}
       else
 	{
 	  if (Orientation == PP_Landscape)
-	    TtaSetPrintSchema ("HTMLUSLL");
+	    TtaSetPrintSchema ("HTMLUSL");
 	  else
-	    TtaSetPrintSchema ("HTMLPLPUS");
-	}
-      strcat (viewsToPrint, "Links_view ");
+	    TtaSetPrintSchema ("HTMLPPUS");
+	}    
     }
-  else if (PageSize == PP_A4)
-    {
-      if (Orientation == PP_Landscape)
-	TtaSetPrintSchema ("HTMLPL");
-      else
-	TtaSetPrintSchema ("HTMLPP");
-    }
-  else
-    {
-      if (Orientation == PP_Landscape)
-	TtaSetPrintSchema ("HTMLUSL");
-      else
-	TtaSetPrintSchema ("HTMLPPUS");
-    }    
-  
   status = TtaIsDocumentModified (doc);
 
   if (textFile || DocumentTypes[doc] == docImage ||
@@ -518,7 +520,8 @@ static void PrintDocument (Document doc, View view)
     }
   
   /* get the path dir where css files have to be stored */
-  if ((DocumentTypes[doc] == docHTML || DocumentTypes[doc] == docSVG) &&
+  if ((DocumentTypes[doc] == docHTML || DocumentTypes[doc] == docSVG ||
+       DocumentTypes[doc] == docXml) &&
       !IgnoreCSS)
     {
       TtaGetPrintNames (&files, &dir);

@@ -5973,7 +5973,6 @@ static void         CheckPageBoxes ()
    PresVariable       *pPresVar;
    PtrCondition        pCond;
    NumberTable        *viewOfBox;
-   PtrPRule            pRLarg;
 
    viewOfBox = (NumberTable*) malloc (pPSchema->PsNPresentBoxes * sizeof (int));
    /* a priori les boites de presentation ne sont pas des boites pages */
@@ -6074,15 +6073,6 @@ static void         CheckPageBoxes ()
 				|| pRule->PrDimRule.DrPosition)
 			  /* ce n'est pas une largeur absolue fixe, erreur */
 			  TtaDisplayMessage (FATAL, TtaGetMessage (PRS, BAD_WIDTH_RULE), pPSchema->PsPresentBox->PresBox[b - 1]->PbName);
-		       /* cherche la regle de largeur de la boite qui porte la */
-		       /* regle Page, ou cree une regle s'il n'y a pas de regle de */
-		       /* largeur */
-		       /* supprime pour les colonnes */
-		       pRLarg = SearchPRule (&pPSchema->PsElemPRule->ElemPres[el], PtWidth,
-					     pR->PrViewNum);
-		       /* modifie la regle de largeur: meme regle que la boite page */
-		       pRLarg->PrPresMode = PresImmediate;
-		       pRLarg->PrDimRule = pRule->PrDimRule;
 		       /* cherche la regle de position verticale */
 		       /* de la boite page */
 		       pRule = pPSchema->PsPresentBox->PresBox[b - 1]->PbFirstPRule;

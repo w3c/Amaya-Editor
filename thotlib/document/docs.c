@@ -131,6 +131,8 @@ Document TtaInitDocument (char *structureSchema, char *documentName,
 	  else
 	    {
 	      /* The structure schema is loaded */
+	      if (strcmp (structureSchema, "XML") == 0)
+		pDoc->DocSSchema->SsIsXml = TRUE;
 #ifndef NODISPLAY
 	      InitApplicationSchema (pDoc->DocSSchema);
 #endif

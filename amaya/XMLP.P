@@ -35,6 +35,9 @@ VIEWS
 #define TAG_Font Helvetica
 #define ATTR_Font Helvetica
 
+COUNTERS
+   CptPage : Rank of Page(Formatted_view);
+
 DEFAULT
 
    BEGIN
@@ -210,15 +213,6 @@ BOXES
 	IN Structure_view
 		Visibility: 0;
 	END;
-{
- EmptyBox: BEGIN
-	Content: Text '<>';
-	Width : Enclosed . Width;
-	Visibility: Creator =;
-	IN Structure_view
-		Visibility: 0;
-	END;
-}
 
  CDATA_S: BEGIN
 	Content: Text '<![CDATA[';
@@ -240,10 +234,74 @@ BOXES
 		END;
 	END;
 
+  Spacehead:
+	BEGIN
+	Background : White;
+	Foreground : Black;
+	Fillpattern : nopattern;
+	Underline: NoUnderline;
+	Content: Text ' ';
+	Adjust: Left;
+	HorizPos: Left = Previous PAGE_BREAK . Left;
+	VertPos: Top = Previous PAGE_BREAK . Bottom + 0.7 cm;
+	Height:   1.2 cm;
+	Size : 8 pt;
+	Font: times;
+	Style: Roman;
+	Weight: Normal;
+	END;
+
+  PageNum:
+	BEGIN
+	Background : White;
+	Foreground : Black;
+	Fillpattern : nopattern;
+	Underline: NoUnderline;
+	Content: (Value (CptPage, Arabic));
+	HorizPos: VMiddle = Next PAGE_BREAK . VMiddle;
+	VertPos: Top = Next PAGE_BREAK . Top - 0.5 cm;
+	Width: Enclosed . Width;
+	Height: 1.6 cm;
+	Size : 11 pt;
+	Font: times;
+	Style: Roman;
+	Weight: Normal;
+	END;
+
+  BottomSpace:
+	BEGIN
+	Background : White;
+	Foreground : Black;
+	FillPattern: backgroundcolor;
+	Height:   1.4 cm;
+	Width: 1 pt;
+	Underline: NoUnderline;
+	VertPos: Bottom = Next PAGE_BREAK . Top;
+	HorizPos: Left = Next PAGE_BREAK . Left;
+	Content: (Graphics ' ');
+	END;
+
+  ThePage:
+	BEGIN
+	Background : White;
+	Foreground : Black;
+	FillPattern: backgroundcolor;
+	ShowBox;
+	Width: 15.6 cm;
+	Height: 25.9 cm;
+	VertPos: Top = Enclosing . Top + 1.7 cm;
+	HorizPos: Left = Enclosing . Left + 2.7 cm;
+	CreateAfter (Spacehead);
+	if not One(CptPage) CreateBefore (PageNum);
+	if not One(CptPage) CreateBefore (BottomSpace);
+	Underline: NoUnderline;
+	END;
+
 RULES
 
    Document:
 	BEGIN
+	Page(ThePage);
 	Depth: 0;
 	Adjust: Left;
 	Indent: 0;

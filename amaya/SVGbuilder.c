@@ -1066,7 +1066,7 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
 	   SetTextAnchor (attr, el, doc, FALSE);
        }
 
-     if (SVG_EL_set_ == SVG_EL_set_ || 
+     if (elType.ElTypeNum == SVG_EL_set_ || 
 	 elType.ElTypeNum == SVG_EL_animate ||    
 	 elType.ElTypeNum == SVG_EL_animateColor ||       
 	 elType.ElTypeNum == SVG_EL_animateMotion ||
@@ -2994,7 +2994,7 @@ void *ParsePathDataAttribute (Attribute attr, Element el, Document doc, ThotBool
       }
    if (IsDrawn)
      return NULL;
-   else 
+   else
      return anim_seg;
 }
 
