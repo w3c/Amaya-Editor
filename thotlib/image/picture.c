@@ -75,6 +75,7 @@
 
 static ThotPixmap PictureLogo;
 static ThotGC     tiledGC;
+static ThotBool   RedoDone = FALSE;
 
 static unsigned char MirrorBytes[0x100] = {
    0x00, 0x80, 0x40, 0xc0, 0x20, 0xa0, 0x60, 0xe0,
@@ -2748,9 +2749,13 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
   if (frame != ActiveFrame)
     GL_prepare (ActiveFrame); 
 #endif /* _NOSHARELIST */
-  if (redo)
-    /* a ratio applied need to regenerate the image */
-    LoadPicture (frame, box, imageDesc);
+  if (redo && RedoDone)
+    {
+      RedoDone = TRUE;
+      /* a ratio applied need to regenerate the image */
+      LoadPicture (frame, box, imageDesc);
+      RedoDone = FALSE;
+    }
 }
 
 #else /* _GL */
@@ -3021,9 +3026,13 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
     /* release the device context into TtDisplay */
     WIN_ReleaseDeviceContext ();
 #endif /* _WIN_PRINT */
-  if (redo)
-    /* a ratio applied need to regenerate the image */
-    LoadPicture (frame, box, imageDesc);
+  if (redo && RedoDone)
+    {
+      RedoDone = TRUE;
+      /* a ratio applied need to regenerate the image */
+      LoadPicture (frame, box, imageDesc);
+      RedoDone = FALSE;
+    }
 }
 #endif /*_GL*/
 
