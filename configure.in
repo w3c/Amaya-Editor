@@ -522,7 +522,7 @@ AC_SUBST(LIBZ)
 AC_SUBST(MAKEJPEG)
 AC_SUBST(MAKEPNG)
 
-AMAYA_VER="7.0"
+AMAYA_VER="8.1c"
 
 dnl
 dnl We use a special versoin of cextract patched for alignment
@@ -983,7 +983,7 @@ if test "$build_amaya" = "yes" ; then
     if test "$with_redland" = "yes" -a "$with_system_redland" = "yes" ; then
        # check to see if we have a redland library
        AC_MSG_CHECKING(system redland library)
-       redland_min_version=0.9.12
+       redland_min_version=0.9.14
        REDLAND_CONFIG="redland-config"
        REDLAND_VERSION=`$REDLAND_CONFIG --version`
        redland_version_dec=`echo $REDLAND_VERSION | awk -F. '{printf("%d\n", 10000*$1 + 100*$2 + $3)};'`
