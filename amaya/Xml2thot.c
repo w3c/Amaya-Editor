@@ -5278,6 +5278,12 @@ static void   XmlParse (FILE     *infile, CHARSET charset,
 	       i = 3;
 	       res = res - 3;
 	     }
+	   else if ((unsigned char) bufferRead[0] == EOL)
+	     {
+	       /* accept a newline before the XML declaration */
+	       i = 1;
+	       res = res - 1;
+	     }
 	   beginning = FALSE;
 	 }
 
