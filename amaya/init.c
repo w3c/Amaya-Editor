@@ -927,9 +927,35 @@ Document  doc;
 }
 
 /*----------------------------------------------------------------------
+   ChangeToEdotirMode
+   Similar to Editor mode except for  the variable ReadOnlyDocument
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void    ChangeToEditorMode (Document document)
+#else
+void    ChangeToEditorMode (document)
+Document    doc;
+#endif
+{
+   Document  docSel;
+
+   docSel = TtaGetSelectedDocument ();
+   if (docSel == document)
+     TtaUnselect (document);
+
+   /* =============> The document is in Read-Write mode now */
+   /* change the document status */
+   if (TtaIsDocumentModified (document))
+     DocStatusUpdate (document, TRUE);
+   /* change the document status */
+   TtaSetDocumentAccessMode (document, 1);
+   /* update windows menus */
+   UpdateEditorMenus (document);
+}
+
+/*----------------------------------------------------------------------
    ChangeToBrowserMode
-   This mode is similar to Browser mode except for 
-   the variable ReadOnlyDocument[document]
+   Similar to Browser mode except for the variable ReadOnlyDocument
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void    ChangeToBrowserMode (Document document)

@@ -1033,9 +1033,10 @@ Document     doc;
    RestartParser
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void       RestartHTMLParser (Document doc, CHAR_T *localFile, CHAR_T *tempdir, CHAR_T *documentname)
+static void       RestartParser (Document doc, CHAR_T *localFile,
+				 CHAR_T *tempdir, CHAR_T *documentname)
 #else
-static void       RestartHTMLParser (doc, localFile, tempdir, documentname)
+static void       RestartParser (doc, localFile, tempdir, documentname)
 Document          doc;
 CHAR_T           *localFile;
 CHAR_T           *tempdir;
@@ -1072,6 +1073,12 @@ CHAR_T           *documentname;
 	  /* switch off the button Show Log file */
 	  TtaSetItemOff (doc, 1, Views, BShowLogFile);
 	}
+
+  /* When the browser mode was set due to a parsing error,
+     restore the editor mode */
+  if (!ReadOnlyDocument[doc] && 
+      !TtaGetDocumentAccessMode (doc))
+    ChangeToEditorMode (doc);
   
   /* Calls the corresponding parser */
   if (DocumentMeta[doc]->xmlformat)       
@@ -1736,7 +1743,7 @@ View                view;
        TtaExportDocumentWithNewLineNumbers (document, tempdocument,
 					    TEXT("TextFileT"));
        TtaExtractName (tempdocument, tempdir, documentname);
-       RestartHTMLParser (htmlDoc, tempdocument, tempdir, documentname);
+       RestartParser (htmlDoc, tempdocument, tempdir, documentname);
        /* the other document is now different from the original file. It can
 	  be saved */
        TtaSetDocumentModified (otherDoc);
@@ -1976,7 +1983,7 @@ View                view;
 	if (htmlDoc)
 	   {
 	   TtaExtractName (localFile, tempdir, documentname);
-	   RestartHTMLParser (htmlDoc, localFile, tempdir, documentname);
+	   RestartParser (htmlDoc, localFile, tempdir, documentname);
 	   TtaSetDocumentUnmodified (htmlDoc);
 	   /* Synchronize selections */
 	   event.document = doc;
