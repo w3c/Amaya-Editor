@@ -30,12 +30,14 @@
 #include "message.h"
 #include "language.h"
 #include "appdialogue.h"
+#include "frame.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
 #include "page_tv.h"
 #include "platform_tv.h"
 #include "edit_tv.h"
+#include "frame_tv.h"
 #include "appdialogue_tv.h"
 
 #include "absboxes_f.h"
@@ -425,8 +427,8 @@ boolean             ro;
    pAb->AbSize = 1;
    pAb->AbSizeUnit = UnRelative;
    pAb->AbFillPattern = 0;
-   pAb->AbBackground = 0;	/* blanc */
-   pAb->AbForeground = 1;	/* noir */
+   pAb->AbBackground = White_Color;	/* blanc */
+   pAb->AbForeground = Black_Color;	/* noir */
    pAb->AbLineStyle = 'S';
    pAb->AbLineWeight = 1;
    pAb->AbLineWeightUnit = UnPoint;

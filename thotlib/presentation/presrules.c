@@ -34,6 +34,7 @@
 #define THOT_EXPORT extern
 #include "platform_tv.h"
 #include "appdialogue_tv.h"
+#include "frame_tv.h"
 
 #include "tree_f.h"
 #include "structcreation_f.h"
@@ -3043,7 +3044,7 @@ PtrAttribute        pAttr;
 	    if (!appl && pAbb1->AbElement->ElParent == NULL)
 	      /* Pas de regle pour la racine, on met la valeur par defaut */
 	      {
-		pAbb1->AbBackground = 0;
+		pAbb1->AbBackground = White_Color;
 		appl = TRUE;
 	      }
 	    break;
@@ -3053,7 +3054,7 @@ PtrAttribute        pAttr;
 	    if (!appl && pAbb1->AbElement->ElParent == NULL)
 	      /* Pas de regle pour la racine, on met la valeur par defaut */
 	      {
-		pAbb1->AbForeground = 1;
+		pAbb1->AbForeground = Black_Color;
 		appl = TRUE;
 	      }
 	    break;

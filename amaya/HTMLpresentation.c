@@ -533,16 +533,9 @@ NotifyPresentation *event;
 		TtaSwitchSelection (doc, 1, FALSE);
 		attrType.AttrSSchema = HTMLschema;
 		unit = TtaGetPRuleUnit (presRule);
-/****** register the attribute in the editing history ******/
+
 		if (presType == PRWidth)
 		  {
-		    attrType.AttrTypeNum = HTML_ATTR_Width__;
-		    attr = TtaGetAttribute (el, attrType);
-		    if (attr == NULL)
-		      {
-			attr = TtaNewAttribute (attrType);
-			TtaAttachAttribute (el, attr, doc);
-		      }
 		    /* the new value is the old one plus the delta */
 		    TtaGiveBoxSize (el, doc, 1, unit, &value, &i);
 		    value += TtaGetPRuleValue (presRule);
@@ -550,22 +543,43 @@ NotifyPresentation *event;
 		      sprintf (buffer, "%d%%", value);
 		    else
 		      sprintf (buffer, "%d", value);
+
+		    attrType.AttrTypeNum = HTML_ATTR_Width__;
+		    attr = TtaGetAttribute (el, attrType);
+		    if (attr == NULL)
+		      {
+			attr = TtaNewAttribute (attrType);
+			TtaAttachAttribute (el, attr, doc);
+			TtaSetAttributeText (attr, buffer, el, doc);
+			TtaRegisterAttributeCreate (attr, el, doc);
+		      }
+		    else
+		      {
+		        TtaRegisterAttributeReplace (attr, el, doc);
+		        TtaSetAttributeText (attr, buffer, el, doc);
+		      }
 		    TtaSetAttributeText (attr, buffer, el, doc);
 		    CreateAttrWidthPercentPxl (buffer, el, doc, w);
 		  }
 		else
 		  {
+		    /* the new value is the old one plus the delta */
+		    TtaGiveBoxSize (el, doc, 1, unit, &i, &value);
+		    value += TtaGetPRuleValue (presRule);
 		    attrType.AttrTypeNum = HTML_ATTR_Height_;
 		    attr = TtaGetAttribute (el, attrType);
 		    if (attr == NULL)
 		      {
 			attr = TtaNewAttribute (attrType);
 			TtaAttachAttribute (el, attr, doc);
+		        TtaSetAttributeValue (attr, value, el, doc);
+			TtaRegisterAttributeCreate (attr, el, doc);
 		      }
-		    /* the new value is the old one plus the delta */
-		    TtaGiveBoxSize (el, doc, 1, unit, &i, &value);
-		    value += TtaGetPRuleValue (presRule);
-		    TtaSetAttributeValue (attr, value, el, doc);
+		    else
+		      {
+			TtaRegisterAttributeReplace (attr, el, doc);
+		        TtaSetAttributeValue (attr, value, el, doc);
+		      }
 		    /* update the associated map */
 		    if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
 		      UpdateImageMap (el, doc, -1, h);

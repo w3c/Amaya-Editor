@@ -748,19 +748,20 @@ boolean             display;
    int                 view;
    int                 value;
    boolean             attr, stop, doit;
-   boolean             isNew, reDisp, isLined;
+   boolean             isNew, reDisp, isLined, histOpen;
 
    /* nettoie la table des frames a reafficher */
    for (view = 1; view <= MAX_VIEW_DOC; view++)
       updateframe[view - 1] = 0;
-   /* rien a reafficher */
-   reDisp = FALSE;
    /* l'element auquel correspond le pave */
    pEl = pAb->AbElement;
    /* le document auquel il appartient */
    pDoc = DocumentOfElement (pEl);
    /* numero de cette view */
    viewSch = AppliedView (pEl, NULL, pDoc, pAb->AbDocView);
+   /* rien a reafficher */
+   reDisp = FALSE;
+   histOpen = FALSE;
    /* le pave est-il dans une mise en lignes ? a priori non */
    isLined = FALSE;
    doit = FALSE;
@@ -812,6 +813,11 @@ boolean             display;
 	       /* la nouvelle position sera rangee dans l'attribut */
 	       attr = TRUE;
 	   doit = TRUE;
+	   if (!BoxCreating && !histOpen)
+	     {
+		OpenHistorySequence (pDoc, pEl, pEl, 0, 0);
+		histOpen = TRUE;
+	     }
 	   if (attr)
 	     {
 	       pPRule = pRStd;
@@ -828,6 +834,8 @@ boolean             display;
 		     doit = FALSE;
 		   else
 		     {
+		       if (!BoxCreating)
+		         AddAttrEditOpInHistory (pAttr, pEl, pDoc, TRUE, TRUE);
 		       pAttr->AeAttrValue += dy;
 		       /* fait reafficher les variables de presentation utilisant */
 		       /* l'attribut */
@@ -959,6 +967,11 @@ boolean             display;
 	       /* la nouvelle position sera rangee dans l'attribut */
 	       attr = TRUE;
 	   doit = TRUE;
+	   if (!BoxCreating && !histOpen)
+	     {
+	       OpenHistorySequence (pDoc, pEl, pEl, 0, 0);
+	       histOpen = TRUE;
+	     }
 	   if (attr)
 	     {
 	       pPRule = pRStd;
@@ -975,6 +988,8 @@ boolean             display;
 		     doit = FALSE;
 		   else
 		     {
+		       if (!BoxCreating)
+		         AddAttrEditOpInHistory (pAttr, pEl, pDoc, TRUE, TRUE);
 		       pAttr->AeAttrValue += dx;
 		       /* fait reafficher les variables de presentation utilisant */
 		       /* l'attribut */
@@ -1069,6 +1084,12 @@ boolean             display;
 	 }
      }
 
+   if (!BoxCreating && histOpen)
+     {
+     CloseHistorySequence (pDoc);
+     histOpen = FALSE;
+     }
+
    if (reDisp)
      {
        if (display)
@@ -1125,19 +1146,19 @@ boolean             display;
    int                 view;
    int                 value;
    boolean             attr, stop, doit;
-   boolean             isNew, reDisp, ok;
+   boolean             isNew, reDisp, ok, histOpen;
 
    /* nettoie la table des frames a reafficher */
    for (view = 0; view < MAX_VIEW_DOC; view++)
      updateframe[view] = 0;
-   /* rien a reafficher */
-   reDisp = FALSE;
    /* l'element auquel correspond le pave */
    pEl = pAb->AbElement;
-
    /* le document auquel appartient le pave */
    pDoc = DocumentOfElement (pEl);
    doc = (Document) IdentDocument (pDoc);
+   /* rien a reafficher */
+   reDisp = FALSE;
+   histOpen = FALSE;
    oldDisplayMode = documentDisplayMode[doc - 1];
    if (oldDisplayMode == DisplayImmediately)
      {
@@ -1201,6 +1222,11 @@ boolean             display;
 	       attr = TRUE;
 	   
 	   doit = TRUE;
+	   if (!BoxCreating && !histOpen)
+	     {
+	       OpenHistorySequence (pDoc, pEl, pEl, 0, 0);
+	       histOpen = TRUE;
+	     }
 	   if (attr)
 	     {
 	       pPRule = pRStd;
@@ -1217,6 +1243,9 @@ boolean             display;
 		     doit = FALSE;
 		   else
 		     {
+		       if (!BoxCreating)
+		         AddAttrEditOpInHistory (pAttr, pEl, pDoc, TRUE, TRUE);
+
 		       pAttr->AeAttrValue += dx;
 		       /* fait reafficher les variables de presentation */
 		       /* utilisant l'attribut */
@@ -1375,6 +1404,11 @@ boolean             display;
 	       /* la nouvelle hauteur sera rangee dans l'attribut */
 	       attr = TRUE;
 	   doit = TRUE;
+	   if (!BoxCreating && !histOpen)
+	     {
+	       OpenHistorySequence (pDoc, pEl, pEl, 0, 0);
+	       histOpen = TRUE;
+	     }
 	   if (attr)
 	     {
 	       pPRule = pRStd;
@@ -1391,6 +1425,8 @@ boolean             display;
 		     doit = FALSE;
 		   else
 		     {
+		       if (!BoxCreating)
+		         AddAttrEditOpInHistory (pAttr, pEl, pDoc, TRUE, TRUE);
 		       pAttr->AeAttrValue += dy;
 		       /* fait reafficher les variables de presentation */
 		       /* utilisant l'attribut */
@@ -1494,6 +1530,12 @@ boolean             display;
 		 PRuleMessagePost (pEl, pPRule, pDoc, isNew);
 	     }
 	 }
+     }
+
+   if (!BoxCreating && histOpen)
+     {
+     CloseHistorySequence (pDoc);
+     histOpen = FALSE;
      }
 
    if (reDisp || oldDisplayMode == DisplayImmediately)

@@ -1600,6 +1600,20 @@ boolean             pre;
 	result = result || ok;
 	pAsc = pAsc->ElParent;
      }
+   /* if it's before the actual change is made and if the application accepts
+      the change, register the operation in the Undo queue (only if it's
+      not a creation). */
+   if (pre && !ok)
+     {
+	if (((pEl->ElLeafType == LtGraphics || pEl->ElLeafType == LtSymbol) &&
+	     pEl->ElGraph != '\0') ||
+	    (pEl->ElLeafType == LtPolyLine && pEl->ElPolyLineType != '\0'))
+	   {
+	   OpenHistorySequence (pDoc, pEl, pEl, 0, 0);
+	   AddEditOpInHistory (pEl, pDoc, TRUE, TRUE);
+	   CloseHistorySequence (pDoc);
+	   }
+     }
    return result;
 }
 
@@ -1622,7 +1636,6 @@ int                 ym;
 {
    PtrBox              pBox;
    PtrAbstractBox      pAb, draw;
-   boolean             still, okH, okV;
    int                 x, width;
    int                 y, height;
    int                 xr, xmin;
@@ -1631,6 +1644,8 @@ int                 ym;
    int                 ymax;
    ViewFrame          *pFrame;
    int                 pointselect;
+   PtrElement	       pEl;
+   boolean             still, okH, okV;
 
    pFrame = &ViewFrameTable[frame - 1];
    /* pas de point selectionne */
@@ -1644,8 +1659,8 @@ int                 ym;
 	/* On recherche la boite englobant le point designe */
 
 	if (ThotLocalActions[T_selecbox] != NULL)
-	   (*ThotLocalActions[T_selecbox]) (&pBox, pFrame->FrAbstractBox, frame, xr, yr,
-					    &pointselect);
+	   (*ThotLocalActions[T_selecbox]) (&pBox, pFrame->FrAbstractBox,
+					    frame, xr, yr, &pointselect);
 	if (pBox == NULL)
 	   pAb = NULL;
 	else
@@ -1697,20 +1712,29 @@ int                 ym;
 
 	     if (pointselect != 0 && pBox->BxType != BoPicture)
 	       {
-		  if (!APPgraphicModify (pBox->BxAbstractBox->AbElement, pointselect, frame, TRUE))
+		  pEl = pBox->BxAbstractBox->AbElement;
+		  if (!APPgraphicModify (pEl, pointselect, frame, TRUE))
 		    {
 		       /* Deplacement d'un point de la polyline */
 		       x = pBox->BxXOrg - pFrame->FrXOrg;
 		       y = pBox->BxYOrg - pFrame->FrYOrg;
-		       TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_MOVING_BOX), AbsBoxType (pBox->BxAbstractBox, FALSE));
+		       TtaDisplayMessage (INFO,
+					  TtaGetMessage (LIB, TMSG_MOVING_BOX),
+					  AbsBoxType (pBox->BxAbstractBox,
+					  FALSE));
 		       /* Note si le trace est ouvert ou ferme */
-		       still = (pAb->AbPolyLineShape == 'p' || pAb->AbPolyLineShape == 's');
+		       still = (pAb->AbPolyLineShape == 'p' ||
+				pAb->AbPolyLineShape == 's');
 		       /* Reaffiche la selection */
 		       SwitchSelection (frame, FALSE);
 		       draw = GetParentDraw (pBox);
-		       PolyLineModification (frame, &x, &y, pBox, draw, pBox->BxNChars, pointselect, still);
+		       PolyLineModification (frame, &x, &y, pBox, draw,
+					   pBox->BxNChars, pointselect, still);
 		       /* on force le reaffichage de la boite */
-		       DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH, pBox->BxYOrg - EXTRA_GRAPH, pBox->BxXOrg + width + EXTRA_GRAPH, pBox->BxYOrg + height + EXTRA_GRAPH);
+		       DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH,
+				pBox->BxYOrg - EXTRA_GRAPH,
+				pBox->BxXOrg + width + EXTRA_GRAPH,
+				pBox->BxYOrg + height + EXTRA_GRAPH);
 #ifdef IV
 		       x += pFrame->FrXOrg;
 		       y += pFrame->FrYOrg;
@@ -1723,7 +1747,7 @@ int                 ym;
 #endif
 		       RedrawFrameBottom (frame, 0);
 		       NewContent (pAb);
-		       APPgraphicModify (pBox->BxAbstractBox->AbElement, pointselect, frame, FALSE);
+		       APPgraphicModify (pEl, pointselect, frame, FALSE);
 		       /* Reaffiche la selection */
 		       SwitchSelection (frame, TRUE);
 		    }

@@ -487,12 +487,9 @@ boolean removeWhenUndoing;
 
    if (!pEl && !pAttr)
       return;
-   /* error if no sequence open */
+   /* noting to to if no sequence open */
    if (!pDoc->DocEditSequence)
-     {
-      HistError (3);
       return;
-     }
 
    /* if the previous operation recorded is about the same attribute for the
       same element, just modify the previous operation */

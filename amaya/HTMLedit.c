@@ -1524,7 +1524,10 @@ NotifyAttribute    *event;
    else
      {
        if (elType.ElTypeNum != HTML_EL_AREA)
+	 {
 	 el = TtaGetParent (el);
+	 elType = TtaGetElementType (el);
+	 }
        if (elType.ElTypeNum == HTML_EL_AREA)
 	 SetAreaCoords (event->document, el, event->attributeType.AttrTypeNum);
      }

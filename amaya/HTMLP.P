@@ -31,7 +31,7 @@ PRINT
 #else
 #define TAG_Color Blue
 #define ATTR_Color Blue
-#define ATTRVALUE_Color Black
+#define ATTRVALUE_Color Enclosing=
 #define INVALID_Color Red
 #define UNKNOWNTAG_Color Red
 #define LINK_Color DarkIndigo1
