@@ -12,18 +12,6 @@
 <table border="1" title="exemple de fleche">
   <tbody>
     <tr>
-      <td><a href="./trash.svg#trash1"><img class="image" src="./trash.png"
-        alt="fleche de type 1" /></a></td>
-      <td class="titre-graph" valign="middle">trash</td>
-      <td class="commentaire" valign="middle">It's a full trash</td>
-    </tr>
-    <tr>
-      <td><a href="./audio.svg#audio"><img class="image" src="./audio.png"
-        alt="fleche de type 2" /></a></td>
-      <td class="titre-graph" valign="middle">audio</td>
-      <td class="commentaire" valign="middle"></td>
-    </tr>
-    <tr>
       <td><a href="./colorbox.svg#colorbox"><img class="image"
         src="./colorbox.png" alt="Colored cube" /></a></td>
       <td class="titre-graph" valign="middle">Color boxe</td>
@@ -58,6 +46,18 @@
         alt="fleche de type 7" /></a></td>
       <td class="titre-graph" valign="middle">arrow 5</td>
       <td class="commentaire" valign="middle">Simple arrow</td>
+    </tr>
+    <tr>
+      <td><a href="./audio.svg#audio"><img class="image" src="./audio.png"
+        alt="fleche de type 2" /></a></td>
+      <td class="titre-graph" valign="middle">audio</td>
+      <td class="commentaire" valign="middle"></td>
+    </tr>
+    <tr>
+      <td><a href="./trash.svg#trash1"><img class="image" src="./trash.png"
+        alt="fleche de type 1" /></a></td>
+      <td class="titre-graph" valign="middle">trash</td>
+      <td class="commentaire" valign="middle">It's a full trash</td>
     </tr>
   </tbody>
 </table>
