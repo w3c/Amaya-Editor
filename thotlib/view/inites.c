@@ -1505,6 +1505,7 @@ ThotPixmap CreatePattern (int disp, int fg, int bg, int motif)
 
 #if defined(_WX)
    /* TODO */
+   pixmap = NULL;
 #endif /* defined(_WX) */
    
    return (pixmap);
