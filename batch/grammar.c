@@ -29,7 +29,6 @@
 #include "fileaccess.h"
 #include "typegrm.h"
 #include "typeint.h"
-#include "fileaccess.h"
 
 typedef char        fname[30];	/* nom de fichier */
 
@@ -75,10 +74,8 @@ static int           curIndx;	/* position courante dans la regle courante */
 static FILE         *listFile;	/* fichier des listes */
 
 #include "compilmsg_f.h"
-#include "fileaccess_f.h"
 #include "parser_f.h"
 #include "platform_f.h"
-#include "message_f.h"
 #include "registry_f.h"
 
 #ifdef _WINGUI

@@ -11,7 +11,9 @@
 
 #include "thot_sys.h"
 #include "typebase.h"
+#ifndef NODISPLAY
 #include "zlib.h"
+#endif /* NODISPLAY */
 
 typedef FILE *BinFile;
 
@@ -107,8 +109,10 @@ extern ThotBool TtaReadInteger ( BinFile file,
                                 int *sval );
 extern ThotBool TtaReadName ( BinFile file,
                              unsigned char *name );
+#ifndef NODISPLAY
 extern gzFile TtaGZOpen (CONST char *filename);
 extern void TtaGZClose (gzFile file);
+#endif /* NODISPLAY */
 extern BinFile TtaReadOpen (CONST char *filename);
 extern void TtaReadClose ( BinFile file );
 extern BinFile TtaWriteOpen (CONST char *filename);

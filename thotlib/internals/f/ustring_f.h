@@ -37,9 +37,9 @@ extern CHAR_T *ustrtok ( CHAR_T *str,
 extern CHAR_T *ustrstr ( const CHAR_T *str,
                          const CHAR_T *strCharSet );
 extern CHARSET TtaGetCharset ( char *charsetname );
+extern CHARSET TtaGetLocaleCharset ( void );
 extern CHARSET TtaGetDefaultCharset ( void );
 extern char *TtaGetCharsetName ( CHARSET charset );
-extern CHARSET TtaGetLocaleCharset ( void );
 
 #else /* __STDC__ */
 
@@ -74,9 +74,9 @@ extern CHAR_T *ustrtok ( CHAR_T *str,
 extern CHAR_T *ustrstr ( const CHAR_T *str,
                            const CHAR_T *strCharSet );
 extern CHARSET TtaGetCharset ( char *charsetname );
+extern CHARSET TtaGetLocaleCharset ( void );
 extern CHARSET TtaGetDefaultCharset ( void );
 extern char *TtaGetCharsetName ( CHARSET charset );
-extern CHARSET TtaGetLocaleCharset ( void );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

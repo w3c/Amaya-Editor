@@ -35,6 +35,8 @@
 #include "typemedia.h"
 #include "registry.h"
 #include "application.h"
+#include "zlib.h"
+
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
 #include "platform_tv.h"

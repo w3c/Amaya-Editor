@@ -151,7 +151,6 @@ static ThotBool      AttrInitCounter;	/* on a rencontre' "Init" dans une definit
 
 					   de compteur */
 #include "compilmsg_f.h"
-#include "fileaccess_f.h"
 #include "parser_f.h"
 #include "platform_f.h"
 #include "prs_f.h"

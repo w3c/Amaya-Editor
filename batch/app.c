@@ -25,7 +25,6 @@
 #include "appstruct.h"
 #include "menuaction.h"
 #include "registry.h"
-#include "fileaccess.h"
 
 #include "parser_f.h"
 #include "compilmsg_f.h"
@@ -34,7 +33,6 @@
 #include "memory_f.h"
 #include "message_f.h"
 #include "readstr_f.h"
-#include "fileaccess_f.h"
 #include "writeapp_f.h"
 
 #undef THOT_EXPORT

@@ -29,7 +29,6 @@
 #include "compilmsg.h"
 #include "tramsg.h"
 #include "message.h"
-#include "fileaccess.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -118,7 +117,6 @@ static ThotBool    SecondInPair;/* on a rencontre' "Second" */
 #include "parser_f.h"
 #include "readstr_f.h"
 #include "writetra_f.h"
-#include "fileaccess_f.h"
 #include "memory_f.h"
 #include "message_f.h"
 #include "compilmsg_f.h"

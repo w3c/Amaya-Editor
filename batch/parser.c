@@ -47,7 +47,7 @@ static ThotBool      Comment;	/* on est dans un commentaire */
 static int          level;	/* niveau courant dans la pile */
 static ParserStackItem Stack[STACKSIZE];	/* pile d'analyse */
 
-#include "fileaccess_f.h"
+#include "fileaccess.h"
 #include "parser_f.h"
 #include "registry_f.h"
 

@@ -384,7 +384,7 @@ ThotBool TtaReadName (BinFile file, unsigned char *name)
   return TRUE;
 }
 
-
+#ifndef NODISPLAY
 /*----------------------------------------------------------------------
    TtaGZOpen opens a file for reading.
   ----------------------------------------------------------------------*/
@@ -405,7 +405,7 @@ void TtaGZClose (gzFile file)
   if (file)
     gzclose (file);
 }
-
+#endif /* NODISPLAY */
 
 /*----------------------------------------------------------------------
    TtaReadOpen opens a file for reading.
