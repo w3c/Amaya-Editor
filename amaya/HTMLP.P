@@ -2248,7 +2248,8 @@ RULES
 		Size: TAG_FONTSIZE;
 		Font: TAG_Font;
 		Weight: TAG_Weight;
-		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		Visibility: Enclosing =;
+                Foreground: TAG_Color;
 		END;
 	END;
 
@@ -2264,7 +2265,7 @@ RULES
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Foreground: ATTR_Color;
 		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;
+		Visibility: Enclosing =;
 		Size: TAG_FONTSIZE;
 		END;
 	IN Links_view
@@ -4777,7 +4778,6 @@ RULES
 	Visibility: Enclosing =;
 	MarginBottom: 0.4;
 	IN Structure_view BEGIN
-		Visibility: Enclosing =;
 		Width: Enclosing . Width;
 	        MarginBottom: 0;
 		END;
