@@ -1238,7 +1238,7 @@ Document            doc;
   if ((buffer == NULL) && (thotdir))
     {
       /* file not found */
-      sprintf (tempfile, "%s%sbin%s%s.css", thotdir, DIR_STR, DIR_STR, HTAppName);
+      sprintf (tempfile, "%s%samaya%s%s.css", thotdir, DIR_STR, DIR_STR, HTAppName);
       res = fopen (tempfile, "r");
       if (res != NULL)
 	{
