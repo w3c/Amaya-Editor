@@ -305,7 +305,11 @@ AHTReqContext      *me;
 
 	if (HTRequest_outputStream (me->request))
 	  AHTFWriter_FREE (me->request->output_stream);
-	  
+
+#ifdef _WINDOWS
+	HTRequest_kill (me->request);
+#endif /*_WINDOWS */
+
 	HTRequest_delete (me->request);
 
 	if (me->output && me->output != stdout)
@@ -783,7 +787,7 @@ int                 status;
 
 #ifdef _WINDOWS
    /* Try to add this to AHTEventrg.c */
-   ProcessTerminateRequest (me);
+  ProcessTerminateRequest (me);
 #endif /* WINDOWS */
 
   return HT_OK;
