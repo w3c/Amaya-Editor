@@ -2279,7 +2279,8 @@ void ANNOT_SetType (Document doc, RDFResourceP type)
   int              i;
   AnnotMeta       *annot;
   char          *type_name;
-  
+  ThotBool       in_thread = FALSE;
+
   if (!type)
     return;
 
@@ -2335,14 +2336,22 @@ void ANNOT_SetType (Document doc, RDFResourceP type)
 					 AM_BODY_URL);
 #ifdef ANNOT_ON_ANNOT
 	  if (!annot && AnnotMetaData[i].thread)
-	    annot = AnnotList_searchAnnot (AnnotMetaData[i].thread->annotations,
-					   (ptr) ? ptr : DocumentURLs[doc],
-					   AM_BODY_URL);
+	    {
+	      in_thread = TRUE;
+	      annot = AnnotList_searchAnnot (AnnotMetaData[i].thread->annotations,
+					     (ptr) ? ptr : DocumentURLs[doc],
+					     AM_BODY_URL);
+	    }
 #endif /* ANNOT_ON_ANNOT */
 	  if (ptr)
 	    TtaFreeMemory (ptr);
 	  if (annot)
+	    {
 	      annot->type = type;
+	      if (in_thread)
+		/* update the reply type in the thread */
+		ANNOT_UpdateThreadItem (doc, annot, annot->body_url);
+	    }
 	  break;
 	}
     }
