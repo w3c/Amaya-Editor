@@ -31,11 +31,10 @@
    Main tag addition: They are Thot tags added for thot structure extensions
                       so they don't respect the S schema structure
    -------------------------------------------------------------------- */
-#define DOCUMENT_TAG  	   "document"   /* main tag for namespace declaration
-					   and unique root level */
 #define PRES_SCHEMA_TAG    "presschema" /* presentation schema element */
 #define PARAM_TAG     	   "parameters" /* parameter element. not used */
 #define BR_TAG             "br"         /* BreakLine element */
+
 /* ---------------------------------------------------------------------
    Xml Element parameter addition: XML/XLL attributes addition
    -------------------------------------------------------------------- */
@@ -58,11 +57,16 @@
    ------------------------------------------------------------------- */
 #define HOLOPHRASTE_ATTR   "holophraste"/* holophrased elements */
 #define GRAPH_CODE_ATTR    "code"       /* graphic designation code */
-#define PG_NUM_ATTR        "number"     /* page number, not used yet */
-#define PG_VIEW_ATTR       "view"       /* page view, not used yet */
+#define PG_NUM_ATTR        "pgnumber"   /* page number */
+#define PG_VIEW_ATTR       "pgview"     /* page view */
+#define PG_TYPE_ATTR       "pgtype"     /* page type */
 #define PAIRED_ATTR        "position"   /* paired element position, not used yet */
 #define LINE_POINTS_ATTR   "points"     /* polyline points */
 #define SRC_ATTR           "src"        /* picture source */
+#define FPAIR_ATTR         "firstpair"  /* first paired elem */
+#define ASSOC_TREE_ATTR    "float"      /* associated tree */
+#define NLABEL_ATTR        "maxid"      /* number of ids used in the doc */
+
 /* ---------------------------------------------------------------------
    Basic element attribute value addition: enumerate value for added 
                                         attributes .

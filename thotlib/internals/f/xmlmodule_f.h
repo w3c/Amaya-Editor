@@ -6,6 +6,13 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void XmlAddNSPresentation ( Document doc,
+                                   unsigned char *prefix,
+                                   unsigned char *presentationName );
+extern void XmlAddNSSchema ( Document doc,
+                             unsigned char *prefixName,
+                             unsigned char *schemaName );
+extern SSchema XmlGetNSSchema ( unsigned char *prefix );
 extern void XmlAddRef ( Document doc,
                         Element el,
                         Attribute attr );
@@ -13,14 +20,20 @@ extern void XmlSetTarget ( Document doc,
                            Element el,
                            unsigned char *value );
 extern void XmlSetRef ( Document doc );
-extern boolean ParseXmlAttribute ( PrefixType **pPrefixs,
-                                   Document doc,
+extern boolean ParseXmlAttribute ( Document doc,
                                    Element el,
                                    unsigned char *attrName,
                                    unsigned char *value );
 
 #else /* __STDC__ */
 
+extern void XmlAddNSPresentation (/* Document doc,
+                                     unsigned char *prefix,
+                                     unsigned char *presentationName */);
+extern void XmlAddNSSchema (/* Document doc,
+                               unsigned char *prefixName,
+                               unsigned char *schemaName */);
+extern SSchema XmlGetNSSchema (/* unsigned char *prefix */);
 extern void XmlAddRef (/* Document doc,
                           Element el,
                           Attribute attr */);
@@ -28,8 +41,7 @@ extern void XmlSetTarget (/* Document doc,
                              Element el,
                              unsigned char *value */);
 extern void XmlSetRef (/* Document doc */);
-extern boolean ParseXmlAttribute (/* PrefixType **pPrefixs,
-                                     Document doc,
+extern boolean ParseXmlAttribute (/* Document doc,
                                      Element el,
                                      unsigned char *attrName,
                                      unsigned char *value */);

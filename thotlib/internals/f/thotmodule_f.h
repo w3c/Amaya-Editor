@@ -6,21 +6,25 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void XmlSetPageBreakProperties ( Element el );
 extern void XmlSetPresentation ( Document doc );
-extern boolean ParseThotAttribute ( PrefixType *Prefixs,
-                                    Document doc,
+extern boolean ParseThotAttribute ( Document doc,
                                     Element el,
                                     char *attrName,
                                     char *value );
+extern void StoreTableActions ( void );
+extern void RestoreTableActions ( void );
 
 #else /* __STDC__ */
 
+extern void XmlSetPageBreakProperties (/* Element el */);
 extern void XmlSetPresentation (/* Document doc */);
-extern boolean ParseThotAttribute (/* PrefixType *Prefixs,
-                                      Document doc,
+extern boolean ParseThotAttribute (/* Document doc,
                                       Element el,
                                       char *attrName,
                                       char *value */);
+extern void StoreTableActions (/* void */);
+extern void RestoreTableActions (/* void */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

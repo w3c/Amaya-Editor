@@ -51,7 +51,39 @@ static int        NbPrefix;         /* counter used for unique prefix name */
 static int        XmlDepth = 0;     /* Tree depth */
 static Document   OpenedRefDoc[10] = {0,0,0,0,0,0,0,0,0,0};
 static int        NbOpenedRefDoc = 0;/* structures for extern references */
+static StrAtomPair *ListAtomPair;    /* list of first paired elements */
+static int        LabelCounter;      /* counter for generating labels */
 
+/*----------------------------------------------------------------------
+  XmlGetElementLabel : gets a label for the element el
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void XmlGetElementLabel (char *label, Element el)
+#else /* __STDC__ */
+static void XmlGetElementLabel (label, el)
+char *label;
+Element el;
+#endif /* __STDC__ */
+{
+  char buf[MAX_LABEL_LEN];
+  
+  strcpy (buf, TtaGetElementLabel(el));
+  if (buf[3] != '_')
+    /* it's a thot generated label, change it in XmlId */
+    {
+      label[0]='\0';
+      strncat (label,
+	       NameThotToXml (TtaGetElementType(el).ElSSchema, 
+			      TtaGetElementType(el).ElTypeNum, 0, 0),
+	       3);
+      strcat (label, "_");
+      strcat (label, &buf[1]);
+    }
+  else
+    {
+     strcpy (label, buf);
+    }
+}
 /*----------------------------------------------------------------------
   XmlWriteString:
 	Writes a string in the xmlFile WITHOUT the trailing \0
@@ -251,7 +283,6 @@ char *comments;
   return ok;
 }
 
-#ifdef IV
 /*----------------------------------------------------------------------
    	XmlMakePrefix make the prefix from the first two letters of 
 	the nature name and an arbitrary number
@@ -316,7 +347,6 @@ SSchema sSchema;
     }
   return ok;
 }
-#endif /* IV */
 
 /*----------------------------------------------------------------------
    	XmlFreePrefixs: free internals prefixs structures
@@ -386,9 +416,10 @@ Document        doc;
   return XmlWriteVersionNumber (xmlFile);
 }
 
-#ifdef IV
+
 /*----------------------------------------------------------------------
-   XmlWriteDocSchemaNames: write all the structure schemas used by document doc.                                                  
+   XmlWriteDocSchemaNames: write additional structure schemas 
+    used by the document doc as namespace attributes.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean  XmlWriteDocSchemaNames (BinFile xmlFile, Document doc)
@@ -402,21 +433,6 @@ Document        doc;
   SSchema         tempSchema;
   char            tempName[40];
   boolean         ok = TRUE;
-
-  /* read the document principal schema */
-  tempSchema = TtaGetDocumentSSchema (doc);
-  ok = ok && XmlWriteString(xmlFile, "\n");
-  ok = ok && XmlWriteAttrName(xmlFile, XML_NAMESPACE_ATTR);
-  ok = ok && XmlWriteAttrStrValue (xmlFile, TtaGetSSchemaName (tempSchema));
-
-  /* write the thot special schema */
-  /* Warning: defining a thot schema but it's not a 
-              real schema and won't be DTD */
-  ok = ok && XmlWriteString(xmlFile, "\n");
-  ok = ok && XmlWriteString(xmlFile, XML_NAMESPACE_ATTR);
-  ok = ok && XmlWriteString(xmlFile, ":");
-  ok = ok && XmlWriteAttrName(xmlFile, "thot");
-  ok = ok && XmlWriteAttrStrValue (xmlFile,"Thot application special elements");
 
   /* read document's extensions */
   tempSchema = NULL;
@@ -455,6 +471,7 @@ Document        doc;
     }
   return ok;
 }
+
 
 /*----------------------------------------------------------------------
    XmlWriteSchemaPres: Write the doc's schemas presentation
@@ -520,7 +537,6 @@ Document doc;
     }
   return ok;
 }
-#endif /* IV */
 
 /*----------------------------------------------------------------------
    XmlWriteReference: Writes a reference
@@ -608,8 +624,6 @@ Attribute attr;
 	  strcat(tempName,TtaGetElementLabel(refEl));
 	  ok = ok && XmlWriteAttrStrValue (xmlFile,tempName);
 	}
-      if(el!=NULL)
-	  ok = ok && XmlWriteString(xmlFile, CLOSE_EMPTY_TAG);
     }
   return ok;
 }
@@ -732,6 +746,7 @@ boolean         taggedText;
 #endif /* __STDC__ */
 {
   ElementType     elType;
+  Element         tempElem;
   int             x, y;
   SSchema         sSchema;
   char           *tempChar;
@@ -740,13 +755,14 @@ boolean         taggedText;
   int             tempLength;
   int             i;
   boolean         ok = TRUE;
+  StrAtomPair     *atomPair, *prevAtomPair;
+  char            buf[32];
 
   elType = TtaGetElementType (el);
   sSchema = elType.ElSSchema;
 
   if (TtaGetConstruct(el) == ConstructConstant)
   /* We do not write constants text content, it is automaticly created */
-    XmlWriteString (xmlFile,CLOSE_EMPTY_TAG)
     ;
   else if (TtaGetConstruct(el) == ConstructReference)
     /* Inline element */
@@ -755,7 +771,58 @@ boolean         taggedText;
     {      
       if (TtaGetConstruct (el)== ConstructPair)
 	{
-	  /* Warning: paired element not treated ! */
+	  if (TtaIsFirstPairedElement (el))
+	    {
+	      /* first paired element */
+	      /* store the elment in list of first paired element */
+	      atomPair = (StrAtomPair *) TtaGetMemory (sizeof (StrAtomPair));
+	      atomPair->elem = el;
+	      atomPair->next = ListAtomPair;
+	      ListAtomPair = atomPair;
+	      if (!TtaIsElementReferred(el))
+		/* write element id if its done yet */
+		{
+		  ok = ok && XmlWriteString(xmlFile, XML_SPACE);
+		  ok = ok && XmlWriteString(xmlFile, XML_SCHEMA);
+		  ok = ok && XmlWriteAttrName (xmlFile, XML_ID_ATTR);
+		  buf[0]='\0';
+		  strncat(buf,TtaGetElementTypeOriginalName(TtaGetElementType(el)),3);
+		  strcat(buf,"_");
+		  strcat(buf,TtaGetElementLabel(el)+1);
+		  ok = ok && XmlWriteAttrStrValue (xmlFile, buf);
+		}
+	    }
+	  else
+	    {
+	      /* second paired element */
+	      tempElem = TtaSearchOtherPairedElement(el);
+	      if (tempElem != NULL)
+		{
+		  atomPair = ListAtomPair;
+		  prevAtomPair = NULL;
+		  while (atomPair != NULL && atomPair->elem != tempElem)
+		    {
+		      prevAtomPair = atomPair;
+		      atomPair = atomPair->next;
+		    }
+		  if (atomPair != NULL)
+		    {
+		      ok = ok && XmlWriteString(xmlFile, XML_SPACE);
+		      ok = ok && XmlWriteString(xmlFile, THOT_SCHEMA);     
+		      ok = ok && XmlWriteAttrName(xmlFile, FPAIR_ATTR);
+		      buf[0]='\0';
+		      strncat(buf,TtaGetElementTypeOriginalName(TtaGetElementType(tempElem)),3);
+		      strcat(buf,"_");
+		      strcat(buf,TtaGetElementLabel(tempElem)+1);
+		      ok = ok && XmlWriteAttrStrValue (xmlFile, buf);
+		      if (prevAtomPair == NULL)
+			ListAtomPair = atomPair->next;
+		      else
+			prevAtomPair->next = atomPair->next;
+		      TtaFreeMemory (atomPair);
+		    }
+		}
+	    }
 	} 
       switch (elType.ElTypeNum)
 	{
@@ -770,11 +837,10 @@ boolean         taggedText;
 	  TtaGiveTextContent (el, tempChar, &tempLength, &tempLanguage);
 	  ok = ok && XmlWriteAttrStrValue (xmlFile, tempChar);
 	  TtaFreeMemory(tempChar);
-	  /* Ends tag */
-	  ok = ok && XmlWriteString (xmlFile, CLOSE_EMPTY_TAG);
 	  break;
 	
 	case TEXT_UNIT:
+	  
 	  /* Put text content  */
 	  tempLength = TtaGetTextLength(el)+1;
 	  tempChar = TtaGetMemory (tempLength);
@@ -841,20 +907,147 @@ boolean         taggedText;
 		}
 		      ok = ok && TtaWriteByte(xmlFile,'"');
 	    }
-	  ok = ok && XmlWriteString (xmlFile, CLOSE_EMPTY_TAG);
 	  break;
 
 	case PAGE_BREAK:
-	  /* Warning: No API for accessing PageType */
-	  /* Warning: No API for accessing PageModified */
-	  /* Warning: No API for accessing PageView */
-	  ok = ok && XmlWriteString (xmlFile, CLOSE_EMPTY_TAG);
+	  ok = ok && XmlWriteString(xmlFile, XML_SPACE);
+	  ok = ok && XmlWriteString(xmlFile, THOT_SCHEMA);
+	  ok = ok && XmlWriteAttrName (xmlFile, PG_NUM_ATTR);
+	  ok = ok && XmlWriteAttrIntValue (xmlFile, ((PtrElement)el)->ElPageNumber);
+	  ok = ok && XmlWriteString(xmlFile, XML_SPACE);
+	  ok = ok && XmlWriteString(xmlFile, THOT_SCHEMA);
+	  ok = ok && XmlWriteAttrName (xmlFile, PG_VIEW_ATTR);
+	  ok = ok && XmlWriteAttrIntValue (xmlFile, ((PtrElement)el)->ElViewPSchema);
+	  ok = ok && XmlWriteString(xmlFile, XML_SPACE);
+	  ok = ok && XmlWriteString(xmlFile, THOT_SCHEMA);
+	  ok = ok && XmlWriteAttrName (xmlFile, PG_TYPE_ATTR);
+	  ok = ok && XmlWriteAttrIntValue (xmlFile, (int)((PtrElement)el)->ElPageType);
 	  break;
 	
 	default:
 	  break;
 	}
     }
+  if (elType.ElTypeNum != TEXT_UNIT)
+    ok = ok && XmlWriteString (xmlFile, CLOSE_EMPTY_TAG);
+  return ok;
+}
+
+/*----------------------------------------------------------------------
+  XmlWriteAttributes : writes the attributes of el element
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static boolean        XmlWriteAttributes (BinFile xmlFile, Element el, Document doc, boolean withEvent)
+#else /* __STDC__ */
+static boolean        XmlWriteAttributes (xmlFile, el, doc, withEvent)
+BinFile  xmlFile;
+Element        *pEl;
+Document        doc;
+boolean         withEvent;
+
+#endif /* __STDC__ */
+{	
+  Attribute attr;
+  char            buf[100];
+  NotifyAttribute notifyAttr;
+  AttributeType   attrType;
+  int             attrKind;
+  boolean         ok = TRUE;
+  boolean         doit;
+  PRule           pRule;
+
+  attr = NULL;
+  TtaNextAttribute (el, &attr);
+  pRule = NULL;
+  TtaNextPRule (el, &pRule);
+
+  /* If it's an included element copy then write the element reference */
+  
+  if (TtaIsInAnInclusion (el))
+    ok = ok && XmlWriteReference (xmlFile, doc, el, NULL);
+  
+  if (TtaIsElementReferred(el))
+    /* Write the element's label if he is referred */
+    {
+      /* An element label is formed by his first 3 letter of
+	 its type and the original Label number without 'L' */
+      ok = ok && XmlWriteString(xmlFile, XML_SPACE);
+      ok = ok && XmlWriteString(xmlFile, XML_SCHEMA);
+      ok = ok && XmlWriteAttrName (xmlFile, XML_ID_ATTR);
+      buf[0]='\0';
+      strncat(buf,TtaGetElementTypeOriginalName(TtaGetElementType(el)),3);
+      strcat(buf,"_");
+      strcat(buf,TtaGetElementLabel(el)+1);
+      ok = ok && XmlWriteAttrStrValue (xmlFile, buf);
+    }
+  if (TtaIsHolophrasted(el))
+    /* Write holophrast attribute if holophrasted */
+    {
+      ok = ok && XmlWriteString(xmlFile, XML_SPACE);
+      ok = ok && XmlWriteString(xmlFile, THOT_SCHEMA);
+      ok = ok && XmlWriteAttrName (xmlFile, HOLOPHRASTE_ATTR);
+      ok = ok && XmlWriteAttrStrValue (xmlFile, "true");
+    }
+  /* Warning: What's imposed attributs ? */
+  /*          Export doesn't associate special treatment */
+  while (ok && attr != NULL)
+    {
+      if (withEvent)
+	{
+	  /* prepare and send the event AttrSave.Pre if asked */
+	  notifyAttr.event = TteAttrSave;
+	  notifyAttr.document = doc;
+	  notifyAttr.element = el;
+	  notifyAttr.attribute = attr;
+	  TtaGiveAttributeType (attr, &attrType, &attrKind);
+	  notifyAttr.attributeType.AttrTypeNum = attrType.AttrTypeNum;
+	  notifyAttr.attributeType.AttrSSchema = attrType.AttrSSchema;
+	  doit = !CallEventAttribute (&notifyAttr, TRUE);
+	}
+      else
+	doit = TRUE;
+      if (doit)
+	/* Saving attribute accepted by the application */
+	/* Write the attribut */
+	ok = ok && XmlPutAttribut (xmlFile, attr, doc);
+      if (ok && withEvent)
+	{
+	  /* prepare and send the event AttrSave.Post if asked */
+	  notifyAttr.event = TteAttrSave;
+	  notifyAttr.document = doc;
+	  notifyAttr.element = el;
+	  notifyAttr.attribute = attr;
+	  TtaGiveAttributeType (attr, &attrType, &attrKind);
+	  notifyAttr.attributeType.AttrTypeNum = attrType.AttrTypeNum;
+	  notifyAttr.attributeType.AttrSSchema = attrType.AttrSSchema;
+	  CallEventAttribute (&notifyAttr, FALSE);
+	}
+      TtaNextAttribute (el, &attr);
+    }
+  /* Warning: No API to know pEl->ElPictInfo->PicPresent */
+  /*          to know if it's realsize, rescale,fillframe...*/
+  /*          Insert picture type: */
+  /* missing an attribute then */
+  
+  /* Write the element's presentation rules */
+  if (pRule!=NULL)
+    {
+      ok = ok && XmlWriteString(xmlFile, XML_SPACE);
+      ok = ok && XmlWriteString(xmlFile, THOT_SCHEMA);
+      ok = XmlWriteAttrName(xmlFile, STYLE_ATTR);
+      ok = ok && XmlWriteString(xmlFile, "\"");
+      while (pRule!=NULL)
+	{
+	  ok = ok && XmlWriteString(xmlFile, TtaGetViewName(doc,TtaGetPRuleView(pRule)));
+	  ok = ok && XmlWriteString(xmlFile, ":");
+	  ok = ok && XmlWriteInteger(xmlFile,TtaGetPRuleType(pRule));
+	  ok = ok && XmlWriteString(xmlFile, ":");
+	  ok = ok && XmlWriteInteger(xmlFile,TtaGetPRuleValue(pRule));
+	  ok = ok && XmlWriteString(xmlFile, ";");
+	  TtaNextPRule (el, &pRule);
+	}
+      ok = ok && XmlWriteString(xmlFile, "\"");
+    }  
   return ok;
 }
 
@@ -879,18 +1072,14 @@ boolean         withEvent;
   Element         elChild, el;
   ElementType     elType;
   Attribute       attr;
-  AttributeType   attrType;
-  int             attrKind;
   SSchema         sSchema;
   PRule           pRule;
 
   NotifyElement   notifyEl;
-  NotifyAttribute notifyAttr;
   boolean         toWrite = TRUE;
   boolean         taggedText = TRUE;
   boolean         ok = TRUE;
   boolean         doit = TRUE;
-  char            buf[100];
 #ifdef INDENT
   int             i;
 #endif      
@@ -903,11 +1092,10 @@ boolean         withEvent;
   attr = NULL;
   TtaNextAttribute (el, &attr);
 
-  /* Test if name has an XML translation or is not computed PageBreak */
+  /* Test if name has an XML translation or is not first PageBreak in view */
   toWrite = 
-    (NameThotToXml (elType.ElSSchema, elType.ElTypeNum, 0, 0) != NULL) &&
-    (elType.ElTypeNum!=6 ||
-    (elType.ElTypeNum==6 && ((PtrElement)el)->ElPageType != PgComputed));
+    (NameThotToXml (elType.ElSSchema, elType.ElTypeNum, 0, 0) != NULL &&
+     (elType.ElTypeNum != 6 || ((PtrElement)el)->ElPageType != PgBegin));
   /* test if the text element has to be tagged, i.e. has attributes */
   taggedText = 
     toWrite &&
@@ -916,7 +1104,7 @@ boolean         withEvent;
       !TtaIsElementReferred(el) && 
       !TtaIsHolophrasted(el));
 
-  if (toWrite&&taggedText)
+  if (toWrite && taggedText)
     /* We write that Tag */
     {
       /* Write depth spaces */
@@ -930,105 +1118,22 @@ boolean         withEvent;
       
       /* Write the Tag name (= element Name) and its prefix     */
       /*       Name is took from the ThotXmlTable */
-#ifdef NAMESPACE
       if (!TtaSameSSchemas (sSchema, TtaGetDocumentSSchema (doc)))
 	/* If schema is default schema, no prefix is added */
 	ok = ok && XmlWritePrefix (xmlFile,sSchema);
-#endif
+      
       ok = ok && XmlWriteElementName (xmlFile,elType); 
-      /* If it's an included element copy then write the element reference */
-      if (TtaIsInAnInclusion (el))
-	ok = ok && XmlWriteReference (xmlFile, doc, el, NULL);
-      
-      if (TtaIsElementReferred(el))
-      /* Write the element's label if he is referred */
-	{
-	  /* An element label is formed by his first 3 letter of
-             its type and the original Label number without 'L' */
-	  ok = ok && XmlWriteString(xmlFile, XML_SPACE);
-	  ok = ok && XmlWriteString(xmlFile, XML_SCHEMA);
-	  ok = ok && XmlWriteAttrName (xmlFile, XML_ID_ATTR);
-	  buf[0]='\0';
-	  strncat(buf,TtaGetElementTypeOriginalName(
-			 TtaGetElementType(el)),3);
-	  strcat(buf,"_");
-	  strcat(buf,TtaGetElementLabel(el)+1);
-	  ok = ok && XmlWriteAttrStrValue (xmlFile, buf);
-	}
-      if (TtaIsHolophrasted(el))
-      /* Write holophrast attribute if holophrasted */
-	{
-	  ok = ok && XmlWriteString(xmlFile, XML_SPACE);
-	  ok = ok && XmlWriteString(xmlFile, THOT_SCHEMA);
-	  ok = ok && XmlWriteAttrName (xmlFile, HOLOPHRASTE_ATTR);
-	  ok = ok && XmlWriteAttrStrValue (xmlFile, "true");
-	}
-      /* Warning: What's imposed attributs ? */
-      /*          Export doesn't associate special treatment */
-      while (ok && attr != NULL)
-	{
-	  if (withEvent)
-	    {
-	      /* prepare and send the event AttrSave.Pre if asked */
-	      notifyAttr.event = TteAttrSave;
-	      notifyAttr.document = doc;
-	      notifyAttr.element = el;
-	      notifyAttr.attribute = attr;
-	      TtaGiveAttributeType (attr, &attrType, &attrKind);
-	      notifyAttr.attributeType.AttrTypeNum = attrType.AttrTypeNum;
-	      notifyAttr.attributeType.AttrSSchema = attrType.AttrSSchema;
-	      doit = !CallEventAttribute (&notifyAttr, TRUE);
-	    }
-	  else
-	    doit = TRUE;
-	  if (doit)
-	    /* Saving attribute accepted by the application */
-	    /* Write the attribut */
-	    ok = ok && XmlPutAttribut (xmlFile, attr, doc);
-	  if (ok && withEvent)
-	    {
-	      /* prepare and send the event AttrSave.Post if asked */
-	      notifyAttr.event = TteAttrSave;
-	      notifyAttr.document = doc;
-	      notifyAttr.element = el;
-	      notifyAttr.attribute = attr;
-	      TtaGiveAttributeType (attr, &attrType, &attrKind);
-	      notifyAttr.attributeType.AttrTypeNum = attrType.AttrTypeNum;
-	      notifyAttr.attributeType.AttrSSchema = attrType.AttrSSchema;
-	      CallEventAttribute (&notifyAttr, FALSE);
-	    }
-	  TtaNextAttribute (el, &attr);
-	}
-      /* Warning: No API to know pEl->ElPictInfo->PicPresent */
-      /*          to know if it's realsize, rescale,fillframe...*/
-      /*          Insert picture type: */
-      /* missing an attribute then */
-      
-      /* Write the element's presentation rules */
-      if (pRule!=NULL)
-	{
-	    ok = ok && XmlWriteString(xmlFile, XML_SPACE);
-	    ok = ok && XmlWriteString(xmlFile, THOT_SCHEMA);
-	    ok = XmlWriteAttrName(xmlFile, STYLE_ATTR);
-	    ok = ok && XmlWriteString(xmlFile, "\"");
-	    while (pRule!=NULL)
-	      {
-		ok = ok && XmlWriteString(xmlFile, TtaGetViewName(doc,TtaGetPRuleView(pRule)));
-		ok = ok && XmlWriteString(xmlFile, ":");
-		ok = ok && XmlWriteInteger(xmlFile,TtaGetPRuleType(pRule));
-		ok = ok && XmlWriteString(xmlFile, ":");
-		ok = ok && XmlWriteInteger(xmlFile,TtaGetPRuleValue(pRule));
-		ok = ok && XmlWriteString(xmlFile, ";");
-		TtaNextPRule (el, &pRule);
-	      }
-	    ok = ok && XmlWriteString(xmlFile, "\"");
-	}  
-      /* Warning: no API function for accessing comments */
+     
+      ok = ok && XmlWriteAttributes (xmlFile, el, doc, withEvent);
     }
 
-  /* Write the element's body */
-  if (ok && !TtaIsInAnInclusion (el))
-    /* We don't write included element's body */
+  if (ok && TtaIsInAnInclusion (el))
+    /* Don't write included element's body */
+    {
+      ok = ok && XmlWriteString (xmlFile, CLOSE_EMPTY_TAG);
+    }
+  else if (ok)
+    /* Write the element's body */
     {
       if (TtaIsLeaf (elType) && (toWrite || 
 				 (elType.ElTypeNum==1 && !taggedText)))
@@ -1046,7 +1151,7 @@ boolean         withEvent;
 	  /*            if (!pSS->SsRule[pEl1->ElTypeNum - 1].SrParamElem) */
 	  {
 	    if (toWrite)
-	    /* Ends heading if toWrite */
+	      /* Ends heading if toWrite */
 	      ok = ok && XmlWriteString (xmlFile, CLOSE_TAG);
 	    elChild = TtaGetFirstChild (el);
 	    /* successively write element's children */
@@ -1094,11 +1199,9 @@ boolean         withEvent;
 		  ok = ok && XmlWriteString (xmlFile, DEPTH_SPACE);
 #endif
 		ok = ok && XmlWriteString (xmlFile, OPEN_END_TAG);
-#ifdef NAMESPACE
 		if (!TtaSameSSchemas (sSchema, TtaGetDocumentSSchema (doc)))
 		  /* If schema is default schema, no prefix is added */
 		  ok = ok && XmlWritePrefix (xmlFile,sSchema);
-#endif
 		ok = ok && XmlWriteElementName (xmlFile,elType);
 		ok = ok && XmlWriteString (xmlFile, CLOSE_TAG);
 	      }
@@ -1127,34 +1230,36 @@ Document        doc;
 boolean         withEvent;
 #endif /* __STDC__ */
 {
-  Element         el, nextEl, tempEl;
-  NotifyElement       notifyEl;
+  Element         nextEl, rootEl;
+  ElementType     rootType, elType;
+  NotifyElement   notifyEl;
   boolean         ok = TRUE;
   boolean         doit = TRUE;
-
-  el = NULL;
-  TtaNextAssociatedRoot (doc, &el);
-  while (el != NULL)
+  int             i;
+  
+  rootEl = NULL;
+  TtaNextAssociatedRoot (doc, &rootEl);
+  while (rootEl != NULL)
     {
-      tempEl = el;
-      el = TtaGetFirstChild (el);
-      if (el != NULL)
+      rootType = TtaGetElementType (rootEl);
+      nextEl = TtaGetFirstChild (rootEl);
+      if (nextEl != NULL)
 	/* Is there anything else then PageBreak */
 	{
-	  nextEl = TtaSearchNoPageBreak (el, TRUE);
+	  if (TtaGetElementType (nextEl).ElTypeNum == PAGE_BREAK)
+	    nextEl = TtaSearchNoPageBreak (nextEl, TRUE);
 
 	  if (nextEl != NULL)
 	    /*there's not only PageBreak */
 	    {
-	      el = tempEl;
 	      if (withEvent)
 		{
 		  /* send evenement ElemSave.Pre to application, if asked */
 		  notifyEl.event = TteElemSave;
 		  notifyEl.document = doc;
-		  notifyEl.element = el;
-		  notifyEl.elementType.ElTypeNum = (TtaGetElementType (el)).ElTypeNum;
-		  notifyEl.elementType.ElSSchema = (TtaGetElementType (el)).ElSSchema;
+		  notifyEl.element = rootEl;
+		  notifyEl.elementType.ElTypeNum = rootType.ElTypeNum;
+		  notifyEl.elementType.ElSSchema = rootType.ElSSchema;
 		  notifyEl.position = 0;
 		  doit = !CallEventType ((NotifyEvent *) & notifyEl, TRUE);
 		}
@@ -1162,24 +1267,94 @@ boolean         withEvent;
 		doit = TRUE;
 	      /* Saving element accepted by the application */
 	      if (doit)
-		/* write subtree */
-		ok = ok && XmlExternalise (xmlFile, &el, doc, withEvent);
+		/* write assoc root */
+		XmlDepth++;
+#ifdef INDENT
+	      for (i=0;i<XmlDepth;i++)
+		ok = ok && XmlWriteString (xmlFile, DEPTH_SPACE);
+#endif      
+	      /* Open the root Tag */
+	      ok = XmlWriteString (xmlFile, OPEN_TAG);
+	      /* Write the Tag name (= element Name) and its prefix     */
+	      /*       Name is took from the ThotXmlTable */
+	      if (!TtaSameSSchemas (rootType.ElSSchema, 
+				    TtaGetDocumentSSchema (doc)))
+		/* If schema is default schema, no prefix is added */
+		ok = ok && XmlWritePrefix (xmlFile,rootType.ElSSchema);
+      
+	      ok = ok && XmlWriteElementName (xmlFile,rootType); 
+	      /* write assoc tree thot ns attribute */
+	      ok = ok && XmlWriteString(xmlFile, XML_SPACE);
+	      ok = ok && XmlWriteString(xmlFile, THOT_SCHEMA);
+	      ok = ok && XmlWriteAttrName (xmlFile, ASSOC_TREE_ATTR);
+	      ok = ok && XmlWriteAttrStrValue (xmlFile, TRUE_VALUE);
+
+	      /* write assoc tree attributes */
+	      ok = ok && XmlWriteAttributes (xmlFile, rootEl, doc, withEvent);
+	      ok = ok && XmlWriteString (xmlFile, CLOSE_TAG);
+	      if (ok)
+		{
+		  /* successively write root's children */
+		  while (ok && nextEl != NULL)
+		    {
+		      elType = TtaGetElementType (nextEl);
+		      if (withEvent)
+			{
+			  /* send evenement ElemSave.Pre to application, if asked */
+			  notifyEl.event = TteElemSave;
+			  notifyEl.document = doc;
+			  notifyEl.element = nextEl;
+			  notifyEl.elementType.ElTypeNum = elType.ElTypeNum;
+			  notifyEl.elementType.ElSSchema = elType.ElSSchema;
+			  notifyEl.position = 0;
+			  doit = !CallEventType ((NotifyEvent *) & notifyEl, TRUE);
+			}
+		      else 
+			doit = TRUE;
+		      if (doit)
+			/* Saving element accepted by the application */
+			/* Write an element's child */
+			ok = ok && XmlExternalise (xmlFile, &nextEl, doc, withEvent);
+		      if (withEvent && ok)
+			/* send evenement ElemSave.Post to application, if asked */
+			{
+			  notifyEl.event = TteElemSave;
+			  notifyEl.document = doc;
+			  notifyEl.element = nextEl;
+			  notifyEl.elementType.ElTypeNum = elType.ElTypeNum;
+			  notifyEl.elementType.ElSSchema = elType.ElSSchema;
+			  notifyEl.position = 0;
+			}
+		      /* Go to next child */
+		      TtaNextSibling (&nextEl);
+		    }	  
+		}
+	      /*  assoc root end tag*/
+#ifdef INDENT
+	      for (i=0;i<XmlDepth;i++)
+		ok = ok && XmlWriteString (xmlFile, DEPTH_SPACE);
+#endif
+	      ok = ok && XmlWriteString (xmlFile, OPEN_END_TAG);
+	      if (!TtaSameSSchemas (rootType.ElSSchema,
+				    TtaGetDocumentSSchema (doc)))
+		/* If schema is default schema, no prefix is added */
+		ok = ok && XmlWritePrefix (xmlFile,rootType.ElSSchema);
+	      ok = ok && XmlWriteElementName (xmlFile,rootType);
+	      ok = ok && XmlWriteString (xmlFile, CLOSE_TAG);
 	      if (withEvent && ok)
 		{
 		  /* send evenement ElemSave.Post to application, if asked */
 		  notifyEl.event = TteElemSave;
 		  notifyEl.document = doc;
-		  notifyEl.element = el;
-		  notifyEl.elementType.ElTypeNum =
-		    (TtaGetElementType (el)).ElTypeNum;
-		  notifyEl.elementType.ElSSchema =
-		    (TtaGetElementType (el)).ElSSchema;
+		  notifyEl.element = rootEl;
+		  notifyEl.elementType.ElTypeNum = rootType.ElTypeNum;
+		  notifyEl.elementType.ElSSchema = rootType.ElSSchema;
 		  notifyEl.position = 0;
 		  CallEventType ((NotifyEvent *) & notifyEl, FALSE);
 		}
 	    }
 	}
-      TtaNextAssociatedRoot (doc, &el);
+      TtaNextAssociatedRoot (doc, &rootEl);
     }
   return ok;
 }
@@ -1199,41 +1374,28 @@ boolean         withEvent;
 
 #endif /* __STDC__ */
 {
-  Element         el;
+  Element         el, elChild;
   NotifyElement   notifyEl;
   boolean         ok;
   boolean         doit;
+  SSchema         schema;
+  int             i;
+  StrAtomPair     *atomPair;
 
-  
+  ListAtomPair = NULL;
   /* write the xmlFile header */
   ok = WriteXmlHeader (xmlFile, doc);
   /* write doc associate comments if it exists  */
   /* Warning: No API function for accessing comments */
   /*   if (doc->DocComment != NULL) */
   /*     ok = ok && PutComment (xmlFile, pDoc->DocComment); */
-  ok = ok && XmlWriteComments(xmlFile,"Made by Thot");
+  ok = ok && XmlWriteComments(xmlFile,"Generated by Thot");
   /* Warning: Structure: Open thot special document begin tag  */
   /* This tag is used to have previous declaration of the main 
      document schema and to have associated tree at the same level
      than root tree */
-  ok = ok && XmlWriteString (xmlFile, OPEN_TAG);
-  ok = ok && XmlWriteString (xmlFile, THOT_SCHEMA);
-  ok = ok && XmlWriteString (xmlFile, DOCUMENT_TAG);
-  /* Write all schemas structure used by doc as document attribute  */
-#ifdef NAMESPACE
-  ok = ok && XmlWriteDocSchemaNames (xmlFile, doc);
-#endif
-  ok = ok && XmlWriteString (xmlFile, CLOSE_TAG);
-  ok = ok && XmlWriteString (xmlFile, "\n");
-  /* Write the corresponding schema presentations */
-#ifdef NAMESPACE
-  ok = ok && XmlWriteSchemaPres (xmlFile, doc);
-  ok = ok && XmlWriteString (xmlFile, "\n");
-#endif
-  /* Write non-empty associated trees */
-  ok = ok && XmlWriteDocAssocRoot (xmlFile, doc, withEvent);
-
   /* Write document's body */
+  
   el = TtaGetMainRoot (doc);
   if (el != NULL)
     {
@@ -1252,11 +1414,82 @@ boolean         withEvent;
 	}
       else
 	doit = TRUE;
-      if (doit)
+    }
+  if (doit)
+    {
+      ok = ok && XmlWriteString (xmlFile, OPEN_TAG);
+      /* Write the main str schema as root tag GI */
+      schema = TtaGetDocumentSSchema (doc);
+      ok = ok && XmlWriteString (xmlFile, TtaGetSSchemaName (schema));  
+      /* Write additional schemas as namespace attributes  */
+      ok = ok && XmlWriteDocSchemaNames (xmlFile, doc);
+      /*wirte root element attributes */
+      ok = ok && XmlWriteAttributes (xmlFile, el, doc, withEvent);
+      ok = ok && XmlWriteString (xmlFile, CLOSE_TAG);
+      
+      ok = ok && XmlWriteString (xmlFile, "\n");
+      /* Write the schema presentations */
+
+      ok = ok && XmlWriteSchemaPres (xmlFile, doc);
+      ok = ok && XmlWriteString (xmlFile, "\n");
 	
-	/* Saving element accepted by the application */
-	/* Write document tree */
-	ok = XmlExternalise (xmlFile, &el, doc, withEvent);
+      if (ok)
+	/* We write root element's child */
+	/* Warning: No API for knowing if it's a S paramaeter */
+	/*          In pivot version there was a test whether */
+	/*            the element was a S parameters or not: */
+	/*            if (!pSS->SsRule[pEl1->ElTypeNum - 1].SrParamElem) */
+	{
+	  elChild = TtaGetFirstChild (el);
+	  /* successively write element's children */
+	  while (ok && elChild != NULL)
+	    {
+	      if (withEvent)
+		{
+		  /* send evenement ElemSave.Pre to application, if asked */
+		  notifyEl.event = TteElemSave;
+		  notifyEl.document = doc;
+		  notifyEl.element = elChild;
+		  notifyEl.elementType.ElTypeNum =
+		    (TtaGetElementType (elChild)).ElTypeNum;
+		  notifyEl.elementType.ElSSchema =
+		    (TtaGetElementType (elChild)).ElSSchema;
+		  notifyEl.position = 0;
+		  doit = !CallEventType ((NotifyEvent *) & notifyEl, TRUE);
+		}
+	      else 
+		doit = TRUE;
+	      if (doit)
+		/* Saving element accepted by the application */
+		/* Write an element's child */
+		ok = ok && XmlExternalise (xmlFile, &elChild, doc, withEvent);
+	      if (withEvent && ok)
+		/* send evenement ElemSave.Post to application, if asked */
+		{
+		  notifyEl.event = TteElemSave;
+		  notifyEl.document = doc;
+		  notifyEl.element = elChild;
+		  notifyEl.elementType.ElTypeNum =
+		    (TtaGetElementType (elChild)).ElTypeNum;
+		  notifyEl.elementType.ElSSchema =
+		    (TtaGetElementType (elChild)).ElSSchema;
+		  notifyEl.position = 0;
+		}
+	      /* Go to next child */
+	      TtaNextSibling (&elChild);
+	    }
+	}
+      /* Write non-empty associated trees */
+      ok = ok && XmlWriteDocAssocRoot (xmlFile, doc, withEvent);
+	  
+      /* close root element tag */
+#ifdef INDENT
+      for (i=0;i<XmlDepth;i++)
+	ok = ok && XmlWriteString (xmlFile, DEPTH_SPACE);
+#endif
+      ok = ok && XmlWriteString (xmlFile, OPEN_END_TAG);
+      ok = ok && XmlWriteString (xmlFile,TtaGetSSchemaName (schema));
+      ok = ok && XmlWriteString (xmlFile, CLOSE_TAG);
       /* send evenement ElemSave.Post to application, if asked */
       if (withEvent && ok)
 	{
@@ -1269,13 +1502,15 @@ boolean         withEvent;
 	  CallEventType ((NotifyEvent *) & notifyEl, FALSE);
 	}
     }
-  /* document end tag  */
-  ok = ok && XmlWriteString (xmlFile, OPEN_END_TAG);
-  ok = ok && XmlWriteString (xmlFile, THOT_SCHEMA);
-  ok = ok && XmlWriteString (xmlFile, DOCUMENT_TAG);
-  ok = ok && XmlWriteString (xmlFile, CLOSE_TAG);
+  
   XmlFreePrefixs();
   XmlCloseRefDoc();
+  while (ListAtomPair != NULL)
+    {  
+      atomPair = ListAtomPair;
+      ListAtomPair = ListAtomPair->next;
+      free (atomPair);
+    }
   return ok;
 }
 

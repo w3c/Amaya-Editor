@@ -8,9 +8,9 @@
 
 extern void XmlError ( Document doc,
                        unsigned char *text );
-extern void XmlSetCurrentDocument ( char *schemaName );
+extern Element XmlSetCurrentDocument ( char *schemaName );
 extern void XmlChangeCurrentLangage ( Language lang );
-extern Element XmlInsertElement ( ElementType elType );
+extern Element XmlInsertElement ( Element newElement );
 extern void XmlTextToDocument ( void );
 extern void FreeXmlParser ( void );
 extern Document XmlParseDoc ( char* name );
@@ -20,9 +20,9 @@ extern void XmlParserLoadResources ( void );
 
 extern void XmlError (/* Document doc,
                          unsigned char *text */);
-extern void XmlSetCurrentDocument (/* char *schemaName */);
+extern Element XmlSetCurrentDocument (/* char *schemaName */);
 extern void XmlChangeCurrentLangage (/* Language lang */);
-extern Element XmlInsertElement (/* ElementType elType */);
+extern Element XmlInsertElement (/* Element newElement */);
 extern void XmlTextToDocument (/* void */);
 extern void FreeXmlParser (/* void */);
 extern Document XmlParseDoc (/* char* name */);

@@ -9,6 +9,8 @@ typedef struct _PrefixType {
   SSchema              Schema;        /* The corresponding SSchema */
   char                *SchemaName;    /* The corresponding SSchema name */
   char                *Name;          /* Prefix's id */
+  boolean              IsExtSchema;   /* true if the namespace is associated */
+                                      /* to an extension schema */
   struct _PrefixType  *Next;          /* Next prefix */
 }PrefixType;
 
@@ -60,3 +62,9 @@ typedef struct _TranslationSchema
   PtrTranslationSchema Next;
 }TranslationSchema;
 
+/* list of first paired elements */
+typedef struct _AtomPair
+{
+  Element elem; /* the first paired element */
+  struct _AtomPair * next;
+} StrAtomPair;

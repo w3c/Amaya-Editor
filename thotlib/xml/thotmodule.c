@@ -1,36 +1,6 @@
-/*
+#include "constmedia.h"
+#include "typemedia.h"
 
- *  (c) COPYRIGHT INRIA, 1996.
- *  Please first read the full copyright statement in file COPYRIGHT.
- *
- */
-/*
-   module: thotmodule.c
-   Authors: Monte Regis
-            Bonhomme Stephane
-
-   Comments: this module manage Thot special attributes
-             while parsing XML documents
-	     this module uses constant defined in constxml.h
-
-   Extern function: 
-     - boolean ParseThotAttribute (PrefixType *Prefixs,
-                                   Document doc,
-				   Element el, 
-				   char *attrName, 
-				   char *value)
-            Parse the Thot attribute (Prefixs is the parser prefix list
-	      for opening document's nature in XmlAddPS)
-     - void  XmlSetPresentation(Document doc)
-            Update the presentation rules when views are opened
- */
-
-#define MAX_ATTR 100;
-#undef THOT_EXPORT
-#define THOT_EXPORT extern
-#define EOS     '\0'
-#define SPACE    ' '
-#define MAX_LENGTH     512
 #include "tree.h"
 #include "content.h"
 #include "view.h"
@@ -39,223 +9,273 @@
 #include "document.h"
 #include "application.h"
 #include "app.h"
+#include "appdialogue.h"
+
 
 #include "constxml.h"
 #include "typexml.h"
 #include "parsexml_f.h"
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
+#include "appdialogue_tv.h"
+#include "edit_tv.h"
 
-/* specific presentation storing structure */
 typedef struct _XmlPresentationType{
-  Element  El;           /* associated element */
-  char    *ViewName;     /* PRule view */
-  int      PRuleNum;     
+  Element  El;
+  char    *ViewName;
+  int      PRuleNum;
   int      PRuleValue;
   struct  _XmlPresentationType *Next;
 }XmlPresentationType;
 
-static int      NbEntries = 8;        /* number of thot attribute parsed */
-static char     PPrefixName[9] = "";  /* temporary structure to store prefix */
-static char     PSchemaName[30] = ""; /* temporary structure to store PSchema */
-/* temporary pointer to parser prefixlist */
+static char     PPrefixName[9] = "";
+static char     PSchemaName[30] = "";
+static int      XmlMaxID = 0;
 static PrefixType     *ParserPrefixs;
-/* specific presentation list */
 static XmlPresentationType *XmlPresentation=NULL;
+static int PBnumber = 0;
+static int PBview = 0;
+static int PBtype = 0;
 
+/* Thot and Xml attributes actions tables */
+#define MAX_ATTR 100;
+#define EOS     '\0'
+#define SPACE    ' '
+#define MAX_LENGTH     512
 /*----------------------------------------------------------------------
-   XmlAddPS: add a nature presentation in the document
-             Except main document, no nature are previously added so
-	     this function add them to document
+  XmlSetPageNum: sets the next pagebreak number
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void XmlAddPS (Document doc)
+static void XmlSetPageNum (Document doc, Element el, char *value)
 #else
-static void XmlAddPS (doc)
+static void XmlSetPageNum (doc, el, value)
 Document doc;
+Element el;
+char *value;
 #endif
 {
-  PrefixType         *tempPrefix;
-  char               *schemaName;
-
-  schemaName = TtaGetSSchemaName(TtaGetDocumentSSchema(doc));
-
-  if ( PSchemaName[0] != EOS &&  PPrefixName[0] != EOS)
-    if(!strcmp( PPrefixName,DEFAULT_VALUE))
-      /* We've read the default and main schema presentation*/
-      /* Creating Document and Initializing document */
-      TtaSetPSchema(doc, PSchemaName);
-    else 
-      {
-	tempPrefix = ParserPrefixs;
-	while (tempPrefix != NULL && strcmp(tempPrefix->Name,PPrefixName))
-	  tempPrefix = tempPrefix->Next;
-	if (tempPrefix != NULL)
-	  if (tempPrefix->Schema==NULL)
-	    /* if nature had not been added ... */
-	    {
-	      if ((strlen(tempPrefix->SchemaName))>4 && 
-		  !strcmp(&(tempPrefix->SchemaName[strlen(tempPrefix->SchemaName)-4]),"_EXT"))
-		/* We've read an extension */
-		{
-		  tempPrefix->SchemaName[strlen(tempPrefix->SchemaName)-4]=EOS;
-		  tempPrefix->Schema = TtaNewSchemaExtension(doc,tempPrefix->SchemaName,PSchemaName);
-		}
-	      else 
-		/* We've read an nature  */
-		tempPrefix->Schema = TtaNewNature(TtaGetDocumentSSchema(doc),tempPrefix->SchemaName,PSchemaName);
-	    
-	    }
-	  else
-	    {
-	      /* Warning: No API, waiting for a generic API that change */ 
-	      /*   a Nature or Ext presentation
-	           it would much more coherent and stable to add nature in 
-	           xmlmodule.c AddNS */ 
-	      if (TtaGetSchemaExtension(doc,tempPrefix->SchemaName)!=NULL) 
-		/* We've read an extension */ 
-	      {
-		/*TtaChangeExtPSchema(tempPrefix->Schema,PSchemaName);*/
-	      } 
-	      else if (TtaGetSSchema(tempPrefix->SchemaName,doc) != NULL) 
-		/* Schema is known so we've read a nature */ 
-		{
-		  /*TtaChangeExtPSchema(tempPrefix->Schema,PSchemaName)*/
-		}
-	      else 
-	      XmlError(doc,"Bad xml entry");
-	    }
-	else
-	  XmlError(doc,"Bad xml entry");
-      }
-  PSchemaName[0] = EOS;
-  PPrefixName[0] = EOS;
+  PBnumber = atoi (value);
 }
+
+/*----------------------------------------------------------------------
+  XmlSetPageView : sets the next pagebreak View number
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void XmlSetPageView (Document doc, Element el, char *value)
+#else
+static void XmlSetPageView (doc, el, value)
+Document doc;
+Element el;
+char *value;
+#endif
+{
+  PBview = atoi (value);
+}
+
+/*----------------------------------------------------------------------
+  XmlSetPageType : sets the next pagebreak Type number
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void XmlSetPageType (Document doc, Element el, char *value)
+#else
+static void XmlSetPageType (doc, el, value)
+Document doc;
+Element el;
+char *value;
+#endif
+{
+  PBtype = atoi (value);
+}
+
+/*----------------------------------------------------------------------
+  XmlSetPageBreakProperties
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void XmlSetPageBreakProperties (Element el)
+#else
+void XmlSetPageBreakProperties (el)
+Element el;
+#endif
+{
+  if (el != NULL)
+    if (TtaGetElementType (el).ElTypeNum == 6) /*element is a Page Break */
+      {
+	if (PBnumber != 0)
+	  {
+	    ((PtrElement)el)->ElPageNumber = PBnumber;
+	    PBnumber = 0;
+	  }
+	if (PBview != 0)
+	  {
+	    ((PtrElement)el)->ElViewPSchema = PBview;
+	    PBview = 0;
+	  }
+	if (PBtype != 0)
+	  {
+	    ((PtrElement)el)->ElPageType = PBtype;
+	    PBtype = 0;
+	  }
+      }
+}
+
+
 
 /*----------------------------------------------------------------------
    XmlSetPPrefix
   ----------------------------------------------------------------------*/
-static void XmlSetPPrefix (Document doc,Element el, char *value)
+#ifdef __STDC__
+static void XmlSetPPrefix (Document doc, Element el, char *value)
+#else
+static void XmlSetPPrefix (doc, el, value)
+Document doc;
+Element el;
+char *value;
+#endif
 {
-  if (PPrefixName[0]!=EOS)
-    XmlError (doc, "Already a prefix read. \n");
-  else
-    {
-      strcpy (PPrefixName,value);
-      if (PSchemaName[0]!=EOS)
-	/* we have both PPrefix and PSchema */
-	XmlAddPS (doc);
-    }
+  strcpy (PPrefixName, value);
 }
 
 /*----------------------------------------------------------------------
    XmlSetPSchema
   ----------------------------------------------------------------------*/
-static void XmlSetPSchema (Document doc,Element el, char *value)
+#ifdef __STDC__
+static void XmlSetPSchema (Document doc, Element el, char *value)
+#else
+static void XmlSetPSchema (doc, el, value)
+Document doc;
+Element el;
+char *value;
+#endif
 {
-  if (PSchemaName[0]!=EOS)
-    XmlError (doc, "Already a schema read. \n");
+  if (PPrefixName[0]!=EOS)
+    if (!strcmp (PPrefixName, DEFAULT_VALUE))
+      XmlAddNSPresentation (doc, "", value);
   else
-    {
-      strcpy (PSchemaName,value);
-      if (PPrefixName[0]!=EOS)
-	/* we have both PPrefix and PSchema */
-	XmlAddPS (doc);
-    }
+    XmlAddNSPresentation (doc, PPrefixName, value);
+  PSchemaName[0] = EOS;
+  PPrefixName[0] = EOS;
 }
 
 /*----------------------------------------------------------------------
   XmlSetHolophraste 
   ----------------------------------------------------------------------*/
-static void  XmlSetHolophraste (Document doc,Element el, char *value)
+#ifdef __STDC__
+static void XmlSetHolophraste (Document doc, Element el, char *value)
+#else
+static void XmlSetHolophraste (doc, el, value)
+Document doc;
+Element el;
+char *value;
+#endif
 {
-  if (!strcmp(value,TRUE_VALUE))
+  if ( el != NULL && !strcmp(value, TRUE_VALUE))
       TtaHolophrastElement(el,TRUE,doc);
 }
 
 /*----------------------------------------------------------------------
-   XmlHoldPresentation: store presentation rules from a thot:style attribute
-      Value is typed like: "ViewName:PRuleNum:PRuleValue;..."
+   XmlHoldPresentation
   ----------------------------------------------------------------------*/
-static void  XmlHoldPresentation(Document doc,Element el, char *value)
+#ifdef __STDC__
+static void  XmlHoldPresentation (Document doc, Element el, char *value)
+#else
+static void  XmlHoldPresentation (doc, el, value)
+Document doc;
+Element el;
+char *value;
+#endif
 {
 
   XmlPresentationType  *newPres;
   int     begin=0;
   int     end=0;
   int     length=0;
-
-  length = strlen (value)-1;
-  while(begin<length)
+  
+  if (el != NULL)
     {
-      /* Creating new structure */
-      newPres = (XmlPresentationType *)TtaGetMemory(sizeof(XmlPresentationType));
-      newPres->Next = XmlPresentation;
-      XmlPresentation = newPres;
+      length = strlen (value)-1;
+      while(begin<length)
+	{
+	  newPres = (XmlPresentationType *)TtaGetMemory(sizeof(XmlPresentationType));
+	  newPres->Next = XmlPresentation;
+	  XmlPresentation = newPres;
 
-      XmlPresentation->El = el;
-      /* reading view name */
-      while(end<length&&value[end]!=':') end++;
-      value[end]=EOS;
-      newPres->ViewName = TtaStrdup(&value[begin]);
-      begin = end + 1;
-      /* reading PRule number */
-      while(end<length&&value[end]!=':') end++;
-      value[end]=EOS;
-      newPres->PRuleNum = atoi(&value[begin]);
-      begin = end + 1;
-      /* reading PRule value */
-      while(end<length&&value[end]!=';') end++;
-      value[end]=EOS;
-      newPres->PRuleValue = atoi(&value[begin]);
-      begin = end + 1;
+	  XmlPresentation->El = el;
+      
+	  while(end<length&&value[end]!=':') end++;
+	  value[end]=EOS;
+	  newPres->ViewName = TtaStrdup(&value[begin]);
+	  begin = end + 1;
+
+	  while(end<length&&value[end]!=':') end++;
+	  value[end]=EOS;
+	  newPres->PRuleNum = atoi(&value[begin]);
+	  begin = end + 1;
+
+	  while(end<length&&value[end]!=';') end++;
+	  value[end]=EOS;
+	  newPres->PRuleValue = atoi(&value[begin]);
+	  begin = end + 1;
+	}
     }
 }
 /*----------------------------------------------------------------------
-   XmlSetPresentation: Update doc presentation after views are opened
-         Warning: box values don't work yet
-                  TtaGetPruleValue gives percent and absolute position
-		  from upper box, as TtaChangeBoxe are offset.
+   XmlSetPresentation
   ----------------------------------------------------------------------*/
-void  XmlSetPresentation(Document doc)
+#ifdef __STDC__
+void  XmlSetPresentation (Document doc)
+#else
+void  XmlSetPresentation (doc)
+Document doc;
+#endif
 {
   PRule   newPRule;
   XmlPresentationType *inter;
   
-  while(XmlPresentation!=NULL)
+  while (XmlPresentation != NULL)
     {
-      switch(XmlPresentation->PRuleNum)
+      switch (XmlPresentation->PRuleNum)
 	  /* Manage the different PRule types */
 	{
 	case 4: /* case heigth */
-	  TtaChangeBoxSize(XmlPresentation->El, doc,
-	                   TtaGetViewFromName(doc,XmlPresentation->ViewName),
-			   0,XmlPresentation->PRuleValue,UnPoint);
+	  TtaChangeBoxSize (XmlPresentation->El, doc,
+			    TtaGetViewFromName (doc,
+						XmlPresentation->ViewName),
+			    0,XmlPresentation->PRuleValue,UnPoint);
 	  break;
         case 5: /* case width */
-	  TtaChangeBoxSize(XmlPresentation->El, doc,
-	                   TtaGetViewFromName(doc,XmlPresentation->ViewName),
-			   XmlPresentation->PRuleValue,0,UnPoint); 
+	  TtaChangeBoxSize (XmlPresentation->El, doc,
+			    TtaGetViewFromName (doc, 
+						XmlPresentation->ViewName),
+			    XmlPresentation->PRuleValue,0,UnPoint); 
 	  break;
         case 6: /* case y offset */
-	  TtaChangeBoxPosition(XmlPresentation->El, doc,
-	                   TtaGetViewFromName(doc,XmlPresentation->ViewName),
-			   0,XmlPresentation->PRuleValue,UnPoint);
+	  TtaChangeBoxPosition (XmlPresentation->El, doc,
+				TtaGetViewFromName (doc, 
+						    XmlPresentation->ViewName),
+				0,XmlPresentation->PRuleValue,UnPoint);
 	  break;
         case 7: /* case x offset */
-	  TtaChangeBoxPosition(XmlPresentation->El, doc,
-	                   TtaGetViewFromName(doc,XmlPresentation->ViewName),
+	  TtaChangeBoxPosition (XmlPresentation->El, doc,
+	                   TtaGetViewFromName (doc,
+					       XmlPresentation->ViewName),
 			   XmlPresentation->PRuleValue,0,UnPoint);
 	  break;
 	default: /* Other PRules */
-	  newPRule = TtaGetPRule(XmlPresentation->El,XmlPresentation->PRuleNum);
+	  newPRule = TtaGetPRule (XmlPresentation->El,
+				  XmlPresentation->PRuleNum);
 	  if (newPRule==NULL)
 	    /* PRule doesn't exist yet */
 	    {
-	      newPRule = TtaNewPRule (XmlPresentation->PRuleNum,TtaGetViewFromName(doc,XmlPresentation->ViewName),doc);
-	      TtaAttachPRule(XmlPresentation->El,newPRule,doc);
+	      newPRule = TtaNewPRule (XmlPresentation->PRuleNum,
+				      TtaGetViewFromName (doc,
+							  XmlPresentation->ViewName),
+				      doc);
+	      TtaAttachPRule (XmlPresentation->El,
+			      newPRule,
+			      doc);
 	    }
 	  TtaSetPRuleValue(XmlPresentation->El,newPRule,XmlPresentation->PRuleValue,doc);
 	}
-      /* frees current structure */
       inter = XmlPresentation->Next;
       TtaFreeMemory (XmlPresentation->ViewName);
       TtaFreeMemory (XmlPresentation);
@@ -266,22 +286,43 @@ void  XmlSetPresentation(Document doc)
 /*----------------------------------------------------------------------
    XmlSetGraphicsShape
   ----------------------------------------------------------------------*/
-static void  XmlSetGraphicsShape(Document doc,Element el, char *value)
+#ifdef __STDC__
+static void  XmlSetGraphicsShape (Document doc, Element el, char *value)
+#else
+static void  XmlSetGraphicsShape (doc, el, value)
+Document doc;
+Element el;
+char *value;
+#endif
 {
-  TtaSetGraphicsShape(el, value[0], doc);
+  if (el != NULL)
+    TtaSetGraphicsShape (el, value[0], doc);
 }
 
 /*----------------------------------------------------------------------
    XmlSetPairedPosition
   ----------------------------------------------------------------------*/
-static void  XmlSetPairedPosition(Document doc,Element el, char *value)
+#ifdef __STDC__
+static void  XmlSetPairedPosition(Document doc, Element el, char *value)
+#else
+static void  XmlSetPairedPosition (doc, el, value)
+Document doc;
+Element el;
+char *value;
+#endif
 {}
 
 /*----------------------------------------------------------------------
-   XmlSetLinePoints: Add points to polyline from thot:points attr
-     value is formed: "x,y;x,y;"
+   XmlSetLinePoints
   ----------------------------------------------------------------------*/
+#ifdef __STDC__
 static void  XmlSetLinePoints(Document doc,Element el, char *value)
+#else
+static void  XmlSetLinePoints (doc, el, value)
+Document doc;
+Element el;
+char *value;
+#endif
 {
   int     begin=0;
   int     end=0;
@@ -290,32 +331,64 @@ static void  XmlSetLinePoints(Document doc,Element el, char *value)
   int     y;
   int     rank=1;
 
-  length = strlen (value)-1;
-
-  while(begin<length)
+  if (el !=NULL)
     {
-      while(end<length&&value[end]!=',') end++;
-      value[end]=EOS;
-      x = atoi(&value[begin]);
-      begin = end + 1;
+      length = strlen (value)-1;
 
-      while(end<length&&value[end]!=';') end++;
-      value[end]=EOS;
-      y = atoi(&value[begin]);
-      begin = end + 1;
+      while(begin<length)
+	{
+	  while(end<length&&value[end]!=',') end++;
+	  value[end]=EOS;
+	  x = atoi(&value[begin]);
+	  begin = end + 1;
 
-      TtaAddPointInPolyline(el,rank,UnPoint,x,y,doc);
-      rank++;
+	  while(end<length&&value[end]!=';') end++;
+	  value[end]=EOS;
+	  y = atoi(&value[begin]);
+	  begin = end + 1;
+
+	  TtaAddPointInPolyline(el,rank,UnPoint,x,y,doc);
+	  rank++;
+	}
     }
 }
 
 /*----------------------------------------------------------------------
-   XmlSetSrc: set image source
+   XmlSetSrc
   ----------------------------------------------------------------------*/
-static void  XmlSetSrc(Document doc,Element el, char *value)
+#ifdef __STDC__
+static void  XmlSetSrc (Document doc, Element el, char *value)
+#else
+static void  XmlSetSrc (doc, el, value)
+Document doc;
+Element el;
+char *value;
+#endif
 {
-  TtaSetTextContent(el,value,SPACE,doc);
+  if (el != NULL)
+    TtaSetTextContent(el, value, SPACE, doc);
 }
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void  XmlSetMaxId (Document doc, Element el, char *value)
+#else
+static void  XmlSetMaxId (doc, el, value)
+Document doc;
+Element el;
+char *value;
+#endif
+{
+  if (value != 0)
+    XmlMaxID = atoi (value);
+  else
+    {
+      ((PtrDocument) LoadedDocument[doc - 1])-> DocLabelExpMax = XmlMaxID;
+      XmlMaxID = 0;
+    }
+}
+
 
 static XmlAttrEntry ThotAttr[] = 
 {
@@ -326,30 +399,93 @@ static XmlAttrEntry ThotAttr[] =
   {GRAPH_CODE_ATTR, (Proc) XmlSetGraphicsShape},
   {PAIRED_ATTR, (Proc) XmlSetPairedPosition},
   {LINE_POINTS_ATTR, (Proc) XmlSetLinePoints},
-  {SRC_ATTR, (Proc) XmlSetSrc}
+  {SRC_ATTR, (Proc) XmlSetSrc},
+  {NLABEL_ATTR, (Proc) XmlSetMaxId},
+  {PG_NUM_ATTR, (Proc) XmlSetPageNum},
+  {PG_VIEW_ATTR, (Proc) XmlSetPageView},
+  {PG_TYPE_ATTR, (Proc) XmlSetPageType},
+  {"", (Proc) NULL},
 };
 
 /*----------------------------------------------------------------------
-  ParseThotAttribute:main function called 
+  ParseThotAttribute: parse  
   ----------------------------------------------------------------------*/
-boolean ParseThotAttribute (PrefixType *Prefixs,Document doc,Element el, char *attrName, char *value)
+#ifdef __STDC__
+boolean ParseThotAttribute (Document doc, Element el, char *attrName, char *value)
+#else /* __STDC__ */
+boolean ParseThotAttribute (Document doc, Element el, char *attrName, char *value)
+Document doc;
+Element el;
+char *attrName;
+char *value;
+#endif /* __STDC__ */
+
 {
   int i=0;
-  /* searching thot action */
-  while (i<NbEntries && strcmp(attrName,ThotAttr[i].AttrName)) i++;
+  while (ThotAttr[i].AttrAction != (Proc)NULL && 
+	 strcmp(attrName,ThotAttr[i].AttrName)) 
+    i++;
 
-  if (i<NbEntries)
+  if (ThotAttr[i].AttrAction != (Proc)NULL)
     {
-      ParserPrefixs = Prefixs;
       (*(ThotAttr[i].AttrAction))(doc,el,value);
-      return (TRUE);
     }
   else 
     {
-      XmlError(doc,"Thot Attribute unknown");
       return (FALSE);
     }
+  return (TRUE);
 }
 
+/* y'avait un truc sur les exceptions des tables */
+static boolean tableActionsOn = FALSE;
+/*----------------------------------------------------------------------
+  StoreTableActions
+  temporarely set table actions off 
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void StoreTableActions ()
+#else /* __STDC__ */
+void StoreTableActions ()
+#endif /* __STDC__ */
+{
+  if (ThotLocalActions[T_createtable] != NULL)
+    {
+      tableActionsOn = TRUE;
+      TteConnectAction (T_createtable, (Proc) NULL);
+      TteConnectAction (T_selecttable, (Proc) NULL);
+      TteConnectAction (T_singlecell, (Proc) NULL);
+      TteConnectAction (T_attrtable, (Proc) NULL);
+      TteConnectAction (T_lastsaved, (Proc) NULL);
+      TteConnectAction (T_pastesiblingtable, (Proc) NULL);
+      TteConnectAction (T_refattr, (Proc) NULL);
+      TteConnectAction (T_createhairline, (Proc) NULL);
+      TteConnectAction (T_holotable, (Proc) NULL);
+      TteConnectAction (T_checkextens, (Proc) NULL);
+      TteConnectAction (T_ruleattr, (Proc) NULL);
+      TteConnectAction (T_abref, (Proc) NULL);
+      TteConnectAction (T_condlast, (Proc) NULL);
+      TteConnectAction (T_vertspan, (Proc) NULL);
+      TteConnectAction (T_excepttable, (Proc) NULL);
+      TteConnectAction (T_entertable, (Proc) NULL);
+      TteConnectAction (T_insertpage, (Proc) NULL);
+      TteConnectAction (T_cutpage, (Proc) NULL);
+      TteConnectAction (T_deletepage, (Proc) NULL);
+      TteConnectAction (T_deletepageab, (Proc) NULL);
+    }
+  else
+    tableActionsOn = FALSE;
+}
 
-
+/*----------------------------------------------------------------------
+  RestoreTableActions
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void RestoreTableActions ()
+#else /* __STDC__ */
+void RestoreTableActions ()
+#endif /* __STDC__ */
+{
+  if (tableActionsOn)
+    TableauLoadResources ();
+}

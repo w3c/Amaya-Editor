@@ -25,6 +25,8 @@
 #define EOS     '\0'
 #define SPACE    ' '
 #define MAX_LENGTH     512
+#include "constmedia.h"
+#include "typemedia.h"
 #include "tree.h"
 #include "content.h"
 #include "view.h"
@@ -34,24 +36,21 @@
 #include "document.h"
 #include "application.h"
 #include "app.h"
-#include "constmedia.h"
-#include "typemedia.h"
-#include "appdialogue.h"
+
+#include "translatexml_f.h"
 #include "constxml.h"
 #include "typexml.h"
+#include "xmlmodule_f.h"
+#include "thotmodule_f.h"
+#include "callback_f.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
+#include "constmedia.h"
+#include "typemedia.h"
+#include "appdialogue.h"
 #include "appdialogue_tv.h"
-
-#include "actions_f.h"
-#include "referenceapi_f.h"
-#include "translatexml_f.h"
-#include "treeapi_f.h"
-#include "thotmodule_f.h"
-#include "xmlmodule_f.h"
-
-
+#include "edit_tv.h"
 /* an entity name */
 typedef unsigned char entName[10];
 
@@ -96,19 +95,26 @@ static char         currentDocumentName[20];      /* the current doc name */
 static SSchema      currentDocSSchema = NULL;     /* the current doc SSchema */
 static Language     currentLanguage;	          /* language in use */
 static SSchema	    currentSSchema = NULL;        /* current SSchema */
-static boolean	    XmlSchema = FALSE;            /* Xml schema flag */
-static boolean	    ThotSchema = FALSE;           /* Thot schema flag */
-static Element	    currentElement = NULL;        /* current element */
+static SSchema	    currentAttrSSchema = NULL;
+static boolean	    ReadingXmlElement = FALSE;    /* Xml schema flag */
+static boolean	    ReadingThotElement = FALSE;   /* Thot schema flag */
+static Element	    createdElement = NULL;        /* new created element */
 static boolean	    currentElementClosed = FALSE; /* structure flag */
 static Attribute    currentAttribute = NULL;      /* current attribute */
-static unsigned char currentAttrName[30];         /* current attribute name */
-static boolean	    ReadingXmlnsAttr = FALSE;     /* namespace attr flag */
-
-/* prefixs list */
-static PrefixType  *ParserPrefixs;
+static unsigned char currentAttributeName[30];    /* current attribute name */
+static boolean	    ReadingXmlNSAttribute = FALSE;/* namespace attr flag */
+static boolean	    ReadingXmlAttribute = FALSE;  /* xml attr flag */
+static boolean	    ReadingThotAttribute = FALSE; /* thot attr flag */
+static boolean	    ReadingAssocRoot = FALSE;     /* thot assoc root flag */
+static boolean      DoCreateElement = TRUE;       /* flag for NotifyElement */
+static boolean      DoCreateAttribute = TRUE;     /* flag for NotifyAttribute*/
+static int          IgnoreElemLevel;              /* stack level from where */
+                                                  /* elements are ignored (events) */
+static unsigned char currentGI[64];               /* the GI of the last elem read */
+static int          nbAssocRoot = 0;              /* number of assoc trees read */
 /* parser stack */
 #define MAX_STACK_HEIGHT 200		  /* maximum stack height */
-static unsigned char* XmlelementType[MAX_STACK_HEIGHT]; /* Xml element name */
+static unsigned char* GIStack[MAX_STACK_HEIGHT]; /* Xml element name */
 static Element      elementStack[MAX_STACK_HEIGHT];  /* element in the Thot abstract tree */
 static Language     languageStack[MAX_STACK_HEIGHT]; /* element language */
 static int          stackLevel = 0;       /* first free element on the stack */
@@ -147,9 +153,9 @@ unsigned char *text;
                           launched after the first xmlns attribute
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void XmlSetCurrentDocument (char *schemaName)
+Element XmlSetCurrentDocument (char *schemaName)
 #else
-void XmlSetCurrentDocument (schemaName)
+Element XmlSetCurrentDocument (schemaName)
 char *schemaName;
 #endif
 {
@@ -179,7 +185,9 @@ char *schemaName;
 	TtaRemoveAttribute (root, attr, currentDocument);
       TtaNextAttribute (root, &attr);
    }
-  elementStack[1] = root;
+  strcpy (currentGI, inputBuffer);
+  currentElementClosed = FALSE;
+  return root;
 }
 
 /* ---------------------------------------------------------------------
@@ -197,27 +205,6 @@ Language lang;
 }
 
 /*----------------------------------------------------------------------
-   XmlGetPrefixSchema: seach the prefix associated schema
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static SSchema XmlGetPrefixSchema (unsigned char *prefixName)
-#else
-static SSchema XmlGetPrefixSchema (prefixName)
-unsigned char *prefixName;
-#endif
-{
-  PrefixType  *prefix;
-
-  prefix = ParserPrefixs;
-  while (prefix != NULL && strcmp(prefix->Name,prefixName))
-    prefix = prefix->Next;
-  if (prefix!=NULL)
-    return (prefix->Schema);
-  else
-    return ((SSchema) NULL);
-}
-
-/*----------------------------------------------------------------------
    EndOfPrefix
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -230,18 +217,18 @@ unsigned char c;
   inputBuffer[bufferLength]=EOS;
   if (!strcmp(inputBuffer,"xml"))
     /* Reading an xml element or attribute */
-    XmlSchema = TRUE;
+    ReadingXmlElement = TRUE;
   else if (!strcmp(inputBuffer,"thot"))
     /* Reading a thot element or attribute */
-    ThotSchema = TRUE;
-  else if (!strcmp(inputBuffer,"xmlns"))
+    ReadingThotElement = TRUE;
+  /* else if (!strcmp(inputBuffer,"xmlns")) */
     /* Reading the xmlns attribute (prefix/attr inversed */
-    {
-      XmlSchema = TRUE;      
-      ReadingXmlnsAttr = TRUE;
-    }
+/*     { */
+/*       ReadingXmlElement = TRUE;       */
+/*       ReadingXmlNSAttribute = TRUE; */
+/*     } */
   else
-    currentSSchema = XmlGetPrefixSchema (inputBuffer);
+    currentSSchema = XmlGetNSSchema (inputBuffer);
   bufferLength = 0;
 }
 
@@ -249,114 +236,199 @@ unsigned char c;
    XmlInsertElement: Insert an element and make all necessary links
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Element XmlInsertElement (ElementType elType)
+Element XmlInsertElement (Element newElement)
 #else
-Element XmlInsertElement (elType)
-ElementType el;
+Element XmlInsertElement (newElement)
+Element newElement;
 
 #endif
 {
-  Element newElement;
-  Element lastElement;
-  Element tempElement;
-#ifdef DEBUG_0
+  Element	lastElement;
+  Element	tempElement;
+  Element	descendElement;
+  ElementType	elType;
+  Attribute	currentAttribute, tempAttribute;
+  boolean	isChild = FALSE;
+  boolean	success = FALSE;
+  int		val;
+  int		parentStackLevel;
+  char		buf[255];
+  Element	elemParent ;
+  boolean	insertAsSibling ;
+  Element	elemSibling ;
+	
+#ifdef DEBUG
   ElementType elt2;
 
-  elt2 = TtaGetElementType (elementStack[stackLevel-1]);
-  printf ("inserting %s  ",
-	  TtaGetElementTypeOriginalName (elType));
-  printf ("inside %s  ",
-	  TtaGetElementTypeOriginalName (elt2));
+  elType = TtaGetElementType (newElement);
+  printf ("inserting %s  ", TtaGetElementTypeOriginalName (elType));
+  if (stackLevel != 0)
+    {
+      elt2 = TtaGetElementType (elementStack[stackLevel-1]);
+      printf ("inside %s  ", TtaGetElementTypeOriginalName (elt2));
+    }
   if (currentElementClosed)
     {
-      elt2 = TtaGetElementType (currentElement);
-      printf ("after %s", 
-	      TtaGetElementTypeOriginalName(elt2));
+      elt2 = TtaGetElementType (elementStack[stackLevel]);
+      printf ("after %s", TtaGetElementTypeOriginalName(elt2));
     }
-  printf ("\n");
+  printf ("(level %d)\n",stackLevel);
 #endif
-  if (elType.ElTypeNum == 6) 
-    /* page break are special element*/
+
+  elType = TtaGetElementType (newElement);
+  if (stackLevel == 0)
     {
-       newElement = TtaNewElement (currentDocument, elType); 
-       if (currentElementClosed) 
- 	TtaInsertSibling (newElement, currentElement, FALSE, currentDocument); 
-       else if (currentElement != NULL) 
- 	TtaInsertFirstChild (&newElement, currentElement, currentDocument); 
-       else  
- 	{ 
- 	  newElement = currentElement; 
- 	  XmlError(currentDocument,"Inserting PageBreak in NULL tree"); 
- 	} 
-    }
-  else
-    /* normal element */
-    {
-      newElement = TtaNewElement (currentDocument, elType);
-      if (currentElementClosed)
-	/* inserting a sibling */
-	{
-	  if (elementStack[stackLevel-1]!=NULL)
-	    /* he may have a father */
-	    {
-	      TtaInsertSibling (newElement, currentElement, FALSE, currentDocument);
-	      if (TtaGetErrorCode()!=0)
-		/* normal sibling insertion failed */
-		{
-		  /* we delete what we've just created */
-		  TtaDeleteTree (newElement, currentDocument);
-		  /* triying to create the descent from the father to that element */
-		  newElement = TtaCreateDescent (currentDocument, elementStack[stackLevel-1], elType);
-		  if (newElement == NULL)
-		    /* well... no way to insert that element */
-		    XmlError(currentDocument, "Invalid Document Structure");
-		  else if (TtaGetConstruct (elementStack[stackLevel-1]) == ConstructList)
-		    /* father is a list of things */
-		    {
-		      /* TtaCreateDescent creates a sibling before so we have
-			 to remove tree and insert it after lastchlid */
-		      tempElement = TtaGetFirstChild (elementStack[stackLevel-1]);
-		      TtaRemoveTree (tempElement, currentDocument);
-		      lastElement = TtaGetLastChild (elementStack[stackLevel-1]);
-		      TtaInsertSibling (tempElement, lastElement, FALSE,currentDocument);
-		    }
-		      
-#ifdef DEBUG
-		    printf ("---> Tool tool Kit error fixed \n");
-#endif 
-		}
-	    }
-	  else
-	    /* Warning: we should insert associated trees */;
+      /* the root is already inserted : setting the attributes */
+      tempElement = TtaGetMainRoot (currentDocument);
+      currentAttribute = NULL;
+      tempAttribute = NULL;
+      TtaNextAttribute (newElement, &currentAttribute);
+      TtaNextAttribute (tempElement, &tempAttribute);
+      if (currentAttribute != NULL)
+	{/* it is the language attribute (mandatory on root)*/
+	  val = 255;
+	  TtaGiveTextAttributeValue (currentAttribute, buf, &val);
+	  TtaSetAttributeText (tempAttribute, buf, tempElement, currentDocument);
 	}
-      else if (currentElement != NULL)
-	/* inserting a child */
+      TtaNextAttribute (tempElement, &currentAttribute);	   
+      while (currentAttribute != NULL)
+	{ /* setting other attributes */
+	  TtaRemoveAttribute (newElement,  currentAttribute, currentDocument);
+	  TtaAttachAttribute (tempElement, currentAttribute, currentDocument);
+	  TtaNextAttribute (tempElement, &currentAttribute);	   
+	}  
+      newElement = tempElement;
+      success = TRUE;
+    }
+  else if (ReadingAssocRoot)
+    {
+      (LoadedDocument[currentDocument-1])->DocAssocRoot[nbAssocRoot++] = (PtrElement) newElement;
+      ReadingAssocRoot = FALSE;
+      success = TRUE;
+    } 
+  else
+    {
+      /* searches the parent element */
+      parentStackLevel = stackLevel-1;
+      elemParent = elementStack[parentStackLevel];
+      while (elemParent == NULL && parentStackLevel>0)
+	elemParent = elementStack[--parentStackLevel];
+      /* searching the previous sibling */
+      if (currentElementClosed && elementStack[stackLevel] != NULL)
 	{
-	  TtaInsertFirstChild (&newElement, currentElement, currentDocument);
-	  if (TtaGetErrorCode()!=0)
-	    /* normal insertion failed */
-	    {
-	      TtaDeleteTree (newElement, currentDocument);
-	      /* creating descent */
-	      newElement = TtaCreateDescent (currentDocument, currentElement, elType);
-	      if (newElement == NULL)
-		XmlError(currentDocument, "Invalid Document Structure");
-#ifdef DEBUG
-	      else
-		printf ("---> Tool tool Kit error fixed \n");
-#endif 
-	    }
+	  insertAsSibling = TRUE;
+	  elemSibling = elementStack[stackLevel];
 	}
       else
-	/* father hasn't be recognized so descendant are ignored */
-	/* Warning: we could allow errors on tags and try 
-	   to make it out without them */
+	insertAsSibling = FALSE;
+      
+      if (elType.ElTypeNum == PAGE_BREAK) 
+	/* page break are special element*/
 	{
-	  newElement = currentElement;
-	  XmlError(currentDocument,"Inserting in NULL tree");
+	  XmlSetPageBreakProperties (newElement);
+	  if (insertAsSibling) 
+	    TtaInsertSibling (newElement, elemSibling, FALSE, currentDocument); 
+	  else
+	    TtaInsertFirstChild (&newElement, elemParent, currentDocument); 
+	  success = (TtaGetErrorCode()==0);
+	}
+      else
+	/* normal element */
+	{
+	  if (insertAsSibling)
+	    /* inserting a sibling */
+	    {
+	      TtaInsertSibling (newElement, elemSibling, FALSE, currentDocument);
+	      if (TtaGetErrorCode()==0)
+		success = TRUE;
+	      else
+		/* normal sibling insertion failed */
+		{		  
+		  /* trying to create the descent from the father to that element */
+		  descendElement = TtaCreateDescent (currentDocument, elemParent, elType);
+		  if (descendElement != NULL)
+		    {
+		      if (TtaGetConstruct (elemParent) == ConstructList)
+			/* the parent is a list element */
+			{
+			  /* TtaCreateDescent creates a sibling before so we have
+			     to remove tree and insert it after lastchlid */
+			  tempElement = TtaGetFirstChild (elemParent);
+			  lastElement = TtaGetLastChild (elemParent);
+			  if (tempElement != lastElement)
+			    {
+			      TtaRemoveTree (tempElement, currentDocument);
+			      TtaInsertSibling (tempElement, lastElement, FALSE, currentDocument);
+			    }
+			}
+		    }
+		  /* insert the new element in place of the last descendant */
+		  if (TtaGetErrorCode()==0)
+		    {
+		      lastElement = descendElement;
+		      TtaPreviousSibling (&lastElement);
+		      if (lastElement == NULL)
+			{
+			  lastElement = TtaGetParent (descendElement);
+			  isChild = TRUE;
+			}
+		      TtaRemoveTree (descendElement, currentDocument);
+		      if (isChild)
+			TtaInsertFirstChild (&newElement, lastElement, currentDocument);
+		      else
+			TtaInsertSibling (newElement, lastElement, FALSE, currentDocument);
+		      if (TtaGetErrorCode()==0)
+			success = TRUE;
+#ifdef DEBUG
+		      printf ("---> Tool tool Kit error fixed \n");
+#endif 
+		    }
+		}
+	    }
+	  else if (elemParent != NULL)
+	    /* inserting a first child */
+	    {
+	      TtaInsertFirstChild (&newElement, elemParent, currentDocument);
+	      if (TtaGetErrorCode()==0)
+		{
+		  success = TRUE;
+		}
+	      else
+		/* normal insertion failed */
+		{
+		  TtaDeleteTree (newElement, currentDocument);
+		  /* creating descent */
+		  descendElement = TtaCreateDescent (currentDocument, elemParent, elType);
+		  if (descendElement == NULL)
+		    /* well... no way to insert that element */
+		    XmlError(currentDocument, "Invalid Document Structure");
+		  if (TtaGetErrorCode()==0)
+		    {
+		      lastElement = descendElement;
+		      TtaPreviousSibling (&lastElement);
+		      if (lastElement == NULL)
+			{
+			  lastElement = TtaGetParent (descendElement);
+			  isChild = TRUE;
+			}
+		      TtaRemoveTree (descendElement, currentDocument);
+		      if (isChild)
+			TtaInsertFirstChild (&newElement, lastElement, currentDocument);
+		      else
+			TtaInsertSibling (newElement, lastElement, FALSE, currentDocument);
+		      success = (TtaGetErrorCode()==0);
+#ifdef DEBUG
+		      printf ("---> Tool tool Kit error fixed \n");
+#endif 
+		    }	   
+		}
+	    }
 	}
     }
-  return(newElement);
+  if (success)
+    return newElement;
+  else
+    return NULL;
 }
 
 /*----------------------------------------------------------------------
@@ -367,17 +439,19 @@ void         XmlTextToDocument ()
 {
   int		i, firstChar, lastChar;
   ElementType	elType;
+  Element       elNew;
 
   /* close the input buffer */
   inputBuffer[bufferLength] = EOS;
+#ifdef DEBUG
+  printf ("  XmlTextToDocument \n");
+#endif 
 
-  if(!(currentElement==NULL&&!currentElementClosed))
-    /* we can't insert if it is as a child of an NULL father */
+  if (DoCreateElement)
     {
       /* suppress leading spaces */
-      for (firstChar = 0;
-	   inputBuffer[firstChar] <= SPACE &&
-	     inputBuffer[firstChar] != EOS;
+      for (firstChar = 0; 
+	   inputBuffer[firstChar] <= SPACE && inputBuffer[firstChar] != EOS;
 	   firstChar++);
       if (inputBuffer[firstChar] != EOS)
 	/* We don't write empty text */
@@ -387,19 +461,23 @@ void         XmlTextToDocument ()
 	  for (i = lastChar; inputBuffer[i] <= SPACE && i > 0; i--);     
 	  inputBuffer[i+1] = EOS;
 	  
-	  if (!(currentElement!=NULL && 
-		TtaGetElementType(currentElement).ElTypeNum==1 && 
-		!currentElementClosed))
+	  if (currentElementClosed || TtaGetElementType (elementStack[stackLevel-1]).ElTypeNum != 1)
 	    /* There hasn't been the Text tag so the element is not created */
 	    {
 	      elType.ElTypeNum = 1;	/* Text element */
 	      elType.ElSSchema = currentSSchema;
-	      currentElement = XmlInsertElement (elType);
+	      elNew = TtaNewElement (currentDocument, elType);
+	      elNew = XmlInsertElement (elNew);
 	      currentElementClosed = TRUE;
+	      if (elNew == NULL)
+		TtaDeleteTree (elNew, currentDocument);
+	      elementStack[stackLevel] = elNew;
 	    }
-	  TtaSetTextContent (currentElement, &inputBuffer[firstChar], currentLanguage, currentDocument);
-	}
-    }  
+	  else
+	    elNew = elementStack[stackLevel-1];
+	  TtaSetTextContent (elNew, &inputBuffer[firstChar], currentLanguage, currentDocument);
+	}  
+    }
   /* the input buffer is now empty */
   bufferLength = 0;
 }
@@ -417,12 +495,15 @@ unsigned char                c;
 
 #endif
 {
+#ifdef DEBUG
+  printf ("  StartOfTag \n");
+#endif 
   if (bufferLength > 0)
     /* Text have been readed */
     XmlTextToDocument (); 
   currentSSchema = currentDocSSchema;
-  XmlSchema = FALSE;
-  ThotSchema = FALSE;
+  ReadingXmlElement = FALSE;
+  ReadingThotElement = FALSE;
 }
 
 /*----------------------------------------------------------------------
@@ -482,13 +563,36 @@ unsigned char                c;
 
 #endif
 {
-  stackLevel--;
-  if (stackLevel >= 0)
-    currentLanguage = languageStack[stackLevel];
-  if (elementStack[stackLevel] != NULL)
+  ElementType         elType;
+  NotifyElement       notifyEl;
+#ifdef DEBUG
+  printf ("  EndOfXmlEndTag  \n");
+#endif 
+
+  if (!ReadingThotElement && !ReadingXmlElement)
     {
-      currentElement = elementStack[stackLevel];
-      currentElementClosed = TRUE;
+      /* Thot Event ElemRead.Post */
+      if (DoCreateElement && elementStack [stackLevel-1] != NULL)
+	{
+	  elType = TtaGetElementType (elementStack [stackLevel-1]);
+	  notifyEl.event = TteElemRead;
+	  notifyEl.document = currentDocument;
+	  notifyEl.element = elementStack [stackLevel-1];
+	  notifyEl.elementType.ElTypeNum = elType.ElTypeNum;
+	  notifyEl.elementType.ElSSchema = elType.ElSSchema;
+	  notifyEl.position = 0;
+	  CallEventType ((NotifyEvent *) & notifyEl, FALSE);
+	  currentElementClosed = TRUE;
+	}
+      else if (stackLevel-1 == IgnoreElemLevel)
+	{
+	  DoCreateElement = TRUE;
+	}
+      if (stackLevel > 0)
+	{
+	  currentLanguage = languageStack[stackLevel-1];
+	  stackLevel --;
+	}
     }
   immAfterTag = TRUE;
 }
@@ -505,18 +609,38 @@ unsigned char                c;
 
 #endif
 {
-  if (c == '/')
-    /* this is an empty element. Do not expect an end tag */
+  Element currentElement = NULL;
+#ifdef DEBUG
+  printf ("   EndOfStartTag \n");
+#endif 
+  if (!ReadingThotElement && !ReadingXmlElement)
     {
-      stackLevel--;
-      if (stackLevel > 0)
-        currentLanguage = languageStack[stackLevel - 1];
-      currentElement = elementStack[stackLevel];
-      currentElementClosed = TRUE;
+      if (DoCreateElement)
+	currentElement = XmlInsertElement (createdElement);
+      elementStack[stackLevel] = currentElement;
+      GIStack[stackLevel] = TtaStrdup (currentGI);
+      languageStack[stackLevel] = currentLanguage;
+      if (c != '/')
+	{
+	  if (DoCreateElement)
+	    currentElementClosed = FALSE;
+	  stackLevel ++;
+	}
+      else
+	/* this is an empty element. Do not expect an end tag */
+	{
+	  if (DoCreateElement)
+	    currentElementClosed = TRUE;
+	}
     }
-  else if (c == '>')
+  currentGI[0]='\0';
+  currentAttribute = NULL; 
+  currentSSchema = currentDocSSchema;
+  ReadingThotElement = FALSE; 
+  ReadingXmlElement = FALSE; 
+  ReadingAssocRoot = FALSE;
+  if (c == '>')
     immAfterTag = TRUE;
-  currentAttribute = NULL;
 }
 
 /*----------------------------------------------------------------------
@@ -548,71 +672,77 @@ static void         EndOfStartGI (c)
 unsigned char                c;
 #endif
 {
-   Element		newElement;
-   ElementType		elType;
-   unsigned char        msgBuffer[MAX_BUFFER_LENGTH];
+  ElementType		elType;
+  unsigned char        msgBuffer[MAX_BUFFER_LENGTH];
+  NotifyElement       notifyEl;
 
-   /* close the input buffer */
-   inputBuffer[bufferLength] = EOS;
+  /* close the input buffer */
+  inputBuffer[bufferLength] = EOS;
 
-   if (stackLevel==1)
-   /* Root element already with the first xmlns attribute 
-      inserted but no stack++ */
-   /* Warning: what about associated trees */
-     {
-       newElement = elementStack[stackLevel];
-     }
-   else 
-     {           
-       if(ThotSchema&&(!strcmp(inputBuffer,PRES_SCHEMA_TAG)||
-		       !strcmp(inputBuffer,DOCUMENT_TAG)||
-		       !strcmp(inputBuffer,BR_TAG)))
-	 /* the Thot special elements: we don't insert them */
-	 {
-	   if (!strcmp(inputBuffer,BR_TAG))
-	     {
-	       /* Warning: not the good string for linebreak */
-	       strncpy(inputBuffer,"\212",5);
-	       bufferLength = 5;
-	       currentElementClosed = TRUE;
-	       XmlTextToDocument();
-	     }
-	   ThotSchema = FALSE;
-	   newElement = NULL;
-	 }
-       else
-	 /* normal element */
-	 {
-	   elType.ElSSchema = currentSSchema;
-	   elType.ElTypeNum =  NameXmlToThot(elType.ElSSchema, 
+#ifdef DEBUG
+  printf ("   EndOfStartGI                  ---         %s\n",inputBuffer);
+#endif 
+
+  if (stackLevel == 0)
+    /* Root element : create the document */
+    {
+      createdElement = XmlSetCurrentDocument (inputBuffer);
+    }
+  else
+    {           
+      if (ReadingThotElement)
+	/* the Thot special elements: do not create them */
+	{
+	  if (!strcmp (inputBuffer, BR_TAG))
+	    {
+	      /* Warning: not the good string for linebreak */
+	      strncpy(inputBuffer, "\212", 5);
+	      bufferLength = 5;
+	      XmlTextToDocument ();
+	      createdElement = NULL;
+	    }
+	  else if (!strcmp (inputBuffer, PRES_SCHEMA_TAG))
+	      ;
+	  createdElement = NULL;
+	}
+      else if (DoCreateElement)
+	/* normal element */
+	{
+	  elType.ElSSchema = currentSSchema;
+	  elType.ElTypeNum =  NameXmlToThot (elType.ElSSchema, 
 					     inputBuffer, 0, 0);
-	   if (elType.ElTypeNum == 0)
-	     {
-	       sprintf (msgBuffer, "Unknown Xml or Thot  element %s", inputBuffer);
-	       XmlError (currentDocument, msgBuffer);
-	       elementStack[stackLevel] = NULL;
-	       newElement = NULL;
-	     }
-	   else
-	     {
-	       /* insert element */
-	       newElement = XmlInsertElement (elType);
-	       if (TtaIsElementTypeReference(elType)&&newElement!=NULL)
-	       /* storing the reference element in xmlmodule for later updating */
-		 XmlAddRef (currentDocument,newElement,NULL);
-	     }
-	 }
-     }
-   currentElement = newElement;
-   languageStack[stackLevel] = currentLanguage;
-   currentElementClosed = FALSE;
-   XmlelementType[stackLevel] = TtaStrdup(inputBuffer);
-   elementStack[stackLevel] = newElement;
-   currentAttribute = NULL;
-   stackLevel++;
-      
-   /* the input buffer is now empty */
-   bufferLength = 0;
+	  if (elType.ElTypeNum == 0)
+	    {
+	      sprintf (msgBuffer, "Unknown Xml or Thot  element %s", inputBuffer);
+	      XmlError (currentDocument, msgBuffer);
+	      createdElement = NULL;
+	    }
+	  else
+	    {
+	      /* Thot Event elemread.pre */
+	      notifyEl.event = TteElemRead;
+	      notifyEl.document = currentDocument;
+	      notifyEl.element = elementStack[stackLevel - 1];
+	      notifyEl.elementType.ElTypeNum = elType.ElTypeNum;
+	      notifyEl.elementType.ElSSchema = elType.ElSSchema;
+	      notifyEl.position = 0;
+	      DoCreateElement = !CallEventType ((NotifyEvent *) & notifyEl, TRUE);
+	      if (DoCreateElement)
+		{
+		  /* create a new element */
+		  createdElement = TtaNewElement (currentDocument, elType); 
+		  if (TtaIsElementTypeReference (elType) && createdElement!=NULL)
+		    /* storing the reference element in xmlmodule for later updating */
+		    XmlAddRef (currentDocument, createdElement, NULL);
+		}
+	      else
+		IgnoreElemLevel = stackLevel;
+	    }
+	}
+    }
+  strcpy (currentGI, inputBuffer);
+  currentAttrSSchema = currentDocSSchema;
+  bufferLength = 0;
 }
 
 /*----------------------------------------------------------------------
@@ -649,15 +779,17 @@ unsigned char                c;
 
   /* close the input buffer */
   inputBuffer[bufferLength] = EOS;
-
-  if (XmlelementType[stackLevel - 1] != NULL)
+#ifdef DEBUG
+   printf ("  EndOfClosingTagName  \n");
+#endif 
+  if (GIStack[stackLevel - 1] != NULL)
     /* the corresponding opening tag was a known tag */
-    if (strcmp(inputBuffer, XmlelementType[stackLevel - 1]) != 0)
+    if (strcmp(inputBuffer, GIStack[stackLevel - 1]) != 0)
       /* the end tag does not close the current element */
       {
 	/* print an error message */
 	sprintf (msgBuffer, "Unexpected Xml end tag </%s> instead of </%s>",
-		 inputBuffer, XmlelementType[stackLevel - 1]);
+		 inputBuffer, GIStack[stackLevel - 1]);
 	XmlError (currentDocument, msgBuffer);
       }
   /* the input buffer is now empty */
@@ -681,6 +813,37 @@ unsigned char                c;
 }
 
 /*----------------------------------------------------------------------
+   EndOfAttrPrefix
+   An attribute prefix has been read.
+   ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         EndOfAttrPrefix (unsigned char c)
+#else
+static void         EndOfAttrPrefix (c)
+unsigned char                c;
+
+#endif
+{ 
+  inputBuffer[bufferLength]=EOS;
+
+#ifdef DEBUG
+   printf ("  EndOfAttrPrefix                  ---         %s\n",inputBuffer);
+#endif 
+  if (!strcmp(inputBuffer,"xml"))
+    /* Reading an xml element or attribute */
+    ReadingXmlAttribute = TRUE; 
+  else if (!strcmp(inputBuffer,"thot"))
+    /* Reading a thot element or attribute */
+    ReadingThotAttribute = TRUE;
+  else if (!strcmp(inputBuffer,"xmlns"))
+    /* Reading the xmlns attribute (prefix/attr inversed */
+    ReadingXmlNSAttribute = TRUE;
+  else
+    currentAttrSSchema = XmlGetNSSchema (inputBuffer);
+  bufferLength = 0;
+}
+
+/*----------------------------------------------------------------------
    EndOfAttrName
    An Xml attribute name has been read.
    Create the corresponding Thot attribute.
@@ -697,60 +860,75 @@ unsigned char                c;
   AttributeType	attrType;
   int           attrKind;
   unsigned char msgBuffer[MAX_BUFFER_LENGTH];
+  NotifyAttribute     notifyAttr;
 
   /* close the input buffer */
   inputBuffer[bufferLength] = EOS;
-  
-  if (!strcmp(inputBuffer,XML_NAMESPACE_ATTR))
+#ifdef DEBUG
+   printf ("  EndOfAttrName                  ---         %s\n",inputBuffer);
+#endif   
+  currentAttribute = NULL;
+  strcpy (currentAttributeName, inputBuffer);
+  if (ReadingXmlAttribute)
+    ;
+  else if (ReadingThotAttribute)
     {
-      XmlSchema = TRUE;
-      ReadingXmlnsAttr = TRUE;
-    }
-  else
-    {
-      currentAttribute = NULL;
-      if (currentElement != NULL || ReadingXmlnsAttr)
+      if (!strcmp (inputBuffer, ASSOC_TREE_ATTR))
 	{
-	  attrType.AttrTypeNum = 0;
-	  if (XmlSchema||ThotSchema)
-	    /* special xml or thot attributes */
-	    /* we keep the attr name for later treatment */
-	    strcpy(currentAttrName, inputBuffer);
-	  else
+	  ReadingAssocRoot = TRUE; 
+	}
+    }
+  else if (ReadingXmlNSAttribute)
+    ;
+  else if (createdElement != NULL)
+    {
+      attrType.AttrSSchema = currentAttrSSchema;
+      attrType.AttrTypeNum = NameXmlToThot(currentAttrSSchema,
+					   inputBuffer,
+					   1,
+					   0);
+     
+      if (attrType.AttrTypeNum == 0 )
+	{
+	  sprintf (msgBuffer, "Unknown Xml attribute %s", inputBuffer);
+	  XmlError (currentDocument, msgBuffer);
+	}
+      else
+	{ 
+	  /* Thot Event AttrRead.Pre */
+	  notifyAttr.event = TteAttrRead;
+	  notifyAttr.document = currentDocument;
+	  notifyAttr.element = createdElement;
+	  notifyAttr.attribute = NULL;
+	  notifyAttr.attributeType.AttrTypeNum = attrType.AttrTypeNum;
+	  notifyAttr.attributeType.AttrSSchema = attrType.AttrSSchema;
+	  DoCreateAttribute = !CallEventAttribute (&notifyAttr, TRUE);
+	  
+	  if (DoCreateAttribute)
 	    {
-	      attrType.AttrSSchema = currentSSchema;
-	      attrType.AttrTypeNum = NameXmlToThot(currentSSchema,
-						   inputBuffer,
-						   1,
-						   0);
-	      if (attrType.AttrTypeNum == 0 )
+	      oldAttr = TtaGetAttribute (createdElement, attrType);
+	      if (oldAttr != NULL)
 		{
-		  sprintf (msgBuffer, "Unknown Xml attribute %s", inputBuffer);
-		  XmlError (currentDocument, msgBuffer);
+		  /* this attribute already exists for the current element */
+		  /* it will be updated at EndOfAttrValue */
+		  currentAttribute = oldAttr;
+#ifdef DEBUG
+		  sprintf (msgBuffer, "Duplicate Xml attribute %s", inputBuffer);
+		  XmlError (currentDocument, msgBuffer);	
+#endif
 		}
 	      else
 		{
-		  oldAttr = TtaGetAttribute (currentElement, attrType);
-		  if (oldAttr != NULL)
-		    {
-		      /* this attribute already exists for the current element */
-		      /* it will be updated at EndOfAttrValue */
-		      currentAttribute = oldAttr;
-#ifdef DEBUG
-		      sprintf (msgBuffer, "Duplicate Xml attribute %s", inputBuffer);
-		      XmlError (currentDocument, msgBuffer);	
-#endif
-		    }
-		  else
-		    {
-		      attr = TtaNewAttribute (attrType);
-		      TtaGiveAttributeType (attr,&attrType,&attrKind);
-		      if (attrKind == 3)
-			/* storing reference attribute in xmlmodule for later updating */
-			XmlAddRef(currentDocument,currentElement,attr);
-		      TtaAttachAttribute (currentElement, attr, currentDocument);
-		      currentAttribute = attr;
-		    }
+		  attr = TtaNewAttribute (attrType);
+		  TtaGiveAttributeType (attr,&attrType,&attrKind);
+		  if (attrKind == 3)
+		    /* storing reference attribute in xmlmodule for later updating */
+		    XmlAddRef(currentDocument,createdElement,attr);
+		  TtaSetStructureChecking (FALSE, currentDocument);
+		  TtaAttachAttribute (createdElement, attr, currentDocument);
+		  TtaSetStructureChecking (TRUE, currentDocument);
+		  TtaSetMandatoryInsertion (FALSE, currentDocument);
+		  currentAttribute = attr;
 		}
 	    }
 	}
@@ -792,71 +970,81 @@ unsigned char                c;
    AttributeType	attrType;
    int			attrKind, val;
    unsigned char        msgBuffer[MAX_BUFFER_LENGTH];
+   NotifyAttribute     notifyAttr;
 
    /* close the input buffer */
    inputBuffer[bufferLength] = EOS;
-
-   if (XmlSchema)
+#ifdef DEBUG
+   printf ("  EndOfAttrValue                  ---         %s\n",inputBuffer);
+#endif   
+   if (ReadingXmlNSAttribute) 
      {
-       if (ReadingXmlnsAttr) 
-	 {
-	   /* We're talking about THE xmlns attribute */
-	   /*   Adding :xmlns in end  of prefix so that ParseXml knows */
-	   /*   Because in that case there is three data:
-                      the xmlns attribute, the prefix, the schema name, 
-		      instead of two (the attribute and the value) */
-	   strcat (currentAttrName,":xmlns");
-	   ReadingXmlnsAttr = False;
-	 }
-       /* xmlmodule will treat the attribute */
-       ParseXmlAttribute (&ParserPrefixs,currentDocument,currentElement,
-			  currentAttrName,inputBuffer);
-       XmlSchema = FALSE;
+       /* We're talking about THE xmlns attribute */
+       /*   Adding :xmlns in end  of prefix so that ParseXml knows */
+       /*   Because in that case there is three data:
+	    the xmlns attribute, the prefix, the schema name, 
+	    instead of two (the attribute and the value) */
+       XmlAddNSSchema (currentDocument, currentAttributeName, inputBuffer);
+       ReadingXmlNSAttribute = FALSE;
      }
-   else if (ThotSchema)
+   else if (ReadingXmlAttribute)
+     {
+       /* xml module will treat the attribute */
+       ParseXmlAttribute (currentDocument, createdElement,
+			  currentAttributeName, inputBuffer);
+       ReadingXmlAttribute = FALSE;
+     }
+   else if (ReadingThotAttribute)
      {
        /* thotmodule will treat the attribute */
-       ParseThotAttribute (ParserPrefixs,currentDocument,currentElement,
-			   currentAttrName,inputBuffer);
-       ThotSchema = FALSE;
+       ParseThotAttribute (currentDocument, createdElement,
+			   currentAttributeName, inputBuffer);
+        ReadingThotAttribute = FALSE;
      }
    else if (currentAttribute != NULL)
      /* normal attribute */
-     {
-       TtaGiveAttributeType (currentAttribute, &attrType, &attrKind);
-       switch (attrKind)
-	 {
-	 case 0:       /* enumerate */
-	   /* Warning: it reads only the integer value */
-	   /* To improve */
-	   sscanf (inputBuffer, "%d", &val);
-	   TtaSetAttributeValue (currentAttribute, val, currentElement,
-				 currentDocument);
-	   break;
-	 case 1:       /* integer */
-	   sscanf (inputBuffer, "%d", &val);
-	   TtaSetAttributeValue (currentAttribute, val, currentElement,
-				 currentDocument);
-	   break;
-	 case 2:       /* text */
-	   TtaSetAttributeText (currentAttribute, inputBuffer, currentElement,currentDocument);
-	   break;
-	 case 3:       /* reference */
-	   XmlSetTarget (currentDocument, currentElement, inputBuffer);
-	   break;
+     if (DoCreateAttribute)
+       {
+	 TtaGiveAttributeType (currentAttribute, &attrType, &attrKind);
+	 switch (attrKind)
+	   {
+	   case 0:       /* enumerate */
+	     /* Warning: it reads only the integer value */
+	     /* To improve */
+	     sscanf (inputBuffer, "%d", &val);
+	     TtaSetAttributeValue (currentAttribute, val, createdElement, currentDocument);
+	     break;
+	   case 1:       /* integer */
+	     sscanf (inputBuffer, "%d", &val);
+	     TtaSetAttributeValue (currentAttribute, val, createdElement, currentDocument);
+	     break;
+	   case 2:       /* text */
+	     TtaSetAttributeText (currentAttribute, inputBuffer, createdElement, currentDocument);
+	     break;
+	   case 3:       /* reference */
+	     XmlSetTarget (currentDocument, createdElement, inputBuffer);
+	     break;
 	   }
-     }
+	 /* Thot Event AttrRead.Post */
+	 notifyAttr.event = TteAttrRead;
+	 notifyAttr.document = currentDocument;
+	 notifyAttr.element = createdElement;
+	 notifyAttr.attribute = currentAttribute;
+	 notifyAttr.attributeType.AttrTypeNum = attrType.AttrTypeNum;
+	 notifyAttr.attributeType.AttrSSchema = attrType.AttrSSchema;
+	 CallEventAttribute (&notifyAttr, FALSE);
+       }
    else
      {
        sprintf (msgBuffer, "Value of Unknown Xml attribute ");
        XmlError (currentDocument, msgBuffer);
      }
+  
    /* the input buffer is now empty */
    currentAttribute = NULL;
-   currentAttrName[0]=EOS;
+   currentAttributeName[0] = EOS;
+   currentAttrSSchema = currentDocSSchema;
    bufferLength = 0;
-   currentSSchema = currentDocSSchema;
-   ThotSchema = FALSE; XmlSchema = FALSE; ReadingXmlnsAttr = FALSE;
 }
 
 /*----------------------------------------------------------------------
@@ -1050,6 +1238,7 @@ unsigned char                c;
 
    /* the input buffer is now empty */
    bufferLength = 0;
+  immAfterTag = TRUE;
 }
 
 /*----------------------------------------------------------------------
@@ -1067,6 +1256,8 @@ unsigned char                c;
 
    /* the input buffer is now empty */
    bufferLength = 0;
+   immAfterTag = TRUE;
+
 }
 
 /*----------------------------------------------------------------------
@@ -1084,6 +1275,7 @@ unsigned char                c;
 
    /* the input buffer is now empty */
    bufferLength = 0;
+  immAfterTag = TRUE;
 }
 
 /*----------------------------------------------------------------------
@@ -1169,7 +1361,7 @@ static sourceTransition sourceAutomaton[] =
    {3, 'S', (Proc) EndOfClosingTagName, 7},
    {3, '*', (Proc) PutInBuffer, 3},
 /* state 4: reading an attribute name */
-   {4, ':', (Proc) EndOfPrefix, 4},
+   {4, ':', (Proc) EndOfAttrPrefix, 4},
    {4, '=', (Proc) EndOfAttrName, 5},
    {4, 'S', (Proc) EndOfAttrName, 17},
    {4, '/', (Proc) EndOfAttrNameAndTag, 18},
@@ -1354,6 +1546,7 @@ char	 *name;
 #ifdef DEBUG
   TtaSetErrorMessages(TRUE);
 #endif
+  StoreTableActions();
   file = TtaReadOpen (name);
   i=0;
   strcpy(tempDocName,name);
@@ -1366,6 +1559,7 @@ char	 *name;
   tempDocName[i]=EOS;
   tempDocName[firstNameChar-1]=EOS;
   strcpy(currentDocumentName,&tempDocName[firstNameChar]); 
+  nbAssocRoot = 0;              
   /* intialise the Xml automaton if it has not been initialized yet */
   if (!XmlautomatonInitalized)
      InitXmlAutomaton ();
@@ -1378,7 +1572,11 @@ char	 *name;
   charRead = EOS;
   endOfFile = FALSE;
   error = FALSE;
-  immAfterTag = TRUE;
+  immAfterTag = TRUE;   
+  DoCreateElement = TRUE;       /* flag for NotifyElement */
+  DoCreateAttribute = TRUE;     /* flag for NotifyAttribute*/
+  IgnoreElemLevel = 0;              /* stack level from where */
+                  
   /* read the Xml file sequentially */
   do
     {
@@ -1534,8 +1732,9 @@ char	 *name;
 	}
     }
   while (!endOfFile);
-
+  RestoreTableActions();
   TtaSetMandatoryInsertion (TRUE, currentDocument);
+  
   return (currentDocument);
   /* end of the Xml root element */
 /*   if (!isclosed) */
@@ -1545,7 +1744,6 @@ char	 *name;
 /*   currentParserCtxt = oldParserCtxt; */
 /*   currentDocument = oldDocument; */
 /*   currentLanguage = oldLanguage; */
-/*   currentElement = oldElement; */
 /*   currentElementClosed = oldElementClosed; */
 /*   currentAttribute = oldAttribute; */
 /*   XmlrootClosed = oldXmlrootClosed; */

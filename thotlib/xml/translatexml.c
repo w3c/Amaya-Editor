@@ -1,27 +1,3 @@
-/* -------------------------------------------------------------------
-
-   Module: translatexml.c
-   Authors: Monte Regis & Bonhomme Stephane
-
-   Comments: This module makes the translation from Thot original to XML 
-             names and reversly using files "schema name".X in Thot
-	     schema paths.
-	     Type declarations are in thotlib/internals/h/typexml.h
-
-   Extern functions:
-           int NameXmlToThot(SSchema schema,
-	                     char *xmlName, 
-			     int elTypeNum, 
-			     int attrTypeNum)
-	   char *NameThotToXml(SSchema schema, 
-	                       int elTypeNum, 
-	                       int attrTypeNum, 
-			       int attrVal)
-	   void  FreeThotXmlTables()
---------------------------------------------------------------------*/
-			       
-
-
 #include "thot_sys.h"
 #include "attribute.h"
 #include "document.h"
@@ -41,7 +17,6 @@ static SSchema              CurrentSSchema;
 static int                  MaxTypeNum;
 static int                  MaxAttrNum;
 static int                  CurrentTableRank;
-/* Wraning: No API for easy access to S schemas */
 #define CURRENT_ATTR_DEF (((PtrSSchema)CurrentSSchema)->SsAttribute[CurrentAttrNum - 1])
 
 
@@ -127,8 +102,6 @@ char *XmlName;
 
   /* chooses the name to be inserted */
   if (XmlName[0] == '\0')
-    /* Thot name has no transaltion: inserting NULL name */
-    /*   it will be recognized as no Tag */
     theName = NULL;
   else
     theName = XmlName;
@@ -143,18 +116,14 @@ char *XmlName;
       strcpy (tempName, TtaGetElementTypeOriginalName (elType));
       while ((CurrentTypeNum < MaxTypeNum-1) && 
 	     (strcmp (ThotName, tempName) != 0))
-	/* Thot name not present in the translation file */
-	/* Inserting original thot name */
 	{
 	  CurrentTableRank ++;
 	  index = InsertNameInAlpha (&(TSchema->XmlNameTable[1]), 
 				     tempName, 
 				     CurrentTableRank) + 1;
-	  /* update XmlElemNameTable (Thot -> XML)*/
 	  for (n = 1; n<CurrentTypeNum; n++)
 	    if (TSchema->XmlElemNameTable[n] >= index)
 	      (TSchema->XmlElemNameTable[n])++;
-	  /* update XmlReverseTable (XML -> Thot)*/
 	  for (n = CurrentTableRank-1; n>=index; n--)
 	    TSchema->XmlReverseTable[n+1] = TSchema->XmlReverseTable[n];
 	  TSchema->XmlElemNameTable[CurrentTypeNum] = index;
@@ -167,17 +136,15 @@ char *XmlName;
   if (CurrentTypeNum < MaxTypeNum)
     if (theName!=NULL)
       {
-	/* Thot name found*/
+	/* inserts an element name */
 	CurrentTableRank ++;
 	index = InsertNameInAlpha (&(TSchema->XmlNameTable[1]), 
 				   theName, 
 				   CurrentTableRank) + 1;
-	/* update XmlElemNameTable (Thot -> XML)*/
 	for (n = 1; n<CurrentTypeNum; n++)
 	  if (TSchema->XmlElemNameTable[n] >= index)
 	    (TSchema->XmlElemNameTable[n])++;
 	for (n = CurrentTableRank-1; n>=index; n--)
-	/* update XmlReverseTable (XML -> Thot)*/
 	  TSchema->XmlReverseTable[n+1] = TSchema->XmlReverseTable[n];
 	TSchema->XmlElemNameTable[CurrentTypeNum] = index;
 	TSchema->XmlReverseTable[index] = CurrentTypeNum;
@@ -207,17 +174,15 @@ char *XmlName;
 	  while ((CurrentAttrNum < MaxAttrNum) && 
 		 (strcmp (ThotName, tempName) != 0))
 	    {
-	      /* inserts the Thot original attribute name */
+	      /* inserts a new thot attribute name */
 	      CurrentTableRank++;
 	      index = (TSchema->FirstAttr) + 
 		InsertNameInAlpha (&(TSchema->XmlNameTable[TSchema->FirstAttr]), 
 				   tempName,
 				   (CurrentTableRank - (TSchema->FirstAttr))+1);
-	      /* update XmlAttrNameTable (Thot -> XML)*/
 	      for (n = 1; n < CurrentAttrNum; n++)
 		if (TSchema->XmlAttrNameTable[n].AttrNameRank >= index)
 		  (TSchema->XmlAttrNameTable[n].AttrNameRank)++;
-	      /* update XmlReverseTable (XML -> Thot)*/
 	      for (n = CurrentTableRank-1; n>=index; n--)
 		TSchema->XmlReverseTable[n+1] = TSchema->XmlReverseTable[n];
 	      TSchema->XmlAttrNameTable[CurrentAttrNum].AttrNameRank = index;
@@ -237,11 +202,9 @@ char *XmlName;
 		  InsertNameInAlpha (&(TSchema->XmlNameTable[TSchema->FirstAttr]), 
 				     theName,
 				     (CurrentTableRank - (TSchema->FirstAttr))+1);
-		/* update XmlAttrNameTable (Thot -> XML)*/
 		for (n = 1; n < CurrentAttrNum; n++)
 		  if (TSchema->XmlAttrNameTable[n].AttrNameRank >= index)
 		    (TSchema->XmlAttrNameTable[n].AttrNameRank)++;
-		/* update XmlReverseTable (XML -> Thot)*/
 		for (n = CurrentTableRank-1; n>=index; n--)
 		  TSchema->XmlReverseTable[n+1] = TSchema->XmlReverseTable[n];
 		TSchema->XmlAttrNameTable[CurrentAttrNum].AttrNameRank = index;
@@ -251,7 +214,6 @@ char *XmlName;
 		CurrentAttrNum++;
 	      }
 	    else
-	      /* updating NULL attribute */
 	      {
 		TSchema->XmlAttrNameTable[CurrentAttrNum].AttrNameRank = 0;
 		TSchema->XmlAttrNameTable[CurrentAttrNum].AttrFirstValue = 0;
@@ -341,7 +303,6 @@ SSchema sSchema;
   pts->Next = TranslationSchemas;
   TranslationSchemas = pts;
 
-  /* Warning: No API for accessing the rules number */
   MaxTypeNum = ((PtrSSchema)sSchema)->SsNRules + 1;
   MaxAttrNum = ((PtrSSchema)sSchema)->SsNAttributes + 1;
   CurrentTypeNum = 1;
@@ -378,6 +339,9 @@ SSchema sSchema;
 
   /* Gets all SchemasPaths */
   TtaGetSchemaPath(paths,1000);
+#ifdef DEBUG
+  printf("Paths:%s.\n",paths);
+#endif
   while ((paths[i]!='\0')&&(!ok))
     {
       switch (paths[i])
@@ -387,7 +351,7 @@ SSchema sSchema;
 	  filename[f++]='/';
 	  filename[f++]='\0';
 	  strcat(filename,TtaGetSSchemaName(sSchema));
-	  strcat(filename,".X");
+	  strcat(filename,".xml");
 	  if (TtaFileExist(filename))
 	    {
 	      file=TtaReadOpen(filename);
@@ -423,8 +387,6 @@ SSchema sSchema;
 	  switch (c)
 	    {
             case '\\':
-	      /* Octal recognition for \x thot special element */
-	      /* ex: &eacute = \351 */
               inoct = 0;
 	      for (inoct = 0; inoct<3; inoct ++)
 		{
@@ -434,25 +396,18 @@ SSchema sSchema;
 	      currentbuf[i++] = (char)icode;
 	      break;
 	    case '\n':
-	      /* end of line */
-	      if (currentbuf == xmlbuf)
-		/* translation line (i.e thotname:xmlname) */
-		{ 
-		  xmlbuf[i]='\0';
-		  InsertInTable (pts, thotbuf,xmlbuf);
-		  currentbuf=thotbuf;
-		}
-	      i = 0;
+	      xmlbuf[i]='\0';
+	      InsertInTable (pts, thotbuf,xmlbuf);
+	      currentbuf=thotbuf;
+	      i=0;
 	      break;
 	    case ':':
-	      /* end of Thot name */
 	      thotbuf[i]='\0';
 	      currentbuf=xmlbuf;
 	      i=0;
 	      break;
 	    case ' ':
 	    case '\t':
-	      /* suppresing space and tabs */
 	      break;
 	    default:
 	      currentbuf[i++]=c;
@@ -503,10 +458,8 @@ int attrTypeNum;
   while (curTS != NULL && strcmp (curTS->SchemaName, TtaGetSSchemaName(schema)))
     curTS = curTS->Next;
   if (curTS == NULL)
-    /* Schema has to be loaded */
     curTS = LoadTable (schema);
   if (curTS != NULL)
-    /* schema found */
     {
       if (attrTypeNum == 0)	
 	{
@@ -556,9 +509,7 @@ int attrTypeNum;
 	}
       return curTS->XmlReverseTable[result];
     }
-  else   
-    /* No translation table: schema not loaded and file not found */
-    /* Searching Thot original name */ 
+  else   /* No translation table */
     {
       if (attrTypeNum == 0)	
 	if (elTypeNum == 0)
@@ -570,9 +521,7 @@ int attrTypeNum;
 	else
 	  {
 	    result = 0;
-	    /* Searching manualy the attribute number */
-	    /* Warning: No API for 
-	       GiveAttributeTypeFromOriginalName without the element */
+	    /* Searching manualy the attribute */
 	    while (result < (((PtrSSchema)schema)->SsNAttributes+1) && !found)
 	      {
 		result++;
@@ -588,8 +537,6 @@ int attrTypeNum;
 	  }
       else
 	result = 0;
-	    /* Warning: No API for 
-	       TtaGetAttributeValueFromName without the attribute and element */
 /* 	result = TtaGetAttributeValueFromName(xmlName); */
       return result;
     }
@@ -599,6 +546,7 @@ int attrTypeNum;
   NameThotToXml : Return the Xml name of a thot type (or attr value)
            schema : the schema of the type which name is searched
         elTypeNum : the type number of the element which name is searched
+                    or that have the attribute which the name is searched
       attrTypeNum : the type of the attribute which name or value 
                     is searched ( 0 if an element name is searched)
 	  attrVal : The name of the attibute enum value is searched 
@@ -664,12 +612,10 @@ int attrVal;
   else
     if (attrTypeNum != 0)
       if (attrVal != 0)
-	/* searching an attr value */
-	/* Warning: No API for accessing attrVal with attrType only */
-/* 	res = TtaGetAttributeValueName(attrType,attrVal);  */
-	res = 0;
+	/*searching an attr value */
+	res = TtaGetAttributeValueName(attrType,attrVal); 
       else 
-	/* searching an attribute name */
+	/*searching an attribute name */
 	res = TtaGetAttributeOriginalName(attrType); 
     else 
       res = TtaGetElementTypeOriginalName(elType);      
@@ -677,28 +623,44 @@ int attrVal;
   return res;
 }
 
-/*------------------------------------------------------------------------
-  FreeThotXmlTables : Free all loaded tables      
------------------------------------------------------------------------ */
-#ifdef __STDC__
-void  FreeThotXmlTables()
-#else /*__STDC__*/
-void  FreeThotXmlTables()
-#endif /*__STDC__*/
+
+
+
+#ifdef DEBUGrr
+void PrintTable ()
 {
-  PtrTranslationSchema inter;
   int i;
-
-  while (TranslationSchemas!=NULL)
-    {
-      if (TranslationSchemas->SchemaName!=NULL)
-	TtaFreeMemory(TranslationSchemas->SchemaName);
-      for (i=0;i<MAXNTYPE;i++)
-	if (TranslationSchemas->XmlNameTable[i]!=NULL)
-	  TtaFreeMemory (TranslationSchemas->XmlNameTable[i]);
-      inter = TranslationSchemas;
-      TranslationSchemas = inter->Next;
-      TtaFreeMemory(inter);
-    }
+  printf ("Thot Table :\n");
+  for (i=0;i<TXTables[0]->TNbElem;i++) printf ("%s %d\n",TXTables[0]->ThotTable[i]->Name, TXTables[0]->ThotTable[i]->Ref);
+  printf ("Xml  Table :\n");
+  for (i=0;i<TXTables[0]->XNbElem;i++) printf ("%s %d\n",TXTables[0]->XmlTable[i]->Name, TXTables[0]->XmlTable[i]->Ref);
 }
+#endif
 
+/* Search the Thot and Xml Name in alphabetical order by dichotomie*/
+/*int   SearchXmlIndex2(Entry *Table[MAXNAME], char *Name, int Min, int Max)
+  {
+  int Middle;
+  int i=0;
+  
+  printf ("%s  min:%d, max:%d\n",Name,Min,Max);
+  if ((Max==Min)||(Max==(Min+1))) 
+  
+  return (Max);
+  
+  Middle=(Min+Max)/2;
+  
+  i=strcmp(Table[Middle]->Name,Name);
+  if (i<0) i=-1;
+  if (i>0) i=1;
+  
+  switch(i)
+  {
+  case 0: return (Middle);
+  break;
+  case -1: return (SearchXmlIndex(Table,Name,Middle,Max));
+  break;
+  case 1:return (SearchXmlIndex(Table,Name,Min,Middle));
+  break;
+  }
+  }*/
