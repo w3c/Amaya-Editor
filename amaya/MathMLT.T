@@ -1674,7 +1674,7 @@ TextTRANSLATE Grec
 	'\251' -> '&hearts;';
 	'\252' -> '&spades;';
 	'\253' -> '&LeftRightArrow;';
-	'\254' -> '&LeftArrow;';
+	'\254' -> '&not;';
 	'\255' -> '&UpArrow;';
 	'\256' -> '&RightArrow;';
 	'\257' -> '&DownArrow;';
