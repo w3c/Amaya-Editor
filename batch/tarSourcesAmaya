@@ -78,6 +78,10 @@ Amaya/amaya/XLink.A \
 Amaya/amaya/XLink.S \
 Amaya/amaya/XLinkP.P \
 Amaya/amaya/XLinkT.T \
+Amaya/amaya/XML.A \
+Amaya/amaya/XML.S \
+Amaya/amaya/XMLP.P \
+Amaya/amaya/XMLT.T \
 Amaya/amaya/Text_SGML.inc \
 Amaya/amaya/greek.sgml \
 Amaya/amaya/*.bmp \
@@ -397,3 +401,6 @@ libwww/config/mkinstalldirs \
 libwww/config/winConfigure.pl \
 libwww/config/missing \
  | $COMPRESS  > $DEST/amaya-src-$AMAYAVERSION.tgz
+
+
+
