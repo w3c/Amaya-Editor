@@ -274,9 +274,12 @@ NotifyPresentation *event;
    doc = event->document;
    presType = event->pRuleType;
    presRule = event->pRule;
+   elType = TtaGetElementType (elem);
+   /* if it's a background rule on element BODY, move it to element HTML */
+   /* if it's a rule on element HTML and it's not a background rule, move
+      it to element BODY */
    if (event->event != TtePRuleDelete)
       {
-      elType = TtaGetElementType (elem);
       if (presType == PRFillPattern || presType == PRBackground ||
           presType == PRShowBox)
          /* this is a rule for the background */
@@ -285,7 +288,6 @@ NotifyPresentation *event;
 	    {
 	    root = TtaGetParent (elem);
 	    MovePRule (&presRule, elem, root, doc);
-	    elem = root;
 	    }
 	 }
       else
@@ -296,6 +298,12 @@ NotifyPresentation *event;
 	    MovePRule (&presRule, elem, body, doc);
 	    elem = body;
 	    }
+      }
+   if (elType.ElTypeNum == HTML_EL_HTML)
+      {
+      elType.ElTypeNum = HTML_EL_BODY;
+      body = TtaSearchTypedElement (elType, SearchInTree, elem);
+      elem = body;
       }
 
    if (event->event == TtePRuleCreate)
