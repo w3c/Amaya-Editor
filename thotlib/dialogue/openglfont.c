@@ -168,8 +168,9 @@ static GL_glyph *Char_index_lookup_cache (GL_font *font,
 					  unsigned int idx,
 					  unsigned int *glyph_index)
 {
-  Char_Cache_index *Cache = font->Cache;
+  Char_Cache_index *Cache;
 
+  Cache = font->Cache;
   if (Cache)
     while (1)
       {
@@ -194,10 +195,11 @@ static GL_glyph *Char_index_lookup_cache (GL_font *font,
       font->Cache = TtaGetMemory (sizeof (Char_Cache_index));
       Cache = font->Cache;      
     }
-    
+  FT_Get_Char_Index (font->face, 
+				       idx);
   Cache->index = idx;
   Cache->character = FT_Get_Char_Index (font->face, 
-					idx);
+				       idx);
   Cache->next = NULL;  
   MakeBitmapGlyph (font,
 		   Cache->character,
@@ -327,7 +329,7 @@ static int FontFaceSize (GL_font *font,
    to glyph index conversion 
    The Aim is mainly to get Unicode Charmaps
 -------------------------------------------------------------------------*/
-static int FontCharMap (GL_font *font, FT_Encoding encoding, char alphabet)
+static int FontCharMap (GL_font *font, FT_Encoding encoding)
 {  
   FT_CharMap  found = 0;
   FT_CharMap  charmap;
@@ -444,12 +446,12 @@ void *gl_font_init (const char *font_filename,
   if (gl_font != NULL)
     {   
       if (alphabet == 'G')
-	FontCharMap (gl_font, ft_encoding_symbol, alphabet);
+	FontCharMap (gl_font, ft_encoding_symbol);
       else        
 	if (alphabet == 'E')
-	  FontCharMap (gl_font, ft_encoding_none, alphabet);/*err = 0;*/
+	  FontCharMap (gl_font, ft_encoding_none);/*err = 0;*/
 	else
-	  err = FontCharMap (gl_font, ft_encoding_unicode, alphabet);
+	  err = FontCharMap (gl_font, ft_encoding_unicode);
       if (err) 
  	{ 
  	  FT_Done_Face (gl_font->face); 
@@ -660,21 +662,22 @@ static void MakeBitmapGlyph (GL_font *font,
 				      ft_render_mode_normal,
 				      0, 
 				      1);
-      
-      
 	  if (err)
 	    FT_Done_Glyph (Glyph);
 	  else
 	    {
 	      bitmap = (FT_BitmapGlyph) Glyph;
 	      source = &bitmap->bitmap;	 
-	      if (source->width && 
-		  source->rows)
+	      if (source->width && source->rows)
 		{
 		  w = (short unsigned int) source->width;     
 		  h = (short unsigned int) source->rows;
 		  p = w*h;
-		  data = TtaGetMemory ((int) p*sizeof (unsigned char));
+		  if (source->pitch*(h-1) > p)
+		    //p = source->pitch*h;
+		    source->pitch = w;
+		  
+		  data = TtaGetMemory ((int) p * sizeof (unsigned char));
 		  if (data)
 		    {
 		      memset (data, 0, (int)p);

@@ -72,8 +72,7 @@ static int           FontFaceSize (GL_font *font,
 			   unsigned int res);
 
 static int           FontCharMap (GL_font *font,
-				  FT_Encoding encoding,
-				  char alphabet);
+				  FT_Encoding encoding);
 static void          FontBBox (GL_font *font,
 			       wchar_t* string,
 			       int length,

@@ -392,8 +392,8 @@ static void GL_MakeTextureSize(PictInfo *Image,
 	  ptr1 += x;
 	  ptr2 += x + xdiff;
 	}	
-	  if (Image->PicPixmap != PictureLogo)
-		TtaFreeMemory (Image->PicPixmap);
+      if (Image->PicPixmap != PictureLogo)
+	TtaFreeMemory (Image->PicPixmap);      
       Image->PicPixmap = data;
     }
 }
@@ -2337,7 +2337,8 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
       if (PictureLogo == None)
 	/* create a special logo for lost pictures */
 	CreateGifLogo ();
-      imageDesc->PicFileName = TtaStrdup (LostPicturePath);
+      imageDesc->PicFileName = TtaGetMemory (strlen(LostPicturePath)+1);
+      strcpy (imageDesc->PicFileName,TtaStrdup (LostPicturePath));
       imageDesc->PicType = 3;
       imageDesc->PicPresent = RealSize;
       imageDesc->PicPixmap = (unsigned char*) PictureLogo;

@@ -30,6 +30,7 @@
 **/
 #ifdef _GTK
 #include "gtkdialogapi.h"
+extern char      LostPicturePath [512];
 #endif /* _GTK */
 
 
@@ -6654,6 +6655,11 @@ void InitAmaya (NotifyEvent * event)
 #ifdef _WINDOWS
    sprintf (LostPicturePath, "%s\\amaya\\lost.gif",
 	     TtaGetEnvString ("THOTDIR"));
+#else /* _WINDOWS */
+#ifdef _GTK
+   sprintf (LostPicturePath, "%s/amaya/lost.gif",
+	     TtaGetEnvString ("THOTDIR"));   
+#endif /* _GTK */
 #endif /* _WINDOWS */
 
 

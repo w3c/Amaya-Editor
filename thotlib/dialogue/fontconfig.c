@@ -35,9 +35,9 @@
    font style*/
 typedef struct FontFamilyConfig
 {
-  char *highlight[6];
   ThotBool is_xlfd[6];
   ThotBool is_xlfd_checked[6];
+  char     *highlight[6];
   /*
   char *bold;
   char *italic;
@@ -139,6 +139,23 @@ int isnum (char c)
 }
 
 /*----------------------------------------------------------------------
+   PassOnComments                                                   
+  ----------------------------------------------------------------------*/
+static int PassOnComments (unsigned char *line, int indline)
+{
+  while (indline < MAX_TXT_LEN && 
+	 line[indline] == '#')
+    {
+      while (indline < MAX_TXT_LEN &&
+	     line[indline] != EOS && 
+	     line[indline] != EOL)
+	indline++; 
+    }
+  if (indline == MAX_TXT_LEN)
+    indline--;  
+  return indline;
+}
+/*----------------------------------------------------------------------
    AdvanceNextWord                                                    
   ----------------------------------------------------------------------*/
 static int AdvanceNextWord (unsigned char *line, int indline)
@@ -148,13 +165,8 @@ static int AdvanceNextWord (unsigned char *line, int indline)
 	 line[indline] != EOS &&
 	 !isnum (line[indline]))
     {
-      if (line[indline] == '#')
-	while (indline < MAX_TXT_LEN &&
-	       line[indline] != EOS && 
-	       line[indline] != EOL)
-	  indline++;
-      else
-	indline++;
+      indline = PassOnComments (line, indline);
+      indline++;
     }
   return indline;
 }
@@ -193,7 +205,9 @@ static int getFontFace (int indline, unsigned char *line, char *word)
    int             indword;
 
    indword = 0;
-   word[0] = EOS;   
+   word[0] = EOS;  
+   /*place ourself next to a word*/
+   indline = AdvanceNextWord (line, indline); 
    /* skip all char if there are */
    while (indline < MAX_TXT_LEN &&
 	  line[indline] != EOS &&

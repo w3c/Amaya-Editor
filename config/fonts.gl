@@ -1,19 +1,15 @@
-###
-##
-#
 
-##
-
-
-#
-
-
-
+#font script 1-17 iso, then unicode,symbol,stix...;
+#1 = serif;normale face;bold face;italic face  
+#2 = sans-serif;normale face;bold face;italic face  
+#3 = monospace;normale face;bold face;italic face  
+#4 = cursive;normale face;bold face;italic face  
+#5 = fantasy;normale face;bold face;italic face  
 
 
 
 1;#Latin1 (West European)
-1;1=/share/fonts/type1/gsfonts/a010013l.pfb;2=/usr/X11R6/lib/X11/fonts/TrueType/arialbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/ariali.ttf;
+1;1=/usr/X11R6/lib/X11/fonts/TrueType/arial.ttf;2=/usr/X11R6/lib/X11/fonts/TrueTypearialbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/ariali.ttf;
 2;1=/usr/X11R6/lib/X11/fonts/TrueType/times.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/timesbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/timesi.ttf;
 3;1=/usr/X11R6/lib/X11/fonts/TrueType/cour.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/courbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/couri.ttf;
 
@@ -100,9 +96,9 @@
 
 
 0;#Unicode (.or ... JAPANESe)
-1;1=/usr/local/share/fonts/msincho.ttc;2=/usr/local/share/fonts/msincho.ttc;3=/usr/local/share/fonts/msincho.ttc
-2;1=/usr/local/share/fonts/msincho.ttc;2=/usr/local/share/fonts/msgothic.ttc;3=/usr/local/share/fonts/msincho.ttc
-3;1=/usr/local/share/fonts/msincho.ttc;2=/usr/local/share/fonts/msgothic.ttc;3=/usr/local/share/fonts/msincho.ttc
+1;1=/usr/local/share/fonts/japanese/msmincho.ttc;2=/usr/local/share/fonts/japanese/msmincho.ttc;3=/usr/local/share/fonts/japanese/msmincho.ttc;
+2;1=/usr/local/share/fonts/japanese/msmincho.ttc;2=/usr/local/share/fonts/japanese/msmincho.ttc;3=/usr/local/share/fonts/japanese/msmincho.ttc;
+3;1=/usr/local/share/fonts/japanese/msmincho.ttc;2=/usr/local/share/fonts/japanese/msmincho.ttc;3=/usr/local/share/fonts/japanese/msmincho.ttc;
 
 
 

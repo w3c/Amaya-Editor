@@ -382,9 +382,11 @@ int GetFontFilename (char script, int family, int highlight, int size,
        {
 	 strcpy (filename, s);  
 	 ok = 1;
+	 if (strstr (filename, "gz"))
+	   ok = 0;
 	 if (script == 'E')
 	   if (strstr (filename, "esstix") == NULL)
-	       ok = 0;
+	     ok = 0;
 #ifdef _PCLFONTDEBUG
 	 g_print ("\n %s \t[script : %c (%i) family : %i] \t=> %i", 
 		  filename, script, script, family, ok);
