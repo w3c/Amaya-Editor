@@ -813,7 +813,7 @@ void DrawPointyBracket (int frame, int thick, int x, int y, int l, int h,
     }
   
   /*symbol*/
-  if (0 && FontHeight (font) >= h)
+  if (FontHeight (font) >= h)
     {
       /* With only one glyph */
       if (direction == 0)

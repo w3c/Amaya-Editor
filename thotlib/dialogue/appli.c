@@ -28,6 +28,9 @@
 #include "appdialogue.h"
 #include "thotcolor.h"
 
+#ifdef _GTK
+#include <gdk/gdkx.h>
+#endif /*_GTK*/
 
 #ifdef _GL
 #include <GL/gl.h>
@@ -2748,11 +2751,16 @@ void ThotGrab (ThotWindow win, ThotCursor cursor, long events, int disp)
 {
 #ifndef _WINDOWS
 #ifndef _GTK 
-  /*GTK n'a pas de fonction equivalente !!!*/
    XGrabPointer (TtDisplay, win, FALSE, events, GrabModeAsync, GrabModeAsync,
 		 win, cursor, CurrentTime);
 #else /* _GTK */
-  /*GTK n'a pas de fonction equivalente !!!*/
+   gdk_pointer_grab (win,
+		     FALSE, 
+		     events,
+		     win,
+		     cursor,
+		     GDK_CURRENT_TIME);
+
 #endif /* _GTK */
 #endif /* _WINDOWS */
 }
@@ -2766,6 +2774,8 @@ void ThotUngrab ()
 #ifndef _WINDOWS
 #ifndef _GTK
    XUngrabPointer (TtDisplay, CurrentTime);
+#else /* _GTK */
+   gdk_pointer_ungrab (GDK_CURRENT_TIME);
 #endif /* _GTK */
 #endif /* _WINDOWS */
 }
