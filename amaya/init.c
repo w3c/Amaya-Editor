@@ -2699,6 +2699,10 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc, ThotBool inNew
        TtaSetMenuOff (doc, 1, Bookmarks_);
 #endif /* BOOKMARKS */
 
+#ifndef DAV    /* don't active the WebDAV menu if flag is off */
+	   TtaSetMenuOff (doc, 1, Cooperation_);
+#endif  /* DAV */
+
        if (docType == docSource || docType == docLog ||
 	   docType == docLibrary || docType == docBookmark)
 	 {
@@ -2923,9 +2927,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc, ThotBool inNew
 	   else
 	     TtaSetToggleItem (doc, 1, Views, TShowTargets, FALSE);
 	   TtaSetMenuOff (doc, 1, Attributes_);
-#ifndef DAV    /* after all, we active the WebDAV menu in the main view */
-	   TtaSetMenuOff (doc, 1, Cooperation_);
-#endif  /* DAV */
 
 	   /* if we open the new document in a new view, control */
 	   /* is transferred from previous document to new document */
