@@ -118,6 +118,7 @@ static char *     CacheDirectory = GProp_Cache.CacheDirectory;
 static int &      CacheSize = GProp_Cache.CacheSize;
 static int &      MaxCacheFile = GProp_Cache.MaxCacheFile;
 #else /* _WINGUI */
+/* do not use references on Windows C compiler, it doesn't understand it :( */
 static ThotBool EnableCache;
 static ThotBool CacheProtectedDocs;
 static ThotBool CacheDisconnectMode;
@@ -143,9 +144,18 @@ static AM_WIN_MenuText WIN_ProxyMenuText[] =
 };
 #endif /* _WINGUI */
 static int      ProxyBase;
+
+#ifndef _WINGUI
+static Prop_Proxy GProp_Proxy;
+static char *     HttpProxy              = GProp_Proxy.HttpProxy;
+static char *     ProxyDomain            = GProp_Proxy.ProxyDomain;
+static ThotBool & ProxyDomainIsOnlyProxy = GProp_Proxy.ProxyDomainIsOnlyProxy;
+#else /* _WINGUI */
+/* do not use references on Windows C compiler, it doesn't understand it :( */
 static char     HttpProxy[MAX_LENGTH];
 static char     ProxyDomain[MAX_LENGTH];
 static ThotBool ProxyDomainIsOnlyProxy;
+#endif /* _WINGUI */
 
 /* General menu options */
 #ifdef _WINGUI
@@ -5170,6 +5180,30 @@ Prop_Cache GetProp_Cache()
 }
 
 /*----------------------------------------------------------------------
+  Use to set the Amaya global variables (Proxy preferences)
+  ----------------------------------------------------------------------*/
+void SetProp_Proxy( const Prop_Proxy * prop )
+{
+#ifdef _WX
+  GProp_Proxy = *prop;
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  Use to get the Amaya global variables (Proxy preferences)
+  ----------------------------------------------------------------------*/
+Prop_Proxy GetProp_Proxy()
+{
+#ifdef _WX
+  return GProp_Proxy;
+#else /* _WX */
+  Prop_Proxy prop;
+  memset(&prop, 0, sizeof(Prop_Proxy) );
+  return prop;
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
   PreferenceMenu
   Build and display the preference dialog
   ----------------------------------------------------------------------*/
@@ -5195,7 +5229,10 @@ void PreferenceMenu (Document document, View view)
   /* ---> Cache Tab */
   CacheStatus = 0; /* reset the modified flag */
   GetCacheConf (); /* load and display the current values */
-
+  
+  /* ---> Proxy Tab */
+  ProxyStatus = 0; /* reset the modified flag */
+  GetProxyConf (); /* load and display the current values */
 
   ThotBool created = CreatePreferenceDlgWX ( PreferenceBase,
 					     TtaGetViewFrame (document, view),

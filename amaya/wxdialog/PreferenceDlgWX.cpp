@@ -59,6 +59,7 @@ PreferenceDlgWX::PreferenceDlgWX( int ref,
   SetupLabelDialog_Browse();
   SetupLabelDialog_Publish();
   SetupLabelDialog_Cache();
+  SetupLabelDialog_Proxy();
 
   XRCCTRL(*this, "wxID_OK",      wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage (AMAYA, AM_APPLY_BUTTON)));
   XRCCTRL(*this, "wxID_CANCEL",  wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CANCEL)) );
@@ -69,6 +70,7 @@ PreferenceDlgWX::PreferenceDlgWX( int ref,
   SetupDialog_Browse( GetProp_Browse() );
   SetupDialog_Publish( GetProp_Publish() );
   SetupDialog_Cache( GetProp_Cache() );
+  SetupDialog_Proxy( GetProp_Proxy() );
 
   // give focus to ...
   XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE", wxComboBox)->SetFocus();
@@ -470,6 +472,75 @@ void PreferenceDlgWX::OnEmptyCache( wxCommandEvent& event )
   ThotCallback (GetPrefCacheBase() + CacheMenu, INTEGER_DATA, (char*) 3);
 }
 
+/************************************************************************/
+/* Proxy tab                                                            */
+/************************************************************************/
+
+/*----------------------------------------------------------------------
+  SetupLabelDialog_Proxy init labels
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::SetupLabelDialog_Proxy()
+{
+  wxLogDebug( _T("PreferenceDlgWX::SetupLabelDialog_Proxy") );
+
+  // Setup notebook tab names :
+  int page_id;
+  wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
+  page_id = GetPagePosFromXMLID( _T("wxID_PAGE_PROXY") );
+  if (page_id >= 0)
+    p_notebook->SetPageText( page_id, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_PROXY_MENU)) );
+
+  XRCCTRL(*this, "wxID_LABEL_PROXYHTTP", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_HTTP_PROXY)) );
+  XRCCTRL(*this, "wxID_LABEL_PROXYDOM", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_PROXY_DOMAIN)) );
+  XRCCTRL(*this, "wxID_LABEL_PROXYSPACE", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_PROXY_DOMAIN_INFO)) );
+
+  XRCCTRL(*this, "wxID_RADIOBOX_NOTUSEPROXY", wxRadioButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_DONT_PROXY_DOMAIN)) );
+  XRCCTRL(*this, "wxID_RADIOBOX_USEPROXY", wxRadioButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_ONLY_PROXY_DOMAIN)) );
+}
+
+/*----------------------------------------------------------------------
+  SetupDialog_Proxy send init value to dialog 
+  params:
+    + const Prop_Proxy & prop : the values to setup into the dialog
+  returns:
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::SetupDialog_Proxy( const Prop_Proxy & prop )
+{
+  wxLogDebug( _T("PreferenceDlgWX::SetupDialog_Proxy") );
+
+  XRCCTRL(*this, "wxID_VALUE_PROXYHTTP", wxTextCtrl)->SetValue( TtaConvMessageToWX(prop.HttpProxy) );
+  XRCCTRL(*this, "wxID_VALUE_PROXYDOM", wxTextCtrl)->SetValue( TtaConvMessageToWX(prop.ProxyDomain) );
+
+  XRCCTRL(*this, "wxID_RADIOBOX_USEPROXY", wxRadioButton)->SetValue(prop.ProxyDomainIsOnlyProxy);
+  XRCCTRL(*this, "wxID_RADIOBOX_NOTUSEPROXY", wxRadioButton)->SetValue(!prop.ProxyDomainIsOnlyProxy);
+}
+
+/*----------------------------------------------------------------------
+  GetValueDialog_Proxy get dialog values
+  params:
+  returns:
+    + Prop_Proxy prop : the dialog values
+  ----------------------------------------------------------------------*/
+Prop_Proxy PreferenceDlgWX::GetValueDialog_Proxy()
+{
+  wxString        value;
+  Prop_Proxy      prop;
+  memset( &prop, 0, sizeof(Prop_Proxy) );
+
+  value = XRCCTRL(*this, "wxID_VALUE_PROXYHTTP", wxTextCtrl)->GetValue();
+  strcpy( prop.HttpProxy, (const char*)value.mb_str(wxConvUTF8) );
+
+  value = XRCCTRL(*this, "wxID_VALUE_PROXYDOM", wxTextCtrl)->GetValue();
+  strcpy( prop.ProxyDomain, (const char*)value.mb_str(wxConvUTF8) );
+
+  prop.ProxyDomainIsOnlyProxy = XRCCTRL(*this, "wxID_RADIOBOX_USEPROXY", wxRadioButton)->GetValue();
+
+  return prop;
+}
+
+
 /*----------------------------------------------------------------------
   OnOk called when the user validates his selection
   params:
@@ -492,6 +563,10 @@ void PreferenceDlgWX::OnOk( wxCommandEvent& event )
   Prop_Cache prop_cache = GetValueDialog_Cache();
   SetProp_Cache( &prop_cache );
   ThotCallback (GetPrefCacheBase() + CacheMenu, INTEGER_DATA, (char*) 1);
+
+  Prop_Proxy prop_px = GetValueDialog_Proxy();
+  SetProp_Proxy( &prop_px );
+  ThotCallback (GetPrefProxyBase() + ProxyMenu, INTEGER_DATA, (char*) 1);
 
   ThotCallback (m_Ref, INTEGER_DATA, (char*) 1);
 }
@@ -530,6 +605,11 @@ void PreferenceDlgWX::OnDefault( wxCommandEvent& event )
       ThotCallback (GetPrefCacheBase() + CacheMenu, INTEGER_DATA, (char*) 2);
       SetupDialog_Cache( GetProp_Cache() );
     }
+  else if ( p_page->GetId() == wxXmlResource::GetXRCID(_T("wxID_PAGE_PROXY")) )
+    {
+      ThotCallback (GetPrefProxyBase() + ProxyMenu, INTEGER_DATA, (char*) 2);
+      SetupDialog_Proxy( GetProp_Proxy() );
+    }
 
   ThotCallback (m_Ref, INTEGER_DATA, (char*) 2);
 }
@@ -545,6 +625,7 @@ void PreferenceDlgWX::OnCancel( wxCommandEvent& event )
   ThotCallback (GetPrefBrowseBase() + BrowseMenu, INTEGER_DATA, (char*) 0);
   ThotCallback (GetPrefPublishBase() + PublishMenu, INTEGER_DATA, (char*) 0);
   ThotCallback (GetPrefCacheBase() + CacheMenu, INTEGER_DATA, (char*) 0);
+  ThotCallback (GetPrefProxyBase() + ProxyMenu, INTEGER_DATA, (char*) 0);
   ThotCallback (m_Ref, INTEGER_DATA, (char*) 0);
 }
 

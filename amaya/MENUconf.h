@@ -146,4 +146,11 @@ typedef struct Prop_Cache_t
   int      MaxCacheFile;
 } Prop_Cache;
 
+typedef struct Prop_Proxy_t
+{
+  char     HttpProxy[MAX_LENGTH];
+  char     ProxyDomain[MAX_LENGTH];
+  ThotBool ProxyDomainIsOnlyProxy;
+} Prop_Proxy;
+
 #endif /* _MENUCONF.h */

@@ -49,6 +49,11 @@ private:
   Prop_Cache GetValueDialog_Cache();
   void OnEmptyCache( wxCommandEvent& event );
 
+  // "Proxy" tab
+  void SetupLabelDialog_Proxy();
+  void SetupDialog_Proxy( const Prop_Proxy & prop );
+  Prop_Proxy GetValueDialog_Proxy();
+
   int GetPagePosFromXMLID( const wxString & xml_id );
 
   void OnOk( wxCommandEvent& event );
