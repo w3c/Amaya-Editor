@@ -1114,7 +1114,7 @@ boolean		    history;
 	 content_type[i] = EOS;
 	 if (strcasecmp (content_type, "text") == 0)
 	    {
-	    if (strncasecmp (&content_type[i+1], "html", 4) == 0)
+	    if (strcasecmp (&content_type[i+1], "html") == 0)
 	       HTMLfile = TRUE;
 	    else
 	       PlainText = TRUE;
@@ -1140,9 +1140,12 @@ boolean		    history;
      {
 	if (DocumentURLs[doc])
 	   {
-	   /* save the URL of the old document in the history */
+	   /* save the URL of the old document in the history, if the same
+	      window is reused, i.e. if the old document has not been
+	      modified */
 	   if (history)
-	      AddDocHistory (doc, DocumentURLs[doc]);
+	      if (!TtaIsDocumentModified (doc))
+	         AddDocHistory (doc, DocumentURLs[doc]);
 	   /* free the previous document */
 	   newdoc = InitDocView (doc, pathname);
 	   }
@@ -1270,7 +1273,7 @@ View                view;
        /* load the document from the Web */
 #ifdef AMAYA_JAVA
        toparse = GetObjectWWW (newdoc, pathname, NULL, tempfile, AMAYA_SYNC | AMAYA_NOCACHE,
-			       NULL, NULL, NULL, NULL, YES, &content_type[0]);
+			       NULL, NULL, NULL, NULL, YES);
 #else /* AMAYA_JAVA */
        toparse = GetObjectWWW (newdoc, pathname, NULL, tempfile, AMAYA_SYNC,
 			       NULL, NULL, NULL, NULL, YES, content_type);
@@ -2126,7 +2129,10 @@ char               *data;
 	   if (SavingDocument != 0)
 	     DoSaveAs ();
 	   else if (SavingObject != 0)
+	     {
 	     DoSaveObjectAs ();
+	     /***** TODO delete the temporary file *****/
+	     }
 	 }
        else if (val == 2)
 	 /* "Clear" button */
@@ -2154,6 +2160,11 @@ char               *data;
 	 /* "Cancel" button */
 	 {
 	   TtaDestroyDialogue (BaseDialog + SaveForm);
+	   if (SavingObject != 0)
+	      /* delete temporary file */
+	      {
+	      /******** TODO *******/;
+	      }
 	   SavingDocument = 0;
 	   SavingObject = 0;
 	 }

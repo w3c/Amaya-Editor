@@ -193,9 +193,11 @@ View                view;
    if (DocHistory[doc][prev].HistUrl == NULL)
       return;
 
-   /* if the document has been edited, ask the user to confirm */
-   if (!CanReplaceCurrentDocument (doc, view))
-      return;
+   /* if the document has been edited, ask the user to confirm, except
+      if it's simply a jump in the same document */
+   if (strcmp(DocumentURLs[doc], DocHistory[doc][prev].HistUrl))
+      if (!CanReplaceCurrentDocument (doc, view))
+         return;
 
    /* the current document must be put in the history if it's the last one */
    hist = FALSE;
@@ -274,9 +276,11 @@ View                view;
    if (DocHistory[doc][next].HistUrl == NULL)
       return;
 
-   /* if the document has been edited, ask the user to confirm */
-   if (!CanReplaceCurrentDocument (doc, view))
-      return;
+   /* if the document has been edited, ask the user to confirm, except
+      if it's simply a jump in the same document */
+   if (strcmp(DocumentURLs[doc], DocHistory[doc][next].HistUrl))
+      if (!CanReplaceCurrentDocument (doc, view))
+         return;
 
    /* set the Back button on if it's off */
    i = DocHistoryIndex[doc];
