@@ -1,8 +1,6 @@
 
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /*
-   filesystem.c : Acces aux fichiers Unix
+   platform.c : basic system functions
  */
 
 #include "thot_sys.h"
@@ -117,39 +115,39 @@ int                 FileExist (filename)
 char               *filename;
 #endif /* __STDC__ */
 {
-   int                 ret = 0;
+   int                 status = 0;
 
 #ifdef WWW_MSWINDOWS
    DWORD               attribs;
 
    attribs = GetFileAttributes (filename);
    if (attribs == 0xFFFFFFFF)
-      ret = 0;
+      status = 0;
    else if (attribs & FILE_ATTRIBUTE_DIRECTORY)
-      ret = 0;
+      status = 0;
    else
-      ret = 1;
+      status = 1;
 #else  /* WWW_MSWINDOWS */
    int                 filedes;
    struct stat         statinfo;
 
    filedes = open (filename, 0);
    if (filedes < 0)
-      ret = 0;
+      status = 0;
    else
      {
 	if (fstat (filedes, &statinfo) != -1)
 	  {
 	     if (statinfo.st_mode & S_IFDIR)
 		/* on ne veut pas de directory */
-		ret = 0;
+		status = 0;
 	     else
-		ret = 1;
+		status = 1;
 	  }
 	close (filedes);
      }
 #endif /* !WWW_MSWINDOWS */
-   return ret;
+   return status;
 }
 
 /* ---------------------------------------------------------------------- */
@@ -170,8 +168,8 @@ char               *filename;
 }
 
 /* ---------------------------------------------------------------------- */
-/* | static ThotDirBrowse_copyFile - copy the filename from the           */
-/* |                                 platform's directory structure       */
+/* | static ThotDirBrowseCopyFile - copy the filename from the          | */
+/* |                                 platform's directory structure     | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 static int          ThotDirBrowse_copyFile (ThotDirBrowse * me)
