@@ -2218,13 +2218,6 @@ PtrSSchema          newSSchema;
 	      if (CanSurround (newTypeNum, newSSchema, firstEl, lastEl, pDoc))
 		 done = DoSurround (firstEl, lastEl, 0, 0, pDoc, newTypeNum,
 				    newSSchema);
-	}
-   if (!done)
-      /* essaie les transformations de type par patterns */
-     {
-	elType.ElSSchema = (SSchema) newSSchema;
-	elType.ElTypeNum = newTypeNum;
-	done = TransformIntoType (elType, IdentDocument (pDoc));
      }
    return done;
 }
@@ -2253,6 +2246,7 @@ boolean             Before;
 {
    PtrElement          firstSel, lastSel, pNew, pF, pSibling, pEl, pElem;
    PtrDocument         pSelDoc;
+   ElementType	       elType;
    NotifyElement       notifyEl;
    int                 firstChar, lastChar, NSiblings, ancestorRule, rule;
    boolean             PointInsertion, ok, createAfter, splitElem, elConst,
@@ -2319,6 +2313,14 @@ boolean             Before;
 		     selectionne's en un element du type demande' */
 		  ok = ChangeElementType (firstSel, lastSel, pSelDoc, typeNum,
 					  pSS);
+		  if (!ok)
+		     /* ca n'a pas marche'. essaie les transformations de */
+		     /* type par patterns */
+		     {
+			elType.ElSSchema = (SSchema) pSS;
+			elType.ElTypeNum = typeNum;
+			ok = TransformIntoType (elType, IdentDocument (pSelDoc));
+		     }
 		  /* si ca n'a pas marche' et si plusieurs elements sont
 		     selectionne's, on essaie de transformer chaque element
 		     selectionne' en un element du type demande' */
