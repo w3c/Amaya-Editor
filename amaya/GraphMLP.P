@@ -234,9 +234,9 @@ BOXES
 		END;
 	END;
 
-   MATH_S:
+   FOREIGNOBJECT_S:
 	BEGIN
-	Content: Text 'math';
+	Content: Text 'foreignObject';
 	Visibility: 0;
 	IN Graph_Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -874,11 +874,15 @@ RULES
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
         	Height	: Enclosed . Height;
+	   	MarginTop: 0;
+	   	MarginBottom: 0;
 		Visibility: 10;
 		END;
 	IN Graph_Alternate_view BEGIN
 		Width: Enclosing . Width;
         	Height	: Enclosed . Height;
+	   	MarginTop: 0;
+	   	MarginBottom: 0;
 		END;		
 	END;
 
@@ -1199,12 +1203,10 @@ RULES
 		END;
 	END;
 
-   Math:
+   foreignObject:
 	BEGIN
-	CreateBefore (MATH_S);
+	CreateBefore (FOREIGNOBJECT_S);
 	CreateWith (VerticalLine);
-	HorizPos: Left = Enclosing . Left + 1 pt  UserSpecified;
-	VertPos:  Top = Enclosing . Top + 1 pt  UserSpecified;
 	IN Graph_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - STRUCT_INDENT;

@@ -2003,7 +2003,7 @@ ThotBool            recordLineNb;
 
 {
    PtrElement          pAsc;
-   PtrAttribute        pAttr;
+   PtrAttribute        pAttr, nextAttr;
    PtrTSchema          pTSch;
    int                 att, nAttr = 0;
 
@@ -2026,6 +2026,23 @@ ThotBool            recordLineNb;
    /* parcourt les attributs de l'element */
    while (pAttr != NULL)
      {
+     /* get the next attribute to be processed: an action associated with
+	event AttrExport could remove the current attribute */
+     if (position == TAfter)
+       /* passe a l'attribut precedent de l'element */
+       {
+       if (nAttr > 0)
+	 {
+	 nAttr--;
+	 nextAttr = AttrTable[nAttr];
+	 }
+       else
+	 nextAttr = NULL;
+       }
+     else
+       /* passe a l'attribut suivant de l'element */
+       nextAttr = pAttr->AeNext;
+     /* process the current attribute */
      pTSch = GetTranslationSchema (pAttr->AeAttrSSchema);
      if (pTSch != NULL)
        if (pTSch->TsAttrTRule[pAttr->AeAttrNum - 1].AtrElemType == 0)
@@ -2033,20 +2050,8 @@ ThotBool            recordLineNb;
 	 /* n'importe quel type d'element, on les applique */
 	 ApplyAttrRulesToElem (position, pEl, pAttr, removeEl, transChar,
 			       lineBreak, pDoc, recordLineNb);
-     if (position == TAfter)
-       /* passe a l'attribut precedent de l'element */
-       {
-       if (nAttr > 0)
-	 {
-	 nAttr--;
-	 pAttr = AttrTable[nAttr];
-	 }
-       else
-	 pAttr = NULL;
-       }
-     else
-       /* passe a l'attribut suivant de l'element */
-       pAttr = pAttr->AeNext;
+     /* next attribute to be processed */
+     pAttr = nextAttr;
      }
    /* produit la traduction des attributs des elements ascendants qui */
    /* s'appliquent aux elements du type de notre element */

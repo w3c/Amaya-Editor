@@ -624,7 +624,7 @@ int                 construct;
   SSchema            docSchema, mathSchema;
   int                c1, c2, i, j, len, oldStructureChecking, col;
   ThotBool	     before, ParBlock, emptySel, ok, insertSibling,
-		     selectFirstChild, displayTableForm, mrowCreated;
+		     selectFirstChild, displayTableForm, registered;
 
       doc = TtaGetSelectedDocument ();
       if (!TtaGetDocumentAccessMode (doc))
@@ -638,7 +638,13 @@ int                 construct;
       elType = TtaGetElementType (sibling);
       docSchema = TtaGetDocumentSSchema (doc);
 
+#ifdef GRAPHML
+      if (construct == 1 &&
+	  ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")))
+	/* Math button and selection is not in a SVG element */
+#else
       if (construct == 1)
+#endif
 	/* Math button */
 	{
 	if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")))
@@ -664,7 +670,7 @@ int                 construct;
       before = TRUE;
 
       TtaOpenUndoSequence (doc, sibling, last, c1, c2);
-      mrowCreated = FALSE;
+      registered = FALSE;
 
       /* Check whether the selected element is a MathML element */
       if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")) == 0)
@@ -682,14 +688,14 @@ int                 construct;
 		if (next)
 		  /* there is another character string after that one.
 		     split the enclosing mo, mn, mi or mtext */
-		   sibling = SplitTextInMathML (doc, sibling, c1,&mrowCreated);
+		   sibling = SplitTextInMathML (doc, sibling, c1,&registered);
 		else
 		   /* create the new element after the character string */
 		   before = FALSE;
 		}
 	      else
 		/* split the character string before the first selected char */
-		sibling = SplitTextInMathML (doc, sibling, c1, &mrowCreated);
+		sibling = SplitTextInMathML (doc, sibling, c1, &registered);
 	    }
 	}
       else
@@ -829,21 +835,40 @@ int                 construct;
 			      TEXT("GraphML")) == 0)
 		    /* selection is within a GraphML element */
 		    {
-		    elType.ElTypeNum = GraphML_EL_Math;
+		    elType.ElTypeNum = GraphML_EL_foreignObject;
 	            if (TtaCanInsertSibling (elType, sibling, before, doc))
-	               /* insert the new Math element as a sibling element */
-	                insertSibling = TRUE;
+	               /* insert a foreignObject element as a sibling */
+	               insertSibling = TRUE;
 	            else if (TtaCanInsertFirstChild (elType, sibling,doc))
-	               /* insert the new Math element as a child element */
+	               /* insert a foreignObject element as a child */
 	               insertSibling = FALSE;
 	            else if (TtaCanInsertSibling (elType,
-					TtaGetParent (sibling), before, doc))
+					  TtaGetParent (sibling), before, doc))
+		        /* insert a foreignObject element as a sibling of the
+			   parent element */
 			{
 			sibling = TtaGetParent (sibling);
 			insertSibling = TRUE;
 			}
 		    else
 			sibling = NULL;
+		    if (sibling)
+		      {
+			/* create a foreigObject element and insert it */
+			el = TtaNewElement (doc, elType);
+			if (insertSibling)
+			  TtaInsertSibling (el, sibling, before, doc);
+			else
+			  TtaInsertFirstChild (&el, sibling, doc);
+			/* register the new element in the Undo queue */
+			TtaRegisterElementCreate (el, doc);
+			registered = TRUE;
+			/* prepare creation of a child Math element */
+			elType.ElSSchema = mathSchema;
+			elType.ElTypeNum = MathML_EL_MathML;
+			sibling = el;
+			insertSibling = FALSE;
+		      }
 		    }
 		 else
 		    /* not within a GraphML element */
@@ -862,15 +887,31 @@ int                 construct;
                  {
 		 /* create a Math element */
                  el = TtaNewTree (doc, elType, "");
+	         /* do not check the Thot abstract tree against the structure/
+		    schema while inserting the Math element */
+		 oldStructureChecking = TtaGetStructureChecking (doc);
+		 TtaSetStructureChecking (0, doc);
                  if (insertSibling)
                     /* insert the new Math element as a sibling element */
                     TtaInsertSibling (el, sibling, before, doc);
                  else
                     /* insert the new Math element as a child element */
                     TtaInsertFirstChild (&el, sibling, doc);
+		 /* restore structure checking mode */
+		 TtaSetStructureChecking ((ThotBool)oldStructureChecking, doc);
                  sibling = TtaGetFirstChild (el);
 		 /* register the new Math element in the Undo queue */
-		 TtaRegisterElementCreate (el, doc);
+		 if (!registered)
+		    TtaRegisterElementCreate (el, doc);
+		 if (construct == 1)
+		   /* The <math> element requested is created. Return */
+		   {
+		     TtaSetDocumentModified (doc);
+		     TtaSetDisplayMode (doc, DisplayImmediately);
+		     TtaSelectElement (doc, sibling);
+		     TtaCloseUndoSequence (doc);
+		     return;
+		   }
                  }
 	    }
 	}
@@ -1028,8 +1069,11 @@ int                 construct;
 		{
 		  /* replace the empty MROW by the new element*/
 		  TtaInsertSibling (el, row, TRUE, doc);
-		  TtaRegisterElementCreate (el, doc);
-		  TtaRegisterElementDelete (row, doc);
+		  if (!registered)
+		    {
+		      TtaRegisterElementCreate (el, doc);
+		      TtaRegisterElementDelete (row, doc);
+		    }
 		  TtaRemoveTree (row, doc);
 		}
 	      else
@@ -1043,7 +1087,8 @@ int                 construct;
 		    }
 		  else
 		    TtaInsertSibling (el, sibling, before, doc);
-		  TtaRegisterElementCreate (el, doc);
+		  if (!registered)
+		    TtaRegisterElementCreate (el, doc);
 		}
 	    }
 	  else if (elType.ElTypeNum == MathML_EL_Construct)
@@ -1051,7 +1096,8 @@ int                 construct;
 	      /* replace the Construct element */
 	      TtaInsertFirstChild (&el, sibling, doc);
 	      RemoveAttr (el, doc, MathML_ATTR_IntPlaceholder);
-	      TtaRegisterElementCreate (el, doc);
+	      if (!registered)
+	        TtaRegisterElementCreate (el, doc);
 	    }
 	  else
 	    {
@@ -1061,7 +1107,7 @@ int                 construct;
 		sibling = TtaGetParent (sibling);
 	      /* insert the new element */
 	      TtaInsertSibling (el, sibling, before, doc);
-	      if (!mrowCreated)
+	      if (!registered)
 		 TtaRegisterElementCreate (el, doc);
 	    }
 	  
@@ -1130,8 +1176,8 @@ int                 construct;
 
 	  /* insert placeholders before and/or after the new element if
 	    they are needed */
-	  placeholderEl = InsertPlaceholder (el, TRUE, doc, !mrowCreated);
-	  placeholderEl = InsertPlaceholder (el, FALSE, doc, !mrowCreated);
+	  placeholderEl = InsertPlaceholder (el, TRUE, doc, !registered);
+	  placeholderEl = InsertPlaceholder (el, FALSE, doc, !registered);
 
 	  TtaSetDisplayMode (doc, DisplayImmediately);
 	  /* check the Thot abstract tree against the structure schema. */

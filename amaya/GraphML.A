@@ -27,8 +27,17 @@ ELEMENTS
 	ElemGraphModify.Post -> ControlPointChanged;
    GRAPHICS_UNIT:
 	ElemDelete.Post ->      GraphLeafDeleted;
+   foreignObject:
+	ElemExport.Pre ->       ExportForeignObject;
 
 ATTRIBUTES
+
+   id:
+        BEGIN
+        AttrCreate.Post -> UpdateAttrID;
+        AttrModify.Post -> UpdateAttrID;
+        AttrDelete.Post -> UpdateAttrID;
+        END;
 
    class:
         BEGIN
@@ -45,12 +54,8 @@ ATTRIBUTES
         AttrModify.Post -> UpdateStylePost;
         END;
  
-   id:
-        BEGIN
-        AttrCreate.Post -> UpdateAttrID;
-        AttrModify.Post -> UpdateAttrID;
-        AttrDelete.Post -> UpdateAttrID;
-        END;
+   Namespace:
+	AttrExport.Post -> NameSpaceGenerated;
 
    position:
 	AttrModify.Post -> AttrPositionChanged;

@@ -10,10 +10,10 @@ static ElemMapping    GraphMLElemMappingTable[] =
    {TEXT("circle"), SPACE, GraphML_EL_Circle, L_Other},
    {TEXT("closedspline"), SPACE, GraphML_EL_ClosedSpline, L_Other},
    {TEXT("desc"), SPACE, GraphML_EL_desc, L_Other},
+   {TEXT("foreignObject"), SPACE, GraphML_EL_foreignObject, L_Other},
    {TEXT("group"), SPACE, GraphML_EL_Group, L_Other},
    {TEXT("label"), 'X', GraphML_EL_Label, L_Other}, /* see function GraphMLGetDTDName */
    {TEXT("line"), 'E', GraphML_EL_Line_, L_Other},
-   {TEXT("math"), 'X', GraphML_EL_Math, L_Other},   /* see function GraphMLGetDTDName */
    {TEXT("metadata"), SPACE, GraphML_EL_metadata, L_Other},
    {TEXT("oval"), SPACE, GraphML_EL_Oval, L_Other},
    {TEXT("polygon"), SPACE, GraphML_EL_Polygon, L_Other},

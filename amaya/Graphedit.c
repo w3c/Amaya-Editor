@@ -189,7 +189,7 @@ ThotBool ExtendSelectGraphMLElement(event)
 	 elType.ElTypeNum != GraphML_EL_Spline &&
 	 elType.ElTypeNum != GraphML_EL_ClosedSpline &&
 	 elType.ElTypeNum != GraphML_EL_Text_ &&
-	 elType.ElTypeNum != GraphML_EL_Math &&
+	 elType.ElTypeNum != GraphML_EL_foreignObject &&
 	 elType.ElTypeNum != GraphML_EL_Group))
       {
       elType.ElSSchema = graphSSchema;
@@ -209,7 +209,7 @@ ThotBool ExtendSelectGraphMLElement(event)
 	 elType.ElTypeNum != GraphML_EL_Spline &&
 	 elType.ElTypeNum != GraphML_EL_ClosedSpline &&
 	 elType.ElTypeNum != GraphML_EL_Text_ &&
-	 elType.ElTypeNum != GraphML_EL_Math &&
+	 elType.ElTypeNum != GraphML_EL_foreignObject &&
 	 elType.ElTypeNum != GraphML_EL_Group))
       {
       elType.ElSSchema = graphSSchema;
@@ -623,7 +623,7 @@ void GraphElemPasted(event)
       elType.ElTypeNum == GraphML_EL_Spline ||
       elType.ElTypeNum == GraphML_EL_ClosedSpline ||
       elType.ElTypeNum == GraphML_EL_Text_ ||
-      elType.ElTypeNum == GraphML_EL_Math ||
+      elType.ElTypeNum == GraphML_EL_foreignObject ||
       elType.ElTypeNum == GraphML_EL_Group ||
       elType.ElTypeNum == GraphML_EL_Polygon )
      {
@@ -739,7 +739,7 @@ ThotBool   GraphicsPRuleChange (event)
           elType.ElTypeNum == GraphML_EL_Spline ||
           elType.ElTypeNum == GraphML_EL_ClosedSpline ||
           elType.ElTypeNum == GraphML_EL_Text_ ||
-          elType.ElTypeNum == GraphML_EL_Math ||
+          elType.ElTypeNum == GraphML_EL_foreignObject ||
           elType.ElTypeNum == GraphML_EL_Group)
         {
           TtaGiveBoxPosition (el, doc, mainView, UnPoint, &xPos, &yPos);
@@ -872,6 +872,58 @@ void GraphLeafDeleted(event)
    /* don't delete anything if event is sent by Undo */
    if (!event->info)
       TtaDeleteTree (event->element, event->document);
+}
+
+/*----------------------------------------------------------------------
+ ExportForeignObject
+ A foreignObject element will be generated in the output file.
+ Associate a Namespace attribute with its child. This attribute will be
+ generated with the child.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool ExportForeignObject (NotifyElement *event)
+#else /* __STDC__*/
+ThotBool ExportForeignObject (event)
+     NotifyElement *event;
+#endif /* __STDC__*/
+{
+  Element       child;
+  ElementType   elType;
+  Attribute     attr;
+  AttributeType attrType;
+
+  child = TtaGetFirstChild (event->element);
+  while (child)
+    {
+      elType = TtaGetElementType (child);
+      if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
+	 /* child is an HTML element */
+	{
+        attrType.AttrTypeNum = GraphML_ATTR_Namespace;
+        attrType.AttrSSchema = TtaGetElementType (event->element).ElSSchema;
+	attr = TtaNewAttribute (attrType);
+	TtaAttachAttribute (child, attr, event->document);
+        TtaSetAttributeText (attr, TEXT("http://www.w3.org/1999/xhtml"), child,
+			     event->document);
+	}
+      TtaNextSibling (&child);
+    }
+  return FALSE; /* let Thot perform normal operation */
+}
+
+/*----------------------------------------------------------------------
+ NameSpaceGenerated
+ An attribute Namespace has been generated for a child of a foreign
+ element. Delete that attribute.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void NameSpaceGenerated (NotifyAttribute *event)
+#else /* __STDC__*/
+void NameSpaceGenerated (event)
+     NotifyAttribute *event;
+#endif /* __STDC__*/
+{
+   TtaRemoveAttribute (event->element, event->attribute, event->document);
 }
 
 /*----------------------------------------------------------------------
@@ -1073,7 +1125,7 @@ int                 construct;
 	     newType.ElTypeNum == GraphML_EL_Circle ||
 	     newType.ElTypeNum == GraphML_EL_Oval ||
 	     newType.ElTypeNum == GraphML_EL_Text_ ||
-	     newType.ElTypeNum == GraphML_EL_Math)
+	     newType.ElTypeNum == GraphML_EL_foreignObject)
 	   TtaAskFirstCreation ();
        /* create the new element */
        newEl = TtaNewElement (doc, newType);

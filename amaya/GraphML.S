@@ -15,6 +15,7 @@ ATTR
    { global attributes for Amaya }
    Invalid_attribute = TEXT;
    Ghost_restruct = TEXT;
+   Namespace = TEXT;        { for children of element foreignObject }
 
 STRUCT
 
@@ -227,17 +228,16 @@ STRUCT
                                 IntUpDistance;
                                 IntDownDistance)
                 = HTML;
-            Math
-                (ATTR position;
-                                IntPosX; IntPosY;
-                      align;
-                      valign;
-                      depth_;
-                                IntLeftDistance;
-                                IntRightDistance;
-                                IntUpDistance;
-                                IntDownDistance)
-                = MathML;
+
+	    foreignObject			{ NEW }
+	        (ATTR x; 
+	              y;
+                      width_;
+                      height_; 
+	              fill;
+	              stroke)
+		= BEGIN CASE OF HTML; MathML; END; END;
+	              
             Group
                 (ATTR position;
                                 IntPosX; IntPosY;
@@ -271,7 +271,7 @@ EXCEPT
    Spline:              MoveResize, HighlightChildren, NoShowBox;
    ClosedSpline:        MoveResize, HighlightChildren, NoShowBox;
    Text_:               MoveResize;
-   Math:                MoveResize;
+   foreignObject:       MoveResize;
    Group:               MoveResize;
    PICTURE:             MoveResize;
    TEXT:                NoMove, NoResize;

@@ -242,16 +242,16 @@ RULES
 	create 'text>\12' after;
 	END;
 
-   Math:
+   foreignObject:
 	BEGIN
 	create SOT;
-	create 'math';
+	create 'foreignObject';
 	create attributes;
 	create CloseTagNL;
 	indent +2;
 	indent -2 after;
 	create SCT after;
-	create 'math>\12' after;
+	create 'foreignObject>\12' after;
 	END;
 
    Group:
@@ -271,6 +271,14 @@ RULES
 
 ATTRIBUTES
 
+   id:
+        begin
+        create SAN;
+        create 'id="';
+        create id;
+        create DoubleQuote;
+        end;
+ 
    class:
         begin
         create SAN;
@@ -287,14 +295,14 @@ ATTRIBUTES
         create DoubleQuote;
         end;
  
-   id:
-        begin
+   Namespace:
+	begin
         create SAN;
-        create 'id="';
-        create id;
+        create 'xmlns="';
+        create Namespace;
         create DoubleQuote;
-        end;
- 
+	end;
+
    linewidth:
 	BEGIN
 	create SAN;
