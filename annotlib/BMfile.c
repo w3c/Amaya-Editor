@@ -780,7 +780,7 @@ static void Model_getItemInfo (librdf_world *world, librdf_model *model,
 /*----------------------------------------------------------------------
   Model_dumpAsList
   topics == TRUE means we want to dump the topics.
-  topics == TRUE means we want to dump the bookmarks.
+  topics == FALSE means we want to dump the bookmarks.
   dump contains the info list of topics and bookmarks from the model.
   Returns the number of matching statements.
   ----------------------------------------------------------------------*/
