@@ -3124,30 +3124,39 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   noWrappedWidth = 0;
   pAb = pBox->BxAbstractBox;
   pRootAb = ViewFrameTable[frame - 1].FrAbstractBox;
+  /* save current width */
+  width = pBox->BxW;
   extensibleBox = (pBox->BxContentWidth ||
 		   (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum));
-  /* what is the maximum width allowed */
+ /* what is the maximum width allowed */
   pParent = pAb->AbEnclosing;
   if ((pAb->AbWidth.DimUnit == UnAuto || pBox->BxType == BoFloatBlock) &&
-      pParent &&
-      pAb->AbWidth.DimAbRef == NULL && pAb->AbWidth.DimValue == -1)
+      pParent)
     {
       /* limit to the enclosing box */
-       while (pParent && pParent->AbBox &&
-	     ((pParent->AbWidth.DimAbRef == NULL &&
-	       pParent->AbWidth.DimValue == -1) ||
-	      pParent->AbBox->BxType == BoGhost ||
-	      pParent->AbBox->BxType == BoFloatGhost))
-	pParent = pParent->AbEnclosing;
+      if (pAb->AbWidth.DimAbRef == NULL && pAb->AbWidth.DimValue == -1)
+	while (pParent && pParent->AbBox &&
+	       ((pParent->AbWidth.DimAbRef == NULL &&
+		 pParent->AbWidth.DimValue == -1) ||
+		pParent->AbBox->BxType == BoGhost ||
+		pParent->AbBox->BxType == BoFloatGhost))
+	  pParent = pParent->AbEnclosing;
       if (pParent && pParent->AbBox &&
-	  (pParent->AbBox->BxType != BoCell || pParent->AbBox->BxW != 20))
+	  (pParent->AbBox->BxType != BoCell || pParent->AbBox->BxW > 20))
+	   /* keep the box width */
 	maxWidth = pParent->AbBox->BxW;
       else
-	maxWidth = 30 * DOT_PER_INCH;
+	{
+	  /* manage this box as an extensible box */
+	  maxWidth = 30 * DOT_PER_INCH;
+	  pBox->BxW = maxWidth;
+	}
       pBox->BxRuleWidth = maxWidth;
     }
   else
     maxWidth = 30 * DOT_PER_INCH;
+  if (extensibleBox)
+    pBox->BxW = maxWidth;
 
   pNextBox = NULL;
   full = TRUE;
@@ -3202,17 +3211,11 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   spacing = lineSpacing - BoxFontHeight (pBox->BxFont);
   standard = (spacing >= 0);
   spacing = 0;
-  width = pBox->BxW;
-  if (width > BoxCharacterWidth (119, pBox->BxFont)/*'w'*/ || extensibleBox)
+  if (pBox->BxW > BoxCharacterWidth (119, pBox->BxFont)/*'w'*/ || extensibleBox)
     {
       /* compute the indent */
       if (extensibleBox)
-	{
-	  indent = 0;
-	  /* the real width will be know later */
-	  width = maxWidth;
-	  pBox->BxW = width;
-	}
+	indent = 0;
       else if (pAb->AbIndentUnit == UnPercent)
 	indent = PixelValue (pAb->AbIndent, UnPercent,
 				 (PtrAbstractBox) width, 0);
@@ -3555,9 +3558,9 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	  FreeLine (pLine);
 	  pLine = NULL;
 	}
-      /* restore the right width */
-      pBox->BxW = width;
     }
+  /* restore the right width */
+  pBox->BxW = width;
   /* now add margins, borders and paddings to min and max widths */
   pBox->BxMinWidth += left + right;
   pBox->BxMaxWidth += left + right;
