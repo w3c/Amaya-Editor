@@ -1590,6 +1590,10 @@ void FreeDocumentResource (Document doc)
 
 	  if (DocumentTypes[doc] == docImage)
 	    DocumentTypes[doc] = docHTML;
+#ifdef BOOKMARKS
+	  if (DocumentTypes[doc] == docBookmark)
+	    DocumentTypes[doc] = docHTML;
+#endif /* BOOKMARKS */
 	}
       TtaFreeMemory (DocumentURLs[doc]);
       DocumentURLs[doc] = NULL;
