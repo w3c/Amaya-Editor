@@ -5717,11 +5717,17 @@ CHARSET        *charset;
 		      if (ptr && ptr < end)
 			*parsingLevel = L_Strict;
 		    }
-		  else if (strncmp (&FileBuffer[i], "<!--", 9))
+		  else if (!strncmp (&FileBuffer[i], "<!--", 4))
+		    {
+		      /* it's a comment */
+		      i += 4;
+		      found = TRUE;
+		    }
+		  else
 		    {
 		      /* it's not a comment */
-		      i += 9;
 		      /* it's not necessary to continue */
+		      i += 4;
 		      found = FALSE;
 		      endOfFile = TRUE;
 		    }

@@ -2157,6 +2157,7 @@ ThotBool            history;
 	{
 	  /* it seems to be an HTML document */
 	  docType = docHTML;
+	  parsingLevel = L_Transitional;
 	  unknown = FALSE;
 	}
       else if (isXML || IsXMLName (pathname))
