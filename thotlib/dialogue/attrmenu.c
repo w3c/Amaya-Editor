@@ -47,12 +47,11 @@ static ThotBool     AttrFormExists = FALSE;
 static ThotBool     MandatoryAttrFormExists = FALSE;
 #ifdef _WINDOWS
 static ThotBool     dlgInitialized = FALSE; 
-static CHAR_T         WIN_Lab [1024];
+static CHAR_T       WIN_Lab [1024];
 static int          WIN_nbItem;
-static CHAR_T         WIN_title [MAX_NAME_LENGTH + 2];
+static CHAR_T       WIN_title [MAX_NAME_LENGTH + 2];
 
-int                 WIN_MenuAlphabet;
-CHAR_T                WIN_buffMenu [MAX_TXT_LEN];
+CHAR_T              WIN_buffMenu [MAX_TXT_LEN];
 #endif /* _WINDOWS */
 
 
@@ -62,7 +61,7 @@ static PtrSSchema   AttrStruct[MAX_MENU * 2];
 static int          AttrNumber[MAX_MENU * 2];
 static ThotBool     AttrOblig[MAX_MENU * 2];
 static ThotBool     AttrEvent[MAX_MENU* 2];
-static CHAR_T         TextAttrValue[LgMaxAttrText];
+static CHAR_T       TextAttrValue[LgMaxAttrText];
 static PtrSSchema   SchCurrentAttr = NULL;
 static int          EventMenu[MAX_FRAME];
 static int          NumCurrentAttr = 0;
@@ -163,15 +162,17 @@ PtrAttribute        currAttr;
 
 #endif /* __STDC__ */
 {
-   int                 i, defItem, nbItem, nbLanguages, firstLanguage, length;
-   CHAR_T                bufMenu[MAX_TXT_LEN];
-   CHAR_T                string[MAX_TXT_LEN];
+#ifndef _WINDOWS
+   CHAR_T              bufMenu[MAX_TXT_LEN];
+#endif /* _WINDOWS */
+   CHAR_T              string[MAX_TXT_LEN];
    STRING              ptr;
    Language            language;
    Name                languageValue;
    CHAR_T                Lab[200];
    PtrAttribute        pHeritAttr;
    PtrElement          pElAttr;
+   int                 i, defItem, nbItem, nbLanguages, firstLanguage, length;
 
    /* c'est l'attribut Langue, on initialise le formulaire Langue */
    languageValue[0] = EOS;
@@ -179,18 +180,19 @@ PtrAttribute        currAttr;
      ustrncpy (languageValue, currAttr->AeAttrText->BuContent, MAX_NAME_LENGTH);
 
    /* cree le formulaire avec les deux boutons Appliquer et Supprimer */
+#ifdef _WINDOWS
+   ptr = &WIN_buffMenu [0];
+#else  /* _WINDOWS */
    ustrcpy (bufMenu, TtaGetMessage (LIB, TMSG_APPLY));
    i = ustrlen (bufMenu) + 1;
    ustrcpy (&bufMenu[i], TtaGetMessage (LIB, TMSG_DEL_ATTR));
-#  ifdef _WINDOWS
-   ptr = &WIN_buffMenu [0];
-#  else  /* _WINDOWS */
    TtaNewSheet (NumFormLanguage, TtaGetViewFrame (doc, view),
 		TtaGetMessage (LIB, TMSG_LANGUAGE), 2, 
 		bufMenu, FALSE, 2, 'L', D_DONE);
    /* construit le selecteur des Langues */
    ptr = &bufMenu[0];
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
+
    nbItem = 0;
    defItem = -1;
    nbLanguages = TtaGetNumberOfLanguages ();
@@ -216,10 +218,7 @@ PtrAttribute        currAttr;
    if (nbItem == 0)
      {
        /* pas de langue definie, on cree une simple zone de saisie de texte */
-       MenuAlphaLangValue = 0;
-#ifdef _WINDOWS
-       WIN_MenuAlphabet = 0;
-#else /* _WINDOWS  */
+#ifndef _WINDOWS
        TtaNewTextForm (NumSelectLanguage, NumFormLanguage,
 		       TtaGetMessage (LIB, TMSG_LANGUAGE), 30, 1, FALSE);
        TtaSetTextForm (NumFormLanguage, languageValue);
@@ -227,12 +226,12 @@ PtrAttribute        currAttr;
      }
    else
      {
+#ifndef _WINDOWS 
        /* on cree un selecteur */
        if (nbItem >= 6)
 	 length = 6;
        else
 	 length = nbItem;
-#ifndef _WINDOWS 
        TtaNewSelector (NumSelectLanguage, NumFormLanguage,
 		       TtaGetMessage (LIB, TMSG_LANG_OF_EL), nbItem, bufMenu,
 		       length, NULL, TRUE, TRUE);
@@ -240,7 +239,6 @@ PtrAttribute        currAttr;
        if (languageValue[0] == EOS || defItem < 0)
 	 {
 	   TtaSetSelector (NumSelectLanguage, -1, NULL);
-	   MenuAlphaLangValue = -1;
 	   /* cherche la valeur heritee de l'attribut Langue */
 	   ustrcpy (Lab, TtaGetMessage (LIB, TMSG_INHERITED_LANG));
 	   pHeritAttr = GetTypedAttrAncestor (firstSel, 1, NULL, &pElAttr);
@@ -256,28 +254,11 @@ PtrAttribute        currAttr;
        else
 	 /* initialise le selecteur sur l'entree correspondante a la valeur
 	    courante de l'attribut langue. */
-	 {
-	   TtaSetSelector (NumSelectLanguage, defItem, languageValue);
-	   MenuAlphaLangValue = TtaGetLanguageIdFromAlphabet(TtaGetAlphabet (defItem));
-#ifdef _WINDOWS
-	   WIN_MenuAlphabet = MenuAlphaLangValue;
-#endif /* _WINDOWS */
 	   Lab[0] = EOS;
-	 }
      }
 
-   if (MenuAlphaLangValue == -1) {
-     MenuAlphaLangValue = TtaGetLanguageIdFromAlphabet(TtaGetAlphabet (language));
-#    ifdef _WINDOWS 
-     WIN_MenuAlphabet = MenuAlphaLangValue;
-#    endif /* _WINDOWS */
-   }
-#  ifndef _WINDOWS 
+#ifndef _WINDOWS 
    TtaNewLabel (NumLabelHeritedLanguage, NumFormLanguage, Lab);
-   TtaNewSubmenu (NumMenuAlphaLanguage, NumFormLanguage, 0 ,TtaGetMessage (LIB, TMSG_CHAR_ENCODING), nbItem, bufMenu, NULL, TRUE);
-   TtaSetMenuForm (NumMenuAlphaLanguage, MenuAlphaLangValue);	      
-#endif /* a supprimer */
-
    /* affiche le formulaire */
    TtaShowDialogue (NumFormLanguage, TRUE);
 #else  /* _WINDOWS */
@@ -364,86 +345,89 @@ LRESULT CALLBACK InitFormDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPA
 LRESULT CALLBACK InitFormDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 #endif /* __STDC__ */
 {
-	HWND        hwnTitle;
-	HWND        confirmButton;
-	HWND        doneButton;
-	STRING       pBuffer;
-	/* CHAR_T        attr_text [500]; */
-	int         i, index;
-	static STRING pWinBuffer;
-	static int    txtLength;
-	static HWND   hwnEdit ;
+  HWND        hwnTitle;
+  HWND        confirmButton;
+  HWND        doneButton;
+  STRING       pBuffer;
+  int         i, index;
+  static STRING pWinBuffer;
+  static int    txtLength;
+  static HWND   hwnEdit ;
+  
+  if (WIN_currAttr)
+    usprintf (attr_text, WIN_currAttr->AeAttrText->BuContent);
+  else
+    attr_text [0] = EOS ;
 
-	if (WIN_currAttr)
-	   usprintf (attr_text, WIN_currAttr->AeAttrText->BuContent);
-	else
-		attr_text [0] = EOS ;
-
-    switch (iMsg) {
-	       case WM_CREATE:
-			    /* Create static window for the title */
-			    hwnTitle = CreateWindow ("STATIC", WIN_pAttr1->AttrName, 
-					                     WS_CHILD | WS_VISIBLE | SS_LEFT,
-										 10, 10, 100, 15, hwnd, (HMENU) 99, 
-										 ((LPCREATESTRUCT) lParam)->hInstance, NULL); 
-
-			    /* Create Edit Window autoscrolled */
-				hwnEdit = CreateWindow ("EDIT", attr_text, 
-					                    WS_CHILD | WS_VISIBLE | WS_HSCROLL | WS_VSCROLL |
-										WS_BORDER | ES_LEFT | ES_MULTILINE |
-										ES_AUTOHSCROLL | ES_AUTOVSCROLL,
-										10, 30, 310, 110, hwnd, (HMENU) 1, ((LPCREATESTRUCT) lParam)->hInstance, NULL);
+  switch (iMsg)
+    {
+    case WM_CREATE:
+      /* Create static window for the title */
+      hwnTitle = CreateWindow ("STATIC", WIN_pAttr1->AttrName, 
+			       WS_CHILD | WS_VISIBLE | SS_LEFT,
+			       10, 10, 100, 15, hwnd, (HMENU) 99, 
+			       ((LPCREATESTRUCT) lParam)->hInstance, NULL); 
+      
+      /* Create Edit Window autoscrolled */
+      hwnEdit = CreateWindow ("EDIT", attr_text, 
+			      WS_CHILD | WS_VISIBLE | WS_HSCROLL | WS_VSCROLL |
+			      WS_BORDER | ES_LEFT | ES_MULTILINE |
+			      ES_AUTOHSCROLL | ES_AUTOVSCROLL,
+			      10, 30, 310, 110, hwnd, (HMENU) 1, ((LPCREATESTRUCT) lParam)->hInstance, NULL);
 				/* Create Confirm button */
-                confirmButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_LIB_CONFIRM), 
-                                              WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
-                                              50, 150, 100, 20, hwnd, 
-                                              (HMENU) ID_CONFIRM, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
-
+      confirmButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_LIB_CONFIRM), 
+				    WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
+				    50, 150, 100, 20, hwnd, 
+				    (HMENU) ID_CONFIRM, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
+      
 				/* Create Done Button */
-				doneButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_DONE), 
-                                           WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
-                                           185, 150, 100, 20, hwnd, 
-                                           (HMENU) ID_DONE, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
- 
-				break;
+      doneButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_DONE), 
+				 WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
+				 185, 150, 100, 20, hwnd, 
+				 (HMENU) ID_DONE, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
+      
+      break;
+      
+    case WM_DESTROY :
+      PostQuitMessage (0) ;
+      break;
+      
+    case WM_COMMAND:
+      switch (LOWORD (wParam))
+	{
+	case ID_CONFIRM:
+	  txtLength = GetWindowTextLength (hwnEdit);
+	  if ((pWinBuffer = (STRING) TtaGetMemory (txtLength + 1)))
+	    {
+	      GetWindowText (hwnEdit, pWinBuffer, txtLength + 1);
+	      index = 0;
+	      pBuffer = (STRING) TtaGetMemory (txtLength + 1);
+	      for (i = 0; i < txtLength; i ++) 
+		if (pWinBuffer [i] != '\r')
+		  pBuffer [index++] = pWinBuffer[i];
+	      
+	      pBuffer [index] = EOS;
+	    }
+	  else
+	    {
+	      pWinBuffer = "";	  
+	      pBuffer = "";
+	    }
 
-           case WM_DESTROY :
-                PostQuitMessage (0) ;
-                break;
+	  ThotCallback (NumMenuAttrTextNeeded, STRING_DATA, pBuffer);
+	  ThotCallback (NumMenuAttrRequired, INTEGER_DATA, (STRING) 1);
+	  DestroyWindow (hwnd);
+	  break;
 
-		   case WM_COMMAND:
-			    switch (LOWORD (wParam)) {
-				       case ID_CONFIRM:
-						    txtLength = GetWindowTextLength (hwnEdit);
-							if ((pWinBuffer = (STRING) TtaGetMemory (txtLength + 1))) {
-							   GetWindowText (hwnEdit, pWinBuffer, txtLength + 1);
-							   index = 0;
-							   pBuffer = (STRING) TtaGetMemory (txtLength + 1);
-							   for (i = 0; i < txtLength; i ++) 
-								   if (pWinBuffer [i] != '\r') {
-									  pBuffer [index++] = pWinBuffer[i];
-								   }
-
-							   pBuffer [index] = EOS;
-							} else {
-								  pWinBuffer = "";	  
-							      pBuffer = "";
-							}
-
-							ThotCallback (NumMenuAttrTextNeeded, STRING_DATA, pBuffer);
-							ThotCallback (NumMenuAttrRequired, INTEGER_DATA, (STRING) 1);
-						    DestroyWindow (hwnd);
-						    break;
-
-					   case ID_DONE:
-							ThotCallback (NumMenuAttrRequired, INTEGER_DATA, (STRING) 0);
-						    DestroyWindow (hwnd);
-						    /* Traitement ID_DONE */
-						    break;
-				}
-			    break;
+	case ID_DONE:
+	  ThotCallback (NumMenuAttrRequired, INTEGER_DATA, (STRING) 0);
+	  DestroyWindow (hwnd);
+	  /* Traitement ID_DONE */
+	  break;
+	}
+      break;
     }
-    return DefWindowProc (hwnd, iMsg, wParam, lParam) ;
+  return DefWindowProc (hwnd, iMsg, wParam, lParam) ;
 }
 
 /*----------------------------------------------------------------------
@@ -521,115 +505,121 @@ LRESULT CALLBACK InitSheetDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LP
 LRESULT CALLBACK InitSheetDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 #endif /* __STDC__ */
 {
-	HWND          hwnTitle;
-	HWND          applyButton;
-	HWND          deleteButton;
-	HWND          doneButton;
-	STRING        pBuffer;
-	int           i, index;
-	static STRING pWinBuffer;
-	static int    txtLength;
-	static HWND   hwnEdit ;
+  HWND          hwnTitle;
+  HWND          applyButton;
+  HWND          deleteButton;
+  HWND          doneButton;
+  STRING        pBuffer;
+  int           i, index;
+  static STRING pWinBuffer;
+  static int    txtLength;
+  static HWND   hwnEdit ;
 
-	if (!dlgInitialized) {
-       if (WIN_currAttr) 
-          usprintf (attr_text, "%s", WIN_currAttr->AeAttrText->BuContent);
-       else
-          attr_text [0] = EOS ;
-       dlgInitialized = TRUE;
+  if (!dlgInitialized)
+    {
+      if (WIN_currAttr) 
+	usprintf (attr_text, "%s", WIN_currAttr->AeAttrText->BuContent);
+      else
+	attr_text [0] = EOS ;
+      dlgInitialized = TRUE;
     }
 
-    switch (iMsg) {
-	       case WM_CREATE:
-			    /* Create static window for the title */
-			    hwnTitle = CreateWindow ("STATIC", WIN_pAttr1->AttrName, 
-					                     WS_CHILD | WS_VISIBLE | SS_LEFT,
-										 10, 10, 100, 20, hwnd, (HMENU) 99, 
-										 ((LPCREATESTRUCT) lParam)->hInstance, NULL); 
+  switch (iMsg)
+    {
+    case WM_CREATE:
+      /* Create static window for the title */
+      hwnTitle = CreateWindow ("STATIC", WIN_pAttr1->AttrName, 
+			       WS_CHILD | WS_VISIBLE | SS_LEFT,
+			       10, 10, 100, 20, hwnd, (HMENU) 99, 
+			       ((LPCREATESTRUCT) lParam)->hInstance, NULL); 
+      
+      /* Create Edit Window autoscrolled */
+      hwnEdit = CreateWindow ("EDIT", attr_text, 
+			      WS_CHILD | WS_VISIBLE | WS_HSCROLL | WS_VSCROLL |
+			      WS_BORDER | ES_LEFT | ES_MULTILINE |
+			      ES_AUTOHSCROLL | ES_AUTOVSCROLL,
+			      10, 40, 310, 110, hwnd, (HMENU) 1, ((LPCREATESTRUCT) lParam)->hInstance, NULL);
+				
+      /* Create Apply button */
+      applyButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_APPLY), 
+				  WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
+				  10, 170, 70, 30, hwnd, 
+				  (HMENU) ID_APPLY, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
+      
+      /* Create Delete Button */
+      deleteButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_DEL_ATTR), 
+				   WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
+				   90, 170, 150, 30, hwnd, 
+				   (HMENU) ID_DELETE, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
+      
+      /* Create Done Button */
+      doneButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_DONE), 
+				 WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
+				 250, 170, 70, 30, hwnd, 
+				 (HMENU) ID_DONE, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
+      break;
+      
+    case WM_DESTROY :
+      PostQuitMessage (0) ;
+      break;
 
-			    /* Create Edit Window autoscrolled */
-				hwnEdit = CreateWindow ("EDIT", attr_text, 
-					                    WS_CHILD | WS_VISIBLE | WS_HSCROLL | WS_VSCROLL |
-										WS_BORDER | ES_LEFT | ES_MULTILINE |
-										ES_AUTOHSCROLL | ES_AUTOVSCROLL,
-										10, 40, 310, 110, hwnd, (HMENU) 1, ((LPCREATESTRUCT) lParam)->hInstance, NULL);
-				/* Create Apply button */
-                applyButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_APPLY), 
-                                            WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
-                                            10, 170, 70, 30, hwnd, 
-                                            (HMENU) ID_APPLY, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
+    case WM_COMMAND:
+      switch (LOWORD (wParam))
+	{
+	case ID_APPLY:
+	  txtLength = GetWindowTextLength (hwnEdit);
+	  if ((pWinBuffer = (STRING) TtaGetMemory (txtLength + 1)))
+	    {
+	      GetWindowText (hwnEdit, pWinBuffer, txtLength + 1);
+	      index = 0;
+	      pBuffer = (STRING) TtaGetMemory (txtLength + 1);
+	      for (i = 0; i < txtLength; i ++) 
+		if (pWinBuffer [i] != '\r')
+		  pBuffer [index++] = pWinBuffer[i];
+	      pBuffer [index] = EOS;
+	    }
+	  else
+	    {
+	      pWinBuffer = "";	  
+	      pBuffer = "";
+	    }
+	  
+	  ThotCallback (NumMenuAttrText, STRING_DATA, pBuffer);
+	  ThotCallback (NumMenuAttr, INTEGER_DATA, (STRING) 1);
+	  break;
+	  
+	case ID_DELETE:
+	  txtLength = GetWindowTextLength (hwnEdit);
+	  if ((pWinBuffer = (STRING) TtaGetMemory (txtLength + 1)))
+	    {
+	      GetWindowText (hwnEdit, pWinBuffer, txtLength + 1);
+	      index = 0;
+	      pBuffer = (STRING) TtaGetMemory (txtLength + 1);
+	      for (i = 0; i < txtLength; i ++) 
+		if (pWinBuffer [i] != '\r')
+		  pBuffer [index++] = pWinBuffer[i];
+	      pBuffer [index] = EOS;
+	    }
+	  else
+	    {
+	      pWinBuffer = "";	  
+	      pBuffer = "";
+	    }
 
-				/* Create Delete Button */
-				deleteButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_DEL_ATTR), 
-                                           WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
-                                           90, 170, 150, 30, hwnd, 
-                                           (HMENU) ID_DELETE, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
- 
-				/* Create Done Button */
-				doneButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_DONE), 
-                                           WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
-                                           250, 170, 70, 30, hwnd, 
-                                           (HMENU) ID_DONE, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
-				break;
+	  ThotCallback (NumMenuAttrText, STRING_DATA, pBuffer);
+	  ThotCallback (NumMenuAttr, INTEGER_DATA, (STRING) 2);
+	  DestroyWindow (hwnd);
+	  break;
 
-           case WM_DESTROY :
-                PostQuitMessage (0) ;
-                break;
-
-		   case WM_COMMAND:
-			    switch (LOWORD (wParam)) {
-				       case ID_APPLY:
-						    txtLength = GetWindowTextLength (hwnEdit);
-							if ((pWinBuffer = (STRING) TtaGetMemory (txtLength + 1))) {
-							   GetWindowText (hwnEdit, pWinBuffer, txtLength + 1);
-							   index = 0;
-							   pBuffer = (STRING) TtaGetMemory (txtLength + 1);
-							   for (i = 0; i < txtLength; i ++) 
-								   if (pWinBuffer [i] != '\r') {
-									  pBuffer [index++] = pWinBuffer[i];
-								   }
-
-							   pBuffer [index] = EOS;
-							} else {
-								  pWinBuffer = "";	  
-							      pBuffer = "";
-							}
-
-							ThotCallback (NumMenuAttrText, STRING_DATA, pBuffer);
-							ThotCallback (NumMenuAttr, INTEGER_DATA, (STRING) 1);
-						    break;
-
-					   case ID_DELETE:
-						    txtLength = GetWindowTextLength (hwnEdit);
-							if ((pWinBuffer = (STRING) TtaGetMemory (txtLength + 1))) {
-							   GetWindowText (hwnEdit, pWinBuffer, txtLength + 1);
-							   index = 0;
-							   pBuffer = (STRING) TtaGetMemory (txtLength + 1);
-							   for (i = 0; i < txtLength; i ++) 
-								   if (pWinBuffer [i] != '\r') {
-									  pBuffer [index++] = pWinBuffer[i];
-								   }
-
-							   pBuffer [index] = EOS;
-							} else {
-								  pWinBuffer = "";	  
-							      pBuffer = "";
-							}
-
-							ThotCallback (NumMenuAttrText, STRING_DATA, pBuffer);
-							ThotCallback (NumMenuAttr, INTEGER_DATA, (STRING) 2);
-                            DestroyWindow (hwnd);
-						    break;
-
-					   case ID_DONE:
-							ThotCallback (NumMenuAttr, INTEGER_DATA, (STRING) 0);
-						    DestroyWindow (hwnd);
-							dlgInitialized = FALSE;
-						    break;
-				}
-			    break;
+	case ID_DONE:
+	  ThotCallback (NumMenuAttr, INTEGER_DATA, (STRING) 0);
+	  DestroyWindow (hwnd);
+	  dlgInitialized = FALSE;
+	  break;
+	}
+      break;
     }
-    return DefWindowProc (hwnd, iMsg, wParam, lParam) ;
+  return DefWindowProc (hwnd, iMsg, wParam, lParam) ;
 }
 
 /*----------------------------------------------------------------------
@@ -707,86 +697,89 @@ LRESULT CALLBACK InitNumAttrDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, 
 LRESULT CALLBACK InitNumAttrDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 #endif /* __STDC__ */
 {
-	HWND        hwnTitle;
-	HWND        hwnRange;
-	HWND        applyButton;
-	HWND        deleteButton;
-	HWND        doneButton;
-	BOOL        ok;
-	int         val;
-	static PSTR pWinBuffer;
-	static int  txtLength;
-	static HWND hwnEdit ;
+  HWND        hwnTitle;
+  HWND        hwnRange;
+  HWND        applyButton;
+  HWND        deleteButton;
+  HWND        doneButton;
+  BOOL        ok;
+  int         val;
+  static PSTR pWinBuffer;
+  static int  txtLength;
+  static HWND hwnEdit ;
 
-    switch (iMsg) {
-	       case WM_CREATE:
-			    /* Create static window for the title */
-			    hwnTitle = CreateWindow ("STATIC", WIN_pAttr1->AttrName, 
-					                     WS_CHILD | WS_VISIBLE | SS_LEFT,
-										 10, 10, 160, 25, hwnd, (HMENU) 1,
-										 ((LPCREATESTRUCT) lParam)->hInstance, NULL); 
-
-			    hwnRange = CreateWindow ("STATIC", formRange, 
-					                     WS_CHILD | WS_VISIBLE | SS_LEFT,
-										 10, 45, 160, 25, hwnd, (HMENU) 2, 
-										 ((LPCREATESTRUCT) lParam)->hInstance, NULL); 
-
-			    /* Create Edit Window autoscrolled */
-				hwnEdit = CreateWindow ("EDIT", NULL, 
-					                    WS_CHILD | WS_VISIBLE | WS_BORDER | ES_LEFT,
-										10, 80, 250, 30, hwnd, (HMENU) ID_EDITVALUE, ((LPCREATESTRUCT) lParam)->hInstance, NULL);
-				SetDlgItemInt (hwnd, ID_EDITVALUE, formValue, TRUE);
-
+  switch (iMsg)
+    {
+    case WM_CREATE:
+      /* Create static window for the title */
+      hwnTitle = CreateWindow ("STATIC", WIN_pAttr1->AttrName, 
+			       WS_CHILD | WS_VISIBLE | SS_LEFT,
+			       10, 10, 160, 25, hwnd, (HMENU) 1,
+			       ((LPCREATESTRUCT) lParam)->hInstance, NULL); 
+    
+      hwnRange = CreateWindow ("STATIC", formRange, 
+			       WS_CHILD | WS_VISIBLE | SS_LEFT,
+			       10, 45, 160, 25, hwnd, (HMENU) 2, 
+			       ((LPCREATESTRUCT) lParam)->hInstance, NULL); 
+    
+      /* Create Edit Window autoscrolled */
+      hwnEdit = CreateWindow ("EDIT", NULL, 
+			      WS_CHILD | WS_VISIBLE | WS_BORDER | ES_LEFT,
+			      10, 80, 250, 30, hwnd, (HMENU) ID_EDITVALUE, ((LPCREATESTRUCT) lParam)->hInstance, NULL);
+      SetDlgItemInt (hwnd, ID_EDITVALUE, formValue, TRUE);
+    
 				/* Create Apply button */
-                applyButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_APPLY), 
-                                            WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
-                                            10, 120, 80, 25, hwnd, 
-                                            (HMENU) ID_APPLY, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
-
+      applyButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_APPLY), 
+				  WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
+				  10, 120, 80, 25, hwnd, 
+				  (HMENU) ID_APPLY, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
+      
 				/* Create Delete Button */
-				deleteButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_DEL_ATTR), 
-                                             WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
-                                             95, 120, 80, 25, hwnd, 
-                                             (HMENU) ID_DELETE, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
- 
+      deleteButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_DEL_ATTR), 
+				   WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
+				   95, 120, 80, 25, hwnd, 
+				   (HMENU) ID_DELETE, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
+      
 				/* Create Done Button */
-				doneButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_DONE), 
-                                           WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
-                                           180, 120, 80, 25, hwnd, 
-                                           (HMENU) ID_DONE, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
-				break;
+      doneButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_DONE), 
+				 WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
+				 180, 120, 80, 25, hwnd, 
+				 (HMENU) ID_DONE, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
+      break;
+      
+    case WM_DESTROY :
+      PostQuitMessage (0) ;
+      break;
+    
+    case WM_COMMAND:
+      switch (LOWORD (wParam))
+	{
+	case ID_APPLY:
+	  val = GetDlgItemInt (hwnd, ID_EDITVALUE, &ok, TRUE);
+	  if (ok) {
+	    ThotCallback (NumMenuAttrNumber, INTEGER_DATA, (STRING) val);
+	    ThotCallback (NumMenuAttr, INTEGER_DATA, (STRING) 1);
+	  }
+	  break;
+      
+	case ID_DELETE:
+	  val = GetDlgItemInt (hwnd, ID_EDITVALUE, &ok, TRUE);
+	  if (ok)
+	    {
+	      ThotCallback (NumMenuAttrNumber, INTEGER_DATA, (STRING) val);
+	      ThotCallback (NumMenuAttr, INTEGER_DATA, (STRING) 2);
+	      DestroyWindow (hwnd);
+	    }
+	  break;
 
-           case WM_DESTROY :
-                PostQuitMessage (0) ;
-                break;
-
-		   case WM_COMMAND:
-			    switch (LOWORD (wParam)) {
-				       case ID_APPLY:
-						    val = GetDlgItemInt (hwnd, ID_EDITVALUE, &ok, TRUE);
-							if (ok) {
-						       ThotCallback (NumMenuAttrNumber, INTEGER_DATA, (STRING) val);
-						       ThotCallback (NumMenuAttr, INTEGER_DATA, (STRING) 1);
-							}
-						    break;
-
-					   case ID_DELETE:
-						    val = GetDlgItemInt (hwnd, ID_EDITVALUE, &ok, TRUE);
-							if (ok) {
-						       ThotCallback (NumMenuAttrNumber, INTEGER_DATA, (STRING) val);
-						       ThotCallback (NumMenuAttr, INTEGER_DATA, (STRING) 2);
-                               DestroyWindow (hwnd);
-							}
-						    break;
-
-					   case ID_DONE:
-						    ThotCallback (NumMenuAttr, INTEGER_DATA, (STRING) 0);
-						    DestroyWindow (hwnd);
-						    break;
-				}
-			    break;
+	case ID_DONE:
+	  ThotCallback (NumMenuAttr, INTEGER_DATA, (STRING) 0);
+	  DestroyWindow (hwnd);
+	  break;
+	}
+      break;
     }
-    return DefWindowProc (hwnd, iMsg, wParam, lParam) ;
+  return DefWindowProc (hwnd, iMsg, wParam, lParam) ;
 }
 #endif /* _WINDOWS */
 
@@ -1731,9 +1724,8 @@ STRING              txt;
 	  ustrncpy (TextAttrValue, TtaGetLanguageCode (i), LgMaxAttrText);
 	}
 #ifndef _WINDOWS 
-   TtaNewLabel (NumLabelHeritedLanguage, NumFormLanguage, "");
+      TtaNewLabel (NumLabelHeritedLanguage, NumFormLanguage, "");
 #endif /* _WINDOWS */
-
       CallbackValAttrMenu (NumMenuAttr, 1, NULL);
       break;
     case NumFormLanguage:
