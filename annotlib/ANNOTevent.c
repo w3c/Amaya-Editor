@@ -715,9 +715,6 @@ View view;
     return;
   */
 
-  /* output the HTML body */
-  ANNOT_LocalSave (doc, view);
-
   /* create the RDF container */
   rdf_file = ANNOT_PreparePostBody (doc);
   if (!rdf_file)
@@ -773,7 +770,16 @@ View                view;
   if (IsW3Path (DocumentURLs[doc_annot]))
     ANNOT_Post (doc_annot, view);
   else
-    ANNOT_LocalSave (doc_annot, view);
+    {
+      /* save the file */
+      filename =  TtaStrdup (DocumentURLs[doc_annot]);
+      /* we skip the file: prefix if it's present */
+      filename = TtaGetMemory (ustrlen (DocumentURLs[doc_annot]));
+      NormalizeFile (DocumentURLs[doc_annot], filename, AM_CONV_ALL);
+      if (ANNOT_LocalSave (doc_annot, filename))
+	TtaSetDocumentUnmodified (doc_annot);
+      TtaFreeMemory (filename); 
+    }
 }
 
 /*-----------------------------------------------------------------------

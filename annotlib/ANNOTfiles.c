@@ -600,7 +600,7 @@ void  ANNOT_InitDocumentStructure (docAnnot, document)
 #endif
 
 /*-----------------------------------------------------------------------
-   Procedure ANNOT_PrepareannotView (document)
+   Procedure ANNOT_PrepareAnnotView (document)
   -----------------------------------------------------------------------
    Removes all  unused buttons and menus). Returns the number of the opened 
    view or 0 in case of failure.
@@ -685,15 +685,14 @@ void  ANNOT_CheckEmptyDoc (docAnnot)
   Saves the annotation document doc_annot to the local filesystem
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            ANNOT_LocalSave (Document doc_annot, View view)
+ThotBool            ANNOT_LocalSave (Document doc_annot, CHAR_T *html_filename)
 #else  /* __STDC__ */
-ThotBool            ANNOT_LocalSave (doc_annot, view)
+ThotBool            ANNOT_LocalSave (doc_annot, html_filename)
 Document            doc_annot;
-View                view;
+CHAR_T             *html_filename;
 
 #endif /* __STDC__ */
 {
-  CHAR_T *filename;
   Element el;
   ElementType elType;
   AnnotMeta *annot;
@@ -725,15 +724,7 @@ View                view;
   el = TtaGetFirstChild (el);
   TtaSetTextContent (el, annot->mdate, TtaGetDefaultLanguage (), doc_annot); 
 
-  /* save the file */
-  filename =  TtaStrdup (DocumentURLs[doc_annot]);
-  /* we skip the file: prefix if it's present */
-  NormalizeFile (DocumentURLs[doc_annot], filename, AM_CONV_ALL);
-  TtaExportDocument (doc_annot, filename, TEXT("AnnotT"));
-  TtaFreeMemory (filename);
-  TtaSetDocumentUnmodified (doc_annot);
-
-  return TRUE; /* prevent Thot from performing normal save operation */
+  return TtaExportDocument (doc_annot, html_filename, TEXT("AnnotT"));
 }
 
 

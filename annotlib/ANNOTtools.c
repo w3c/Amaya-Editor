@@ -539,8 +539,9 @@ Document doc;
   FILE *fp;
   FILE *fp2;
   char tmp_str[80];
-  CHAR_T *tmpfile, *ptr;
-  
+  CHAR_T *rdf_tmpfile, *ptr;
+  CHAR_T *html_tmpfile;
+
   AnnotMeta *annot;
   long content_length;
 
@@ -557,9 +558,12 @@ Document doc;
     content_length = AGetFileSize (DocumentURLs[doc]);
 
   ptr = TtaGetEnvString ("APP_TMPDIR");
-  tmpfile = TtaGetMemory (strlen (ptr) + sizeof ("rdf.tmp") + 2);
-  usprintf (tmpfile, "%s%c%s", ptr, DIR_SEP, "rdf.tmp");
-  fp = fopen (tmpfile, "w");
+  rdf_tmpfile = TtaGetMemory (strlen (ptr) + sizeof ("rdf.tmp") + 2);
+  usprintf (rdf_tmpfile, "%s%c%s", ptr, DIR_SEP, "rdf.tmp");
+  html_tmpfile = TtaGetMemory (strlen (ptr) + sizeof ("html.tmp") + 2);
+  usprintf (html_tmpfile, "%s%c%s", ptr, DIR_SEP, "html.tmp");
+
+  fp = fopen (rdf_tmpfile, "w");
   /* write the prologue */
   fprintf (fp,
 	  "<?xml version=\"1.0\" ?>\n" 
@@ -610,12 +614,13 @@ Document doc;
 	   "text/html",
 	   content_length);
 
- /* insert the HTML body */
-  ptr = DocumentURLs[doc];
-  /* skip any file: prefix */
-  if (IsFilePath(ptr))
-      ptr = ptr + 7;
-  fp2 = fopen (ptr, "r");
+ /* 
+ ** insert the HTML body 
+ */
+
+  /* output the HTML body */
+  ANNOT_LocalSave (doc, html_tmpfile);
+  fp2 = fopen (html_tmpfile, "r");
   if (fp2)
     {
       /* skip any prologue (to have a valid XML doc )*/
@@ -632,6 +637,8 @@ Document doc;
       }
       fclose (fp2);
     }
+  TtaFileUnlink (html_tmpfile);
+  TtaFreeMemory (html_tmpfile);
 
   /* finish writing the annotation */
   fprintf (fp, 
@@ -642,7 +649,7 @@ Document doc;
 	   "</r:RDF>\n");
 
   fclose (fp);  
-  return (tmpfile);
+  return (rdf_tmpfile);
 }
 
 /* ------------------------------------------------------------

@@ -25,7 +25,7 @@ extern void ANNOT_InitDocumentStructure ( Document doc,
 extern void ANNOT_PrepareAnnotView ( Document document );
 extern void ANNOT_CheckEmptyDoc ( Document docAnnot );
 extern ThotBool ANNOT_LocalSave ( Document doc_annot,
-                                  View view );
+                                  CHAR_T *html_filename );
 
 #else /* __STDC__ */
 
@@ -48,7 +48,7 @@ extern void ANNOT_InitDocumentStructure (/* Document doc,
 extern void ANNOT_PrepareAnnotView (/* Document document */);
 extern void ANNOT_CheckEmptyDoc (/* Document docAnnot */);
 extern ThotBool ANNOT_LocalSave (/* Document doc_annot,
-                                    View view */);
+                                    CHAR_T *html_filename */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
