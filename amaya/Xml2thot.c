@@ -2846,7 +2846,6 @@ static void EndOfAttributeName (char *xmlName)
    if (UnknownElement)
      /* The corresponding element doesn't belong to the current DTD */ 
      return;
-
    /* look for a NS_SEP in the tag name (namespaces) */ 
    /* and ignore the prefix if there is one */
    savParserCtxt = currentParserCtxt;
@@ -2889,7 +2888,11 @@ static void EndOfAttributeName (char *xmlName)
 	     }
 	 }
      }
-   else
+   else if (currentParserCtxt == NULL ||
+	    currentParserCtxt->SSchemaName == NULL ||
+	    strcmp (currentParserCtxt->SSchemaName, "SVG") ||
+	    strcmp (xmlName, "xlink:href"))
+     /* This attribute doesn't belongs to the current namespace */
      {
        if ((ptr = strrchr (nsURI, NS_COLON)) != NULL)
 	 {
@@ -2920,6 +2923,8 @@ static void EndOfAttributeName (char *xmlName)
 	     }
 	 }
      }
+   else
+     attrName = (char *)TtaStrdup ((char *)xmlName);
    
    if (currentParserCtxt == NULL)
      {
@@ -2946,7 +2951,7 @@ static void EndOfAttributeName (char *xmlName)
    if (strncmp (attrName, "xml:lang", 8) == 0)
      strcpy ((char *)attrName, "lang");
 
-   if (currentParserCtxt != NULL && !UnknownAttr)
+   if (currentParserCtxt && !UnknownAttr)
      {
        if (strcmp ((char *)currentParserCtxt->SSchemaName, "HTML") == 0)
 	 EndOfXhtmlAttributeName (attrName,

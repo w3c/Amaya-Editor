@@ -959,7 +959,7 @@ static void         CreateMathConstruct (int construct)
 		     selectFirstChild, displayTableForm, registered;
 
   doc = TtaGetSelectedDocument ();
-  if (doc == NULL || !TtaGetDocumentAccessMode (doc))
+  if (doc == 0 || !TtaGetDocumentAccessMode (doc))
     {
       /* no selection. Nothing to do */
       TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
