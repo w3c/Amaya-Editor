@@ -783,6 +783,24 @@ ThotBool            AttrCSSequivDelete (NotifyAttribute * event)
 }
 
 /*----------------------------------------------------------------------
+ AttrTextAnchorModified
+ -----------------------------------------------------------------------*/
+void             AttrTextAnchorModified (NotifyAttribute *event)
+{
+  SetTextAnchor (event->attribute, event->element, event->document, FALSE);
+}
+ 
+/*----------------------------------------------------------------------
+   AttrTextAnchorDelete : attribute text_anchor will be
+   deleted. Remove the corresponding presentation.
+  ----------------------------------------------------------------------*/
+ThotBool            AttrTextAnchorDelete (NotifyAttribute * event)
+{
+  SetTextAnchor (event->attribute, event->element, event->document, TRUE);
+  return FALSE; /* let Thot perform normal operation */
+}
+
+/*----------------------------------------------------------------------
  DeleteAttrPoints
  -----------------------------------------------------------------------*/
 ThotBool         DeleteAttrPoints (NotifyAttribute *event)

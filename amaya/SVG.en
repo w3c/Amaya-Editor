@@ -50,6 +50,8 @@ w900: 900
 direction_: direction
 ltr_: ltr
 rtl_: rtl
+text_anchor: text-anchor
+end_: end
 text_decoration: text-decoration
 unicode_bidi: unicode-bidi
 embed_: embed

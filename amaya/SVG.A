@@ -138,6 +138,12 @@ ATTRIBUTES
 	AttrCreate.Post -> AttrCSSequivModified;
 	AttrDelete.Pre ->  AttrCSSequivDelete;
 	END;
+   text_anchor:
+	BEGIN
+	AttrModify.Post -> AttrTextAnchorModified;
+	AttrCreate.Post -> AttrTextAnchorModified;
+	AttrDelete.Pre ->  AttrTextAnchorDelete;
+	END;
    text_decoration:
 	BEGIN
 	AttrModify.Post -> AttrCSSequivModified;

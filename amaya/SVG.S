@@ -41,7 +41,8 @@ STRUCT
 	      font_variant = normal_, small_caps, inherit;
 	      font_weight = normal_, bold_, bolder, lighter, w100, w200, w300,
 			    w400, w500, w600, w700, w800, w900, inherit;
-	      direction_ = ltr_, rtl_, inherit; 
+	      direction_ = ltr_, rtl_, inherit;
+	      text_anchor = start, middle, end_, inherit;
 	      text_decoration = text;
 	      unicode_bidi = normal_, embed_, bidi_override, inherit;
 	      viewBox = text;
@@ -65,7 +66,7 @@ STRUCT
 	      externalResourcesRequired; 
 	      fill; stroke; stroke_width;
 	      font_family; font_size; font_style; font_variant; font_weight;
-	      direction_; text_decoration; unicode_bidi;
+	      direction_; text_anchor; text_decoration; unicode_bidi;
 	      transform = text)
         = LIST OF (GraphicsElement);
 
@@ -74,7 +75,7 @@ STRUCT
 	      externalResourcesRequired;
 	      fill; stroke; stroke_width;
 	      font_family; font_size; font_style; font_variant; font_weight;
-	      direction_; text_decoration; unicode_bidi;
+	      direction_; text_anchor; text_decoration; unicode_bidi;
 	      transform;
 	      { graphicsElementEvents })
         = LIST OF (GraphicsElement);
@@ -83,7 +84,7 @@ STRUCT
 	(ATTR externalResourcesRequired;
 	      fill; stroke; stroke_width;
 	      font_family; font_size; font_style; font_variant; font_weight;
-	      direction_; text_decoration; unicode_bidi;
+	      direction_; text_anchor; text_decoration; unicode_bidi;
 	      viewBox;
 	      preserveAspectRatio = text; 
 	      { graphicsElementEvents })
@@ -95,7 +96,7 @@ STRUCT
 	      externalResourcesRequired;
 	      fill; stroke; stroke_width;
 	      font_family; font_size; font_style; font_variant; font_weight;
-	      direction_; text_decoration; unicode_bidi;
+	      direction_; text_anchor; text_decoration; unicode_bidi;
 	      transform;
 	      { graphicsElementEvents }
 	      x; 
@@ -131,7 +132,7 @@ STRUCT
 	      { PresentationAttributes-All }
 	      fill; stroke; stroke_width;
 	      font_family; font_size; font_style; font_variant; font_weight;
-	      direction_; text_decoration; unicode_bidi;
+	      direction_; text_anchor; text_decoration; unicode_bidi;
 	      transform;
 	      { graphicsElementEvents })
 	= LIST OF (CASE OF
@@ -246,7 +247,7 @@ STRUCT
 	      externalResourcesRequired; 
 	      fill; stroke; stroke_width;
 	      font_family; font_size; font_style; font_variant; font_weight;
-	      direction_; text_decoration; unicode_bidi;
+	      direction_; text_anchor; text_decoration; unicode_bidi;
 	      transform;
 	      x;
 	      y;
@@ -259,7 +260,7 @@ STRUCT
 	      externalResourcesRequired; 
 	      fill; stroke; stroke_width;
 	      font_family; font_size; font_style; font_variant; font_weight;
-	      direction_; text_decoration; unicode_bidi;
+	      direction_; text_anchor; text_decoration; unicode_bidi;
 	      x;
               y;
 	      dx;
@@ -308,7 +309,7 @@ STRUCT
 	      externalResourcesRequired;
 	      fill; stroke; stroke_width;
 	      font_family; font_size; font_style; font_variant; font_weight;
-	      direction_; text_decoration; unicode_bidi;
+	      direction_; text_anchor; text_decoration; unicode_bidi;
 	      transform;
 	      { graphicsElementEvents }
 	      target_ = text)
@@ -348,7 +349,7 @@ STRUCT
 	      externalResourcesRequired; 
 	      fill; stroke; stroke_width;
 	      font_family; font_size; font_style; font_variant; font_weight;
-	      direction_; text_decoration; unicode_bidi;
+	      direction_; text_anchor; text_decoration; unicode_bidi;
 	      transform;
 	      x; 
               y;

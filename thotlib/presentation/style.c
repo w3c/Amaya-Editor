@@ -1208,7 +1208,8 @@ static void PresRuleRemove (PtrPSchema tsch, GenericContext ctxt,
 /*----------------------------------------------------------------------
  PresentationValueToPRule : set up an internal Presentation Rule according
  to a Presentation Value for a given type of presentation property.
- funcType is an extra parameter needed when using a Function rule.
+ funcType is an extra parameter needed when using a Function rule
+ or a position rule (VertPos, HorizPos).
  ----------------------------------------------------------------------*/
 static void PresentationValueToPRule (PresentationValue val, int type,
 				      PtrPRule rule, int funcType,
@@ -1595,8 +1596,30 @@ static void PresentationValueToPRule (PresentationValue val, int type,
       break;
     case PtVertPos:
       rule->PrPresMode = PresImmediate;
-      rule->PrPosRule.PoDistUnit = int_unit;
-      rule->PrPosRule.PoDistance = value;
+      if (funcType == 0)
+	{
+	  rule->PrPosRule.PoDistUnit = int_unit;
+	  rule->PrPosRule.PoDistance = value;
+	}
+      else
+	/* funcType represents the axis used for positionning */
+	switch (funcType)
+	  {
+	  case PositionTop:
+	    rule->PrPosRule.PoPosDef = Top;
+	    break;
+	  case PositionBottom:
+	    rule->PrPosRule.PoPosDef = Bottom;
+	    break;
+	  case PositionHorizRef:
+	    rule->PrPosRule.PoPosDef = HorizRef;
+	    break;
+	  case PositionHorizMiddle:
+	    rule->PrPosRule.PoPosDef = HorizMiddle;
+	    break;
+	  default:
+	    break;
+	  }
       if (generic)
 	{
 	  /* generate a complete rule Top=Previous AnyElem.Bottom+value */
@@ -1611,8 +1634,30 @@ static void PresentationValueToPRule (PresentationValue val, int type,
       break;
     case PtHorizPos:
       rule->PrPresMode = PresImmediate;
-      rule->PrPosRule.PoDistUnit = int_unit;
-      rule->PrPosRule.PoDistance = value;
+      if (funcType == 0)
+	{
+	  rule->PrPosRule.PoDistUnit = int_unit;
+	  rule->PrPosRule.PoDistance = value;
+	}
+      else
+	/* funcType represents the axis used for positionning */
+	switch (funcType)
+	  {
+	  case PositionLeft:
+	    rule->PrPosRule.PoPosDef = Left;
+	    break;
+	  case PositionRight:
+	    rule->PrPosRule.PoPosDef = Right;
+	    break;
+	  case PositionVertRef:
+	    rule->PrPosRule.PoPosDef = VertRef;
+	    break;
+	  case PositionVertMiddle:
+	    rule->PrPosRule.PoPosDef = VertMiddle;
+	    break;
+	  default:
+	    break;
+	  }
       if (generic)
 	{
 	  /* generate a complete rule Left=Enclosing.left+value */
@@ -2370,8 +2415,19 @@ static void TypeToPresentation (unsigned int type, PRuleType *intRule,
 }
 
 /*----------------------------------------------------------------------
-  TtaSetStylePresentation attachs a style rule to an element or to an
+  TtaSetStylePresentation attachs a presentation rule to an element or to an
   extended presentation schema.
+  type: type of the presentation rule
+  el: element to which the presentation rule must be attached. If NULL,
+      the rule is not attached to an element but included in an extended
+      P schema (generic rule).
+  tsch: extended P schema to which the rule will be attached. If NULL,
+        the rule is attached to element el (which must not be NULL).
+  c: context of the rule. For a position rule (type = PRVertPos or PRHorizPos)
+     ctxt->type indicates the edge whose position is set; ctxt->type = 0
+     indicates that only the distance is changed, not the edge.
+  v: value for the rule. For a position rule (type = PRVertPos or PRHorizPos)
+     v indicates the distance; it is taken into account only if ctxt->type = 0.
   ----------------------------------------------------------------------*/
 int TtaSetStylePresentation (unsigned int type, Element el, PSchema tsch,
 			     PresentationContext c, PresentationValue v)
@@ -2434,8 +2490,13 @@ int TtaSetStylePresentation (unsigned int type, Element el, PSchema tsch,
 	    }
 	  /* avoid to override an important rule by a non-important rule */
 	  if (ctxt->important || !pRule->PrImportant)
-	    PresentationValueToPRule (v, intRule, pRule, func, absolute, generic,
-				      minValue);
+	    {
+	      if (ctxt->type > 0 &&
+	          (type == PRVertPos || type == PRHorizPos))
+		func = ctxt->type;
+	      PresentationValueToPRule (v, intRule, pRule, func, absolute,
+					generic, minValue);
+	    }
 	  if (generic)
 	    {
 	      pRule->PrViewNum = 1;
@@ -2475,7 +2536,8 @@ int TtaGetStylePresentation (unsigned int type, Element el, PSchema tsch,
   TypeToPresentation (type, &intRule, &func, &absolute);
   generic = (el == NULL);
   if (generic)
-    rule = PresRuleSearch ((PtrPSchema) tsch, (GenericContext) c, intRule, func, &chain);
+    rule = PresRuleSearch ((PtrPSchema) tsch, (GenericContext) c, intRule,
+			   func, &chain);
   else
     rule = SearchElementPRule ((PtrElement) el, intRule, func);
   if (rule == NULL)
@@ -2691,8 +2753,10 @@ PresentationContext TtaGetSpecificStyleContext (Document doc)
       return (NULL);
    ctxt->doc = doc;
    ctxt->schema = TtaGetDocumentSSchema (doc);
-   ctxt->destroy = 0;
+   ctxt->type = 0;
    ctxt->cssSpecificity = 0;
+   ctxt->important = FALSE;
+   ctxt->destroy = 0;
    return (ctxt);
 }
 

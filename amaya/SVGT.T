@@ -708,6 +708,27 @@ ATTRIBUTES
 	create 'direction="inherit"';
 	END;
 
+   text_anchor = start:
+	BEGIN
+	create SAN;
+	create 'text-anchor="start"';
+	END;
+   text_anchor = middle:
+	BEGIN
+	create SAN;
+	create 'text-anchor="middle"';
+	END;
+   text_anchor = end_:
+	BEGIN
+	create SAN;
+	create 'text-anchor="end"';
+	END;
+   text_anchor = inherit:
+	BEGIN
+	create SAN;
+	create 'text-anchor="inherit"';
+	END;
+
    text_decoration:
 	BEGIN
 	create SAN;

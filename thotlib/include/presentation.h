@@ -93,6 +93,16 @@ typedef int        *PRule;
 #define BorderStyleInset 9
 #define BorderStyleOutset 10
 
+/* values for PRHorizPos and PRVertPos */
+#define PositionTop 1
+#define PositionBottom 2
+#define PositionLeft 3
+#define PositionRight 4
+#define PositionHorizRef 5
+#define PositionVertRef 6
+#define PositionHorizMiddle 7
+#define PositionVertMiddle 8
+
 /* values for rule PRStyle */
 #define StyleRoman 1
 #define StyleItalics 2

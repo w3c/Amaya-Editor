@@ -1585,6 +1585,124 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
 }
 
 /*----------------------------------------------------------------------
+   SetTextAnchorTree
+   Apply the value of a text-anchor attribute to a tree.
+  ----------------------------------------------------------------------*/
+static void SetTextAnchorTree (Element el, PresentationContext ctxt,
+			       SSchema SvgSSchema, Attribute deletedAttr)
+{
+  ElementType         elType;
+  Element             child;
+  AttributeType       attrType;
+  Attribute           attr;
+  PresentationValue   v;
+
+  attrType.AttrSSchema = SvgSSchema;
+  attrType.AttrTypeNum = SVG_ATTR_text_anchor;
+  attr = TtaGetAttribute (el, attrType);
+  if (attr && attr == deletedAttr)
+    attr = NULL;
+  if (!attr)
+    /* this element does not have a text-anchor attribute. Continue */
+    {
+      elType = TtaGetElementType (el);
+      if (elType.ElSSchema == SvgSSchema &&
+	  (elType.ElTypeNum == SVG_EL_text_ ||
+	   elType.ElTypeNum == SVG_EL_tspan /**** ||
+	   elType.ElTypeNum == SVG_EL_tref ||
+	   elType.ElTypeNum == SVG_EL_altGlyph ||
+	   elType.ElTypeNum == SVG_EL_textPath ****/))
+	/* this element is affected */
+	{
+	  v.data = 0;
+	  TtaSetStylePresentation (PRHorizPos, el, NULL, ctxt, v);
+	}
+      child = TtaGetFirstChild (el);
+      while (child)
+	{
+	  SetTextAnchorTree (child, ctxt, SvgSSchema, deletedAttr);
+	  TtaNextSibling (&child);
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
+   SetTextAnchor
+   Update (or create) the position rule of element el according to the
+   value of the text-anchor attribute attr.
+  ----------------------------------------------------------------------*/
+void SetTextAnchor (Attribute attr, Element el, Document doc, ThotBool delete)
+{
+   Attribute            attr1;
+   AttributeType        attrType;
+   Element              ancestor;
+   int                  val, val1, attrKind;
+   SSchema              SvgSSchema;
+   ThotBool             found;
+   PresentationContext  ctxt;
+
+   TtaGiveAttributeType (attr, &attrType, &attrKind);
+   SvgSSchema = attrType.AttrSSchema;
+   val = TtaGetAttributeValue (attr);
+   ctxt = TtaGetSpecificStyleContext (doc);
+   if (delete)
+     /* attribute text-anchor is being deleted */
+     {
+       ctxt->type = PositionLeft;
+       /* is there a text-anchor attribute on an ancestor? */
+       ancestor = TtaGetParent (el);
+       found = FALSE;
+       while (ancestor && !found)
+	 {
+	   attr1 = TtaGetAttribute (ancestor, attrType);
+	   if (attr1)
+	     /* this ancestor has an attribute text-anchor */
+	     {
+	       val1 = TtaGetAttributeValue (attr1);
+	       if (val1 == val)
+		 /* the inherited value is the same as the value of the
+		    deleted attribute. done. */
+		 el = NULL;
+	       else
+		 /* the inherited value has to be applied to element el
+		    and all its descendants */
+		 val = val1;
+	       found = TRUE; /* don't look for more ancestors */
+	     }
+           else
+	     ancestor = TtaGetParent (ancestor);
+	 }
+       if (!found)
+	 {
+	   /* ancestors don't have attribute text-anchor */
+	   if (val == SVG_ATTR_text_anchor_VAL_start)
+	     /* removing the default value. Done. */
+	     el = NULL;
+	   else
+	     /* apply the default value to element el and all its descendants*/
+	     val = SVG_ATTR_text_anchor_VAL_start;
+	 }
+     }
+   if (el)
+     /* applies the new value to element el and all its descendants */
+     {
+       if (val == SVG_ATTR_text_anchor_VAL_start)
+	 ctxt->type = PositionLeft;
+       else if (val == SVG_ATTR_text_anchor_VAL_middle)
+	 ctxt->type = PositionVertMiddle;
+       else if (val == SVG_ATTR_text_anchor_VAL_end_)
+	 ctxt->type = PositionRight;
+       else
+	 ctxt->type = PositionLeft;
+       ctxt->cssSpecificity = 0;
+       ctxt->important = TRUE;
+       ctxt->destroy = FALSE;
+       SetTextAnchorTree (el, ctxt, SvgSSchema, attr);
+     }
+   TtaFreeMemory (ctxt);
+}
+
+/*----------------------------------------------------------------------
    ParsePathDataAttribute
    Parse the value of a path data attribute
   ----------------------------------------------------------------------*/
@@ -1979,6 +2097,9 @@ void SVGAttributeComplete (Attribute attr, Element el, Document doc)
 	   leaf = CreateGraphicLeaf (el, doc, &closed);	   
 	ParseWidthHeightAttribute (attr, el, doc, FALSE);
 	break;
+     case SVG_ATTR_text_anchor:
+        SetTextAnchor (attr, el, doc, FALSE);
+        break;
      case SVG_ATTR_d:
 	ParsePathDataAttribute (attr, el, doc);
         break;
@@ -2005,3 +2126,6 @@ void SVGAttributeComplete (Attribute attr, Element el, Document doc)
 }
 
 /* end of module */
+
+
+

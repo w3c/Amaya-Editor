@@ -77,6 +77,7 @@ static AttributeMapping SVGAttributeMappingTable[] =
    {"style", "", 'A', SVG_ATTR_style_, L_OtherValue},
    {"systemLanguage", "", 'A', SVG_ATTR_systemLanguage, L_OtherValue},
    {"target", "", 'A', SVG_ATTR_target_, L_OtherValue},
+   {"text-anchor", "", 'A', SVG_ATTR_text_anchor, L_OtherValue},
    {"text-decoration", "", 'A', SVG_ATTR_text_decoration, L_OtherValue},
    {"title", "", 'A', SVG_ATTR_title_, L_OtherValue},
    {"transform", "", 'A', SVG_ATTR_transform, L_OtherValue},
@@ -133,6 +134,11 @@ static AttrValueMapping SVGAttrValueMappingTable[] =
    {SVG_ATTR_direction_, "ltr", SVG_ATTR_direction__VAL_ltr_},
    {SVG_ATTR_direction_, "rtl", SVG_ATTR_direction__VAL_rtl_},
    {SVG_ATTR_direction_, "inherit", SVG_ATTR_direction__VAL_inherit},
+
+   {SVG_ATTR_text_anchor, "start", SVG_ATTR_text_anchor_VAL_start},
+   {SVG_ATTR_text_anchor, "middle", SVG_ATTR_text_anchor_VAL_middle},
+   {SVG_ATTR_text_anchor, "end", SVG_ATTR_text_anchor_VAL_end_},
+   {SVG_ATTR_text_anchor, "inherit", SVG_ATTR_text_anchor_VAL_inherit},
 
    {SVG_ATTR_unicode_bidi, "normal", SVG_ATTR_unicode_bidi_VAL_normal_},
    {SVG_ATTR_unicode_bidi, "embed", SVG_ATTR_unicode_bidi_VAL_embed_},

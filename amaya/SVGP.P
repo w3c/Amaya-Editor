@@ -1158,6 +1158,9 @@ ATTRIBUTES
 	Direction: Enclosing =;
 	END;
 
+  text_anchor:
+	CreateBefore(AttrNameAndValue);
+
   text_decoration:
 	BEGIN
 	CreateBefore(AttrName);
