@@ -663,14 +663,41 @@ void AmayaNormalWindow::CleanUp()
     Close();
 }
 
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaNormalWindow
+ *      Method:  OnMenuOpen
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaNormalWindow::OnMenuOpen( wxMenuEvent& event )
+{
+  wxLogDebug( _T("AmayaNormalWindow::OnMenuOpen - menu_id=%d"), event.GetMenuId() );
+  event.Skip();
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaNormalWindow
+ *      Method:  OnMenuClose
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaNormalWindow::OnMenuClose( wxMenuEvent& event )
+{
+  wxLogDebug( _T("AmayaNormalWindow::OnMenuClose - menu_id=%d"), event.GetMenuId() );
+  event.Skip();
+}
 
 /*----------------------------------------------------------------------
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type
  *----------------------------------------------------------------------*/
 BEGIN_EVENT_TABLE(AmayaNormalWindow, AmayaWindow)
-  EVT_MENU( -1,             AmayaNormalWindow::OnMenuItem ) 
-  EVT_CLOSE(                AmayaNormalWindow::OnClose )
+  EVT_MENU_OPEN(  AmayaNormalWindow::OnMenuOpen )
+  EVT_MENU_CLOSE( AmayaNormalWindow::OnMenuClose )
+  EVT_MENU( -1,   AmayaNormalWindow::OnMenuItem ) 
+  EVT_CLOSE(      AmayaNormalWindow::OnClose )
 END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */
