@@ -208,8 +208,8 @@ static ThotBool FillAnnotField( AnnotMeta* annot,
     {
 
 #ifdef RAPTOR_RDF_PARSER
-      if (triple && triple->object_type == RAPTOR_IDENTIFIER_TYPE_RESOURCE 
-	  || triple->object_type == RAPTOR_IDENTIFIER_TYPE_ANONYMOUS)
+      if (triple && (triple->object_type == RAPTOR_IDENTIFIER_TYPE_RESOURCE 
+	  || triple->object_type == RAPTOR_IDENTIFIER_TYPE_ANONYMOUS))
 #else
 	/* @@ RRS: hack, hack; we should _not_ be inferring URIs.
 	   Libwww should distinguish between literal and resource. */
