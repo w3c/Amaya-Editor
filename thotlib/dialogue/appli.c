@@ -1721,10 +1721,9 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
 	
   case WM_IME_CHAR:
   case WM_SYSCHAR:
-  case WM_CHAR:
-	  if (frame != -1)
+  case WM_CHAR:	  if (frame != -1)
 	  {
-      SetFocus (FrRef [frame]);
+          SetFocus (FrRef [frame]);
 	  ActiveFrame = frame;
 	  SendMessage (FrRef [frame], mMsg, wParam, lParam);
 	  }
@@ -2049,8 +2048,27 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 	WIN_CharTranslation (FrRef[frame], frame, mMsg, (WPARAM) key, lParam, FALSE);
       if (wParam != VK_MENU)
 	return 0;
-
       break;
+
+#ifdef IME_INPUT
+    case WM_IME_COMPOSITION:
+	{
+	  HIMC hIMC = ImmGetContext(hwnd);
+	  wchar_t str[128];
+	  int len;
+
+	  if (lParam & GCS_RESULTSTR) {
+	    len = ImmGetCompositionStringW(hIMC, GCS_RESULTSTR, NULL, 0);
+	    /* need to check (len/2) < 128; len is strangely in bytes rather than wchars */
+	    ImmGetCompositionStringW(hIMC, GCS_RESULTSTR, str, len);
+	    ImmReleaseContext(hwnd, hIMC);
+	    str[len/2] = '\0';
+	    /* actually move the characters to the document */
+	    return 0;
+	  }
+	}
+      break;
+#endif /* IME_INPUT */
     case WM_LBUTTONDOWN:
       /* Activate the client window */
       SetFocus (FrRef[frame]);
