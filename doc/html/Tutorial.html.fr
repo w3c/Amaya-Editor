@@ -459,6 +459,31 @@ le formulaire de choix de la langue.</p>
 </div>
 
 <div>
+<h3><a id="L1104">Sauver des documents en HTML</a></h3>
+
+<p><b>Amaya</b> ne fournit aucune vue d'ensemble de série de pages installées
+sur le serveur. Cependant il est possible de sauver des fichiers d'un serveur
+lointain comme des fichiers locaux grâce aux commandes
+<strong>Sauver</strong> et <strong>Sauver comme</strong>. Pendant ces
+opérations, Amaya tient compte des images.</p>
+
+<h4><a id="L1517">La commande Sauver</a></h4>
+
+<p>La commande sauver peut être invoquée soit en choisissant
+<strong>Sauver</strong> depuis le menu <strong>Fichier</strong> (control-s
+pour Windows, control-x, control-s pour Unix) ou bien en cliquant sur le
+bouton <img alt="floppy" src="../images/floppy.gif" />.</p>
+
+<h4><a id="L1518">La commande Sauver comme</a></h4>
+
+<p>Le fait de sélectionner l'entrée <strong>Sauver comme</strong> dans le
+menu <strong>Fichier</strong> ouvre une boîte de dialogue qui vous permet de
+sauver le document courant à une adresse différente (sur un serveur Web ou
+sur le disque local) ou de changer certains paramétres, comme le format du
+document et l'encodage.</p>
+
+<p><img src="../images/SaveAs-fr.gif" alt="SaveAs" /></p>
+
 <h2 id="L662">5. Création du contenu (paragraphes, en-têtes de sections,
 divisions)</h2>
 
@@ -1376,7 +1401,7 @@ le document comme un document HTML au lieu de XHTML et donc éviter de bloquer
 sur le parseur XML.</p>
 </div>
 <address>
-  <p>Irène Vatton $date: Friday 09 January 2004 - 17:34:59$</p>
+  <p>Irène Vatton $date: Tuesday 13 January 2004 - 09:45:05$</p>
 
 </address>
 

@@ -128,6 +128,55 @@ static void InsertPastedElement (PtrElement pEl, ThotBool within,
      }
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+static void NotifyHExtension (PtrElement pCell, Document doc)
+{
+  PtrSSchema          pSS;
+  PtrAttribute        pAttr;
+  NotifyAttribute     notifyAttr;
+  int                 attrHSpan;
+
+  if (pCell)
+    {
+      pSS = pCell->ElStructSchema;
+      attrHSpan = GetAttrWithException (ExcColSpan, pSS);
+      if (attrHSpan)
+	{
+	  /* is this attribute attached to the cell */
+	  pAttr = pCell->ElFirstAttr;
+	  while (pAttr)
+	    {
+	      if (pAttr->AeAttrNum == attrHSpan && pAttr->AeAttrSSchema == pSS)
+		{
+		  notifyAttr.event = TteAttrModify;
+		  notifyAttr.document = doc;
+		  notifyAttr.element = (Element) pCell;
+		  notifyAttr.info = 0; /* not sent by undo */
+		  notifyAttr.attribute = (Attribute) pAttr;
+		  notifyAttr.attributeType.AttrSSchema = (SSchema) pSS;
+		  notifyAttr.attributeType.AttrTypeNum = pAttr->AeAttrNum;
+		  /* notify .PRE */
+		  if (!CallEventAttribute (&notifyAttr, TRUE))
+		    {
+		      if (pAttr->AeAttrValue > 1)
+			{
+			  pAttr->AeAttrValue++;
+			  AddAttrEditOpInHistory (pAttr, pCell,
+						  LoadedDocument[doc -1],
+						  TRUE, TRUE);
+			}
+		      /* notify .POST */
+		      CallEventAttribute (&notifyAttr, FALSE);
+		    }
+		  pAttr = NULL;
+		}
+	      else
+		pAttr = pAttr->AeNext;
+	    }
+	}
+    }
+}
 
 /*----------------------------------------------------------------------
   PasteAnElement  Paste element decribed by pSavedEl within (if within
@@ -571,18 +620,19 @@ void PasteCommand ()
   PtrDocument         pDoc;
   PtrElement          firstSel, lastSel, pEl, pPasted, pClose, pFollowing,
                       pNextEl, pFree, pSplitText, pSel, cellChild;
-  PtrElement          pColHead, pNextCol, pRow, pNextRow, pTable, addedCell,
-                      pCell;
+  PtrElement          pColHead, pNextCol, pRow, pNextRow, pTable;
+  PtrElement          addedCell, pCell, extendedCell[500];
   PtrPasteElem        pPasteD;
   ElementType         cellType;
   DisplayMode         dispMode;
   Document            doc;
   int                 firstChar, lastChar, view, i, info = 0;
-  int                 colspan, rowspan;
+  int                 colspan, rowspan, back, nbextended;
   ThotBool            ok, before, within, lock, cancelled, first, beginning;
   ThotBool            savebefore;
 
   before = FALSE;
+  nbextended = 0;
   pColHead = pRow = pNextRow = pTable = NULL;
   if (FirstSavedElement == NULL)
     return;
@@ -652,23 +702,20 @@ void PasteCommand ()
 		{
 		  /* get the last column of the cell */
 		  GetCellSpans (pCell, &colspan, &rowspan);
+		  if (colspan == 0)
+		    return;
 		  while (colspan > 1 && pColHead)
 		    {
 		      pColHead = NextColumnInTable (pColHead, pTable);
 		      colspan--;
 		    }
 		}
-	      /* look for the first row */
+	      /* current row */
 	      pRow = pCell->ElParent;
 	      if (pRow && pColHead)
-		/* search the next row in the same table */
-		{
-		  /***** could be implemented more efficiently *****/
-		  pRow = FwdSearchTypedElem (pColHead, pRow->ElTypeNumber,
-					     pRow->ElStructSchema);
-		  if (pRow && !ElemIsWithinSubtree (pRow, pTable))
-		    pRow = NULL;
-		}
+		/* look for the first row in the table */
+		pRow = FwdSearchTypedElem (pColHead, pRow->ElTypeNumber,
+					   pRow->ElStructSchema);
 	      else
 		pRow = NULL;
 	      /* change the selection to paste a whole column */
@@ -763,8 +810,9 @@ void PasteCommand ()
 	      savebefore = before; /* could be temporay changed */
 	      if (WholeColumnSaved)
 		{
-		  /* look for the cell in that row and that column */
-		  pEl = GetCellInRow (pRow, pColHead, TRUE);
+		  /* look for the cell in that row and that column or
+		     in a previous column */
+		  pEl = GetCellInRow (pRow, pColHead, TRUE, &back);
 		  if (pEl == NULL && pRow)
 		    {
 		      /* no cell in that row */
@@ -775,9 +823,23 @@ void PasteCommand ()
 			  before = TRUE;
 			  pNextCol = NextColumnInTable (pNextCol, pTable);
 			  if (pNextCol)
-			    pEl = GetCellInRow (pRow, pNextCol, FALSE);
+			    pEl = GetCellInRow (pRow, pNextCol, FALSE, &back);
 			}
 		    }
+		  else
+		    {
+		      GetCellSpans (pEl, &colspan, &rowspan);
+		      if (colspan == 0)
+			colspan = 9999;
+		      if (colspan - back > 1)
+			{
+			  /* extend this cell instead of pasting the new cell */
+			  extendedCell[nbextended] = pEl;
+			  nbextended++;
+			  pEl = NULL;
+			}
+		    }
+		  
 		  pNextRow = NextRowInTable (pRow, pTable);
 		}
 	      if (pEl)
@@ -785,7 +847,7 @@ void PasteCommand ()
 					  &cancelled, pDoc, &cellChild, addedCell);
 	      else
 		pPasted = NULL;
-	      if (pPasted == NULL && !cancelled &&
+	      if (pPasted == NULL && !WholeColumnSaved && !cancelled &&
 		  /* echec, mais l'application n'a pas refusé */
 		  !within && !before && pNextEl)
 		/* on essayait de coller apres le dernier colle' */
@@ -908,7 +970,15 @@ void PasteCommand ()
 		    CreatedElement[i] = NULL;
 		  else
 		    AddEditOpInHistory (CreatedElement[i], pDoc, FALSE, TRUE);
-	      }
+		}
+
+	    for (i = 0; i < nbextended; i++)
+	      if (extendedCell[i])
+	        {
+		  NotifyHExtension (extendedCell[i], doc);
+		  extendedCell[i] = NULL;
+		}
+
 	    /* close the history sequence after applications have possibly
 	       registered more changes to the pasted elements */
 	    CloseHistorySequence (pDoc);

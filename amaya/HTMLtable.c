@@ -3108,7 +3108,7 @@ void ColspanModified (NotifyAttribute * event)
 	  TtaSetAttributeValue (attr, span, cell, doc);
 	}
     }
-  if (span != PreviousColspan)
+  if (span != PreviousColspan || span == 0)
     {
       /* for undo operations just restore the col extension */
       if (event->info != 1)

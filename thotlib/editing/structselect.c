@@ -461,13 +461,17 @@ PtrElement GetColHeadOfCell (PtrElement pCell)
   GetCellInRow
   Return the cell in row pRow that is related to column head pColHead or
   a previous column if orPrevious is TRUE.
+  If the cell comes from a previous column, *back gives the shift of
+  that related column.
   ----------------------------------------------------------------------*/
 PtrElement GetCellInRow (PtrElement pRow, PtrElement pColHead,
-			 ThotBool orPrevious)
+			 ThotBool orPrevious, int *back)
 {
   PtrElement   pCell;
+  int          pos;
   ThotBool     found;
 
+  *back = 0;
   if (pRow == NULL || pColHead == NULL)
     return NULL;
   pCell = NULL;
@@ -489,9 +493,10 @@ PtrElement GetCellInRow (PtrElement pRow, PtrElement pColHead,
 	     !TypeHasException (ExcIsColHead,
 				pColHead->ElTypeNumber,
 				pColHead->ElStructSchema))
-	/* skip comments */
-	pColHead = pColHead->ElPrevious;
-      pCell = GetCellInRow (pRow, pColHead, orPrevious);
+	  /* skip comments */
+	  pColHead = pColHead->ElPrevious;
+      pCell = GetCellInRow (pRow, pColHead, orPrevious, back);
+      (*back)++;
     }
   return pCell;
 }
@@ -620,7 +625,7 @@ PtrElement NextColumnInTable (PtrElement pCol, PtrElement pTable)
 static PtrElement PreviousLeafInSelection (PtrElement pEl)
 {
    PtrElement          pCell, pRow, pEl1;
-   int                 i;
+   int                 i, back;
    ThotBool            found;
 
    if (pEl != NULL)
@@ -687,7 +692,7 @@ static PtrElement PreviousLeafInSelection (PtrElement pEl)
 					     pRow->ElStructSchema);
 		  if (pRow)
 		    {
-		      pCell = GetCellInRow (pRow, SelectedColumn, FALSE);
+		      pCell = GetCellInRow (pRow, SelectedColumn, FALSE, &back);
 		      if (pCell)
 			/* there is a cell for that column in the row */
 			/* take that cell */
@@ -736,7 +741,7 @@ static PtrElement PreviousLeafInSelection (PtrElement pEl)
 PtrElement NextInSelection (PtrElement pEl, PtrElement pLastEl)
 {
    PtrElement          pCell, pRow, pEl1;
-   int                 i;
+   int                 i, back;
    ThotBool            found;
 
    if (pEl != NULL)
@@ -819,7 +824,7 @@ PtrElement NextInSelection (PtrElement pEl, PtrElement pLastEl)
 						 pRow->ElStructSchema);
 		      if (pRow)
 			{
-			  pCell = GetCellInRow (pRow, SelectedColumn, FALSE);
+			  pCell = GetCellInRow (pRow, SelectedColumn, FALSE, &back);
 			  if (pCell)
 			    /* there is a cell for that column in the row */
 			    {
@@ -3424,7 +3429,7 @@ static void SelColumn (PtrElement column)
 {
   PtrElement          pNextRow, pCell;
   PtrElement          pFirst, pLast, pRow, pTable;
-  int                 rowType;
+  int                 rowType, back;
   
   /* get the table ancestor first */
   pTable = column;
@@ -3440,7 +3445,7 @@ static void SelColumn (PtrElement column)
   /* get the relevant cell in the first row */
   do
     {
-      pCell = GetCellInRow (pRow, column, FALSE);
+      pCell = GetCellInRow (pRow, column, FALSE, &back);
       if (!pCell)
 	pRow = NextRowInTable (pRow, pTable);
     }
@@ -3457,7 +3462,7 @@ static void SelColumn (PtrElement column)
   /* get the relevant cell in the last row */
   do
     {
-      pCell = GetCellInRow (pRow, column, FALSE);
+      pCell = GetCellInRow (pRow, column, FALSE, &back);
       if (!pCell)
 	pRow = PreviousRowInTable (pRow, pTable);
     }
