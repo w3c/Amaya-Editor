@@ -2652,7 +2652,8 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 
        /* do we have to redraw buttons and menus? */
        reinitialized = (docType != DocumentTypes[doc]);
-       if (docType == docBookmark || docType == docLog || docType == docLibrary)
+       if (docType == docBookmark || docType == docLog ||
+	   docType == docLibrary || docType == docSource)
 	 {
 	   TtcSwitchButtonBar (doc, 1); /* no button bar */
 	   if (docType != docLibrary)

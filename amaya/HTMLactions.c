@@ -2465,38 +2465,6 @@ void ResetHighlightedElement ()
 }
 
 /*----------------------------------------------------------------------
-   CheckSynchronize
-   Check if the selected document must be synchronized.
-   If the clicked document is not the current one : synchronize it !
-  ----------------------------------------------------------------------*/
-void CheckSynchronize (NotifyElement *event)
-{
-  if (event->document != SelectionDoc)
-    {
-      if (SelectionDoc && DocumentURLs[SelectionDoc])
-	{
-	  /* Reset buttons state in previous selected document */
-	  UpdateContextSensitiveMenus (SelectionDoc);
-	  /* Synchronize the content of the old document */
-	  if ((DocumentSource[SelectionDoc] &&
-	       (DocumentTypes[SelectionDoc] == docHTML ||
-		DocumentTypes[SelectionDoc] == docSVG ||
-		DocumentTypes[SelectionDoc] == docLibrary ||
-		DocumentTypes[SelectionDoc] == docMath)) ||
-	      DocumentTypes[SelectionDoc] == docSource)
-	    DoSynchronize (SelectionDoc, 1, event);
-	}
-      else
-	/* the document didn't change. Only synchronize the selection. */
-	SynchronizeSourceView (event);
-      SelectionDoc = event->document;
-    }
-  else
-    /* the document didn't change. Only synchronize the selection. */
-    SynchronizeSourceView (event);
-}
-
-/*----------------------------------------------------------------------
    SynchronizeSourceView
    A new element has been selected. If the Source view is open,
    synchronize it with the new selection.      
@@ -2940,39 +2908,52 @@ ThotBool RightClickInText (NotifyElement *event)
 }
 
 /*----------------------------------------------------------------------
-   A new element has been selected. Update menus accordingly.      
+  CheckSynchronize
+  Check if the selected document must be synchronized.
+  If the clicked document is not the current one : synchronize it !
   ----------------------------------------------------------------------*/
-void SelectionChanged (NotifyElement *event)
+void CheckSynchronize (NotifyElement *event)
 {
-  Document       doc;
-
   if (event->document != SelectionDoc)
     {
       if (SelectionDoc && DocumentURLs[SelectionDoc])
 	{
 	  /* Reset buttons state in previous selected document */
 	  UpdateContextSensitiveMenus (SelectionDoc);
-	  doc = event->document;
 	  /* Synchronize the content of the old document */
-	  if ((DocumentSource[SelectionDoc] &&
+	  if (DocumentTypes[SelectionDoc] == docSource || /* source of ... */
+	      (DocumentSource[SelectionDoc] && /* has a source */
 	       (DocumentTypes[SelectionDoc] == docHTML ||
 		DocumentTypes[SelectionDoc] == docSVG ||
 		DocumentTypes[SelectionDoc] == docLibrary ||
-		DocumentTypes[SelectionDoc] == docMath)) ||
-	      DocumentTypes[SelectionDoc] == docSource)
-	    DoSynchronize (SelectionDoc, 1, event);
+		DocumentTypes[SelectionDoc] == docMath)))
+	    {
+	      if (event->info == 1)
+		/* an undo operation was done in event->document */
+		DoSynchronize (event->document, 1, event);
+	      else if (TtaIsDocumentModified (SelectionDoc))
+		DoSynchronize (SelectionDoc, 1, event);
+	    }
 	}
       else
-	/* change the new selected document */
+	/* the document didn't change. Only synchronize the selection. */
 	SynchronizeSourceView (event);
       SelectionDoc = event->document;
     }
   else
     {
+      /* the document didn't change. Only synchronize the selection. */
       UpdateContextSensitiveMenus (event->document);
       SynchronizeSourceView (event);
     }
+}
 
+/*----------------------------------------------------------------------
+  A new element has been selected. Update menus accordingly.      
+  ----------------------------------------------------------------------*/
+void SelectionChanged (NotifyElement *event)
+{
+  CheckSynchronize (event);
   TtaSelectView (SelectionDoc, 1);
   /* update the displayed style information */
   SynchronizeAppliedStyle (event);    
