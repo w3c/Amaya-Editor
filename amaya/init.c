@@ -716,7 +716,8 @@ Document            doc;
        TtaSetMenuOff (document, 1, Types);
        TtaSetMenuOff (document, 1, Links);
        TtaSetMenuOff (document, 1, Style);
-       TtaSetMenuOff (document, 1, Special);
+       TtaSetItemOff (document, 1, Special, TSectionNumber);
+       TtaSetItemOff (document, 1, Special, BMakeBook);
        view = TtaGetViewFromName (document, "Structure_view");
        if (view != 0 && TtaIsViewOpened (document, view))
 	 {
@@ -832,7 +833,8 @@ Document            doc;
        TtaSetMenuOn (document, 1, Types);
        TtaSetMenuOn (document, 1, Links);
        TtaSetMenuOn (document, 1, Style);
-       TtaSetMenuOn (document, 1, Special);
+       TtaSetItemOn (document, 1, Special, TSectionNumber);
+       TtaSetItemOn (document, 1, Special, BMakeBook);
        view = TtaGetViewFromName (document, "Structure_view");
        if (view != 0 && TtaIsViewOpened (document, view))
 	 {
@@ -1713,7 +1715,8 @@ boolean             logFile;
 	 TtaSetMenuOff (doc, 1, Types);
 	 TtaSetMenuOff (doc, 1, Links);
 	 TtaSetMenuOff (doc, 1, Style);
-	 TtaSetMenuOff (doc, 1, Special);
+	 TtaSetItemOff (doc, 1, Special, TSectionNumber);
+	 TtaSetItemOff (doc, 1, Special, BMakeBook);
 	 TtaSetMenuOff (doc, 1, Attributes_);
        }
      else if (DocumentTypes[doc] == docHTML ||
@@ -1757,7 +1760,8 @@ boolean             logFile;
 	     TtaSetMenuOn (doc, 1, Types);
 	     TtaSetMenuOn (doc, 1, Links);
 	     TtaSetMenuOn (doc, 1, Style);
-	     TtaSetMenuOn (doc, 1, Special);
+	     TtaSetItemOn (doc, 1, Special, TSectionNumber);
+	     TtaSetItemOn (doc, 1, Special, BMakeBook);
 	     TtaSetMenuOn (doc, 1, Attributes_);
 	   }
 	 TtaSetToggleItem (doc, 1, Edit_, TEditMode, TRUE);

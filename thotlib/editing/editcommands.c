@@ -2569,9 +2569,16 @@ int                 editType;
 			     pSelBox->BxYOrg + pSelBox->BxHeight);
 		  }
 		else
-		  DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
-			   pBox->BxXOrg + pBox->BxWidth,
-			   pBox->BxYOrg + pBox->BxHeight);
+		  {
+		    if (editType == TEXT_PASTE || editType == TEXT_X_PASTE)
+		      /* adding clipping space to display the carret */
+		      i = 2;
+		    else
+		      i = 0;
+		    DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
+			     pBox->BxXOrg + pBox->BxWidth,
+			     pBox->BxYOrg + pBox->BxHeight + i);
+		  }
 
 		/* Est-ce que les dimensions de la boite dependent du contenu */
 		pPavD1 = &pAb->AbWidth;

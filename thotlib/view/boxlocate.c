@@ -1025,7 +1025,7 @@ int                 yDelta;
 	    pBox = pSourceBox;
 	  if (pBox == pSourceBox || pBox->BxAbstractBox->AbBox == pSourceBox)
 	    {
-	      /* compute the height to be moved*/
+	      /* compute the height to be moved */
 	      pLine = SearchLine (pBox);
 	      if (pLine != NULL)
 		h = pLine->LiHeight / 2;
@@ -1049,6 +1049,8 @@ int                 yDelta;
 		  yDelta = -h;
 		  found = FALSE;
 		}
+	      else if (yDelta != 0)
+		*y += yDelta;
 	    }
 	  else if (IsParentBox (pSourceBox, pBox))
 	    {

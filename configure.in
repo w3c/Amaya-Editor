@@ -418,21 +418,23 @@ build_amaya="yes"
 
 if test "$with_thot" = "no" ; then
     build_thot="no"
-fi
-if test "$with_amaya" = "no" ; then
-    build_amaya="no"
-fi
-
-if test ! -f $srcdir/thot/Makefile.in ; then
+else
+  if test ! -f $srcdir/thot/Makefile.in ; then
     AC_MSG_WARN(Thot editor sources not found, disabling Thot build !)
     build_thot="no"
-fi
-   
-if test ! -f $srcdir/amaya/Makefile.in ; then
-    AC_MSG_WARN(Amaya browser/editor sources not found, disabling Amaya build !)
-    build_amaya="no"
+  fi
 fi
 
+if test "$with_amaya" = "no" ; then
+    build_amaya="no"
+else
+  if test ! -f $srcdir/amaya/Makefile.in ; then
+    AC_MSG_WARN(Amaya browser/editor sources not found, disabling Amaya build !)
+    build_amaya="no"
+  fi
+fi
+
+ 
 dnl
 dnl Check for external, Thot related programs
 dnl

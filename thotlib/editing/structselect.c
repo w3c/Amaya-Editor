@@ -51,12 +51,6 @@
 #include "displayselect_f.h"
 #include "searchref_f.h"
 
-static PtrElement   FixedElement;	/* the element where the user clicked
-					   first when setting the current
-					   selection */
-static int          FixedChar;		/* rank of the character where the
-					   user clickeded first */
-
 static int          NSelectedElements;	/* number of elements in table
 					   SelectedElement */
 static PtrElement   SelectedElement[MAX_SEL_ELEM]; /* the selected elements if

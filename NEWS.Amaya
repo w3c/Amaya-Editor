@@ -59,7 +59,7 @@ Extensions 2.0:
   Using the configuration menus, it's now possible to choose the default
   name for saving URLs that end in "/".
 
-* Implementing a new policy of colors management.
+* Implementing a new policy of colors allocation.
 
 * It's now possible to browse with a simple-click or a double-click. By default
   Amaya uses the double-click, but it could be switched to simple-click in the

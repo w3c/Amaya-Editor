@@ -282,11 +282,28 @@ boolean             extendSel;
 	       }
 
 	     /* could we shrink the current extended selection */
-	     if (FirstSelectedChar == LastSelectedChar &&
-		 FirstSelectedElement == LastSelectedElement && SelPosition)
+	     if (extendSel)
 	       {
-		 RightExtended = FALSE;
-		 LeftExtended = FALSE;
+		 if (FirstSelectedChar == LastSelectedChar &&
+		     FirstSelectedElement == LastSelectedElement && SelPosition)
+		   {
+		     RightExtended = FALSE;
+		     LeftExtended = FALSE;
+		   }
+		 else if (!RightExtended && !LeftExtended)
+		   {
+		     if (FirstSelectedChar == FixedElement &&
+			 FirstSelectedChar == FixedChar)
+		       {
+			 RightExtended = FALSE;
+			 LeftExtended = TRUE;
+		       }
+		     else
+		       {
+			 RightExtended = TRUE;
+			 LeftExtended = FALSE;
+		       }
+		   }
 	       }
 	     /* doesn't change the current Shrink value in other cases */
 	     switch (code)
