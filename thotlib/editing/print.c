@@ -300,7 +300,7 @@ PtrAbstractBox      pPage;
   PtrAbstractBox    pAb;
   PtrBox            pBox;
   ViewFrame        *pFrame;
-  int               h;
+  int               h, y, framexmin, framexmax;
 
 
   /* Look for the break line position */
@@ -312,12 +312,17 @@ PtrAbstractBox      pPage;
   /* define the clipping to display the page header */
   pFrame = &ViewFrameTable[frame - 1];
   pFrame->FrClipXBegin = 0;
-  pFrame->FrClipXEnd = 32000;
+  pFrame->FrClipXEnd = PixelValue (32000, UnPoint, NULL, 0);
   pFrame->FrClipYBegin = 0;
-  pFrame->FrClipYEnd = 32000;
+  pFrame->FrClipYEnd = PixelValue (32000, UnPoint, NULL, 0);
   pFrame->FrYOrg = pPage->AbBox->BxYOrg;
   /* Set the top margin to the page footer position on the paper */
-  FrameTable[frame].FrTopMargin = TopMargin + PageHeight + PageFooterHeight - h  + pPage->AbBox->BxYOrg;
+  FrameTable[frame].FrTopMargin = PixelValue (TopMargin, UnPoint, NULL, 0) + PageHeight + PageFooterHeight - h  + pPage->AbBox->BxYOrg;
+
+  /*y = 0;
+  h = 32000; */
+  /* set the clipping to the frame size before generating postscript (RedrawFrameBottom) */
+  /* DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg, &framexmin, &y, &framexmax, &h, 1); */
 
   /* Look for the first terminal box of the current page */
   pAb = pPage->AbFirstEnclosed;
@@ -357,14 +362,17 @@ int                 org;
 
 
   /* Set the top margin to the page header position on the paper */
-  FrameTable[frame].FrTopMargin = TopMargin;
+  FrameTable[frame].FrTopMargin = PixelValue (TopMargin, UnPoint, NULL, 0);
   /* define the clipping to display the page header */
   pFrame = &ViewFrameTable[frame - 1];
   pFrame->FrClipXBegin = 0;
-  pFrame->FrClipXEnd = 32000;
+  pFrame->FrClipXEnd = PixelValue (32000, UnPoint, NULL, 0);
   pFrame->FrClipYBegin = 0;
-  pFrame->FrYOrg = PixelValue (org, UnPoint, pFrame->FrAbstractBox, 0);
-  pFrame->FrClipYEnd = 32000;
+  /* pFrame->FrYOrg = PixelValue (org, UnPoint, pFrame->FrAbstractBox, 0); */
+  pFrame->FrYOrg = org;
+  pFrame->FrClipYEnd = PixelValue (32000, UnPoint, NULL, 0);
+  y = 0;
+  h = 32000;
   /* set the clipping to the frame size before generating postscript (RedrawFrameBottom) */
   DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg, &framexmin, &y, &framexmax, &h, 1);
 
@@ -382,7 +390,7 @@ int                 org;
     }
 
   /* Set the top margin to the page body position on the paper */
-  FrameTable[frame].FrTopMargin = TopMargin + pPage->AbBox->BxHeight;
+  FrameTable[frame].FrTopMargin = PixelValue (TopMargin, UnPoint, NULL, 0) + pPage->AbBox->BxHeight;
 
   /* Remove all boxes within the page element except the line */
   pAb = pPage->AbFirstEnclosed;
@@ -687,7 +695,7 @@ int                 frame;
 
 {   
    FrameTable[frame].FrWidth = 32000;
-   FrameTable[frame].FrHeight = 1000;
+   FrameTable[frame].FrHeight = PixelValue (1000, UnPixel, NULL, 0);
 
 }
 
@@ -1581,14 +1589,16 @@ int                 height;
      {
 	pFrame = &ViewFrameTable[frame - 1];
 	/* On convertit suivant l'unite donnee */
-	y = PixelValue (org, UnPoint, pFrame->FrAbstractBox, 0);
-	h = PixelValue (height, UnPoint, pFrame->FrAbstractBox, 0);
+	/* y = PixelValue (org, UnPoint, pFrame->FrAbstractBox, 0);
+	h = PixelValue (height, UnPoint, pFrame->FrAbstractBox, 0); */
+	y = org;
+	h = y + height;
 	pFrame->FrClipXBegin = 0;
 	pFrame->FrClipXEnd = 32000;
 	pFrame->FrClipYBegin = y;
 	pFrame->FrYOrg = y;
-	pFrame->FrClipYEnd = y + h;
-        /* set the clipping to the frame size before generating postscript (RedrawFrameBottom) */
+	pFrame->FrClipYEnd = h;
+    /* set the clipping to the frame size before generating postscript (RedrawFrameBottom) */
 	DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg, &framexmin, &y, &framexmax, &h, 1);
      }
 }
@@ -1624,6 +1634,8 @@ PtrAbstractBox      rootAbsBox;
       /* par defaut */
      {
 	PageFooterHeight = 0;
+	/****** NewLeftMargin = PixelValue (DEF_LEFT_MARGIN, UnPoint, NULL, 0);
+	NewTopMargin = PixelValue (DEF_TOP_MARGIN, UnPoint, NULL, 0); ******/
 	NewLeftMargin = DEF_LEFT_MARGIN;
 	NewTopMargin = DEF_TOP_MARGIN;
 	PageHeight = DEF_PAGE_HEIGHT;
@@ -2219,7 +2231,7 @@ int                 clipOrg;
       /* calcule a priori la position verticale (par rapport au bord */
       /* superieur de la feuille de papier) au-dela de laquelle rien ne */
       /* sera imprime' */
-      nextPageBreak = TopMargin + PageHeight + PageFooterHeight;
+      nextPageBreak = PixelValue (TopMargin, UnPoint, NULL, 0) + PageHeight + PageFooterHeight;
       /* valeur utilisee par SetPageHeight si pas de nouvelle marque page */
       /* (cas de la fin du document) */
       /* pas (encore) de pave espace insere' */
@@ -2252,72 +2264,6 @@ int                 clipOrg;
 	    {
 	      nextPageBreak = 0;
 	      SetPageHeight (pAb, TRUE, &pageHeight, &nextPageBreak, &nChars);
-	      /* position = position du filet */
-	      /* on decale la boite page pour que le filet separateur de */
-	      /* pages se place exactement a la distance prevue du haut de la page */
-	      shift = TopMargin + PageHeight + PageFooterHeight - nextPageBreak;
-	      /* shift = valeur du decalage souhaite */
-	      /* mais le pave ajoute doit avoir pour hauteur ce decalage */
-	      /* plus la hauteur effective du bas de page, car on fait */
-	      /* une insertion comme frere du filet (toutes les boites de */
-	      /* bas de page sont positionnees par rapport au filet) */
-	      if (shift <= 0)
-		shift = 0;
-	      else
-		/* demande la position (h) du haut de la boite page */
-		{
-		  h = 0;
-		  SetPageHeight (pNextPageAb, TRUE, &pageHeight, &h, &nChars);
-		  /* on ajoute un pave avant le filet de page pour augmenter */
-		  /* la hauteur de la boite page */
-		  /* ce pave a pour hauteur shift + position - h */
-		  /* car  position - h = hauteur effective du bas de page */
-		  pSpaceAb = InitAbsBoxes (pNextPageAb->AbElement, pNextPageAb->AbDocView,
-					   pNextPageAb->AbVisibility, TRUE);
-		  pSpaceAb->AbPSchema = pNextPageAb->AbPSchema;
-		  pSpaceAb->AbVertPos.PosEdge = Bottom;
-		  pSpaceAb->AbVertPos.PosRefEdge = Top;
-		  pSpaceAb->AbVertPos.PosDistance = 0;
-		  pSpaceAb->AbVertPos.PosAbRef = pAb;
-		  pSpaceAb->AbHorizPos.PosAbRef = pAb;
-		  pSpaceAb->AbPresentationBox = TRUE;
-		  
-		  pDim = &pSpaceAb->AbHeight;
-		  pDim->DimValue = shift + nextPageBreak - h;
-		  pDim->DimUnit = UnPoint;
-
-		  pDim = &pSpaceAb->AbWidth;
-		  pDim->DimValue = 1;
-		  pDim->DimUnit = UnPoint;
-		  
-		  pSpaceAb->AbLeafType = LtGraphics;
-		  pSpaceAb->AbShape = ' ';
-		  pSpaceAb->AbGraphAlphabet = 'L';
-		  pSpaceAb->AbVolume = 1;
-		  pSpaceAb->AbAcceptLineBreak = FALSE;
-		  pSpaceAb->AbAcceptPageBreak = FALSE;
-		  pSpaceAb->AbEnclosing = pNextPageAb;
-		  pSpaceAb->AbNext = pAb;
-		  pSpaceAb->AbPrevious = pAb->AbPrevious;
-		  pSpaceAb->AbNew = TRUE;
-		  if (pAb->AbPrevious != NULL)
-		    {
-		      pAb->AbPrevious->AbNext = pSpaceAb;
-		      pAb->AbPrevious = pSpaceAb;
-		    }
-		  if (pNextPageAb->AbFirstEnclosed == pAb)
-		    pNextPageAb->AbFirstEnclosed = pSpaceAb;
-		  /* on signale la creation du pave au Mediateur */
-		  h = 0;
-		   /* on met a jour l'image depuis la racine (pour que la hauteur */
-		   /*  du filet soit correctement calculee */
-		  ChangeConcreteImage (CurrentFrame, &h, rootAbsBox);
-		  /* demande au Mediateur la nouvelle position du saut de page */
-		  /* pour lui donner la hauteur effective a l'impression */
-		  /* cf. appel a SetPageHeight */
-		  nextPageBreak = 0;
-		  SetPageHeight (pAb, TRUE, &pageHeight, &nextPageBreak, &nChars);
-		}
 	    }
 	}
 

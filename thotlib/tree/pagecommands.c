@@ -176,12 +176,12 @@ PtrPSchema         *pSchP;
 	  {
 	     *b = pR->PrPresBox[0];	/* parametre retour */
 	     /* Hauteur minimum du bas de page */
-	     PageFooterHeight = pSP->PsPresentBox[(*b) - 1].PbFooterHeight;
+	     PageFooterHeight = PixelValue (pSP->PsPresentBox[(*b) - 1].PbFooterHeight, UnPoint, NULL, 0);
 	     /* cherche la regle de hauteur de la boite page */
 	     pR = GetPRulePage (PtHeight, *b, pSP);
 	     if (pR != NULL)
 		if (!pR->PrDimRule.DrPosition)
-		   PageHeight = pR->PrDimRule.DrValue - PageFooterHeight;
+		   PageHeight = PixelValue (pR->PrDimRule.DrValue, UnPoint, NULL, 0) - PageFooterHeight;
 	     *pSchP = pSP;	/* parametre retour */
 	  }
      }

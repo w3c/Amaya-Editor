@@ -41,7 +41,7 @@
 #define THOT_EXPORT
 #include "page_tv.h"
 
-/*#define PRINT_DEBUG*/ 
+#define PRINT_DEBUG
 
 #include "absboxes_f.h"
 #include "applicationapi_f.h"
@@ -952,10 +952,10 @@ int                 position;
 	  {
 	    pPos = &pP1->AbVertPos;
 	    pPos->PosAbRef = pAb;
-	    pPos->PosDistance = RealPageHeight - pAb->AbBox->BxYOrg - pAb->AbBox->BxHeight;
+	    pPos->PosDistance = PixelToPoint (RealPageHeight - pAb->AbBox->BxYOrg - pAb->AbBox->BxHeight);
 	    pPos->PosEdge = Top;
 	    pPos->PosRefEdge = Bottom;
-	    pPos->PosUnit = UnPixel;
+	    pPos->PosUnit = UnPoint;
 	    pPos->PosUserSpecified = FALSE;
 	    pP1->AbVertPosChange = TRUE;
 	  }
@@ -963,10 +963,10 @@ int                 position;
 	  {
 	    pPos = &pP1->AbVertPos;
 	    pPos->PosAbRef = pAb;
-	    pPos->PosDistance = RealPageHeight - pAb->AbBox->BxYOrg;
+	    pPos->PosDistance = PixelToPoint (RealPageHeight - pAb->AbBox->BxYOrg);
 	    pPos->PosEdge = Top;
 	    pPos->PosRefEdge = Top;
-	    pPos->PosUnit = UnPixel;
+	    pPos->PosUnit = UnPoint;
 	    pPos->PosUserSpecified = FALSE;
 	    pP1->AbVertPosChange = TRUE;
 	  }
@@ -1275,7 +1275,7 @@ FILE     *list;
 char      localname[50];
 static int       n = 1;
 
-   sprintf (localname, "/tahiti/vatton/.amaya/print%d.debug", n);
+   sprintf (localname, "C:\\TEMP\\AMAYA\\print%d.dbg", n);
    n++;
    list = fopen (localname, "w");
    TtaListBoxes (1, 1, list);
@@ -1309,7 +1309,7 @@ static int       n = 1;
 		newPageHight = 0;
 	    }
 	}
-      while (!(newPageHight == 0));
+      while (newPageHight != 0);
     }
   /* place la marque de page dans l'arbre abstrait */
   SetMark (rootEl->ElAbstractBox[nbView - 1], rootEl, pDoc, schView,

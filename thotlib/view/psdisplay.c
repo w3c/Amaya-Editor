@@ -524,7 +524,8 @@ int                 shadow;
 	   WinErrorBox (NULL);
 
        if (hyphen) /* draw the hyphen */
-         if (!TextOut (TtPrinterDC, X + width, Y, "\255", 1))
+         /* if (!TextOut (TtPrinterDC, X + width, Y, "\255", 1)) */
+         if (!TextOut (TtPrinterDC, x + width, y, "\255", 1))
 	   WinErrorBox (NULL);
        if (lgboite != 0)
          SameBox = 0;
@@ -737,7 +738,7 @@ int                 fg;
    int                 ex, fh;
    FILE               *fout;
 #  ifdef _WINDOWS
-   int                 xm, xp, fh;
+   int                 xm, xp;
 #  endif /* _WINDOWS */
 
    if (y < 0)
