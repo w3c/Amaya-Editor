@@ -4667,7 +4667,7 @@ RULES
 	  CreateBefore(CellFrame);
 	VertPos : Top = Enclosing . Top;
 	HorizPos: Left = Previous Table_cell . Right;
-	Width: Enclosed . Width{20 px};
+	Width: Enclosed . Width {20 px};
 	Adjust: Enclosing =;
 	PaddingTop: 0.2;
 	PaddingRight: 0.2;

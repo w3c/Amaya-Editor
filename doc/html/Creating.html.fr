@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Créer des éléments</title>
-  <meta name="GENERATOR" content="amaya 6.4, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
 </head>
 
 <body xml:lang="fr" lang="fr">
@@ -31,14 +32,14 @@
 <h3><a name="Types">Boutons et menu Eléments</a></h3>
 
 <p>La manière la plus simple de créer de nouveaux éléments dans un document
-est de placer le point d'insertion dans la position voulue et d'utiliser
+est de placer le point d'insertion à la position voulue et d'utiliser
 les&nbsp;menus <strong>Xhtml</strong> ou <strong>Xml</strong>, ou les boutons
 correspondant aux éléments les plus communs (images, en-têtes, listes...).
 Ces boutons ou entrées de menu créent l'élément correspondant à la position
 courante.</p>
 
-<p>Dans certains cas, l'élément désiré ne peut pas être créé exactement dans
-la position choisie à cause des contraintes imposées par les DTD HTML, SVG ou
+<p>Dans certains cas, l'élément désiré ne peut pas être créé exactement à la
+position choisie à cause des contraintes imposées par les DTD HTML, SVG ou
 MathML. <strong>Amaya</strong> tente alors de créer l'élément à l'endroit le
 plus proche possible. Par exemple, si le point d'insertion se trouve à la fin
 de la dernière ligne d'un paragraphe quand vous cliquez sur le bouton <img
@@ -125,10 +126,10 @@ permet de créer très rapidement des structures complexes emboîtées.</p>
 
 <p>Considérez par exemple la structure suivante :</p>
 <ol>
-  <li>Le premier item dans le plus haut niveau de la liste. 
+  <li>Le premier item dans le plus haut niveau de la liste.
     <p>Un paragraphe dans le premier item.</p>
   </li>
-  <li>Le second item. 
+  <li>Le second item.
     <ol type="a">
       <li>Le premier item dans la liste emboîtée.</li>
       <li>Le second item dans la liste emboîtée.</li>
@@ -205,7 +206,7 @@ une table. Vous pouvez aussi sortir de la table par une série de plusieurs
 
 <h4 id="edit-dl">Editer les listes de définitions (dl/dt/dd)</h4>
 
-<p>La touche "Entrée" est également utile pour éditer des listes de
+<p>La touche "Enter" est également utile pour éditer des listes de
 définitions. Considérez l'exemple suivant :</p>
 
 <blockquote>

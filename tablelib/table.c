@@ -11,9 +11,6 @@
  *          C. Roisin (INRIA) 
  */
 
-/*----------------------------------------------------------------------
-      Traitements specifiques a la structure Tableau             
-  ----------------------------------------------------------------------*/
 
 #include "thot_sys.h"
 #include "constmedia.h"
@@ -47,21 +44,12 @@
 /* exceptions definies dans Tableau */
 #include "exc_Table.h"
 
-/* OrphanCell repond true si la cellule comporte
-   un attribut reference a une colonne qui se trouve
-   dans le buffer Couper-Coller. */
-
-#ifdef __STDC__
-static void         OrphanCell (PtrElement pCell, PtrElement pElSave, ThotBool * InCutBuffer)
-
-#else  /* __STDC__ */
-static void         OrphanCell (pCell, pElSave, InCutBuffer)
-PtrElement          pCell;
-PtrElement          pElSave;
-ThotBool            *InCutBuffer;
-
-#endif /* __STDC__ */
-
+/*----------------------------------------------------------------------
+  OrphanCell repond true si la cellule comporte
+  un attribut reference a une colonne qui se trouve
+  dans le buffer Couper-Coller.
+  ----------------------------------------------------------------------*/
+static void OrphanCell (PtrElement pCell, PtrElement pElSave, ThotBool *InCutBuffer)
 {
    int                 attr;
    PtrAttribute        pAttr;
@@ -106,22 +94,12 @@ ThotBool            *InCutBuffer;
 }
 
 
-
-
-/* DistribAlignHorizVertic      met un attribut Alignement horizontal ou Vertical */
-/* sur toutes les elements portant une exception EXC_TR_Cell_ATTRIBUT */
-
-#ifdef __STDC__
-static void         DistribAlignHorizVertic (PtrElement pEl, PtrAttribute pAttrCell, PtrDocument SelDoc)
-
-#else  /* __STDC__ */
-static void         DistribAlignHorizVertic (pEl, pAttrCell, SelDoc)
-PtrElement          pEl;
-PtrAttribute        pAttrCell;
-PtrDocument         SelDoc;
-
-#endif /* __STDC__ */
-
+/*----------------------------------------------------------------------
+  DistribAlignHorizVertic met un attribut Alignement horizontal ou Vertical
+  sur toutes les elements portant une exception EXC_TR_Cell_ATTRIBUT
+  ----------------------------------------------------------------------*/
+static void DistribAlignHorizVertic (PtrElement pEl, PtrAttribute pAttrCell,
+				     PtrDocument SelDoc)
 {
    PtrElement          pCell;
    PtrAttribute        pAttr;
@@ -158,72 +136,53 @@ PtrDocument         SelDoc;
      }
 }
 
-/* AttributSpecial traite : */
-/* - le cas particulier de l'attribut Type_Table  */
-/*   si cet attribut est mis ou retire du tableau on recree l'image abstraite du tableau */
-/* - le cas particulier de l'attribut Alignement horizontal  */
-/* - le cas particulier de l'attribut Alignement vertical */
-
-#ifdef __STDC__
-static void         AttributSpecial (PtrElement pEl, PtrAttribute pAttr, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-static void         AttributSpecial (pEl, pAttr, pDoc)
-PtrElement          pEl;
-PtrAttribute        pAttr;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
+/*----------------------------------------------------------------------
+  AttributSpecial traite :
+  - le cas particulier de l'attribut Type_Table 
+  si cet attribut est mis ou retire du tableau on recree l'image
+  abstraite du tableau
+  - le cas particulier de l'attribut Alignement horizontal
+  - le cas particulier de l'attribut Alignement vertical
+  ----------------------------------------------------------------------*/
+static void AttributSpecial (PtrElement pEl, PtrAttribute pAttr, PtrDocument pDoc)
 {
-   AttributeBlock      AttrCell;
-   PtrAttribute        pAttrCell;
+  AttributeBlock      AttrCell;
+  PtrAttribute        pAttrCell;
 
-   if (TypeHasException (EXC_ID_Table, pEl->ElTypeNumber, pEl->ElStructSchema)
-       && pAttr->AeAttrNum == GetAttrWithException (EXC_ID_Type_Table, pEl->ElStructSchema))
-     {
-	DestroyAbsBoxes (pEl, pDoc, FALSE);
-	AbstractImageUpdated (pDoc);
-	CreateAllAbsBoxesOfEl (pEl, pDoc);
-	AbstractImageUpdated (pDoc);
-     }
-
-   else if (AttrHasException (EXC_ID_Align_HorizDistrib, pAttr->AeAttrNum, pEl->ElStructSchema))
-     {
-	/* distribution sur les elements cellule inclus d'un attribut Alignement horizontal */
-	pAttrCell = &AttrCell;
-	AttrCell = *pAttr;
-	AttrCell.AeAttrNum = GetAttrWithException (EXC_ID_Align_Horiz, pEl->ElStructSchema);
-	DistribAlignHorizVertic (pEl, pAttrCell, pDoc);
-     }
-
-   else if (AttrHasException (EXC_ID_Align_VerticDistrib, pAttr->AeAttrNum, pEl->ElStructSchema))
-     {
-	/* distribution sur les elements cellule inclus d'un attribut Alignement Vertical */
-	pAttrCell = &AttrCell;
-	AttrCell = *pAttr;
-	AttrCell.AeAttrNum = GetAttrWithException (EXC_ID_Align_Vertic, pEl->ElStructSchema);
-	DistribAlignHorizVertic (pEl, pAttrCell, pDoc);
-     }
+  if (TypeHasException (EXC_ID_Table, pEl->ElTypeNumber, pEl->ElStructSchema)
+      && pAttr->AeAttrNum == GetAttrWithException (EXC_ID_Type_Table, pEl->ElStructSchema))
+    {
+      DestroyAbsBoxes (pEl, pDoc, FALSE);
+      AbstractImageUpdated (pDoc);
+      CreateAllAbsBoxesOfEl (pEl, pDoc);
+      AbstractImageUpdated (pDoc);
+    }
+  else if (AttrHasException (EXC_ID_Align_HorizDistrib, pAttr->AeAttrNum, pEl->ElStructSchema))
+    {
+      /* distribution sur les elements cellule inclus d'un attribut Alignement horizontal */
+      pAttrCell = &AttrCell;
+      AttrCell = *pAttr;
+      AttrCell.AeAttrNum = GetAttrWithException (EXC_ID_Align_Horiz, pEl->ElStructSchema);
+      DistribAlignHorizVertic (pEl, pAttrCell, pDoc);
+    }
+  else if (AttrHasException (EXC_ID_Align_VerticDistrib, pAttr->AeAttrNum, pEl->ElStructSchema))
+    {
+      /* distribution sur les elements cellule inclus d'un attribut Alignement Vertical */
+      pAttrCell = &AttrCell;
+      AttrCell = *pAttr;
+      AttrCell.AeAttrNum = GetAttrWithException (EXC_ID_Align_Vertic, pEl->ElStructSchema);
+      DistribAlignHorizVertic (pEl, pAttrCell, pDoc);
+    }
 }
 
 
 
-/* CheckAttrRef        retourne vrai si l'attribut pointe' par pAttr est */
-/* l'attribut Ref_largeur ou l'attribut La_Column. */
-
-#ifdef __STDC__
-static void         CheckAttrRef (PtrAttribute pAttr, ThotBool * ret)
-
-#else  /* __STDC__ */
-ThotBool             CheckAttrRef (pAttr, ret)
-PtrAttribute        pAttr;
-ThotBool            *ret;
-
-#endif /* __STDC__ */
-
+/*----------------------------------------------------------------------
+  CheckAttrRef retourne vrai si l'attribut pointe' par pAttr est
+  l'attribut Ref_largeur ou l'attribut La_Column.
+  ----------------------------------------------------------------------*/
+static void CheckAttrRef (PtrAttribute pAttr, ThotBool * ret)
 {
-
    *ret = FALSE;
    if (AttrHasException (EXC_ID_Ref_Title, pAttr->AeAttrNum, pAttr->AeAttrSSchema))
       *ret = TRUE;		/* c'est l'attribut Ref_largeur */
@@ -232,20 +191,12 @@ ThotBool            *ret;
 }
 
 
-/* SetAttrTitleRow    met les attribut Ref_Title_Width sur l'element pointe' par */
-/* pTitre et l'attribut Width_Percent avec une valeur qui depend du */
-/* degre' d'imbrication des lignes composees. */
-
-#ifdef __STDC__
-static void         SetAttrTitleRow (PtrElement pElTitle, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-static void         SetAttrTitleRow (pElTitle, pDoc)
-PtrElement          pElTitle;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
+/*----------------------------------------------------------------------
+  SetAttrTitleRow met les attribut Ref_Title_Width sur l'element pointe'
+  par pTitre et l'attribut Width_Percent avec une valeur qui depend du
+  degre' d'imbrication des lignes composees.
+  ----------------------------------------------------------------------*/
+static void SetAttrTitleRow (PtrElement pElTitle, PtrDocument pDoc)
 {
    PtrElement          pE, pT, pElTableTitle;
    PtrAttribute        pAttr;
@@ -290,81 +241,55 @@ PtrDocument         pDoc;
    if (TypeHasException (EXC_ID_Title_Compound_Row, pElTitle->ElTypeNumber, pElTitle->ElStructSchema))
       /* c'est un titre de ligne composee, il y a donc des titres de ligne imbriques */
      {
-	pE = pElTitle->ElNext;	/* passe a l'element Sub_Rows */
-	if (pE != NULL)
-	  {
-	     pE = pE->ElFirstChild;	/* passe a la premiere ligne imbriquee */
-	     while (pE != NULL)	/* traite toutes les lignes imbriquees */
-	       {
-		  pT = pE->ElFirstChild;	/* passe au titre de la ligne imbriquee */
-		  if (pT != NULL)
-		    {
-		       if (TypeHasException (EXC_ID_Title_Row, pT->ElTypeNumber, pT->ElStructSchema) ||
-			   TypeHasException (EXC_ID_Title_Compound_Row, pT->ElTypeNumber, pT->ElStructSchema))
-			  /* c'est bien un element Title_Row ou Title_Compound_Row, */
-			  /* on verifie ses attributs */
-			  SetAttrTitleRow (pT, pDoc);
-		    }
-		  pE = pE->ElNext;
-	       }
-	  }
+       pE = pElTitle->ElNext;	/* passe a l'element Sub_Rows */
+       if (pE != NULL)
+	 {
+	   pE = pE->ElFirstChild;	/* passe a la premiere ligne imbriquee */
+	   while (pE != NULL)	/* traite toutes les lignes imbriquees */
+	     {
+	       pT = pE->ElFirstChild;	/* passe au titre de la ligne imbriquee */
+	       if (pT != NULL)
+		 {
+		   if (TypeHasException (EXC_ID_Title_Row, pT->ElTypeNumber, pT->ElStructSchema) ||
+		       TypeHasException (EXC_ID_Title_Compound_Row, pT->ElTypeNumber, pT->ElStructSchema))
+		     /* c'est bien un element Title_Row ou Title_Compound_Row, */
+		     /* on verifie ses attributs */
+		     SetAttrTitleRow (pT, pDoc);
+		 }
+	       pE = pE->ElNext;
+	     }
+	 }
      }
 }
 
-/* SetRowAttribute     met l'attribut Filet_Gauche et Filet_Bas a l'element */
-
-#ifdef __STDC__
-static void         SetRowAttribute (PtrElement pLigne, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-static void         SetRowAttribute (pLigne, pDoc)
-PtrElement          pLigne;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
+/*----------------------------------------------------------------------
+  SetRowAttribute met l'attribut Filet_Gauche et Filet_Bas a l'element
+  ----------------------------------------------------------------------*/
+static void SetRowAttribute (PtrElement pLigne, PtrDocument pDoc)
 {
-   PtrAttribute        pAttr;
+  PtrAttribute        pAttr;
 
-   pAttr = AttachAttrByExceptNum (EXC_ID_Foot_Hairline_SimpRow, pLigne, NULL, pDoc);
-   pAttr->AeAttrValue = 2;
+  pAttr = AttachAttrByExceptNum (EXC_ID_Foot_Hairline_SimpRow, pLigne, NULL, pDoc);
+  pAttr->AeAttrValue = 2;
 
-   if (TypeHasException (EXC_ID_Compound_Row, pLigne->ElTypeNumber, pLigne->ElStructSchema))
-     {
-	pAttr = AttachAttrByExceptNum (EXC_ID_Right_Hairline_CompRow, pLigne, NULL, pDoc);
-	pAttr->AeAttrValue = 2;
-     }
+  if (TypeHasException (EXC_ID_Compound_Row, pLigne->ElTypeNumber, pLigne->ElStructSchema))
+    {
+      pAttr = AttachAttrByExceptNum (EXC_ID_Right_Hairline_CompRow, pLigne, NULL, pDoc);
+      pAttr->AeAttrValue = 2;
+    }
 }
 
-
-/* SetAttrColTitle  met l'attribut a l'element */
-
-#ifdef __STDC__
-void                SetAttrColTitle (PtrElement pElTitleCol, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-void                SetAttrColTitle (pElTitleCol, pDoc)
-PtrElement          pElTitleCol;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
+/*----------------------------------------------------------------------
+  SetAttrColTitle  met l'attribut a l'element
+  ----------------------------------------------------------------------*/
+void SetAttrColTitle (PtrElement pElTitleCol, PtrDocument pDoc)
 {
 }
 
-
-/* SetAttrSimpleCol met l'attribut Largeur a l'element */
-
-#ifdef __STDC__
-static void         SetAttrSimpleCol (PtrElement pCol, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-static void         SetAttrSimpleCol (pCol, pDoc)
-PtrElement          pCol;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
+/*----------------------------------------------------------------------
+  SetAttrSimpleCol met l'attribut Largeur a l'element
+  ----------------------------------------------------------------------*/
+static void SetAttrSimpleCol (PtrElement pCol, PtrDocument pDoc)
 {
    PtrAttribute        pAttr;
 
@@ -374,20 +299,11 @@ PtrDocument         pDoc;
    pAttr->AeAttrValue = 2;
 }
 
-
-/* SetAttrHairlineCol      met l'attribut Filet_Haut a l'element si */
-/* la Column est simple */
-
-#ifdef __STDC__
-static void         SetAttrHairlineCol (PtrElement pCol, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-static void         SetAttrHairlineCol (pCol, pDoc)
-PtrElement          pCol;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
+/*----------------------------------------------------------------------
+  SetAttrHairlineCol met l'attribut Filet_Haut a l'element si
+  la Column est simple 
+  ----------------------------------------------------------------------*/
+static void SetAttrHairlineCol (PtrElement pCol, PtrDocument pDoc)
 {
    PtrAttribute        pAttr;
 
@@ -398,18 +314,10 @@ PtrDocument         pDoc;
 }
 
 
-/* SetAttrTableTitle met l'attribut Filet_Haut et Filet_Gauche */
-
-#ifdef __STDC__
-static void         SetAttrTableTitle (PtrElement pElTitleTab, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-static void         SetAttrTableTitle (pElTitleTab, pDoc)
-PtrElement          pElTitleTab;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
+/*----------------------------------------------------------------------
+  SetAttrTableTitle met l'attribut Filet_Haut et Filet_Gauche
+  ----------------------------------------------------------------------*/
+static void SetAttrTableTitle (PtrElement pElTitleTab, PtrDocument pDoc)
 {
    PtrAttribute        pAttr;
 
@@ -418,38 +326,20 @@ PtrDocument         pDoc;
 }
 
 
-/* SetAttrColToCell   met l'attribut Ref_Column a l'element */
-/* utilise pColumn comme valeur pour la reference */
-
-#ifdef __STDC__
-static void         SetAttrColToCell (PtrElement pCell, PtrElement pCol, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-static void         SetAttrColToCell (pCell, pCol, pDoc)
-PtrElement          pCell;
-PtrElement          pCol;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
+/*----------------------------------------------------------------------
+  SetAttrColToCell   met l'attribut Ref_Column a l'element
+  utilise pColumn comme valeur pour la reference
+  ----------------------------------------------------------------------*/
+static void SetAttrColToCell (PtrElement pCell, PtrElement pCol, PtrDocument pDoc)
 {
-
-   AttachAttrByExceptNum (EXC_ID_Ref_Column, pCell, pCol, pDoc);
+  AttachAttrByExceptNum (EXC_ID_Ref_Column, pCell, pCol, pDoc);
 }
 
 
-/*  SetAttrHairlineToCols met l'attribut Filet_Gauche */
-
-#ifdef __STDC__
-static void         SetAttrHairlineToCols (PtrElement pElCols, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-static void         SetAttrHairlineToCols (pElCols, pDoc)
-PtrElement          pElCols;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
+/*----------------------------------------------------------------------
+  SetAttrHairlineToCols met l'attribut Filet_Gauche
+  ----------------------------------------------------------------------*/
+static void SetAttrHairlineToCols (PtrElement pElCols, PtrDocument pDoc)
 {
    PtrAttribute        pAttr;
 
@@ -458,18 +348,10 @@ PtrDocument         pDoc;
 }
 
 
-/* SetAttrHairlineToHead met l'attribut Hairline_Inferieur */
-
-#ifdef __STDC__
-static void         SetAttrHairlineToHead (PtrElement pElHead, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-static void         SetAttrHairlineToHead (pElHead, pDoc)
-PtrElement          pElHead;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
+/*----------------------------------------------------------------------
+  SetAttrHairlineToHead met l'attribut Hairline_Inferieur
+  ----------------------------------------------------------------------*/
+static void SetAttrHairlineToHead (PtrElement pElHead, PtrDocument pDoc)
 {
    PtrAttribute        pAttr;
 
@@ -477,18 +359,10 @@ PtrDocument         pDoc;
    pAttr->AeAttrValue = 2;
 }
 
-/* SetAttrFrameTable */
-
-#ifdef __STDC__
-static void         SetAttrFrameTable (PtrElement pTable, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-static void         SetAttrFrameTable (pTable, pDoc)
-PtrElement          pTable;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
+/*----------------------------------------------------------------------
+  SetAttrFrameTable
+  ----------------------------------------------------------------------*/
+static void SetAttrFrameTable (PtrElement pTable, PtrDocument pDoc)
 {
    PtrAttribute        pAttr;
 
@@ -497,22 +371,14 @@ PtrDocument         pDoc;
 }
 
 
-/* CreateSimpleCol        On vient de creer l'element Simple_Column pointe' */
-/* par pEl, dans le document pointe' par pDoc. Ajoute l'attribut */
-/* Filet-vertical a cet element et cree une cellule dans chaque ligne */
-/* simple du tableau. Associe a chaque cellule creee un attribut */
-/* La_Column qui pointe sur la Column simple. */
-
-#ifdef __STDC__
-static void         CreateSimpleCol (PtrElement pEl, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-static void         CreateSimpleCol (pEl, pDoc)
-PtrElement          pEl;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
+/*----------------------------------------------------------------------
+  CreateSimpleCol: On vient de creer l'element Simple_Column pointe'
+  par pEl, dans le document pointe' par pDoc. Ajoute l'attribut
+  Filet-vertical a cet element et cree une cellule dans chaque ligne
+  simple du tableau. Associe a chaque cellule creee un attribut
+  La_Column qui pointe sur la Column simple.
+  ----------------------------------------------------------------------*/
+static void CreateSimpleCol (PtrElement pEl, PtrDocument pDoc)
 {
    PtrElement          pE, pCol, pElRow, pElTheRows, pCell, pNCell;
    int                 NType, TypeCell;
@@ -637,23 +503,14 @@ PtrDocument         pDoc;
 }
 
 
-/* passe a la ligne imbriquee suivante */
-/* CreateSimpleRow      On vient de creer une ligne simple. Associe */
-/* un attribut Filet_horizontal a cette ligne et cree une cellule dans */
-/* la ligne pour chaque Column simple du tableau. Associe a chaque */
-/* Cellule creee un attribut La_Column qui pointe vers la Column */
-/* correspondante */
-
-#ifdef __STDC__
-static void         CreateSimpleRow (PtrElement pEl, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-static void         CreateSimpleRow (pEl, pDoc)
-PtrElement          pEl;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
+/*----------------------------------------------------------------------
+  CreateSimpleRow      On vient de creer une ligne simple. Associe
+  un attribut Filet_horizontal a cette ligne et cree une cellule dans
+  la ligne pour chaque Column simple du tableau. Associe a chaque
+  Cellule creee un attribut La_Column qui pointe vers la Column
+  correspondante
+  ----------------------------------------------------------------------*/
+static void CreateSimpleRow (PtrElement pEl, PtrDocument pDoc)
 {
    PtrElement          pE, pCol, pElCols, pCell, pCellPrec;
    int                 TypeCol;
@@ -720,21 +577,12 @@ PtrDocument         pDoc;
      }
 }
 
-
-/* CreateTable    complete le squelette de tableau cree par les */
-/* procedures standard de l'editeur Thot. pEl pointe sur l'element */
-/* Table. */
-
-#ifdef __STDC__
-static void         CreateTable (PtrElement pEl, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-static void         CreateTable (pEl, pDoc)
-PtrElement          pEl;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
+/*----------------------------------------------------------------------
+  CreateTable    complete le squelette de tableau cree par les
+  procedures standard de l'editeur Thot. pEl pointe sur l'element
+  Table.
+  ----------------------------------------------------------------------*/
+static void CreateTable (PtrElement pEl, PtrDocument pDoc)
 {
    PtrElement          pE, pL, pC, pElNew;
    int                 NType;
@@ -822,22 +670,13 @@ PtrDocument         pDoc;
      }
 }
 
-
-/* CreateRowHairline       Si l'element pElRow est bien une */
-/* ligne de tableau et l'element pBasPage un Bas_Table, cree */
-/* la boite de presentation Filet_Bas de la ligne pElRow. */
-
-#ifdef __STDC__
-static void         CreateRowHairline (PtrElement pElRow, PtrElement pElFootPage, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-static void         CreateRowHairline (pElRow, pElFootPage, pDoc)
-PtrElement          pElRow;
-PtrElement          pElFootPage;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
+/*----------------------------------------------------------------------
+  CreateRowHairline       Si l'element pElRow est bien une
+  ligne de tableau et l'element pBasPage un Bas_Table, cree
+  la boite de presentation Filet_Bas de la ligne pElRow.
+  ----------------------------------------------------------------------*/
+static void CreateRowHairline (PtrElement pElRow, PtrElement pElFootPage,
+			       PtrDocument pDoc)
 {
    int                 attr;
    PtrAttribute        pAttr;
@@ -871,24 +710,16 @@ PtrDocument         pDoc;
 
 
 
-/* VerifAndCreate   verifie si l'element pointe par pEl est une Column ou */
-/* une ligne de table et dans ce cas cree toutes les cellules de cette */
-/* Column ou de cette ligne. */
-/* Si l'element pEl n'est pas un element terminal cherche dans le sous arbre */
-/* si par hasard il ne se trouve pas un element tableau */
-/* Ce cas se produit quand on enchaine la creation d'un grand */
-/* nombre d'elements */
-
-#ifdef __STDC__
-static void         VerifAndCreate (PtrElement pEl, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-static void         VerifAndCreate (pEl, pDoc)
-PtrElement          pEl;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
+/*----------------------------------------------------------------------
+  VerifAndCreate   verifie si l'element pointe par pEl est une Column ou
+  une ligne de table et dans ce cas cree toutes les cellules de cette
+  Column ou de cette ligne.
+  Si l'element pEl n'est pas un element terminal cherche dans le sous arbre
+  si par hasard il ne se trouve pas un element tableau
+  Ce cas se produit quand on enchaine la creation d'un grand
+  nombre d'elements
+  ----------------------------------------------------------------------*/
+static void VerifAndCreate (PtrElement pEl, PtrDocument pDoc)
 {
    PtrElement          pE, pC;
    int                 NType;
@@ -979,19 +810,11 @@ PtrDocument         pDoc;
 }
 
 
-/* SearchAndCreateTable  Parcours recursivement l'arbre pointe par pEl
-et cree les elements de tableau (table, Columns, lignes) */
-
-#ifdef __STDC__
-static void         SearchAndCreateTable (PtrElement pEl, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-static void         SearchAndCreateTable (pEl, pDoc)
-PtrElement          pEl;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
+/*----------------------------------------------------------------------
+  SearchAndCreateTable  Parcours recursivement l'arbre pointe par pEl
+  et cree les elements de tableau (table, Columns, lignes)
+  ----------------------------------------------------------------------*/
+static void SearchAndCreateTable (PtrElement pEl, PtrDocument pDoc)
 {
    PtrElement          pE;
 
@@ -1016,18 +839,11 @@ PtrDocument         pDoc;
      }
 }
 
-/* SelectColSimple      selectionne toutes les cellules correspondant */
-/* a la Column simple pointe' par pEl. */
-
-#ifdef __STDC__
-static void         SelectSimpleCol (PtrElement pEl)
-
-#else  /* __STDC__ */
-static void         SelectSimpleCol (pEl)
-PtrElement          pEl;
-
-#endif /* __STDC__ */
-
+/*----------------------------------------------------------------------
+  SelectColSimple      selectionne toutes les cellules correspondant
+  a la Column simple pointe' par pEl.
+  ----------------------------------------------------------------------*/
+static void SelectSimpleCol (PtrElement pEl)
 {
    PtrElement          pElRow, pElRowSuiv, pE, pElTheRows, pCell;
    PtrAttribute        pAttr;
@@ -1100,25 +916,16 @@ PtrElement          pEl;
      }
 }
 
-/* TableSelection    verifie si l'element pointe par pEl est une Column */
-/* de table et dans ce cas selectionne toutes les cellules de cette */
-/* Column. Si selExtension est vrai, il s'agit d'une selextension de selection. */
-/* Retourne vrai si la selection est correcte, faux s'il s'agit d'une */
-/* extension de selection invalide (on ne selectionne pas plus d'une */
-/* Column a la fois). */
-
-#ifdef __STDC__
-static void         TableSelection (PtrElement pEl, PtrDocument pDoc, ThotBool selExtension, ThotBool * ret)
-
-#else  /* __STDC__ */
-static void         TableSelection (pEl, pDoc, selExtension, ret)
-PtrElement          pEl;
-PtrDocument         pDoc;
-ThotBool             selExtension;
-ThotBool            *ret;
-
-#endif /* __STDC__ */
-
+/*----------------------------------------------------------------------
+  TableSelection    verifie si l'element pointe par pEl est une Column
+  de table et dans ce cas selectionne toutes les cellules de cette
+  Column. Si selExtension est vrai, il s'agit d'une selextension de selection.
+  Retourne vrai si la selection est correcte, faux s'il s'agit d'une
+  extension de selection invalide (on ne selectionne pas plus d'une
+  Column a la fois).
+  ----------------------------------------------------------------------*/
+static void TableSelection (PtrElement pEl, PtrDocument pDoc,
+			    ThotBool selExtension, ThotBool *ret)
 {
   PtrElement          pE;
 
@@ -1195,55 +1002,38 @@ ThotBool            *ret;
     }
 }
 
-/* LastSavedIsAColumn       Verifie si le premier element du buffer */
-/* copier-couper-coller, qui est pointe' par pElSv, est un element */
-/* Column de tableau et repond vrai si oui. Dans ce cas, cet element */
-/* est egalement considere comme le dernier du buffer, meme s'il est */
-/* suivi de cellules, qui sont considerees comme lui appartenant. */
-
-#ifdef __STDC__
- static void         LastSavedIsAColumn (PtrElement pElSv, ThotBool * ret)
-
-#else  /* __STDC__ */
- static void         LastSavedIsAColumn (pElSv, ret)
- PtrElement          pElSv;
- ThotBool            *ret;
-
-#endif /* __STDC__ */
-
+/*----------------------------------------------------------------------
+  LastSavedIsAColumn       Verifie si le premier element du buffer
+  copier-couper-coller, qui est pointe' par pElSv, est un element
+  Column de tableau et repond vrai si oui. Dans ce cas, cet element
+  est egalement considere comme le dernier du buffer, meme s'il est
+  suivi de cellules, qui sont considerees comme lui appartenant.
+  ----------------------------------------------------------------------*/
+static void LastSavedIsAColumn (PtrElement pElSv, ThotBool * ret)
  {
-
    /* est-ce un element Simple_Column ? */
-    *ret = TypeHasException (EXC_ID_Simple_Column, pElSv->ElTypeNumber, pElSv->ElStructSchema);
+    *ret = TypeHasException (EXC_ID_Simple_Column, pElSv->ElTypeNumber,
+			     pElSv->ElStructSchema);
 
     if (*ret)			/* est-ce un element Compound_Column ? */
-       *ret = TypeHasException (EXC_ID_Compound_Column, pElSv->ElTypeNumber, pElSv->ElStructSchema);
+       *ret = TypeHasException (EXC_ID_Compound_Column,
+				pElSv->ElTypeNumber, pElSv->ElStructSchema);
  }
 
 
-/* PasteCells      Colle les NbCell premieres cellules de la suite de */
-/* cellules pointee par pSvCell dans les lignes simples du tableau */
-/* auquel appartient l'element Simple_Column pointe' par pCol. Dans */
-/* chaque ligne simple, la cellule est collee apres la cellule de rang */
-/* NbPreced. */
-/* Si NbCell est inferieur au nombre de lignes du tableau, la Column */
-/* pCol est completee avec des cellules vides. */
-/* Au retour, pSvCell pointe la cellule qui suit la derniere cellule */
-/* collee. */
-
-#ifdef __STDC__
-static void         PasteCells (PtrElement pCol, int NbPreced, int NbCell, PtrElement * pSvCell, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-static void         PasteCells (pCol, NbPreced, NbCell, pSvCell, pDoc)
-PtrElement          pCol;
-int                 NbPreced;
-int                 NbCell;
-PtrElement         *pSvCell;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
+/*----------------------------------------------------------------------
+  PasteCells      Colle les NbCell premieres cellules de la suite de
+  cellules pointee par pSvCell dans les lignes simples du tableau
+  auquel appartient l'element Simple_Column pointe' par pCol. Dans
+  chaque ligne simple, la cellule est collee apres la cellule de rang
+  NbPreced.
+  Si NbCell est inferieur au nombre de lignes du tableau, la Column
+  pCol est completee avec des cellules vides.
+  Au retour, pSvCell pointe la cellule qui suit la derniere cellule 
+  collee.
+  ----------------------------------------------------------------------*/
+static void PasteCells (PtrElement pCol, int NbPreced, int NbCell,
+			PtrElement * pSvCell, PtrDocument pDoc)
 {
    PtrElement          pElTheRows, pElRow, pCell, pNCell, pElParent;
    int                 RowType, cellType, i, nbPastedCells;
@@ -1320,25 +1110,16 @@ PtrDocument         pDoc;
 }
 
 
-/* VerifColCell verifie que les Columns_simples contenues dans */
-/* l'element pointe' par pCol ont chacune une cellule a partir de celle */
-/* pointee par pCell. */
-/* pCellPrec pointe sur la cellule precedant pCell. */
-/* Au retour, pCellPrec pointe sur la derniere cellule traitee et */
-/* pCell sur la prochaine a traiter. */
-
-#ifdef __STDC__
-static void         CheckColCell (PtrElement pCol, PtrElement * pCell, PtrElement * pCellPrec, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-static void         CheckColCell (pCol, pCell, pCellPrec, pDoc)
-PtrElement          pCol;
-PtrElement         *pCell;
-PtrElement         *pCellPrec;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
+/*----------------------------------------------------------------------
+  VerifColCell verifie que les Columns_simples contenues dans
+  l'element pointe' par pCol ont chacune une cellule a partir de celle
+  pointee par pCell.
+  pCellPrec pointe sur la cellule precedant pCell.
+  Au retour, pCellPrec pointe sur la derniere cellule traitee et
+  pCell sur la prochaine a traiter.
+  ----------------------------------------------------------------------*/
+static void CheckColCell (PtrElement pCol, PtrElement *pCell,
+			  PtrElement *pCellPrec, PtrDocument pDoc)
 {
    PtrElement          pC;
    int                 colSimpleType;
@@ -1386,21 +1167,11 @@ PtrDocument         pDoc;
      }
 }
 
-
-/* CheckRow traite toutes les lignes simples contenues dans */
-/* l'element pointe' par pElRow */
-
-#ifdef __STDC__
-static void         CheckRow (PtrElement pElRow, PtrElement pElCols, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-static void         CheckRow (pElRow, pElCols, pDoc)
-PtrElement          pElRow;
-PtrElement          pElCols;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
+/*----------------------------------------------------------------------
+  CheckRow traite toutes les lignes simples contenues dans
+  l'element pointe' par pElRow
+  ----------------------------------------------------------------------*/
+static void CheckRow (PtrElement pElRow, PtrElement pElCols, PtrDocument pDoc)
 {
    PtrElement          pSubRow, pCell, pCellPrec, pCellSuiv, pCol, pElTitleRow;
    int                 RowTypeSimple;
@@ -1455,22 +1226,13 @@ PtrDocument         pDoc;
 }
 
 
-/* PasteSibling      effectue le traitement particulier a l'operation */
-/* Coller lorsqu'elle s'applique a une Column ou une ligne de tableau. */
-/* pElPasted pointe sur l'element colle' et pElSv sur l'element */
-/* a coller ensuite. */
-
-#ifdef __STDC__
-static void         PasteSibling (PtrElement pElPasted, PtrElement * pElSv, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-static void         PasteSibling (pElPasted, pElSv, pDoc)
-PtrElement          pElPasted;
-PtrElement         *pElSv;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
+/*----------------------------------------------------------------------
+  PasteSibling      effectue le traitement particulier a l'operation
+  Coller lorsqu'elle s'applique a une Column ou une ligne de tableau.
+  pElPasted pointe sur l'element colle' et pElSv sur l'element
+  a coller ensuite.
+  ----------------------------------------------------------------------*/
+static void PasteSibling (PtrElement pElPasted, PtrElement *pElSv, PtrDocument pDoc)
 {
    PtrElement          pE, pCell, pSimpleCol;
    int                 nbColPrec, nbTotalCell, nbCellbyCol, nbPastedCols;
@@ -1584,21 +1346,12 @@ PtrDocument         pDoc;
      }
 }
 
-
-/* CutTable       Si l'element pointe' par pFootTable est */
-/* effectivement un Bas_Table, on reapplique les regles de hauteur */
-/* des filets verticaux engendre's par l'En_Tete qui precede */
-
-#ifdef __STDC__
-static void         CutTable (PtrElement pFootTable, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-static void         CutTable (pFootTable, pDoc)
-PtrElement          pFootTable;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
+/*----------------------------------------------------------------------
+  CutTable       Si l'element pointe' par pFootTable est
+  effectivement un Bas_Table, on reapplique les regles de hauteur
+  des filets verticaux engendre's par l'En_Tete qui precede
+  ----------------------------------------------------------------------*/
+static void CutTable (PtrElement pFootTable, PtrDocument pDoc)
 {
    int                 typeSaved;
 
@@ -1617,34 +1370,24 @@ PtrDocument         pDoc;
      }
 }
 
-/* ExcCutPage est appele' par CutCommand qui effectue le traitement */
-/* de la commande Couper. */
-/* pElFirstSel et pElLastSel pointent le premier et le dernier element */
-/* selectionne's, qui doivent etre coupe's. */
-/* S'il s'agit d'un seul et meme element saut de page qui se trouve */
-/* dans une structure demandant un traitement special des sauts de */
-/* pages, on etend la selection a l'element portant l'exception */
-/* PageBreakRepBefore qui precede ce saut de page et a l'element */
-/* portant l'exception PageBreakRepetition qui */
-/* suit, pour que CutCommand coupe les 3 elements a la fois. */
-/* Dans ce cas, on met toBeSaved a Faux (on ne sauvera pas les elements */
-/* coupe's dans le buffer Couper-Copier-Coller) et deletePage a */
-/* Vrai (on detruira le saut de page bien qu'il ne soit plus le seul */
-/* selectionne'). */
-
-#ifdef __STDC__
-static void         ExcCutPage (PtrElement * pElFirstSel, PtrElement * pElLastSel, PtrDocument pDoc, ThotBool * toBeSaved, ThotBool * deletePage)
-
-#else  /* __STDC__ */
-static void         ExcCutPage (pElFirstSel, pElLastSel, pDoc, toBeSaved, deletePage)
-PtrElement         *pElFirstSel;
-PtrElement         *pElLastSel;
-PtrDocument         pDoc;
-ThotBool            *toBeSaved;
-ThotBool            *deletePage;
-
-#endif /* __STDC__ */
-
+/*----------------------------------------------------------------------
+  ExcCutPage est appele' par CutCommand qui effectue le traitement
+  de la commande Couper.
+  pElFirstSel et pElLastSel pointent le premier et le dernier element
+  selectionne's, qui doivent etre coupe's.
+  S'il s'agit d'un seul et meme element saut de page qui se trouve
+  dans une structure demandant un traitement special des sauts de
+  pages, on etend la selection a l'element portant l'exception
+  PageBreakRepBefore qui precede ce saut de page et a l'element
+  portant l'exception PageBreakRepetition qui
+  suit, pour que CutCommand coupe les 3 elements a la fois.
+  Dans ce cas, on met toBeSaved a Faux (on ne sauvera pas les elements
+  coupe's dans le buffer Couper-Copier-Coller) et deletePage a
+  Vrai (on detruira le saut de page bien qu'il ne soit plus le seul
+  selectionne').
+  ----------------------------------------------------------------------*/
+static void ExcCutPage (PtrElement *pElFirstSel, PtrElement *pElLastSel,
+			PtrDocument pDoc, ThotBool *toBeSaved, ThotBool *deletePage)
 {
    PtrElement          pElPrec, pElNext;
    ThotBool             stop;
@@ -1708,28 +1451,16 @@ ThotBool            *deletePage;
 	   }
 }
 
-
-
-/* CheckExtension        verifie si l'attribut pAttr qui doit etre */
-/* applique' a` tous les elements compris entre pElFirst et pElLast */
-/* est un attribut Extension_horiz ou Extension_vert. */
-/* Dans ce cas, verifie si cet attribut designe un element correct */
-/* et si ce n'est pas le cas, annule l'attribut ou le supprime si */
-/* deleteAttr est Vrai. */
-
-
-#ifdef __STDC__
-static void         CheckExtension (PtrAttribute pAttr, PtrElement pElFirst, PtrElement pElLast, ThotBool deleteAttr)
-
-#else  /* __STDC__ */
-static void         CheckExtension (pAttr, pElFirst, pElLast, deleteAttr)
-PtrAttribute        pAttr;
-PtrElement          pElFirst;
-PtrElement          pElLast;
-ThotBool             deleteAttr;
-
-#endif /* __STDC__ */
-
+/*----------------------------------------------------------------------
+  CheckExtension        verifie si l'attribut pAttr qui doit etre
+  applique' a` tous les elements compris entre pElFirst et pElLast
+  est un attribut Extension_horiz ou Extension_vert.
+  Dans ce cas, verifie si cet attribut designe un element correct
+  et si ce n'est pas le cas, annule l'attribut ou le supprime si
+  deleteAttr est Vrai.
+  ----------------------------------------------------------------------*/
+static void CheckExtension (PtrAttribute pAttr, PtrElement pElFirst,
+			    PtrElement pElLast, ThotBool deleteAttr)
 {
    PtrElement          pEl, pElRef;
    DocumentIdentifier  IdentDoc;
@@ -1819,22 +1550,11 @@ ThotBool             deleteAttr;
 
 
 /*----------------------------------------------------------------------
-   CanHolophrast   indique si on peut holophraster         
-   l'element pointe' par pEl.                              
+  CanHolophrast   indique si on peut holophraster         
+  l'element pointe' par pEl.                              
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static void         CanHolophrast (PtrElement pEl, ThotBool * ret)
-
-#else  /* __STDC__ */
-static void         CanHolophrast (pEl, ret)
-PtrElement          pEl;
-ThotBool            *ret;
-
-#endif /* __STDC__ */
-
+static void CanHolophrast (PtrElement pEl, ThotBool * ret)
 {
-
    *ret = TRUE;
    /* on n'holophraste pas les entetes de tableau */
    if (TypeHasException (EXC_ID_Headings, pEl->ElTypeNumber, pEl->ElStructSchema))
@@ -1859,48 +1579,31 @@ ThotBool            *ret;
 
 
 /*----------------------------------------------------------------------
-   	HasTableExc	indique si l'element pEl porte une exception  	
-   		tableau EXC_ID_Table.			  	        
+  HasTableExc	indique si l'element pEl porte une exception  	
+  tableau EXC_ID_Table.			  	        
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static void         HasTableExc (PtrElement pEl, ThotBool * ret)
-#else  /* __STDC__ */
-static void         HasTableExc (pEl, ret)
-PtrElement          pEl;
-ThotBool            *ret;
-
-#endif /* __STDC__ */
+static void HasTableExc (PtrElement pEl, ThotBool * ret)
 {
    *ret = (TypeHasException (EXC_ID_Table, pEl->ElTypeNumber,
 			     (pEl->ElStructSchema)));
 }
 
 /*----------------------------------------------------------------------
-   	HasTableExcCreate	indique si l'element pEl porte une exception  	
-   		tableau EXC_ID_SearchAndCreate.	    	  	        
+  HasTableExcCreate	indique si l'element pEl porte une exception  	
+  tableau EXC_ID_SearchAndCreate.	    	  	        
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static void         HasTableExcCreate (PtrElement pEl, ThotBool * ret)
-#else  /* __STDC__ */
-static void         HasTableExcCreate (pEl, ret)
-PtrElement          pEl;
-ThotBool            *ret;
-
-#endif /* __STDC__ */
+static void HasTableExcCreate (PtrElement pEl, ThotBool * ret)
 {
-   *ret = (TypeHasException (EXC_TR_Table_CREATION, pEl->ElTypeNumber,
-			     (pEl->ElStructSchema)));
+  *ret = (TypeHasException (EXC_TR_Table_CREATION, pEl->ElTypeNumber,
+			    (pEl->ElStructSchema)));
 }
 
 /*----------------------------------------------------------------------
    TableauLoadResources : connecte les ressources de traitement des  
    tableaux            	                                        
   ----------------------------------------------------------------------*/
-void                TableauLoadResources ()
+void TableauLoadResources ()
 {
-
    if (ThotLocalActions[T_createtable] == NULL)
      {
 	/* initialisations */

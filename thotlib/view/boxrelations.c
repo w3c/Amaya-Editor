@@ -232,10 +232,12 @@ static void InsertDimRelation (PtrBox pOrginBox, PtrBox pTargetBox,
   i = 0;
   /* add a relation from origin to target */
   if (horizRef)
-    if (sameDimension)
-      pDimRel = pOrginBox->BxWidthRelations;
-    else
-      pDimRel = pOrginBox->BxHeightRelations;
+    {
+      if (sameDimension)
+	pDimRel = pOrginBox->BxWidthRelations;
+      else
+	pDimRel = pOrginBox->BxHeightRelations;
+    }
   else if (sameDimension)
     pDimRel = pOrginBox->BxHeightRelations;
   else
@@ -265,7 +267,7 @@ static void InsertDimRelation (PtrBox pOrginBox, PtrBox pTargetBox,
 	pDimRel = pDimRel->DimRNext;
     }
 
-  /* Faut-il creer un nouveau bloc de relations ? */
+  /* Need a new block? */
   if (loop)
     {
       /* add a new block */
@@ -1577,7 +1579,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 {
   PtrBox              pRefBox;
   PtrBox              pBox;
-  PtrAbstractBox      pParentAb;
+  PtrAbstractBox      pParentAb, pColumn;
   PtrAbstractBox      pChildAb;
   PtrElement          pEl;
   PtrLine             pLine;
@@ -1803,11 +1805,32 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 			 pParentAb->AbBox->BxType == BoFloatGhost));
 	      if (horizRef)
 		{
-		  if (!inLine && pDimAb->DimUnit == UnAuto)
+		  if (pBox->BxType == BoCell)
 		    {
-		      pDimAb->DimAbRef = pParentAb;
-		      pDimAb->DimValue = 0;
+		      /* get the related column */
+		      if (pDimAb->DimAbRef)
+			pColumn = pDimAb->DimAbRef;
+		      else
+			pColumn = pAb->AbHorizPos.PosAbRef;
+		      if (pColumn)
+			InsertDimRelation (pColumn->AbBox, pBox, TRUE, TRUE, FALSE);
+		      if (pDimAb->DimUnit == UnAuto)
+			{
+			  pDimAb->DimAbRef = NULL;
+			  pDimAb->DimValue = -1;
+			}
 		    }
+		  else
+		    {
+		      pColumn = NULL;
+		      if (!inLine && pDimAb->DimUnit == UnAuto)
+			{
+			  /* in other cases takes the parent width */
+			  pDimAb->DimAbRef = pParentAb;
+			  pDimAb->DimValue = 0;
+			}
+		    }
+
 		  if ((inLine && pAb->AbLeafType == LtText) ||
 		      (pDimAb->DimAbRef == NULL && pDimAb->DimValue < 0))
 		    /* inherited from the contents */
@@ -1819,27 +1842,30 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 		      /* percentage or explicit value */
 		      if (pDimAb->DimUnit == UnPercent)
 			{
-			  while (pParentAb &&
-				 !pParentAb->AbWidth.DimIsPosition &&
-				 pParentAb->AbWidth.DimValue < 0 &&
-				 pParentAb->AbWidth.DimAbRef == NULL)
-			    pParentAb = pParentAb->AbEnclosing;
-				/* inherited from the parent */
-			  if (pParentAb)
-			    val = PixelValue (pDimAb->DimValue, UnPercent, 
-					      (PtrAbstractBox) (pParentAb->AbBox->BxW), 0);
-			  else
+			  if (pBox->BxType != BoCell)
 			    {
-			      GetSizesFrame (frame, &i, &val);
-			      val = PixelValue (pDimAb->DimValue, UnPercent, 
-						(PtrAbstractBox) i, 0);
+			      while (pParentAb &&
+				     !pParentAb->AbWidth.DimIsPosition &&
+				     pParentAb->AbWidth.DimValue < 0 &&
+				     pParentAb->AbWidth.DimAbRef == NULL)
+				pParentAb = pParentAb->AbEnclosing;
+				/* inherited from the parent */
+			      if (pParentAb)
+				val = PixelValue (pDimAb->DimValue, UnPercent, 
+						  (PtrAbstractBox) (pParentAb->AbBox->BxW), 0);
+			      else
+				{
+				  GetSizesFrame (frame, &i, &val);
+				  val = PixelValue (pDimAb->DimValue, UnPercent, 
+						    (PtrAbstractBox) i, 0);
+				}
+			      /* the rule gives the outside value */
+			      val = val - dx;
+			      if (pParentAb)
+				InsertDimRelation (pParentAb->AbBox, pBox,
+						   pDimAb->DimSameDimension, horizRef,
+						   inLine);
 			    }
-			  /* the rule gives the outside value */
-			  val = val - dx;
-			  if (pParentAb)
-			    InsertDimRelation (pParentAb->AbBox, pBox,
-					       pDimAb->DimSameDimension, horizRef,
-					       inLine);
 			}
 		      else
 			/* explicit value */
@@ -1941,8 +1967,9 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 				pBox->BxWOutOfStruct = TRUE;
 			      
 			      /* Store dependencies */
-			      InsertDimRelation (pDimAb->DimAbRef->AbBox, pBox,
-						 pDimAb->DimSameDimension, horizRef, inLine);
+			      if (pBox->BxType != BoCell)
+				InsertDimRelation (pDimAb->DimAbRef->AbBox, pBox,
+						   pDimAb->DimSameDimension, horizRef, inLine);
 			    }
 			}
 		    }

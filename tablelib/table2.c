@@ -53,69 +53,64 @@
    appliquer les regles de l'attribut a` l'element.        
   ----------------------------------------------------------------------*/
 void CanApplAttrRules (PtrElement pEl, PtrAttribute pAttr, PtrDocument pDoc,
-					   ThotBool *ApplAttr)
+		       ThotBool *ApplAttr)
 {
-   int                 attr;
-   PtrAttribute        pAttrTab;
-   PtrElement          pElAttr;
+  int                 attr;
+  PtrAttribute        pAttrTab;
+  PtrElement          pElAttr;
 
-   *ApplAttr = TRUE;		/* a priori, on peut appliquer la regle */
-   if (TypeHasException (EXC_TR_Table_ATTRIBUT, pEl->ElTypeNumber, pEl->ElStructSchema))
-     {
-	/* on est dans un tableau sur un element necessitant
-	   un traitement particulier pour ses attributs */
-	attr = GetAttrWithException (EXC_ID_Type_Table, pEl->ElStructSchema);
-	if ((pAttrTab = GetTypedAttrAncestor (pEl, attr, pEl->ElStructSchema,
-					      &pElAttr)))
-	  {
-	     /* le tableau porte bien un attribut Type_Table */
-
-	     if (pEl->ElTypeNumber == GetElemWithException (EXC_ID_Title_Table, pEl->ElStructSchema))
-	       {
-		  /* on inhibe la regle de largeur de l'attribut Title_Width 
-		     quand l'attribut Type_Table vaut Colonnes ou Tabulations */
-		  if (pAttr->AeAttrNum == GetAttrWithException (EXC_ID_Title_Width, pEl->ElStructSchema)
-		      && (pAttrTab->AeAttrValue == 3 || pAttrTab->AeAttrValue == 4))
-		     *ApplAttr = FALSE;
-	       }
-
-	     else if (pEl->ElTypeNumber == GetElemWithException (EXC_ID_Compound_Column, pEl->ElStructSchema))
-	       {
-		  /* on inhibe la regle de creation de l'attribut Filet_bas 
-		     quand l'attribut Type_Table vaut Lignes ou Tabulations */
-		  if (pAttr->AeAttrNum == GetAttrWithException (EXC_ID_Foot_Hairline_CompCol, pEl->ElStructSchema)
-		      && (pAttrTab->AeAttrValue == 2 || pAttrTab->AeAttrValue == 4))
-		     *ApplAttr = FALSE;
-	       }
-
-	     else if (pEl->ElTypeNumber == GetElemWithException (EXC_ID_Compound_Row, pEl->ElStructSchema))
-	       {
-		  /* on inhibe la regle de creation de l'attribut Filet_Droit 
-		     quand l'attribut Type_Table vaut Colonnes ou Tabulations */
-		  if (pAttr->AeAttrNum == GetAttrWithException (EXC_ID_Right_Hairline_CompRow, pEl->ElStructSchema)
-		      && (pAttrTab->AeAttrValue == 3 || pAttrTab->AeAttrValue == 4))
-		     *ApplAttr = FALSE;
-	       }
-
-	     else if (pEl->ElTypeNumber == GetElemWithException (EXC_ID_Headings, pEl->ElStructSchema))
-	       {
-		  /* on inhibe la regle de creation de l'attribut Filet_Inferieur 
-		     quand l'attribut Type_Table vaut Lignes ou Tabulations */
-		  if (pAttr->AeAttrNum == GetAttrWithException (EXC_ID_Foot_Hairline_Headings, pEl->ElStructSchema)
-		      && (pAttrTab->AeAttrValue == 2 || pAttrTab->AeAttrValue == 4))
-		     *ApplAttr = FALSE;
-	       }
-
-	     else if (pEl->ElTypeNumber == GetElemWithException (EXC_ID_The_Columns, pEl->ElStructSchema))
-	       {
-		  /* on inhibe la regle de creation de l'attribut Filet_Gauche 
-		     quand l'attribut Type_Table vaut Colonnes ou Tabulations */
-		  if (pAttr->AeAttrNum == GetAttrWithException (EXC_ID_Left_Hairline_Cols, pEl->ElStructSchema)
-		      && (pAttrTab->AeAttrValue == 3 || pAttrTab->AeAttrValue == 4))
-		     *ApplAttr = FALSE;
-	       }
-	  }
-     }
+  *ApplAttr = TRUE;		/* a priori, on peut appliquer la regle */
+  if (TypeHasException (EXC_TR_Table_ATTRIBUT, pEl->ElTypeNumber, pEl->ElStructSchema))
+    {
+      /* on est dans un tableau sur un element necessitant
+	 un traitement particulier pour ses attributs */
+      attr = GetAttrWithException (EXC_ID_Type_Table, pEl->ElStructSchema);
+      if ((pAttrTab = GetTypedAttrAncestor (pEl, attr, pEl->ElStructSchema,
+					    &pElAttr)))
+	{
+	  /* le tableau porte bien un attribut Type_Table */
+	  if (pEl->ElTypeNumber == GetElemWithException (EXC_ID_Title_Table, pEl->ElStructSchema))
+	    {
+	      /* on inhibe la regle de largeur de l'attribut Title_Width 
+		 quand l'attribut Type_Table vaut Colonnes ou Tabulations */
+	      if (pAttr->AeAttrNum == GetAttrWithException (EXC_ID_Title_Width, pEl->ElStructSchema)
+		  && (pAttrTab->AeAttrValue == 3 || pAttrTab->AeAttrValue == 4))
+		*ApplAttr = FALSE;
+	    }
+	  else if (pEl->ElTypeNumber == GetElemWithException (EXC_ID_Compound_Column, pEl->ElStructSchema))
+	    {
+	      /* on inhibe la regle de creation de l'attribut Filet_bas 
+		 quand l'attribut Type_Table vaut Lignes ou Tabulations */
+	      if (pAttr->AeAttrNum == GetAttrWithException (EXC_ID_Foot_Hairline_CompCol, pEl->ElStructSchema)
+		  && (pAttrTab->AeAttrValue == 2 || pAttrTab->AeAttrValue == 4))
+		*ApplAttr = FALSE;
+	    }
+	  else if (pEl->ElTypeNumber == GetElemWithException (EXC_ID_Compound_Row, pEl->ElStructSchema))
+	    {
+	      /* on inhibe la regle de creation de l'attribut Filet_Droit 
+		 quand l'attribut Type_Table vaut Colonnes ou Tabulations */
+	      if (pAttr->AeAttrNum == GetAttrWithException (EXC_ID_Right_Hairline_CompRow, pEl->ElStructSchema)
+		  && (pAttrTab->AeAttrValue == 3 || pAttrTab->AeAttrValue == 4))
+		*ApplAttr = FALSE;
+	    }
+	  else if (pEl->ElTypeNumber == GetElemWithException (EXC_ID_Headings, pEl->ElStructSchema))
+	    {
+	      /* on inhibe la regle de creation de l'attribut Filet_Inferieur 
+		 quand l'attribut Type_Table vaut Lignes ou Tabulations */
+	      if (pAttr->AeAttrNum == GetAttrWithException (EXC_ID_Foot_Hairline_Headings, pEl->ElStructSchema)
+		  && (pAttrTab->AeAttrValue == 2 || pAttrTab->AeAttrValue == 4))
+		*ApplAttr = FALSE;
+	    }
+	  else if (pEl->ElTypeNumber == GetElemWithException (EXC_ID_The_Columns, pEl->ElStructSchema))
+	    {
+	      /* on inhibe la regle de creation de l'attribut Filet_Gauche 
+		 quand l'attribut Type_Table vaut Colonnes ou Tabulations */
+	      if (pAttr->AeAttrNum == GetAttrWithException (EXC_ID_Left_Hairline_Cols, pEl->ElStructSchema)
+		  && (pAttrTab->AeAttrValue == 3 || pAttrTab->AeAttrValue == 4))
+		*ApplAttr = FALSE;
+	    }
+	}
+    }
 }
 
 
@@ -139,7 +134,7 @@ void CanApplAttrRules (PtrElement pEl, PtrAttribute pAttr, PtrDocument pDoc,
    cherche' n'existe pas, elle retourne NULL.              
   ----------------------------------------------------------------------*/
 void CheckHeightRuleHairline (PtrAbstractBox pAb, PosRule *position,
-							  PtrPRule pRule, PtrAbstractBox * pAbFootTable)
+			      PtrPRule pRule, PtrAbstractBox * pAbFootTable)
 {
    PtrElement          pEl;
 
@@ -188,26 +183,26 @@ void CheckHeightRuleHairline (PtrAbstractBox pAb, PosRule *position,
   ----------------------------------------------------------------------*/
 void CheckNextIsFootTable (PtrElement pEl, ThotBool * PcLast)
 {
-   if (TypeHasException (EXC_ID_Simple_Row, pEl->ElTypeNumber, pEl->ElStructSchema)
-       || TypeHasException (EXC_ID_Compound_Row, pEl->ElTypeNumber, pEl->ElStructSchema))
-      /* c'est bien une ligne simple ou composee de tableau */
-      if (pEl->ElParent != NULL)
-	 if (TypeHasException (EXC_ID_The_Rows, pEl->ElParent->ElTypeNumber,
-			       pEl->ElParent->ElStructSchema))
-	    /* c'est une ligne du 1er niveau */
-	   {
-	      if (pEl->ElNext == NULL)
-		 *PcLast = TRUE;
-	      else
-		{
-		   *PcLast = FALSE;
-		   if (pEl->ElNext != NULL)
-		      if (TypeHasException (EXC_ID_FootTable, pEl->ElNext->ElTypeNumber,
-					    pEl->ElNext->ElStructSchema))
-			 /* le suivant est un element FootTable */
-			 *PcLast = TRUE;
-		}
-	   }
+  if (TypeHasException (EXC_ID_Simple_Row, pEl->ElTypeNumber, pEl->ElStructSchema)
+      || TypeHasException (EXC_ID_Compound_Row, pEl->ElTypeNumber, pEl->ElStructSchema))
+    /* c'est bien une ligne simple ou composee de tableau */
+    if (pEl->ElParent != NULL)
+      if (TypeHasException (EXC_ID_The_Rows, pEl->ElParent->ElTypeNumber,
+			    pEl->ElParent->ElStructSchema))
+	/* c'est une ligne du 1er niveau */
+	{
+	  if (pEl->ElNext == NULL)
+	    *PcLast = TRUE;
+	  else
+	    {
+	      *PcLast = FALSE;
+	      if (pEl->ElNext != NULL)
+		if (TypeHasException (EXC_ID_FootTable, pEl->ElNext->ElTypeNumber,
+				      pEl->ElNext->ElStructSchema))
+		  /* le suivant est un element FootTable */
+		  *PcLast = TRUE;
+	    }
+	}
 }
 
 
@@ -222,39 +217,39 @@ void SetVertOverflow (PtrPRule pRule, PtrAbstractBox pAb)
    int                 attr;
 
    if (pRule->PrType == PtHeight || pRule->PrType == PtVertPos)
-      /* c'est une regle de hauteur ou de position verticale */
+     /* c'est une regle de hauteur ou de position verticale */
      {
-	pEl = pAb->AbElement;
-	if (TypeHasException (EXC_ID_Cell, pEl->ElTypeNumber, pEl->ElStructSchema))
-	   /* c'est un pave d'une cellule de tableau */
-	  {
-	     /* cherche si la cellule possede l'attribut Debordement_vert */
-	     /* cherche d'abord le numero de l'attribut */
-	     attr = GetAttrWithException (EXC_ID_Extens_Vertic, pEl->ElStructSchema);
-	     /* cherche si cet attribut est porte' par l'element */
-	     pAttr = pEl->ElFirstAttr;
-	     found = FALSE;
-	     while (!found && pAttr != NULL)
-		if (pAttr->AeAttrNum == attr &&
-		    pAttr->AeAttrSSchema == pEl->ElStructSchema)
-		   found = TRUE;
-		else
-		   pAttr = pAttr->AeNext;
-	     if (found)
-		/* l'element porte cet attribut, le pave deborde */
-		/* verticalement de son englobant */
-	       {
-		  /* Dans la vue "Source_View" du schema de presentation HTMLP.P */
-		  /* les cellules etendues verticalement doivent quand meme   */
-		  /* respecter l'englobement */
-		  if (pRule->PrViewNum != 2 || strcmp (pAb->AbElement->ElStructSchema->SsName, "HTML") != 0)
-		     pAb->AbVertEnclosing = FALSE;
-	       }
+       pEl = pAb->AbElement;
+       if (TypeHasException (EXC_ID_Cell, pEl->ElTypeNumber, pEl->ElStructSchema))
+	 /* c'est un pave d'une cellule de tableau */
+	 {
+	   /* cherche si la cellule possede l'attribut Debordement_vert */
+	   /* cherche d'abord le numero de l'attribut */
+	   attr = GetAttrWithException (EXC_ID_Extens_Vertic, pEl->ElStructSchema);
+	   /* cherche si cet attribut est porte' par l'element */
+	   pAttr = pEl->ElFirstAttr;
+	   found = FALSE;
+	   while (!found && pAttr != NULL)
+	     if (pAttr->AeAttrNum == attr &&
+		 pAttr->AeAttrSSchema == pEl->ElStructSchema)
+	       found = TRUE;
 	     else
-		/* l'element ne porte pas (ou plus) cet attribut, le pave */
-		/* ne deborde pas (plus) verticalement de son englobant */
-		pAb->AbVertEnclosing = TRUE;
-	  }
+	       pAttr = pAttr->AeNext;
+	   if (found)
+	     /* l'element porte cet attribut, le pave deborde */
+	     /* verticalement de son englobant */
+	     {
+	       /* Dans la vue "Source_View" du schema de presentation HTMLP.P */
+	       /* les cellules etendues verticalement doivent quand meme   */
+	       /* respecter l'englobement */
+	       if (pRule->PrViewNum != 2 || strcmp (pAb->AbElement->ElStructSchema->SsName, "HTML") != 0)
+		 pAb->AbVertEnclosing = FALSE;
+	     }
+	   else
+	     /* l'element ne porte pas (ou plus) cet attribut, le pave */
+	     /* ne deborde pas (plus) verticalement de son englobant */
+	     pAb->AbVertEnclosing = TRUE;
+	 }
      }
 }
 
@@ -431,40 +426,38 @@ static void DeleteRowHairline (PtrElement pElPage, PtrDocument pDoc)
   Renvoi un pointeur sur l'element trouve ou NULL si rien n'a ete trouve
   ----------------------------------------------------------------------*/
 static PtrElement SearchTypeExcept (PtrElement pElToCut, PtrElement StopElem,
-									int TypeExcept, ThotBool Restrict)
+				    int TypeExcept, ThotBool Restrict)
 {
-   PtrElement          pE, Repetition;
+  PtrElement          pE, Repetition;
 
-   Repetition = NULL;
-
-   if (pElToCut != NULL && !pElToCut->ElTerminal)
-     {
-	for (pE = pElToCut->ElFirstChild; pE != NULL; pE = pE->ElNext)
-	  {
-	     if (Restrict && pE == StopElem)	/* on arrete la recherche */
-		break;
-	     else
-	       {
-		  if (pE->ElStructSchema == pElToCut->ElStructSchema)	/* meme schema de structure */
+  Repetition = NULL;
+  if (pElToCut != NULL && !pElToCut->ElTerminal)
+    {
+      for (pE = pElToCut->ElFirstChild; pE != NULL; pE = pE->ElNext)
+	{
+	  if (Restrict && pE == StopElem)	/* on arrete la recherche */
+	    break;
+	  else
+	    {
+	      if (pE->ElStructSchema == pElToCut->ElStructSchema)	/* meme schema de structure */
+		{
+		  if (pE->ElSource == NULL)	/* ce n'est pas une copie */
 		    {
-		       if (pE->ElSource == NULL)	/* ce n'est pas une copie */
-			 {
-			    if (TypeHasException (TypeExcept, pE->ElTypeNumber, pE->ElStructSchema))	/* exception ok */
-			      {
-				 Repetition = pE;	/* c'est donc le bon */
-				 break;
-			      }
-			    else
-			       /* recursion si l'element ne porte pas l'exception ExcPageBreak */ 
-			       if (!TypeHasException (ExcPageBreak, pE->ElTypeNumber, pE->ElStructSchema))
-			         SearchTypeExcept (pE, StopElem, TypeExcept, Restrict);
-			 }
+		      if (TypeHasException (TypeExcept, pE->ElTypeNumber, pE->ElStructSchema))	/* exception ok */
+			{
+			  Repetition = pE;	/* c'est donc le bon */
+			  break;
+			}
+		      else
+			/* recursion si l'element ne porte pas l'exception ExcPageBreak */ 
+			if (!TypeHasException (ExcPageBreak, pE->ElTypeNumber, pE->ElStructSchema))
+			  SearchTypeExcept (pE, StopElem, TypeExcept, Restrict);
 		    }
-	       }
-	  }
-     }
-
-   return Repetition;
+		}
+	    }
+	}
+    }
+  return Repetition;
 }
 
 
@@ -477,7 +470,7 @@ static PtrElement SearchTypeExcept (PtrElement pElToCut, PtrElement StopElem,
   ne fait rien et retourne Faux.
   ----------------------------------------------------------------------*/
 void InsertPageInTable (PtrElement pElPage, PtrDocument pDoc, int viewNb,
-						ThotBool * cutDone)
+			ThotBool * cutDone)
 {
    PtrElement          pEl, pElToCopy, pSpecial;
    ThotBool             finish;
@@ -570,7 +563,7 @@ void InsertPageInTable (PtrElement pElPage, PtrDocument pDoc, int viewNb,
 	     pSpecial = pSpecial->ElParent;	/* passe a l'ascendant */
 	  }
      }
-}				/* End Of InsertPageInTable */
+}
 
 
 /*----------------------------------------------------------------------
@@ -683,7 +676,7 @@ void DeletePageAbsBoxes (PtrElement pElPage, PtrDocument pDoc, int viewNb)
 	     pElNext = pElNext->ElNext;
 	  }
      }
-}				/* End Of DeletePageAbsBoxes */
+}
 
 
 /*----------------------------------------------------------------------
@@ -707,5 +700,4 @@ void Table2LoadResources ()
 	TteConnectAction (T_deletepageab, (Proc) DeletePageAbsBoxes);
      }
 }
-
 /* End Of Module Table2 */

@@ -3832,7 +3832,15 @@ int TtaListStyleOfCurrentElement (Document document, FILE *fileDescriptor)
       pDoc = LoadedDocument[document - 1];
       TtaGiveFirstSelectedElement (document, &El, &f, &l);
       pEl = (PtrElement) El;
-      while (pEl && TypeHasException (ExcHidden, pEl->ElTypeNumber,
+      if (pEl && pEl->ElTerminal &&
+	  (pEl->ElLeafType == LtText ||
+	   pEl->ElLeafType == LtGraphics ||
+	   pEl->ElLeafType == LtPath ||
+	   pEl->ElLeafType == LtPolyLine ||
+	   pEl->ElLeafType == LtSymbol))
+	pEl = pEl->ElParent;
+
+       while (pEl && TypeHasException (ExcHidden, pEl->ElTypeNumber,
 				      pEl->ElStructSchema))
 	pEl = pEl->ElParent;
       if (pEl)

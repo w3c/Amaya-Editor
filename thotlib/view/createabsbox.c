@@ -2980,11 +2980,11 @@ static PtrPRule GetNextAttrPresRule (PtrPRule *pR, PtrSSchema pSS,
 				     PtrDocument pDoc, PtrElement pEl,
 				     int view)
 {
-  PtrPRule            pRuleView1, pRuleToApply;
+  PtrPRule            pRuleView1, pRule;
 
   /* on cherche une regle qui concerne la vue ou defaut la regle pour la vue 1*/
   pRuleView1 = NULL;
-  pRuleToApply = NULL;
+  pRule = NULL;
   if ((*pR)->PrViewNum == 1)
     {
       /* la regle pour la vue 1 */
@@ -2996,7 +2996,7 @@ static PtrPRule GetNextAttrPresRule (PtrPRule *pR, PtrSSchema pSS,
 	  pRuleView1 = *pR;
 	  if (view == 1)
 	    /* on est dans la vue 1. Donc c'est la bone regle */
-	    pRuleToApply = *pR;
+	    pRule = *pR;
 	  else
 	    {
 	      /* on cherche s'il existe une regle de meme type pour la vue
@@ -3010,12 +3010,12 @@ static PtrPRule GetNextAttrPresRule (PtrPRule *pR, PtrSSchema pSS,
 		    if ((*pR)->PrCond == NULL ||
 			CondPresentation ((*pR)->PrCond, pEl, pAttr, pElAttr,
 					  view, pSS, pDoc))
-		      pRuleToApply = *pR;
+		      pRule = *pR;
 		}
-	      if (pRuleToApply == NULL)
+	      if (pRule == NULL)
 		/* il n'y a pas de regle specifique pour la vue view */
 		/* On prend la vue 1 */
-		pRuleToApply = pRuleView1;
+		pRule = pRuleView1;
 	    }
 	}
     }
@@ -3025,9 +3025,9 @@ static PtrPRule GetNextAttrPresRule (PtrPRule *pR, PtrSSchema pSS,
     if (view == (*pR)->PrViewNum)
       if ((*pR)->PrCond == NULL ||
 	  CondPresentation ((*pR)->PrCond, pEl, pAttr, pElAttr, view, pSS, pDoc))
-	pRuleToApply = *pR;
+	pRule = *pR;
 
-  return pRuleToApply;
+  return pRule;
 }
 
 /*----------------------------------------------------------------------
@@ -3517,7 +3517,7 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
   PtrAttribute       attrOfSelectedRule[PtPictInfo];
   PtrAttributePres   attrBlockOfSelectedRule[PtPictInfo];
   int                i, view, l, valNum;
-  PtrPRule           pRuleView, pRule, ruleToApply, pR;
+  PtrPRule           pRuleView, pRule, pR;
   PtrHandlePSchema   pHd;
   PtrPSchema         pSchPres, pSchPattr, pSP;
   PtrAttribute       pAttr;
@@ -3684,7 +3684,7 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 				   attrBlockOfSelectedRule[pRule->PrType]))
 			{
 			  selectedRule[pRule->PrType] = pRule;
-			  schemaOfSelectedRule[pRule->PrType] = pSchPres;      
+			  schemaOfSelectedRule[pRule->PrType] = pSchPres;
 			  attrOfSelectedRule[pRule->PrType] = NULL;
 			  attrBlockOfSelectedRule[pRule->PrType] = NULL;
 			}
@@ -3765,7 +3765,7 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 			    /* look at all rules associated with this value */
 			    while (pR != NULL)
 			      {
-				ruleToApply = NULL;
+				pRule = NULL;
 				if (!pR->PrDuplicate &&
 				    /* if it's a creation rule, apply it now */
 				    !ApplCrRule (pR, pSSattr, pSchPres, pAttr,
@@ -3773,39 +3773,39 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 						 forward, lqueue, queuePR, queuePP,
 						 queuePS, queuePA, pNewAbbox, fileDescriptor))
 				  /* not a creation rule, get the right rule*/
-				  ruleToApply = GetNextAttrPresRule (&pR,
+				  pRule = GetNextAttrPresRule (&pR,
 							 pAttr->AeAttrSSchema, pAttr,
 						         pElAttr, pDoc, pEl, view);
-				if (ruleToApply &&
+				if (pRule &&
 				    DoesViewExist (pEl, pDoc, viewNb))
 				  /* this rule applies to the element */
 				  {
 				    if (viewSch == 1 &&
-					(ruleToApply->PrType != PtFunction ||
-					 (ruleToApply->PrType == PtFunction &&
-					  ruleToApply->PrPresFunction == FnBackgroundPicture)))
+					(pRule->PrType != PtFunction ||
+					 (pRule->PrType == PtFunction &&
+					  pRule->PrPresFunction == FnBackgroundPicture)))
 				      /* main view. Record the rule for cascade */
 				      /* but apply presentation function */
 				      /* immediately */
 				      {
-					if (RuleHasHigherPriority (ruleToApply,
+					if (RuleHasHigherPriority (pRule,
 					     pSchPres, attrBlock,
-					     selectedRule[ruleToApply->PrType],
-					     schemaOfSelectedRule[ruleToApply->PrType],
-					     attrBlockOfSelectedRule[ruleToApply->PrType]))
+					     selectedRule[pRule->PrType],
+					     schemaOfSelectedRule[pRule->PrType],
+					     attrBlockOfSelectedRule[pRule->PrType]))
 					  {
-					    selectedRule[ruleToApply->PrType] = ruleToApply;
-					    schemaOfSelectedRule[ruleToApply->PrType] = pSchPres;      
-					    attrOfSelectedRule[ruleToApply->PrType] = pAttr;
-					    attrBlockOfSelectedRule[ruleToApply->PrType] = attrBlock;
+					    selectedRule[pRule->PrType] = pRule;
+					    schemaOfSelectedRule[pRule->PrType] = pSchPres;
+					    attrOfSelectedRule[pRule->PrType] = pAttr;
+					    attrBlockOfSelectedRule[pRule->PrType] = attrBlock;
 					  }
 				      }
 				    else if (fileDescriptor)
-				      DisplayPRule (ruleToApply, fileDescriptor, pEl, pSchPres);
-				    else if (!ApplyRule (ruleToApply, pSchPres,
+				      DisplayPRule (pRule, fileDescriptor, pEl, pSchPres);
+				    else if (!ApplyRule (pRule, pSchPres,
 							 pNewAbbox, pDoc, pAttr))
 				      /* not the main view, apply the rule now */
-				      WaitingRule (ruleToApply, pNewAbbox, pSchPres,
+				      WaitingRule (pRule, pNewAbbox, pSchPres,
 						   pAttr, queuePA, queuePS, queuePP,
 						   queuePR, lqueue);
 				  }
@@ -3874,7 +3874,7 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 		      /* look for all rules associated with this value */
 		      while (pR != NULL)
 			{
-			  ruleToApply = NULL;
+			  pRule = NULL;
 			  if (!pR->PrDuplicate &&
 			      /* if it's a creation rule, apply it now */
 			      !ApplCrRule (pR, pSSattr, pSchPattr, pAttr,
@@ -3882,38 +3882,38 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
                                    lqueue, queuePR, queuePP, queuePS, queuePA,
                                    pNewAbbox, fileDescriptor))
 			    /* not a creation rule, get the right rule */
-			    ruleToApply = GetNextAttrPresRule (&pR,
+			    pRule = GetNextAttrPresRule (&pR,
 					          pAttr->AeAttrSSchema, pAttr,
                                                   pEl, pDoc, pEl, view);
-			  if (ruleToApply && DoesViewExist (pEl, pDoc, viewNb))
+			  if (pRule && DoesViewExist (pEl, pDoc, viewNb))
 			    /* this rule applies to the element */
 			    {
 			      if (viewSch == 1 &&
-				  (ruleToApply->PrType != PtFunction ||
-				   (ruleToApply->PrType == PtFunction &&
-				    ruleToApply->PrPresFunction == FnBackgroundPicture)))
+				  (pRule->PrType != PtFunction ||
+				   (pRule->PrType == PtFunction &&
+				    pRule->PrPresFunction == FnBackgroundPicture)))
 				/* main view. Record the rule for the cascade*/
 				/* but apply presentation functions
 				   immediately */
 				{
-				  if (RuleHasHigherPriority (ruleToApply,
+				  if (RuleHasHigherPriority (pRule,
 					   pSchPattr, attrBlock,
-					   selectedRule[ruleToApply->PrType],
-					   schemaOfSelectedRule[ruleToApply->PrType],
-					   attrBlockOfSelectedRule[ruleToApply->PrType]))
+					   selectedRule[pRule->PrType],
+					   schemaOfSelectedRule[pRule->PrType],
+					   attrBlockOfSelectedRule[pRule->PrType]))
 				    {
-				      selectedRule[ruleToApply->PrType] = ruleToApply;
-				      schemaOfSelectedRule[ruleToApply->PrType] = pSchPattr;      
-				      attrOfSelectedRule[ruleToApply->PrType] = pAttr;
-				      attrBlockOfSelectedRule[ruleToApply->PrType] = attrBlock;
+				      selectedRule[pRule->PrType] = pRule;
+				      schemaOfSelectedRule[pRule->PrType] = pSchPattr;
+				      attrOfSelectedRule[pRule->PrType] = pAttr;
+				      attrBlockOfSelectedRule[pRule->PrType] = attrBlock;
 				    }
 				}
 			      else if (fileDescriptor)
-				DisplayPRule (ruleToApply, fileDescriptor, pEl, pSchPattr);
-			      else if (!ApplyRule (ruleToApply, pSchPattr,
+				DisplayPRule (pRule, fileDescriptor, pEl, pSchPattr);
+			      else if (!ApplyRule (pRule, pSchPattr,
 						   pNewAbbox, pDoc, pAttr))
 				/* not the main view, apply the rule now */
-				WaitingRule (ruleToApply, pNewAbbox,
+				WaitingRule (pRule, pNewAbbox,
 					     pSchPattr, pAttr, queuePA, queuePS,
 					     queuePP, queuePR, lqueue);
 			    }
@@ -3981,7 +3981,7 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 			pAttr = pAttr->AeNext;
 		  }
 		selectedRule[pRule->PrType] = pRule;
-		schemaOfSelectedRule[pRule->PrType] = pSchP;      
+		schemaOfSelectedRule[pRule->PrType] = pSchP;
 		attrOfSelectedRule[pRule->PrType] = pAttr;
 		attrBlockOfSelectedRule[pRule->PrType] = NULL;
 	      }

@@ -5,7 +5,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Configurer Amaya</title>
-  <meta name="GENERATOR" content="amaya 8.1c, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
 </head>
 
 <body xml:lang="fr" lang="fr">
@@ -86,21 +86,21 @@ différentes architectures :</p>
       <td valign="top"><p class="TableText">Windows NT</p>
       </td>
       <td valign="top"><p
-        class="TableText"><code>$HOMEDRIVE:\$HOMEPATH\Amaya\config</code></p>
+        class="TableText"><code>$HOMEDRIVE\$HOMEPATH\Amaya\config</code></p>
       </td>
     </tr>
     <tr>
       <td valign="top"><p class="TableText">Windows 2000</p>
       </td>
       <td valign="top"><p
-        class="TableText"><code>$HOMEDRIVE:\$HOMEPATH\Amaya\config</code></p>
+        class="TableText"><code>$HOMEDRIVE\$HOMEPATH\Amaya\config</code></p>
       </td>
     </tr>
     <tr>
       <td valign="top"><p class="TableText">Windows XP</p>
       </td>
       <td valign="top"><p
-        class="TableText"><code>$HOMEDRIVE:\$HOMEPATH\Amaya\config</code></p>
+        class="TableText"><code>$HOMEDRIVE\$HOMEPATH\Amaya\config</code></p>
       </td>
     </tr>
   </tbody>
@@ -174,13 +174,14 @@ Ceci n'aura pas d'impact sur les exécutions d'Amaya ultérieurement.</p>
 <h3><a name="preferences">Menus des Préférences</a></h3>
 
 <p>Ces menus se trouvent sous le menu <strong>Spécial/Préférences</strong>.
-Il y a neuf différents menus de préférences disponibles : <a
-href="#General">Générales</a>, <a href="#Publishing">Publication</a>, <a
-href="#Cache">Cache</a>, <a href="#Specifying1">Proxy</a>, <a
-href="#color">Couleurs</a>, <a href="#HTML">Géométrie</a>,<a
-href="#lang">Négociation des langues</a>, <a href="#Profiles">Profils</a>, et
-<a href="#Templates">Modèles de page</a>. Dans chacun de ces menus, il y a
-trois boutons d'action en commun :</p>
+Il y a 10 différents menus de préférences disponibles : <a
+href="#General">Générales</a>, <a href="#L970">Navigation</a>, <a
+href="#Publishing">Publication</a>, <a href="#Cache">Cache</a>, <a
+href="#Specifying1">Proxy</a>, <a href="#color">Couleurs</a>, <a
+href="#HTML">Géométrie</a>, <a href="#lang">Négociation des langues</a>, <a
+href="#Profiles">Profils</a>, et <a href="#Templates">Modèles de page</a>.
+Ces menus sont légèrement différents sur Windows et station Unix, mais chacun
+présente trois boutons d'action :</p>
 
 <table border="0" cellspacing="5" cellpadding="5"
 summary="action button chart">
@@ -226,7 +227,7 @@ alt="General Preferences Menu" /></p>
       temporaire précédent, un nouveau cache sera créé sous le nouveau
       répertoire.<br />
     </dd>
-  <dt><strong>Home Page</strong></dt>
+  <dt><strong>Page de démarrage</strong></dt>
     <dd>Spécifie l'URI qu'Amaya chargera au démarrage ou quand l'utilisateur
       pressera le bouton Home. Un exemple est
       <code>http://www.w3.org</code>.<br />
@@ -239,17 +240,13 @@ alt="General Preferences Menu" /></p>
       conservées. Sinon les caractères «&nbsp;fin de ligne&nbsp;» sont
       remplacés par des espaces.</dd>
   <dt><strong>Produire des fichiers de sauvegarde</strong></dt>
-    <dd>Si cette option est active Amaya va produire un fichier de sauvegarde
-      pour chaque document édité, au bout d'un certain volume de
-      modifications.</dd>
-  <dt><strong>Montrer les boutons</strong></dt>
-    <dd>Contrôle si la barre de boutons est visible ou non dans chaque vue
-      principale de document.</dd>
-  <dt><strong>Montrer l'adresse</strong></dt>
-    <dd>Contrôle si la barre de boutons est visible ou non dans chaque vue
-      principale de document.</dd>
+    <dd>Si cette option est active Amaya va produire périodiquement un
+      fichier de sauvegarde pour chaque document édité.</dd>
   <dt><strong>Montrer boutons</strong></dt>
-    <dd>Contrôle si la barre de boutons est visible ou non dans chaque vue
+    <dd>Contrôle si Amaya affiche les barres de boutons dans chaque vue
+      principale de document.</dd>
+  <dt><strong>Montrer adresse</strong></dt>
+    <dd>Contrôle si Amaya affiche les adresses des pages dans chaque vue
       principale de document.</dd>
   <dt><strong>Montrer les cibles</strong></dt>
     <dd>Contrôle si les cibles de liens sont visualisées ou non. Montrer les
@@ -268,9 +265,9 @@ alt="General Preferences Menu" /></p>
       href="Browsing.html.fr#L294">accès rapides</a> du document ou indique
       que les accès rapides définis les documents sont ignorés. <br />
     </dd>
-  <dt><strong>Menu de la taille de la police de caractère</strong> (stations
-  Unix uniquement)</dt>
-    <dd>Spécifie la taille de la police de caractère dans tous les menus
+  <dt><strong>Taille de caractères des menus</strong> (stations Unix
+  uniquement)</dt>
+    <dd>Spécifie la taille de la police de caractères dans tous les menus
       d'Amaya. Cette option est aussi prise en compte au démarrage. <br />
     </dd>
   <dt><strong>Zoom sur les caractères</strong></dt>
@@ -284,14 +281,13 @@ alt="General Preferences Menu" /></p>
       sur tous les documents ouverts. <br />
     </dd>
   <dt><strong>Langue du dialogue</strong></dt>
-    <dd>Spécifie la langue de tous les menus d'Amaya et les messages des
-      dialogues. La langue par défaut est l'Anglais Américain (valeur
-      <code>en_US</code>). A ce moment précis, seulement trois langues sont
-      disponibles : Anglais (<code>en</code>), Français (<code>fr</code>), et
-      Allemand (<code>de</code>). Au démarrage, Amaya charge les fichiers de
-      dialogue selon la langue de dialogue courante : les fichiers en-, fr-,
-      ou de- . Ces fichiers de dialogue se trouvent dans le répertoire
-      <strong>Amaya/config</strong>.
+    <dd>Spécifie la langue utilisée dans les menus et les messages. La langue
+      par défaut est l'anglais américain (valeur <code>en</code>). D'autres
+      langues sont possibles comme le français (<code>fr</code>), l'italien
+      (it), l'espagnol (es), et l'allemand (<code>de</code>). Au démarrage,
+      Amaya charge les fichiers de dialogue selon la langue de dialogue
+      courante : les fichiers en-, fr-, ou de- . Ces fichiers de dialogue se
+      trouvent dans le répertoire <strong>Amaya/config</strong>.
       <p>Il est possible d'adapter Amaya aux nouvelles langues ISO-Latin-1 en
       écrivant les fichiers de dialogue correspondants. Ces fichiers de
       dialogue doivent se trouver dans le même répertoire (c'est à dire
@@ -301,7 +297,7 @@ alt="General Preferences Menu" /></p>
     </dd>
 </dl>
 
-<h4>Préférences de navigation</h4>
+<h4><a name="L970">Préférences de navigation</a></h4>
 
 <p>Cette boîte de dialogue vous permet d'enregistrer vos préférences de
 navigation.</p>
@@ -311,16 +307,18 @@ alt="Publish Preferences Menu" /></p>
 <dl>
   <dt></dt>
   <dt><strong>Charger les images</strong></dt>
-    <dd>Contrôle si les images doivent être chargées ou non. Cette option est
-      effective pour les nouveaux documents chargés. <br />
+    <dd>Contrôle si les images doivent être chargées et affichées. Sinon,
+      l'attibut ALT est visualisé à la place de l'image. Cette option prend
+      effet dès que le formulaire est validé. <br />
     </dd>
   <dt><strong>Charger les objets</strong></dt>
-    <dd>Contrôle si les objets doivent être chargés ou non. Cette option est
-      effective pour les nouveaux documents chargés.</dd>
+    <dd>Contrôle si les objets doivent être chargés et affichés. Sinon, le
+      contenu de l'objet est visualisé à la place de l'objet. Cette option
+      prend effet dès que le formulaire est validé. </dd>
   <dt><strong>Montrer les images de fond</strong></dt>
     <dd>Contrôle si les images en arrière plan doivent être montrées ou non.
-      Cette option est effective uniquement quand on charge un nouveau
-      document.</dd>
+      Cette option prend effet dès que le formulaire est validé.
+    document.</dd>
   <dt><strong>Le double clic active les liens</strong></dt>
     <dd>Depuis la première version d'Amaya, les utilisateurs ont besoin de
       double cliquer sur un lien pour l'activer. Cela permet de différencier
@@ -335,21 +333,13 @@ alt="Publish Preferences Menu" /></p>
       taper sur le bouton Stop pendant un téléchargement FTP peut faire
       planter Amaya. Malgré ces problèmes, nous avons rajouté cette option
       dans Amaya afin que les autres développeurs puissent nous aider à le
-      débuguer rapidement. Par défaut, cette option est inactive.<br />
-    </dd>
-  <dt><strong>Accès rapides</strong></dt>
-    <dd>Spécifie la touche <strong>Alt</strong> ou <strong>Control</strong>
-      utilisée pour mettre en oeuvre les <a
-      href="Browsing.html.fr#L294">accès rapides</a> du document ou indique
-      que les accès rapides définis les documents sont ignorés. <br />
-    </dd>
-    <dd><p><br />
-      </p>
-    </dd>
+      débuguer rapidement. Par défaut, cette option est inactive.</dd>
+  <dt><strong>Type d'écran courant</strong></dt>
+    <dd>L'application des feuilles de style (CSS) dépendent du type d'écran
+      choisi dans ce formulaire.</dd>
 </dl>
 
-<h4><a name="Publishing">Pré</a><a name="Publishing1">férences de
-publication</a></h4>
+<h4><a name="Publishing">Pré</a>férences de publication</h4>
 
 <p>Cette boîte de dialogue vous permet d'enregistrer vos préférences pour les
 ETAGS et pré-conditions, pour vérifier ou non chaque commande PUT avec une

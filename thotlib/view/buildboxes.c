@@ -1899,6 +1899,8 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
 
   if (pCurrentBox)
     {
+      if (pAb->AbLeafType == LtCompound)
+	pCurrentBox->BxType = tableType;
       /* pMainBox points to the root box of the view */
       pMainBox = ViewFrameTable[frame - 1].FrAbstractBox->AbBox;
       pCurrentBox->BxFont = font;
@@ -2143,7 +2145,6 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
 	case LtCompound:
 	  if (tableType == BoTable)
 	    {
-	      pCurrentBox->BxType = tableType;
 	      pCurrentBox->BxColumns = NULL;
 	      pCurrentBox->BxRows = NULL;
 	      pCurrentBox->BxMaxWidth = 0;
@@ -2151,7 +2152,6 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
 	    }
 	  else if (tableType == BoColumn)
 	    {
-	      pCurrentBox->BxType = tableType;
 	      pCurrentBox->BxTable = NULL;
 	      pCurrentBox->BxRows = NULL;
 	      pCurrentBox->BxMaxWidth = 0;
@@ -2159,7 +2159,6 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
 	    }
 	  else if (tableType == BoRow)
 	    {
-	      pCurrentBox->BxType = tableType;
 	      pCurrentBox->BxTable = NULL;
 	      pCurrentBox->BxRows = NULL;
 	      pCurrentBox->BxMaxWidth = 0;
@@ -2167,7 +2166,6 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
 	    }
 	  else if (tableType == BoCell)
 	    {
-	      pCurrentBox->BxType = tableType;
 	      pCurrentBox->BxTable = NULL;
 	      pCurrentBox->BxRows = NULL;
 	      pCurrentBox->BxMaxWidth = 0;
