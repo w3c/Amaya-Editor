@@ -587,6 +587,8 @@ void TtaGetDocumentPageId( Document doc_id, int schView,
 int TtaGetFrameDocumentId( int frame_id )
 {
 #ifdef _WX
+  if (frame_id <= 0 || frame_id >= MAX_FRAME )
+    return -1;
   return FrameTable[frame_id].FrDoc;
 #else
   return -1;
@@ -604,6 +606,33 @@ AmayaWindow * TtaGetWindowFromId( int window_id )
   return WindowTable[window_id].WdWindow;
 }
 #endif /* #ifdef _WX */
+
+/*----------------------------------------------------------------------
+  TtaGetFrameId returns the frame id corresponding to a sepcific position
+  params:
+    - window_id : in which window
+    - page_id : in which page 
+    - position : 1 or 2
+  returns:
+    - int : the frame id (0 if not found)
+  ----------------------------------------------------------------------*/
+int TtaGetFrameId( int window_id, int page_id, int position )
+{
+#ifdef _WX  
+  AmayaWindow * p_window = TtaGetWindowFromId( window_id );
+  if (!p_window)
+    return 0;
+  AmayaPage * p_page = p_window->GetPage( page_id );
+  if (!p_page)
+    return 0;
+  AmayaFrame * p_frame = p_page->GetFrame( position );
+  if (!p_frame)
+    return 0;
+  return p_frame->GetFrameId();
+#else /* _WX */
+  return 0;
+#endif /* _WX */
+}
 
 /*----------------------------------------------------------------------
   TtaCloseWindow generate a close event and forward it to the aimed window
