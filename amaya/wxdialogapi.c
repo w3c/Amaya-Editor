@@ -80,6 +80,14 @@ ThotBool CreateInitConfirmDlgWX ( int ref,
 #endif /* _WX */
 }
 
+#define APPFILENAMEFILTER _T("HTML files (*.*htm[l])|*.*htm*|XML files (*.xml)|*.xml|MathML Files (*.mml)|*.mml|SVG files (*.svg)|*.svg|CSS files (*.css)|*.css|All files (*.*)|*.*")
+#define APPCSSNAMEFILTER _T("CSS files (*.css)|*.css|All files (*.*)|*.*")
+#define APPSVGNAMEFILTER _T("SVG files (*.svg)|*.svg|All files (*.*)|*.*")
+#define APPMATHNAMEFILTER _T("MathML files (*.mml)|*.mml|All files (*.*)|*.*")
+#define APPHTMLNAMEFILTER _T("HTML files (*.*htm[l])|*.*htm*|All files (*.*)|*.*")
+#define APPIMAGENAMEFILTER _T("All files (*.*)|*.*|Image files (*.png)|*.png|Image files (*.jpg)|*.jpg|Image files (*.gif)|*.gif|Image files (*.bmp)|*.bmp")
+#define APPLIBRARYNAMEFILTER _T("Library files (*.lhtml)|*.lhtml|All files (*.*)|*.*")
+#define APPALLFILESFILTER _T("All files (*.*)|*.*")
 
 /*----------------------------------------------------------------------
   CreateOpenDocDlgWX create the dialog for openging new documents
@@ -103,16 +111,37 @@ ThotBool CreateOpenDocDlgWX ( int ref,
 			      DocumentType doc_type )
 {
 #ifdef _WX
-  wxString wx_title = TtaConvMessageToWX( title );
+  wxString wx_title   = TtaConvMessageToWX( title );
   wxString wx_docName = TtaConvMessageToWX( docName );
+  wxString wx_filter;
+
+  if (doc_type == docHTML)
+    wx_filter = APPHTMLNAMEFILTER;
+  else if (doc_type == docMath)
+    wx_filter = APPMATHNAMEFILTER;
+  else if (doc_type == docSVG)
+    wx_filter = APPSVGNAMEFILTER;
+  else if (doc_type == docCSS)
+    wx_filter = APPCSSNAMEFILTER;
+  else if (doc_type == docImage)
+    wx_filter = APPIMAGENAMEFILTER;
+  else if (doc_type == docImage)
+    wx_filter = APPIMAGENAMEFILTER;
+  else if (doc_type == docLibrary)
+    wx_filter = APPLIBRARYNAMEFILTER;
+  else 
+    wx_filter = APPFILENAMEFILTER;
+
 
   wxLogDebug( _T("CreateOpenDocDlgWX - title=")+wx_title+
-	      _T("\tdocName=")+wx_docName );
+	      _T("\tdocName=")+wx_docName+
+	      _T("\tfilter=")+wx_filter );
 
   OpenDocDlgWX * p_dlg = new OpenDocDlgWX( ref,
 					   parent,
 					   wx_title,
-					   wx_docName );
+					   wx_docName,
+					   wx_filter );
 
   /* - Setup urlbar ------------------------------------------- */
   /* Append URL from url list to the urlbar */

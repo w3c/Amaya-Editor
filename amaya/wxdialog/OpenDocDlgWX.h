@@ -22,7 +22,8 @@ public:
   OpenDocDlgWX( int ref, 
 		wxWindow* parent,
 		const wxString & title,
-		const wxString & docName );
+		const wxString & docName,
+		const wxString & filtre );
     
   // Destructor.                  
   virtual ~OpenDocDlgWX();
@@ -38,6 +39,10 @@ private:
 
   // Any class wishing to process wxWindows events must use this macro
   DECLARE_EVENT_TABLE()
+
+private:
+  wxString m_Filter;
+
 };
 
 #endif  //__OPENDOCDLGWX_H__

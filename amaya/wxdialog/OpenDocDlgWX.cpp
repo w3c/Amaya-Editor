@@ -33,8 +33,10 @@ END_EVENT_TABLE()
 OpenDocDlgWX::OpenDocDlgWX( int ref,
 			    wxWindow* parent,
 			    const wxString & title,
-			    const wxString & docName  ) :
-  AmayaDialog( NULL, ref )
+			    const wxString & docName,
+			    const wxString & filter ) :
+  AmayaDialog( NULL, ref ),
+  m_Filter(filter)
 {
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("OpenDocDlgWX"));
 
@@ -63,6 +65,7 @@ OpenDocDlgWX::OpenDocDlgWX( int ref,
   ----------------------------------------------------------------------*/
 OpenDocDlgWX::~OpenDocDlgWX()
 {
+  ThotCallback (m_Ref, INTEGER_DATA, (char*) 0);
 }
 
 /*----------------------------------------------------------------------
@@ -101,7 +104,7 @@ void OpenDocDlgWX::OnOpenButton( wxCommandEvent& event )
   // allocate a temporary buffer to copy the 'const char *' url buffer 
   char buffer[512];
   wxASSERT( url.Len() < 512 );
-  strcpy( buffer, url.ToAscii() );
+  strcpy( buffer, (const char*)url.mb_str(wxConvUTF8) );
 
   // give the new url to amaya (to do url completion)
   ThotCallback (BaseDialog + URLName,  STRING_DATA, (char *)buffer );
@@ -117,22 +120,30 @@ void OpenDocDlgWX::OnOpenButton( wxCommandEvent& event )
 void OpenDocDlgWX::OnBrowseButton( wxCommandEvent& event )
 {
   // Create a generic filedialog
-  wxFileDialog dialog
+  wxFileDialog * p_dlg = new wxFileDialog
     (
      this,
      TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_OPEN_URL) ),
      _T(""),
      _T(""), 
-     _T("HTML files (*.htm;*.html)|*.htm;*.html")
+     m_Filter
      );
 
-  dialog.SetDirectory(wxGetHomeDir());
+  p_dlg->SetDirectory(wxGetHomeDir());
   
-  if (dialog.ShowModal() == wxID_OK)
-    {     
-      XRCCTRL(*this, "wxID_COMBOBOX",     wxComboBox)->SetValue( dialog.GetPath() );
+  if (p_dlg->ShowModal() == wxID_OK)
+    {
+      XRCCTRL(*this, "wxID_COMBOBOX",     wxComboBox)->SetValue( p_dlg->GetPath() );
+      // destroy the dlg before calling thotcallback because it's a child of this
+      // dialog and thotcallback will delete the dialog...
+      // so if I do not delete it manualy here it will be deleted twice
+      p_dlg->Destroy();
       // simulate the open command
       OnOpenButton( event );
+    }
+  else
+    {
+      p_dlg->Destroy();
     }
 }
 
