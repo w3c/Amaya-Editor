@@ -1064,14 +1064,24 @@ static void         CreateMathConstruct (int construct)
 	    sibling = TtaGetLastChild (row);
 	  if (sibling == NULL)
 	    {
-	      /* replace the empty MROW by the new element*/
-	      TtaInsertSibling (el, row, TRUE, doc);
-	      if (!registered)
+	      if (elType.ElTypeNum == MathML_EL_MathML)
+		/* empty MATH element. Isert the new element as a child */
 		{
-		  TtaRegisterElementCreate (el, doc);
-		  TtaRegisterElementDelete (row, doc);
+		  TtaInsertFirstChild (&el, row, doc);
+		  if (!registered)
+		    TtaRegisterElementCreate (el, doc);
 		}
-	      TtaRemoveTree (row, doc);
+	      else
+		{
+		  /* replace the empty MROW element by the new element */
+		  TtaInsertSibling (el, row, TRUE, doc);
+		  if (!registered)
+		    {
+		      TtaRegisterElementCreate (el, doc);
+		      TtaRegisterElementDelete (row, doc);
+		    }
+		  TtaRemoveTree (row, doc);
+		}
 	    }
 	  else
 	    {
