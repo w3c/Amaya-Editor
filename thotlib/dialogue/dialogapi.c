@@ -2472,7 +2472,6 @@ static int DestContenuMenu (struct Cat_Context *catalogue)
    des entre'es du menu.    
    Retourne un code d'erreur.
   ----------------------------------------------------------------------*/
-
 void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 		     char *text, char* equiv)
 {
@@ -2499,6 +2498,7 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
    XmString            title_string;
 #else /* _GTK */
    ThotWidget          tmpw;
+   ThotWidget          accelw = NULL;
 #endif /* !_GTK */
 #endif
 
@@ -2720,11 +2720,26 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 #ifndef _GTK
 			 title_string = XmStringCreate (&equiv[eindex], XmSTRING_DEFAULT_CHARSET);
 			 XtSetArg (args[n - 1], XmNacceleratorText, title_string);
-#endif /* _GTK */
+#else /* _GTK */
+			 if (&equiv[eindex] != EOS)
+			   {
+			     accelw = gtk_accel_label_new (&equiv[eindex]);
+			     gtk_widget_show_all (accelw);
+			   }
+			 else
+			   {
+			     accelw = NULL;
+			   }
+#endif /* !_GTK */
 #endif /* _WINDOWS */
 			 eindex += strlen (&equiv[eindex]) + 1;
 		       }
-
+#ifdef _GTK
+		     else
+		       {
+			 accelw = NULL;
+		       }
+#endif /* _GTK*/
 		     if (text[index] == 'B')
 		       /*__________________________________________ Creation d'un bouton __*/
 		       {
@@ -2744,6 +2759,10 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 #ifdef _GTK
                          w = gtk_menu_item_new_with_label (&text[index + 1]);
                          gtk_widget_show (w);
+			 if (accelw != NULL)
+			   {
+			     gtk_accel_label_set_accel_widget(accelw, GTK_WIDGET(w)); 
+			   }
                          gtk_menu_append (GTK_MENU (menu), w);
                          ConnectSignalGTK (w, "activate",
 					   GTK_SIGNAL_FUNC (CallMenuGTK), (gpointer)catalogue);
@@ -2780,6 +2799,10 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 			    gtk_widget_show (tmpw);*/
 			 w = gtk_check_menu_item_new_with_label (&text[index + 1]);
 			 gtk_widget_show (w);
+			 if (accelw != NULL)
+			   {
+			     gtk_accel_label_set_accel_widget(accelw, GTK_WIDGET(w)); 
+			   }
 			 /* gtk_container_add (GTK_CONTAINER (w), tmpw);*/
 			 /*			 gtk_container_set_border_width (GTK_CONTAINER (w), -2);*/
 			 /*			 gtk_object_set_data (GTK_OBJECT (w), "check_button", (gpointer)tmpw);*/
@@ -2822,6 +2845,10 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 #ifdef _GTK
 			 w =  gtk_menu_item_new_with_label (&text[index + 1]);
 			 gtk_widget_show (w);
+			 if (accelw != NULL)
+			   {
+			     gtk_accel_label_set_accel_widget(accelw, GTK_WIDGET(w)); 
+			   }
 			 gtk_menu_append (GTK_MENU (menu),w);
 			 adbloc->E_ThotWidget[ent] = w;
 #else /* _GTK */
@@ -2843,8 +2870,12 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 #else  /* _WINDOWS */
 #ifdef _GTK
 			 w = gtk_menu_item_new_with_label ( &text[index + 1]);
-			 gtk_menu_append (GTK_MENU (menu),w);
 			 gtk_widget_show (w);
+			 if (accelw != NULL)
+			   {
+			     gtk_accel_label_set_accel_widget(accelw, GTK_WIDGET(w)); 
+			   }
+			 gtk_menu_append (GTK_MENU (menu),w);
 			 /*			 gtk_signal_connect (GTK_OBJECT (w), "activate",
 						 GTK_SIGNAL_FUNC (CallMenuGTK), catalogue);*/
 			 adbloc->E_ThotWidget[ent] = w;
@@ -2866,6 +2897,10 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 #ifdef _GTK
                          w = gtk_menu_item_new ();
                          gtk_widget_show (w);
+			 if (accelw != NULL)
+			   {
+			     gtk_accel_label_set_accel_widget(accelw, GTK_WIDGET(w)); 
+			   }
                          gtk_menu_append (GTK_MENU (menu),w); 
 			 adbloc->E_ThotWidget[ent] = w;		 
 #else /* _GTK */
@@ -3217,7 +3252,6 @@ void TtaNewPopup (int ref, ThotWidget parent, char *title, int number,
 	     XmStringFree (title_string);
 #endif /* !_WINDOWS */
 	  }
-
 	/* Cree les differentes entrees du menu */
 #ifndef _WINDOWS
 	n = 0;
@@ -3731,6 +3765,7 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
   GSList *            GSListTmp = NULL;
   GtkStyle *          styletmp;
   ThotWidget          tmpw;
+  ThotWidget          accelw = NULL;
 #endif /* _GTK */
   ThotWidget          menu;
   char                heading[200];
@@ -3991,12 +4026,18 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 		      title_string = XmStringCreate (&equiv[eindex], XmSTRING_DEFAULT_CHARSET);
 		      XtSetArg (args[n + 1], XmNacceleratorText, title_string);
 #else /* _GTK */
-
-
+		      accelw = gtk_accel_label_new (&equiv[eindex]);
+		      gtk_widget_show (accelw);
 #endif /* !_GTK */
 #endif /* !_WINDOWS */
 		      eindex += strlen (&equiv[eindex]) + 1;
 		    }
+#ifdef _GTK
+		  else
+		    {
+		      accelw = NULL;
+		    }
+#endif /* _GTK */		  
 #ifndef _GTK
 #ifdef _WINDOWS
 		  WIN_AddFrameCatalogue (w, catalogue);
@@ -4018,6 +4059,10 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 		  /* rem: GSListTmp regroupe the widget of the radiolist*/
 		  w = gtk_radio_button_new (GSListTmp);
 		  gtk_widget_show (GTK_WIDGET(w));
+		  if (accelw != NULL)
+		    {
+		      gtk_accel_label_set_accel_widget(accelw, GTK_WIDGET(w)); 
+		    }
 		  tmpw = gtk_label_new (&text[index + 1]);
 		  gtk_misc_set_alignment (GTK_MISC (tmpw), 0.0, 0.5);
 		  gtk_widget_show (tmpw);
@@ -4116,9 +4161,9 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 		      catalogue->Cat_PtParent = parentCatalogue;
 		      catalogue->Cat_Widget = menu;
 #ifdef _WINDOWS
-              WIN_AddFrameCatalogue (FrMainRef[currentFrame], catalogue);
+		      WIN_AddFrameCatalogue (FrMainRef[currentFrame], catalogue);
 		      if (!IsMenu (catalogue->Cat_Widget))
-			     catalogue->Cat_Widget = w;
+			catalogue->Cat_Widget = w;
 #else  /* _WINDOWS */
 #ifndef _GTK
 		      n = 0;
@@ -4126,11 +4171,15 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 		      n++;
 		      XtSetValues (w, args, n);
 		      XtManageChild (w);
-#else
+#else /* _GTK */
 		      /* assign the submenu to the menu bar*/
-		      gtk_menu_item_set_submenu (GTK_MENU_ITEM (w), menu);
 		      gtk_widget_show_all (w);
-#endif /* _GTK */
+		      gtk_menu_item_set_submenu (GTK_MENU_ITEM (w), menu);
+		      if (accelw != NULL)
+			{
+			  gtk_accel_label_set_accel_widget(accelw, GTK_WIDGET(w)); 
+			}
+#endif /* !_GTK */
 #endif /* !_WINDOWS */
 		      adbloc->E_Free[ent] = 'N';
 		      
@@ -4181,13 +4230,17 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 		  n++;
 		  w = XmCreateLabel (menu, "Dialogue", args, n);
 		  XtManageChild (w);
-#else
+#else /* _GTK */
 		  w = gtk_menu_item_new_with_label (title);
 		  gtk_widget_show (w);
+		  if (accelw != NULL)
+		    {
+		      gtk_accel_label_set_accel_widget(accelw, GTK_WIDGET(w)); 
+		    }
 		  gtk_box_pack_start (GTK_BOX(menu), w, FALSE, FALSE, 0);
 		  /*TODO*/ 
 
-#endif /* _GTK */
+#endif /* !_GTK */
 #endif /* !_WINDOWS */
 		  adbloc->E_ThotWidget[0] = w;
 #ifndef _WINDOWS
@@ -4274,17 +4327,21 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 			  strcpy (equiv_item, &equiv[eindex]);
 #else  /* !_WINDOWS */
 #ifdef _GTK
-		      /* TODO : penser aux accelerateurs de GTK */
-
-
-
+		      accelw = gtk_accel_label_new (&equiv[eindex]);
+		      gtk_widget_show (accelw);
 #else /* _GTK */
 		      title_string = XmStringCreate (&equiv[eindex], XmSTRING_DEFAULT_CHARSET);
 		      XtSetArg (args[n - 1], XmNacceleratorText, title_string);
 #endif /* _GTK */
 #endif /* !_WINDOWS */
 		      eindex += strlen (&equiv[eindex]) + 1;
-		    } 
+		    }
+#ifdef _GTK
+		  else
+		    {
+		      accelw = NULL;
+		    }
+#endif /* _GTK*/
 		  
 		  if (text[index] == 'B')
 		    {
@@ -4306,6 +4363,10 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 		      w->style = gtk_style_copy (w->style);
 		      w->style->font=DefaultFont;
 		      gtk_widget_show (w);
+		      if (accelw != NULL)
+			{
+			  gtk_accel_label_set_accel_widget(accelw, GTK_WIDGET(w)); 
+			}
 		      gtk_menu_append (GTK_MENU (menu),w);
 		      ConnectSignalGTK (w, "activate",
 					GTK_SIGNAL_FUNC (CallMenuGTK), (gpointer)catalogue);
@@ -4338,6 +4399,10 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 		      /* create a check menu */
 		      w = gtk_check_menu_item_new_with_label (&text[index + 1]);
 		      gtk_widget_show (w);
+		      if (accelw != NULL)
+			{
+			  gtk_accel_label_set_accel_widget(accelw, GTK_WIDGET(w)); 
+			}
 		      gtk_menu_append (GTK_MENU (menu), w);
 		      gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (w), FALSE);
 		      adbloc->E_ThotWidget[ent] = w;
@@ -4361,6 +4426,10 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 #ifdef _GTK
 		      w = gtk_menu_item_new_with_label (&text[index + 1]);
 		      gtk_widget_show (w);
+		      if (accelw != NULL)
+			{
+			  gtk_accel_label_set_accel_widget(accelw, GTK_WIDGET(w)); 
+			}
 		      w->style = gtk_style_copy (w->style);
 		      w->style->font=DefaultFont;
 		      adbloc->E_ThotWidget[ent] = w;
@@ -4381,6 +4450,10 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 		      w->style = gtk_style_copy (w->style);
 		      w->style->font=DefaultFont;
 		      gtk_widget_show (w);
+		      if (accelw != NULL)
+			{
+			  gtk_accel_label_set_accel_widget(accelw, GTK_WIDGET(w)); 
+			}
 		      adbloc->E_ThotWidget[ent] = w;
 #else /* _GTK */
 		      strcpy (heading, &text[index + 1]);
@@ -4403,6 +4476,10 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 		      w->style = gtk_style_copy (w->style);
 		      w->style->font=DefaultFont;
 		      gtk_widget_show (w);
+		      if (accelw != NULL)
+			{
+			  gtk_accel_label_set_accel_widget(accelw, GTK_WIDGET(w)); 
+			}
 		      gtk_menu_append (GTK_MENU (menu),w);
 		      adbloc->E_ThotWidget[ent] = w;
 #else /* _GTK */
@@ -4575,6 +4652,7 @@ void TtaNewToggleMenu (int ref, int ref_parent, char *title, int number,
    int                 n;
 #else /* _GTK */
    ThotWidget          tmpw;
+   ThotWidget          accelw = NULL;
 #endif /* !_GTK */
    ThotWidget          menu;
    ThotWidget          w;
@@ -4774,18 +4852,6 @@ void TtaNewToggleMenu (int ref, int ref_parent, char *title, int number,
 		  XtSetArg (args[n + 1], XmNacceleratorText, title_string);
 		  n++;
 	       }
-#else /* _GTK */
-
-	     /*
-	      *
-	      * PLACER ICI L ACCELERATOR
-	      *
-	      *
-	      *
-	      */
-
-
-
 #endif /* !_GTK */
 	     i = 0;
 	     index = 0;
@@ -4825,13 +4891,17 @@ void TtaNewToggleMenu (int ref, int ref_parent, char *title, int number,
 #ifndef _GTK
 			   title_string = XmStringCreate (&equiv[eindex], XmSTRING_DEFAULT_CHARSET);
 #else /* _GTK */
-
-
-
-
+			   accelw = gtk_accel_label_new (&equiv[eindex]);
+			   gtk_widget_show (accelw);
 #endif /* !_GTK */
-			    eindex += strlen (&equiv[eindex]) + 1;
+			   eindex += strlen (&equiv[eindex]) + 1;
 			 }
+#ifdef _GTK
+		       else
+			 {
+			   accelw = NULL;
+			 }
+#endif /* _GTK*/
 		       /* On accepte toggles, boutons et separateurs */
 		       if (text[index] == 'B' || text[index] == 'T')
 			 /*________________________________________ Creation d'un bouton __*/
@@ -4846,6 +4916,10 @@ void TtaNewToggleMenu (int ref, int ref_parent, char *title, int number,
 			   /* add a check button to the list */
 			   w = gtk_check_button_new_with_label (&text[index + 1]);
 			   gtk_widget_show (GTK_WIDGET(w));
+			   if (accelw != NULL)
+			     {
+			       gtk_accel_label_set_accel_widget(accelw, GTK_WIDGET(w)); 
+			     }
 			   gtk_box_pack_start (GTK_BOX(row), GTK_WIDGET(w), FALSE, FALSE, 0);
 			   ConnectSignalGTK (w, "toggled", GTK_SIGNAL_FUNC (CallToggle), (gpointer)catalogue);
 #endif /* !_GTK */
@@ -4863,6 +4937,10 @@ void TtaNewToggleMenu (int ref, int ref_parent, char *title, int number,
 			    /* add a separator to the list */
 			    w = gtk_hseparator_new ();
 			    gtk_widget_show (w);
+			    if (accelw != NULL)
+			      {
+				gtk_accel_label_set_accel_widget(accelw, GTK_WIDGET(w)); 
+			      }
 			    gtk_widget_set_name (w, "Dialogue");
 			    gtk_box_pack_start (GTK_BOX(row), w, FALSE, FALSE, 0);
 #endif /* !_GTK */

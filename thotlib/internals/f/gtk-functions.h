@@ -124,3 +124,12 @@ void ConnectSignalGTK (ThotWidget w, gchar *signal_name, GtkFunction callback, g
 
 void RemoveSignalGTK (ThotWidget w, gchar *signal_name);
 
+
+
+gboolean ButtonPressCallbackGTK (GtkWidget *widget,
+				 GdkEventButton *event,
+				 gpointer user_data);
+
+gboolean ButtonReleaseCallbackGTK (GtkWidget *widget,
+				   GdkEventButton *event,
+				   gpointer user_data);

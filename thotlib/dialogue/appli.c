@@ -2392,13 +2392,8 @@ gboolean FocusInCallbackGTK (GtkWidget *widget,
   {
 
     int frame = (int)user_data;
-    /*    GtkWidget *drawing_area = FrameTable[frame].WdFrame;*/
     /*    printf("focus in\n");*/
-    /* Set the drawing area active for the keyboard */
     gtk_object_set_data (GTK_OBJECT(widget), "Active", (gpointer)TRUE);
-    /*    gtk_grab_remove (gtk_grab_get_current ());*/
-    /*    gtk_grab_add (GTK_WIDGET (widget));*/
-    /*    gtk_widget_grab_focus (GTK_WIDGET(drawing_area));*/
     return FALSE;
   }
 
@@ -2407,13 +2402,9 @@ gboolean FocusOutCallbackGTK (GtkWidget *widget,
 			      gpointer user_data)
   {
     int frame = (int)user_data;
+    
     /*    printf("focus out\n");*/
-    /*    GtkWidget *drawing_area = FrameTable[frame].WdFrame;*/
-    /* Set the drawing area inactive for the keyboard */	  
     gtk_object_set_data (GTK_OBJECT(widget), "Active", (gpointer)FALSE);
-    /* gtk_grab_remove (GTK_WIDGET (widget));*/
-
-    /*    gtk_widget_grab_focus (GTK_WIDGET(drawing_area));*/
     return FALSE;
   }
  
@@ -2421,9 +2412,7 @@ gboolean EnterCallbackGTK (GtkWidget *widget,
 			   GdkEventCrossing *event,
 			   gpointer user_data)
   {
-    /*    printf("enter\n");*/
      gtk_object_set_data (GTK_OBJECT(widget), "MouseIn", (gpointer)TRUE);    
-     /*     gtk_grab_add (GTK_WIDGET (widget));*/
     return FALSE;
   }
 
@@ -2431,11 +2420,28 @@ gboolean LeaveCallbackGTK (GtkWidget *widget,
 			   GdkEventCrossing *event,
 			   gpointer user_data)
   {
-    /* printf("leave\n");*/
     gtk_object_set_data (GTK_OBJECT(widget), "MouseIn", (gpointer)FALSE);        
-    /*       gtk_grab_remove (GTK_WIDGET (widget));*/
     return FALSE;
-  } 
+  }
+
+
+gboolean ButtonPressCallbackGTK (GtkWidget *widget,
+				 GdkEventButton *event,
+				 gpointer user_data)
+  {
+     gtk_object_set_data (GTK_OBJECT(widget), "ButtonPress", (gpointer)TRUE);    
+    return FALSE;
+  }
+
+gboolean ButtonReleaseCallbackGTK (GtkWidget *widget,
+				   GdkEventButton *event,
+				   gpointer user_data)
+  {
+    /*    printf("enter\n");*/
+    gtk_object_set_data (GTK_OBJECT(widget), "ButtonRelease", (gpointer)TRUE);    
+    return FALSE;
+  }
+ 
 #endif
 
 

@@ -567,12 +567,18 @@ gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
    drawing_area = FrameTable[frame].WdFrame;
    textzone = FrameTable[frame].Text_Zone[1];
 
+
    if (textzone)
      {
        /* if the mouse is into the text zone then event must be ignored */
        if (w == textzone || gtk_object_get_data (GTK_OBJECT(textzone), "MouseIn"))
-	 return FALSE;
+	 {
+	   return FALSE;
+	 }
      }
+   /* force the focus into the drawing area */
+   gtk_widget_grab_focus (drawing_area);
+
    status = 0;
    /* control, alt and mouse status bits of the state are ignored */
    state = event->state & (GDK_SHIFT_MASK | GDK_LOCK_MASK | GDK_MOD3_MASK);

@@ -2030,19 +2030,8 @@ int TtaAddTextZone (Document document, View view, char *label,
 	      w->style->font=DefaultFont;
 	      gtk_box_pack_start (GTK_BOX(row), w, TRUE, TRUE, 0);
  	      FrameTable[frame].Text_Zone[i] = w;
-	      ConnectSignalGTK (w,
-				"key_press_event",
-				GTK_SIGNAL_FUNC(CharTranslationGTK),
-				(gpointer)frame);
-	      gtk_object_set_data (GTK_OBJECT(w), "Active", (gpointer)FALSE);
-	      ConnectSignalGTK (w,
-				"focus_in_event",
-				GTK_SIGNAL_FUNC(FocusInCallbackGTK),
-				(gpointer)frame);
-	      ConnectSignalGTK (w,
-				"focus_out_event",
-				GTK_SIGNAL_FUNC(FocusOutCallbackGTK),
-				(gpointer)frame);
+
+	      /* callback to know if the mouse is over the edit zone or not */
 	      ConnectSignalGTK (w,
 				"enter-notify-event",
 				GTK_SIGNAL_FUNC(EnterCallbackGTK),
@@ -2899,7 +2888,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   gtk_widget_show (drawing_area);
            gtk_container_add (GTK_CONTAINER (drawing_frame), drawing_area);
 	   GTK_WIDGET_SET_FLAGS (drawing_area, GTK_CAN_FOCUS);
-	   /*	   GTK_WIDGET_SET_FLAGS (drawing_area, GTK_CAN_DEFAULT);*/
+	   /*  GTK_WIDGET_SET_FLAGS (drawing_area, GTK_CAN_DEFAULT);*/
 	   /*	   gtk_widget_grab_default (drawing_area);*/
 	   
 	   /*	   gtk_widget_grab_focus (drawing_area);*/
@@ -2926,40 +2915,21 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 			     GTK_SIGNAL_FUNC(FrameCallbackGTK),
 			     (gpointer)frame);
 	   ConnectSignalGTK (drawing_area,
-			     "motion_notify_event",
-			     GTK_SIGNAL_FUNC(FrameCallbackGTK),
-			     (gpointer)frame);
-	   ConnectSignalGTK (drawing_area,
 			     "button_release_event",
 			     GTK_SIGNAL_FUNC(FrameCallbackGTK),
 			     (gpointer)frame);
+	   ConnectSignalGTK (drawing_area,
+			     "motion_notify_event",
+			     GTK_SIGNAL_FUNC(FrameCallbackGTK),
+			     (gpointer)frame);
 
-	   /* To notice if the drawing area has mouse in or not */
-	   gtk_object_set_data (GTK_OBJECT(drawing_area), "MouseIn", (gpointer)TRUE);
-
-	   /*	   gtk_signal_connect (GTK_OBJECT (drawing_area), "enter-notify-event",
-			       GTK_SIGNAL_FUNC (EnterCallbackGTK),
-			       (gpointer)frame);
-	   gtk_signal_connect (GTK_OBJECT (drawing_area), "leave-notify-event",
-			       GTK_SIGNAL_FUNC (LeaveCallbackGTK),
-			       (gpointer)frame);
-	   */
-
-	   /* To notice if the drawing area has focus or not */
-	   gtk_object_set_data (GTK_OBJECT(drawing_area), "Active", (gpointer)FALSE);
-	   /*	   gtk_signal_connect (GTK_OBJECT (drawing_area), "focus_in_event",
-		 	       GTK_SIGNAL_FUNC (FocusInCallbackGTK),
-			       (gpointer)frame);
-	   gtk_signal_connect (GTK_OBJECT (drawing_area), "focus_out_event",
-			       GTK_SIGNAL_FUNC (FocusOutCallbackGTK),
-			       (gpointer)frame);
-	   */
  	   /* the key press event is intercepted by the main frame and not by the drawing area.
               the result is analised into the callback */
 	   ConnectSignalGTK (Main_Wd,
 			     "key_press_event",
 			     GTK_SIGNAL_FUNC(CharTranslationGTK),
 			     (gpointer)frame);
+	   /* callbacks to know if it's necessary to redisplay */
 	   ConnectSignalGTK (drawing_area,
 			     "expose_event",
 			     GTK_SIGNAL_FUNC(ExposeCB),
