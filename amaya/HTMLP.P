@@ -4085,10 +4085,10 @@ RULES
 
  SYMBOL_UNIT:
 	BEGIN
-	IN Structure_view BEGIN
+	{IN Structure_view BEGIN}
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
-		END;		
+		{END;}		
 	END;
 
 #ifdef PAGE
